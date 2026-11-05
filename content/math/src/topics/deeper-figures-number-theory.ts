@@ -45,6 +45,7 @@ const lineThroughLatticePoints = point(
       const [x, y] = [x0 + k * b, y0 - k * a];
       if (x >= -3 && x <= 12 && y >= -3 && y <= 12) marks.push({ kind: "point", at: [x, y], accent: true });
     }
+    const listed = marks.flatMap((m) => (m.kind === "point" ? [`(${m.at[0]}, ${m.at[1]})`] : [])).join(", ");
     return choose(
       rng,
       [
@@ -58,8 +59,8 @@ const lineThroughLatticePoints = point(
         `相邻的点相差步长 $(${b}, ${-a})$，所以 $x$ 和 $y$ 的系数是 $${a}$ 和 $${b}$。点 $(${x0}, ${y0})$ 再给出 $c = ${c}$。`,
       ],
       fig({ xMin: -3, xMax: 12, yMin: -3, yMax: 12, xName: "x", yName: "y" }, marks, [
-        `A line through the lattice point (${x0}, ${y0}), with marked lattice points a step of (${b}, ${-a}) apart.`,
-        `过格点 (${x0}, ${y0}) 的直线，标记的格点之间相差步长 (${b}, ${-a})。`,
+        `A line through the marked lattice points ${listed}.`,
+        `过标记格点 ${listed} 的直线。`,
       ]),
     );
   },

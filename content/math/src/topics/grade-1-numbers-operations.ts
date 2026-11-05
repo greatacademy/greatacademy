@@ -543,7 +543,7 @@ const makingTen = earlyTopic(
             )
           : whole(
               [
-                `${name} has ${a} ${thing.en} and wants 10. How many more ${thing.en} does ${name} need?`,
+                `${name} has ${a} ${a === 1 ? thing.en.replace(/s$/, "") : thing.en} and wants 10. How many more ${thing.en} does ${name} need?`,
                 `${name} 有 ${a} ${thing.unit}${thing.zh}，想要 10 ${thing.unit}。还需要多少${thing.unit}？`,
               ],
               answer,

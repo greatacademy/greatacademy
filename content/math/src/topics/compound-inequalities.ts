@@ -79,8 +79,8 @@ function randomInterval(rng: Rng, kind: Kind): Interval {
 const asInterval = t("Write the answer in interval notation.", "用区间记号写出答案。");
 const asInequality = (v: string) => t(`Write the answer as an inequality in $${v}$.`, `用关于 $${v}$ 的不等式写出答案。`);
 const listSolutions = t(
-  "Enter all real solutions separated by commas, or $\\varnothing$ if there are none.",
-  "请用逗号分隔写出所有实数解；如果没有实数解，请输入 $\\varnothing$。",
+  "Enter all real solutions separated by commas, or type none if there are none.",
+  "请用逗号分隔写出所有实数解；如果没有实数解，请输入 none。",
 );
 
 /** ask builds a prompt from a question and an instruction about the form of the answer. */

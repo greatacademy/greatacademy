@@ -144,3 +144,9 @@ export function orderMod(a: number, n: number): number {
 /** factorizationLatex writes a prime factorization in LaTeX. */
 export const factorizationLatex = (factors: readonly (readonly [number, number])[]) =>
   factors.map(([p, e]) => (e === 1 ? `${p}` : `${p}^{${e}}`)).join(" \\cdot ");
+
+/** observed keeps the part of a reason a drawing shows, for its alt text: what comes before "so" or "which". */
+export const observed = (reason: Pair): Pair => [
+  reason[0].split(/, (?:so|which) /)[0] as string,
+  reason[1].split(/，(?:所以|符合|每个对称)/)[0] as string,
+];

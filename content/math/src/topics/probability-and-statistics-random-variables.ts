@@ -497,7 +497,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
           return numberProblem({
             prompt: t(
               `Let $X$ be uniformly distributed on $(0, ${b})$ with density $f_X(x) = \\frac{1}{${b}}$. Let $Y = \\frac{${c}}{X}$. Find the value of the PDF $f_Y(y)$ at $y = \\frac{${k * c}}{${b}}${lowestTerms(k * c, b)}$.`,
-              `设 $X$ 服从 $(0, ${b})$ 上的均匀分布，密度为 $f_X(x) = \\frac{1}{${b}}$。令 $Y = \\frac{${c}}{X}$。求概率密度函数 $f_Y(y)$ 在 $y = \\frac{${k * c}}{${b}}$ 处的值。`,
+              `设 $X$ 服从 $(0, ${b})$ 上的均匀分布，密度为 $f_X(x) = \\frac{1}{${b}}$。令 $Y = \\frac{${c}}{X}$。求概率密度函数 $f_Y(y)$ 在 $y = \\frac{${k * c}}{${b}}${lowestTerms(k * c, b)}$ 处的值。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(1, b), Q.of(1, k), Q.of(k * k * c, b)],

@@ -34,7 +34,7 @@ const pickUnit = (rng: Rng): Unit => rng.pick(units);
 const num = (q: Q, decimal: boolean) => (decimal ? dec(q) : mixedLatex(q));
 
 /** measure writes a measurement in LaTeX: "2\frac{1}{2}\text{ ft}", "8.4\text{ m}^2". */
-const measure = (q: Q, decimal: boolean, u: Unit, power = 1) => `${num(q, decimal)}\\text{ ${u}}${power > 1 ? `^${power}` : ""}`;
+const measure = (q: Q, decimal: boolean, u: Unit, power = 1) => `${num(q, decimal)}\\text{ ${u}}${power > 1 ? `^{${power}}` : ""}`;
 
 /** label writes a length for a figure in plain text: "4.5 m", "2 1/2 ft". */
 function label(q: Q, decimal: boolean, u: Unit): string {

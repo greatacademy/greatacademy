@@ -75,8 +75,13 @@ export const groupHomomorphisms: TopicDef = {
         "生成元的每个允许的像都给出一个同态，允许的像的个数等于两个阶的最大公因数。同态 $\\mathbb{Z}_{m} \\to \\mathbb{Z}_{n}$ 对应于满足 $mk \\equiv 0 \\pmod n$ 的 $k$，即 $\\frac{n}{\\gcd(m, n)}$ 的倍数，共 $\\gcd(m, n)$ 个：$\\mathbb{Z}_{12} \\to \\mathbb{Z}_{18}$ 有 $6$ 个。",
       ),
       generate(rng) {
-        const m = rng.int(2, 60);
-        const n = rng.int(2, 60);
+        // Orders with a common factor, since coprime orders only allow the zero map.
+        let m: number;
+        let n: number;
+        do {
+          m = rng.int(2, 60);
+          n = rng.int(2, 60);
+        } while (gcd(m, n) === 1);
         const g = gcd(m, n);
         return numberProblem({
           prompt: t(`How many homomorphisms $${zTex(m)} \\to ${zTex(n)}$ are there?`, `$${zTex(m)} \\to ${zTex(n)}$ 的同态有多少个？`),

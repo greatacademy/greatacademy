@@ -399,8 +399,8 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
         const inner = `1 ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}x`;
         return numberProblem({
           prompt: t(
-            `Find the coefficient of $${xk(k)}$ in the expansion of $(${inner})^${rTex(r)}$.`,
-            `求 $(${inner})^${rTex(r)}$ 展开式中 $${xk(k)}$ 的系数。`,
+            `Find the coefficient of $${xk(k)}$ in the expansion of $(${inner})^{${rTex(r)}}$.`,
+            `求 $(${inner})^{${rTex(r)}}$ 展开式中 $${xk(k)}$ 的系数。`,
           ),
           answer: value,
           wrong: [
@@ -478,8 +478,8 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
         const inner = `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`;
         return numberProblem({
           prompt: t(
-            `Find the coefficient of $${xk(k)}$ in the expansion of $(${inner})^${rTex(r)}$.`,
-            `求 $(${inner})^${rTex(r)}$ 展开式中 $${xk(k)}$ 的系数。`,
+            `Find the coefficient of $${xk(k)}$ in the expansion of $(${inner})^{${rTex(r)}}$.`,
+            `求 $(${inner})^{${rTex(r)}}$ 展开式中 $${xk(k)}$ 的系数。`,
           ),
           answer: value,
           wrong: [
@@ -489,8 +489,8 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
             Q.of(a).mul(genChoose(r, k)).mul(ratio.pow(k)),
           ],
           solution: t(
-            `$(${inner})^${rTex(r)} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^${rTex(r)}$, so the coefficient is $${ar.toLatex()} \\cdot ${pq(genChoose(r, k))} \\cdot \\left(${ratio.toLatex()}\\right)^{${k}} = ${value.toLatex()}$.`,
-            `$(${inner})^${rTex(r)} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^${rTex(r)}$，所以系数为 $${ar.toLatex()} \\cdot ${pq(genChoose(r, k))} \\cdot \\left(${ratio.toLatex()}\\right)^{${k}} = ${value.toLatex()}$。`,
+            `$(${inner})^{${rTex(r)}} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^{${rTex(r)}}$, so the coefficient is $${ar.toLatex()} \\cdot ${pq(genChoose(r, k))} \\cdot \\left(${ratio.toLatex()}\\right)^{${k}} = ${value.toLatex()}$.`,
+            `$(${inner})^{${rTex(r)}} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^{${rTex(r)}}$，所以系数为 $${ar.toLatex()} \\cdot ${pq(genChoose(r, k))} \\cdot \\left(${ratio.toLatex()}\\right)^{${k}} = ${value.toLatex()}$。`,
           ),
         });
       },
@@ -519,8 +519,8 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
         ]);
         return numberProblem({
           prompt: t(
-            `Find the coefficient of $${xk(k)}$ in the expansion of $(${lin})(${inner})^${rTex(r)}$.`,
-            `求 $(${lin})(${inner})^${rTex(r)}$ 展开式中 $${xk(k)}$ 的系数。`,
+            `Find the coefficient of $${xk(k)}$ in the expansion of $(${lin})(${inner})^{${rTex(r)}}$.`,
+            `求 $(${lin})(${inner})^{${rTex(r)}}$ 展开式中 $${xk(k)}$ 的系数。`,
           ),
           answer: value,
           wrong: [
@@ -575,8 +575,8 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
           const inner2 = `${a * a} ${b < 0 ? "-" : "+"} ${Math.abs(b)}x^2`;
           return numberProblem({
             prompt: t(
-              `The expansion of $(${inner2})^${rTex(r)}$ in powers of $x$ is valid for $x^2 < c$. Find $c$.`,
-              `$(${inner2})^${rTex(r)}$ 按 $x$ 的幂展开，在 $x^2 < c$ 时有效。求 $c$。`,
+              `The expansion of $(${inner2})^{${rTex(r)}}$ in powers of $x$ is valid for $x^2 < c$. Find $c$.`,
+              `$(${inner2})^{${rTex(r)}}$ 按 $x$ 的幂展开，在 $x^2 < c$ 时有效。求 $c$。`,
             ),
             answer: s,
             wrong: [Q.of(Math.abs(b), a * a), Q.of(a, Math.abs(b)), Q.of(1)],
@@ -588,14 +588,14 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
         }
         return numberProblem({
           prompt: t(
-            `The expansion of $(${inner})^${rTex(r)}$ in powers of $x$ is valid for $|x| < c$. Find $c$.`,
-            `$(${inner})^${rTex(r)}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求 $c$。`,
+            `The expansion of $(${inner})^{${rTex(r)}}$ in powers of $x$ is valid for $|x| < c$. Find $c$.`,
+            `$(${inner})^{${rTex(r)}}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求 $c$。`,
           ),
           answer,
           wrong: [Q.of(Math.abs(b), a), Q.of(1), Q.of(a), Q.of(1, Math.abs(b))],
           solution: t(
-            `$(${inner})^${rTex(r)} = ${a}^${rTex(r)}\\left(1 ${b < 0 ? "-" : "+"} ${qx(Q.of(Math.abs(b), a))}\\right)^${rTex(r)}$ is valid for $\\left|\\frac{${Math.abs(b)}x}{${a}}\\right| < 1$, that is, $|x| < ${value.toLatex()}$.`,
-            `$(${inner})^${rTex(r)} = ${a}^${rTex(r)}\\left(1 ${b < 0 ? "-" : "+"} ${qx(Q.of(Math.abs(b), a))}\\right)^${rTex(r)}$ 在 $\\left|\\frac{${Math.abs(b)}x}{${a}}\\right| < 1$，即 $|x| < ${value.toLatex()}$ 时有效。`,
+            `$(${inner})^{${rTex(r)}} = ${a}^{${rTex(r)}}\\left(1 ${b < 0 ? "-" : "+"} ${qx(Q.of(Math.abs(b), a))}\\right)^{${rTex(r)}}$ is valid for $\\left|\\frac{${Math.abs(b)}x}{${a}}\\right| < 1$, that is, $|x| < ${value.toLatex()}$.`,
+            `$(${inner})^{${rTex(r)}} = ${a}^{${rTex(r)}}\\left(1 ${b < 0 ? "-" : "+"} ${qx(Q.of(Math.abs(b), a))}\\right)^{${rTex(r)}}$ 在 $\\left|\\frac{${Math.abs(b)}x}{${a}}\\right| < 1$，即 $|x| < ${value.toLatex()}$ 时有效。`,
           ),
         });
       },
@@ -618,8 +618,8 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
         const f = (a: number, b: number) => `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`;
         return numberProblem({
           prompt: t(
-            `The expansion of $(${f(a1, b1)})^${rTex(r1!)}(${f(a2, b2)})^${rTex(r2!)}$ in powers of $x$ is valid for $|x| < c$. Find the largest such $c$.`,
-            `$(${f(a1, b1)})^${rTex(r1!)}(${f(a2, b2)})^${rTex(r2!)}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求最大的 $c$。`,
+            `The expansion of $(${f(a1, b1)})^{${rTex(r1!)}}(${f(a2, b2)})^{${rTex(r2!)}}$ in powers of $x$ is valid for $|x| < c$. Find the largest such $c$.`,
+            `$(${f(a1, b1)})^{${rTex(r1!)}}(${f(a2, b2)})^{${rTex(r2!)}}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求最大的 $c$。`,
           ),
           answer: value,
           wrong: [c1.cmp(c2) < 0 ? c2 : c1, c1.mul(c2), Q.of(1)],
@@ -665,8 +665,8 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
         const base = Q.of(1).add(u);
         return numberProblem({
           prompt: t(
-            `Use the first three terms of the expansion of $(1 + x)^${rTex(r)}$ to approximate $${dec(base)}^${rTex(r)}$.`,
-            `用 $(1 + x)^${rTex(r)}$ 展开式的前三项近似计算 $${dec(base)}^${rTex(r)}$。`,
+            `Use the first three terms of the expansion of $(1 + x)^{${rTex(r)}}$ to approximate $${dec(base)}^{${rTex(r)}}$.`,
+            `用 $(1 + x)^{${rTex(r)}}$ 展开式的前三项近似计算 $${dec(base)}^{${rTex(r)}}$。`,
           ),
           answer: value,
           form: "decimal",

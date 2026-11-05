@@ -2486,15 +2486,15 @@ const numeratorDeterminant: KnowledgePointDef = {
     const answer = d * k;
     return numberProblem({
       prompt: t(
-        `A system $A\\mathbf{x} = \\mathbf{b}$ of three equations has $\\det A = ${d}$, and its unique solution has $x_${j} = ${k}$. Let $A_${j}$ be $A$ with column ${j} replaced by $\\mathbf{b}$. Find $\\det A_${j}$.`,
-        `三个方程的方程组 $A\\mathbf{x} = \\mathbf{b}$ 满足 $\\det A = ${d}$，它的唯一解满足 $x_${j} = ${k}$。设 $A_${j}$ 是把 $A$ 的第 ${j} 列换成 $\\mathbf{b}$ 得到的矩阵。求 $\\det A_${j}$。`,
+        `A system $A\\mathbf{x} = \\mathbf{b}$ of three equations has $\\det A = ${d}$, and its unique solution has $x_{${j}} = ${k}$. Let $A_{${j}}$ be $A$ with column ${j} replaced by $\\mathbf{b}$. Find $\\det A_{${j}}$.`,
+        `三个方程的方程组 $A\\mathbf{x} = \\mathbf{b}$ 满足 $\\det A = ${d}$，它的唯一解满足 $x_{${j}} = ${k}$。设 $A_{${j}}$ 是把 $A$ 的第 ${j} 列换成 $\\mathbf{b}$ 得到的矩阵。求 $\\det A_{${j}}$。`,
       ),
       answer,
       form: "integer",
       wrong: [-answer, d + k, answer + 1, 2 * answer, answer - 1],
       solution: t(
-        `By Cramer's rule, $x_${j} = \\frac{\\det A_${j}}{\\det A}$. So $\\det A_${j} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$.`,
-        `由克拉默法则，$x_${j} = \\frac{\\det A_${j}}{\\det A}$。所以 $\\det A_${j} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$。`,
+        `By Cramer's rule, $x_{${j}} = \\frac{\\det A_{${j}}}{\\det A}$. So $\\det A_{${j}} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$.`,
+        `由克拉默法则，$x_{${j}} = \\frac{\\det A_{${j}}}{\\det A}$。所以 $\\det A_{${j}} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$。`,
       ),
     });
   },

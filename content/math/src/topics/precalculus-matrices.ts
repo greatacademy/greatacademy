@@ -1999,7 +1999,7 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
           rng,
           t(
             `Represent the system of equations in matrix form $A \\mathbf{x} = \\mathbf{b}$:\n\n$$\\begin{cases} ${eq1} \\\\ ${eq2} \\\\ ${eq3} \\end{cases}$$`,
-            `将下列方程组表示为矩阵形式 $A \\mathbf{x} = \\mathbf{b}$：\n\n$$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$`,
+            `将下列方程组表示为矩阵形式 $A \\mathbf{x} = \\mathbf{b}$：\n\n$$\\begin{cases} ${eq1} \\\\ ${eq2} \\\\ ${eq3} \\end{cases}$$`,
           ),
           t(`$${correctAns}$`, `$${correctAns}$`),
           [

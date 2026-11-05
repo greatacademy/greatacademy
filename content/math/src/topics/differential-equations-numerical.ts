@@ -1361,7 +1361,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             steps(
               `在固定时间区间 $[t_0, T]$ 上，总计算步数为 $N = \\frac{T - t_0}{h} = O(h^{-1})$。`,
               `全局累积误差约为 $N$ 步局部误差之和：$E_{\\text{global}} \\approx N \\cdot O(h^{${localOrder}}) = O(h^{-1}) \\cdot O(h^{${localOrder}}) = O(h^{${ans}})$。`,
-              `因此全局误差阶次为 ${ans}。`,
+              `因此全局误差阶次为 $${ans}$。`,
             ),
           );
 

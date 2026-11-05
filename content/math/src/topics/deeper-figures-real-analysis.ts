@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
 
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { ask, choose, observed, type Pair, point } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
@@ -60,8 +60,8 @@ const epsilonBand = point(
           { kind: "segment", a: [0, L - eps], b: [13, L - eps], dashed: true },
         ],
         [
-          `A sequence tending to ${L}, with a band of half-width ${eps} around the limit; the dots are inside from position ${N} on.`,
-          `趋向 ${L} 的数列，极限周围的带半宽为 ${eps}；从位置 ${N} 起点都在带内。`,
+          `A sequence of 12 dots tending to ${L}, with a dashed band of half-width ${eps} around the limit.`,
+          `趋向 ${L} 的数列的 12 个点，极限周围有半宽为 ${eps} 的虚线带。`,
         ],
       ),
     );
@@ -95,8 +95,8 @@ const limsupPlot = point(
         `奇数项稳定在 $${up}$，偶数项稳定在 $${down}$，所以子列的极限只有这两个。其中${askUp ? "较大" : "较小"}的是 $${right}$，前面的项无关紧要。`,
       ],
       fig({ xMin: 0, xMax: 15, yMin: -7, yMax: 8, xName: "n" }, dots(values), [
-        `A sequence whose odd terms come down to ${up} and whose even terms come up to ${down}.`,
-        `一个数列，奇数项下降趋向 ${up}，偶数项上升趋向 ${down}。`,
+        "A plot of a sequence whose dots alternate between an upper branch and a lower branch.",
+        "一个数列的图，点在上下两支之间交替。",
       ]),
     );
   },
@@ -128,8 +128,8 @@ const clusterCount = point(
         `点无限次回到 $${k}$ 个不同的高度，每个高度都是趋向它的那些项组成的子列的极限。其他收敛子列最终也只能落在这些高度之中。`,
       ],
       fig({ xMin: 0, xMax: 21, yMin: -7, yMax: 8, xName: "n" }, dots(values), [
-        `A sequence that keeps returning to the heights ${[...heights].sort((a, b) => a - b).join(", ")}.`,
-        `一个数列，不断回到高度 ${[...heights].sort((a, b) => a - b).join("，")}。`,
+        "A plot of a sequence whose dots keep returning to certain heights as n grows.",
+        "一个数列的图，随着 n 增大，点不断回到某些高度。",
       ]),
     );
   },
@@ -241,7 +241,10 @@ const discontinuityKind = point(
         `${seen[0]}. That is the meaning of ${(names[kind] as Pair)[0].toLowerCase()}.`,
         `${seen[1]}。这就是${(names[kind] as Pair)[1]}的含义。`,
       ],
-      fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [`A graph near x = ${a}. ${seen[0]}.`, `x = ${a} 附近的图。${seen[1]}。`]),
+      fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
+        `A graph near x = ${a}. ${observed(seen)[0]}.`,
+        `x = ${a} 附近的图。${observed(seen)[1]}。`,
+      ]),
     );
   },
 );
@@ -451,8 +454,8 @@ const extremeAttained = point(
       attained ? [none, at(b), at(a), at(c + 1)] : [at(where), at(a), at(where === b ? c : b)],
       [`${reason[0]}.`, `${reason[1]}。`],
       fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
-        `A graph from x = ${a} to x = ${b}. ${reason[0].replaceAll("$", "")}.`,
-        `从 x = ${a} 到 x = ${b} 的图。${reason[1].replaceAll("$", "")}。`,
+        `A graph from x = ${a} to x = ${b}. ${observed(reason)[0].replaceAll("$", "")}.`,
+        `从 x = ${a} 到 x = ${b} 的图。${observed(reason)[1].replaceAll("$", "")}。`,
       ]),
     );
   },
@@ -563,8 +566,8 @@ const riemannRectangles = point(
         `每个矩形在${leftSum ? "左" : "右"}上角碰到图，所以这是${leftSum ? "左" : "右"}和。高度依次为 ${(leftSum ? h.slice(0, -1) : h.slice(1)).join("，")}，它们的和乘以宽度 $${width}$ 得 $${v}$。`,
       ],
       fig({ xMin: -1, xMax: 8, yMin: -1, yMax: 8 }, marks, [
-        `Rectangles of width ${width} under a path through the heights ${h.join(", ")}; each touches the path at its ${leftSum ? "left" : "right"} corner.`,
-        `折线下方宽度为 ${width} 的矩形，折线经过高度 ${h.join("，")}；每个矩形在${leftSum ? "左" : "右"}上角碰到折线。`,
+        `Rectangles of width ${width} and a path through the heights ${h.join(", ")}.`,
+        `宽度为 ${width} 的矩形和经过高度 ${h.join("，")} 的折线。`,
       ]),
     );
   },
@@ -733,8 +736,8 @@ const cobweb = point(
           { kind: "path", points: path },
         ],
         [
-          `A line of slope ${m} and the line y = x, meeting at (${p}, ${p}), with a cobweb starting from x = ${x0} and tightening around that point.`,
-          `斜率为 ${m} 的直线和直线 y = x，交于 (${p}, ${p})，蛛网从 x = ${x0} 出发，在该点周围收紧。`,
+          `A sloping line and the line y = x, with a cobweb path starting from x = ${x0}.`,
+          `一条斜线和直线 y = x，蛛网路径从 x = ${x0} 出发。`,
         ],
       ),
     );
@@ -795,8 +798,8 @@ const openClosed = point(
       {
         svg: svgDocument(90, body),
         alt: t(
-          `A set on a number line with end points ${ends.join(", ")}. ${reason[0]}.`,
-          `数轴上的集合，端点为 ${ends.join("，")}。${reason[1]}。`,
+          `A set on a number line with end points ${ends.join(", ")}. ${mode === "open" ? "No end point belongs to the set" : mode === "closed" ? "Every end point belongs to the set" : "Some end points are filled and others are open"}.`,
+          `数轴上的集合，端点为 ${ends.join("，")}。${mode === "open" ? "端点都不属于集合" : mode === "closed" ? "每个端点都属于集合" : "有的端点是实心，有的是空心"}。`,
         ),
       },
     );

@@ -1473,8 +1473,8 @@ export const equivalenceClasses: TopicDef = {
           values: cls,
           wrong: [cls.filter((x) => x !== a), [a]],
           solution: t(
-            `$[${a}]$ consists of the numbers whose value of the shared property matches that of $${a}$: $${setTex(cls)}$.`,
-            `$[${a}]$ 由该性质与 $${a}$ 相同的数组成：$${setTex(cls)}$。`,
+            `$[${a}]$ consists of the $x$ for which the condition holds with $y = ${a}$: $${setTex(cls)}$.`,
+            `$[${a}]$ 由使条件在 $y = ${a}$ 时成立的 $x$ 组成：$${setTex(cls)}$。`,
           ),
         });
       },
@@ -1571,8 +1571,8 @@ export const theIntegersModuloN: TopicDef = {
           answer: count,
           wrong: [n - 1 - count, count + 1, n - count],
           solution: t(
-            `The invertible classes are those with $\\gcd(a, ${n}) = 1$: there are $${units.length}$. The other $${n - 1 - units.length}$ nonzero classes are zero divisors.`,
-            `可逆类就是满足 $\\gcd(a, ${n}) = 1$ 的类：共 $${units.length}$ 个。其余 $${n - 1 - units.length}$ 个非零类是零因子。`,
+            `The invertible classes are those with $\\gcd(a, ${n}) = 1$: there are $${units.length}$. ${units.length === n - 1 ? "So every nonzero class is invertible, and there are no zero divisors." : `The other $${n - 1 - units.length}$ nonzero classes are zero divisors.`}`,
+            `可逆类就是满足 $\\gcd(a, ${n}) = 1$ 的类：共 $${units.length}$ 个。${units.length === n - 1 ? "所以每个非零类都可逆，没有零因子。" : `其余 $${n - 1 - units.length}$ 个非零类是零因子。`}`,
           ),
         });
       },

@@ -58,8 +58,8 @@ function piTex(c: Q): string {
   return c.d === 1n ? top : `\\frac{${top}}{${c.d}}`;
 }
 
-const SET_EN = " Write the set as a list, such as $\\{1, 2, 3\\}$, or $\\varnothing$ if it is empty.";
-const SET_ZH = "用列举法写出集合，如 $\\{1, 2, 3\\}$；若为空集，写 $\\varnothing$。";
+const SET_EN = " Write the set as a list, such as $\\{1, 2, 3\\}$, or type none if it is empty.";
+const SET_ZH = "用列举法写出集合，如 $\\{1, 2, 3\\}$；若为空集，请输入 none。";
 
 /** NumEvent is an event about a number drawn from 1 to n, such as "the number is even". */
 interface NumEvent {

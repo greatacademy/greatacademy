@@ -1641,17 +1641,17 @@ const semiLogScatterPlots: TopicDef = {
         const sets = rng.shuffle([expo, lin, quad, mixed]);
         const labels = ["A", "B", "C", "D"];
         const right = sets.indexOf(expo);
-        const tab = table(["$x$", "$0$", "$1$", "$2$", "$3$"], ...sets.map((s, i) => [`$y_${labels[i]}$`, ...m(s)]));
+        const tab = table(["$x$", "$0$", "$1$", "$2$", "$3$"], ...sets.map((s, i) => [`$y_{${labels[i]}}$`, ...m(s)]));
         return choiceProblem({
           prompt: t(
             `Which data set lies on a straight line on a semi-log plot of $\\log y$ against $x$?\n\n${tab}`,
             `在 $\\log y$ 关于 $x$ 的半对数图上，哪一组数据位于一条直线上？\n\n${tab}`,
           ),
-          options: labels.map((l) => t(`$y_${l}$`, `$y_${l}$`)),
+          options: labels.map((l) => t(`$y_{${l}}$`, `$y_{${l}}$`)),
           correct: right,
           solution: t(
-            `In $y_${labels[right]}$ each value is $${r}$ times the one before, so $\\log y$ increases by $\\log ${r}$ at every step: the semi-log plot is a straight line. The other data sets do not have a constant ratio.`,
-            `$y_${labels[right]}$ 中每个值都是前一个的 $${r}$ 倍，所以 $\\log y$ 每一步都增加 $\\log ${r}$：半对数图是一条直线。其他数据组相邻值之比都不是常数。`,
+            `In $y_{${labels[right]}}$ each value is $${r}$ times the one before, so $\\log y$ increases by $\\log ${r}$ at every step: the semi-log plot is a straight line. The other data sets do not have a constant ratio.`,
+            `$y_{${labels[right]}}$ 中每个值都是前一个的 $${r}$ 倍，所以 $\\log y$ 每一步都增加 $\\log ${r}$：半对数图是一条直线。其他数据组相邻值之比都不是常数。`,
           ),
         });
       },

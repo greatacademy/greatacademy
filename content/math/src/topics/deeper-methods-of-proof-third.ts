@@ -173,10 +173,11 @@ const falsifyingRows = point(
       for (const y of [true, false]) for (const z of [true, false]) if (fa(x, y, z) && !fb(x, y, z)) bad.push([x, y, z]);
     const answer = bad.length;
     const rows = bad.map(row).join(", ");
+    const grouped = (part: string) => (part.includes(" ") ? `(${part})` : part);
     return ask(
       [
-        `In how many of the $8$ rows of the truth table is $(${A}) \\Rightarrow (${B})$ false?`,
-        `在真值表的 $8$ 行中，$(${A}) \\Rightarrow (${B})$ 有多少行为假？`,
+        `In how many of the $8$ rows of the truth table is $${grouped(A)} \\Rightarrow ${grouped(B)}$ false?`,
+        `在真值表的 $8$ 行中，$${grouped(A)} \\Rightarrow ${grouped(B)}$ 有多少行为假？`,
       ],
       answer,
       [8 - answer, answer + 1, answer === 0 ? 2 : answer - 1],
@@ -302,8 +303,8 @@ const nestedNegation = point(
   "negating-two-nested-quantifiers",
   ["Negating two nested quantifiers", "否定两层嵌套量词"],
   [
-    "To negate a statement with two quantifiers, flip each quantifier in turn and negate the inner condition. The order of the variables stays the same. A common mistake is to flip just one quantifier, or to negate an inequality to the strict opposite.",
-    "否定含两个量词的命题时，要依次翻转每个量词，并否定内层条件。变量的顺序不变。常见的错误是只翻转一个量词，或者把不等式否定成严格相反的形式。",
+    "To negate a statement with two quantifiers, flip each quantifier in turn and negate the inner condition. The order of the variables stays the same. A common mistake is to flip just one quantifier, or to negate $<$ as $>$, when the negation of $<$ is $\\ge$.",
+    "否定含两个量词的命题时，要依次翻转每个量词，并否定内层条件。变量的顺序不变。常见的错误是只翻转一个量词，或者把 $<$ 否定成 $>$，而 $<$ 的否定其实是 $\\ge$。",
   ],
   (rng) => {
     const k = rng.pick([-7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);

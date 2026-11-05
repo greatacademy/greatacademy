@@ -1,4 +1,4 @@
-import type { Rng, TopicDef } from "@ga/content";
+import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
@@ -71,6 +71,20 @@ function pGcd(f: Poly, g: Poly, p: number): Poly {
   let [a, b] = [trim(f), trim(g)];
   while (b.length > 0) [a, b] = [b, pDivMod(a, b, p)[1]];
   return monic(a, p);
+}
+
+/** euclidTrail describes the remainders of the Euclidean algorithm on f and g over ℤₚ, as a clause of a sentence. */
+function euclidTrail(f: Poly, g: Poly, p: number): Text {
+  let [a, b] = f.length >= g.length ? [trim(f), trim(g)] : [trim(g), trim(f)];
+  const remainders: string[] = [];
+  while (b.length > 0) {
+    const r = pDivMod(a, b, p)[1];
+    if (r.length > 0) remainders.push(polyTex(r));
+    [a, b] = [b, r];
+  }
+  if (remainders.length === 0) return t("the first division leaves no remainder", "第一次相除就没有余式");
+  const list = remainders.map((r) => `$${r}$`);
+  return t(`the successive nonzero remainders are ${list.join(", ")}`, `依次的非零余式是 ${list.join("、")}`);
 }
 
 /** hasRootMod reports whether f has a root in ℤₚ. */
@@ -413,8 +427,8 @@ export const theEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
           polyTex(right),
           wrong.map((w) => polyTex(trim(w))),
           t(
-            `The Euclidean algorithm ends with the last nonzero remainder, which made monic is $${polyTex(right)}$.`,
-            `欧几里得算法的最后一个非零余式化为首一后为 $${polyTex(right)}$。`,
+            `In the Euclidean algorithm ${euclidTrail(f, g, p).en}. The last nonzero divisor, made monic, is $${polyTex(right)}$.`,
+            `在欧几里得算法中，${euclidTrail(f, g, p)["zh-CN"]}。最后一个非零除式化为首一后为 $${polyTex(right)}$。`,
           ),
         );
       },
@@ -438,8 +452,8 @@ export const theEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
           answer: deg(right),
           wrong: [Math.min(deg(f), deg(g)), deg(right) + 1, Math.abs(deg(f) - deg(g))],
           solution: t(
-            `The Euclidean algorithm gives $\\gcd = ${polyTex(right)}$, of degree $${deg(right)}$.`,
-            `欧几里得算法给出 $\\gcd = ${polyTex(right)}$，次数为 $${deg(right)}$。`,
+            `In the Euclidean algorithm ${euclidTrail(f, g, p).en}. The last nonzero divisor, made monic, gives $\\gcd = ${polyTex(right)}$, of degree $${deg(right)}$.`,
+            `在欧几里得算法中，${euclidTrail(f, g, p)["zh-CN"]}。最后一个非零除式化为首一后给出 $\\gcd = ${polyTex(right)}$，次数为 $${deg(right)}$。`,
           ),
         });
       },
@@ -844,8 +858,8 @@ export const irreduciblePolynomialsOverAFiniteField: TopicDef = {
       id: "counting-irreducible-polynomials-over-zp",
       title: t("Counting irreducibles", "数不可约多项式"),
       explanation: t(
-        "Count all monic polynomials of the degree and subtract those that split into factors of lower degree. Over $\\mathbb{Z}_5$ there are $25$ monic quadratics; $5$ are squares $(x - a)^2$ and $\\binom{5}{2} = 10$ are $(x - a)(x - b)$ with $a \\ne b$, leaving $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ irreducible ones.",
-        "数出该次数的所有首一多项式，再减去那些能分解成更低次因式的多项式。在 $\\mathbb{Z}_5$ 上有 $25$ 个首一二次多项式；其中 $5$ 个是 $(x - a)^2$，$\\binom{5}{2} = 10$ 个是 $(x - a)(x - b)$（$a \\ne b$），余下 $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ 个不可约。",
+        "Count all monic polynomials of the degree and subtract those that split into factors of lower degree. Over $\\mathbb{Z}_5$ there are $25$ monic quadratics; $5$ are squares $(x - a)^2$ and $\\binom{5}{2} = 10$ are $(x - a)(x - b)$ with $a \\ne b$, leaving $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ irreducible ones. A reducible monic cubic is three linear factors, or a linear factor times an irreducible quadratic, and subtracting these leaves $\\frac{p^3 - p}{3}$. For quartics, the same subtraction leaves $\\frac{p^4 - p^2}{4}$.",
+        "数出该次数的所有首一多项式，再减去那些能分解成更低次因式的多项式。在 $\\mathbb{Z}_5$ 上有 $25$ 个首一二次多项式；其中 $5$ 个是 $(x - a)^2$，$\\binom{5}{2} = 10$ 个是 $(x - a)(x - b)$（$a \\ne b$），余下 $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ 个不可约。可约的首一三次多项式是三个一次因式之积，或一个一次因式与一个不可约二次因式之积，减去这些后余下 $\\frac{p^3 - p}{3}$ 个。对四次多项式，同样相减后余下 $\\frac{p^4 - p^2}{4}$ 个。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]);
@@ -854,6 +868,13 @@ export const irreduciblePolynomialsOverAFiniteField: TopicDef = {
         const value = d === 4 ? (p ** 4 - p * p) / 4 : cubic ? (p ** 3 - p) / 3 : (p * p - p) / 2;
         const name = ["", "", "quadratics", "cubics", "quartics"][d];
         const nameZh = ["", "", "二", "三", "四"][d];
+        const quadratics = (p * p - p) / 2;
+        const threeLinear = (p * (p + 1) * (p + 2)) / 6;
+        const linearAndQuadratic = p * quadratics;
+        const allLinear = (p * (p + 1) * (p + 2) * (p + 3)) / 24;
+        const twoAndQuadratic = ((p * (p + 1)) / 2) * quadratics;
+        const twoQuadratics = (quadratics * (quadratics + 1)) / 2;
+        const linearAndCubic = (p * (p ** 3 - p)) / 3;
         return numberProblem({
           prompt: t(
             `How many monic irreducible ${name} are there in $${zTex(p)}[x]$?`,
@@ -866,15 +887,21 @@ export const irreduciblePolynomialsOverAFiniteField: TopicDef = {
               : cubic
                 ? [p ** 3 - p, (p ** 3 - p) / 2, p ** 3 - p * p]
                 : [p * p - p, (p * (p + 1)) / 2, p * p - 2 * p],
-          solution: cubic
-            ? t(
-                `Of the $${p ** 3}$ monic cubics, the reducible ones have a root; counting gives $\\frac{${p}^3 - ${p}}{3} = ${value}$ irreducible.`,
-                `$${p ** 3}$ 个首一三次多项式中可约的都有根；计数得 $\\frac{${p}^3 - ${p}}{3} = ${value}$ 个不可约。`,
-              )
-            : t(
-                `Of the $${p * p}$ monic quadratics, $${p}$ are $(x - a)^2$ and $${(p * (p - 1)) / 2}$ are $(x - a)(x - b)$ with $a \\ne b$, leaving $${value}$.`,
-                `$${p * p}$ 个首一二次多项式中，$${p}$ 个是 $(x - a)^2$，$${(p * (p - 1)) / 2}$ 个是 $(x - a)(x - b)$（$a \\ne b$），余下 $${value}$ 个。`,
-              ),
+          solution:
+            d === 4
+              ? t(
+                  `Of the $${p ** 4}$ monic quartics, $${allLinear}$ are four linear factors, $${twoAndQuadratic}$ are two linear factors times an irreducible quadratic, $${twoQuadratics}$ are two irreducible quadratics and $${linearAndCubic}$ are a linear factor times an irreducible cubic. That leaves $${value}$.`,
+                  `$${p ** 4}$ 个首一四次多项式中，$${allLinear}$ 个是四个一次因式之积，$${twoAndQuadratic}$ 个是两个一次因式与一个不可约二次因式之积，$${twoQuadratics}$ 个是两个不可约二次因式之积，$${linearAndCubic}$ 个是一个一次因式与一个不可约三次因式之积。余下 $${value}$ 个。`,
+                )
+              : cubic
+                ? t(
+                    `Of the $${p ** 3}$ monic cubics, $${threeLinear}$ are three linear factors and $${linearAndQuadratic}$ are a linear factor times an irreducible quadratic. That leaves $${value}$.`,
+                    `$${p ** 3}$ 个首一三次多项式中，$${threeLinear}$ 个是三个一次因式之积，$${linearAndQuadratic}$ 个是一个一次因式与一个不可约二次因式之积。余下 $${value}$ 个。`,
+                  )
+                : t(
+                    `Of the $${p * p}$ monic quadratics, $${p}$ are $(x - a)^2$ and $${(p * (p - 1)) / 2}$ are $(x - a)(x - b)$ with $a \\ne b$, leaving $${value}$.`,
+                    `$${p * p}$ 个首一二次多项式中，$${p}$ 个是 $(x - a)^2$，$${(p * (p - 1)) / 2}$ 个是 $(x - a)(x - b)$（$a \\ne b$），余下 $${value}$ 个。`,
+                  ),
         });
       },
     },
@@ -1154,7 +1181,8 @@ export const invertingQuaternions: TopicDef = {
       generate(rng) {
         const x = randomQuat(rng);
         const nrm = qNorm(x);
-        const comp = rng.int(0, 3);
+        // A component that is zero stays zero in the inverse, so it would test nothing.
+        const comp = rng.pick([0, 1, 2, 3].filter((i) => x[i] !== 0));
         const c = qConj(x)[comp]!;
         return numberProblem({
           prompt: t(`Find ${compOf(comp, `(${qTex(x)})^{-1}`)[0]}.`, `求${compOf(comp, `(${qTex(x)})^{-1}`)[1]}。`),
@@ -1273,8 +1301,8 @@ export const vectorSpacesOverFiniteFields: TopicDef = {
           answer: value,
           wrong: [p ** n, k * p, k ** p, p ** k - 1].filter((x) => x !== value),
           solution: t(
-            `The span has dimension $${k}$, and each vector is $c_1v_1 + \\dots + c_${k}v_${k}$ for a unique choice of $c_i \\in ${zTex(p)}$: $${p}^{${k}} = ${value}$.`,
-            `张成空间维数为 $${k}$，每个向量对唯一的一组 $c_i \\in ${zTex(p)}$ 写成 $c_1v_1 + \\dots + c_${k}v_${k}$：$${p}^{${k}} = ${value}$。`,
+            `The span has dimension $${k}$, and each vector is $c_1v_1 + \\dots + c_{${k}}v_{${k}}$ for a unique choice of $c_i \\in ${zTex(p)}$: $${p}^{${k}} = ${value}$.`,
+            `张成空间维数为 $${k}$，每个向量对唯一的一组 $c_i \\in ${zTex(p)}$ 写成 $c_1v_1 + \\dots + c_{${k}}v_{${k}}$：$${p}^{${k}} = ${value}$。`,
           ),
         });
       },

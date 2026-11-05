@@ -976,7 +976,7 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           answer[0],
           four.filter((x) => x !== answer).map((x) => x[0]),
           [
-            `Each is one part, and ${answer[0]} cuts the pizza into the fewest parts, so each part is largest.`,
+            `Each is one part, and ${answer[0][0]} cuts the pizza into the fewest parts, so each part is largest.`,
             `每个都是一份，${answer[0][1]}把比萨分成的份数最少，所以每份最大。`,
           ],
         );
@@ -1086,7 +1086,7 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           a + 1,
           [a, d, a + n],
           [
-            `${a} bars are full and one more shows $\\frac{${n}}{${d}}$, so ${a + 1} bars.`,
+            `${a} ${a === 1 ? "bar is" : "bars are"} full and one more shows $\\frac{${n}}{${d}}$, so ${a + 1} bars.`,
             `${a} 个长条涂满，还有 1 个表示 $\\frac{${n}}{${d}}$，所以需要 ${a + 1} 个。`,
           ],
         );

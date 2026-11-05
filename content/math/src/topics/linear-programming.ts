@@ -314,18 +314,18 @@ const tableau = topic(
       (rng) => {
         const entries = rng.shuffle([-rng.int(6, 12), -rng.int(1, 5), rng.int(1, 9), rng.int(0, 9)]);
         const index = entries.indexOf(Math.min(...entries));
-        const names = [0, 1, 2, 3].map((i): Pair => [`$x_${i + 1}$`, `$x_${i + 1}$`]);
+        const names = [0, 1, 2, 3].map((i): Pair => [`$x_{${i + 1}}$`, `$x_{${i + 1}}$`]);
         return choose(
           rng,
           [
-            `The objective row of a maximization tableau has entries ${entries.map((e, i) => `$${e}$ under $x_${i + 1}$`).join(", ")}. Which variable enters under the most negative rule?`,
-            `最大化单纯形表的目标行中，${entries.map((e, i) => `$x_${i + 1}$ 下的数是 $${e}$`).join("，")}。按最负法则，哪个变量进基？`,
+            `The objective row of a maximization tableau has entries ${entries.map((e, i) => `$${e}$ under $x_{${i + 1}}$`).join(", ")}. Which variable enters under the most negative rule?`,
+            `最大化单纯形表的目标行中，${entries.map((e, i) => `$x_{${i + 1}}$ 下的数是 $${e}$`).join("，")}。按最负法则，哪个变量进基？`,
           ],
           names[index] as Pair,
           names.filter((_, i) => i !== index),
           [
-            `The most negative entry is $${entries[index]}$, so $x_${index + 1}$ enters.`,
-            `最负的数是 $${entries[index]}$，所以 $x_${index + 1}$ 进基。`,
+            `The most negative entry is $${entries[index]}$, so $x_{${index + 1}}$ enters.`,
+            `最负的数是 $${entries[index]}$，所以 $x_{${index + 1}}$ 进基。`,
           ],
         );
       },
@@ -1003,9 +1003,13 @@ const assignment = topic(
       (rng) => {
         const rows = [0, 1, 2].map(() => [rng.int(1, 15), rng.int(1, 15), rng.int(1, 15)]) as number[][];
         const afterRows = rows.map((r) => r.map((v) => v - Math.min(...r)));
-        const j = rng.int(0, 2);
-        const i = rng.int(0, 2);
-        const columnMin = Math.min(...afterRows.map((r) => r[j] as number));
+        const columnMins = [0, 1, 2].map((c) => Math.min(...afterRows.map((r) => r[c] as number)));
+        const cells = [0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => [r, c] as const));
+        const remaining = (r: number, c: number) => (afterRows[r]?.[c] as number) - (columnMins[c] as number);
+        const shifted = cells.filter(([r, c]) => remaining(r, c) > 0 && (columnMins[c] as number) > 0);
+        const nonzero = cells.filter(([r, c]) => remaining(r, c) > 0);
+        const [i, j] = rng.pick(shifted.length > 0 ? shifted : nonzero.length > 0 ? nonzero : cells) as readonly [number, number];
+        const columnMin = columnMins[j] as number;
         const entry = afterRows[i]?.[j] as number;
         const answer = entry - columnMin;
         return ask(

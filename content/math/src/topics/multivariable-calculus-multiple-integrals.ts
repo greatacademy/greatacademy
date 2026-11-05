@@ -496,7 +496,7 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
 
         const prompt = t(
           `Find the lower Riemann sum $L(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${x2}] \\times [0, ${y2}]$ with partition points $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
-          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}}$，求其下黎曼和 $L(f, P)$。`,
+          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}\\}$，求其下黎曼和 $L(f, P)$。`,
         );
         const solution = t(
           steps(
@@ -602,7 +602,7 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
 
         const prompt = t(
           `Find the upper Riemann sum $U(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${x2}] \\times [0, ${y2}]$ with partition points $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
-          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}}$，求其上黎曼和 $U(f, P)$。`,
+          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}\\}$，求其上黎曼和 $U(f, P)$。`,
         );
         const solution = t(
           steps(

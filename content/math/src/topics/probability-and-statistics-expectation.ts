@@ -27,6 +27,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 35);
           const n = rng.pick([1, 2, 3]);
+      const power = (base: string) => (n === 1 ? base : `${base}^{${n}}`);
           // f(x) = 2x / b^2 on [0, b], so k = 1.
           // E[X^n] = 2 b^n / (n + 2)
           let bPow = 1;
@@ -36,14 +37,14 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A continuous random variable $X$ has PDF $f(x) = \\frac{2x}{${b * b}}$ for $0 \\le x \\le ${b}$, and $0$ otherwise. Find the $n = ${n}$ raw moment $E[X^{${n}}]$.`,
-              `设连续型随机变量 $X$ 的概率密度函数为 $f(x) = \\frac{2x}{${b * b}}$（$0 \\le x \\le ${b}$），其他位置为 $0$。求 $n = ${n}$ 阶原点矩 $E[X^{${n}}]$。`,
+              `A continuous random variable $X$ has PDF $f(x) = \\frac{2x}{${b * b}}$ for $0 \\le x \\le ${b}$, and $0$ otherwise. Find the $n = ${n}$ raw moment $E[${power("X")}]$.`,
+              `设连续型随机变量 $X$ 的概率密度函数为 $f(x) = \\frac{2x}{${b * b}}$（$0 \\le x \\le ${b}$），其他位置为 $0$。求 $n = ${n}$ 阶原点矩 $E[${power("X")}]$。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(bPow, den), Q.of(2 * bPow, n + 1), Q.of(bPow, n + 1)],
             solution: t(
-              `Compute by definition: $E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
-              `按定义积分：$E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+              `Compute by definition: $E[${power("X")}] = \\int_0^{${b}} ${power("x")} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `按定义积分：$E[${power("X")}] = \\int_0^{${b}} ${power("x")} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },

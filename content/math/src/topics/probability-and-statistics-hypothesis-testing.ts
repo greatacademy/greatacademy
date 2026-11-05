@@ -969,7 +969,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Independent samples from two normal populations have sample means $\\bar{x}_1 = ${xBar1}$ ($n_1 = ${n1}$, $\\sigma_1^2 = ${sig1Sq}$) and $\\bar{x}_2 = ${xBar2}$ ($n_2 = ${n2}$, $\\sigma_2^2 = ${sig2Sq}$). To test $H_0: \\mu_1 - \\mu_2 = 0$, compute the test statistic $z = \\frac{\\bar{x} - \\bar{x}_2}{\\sqrt{\\sigma_1^2/n_1 + \\sigma_2^2/n_2}}$.`,
+              `Independent samples from two normal populations have sample means $\\bar{x}_1 = ${xBar1}$ ($n_1 = ${n1}$, $\\sigma_1^2 = ${sig1Sq}$) and $\\bar{x}_2 = ${xBar2}$ ($n_2 = ${n2}$, $\\sigma_2^2 = ${sig2Sq}$). To test $H_0: \\mu_1 - \\mu_2 = 0$, compute the test statistic $z = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{\\sigma_1^2/n_1 + \\sigma_2^2/n_2}}$.`,
               `从两个正态总体抽取的独立样本均值分别为 $\\bar{x}_1 = ${xBar1}$（$n_1 = ${n1}$，$\\sigma_1^2 = ${sig1Sq}$）和 $\\bar{x}_2 = ${xBar2}$（$n_2 = ${n2}$，$\\sigma_2^2 = ${sig2Sq}$）。为检验 $H_0: \\mu_1 - \\mu_2 = 0$，计算检验统计量 $z = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{\\sigma_1^2/n_1 + \\sigma_2^2/n_2}}$。`,
             ),
             answer: d,

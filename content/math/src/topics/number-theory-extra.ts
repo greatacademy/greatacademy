@@ -323,8 +323,9 @@ const pollard = topic(
       (rng) => {
         const [p, q] = rng.sample(oddPrimes, 2) as [number, number];
         const n = p * q;
-        const x = rng.int(2, 200);
-        const y = x + p * rng.int(1, 6);
+        const j = rng.int(1, q - 1);
+        const x = rng.int(1, n - 1 - p * j);
+        const y = x + p * j;
         const g = gcdOf(y - x, n);
         return ask(
           [
@@ -334,8 +335,8 @@ const pollard = topic(
           g,
           [g === p ? q : p, y - x === g ? g + 1 : y - x, 1 === g ? n : 1],
           [
-            `The difference is ${y - x}, and the Euclidean algorithm with ${n} gives the gcd.`,
-            `差是 ${y - x}，再与 ${n} 用欧几里得算法求最大公约数。`,
+            `The difference is ${y - x}, and $\\gcd(${y - x}, ${n}) = ${g}$ by the Euclidean algorithm, so ${g} is a factor of ${n}.`,
+            `差是 ${y - x}，由欧几里得算法 $\\gcd(${y - x}, ${n}) = ${g}$，所以 ${g} 是 ${n} 的因子。`,
           ],
         );
       },
@@ -368,8 +369,8 @@ const pollard = topic(
           cycle,
           [cycle + 1, i === cycle ? i + 2 : i, cycle + 2],
           [
-            `List terms until one repeats, and then count the steps between the two appearances.`,
-            `列出各项直到某项重复，再数两次出现之间的步数。`,
+            `The terms are ${[...seen.keys(), x].join(", ")}. The value ${x} comes back after ${cycle} steps.`,
+            `各项是 ${[...seen.keys(), x].join("、")}。值 ${x} 经过 ${cycle} 步后再次出现。`,
           ],
         );
       },
@@ -402,7 +403,10 @@ const diffieHellman = topic(
           ],
           powMod(g, a, p),
           [(g * a) % p, (powMod(g, a, p) + 1) % p, powMod(a, g, p) === powMod(g, a, p) ? (powMod(g, a, p) + 2) % p : powMod(a, g, p)],
-          [`Compute $${g}^{${a}}$ modulo ${p}.`, `计算 $${g}^{${a}}$ 模 ${p}。`],
+          [
+            `Compute $${g}^{${a}} \\equiv ${powMod(g, a, p)} \\pmod{${p}}$.`,
+            `计算 $${g}^{${a}} \\equiv ${powMod(g, a, p)} \\pmod{${p}}$。`,
+          ],
         );
       },
     ),
@@ -428,8 +432,8 @@ const diffieHellman = topic(
           key,
           [powMod(g, a, p) === key ? (key + 1) % p : powMod(g, a, p), (pub * a) % p === key ? (key + 2) % p : (pub * a) % p, (key + 3) % p],
           [
-            `Raise the received value to your exponent: $${pub}^{${a}}$ modulo ${p}.`,
-            `把收到的值升到你的指数次幂：$${pub}^{${a}}$ 模 ${p}。`,
+            `Raise the received value to your exponent: $${pub}^{${a}} \\equiv ${key} \\pmod{${p}}$.`,
+            `把收到的值升到你的指数次幂：$${pub}^{${a}} \\equiv ${key} \\pmod{${p}}$。`,
           ],
         );
       },
@@ -453,7 +457,10 @@ const diffieHellman = topic(
           ],
           a,
           [a === p - 2 ? a - 1 : a + 1, p - 1 - a === a ? a - 1 : p - 1 - a, powMod(g, a, p) === a ? a + 2 : powMod(g, a, p)],
-          [`Try powers of ${g} modulo ${p} until the announced value appears.`, `试 ${g} 模 ${p} 的幂，直到出现公布的值。`],
+          [
+            `The powers of ${g} modulo ${p} are ${Array.from({ length: a }, (_, i) => powMod(g, i + 1, p)).join(", ")}, so the announced value appears at exponent ${a}.`,
+            `${g} 模 ${p} 的幂是 ${Array.from({ length: a }, (_, i) => powMod(g, i + 1, p)).join("、")}，所以公布的值出现在指数 ${a}。`,
+          ],
         );
       },
     ),
@@ -518,8 +525,8 @@ const quadraticComposite = topic(
           v === 1 ? 4 : v === 2 ? m : m - 2,
           v === 1 ? [2, k, 8] : v === 2 ? [m - 2, m - 1, m + 1] : [m, m - 1, m - 3],
           [
-            `The solutions are $\\pm 1$ and $\\pm 1 + ${n / 2}$, because $${n / 2}$ squared and doubled vanish modulo ${n}.`,
-            `解是 $\\pm 1$ 和 $\\pm 1 + ${n / 2}$，因为 $${n / 2}$ 的平方及其二倍模 ${n} 都消失。`,
+            `The solutions are $\\pm 1$ and $${n / 2} \\pm 1$, because $(${n / 2} \\pm 1)^{2} = ${n / 2}^{2} \\pm 2 \\cdot ${n / 2} + 1$, and both $${n / 2}^{2}$ and $2 \\cdot ${n / 2}$ are multiples of ${n}.`,
+            `解是 $\\pm 1$ 和 $${n / 2} \\pm 1$，因为 $(${n / 2} \\pm 1)^{2} = ${n / 2}^{2} \\pm 2 \\cdot ${n / 2} + 1$，而 $${n / 2}^{2}$ 和 $2 \\cdot ${n / 2}$ 都是 ${n} 的倍数。`,
           ],
         );
       },
@@ -534,9 +541,10 @@ const quadraticComposite = topic(
       (rng) => {
         const [p, q] = rng.sample([7, 11, 13, 17, 19, 23], 2) as [number, number];
         const n = p * q;
-        const x = rng.int(2, Math.floor(n / 2));
-        const safe = gcdOf(x, n) === 1 ? x : x + 1;
-        const a = (safe * safe) % n;
+        const pool = Array.from({ length: Math.floor(n / 2) - 1 }, (_, i) => i + 2).filter(
+          (y) => gcdOf(y, n) === 1 && !Number.isInteger(Math.sqrt((y * y) % n)),
+        );
+        const a = rng.pick(pool) ** 2 % n;
         const roots: number[] = [];
         for (let y = 1; y < n; y++) if ((y * y) % n === a) roots.push(y);
         return ask(
@@ -547,8 +555,8 @@ const quadraticComposite = topic(
           roots[0] as number,
           [(roots[1] ?? 1) as number, n - (roots[0] as number), (roots[0] as number) + 1],
           [
-            `Find the roots modulo ${p} and ${q}, combine them, and take the smallest result.`,
-            `求模 ${p} 和模 ${q} 的根，组合它们，再取最小的结果。`,
+            `Find the roots modulo ${p} and ${q}, and combine them by the Chinese remainder theorem. The solutions are ${roots.join(", ")}, so the smallest is ${roots[0]}.`,
+            `求模 ${p} 和模 ${q} 的根，再用中国剩余定理组合。解是 ${roots.join("、")}，所以最小的是 ${roots[0]}。`,
           ],
         );
       },
@@ -572,8 +580,9 @@ const generalCrt = topic(
       ],
       (rng) => {
         const g = rng.int(2, 9);
-        const m = g * rng.int(2, 9);
-        const n = g * rng.int(2, 9);
+        const [u, v] = rng.sample([2, 3, 4, 5, 6, 7, 8, 9], 2) as [number, number];
+        const m = g * u;
+        const n = g * v;
         const a = rng.int(0, m - 1);
         const ok = rng.bool();
         const b0 = ok ? a + g * rng.int(0, 5) : a + g * rng.int(0, 5) + rng.int(1, g - 1);
@@ -647,8 +656,8 @@ const generalCrt = topic(
           x,
           [x + lcm, (x + m) % lcm === x ? x + 1 : (x + m) % lcm, x + m * n],
           [
-            `Substitute $x = ${x % m} + ${m}k$ into the second condition; solutions repeat every ${lcm}.`,
-            `把 $x = ${x % m} + ${m}k$ 代入第二个条件；解每隔 ${lcm} 重复一次。`,
+            `Substitute $x = ${x % m} + ${m}k$ into the second condition: the first $k$ that works is ${Math.floor(x / m)}, which gives $x = ${x}$. Solutions repeat every ${lcm}.`,
+            `把 $x = ${x % m} + ${m}k$ 代入第二个条件：第一个可行的 $k$ 是 ${Math.floor(x / m)}，得 $x = ${x}$。解每隔 ${lcm} 重复一次。`,
           ],
         );
       },
@@ -782,7 +791,7 @@ const mobiusInversion = topic(
           ],
           d - b - c + a,
           [d - b - c - a, d - b - c, d + b + c + a],
-          [`Inversion gives $${d} - ${b} - ${c} + ${a}$.`, `反演给出 $${d} - ${b} - ${c} + ${a}$。`],
+          [`Inversion gives $${d} - ${b} - ${c} + ${a} = ${d - b - c + a}$.`, `反演给出 $${d} - ${b} - ${c} + ${a} = ${d - b - c + a}$。`],
         );
       },
     ),
@@ -795,7 +804,13 @@ const mobiusInversion = topic(
       ],
       (rng) => {
         const n = rng.int(12, 400);
-        const f = factorize(n).map(([p]) => p);
+        const signed = divisors(n)
+          .map((d) => {
+            const f = factorize(d);
+            return f.some(([, e]) => e > 1) ? 0 : ((f.length % 2 === 0 ? 1 : -1) * n) / d;
+          })
+          .filter((v) => v !== 0);
+        const sum = signed.map((v, i) => (i === 0 ? `${v}` : v < 0 ? ` - ${-v}` : ` + ${v}`)).join("");
         return ask(
           [
             `Use $\\varphi(n) = \\sum_{d \\mid n} \\mu(d)\\frac{n}{d}$ to compute $\\varphi(${n})$.`,
@@ -804,8 +819,8 @@ const mobiusInversion = topic(
           totient(n),
           [n - 1 === totient(n) ? n : n - 1, totient(n) + 1, divisors(n).length === totient(n) ? totient(n) + 2 : divisors(n).length],
           [
-            `Only the squarefree divisors count, and the primes of ${n} are ${f.join(", ")}.`,
-            `只有无平方因子的除数起作用，${n} 的质因数是 ${f.join(", ")}。`,
+            `Only the squarefree divisors count: $\\varphi(${n}) = ${sum} = ${totient(n)}$.`,
+            `只有无平方因子的除数起作用：$\\varphi(${n}) = ${sum} = ${totient(n)}$。`,
           ],
         );
       },
@@ -814,8 +829,8 @@ const mobiusInversion = topic(
       "counting-irreducible-strings",
       ["Counting primitive strings", "计算本原串"],
       [
-        "The strings of length $n$ over $k$ letters are each a repetition of a unique primitive string of some length dividing $n$. So inversion counts the primitive strings: $\\sum_{d \\mid n} \\mu(d) k^{n/d}$.",
-        "长度为 $n$、字母表有 $k$ 个字母的每个串，都是某个长度整除 $n$ 的唯一本原串的重复。所以反演给出本原串的个数：$\\sum_{d \\mid n} \\mu(d) k^{n/d}$。",
+        "A string is primitive when it is not a repetition of a shorter string. The strings of length $n$ over $k$ letters are each a repetition of a unique primitive string of some length dividing $n$. So inversion counts the primitive strings: $\\sum_{d \\mid n} \\mu(d) k^{n/d}$.",
+        "一个串如果不是更短的串的重复，就称为本原串。长度为 $n$、字母表有 $k$ 个字母的每个串，都是某个长度整除 $n$ 的唯一本原串的重复。所以反演给出本原串的个数：$\\sum_{d \\mid n} \\mu(d) k^{n/d}$。",
       ],
       (rng) => {
         const k = rng.int(2, 5);
@@ -826,11 +841,18 @@ const mobiusInversion = topic(
           return f.length % 2 === 0 ? 1 : -1;
         };
         const total = divisors(n).reduce((sum, d) => sum + mu(d) * k ** (n / d), 0);
+        const terms = divisors(n)
+          .filter((d) => mu(d) !== 0)
+          .map((d, i) => `${i === 0 ? "" : mu(d) < 0 ? " - " : " + "}${k}^{${n / d}}`)
+          .join("");
         return ask(
           [`How many primitive strings of length ${n} are there over ${k} letters?`, `在 ${k} 个字母上，长度为 ${n} 的本原串有多少个？`],
           total,
           [k ** n, total + k, Q.of(total, n)],
-          [`Sum $\\mu(d) \\cdot ${k}^{${n}/d}$ over the divisors $d$ of ${n}.`, `对 ${n} 的除数 $d$ 求和 $\\mu(d) \\cdot ${k}^{${n}/d}$。`],
+          [
+            `Sum $\\mu(d) \\cdot ${k}^{${n}/d}$ over the divisors $d$ of ${n}: $${terms} = ${total}$.`,
+            `对 ${n} 的除数 $d$ 求和 $\\mu(d) \\cdot ${k}^{${n}/d}$：$${terms} = ${total}$。`,
+          ],
         );
       },
     ),
@@ -944,8 +966,8 @@ const primeSize = topic(
       "the-density-of-primes",
       ["The density of primes", "质数的密度"],
       [
-        "Near a large number $x$, about one number in $\\ln x$ is prime. So raising $x$ to a power multiplies the typical gap by the same factor, and primes thin out slowly as the numbers get larger.",
-        "在大数 $x$ 附近，大约每 $\\ln x$ 个数中有一个质数。所以把 $x$ 升到某个幂，典型间隔就乘相同的倍数，质数随数的增大而缓慢变稀。",
+        "Near a large number $x$, about one number in $\\ln x$ is prime. So replacing $x$ by $x^{k}$ multiplies the typical gap by $k$, since $\\ln x^{k} = k \\ln x$, and primes thin out slowly as the numbers get larger.",
+        "在大数 $x$ 附近，大约每 $\\ln x$ 个数中有一个质数。所以把 $x$ 换成 $x^{k}$，典型间隔就乘以 $k$，因为 $\\ln x^{k} = k \\ln x$，质数随数的增大而缓慢变稀。",
       ],
       (rng) => {
         const g = rng.int(5, 50);
@@ -1019,8 +1041,8 @@ const primitiveExist = topic(
           yes ? a : b,
           [yes ? b : a, ["Only when it is prime", "只有它是质数时才有"], ["Every modulus has exactly one", "每个模恰有一个"]],
           [
-            `Here ${n} factors as $${factorizationLatex(factorize(n))}$, and the classification decides.`,
-            `这里 ${n} 分解为 $${factorizationLatex(factorize(n))}$，由分类决定。`,
+            `Here ${n} factors as $${factorizationLatex(factorize(n))}$. A primitive root exists only for 2, 4, $p^{k}$ and $2p^{k}$ with $p$ an odd prime, and ${n} ${yes ? "has" : "does not have"} one of these forms.`,
+            `这里 ${n} 分解为 $${factorizationLatex(factorize(n))}$。只有 2、4、$p^{k}$ 和 $2p^{k}$（$p$ 为奇质数）才有原根，而 ${n} ${yes ? "是" : "不是"}这些形式之一。`,
           ],
         );
       },
@@ -1071,7 +1093,10 @@ const primitiveExist = topic(
           [`How many primitive roots does the modulus ${n} have?`, `模 ${n} 有多少个原根？`],
           totient(f),
           [f, totient(f) + 1, totient(f) === 1 ? 2 : totient(f) - 1],
-          [`We have $\\varphi(${n}) = ${f}$, and the count is $\\varphi(${f})$.`, `$\\varphi(${n}) = ${f}$，个数是 $\\varphi(${f})$。`],
+          [
+            `We have $\\varphi(${n}) = ${f}$, and the count is $\\varphi(${f}) = ${totient(f)}$.`,
+            `$\\varphi(${n}) = ${f}$，个数是 $\\varphi(${f}) = ${totient(f)}$。`,
+          ],
         );
       },
     ),
@@ -1089,7 +1114,10 @@ const primitiveExist = topic(
           [`What is the largest possible order of a unit modulo ${p * q}?`, `模 ${p * q} 的单位的最大可能的阶是多少？`],
           l,
           [(p - 1) * (q - 1), Math.max(p, q) - 1 === l ? l + 2 : Math.max(p, q) - 1, l + 1],
-          [`It is $\\operatorname{lcm}(${p - 1}, ${q - 1})$.`, `它是 $\\operatorname{lcm}(${p - 1}, ${q - 1})$。`],
+          [
+            `A unit's order is the lcm of its orders modulo ${p} and ${q}, which can reach ${p - 1} and ${q - 1} independently, so the largest is $\\operatorname{lcm}(${p - 1}, ${q - 1}) = ${l}$.`,
+            `单位的阶是它模 ${p} 和模 ${q} 的阶的最小公倍数，这两个阶可以分别独立达到 ${p - 1} 和 ${q - 1}，所以最大值是 $\\operatorname{lcm}(${p - 1}, ${q - 1}) = ${l}$。`,
+          ],
         );
       },
     ),
@@ -1112,8 +1140,10 @@ const indices = topic(
       ],
       (rng) => {
         const p = rng.pick([17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
-        const i = rng.int(1, p - 2);
-        const j = rng.int(1, p - 2);
+        const [i, j] = rng.sample(
+          Array.from({ length: p - 2 }, (_, v) => v + 1),
+          2,
+        ) as [number, number];
         return ask(
           [
             `Modulo ${p}, we have $\\operatorname{ind}(a) = ${i}$ and $\\operatorname{ind}(b) = ${j}$. What is $\\operatorname{ind}(ab)$, as a number from 0 to ${p - 2}?`,
@@ -1193,14 +1223,19 @@ const legendreFormula = topic(
         const p = rng.pick([2, 3, 5, 7]);
         const n = rng.int(20, 800);
         let e = 0;
-        for (let m = Math.floor(n / p); m > 0; m = Math.floor(m / p)) e += m;
+        const floors: number[] = [];
+        for (let m = Math.floor(n / p); m > 0; m = Math.floor(m / p)) {
+          e += m;
+          floors.push(m);
+        }
+        const added = floors.length > 1 ? `${floors.join(" + ")} = ${e}` : `${e}`;
         return ask(
           [`What is the exponent of ${p} in $${n}!$?`, `$${n}!$ 中 ${p} 的指数是多少？`],
           e,
           [Math.floor(n / p) === e ? e + 1 : Math.floor(n / p), e + 1, e - 1],
           [
-            `Add $\\left\\lfloor\\frac{${n}}{${p}^{i}}\\right\\rfloor$ for $i = 1, 2, \\ldots$ until the terms vanish.`,
-            `对 $i = 1, 2, \\ldots$ 求 $\\left\\lfloor\\frac{${n}}{${p}^{i}}\\right\\rfloor$ 的和，直到项为零。`,
+            `Add $\\left\\lfloor\\frac{${n}}{${p}^{i}}\\right\\rfloor$ for $i = 1, 2, \\ldots$ until the terms vanish: $${added}$.`,
+            `对 $i = 1, 2, \\ldots$ 求 $\\left\\lfloor\\frac{${n}}{${p}^{i}}\\right\\rfloor$ 的和，直到项为零：$${added}$。`,
           ],
         );
       },
@@ -1215,14 +1250,18 @@ const legendreFormula = topic(
       (rng) => {
         const n = rng.int(25, 3000);
         let e = 0;
-        for (let m = Math.floor(n / 5); m > 0; m = Math.floor(m / 5)) e += m;
+        const floors: number[] = [];
+        for (let m = Math.floor(n / 5); m > 0; m = Math.floor(m / 5)) {
+          e += m;
+          floors.push(m);
+        }
         return ask(
           [`How many zeros does $${n}!$ end in?`, `$${n}!$ 末尾有多少个零？`],
           e,
           [Math.floor(n / 5) === e ? e + 1 : Math.floor(n / 5), Math.floor(n / 10), e + 1],
           [
-            `Count factors of 5: add $\\left\\lfloor\\frac{${n}}{5^{i}}\\right\\rfloor$ for each $i$.`,
-            `数因子 5：对每个 $i$ 加 $\\left\\lfloor\\frac{${n}}{5^{i}}\\right\\rfloor$。`,
+            `Count factors of 5: add $\\left\\lfloor\\frac{${n}}{5^{i}}\\right\\rfloor$ for each $i$: $${floors.join(" + ")} = ${e}$.`,
+            `数因子 5：对每个 $i$ 加 $\\left\\lfloor\\frac{${n}}{5^{i}}\\right\\rfloor$：$${floors.join(" + ")} = ${e}$。`,
           ],
         );
       },
@@ -1288,8 +1327,8 @@ const lucas = topic(
           v,
           [(v + 1) % p, c(n1, k1) % p === v ? (v + 2) % p : c(n1, k1) % p, c(n0, k0) % p === v ? (v + 3) % p : c(n0, k0) % p],
           [
-            `In base ${p} the digits are $(${n1}, ${n0})$ and $(${k1}, ${k0})$, so multiply $\\binom{${n1}}{${k1}}\\binom{${n0}}{${k0}}$.`,
-            `在 ${p} 进制中数字是 $(${n1}, ${n0})$ 和 $(${k1}, ${k0})$，所以乘 $\\binom{${n1}}{${k1}}\\binom{${n0}}{${k0}}$。`,
+            `In base ${p} the digits are $(${n1}, ${n0})$ and $(${k1}, ${k0})$, so multiply: $\\binom{${n1}}{${k1}}\\binom{${n0}}{${k0}} = ${c(n1, k1)} \\cdot ${c(n0, k0)} \\equiv ${v} \\pmod{${p}}$.`,
+            `在 ${p} 进制中数字是 $(${n1}, ${n0})$ 和 $(${k1}, ${k0})$，所以相乘：$\\binom{${n1}}{${k1}}\\binom{${n0}}{${k0}} = ${c(n1, k1)} \\cdot ${c(n0, k0)} \\equiv ${v} \\pmod{${p}}$。`,
           ],
         );
       },
@@ -1343,8 +1382,8 @@ const lucas = topic(
             digits.reduce((a, b) => a + b + 1, 0) === prod ? prod + 3 : digits.reduce((a, b) => a + b + 1, 0),
           ],
           [
-            `In base ${p} the digits of ${n} are ${digits.join(", ")}; multiply each digit plus one.`,
-            `${n} 的 ${p} 进制数字是 ${digits.join(", ")}；把每位加一后相乘。`,
+            `In base ${p} the digits of ${n} are ${digits.join(", ")}; multiply each digit plus one: $${digits.map((d) => d + 1).join(" \\cdot ")} = ${prod}$.`,
+            `${n} 的 ${p} 进制数字是 ${digits.join(", ")}；把每位加一后相乘：$${digits.map((d) => d + 1).join(" \\cdot ")} = ${prod}$。`,
           ],
         );
       },
@@ -1468,7 +1507,10 @@ const sumOfSquaresFunction = topic(
           ],
           r,
           [r + 4, d1 - d3 === r ? r + 8 : d1 - d3, 4 * d1 === r ? r + 12 : 4 * d1],
-          [`The divisors of ${n} give $d_1 = ${d1}$ and $d_3 = ${d3}$.`, `${n} 的除数给出 $d_1 = ${d1}$，$d_3 = ${d3}$。`],
+          [
+            `${n} has ${d1} divisors congruent to 1 modulo 4 and ${d3} congruent to 3, so the count is $4(${d1} - ${d3}) = ${r}$.`,
+            `${n} 有 ${d1} 个模 4 余 1 的除数和 ${d3} 个模 4 余 3 的除数，所以个数是 $4(${d1} - ${d3}) = ${r}$。`,
+          ],
         );
       },
     ),
@@ -1682,7 +1724,10 @@ const quadraticForms = topic(
           [`Is the prime ${p} represented by the form $${form}$?`, `质数 ${p} 被型 $${form}$ 表示吗？`],
           found ? a : b,
           [found ? b : a, ["Only with a negative $x$", "只在 $x$ 为负时"], ["Only when $y$ is zero", "只在 $y$ 为零时"]],
-          [`Primes represented by this form are those that are ${rule}.`, `这个型表示的质数是${ruleZh}的质数。`],
+          [
+            `Primes represented by this form are those that are ${rule}. Here ${p} leaves remainder ${p % (k === 1 ? 4 : k === 2 ? 8 : 3)}, so it ${found ? "is" : "is not"} represented.`,
+            `这个型表示的质数是${ruleZh}的质数。这里 ${p} 的余数是 ${p % (k === 1 ? 4 : k === 2 ? 8 : 3)}，所以它${found ? "被" : "不被"}表示。`,
+          ],
         );
       },
     ),

@@ -739,7 +739,7 @@ export const theAlternatingSeriesTest: TopicDef = {
       id: "terms-that-decrease-eventually",
       title: t("Terms that decrease only eventually", "最终才递减的项"),
       explanation: t(
-        "The alternating series test only needs $b_n$ to decrease from some point on, since the first few terms do not affect convergence. $b_n = \\frac{n}{n^{2} + 10}$ rises until $n = 3$ and then falls to $0$, so $\\sum (-1)^{n} \\frac{n}{n^{2} + 10}$ converges. Check eventual decrease with the derivative of $f(x)$, and check $b_n \\to 0$ separately: $\\frac{n^{2}}{n^{2} + 10}$ decreases to nothing but $1$, so that series diverges.",
+        "The alternating series test only needs $b_n$ to decrease from some point on, since the first few terms do not affect convergence. $b_n = \\frac{n}{n^{2} + 10}$ rises until $n = 3$ and then falls to $0$, so $\\sum (-1)^{n} \\frac{n}{n^{2} + 10}$ converges. Check eventual decrease with the derivative of $f(x)$, and check $b_n \\to 0$ separately: $\\frac{n^{2}}{n^{2} + 10}$ tends to $1$, not $0$, so that series diverges.",
         "交错级数判别法只要求 $b_n$ 从某一项起递减，因为开头有限项不影响敛散性。$b_n = \\frac{n}{n^{2} + 10}$ 在 $n = 3$ 之前增大，之后递减趋于 $0$，所以 $\\sum (-1)^{n} \\frac{n}{n^{2} + 10}$ 收敛。用 $f(x)$ 的导数检查最终是否递减，并单独检查 $b_n \\to 0$：$\\frac{n^{2}}{n^{2} + 10}$ 趋于 $1$ 而不是 $0$，所以那个级数发散。",
       ),
       generate(rng) {

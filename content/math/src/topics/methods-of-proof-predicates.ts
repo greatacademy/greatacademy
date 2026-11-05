@@ -226,7 +226,7 @@ export const theNotConnectiveWithPredicates: TopicDef = {
             `设 $U = ${u.tex}$，$P(x)$ 为“${p.text["zh-CN"]}”。求 $\\neg P(x)$ 的真值集。`,
           ),
           values: comp,
-          wrong: [set],
+          wrong: [set, ...(comp.length > 1 ? [comp.slice(1)] : [])],
           solution: t(
             `The truth set of $P(x)$ is $${setTex(set)}$; its complement in $U$ is $${setTex(comp)}$.`,
             `$P(x)$ 的真值集为 $${setTex(set)}$，它在 $U$ 中的补集为 $${setTex(comp)}$。`,
@@ -414,7 +414,9 @@ export const necessaryAndSufficientConditions: TopicDef = {
           both: t("a necessary and sufficient condition", "充分必要条件"),
         }[kind];
         const right = kind === "sufficient" ? imp(a, b) : kind === "necessary" ? imp(b, a) : iff(a, b);
-        const wrong = [imp(a, b), imp(b, a), iff(a, b), imp(not(a), not(b))].filter((f) => tex(f) !== tex(right));
+        // ¬q ⇒ ¬p says the same as p ⇒ q, so the contrapositive offered must not be that of the right answer.
+        const contrapositive = kind === "necessary" ? imp(not(b), not(a)) : imp(not(a), not(b));
+        const wrong = [imp(a, b), imp(b, a), iff(a, b), contrapositive].filter((f) => tex(f) !== tex(right));
         return oneOf(
           rng,
           t(
@@ -444,8 +446,9 @@ export const necessaryAndSufficientConditions: TopicDef = {
         let ba: boolean;
         let why: Text;
         if (rng.bool()) {
-          const k = rng.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 15]);
-          const m = rng.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 15]);
+          const divisors = [2, 3, 4, 5, 6, 8, 9, 10, 12, 15];
+          const k = rng.pick(divisors);
+          const m = rng.pick(divisors.filter((v) => v !== k));
           a = t(`$x$ is a multiple of $${k}$`, `$x$ 是 $${k}$ 的倍数`);
           b = t(`$x$ is a multiple of $${m}$`, `$x$ 是 $${m}$ 的倍数`);
           ab = k % m === 0;
@@ -456,17 +459,17 @@ export const necessaryAndSufficientConditions: TopicDef = {
           );
         } else {
           const p = rng.int(-5, 9);
-          const q = rng.int(-5, 9);
+          const q = rng.bool(0.3) ? p : rng.int(-5, 9);
           a = t(`$x > ${p}$`, `$x > ${p}$`);
-          b = t(`$x > ${q}$`, `$x > ${q}$`);
+          b = p === q ? t(`$x \\ge ${p + 1}$`, `$x \\ge ${p + 1}$`) : t(`$x > ${q}$`, `$x > ${q}$`);
           ab = p >= q;
           ba = q >= p;
           why = t(
             p === q
-              ? "The two conditions are the same."
+              ? `For integers, $x > ${p}$ and $x \\ge ${p + 1}$ say the same thing.`
               : `For integers, $x > ${Math.max(p, q)}$ implies $x > ${Math.min(p, q)}$ but not conversely: $x = ${Math.max(p, q)}$ satisfies only $x > ${Math.min(p, q)}$.`,
             p === q
-              ? "两个条件相同。"
+              ? `对整数，$x > ${p}$ 与 $x \\ge ${p + 1}$ 说的是同一件事。`
               : `对整数，$x > ${Math.max(p, q)}$ 蕴涵 $x > ${Math.min(p, q)}$，反之不成立：$x = ${Math.max(p, q)}$ 只满足 $x > ${Math.min(p, q)}$。`,
           );
         }
@@ -615,7 +618,7 @@ export function setExpr(f: Formula): string {
   const names: Record<Var, string> = { p: "A", q: "B", r: "C", s: "D" };
   const inner = (g: Formula) => (g.k === "var" || g.k === "not" ? setExpr(g) : `(${setExpr(g)})`);
   if (f.k === "var") return names[f.v];
-  if (f.k === "not") return `${inner(f.a)}^{c}`;
+  if (f.k === "not") return f.a.k === "not" ? `(${setExpr(f.a)})^{c}` : `${inner(f.a)}^{c}`;
   if (f.k === "and") return `${inner(f.a)} \\cap ${inner(f.b)}`;
   if (f.k === "or") return `${inner(f.a)} \\cup ${inner(f.b)}`;
   if (f.k === "imp") return setExpr(or(not(f.a), f.b));
@@ -673,8 +676,8 @@ export const translatingBetweenLogicalAndSetOperations: TopicDef = {
       id: "quantified-statements-as-set-relations",
       title: t("Quantified statements as set relations", "量化命题与集合关系"),
       explanation: t(
-        '"A predicate picks out the set of elements where it is true, so statements about all elements become statements about how those sets relate. $P(x) \\Rightarrow Q(x)$ for every $x \\in U$" says every element of $A$ lies in $B$: $A \\subseteq B$. "一个谓词选出使它为真的元素组成的集合，所以关于所有元素的命题就变成了关于这些集合之间关系的命题。$P(x) \\Leftrightarrow Q(x)$ for every $x$" says $A = B$. "No $x$ satisfies $P(x) \\wedge Q(x)$" says $A \\cap B = \\varnothing$.',
-        "“对每个 $x \\in U$，$P(x) \\Rightarrow Q(x)$”表示 $A$ 的每个元素都在 $B$ 中：$A \\subseteq B$。“对每个 $x$，$P(x) \\Leftrightarrow Q(x)$”表示 $A = B$。“没有 $x$ 满足 $P(x) \\wedge Q(x)$”表示 $A \\cap B = \\varnothing$。",
+        'A predicate picks out the set of elements where it is true, so statements about all elements become statements about how those sets relate. "$P(x) \\Rightarrow Q(x)$ for every $x \\in U$" says every element of $A$ lies in $B$: $A \\subseteq B$. "$P(x) \\Leftrightarrow Q(x)$ for every $x$" says $A = B$. "No $x$ satisfies $P(x) \\wedge Q(x)$" says $A \\cap B = \\varnothing$.',
+        "一个谓词选出使它为真的元素组成的集合，所以关于所有元素的命题就变成了关于这些集合之间关系的命题。“对每个 $x \\in U$，$P(x) \\Rightarrow Q(x)$”表示 $A$ 的每个元素都在 $B$ 中：$A \\subseteq B$。“对每个 $x$，$P(x) \\Leftrightarrow Q(x)$”表示 $A = B$。“没有 $x$ 满足 $P(x) \\wedge Q(x)$”表示 $A \\cap B = \\varnothing$。",
       ),
       generate(rng) {
         const letters = rng.shuffle([
@@ -1470,7 +1473,7 @@ export const implicationEliminationAndDenyingTheConsequent: TopicDef = {
           [
             t(`${(ponens ? not(f.b) : f.a).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? not(f.b) : f.a)["zh-CN"]}。`),
             t(`${(ponens ? not(f.a) : f.b).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? not(f.a) : f.b)["zh-CN"]}。`),
-            t(`${(ponens ? f.a : not(f.b)).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? f.a : not(f.b))["zh-CN"]}。`),
+            t("Nothing can be concluded.", "无法得出任何结论。"),
           ],
           ponens
             ? t("The hypothesis holds, so by modus ponens the conclusion holds.", "前提成立，由肯定前件，结论成立。")

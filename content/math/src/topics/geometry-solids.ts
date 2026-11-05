@@ -28,10 +28,10 @@ const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 const len = (v: Coefficient, u: Unit) => `${toQ(v).isInteger() ? toQ(v).toString() : dec(v)} ${u}`;
 
 /** tex writes a length, an area or a volume in LaTeX: "8\text{ cm}", "24\text{ cm}^2". */
-export const tex = (v: Coefficient, u: Unit, power = 1) => `${num(v)}\\text{ ${u}}${power > 1 ? `^${power}` : ""}`;
+export const tex = (v: Coefficient, u: Unit, power = 1) => `${num(v)}\\text{ ${u}}${power > 1 ? `^{${power}}` : ""}`;
 
 /** unitTex writes a unit of length, area or volume alone: "\text{cm}^3". */
-const unitTex = (u: Unit, power: number) => `\\text{${u}}${power > 1 ? `^${power}` : ""}`;
+const unitTex = (u: Unit, power: number) => `\\text{${u}}${power > 1 ? `^{${power}}` : ""}`;
 
 const figure = (marks: readonly Mark[], en: string, zh: string): Figure => ({ svg: sketch(marks), alt: t(en, zh) });
 
@@ -2756,8 +2756,8 @@ export const surfaceAreasAndVolumesOfSimilarSolids: TopicDef = {
           unit: `${u}^${power}`,
           wrong: [given.mul(k), given.mul(k.pow(askVolume ? 2 : 3)), given.mul(k.pow(power === 2 ? 1 : 2))],
           solution: t(
-            `The scale factor is $k = ${num(k)}$, and ${measure.en}s scale by $k^${power}$:${steps(`${num(given)} \\cdot \\left(${num(k)}\\right)^${power} = ${num(answer)}\\text{ ${u}}^${power}`)}`,
-            `相似比 $k = ${num(k)}$，${measure["zh-CN"]}按 $k^${power}$ 变化：${steps(`${num(given)} \\cdot \\left(${num(k)}\\right)^${power} = ${num(answer)}\\text{ ${u}}^${power}`)}`,
+            `The scale factor is $k = ${num(k)}$, and ${measure.en}s scale by $k^{${power}}$:${steps(`${num(given)} \\cdot \\left(${num(k)}\\right)^{${power}} = ${num(answer)}\\text{ ${u}}^{${power}}`)}`,
+            `相似比 $k = ${num(k)}$，${measure["zh-CN"]}按 $k^{${power}}$ 变化：${steps(`${num(given)} \\cdot \\left(${num(k)}\\right)^{${power}} = ${num(answer)}\\text{ ${u}}^{${power}}`)}`,
           ),
         });
       },

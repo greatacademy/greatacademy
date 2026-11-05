@@ -111,7 +111,7 @@ export const interiorAndBoundaryPoints: TopicDef = {
           `考虑区域 $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : x^2 + y^2 < ${rSq}\\right\\}$。判断点 $(${pt[0]}, ${pt[1]})$ 的类别。`,
         );
         const solution = t(
-          `The point $(${pt[0]}, ${pt[1]})$ is an ${right.en.toLowerCase()} because ${reason.en}`,
+          `The point $(${pt[0]}, ${pt[1]})$ is ${/^[aeio]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}. ${reason.en}`,
           `点 $(${pt[0]}, ${pt[1]})$ 是${right["zh-CN"]}，因为${reason["zh-CN"]}`,
         );
         return pickChoice(rng, prompt, right, wrong, solution);
@@ -280,7 +280,7 @@ export const openAndClosedSets: TopicDef = {
           `将集合 $S = ${desc["zh-CN"]}$ 分类为开集、闭集或既非开亦非闭。`,
         );
         const solution = t(
-          `The set is an ${right.en.toLowerCase()} because ${reason.en}`,
+          `The set is ${/^[aeio]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}. ${reason.en}`,
           `该集合为${right["zh-CN"]}，因为${reason["zh-CN"]}`,
         );
         return pickChoice(rng, prompt, right, wrong, solution);
@@ -1594,14 +1594,14 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
         const v = wantY ? "y" : "x";
         return numberProblem({
           prompt: t(
-            `Let $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$ for $(x, y) \\ne (0, 0)$ and $f(0, 0) = 0$. Find $f_${v}(0, 0)$.`,
-            `设 $(x, y) \\ne (0, 0)$ 时 $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$，且 $f(0, 0) = 0$。求 $f_${v}(0, 0)$。`,
+            `Let $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$ for $(x, y) \\ne (0, 0)$ and $f(0, 0) = 0$. Find $f_{${v}}(0, 0)$.`,
+            `设 $(x, y) \\ne (0, 0)$ 时 $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$，且 $f(0, 0) = 0$。求 $f_{${v}}(0, 0)$。`,
           ),
           answer: ans,
           wrong: [0, wantY ? a : b, 3 * ans],
           solution: t(
-            `$f_${v}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$.`,
-            `$f_${v}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$。`,
+            `$f_{${v}}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$.`,
+            `$f_{${v}}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$。`,
           ),
         });
       },

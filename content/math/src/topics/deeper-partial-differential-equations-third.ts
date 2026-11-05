@@ -16,7 +16,7 @@ const decayRate = point(
   (rng) => {
     const k = rng.int(1, 6);
     const n = rng.int(2, 5);
-    const L = rng.int(1, 6);
+    const L = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => ![2, 3, 5].some((p) => n % p === 0 && v % p === 0)));
     const b = rng.int(2, 9);
     const answer = Q.of(k * n * n, L * L);
     const mode = L === 1 ? `${n}\\pi x` : `\\frac{${n}\\pi x}{${L}}`;

@@ -139,13 +139,13 @@ export const provingTheLimitOfANullSequence: TopicDef = {
         const tex = square ? `\\dfrac{${c}}{n^2 + ${k}}` : `\\dfrac{${c}}{n + ${k}}`;
         const right = square ? `\\sqrt{\\dfrac{${c}}{\\varepsilon} - ${k}}` : `\\dfrac{${c}}{\\varepsilon} - ${k}`;
         const wrong = square
-          ? [`\\dfrac{${c}}{\\varepsilon} - ${k}`, `\\sqrt{${c}\\varepsilon - ${k}}`, `\\sqrt{\\dfrac{\\varepsilon}{${c}}} - ${k}`]
-          : [`${c}\\varepsilon - ${k}`, `\\dfrac{\\varepsilon}{${c}} - ${k}`, `\\dfrac{${c}}{\\varepsilon} + ${k}`];
+          ? [`\\sqrt{\\dfrac{1}{\\varepsilon} - ${k}}`, `\\sqrt{${c}\\varepsilon - ${k}}`, `\\sqrt{\\dfrac{${c}}{\\varepsilon}} - ${k}`]
+          : [`${c}\\varepsilon - ${k}`, `\\dfrac{\\varepsilon}{${c}} - ${k}`, `\\dfrac{1}{\\varepsilon} - ${k}`];
         return oneOf(
           rng,
           t(
-            `To prove $${tex} \\to 0$, given $\\varepsilon > 0$ (small enough that the expressions are defined), which condition on $N$ works?`,
-            `为证明 $${tex} \\to 0$，给定 $\\varepsilon > 0$（足够小，使表达式有意义），对 $N$ 的哪个条件可行？`,
+            `To prove $${tex} \\to 0$, given $\\varepsilon > 0$${square ? " (small enough that the expressions are defined)" : ""}, which condition on $N$ works?`,
+            `为证明 $${tex} \\to 0$，给定 $\\varepsilon > 0$${square ? "（足够小，使表达式有意义）" : ""}，对 $N$ 的哪个条件可行？`,
           ),
           math(`N > ${right}`),
           wrong.map((w) => math(`N > ${w}`)),
@@ -395,14 +395,15 @@ export const provingASequenceHasAnInfiniteLimit: TopicDef = {
         return oneOf(
           rng,
           t(
-            `To prove $${tex} \\to \\infty$, given $M > ${-q}$, which condition on $N$ works?`,
-            `为证明 $${tex} \\to \\infty$，给定 $M > ${-q}$，对 $N$ 的哪个条件可行？`,
+            `To prove $${tex} \\to \\infty$, given $M > ${q}$, which condition on $N$ works?`,
+            `为证明 $${tex} \\to \\infty$，给定 $M > ${q}$，对 $N$ 的哪个条件可行？`,
           ),
           math(`N > ${wrap(`\\dfrac{${mq}}{${p}}`)}`),
           [
-            math(`N > ${wrap(`\\dfrac{${mqWrong}}{${p}}`)}`),
-            math(`N > ${wrap(`${p}(${mq})`)}`),
-            math(`N > ${root ? `\\dfrac{${mq}}{${p}}` : `\\left(\\dfrac{${mq}}{${p}}\\right)^2`}`),
+            // Each of these falls short for large M; a larger bound than the right one would also work.
+            math(`N > ${wrap(q > 0 ? `\\dfrac{M}{${p}} - ${q}` : `\\dfrac{${mqWrong}}{${p}}`)}`),
+            math(`N > ${wrap(`\\dfrac{${p}}{${mq}}`)}`),
+            math(`N > ${root ? `\\dfrac{${mq}}{${p}}` : `\\sqrt{\\dfrac{${mq}}{${p}}}`}`),
           ],
           t(
             `$${tex} > M \\iff ${root ? "\\sqrt{n}" : "n"} > \\dfrac{${mq}}{${p}}${root ? ` \\iff n > ${wrap(`\\dfrac{${mq}}{${p}}`)}` : ""}$.`,
@@ -450,7 +451,7 @@ interface FiniteMap {
 /** finiteMap picks a function from {1..m} to letters with a chosen property. */
 function finiteMap(rng: Rng, m: number, n: number, injective: boolean, onto: boolean): FiniteMap {
   const domain = range(1, m).map(String);
-  const codomain = ["a", "b", "c", "d", "e", "f"].slice(0, n);
+  const codomain = ["a", "b", "c", "d", "e", "g"].slice(0, n);
   for (;;) {
     const values = domain.map(() => rng.pick(codomain));
     const inj = new Set(values).size === m;
@@ -1094,10 +1095,13 @@ export const theFloorAndCeilingFunctions: TopicDef = {
         "下取整向下取到最近的整数，上取整向上取，所以对于负数，下取整会离零更远。$\\lfloor 3.7 \\rfloor = 3$，$\\lceil 3.2 \\rceil = 4$，$\\lfloor -2.5 \\rfloor = -3$，$\\lceil -2.5 \\rceil = -2$。对整数 $n$，$\\lfloor n \\rfloor = \\lceil n \\rceil = n$。",
       ),
       generate(rng) {
-        const a = rng.int(-40, 40);
+        const a0 = rng.int(-40, 40);
         const b = rng.int(2, 9);
-        const c = rng.int(-40, 40);
+        const c0 = rng.int(-40, 40);
         const d = rng.int(2, 9);
+        // Neither fraction is a whole number, so that the rounding matters.
+        const a = a0 % b === 0 ? a0 + 1 : a0;
+        const c = c0 % d === 0 ? c0 + 1 : c0;
         const value = Math.floor(a / b) + Math.ceil(c / d);
         return numberProblem({
           prompt: t(
@@ -1117,8 +1121,8 @@ export const theFloorAndCeilingFunctions: TopicDef = {
       id: "solving-floor-equations",
       title: t("Solving floor equations", "解取整方程"),
       explanation: t(
-        "Saying that the floor of a number is an integer means the number lies in a half open interval starting at that integer, which turns the equation into inequalities. $\\lfloor x \\rfloor = m$ means $m \\le x < m + 1$. So $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ means $20 \\le n < 24$: four integers. $\\lfloor \\sqrt{n} \\rfloor = 3$ means $9 \\le n < 16$: seven integers.",
-        "说一个数的下取整等于某个整数，就是说这个数位于从该整数开始的半开区间内，这把方程化为不等式。$\\lfloor x \\rfloor = m$ 表示 $m \\le x < m + 1$。所以 $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ 表示 $20 \\le n < 24$：四个整数。$\\lfloor \\sqrt{n} \\rfloor = 3$ 表示 $9 \\le n < 16$：七个整数。",
+        "Saying that the floor of a number is an integer means the number lies in a half open interval starting at that integer, which turns the equation into inequalities. $\\lfloor x \\rfloor = m$ means $m \\le x < m + 1$. So $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ means $20 \\le n < 24$: four integers. $\\lfloor \\sqrt{n} \\rfloor = 3$ means $9 \\le n < 16$: seven integers. Likewise, $\\lceil x \\rceil = m$ means $m - 1 < x \\le m$.",
+        "说一个数的下取整等于某个整数，就是说这个数位于从该整数开始的半开区间内，这把方程化为不等式。$\\lfloor x \\rfloor = m$ 表示 $m \\le x < m + 1$。所以 $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ 表示 $20 \\le n < 24$：四个整数。$\\lfloor \\sqrt{n} \\rfloor = 3$ 表示 $9 \\le n < 16$：七个整数。同样，$\\lceil x \\rceil = m$ 表示 $m - 1 < x \\le m$。",
       ),
       generate(rng) {
         const m = rng.int(2, 12);
@@ -1126,30 +1130,49 @@ export const theFloorAndCeilingFunctions: TopicDef = {
         const k = rng.int(2, 9);
         const c = rng.int(1, 9);
         let tex: string;
+        let means: string;
         let lo: number;
         let hi: number;
         if (kind === 0) {
           tex = `\\left\\lfloor \\dfrac{n${signed(c)}}{${k}} \\right\\rfloor = ${m}`;
+          means = `${m} \\le \\dfrac{n${signed(c)}}{${k}} < ${m + 1}`;
           lo = m * k - c;
           hi = (m + 1) * k - c - 1;
         } else if (kind === 1) {
           tex = `\\lfloor \\sqrt{n} \\rfloor = ${m}`;
+          means = `${m} \\le \\sqrt{n} < ${m + 1}`;
           lo = m * m;
           hi = (m + 1) ** 2 - 1;
         } else {
           tex = `\\left\\lceil \\dfrac{n}{${k}} \\right\\rceil = ${m}`;
+          means = `${m - 1} < \\dfrac{n}{${k}} \\le ${m}`;
           lo = (m - 1) * k + 1;
           hi = m * k;
         }
         const count = hi - lo + 1;
+        const solved = t(
+          `The equation means $${means}$, so $${lo} \\le n \\le ${hi}$`,
+          `方程表示 $${means}$，所以 $${lo} \\le n \\le ${hi}$`,
+        );
+        // With a linear fraction the count is always the denominator, so those ask for an end of the range.
+        if (kind === 1)
+          return numberProblem({
+            prompt: t(`How many integers $n$ satisfy $${tex}$?`, `有多少个整数 $n$ 满足 $${tex}$？`),
+            answer: count,
+            wrong: [count + 1, count - 1, m],
+            solution: t(`${solved.en}: $${count}$ integers.`, `${solved["zh-CN"]}：共 $${count}$ 个整数。`),
+          });
+        const largest = kind === 0;
+        const answer = largest ? hi : lo;
         return numberProblem({
-          prompt: t(`How many integers $n$ satisfy $${tex}$?`, `有多少个整数 $n$ 满足 $${tex}$？`),
-          answer: count,
-          wrong: [count + 1, count - 1, m],
-          solution: t(
-            `The solutions are $${lo} \\le n \\le ${hi}$: $${count}$ integers.`,
-            `解为 $${lo} \\le n \\le ${hi}$：共 $${count}$ 个整数。`,
-          ),
+          prompt: largest
+            ? t(`What is the largest integer $n$ that satisfies $${tex}$?`, `满足 $${tex}$ 的最大整数 $n$ 是多少？`)
+            : t(`What is the smallest integer $n$ that satisfies $${tex}$?`, `满足 $${tex}$ 的最小整数 $n$ 是多少？`),
+          answer,
+          wrong: largest ? [hi + 1, lo, (m + 1) * k] : [lo - 1, hi, (m - 1) * k],
+          solution: largest
+            ? t(`${solved.en}. The largest is $${answer}$.`, `${solved["zh-CN"]}。最大的是 $${answer}$。`)
+            : t(`${solved.en}. The smallest is $${answer}$.`, `${solved["zh-CN"]}。最小的是 $${answer}$。`),
         });
       },
     },
@@ -1442,8 +1465,8 @@ export const cantorsDiagonalArgument: TopicDef = {
         return oneOf(
           rng,
           t(
-            `A list of binary sequences begins ${rows.map((r, i) => `$s_${i + 1} = ${r}\\dots$`).join(", ")}. Which sequence does the diagonal argument build (first ${n} digits)?`,
-            `一列二进制序列开头为 ${rows.map((r, i) => `$s_${i + 1} = ${r}\\dots$`).join("，")}。对角线论证构造出的序列是哪一个（前 ${n} 位）？`,
+            `A list of binary sequences begins ${rows.map((r, i) => `$s_{${i + 1}} = ${r}\\dots$`).join(", ")}. Which sequence does the diagonal argument build (first ${n} digits)?`,
+            `一列二进制序列开头为 ${rows.map((r, i) => `$s_{${i + 1}} = ${r}\\dots$`).join("，")}。对角线论证构造出的序列是哪一个（前 ${n} 位）？`,
           ),
           opt(flip),
           [
@@ -1485,8 +1508,8 @@ export const cantorsDiagonalArgument: TopicDef = {
         const digits = rows.map((r, i) => (r[i] === "5" ? "4" : "5")).join("");
         return numberProblem({
           prompt: t(
-            `A list of numbers in $(0, 1)$ begins ${rows.map((r, i) => `$x_${i + 1} = 0.${r}\\dots$`).join(", ")}. Build $y$ by making digit $n$ equal to $5$ if digit $n$ of $x_n$ is not $5$, and $4$ otherwise. Write the first four digits of $y$ as a four-digit integer.`,
-            `$(0, 1)$ 中的一列数开头为 ${rows.map((r, i) => `$x_${i + 1} = 0.${r}\\dots$`).join("，")}。构造 $y$：若 $x_n$ 的第 $n$ 位不是 $5$，则 $y$ 的第 $n$ 位为 $5$，否则为 $4$。把 $y$ 的前四位写成一个四位整数。`,
+            `A list of numbers in $(0, 1)$ begins ${rows.map((r, i) => `$x_{${i + 1}} = 0.${r}\\dots$`).join(", ")}. Build $y$ by making digit $n$ equal to $5$ if digit $n$ of $x_n$ is not $5$, and $4$ otherwise. Write the first four digits of $y$ as a four-digit integer.`,
+            `$(0, 1)$ 中的一列数开头为 ${rows.map((r, i) => `$x_{${i + 1}} = 0.${r}\\dots$`).join("，")}。构造 $y$：若 $x_n$ 的第 $n$ 位不是 $5$，则 $y$ 的第 $n$ 位为 $5$，否则为 $4$。把 $y$ 的前四位写成一个四位整数。`,
           ),
           answer: Number(digits),
           wrong: [
@@ -1789,8 +1812,8 @@ export const cantorsTheorem: TopicDef = {
           ],
           [
             t(
-              `Some set has cardinality larger than every set, including $\\mathcal{P}(${A})$.`,
-              `存在一个集合，其基数大于包括 $\\mathcal{P}(${A})$ 在内的所有集合。`,
+              `Some set has cardinality larger than every other set, including $\\mathcal{P}(${A})$.`,
+              `存在一个集合，其基数大于包括 $\\mathcal{P}(${A})$ 在内的所有其他集合。`,
             ),
             false,
             t(

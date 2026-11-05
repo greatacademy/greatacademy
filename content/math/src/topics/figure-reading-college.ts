@@ -174,8 +174,8 @@ const orderFromCycle: KnowledgePointDef = {
       {
         svg: svgDocument(220, arrows.join("") + names.map((name, i) => node(at[i] as Point, name)).join("")),
         alt: t(
-          `The residues from 1 to ${p - 1} on a circle, with a closed walk of arrows through ${order} of them.`,
-          `1 到 ${p - 1} 的余数排在圆上，箭头构成经过其中 ${order} 个数的闭合路线。`,
+          `The residues from 1 to ${p - 1} on a circle, with a closed walk of arrows starting at 1.`,
+          `1 到 ${p - 1} 的余数排在圆上，箭头构成从 1 出发的闭合路线。`,
         ),
       },
       "integer",

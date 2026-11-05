@@ -478,8 +478,8 @@ export const areasOfParametricSurfaces: TopicDef = {
           steps(
             `参数曲面面积公式为 $A(S) = \\iint_D \\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$。`,
             `由于 $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${c}$ 为常数，提至积分号外：$A(S) = ${c} \\iint_D 1\\,du\\,dv$。`,
-            `参数区域 $D$ 的面积为 $U \\times V = ${U} \\times ${V} = ${U * V}$。\`,
-            \`相乘得：$A(S) = ${c} \\times ${U * V} = ${area}$。`,
+            `参数区域 $D$ 的面积为 $U \\times V = ${U} \\times ${V} = ${U * V}$。`,
+            `相乘得：$A(S) = ${c} \\times ${U * V} = ${area}$。`,
           ),
         );
         return numberProblem({
@@ -1245,14 +1245,12 @@ export const calculatingFluxThroughClosedSurfaces: TopicDef = {
         );
         const solution = t(
           steps(
-            `On each pair of parallel faces, evaluate the flux:\`,
-            \`At $x = ${L}$, $\\mathbf{n} = \\mathbf{i}$, flux is $(${a} \\times ${L}) \\times (${W} \\times ${H}) = ${a * vol}$. At $x = 0$, $x = 0$ so flux is $0$.`,
+            `On each pair of parallel faces, evaluate the flux. At $x = ${L}$, $\\mathbf{n} = \\mathbf{i}$, flux is $(${a} \\times ${L}) \\times (${W} \\times ${H}) = ${a * vol}$. At $x = 0$, $x = 0$ so flux is $0$.`,
             `Similarly, the $y$-faces give $b \\times \\text{Vol} = ${b * vol}$, and the $z$-faces give $c \\times \\text{Vol} = ${c * vol}$.`,
             `Summing the six faces: $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (${a} + ${b} + ${c}) \\times ${vol} = ${flux}$.`,
           ),
           steps(
-            `分别计算三对相对的面上的外向通量：`,
-            `在 $x = ${L}$ 面上，外法向 $\\mathbf{n} = \\mathbf{i}$，通量为 $(${a} \\times ${L}) \\times (${W} \\times ${H}) = ${a * vol}$；在 $x = 0$ 面上，$x = 0$ 故通量为 $0$。`,
+            `分别计算三对相对的面上的外向通量。在 $x = ${L}$ 面上，外法向 $\\mathbf{n} = \\mathbf{i}$，通量为 $(${a} \\times ${L}) \\times (${W} \\times ${H}) = ${a * vol}$；在 $x = 0$ 面上，$x = 0$ 故通量为 $0$。`,
             `同理，$y$ 方向两面净通量为 $b \\times \\text{Vol} = ${b * vol}$，$z$ 方向两面净通量为 $c \\times \\text{Vol} = ${c * vol}$。`,
             `六个面通量求和：$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (${a} + ${b} + ${c}) \\times ${vol} = ${flux}$。`,
           ),

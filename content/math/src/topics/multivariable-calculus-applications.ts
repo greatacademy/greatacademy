@@ -1627,8 +1627,8 @@ export const jointDistributionsForContinuousRandomVariables: TopicDef = {
           answer: ans,
           wrong: [Q.of(askX ? n + 1 : m + 1, askX ? n + 2 : m + 2), Q.of(1, 2), Q.of(e + 1, e + 3)],
           solution: t(
-            `The marginal density of ${askX ? "$X$" : "$Y$"} is $${e + 1}${askX ? (m === 1 ? "x" : `x^${m}`) : n === 1 ? "y" : `y^${n}`}$, so $E[${askX ? "X" : "Y"}] = ${e + 1}\\int_0^1 ${askX ? "x" : "y"}^{${e + 1}}\\,d${askX ? "x" : "y"} = ${ans.toLatex()}$.`,
-            `${askX ? "$X$" : "$Y$"} 的边缘密度为 $${e + 1}${askX ? (m === 1 ? "x" : `x^${m}`) : n === 1 ? "y" : `y^${n}`}$，所以 $E[${askX ? "X" : "Y"}] = ${e + 1}\\int_0^1 ${askX ? "x" : "y"}^{${e + 1}}\\,d${askX ? "x" : "y"} = ${ans.toLatex()}$。`,
+            `The marginal density of ${askX ? "$X$" : "$Y$"} is $${e + 1}${askX ? (m === 1 ? "x" : `x^{${m}}`) : n === 1 ? "y" : `y^{${n}}`}$, so $E[${askX ? "X" : "Y"}] = ${e + 1}\\int_0^1 ${askX ? "x" : "y"}^{${e + 1}}\\,d${askX ? "x" : "y"} = ${ans.toLatex()}$.`,
+            `${askX ? "$X$" : "$Y$"} 的边缘密度为 $${e + 1}${askX ? (m === 1 ? "x" : `x^{${m}}`) : n === 1 ? "y" : `y^{${n}}`}$，所以 $E[${askX ? "X" : "Y"}] = ${e + 1}\\int_0^1 ${askX ? "x" : "y"}^{${e + 1}}\\,d${askX ? "x" : "y"} = ${ans.toLatex()}$。`,
           ),
         });
       },

@@ -67,16 +67,24 @@ export const modularCongruence: TopicDef = {
         const n = rng.int(3, 15);
         const a = rng.int(-60, 99);
         const value = rng.bool();
-        const b = value ? a - n * rng.int(-6, 6) : a - n * rng.int(-6, 6) + rng.int(1, n - 1);
+        const b = value ? a - n * rng.nonZero(-6, 6) : a - n * rng.int(-6, 6) + rng.int(1, n - 1);
         const diff = a - b;
+        const shownB = b < 0 ? `(${b})` : `${b}`;
+        const quotient = diff / n < 0 ? `(${diff / n})` : `${diff / n}`;
         return oneOf(
           rng,
           t(`Is $${cong(a, b, n)}$?`, `$${cong(a, b, n)}$ 成立吗？`),
           yesNo[value ? 0 : 1]!,
           [yesNo[value ? 1 : 0]!],
           value
-            ? t(`Yes: $${a} - (${b}) = ${diff} = ${n} \\cdot ${diff / n}$.`, `成立：$${a} - (${b}) = ${diff} = ${n} \\cdot ${diff / n}$。`)
-            : t(`No: $${a} - (${b}) = ${diff}$ is not a multiple of $${n}$.`, `不成立：$${a} - (${b}) = ${diff}$ 不是 $${n}$ 的倍数。`),
+            ? t(
+                `Yes: $${a} - ${shownB} = ${diff} = ${n} \\cdot ${quotient}$.`,
+                `成立：$${a} - ${shownB} = ${diff} = ${n} \\cdot ${quotient}$。`,
+              )
+            : t(
+                `No: $${a} - ${shownB} = ${diff}$ is not a multiple of $${n}$.`,
+                `不成立：$${a} - ${shownB} = ${diff}$ 不是 $${n}$ 的倍数。`,
+              ),
         );
       },
     },
@@ -92,14 +100,16 @@ export const modularCongruence: TopicDef = {
         const a = rng.int(-30, 50);
         const right = a + n * rng.pick([-4, -3, -2, 2, 3, 4, 5]);
         const wrong = [1, 2, 3].map((k) => a + n * rng.int(-3, 3) + (k % n === 0 ? 1 : k));
+        const shownA = a < 0 ? `(${a})` : `${a}`;
+        const quotient = (right - a) / n < 0 ? `(${(right - a) / n})` : `${(right - a) / n}`;
         return oneOf(
           rng,
           t(`Which integer is congruent to $${a}$ modulo $${n}$?`, `哪个整数模 $${n}$ 与 $${a}$ 同余？`),
           math(`${right}`),
           wrong.map((w) => math(`${w}`)),
           t(
-            `$${right} - (${a}) = ${right - a} = ${n} \\cdot ${(right - a) / n}$.`,
-            `$${right} - (${a}) = ${right - a} = ${n} \\cdot ${(right - a) / n}$。`,
+            `$${right} - ${shownA} = ${right - a} = ${n} \\cdot ${quotient}$.`,
+            `$${right} - ${shownA} = ${right - a} = ${n} \\cdot ${quotient}$。`,
           ),
         );
       },
@@ -130,8 +140,9 @@ export const theAdditionPropertyOfModularArithmetic: TopicDef = {
       generate(rng) {
         const n = rng.int(4, 13);
         const r = rng.int(1, n - 1);
-        const s = rng.int(1, n - 1);
         const minus = rng.bool();
+        // Equal remainders would make a difference trivially zero.
+        const s = rng.pick(range(1, n - 1).filter((v) => !minus || v !== r));
         const value = mod(minus ? r - s : r + s, n);
         const op = minus ? "-" : "+";
         return numberProblem({
@@ -268,8 +279,9 @@ export const theMultiplicationPropertiesOfModularArithmetic: TopicDef = {
       ),
       generate(rng) {
         const n = rng.int(3, 13);
-        const a = rng.int(50, 999);
-        const b = rng.int(50, 999);
+        const nudge = (v: number): number => (v % n === 0 ? v + 1 : v);
+        const a = nudge(rng.int(50, 999));
+        const b = nudge(rng.int(50, 999));
         const ra = a % n;
         const rb = b % n;
         const value = (a * b) % n;
@@ -463,7 +475,7 @@ export const provingPropertiesOfModularCongruence: TopicDef = {
         return oneOf(
           rng,
           t(
-            `To prove that $${hyp}$ imply $${goal} \\pmod{${n}}$, write ${writeEn}. Which equation finishes the proof?`,
+            `To prove that $${hyp}$ ${kind < 3 ? "imply" : "implies"} $${goal} \\pmod{${n}}$, write ${writeEn}. Which equation finishes the proof?`,
             `为证明 $${hyp}$ 推出 $${goal} \\pmod{${n}}$，写出 ${writeZh}。哪个等式完成证明？`,
           ),
           math(right),
@@ -515,7 +527,9 @@ export const provingPropertiesOfModularCongruence: TopicDef = {
               d > 0
                 ? `$${d} \\mid ${n}$ and $${n} \\mid a - b$, so $${d} \\mid a - b$.`
                 : `$${n} \\mid ${2 * n}$ and $${2 * n} \\mid a - b$, so $${n} \\mid a - b$.`,
-              `$${d} \\mid ${n}$ 且 $${n} \\mid a - b$，所以 $${d} \\mid a - b$。`,
+              d > 0
+                ? `$${d} \\mid ${n}$ 且 $${n} \\mid a - b$，所以 $${d} \\mid a - b$。`
+                : `$${n} \\mid ${2 * n}$ 且 $${2 * n} \\mid a - b$，所以 $${n} \\mid a - b$。`,
             ),
           ],
           [
@@ -976,8 +990,8 @@ export const solvingAdvancedLinearCongruences: TopicDef = {
           values: sols,
           wrong: [[x0], sols.map((s) => mod(s + 1, n))],
           solution: t(
-            `$\\gcd(${a}, ${n}) = ${d}$: divide by $${d}$ to get $${cong(`${a1 === 1 ? "" : a1}x`, b1, m)}$, so $${cong("x", x0, m)}$. Modulo $${n}$: $${setTex(sols)}$.`,
-            `$\\gcd(${a}, ${n}) = ${d}$：两边除以 $${d}$ 得 $${cong(`${a1 === 1 ? "" : a1}x`, b1, m)}$，所以 $${cong("x", x0, m)}$。模 $${n}$：$${setTex(sols)}$。`,
+            `$\\gcd(${a}, ${n}) = ${d}$: divide by $${d}$ to get $${cong(`${a1 === 1 ? "" : a1}x`, b1, m)}$${a1 === 1 ? "" : `, so $${cong("x", x0, m)}$`}. Modulo $${n}$: $${setTex(sols)}$.`,
+            `$\\gcd(${a}, ${n}) = ${d}$：两边除以 $${d}$ 得 $${cong(`${a1 === 1 ? "" : a1}x`, b1, m)}$${a1 === 1 ? "" : `，所以 $${cong("x", x0, m)}$`}。模 $${n}$：$${setTex(sols)}$。`,
           ),
         });
       },
@@ -1128,7 +1142,8 @@ export const provingPropertiesOfLinearCongruences: TopicDef = {
           a = rng.int(2, n - 1);
         } while (gcd(a, n) !== 1);
         const [s, tt] = bezout(a, n);
-        const b = rng.int(2, n - 1);
+        // With b = a the answer is x = 1, whatever the identity says.
+        const b = rng.pick(range(2, n - 1).filter((v) => v !== a));
         const value = mod(s * b, n);
         return oneOf(
           rng,

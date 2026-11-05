@@ -2216,7 +2216,7 @@ const limitContexts: readonly LimitContext[] = [
     vars: t("Let $x$ be the number of wins and $y$ the number of draws.", "设赢 $x$ 场，平 $y$ 场。"),
     askY: (x) =>
       t(`If the team wins ${x} games, what is the least number of draws it needs?`, `如果球队赢了 ${x} 场，它至少还需要平多少场？`),
-    askPair: (x, y) => t(`Does the team qualify with ${x} wins and ${y} draws?`, `球队赢 ${x} 场、平 ${y} 场能晋级吗？`),
+    askPair: (x, y) => t(`Does the team qualify with ${x} ${x === 1 ? "win" : "wins"} and ${y} ${y === 1 ? "draw" : "draws"}?`, `球队赢 ${x} 场、平 ${y} 场能晋级吗？`),
   },
 ];
 
@@ -2382,7 +2382,7 @@ const planningContexts: readonly PlanningContext[] = [
         `面包店的烤箱每天最多烤 ${n} 个蛋糕和馅饼。每个蛋糕要装饰 ${a} 分钟，每个馅饼要 ${b} 分钟，装饰时间最多 ${r} 分钟。`,
       ),
     vars: t("Let $x$ be the number of cakes and $y$ the number of pies.", "设烤蛋糕 $x$ 个，馅饼 $y$ 个。"),
-    askPair: (x, y) => t(`Can the bakery make ${x} cakes and ${y} pies in a day?`, `面包店一天能做 ${x} 个蛋糕和 ${y} 个馅饼吗？`),
+    askPair: (x, y) => t(`Can the bakery make ${x} ${x === 1 ? "cake" : "cakes"} and ${y} ${y === 1 ? "pie" : "pies"} in a day?`, `面包店一天能做 ${x} 个蛋糕和 ${y} 个馅饼吗？`),
     askY: (x) =>
       t(
         `If the bakery makes ${x} cakes, what is the greatest number of pies it can make?`,

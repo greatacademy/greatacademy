@@ -33,7 +33,7 @@ function settled(problem: Problem, answer: Text): Text {
     return lead ? solution.slice(lead.length).trimStart() : solution;
   };
   return t(
-    `${problem.prompt.en} **${bare(answer.en)}.** ${rest("en", [".", ":"])}`,
+    `${problem.prompt.en} **${bare(answer.en)}.** ${rest("en", [".", ":"]).replace(/^[a-z](?=[a-z])/, (c) => c.toUpperCase())}`,
     `${problem.prompt["zh-CN"]} **${bare(answer["zh-CN"])}。** ${rest("zh-CN", ["。", "："])}`,
   );
 }

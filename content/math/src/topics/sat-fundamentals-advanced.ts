@@ -1260,8 +1260,8 @@ export const applyingTheDistributiveLawToExponentialExpressions = topic(
           answer: value,
           wrong: [e + sign * c, base * e + sign * c, base ** e, base ** (e + 1) + sign * c],
           solution: t(
-            `Write $${base}^{n + ${e}} = ${base}^${e} \\cdot ${base}^n$ and factor out $${base}^n$:${steps(`${base}^n(${base ** e} ${sign > 0 ? "+" : "-"} ${c}) = ${value} \\cdot ${base}^n`)}`,
-            `把 $${base}^{n + ${e}}$ 写成 $${base}^${e} \\cdot ${base}^n$，提取 $${base}^n$：${steps(`${base}^n(${base ** e} ${sign > 0 ? "+" : "-"} ${c}) = ${value} \\cdot ${base}^n`)}`,
+            `Write $${base}^{n + ${e}} = ${base}^{${e}} \\cdot ${base}^n$ and factor out $${base}^n$:${steps(`${base}^n(${base ** e} ${sign > 0 ? "+" : "-"} ${c}) = ${value} \\cdot ${base}^n`)}`,
+            `把 $${base}^{n + ${e}}$ 写成 $${base}^{${e}} \\cdot ${base}^n$，提取 $${base}^n$：${steps(`${base}^n(${base ** e} ${sign > 0 ? "+" : "-"} ${c}) = ${value} \\cdot ${base}^n`)}`,
           ),
         });
       },

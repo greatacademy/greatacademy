@@ -1198,7 +1198,7 @@ const measureContexts: readonly { what: Text; kind: 0 | 1 | 2; units: readonly L
 const kindNames: readonly Text[] = [t("length", "长度"), t("area", "面积"), t("volume", "体积")];
 
 /** unitTex writes a length unit, square unit or cubic unit in LaTeX. */
-const unitTex = (u: LengthUnit, kind: number) => `\\text{${u.abbr}}${kind === 0 ? "" : `^${kind + 1}`}`;
+const unitTex = (u: LengthUnit, kind: number) => `\\text{${u.abbr}}${kind === 0 ? "" : `^{${kind + 1}}`}`;
 
 export const unitsOfAreaAndVolume = topic(
   "units-of-area-and-volume",
@@ -1228,7 +1228,7 @@ export const unitsOfAreaAndVolume = topic(
           options: [0, 1, 2].map((k) => same(`$${unitTex(u, k)}$`)),
           correct: c.kind,
           solution: t(
-            `This is a ${kindNames[c.kind]!.en}, so it is measured in $${unitTex(u, c.kind)}$.`,
+            `This is ${c.kind === 1 ? "an" : "a"} ${kindNames[c.kind]!.en}, so it is measured in $${unitTex(u, c.kind)}$.`,
             `这是${kindNames[c.kind]!["zh-CN"]}，所以用 $${unitTex(u, c.kind)}$ 度量。`,
           ),
         });

@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q, svgDocument } from "@ga/subject-math";
 
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
@@ -517,14 +517,14 @@ const termFromPartialSums = point(
     const term = now - before;
     return ask(
       [
-        `The dots show the partial sums $S_1, S_2, \\ldots, S_7$ of a series. What is the term $a_${n}$?`,
-        `图中的点是某级数的部分和 $S_1, S_2, \\ldots, S_7$。项 $a_${n}$ 是多少？`,
+        `The dots show the partial sums $S_1, S_2, \\ldots, S_7$ of a series. What is the term $a_{${n}}$?`,
+        `图中的点是某级数的部分和 $S_1, S_2, \\ldots, S_7$。项 $a_{${n}}$ 是多少？`,
       ],
       term,
       [now, before, -term, now + before],
       [
-        `The term is the step between consecutive partial sums: $a_${n} = S_${n} - S_${n - 1} = ${now} - ${before < 0 ? `(${before})` : before} = ${term}$.`,
-        `项是相邻部分和之间的步长：$a_${n} = S_${n} - S_${n - 1} = ${now} - ${before < 0 ? `(${before})` : before} = ${term}$。`,
+        `The term is the step between consecutive partial sums: $a_{${n}} = S_{${n}} - S_{${n - 1}} = ${now} - ${before < 0 ? `(${before})` : before} = ${term}$.`,
+        `项是相邻部分和之间的步长：$a_{${n}} = S_{${n}} - S_{${n - 1}} = ${now} - ${before < 0 ? `(${before})` : before} = ${term}$。`,
       ],
       fig({ xMin: 0, xMax: 8, yMin: -4, yMax: 7, xName: "n", yName: "S" }, dots(values), [
         `Partial sums at n = 1 to 7: ${values.join(", ")}.`,
@@ -593,7 +593,7 @@ const seriesBehaviour = point(
       fig(
         { xMin: 0, xMax: 13, yMin: -6, yMax: 9, xName: "n", yName: "S" },
         [...dots(values), { kind: "segment", a: [0, L], b: [13, L], dashed: true }],
-        [`Partial sums of a series. ${seen[0].replaceAll("$", "")}.`, `某级数的部分和。${seen[1].replaceAll("$", "")}。`],
+        [`Partial sums of a series. ${observed(seen)[0].replaceAll("$", "")}.`, `某级数的部分和。${observed(seen)[1].replaceAll("$", "")}。`],
       ),
     );
   },
@@ -655,14 +655,14 @@ const alternatingBound = point(
     const next = values[n] as number;
     return ask(
       [
-        `The dots show the sizes $|a_1|, \\ldots, |a_6|$ of the terms of an alternating series, and the sizes keep decreasing to zero. By the alternating series bound, what is the smallest upper bound the plot gives on the error of $S_${n}$?`,
-        `图中的点是某交错级数各项的大小 $|a_1|, \\ldots, |a_6|$，这些大小继续递减趋于零。由交错级数误差界，图给出的 $S_${n}$ 误差的最小上界是多少？`,
+        `The dots show the sizes $|a_1|, \\ldots, |a_6|$ of the terms of an alternating series, and the sizes keep decreasing to zero. By the alternating series bound, what is the smallest upper bound the plot gives on the error of $S_{${n}}$?`,
+        `图中的点是某交错级数各项的大小 $|a_1|, \\ldots, |a_6|$，这些大小继续递减趋于零。由交错级数误差界，图给出的 $S_{${n}}$ 误差的最小上界是多少？`,
       ],
       next,
       [values[n - 1] as number, values[n + 1] as number, (values[n - 1] as number) + next],
       [
-        `The error after $${n}$ terms is at most the next term size, $|a_${n + 1}|$, and the dot at $${n + 1}$ has height $${next}$.`,
-        `取前 $${n}$ 项后的误差不超过下一项的大小 $|a_${n + 1}|$，而 $${n + 1}$ 处点的高度是 $${next}$。`,
+        `The error after $${n}$ terms is at most the next term size, $|a_{${n + 1}}|$, and the dot at $${n + 1}$ has height $${next}$.`,
+        `取前 $${n}$ 项后的误差不超过下一项的大小 $|a_{${n + 1}}|$，而 $${n + 1}$ 处点的高度是 $${next}$。`,
       ],
       fig({ xMin: 0, xMax: 7, yMin: 0, yMax: 10, xName: "n" }, dots(values), [
         `Term sizes at n = 1 to 6: ${values.join(", ")}.`,

@@ -242,8 +242,8 @@ const cauchyProducts = topic(
         const answer = parts.reduce((x, y) => x + y, 0);
         return ask(
           [
-            `Two series begin with $a_0, a_1, a_2, a_3 = ${a.join(", ")}$ and $b_0, b_1, b_2, b_3 = ${b.join(", ")}$. What is the term $c_${n}$ of their Cauchy product?`,
-            `两个级数开头是 $a_0, a_1, a_2, a_3 = ${a.join(", ")}$ 和 $b_0, b_1, b_2, b_3 = ${b.join(", ")}$。它们的柯西乘积中 $c_${n}$ 是多少？`,
+            `Two series begin with $a_0, a_1, a_2, a_3 = ${a.join(", ")}$ and $b_0, b_1, b_2, b_3 = ${b.join(", ")}$. What is the term $c_{${n}}$ of their Cauchy product?`,
+            `两个级数开头是 $a_0, a_1, a_2, a_3 = ${a.join(", ")}$ 和 $b_0, b_1, b_2, b_3 = ${b.join(", ")}$。它们的柯西乘积中 $c_{${n}}$ 是多少？`,
           ],
           answer,
           [
@@ -568,7 +568,7 @@ const darboux = topic(
         return choose(
           rng,
           [
-            "On an interval around 0 and 1, which function cannot be the derivative of a differentiable function?",
+            "On an interval containing 0 and 1, which function cannot be the derivative of a differentiable function?",
             "在包含 0 和 1 的区间上，哪个函数不可能是可导函数的导数？",
           ],
           jump,
@@ -905,11 +905,11 @@ const measureZero = topic(
           k === 0
             ? [3 ** n, 2 * n, 2 ** (n + 1)]
             : [
+                Q.of(scale * 2 ** n, 3 ** n),
+                Q.of(scale, 3 ** n),
                 Q.of(scale, 2 ** n),
                 Q.of(scale, 3 ** (n + 1)),
                 Q.of(scale * 2 ** (n + 1), 3 ** (n + 1)),
-                Q.of(scale * 2 ** n, 3 ** n),
-                Q.of(scale, 3 ** n),
               ];
         return ask(
           [
@@ -919,8 +919,8 @@ const measureZero = topic(
           answer,
           wrong,
           [
-            `After $n$ steps there are $2^n$ pieces, each $\\frac{1}{3^n}$ of the starting length, so here the answer is $${typeof answer === "number" ? answer : answer.toLatex()}$.`,
-            `$n$ 步后有 $2^n$ 段，每段是原长度的 $\\frac{1}{3^n}$，所以这里的答案是 $${typeof answer === "number" ? answer : answer.toLatex()}$。`,
+            `After $n$ steps there are $2^n$ pieces, each $\\frac{1}{3^n}$ of the starting length. So $\\left(\\frac{2}{3}\\right)^n$ of the length is left, and the rest has been removed. Here the answer is $${typeof answer === "number" ? answer : answer.toLatex()}$.`,
+            `$n$ 步后有 $2^n$ 段，每段是原长度的 $\\frac{1}{3^n}$。所以留下原长度的 $\\left(\\frac{2}{3}\\right)^n$，其余都被去掉了。这里的答案是 $${typeof answer === "number" ? answer : answer.toLatex()}$。`,
           ],
         );
       },
@@ -957,7 +957,7 @@ const complete = topic(
         const notComplete: Pair = ["Not complete", "不完备"];
         return choose(
           rng,
-          [`With the usual distance, is ${en} complete?`, `在通常距离下，${zh}完备吗？`],
+          [`Consider ${en} with the usual distance. Is this metric space complete?`, `考虑带通常距离的${zh}。这个度量空间完备吗？`],
           yes ? complete : notComplete,
           [complete, notComplete, ["It depends on the sequence", "取决于序列"]],
           [

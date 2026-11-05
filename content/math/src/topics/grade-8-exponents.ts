@@ -718,8 +718,8 @@ export const thePowerOfProductRuleForExponents = topic(
             mono(-cn, out),
           ],
           solution: t(
-            `Raise every factor to the power $${n}$:${steps(`${expr} = ${c < 0 ? `(${c})` : c}^{${n}}${m ? `(x^{${m}})^{${n}}` : ""}${p ? `(${p === 1 ? "y" : `y^{${p}}`})^{${n}}` : ""} = ${answer}`)}`,
-            `括号里的每个因数都乘 $${n}$ 次方：${steps(`${expr} = ${c < 0 ? `(${c})` : c}^{${n}}${m ? `(x^{${m}})^{${n}}` : ""}${p ? `(${p === 1 ? "y" : `y^{${p}}`})^{${n}}` : ""} = ${answer}`)}`,
+            `Raise every factor to the power $${n}$:${steps(`${expr} = ${c < 0 ? `(${c})` : c}^{${n}}${m ? `(${m === 1 ? "x" : `x^{${m}}`})^{${n}}` : ""}${p ? `(${p === 1 ? "y" : `y^{${p}}`})^{${n}}` : ""} = ${answer}`)}`,
+            `括号里的每个因数都乘 $${n}$ 次方：${steps(`${expr} = ${c < 0 ? `(${c})` : c}^{${n}}${m ? `(${m === 1 ? "x" : `x^{${m}}`})^{${n}}` : ""}${p ? `(${p === 1 ? "y" : `y^{${p}}`})^{${n}}` : ""} = ${answer}`)}`,
           ),
         });
       },
@@ -837,8 +837,8 @@ export const thePowerOfQuotientRuleForExponents = topic(
             `\\frac{${mono(a ** n, [["x", m + n]])}}{${mono(c ** n, [["y", p + n]])}}`,
           ],
           solution: t(
-            `Raise every factor of the numerator and the denominator to the power $${n}$:${steps(`${expr} = \\frac{${a === 1 ? "" : `${a}^{${n}}`}(x^{${m}})^{${n}}}{${c}^{${n}}(${p === 1 ? "y" : `y^{${p}}`})^{${n}}} = ${answer}`)}`,
-            `分子和分母的每个因数都乘 $${n}$ 次方：${steps(`${expr} = \\frac{${a === 1 ? "" : `${a}^{${n}}`}(x^{${m}})^{${n}}}{${c}^{${n}}(${p === 1 ? "y" : `y^{${p}}`})^{${n}}} = ${answer}`)}`,
+            `Raise every factor of the numerator and the denominator to the power $${n}$:${steps(`${expr} = \\frac{${a === 1 ? "" : `${a}^{${n}}`}(${m === 1 ? "x" : `x^{${m}}`})^{${n}}}{${c}^{${n}}(${p === 1 ? "y" : `y^{${p}}`})^{${n}}} = ${answer}`)}`,
+            `分子和分母的每个因数都乘 $${n}$ 次方：${steps(`${expr} = \\frac{${a === 1 ? "" : `${a}^{${n}}`}(${m === 1 ? "x" : `x^{${m}}`})^{${n}}}{${c}^{${n}}(${p === 1 ? "y" : `y^{${p}}`})^{${n}}} = ${answer}`)}`,
           ),
         });
       },

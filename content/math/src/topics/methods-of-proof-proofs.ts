@@ -439,7 +439,7 @@ export const disprovingUniversalStatements: TopicDef = {
       id: "what-a-disproof-shows",
       title: t("What a disproof shows", "否定需要证明什么"),
       explanation: t(
-        '$\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$. To disprove "A statement about every element is false exactly when some element fails it, so a single counterexample is a complete disproof. for every real $x$, $x^2 \\ge x$", show there is a real $x$ with $x^2 < x$, such as $x = \\tfrac{1}{2}$.',
+        'A statement about every element is false exactly when some element fails it, so a single counterexample is a complete disproof. $\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$. To disprove "for every real $x$, $x^2 \\ge x$", show there is a real $x$ with $x^2 < x$, such as $x = \\tfrac{1}{2}$.',
         "关于每个元素的命题为假，当且仅当有某个元素不满足它，所以一个反例就是完整的反驳。$\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$。要否定“对每个实数 $x$，$x^2 \\ge x$”，只需说明存在实数 $x$ 使 $x^2 < x$，例如 $x = \\tfrac{1}{2}$。",
       ),
       generate(rng) {
@@ -808,7 +808,10 @@ export const proofByContrapositive: TopicDef = {
       ),
       generate(rng) {
         const n = rng.int(10, 30);
-        const [P, Q] = twoPredicates(rng, n);
+        // The claim to be proved must be true, and not vacuously.
+        const domain = range(1, n);
+        let [P, Q] = twoPredicates(rng, n);
+        while (!domain.some(P.holds) || domain.some((x) => P.holds(x) && !Q.holds(x))) [P, Q] = twoPredicates(rng, n);
         const plan = (a: Text, b: Text) => t(`Assume ${a.en}; show ${b.en}.`, `假设${a["zh-CN"]}；证明${b["zh-CN"]}。`);
         return oneOf(
           rng,
@@ -960,8 +963,8 @@ export const provingDivisibilityByContrapositive: TopicDef = {
       id: "the-contrapositive-of-a-divisibility-claim",
       title: t("The contrapositive of a divisibility claim", "整除命题的逆否"),
       explanation: t(
-        '"The contrapositive swaps the hypothesis and conclusion and negates both, and it is often easier because the new hypothesis gives an equation to work with. If $5 \\nmid n^2 + 10n$ then $5 \\nmid n$" has contrapositive "逆否命题交换假设和结论并把两者都否定，它常常更容易证明，因为新的假设提供了一个可以使用的等式。if $5 \\mid n$ then $5 \\mid n^2 + 10n$". Negating $\\nmid$ gives $\\mid$.',
-        "“若 $5 \\nmid n^2 + 10n$，则 $5 \\nmid n$”的逆否命题是“若 $5 \\mid n$，则 $5 \\mid n^2 + 10n$”。$\\nmid$ 的否定是 $\\mid$。",
+        'The contrapositive swaps the hypothesis and conclusion and negates both, and it is often easier because the new hypothesis gives an equation to work with. "If $5 \\nmid n^2 + 10n$ then $5 \\nmid n$" has contrapositive "if $5 \\mid n$ then $5 \\mid n^2 + 10n$". Negating $\\nmid$ gives $\\mid$.',
+        "逆否命题交换假设和结论并把两者都否定，它常常更容易证明，因为新的假设提供了一个可以使用的等式。“若 $5 \\nmid n^2 + 10n$，则 $5 \\nmid n$”的逆否命题是“若 $5 \\mid n$，则 $5 \\mid n^2 + 10n$”。$\\nmid$ 的否定是 $\\mid$。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);

@@ -598,8 +598,8 @@ export const monotonicSequences: TopicDef = {
             answer: K,
             wrong: [-K, p, p * s + q, p + q],
             solution: t(
-              `$a_{n+1} = \\frac{${linear(p, p + q, "n")}}{${shift(s + 1)}}$. Over the common denominator, the numerator is $(${linear(p, p + q, "n")})(${shift(s)}) - (${linear(p, q, "n")})(${shift(s + 1)})$; the $n^{2}$ and $n$ terms cancel, leaving $${p} \\cdot ${s} - (${q}) = ${K}$.`,
-              `$a_{n+1} = \\frac{${linear(p, p + q, "n")}}{${shift(s + 1)}}$。通分后分子为 $(${linear(p, p + q, "n")})(${shift(s)}) - (${linear(p, q, "n")})(${shift(s + 1)})$；$n^{2}$ 项与 $n$ 项相消，剩下 $${p} \\cdot ${s} - (${q}) = ${K}$。`,
+              `$a_{n+1} = \\frac{${linear(p, p + q, "n")}}{${shift(s + 1)}}$. Over the common denominator, the numerator is $(${linear(p, p + q, "n")})(${shift(s)}) - (${linear(p, q, "n")})(${shift(s + 1)})$; the $n^{2}$ and $n$ terms cancel, leaving the constant terms $${p + q < 0 ? `(${p + q})` : p + q} \\cdot ${s} - ${q < 0 ? `(${q})` : q} \\cdot ${s + 1} = ${K}$.`,
+              `$a_{n+1} = \\frac{${linear(p, p + q, "n")}}{${shift(s + 1)}}$。通分后分子为 $(${linear(p, p + q, "n")})(${shift(s)}) - (${linear(p, q, "n")})(${shift(s + 1)})$；$n^{2}$ 项与 $n$ 项相消，剩下常数项 $${p + q < 0 ? `(${p + q})` : p + q} \\cdot ${s} - ${q < 0 ? `(${q})` : q} \\cdot ${s + 1} = ${K}$。`,
             ),
           });
         }

@@ -92,26 +92,27 @@ const primeGaps = point(
   ],
   (rng) => {
     const n = rng.int(5, 40);
-    const k = rng.int(2, n);
+    const k = 2 * rng.int(1, Math.floor((n - 1) / 2)) + 1;
+    let smallest = 3;
+    while (k % smallest !== 0) smallest += 2;
     const countIt = rng.bool();
-    const answer = countIt ? n - 1 : k;
+    const answer = countIt ? n - 1 : smallest;
     return ask(
       countIt
         ? [
             `How many consecutive composite numbers does the list $${n}! + 2, \\ldots, ${n}! + ${n}$ contain?`,
             `列表 $${n}! + 2, \\ldots, ${n}! + ${n}$ 含有多少个连续合数？`,
           ]
-        : [
-            `The proof shows that $${n}! + ${k}$ is composite by naming one divisor of it. Which divisor does it name?`,
-            `这个证明指出 $${n}! + ${k}$ 的一个因子，从而说明它是合数。它指出的因子是哪个？`,
-          ],
+        : [`What is the smallest prime factor of $${n}! + ${k}$?`, `$${n}! + ${k}$ 的最小质因数是多少？`],
       answer,
-      countIt ? [n, n + 1, n - 2, 2 * n] : [k + 1, k - 1 > 1 ? k - 1 : k + 2, n + 1, k + 3],
+      countIt ? [n, n + 1, n - 2, 2 * n] : [2, k, smallest + 2, n + 1],
       [
         countIt
           ? `The added term runs from 2 to ${n}, which gives ${n - 1} numbers, and each is composite.`
-          : `${k} divides $${n}!$ and divides itself, so it divides the sum.`,
-        countIt ? `加上的项从 2 到 ${n}，共 ${n - 1} 个数，每个都是合数。` : `${k} 整除 $${n}!$，也整除它自身，所以整除它们的和。`,
+          : `A prime up to ${n} divides $${n}!$, so it divides the sum exactly when it divides ${k}. The smallest prime factor of ${k} is ${smallest}, and it is at most ${n}, so it is the answer.`,
+        countIt
+          ? `加上的项从 2 到 ${n}，共 ${n - 1} 个数，每个都是合数。`
+          : `不超过 ${n} 的质数整除 $${n}!$，所以它整除这个和当且仅当它整除 ${k}。${k} 的最小质因数是 ${smallest}，它不超过 ${n}，所以这就是答案。`,
       ],
     );
   },
@@ -196,7 +197,10 @@ const logOfProduct = point(
   ],
   (rng) => {
     const p = rng.pick([11, 13, 17, 19, 23, 29, 31, 37, 41, 43]);
-    const [x, y] = [rng.int(1, p - 2), rng.int(1, p - 2)];
+    const [x, y] = rng.sample(
+      Array.from({ length: p - 2 }, (_, i) => i + 1),
+      2,
+    ) as [number, number];
     const answer = (x + y) % (p - 1);
     return ask(
       [

@@ -194,8 +194,8 @@ export const dotProductInNDimensionalEuclideanSpace: TopicDef = {
         }
 
         const prompt = t(
-          `Compute the dot product $u \\cdot v$ of the vectors in $\\mathbb{R}^${dim}$:\n$$u = ${colVecLatex(u)}, \\quad v = ${colVecLatex(v)}$$`,
-          `计算 $\\mathbb{R}^${dim}$ 中两向量的点积 $u \\cdot v$：\n$$u = ${colVecLatex(u)}, \\quad v = ${colVecLatex(v)}$$`,
+          `Compute the dot product $u \\cdot v$ of the vectors in $\\mathbb{R}^{${dim}}$:\n$$u = ${colVecLatex(u)}, \\quad v = ${colVecLatex(v)}$$`,
+          `计算 $\\mathbb{R}^{${dim}}$ 中两向量的点积 $u \\cdot v$：\n$$u = ${colVecLatex(u)}, \\quad v = ${colVecLatex(v)}$$`,
         );
 
         const terms = u.map((val, idx) => `(${val})(${v[idx]!})`).join(" + ");
@@ -1029,13 +1029,13 @@ export const orthogonalComplements: TopicDef = {
         const ans = n - k;
 
         const prompt = t(
-          `Let $W = \\operatorname{span}\\{${spanLatex}\\} \\subset \\mathbb{R}^${n}$, where the given vectors are linearly independent. What is the dimension of its orthogonal complement $W^\\perp$?`,
-          `设 $W = \\operatorname{span}\\{${spanLatex}\\} \\subset \\mathbb{R}^${n}$，其中所给向量线性无关。求其正交补 $W^\\perp$ 的维数 $\\dim(W^\\perp)$。`,
+          `Let $W = \\operatorname{span}\\{${spanLatex}\\} \\subset \\mathbb{R}^{${n}}$, where the given vectors are linearly independent. What is the dimension of its orthogonal complement $W^\\perp$?`,
+          `设 $W = \\operatorname{span}\\{${spanLatex}\\} \\subset \\mathbb{R}^{${n}}$，其中所给向量线性无关。求其正交补 $W^\\perp$ 的维数 $\\dim(W^\\perp)$。`,
         );
 
         const solution = t(
-          `Since $W$ is spanned by $k = ${k}$ linearly independent vectors in $\\mathbb{R}^${n}$, $\\dim(W) = ${k}$. By the dimension formula for orthogonal complements:\n$$\\dim(W^\\perp) = n - \\dim(W) = ${n} - ${k} = ${ans}$$`,
-          `因 $W$ 由 $\\mathbb{R}^${n}$ 中的 $k = ${k}$ 个线性无关向量张成，故 $\\dim(W) = ${k}$。由正交补维数公式：\n$$\\dim(W^\\perp) = n - \\dim(W) = ${n} - ${k} = ${ans}$$`,
+          `Since $W$ is spanned by $k = ${k}$ linearly independent vectors in $\\mathbb{R}^{${n}}$, $\\dim(W) = ${k}$. By the dimension formula for orthogonal complements:\n$$\\dim(W^\\perp) = n - \\dim(W) = ${n} - ${k} = ${ans}$$`,
+          `因 $W$ 由 $\\mathbb{R}^{${n}}$ 中的 $k = ${k}$ 个线性无关向量张成，故 $\\dim(W) = ${k}$。由正交补维数公式：\n$$\\dim(W^\\perp) = n - \\dim(W) = ${n} - ${k} = ${ans}$$`,
         );
 
         return numberProblem({
@@ -1556,12 +1556,12 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
         );
 
         const explanationPart = askColComp
-          ? `$(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$ in $\\mathbb{R}^${m}$, so $\\dim((\\operatorname{Col}(A))^\\perp) = m - r = ${m} - ${r} = ${answerVal}$.`
-          : `$(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$ in $\\mathbb{R}^${n}$, so $\\dim((\\operatorname{Row}(A))^\\perp) = n - r = ${n} - ${r} = ${answerVal}$.`;
+          ? `$(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$ in $\\mathbb{R}^{${m}}$, so $\\dim((\\operatorname{Col}(A))^\\perp) = m - r = ${m} - ${r} = ${answerVal}$.`
+          : `$(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$ in $\\mathbb{R}^{${n}}$, so $\\dim((\\operatorname{Row}(A))^\\perp) = n - r = ${n} - ${r} = ${answerVal}$.`;
 
         const explanationZh = askColComp
-          ? `在 $\\mathbb{R}^${m}$ 中，$(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$，因此 $\\dim((\\operatorname{Col}(A))^\\perp) = m - r = ${m} - ${r} = ${answerVal}$。`
-          : `在 $\\mathbb{R}^${n}$ 中，$(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$，因此 $\\dim((\\operatorname{Row}(A))^\\perp) = n - r = ${n} - ${r} = ${answerVal}$。`;
+          ? `在 $\\mathbb{R}^{${m}}$ 中，$(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$，因此 $\\dim((\\operatorname{Col}(A))^\\perp) = m - r = ${m} - ${r} = ${answerVal}$。`
+          : `在 $\\mathbb{R}^{${n}}$ 中，$(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$，因此 $\\dim((\\operatorname{Row}(A))^\\perp) = n - r = ${n} - ${r} = ${answerVal}$。`;
 
         const solution = t(`By the Fundamental Theorem of Linear Algebra, ${explanationPart}`, `由线性代数基本定理，${explanationZh}`);
 
@@ -2103,8 +2103,8 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
         const power = rng.pick([2023, 2024, 2025, 2026, 2027]);
 
         const prompt = t(
-          `Let $P$ be the $n \\times n$ standard matrix of an orthogonal projection onto ${article(k)} $${k}$-dimensional subspace $W \\subseteq \\mathbb{R}^${n}$.\nWhat is the trace $\\operatorname{tr}(P^{${power}})$?`,
-          `设 $P$ 为将 $\\mathbb{R}^${n}$ 中的向量正交投影到 $${k}$ 维子空间 $W$ 上的投影矩阵。\n求矩阵幂的迹 $\\operatorname{tr}(P^{${power}})$ 的值。`,
+          `Let $P$ be the $n \\times n$ standard matrix of an orthogonal projection onto ${article(k)} $${k}$-dimensional subspace $W \\subseteq \\mathbb{R}^{${n}}$.\nWhat is the trace $\\operatorname{tr}(P^{${power}})$?`,
+          `设 $P$ 为将 $\\mathbb{R}^{${n}}$ 中的向量正交投影到 $${k}$ 维子空间 $W$ 上的投影矩阵。\n求矩阵幂的迹 $\\operatorname{tr}(P^{${power}})$ 的值。`,
         );
 
         const solution = t(
@@ -2148,8 +2148,8 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
             ans.neg(),
           ],
           solution: t(
-            `$\\|a\\|^2 = ${aa}$, so $P_{${i}${j}} = \\frac{a_${i}a_${j}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$.`,
-            `$\\|a\\|^2 = ${aa}$，所以 $P_{${i}${j}} = \\frac{a_${i}a_${j}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$。`,
+            `$\\|a\\|^2 = ${aa}$, so $P_{${i}${j}} = \\frac{a_{${i}}a_{${j}}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$.`,
+            `$\\|a\\|^2 = ${aa}$，所以 $P_{${i}${j}} = \\frac{a_{${i}}a_{${j}}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$。`,
           ),
         });
       },
@@ -2589,8 +2589,8 @@ export const qrFactorization: TopicDef = {
           answer: ans,
           wrong: [ans / 3, -ans, 3 * r11 + 3 * r22 - ans || 1, ans * 3],
           solution: t(
-            `$${label} = q_${which === 2 ? 2 : 1} \\cdot a_${which === 0 ? 1 : 2} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$.`,
-            `$${label} = q_${which === 2 ? 2 : 1} \\cdot a_${which === 0 ? 1 : 2} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$。`,
+            `$${label} = q_{${which === 2 ? 2 : 1}} \\cdot a_{${which === 0 ? 1 : 2}} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$.`,
+            `$${label} = q_{${which === 2 ? 2 : 1}} \\cdot a_{${which === 0 ? 1 : 2}} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$。`,
           ),
         });
       },

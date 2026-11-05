@@ -1113,8 +1113,8 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
           const c = a * r * s;
           return solutionsProblem({
             prompt: t(
-              `Find the $y$-coordinates of the $y$-intercepts of the parabola $x = ${quad(a, b, c, "y")}$. Write $\\varnothing$ if there are none.`,
-              `求抛物线 $x = ${quad(a, b, c, "y")}$ 与 $y$ 轴交点的纵坐标。若没有交点，写 $\\varnothing$。`,
+              `Find the $y$-coordinates of the $y$-intercepts of the parabola $x = ${quad(a, b, c, "y")}$. Type none if there are none.`,
+              `求抛物线 $x = ${quad(a, b, c, "y")}$ 与 $y$ 轴交点的纵坐标。若没有交点，请输入 none。`,
             ),
             values: [num(r), num(s)],
             variable: "y",
@@ -1131,8 +1131,8 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
         const c = a * k * k + h;
         return solutionsProblem({
           prompt: t(
-            `Find the $y$-coordinates of the $y$-intercepts of the parabola $x = ${quad(a, b, c, "y")}$. Write $\\varnothing$ if there are none.`,
-            `求抛物线 $x = ${quad(a, b, c, "y")}$ 与 $y$ 轴交点的纵坐标。若没有交点，写 $\\varnothing$。`,
+            `Find the $y$-coordinates of the $y$-intercepts of the parabola $x = ${quad(a, b, c, "y")}$. Type none if there are none.`,
+            `求抛物线 $x = ${quad(a, b, c, "y")}$ 与 $y$ 轴交点的纵坐标。若没有交点，请输入 none。`,
           ),
           values: [],
           variable: "y",
@@ -1159,8 +1159,8 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
         const values = pmRoot(h, n);
         return solutionsProblem({
           prompt: t(
-            `Find the $x$-coordinates of the $x$-intercepts of the parabola $${verticalConic(h, k, c)}$. Write $\\varnothing$ if there are none.`,
-            `求抛物线 $${verticalConic(h, k, c)}$ 与 $x$ 轴交点的横坐标。若没有交点，写 $\\varnothing$。`,
+            `Find the $x$-coordinates of the $x$-intercepts of the parabola $${verticalConic(h, k, c)}$. Type none if there are none.`,
+            `求抛物线 $${verticalConic(h, k, c)}$ 与 $x$ 轴交点的横坐标。若没有交点，请输入 none。`,
           ),
           values,
           wrong: [pmRoot(h, -n), pmRoot(-h, n), n > 0 ? [num(h + n), num(h - n)] : [num(h)]],

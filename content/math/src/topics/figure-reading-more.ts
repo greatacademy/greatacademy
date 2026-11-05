@@ -1938,8 +1938,8 @@ const productFromDots: KnowledgePointDef = {
         math(set(right.map((v) => -v).sort((p, q) => p - q))),
       ],
       t(
-        asksA ? `The first coordinates of the dots are ${A.join(", ")}.` : `The second coordinates of the dots are ${B.join(", ")}.`,
-        asksA ? `这些点的第一个坐标是 ${A.join("、")}。` : `这些点的第二个坐标是 ${B.join("、")}。`,
+        asksA ? `The first coordinates of the dots are $${A.join(", ")}$.` : `The second coordinates of the dots are $${B.join(", ")}$.`,
+        asksA ? `这些点的第一个坐标是 $${A.join(", ")}$。` : `这些点的第二个坐标是 $${B.join(", ")}$。`,
       ),
       drawn(
         square(5),
@@ -1974,7 +1974,10 @@ const cayleyReading: KnowledgePointDef = {
     const figure = tableFigure(
       heads.map(name),
       cells,
-      t(`The Cayley table of a cyclic group of order ${n}, whose identity is ${name(0)}.`, `${n} 阶循环群的凯莱表，单位元是 ${name(0)}。`),
+      t(
+        `A Cayley table with headings ${heads.map(name).join(", ")}. Its rows read ${cells.map((row) => row.join(" ")).join("; ")}.`,
+        `凯莱表，表头为 ${heads.map(name).join("、")}，各行依次为 ${cells.map((row) => row.join(" ")).join("；")}。`,
+      ),
     );
     const x = rng.int(1, n - 1);
     const kind = rng.int(0, 2);
@@ -2187,15 +2190,20 @@ const permutationOrderFromArrows: KnowledgePointDef = {
       ),
       lcm,
       [sum, Math.max(...lengths), lengths.length, lcm + 1, lcm + 2, lcm * 2],
-      t(
-        `The cycles have lengths ${lengths.join(", ")}, and their least common multiple is ${lcm}.`,
-        `各循环的长度是 ${lengths.join("、")}，它们的最小公倍数是 ${lcm}。`,
-      ),
+      lengths.length === 1
+        ? t(`The arrows form one cycle, of length ${lcm}, so the order is ${lcm}.`, `箭头构成一个循环，长度为 ${lcm}，所以阶是 ${lcm}。`)
+        : t(
+            `The cycles have lengths ${lengths.join(", ")}, and their least common multiple is ${lcm}.`,
+            `各循环的长度是 ${lengths.join("、")}，它们的最小公倍数是 ${lcm}。`,
+          ),
       graphFigure(
         names,
         edges,
         true,
-        t(`An arrow diagram with cycles of lengths ${lengths.join(", ")}.`, `箭头图，循环长度为 ${lengths.join("、")}。`),
+        t(
+          `An arrow diagram on the numbers 1 to ${n}, with arrows ${edges.map(([a, b]) => `${a + 1} to ${b + 1}`).join(", ")}.`,
+          `数字 1 到 ${n} 的箭头图，箭头为 ${edges.map(([a, b]) => `${a + 1} 到 ${b + 1}`).join("、")}。`,
+        ),
       ),
       "integer",
     );

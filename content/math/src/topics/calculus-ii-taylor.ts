@@ -95,8 +95,8 @@ function maclaurinPolynomialProblem(rng: Rng, n: 2 | 3) {
     prefix: `P_${n}(x) =`,
     wrong: [unhalved, taylorPoly(cs.slice(0, n))],
     solution: t(
-      `$${derivativeValues(f, n)}$. Dividing the $k$th derivative by $k!$ gives $P_${n}(x) = ${answer}$.`,
-      `$${derivativeValues(f, n)}$。把第 $k$ 阶导数除以 $k!$，得 $P_${n}(x) = ${answer}$。`,
+      `$${derivativeValues(f, n)}$. Dividing the $k$th derivative by $k!$ gives $P_{${n}}(x) = ${answer}$.`,
+      `$${derivativeValues(f, n)}$。把第 $k$ 阶导数除以 $k!$，得 $P_{${n}}(x) = ${answer}$。`,
     ),
   });
 }
@@ -129,7 +129,7 @@ function fromValuesProblem(rng: Rng, n: 2 | 3) {
         a,
       ),
     ],
-    solution: t(`$P_${n}(x) = ${general} = ${answer}$.`, `$P_${n}(x) = ${general} = ${answer}$。`),
+    solution: t(`$P_{${n}}(x) = ${general} = ${answer}$.`, `$P_{${n}}(x) = ${general} = ${answer}$。`),
   });
 }
 
@@ -435,8 +435,8 @@ export const theLagrangeErrorBound: TopicDef = {
           .div(Q.of(factorial(n + 1)));
         return numberProblem({
           prompt: t(
-            `Suppose $\\left|${nth(n + 1, "x")}\\right| \\le ${M}$ for all $x$ between $${a}$ and $${x.toLatex()}$, and $P_${n}$ is the Taylor polynomial of degree ${n} for $f$ centered at $x = ${a}$. Use the Lagrange error bound to find an upper bound for $\\left|f\\left(${x.toLatex()}\\right) - P_${n}\\left(${x.toLatex()}\\right)\\right|$.`,
-            `设对 $${a}$ 与 $${x.toLatex()}$ 之间的所有 $x$ 有 $\\left|${nth(n + 1, "x")}\\right| \\le ${M}$，$P_${n}$ 是 $f$ 以 $x = ${a}$ 为中心的 ${n} 次泰勒多项式。用拉格朗日误差界求 $\\left|f\\left(${x.toLatex()}\\right) - P_${n}\\left(${x.toLatex()}\\right)\\right|$ 的一个上界。`,
+            `Suppose $\\left|${nth(n + 1, "x")}\\right| \\le ${M}$ for all $x$ between $${a}$ and $${x.toLatex()}$, and $P_{${n}}$ is the Taylor polynomial of degree ${n} for $f$ centered at $x = ${a}$. Use the Lagrange error bound to find an upper bound for $\\left|f\\left(${x.toLatex()}\\right) - P_{${n}}\\left(${x.toLatex()}\\right)\\right|$.`,
+            `设对 $${a}$ 与 $${x.toLatex()}$ 之间的所有 $x$ 有 $\\left|${nth(n + 1, "x")}\\right| \\le ${M}$，$P_{${n}}$ 是 $f$ 以 $x = ${a}$ 为中心的 ${n} 次泰勒多项式。用拉格朗日误差界求 $\\left|f\\left(${x.toLatex()}\\right) - P_{${n}}\\left(${x.toLatex()}\\right)\\right|$ 的一个上界。`,
           ),
           answer,
           wrong: [
@@ -449,8 +449,8 @@ export const theLagrangeErrorBound: TopicDef = {
             Q.of(M).mul(qpow(h, n + 1)),
           ],
           solution: t(
-            `$|R_${n}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$.`,
-            `$|R_${n}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$。`,
+            `$|R_{${n}}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$.`,
+            `$|R_{${n}}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$。`,
           ),
         });
       },
@@ -473,8 +473,8 @@ export const theLagrangeErrorBound: TopicDef = {
           .div(Q.of(factorial(n + 1)));
         return numberProblem({
           prompt: t(
-            `Let $P_${n}$ be the Taylor polynomial of degree ${n} for $f(x) = ${f}$ centered at $x = 0$. Use the Lagrange error bound to find an upper bound for $\\left|f\\left(${h.toLatex()}\\right) - P_${n}\\left(${h.toLatex()}\\right)\\right|$.`,
-            `设 $P_${n}$ 是 $f(x) = ${f}$ 以 $x = 0$ 为中心的 ${n} 次泰勒多项式。用拉格朗日误差界求 $\\left|f\\left(${h.toLatex()}\\right) - P_${n}\\left(${h.toLatex()}\\right)\\right|$ 的一个上界。`,
+            `Let $P_{${n}}$ be the Taylor polynomial of degree ${n} for $f(x) = ${f}$ centered at $x = 0$. Use the Lagrange error bound to find an upper bound for $\\left|f\\left(${h.toLatex()}\\right) - P_{${n}}\\left(${h.toLatex()}\\right)\\right|$.`,
+            `设 $P_{${n}}$ 是 $f(x) = ${f}$ 以 $x = 0$ 为中心的 ${n} 次泰勒多项式。用拉格朗日误差界求 $\\left|f\\left(${h.toLatex()}\\right) - P_{${n}}\\left(${h.toLatex()}\\right)\\right|$ 的一个上界。`,
           ),
           answer,
           wrong: [
@@ -485,8 +485,8 @@ export const theLagrangeErrorBound: TopicDef = {
             qpow(h, n + 1),
           ],
           solution: t(
-            `$|${nth(n + 1, "x")}| \\le ${k}^{${n + 1}} = ${M}$, so $|R_${n}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$.`,
-            `$|${nth(n + 1, "x")}| \\le ${k}^{${n + 1}} = ${M}$，所以 $|R_${n}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$。`,
+            `$|${nth(n + 1, "x")}| \\le ${k}^{${n + 1}} = ${M}$, so $|R_{${n}}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$.`,
+            `$|${nth(n + 1, "x")}| \\le ${k}^{${n + 1}} = ${M}$，所以 $|R_{${n}}| \\le \\frac{${M} \\cdot \\left(${h.toLatex()}\\right)^{${n + 1}}}{${n + 1}!} = ${answer.toLatex()}$。`,
           ),
         });
       },

@@ -1632,11 +1632,12 @@ export const classifyingQuadraticCurves: TopicDef = {
         const Pa = t("A parabola", "抛物线");
         const right = disc < 0 ? E : disc > 0 ? H : Pa;
         const lhs = `${formatQuadratic(a, b, c, "x", "y")} ${formatSignedTerm(d, "x")} ${formatSignedTerm(e, "y")}`;
+        const rhs = rng.int(1, 9);
         return oneOf(
           rng,
           t(
-            `Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rng.int(1, 9)}$?`,
-            `假设曲线非退化，$${lhs} = ${rng.int(1, 9)}$ 是哪种曲线？`,
+            `Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rhs}$?`,
+            `假设曲线非退化，$${lhs} = ${rhs}$ 是哪种曲线？`,
           ),
           right,
           [E, H, Pa].filter((o) => o !== right),
@@ -1804,7 +1805,7 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
         const d = rng.shuffle([rng.int(-6, -1), rng.int(0, 3), rng.int(4, 9)]);
         const findMax = rng.int(0, 1) === 0;
         const target = findMax ? d.indexOf(Math.max(...d)) : d.indexOf(Math.min(...d));
-        const e = (i: number) => `\\mathbf{e}_${i + 1}`;
+        const e = (i: number) => `\\mathbf{e}_{${i + 1}}`;
         const opt = (s: string) => t(`$${s}$`, `$${s}$`);
         const others = [0, 1, 2].filter((i) => i !== target).map((i) => opt(e(i)));
         const q = `${formatFirstTerm(d[0]!, "x_1^2")} ${formatSignedTerm(d[1]!, "x_2^2")} ${formatSignedTerm(d[2]!, "x_3^2")}`.replace(
@@ -1820,8 +1821,8 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
           opt(`\\pm${e(target)}`),
           [...others.map((o) => t(`$\\pm${o.en.slice(1)}`, `$\\pm${o["zh-CN"].slice(1)}`)), opt("\\frac{1}{\\sqrt{3}}(1, 1, 1)")],
           t(
-            `The ${findMax ? "largest" : "smallest"} coefficient is $${d[target]}$, on $x_${target + 1}^2$, so the ${findMax ? "maximum" : "minimum"} $${d[target]}$ is attained at $\\pm${e(target)}$.`,
-            `${findMax ? "最大" : "最小"}系数为 $x_${target + 1}^2$ 的 $${d[target]}$，所以${findMax ? "最大值" : "最小值"} $${d[target]}$ 在 $\\pm${e(target)}$ 处取得。`,
+            `The ${findMax ? "largest" : "smallest"} coefficient is $${d[target]}$, on $x_{${target + 1}}^2$, so the ${findMax ? "maximum" : "minimum"} $${d[target]}$ is attained at $\\pm${e(target)}$.`,
+            `${findMax ? "最大" : "最小"}系数为 $x_{${target + 1}}^2$ 的 $${d[target]}$，所以${findMax ? "最大值" : "最小值"} $${d[target]}$ 在 $\\pm${e(target)}$ 处取得。`,
           ),
         );
       },
@@ -2384,8 +2385,8 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
         const ans = fro ? rest.reduce((x, y) => x + y * y, 0) : sig[k]!;
         return numberProblem({
           prompt: t(
-            `A matrix has singular values $${sig.join(", ")}$. Let $A_${k}$ be its best rank-$${k}$ approximation from the SVD. Find $${fro ? `\\|A - A_${k}\\|_F^2` : `\\|A - A_${k}\\|_2`}$.`,
-            `某矩阵的奇异值为 $${sig.join(", ")}$。设 $A_${k}$ 为由奇异值分解得到的最佳秩 $${k}$ 逼近。求 $${fro ? `\\|A - A_${k}\\|_F^2` : `\\|A - A_${k}\\|_2`}$。`,
+            `A matrix has singular values $${sig.join(", ")}$. Let $A_{${k}}$ be its best rank-$${k}$ approximation from the SVD. Find $${fro ? `\\|A - A_{${k}}\\|_F^2` : `\\|A - A_{${k}}\\|_2`}$.`,
+            `某矩阵的奇异值为 $${sig.join(", ")}$。设 $A_{${k}}$ 为由奇异值分解得到的最佳秩 $${k}$ 逼近。求 $${fro ? `\\|A - A_{${k}}\\|_F^2` : `\\|A - A_{${k}}\\|_2`}$。`,
           ),
           answer: ans,
           wrong: fro
@@ -2397,8 +2398,8 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
                 `舍弃的奇异值为 $${rest.join(", ")}$，所以 Frobenius 误差的平方为 $${rest.map((x) => `${x}^2`).join(" + ")} = ${ans}$。`,
               )
             : t(
-                `The spectral-norm error is the first discarded singular value, $\\sigma_${k + 1} = ${ans}$.`,
-                `谱范数误差是第一个被舍弃的奇异值 $\\sigma_${k + 1} = ${ans}$。`,
+                `The spectral-norm error is the first discarded singular value, $\\sigma_{${k + 1}} = ${ans}$.`,
+                `谱范数误差是第一个被舍弃的奇异值 $\\sigma_{${k + 1}} = ${ans}$。`,
               ),
         });
       },
@@ -3111,8 +3112,8 @@ export const steadyStateVectors: TopicDef = {
           answer: ans,
           wrong: [Q.of(1, 3), Q.one.div(total), r3.div(total), r2.div(total), Q.of(up1, up1 + down2)],
           solution: t(
-            `Balance gives $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$ and $\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$. The weights $1, ${r2.toLatex()}, ${r3.toLatex()}$ sum to $${total.toLatex()}$, so $\\pi_${which} = ${ans.toLatex()}$.`,
-            `平衡给出 $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$，$\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$。权重 $1, ${r2.toLatex()}, ${r3.toLatex()}$ 之和为 $${total.toLatex()}$，所以 $\\pi_${which} = ${ans.toLatex()}$。`,
+            `Balance gives $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$ and $\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$. The weights $1, ${r2.toLatex()}, ${r3.toLatex()}$ sum to $${total.toLatex()}$, so $\\pi_{${which}} = ${ans.toLatex()}$.`,
+            `平衡给出 $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$，$\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$。权重 $1, ${r2.toLatex()}, ${r3.toLatex()}$ 之和为 $${total.toLatex()}$，所以 $\\pi_{${which}} = ${ans.toLatex()}$。`,
           ),
         });
       },
@@ -3332,8 +3333,8 @@ export const polynomialRegressionWithMatrices: TopicDef = {
         const ans = which === 1 ? b1 : b2;
         return numberProblem({
           prompt: t(
-            `Fit $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ by least squares to $(${-h}, ${ym})$, $(0, ${y0})$, $(${h}, ${yp})$. Find $\\beta_${which}$.`,
-            `用最小二乘把 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合到 $(${-h}, ${ym})$、$(0, ${y0})$、$(${h}, ${yp})$。求 $\\beta_${which}$。`,
+            `Fit $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ by least squares to $(${-h}, ${ym})$, $(0, ${y0})$, $(${h}, ${yp})$. Find $\\beta_{${which}}$.`,
+            `用最小二乘把 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合到 $(${-h}, ${ym})$、$(0, ${y0})$、$(${h}, ${yp})$。求 $\\beta_{${which}}$。`,
           ),
           answer: ans,
           wrong:

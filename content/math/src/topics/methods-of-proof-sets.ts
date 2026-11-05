@@ -116,6 +116,7 @@ export const theMaximumAndMinimumOfASet: TopicDef = {
         const kind = rng.int(0, 3);
         const real = rng.bool();
         const D = real ? "\\mathbb{R}" : "\\mathbb{Z}";
+        let around: readonly [number, number] = [a, b];
         let set: string;
         let min: number | null;
         let max: number | null;
@@ -137,6 +138,7 @@ export const theMaximumAndMinimumOfASet: TopicDef = {
           max = strict ? (real ? null : b - 1) : b;
         } else {
           const k = rng.int(1, 9);
+          around = [-k, k];
           set = `\\{x \\in ${D} : x^2 < ${k * k}\\}`;
           min = real ? null : -(k - 1);
           max = real ? null : k - 1;
@@ -148,8 +150,8 @@ export const theMaximumAndMinimumOfASet: TopicDef = {
             `${lo === null ? "没有最小值" : `最小值 $${lo}$`}，${hi === null ? "没有最大值" : `最大值 $${hi}$`}`,
           );
         const right = describe(min, max);
-        const lo0 = min ?? a;
-        const hi0 = max ?? b;
+        const lo0 = min ?? around[0];
+        const hi0 = max ?? around[1];
         return oneOf(
           rng,
           t(`Which describes the extrema of $${set}$?`, `$${set}$ 的最值情况是哪一个？`),
@@ -417,7 +419,16 @@ export const indicatorFunctions: TopicDef = {
           [`\\bigl(1 - \\mathbf{1}_A(x)\\bigr)`, (x: number) => (inA(x) ? 0 : 1)],
         ][kind] as [string, (x: number) => number];
         const total = range(1, n).reduce((s, x) => s + f(x), 0);
-        const meaning = [t("$A$", "$A$"), t("$A \\cap B$", "$A \\cap B$"), t("$A^{c}$", "$A^{c}$")][kind]!;
+        const lcm = range(1, k * m).find((x) => inA(x) && inB(x))!;
+        const meaning = [
+          t("$A$", "$A$"),
+          t(
+            `$A \\cap B$, the multiples of $\\operatorname{lcm}(${k}, ${m}) = ${lcm}$`,
+            `$A \\cap B$（即 $\\operatorname{lcm}(${k}, ${m}) = ${lcm}$ 的倍数）`,
+          ),
+          t("$A^{c}$", "$A^{c}$"),
+        ][kind]!;
+        const counted = [t("$A$", "$A$"), t("$A \\cap B$", "$A \\cap B$"), t("$A^{c}$", "$A^{c}$")][kind]!;
         return numberProblem({
           prompt: t(
             `Let $A$ be the set of multiples of $${k}$${kind === 1 ? ` and $B$ the set of multiples of $${m}$` : ""}. Compute $\\sum_{x=1}^{${n}} ${expr}$.`,
@@ -426,8 +437,8 @@ export const indicatorFunctions: TopicDef = {
           answer: total,
           wrong: [Math.floor(n / k), n - Math.floor(n / k), Math.floor(n / (k * m)), total + 1],
           solution: t(
-            `The summand is the indicator of ${meaning.en}, so the sum counts the elements of ${meaning.en} among $1, \\dots, ${n}$: $${total}$.`,
-            `求和项是 ${meaning["zh-CN"]} 的示性函数，所以和就是 $1, \\dots, ${n}$ 中属于 ${meaning["zh-CN"]} 的元素个数：$${total}$。`,
+            `The summand is the indicator of ${meaning.en}, so the sum counts the elements of ${counted.en} among $1, \\dots, ${n}$: $${total}$.`,
+            `求和项是 ${meaning["zh-CN"]} 的示性函数，所以和就是 $1, \\dots, ${n}$ 中属于 ${counted["zh-CN"]} 的元素个数：$${total}$。`,
           ),
         });
       },
@@ -645,7 +656,7 @@ export const disjointSets: TopicDef = {
       generate(rng) {
         const n = rng.int(10, 30);
         const k = rng.int(2, 9);
-        const m = rng.int(2, 9);
+        const m = rng.pick(range(2, 9).filter((v) => v !== k));
         const shift = rng.bool() ? 0 : rng.int(1, m - 1);
         const A = range(1, n).filter((x) => x % k === 0);
         const B = range(1, n).filter((x) => x % m === shift % m);
@@ -690,7 +701,8 @@ export const disjointSets: TopicDef = {
           const bad = pairs.filter(([i, j]) => sets[i]!.some((x) => sets[j]!.includes(x)));
           if (bad.length !== 1) continue;
           const [i, j] = bad[0]!;
-          const label = (p: readonly [number, number]) => t(`$A_${p[0] + 1}$ and $A_${p[1] + 1}$`, `$A_${p[0] + 1}$ 与 $A_${p[1] + 1}$`);
+          const label = (p: readonly [number, number]) =>
+            t(`$A_{${p[0] + 1}}$ and $A_{${p[1] + 1}}$`, `$A_{${p[0] + 1}}$ 与 $A_{${p[1] + 1}}$`);
           const shared = sets[i]!.filter((x) => sets[j]!.includes(x));
           return oneOf(
             rng,
@@ -701,8 +713,8 @@ export const disjointSets: TopicDef = {
             label([i, j]),
             [...pairs.filter((p) => p[0] !== i || p[1] !== j).map(label), t("Every pair is disjoint", "每一对都不相交")],
             t(
-              `$A_${i + 1} \\cap A_${j + 1} = ${setTex(shared)}$; the other intersections are empty.`,
-              `$A_${i + 1} \\cap A_${j + 1} = ${setTex(shared)}$；其余交集都为空。`,
+              `$A_{${i + 1}} \\cap A_{${j + 1}} = ${setTex(shared)}$; the other intersections are empty.`,
+              `$A_{${i + 1}} \\cap A_{${j + 1}} = ${setTex(shared)}$；其余交集都为空。`,
             ),
           );
         }

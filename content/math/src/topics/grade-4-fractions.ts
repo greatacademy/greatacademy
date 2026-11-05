@@ -755,7 +755,7 @@ export const modelingMixedNumbersUsingNumberLines = topic(
       id: "reading-mixed-numbers-on-number-lines",
       title: t("Reading a point", "读出点表示的带分数"),
       explanation: t(
-        "A point $2$ steps past $3$ on a line with fourths is at $3\\frac{2}{4}$... but write it in lowest terms: $3\\frac{1}{2}$. Count the steps after the last whole number.",
+        "A point $2$ steps past $3$ on a line with fourths is at $3\\frac{2}{4}$, which is $3\\frac{1}{2}$ in lowest terms. Count the steps after the last whole number.",
         "以四分之一为一格的数轴上，$3$ 右边第 $1$ 格是 $3\\frac{1}{4}$。数出最后一个整数之后有几格。",
       ),
       generate(rng) {
@@ -1749,7 +1749,7 @@ export const addingFractionsWithLikeDenominators = topic(
       id: "adding-two-fractions-with-like-denominators",
       title: t("Two fractions", "两个分数相加"),
       explanation: t(
-        "$\\frac{5}{9} + \\frac{7}{9} = \\frac{12}{9}$... which simplifies to $\\frac{4}{3}$. Add the numerators and keep the denominator, then write the result in lowest terms.",
+        "$\\frac{5}{9} + \\frac{7}{9} = \\frac{12}{9}$, which simplifies to $\\frac{4}{3}$. Add the numerators and keep the denominator, then write the result in lowest terms.",
         "$\\frac{5}{9} + \\frac{7}{9} = \\frac{12}{9} = \\frac{4}{3}$。分子相加、分母不变，再化成最简分数。",
       ),
       generate(rng) {

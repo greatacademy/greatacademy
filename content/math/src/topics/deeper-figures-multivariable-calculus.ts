@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q } from "@ga/subject-math";
 
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
 
 /** square is the view from -r to r on both axes. */
@@ -145,7 +145,7 @@ const formulaFromLevelCurves = point(
       fig(
         square(4),
         right.levels.map((level): PlaneMark => ({ kind: "contour", f: right.f, level, accent: true })),
-        [`Level curves in the plane: ${right.clue[0].replaceAll("$", "")}.`, `平面上的等值线：${right.clue[1].replaceAll("$", "")}。`],
+        [`Level curves in the plane: ${observed(right.clue)[0].replaceAll("$", "")}.`, `平面上的等值线：${observed(right.clue)[1].replaceAll("$", "")}。`],
       ),
     );
   },
@@ -454,7 +454,10 @@ const divergenceSign = point(
         `${reason[0]}. So the divergence is ${value > 0 ? "positive" : value < 0 ? "negative" : "zero"}.`,
         `${reason[1]}。所以散度为${value > 0 ? "正" : value < 0 ? "负" : "零"}。`,
       ],
-      fig(square(3), field(f, 0.15), [`A linear vector field. ${reason[0]}.`, `一个线性向量场。${reason[1]}。`]),
+      fig(square(3), field(f, 0.15), [
+        `A linear vector field. The arrow at (1, 0) is (${f(1, 0).join(", ")}) and the arrow at (0, 1) is (${f(0, 1).join(", ")}).`,
+        `一个线性向量场。(1, 0) 处的箭头是 (${f(1, 0).join(", ")})，(0, 1) 处的箭头是 (${f(0, 1).join(", ")})。`,
+      ]),
     );
   },
 );
@@ -515,7 +518,10 @@ const curlSign = point(
         `${reason[0]}. So the curl is ${value > 0 ? "positive" : value < 0 ? "negative" : "zero"}.`,
         `${reason[1]}。所以旋度为${value > 0 ? "正" : value < 0 ? "负" : "零"}。`,
       ],
-      fig(square(3), field(f, 0.15), [`A linear vector field. ${reason[0]}.`, `一个线性向量场。${reason[1]}。`]),
+      fig(square(3), field(f, 0.15), [
+        `A linear vector field. The arrow at (1, 0) is (${f(1, 0).join(", ")}) and the arrow at (0, 1) is (${f(0, 1).join(", ")}).`,
+        `一个线性向量场。(1, 0) 处的箭头是 (${f(1, 0).join(", ")})，(0, 1) 处的箭头是 (${f(0, 1).join(", ")})。`,
+      ]),
     );
   },
 );

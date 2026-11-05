@@ -1895,14 +1895,14 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
         const out = first ? s - r1 : s - r2;
         return numberProblem({
           prompt: t(
-            `For $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ take $y_1 = ${e(r1)}$, $y_2 = ${e(r2)}$. Then $u_${first ? 1 : 2}' = C${out === 0 ? "" : e(out)}$. Find $C$.`,
-            `对 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ 取 $y_1 = ${e(r1)}$，$y_2 = ${e(r2)}$。则 $u_${first ? 1 : 2}' = C${out === 0 ? "" : e(out)}$。求 $C$。`,
+            `For $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ take $y_1 = ${e(r1)}$, $y_2 = ${e(r2)}$. Then $u_{${first ? 1 : 2}}' = C${out === 0 ? "" : e(out)}$. Find $C$.`,
+            `对 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ 取 $y_1 = ${e(r1)}$，$y_2 = ${e(r2)}$。则 $u_{${first ? 1 : 2}}' = C${out === 0 ? "" : e(out)}$。求 $C$。`,
           ),
           answer: ans,
           wrong: [ans.neg(), Q.of(k), Q.of(k, r1 - r2 - 1)],
           solution: t(
-            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$, so $u_${first ? 1 : 2}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$ and $C = ${ans.toLatex()}$.`,
-            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$，所以 $u_${first ? 1 : 2}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$，$C = ${ans.toLatex()}$。`,
+            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$, so $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$ and $C = ${ans.toLatex()}$.`,
+            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$，所以 $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$，$C = ${ans.toLatex()}$。`,
           ),
         });
       },

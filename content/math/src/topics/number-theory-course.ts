@@ -62,8 +62,8 @@ const countingDivisors = topic(
       "divisors-from-a-factorization",
       ["Divisors from a factorization", "由分解式求因数个数"],
       [
-        "A divisor of a number takes each prime of the factorization to some power from zero up to the exponent there. Those choices are independent, so the count multiplies: an exponent e contributes e + 1 choices. Adding the exponents instead counts only prime factors, and it misses every divisor that mixes the primes.",
-        "一个数的因数，对分解式中的每个质数取从零到该指数之间的某个幂。这些选择相互独立，所以个数相乘：指数 e 贡献 e + 1 种选择。如果把指数相加，只数到了质因数，漏掉了所有混合不同质数的因数。",
+        "A divisor of a number takes each prime of the factorization to some power from zero up to the exponent there. Those choices are independent, so the count multiplies: an exponent $e$ contributes $e + 1$ choices. Adding the exponents instead counts only prime factors, and it misses every divisor that mixes the primes.",
+        "一个数的因数，对分解式中的每个质数取从零到该指数之间的某个幂。这些选择相互独立，所以个数相乘：指数 $e$ 贡献 $e + 1$ 种选择。如果把指数相加，只数到了质因数，漏掉了所有混合不同质数的因数。",
       ],
       (rng) => {
         const primes = rng.shuffle([2, 3, 5, 7, 11]).slice(0, rng.int(2, 3));
@@ -76,8 +76,8 @@ const countingDivisors = topic(
           answer,
           [sum, sum + 1, factors.reduce((v, [, e]) => v * e, 1), answer - 1],
           [
-            `Each exponent e gives e + 1 choices, so the count is $${factors.map(([, e]) => e + 1).join(" \\times ")} = ${answer}$.`,
-            `每个指数 e 给出 e + 1 种选择，所以个数是 $${factors.map(([, e]) => e + 1).join(" \\times ")} = ${answer}$。`,
+            `Each exponent $e$ gives $e + 1$ choices, so the count is $${factors.map(([, e]) => e + 1).join(" \\times ")} = ${answer}$.`,
+            `每个指数 $e$ 给出 $e + 1$ 种选择，所以个数是 $${factors.map(([, e]) => e + 1).join(" \\times ")} = ${answer}$。`,
           ],
         );
       },
@@ -618,8 +618,8 @@ const wilson = topic(
       "factorials-and-composites",
       ["Factorials and composites", "阶乘与合数"],
       [
-        "Wilson's theorem has a converse: (n − 1)! leaves remainder n − 1 modulo n only when n is prime. For a composite n above four, the factors below n already include enough to make a multiple of n, so the remainder is zero. The value four is the only exception, where 3! is six, which leaves remainder two.",
-        "威尔逊定理有逆命题：只有当 n 是质数时，(n − 1)! 模 n 才余 n − 1。对大于 4 的合数 n，小于 n 的因数已经足以构成 n 的倍数，所以余数是 0。4 是唯一的例外，此时 3! 等于 6，余 2。",
+        "Wilson's theorem has a converse: $(n - 1)!$ leaves remainder $n - 1$ modulo $n$ only when $n$ is prime. For a composite $n > 4$, the factors below $n$ already include enough to make a multiple of $n$, so the remainder is $0$. The only exception is $n = 4$, where $3! = 6$ leaves remainder $2$.",
+        "威尔逊定理有逆命题：只有当 $n$ 是质数时，$(n - 1)!$ 模 $n$ 才余 $n - 1$。对合数 $n > 4$，小于 $n$ 的因数已经足以构成 $n$ 的倍数，所以余数是 $0$。唯一的例外是 $n = 4$，此时 $3! = 6$，余 $2$。",
       ],
       (rng) => {
         const n = rng.int(4, 60);
@@ -657,8 +657,8 @@ const orders = topic(
       "finding-an-order",
       ["Finding an order", "求阶"],
       [
-        "The order of a modulo n is the smallest positive power of a that leaves remainder one. It exists exactly when a is coprime to n, and it divides phi of n, by Euler's theorem. So only the divisors of phi of n need checking, which is often quicker than listing the powers one after another until the value one appears.",
-        "a 模 n 的阶是使余数为 1 的最小正幂。它存在当且仅当 a 与 n 互质，并且由欧拉定理，它整除 φ(n)。所以只需检查 φ(n) 的因数，这通常比逐个列出幂直到出现 1 要快。",
+        "The order of $a$ modulo $n$ is the smallest positive exponent $k$ with $a^{k} \\equiv 1 \\pmod{n}$. It exists exactly when $a$ is coprime to $n$, and it divides $\\varphi(n)$, by Euler's theorem. So only the divisors of $\\varphi(n)$ need checking, which is often quicker than listing the powers one after another until the value $1$ appears.",
+        "$a$ 模 $n$ 的阶是使 $a^{k} \\equiv 1 \\pmod{n}$ 的最小正指数 $k$。它存在当且仅当 $a$ 与 $n$ 互质，并且由欧拉定理，它整除 $\\varphi(n)$。所以只需检查 $\\varphi(n)$ 的因数，这通常比逐个列出幂直到出现 $1$ 要快。",
       ],
       (rng) => {
         const n = rng.pick([7, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 25, 26, 27, 29, 31]);
@@ -680,8 +680,8 @@ const orders = topic(
       "which-orders-are-possible",
       ["Which orders are possible", "哪些阶是可能的"],
       [
-        "The order of any element modulo a prime p divides p − 1, because the units form a group of that size and the order of an element divides the order of the group. So a number that does not divide p − 1 cannot be an order. The converse also holds modulo a prime: every divisor of p − 1 occurs as an order.",
-        "模质数 p 时，任何元素的阶都整除 p − 1，因为单位元构成这个大小的群，而元素的阶整除群的阶。所以不整除 p − 1 的数不可能是阶。模质数时逆命题也成立：p − 1 的每个因数都是某个元素的阶。",
+        "The order of any element modulo a prime $p$ divides $p - 1$, because the units form a group of that size and the order of an element divides the order of the group. So a number that does not divide $p - 1$ cannot be an order. The converse also holds modulo a prime: every divisor of $p - 1$ occurs as an order.",
+        "模质数 $p$ 时，任何元素的阶都整除 $p - 1$，因为单位构成这个大小的群，而元素的阶整除群的阶。所以不整除 $p - 1$ 的数不可能是阶。模质数时逆命题也成立：$p - 1$ 的每个因数都是某个元素的阶。",
       ],
       (rng) => {
         const p = rng.pick(primesUpTo(250).filter((q) => q > 10));
@@ -715,8 +715,8 @@ const primitiveRoots = topic(
       "recognizing-a-primitive-root",
       ["Recognizing a primitive root", "识别原根"],
       [
-        "A primitive root modulo a prime p is a number of the largest possible order, p − 1, so that its powers run through every nonzero remainder. To test a candidate, it is enough to check that none of its powers with exponent p − 1 divided by a prime factor of p − 1 gives one. This saves computing the entire list of powers.",
-        "模质数 p 的原根是阶最大（等于 p − 1）的数，它的幂遍历所有非零余数。检验一个候选数时，只要检查指数为 p − 1 除以 p − 1 的某个质因数的幂都不等于 1 就够了。这样不必算出全部的幂。",
+        "A primitive root modulo a prime $p$ is a number of the largest possible order, $p - 1$, so that its powers run through every nonzero remainder. To test a candidate $g$, it is enough to check that $g^{(p-1)/q} \\not\\equiv 1 \\pmod{p}$ for every prime factor $q$ of $p - 1$. This saves computing the entire list of powers.",
+        "模质数 $p$ 的原根是阶最大（等于 $p - 1$）的数，它的幂遍历所有非零余数。检验候选数 $g$ 时，只要对 $p - 1$ 的每个质因数 $q$ 检查 $g^{(p-1)/q} \\not\\equiv 1 \\pmod{p}$ 就够了。这样不必算出全部的幂。",
       ],
       (rng) => {
         const p = rng.pick(primesUpTo(97).filter((q) => q > 5));
@@ -756,8 +756,8 @@ const primitiveRoots = topic(
       "counting-primitive-roots",
       ["Counting primitive roots", "数原根的个数"],
       [
-        "Modulo a prime p, the units form a cyclic group of size p − 1, and a cyclic group of that size has phi of p − 1 generators. So the number of primitive roots modulo p is phi of p − 1, not phi of p. Modulo 13, for instance, there are phi of 12, which is four, and not all twelve units.",
-        "模质数 p 时，单位元构成大小为 p − 1 的循环群，这样的循环群有 φ(p − 1) 个生成元。所以模 p 的原根个数是 φ(p − 1)，而不是 φ(p)。例如模 13 时有 φ(12) = 4 个，而不是全部 12 个单位元。",
+        "Modulo a prime $p$, the units form a cyclic group of size $p - 1$, and a cyclic group of that size has $\\varphi(p - 1)$ generators. So the number of primitive roots modulo $p$ is $\\varphi(p - 1)$, not $\\varphi(p)$. Modulo $13$, for instance, there are $\\varphi(12) = 4$, and not all $12$ units.",
+        "模质数 $p$ 时，单位构成大小为 $p - 1$ 的循环群，这样的循环群有 $\\varphi(p - 1)$ 个生成元。所以模 $p$ 的原根个数是 $\\varphi(p - 1)$，而不是 $\\varphi(p)$。例如模 $13$ 时有 $\\varphi(12) = 4$ 个，而不是全部 $12$ 个单位。",
       ],
       (rng) => {
         const p = rng.pick(primesUpTo(200).filter((q) => q > 5));
@@ -787,8 +787,8 @@ const discreteLogs = topic(
       "solving-for-the-exponent",
       ["Solving for the exponent", "求指数"],
       [
-        "The discrete logarithm of $h$ to base $g$ modulo $p$ is the exponent $x$ with $g^x = h$. For a primitive root, every nonzero remainder has exactly one such exponent from zero to $p - 2$. Small cases are solved by listing powers. For large primes no fast method is known, which is exactly why cryptography relies on this problem.",
-        "$h$ 以 $g$ 为底模 $p$ 的离散对数，是满足 $g^x = h$ 的指数 $x$。对原根，每个非零余数恰有一个这样的指数，取值从 0 到 $p - 2$。小的情况可以列出幂来求解。对大的质数，还不知道快速的方法，这正是密码学依赖这个问题的原因。",
+        "The discrete logarithm of $h$ to base $g$ modulo $p$ is the exponent $x$ with $g^x \\equiv h \\pmod{p}$. For a primitive root, every nonzero remainder has exactly one such exponent from $0$ to $p - 2$. Small cases are solved by listing powers. For large primes no fast method is known, which is exactly why cryptography relies on this problem.",
+        "$h$ 以 $g$ 为底模 $p$ 的离散对数，是满足 $g^x \\equiv h \\pmod{p}$ 的指数 $x$。对原根，每个非零余数恰有一个这样的指数，取值从 0 到 $p - 2$。小的情况可以列出幂来求解。对大的质数，还不知道快速的方法，这正是密码学依赖这个问题的原因。",
       ],
       (rng) => {
         const p = rng.pick([7, 11, 13, 17, 19, 23, 29, 31]);
@@ -813,8 +813,8 @@ const discreteLogs = topic(
       "a-diffie-hellman-key",
       ["A Diffie–Hellman key", "迪菲–赫尔曼密钥"],
       [
-        "In a Diffie–Hellman exchange, two people share a prime and a base in public and each keeps a secret exponent. Each sends the base to their own secret, and raises what they receive to that same secret. Both arrive at the base to the product of the secrets, while an eavesdropper would need a discrete logarithm to find it.",
-        "在迪菲–赫尔曼交换中，两个人公开共用一个质数和一个底数，各自保留一个秘密指数。每人发送底数的秘密次幂，再把收到的值取自己秘密次幂。两人都得到底数的两个秘密之积次幂，而窃听者需要求离散对数才能得到它。",
+        "In a Diffie–Hellman exchange, two people share a prime $p$ and a base $g$ in public and keep secret exponents $a$ and $b$. One sends $g^{a}$, the other sends $g^{b}$, and each raises what they receive to their own secret. Both arrive at $g^{ab}$ modulo $p$, while an eavesdropper would need a discrete logarithm to find it.",
+        "在迪菲–赫尔曼交换中，两个人公开共用一个质数 $p$ 和一个底数 $g$，分别保留秘密指数 $a$ 和 $b$。一人发送 $g^{a}$，另一人发送 $g^{b}$，再各自把收到的值取自己秘密次幂。两人都得到模 $p$ 的 $g^{ab}$，而窃听者需要求离散对数才能得到它。",
       ],
       (rng) => {
         const p = rng.pick([23, 29, 31, 37, 41, 43, 47]);
@@ -852,7 +852,7 @@ const quadraticResidues = topic(
       "recognizing-a-residue",
       ["Recognizing a quadratic residue", "识别二次剩余"],
       [
-        "A number is a quadratic residue modulo a prime when it is congruent to a perfect square and not divisible by the prime. To list the residues, square only the numbers from one to half of $p$, because $x$ and $-x$ have the same square. The remaining nonzero remainders are the nonresidues, and these cannot be square roots of anything modulo $p$.",
+        "A number is a quadratic residue modulo a prime when it is congruent to a perfect square and not divisible by the prime. To list the residues, square only the numbers from one to half of $p$, because $x$ and $-x$ have the same square. The remaining nonzero remainders are the nonresidues, and these have no square root modulo $p$.",
         "一个数如果同余于完全平方数且不被质数整除，就是模这个质数的二次剩余。要列出二次剩余，只需把 1 到 $p$ 的一半的数平方，因为 $x$ 和 $-x$ 的平方相同。其余的非零余数是二次非剩余，模 $p$ 时它们不是任何数的平方。",
       ],
       (rng) => {
@@ -962,8 +962,10 @@ const legendreSymbol = topic(
       ],
       (rng) => {
         const p = rng.pick(oddPrimes.filter((q) => q > 10 && q < 90));
-        const a = rng.int(2, p - 1);
-        const b = rng.int(2, p - 1);
+        const [a, b] = rng.sample(
+          Array.from({ length: p - 2 }, (_, i) => i + 2),
+          2,
+        ) as [number, number];
         const [la, lb] = [legendre(a, p), legendre(b, p)];
         const value = la * lb;
         return ask(
@@ -1410,14 +1412,20 @@ const continuedFractions = topic(
       "evaluating-a-continued-fraction",
       ["Evaluating a continued fraction", "计算连分数"],
       [
-        "The notation with a semicolon lists the whole parts of a nested fraction: the first number, plus one over the second, plus one over the third, and so on. To evaluate it, start at the innermost term and work outward, inverting and adding at each stage. Starting from the outside does not work, because each stage depends on the value below it.",
-        "带分号的记号列出嵌套分数的各整数部分：第一个数，加上 1 除以第二个数，再加 1 除以第三个数，依此类推。计算时要从最里面的项开始向外算，每一步先取倒数再相加。从外面开始不行，因为每一步都依赖下一层的值。",
+        "The notation with a semicolon lists the whole parts of a nested fraction: $[a_0; a_1, a_2] = a_0 + \\frac{1}{a_1 + \\frac{1}{a_2}}$, and so on. To evaluate it, start at the innermost term and work outward, inverting and adding at each stage. Starting from the outside does not work, because each stage depends on the value below it.",
+        "带分号的记号列出嵌套分数的各整数部分：$[a_0; a_1, a_2] = a_0 + \\frac{1}{a_1 + \\frac{1}{a_2}}$，依此类推。计算时要从最里面的项开始向外算，每一步先取倒数再相加。从外面开始不行，因为每一步都依赖下一层的值。",
       ],
       (rng) => {
         const terms = [rng.int(1, 4), rng.int(1, 5), rng.int(1, 6), rng.int(2, 6)];
         const answer = continuedValue(terms);
         const shorter = continuedValue(terms.slice(0, 3));
         const reversed = continuedValue([...terms].reverse());
+        const steps = [2, 1, 0]
+          .map(
+            (i) =>
+              `$${terms[i]} + \\frac{1}{${continuedValue(terms.slice(i + 1)).toLatex()}} = ${continuedValue(terms.slice(i)).toLatex()}$`,
+          )
+          .join(", ");
         return ask(
           [
             `What is $[${terms[0]}; ${terms.slice(1).join(", ")}]$ as a fraction?`,
@@ -1425,7 +1433,7 @@ const continuedFractions = topic(
           ],
           answer,
           [shorter, reversed, Q.of(terms.reduce((a, b) => a + b, 0)), answer.add(Q.of(1))],
-          [`Working from the inside out, the value is $${answer.toLatex()}$.`, `从里向外计算，值是 $${answer.toLatex()}$。`],
+          [`Working from the inside out: ${steps}.`, `从里向外计算：${steps}。`],
         );
       },
     ),

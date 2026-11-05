@@ -170,8 +170,8 @@ const constraintOfEdge = point(
         same(tex(a + 1, b, c, "\\leq")),
       ],
       [
-        `The slanted edge runs from $(${xCut}, 0)$ to $(0, ${yCut})$, and both points satisfy $${tex(a, b, c, "=")}$. The origin is in the region and gives $0$, so the inequality is the one with the smaller side on the left.`,
-        `斜边从 $(${xCut}, 0)$ 到 $(0, ${yCut})$，两点都满足 $${tex(a, b, c, "=")}$。原点在区域内，代入得 $0$，所以不等式取左边较小的方向。`,
+        `The slanted edge runs from $(${xCut}, 0)$ to $(0, ${yCut})$, and both points satisfy $${tex(a, b, c, "=")}$. The origin is in the region and gives $0 \\leq ${c}$, so the region is the side where $${tex(a, b, c, "\\leq")}$.`,
+        `斜边从 $(${xCut}, 0)$ 到 $(0, ${yCut})$，两点都满足 $${tex(a, b, c, "=")}$。原点在区域内，代入得 $0 \\leq ${c}$，所以区域是满足 $${tex(a, b, c, "\\leq")}$ 的一侧。`,
       ],
       fig(quadrant, region(pts), [
         `A triangle with corners (0, 0), (${xCut}, 0) and (0, ${yCut}).`,
@@ -220,8 +220,8 @@ const extremeCount = point(
         quadrant,
         [...region(pts), ...all.map((p): PlaneMark => ({ kind: "point", at: p }))],
         [
-          `A polygon with ${n} corners and ${extras} further marked points in the middle of edges.`,
-          `有 ${n} 个顶点的多边形，另有 ${extras} 个点标在边的中间。`,
+          `A polygon with ${all.length} points marked on its boundary, at ${all.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+          `一个多边形，边界上标出了 ${all.length} 个点，分别在 ${all.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
         ],
       ),
     );
@@ -286,8 +286,8 @@ const alternativeOptima = point(
         `斜边的斜率是 $${Q.of(-a, b).toLatex()}$，它在直线 $${objective(a, b)} = ${level}$ 上，所以这个目标函数沿边不变，并且在那里最大。`,
       ],
       fig({ xMin: -1, xMax: Math.max(xCut, yCut) + 2, yMin: -1, yMax: Math.max(xCut, yCut) + 2 }, region(polygon), [
-        `A polygon whose slanted edge lies on the line ${objective(a, b)} = ${level}.`,
-        `一个多边形，其斜边在直线 ${objective(a, b)} = ${level} 上。`,
+        `A polygon with corners ${polygon.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+        `顶点为 ${polygon.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的多边形。`,
       ]),
     );
   },
@@ -665,11 +665,11 @@ const integerBest = point(
   ],
   (rng) => {
     const pts = slantedPolygon(rng);
-    const a = rng.int(1, 5);
-    const b = rng.int(1, 5);
+    const [a, b] = rng.sample([1, 2, 3, 4, 5], 2) as [number, number];
     const lattice = latticeInside(pts);
     const values = lattice.map(([x, y]) => a * x + b * y);
     const best = Math.max(...values);
+    const bestPoint = lattice[values.indexOf(best)] as Point;
     const relaxed = Math.max(...pts.map(([x, y]) => a * x + b * y));
     const distinct = [...new Set(values)].sort((u, v) => v - u);
     return ask(
@@ -680,8 +680,8 @@ const integerBest = point(
       best,
       [distinct[1] ?? best - 1, Math.ceil(relaxed) === best ? best + 1 : Math.ceil(relaxed), best + a + b],
       [
-        `Among the dots inside the region, the objective is largest at a point where it equals $${best}$. The best corner of the region is not an integer point, so it is not allowed.`,
-        `在区域内的点中，目标函数的最大值是 $${best}$。区域的最优顶点不是整数点，所以不允许。`,
+        `Among the dots inside the region, the objective is largest at $(${bestPoint[0]}, ${bestPoint[1]})$, where it equals $${best}$. The best corner of the region is not an integer point, so it is not allowed.`,
+        `在区域内的点中，目标函数在 $(${bestPoint[0]}, ${bestPoint[1]})$ 处最大，等于 $${best}$。区域的最优顶点不是整数点，所以不允许。`,
       ],
       fig(
         quadrant,

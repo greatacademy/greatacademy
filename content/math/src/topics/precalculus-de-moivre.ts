@@ -1257,21 +1257,10 @@ export const higherRootsOfComplexNumbers: TopicDef = {
         const step = 360 / n;
         const b = rng.int(1, step - 1);
         const theta = n * b;
-        const kind = rng.pick(["smallest", "largest", "second", "modulus"] as const);
+        const kind = rng.pick(["smallest", "largest", "second"] as const);
         const w = cisDeg(String(r ** n), theta);
         const name = ROOT_NAMES[n]!;
         const list = Array.from({ length: n }, (_, k) => `${b + step * k}^{\\circ}`).join(", ");
-        if (kind === "modulus") {
-          return numberProblem({
-            prompt: t(`Find the modulus of each of the ${name.en} of $${w}$.`, `求 $${w}$ 的每个${name["zh-CN"]}的模长。`),
-            answer: r,
-            wrong: [Q.of(r ** n, n), r ** n, r * n],
-            solution: t(
-              `Every ${ordinal(n)} root has modulus $\\sqrt[${n}]{${r ** n}} = ${r}$.`,
-              `每个 ${n} 次方根的模长都是 $\\sqrt[${n}]{${r ** n}} = ${r}$。`,
-            ),
-          });
-        }
         const k = kind === "smallest" ? 0 : kind === "second" ? 1 : n - 1;
         const answer = b + step * k;
         const what =
@@ -1525,7 +1514,7 @@ export const theFundamentalTheoremOfAlgebraWithCubicEquations: TopicDef = {
       id: "the-real-root-from-a-nonreal-root",
       title: t("Find the real root from a nonreal root", "由一个非实根求实根"),
       explanation: t(
-        "If a real cubic $x^{3} + bx^{2} + cx + d$ has the nonreal root $p + qi$, it also has $p - qi$, and the third root $r$ is real. By Vieta's formulas the three roots sum to $-b$:\n\n$$r + (p + qi) + (p - qi) = -b \\quad\\Rightarrow\\quad r = -b - 2p$$\n\nFor $x^{3} - x^{2} + 7x + 9$ with root $1 + 2\\sqrt{2}i$... more simply, for $x^{3} - 5x^{2} + 17x - 13$ with root $2 + 3i$: $r = 5 - 4 = 1$.",
+        "If a real cubic $x^{3} + bx^{2} + cx + d$ has the nonreal root $p + qi$, it also has $p - qi$, and the third root $r$ is real. By Vieta's formulas the three roots sum to $-b$:\n\n$$r + (p + qi) + (p - qi) = -b \\quad\\Rightarrow\\quad r = -b - 2p$$\n\nFor $x^{3} - 5x^{2} + 17x - 13$ with root $2 + 3i$: $r = 5 - 4 = 1$.",
         "若实系数三次式 $x^{3} + bx^{2} + cx + d$ 有非实根 $p + qi$，则它也有根 $p - qi$，第三个根 $r$ 为实数。由韦达定理，三根之和为 $-b$：\n\n$$r + (p + qi) + (p - qi) = -b \\quad\\Rightarrow\\quad r = -b - 2p$$\n\n例如，$x^{3} - 5x^{2} + 17x - 13$ 有根 $2 + 3i$，则 $r = 5 - 4 = 1$。",
       ),
       generate(rng) {

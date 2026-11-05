@@ -2367,14 +2367,14 @@ const airyCoefficient: KnowledgePointDef = {
     const answer = Q.of(start, denominator);
     return numberProblem({
       prompt: t(
-        `The solution of $y'' = xy$ with $y(0) = ${a}$ and $y'(0) = ${b}$ has a power series about $x = 0$. Find the coefficient of $x^${power}$.`,
-        `$y'' = xy$，$y(0) = ${a}$，$y'(0) = ${b}$ 的解在 $x = 0$ 处有幂级数。求 $x^${power}$ 的系数。`,
+        `The solution of $y'' = xy$ with $y(0) = ${a}$ and $y'(0) = ${b}$ has a power series about $x = 0$. Find the coefficient of $x^{${power}}$.`,
+        `$y'' = xy$，$y(0) = ${a}$，$y'(0) = ${b}$ 的解在 $x = 0$ 处有幂级数。求 $x^{${power}}$ 的系数。`,
       ),
       answer,
       wrong: [Q.of(other, denominator), Q.of(start, power), Q.of(start, power - 1), Q.of(start, 2 * denominator)],
       solution: t(
-        `Comparing coefficients gives $${power}\\cdot${power - 1}\\,a_${power} = a_${power - 3}$, and $a_${power - 3} = ${start}$. So $a_${power} = ${answer.toLatex()}$.`,
-        `比较系数，得 $${power}\\cdot${power - 1}\\,a_${power} = a_${power - 3}$，且 $a_${power - 3} = ${start}$。所以 $a_${power} = ${answer.toLatex()}$。`,
+        `Comparing coefficients gives $${power}\\cdot${power - 1}\\,a_{${power}} = a_{${power - 3}}$, and $a_{${power - 3}} = ${start}$. So $a_{${power}} = ${answer.toLatex()}$.`,
+        `比较系数，得 $${power}\\cdot${power - 1}\\,a_{${power}} = a_{${power - 3}}$，且 $a_{${power - 3}} = ${start}$。所以 $a_{${power}} = ${answer.toLatex()}$。`,
       ),
     });
   },

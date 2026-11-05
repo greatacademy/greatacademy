@@ -738,7 +738,7 @@ export const parametricEquationsOfEllipses: TopicDef = {
       id: "ellipse-axes-and-eccentric-angle",
       title: t("Semi-axes lengths and eccentric angle", "椭圆的半轴长与离心角"),
       explanation: t(
-        "For an ellipse $x = h + a\\cos\\theta, y = k + b\\sin\\theta$:\n- The center is $(h, k)$.\n- The semi-major axis length is $\\max(a, b)$, and the length of the major axis is $2\\max(a, b)$.\n- The semi-minor axis length is $\\min(a, b)$, and the length of the minor axis is $2\\min(a, b)$.\n- The parameter $\\theta$ is called the **eccentric angle** (离心角). It corresponds to the angle of a point on the circumscribed auxiliary circle, and is generally not the geometric angle from the origin to $(x, y)$.",
+        "For an ellipse $x = h + a\\cos\\theta, y = k + b\\sin\\theta$:\n- The center is $(h, k)$.\n- The semi-major axis length is $\\max(a, b)$, and the length of the major axis is $2\\max(a, b)$.\n- The semi-minor axis length is $\\min(a, b)$, and the length of the minor axis is $2\\min(a, b)$.\n- The parameter $\\theta$ is called the **eccentric angle**. It corresponds to the angle of a point on the circumscribed auxiliary circle, and is generally not the geometric angle from the origin to $(x, y)$.",
         "对于椭圆参数方程 $x = h + a\\cos\\theta, y = k + b\\sin\\theta$：\n- 中心为 $(h, k)$。\n- 半长轴长为 $\\max(a, b)$，长轴全长为 $2\\max(a, b)$。\n- 半短轴长为 $\\min(a, b)$，短轴全长为 $2\\min(a, b)$。\n- 参数 $\\theta$ 称为该点的**离心角**。它是辅助圆上对应点的圆心角，通常不等于椭圆上该点与中心连线的极角（几何角度）。",
       ),
       generate(rng) {

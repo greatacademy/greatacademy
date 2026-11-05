@@ -215,8 +215,12 @@ export const integerDivisibility: TopicDef = {
           answer: all ? 2 * pos : pos,
           wrong: [all ? pos : 2 * pos, pos - 2, pos + 1],
           solution: t(
-            `$${n}$ has $${pos}$ positive divisors${all ? `, and each has a negative partner, giving $${2 * pos}$` : ""}.`,
-            `$${n}$ 有 $${pos}$ 个正因数${all ? `，每个都有对应的负因数，共 $${2 * pos}$ 个` : ""}。`,
+            `The positive divisors of $${n}$ are $${range(1, n)
+              .filter((x) => n % x === 0)
+              .join(", ")}$, which makes $${pos}$${all ? `. Each has a negative partner, giving $${2 * pos}$` : ""}.`,
+            `$${n}$ 的正因数是 $${range(1, n)
+              .filter((x) => n % x === 0)
+              .join(", ")}$，共 $${pos}$ 个${all ? `。每个都有对应的负因数，共 $${2 * pos}$ 个` : ""}。`,
           ),
         });
       },
@@ -869,8 +873,14 @@ export const provingInequalitiesUsingInduction: TopicDef = {
           tex = `${a}^n > ${c}n`;
           f = (n) => a ** n > c * n;
         } else if (kind === 1) {
-          const a = rng.int(2, 4);
-          const k = rng.int(2, 3);
+          // These pairs fail for some n, so that there is a starting value to find.
+          const [a, k] = rng.pick([
+            [2, 2],
+            [2, 3],
+            [2, 4],
+            [3, 3],
+            [3, 4],
+          ] as const);
           tex = `${a}^n > n^{${k}}`;
           f = (n) => a ** n > n ** k;
         } else {

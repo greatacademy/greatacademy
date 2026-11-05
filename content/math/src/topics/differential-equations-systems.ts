@@ -823,19 +823,19 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
         const [a, b, c, d] = [l + n11, n12, n21, l + n22];
         return numberProblem({
           prompt: t(
-            `The matrix $A = ${mat(a, b, c, d)}$ has a repeated eigenvalue. The solution of $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x}(0) = ${vec(p, q)}$ has the form $e^{\\lambda t}(\\mathbf{x}(0) + t\\mathbf{w})$. Find $w_${comp}$.`,
-            `矩阵 $A = ${mat(a, b, c, d)}$ 有重特征值。$\\mathbf{x}' = A\\mathbf{x}$ 满足 $\\mathbf{x}(0) = ${vec(p, q)}$ 的解形如 $e^{\\lambda t}(\\mathbf{x}(0) + t\\mathbf{w})$。求 $w_${comp}$。`,
+            `The matrix $A = ${mat(a, b, c, d)}$ has a repeated eigenvalue. The solution of $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x}(0) = ${vec(p, q)}$ has the form $e^{\\lambda t}(\\mathbf{x}(0) + t\\mathbf{w})$. Find $w_{${comp}}$.`,
+            `矩阵 $A = ${mat(a, b, c, d)}$ 有重特征值。$\\mathbf{x}' = A\\mathbf{x}$ 满足 $\\mathbf{x}(0) = ${vec(p, q)}$ 的解形如 $e^{\\lambda t}(\\mathbf{x}(0) + t\\mathbf{w})$。求 $w_{${comp}}$。`,
           ),
           answer: ans,
           wrong: [comp === 1 ? a * p + b * q : c * p + d * q, -ans, comp === 1 ? w2 : w1],
           solution: t(
             steps(
               `$\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A) = ${l}$, so $A - ${par(l)}I = ${mat(n11, n12, n21, n22)}$.`,
-              `$\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}$, so $w_${comp} = ${ans}$.`,
+              `$\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}$, so $w_{${comp}} = ${ans}$.`,
             ),
             steps(
               `$\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A) = ${l}$，所以 $A - ${par(l)}I = ${mat(n11, n12, n21, n22)}$。`,
-              `$\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}$，所以 $w_${comp} = ${ans}$。`,
+              `$\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}$，所以 $w_{${comp}} = ${ans}$。`,
             ),
           ),
         });
@@ -1016,8 +1016,8 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
         const ans = comp === 1 ? x : y;
         return numberProblem({
           prompt: t(
-            `Find the constant solution of $x_1' = ${poly([a, "x_1"], [b, "x_2"], [b1, ""])}$, $x_2' = ${poly([c, "x_1"], [d, "x_2"], [b2, ""])}$ and give its component $x_${comp}$.`,
-            `求 $x_1' = ${poly([a, "x_1"], [b, "x_2"], [b1, ""])}$，$x_2' = ${poly([c, "x_1"], [d, "x_2"], [b2, ""])}$ 的常数解，并给出分量 $x_${comp}$。`,
+            `Find the constant solution of $x_1' = ${poly([a, "x_1"], [b, "x_2"], [b1, ""])}$, $x_2' = ${poly([c, "x_1"], [d, "x_2"], [b2, ""])}$ and give its component $x_{${comp}}$.`,
+            `求 $x_1' = ${poly([a, "x_1"], [b, "x_2"], [b1, ""])}$，$x_2' = ${poly([c, "x_1"], [d, "x_2"], [b2, ""])}$ 的常数解，并给出分量 $x_{${comp}}$。`,
           ),
           answer: ans,
           wrong: [comp === 1 ? y : x, -ans, comp === 1 ? Q.of(-b1, a) : Q.of(-b2, d)],

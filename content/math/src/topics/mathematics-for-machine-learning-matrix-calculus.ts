@@ -42,8 +42,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Consider the scalar objective function $f(\\mathbf{x}, \\mathbf{y}) = ${a} x_1 y_1 + ${b} x_2 y_2 + ${c} x_1^2 + ${d} x_2^2$ for vectors $\\mathbf{x} = [x_1, x_2]^T$ and $\\mathbf{y} = [y_1, y_2]^T$. Find the $x_${askIndex}$-component of the gradient vector $\\nabla_{\\mathbf{x}} f(\\mathbf{x}, \\mathbf{y}) = \\begin{bmatrix} \\frac{\\partial f}{\\partial x_1} \\\\[3pt] \\frac{\\partial f}{\\partial x_2} \\end{bmatrix}$ evaluated at $\\mathbf{x} = [${x1}, ${x2}]^T$ and $\\mathbf{y} = [${y1}, ${y2}]^T$.`,
-              `考虑标量目标函数 $f(\\mathbf{x}, \\mathbf{y}) = ${a} x_1 y_1 + ${b} x_2 y_2 + ${c} x_1^2 + ${d} x_2^2$，其中向量 $\\mathbf{x} = [x_1, x_2]^T$ 且 $\\mathbf{y} = [y_1, y_2]^T$。在点 $\\mathbf{x} = [${x1}, ${x2}]^T$ 和 $\\mathbf{y} = [${y1}, ${y2}]^T$ 处，求关于子变量 $\\mathbf{x}$ 的梯度向量 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}, \\mathbf{y}) = \\begin{bmatrix} \\frac{\\partial f}{\\partial x_1} \\\\[3pt] \\frac{\\partial f}{\\partial x_2} \\end{bmatrix}$ 的第 $x_${askIndex}$ 个分量。`,
+              `Consider the scalar objective function $f(\\mathbf{x}, \\mathbf{y}) = ${a} x_1 y_1 + ${b} x_2 y_2 + ${c} x_1^2 + ${d} x_2^2$ for vectors $\\mathbf{x} = [x_1, x_2]^T$ and $\\mathbf{y} = [y_1, y_2]^T$. Find the $x_{${askIndex}}$-component of the gradient vector $\\nabla_{\\mathbf{x}} f(\\mathbf{x}, \\mathbf{y}) = \\begin{bmatrix} \\frac{\\partial f}{\\partial x_1} \\\\[3pt] \\frac{\\partial f}{\\partial x_2} \\end{bmatrix}$ evaluated at $\\mathbf{x} = [${x1}, ${x2}]^T$ and $\\mathbf{y} = [${y1}, ${y2}]^T$.`,
+              `考虑标量目标函数 $f(\\mathbf{x}, \\mathbf{y}) = ${a} x_1 y_1 + ${b} x_2 y_2 + ${c} x_1^2 + ${d} x_2^2$，其中向量 $\\mathbf{x} = [x_1, x_2]^T$ 且 $\\mathbf{y} = [y_1, y_2]^T$。在点 $\\mathbf{x} = [${x1}, ${x2}]^T$ 和 $\\mathbf{y} = [${y1}, ${y2}]^T$ 处，求关于子变量 $\\mathbf{x}$ 的梯度向量 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}, \\mathbf{y}) = \\begin{bmatrix} \\frac{\\partial f}{\\partial x_1} \\\\[3pt] \\frac{\\partial f}{\\partial x_2} \\end{bmatrix}$ 的第 $x_{${askIndex}}$ 个分量。`,
             ),
             answer: ans,
             wrong: [
@@ -52,8 +52,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               askIndex === 1 ? 2 * c * x1 : 2 * d * x2,
             ],
             solution: t(
-              `Holding $\\mathbf{y}$ constant, the partial derivative is $\\frac{\\partial f}{\\partial x_${askIndex}} = ${askIndex === 1 ? `${a} y_1 + 2(${c}) x_1` : `${b} y_2 + 2(${d}) x_2`}$. Substituting $x_${askIndex} = ${askIndex === 1 ? x1 : x2}$ and $y_${askIndex} = ${askIndex === 1 ? y1 : y2}$ yields $${ans}$.`,
-              `固定 $\\mathbf{y}$ 时，偏导数为 $\\frac{\\partial f}{\\partial x_${askIndex}} = ${askIndex === 1 ? `${a} y_1 + 2(${c}) x_1` : `${b} y_2 + 2(${d}) x_2`}$。代入 $x_${askIndex} = ${askIndex === 1 ? x1 : x2}$ 和 $y_${askIndex} = ${askIndex === 1 ? y1 : y2}$ 计算得 $${ans}$。`,
+              `Holding $\\mathbf{y}$ constant, the partial derivative is $\\frac{\\partial f}{\\partial x_{${askIndex}}} = ${askIndex === 1 ? `${a} y_1 + 2(${c}) x_1` : `${b} y_2 + 2(${d}) x_2`}$. Substituting $x_{${askIndex}} = ${askIndex === 1 ? x1 : x2}$ and $y_{${askIndex}} = ${askIndex === 1 ? y1 : y2}$ yields $${ans}$.`,
+              `固定 $\\mathbf{y}$ 时，偏导数为 $\\frac{\\partial f}{\\partial x_{${askIndex}}} = ${askIndex === 1 ? `${a} y_1 + 2(${c}) x_1` : `${b} y_2 + 2(${d}) x_2`}$。代入 $x_{${askIndex}} = ${askIndex === 1 ? x1 : x2}$ 和 $y_{${askIndex}} = ${askIndex === 1 ? y1 : y2}$ 计算得 $${ans}$。`,
             ),
           });
         },
@@ -339,8 +339,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$ for $\\mathbf{x} \\in \\mathbb{R}^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$ at $\\mathbf{x} = ${xVec}$, and report its $x_${askIdx}$-component.`,
-              `设 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，其中 $\\mathbf{x} \\in \\mathbb{R}^2$，$A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在 $\\mathbf{x} = ${xVec}$ 处计算梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$，并给出其第 $x_${askIdx}$ 个分量。`,
+              `Let $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$ for $\\mathbf{x} \\in \\mathbb{R}^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$ at $\\mathbf{x} = ${xVec}$, and report its $x_{${askIdx}}$-component.`,
+              `设 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，其中 $\\mathbf{x} \\in \\mathbb{R}^2$，$A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在 $\\mathbf{x} = ${xVec}$ 处计算梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$，并给出其第 $x_{${askIdx}}$ 个分量。`,
             ),
             answer: ans,
             wrong: [
@@ -379,8 +379,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
           const row = first ? `${2 * a11},\\ ${s}` : `${s},\\ ${2 * a22}`;
           return numberProblem({
             prompt: t(
-              `Let $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x}$ with $A = \\begin{bmatrix} ${a11} & ${a12} \\\\[3pt] ${a21} & ${a22} \\end{bmatrix}$. Find the $x_${k}$-component of $\\nabla_{\\mathbf{x}} f$ at $\\mathbf{x} = (${x1}, ${x2})$.`,
-              `设 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x}$，其中 $A = \\begin{bmatrix} ${a11} & ${a12} \\\\[3pt] ${a21} & ${a22} \\end{bmatrix}$。求 $\\nabla_{\\mathbf{x}} f$ 在 $\\mathbf{x} = (${x1}, ${x2})$ 处的 $x_${k}$ 分量。`,
+              `Let $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x}$ with $A = \\begin{bmatrix} ${a11} & ${a12} \\\\[3pt] ${a21} & ${a22} \\end{bmatrix}$. Find the $x_{${k}}$-component of $\\nabla_{\\mathbf{x}} f$ at $\\mathbf{x} = (${x1}, ${x2})$.`,
+              `设 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x}$，其中 $A = \\begin{bmatrix} ${a11} & ${a12} \\\\[3pt] ${a21} & ${a22} \\end{bmatrix}$。求 $\\nabla_{\\mathbf{x}} f$ 在 $\\mathbf{x} = (${x1}, ${x2})$ 处的 $x_{${k}}$ 分量。`,
             ),
             answer: ans,
             wrong: [twoAx, twoATx, ax],
@@ -444,8 +444,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Consider the least-squares residual objective $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$ at $\\mathbf{x} = ${xVec}$, and find its $x_${askIdx}$-component.`,
-              `考虑最小二乘残差目标函数 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$，其中 $A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在点 $\\mathbf{x} = ${xVec}$ 处求梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$，并给出其第 $x_${askIdx}$ 个分量。`,
+              `Consider the least-squares residual objective $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$ at $\\mathbf{x} = ${xVec}$, and find its $x_{${askIdx}}$-component.`,
+              `考虑最小二乘残差目标函数 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$，其中 $A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在点 $\\mathbf{x} = ${xVec}$ 处求梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$，并给出其第 $x_{${askIdx}}$ 个分量。`,
             ),
             answer: ans,
             wrong: [

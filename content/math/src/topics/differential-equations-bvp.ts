@@ -1218,7 +1218,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             ),
             steps(
               `将试探解 $y(x) = Y_{${m}} \\sin(${m}x)$ 代入方程：$-y''(x) = -(-${m}^2 Y_{${m}} \\sin(${m}x)) = ${mSq} Y_{${m}} \\sin(${m}x)$。`,
-              `与右端激励项对比系数：${mSq} Y_{${m}} = ${Fm}。`,
+              `与右端激励项对比系数：$${mSq} Y_{${m}} = ${Fm}$。`,
               `解得 $Y_{${m}} = \\frac{${Fm}}{${mSq}} = ${ans}$。注意该解自动满足边界条件 $y(0) = 0$ 与 $y(\\pi) = 0$。`,
             ),
           );

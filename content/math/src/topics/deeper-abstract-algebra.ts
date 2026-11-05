@@ -1103,8 +1103,22 @@ const orderFromTwoPowers: KnowledgePointDef = {
     "如果 $a^m = e$，那么 $a$ 的阶整除 $m$，因为 $a$ 的幂以阶为周期重复。所以两个这样的方程迫使阶同时整除两个指数，从而整除它们的最大公约数。在这个大小的循环群中，恰好有这个阶的元素，所以这个界不能再改进。",
   ),
   generate(rng) {
-    const m = rng.int(4, 60);
-    const n = rng.pick(range(4, 60).filter((v) => v !== m));
+    // Mostly a common factor above one, so that the answer is rarely the trivial order.
+    const common = rng.int(1, 12);
+    const [p, q] = rng.shuffle(rng.pick([
+      [2, 3],
+      [2, 5],
+      [2, 7],
+      [3, 4],
+      [3, 5],
+      [3, 7],
+      [4, 5],
+      [4, 7],
+      [5, 6],
+      [5, 7],
+    ] as const));
+    const m = common * (p as number);
+    const n = common * (q as number);
     const answer = gcd(m, n);
     return numberProblem({
       prompt: t(
@@ -1212,15 +1226,22 @@ const annihilatedElements: KnowledgePointDef = {
     "映射 $x \\mapsto kx$ 是 $\\mathbb{Z}_n$ 到自身的同态，$kx = 0$ 的解就是它的核。像是由 $k$ 生成的子群，有 $\\frac{n}{\\gcd(k, n)}$ 个元素。用 $n$ 除以这个大小，得到核的大小 $\\gcd(k, n)$。这些解恰好是 $\\frac{n}{\\gcd(k, n)}$ 的倍数。",
   ),
   generate(rng) {
-    const n = rng.int(6, 60);
-    const k = rng.int(2, n - 1);
+    // n = answer * a and k = answer * b with a and b coprime, so that the count is above one.
+    const common = rng.int(2, 10);
+    const a = rng.int(2, 8);
+    const b = rng.pick(range(1, a - 1).filter((v) => gcd(v, a) === 1));
+    const n = common * a;
+    const k = common * b;
     const answer = gcd(k, n);
     return numberProblem({
       prompt: t(`How many elements $x$ of ${"$"}${Zn(n)}$ satisfy $${k}x = 0$?`, `${"$"}${Zn(n)}$ 中有多少个元素 $x$ 满足 $${k}x = 0$？`),
       answer,
       form: "integer",
       wrong: [1, n, n / answer, k, answer + 1],
-      solution: t(`The number of solutions is $\\gcd(${k}, ${n}) = ${answer}$.`, `解的个数是 $\\gcd(${k}, ${n}) = ${answer}$。`),
+      solution: t(
+        `The image of $x \\mapsto ${k}x$ has $\\frac{${n}}{\\gcd(${k}, ${n})} = ${n / answer}$ elements, so the kernel has $\\frac{${n}}{${n / answer}} = ${answer}$.`,
+        `映射 $x \\mapsto ${k}x$ 的像有 $\\frac{${n}}{\\gcd(${k}, ${n})} = ${n / answer}$ 个元素，所以核有 $\\frac{${n}}{${n / answer}} = ${answer}$ 个元素。`,
+      ),
     });
   },
 };
@@ -1299,8 +1320,8 @@ const surjectionsFromFree: KnowledgePointDef = {
       form: "integer",
       wrong: [p ** r, p ** r - p, r * (p - 1)],
       solution: t(
-        `There are $${p}^${r}$ homomorphisms, and only the zero map is not onto. That leaves $${answer}$.`,
-        `一共有 $${p}^${r}$ 个同态，只有零映射不是满射。剩下 $${answer}$ 个。`,
+        `There are $${p}^{${r}}$ homomorphisms, and only the zero map is not onto. That leaves $${answer}$.`,
+        `一共有 $${p}^{${r}}$ 个同态，只有零映射不是满射。剩下 $${answer}$ 个。`,
       ),
     });
   },
@@ -1314,8 +1335,22 @@ const twoRelationsOnOneGenerator: KnowledgePointDef = {
     "只有一个生成元的表现描述一个循环群，关系决定它的大小。关系 $a^m = e$ 和 $a^n = e$ 合起来推出 $a^{\\gcd(m, n)} = e$，因为最大公约数是 $m$ 和 $n$ 的整数线性组合。没有更多的限制，所以这个群是 $\\gcd(m, n)$ 阶循环群。",
   ),
   generate(rng) {
-    const m = rng.int(4, 60);
-    const n = rng.pick(range(4, 60).filter((v) => v !== m));
+    // Mostly a common factor above one, so that the answer is rarely the trivial group.
+    const common = rng.int(1, 12);
+    const [p, q] = rng.shuffle(rng.pick([
+      [2, 3],
+      [2, 5],
+      [2, 7],
+      [3, 4],
+      [3, 5],
+      [3, 7],
+      [4, 5],
+      [4, 7],
+      [5, 6],
+      [5, 7],
+    ] as const));
+    const m = common * (p as number);
+    const n = common * (q as number);
     const answer = gcd(m, n);
     return numberProblem({
       prompt: t(
@@ -1549,8 +1584,8 @@ const polynomialQuotientSize: KnowledgePointDef = {
       form: "integer",
       wrong: [n * d, n ** (d - 1), n ** (d + 1)],
       solution: t(
-        `Each coset has one representative of degree below ${d}, with ${d} free coefficients in ${"$"}${Zn(n)}$. That gives $${n}^${d} = ${answer}$.`,
-        `每个陪集有一个次数低于 ${d} 的代表元，它有 ${d} 个可在 ${"$"}${Zn(n)}$ 中自由选取的系数。于是得 $${n}^${d} = ${answer}$。`,
+        `Each coset has one representative of degree below ${d}, with ${d} free coefficients in ${"$"}${Zn(n)}$. That gives $${n}^{${d}} = ${answer}$.`,
+        `每个陪集有一个次数低于 ${d} 的代表元，它有 ${d} 个可在 ${"$"}${Zn(n)}$ 中自由选取的系数。于是得 $${n}^{${d}} = ${answer}$。`,
       ),
     });
   },
@@ -1666,8 +1701,8 @@ const matrixSubspaceDimension: KnowledgePointDef = {
       form: "integer",
       wrong: [other, n * n, n],
       solution: t(
-        `A ${symmetric ? "symmetric matrix is decided by its entries on and above the diagonal" : "skew-symmetric matrix has a zero diagonal and is decided by its entries above it"}, and there are $${answer}$ of them.`,
-        `${symmetric ? "对称矩阵由对角线及其上方的元素决定" : "反对称矩阵对角线为零，由对角线上方的元素决定"}，共有 $${answer}$ 个。`,
+        `A ${symmetric ? "symmetric matrix is decided by its entries on and above the diagonal" : "skew-symmetric matrix has a zero diagonal and is decided by its entries above it"}, and there are $\\frac{${n} \\cdot ${symmetric ? n + 1 : n - 1}}{2} = ${answer}$ of them.`,
+        `${symmetric ? "对称矩阵由对角线及其上方的元素决定" : "反对称矩阵对角线为零，由对角线上方的元素决定"}，共有 $\\frac{${n} \\cdot ${symmetric ? n + 1 : n - 1}}{2} = ${answer}$ 个。`,
       ),
     });
   },

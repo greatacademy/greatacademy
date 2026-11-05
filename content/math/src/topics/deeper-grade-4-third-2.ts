@@ -80,7 +80,7 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
           q,
           [q + 1, r, d],
           [
-            `$${frac(n, d)} = ${q}${frac(r, d)}$, so ${q} whole pies and ${r} slices left over.`,
+            `$${frac(n, d)} = ${q}${frac(r, d)}$, so ${q} whole pies and ${r} ${r === 1 ? "slice" : "slices"} left over.`,
             `$${frac(n, d)} = ${q}${frac(r, d)}$，所以能拼成 ${q} 个完整的馅饼，还剩 ${r} 块。`,
           ],
         );

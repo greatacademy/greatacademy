@@ -1487,7 +1487,7 @@ export const removingDiscontinuitiesFromRationalFunctions: TopicDef = {
         const values = shared === 0 ? [] : shared === 1 ? [r1] : [r1, r2];
         return solutionsProblem({
           prompt: t(
-            `Find every $x$ at which $f(x) = \\frac{${quadraticFrom(m, tops[0]!, tops[1]!)}}{${quadraticFrom(1, r1, r2)}}$ has a removable discontinuity. If there is none, answer $\\varnothing$.`,
+            `Find every $x$ at which $f(x) = \\frac{${quadraticFrom(m, tops[0]!, tops[1]!)}}{${quadraticFrom(1, r1, r2)}}$ has a removable discontinuity. If there is none, type none.`,
             `求 $f(x) = \\frac{${quadraticFrom(m, tops[0]!, tops[1]!)}}{${quadraticFrom(1, r1, r2)}}$ 的所有可去间断点的 $x$ 值。若没有，回答 $\\varnothing$。`,
           ),
           values: values.map(String),

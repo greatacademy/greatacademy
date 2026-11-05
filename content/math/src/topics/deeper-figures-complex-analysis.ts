@@ -207,7 +207,7 @@ const rootsFromPicture = point(
   "the-equation-from-its-roots-on-a-circle",
   ["The equation from its roots on a circle", "由圆上的根读方程"],
   [
-    "The solutions of $z^n = w$ are $n$ points evenly spaced on a circle centered at the origin. So the number of dots gives $n$, the radius $R$ gives $|w| = R^n$, and raising the angle of any one dot to the power $n$ gives the angle of $w$. A dot on the positive real axis means that $w$ is positive.",
+    "The solutions of $z^n = w$ are $n$ points evenly spaced on a circle centered at the origin. So the number of dots gives $n$, the radius $R$ gives $|w| = R^n$, and multiplying the angle of any one dot by $n$ gives the angle of $w$. A dot on the positive real axis means that $w$ is positive.",
     "$z^n = w$ 的解是以原点为圆心的圆上均匀分布的 $n$ 个点。所以点的个数给出 $n$，半径 $R$ 给出 $|w| = R^n$，任一点的辐角乘以 $n$ 给出 $w$ 的辐角。正实轴上有点就说明 $w$ 为正。",
   ],
   (rng) => {
@@ -540,8 +540,8 @@ const wedgeImage = point(
           { kind: "segment", a: [0, 0], b: scale(v), accent: true },
         ],
         [
-          `A shaded wedge with its tip at the origin, opening from ${first * 45} degrees through ${steps * 45} degrees.`,
-          `顶点在原点的阴影楔形，从 ${first * 45} 度起张开 ${steps * 45} 度。`,
+          `A shaded wedge with its tip at the origin, between the rays at ${first * 45} degrees and ${((first + steps) * 45) % 360} degrees.`,
+          `顶点在原点的阴影楔形，位于 ${first * 45} 度和 ${((first + steps) * 45) % 360} 度的两条射线之间。`,
         ],
       ),
     );

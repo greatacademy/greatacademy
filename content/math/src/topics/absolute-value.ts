@@ -75,8 +75,8 @@ function solveAbs(A: number, B: number, C: Coefficient): Q[] {
 }
 
 const listSolutions = t(
-  "Enter all solutions separated by commas, or $\\varnothing$ if there are none.",
-  "请用逗号分隔写出所有解；如果无解，请输入 $\\varnothing$。",
+  "Enter all solutions separated by commas, or type none if there are none.",
+  "请用逗号分隔写出所有解；如果无解，请输入 none。",
 );
 const asInterval = t("Write the answer in interval notation.", "用区间记号写出答案。");
 

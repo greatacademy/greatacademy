@@ -103,8 +103,8 @@ const powerSeriesDiscs = topic(
           correct,
           [inside, outside, edge, ["It converges everywhere", "处处收敛"]],
           [
-            `The distance from the center is $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$, compared with the radius ${r}.`,
-            `到圆心的距离是 $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$，再与半径 ${r} 比较。`,
+            `The distance from the center is $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$, and the radius is ${r}. ${d < r ? "The point is inside the disc, so the series converges there." : d > r ? "The point is outside the disc, so the series diverges there." : "The point is on the boundary circle, where a series may converge or diverge."}`,
+            `到圆心的距离是 $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$，半径是 ${r}。${d < r ? "这个点在圆盘内，所以级数在那里收敛。" : d > r ? "这个点在圆盘外，所以级数在那里发散。" : "这个点在边界圆上，级数在那里可能收敛也可能发散。"}`,
           ],
         );
       },

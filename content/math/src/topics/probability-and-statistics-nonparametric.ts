@@ -137,8 +137,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
             answer: expected,
             wrong: [Q.of(N, n + 1), mult, Q.of(N * x, n)],
             solution: t(
-              `$P(X = ${x}) = \\binom{${n}}{${x}} (0.5)^${x} (0.5)^{${n - x}} = \\frac{${nChooseX}}{${denProb}}$. Thus $E_{${x}} = ${N} \\times \\frac{${nChooseX}}{${denProb}} = ${expected}$.`,
-              `$P(X = ${x}) = \\binom{${n}}{${x}} (0.5)^${x} (0.5)^{${n - x}} = \\frac{${nChooseX}}{${denProb}}$。因此 $E_{${x}} = ${N} \\times \\frac{${nChooseX}}{${denProb}} = ${expected}$。`,
+              `$P(X = ${x}) = \\binom{${n}}{${x}} (0.5)^{${x}} (0.5)^{${n - x}} = \\frac{${nChooseX}}{${denProb}}$. Thus $E_{${x}} = ${N} \\times \\frac{${nChooseX}}{${denProb}} = ${expected}$.`,
+              `$P(X = ${x}) = \\binom{${n}}{${x}} (0.5)^{${x}} (0.5)^{${n - x}} = \\frac{${nChooseX}}{${denProb}}$。因此 $E_{${x}} = ${N} \\times \\frac{${nChooseX}}{${denProb}} = ${expected}$。`,
             ),
           });
         },

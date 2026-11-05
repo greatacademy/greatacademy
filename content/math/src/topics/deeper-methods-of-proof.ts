@@ -381,7 +381,7 @@ const latticePoints: KnowledgePointDef = {
 
 /** conjunction writes the conjunction of the variables named by a letter and an index. */
 const conjunction = (k: number) =>
-  k === 1 ? "p_1" : k === 2 ? "(p_1 \\land p_2)" : k === 3 ? "(p_1 \\land p_2 \\land p_3)" : `(p_1 \\land \\dots \\land p_${k})`;
+  k === 1 ? "p_1" : k === 2 ? "(p_1 \\land p_2)" : k === 3 ? "(p_1 \\land p_2 \\land p_3)" : `(p_1 \\land \\dots \\land p_{${k}})`;
 
 const falseRowsOfAConditional: KnowledgePointDef = {
   id: "the-false-rows-of-a-conditional",
@@ -394,7 +394,7 @@ const falseRowsOfAConditional: KnowledgePointDef = {
     const k = rng.int(1, 4);
     const n = rng.int(k + 1, 10);
     const answer = 2 ** (n - k - 1);
-    const named = k === 1 ? "$p_1$" : k === 2 ? "$p_1$, $p_2$" : `$p_1$ to $p_${k}$`;
+    const named = k === 1 ? "$p_1$" : k === 2 ? "$p_1$, $p_2$" : `$p_1$ to $p_{${k}}$`;
     return numberProblem({
       prompt: t(
         `A truth table lists all values of ${n} variables, including ${named} and $q$. In how many rows is $${conjunction(k)} \\to q$ false?`,
@@ -422,7 +422,7 @@ const trueRowsOfBiconditionals: KnowledgePointDef = {
     const k = rng.int(1, 4);
     const n = rng.int(2 * k, 12);
     const answer = 2 ** (n - k);
-    const pair = (i: number) => `(p_${i} \\leftrightarrow q_${i})`;
+    const pair = (i: number) => `(p_{${i}} \\leftrightarrow q_{${i}})`;
     const formula = k === 1 ? pair(1) : k === 2 ? `${pair(1)} \\land ${pair(2)}` : `${pair(1)} \\land \\dots \\land ${pair(k)}`;
     return numberProblem({
       prompt: t(
@@ -1012,7 +1012,7 @@ const joined = (letter: string, k: number, op: string) =>
     ? `(${letter}_1 ${op} ${letter}_2)`
     : k === 3
       ? `(${letter}_1 ${op} ${letter}_2 ${op} ${letter}_3)`
-      : `(${letter}_1 ${op} \\dots ${op} ${letter}_${k})`;
+      : `(${letter}_1 ${op} \\dots ${op} ${letter}_{${k}})`;
 /** independentDivisors lists the ordered pairs from 2 to 12 in which neither number divides the other. */
 const independentDivisors: readonly (readonly [number, number])[] = [...Array(11).keys()]
   .flatMap((i) => [...Array(11).keys()].map((j) => [i + 2, j + 2] as const))
@@ -1528,11 +1528,11 @@ const implicationChainRows: KnowledgePointDef = {
         ? "(p_1 \\to p_2) \\land (p_2 \\to p_3)"
         : k === 4
           ? "(p_1 \\to p_2) \\land (p_2 \\to p_3) \\land (p_3 \\to p_4)"
-          : `(p_1 \\to p_2) \\land \\dots \\land (p_${k - 1} \\to p_${k})`;
+          : `(p_1 \\to p_2) \\land \\dots \\land (p_{${k - 1}} \\to p_{${k}})`;
     return numberProblem({
       prompt: t(
-        `A truth table lists all values of ${n} variables, including $p_1$ to $p_${k}$. In how many rows is $${links}$ true?`,
-        `真值表列出 ${n} 个变量的所有取值，其中包括 $p_1$ 到 $p_${k}$。$${links}$ 在多少行为真？`,
+        `A truth table lists all values of ${n} variables, including $p_1$ to $p_{${k}}$. In how many rows is $${links}$ true?`,
+        `真值表列出 ${n} 个变量的所有取值，其中包括 $p_1$ 到 $p_{${k}}$。$${links}$ 在多少行为真？`,
       ),
       answer,
       form: "integer",
@@ -1563,7 +1563,7 @@ const chainsOfSubsets: KnowledgePointDef = {
       const r = rng.int(2, 4);
       const n = rng.int(2, 8);
       const answer = (r + 1) ** n;
-      const chain = [...Array(r).keys()].map((i) => `A_${i + 1}`).join(" \\subseteq ");
+      const chain = [...Array(r).keys()].map((i) => `A_{${i + 1}}`).join(" \\subseteq ");
       return numberProblem({
         prompt: t(
           `Let $U$ be a set of ${n} elements. How many lists of subsets of $U$ satisfy $${chain}$?`,
@@ -2493,7 +2493,8 @@ const floorPreimage: KnowledgePointDef = {
     const m = rng.int(2, 12);
     const r = rng.int(0, k - 1);
     const n = k * m + r;
-    const v = rng.int(0, m);
+    // The blocks at the two ends are the ones that can be cut short.
+    const v = rng.pick([0, m, rng.int(1, m - 1)]);
     const preimage = oneTo(n).filter((x) => Math.floor(x / k) === v);
     const answer = preimage.length;
     return numberProblem({

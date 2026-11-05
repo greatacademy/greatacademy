@@ -485,7 +485,11 @@ const commonRoot = point(
   ],
   (rng) => {
     const p = rng.pick([7, 11, 13, 17]);
-    const [a, b, c] = rng.sample([...Array(p).keys()], 3) as [number, number, number];
+    // Nonzero roots, since a root of 0 would show in the missing constant terms.
+    const [a, b, c] = rng.sample(
+      [...Array(p - 1).keys()].map((v) => v + 1),
+      3,
+    ) as [number, number, number];
     const coefficient = (s: number, t: number) => [(p - ((s + t) % p)) % p, (s * t) % p] as const;
     const [f1, f0] = coefficient(a, b);
     const [g1, g0] = coefficient(a, c);

@@ -1941,13 +1941,13 @@ export const rotationalSymmetry: TopicDef = {
         const ok = angle % step === 0;
         return choiceProblem({
           prompt: t(
-            `Does a rotation of $${angle}^\\circ$ about its center map a ${en} onto itself?`,
+            `Does a rotation of $${angle}^\\circ$ about its center map ${/^[aeio]/.test(en) ? "an" : "a"} ${en} onto itself?`,
             `绕中心旋转 $${angle}^\\circ$ 能把${zh}映到自身吗？`,
           ),
           options: yesNo,
           correct: ok ? 0 : 1,
           solution: t(
-            `The rotations that map a ${en} onto itself are the multiples of $\\frac{360^\\circ}{${n}} = ${step}^\\circ$. ${ok ? `$${angle} = ${angle / step} \\cdot ${step}$, so yes.` : `$${angle}$ is not a multiple of $${step}$, so no.`}`,
+            `The rotations that map ${/^[aeio]/.test(en) ? "an" : "a"} ${en} onto itself are the multiples of $\\frac{360^\\circ}{${n}} = ${step}^\\circ$. ${ok ? `$${angle} = ${angle / step} \\cdot ${step}$, so yes.` : `$${angle}$ is not a multiple of $${step}$, so no.`}`,
             `能把${zh}映到自身的旋转是 $\\frac{360^\\circ}{${n}} = ${step}^\\circ$ 的倍数。${ok ? `$${angle} = ${angle / step} \\cdot ${step}$，所以能。` : `$${angle}$ 不是 $${step}$ 的倍数，所以不能。`}`,
           ),
         });

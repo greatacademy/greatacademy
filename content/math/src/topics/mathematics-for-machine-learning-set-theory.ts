@@ -125,8 +125,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "evaluating-supremum-and-infimum",
         title: t("Evaluating supremum and infimum of bounded sets", "求有界集合的上确界与下确界"),
         explanation: t(
-          "For an open interval (a, b), sup((a, b)) = b and inf((a, b)) = a, neither of which is a maximum or minimum. For S = {c - d/n : n in N+}, sup(S) = c and inf(S) = c - d.",
-          "对于开区间 (a, b)，sup((a, b)) = b 且 inf((a, b)) = a，两者都不是最大值或最小值。对于 S = {c - d/n : n in N+}，sup(S) = c 且 inf(S) = c - d。",
+          "For an open interval $(a, b)$, $\\sup (a, b) = b$ and $\\inf (a, b) = a$, neither of which is a maximum or minimum. For $S = \\{c - \\frac{d}{n} : n \\in \\mathbb{N}^{+}\\}$ with $d > 0$, $\\sup S = c$ and $\\inf S = c - d$.",
+          "对于开区间 $(a, b)$，$\\sup (a, b) = b$ 且 $\\inf (a, b) = a$，两者都不是最大值或最小值。对于 $S = \\{c - \\frac{d}{n} : n \\in \\mathbb{N}^{+}\\}$（$d > 0$），$\\sup S = c$ 且 $\\inf S = c - d$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);

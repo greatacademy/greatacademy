@@ -31,7 +31,7 @@ const convexity = topic(
       ],
       (rng) => {
         const lambda = rng.pick([1, 3]);
-        const [x1, x2] = [rng.int(-3, 6) * 4, rng.int(-3, 6) * 4];
+        const [x1, x2] = (rng.sample([-3, -2, -1, 1, 2, 3, 4, 5, 6], 2) as [number, number]).map((v) => v * 4) as [number, number];
         const [y1, y2] = [rng.int(0, 9), rng.int(0, 9)];
         const value = (lambda * x1 + (4 - lambda) * x2) / 4;
         return ask(
@@ -86,9 +86,11 @@ const convexity = topic(
         const [a, b] = [rng.int(1, 5), rng.int(1, 5)];
         const r = rng.int(2, 9);
         const h = rng.int(3, 12);
-        const bad: Pair = rng.bool()
+        const outsideDisc = rng.bool();
+        const bad: Pair = outsideDisc
           ? same(`\\{(x, y) : x^2 + y^2 \\ge ${r * r}\\}`)
           : same(`\\{(x, y) : x \\le -${a} \\text{ or } x \\ge ${b}\\}`);
+        const [left, right] = outsideDisc ? [-r, r] : [-a, b];
         return choose(
           rng,
           ["Which of these sets is not convex?", "下面哪个集合不是凸集？"],
@@ -99,8 +101,8 @@ const convexity = topic(
             same(`\\{(x, y) : x \\ge ${a},\\ y \\ge ${b},\\ x + y \\le ${h + a + b}\\}`),
           ],
           [
-            "In the chosen set, two points on opposite sides of the gap have a segment that passes through the gap. The others are half-planes, a disc, or an intersection of half-planes, all of which are convex.",
-            "在所选集合中，缺口两侧的两点之间的线段会穿过缺口。其他选项是半平面、圆盘或半平面的交，都是凸集。",
+            `The points $(${left}, 0)$ and $(${right}, 0)$ are both in the set ${bad[0]}, but the origin between them on the segment is not, so it is not convex. The others are half-planes, a disc, or an intersection of half-planes, all of which are convex.`,
+            `点 $(${left}, 0)$ 和 $(${right}, 0)$ 都在集合 ${bad[0]} 中，但它们之间线段上的原点不在其中，所以它不是凸集。其他选项是半平面、圆盘或半平面的交，都是凸集。`,
           ],
         );
       },

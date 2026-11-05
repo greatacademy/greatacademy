@@ -75,8 +75,8 @@ const dedupe = (xs: readonly Q[]) => xs.filter((x, i) => xs.findIndex((y) => y.e
 const sols = (xs: readonly Coefficient[]) => sortQ(dedupe(xs.map(toQ))).map((x) => x.toLatex());
 
 const listSolutions = t(
-  "Enter all solutions separated by commas, or $\\varnothing$ if there are none.",
-  "请用逗号分隔写出所有解；如果无解，请输入 $\\varnothing$。",
+  "Enter all solutions separated by commas, or type none if there are none.",
+  "请用逗号分隔写出所有解；如果无解，请输入 none。",
 );
 
 /** solve asks to solve an equation and list its solutions. */

@@ -15,8 +15,8 @@ export const setTex = (xs: readonly number[]) => (xs.length === 0 ? "\\varnothin
 
 /** SET_HINT tells the learner how to type a finite set. */
 export const SET_HINT = t(
-  " Write the set as a list, such as $\\{1, 2, 3\\}$, or $\\varnothing$ if it is empty.",
-  "用列举法写出集合，如 $\\{1, 2, 3\\}$；若为空集，写 $\\varnothing$。",
+  " Write the set as a list, such as $\\{1, 2, 3\\}$, or type none if it is empty.",
+  "用列举法写出集合，如 $\\{1, 2, 3\\}$；若为空集，请输入 none。",
 );
 
 /** SetProblem describes a problem whose answer is a finite set of numbers. */

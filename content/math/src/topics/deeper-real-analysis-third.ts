@@ -53,8 +53,8 @@ const whichFixedPoint = point(
       r,
       [s, t, Q.of(r + s, 2)],
       [
-        `The fixed points are $${r}$ and $${s}$, and $a_{n+1} - a_n = \\frac{(a_n - ${r})(a_n - ${s})}{${r + s}}$ is negative between them. So the sequence decreases and stays above $${r}$, which makes $${r}$ the limit.`,
-        `不动点是 $${r}$ 和 $${s}$，在它们之间 $a_{n+1} - a_n = \\frac{(a_n - ${r})(a_n - ${s})}{${r + s}}$ 为负。所以数列递减且保持在 $${r}$ 之上，极限是 $${r}$。`,
+        `The fixed points are $${r}$ and $${s}$, and $a_{n+1} - a_n = \\frac{(a_n - ${r})(a_n - ${s})}{${r + s}}$ is negative between them, so the sequence decreases. It stays above $${r}$, because $a_{n+1} - ${r} = \\frac{a_n^{2} - ${r * r}}{${r + s}} > 0$ whenever $a_n > ${r}$. A bounded monotone sequence converges to a fixed point, and $${r}$ is the only one it can reach.`,
+        `不动点是 $${r}$ 和 $${s}$，在它们之间 $a_{n+1} - a_n = \\frac{(a_n - ${r})(a_n - ${s})}{${r + s}}$ 为负，所以数列递减。它保持在 $${r}$ 之上，因为只要 $a_n > ${r}$，就有 $a_{n+1} - ${r} = \\frac{a_n^{2} - ${r * r}}{${r + s}} > 0$。有界单调数列收敛到不动点，而它只能到达 $${r}$。`,
       ],
     );
   },
@@ -375,8 +375,8 @@ const lebesgueNumber = point(
   "the-overlap-of-a-cover",
   ["The overlap of a cover", "覆盖的重叠"],
   [
-    "When an open cover is made of overlapping intervals, a short interval fits inside a single member only if it is shorter than a limit set by the overlap. This idea is the Lebesgue number of a cover, which a compact set always has. It is the number behind many proofs by compactness.",
-    "当开覆盖由互相重叠的区间组成时，只有比重叠所确定的界限更短的小区间，才能放进单个成员之内。这个想法就是覆盖的勒贝格数，紧集总有勒贝格数。许多紧性证明都依赖它。",
+    "When an open cover is made of overlapping intervals, a short interval fits inside a single member only if it is shorter than a limit set by the overlap. A Lebesgue number of an open cover is a $\\delta > 0$ such that every set of diameter less than $\\delta$ lies inside a single member of the cover. An open cover of a compact set always has one, and it is the number behind many proofs by compactness. For overlapping open intervals, the danger is an interval that reaches past the overlap of two neighbours: it sticks out of both.",
+    "当开覆盖由互相重叠的区间组成时，只有比重叠所确定的界限更短的小区间，才能放进单个成员之内。开覆盖的勒贝格数是这样一个 $\\delta > 0$：每个直径小于 $\\delta$ 的集合都落在覆盖的某一个成员之内。紧集的开覆盖总有勒贝格数，许多紧性证明都依赖它。对于互相重叠的开区间，危险在于小区间越过两个相邻区间的重叠部分：这时它同时伸出这两个区间。",
   ],
   (rng) => {
     const w = rng.int(2, 9);

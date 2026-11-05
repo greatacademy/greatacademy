@@ -88,8 +88,8 @@ const complexFunctions = topic(
       "the-reciprocal-function",
       ["The reciprocal function", "倒数函数"],
       [
-        "The reciprocal of a complex number comes from multiplying above and below by its conjugate, which makes the denominator the real number $x^2 + y^2$. So the real part of $\\frac{1}{z}$ is $x$ over that sum, and the imaginary part is $-y$ over it. The sign of the imaginary part flips, which is a common place to slip when working quickly.",
-        "复数的倒数可以通过分子分母同乘共轭得到，这样分母变成实数 $x^2 + y^2$。所以 $\\frac{1}{z}$ 的实部是 $x$ 除以这个和，虚部是 $-y$ 除以它。虚部的符号相反，快速计算时这里常常出错。",
+        "The reciprocal of a complex number comes from multiplying above and below by its conjugate, which makes the denominator the real number $x^2 + y^2$. So $\\frac{1}{z} = \\frac{x}{x^2 + y^2} - \\frac{y}{x^2 + y^2} i$. The sign of the imaginary part flips, which is a common place to slip when working quickly.",
+        "复数的倒数可以通过分子分母同乘共轭得到，这样分母变成实数 $x^2 + y^2$。所以 $\\frac{1}{z} = \\frac{x}{x^2 + y^2} - \\frac{y}{x^2 + y^2} i$。虚部的符号相反，快速计算时这里常常出错。",
       ],
       (rng) => {
         const { a, b, r } = signedTriple(rng);
@@ -154,8 +154,8 @@ const complexLimits = topic(
       "a-limit-of-a-polynomial",
       ["A limit of a quotient", "商的极限"],
       [
-        "Polynomials are continuous on the whole plane, so their limits come from substitution, just as for real functions. A quotient that is zero over zero at a point usually has a common factor to cancel. After cancelling $z^2 - a^2$ with $z - a$, the limit at a is twice a, in any direction of approach, and this quotient is exactly the derivative of the square function.",
-        "多项式在整个平面上连续，所以它们的极限可以直接代入，就像实函数一样。在一点处为零比零的商通常有可约去的公因式。把 $z^2 - a^2$ 与 $z - a$ 约分后，在 a 处的极限是 2a，不论从哪个方向趋近，而这个商正是平方函数的导数。",
+        "Polynomials are continuous on the whole plane, so their limits come from substitution, just as for real functions. A quotient that is zero over zero at a point usually has a common factor to cancel. After cancelling $z^2 - a^2$ with $z - a$, the limit at $a$ is $2a$, in any direction of approach, and this quotient is exactly the derivative of the square function.",
+        "多项式在整个平面上连续，所以它们的极限可以直接代入，就像实函数一样。在一点处为零比零的商通常有可约去的公因式。把 $z^2 - a^2$ 与 $z - a$ 约分后，在 $a$ 处的极限是 $2a$，不论从哪个方向趋近，而这个商正是平方函数的导数。",
       ],
       (rng) => {
         const a = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
@@ -219,8 +219,8 @@ const complexDerivative = topic(
       "the-conjugate-has-no-derivative",
       ["The conjugate has no derivative", "共轭没有导数"],
       [
-        "The conjugate function looks simple, and it is continuous everywhere, yet it has no derivative at any point. Along a real h the difference quotient is one, and along an imaginary h it is minus one. These differ, so the limit fails. Complex differentiability is thus far stronger than its real counterpart: the smooth real map that reflects the plane is not complex differentiable.",
-        "共轭函数看起来很简单，处处连续，却在任何一点都没有导数。沿实的 h，差商是 1；沿虚的 h，差商是 −1。两者不同，所以极限不存在。因此复可导比实可导强得多：把平面反射的光滑实映射并不是复可导的。",
+        "The conjugate function looks simple, and it is continuous everywhere, yet it has no derivative at any point. Along a real $h$ the difference quotient $\\frac{\\overline{h}}{h}$ is $1$, and along an imaginary $h$ it is $-1$. These differ, so the limit fails. Complex differentiability is thus far stronger than its real counterpart: the smooth real map that reflects the plane is not complex differentiable.",
+        "共轭函数看起来很简单，处处连续，却在任何一点都没有导数。沿实的 $h$，差商 $\\frac{\\overline{h}}{h}$ 是 $1$；沿虚的 $h$，差商是 $-1$。两者不同，所以极限不存在。因此复可导比实可导强得多：把平面反射的光滑实映射并不是复可导的。",
       ],
       (rng) => {
         const c = rng.int(2, 19);
@@ -318,8 +318,8 @@ const harmonic = topic(
       "making-a-function-harmonic",
       ["Making a function harmonic", "使函数调和"],
       [
-        "A function is harmonic when its second x derivative and second y derivative add to zero. The real and imaginary parts of an analytic function are always harmonic, which follows by differentiating the Cauchy–Riemann equations once more and using the equality of mixed partial derivatives. So a function that is not harmonic cannot be the real part of an analytic function, and this gives a quick test.",
-        "如果对 x 和对 y 的二阶偏导之和为零，函数就是调和的。解析函数的实部和虚部总是调和的，把柯西–黎曼方程再求一次导，并用混合偏导相等，就能得到这一点。所以不调和的函数不可能是解析函数的实部，这是一个快速的检验。",
+        "A function $u$ is harmonic when $u_{xx} + u_{yy} = 0$. The real and imaginary parts of an analytic function are always harmonic, which follows by differentiating the Cauchy–Riemann equations once more and using the equality of mixed partial derivatives. So a function that is not harmonic cannot be the real part of an analytic function, and this gives a quick test.",
+        "如果 $u_{xx} + u_{yy} = 0$，函数 $u$ 就是调和的。解析函数的实部和虚部总是调和的，把柯西–黎曼方程再求一次导，并用混合偏导相等，就能得到这一点。所以不调和的函数不可能是解析函数的实部，这是一个快速的检验。",
       ],
       (rng) => {
         const p = rng.int(1, 9);
@@ -409,8 +409,8 @@ const complexExponential = topic(
       "the-period-of-the-exponential",
       ["The period of the exponential", "指数函数的周期"],
       [
-        "Unlike its real counterpart, the complex exponential is periodic, with period $2\\pi i$. Adding this to z leaves the value unchanged, so the equation asking for a given value has infinitely many solutions, spaced along a vertical line. This failure of injectivity is the source of all the difficulty with complex logarithms, and of the need to choose a branch for them.",
-        "与实指数函数不同，复指数函数是周期函数，周期是 $2\\pi i$。把它加到 z 上，值不变，所以求给定值的方程有无穷多个解，沿一条竖直线排列。这种不是单射的性质，正是复对数所有困难的来源，也是需要选择分支的原因。",
+        "Unlike its real counterpart, the complex exponential is periodic, with period $2\\pi i$. Adding this to $z$ leaves the value unchanged, so the equation asking for a given value has infinitely many solutions, spaced along a vertical line. This failure of injectivity is the source of all the difficulty with complex logarithms, and of the need to choose a branch for them.",
+        "与实指数函数不同，复指数函数是周期函数，周期是 $2\\pi i$。把它加到 $z$ 上，值不变，所以求给定值的方程有无穷多个解，沿一条竖直线排列。这种不是单射的性质，正是复对数所有困难的来源，也是需要选择分支的原因。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
@@ -477,8 +477,8 @@ const complexLog = topic(
       "the-real-part-of-the-logarithm",
       ["The real part of the logarithm", "对数的实部"],
       [
-        "The real part of the logarithm of z is the natural logarithm of its modulus, and it is the same for every branch. Branches differ only by multiples of $2\\pi i$. So the real part of the logarithm is a function on the punctured plane with no ambiguity, and it is harmonic, as the real part of an analytic function always is, wherever a branch exists.",
-        "z 的对数的实部是它的模的自然对数，对每个分支都相同。不同分支只相差 $2\\pi i$ 的倍数。所以对数的实部是去掉原点的平面上没有歧义的函数；并且和解析函数的实部一样，凡是存在分支的地方，它都是调和的。",
+        "The real part of $\\log z$ is $\\ln |z|$, and it is the same for every branch. Branches differ only by multiples of $2\\pi i$. So the real part of the logarithm is a function on the punctured plane with no ambiguity, and it is harmonic, as the real part of an analytic function always is, wherever a branch exists.",
+        "$\\log z$ 的实部是 $\\ln |z|$，对每个分支都相同。不同分支只相差 $2\\pi i$ 的倍数。所以对数的实部是去掉原点的平面上没有歧义的函数；并且和解析函数的实部一样，凡是存在分支的地方，它都是调和的。",
       ],
       (rng) => {
         const s = rng.int(1, 4);
@@ -542,8 +542,8 @@ const contourIntegrals = topic(
         "对从一点到另一点的线段，参数化为起点加 $t$ 乘差，$t$ 从 0 到 1。$z$ 沿线段的积分是端点平方之差的一半。答案只取决于端点，这是后面定理的第一个迹象，因为 $z$ 有原函数。",
       ],
       (rng) => {
-        const a = rng.int(-6, 6);
-        const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
+        const a = rng.nonZero(-6, 6);
+        const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((v) => Math.abs(v) !== Math.abs(a)));
         const asksReal = rng.bool();
         const u = a * a - b * b;
         const v = 2 * a * b;
@@ -1115,8 +1115,8 @@ const mobiusMaps = topic(
       "the-image-of-infinity-and-the-pole",
       ["The image of infinity and the pole", "无穷远点的像和极点"],
       [
-        "A Möbius transformation is a quotient of two linear functions of z, with a nonzero determinant. It is best treated as a map of the extended plane with one point at infinity added. The point where the denominator vanishes goes to infinity, and infinity goes to the ratio of the leading coefficients. With these conventions, every such map is a bijection and has an inverse of the same form.",
-        "默比乌斯变换是 z 的两个线性函数之商，行列式不为零。最好把它看成添加了一个无穷远点的扩充平面上的映射。分母为零的点被送到无穷远，无穷远被送到首项系数之比。按这样的约定，每个这样的映射都是双射，并有同样形式的逆。",
+        "A Möbius transformation is $\\frac{az + b}{cz + d}$, a quotient of two linear functions of $z$, with $ad - bc \\ne 0$. It is best treated as a map of the extended plane with one point at infinity added. The point where the denominator vanishes goes to infinity, and infinity goes to the ratio of the leading coefficients. With these conventions, every such map is a bijection and has an inverse of the same form.",
+        "默比乌斯变换是 $\\frac{az + b}{cz + d}$，即 $z$ 的两个线性函数之商，且 $ad - bc \\ne 0$。最好把它看成添加了一个无穷远点的扩充平面上的映射。分母为零的点被送到无穷远，无穷远被送到首项系数之比。按这样的约定，每个这样的映射都是双射，并有同样形式的逆。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
@@ -1216,8 +1216,8 @@ const conformal = topic(
       "where-conformality-fails",
       ["Where conformality fails", "共形性在哪里失效"],
       [
-        "A map fails to be conformal at a critical point, where the derivative vanishes. There, the map behaves like a higher power and multiplies angles rather than keeping them: the square of z doubles angles at zero. For a quadratic, there is one critical point, found by setting the derivative to zero, and at any other point of the plane the map preserves angles.",
-        "在导数为零的临界点，映射不再共形。在那里，映射的行为像更高次的幂，把角度成倍放大而不是保持不变：z 的平方在零处把角度加倍。对二次函数，只有一个临界点，令导数为零即可求出，在平面上其他任何点，映射都保持角度。",
+        "A map fails to be conformal at a critical point, where the derivative vanishes. There, the map behaves like a higher power and multiplies angles rather than keeping them: $z^2$ doubles angles at zero. For a quadratic, there is one critical point, found by setting the derivative to zero, and at any other point of the plane the map preserves angles.",
+        "在导数为零的临界点，映射不再共形。在那里，映射的行为像更高次的幂，把角度成倍放大而不是保持不变：$z^2$ 在零处把角度加倍。对二次函数，只有一个临界点，令导数为零即可求出，在平面上其他任何点，映射都保持角度。",
       ],
       (rng) => {
         const a = rng.int(1, 5);

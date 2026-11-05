@@ -133,8 +133,12 @@ const howFarDown = point(
       answer,
       [smallest(up), smallest([...down, ...up]).eq(answer) ? answer.add(Q.of(1)) : smallest([...down, ...up]), Q.of(Math.min(...values))],
       [
-        `A decrease reduces only the basic values with positive entries in the column. The ratios for these rows are $${shown}$, and the smallest is $${answer.toLatex()}$.`,
-        `减少资源只会使列中元素为正的基变量的值减小。这些行的比值是 $${shown}$，最小的是 $${answer.toLatex()}$。`,
+        down.length === 1
+          ? `A decrease reduces only the basic values with positive entries in the column. Only one row qualifies, and its ratio is $${answer.toLatex()}$.`
+          : `A decrease reduces only the basic values with positive entries in the column. The ratios for these rows are $${shown}$, and the smallest is $${answer.toLatex()}$.`,
+        down.length === 1
+          ? `减少资源只会使列中元素为正的基变量的值减小。只有一行符合，它的比值是 $${answer.toLatex()}$。`
+          : `减少资源只会使列中元素为正的基变量的值减小。这些行的比值是 $${shown}$，最小的是 $${answer.toLatex()}$。`,
       ],
     );
   },

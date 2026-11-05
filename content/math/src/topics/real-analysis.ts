@@ -61,8 +61,8 @@ const epsilonForSequences = topic(
       "finding-n-for-a-geometric-sequence",
       ["Finding N for a geometric sequence", "求几何型数列的 N"],
       [
-        "For a sequence of the form one over $r^n$ with r above one, the distance from zero falls by a constant factor at every step, so the index needed grows only like a logarithm of the reciprocal tolerance. Comparing with powers of r gives the answer directly: the condition is that $r^n$ exceeds the reciprocal of $\\varepsilon$, and the first power to do so is N.",
-        "对形如 $\\frac{1}{r^n}$ 且 r 大于 1 的数列，它与零的距离每一步按固定比例减小，所以所需下标只像误差倒数的对数那样增长。与 r 的幂比较就能直接得到答案：条件是 $r^n$ 超过 $\\varepsilon$ 的倒数，第一个做到这一点的幂的指数就是 N。",
+        "For a sequence $\\frac{1}{r^n}$ with $r > 1$, the distance from zero falls by a constant factor at every step, so the index needed grows only like $\\log \\frac{1}{\\varepsilon}$. Comparing with powers of $r$ gives the answer directly: the condition is $r^n > \\frac{1}{\\varepsilon}$, and $N$ is the exponent of the first power to satisfy it.",
+        "对形如 $\\frac{1}{r^n}$ 且 $r > 1$ 的数列，它与零的距离每一步按固定比例减小，所以所需下标只像 $\\log \\frac{1}{\\varepsilon}$ 那样增长。与 $r$ 的幂比较就能直接得到答案：条件是 $r^n > \\frac{1}{\\varepsilon}$，第一个满足它的幂的指数就是 $N$。",
       ],
       (rng) => {
         const r = rng.int(2, 6);
@@ -137,10 +137,7 @@ const suprema = topic(
         const b = a + rng.int(2, 9);
         return choose(
           rng,
-          [
-            `Which of these sets contains its supremum, where $a = ${a}$ and $b = ${b}$?`,
-            `其中 $a = ${a}$，$b = ${b}$，下列哪个集合包含它的上确界？`,
-          ],
+          ["Which of these sets contains its supremum?", "下列哪个集合包含它的上确界？"],
           same(`(${a}, ${b}]`),
           [same(`(${a}, ${b})`), same(`[${a}, ${b})`), same(`\\{${b} - \\frac{1}{n} : n \\ge 1\\}`)],
           [
@@ -310,18 +307,15 @@ const cauchySequences = topic(
       "recognizing-a-sequence-that-is-not-cauchy",
       ["Recognizing what is not Cauchy", "识别非柯西数列"],
       [
-        "Consecutive terms getting closer is not enough for a sequence to be Cauchy. The partial sums of the harmonic series have consecutive differences that vanish, yet the block of terms from n to 2n always adds to at least one half, so they are not Cauchy. Sums of terms like one over $k^2$ or a geometric series have small tails, which is what the criterion actually requires.",
-        "相邻项越来越接近，并不足以使数列成为柯西数列。调和级数的部分和相邻差趋于零，但从 n 到 2n 这一段的和总不小于一半，所以它不是柯西数列。像 $\\frac{1}{k^2}$ 这样的项之和或几何级数的尾部很小，这才是这个准则真正要求的。",
+        "Consecutive terms getting closer is not enough for a sequence to be Cauchy. The partial sums of the harmonic series have consecutive differences that vanish, yet the block $\\frac{1}{n} + \\cdots + \\frac{1}{2n}$ always adds to at least $\\frac{1}{2}$, so they are not Cauchy. Sums of terms like $\\frac{1}{k^2}$ or a geometric series have small tails, which is what the criterion actually requires.",
+        "相邻项越来越接近，并不足以使数列成为柯西数列。调和级数的部分和相邻差趋于零，但 $\\frac{1}{n} + \\cdots + \\frac{1}{2n}$ 这一段的和总不小于 $\\frac{1}{2}$，所以它不是柯西数列。像 $\\frac{1}{k^2}$ 这样的项之和或几何级数的尾部很小，这才是这个准则真正要求的。",
       ],
       (rng) => {
         const c = rng.int(2, 19);
         const r = rng.int(2, 19);
         return choose(
           rng,
-          [
-            `For $c = ${c}$ and $r = ${r}$, which of these sequences is not Cauchy?`,
-            `其中 $c = ${c}$，$r = ${r}$，下列哪个数列不是柯西数列？`,
-          ],
+          ["Which of these sequences is not Cauchy?", "下列哪个数列不是柯西数列？"],
           same(`s_n = \\sum_{k=1}^{n} \\frac{${c}}{k}`),
           [
             same(`s_n = \\sum_{k=1}^{n} \\frac{${c}}{k^2}`),
@@ -413,8 +407,8 @@ const absoluteConvergence = topic(
       "classifying-an-alternating-p-series",
       ["Classifying an alternating series", "判断交错级数"],
       [
-        "A series converges absolutely when the series of absolute values converges, and this implies convergence. It converges conditionally when it converges but the absolute values do not sum. For an alternating series of one over $k^p$, this gives three cases: absolute when p exceeds one, conditional when p lies in the interval above zero up to one, and divergence otherwise, since the terms then fail to vanish.",
-        "如果绝对值组成的级数收敛，原级数就绝对收敛，这蕴含着收敛。如果级数收敛但绝对值之和不收敛，就是条件收敛。对 $\\frac{1}{k^p}$ 的交错级数，有三种情况：p 大于 1 时绝对收敛；p 大于 0 且不超过 1 时条件收敛；其他情况发散，因为这时项不趋于零。",
+        "A series converges absolutely when the series of absolute values converges, and this implies convergence. It converges conditionally when it converges but the absolute values do not sum. For the alternating series $\\sum (-1)^{k} \\frac{1}{k^p}$, this gives three cases: absolute when $p > 1$, conditional when $0 < p \\le 1$, and divergence when $p \\le 0$, since the terms then fail to vanish.",
+        "如果绝对值组成的级数收敛，原级数就绝对收敛，这蕴含着收敛。如果级数收敛但绝对值之和不收敛，就是条件收敛。对交错级数 $\\sum (-1)^{k} \\frac{1}{k^p}$，有三种情况：$p > 1$ 时绝对收敛；$0 < p \\le 1$ 时条件收敛；$p \\le 0$ 时发散，因为这时项不趋于零。",
       ],
       (rng) => {
         const b = rng.int(2, 7);
@@ -806,7 +800,7 @@ const compactness = topic(
         const b = a + rng.int(1, 9);
         return choose(
           rng,
-          [`Which of these sets with $a = ${a}$ and $b = ${b}$ is compact?`, `其中 $a = ${a}$，$b = ${b}$，下列哪个集合是紧的？`],
+          ["Which of these sets is compact?", "下列哪个集合是紧的？"],
           same(`[${a}, ${b}]`),
           [same(`(${a}, ${b}]`), same(`[${a}, \\infty)`), same(`[${a}, ${b})`)],
           [
@@ -862,8 +856,8 @@ const uniformContinuity = topic(
       "a-uniform-delta",
       ["A uniform delta", "一致的 δ"],
       [
-        "Continuity allows $\\delta$ to depend on the point, whereas uniform continuity asks for a single $\\delta$ that works at every point of the domain. A bound on the slope gives one directly. If the difference of outputs is at most L times the difference of inputs, then $\\varepsilon$ over L works everywhere. For the square function on a bounded interval, the steepest slope lies at the far end.",
-        "连续性允许 $\\delta$ 依赖于点，而一致连续要求单个 $\\delta$ 在定义域的每一点都适用。斜率的界能直接给出它。如果输出之差至多是输入之差的 L 倍，那么 $\\varepsilon$ 除以 L 处处适用。对有界区间上的平方函数，最陡的斜率在远端。",
+        "Continuity allows $\\delta$ to depend on the point, whereas uniform continuity asks for a single $\\delta$ that works at every point of the domain. A bound on the slope gives one directly. If $|f(x) - f(y)| \\le L|x - y|$, then $\\delta = \\frac{\\varepsilon}{L}$ works everywhere. For the square function on a bounded interval, the steepest slope lies at the far end.",
+        "连续性允许 $\\delta$ 依赖于点，而一致连续要求单个 $\\delta$ 在定义域的每一点都适用。斜率的界能直接给出它。如果 $|f(x) - f(y)| \\le L|x - y|$，那么 $\\delta = \\frac{\\varepsilon}{L}$ 处处适用。对有界区间上的平方函数，最陡的斜率在远端。",
       ],
       (rng) => {
         const B = rng.int(2, 20);
@@ -896,10 +890,7 @@ const uniformContinuity = topic(
         const c = rng.int(1, 9);
         return choose(
           rng,
-          [
-            `For $k = ${k}$ and $B = ${B}$, which of these functions is not uniformly continuous on the given domain?`,
-            `其中 $k = ${k}$，$B = ${B}$，下列哪个函数在给定定义域上不是一致连续的？`,
-          ],
+          ["Which of these functions is not uniformly continuous on the given domain?", "下列哪个函数在给定定义域上不是一致连续的？"],
           same(`${k}x^2 \\text{ on } \\mathbb{R}`),
           [
             same(`${k}x^2 \\text{ on } [0, ${B}]`),
@@ -1021,8 +1012,8 @@ const meanValueBounds = topic(
       "the-best-lipschitz-constant",
       ["The best Lipschitz constant", "最佳利普希茨常数"],
       [
-        "A function is Lipschitz with constant L when the difference of its values is at most L times the difference of the inputs. By the mean value theorem, the smallest such constant on an interval is the largest size of the derivative there. For a power of x on an interval that starts at zero, the derivative grows with x, so the largest slope occurs at the right end.",
-        "如果函数值之差至多是输入之差的 L 倍，函数就是常数为 L 的利普希茨函数。由中值定理，区间上最小的这种常数就是那里导数大小的最大值。对从零开始的区间上的 x 的幂，导数随 x 增大，所以最大斜率在右端取到。",
+        "A function is Lipschitz with constant $L$ when $|f(x) - f(y)| \\le L|x - y|$ for all $x, y$. By the mean value theorem, the smallest such constant on an interval is the largest value of $|f'|$ there. For a power of $x$ on an interval that starts at zero, the derivative grows with x, so the largest slope occurs at the right end.",
+        "如果对所有 $x, y$ 都有 $|f(x) - f(y)| \\le L|x - y|$，函数就是常数为 $L$ 的利普希茨函数。由中值定理，区间上最小的这种常数就是那里 $|f'|$ 的最大值。对从零开始的区间上的 $x$ 的幂，导数随 x 增大，所以最大斜率在右端取到。",
       ],
       (rng) => {
         const k = rng.int(2, 4);
@@ -1085,8 +1076,8 @@ const upperLowerSums = topic(
       "how-fine-a-partition-must-be",
       ["How fine a partition must be", "分割要多细"],
       [
-        "For an increasing function and n equal parts, the difference between upper and lower sums telescopes to the total rise times the width of one part. This shows at once that a monotone function is integrable, since the difference falls below any tolerance when n is large. It also gives an exact count of parts needed: n must exceed the rise times the length over the tolerance.",
-        "对递增函数和 n 等分，上和与下和之差经过相消，等于总增量乘一段的宽度。这立刻说明单调函数是可积的，因为 n 很大时，这个差小于任何误差。它也准确给出所需的段数：n 必须超过增量乘长度再除以误差。",
+        "For an increasing function on $[a, b]$ and $n$ equal parts, the difference between upper and lower sums telescopes to $(f(b) - f(a)) \\frac{b - a}{n}$. This shows at once that a monotone function is integrable, since the difference falls below any tolerance when $n$ is large. It also gives an exact count of parts needed for a tolerance $\\varepsilon$: $n > \\frac{(f(b) - f(a))(b - a)}{\\varepsilon}$.",
+        "对 $[a, b]$ 上的递增函数和 $n$ 等分，上和与下和之差经过相消，等于 $(f(b) - f(a)) \\frac{b - a}{n}$。这立刻说明单调函数是可积的，因为 $n$ 很大时，这个差小于任何误差。它也准确给出误差 $\\varepsilon$ 所需的段数：$n > \\frac{(f(b) - f(a))(b - a)}{\\varepsilon}$。",
       ],
       (rng) => {
         const rise = rng.int(2, 15);
@@ -1221,8 +1212,8 @@ const uniformConvergence = topic(
       "uniform-convergence-through-the-supremum",
       ["Convergence through the supremum", "用上确界判断一致收敛"],
       [
-        "Convergence is uniform when the supremum of the difference from the limit tends to zero, so that one index works for all points at once. Uniform limits of continuous functions are continuous, and this explains why $x^n$ cannot converge uniformly on the closed unit interval. To find an index, compute the supremum of the difference on the domain as a function of n and solve the inequality.",
-        "如果与极限之差的上确界趋于零，收敛就是一致的，这时一个下标同时适用于所有点。连续函数的一致极限是连续的，这解释了为什么 $x^n$ 在闭单位区间上不能一致收敛。要求下标，就把定义域上差的上确界写成 n 的函数，再解不等式。",
+        "Convergence is uniform when the supremum of the difference from the limit tends to zero, so that one index works for all points at once. Uniform limits of continuous functions are continuous, and this explains why $x^n$ cannot converge uniformly on the closed unit interval. To find an index, compute the supremum of the difference on the domain as a function of $n$ and solve the inequality.",
+        "如果与极限之差的上确界趋于零，收敛就是一致的，这时一个下标同时适用于所有点。连续函数的一致极限是连续的，这解释了为什么 $x^n$ 在闭单位区间上不能一致收敛。要求下标，就把定义域上差的上确界写成 $n$ 的函数，再解不等式。",
       ],
       (rng) => {
         const b = rng.int(2, 15);
@@ -1343,8 +1334,8 @@ const contractions = topic(
       "the-error-after-iterating",
       ["The error after iterating", "迭代后的误差"],
       [
-        "Each application of a contraction with factor L multiplies the distance to the fixed point by at most L. So after n steps, the distance is at most $L^n$ times the first distance. The error therefore shrinks geometrically, and this is what makes fixed-point iteration practical. The smaller the factor, the fewer steps are needed, and the rate does not depend on the starting point.",
-        "每应用一次比例为 L 的压缩映射，到不动点的距离至多乘以 L。所以 n 步之后，距离至多是最初距离的 $L^n$ 倍。因此误差按几何级数缩小，这正是不动点迭代实用的原因。比例越小，需要的步数越少，而这个速度与起点无关。",
+        "Each application of a contraction with factor $L$ multiplies the distance to the fixed point by at most $L$. So after $n$ steps, the distance is at most $L^n$ times the first distance. The error therefore shrinks geometrically, and this is what makes fixed-point iteration practical. The smaller the factor, the fewer steps are needed, and the rate does not depend on the starting point.",
+        "每应用一次比例为 $L$ 的压缩映射，到不动点的距离至多乘以 $L$。所以 $n$ 步之后，距离至多是最初距离的 $L^n$ 倍。因此误差按几何级数缩小，这正是不动点迭代实用的原因。比例越小，需要的步数越少，而这个速度与起点无关。",
       ],
       (rng) => {
         const q = rng.int(2, 6);

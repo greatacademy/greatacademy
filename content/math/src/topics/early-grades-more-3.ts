@@ -1192,7 +1192,7 @@ const equivalentOnLines = earlyTopic(
           fr(m, e),
           rng.shuffle([fr(n, e), fr(m, d), fr(m + 1, e), fr(m === 1 ? 3 : m - 1, e)]),
           [
-            `It lines up with the mark ${m} spaces along the bottom line, which has ${e} spaces.`,
+            `It lines up with the mark ${m} ${m === 1 ? "space" : "spaces"} along the bottom line, which has ${e} spaces.`,
             `它对着下面数轴的第 ${m} 格，下面的数轴一共有 ${e} 格。`,
           ],
           twoFractionLinesFigure(d, n, e, m),

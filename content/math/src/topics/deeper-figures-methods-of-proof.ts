@@ -70,7 +70,11 @@ const setOfVenn = point(
       const value: Record<string, boolean> = { [names[0]]: a, [names[1]]: b, [names[2]]: c };
       return right.member(value.A as boolean, value.B as boolean, value.C as boolean);
     };
-    const regions = regionPoints.filter(([a, b, c]) => member(a, b, c)).length;
+    const inside = regionPoints.filter(([a, b, c]) => member(a, b, c)).map(([a, b, c]) => names.filter((_, i) => [a, b, c][i]));
+    const regionsEn = inside.map((n) =>
+      n.length === 0 ? "outside all three circles" : n.length === 3 ? "inside all three circles" : `inside only ${n.join(" and ")}`,
+    );
+    const regionsZh = inside.map((n) => (n.length === 0 ? "三个圆之外" : n.length === 3 ? "三个圆的公共部分" : `只在 ${n.join("、")} 内`));
     return choose(
       rng,
       [
@@ -85,14 +89,14 @@ const setOfVenn = point(
         )
         .map((e) => same(texOf(e))),
       [
-        `Testing each of the eight regions against $${texOf(right)}$ gives exactly the $${regions}$ marked regions, and every other choice differs from the drawing on at least one region.`,
-        `对八个区域逐一检验 $${texOf(right)}$，恰好得到标出的 $${regions}$ 个区域，其他选项都至少在一个区域上与图不同。`,
+        `Testing each of the eight regions against $${texOf(right)}$ gives exactly the regions with dots, and every other choice differs from the drawing on at least one region.`,
+        `对八个区域逐一检验 $${texOf(right)}$，恰好得到有点的区域，其他选项都至少在一个区域上与图不同。`,
       ],
       {
         svg: vennFigure(names, member),
         alt: t(
-          `Three overlapping circles labeled ${names.join(", ")}; dots mark the regions of ${texOf(right).replace(/\\[a-z]+/g, (m) => ({ "\\cap": "intersect", "\\cup": "union", "\\setminus": "minus" })[m] ?? m)}.`,
-          `标有 ${names.join("、")} 的三个相交的圆；点标出 ${texOf(right).replace(/\\[a-z]+/g, (m) => ({ "\\cap": "交", "\\cup": "并", "\\setminus": "减" })[m] ?? m)} 的区域。`,
+          `Three overlapping circles labeled ${names.join(", ")}, with a dot in each of these regions: ${regionsEn.join("; ")}.`,
+          `标有 ${names.join("、")} 的三个相交的圆，以下每个区域各有一个点：${regionsZh.join("；")}。`,
         ),
       },
     );

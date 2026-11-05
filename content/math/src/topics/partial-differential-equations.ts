@@ -31,8 +31,8 @@ const introduction = topic(
       "the-order-of-an-equation",
       ["The order of an equation", "方程的阶"],
       [
-        "A partial differential equation relates an unknown function of several variables to its partial derivatives. Its order is the order of the highest derivative that appears, counting all differentiations, whichever variables they are with respect to. So a mixed derivative in x and t counts as second order. The order largely decides how many initial and boundary conditions a problem needs to determine a single solution.",
-        "偏微分方程把多元未知函数和它的偏导数联系起来。它的阶是方程中最高阶导数的阶，不论对哪个变量求导，所有求导次数都要算上。所以对 x 和 t 的混合导数算二阶。阶在很大程度上决定了问题需要多少初始条件和边界条件才能确定唯一的解。",
+        "A partial differential equation relates an unknown function of several variables to its partial derivatives. Its order is the order of the highest derivative that appears, counting all differentiations, whichever variables they are with respect to. So a mixed derivative $u_{xt}$ counts as second order. The order largely decides how many initial and boundary conditions a problem needs to determine a single solution.",
+        "偏微分方程把多元未知函数和它的偏导数联系起来。它的阶是方程中最高阶导数的阶，不论对哪个变量求导，所有求导次数都要算上。所以混合导数 $u_{xt}$ 算二阶。阶在很大程度上决定了问题需要多少初始条件和边界条件才能确定唯一的解。",
       ],
       (rng) => {
         const c = rng.int(2, 12);
@@ -96,8 +96,8 @@ const classifying = topic(
       "the-discriminant",
       ["The discriminant", "判别式"],
       [
-        "A second-order linear equation has the form A times the second x derivative, plus B times the mixed derivative, plus C times the second y derivative, plus lower terms. Its discriminant is $B^2 - 4AC$, as for a conic section. The name is no accident: these three coefficients control the equation in the way that they control the shape of a conic, and the lower terms have no effect on the type.",
-        "二阶线性方程的形式是 A 乘对 x 的二阶导数，加 B 乘混合导数，加 C 乘对 y 的二阶导数，再加低阶项。它的判别式是 $B^2 - 4AC$，和圆锥曲线一样。这不是巧合：这三个系数控制方程的方式，正如它们控制圆锥曲线的形状，而低阶项不影响类型。",
+        "A second-order linear equation has the form $A u_{xx} + B u_{xy} + C u_{yy}$ plus lower terms. Its discriminant is $B^2 - 4AC$, as for a conic section. The name is no accident: these three coefficients control the equation in the way that they control the shape of a conic, and the lower terms have no effect on the type.",
+        "二阶线性方程的形式是 $A u_{xx} + B u_{xy} + C u_{yy}$ 再加低阶项。它的判别式是 $B^2 - 4AC$，和圆锥曲线一样。这不是巧合：这三个系数控制方程的方式，正如它们控制圆锥曲线的形状，而低阶项不影响类型。",
       ],
       (rng) => {
         const [A, B, C] = [rng.int(1, 6), rng.int(1, 9), rng.int(-5, 6)];
@@ -216,8 +216,8 @@ const transport = topic(
           answer,
           [x + c * t, x, c * t, answer + 1],
           [
-            `$x - (${c})t$ is constant along the line, so the foot is at $${x} - (${c})(${t}) = ${answer}$.`,
-            `$x - (${c})t$ 沿这条线不变，所以起点在 $${x} - (${c})(${t}) = ${answer}$。`,
+            `$x ${c < 0 ? `+ ${-c}` : `- ${c}`}t$ is constant along the line, so the foot is at $${x} ${c < 0 ? `+ ${-c}` : `- ${c}`} \\cdot ${t} = ${answer}$.`,
+            `$x ${c < 0 ? `+ ${-c}` : `- ${c}`}t$ 沿这条线不变，所以起点在 $${x} ${c < 0 ? `+ ${-c}` : `- ${c}`} \\cdot ${t} = ${answer}$。`,
           ],
         );
       },
@@ -366,8 +366,8 @@ const heatEquation = topic(
       "a-decaying-solution",
       ["A decaying solution", "衰减的解"],
       [
-        "The heat equation says that the temperature rises at a rate proportional to its second x derivative. Where the profile curves upward, the point is cooler than its neighbours and warms; where it curves downward, it cools. The constant, called the diffusivity, sets the speed. High-frequency wiggles have large curvature, and so they decay quickly, which explains why heat flow smooths everything out.",
-        "热方程说，温度上升的速率与它对 x 的二阶导数成正比。波形向上弯的地方，这一点比邻近的点冷，因而升温；向下弯的地方则降温。这个常数称为扩散系数，它决定速度。高频的起伏曲率大，所以衰减很快，这解释了为什么热流会把一切都抹平。",
+        "The heat equation $u_t = c u_{xx}$ says that the temperature rises at a rate proportional to $u_{xx}$. Where the profile curves upward, the point is cooler than its neighbours and warms; where it curves downward, it cools. The constant $c$, called the diffusivity, sets the speed. High-frequency wiggles have large curvature, and so they decay quickly, which explains why heat flow smooths everything out.",
+        "热方程 $u_t = c u_{xx}$ 说，温度上升的速率与 $u_{xx}$ 成正比。波形向上弯的地方，这一点比邻近的点冷，因而升温；向下弯的地方则降温。常数 $c$ 称为扩散系数，它决定速度。高频的起伏曲率大，所以衰减很快，这解释了为什么热流会把一切都抹平。",
       ],
       (rng) => {
         const c = rng.int(2, 12);
@@ -392,8 +392,8 @@ const heatEquation = topic(
       "the-steady-state",
       ["The steady state", "稳态"],
       [
-        "With the ends of a rod held at fixed temperatures, the solution settles down as time passes. In the limit the time derivative vanishes, so the second x derivative is zero as well, and the temperature is a straight line joining the two end values. The initial temperature leaves no trace in the limit, since the boundary values alone determine this steady state.",
-        "杆的两端保持固定温度时，解随时间趋于稳定。在极限情况下时间导数为零，所以对 x 的二阶导数也为零，温度是连接两端值的一条直线。初始温度在极限中不留痕迹，因为这个稳态完全由边界值决定。",
+        "With the ends of a rod held at fixed temperatures, the solution settles down as time passes. In the limit $u_t = 0$, so $u_{xx} = 0$ as well, and the temperature is a straight line joining the two end values. The initial temperature leaves no trace in the limit, since the boundary values alone determine this steady state.",
+        "杆的两端保持固定温度时，解随时间趋于稳定。在极限情况下 $u_t = 0$，所以 $u_{xx}$ 也为零，温度是连接两端值的一条直线。初始温度在极限中不留痕迹，因为这个稳态完全由边界值决定。",
       ],
       (rng) => {
         const L = rng.int(2, 10);
@@ -492,8 +492,8 @@ const insulated = topic(
       "the-limit-from-a-cosine-series",
       ["The limit from a cosine series", "由余弦级数得极限"],
       [
-        "An insulated end lets no heat through, which means that the x derivative is zero there. The eigenfunctions are then cosines, and one eigenvalue is zero, with the constant as its eigenfunction. Every other mode decays, so the solution tends to that constant term of the series. With the ends sealed, no heat escapes, so the limit is simply the temperature that spreads the heat evenly.",
-        "绝热的端点不让热量通过，这意味着那里对 x 的导数为零。这时特征函数是余弦，有一个特征值为零，对应的特征函数是常数。其他每个模态都衰减，所以解趋于级数的常数项。两端封闭时热量不会散失，所以极限就是热量均匀分布时的温度。",
+        "An insulated end lets no heat through, which means that $u_x = 0$ there. The eigenfunctions are then cosines, and one eigenvalue is zero, with the constant as its eigenfunction. Every other mode decays, so the solution tends to that constant term of the series. With the ends sealed, no heat escapes, so the limit is simply the temperature that spreads the heat evenly.",
+        "绝热的端点不让热量通过，这意味着那里 $u_x = 0$。这时特征函数是余弦，有一个特征值为零，对应的特征函数是常数。其他每个模态都衰减，所以解趋于级数的常数项。两端封闭时热量不会散失，所以极限就是热量均匀分布时的温度。",
       ],
       (rng) => {
         const L = rng.int(1, 6);
@@ -977,8 +977,8 @@ const eigenfunctions = topic(
       "orthogonality-of-sine-modes",
       ["Orthogonality of sine modes", "正弦模态的正交性"],
       [
-        "Eigenfunctions with different eigenvalues are orthogonal: the integral of their product over the interval is zero. For sines on an interval of length L, the integral of a mode with itself is L over two. This is what makes series methods work, because multiplying an expansion by one mode and integrating kills all the other terms and isolates a single coefficient of the series.",
-        "特征值不同的特征函数是正交的：它们的乘积在区间上的积分为零。对长度为 L 的区间上的正弦，一个模态与自身的积分是 L/2。这正是级数方法有效的原因，因为把展开式乘以一个模态再积分，就消去了其他所有项，只留下级数的一个系数。",
+        "Eigenfunctions with different eigenvalues are orthogonal: the integral of their product over the interval is zero. For sines on an interval of length $L$, the integral of a mode with itself is $\\frac{L}{2}$. This is what makes series methods work, because multiplying an expansion by one mode and integrating kills all the other terms and isolates a single coefficient of the series.",
+        "特征值不同的特征函数是正交的：它们的乘积在区间上的积分为零。对长度为 $L$ 的区间上的正弦，一个模态与自身的积分是 $\\frac{L}{2}$。这正是级数方法有效的原因，因为把展开式乘以一个模态再积分，就消去了其他所有项，只留下级数的一个系数。",
       ],
       (rng) => {
         const L = rng.int(1, 12);
@@ -1018,8 +1018,8 @@ const fourierData = topic(
       "the-coefficient-of-a-constant",
       ["The coefficient of a constant", "常数的系数"],
       [
-        "To match an initial condition, expand it in the eigenfunctions. By orthogonality, the sine coefficient is $\\frac{2}{L}$ times the integral of the function times that mode. For a constant function, the result is zero for even modes and four times the constant, over $n\\pi$, for odd ones. The coefficients fall slowly, because a constant does not match the zero boundary values of the sine modes.",
-        "要匹配初始条件，就把它按特征函数展开。根据正交性，正弦系数是 $\\frac{2}{L}$ 乘函数与这个模态之积的积分。对常数函数，偶数模态的结果是零，奇数模态的结果是 4 倍常数除以 $n\\pi$。系数下降得很慢，因为常数与正弦模态的零边界值不相符。",
+        "To match an initial condition, expand it in the eigenfunctions. By orthogonality, the sine coefficient is $\\frac{2}{L}$ times the integral of the function times that mode. For a constant function $C$, the result is zero for even modes and $\\frac{4C}{n\\pi}$ for odd ones. The coefficients fall slowly, because a constant does not match the zero boundary values of the sine modes.",
+        "要匹配初始条件，就把它按特征函数展开。根据正交性，正弦系数是 $\\frac{2}{L}$ 乘函数与这个模态之积的积分。对常数函数 $C$，偶数模态的结果是零，奇数模态的结果是 $\\frac{4C}{n\\pi}$。系数下降得很慢，因为常数与正弦模态的零边界值不相符。",
       ],
       (rng) => {
         const c = rng.int(2, 25);
@@ -1084,8 +1084,8 @@ const finiteDifferences = topic(
       "one-step-of-the-explicit-scheme",
       ["One step of the explicit scheme", "显式格式的一步"],
       [
-        "A computer solves the heat equation on a grid. The explicit scheme replaces each derivative by a difference, which gives a new value equal to the old value plus $r$ times the sum of the two neighbours minus twice the old value. Here $r$ is $c$ times the time step over the square of the grid spacing. Each new value thus depends only on three old values nearby.",
-        "计算机在网格上求解热方程。显式格式用差分代替每个导数，得到的新值等于旧值加 $r$ 乘（两个邻点之和减去旧值的两倍）。这里 $r$ 是 $c$ 乘时间步长除以网格间距的平方。因此每个新值只依赖附近的三个旧值。",
+        "A computer solves the heat equation on a grid. The explicit scheme replaces each derivative by a difference, which gives $u_i^{\\text{new}} = u_i + r(u_{i-1} - 2u_i + u_{i+1})$. Here $r = \\frac{c \\Delta t}{\\Delta x^{2}}$. Each new value thus depends only on three old values nearby.",
+        "计算机在网格上求解热方程。显式格式用差分代替每个导数，得到 $u_i^{\\text{new}} = u_i + r(u_{i-1} - 2u_i + u_{i+1})$。这里 $r = \\frac{c \\Delta t}{\\Delta x^{2}}$。因此每个新值只依赖附近的三个旧值。",
       ],
       (rng) => {
         const r = rng.pick([Q.of(1, 4), Q.of(1, 2), Q.of(1, 5), Q.of(2, 5), Q.of(1, 3)]);
@@ -1110,8 +1110,8 @@ const finiteDifferences = topic(
       "a-stable-time-step",
       ["A stable time step", "稳定的时间步长"],
       [
-        "The explicit scheme is stable only when r is at most one half. Beyond this, small errors grow at each step and soon swamp the solution. So the largest allowed time step is the square of the grid spacing over twice c, which is severe: halving the spacing forces four times as many steps. Implicit schemes avoid this limit, at the price of solving a linear system per step.",
-        "显式格式只有在 r 不超过 1/2 时才稳定。超过这个值，小误差会逐步增长，很快淹没解。所以允许的最大时间步长是网格间距的平方除以 2c，这个限制很严格：间距减半要求步数变为四倍。隐式格式避免了这个限制，代价是每一步都要解一个线性方程组。",
+        "The explicit scheme is stable only when $r \\le \\frac{1}{2}$. Beyond this, small errors grow at each step and soon swamp the solution. So the largest allowed time step is $\\Delta t = \\frac{\\Delta x^{2}}{2c}$, which is severe: halving the spacing forces four times as many steps. Implicit schemes avoid this limit, at the price of solving a linear system per step.",
+        "显式格式只有在 $r \\le \\frac{1}{2}$ 时才稳定。超过这个值，小误差会逐步增长，很快淹没解。所以允许的最大时间步长是 $\\Delta t = \\frac{\\Delta x^{2}}{2c}$，这个限制很严格：间距减半要求步数变为四倍。隐式格式避免了这个限制，代价是每一步都要解一个线性方程组。",
       ],
       (rng) => {
         const denominator = rng.int(2, 12);

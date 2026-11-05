@@ -557,8 +557,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           [3, 7],
         ]);
         const n = p * q;
-        const k = rng.int(1, 9);
-        const r = rng.int(1, n - 1);
+        const k = rng.int(2, 9);
+        const r = rng.int(2, n - 2);
         const v = rng.pick(["x", "y", "a", "m"]);
         return chooseMath(
           rng,
@@ -965,7 +965,7 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           count,
           [items.length, items.length - count, count + 1],
           [
-            `Roots of perfect squares and cubes are whole numbers, which leaves ${count} surds.`,
+            `Roots of perfect squares and cubes are whole numbers, which leaves ${count} ${count === 1 ? "surd" : "surds"}.`,
             `完全平方数和完全立方数的根是整数，剩下 ${count} 个根式。`,
           ],
         );

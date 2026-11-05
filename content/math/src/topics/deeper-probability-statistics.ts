@@ -738,8 +738,8 @@ const atLeastOneSymbol: KnowledgePointDef = {
       form: "integer",
       wrong: [n ** k, k * n ** (k - 1), (n - 1) ** k],
       solution: t(
-        `There are $${n}^${k}$ sequences, and $${n - 1}^${k}$ of them avoid A. The difference is $${answer}$.`,
-        `一共有 $${n}^${k}$ 个序列，其中 $${n - 1}^${k}$ 个不含 A。差是 $${answer}$。`,
+        `There are $${n}^{${k}}$ sequences, and $${n - 1}^{${k}}$ of them avoid A. The difference is $${answer}$.`,
+        `一共有 $${n}^{${k}}$ 个序列，其中 $${n - 1}^{${k}}$ 个不含 A。差是 $${answer}$。`,
       ),
     });
   },
@@ -1622,8 +1622,8 @@ const powerOfUniform: KnowledgePointDef = {
     const y = power(answer, n);
     return numberProblem({
       prompt: t(
-        `Let $X$ be uniform on $[0, 1]$ and $Y = X^${n}$. Find $P\\left(Y \\le ${y.toLatex()}\\right)$.`,
-        `设 $X$ 在 $[0, 1]$ 上均匀，$Y = X^${n}$。求 $P\\left(Y \\le ${y.toLatex()}\\right)$。`,
+        `Let $X$ be uniform on $[0, 1]$ and $Y = X^{${n}}$. Find $P\\left(Y \\le ${y.toLatex()}\\right)$.`,
+        `设 $X$ 在 $[0, 1]$ 上均匀，$Y = X^{${n}}$。求 $P\\left(Y \\le ${y.toLatex()}\\right)$。`,
       ),
       answer,
       wrong: [y, Q.of(1).sub(answer), answer.div(Q.of(n)), Q.of(1).sub(y)],
@@ -1684,8 +1684,8 @@ const expectedEmptyBoxes: KnowledgePointDef = {
       answer,
       wrong: [miss, power(Q.of(m - 1, m), n - 1).mul(Q.of(m)), power(Q.of(1, m), n).mul(Q.of(m)), answer.add(Q.of(1))],
       solution: t(
-        `A given box is empty with probability $\\left(${Q.of(m - 1, m).toLatex()}\\right)^${n}$. Adding this over the ${m} boxes gives $${answer.toLatex()}$.`,
-        `一个给定的盒子为空的概率是 $\\left(${Q.of(m - 1, m).toLatex()}\\right)^${n}$。对 ${m} 个盒子求和，得 $${answer.toLatex()}$。`,
+        `A given box is empty with probability $\\left(${Q.of(m - 1, m).toLatex()}\\right)^{${n}}$. Adding this over the ${m} boxes gives $${answer.toLatex()}$.`,
+        `一个给定的盒子为空的概率是 $\\left(${Q.of(m - 1, m).toLatex()}\\right)^{${n}}$。对 ${m} 个盒子求和，得 $${answer.toLatex()}$。`,
       ),
     });
   },
@@ -1704,8 +1704,8 @@ const momentOfPowerDensity: KnowledgePointDef = {
     const answer = Q.of(k + 1, k + n + 1);
     return numberProblem({
       prompt: t(
-        `A random variable has density $f(x) = ${k + 1}${powerOf("x", k)}$ on $[0, 1]$. Find $E(X^${n})$.`,
-        `一个随机变量在 $[0, 1]$ 上的密度是 $f(x) = ${k + 1}${powerOf("x", k)}$。求 $E(X^${n})$。`,
+        `A random variable has density $f(x) = ${k + 1}${powerOf("x", k)}$ on $[0, 1]$. Find $E(X^{${n}})$.`,
+        `一个随机变量在 $[0, 1]$ 上的密度是 $f(x) = ${k + 1}${powerOf("x", k)}$。求 $E(X^{${n}})$。`,
       ),
       answer,
       wrong: [Q.of(k + 1, k + n), Q.of(1, n + 1), Q.of(k, k + n), Q.of(k + 1, n + 1)],

@@ -898,15 +898,15 @@ const divergenceOfRadialPower: KnowledgePointDef = {
     const answer = (k + 3) * size;
     return numberProblem({
       prompt: t(
-        `Let $\\mathbf{F} = |\\mathbf{r}|${k === 1 ? "" : `^${k}`}\\,\\mathbf{r}$, where $\\mathbf{r} = \\langle x, y, z \\rangle$. Find $\\nabla \\cdot \\mathbf{F}$ at the point $(${point.join(", ")})$.`,
-        `设 $\\mathbf{F} = |\\mathbf{r}|${k === 1 ? "" : `^${k}`}\\,\\mathbf{r}$，其中 $\\mathbf{r} = \\langle x, y, z \\rangle$。求 $\\nabla \\cdot \\mathbf{F}$ 在点 $(${point.join(", ")})$ 处的值。`,
+        `Let $\\mathbf{F} = |\\mathbf{r}|${k === 1 ? "" : `^{${k}}`}\\,\\mathbf{r}$, where $\\mathbf{r} = \\langle x, y, z \\rangle$. Find $\\nabla \\cdot \\mathbf{F}$ at the point $(${point.join(", ")})$.`,
+        `设 $\\mathbf{F} = |\\mathbf{r}|${k === 1 ? "" : `^{${k}}`}\\,\\mathbf{r}$，其中 $\\mathbf{r} = \\langle x, y, z \\rangle$。求 $\\nabla \\cdot \\mathbf{F}$ 在点 $(${point.join(", ")})$ 处的值。`,
       ),
       answer,
       form: "integer",
       wrong: [3 * size, k * size, (k + 3) * rho ** (k - 1)],
       solution: t(
-        `Here $|\\mathbf{r}| = ${rho}$, and the divergence is $(${k} + 3)|\\mathbf{r}|${k === 1 ? "" : `^${k}`} = ${k + 3} \\cdot ${size} = ${answer}$.`,
-        `这里 $|\\mathbf{r}| = ${rho}$，散度是 $(${k} + 3)|\\mathbf{r}|${k === 1 ? "" : `^${k}`} = ${k + 3} \\cdot ${size} = ${answer}$。`,
+        `Here $|\\mathbf{r}| = ${rho}$, and the divergence is $(${k} + 3)|\\mathbf{r}|${k === 1 ? "" : `^{${k}}`} = ${k + 3} \\cdot ${size} = ${answer}$.`,
+        `这里 $|\\mathbf{r}| = ${rho}$，散度是 $(${k} + 3)|\\mathbf{r}|${k === 1 ? "" : `^{${k}}`} = ${k + 3} \\cdot ${size} = ${answer}$。`,
       ),
     });
   },

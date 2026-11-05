@@ -104,7 +104,7 @@ const limsup = point(
     "有界数列可能没有极限，但子数列的极限总有最大值和最小值，分别称为上极限和下极限。数列收敛当且仅当两者相等。对 $a + b (-1)^n + \\frac{c}{n}$，最后一项趋于零，前两项留下两个极限点。",
   ],
   (rng) => {
-    const a = rng.int(-6, 6);
+    const a = rng.nonZero(-6, 6);
     const b = rng.int(1, 6);
     const c = rng.int(1, 9);
     const sup = rng.bool();

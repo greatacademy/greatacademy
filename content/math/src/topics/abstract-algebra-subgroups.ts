@@ -1197,8 +1197,9 @@ export const freeGroups: TopicDef = {
       ),
       generate(rng) {
         let w: Letter[];
+        // A word that reads the same backward would make two of the options coincide.
         do w = reduceWord(randomWord(rng, rng.int(5, 8)));
-        while (w.length < 4);
+        while (w.length < 4 || wordTex(w) === wordTex([...w].reverse()));
         const inv = [...w].reverse().map(([x, e]) => [x, -e] as Letter);
         const noReverse = w.map(([x, e]) => [x, -e] as Letter);
         const noInvert = [...w].reverse();

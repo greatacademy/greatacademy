@@ -136,6 +136,7 @@ export const subtractingAPositiveNumberFromASmallerPositiveNumber = topic(
         "下降、亏损或取款的量大于原来的量时，结果会低于零。照常相减，答案是负数，它的大小表示比零低多少。\n\n气温是 $4^{\\circ}\\text{C}$，下降了 $9^{\\circ}\\text{C}$：$4 - 9 = -5$，所以是 $-5^{\\circ}\\text{C}$。",
       ),
       generate(rng) {
+        const who = rng.pick(names);
         const a = rng.int(1, 25);
         const b = rng.int(a + 1, a + 30);
         const ctx = rng.int(0, 2);
@@ -147,8 +148,8 @@ export const subtractingAPositiveNumberFromASmallerPositiveNumber = topic(
               )
             : ctx === 1
               ? t(
-                  `${rng.pick(names)} has $\\$${a}$ in a bank account and makes a payment of $\\$${b}$ from it. What is the new balance, in dollars?`,
-                  `${rng.pick(names)} 的银行账户里有 $\\$${a}$，从中支付了 $\\$${b}$。账户余额变为多少美元？`,
+                  `${who} has $\\$${a}$ in a bank account and makes a payment of $\\$${b}$ from it. What is the new balance, in dollars?`,
+                  `${who} 的银行账户里有 $\\$${a}$，从中支付了 $\\$${b}$。账户余额变为多少美元？`,
                 )
               : t(
                   `A hiking trail starts at an elevation of $${a}$ meters above sea level and descends $${b}$ meters into a valley. What is the elevation at the end of the trail, in meters?`,
@@ -1474,6 +1475,7 @@ export const fractionsOfFractions = topic(
         "菜园的 $\\frac{2}{3}$ 种蔬菜，蔬菜部分的 $\\frac{1}{4}$ 种胡萝卜。胡萝卜占菜园的 $\\frac{1}{4} \\times \\frac{2}{3} = \\frac{1}{6}$。",
       ),
       generate(rng) {
+        const who = rng.pick(names);
         const a = properQ(rng, 8);
         const b = properQ(rng, 8);
         const r = a.mul(b);
@@ -1491,8 +1493,8 @@ export const fractionsOfFractions = topic(
                   `菜园的 $${A}$ 种蔬菜，蔬菜部分的 $${B}$ 种胡萝卜。胡萝卜占整个菜园的几分之几？`,
                 )
               : t(
-                  `$${A}$ of a pizza is left over, and ${rng.pick(names)} eats $${B}$ of the leftover part. What fraction of the whole pizza is eaten?`,
-                  `一个比萨还剩 $${A}$，${rng.pick(names)} 吃了剩下部分的 $${B}$。吃掉的是整个比萨的几分之几？`,
+                  `$${A}$ of a pizza is left over, and ${who} eats $${B}$ of the leftover part. What fraction of the whole pizza is eaten?`,
+                  `一个比萨还剩 $${A}$，${who} 吃了剩下部分的 $${B}$。吃掉的是整个比萨的几分之几？`,
                 );
         return numberProblem({
           prompt,
@@ -1549,6 +1551,7 @@ function rateSituation(rng: Rng): RateSituation {
   const r = rng.bool() ? Q.of(rng.int(2, 15)) : decQ(rng, 1, 11, 95);
   const rs = dec(r);
   const kind = rng.int(0, 4);
+  const who = rng.pick(names);
   if (kind <= 2) {
     const text = [
       t(
@@ -1560,8 +1563,8 @@ function rateSituation(rng: Rng): RateSituation {
         `气温每小时下降 $${rs}$ 度，持续了 $${n}$ 小时。哪个式子表示气温的总变化量（度）？`,
       ),
       t(
-        `${rng.pick(names)} withdraws $\\$${rs}$ from a bank account every week for $${n}$ weeks. Which expression gives the change in the account balance, in dollars?`,
-        `${rng.pick(names)} 连续 $${n}$ 周每周从银行账户取出 $\\$${rs}$。哪个式子表示账户余额的变化量（美元）？`,
+        `${who} withdraws $\\$${rs}$ from a bank account every week for $${n}$ weeks. Which expression gives the change in the account balance, in dollars?`,
+        `${who} 连续 $${n}$ 周每周从银行账户取出 $\\$${rs}$。哪个式子表示账户余额的变化量（美元）？`,
       ),
     ][kind]!;
     return {

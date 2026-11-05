@@ -304,7 +304,7 @@ export const readingAndWritingDecimalsWrittenInWords = topic(
           rng,
           t(`How is $${fix(n, p)}$ read?`, `$${fix(n, p)}$ 怎么读？`),
           decimalWords(n, p),
-          [moved(p - 1), moved(p + 1), decimalWords(whole * pow10(p) + Math.floor(part / 10) + (part % 10) * pow10(p - 1), p)].filter(
+          [moved(p - 1), ...(p < 3 ? [moved(p + 1)] : []), decimalWords(whole * pow10(p) + Math.floor(part / 10) + (part % 10) * pow10(p - 1), p)].filter(
             (w) => w.en !== decimalWords(n, p).en,
           ),
           t(

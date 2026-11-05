@@ -43,8 +43,8 @@ const cdot = (a: string, b: string) => `${a} \\cdot ${b.startsWith("-") ? `(${b}
 
 /** listSolutions tells the learner how to enter a solution set. */
 const listSolutions = t(
-  "Enter all solutions separated by commas, or $\\varnothing$ if there is none.",
-  "请用逗号分隔写出所有解；如果无解，请输入 $\\varnothing$。",
+  "Enter all solutions separated by commas, or type none if there is none.",
+  "请用逗号分隔写出所有解；如果无解，请输入 none。",
 );
 
 /** solve asks to solve an equation and to enter its solution set. */
@@ -283,8 +283,8 @@ export const simplifyingRationalExpressions: TopicDef = {
         const topRoot = top.includes("x") ? [[num(-a)]] : [];
         const prompt = (e: string) =>
           t(
-            `Find all values of $x$ for which $${e}$ is not defined. Enter them separated by commas, or $\\varnothing$ if there is none.`,
-            `求使 $${e}$ 没有意义的所有 $x$ 值。请用逗号分隔；如果没有，请输入 $\\varnothing$。`,
+            `Find all values of $x$ for which $${e}$ is not defined. Enter them separated by commas, or type none if there is none.`,
+            `求使 $${e}$ 没有意义的所有 $x$ 值。请用逗号分隔；如果没有，请输入 none。`,
           );
         const zero = (d: string, work: string, vs: readonly string[]) =>
           t(

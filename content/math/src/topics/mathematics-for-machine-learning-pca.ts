@@ -158,8 +158,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `The sample covariance matrix of a 2-dimensional dataset is $S = \\begin{pmatrix} ${s11} & ${tr.s12} \\\\ ${tr.s12} & ${s22} \\end{pmatrix}$. Find the variance $\\lambda_${askMax ? "1" : "2"}$ along the ${askMax ? "first (dominant)" : "second"} principal component by calculating the ${askMax ? "larger" : "smaller"} eigenvalue of $S$.`,
-              `一个 2 维数据集的样本协方差矩阵为 $S = \\begin{pmatrix} ${s11} & ${tr.s12} \\\\ ${tr.s12} & ${s22} \\end{pmatrix}$。通过计算 $S$ 的${askMax ? "较大" : "较小"}特征值，求${askMax ? "第一（主）" : "第二"}主成分方向上的方差 $\\lambda_${askMax ? "1" : "2"}$。`,
+              `The sample covariance matrix of a 2-dimensional dataset is $S = \\begin{pmatrix} ${s11} & ${tr.s12} \\\\ ${tr.s12} & ${s22} \\end{pmatrix}$. Find the variance $\\lambda_{${askMax ? "1" : "2"}}$ along the ${askMax ? "first (dominant)" : "second"} principal component by calculating the ${askMax ? "larger" : "smaller"} eigenvalue of $S$.`,
+              `一个 2 维数据集的样本协方差矩阵为 $S = \\begin{pmatrix} ${s11} & ${tr.s12} \\\\ ${tr.s12} & ${s22} \\end{pmatrix}$。通过计算 $S$ 的${askMax ? "较大" : "较小"}特征值，求${askMax ? "第一（主）" : "第二"}主成分方向上的方差 $\\lambda_{${askMax ? "1" : "2"}}$。`,
             ),
             answer: targetLambda,
             wrong: [askMax ? actualL2 : actualL1, askMax ? s11 : s22, s11 + s22],

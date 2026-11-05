@@ -1492,8 +1492,8 @@ export const furtherRationalizingDenominators: TopicDef = {
 
 /** listSolutions tells the learner how to enter a solution set. */
 const listSolutions = t(
-  "Enter all real solutions separated by commas, or $\\varnothing$ if there are none.",
-  "请用逗号分隔写出所有实数解；如果没有实数解，请输入 $\\varnothing$。",
+  "Enter all real solutions separated by commas, or type none if there are none.",
+  "请用逗号分隔写出所有实数解；如果没有实数解，请输入 none。",
 );
 
 /** solve asks to solve an equation. */

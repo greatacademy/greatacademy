@@ -170,8 +170,8 @@ $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$`,
           answer: ansVal,
           solveFor: varName,
           solution: t(
-            `First compute the coefficient determinant: $D = (${a})(${d}) - (${b})(${c}) = ${D}$. Next compute $D_${varName} = ${askX ? Dx : Dy}$. Therefore, $${varName} = \\frac{D_${varName}}{D} = \\frac{${askX ? Dx : Dy}}{${D}} = ${ansVal}$.`,
-            `首先计算系数行列式：$D = (${a})(${d}) - (${b})(${c}) = ${D}$。接着计算 $D_${varName} = ${askX ? Dx : Dy}$。因此 $${varName} = \\frac{D_${varName}}{D} = \\frac{${askX ? Dx : Dy}}{${D}} = ${ansVal}$。`,
+            `First compute the coefficient determinant: $D = (${a})(${d}) - (${b})(${c}) = ${D}$. Next compute $D_{${varName}} = ${askX ? Dx : Dy}$. Therefore, $${varName} = \\frac{D_{${varName}}}{D} = \\frac{${askX ? Dx : Dy}}{${D}} = ${ansVal}$.`,
+            `首先计算系数行列式：$D = (${a})(${d}) - (${b})(${c}) = ${D}$。接着计算 $D_{${varName}} = ${askX ? Dx : Dy}$。因此 $${varName} = \\frac{D_{${varName}}}{D} = \\frac{${askX ? Dx : Dy}}{${D}} = ${ansVal}$。`,
           ),
           wrong: [otherVal, -ansVal, ansVal + 1, ansVal - 1, askX ? Dx : Dy],
         });
@@ -279,12 +279,12 @@ export const cramersRuleFor3x3Systems: TopicDef = {
 
 $$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(bVec)}$$
 
-Which matrix is $A_${colIdx}(\\mathbf{b})$, used in Cramer's rule to compute $${varStr} = \\frac{\\det(A_${colIdx}(\\mathbf{b}))}{\\det(A)}$?`,
+Which matrix is $A_{${colIdx}}(\\mathbf{b})$, used in Cramer's rule to compute $${varStr} = \\frac{\\det(A_{${colIdx}}(\\mathbf{b}))}{\\det(A)}$?`,
           `考虑 $3 \\times 3$ 线性系统 $A\\mathbf{x} = \\mathbf{b}$，其中
 
 $$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(bVec)}$$
 
-在克莱姆法则中用于计算 $${varStr} = \\frac{\\det(A_${colIdx}(\\mathbf{b}))}{\\det(A)}$ 的替换矩阵 $A_${colIdx}(\\mathbf{b})$ 是哪一个？`,
+在克莱姆法则中用于计算 $${varStr} = \\frac{\\det(A_{${colIdx}}(\\mathbf{b}))}{\\det(A)}$ 的替换矩阵 $A_{${colIdx}}(\\mathbf{b})$ 是哪一个？`,
         );
 
         return oneOf(
@@ -297,8 +297,8 @@ $$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(bVec)}$$
             t(`$$${matLatex(A_wrong3)}$$`, `$$${matLatex(A_wrong3)}$$`),
           ],
           t(
-            `In Cramer's rule, $A_${colIdx}(\\mathbf{b})$ is obtained by replacing column ${colIdx} of $A$ with the constant vector $\\mathbf{b}$. Thus column ${colIdx} becomes $\\begin{pmatrix} ${b1} \\\\ ${b2} \\\\ ${b3} \\end{pmatrix}$ while the other columns remain unchanged.`,
-            `在克莱姆法则中，$A_${colIdx}(\\mathbf{b})$ 是通过将 $A$ 的第 ${colIdx} 列替换为常数向量 $\\mathbf{b}$ 得到的。因此第 ${colIdx} 列变为 $\\begin{pmatrix} ${b1} \\\\ ${b2} \\\\ ${b3} \\end{pmatrix}$，其余列保持不变。`,
+            `In Cramer's rule, $A_{${colIdx}}(\\mathbf{b})$ is obtained by replacing column ${colIdx} of $A$ with the constant vector $\\mathbf{b}$. Thus column ${colIdx} becomes $\\begin{pmatrix} ${b1} \\\\ ${b2} \\\\ ${b3} \\end{pmatrix}$ while the other columns remain unchanged.`,
+            `在克莱姆法则中，$A_{${colIdx}}(\\mathbf{b})$ 是通过将 $A$ 的第 ${colIdx} 列替换为常数向量 $\\mathbf{b}$ 得到的。因此第 ${colIdx} 列变为 $\\begin{pmatrix} ${b1} \\\\ ${b2} \\\\ ${b3} \\end{pmatrix}$，其余列保持不变。`,
           ),
         );
       },
@@ -336,8 +336,8 @@ $$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(bVec)}$$
             Q.of(det3(A.map((row, r) => row.map((x, cIdx) => (cIdx === (i + 1) % 3 ? b[r]! : x)))), D),
           ],
           solution: t(
-            `$\\det A = ${D}$ and $\\det A_${i + 1}(\\mathbf{b}) = \\det ${matLatex(Ai)} = ${Di}$, so $${name} = \\frac{${Di}}{${D}} = ${ans.toLatex()}$.`,
-            `$\\det A = ${D}$，$\\det A_${i + 1}(\\mathbf{b}) = \\det ${matLatex(Ai)} = ${Di}$，所以 $${name} = \\frac{${Di}}{${D}} = ${ans.toLatex()}$。`,
+            `$\\det A = ${D}$ and $\\det A_{${i + 1}}(\\mathbf{b}) = \\det ${matLatex(Ai)} = ${Di}$, so $${name} = \\frac{${Di}}{${D}} = ${ans.toLatex()}$.`,
+            `$\\det A = ${D}$，$\\det A_{${i + 1}}(\\mathbf{b}) = \\det ${matLatex(Ai)} = ${Di}$，所以 $${name} = \\frac{${Di}}{${D}} = ${ans.toLatex()}$。`,
           ),
         });
       },
@@ -1553,14 +1553,14 @@ $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$。�
         const kind = rng.int(0, 2);
         const o = (s: string) => t(`$${s}$`, `$${s}$`);
         const kl = (v: number) => (v < 0 ? `- ${-v}` : `+ ${v}`);
-        const op = [`R_${i} \\leftrightarrow R_${j}`, `${k}R_${i} \\to R_${i}`, `R_${i} ${kl(k)}R_${j} \\to R_${i}`][kind]!;
-        const inv = [`R_${i} \\leftrightarrow R_${j}`, `${Q.of(1, k).toLatex()}R_${i} \\to R_${i}`, `R_${i} ${kl(-k)}R_${j} \\to R_${i}`][
+        const op = [`R_{${i}} \\leftrightarrow R_{${j}}`, `${k}R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(k)}R_{${j}} \\to R_{${i}}`][kind]!;
+        const inv = [`R_{${i}} \\leftrightarrow R_{${j}}`, `${Q.of(1, k).toLatex()}R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(-k)}R_{${j}} \\to R_{${i}}`][
           kind
         ]!;
         const wrong = [
-          [`R_${j} ${kl(1)}R_${i} \\to R_${j}`, `-R_${i} \\to R_${i}`, `R_${i} ${kl(-1)}R_${j} \\to R_${i}`],
-          [`${-k}R_${i} \\to R_${i}`, `R_${i} ${kl(-k)}R_${j} \\to R_${i}`, `${Q.of(1, k).toLatex()}R_${j} \\to R_${j}`],
-          [`R_${i} ${kl(k)}R_${j} \\to R_${i}`, `R_${j} ${kl(-k)}R_${i} \\to R_${j}`, `${Q.of(1, k).toLatex()}R_${i} \\to R_${i}`],
+          [`R_{${j}} ${kl(1)}R_{${i}} \\to R_{${j}}`, `-R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(-1)}R_{${j}} \\to R_{${i}}`],
+          [`${-k}R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(-k)}R_{${j}} \\to R_{${i}}`, `${Q.of(1, k).toLatex()}R_{${j}} \\to R_{${j}}`],
+          [`R_{${i}} ${kl(k)}R_{${j}} \\to R_{${i}}`, `R_{${j}} ${kl(-k)}R_{${i}} \\to R_{${j}}`, `${Q.of(1, k).toLatex()}R_{${i}} \\to R_{${i}}`],
         ][kind]!;
         return oneOf(
           rng,
@@ -1571,9 +1571,9 @@ $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$。�
             [
               `A swap is its own inverse.`,
               `Scaling by $${k}$ is undone by scaling by $${Q.of(1, k).toLatex()}$.`,
-              `Adding $${k}R_${j}$ is undone by subtracting it again.`,
+              `Adding $${k}R_{${j}}$ is undone by subtracting it again.`,
             ][kind]!,
-            [`交换的逆就是它本身。`, `乘以 $${k}$ 由乘以 $${Q.of(1, k).toLatex()}$ 撤销。`, `加上 $${k}R_${j}$ 由再减去它撤销。`][kind]!,
+            [`交换的逆就是它本身。`, `乘以 $${k}$ 由乘以 $${Q.of(1, k).toLatex()}$ 撤销。`, `加上 $${k}R_{${j}}$ 由再减去它撤销。`][kind]!,
           ),
         );
       },
@@ -2773,7 +2773,7 @@ export const elementary3x3Matrices: TopicDef = {
         const [targetRow, sourceRow] = rng.pick(rowPairs);
 
         const opStr =
-          c > 0 ? `R_${targetRow} + ${c} R_${sourceRow} \\to R_${targetRow}` : `R_${targetRow} - ${-c} R_${sourceRow} \\to R_${targetRow}`;
+          c > 0 ? `R_{${targetRow}} + ${c} R_{${sourceRow}} \\to R_{${targetRow}}` : `R_{${targetRow}} - ${-c} R_{${sourceRow}} \\to R_{${targetRow}}`;
 
         // Create 3x3 identity with c at (targetRow-1, sourceRow-1)
         const E: Mat = [

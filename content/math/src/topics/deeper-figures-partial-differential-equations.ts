@@ -96,8 +96,8 @@ const valueAlongCharacteristic = point(
         { xMin: -10, xMax: 10, yMin: -1, yMax: 6, labelEvery: 2, xName: "x", yName: "t" },
         [...lines, { kind: "point", at: P, label: "P", dir: "e" }],
         [
-          `Parallel characteristic lines of slope dx/dt = ${speed}, with P at (${P[0]}, ${P[1]}).`,
-          `平行的特征线，dx/dt = ${speed}，P 在 (${P[0]}, ${P[1]})。`,
+          `Parallel characteristic lines in the xt-plane, with P at (${P[0]}, ${P[1]}).`,
+          `xt 平面上平行的特征线，P 在 (${P[0]}, ${P[1]})。`,
         ],
       ),
     );
@@ -165,8 +165,8 @@ const burgersPicture = point(
             `由斜率读出左状态为 $${a}$，右状态为 $${b}$。右边的线更快，所以线在跳跃附近散开，空隙由稀疏扇填满。`,
           ],
       fig({ xMin: -11, xMax: 11, yMin: -1, yMax: 4, labelEvery: 2, xName: "x", yName: "t" }, lines, [
-        `Solid lines on the left with dx/dt = ${a} and dashed lines on the right with dx/dt = ${b}.`,
-        `左边实线的 dx/dt = ${a}，右边虚线的 dx/dt = ${b}。`,
+        "Solid characteristic lines to the left of the jump and dashed ones to the right of it.",
+        "跳跃左边是实线的特征线，右边是虚线的特征线。",
       ]),
     );
   },
@@ -392,8 +392,8 @@ const heatCurves = point(
         `热量随时间扩散，所以峰下降、曲线变宽。曲线 $${answer}$ 是${latest ? "最低最宽" : "最高最窄"}的，所以它是${latest ? "最晚" : "最早"}的。`,
       ],
       fig({ xMin: -7, xMax: 7, yMin: -1, yMax: 6 }, marks, [
-        `Three bell curves centered at x = ${center}, from tallest to lowest: ${names.join(", ")}.`,
-        `以 x = ${center} 为中心的三条钟形曲线，从最高到最低：${names.join("，")}。`,
+        `Three bell curves centered at x = ${center}, labelled ${[...names].sort().join(", ")}.`,
+        `以 x = ${center} 为中心的三条钟形曲线，标为 ${[...names].sort().join("，")}。`,
       ]),
     );
   },

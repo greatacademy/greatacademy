@@ -1394,8 +1394,8 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
           values: ans,
           wrong: [wrong1, wrong2, wrong3],
           solution: t(
-            `The inner angle equals $${item.base.join("^{\\circ}, ")}{}^{\\circ}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
-            `内层角等于 $${item.base.join("^{\\circ}, ")}{}^{\\circ}$，解得 $${v} = ${ansStr}$。`,
+            `The inner angle equals $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
+            `内层角等于 $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$，解得 $${v} = ${ansStr}$。`,
           ),
         });
       },
@@ -1513,8 +1513,8 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
           values: ans,
           wrong: [wrong1, wrong2, wrong3],
           solution: t(
-            `The inner angle equals $${item.base.join("^{\\circ}, ")}{}^{\\circ}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
-            `内层角等于 $${item.base.join("^{\\circ}, ")}{}^{\\circ}$，解得 $${v} = ${ansStr}$。`,
+            `The inner angle equals $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
+            `内层角等于 $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$，解得 $${v} = ${ansStr}$。`,
           ),
         });
       },

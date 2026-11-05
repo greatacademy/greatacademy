@@ -397,8 +397,8 @@ export const powerRules: TopicDef = {
           simplified: true,
           wrong: [mono(c, [["x", m * n]]), mono(c * n, [["x", m * n]]), mono(c ** n, [["x", m + n]])],
           solution: t(
-            `Raise the coefficient and the power of $x$ to the power $${n}$:${steps(`(${inner})^{${n}} = ${c < 0 ? `(${c})` : c}^{${n}}(x^{${m}})^{${n}} = ${answer}`)}`,
-            `系数和 $x$ 的幂都要乘方 $${n}$ 次：${steps(`(${inner})^{${n}} = ${c < 0 ? `(${c})` : c}^{${n}}(x^{${m}})^{${n}} = ${answer}`)}`,
+            `Raise the coefficient and the power of $x$ to the power $${n}$:${steps(`(${inner})^{${n}} = ${c < 0 ? `(${c})` : c}^{${n}}(${m === 1 ? "x" : `x^{${m}}`})^{${n}} = ${answer}`)}`,
+            `系数和 $x$ 的幂都要乘方 $${n}$ 次：${steps(`(${inner})^{${n}} = ${c < 0 ? `(${c})` : c}^{${n}}(${m === 1 ? "x" : `x^{${m}}`})^{${n}} = ${answer}`)}`,
           ),
         });
       },

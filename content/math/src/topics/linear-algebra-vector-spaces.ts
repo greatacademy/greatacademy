@@ -640,7 +640,7 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
         const sets = [`${eqLhs} = 0`, `${eqLhs} = ${d}`, "x \\ge 0"];
         const order = rng.shuffle([0, 1, 2]);
         const name = (kind: number) => `W_${order.indexOf(kind) + 1}`;
-        const listed = order.map((kind, i) => `W_${i + 1} = \\{ (x, y, z) \\mid ${sets[kind]} \\}`);
+        const listed = order.map((kind, i) => `W_{${i + 1}} = \\{ (x, y, z) \\mid ${sets[kind]} \\}`);
         const answer = order.indexOf(0);
         return choiceProblem({
           prompt: t(
@@ -672,20 +672,20 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
         const k = rng.int(2, 12);
         const n = rng.int(3, 15);
         const prompt = t(
-          `Let $S = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ be any collection of $${k}$ vectors in $\\mathbb{R}^${n}$. Which statement about $W = \\text{Span}(S)$ is always true?`,
-          `设 $S = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ 为 $\\mathbb{R}^${n}$ 中的任意 $${k}$ 个向量构成的向量组。关于 $W = \\text{Span}(S)$，下列哪个说法恒成立？`,
+          `Let $S = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_{${k}}\\}$ be any collection of $${k}$ vectors in $\\mathbb{R}^{${n}}$. Which statement about $W = \\text{Span}(S)$ is always true?`,
+          `设 $S = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_{${k}}\\}$ 为 $\\mathbb{R}^{${n}}$ 中的任意 $${k}$ 个向量构成的向量组。关于 $W = \\text{Span}(S)$，下列哪个说法恒成立？`,
         );
         const right = t(
-          `$W$ is always a subspace of $\\mathbb{R}^${n}$, containing $\\mathbf{0}$ and closed under linear combinations`,
-          `$W$ 恒为 $\\mathbb{R}^${n}$ 的子空间，包含零向量且对线性组合封闭`,
+          `$W$ is always a subspace of $\\mathbb{R}^{${n}}$, containing $\\mathbf{0}$ and closed under linear combinations`,
+          `$W$ 恒为 $\\mathbb{R}^{${n}}$ 的子空间，包含零向量且对线性组合封闭`,
         );
         const wrong = [
           t(`$W$ is a subspace only if the vectors in $S$ are linearly independent`, `只有当 $S$ 中的向量线性无关时，$W$ 才是子空间`),
           t(`$W$ is a subspace only if $k \\ge ${n}$`, `只有当 $k \\ge ${n}$ 时，$W$ 才是子空间`),
-          t(`$W = \\mathbb{R}^${n}$ regardless of which vectors are in $S$`, `无论 $S$ 中是何向量，$W$ 恒等于 $\\mathbb{R}^${n}$`),
+          t(`$W = \\mathbb{R}^{${n}}$ regardless of which vectors are in $S$`, `无论 $S$ 中是何向量，$W$ 恒等于 $\\mathbb{R}^{${n}}$`),
         ];
         const solution = t(
-          `By definition, the linear span of any set of vectors in $\\mathbb{R}^${n}$ satisfies all three subspace axioms: it contains $\\mathbf{0}$ (set all weights to 0), and any linear combination of linear combinations is again a linear combination.`,
+          `By definition, the linear span of any set of vectors in $\\mathbb{R}^{${n}}$ satisfies all three subspace axioms: it contains $\\mathbf{0}$ (set all weights to 0), and any linear combination of linear combinations is again a linear combination.`,
           `根据定义，任何向量组的线性张成空间都满足子空间三公理：取系数全为 0 即得 $\\mathbf{0}$，且线性组合的线性组合依然属于张成空间，故恒为子空间。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
@@ -792,8 +792,8 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
         const m = rng.int(-9, 9);
         const rhs = m === 0 ? "k" : `k ${m < 0 ? "+" : "-"} ${Math.abs(m)}`;
         const prompt = t(
-          `The hyperplane in $\\mathbb{R}^${n}$ defined by $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = ${rhs} \\right\\}$ forms a subspace of $\\mathbb{R}^${n}$ precisely when:`,
-          `在 $\\mathbb{R}^${n}$ 中，由 $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = ${rhs} \\right\\}$ 定义的超平面构成子空间，充要条件是：`,
+          `The hyperplane in $\\mathbb{R}^{${n}}$ defined by $H = \\left\\{ (x_1, \\dots, x_{${n}}) \\mid ${eqLhs} = ${rhs} \\right\\}$ forms a subspace of $\\mathbb{R}^{${n}}$ precisely when:`,
+          `在 $\\mathbb{R}^{${n}}$ 中，由 $H = \\left\\{ (x_1, \\dots, x_{${n}}) \\mid ${eqLhs} = ${rhs} \\right\\}$ 定义的超平面构成子空间，充要条件是：`,
         );
         const right = t(`$k = ${m}$`, `$k = ${m}$`);
         const wrong = [-m, m + 1, m - 1, m === 0 ? 2 : 0, coeffs[0]!].map((v) => t(`$k = ${v}$`, `$k = ${v}$`));
@@ -834,9 +834,9 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
           `Let $A$ be ${article(m)} $${m} \\times ${n}$ matrix. The column space $\\text{Col}(A)$ is a subspace of which Euclidean space?`,
           `设 $A$ 为一个 $${m} \\times ${n}$ 矩阵。其列空间 $\\text{Col}(A)$ 是哪一个欧几里得空间的子空间？`,
         );
-        const right = t(`$\\mathbb{R}^${m}$`, `$\\mathbb{R}^${m}$`);
+        const right = t(`$\\mathbb{R}^{${m}}$`, `$\\mathbb{R}^{${m}}$`);
         const wrong = [
-          t(`$\\mathbb{R}^${n}$`, `$\\mathbb{R}^${n}$`),
+          t(`$\\mathbb{R}^{${n}}$`, `$\\mathbb{R}^{${n}}$`),
           t(`$\\mathbb{R}^{${m + n}}$`, `$\\mathbb{R}^{${m + n}}$`),
           t(`$\\mathbb{R}^{${m * n}}$`, `$\\mathbb{R}^{${m * n}}$`),
         ];
@@ -947,9 +947,9 @@ export const theNullSpaceOfAMatrix: TopicDef = {
           `Let $A$ be ${article(m)} $${m} \\times ${n}$ matrix. In which Euclidean space does the null space $\\text{Null}(A)$ reside?`,
           `设 $A$ 为一个 $${m} \\times ${n}$ 矩阵。其零空间 $\\text{Null}(A)$ 是哪一个空间的子空间？`,
         );
-        const right = t(`$\\mathbb{R}^${n}$`, `$\\mathbb{R}^${n}$`);
+        const right = t(`$\\mathbb{R}^{${n}}$`, `$\\mathbb{R}^{${n}}$`);
         const wrong = [
-          t(`$\\mathbb{R}^${m}$`, `$\\mathbb{R}^${m}$`),
+          t(`$\\mathbb{R}^{${m}}$`, `$\\mathbb{R}^{${m}}$`),
           t(`$\\mathbb{R}^{${m - n > 0 ? m - n : 1}}$`, `$\\mathbb{R}^{${m - n > 0 ? m - n : 1}}$`),
           t(`$\\mathbb{R}^{${m * n}}$`, `$\\mathbb{R}^{${m * n}}$`),
         ];
@@ -1042,8 +1042,8 @@ export const findingABasisOfASpan: TopicDef = {
         const k = rng.int(2, 8);
         const n = rng.int(k, 12);
         const prompt = t(
-          `Let $H$ be ${article(k)} $${k}$-dimensional subspace of $\\mathbb{R}^${n}$. What two conditions must a set of vectors $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ satisfy to be a basis for $H$?`,
-          `设 $H$ 为 $\\mathbb{R}^${n}$ 的一个 $${k}$ 维子空间。向量组 $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ 成为 $H$ 的一组基必须满足哪两个条件？`,
+          `Let $H$ be ${article(k)} $${k}$-dimensional subspace of $\\mathbb{R}^{${n}}$. What two conditions must a set of vectors $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_{${k}}\\}$ satisfy to be a basis for $H$?`,
+          `设 $H$ 为 $\\mathbb{R}^{${n}}$ 的一个 $${k}$ 维子空间。向量组 $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_{${k}}\\}$ 成为 $H$ 的一组基必须满足哪两个条件？`,
         );
         const right = t(
           `$\\mathcal{B}$ must be linearly independent, and $\\text{Span}(\\mathcal{B}) = H$`,
@@ -1055,8 +1055,8 @@ export const findingABasisOfASpan: TopicDef = {
             `$\\mathcal{B}$ 必须正交，且所有向量必须为单位向量`,
           ),
           t(
-            `$\\mathcal{B}$ must span all of $\\mathbb{R}^${n}$, and $k$ must equal $${n}$`,
-            `$\\mathcal{B}$ 必须张成整个 $\\mathbb{R}^${n}$，且 $k$ 必须等于 $${n}$`,
+            `$\\mathcal{B}$ must span all of $\\mathbb{R}^{${n}}$, and $k$ must equal $${n}$`,
+            `$\\mathcal{B}$ 必须张成整个 $\\mathbb{R}^{${n}}$，且 $k$ 必须等于 $${n}$`,
           ),
           t(
             `The vectors in $\\mathcal{B}$ must have non-zero entries and be pairwise linearly independent`,
@@ -1094,7 +1094,7 @@ export const findingABasisOfASpan: TopicDef = {
         const [i, j] = [pos("u"), pos("cu")].sort((m, n) => m - n) as [number, number];
         const k = pos("w");
         const ratio = pos("u") < pos("cu") ? Q.of(c) : Q.of(1, c);
-        const v = (n: number) => `\\mathbf{v}_${n}`;
+        const v = (n: number) => `\\mathbf{v}_{${n}}`;
         const set = (ns: number[]) =>
           `$\\{${[...ns]
             .sort((m, n) => m - n)
@@ -1722,25 +1722,25 @@ export const changingABasisUsingTheChangeOfCoordinatesMatrix: TopicDef = {
       generate(rng) {
         const n = rng.int(2, 35);
         const prompt = t(
-          `In $\\mathbb{R}^${n}$, to compute the change-of-coordinates matrix $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ between two bases $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_${n}\\}$ and $\\mathcal{C} = \\{\\mathbf{c}_1, \\dots, \\mathbf{c}_${n}\\}$, which augmented matrix is row reduced to $[I \\mid P_{\\mathcal{C} \\leftarrow \\mathcal{B}}]$?`,
-          `在 $\\mathbb{R}^${n}$ 中，为求基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_${n}\\}$ 到基 $\\mathcal{C} = \\{\\mathbf{c}_1, \\dots, \\mathbf{c}_${n}\\}$ 的过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$，应将哪一个增广矩阵行化简为 $[I \\mid P_{\\mathcal{C} \\leftarrow \\mathcal{B}}]$？`,
+          `In $\\mathbb{R}^{${n}}$, to compute the change-of-coordinates matrix $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ between two bases $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_{${n}}\\}$ and $\\mathcal{C} = \\{\\mathbf{c}_1, \\dots, \\mathbf{c}_{${n}}\\}$, which augmented matrix is row reduced to $[I \\mid P_{\\mathcal{C} \\leftarrow \\mathcal{B}}]$?`,
+          `在 $\\mathbb{R}^{${n}}$ 中，为求基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_{${n}}\\}$ 到基 $\\mathcal{C} = \\{\\mathbf{c}_1, \\dots, \\mathbf{c}_{${n}}\\}$ 的过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$，应将哪一个增广矩阵行化简为 $[I \\mid P_{\\mathcal{C} \\leftarrow \\mathcal{B}}]$？`,
         );
         const right = t(
-          `$[\\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_${n} \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_${n}]$`,
-          `$[\\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_${n} \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_${n}]$`,
+          `$[\\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_{${n}} \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_{${n}}]$`,
+          `$[\\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_{${n}} \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_{${n}}]$`,
         );
         const wrong = [
           t(
-            `$[\\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_${n} \\mid \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_${n}]$`,
-            `$[\\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_${n} \\mid \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_${n}]$`,
+            `$[\\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_{${n}} \\mid \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_{${n}}]$`,
+            `$[\\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_{${n}} \\mid \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_{${n}}]$`,
           ),
           t(
-            `$[I \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_${n} \\; \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_${n}]$`,
-            `$[I \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_${n} \\; \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_${n}]$`,
+            `$[I \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_{${n}} \\; \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_{${n}}]$`,
+            `$[I \\mid \\mathbf{b}_1 \\; \\dots \\; \\mathbf{b}_{${n}} \\; \\mathbf{c}_1 \\; \\dots \\; \\mathbf{c}_{${n}}]$`,
           ),
           t(
-            `$[\\mathbf{b}_1 \\; \\mathbf{c}_1 \\mid \\dots \\mid \\mathbf{b}_${n} \\; \\mathbf{c}_${n}]$`,
-            `$[\\mathbf{b}_1 \\; \\mathbf{c}_1 \\mid \\dots \\mid \\mathbf{b}_${n} \\; \\mathbf{c}_${n}]$`,
+            `$[\\mathbf{b}_1 \\; \\mathbf{c}_1 \\mid \\dots \\mid \\mathbf{b}_{${n}} \\; \\mathbf{c}_{${n}}]$`,
+            `$[\\mathbf{b}_1 \\; \\mathbf{c}_1 \\mid \\dots \\mid \\mathbf{b}_{${n}} \\; \\mathbf{c}_{${n}}]$`,
           ),
         ];
         const solution = t(
@@ -2034,7 +2034,7 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
         const right = t(`$\\text{rank}(A) = ${n}$ and $\\text{nullity}(A) = 0$`, `$\\text{rank}(A) = ${n}$ 且 $\\text{nullity}(A) = 0$`);
         const wrong = [
           t(`$\\text{rank}(A) = 0$ and $\\text{nullity}(A) = ${n}$`, `$\\text{rank}(A) = 0$ 且 $\\text{nullity}(A) = ${n}$`),
-          t(`$\\text{Col}(A)$ is a line in $\\mathbb{R}^${n}$`, `$\\text{Col}(A)$ 是 $\\mathbb{R}^${n}$ 中的一条直线`),
+          t(`$\\text{Col}(A)$ is a line in $\\mathbb{R}^{${n}}$`, `$\\text{Col}(A)$ 是 $\\mathbb{R}^{${n}}$ 中的一条直线`),
           t(`$\\text{Null}(A)$ contains non-zero vectors`, `$\\text{Null}(A)$ 包含非零向量`),
         ];
         const solution = t(
@@ -2062,7 +2062,7 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
         const right = t(`$\\text{nullity}(A) = ${nullity}$, and $A$ is not invertible`, `$\\text{nullity}(A) = ${nullity}$，且 $A$ 不可逆`);
         const wrong = [
           t(`$A$ is invertible`, `$A$ 可逆`),
-          t(`$\\text{Col}(A) = \\mathbb{R}^${n}$`, `$\\text{Col}(A) = \\mathbb{R}^${n}$`),
+          t(`$\\text{Col}(A) = \\mathbb{R}^{${n}}$`, `$\\text{Col}(A) = \\mathbb{R}^{${n}}$`),
           t(`$\\text{Null}(A) = \\{\\mathbf{0}\\}$`, `$\\text{Null}(A) = \\{\\mathbf{0}\\}$`),
         ];
         const solution = t(
@@ -2176,8 +2176,8 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
       generate(rng) {
         const n = rng.int(2, 30);
         const prompt = t(
-          `In the polynomial vector space $\\mathbb{P}_${n}$, what mathematical objects play the role of 'vectors'?`,
-          `在多项式向量空间 $\\mathbb{P}_${n}$ 中，什么数学对象充当'向量'的角色？`,
+          `In the polynomial vector space $\\mathbb{P}_{${n}}$, what mathematical objects play the role of 'vectors'?`,
+          `在多项式向量空间 $\\mathbb{P}_{${n}}$ 中，什么数学对象充当'向量'的角色？`,
         );
         const right = t(
           `All polynomials with real coefficients of degree at most $${n}$, together with the zero polynomial`,
@@ -2185,7 +2185,7 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
         );
         const wrong = [
           t(`Only polynomials of degree exactly equal to $${n}$`, `次数严格等于 $${n}$ 的多项式`),
-          t(`Column vectors in $\\mathbb{R}^${n}$ whose entries are integers`, `分量为整数的 $\\mathbb{R}^${n}$ 列向量`),
+          t(`Column vectors in $\\mathbb{R}^{${n}}$ whose entries are integers`, `分量为整数的 $\\mathbb{R}^{${n}}$ 列向量`),
           t(`All rational functions $p(x)/q(x)$ of degree at most $${n}$`, `次数不超过 $${n}$ 的所有有理分式 $p(x)/q(x)$`),
         ];
         const solution = t(
@@ -2250,18 +2250,18 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
         }
         const k = rng.int(2, 10);
         const prompt = t(
-          `What is the zero vector in the polynomial vector space $\\mathbb{P}_${k}$?`,
-          `在多项式向量空间 $\\mathbb{P}_${k}$ 中，零向量是什么？`,
+          `What is the zero vector in the polynomial vector space $\\mathbb{P}_{${k}}$?`,
+          `在多项式向量空间 $\\mathbb{P}_{${k}}$ 中，零向量是什么？`,
         );
         const right = t(`The zero polynomial $p(t) = 0$ with all coefficients equal to zero`, `所有系数均为 0 的零多项式 $p(t) = 0$`);
         const wrong = [
           t(`The polynomial $p(t) = 1$`, `多项式 $p(t) = 1$`),
-          t(`The monomial $p(t) = t^${k}$`, `单项式 $p(t) = t^${k}$`),
-          t(`The zero vector in $\\mathbb{R}^${k}$`, `$\\mathbb{R}^${k}$ 中的零向量`),
+          t(`The monomial $p(t) = t^{${k}}$`, `单项式 $p(t) = t^{${k}}$`),
+          t(`The zero vector in $\\mathbb{R}^{${k}}$`, `$\\mathbb{R}^{${k}}$ 中的零向量`),
         ];
         const solution = t(
-          `The zero vector in $\\mathbb{P}_${k}$ is the zero polynomial whose coefficients are all zero, satisfying $q(t) + 0 = q(t)$ for every $q(t) \\in \\mathbb{P}_${k}$.`,
-          `$\\mathbb{P}_${k}$ 中的零向量是所有系数均为零的零多项式，满足对任意 $q(t) \\in \\mathbb{P}_${k}$ 均有 $q(t) + 0 = q(t)$。`,
+          `The zero vector in $\\mathbb{P}_{${k}}$ is the zero polynomial whose coefficients are all zero, satisfying $q(t) + 0 = q(t)$ for every $q(t) \\in \\mathbb{P}_{${k}}$.`,
+          `$\\mathbb{P}_{${k}}$ 中的零向量是所有系数均为零的零多项式，满足对任意 $q(t) \\in \\mathbb{P}_{${k}}$ 均有 $q(t) + 0 = q(t)$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2384,8 +2384,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
           t(`Associativity of scalar multiplication fails`, `标量乘法结合律不成立`),
         ];
         const solution = t(
-          `For scalar $c = 2$ and $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$, $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$, while $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$ because $k \\neq 0$. Thus distributivity over vector addition fails.`,
-          `取标量 $c = 2$ 及 $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$，左边 $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$，而右边 $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$（因为 $k \\neq 0$）。因此分配律失效。`,
+          `For scalar $c = 2$ and $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$, $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$, while $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$. Thus distributivity over vector addition fails.`,
+          `取标量 $c = 2$ 及 $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$，左边 $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$，而右边 $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$。因此分配律失效。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2498,7 +2498,7 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
           ? [
               t(`Linearly independent, because all three matrices are invertible`, `线性无关，因为三个矩阵都可逆`),
               t(`Linearly independent, because their traces are distinct`, `线性无关，因为它们的迹互不相同`),
-              t(`Linearly dependent, but only if $a = b$`, `线性相关，但仅在 $a = b$ 时成立`),
+              t(`Linearly dependent, but only if the second matrix is symmetric`, `线性相关，但仅在第二个矩阵对称时成立`),
             ]
           : [
               t(
@@ -2514,8 +2514,8 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
               `对应位置逐项比对可知 $A_3 = 2A_1 + A_2$。故 $2A_1 + A_2 - A_3 = O$ 为非平凡相关关系，证明矩阵组线性相关。`,
             )
           : t(
-              `Setting $c_1 A_1 + c_2 A_2 + c_3 A_3 = O$ yields equations for each of the 4 entries: $c_1 = 0$, $c_2 = 0$, and $(b c_2 + c_3) = 0 \\implies c_3 = 0$. Hence only the trivial solution exists, so the matrices are linearly independent.`,
-              `令 $c_1 A_1 + c_2 A_2 + c_3 A_3 = O$，比较 4 个位置的元素得 $c_1 = 0$，$c_2 = 0$ 及 $b c_2 + c_3 = 0 \\implies c_3 = 0$。只有平凡零解，故线性无关。`,
+              `Setting $c_1 A_1 + c_2 A_2 + c_3 A_3 = O$ yields one equation for each entry. The top row gives $c_1 = 0$ and $c_2 = 0$, and then the bottom left entry gives $c_3 = 0$. Hence only the trivial solution exists, so the matrices are linearly independent.`,
+              `令 $c_1 A_1 + c_2 A_2 + c_3 A_3 = O$，每个位置的元素给出一个方程。第一行给出 $c_1 = 0$ 和 $c_2 = 0$，于是左下角的元素给出 $c_3 = 0$。只有平凡零解，故线性无关。`,
             );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2551,11 +2551,11 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
         const sets = [`p(${x0}) = 0`, `p(${x0}) = ${k}`, `\\deg(p) = ${n}`];
         const order = rng.shuffle([0, 1, 2]);
         const name = (kind: number) => `W_${order.indexOf(kind) + 1}`;
-        const listed = order.map((kind, i) => `W_${i + 1} = \\{ p(t) \\in \\mathbb{P}_${n} \\mid ${sets[kind]} \\}`);
+        const listed = order.map((kind, i) => `W_{${i + 1}} = \\{ p(t) \\in \\mathbb{P}_{${n}} \\mid ${sets[kind]} \\}`);
         return choiceProblem({
           prompt: t(
-            `Consider the subsets of $\\mathbb{P}_${n}$: $${listed[0]}$, $${listed[1]}$, and $${listed[2]}$. Which of these is a subspace of $\\mathbb{P}_${n}$?`,
-            `考虑 $\\mathbb{P}_${n}$ 的子集：$${listed[0]}$，$${listed[1]}$ 及 $${listed[2]}$。其中哪一个是 $\\mathbb{P}_${n}$ 的子空间？`,
+            `Consider the subsets of $\\mathbb{P}_{${n}}$: $${listed[0]}$, $${listed[1]}$, and $${listed[2]}$. Which of these is a subspace of $\\mathbb{P}_{${n}}$?`,
+            `考虑 $\\mathbb{P}_{${n}}$ 的子集：$${listed[0]}$，$${listed[1]}$ 及 $${listed[2]}$。其中哪一个是 $\\mathbb{P}_{${n}}$ 的子空间？`,
           ),
           options: [
             t("Only $W_1$", "仅有 $W_1$"),
@@ -2635,20 +2635,20 @@ export const basesInAbstractVectorSpaces: TopicDef = {
       generate(rng) {
         const n = rng.int(2, 40);
         const prompt = t(
-          `What is the standard basis for the polynomial vector space $\\mathbb{P}_${n}$?`,
-          `多项式向量空间 $\\mathbb{P}_${n}$ 的标准基是什么？`,
+          `What is the standard basis for the polynomial vector space $\\mathbb{P}_{${n}}$?`,
+          `多项式向量空间 $\\mathbb{P}_{${n}}$ 的标准基是什么？`,
         );
-        const powers = Array.from({ length: n + 1 }, (_, i) => (i === 0 ? "1" : i === 1 ? "t" : `t^${i}`));
+        const powers = Array.from({ length: n + 1 }, (_, i) => (i === 0 ? "1" : i === 1 ? "t" : `t^{${i}}`));
         const right = t(`$\\left\\{ ${powers.join(", ")} \\right\\}$`, `$\\left\\{ ${powers.join(", ")} \\right\\}$`);
-        const powersNo1 = Array.from({ length: n }, (_, i) => (i === 0 ? "t" : `t^${i + 1}`));
+        const powersNo1 = Array.from({ length: n }, (_, i) => (i === 0 ? "t" : `t^{${i + 1}}`));
         const wrong = [
           t(`$\\left\\{ ${powersNo1.join(", ")} \\right\\}$`, `$\\left\\{ ${powersNo1.join(", ")} \\right\\}$`),
-          t(`$\\left\\{ 1 + t + \\dots + t^${n} \\right\\}$`, `$\\left\\{ 1 + t + \\dots + t^${n} \\right\\}$`),
-          t(`$\\left\\{ t^${n} \\right\\}$`, `$\\left\\{ t^${n} \\right\\}$`),
+          t(`$\\left\\{ 1 + t + \\dots + t^{${n}} \\right\\}$`, `$\\left\\{ 1 + t + \\dots + t^{${n}} \\right\\}$`),
+          t(`$\\left\\{ t^{${n}} \\right\\}$`, `$\\left\\{ t^{${n}} \\right\\}$`),
         ];
         const solution = t(
-          `Every polynomial in $\\mathbb{P}_${n}$ is uniquely written as $a_0(1) + a_1(t) + \\dots + a_${n}(t^${n})$. The set of monomials $\\{${powers.join(", ")}\\}$ is linearly independent and spans $\\mathbb{P}_${n}$, making it the standard basis.`,
-          `$\\mathbb{P}_${n}$ 中的任意多项式均可唯一表示为 $a_0(1) + a_1(t) + \\dots + a_${n}(t^${n})$。单项式集合 $\\{${powers.join(", ")}\\}$ 线性无关且张成全空间，故为标准基。`,
+          `Every polynomial in $\\mathbb{P}_{${n}}$ is uniquely written as $a_0(1) + a_1(t) + \\dots + a_{${n}}(t^{${n}})$. The set of monomials $\\{${powers.join(", ")}\\}$ is linearly independent and spans $\\mathbb{P}_{${n}}$, making it the standard basis.`,
+          `$\\mathbb{P}_{${n}}$ 中的任意多项式均可唯一表示为 $a_0(1) + a_1(t) + \\dots + a_{${n}}(t^{${n}})$。单项式集合 $\\{${powers.join(", ")}\\}$ 线性无关且张成全空间，故为标准基。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2820,12 +2820,12 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
         if (choice === "polynomials") {
           const n = rng.int(2, 15);
           const prompt = t(
-            `What is the dimension of the polynomial vector space $\\mathbb{P}_${n}$?`,
-            `多项式向量空间 $\\mathbb{P}_${n}$ 的维数是多少？`,
+            `What is the dimension of the polynomial vector space $\\mathbb{P}_{${n}}$?`,
+            `多项式向量空间 $\\mathbb{P}_{${n}}$ 的维数是多少？`,
           );
           const solution = t(
-            `The standard basis for $\\mathbb{P}_${n}$ is $\\{1, t, t^2, \\dots, t^${n}\\}$, which contains $${n} + 1 = ${n + 1}$ elements. Therefore $\\dim(\\mathbb{P}_${n}) = ${n + 1}$.`,
-            `$\\mathbb{P}_${n}$ 的标准基为 $\\{1, t, t^2, \\dots, t^${n}\\}$，共含有 $${n} + 1 = ${n + 1}$ 个基向量。因此 $\\dim(\\mathbb{P}_${n}) = ${n + 1}$。`,
+            `The standard basis for $\\mathbb{P}_{${n}}$ is $\\{1, t, t^2, \\dots, t^{${n}}\\}$, which contains $${n} + 1 = ${n + 1}$ elements. Therefore $\\dim(\\mathbb{P}_{${n}}) = ${n + 1}$.`,
+            `$\\mathbb{P}_{${n}}$ 的标准基为 $\\{1, t, t^2, \\dots, t^{${n}}\\}$，共含有 $${n} + 1 = ${n + 1}$ 个基向量。因此 $\\dim(\\mathbb{P}_{${n}}) = ${n + 1}$。`,
           );
           return numberProblem({
             prompt,
@@ -2886,21 +2886,21 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
         const b = rng.int(1, 6);
         const d = rng.int(4, 10);
         const prompt = t(
-          `Consider the vector spaces $C[${a}, ${b}]$, $\\mathbb{P}_${d}$, $M_{2 \\times ${d}}$, and $\\mathbb{R}^${d}$. Which of these is an infinite-dimensional vector space?`,
-          `考虑向量空间 $C[${a}, ${b}]$、$\\mathbb{P}_${d}$、$M_{2 \\times ${d}}$ 与 $\\mathbb{R}^${d}$。其中哪一个是无限维向量空间？`,
+          `Consider the vector spaces $C[${a}, ${b}]$, $\\mathbb{P}_{${d}}$, $M_{2 \\times ${d}}$, and $\\mathbb{R}^{${d}}$. Which of these is an infinite-dimensional vector space?`,
+          `考虑向量空间 $C[${a}, ${b}]$、$\\mathbb{P}_{${d}}$、$M_{2 \\times ${d}}$ 与 $\\mathbb{R}^{${d}}$。其中哪一个是无限维向量空间？`,
         );
         const right = t(
           `$C[${a}, ${b}]$, the space of all continuous real functions on $[${a}, ${b}]$`,
           `$C[${a}, ${b}]$，区间 $[${a}, ${b}]$ 上的所有连续实函数构成的空间`,
         );
         const wrong = [
-          t(`$\\mathbb{P}_${d}$, the space of polynomials of degree at most ${d}`, `$\\mathbb{P}_${d}$，次数不超过 ${d} 的多项式空间`),
+          t(`$\\mathbb{P}_{${d}}$, the space of polynomials of degree at most ${d}`, `$\\mathbb{P}_{${d}}$，次数不超过 ${d} 的多项式空间`),
           t(`$M_{2 \\times ${d}}$, the space of $2 \\times ${d}$ matrices`, `$M_{2 \\times ${d}}$，所有 $2 \\times ${d}$ 矩阵构成的空间`),
-          t(`$\\mathbb{R}^${d}$, the ${d}-dimensional Euclidean space`, `$\\mathbb{R}^${d}$，${d} 维欧几里得空间`),
+          t(`$\\mathbb{R}^{${d}}$, the ${d}-dimensional Euclidean space`, `$\\mathbb{R}^{${d}}$，${d} 维欧几里得空间`),
         ];
         const solution = t(
-          `$C[${a}, ${b}]$ contains linearly independent sets of arbitrary finite size (for example, $\\{1, x, x^2, x^3, \\dots\\}$), so no finite set of functions can span it. Hence $C[${a}, ${b}]$ is infinite-dimensional. $\\mathbb{P}_${d}$ has dimension $${d + 1}$, $M_{2 \\times ${d}}$ has dimension $${2 * d}$, and $\\mathbb{R}^${d}$ has dimension $${d}$.`,
-          `$C[${a}, ${b}]$ 包含任意有限大小的线性无关集（例如 $\\{1, x, x^2, x^3, \\dots\\}$），无法由有限个函数张成，故为无限维空间。$\\mathbb{P}_${d}$ 维数为 $${d + 1}$，$M_{2 \\times ${d}}$ 维数为 $${2 * d}$，$\\mathbb{R}^${d}$ 维数为 $${d}$。`,
+          `$C[${a}, ${b}]$ contains linearly independent sets of arbitrary finite size (for example, $\\{1, x, x^2, x^3, \\dots\\}$), so no finite set of functions can span it. Hence $C[${a}, ${b}]$ is infinite-dimensional. $\\mathbb{P}_{${d}}$ has dimension $${d + 1}$, $M_{2 \\times ${d}}$ has dimension $${2 * d}$, and $\\mathbb{R}^{${d}}$ has dimension $${d}$.`,
+          `$C[${a}, ${b}]$ 包含任意有限大小的线性无关集（例如 $\\{1, x, x^2, x^3, \\dots\\}$），无法由有限个函数张成，故为无限维空间。$\\mathbb{P}_{${d}}$ 维数为 $${d + 1}$，$M_{2 \\times ${d}}$ 维数为 $${2 * d}$，$\\mathbb{R}^{${d}}$ 维数为 $${d}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },

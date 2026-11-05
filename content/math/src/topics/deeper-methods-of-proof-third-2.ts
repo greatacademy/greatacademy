@@ -260,7 +260,7 @@ const diagonalDistance = point(
         `设 $${list}$。令 $d$ 为翻转对角线上的数字得到的序列。$d$ 与 $s_{${k + 1}}$ 在 $5$ 个位置中有多少个不同？`,
       ],
       answer,
-      [5 - answer === answer ? answer + 1 : 5 - answer, answer === 1 ? 2 : 1, 5],
+      [(answer + 1) % 6, (answer + 2) % 6, (answer + 3) % 6],
       [
         `Flipping the diagonal gives $d = ${diagonal.join("")}$. Comparing it digit by digit with $s_{${k + 1}} = ${row.join("")}$ gives $${answer}$ differences, including position $${k + 1}$.`,
         `翻转对角线得 $d = ${diagonal.join("")}$。与 $s_{${k + 1}} = ${row.join("")}$ 逐位比较，有 $${answer}$ 处不同，其中包括第 $${k + 1}$ 位。`,
@@ -330,10 +330,17 @@ const linearCombination = point(
   ],
   (rng) => {
     const m = rng.int(5, 15);
-    const r = rng.int(1, m - 1);
-    const s = rng.int(1, m - 1);
-    const k = rng.int(2, 6);
-    const l = rng.int(2, 6);
+    let r: number;
+    let s: number;
+    let k: number;
+    let l: number;
+    // A combination that vanishes before any reduction, or reduces to zero, says little.
+    do {
+      r = rng.int(1, m - 1);
+      s = rng.int(1, m - 1);
+      k = rng.int(2, 6);
+      l = rng.int(2, 6);
+    } while ((k * r - l * s) % m === 0);
     const raw = k * r - l * s;
     const answer = ((raw % m) + m) % m;
     return ask(
@@ -359,12 +366,19 @@ const twoCancellations = point(
     "从同余式中约去 $k$ 时，模要除以 $\\gcd(k, m)$。两次不同的约分给出两个模，在两者下都同余的数在它们的最小公倍数下也同余，所以两个事实合起来比单独任何一个都强。",
   ],
   (rng) => {
-    const m = rng.pick([12, 18, 24, 30, 36, 40, 42, 48, 60, 72]);
-    const k1 = rng.int(2, 15);
-    let k2 = rng.int(2, 15);
-    if (k2 === k1) k2 = k1 + 1;
-    const m1 = m / gcd(k1, m);
-    const m2 = m / gcd(k2, m);
+    let m: number;
+    let k1: number;
+    let k2: number;
+    let m1: number;
+    let m2: number;
+    // Neither congruence alone may give what the two give together.
+    do {
+      m = rng.pick([12, 18, 24, 30, 36, 40, 42, 48, 60, 72]);
+      k1 = rng.int(2, 15);
+      k2 = rng.int(2, 15);
+      m1 = m / gcd(k1, m);
+      m2 = m / gcd(k2, m);
+    } while (m1 % m2 === 0 || m2 % m1 === 0);
     const answer = lcm(m1, m2);
     return ask(
       [
@@ -374,8 +388,8 @@ const twoCancellations = point(
       answer,
       [m1, m2, m1 * m2 === answer ? m + 1 : m1 * m2],
       [
-        `The two congruences give $a \\equiv b$ modulo $${m1}$ and modulo $${m2}$. Together these give the least common multiple, which is $${answer}$.`,
-        `两个同余式分别给出模 $${m1}$ 和模 $${m2}$ 下的 $a \\equiv b$。合起来就得到它们的最小公倍数，即 $${answer}$。`,
+        `Since $\\gcd(${k1}, ${m}) = ${gcd(k1, m)}$ and $\\gcd(${k2}, ${m}) = ${gcd(k2, m)}$, the two congruences give $a \\equiv b$ modulo $${m1}$ and modulo $${m2}$. Together these give the least common multiple, which is $${answer}$.`,
+        `因为 $\\gcd(${k1}, ${m}) = ${gcd(k1, m)}$，$\\gcd(${k2}, ${m}) = ${gcd(k2, m)}$，两个同余式分别给出模 $${m1}$ 和模 $${m2}$ 下的 $a \\equiv b$。合起来就得到它们的最小公倍数，即 $${answer}$。`,
       ],
     );
   },

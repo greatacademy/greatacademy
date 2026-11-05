@@ -1147,8 +1147,8 @@ export const orderingRationalNumbers = topic(
           list(sorted),
           [list(byAbs), list([...sorted].reverse()), list(swapped)],
           t(
-            `As decimals: ${asDecimals(xs, ", ")}. From least to greatest: $${sorted.map((r) => r.latex).join(", ")}$.`,
-            `化成小数：${asDecimals(xs, "，")}。从小到大：$${sorted.map((r) => r.latex).join(", ")}$。`,
+            `${asDecimals(xs, ", ") ? `As decimals: ${asDecimals(xs, ", ")}. ` : ""}From least to greatest: $${sorted.map((r) => r.latex).join(", ")}$.`,
+            `${asDecimals(xs, "，") ? `化成小数：${asDecimals(xs, "，")}。` : ""}从小到大：$${sorted.map((r) => r.latex).join(", ")}$。`,
           ),
         );
       },
@@ -1171,8 +1171,8 @@ export const orderingRationalNumbers = topic(
           options: xs.map((r) => mathText(r.latex)),
           correct: xs.indexOf(least),
           solution: t(
-            `As decimals: ${asDecimals(xs, ", ")}. The least, farthest left on the number line, is $${least.latex}$.`,
-            `化成小数：${asDecimals(xs, "，")}。最小的数（数轴上最左边）是 $${least.latex}$。`,
+            `${asDecimals(xs, ", ") ? `As decimals: ${asDecimals(xs, ", ")}. ` : ""}The least, farthest left on the number line, is $${least.latex}$.`,
+            `${asDecimals(xs, "，") ? `化成小数：${asDecimals(xs, "，")}。` : ""}最小的数（数轴上最左边）是 $${least.latex}$。`,
           ),
         });
       },

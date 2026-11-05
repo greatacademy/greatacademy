@@ -539,11 +539,24 @@ export const theOrderOfAPermutation: TopicDef = {
         return numberProblem({
           prompt: t(`Find the order of $${permTex(p)}$.`, `求 $${permTex(p)}$ 的阶。`),
           answer: value,
-          wrong: [lengths.reduce((a, b) => a * b, 1), lengths.reduce((a, b) => a + b, 0), Math.max(...lengths), p.length],
-          solution: t(
-            `It is $${permCycleTex(p)}$, so its order is $\\operatorname{lcm}(${lengths.join(", ")}) = ${value}$.`,
-            `它等于 $${permCycleTex(p)}$，所以阶为 $\\operatorname{lcm}(${lengths.join(", ")}) = ${value}$。`,
-          ),
+          wrong: [
+            lengths.reduce((a, b) => a * b, 1),
+            lengths.reduce((a, b) => a + b, 0),
+            Math.max(...lengths),
+            p.length,
+            value + 1,
+            2 * value,
+          ],
+          solution:
+            lengths.length === 1
+              ? t(
+                  `It is the single cycle $${permCycleTex(p)}$, so its order is its length, $${value}$.`,
+                  `它是一个轮换 $${permCycleTex(p)}$，所以阶等于它的长度 $${value}$。`,
+                )
+              : t(
+                  `It is $${permCycleTex(p)}$, so its order is $\\operatorname{lcm}(${lengths.join(", ")}) = ${value}$.`,
+                  `它等于 $${permCycleTex(p)}$，所以阶为 $\\operatorname{lcm}(${lengths.join(", ")}) = ${value}$。`,
+                ),
         });
       },
     },
@@ -586,8 +599,8 @@ export const transpositions: TopicDef = {
           answer: value,
           wrong: [cs.length, cs.reduce((s, c) => s + c.length, 0), value - 1],
           solution: t(
-            `${asCycles ? "" : `It is $${permCycleTex(p)}$. `}Each $k$-cycle needs $k - 1$ transpositions: $${cs.map((c) => c.length - 1).join(" + ")} = ${value}$.`,
-            `${asCycles ? "" : `它等于 $${permCycleTex(p)}$。`}每个 $k$-轮换需要 $k - 1$ 个对换：$${cs.map((c) => c.length - 1).join(" + ")} = ${value}$。`,
+            `${asCycles ? "" : `It is $${permCycleTex(p)}$. `}Each $k$-cycle needs $k - 1$ transpositions: $${cs.length === 1 ? "" : `${cs.map((c) => c.length - 1).join(" + ")} = `}${value}$.`,
+            `${asCycles ? "" : `它等于 $${permCycleTex(p)}$。`}每个 $k$-轮换需要 $k - 1$ 个对换：$${cs.length === 1 ? "" : `${cs.map((c) => c.length - 1).join(" + ")} = `}${value}$。`,
           ),
         });
       },
@@ -860,10 +873,22 @@ export const theSymmetryGroupOfAFigure: TopicDef = {
         const rotationsOnly = rng.bool();
         let name: Text;
         let value: number;
+        let solution = (v: number) =>
+          t(`Listing the isometries that map the figure onto itself gives $${v}$.`, `列出把图形映到自身的等距变换，共 $${v}$ 个。`);
         if (rng.bool(0.6)) {
           const n = rng.int(3, 20);
           name = t(`a regular ${n}-gon`, `正 ${n} 边形`);
           value = rotationsOnly ? n : 2 * n;
+          solution = (v) =>
+            rotationsOnly
+              ? t(
+                  `The rotations by the multiples of $\\frac{360^\\circ}{${n}}$ number $${v}$.`,
+                  `旋转角为 $\\frac{360^\\circ}{${n}}$ 的倍数的旋转共 $${v}$ 个。`,
+                )
+              : t(
+                  `There are $${n}$ rotations and $${n}$ reflections, one in each line of symmetry, which makes $${v}$.`,
+                  `有 $${n}$ 个旋转和 $${n}$ 个反射（每条对称轴一个），共 $${v}$ 个。`,
+                );
         } else {
           const f = rng.pick(FIGURES);
           name = f.name;
@@ -880,10 +905,7 @@ export const theSymmetryGroupOfAFigure: TopicDef = {
           wrong: rotationsOnly
             ? [2 * value, value + 1, Math.max(1, value - 1)]
             : [value / 2 >= 1 ? Math.floor(value / 2) : 2, value + 1, 2 * value],
-          solution: t(
-            `Listing the isometries that map the figure onto itself gives $${value}$.`,
-            `列出把图形映到自身的等距变换，共 $${value}$ 个。`,
-          ),
+          solution: solution(value),
         });
       },
     },

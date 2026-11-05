@@ -1231,8 +1231,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           const ans = L(p1).div(L(p2));
           return numberProblem({
             prompt: t(
-              `In $n = ${n}$ independent Bernoulli trials there are $k = ${k}$ successes, so $L(p) = p^{${k}}(1 - p)^{${n - k}}$. Find the likelihood ratio $\\frac{L(${p1.toLatex()})}{L(\\frac{1}{2})}$.`,
-              `$n = ${n}$ 次独立伯努利试验中成功 $k = ${k}$ 次，所以 $L(p) = p^{${k}}(1 - p)^{${n - k}}$。求似然比 $\\frac{L(${p1.toLatex()})}{L(\\frac{1}{2})}$。`,
+              `In $n = ${n}$ independent Bernoulli trials there are $k = ${k}$ successes, so $L(p) = p^{${k}}${n - k === 1 ? "(1 - p)" : `(1 - p)^{${n - k}}`}$. Find the likelihood ratio $\\frac{L(${p1.toLatex()})}{L(\\frac{1}{2})}$.`,
+              `$n = ${n}$ 次独立伯努利试验中成功 $k = ${k}$ 次，所以 $L(p) = p^{${k}}${n - k === 1 ? "(1 - p)" : `(1 - p)^{${n - k}}`}$。求似然比 $\\frac{L(${p1.toLatex()})}{L(\\frac{1}{2})}$。`,
             ),
             answer: ans,
             wrong: [Q.one.div(ans), L(p1), L(p2)].filter((w) => !w.eq(ans)),

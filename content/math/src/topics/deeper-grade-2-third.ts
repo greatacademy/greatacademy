@@ -771,7 +771,7 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
         const who = rng.pick(earlyNames);
         return whole(
           [
-            `${who} has ${q} quarters, ${d} dimes and ${n} nickels. How many more cents does ${who} need to have one dollar?`,
+            `${who} has ${q} ${q === 1 ? "quarter" : "quarters"}, ${d} ${d === 1 ? "dime" : "dimes"} and ${n} ${n === 1 ? "nickel" : "nickels"}. How many more cents does ${who} need to have one dollar?`,
             `${who} 有 ${q} 个 25 美分硬币、${d} 个 10 美分硬币和 ${n} 个 5 美分硬币。还差多少美分才够一美元？`,
           ],
           100 - have,
@@ -832,7 +832,7 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
         const marks = [rng.int(1, 6), rng.int(1, 6), rng.int(1, 6)];
         return whole(
           [
-            `A line plot of pencil lengths has ${marks[0]} marks above ${lens[0]} inches, ${marks[1]} above ${lens[1]} inches and ${marks[2]} above ${lens[2]} inches. How many pencils were measured?`,
+            `A line plot of pencil lengths has ${marks[0]} ${marks[0] === 1 ? "mark" : "marks"} above ${lens[0]} inches, ${marks[1]} above ${lens[1]} inches and ${marks[2]} above ${lens[2]} inches. How many pencils were measured?`,
             `一张铅笔长度线状图上，${lens[0]} 英寸上方有 ${marks[0]} 个标记，${lens[1]} 英寸上方有 ${marks[1]} 个，${lens[2]} 英寸上方有 ${marks[2]} 个。一共测量了多少支铅笔？`,
           ],
           marks[0]! + marks[1]! + marks[2]!,

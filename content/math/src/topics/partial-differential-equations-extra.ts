@@ -33,8 +33,8 @@ const conservationLaws = topic(
           start + (a - b) * t,
           [start + (b - a) * t, start + a * t, start + (a + b) * t],
           [
-            `The total changes at the rate in minus out, which is $${a} - ${b}$ per minute.`,
-            `总量的变化率是流入减流出，即每分钟 $${a} - ${b}$。`,
+            `The total changes at the rate in minus out, which is $${a} - ${b}$ per minute, so after ${t} minutes it is $${start} + (${a} - ${b}) \\cdot ${t} = ${start + (a - b) * t}$.`,
+            `总量的变化率是流入减流出，即每分钟 $${a} - ${b}$，所以 ${t} 分钟后是 $${start} + (${a} - ${b}) \\cdot ${t} = ${start + (a - b) * t}$。`,
           ],
         );
       },
@@ -279,22 +279,22 @@ const sturmLiouville = topic(
         "特征函数是正交的，一般带权函数。所以级数系数是数据与该模式的加权积分，除以该模式平方的加权积分。",
       ],
       (rng) => {
-        const big = rng.int(1, 12);
         const n = rng.int(1, 9);
-        const a = rng.int(2, 25);
-        const b = rng.int(2, 25);
-        const m = n + rng.int(1, 5);
-        const ask1 = rng.bool();
+        const norm = rng.int(2, 12);
+        const weighted = rng.int(2, 60);
+        const plain = weighted + rng.int(1, 9);
+        const data = `f = \\sum_{k} c_k \\phi_k`;
+        const given = `\\int w f \\phi_{${n}} \\, dx = ${weighted}$, $\\int f \\phi_{${n}} \\, dx = ${plain}$ and $\\int w \\phi_{${n}}^{2} \\, dx = ${norm}`;
         return ask(
           [
-            `On $[0, ${big}]$, the data is $${a}\\sin\\left(\\frac{${n}\\pi x}{${big}}\\right) + ${b}\\sin\\left(\\frac{${m}\\pi x}{${big}}\\right)$. What is the sine series coefficient of mode ${ask1 ? n : m}?`,
-            `在 $[0, ${big}]$ 上，数据是 $${a}\\sin\\left(\\frac{${n}\\pi x}{${big}}\\right) + ${b}\\sin\\left(\\frac{${m}\\pi x}{${big}}\\right)$。模式 ${ask1 ? n : m} 的正弦级数系数是多少？`,
+            `The eigenfunctions $\\phi_k$ are orthogonal with the weight $w$, and $${data}$. Given $${given}$, what is $c_{${n}}$?`,
+            `特征函数 $\\phi_k$ 关于权 $w$ 正交，且 $${data}$。已知 $${given}$，$c_{${n}}$ 是多少？`,
           ],
-          ask1 ? a : b,
-          [ask1 ? (a === b ? a + 1 : b) : a === b ? b + 1 : a, a + b, Q.of(ask1 ? a : b, big)],
+          Q.of(weighted, norm),
+          [Q.of(plain, norm), Q.of(norm, weighted), weighted],
           [
-            `Orthogonality removes the other mode, so the coefficient can be read off directly.`,
-            `正交性去掉了另一个模式，所以可以直接读出系数。`,
+            `Multiply the series by $w \\phi_{${n}}$ and integrate. Weighted orthogonality removes every other term, leaving $\\int w f \\phi_{${n}} \\, dx = c_{${n}} \\int w \\phi_{${n}}^{2} \\, dx$. So $c_{${n}} = \\frac{${weighted}}{${norm}}$; the integral without the weight plays no part.`,
+            `把级数乘 $w \\phi_{${n}}$ 再积分。带权正交性去掉其他所有项，剩下 $\\int w f \\phi_{${n}} \\, dx = c_{${n}} \\int w \\phi_{${n}}^{2} \\, dx$。所以 $c_{${n}} = \\frac{${weighted}}{${norm}}$；不带权的积分不起作用。`,
           ],
         );
       },
@@ -350,11 +350,12 @@ const eigenvalues2d = topic(
           2, 5, 8, 10, 13, 17, 18, 20, 25, 26, 29, 32, 34, 37, 40, 41, 45, 50, 52, 53, 58, 61, 65, 68, 72, 73, 74, 80, 82, 85, 89, 90, 97,
           98, 100, 101, 104, 106, 109, 113, 116, 117, 122, 125, 130,
         ]);
-        let count = 0;
+        const found: string[] = [];
         for (let m = 1; m * m < value; m++) {
           const n = Math.round(Math.sqrt(value - m * m));
-          if (n >= 1 && m * m + n * n === value) count += 1;
+          if (n >= 1 && m * m + n * n === value) found.push(`(${m}, ${n})`);
         }
+        const count = found.length;
         return ask(
           [
             `On a square with fixed edges, how many ordered modes $(m, n)$ with $m, n \\ge 1$ have $m^{2} + n^{2} = ${value}$?`,
@@ -363,8 +364,8 @@ const eigenvalues2d = topic(
           count,
           [count + 1, count === 1 ? 2 : count - 1, count + 2],
           [
-            `List the sums of two positive squares equal to ${value}, counting both orders when $m \\ne n$.`,
-            `列出等于 ${value} 的两个正平方数之和，$m \\ne n$ 时两种顺序都算。`,
+            `The ordered pairs with $m^{2} + n^{2} = ${value}$ are $${found.join(", ")}$, which makes ${count}.`,
+            `满足 $m^{2} + n^{2} = ${value}$ 的有序对是 $${found.join(", ")}$，共 ${count} 个。`,
           ],
         );
       },
@@ -511,7 +512,10 @@ const laplacePde = topic(
           ],
           s * big - u,
           [s * big + u, big - u, s * (big - u)],
-          [`Use $sU - u(x, 0) = ${s}(${big}) - (${u})$.`, `用 $sU - u(x, 0) = ${s}(${big}) - (${u})$。`],
+          [
+            `Use $sU - u(x, 0) = ${s} \\cdot ${big < 0 ? `(${big})` : big} ${u < 0 ? `+ ${-u}` : `- ${u}`} = ${s * big - u}$.`,
+            `用 $sU - u(x, 0) = ${s} \\cdot ${big < 0 ? `(${big})` : big} ${u < 0 ? `+ ${-u}` : `- ${u}`} = ${s * big - u}$。`,
+          ],
         );
       },
     ),
@@ -857,8 +861,8 @@ const images = topic(
           fixed ? -a : a,
           [fixed ? a : -a, 0, x],
           [
-            `A ${fixed ? "fixed" : "insulated"} end calls for an ${fixed ? "odd" : "even"} extension.`,
-            `${fixed ? "固定" : "绝热"}端需要${fixed ? "奇" : "偶"}延拓。`,
+            `${fixed ? "A fixed" : "An insulated"} end calls for ${fixed ? "an odd" : "an even"} extension, so the value at $-${x}$ is $${fixed ? -a : a}$.`,
+            `${fixed ? "固定" : "绝热"}端需要${fixed ? "奇" : "偶"}延拓，所以 $-${x}$ 处的值是 $${fixed ? -a : a}$。`,
           ],
         );
       },
@@ -986,8 +990,8 @@ const wave3d = topic(
       "the-amplitude-of-a-spherical-wave",
       ["The amplitude of a spherical wave", "球面波的振幅"],
       [
-        "Spherically symmetric solutions of the wave equation have the form $\\frac{F(r - ct)}{r}$. The product $ru$ obeys the one-dimensional wave equation, so the amplitude falls in proportion to one over the distance.",
-        "波动方程的球对称解形如 $\\frac{F(r - ct)}{r}$。乘积 $ru$ 满足一维波动方程，所以振幅与距离成反比下降。",
+        "Spherically symmetric solutions of the wave equation have the form $\\frac{F(r - ct)}{r}$. The product $ru$ obeys the one-dimensional wave equation, so the amplitude falls in proportion to $\\frac{1}{r}$.",
+        "波动方程的球对称解形如 $\\frac{F(r - ct)}{r}$。乘积 $ru$ 满足一维波动方程，所以振幅与 $\\frac{1}{r}$ 成正比下降。",
       ],
       (rng) => {
         const a = rng.int(2, 40);
@@ -1001,8 +1005,8 @@ const wave3d = topic(
           Q.of(a * r1, r2),
           [Q.of(a * r1 * r1, r2 * r2), a, Q.of(a * r2, r1)],
           [
-            `The amplitude varies as one over $r$, so multiply by $\\frac{${r1}}{${r2}}$.`,
-            `振幅与 $r$ 成反比，所以乘 $\\frac{${r1}}{${r2}}$。`,
+            `The amplitude varies as $\\frac{1}{r}$, so multiply by $\\frac{${r1}}{${r2}}$.`,
+            `振幅与 $\\frac{1}{r}$ 成正比，所以乘 $\\frac{${r1}}{${r2}}$。`,
           ],
         );
       },
@@ -1111,18 +1115,17 @@ const bessel = topic(
       ],
       (rng) => {
         const f = rng.int(20, 400);
-        const a = rng.int(1, 12);
-        const b = rng.int(1, 12);
+        const [a, b] = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2) as [number, number];
         return ask(
           [
             `A drum of radius ${a} has a frequency ${f}. What is the matching frequency for a drum of radius ${b} with the same wave speed?`,
             `半径为 ${a} 的鼓有频率 ${f}。波速相同、半径为 ${b} 的鼓对应的频率是多少？`,
           ],
           Q.of(f * a, b),
-          [Q.of(f * b, a), Q.of(f * a * a, b * b), f + a - b === f ? f + 1 : f + a - b],
+          [Q.of(f * b, a), Q.of(f * a * a, b * b), f],
           [
-            `Frequency varies as one over the radius, so multiply by $${Q.of(a, b).toLatex()}$.`,
-            `频率与半径成反比，所以乘 $${Q.of(a, b).toLatex()}$。`,
+            `Frequency varies as $\\frac{1}{R}$ for the radius $R$, so multiply by $${Q.of(a, b).toLatex()}$.`,
+            `对半径 $R$，频率与 $\\frac{1}{R}$ 成正比，所以乘 $${Q.of(a, b).toLatex()}$。`,
           ],
         );
       },
@@ -1373,14 +1376,14 @@ const harmonicMax = topic(
         const c = rng.int(-20, 20);
         return ask(
           [
-            `What is the maximum of $u = ${a}(x^{2} - y^{2}) + (${c})$ on the disc $x^{2} + y^{2} \\le ${r * r}$?`,
-            `$u = ${a}(x^{2} - y^{2}) + (${c})$ 在圆盘 $x^{2} + y^{2} \\le ${r * r}$ 上的最大值是多少？`,
+            `What is the maximum of $u = ${a}(x^{2} - y^{2})${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}$ on the disc $x^{2} + y^{2} \\le ${r * r}$?`,
+            `$u = ${a}(x^{2} - y^{2})${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}$ 在圆盘 $x^{2} + y^{2} \\le ${r * r}$ 上的最大值是多少？`,
           ],
           a * r * r + c,
           [c, a * r + c, 2 * a * r * r + c],
           [
-            `On the circle $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$, whose largest value is ${r * r}.`,
-            `在圆周上 $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$，它的最大值是 ${r * r}。`,
+            `By the maximum principle, the maximum lies on the boundary circle. There $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$, whose largest value is ${r * r}, so the maximum of $u$ is $${a * r * r + c}$.`,
+            `由极值原理，最大值在边界圆周上取到。在圆周上 $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$，它的最大值是 ${r * r}，所以 $u$ 的最大值是 $${a * r * r + c}$。`,
           ],
         );
       },

@@ -316,7 +316,8 @@ const directComponent = point(
       [5, 8],
     ] as const);
     const n = m * k;
-    const x = rng.int(1, n - 1);
+    // An element of either subgroup would already be its own decomposition.
+    const x = rng.pick(Array.from({ length: n - 1 }, (_, i) => i + 1).filter((v) => v % m !== 0 && v % k !== 0));
     let h = 0;
     while (h % m !== 0 || (h - x) % k !== 0) h++;
     const other = (((x - h) % n) + n) % n;
@@ -771,8 +772,8 @@ const reflectionFixedVertices = point(
             `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。左边是偶数，$${n}$ 是偶数，而 $${a}$ 是奇数，所以没有。`,
           ]
         : [
-            `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. The solutions are $${fixed.join(", ")}$, so the count is $${answer}$.`,
-            `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。解是 $${fixed.join(", ")}$，所以个数是 $${answer}$。`,
+            `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. ${answer === 1 ? `The only solution is $${fixed[0]}$` : `The solutions are $${fixed.join(", ")}$`}, so the count is $${answer}$.`,
+            `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。${answer === 1 ? `唯一的解是 $${fixed[0]}$` : `解是 $${fixed.join(", ")}$`}，所以个数是 $${answer}$。`,
           ],
     );
   },

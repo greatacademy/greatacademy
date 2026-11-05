@@ -354,8 +354,8 @@ const eigenFromShear = point(
       same(answer),
       [same(upper ? col(0, 1) : col(1, 0)), same(col(1, 1)), same(col(1, -1))],
       [
-        `The image of $e_${upper ? 1 : 2}$ stays on its own axis, with factor $${s}$, so that basis vector is an eigenvector. The other basis vector tips off its axis, and the eigenvalue $${s}$ is repeated with this one direction only.`,
-        `$e_${upper ? 1 : 2}$ 的像留在自己的坐标轴上，倍数是 $${s}$，所以这个基向量是特征向量。另一个基向量偏离了自己的坐标轴，重特征值 $${s}$ 只有这一个方向。`,
+        `The image of $e_{${upper ? 1 : 2}}$ stays on its own axis, with factor $${s}$, so that basis vector is an eigenvector. The other basis vector tips off its axis, and the eigenvalue $${s}$ is repeated with this one direction only.`,
+        `$e_{${upper ? 1 : 2}}$ 的像留在自己的坐标轴上，倍数是 $${s}$，所以这个基向量是特征向量。另一个基向量偏离了自己的坐标轴，重特征值 $${s}$ 只有这一个方向。`,
       ],
       fig(5, imageOfSquare(u, v), altOfImage(u, v)),
     );

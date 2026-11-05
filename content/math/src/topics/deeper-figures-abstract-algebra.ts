@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import type { Point } from "@ga/subject-math";
 import { gcd, svgDocument } from "@ga/subject-math";
 
-import { ask, choose, divisors, type Pair, point, same } from "../university-kit.ts";
+import { ask, choose, divisors, observed, type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, node, ring } from "./figure-reading-more.ts";
 
 /** ringed circles a node to highlight it. */
@@ -318,7 +318,10 @@ const shapeOfLattice = point(
         `The lattice is ${shape.clue[0]}, and the divisors of $${n}$ have that shape under division.`,
         `这个格是${shape.clue[1]}，$${n}$ 的因数按整除排列正是这个形状。`,
       ],
-      { svg: latticeFigure(n, false), alt: t(`An unlabeled lattice: ${shape.clue[0]}.`, `没有标记的格：${shape.clue[1]}。`) },
+      {
+        svg: latticeFigure(n, false),
+        alt: t(`An unlabeled lattice: ${observed(shape.clue)[0]}.`, `没有标记的格：${observed(shape.clue)[1]}。`),
+      },
     );
   },
 );
@@ -555,7 +558,10 @@ const orbitStabilizer = point(
         `${seen[0]}, so the stabilizer has size $${stabilizer}$. The orbit then has size $${orbit}$, and the product is the group size $${2 * n}$, as the theorem requires.`,
         `${seen[1]}，所以稳定子大小为 $${stabilizer}$。于是轨道大小为 $${orbit}$，二者之积是群的大小 $${2 * n}$，符合定理。`,
       ],
-      { svg: svgDocument(220, body), alt: t(`A regular polygon with ${n} sides. ${seen[0]}.`, `正 ${n} 边形。${seen[1]}。`) },
+      {
+        svg: svgDocument(220, body),
+        alt: t(`A regular polygon with ${n} sides. ${observed(seen)[0]}.`, `正 ${n} 边形。${observed(seen)[1]}。`),
+      },
     );
   },
 );
@@ -700,8 +706,8 @@ const necklace = point(
       {
         svg: svgDocument(220, body),
         alt: t(
-          `A ring of ${n} beads whose color pattern repeats every ${period} beads.`,
-          `${n} 颗珠子组成的环，颜色模式每 ${period} 颗重复一次。`,
+          `A ring of ${n} beads, going around: ${beads.map((b) => (b ? "filled" : "hollow")).join(", ")}.`,
+          `${n} 颗珠子组成的环，依次为：${beads.map((b) => (b ? "实心" : "空心")).join("、")}。`,
         ),
       },
     );
@@ -757,8 +763,8 @@ const kernelArrows = point(
       {
         svg: svgDocument(220, body),
         alt: t(
-          `Arrows from the integers modulo ${m} to the integers modulo ${n}, sending each x to ${k} times x.`,
-          `从模 ${m} 整数到模 ${n} 整数的箭头，把每个 x 送到 x 的 ${k} 倍。`,
+          `Arrows from the integers modulo ${m} to the integers modulo ${n}: ${left.map((_, x) => `${x} to ${image(x)}`).join(", ")}.`,
+          `从模 ${m} 整数到模 ${n} 整数的箭头：${left.map((_, x) => `${x} 到 ${image(x)}`).join("、")}。`,
         ),
       },
     );

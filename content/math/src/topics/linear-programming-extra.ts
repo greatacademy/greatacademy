@@ -269,8 +269,8 @@ const boundedVariables = topic(
           r - a * l,
           [r + a * l, r - l, r - b * l],
           [
-            `Move $${a} \\cdot ${l}$ across the inequality, away from the right side.`,
-            `把 $${a} \\cdot ${l}$ 移到不等式另一边，从右端减去。`,
+            `Substituting adds the constant $${a} \\cdot ${l} = ${a * l}$ on the left. Moving it across leaves the right side $${r} - ${a * l} = ${r - a * l}$.`,
+            `代入后左边多出常数 $${a} \\cdot ${l} = ${a * l}$。把它移到右边，右端变成 $${r} - ${a * l} = ${r - a * l}$。`,
           ],
         );
       },
@@ -458,8 +458,8 @@ const modeling = topic(
         const first = rng.bool();
         return ask(
           [
-            `Two ingredients have purity ${a} and ${b} percent, and the blend must be at least ${r} percent. In $px + qy \\ge 0$, what is ${first ? "$p$" : "$q$"}?`,
-            `两种原料的纯度是百分之 ${a} 和百分之 ${b}，混合物至少要达到百分之 ${r}。在 $px + qy \\ge 0$ 中，${first ? "$p$" : "$q$"} 是多少？`,
+            `Two ingredients have purity ${a} and ${b} percent, and a blend of amounts $x$ and $y$ of them must be at least ${r} percent pure. Written linearly as $px + qy \\ge 0$, what is ${first ? "$p$" : "$q$"}?`,
+            `两种原料的纯度是百分之 ${a} 和百分之 ${b}，用量分别为 $x$ 和 $y$ 的混合物纯度至少要达到百分之 ${r}。写成线性形式 $px + qy \\ge 0$ 时，${first ? "$p$" : "$q$"} 是多少？`,
           ],
           first ? a - r : b - r,
           first ? [r - a, a, a + r] : [r - b, b, b + r],
@@ -718,7 +718,7 @@ const shadow = topic(
       ],
       (rng) => {
         const y = rng.int(3, 30);
-        const price = rng.int(1, 35);
+        const price = rng.int(1, 4) === 1 ? y + rng.int(0, 6) : rng.int(1, y - 1);
         const d = rng.int(2, 20);
         const net = Math.max(y - price, 0) * d;
         return ask(
@@ -790,8 +790,8 @@ const objectiveRanging = topic(
           top ? k * c2 : c2,
           top ? [c2, k + c2, k * c2 + 1] : [k * c2, Q.of(c2, k), c2 + 1],
           [
-            `The ratio $\\frac{c_1}{${c2}}$ must lie between the constraint slopes 1 and ${k}.`,
-            `比值 $\\frac{c_1}{${c2}}$ 必须在约束斜率 1 和 ${k} 之间。`,
+            `The ratio $\\frac{c_1}{${c2}}$ must lie between the constraint slopes 1 and ${k}, so $c_1$ runs from ${c2} to ${k * c2}.`,
+            `比值 $\\frac{c_1}{${c2}}$ 必须在约束斜率 1 和 ${k} 之间，所以 $c_1$ 从 ${c2} 到 ${k * c2}。`,
           ],
         );
       },
@@ -1145,7 +1145,8 @@ const hungarian = topic(
           4,
         );
         const m = Math.min(...row);
-        const i = rng.int(0, 3);
+        const first = rng.int(0, 3);
+        const i = row[first] === m ? (first + 1) % 4 : first;
         return ask(
           [
             `A row of the cost matrix is $${row.join(", ")}$. After row reduction, what does entry ${i + 1} become?`,
@@ -1153,7 +1154,7 @@ const hungarian = topic(
           ],
           (row[i] as number) - m,
           [row[i] as number, m, (row[i] as number) - m + 1],
-          [`Subtract the smallest entry, ${m}, from entry ${row[i]}.`, `从元素 ${row[i]} 减去最小的元素 ${m}。`],
+          [`The smallest entry of the row is ${m}, and it is subtracted from every entry, so ${row[i]} becomes $${row[i]} - ${m} = ${(row[i] as number) - m}$.`, `这一行最小的元素是 ${m}，每个元素都减去它，所以 ${row[i]} 变成 $${row[i]} - ${m} = ${(row[i] as number) - m}$。`],
         );
       },
     ),
@@ -1198,6 +1199,7 @@ const hungarian = topic(
         const all = permutationsOf3.map(cost);
         const best = Math.min(...all);
         const worst = Math.max(...all);
+        const bestOrder = (permutationsOf3[all.indexOf(best)] as readonly number[]).map((j) => j + 1).join(", ");
         const tex = m.map((r) => r.join(" & ")).join(" \\\\ ");
         return ask(
           [
@@ -1207,8 +1209,8 @@ const hungarian = topic(
           best,
           [worst === best ? best + 1 : worst, best + 1, cost([0, 1, 2]) === best ? best + 2 : cost([0, 1, 2])],
           [
-            `Compare the assignments, or reduce the matrix; the cheapest of the six costs ${best}.`,
-            `比较各种指派，或化简矩阵；六种中最便宜的成本是 ${best}。`,
+            `The six assignments cost ${all.join(", ")}. The cheapest, ${best}, gives rows 1, 2, 3 the columns ${bestOrder}.`,
+            `六种指派的成本是 ${all.join("、")}。最便宜的是 ${best}，第 1、2、3 行分别取第 ${bestOrder.replaceAll(", ", "、")} 列。`,
           ],
         );
       },
@@ -1449,6 +1451,8 @@ const knapsack = topic(
         const total = items.reduce((sum, it) => sum + it.w, 0);
         const cap = rng.int(Math.max(...items.map((it) => it.w)), total - 1);
         let best = 0;
+        let bestWeight = 0;
+        let bestItems: string[] = [];
         for (let mask = 0; mask < 16; mask++) {
           let w = 0;
           let v = 0;
@@ -1458,7 +1462,11 @@ const knapsack = topic(
               v += it.v;
             }
           });
-          if (w <= cap && v > best) best = v;
+          if (w <= cap && v > best) {
+            best = v;
+            bestWeight = w;
+            bestItems = items.flatMap((it, i) => (mask & (1 << i) ? [`(${it.w}, ${it.v})`] : []));
+          }
         }
         const sumV = items.reduce((sum, it) => sum + it.v, 0);
         return ask(
@@ -1469,8 +1477,8 @@ const knapsack = topic(
           best,
           [sumV === best ? best + 2 : sumV, best + 1, best === 1 ? 2 : best - 1],
           [
-            `Check the subsets whose total weight is at most ${cap}; the best value is ${best}.`,
-            `检查总重量不超过 ${cap} 的子集；最佳价值是 ${best}。`,
+            `Among the subsets whose total weight is at most ${cap}, the best takes ${bestItems.join(", ")}, with weight ${bestWeight} and value ${best}.`,
+            `在总重量不超过 ${cap} 的子集中，最好的是取 ${bestItems.join("、")}，重量 ${bestWeight}，价值 ${best}。`,
           ],
         );
       },
@@ -1483,8 +1491,8 @@ const knapsack = topic(
         "设 $f(c)$ 是容量 $c$ 时用目前物品的最佳价值。对重量 $w$、价值 $v$ 的新物品，$f'(c) = \\max(f(c), f(c - w) + v)$，比较不取和取这个物品。",
       ],
       (rng) => {
-        const a = rng.int(5, 60);
-        const b = rng.int(5, 60);
+        const b = rng.int(5, 50);
+        const a = b + rng.int(0, 30);
         const v = rng.int(3, 40);
         const w = rng.int(2, 9);
         const c = w + rng.int(1, 20);
@@ -1537,23 +1545,35 @@ const unimodular = topic(
       "whole-number-corners",
       ["Whole number corners", "整数角点"],
       [
-        "By Cramer's rule, each basic value is an integer divided by the determinant of the basis. When that determinant is $\\pm 1$ and the right side is whole, every corner is a whole number point, so rounding is never needed.",
-        "由克拉默法则，每个基本变量的值是整数除以基的行列式。当行列式是 $\\pm 1$ 且右端是整数时，每个角点都是整数点，所以不需要取整。",
+        "By Cramer's rule, each basic value is the determinant of the basis with that variable's column replaced by the right side, divided by the determinant of the basis. With whole data the numerator is an integer. When the determinant of the basis is $\\pm 1$ and the right side is whole, every corner is a whole number point, so rounding is never needed.",
+        "由克拉默法则，每个基本变量的值等于把基中该变量的列换成右端后的行列式，除以基的行列式。数据都是整数时，分子是整数。当基的行列式是 $\\pm 1$ 且右端是整数时，每个角点都是整数点，所以不需要取整。",
       ],
       (rng) => {
-        const big = rng.int(2, 9);
-        const b1 = rng.int(1, 60);
-        const b2 = rng.int(1, 60);
-        const nice = rng.bool();
-        const det = nice ? 1 : big;
+        const [p, q, r, s] = rng.pick([
+          [2, 1, 1, 1],
+          [3, 2, 1, 1],
+          [3, 1, 2, 1],
+          [2, 3, 1, 2],
+          [1, 2, 1, 1],
+          [1, 3, 1, 2],
+          [2, 1, 3, 1],
+          [3, 2, 4, 3],
+        ] as const);
+        const det = p * s - q * r;
+        const [x1, x2] = rng.sample([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2) as [number, number];
+        const [b1, b2] = [p * x1 + q * x2, r * x1 + s * x2];
+        const numerator = b1 * s - q * b2;
         return ask(
           [
-            `A basis has determinant ${det}, and Cramer's rule gives a numerator of ${b1 * big + b2} for one basic variable. What is that variable's value?`,
-            `基的行列式是 ${det}，克拉默法则给出一个基本变量的分子是 ${b1 * big + b2}。这个变量的值是多少？`,
+            `A basis has the matrix $\\begin{pmatrix} ${p} & ${q} \\\\ ${r} & ${s} \\end{pmatrix}$ and the right side is $\\begin{pmatrix} ${b1} \\\\ ${b2} \\end{pmatrix}$. By Cramer's rule, what is the value of the first basic variable?`,
+            `基的矩阵是 $\\begin{pmatrix} ${p} & ${q} \\\\ ${r} & ${s} \\end{pmatrix}$，右端是 $\\begin{pmatrix} ${b1} \\\\ ${b2} \\end{pmatrix}$。由克拉默法则，第一个基本变量的值是多少？`,
           ],
-          Q.of(b1 * big + b2, det),
-          [Q.of(b1 * big + b2 + 1, det), Q.of(det, b1 * big + b2), b1 * big + b2 + det],
-          [`Divide the numerator ${b1 * big + b2} by the determinant ${det}.`, `用行列式 ${det} 除分子 ${b1 * big + b2}。`],
+          x1,
+          [x2, -x1, numerator === x1 ? x1 + 1 : numerator],
+          [
+            `The determinant of the basis is $${p} \\cdot ${s} - ${q} \\cdot ${r} = ${det}$. Replacing the first column by the right side gives the numerator $${b1} \\cdot ${s} - ${q} \\cdot ${b2} = ${numerator}$. The value is $\\frac{${numerator}}{${det}} = ${x1}$, a whole number because the determinant is $${det}$.`,
+            `基的行列式是 $${p} \\cdot ${s} - ${q} \\cdot ${r} = ${det}$。把第一列换成右端，分子是 $${b1} \\cdot ${s} - ${q} \\cdot ${b2} = ${numerator}$。这个值是 $\\frac{${numerator}}{${det}} = ${x1}$，它是整数，因为行列式是 $${det}$。`,
+          ],
         );
       },
     ),
@@ -1764,7 +1784,8 @@ const gamesLp = topic(
       (rng) => {
         const v = rng.int(2, 30);
         const opt = Q.of(1, v);
-        const k = rng.int(1, 20);
+        const shift = rng.int(1, 20);
+        const k = shift === v ? shift + 1 : shift;
         return ask(
           [
             `After adding ${k} to every payoff, the program's optimal $\\sum x_i$ is $${opt.toLatex()}$. What is the value of the original game?`,
@@ -1801,7 +1822,7 @@ const columnGeneration = topic(
       ],
       (rng) => {
         const big = rng.pick([10, 12, 15, 20, 25]);
-        const w = [rng.int(2, 7), rng.int(2, 7)] as [number, number];
+        const w = rng.sample([2, 3, 4, 5, 6, 7], 2) as [number, number];
         const n = [rng.int(5, 40), rng.int(5, 40)] as [number, number];
         const total = w[0] * n[0] + w[1] * n[1];
         return ask(
@@ -1815,7 +1836,10 @@ const columnGeneration = topic(
             Math.floor(total / big) === Math.ceil(total / big) ? Math.ceil(total / big) + 2 : Math.floor(total / big),
             n[0] + n[1],
           ],
-          [`The total width is ${total}; divide by ${big} and round up.`, `总宽度是 ${total}；除以 ${big} 再向上取整。`],
+          [
+            `The total width is ${w[0]} · ${n[0]} + ${w[1]} · ${n[1]} = ${total}. Dividing by ${big} and rounding up gives ${Math.ceil(total / big)}, since a part of a roll still needs a whole roll.`,
+            `总宽度是 ${w[0]} · ${n[0]} + ${w[1]} · ${n[1]} = ${total}。除以 ${big} 再向上取整得 ${Math.ceil(total / big)}，因为用到一卷的一部分也要用一整卷。`,
+          ],
         );
       },
     ),
@@ -1828,7 +1852,10 @@ const columnGeneration = topic(
       ],
       (rng) => {
         const den = rng.pick([4, 5, 6, 8, 10, 12, 16, 20]);
-        const [y1, y2] = [rng.int(1, den - 1), rng.int(1, den - 1)];
+        const [y1, y2] = rng.sample(
+          Array.from({ length: den - 1 }, (_, i) => i + 1),
+          2,
+        ) as [number, number];
         const [a1, a2] = [rng.int(1, 4), rng.int(1, 4)];
         return ask(
           [
@@ -1837,7 +1864,10 @@ const columnGeneration = topic(
           ],
           Q.of(den - y1 * a1 - y2 * a2, den),
           [Q.of(y1 * a1 + y2 * a2, den), Q.of(den + y1 * a1 + y2 * a2, den), Q.of(den - y1 - y2 + 1, den)],
-          [`Subtract the earned value from the cost 1 of the roll.`, `从一卷的成本 1 中减去赚取的价值。`],
+          [
+            `The pattern earns $${Q.of(y1 * a1 + y2 * a2, den).toLatex()}$, and this is subtracted from the cost 1 of the roll, which leaves $${Q.of(den - y1 * a1 - y2 * a2, den).toLatex()}$.`,
+            `这种切割方式赚取 $${Q.of(y1 * a1 + y2 * a2, den).toLatex()}$，从一卷的成本 1 中减去它，剩下 $${Q.of(den - y1 * a1 - y2 * a2, den).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -1851,11 +1881,15 @@ const columnGeneration = topic(
       (rng) => {
         const big = rng.int(8, 30);
         const [w1, w2] = rng.sample([2, 3, 4, 5, 6, 7], 2) as [number, number];
-        const [v1, v2] = [rng.int(1, 12), rng.int(1, 12)];
+        const [v1, v2] = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2) as [number, number];
         let best = 0;
+        let bestCounts = [0, 0];
         for (let a = 0; a * w1 <= big; a++) {
           const b = Math.floor((big - a * w1) / w2);
-          best = Math.max(best, a * v1 + b * v2);
+          if (a * v1 + b * v2 > best) {
+            best = a * v1 + b * v2;
+            bestCounts = [a, b];
+          }
         }
         return ask(
           [
@@ -1870,7 +1904,10 @@ const columnGeneration = topic(
               ? best + 2
               : Math.floor(big / w1) * v1 + Math.floor(big / w2) * v2,
           ],
-          [`Try each count of the first piece, and fill what is left with the second.`, `试第一种件的每个件数，再用第二种件填满剩余部分。`],
+          [
+            `Try each count of the first piece, and fill what is left with the second. The best is ${bestCounts[0]} of width ${w1} and ${bestCounts[1]} of width ${w2}, worth ${best}.`,
+            `试第一种件的每个件数，再用第二种件填满剩余部分。最好的是宽 ${w1} 的 ${bestCounts[0]} 件和宽 ${w2} 的 ${bestCounts[1]} 件，价值 ${best}。`,
+          ],
         );
       },
     ),

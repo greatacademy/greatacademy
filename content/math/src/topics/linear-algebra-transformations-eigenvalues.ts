@@ -771,8 +771,8 @@ export const rankNullityTheoremInTermsOfLinearTransformations: TopicDef = {
         const nullity = rng.int(1, dimV - 1);
         const rank = dimV - nullity;
         const prompt = t(
-          `Let $T: \\mathbb{R}^${dimV} \\to \\mathbb{R}^${dimW}$ be a linear transformation. If $\\dim(\\ker(T)) = ${nullity}$, what is the rank of $T$ (that is, $\\dim(\\operatorname{im}(T))$)?`,
-          `设 $T: \\mathbb{R}^${dimV} \\to \\mathbb{R}^${dimW}$ 为线性变换。若 $\\dim(\\ker(T)) = ${nullity}$，求 $T$ 的秩（即 $\\dim(\\operatorname{im}(T))$）。`,
+          `Let $T: \\mathbb{R}^{${dimV}} \\to \\mathbb{R}^{${dimW}}$ be a linear transformation. If $\\dim(\\ker(T)) = ${nullity}$, what is the rank of $T$ (that is, $\\dim(\\operatorname{im}(T))$)?`,
+          `设 $T: \\mathbb{R}^{${dimV}} \\to \\mathbb{R}^{${dimW}}$ 为线性变换。若 $\\dim(\\ker(T)) = ${nullity}$，求 $T$ 的秩（即 $\\dim(\\operatorname{im}(T))$）。`,
         );
         const solution = t(
           `By the Rank-Nullity Theorem, $\\dim(V) = \\dim(\\ker(T)) + \\dim(\\operatorname{im}(T))$. Therefore, $\\operatorname{rank}(T) = ${dimV} - ${nullity} = ${rank}$.`,
@@ -3142,8 +3142,8 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
           ),
         ];
         const solution = t(
-          `If $N v = \\lambda v$, then $N^${k} v = \\lambda^${k} v = 0$, so $\\lambda = 0$. If $M v = \\lambda v$, then $M^2 v = \\lambda^2 v = \\lambda v$, so $\\lambda^2 - \\lambda = 0$, giving $\\lambda = 0$ or $\\lambda = 1$.`,
-          `若 $N v = \\lambda v$，则 $N^${k} v = \\lambda^${k} v = 0$，故 $\\lambda = 0$。若 $M v = \\lambda v$，则 $M^2 v = \\lambda^2 v = \\lambda v$，故 $\\lambda^2 - \\lambda = 0$，即 $\\lambda = 0$ 或 $\\lambda = 1$。`,
+          `If $N v = \\lambda v$, then $N^{${k}} v = \\lambda^{${k}} v = 0$, so $\\lambda = 0$. If $M v = \\lambda v$, then $M^2 v = \\lambda^2 v = \\lambda v$, so $\\lambda^2 - \\lambda = 0$, giving $\\lambda = 0$ or $\\lambda = 1$.`,
+          `若 $N v = \\lambda v$，则 $N^{${k}} v = \\lambda^{${k}} v = 0$，故 $\\lambda = 0$。若 $M v = \\lambda v$，则 $M^2 v = \\lambda^2 v = \\lambda v$，故 $\\lambda^2 - \\lambda = 0$，即 $\\lambda = 0$ 或 $\\lambda = 1$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -3207,21 +3207,21 @@ export const generalizedEigenvectors: TopicDef = {
         );
         const shiftStr = formatShift(lambda, "I");
         const right = t(
-          `$(A${shiftStr})^${k} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$`,
-          `$(A${shiftStr})^${k} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$`,
+          `$(A${shiftStr})^{${k}} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$`,
+          `$(A${shiftStr})^{${k}} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$`,
         );
         const wrong = [
-          t(`$(A${shiftStr})^${k} v = v$`, `$(A${shiftStr})^${k} v = v$`),
+          t(`$(A${shiftStr})^{${k}} v = v$`, `$(A${shiftStr})^{${k}} v = v$`),
           t(`$(A${shiftStr}) v = ${k} v$`, `$(A${shiftStr}) v = ${k} v$`),
-          t(`$A^${k} v = (${lambda})^${k} v$`, `$A^${k} v = (${lambda})^${k} v$`),
+          t(`$A^{${k}} v = (${lambda})^{${k}} v$`, `$A^{${k}} v = (${lambda})^{${k}} v$`),
           t(
-            `$(A${shiftStr})^${k} v \\neq 0$ and $(A${shiftStr})^{${k + 1}} v = 0$`,
-            `$(A${shiftStr})^${k} v \\neq 0$ 且 $(A${shiftStr})^{${k + 1}} v = 0$`,
+            `$(A${shiftStr})^{${k}} v \\neq 0$ and $(A${shiftStr})^{${k + 1}} v = 0$`,
+            `$(A${shiftStr})^{${k}} v \\neq 0$ 且 $(A${shiftStr})^{${k + 1}} v = 0$`,
           ),
         ];
         const solution = t(
-          `A non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ for $\\lambda = ${lambda}$ if $(A${shiftStr})^${k} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$.`,
-          `非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量，当且仅当 $(A${shiftStr})^${k} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$。`,
+          `A non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ for $\\lambda = ${lambda}$ if $(A${shiftStr})^{${k}} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$.`,
+          `非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量，当且仅当 $(A${shiftStr})^{${k}} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },

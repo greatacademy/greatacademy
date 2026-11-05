@@ -111,6 +111,9 @@ const traceTex = (states: readonly number[]) => states.map(qx).join(" \\to ");
 const DFA_NOTE = t("($\\to$ marks the start state and $*$ the accepting states.)", "（$\\to$ 标出初始状态，$*$ 标出接受状态。）");
 
 /** mealyMachines runs finite-state transducers whose outputs belong to transitions. */
+/** pwr writes $n^k$, or plain $n$ for the first power. */
+const pwr = (k: number): string => (k === 1 ? "n" : `n^{${k}}`);
+
 export const mealyMachines: TopicDef = {
   id: "mealy-machines",
   title: t("Mealy Machines", "Mealy 机"),
@@ -769,7 +772,7 @@ const tmTex = (m: Tm) =>
     .map(([k, [b, d, r]]) => {
       const [q, a] = k.split(",");
       const sym = (c: string) => (c === "_" ? "\\sqcup" : c);
-      return `\\delta(q_${q}, ${sym(a!)}) = (${r === -1 ? "h" : `q_${r}`}, ${sym(b)}, ${d})`;
+      return `\\delta(q_{${q}}, ${sym(a!)}) = (${r === -1 ? "h" : `q_{${r}}`}, ${sym(b)}, ${d})`;
     })
     .join(",\\ ");
 
@@ -1088,8 +1091,8 @@ export const bigONotation: TopicDef = {
           answer: g.upper,
           wrong: [g.upper + 1, g.upper - 1, g.lower === g.upper ? g.upper + 2 : g.lower],
           solution: t(
-            `Ignoring constants and lower-order terms, $${g.tex}$ grows ${g.upper === g.lower ? `like $n^{${g.upper}}$` : `faster than $n^{${g.lower}}$ but slower than $n^{${g.upper}}$`}, so $k = ${g.upper}$.`,
-            `忽略常数和低阶项，$${g.tex}$ 的增长${g.upper === g.lower ? `与 $n^{${g.upper}}$ 相当` : `快于 $n^{${g.lower}}$ 但慢于 $n^{${g.upper}}$`}，所以 $k = ${g.upper}$。`,
+            `Ignoring constants and lower-order terms, $${g.tex}$ grows ${g.upper === g.lower ? `like $${pwr(g.upper)}$` : `faster than $${pwr(g.lower)}$ but slower than $${pwr(g.upper)}$`}, so $k = ${g.upper}$.`,
+            `忽略常数和低阶项，$${g.tex}$ 的增长${g.upper === g.lower ? `与 $${pwr(g.upper)}$ 相当` : `快于 $${pwr(g.lower)}$ 但慢于 $${pwr(g.upper)}$`}，所以 $k = ${g.upper}$。`,
           ),
         });
       },
@@ -1160,8 +1163,8 @@ export const bigOmegaNotation: TopicDef = {
           answer: g.lower,
           wrong: [g.lower + 1, g.lower - 1, g.upper === g.lower ? g.lower + 2 : g.upper],
           solution: t(
-            `Ignoring constants and lower-order terms, $${g.tex}$ grows ${g.upper === g.lower ? `like $n^{${g.lower}}$` : `faster than $n^{${g.lower}}$ but slower than $n^{${g.upper}}$`}, so $k = ${g.lower}$.`,
-            `忽略常数和低阶项，$${g.tex}$ 的增长${g.upper === g.lower ? `与 $n^{${g.lower}}$ 相当` : `快于 $n^{${g.lower}}$ 但慢于 $n^{${g.upper}}$`}，所以 $k = ${g.lower}$。`,
+            `Ignoring constants and lower-order terms, $${g.tex}$ grows ${g.upper === g.lower ? `like $${pwr(g.lower)}$` : `faster than $${pwr(g.lower)}$ but slower than $${pwr(g.upper)}$`}, so $k = ${g.lower}$.`,
+            `忽略常数和低阶项，$${g.tex}$ 的增长${g.upper === g.lower ? `与 $${pwr(g.lower)}$ 相当` : `快于 $${pwr(g.lower)}$ 但慢于 $${pwr(g.upper)}$`}，所以 $k = ${g.lower}$。`,
           ),
         });
       },
@@ -1283,8 +1286,8 @@ export const bigThetaNotation: TopicDef = {
           answer: k,
           wrong: kind === 0 ? [a * b, Math.max(a, b), k + 1] : kind === 1 ? [a + b, b, a + 1] : [a, k + 1, a + b + 1],
           solution: t(
-            `The dominant behavior is a constant times $n^{${k}}$, so $k = ${k}$.`,
-            `主导行为是常数乘以 $n^{${k}}$，所以 $k = ${k}$。`,
+            `The dominant behavior is a constant times $${pw(k)}$, so $k = ${k}$.`,
+            `主导行为是常数乘以 $${pw(k)}$，所以 $k = ${k}$。`,
           ),
         });
       },

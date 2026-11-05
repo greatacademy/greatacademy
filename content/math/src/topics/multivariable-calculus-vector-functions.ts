@@ -2680,7 +2680,7 @@ export const propertiesOfTheCurlOperator: TopicDef = {
       generate(rng: Rng): Problem {
         const a = rng.int(2, 5);
         const b = rng.int(2, 5);
-        const fs = [`x^${a}y^${b}z`, `${a}x^2yz^${b}`, `e^{${a}x}\\sin(${b}y)`, `x^${a}z + y^${b}`];
+        const fs = [`x^{${a}}y^{${b}}z`, `${a}x^2yz^{${b}}`, `e^{${a}x}\\sin(${b}y)`, `x^{${a}}z + y^{${b}}`];
         const f = rng.pick(fs);
         const right = t("$\\nabla f$", "$\\nabla f$");
         const wrongs = [

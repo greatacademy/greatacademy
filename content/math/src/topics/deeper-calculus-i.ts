@@ -1975,14 +1975,14 @@ const expandedPowersAtInfinity: KnowledgePointDef = {
     const inner = poly([1, "x"], [a, ""]);
     return numberProblem({
       prompt: t(
-        `Find $\\lim_{x \\to \\infty} \\frac{(${inner})^${n} - x^${n}}{${denominator}}$.`,
-        `求 $\\lim_{x \\to \\infty} \\frac{(${inner})^${n} - x^${n}}{${denominator}}$。`,
+        `Find $\\lim_{x \\to \\infty} \\frac{(${inner})^{${n}} - x^{${n}}}{${denominator}}$.`,
+        `求 $\\lim_{x \\to \\infty} \\frac{(${inner})^{${n}} - x^{${n}}}{${denominator}}$。`,
       ),
       answer,
       wrong: [Q.of(a, k), Q.of(a ** n, k), Q.of(n * a), Q.of(n, k)],
       solution: t(
-        `When expanded, the terms $x^${n}$ cancel and the numerator has the leading term $${poly([n * a, n === 2 ? "x" : `x^${n - 1}`])}$. Dividing by the denominator gives the limit $${answer.toLatex()}$.`,
-        `展开后 $x^${n}$ 项抵消，分子的首项是 $${poly([n * a, n === 2 ? "x" : `x^${n - 1}`])}$。除以分母，得极限 $${answer.toLatex()}$。`,
+        `When expanded, the terms $x^{${n}}$ cancel and the numerator has the leading term $${poly([n * a, n === 2 ? "x" : `x^{${n - 1}}`])}$. Dividing by the denominator gives the limit $${answer.toLatex()}$.`,
+        `展开后 $x^{${n}}$ 项抵消，分子的首项是 $${poly([n * a, n === 2 ? "x" : `x^{${n - 1}}`])}$。除以分母，得极限 $${answer.toLatex()}$。`,
       ),
     });
   },
@@ -2653,8 +2653,8 @@ const integralAsOneLogarithm: KnowledgePointDef = {
       form: "integer",
       wrong: [ratio * k, b ** k, ratio, (b - a) ** k],
       solution: t(
-        `The integral is $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^${k}$. So $c = ${answer}$.`,
-        `积分等于 $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^${k}$。所以 $c = ${answer}$。`,
+        `The integral is $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^{${k}}$. So $c = ${answer}$.`,
+        `积分等于 $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^{${k}}$。所以 $c = ${answer}$。`,
       ),
     });
   },

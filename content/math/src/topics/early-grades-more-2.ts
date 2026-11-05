@@ -331,7 +331,7 @@ const numberLinesTo1000 = earlyTopic(
           mark,
           [lo + k, lo + 10 * k, mark + 100],
           [
-            `The dot is ${k} spaces past ${lo}, and counting by hundreds reaches ${mark}.`,
+            `The dot is ${k} ${k === 1 ? "space" : "spaces"} past ${lo}, and counting by hundreds reaches ${mark}.`,
             `这个点在 ${lo} 后面第 ${k} 格，一百一百地数，数到 ${mark}。`,
           ],
           numberLineFigure(lo, hi, 100, mark, false),
@@ -354,7 +354,7 @@ const numberLinesTo1000 = earlyTopic(
           mark,
           [lo + k, lo + 100 - 10 * k, mark + 100],
           [
-            `There are 10 spaces between ${lo} and ${lo + 100}, so each is worth 10. The dot is ${k} spaces past ${lo}, which is ${mark}.`,
+            `There are 10 spaces between ${lo} and ${lo + 100}, so each is worth 10. The dot is ${k} ${k === 1 ? "space" : "spaces"} past ${lo}, which is ${mark}.`,
             `${lo} 和 ${lo + 100} 之间有 10 格，所以每格是 10。这个点在 ${lo} 后面第 ${k} 格，表示 ${mark}。`,
           ],
           numberLineFigure(lo, lo + 100, 10, mark, false),
@@ -378,7 +378,7 @@ const numberLinesTo1000 = earlyTopic(
           mark,
           [lo + (step === 1 ? 5 * k : k), lo + 10 * k, mark + step],
           [
-            `The ends are ${10 * step} apart with 10 spaces, so each space is worth ${step}. The dot is ${k} spaces past ${lo}, which is ${mark}.`,
+            `The ends are ${10 * step} apart with 10 spaces, so each space is worth ${step}. The dot is ${k} ${k === 1 ? "space" : "spaces"} past ${lo}, which is ${mark}.`,
             `两端相差 ${10 * step}，有 10 格，所以每格是 ${step}。这个点在 ${lo} 后面第 ${k} 格，表示 ${mark}。`,
           ],
           numberLineFigure(lo, lo + 10 * step, step, mark, false),

@@ -216,20 +216,22 @@ const logOfProduct = point(
     "主对数并不总把积变成和。辐角相加，但和可能落在 $-\\pi$ 到 $\\pi$ 的范围之外，这时要减去一整圈。所以 $\\operatorname{Log}(zw)$ 与 $\\operatorname{Log} z + \\operatorname{Log} w$ 可能相差 $2 \\pi i$。",
   ],
   (rng) => {
-    const options = [-3, -2, -1, 1, 2, 3, 4];
-    const [a, b] = [rng.pick(options), rng.pick(options)];
+    const d = rng.pick([4, 6]);
+    const options = Array.from({ length: 2 * d }, (_, i) => i - d + 1).filter((v) => v !== 0);
+    const pairs = options.flatMap((x) => options.map((y): [number, number] => [x, y])).filter(([x, y]) => x + y > d || x + y <= -d);
+    const [a, b] = rng.pick(pairs);
     let s = a + b;
-    if (s > 4) s -= 8;
-    if (s <= -4) s += 8;
-    const answer = frac(s, 4);
-    const show = (x: number) => timesPi(frac(x, 4));
+    if (s > d) s -= 2 * d;
+    if (s <= -d) s += 2 * d;
+    const answer = frac(s, d);
+    const show = (x: number) => timesPi(frac(x, d));
     return ask(
       [
         `$\\operatorname{Arg} z = ${show(a)}$ and $\\operatorname{Arg} w = ${show(b)}$. What is $\\operatorname{Arg}(zw)$ as a multiple of $\\pi$?`,
         `$\\operatorname{Arg} z = ${show(a)}$，$\\operatorname{Arg} w = ${show(b)}$。$\\operatorname{Arg}(zw)$ 是 $\\pi$ 的多少倍？`,
       ],
       answer,
-      [frac(s + 8, 4), frac(s - 8, 4), frac(a - b, 4), frac(-s, 4)],
+      [frac(s + 2 * d, d), frac(s - 2 * d, d), frac(a - b, d), frac(-s, d)],
       [
         `The sum of the arguments is $${show(a + b)}$${s === a + b ? ", already in the principal range" : `, and removing a full turn gives $${show(s)}$`}.`,
         `辐角之和是 $${show(a + b)}$${s === a + b ? "，已在主值范围内" : `，调整一整圈后得 $${show(s)}$`}。`,
@@ -365,10 +367,10 @@ const twoPoles = point(
       [
         both
           ? `Both poles lie inside the circle, and their residues cancel, so the integral is 0.`
-          : `Only the pole at ${a} lies inside, with residue $\\frac{1}{${a} - (${b})}$, so $k = ${answer.toLatex()}$.`,
+          : `Only the pole at ${a} lies inside, with residue $\\frac{1}{${a} ${b < 0 ? `+ ${-b}` : `- ${b}`}}$, so $k = ${answer.toLatex()}$.`,
         both
           ? "两个极点都在圆内，它们的留数相互抵消，所以积分是 0。"
-          : `只有 ${a} 处的极点在圆内，留数是 $\\frac{1}{${a} - (${b})}$，所以 $k = ${answer.toLatex()}$。`,
+          : `只有 ${a} 处的极点在圆内，留数是 $\\frac{1}{${a} ${b < 0 ? `+ ${-b}` : `- ${b}`}}$，所以 $k = ${answer.toLatex()}$。`,
       ],
     );
   },
@@ -570,8 +572,8 @@ const residuesSum = point(
       answer,
       [x + y, x - y, y - x, answer + 1].filter((v) => v !== answer),
       [
-        `All three add up to 0, so the third is $-(${x}) - (${y}) = ${answer}$.`,
-        `三个留数之和为 0，所以第三个是 $-(${x}) - (${y}) = ${answer}$。`,
+        `All three add up to 0, so the third is $-(${x} ${y < 0 ? `- ${-y}` : `+ ${y}`}) = ${answer}$.`,
+        `三个留数之和为 0，所以第三个是 $-(${x} ${y < 0 ? `- ${-y}` : `+ ${y}`}) = ${answer}$。`,
       ],
     );
   },

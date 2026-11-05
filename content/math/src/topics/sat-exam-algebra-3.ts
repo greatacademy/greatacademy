@@ -405,11 +405,12 @@ export const satExamAlgebra3: ExamSpec[] = [
     }
     const a = rng.int(2, 6);
     const b = rng.int(2, 6);
+    const rhs = rng.int(2, 20);
     return mc(
       rng,
       t(
-        `What is the slope of a line perpendicular to $${a}x ${s > 0 ? "+" : "-"} ${b}y = ${rng.int(2, 20)}$?`,
-        `与直线 $${a}x ${s > 0 ? "+" : "-"} ${b}y = ${rng.int(2, 20)}$ 垂直的直线斜率是多少？`,
+        `What is the slope of a line perpendicular to $${a}x ${s > 0 ? "+" : "-"} ${b}y = ${rhs}$?`,
+        `与直线 $${a}x ${s > 0 ? "+" : "-"} ${b}y = ${rhs}$ 垂直的直线斜率是多少？`,
       ),
       Q.of(s * b, a),
       [Q.of(-s * a, b), Q.of(s * a, b), Q.of(-s * b, a)],

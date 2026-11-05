@@ -20,6 +20,8 @@ const superposition = point(
     const [c1, c2] = [rng.int(2, 6), rng.pick([-4, -3, -2, 2, 3, 5])];
     const [v, w] = [rng.int(-9, 9), rng.int(-9, 9)];
     const answer = c1 * v + c2 * w;
+    const par = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const sum = `${c1} \\cdot ${par(v)} ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)} \\cdot ${par(w)}`;
     return ask(
       [
         `$u_1$ and $u_2$ solve the heat equation, with $u_1 = ${v}$ and $u_2 = ${w}$ at some point. What is the value there of the solution $${c1} u_1 ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)} u_2$?`,
@@ -27,10 +29,7 @@ const superposition = point(
       ],
       answer,
       [v + w, c1 * v - c2 * w, c1 * w + c2 * v, c1 + c2].filter((x) => x !== answer),
-      [
-        `Substitute: $${c1} \\cdot (${v}) + (${c2}) \\cdot (${w}) = ${answer}$.`,
-        `代入：$${c1} \\cdot (${v}) + (${c2}) \\cdot (${w}) = ${answer}$。`,
-      ],
+      [`Substitute: $${sum} = ${answer}$.`, `代入：$${sum} = ${answer}$。`],
     );
   },
 );

@@ -1001,8 +1001,8 @@ const tabularValue: KnowledgePointDef = {
     const P = poly(...terms);
     return numberProblem({
       prompt: t(
-        `Write $\\int x^${n}e^x\\,dx = e^xP(x) + C$, where $P$ is a polynomial. Find $P(${m})$.`,
-        `写成 $\\int x^${n}e^x\\,dx = e^xP(x) + C$，其中 $P$ 是多项式。求 $P(${m})$。`,
+        `Write $\\int x^{${n}}e^x\\,dx = e^xP(x) + C$, where $P$ is a polynomial. Find $P(${m})$.`,
+        `写成 $\\int x^{${n}}e^x\\,dx = e^xP(x) + C$，其中 $P$ 是多项式。求 $P(${m})$。`,
       ),
       answer: signedValue,
       form: "integer",
@@ -1655,7 +1655,7 @@ const xSquaredInTermsOfU: KnowledgePointDef = {
     const square = poly([1, "u^2"], [2 * a, "u"], [a * a, ""]);
     const sum = poly([one, ""], [two, ""], [three, ""]);
     return numberProblem({
-      prompt: t(`Evaluate $\\int_{${a}}^{${a + 1}} x^2(${inner})^${n}\\,dx$.`, `计算 $\\int_{${a}}^{${a + 1}} x^2(${inner})^${n}\\,dx$。`),
+      prompt: t(`Evaluate $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$.`, `计算 $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$。`),
       answer,
       wrong: [one.add(three), one.add(Q.of(a, n + 2)).add(three), Q.of((a + 1) * (a + 1), n + 1), one],
       solution: t(
@@ -1775,7 +1775,7 @@ const powerOfCoshAndSinh: KnowledgePointDef = {
     const a = rng.int(2, 5);
     const k = rng.int(1, 6);
     const power = a ** n;
-    const bracket = `(\\cosh x ${plus ? "+" : "-"} \\sinh x)${n === 1 ? "" : `^${n}`}`;
+    const bracket = `(\\cosh x ${plus ? "+" : "-"} \\sinh x)${n === 1 ? "" : `^{${n}}`}`;
     const up = Q.of(k * (power - 1), n);
     const down = Q.of(k * (power - 1), n * power);
     const answer = plus ? up : down;
@@ -1931,8 +1931,8 @@ const reductionForPowerTimesExponential: KnowledgePointDef = {
     const lastZh = k === 1 ? "" : `，乘以 $${k}$ 得 $${letter} = ${value}$`;
     return numberProblem({
       prompt: t(
-        `$\\int_0^1 ${coefficientOf(k)}x^${n}e^x\\,dx = Ae + B$ for integers $A$ and $B$. Find $${letter}$.`,
-        `$\\int_0^1 ${coefficientOf(k)}x^${n}e^x\\,dx = Ae + B$，其中 $A$、$B$ 是整数。求 $${letter}$。`,
+        `$\\int_0^1 ${coefficientOf(k)}x^{${n}}e^x\\,dx = Ae + B$ for integers $A$ and $B$. Find $${letter}$.`,
+        `$\\int_0^1 ${coefficientOf(k)}x^{${n}}e^x\\,dx = Ae + B$，其中 $A$、$B$ 是整数。求 $${letter}$。`,
       ),
       answer: value,
       form: "integer",
@@ -2370,14 +2370,14 @@ const widthOfIntegralBounds: KnowledgePointDef = {
     const answer = tail(N).sub(tail(N + 1));
     return numberProblem({
       prompt: t(
-        `For $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^${p}}$, the integral test traps $S$ between a lower and an upper bound that both use $S_{${N}}$. How far apart are the two bounds?`,
-        `对 $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^${p}}$，积分判别法把 $S$ 夹在都用到 $S_{${N}}$ 的下界和上界之间。这两个界相距多远？`,
+        `For $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^{${p}}}$, the integral test traps $S$ between a lower and an upper bound that both use $S_{${N}}$. How far apart are the two bounds?`,
+        `对 $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^{${p}}}$，积分判别法把 $S$ 夹在都用到 $S_{${N}}$ 的下界和上界之间。这两个界相距多远？`,
       ),
       answer,
       wrong: [tail(N), tail(N + 1), tail(N).add(tail(N + 1)), Q.of(k, N ** p)],
       solution: t(
-        `The bounds are $S_{${N}} + \\int_{${N + 1}}^\\infty f$ and $S_{${N}} + \\int_{${N}}^\\infty f$, where $f(x) = \\frac{${k}}{x^${p}}$. These integrals are $${tail(N + 1).toLatex()}$ and $${tail(N).toLatex()}$. The partial sum cancels, so the distance is $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$.`,
-        `两个界是 $S_{${N}} + \\int_{${N + 1}}^\\infty f$ 和 $S_{${N}} + \\int_{${N}}^\\infty f$，其中 $f(x) = \\frac{${k}}{x^${p}}$。这两个积分分别是 $${tail(N + 1).toLatex()}$ 和 $${tail(N).toLatex()}$。部分和相互抵消，所以距离是 $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$。`,
+        `The bounds are $S_{${N}} + \\int_{${N + 1}}^\\infty f$ and $S_{${N}} + \\int_{${N}}^\\infty f$, where $f(x) = \\frac{${k}}{x^{${p}}}$. These integrals are $${tail(N + 1).toLatex()}$ and $${tail(N).toLatex()}$. The partial sum cancels, so the distance is $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$.`,
+        `两个界是 $S_{${N}} + \\int_{${N + 1}}^\\infty f$ 和 $S_{${N}} + \\int_{${N}}^\\infty f$，其中 $f(x) = \\frac{${k}}{x^{${p}}}$。这两个积分分别是 $${tail(N + 1).toLatex()}$ 和 $${tail(N).toLatex()}$。部分和相互抵消，所以距离是 $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$。`,
       ),
     });
   },

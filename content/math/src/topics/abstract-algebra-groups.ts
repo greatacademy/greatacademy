@@ -1202,36 +1202,50 @@ export const generalGroups: TopicDef = {
 };
 
 /** MATRIX_GROUP_ORDERS are matrix groups over ℤₚ with the formulas for their orders. */
-const MATRIX_GROUP_ORDERS: readonly { en: string; zh: string; order: (p: number) => number; formula: string }[] = [
+const MATRIX_GROUP_ORDERS: readonly { en: string; zh: string; order: (p: number) => number; formula: string; why: Text }[] = [
   {
     en: "$GL(2, \\mathbb{Z}_{p})$, the group of invertible $2 \\times 2$ matrices over $\\mathbb{Z}_{p}$",
     zh: "$GL(2, \\mathbb{Z}_{p})$（$\\mathbb{Z}_{p}$ 上可逆的 $2 \\times 2$ 矩阵构成的群）",
     order: (p) => (p * p - 1) * (p * p - p),
     formula: "(p^2 - 1)(p^2 - p)",
+    why: t(
+      "The first column is any of the $p^2 - 1$ nonzero vectors, and the second any of the $p^2 - p$ vectors outside the line of the first",
+      "第一列可以是 $p^2 - 1$ 个非零向量中的任一个，第二列可以是第一列所在直线之外的 $p^2 - p$ 个向量中的任一个",
+    ),
   },
   {
     en: "$SL(2, \\mathbb{Z}_{p})$, the group of $2 \\times 2$ matrices of determinant $1$ over $\\mathbb{Z}_{p}$",
     zh: "$SL(2, \\mathbb{Z}_{p})$（$\\mathbb{Z}_{p}$ 上行列式为 $1$ 的 $2 \\times 2$ 矩阵构成的群）",
     order: (p) => p * (p * p - 1),
     formula: "p(p^2 - 1)",
+    why: t(
+      "The determinant takes each of the $p - 1$ nonzero values equally often on $GL(2, \\mathbb{Z}_p)$, so the order of that group is divided by $p - 1$",
+      "在 $GL(2, \\mathbb{Z}_p)$ 上，行列式取 $p - 1$ 个非零值中每个值的次数相同，所以把该群的阶除以 $p - 1$",
+    ),
   },
   {
     en: "the group of invertible upper triangular $2 \\times 2$ matrices over $\\mathbb{Z}_{p}$",
     zh: "$\\mathbb{Z}_{p}$ 上可逆的 $2 \\times 2$ 上三角矩阵构成的群",
     order: (p) => (p - 1) * (p - 1) * p,
     formula: "(p - 1)^2 p",
+    why: t(
+      "Each of the two diagonal entries is one of the $p - 1$ nonzero values, and the entry above the diagonal is any of the $p$ values",
+      "两个对角元各取 $p - 1$ 个非零值之一，对角线上方的元素可取 $p$ 个值中的任一个",
+    ),
   },
   {
     en: "the group of invertible diagonal $2 \\times 2$ matrices over $\\mathbb{Z}_{p}$",
     zh: "$\\mathbb{Z}_{p}$ 上可逆的 $2 \\times 2$ 对角矩阵构成的群",
     order: (p) => (p - 1) * (p - 1),
     formula: "(p - 1)^2",
+    why: t("Each of the two diagonal entries is one of the $p - 1$ nonzero values", "两个对角元各取 $p - 1$ 个非零值之一"),
   },
   {
     en: "the group of invertible diagonal $3 \\times 3$ matrices over $\\mathbb{Z}_{p}$",
     zh: "$\\mathbb{Z}_{p}$ 上可逆的 $3 \\times 3$ 对角矩阵构成的群",
     order: (p) => (p - 1) ** 3,
     formula: "(p - 1)^3",
+    why: t("Each of the three diagonal entries is one of the $p - 1$ nonzero values", "三个对角元各取 $p - 1$ 个非零值之一"),
   },
 ];
 
@@ -1285,7 +1299,10 @@ export const theOrderOfAGroup: TopicDef = {
           prompt: t(`Find the order of ${sub(g.en)}.`, `求${sub(g.zh)}的阶。`),
           answer: value,
           wrong: MATRIX_GROUP_ORDERS.map((h) => h.order(p)).concat([p ** 4]),
-          solution: t(`The order is $${g.formula}$ with $p = ${p}$: $${value}$.`, `阶为 $${g.formula}$，其中 $p = ${p}$：$${value}$。`),
+          solution: t(
+            `${g.why.en}. So the order is $${g.formula}$, which for $p = ${p}$ is $${value}$.`,
+            `${g.why["zh-CN"]}。所以阶为 $${g.formula}$，当 $p = ${p}$ 时为 $${value}$。`,
+          ),
         });
       },
     },
@@ -1423,7 +1440,7 @@ export const computingInversesOfElementsInZn: TopicDef = {
           n = rng.int(7, 40);
           a = rng.pick(units(n));
         } while (a === 1);
-        const b = rng.pick(units(n));
+        const b = rng.pick(units(n).filter((v) => v !== a));
         const inv = modInverse(a, n);
         const x = mod(inv * b, n);
         return numberProblem({
@@ -1665,6 +1682,7 @@ export const abelianGroups: TopicDef = {
       generate(rng) {
         const n = rng.int(3, 30);
         const p = rng.pick([2, 3, 5, 7]);
+        const size = rng.int(2, 4);
         const facts: Fact[] = [
           {
             prompt: t(`Is $\\mathbb{Z}_{${n}}$ under addition abelian?`, `加法群 $\\mathbb{Z}_{${n}}$ 是阿贝尔群吗？`),
@@ -1678,8 +1696,8 @@ export const abelianGroups: TopicDef = {
           },
           {
             prompt: t(
-              `Is $GL(${rng.int(2, 4)}, \\mathbb{Z}_{${p}})$ abelian?`,
-              `$GL(${rng.int(2, 4)}, \\mathbb{Z}_{${p}})$ 是阿贝尔群吗？`,
+              `Is $GL(${size}, \\mathbb{Z}_{${p}})$ abelian?`,
+              `$GL(${size}, \\mathbb{Z}_{${p}})$ 是阿贝尔群吗？`,
             ),
             holds: false,
             reason: t(

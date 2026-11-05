@@ -351,20 +351,23 @@ const mersenne = topic(
         "如果 $d$ 整除 $n$，那么 $2^d - 1$ 整除 $2^n - 1$，这由 $x^k - 1$（$x = 2^d$）的因式分解得出。所以梅森数 $2^n - 1$ 只有当 $n$ 是素数时才可能是素数。反过来不成立：11 是素数，但 $2^{11} - 1 = 23 \\cdot 89$。",
       ],
       (rng) => {
-        const d = rng.int(2, 7);
-        const k = rng.int(2, 6);
+        const d = rng.pick([3, 5, 7, 11, 13]);
+        const k = rng.pick([3, 5, 7, 9, 11, 13, 15, 17, 19, 21]);
         const n = d * k;
-        const answer = 2 ** d - 1;
+        let s = 2;
+        while (n % s !== 0) s += 1;
+        const cofactor = n / s <= 30 ? [2 ** (n / s) - 1] : [];
+        const answer = 2 ** s - 1;
         return ask(
           [
-            `Since ${d} divides ${n}, which factor of $2^{${n}} - 1$ does this give, in the form $2^{${d}} - 1$?`,
-            `因为 ${d} 整除 ${n}，由此得到 $2^{${n}} - 1$ 的哪个因子（形如 $2^{${d}} - 1$）？`,
+            `Take the smallest divisor of ${n} above 1. Which factor of $2^{${n}} - 1$ does that divisor give?`,
+            `取 ${n} 大于 1 的最小因数。这个因数给出 $2^{${n}} - 1$ 的哪个因子？`,
           ],
           answer,
-          [2 ** d, 2 ** k - 1, 2 ** d + 1, 2 ** (d - 1)].filter((v) => v !== answer),
+          [2 ** s, ...cofactor, 2 ** s + 1, 2 ** (s - 1)].filter((v) => v !== answer),
           [
-            `With $x = 2^{${d}}$, the number $x^{${k}} - 1$ has the factor $x - 1 = ${answer}$.`,
-            `令 $x = 2^{${d}}$，则 $x^{${k}} - 1$ 有因子 $x - 1 = ${answer}$。`,
+            `The smallest divisor is ${s}, and $${n} = ${s} \\cdot ${n / s}$. With $x = 2^{${s}}$, the number $x^{${n / s}} - 1$ has the factor $x - 1 = ${answer}$.`,
+            `最小因数是 ${s}，且 $${n} = ${s} \\cdot ${n / s}$。令 $x = 2^{${s}}$，则 $x^{${n / s}} - 1$ 有因子 $x - 1 = ${answer}$。`,
           ],
         );
       },
@@ -373,7 +376,7 @@ const mersenne = topic(
       "an-even-perfect-number",
       ["An even perfect number", "偶完全数"],
       [
-        "Euclid showed that when $2^p - 1$ is prime, the number $2^{p-1} (2^p - 1)$ is perfect, and Euler showed that every even perfect number has this form. So each Mersenne prime gives one even perfect number. No odd perfect number is known, and none has ever been ruled out.",
+        "Euclid showed that when $2^p - 1$ is prime, the number $2^{p-1} (2^p - 1)$ is perfect, and Euler showed that every even perfect number has this form. So each Mersenne prime gives one even perfect number. No odd perfect number is known, and their existence has not been ruled out.",
         "欧几里得证明：当 $2^p - 1$ 是素数时，$2^{p-1} (2^p - 1)$ 是完全数；欧拉证明每个偶完全数都是这种形式。所以每个梅森素数对应一个偶完全数。至今没有发现奇完全数，也没有人证明它不存在。",
       ],
       (rng) => {
@@ -700,8 +703,8 @@ const convolution = topic(
       "the-inverse-of-one",
       ["The inverse of one", "常数 1 的逆"],
       [
-        "Convolution has an identity $\\varepsilon$, equal to 1 at $n = 1$ and 0 elsewhere. The Möbius function is the inverse of $\\mathbf{1}$: the sum $\\sum_{d \\mid n} \\mu(d)$ is 1 when $n = 1$ and 0 otherwise. Convolving with $\\mu$ undoes a divisor sum, which is what Möbius inversion does.",
-        "卷积有单位元 $\\varepsilon$，它在 $n = 1$ 时为 1，其他情况为 0。默比乌斯函数是 $\\mathbf{1}$ 的逆：和 $\\sum_{d \\mid n} \\mu(d)$ 在 $n = 1$ 时为 1，否则为 0。与 $\\mu$ 作卷积能撤销因子求和，这正是默比乌斯反演所做的事。",
+        "Convolution has an identity $\\varepsilon$, equal to 1 at $n = 1$ and 0 elsewhere. The Möbius function is the inverse of $\\mathbf{1}$: the sum $\\sum_{d \\mid n} \\mu(d)$ is 1 when $n = 1$ and 0 otherwise. Convolving with $\\mu$ undoes a divisor sum, which is what Möbius inversion does: from $\\mathbf{1} * \\varphi = \\operatorname{id}$ it gives $\\mu * \\operatorname{id} = \\varphi$.",
+        "卷积有单位元 $\\varepsilon$，它在 $n = 1$ 时为 1，其他情况为 0。默比乌斯函数是 $\\mathbf{1}$ 的逆：和 $\\sum_{d \\mid n} \\mu(d)$ 在 $n = 1$ 时为 1，否则为 0。与 $\\mu$ 作卷积能撤销因子求和，这正是默比乌斯反演所做的事：由 $\\mathbf{1} * \\varphi = \\operatorname{id}$ 得到 $\\mu * \\operatorname{id} = \\varphi$。",
       ],
       (rng) => {
         const n = rng.int(2, 60);
@@ -1054,10 +1057,10 @@ const progressions = topic(
           [
             g === 1
               ? `$\\gcd(${a}, ${d}) = 1$, so Dirichlet's theorem applies.`
-              : `$\\gcd(${a}, ${d}) = ${g}$, so every term is a multiple of ${g}, and only ${g} itself could be prime.`,
+              : `$\\gcd(${a}, ${d}) = ${g}$, so every term is a multiple of ${g}. A multiple of ${g} can be prime only if it equals ${g}, so at most one term is prime.`,
             g === 1
               ? `$\\gcd(${a}, ${d}) = 1$，所以狄利克雷定理适用。`
-              : `$\\gcd(${a}, ${d}) = ${g}$，所以每一项都是 ${g} 的倍数，只有 ${g} 本身可能是素数。`,
+              : `$\\gcd(${a}, ${d}) = ${g}$，所以每一项都是 ${g} 的倍数。${g} 的倍数只有等于 ${g} 时才可能是素数，所以至多一项是素数。`,
           ],
         );
       },

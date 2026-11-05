@@ -13,6 +13,12 @@ const interval = (a: number, b: number) => `[${a}, ${b}]`;
 /** binomial returns n choose k for small numbers. */
 const binomial = (n: number, k: number): number => (k === 0 ? 1 : (binomial(n, k - 1) * (n - k + 1)) / k);
 
+/** plus writes a constant term after another term, with its sign, and nothing for zero. */
+const plus = (v: number) => (v === 0 ? "" : v > 0 ? ` + ${v}` : ` - ${-v}`);
+
+/** minus writes "a - b" for a number b, with parentheses only around a negative b. */
+const minus = (a: number | string, b: number) => (b < 0 ? `${a} - (${b})` : `${a} - ${b}`);
+
 const orderedField = topic(
   "the-real-numbers-as-an-ordered-field",
   ["The Real Numbers as an Ordered Field", "作为有序域的实数"],
@@ -50,8 +56,8 @@ const orderedField = topic(
       "the-reverse-triangle-inequality",
       ["The reverse triangle inequality", "反向三角不等式"],
       [
-        "The triangle inequality also gives a lower bound: the size of $x$ is at least the size of $a$ minus the distance from $x$ to $a$. Analysis uses this to keep a quantity away from zero.",
-        "三角不等式也给出下界：$x$ 的绝对值至少是 $a$ 的绝对值减去 $x$ 到 $a$ 的距离。分析中用它使某个量远离零。",
+        "The triangle inequality also gives a lower bound: $|x| \\ge |a| - |x - a|$. Analysis uses this to keep a quantity away from zero.",
+        "三角不等式也给出下界：$|x| \\ge |a| - |x - a|$。分析中用它使某个量远离零。",
       ],
       (rng) => {
         const d = rng.int(1, 12);
@@ -114,8 +120,8 @@ const nestedIntervals = topic(
         const k = rng.int(1, 9);
         return ask(
           [
-            `For $n \\ge 1$, let $I_n = \\left[${p} - \\frac{${k}}{n}, ${q} + \\frac{${k}}{n}\\right]$. What is the length of $\\bigcap_{n \\ge 1} I_n$?`,
-            `对 $n \\ge 1$，设 $I_n = \\left[${p} - \\frac{${k}}{n}, ${q} + \\frac{${k}}{n}\\right]$。$\\bigcap_{n \\ge 1} I_n$ 的长度是多少？`,
+            `For $n \\ge 1$, let $I_n = \\left[${p === 0 ? "" : `${p} `}- \\frac{${k}}{n}, ${q === 0 ? "" : `${q} + `}\\frac{${k}}{n}\\right]$. What is the length of $\\bigcap_{n \\ge 1} I_n$?`,
+            `对 $n \\ge 1$，设 $I_n = \\left[${p === 0 ? "" : `${p} `}- \\frac{${k}}{n}, ${q === 0 ? "" : `${q} + `}\\frac{${k}}{n}\\right]$。$\\bigcap_{n \\ge 1} I_n$ 的长度是多少？`,
           ],
           q - p,
           [q - p + 2 * k, q - p + k, q],
@@ -402,7 +408,10 @@ const connected = topic(
           [`Which of these sets is connected?`, `下面哪个集合是连通的？`],
           same(`[${a}, ${c}) \\cup [${c}, ${b}]`),
           [same(`[${a}, ${c}) \\cup (${c}, ${b}]`), same(`[${a}, ${b}] \\cap \\mathbb{Q}`), same(`[${a}, ${c}) \\cup [${b}, ${b + 3}]`)],
-          [`The first pieces join with no gap, to make the interval $[${a}, ${b}]$.`, `这两段没有空隙地接起来，构成区间 $[${a}, ${b}]$。`],
+          [
+            `The pieces $[${a}, ${c})$ and $[${c}, ${b}]$ join with no gap, to make the interval $[${a}, ${b}]$. Each of the other sets has a gap between two of its points.`,
+            `$[${a}, ${c})$ 和 $[${c}, ${b}]$ 这两段没有空隙地接起来，构成区间 $[${a}, ${b}]$。其他每个集合的两点之间都有空隙。`,
+          ],
         );
       },
     ),
@@ -506,15 +515,16 @@ const compactImages = topic(
       ],
       (rng) => {
         const h = rng.int(-10, 10);
-        const k = rng.int(-20, 20);
+        const k = rng.nonZero(-20, 20);
+        const square = h === 0 ? "x^{2}" : `(x${plus(-h)})^{2}`;
         const a = rng.int(-12, 8);
         const b = a + rng.int(1, 8);
         const at = (x: number) => k - (x - h) * (x - h);
         const best = h >= a && h <= b ? k : Math.max(at(a), at(b));
         return ask(
           [
-            `What is the maximum value of $f(x) = ${k} - (x - (${h}))^{2}$ on $[${a}, ${b}]$?`,
-            `$f(x) = ${k} - (x - (${h}))^{2}$ 在 $[${a}, ${b}]$ 上的最大值是多少？`,
+            `What is the maximum value of $f(x) = ${k} - ${square}$ on $[${a}, ${b}]$?`,
+            `$f(x) = ${k} - ${square}$ 在 $[${a}, ${b}]$ 上的最大值是多少？`,
           ],
           best,
           [k === best ? k + 1 : k, Math.min(at(a), at(b)), at(a) + at(b)],
@@ -577,14 +587,14 @@ const monotoneJumps = topic(
         const p = rng.int(-8, 8);
         return ask(
           [
-            `$f(x) = ${m}x + (${c})$ for $x < ${p}$, and $f(x) = ${m}x + (${c + j})$ for $x \\ge ${p}$. What is the size of the jump of $f$ at ${p}?`,
-            `当 $x < ${p}$ 时 $f(x) = ${m}x + (${c})$，当 $x \\ge ${p}$ 时 $f(x) = ${m}x + (${c + j})$。$f$ 在 ${p} 处的跳跃是多少？`,
+            `$f(x) = ${m}x${plus(c)}$ for $x < ${p}$, and $f(x) = ${m}x${plus(c + j)}$ for $x \\ge ${p}$. What is the size of the jump of $f$ at ${p}?`,
+            `当 $x < ${p}$ 时 $f(x) = ${m}x${plus(c)}$，当 $x \\ge ${p}$ 时 $f(x) = ${m}x${plus(c + j)}$。$f$ 在 ${p} 处的跳跃是多少？`,
           ],
           j,
           [c + j, m * p + c + j, j + m],
           [
-            `The linear parts agree at ${p}, so the difference is $${c + j} - (${c}) = ${j}$.`,
-            `线性部分在 ${p} 处相同，所以差是 $${c + j} - (${c}) = ${j}$。`,
+            `The linear parts agree at ${p}, so the difference is $${minus(c + j, c)} = ${j}$.`,
+            `线性部分在 ${p} 处相同，所以差是 $${minus(c + j, c)} = ${j}$。`,
           ],
         );
       },
@@ -739,8 +749,8 @@ const stieltjes = topic(
         const f = (x: number) => x * x + k;
         return ask(
           [
-            `$\\alpha$ is constant on $[0, 8]$ except for a jump of ${j1} at ${c} and a jump of ${j2} at ${d}. Evaluate $\\int_{0}^{8} (x^{2} + (${k}))\\, d\\alpha$.`,
-            `$\\alpha$ 在 $[0, 8]$ 上除在 ${c} 处跳 ${j1}、在 ${d} 处跳 ${j2} 外都是常数。计算 $\\int_{0}^{8} (x^{2} + (${k}))\\, d\\alpha$。`,
+            `$\\alpha$ is constant on $[0, 8]$ except for a jump of ${j1} at ${c} and a jump of ${j2} at ${d}. Evaluate $\\int_{0}^{8} (x^{2}${plus(k)})\\, d\\alpha$.`,
+            `$\\alpha$ 在 $[0, 8]$ 上除在 ${c} 处跳 ${j1}、在 ${d} 处跳 ${j2} 外都是常数。计算 $\\int_{0}^{8} (x^{2}${plus(k)})\\, d\\alpha$。`,
           ],
           j1 * f(c) + j2 * f(d),
           [f(c) + f(d), j1 * f(d) + j2 * f(c), (j1 + j2) * f(8)],
@@ -783,14 +793,14 @@ const stieltjes = topic(
         const sum = (a * n * (n + 1)) / 2 + b * n;
         return ask(
           [
-            `Evaluate $\\int_{0}^{${n} + \\frac{1}{2}} (${a}x + (${b}))\\, d\\lfloor x \\rfloor$.`,
-            `计算 $\\int_{0}^{${n} + \\frac{1}{2}} (${a}x + (${b}))\\, d\\lfloor x \\rfloor$。`,
+            `Evaluate $\\int_{0}^{${n} + \\frac{1}{2}} (${a}x${plus(b)})\\, d\\lfloor x \\rfloor$.`,
+            `计算 $\\int_{0}^{${n} + \\frac{1}{2}} (${a}x${plus(b)})\\, d\\lfloor x \\rfloor$。`,
           ],
           sum,
           [sum + b, (a * n * (n - 1)) / 2 + b * n, Math.floor((a * n * n) / 2) + b * n],
           [
-            `The jumps at 1 through ${n} add the values $${a}k + (${b})$, for a total of ${sum}.`,
-            `1 到 ${n} 处的跳跃把 $${a}k + (${b})$ 的值相加，总和是 ${sum}。`,
+            `The jumps at 1 through ${n} add the values $${a}k${plus(b)}$, for a total of ${sum}.`,
+            `1 到 ${n} 处的跳跃把 $${a}k${plus(b)}$ 的值相加，总和是 ${sum}。`,
           ],
         );
       },
@@ -809,8 +819,8 @@ const improperAnalysis = topic(
       "the-value-of-a-p-integral",
       ["The value of a p-integral", "p 积分的值"],
       [
-        "The integral of $x^{-p}$ from 1 to infinity converges exactly when $p$ exceeds 1, and its value is then one over $p - 1$. These integrals are the standard against which others are compared.",
-        "$x^{-p}$ 从 1 到无穷的积分当且仅当 $p$ 大于 1 时收敛，这时它的值是 $p - 1$ 分之一。这些积分是用来比较的标准。",
+        "The integral of $x^{-p}$ from 1 to infinity converges exactly when $p$ exceeds 1, and its value is then $\\frac{1}{p - 1}$. These integrals are the standard against which others are compared.",
+        "$x^{-p}$ 从 1 到无穷的积分当且仅当 $p$ 大于 1 时收敛，这时它的值是 $\\frac{1}{p - 1}$。这些积分是用来比较的标准。",
       ],
       (rng) => {
         const q = rng.int(2, 9);
@@ -820,7 +830,10 @@ const improperAnalysis = topic(
           [`Evaluate $\\int_{1}^{\\infty} x^{-${p.toLatex()}}\\, dx$.`, `计算 $\\int_{1}^{\\infty} x^{-${p.toLatex()}}\\, dx$。`],
           Q.of(q, r),
           [Q.of(r, q), Q.of(q + r, r), Q.of(q + r, q)],
-          [`The value is one over $p - 1 = ${Q.of(r, q).toLatex()}$.`, `值是 $p - 1 = ${Q.of(r, q).toLatex()}$ 的倒数。`],
+          [
+            `The value is $\\frac{1}{p - 1}$, with $p - 1 = ${Q.of(r, q).toLatex()}$.`,
+            `值是 $\\frac{1}{p - 1}$，其中 $p - 1 = ${Q.of(r, q).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -855,8 +868,8 @@ const improperAnalysis = topic(
       "a-singularity-at-zero",
       ["A singularity at zero", "零处的奇点"],
       [
-        "Near zero the comparison goes the other way: the integral of $x^{-p}$ from 0 to 1 converges exactly when $p$ is less than 1. Its value is then one over $1 - p$.",
-        "在零附近比较方向相反：$x^{-p}$ 从 0 到 1 的积分当且仅当 $p$ 小于 1 时收敛。这时它的值是 $1 - p$ 分之一。",
+        "Near zero the comparison goes the other way: the integral of $x^{-p}$ from 0 to 1 converges exactly when $p$ is less than 1. Its value is then $\\frac{1}{1 - p}$.",
+        "在零附近比较方向相反：$x^{-p}$ 从 0 到 1 的积分当且仅当 $p$ 小于 1 时收敛。这时它的值是 $\\frac{1}{1 - p}$。",
       ],
       (rng) => {
         const q = rng.int(2, 15);
@@ -870,8 +883,8 @@ const improperAnalysis = topic(
           Q.of(b * q, q - r),
           [Q.of(b * q, r), Q.of(b * (q - r), q), Q.of(b * r, q)],
           [
-            `The antiderivative of the power gives one over $1 - ${Q.of(r, q).toLatex()}$, times ${b}.`,
-            `幂的原函数给出 $1 - ${Q.of(r, q).toLatex()}$ 的倒数，再乘 ${b}。`,
+            `The antiderivative of the power gives $\\frac{1}{1 - ${Q.of(r, q).toLatex()}}$, times ${b}.`,
+            `幂的原函数给出 $\\frac{1}{1 - ${Q.of(r, q).toLatex()}}$，再乘 ${b}。`,
           ],
         );
       },
@@ -948,16 +961,24 @@ const dirichletAbel = topic(
           rng,
           useAbel
             ? [
-                `The series $\\sum \\frac{(-1)^{n}}{n} \\left(1 + \\frac{${k}}{n}\\right)$ multiplies a convergent series by a bounded monotone factor. Which test fits this description?`,
-                `级数 $\\sum \\frac{(-1)^{n}}{n} \\left(1 + \\frac{${k}}{n}\\right)$ 把收敛级数乘有界单调因子。哪个判别法符合这个描述？`,
+                `Suppose $\\sum a_n$ converges, possibly only conditionally. Which test proves that $\\sum a_n \\left(1 + \\frac{${k}}{n}\\right)$ converges?`,
+                `设 $\\sum a_n$ 收敛，可能只是条件收敛。哪个判别法能证明 $\\sum a_n \\left(1 + \\frac{${k}}{n}\\right)$ 收敛？`,
               ]
             : [
-                `The series $\\sum \\frac{\\sin(${s}n)}{n + ${k}}$ multiplies terms with bounded partial sums by a factor decreasing to zero. Which test fits this description?`,
-                `级数 $\\sum \\frac{\\sin(${s}n)}{n + ${k}}$ 把部分和有界的项乘递减趋于零的因子。哪个判别法符合这个描述？`,
+                `Which test proves that $\\sum \\frac{\\sin(${s}n)}{n + ${k}}$ converges?`,
+                `哪个判别法能证明 $\\sum \\frac{\\sin(${s}n)}{n + ${k}}$ 收敛？`,
               ],
           useAbel ? abel : dirichlet,
           [useAbel ? dirichlet : abel, ["The comparison test", "比较判别法"], ["The ratio test", "比值判别法"]],
-          [`The description matches the hypotheses of that test exactly.`, `这个描述正好符合该判别法的条件。`],
+          useAbel
+            ? [
+                `The factor $1 + \\frac{${k}}{n}$ is bounded and decreasing, and $\\sum a_n$ converges, which is what Abel's test needs. The factor tends to $1$, not $0$, so the Dirichlet test does not apply, and the signs of $a_n$ rule out comparison and ratio.`,
+                `因子 $1 + \\frac{${k}}{n}$ 有界且递减，$\\sum a_n$ 收敛，这正是阿贝尔判别法所需的条件。因子趋于 $1$ 而不是 $0$，所以狄利克雷判别法不适用，而 $a_n$ 的符号使比较和比值判别法无法使用。`,
+              ]
+            : [
+                `The partial sums of $\\sin(${s}n)$ are bounded and $\\frac{1}{n + ${k}}$ decreases to $0$, which is what the Dirichlet test needs. Abel's test does not apply, because $\\sum \\sin(${s}n)$ diverges: its terms do not tend to $0$. The series of absolute values also diverges, so comparison does not help.`,
+                `$\\sin(${s}n)$ 的部分和有界，$\\frac{1}{n + ${k}}$ 递减趋于 $0$，这正是狄利克雷判别法所需的条件。阿贝尔判别法不适用，因为 $\\sum \\sin(${s}n)$ 发散：它的项不趋于 $0$。绝对值级数也发散，所以比较判别法没有帮助。`,
+              ],
         );
       },
     ),
@@ -1031,12 +1052,15 @@ const tails = topic(
         const c = rng.int(1, 6);
         return ask(
           [
-            `Using the integral bound, how many terms $n$ of $\\sum \\frac{${c}}{k^{2}}$ are guaranteed to leave a tail below $\\frac{1}{${m}}$? Give the smallest such $n$ with $\\frac{${c}}{n} < \\frac{1}{${m}}$.`,
-            `用积分界，$\\sum \\frac{${c}}{k^{2}}$ 取多少项 $n$ 才保证余项小于 $\\frac{1}{${m}}$？给出满足 $\\frac{${c}}{n} < \\frac{1}{${m}}$ 的最小 $n$。`,
+            `Using the integral bound for the tail, what is the smallest $n$ for which the bound guarantees that the first $n$ terms of $\\sum \\frac{${c}}{k^{2}}$ leave a tail below $\\frac{1}{${m}}$?`,
+            `用余项的积分界，使这个界能保证 $\\sum \\frac{${c}}{k^{2}}$ 的前 $n$ 项留下的余项小于 $\\frac{1}{${m}}$ 的最小 $n$ 是多少？`,
           ],
           c * m + 1,
           [c * m, m + 1, c * m * m],
-          [`The inequality says $n > ${c * m}$.`, `不等式表示 $n > ${c * m}$。`],
+          [
+            `The tail after $n$ terms is below $\\int_{n}^{\\infty} \\frac{${c}}{x^{2}} \\, dx = \\frac{${c}}{n}$. So we need $\\frac{${c}}{n} < \\frac{1}{${m}}$, that is, $n > ${c * m}$.`,
+            `$n$ 项之后的余项小于 $\\int_{n}^{\\infty} \\frac{${c}}{x^{2}} \\, dx = \\frac{${c}}{n}$。所以需要 $\\frac{${c}}{n} < \\frac{1}{${m}}$，也就是 $n > ${c * m}$。`,
+          ],
         );
       },
     ),
@@ -1186,8 +1210,8 @@ const differentiatingSequences = topic(
       "a-sum-found-by-differentiating",
       ["A sum found by differentiating", "通过求导求和"],
       [
-        "Differentiating the geometric series gives the sum of $k x^{k-1}$ as one over $(1 - x)^{2}$. Multiplying by $x$ then gives the sum of $k x^{k}$, which evaluates many series that are not geometric.",
-        "对几何级数求导，得到 $k x^{k-1}$ 的和是 $(1 - x)^{2}$ 分之一。再乘 $x$，得到 $k x^{k}$ 的和，这可以求出许多不是几何级数的和。",
+        "Differentiating the geometric series gives $\\sum k x^{k-1} = \\frac{1}{(1 - x)^{2}}$. Multiplying by $x$ then gives the sum of $k x^{k}$, which evaluates many series that are not geometric.",
+        "对几何级数求导，得到 $\\sum k x^{k-1} = \\frac{1}{(1 - x)^{2}}$。再乘 $x$，得到 $k x^{k}$ 的和，这可以求出许多不是几何级数的和。",
       ],
       (rng) => {
         const q = rng.int(2, 15);
@@ -1370,7 +1394,7 @@ const bernstein = topic(
         const m = rng.int(5, 900);
         return ask(
           [
-            `What is the smallest $n$ for which the degree $n$ Bernstein polynomial of $x^{2}$ is within $\\frac{1}{${m}}$ of $x^{2}$ on all of $[0, 1]$, with the error strictly smaller?`,
+            `What is the smallest $n$ for which the degree $n$ Bernstein polynomial of $x^{2}$ differs from $x^{2}$ by less than $\\frac{1}{${m}}$ everywhere on $[0, 1]$?`,
             `使 $x^{2}$ 的 $n$ 次伯恩斯坦多项式在整个 $[0, 1]$ 上与 $x^{2}$ 的误差严格小于 $\\frac{1}{${m}}$ 的最小 $n$ 是多少？`,
           ],
           Math.floor(m / 4) + 1,
@@ -1449,7 +1473,7 @@ const arzela = topic(
         "定理需要两个条件：函数族逐点有界且等度连续。这时其中每个序列都有一致收敛的子列。求出公共界就验证了第一个条件。",
       ],
       (rng) => {
-        const c = rng.int(-20, 20);
+        const c = rng.nonZero(-20, 20);
         const d = rng.int(1, 20);
         return ask(
           [
@@ -1599,14 +1623,14 @@ const metricContinuity = topic(
         const q = p + rng.int(1, 40);
         return ask(
           [
-            `What is the length of the preimage of $(${p}, ${q})$ under $f(x) = ${m}x + (${c})$?`,
-            `$(${p}, ${q})$ 在 $f(x) = ${m}x + (${c})$ 下的原像的长度是多少？`,
+            `What is the length of the preimage of $(${p}, ${q})$ under $f(x) = ${m}x${plus(c)}$?`,
+            `$(${p}, ${q})$ 在 $f(x) = ${m}x${plus(c)}$ 下的原像的长度是多少？`,
           ],
           Q.of(q - p, m),
           [q - p, m * (q - p), Q.of(q - p + c, m)],
           [
-            `The preimage runs from $\\frac{${p} - (${c})}{${m}}$ to $\\frac{${q} - (${c})}{${m}}$.`,
-            `原像从 $\\frac{${p} - (${c})}{${m}}$ 到 $\\frac{${q} - (${c})}{${m}}$。`,
+            `The preimage runs from $\\frac{${minus(p, c)}}{${m}}$ to $\\frac{${minus(q, c)}}{${m}}$, so its length is $\\frac{${q - p}}{${m}}$.`,
+            `原像从 $\\frac{${minus(p, c)}}{${m}}$ 到 $\\frac{${minus(q, c)}}{${m}}$，所以长度是 $\\frac{${q - p}}{${m}}$。`,
           ],
         );
       },
@@ -1832,7 +1856,7 @@ const baire = topic(
         return choose(
           rng,
           [`Which set is nowhere dense in $\\mathbb{R}$?`, `哪个集合在 $\\mathbb{R}$ 中无处稠密？`],
-          same(`\\left\\{ ${a} + \\frac{${k}}{n} : n \\ge 1 \\right\\}`),
+          same(`\\left\\{ ${a === 0 ? "" : `${a} + `}\\frac{${k}}{n} : n \\ge 1 \\right\\}`),
           [same(`\\mathbb{Q} \\cap [${a}, ${b}]`), same(`(${a}, ${b})`), same(`[${a}, ${b}] \\setminus \\mathbb{Q}`)],
           [`Its closure only adds the point ${a}, and it contains no interval.`, `它的闭包只增加点 ${a}，不含任何区间。`],
         );
@@ -1888,8 +1912,8 @@ const baire = topic(
             [`It is finite`, `它是有限集`],
           ],
           [
-            `Otherwise a closed interval, which is complete, would be a countable union of nowhere dense sets.`,
-            `否则闭区间这个完备空间就是可数个无处稠密集的并。`,
+            `If some closed subinterval of $[${a}, ${b}]$ missed $[${a}, ${b}] \\setminus S$, it would lie inside $S$. Then this complete space would be a countable union of nowhere dense sets, which the Baire category theorem forbids.`,
+            `如果 $[${a}, ${b}]$ 的某个闭子区间与 $[${a}, ${b}] \\setminus S$ 不相交，它就落在 $S$ 之内。那么这个完备空间就是可数个无处稠密集的并，而贝尔纲定理禁止这种情况。`,
           ],
         );
       },

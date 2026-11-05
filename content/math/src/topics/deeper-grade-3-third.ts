@@ -903,7 +903,7 @@ export const deeperGrade3ThirdPoints: Readonly<Record<string, readonly Knowledge
         const total = l[0] * m[0] + l[1] * m[1] + l[2] * m[2];
         return whole(
           [
-            `A line plot of ribbon lengths has ${m[0]} marks at ${l[0]} inches, ${m[1]} at ${l[1]} inches and ${m[2]} at ${l[2]} inches. What is the total length of the ribbons, in inches?`,
+            `A line plot of ribbon lengths has ${m[0]} ${m[0] === 1 ? "mark" : "marks"} at ${l[0]} inches, ${m[1]} at ${l[1]} inches and ${m[2]} at ${l[2]} inches. What is the total length of the ribbons, in inches?`,
             `一张丝带长度线状图上，${l[0]} 英寸处有 ${m[0]} 个标记，${l[1]} 英寸处有 ${m[1]} 个，${l[2]} 英寸处有 ${m[2]} 个。这些丝带的总长度是多少英寸？`,
           ],
           total,

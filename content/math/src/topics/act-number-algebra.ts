@@ -717,11 +717,12 @@ export const slantAsymptotesOfRationalFunctions = topic(
           t("Neither a horizontal nor a slant asymptote", "既无水平渐近线也无斜渐近线"),
         ];
         const correct = kind;
+        const [top, bottom] = [term(n), term(d)];
         return pickChoice(
           rng,
           t(
-            `Which describes the end behavior asymptote of the graph of $f(x) = \\frac{${term(n)}}{${term(d)}}$?`,
-            `下列哪项描述了 $f(x) = \\frac{${term(n)}}{${term(d)}}$ 的图象在两端的渐近线？`,
+            `Which describes the end behavior asymptote of the graph of $f(x) = \\frac{${top}}{${bottom}}$?`,
+            `下列哪项描述了 $f(x) = \\frac{${top}}{${bottom}}$ 的图象在两端的渐近线？`,
           ),
           options[correct]!,
           options.filter((_, i) => i !== correct),

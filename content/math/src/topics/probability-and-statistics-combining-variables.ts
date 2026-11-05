@@ -509,14 +509,14 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
           const ans = Q.of(-n).mul(pi).mul(pj);
           return numberProblem({
             prompt: t(
-              `$(X_1, X_2, X_3, X_4)$ is multinomial with $n = ${n}$ and probabilities $${ps.map((p) => p.toLatex()).join(", ")}$. Find $\\operatorname{Cov}(X_${i + 1}, X_${j + 1})$.`,
-              `$(X_1, X_2, X_3, X_4)$ 服从 $n = ${n}$、概率为 $${ps.map((p) => p.toLatex()).join(", ")}$ 的多项分布。求 $\\operatorname{Cov}(X_${i + 1}, X_${j + 1})$。`,
+              `$(X_1, X_2, X_3, X_4)$ is multinomial with $n = ${n}$ and probabilities $${ps.map((p) => p.toLatex()).join(", ")}$. Find $\\operatorname{Cov}(X_{${i + 1}}, X_{${j + 1}})$.`,
+              `$(X_1, X_2, X_3, X_4)$ 服从 $n = ${n}$、概率为 $${ps.map((p) => p.toLatex()).join(", ")}$ 的多项分布。求 $\\operatorname{Cov}(X_{${i + 1}}, X_{${j + 1}})$。`,
             ),
             answer: ans,
             wrong: [ans.neg(), Q.zero, Q.of(-n).mul(pi).mul(Q.one.sub(pj))].filter((v) => !v.eq(ans)),
             solution: t(
-              `$\\operatorname{Cov}(X_${i + 1}, X_${j + 1}) = -np_${i + 1}p_${j + 1} = -${n} \\cdot ${pi.toLatex()} \\cdot ${pj.toLatex()} = ${ans.toLatex()}$.`,
-              `$\\operatorname{Cov}(X_${i + 1}, X_${j + 1}) = -np_${i + 1}p_${j + 1} = -${n} \\cdot ${pi.toLatex()} \\cdot ${pj.toLatex()} = ${ans.toLatex()}$。`,
+              `$\\operatorname{Cov}(X_{${i + 1}}, X_{${j + 1}}) = -np_{${i + 1}}p_{${j + 1}} = -${n} \\cdot ${pi.toLatex()} \\cdot ${pj.toLatex()} = ${ans.toLatex()}$.`,
+              `$\\operatorname{Cov}(X_{${i + 1}}, X_{${j + 1}}) = -np_{${i + 1}}p_{${j + 1}} = -${n} \\cdot ${pi.toLatex()} \\cdot ${pj.toLatex()} = ${ans.toLatex()}$。`,
             ),
           });
         },

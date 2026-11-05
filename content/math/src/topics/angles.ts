@@ -1354,7 +1354,7 @@ export const anglesOfPolygons: TopicDef = {
         const named = polygonNames[n] !== undefined && rng.bool(0.7);
         return numberProblem({
           prompt: named
-            ? t(`What is the sum of the interior angles of a ${name.en}?`, `${name["zh-CN"]}的内角和是多少度？`)
+            ? t(`What is the sum of the interior angles of ${/^[aeio]/.test(name.en) ? "an" : "a"} ${name.en}?`, `${name["zh-CN"]}的内角和是多少度？`)
             : t(`What is the sum of the interior angles of a polygon with $${n}$ sides?`, `一个 $${n}$ 边形的内角和是多少度？`),
           answer: sum,
           form: "integer",

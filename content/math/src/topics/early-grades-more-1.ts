@@ -443,7 +443,7 @@ const numberLinesTo120 = earlyTopic(
           ["What number does the dot show?", "这个点表示什么数？"],
           mark,
           [mark - lo, lo + 10 - (mark - lo), mark + 10],
-          [`The dot is ${mark - lo} spaces past ${lo}, so it shows ${mark}.`, `这个点在 ${lo} 后面第 ${mark - lo} 格，所以表示 ${mark}。`],
+          [`The dot is ${mark - lo} ${mark - lo === 1 ? "space" : "spaces"} past ${lo}, so it shows ${mark}.`, `这个点在 ${lo} 后面第 ${mark - lo} 格，所以表示 ${mark}。`],
           numberLineFigure(lo, lo + 10, 1, mark, false),
         );
       },
@@ -2237,7 +2237,7 @@ const dimesAndPennies = earlyTopic(
           10 * d + p,
           [d + p, 10 * p + d, 10 * d],
           [
-            `${d} dimes make ${10 * d} cents, and ${p} pennies more make ${10 * d + p} cents.`,
+            `${d} ${d === 1 ? "dime makes" : "dimes make"} ${10 * d} cents, and ${p} pennies more make ${10 * d + p} cents.`,
             `${d} 枚 10 美分硬币是 ${10 * d} 美分，再加 ${p} 枚 1 美分硬币，是 ${10 * d + p} 美分。`,
           ],
           coinsFigure(rng.shuffle([...Array<number>(d).fill(10), ...Array<number>(p).fill(1)])),

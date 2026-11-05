@@ -782,20 +782,21 @@ export const homogeneousFunctions: TopicDef = {
         const n = p + q;
         const a = rng.int(2, 7);
         const b = rng.int(2, 7);
+        const monomial = `${a}x${p === 1 ? "" : `^{${p}}`}y${q === 1 ? "" : `^{${q}}`}`;
 
         const prompt = t(
-          `Determine the degree of homogeneity $n$ of the function $f(x, y) = ${poly([a, "x"])}^${poly([p, "y"])}^${q} + ${poly([b, "x"])}^${n}$.`,
-          `确定函数 $f(x, y) = ${poly([a, "x"])}^${poly([p, "y"])}^${q} + ${poly([b, "x"])}^${n}$ 的齐次次数 $n$。`,
+          `Determine the degree of homogeneity $n$ of the function $f(x, y) = ${monomial} + ${poly([b, "x"])}^{${n}}$.`,
+          `确定函数 $f(x, y) = ${monomial} + ${poly([b, "x"])}^{${n}}$ 的齐次次数 $n$。`,
         );
         const solution = t(
           steps(
-            `Substitute $tx$ for $x$ and $ty$ for $y$: $f(tx, ty) = ${a}(tx)^${p}(ty)^${q} + ${b}(tx)^${n}$.`,
-            `Factor out powers of $t$: $f(tx, ty) = t^{${p}+${q}}(${poly([a, "x"])}^${poly([p, "y"])}^${q}) + t^${n}(${poly([b, "x"])}^${n}) = t^${n} f(x, y)$.`,
+            `Substitute $tx$ for $x$ and $ty$ for $y$: $f(tx, ty) = ${a}(tx)^{${p}}(ty)^{${q}} + ${b}(tx)^{${n}}$.`,
+            `Factor out powers of $t$: $f(tx, ty) = t^{${p}+${q}}(${monomial}) + t^{${n}}(${poly([b, "x"])}^{${n}}) = t^{${n}} f(x, y)$.`,
             `By definition of homogeneity, the degree is $n = ${n}$.`,
           ),
           steps(
-            `将 $x$ 替换为 $tx$，$y$ 替换为 $ty$：$f(tx, ty) = ${a}(tx)^${p}(ty)^${q} + ${b}(tx)^${n}$。`,
-            `提取 $t$ 的公因子：$f(tx, ty) = t^{${p}+${q}}(${poly([a, "x"])}^${poly([p, "y"])}^${q}) + t^${n}(${poly([b, "x"])}^${n}) = t^${n} f(x, y)$。`,
+            `将 $x$ 替换为 $tx$，$y$ 替换为 $ty$：$f(tx, ty) = ${a}(tx)^{${p}}(ty)^{${q}} + ${b}(tx)^{${n}}$。`,
+            `提取 $t$ 的公因子：$f(tx, ty) = t^{${p}+${q}}(${monomial}) + t^{${n}}(${poly([b, "x"])}^{${n}}) = t^{${n}} f(x, y)$。`,
             `根据齐次函数定义，其齐次次数为 $n = ${n}$。`,
           ),
         );

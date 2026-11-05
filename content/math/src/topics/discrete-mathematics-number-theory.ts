@@ -807,7 +807,7 @@ export const eulersTheorem: TopicDef = {
         const two = rng.bool();
         const n = two ? 100 : 10;
         const f = phi(n);
-        const a = rng.pick([3, 7, 9, 11, 13, 17, 19, 21, 23, 27, 29, 31, 33, 37]);
+        const a = rng.pick([3, 7, 9, 13, 17, 19, 23, 27, 29, 33, 37, ...(two ? [11, 21, 31] : [])]);
         const e = rng.int(100, 3000);
         const value = modPow(a, e, n);
         return numberProblem({
@@ -957,7 +957,7 @@ export const theLinearCipher: TopicDef = {
       id: "encrypting-with-a-linear-cipher",
       title: t("Encrypting", "加密"),
       explanation: t(
-        "A linear cipher multiplies the letter's number by a key and adds another, then reduces modulo twenty six. With $y = 5x + 8 \\bmod 26$, the letter $\\mathrm{K} = 10$ becomes $58 \\equiv 6 = \\mathrm{G}$.",
+        "A linear cipher multiplies the letter's number by a key and adds another, then reduces modulo $26$. With $y = 5x + 8 \\bmod 26$, the letter $\\mathrm{K} = 10$ becomes $58 \\equiv 6 = \\mathrm{G}$.",
         "线性密码把字母对应的数乘以一个密钥再加上另一个密钥，然后模 26 约化。用 $y = 5x + 8 \\bmod 26$，字母 $\\mathrm{K} = 10$ 变成 $58 \\equiv 6 = \\mathrm{G}$。",
       ),
       generate(rng) {
@@ -983,7 +983,7 @@ export const theLinearCipher: TopicDef = {
       id: "decrypting-a-linear-cipher",
       title: t("Decrypting", "解密"),
       explanation: t(
-        "To decrypt, subtract the added key and multiply by the inverse of the multiplier, which exists only if it is coprime to twenty six. For $y = 5x + 8$: $5^{-1} \\equiv 21 \\pmod{26}$ since $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$. So $x = 21(y - 8) \\bmod 26$, and $\\mathrm{G} = 6$ decrypts to $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$.",
+        "To decrypt, subtract the added key and multiply by the inverse of the multiplier, which exists only if it is coprime to $26$. For $y = 5x + 8$: $5^{-1} \\equiv 21 \\pmod{26}$ since $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$. So $x = 21(y - 8) \\bmod 26$, and $\\mathrm{G} = 6$ decrypts to $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$.",
         "解密时先减去加上的密钥，再乘以乘数的逆元，只有乘数与 26 互素时逆元才存在。对 $y = 5x + 8$：因为 $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$，所以 $5^{-1} \\equiv 21 \\pmod{26}$。于是 $x = 21(y - 8) \\bmod 26$，$\\mathrm{G} = 6$ 解密为 $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$。",
       ),
       generate(rng) {

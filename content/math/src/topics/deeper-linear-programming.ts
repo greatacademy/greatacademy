@@ -80,7 +80,7 @@ const freeVariables = point(
     const answer = n + k + (m - e);
     return ask(
       [
-        `A program has ${n} variables, with ${k} free, and ${m} constraints, with ${e} equations. How many variables does its standard form have?`,
+        `A program has ${n} variables, with ${k} free, and ${m} constraints, with ${e} ${e === 1 ? "equation" : "equations"}. How many variables does its standard form have?`,
         `一个规划有 ${n} 个变量，其中 ${k} 个是自由变量；有 ${m} 个约束，其中 ${e} 个是等式。它的标准形有多少个变量？`,
       ],
       answer,

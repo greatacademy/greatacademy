@@ -753,7 +753,7 @@ export const describingSetsUsingSetBuilderNotation: TopicDef = {
       ),
       generate(rng) {
         const m = rng.int(3, 12);
-        const r = rng.int(0, m - 1);
+        const r = rng.int(1, m - 1);
         const kVal = rng.int(1, 15);
         const rightVal = m * kVal + r;
         return numberProblem({
@@ -1067,8 +1067,8 @@ export const infiniteSets: TopicDef = {
           setNameZh = `所有大于 ${k} 的有理数构成的集合`;
           setLatex = `\\{ q \\in \\mathbb{Q} \\mid q > ${k} \\}`;
         } else {
-          setNameEn = `the set of integers of the form ${2 * k}n + 1`;
-          setNameZh = `形如 ${2 * k}n + 1 的整数集合`;
+          setNameEn = `the set of integers of the form $${2 * k}n + 1$`;
+          setNameZh = `形如 $${2 * k}n + 1$ 的整数集合`;
           setLatex = `\\{ ${2 * k}n + 1 \\mid n \\in \\mathbb{Z} \\}`;
         }
 
@@ -1081,12 +1081,12 @@ export const infiniteSets: TopicDef = {
           t("Countably infinite (cardinality $\\aleph_0$)", "可数无限集（基数为 $\\aleph_0$）"),
           [
             t("Uncountably infinite (continuum cardinality $\\mathfrak{c}$)", "不可数无限集（连续统基数 $\\mathfrak{c}$）"),
-            t("Finite set with empty interior", "有限集合"),
+            t("Finite set", "有限集合"),
             t("Undefined cardinality", "基数未定义"),
           ],
           t(
-            `Because $S$ is an infinite subset of $\\mathbb{Z}$ or $\\mathbb{Q}$, it can be placed in a one-to-one correspondence with the natural numbers $\\mathbb{N}$. Thus its cardinality is $\\aleph_0$ (countably infinite).`,
-            `因为 $S$ 是 $\\mathbb{Z}$ 或 $\\mathbb{Q}$ 的无限子集，它可以与自然数集 $\\mathbb{N}$ 建立一一对应。因此它是可数无限集，基数为 $\\aleph_0$。`,
+            `Because $S$ is an infinite subset of the countable set $${setType === "rationals_gt" ? "\\mathbb{Q}" : "\\mathbb{Z}"}$, it can be placed in a one-to-one correspondence with the natural numbers $\\mathbb{N}$. Thus its cardinality is $\\aleph_0$ (countably infinite).`,
+            `因为 $S$ 是可数集 $${setType === "rationals_gt" ? "\\mathbb{Q}" : "\\mathbb{Z}"}$ 的无限子集，它可以与自然数集 $\\mathbb{N}$ 建立一一对应。因此它是可数无限集，基数为 $\\aleph_0$。`,
           ),
         );
       },
@@ -1118,7 +1118,7 @@ export const infiniteSets: TopicDef = {
           [
             t("Countably infinite (cardinality $\\aleph_0$)", "可数无限集（基数为 $\\aleph_0$）"),
             t(`Finite set with cardinality $|S| = ${len}$`, `有限集，元素个数 $|S| = ${len}$`),
-            t("Finite set with empty cardinality", "空集"),
+            t("The empty set", "空集"),
           ],
           t(
             `Every non-degenerate real interval contains uncountably many points (in bijection with $\\mathbb{R}$, having continuum cardinality $\\mathfrak{c}$).`,
@@ -1656,7 +1656,10 @@ export const indexedSets: TopicDef = {
             `The intervals are nested in reverse: $A_1 = [${c - 1}, ${c + 1}] \\subset A_2 \\subset \\dots \\subset A_{${n}}$. The intersection of nested sets is the smallest set, so $\\bigcap_{i=1}^{${n}} A_i = A_1 = [${c - 1}, ${c + 1}]$.`,
             `这些区间满足反向嵌套包含：$A_1 = [${c - 1}, ${c + 1}] \\subset A_2 \\subset \\dots \\subset A_{${n}}$。嵌套集合族的交集即为其最小集合，因此 $\\bigcap_{i=1}^{${n}} A_i = A_1 = [${c - 1}, ${c + 1}]$。`,
           ),
-          wrong: [[{ lo: q(c - n), loClosed: true, hi: q(c + n), hiClosed: true }]],
+          wrong: [
+            [{ lo: q(c - n), loClosed: true, hi: q(c + n), hiClosed: true }],
+            [{ lo: q(c - 1), loClosed: false, hi: q(c + 1), hiClosed: false }],
+          ],
         });
       },
     },

@@ -27,6 +27,23 @@ const piFraction = (p: number, q: number): string => {
 /** minus writes z minus a without a double sign. */
 const minus = (a: number): string => (a === 0 ? "z" : a < 0 ? `z + ${-a}` : `z - ${a}`);
 
+/** factor writes the factor with a root at a, in parentheses unless it is just z. */
+const factor = (a: number): string => (a === 0 ? "z" : `(${minus(a)})`);
+
+/** plus writes a constant term after another term, with its sign, and nothing for zero. */
+const plus = (v: number): string => (v === 0 ? "" : v > 0 ? ` + ${v}` : ` - ${-v}`);
+
+/** plusTerm writes c times symbol after another term, with its sign, and nothing for zero. */
+const plusTerm = (c: number, symbol: string): string =>
+  c === 0 ? "" : `${c < 0 ? " - " : " + "}${Math.abs(c) === 1 ? "" : Math.abs(c)}${symbol}`;
+
+/** gauss writes a + bi for b > 0, and with sign -1 its conjugate. */
+const gauss = (a: number, b: number, sign = 1): string => {
+  const part = b === 1 ? "i" : `${b}i`;
+  if (a === 0) return sign < 0 ? `-${part}` : part;
+  return `${a} ${sign < 0 ? "-" : "+"} ${part}`;
+};
+
 const riemannSphere = topic(
   "the-riemann-sphere",
   ["The Riemann Sphere", "黎曼球面"],
@@ -46,10 +63,16 @@ const riemannSphere = topic(
         const b = rng.int(1, 9);
         const m = a * a + b * b;
         return ask(
-          [`At what height does $z = ${a} + ${b}i$ land on the unit Riemann sphere?`, `$z = ${a} + ${b}i$ 落在单位黎曼球面的什么高度？`],
+          [
+            `At what height does $z = ${gauss(a, b)}$ land on the unit Riemann sphere?`,
+            `$z = ${gauss(a, b)}$ 落在单位黎曼球面的什么高度？`,
+          ],
           Q.of(m - 1, m + 1),
           [Q.of(m + 1, m - 1 === 0 ? 3 : m - 1), Q.of(2, m + 1), Q.of(m, m + 1)],
-          [`Here $|z|^{2} = ${m}$, and this goes into the height formula.`, `这里 $|z|^{2} = ${m}$，把它代入高度公式。`],
+          [
+            `Here $|z|^{2} = ${m}$, and the height is $\\frac{|z|^{2} - 1}{|z|^{2} + 1} = \\frac{${m - 1}}{${m + 1}}$.`,
+            `这里 $|z|^{2} = ${m}$，高度是 $\\frac{|z|^{2} - 1}{|z|^{2} + 1} = \\frac{${m - 1}}{${m + 1}}$。`,
+          ],
         );
       },
     ),
@@ -106,8 +129,16 @@ const riemannSphere = topic(
         const right = kind === 0 ? lower : kind === 1 ? upper : equator;
         const others = [lower, upper, equator, pole].filter((o) => o !== right);
         return choose(rng, [`Where on the Riemann sphere does $z = ${z}$ land?`, `$z = ${z}$ 落在黎曼球面的什么位置？`], right, others, [
-          `Compare $|z|$ with 1, because the unit circle is what lands on the equator.`,
-          `把 $|z|$ 与 1 比较，因为落在赤道上的正是单位圆。`,
+          kind === 0
+            ? `Here $|z| < 1$, because $|${a} + ${b}i| \\le ${a + b} < ${a + b + n}$. Points inside the unit circle land on the lower hemisphere.`
+            : kind === 1
+              ? `Here $|z|^{2} = ${a * a + b * b} > 1$. Points outside the unit circle land on the upper hemisphere.`
+              : `Here $|z| = 1$, because $${n * n - 1}^{2} + ${2 * n}^{2} = ${n * n + 1}^{2}$. The unit circle lands on the equator.`,
+          kind === 0
+            ? `这里 $|z| < 1$，因为 $|${a} + ${b}i| \\le ${a + b} < ${a + b + n}$。单位圆内的点落在下半球。`
+            : kind === 1
+              ? `这里 $|z|^{2} = ${a * a + b * b} > 1$。单位圆外的点落在上半球。`
+              : `这里 $|z| = 1$，因为 $${n * n - 1}^{2} + ${2 * n}^{2} = ${n * n + 1}^{2}$。单位圆落在赤道上。`,
         ]);
       },
     ),
@@ -228,8 +259,8 @@ const meanValue = topic(
         const f = (x: number) => x * x + b * x + c;
         return ask(
           [
-            `What is the average of $f(z) = z^{2} + (${b})z + (${c})$ around the circle $|z - (${a})| = ${r}$?`,
-            `$f(z) = z^{2} + (${b})z + (${c})$ 沿圆周 $|z - (${a})| = ${r}$ 的平均值是多少？`,
+            `What is the average of $f(z) = z^{2}${plusTerm(b, "z")}${plus(c)}$ around the circle $|${minus(a)}| = ${r}$?`,
+            `$f(z) = z^{2}${plusTerm(b, "z")}${plus(c)}$ 沿圆周 $|${minus(a)}| = ${r}$ 的平均值是多少？`,
           ],
           f(a),
           [f(a + r), f(a) + r * r, 0],
@@ -403,8 +434,8 @@ const algebra = topic(
         const n = rng.int(2, 6);
         return ask(
           [
-            `How many complex roots, counted with multiplicity, does $(${minus(a)})^{${m}} (z^{2} + ${b})^{${n}}$ have?`,
-            `$(${minus(a)})^{${m}} (z^{2} + ${b})^{${n}}$ 按重数有多少个复根？`,
+            `How many complex roots, counted with multiplicity, does $${factor(a)}^{${m}} (z^{2} + ${b})^{${n}}$ have?`,
+            `$${factor(a)}^{${m}} (z^{2} + ${b})^{${n}}$ 按重数有多少个复根？`,
           ],
           m + 2 * n,
           [m + n, m, 2 * m + n],
@@ -430,8 +461,8 @@ const algebra = topic(
         const m = Math.max(Math.abs(a), Math.abs(b), c);
         return ask(
           [
-            `What radius does Cauchy's bound give for all roots of $z^{${n}} + (${a})z^{2} + (${b})z + ${c}$?`,
-            `对 $z^{${n}} + (${a})z^{2} + (${b})z + ${c}$ 的所有根，柯西界给出的半径是多少？`,
+            `What radius does Cauchy's bound give for all roots of $z^{${n}}${plusTerm(a, "z^{2}")}${plusTerm(b, "z")} + ${c}$?`,
+            `对 $z^{${n}}${plusTerm(a, "z^{2}")}${plusTerm(b, "z")} + ${c}$ 的所有根，柯西界给出的半径是多少？`,
           ],
           1 + m,
           [m, 1 + Math.abs(a) + Math.abs(b) + c + 1, n + m],
@@ -452,14 +483,14 @@ const algebra = topic(
         const r = rng.int(-9, 9);
         return ask(
           [
-            `A real monic cubic has the roots $${p} + ${q}i$ and ${r}. What is its coefficient of $z^{2}$?`,
-            `实系数首一三次多项式有根 $${p} + ${q}i$ 和 ${r}。它的 $z^{2}$ 系数是多少？`,
+            `A real monic cubic has the roots $${gauss(p, q)}$ and ${r}. What is its coefficient of $z^{2}$?`,
+            `实系数首一三次多项式有根 $${gauss(p, q)}$ 和 ${r}。它的 $z^{2}$ 系数是多少？`,
           ],
           -(2 * p + r),
           [2 * p + r, -(p + r), -(2 * p + r) + 2 * q],
           [
-            `The third root is the conjugate, and the coefficient is minus the sum $${2 * p} + (${r})$.`,
-            `第三个根是共轭，系数是和 $${2 * p} + (${r})$ 的相反数。`,
+            `The third root is the conjugate, so the sum of the roots is $${2 * p}${plus(r)}$, and the coefficient is minus this sum.`,
+            `第三个根是共轭，所以根的和是 $${2 * p}${plus(r)}$，系数是这个和的相反数。`,
           ],
         );
       },
@@ -581,14 +612,14 @@ const localMapping = topic(
         const m = rng.int(2, 9);
         return ask(
           [
-            `Let $f(z) = ${c} + ${k}(z - (${a}))^{${m}}$. How many preimages near ${a} does a value very near ${c}, but not equal to it, have?`,
-            `设 $f(z) = ${c} + ${k}(z - (${a}))^{${m}}$。一个非常接近 ${c} 但不等于它的值，在 ${a} 附近有多少个原像？`,
+            `Let $f(z) = ${c === 0 ? "" : `${c} + `}${k}${factor(a)}^{${m}}$. How many preimages near ${a} does a value very near ${c}, but not equal to it, have?`,
+            `设 $f(z) = ${c === 0 ? "" : `${c} + `}${k}${factor(a)}^{${m}}$。一个非常接近 ${c} 但不等于它的值，在 ${a} 附近有多少个原像？`,
           ],
           m,
           [1, k, m - 1],
           [
-            `The zero of $f - (${c})$ at ${a} has order ${m}, and it splits into ${m} simple preimages.`,
-            `$f - (${c})$ 在 ${a} 处的零点是 ${m} 阶的，它分裂成 ${m} 个单原像。`,
+            `The zero of $f${plus(-c)}$ at ${a} has order ${m}, and it splits into ${m} simple preimages.`,
+            `$f${plus(-c)}$ 在 ${a} 处的零点是 ${m} 阶的，它分裂成 ${m} 个单原像。`,
           ],
         );
       },
@@ -713,8 +744,8 @@ const identity = topic(
         const m = rng.int(1, 9);
         return ask(
           [
-            `$f$ is entire, and $f(x) = ${a}x^{2} + (${b})$ for all real $x$. What is $f(${m}i)$?`,
-            `$f$ 是整函数，对所有实数 $x$ 有 $f(x) = ${a}x^{2} + (${b})$。$f(${m}i)$ 是多少？`,
+            `$f$ is entire, and $f(x) = ${a}x^{2}${plus(b)}$ for all real $x$. What is $f(${m}i)$?`,
+            `$f$ 是整函数，对所有实数 $x$ 有 $f(x) = ${a}x^{2}${plus(b)}$。$f(${m}i)$ 是多少？`,
           ],
           -a * m * m + b,
           [a * m * m + b, -a * m * m, a * m + b],
@@ -747,12 +778,12 @@ const reflection = topic(
         const real = rng.bool();
         return ask(
           [
-            `$f$ is entire and real on the real axis, and $f(${a} + ${b}i) = ${c} + ${d}i$. What is the ${real ? "real" : "imaginary"} part of $f(${a} - ${b}i)$?`,
-            `$f$ 是整函数且在实轴上取实值，$f(${a} + ${b}i) = ${c} + ${d}i$。$f(${a} - ${b}i)$ 的${real ? "实" : "虚"}部是多少？`,
+            `$f$ is entire and real on the real axis, and $f(${gauss(a, b)}) = ${gauss(c, d)}$. What is the ${real ? "real" : "imaginary"} part of $f(${gauss(a, b, -1)})$?`,
+            `$f$ 是整函数且在实轴上取实值，$f(${gauss(a, b)}) = ${gauss(c, d)}$。$f(${gauss(a, b, -1)})$ 的${real ? "实" : "虚"}部是多少？`,
           ],
           real ? c : -d,
           real ? [-c === c ? c + 1 : -c, d, -d] : [d, c, -c === -d ? -c + 1 : -c],
-          [`The mirror value is the conjugate, namely $${c} - ${d}i$.`, `镜像点的值是共轭，即 $${c} - ${d}i$。`],
+          [`The mirror value is the conjugate, namely $${gauss(c, d, -1)}$.`, `镜像点的值是共轭，即 $${gauss(c, d, -1)}$。`],
         );
       },
     ),
@@ -793,14 +824,14 @@ const reflection = topic(
         const m = rng.int(1, 9);
         return ask(
           [
-            `Let $f(z) = (${a} + ${b}i)z + (${c})$ and $g(z) = \\overline{f(\\overline{z})}$. What is the imaginary part of $g(${m})$?`,
-            `设 $f(z) = (${a} + ${b}i)z + (${c})$，$g(z) = \\overline{f(\\overline{z})}$。$g(${m})$ 的虚部是多少？`,
+            `Let $f(z) = (${gauss(a, b)})z${plus(c)}$ and $g(z) = \\overline{f(\\overline{z})}$. What is the imaginary part of $g(${m})$?`,
+            `设 $f(z) = (${gauss(a, b)})z${plus(c)}$，$g(z) = \\overline{f(\\overline{z})}$。$g(${m})$ 的虚部是多少？`,
           ],
           -b * m,
           [b * m, -b, a * m + c],
           [
-            `Here $g(z) = (${a} - ${b}i)z + (${c})$, whose coefficients are the conjugates.`,
-            `这里 $g(z) = (${a} - ${b}i)z + (${c})$，系数都取共轭。`,
+            `Here $g(z) = (${gauss(a, b, -1)})z${plus(c)}$, whose coefficients are the conjugates. At $z = ${m}$, the imaginary part is $${-b} \\cdot ${m} = ${-b * m}$.`,
+            `这里 $g(z) = (${gauss(a, b, -1)})z${plus(c)}$，系数都取共轭。在 $z = ${m}$ 处，虚部是 $${-b} \\cdot ${m} = ${-b * m}$。`,
           ],
         );
       },
@@ -858,8 +889,8 @@ const continuation = topic(
         const r = Math.min(Math.abs(center - a), Math.abs(center - b));
         return ask(
           [
-            `What is the radius of convergence of the Taylor series of $\\frac{1}{(${minus(a)})(${minus(b)})}$ at $z = ${center}$?`,
-            `$\\frac{1}{(${minus(a)})(${minus(b)})}$ 在 $z = ${center}$ 处的泰勒级数的收敛半径是多少？`,
+            `What is the radius of convergence of the Taylor series of $\\frac{1}{${factor(a)}${factor(b)}}$ at $z = ${center}$?`,
+            `$\\frac{1}{${factor(a)}${factor(b)}}$ 在 $z = ${center}$ 处的泰勒级数的收敛半径是多少？`,
           ],
           r,
           [Math.max(Math.abs(center - a), Math.abs(center - b)), Math.abs(center), b - a],
@@ -1023,8 +1054,8 @@ const sineProduct = topic(
         "欧拉公式是 $\\sin(\\pi z) = \\pi z \\prod_{n \\ge 1} \\left(1 - \\frac{z^{2}}{n^{2}}\\right)$。每个因子给出一对零点 $\\pm n$，在简单分数处的部分积就是普通的有理数运算。",
       ],
       (rng) => {
-        const m = rng.int(2, 9);
-        const big = rng.int(2, 5);
+        const m = rng.int(2, 15);
+        const big = rng.int(2, 3);
         let top = 1;
         let bottom = 1;
         for (let n = 1; n <= big; n++) {
@@ -1284,8 +1315,8 @@ const indented = topic(
         const clockwise = rng.bool();
         return ask(
           [
-            `A semicircle of small radius around $z = ${a}$ runs ${clockwise ? "clockwise" : "counterclockwise"}. In the limit, $\\int \\frac{${c}}{z - (${a})}\\, dz$ along it is $m\\pi i$. What is $m$?`,
-            `绕 $z = ${a}$ 的小半圆沿${clockwise ? "顺时针" : "逆时针"}方向。在极限下，沿它的 $\\int \\frac{${c}}{z - (${a})}\\, dz$ 是 $m\\pi i$。$m$ 是多少？`,
+            `A semicircle of small radius around $z = ${a}$ runs ${clockwise ? "clockwise" : "counterclockwise"}. In the limit, $\\int \\frac{${c}}{${minus(a)}}\\, dz$ along it is $m\\pi i$. What is $m$?`,
+            `绕 $z = ${a}$ 的小半圆沿${clockwise ? "顺时针" : "逆时针"}方向。在极限下，沿它的 $\\int \\frac{${c}}{${minus(a)}}\\, dz$ 是 $m\\pi i$。$m$ 是多少？`,
           ],
           clockwise ? -c : c,
           [clockwise ? c : -c, clockwise ? -2 * c : 2 * c, 0],
@@ -1329,10 +1360,11 @@ const indented = topic(
         const r = rng.int(1, 15);
         const c = rng.int(2, 15);
         const d = rng.int(1, 12);
+        const x = a === 0 ? "x" : a < 0 ? `x + ${-a}` : `x - ${a}`;
         return ask(
           [
-            `What is the principal value of $\\int_{${a - r}}^{${a + r}} \\left(\\frac{${c}}{x - (${a})} + ${d}\\right) dx$?`,
-            `$\\int_{${a - r}}^{${a + r}} \\left(\\frac{${c}}{x - (${a})} + ${d}\\right) dx$ 的主值是多少？`,
+            `What is the principal value of $\\int_{${a - r}}^{${a + r}} \\left(\\frac{${c}}{${x}} + ${d}\\right) dx$?`,
+            `$\\int_{${a - r}}^{${a + r}} \\left(\\frac{${c}}{${x}} + ${d}\\right) dx$ 的主值是多少？`,
           ],
           2 * r * d,
           [2 * r * (c + d), r * d, 2 * r * d + c],
@@ -1453,8 +1485,8 @@ const summing = topic(
         const n = rng.int(-9, 9);
         return ask(
           [
-            `What is the residue of $\\pi \\cot(\\pi z) \\cdot (${a}z^{2} + (${b}))$ at $z = ${n}$?`,
-            `$\\pi \\cot(\\pi z) \\cdot (${a}z^{2} + (${b}))$ 在 $z = ${n}$ 处的留数是多少？`,
+            `What is the residue of $\\pi \\cot(\\pi z) \\cdot (${a}z^{2}${plus(b)})$ at $z = ${n}$?`,
+            `$\\pi \\cot(\\pi z) \\cdot (${a}z^{2}${plus(b)})$ 在 $z = ${n}$ 处的留数是多少？`,
           ],
           a * n * n + b,
           [a * n * n, a * n + b, b],
@@ -1566,7 +1598,18 @@ const casorati = topic(
           [`What kind of singularity does $${f}$ have at 0?`, `$${f}$ 在 0 处是什么类型的奇点？`],
           names[kind] as [string, string],
           names.filter((_, i) => i !== kind).concat([[`No singularity at all`, `根本没有奇点`]]),
-          [`Count the negative powers in its Laurent series at 0.`, `数它在 0 处的洛朗级数中的负幂。`],
+          [
+            kind === 0
+              ? `Its Laurent series $\\sum_{n \\ge 0} \\frac{${k}^{n}}{n!\\, z^{n}}$ has infinitely many negative powers, so the singularity is essential.`
+              : kind === 1
+                ? `Its Laurent series starts with $z^{-${k}}$, so it has finitely many negative powers, and the singularity is a pole.`
+                : `The series of $e^{${k}z} - 1$ starts with $${k}z$, so the quotient has no negative powers, and the singularity is removable.`,
+            kind === 0
+              ? `它的洛朗级数 $\\sum_{n \\ge 0} \\frac{${k}^{n}}{n!\\, z^{n}}$ 有无穷多个负幂，所以是本性奇点。`
+              : kind === 1
+                ? `它的洛朗级数从 $z^{-${k}}$ 开始，负幂只有有限个，所以是极点。`
+                : `$e^{${k}z} - 1$ 的级数从 $${k}z$ 开始，所以商没有负幂，是可去奇点。`,
+          ],
         );
       },
     ),
@@ -1578,16 +1621,16 @@ const casorati = topic(
         "皮卡大定理加强了这个结果：在本性奇点附近，函数取到每个值无穷多次，至多有一个例外。对 $e^{1/z}$，例外是 0，因为指数函数永不为零。",
       ],
       (rng) => {
-        const c = rng.int(-30, 30);
+        const c = rng.nonZero(-30, 30);
         const k = rng.int(2, 15);
         return ask(
           [
-            `Near 0, the function $e^{${k}/z} + (${c})$ takes every complex value infinitely often except one. What is that value?`,
-            `在 0 附近，函数 $e^{${k}/z} + (${c})$ 取到每个复数值无穷多次，只有一个例外。这个值是多少？`,
+            `Near 0, the function $e^{${k}/z}${plus(c)}$ takes every complex value infinitely often except one. What is that value?`,
+            `在 0 附近，函数 $e^{${k}/z}${plus(c)}$ 取到每个复数值无穷多次，只有一个例外。这个值是多少？`,
           ],
           c,
           [c + 1, k + c, 0 === c ? k : 0],
-          [`The exponential misses only 0, so the sum misses $0 + (${c})$.`, `指数函数只取不到 0，所以和取不到 $0 + (${c})$。`],
+          [`The exponential misses only 0, so the sum misses $${c}$.`, `指数函数只取不到 0，所以和取不到 $${c}$。`],
         );
       },
     ),
@@ -1802,7 +1845,7 @@ const dirichlet = topic(
         "平均值性质直接给出圆心的值，即边界数据的平均。在整个圆周上，$\\theta$ 的正整数倍的正弦和余弦的平均都是零。",
       ],
       (rng) => {
-        const [a, b, c] = [rng.int(-30, 30), rng.int(2, 15), rng.int(2, 15)];
+        const [a, b, c] = [rng.nonZero(-30, 30), rng.int(2, 15), rng.int(2, 15)];
         const big = rng.int(1, 12);
         return ask(
           [
@@ -1915,8 +1958,8 @@ const poisson = topic(
           upper ? Q.of(c * (q + p), q - p) : Q.of(c * (q - p), q + p),
           upper ? [Q.of(c * (q - p), q + p), Q.of(q + p, q - p), c] : [Q.of(c * (q + p), q - p), Q.of(q - p, q + p), c],
           [
-            `Multiply ${c} by the kernel's ${upper ? "largest" : "smallest"} value at this radius.`,
-            `把 ${c} 乘这个半径上核的${upper ? "最大" : "最小"}值。`,
+            `The kernel's ${upper ? "largest" : "smallest"} value at this radius is $${upper ? `\\frac{1 + r}{1 - r} = ${Q.of(q + p, q - p).toLatex()}` : `\\frac{1 - r}{1 + r} = ${Q.of(q - p, q + p).toLatex()}`}$, and we multiply it by ${c}.`,
+            `这个半径上核的${upper ? "最大" : "最小"}值是 $${upper ? `\\frac{1 + r}{1 - r} = ${Q.of(q + p, q - p).toLatex()}` : `\\frac{1 - r}{1 + r} = ${Q.of(q - p, q + p).toLatex()}`}$，再乘 ${c}。`,
           ],
         );
       },
