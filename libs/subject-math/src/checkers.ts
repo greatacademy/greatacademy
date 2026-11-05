@@ -68,7 +68,7 @@ const feedback = {
   pointSlope: t("Write the equation in point-slope form, $y - y_1 = m(x - x_1)$.", "请把方程写成点斜式 $y - y_1 = m(x - x_1)$。"),
   factorCompletely: t("Factor completely.", "请彻底分解因式。"),
   commonFactor: t("Factor out the greatest common factor of the coefficients.", "请提出各项系数的最大公因数。"),
-  point: t("Write the ordered pair, such as $(3, -2)$.", "请写出有序数对，例如 $(3, -2)$。"),
+  point: t("Write the ordered pair or vector, such as $(3, -2)$.", "请写出有序数对或向量，例如 $(3, -2)$。"),
   solutions: t(
     "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
     "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 $\\varnothing$。",
@@ -687,7 +687,7 @@ export const intervalChecker: Checker = {
 
 /**
  * pointChecker accepts an ordered pair (or tuple) of numbers equal to
- * expected.values, written "(3, -2)" or as a vector "\\langle 3, -2 \\rangle", or, when expected.vars names the
+ * expected.values, written "(3, -2)" or as a vector "\\langle 3, -2 \\rangle" or "<3, -2>", or, when expected.vars names the
  * coordinates, as "x = 3, y = -2" in any order. Each number must be written
  * as in numberChecker's default form.
  */
@@ -702,9 +702,11 @@ export const pointChecker: Checker = {
     const vars = Array.isArray(e.vars) ? (e.vars as string[]) : undefined;
     const s = normalizeLatex(response)
       .replace(/\\left|\\right/g, "")
-      .replace(/\\langle/g, "(")
-      .replace(/\\rangle/g, ")")
-      .trim();
+      .replace(/\\langle|⟨/g, "(")
+      .replace(/\\rangle|⟩/g, ")")
+      .trim()
+      .replace(/^(?:<|\\lt\b)/, "(")
+      .replace(/(?:>|\\gt\b)$/, ")");
     let parts: string[];
     if (s.startsWith("(") && s.endsWith(")") && splitTopLevel(s, ",").length === 1) {
       parts = splitTopLevel(s.slice(1, -1), ",").map((p) => p.trim());

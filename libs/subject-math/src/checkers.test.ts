@@ -441,6 +441,9 @@ describe("point", () => {
     [["1/2", "0"], "(\\frac{1}{2}, 0)"],
     [["3", "-2"], "\\langle 3, -2 \\rangle"],
     [["3", "-2"], "\\left\\langle 3,-2\\right\\rangle"],
+    [["3", "-2"], "<3, -2>"],
+    [["3", "-2"], "\\lt 3, -2\\gt"],
+    [["1/2", "0"], "⟨\\frac{1}{2}, 0⟩"],
   ])("accepts %j as %s", (values, response) => {
     expect(check(values, response).correct).toBe(true);
   });
