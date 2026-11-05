@@ -33,6 +33,7 @@ import { calculusIISubstitutionTopics } from "../topics/calculus-ii-substitution
 import { calculusIITaylorTopics } from "../topics/calculus-ii-taylor.ts";
 import { calculusIIVectorTopics } from "../topics/calculus-ii-vectors.ts";
 import { complexAnalysisTopics } from "../topics/complex-analysis.ts";
+import { complexAnalysisExtraTopics } from "../topics/complex-analysis-extra.ts";
 import { complexAnalysisMoreTopics } from "../topics/complex-analysis-more.ts";
 import { deeperCalculusIPoints } from "../topics/deeper-calculus-i.ts";
 import { deeperCalculusIIPoints } from "../topics/deeper-calculus-ii.ts";
@@ -136,6 +137,7 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     ...partialDifferentialEquationsMoreTopics,
     ...complexAnalysisTopics,
     ...complexAnalysisMoreTopics,
+    ...complexAnalysisExtraTopics,
     ...realAnalysisTopics,
     ...realAnalysisMoreTopics,
     ...realAnalysisExtraTopics,

@@ -18411,8 +18411,8 @@ export const complexAnalysis: CourseDef = {
   id: "complex-analysis",
   title: t("Complex Analysis", "复分析"),
   description: t(
-    "Calculus for functions of a complex variable: analytic functions and the Cauchy–Riemann equations, contour integrals and Cauchy's theorems, Taylor and Laurent series, residues, and conformal maps.",
-    "复变函数的微积分：解析函数和柯西–黎曼方程，围道积分和柯西定理，泰勒级数和洛朗级数，留数，以及共形映射。",
+    "Calculus for functions of a complex variable: analytic functions and the Cauchy–Riemann equations, contour integrals and Cauchy's theorems, Taylor and Laurent series, residues and their applications, analytic continuation, conformal maps, and the Dirichlet problem.",
+    "复变函数的微积分：解析函数和柯西–黎曼方程，围道积分和柯西定理，泰勒级数和洛朗级数，留数及其应用，解析延拓，共形映射，以及狄利克雷问题。",
   ),
   units: [
     {
@@ -18420,7 +18420,13 @@ export const complexAnalysis: CourseDef = {
       modules: [
         {
           title: t("Complex Numbers Revisited", "复数回顾"),
-          topics: ["the-complex-plane", "the-polar-form-of-a-complex-number", "eulers-formula", "higher-roots-of-complex-numbers"],
+          topics: [
+            "the-complex-plane",
+            "the-polar-form-of-a-complex-number",
+            "eulers-formula",
+            "higher-roots-of-complex-numbers",
+            "the-riemann-sphere",
+          ],
         },
         {
           title: t("Differentiation", "微分"),
@@ -18450,11 +18456,16 @@ export const complexAnalysis: CourseDef = {
           title: t("Cauchy's Theorems", "柯西定理"),
           topics: [
             "contour-integrals",
+            "complex-antiderivatives-and-path-independence",
             "the-ml-inequality",
             "cauchys-integral-theorem",
             "winding-numbers",
             "cauchys-integral-formula",
+            "the-mean-value-property-and-moreras-theorem",
+            "the-maximum-modulus-principle",
+            "the-schwarz-lemma",
             "cauchys-estimates-and-liouvilles-theorem",
+            "the-fundamental-theorem-of-algebra-from-liouville",
           ],
         },
       ],
@@ -18468,19 +18479,31 @@ export const complexAnalysis: CourseDef = {
             "taylor-series-of-analytic-functions",
             "power-series-on-discs",
             "zeros-of-analytic-functions",
+            "the-local-behavior-of-analytic-maps",
+            "the-identity-theorem",
+            "the-schwarz-reflection-principle",
+            "analytic-continuation",
+            "the-product-formula-for-sine",
             "laurent-series",
             "laurent-series-on-annuli",
             "classifying-isolated-singularities",
+            "the-casorati-weierstrass-theorem",
           ],
         },
         {
           title: t("Residues", "留数"),
           topics: [
             "computing-residues",
+            "the-gamma-function-in-the-complex-plane",
             "the-residue-theorem",
+            "the-residue-at-infinity",
             "the-argument-principle-and-rouches-theorem",
             "trigonometric-integrals-by-residues",
             "improper-integrals-by-residues",
+            "jordans-lemma-and-fourier-integrals",
+            "indented-contours-and-principal-values",
+            "keyhole-contours-and-branch-cuts",
+            "summing-series-by-residues",
           ],
         },
       ],
@@ -18490,7 +18513,16 @@ export const complexAnalysis: CourseDef = {
       modules: [
         {
           title: t("Conformal Maps", "共形映射"),
-          topics: ["mobius-transformations", "the-cross-ratio", "conformal-maps", "conformal-maps-of-regions"],
+          topics: [
+            "mobius-transformations",
+            "the-cross-ratio",
+            "conformal-maps",
+            "conformal-maps-of-regions",
+            "the-riemann-mapping-theorem",
+            "the-joukowski-map",
+            "the-dirichlet-problem-on-simple-regions",
+            "the-poisson-integral-formula",
+          ],
         },
       ],
     },
