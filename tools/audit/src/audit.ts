@@ -115,7 +115,8 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (proseWords(kp.explanation.en) < minProseWords) add(`explanation under ${minProseWords} words of prose`, path);
       if (!cjk.test(kp.explanation["zh-CN"])) add("zh explanation without Chinese", path);
       if (kp.figure || kp.figures?.length) hasFigure = true;
-      else if (visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`)) add("explanation of something visual without a drawing", path);
+      else if (visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`))
+        add("explanation of something visual without a drawing", path);
 
       let choices = 0;
       let options = 0;
