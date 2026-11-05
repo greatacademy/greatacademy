@@ -66,6 +66,7 @@ import { multivariableCalculusMultivariableFunctionTopics } from "../topics/mult
 import { multivariableCalculusSurfaceIntegralTopics } from "../topics/multivariable-calculus-surface-integrals.ts";
 import { multivariableCalculusVectorFunctionTopics } from "../topics/multivariable-calculus-vector-functions.ts";
 import { partialDifferentialEquationsTopics } from "../topics/partial-differential-equations.ts";
+import { partialDifferentialEquationsExtraTopics } from "../topics/partial-differential-equations-extra.ts";
 import { partialDifferentialEquationsMoreTopics } from "../topics/partial-differential-equations-more.ts";
 import { precalculusComplexNumberTopics } from "../topics/precalculus-complex-numbers.ts";
 import { precalculusConicSectionTopics } from "../topics/precalculus-conic-sections.ts";
@@ -135,6 +136,7 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     ...apCalculusTechnologyTopics,
     ...partialDifferentialEquationsTopics,
     ...partialDifferentialEquationsMoreTopics,
+    ...partialDifferentialEquationsExtraTopics,
     ...complexAnalysisTopics,
     ...complexAnalysisMoreTopics,
     ...complexAnalysisExtraTopics,
