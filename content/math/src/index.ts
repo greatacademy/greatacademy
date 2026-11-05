@@ -114,6 +114,7 @@ import { discreteMathematicsNumberTheoryTopics } from "./topics/discrete-mathema
 import { discreteMathematicsRandomVariableTopics } from "./topics/discrete-mathematics-random-variables.ts";
 import { discreteMathematicsRecurrenceTopics } from "./topics/discrete-mathematics-recurrences.ts";
 import { discreteMathematicsSeriesTopics } from "./topics/discrete-mathematics-series.ts";
+import { earlyGradesMoreTopics } from "./topics/early-grades-more.ts";
 import { equationTopics } from "./topics/equations.ts";
 import { examTopics } from "./topics/exam-topics.ts";
 import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
@@ -448,6 +449,7 @@ export const math: SubjectDef = {
     ...linearProgrammingTopics,
     ...complexAnalysisTopics,
     ...realAnalysisTopics,
+    ...earlyGradesMoreTopics,
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,
     ...methodsOfProofRelationTopics,

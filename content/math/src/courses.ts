@@ -1,6 +1,8 @@
 import type { CourseDef } from "@ga/content";
 import { t } from "@ga/content";
 
+import { earlyGradesMoreUnits } from "./topics/early-grades-more.ts";
+
 /** algebraFoundations is the first course: integers, expressions, linear equations and inequalities. */
 export const algebraFoundations: CourseDef = {
   id: "algebra-foundations",
@@ -17343,6 +17345,7 @@ export const firstGradeMath: CourseDef = {
         },
       ],
     },
+    ...earlyGradesMoreUnits["1st-grade-math"],
   ],
 };
 
@@ -17455,6 +17458,7 @@ export const secondGradeMath: CourseDef = {
         },
       ],
     },
+    ...earlyGradesMoreUnits["2nd-grade-math"],
   ],
 };
 
@@ -17570,6 +17574,7 @@ export const thirdGradeMath: CourseDef = {
         },
       ],
     },
+    ...earlyGradesMoreUnits["3rd-grade-math"],
   ],
 };
 
