@@ -7,6 +7,9 @@ const singularOf: Readonly<Record<string, string>> = {
       .split(" ")
       .map((word) => [`${word}s`, word]),
   ),
+  erasers: "eraser",
+  digits: "digit",
+  letters: "letter",
   boxes: "box",
   copies: "copy",
   successes: "success",
@@ -89,7 +92,7 @@ function simplifyMath(tex: string, topicId: string): string {
     .join("");
   const chain = dropped.split(" = ");
   const simplified = chain.length < 3 ? dropped : chain.filter((value, i) => i === 0 || value.trim() !== chain[i - 1]?.trim()).join(" = ");
-  return separateThousands(simplified, topicId);
+  return separateThousands(simplified.replace(/\\sqrt\[2\]/g, "\\sqrt").replace(/(?<=\S) {2,}(?=\S)/g, " "), topicId);
 }
 
 /** polishSpans applies simplifyMath to every span of math of a text, and puts the negative numbers outside math into math. */
@@ -101,6 +104,9 @@ function polishSpans(text: string, topicId: string): string {
     return delimiter + simplifyMath(span.slice(delimiter.length, -delimiter.length), topicId) + delimiter;
   });
 }
+
+/** repeatedStatement matches a statement said twice in a row when a generated step changes nothing: "$x = 5$, so $x = 5$". */
+const repeatedStatement = /(\$[^$]+\$)(?:, so | gives |，所以 ?)\1/g;
 
 /** polishEnglish makes the words around a generated number agree with it: "$1$ part", "an 8". */
 function polishEnglish(text: string): string {
@@ -116,7 +122,8 @@ function polishEnglish(text: string): string {
  * otherwise be needed at every "${n}x" and "${n} hours" of the content.
  */
 export function polishText(text: Text, topicId = ""): Text {
-  return { en: polishEnglish(polishSpans(text.en, topicId)), "zh-CN": polishSpans(text["zh-CN"], topicId) };
+  const polished = (s: string) => polishSpans(s, topicId).replace(repeatedStatement, "$1");
+  return { en: polishEnglish(polished(text.en)), "zh-CN": polished(text["zh-CN"]) };
 }
 
 /** polishProblem applies polishText to what a learner reads of a problem; the answer is left to the checker. */

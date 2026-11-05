@@ -7,6 +7,14 @@ const en = (text: string) => polishText(t(text, "中")).en;
 const zh = (text: string) => polishText(t("a", text))["zh-CN"];
 
 describe("polishText", () => {
+  it("drops what a generated step leaves behind", () => {
+    expect(en("Collect: $x = 5$, so $x = 5$. Then stop.")).toBe("Collect: $x = 5$. Then stop.");
+    expect(zh("合并：$x = 5$，所以 $x = 5$。")).toBe("合并：$x = 5$。");
+    expect(en("$x = 5$, so $x = 6$.")).toBe("$x = 5$, so $x = 6$.");
+    expect(en("Solve $3x  = 9$ and $\\sqrt[2]{x}$.")).toBe("Solve $3x = 9$ and $\\sqrt{x}$.");
+    expect(en("He buys $1$ erasers and $1$ digits.")).toBe("He buys $1$ eraser and $1$ digit.");
+  });
+
   it("drops coefficients of 1 in math", () => {
     expect(en("Find $a_n = -1a_{n-1} + 1x^{2}$.")).toBe("Find $a_n = -a_{n-1} + x^{2}$.");
     expect(en("$D(t) = 5 + 1\\cos t$ and $\\frac{4}{1\\pi}$")).toBe("$D(t) = 5 + \\cos t$ and $\\frac{4}{\\pi}$");
