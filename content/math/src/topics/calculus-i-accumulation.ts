@@ -703,6 +703,7 @@ export const theIntegralAsAnAccumulationFunction: TopicDef = {
           wrong: [
             F,
             poly(...p.map((c, i) => [Q.of(c, i + 1), i + 1 === 1 ? "x" : `x^{${i + 1}}`] as const).reverse(), [Fa, ""]),
+            poly(...p.map((c, i) => [Q.of(c, i + 1), i + 1 === 1 ? "x" : `x^{${i + 1}}`] as const).reverse(), [Fa.neg().add(Q.of(a)), ""]),
             pLatex(p),
           ],
           solution: t(

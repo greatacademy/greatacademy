@@ -168,11 +168,11 @@ export const secondDegreeTaylorPolynomials: TopicDef = {
 };
 
 /** behaviors are what a second-degree Taylor polynomial says about f near its center. */
-const behaviors = [
-  t("f has a local minimum at x = a.", "f 在 x = a 处取得局部极小值。"),
-  t("f has a local maximum at x = a.", "f 在 x = a 处取得局部极大值。"),
-  t("f has neither a local maximum nor a local minimum at x = a.", "f 在 x = a 处既无局部极大值也无局部极小值。"),
-] as const;
+const behaviors = (a: number) => [
+  t(`$f$ has a local minimum at $x = ${a}$.`, `$f$ 在 $x = ${a}$ 处取得局部极小值。`),
+  t(`$f$ has a local maximum at $x = ${a}$.`, `$f$ 在 $x = ${a}$ 处取得局部极大值。`),
+  t(`$f$ has neither a local maximum nor a local minimum at $x = ${a}$.`, `$f$ 在 $x = ${a}$ 处既无局部极大值也无局部极小值。`),
+];
 
 /** analyzingSecondDegreeTaylorPolynomials reads derivatives and local behavior from P₂. */
 export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
@@ -242,8 +242,8 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
             `The second-degree Taylor polynomial for $f$ centered at $x = ${a}$ is $P_2(x) = ${p}$. What can you conclude about $f$ at $x = ${a}$?`,
             `$f$ 以 $x = ${a}$ 为中心的二次泰勒多项式为 $P_2(x) = ${p}$。关于 $f$ 在 $x = ${a}$ 处能得出什么结论？`,
           ),
-          behaviors[right],
-          behaviors.filter((_, i) => i !== right),
+          behaviors(a)[right]!,
+          behaviors(a).filter((_, i) => i !== right),
           c1 !== 0
             ? t(
                 `$${nth(1, a)} = ${c1} \\neq 0$, so $x = ${a}$ is not a critical point and there is no local extremum there.`,
@@ -540,9 +540,9 @@ function radiusCase(rng: Rng): { series: string; R: Q; work: Text } {
 
 /** extents are the three ways a power series can converge. */
 const extents = [
-  t("It converges only at x = 0 (R = 0).", "只在 x = 0 处收敛（R = 0）。"),
-  t("It converges for every x (R = ∞).", "对所有 x 都收敛（R = ∞）。"),
-  t("It converges for |x| < R for some finite R > 0.", "存在有限的 R > 0，使它在 |x| < R 时收敛。"),
+  t("It converges only at $x = 0$ ($R = 0$).", "只在 $x = 0$ 处收敛（$R = 0$）。"),
+  t("It converges for every $x$ ($R = \\infty$).", "对所有 $x$ 都收敛（$R = \\infty$）。"),
+  t("It converges for $|x| < R$ for some finite $R > 0$.", "存在有限的 $R > 0$，使它在 $|x| < R$ 时收敛。"),
 ] as const;
 
 /** radiusOfConvergenceOfPowerSeriesCenteredAtTheOrigin applies the ratio test to Σ cₙxⁿ. */

@@ -171,8 +171,8 @@ export const verifyingSolutionsOfDifferentialEquations: TopicDef = {
           solutionAnswers[works ? 0 : 1],
           [solutionAnswers[works ? 1 : 0]],
           t(
-            `$xy' = x \\cdot ${c * k}x^{${k - 1}} = ${c * k}x^{${k}}$ and $${m}y = ${c * m}x^{${k}}$. ${works ? "They agree, so $y$ is a solution." : "They differ, so $y$ is not a solution."}`,
-            `$xy' = x \\cdot ${c * k}x^{${k - 1}} = ${c * k}x^{${k}}$，而 $${m}y = ${c * m}x^{${k}}$。${works ? "两者相等，所以 $y$ 是解。" : "两者不等，所以 $y$ 不是解。"}`,
+            `$xy' = x \\cdot ${c * k}${k === 2 ? "x" : `x^{${k - 1}}`} = ${c * k}x^{${k}}$ and $${m}y = ${c * m}x^{${k}}$. ${works ? "They agree, so $y$ is a solution." : "They differ, so $y$ is not a solution."}`,
+            `$xy' = x \\cdot ${c * k}${k === 2 ? "x" : `x^{${k - 1}}`} = ${c * k}x^{${k}}$，而 $${m}y = ${c * m}x^{${k}}$。${works ? "两者相等，所以 $y$ 是解。" : "两者不等，所以 $y$ 不是解。"}`,
           ),
         );
       },
@@ -250,7 +250,7 @@ export const solvingFirstOrderOdesUsingDirectIntegration: TopicDef = {
           answer,
           antiderivative: true,
           prefix: "y =",
-          wrong: [plusC([a * n, `x^{${n - 1}}`], [b, ""]), plusC([a, `x^{${n + 1}}`], [b, "x^{2}"], [c, "x"])],
+          wrong: [plusC([a * n, n === 2 ? "x" : `x^{${n - 1}}`], [b, ""]), plusC([a, `x^{${n + 1}}`], [b, "x^{2}"], [c, "x"])],
           solution: t(
             `Integrate term by term: $y = \\int (${rhs}) \\, dx = ${answer}$.`,
             `逐项积分：$y = \\int (${rhs}) \\, dx = ${answer}$。`,
@@ -270,7 +270,7 @@ export const solvingFirstOrderOdesUsingDirectIntegration: TopicDef = {
         const b = rng.int(-9, 9);
         const x0 = rng.int(-3, 3);
         const y0 = rng.int(-9, 9);
-        const x1 = rng.int(-4, 4);
+        const x1 = rng.pick([-4, -3, -2, -1, 0, 1, 2, 3, 4].filter((v) => v !== x0));
         const F = (x: number) => Q.of(a * x * x, 2).add(Q.of(b * x));
         const C = Q.of(y0).sub(F(x0));
         const answer = F(x1).add(C);

@@ -247,7 +247,7 @@ function substitutionChoice(rng: Rng): Choice {
   switch (rng.int(0, 5)) {
     case 0: {
       const u = poly([1, "x^{3}"], [b, ""]);
-      return { integrand: `x^{2}(${u})^{${m}}`, u, wrong: ["x^{2}", `(${u})^{${m}}`, "x^{3}"], du: "3x^{2} \\, dx" };
+      return { integrand: `x^{2}(${u})^{${m}}`, u, wrong: ["x^{2}", "x", poly([1, "x^{2}"], [b, ""])], du: "3x^{2} \\, dx" };
     }
     case 1: {
       const p = rng.nonZero(-6, 6);
@@ -255,29 +255,34 @@ function substitutionChoice(rng: Rng): Choice {
       return {
         integrand: `\\frac{${linear(2, p)}}{${u}}`,
         u,
-        wrong: [linear(2, p), "x^{2}", `\\frac{1}{${u}}`],
+        wrong: [linear(2, p), "x^{2}", "x"],
         du: `(${linear(2, p)}) \\, dx`,
       };
     }
     case 2: {
       const a = rng.nonZero(-4, 4);
       const u = poly([a, "x^{2}"]);
-      return { integrand: `xe^{${u}}`, u, wrong: ["x", `e^{${u}}`, "e^{x}"], du: `${poly([2 * a, "x"])} \\, dx` };
+      return { integrand: `xe^{${u}}`, u, wrong: ["x", poly([2 * a, "x"]), "e^{x}"], du: `${poly([2 * a, "x"])} \\, dx` };
     }
     case 3:
-      return { integrand: `\\cos x \\sin^{${m}} x`, u: "\\sin x", wrong: ["\\cos x", `\\sin^{${m}} x`, "x"], du: "\\cos x \\, dx" };
+      return {
+        integrand: `\\cos x \\sin^{${2 * rng.int(1, 3)}} x`,
+        u: "\\sin x",
+        wrong: ["\\cos x", "\\tan x", "x"],
+        du: "\\cos x \\, dx",
+      };
     case 4: {
       const a = rng.int(2, 6);
       return {
         integrand: `\\frac{(\\ln x)^{${m}}}{${a}x}`,
         u: "\\ln x",
-        wrong: [`${a}x`, "\\frac{1}{x}", `(\\ln x)^{${m}}`],
+        wrong: [`${a}x`, "\\frac{1}{x}", `x^{${m}}`],
         du: "\\frac{1}{x} \\, dx",
       };
     }
     default: {
       const u = poly([1, "x^{2}"], [Math.abs(b), ""]);
-      return { integrand: `x\\sqrt{${u}}`, u, wrong: ["x", `\\sqrt{${u}}`, "x^{2}"], du: "2x \\, dx" };
+      return { integrand: `x\\sqrt{${u}}`, u, wrong: ["x", "\\sqrt{x}", `x + ${Math.abs(b)}`], du: "2x \\, dx" };
     }
   }
 }

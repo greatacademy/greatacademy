@@ -237,8 +237,8 @@ const washerFromDrawing: KnowledgePointDef = {
     return pickChoice(
       rng,
       t(
-        `The shaded region between $y = ${outer}$ and $y = ${inner}$ turns about the x-axis. Which integral gives the volume?`,
-        `$y = ${outer}$ 和 $y = ${inner}$ 之间的阴影区域绕 x 轴旋转。哪个积分给出体积？`,
+        `The shaded region between $y = ${outer}$ and $y = ${inner}$ turns about the $x$-axis. Which integral gives the volume?`,
+        `$y = ${outer}$ 和 $y = ${inner}$ 之间的阴影区域绕 $x$ 轴旋转。哪个积分给出体积？`,
       ),
       math(volume(`\\left(${squared(outer)} - ${squared(inner)}\\right)`)),
       [
@@ -348,8 +348,8 @@ const sequenceFromPlot: KnowledgePointDef = {
         { xMin: -1, xMax: 9, yMin: -5, yMax: 5, labelEvery: 2 },
         dots.map(([x, y]): PlaneMark => ({ kind: "point", at: [x, y / scale], accent: true })),
         t(
-          `Nine dots of a geometric sequence with first term ${a} and common ratio ${kind.r}. The vertical axis is not to scale.`,
-          `首项为 ${a}、公比为 ${kind.r} 的几何数列的九个点。纵轴未按比例。`,
+          `Nine dots at heights ${dots.map(([, y]) => Math.round(y * 100) / 100).join(", ")}. The vertical axis is not to scale.`,
+          `九个点，高度依次为 ${dots.map(([, y]) => Math.round(y * 100) / 100).join("、")}。纵轴未按比例。`,
         ),
       ),
     );
@@ -439,8 +439,8 @@ const seriesSumFromPlot: KnowledgePointDef = {
         { xMin: -1, xMax: 10, yMin: -1, yMax: sum + 2 },
         dots.map(([x, y]): PlaneMark => ({ kind: "point", at: [x, y], accent: true })),
         t(
-          `Nine rising dots that start at height ${Math.round(first.toNumber() * 100) / 100} and level off at height ${sum}.`,
-          `九个上升的点，从高度 ${Math.round(first.toNumber() * 100) / 100} 开始，逐渐靠近高度 ${sum}。`,
+          `Nine rising dots that start at height ${Math.round(first.toNumber() * 100) / 100}, with shrinking gaps between them.`,
+          `九个上升的点，从高度 ${Math.round(first.toNumber() * 100) / 100} 开始，相邻点的间距越来越小。`,
         ),
       ),
     );
@@ -1261,8 +1261,8 @@ const polarFromPoint: KnowledgePointDef = {
       math(`\\left(${r}, ${tex}\\right)`),
       [math(`\\left(${r}, ${other[0]}\\right)`), math(`\\left(${2 * size}, ${tex}\\right)`), math(`\\left(${r}, ${other[1]}\\right)`)],
       t(
-        `The point is at (${x}, ${y}), so $r = ${r}$. Its position relative to the axes gives the angle $${tex}$.`,
-        `这个点在 (${x}, ${y})，所以 $r = ${r}$。由它相对坐标轴的位置得到角 $${tex}$。`,
+        `The point is at $(${x}, ${y})$, so $r = ${r}$. Its position relative to the axes gives the angle $${tex}$.`,
+        `这个点在 $(${x}, ${y})$，所以 $r = ${r}$。由它相对坐标轴的位置得到角 $${tex}$。`,
       ),
       drawn(
         square(6),

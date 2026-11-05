@@ -149,8 +149,8 @@ const tangentSlope = point(
       answer,
       [Q.of(k, 2 * t0), Q.of(-2 * t0, k), 2 * t0, Q.of(t0, k)],
       [
-        `$P = ${at(P)}$, so $${xt} = ${P[0]}$ gives $t = ${t0}$. Since $r'(t) = (${k},\\ 2t)$, the slope is $\\frac{2(${t0})}{${k}} = ${answer.toLatex()}$.`,
-        `$P = ${at(P)}$，由 $${xt} = ${P[0]}$ 得 $t = ${t0}$。因为 $r'(t) = (${k},\\ 2t)$，斜率为 $\\frac{2(${t0})}{${k}} = ${answer.toLatex()}$。`,
+        `$P = ${at(P)}$, so $${xt} = ${P[0]}$${k === 1 ? "" : ` gives $t = ${t0}$`}. Since $r'(t) = (${k},\\ 2t)$, the slope is $\\frac{2(${t0})}{${k}} = ${answer.toLatex()}$.`,
+        `$P = ${at(P)}$，${k === 1 ? `即 $t = ${t0}$` : `由 $${xt} = ${P[0]}$ 得 $t = ${t0}$`}。因为 $r'(t) = (${k},\\ 2t)$，斜率为 $\\frac{2(${t0})}{${k}} = ${answer.toLatex()}$。`,
       ],
       fig(
         { xMin: -10, xMax: 10, yMin: -2, yMax: 11, labelEvery: 2 },
@@ -1117,8 +1117,8 @@ const lagrangeLine = point(
           ...levels.map((level): PlaneMark => ({ kind: "contour", f: circle, level, dashed: true })),
         ],
         [
-          `A line through ${at([p, q])} perpendicular to the segment from the origin to it, and dashed circles about the origin.`,
-          `过 ${at([p, q])} 且与原点到该点的线段垂直的直线，以及以原点为圆心的虚线圆。`,
+          `The line through ${at([p, q])} and ${at([p + q, q - p])}, and dashed circles about the origin.`,
+          `过 ${at([p, q])} 和 ${at([p + q, q - p])} 的直线，以及以原点为圆心的虚线圆。`,
         ],
       ),
     );

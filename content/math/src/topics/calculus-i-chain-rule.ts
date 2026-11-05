@@ -100,13 +100,23 @@ export const theChainRuleForDifferentiation: TopicDef = {
         const k = rng.pick([1, 2, 3, 4, 6, -1, -2]);
         if (root) {
           const f = poly([k, `\\sqrt{${inner.g}}`]);
-          const top = inner.coef !== undefined ? String(k * inner.coef) : poly([k * splitMonomial(inner.dg)[0], "x"]);
-          const answer = `\\frac{${top}}{2\\sqrt{${inner.g}}}`;
+          const whole = k * (inner.coef ?? splitMonomial(inner.dg)[0]);
+          const v = inner.coef !== undefined ? "" : "x";
+          const num = (m: number) => (m === 1 && v ? v : `${m}${v}`);
+          const sign = whole < 0 ? "-" : "";
+          const size = Math.abs(whole);
+          const top = `${sign}${num(size)}`;
+          const answer =
+            size % 2 === 0 ? `${sign}\\frac{${num(size / 2)}}{\\sqrt{${inner.g}}}` : `${sign}\\frac{${num(size)}}{2\\sqrt{${inner.g}}}`;
           return functionProblem({
             prompt: t(`Find $f'(x)$ for $f(x) = ${f}$.`, `设 $f(x) = ${f}$。求 $f'(x)$。`),
             answer,
             prefix: "f'(x) =",
-            wrong: [fracL(k, `2\\sqrt{${inner.g}}`), `\\frac{${top}}{\\sqrt{${inner.g}}}`, `${top === "1" ? "" : top}\\sqrt{${inner.g}}`],
+            wrong: [
+              k % 2 === 0 ? fracL(k / 2, `\\sqrt{${inner.g}}`) : fracL(k, `2\\sqrt{${inner.g}}`),
+              `${sign}\\frac{${num(size)}}{\\sqrt{${inner.g}}}`,
+              `${top === "1" ? "" : top === "-1" ? "-" : top}\\sqrt{${inner.g}}`,
+            ],
             solution: t(
               `$f(x) = ${poly([k, `(${inner.g})^{\\frac{1}{2}}`])}$, so$$f'(x) = ${poly([Q.of(k, 2), `(${inner.g})^{-\\frac{1}{2}}`])} \\cdot ${inner.dg} = ${answer}.$$`,
               `$f(x) = ${poly([k, `(${inner.g})^{\\frac{1}{2}}`])}$，所以$$f'(x) = ${poly([Q.of(k, 2), `(${inner.g})^{-\\frac{1}{2}}`])} \\cdot ${inner.dg} = ${answer}.$$`,
@@ -279,8 +289,8 @@ export const theChainRuleWithLogarithmicFunctions: TopicDef = {
           positive: true,
           wrong: [fracL(k, pLatex(g)), `\\frac{${k}}{${pLatex(dg)}}`, poly([k, `\\frac{1}{${pLatex(dg)}}`])],
           solution: t(
-            `With $g(x) = ${pLatex(g)}$, $g'(x) = ${pLatex(dg)}$, so$$f'(x) = ${scale}\\frac{${pLatex(dg)}}{${pLatex(g)}} = ${answer}.$$`,
-            `取 $g(x) = ${pLatex(g)}$，$g'(x) = ${pLatex(dg)}$，所以$$f'(x) = ${scale}\\frac{${pLatex(dg)}}{${pLatex(g)}} = ${answer}.$$`,
+            `With $g(x) = ${pLatex(g)}$, $g'(x) = ${pLatex(dg)}$, so$$f'(x) = ${scale}\\frac{${pLatex(dg)}}{${pLatex(g)}}${Math.abs(k) === 1 ? "" : ` = ${answer}`}.$$`,
+            `取 $g(x) = ${pLatex(g)}$，$g'(x) = ${pLatex(dg)}$，所以$$f'(x) = ${scale}\\frac{${pLatex(dg)}}{${pLatex(g)}}${Math.abs(k) === 1 ? "" : ` = ${answer}`}.$$`,
           ),
         });
       },
@@ -391,6 +401,7 @@ export const theChainRuleWithTrigonometricFunctions: TopicDef = {
         const k = rng.pick([1, 1, 2, 3, -1, -2]);
         const pow = (m: number) => (m === 1 ? `${o.f} x` : `${o.f}^{${m}}x`);
         const dPart = o.f === "\\tan" ? "\\sec^{2}x" : `${o.d[1]} x`;
+        const dFactor = o.d[0] < 0 ? `\\left(${poly([o.d[0], dPart])}\\right)` : poly([o.d[0], dPart]);
         const answer = poly([k * n * o.d[0], `${pow(n - 1)}${dPart}`]);
         return functionProblem({
           prompt: t(`Find $f'(x)$ for $f(x) = ${poly([k, pow(n)])}$.`, `设 $f(x) = ${poly([k, pow(n)])}$。求 $f'(x)$。`),
@@ -402,8 +413,8 @@ export const theChainRuleWithTrigonometricFunctions: TopicDef = {
             poly([-k * n * o.d[0], `${pow(n - 1)}${dPart}`]),
           ],
           solution: t(
-            `$f(x) = ${poly([k, `(${o.f} x)^{${n}}`])}$; the outer function is a power and the inner function is $${o.f} x$, so$$f'(x) = ${poly([k * n, `(${o.f} x)^{${n - 1}}`])} \\cdot ${poly([o.d[0], dPart])} = ${answer}.$$`,
-            `$f(x) = ${poly([k, `(${o.f} x)^{${n}}`])}$；外层函数是幂函数，内层函数是 $${o.f} x$，所以$$f'(x) = ${poly([k * n, `(${o.f} x)^{${n - 1}}`])} \\cdot ${poly([o.d[0], dPart])} = ${answer}.$$`,
+            `$f(x) = ${poly([k, `(${o.f} x)^{${n}}`])}$; the outer function is a power and the inner function is $${o.f} x$, so$$f'(x) = ${poly([k * n, `(${o.f} x)^{${n - 1}}`])} \\cdot ${dFactor} = ${answer}.$$`,
+            `$f(x) = ${poly([k, `(${o.f} x)^{${n}}`])}$；外层函数是幂函数，内层函数是 $${o.f} x$，所以$$f'(x) = ${poly([k * n, `(${o.f} x)^{${n - 1}}`])} \\cdot ${dFactor} = ${answer}.$$`,
           ),
         });
       },
@@ -620,8 +631,8 @@ export const calculatingDerivativesFromGraphsUsingTheChainRule: TopicDef = {
             answer,
             wrong: [Q.of(n).mul(s.slope.pow(n - 1)), Q.of(n).mul(s.value.pow(n - 1)), s.value.pow(n)].filter((w) => !w.eq(answer)),
             solution: t(
-              `From the graph, $f(${a}) = ${s.value.toLatex()}$ and $f'(${a}) = ${s.slope.toLatex()}$. So$$h'(${a}) = ${n}[f(${a})]^{${n - 1}}f'(${a}) = ${n} \\cdot ${par(s.value)}^{${n - 1}} \\cdot ${par(s.slope)} = ${answer.toLatex()}.$$`,
-              `由图像，$f(${a}) = ${s.value.toLatex()}$，$f'(${a}) = ${s.slope.toLatex()}$。所以$$h'(${a}) = ${n}[f(${a})]^{${n - 1}}f'(${a}) = ${n} \\cdot ${par(s.value)}^{${n - 1}} \\cdot ${par(s.slope)} = ${answer.toLatex()}.$$`,
+              `From the graph, $f(${a}) = ${s.value.toLatex()}$ and $f'(${a}) = ${s.slope.toLatex()}$. So$$h'(${a}) = ${n}${n === 2 ? `f(${a})` : `[f(${a})]^{${n - 1}}`}f'(${a}) = ${n} \\cdot ${n === 2 ? par(s.value) : `\\left(${s.value.toLatex()}\\right)^{${n - 1}}`} \\cdot ${par(s.slope)} = ${answer.toLatex()}.$$`,
+              `由图像，$f(${a}) = ${s.value.toLatex()}$，$f'(${a}) = ${s.slope.toLatex()}$。所以$$h'(${a}) = ${n}${n === 2 ? `f(${a})` : `[f(${a})]^{${n - 1}}`}f'(${a}) = ${n} \\cdot ${n === 2 ? par(s.value) : `\\left(${s.value.toLatex()}\\right)^{${n - 1}}`} \\cdot ${par(s.slope)} = ${answer.toLatex()}.$$`,
             ),
           }),
           figure: polylineFigure(ys),

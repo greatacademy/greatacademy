@@ -176,7 +176,9 @@ const limitAcrossTwoFormulas = point(
       prompt: t(`Let $f(x) = ${f}$. Does $\\lim_{x \\to ${a}} f(x)$ exist?`, `设 $f(x) = ${f}$。$\\lim_{x \\to ${a}} f(x)$ 存在吗？`),
       holds,
       yes: t(`the left and right limits are both $${L}$`, `左极限和右极限都是 $${L}$`),
-      no: t(`the left limit is $${L}$ and the right limit is $${R}$`, `左极限是 $${L}$，右极限是 $${R}$`),
+      no: holds
+        ? t(`$f(${a}) = ${v}$ differs from the values $f$ approaches`, `$f(${a}) = ${v}$ 与 $f$ 趋近的值不同`)
+        : t(`the left limit is $${L}$ and the right limit is $${R}$`, `左极限是 $${L}$，右极限是 $${R}$`),
       yesWrong: t(`$f(${a})$ is defined and equals $${v}$`, `$f(${a})$ 有定义，等于 $${v}$`),
       noWrong: t(`$f$ is given by different formulas on the two sides`, `$f$ 在两侧由不同的表达式给出`),
       solution: t(
@@ -288,7 +290,8 @@ const twoSidedReciprocal = point(
     const c = nz(rng, 7);
     const n = rng.int(1, 4);
     const b = rng.int(-4, 4);
-    const f = poly([1, `\\frac{${c}}{${n === 1 ? minus(a) : `(${minus(a)})^{${n}}`}}`], [b, ""]);
+    const base = a === 0 ? "x" : `(${minus(a)})`;
+    const f = poly([1, `\\frac{${c}}{${n === 1 ? minus(a) : `${base}^{${n}}`}}`], [b, ""]);
     const pos: Pair = ["$\\infty$", "$\\infty$"];
     const neg: Pair = ["$-\\infty$", "$-\\infty$"];
     const none: Pair = ["It does not exist, as the sides go to opposite infinities", "不存在，因为两侧趋于相反的无穷"];
@@ -566,7 +569,7 @@ const countingAsymptotes = point(
       answer,
       [3, 0, 1, 2],
       [
-        `Compare the powers, top over bottom: ${lines}. An asymptote occurs where the bottom power is larger, which happens $${answer}$ times.`,
+        `Compare the powers, top over bottom: ${lines}. An asymptote occurs where the bottom power is larger, and the number of such points is $${answer}$.`,
         `比较次数（分子次数 / 分母次数）：${linesZh}。分母次数更大的地方才有渐近线，这样的点有 $${answer}$ 个。`,
       ],
     );

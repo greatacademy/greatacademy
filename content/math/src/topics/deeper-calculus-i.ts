@@ -395,14 +395,14 @@ const troughDepth: KnowledgePointDef = {
     const answer = Q.of(R * h, L * w * y);
     return numberProblem({
       prompt: t(
-        `A trough is ${L} m long, and its cross section is an isosceles triangle, vertex down, ${w} m wide at the top and ${h} m deep. Water flows in at ${R} m³/min. How fast is the depth rising, in m/min, when the depth is ${y} m?`,
-        `水槽长 ${L} m，横截面是顶点朝下的等腰三角形，顶部宽 ${w} m，深 ${h} m。水以 ${R} m³/min 的速率流入。当水深为 ${y} m 时，水深上升的速率是多少 m/min？`,
+        `A trough is $${L}$ m long, and its cross section is an isosceles triangle, vertex down, $${w}$ m wide at the top and $${h}$ m deep. Water flows in at $${R}$ m³/min. How fast is the depth rising, in m/min, when the depth is $${y}$ m?`,
+        `水槽长 $${L}$ m，横截面是顶点朝下的等腰三角形，顶部宽 $${w}$ m，深 $${h}$ m。水以 $${R}$ m³/min 的速率流入。当水深为 $${y}$ m 时，水深上升的速率是多少 m/min？`,
       ),
       answer,
       wrong: [Q.of(R * h, 2 * L * w * y), Q.of(R, L * w), Q.of(R * h, L * w)],
       solution: t(
-        `At depth $y$ the surface is $\\frac{${w}}{${h}}y$ wide, so $V = \\frac{1}{2} \\cdot \\frac{${w}}{${h}}y \\cdot y \\cdot ${L} = \\frac{${L * w}}{${2 * h}}y^2$. Differentiating gives $\\frac{dV}{dt} = \\frac{${L * w}}{${h}}y\\frac{dy}{dt}$. With $y = ${y}$ and $\\frac{dV}{dt} = ${R}$, $\\frac{dy}{dt} = ${answer.toLatex()}$.`,
-        `水深为 $y$ 时水面宽 $\\frac{${w}}{${h}}y$，所以 $V = \\frac{1}{2} \\cdot \\frac{${w}}{${h}}y \\cdot y \\cdot ${L} = \\frac{${L * w}}{${2 * h}}y^2$。求导得 $\\frac{dV}{dt} = \\frac{${L * w}}{${h}}y\\frac{dy}{dt}$。代入 $y = ${y}$ 和 $\\frac{dV}{dt} = ${R}$，得 $\\frac{dy}{dt} = ${answer.toLatex()}$。`,
+        `At depth $y$ the surface is $${poly([Q.of(w, h), "y"])}$ wide, so $V = \\frac{1}{2} \\cdot ${poly([Q.of(w, h), "y"])} \\cdot y \\cdot ${L} = ${poly([Q.of(L * w, 2 * h), "y^2"])}$. Differentiating gives $\\frac{dV}{dt} = ${poly([Q.of(L * w, h), "y"])}\\frac{dy}{dt}$. With $y = ${y}$ and $\\frac{dV}{dt} = ${R}$, $\\frac{dy}{dt} = ${answer.toLatex()}$.`,
+        `水深为 $y$ 时水面宽 $${poly([Q.of(w, h), "y"])}$，所以 $V = \\frac{1}{2} \\cdot ${poly([Q.of(w, h), "y"])} \\cdot y \\cdot ${L} = ${poly([Q.of(L * w, 2 * h), "y^2"])}$。求导得 $\\frac{dV}{dt} = ${poly([Q.of(L * w, h), "y"])}\\frac{dy}{dt}$。代入 $y = ${y}$ 和 $\\frac{dV}{dt} = ${R}$，得 $\\frac{dy}{dt} = ${answer.toLatex()}$。`,
       ),
     });
   },
@@ -425,14 +425,14 @@ const coneWithALeak: KnowledgePointDef = {
     const answer = net.add(Q.of(leak));
     return numberProblem({
       prompt: t(
-        `A conical tank, vertex down, has top radius ${R} m and height ${H} m. Water leaks out at $${leak}\\pi$ m³/min while being pumped in. At depth ${y} m, the depth is rising at $${rate.toLatex()}$ m/min. The inflow is $c\\pi$ m³/min. Find $c$.`,
-        `圆锥形水箱顶点朝下，顶部半径 ${R} m，高 ${H} m。水以 $${leak}\\pi$ m³/min 的速率渗漏，同时被泵入。水深 ${y} m 时，水深正以 $${rate.toLatex()}$ m/min 的速率上升。流入量是 $c\\pi$ m³/min。求 $c$。`,
+        `A conical tank, vertex down, has top radius $${R}$ m and height $${H}$ m. Water leaks out at $${leak}\\pi$ m³/min while being pumped in. At depth $${y}$ m, the depth is rising at $${rate.toLatex()}$ m/min. The inflow is $c\\pi$ m³/min. Find $c$.`,
+        `圆锥形水箱顶点朝下，顶部半径 $${R}$ m，高 $${H}$ m。水以 $${leak}\\pi$ m³/min 的速率渗漏，同时被泵入。水深 $${y}$ m 时，水深正以 $${rate.toLatex()}$ m/min 的速率上升。流入量是 $c\\pi$ m³/min。求 $c$。`,
       ),
       answer,
       wrong: [net, net.sub(Q.of(leak)), Q.of(leak).sub(net)],
       solution: t(
-        `The surface radius at depth $y$ is $\\frac{${R}}{${H}}y$, so $\\frac{dV}{dt} = \\pi\\left(\\frac{${R}}{${H}}\\right)^2y^2\\frac{dy}{dt} = ${net.toLatex()}\\pi$. The inflow is this plus the leak, so $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$.`,
-        `水深为 $y$ 时水面半径是 $\\frac{${R}}{${H}}y$，所以 $\\frac{dV}{dt} = \\pi\\left(\\frac{${R}}{${H}}\\right)^2y^2\\frac{dy}{dt} = ${net.toLatex()}\\pi$。流入量等于它加上渗漏量，所以 $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$。`,
+        `The surface radius at depth $y$ is $${poly([Q.of(R, H), "y"])}$, so $\\frac{dV}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2y^2\\frac{dy}{dt} = ${net.toLatex()}\\pi$. The inflow is this plus the leak, so $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$.`,
+        `水深为 $y$ 时水面半径是 $${poly([Q.of(R, H), "y"])}$，所以 $\\frac{dV}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2y^2\\frac{dy}{dt} = ${net.toLatex()}\\pi$。流入量等于它加上渗漏量，所以 $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$。`,
       ),
     });
   },
@@ -542,8 +542,9 @@ const cubicFromExtrema: KnowledgePointDef = {
     "三次函数的临界点是导数的根。如果 $f(x) = x^3 + ax^2 + bx + c$ 的临界点是 $p$ 和 $q$，则 $f'(x) = 3(x - p)(x - q)$。展开后与 $3x^2 + 2ax + b$ 比较，就得到系数。常数 $c$ 不影响极值点的位置。",
   ),
   generate(rng) {
-    const p = rng.int(-6, 5);
-    const q = p + rng.int(1, 6);
+    const p = nonzero(rng, 6);
+    let q = p + rng.int(1, 6);
+    while (q === 0 || p + q === 0) q += 1;
     const askA = rng.int(0, 1) === 0;
     const a = Q.of(-3 * (p + q), 2);
     const b = 3 * p * q;
@@ -571,8 +572,9 @@ const quarticFromInflections: KnowledgePointDef = {
     "四次函数的拐点是二阶导数变号的地方，所以它的横坐标是 $f''$ 的单根。如果 $f(x) = x^4 + ax^3 + bx^2$ 的拐点在 $p$ 和 $q$，则 $f''(x) = 12(x - p)(x - q)$。与 $12x^2 + 6ax + 2b$ 比较，就得到系数。",
   ),
   generate(rng) {
-    const p = rng.int(-6, 5);
-    const q = p + rng.int(1, 6);
+    const p = nonzero(rng, 6);
+    let q = p + rng.int(1, 6);
+    while (q === 0 || p + q === 0) q += 1;
     const askA = rng.int(0, 1) === 0;
     const a = -2 * (p + q);
     const b = 6 * p * q;
@@ -635,8 +637,8 @@ const priceForMostRevenue: KnowledgePointDef = {
     const answer = p + k;
     return numberProblem({
       prompt: t(
-        `A shop sells ${n} items a week at $${p}$ dollars each. Every dollar added to the price loses ${m} sales a week. Which price gives the greatest weekly revenue, in dollars?`,
-        `商店以每件 $${p}$ 美元的价格每周售出 ${n} 件。价格每提高一美元，每周少售出 ${m} 件。什么价格（美元）使每周收入最大？`,
+        `A shop sells $${n}$ items a week at $${p}$ dollars each. Every dollar added to the price loses $${m}$ ${m === 1 ? "sale" : "sales"} a week. Which price gives the greatest weekly revenue, in dollars?`,
+        `商店以每件 $${p}$ 美元的价格每周售出 $${n}$ 件。价格每提高一美元，每周少售出 $${m}$ 件。什么价格（美元）使每周收入最大？`,
       ),
       answer,
       form: "integer",
@@ -1316,8 +1318,8 @@ const powerOfTrigOfMultiple: KnowledgePointDef = {
       form: "integer",
       wrong: [big * factor, 2 * answer, -answer, big * b, 3 * answer],
       solution: t(
-        `Let $u = ${u}$, so $u = \\frac{\\pi}{4}$ at this point. The derivative of the function of $u$ is $${steps}$ there, without the constant. Multiplying by $${big}$ and by $\\frac{du}{dx} = ${b}$ gives $${answer}$.`,
-        `令 $u = ${u}$，此时 $u = \\frac{\\pi}{4}$。不计常数时，关于 $u$ 的导数在此处是 $${steps}$。再乘以 $${big}$ 和 $\\frac{du}{dx} = ${b}$，得 $${answer}$。`,
+        `Let $u = ${u}$, so $u = \\frac{\\pi}{4}$ at this point. The derivative of $${outer} u$ with respect to $u$ is $${steps}$ there. Multiplying by the coefficient $${big}$ and by $\\frac{du}{dx} = ${b}$ gives $${answer}$.`,
+        `令 $u = ${u}$，此时 $u = \\frac{\\pi}{4}$。$${outer} u$ 关于 $u$ 的导数在此处是 $${steps}$。再乘以系数 $${big}$ 和 $\\frac{du}{dx} = ${b}$，得 $${answer}$。`,
       ),
     });
   },
@@ -2443,8 +2445,8 @@ const boatOnARope: KnowledgePointDef = {
     const answer = Q.of(s * r, x);
     return numberProblem({
       prompt: t(
-        `A rope runs from a boat to a pulley ${h} m above the level of the boat. The rope is pulled in at ${r} m/s. How fast, in m/s, is the boat moving horizontally when ${s} m of rope is out?`,
-        `一根绳子从船连到比船高 ${h} 米的滑轮。绳子以每秒 ${r} 米的速度被拉进。当绳子放出 ${s} 米时，船的水平速度是每秒多少米？`,
+        `A rope runs from a boat to a pulley $${h}$ m above the level of the boat. The rope is pulled in at $${r}$ m/s. How fast, in m/s, is the boat moving horizontally when $${s}$ m of rope is out?`,
+        `一根绳子从船连到比船高 $${h}$ 米的滑轮。绳子以每秒 $${r}$ 米的速度被拉进。当绳子放出 $${s}$ 米时，船的水平速度是每秒多少米？`,
       ),
       answer,
       wrong: [Q.of(r), Q.of(x * r, s), Q.of(h * r, x), Q.of(s * r, h)],

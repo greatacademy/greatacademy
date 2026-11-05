@@ -93,13 +93,14 @@ export const interpretingTheMeaningOfTheDerivativeInContext: TopicDef = {
         const c = rng.pick(contexts);
         const a = rng.int(1, 12);
         const per = (x: Context) => t(`${x.out.en} per ${x.one.en}`, `${x.out["zh-CN"]}每${x.one["zh-CN"]}`);
+        const oneOut = c.out.en === "people" ? "person" : c.out.en === "degrees Celsius" ? "degree Celsius" : c.out.en.replace(/s$/, "");
         return oneOf(
           rng,
           t(`${setting(c).en} What are the units of $${c.f}'(${a})$?`, `${setting(c)["zh-CN"]}$${c.f}'(${a})$ 的单位是什么？`),
           per(c),
           [
             c.out,
-            t(`${c.one.en} per ${c.out.en.replace(/s$/, "")}`, `${c.one["zh-CN"]}每${c.out["zh-CN"]}`),
+            t(`${c.one.en} per ${oneOut}`, `${c.one["zh-CN"]}每${c.out["zh-CN"]}`),
             t(`${c.out.en} per ${c.one.en} per ${c.one.en}`, `${c.out["zh-CN"]}每${c.one["zh-CN"]}的平方`),
           ],
           t(
@@ -517,6 +518,7 @@ export const introductionToRelatedRates: TopicDef = {
         const s = rng.nonZero(-20, 20);
         const d = pAt(pDer(p), x0);
         const answer = Q.of(s, d);
+        const dText = d === 1 ? "" : d === -1 ? "-" : `${d}`;
         return numberProblem({
           prompt: t(
             `$x$ and $y$ are functions of $t$ with $y = ${pLatex(p)}$. Find $\\frac{dx}{dt}$ when $x = ${x0}$ and $\\frac{dy}{dt} = ${s}$.`,
@@ -525,8 +527,8 @@ export const introductionToRelatedRates: TopicDef = {
           answer,
           wrong: [Q.of(s * d), Q.of(d, s), answer.neg()].filter((w) => !w.eq(answer)),
           solution: t(
-            `$\\frac{dy}{dt} = (${pLatex(pDer(p))})\\frac{dx}{dt}$, so $${s} = ${d}\\frac{dx}{dt}$ and $\\frac{dx}{dt} = ${answer.toLatex()}$.`,
-            `$\\frac{dy}{dt} = (${pLatex(pDer(p))})\\frac{dx}{dt}$，所以 $${s} = ${d}\\frac{dx}{dt}$，$\\frac{dx}{dt} = ${answer.toLatex()}$。`,
+            `$\\frac{dy}{dt} = (${pLatex(pDer(p))})\\frac{dx}{dt}$, so $${s} = ${dText}\\frac{dx}{dt}$ and $\\frac{dx}{dt} = ${answer.toLatex()}$.`,
+            `$\\frac{dy}{dt} = (${pLatex(pDer(p))})\\frac{dx}{dt}$，所以 $${s} = ${dText}\\frac{dx}{dt}$，$\\frac{dx}{dt} = ${answer.toLatex()}$。`,
           ),
         });
       },

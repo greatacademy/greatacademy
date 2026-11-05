@@ -993,8 +993,8 @@ export const limitsOfReciprocalFunctions: TopicDef = {
           answer,
           [Q.zero, Q.of(c)],
           t(
-            `$${den}$ is a tiny ${n % 2 === 0 ? "positive number on both sides" : "number, negative on the left and positive on the right"} of $${h}$, and $k = ${k}$. So the fraction tends to $${infL(leftSign)}$ from the left and $${infL(rightSign)}$ from the right${side === 0 ? (answer === "dne" ? ": the limit does not exist" : `: the limit is $${infL(leftSign)}$`) : ""}.`,
-            `在 $${h}$ 附近，$${den}$ 是${n % 2 === 0 ? "两侧都为正的很小的数" : "左负右正的很小的数"}，且 $k = ${k}$。所以分式从左侧趋于 $${infL(leftSign)}$，从右侧趋于 $${infL(rightSign)}$${side === 0 ? (answer === "dne" ? "：极限不存在" : `：极限是 $${infL(leftSign)}$`) : ""}。`,
+            `$${den}$ is a tiny ${n % 2 === 0 ? "positive number on both sides" : "number, negative on the left and positive on the right"} of $${h}$, and the numerator is $${k}$. So the fraction tends to $${infL(leftSign)}$ from the left and $${infL(rightSign)}$ from the right${side === 0 ? (answer === "dne" ? ": the limit does not exist" : `: the limit is $${infL(leftSign)}$`) : ""}.`,
+            `在 $${h}$ 附近，$${den}$ 是${n % 2 === 0 ? "两侧都为正的很小的数" : "左负右正的很小的数"}，且分子是 $${k}$。所以分式从左侧趋于 $${infL(leftSign)}$，从右侧趋于 $${infL(rightSign)}$${side === 0 ? (answer === "dne" ? "：极限不存在" : `：极限是 $${infL(leftSign)}$`) : ""}。`,
           ),
           undefined,
           true,
@@ -1572,7 +1572,7 @@ export const limitsOfInverseTrigonometricFunctions: TopicDef = {
         const halfPi = piLatex(a * sign, 2);
         const answer = c === 0 ? halfPi : `${halfPi} ${c > 0 ? "+" : "-"} ${Math.abs(c)}`;
         const coef = a === 1 ? "" : a === -1 ? "-" : `${a}`;
-        const inner = k === 1 ? "x" : k === -1 ? "(-x)" : `${k}x`;
+        const inner = k === 1 ? "x" : k === -1 ? "(-x)" : k < 0 ? `(${k}x)` : `${k}x`;
         const expr = `${coef}\\arctan ${inner}${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}`;
         const target = toPlus ? "\\infty" : "-\\infty";
         const wrongHalf = piLatex(-a * sign, 2);

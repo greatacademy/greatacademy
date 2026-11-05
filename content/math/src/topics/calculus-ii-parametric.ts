@@ -194,8 +194,8 @@ function horizontalOrVerticalTangent(rng: Rng) {
     answer,
     wrong: [r, horizontal ? x0 : y0, k],
     solution: t(
-      `A ${horizontal ? "horizontal" : "vertical"} tangent needs $\\frac{${zero}}{dt} = 0$ with the other derivative non-zero. $\\frac{${zero}}{dt} = 2t ${r < 0 ? "+" : "-"} ${Math.abs(2 * r)}$ is zero at $t = ${r}$, where $\\frac{${horizontal ? "dx" : "dy"}}{dt} = 3t^{2} + ${monotone[1]} > 0$. The point is $(${x0}, ${y0})$, so the answer is $${answer}$.`,
-      `${horizontal ? "水平" : "竖直"}切线要求 $\\frac{${zero}}{dt} = 0$ 且另一个导数不为零。$\\frac{${zero}}{dt} = 2t ${r < 0 ? "+" : "-"} ${Math.abs(2 * r)}$ 在 $t = ${r}$ 时为零，此时 $\\frac{${horizontal ? "dx" : "dy"}}{dt} = 3t^{2} + ${monotone[1]} > 0$。切点为 $(${x0}, ${y0})$，所以答案为 $${answer}$。`,
+      `A ${horizontal ? "horizontal" : "vertical"} tangent needs $\\frac{${zero}}{dt} = 0$ with the other derivative non-zero. $\\frac{${zero}}{dt} = 2t${r === 0 ? "" : ` ${r < 0 ? "+" : "-"} ${Math.abs(2 * r)}`}$ is zero at $t = ${r}$, where $\\frac{${horizontal ? "dx" : "dy"}}{dt} = 3t^{2} + ${monotone[1]} > 0$. The point is $(${x0}, ${y0})$, so the answer is $${answer}$.`,
+      `${horizontal ? "水平" : "竖直"}切线要求 $\\frac{${zero}}{dt} = 0$ 且另一个导数不为零。$\\frac{${zero}}{dt} = 2t${r === 0 ? "" : ` ${r < 0 ? "+" : "-"} ${Math.abs(2 * r)}`}$ 在 $t = ${r}$ 时为零，此时 $\\frac{${horizontal ? "dx" : "dy"}}{dt} = 3t^{2} + ${monotone[1]} > 0$。切点为 $(${x0}, ${y0})$，所以答案为 $${answer}$。`,
     ),
   });
 }

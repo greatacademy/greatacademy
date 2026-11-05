@@ -380,8 +380,8 @@ export const integratingTheReciprocalFunction: TopicDef = {
             plusC(...(extra ? [extra.antiderivative] : []), [Q.of(1, k), "\\ln|x|"]),
           ],
           solution: t(
-            `$\\int \\frac{${k}}{x} \\, dx = ${coef(Q.of(k))}\\ln|x| + C$${extra ? `, and the power term integrates by the power rule` : ""}: $${plusC(...terms)}$.`,
-            `$\\int \\frac{${k}}{x} \\, dx = ${coef(Q.of(k))}\\ln|x| + C$${extra ? "，幂函数项用幂法则积分" : ""}：$${plusC(...terms)}$。`,
+            `Since $\\frac{d}{dx}\\ln|x| = \\frac{1}{x}$, $\\int \\frac{${k}}{x} \\, dx = ${coef(Q.of(k))}\\ln|x| + C$${extra ? `, and the power term integrates by the power rule: $${plusC(...terms)}$` : ""}.`,
+            `由 $\\frac{d}{dx}\\ln|x| = \\frac{1}{x}$，$\\int \\frac{${k}}{x} \\, dx = ${coef(Q.of(k))}\\ln|x| + C$${extra ? `，幂函数项用幂法则积分：$${plusC(...terms)}$` : ""}。`,
           ),
         });
       },
@@ -470,26 +470,27 @@ export const integratingExponentialFunctions: TopicDef = {
         const k = rng.int(1, 12);
         const withPower = rng.bool();
         const p = rng.nonZero(-6, 6);
-        const n = rng.int(1, 4);
+        const n = rng.int(2, 5);
+        const kTimes = k === 1 ? "" : `${k}\\cdot `;
         const shown =
           `${k === 1 ? "" : k}\\cdot ${base}^{x}${withPower ? ` ${p < 0 ? "-" : "+"} ${Math.abs(p) === 1 ? "" : Math.abs(p)}x^{${n}}` : ""}`.replace(
             /^\\cdot /,
             "",
           );
         const integrand = withPower ? `(${shown})` : shown;
-        const answer = `\\frac{${k}\\cdot ${base}^{x}}{\\ln ${base}}${withPower ? ` ${p < 0 ? "-" : "+"} ${Q.of(Math.abs(p), n + 1).toLatex()}x^{${n + 1}}` : ""} + C`;
+        const answer = `\\frac{${kTimes}${base}^{x}}{\\ln ${base}}${withPower ? ` ${p < 0 ? "-" : "+"} ${coef(Q.of(Math.abs(p), n + 1))}x^{${n + 1}}` : ""} + C`;
         return functionProblem({
           prompt: t(`Find $\\int ${integrand} \\, dx$.`, `求 $\\int ${integrand} \\, dx$。`),
           answer,
           antiderivative: true,
           wrong: [
-            `${k}\\cdot ${base}^{x}\\ln ${base} + C`,
+            `${kTimes}${base}^{x}\\ln ${base} + C`,
             `${k === 1 ? "" : k}\\cdot\\frac{${base}^{x + 1}}{x + 1} + C`.replace(/^\\cdot/, ""),
-            `${k}\\cdot ${base}^{x} + C`,
+            `${kTimes}${base}^{x} + C`,
           ],
           solution: t(
-            `$\\int ${base}^{x} \\, dx = \\frac{${base}^{x}}{\\ln ${base}} + C$${withPower ? ", and the power term uses the power rule" : ""}: $${answer}$.`,
-            `$\\int ${base}^{x} \\, dx = \\frac{${base}^{x}}{\\ln ${base}} + C$${withPower ? "，幂函数项用幂法则" : ""}：$${answer}$。`,
+            `Since $\\frac{d}{dx}${base}^{x} = ${base}^{x}\\ln ${base}$, $\\int ${base}^{x} \\, dx = \\frac{${base}^{x}}{\\ln ${base}} + C$${withPower ? ", and the power term uses the power rule" : ""}. So the integral is $${answer}$.`,
+            `由 $\\frac{d}{dx}${base}^{x} = ${base}^{x}\\ln ${base}$，$\\int ${base}^{x} \\, dx = \\frac{${base}^{x}}{\\ln ${base}} + C$${withPower ? "，幂函数项用幂法则" : ""}。所以积分等于 $${answer}$。`,
           ),
         });
       },

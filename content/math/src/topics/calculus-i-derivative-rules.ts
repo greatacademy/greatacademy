@@ -794,8 +794,8 @@ export const differentiatingReciprocalTrigonometricFunctions: TopicDef = {
       id: "derivatives-of-secant-cosecant-and-cotangent",
       title: t("Derivatives of secant, cosecant and cotangent", "正割、余割、余切的导数"),
       explanation: t(
-        'Applying the quotient rule to $\\frac{1}{\\cos x}$, $\\frac{1}{\\sin x}$ and $\\frac{\\cos x}{\\sin x}$ gives\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\nThe "These derivatives come from writing each function as a quotient of sine and cosine, and the ones whose names start with co carry a minus sign. co" functions have minus signs.',
-        "把每个函数写成正弦与余弦之商就能得到这些导数，名字以“余”开头的函数导数带负号。对 $\\frac{1}{\\cos x}$、$\\frac{1}{\\sin x}$、$\\frac{\\cos x}{\\sin x}$ 用商法则，得\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\n带“余”字的函数，导数带负号。",
+        'These derivatives come from writing each function as a quotient of sine and cosine. Applying the quotient rule to $\\frac{1}{\\cos x}$, $\\frac{1}{\\sin x}$ and $\\frac{\\cos x}{\\sin x}$ gives\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\nThe functions whose names start with "co" have derivatives with a minus sign.',
+        "把每个函数写成正弦与余弦之商就能得到这些导数。对 $\\frac{1}{\\cos x}$、$\\frac{1}{\\sin x}$、$\\frac{\\cos x}{\\sin x}$ 用商法则，得\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\n带“余”字的函数，导数带负号。",
       ),
       generate(rng) {
         const r1 = rng.pick(reciprocalTrigRules);

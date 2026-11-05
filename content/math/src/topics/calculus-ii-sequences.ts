@@ -1647,8 +1647,8 @@ export const repeatingDecimalsAsInfiniteGeometricSeries: TopicDef = {
           answer,
           wrong: [Q.of(B, 10 ** k), Q.of(B, den + 2), Q.of(B, 10 * den)],
           solution: t(
-            `$0.\\overline{${digits}} = \\frac{${B}}{10^{${k}}} + \\frac{${B}}{10^{${2 * k}}} + \\cdots$, a geometric series with $a = \\frac{${B}}{${10 ** k}}$ and $r = \\frac{1}{${10 ** k}}$. Its sum is $\\frac{${B}}{${den}} = ${answer.toLatex()}$.`,
-            `$0.\\overline{${digits}} = \\frac{${B}}{10^{${k}}} + \\frac{${B}}{10^{${2 * k}}} + \\cdots$，是 $a = \\frac{${B}}{${10 ** k}}$、$r = \\frac{1}{${10 ** k}}$ 的等比级数，其和为 $\\frac{${B}}{${den}} = ${answer.toLatex()}$。`,
+            `$0.\\overline{${digits}} = \\frac{${B}}{10^{${k}}} + \\frac{${B}}{10^{${2 * k}}} + \\cdots$, a geometric series with $a = \\frac{${B}}{${10 ** k}}$ and $r = \\frac{1}{${10 ** k}}$. Its sum is $\\frac{${B}}{${den}}${answer.toLatex() === `\\frac{${B}}{${den}}` ? "" : ` = ${answer.toLatex()}`}$.`,
+            `$0.\\overline{${digits}} = \\frac{${B}}{10^{${k}}} + \\frac{${B}}{10^{${2 * k}}} + \\cdots$，是 $a = \\frac{${B}}{${10 ** k}}$、$r = \\frac{1}{${10 ** k}}$ 的等比级数，其和为 $\\frac{${B}}{${den}}${answer.toLatex() === `\\frac{${B}}{${den}}` ? "" : ` = ${answer.toLatex()}`}$。`,
           ),
         });
       },

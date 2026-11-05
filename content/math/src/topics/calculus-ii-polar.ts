@@ -815,6 +815,7 @@ function roseArea(rng: Rng) {
   const even = k % 2 === 0;
   const petals = even ? 2 * k : k;
   const answer = Q.of(a * a, even ? 2 : 4);
+  const petal = fn === "\\sin" ? `_{0}^{\\pi/${k}}` : `_{-\\pi/${2 * k}}^{\\pi/${2 * k}}`;
   return exactProblem(
     t(
       `Find the total area enclosed by the rose $r = ${k1(a)}${fn} ${k}\\theta$. Give an exact answer.`,
@@ -822,8 +823,8 @@ function roseArea(rng: Rng) {
     ),
     piL(answer),
     [piL(Q.of(a * a, even ? 4 : 2)), piL(Q.of(a * a, 4 * k)), piL(Q.of(a * a))],
-    `The rose has $${petals}$ petals, since $k = ${k}$ is ${even ? "even" : "odd"}. Each petal has area $\\frac{1}{2}\\int_{0}^{\\pi/${k}} ${a * a === 1 ? "" : a * a}${fn}^{2} ${k}\\theta \\, d\\theta = ${piL(Q.of(a * a, 4 * k))}$, so the total is $${petals} \\cdot ${piL(Q.of(a * a, 4 * k))} = ${piL(answer)}$.${even ? "" : ` Integrating over $[0, 2\\pi]$ would trace every petal twice.`}`,
-    `因为 $k = ${k}$ 是${even ? "偶数" : "奇数"}，玫瑰线有 $${petals}$ 片花瓣。每片面积为 $\\frac{1}{2}\\int_{0}^{\\pi/${k}} ${a * a === 1 ? "" : a * a}${fn}^{2} ${k}\\theta \\, d\\theta = ${piL(Q.of(a * a, 4 * k))}$，所以总面积为 $${petals} \\cdot ${piL(Q.of(a * a, 4 * k))} = ${piL(answer)}$。${even ? "" : "在 $[0, 2\\pi]$ 上积分会把每片花瓣描两次。"}`,
+    `The rose has $${petals}$ petals, since $k = ${k}$ is ${even ? "even" : "odd"}. Each petal has area $\\frac{1}{2}\\int${petal} ${a * a === 1 ? "" : a * a}${fn}^{2} ${k}\\theta \\, d\\theta = ${piL(Q.of(a * a, 4 * k))}$, so the total is $${petals} \\cdot ${piL(Q.of(a * a, 4 * k))} = ${piL(answer)}$.${even ? "" : ` Integrating over $[0, 2\\pi]$ would trace every petal twice.`}`,
+    `因为 $k = ${k}$ 是${even ? "偶数" : "奇数"}，玫瑰线有 $${petals}$ 片花瓣。每片面积为 $\\frac{1}{2}\\int${petal} ${a * a === 1 ? "" : a * a}${fn}^{2} ${k}\\theta \\, d\\theta = ${piL(Q.of(a * a, 4 * k))}$，所以总面积为 $${petals} \\cdot ${piL(Q.of(a * a, 4 * k))} = ${piL(answer)}$。${even ? "" : "在 $[0, 2\\pi]$ 上积分会把每片花瓣描两次。"}`,
   );
 }
 

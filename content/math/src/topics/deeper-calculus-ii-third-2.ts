@@ -596,7 +596,7 @@ const constantThatMakesASolution = point(
     "验证也能确定未知数。把候选解代入方程，比较两边。形式正确时，含任意常数 $C$ 的部分会抵消，剩下的就是关于未知数的方程。",
   ],
   (rng) => {
-    const k = nz(rng, 6);
+    const k = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
     const m = nz(rng, 12);
     const answer = Q.of(-m, k);
     const eq = poly([k, "y"], [m, ""]);

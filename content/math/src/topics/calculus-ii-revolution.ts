@@ -68,7 +68,7 @@ function discProblem(rng: Rng, v: Variable) {
   const a = rng.int(0, 2);
   const b = a + rng.int(1, 3);
   const root = rng.bool();
-  const p: Poly = root ? [rng.int(0, 4), rng.int(1, 4)] : [rng.int(1, 5), rng.int(0, 3), rng.int(0, 1)];
+  const p: Poly = root ? [rng.int(0, 4), rng.int(1, 4)] : [rng.int(1, 5), rng.int(1, 3), rng.int(0, 1)];
   const f = root ? `\\sqrt{${pLatex(p, v)}}` : pLatex(p, v);
   const r2 = root ? p : sq(p);
   const q = intQ(r2, a, b);

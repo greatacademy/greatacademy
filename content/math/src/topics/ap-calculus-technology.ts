@@ -175,26 +175,31 @@ export const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
         "对于任意方程 $g(x) = c$，都可以通过绘制差函数 $Y_1 = g(x) - c$ 并定位其 $x$ 轴交点来用计算器求根功能求解。在 $Y_1(x)$ 变号处将数值表步长设为 $\\Delta\\text{Tbl} = 0.001$，即可将根确定到小数点后三位。",
       ),
       generate: (rng: Rng) => {
-        const whole = rng.int(1, 4);
-        const thousandths = rng.int(11, 88) * 10 + rng.int(2, 8);
-        const r = Q.of(whole * 1000 + thousandths, 1000);
-        const rMinus = Q.of(whole * 1000 + thousandths - 1, 1000);
-        const rPlus = Q.of(whole * 1000 + thousandths + 1, 1000);
-        const c = rng.int(3, 12);
-        const yMinus = -rng.int(4, 9);
-        const yZero = rng.bool() ? 1 : -1;
-        const yPlus = rng.int(5, 9);
+        const c = rng.int(3, 30);
+        const difference = (x: number) => Math.exp(x) + x - c;
+        let [lo, hi] = [0, 4];
+        for (let i = 0; i < 40; i++) {
+          const mid = (lo + hi) / 2;
+          if (difference(mid) < 0) lo = mid;
+          else hi = mid;
+        }
+        const thousandths = Math.round(lo * 1000);
+        const r = Q.of(thousandths, 1000);
+        const rMinus = Q.of(thousandths - 1, 1000);
+        const rPlus = Q.of(thousandths + 1, 1000);
+        const shown = (n: number) => difference(n / 1000).toFixed(5);
+        const [yMinus, yZero, yPlus] = [shown(thousandths - 1), shown(thousandths), shown(thousandths + 1)];
         return numberProblem({
           prompt: t(
-            `To solve $e^x + x = ${c}$, you graph the difference function $Y_1 = e^x + x - ${c}$ and inspect a zoomed calculator table with step $\\Delta\\text{Tbl} = 0.001$:\n\n$$Y_1(${dec(rMinus)}) = ${(yMinus / 1000).toFixed(3)}, \\quad Y_1(${dec(r)}) = ${(yZero / 10000).toFixed(4)}, \\quad Y_1(${dec(rPlus)}) = ${(yPlus / 1000).toFixed(3)}.$$\n\nWhat is the root of $e^x + x = ${c}$ rounded to three decimal places?`,
-            `为解方程 $e^x + x = ${c}$，绘制差函数 $Y_1 = e^x + x - ${c}$ 并查看步长为 $\\Delta\\text{Tbl} = 0.001$ 的局部放大计算器数值表：\n\n$$Y_1(${dec(rMinus)}) = ${(yMinus / 1000).toFixed(3)}，\\quad Y_1(${dec(r)}) = ${(yZero / 10000).toFixed(4)}，\\quad Y_1(${dec(rPlus)}) = ${(yPlus / 1000).toFixed(3)}。$$\n\n求方程 $e^x + x = ${c}$ 精确到小数点后三位的根。`,
+            `To solve $e^x + x = ${c}$, you graph the difference function $Y_1 = e^x + x - ${c}$ and inspect a zoomed calculator table with step $\\Delta\\text{Tbl} = 0.001$:\n\n$$Y_1(${dec(rMinus)}) = ${yMinus}, \\quad Y_1(${dec(r)}) = ${yZero}, \\quad Y_1(${dec(rPlus)}) = ${yPlus}.$$\n\nWhat is the root of $e^x + x = ${c}$ rounded to three decimal places?`,
+            `为解方程 $e^x + x = ${c}$，绘制差函数 $Y_1 = e^x + x - ${c}$ 并查看步长为 $\\Delta\\text{Tbl} = 0.001$ 的局部放大计算器数值表：\n\n$$Y_1(${dec(rMinus)}) = ${yMinus}，\\quad Y_1(${dec(r)}) = ${yZero}，\\quad Y_1(${dec(rPlus)}) = ${yPlus}。$$\n\n求方程 $e^x + x = ${c}$ 精确到小数点后三位的根。`,
           ),
           answer: r,
           form: "decimal",
           wrong: [rMinus, rPlus, Q.of(c)],
           solution: t(
-            `The difference function $Y_1(x) = e^x + x - ${c}$ changes sign near $x = ${dec(r)}$, where $|Y_1(${dec(r)})| = 0.0001$ is much closer to $0$ than at $${dec(rMinus)}$ or $${dec(rPlus)}$. Thus the root rounded to three decimal places is $${dec(r)}$.`,
-            `差函数 $Y_1(x) = e^x + x - ${c}$ 在 $x = ${dec(r)}$ 附近变号，且 $|Y_1(${dec(r)})| = 0.0001$ 比在 $${dec(rMinus)}$ 或 $${dec(rPlus)}$ 处更接近 $0$，因此精确到三位小数的根为 $${dec(r)}$。`,
+            `The difference function $Y_1(x) = e^x + x - ${c}$ is negative at $${dec(rMinus)}$ and positive at $${dec(rPlus)}$, so the root lies between them. The value $Y_1(${dec(r)}) = ${yZero}$ is much closer to $0$ than the other two, so the root rounded to three decimal places is $${dec(r)}$.`,
+            `差函数 $Y_1(x) = e^x + x - ${c}$ 在 $${dec(rMinus)}$ 处为负，在 $${dec(rPlus)}$ 处为正，所以根在两者之间。$Y_1(${dec(r)}) = ${yZero}$ 比另外两个值更接近 $0$，因此精确到三位小数的根为 $${dec(r)}$。`,
           ),
         });
       },
@@ -305,32 +310,24 @@ export const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
       generate: (rng: Rng) => {
         const xMin = rng.int(1, 3);
         const xMax = rng.int(5, 7);
-        const yEndLeft = rng.int(2, 8);
         const yLocalMax = rng.int(12, 22);
         const yLocalMin = -rng.int(3, 9);
-        const yEndRight = yLocalMax + rng.int(3, 8);
-        const askLocal = rng.bool();
+        const askMax = rng.bool();
+        const endpointWins = rng.bool();
+        const yEndLeft = !askMax && endpointWins ? yLocalMin - rng.int(2, 6) : rng.int(2, 8);
+        const yEndRight = yLocalMax + (askMax && !endpointWins ? -rng.int(3, 8) : rng.int(3, 8));
+        const [en, zh] = askMax ? ["maximum", "最大值"] : ["minimum", "最小值"];
         return numberProblem({
-          prompt: askLocal
-            ? t(
-                `To analyze a continuous function $f$ on $[0, 8]$, you use a graphing calculator:\n\n- Endpoint values: $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$\n- Calculator \`Maximum\` command on $(0, 8)$: $(${xMin}, ${yLocalMax})$\n- Calculator \`Minimum\` command on $(0, 8)$: $(${xMax}, ${yLocalMin})$\n\nWhat is the local maximum value of $f$ on $(0, 8)$?`,
-                `在 $[0, 8]$ 上分析连续函数 $f$ 时，使用图形计算器测得：\n\n- 端点值：$f(0) = ${yEndLeft}$，$f(8) = ${yEndRight}$\n- $(0, 8)$ 内的 \`Maximum\`（最大值）命令结果：$(${xMin}, ${yLocalMax})$\n- $(0, 8)$ 内的 \`Minimum\`（最小值）命令结果：$(${xMax}, ${yLocalMin})$\n\n函数 $f$ 在 $(0, 8)$ 内的局部极大值是多少？`,
-              )
-            : t(
-                `To analyze a continuous function $f$ on $[0, 8]$, you use a graphing calculator:\n\n- Endpoint values: $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$\n- Calculator \`Maximum\` command on $(0, 8)$: $(${xMin}, ${yLocalMax})$\n- Calculator \`Minimum\` command on $(0, 8)$: $(${xMax}, ${yLocalMin})$\n\nWhat is the absolute maximum value of $f$ on the closed interval $[0, 8]$?`,
-                `在 $[0, 8]$ 上分析连续函数 $f$ 时，使用图形计算器测得：\n\n- 端点值：$f(0) = ${yEndLeft}$，$f(8) = ${yEndRight}$\n- $(0, 8)$ 内的 \`Maximum\`（最大值）命令结果：$(${xMin}, ${yLocalMax})$\n- $(0, 8)$ 内的 \`Minimum\`（最小值）命令结果：$(${xMax}, ${yLocalMin})$\n\n函数 $f$ 在闭区间 $[0, 8]$ 上的绝对最大值是多少？`,
-              ),
-          answer: askLocal ? yLocalMax : yEndRight,
-          wrong: askLocal ? [xMin, yEndRight, yLocalMin] : [yLocalMax, xMin, 8],
-          solution: askLocal
-            ? t(
-                `The \`Maximum\` command reports the interior local maximum point $(${xMin}, ${yLocalMax})$. The local maximum value is its $y$-coordinate, $${yLocalMax}$.`,
-                `\`Maximum\` 命令给出内部局部极大值点 $(${xMin}, ${yLocalMax})$，局部极大值为其纵坐标 $${yLocalMax}$。`,
-              )
-            : t(
-                `Compare the interior local maximum value $${yLocalMax}$ with the endpoint values $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$. The largest value on $[0, 8]$ is $${yEndRight}$.`,
-                `将内部局部极大值 $${yLocalMax}$ 与端点值 $f(0) = ${yEndLeft}$、$f(8) = ${yEndRight}$ 比较，闭区间 $[0, 8]$ 上的绝对最大值为 $${yEndRight}$。`,
-              ),
+          prompt: t(
+            `To analyze a continuous function $f$ on $[0, 8]$, you use a graphing calculator:\n\n- Endpoint values: $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$\n- Calculator \`Maximum\` command on $(0, 8)$: $(${xMin}, ${yLocalMax})$\n- Calculator \`Minimum\` command on $(0, 8)$: $(${xMax}, ${yLocalMin})$\n\nWhat is the absolute ${en} value of $f$ on the closed interval $[0, 8]$?`,
+            `在 $[0, 8]$ 上分析连续函数 $f$ 时，使用图形计算器测得：\n\n- 端点值：$f(0) = ${yEndLeft}$，$f(8) = ${yEndRight}$\n- $(0, 8)$ 内的 \`Maximum\`（最大值）命令结果：$(${xMin}, ${yLocalMax})$\n- $(0, 8)$ 内的 \`Minimum\`（最小值）命令结果：$(${xMax}, ${yLocalMin})$\n\n函数 $f$ 在闭区间 $[0, 8]$ 上的绝对${zh}是多少？`,
+          ),
+          answer: askMax ? Math.max(yLocalMax, yEndRight) : Math.min(yLocalMin, yEndLeft),
+          wrong: askMax ? [Math.min(yLocalMax, yEndRight), xMin, 8] : [Math.max(yLocalMin, yEndLeft), xMax, 0],
+          solution: t(
+            `An absolute extremum on a closed interval occurs at an interior extremum or at an endpoint. Compare the $y$-values $${yLocalMax}$ and $${yLocalMin}$ with $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$: the ${askMax ? "largest" : "smallest"} is $${askMax ? Math.max(yLocalMax, yEndRight) : Math.min(yLocalMin, yEndLeft)}$.`,
+            `闭区间上的绝对最值出现在内部极值点或端点。比较纵坐标 $${yLocalMax}$、$${yLocalMin}$ 与 $f(0) = ${yEndLeft}$、$f(8) = ${yEndRight}$：${askMax ? "最大" : "最小"}的是 $${askMax ? Math.max(yLocalMax, yEndRight) : Math.min(yLocalMin, yEndLeft)}$。`,
+          ),
         });
       },
     },

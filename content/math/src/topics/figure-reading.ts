@@ -273,8 +273,8 @@ const divergenceFromPlot: KnowledgePointDef = {
         right,
         wrong,
         t(
-          `Here $\\operatorname{div} \\mathbf{F} = a + b$. Arrows on the $x$-axis point ${direction(a).en} and arrows on the $y$-axis point ${direction(b).en}, so $a$ and $b$ have these signs, and comparing lengths gives $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$. In a field with these proportions, $a + b$ has the sign of $${a + b}$.`,
-          `这里 $\\operatorname{div} \\mathbf{F} = a + b$。$x$ 轴上的箭头${direction(a)["zh-CN"]}，$y$ 轴上的箭头${direction(b)["zh-CN"]}，由此得到 $a$、$b$ 的符号；比较长度得 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$。按这个比例，$a + b$ 与 $${a + b}$ 同号。`,
+          `Here $\\operatorname{div} \\mathbf{F} = a + b$. Arrows on the $x$-axis point ${direction(a).en} and arrows on the $y$-axis point ${direction(b).en}, so $a$ and $b$ have these signs, and comparing lengths gives $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$. So $a + b$ is a positive multiple of $${a + b}$, which fixes its sign.`,
+          `这里 $\\operatorname{div} \\mathbf{F} = a + b$。$x$ 轴上的箭头${direction(a)["zh-CN"]}，$y$ 轴上的箭头${direction(b)["zh-CN"]}，由此得到 $a$、$b$ 的符号；比较长度得 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$。所以 $a + b$ 是 $${a + b}$ 的正数倍，符号由此确定。`,
         ),
       ),
       quiver((x, y) => [a * x, b * y]),
@@ -304,8 +304,8 @@ const curlFromPlot: KnowledgePointDef = {
         right,
         wrong,
         t(
-          `Here $Q_x - P_y = b - (-a) = a + b$. The arrows on the positive $x$-axis show the sign of $b$ and those on the positive $y$-axis show the opposite of the first component, which gives the sign of $a$; comparing lengths gives $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$. In a field with these proportions, $a + b$ has the sign of $${a + b}$.`,
-          `这里 $Q_x - P_y = b - (-a) = a + b$。$x$ 轴正半轴上的箭头给出 $b$ 的符号，$y$ 轴正半轴上的箭头给出 $a$ 的符号；比较长度得 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$。按这个比例，$a + b$ 与 $${a + b}$ 同号。`,
+          `Here $Q_x - P_y = b - (-a) = a + b$. The arrows on the positive $x$-axis show the sign of $b$ and those on the positive $y$-axis show the opposite of the first component, which gives the sign of $a$; comparing lengths gives $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$. So $a + b$ is a positive multiple of $${a + b}$, which fixes its sign.`,
+          `这里 $Q_x - P_y = b - (-a) = a + b$。$x$ 轴正半轴上的箭头给出 $b$ 的符号，$y$ 轴正半轴上的箭头给出 $a$ 的符号；比较长度得 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$。所以 $a + b$ 是 $${a + b}$ 的正数倍，符号由此确定。`,
         ),
       ),
       quiver((x, y) => [-a * y, b * x]),

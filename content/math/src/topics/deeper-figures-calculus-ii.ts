@@ -73,7 +73,7 @@ const areaInY = point(
       form(y1, y2, right, left, "y"),
       [
         form(y1, y2, left, right, "y"),
-        form(x1, x2, right, left, "x"),
+        x1 === x2 ? form(Math.min(x1, c), Math.max(x1, c), right, left, "x") : form(x1, x2, right, left, "x"),
         form(0, y2 - y1, right, left, "y"),
         form(y1, y2 + 1, right, left, "y"),
       ],
@@ -155,8 +155,8 @@ const splitArea = point(
           { kind: "label", at: [5.4, d], text: "g", dir: "n" },
         ],
         [
-          `A curve f crossing the horizontal line g at x = ${c - k}, ${c} and ${c + k}; f is ${flip ? "below" : "above"} g on the left piece.`,
-          `曲线 f 与水平线 g 在 x = ${c - k}、${c} 和 ${c + k} 处相交；左段 f 在 g ${flip ? "下方" : "上方"}。`,
+          `A curve f meeting the horizontal line g at x = ${c - k}, ${c} and ${c + k}, with a ${flip ? "trough" : "peak"} on the left piece and a ${flip ? "peak" : "trough"} on the right piece.`,
+          `曲线 f 与水平线 g 在 x = ${c - k}、${c} 和 ${c + k} 处相遇，左段有一个${flip ? "谷" : "峰"}，右段有一个${flip ? "峰" : "谷"}。`,
         ],
       ),
     );

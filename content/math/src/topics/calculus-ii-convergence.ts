@@ -206,11 +206,11 @@ function integralCase(rng: Rng): IntegralCase {
     };
   if (kind === 3)
     return {
-      series: sigma(`\\frac{${c === 1 ? "" : c}\\ln n}{n}`),
+      series: sigma(`\\frac{${c === 1 ? "" : c}\\ln n}{n}`, 3),
       converges: false,
       work: t(
-        `$\\int_{1}^{\\infty} \\frac{${c === 1 ? "" : c}\\ln x}{x} \\, dx = \\frac{${c}}{2} (\\ln x)^{2} \\Big|_{1}^{\\infty} = \\infty$`,
-        `$\\int_{1}^{\\infty} \\frac{${c === 1 ? "" : c}\\ln x}{x} \\, dx = \\frac{${c}}{2} (\\ln x)^{2} \\Big|_{1}^{\\infty} = \\infty$`,
+        `$\\int_{3}^{\\infty} \\frac{${c === 1 ? "" : c}\\ln x}{x} \\, dx = \\frac{${c}}{2} (\\ln x)^{2} \\Big|_{3}^{\\infty} = \\infty$`,
+        `$\\int_{3}^{\\infty} \\frac{${c === 1 ? "" : c}\\ln x}{x} \\, dx = \\frac{${c}}{2} (\\ln x)^{2} \\Big|_{3}^{\\infty} = \\infty$`,
       ),
     };
   return {

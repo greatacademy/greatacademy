@@ -153,7 +153,7 @@ export const limitsOfAbsoluteValueFunctions: TopicDef = {
         return numberProblem({
           prompt: t(`Find $${lim(b)} \\left(${expr}\\right)$.`, `求 $${lim(b)} \\left(${expr}\\right)$。`),
           answer,
-          wrong: [k * (b - a) + c * b, k * Math.abs(b + a) + c * b, Math.abs(k * (b - a) + c * b)],
+          wrong: [k * (b - a) + c * b, k * (a - b) + c * b, k * Math.abs(b + a) + c * b, k * Math.abs(b - a) - c * b],
           solution: t(
             `Substitute $x = ${b}$: $${poly([k, `|${b - a}|`], [c, `(${b})`])} = ${answer}$.`,
             `代入 $x = ${b}$：$${poly([k, `|${b - a}|`], [c, `(${b})`])} = ${answer}$。`,
@@ -874,7 +874,7 @@ export const specialLimitsInvolvingSine: TopicDef = {
       ),
       generate(rng) {
         const a = rng.nonZero(-7, 7);
-        const b = rng.nonZero(-6, 6);
+        const b = rng.pick(range(-6, 6).filter((v) => v !== 0 && v !== a));
         const flip = rng.bool(0.3);
         const s = `\\sin ${ta(a)}`;
         const answer = flip ? Q.of(b, a) : Q.of(a, b);
@@ -912,8 +912,8 @@ export const specialLimitsInvolvingSine: TopicDef = {
           answer,
           wrong: [Q.one, inv(answer), Q.zero, answer.neg()],
           solution: t(
-            `Near $0$, $${top} \\approx ${kx(sa)}$ and $${bottom} \\approx ${bottomFn === "x" ? kx(b) : kx(c * b)}$, since $\\frac{\\sin u}{u} \\to 1$ and $\\frac{\\tan u}{u} \\to 1$. So the limit is $${ratio(sa, bottomFn === "x" ? b : c * b)}$.`,
-            `在 $0$ 附近，由 $\\frac{\\sin u}{u} \\to 1$ 和 $\\frac{\\tan u}{u} \\to 1$，$${top} \\approx ${kx(sa)}$，$${bottom} \\approx ${bottomFn === "x" ? kx(b) : kx(c * b)}$。所以极限为 $${ratio(sa, bottomFn === "x" ? b : c * b)}$。`,
+            `Near $0$, $${top} \\approx ${kx(sa)}$${bottomFn === "x" ? "" : ` and $${bottom} \\approx ${kx(c * b)}$`}, since $\\frac{\\sin u}{u} \\to 1$ and $\\frac{\\tan u}{u} \\to 1$. So the limit is $${ratio(sa, bottomFn === "x" ? b : c * b)}$.`,
+            `在 $0$ 附近，由 $\\frac{\\sin u}{u} \\to 1$ 和 $\\frac{\\tan u}{u} \\to 1$，$${top} \\approx ${kx(sa)}$${bottomFn === "x" ? "" : `，$${bottom} \\approx ${kx(c * b)}$`}。所以极限为 $${ratio(sa, bottomFn === "x" ? b : c * b)}$。`,
           ),
         });
       },

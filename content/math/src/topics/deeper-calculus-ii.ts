@@ -865,7 +865,7 @@ const sinhCoshLimit: KnowledgePointDef = {
   id: "a-hyperbolic-integral-with-a-logarithm-in-the-limit",
   title: t("A hyperbolic integral with a logarithm in the limit", "积分限含对数的双曲积分"),
   explanation: t(
-    "The substitution $u = \\sinh x$ gives $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$. To evaluate at a limit such as $\\ln a$, return to the exponential definition: $\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$. The exponentials and logarithm then cancel, so the result is a rational number whenever $a$ is one.",
+    "The substitution $u = \\sinh x$ gives $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$. To evaluate at a limit such as $\\ln a$, return to the exponential definition: $\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$. The exponentials and logarithm then cancel, so the result is a rational number whenever $a$ is rational.",
     "换元 $u = \\sinh x$ 给出 $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$。在 $\\ln a$ 这样的积分限处求值时，要回到指数定义：$\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$。指数和对数相互抵消，所以只要 $a$ 是有理数，结果就是有理数。",
   ),
   generate(rng) {
@@ -1337,8 +1337,8 @@ const conjugateLimit: KnowledgePointDef = {
       answer,
       wrong: [Q.of(a), Q.of(0), Q.of(b, 2)],
       solution: t(
-        `Multiplying by the conjugate gives $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$. The dominant terms give $\\frac{${a}}{2} = ${answer.toLatex()}$.`,
-        `乘以共轭式得 $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$。主导项给出 $\\frac{${a}}{2} = ${answer.toLatex()}$。`,
+        `Multiplying by the conjugate gives $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$. The dominant terms give $${a % 2 === 0 ? `\\frac{${a}}{2} = ` : ""}${answer.toLatex()}$.`,
+        `乘以共轭式得 $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$。主导项给出 $${a % 2 === 0 ? `\\frac{${a}}{2} = ` : ""}${answer.toLatex()}$。`,
       ),
     });
   },

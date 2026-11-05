@@ -816,7 +816,7 @@ export const deeperRemainingCalculusThirdPoints: Readonly<Record<string, readonl
             `计算器显示 $${m / 10}\\text{E}${n}$。这是哪个整数？`,
           ],
           value,
-          [m * 10 ** n, m + n, Math.round(m / 10) ** n],
+          [m * 10 ** n, m * 10 ** (n - 2), m * 10 ** (n + 1)],
           [
             `The E means times a power of ten: $${m / 10} \\times 10^{${n}} = ${value}$.`,
             `E 表示乘 10 的幂：$${m / 10} \\times 10^{${n}} = ${value}$。`,
@@ -982,8 +982,12 @@ export const deeperRemainingCalculusThirdPoints: Readonly<Record<string, readonl
           keepLeft ? `(${a}, ${m})` : `(${m}, ${b})`,
           [keepLeft ? `(${m}, ${b})` : `(${a}, ${m})`, `(${b}, ${b + (b - m)})`, `(${a - (m - a)}, ${a})`],
           [
-            keepLeft ? `The signs differ between ${a} and ${m}.` : `The signs differ between ${m} and ${b}.`,
-            keepLeft ? `${a} 和 ${m} 处异号。` : `${m} 和 ${b} 处异号。`,
+            keepLeft
+              ? `$f(${m})$ is positive and $f(${a})$ is negative, so the signs differ on $(${a}, ${m})$. By the intermediate value theorem a root lies there.`
+              : `$f(${m})$ is negative and $f(${b})$ is positive, so the signs differ on $(${m}, ${b})$. By the intermediate value theorem a root lies there.`,
+            keepLeft
+              ? `$f(${m})$ 为正，$f(${a})$ 为负，所以在 $(${a}, ${m})$ 上异号。由介值定理，那里有根。`
+              : `$f(${m})$ 为负，$f(${b})$ 为正，所以在 $(${m}, ${b})$ 上异号。由介值定理，那里有根。`,
           ],
         );
       },

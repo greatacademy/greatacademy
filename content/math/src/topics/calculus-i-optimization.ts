@@ -411,8 +411,8 @@ export const optimizingDistances: TopicDef = {
           answer: x,
           wrong: [Q.of(a), Q.of(a + m * (b - c), m * m), Q.of(a - m * (b - c), 1 + m * m)],
           solution: t(
-            `$D^{2} = (x - ${par(a)})^{2} + (${poly([m, "x"], [c - b, ""])})^{2}$. Its derivative is $2(x - ${par(a)}) ${m < 0 ? "-" : "+"} ${Math.abs(2 * m)}(${poly([m, "x"], [c - b, ""])}) = ${poly([2 + 2 * m * m, "x"], [-2 * a + 2 * m * (c - b), ""])}$, which is $0$ at $x = ${x.toLatex()}$.`,
-            `$D^{2} = (x - ${par(a)})^{2} + (${poly([m, "x"], [c - b, ""])})^{2}$。其导数为 $2(x - ${par(a)}) ${m < 0 ? "-" : "+"} ${Math.abs(2 * m)}(${poly([m, "x"], [c - b, ""])}) = ${poly([2 + 2 * m * m, "x"], [-2 * a + 2 * m * (c - b), ""])}$，在 $x = ${x.toLatex()}$ 处为 $0$。`,
+            `$D^{2} = (${poly([1, "x"], [-a, ""])})^{2} + (${poly([m, "x"], [c - b, ""])})^{2}$. Its derivative is $2(${poly([1, "x"], [-a, ""])}) ${m < 0 ? "-" : "+"} ${Math.abs(2 * m)}(${poly([m, "x"], [c - b, ""])}) = ${poly([2 + 2 * m * m, "x"], [-2 * a + 2 * m * (c - b), ""])}$, which is $0$ at $x = ${x.toLatex()}$.`,
+            `$D^{2} = (${poly([1, "x"], [-a, ""])})^{2} + (${poly([m, "x"], [c - b, ""])})^{2}$。其导数为 $2(${poly([1, "x"], [-a, ""])}) ${m < 0 ? "-" : "+"} ${Math.abs(2 * m)}(${poly([m, "x"], [c - b, ""])}) = ${poly([2 + 2 * m * m, "x"], [-2 * a + 2 * m * (c - b), ""])}$，在 $x = ${x.toLatex()}$ 处为 $0$。`,
           ),
         });
       },

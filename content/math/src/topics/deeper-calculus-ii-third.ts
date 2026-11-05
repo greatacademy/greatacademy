@@ -197,7 +197,10 @@ const pythagoreanIntegrals = point(
       answer,
       antiderivative: true,
       wrong,
-      solution: t(`Use $${identity}$, then integrate term by term to get $${answer}$.`, `用 $${identity}$，再逐项积分，得 $${answer}$。`),
+      solution: t(
+        `Use $${identity}$ to rewrite the integrand, then integrate to get $${answer}$.`,
+        `用 $${identity}$ 改写被积函数，再积分，得 $${answer}$。`,
+      ),
     });
   },
 );
@@ -887,8 +890,9 @@ const mixedDominance = point(
     const kind = rng.pick(["factorial", "exponential", "power"] as const);
     const big = { factorial: "n!", exponential: `${p}^{n}`, power: `n^{${k}}` }[kind];
     const small = { factorial: `${p}^{n}`, exponential: `n^{${k}}`, power: "\\ln n" }[kind];
-    const top = poly([c, big], [1, small]);
-    const bottom = poly([d, big], [e, small]);
+    const term = (co: number, body: string): [number, string] => [co, /^\d/.test(body) && Math.abs(co) !== 1 ? `\\cdot ${body}` : body];
+    const top = poly(term(c, big), term(1, small));
+    const bottom = poly(term(d, big), term(e, small));
     const answer = Q.of(c, d);
     return ask(
       [`Find $\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}}$.`, `求 $\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}}$。`],

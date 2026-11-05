@@ -302,7 +302,7 @@ export const theAverageValueOfAFunction: TopicDef = {
             a: "1",
             b: `${m}`,
             answer: `${coef(Q.of(k, m - 1))}\\ln ${m}`,
-            wrong: [`${coef(Q.of(k))}\\ln ${m}`, `${coef(Q.of(k, m))}\\ln ${m}`, `\\frac{${k}}{${m - 1}}`.replace("\\frac{-", "-\\frac{")],
+            wrong: [`${coef(Q.of(k))}\\ln ${m}`, `${coef(Q.of(k, m))}\\ln ${m}`, Q.of(k, m - 1).toLatex()],
             work: `${int(1, m, `\\frac{${k}}{x}`.replace("\\frac{-", "-\\frac{"))} = ${coef(Q.of(k))}\\ln ${m}`,
           },
         ];
@@ -395,11 +395,11 @@ export const theAreaBetweenCurvesExpressedAsFunctionsOfX: TopicDef = {
           answer,
           wrong: [intQ(f, a, b), intQ(g, a, b), answer.neg()],
           solution: t(
-            `$(${pLatex(f)}) - (${pLatex(g)}) = ${pLatex(d)} = ${fac(h)}^{2} + ${m} > 0$, so $y = ${pLatex(f)}$ is on top. The area is $${int(a, b, `(${pLatex(d)})`)} = ${answer.toLatex()}$.`.replace(
+            `$(${pLatex(f)}) - (${pLatex(g)}) = ${pLatex(d)}${h === 0 ? "" : ` = ${fac(h)}^{2} + ${m}`} > 0$, so $y = ${pLatex(f)}$ is on top. The area is $${int(a, b, `(${pLatex(d)})`)} = ${answer.toLatex()}$.`.replace(
               "(x)^{2}",
               "x^{2}",
             ),
-            `$(${pLatex(f)}) - (${pLatex(g)}) = ${pLatex(d)} = ${fac(h)}^{2} + ${m} > 0$，所以 $y = ${pLatex(f)}$ 在上方。面积为 $${int(a, b, `(${pLatex(d)})`)} = ${answer.toLatex()}$。`.replace(
+            `$(${pLatex(f)}) - (${pLatex(g)}) = ${pLatex(d)}${h === 0 ? "" : ` = ${fac(h)}^{2} + ${m}`} > 0$，所以 $y = ${pLatex(f)}$ 在上方。面积为 $${int(a, b, `(${pLatex(d)})`)} = ${answer.toLatex()}$。`.replace(
               "(x)^{2}",
               "x^{2}",
             ),
