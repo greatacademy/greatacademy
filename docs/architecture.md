@@ -148,7 +148,7 @@ The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands re
 
 ### 6.1 Subjects as Workers
 
-Generators are code, so content cannot be loaded as data, and a Worker has a size limit: 3 MB compressed on the free plan, 10 MB on paid plans. All of mathematics compresses to about 6.5 MB, and more subjects are planned. So subjects run in Workers of their own:
+Generators are code, so content cannot be loaded as data, and a Worker has a size limit: 3 MB compressed on the free plan, 10 MB on paid plans. All of mathematics compresses to about 7.7 MB, and more subjects are planned. So subjects run in Workers of their own:
 
 ```text
 web Worker ──service binding──► subject gateway ──service bindings──► subject shards
@@ -165,12 +165,12 @@ Mathematics has five shards, one for each stretch of the curriculum (`content/ma
 | Worker | Compressed size (gzip -9) | Module load under Node |
 | :--- | :--- | :--- |
 | `ga-web` | about 2.1 MB | |
-| `ga-math` (gateway) | 0.96 MB | 42 ms |
-| `ga-math-school` | 1.19 MB | 50 ms |
-| `ga-math-algebra` | 1.44 MB | 103 ms |
-| `ga-math-calculus` | 1.87 MB | 107 ms |
-| `ga-math-college` | 1.62 MB | 94 ms |
-| `ga-math-exam` | 0.68 MB | 42 ms |
+| `ga-math` (gateway) | 0.99 MB | 51 ms |
+| `ga-math-school` | 1.36 MB | 62 ms |
+| `ga-math-algebra` | 1.49 MB | 108 ms |
+| `ga-math-calculus` | 2.25 MB | 133 ms |
+| `ga-math-college` | 1.87 MB | 112 ms |
+| `ga-math-exam` | 0.76 MB | 49 ms |
 
 A shard that nears 3 MB is split in two: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
 

@@ -23,7 +23,7 @@ Phases, their completion criteria and the current status. Mathematics is the fir
 
 ## 2. Risks and Open Items
 
-- **Content volume** is the main cost. About 3,800 topics are needed to cover grade 1 through upper-division mathematics, each with KPs, worked examples and generators. Tooling for authoring and review matters more than any other part of the system.
+- **Content volume** is the main cost. About 4,100 topics are needed to cover grade 1 through upper-division mathematics, each with KPs, worked examples and generators. Tooling for authoring and review matters more than any other part of the system.
 - **Engine parameters** come from the book's description and our own choices, not from data. They are recorded in [Learning Engine §8](learning-engine.md#8-parameters) and must be recalibrated in P10.
 - **`cf` command line** is in beta; its configuration may change.
 - **Worker size and startup.** Subjects run in Workers of their own, each under the 3 MB compressed limit of free plans ([Architecture](architecture.md) §6.1). This runs in workerd locally; it has not yet been deployed to Cloudflare, so startup time, the latency of calls between Workers and memory there are unmeasured.

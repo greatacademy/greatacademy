@@ -148,7 +148,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 
 ### 6.1 学科作为 Worker
 
-生成器是代码，所以内容不能当作数据加载，而 Worker 有体积上限：免费计划压缩后 3 MB，付费计划 10 MB。全部数学压缩后约 6.5 MB，后续还要增加更多学科。因此学科运行在各自的 Worker 中：
+生成器是代码，所以内容不能当作数据加载，而 Worker 有体积上限：免费计划压缩后 3 MB，付费计划 10 MB。全部数学压缩后约 7.7 MB，后续还要增加更多学科。因此学科运行在各自的 Worker 中：
 
 ```text
 Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 学科分片
@@ -165,12 +165,12 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | Worker | 压缩后体积（gzip -9） | Node 下的模块加载时间 |
 | :--- | :--- | :--- |
 | `ga-web` | 约 2.1 MB | |
-| `ga-math`（网关） | 0.96 MB | 42 毫秒 |
-| `ga-math-school` | 1.19 MB | 50 毫秒 |
-| `ga-math-algebra` | 1.44 MB | 103 毫秒 |
-| `ga-math-calculus` | 1.87 MB | 107 毫秒 |
-| `ga-math-college` | 1.62 MB | 94 毫秒 |
-| `ga-math-exam` | 0.68 MB | 42 毫秒 |
+| `ga-math`（网关） | 0.99 MB | 51 毫秒 |
+| `ga-math-school` | 1.36 MB | 62 毫秒 |
+| `ga-math-algebra` | 1.49 MB | 108 毫秒 |
+| `ga-math-calculus` | 2.25 MB | 133 毫秒 |
+| `ga-math-college` | 1.87 MB | 112 毫秒 |
+| `ga-math-exam` | 0.76 MB | 49 毫秒 |
 
 分片接近 3 MB 时就一分为二：把 topic 移到 `shards/` 下的新文件，在 `apps/math-workers/src/shards/` 下新增入口，并增加一个绑定。学习者状态不记录 topic 属于哪个分片，所以随时都可以这样做。
 
