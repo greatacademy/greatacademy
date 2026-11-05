@@ -212,6 +212,7 @@ import { multivariableCalculusSurfaceIntegralTopics } from "./topics/multivariab
 import { multivariableCalculusVectorFunctionTopics } from "./topics/multivariable-calculus-vector-functions.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { numberTheoryCourseTopics } from "./topics/number-theory-course.ts";
+import { numberTheoryMoreTopics } from "./topics/number-theory-more.ts";
 import { outlineGapTopics } from "./topics/outline-gaps.ts";
 import { partialDifferentialEquationsTopics } from "./topics/partial-differential-equations.ts";
 import { partialDifferentialEquationsMoreTopics } from "./topics/partial-differential-equations-more.ts";
@@ -449,6 +450,7 @@ export const math: SubjectDef = {
     ...methodsOfProofProofTopics,
     ...methodsOfProofNumberTheoryTopics,
     ...numberTheoryCourseTopics,
+    ...numberTheoryMoreTopics,
     ...partialDifferentialEquationsTopics,
     ...partialDifferentialEquationsMoreTopics,
     ...linearProgrammingTopics,

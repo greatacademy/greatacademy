@@ -18157,9 +18157,11 @@ export const numberTheory: CourseDef = {
           topics: [
             "the-division-algorithm",
             "the-euclidean-algorithm",
+            "divisibility-of-fibonacci-numbers",
             "the-extended-euclidean-algorithm",
             "linear-diophantine-equations",
             "properties-of-prime-divisibility",
+            "prime-valuations",
           ],
         },
         {
@@ -18179,8 +18181,10 @@ export const numberTheory: CourseDef = {
           title: t("Working Modulo n", "模 n 运算"),
           topics: [
             "modular-congruence",
+            "divisibility-tests",
             "the-multiplication-properties-of-modular-arithmetic",
             "multiplicative-inverses-modulo-n",
+            "hensels-lemma",
             "solving-linear-congruences",
             "the-chinese-remainder-theorem",
           ],
@@ -18190,19 +18194,29 @@ export const numberTheory: CourseDef = {
           topics: [
             "powers-modulo-n",
             "fermats-little-theorem",
+            "mersenne-and-fermat-numbers",
             "using-fermats-little-theorem",
             "eulers-totient-function",
+            "primes-in-arithmetic-progressions",
             "computing-and-counting-with-the-totient",
+            "farey-sequences",
             "eulers-theorem",
             "reducing-exponents-with-eulers-theorem",
             "wilsons-theorem",
             "multiplicative-functions",
             "the-mobius-function",
+            "dirichlet-convolution",
           ],
         },
         {
           title: t("Orders and Generators", "阶和生成元"),
-          topics: ["the-order-of-an-integer-modulo-n", "primitive-roots", "discrete-logarithms"],
+          topics: [
+            "the-order-of-an-integer-modulo-n",
+            "periods-of-repeating-decimals",
+            "pseudoprimes-and-carmichael-numbers",
+            "primitive-roots",
+            "discrete-logarithms",
+          ],
         },
       ],
     },
@@ -18211,7 +18225,7 @@ export const numberTheory: CourseDef = {
       modules: [
         {
           title: t("Squares Modulo a Prime", "模质数的平方数"),
-          topics: ["quadratic-residues", "the-legendre-symbol", "eulers-criterion", "quadratic-reciprocity"],
+          topics: ["quadratic-residues", "the-legendre-symbol", "eulers-criterion", "quadratic-reciprocity", "the-jacobi-symbol"],
         },
       ],
     },
@@ -18220,7 +18234,15 @@ export const numberTheory: CourseDef = {
       modules: [
         {
           title: t("Classic Equations", "经典方程"),
-          topics: ["pythagorean-triples", "sums-of-two-squares", "continued-fractions", "pells-equation"],
+          topics: [
+            "pythagorean-triples",
+            "sums-of-two-squares",
+            "gaussian-integers",
+            "sums-of-three-and-four-squares",
+            "continued-fractions",
+            "best-rational-approximations",
+            "pells-equation",
+          ],
         },
       ],
     },
