@@ -26,6 +26,10 @@ service LearningService {
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
   // SubmitAnswer answers the current question of a session.
   rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  // GetTopic returns a topic's lesson to reread, and how it connects to other topics.
+  rpc GetTopic(GetTopicRequest) returns (GetTopicResponse);
+  // ListSessions lists the learner's finished sessions in a course, newest first.
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
 }
 
 message GetProfileRequest {
@@ -306,13 +310,60 @@ message Feedback {
   optional ga.common.v1.Figure solution_figure = 5;
 }
 
+message GetTopicRequest {
+  string course_id = 1;
+  string topic_id = 2;
+  // example_seed picks the worked examples, so that a learner can ask for others.
+  int32 example_seed = 3;
+}
+
+message GetTopicResponse {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+  ga.common.v1.Text summary = 3;
+  TopicStatus status = 4;
+  // knowledge_points are the steps of the lesson, each with a worked example.
+  repeated KnowledgePointIntro knowledge_points = 5;
+  // prerequisites are the topics this one builds on.
+  repeated TopicLink prerequisites = 6;
+  // dependents are the topics of the course that build on this one.
+  repeated TopicLink dependents = 7;
+}
+
+// TopicLink names another topic and the learner's standing on it.
+message TopicLink {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+  TopicStatus status = 3;
+}
+
+message ListSessionsRequest {
+  string course_id = 1;
+}
+
+message ListSessionsResponse {
+  repeated FinishedSession sessions = 1;
+}
+
+// FinishedSession is one line of a learner's history; GetSession returns the whole session.
+message FinishedSession {
+  string id = 1;
+  Task task = 2;
+  // completed_at is in milliseconds since the epoch.
+  int64 completed_at = 3;
+  bool passed = 4;
+  int32 correct = 5;
+  int32 asked = 6;
+  int32 xp = 7;
+}
+
 // Result ends a session.
 message Result {
   bool passed = 1;
   int32 correct = 2;
   int32 asked = 3;
   int32 xp = 4;
-  // items are the questions with their outcomes, for quizzes and reviews.
+  // items are the questions with their outcomes, for lessons, quizzes and reviews.
   repeated ResultItem items = 5;
   // placed counts the topics the diagnostic placed as known.
   int32 placed = 6;

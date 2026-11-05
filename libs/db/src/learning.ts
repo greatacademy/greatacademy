@@ -1,5 +1,5 @@
 import type { EngineEvent, LearnerState } from "@ga/engine";
-import { and, asc, eq, gte, sql, sum } from "drizzle-orm";
+import { and, asc, desc, eq, gte, sql, sum } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { answer, enrollment, event, learner, learnerState, type SessionStatus, taskSession } from "./schema/learning.ts";
@@ -125,6 +125,16 @@ export async function activeSession(db: Db, learnerId: string, courseId: string)
     .from(taskSession)
     .where(and(eq(taskSession.learnerId, learnerId), eq(taskSession.courseId, courseId), eq(taskSession.status, "active")));
   return row;
+}
+
+/** completedSessions returns a learner's finished sessions in a course, newest first. */
+export async function completedSessions(db: Db, learnerId: string, courseId: string, limit: number): Promise<SessionRow[]> {
+  return db
+    .select()
+    .from(taskSession)
+    .where(and(eq(taskSession.learnerId, learnerId), eq(taskSession.courseId, courseId), eq(taskSession.status, "completed")))
+    .orderBy(desc(taskSession.completedAt))
+    .limit(limit);
 }
 
 /** NewSession is a session to create. */

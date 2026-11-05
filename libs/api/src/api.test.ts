@@ -98,6 +98,38 @@ async function skipToLessons() {
   await learning.skipDiagnostic({ courseId: COURSE });
 }
 
+describe("rereading", () => {
+  it("returns a topic's lesson with its links, and worked examples chosen by a seed", async () => {
+    await skipToLessons();
+    const { tasks } = await learning.getDashboard({ courseId: COURSE, timeZone: "UTC" });
+    const lesson = tasks.find((t) => t.kind.case === "lesson");
+    if (lesson?.kind.case !== "lesson") throw new Error("no lesson");
+    const topic = await learning.getTopic({ courseId: COURSE, topicId: lesson.kind.value.topicId });
+    expect(topic.knowledgePoints.length).toBe(lesson.kind.value.knowledgePoints);
+    expect(topic.status).toBe(TopicStatus.AVAILABLE);
+    expect(topic.knowledgePoints[0]?.example?.solution?.values.en).toBeTruthy();
+    expect(topic.dependents.length).toBeGreaterThan(0);
+    await expectCode(learning.getTopic({ courseId: COURSE, topicId: "nope" }), Code.NotFound);
+    await expectCode(anonymous.getTopic({ courseId: COURSE, topicId: lesson.kind.value.topicId }), Code.Unauthenticated);
+  });
+
+  it("lists finished sessions, newest first, and reopens them with their questions", async () => {
+    await skipToLessons();
+    expect((await learning.listSessions({ courseId: COURSE })).sessions).toEqual([]);
+    const { tasks } = await learning.getDashboard({ courseId: COURSE, timeZone: "UTC" });
+    const task = tasks.find((t) => t.kind.case === "lesson");
+    const started = await learning.startTask({ courseId: COURSE, task });
+    const done = await finish(started.session!);
+    const { sessions } = await learning.listSessions({ courseId: COURSE });
+    expect(sessions.map((s) => s.id)).toEqual([done.id]);
+    expect(sessions[0]?.passed).toBe(true);
+    expect(sessions[0]?.task?.kind.case).toBe("lesson");
+    expect(Number(sessions[0]?.completedAt)).toBe(now);
+    const reopened = await learning.getSession({ id: done.id });
+    expect(reopened.session?.step.case === "result" && reopened.session.step.value.items.length).toBe(sessions[0]?.asked);
+  });
+});
+
 describe("CatalogService", () => {
   it("lists courses and returns the outline of one", async () => {
     const { courses } = await catalog.listCourses({});

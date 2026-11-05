@@ -1038,6 +1038,196 @@ export declare type Feedback = Message<"ga.learning.v1.Feedback"> & {
 export declare const FeedbackSchema: GenMessage<Feedback>;
 
 /**
+ * @generated from message ga.learning.v1.GetTopicRequest
+ */
+export declare type GetTopicRequest = Message<"ga.learning.v1.GetTopicRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * @generated from field: string topic_id = 2;
+   */
+  topicId: string;
+
+  /**
+   * example_seed picks the worked examples, so that a learner can ask for others.
+   *
+   * @generated from field: int32 example_seed = 3;
+   */
+  exampleSeed: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.GetTopicRequest.
+ * Use `create(GetTopicRequestSchema)` to create a new message.
+ */
+export declare const GetTopicRequestSchema: GenMessage<GetTopicRequest>;
+
+/**
+ * @generated from message ga.learning.v1.GetTopicResponse
+ */
+export declare type GetTopicResponse = Message<"ga.learning.v1.GetTopicResponse"> & {
+  /**
+   * @generated from field: string topic_id = 1;
+   */
+  topicId: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: ga.common.v1.Text summary = 3;
+   */
+  summary?: Text | undefined;
+
+  /**
+   * @generated from field: ga.learning.v1.TopicStatus status = 4;
+   */
+  status: TopicStatus;
+
+  /**
+   * knowledge_points are the steps of the lesson, each with a worked example.
+   *
+   * @generated from field: repeated ga.learning.v1.KnowledgePointIntro knowledge_points = 5;
+   */
+  knowledgePoints: KnowledgePointIntro[];
+
+  /**
+   * prerequisites are the topics this one builds on.
+   *
+   * @generated from field: repeated ga.learning.v1.TopicLink prerequisites = 6;
+   */
+  prerequisites: TopicLink[];
+
+  /**
+   * dependents are the topics of the course that build on this one.
+   *
+   * @generated from field: repeated ga.learning.v1.TopicLink dependents = 7;
+   */
+  dependents: TopicLink[];
+};
+
+/**
+ * Describes the message ga.learning.v1.GetTopicResponse.
+ * Use `create(GetTopicResponseSchema)` to create a new message.
+ */
+export declare const GetTopicResponseSchema: GenMessage<GetTopicResponse>;
+
+/**
+ * TopicLink names another topic and the learner's standing on it.
+ *
+ * @generated from message ga.learning.v1.TopicLink
+ */
+export declare type TopicLink = Message<"ga.learning.v1.TopicLink"> & {
+  /**
+   * @generated from field: string topic_id = 1;
+   */
+  topicId: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: ga.learning.v1.TopicStatus status = 3;
+   */
+  status: TopicStatus;
+};
+
+/**
+ * Describes the message ga.learning.v1.TopicLink.
+ * Use `create(TopicLinkSchema)` to create a new message.
+ */
+export declare const TopicLinkSchema: GenMessage<TopicLink>;
+
+/**
+ * @generated from message ga.learning.v1.ListSessionsRequest
+ */
+export declare type ListSessionsRequest = Message<"ga.learning.v1.ListSessionsRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.ListSessionsRequest.
+ * Use `create(ListSessionsRequestSchema)` to create a new message.
+ */
+export declare const ListSessionsRequestSchema: GenMessage<ListSessionsRequest>;
+
+/**
+ * @generated from message ga.learning.v1.ListSessionsResponse
+ */
+export declare type ListSessionsResponse = Message<"ga.learning.v1.ListSessionsResponse"> & {
+  /**
+   * @generated from field: repeated ga.learning.v1.FinishedSession sessions = 1;
+   */
+  sessions: FinishedSession[];
+};
+
+/**
+ * Describes the message ga.learning.v1.ListSessionsResponse.
+ * Use `create(ListSessionsResponseSchema)` to create a new message.
+ */
+export declare const ListSessionsResponseSchema: GenMessage<ListSessionsResponse>;
+
+/**
+ * FinishedSession is one line of a learner's history; GetSession returns the whole session.
+ *
+ * @generated from message ga.learning.v1.FinishedSession
+ */
+export declare type FinishedSession = Message<"ga.learning.v1.FinishedSession"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: ga.learning.v1.Task task = 2;
+   */
+  task?: Task | undefined;
+
+  /**
+   * completed_at is in milliseconds since the epoch.
+   *
+   * @generated from field: int64 completed_at = 3;
+   */
+  completedAt: bigint;
+
+  /**
+   * @generated from field: bool passed = 4;
+   */
+  passed: boolean;
+
+  /**
+   * @generated from field: int32 correct = 5;
+   */
+  correct: number;
+
+  /**
+   * @generated from field: int32 asked = 6;
+   */
+  asked: number;
+
+  /**
+   * @generated from field: int32 xp = 7;
+   */
+  xp: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.FinishedSession.
+ * Use `create(FinishedSessionSchema)` to create a new message.
+ */
+export declare const FinishedSessionSchema: GenMessage<FinishedSession>;
+
+/**
  * Result ends a session.
  *
  * @generated from message ga.learning.v1.Result
@@ -1064,7 +1254,7 @@ export declare type Result = Message<"ga.learning.v1.Result"> & {
   xp: number;
 
   /**
-   * items are the questions with their outcomes, for quizzes and reviews.
+   * items are the questions with their outcomes, for lessons, quizzes and reviews.
    *
    * @generated from field: repeated ga.learning.v1.ResultItem items = 5;
    */
@@ -1284,6 +1474,26 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof SubmitAnswerRequestSchema;
     output: typeof SubmitAnswerResponseSchema;
+  },
+  /**
+   * GetTopic returns a topic's lesson to reread, and how it connects to other topics.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.GetTopic
+   */
+  getTopic: {
+    methodKind: "unary";
+    input: typeof GetTopicRequestSchema;
+    output: typeof GetTopicResponseSchema;
+  },
+  /**
+   * ListSessions lists the learner's finished sessions in a course, newest first.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.ListSessions
+   */
+  listSessions: {
+    methodKind: "unary";
+    input: typeof ListSessionsRequestSchema;
+    output: typeof ListSessionsResponseSchema;
   },
 }>;
 

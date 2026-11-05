@@ -4,6 +4,7 @@ import { createRng, type Rng } from "@ga/content";
 import {
   activeSession,
   appendEvent,
+  completedSessions,
   createSession,
   type Db,
   enroll,
@@ -27,6 +28,7 @@ import {
   frontier,
   initialState,
   isDue,
+  type LearnerState,
   memory,
   nextTasks,
   type Task,
@@ -34,9 +36,21 @@ import {
 import { type LearningService, type Task as TaskMessage, TopicStatus, type XpSummarySchema } from "@ga/proto/learning/v1/learning_pb";
 
 import { dbKey, userIdKey } from "./context.ts";
-import { figure, sessionMessage, taskMessage, text } from "./convert.ts";
+import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, type RunState, runTask, startRun } from "./runner.ts";
+
+/** historyLength bounds the finished sessions a learner's history lists. */
+const historyLength = 100;
+
+/** topicStatus is a learner's standing on a topic; open is the learner's frontier. */
+function topicStatus(c: CourseEntry, s: LearnerState, open: ReadonlySet<string>, id: string, now: number): TopicStatus {
+  const t = s.topics[id];
+  if (c.planner.scope.assumed.has(id)) return TopicStatus.ASSUMED;
+  if (t?.learned) return isDue(c.ctx.params, t, now) ? TopicStatus.DUE : TopicStatus.LEARNED;
+  if (open.has(id)) return TopicStatus.AVAILABLE;
+  return t?.failedAt !== undefined ? TopicStatus.FAILED : TopicStatus.LOCKED;
+}
 
 /** LearningDeps are the learning service's dependencies besides the request context. */
 export interface LearningDeps {
@@ -178,24 +192,67 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       return {
         topics: c.planner.scope.topics.map((id) => {
           const t = s.topics[id];
-          const status = c.planner.scope.assumed.has(id)
-            ? TopicStatus.ASSUMED
-            : t?.learned
-              ? isDue(p, t, now)
-                ? TopicStatus.DUE
-                : TopicStatus.LEARNED
-              : open.has(id)
-                ? TopicStatus.AVAILABLE
-                : t?.failedAt !== undefined
-                  ? TopicStatus.FAILED
-                  : TopicStatus.LOCKED;
           return {
             topicId: id,
-            status,
+            status: topicStatus(c, s, open, id, now),
             placed: t?.placed === true,
             memory: t?.learned ? memory(p, t, now) : 0,
             foundation: !c.planner.scope.inCourse.has(id),
           };
+        }),
+      };
+    },
+
+    async getTopic(req, ctx) {
+      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const topic = c.subject.topics.get(req.topicId);
+      if (!topic) throw new ConnectError("no such topic", Code.NotFound);
+      const now = deps.now();
+      const { state: s } = await state(db, learnerId, c);
+      const open = new Set(frontier(c.planner, s));
+      const count = topic.knowledgePoints.length;
+      const indexes = Array.from({ length: count }, (_, kp) => kp);
+      const [lessons, examples] = await Promise.all([
+        Promise.all(indexes.map((kp) => c.source.lesson(topic.id, kp))),
+        c.source.problems(indexes.map((kp) => ({ topic: topic.id, kp, seed: req.exampleSeed + 1 }))),
+      ]);
+      const link = (id: string) => ({
+        topicId: id,
+        title: text(c.subject.topics.get(id)!.title),
+        status: topicStatus(c, s, open, id, now),
+      });
+      const dependents = c.planner.scope.topics.filter((id) => c.subject.topics.get(id)?.prerequisites.includes(topic.id));
+      return {
+        topicId: topic.id,
+        title: text(topic.title),
+        summary: text(topic.summary),
+        status: topicStatus(c, s, open, topic.id, now),
+        knowledgePoints: indexes.map((kp) => knowledgePointIntro(lessons[kp]!, examples[kp]!, kp, count)),
+        prerequisites: topic.prerequisites.map(link),
+        dependents: dependents.map(link),
+      };
+    },
+
+    async listSessions(req, ctx) {
+      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { state: s } = await state(db, learnerId, c);
+      const rows = await completedSessions(db, learnerId, c.id, historyLength);
+      return {
+        sessions: rows.flatMap((row) => {
+          const run = row.state as RunState;
+          const r = run.result;
+          if (!r) return [];
+          return [
+            {
+              id: row.id,
+              task: taskMessage(c, runTask(run), s),
+              completedAt: BigInt(row.completedAt?.getTime() ?? row.updatedAt.getTime()),
+              passed: r.passed,
+              correct: r.correct,
+              asked: r.asked,
+              xp: r.xp,
+            },
+          ];
         }),
       };
     },

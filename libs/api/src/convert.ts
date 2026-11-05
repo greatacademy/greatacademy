@@ -1,10 +1,11 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
-import type { Figure, InputSpec, Problem, Text } from "@ga/content";
+import type { Figure, InputSpec, KnowledgePointLesson, Problem, Text } from "@ga/content";
 import { diagnosticCandidates, diagnosticLength, type LearnerState, reviewXp, type Task } from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
   InputSchema,
+  KnowledgePointIntroSchema,
   ProblemViewSchema,
   QuestionSchema,
   ResultSchema,
@@ -65,6 +66,29 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
   }
 }
 
+/** knowledgePointIntro converts a knowledge point's lesson and a worked example of it. */
+export function knowledgePointIntro(
+  kp: KnowledgePointLesson,
+  example: Problem,
+  index: number,
+  count: number,
+): MessageInitShape<typeof KnowledgePointIntroSchema> {
+  return {
+    index,
+    count,
+    title: text(kp.title),
+    explanation: text(kp.explanation),
+    example: {
+      problem: problemView(example),
+      solution: text(example.solution),
+      answer: example.canonical,
+      ...(example.solutionFigure && { solutionFigure: figure(example.solutionFigure) }),
+    },
+    ...(kp.figure && { figure: figure(kp.figure) }),
+    figures: (kp.figures ?? []).map(figure),
+  };
+}
+
 async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof QuestionSchema>> {
   const ref = run.current!;
   const intro = run.kind === "lesson" && run.lesson.kpAsked === 0 && !run.practice;
@@ -85,26 +109,13 @@ async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape
   return {
     ...q,
     lesson,
-    intro: {
-      index: l.kp,
-      count: l.kpCount,
-      title: text(kp.title),
-      explanation: text(kp.explanation),
-      example: {
-        problem: problemView(example!),
-        solution: text(example!.solution),
-        answer: example!.canonical,
-        ...(example!.solutionFigure && { solutionFigure: figure(example!.solutionFigure) }),
-      },
-      ...(kp.figure && { figure: figure(kp.figure) }),
-      figures: (kp.figures ?? []).map(figure),
-    },
+    intro: knowledgePointIntro(kp, example!, l.kp, l.kpCount),
   };
 }
 
 async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof ResultSchema>> {
   const r = run.result!;
-  const listed = run.kind === "review" || run.kind === "quiz";
+  const listed = run.kind !== "diagnostic";
   const problems = listed ? await c.source.problems(run.asked.map(({ topic, kp, seed }) => ({ topic, kp, seed }))) : [];
   const items = listed
     ? run.asked.map((a, i) => {
