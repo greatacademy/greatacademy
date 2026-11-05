@@ -905,7 +905,7 @@ const gomory = topic(
 );
 
 /** arcsFigure draws a small network on four nodes, each arc labelled with a number. */
-function arcsFigure(arcs: readonly (readonly [string, string, number])[], alt: Pair): Figure {
+export function arcsFigure(arcs: readonly (readonly [string, string, number])[], alt: Pair): Figure {
   const at: Record<string, readonly [number, number]> = { S: [40, 90], A: [160, 30], B: [160, 150], T: [280, 90] };
   const parts = arcs.map(([from, to, w]) => {
     const [x1, y1] = at[from] as readonly [number, number];

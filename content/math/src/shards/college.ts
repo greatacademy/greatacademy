@@ -47,6 +47,7 @@ import { linearAlgebraQuadraticFormsApplicationsTopics } from "../topics/linear-
 import { linearAlgebraTransformationsEigenvaluesTopics } from "../topics/linear-algebra-transformations-eigenvalues.ts";
 import { linearAlgebraVectorSpaceTopics } from "../topics/linear-algebra-vector-spaces.ts";
 import { linearProgrammingTopics } from "../topics/linear-programming.ts";
+import { linearProgrammingExtraTopics } from "../topics/linear-programming-extra.ts";
 import { linearProgrammingMoreTopics } from "../topics/linear-programming-more.ts";
 import { mathematicsForMachineLearningContinuousConditioningTopics } from "../topics/mathematics-for-machine-learning-continuous-conditioning.ts";
 import { mathematicsForMachineLearningMatrixCalculusTopics } from "../topics/mathematics-for-machine-learning-matrix-calculus.ts";
@@ -99,6 +100,7 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     ...numberTheoryExtraTopics,
     ...linearProgrammingTopics,
     ...linearProgrammingMoreTopics,
+    ...linearProgrammingExtraTopics,
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,
     ...methodsOfProofRelationTopics,

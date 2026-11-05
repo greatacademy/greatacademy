@@ -18572,8 +18572,8 @@ export const linearProgramming: CourseDef = {
   id: "linear-programming",
   title: t("Linear Programming", "线性规划"),
   description: t(
-    "Optimization with linear constraints: formulating programs, the graphical and simplex methods, duality and sensitivity, transportation, assignment and flow problems, integer programs, and matrix games.",
-    "线性约束下的优化：建立规划，图解法和单纯形法，对偶和灵敏度，运输、指派和流问题，整数规划，以及矩阵博弈。",
+    "Optimization with linear constraints: formulating programs, the graphical and simplex methods, duality and sensitivity, modeling techniques, transportation, assignment and flow problems, integer programs and branch and bound, large programs, and matrix games.",
+    "线性约束下的优化：建立规划，图解法和单纯形法，对偶和灵敏度，建模技巧，运输、指派和流问题，整数规划和分支定界，大规模规划，以及矩阵博弈。",
   ),
   units: [
     {
@@ -18583,6 +18583,10 @@ export const linearProgramming: CourseDef = {
           title: t("Linear Programs", "线性规划"),
           topics: [
             "formulating-linear-programs",
+            "diet-blending-and-multiperiod-models",
+            "linearizing-absolute-values-and-minimax",
+            "piecewise-linear-objectives",
+            "goal-programming",
             "the-graphical-method-for-linear-programs",
             "standard-form-and-slack-variables",
             "basic-feasible-solutions",
@@ -18590,7 +18594,12 @@ export const linearProgramming: CourseDef = {
         },
         {
           title: t("Geometry and Variations", "几何与变化形式"),
-          topics: ["convex-sets-and-convex-combinations", "infeasible-programs-and-farkas-lemma", "minimization-and-surplus-variables"],
+          topics: [
+            "convex-sets-and-convex-combinations",
+            "polyhedra-and-extreme-points",
+            "infeasible-programs-and-farkas-lemma",
+            "minimization-and-surplus-variables",
+          ],
         },
       ],
     },
@@ -18599,11 +18608,22 @@ export const linearProgramming: CourseDef = {
       modules: [
         {
           title: t("Tableaus and Pivots", "单纯形表和主元运算"),
-          topics: ["the-simplex-tableau", "pivoting-in-the-simplex-method", "the-two-phase-method", "unboundedness-and-degeneracy"],
+          topics: [
+            "the-simplex-tableau",
+            "pivoting-in-the-simplex-method",
+            "the-two-phase-method",
+            "unboundedness-and-degeneracy",
+            "blands-rule-and-cycling",
+          ],
         },
         {
           title: t("Refinements of the Method", "方法的改进"),
-          topics: ["alternative-optimal-solutions", "the-big-m-method"],
+          topics: [
+            "alternative-optimal-solutions",
+            "the-big-m-method",
+            "the-simplex-method-with-bounded-variables",
+            "the-complexity-of-linear-programming",
+          ],
         },
       ],
     },
@@ -18612,11 +18632,26 @@ export const linearProgramming: CourseDef = {
       modules: [
         {
           title: t("Duality and Sensitivity", "对偶和灵敏度"),
-          topics: ["the-dual-of-a-linear-program", "weak-duality", "strong-duality-and-complementary-slackness", "sensitivity-analysis"],
+          topics: [
+            "the-dual-of-a-linear-program",
+            "weak-duality",
+            "strong-duality-and-complementary-slackness",
+            "sensitivity-analysis",
+            "objective-coefficient-ranging",
+          ],
         },
         {
           title: t("Working With the Inverse", "利用逆矩阵"),
-          topics: ["reduced-costs", "the-revised-simplex-method", "the-dual-simplex-method", "right-hand-side-ranging"],
+          topics: [
+            "reduced-costs",
+            "the-revised-simplex-method",
+            "the-tableau-in-matrix-form",
+            "column-generation",
+            "the-dual-simplex-method",
+            "adding-a-variable-or-a-constraint",
+            "right-hand-side-ranging",
+            "shadow-prices-in-decisions",
+          ],
         },
       ],
     },
@@ -18627,16 +18662,27 @@ export const linearProgramming: CourseDef = {
           title: t("Network Problems", "网络问题"),
           topics: [
             "the-transportation-problem",
+            "starting-plans-for-transportation",
             "improving-a-transportation-plan",
             "the-assignment-problem",
+            "the-hungarian-algorithm",
             "maximum-flow-and-minimum-cut",
             "shortest-paths-as-linear-programs",
             "minimum-cost-flow",
+            "the-network-simplex-method",
           ],
         },
         {
           title: t("Beyond the Continuous Case", "连续情形之外"),
-          topics: ["integer-programming", "gomory-cutting-planes", "matrix-games"],
+          topics: [
+            "integer-programming",
+            "branch-and-bound",
+            "the-knapsack-problem",
+            "total-unimodularity",
+            "gomory-cutting-planes",
+            "matrix-games",
+            "solving-matrix-games-by-linear-programming",
+          ],
         },
       ],
     },
