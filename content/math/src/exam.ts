@@ -281,6 +281,7 @@ export interface PlotView {
 }
 
 const round1 = (n: number): string => String(Math.round(n * 10) / 10);
+const round2 = (n: number): string => String(Math.round(n * 100) / 100);
 
 /** plotFrame draws the grid and axes of a coordinate figure and what body adds in its coordinates. */
 export const plotFrame = (v: PlotView, body: (px: (x: number) => number, py: (y: number) => number) => string, alt: Text): Figure => {
@@ -312,7 +313,24 @@ export const plotFrame = (v: PlotView, body: (px: (x: number) => number, py: (y:
   };
 };
 
-/** curveFigure draws the graph of f over a grid, leaving out the parts outside the window. */
+/** listAlt adds a sentence to an alt text, with the list of what it names. */
+const listAlt = (alt: Text, en: string, zh: string, items: readonly string[]): Text =>
+  items.length === 0 ? alt : t(`${alt.en} ${en} ${items.join(", ")}.`, `${alt["zh-CN"]}${zh} ${items.join("、")}。`);
+
+/** curvePoints lists up to nine points of the graph of f on the grid lines of the view. */
+const curvePoints = (f: (x: number) => number, view: PlotView): string[] => {
+  const points: string[] = [];
+  const count = Math.round((view.x[1] - view.x[0]) / view.dx);
+  const stride = Math.max(1, Math.ceil(count / 8));
+  for (let i = 0; i <= count; i += stride) {
+    const x = view.x[0] + i * view.dx;
+    const y = f(x);
+    if (Number.isFinite(y) && y >= view.y[0] && y <= view.y[1]) points.push(`(${round2(x)}, ${round2(y)})`);
+  }
+  return points;
+};
+
+/** curveFigure draws the graph of f over a grid, leaving out the parts outside the window; its alt text lists points of the graph. */
 export function curveFigure(f: (x: number) => number, view: PlotView, alt: Text): Figure {
   return plotFrame(
     view,
@@ -330,7 +348,7 @@ export function curveFigure(f: (x: number) => number, view: PlotView, alt: Text)
         .map((r) => `<polyline class="accent" points="${r.join(" ")}" stroke-width="2"/>`)
         .join("");
     },
-    alt,
+    listAlt(alt, "It passes through", "它经过", curvePoints(f, view)),
   );
 }
 
@@ -352,7 +370,17 @@ export function dotsFigure(
         : "";
       return dots + fit;
     },
-    alt,
+    listAlt(
+      listAlt(
+        alt,
+        "The points are",
+        "这些点是",
+        points.map(([x, y]) => `(${round2(x)}, ${round2(y)})`),
+      ),
+      "A line runs through",
+      "一条直线经过",
+      line ? line.map(([x, y]) => `(${round2(x)}, ${round2(y)})`) : [],
+    ),
   );
 }
 

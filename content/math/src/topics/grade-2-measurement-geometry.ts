@@ -1138,7 +1138,10 @@ function linePlotData(rng: Rng): { readonly values: number[]; readonly top: numb
 /** linePlotFigure draws a line plot of pencil lengths in inches. */
 const linePlotFigure = (values: readonly number[]): Figure => ({
   svg: dotPlot(values, { min: 3, max: 9, step: 1 }),
-  alt: t("A line plot of pencil lengths from 3 to 9 inches.", "铅笔长度的线图，从 3 到 9 英寸。"),
+  alt: t(
+    `A line plot of pencil lengths from 3 to 9 inches, with one dot at each of: ${values.join(", ")}.`,
+    `铅笔长度的线图，从 3 到 9 英寸，点分别在：${values.join("、")}。`,
+  ),
 });
 
 const linePlotsOfLengths = earlyTopic(

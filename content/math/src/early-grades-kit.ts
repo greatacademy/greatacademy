@@ -93,8 +93,8 @@ export function countersFigure(n: number, perRow = 5, accented = 0): Figure {
   return {
     svg: svgDocument(rows * 26 + 10, body),
     alt: t(
-      accented ? "Counters set out in rows, some of them filled in." : "Counters set out in rows.",
-      accented ? "圆片一行行地排着，其中一些涂了颜色。" : "圆片一行行地排着。",
+      `${n} counters set out in rows of ${perRow}${accented ? `, ${accented} of them filled in` : ""}.`,
+      `${n} 个圆片，每行 ${perRow} 个${accented ? `，其中 ${accented} 个涂了颜色` : ""}。`,
     ),
   };
 }
@@ -108,7 +108,7 @@ export function arrayFigure(rows: number, columns: number): Figure {
   }
   return {
     svg: svgDocument(rows * gap + 12, body),
-    alt: t("An array of dots set out in rows and columns.", "一个按行和列排好的点阵。"),
+    alt: t(`An array of dots in ${rows} rows and ${columns} columns.`, `一个点阵，共 ${rows} 行 ${columns} 列。`),
   };
 }
 
@@ -132,8 +132,8 @@ export function baseTenFigure(hundreds: number, tens: number, ones: number): Fig
   return {
     svg: svgDocument(70, body),
     alt: t(
-      "Base-ten blocks: large squares are hundreds, rods are tens and small squares are ones.",
-      "十进制积木：大方块是百，长条是十，小方块是一。",
+      `Base-ten blocks: ${hundreds} large squares for hundreds, ${tens} rods for tens and ${ones} small squares for ones.`,
+      `十进制积木：${hundreds} 个大方块表示百，${tens} 根长条表示十，${ones} 个小方块表示一。`,
     ),
   };
 }
@@ -160,7 +160,10 @@ export function clockFigure(hour: number, minute: number): Figure {
   body += `<g class="accent" stroke-width="3"><line x1="${cx}" y1="${cy}" ${hand(hourAngle, 34)}/></g><g class="accent"><line x1="${cx}" y1="${cy}" ${hand(minuteAngle, 52)}/></g>`;
   return {
     svg: svgDocument(160, body),
-    alt: t(`An analog clock whose hands show a time.`, `一个指针式钟面，指针指示某个时间。`),
+    alt: t(
+      `An analog clock showing ${hour}:${String(minute).padStart(2, "0")}.`,
+      `一个指针式钟面，显示 ${hour}:${String(minute).padStart(2, "0")}。`,
+    ),
   };
 }
 
@@ -181,7 +184,10 @@ export function barGraphFigure(labels: readonly string[], values: readonly numbe
   });
   return {
     svg: svgDocument(height + 34, body),
-    alt: t(`A bar graph with bars ${labels.join(", ")} and a scale at the side.`, `条形图，有条 ${labels.join("、")}，旁边有刻度。`),
+    alt: t(
+      `A bar graph with a scale at the side: ${labels.map((label, i) => `bar ${label} reaches ${values[i]}`).join(", ")}.`,
+      `条形图，旁边有刻度：${labels.map((label, i) => `条 ${label} 到 ${values[i]}`).join("，")}。`,
+    ),
   };
 }
 
@@ -196,8 +202,8 @@ export function pictureGraphFigure(labels: readonly string[], values: readonly n
   return {
     svg: svgDocument(values.length * 28 + 10, body),
     alt: t(
-      `A picture graph with rows ${labels.join(", ")}. Each dot stands for ${per}.`,
-      `象形统计图，各行是 ${labels.join("、")}。每个点代表 ${per}。`,
+      `A picture graph where each dot stands for ${per}: ${labels.map((label, i) => `row ${label} has ${(values[i] ?? 0) / per} dots`).join(", ")}.`,
+      `象形统计图，每个点代表 ${per}：${labels.map((label, i) => `${label} 行有 ${(values[i] ?? 0) / per} 个点`).join("，")}。`,
     ),
   };
 }
@@ -215,9 +221,11 @@ export function gridFigure(rows: number, columns: number, shaded = rows * column
     svg: svgDocument(rows * size + 12, body),
     alt: t(
       shaded === rows * columns
-        ? "A rectangle cut into equal squares, all shaded."
-        : "A rectangle cut into equal squares, some of them shaded.",
-      shaded === rows * columns ? "一个长方形，分成相同的方格，全部涂色。" : "一个长方形，分成相同的方格，其中一些涂色。",
+        ? `A rectangle cut into ${rows} rows and ${columns} columns of equal squares, all shaded.`
+        : `A rectangle cut into ${rows} rows and ${columns} columns of equal squares, ${shaded} of them shaded.`,
+      shaded === rows * columns
+        ? `一个长方形，分成 ${rows} 行 ${columns} 列相同的方格，全部涂色。`
+        : `一个长方形，分成 ${rows} 行 ${columns} 列相同的方格，其中 ${shaded} 个涂了颜色。`,
     ),
   };
 }
@@ -249,7 +257,7 @@ export function polygonFigure(points: readonly (readonly [number, number])[], al
   const path = points.map(([x, y]) => `${60 + x * 20},${10 + (10 - y) * 12}`).join(" ");
   return {
     svg: svgDocument(140, `<polygon points="${path}" class="accent" fill="currentColor" fill-opacity="0.2"/><polygon points="${path}"/>`),
-    alt,
+    alt: t(`${alt.en} It has ${points.length} sides.`, `${alt["zh-CN"]}它有 ${points.length} 条边。`),
   };
 }
 
@@ -289,8 +297,10 @@ export function tenFramesFigure(first: number, second = 0): Figure {
   return {
     svg: svgDocument(2 * cell + 12, body),
     alt: t(
-      second ? "Ten-frames holding filled counters and hollow counters." : "A ten-frame holding filled counters.",
-      second ? "十格框，里面有实心圆片和空心圆片。" : "十格框，里面有实心圆片。",
+      second
+        ? `Ten-frames holding ${first} filled counters and ${second} hollow counters.`
+        : `Ten-frames holding ${first} filled counters.`,
+      second ? `十格框，里面有 ${first} 个实心圆片和 ${second} 个空心圆片。` : `十格框，里面有 ${first} 个实心圆片。`,
     ),
   };
 }
@@ -314,7 +324,10 @@ export function tallyFigure(labels: readonly string[], values: readonly number[]
   });
   return {
     svg: svgDocument(values.length * 30 + 6, body),
-    alt: t(`A tally chart with rows ${labels.join(", ")}.`, `计数表，各行是 ${labels.join("、")}。`),
+    alt: t(
+      `A tally chart: ${labels.map((label, i) => `row ${label} has ${values[i]} marks`).join(", ")}.`,
+      `计数表：${labels.map((label, i) => `${label} 行有 ${values[i]} 笔`).join("，")}。`,
+    ),
   };
 }
 
@@ -374,7 +387,10 @@ export function lengthBarsFigure(labels: readonly string[], lengths: readonly nu
   });
   return {
     svg: svgDocument(lengths.length * 30 + 6, body),
-    alt: t(`Bars ${labels.join(", ")} starting from the same line.`, `从同一条线开始的长条 ${labels.join("、")}。`),
+    alt: t(
+      `Bars starting from the same line: ${labels.map((label, i) => `${label} is ${lengths[i]} units long`).join(", ")}.`,
+      `从同一条线开始的长条：${labels.map((label, i) => `${label} 长 ${lengths[i]} 个单位`).join("，")}。`,
+    ),
   };
 }
 
@@ -396,7 +412,10 @@ export function slicedCircleFigure(parts: number, shaded: number): Figure {
   for (let i = 0; i < parts; i++) body += `<path d="M ${cx} ${cy} L ${at(i)}"/>`;
   return {
     svg: svgDocument(140, body),
-    alt: t("A circle cut into equal slices, some of them shaded.", "一个圆被平均分成几份，其中一些涂了颜色。"),
+    alt: t(
+      `A circle cut into ${parts} equal slices, ${shaded} of them shaded.`,
+      `一个圆被平均分成 ${parts} 份，其中 ${shaded} 份涂了颜色。`,
+    ),
   };
 }
 
@@ -412,6 +431,9 @@ export function cutBarFigure(widths: readonly number[], shaded?: number): Figure
   });
   return {
     svg: svgDocument(60, body),
-    alt: t(`A bar cut into ${widths.length} parts.`, `一个长条被分成 ${widths.length} 部分。`),
+    alt: t(
+      `A bar cut into ${widths.length} parts of widths ${widths.join(", ")}${shaded === undefined ? "" : `; part ${shaded + 1} is shaded`}.`,
+      `一个长条被分成 ${widths.length} 部分，宽度依次为 ${widths.join("、")}${shaded === undefined ? "" : `；第 ${shaded + 1} 部分涂了颜色`}。`,
+    ),
   };
 }

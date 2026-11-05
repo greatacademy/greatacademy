@@ -123,8 +123,8 @@ export function barFigure(d: number, shaded: number, count = 1): Figure {
   return {
     svg: barsSvg(d, shaded, count),
     alt: t(
-      `${count === 1 ? "A bar cut" : "Equal bars, each cut"} into equal parts, some of them shaded.`,
-      `${count === 1 ? "一个长条，平均分成" : "几个同样的长条，每个都平均分成"}几份，其中一些涂了颜色。`,
+      `${count === 1 ? "A bar cut" : `${count} equal bars, each cut`} into ${d} equal parts, with ${shaded} parts shaded${count === 1 ? "" : " in all"}.`,
+      `${count === 1 ? "一个长条，平均分成" : `${count} 个同样的长条，每个都平均分成`} ${d} 份，${count === 1 ? "" : "一共"}有 ${shaded} 份涂了颜色。`,
     ),
   };
 }
@@ -145,8 +145,8 @@ export function twoBarsFigure(d1: number, s1: number, d2: number, s2: number): F
   return {
     svg: svgDocument(2 * (h + 14) + 4, body),
     alt: t(
-      "Two bars of the same size, each cut into equal parts, with some parts of each shaded.",
-      "两个同样大的长条，每个都平均分成几份，各有一些涂了颜色。",
+      `Two bars of the same size: the first is cut into ${d1} equal parts with ${s1} shaded, the second into ${d2} equal parts with ${s2} shaded.`,
+      `两个同样大的长条：第一个平均分成 ${d1} 份，涂了 ${s1} 份；第二个平均分成 ${d2} 份，涂了 ${s2} 份。`,
     ),
   };
 }

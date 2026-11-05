@@ -1892,7 +1892,10 @@ export const furtherGraphingLinearInequalities: TopicDef = {
           }),
           figure: {
             svg: plane(inequalityView, [{ kind: "region", halfPlanes: [hp] }, line]),
-            alt: t("A shaded region on a coordinate grid, bounded by a line.", "坐标网格上的一个涂色区域，边界是一条直线。"),
+            alt: t(
+              `A shaded region on a coordinate grid, ${side[0]} the ${isStrict(op) ? "dashed" : "solid"} line ${v} = ${k}.`,
+              `坐标网格上的一个涂色区域，在${isStrict(op) ? "虚" : "实"}线 ${v} = ${k} 的${side[1]}。`,
+            ),
           },
         };
       },

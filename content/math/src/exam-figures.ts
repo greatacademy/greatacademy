@@ -45,7 +45,13 @@ const centroid = (pts: readonly Pt[]): Pt => [
 ];
 
 /** sceneFigure draws a scene on a 320 by 240 canvas, scaled to fit and keeping its proportions. */
-export function sceneFigure(s: Scene, alt: Text = givenMeasures): Figure {
+export function sceneFigure(s: Scene, given?: Text): Figure {
+  const named = [...new Set((s.labels ?? []).map((label) => label.text))];
+  const alt =
+    given ??
+    (named.length === 0
+      ? givenMeasures
+      : t(`${givenMeasures.en} Its labels are ${named.join(", ")}.`, `${givenMeasures["zh-CN"]}图上标有 ${named.join("、")}。`));
   const [W, H, M] = [320, 240, 34];
   const xs: number[] = [];
   const ys: number[] = [];
@@ -784,7 +790,7 @@ export function pieFigure(percent: number): Figure {
       ],
       labels: [{ at: polar(0.6, 90 - angle / 2), text: `${percent}%` }],
     },
-    t("A circle graph with one shaded sector labeled with its percent.", "一张扇形图，其中一个阴影扇形标有百分比。"),
+    t(`A circle graph with one shaded sector labeled ${percent}%.`, `一张扇形图，其中一个阴影扇形标有 ${percent}%。`),
   );
 }
 
@@ -823,7 +829,15 @@ export function linesFigure(first: readonly [number, number], second: readonly [
     const [xa, xb] = m === 0 ? [-10, 10] : [clip((-20 - b) / m), clip((20 - b) / m)].sort((p, q) => p - q);
     return `<line class="accent" x1="${r1(px(xa!))}" y1="${r1(py(m * xa! + b))}" x2="${r1(px(xb!))}" y2="${r1(py(m * xb! + b))}" stroke-width="2"/>`;
   };
-  return plotFrame(view, (px, py) => line(first[0], first[1], px, py) + line(second[0], second[1], px, py), givenGraph);
+  const lineAlt = ([m, b]: readonly [number, number]) => `y = ${r1(m)}x + ${r1(b)}`;
+  return plotFrame(
+    view,
+    (px, py) => line(first[0], first[1], px, py) + line(second[0], second[1], px, py),
+    t(
+      `Two lines on a coordinate grid: ${lineAlt(first)} and ${lineAlt(second)}.`,
+      `坐标网格上的两条直线：${lineAlt(first)} 和 ${lineAlt(second)}。`,
+    ),
+  );
 }
 
 /** pointsFigure plots points on a grid that fits them, with an optional segment through two points. */
@@ -865,7 +879,10 @@ export function regionFigure(m: number, b: number, above: boolean): Figure {
       const pts = corners.map((p) => `${r1(px(p[0]))},${r1(py(p[1]))}`).join(" ");
       return `<polygon points="${pts}" fill="currentColor" fill-opacity="0.15" stroke="none"/><line class="accent" x1="${r1(px(xa))}" y1="${r1(py(ya))}" x2="${r1(px(xc))}" y2="${r1(py(yc))}" stroke-width="2" stroke-dasharray="6 4"/>`;
     },
-    givenGraph,
+    t(
+      `A dashed line through (0, ${r1(b)}) with slope ${r1(m)} on a coordinate grid, with the region ${above ? "above" : "below"} it shaded.`,
+      `坐标网格上一条过 (0, ${r1(b)})、斜率为 ${r1(m)} 的虚线，${above ? "上" : "下"}方区域涂色。`,
+    ),
   );
 }
 
@@ -887,7 +904,10 @@ export function rectPlot(x: number, y: number, w: number, h: number, hideFourth:
       const path = corners.map(([a, b]) => `${r1(px(a))},${r1(py(b))}`).join(" ");
       return `${dots}<polyline class="accent" points="${path}${hideFourth ? "" : ` ${r1(px(x))},${r1(py(y))}`}" stroke-width="2"/>`;
     },
-    givenGraph,
+    t(
+      `${hideFourth ? "Three corners of a rectangle" : "A rectangle"} on a coordinate grid: ${corners.map(([a, b]) => `(${a}, ${b})`).join(", ")}.`,
+      `坐标网格上${hideFourth ? "长方形的三个顶点" : "的长方形"}：${corners.map(([a, b]) => `(${a}, ${b})`).join("、")}。`,
+    ),
   );
   return frame;
 }

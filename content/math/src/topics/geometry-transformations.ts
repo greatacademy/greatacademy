@@ -28,10 +28,14 @@ const figure = (marks: readonly Mark[], en: string, zh: string): Figure => ({ sv
 
 const view: PlaneView = { xMin: -8, xMax: 8, yMin: -8, yMax: 8, labelEvery: 2 };
 
+/** markedPoints lists the labeled points of a graph for its alt text. */
+const markedPoints = (marks: readonly PlaneMark[]): string =>
+  marks.flatMap((mark) => (mark.kind === "point" && mark.label ? [`${mark.label} (${mark.at[0]}, ${mark.at[1]})`] : [])).join(", ");
+
 /** graph draws marks in the coordinate plane as a figure. */
 const graph = (marks: readonly PlaneMark[], en: string, zh: string, v: PlaneView = view): Figure => ({
   svg: plane(v, marks),
-  alt: t(en, zh),
+  alt: markedPoints(marks) ? t(`${en} Marked points: ${markedPoints(marks)}.`, `${zh}标出的点：${markedPoints(marks)}。`) : t(en, zh),
 });
 
 /** cat joins texts and plain strings (the same in every locale). */

@@ -2183,7 +2183,13 @@ const makingLinePlots = earlyTopic(
           values.length,
           [span + 1, min + span, values.length + 1],
           [`There are ${values.length} dots in all, and each dot is one pencil.`, `一共有 ${values.length} 个点，每个点是一支铅笔。`],
-          { svg: dotPlot(values, { min, max: min + span, step: 1 }), alt: t("A line plot of pencil lengths.", "铅笔长度的线图。") },
+          {
+            svg: dotPlot(values, { min, max: min + span, step: 1 }),
+            alt: t(
+              `A line plot of pencil lengths, with one dot at each of: ${values.join(", ")}.`,
+              `铅笔长度的线图，点分别在：${values.join("、")}。`,
+            ),
+          },
         );
       },
     ),
@@ -2209,7 +2215,13 @@ const makingLinePlots = earlyTopic(
             `The longest leaf is ${min + span} cm and the shortest is ${min} cm, and $${min + span} - ${min} = ${span}$.`,
             `最长的树叶是 ${min + span} 厘米，最短的是 ${min} 厘米，$${min + span} - ${min} = ${span}$。`,
           ],
-          { svg: dotPlot(values, { min: start, max: stop, step: 1 }), alt: t("A line plot of leaf lengths.", "树叶长度的线图。") },
+          {
+            svg: dotPlot(values, { min: start, max: stop, step: 1 }),
+            alt: t(
+              `A line plot of leaf lengths, with one dot at each of: ${values.join(", ")}.`,
+              `树叶长度的线图，点分别在：${values.join("、")}。`,
+            ),
+          },
         );
       },
     ),

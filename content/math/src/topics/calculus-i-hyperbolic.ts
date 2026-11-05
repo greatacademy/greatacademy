@@ -3,7 +3,7 @@ import { same, t } from "@ga/content";
 import { plane, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
-import { oneOf, range, sqrtLatex } from "./calculus-common.ts";
+import { graphAltOf, oneOf, range, sqrtLatex } from "./calculus-common.ts";
 
 // Calculus I unit 1: Preliminaries, module 1.1 (The Hyperbolic Functions).
 
@@ -62,7 +62,7 @@ function graphChoice(rng: Rng, graphs: readonly HyperbolicGraph[]) {
   const others = graphs.filter((h) => h !== g);
   const figure = {
     svg: plane({ xMin: -4, xMax: 4, yMin: -5, yMax: 5 }, [{ kind: "curve", f: (x) => s * g.f(x) + k, accent: true }]),
-    alt: t("The graph of a hyperbolic function.", "一个双曲函数的图像。"),
+    alt: graphAltOf({ xMin: -4, xMax: 4, yMin: -5, yMax: 5 }, [{ kind: "curve", f: (x) => s * g.f(x) + k }]),
   };
   return oneOf(
     rng,

@@ -1,10 +1,50 @@
 import type { Figure, Problem, Rng, Text } from "@ga/content";
 import { same, t } from "@ga/content";
-import { linear, poly, Q, radical } from "@ga/subject-math";
+import { linear, type PlaneMark, poly, Q, radical } from "@ga/subject-math";
 
 import { choiceProblem } from "../problems.ts";
 
 // Helpers shared by the calculus topics.
+
+/** graphAltOf describes for screen readers what a graph of y = f(x) shows: where its curves pass and end, its dots and its dashed lines. */
+export function graphAltOf(
+  view: { readonly xMin: number; readonly xMax: number; readonly yMin: number; readonly yMax: number },
+  marks: readonly PlaneMark[],
+): Text {
+  const num = (n: number) => String(Math.round(n * 100) / 100);
+  const en: string[] = [];
+  const zh: string[] = [];
+  for (const mark of marks) {
+    if (mark.kind === "curve") {
+      const [from, to] = [mark.from ?? view.xMin, mark.to ?? view.xMax];
+      const points: string[] = [];
+      for (let x = Math.ceil(from); x <= to; x++) {
+        const y = mark.f(x);
+        if (x > from && x < to && Number.isFinite(y) && y >= view.yMin && y <= view.yMax) points.push(`(${x}, ${num(y)})`);
+      }
+      const edge = (x: number | undefined) => (x === undefined ? undefined : `x = ${num(x)}, y = ${num(mark.f(x))}`);
+      const ends = [edge(mark.from), edge(mark.to)].filter((end) => end !== undefined);
+      en.push(`a curve through ${points.join(", ")}${ends.length ? `, with an end at ${ends.join(" and at ")}` : ""}`);
+      zh.push(`一条经过 ${points.join("、")} 的曲线${ends.length ? `，端点在 ${ends.join(" 和 ")}` : ""}`);
+    } else if (mark.kind === "point") {
+      const at = `(${num(mark.at[0])}, ${num(mark.at[1])})`;
+      en.push(`${mark.open ? "an open" : "a filled"} dot at ${at}`);
+      zh.push(`${at} 处的${mark.open ? "空心" : "实心"}点`);
+    } else if (mark.kind === "segment") {
+      const ends = `(${num(mark.a[0])}, ${num(mark.a[1])}) to (${num(mark.b[0])}, ${num(mark.b[1])})`;
+      en.push(`a straight piece from ${ends}`);
+      zh.push(`一段直线 ${ends.replace(" to ", " 到 ")}`);
+    } else if (mark.kind === "line") {
+      const vertical = mark.a[0] === mark.b[0];
+      const where = vertical
+        ? `x = ${num(mark.a[0])}`
+        : `through (${num(mark.a[0])}, ${num(mark.a[1])}) and (${num(mark.b[0])}, ${num(mark.b[1])})`;
+      en.push(`a ${mark.dashed ? "dashed " : ""}line ${where}`);
+      zh.push(`一条${mark.dashed ? "虚" : "直"}线 ${where.replace("through", "经过").replace(" and ", " 和 ")}`);
+    }
+  }
+  return t(`The graph of y = f(x): ${en.join("; ")}.`, `y = f(x) 的图像：${zh.join("；")}。`);
+}
 
 /** range lists the integers from lo to hi. */
 export const range = (lo: number, hi: number) => Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);

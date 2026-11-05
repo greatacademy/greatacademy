@@ -143,7 +143,10 @@ const boxFig = (min: number, q1: number, med: number, q3: number, max: number, l
       ],
       labels: ticks.map((v) => [px(v), 212, String(v)] as const),
     },
-    t("A box plot on a number line.", "数轴上的箱线图。"),
+    t(
+      `A box plot on a number line: minimum ${min}, first quartile ${q1}, median ${med}, third quartile ${q3}, maximum ${max}.`,
+      `数轴上的箱线图：最小值 ${min}，下四分位数 ${q1}，中位数 ${med}，上四分位数 ${q3}，最大值 ${max}。`,
+    ),
   );
 };
 

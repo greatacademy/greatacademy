@@ -232,7 +232,20 @@ export function measuredBarsFigure(labels: readonly string[], ways: readonly Bar
   });
   return {
     svg: svgDocument(ways.length * 48 + 6, body),
-    alt: t("A bar with small blocks laid under it, in each row.", "每行有一个长条，下面摆着小方块。"),
+    alt: t(
+      `Each row has a bar with small blocks laid under it: ${labels
+        .map(
+          (label, i) =>
+            `in row ${label} the blocks ${{ good: "touch edge to edge from the end", gaps: "leave gaps", overlap: "overlap", late: "start away from the end" }[ways[i]!]}`,
+        )
+        .join(", ")}.`,
+      `每行有一个长条，下面摆着小方块：${labels
+        .map(
+          (label, i) =>
+            `${label} 行的方块${{ good: "从一端起首尾相接", gaps: "之间有空隙", overlap: "互相重叠", late: "没有从一端开始" }[ways[i]!]}`,
+        )
+        .join("；")}。`,
+    ),
   };
 }
 
@@ -360,12 +373,15 @@ export function blockRowsFigure(rows: readonly (readonly [number, number, number
     }
   });
   const alt = t(
-    rows.length === 1
-      ? "Base-ten blocks: large squares are hundreds, rods are tens and small squares are ones."
-      : `${rows.length} rows of base-ten blocks: large squares are hundreds, rods are tens and small squares are ones.`,
-    rows.length === 1
-      ? "十进制积木：大方块是百，长条是十，小方块是一。"
-      : `${rows.length} 行十进制积木：大方块是百，长条是十，小方块是一。`,
+    `Base-ten blocks, where large squares are hundreds, rods are tens and small squares are ones: ${rows
+      .map(
+        ([h, n, o], r) =>
+          `${rows.length === 1 ? "" : `row ${r + 1} has `}${many(h, "large square")}, ${many(n, "rod")} and ${many(o, "small square")}`,
+      )
+      .join("; ")}.`,
+    `十进制积木，大方块是百，长条是十，小方块是一：${rows
+      .map(([h, n, o], r) => `${rows.length === 1 ? "" : `第 ${r + 1} 行有 `}${h} 个大方块、${n} 根长条和 ${o} 个小方块`)
+      .join("；")}。`,
   );
   return { svg: svgDocument(rows.length * 54 + 6, body), alt };
 }
@@ -482,7 +498,10 @@ export function rectangleCutsFigure(
   });
   return {
     svg: svgDocument(74, body),
-    alt: t(`Rectangles ${labels.join(", ")}, each cut into parts.`, `长方形 ${labels.join("、")}，每个都被分成几部分。`),
+    alt: t(
+      `Rectangles, each cut into parts: ${labels.map((label, i) => `${label} has ${cutParts(cuts[i]!.kind).length} parts with ${cuts[i]!.shaded} shaded`).join(", ")}.`,
+      `长方形，每个都被分成几部分：${labels.map((label, i) => `${label} 有 ${cutParts(cuts[i]!.kind).length} 部分，涂色 ${cuts[i]!.shaded} 部分`).join("；")}。`,
+    ),
   };
 }
 
@@ -610,7 +629,10 @@ export function inchRulerFigure(fourths: number, inches: number, ticksPerInch: 2
   body += text(290, 22, "in", 12);
   return {
     svg: svgDocument(76, body),
-    alt: t(`A bar above an inch ruler marked in parts of an inch.`, `一把英寸尺上方有一个长条，尺子上有英寸的分格。`),
+    alt: t(
+      `A bar above an inch ruler ${inches} inches long, with ${ticksPerInch} parts to the inch. The bar runs from 0 to ${fourths / 4} inches.`,
+      `一把 ${inches} 英寸长的尺上方有一个长条，尺子每英寸分成 ${ticksPerInch} 份。长条从 0 到 ${fourths / 4} 英寸。`,
+    ),
   };
 }
 
@@ -672,8 +694,8 @@ export function halfPictureGraphFigure(labels: readonly string[], dots: readonly
   return {
     svg: svgDocument(dots.length * 28 + 10, body),
     alt: t(
-      `A picture graph with rows ${labels.join(", ")}, some ending in half a dot.`,
-      `象形统计图，各行是 ${labels.join("、")}，有的行最后是半个点。`,
+      `A picture graph: ${labels.map((label, i) => `row ${label} has ${dots[i]} dots`).join(", ")}, where .5 is half a dot.`,
+      `象形统计图：${labels.map((label, i) => `${label} 行有 ${dots[i]} 个点`).join("，")}，其中 .5 表示半个点。`,
     ),
   };
 }
@@ -749,7 +771,10 @@ export function lShapeFigure(
   if (sides.left) body += text(X(0) - 22, Y(h / 2) + 4, sides.left, 12);
   return {
     svg: svgDocument(h * u + 46, body),
-    alt: t("An L-shaped figure made of rectangles, with some sides labeled.", "一个由长方形组成的 L 形，有些边标了长度。"),
+    alt: t(
+      `An L-shaped figure made of rectangles, with sides labeled: ${Object.values(sides).filter(Boolean).join(", ")}.`,
+      `一个由长方形组成的 L 形，标出的边长：${Object.values(sides).filter(Boolean).join("、")}。`,
+    ),
   };
 }
 

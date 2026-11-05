@@ -84,8 +84,8 @@ function groupedBarsFigure(w: number, d: number, g: number): Figure {
   return {
     svg: barsSvg(w, d, (i) => (Math.floor(i / g) % 2 === 0 ? "shade" : "light")),
     alt: t(
-      `${w === 1 ? "A bar" : "Equal bars"} cut into equal parts; groups of parts are colored dark and light in turn.`,
-      `${w === 1 ? "一个长条" : "几个同样的长条"}，平均分成几份；各组深浅颜色交替。`,
+      `${w === 1 ? "A bar" : `${w} equal bars`} cut into ${d} equal parts each; groups of ${g} parts are colored dark and light in turn.`,
+      `${w === 1 ? "一个长条" : `${w} 个同样的长条`}，每个平均分成 ${d} 份；每 ${g} 份一组，深浅颜色交替。`,
     ),
   };
 }
@@ -2003,8 +2003,24 @@ export const interpretingFractionDivisionUsingAreaModels = topic(
 );
 
 /** servingStory is a word problem asking how many servings of size 1/d are in w wholes. */
-function servingStory(rng: Rng, w: number, sizeTex: string): Text {
+function servingStory(rng: Rng, w: number, sizeTex: string, partial = false): Text {
   const name = rng.pick(names);
+  if (partial) {
+    return rng.pick([
+      t(
+        `${name} has ${w} cups of rice. Each serving is $${sizeTex}$ cup. How many servings are there, counting a partial serving as a fraction?`,
+        `${name} 有 ${w} 杯米，每份是 $${sizeTex}$ 杯。不满一份的部分按几分之几份计，一共有多少份？`,
+      ),
+      t(
+        `A ${w}-meter ribbon is cut into pieces $${sizeTex}$ meter long. How many pieces does the ribbon make, counting the shorter leftover as a fraction of a piece?`,
+        `一根 ${w} 米长的丝带剪成每段 $${sizeTex}$ 米长。剩下不够一段的部分按几分之几段计，这根丝带相当于多少段？`,
+      ),
+      t(
+        `${name} has ${w} pounds of nuts and fills bags with $${sizeTex}$ pound each. How many bags' worth of nuts is that, counting a partly filled bag as a fraction?`,
+        `${name} 有 ${w} 磅坚果，每袋装 $${sizeTex}$ 磅。没装满的一袋按几分之几袋计，这些坚果相当于多少袋？`,
+      ),
+    ]);
+  }
   return rng.pick([
     t(
       `${name} has ${w} cups of rice. Each serving is $${sizeTex}$ cup. How many servings are there?`,
@@ -2487,13 +2503,13 @@ export const dividingWholeNumbersByFractionsUsingModelsFractionalResults = topic
           if (gcd(a, d) !== 1 || (w * d) % a === 0) continue;
           const v = qf(w * d, a);
           return numberProblem({
-            prompt: servingStory(rng, w, fr(a, d)),
+            prompt: servingStory(rng, w, fr(a, d), true),
             answer: v,
             form: "mixed",
             wrong: [Math.floor((w * d) / a), qf(w * a, d), Math.ceil((w * d) / a)],
             solution: t(
-              `$${w} \\div ${fr(a, d)} = ${fr(w * d, a)} = ${mq(v)}$: ${Math.floor((w * d) / a)} full servings and part of another.`,
-              `$${w} \\div ${fr(a, d)} = ${fr(w * d, a)} = ${mq(v)}$：${Math.floor((w * d) / a)} 个整份，还有不满一份的部分。`,
+              `$${w} \\div ${fr(a, d)} = ${fr(w * d, a)} = ${mq(v)}$: ${Math.floor((w * d) / a)} full groups and part of another.`,
+              `$${w} \\div ${fr(a, d)} = ${fr(w * d, a)} = ${mq(v)}$：${Math.floor((w * d) / a)} 个整组，还有不满一组的部分。`,
             ),
           });
         }

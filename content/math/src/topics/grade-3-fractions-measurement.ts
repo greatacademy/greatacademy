@@ -787,7 +787,10 @@ const linePlotsEarly = earlyTopic(
           ),
           figure: {
             svg: dotPlot(values, { min: 3, max: 8, step: 1 }),
-            alt: t("A line plot of ribbon lengths from 3 to 8 inches.", "丝带长度的线图，从 3 到 8 英寸。"),
+            alt: t(
+              `A line plot of ribbon lengths from 3 to 8 inches, with one dot at each of: ${values.join(", ")}.`,
+              `丝带长度的线图，从 3 到 8 英寸，点分别在：${values.join("、")}。`,
+            ),
           },
         };
       },
@@ -826,7 +829,10 @@ const linePlotsEarly = earlyTopic(
           ),
           figure: {
             svg: dotPlot(values, { min: 3, max: 8, step: 1 }),
-            alt: t("A line plot of ribbon lengths from 3 to 8 inches.", "丝带长度的线图，从 3 到 8 英寸。"),
+            alt: t(
+              `A line plot of ribbon lengths from 3 to 8 inches, with one dot at each of: ${values.join(", ")}.`,
+              `丝带长度的线图，从 3 到 8 英寸，点分别在：${values.join("、")}。`,
+            ),
           },
         };
       },

@@ -74,8 +74,8 @@ export function blocksFigure(hundreds: number, tens: number, single: number): Fi
   return {
     svg: baseTenFigure(hundreds, tens, single).svg,
     alt: t(
-      "Base-ten blocks: large squares are hundreds, rods are tens and small squares are ones.",
-      "十进制积木：大方块是百，长条是十，小方块是一。",
+      `Base-ten blocks, where large squares are hundreds, rods are tens and small squares are ones: ${[..._en(hundreds, "large square", "large squares"), ..._en(tens, "rod", "rods"), ..._en(single, "small square", "small squares")].join(", ")}.`,
+      `十进制积木，大方块是百，长条是十，小方块是一：${[..._zh(hundreds, "大方块"), ..._zh(tens, "长条"), ..._zh(single, "小方块")].join("、")}。`,
     ),
   };
 }

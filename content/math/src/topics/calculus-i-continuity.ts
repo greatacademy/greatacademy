@@ -3,15 +3,12 @@ import { same, t } from "@ga/content";
 import { type Interval, type PlaneMark, plane, poly, Q, union } from "@ga/subject-math";
 
 import { choiceProblem, intervalProblem, numberProblem, pointProblem, reasonChoice, solutionsProblem, yesNo } from "../problems.ts";
-import { bare, fac, lim, oneOf, range, sqrtLatex, table } from "./calculus-common.ts";
+import { bare, fac, graphAltOf, lim, oneOf, range, sqrtLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 3: Continuity, modules 3.7 (Continuity) and 3.8 (Removing
 // Discontinuities).
 
 const view = { xMin: -6, xMax: 6, yMin: -7, yMax: 7 };
-
-/** graphAlt describes a graph of f for screen readers. */
-const graphAlt = t("The graph of y = f(x).", "y = f(x) 的图像。");
 
 /** Piece is one formula of a piecewise function. */
 interface Piece {
@@ -89,7 +86,7 @@ function breakGraph(rng: Rng, b: Break): Figure {
     { kind: "curve", f: (x) => b.R + m2 * (x - b.a) + c2 * (x - b.a) ** 2, from: b.a, accent: true },
     ...breakMarks(b),
   ];
-  return { svg: plane(view, marks), alt: graphAlt };
+  return { svg: plane(view, marks), alt: graphAltOf(view, marks) };
 }
 
 /** valueText says what f(a) is, or that it is not defined. */
@@ -222,7 +219,7 @@ export const determiningContinuityFromGraphs: TopicDef = {
                 "在这三点处，曲线都不间断地穿过实心点，所以 $f$ 在这三处都连续。",
               )
             : breakReason(breaks[bad]!),
-          { svg: plane(view, marks), alt: graphAlt },
+          { svg: plane(view, marks), alt: graphAltOf(view, marks) },
         );
       },
     },
@@ -775,7 +772,10 @@ export const discontinuitiesDueToVerticalAsymptotes: TopicDef = {
               { kind: "curve", f: g, to: a - 0.01, accent: true },
               { kind: "curve", f: g, from: a + 0.01, accent: true },
             ]),
-            alt: graphAlt,
+            alt: t(
+              `The graph of y = f(x), with a dashed vertical line at x = ${a} that the curve climbs or falls along on each side.`,
+              `y = f(x) 的图像，在 x = ${a} 处有一条竖直虚线，曲线在两侧沿它上升或下降。`,
+            ),
           };
         } else {
           figure = breakGraph(rng, makeBreak(rng, a, kind === "point" ? rng.pick<BreakKind>(["hole", "moved"]) : "jump"));

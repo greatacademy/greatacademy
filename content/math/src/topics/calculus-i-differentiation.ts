@@ -3,7 +3,7 @@ import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { expressionProblem, functionProblem, numberProblem, reasonChoice, solutionsProblem } from "../problems.ts";
-import { bare, fac, lim, oneOf, type Poly, pAt, par, pDer, pLatex, power, range, sumLatex, table } from "./calculus-common.ts";
+import { bare, fac, graphAltOf, lim, oneOf, type Poly, pAt, par, pDer, pLatex, power, range, sumLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 4: Introduction to Differentiation, module 4.9. Topic 4.9.1
 // is the existing the-average-rate-of-change-of-a-function.
@@ -391,7 +391,7 @@ export const continuityAndDifferentiabilityOfFunctions: TopicDef = {
             `$f$ 在 $x = ${a}$ 处不连续，所以在该处不可导。`,
           ),
         };
-        const figure: Figure = { svg: plane(view, marks), alt: t("The graph of y = f(x).", "y = f(x) 的图像。") };
+        const figure: Figure = { svg: plane(view, marks), alt: graphAltOf(view, marks) };
         const reasons: Record<Smoothness, Text> = {
           smooth: t("Yes, because the graph has a single non-vertical tangent line there.", "是，因为图像在该处有唯一一条非竖直的切线。"),
           corner: t("No, because the graph has a corner there.", "否，因为图像在该处有一个角点。"),

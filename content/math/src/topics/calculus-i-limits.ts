@@ -7,6 +7,7 @@ import {
   bare,
   exactDiv,
   exactLatex,
+  graphAltOf,
   infL,
   type LimitValue,
   lim,
@@ -63,7 +64,7 @@ function limitGraph(rng: Rng, jump: boolean, valueKind: number): LimitGraph {
     L,
     R,
     value,
-    figure: { svg: plane(view, marks), alt: t("The graph of y = f(x).", "y = f(x) 的图像。") },
+    figure: { svg: plane(view, marks), alt: graphAltOf(view, marks) },
   };
 }
 
@@ -408,7 +409,7 @@ export const limitsAtInfinityFromGraphs: TopicDef = {
           }),
           figure: {
             svg: plane({ xMin: -9, xMax: 9, yMin: -7, yMax: 7 }, [{ kind: "curve", f, accent: true }]),
-            alt: t("The graph of y = f(x).", "y = f(x) 的图像。"),
+            alt: graphAltOf({ xMin: -9, xMax: 9, yMin: -7, yMax: 7 }, [{ kind: "curve", f }]),
           },
         };
       },
