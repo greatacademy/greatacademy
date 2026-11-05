@@ -121,6 +121,7 @@ import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
 import { factoringTopics } from "./topics/factoring.ts";
 import { figureReadingPoints } from "./topics/figure-reading.ts";
+import { collegeFigurePoints } from "./topics/figure-reading-college.ts";
 import { moreFigureReadingPoints } from "./topics/figure-reading-more.ts";
 import { fractionTopics } from "./topics/fractions.ts";
 import { functionTopics } from "./topics/functions.ts";
@@ -282,6 +283,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
       ...(figureReadingPoints[topic.id] ?? []),
       ...(moreFigureReadingPoints[topic.id] ?? []),
+      ...(collegeFigurePoints[topic.id] ?? []),
     ],
   };
   return polishTopic(oneOfFourTopic(weighted));

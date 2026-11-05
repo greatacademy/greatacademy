@@ -12,6 +12,10 @@ export interface PlaneView {
   readonly yMax: number;
   readonly step?: number;
   readonly labelEvery?: number;
+  /** xName names the horizontal axis, x by default. */
+  readonly xName?: string;
+  /** yName names the vertical axis, y by default. */
+  readonly yName?: string;
 }
 
 /** HalfPlane [a, b, c] is the set of points with a·x + b·y + c ≥ 0. */
@@ -208,8 +212,8 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
     if (i === 0 || i % every !== 0) continue;
     numbers += `<text x="${sx(x0) - 5}" y="${sy(i * step) + 3.5}" text-anchor="end">${label(i * step)}</text>`;
   }
-  numbers += `<text x="${sx(xMax) + 10}" y="${sy(y0) + 4}" font-size="12" font-style="italic">x</text>`;
-  numbers += `<text x="${sx(x0)}" y="${sy(yMax) - 8}" font-size="12" font-style="italic">y</text>`;
+  numbers += `<text x="${sx(xMax) + 10}" y="${sy(y0) + 4}" font-size="12" font-style="italic">${view.xName ?? "x"}</text>`;
+  numbers += `<text x="${sx(x0)}" y="${sy(yMax) - 8}" font-size="12" font-style="italic">${view.yName ?? "y"}</text>`;
   numbers += "</g>";
 
   let regions = "";

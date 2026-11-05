@@ -13,7 +13,7 @@ import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 const math = (latex: string): Text => t(`$${latex}$`, `$${latex}$`);
 
 /** pickChoice builds a choice problem with its figure, after dropping wrong options that repeat the right one or each other. */
-function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text, figure: Figure): Problem {
+export function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text, figure: Figure): Problem {
   const seen = new Set([correct.en]);
   return choiceFrom(
     rng,
@@ -26,7 +26,7 @@ function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[
 }
 
 /** numeric builds a number problem with its figure. */
-function numeric(
+export function numeric(
   prompt: Text,
   answer: number | Q,
   wrong: readonly (number | Q)[],
@@ -41,7 +41,7 @@ function numeric(
 const square = (r: number): PlaneView => ({ xMin: -r, xMax: r, yMin: -r, yMax: r, labelEvery: r > 6 ? 2 : 1 });
 
 /** drawn wraps marks in a figure. */
-const drawn = (view: PlaneView, marks: readonly PlaneMark[], alt: Text): Figure => ({ svg: plane(view, marks), alt });
+export const drawn = (view: PlaneView, marks: readonly PlaneMark[], alt: Text): Figure => ({ svg: plane(view, marks), alt });
 
 /** parametric samples a curve as a chain of points. */
 function parametric(r: (s: number) => Point, from: number, to: number, n = 120): Point[] {
@@ -49,11 +49,11 @@ function parametric(r: (s: number) => Point, from: number, to: number, n = 120):
 }
 
 /** label draws a piece of text in an SVG figure. */
-const label = (x: number, y: number, text: string, extra = "") =>
+export const label = (x: number, y: number, text: string, extra = "") =>
   `<text x="${x}" y="${y}" stroke="none" fill="currentColor" ${extra}>${text}</text>`;
 
 /** arrowLine draws an arrow between two points, stopping short of the ends so that it clears the nodes. */
-function arrowLine([x1, y1]: Point, [x2, y2]: Point, gap = 14, accent = false): string {
+export function arrowLine([x1, y1]: Point, [x2, y2]: Point, gap = 14, accent = false): string {
   const length = Math.hypot(x2 - x1, y2 - y1);
   const [ux, uy] = [(x2 - x1) / length, (y2 - y1) / length];
   const [ax, ay] = [x1 + ux * gap, y1 + uy * gap];
@@ -65,7 +65,7 @@ function arrowLine([x1, y1]: Point, [x2, y2]: Point, gap = 14, accent = false): 
 }
 
 /** ring places n points evenly on a circle, the first at the top, running clockwise. */
-function ring(n: number, r: number, cx = 160, cy = 110): Point[] {
+export function ring(n: number, r: number, cx = 160, cy = 110): Point[] {
   return Array.from({ length: n }, (_, i): Point => {
     const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
     return [Math.round((cx + r * Math.cos(a)) * 10) / 10, Math.round((cy + r * Math.sin(a)) * 10) / 10];
@@ -73,7 +73,7 @@ function ring(n: number, r: number, cx = 160, cy = 110): Point[] {
 }
 
 /** node draws a labelled circle. */
-const node = ([x, y]: Point, text: string) => `<circle cx="${x}" cy="${y}" r="12"/>${label(x, y + 4, text)}`;
+export const node = ([x, y]: Point, text: string) => `<circle cx="${x}" cy="${y}" r="12"/>${label(x, y + 4, text)}`;
 
 /** graphFigure draws a graph on labelled vertices in a ring, with arrows when directed. */
 function graphFigure(names: readonly string[], edges: readonly (readonly [number, number])[], directed: boolean, alt: Text): Figure {
