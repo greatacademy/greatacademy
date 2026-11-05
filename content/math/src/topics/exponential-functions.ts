@@ -3110,10 +3110,15 @@ function equationFromGraphProblem(rng: Rng, pairs: readonly { a: Q; b: Q; x0: nu
       ),
       answer,
       prefix: "y =",
-      wrong: [expo(b, num(a)), linear(slope, y0.sub(slope.mul(Q.of(x0)))), expo(y0, num(b)), expo(a, num(Q.one.div(b)))],
+      wrong: [
+        ...(a.eq(Q.one) ? [] : [expo(b, num(a))]),
+        linear(slope, y0.sub(slope.mul(Q.of(x0)))),
+        expo(y0, num(b)),
+        expo(a, num(Q.one.div(b))),
+      ],
       solution: t(
-        `Going from $x = ${x0}$ to $x = ${x0 + 1}$ multiplies $y$ by $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$. Then $a = y(0)$${x0 === 0 ? ` $= ${a.toLatex()}$` : `, found from $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$: $a = ${a.toLatex()}$`}. So${steps(`y = ${answer}`)}`,
-        `从 $x = ${x0}$ 到 $x = ${x0 + 1}$，$y$ 乘以 $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$。而 $a = y(0)$${x0 === 0 ? ` $= ${a.toLatex()}$` : `，由 $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$ 得 $a = ${a.toLatex()}$`}。所以${steps(`y = ${answer}`)}`,
+        `Going from $x = ${x0}$ to $x = ${x0 + 1}$ multiplies $y$ by $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$. Then ${x0 === 0 ? `$a = y(0) = ${a.toLatex()}$` : `$a = y(0)$, found from $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$: $a = ${a.toLatex()}$`}. So${steps(`y = ${answer}`)}`,
+        `从 $x = ${x0}$ 到 $x = ${x0 + 1}$，$y$ 乘以 $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$。而 ${x0 === 0 ? `$a = y(0) = ${a.toLatex()}$` : `$a = y(0)$，由 $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$ 得 $a = ${a.toLatex()}$`}。所以${steps(`y = ${answer}`)}`,
       ),
     }),
     figure: expFigure(a, b, 0, pts, dir),
@@ -3137,8 +3142,8 @@ function asymptoteProblem(rng: Rng, bases: readonly Q[]): Problem {
     solveFor: "y",
     wrong: [a + k, -k, a, ...(k === 0 ? [] : [0])],
     solution: t(
-      `As $x$ ${direction.en}, $${bracket(b)}^{x}$ gets closer and closer to $0$, so $y$ gets closer and closer to $0 ${k < 0 ? "-" : "+"} ${Math.abs(k)} = ${k}$. The asymptote is $y = ${k}$.`,
-      `当 $x$ ${direction["zh-CN"]}时，$${bracket(b)}^{x}$ 越来越接近 $0$，所以 $y$ 越来越接近 $0 ${k < 0 ? "-" : "+"} ${Math.abs(k)} = ${k}$。渐近线是 $y = ${k}$。`,
+      `As $x$ ${direction.en}, $${bracket(b)}^{x}$ gets closer and closer to $0$, so $y$ gets closer and closer to ${k === 0 ? "$0$" : `$0 ${k < 0 ? "-" : "+"} ${Math.abs(k)} = ${k}$`}. The asymptote is $y = ${k}$.`,
+      `当 $x$ ${direction["zh-CN"]}时，$${bracket(b)}^{x}$ 越来越接近 $0$，所以 $y$ 越来越接近 ${k === 0 ? "$0$" : `$0 ${k < 0 ? "-" : "+"} ${Math.abs(k)} = ${k}$`}。渐近线是 $y = ${k}$。`,
     ),
   };
   if (fromGraph) {

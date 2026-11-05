@@ -215,7 +215,7 @@ export const addingAndSubtractingRadicals: TopicDef = {
       id: "like-radicals",
       title: t("Like radicals", "同类根式"),
       explanation: t(
-        "Radicals with the same number under the root are **like radicals**, and combine like like terms: add or subtract the coefficients and keep the root.\n\n$$3\\sqrt{2} + 5\\sqrt{2} = 8\\sqrt{2}$$\n\nThe numbers under the roots are **not** added: $\\sqrt{2} + \\sqrt{2} = 2\\sqrt{2}$, not $\\sqrt{4}$.",
+        "Radicals with the same number under the root are **like radicals**, and they combine the way like terms do: add or subtract the coefficients and keep the root.\n\n$$3\\sqrt{2} + 5\\sqrt{2} = 8\\sqrt{2}$$\n\nThe numbers under the roots are **not** added: $\\sqrt{2} + \\sqrt{2} = 2\\sqrt{2}$, not $\\sqrt{4}$.",
         "根号内的数相同的根式叫**同类根式**，像同类项一样合并：系数相加减，根式不变。\n\n$$3\\sqrt{2} + 5\\sqrt{2} = 8\\sqrt{2}$$\n\n根号内的数**不**相加：$\\sqrt{2} + \\sqrt{2} = 2\\sqrt{2}$，而不是 $\\sqrt{4}$。",
       ),
       keyPrerequisites: ["combining-like-terms"],
@@ -336,8 +336,8 @@ export const rationalizingDenominators: TopicDef = {
             answer: [c, m],
             wrong: [`\\frac{${rp}}{${q}}`, ...(p > 1 ? [radical(Q.of(p, q), q)] : []), radical(Q.of(k), m)],
             solution: t(
-              `Write the root of the quotient as a quotient of roots and multiply the numerator and the denominator by $\\sqrt{${q}}$:${steps(work)}`,
-              `把商的平方根写成平方根的商，分子、分母同乘以 $\\sqrt{${q}}$：${steps(work)}`,
+              `${quotient ? "Multiply" : "Write the root of the quotient as a quotient of roots and multiply"} the numerator and the denominator by $\\sqrt{${q}}$:${steps(work)}`,
+              `${quotient ? "" : "把商的平方根写成平方根的商，"}分子、分母同乘以 $\\sqrt{${q}}$：${steps(work)}`,
             ),
           });
         }

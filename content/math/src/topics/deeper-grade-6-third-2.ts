@@ -271,8 +271,8 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
           2 * near,
           [near, 2 * far, near + far],
           [
-            `$P$ is ${near} from the axis, and $Q$ is ${near} on the other side, so they are $2 \\times ${near} = ${2 * near}$ apart.`,
-            `$P$ 到这条轴的距离是 ${near}，$Q$ 在另一侧也是 ${near}，所以相距 $2 \\times ${near} = ${2 * near}$。`,
+            `$P$ is $${near}$ from the axis, and $Q$ is $${near}$ on the other side, so they are $2 \\times ${near} = ${2 * near}$ apart.`,
+            `$P$ 到这条轴的距离是 $${near}$，$Q$ 在另一侧也是 $${near}$，所以相距 $2 \\times ${near} = ${2 * near}$。`,
           ],
         );
       },
@@ -324,20 +324,20 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
         return whole(
           range
             ? [
-                `The data set ${list} has its largest value raised by ${k}. By how much does the range increase?`,
-                `数据 ${list} 的最大值增大 ${k}。极差增大多少？`,
+                `The data set $${list}$ has its largest value raised by $${k}$. By how much does the range increase?`,
+                `数据 $${list}$ 的最大值增大 $${k}$。极差增大多少？`,
               ]
             : [
-                `The data set ${list} has its largest value raised by ${k}. By how much does the interquartile range increase?`,
-                `数据 ${list} 的最大值增大 ${k}。四分位距增大多少？`,
+                `The data set $${list}$ has its largest value raised by $${k}$. By how much does the interquartile range increase?`,
+                `数据 $${list}$ 的最大值增大 $${k}$。四分位距增大多少？`,
               ],
           range ? k : 0,
           range ? [k + 1, 2 * k, xs[6]! - xs[0]!] : [k, Math.ceil(k / 2), Math.ceil(k / 4)],
           range
             ? [`The range is the largest minus the smallest, so it grows by the full ${k}.`, `极差是最大值减最小值，所以增大整整 ${k}。`]
             : [
-                `The quartiles are ${xs[1]} and ${xs[5]}, which do not involve the largest value, so the change is 0.`,
-                `四分位数是 ${xs[1]} 和 ${xs[5]}，不涉及最大值，所以变化为 0。`,
+                `The quartiles are ${xs[1]} and ${xs[5]}, which do not involve the largest value, so the change is $0$.`,
+                `四分位数是 ${xs[1]} 和 ${xs[5]}，不涉及最大值，所以变化为 $0$。`,
               ],
         );
       },
@@ -392,14 +392,14 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
         const answer = Math.max(big, v) - Math.min(small, v);
         return whole(
           [
-            `The dot plot shows a data set. A new value of ${v} is added. What is the range now?`,
-            `点图表示一组数据。新增一个值 ${v}。现在的极差是多少？`,
+            `The dot plot shows a data set. A new value of $${v}$ is added. What is the range now?`,
+            `点图表示一组数据。新增一个值 $${v}$。现在的极差是多少？`,
           ],
           answer,
           [big - small === answer ? answer + 1 : big - small, v - small === answer ? answer + 2 : Math.abs(v - small), answer + 3],
           [
-            `The extremes are now ${Math.min(small, v)} and ${Math.max(big, v)}, and their difference is ${answer}.`,
-            `现在的极端值是 ${Math.min(small, v)} 和 ${Math.max(big, v)}，差是 ${answer}。`,
+            `The extremes are now ${Math.min(small, v)} and ${Math.max(big, v)}, and their difference is $${answer}$.`,
+            `现在的极端值是 ${Math.min(small, v)} 和 ${Math.max(big, v)}，差是 $${answer}$。`,
           ],
           dotPlotFigure(xs, { min: lo - 6, max: lo + 13, step: 1 }),
         );

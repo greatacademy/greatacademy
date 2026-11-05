@@ -1071,8 +1071,8 @@ export const classifyingTriangles: TopicDef = {
             options: sideKinds,
             correct: kind,
             solution: t(
-              `The sides are ${c}, ${a} and ${b}: ${reason.en}. The triangle is ${sideKinds[kind]!.en.toLowerCase()}.`,
-              `三条边是 ${c}、${a}、${b}：${reason["zh-CN"]}，所以是${sideKinds[kind]!["zh-CN"]}。`,
+              `The sides are $${c}$, $${a}$ and $${b}$: ${reason.en}. The triangle is ${sideKinds[kind]!.en.toLowerCase()}.`,
+              `三条边是 $${c}$、$${a}$、$${b}$：${reason["zh-CN"]}，所以是${sideKinds[kind]!["zh-CN"]}。`,
             ),
           }),
           figure: figure(
@@ -1226,8 +1226,8 @@ export const isoscelesTriangles: TopicDef = {
             );
             return numberProblem({
               prompt: t(
-                `In an isosceles triangle, the vertex angle is ${k} times a base angle. Find a base angle $x$.`,
-                `在一个等腰三角形中，顶角是底角的 ${k} 倍。求底角 $x$。`,
+                `In an isosceles triangle, the vertex angle is $${k}$ times a base angle. Find a base angle $x$.`,
+                `在一个等腰三角形中，顶角是底角的 $${k}$ 倍。求底角 $x$。`,
               ),
               answer: base,
               form: "integer",

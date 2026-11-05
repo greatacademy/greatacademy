@@ -73,18 +73,18 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         return whole(
           first
             ? [
-                `Two friends share ${(a + b) * k} stickers in the ratio ${a} : ${b}. How many stickers does the first friend get?`,
-                `两个朋友按 ${a} : ${b} 分 ${(a + b) * k} 张贴纸。第一个朋友得到多少张？`,
+                `Two friends share $${(a + b) * k}$ stickers in the ratio $${a} : ${b}$. How many stickers does the first friend get?`,
+                `两个朋友按 $${a} : ${b}$ 分 $${(a + b) * k}$ 张贴纸。第一个朋友得到多少张？`,
               ]
             : [
-                `Two friends share ${(a + b) * k} stickers in the ratio ${a} : ${b}. How many stickers does the second friend get?`,
-                `两个朋友按 ${a} : ${b} 分 ${(a + b) * k} 张贴纸。第二个朋友得到多少张？`,
+                `Two friends share $${(a + b) * k}$ stickers in the ratio $${a} : ${b}$. How many stickers does the second friend get?`,
+                `两个朋友按 $${a} : ${b}$ 分 $${(a + b) * k}$ 张贴纸。第二个朋友得到多少张？`,
               ],
           (first ? a : b) * k,
           [(first ? b : a) * k === (first ? a : b) * k ? k : (first ? b : a) * k, k, (a + b) * k - 1],
           [
-            `There are $${a} + ${b} = ${a + b}$ shares of ${k} each, and $${first ? a : b} \\times ${k} = ${(first ? a : b) * k}$.`,
-            `一共 $${a} + ${b} = ${a + b}$ 份，每份 ${k} 张，$${first ? a : b} \\times ${k} = ${(first ? a : b) * k}$。`,
+            `There are $${a} + ${b} = ${a + b}$ shares of $${k}$ each, and $${first ? a : b} \\times ${k} = ${(first ? a : b) * k}$.`,
+            `一共 $${a} + ${b} = ${a + b}$ 份，每份 $${k}$ 张，$${first ? a : b} \\times ${k} = ${(first ? a : b) * k}$。`,
           ],
         );
       },
@@ -180,8 +180,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         const q = rng.int(p + 1, 11);
         return whole(
           [
-            `A ratio table has the columns $(${a * p}, ${b * p})$ and $(${a * q}, ${b * q})$. Adding them gives a new column. What goes below ${a * (p + q)}?`,
-            `比例表有两列 $(${a * p}, ${b * p})$ 和 $(${a * q}, ${b * q})$。相加得到新的一列。${a * (p + q)} 下面是多少？`,
+            `A ratio table has the columns $(${a * p}, ${b * p})$ and $(${a * q}, ${b * q})$. Adding them gives a new column. What goes below $${a * (p + q)}$?`,
+            `比例表有两列 $(${a * p}, ${b * p})$ 和 $(${a * q}, ${b * q})$。相加得到新的一列。$${a * (p + q)}$ 下面是多少？`,
           ],
           b * (p + q),
           [b * p * q, a * (p + q) + b, b * q],
@@ -227,8 +227,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         const m = rng.int(n + 1, 40);
         return whole(
           [
-            `${n} notebooks cost ${n * price} dollars. At the same price, how many notebooks can be bought for ${m * price} dollars?`,
-            `${n} 本笔记本售价 ${n * price} 美元。按同样的价格，${m * price} 美元能买多少本？`,
+            `$${n}$ notebooks cost $${n * price}$ dollars. At the same price, how many notebooks can be bought for $${m * price}$ dollars?`,
+            `$${n}$ 本笔记本售价 $${n * price}$ 美元。按同样的价格，$${m * price}$ 美元能买多少本？`,
           ],
           m,
           [m * price, n + m, m * n],
@@ -245,8 +245,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       "parts-of-a-bar-for-a-percent",
       ["Parts of a bar for a percent", "百分数对应几份"],
       [
-        "A whole bar is 100 percent, so each of its equal parts is 100 divided by the number of parts. The number of parts to shade is the percent divided by the size of one part.",
-        "整个长条是百分之百，所以每一等份是 100 除以份数。要涂的份数是百分数除以每份的大小。",
+        "A whole bar is $100$ percent, so each of its equal parts is $100$ divided by the number of parts. The number of parts to shade is the percent divided by the size of one part.",
+        "整个长条是百分之百，所以每一等份是 $100$ 除以份数。要涂的份数是百分数除以每份的大小。",
       ],
       (rng) => {
         const parts = rng.pick([2, 4, 5, 10, 20, 25, 50]);
@@ -254,8 +254,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         const k = rng.int(1, parts - 1);
         return whole(
           [
-            `A bar is split into ${parts} equal parts. How many parts must be shaded to show ${k * each}%?`,
-            `一个长条分成 ${parts} 等份。要表示 ${k * each}% 需要涂几份？`,
+            `A bar is split into $${parts}$ equal parts. How many parts must be shaded to show $${k * each}\\%$?`,
+            `一个长条分成 $${parts}$ 等份。要表示 $${k * each}\\%$ 需要涂几份？`,
           ],
           k,
           [k * each, parts - k, k + 1],
@@ -269,8 +269,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       "percents-over-one-hundred-as-fractions",
       ["Percents over 100 as fractions", "超过 100% 的百分数化分数"],
       [
-        "A percent over 100 means more than the whole, so its fraction is greater than 1. Writing it over 100 and simplifying gives an improper fraction, which may also be written as a mixed number.",
-        "超过 100% 的百分数表示比整体多，所以对应的分数大于 1。写成分母为 100 的分数再约分，得到一个假分数，也可以写成带分数。",
+        "A percent over $100$ means more than the whole, so its fraction is greater than $1$. Writing it over $100$ and simplifying gives an improper fraction, which may also be written as a mixed number.",
+        "超过 $100\\%$ 的百分数表示比整体多，所以对应的分数大于 $1$。写成分母为 $100$ 的分数再约分，得到一个假分数，也可以写成带分数。",
       ],
       (rng) => {
         let p = rng.int(21, 79) * 5;
@@ -280,8 +280,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           Q.of(p, 100),
           [Q.of(100, p), Q.of(p, 1000), Q.of(p - 100, 100)],
           [
-            `$${p}\\% = ${frac(p, 100)} = ${frac(p / gcd(p, 100), 100 / gcd(p, 100))}$, which is more than 1 because ${p}% is more than the whole.`,
-            `$${p}\\% = ${frac(p, 100)} = ${frac(p / gcd(p, 100), 100 / gcd(p, 100))}$，它大于 1，因为 ${p}% 比整体多。`,
+            `$${p}\\% = ${frac(p, 100)} = ${frac(p / gcd(p, 100), 100 / gcd(p, 100))}$, which is more than $1$ because $${p}\\%$ is more than the whole.`,
+            `$${p}\\% = ${frac(p, 100)} = ${frac(p / gcd(p, 100), 100 / gcd(p, 100))}$，它大于 $1$，因为 $${p}\\%$ 比整体多。`,
           ],
         );
       },
@@ -292,8 +292,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       "percents-below-one-as-decimals",
       ["Percents below 1 as decimals", "小于 1% 的百分数化小数"],
       [
-        "Moving the point two places to the left works for every percent, even one below 1. So half of one percent is 0.005, and writing 0.5 for it would mean fifty percent.",
-        "小数点左移两位适用于所有百分数，包括小于 1% 的。所以 0.5% 是 0.005；写成 0.5 就成了 50%。",
+        "Moving the point two places to the left works for every percent, even one below $1$. So half of one percent is $0.005$, and writing $0.5$ for it would mean fifty percent.",
+        "小数点左移两位适用于所有百分数，包括小于 $1\\%$ 的。所以 $0.5\\%$ 是 $0.005$；写成 $0.5$ 就成了 $50\\%$。",
       ],
       (rng) => {
         const k = rng.int(1, 9);
@@ -316,8 +316,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       "the-percent-that-did-not",
       ["The percent that did not", "没有做到的百分比"],
       [
-        "The two parts of a whole have percents that add to 100. So the percent of those who did not do something can be found from those who did, by subtracting from 100.",
-        "整体的两部分的百分比之和是 100。所以没有做某事的百分比，可以用 100 减去做了的百分比求出。",
+        "The two parts of a whole have percents that add to $100$. So the percent of those who did not do something can be found from those who did, by subtracting from $100$.",
+        "整体的两部分的百分比之和是 $100$。所以没有做某事的百分比，可以用 $100$ 减去做了的百分比求出。",
       ],
       (rng) => {
         const total = rng.pick([20, 40, 60, 80, 100, 200, 300, 400, 500]);
@@ -325,14 +325,14 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         const yes = (total * p) / 100;
         return whole(
           [
-            `In a school of ${total} students, ${yes} walk to school. What percent of the students do not walk to school?`,
-            `一所有 ${total} 名学生的学校中，${yes} 人步行上学。不步行上学的学生占百分之几？`,
+            `In a school of $${total}$ students, $${yes}$ walk to school. What percent of the students do not walk to school?`,
+            `一所有 $${total}$ 名学生的学校中，$${yes}$ 人步行上学。不步行上学的学生占百分之几？`,
           ],
           100 - p,
           [p, total - yes, 100 - yes > 0 ? 100 - yes : 100 - p + 5],
           [
-            `$${yes} \\div ${total} = ${p}\\%$ walk, so $100\\% - ${p}\\% = ${100 - p}\\%$ do not.`,
-            `$${yes} \\div ${total} = ${p}\\%$ 步行，所以 $100\\% - ${p}\\% = ${100 - p}\\%$ 不步行。`,
+            `$${yes} \\div ${total} = ${p / 100} = ${p}\\%$ walk, so $100\\% - ${p}\\% = ${100 - p}\\%$ do not.`,
+            `$${yes} \\div ${total} = ${p / 100} = ${p}\\%$ 步行，所以 $100\\% - ${p}\\% = ${100 - p}\\%$ 不步行。`,
           ],
         );
       },
@@ -618,8 +618,18 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           answer,
           [count, count - answer, answer + 1],
           [
-            `Simplify the fractions first. Those with a top divisible by the bottom are integers, and the count is ${answer}.`,
-            `先化简分数。分子能被分母整除的是整数，一共 ${answer} 个。`,
+            answer === 0
+              ? "Simplify the fractions first. None of the numbers comes out as a whole number or its opposite, so the count is $0$."
+              : `Simplify the fractions first. The integers are $${items
+                  .filter((x) => x.isInt)
+                  .map((x) => x.latex)
+                  .join(",\\;")}$, so the count is $${answer}$.`,
+            answer === 0
+              ? "先化简分数。没有一个数化简后是整数，所以有 $0$ 个。"
+              : `先化简分数。整数是 $${items
+                  .filter((x) => x.isInt)
+                  .map((x) => x.latex)
+                  .join(",\\;")}$，一共 $${answer}$ 个。`,
           ],
         );
       },
@@ -779,7 +789,7 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       ["Less than goes backwards", "“比……少”的顺序"],
       [
         "The phrase less than reverses the order of the words. So five less than a number means the number minus five, and writing the five first would describe a different quantity.",
-        "“比……少”的顺序要注意。比一个数少 5，是这个数减 5；把 5 写在前面，表示的就是另一个量了。",
+        "“比……少”的顺序要注意。比一个数少 $5$，是这个数减 $5$；把 $5$ 写在前面，表示的就是另一个量了。",
       ],
       (rng) => {
         const v = rng.pick(["x", "y", "m", "n", "t", "w", "p"]);
@@ -812,14 +822,14 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         return chooseMath(
           rng,
           [
-            `A rental costs ${fee} dollars plus ${rate} dollars for each of $${v}$ ${unit[0]}. Which expression gives the total cost in dollars?`,
-            `租用费用是 ${fee} 美元，每${unit[1]}再加 ${rate} 美元，共 $${v}$ ${unit[1]}。哪个表达式表示总费用（美元）？`,
+            `A rental costs $${fee}$ dollars plus $${rate}$ dollars for each of $${v}$ ${unit[0]}. Which expression gives the total cost in dollars?`,
+            `租用费用是 $${fee}$ 美元，每${unit[1]}再加 $${rate}$ 美元，共 $${v}$ ${unit[1]}。哪个表达式表示总费用（美元）？`,
           ],
           `${rate}${v} + ${fee}`,
           [`${fee}${v} + ${rate}`, `(${fee} + ${rate})${v}`, `${fee} + ${rate} + ${v}`],
           [
-            `The ${rate} dollars repeat $${v}$ times, which is $${rate}${v}$, and the ${fee} dollars are paid once.`,
-            `${rate} 美元重复 $${v}$ 次，即 $${rate}${v}$，${fee} 美元只付一次。`,
+            `The $${rate}$ dollars repeat $${v}$ times, which is $${rate}${v}$, and the $${fee}$ dollars are paid once.`,
+            `$${rate}$ 美元重复 $${v}$ 次，即 $${rate}${v}$，$${fee}$ 美元只付一次。`,
           ],
         );
       },
@@ -880,8 +890,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       "the-sum-of-the-coefficients",
       ["The sum of the coefficients", "系数之和"],
       [
-        "Each coefficient carries the sign in front of its term, and a variable alone has coefficient 1 or $-1$. A constant has no variable, so it is not counted among the coefficients.",
-        "每个系数都带着项前面的符号，单独的变量系数是 1 或 $-1$。常数项没有变量，不算系数。",
+        "Each coefficient carries the sign in front of its term, and a variable alone has coefficient $1$ or $-1$. A constant has no variable, so it is not counted among the coefficients.",
+        "每个系数都带着项前面的符号，单独的变量系数是 $1$ 或 $-1$。常数项没有变量，不算系数。",
       ],
       (rng) => {
         const a = rng.int(2, 15);
@@ -897,8 +907,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           a + second,
           [a, a + second + c, a - second],
           [
-            `The coefficients are ${a} and ${second}, and their sum is ${a + second}. The constant ${c} is not a coefficient.`,
-            `系数是 ${a} 和 ${second}，和是 ${a + second}。常数 ${c} 不是系数。`,
+            `The coefficients are $${a}$ and $${second}$, and their sum is $${a + second}$. The constant $${c}$ is not a coefficient.`,
+            `系数是 $${a}$ 和 $${second}$，和是 $${a + second}$。常数 $${c}$ 不是系数。`,
           ],
         );
       },
@@ -967,8 +977,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           `${g}`,
           [`${g}${v}`, `${v}`, `${g * c}`],
           [
-            `${g} divides all three numbers, and $${g * c}$ has no $${v}$, so the factor is ${g}.`,
-            `${g} 能整除三个数，而 $${g * c}$ 不含 $${v}$，所以最大公因数是 ${g}。`,
+            `$${g}$ divides all three numbers, and $${g * c}$ has no $${v}$, so the factor is $${g}$.`,
+            `$${g}$ 能整除三个数，而 $${g * c}$ 不含 $${v}$，所以最大公因数是 $${g}$。`,
           ],
         );
       },
@@ -1004,8 +1014,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       "the-one-left-behind",
       ["The 1 left behind", "留下的 1"],
       [
-        "When a term equals the common factor, dividing it by the factor leaves 1, and not nothing. Forgetting that 1 gives an expression that no longer expands back to the original.",
-        "某一项等于公因数时，除以公因数得 1，不是什么都没有。漏掉这个 1，展开后就不等于原式了。",
+        "When a term equals the common factor, dividing it by the factor leaves $1$, and not nothing. Forgetting that $1$ gives an expression that no longer expands back to the original.",
+        "某一项等于公因数时，除以公因数得 $1$，不是什么都没有。漏掉这个 $1$，展开后就不等于原式了。",
       ],
       (rng) => {
         const g = rng.int(2, 15);
@@ -1017,8 +1027,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           `${g}(${a}${v} + 1)`,
           [`${g}(${a}${v})`, `${g}(${a}${v} + ${g})`, `${g * a}(${v} + ${g})`],
           [
-            `$${g} \\div ${g} = 1$, so a 1 stays in the parentheses. Check: $${g} \\times 1 = ${g}$, the original term.`,
-            `$${g} \\div ${g} = 1$，所以括号里留下 1。检验：$${g} \\times 1 = ${g}$，正是原来的项。`,
+            `$${g} \\div ${g} = 1$, so a $1$ stays in the parentheses. Check: $${g} \\times 1 = ${g}$, the original term.`,
+            `$${g} \\div ${g} = 1$，所以括号里留下 $1$。检验：$${g} \\times 1 = ${g}$，正是原来的项。`,
           ],
         );
       },

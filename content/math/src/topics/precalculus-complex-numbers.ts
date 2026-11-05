@@ -492,10 +492,37 @@ export const theArgumentOfAComplexNumber: TopicDef = {
         );
         const right = t(`$\\theta = ${item.ans}$`, `$\\theta = ${item.ans}$`);
         const wrong = item.wrong.map((w) => t(`$\\theta = ${w}$`, `$\\theta = ${w}$`));
-        const solution = t(
-          `Determine the position of $z = ${item.expr}$ in the complex plane. Its angle with the positive real axis in $[0, 2\\pi)$ is $\\theta = ${item.ans}$.`,
-          `观察 $z = ${item.expr}$ 在复平面中的位置。其与正实轴构成的在 $[0, 2\\pi)$ 内的角为 $\\theta = ${item.ans}$。`,
-        );
+        const axes: Record<string, [string, string]> = {
+          "0": ["the positive real axis", "正实轴"],
+          "\\frac{\\pi}{2}": ["the positive imaginary axis", "正虚轴"],
+          "\\pi": ["the negative real axis", "负实轴"],
+          "\\frac{3\\pi}{2}": ["the negative imaginary axis", "负虚轴"],
+        };
+        const turns: Record<string, [number, string]> = {
+          "\\frac{\\pi}{4}": [1, "\\frac{\\pi}{4}"],
+          "\\frac{3\\pi}{4}": [2, "\\frac{\\pi}{4}"],
+          "\\frac{5\\pi}{4}": [3, "\\frac{\\pi}{4}"],
+          "\\frac{7\\pi}{4}": [4, "\\frac{\\pi}{4}"],
+          "\\frac{\\pi}{6}": [1, "\\frac{\\pi}{6}"],
+          "\\frac{5\\pi}{6}": [2, "\\frac{\\pi}{6}"],
+          "\\frac{7\\pi}{6}": [3, "\\frac{\\pi}{6}"],
+          "\\frac{11\\pi}{6}": [4, "\\frac{\\pi}{6}"],
+          "\\frac{\\pi}{3}": [1, "\\frac{\\pi}{3}"],
+          "\\frac{2\\pi}{3}": [2, "\\frac{\\pi}{3}"],
+          "\\frac{4\\pi}{3}": [3, "\\frac{\\pi}{3}"],
+          "\\frac{5\\pi}{3}": [4, "\\frac{\\pi}{3}"],
+        };
+        const axis = axes[item.ans];
+        const turn = turns[item.ans] ?? [1, item.ans];
+        const solution = axis
+          ? t(
+              `The point $z = ${item.expr}$ lies on ${axis[0]}, so $\\theta = ${item.ans}$.`,
+              `点 $z = ${item.expr}$ 在${axis[1]}上，所以 $\\theta = ${item.ans}$。`,
+            )
+          : t(
+              `The signs of the real and imaginary parts put $z = ${item.expr}$ in Quadrant ${["I", "II", "III", "IV"][turn[0] - 1]}, and the ratio of their sizes gives the reference angle $${turn[1]}$. In that quadrant, $\\theta = ${item.ans}$.`,
+              `实部和虚部的符号说明 $z = ${item.expr}$ 在第${["一", "二", "三", "四"][turn[0] - 1]}象限，两者大小之比给出参考角 $${turn[1]}$。在该象限中，$\\theta = ${item.ans}$。`,
+            );
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },

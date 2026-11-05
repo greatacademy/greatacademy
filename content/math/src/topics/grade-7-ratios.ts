@@ -736,7 +736,13 @@ const tableXs = (rng: Rng, q: number) => (rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 10
 
 /** quotientsLatex writes y ÷ x for each column, reduced: "\frac{6}{4} = \frac{3}{2}". */
 const quotientsLatex = (xs: readonly number[], ys: readonly number[]) =>
-  xs.map((x, i) => `\\frac{${ys[i]}}{${x}} = ${Q.of(ys[i]!, x).toLatex()}`).join(", \\quad ");
+  xs
+    .map((x, i) => {
+      const shown = `\\frac{${ys[i]}}{${x}}`;
+      const value = Q.of(ys[i]!, x).toLatex();
+      return shown === value ? shown : `${shown} = ${value}`;
+    })
+    .join(", \\quad ");
 
 /** understandingProportionalRelationshipsUsingTables tests tables for proportionality and finds the constant. */
 export const understandingProportionalRelationshipsUsingTables = topic(
@@ -1045,8 +1051,8 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
               t(`One ${g.one} costs $\\$${n}$.`, `每${g.zh} $\\$${n}$。`),
             ],
             t(
-              `The first coordinate is the number of ${g.many} and the second is the cost, so ${n} ${g.many} cost $\\$${c}$ (one costs $\\$${c} \\div ${n} = \\$${u}$).`,
-              `第一个坐标是数量，第二个坐标是总价，所以 ${n} ${g.zh}共 $\\$${c}$（每${g.zh} $\\$${c} \\div ${n} = \\$${u}$）。`,
+              `The first coordinate is the number of ${g.many} and the second is the cost, so $${n}$ ${g.many} cost $\\$${c}$ (one costs $\\$${c} \\div ${n} = \\$${u}$).`,
+              `第一个坐标是数量，第二个坐标是总价，所以 $${n}$ ${g.zh}共 $\\$${c}$（每${g.zh} $\\$${c} \\div ${n} = \\$${u}$）。`,
             ),
           );
         }
@@ -1100,8 +1106,8 @@ function situation(rng: Rng): Situation {
     case 1:
       return {
         text: t(
-          `A car travels at a constant speed of ${k * 5} miles per hour. Is the distance traveled proportional to the time?`,
-          `一辆汽车以 ${k * 5} 英里/小时的速度匀速行驶。行驶的路程与时间成正比例吗？`,
+          `A car travels at a constant speed of $${k * 5}$ miles per hour. Is the distance traveled proportional to the time?`,
+          `一辆汽车以 $${k * 5}$ 英里/小时的速度匀速行驶。行驶的路程与时间成正比例吗？`,
         ),
         proportional: true,
         why: t(
@@ -1124,8 +1130,8 @@ function situation(rng: Rng): Situation {
     case 3:
       return {
         text: t(
-          `A printer prints ${k * 2} pages per minute. Is the number of pages printed proportional to the time?`,
-          `一台打印机每分钟打印 ${k * 2} 页。打印的页数与时间成正比例吗？`,
+          `A printer prints $${k * 2}$ pages per minute. Is the number of pages printed proportional to the time?`,
+          `一台打印机每分钟打印 $${k * 2}$ 页。打印的页数与时间成正比例吗？`,
         ),
         proportional: true,
         why: t(`The number of pages is $y = ${k * 2}x$.`, `页数 $y = ${k * 2}x$。`),
@@ -1157,25 +1163,25 @@ function situation(rng: Rng): Situation {
     case 6:
       return {
         text: t(
-          `A candle is ${b + 20} centimeters tall and burns down ${(k % 3) + 1} ${k % 3 === 0 ? "centimeter" : "centimeters"} per hour. Is its height proportional to the time it has burned?`,
-          `一支蜡烛高 ${b + 20} 厘米，每小时燃烧 ${(k % 3) + 1} 厘米。它的高度与燃烧时间成正比例吗？`,
+          `A candle is $${b + 20}$ centimeters tall and burns down ${(k % 3) + 1} ${k % 3 === 0 ? "centimeter" : "centimeters"} per hour. Is its height proportional to the time it has burned?`,
+          `一支蜡烛高 $${b + 20}$ 厘米，每小时燃烧 ${(k % 3) + 1} 厘米。它的高度与燃烧时间成正比例吗？`,
         ),
         proportional: false,
         why: t(
-          `The height is $y = ${b + 20} - ${k % 3 === 0 ? "" : (k % 3) + 1}x$. It decreases from ${b + 20}, and at time $0$ it is not $0$, so it is not proportional.`,
-          `高度 $y = ${b + 20} - ${k % 3 === 0 ? "" : (k % 3) + 1}x$，从 ${b + 20} 开始减少，时间为 $0$ 时高度不为 $0$，所以不成正比例。`,
+          `The height is $y = ${b + 20} - ${k % 3 === 0 ? "" : (k % 3) + 1}x$. It decreases from $${b + 20}$, and at time $0$ it is not $0$, so it is not proportional.`,
+          `高度 $y = ${b + 20} - ${k % 3 === 0 ? "" : (k % 3) + 1}x$，从 $${b + 20}$ 开始减少，时间为 $0$ 时高度不为 $0$，所以不成正比例。`,
         ),
       };
     default:
       return {
         text: t(
-          `A pool already holds ${b * 50} gallons of water and is filled at ${k * 5} gallons per minute. Is the amount of water in the pool proportional to the time?`,
-          `一个水池里已有 ${b * 50} 加仑水，又以每分钟 ${k * 5} 加仑的速度注水。池中的水量与时间成正比例吗？`,
+          `A pool already holds $${b * 50}$ gallons of water and is filled at $${k * 5}$ gallons per minute. Is the amount of water in the pool proportional to the time?`,
+          `一个水池里已有 $${b * 50}$ 加仑水，又以每分钟 $${k * 5}$ 加仑的速度注水。池中的水量与时间成正比例吗？`,
         ),
         proportional: false,
         why: t(
-          `The amount is $y = ${k * 5}x + ${b * 50}$. At time $0$ there are already ${b * 50} gallons, so it is not proportional.`,
-          `水量 $y = ${k * 5}x + ${b * 50}$。时间为 $0$ 时已有 ${b * 50} 加仑，所以不成正比例。`,
+          `The amount is $y = ${k * 5}x + ${b * 50}$. At time $0$ there are already $${b * 50}$ gallons, so it is not proportional.`,
+          `水量 $y = ${k * 5}x + ${b * 50}$。时间为 $0$ 时已有 $${b * 50}$ 加仑，所以不成正比例。`,
         ),
       };
   }
@@ -1187,7 +1193,7 @@ export const understandingProportionalRelationshipsFromDescriptions = topic(
   t("Understanding Proportional Relationships From Descriptions", "由文字描述理解正比例关系"),
   t(
     "A situation is proportional when one quantity is always the same number of times the other: a fixed price per item, a constant speed, a fixed pay per hour. A starting amount or a fixed fee breaks proportionality. A proportional relationship is written y = kx, where k is the amount for one unit.",
-    "如果一个量总是另一个量的同一倍数，例如单价固定、速度不变、时薪固定，那么它们成正比例。有初始量或固定费用就不成正比例。正比例关系写作 y = kx，k 是 1 个单位对应的量。",
+    "如果一个量总是另一个量的同一倍数，例如单价固定、速度不变、时薪固定，那么它们成正比例。有初始量或固定费用就不成正比例。正比例关系写作 y = kx，k 是 $1$ 个单位对应的量。",
   ),
   ["understanding-proportional-relationships-using-tables"],
   ["7.RP.A.2a", "7.RP.A.2c"],
@@ -1230,8 +1236,8 @@ export const understandingProportionalRelationshipsFromDescriptions = topic(
         const n = rng.int(2, 9);
         return expressionProblem({
           prompt: t(
-            `${n} ${b.units} of ${b.en} cost $${usd(n * u)}$, and the cost is proportional to the amount. Write an equation for the cost $y$, in dollars, of $x$ ${b.units}.`,
-            `${n} ${b.zhUnit}${b.zh}售价 $${usd(n * u)}$，价钱与数量成正比例。写出 $x$ ${b.zhUnit}${b.zh}的价钱 $y$（美元）的方程。`,
+            `$${n}$ ${b.units} of ${b.en} cost $${usd(n * u)}$, and the cost is proportional to the amount. Write an equation for the cost $y$, in dollars, of $x$ ${b.units}.`,
+            `$${n}$ ${b.zhUnit}${b.zh}售价 $${usd(n * u)}$，价钱与数量成正比例。写出 $x$ ${b.zhUnit}${b.zh}的价钱 $y$（美元）的方程。`,
           ),
           answer: `${k}x`,
           prefix: "y =",
@@ -1286,7 +1292,7 @@ export const interpretingDataFromProportionalRelationships = topic(
   t("Interpreting Data From Proportional Relationships", "解读正比例关系中的数据"),
   t(
     "In y = kx, the constant k is the amount of y for one unit of x. Multiply by k to find y from x, divide by k to find x from y, and compare two proportional relationships by comparing their constants, wherever they come from: an equation, a table or a description.",
-    "在 y = kx 中，常数 k 是 x 为 1 个单位时 y 的量。由 x 求 y 就乘 k，由 y 求 x 就除以 k。比较两个正比例关系，就比较它们的常数，不论它们来自方程、表格还是文字描述。",
+    "在 y = kx 中，常数 k 是 x 为 $1$ 个单位时 y 的量。由 x 求 y 就乘 k，由 y 求 x 就除以 k。比较两个正比例关系，就比较它们的常数，不论它们来自方程、表格还是文字描述。",
   ),
   ["understanding-proportional-relationships-using-graphs", "understanding-proportional-relationships-from-descriptions"],
   ["7.RP.A.2b", "7.RP.A.2c", "7.RP.A.2d"],
@@ -1445,12 +1451,12 @@ const changeContexts: readonly ChangeContext[] = [
   },
   {
     start: (n) => t(`Leo earns $\\$${n}$ a week.`, `Leo 每周挣 $\\$${n}$。`),
-    up: (p) => t(`His weekly pay increases by $${p}\\%$.`, `他的周薪提高了 $${p}\\%$。`),
-    down: (p) => t(`His weekly pay decreases by $${p}\\%$.`, `他的周薪降低了 $${p}\\%$。`),
-    askNew: t("How much does he earn a week now, in dollars?", "他现在每周挣多少美元？"),
-    askOld: t("How much did he earn a week before, in dollars?", "他原来每周挣多少美元？"),
+    up: (p) => t(`The weekly pay increases by $${p}\\%$.`, `周薪提高了 $${p}\\%$。`),
+    down: (p) => t(`The weekly pay decreases by $${p}\\%$.`, `周薪降低了 $${p}\\%$。`),
+    askNew: t("How much does Leo earn a week now, in dollars?", "Leo 现在每周挣多少美元？"),
+    askOld: t("How much did Leo earn a week before, in dollars?", "Leo 原来每周挣多少美元？"),
     isNow: (n) => t(`Leo now earns $\\$${n}$ a week`, `Leo 现在每周挣 $\\$${n}$`),
-    now: (n) => t(`Now he earns $\\$${n}$ a week.`, `现在他每周挣 $\\$${n}$。`),
+    now: (n) => t(`Now Leo earns $\\$${n}$ a week.`, `现在 Leo 每周挣 $\\$${n}$。`),
     size: (rng) => 20 * rng.int(15, 60),
     maxUp: 40,
   },

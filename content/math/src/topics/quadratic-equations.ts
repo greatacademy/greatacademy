@@ -713,8 +713,8 @@ export const solvingQuadraticEquationsWithNoConstantTerm: TopicDef = {
           values,
           wrong: [[num(-b)], ["0", num(b)], [num(b)]],
           solution: t(
-            `Write the equation as $${quad(1, b, 0, v)} = 0$ and factor out $${v}$:${steps(`${v}${lf(1, b, v)} = 0`)}So ${solved(values, v).en}.`,
-            `把方程写成 $${quad(1, b, 0, v)} = 0$，提出 $${v}$：${steps(`${v}${lf(1, b, v)} = 0`)}所以 ${solved(values, v)["zh-CN"]}。`,
+            `${eq.endsWith("= 0") ? "Factor" : `Write the equation as $${quad(1, b, 0, v)} = 0$ and factor`} out $${v}$:${steps(`${v}${lf(1, b, v)} = 0`)}So ${solved(values, v).en}.`,
+            `${eq.endsWith("= 0") ? "" : `把方程写成 $${quad(1, b, 0, v)} = 0$，`}提出 $${v}$：${steps(`${v}${lf(1, b, v)} = 0`)}所以 ${solved(values, v)["zh-CN"]}。`,
           ),
         });
       },

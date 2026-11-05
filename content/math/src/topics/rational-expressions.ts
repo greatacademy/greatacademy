@@ -589,8 +589,8 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
           lowest: true,
           wrong: flip ? [ratio(k, [], 1, [cancel]), ratio(1, [], 1, [keep])] : [ratio(1, [cancel], k, []), keep],
           solution: t(
-            `Factor the difference of squares, and take out the common factor $${k}$ if there is one:${steps(`${expr} = ${factored} = ${answer}`)}`,
-            `用平方差公式分解，如有公因数 $${k}$ 也提取出来：${steps(`${expr} = ${factored} = ${answer}`)}`,
+            `Factor the difference of squares${k === 1 ? "" : `, take out the common factor $${k}$`} and cancel the common binomial:${steps(`${expr} = ${factored} = ${answer}`)}`,
+            `用平方差公式分解${k === 1 ? "" : `，提取公因数 $${k}$`}，再约去公共的二项式：${steps(`${expr} = ${factored} = ${answer}`)}`,
           ),
         });
       },
@@ -1216,8 +1216,9 @@ export const rationalEquationsUsingTheFlipMethod: TopicDef = {
           const v = Q.of(a * c, b);
           const x = v.sub(Q.of(p)).div(Q.of(m));
           const work = [
-            `${frac(L, String(a))} = ${num(Q.of(c, b))}`,
-            `${L} = ${cdot(String(a), num(Q.of(c, b)))} = ${num(v)}`,
+            ...(a === 1
+              ? [`${L} = ${num(v)}`]
+              : [`${frac(L, String(a))} = ${num(Q.of(c, b))}`, `${L} = ${cdot(String(a), num(Q.of(c, b)))} = ${num(v)}`]),
             ...solvingLinear(m, v.sub(Q.of(p))),
           ];
           return solutionsProblem({
@@ -1241,8 +1242,8 @@ export const rationalEquationsUsingTheFlipMethod: TopicDef = {
               ],
             ],
             solution: t(
-              `Flip both sides, then multiply by $${a}$:${steps(...work)}${keptNote(num(x)).en}`,
-              `两边取倒数，再乘以 $${a}$：${steps(...work)}${keptNote(num(x))["zh-CN"]}`,
+              `Flip both sides${a === 1 ? "" : `, then multiply by $${a}$`}:${steps(...work)}${keptNote(num(x)).en}`,
+              `两边取倒数${a === 1 ? "" : `，再乘以 $${a}$`}：${steps(...work)}${keptNote(num(x))["zh-CN"]}`,
             ),
           });
         }
@@ -1276,14 +1277,18 @@ export const rationalEquationsUsingTheFlipMethod: TopicDef = {
         }
         const v = Q.of(a, c);
         const x = v.sub(Q.of(p)).div(Q.of(m));
-        const work = [`${frac(L, String(a))} = ${num(Q.of(1, c))}`, `${L} = ${num(v)}`, ...solvingLinear(m, v.sub(Q.of(p)))];
+        const work = [
+          ...(a === 1 ? [] : [`${frac(L, String(a))} = ${num(Q.of(1, c))}`]),
+          `${L} = ${num(v)}`,
+          ...solvingLinear(m, v.sub(Q.of(p))),
+        ];
         return solutionsProblem({
           prompt: solve(eq),
           values: [num(x)],
           wrong: [[num(Q.of(a * c - p, m))], [num(Q.of(c, a).sub(Q.of(p)).div(Q.of(m)))], [num(Q.of(-p, m))]],
           solution: t(
-            `Flip both sides, then multiply by $${a}$:${steps(...work)}${keptNote(num(x)).en}`,
-            `两边取倒数，再乘以 $${a}$：${steps(...work)}${keptNote(num(x))["zh-CN"]}`,
+            `Flip both sides${a === 1 ? "" : `, then multiply by $${a}$`}:${steps(...work)}${keptNote(num(x)).en}`,
+            `两边取倒数${a === 1 ? "" : `，再乘以 $${a}$`}：${steps(...work)}${keptNote(num(x))["zh-CN"]}`,
           ),
         });
       },

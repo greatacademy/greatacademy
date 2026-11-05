@@ -47,8 +47,8 @@ export const frac = (n: number | string, d: number | string) => `\\frac{${n}}{${
 /** tenths writes a count of tenths as a decimal. */
 export const tenths = (n: number) => (n / 10).toFixed(1);
 
-/** signed writes a number after a term, as " + 3" or " - 3". */
-export const signed = (n: number) => (n < 0 ? ` - ${-n}` : ` + ${n}`);
+/** signed writes a number after a term, as " + 3" or " - 3", and nothing for 0. */
+export const signed = (n: number) => (n === 0 ? "" : n < 0 ? ` - ${-n}` : ` + ${n}`);
 
 /** gcd finds the greatest common factor of two whole numbers. */
 export const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));

@@ -183,7 +183,7 @@ function oneStepStories(v: string, a: number): Story[] {
       zh: `Sam 有 $${v}$ 张贴纸，送出了 $${a}$ 张。用代数式表示 Sam 剩下的贴纸数。`,
       latex: `${v} - ${a}`,
       why: t(
-        `Giving away $${a}$ takes them from the $${v}$ he had: $${v} - ${a}$.`,
+        `Giving away $${a}$ takes them from the $${v}$ Sam had: $${v} - ${a}$.`,
         `送出 $${a}$ 张，是从原有的 $${v}$ 张中减去：$${v} - ${a}$。`,
       ),
       wrong: [`${a} - ${v}`, `${v} + ${a}`],

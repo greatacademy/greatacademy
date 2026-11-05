@@ -1268,8 +1268,8 @@ export const theCartesianCoordinateSystem = topic(
               [Math.abs(x), Math.abs(y)],
             ],
             solution: t(
-              `From the origin, $${name}$ is ${dirEn}, so $${name} = ${pointLatex([x, y])}$.`,
-              `从原点出发，$${name}$ 在${dirZh}处，所以 $${name} = ${pointLatex([x, y])}$。`,
+              `From the origin, $${name}$ is $${dirEn}$, so $${name} = ${pointLatex([x, y])}$.`,
+              `从原点出发，$${name}$ 在$${dirZh}$处，所以 $${name} = ${pointLatex([x, y])}$。`,
             ),
           }),
           figure: grid(
@@ -1288,8 +1288,8 @@ export const rationalNumbersInTheCoordinatePlane = topic(
   "rational-numbers-in-the-coordinate-plane",
   t("Rational Numbers in the Coordinate Plane", "坐标平面中的有理数"),
   t(
-    "Coordinates need not be integers. On a grid with lines every half unit, a point halfway between −3 and −2 on the x-axis and between 1 and 2 on the y-axis is (−2.5, 1.5) = (−2 1/2, 1 1/2).",
-    "坐标不一定是整数。在每半个单位画一条线的网格上，横向在 −3 与 −2 正中间、纵向在 1 与 2 正中间的点是 (−2.5, 1.5) = (−2 1/2, 1 1/2)。",
+    "Coordinates need not be integers. On a grid with lines every half unit, a point halfway between $-3$ and $-2$ on the x-axis and between $1$ and $2$ on the y-axis is $(-2.5, 1.5)$ = ($-2$ $\\frac{1}{2}$, $1$ $\\frac{1}{2}$).",
+    "坐标不一定是整数。在每半个单位画一条线的网格上，横向在 $-3$ 与 $-2$ 正中间、纵向在 $1$ 与 $2$ 正中间的点是 $(-2.5, 1.5)$ = ($-2$ $\\frac{1}{2}$, $1$ $\\frac{1}{2}$)。",
   ),
   ["the-cartesian-coordinate-system", "identifying-rational-numbers-on-a-number-line"],
   ["6.NS.C.6c"],

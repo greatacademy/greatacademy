@@ -1541,8 +1541,8 @@ export const consecutiveIntegerProblems: TopicDef = {
             answer: n,
             wrong: [last, frac(c + (k - 1) * otherStep, p - 1), frac(c, p - 1)],
             solution: t(
-              `Let the ${e.small.en} be $n$; the ${e.large.en} is $n + ${(k - 1) * s}$. ${steps(`${p}n = n + ${(k - 1) * s} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`, `${p - 1 === 1 ? "" : p - 1}n = ${(k - 1) * s + c}`, `n = ${n}`)}`,
-              `设${e.small["zh-CN"]}的数为 $n$，${e.large["zh-CN"]}的数为 $n + ${(k - 1) * s}$。${steps(`${p}n = n + ${(k - 1) * s} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`, `${p - 1 === 1 ? "" : p - 1}n = ${(k - 1) * s + c}`, `n = ${n}`)}`,
+              `Let the ${e.small.en} be $n$; the ${e.large.en} is $n + ${(k - 1) * s}$. ${steps(`${p}n = n + ${(k - 1) * s} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`, ...(p === 2 ? [] : [`${p - 1}n = ${(k - 1) * s + c}`]), `n = ${n}`)}`,
+              `设${e.small["zh-CN"]}的数为 $n$，${e.large["zh-CN"]}的数为 $n + ${(k - 1) * s}$。${steps(`${p}n = n + ${(k - 1) * s} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`, ...(p === 2 ? [] : [`${p - 1}n = ${(k - 1) * s + c}`]), `n = ${n}`)}`,
             ),
           });
         }
@@ -1691,8 +1691,8 @@ export const speedDistanceTime: TopicDef = {
         const dist = t1.mul(Q.of(r1)).add(t2.mul(Q.of(r2)));
         return numberProblem({
           prompt: t(
-            `Sam drove $${dec(dist)}$ km in $${dec(total)}$ hours. He drove at $${r1}$ km/h on the highway and at $${r2}$ km/h on the rest of the trip. How many hours did he spend on the highway?`,
-            `小山用 $${dec(total)}$ 小时开了 $${dec(dist)}$ 千米。他在高速公路上的速度是 $${r1}$ 千米/时，其余路段的速度是 $${r2}$ 千米/时。他在高速公路上开了多少小时？`,
+            `Sam drove $${dec(dist)}$ km in $${dec(total)}$ hours, at $${r1}$ km/h on the highway and at $${r2}$ km/h on the rest of the trip. How many of the hours were on the highway?`,
+            `小山用 $${dec(total)}$ 小时开了 $${dec(dist)}$ 千米，高速公路上的速度是 $${r1}$ 千米/时，其余路段的速度是 $${r2}$ 千米/时。其中在高速公路上开了多少小时？`,
           ),
           answer: t1,
           wrong: [t2, dist.div(Q.of(r1 + r2)), total.div(Q.of(2))],
@@ -1744,8 +1744,8 @@ export const speedDistanceTime: TopicDef = {
           answer: avg,
           wrong: [frac(r1 + r2, 2), frac(dist, 2)],
           solution: t(
-            `The total distance is $${r1} \\cdot ${t1} + ${r2} \\cdot ${t2} = ${dist}$ km in $${t1 + t2}$ hours: ${steps(`\\frac{${dist}}{${t1 + t2}} = ${avg.toLatex()}`)}`,
-            `总路程是 $${r1} \\cdot ${t1} + ${r2} \\cdot ${t2} = ${dist}$ 千米，总时间 $${t1 + t2}$ 小时：${steps(`\\frac{${dist}}{${t1 + t2}} = ${avg.toLatex()}`)}`,
+            `The total distance is $${r1} \\cdot ${t1} + ${r2} \\cdot ${t2} = ${dist}$ km in $${t1 + t2}$ hours, so the average speed is ${avg.isInteger() ? steps(`\\frac{${dist}}{${t1 + t2}} = ${avg.toLatex()}`) : `$${avg.toLatex()}$ km/h.`}`,
+            `总路程是 $${r1} \\cdot ${t1} + ${r2} \\cdot ${t2} = ${dist}$ 千米，总时间 $${t1 + t2}$ 小时，所以平均速度是 ${avg.isInteger() ? steps(`\\frac{${dist}}{${t1 + t2}} = ${avg.toLatex()}`) : `$${avg.toLatex()}$ 千米/时。`}`,
           ),
         });
       },

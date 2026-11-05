@@ -57,7 +57,7 @@ function gcfSteps(
 /** trinomialPairs writes, with write, up to two factorizations from the other factor pairs of m·n: the misreadings of x² + bx + mn. */
 function trinomialPairs(m: number, n: number, write: (d: number, e: number) => string): string[] {
   return factorPairs(m * n)
-    .filter(([d]) => d !== m && d !== n)
+    .filter(([d]) => d !== m && d !== n && d !== -m && d !== -n)
     .sort((x, y) => Math.abs(x[0] + x[1] - m - n) - Math.abs(y[0] + y[1] - m - n))
     .slice(0, 2)
     .map(([d, e]) => write(d, e));

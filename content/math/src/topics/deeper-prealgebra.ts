@@ -60,8 +60,8 @@ const wholesBetweenFractions: KnowledgePointDef = {
       form: "integer",
       wrong: [answer + 1, answer - 1, high, b - a, answer + 2],
       solution: t(
-        `As mixed numbers they are $${low}\\frac{${r}}{${d}}$ and $${high}\\frac{${s}}{${e}}$. The whole numbers between them run from ${low + 1} to ${high}, and that makes ${answer} of them.`,
-        `化成带分数是 $${low}\\frac{${r}}{${d}}$ 和 $${high}\\frac{${s}}{${e}}$。它们之间的整数从 ${low + 1} 到 ${high}，一共 ${answer} 个。`,
+        `As mixed numbers they are $${low}\\frac{${r}}{${d}}$ and $${high}\\frac{${s}}{${e}}$. The whole numbers between them run from $${low + 1}$ to $${high}$, and that makes $${answer}$ of them.`,
+        `化成带分数是 $${low}\\frac{${r}}{${d}}$ 和 $${high}\\frac{${s}}{${e}}$。它们之间的整数从 $${low + 1}$ 到 $${high}$，一共 $${answer}$ 个。`,
       ),
     });
   },
@@ -87,7 +87,7 @@ const farDigit: KnowledgePointDef = {
     return numberProblem({
       prompt: t(
         `What is the ${ordinalEn(position)} digit after the decimal point in the decimal form of $\\frac{${n}}{${d}}$?`,
-        `$\\frac{${n}}{${d}}$ 写成小数后，小数点后第 ${position} 位上的数字是多少？`,
+        `$\\frac{${n}}{${d}}$ 写成小数后，小数点后第 $${position}$ 位上的数字是多少？`,
       ),
       answer,
       form: "integer",
@@ -103,8 +103,8 @@ const farDigit: KnowledgePointDef = {
         Math.floor(position / size),
       ],
       solution: t(
-        `The decimal is $0.\\overline{${block.join("")}}$, with a block of ${size} digits. Since ${position} leaves remainder ${remainder} on division by ${size}, ${remainder === 0 ? "the position ends a complete block, so the digit is the last one in the block" : `the digit is number ${remainder} in the block`}: it is ${answer}.`,
-        `这个小数是 $0.\\overline{${block.join("")}}$，循环节有 ${size} 位。${position} 除以 ${size} 余 ${remainder}，${remainder === 0 ? "这一位正好是一个完整循环节的末尾，所以是循环节的最后一个数字" : `所以是循环节的第 ${remainder} 个数字`}：${answer}。`,
+        `The decimal is $0.\\overline{${block.join("")}}$, with a block of $${size}$ digits. Since $${position}$ leaves remainder $${remainder}$ on division by $${size}$, ${remainder === 0 ? "the position ends a complete block, so the digit is the last one in the block" : `the digit is number ${remainder} in the block`}: it is $${answer}$.`,
+        `这个小数是 $0.\\overline{${block.join("")}}$，循环节有 $${size}$ 位。$${position}$ 除以 $${size}$ 余 $${remainder}$，${remainder === 0 ? "这一位正好是一个完整循环节的末尾，所以是循环节的最后一个数字" : `所以是循环节的第 ${remainder} 个数字`}：$${answer}$。`,
       ),
     });
   },
@@ -185,8 +185,8 @@ const ratioFromFraction: KnowledgePointDef = {
       form: "fraction",
       wrong: [Q.of(p, q), Q.of(rest, q), reversed ? Q.of(p, rest) : Q.of(rest, p), Q.of(p, p + q), reversed ? Q.of(q, p) : Q.of(q, rest)],
       solution: t(
-        `Out of every ${q} equal shares, ${p} are ${one} and $${q} - ${p} = ${rest}$ are ${other}. The ratio is $${answer.toLatex()}$.`,
-        `每 ${q} 等份中，${oneZh}占 ${p} 份，${otherZh}占 $${q} - ${p} = ${rest}$ 份。所以比是 $${answer.toLatex()}$。`,
+        `Out of every $${q}$ equal shares, $${p}$ are $${one}$ and $${q} - ${p} = ${rest}$ are $${other}$. The ratio is $${answer.toLatex()}$.`,
+        `每 $${q}$ 等份中，${oneZh}占 $${p}$ 份，${otherZh}占 $${q} - ${p} = ${rest}$ 份。所以比是 $${answer.toLatex()}$。`,
       ),
     });
   },
@@ -255,8 +255,8 @@ const rateUnits: KnowledgePointDef = {
       answer,
       wrong: [Q.of(value * top), Q.of(value, bottom), Q.of(value * bottom, top), Q.of(value * top * bottom)],
       solution: t(
-        `Change the quantity and the time separately, which multiplies by ${top} and divides by ${bottom}: $${value} \\times ${top} \\div ${bottom} = ${answer.toLatex()}$.`,
-        `把量和时间分开换算，也就是乘以 ${top} 再除以 ${bottom}：$${value} \\times ${top} \\div ${bottom} = ${answer.toLatex()}$。`,
+        `Change the quantity and the time separately, which multiplies by $${top}$ and divides by $${bottom}$: $${value} \\times ${top} \\div ${bottom} = ${answer.toLatex()}$.`,
+        `把量和时间分开换算，也就是乘以 $${top}$ 再除以 $${bottom}$：$${value} \\times ${top} \\div ${bottom} = ${answer.toLatex()}$。`,
       ),
     });
   },
@@ -286,15 +286,15 @@ const percentOfPercent: KnowledgePointDef = {
     ) as [string, string, string, string, string, string];
     return numberProblem({
       prompt: t(
-        `${en}. Of these, ${p}% ${enFirst}, and ${q}% of that group ${enSecond}. How many are in this last group?`,
-        `${zh}。其中 ${p}% ${zhFirst}，这部分中又有 ${q}% ${zhSecond}。最后这部分有多少个？`,
+        `${en}. Of these, $${p}\\%$ ${enFirst}, and $${q}\\%$ of that group ${enSecond}. How many are in this last group?`,
+        `${zh}。其中 $${p}\\%$ ${zhFirst}，这部分中又有 $${q}\\%$ ${zhSecond}。最后这部分有多少个？`,
       ),
       answer,
       form: "integer",
       wrong: [(total * q) / 100, part, (total * (p + q)) / 100, part - answer, total - answer],
       solution: t(
-        `First find the smaller group: ${p}% of ${total} is ${part}. Then ${q}% of ${part} is ${answer}.`,
-        `先求较小的群体：${total} 的 ${p}% 是 ${part}。再求 ${part} 的 ${q}%，得 ${answer}。`,
+        `First find the smaller group: $${p}\\%$ of $${total}$ is $${part}$. Then $${q}\\%$ of $${part}$ is $${answer}$.`,
+        `先求较小的群体：$${total}$ 的 $${p}\\%$ 是 $${part}$。再求 $${part}$ 的 $${q}\\%$，得 $${answer}$。`,
       ),
     });
   },
@@ -321,15 +321,15 @@ const scoreNeeded: KnowledgePointDef = {
     const nameZh = { Mia: "米娅", Leo: "利奥", Ana: "安娜", Sam: "萨姆" }[name] as string;
     return numberProblem({
       prompt: t(
-        `A test has ${total} questions. ${name} has finished the first ${done} and has ${right} of them right. ${name} wants at least ${target}% on the whole test. What is the fewest of the remaining questions that must be right?`,
-        `一场考试有 ${total} 道题。${nameZh}做完了前 ${done} 道，答对了 ${right} 道。${nameZh}希望全卷至少得 ${target}%。剩下的题中至少要答对多少道？`,
+        `A test has $${total}$ questions. ${name} has finished the first $${done}$ and has $${right}$ of them right. ${name} wants at least $${target}\\%$ on the whole test. What is the fewest of the remaining questions that must be right?`,
+        `一场考试有 $${total}$ 道题。${nameZh}做完了前 $${done}$ 道，答对了 $${right}$ 道。${nameZh}希望全卷至少得 $${target}\\%$。剩下的题中至少要答对多少道？`,
       ),
       answer,
       form: "integer",
       wrong: [needed, Q.of(left * target, 100), done - right, left - answer, answer + 1],
       solution: t(
-        `A score of ${target}% of ${total} needs ${needed} correct answers in all. ${name} already has ${right}, so $${needed} - ${right} = ${answer}$ more are needed.`,
-        `${total} 道题的 ${target}% 共需答对 ${needed} 道。${nameZh}已经答对 ${right} 道，所以还要答对 $${needed} - ${right} = ${answer}$ 道。`,
+        `A score of $${target}\\%$ of $${total}$ needs $${needed}$ correct answers in all. ${name} already has $${right}$, so $${needed} - ${right} = ${answer}$ more are needed.`,
+        `$${total}$ 道题的 $${target}\\%$ 共需答对 $${needed}$ 道。${nameZh}已经答对 $${right}$ 道，所以还要答对 $${needed} - ${right} = ${answer}$ 道。`,
       ),
     });
   },
@@ -352,8 +352,8 @@ const percentOrDollars: KnowledgePointDef = {
     const better = Math.max(fromRate, fixed);
     return numberProblem({
       prompt: t(
-        `A jacket costs ${price} dollars. One coupon takes ${rate}% off the price, and another takes ${fixed} dollars off. Only one coupon can be used. How many more dollars does the better coupon save than the other?`,
-        `一件夹克售价 ${price} 美元。一张优惠券减价 ${rate}%，另一张减 ${fixed} 美元。只能用一张。较好的优惠券比另一张多省多少美元？`,
+        `A jacket costs $${price}$ dollars. One coupon takes $${rate}\\%$ off the price, and another takes $${fixed}$ dollars off. Only one coupon can be used. How many more dollars does the better coupon save than the other?`,
+        `一件夹克售价 $${price}$ 美元。一张优惠券减价 $${rate}\\%$，另一张减 $${fixed}$ 美元。只能用一张。较好的优惠券比另一张多省多少美元？`,
       ),
       answer,
       form: "integer",
@@ -367,8 +367,8 @@ const percentOrDollars: KnowledgePointDef = {
         Q.of(fixed * rate, 100),
       ],
       solution: t(
-        `The percent coupon saves ${rate}% of ${price}, which is ${fromRate} dollars, and the other saves ${fixed} dollars. The difference between the savings is ${answer} dollars.`,
-        `百分比优惠券省下 ${price} 的 ${rate}%，也就是 ${fromRate} 美元；另一张省 ${fixed} 美元。两者相差 ${answer} 美元。`,
+        `The percent coupon saves $${rate}\\%$ of $${price}$, which is $${fromRate}$ dollars, and the other saves $${fixed}$ dollars. The difference between the savings is $${answer}$ dollars.`,
+        `百分比优惠券省下 $${price}$ 的 $${rate}\\%$，也就是 $${fromRate}$ 美元；另一张省 $${fixed}$ 美元。两者相差 $${answer}$ 美元。`,
       ),
     });
   },
@@ -398,16 +398,16 @@ const shrinkflation: KnowledgePointDef = {
     const answer = Q.of(100 * (a - b), b);
     return numberProblem({
       prompt: t(
-        `A ${item} shrinks from ${a * size} ${unit} to ${b * size} ${unit}, and its price stays at ${price} dollars. By what percent does the price per ${single} rise?`,
-        `${itemZh}从 ${a * size} ${unitZh}减少到 ${b * size} ${unitZh}，价格仍是 ${price} 美元。每${unitZh}的价格上升了百分之几？`,
+        `A ${item} shrinks from $${a * size}$ ${unit} to $${b * size}$ ${unit}, and its price stays at $${price}$ dollars. By what percent does the price per $${single}$ rise?`,
+        `${itemZh}从 $${a * size}$ ${unitZh}减少到 $${b * size}$ ${unitZh}，价格仍是 $${price}$ 美元。每${unitZh}的价格上升了百分之几？`,
       ),
       answer,
       form: "decimal",
       percent: true,
       wrong: [Q.of(100 * (a - b), a), Q.of(100 * a, b), Q.of(100 * b, a), Q.of((a - b) * size)],
       solution: t(
-        `With the same price, the unit price changes by the factor $${a * size} \\div ${b * size} = ${dec(Q.of(a, b))}$. A factor of $${dec(Q.of(a, b))}$ is a rise of ${dec(answer)}%, measured from the old unit price.`,
-        `价格不变，所以单价变成原来的 $${a * size} \\div ${b * size} = ${dec(Q.of(a, b))}$ 倍。这相当于比旧单价上升了 ${dec(answer)}%。`,
+        `With the same price, the unit price changes by the factor $${a * size} \\div ${b * size} = ${dec(Q.of(a, b))}$. A factor of $${dec(Q.of(a, b))}$ is a rise of $${dec(answer)}\\%$, measured from the old unit price.`,
+        `价格不变，所以单价变成原来的 $${a * size} \\div ${b * size} = ${dec(Q.of(a, b))}$ 倍。这相当于比旧单价上升了 $${dec(answer)}\\%$。`,
       ),
     });
   },
@@ -470,8 +470,8 @@ const missingSubtrahend: KnowledgePointDef = {
       form: "integer",
       wrong: [start + end, -answer, -(start + end), end, start],
       solution: t(
-        `Both numbers are below zero, ${start} and ${end} units away from it. The distance between them is $${end} - ${start} = ${answer}$. Check: $-${start} - ${answer} = -${end}$.`,
-        `两个数都在零的下方，离零分别是 ${start} 和 ${end} 个单位。它们之间的距离是 $${end} - ${start} = ${answer}$。检验：$-${start} - ${answer} = -${end}$。`,
+        `Both numbers are below zero, $${start}$ and $${end}$ units away from it. The distance between them is $${end} - ${start} = ${answer}$. Check: $-${start} - ${answer} = -${end}$.`,
+        `两个数都在零的下方，离零分别是 $${start}$ 和 $${end}$ 个单位。它们之间的距离是 $${end} - ${start} = ${answer}$。检验：$-${start} - ${answer} = -${end}$。`,
       ),
     });
   },
@@ -495,19 +495,19 @@ const untilBelowZero: KnowledgePointDef = {
     return numberProblem({
       prompt: inContext
         ? t(
-            `A player starts a game with ${start} points, and each wrong move adds $-${step}$ to the score. After how many wrong moves is the score first below zero?`,
-            `一名玩家开始时有 ${start} 分，每次走错都在分数上加 $-${step}$。走错多少次后，分数第一次低于零？`,
+            `A player starts a game with $${start}$ points, and each wrong move adds $-${step}$ to the score. After how many wrong moves is the score first below zero?`,
+            `一名玩家开始时有 $${start}$ 分，每次走错都在分数上加 $-${step}$。走错多少次后，分数第一次低于零？`,
           )
         : t(
-            `Start at ${start} and keep adding $-${step}$. After how many additions is the total first negative?`,
-            `从 ${start} 开始，不断加 $-${step}$。加多少次后，总数第一次变成负数？`,
+            `Start at $${start}$ and keep adding $-${step}$. After how many additions is the total first negative?`,
+            `从 $${start}$ 开始，不断加 $-${step}$。加多少次后，总数第一次变成负数？`,
           ),
       answer,
       form: "integer",
       wrong: [full, full + 2, full - 1, start - step, left + 1],
       solution: t(
-        `After ${full} additions the total is $${start} - ${step * full} = ${left}$, which is not below zero. One more addition gives $${after}$, so the count is ${answer}.`,
-        `加 ${full} 次后总数是 $${start} - ${step * full} = ${left}$，还没有低于零。再加一次得 $${after}$，所以是 ${answer} 次。`,
+        `After $${full}$ additions the total is $${start} - ${step * full} = ${left}$, which is not below zero. One more addition gives $${after}$, so the count is $${answer}$.`,
+        `加 $${full}$ 次后总数是 $${start} - ${step * full} = ${left}$，还没有低于零。再加一次得 $${after}$，所以是 $${answer}$ 次。`,
       ),
     });
   },
@@ -577,8 +577,8 @@ const largestProduct: KnowledgePointDef = {
       form: "integer",
       wrong: [positives, negatives, -b * posHigh, -negatives, b * b],
       solution: t(
-        `Two positives give at most $${posHigh} \\times ${posMid} = ${positives}$. Two negatives give $(-${a}) \\times (-${b}) = ${negatives}$. The larger of these is ${answer}.`,
-        `两个正数的积最大是 $${posHigh} \\times ${posMid} = ${positives}$。两个负数的积是 $(-${a}) \\times (-${b}) = ${negatives}$。其中较大的是 ${answer}。`,
+        `Two positives give at most $${posHigh} \\times ${posMid} = ${positives}$. Two negatives give $(-${a}) \\times (-${b}) = ${negatives}$. The larger of these is $${answer}$.`,
+        `两个正数的积最大是 $${posHigh} \\times ${posMid} = ${positives}$。两个负数的积是 $(-${a}) \\times (-${b}) = ${negatives}$。其中较大的是 $${answer}$。`,
       ),
     });
   },
@@ -603,15 +603,15 @@ const changePerHour: KnowledgePointDef = {
     const answer = falling ? -rate : rate;
     return numberProblem({
       prompt: t(
-        `Over ${hours} hours the temperature changed steadily from $${first}^{\\circ}\\text{C}$ to $${last}^{\\circ}\\text{C}$. What was the change per hour, in degrees? Use a negative number for a fall.`,
-        `在 ${hours} 小时内，气温从 $${first}^{\\circ}\\text{C}$ 稳定地变化到 $${last}^{\\circ}\\text{C}$。每小时变化多少度？下降用负数表示。`,
+        `Over $${hours}$ hours the temperature changed steadily from $${first}^{\\circ}\\text{C}$ to $${last}^{\\circ}\\text{C}$. What was the change per hour, in degrees? Use a negative number for a fall.`,
+        `在 $${hours}$ 小时内，气温从 $${first}^{\\circ}\\text{C}$ 稳定地变化到 $${last}^{\\circ}\\text{C}$。每小时变化多少度？下降用负数表示。`,
       ),
       answer,
       form: "integer",
       wrong: [-answer, last - first, Q.of(first + last, hours), Q.of(last, hours)],
       solution: t(
-        `The total change is $${differenceLatex(last, first)} = ${last - first}$ degrees. Sharing it over ${hours} hours gives $${last - first} \\div ${hours} = ${answer}$ degrees per hour.`,
-        `总变化是 $${differenceLatex(last, first)} = ${last - first}$ 度。平均分到 ${hours} 小时，得 $${last - first} \\div ${hours} = ${answer}$ 度每小时。`,
+        `The total change is $${differenceLatex(last, first)} = ${last - first}$ degrees. Sharing it over $${hours}$ hours gives $${last - first} \\div ${hours} = ${answer}$ degrees per hour.`,
+        `总变化是 $${differenceLatex(last, first)} = ${last - first}$ 度。平均分到 $${hours}$ 小时，得 $${last - first} \\div ${hours} = ${answer}$ 度每小时。`,
       ),
     });
   },
@@ -797,8 +797,8 @@ const fencePosts: KnowledgePointDef = {
       const answer = perimeter / gap;
       return numberProblem({
         prompt: t(
-          `A rectangular field is ${length} m long and ${width} m wide. Posts stand all the way around its border, ${gap} m apart, with one at each corner. How many posts are there?`,
-          `一块长方形田地长 ${length} 米、宽 ${width} 米。沿边界一圈立柱子，间隔 ${gap} 米，每个角上都有一根。一共有多少根柱子？`,
+          `A rectangular field is $${length}$ m long and $${width}$ m wide. Posts stand all the way around its border, $${gap}$ m apart, with one at each corner. How many posts are there?`,
+          `一块长方形田地长 $${length}$ 米、宽 $${width}$ 米。沿边界一圈立柱子，间隔 $${gap}$ 米，每个角上都有一根。一共有多少根柱子？`,
         ),
         answer,
         form: "integer",
@@ -812,15 +812,15 @@ const fencePosts: KnowledgePointDef = {
     const gaps = length / gap;
     return numberProblem({
       prompt: t(
-        `A straight fence is ${length} m long. Posts stand along it, ${gap} m apart, with one at each end. How many posts are there?`,
-        `一道直栅栏长 ${length} 米。沿栅栏立柱子，间隔 ${gap} 米，两端都有一根。一共有多少根柱子？`,
+        `A straight fence is $${length}$ m long. Posts stand along it, $${gap}$ m apart, with one at each end. How many posts are there?`,
+        `一道直栅栏长 $${length}$ 米。沿栅栏立柱子，间隔 $${gap}$ 米，两端都有一根。一共有多少根柱子？`,
       ),
       answer: gaps + 1,
       form: "integer",
       wrong: [gaps, gaps - 1, gaps + 2, length - gap],
       solution: t(
-        `There are $${length} \\div ${gap} = ${gaps}$ gaps. With a post at each end, a straight line has one more post than gaps, which makes ${gaps + 1}.`,
-        `共有 $${length} \\div ${gap} = ${gaps}$ 个间隔。两端都有柱子时，直线上的柱子比间隔多一根，所以是 ${gaps + 1} 根。`,
+        `There are $${length} \\div ${gap} = ${gaps}$ gaps. With a post at each end, a straight line has one more post than gaps, which makes $${gaps + 1}$.`,
+        `共有 $${length} \\div ${gap} = ${gaps}$ 个间隔。两端都有柱子时，直线上的柱子比间隔多一根，所以是 $${gaps + 1}$ 根。`,
       ),
     });
   },
@@ -862,8 +862,8 @@ const squareUnits: KnowledgePointDef = {
         form: "integer",
         wrong: [n * factor, n * factor ** (5 - power), Q.of(n, scale), n * factor * power],
         solution: t(
-          `One ${big} is ${factor} ${small}, so one $${unitBig}$ is $${factor}^{${power}} = ${scale}$ $${unitSmall}$. Then $${n} \\times ${scale} = ${answer}$.`,
-          `1 ${bigZh}等于 ${factor} ${smallZh}，所以 1 ${wordZh}${bigZh}等于 $${factor}^{${power}} = ${scale}$ ${wordZh}${smallZh}。于是 $${n} \\times ${scale} = ${answer}$。`,
+          `One ${big} is $${factor}$ ${small}, so one $${unitBig}$ is $${factor}^{${power}} = ${scale}$ $${unitSmall}$. Then $${n} \\times ${scale} = ${answer}$.`,
+          `$1$ ${bigZh}等于 $${factor}$ ${smallZh}，所以 $1$ ${wordZh}${bigZh}等于 $${factor}^{${power}} = ${scale}$ ${wordZh}${smallZh}。于是 $${n} \\times ${scale} = ${answer}$。`,
         ),
       });
     }
@@ -878,7 +878,7 @@ const squareUnits: KnowledgePointDef = {
       wrong: [Q.of(start, factor), Q.of(start, factor ** (5 - power)), start * scale, Q.of(start, factor * power)],
       solution: t(
         `One $${unitBig}$ is $${factor}^{${power}} = ${scale}$ $${unitSmall}$, so divide: $${start} \\div ${scale} = ${n}$.`,
-        `1 ${wordZh}${bigZh}等于 $${factor}^{${power}} = ${scale}$ ${wordZh}${smallZh}，所以做除法：$${start} \\div ${scale} = ${n}$。`,
+        `$1$ ${wordZh}${bigZh}等于 $${factor}^{${power}} = ${scale}$ ${wordZh}${smallZh}，所以做除法：$${start} \\div ${scale} = ${n}$。`,
       ),
     });
   },

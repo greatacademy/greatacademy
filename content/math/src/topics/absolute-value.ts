@@ -1361,8 +1361,8 @@ export const absoluteValueGraphs: TopicDef = {
         const answer = absFn(1, h, k);
         const hx = Math.abs(h);
         const kx = Math.abs(k);
-        const en = `${hx} unit${hx === 1 ? "" : "s"} ${h > 0 ? "right" : "left"} and ${kx} unit${kx === 1 ? "" : "s"} ${k > 0 ? "up" : "down"}`;
-        const zh = `向${h > 0 ? "右" : "左"}平移 ${hx} 个单位，再向${k > 0 ? "上" : "下"}平移 ${kx} 个单位`;
+        const en = `$${hx}$ unit${hx === 1 ? "" : "s"} ${h > 0 ? "right" : "left"} and $${kx}$ unit${kx === 1 ? "" : "s"} ${k > 0 ? "up" : "down"}`;
+        const zh = `向${h > 0 ? "右" : "左"}平移 $${hx}$ 个单位，再向${k > 0 ? "上" : "下"}平移 $${kx}$ 个单位`;
         return expressionProblem({
           prompt: t(
             `The graph of $y = |x|$ is moved ${en}. Write the equation of the new graph.`,
@@ -1596,9 +1596,9 @@ function transformText(a: Q, h: number, k: number): Text {
   const hx = Math.abs(h);
   const kx = Math.abs(k);
   en.push(
-    `shift ${hx} unit${hx === 1 ? "" : "s"} ${h > 0 ? "right" : "left"} and ${kx} unit${kx === 1 ? "" : "s"} ${k > 0 ? "up" : "down"}`,
+    `shift $${hx}$ unit${hx === 1 ? "" : "s"} ${h > 0 ? "right" : "left"} and $${kx}$ unit${kx === 1 ? "" : "s"} ${k > 0 ? "up" : "down"}`,
   );
-  zh.push(`向${h > 0 ? "右" : "左"}平移 ${hx} 个单位，再向${k > 0 ? "上" : "下"}平移 ${kx} 个单位`);
+  zh.push(`向${h > 0 ? "右" : "左"}平移 $${hx}$ 个单位，再向${k > 0 ? "上" : "下"}平移 $${kx}$ 个单位`);
   const first = en.join(", then ");
   return t(`${first.charAt(0).toUpperCase()}${first.slice(1)}.`, `${zh.join("，然后")}。`);
 }

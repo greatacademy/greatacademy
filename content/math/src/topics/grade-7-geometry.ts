@@ -25,6 +25,9 @@ function topic(
 
 const units = ["cm", "m", "in", "ft"] as const;
 
+/** unitWords spells out each unit, since a prompt reading "in in" would be hard to read. */
+const unitWords: Record<(typeof units)[number], string> = { cm: "centimeters", m: "meters", in: "inches", ft: "feet" };
+
 /** Unit is a unit of length. */
 type Unit = (typeof units)[number];
 
@@ -406,7 +409,7 @@ export const congruentSegments = topic(
         return {
           ...numberProblem({
             prompt: t(
-              `In the figure, $${over("AB")} \\cong ${over("CD")}$, ${given} and ${given2}, in ${u}. How long is $${over("AB")}$?`,
+              `In the figure, $${over("AB")} \\cong ${over("CD")}$, ${given} and ${given2}, in ${unitWords[u]}. How long is $${over("AB")}$?`,
               `如图，$${over("AB")} \\cong ${over("CD")}$，${given}，${given2}（单位：${u}）。$${over("AB")}$ 有多长？`,
             ),
             answer: L,
@@ -553,7 +556,7 @@ export const midpoints = topic(
           `线段 AB，中点为 M；AM = ${plain(...e1)}，MB = ${plain(...e2)}。`,
         );
         const given = t(
-          `$M$ is the midpoint of $${over("AB")}$, $AM = ${linear(...e1)}$ and $MB = ${linear(...e2)}$, in ${u}.`,
+          `$M$ is the midpoint of $${over("AB")}$, $AM = ${linear(...e1)}$ and $MB = ${linear(...e2)}$, in ${unitWords[u]}.`,
           `$M$ 是 $${over("AB")}$ 的中点，$AM = ${linear(...e1)}$，$MB = ${linear(...e2)}$（单位：${u}）。`,
         );
         const solve = steps(...equalSteps(e1, e2));
@@ -845,7 +848,7 @@ export const theSegmentAdditionPostulate = topic(
           `长为 ${total} 的线段 AC，B 在它上面；AB = ${plain(...e1)}，BC = ${plain(...e2)}。`,
         );
         const given = t(
-          `$B$ lies on $${over("AC")}$, $AB = ${linear(...e1)}$, $BC = ${linear(...e2)}$ and $AC = ${total}$, in ${u}.`,
+          `$B$ lies on $${over("AC")}$, $AB = ${linear(...e1)}$, $BC = ${linear(...e2)}$ and $AC = ${total}$, in ${unitWords[u]}.`,
           `$B$ 在 $${over("AC")}$ 上，$AB = ${linear(...e1)}$，$BC = ${linear(...e2)}$，$AC = ${total}$（单位：${u}）。`,
         );
         if (ask === 0)
@@ -936,7 +939,7 @@ export const segmentBisectorsAndThePerpendicularBisectorTheorem = topic(
           `直线 ℓ 经过线段 AB 的中点 M；AM = ${plain(...half)}。`,
         );
         const given = t(
-          `Line $\\ell$ bisects $${over("AB")}$ at $M$. $AB = ${linear(...whole)}$ and $AM = ${linear(...half)}$, in ${u}.`,
+          `Line $\\ell$ bisects $${over("AB")}$ at $M$. $AB = ${linear(...whole)}$ and $AM = ${linear(...half)}$, in ${unitWords[u]}.`,
           `直线 $\\ell$ 在 $M$ 处平分 $${over("AB")}$。$AB = ${linear(...whole)}$，$AM = ${linear(...half)}$（单位：${u}）。`,
         );
         return {
@@ -1010,7 +1013,7 @@ export const segmentBisectorsAndThePerpendicularBisectorTheorem = topic(
         return {
           ...numberProblem({
             prompt: t(
-              `Line $\\ell$ is the perpendicular bisector of $${over("AB")}$, and $P$ is on $\\ell$. $PA = ${linear(...e1)}$ and $PB = ${linear(...e2)}$, in ${u}. ${askX ? "Find $x$." : `How long is $${over("PA")}$?`}`,
+              `Line $\\ell$ is the perpendicular bisector of $${over("AB")}$, and $P$ is on $\\ell$. $PA = ${linear(...e1)}$ and $PB = ${linear(...e2)}$, in ${unitWords[u]}. ${askX ? "Find $x$." : `How long is $${over("PA")}$?`}`,
               `直线 $\\ell$ 是 $${over("AB")}$ 的垂直平分线，$P$ 在 $\\ell$ 上。$PA = ${linear(...e1)}$，$PB = ${linear(...e2)}$（单位：${u}）。${askX ? "求 $x$。" : `$${over("PA")}$ 有多长？`}`,
             ),
             answer: askX ? x : L,

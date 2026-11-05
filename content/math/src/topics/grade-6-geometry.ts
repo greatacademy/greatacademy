@@ -603,10 +603,10 @@ function betweenFigure(L: number, W: number, l: number, w: number, offset: Point
       ...(unknown ? [] : sides([...inner].reverse(), [`${l} ${u}`, `${w} ${u}`, null, null])),
     ],
     unknown
-      ? `A ${L} ${u} by ${W} ${u} rectangle with a smaller rectangle cut out of it; the region left is shaded.`
+      ? `A ${L} ${u} by ${W} ${u} rectangle with a smaller ${l === w ? "square" : "rectangle"} cut out of it; the region left is shaded.`
       : `A ${L} ${u} by ${W} ${u} rectangle with a ${l} ${u} by ${w} ${u} rectangle inside it; the region between them is shaded.`,
     unknown
-      ? `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面剪去了一个较小的长方形；剩下的区域涂有阴影。`
+      ? `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面剪去了一个较小的${l === w ? "正方形" : "长方形"}；剩下的区域涂有阴影。`
       : `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面有一个 ${l} ${u} 乘 ${w} ${u} 的长方形；两者之间的区域涂有阴影。`,
   );
 }

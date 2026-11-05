@@ -143,8 +143,8 @@ const nextPrime: KnowledgePointDef = {
   id: "the-next-prime-after-a-number",
   title: t("The next prime after a number", "一个数之后的下一个质数"),
   explanation: t(
-    "Primes have no regular pattern, so the next prime is found by testing the numbers that follow, one at a time. Most can be ruled out quickly. Even numbers above 2 are never prime, and numbers ending in 5 are multiples of 5. For the rest, try dividing by 3 and by 7. A number can look prime when it is not: 51, 57 and 91 are all composite, because of factors that are easy to overlook.",
-    "质数没有规律可循，所以要找下一个质数，就依次检验后面的数。大多数数很快就能排除。大于 2 的偶数都不是质数，个位是 5 的数是 5 的倍数。其余的数，试着除以 3 和 7。有些数看起来像质数，其实不是：51、57、91 都是合数，它们的因数容易被忽略。",
+    "Primes have no regular pattern, so the next prime is found by testing the numbers that follow, one at a time. Most can be ruled out quickly. Even numbers above $2$ are never prime, and numbers ending in $5$ are multiples of $5$. For the rest, try dividing by $3$ and by $7$. A number can look prime when it is not: $51$, $57$ and $91$ are all composite, because of factors that are easy to overlook.",
+    "质数没有规律可循，所以要找下一个质数，就依次检验后面的数。大多数数很快就能排除。大于 $2$ 的偶数都不是质数，个位是 $5$ 的数是 $5$ 的倍数。其余的数，试着除以 $3$ 和 $7$。有些数看起来像质数，其实不是：$51$、$57$、$91$ 都是合数，它们的因数容易被忽略。",
   ),
   generate(rng) {
     const n = rng.int(10, 110);
@@ -636,8 +636,8 @@ const equalAnglesAroundPoint: KnowledgePointDef = {
   id: "equal-angles-around-a-point",
   title: t("Equal angles around a point", "一点周围相等的角"),
   explanation: t(
-    "All the angles around a point add up to a full turn of 360 degrees. If one angle is known and the rest are equal, take the known angle away from 360 first. What remains is shared equally among the other angles, so divide it by how many there are. Doing these steps in the wrong order gives a wrong answer, as the known angle does not take part in the sharing at all.",
-    "一点周围所有的角加起来是一周 360 度。如果一个角已知，其余的角都相等，先从 360 里减去已知的角。剩下的平均分给其他的角，所以除以它们的个数。这两步的顺序不能错，因为已知的角根本不参加平分。",
+    "All the angles around a point add up to a full turn of $360$ degrees. If one angle is known and the rest are equal, take the known angle away from $360$ first. What remains is shared equally among the other angles, so divide it by how many there are. Doing these steps in the wrong order gives a wrong answer, as the known angle does not take part in the sharing at all.",
+    "一点周围所有的角加起来是一周 $360$ 度。如果一个角已知，其余的角都相等，先从 $360$ 里减去已知的角。剩下的平均分给其他的角，所以除以它们的个数。这两步的顺序不能错，因为已知的角根本不参加平分。",
   ),
   generate(rng) {
     const count = rng.int(3, 6);
@@ -645,8 +645,8 @@ const equalAnglesAroundPoint: KnowledgePointDef = {
     const known = 360 - each * count;
     return numberProblem({
       prompt: t(
-        `Around a point there is one angle of $${known}^\\circ$ and ${count} other angles that are all equal. How many degrees is each of the equal angles?`,
-        `一点周围有一个 $${known}^\\circ$ 的角和另外 ${count} 个相等的角。每个相等的角是多少度？`,
+        `Around a point there is one angle of $${known}^\\circ$ and $${count}$ other angles that are all equal. How many degrees is each of the equal angles?`,
+        `一点周围有一个 $${known}^\\circ$ 的角和另外 $${count}$ 个相等的角。每个相等的角是多少度？`,
       ),
       answer: each,
       form: "integer",

@@ -44,8 +44,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const add = rng.int(2, 30);
         return whole(
           [
-            `When $${frac(n, d)}$ of a number is increased by ${add}, the result is ${n * k + add}. What is the number?`,
-            `一个数的 $${frac(n, d)}$ 加上 ${add}，结果是 ${n * k + add}。这个数是多少？`,
+            `When $${frac(n, d)}$ of a number is increased by $${add}$, the result is $${n * k + add}$. What is the number?`,
+            `一个数的 $${frac(n, d)}$ 加上 $${add}$，结果是 $${n * k + add}$。这个数是多少？`,
           ],
           d * k,
           [n * k, n * k + add, d * k + add],
@@ -62,8 +62,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
       "a-fee-and-a-decimal-rate",
       ["A fee and a decimal rate", "固定费用和小数单价"],
       [
-        "Prices often give equations with decimal coefficients. Taking away the fee first leaves the part paid per unit, and multiplying through by 100 can clear the decimals before dividing.",
-        "价格常常得到小数系数的方程。先减去固定费用，剩下按单位计算的部分；除之前可以同乘 100 去掉小数。",
+        "Prices often give equations with decimal coefficients. Taking away the fee first leaves the part paid per unit, and multiplying through by $100$ can clear the decimals before dividing.",
+        "价格常常得到小数系数的方程。先减去固定费用，剩下按单位计算的部分；除之前可以同乘 $100$ 去掉小数。",
       ],
       (rng) => {
         const rate = rng.int(5, 95) * 5;
@@ -72,8 +72,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const total = fee + rate * n;
         return whole(
           [
-            `A taxi charges ${money(fee)} dollars plus ${money(rate)} dollars per mile. A ride costs ${money(total)} dollars. How many miles was it?`,
-            `出租车起步价 ${money(fee)} 美元，每英里 ${money(rate)} 美元。一次乘车花了 ${money(total)} 美元。行驶了多少英里？`,
+            `A taxi charges $${money(fee)}$ dollars plus $${money(rate)}$ dollars per mile. A ride costs $${money(total)}$ dollars. How many miles was it?`,
+            `出租车起步价 $${money(fee)}$ 美元，每英里 $${money(rate)}$ 美元。一次乘车花了 $${money(total)}$ 美元。行驶了多少英里？`,
           ],
           n,
           [Math.round(total / rate), n + fee / 100, n - 1],
@@ -107,8 +107,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           x,
           [-x, x + 1, a - c],
           [
-            `Multiply both sides by ${b * d}: $${d}(${top(a)}) = ${b}(${top(c)})$. Collecting terms gives $x = ${x}$.`,
-            `两边同乘 ${b * d}：$${d}(${top(a)}) = ${b}(${top(c)})$。合并后得 $x = ${x}$。`,
+            `Multiply both sides by $${b * d}$: $${d}(${top(a)}) = ${b}(${top(c)})$. Collecting terms gives $x = ${x}$.`,
+            `两边同乘 $${b * d}$：$${d}(${top(a)}) = ${b}(${top(c)})$。合并后得 $x = ${x}$。`,
           ],
         );
       },
@@ -131,8 +131,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           `x = ${frac(`${c} - y`, a)}`,
           [`x = ${frac(`${c} + y`, a)}`, `x = ${frac(c, a)} - y`, `x = ${c} - ${a}y`],
           [
-            `$${a}x = ${c} - y$, and dividing the whole right side by ${a} gives the result.`,
-            `$${a}x = ${c} - y$，整个右边除以 ${a} 就得到结果。`,
+            `$${a}x = ${c} - y$, and dividing the whole right side by $${a}$ gives $x = ${frac(`${c} - y`, a)}$.`,
+            `$${a}x = ${c} - y$，整个右边除以 $${a}$，得 $x = ${frac(`${c} - y`, a)}$。`,
           ],
         );
       },
@@ -190,8 +190,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           count,
           [6 - count, count + (strict ? 1 : -1), 6],
           [
-            `The boundary is $x = ${bound}$, which ${strict ? "does not count" : "counts"}, so ${count} values work.`,
-            `边界是 $x = ${bound}$，它${strict ? "不算" : "算"}解，所以有 ${count} 个值符合。`,
+            `The boundary is $x = ${bound}$, which ${strict ? "does not count" : "counts"}, so $${count}$ values work.`,
+            `边界是 $x = ${bound}$，它${strict ? "不算" : "算"}解，所以有 $${count}$ 个值符合。`,
           ],
         );
       },
@@ -250,8 +250,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           `x \\ge ${x}`,
           [`x \\le ${x}`, `x \\ge ${-x === x ? x + 1 : -x}`, `x \\le ${-x === x ? x + 1 : -x}`],
           [
-            `$${d} - ${b} \\le ${k}x$ after adding $${a}x$ and taking away ${b}, so $x \\ge ${x}$.`,
-            `两边加 $${a}x$，再减 ${b}，得 $${d} - ${b} \\le ${k}x$，所以 $x \\ge ${x}$。`,
+            `$${d} - ${b} \\le ${k}x$ after adding $${a}x$ and taking away $${b}$, so $x \\ge ${x}$.`,
+            `两边加 $${a}x$，再减 $${b}$，得 $${d} - ${b} \\le ${k}x$，所以 $x \\ge ${x}$。`,
           ],
         );
       },
@@ -303,8 +303,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           w * h,
           [2 * (w + h), w + h, Math.abs(x1 + w) * Math.abs(y1 + h) === w * h ? w * h + 1 : Math.abs(x1 + w) * Math.abs(y1 + h)],
           [
-            `The width is ${w} and the height is ${h}, and $${w} \\times ${h} = ${w * h}$.`,
-            `宽是 ${w}，高是 ${h}，$${w} \\times ${h} = ${w * h}$。`,
+            `The width is $${w}$ and the height is $${h}$, and $${w} \\times ${h} = ${w * h}$.`,
+            `宽是 $${w}$，高是 $${h}$，$${w} \\times ${h} = ${w * h}$。`,
           ],
         );
       },
@@ -392,8 +392,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           m * x3 + b,
           [m * x2 + b + (x3 - x2), m * x3, m * x3 + b + m],
           [
-            `$y$ changes by ${m} for each 1 of $x$, so at $x = ${x3}$ it is ${m * x3 + b}.`,
-            `$x$ 每增加 1，$y$ 变化 ${m}，所以 $x = ${x3}$ 时 $y$ 是 ${m * x3 + b}。`,
+            `$y$ changes by $${m}$ for each $1$ of $x$, so at $x = ${x3}$ it is $${m * x3 + b}$.`,
+            `$x$ 每增加 $1$，$y$ 变化 $${m}$，所以 $x = ${x3}$ 时 $y$ 是 $${m * x3 + b}$。`,
           ],
         );
       },
@@ -438,10 +438,11 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         "逆命题也成立：同位角相等时两直线平行。所以令两个表达式相等，就能求出使两线平行的值。",
       ],
       (rng) => {
-        const c = rng.int(1, 5);
+        const c = rng.int(2, 5);
         const a = c + rng.int(1, 4);
         const x = rng.int(3, 15);
-        const angle = rng.int(30, 150);
+        const drawn = rng.int(30, 150);
+        const angle = drawn === a * x || drawn === c * x ? a * x + c * x : drawn;
         const b = angle - a * x;
         const d = angle - c * x;
         return whole(
@@ -451,7 +452,10 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           ],
           x,
           [angle, x + a - c, 180 - angle],
-          [`Corresponding angles must be equal: solving gives $x = ${x}$.`, `同位角必须相等：解得 $x = ${x}$。`],
+          [
+            `Corresponding angles must be equal: $${a}x${signed(b)} = ${c}x${signed(d)}$, so $${a - c === 1 ? "" : a - c}x = ${d - b}$ and $x = ${x}$.`,
+            `同位角必须相等：$${a}x${signed(b)} = ${c}x${signed(d)}$，所以 $${a - c === 1 ? "" : a - c}x = ${d - b}$，$x = ${x}$。`,
+          ],
         );
       },
     ),
@@ -461,8 +465,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
       "consecutive-angles-in-a-ratio",
       ["Consecutive angles in a ratio", "成比例的同旁内角"],
       [
-        "Consecutive interior angles between parallel lines add up to 180 degrees. So a ratio splits 180 degrees into equal shares, and each angle is a number of those shares.",
-        "两平行线间的同旁内角之和是 180 度。所以比把 180 度分成若干等份，每个角占若干份。",
+        "Consecutive interior angles between parallel lines add up to $180$ degrees. So a ratio splits $180$ degrees into equal shares, and each angle is a number of those shares.",
+        "两平行线间的同旁内角之和是 $180$ 度。所以比把 $180$ 度分成若干等份，每个角占若干份。",
       ],
       (rng) => {
         const [p, q] = rng.pick<[number, number]>([
@@ -492,18 +496,18 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         return whole(
           large
             ? [
-                `Two consecutive interior angles between parallel lines are in the ratio ${p} : ${q}. What is the larger angle, in degrees?`,
-                `两平行线间的同旁内角之比是 ${p} : ${q}。较大的角是多少度？`,
+                `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the larger angle, in degrees?`,
+                `两平行线间的同旁内角之比是 $${p} : ${q}$。较大的角是多少度？`,
               ]
             : [
-                `Two consecutive interior angles between parallel lines are in the ratio ${p} : ${q}. What is the smaller angle, in degrees?`,
-                `两平行线间的同旁内角之比是 ${p} : ${q}。较小的角是多少度？`,
+                `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the smaller angle, in degrees?`,
+                `两平行线间的同旁内角之比是 $${p} : ${q}$。较小的角是多少度？`,
               ],
           (large ? q : p) * each,
           [(large ? p : q) * each, each, 90],
           [
-            `One share is $180 \\div ${p + q} = ${each}$, and $${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$.`,
-            `一份是 $180 \\div ${p + q} = ${each}$，$${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$。`,
+            `One share is $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? ", and the smaller angle is one share" : `, and $${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}.`,
+            `一份是 $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? "，较小的角就是一份" : `，$${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}。`,
           ],
         );
       },
@@ -534,8 +538,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         return choose(
           rng,
           [
-            `These are the five-number summaries of two classes. A: ${a}. B: ${b}. For which classes can you be sure that at least half of the students scored ${x} or more?`,
-            `这是两个班的五数概括。A 班：${a}。B 班：${b}。可以确定哪些班至少一半的学生得分不低于 ${x}？`,
+            `These are the five-number summaries of two classes. A: $${a}$. B: $${b}$. For which classes can you be sure that at least half of the students scored $${x}$ or more?`,
+            `这是两个班的五数概括。A 班：$${a}$。B 班：$${b}$。可以确定哪些班至少一半的学生得分不低于 $${x}$？`,
           ],
           options[correct]!,
           options.filter((_, i) => i !== correct),
@@ -559,23 +563,23 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         return whole(
           mul
             ? [
-                `A data set has a mean absolute deviation of ${mad}. Every value is multiplied by ${k}. What is the new mean absolute deviation?`,
-                `一组数据的平均绝对偏差是 ${mad}。每个值都乘 ${k}。新的平均绝对偏差是多少？`,
+                `A data set has a mean absolute deviation of $${mad}$. Every value is multiplied by $${k}$. What is the new mean absolute deviation?`,
+                `一组数据的平均绝对偏差是 $${mad}$。每个值都乘 $${k}$。新的平均绝对偏差是多少？`,
               ]
             : [
-                `A data set has a mean absolute deviation of ${mad}. Every value is increased by ${k}. What is the new mean absolute deviation?`,
-                `一组数据的平均绝对偏差是 ${mad}。每个值都加 ${k}。新的平均绝对偏差是多少？`,
+                `A data set has a mean absolute deviation of $${mad}$. Every value is increased by $${k}$. What is the new mean absolute deviation?`,
+                `一组数据的平均绝对偏差是 $${mad}$。每个值都加 $${k}$。新的平均绝对偏差是多少？`,
               ],
           mul ? mad * k : mad,
           mul ? [mad, mad + k, mad * k + k] : [mad + k, mad * k, k],
           mul
             ? [
-                `All gaps are ${k} times as wide, so it is $${mad} \\times ${k} = ${mad * k}$.`,
-                `所有间隔都变成 ${k} 倍，所以是 $${mad} \\times ${k} = ${mad * k}$。`,
+                `All gaps are $${k}$ times as wide, so it is $${mad} \\times ${k} = ${mad * k}$.`,
+                `所有间隔都变成 $${k}$ 倍，所以是 $${mad} \\times ${k} = ${mad * k}$。`,
               ]
             : [
-                `Adding ${k} moves every value equally, so the gaps and the deviation stay at ${mad}.`,
-                `加 ${k} 使每个值移动相同的距离，所以间隔和偏差仍是 ${mad}。`,
+                `Adding $${k}$ moves every value equally, so the gaps and the deviation stay at $${mad}$.`,
+                `加 $${k}$ 使每个值移动相同的距离，所以间隔和偏差仍是 $${mad}$。`,
               ],
         );
       },
@@ -595,14 +599,14 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const k = rng.int(1, 5);
         return whole(
           [
-            `A test has a mean of ${mean} and a standard deviation of ${sd}. A student scores ${mean + k * sd}. How many standard deviations above the mean is this?`,
-            `一次测验的平均数是 ${mean}，标准差是 ${sd}。一名学生得 ${mean + k * sd} 分。这比平均数高几个标准差？`,
+            `A test has a mean of $${mean}$ and a standard deviation of $${sd}$. A student scores $${mean + k * sd}$. How many standard deviations above the mean is this?`,
+            `一次测验的平均数是 $${mean}$，标准差是 $${sd}$。一名学生得 $${mean + k * sd}$ 分。这比平均数高几个标准差？`,
           ],
           k,
           [k * sd, k + 1, Math.round((mean + k * sd) / sd)],
           [
-            `The score is ${k * sd} above the mean, and $${k * sd} \\div ${sd} = ${k}$.`,
-            `比平均数高 ${k * sd} 分，$${k * sd} \\div ${sd} = ${k}$。`,
+            `The score is $${k * sd}$ above the mean, and $${k * sd} \\div ${sd} = ${k}$.`,
+            `比平均数高 $${k * sd}$ 分，$${k * sd} \\div ${sd} = ${k}$。`,
           ],
         );
       },
@@ -1010,8 +1014,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const low = fs.reduce((s, f, i) => s + f * (ups[i]! - w), 0);
         return whole(
           [
-            `A histogram has classes ${start} to ${ups[0]}, ${ups[0]} to ${ups[1]} and ${ups[1]} to ${ups[2]}, with frequencies ${fs.join(", ")}. What is the greatest possible total of the values?`,
-            `直方图的组为 ${start} 到 ${ups[0]}、${ups[0]} 到 ${ups[1]}、${ups[1]} 到 ${ups[2]}，频数为 ${fs.join("、")}。这些数据的总和最大可能是多少？`,
+            `A histogram has classes ${start} to ${ups[0]}, ${ups[0]} to ${ups[1]} and ${ups[1]} to ${ups[2]}, with frequencies ${fs.join(", ")}. Each class includes its upper end. What is the greatest possible total of the values?`,
+            `直方图的组为 ${start} 到 ${ups[0]}、${ups[0]} 到 ${ups[1]}、${ups[1]} 到 ${ups[2]}，频数为 ${fs.join("、")}，每组都包含其上限。这些数据的总和最大可能是多少？`,
           ],
           total,
           [low, (total + low) / 2, ups[2]! * 3],

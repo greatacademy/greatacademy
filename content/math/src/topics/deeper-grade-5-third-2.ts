@@ -1276,32 +1276,38 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
         const data: readonly [Pair, Pair, Pair][] = [
           [
             [
-              `A parallelogram has a right angle and adjacent sides of ${a} cm and ${a} cm.`,
-              `一个平行四边形有一个直角，相邻两边是 ${a} 厘米和 ${a} 厘米。`,
+              `A parallelogram has a right angle and adjacent sides of $${a}$ cm and $${a}$ cm.`,
+              `一个平行四边形有一个直角，相邻两边是 $${a}$ 厘米和 $${a}$ 厘米。`,
             ],
             sq,
-            [`One right angle gives four, and all the sides are equal.`, `一个直角意味着四个直角，且各边相等。`],
+            [
+              `One right angle gives four, and all the sides are equal, so it is a square.`,
+              `一个直角意味着四个直角，且各边相等，所以是正方形。`,
+            ],
           ],
           [
             [
-              `A parallelogram has a right angle and adjacent sides of ${a} cm and ${b} cm.`,
-              `一个平行四边形有一个直角，相邻两边是 ${a} 厘米和 ${b} 厘米。`,
+              `A parallelogram has a right angle and adjacent sides of $${a}$ cm and $${b}$ cm.`,
+              `一个平行四边形有一个直角，相邻两边是 $${a}$ 厘米和 $${b}$ 厘米。`,
             ],
             re,
-            [`One right angle gives four, but the adjacent sides differ.`, `一个直角意味着四个直角，但相邻两边不等。`],
+            [
+              `One right angle gives four, but the adjacent sides differ, so it is a rectangle and not a square.`,
+              `一个直角意味着四个直角，但相邻两边不等，所以是长方形，不是正方形。`,
+            ],
           ],
           [
             [
-              `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of ${a} cm and ${a} cm.`,
-              `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 ${a} 厘米和 ${a} 厘米。`,
+              `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of $${a}$ cm and $${a}$ cm.`,
+              `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 $${a}$ 厘米和 $${a}$ 厘米。`,
             ],
             rh,
             [`All the sides are equal, but no angle is right.`, `各边相等，但没有直角。`],
           ],
           [
             [
-              `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of ${a} cm and ${b} cm.`,
-              `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 ${a} 厘米和 ${b} 厘米。`,
+              `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of $${a}$ cm and $${b}$ cm.`,
+              `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 $${a}$ 厘米和 $${b}$ 厘米。`,
             ],
             pa,
             [

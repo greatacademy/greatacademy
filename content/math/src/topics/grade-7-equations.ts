@@ -81,15 +81,8 @@ const holds = (l: Q, op: InequalityOp, r: Q) => {
 /** solveInequality is the prompt "Solve …" for an inequality. */
 const solveInequality = (ineq: string): Text => t(`Solve $${ineq}$.`, `解不等式 $${ineq}$。`);
 
-/** people are names in word problems with their possessive pronouns. */
-const people = [
-  ["Mia", "Her"],
-  ["Leo", "His"],
-  ["Ava", "Her"],
-  ["Noah", "His"],
-  ["Zoe", "Her"],
-  ["Sam", "His"],
-] as const;
+/** people are names in word problems. */
+const people = ["Mia", "Leo", "Ava", "Noah", "Zoe", "Sam"] as const;
 
 // ---------------------------------------------------------------------------
 // Trial and error
@@ -113,7 +106,7 @@ export const solvingLinearEquationsByTrialAndError = topic(
       ),
       keyPrerequisites: ["evaluating-expressions"],
       generate(rng) {
-        const [name, pronoun] = rng.pick(people);
+        const name = rng.pick(people);
         const a = rng.sign() * rng.int(2, 9);
         const b = rng.nonZero(-20, 20);
         const s = rng.int(-6, 12);
@@ -132,7 +125,7 @@ export const solvingLinearEquationsByTrialAndError = topic(
         const trend = a > 0 ? t("grows", "变大") : t("shrinks", "变小");
         return choiceProblem({
           prompt: t(
-            `${name} solves $${eq}$ by trial and error. ${pronoun} first guess is $x = ${g}$. What should the next guess be?`,
+            `${name} solves $${eq}$ by trial and error. The first guess is $x = ${g}$. What should the next guess be?`,
             `${name} 用试值法解 $${eq}$，第一次猜 $x = ${g}$。下一次应该怎样猜？`,
           ),
           options,

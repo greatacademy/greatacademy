@@ -530,7 +530,7 @@ function contestFigure(freqs: readonly number[]): Figure {
   return {
     svg: histogramSvg(contestEdges, freqs),
     alt: t(
-      `Histogram of contest scores: ${bars.map(([a, b, f]) => `${f} students from ${a} to ${b}`).join(", ")}.`,
+      `Histogram of contest scores: ${bars.map(([a, b, f]) => `${f} ${f === 1 ? "student" : "students"} from ${a} to ${b}`).join(", ")}.`,
       `竞赛成绩直方图：${bars.map(([a, b, f]) => `${a} 到 ${b} 分有 ${f} 名学生`).join("，")}。`,
     ),
   };

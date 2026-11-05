@@ -1089,8 +1089,8 @@ export const theVertexFormOfAParabola: TopicDef = {
             [k, h],
           ],
           solution: t(
-            `Write it as $y = ${front(a)}(x - ${paren(h)})^{2} + ${paren(k)}$: $h = ${h}$ and $k = ${k}$, so the vertex is $${pt(h, k)}$.`,
-            `把它写成 $y = ${front(a)}(x - ${paren(h)})^{2} + ${paren(k)}$：$h = ${h}$，$k = ${k}$，所以顶点是 $${pt(h, k)}$。`,
+            `${h < 0 || k < 0 ? `Write it as $y = ${front(a)}(x - ${paren(h)})^{2} + ${paren(k)}$: ` : "In the form $y = a(x - h)^{2} + k$, "}$h = ${h}$ and $k = ${k}$, so the vertex is $${pt(h, k)}$.`,
+            `${h < 0 || k < 0 ? `把它写成 $y = ${front(a)}(x - ${paren(h)})^{2} + ${paren(k)}$：` : "在形式 $y = a(x - h)^{2} + k$ 中，"}$h = ${h}$，$k = ${k}$，所以顶点是 $${pt(h, k)}$。`,
           ),
         });
       },

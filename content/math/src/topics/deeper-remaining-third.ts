@@ -100,8 +100,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         const cents = 50 * n + 25 * k;
         return whole(
           [
-            `A box holds $n$ nickels (5 cents), twice as many dimes (10 cents), and ${k} more quarters (25 cents) than nickels. They are worth ${cents} cents in all. Find $n$.`,
-            `盒子里有 $n$ 枚 5 分硬币，10 分硬币的个数是它的两倍，25 分硬币比 5 分硬币多 ${k} 枚。总价值是 ${cents} 分。求 $n$。`,
+            `A box holds $n$ nickels ($5$ cents), twice as many dimes ($10$ cents), and $${k}$ more quarters ($25$ cents) than nickels. They are worth $${cents}$ cents in all. Find $n$.`,
+            `盒子里有 $n$ 枚 $5$ 分硬币，$10$ 分硬币的个数是它的两倍，$25$ 分硬币比 $5$ 分硬币多 $${k}$ 枚。总价值是 $${cents}$ 分。求 $n$。`,
           ],
           n,
           [n + k, 2 * n, Math.floor(cents / 40)],
@@ -135,8 +135,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           k * b,
           [b, -k * b, k * b + k],
           [
-            `The second left side must be ${k} times the first, so $t = ${k * b}$. The constant ${d} is not ${k} times ${c}, so the lines differ.`,
-            `第二个方程的左边必须是第一个的 ${k} 倍，所以 $t = ${k * b}$。常数 ${d} 不是 ${c} 的 ${k} 倍，所以两条直线不重合。`,
+            `The second left side must be $${k}$ times the first, so $t = ${k * b}$. The constant $${d}$ is not $${k}$ times $${c}$, so the lines differ.`,
+            `第二个方程的左边必须是第一个的 $${k}$ 倍，所以 $t = ${k * b}$。常数 $${d}$ 不是 $${c}$ 的 $${k}$ 倍，所以两条直线不重合。`,
           ],
         );
       },
@@ -248,8 +248,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "adding-lengths-in-two-units",
       ["Adding lengths in two units", "不同单位的长度相加"],
       [
-        "Lengths can only be added once they are in the same unit. So first convert the kilometers to meters, multiplying by 1000, and then add the two numbers of meters.",
-        "长度必须化成同一单位才能相加。所以先把千米化成米（乘 1000），再把两个米数相加。",
+        "Lengths can only be added once they are in the same unit. So first convert the kilometers to meters, multiplying by $1000$, and then add the two numbers of meters.",
+        "长度必须化成同一单位才能相加。所以先把千米化成米（乘 $1000$），再把两个米数相加。",
       ],
       (rng) => {
         const k = rng.int(11, 99);
@@ -262,8 +262,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           k * 100 + m,
           [k * 10 + m, k * 1000 + m, k + m],
           [
-            `$${k / 10}\\text{ km} = ${k * 100}\\text{ m}$, and adding ${m} gives ${k * 100 + m}.`,
-            `$${k / 10}\\text{ km} = ${k * 100}\\text{ m}$，加上 ${m} 得 ${k * 100 + m}。`,
+            `$${k / 10}\\text{ km} = ${k * 100}\\text{ m}$, and adding $${m}$ gives $${k * 100 + m}$.`,
+            `$${k / 10}\\text{ km} = ${k * 100}\\text{ m}$，加上 $${m}$ 得 $${k * 100 + m}$。`,
           ],
         );
       },
@@ -274,22 +274,22 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "the-total-mass-of-many-items",
       ["The total mass of many items", "许多物品的总质量"],
       [
-        "Small items are weighed in grams, but a large total reads better in kilograms. So multiply to get the total in grams first, and then divide by 1000.",
-        "小物品用克来称，而大的总量用千克更清楚。所以先相乘得到总克数，再除以 1000。",
+        "Small items are weighed in grams, but a large total reads better in kilograms. So multiply to get the total in grams first, and then divide by $1000$.",
+        "小物品用克来称，而大的总量用千克更清楚。所以先相乘得到总克数，再除以 $1000$。",
       ],
       (rng) => {
         const n = rng.int(3, 40);
         const g = rng.int(12, 95) * 5;
         return decimal(
           [
-            `Each of ${n} books has a mass of $${g}\\text{ g}$. What is their total mass in kilograms?`,
-            `${n} 本书每本的质量是 $${g}\\text{ g}$。它们的总质量是多少千克？`,
+            `Each of $${n}$ books has a mass of $${g}\\text{ g}$. What is their total mass in kilograms?`,
+            `$${n}$ 本书每本的质量是 $${g}\\text{ g}$。它们的总质量是多少千克？`,
           ],
           Q.of(n * g, 1000),
           [Q.of(n * g, 100), Q.of(n * g, 10000), Q.of(n * g)],
           [
-            `$${n} \\times ${g} = ${n * g}\\text{ g}$, and dividing by 1000 gives the kilograms.`,
-            `$${n} \\times ${g} = ${n * g}\\text{ g}$，除以 1000 得到千克数。`,
+            `$${n} \\times ${g} = ${n * g}\\text{ g}$, and dividing by $1000$ gives the kilograms.`,
+            `$${n} \\times ${g} = ${n * g}\\text{ g}$，除以 $1000$ 得到千克数。`,
           ],
         );
       },
@@ -353,14 +353,14 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         const start = k * k * m;
         return whole(
           [
-            `The brightness of a lamp varies inversely with the square of the distance from it. At ${d} m it is ${start} units. What is it at ${k * d} m?`,
-            `灯的亮度与到灯的距离的平方成反比。在 ${d} 米处亮度是 ${start} 单位。在 ${k * d} 米处是多少？`,
+            `The brightness of a lamp varies inversely with the square of the distance from it. At $${d}$ m it is $${start}$ units. What is it at $${k * d}$ m?`,
+            `灯的亮度与到灯的距离的平方成反比。在 $${d}$ 米处亮度是 $${start}$ 单位。在 $${k * d}$ 米处是多少？`,
           ],
           m,
           [k * m, start * k, start - k],
           [
-            `The distance is multiplied by ${k}, so the brightness is divided by ${k * k}: ${m}.`,
-            `距离乘 ${k}，所以亮度除以 ${k * k}：${m}。`,
+            `The distance is multiplied by $${k}$, so the brightness is divided by $${k * k}$: $${m}$.`,
+            `距离乘 $${k}$，所以亮度除以 $${k * k}$：$${m}$。`,
           ],
         );
       },
@@ -392,8 +392,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           x1,
           [Number.isInteger(second) ? second : x2, c, v],
           [
-            `The first piece gives $x = ${x1}$, which is below ${c}. The second gives $x = ${Q.of(v - e, d).toLatex()}$, which is not at least ${c}, so it is rejected.`,
-            `第一段得 $x = ${x1}$，小于 ${c}。第二段得 $x = ${Q.of(v - e, d).toLatex()}$，不满足至少为 ${c}，所以舍去。`,
+            `The first piece gives $x = ${x1}$, which is below $${c}$. The second gives $x = ${Q.of(v - e, d).toLatex()}$, which is not at least $${c}$, so it is rejected.`,
+            `第一段得 $x = ${x1}$，小于 $${c}$。第二段得 $x = ${Q.of(v - e, d).toLatex()}$，不满足至少为 $${c}$，所以舍去。`,
           ],
         );
       },
@@ -421,8 +421,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           `y \\ne ${k}`,
           [`y \\ne ${h}`, `y > ${k}`, `\\text{all real numbers}`],
           [
-            `The fraction is never 0, so $f(x)$ is never ${k}, and it takes every other value.`,
-            `分数不会是 0，所以 $f(x)$ 不会等于 ${k}，其他值都能取到。`,
+            `The fraction is never $0$, so $f(x)$ is never $${k}$, and it takes every other value.`,
+            `分数不会是 $0$，所以 $f(x)$ 不会等于 $${k}$，其他值都能取到。`,
           ],
         );
       },
@@ -448,7 +448,10 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           ],
           d,
           [steps * d, -d, d + steps],
-          [`The change is ${steps * d} over ${steps} steps, so $d = ${d}$.`, `变化量是 ${steps * d}，经过 ${steps} 步，所以 $d = ${d}$。`],
+          [
+            `The change is $${steps * d}$ over $${steps}$ steps, so $d = ${d}$.`,
+            `变化量是 $${steps * d}$，经过 $${steps}$ 步，所以 $d = ${d}$。`,
+          ],
         );
       },
     ),
@@ -466,8 +469,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         const d = rng.int(1, 12);
         return integer(
           [
-            `Three consecutive terms of an arithmetic sequence add up to ${3 * m}, and the common difference is ${d}. Find the smallest term.`,
-            `等差数列连续三项的和是 ${3 * m}，公差是 ${d}。求最小的一项。`,
+            `Three consecutive terms of an arithmetic sequence add up to $${3 * m}$, and the common difference is $${d}$. Find the smallest term.`,
+            `等差数列连续三项的和是 $${3 * m}$，公差是 $${d}$。求最小的一项。`,
           ],
           m - d,
           [m, m + d, 3 * m - d],
@@ -493,14 +496,14 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         const s = rng.int(2, 30);
         return whole(
           [
-            `A speed-time graph rises in a straight line from 0 to ${v} m/s over ${t} s, and then stays level for ${s} s. How far does the object travel, in meters?`,
-            `速度-时间图象在 ${t} 秒内从 0 沿直线升到 ${v} 米/秒，然后保持水平 ${s} 秒。物体走了多少米？`,
+            `A speed-time graph rises in a straight line from $0$ to $${v}$ m/s over $${t}$ s, and then stays level for $${s}$ s. How far does the object travel, in meters?`,
+            `速度-时间图象在 $${t}$ 秒内从 $0$ 沿直线升到 $${v}$ 米/秒，然后保持水平 $${s}$ 秒。物体走了多少米？`,
           ],
           (v * t) / 2 + v * s,
           [v * t + v * s, v * s, (v * (t + s)) / 2],
           [
-            `The triangle has area ${(v * t) / 2} and the rectangle has area ${v * s}.`,
-            `三角形面积是 ${(v * t) / 2}，矩形面积是 ${v * s}。`,
+            `The area under the graph is the distance. The triangle has area $${(v * t) / 2}$ and the rectangle has area $${v * s}$, so the total is $${(v * t) / 2 + v * s}$ m.`,
+            `图象下方的面积就是路程。三角形面积是 $${(v * t) / 2}$，矩形面积是 $${v * s}$，所以总路程是 $${(v * t) / 2 + v * s}$ 米。`,
           ],
         );
       },
@@ -511,8 +514,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "a-mixture-system",
       ["A mixture system", "混合问题的方程组"],
       [
-        "Mixture problems give one equation for the total amount and one for the amount of the ingredient, which has decimal coefficients. Multiplying that second equation by a power of 10 clears them.",
-        "混合问题有一个关于总量的方程，还有一个关于成分含量的方程，后者的系数是小数。把第二个方程乘 10 的幂就能去掉小数。",
+        "Mixture problems give one equation for the total amount and one for the amount of the ingredient, which has decimal coefficients. Multiplying that second equation by a power of $10$ clears them.",
+        "混合问题有一个关于总量的方程，还有一个关于成分含量的方程，后者的系数是小数。把第二个方程乘 $10$ 的幂就能去掉小数。",
       ],
       (rng) => {
         const x = rng.int(1, 40);
@@ -521,14 +524,14 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         const acid = (x + 3 * y) / 10;
         return whole(
           [
-            `${total} liters of a mixture contain ${acid} liters of acid. It was made from $x$ liters of a 10% solution and $y$ liters of a 30% solution. Find $y$.`,
-            `${total} 升混合液含 ${acid} 升酸，由 $x$ 升浓度 10% 的溶液和 $y$ 升浓度 30% 的溶液配成。求 $y$。`,
+            `$${total}$ liters of a mixture contain $${acid}$ liters of acid. It was made from $x$ liters of a $10\\%$ solution and $y$ liters of a $30\\%$ solution. Find $y$.`,
+            `$${total}$ 升混合液含 $${acid}$ 升酸，由 $x$ 升浓度 $10\\%$ 的溶液和 $y$ 升浓度 $30\\%$ 的溶液配成。求 $y$。`,
           ],
           y,
           [x, Math.round(acid), total - Math.round(acid)],
           [
-            `$x + y = ${total}$ and $0.1x + 0.3y = ${acid}$. Multiplying the second by 10 and subtracting gives $2y = ${2 * y}$.`,
-            `$x + y = ${total}$，$0.1x + 0.3y = ${acid}$。第二式乘 10 再相减，得 $2y = ${2 * y}$。`,
+            `$x + y = ${total}$ and $0.1x + 0.3y = ${acid}$. Multiplying the second by $10$ and subtracting gives $2y = ${2 * y}$.`,
+            `$x + y = ${total}$，$0.1x + 0.3y = ${acid}$。第二式乘 $10$ 再相减，得 $2y = ${2 * y}$。`,
           ],
         );
       },
@@ -680,8 +683,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "area-from-lengths-in-smaller-units",
       ["Area from lengths in smaller units", "由较小单位的长度求面积"],
       [
-        "If the sides are given in a smaller unit, either convert each side first or convert the area at the end. A square meter holds 10000 square centimeters, so converting the area divides by 10000, not 100.",
-        "边长用较小单位给出时，可以先换算每条边，也可以最后换算面积。1 平方米含 10000 平方厘米，所以换算面积要除以 10000，而不是 100。",
+        "If the sides are given in a smaller unit, either convert each side first or convert the area at the end. A square meter holds $10000$ square centimeters, so converting the area divides by $10000$, not $100$.",
+        "边长用较小单位给出时，可以先换算每条边，也可以最后换算面积。$1$ 平方米含 $10000$ 平方厘米，所以换算面积要除以 $10000$，而不是 $100$。",
       ],
       (rng) => {
         const a = rng.int(2, 40) * 50;
@@ -694,8 +697,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           Q.of(a * b, 10000),
           [Q.of(a * b, 100), Q.of(a * b, 1000), Q.of(a + b, 100)],
           [
-            `$${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$, and dividing by 10000 gives square meters.`,
-            `$${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$，除以 10000 得到平方米数。`,
+            `$${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$, and dividing by $10000$ gives square meters.`,
+            `$${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$，除以 $10000$ 得到平方米数。`,
           ],
         );
       },
@@ -710,7 +713,7 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
         "恰有一个解的二次方程是完全平方，所以 $x^{2} + bx + c^{2}$ 必须等于 $(x + c)^{2}$ 或 $(x - c)^{2}$。$b$ 的符号决定是哪一个，解就是使平方为零的数。",
       ],
       (rng) => {
-        const c = rng.int(1, 30);
+        const c = rng.int(2, 30);
         const positive = rng.bool();
         return integer(
           [
@@ -720,8 +723,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           positive ? -c : c,
           [positive ? c : -c, positive ? 2 * c : -2 * c, c * c],
           [
-            `$b = ${positive ? 2 * c : -2 * c}$ gives $(x ${positive ? "+" : "-"} ${c})^{2} = 0$, so $x = ${positive ? -c : c}$.`,
-            `$b = ${positive ? 2 * c : -2 * c}$ 给出 $(x ${positive ? "+" : "-"} ${c})^{2} = 0$，所以 $x = ${positive ? -c : c}$。`,
+            `One solution means the left side is a perfect square, and $${c * c} = ${c}^{2}$, so it is $(x + ${c})^{2}$ or $(x - ${c})^{2}$. A ${positive ? "positive" : "negative"} $b$ gives $b = ${positive ? 2 * c : -2 * c}$ and $(x ${positive ? "+" : "-"} ${c})^{2} = 0$, so $x = ${positive ? -c : c}$.`,
+            `恰有一个解说明左边是完全平方式，而 $${c * c} = ${c}^{2}$，所以它是 $(x + ${c})^{2}$ 或 $(x - ${c})^{2}$。$b$ 为${positive ? "正" : "负"}时 $b = ${positive ? 2 * c : -2 * c}$，得 $(x ${positive ? "+" : "-"} ${c})^{2} = 0$，所以 $x = ${positive ? -c : c}$。`,
           ],
         );
       },
@@ -732,8 +735,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "a-perimeter-in-another-unit",
       ["A perimeter in another unit", "用另一单位表示周长"],
       [
-        "Find the perimeter in the unit of the sides, and only then convert it. Since a yard is 3 feet, the number of yards is the number of feet divided by 3.",
-        "先用边的单位求周长，然后再换算。因为 1 码等于 3 英尺，所以码数是英尺数除以 3。",
+        "Find the perimeter in the unit of the sides, and only then convert it. Since a yard is $3$ feet, the number of yards is the number of feet divided by $3$.",
+        "先用边的单位求周长，然后再换算。因为 $1$ 码等于 $3$ 英尺，所以码数是英尺数除以 $3$。",
       ],
       (rng) => {
         const a = rng.int(2, 60);
@@ -743,14 +746,14 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
         const y = (2 * (a + usable)) / 3;
         return whole(
           [
-            `How many yards of fence go around a rectangle that is ${a} feet by ${usable} feet?`,
-            `围住长 ${a} 英尺、宽 ${usable} 英尺的长方形需要多少码围栏？`,
+            `How many yards of fence go around a rectangle that is $${a}$ feet by $${usable}$ feet?`,
+            `围住长 $${a}$ 英尺、宽 $${usable}$ 英尺的长方形需要多少码围栏？`,
           ],
           y,
           [2 * (a + usable), (a + usable) / 3 === Math.floor((a + usable) / 3) ? (a + usable) / 3 : y + 2, y * 9],
           [
-            `The perimeter is ${2 * (a + usable)} feet, and dividing by 3 gives ${y} yards.`,
-            `周长是 ${2 * (a + usable)} 英尺，除以 3 得 ${y} 码。`,
+            `The perimeter is $${2 * (a + usable)}$ feet, and dividing by $3$ gives $${y}$ yards.`,
+            `周长是 $${2 * (a + usable)}$ 英尺，除以 $3$ 得 $${y}$ 码。`,
           ],
         );
       },
@@ -761,8 +764,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "a-total-in-pounds",
       ["A total in pounds", "以磅表示总量"],
       [
-        "Multiply first to get the total in the smaller unit, and then convert it. Since a pound is 16 ounces, a total in ounces is divided by 16 to give pounds.",
-        "先相乘得到较小单位的总量，然后换算。因为 1 磅等于 16 盎司，所以盎司总数除以 16 得到磅数。",
+        "Multiply first to get the total in the smaller unit, and then convert it. Since a pound is $16$ ounces, a total in ounces is divided by $16$ to give pounds.",
+        "先相乘得到较小单位的总量，然后换算。因为 $1$ 磅等于 $16$ 盎司，所以盎司总数除以 $16$ 得到磅数。",
       ],
       (rng) => {
         const pounds = rng.int(2, 60);
@@ -770,8 +773,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
         const n = (16 * pounds) / each;
         return whole(
           [
-            `A shop has ${n} packets, each weighing ${each} ounces. What is their total weight in pounds?`,
-            `商店有 ${n} 包货物，每包重 ${each} 盎司。总重是多少磅？`,
+            `A shop has $${n}$ packets, each weighing $${each}$ ounces. What is their total weight in pounds?`,
+            `商店有 $${n}$ 包货物，每包重 $${each}$ 盎司。总重是多少磅？`,
           ],
           pounds,
           [n * each, n, pounds * 2],
@@ -788,8 +791,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "total-time-for-many-items",
       ["Total time for many items", "许多件的总时间"],
       [
-        "Rates per item often use a small unit of time, while the total reads better in a larger one. So multiply to get the total seconds, and then divide by 60 for minutes.",
-        "每件所用的时间常用小的时间单位，而总时间用大的单位更清楚。所以先相乘得到总秒数，再除以 60 得到分钟数。",
+        "Rates per item often use a small unit of time, while the total reads better in a larger one. So multiply to get the total seconds, and then divide by $60$ for minutes.",
+        "每件所用的时间常用小的时间单位，而总时间用大的单位更清楚。所以先相乘得到总秒数，再除以 $60$ 得到分钟数。",
       ],
       (rng) => {
         const minutes = rng.int(2, 60);
@@ -797,8 +800,8 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
         const n = (60 * minutes) / each;
         return whole(
           [
-            `A machine takes ${each} seconds per item. How many minutes does it take to make ${n} items?`,
-            `一台机器每件用 ${each} 秒。做 ${n} 件要多少分钟？`,
+            `A machine takes $${each}$ seconds per item. How many minutes does it take to make $${n}$ items?`,
+            `一台机器每件用 $${each}$ 秒。做 $${n}$ 件要多少分钟？`,
           ],
           minutes,
           [n * each, n, minutes * 60],

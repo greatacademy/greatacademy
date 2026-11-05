@@ -110,16 +110,16 @@ const modelContexts: readonly ModelContext[] = [
     describe: (f, r) =>
       t(
         `A plumber charges a call-out fee of ${dollars(f)} plus ${dollars(r)} for each hour of work.`,
-        `水管工上门收费 ${f} 元，每工作一小时另收 ${r} 元。`,
+        `水管工上门收费 $${f}$ 元，每工作一小时另收 $${r}$ 元。`,
       ),
     vars: t("Let $C$ be the charge in dollars for a job of $h$ hours.", "设工作 $h$ 小时的费用为 $C$ 元。"),
     startMeaning: t("The call-out fee", "上门费"),
     rateMeaning: t("The charge for each hour of work", "每小时的工钱"),
     yMeaning: t("The total charge for a job", "一次工作的总费用"),
     xMeaning: t("The number of hours worked", "工作的小时数"),
-    askY: (x) => t(`How much does a job of ${x} hours cost, in dollars?`, `工作 ${x} 小时的费用是多少元？`),
-    askX: (y) => t(`A job costs ${dollars(y)}. How many hours did it take?`, `一次工作的费用是 ${y} 元。工作了多少小时？`),
-    point: (x, y) => t(`a job of ${x} hours costs ${dollars(y)}`, `工作 ${x} 小时收费 ${y} 元`),
+    askY: (x) => t(`How much does a job of $${x}$ hours cost, in dollars?`, `工作 $${x}$ 小时的费用是多少元？`),
+    askX: (y) => t(`A job costs ${dollars(y)}. How many hours did it take?`, `一次工作的费用是 $${y}$ 元。工作了多少小时？`),
+    point: (x, y) => t(`a job of $${x}$ hours costs ${dollars(y)}`, `工作 $${x}$ 小时收费 $${y}$ 元`),
     graphOf: t("The graph shows the charge $C$, in dollars, for a job of $h$ hours.", "图像表示工作 $h$ 小时的费用 $C$（元）。"),
     rateUnit: t("dollars per hour", "元/时"),
   },
@@ -135,16 +135,16 @@ const modelContexts: readonly ModelContext[] = [
     describe: (f, r) =>
       t(
         `A phone plan costs ${dollars(f)} per month plus ${dollars(r)} for each gigabyte of data used.`,
-        `某手机套餐每月基本费 ${f} 元，每使用 1 GB 流量另收 ${r} 元。`,
+        `某手机套餐每月基本费 $${f}$ 元，每使用 $1$ GB 流量另收 $${r}$ 元。`,
       ),
     vars: t("Let $C$ be the monthly bill in dollars when $g$ gigabytes are used.", "设使用 $g$ GB 流量时的月费为 $C$ 元。"),
     startMeaning: t("The basic monthly fee", "每月的基本费"),
     rateMeaning: t("The charge for each gigabyte", "每 GB 流量的费用"),
     yMeaning: t("The monthly bill", "每月的话费"),
     xMeaning: t("The number of gigabytes used", "使用的流量 GB 数"),
-    askY: (x) => t(`What is the bill for a month with ${x} GB of data, in dollars?`, `某月使用 ${x} GB 流量，话费是多少元？`),
-    askX: (y) => t(`One month's bill is ${dollars(y)}. How many gigabytes were used?`, `某月话费是 ${y} 元。使用了多少 GB 流量？`),
-    point: (x, y) => t(`a month with ${x} GB costs ${dollars(y)}`, `使用 ${x} GB 的月份话费 ${y} 元`),
+    askY: (x) => t(`What is the bill for a month with $${x}$ GB of data, in dollars?`, `某月使用 $${x}$ GB 流量，话费是多少元？`),
+    askX: (y) => t(`One month's bill is ${dollars(y)}. How many gigabytes were used?`, `某月话费是 $${y}$ 元。使用了多少 GB 流量？`),
+    point: (x, y) => t(`a month with $${x}$ GB costs ${dollars(y)}`, `使用 $${x}$ GB 的月份话费 $${y}$ 元`),
     graphOf: t(
       "The graph shows the monthly bill $C$, in dollars, for $g$ gigabytes of data.",
       "图像表示使用 $g$ GB 流量时的月费 $C$（元）。",
@@ -161,15 +161,18 @@ const modelContexts: readonly ModelContext[] = [
     gx: [2, 5, 10],
     gy: [50, 100],
     describe: (f, r) =>
-      t(`A tank holds ${f} liters of water and drains at ${r} liters per minute.`, `水箱里有 ${f} 升水，以每分钟 ${r} 升的速度放水。`),
+      t(
+        `A tank holds $${f}$ liters of water and drains at $${r}$ liters per minute.`,
+        `水箱里有 $${f}$ 升水，以每分钟 $${r}$ 升的速度放水。`,
+      ),
     vars: t("Let $V$ be the volume of water in liters after $t$ minutes.", "设 $t$ 分钟后水箱里有 $V$ 升水。"),
     startMeaning: t("The amount of water at the start", "开始时的水量"),
     rateMeaning: t("The amount of water drained each minute", "每分钟放出的水量"),
     yMeaning: t("The amount of water left", "剩下的水量"),
     xMeaning: t("The number of minutes since draining began", "放水经过的分钟数"),
-    askY: (x) => t(`How many liters are left after ${x} minutes?`, `${x} 分钟后还剩多少升水？`),
-    askX: (y) => t(`After how many minutes are ${y} liters left?`, `多少分钟后还剩 ${y} 升水？`),
-    point: (x, y) => t(`after ${x} minutes, ${y} liters are left`, `${x} 分钟后还剩 ${y} 升`),
+    askY: (x) => t(`How many liters are left after $${x}$ minutes?`, `$${x}$ 分钟后还剩多少升水？`),
+    askX: (y) => t(`After how many minutes are $${y}$ liters left?`, `多少分钟后还剩 $${y}$ 升水？`),
+    point: (x, y) => t(`after $${x}$ minutes, $${y}$ liters are left`, `$${x}$ 分钟后还剩 $${y}$ 升`),
     graphOf: t(
       "The graph shows the volume $V$ of water in a tank, in liters, $t$ minutes after it starts draining.",
       "图像表示水箱开始放水 $t$ 分钟后的水量 $V$（升）。",
@@ -185,15 +188,16 @@ const modelContexts: readonly ModelContext[] = [
     maxX: (f, r) => Math.floor(f / r),
     gx: [1, 2],
     gy: [2, 4],
-    describe: (f, r) => t(`A candle is ${f} cm tall and burns down ${r} cm per hour.`, `一支蜡烛高 ${f} 厘米，每小时燃烧 ${r} 厘米。`),
+    describe: (f, r) =>
+      t(`A candle is $${f}$ cm tall and burns down $${r}$ cm per hour.`, `一支蜡烛高 $${f}$ 厘米，每小时燃烧 $${r}$ 厘米。`),
     vars: t("Let $h$ be the height of the candle in centimeters after $t$ hours.", "设燃烧 $t$ 小时后蜡烛高 $h$ 厘米。"),
     startMeaning: t("The height of the candle before it is lit", "点燃前蜡烛的高度"),
     rateMeaning: t("The height that burns away each hour", "每小时燃烧的高度"),
     yMeaning: t("The height of the candle", "蜡烛的高度"),
     xMeaning: t("The number of hours it has burned", "燃烧的小时数"),
-    askY: (x) => t(`How tall is the candle after ${x} hours, in centimeters?`, `燃烧 ${x} 小时后蜡烛高多少厘米？`),
-    askX: (y) => t(`After how many hours is the candle ${y} cm tall?`, `燃烧多少小时后蜡烛高 ${y} 厘米？`),
-    point: (x, y) => t(`after ${x} hours, the candle is ${y} cm tall`, `燃烧 ${x} 小时后蜡烛高 ${y} 厘米`),
+    askY: (x) => t(`How tall is the candle after $${x}$ hours, in centimeters?`, `燃烧 $${x}$ 小时后蜡烛高多少厘米？`),
+    askX: (y) => t(`After how many hours is the candle $${y}$ cm tall?`, `燃烧多少小时后蜡烛高 $${y}$ 厘米？`),
+    point: (x, y) => t(`after $${x}$ hours, the candle is $${y}$ cm tall`, `燃烧 $${x}$ 小时后蜡烛高 $${y}$ 厘米`),
     graphOf: t(
       "The graph shows the height $h$ of a candle, in centimeters, $t$ hours after it is lit.",
       "图像表示蜡烛点燃 $t$ 小时后的高度 $h$（厘米）。",
@@ -209,15 +213,15 @@ const modelContexts: readonly ModelContext[] = [
     maxX: () => 20,
     gx: [1, 2],
     gy: [20, 50],
-    describe: (f, r) => t(`Sam has ${dollars(f)} saved and adds ${dollars(r)} every week.`, `小山已存了 ${f} 元，每周再存 ${r} 元。`),
+    describe: (f, r) => t(`Sam has ${dollars(f)} saved and adds ${dollars(r)} every week.`, `小山已存了 $${f}$ 元，每周再存 $${r}$ 元。`),
     vars: t("Let $S$ be Sam's savings in dollars after $w$ weeks.", "设 $w$ 周后小山的存款为 $S$ 元。"),
     startMeaning: t("The amount saved at the start", "开始时的存款"),
     rateMeaning: t("The amount added each week", "每周存入的钱数"),
     yMeaning: t("Sam's total savings", "小山的存款总额"),
     xMeaning: t("The number of weeks", "经过的周数"),
-    askY: (x) => t(`How much has Sam saved after ${x} weeks, in dollars?`, `${x} 周后小山存了多少元？`),
-    askX: (y) => t(`After how many weeks will Sam have ${dollars(y)}?`, `多少周后小山的存款达到 ${y} 元？`),
-    point: (x, y) => t(`after ${x} weeks Sam has ${dollars(y)}`, `${x} 周后小山有 ${y} 元`),
+    askY: (x) => t(`How much has Sam saved after $${x}$ weeks, in dollars?`, `$${x}$ 周后小山存了多少元？`),
+    askX: (y) => t(`After how many weeks will Sam have ${dollars(y)}?`, `多少周后小山的存款达到 $${y}$ 元？`),
+    point: (x, y) => t(`after $${x}$ weeks Sam has ${dollars(y)}`, `$${x}$ 周后小山有 $${y}$ 元`),
     graphOf: t("The graph shows Sam's savings $S$, in dollars, after $w$ weeks.", "图像表示 $w$ 周后小山的存款 $S$（元）。"),
     rateUnit: t("dollars per week", "元/周"),
   },
@@ -240,9 +244,9 @@ const modelContexts: readonly ModelContext[] = [
     rateMeaning: t("The charge used each hour", "每小时消耗的电量"),
     yMeaning: t("The charge left", "剩余的电量"),
     xMeaning: t("The number of hours of use", "使用的小时数"),
-    askY: (x) => t(`What is the charge after ${x} hours, in percent?`, `${x} 小时后电量是百分之多少？`),
+    askY: (x) => t(`What is the charge after $${x}$ hours, in percent?`, `$${x}$ 小时后电量是百分之多少？`),
     askX: (y) => t(`After how many hours is the charge at $${y}\\%$?`, `多少小时后电量降到 $${y}\\%$？`),
-    point: (x, y) => t(`after ${x} hours the charge is $${y}\\%$`, `${x} 小时后电量为 $${y}\\%$`),
+    point: (x, y) => t(`after $${x}$ hours the charge is $${y}\\%$`, `$${x}$ 小时后电量为 $${y}\\%$`),
     graphOf: t(
       "The graph shows the charge $B$ of a phone battery, in percent, after $t$ hours.",
       "图像表示 $t$ 小时后手机的电量 $B$（%）。",
@@ -407,11 +411,11 @@ const totalContexts: readonly TotalContext[] = [
     describe: (a, b, T) =>
       t(
         `A theater sells adult tickets for ${dollars(a)} each and child tickets for ${dollars(b)} each. One evening it took in ${dollars(T)}.`,
-        `剧院成人票每张 ${a} 元，儿童票每张 ${b} 元。某天晚上剧院票房收入 ${T} 元。`,
+        `剧院成人票每张 $${a}$ 元，儿童票每张 $${b}$ 元。某天晚上剧院票房收入 $${T}$ 元。`,
       ),
     vars: t("Let $x$ be the number of adult tickets and $y$ the number of child tickets sold.", "设卖出成人票 $x$ 张，儿童票 $y$ 张。"),
     askY: (x) =>
-      t(`If ${x} adult tickets were sold, how many child tickets were sold?`, `如果卖出了 ${x} 张成人票，那么卖出了多少张儿童票？`),
+      t(`If $${x}$ adult tickets were sold, how many child tickets were sold?`, `如果卖出了 $${x}$ 张成人票，那么卖出了多少张儿童票？`),
     askOnly: (k) =>
       k === 0
         ? t("If no child tickets were sold, how many adult tickets were sold?", "如果没有卖出儿童票，那么卖出了多少张成人票？")
@@ -423,14 +427,14 @@ const totalContexts: readonly TotalContext[] = [
     b: [2, 2, 1],
     describe: (_a, _b, T) =>
       t(
-        `A basketball team scored ${T} points in a season, all from 3-point and 2-point shots.`,
-        `一支篮球队一个赛季得了 ${T} 分，全部来自三分球和两分球。`,
+        `A basketball team scored $${T}$ points in a season, all from $3$-point and $2$-point shots.`,
+        `一支篮球队一个赛季得了 $${T}$ 分，全部来自三分球和两分球。`,
       ),
     vars: t("Let $x$ be the number of 3-point shots and $y$ the number of 2-point shots.", "设投中三分球 $x$ 个，两分球 $y$ 个。"),
     askY: (x) =>
       t(
-        `If the team made ${x} 3-point shots, how many 2-point shots did it make?`,
-        `如果球队投中了 ${x} 个三分球，那么投中了多少个两分球？`,
+        `If the team made $${x}$ $3$-point shots, how many $2$-point shots did it make?`,
+        `如果球队投中了 $${x}$ 个三分球，那么投中了多少个两分球？`,
       ),
     askOnly: (k) =>
       k === 0
@@ -444,10 +448,10 @@ const totalContexts: readonly TotalContext[] = [
     describe: (a, b, T) =>
       t(
         `A bakery sells loaves of bread for ${dollars(a)} and muffins for ${dollars(b)}. One day its sales came to ${dollars(T)}.`,
-        `面包店的面包每个 ${a} 元，松饼每个 ${b} 元。某天的销售额是 ${T} 元。`,
+        `面包店的面包每个 $${a}$ 元，松饼每个 $${b}$ 元。某天的销售额是 $${T}$ 元。`,
       ),
     vars: t("Let $x$ be the number of loaves and $y$ the number of muffins sold.", "设卖出面包 $x$ 个，松饼 $y$ 个。"),
-    askY: (x) => t(`If ${x} loaves were sold, how many muffins were sold?`, `如果卖出了 ${x} 个面包，那么卖出了多少个松饼？`),
+    askY: (x) => t(`If $${x}$ loaves were sold, how many muffins were sold?`, `如果卖出了 $${x}$ 个面包，那么卖出了多少个松饼？`),
     askOnly: (k) =>
       k === 0
         ? t("If no muffins were sold, how many loaves were sold?", "如果没有卖出松饼，那么卖出了多少个面包？")
@@ -459,11 +463,11 @@ const totalContexts: readonly TotalContext[] = [
     b: [5, 8, 1],
     describe: (a, b, T) =>
       t(
-        `Running burns ${a} calories per minute and swimming burns ${b} calories per minute. Mia burned ${T} calories in a week of running and swimming.`,
-        `跑步每分钟消耗 ${a} 千卡，游泳每分钟消耗 ${b} 千卡。米娅一周跑步和游泳共消耗了 ${T} 千卡。`,
+        `Running burns $${a}$ calories per minute and swimming burns $${b}$ calories per minute. Mia burned $${T}$ calories in a week of running and swimming.`,
+        `跑步每分钟消耗 $${a}$ 千卡，游泳每分钟消耗 $${b}$ 千卡。米娅一周跑步和游泳共消耗了 $${T}$ 千卡。`,
       ),
     vars: t("Let $x$ be the number of minutes she ran and $y$ the number of minutes she swam.", "设她跑步 $x$ 分钟，游泳 $y$ 分钟。"),
-    askY: (x) => t(`If she ran for ${x} minutes, how many minutes did she swim?`, `如果她跑步 ${x} 分钟，那么她游泳多少分钟？`),
+    askY: (x) => t(`If she ran for $${x}$ minutes, how many minutes did she swim?`, `如果她跑步 $${x}$ 分钟，那么她游泳多少分钟？`),
     askOnly: (k) =>
       k === 0
         ? t("If she did not swim at all, how many minutes did she run?", "如果她完全没有游泳，那么她跑步多少分钟？")
@@ -570,8 +574,8 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
         const other = kind === 0 ? T / b : T / a;
         const pt: [number, number] = kind === 0 ? [n, 0] : [0, n];
         const meaning = t(
-          `With no ${c.names[1 - kind]!.en}, there are ${n} ${c.names[kind]!.en}.`,
-          `没有${c.names[1 - kind]!["zh-CN"]}时，${c.names[kind]!["zh-CN"]}有 ${n} 份。`,
+          `With no ${c.names[1 - kind]!.en}, there are $${n}$ ${c.names[kind]!.en}.`,
+          `没有${c.names[1 - kind]!["zh-CN"]}时，${c.names[kind]!["zh-CN"]}有 $${n}$ 份。`,
         );
         const work = kind === 0 ? `${poly([a, "x"])} = ${T}, \\quad x = ${n}` : `${poly([b, "y"])} = ${T}, \\quad y = ${n}`;
         const intro = t(
@@ -835,10 +839,10 @@ const planContexts: readonly PlanContext[] = [
     describe: (f1, r1, f2, r2) =>
       t(
         `Gym A charges a joining fee of ${dollars(f1)} plus ${dollars(r1)} per visit. Gym B charges a joining fee of ${dollars(f2)} plus ${dollars(r2)} per visit.`,
-        `A 健身房收入会费 ${f1} 元，每次另收 ${r1} 元；B 健身房收入会费 ${f2} 元，每次另收 ${r2} 元。`,
+        `A 健身房收入会费 $${f1}$ 元，每次另收 $${r1}$ 元；B 健身房收入会费 $${f2}$ 元，每次另收 $${r2}$ 元。`,
       ),
     askEqual: t("For how many visits do the two gyms cost the same?", "去多少次时两家健身房的费用相同？"),
-    askCheaper: (u) => t(`Which gym is cheaper for ${u} visits?`, `去 ${u} 次时，哪家健身房更便宜？`),
+    askCheaper: (u) => t(`Which gym is cheaper for $${u}$ visits?`, `去 $${u}$ 次时，哪家健身房更便宜？`),
     names: [t("Gym A", "A 健身房"), t("Gym B", "B 健身房")],
     units: t("visits", "次"),
   },
@@ -850,10 +854,10 @@ const planContexts: readonly PlanContext[] = [
     describe: (f1, r1, f2, r2) =>
       t(
         `Company A rents cars for ${dollars(f1)} plus ${dollars(r1)} per day. Company B rents them for ${dollars(f2)} plus ${dollars(r2)} per day.`,
-        `A 公司租车收费 ${f1} 元，每天另收 ${r1} 元；B 公司收费 ${f2} 元，每天另收 ${r2} 元。`,
+        `A 公司租车收费 $${f1}$ 元，每天另收 $${r1}$ 元；B 公司收费 $${f2}$ 元，每天另收 $${r2}$ 元。`,
       ),
     askEqual: t("For how many days do the two companies charge the same?", "租多少天时两家公司的收费相同？"),
-    askCheaper: (u) => t(`Which company is cheaper for ${u} days?`, `租 ${u} 天时，哪家公司更便宜？`),
+    askCheaper: (u) => t(`Which company is cheaper for $${u}$ days?`, `租 $${u}$ 天时，哪家公司更便宜？`),
     names: [t("Company A", "A 公司"), t("Company B", "B 公司")],
     units: t("days", "天"),
   },
@@ -865,10 +869,10 @@ const planContexts: readonly PlanContext[] = [
     describe: (f1, r1, f2, r2) =>
       t(
         `Electrician A charges a call-out fee of ${dollars(f1)} plus ${dollars(r1)} per hour. Electrician B charges ${dollars(f2)} plus ${dollars(r2)} per hour.`,
-        `电工 A 上门收费 ${f1} 元，每小时另收 ${r1} 元；电工 B 上门收费 ${f2} 元，每小时另收 ${r2} 元。`,
+        `电工 A 上门收费 $${f1}$ 元，每小时另收 $${r1}$ 元；电工 B 上门收费 $${f2}$ 元，每小时另收 $${r2}$ 元。`,
       ),
     askEqual: t("For how many hours of work do the two electricians charge the same?", "工作多少小时时两位电工的收费相同？"),
-    askCheaper: (u) => t(`Which electrician is cheaper for ${u} hours of work?`, `工作 ${u} 小时时，哪位电工更便宜？`),
+    askCheaper: (u) => t(`Which electrician is cheaper for $${u}$ hours of work?`, `工作 $${u}$ 小时时，哪位电工更便宜？`),
     names: [t("Electrician A", "电工 A"), t("Electrician B", "电工 B")],
     units: t("hours", "小时"),
   },
@@ -925,8 +929,8 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
         const table = x3 <= max && rng.bool();
         const prompt = table
           ? t(
-              `${c.vars.en} $${c.y}$ changes linearly with $${c.x}$, as in the table. Write $${c.y}$ in terms of $${c.x}$.\n\n| $${c.x}$ | $${c.y}$ |\n| :--- | :--- |\n| ${x1} | ${y1} |\n| ${x2} | ${y2} |\n| ${x3} | ${modelAt(c, f, r, x3)} |`,
-              `${c.vars["zh-CN"]}$${c.y}$ 随 $${c.x}$ 线性变化，如下表。用 $${c.x}$ 表示 $${c.y}$。\n\n| $${c.x}$ | $${c.y}$ |\n| :--- | :--- |\n| ${x1} | ${y1} |\n| ${x2} | ${y2} |\n| ${x3} | ${modelAt(c, f, r, x3)} |`,
+              `${c.vars.en} $${c.y}$ changes linearly with $${c.x}$, as in the table. Write $${c.y}$ in terms of $${c.x}$.\n\n| $${c.x}$ | $${c.y}$ |\n| :--- | :--- |\n| $${x1}$ | $${y1}$ |\n| $${x2}$ | $${y2}$ |\n| $${x3}$ | ${modelAt(c, f, r, x3)} |`,
+              `${c.vars["zh-CN"]}$${c.y}$ 随 $${c.x}$ 线性变化，如下表。用 $${c.x}$ 表示 $${c.y}$。\n\n| $${c.x}$ | $${c.y}$ |\n| :--- | :--- |\n| $${x1}$ | $${y1}$ |\n| $${x2}$ | $${y2}$ |\n| $${x3}$ | ${modelAt(c, f, r, x3)} |`,
             )
           : t(
               `${c.vars.en} $${c.y}$ changes linearly with $${c.x}$: ${c.point(x1, y1).en}, and ${c.point(x2, y2).en}. Write $${c.y}$ in terms of $${c.x}$.`,
@@ -1085,14 +1089,14 @@ export const distanceTimeGraphs: TopicDef = {
           return {
             ...numberProblem({
               prompt: t(
-                `${intro.en} How far from home, in kilometers, is ${m.the.en} after ${tx} hours?`,
-                `${intro["zh-CN"]}出发 ${tx} 小时后，${m.the["zh-CN"]}离家多少千米？`,
+                `${intro.en} How far from home, in kilometers, is ${m.the.en} after $${tx}$ hours?`,
+                `${intro["zh-CN"]}出发 $${tx}$ 小时后，${m.the["zh-CN"]}离家多少千米？`,
               ),
               answer: dy * km,
               wrong: [dy, tx * km, tx],
               solution: t(
-                `At $t = ${tx}$ the graph is at $d = ${dy * km}$, so ${m.the.en} is ${dy * km} km from home.`,
-                `$t = ${tx}$ 时图像在 $d = ${dy * km}$ 处，所以${m.the["zh-CN"]}离家 ${dy * km} 千米。`,
+                `At $t = ${tx}$ the graph is at $d = ${dy * km}$, so ${m.the.en} is $${dy * km}$ km from home.`,
+                `$t = ${tx}$ 时图像在 $d = ${dy * km}$ 处，所以${m.the["zh-CN"]}离家 $${dy * km}$ 千米。`,
               ),
             }),
             figure,
@@ -1558,7 +1562,7 @@ const ineqLatex = ({ m, b, op }: Ineq) => `y ${relSymbol(op)} ${linear(m, b)}`;
 const reversedLatex = ({ m, b, op }: Ineq) => `${linear(m, b)} ${relSymbol(flip[op])} y`;
 
 /** plain writes LaTeX as plain text for figure descriptions. */
-const plain = (s: string) =>
+const _plain = (s: string) =>
   s
     .replace(/\\frac\{(\d+)\}\{(\d+)\}/g, "$1/$2")
     .replace(/\\le/g, "≤")
@@ -1581,12 +1585,11 @@ const inequalityView: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
 
 /** inequalityGraph draws the solutions of one or more inequalities y op mx + b. */
 function inequalityGraph(ineqs: readonly Ineq[]): Figure {
-  const text = ineqs.map((i) => plain(ineqLatex(i))).join(", ");
   return {
     svg: plane(inequalityView, [{ kind: "region", halfPlanes: ineqs.map(halfPlaneOf) }, ...ineqs.map(boundaryMark)]),
     alt: t(
-      `The region where ${text}, with ${ineqs.length === 1 ? "its boundary line" : "the boundary lines"} drawn ${ineqs.map((i) => (isStrict(i.op) ? "dashed" : "solid")).join(" and ")}.`,
-      `${text} 的区域，边界线分别画成${ineqs.map((i) => (isStrict(i.op) ? "虚线" : "实线")).join("和")}。`,
+      `A shaded region on a coordinate grid, bounded by ${ineqs.length === 1 ? "a line" : "two lines"}.`,
+      `坐标网格上的一个涂色区域，边界是${ineqs.length === 1 ? "一条直线" : "两条直线"}。`,
     ),
   };
 }
@@ -1599,7 +1602,8 @@ function randomIneq(rng: Rng, ops: readonly InequalityOp[]): Ineq {
 /** evalAt writes m · x + b, leaving out a zero b. */
 function evalAt(m: Coefficient, x: Coefficient, b: Coefficient): string {
   const B = toQ(b);
-  const head = `${num(m)} \\cdot ${paren(x)}`;
+  const M = toQ(m);
+  const head = M.eq(Q.of(1)) ? paren(x) : M.eq(Q.of(-1)) ? `-${paren(x)}` : `${num(m)} \\cdot ${paren(x)}`;
   return B.isZero() ? head : `${head} ${B.sign() < 0 ? "-" : "+"} ${num(B.abs())}`;
 }
 
@@ -1900,16 +1904,13 @@ export const furtherGraphingLinearInequalities: TopicDef = {
             options: order.map((i) => same(`$${candidates[i]!}$`)),
             correct: order.indexOf(0),
             solution: t(
-              `The boundary is the ${v === "x" ? "vertical" : "horizontal"} line $${v} = ${k}$, drawn ${isStrict(op) ? "dashed" : "solid"}, and the region ${side[0]} of it is shaded: $${candidates[0]}$.`,
+              `The boundary is the ${v === "x" ? "vertical" : "horizontal"} line $${v} = ${k}$, drawn ${isStrict(op) ? "dashed" : "solid"}, and the region ${side[0] === "above" || side[0] === "below" ? side[0] : `to the ${side[0]} of`} it is shaded: $${candidates[0]}$.`,
               `边界是${v === "x" ? "竖直" : "水平"}线 $${v} = ${k}$，画成${isStrict(op) ? "虚线" : "实线"}，涂它${side[1]}的区域：$${candidates[0]}$。`,
             ),
           }),
           figure: {
             svg: plane(inequalityView, [{ kind: "region", halfPlanes: [hp] }, line]),
-            alt: t(
-              `The region where ${plain(candidates[0]!)}, with its boundary line drawn ${isStrict(op) ? "dashed" : "solid"}.`,
-              `${plain(candidates[0]!)} 的区域，边界线画成${isStrict(op) ? "虚线" : "实线"}。`,
-            ),
+            alt: t("A shaded region on a coordinate grid, bounded by a line.", "坐标网格上的一个涂色区域，边界是一条直线。"),
           },
         };
       },
@@ -1953,8 +1954,8 @@ export const furtherGraphingLinearInequalities: TopicDef = {
               { kind: "point", at: [0, q] },
             ]),
             alt: t(
-              `The region where ${plain(`${lhs} ${relSymbol(op)} ${C}`)}, with its boundary through (${p}, 0) and (0, ${q}) drawn ${strict ? "dashed" : "solid"}.`,
-              `${plain(`${lhs} ${relSymbol(op)} ${C}`)} 的区域，边界线经过 (${p}, 0) 和 (0, ${q})，画成${strict ? "虚线" : "实线"}。`,
+              `A shaded region on a coordinate grid, bounded by a line through (${p}, 0) and (0, ${q}).`,
+              `坐标网格上的一个涂色区域，边界是经过 (${p}, 0) 和 (0, ${q}) 的直线。`,
             ),
           },
         };
@@ -2153,15 +2154,16 @@ const limitContexts: readonly LimitContext[] = [
     describe: (a, b, L) =>
       t(
         `Adult tickets to a museum cost ${dollars(a)} and child tickets cost ${dollars(b)}. A club can spend at most ${dollars(L)}.`,
-        `博物馆成人票每张 ${a} 元，儿童票每张 ${b} 元。一个俱乐部最多能花 ${L} 元。`,
+        `博物馆成人票每张 $${a}$ 元，儿童票每张 $${b}$ 元。一个俱乐部最多能花 $${L}$ 元。`,
       ),
     vars: t("Let $x$ be the number of adult tickets and $y$ the number of child tickets.", "设买成人票 $x$ 张，儿童票 $y$ 张。"),
     askY: (x) =>
       t(
-        `If the club buys ${x} adult tickets, what is the greatest number of child tickets it can buy?`,
-        `如果俱乐部买 ${x} 张成人票，最多还能买多少张儿童票？`,
+        `If the club buys $${x}$ adult tickets, what is the greatest number of child tickets it can buy?`,
+        `如果俱乐部买 $${x}$ 张成人票，最多还能买多少张儿童票？`,
       ),
-    askPair: (x, y) => t(`Can the club buy ${x} adult tickets and ${y} child tickets?`, `俱乐部能买 ${x} 张成人票和 ${y} 张儿童票吗？`),
+    askPair: (x, y) =>
+      t(`Can the club buy $${x}$ adult tickets and $${y}$ child tickets?`, `俱乐部能买 $${x}$ 张成人票和 $${y}$ 张儿童票吗？`),
   },
   {
     a: [12, 20, 1],
@@ -2171,18 +2173,18 @@ const limitContexts: readonly LimitContext[] = [
     describe: (a, b, L) =>
       t(
         `Mia earns ${dollars(a)} per hour tutoring and ${dollars(b)} per hour babysitting. She wants to earn at least ${dollars(L)} this month.`,
-        `米娅做家教每小时挣 ${a} 元，照看小孩每小时挣 ${b} 元。她这个月想至少挣 ${L} 元。`,
+        `米娅做家教每小时挣 $${a}$ 元，照看小孩每小时挣 $${b}$ 元。她这个月想至少挣 $${L}$ 元。`,
       ),
     vars: t("Let $x$ be her hours of tutoring and $y$ her hours of babysitting.", "设她做家教 $x$ 小时，照看小孩 $y$ 小时。"),
     askY: (x) =>
       t(
-        `If she tutors for ${x} hours, what is the least number of whole hours she must babysit?`,
-        `如果她做家教 ${x} 小时，她至少还要照看小孩多少个整小时？`,
+        `If she tutors for $${x}$ hours, what is the least number of whole hours she must babysit?`,
+        `如果她做家教 $${x}$ 小时，她至少还要照看小孩多少个整小时？`,
       ),
     askPair: (x, y) =>
       t(
-        `Does she reach her goal with ${x} hours of tutoring and ${y} hours of babysitting?`,
-        `做家教 ${x} 小时、照看小孩 ${y} 小时，她能达到目标吗？`,
+        `Does she reach her goal with $${x}$ hours of tutoring and $${y}$ hours of babysitting?`,
+        `做家教 $${x}$ 小时、照看小孩 $${y}$ 小时，她能达到目标吗？`,
       ),
   },
   {
@@ -2192,16 +2194,16 @@ const limitContexts: readonly LimitContext[] = [
     op: "<=",
     describe: (a, b, L) =>
       t(
-        `A van can carry at most ${L} kg. Large boxes weigh ${a} kg and small boxes weigh ${b} kg.`,
-        `一辆货车最多能载 ${L} 千克。大箱子每个重 ${a} 千克，小箱子每个重 ${b} 千克。`,
+        `A van can carry at most $${L}$ kg. Large boxes weigh $${a}$ kg and small boxes weigh $${b}$ kg.`,
+        `一辆货车最多能载 $${L}$ 千克。大箱子每个重 $${a}$ 千克，小箱子每个重 $${b}$ 千克。`,
       ),
     vars: t("Let $x$ be the number of large boxes and $y$ the number of small boxes.", "设装大箱子 $x$ 个，小箱子 $y$ 个。"),
     askY: (x) =>
       t(
-        `If the van carries ${x} large boxes, what is the greatest number of small boxes it can also carry?`,
-        `如果货车装了 ${x} 个大箱子，最多还能装多少个小箱子？`,
+        `If the van carries $${x}$ large boxes, what is the greatest number of small boxes it can also carry?`,
+        `如果货车装了 $${x}$ 个大箱子，最多还能装多少个小箱子？`,
       ),
-    askPair: (x, y) => t(`Can the van carry ${x} large boxes and ${y} small boxes?`, `货车能装 ${x} 个大箱子和 ${y} 个小箱子吗？`),
+    askPair: (x, y) => t(`Can the van carry $${x}$ large boxes and $${y}$ small boxes?`, `货车能装 $${x}$ 个大箱子和 $${y}$ 个小箱子吗？`),
   },
   {
     a: [3, 3, 1],
@@ -2210,16 +2212,16 @@ const limitContexts: readonly LimitContext[] = [
     op: ">=",
     describe: (_a, _b, L) =>
       t(
-        `A soccer team gets 3 points for a win and 1 point for a draw. It needs at least ${L} points to qualify.`,
-        `一支足球队赢一场得 3 分，平一场得 1 分。它至少需要 ${L} 分才能晋级。`,
+        `A soccer team gets $3$ points for a win and $1$ point for a draw. It needs at least $${L}$ points to qualify.`,
+        `一支足球队赢一场得 $3$ 分，平一场得 $1$ 分。它至少需要 $${L}$ 分才能晋级。`,
       ),
     vars: t("Let $x$ be the number of wins and $y$ the number of draws.", "设赢 $x$ 场，平 $y$ 场。"),
     askY: (x) =>
-      t(`If the team wins ${x} games, what is the least number of draws it needs?`, `如果球队赢了 ${x} 场，它至少还需要平多少场？`),
+      t(`If the team wins $${x}$ games, what is the least number of draws it needs?`, `如果球队赢了 $${x}$ 场，它至少还需要平多少场？`),
     askPair: (x, y) =>
       t(
-        `Does the team qualify with ${x} ${x === 1 ? "win" : "wins"} and ${y} ${y === 1 ? "draw" : "draws"}?`,
-        `球队赢 ${x} 场、平 ${y} 场能晋级吗？`,
+        `Does the team qualify with $${x}$ ${x === 1 ? "win" : "wins"} and $${y}$ ${y === 1 ? "draw" : "draws"}?`,
+        `球队赢 $${x}$ 场、平 $${y}$ 场能晋级吗？`,
       ),
   },
 ];
@@ -2363,16 +2365,16 @@ const planningContexts: readonly PlanningContext[] = [
     ops: ["<=", "<="],
     describe: (a, b, n, r) =>
       t(
-        `A farmer has at most ${n} acres to plant with corn and wheat. Corn costs ${dollars(a)} per acre and wheat costs ${dollars(b)} per acre, and the budget is at most ${dollars(r)}.`,
-        `农场主最多有 ${n} 英亩地种玉米和小麦。玉米每英亩成本 ${a} 元，小麦每英亩成本 ${b} 元，预算最多 ${r} 元。`,
+        `A farmer has at most $${n}$ acres to plant with corn and wheat. Corn costs ${dollars(a)} per acre and wheat costs ${dollars(b)} per acre, and the budget is at most ${dollars(r)}.`,
+        `农场主最多有 $${n}$ 英亩地种玉米和小麦。玉米每英亩成本 $${a}$ 元，小麦每英亩成本 $${b}$ 元，预算最多 $${r}$ 元。`,
       ),
     vars: t("Let $x$ be the acres of corn and $y$ the acres of wheat.", "设种玉米 $x$ 英亩，小麦 $y$ 英亩。"),
     askPair: (x, y) =>
-      t(`Can the farmer plant ${x} acres of corn and ${y} acres of wheat?`, `农场主能种 ${x} 英亩玉米和 ${y} 英亩小麦吗？`),
+      t(`Can the farmer plant $${x}$ acres of corn and $${y}$ acres of wheat?`, `农场主能种 $${x}$ 英亩玉米和 $${y}$ 英亩小麦吗？`),
     askY: (x) =>
       t(
-        `If the farmer plants ${x} acres of corn, what is the greatest whole number of acres of wheat possible?`,
-        `如果农场主种 ${x} 英亩玉米，最多还能种多少整英亩小麦？`,
+        `If the farmer plants $${x}$ acres of corn, what is the greatest whole number of acres of wheat possible?`,
+        `如果农场主种 $${x}$ 英亩玉米，最多还能种多少整英亩小麦？`,
       ),
   },
   {
@@ -2382,19 +2384,19 @@ const planningContexts: readonly PlanningContext[] = [
     ops: ["<=", "<="],
     describe: (a, b, n, r) =>
       t(
-        `A bakery's oven bakes at most ${n} cakes and pies a day. A cake takes ${a} minutes of decorating and a pie ${b} minutes, and there are at most ${r} minutes of decorating time.`,
-        `面包店的烤箱每天最多烤 ${n} 个蛋糕和馅饼。每个蛋糕要装饰 ${a} 分钟，每个馅饼要 ${b} 分钟，装饰时间最多 ${r} 分钟。`,
+        `A bakery's oven bakes at most $${n}$ cakes and pies a day. A cake takes $${a}$ minutes of decorating and a pie $${b}$ minutes, and there are at most $${r}$ minutes of decorating time.`,
+        `面包店的烤箱每天最多烤 $${n}$ 个蛋糕和馅饼。每个蛋糕要装饰 $${a}$ 分钟，每个馅饼要 $${b}$ 分钟，装饰时间最多 $${r}$ 分钟。`,
       ),
     vars: t("Let $x$ be the number of cakes and $y$ the number of pies.", "设烤蛋糕 $x$ 个，馅饼 $y$ 个。"),
     askPair: (x, y) =>
       t(
-        `Can the bakery make ${x} ${x === 1 ? "cake" : "cakes"} and ${y} ${y === 1 ? "pie" : "pies"} in a day?`,
-        `面包店一天能做 ${x} 个蛋糕和 ${y} 个馅饼吗？`,
+        `Can the bakery make $${x}$ ${x === 1 ? "cake" : "cakes"} and $${y}$ ${y === 1 ? "pie" : "pies"} in a day?`,
+        `面包店一天能做 $${x}$ 个蛋糕和 $${y}$ 个馅饼吗？`,
       ),
     askY: (x) =>
       t(
-        `If the bakery makes ${x} cakes, what is the greatest number of pies it can make?`,
-        `如果面包店做 ${x} 个蛋糕，最多还能做多少个馅饼？`,
+        `If the bakery makes $${x}$ cakes, what is the greatest number of pies it can make?`,
+        `如果面包店做 $${x}$ 个蛋糕，最多还能做多少个馅饼？`,
       ),
   },
   {

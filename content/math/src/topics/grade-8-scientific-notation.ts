@@ -139,8 +139,8 @@ export const convertingScientificNotationToStandardNotation = topic(
   "converting-scientific-notation-to-standard-notation",
   t("Converting Scientific Notation to Standard Notation", "把科学记数法化为一般形式"),
   t(
-    "Multiplying by 10ⁿ moves the decimal point n places to the right, and multiplying by 10⁻ⁿ moves it n places to the left. Fill any empty places with zeros.",
-    "乘以 10ⁿ 就是把小数点向右移动 n 位，乘以 10⁻ⁿ 就是向左移动 n 位。空出的数位用 0 补足。",
+    "Multiplying by $10^{n}$ moves the decimal point $n$ places to the right, and multiplying by $10^{-n}$ moves it $n$ places to the left. Fill any empty places with zeros.",
+    "乘以 $10^{n}$ 就是把小数点向右移动 $n$ 位，乘以 $10^{-n}$ 就是向左移动 $n$ 位。空出的数位用 $0$ 补足。",
   ),
   ["writing-numbers-in-scientific-notation"],
   ["8.EE.A.3"],
@@ -204,7 +204,7 @@ export const comparingNumbersInScientificNotation = topic(
   t("Comparing Numbers in Scientific Notation", "比较用科学记数法表示的数"),
   t(
     "For positive numbers in scientific notation, the one with the greater power of ten is greater, whatever the first factors are; with equal powers, compare the first factors. To find how many times one number is another, divide: divide the first factors and subtract the exponents.",
-    "对于用科学记数法表示的正数，10 的指数较大的数较大，与前面的因数无关；指数相等时，比较前面的因数。要求一个数是另一个数的多少倍，就做除法：前面的因数相除，指数相减。",
+    "对于用科学记数法表示的正数，$10$ 的指数较大的数较大，与前面的因数无关；指数相等时，比较前面的因数。要求一个数是另一个数的多少倍，就做除法：前面的因数相除，指数相减。",
   ),
   ["writing-numbers-in-scientific-notation"],
   ["8.EE.A.3"],
@@ -469,8 +469,8 @@ export const subtractionInScientificNotationWithDifferentPowersOfTen = topic(
   "subtraction-in-scientific-notation-with-different-powers-of-ten",
   t("Subtraction in Scientific Notation With Different Powers of Ten", "10 的指数不同的科学记数法减法"),
   t(
-    "To subtract numbers in scientific notation with different powers of ten, rewrite the smaller number with the power of the larger one, subtract the first factors, and adjust the result if the first factor falls below 1.",
-    "10 的指数不同的科学记数法数相减时，把较小的数改写成与较大的数相同的 10 的幂，再把前面的因数相减；如果结果前面的因数小于 1，就要调整。",
+    "To subtract numbers in scientific notation with different powers of ten, rewrite the smaller number with the power of the larger one, subtract the first factors, and adjust the result if the first factor falls below $1$.",
+    "$10$ 的指数不同的科学记数法数相减时，把较小的数改写成与较大的数相同的 $10$ 的幂，再把前面的因数相减；如果结果前面的因数小于 $1$，就要调整。",
   ),
   ["addition-and-subtraction-in-scientific-notation"],
   ["8.EE.A.4"],
@@ -515,8 +515,8 @@ export const furtherAdditionInScientificNotationWithDifferentPowersOfTen = topic
   "further-addition-in-scientific-notation-with-different-powers-of-ten",
   t("Further Addition in Scientific Notation With Different Powers of Ten", "10 的指数不同的科学记数法加法（进阶）"),
   t(
-    "The same method works with negative exponents: 10⁻³ is ten times 10⁻⁴, so the number with exponent −3 is the one with the larger power. When the sum of the first factors reaches 10 or more, move the decimal point one place left and raise the exponent by 1.",
-    "负整数指数也用同样的方法：10⁻³ 是 10⁻⁴ 的十倍，所以指数为 −3 的数的 10 的幂较大。前面的因数之和达到 10 或更大时，把小数点向左移动一位，指数加 1。",
+    "The same method works with negative exponents: $10^{-3}$ is ten times $10^{-4}$, so the number with exponent $-3$ is the one with the larger power. When the sum of the first factors reaches $10$ or more, move the decimal point one place left and raise the exponent by $1$.",
+    "负整数指数也用同样的方法：$10^{-3}$ 是 $10^{-4}$ 的十倍，所以指数为 $-3$ 的数的 $10$ 的幂较大。前面的因数之和达到 $10$ 或更大时，把小数点向左移动一位，指数加 $1$。",
   ),
   ["addition-in-scientific-notation-with-different-powers-of-ten"],
   ["8.EE.A.4"],
@@ -558,8 +558,8 @@ export const multiplyingNumbersInScientificNotation = topic(
   "multiplying-numbers-in-scientific-notation",
   t("Multiplying Numbers in Scientific Notation", "科学记数法的乘法"),
   t(
-    "To multiply numbers in scientific notation, multiply the first factors and add the exponents: (a × 10ᵐ)(b × 10ⁿ) = ab × 10ᵐ⁺ⁿ. If ab is 10 or more, move the decimal point one place left and raise the exponent by 1.",
-    "科学记数法的数相乘时，前面的因数相乘，指数相加：(a × 10ᵐ)(b × 10ⁿ) = ab × 10ᵐ⁺ⁿ。如果 ab 大于或等于 10，就把小数点向左移动一位，指数加 1。",
+    "To multiply numbers in scientific notation, multiply the first factors and add the exponents: $(a \\times 10^{m})(b \\times 10^{n}) = ab \\times 10^{m + n}$. If ab is $10$ or more, move the decimal point one place left and raise the exponent by $1$.",
+    "科学记数法的数相乘时，前面的因数相乘，指数相加：(a × 10ᵐ)(b × $10^{n}$) = ab × 10ᵐ⁺ⁿ。如果 ab 大于或等于 $10$，就把小数点向左移动一位，指数加 $1$。",
   ),
   ["writing-numbers-in-scientific-notation", "the-product-rule-for-exponents"],
   ["8.EE.A.4"],

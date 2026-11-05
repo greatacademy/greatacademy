@@ -454,7 +454,8 @@ export const fibonacciSequences: TopicDef = {
           [1, 3],
         ]);
         const a1 = rng.int(-5, 5);
-        const a2 = rng.nonZero(-5, 5);
+        let a2 = rng.nonZero(-5, 5);
+        if (a2 === a1) a2 = a1 === 5 ? 4 : a1 + 1 === 0 ? 1 : a1 + 1;
         const k = rng.int(4, 6);
         const run = (x: number, y: number) => {
           const s = [a1, a2];
@@ -715,8 +716,8 @@ export const recursiveFormulasForArithmeticSequences: TopicDef = {
 /** explicitSteps writes the simplification a_1 + (n - 1)d = dn + c. */
 const explicitSteps = (a1: number, d: number) =>
   steps(
-    `a_n = ${num(a1)} + (n - 1) \\cdot ${paren(d)}`,
-    `a_n = ${num(a1)} ${d < 0 ? "-" : "+"} ${poly([Math.abs(d), "n"])} ${d < 0 ? "+" : "-"} ${Math.abs(d)}`,
+    `a_n = ${a1 === 0 ? "" : `${num(a1)} + `}(n - 1) \\cdot ${paren(d)}`,
+    ...(a1 === 0 ? [] : [`a_n = ${num(a1)} ${d < 0 ? "-" : "+"} ${poly([Math.abs(d), "n"])} ${d < 0 ? "+" : "-"} ${Math.abs(d)}`]),
     `a_n = ${poly([d, "n"], [a1 - d, ""])}`,
   );
 
@@ -1232,46 +1233,46 @@ const stories: readonly Story[] = [
     draw: (rng) => ({ a1: rng.int(10, 30), d: rng.int(2, 5), kMax: 35 }),
     intro: (a1, d) =>
       t(
-        `The first row of a theater has ${a1} seats, and each row has ${d} more seats than the row in front of it.`,
-        `某剧院第一排有 ${a1} 个座位，每一排比前一排多 ${d} 个座位。`,
+        `The first row of a theater has $${a1}$ seats, and each row has $${d}$ more seats than the row in front of it.`,
+        `某剧院第一排有 $${a1}$ 个座位，每一排比前一排多 $${d}$ 个座位。`,
       ),
     data: (p, x, q, y) =>
       t(
-        `The rows of a theater have seat counts that form an arithmetic sequence. Row ${p} has ${x} seats and row ${q} has ${y} seats.`,
-        `某剧院各排的座位数构成等差数列。第 ${p} 排有 ${x} 个座位，第 ${q} 排有 ${y} 个座位。`,
+        `The rows of a theater have seat counts that form an arithmetic sequence. Row $${p}$ has $${x}$ seats and row $${q}$ has $${y}$ seats.`,
+        `某剧院各排的座位数构成等差数列。第 $${p}$ 排有 $${x}$ 个座位，第 $${q}$ 排有 $${y}$ 个座位。`,
       ),
-    ask: (k) => t(`How many seats are in row ${k}?`, `第 ${k} 排有多少个座位？`),
-    which: (v) => t(`Which row has ${v} seats?`, `哪一排有 ${v} 个座位？`),
+    ask: (k) => t(`How many seats are in row $${k}$?`, `第 $${k}$ 排有多少个座位？`),
+    which: (v) => t(`Which row has $${v}$ seats?`, `哪一排有 $${v}$ 个座位？`),
   },
   {
     draw: (rng) => ({ a1: rng.int(5, 20), d: rng.int(2, 10), kMax: 52 }),
     intro: (a1, d) =>
       t(
-        `In week 1, Mia puts ${a1} dollars into her savings box, and each week after that she puts in ${d} dollars more than the week before.`,
-        `第 1 周，小米往存钱罐里放了 ${a1} 元，此后每周都比前一周多放 ${d} 元。`,
+        `In week $1$, Mia puts $${a1}$ dollars into a savings box, and each week after that puts in $${d}$ dollars more than the week before.`,
+        `第 $1$ 周，小米往存钱罐里放了 $${a1}$ 元，此后每周都比前一周多放 $${d}$ 元。`,
       ),
     data: (p, x, q, y) =>
       t(
-        `Each week Mia puts the same amount more into her savings box than the week before. In week ${p} she puts in ${x} dollars, and in week ${q} she puts in ${y} dollars.`,
-        `小米每周往存钱罐里放的钱都比前一周多同样的数目。第 ${p} 周她放了 ${x} 元，第 ${q} 周放了 ${y} 元。`,
+        `Each week Mia puts the same amount more into a savings box than the week before. In week $${p}$ Mia puts in $${x}$ dollars, and in week $${q}$ puts in $${y}$ dollars.`,
+        `小米每周往存钱罐里放的钱都比前一周多同样的数目。第 $${p}$ 周放了 $${x}$ 元，第 $${q}$ 周放了 $${y}$ 元。`,
       ),
-    ask: (k) => t(`How many dollars does she put in during week ${k}?`, `第 ${k} 周她放了多少元？`),
-    which: (v) => t(`In which week does she put in ${v} dollars?`, `她在第几周放了 ${v} 元？`),
+    ask: (k) => t(`How many dollars does Mia put in during week $${k}$?`, `第 $${k}$ 周小米放了多少元？`),
+    which: (v) => t(`In which week does Mia put in $${v}$ dollars?`, `小米在第几周放了 $${v}$ 元？`),
   },
   {
     draw: (rng) => ({ a1: rng.int(70, 100), d: rng.int(3, 9), kMax: 30 }),
     intro: (a1, d) =>
       t(
-        `One chair is ${a1} cm tall, and each chair added to a stack raises its height by ${d} cm.`,
-        `一把椅子高 ${a1} 厘米，每往一摞椅子上叠一把，高度增加 ${d} 厘米。`,
+        `One chair is $${a1}$ cm tall, and each chair added to a stack raises its height by $${d}$ cm.`,
+        `一把椅子高 $${a1}$ 厘米，每往一摞椅子上叠一把，高度增加 $${d}$ 厘米。`,
       ),
     data: (p, x, q, y) =>
       t(
-        `Each chair added to a stack raises its height by the same amount. A stack of ${p} chairs is ${x} cm tall, and a stack of ${q} chairs is ${y} cm tall.`,
-        `每往一摞椅子上叠一把，高度都增加同样的数值。${p} 把椅子叠起来高 ${x} 厘米，${q} 把椅子叠起来高 ${y} 厘米。`,
+        `Each chair added to a stack raises its height by the same amount. A stack of $${p}$ chairs is $${x}$ cm tall, and a stack of $${q}$ chairs is $${y}$ cm tall.`,
+        `每往一摞椅子上叠一把，高度都增加同样的数值。$${p}$ 把椅子叠起来高 $${x}$ 厘米，$${q}$ 把椅子叠起来高 $${y}$ 厘米。`,
       ),
-    ask: (k) => t(`How tall, in centimeters, is a stack of ${k} chairs?`, `${k} 把椅子叠起来高多少厘米？`),
-    which: (v) => t(`How many chairs are in a stack ${v} cm tall?`, `高 ${v} 厘米的一摞椅子有几把？`),
+    ask: (k) => t(`How tall, in centimeters, is a stack of $${k}$ chairs?`, `$${k}$ 把椅子叠起来高多少厘米？`),
+    which: (v) => t(`How many chairs are in a stack $${v}$ cm tall?`, `高 $${v}$ 厘米的一摞椅子有几把？`),
   },
   {
     draw: (rng) => {
@@ -1280,16 +1281,16 @@ const stories: readonly Story[] = [
     },
     intro: (a1, d) =>
       t(
-        `At the end of day 1 of a sale, a store has ${a1} tickets left. It sells ${-d} tickets every day after that.`,
-        `促销第 1 天结束时，商店还剩 ${a1} 张票。此后每天卖出 ${-d} 张。`,
+        `At the end of day $1$ of a sale, a store has $${a1}$ tickets left. It sells $${-d}$ tickets every day after that.`,
+        `促销第 $1$ 天结束时，商店还剩 $${a1}$ 张票。此后每天卖出 $${-d}$ 张。`,
       ),
     data: (p, x, q, y) =>
       t(
-        `A store sells the same number of tickets every day. At the end of day ${p} it has ${x} tickets left, and at the end of day ${q} it has ${y} left.`,
-        `某商店每天卖出同样数量的票。第 ${p} 天结束时还剩 ${x} 张，第 ${q} 天结束时还剩 ${y} 张。`,
+        `A store sells the same number of tickets every day. At the end of day $${p}$ it has $${x}$ tickets left, and at the end of day $${q}$ it has $${y}$ left.`,
+        `某商店每天卖出同样数量的票。第 $${p}$ 天结束时还剩 $${x}$ 张，第 $${q}$ 天结束时还剩 $${y}$ 张。`,
       ),
-    ask: (k) => t(`How many tickets are left at the end of day ${k}?`, `第 ${k} 天结束时还剩多少张票？`),
-    which: (v) => t(`At the end of which day are ${v} tickets left?`, `第几天结束时还剩 ${v} 张票？`),
+    ask: (k) => t(`How many tickets are left at the end of day $${k}$?`, `第 $${k}$ 天结束时还剩多少张票？`),
+    which: (v) => t(`At the end of which day are $${v}$ tickets left?`, `第几天结束时还剩 $${v}$ 张票？`),
   },
 ];
 

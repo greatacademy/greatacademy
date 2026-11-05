@@ -871,6 +871,17 @@ const figureNames: Record<FigureKind, Text> = {
   line: t("A line", "直线"),
 };
 
+/** figureLooks describes each basic figure by what can be seen, without naming it. */
+const figureLooks: Record<FigureKind, Text> = {
+  point: t("A single dot labeled with a letter.", "一个用字母标注的点状标记。"),
+  segment: t("A straight path between two labeled dots, with no arrowheads.", "两个标有字母的点之间的一条直路径，没有箭头。"),
+  ray: t(
+    "A straight path from a labeled dot through another labeled dot, with one arrowhead.",
+    "一条直路径从一个标有字母的点出发，经过另一个标有字母的点，有一个箭头。",
+  ),
+  line: t("A straight path through two labeled dots, with arrowheads at both ends.", "一条直路径经过两个标有字母的点，两端都有箭头。"),
+};
+
 /** basicFigureSvg draws a point, segment, ray or line through A and B, with arrowheads on the ends that go on forever. */
 function basicFigureSvg(kind: FigureKind, angle: number): string {
   const c = Math.cos(rad(angle));
@@ -930,7 +941,7 @@ export const pointsLinesRaysAndSegments = topic(
           }),
           figure: {
             svg: basicFigureSvg(kind, angle),
-            alt: t(`A figure labeled with letters, showing ${figureNames[kind].en.toLowerCase()}.`, `一个用字母标注的图形。`),
+            alt: figureLooks[kind],
           },
         };
       },
@@ -1781,18 +1792,18 @@ export const parallelAndPerpendicularLines = topic(
         "两条边无论怎样延长都不相交，就互相平行。每组平行边只数一次；一个图形可能没有、有一组或有好几组平行边。\n\n长方形有 $2$ 组平行边；正六边形有 $3$ 组。三角形没有平行边。",
       ),
       generate(rng) {
-        const s = rng.pick(shapes);
-        const n = rng.int(1, 5);
+        const s = rng.pick(shapes.filter((x) => x.parallel > 0));
+        const n = rng.int(2, 9);
         return numberProblem({
           prompt: t(
-            `How many pairs of parallel sides are there in all in ${n} cop${n === 1 ? "y" : "ies"} of ${s.name.en}?`,
-            `${n} 个${s.name["zh-CN"]}一共有多少组平行边？`,
+            `How many pairs of parallel sides are there in all in $${n}$ copies of ${s.name.en}?`,
+            `$${n}$ 个${s.name["zh-CN"]}一共有多少组平行边？`,
           ),
           answer: n * s.parallel,
           form: "integer",
           wrong: [n * s.right, n * (s.parallel + 1), n + s.parallel].filter((w) => w !== n * s.parallel),
           solution: t(
-            `${s.name.en} has $${s.parallel}$ pair${s.parallel === 1 ? "" : "s"} of parallel sides: $${n} \\times ${s.parallel} = ${n * s.parallel}$.`,
+            `${s.name.en[0]!.toUpperCase()}${s.name.en.slice(1)} has $${s.parallel}$ pairs of parallel sides: $${n} \\times ${s.parallel} = ${n * s.parallel}$.`,
             `${s.name["zh-CN"]}有 $${s.parallel}$ 组平行边：$${n} \\times ${s.parallel} = ${n * s.parallel}$。`,
           ),
         });
@@ -1805,8 +1816,8 @@ export const modelingWithRectangles = topic(
   "modeling-with-rectangles",
   t("Modeling With Rectangles", "用长方形建模"),
   t(
-    "The area of a rectangle is length × width and its perimeter is 2 × (length + width). These formulas solve real problems, including finding a missing side: a rug of area 48 square feet that is 6 feet wide is 48 ÷ 6 = 8 feet long.",
-    "长方形的面积是长 × 宽，周长是 2 × (长 + 宽)。这些公式可以解决实际问题，包括求未知的边长：面积是 48 平方英尺、宽 6 英尺的地毯长 48 ÷ 6 = 8 英尺。",
+    "The area of a rectangle is length × width and its perimeter is $2$ × (length + width). These formulas solve real problems, including finding a missing side: a rug of area $48$ square feet that is $6$ feet wide is $48 \\div 6 = 8$ feet long.",
+    "长方形的面积是长 × 宽，周长是 $2$ × (长 + 宽)。这些公式可以解决实际问题，包括求未知的边长：面积是 $48$ 平方英尺、宽 $6$ 英尺的地毯长 $48 \\div 6 = 8$ 英尺。",
   ),
   ["area-of-rectangles-and-squares", "two-digit-by-two-digit-multiplication-using-place-value", "division-with-remainders"],
   ["4.MD.A.3"],

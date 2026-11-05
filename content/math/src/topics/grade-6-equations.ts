@@ -514,8 +514,8 @@ function additiveSituations(rng: Rng): Situation[] {
       ),
     },
     {
-      en: `After spending $\\$${a}$ on a jacket, Ana has $\\$${b}$ left. Let $m$ be the amount of money, in dollars, she had before.`,
-      zh: `Ana 花 $\\$${a}$ 买了一件夹克后，还剩 $\\$${b}$。设她原来有 $m$ 美元。`,
+      en: `After spending $\\$${a}$ on a jacket, Ana has $\\$${b}$ left. Let $m$ be the amount of money, in dollars, Ana had before.`,
+      zh: `Ana 花 $\\$${a}$ 买了一件夹克后，还剩 $\\$${b}$。设 Ana 原来有 $m$ 美元。`,
       variable: "m",
       equation: `m - ${a} = ${b}`,
       wrongEquations: [`m + ${a} = ${b}`, `${a} - m = ${b}`, `\\frac{m}{${a}} = ${b}`],
@@ -523,13 +523,13 @@ function additiveSituations(rng: Rng): Situation[] {
       wrongAnswers: [Q.of(b - a)],
       unit: t("dollars", "美元"),
       why: t(
-        `What she had minus what she spent is what is left: $m - ${a} = ${b}$, so $m = ${b} + ${a} = ${a + b}$ dollars.`,
+        `The amount before minus the amount spent is what is left: $m - ${a} = ${b}$, so $m = ${b} + ${a} = ${a + b}$ dollars.`,
         `原有的钱减去花掉的钱等于剩下的钱：$m - ${a} = ${b}$，所以 $m = ${b} + ${a} = ${a + b}$ 美元。`,
       ),
     },
     {
-      en: `Leo is $${gap}$ years older than his cousin. Leo is $${age}$ years old. Let $c$ be his cousin's age, in years.`,
-      zh: `Leo 比他的表弟大 $${gap}$ 岁，Leo 今年 $${age}$ 岁。设表弟 $c$ 岁。`,
+      en: `Leo is $${gap}$ years older than a cousin. Leo is $${age}$ years old. Let $c$ be the cousin's age, in years.`,
+      zh: `Leo 比表弟大 $${gap}$ 岁，Leo 今年 $${age}$ 岁。设表弟 $c$ 岁。`,
       variable: "c",
       equation: `c + ${gap} = ${age}`,
       wrongEquations: [`c - ${gap} = ${age}`, `${age} + c = ${gap}`, `${gap}c = ${age}`],
@@ -1238,7 +1238,7 @@ export const twoVariableEquationsSolvingForTheIndependentVariable = topic(
         const x = rng.int(5, 40);
         const kind = rng.bool();
         const en = kind
-          ? `Ben is always $${d}$ years older than his sister Ava, so $b = a + ${d}$, where $b$ is Ben's age and $a$ is Ava's age. Find $a$ when $b = ${x + d}$.`
+          ? `Ben is always $${d}$ years older than Ava, so $b = a + ${d}$, where $b$ is Ben's age and $a$ is Ava's age. Find $a$ when $b = ${x + d}$.`
           : `A shop sells a phone case for $\\$${d}$ more than it paid, so $s = p + ${d}$, where $s$ is the selling price and $p$ is the price paid, in dollars. Find $p$ when $s = ${x + d}$.`;
         const zh = kind
           ? `Ben 总是比妹妹 Ava 大 $${d}$ 岁，所以 $b = a + ${d}$，其中 $b$ 是 Ben 的年龄，$a$ 是 Ava 的年龄。当 $b = ${x + d}$ 时，求 $a$。`

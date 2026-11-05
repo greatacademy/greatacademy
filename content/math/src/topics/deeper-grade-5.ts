@@ -905,7 +905,7 @@ const diagonalsFromVertex: KnowledgePointDef = {
   title: t("Diagonals from one vertex", "从一个顶点出发的对角线"),
   explanation: t(
     "A diagonal joins two vertices of a polygon that are not next to each other. From any one vertex, a line cannot go to that vertex itself or to its two neighbors, since those are sides. So a polygon with $n$ sides has $n - 3$ diagonals from each vertex. A quadrilateral therefore has one, which agrees with a picture. These diagonals also cut the polygon into triangles, one more than the number of diagonals.",
-    "对角线连接多边形中不相邻的两个顶点。从任一顶点出发，线不能连到它自身，也不能连到它的两个相邻顶点，因为那些是边。所以 $n$ 边形从每个顶点出发有 $n - 3$ 条对角线。四边形因此有一条，与图形相符。这些对角线还把多边形分成若干三角形，三角形的个数比对角线多 1。",
+    "对角线连接多边形中不相邻的两个顶点。从任一顶点出发，线不能连到它自身，也不能连到它的两个相邻顶点，因为那些是边。所以 $n$ 边形从每个顶点出发有 $n - 3$ 条对角线。四边形因此有一条，与图形相符。这些对角线还把多边形分成若干三角形，三角形的个数比对角线多 $1$。",
   ),
   generate(rng) {
     const n = rng.int(4, 30);
@@ -913,8 +913,8 @@ const diagonalsFromVertex: KnowledgePointDef = {
     const answer = asksTriangles ? n - 2 : n - 3;
     return numberProblem({
       prompt: t(
-        `A polygon has ${n} sides. All the diagonals are drawn from one vertex. ${asksTriangles ? "How many triangles are formed?" : "How many diagonals are drawn?"}`,
-        `一个多边形有 ${n} 条边。从一个顶点画出所有的对角线。${asksTriangles ? "形成多少个三角形？" : "画了多少条对角线？"}`,
+        `A polygon has $${n}$ sides. All the diagonals are drawn from one vertex. ${asksTriangles ? "How many triangles are formed?" : "How many diagonals are drawn?"}`,
+        `一个多边形有 $${n}$ 条边。从一个顶点画出所有的对角线。${asksTriangles ? "形成多少个三角形？" : "画了多少条对角线？"}`,
       ),
       answer,
       form: "integer",

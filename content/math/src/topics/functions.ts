@@ -1853,7 +1853,7 @@ const contexts: readonly Context[] = [
     rate: (rng) => rng.int(1, 3),
     describe: (f, r) =>
       t(`A candle is $${f}$ cm tall and burns down $${r}$ cm each hour.`, `一支蜡烛高 $${f}$ 厘米，每小时燃烧掉 $${r}$ 厘米。`),
-    defines: t("the height in centimeters after burning for $t$ hours", "燃烧 $t$ 小时后蜡烛的高度（厘米）"),
+    defines: t("the height in centimeters of a candle after burning for $t$ hours", "燃烧 $t$ 小时后蜡烛的高度（厘米）"),
     outputOf: (n) => t(`How tall is the candle after $${n}$ hours?`, `燃烧 $${n}$ 小时后蜡烛高多少厘米？`),
     inputFor: (c) => t(`After how many hours is the candle $${c}$ cm tall?`, `燃烧多少小时后蜡烛高 $${c}$ 厘米？`),
     meanings: {
@@ -2481,8 +2481,8 @@ export const describingFunctionComposition: TopicDef = {
           ]);
           return choiceProblem({
             prompt: t(
-              `A function $h$ takes $x$, first ${a.en}, then ${b.en}. Which formula is $h(x)$?`,
-              `函数 $h$ 对 $x$ 先${a["zh-CN"]}，再${b["zh-CN"]}。$h(x)$ 是哪个式子？`,
+              `To compute $h(x)$, start with $x$, first ${a.en}, then ${b.en}. Which formula is $h(x)$?`,
+              `计算 $h(x)$ 时，从 $x$ 开始，先${a["zh-CN"]}，再${b["zh-CN"]}。$h(x)$ 是哪个式子？`,
             ),
             options: options.map((o) => same(`$h(x) = ${o}$`)),
             correct: options.indexOf(right),

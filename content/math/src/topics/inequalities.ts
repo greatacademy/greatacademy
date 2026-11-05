@@ -265,8 +265,8 @@ export const solvingMultiStepInequalities: TopicDef = {
             [answerOp, -v],
           ],
           solution: t(
-            `Subtract $${linear(c, b)}$ from both sides, then divide by $${num(k)}$${k < 0 ? ", reversing the symbol" : ""}: ${steps(`${poly([k, "x"])} ${relSymbol(op)} ${num(d - b)}`, inequalityLatex("x", answerOp, v))}`,
-            `两边同时减去 $${linear(c, b)}$，再同时除以 $${num(k)}$${k < 0 ? "，并改变不等号方向" : ""}：${steps(`${poly([k, "x"])} ${relSymbol(op)} ${num(d - b)}`, inequalityLatex("x", answerOp, v))}`,
+            `Move $${poly([c, "x"])}$ to the left side and $${num(b)}$ to the right side, then divide by $${num(k)}$${k < 0 ? ", reversing the symbol" : ""}: ${steps(`${poly([k, "x"])} ${relSymbol(op)} ${num(d - b)}`, inequalityLatex("x", answerOp, v))}`,
+            `把 $${poly([c, "x"])}$ 移到左边，把 $${num(b)}$ 移到右边，再同时除以 $${num(k)}$${k < 0 ? "，并改变不等号方向" : ""}：${steps(`${poly([k, "x"])} ${relSymbol(op)} ${num(d - b)}`, inequalityLatex("x", answerOp, v))}`,
           ),
         });
       },

@@ -222,8 +222,8 @@ export const subtractingAPositiveNumberFromANegativeNumber = topic(
               )
             : ctx === 1
               ? t(
-                  `A diver is at an elevation of $-${a}$ meters. She descends another $${b}$ meters. What is her new elevation, in meters?`,
-                  `一名潜水员在海拔 $-${a}$ 米处，她又下潜了 $${b}$ 米。她现在的海拔是多少米？`,
+                  `A diver is at an elevation of $-${a}$ meters and descends another $${b}$ meters. What is the diver's new elevation, in meters?`,
+                  `一名潜水员在海拔 $-${a}$ 米处，又下潜了 $${b}$ 米。潜水员现在的海拔是多少米？`,
                 )
               : t(
                   `A bank account has a balance of $-\\$${a}$. A fee of $\\$${b}$ is taken out. What is the new balance, in dollars?`,
@@ -813,8 +813,8 @@ export const solvingProblemsUsingAdditionAndSubtractionOfRationalNumbers = topic
         const r = start.add(up).sub(down);
         return numberProblem({
           prompt: t(
-            `At 6 a.m. the temperature was $${dec(start)}^{\\circ}\\text{C}$. By noon it had risen $${dec(up)}$ degrees, and by evening it had fallen $${dec(down)}$ degrees from the noon temperature. What was the evening temperature, in degrees Celsius?`,
-            `早上 6 点气温是 $${dec(start)}^{\\circ}\\text{C}$。到中午上升了 $${dec(up)}$ 度，到傍晚又比中午下降了 $${dec(down)}$ 度。傍晚气温是多少摄氏度？`,
+            `At $6$ a.m. the temperature was $${dec(start)}^{\\circ}\\text{C}$. By noon it had risen $${dec(up)}$ degrees, and by evening it had fallen $${dec(down)}$ degrees from the noon temperature. What was the evening temperature, in degrees Celsius?`,
+            `早上 $6$ 点气温是 $${dec(start)}^{\\circ}\\text{C}$。到中午上升了 $${dec(up)}$ 度，到傍晚又比中午下降了 $${dec(down)}$ 度。傍晚气温是多少摄氏度？`,
           ),
           answer: r,
           form: "decimal",
@@ -1893,7 +1893,7 @@ export const solvingProblemsUsingMultiplicationAndDivisionOfRationalNumbers = to
           form: "integer",
           wrong: [-n, total.mul(r), r.div(total)],
           solution: t(
-            `Each ${diver ? "second" : "day"} changes the elevation by $-${dec(r)}$, so it takes $(-${dec(total)}) \\div (-${dec(r)}) = ${n}$ ${diver ? "seconds" : "days"}.`,
+            `Each ${diver ? "second" : "day"} changes the ${diver ? "elevation" : "water level"} by $-${dec(r)}$, so it takes $(-${dec(total)}) \\div (-${dec(r)}) = ${n}$ ${diver ? "seconds" : "days"}.`,
             `每${diver ? "秒" : "天"}变化 $-${dec(r)}$，所以需要 $(-${dec(total)}) \\div (-${dec(r)}) = ${n}$ ${diver ? "秒" : "天"}。`,
           ),
         });
@@ -1933,8 +1933,8 @@ export const solvingProblemsUsingTheFourOperationsOnRationalNumbers = topic(
         const q = (c: number) => Q.of(c, 100);
         return numberProblem({
           prompt: t(
-            `${name}'s bank account has a balance of $\\$${cents(start)}$. ${name} makes ${n} withdrawals of $\\$${cents(w)}$ each and then deposits $\\$${cents(d)}$. What is the balance now, in dollars? Write a negative balance as a negative number.`,
-            `${name} 的银行账户余额是 $\\$${cents(start)}$。${name} 取款 ${n} 次，每次 $\\$${cents(w)}$，然后存入 $\\$${cents(d)}$。现在余额是多少美元？余额为负时用负数表示。`,
+            `${name}'s bank account has a balance of $\\$${cents(start)}$. ${name} makes $${n}$ withdrawals of $\\$${cents(w)}$ each and then deposits $\\$${cents(d)}$. What is the balance now, in dollars? Write a negative balance as a negative number.`,
+            `${name} 的银行账户余额是 $\\$${cents(start)}$。${name} 取款 $${n}$ 次，每次 $\\$${cents(w)}$，然后存入 $\\$${cents(d)}$。现在余额是多少美元？余额为负时用负数表示。`,
           ),
           answer: q(end),
           form: "decimal",
@@ -1965,8 +1965,8 @@ export const solvingProblemsUsingTheFourOperationsOnRationalNumbers = topic(
         const list = vs.map((v) => dec(v));
         return numberProblem({
           prompt: t(
-            `The low temperatures, in degrees Celsius, over ${n} days were $${list.join("$, $")}$. What was the mean low temperature?`,
-            `连续 ${n} 天的最低气温（摄氏度）分别是 $${list.join("$、$")}$。最低气温的平均数是多少？`,
+            `The low temperatures, in degrees Celsius, over $${n}$ days were $${list.join("$, $")}$. What was the mean low temperature?`,
+            `连续 $${n}$ 天的最低气温（摄氏度）分别是 $${list.join("$、$")}$。最低气温的平均数是多少？`,
           ),
           answer: mean,
           form: "decimal",
@@ -2010,8 +2010,8 @@ export const solvingMultistepProblemsWithRationalNumbers = topic(
         } while (end.sign() >= 0 || start.isInteger() || up.isInteger() || down.isInteger());
         return numberProblem({
           prompt: t(
-            `A diver is at an elevation of $${mixedLatex(start)}$ meters. She rises $${mixedLatex(up)}$ meters ${n} times and then descends $${mixedLatex(down)}$ meters. What is her elevation now, in meters?`,
-            `一名潜水员在海拔 $${mixedLatex(start)}$ 米处。她上升 ${n} 次，每次 $${mixedLatex(up)}$ 米，然后下潜 $${mixedLatex(down)}$ 米。她现在的海拔是多少米？`,
+            `A diver is at an elevation of $${mixedLatex(start)}$ meters, rises $${mixedLatex(up)}$ meters $${n}$ times and then descends $${mixedLatex(down)}$ meters. What is the diver's elevation now, in meters?`,
+            `一名潜水员在海拔 $${mixedLatex(start)}$ 米处，上升 $${n}$ 次，每次 $${mixedLatex(up)}$ 米，然后下潜 $${mixedLatex(down)}$ 米。潜水员现在的海拔是多少米？`,
           ),
           answer: end,
           wrong: [

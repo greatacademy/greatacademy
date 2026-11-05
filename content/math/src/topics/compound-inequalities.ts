@@ -379,8 +379,8 @@ export const intervalNotation: TopicDef = {
           form: "inequality",
           wrong: [union(span(lo, !lc, hi, !hc)), union(span(lo, hc, hi, lc)), union(span(lo, true, hi, true))],
           solution: t(
-            `${bracketWords(set[0]!).en}: $${inequalityLatexOf(set)}$.`,
-            `${bracketWords(set[0]!)["zh-CN"]}：$${inequalityLatexOf(set)}$。`,
+            `A square bracket becomes $\\le$ and a parenthesis becomes $<$: $${inequalityLatexOf(set)}$.`,
+            `方括号变成 $\\le$，圆括号变成 $<$：$${inequalityLatexOf(set)}$。`,
           ),
         });
       },
@@ -1048,8 +1048,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `The speed limit on a road is ${n} km/h. Let $s$ be a speed, in km/h, that obeys the limit.`,
-        `一条道路的限速是每小时 ${n} 千米。设 $s$ 为符合限速的车速（千米/时）。`,
+        `The speed limit on a road is $${n}$ km/h. Let $s$ be a speed, in km/h, that obeys the limit.`,
+        `一条道路的限速是每小时 $${n}$ 千米。设 $s$ 为符合限速的车速（千米/时）。`,
       ),
     variable: "s",
     op: "<=",
@@ -1058,8 +1058,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `A film may only be seen by viewers older than ${n}. Let $a$ be the age of a viewer who may see it.`,
-        `一部电影只允许年龄大于 ${n} 岁的观众观看。设 $a$ 为可以观看的观众的年龄。`,
+        `A film may only be seen by viewers older than $${n}$. Let $a$ be the age of a viewer who may see it.`,
+        `一部电影只允许年龄大于 $${n}$ 岁的观众观看。设 $a$ 为可以观看的观众的年龄。`,
       ),
     variable: "a",
     op: ">",
@@ -1068,8 +1068,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `Kim wants to spend less than ${n} dollars on a gift. Let $c$ be the cost of the gift, in dollars.`,
-        `小金想花少于 ${n} 元买礼物。设 $c$ 为礼物的价格（元）。`,
+        `Kim wants to spend less than $${n}$ dollars on a gift. Let $c$ be the cost of the gift, in dollars.`,
+        `小金想花少于 $${n}$ 元买礼物。设 $c$ 为礼物的价格（元）。`,
       ),
     variable: "c",
     op: "<",
@@ -1078,8 +1078,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `A team needs more than ${n} points to reach the playoffs. Let $p$ be the team's number of points.`,
-        `一支球队需要超过 ${n} 分才能进入季后赛。设 $p$ 为该队的得分。`,
+        `A team needs more than $${n}$ points to reach the playoffs. Let $p$ be the team's number of points.`,
+        `一支球队需要超过 $${n}$ 分才能进入季后赛。设 $p$ 为该队的得分。`,
       ),
     variable: "p",
     op: ">",
@@ -1088,8 +1088,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `The temperature in a freezer must stay below ${n} °C. Let $t$ be the temperature in the freezer, in degrees Celsius.`,
-        `冷冻柜内的温度必须保持在 ${n}°C 以下。设 $t$ 为冷冻柜内的温度（摄氏度）。`,
+        `The temperature in a freezer must stay below $${n}$ °C. Let $t$ be the temperature in the freezer, in degrees Celsius.`,
+        `冷冻柜内的温度必须保持在 $${n}$°C 以下。设 $t$ 为冷冻柜内的温度（摄氏度）。`,
       ),
     variable: "t",
     op: "<",
@@ -1098,8 +1098,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `A trip will run only if no fewer than ${n} people sign up. Let $n$ be the number of people who sign up for a trip that runs.`,
-        `报名人数不少于 ${n} 人时旅行才会成行。设 $n$ 为一次成行的旅行的报名人数。`,
+        `A trip will run only if no fewer than $${n}$ people sign up. Let $n$ be the number of people who sign up for a trip that runs.`,
+        `报名人数不少于 $${n}$ 人时旅行才会成行。设 $n$ 为一次成行的旅行的报名人数。`,
       ),
     variable: "n",
     op: ">=",
@@ -1108,8 +1108,8 @@ const constraints: readonly Constraint[] = [
   {
     text: (n) =>
       t(
-        `A carry-on bag may weigh no more than ${n} kg. Let $m$ be the weight of a bag that is allowed, in kilograms.`,
-        `随身行李的重量不能超过 ${n} 千克。设 $m$ 为允许携带的行李重量（千克）。`,
+        `A carry-on bag may weigh no more than $${n}$ kg. Let $m$ be the weight of a bag that is allowed, in kilograms.`,
+        `随身行李的重量不能超过 $${n}$ 千克。设 $m$ 为允许携带的行李重量（千克）。`,
       ),
     variable: "m",
     op: "<=",
@@ -1130,8 +1130,8 @@ const ranges: readonly Range[] = [
   {
     text: (a, b) =>
       t(
-        `A summer camp accepts children from ${a} to ${b} years old, inclusive. Let $a$ be the age of a camper.`,
-        `一个夏令营接收 ${a} 到 ${b} 岁（含 ${a} 岁和 ${b} 岁）的儿童。设 $a$ 为营员的年龄。`,
+        `A summer camp accepts children from $${a}$ to $${b}$ years old, inclusive. Let $a$ be the age of a camper.`,
+        `一个夏令营接收 $${a}$ 到 $${b}$ 岁（含 $${a}$ 岁和 $${b}$ 岁）的儿童。设 $a$ 为营员的年龄。`,
       ),
     variable: "a",
     closed: [true, true],
@@ -1141,8 +1141,8 @@ const ranges: readonly Range[] = [
   {
     text: (a, b) =>
       t(
-        `A plant grows well when the temperature is above ${a} °C but below ${b} °C. Let $t$ be such a temperature, in degrees Celsius.`,
-        `当温度高于 ${a}°C 且低于 ${b}°C 时，一种植物长得好。设 $t$ 为这样的温度（摄氏度）。`,
+        `A plant grows well when the temperature is above $${a}$ °C but below $${b}$ °C. Let $t$ be such a temperature, in degrees Celsius.`,
+        `当温度高于 $${a}$°C 且低于 $${b}$°C 时，一种植物长得好。设 $t$ 为这样的温度（摄氏度）。`,
       ),
     variable: "t",
     closed: [false, false],
@@ -1152,8 +1152,8 @@ const ranges: readonly Range[] = [
   {
     text: (a, b) =>
       t(
-        `A parcel ships at the medium rate if it weighs more than ${a} kg and at most ${b} kg. Let $w$ be the weight of such a parcel, in kilograms.`,
-        `重量超过 ${a} 千克且不超过 ${b} 千克的包裹按中档运费寄送。设 $w$ 为这样的包裹的重量（千克）。`,
+        `A parcel ships at the medium rate if it weighs more than $${a}$ kg and at most $${b}$ kg. Let $w$ be the weight of such a parcel, in kilograms.`,
+        `重量超过 $${a}$ 千克且不超过 $${b}$ 千克的包裹按中档运费寄送。设 $w$ 为这样的包裹的重量（千克）。`,
       ),
     variable: "w",
     closed: [false, true],
@@ -1163,8 +1163,8 @@ const ranges: readonly Range[] = [
   {
     text: (a, b) =>
       t(
-        `A score of at least ${a} but less than ${b} earns a B. Let $s$ be a score that earns a B.`,
-        `成绩至少 ${a} 分但低于 ${b} 分为 B 等。设 $s$ 为获得 B 等的成绩。`,
+        `A score of at least $${a}$ but less than $${b}$ earns a B. Let $s$ be a score that earns a B.`,
+        `成绩至少 $${a}$ 分但低于 $${b}$ 分为 B 等。设 $s$ 为获得 B 等的成绩。`,
       ),
     variable: "s",
     closed: [true, false],
@@ -1174,8 +1174,8 @@ const ranges: readonly Range[] = [
   {
     text: (a, b) =>
       t(
-        `On a highway, cars must drive faster than ${a} km/h but no faster than ${b} km/h. Let $v$ be an allowed speed, in km/h.`,
-        `在一条高速公路上，车速必须高于每小时 ${a} 千米，但不能高于每小时 ${b} 千米。设 $v$ 为允许的车速（千米/时）。`,
+        `On a highway, cars must drive faster than $${a}$ km/h but no faster than $${b}$ km/h. Let $v$ be an allowed speed, in km/h.`,
+        `在一条高速公路上，车速必须高于每小时 $${a}$ 千米，但不能高于每小时 $${b}$ 千米。设 $v$ 为允许的车速（千米/时）。`,
       ),
     variable: "v",
     closed: [false, true],
@@ -1194,8 +1194,8 @@ function linearModel(rng: Rng): { prompt: Text; correct: string; others: string[
     const B = f + r * rng.int(4, 20);
     return {
       prompt: t(
-        `A phone plan costs ${f} dollars a month plus ${r} dollars for each gigabyte of data. Ana wants her monthly bill to be at most ${B} dollars. Which inequality describes the numbers of gigabytes $g$ she can use?`,
-        `某手机套餐每月收费 ${f} 元，另外每使用 1 GB 流量收费 ${r} 元。安娜希望每月账单不超过 ${B} 元。下列哪个不等式描述了她可以使用的流量 $g$（GB）？`,
+        `A phone plan costs $${f}$ dollars a month plus $${r}$ dollars for each gigabyte of data. Ana wants her monthly bill to be at most $${B}$ dollars. Which inequality describes the numbers of gigabytes $g$ she can use?`,
+        `某手机套餐每月收费 $${f}$ 元，另外每使用 $1$ GB 流量收费 $${r}$ 元。安娜希望每月账单不超过 $${B}$ 元。下列哪个不等式描述了她可以使用的流量 $g$（GB）？`,
       ),
       correct: `${f} + ${r}g \\le ${B}`,
       others: [`${f} + ${r}g \\ge ${B}`, `${r} + ${f}g \\le ${B}`, `${f + r}g \\le ${B}`],
@@ -1208,8 +1208,8 @@ function linearModel(rng: Rng): { prompt: Text; correct: string; others: string[
     const T = s + r * rng.int(3, 15);
     return {
       prompt: t(
-        `Leo has ${s} dollars saved and saves ${r} dollars more each week. Which inequality describes the numbers of weeks $w$ after which he has at least ${T} dollars?`,
-        `小李已经存了 ${s} 元，每周再存 ${r} 元。下列哪个不等式描述了使他至少有 ${T} 元的周数 $w$？`,
+        `Leo has $${s}$ dollars saved and saves $${r}$ dollars more each week. Which inequality describes the numbers of weeks $w$ after which he has at least $${T}$ dollars?`,
+        `小李已经存了 $${s}$ 元，每周再存 $${r}$ 元。下列哪个不等式描述了使他至少有 $${T}$ 元的周数 $w$？`,
       ),
       correct: `${s} + ${r}w \\ge ${T}`,
       others: [`${s} + ${r}w \\le ${T}`, `${r} + ${s}w \\ge ${T}`, `${s} - ${r}w \\ge ${T}`],
@@ -1220,8 +1220,8 @@ function linearModel(rng: Rng): { prompt: Text; correct: string; others: string[
   const L = r * rng.int(2, 15);
   return {
     prompt: t(
-      `A tank holds ${V} liters of water and drains at ${r} liters per minute. Which inequality describes the times $m$, in minutes, at which it still holds more than ${L} liters?`,
-      `一个水箱装有 ${V} 升水，每分钟流出 ${r} 升。下列哪个不等式描述了水箱中仍多于 ${L} 升水的时刻 $m$（分钟）？`,
+      `A tank holds $${V}$ liters of water and drains at $${r}$ liters per minute. Which inequality describes the times $m$, in minutes, at which it still holds more than $${L}$ liters?`,
+      `一个水箱装有 $${V}$ 升水，每分钟流出 $${r}$ 升。下列哪个不等式描述了水箱中仍多于 $${L}$ 升水的时刻 $m$（分钟）？`,
     ),
     correct: `${V} - ${r}m > ${L}`,
     others: [`${V} - ${r}m < ${L}`, `${V} + ${r}m > ${L}`, `${r}m - ${V} > ${L}`],
@@ -1238,7 +1238,7 @@ const rangeWords: Record<string, Text> = {
 /** between writes a range of values in words, such as "at least 120 and at most 200". */
 function between(lc: boolean, hc: boolean, L: number, H: number): Text {
   const w = rangeWords[`${lc},${hc}`]!;
-  const fill = (s: string) => s.replace("{L}", String(L)).replace("{H}", String(H));
+  const fill = (s: string) => s.replace("{L}", `$${L}$`).replace("{H}", `$${H}$`);
   return t(fill(w.en), fill(w["zh-CN"]));
 }
 
@@ -1275,7 +1275,7 @@ export const introductionToModelingWithInequalities: TopicDef = {
             [flip[c.op], n],
           ],
           solution: t(
-            `The words allow ${c.op.length === 2 ? `$${n}$ itself` : `values beyond $${n}$ but not $${n}$ itself`}: $${inequalityLatex(c.variable, c.op, n)}$.`,
+            `The boundary $${n}$ itself is ${c.op.length === 2 ? "allowed" : "not allowed"}: $${inequalityLatex(c.variable, c.op, n)}$.`,
             `按照题意，${c.op.length === 2 ? `$${n}$ 本身也允许` : `$${n}$ 本身不允许`}：$${inequalityLatex(c.variable, c.op, n)}$。`,
           ),
         });
@@ -1344,8 +1344,8 @@ function oneStepModel(rng: Rng): {
     const L = 50 * rng.int(4, C / 50 - 2);
     return {
       text: t(
-        `A truck can carry at most ${C} kg. It is already loaded with ${L} kg. Let $w$ be the additional weight, in kilograms, that may be loaded.`,
-        `一辆卡车最多能载重 ${C} 千克，车上已装有 ${L} 千克货物。设 $w$ 为还可以装载的重量（千克）。`,
+        `A truck can carry at most $${C}$ kg. It is already loaded with $${L}$ kg. Let $w$ be the additional weight, in kilograms, that may be loaded.`,
+        `一辆卡车最多能载重 $${C}$ 千克，车上已装有 $${L}$ 千克货物。设 $w$ 为还可以装载的重量（千克）。`,
       ),
       variable: "w",
       op: "<=",
@@ -1363,8 +1363,8 @@ function oneStepModel(rng: Rng): {
     const v = Q.of(D, r);
     return {
       text: t(
-        `A cyclist rides at ${r} km/h. Let $t$ be a riding time, in hours, in which she covers at least ${D} km.`,
-        `一名骑行者的速度是每小时 ${r} 千米。设 $t$ 为她至少骑行 ${D} 千米所用的时间（小时）。`,
+        `A cyclist rides at $${r}$ km/h. Let $t$ be a riding time, in hours, in which she covers at least $${D}$ km.`,
+        `一名骑行者的速度是每小时 $${r}$ 千米。设 $t$ 为她至少骑行 $${D}$ 千米所用的时间（小时）。`,
       ),
       variable: "t",
       op: ">=",
@@ -1382,8 +1382,8 @@ function oneStepModel(rng: Rng): {
     const v = Q.of(C, r);
     return {
       text: t(
-        `A pump fills a pool at ${r} liters per minute. The pool holds at most ${C} liters. Let $m$ be a pumping time, in minutes, that does not make the pool overflow.`,
-        `一台水泵每分钟向水池注水 ${r} 升，水池最多能装 ${C} 升。设 $m$ 为不会使水池溢出的注水时间（分钟）。`,
+        `A pump fills a pool at $${r}$ liters per minute. The pool holds at most $${C}$ liters. Let $m$ be a pumping time, in minutes, that does not make the pool overflow.`,
+        `一台水泵每分钟向水池注水 $${r}$ 升，水池最多能装 $${C}$ 升。设 $m$ 为不会使水池溢出的注水时间（分钟）。`,
       ),
       variable: "m",
       op: "<=",
@@ -1399,8 +1399,8 @@ function oneStepModel(rng: Rng): {
   const T = s + rng.int(20, 400);
   return {
     text: t(
-      `Mia has saved ${s} dollars. She needs at least ${T} dollars for a bike. Let $d$ be the additional amount, in dollars, she must save.`,
-      `米娅已经存了 ${s} 元，她至少需要 ${T} 元买一辆自行车。设 $d$ 为她还需要存的钱（元）。`,
+      `Mia has saved $${s}$ dollars. She needs at least $${T}$ dollars for a bike. Let $d$ be the additional amount, in dollars, she must save.`,
+      `米娅已经存了 $${s}$ 元，她至少需要 $${T}$ 元买一辆自行车。设 $d$ 为她还需要存的钱（元）。`,
     ),
     variable: "d",
     op: ">=",
@@ -1467,8 +1467,8 @@ export const modelingWithOneStepInequalities: TopicDef = {
           greatest = true;
           work = `${p}n \\le ${B} \\;\\Rightarrow\\; n \\le ${num(Q.of(B, p))}`;
           text = t(
-            `Notebooks cost ${p} dollars each and Sam has ${B} dollars. What is the greatest number of notebooks he can buy?`,
-            `笔记本每本 ${p} 元，小山有 ${B} 元。他最多能买多少本笔记本？`,
+            `Notebooks cost $${p}$ dollars each and Sam has $${B}$ dollars. What is the greatest number of notebooks he can buy?`,
+            `笔记本每本 $${p}$ 元，小山有 $${B}$ 元。他最多能买多少本笔记本？`,
           );
         } else if (kind === 1) {
           const k = rng.pick([6, 10, 12, 18, 24, 30]);
@@ -1477,8 +1477,8 @@ export const modelingWithOneStepInequalities: TopicDef = {
           greatest = false;
           work = `${k}b \\ge ${N} \\;\\Rightarrow\\; b \\ge ${num(Q.of(N, k))}`;
           text = t(
-            `A farm packs eggs in boxes of ${k}. What is the least number of boxes needed to pack at least ${N} eggs?`,
-            `一个农场用每盒 ${k} 个的盒子装鸡蛋。要装至少 ${N} 个鸡蛋，至少需要多少盒？`,
+            `A farm packs eggs in boxes of $${k}$. What is the least number of boxes needed to pack at least $${N}$ eggs?`,
+            `一个农场用每盒 $${k}$ 个的盒子装鸡蛋。要装至少 $${N}$ 个鸡蛋，至少需要多少盒？`,
           );
         } else if (kind === 2) {
           const k = rng.int(30, 60);
@@ -1487,8 +1487,8 @@ export const modelingWithOneStepInequalities: TopicDef = {
           greatest = false;
           work = `${k}b \\ge ${N} \\;\\Rightarrow\\; b \\ge ${num(Q.of(N, k))}`;
           text = t(
-            `Each bus holds ${k} students. What is the least number of buses needed to carry ${N} students?`,
-            `每辆大巴能坐 ${k} 名学生。运送 ${N} 名学生至少需要多少辆大巴？`,
+            `Each bus holds $${k}$ students. What is the least number of buses needed to carry $${N}$ students?`,
+            `每辆大巴能坐 $${k}$ 名学生。运送 $${N}$ 名学生至少需要多少辆大巴？`,
           );
         } else {
           const w = rng.int(12, 40);
@@ -1497,8 +1497,8 @@ export const modelingWithOneStepInequalities: TopicDef = {
           greatest = true;
           work = `${w}n \\le ${C} \\;\\Rightarrow\\; n \\le ${num(Q.of(C, w))}`;
           text = t(
-            `A lift can carry at most ${C} kg. Each crate weighs ${w} kg. What is the greatest number of crates it can carry at once?`,
-            `一台升降机最多能载重 ${C} 千克，每个箱子重 ${w} 千克。它一次最多能运多少个箱子？`,
+            `A lift can carry at most $${C}$ kg. Each crate weighs $${w}$ kg. What is the greatest number of crates it can carry at once?`,
+            `一台升降机最多能载重 $${C}$ 千克，每个箱子重 $${w}$ 千克。它一次最多能运多少个箱子？`,
           );
         }
         return numberProblem({
@@ -1547,8 +1547,8 @@ export const modelingWithTwoStepInequalities: TopicDef = {
           const v = Q.of(B - f, r);
           return inequalityProblem({
             prompt: t(
-              `A taxi charges ${f} dollars plus ${r} dollars per kilometer. Ben can spend at most ${B} dollars. Let $d$ be a distance in kilometers that he can afford. Solve an inequality for $d$.`,
-              `一辆出租车起步价 ${f} 元，另外每千米收费 ${r} 元。小本最多能花 ${B} 元。设 $d$ 为他负担得起的行驶距离（千米）。列出关于 $d$ 的不等式并求解。`,
+              `A taxi charges $${f}$ dollars plus $${r}$ dollars per kilometer. Ben can spend at most $${B}$ dollars. Let $d$ be a distance in kilometers that he can afford. Solve an inequality for $d$.`,
+              `一辆出租车起步价 $${f}$ 元，另外每千米收费 $${r}$ 元。小本最多能花 $${B}$ 元。设 $d$ 为他负担得起的行驶距离（千米）。列出关于 $d$ 的不等式并求解。`,
             ),
             variable: "d",
             op: "<=",
@@ -1571,8 +1571,8 @@ export const modelingWithTwoStepInequalities: TopicDef = {
           const v = Q.of(P - L, r);
           return inequalityProblem({
             prompt: t(
-              `A phone battery is at ${P}% and loses ${r} percentage points of charge per hour. Let $h$ be a number of hours after which the charge is still at least ${L}%. Solve an inequality for $h$.`,
-              `一部手机的电量是 ${P}%，每小时下降 ${r} 个百分点。设 $h$ 为经过的小时数，此时电量仍至少为 ${L}%。列出关于 $h$ 的不等式并求解。`,
+              `A phone battery is at $${P}\\%$ and loses $${r}$ percentage points of charge per hour. Let $h$ be a number of hours after which the charge is still at least $${L}\\%$. Solve an inequality for $h$.`,
+              `一部手机的电量是 $${P}\\%$，每小时下降 $${r}$ 个百分点。设 $h$ 为经过的小时数，此时电量仍至少为 $${L}\\%$。列出关于 $h$ 的不等式并求解。`,
             ),
             variable: "h",
             op: "<=",
@@ -1593,8 +1593,8 @@ export const modelingWithTwoStepInequalities: TopicDef = {
         const v = Q.of(T - s, r);
         return inequalityProblem({
           prompt: t(
-            `Lena has ${s} dollars and saves ${r} dollars a week. Let $w$ be a number of weeks after which she has at least ${T} dollars. Solve an inequality for $w$.`,
-            `莉娜有 ${s} 元，每周存 ${r} 元。设 $w$ 为周数，此时她至少有 ${T} 元。列出关于 $w$ 的不等式并求解。`,
+            `Lena has $${s}$ dollars and saves $${r}$ dollars a week. Let $w$ be a number of weeks after which she has at least $${T}$ dollars. Solve an inequality for $w$.`,
+            `莉娜有 $${s}$ 元，每周存 $${r}$ 元。设 $w$ 为周数，此时她至少有 $${T}$ 元。列出关于 $w$ 的不等式并求解。`,
           ),
           variable: "w",
           op: ">=",
@@ -1633,8 +1633,8 @@ export const modelingWithTwoStepInequalities: TopicDef = {
           greatest = true;
           work = `${f} + ${r}g \\le ${B} \\;\\Rightarrow\\; ${r}g \\le ${B - f} \\;\\Rightarrow\\; g \\le ${num(Q.of(B - f, r))}`;
           text = t(
-            `A party room costs ${f} dollars plus ${r} dollars per guest. The budget is ${B} dollars. What is the greatest number of guests that can be invited?`,
-            `派对场地费 ${f} 元，另外每位客人 ${r} 元。预算是 ${B} 元。最多能邀请多少位客人？`,
+            `A party room costs $${f}$ dollars plus $${r}$ dollars per guest. The budget is $${B}$ dollars. What is the greatest number of guests that can be invited?`,
+            `派对场地费 $${f}$ 元，另外每位客人 $${r}$ 元。预算是 $${B}$ 元。最多能邀请多少位客人？`,
           );
         } else if (kind === 1) {
           const s = rng.int(0, 120);
@@ -1645,8 +1645,8 @@ export const modelingWithTwoStepInequalities: TopicDef = {
           greatest = false;
           work = `${s} + ${r}w \\ge ${T} \\;\\Rightarrow\\; ${r}w \\ge ${T - s} \\;\\Rightarrow\\; w \\ge ${num(Q.of(T - s, r))}`;
           text = t(
-            `Omar has ${s} dollars and saves ${r} dollars each week. What is the least number of weeks until he has at least ${T} dollars?`,
-            `奥马尔有 ${s} 元，每周存 ${r} 元。至少要多少周他才能有至少 ${T} 元？`,
+            `Omar has $${s}$ dollars and saves $${r}$ dollars each week. What is the least number of weeks until he has at least $${T}$ dollars?`,
+            `奥马尔有 $${s}$ 元，每周存 $${r}$ 元。至少要多少周他才能有至少 $${T}$ 元？`,
           );
         } else {
           const w0 = rng.int(60, 90);
@@ -1657,8 +1657,8 @@ export const modelingWithTwoStepInequalities: TopicDef = {
           greatest = true;
           work = `${w0} + ${b}n \\le ${C} \\;\\Rightarrow\\; ${b}n \\le ${C - w0} \\;\\Rightarrow\\; n \\le ${num(Q.of(C - w0, b))}`;
           text = t(
-            `A freight elevator can carry at most ${C} kg. The operator weighs ${w0} kg and each box weighs ${b} kg. What is the greatest number of boxes the operator can take in one trip?`,
-            `一部货梯最多载重 ${C} 千克。操作员体重 ${w0} 千克，每个箱子重 ${b} 千克。操作员一次最多能运多少个箱子？`,
+            `A freight elevator can carry at most $${C}$ kg. The operator weighs $${w0}$ kg and each box weighs $${b}$ kg. What is the greatest number of boxes the operator can take in one trip?`,
+            `一部货梯最多载重 $${C}$ 千克。操作员体重 $${w0}$ 千克，每个箱子重 $${b}$ 千克。操作员一次最多能运多少个箱子？`,
           );
         }
         return numberProblem({
@@ -1687,15 +1687,15 @@ export const modelingWithTwoStepInequalities: TopicDef = {
         const f = rng.bool(0.4) ? d * rng.int(3, 15) : rng.int(2 * d, 15 * d);
         const context = rng.pick([
           {
-            a: t(`Gym A charges a ${f}-dollar fee plus ${rA} dollars per visit`, `健身房 A 收 ${f} 元会费，另外每次 ${rA} 元`),
-            b: t(`gym B charges ${rB} dollars per visit`, `健身房 B 每次收费 ${rB} 元`),
+            a: t(`Gym A charges a $${f}$-dollar fee plus $${rA}$ dollars per visit`, `健身房 A 收 $${f}$ 元会费，另外每次 $${rA}$ 元`),
+            b: t(`gym B charges $${rB}$ dollars per visit`, `健身房 B 每次收费 $${rB}$ 元`),
             unit: t("visits", "次数"),
             A: t("gym A", "健身房 A"),
             B: t("gym B", "健身房 B"),
           },
           {
-            a: t(`Car rental A costs ${f} dollars plus ${rA} dollars per hour`, `租车公司 A 收 ${f} 元，另外每小时 ${rA} 元`),
-            b: t(`rental B costs ${rB} dollars per hour`, `租车公司 B 每小时收费 ${rB} 元`),
+            a: t(`Car rental A costs $${f}$ dollars plus $${rA}$ dollars per hour`, `租车公司 A 收 $${f}$ 元，另外每小时 $${rA}$ 元`),
+            b: t(`rental B costs $${rB}$ dollars per hour`, `租车公司 B 每小时收费 $${rB}$ 元`),
             unit: t("hours", "小时数"),
             A: t("rental A", "公司 A"),
             B: t("rental B", "公司 B"),
@@ -1765,12 +1765,12 @@ export const modelingWithCompoundInequalities: TopicDef = {
           const text =
             kind === 0
               ? t(
-                  `A plumber charges ${f} dollars for a visit plus ${r} dollars per hour. A bill was ${words.en} dollars. Let $h$ be the number of hours worked.`,
-                  `一名水管工上门费 ${f} 元，另外每小时收费 ${r} 元。一张账单${words["zh-CN"]}元。设 $h$ 为工作的小时数。`,
+                  `A plumber charges $${f}$ dollars for a visit plus $${r}$ dollars per hour. A bill was ${words.en} dollars. Let $h$ be the number of hours worked.`,
+                  `一名水管工上门费 $${f}$ 元，另外每小时收费 $${r}$ 元。一张账单${words["zh-CN"]}元。设 $h$ 为工作的小时数。`,
                 )
               : t(
-                  `A taxi charges ${f} dollars plus ${r} dollars per kilometer. A fare was ${words.en} dollars. Let $d$ be the distance in kilometers.`,
-                  `一辆出租车起步价 ${f} 元，另外每千米收费 ${r} 元。一次车费${words["zh-CN"]}元。设 $d$ 为行驶的距离（千米）。`,
+                  `A taxi charges $${f}$ dollars plus $${r}$ dollars per kilometer. A fare was ${words.en} dollars. Let $d$ be the distance in kilometers.`,
+                  `一辆出租车起步价 $${f}$ 元，另外每千米收费 $${r}$ 元。一次车费${words["zh-CN"]}元。设 $d$ 为行驶的距离（千米）。`,
                 );
           const o1 = lc ? "\\le" : "<";
           const o2 = hc ? "\\le" : "<";
@@ -1798,8 +1798,8 @@ export const modelingWithCompoundInequalities: TopicDef = {
         const o1 = lc ? "\\le" : "<";
         const o2 = hc ? "\\le" : "<";
         const text = t(
-          `A candle is ${H0} cm tall and burns down ${r} cm per hour. Let $t$ be a time, in hours after it is lit, at which its height is ${words.en} cm.`,
-          `一支蜡烛高 ${H0} 厘米，每小时燃烧变短 ${r} 厘米。设 $t$ 为点燃后的时间（小时），此时蜡烛的高度${words["zh-CN"]}厘米。`,
+          `A candle is $${H0}$ cm tall and burns down $${r}$ cm per hour. Let $t$ be a time, in hours after it is lit, at which its height is ${words.en} cm.`,
+          `一支蜡烛高 $${H0}$ 厘米，每小时燃烧变短 $${r}$ 厘米。设 $t$ 为点燃后的时间（小时），此时蜡烛的高度${words["zh-CN"]}厘米。`,
         );
         return intervalProblem({
           prompt: ask(text.en, text["zh-CN"], asInequality("t")),
@@ -1860,8 +1860,8 @@ export const modelingWithCompoundInequalities: TopicDef = {
           const words = between(lc, hc, L, H);
           return intervalProblem({
             prompt: ask(
-              `A rectangle is ${w} cm wide, and its perimeter is ${words.en} cm. Let $l$ be its length in centimeters.`,
-              `一个长方形宽 ${w} 厘米，周长${words["zh-CN"]}厘米。设 $l$ 为它的长（厘米）。`,
+              `A rectangle is $${w}$ cm wide, and its perimeter is ${words.en} cm. Let $l$ be its length in centimeters.`,
+              `一个长方形宽 $${w}$ 厘米，周长${words["zh-CN"]}厘米。设 $l$ 为它的长（厘米）。`,
               asInequality("l"),
             ),
             set,
@@ -1882,8 +1882,8 @@ export const modelingWithCompoundInequalities: TopicDef = {
         const words = between(lc, hc, lo, hi);
         return intervalProblem({
           prompt: ask(
-            `Yuki scored ${a} and ${b} on two tests. She wants the mean of these and a third test score $s$ to be ${words.en}.`,
-            `由纪两次测验得了 ${a} 分和 ${b} 分。她希望这两次和第三次测验成绩 $s$ 的平均分${words["zh-CN"]}。`,
+            `Yuki scored $${a}$ and $${b}$ on two tests. She wants the mean of these and a third test score $s$ to be ${words.en}.`,
+            `由纪两次测验得了 $${a}$ 分和 $${b}$ 分。她希望这两次和第三次测验成绩 $s$ 的平均分${words["zh-CN"]}。`,
             asInequality("s"),
           ),
           set,
@@ -1914,8 +1914,8 @@ export const modelingWithCompoundInequalities: TopicDef = {
         const count = hi - lo + 1;
         return numberProblem({
           prompt: t(
-            `A banquet hall charges ${f} dollars plus ${r} dollars per guest. The organizers want to spend at least ${L} and at most ${H} dollars. How many different numbers of guests are possible?`,
-            `一个宴会厅收场地费 ${f} 元，另外每位客人 ${r} 元。组织者希望花费不少于 ${L} 元且不超过 ${H} 元。客人人数有多少种可能？`,
+            `A banquet hall charges $${f}$ dollars plus $${r}$ dollars per guest. The organizers want to spend at least $${L}$ and at most $${H}$ dollars. How many different numbers of guests are possible?`,
+            `一个宴会厅收场地费 $${f}$ 元，另外每位客人 $${r}$ 元。组织者希望花费不少于 $${L}$ 元且不超过 $${H}$ 元。客人人数有多少种可能？`,
           ),
           answer: count,
           form: "integer",
@@ -2066,7 +2066,7 @@ export const solvingEquationsWithSquareRoots: TopicDef = {
         const c = Q.of(a * k + b);
         const root = surd(Q.zero, Q.of(s), BigInt(m));
         const values = plusMinus(Q.zero, root);
-        const simplified = s === 1 ? `\\sqrt{${m}}` : `\\sqrt{${k}} = ${surdLatex(root)}`;
+        const simplified = s === 1 ? `\\pm\\sqrt{${m}}` : `\\pm\\sqrt{${k}} = \\pm ${surdLatex(root)}`;
         return solutionsProblem({
           prompt: ask(`Solve $${isolated(a, "x^{2}", b, c)}$.`, `解方程 $${isolated(a, "x^{2}", b, c)}$。`, listSolutions),
           values,
@@ -2075,8 +2075,8 @@ export const solvingEquationsWithSquareRoots: TopicDef = {
             ...(s > 1 && isSquareFreeInt(s) && s !== m ? [plusMinus(Q.zero, surd(Q.zero, Q.of(m), BigInt(s)))] : []),
           ],
           solution: t(
-            `${steps(...isolatingWork(a, "x^{2}", b, c))}Take square roots and simplify: $x = \\pm${simplified}$.`,
-            `${steps(...isolatingWork(a, "x^{2}", b, c))}开平方并化简：$x = \\pm${simplified}$。`,
+            `${steps(...isolatingWork(a, "x^{2}", b, c))}Take square roots and simplify: $x = ${simplified}$.`,
+            `${steps(...isolatingWork(a, "x^{2}", b, c))}开平方并化简：$x = ${simplified}$。`,
           ),
         });
       },

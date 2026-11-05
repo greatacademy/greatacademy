@@ -15,8 +15,8 @@ const exponentGivingOne: KnowledgePointDef = {
   id: "an-exponent-that-gives-one",
   title: t("An exponent that gives one", "使幂等于一的指数"),
   explanation: t(
-    "A power of a number other than 0, 1 and $-1$ equals 1 only when its exponent is zero. So an equation that sets such a power equal to 1 is really an equation about the exponent. Set the whole exponent equal to zero and solve that linear equation. The base plays no further part, which is why the answer does not change if the base is replaced by another suitable number.",
-    "除 0、1 和 $-1$ 以外的数，它的幂只有在指数为零时才等于 1。所以令这样的幂等于 1 的方程，其实是关于指数的方程。令整个指数等于零，解这个一次方程。底数不再起作用，这就是为什么把底数换成另一个合适的数，答案也不会变。",
+    "A power of a number other than $0$, $1$ and $-1$ equals $1$ only when its exponent is zero. So an equation that sets such a power equal to $1$ is really an equation about the exponent. Set the whole exponent equal to zero and solve that linear equation. The base plays no further part, which is why the answer does not change if the base is replaced by another suitable number.",
+    "除 $0$、$1$ 和 $-1$ 以外的数，它的幂只有在指数为零时才等于 $1$。所以令这样的幂等于 $1$ 的方程，其实是关于指数的方程。令整个指数等于零，解这个一次方程。底数不再起作用，这就是为什么把底数换成另一个合适的数，答案也不会变。",
   ),
   generate(rng) {
     const base = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -29,8 +29,8 @@ const exponentGivingOne: KnowledgePointDef = {
       form: "integer",
       wrong: [c, -answer, answer + 1, 0, 1],
       solution: t(
-        `Only an exponent of zero gives 1 here. So $${k}x - ${c} = 0$, which gives $${k}x = ${c}$ and $x = ${answer}$.`,
-        `这里只有指数为零才能得到 1。所以 $${k}x - ${c} = 0$，得 $${k}x = ${c}$，$x = ${answer}$。`,
+        `Only an exponent of zero gives $1$ here. So $${k}x - ${c} = 0$, which gives $${k}x = ${c}$ and $x = ${answer}$.`,
+        `这里只有指数为零才能得到 $1$。所以 $${k}x - ${c} = 0$，得 $${k}x = ${c}$，$x = ${answer}$。`,
       ),
     });
   },
@@ -203,8 +203,8 @@ const otherNumberFromGcfLcm: KnowledgePointDef = {
     const lcm = g * m * n;
     return numberProblem({
       prompt: t(
-        `Two numbers have a greatest common factor of ${g} and a lowest common multiple of ${lcm}. One of the numbers is ${a}. What is the other?`,
-        `两个数的最大公因数是 ${g}，最小公倍数是 ${lcm}。其中一个数是 ${a}。另一个数是多少？`,
+        `Two numbers have a greatest common factor of $${g}$ and a lowest common multiple of $${lcm}$. One of the numbers is $${a}$. What is the other?`,
+        `两个数的最大公因数是 $${g}$，最小公倍数是 $${lcm}$。其中一个数是 $${a}$。另一个数是多少？`,
       ),
       answer,
       form: "integer",
@@ -233,15 +233,15 @@ const squareTiles: KnowledgePointDef = {
     const answer = m * n;
     return numberProblem({
       prompt: t(
-        `A floor measuring ${w} cm by ${h} cm is covered exactly by equal square tiles, using the largest whole-number side possible. How many tiles are needed?`,
-        `一块 ${w} 厘米乘 ${h} 厘米的地面，用边长为整数且尽可能大的相同正方形地砖恰好铺满。需要多少块地砖？`,
+        `A floor measuring $${w}$ cm by $${h}$ cm is covered exactly by equal square tiles, using the largest whole-number side possible. How many tiles are needed?`,
+        `一块 $${w}$ 厘米乘 $${h}$ 厘米的地面，用边长为整数且尽可能大的相同正方形地砖恰好铺满。需要多少块地砖？`,
       ),
       answer,
       form: "integer",
       wrong: [g, m + n, m * h, 2 * (m + n), answer + 1],
       solution: t(
-        `The largest side is the GCF of ${w} and ${h}, which is ${g}. That gives ${m} tiles along one side and ${n} along the other, so $${m} \\times ${n} = ${answer}$ tiles.`,
-        `最大的边长是 ${w} 和 ${h} 的最大公因数，即 ${g}。一条边放 ${m} 块，另一条边放 ${n} 块，所以共 $${m} \\times ${n} = ${answer}$ 块。`,
+        `The largest side is the GCF of $${w}$ and $${h}$, which is $${g}$. That gives $${m}$ tiles along one side and $${n}$ along the other, so $${m} \\times ${n} = ${answer}$ tiles.`,
+        `最大的边长是 $${w}$ 和 $${h}$ 的最大公因数，即 $${g}$。一条边放 $${m}$ 块，另一条边放 $${n}$ 块，所以共 $${m} \\times ${n} = ${answer}$ 块。`,
       ),
     });
   },
@@ -251,8 +251,8 @@ const missingDigit: KnowledgePointDef = {
   id: "a-missing-digit-for-divisibility",
   title: t("A missing digit for divisibility", "使数能被整除的缺失数字"),
   explanation: t(
-    "The tests for 3 and 9 depend on the digit sum, and so they can also find a missing digit. Add the known digits and see what must be added to reach the next multiple. For 9, this gives one digit, unless the sum is already a multiple. For 3, several digits work, as they differ by 3, so the question must say which one it wants. Checking the new digit sum confirms the choice.",
-    "能否被 3 和 9 整除取决于各位数字之和，所以也可以用来找缺失的数字。把已知数字加起来，看还要加多少才到下一个倍数。对 9 来说，这样得到一个数字，除非和已经是倍数。对 3 来说，有几个数字都可以，它们相差 3，所以题目要说明要哪一个。算一下新的数字和就能确认。",
+    "The tests for $3$ and $9$ depend on the digit sum, and so they can also find a missing digit. Add the known digits and see what must be added to reach the next multiple. For $9$, this gives one digit, unless the sum is already a multiple. For $3$, several digits work, as they differ by $3$, so the question must say which one it wants. Checking the new digit sum confirms the choice.",
+    "能否被 $3$ 和 $9$ 整除取决于各位数字之和，所以也可以用来找缺失的数字。把已知数字加起来，看还要加多少才到下一个倍数。对 $9$ 来说，这样得到一个数字，除非和已经是倍数。对 $3$ 来说，有几个数字都可以，它们相差 $3$，所以题目要说明要哪一个。算一下新的数字和就能确认。",
   ),
   generate(rng) {
     const digits = [rng.int(1, 9), rng.int(0, 9), rng.int(0, 9), rng.int(0, 9)];
@@ -267,18 +267,18 @@ const missingDigit: KnowledgePointDef = {
     return numberProblem({
       prompt: nine
         ? t(
-            `The digit in the box makes $${shown}$ divisible by 9. Which digit is it?`,
-            `方框里的数字使 $${shown}$ 能被 9 整除。这个数字是几？`,
+            `The digit in the box makes $${shown}$ divisible by $9$. Which digit is it?`,
+            `方框里的数字使 $${shown}$ 能被 $9$ 整除。这个数字是几？`,
           )
         : t(
-            `What is the smallest digit that can go in the box to make $${shown}$ divisible by 3?`,
-            `方框里最小填什么数字，才能使 $${shown}$ 能被 3 整除？`,
+            `What is the smallest digit that can go in the box to make $${shown}$ divisible by $3$?`,
+            `方框里最小填什么数字，才能使 $${shown}$ 能被 $3$ 整除？`,
           ),
       answer,
       form: "integer",
       wrong: [sum % modulus, answer + 1, answer + 2, (answer + 3) % 10, modulus],
       solution: t(
-        `The known digits add up to ${sum}. The next multiple of ${modulus} ${answer === 0 ? "is that sum itself, so no more is needed and the smallest digit is $0$" : `is ${sum + answer}, so the digit is $${sum + answer} - ${sum} = ${answer}$`}.`,
+        `The known digits add up to $${sum}$. The next multiple of $${modulus}$ ${answer === 0 ? "is that sum itself, so no more is needed and the smallest digit is $0$" : `is ${sum + answer}, so the digit is $${sum + answer} - ${sum} = ${answer}$`}.`,
         `已知数字之和是 ${sum}。${answer === 0 ? `它已经是 ${modulus} 的倍数，不需要再加，所以最小的数字是 $0$` : `下一个 ${modulus} 的倍数是 ${sum + answer}，所以这个数字是 $${sum + answer} - ${sum} = ${answer}$`}。`,
       ),
     });
@@ -422,8 +422,8 @@ const normalizingCoefficient: KnowledgePointDef = {
   id: "fixing-a-coefficient-outside-the-range",
   title: t("Fixing a coefficient outside the range", "调整超出范围的系数"),
   explanation: t(
-    "A product such as 34 times a power of ten is not yet in scientific notation, as its coefficient must be at least 1 and less than 10. Moving the decimal point changes the coefficient, and the exponent must change in the opposite way so that the value stays the same. A smaller coefficient means a larger exponent, and a larger coefficient means a smaller exponent. Each place moved changes the exponent by one.",
-    "像 34 乘以 10 的幂这样的积，还不是科学记数法，因为系数必须大于或等于 1 且小于 10。移动小数点会改变系数，指数必须朝相反的方向变，数值才保持不变。系数变小，指数就变大；系数变大，指数就变小。每移动一位，指数变化 1。",
+    "A product such as $34$ times a power of ten is not yet in scientific notation, as its coefficient must be at least $1$ and less than $10$. Moving the decimal point changes the coefficient, and the exponent must change in the opposite way so that the value stays the same. A smaller coefficient means a larger exponent, and a larger coefficient means a smaller exponent. Each place moved changes the exponent by one.",
+    "像 $34$ 乘以 $10$ 的幂这样的积，还不是科学记数法，因为系数必须大于或等于 $1$ 且小于 $10$。移动小数点会改变系数，指数必须朝相反的方向变，数值才保持不变。系数变小，指数就变大；系数变大，指数就变小。每移动一位，指数变化 $1$。",
   ),
   generate(rng) {
     const digits = rng.pick([...Array(89).keys()].map((i) => i + 11).filter((v) => v % 10 !== 0));
@@ -443,8 +443,8 @@ const normalizingCoefficient: KnowledgePointDef = {
       form: "integer",
       wrong: [exponent - shift, exponent, shift, answer + 1, answer - 1],
       solution: t(
-        `The coefficient must become $${dec(proper)}$, so the decimal point moves ${places} ${placeEn} to the ${shift > 0 ? "left" : "right"}. To keep the value the same, the exponent ${shift > 0 ? "rises" : "falls"} by ${places}: $${exponent} ${shift > 0 ? "+" : "-"} ${places} = ${answer}$.`,
-        `系数要变成 $${dec(proper)}$，所以小数点向${shift > 0 ? "左" : "右"}移 ${places} 位。为了保持数值不变，指数${shift > 0 ? "增加" : "减少"} ${places}：$${exponent} ${shift > 0 ? "+" : "-"} ${places} = ${answer}$。`,
+        `The coefficient must become $${dec(proper)}$, so the decimal point moves $${places}$ ${placeEn} to the ${shift > 0 ? "left" : "right"}. To keep the value the same, the exponent ${shift > 0 ? "rises" : "falls"} by $${places}$: $${exponent} ${shift > 0 ? "+" : "-"} ${places} = ${answer}$.`,
+        `系数要变成 $${dec(proper)}$，所以小数点向${shift > 0 ? "左" : "右"}移 $${places}$ 位。为了保持数值不变，指数${shift > 0 ? "增加" : "减少"} $${places}$：$${exponent} ${shift > 0 ? "+" : "-"} ${places} = ${answer}$。`,
       ),
     });
   },
@@ -549,11 +549,11 @@ const combinationWithoutSolving: KnowledgePointDef = {
       wrong: [asksSum ? s + u : s - u, asksSum ? x - y : x + y, x, y, -answer, answer + 1],
       solution: t(
         asksSum
-          ? `Adding the equations gives $${a + b}x + ${a + b}y = ${s + u}$. Dividing by ${a + b} gives $x + y = ${answer}$.`
-          : `Subtracting the second equation from the first gives $${differenceLeft} = ${s - u}$.${gap === 1 ? "" : ` Dividing by ${gap} gives $x - y = ${answer}$.`}`,
+          ? `Adding the equations gives $${a + b}x + ${a + b}y = ${s + u}$. Dividing by $${a + b}$ gives $x + y = ${answer}$.`
+          : `Subtracting the second equation from the first gives $${differenceLeft} = ${s - u}$.${gap === 1 ? "" : ` Dividing by $${gap}$ gives $x - y = ${answer}$.`}`,
         asksSum
-          ? `两个方程相加得 $${a + b}x + ${a + b}y = ${s + u}$。除以 ${a + b} 得 $x + y = ${answer}$。`
-          : `第一个方程减去第二个方程得 $${differenceLeft} = ${s - u}$。${gap === 1 ? "" : `除以 ${gap} 得 $x - y = ${answer}$。`}`,
+          ? `两个方程相加得 $${a + b}x + ${a + b}y = ${s + u}$。除以 $${a + b}$ 得 $x + y = ${answer}$。`
+          : `第一个方程减去第二个方程得 $${differenceLeft} = ${s - u}$。${gap === 1 ? "" : `除以 $${gap}$ 得 $x - y = ${answer}$。`}`,
       ),
     });
   },
@@ -627,8 +627,8 @@ const sidesFromAngleRatio: KnowledgePointDef = {
   id: "sides-from-the-ratio-of-interior-to-exterior",
   title: t("Sides from the ratio of interior to exterior", "由内外角之比求边数"),
   explanation: t(
-    "At each vertex of a polygon, the interior and exterior angles form a straight line, so they add up to 180 degrees. If their ratio is known, then splitting 180 degrees in that ratio gives both angles. The exterior angles of a regular polygon add up to 360 degrees, so dividing 360 degrees by one exterior angle gives the number of sides. Using the exterior angle is much simpler than the interior angle formula.",
-    "在多边形的每个顶点，内角和外角组成一条直线，所以它们的和是 180 度。如果知道它们的比，按这个比分配 180 度就得到这两个角。正多边形的外角和是 360 度，所以用 360 度除以一个外角，就得到边数。用外角比用内角公式简单得多。",
+    "At each vertex of a polygon, the interior and exterior angles form a straight line, so they add up to $180$ degrees. If their ratio is known, then splitting $180$ degrees in that ratio gives both angles. The exterior angles of a regular polygon add up to $360$ degrees, so dividing $360$ degrees by one exterior angle gives the number of sides. Using the exterior angle is much simpler than the interior angle formula.",
+    "在多边形的每个顶点，内角和外角组成一条直线，所以它们的和是 $180$ 度。如果知道它们的比，按这个比分配 $180$ 度就得到这两个角。正多边形的外角和是 $360$ 度，所以用 $360$ 度除以一个外角，就得到边数。用外角比用内角公式简单得多。",
   ),
   generate(rng) {
     const answer = rng.int(5, 60);
@@ -638,8 +638,8 @@ const sidesFromAngleRatio: KnowledgePointDef = {
     const exterior = Q.of(360, answer);
     return numberProblem({
       prompt: t(
-        `In a regular polygon, each interior angle and each exterior angle are in the ratio ${p}:${q}. How many sides does the polygon have?`,
-        `在一个正多边形中，每个内角和每个外角的比是 ${p}:${q}。这个多边形有多少条边？`,
+        `In a regular polygon, each interior angle and each exterior angle are in the ratio $${p}:${q}$. How many sides does the polygon have?`,
+        `在一个正多边形中，每个内角和每个外角的比是 $${p}:${q}$。这个多边形有多少条边？`,
       ),
       answer,
       form: "integer",

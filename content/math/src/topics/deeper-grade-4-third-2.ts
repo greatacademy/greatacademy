@@ -1047,8 +1047,8 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
       "the-other-scale-of-a-protractor",
       ["The other scale of a protractor", "量角器的另一圈刻度"],
       [
-        "A protractor has two scales that run opposite ways, and the two numbers at any mark add to 180. If a reading does not fit how the angle looks, the other scale is the one to use.",
-        "量角器有两圈方向相反的刻度，同一刻度线上的两个数相加等于 180。如果读数与角的样子不符，就应该用另一圈刻度。",
+        "A protractor has two scales that run opposite ways, and the two numbers at any mark add to $180$. If a reading does not fit how the angle looks, the other scale is the one to use.",
+        "量角器有两圈方向相反的刻度，同一刻度线上的两个数相加等于 $180$。如果读数与角的样子不符，就应该用另一圈刻度。",
       ],
       (rng) => {
         const wrong = rng.int(91, 175);
@@ -1060,8 +1060,8 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
           180 - wrong,
           [wrong - 90, 90 - (wrong - 90) + 10, 360 - wrong],
           [
-            `The two scales add to 180 at each mark: $180 - ${wrong} = ${180 - wrong}$.`,
-            `同一刻度线上的两个数相加是 180：$180 - ${wrong} = ${180 - wrong}$。`,
+            `The two scales add to $180$ at each mark: $180 - ${wrong} = ${180 - wrong}$.`,
+            `同一刻度线上的两个数相加是 $180$：$180 - ${wrong} = ${180 - wrong}$。`,
           ],
         );
       },
@@ -1072,8 +1072,8 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
       "how-far-a-minute-hand-turns",
       ["How far a minute hand turns", "分针转过的角度"],
       [
-        "A full turn is $360^\\circ$ and the minute hand makes one in 60 minutes. So it sweeps $6^\\circ$ each minute, and a quarter of an hour is a right angle.",
-        "转一整圈是 $360^\\circ$，分针 60 分钟转一圈。所以每分钟转 $6^\\circ$，一刻钟正好是一个直角。",
+        "A full turn is $360^\\circ$ and the minute hand makes one in $60$ minutes. So it sweeps $6^\\circ$ each minute, and a quarter of an hour is a right angle.",
+        "转一整圈是 $360^\\circ$，分针 $60$ 分钟转一圈。所以每分钟转 $6^\\circ$，一刻钟正好是一个直角。",
       ],
       (rng) => {
         const m = rng.int(1, 60);

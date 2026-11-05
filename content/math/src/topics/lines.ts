@@ -44,7 +44,7 @@ function coefficient(m: Coefficient): string {
 
 /** ps writes the point-slope form y − k = m(x − h). */
 const ps = (m: Coefficient, h: Coefficient, k: Coefficient) =>
-  `${linear(1, toQ(k).neg(), "y")} = ${coefficient(m)}(${linear(1, toQ(h).neg())})`;
+  `${linear(1, toQ(k).neg(), "y")} = ${toQ(h).isZero() ? poly([m, "x"]) : `${coefficient(m)}(${linear(1, toQ(h).neg())})`}`;
 
 /** standardOf scales ax + by = c to integers without a common factor and a positive leading coefficient. */
 function standardOf(a: Coefficient, b: Coefficient, c: Coefficient): [number, number, number] {
@@ -103,7 +103,8 @@ const plainLine = (m: Q, b: Coefficient) => `y = ${linear(m, b).replace(/\\frac\
 /** evalAt writes m · x + b for substituting x into y = mx + b, leaving out a zero b. */
 function evalAt(m: Coefficient, x: Coefficient, b: Coefficient): string {
   const B = toQ(b);
-  const head = `${num(m)} \\cdot ${paren(x)}`;
+  const M = toQ(m);
+  const head = M.eq(Q.of(1)) ? paren(x) : M.eq(Q.of(-1)) ? `-${paren(x)}` : `${num(m)} \\cdot ${paren(x)}`;
   return B.isZero() ? head : `${head} ${B.sign() < 0 ? "-" : "+"} ${num(B.abs())}`;
 }
 
@@ -155,11 +156,10 @@ function eliminationSolution(e1: Lin, e2: Lin, elim: 0 | 1): Text {
         : f2 !== 1
           ? t(`Multiply the second equation by $${f2}$: ${steps(eqOf(s2))}`, `第二个方程乘以 $${f2}$：${steps(eqOf(s2))}`)
           : t("", "");
-  const elimSteps = steps(`${poly([k, kv])} = ${num(r)}`, `${kv} = ${num(K)}`);
+  const elimSteps = steps(...new Set([`${poly([k, kv])} = ${num(r)}`, `${kv} = ${num(K)}`]));
   const backSteps = steps(
     ...(K.isZero() ? [] : [`${poly([e1[elim], ev], [Q.of(e1[keep]).mul(K), ""])} = ${num(e1[2])}`]),
-    `${poly([e1[elim], ev])} = ${num(rest)}`,
-    `${ev} = ${num(E)}`,
+    ...new Set([`${poly([e1[elim], ev])} = ${num(rest)}`, `${ev} = ${num(E)}`]),
   );
   return t(
     `${mul.en}${add ? "Add the equations" : "Subtract the second equation from the first"} to eliminate $${ev}$: ${elimSteps}Substitute $${kv} = ${num(K)}$ into the first equation: ${backSteps}The solution is $${pointLatex(sol)}$.`,
@@ -1045,8 +1045,8 @@ export const propertiesOfLinesInStandardForm: TopicDef = {
               [x0.neg(), 0],
             ],
             solution: t(
-              `Set $y = 0$: ${steps(`${poly([A, "x"])} = ${num(C)}`, `x = ${num(x0)}`)}The $x$-intercept is $${pointLatex([x0, 0])}$.`,
-              `令 $y = 0$：${steps(`${poly([A, "x"])} = ${num(C)}`, `x = ${num(x0)}`)}与 $x$ 轴的交点是 $${pointLatex([x0, 0])}$。`,
+              `Set $y = 0$: ${steps(...(A === 1 ? [] : [`${poly([A, "x"])} = ${num(C)}`]), `x = ${num(x0)}`)}The $x$-intercept is $${pointLatex([x0, 0])}$.`,
+              `令 $y = 0$：${steps(...(A === 1 ? [] : [`${poly([A, "x"])} = ${num(C)}`]), `x = ${num(x0)}`)}与 $x$ 轴的交点是 $${pointLatex([x0, 0])}$。`,
             ),
           });
         }
@@ -1293,13 +1293,16 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
         const b = rng.int(-9, 9);
         const given = lineIn(m, b, rng.bool());
         const p = Q.one.div(m).neg();
+        // For a positive whole slope the reciprocal is already in its final form.
+        const reciprocal = `-\\frac{1}{${num(m)}}`;
+        const derivation = reciprocal === num(p) ? `m_2 = ${reciprocal}` : `${reciprocal} = ${num(p)}`;
         return numberProblem({
           prompt: t(`Find the slope of a line perpendicular to $${given}$.`, `求与 $${given}$ 垂直的直线的斜率。`),
           answer: p,
           wrong: [m, m.neg(), Q.one.div(m)],
           solution: t(
-            `The given line has slope $${num(m)}$. The perpendicular slope is its negative reciprocal: ${steps(`-\\frac{1}{${num(m)}} = ${num(p)}`)}`,
-            `已知直线的斜率是 $${num(m)}$。垂线的斜率是它的负倒数：${steps(`-\\frac{1}{${num(m)}} = ${num(p)}`)}`,
+            `The given line has slope $${num(m)}$. The perpendicular slope is its negative reciprocal: ${steps(derivation)}`,
+            `已知直线的斜率是 $${num(m)}$。垂线的斜率是它的负倒数：${steps(derivation)}`,
           ),
         });
       },
@@ -1979,7 +1982,7 @@ function specialReason(e1: Lin, e2: Lin, kind: number, k: number): Text {
     );
   }
   const scaled = `${poly([k * e1[0], "x"], [k * e1[1], "y"])} = ${num(k * e1[2])}`;
-  const end = `0 = ${num(e2[2] - k * e1[2])}`;
+  const end = `0 = ${num(k * e1[2] - e2[2])}`;
   return kind === 1
     ? t(
         `Multiply the first equation by $${k}$: $${scaled}$. Subtracting the second equation gives $${end}$, which is false: there is no solution.`,
@@ -2184,9 +2187,9 @@ export const consistencyAndDependency: TopicDef = {
           ),
         ][kind]!;
         const alt = [
-          ["Two lines that cross at one point.", "两条相交于一点的直线。"],
-          ["Two parallel lines.", "两条平行的直线。"],
-          ["Two lines that lie on top of each other, one drawn dashed.", "两条完全重合的直线，其中一条画成虚线。"],
+          ["The graphs of two equations on one coordinate grid.", "同一坐标网格上两个方程的图像。"],
+          ["The graphs of two equations on one coordinate grid.", "同一坐标网格上两个方程的图像。"],
+          ["The graphs of two equations on one coordinate grid, one drawn dashed.", "同一坐标网格上两个方程的图像，其中一条画成虚线。"],
         ][kind]!;
         return {
           ...choiceProblem({
@@ -2487,8 +2490,8 @@ function purchase(rng: Rng): { p: Purchase; n: [number, number] } {
         total: R,
         prompt: (ask) =>
           t(
-            `A theater sold ${N} tickets for a total of $\\$${R}$. Adult tickets cost $\\$${pa}$ each and child tickets $\\$${pc}$ each. How many ${names[ask][0]} were sold?`,
-            `剧院共售出 ${N} 张票，收入 ${R} 元。成人票每张 ${pa} 元，儿童票每张 ${pc} 元。售出了多少张${names[ask][1]}？`,
+            `A theater sold $${N}$ tickets for a total of $\\$${R}$. Adult tickets cost $\\$${pa}$ each and child tickets $\\$${pc}$ each. How many ${names[ask][0]} were sold?`,
+            `剧院共售出 $${N}$ 张票，收入 $${R}$ 元。成人票每张 $${pa}$ 元，儿童票每张 $${pc}$ 元。售出了多少张${names[ask][1]}？`,
           ),
         vars: t("Let $x$ be the number of adult tickets and $y$ the number of child tickets.", "设成人票有 $x$ 张，儿童票有 $y$ 张。"),
       },
@@ -2509,8 +2512,8 @@ function purchase(rng: Rng): { p: Purchase; n: [number, number] } {
         total: L,
         prompt: (ask) =>
           t(
-            `A farm keeps chickens and rabbits. Together they have ${N} heads and ${L} legs. How many ${names[ask][0]} are there?`,
-            `鸡兔同笼，共有 ${N} 个头、${L} 条腿。有多少只${names[ask][1]}？`,
+            `A farm keeps chickens and rabbits. Together they have $${N}$ heads and $${L}$ legs. How many ${names[ask][0]} are there?`,
+            `鸡兔同笼，共有 $${N}$ 个头、$${L}$ 条腿。有多少只${names[ask][1]}？`,
           ),
         vars: t("Let $x$ be the number of chickens and $y$ the number of rabbits.", "设鸡有 $x$ 只，兔有 $y$ 只。"),
       },
@@ -2542,12 +2545,12 @@ function purchase(rng: Rng): { p: Purchase; n: [number, number] } {
       prompt: (ask) =>
         ctx === 2
           ? t(
-              `A school bought ${N} notebooks and pens for $\\$${R}$. Notebooks cost $\\$${pa}$ each and pens $\\$${pb}$ each. How many ${names[ask][0]} did it buy?`,
-              `学校花 ${R} 元买了笔记本和钢笔共 ${N} 件。笔记本每本 ${pa} 元，钢笔每支 ${pb} 元。买了多少${ask === 0 ? "本" : "支"}${names[ask][1]}？`,
+              `A school bought $${N}$ notebooks and pens for $\\$${R}$. Notebooks cost $\\$${pa}$ each and pens $\\$${pb}$ each. How many ${names[ask][0]} did it buy?`,
+              `学校花 $${R}$ 元买了笔记本和钢笔共 $${N}$ 件。笔记本每本 $${pa}$ 元，钢笔每支 $${pb}$ 元。买了多少${ask === 0 ? "本" : "支"}${names[ask][1]}？`,
             )
           : t(
-              `A shop packed ${N} boxes of tea, large ones holding ${pa} bags and small ones holding ${pb} bags, ${R} bags in all. How many ${names[ask][0]} are there?`,
-              `商店把茶包装成 ${N} 盒，大盒每盒 ${pa} 包，小盒每盒 ${pb} 包，共 ${R} 包。${names[ask][1]}有多少盒？`,
+              `A shop packed $${N}$ boxes of tea, large ones holding $${pa}$ bags and small ones holding $${pb}$ bags, $${R}$ bags in all. How many ${names[ask][0]} are there?`,
+              `商店把茶包装成 $${N}$ 盒，大盒每盒 $${pa}$ 包，小盒每盒 $${pb}$ 包，共 $${R}$ 包。${names[ask][1]}有多少盒？`,
             ),
       vars:
         ctx === 2
@@ -2642,8 +2645,8 @@ export const modelingWithSystems: TopicDef = {
           answer: n[ask],
           wrong: [n[1 - ask]!, Q.of(p.total, pa + pb), Q.of(p.total + pb * p.count, pa - pb)],
           solution: t(
-            `${p.vars.en} ${steps(sys)}Multiply the first equation by $${pb}$ and subtract it from the second: $${poly([pa - pb, "x"])} =${p.total - pb * p.count}$, so $x = ${n[0]}$ and $y = ${p.count} - ${n[0]} = ${n[1]}$. There are ${n[ask]} ${p.names[ask][0]}.`,
-            `${p.vars["zh-CN"]}${steps(sys)}第一个方程乘以 $${pb}$，再用第二个方程减去它：$${poly([pa - pb, "x"])} =${p.total - pb * p.count}$，所以 $x = ${n[0]}$，$y = ${p.count} - ${n[0]} = ${n[1]}$。${p.names[ask][1]}有 ${n[ask]} 个。`,
+            `${p.vars.en} ${steps(sys)}Multiply the first equation by $${pb}$ and subtract it from the second: $${poly([pa - pb, "x"])} = ${p.total - pb * p.count}$, so $x = ${n[0]}$ and $y = ${p.count} - ${n[0]} = ${n[1]}$. There are $${n[ask]}$ ${p.names[ask][0]}.`,
+            `${p.vars["zh-CN"]}${steps(sys)}第一个方程乘以 $${pb}$，再用第二个方程减去它：$${poly([pa - pb, "x"])} = ${p.total - pb * p.count}$，所以 $x = ${n[0]}$，$y = ${p.count} - ${n[0]} = ${n[1]}$。${p.names[ask][1]}有 $${n[ask]}$ 个。`,
           ),
         });
       },
@@ -2677,8 +2680,8 @@ export const modelingWithSystems: TopicDef = {
           options: options.map((i) => same(`$${candidates[i]!}$`)),
           correct,
           solution: t(
-            `The counts add up to ${N}: $x + y = ${N}$. Each of the $x$ ${p.names[0][0]} contributes $${pa}$ and each of the $y$ ${p.names[1][0]} contributes $${pb}$, for $${R}$ in all: $${poly([pa, "x"], [pb, "y"])} = ${R}$.`,
-            `个数之和是 ${N}：$x + y = ${N}$。$x$ 个${p.names[0][1]}每个贡献 $${pa}$，$y$ 个${p.names[1][1]}每个贡献 $${pb}$，合计 $${R}$：$${poly([pa, "x"], [pb, "y"])} = ${R}$。`,
+            `The counts add up to $${N}$: $x + y = ${N}$. Each of the $x$ ${p.names[0][0]} contributes $${pa}$ and each of the $y$ ${p.names[1][0]} contributes $${pb}$, for $${R}$ in all: $${poly([pa, "x"], [pb, "y"])} = ${R}$.`,
+            `个数之和是 $${N}$：$x + y = ${N}$。$x$ 个${p.names[0][1]}每个贡献 $${pa}$，$y$ 个${p.names[1][1]}每个贡献 $${pb}$，合计 $${R}$：$${poly([pa, "x"], [pb, "y"])} = ${R}$。`,
           ),
         });
       },
@@ -2721,8 +2724,8 @@ export const coinProblems: TopicDef = {
         const sys = system(`a + b = ${N}`, `${v1}a + ${v2}b = ${V}`);
         return numberProblem({
           prompt: t(
-            `A jar holds ${N} coins, all ${v1}-cent and ${v2}-cent coins, worth $\\$${money(V)}$ in all. How many ${vs[ask]}-cent coins are there?`,
-            `罐子里有 ${N} 枚硬币，都是 ${v1} 分和 ${v2} 分的，共 ${money(V)} 元。${vs[ask]} 分的硬币有多少枚？`,
+            `A jar holds $${N}$ coins, all $${v1}$-cent and $${v2}$-cent coins, worth $\\$${money(V)}$ in all. How many ${vs[ask]}-cent coins are there?`,
+            `罐子里有 $${N}$ 枚硬币，都是 $${v1}$ 分和 $${v2}$ 分的，共 $${money(V)}$ 元。${vs[ask]} 分的硬币有多少枚？`,
           ),
           answer: n[ask],
           wrong: [n[1 - ask]!, Q.of(V, v1 + v2), Q.of(V, vs[ask]!)],
@@ -2751,9 +2754,9 @@ export const coinProblems: TopicDef = {
         const vs = [v1, v2];
         const answer = ask === 0 ? a : b;
         const relEn = twice
-          ? `${k} times as many ${v1}-cent coins as ${v2}-cent coins`
-          : `${k} more ${v1}-cent coins than ${v2}-cent coins`;
-        const relZh = twice ? `${v1} 分硬币的枚数是 ${v2} 分硬币的 ${k} 倍` : `${v1} 分硬币比 ${v2} 分硬币多 ${k} 枚`;
+          ? `$${k}$ times as many $${v1}$-cent coins as $${v2}$-cent coins`
+          : `$${k}$ more $${v1}$-cent coins than $${v2}$-cent coins`;
+        const relZh = twice ? `$${v1}$ 分硬币的枚数是 $${v2}$ 分硬币的 $${k}$ 倍` : `$${v1}$ 分硬币比 $${v2}$ 分硬币多 $${k}$ 枚`;
         const rel = twice ? `a = ${k}b` : `a = b + ${k}`;
         const subst = twice ? `${v1} \\cdot ${k}b + ${v2}b = ${V}` : `${v1}(b + ${k}) + ${v2}b = ${V}`;
         const coef = twice ? v1 * k + v2 : v1 + v2;
@@ -2761,8 +2764,8 @@ export const coinProblems: TopicDef = {
         const slip = twice ? Q.of(V, k + v2) : Q.of(V - k, v1 + v2);
         return numberProblem({
           prompt: t(
-            `A purse holds only ${v1}-cent and ${v2}-cent coins, worth $\\$${money(V)}$ in all. There are ${relEn}. How many ${vs[ask]}-cent coins are there?`,
-            `钱包里只有 ${v1} 分和 ${v2} 分的硬币，共 ${money(V)} 元。${relZh}。${vs[ask]} 分的硬币有多少枚？`,
+            `A purse holds only $${v1}$-cent and $${v2}$-cent coins, worth $\\$${money(V)}$ in all. There are ${relEn}. How many ${vs[ask]}-cent coins are there?`,
+            `钱包里只有 $${v1}$ 分和 $${v2}$ 分的硬币，共 $${money(V)}$ 元。${relZh}。${vs[ask]} 分的硬币有多少枚？`,
           ),
           answer,
           wrong: [ask === 0 ? b : a, ask === 0 ? slip.add(Q.of(twice ? 0 : k)) : slip, twice ? Q.of(V, v1 + v2) : b + k + 1],

@@ -611,8 +611,8 @@ export const dotPlots: TopicDef = {
               ...(n % 2 === 0 ? [s[h]!, s[h - 1]!] : [s[h - 1]!, s[h + 1]!]),
             ],
             solution: t(
-              `There are ${n} dots. Counting from the left, the sorted values are $${list(s)}$, so the median is ${where.en}: $${dec(m)}$.`,
-              `共有 ${n} 个点。从左往右数，排好序的数据是 $${list(s)}$，所以中位数是${where["zh-CN"]}：$${dec(m)}$。`,
+              `There are $${n}$ dots. Counting from the left, the sorted values are $${list(s)}$, so the median is ${where.en}: $${dec(m)}$.`,
+              `共有 $${n}$ 个点。从左往右数，排好序的数据是 $${list(s)}$，所以中位数是${where["zh-CN"]}：$${dec(m)}$。`,
             ),
           }),
           figure: dotPlotFigure(xs, axis),

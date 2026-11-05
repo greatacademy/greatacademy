@@ -75,8 +75,8 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
           frac(n + add, d + add),
           [frac(n * a, d * a), frac(n * b, d * b), frac(n * c, d * c)],
           [
-            `$${frac(n + add, d + add)}$ adds ${add} to both numbers, which changes the value. The others multiply both by the same number.`,
-            `$${frac(n + add, d + add)}$ 是分子分母同时加 ${add}，值变了。其他的都是同时乘同一个数。`,
+            `$${frac(n + add, d + add)}$ adds $${add}$ to both numbers, which changes the value. The others multiply both by the same number.`,
+            `$${frac(n + add, d + add)}$ 是分子分母同时加 $${add}$，值变了。其他的都是同时乘同一个数。`,
           ],
         );
       },
@@ -96,14 +96,14 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
         const whole_ = k * each;
         return whole(
           [
-            `Rays from the vertex cut an angle of $${whole_}^\\circ$ into ${k} equal angles. What is the measure of each, in degrees?`,
-            `从顶点引出的射线把 $${whole_}^\\circ$ 的角分成 ${k} 个相等的角。每个角是多少度？`,
+            `Rays from the vertex cut an angle of $${whole_}^\\circ$ into $${k}$ equal angles. What is the measure of each, in degrees?`,
+            `从顶点引出的射线把 $${whole_}^\\circ$ 的角分成 $${k}$ 个相等的角。每个角是多少度？`,
           ],
           each,
           [whole_ - k, whole_ * k, k + each],
           [
-            `The ${k} equal angles fill the whole angle, so $${whole_} \\div ${k} = ${each}$.`,
-            `${k} 个相等的角合成整个角，所以 $${whole_} \\div ${k} = ${each}$。`,
+            `The $${k}$ equal angles fill the whole angle, so $${whole_} \\div ${k} = ${each}$.`,
+            `$${k}$ 个相等的角合成整个角，所以 $${whole_} \\div ${k} = ${each}$。`,
           ],
         );
       },
@@ -126,14 +126,14 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
         return {
           ...fraction(
             [
-              `The dot plot shows a data set. What fraction of the values are at least ${v}?`,
-              `点图表示一组数据。至少为 ${v} 的数据占几分之几？`,
+              `The dot plot shows a data set. What fraction of the values are at least $${v}$?`,
+              `点图表示一组数据。至少为 $${v}$ 的数据占几分之几？`,
             ],
             Q.of(count, n),
             [Q.of(n - count, n), Q.of(count, n + 1), Q.of(xs.filter((x) => x > v).length, n)],
             [
-              `${count} of the ${n} dots are at ${v} or above, so the fraction is $${frac(count, n)}$.`,
-              `${n} 个点中有 ${count} 个在 ${v} 或以上，所以是 $${frac(count, n)}$。`,
+              `$${count}$ of the $${n}$ dots are at $${v}$ or above, so the fraction is $${frac(count, n)}$.`,
+              `$${n}$ 个点中有 $${count}$ 个在 $${v}$ 或以上，所以是 $${frac(count, n)}$。`,
             ],
           ),
           figure: dotPlotFigure(xs, { min: lo, max: lo + 8, step: 1 }),
@@ -168,14 +168,14 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
         const answer = (n * parts) / 4;
         return whole(
           [
-            `The box plot summarizes ${n} scores. About how many of the scores are ${en}?`,
-            `箱线图概括了 ${n} 个分数。大约有多少个分数${zh}？`,
+            `The box plot summarizes $${n}$ scores. About how many of the scores are ${en}?`,
+            `箱线图概括了 $${n}$ 个分数。大约有多少个分数${zh}？`,
           ],
           answer,
           [n, n / 2 === answer ? n / 4 : n / 2, (n * (parts === 3 ? 1 : 3)) / 4, q3 - q1],
           [
-            `That range covers ${parts} of the 4 parts, and $${n} \\times ${frac(parts, 4)} = ${answer}$.`,
-            `这个范围占 4 部分中的 ${parts} 部分，$${n} \\times ${frac(parts, 4)} = ${answer}$。`,
+            `That range covers $${parts}$ of the $4$ parts, and $${n} \\times ${frac(parts, 4)} = ${answer}$.`,
+            `这个范围占 $4$ 部分中的 $${parts}$ 部分，$${n} \\times ${frac(parts, 4)} = ${answer}$。`,
           ],
           boxPlotFigure([lo, q1, med, q3, hi], { min: 0, max: 20, step: 1, labelEvery: 2 }),
         );

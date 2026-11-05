@@ -14,7 +14,7 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       ["Dividing by a decimal", "除以小数"],
       [
         "Moving the decimal point of both numbers by the same number of places multiplies them by the same power of ten, so the quotient does not change. This turns the divisor into a whole number.",
-        "把两个数的小数点移动相同的位数，相当于乘同一个 10 的幂，商不变。这样除数就变成了整数。",
+        "把两个数的小数点移动相同的位数，相当于乘同一个 $10$ 的幂，商不变。这样除数就变成了整数。",
       ],
       (rng) => {
         const divisor = rng.int(2, 95);
@@ -29,8 +29,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           q,
           [q * scale, q * 10 ** (places + 1), q + 1],
           [
-            `Multiply both by ${scale}: $${divisor * q} \\div ${divisor} = ${q}$.`,
-            `两个数都乘 ${scale}：$${divisor * q} \\div ${divisor} = ${q}$。`,
+            `Multiply both by $${scale}$: $${divisor * q} \\div ${divisor} = ${q}$.`,
+            `两个数都乘 $${scale}$：$${divisor * q} \\div ${divisor} = ${q}$。`,
           ],
         );
       },
@@ -101,8 +101,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           k === 1 ? `\\sqrt{${r}}` : `${k}\\sqrt{${r}}`,
           [`${c * k}\\sqrt{${r}}`, `${frac(k, r)}\\sqrt{${r}}`, `${top}\\sqrt{${r}}`],
           [
-            `Multiply by $${frac(`\\sqrt{${r}}`, `\\sqrt{${r}}`)}$: the bottom becomes ${c * r}, and $${top} \\div ${c * r} = ${k}$.`,
-            `乘 $${frac(`\\sqrt{${r}}`, `\\sqrt{${r}}`)}$：分母变成 ${c * r}，$${top} \\div ${c * r} = ${k}$。`,
+            `Multiply by $${frac(`\\sqrt{${r}}`, `\\sqrt{${r}}`)}$: the bottom becomes $${c * r}$, and $${top} \\div ${c * r} = ${k}$.`,
+            `乘 $${frac(`\\sqrt{${r}}`, `\\sqrt{${r}}`)}$：分母变成 $${c * r}$，$${top} \\div ${c * r} = ${k}$。`,
           ],
         );
       },
@@ -113,13 +113,14 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       "a-perimeter-with-radicals",
       ["A perimeter with radicals", "含根号的周长"],
       [
-        "Radical lengths add just like like terms once they are simplified to the same root. So simplify each side first, and then add the coefficients of the matching root.",
+        "Radical lengths add the way like terms do once they are simplified to the same root. So simplify each side first, and then add the coefficients of the matching root.",
         "根号长度化简成同一个根后，可以像同类项一样相加。所以先化简每条边，再把相同根号的系数相加。",
       ],
       (rng) => {
         const r = rng.pick([2, 3, 5, 6, 7]);
         const a = rng.int(2, 5);
-        const b = rng.int(2, 5);
+        const drawn = rng.int(2, 5);
+        const b = drawn === a ? (a === 5 ? 4 : a + 1) : drawn;
         const total = 2 * (a + b);
         return chooseMath(
           rng,
@@ -151,8 +152,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         const start = end - rise;
         return integer(
           [
-            `The temperature rose by ${rise} degrees and is now ${end} degrees. What was the temperature before the rise?`,
-            `气温上升了 ${rise} 度，现在是 ${end} 度。上升前是多少度？`,
+            `The temperature rose by $${rise}$ degrees and is now $${end}$ degrees. What was the temperature before the rise?`,
+            `气温上升了 $${rise}$ 度，现在是 $${end}$ 度。上升前是多少度？`,
           ],
           start,
           [end + rise, rise - end, -start],
@@ -217,8 +218,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           count,
           [span, span + 1, span - 1, span + 2],
           [
-            `${lowIn ? "The lower bound counts" : "The lower bound does not count"} and ${highIn ? "the upper bound counts" : "the upper bound does not count"}, which leaves ${count}.`,
-            `下界${lowIn ? "算" : "不算"}，上界${highIn ? "算" : "不算"}，所以有 ${count} 个。`,
+            `${lowIn ? "The lower bound counts" : "The lower bound does not count"} and ${highIn ? "the upper bound counts" : "the upper bound does not count"}, which leaves $${count}$.`,
+            `下界${lowIn ? "算" : "不算"}，上界${highIn ? "算" : "不算"}，所以有 $${count}$ 个。`,
           ],
         );
       },
@@ -247,7 +248,7 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           k,
           [-k, a, k + 1],
           [
-            `Substitute: $${x}k - (${y}) = ${d}$, so $${x}k = ${d + y}$ and $k = ${k}$.`,
+            `Substitute: $${x}k - ${y < 0 ? `(${y})` : y} = ${d}$, so $${x}k = ${d + y}$ and $k = ${k}$.`,
             `代入：$${x}k - (${y}) = ${d}$，所以 $${x}k = ${d + y}$，$k = ${k}$。`,
           ],
         );
@@ -259,8 +260,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       "the-angles-around-a-crossing",
       ["The angles around a crossing", "交点周围的角"],
       [
-        "Two crossing lines make four angles totaling 360 degrees, in two equal pairs. So knowing the sum of a vertical pair gives each of the four angles directly.",
-        "两条相交直线形成四个角，总和 360 度，并且两两相等。所以知道一对对顶角的和，就能直接得到四个角。",
+        "Two crossing lines make four angles totaling $360$ degrees, in two equal pairs. So knowing the sum of a vertical pair gives each of the four angles directly.",
+        "两条相交直线形成四个角，总和 $360$ 度，并且两两相等。所以知道一对对顶角的和，就能直接得到四个角。",
       ],
       (rng) => {
         const each = rng.int(16, 80);
@@ -268,18 +269,18 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         return whole(
           asked
             ? [
-                `Two lines cross, and one pair of vertical angles has a sum of ${2 * each} degrees. What is the measure of each of the other two angles, in degrees?`,
-                `两条直线相交，一对对顶角的和是 ${2 * each} 度。另外两个角各是多少度？`,
+                `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}$ degrees. What is the measure of each of the other two angles, in degrees?`,
+                `两条直线相交，一对对顶角的和是 $${2 * each}$ 度。另外两个角各是多少度？`,
               ]
             : [
-                `Two lines cross, and one pair of vertical angles has a sum of ${2 * each} degrees. What is the sum of the other two angles, in degrees?`,
-                `两条直线相交，一对对顶角的和是 ${2 * each} 度。另外两个角的和是多少度？`,
+                `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}$ degrees. What is the sum of the other two angles, in degrees?`,
+                `两条直线相交，一对对顶角的和是 $${2 * each}$ 度。另外两个角的和是多少度？`,
               ],
           asked ? 180 - each : 360 - 2 * each,
           asked ? [each, 180 - 2 * each, 360 - 2 * each] : [2 * each, 180 - each, 180 - 2 * each],
           [
-            `Each angle of the pair is ${each}, so each other angle is ${180 - each}, and the two together are ${360 - 2 * each}.`,
-            `这一对每个角是 ${each}，所以其余每个角是 ${180 - each}，两个合起来是 ${360 - 2 * each}。`,
+            `Each angle of the pair is $${each}$, so each other angle is $${180 - each}$, and the two together are $${360 - 2 * each}$.`,
+            `这一对每个角是 $${each}$，所以其余每个角是 $${180 - each}$，两个合起来是 $${360 - 2 * each}$。`,
           ],
         );
       },
@@ -290,15 +291,35 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       "what-a-triangle-must-be",
       ["What a triangle must be", "三角形一定是什么"],
       [
-        "A triangle has one name by sides and one by angles, and some pairs cannot happen. An equilateral triangle has three 60 degree angles, so it can be neither right nor obtuse.",
-        "三角形按边和按角各有一个名称，有些组合不可能。等边三角形三个角都是 60 度，所以不可能是直角或钝角三角形。",
+        "A triangle has one name by sides and one by angles, and some pairs cannot happen. An equilateral triangle has three $60$ degree angles, so it can be neither right nor obtuse.",
+        "三角形按边和按角各有一个名称，有些组合不可能。等边三角形三个角都是 $60$ 度，所以不可能是直角或钝角三角形。",
       ],
       (rng) => {
-        const impossible: [string, string][] = [
-          ["An equilateral right triangle", "等边直角三角形"],
-          ["An equilateral obtuse triangle", "等边钝角三角形"],
-          ["A right triangle with two obtuse angles", "有两个钝角的直角三角形"],
-          ["A triangle with two right angles", "有两个直角的三角形"],
+        const impossible: [string, string, string, string][] = [
+          [
+            "An equilateral right triangle",
+            "等边直角三角形",
+            "All three angles of an equilateral triangle measure $60^\\circ$, so none of them is a right angle.",
+            "等边三角形的三个角都是 $60^\\circ$，所以没有直角。",
+          ],
+          [
+            "An equilateral obtuse triangle",
+            "等边钝角三角形",
+            "All three angles of an equilateral triangle measure $60^\\circ$, so none of them is obtuse.",
+            "等边三角形的三个角都是 $60^\\circ$，所以没有钝角。",
+          ],
+          [
+            "A right triangle with two obtuse angles",
+            "有两个钝角的直角三角形",
+            "Two obtuse angles alone add up to more than $180^\\circ$, which is the total of all three angles.",
+            "两个钝角的和已经超过 $180^\\circ$，而三个角的和才是 $180^\\circ$。",
+          ],
+          [
+            "A triangle with two right angles",
+            "有两个直角的三角形",
+            "Two right angles already add up to $180^\\circ$, which leaves $0^\\circ$ for the third angle.",
+            "两个直角的和已经是 $180^\\circ$，第三个角只剩 $0^\\circ$。",
+          ],
         ];
         const possible: [string, string][] = [
           ["An isosceles right triangle", "等腰直角三角形"],
@@ -310,10 +331,13 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           ["An equilateral acute triangle", "等边锐角三角形"],
         ];
         const bad = rng.pick(impossible);
-        return choose(rng, ["Which of these triangles cannot exist?", "下面哪种三角形不可能存在？"], bad, rng.sample(possible, 3), [
-          `${bad[0]} cannot exist, as its angles or sides would break the rule that the angles total 180 degrees.`,
-          `${bad[1]}不可能存在，因为它的角或边违反了内角和是 180 度的规律。`,
-        ]);
+        return choose(
+          rng,
+          ["Which of these triangles cannot exist?", "下面哪种三角形不可能存在？"],
+          [bad[0], bad[1]],
+          rng.sample(possible, 3),
+          [`${bad[0]} cannot exist. ${bad[2]}`, `${bad[1]}不可能存在。${bad[3]}`],
+        );
       },
     ),
   ],
@@ -326,7 +350,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         "如果等腰三角形的已知角可能是底角也可能是顶角，两种情况都要试。90 度或以上的角只能是顶角，因为两个这样的角太大了。",
       ],
       (rng) => {
-        const even = rng.int(5, 40) * 2;
+        const drawn = rng.int(5, 40) * 2;
+        const even = drawn === 60 ? 58 : drawn;
         const e = 180 - 2 * even;
         const v = (180 - even) / 2;
         const answer = Math.max(even, e, v);
@@ -338,8 +363,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           answer,
           [180 - even, 2 * even, Math.min(e, v)],
           [
-            `As a base angle, it leaves a vertex of $${e}^\\circ$. As the vertex, it leaves base angles of $${v}^\\circ$. The greatest measure is $${answer}^\\circ$.`,
-            `作为底角，顶角是 $${e}^\\circ$。作为顶角，底角是 $${v}^\\circ$。最大的是 $${answer}^\\circ$。`,
+            `As a base angle, it leaves a vertex of $${e}^\\circ$. As the vertex, it leaves base angles of $${v}^\\circ$. ${answer === even ? `As a base angle, it also has an equal partner of $${even}^\\circ$, so the` : "The"} greatest measure is $${answer}^\\circ$.`,
+            `作为底角，顶角是 $${e}^\\circ$。作为顶角，底角是 $${v}^\\circ$。${answer === even ? `作为底角时，另一个底角也是 $${even}^\\circ$，所以` : ""}最大的是 $${answer}^\\circ$。`,
           ],
         );
       },
@@ -354,15 +379,30 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         "平行四边形只有一个面积，却有两组底和高。所以两个乘积相等，四个长度中知道三个就能求出第四个。",
       ],
       (rng) => {
-        const area = rng.int(2, 15) * rng.pick([12, 24, 36, 60]);
-        const divisors = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20].filter((n) => area % n === 0);
-        const [b1, b2] = rng.sample(divisors, 2) as [number, number];
-        const h1 = area / b1;
-        const h2 = area / b2;
+        // Sides p m and q m with heights q k and p k: k < m keeps each height shorter than the slanted side.
+        const [p, q] = rng.pick<[number, number]>([
+          [2, 3],
+          [3, 2],
+          [3, 4],
+          [4, 3],
+          [2, 5],
+          [5, 2],
+          [3, 5],
+          [5, 3],
+          [4, 5],
+          [5, 4],
+        ]);
+        const m = rng.int(3, 8);
+        const k = rng.int(2, m - 1);
+        const b1 = p * m;
+        const b2 = q * m;
+        const h1 = q * k;
+        const h2 = p * k;
+        const area = b1 * h1;
         return whole(
           [
-            `A parallelogram has sides of ${b1} cm and ${b2} cm. The height to the ${b1} cm side is ${h1} cm. What is the height to the ${b2} cm side, in cm?`,
-            `平行四边形两边长 ${b1} 厘米和 ${b2} 厘米。到 ${b1} 厘米边的高是 ${h1} 厘米。到 ${b2} 厘米边的高是多少厘米？`,
+            `A parallelogram has sides of $${b1}$ cm and $${b2}$ cm. The height to the $${b1}$ cm side is $${h1}$ cm. What is the height to the $${b2}$ cm side, in cm?`,
+            `平行四边形两边长 $${b1}$ 厘米和 $${b2}$ 厘米。到 $${b1}$ 厘米边的高是 $${h1}$ 厘米。到 $${b2}$ 厘米边的高是多少厘米？`,
           ],
           h2,
           [h1, area, b1 + b2],
@@ -380,18 +420,19 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       ["The missing base of a trapezoid", "梯形缺失的底"],
       [
         "Twice the area divided by the height gives the sum of the two bases. Taking away the known base leaves the other, and forgetting to double the area is the usual slip.",
-        "面积的两倍除以高，得到两底之和。减去已知的底，就是另一个底；忘记把面积乘 2 是常见错误。",
+        "面积的两倍除以高，得到两底之和。减去已知的底，就是另一个底；忘记把面积乘 $2$ 是常见错误。",
       ],
       (rng) => {
         const h = rng.int(2, 12);
         const b1 = rng.int(2, 20);
-        const b2 = rng.int(2, 10) * 2 - (b1 % 2 === 0 ? 0 : 1);
+        const drawn = rng.int(2, 10) * 2 - (b1 % 2 === 0 ? 0 : 1);
+        const b2 = drawn === b1 ? drawn + 2 : drawn;
         const area = ((b1 + b2) * h) / 2;
         const shownArea = `${area}`;
         return whole(
           [
-            `A trapezoid has area ${shownArea} square cm and height ${h} cm. One base is ${b1} cm. How long is the other base, in cm?`,
-            `梯形的面积是 ${shownArea} 平方厘米，高 ${h} 厘米，一条底长 ${b1} 厘米。另一条底长多少厘米？`,
+            `A trapezoid has area $${shownArea}$ square cm and height $${h}$ cm. One base is $${b1}$ cm. How long is the other base, in cm?`,
+            `梯形的面积是 $${shownArea}$ 平方厘米，高 $${h}$ 厘米，一条底长 $${b1}$ 厘米。另一条底长多少厘米？`,
           ],
           b2,
           [b1 + b2, Number.isInteger(area / h) ? area / h : b2 + 1, b2 + b1 + 1],
@@ -421,12 +462,12 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         return whole(
           path === 1
             ? [
-                `A rectangular garden is ${w} m by ${h} m. A pond of ${a} m by ${b} m is inside it. What area of the garden is not pond, in square meters?`,
-                `长方形花园长 ${w} 米、宽 ${h} 米，里面有一个 ${a} 米 × ${b} 米的池塘。花园中不是池塘的面积是多少平方米？`,
+                `A rectangular garden is $${w}$ m by $${h}$ m. A pond of $${a}$ m by $${b}$ m is inside it. What area of the garden is not pond, in square meters?`,
+                `长方形花园长 $${w}$ 米、宽 $${h}$ 米，里面有一个 $${a}$ 米 × $${b}$ 米的池塘。花园中不是池塘的面积是多少平方米？`,
               ]
             : [
-                `A rectangular garden is ${w} m by ${h} m. A corner of ${a} m by ${b} m is paved, and so is another piece of the same size. What area is not paved, in square meters?`,
-                `长方形花园长 ${w} 米、宽 ${h} 米。一角 ${a} 米 × ${b} 米铺了砖，另一块同样大小的地方也铺了砖。没铺砖的面积是多少平方米？`,
+                `A rectangular garden is $${w}$ m by $${h}$ m. A corner of $${a}$ m by $${b}$ m is paved, and so is another piece of the same size. What area is not paved, in square meters?`,
+                `长方形花园长 $${w}$ 米、宽 $${h}$ 米。一角 $${a}$ 米 × $${b}$ 米铺了砖，另一块同样大小的地方也铺了砖。没铺砖的面积是多少平方米？`,
               ],
           area,
           [w * h, (w - a) * (h - b), 2 * (w + h)],
@@ -455,14 +496,14 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         const m2 = combined - d * n1;
         return whole(
           [
-            `A group of ${n1} has a mean score of ${m1}, and a group of ${n2} has a mean score of ${m2}. What is the mean score of all ${n1 + n2} together?`,
-            `${n1} 人一组的平均分是 ${m1}，${n2} 人一组的平均分是 ${m2}。这 ${n1 + n2} 人合起来的平均分是多少？`,
+            `A group of $${n1}$ has a mean score of $${m1}$, and a group of $${n2}$ has a mean score of $${m2}$. What is the mean score of all $${n1 + n2}$ together?`,
+            `$${n1}$ 人一组的平均分是 $${m1}$，$${n2}$ 人一组的平均分是 $${m2}$。这 $${n1 + n2}$ 人合起来的平均分是多少？`,
           ],
           combined,
           [Math.round((m1 + m2) / 2) === combined ? combined + 1 : Math.round((m1 + m2) / 2), m1, m2],
           [
-            `The total is $${n1} \\times ${m1} + ${n2} \\times ${m2} = ${n1 * m1 + n2 * m2}$, and dividing by ${n1 + n2} gives ${combined}.`,
-            `总分是 $${n1} \\times ${m1} + ${n2} \\times ${m2} = ${n1 * m1 + n2 * m2}$，除以 ${n1 + n2} 得 ${combined}。`,
+            `The total is $${n1} \\times ${m1} + ${n2} \\times ${m2} = ${n1 * m1 + n2 * m2}$, and dividing by $${n1 + n2}$ gives $${combined}$.`,
+            `总分是 $${n1} \\times ${m1} + ${n2} \\times ${m2} = ${n1 * m1 + n2 * m2}$，除以 $${n1 + n2}$ 得 $${combined}$。`,
           ],
         );
       },
@@ -484,12 +525,12 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         return whole(
           reach
             ? [
-                `Tickets cost ${price} dollars each. How many must a club sell to raise at least ${budget} dollars?`,
-                `每张票 ${price} 美元。社团至少要卖多少张才能筹到不少于 ${budget} 美元？`,
+                `Tickets cost $${price}$ dollars each. How many must a club sell to raise at least $${budget}$ dollars?`,
+                `每张票 $${price}$ 美元。社团至少要卖多少张才能筹到不少于 $${budget}$ 美元？`,
               ]
             : [
-                `Tickets cost ${price} dollars each. What is the greatest number a club can buy with ${budget} dollars?`,
-                `每张票 ${price} 美元。社团用 ${budget} 美元最多能买多少张？`,
+                `Tickets cost $${price}$ dollars each. What is the greatest number a club can buy with $${budget}$ dollars?`,
+                `每张票 $${price}$ 美元。社团用 $${budget}$ 美元最多能买多少张？`,
               ],
           reach ? floor + 1 : floor,
           reach ? [floor, floor + 2, budget - price] : [floor + 1, floor - 1, budget - price],
@@ -565,19 +606,20 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           ],
         ]);
         const square = rng.bool();
+        const one = (unit: string): string => (unit === "feet" ? "foot" : unit === "inches" ? "inch" : unit.slice(0, -1));
         const correct: [string, string] = square
-          ? [`${s[0]} per ${ti[0]} squared`, `${s[1]}每平方${ti[1]}`]
-          : [`${s[0]} per ${ti[0]}`, `${s[1]}每${ti[1]}`];
+          ? [`${s[0]} per ${one(ti[0])} squared`, `${s[1]}每平方${ti[1]}`]
+          : [`${s[0]} per ${one(ti[0])}`, `${s[1]}每${ti[1]}`];
         const others: [string, string][] = square
           ? [
-              [`${s[0]} per ${ti[0]}`, `${s[1]}每${ti[1]}`],
+              [`${s[0]} per ${one(ti[0])}`, `${s[1]}每${ti[1]}`],
               [`${s[0]} times ${ti[0]} squared`, `${s[1]}乘平方${ti[1]}`],
-              [`${ti[0]} squared per ${s[0]}`, `平方${ti[1]}每${s[1]}`],
+              [`${ti[0]} squared per ${one(s[0])}`, `平方${ti[1]}每${s[1]}`],
             ]
           : [
-              [`${s[0]} per ${ti[0]} squared`, `${s[1]}每平方${ti[1]}`],
+              [`${s[0]} per ${one(ti[0])} squared`, `${s[1]}每平方${ti[1]}`],
               [`${s[0]} times ${ti[0]}`, `${s[1]}乘${ti[1]}`],
-              [`${ti[0]} per ${s[0]}`, `${ti[1]}每${s[1]}`],
+              [`${ti[0]} per ${one(s[0])}`, `${ti[1]}每${s[1]}`],
             ];
         const eq = square ? "d = kt^{2}" : "d = kt";
         return choose(
@@ -613,12 +655,15 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         const v2 = v1 + rate * dh;
         return whole(
           [
-            `A tank holds ${v1} liters after ${h1} hours and ${v2} liters after ${h1 + dh} hours. If it fills steadily, what is the rate, in liters per hour?`,
-            `水箱 ${h1} 小时后有 ${v1} 升，${h1 + dh} 小时后有 ${v2} 升。若匀速注水，速率是每小时多少升？`,
+            `A tank holds $${v1}$ liters after $${h1}$ hours and $${v2}$ liters after $${h1 + dh}$ hours. If it fills steadily, what is the rate, in liters per hour?`,
+            `水箱 $${h1}$ 小时后有 $${v1}$ 升，$${h1 + dh}$ 小时后有 $${v2}$ 升。若匀速注水，速率是每小时多少升？`,
           ],
           rate,
           [v2 - v1, Math.round(v2 / (h1 + dh)) === rate ? rate + 1 : Math.round(v2 / (h1 + dh)), rate + dh],
-          [`$(${v2} - ${v1}) \\div ${dh} = ${rate}$ liters per hour.`, `$(${v2} - ${v1}) \\div ${dh} = ${rate}$ 升每小时。`],
+          [
+            `The volume changes by $${v2} - ${v1} = ${v2 - v1}$ liters over $${h1 + dh} - ${h1} = ${dh}$ hours, so the rate is $${v2 - v1} \\div ${dh} = ${rate}$ liters per hour.`,
+            `水量变化 $${v2} - ${v1} = ${v2 - v1}$ 升，经过 $${h1 + dh} - ${h1} = ${dh}$ 小时，所以速率是 $${v2 - v1} \\div ${dh} = ${rate}$ 升每小时。`,
+          ],
         );
       },
     ),
@@ -674,8 +719,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           x + y,
           [k * (x + y), x, y],
           [
-            `Adding gives $${k}x + ${k}y = ${k * (x + y)}$, and dividing by ${k} gives ${x + y}.`,
-            `相加得 $${k}x + ${k}y = ${k * (x + y)}$，除以 ${k} 得 ${x + y}。`,
+            `Adding gives $${k}x + ${k}y = ${k * (x + y)}$, and dividing by $${k}$ gives $${x + y}$.`,
+            `相加得 $${k}x + ${k}y = ${k * (x + y)}$，除以 $${k}$ 得 $${x + y}$。`,
           ],
         );
       },
@@ -714,14 +759,14 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         return chooseMath(
           rng,
           [
-            `To eliminate $x$ from $${a}x + ${c}y = 1$ and $${b}x - ${d}y = 2$, which multipliers work with the least common multiple, for the first and second equations?`,
-            `要从 $${a}x + ${c}y = 1$ 和 $${b}x - ${d}y = 2$ 中消去 $x$，用最小公倍数时，第一、第二个方程应分别乘哪两个数？`,
+            `To eliminate $x$ from $${a}x + ${c}y = 1$ and $${b}x - ${d}y = 2$ by adding them, using the least common multiple of the coefficients of $x$, what should the first and second equations be multiplied by?`,
+            `要把 $${a}x + ${c}y = 1$ 和 $${b}x - ${d}y = 2$ 相加来消去 $x$，并用 $x$ 的系数的最小公倍数，第一、第二个方程应分别乘哪两个数？`,
           ],
           `${b} \\text{ and } {-${a}}`,
           [`${a} \\text{ and } {-${b}}`, `${b} \\text{ and } ${a}`, `${lcm} \\text{ and } {-${lcm}}`],
           [
-            `The coefficients of $x$ become ${lcm} and $-${lcm}$, which cancel when added.`,
-            `$x$ 的系数变成 ${lcm} 和 $-${lcm}$，相加时抵消。`,
+            `The coefficients of $x$ become $${lcm}$ and $-${lcm}$, which cancel when added.`,
+            `$x$ 的系数变成 $${lcm}$ 和 $-${lcm}$，相加时抵消。`,
           ],
         );
       },
@@ -733,7 +778,7 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       ["The rule behind a table", "表格背后的规则"],
       [
         "A table, a rule and a graph can show one function. To find a linear rule from a table, take the change per step as the multiplier and the output at zero as the constant.",
-        "表格、规则和图像可以表示同一个函数。要由表格求线性规则，每步的变化是乘数，输入为 0 时的输出是常数。",
+        "表格、规则和图像可以表示同一个函数。要由表格求线性规则，每步的变化是乘数，输入为 $0$ 时的输出是常数。",
       ],
       (rng) => {
         const m = rng.int(2, 9) * (rng.bool() ? 1 : -1);
@@ -748,8 +793,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           line(m, b),
           [line(b, m), line(m, -b), line(-m, b)],
           [
-            `$y$ changes by ${m} per step, and stepping back from $x = 1$ to $x = 0$ gives ${b}.`,
-            `每步 $y$ 变化 ${m}，从 $x = 1$ 退回到 $x = 0$ 得 ${b}。`,
+            `$y$ changes by $${m}$ per step, and stepping back from $x = 1$ to $x = 0$ gives $${b}$.`,
+            `每步 $y$ 变化 $${m}$，从 $x = 1$ 退回到 $x = 0$ 得 $${b}$。`,
           ],
         );
       },

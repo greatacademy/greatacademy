@@ -557,7 +557,7 @@ export const areaOfTrapezoids: TopicDef = {
       id: "the-trapezoid-formula",
       title: t("The trapezoid formula", "梯形面积公式"),
       explanation: t(
-        "A **trapezoid** has one pair of parallel sides, its **bases** $b_1$ and $b_2$; the height $h$ is the distance between them. Two copies of a trapezoid, one turned over, make a parallelogram with base $b_1 + b_2$, so\n\n$$A = \\tfrac{1}{2} (b_1 + b_2) h.$$\n\nA trapezoid with bases $6$ m and $10$ m and height $4$ m has area $\\tfrac{1}{2} \\cdot 16 \\cdot 4 = 32\\text{ m}^2$.",
+        "A **trapezoid** has a pair of parallel sides, its **bases** $b_1$ and $b_2$; the height $h$ is the distance between them. Two copies of a trapezoid, one turned over, make a parallelogram with base $b_1 + b_2$, so\n\n$$A = \\tfrac{1}{2} (b_1 + b_2) h.$$\n\nA trapezoid with bases $6$ m and $10$ m and height $4$ m has area $\\tfrac{1}{2} \\cdot 16 \\cdot 4 = 32\\text{ m}^2$.",
         "**梯形**有一组平行的边，叫它的**上底** $b_1$ 和**下底** $b_2$；高 $h$ 是它们之间的距离。两个完全一样的梯形，一个倒过来，拼成底为 $b_1 + b_2$ 的平行四边形，所以\n\n$$A = \\tfrac{1}{2} (b_1 + b_2) h.$$\n\n上下底为 $6$ 米和 $10$ 米、高 $4$ 米的梯形面积是 $\\tfrac{1}{2} \\cdot 16 \\cdot 4 = 32\\text{ m}^2$。",
       ),
       generate(rng) {

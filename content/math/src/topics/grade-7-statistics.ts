@@ -10,6 +10,13 @@ import { mathText, pickChoice } from "./grade-4-fractions.ts";
 // joint and cumulative frequency tables, the mean, median and mode of tabulated and grouped data,
 // and comparing two data sets by their centers, spreads and overlap.
 
+/** ordinal writes a position with its English suffix, as in "$22$nd" and "$13$th". */
+function ordinal(n: number): string {
+  const teen = n % 100 >= 11 && n % 100 <= 13;
+  const suffix = teen ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th");
+  return `$${n}$${suffix}`;
+}
+
 /** ccss is a helper for writing Common Core codes. */
 const ccss = (...codes: string[]) => codes.map((c) => `CCSS.${c}`);
 
@@ -1354,8 +1361,8 @@ export const calculatingMediansFromFrequencyTables = topic(
         const cum = freqs.map((_, i) => sum(freqs.slice(0, i + 1)));
         const where =
           n % 2 === 1
-            ? t(`the $${(n + 1) / 2}$th`, `第 $${(n + 1) / 2}$ 个`)
-            : t(`the mean of the $${n / 2}$th and $${n / 2 + 1}$th`, `第 $${n / 2}$ 个和第 $${n / 2 + 1}$ 个数据的平均数`);
+            ? t(`the ${ordinal((n + 1) / 2)}`, `第 $${(n + 1) / 2}$ 个`)
+            : t(`the mean of the ${ordinal(n / 2)} and ${ordinal(n / 2 + 1)}`, `第 $${n / 2}$ 个和第 $${n / 2 + 1}$ 个数据的平均数`);
         const a = xs[Math.ceil(n / 2) - 1]!;
         const b = xs[Math.floor(n / 2)]!;
         return numberProblem({
@@ -1373,7 +1380,7 @@ export const calculatingMediansFromFrequencyTables = topic(
             median(freqs),
           ],
           solution: t(
-            `There are $${freqs.join(" + ")} = ${n}$ values, so the median is ${where.en}. The running totals are $${list(cum)}$, so${n % 2 === 1 ? ` the $${(n + 1) / 2}$th value is $${a}$.` : ` the middle values are $${a}$ and $${b}$, and the median is $${dec(med)}$.`}`,
+            `There are $${freqs.join(" + ")} = ${n}$ values, so the median is ${where.en}. The running totals are $${list(cum)}$, so${n % 2 === 1 ? ` the ${ordinal((n + 1) / 2)} value is $${a}$.` : ` the middle values are $${a}$ and $${b}$, and the median is $${dec(med)}$.`}`,
             `共有 $${freqs.join(" + ")} = ${n}$ 个数据，所以中位数是${where["zh-CN"]}。累计和依次是 $${list(cum)}$，所以${n % 2 === 1 ? `第 $${(n + 1) / 2}$ 个数据是 $${a}$。` : `中间两个数据是 $${a}$ 和 $${b}$，中位数是 $${dec(med)}$。`}`,
           ),
         });
@@ -1405,7 +1412,7 @@ export const calculatingMediansFromFrequencyTables = topic(
               .filter((i) => i >= 0 && i < d.freqs.length && i !== lo)
               .map(cls),
             t(
-              `There are $${d.n}$ values, so the median is ${d.n % 2 === 1 ? `the $${(d.n + 1) / 2}$th` : `between the $${d.n / 2}$th and the $${d.n / 2 + 1}$th`}. The running totals are $${list(cum)}$, so it lies in $${classTex(d.g, d.edges[lo]!, d.edges[lo + 1]!)}$.`,
+              `There are $${d.n}$ values, so the median is ${d.n % 2 === 1 ? `the ${ordinal((d.n + 1) / 2)}` : `between the ${ordinal(d.n / 2)} and the ${ordinal(d.n / 2 + 1)}`}. The running totals are $${list(cum)}$, so it lies in $${classTex(d.g, d.edges[lo]!, d.edges[lo + 1]!)}$.`,
               `共有 $${d.n}$ 个数据，所以中位数${d.n % 2 === 1 ? `是第 $${(d.n + 1) / 2}$ 个` : `在第 $${d.n / 2}$ 个和第 $${d.n / 2 + 1}$ 个之间`}。累计和依次是 $${list(cum)}$，所以它在 $${classTex(d.g, d.edges[lo]!, d.edges[lo + 1]!)}$ 中。`,
             ),
           );
@@ -1618,7 +1625,7 @@ export const calculatingModesAndMediansFromHistograms = topic(
             cls(lo),
             [top, Math.floor(d.freqs.length / 2), lo + 1, lo - 1].filter((k) => k >= 0 && k < d.freqs.length && k !== lo).map(cls),
             t(
-              `The bar heights add up to $${d.freqs.join(" + ")} = ${d.n}$, so the median is ${d.n % 2 === 1 ? `the $${(d.n + 1) / 2}$th value` : `between the $${d.n / 2}$th and $${d.n / 2 + 1}$th values`}. The running totals are $${list(cum)}$, so it lies in $${classTex(d.g, d.edges[lo]!, d.edges[lo + 1]!)}$.`,
+              `The bar heights add up to $${d.freqs.join(" + ")} = ${d.n}$, so the median is ${d.n % 2 === 1 ? `the ${ordinal((d.n + 1) / 2)} value` : `between the ${ordinal(d.n / 2)} and ${ordinal(d.n / 2 + 1)} values`}. The running totals are $${list(cum)}$, so it lies in $${classTex(d.g, d.edges[lo]!, d.edges[lo + 1]!)}$.`,
               `各矩形条高度之和是 $${d.freqs.join(" + ")} = ${d.n}$，所以中位数${d.n % 2 === 1 ? `是第 $${(d.n + 1) / 2}$ 个数据` : `在第 $${d.n / 2}$ 个和第 $${d.n / 2 + 1}$ 个数据之间`}。累计和依次是 $${list(cum)}$，所以它在 $${classTex(d.g, d.edges[lo]!, d.edges[lo + 1]!)}$ 中。`,
             ),
             histogramFigure(d),

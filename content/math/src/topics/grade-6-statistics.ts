@@ -336,8 +336,8 @@ export const introductionToStatistics = topic(
         const n = rng.int(20, 35);
         return choiceProblem({
           prompt: t(
-            `A survey asks each of the ${n} students in a class: “${q.question.en}” Are the answers numerical or categorical data?`,
-            `一项调查问班上 ${n} 名学生中的每一位：“${q.question["zh-CN"]}”得到的答案是数值数据还是分类数据？`,
+            `A survey asks each of the $${n}$ students in a class: “${q.question.en}” Are the answers numerical or categorical data?`,
+            `一项调查问班上 $${n}$ 名学生中的每一位：“${q.question["zh-CN"]}”得到的答案是数值数据还是分类数据？`,
           ),
           options: [t("Numerical", "数值数据"), t("Categorical", "分类数据")],
           correct: q.numerical ? 0 : 1,
@@ -421,8 +421,8 @@ export const theMeanOfADataSet: TopicDef = {
     "the-mean-of-a-data-set",
     t("Finding the Mean", "求平均数"),
     t(
-      "The mean of a data set is the sum of the values divided by the number of values. Since mean = sum ÷ count, the sum is mean × count: a team that scores a mean of 15 points over 4 games scores 60 points in all. When a value is added, find the new sum and divide by the new count; averaging the old mean with the new value gives the wrong answer.",
-      "一组数据的平均数等于各数据之和除以数据个数。由于平均数 = 总和 ÷ 个数，所以总和 = 平均数 × 个数：一支球队 4 场比赛平均每场得 15 分，一共得 60 分。加入一个新数据时，先求新的总和，再除以新的个数；把原平均数和新数据再平均是错误的。",
+      "The mean of a data set is the sum of the values divided by the number of values. Since mean = sum ÷ count, the sum is mean × count: a team that scores a mean of $15$ points over $4$ games scores $60$ points in all. When a value is added, find the new sum and divide by the new count; averaging the old mean with the new value gives the wrong answer.",
+      "一组数据的平均数等于各数据之和除以数据个数。由于平均数 = 总和 ÷ 个数，所以总和 = 平均数 × 个数：一支球队 $4$ 场比赛平均每场得 $15$ 分，一共得 $60$ 分。加入一个新数据时，先求新的总和，再除以新的个数；把原平均数和新数据再平均是错误的。",
     ),
     ["mean-of-a-data-set", "introduction-to-statistics"],
     ["6.SP.A.3", "6.SP.B.5.C"],
@@ -467,18 +467,18 @@ export const theMeanOfADataSet: TopicDef = {
           const story = rng.pick([
             (n: number, m: string) =>
               t(
-                `A basketball team scored a mean of $${m}$ points per game over ${n} games. How many points did the team score in all?`,
-                `一支篮球队 ${n} 场比赛平均每场得 $${m}$ 分。这支球队一共得了多少分？`,
+                `A basketball team scored a mean of $${m}$ points per game over $${n}$ games. How many points did the team score in all?`,
+                `一支篮球队 $${n}$ 场比赛平均每场得 $${m}$ 分。这支球队一共得了多少分？`,
               ),
             (n: number, m: string) =>
               t(
-                `${names[n % names.length]} ran a mean of $${m}$ kilometers a day for ${n} days. How many kilometers is that in all?`,
-                `${names[n % names.length]} 连续 ${n} 天平均每天跑 $${m}$ 千米。一共跑了多少千米？`,
+                `${names[n % names.length]} ran a mean of $${m}$ kilometers a day for $${n}$ days. How many kilometers is that in all?`,
+                `${names[n % names.length]} 连续 $${n}$ 天平均每天跑 $${m}$ 千米。一共跑了多少千米？`,
               ),
             (n: number, m: string) =>
               t(
-                `Over ${n} weeks, a class collected a mean of $${m}$ kilograms of paper per week for recycling. How many kilograms did the class collect in all?`,
-                `一个班 ${n} 周里平均每周收集 $${m}$ 千克废纸用于回收。这个班一共收集了多少千克？`,
+                `Over $${n}$ weeks, a class collected a mean of $${m}$ kilograms of paper per week for recycling. How many kilograms did the class collect in all?`,
+                `一个班 $${n}$ 周里平均每周收集 $${m}$ 千克废纸用于回收。这个班一共收集了多少千克？`,
               ),
           ]);
           const decimal = rng.bool(0.6);
@@ -519,8 +519,8 @@ export const theMeanOfADataSet: TopicDef = {
             const xs = Number(x.n);
             return numberProblem({
               prompt: t(
-                `The mean of ${n} quiz scores is $${m}$. One more score, $${xs}$, is added. What is the mean of all ${n + 1} scores?`,
-                `${n} 次小测验成绩的平均数是 $${m}$。又加入一个成绩 $${xs}$。全部 ${n + 1} 个成绩的平均数是多少？`,
+                `The mean of $${n}$ quiz scores is $${m}$. One more score, $${xs}$, is added. What is the mean of all $${n + 1}$ scores?`,
+                `$${n}$ 次小测验成绩的平均数是 $${m}$。又加入一个成绩 $${xs}$。全部 $${n + 1}$ 个成绩的平均数是多少？`,
               ),
               answer: m2,
               form: "decimal",
@@ -581,8 +581,8 @@ export const theMedianOfADataSet = topic(
             ...[mean(xs).div(Q.of(10))].filter(isTerminating),
           ],
           solution: t(
-            `Sort the values: $${tenthsList(s)}$. There are ${n} values, so the median is ${middle.en}`,
-            `先排序：$${tenthsList(s)}$。共 ${n} 个数，所以中位数是${middle["zh-CN"]}`,
+            `Sort the values: $${tenthsList(s)}$. There are $${n}$ values, so the median is ${middle.en}`,
+            `先排序：$${tenthsList(s)}$。共 $${n}$ 个数，所以中位数是${middle["zh-CN"]}`,
           ),
         });
       },
@@ -605,8 +605,8 @@ export const theMedianOfADataSet = topic(
         const shown = s.map((v, i) => (i === hide ? "\\square" : String(v)));
         return numberProblem({
           prompt: t(
-            `The ${n} values $${list(shown)}$ are listed from least to greatest, and their median is $${dec(m)}$. What is the missing value?`,
-            `${n} 个数据 $${list(shown)}$ 已按从小到大排列，它们的中位数是 $${dec(m)}$。缺失的数是多少？`,
+            `The $${n}$ values $${list(shown)}$ are listed from least to greatest, and their median is $${dec(m)}$. What is the missing value?`,
+            `$${n}$ 个数据 $${list(shown)}$ 已按从小到大排列，它们的中位数是 $${dec(m)}$。缺失的数是多少？`,
           ),
           answer: x,
           form: "integer",
@@ -653,8 +653,8 @@ export const theMedianOfADataSet = topic(
             form: "decimal",
             wrong: [m0, unsorted, m0.add(Q.of(v)).div(Q.of(2))],
             solution: t(
-              `With $${v}$ added, the ${n + 1} values sorted are $${list(s)}$, so the median is ${middle.en}`,
-              `加入 $${v}$ 后，${n + 1} 个数排序为 $${list(s)}$，所以中位数是${middle["zh-CN"]}`,
+              `With $${v}$ added, the $${n + 1}$ values sorted are $${list(s)}$, so the median is ${middle.en}`,
+              `加入 $${v}$ 后，$${n + 1}$ 个数排序为 $${list(s)}$，所以中位数是${middle["zh-CN"]}`,
             ),
           });
         }
@@ -768,8 +768,8 @@ export const theModeOfADataSet = topic(
             one(a),
             [pair(a, b), one(b), noMode, one(3)],
             t(
-              `Sorted: $${list(sorted(xs))}$. The value $${a}$ occurs 3 times and $${b}$ twice, so the only mode is $${a}$.`,
-              `排序后：$${list(sorted(xs))}$。$${a}$ 出现 3 次，$${b}$ 出现 2 次，所以众数只有 $${a}$。`,
+              `Sorted: $${list(sorted(xs))}$. The value $${a}$ occurs $3$ times and $${b}$ twice, so the only mode is $${a}$.`,
+              `排序后：$${list(sorted(xs))}$。$${a}$ 出现 $3$ 次，$${b}$ 出现 $2$ 次，所以众数只有 $${a}$。`,
             ),
           );
         }
@@ -850,8 +850,8 @@ export const rangeQuartilesAndIqr = topic(
           if (lo >= 0 || hi <= 0 || hi + lo === 0) continue;
           return numberProblem({
             prompt: t(
-              `The low temperatures, in °C, in a town on ${n} winter days were $${list(xs)}$. What is the range of the temperatures?`,
-              `某镇冬季 ${n} 天的最低气温（°C）分别是 $${list(xs)}$。这些气温的极差是多少？`,
+              `The low temperatures, in °C, in a town on $${n}$ winter days were $${list(xs)}$. What is the range of the temperatures?`,
+              `某镇冬季 $${n}$ 天的最低气温（°C）分别是 $${list(xs)}$。这些气温的极差是多少？`,
             ),
             answer: hi - lo,
             form: "integer",
@@ -1023,8 +1023,8 @@ export const removingOutliers = topic(
           form: "decimal",
           wrong: [median(xs), unsortedMiddle(xs.filter((x) => x !== extreme)), ...[mean(base)].filter(clean)],
           solution: t(
-            `${spotTheOutlier(xs, extreme).en} The remaining ${n} values sorted are $${list(s)}$, so the median is $${dec(m)}$.`,
-            `${spotTheOutlier(xs, extreme)["zh-CN"]}其余 ${n} 个数排序为 $${list(s)}$，所以中位数是 $${dec(m)}$。`,
+            `${spotTheOutlier(xs, extreme).en} The remaining $${n}$ values sorted are $${list(s)}$, so the median is $${dec(m)}$.`,
+            `${spotTheOutlier(xs, extreme)["zh-CN"]}其余 $${n}$ 个数排序为 $${list(s)}$，所以中位数是 $${dec(m)}$。`,
           ),
         });
       },
@@ -1568,8 +1568,8 @@ export const measuringCentralityFromDotPlots = topic(
               form: "integer",
               wrong: [top, median(xs), Math.max(...xs)],
               solution: t(
-                `The tallest stack has ${top} dots, above $${mode}$, so the mode is $${mode}$.`,
-                `最高的一叠有 ${top} 个点，在 $${mode}$ 上方，所以众数是 $${mode}$。`,
+                `The tallest stack has $${top}$ dots, above $${mode}$, so the mode is $${mode}$.`,
+                `最高的一叠有 $${top}$ 个点，在 $${mode}$ 上方，所以众数是 $${mode}$。`,
               ),
             }),
             figure: dotPlotFigure(xs, axis),
@@ -1699,8 +1699,8 @@ export const measuringQuartilesAndIqrFromDotPlots = topic(
             form: "decimal",
             wrong: [third ? i3 : i1, median(xs), third ? q1 : q3],
             solution: t(
-              `There are ${n} dots: ${stacks(xs).en}. The ${third ? "upper" : "lower"} half is the ${third ? "last" : "first"} ${lower.length} dots, $${list(third ? upper : lower)}$, and its median is $${third ? "Q_3" : "Q_1"} = ${dec(q)}$.`,
-              `共有 ${n} 个点：${stacks(xs)["zh-CN"]}。${third ? "上" : "下"}半部分是${third ? "后" : "前"} ${lower.length} 个点 $${list(third ? upper : lower)}$，它的中位数是 $${third ? "Q_3" : "Q_1"} = ${dec(q)}$。`,
+              `There are $${n}$ dots: ${stacks(xs).en}. The ${third ? "upper" : "lower"} half is the ${third ? "last" : "first"} ${lower.length} dots, $${list(third ? upper : lower)}$, and its median is $${third ? "Q_3" : "Q_1"} = ${dec(q)}$.`,
+              `共有 $${n}$ 个点：${stacks(xs)["zh-CN"]}。${third ? "上" : "下"}半部分是${third ? "后" : "前"} ${lower.length} 个点 $${list(third ? upper : lower)}$，它的中位数是 $${third ? "Q_3" : "Q_1"} = ${dec(q)}$。`,
             ),
           }),
           figure: dotPlotFigure(xs, axis),

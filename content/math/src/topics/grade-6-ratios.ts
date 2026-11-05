@@ -172,8 +172,8 @@ export const writingRatiosUsingFractions = topic(
         const [a, b] = [p * k, q * k];
         return numberProblem({
           prompt: t(
-            `A box has ${a} ${th.a.en} and ${b} ${th.b.en}. Write the ratio of ${th.a.en} to ${th.b.en} as a fraction in simplest form.`,
-            `盒子里有 ${a} 个${th.a["zh-CN"]}和 ${b} 个${th.b["zh-CN"]}。把${th.a["zh-CN"]}与${th.b["zh-CN"]}的比写成最简分数。`,
+            `A box has $${a}$ ${th.a.en} and $${b}$ ${th.b.en}. Write the ratio of ${th.a.en} to ${th.b.en} as a fraction in simplest form.`,
+            `盒子里有 $${a}$ 个${th.a["zh-CN"]}和 $${b}$ 个${th.b["zh-CN"]}。把${th.a["zh-CN"]}与${th.b["zh-CN"]}的比写成最简分数。`,
           ),
           answer: Q.of(p, q),
           form: "fraction",
@@ -201,8 +201,8 @@ export const writingRatiosUsingFractions = topic(
         const g = gcd(a, total);
         return numberProblem({
           prompt: t(
-            `A box has ${a} ${th.a.en} and ${b} ${th.b.en}. Write the ratio of ${th.a.en} to all the items in the box as a fraction in simplest form.`,
-            `盒子里有 ${a} 个${th.a["zh-CN"]}和 ${b} 个${th.b["zh-CN"]}。把${th.a["zh-CN"]}与盒子里物品总数的比写成最简分数。`,
+            `A box has $${a}$ ${th.a.en} and $${b}$ ${th.b.en}. Write the ratio of ${th.a.en} to all the items in the box as a fraction in simplest form.`,
+            `盒子里有 $${a}$ 个${th.a["zh-CN"]}和 $${b}$ 个${th.b["zh-CN"]}。把${th.a["zh-CN"]}与盒子里物品总数的比写成最简分数。`,
           ),
           answer: Q.of(a, total),
           form: "fraction",
@@ -221,8 +221,8 @@ export const comparingRatios = topic(
   "comparing-ratios",
   t("Comparing Ratios", "比较比的大小"),
   t(
-    "To compare a : b with c : d, compare the fractions a/b and c/d, for example by rewriting them with a common denominator. A juice mix of 2 : 3 is stronger than 3 : 5 because 2/3 = 10/15 > 9/15 = 3/5.",
-    "比较 a : b 与 c : d，就是比较分数 a/b 与 c/d，例如先通分。果汁与水按 2 : 3 调的比按 3 : 5 调的更浓，因为 2/3 = 10/15 > 9/15 = 3/5。",
+    "To compare $a : b$ with $c : d$, compare the fractions $\\frac{a}{b}$ and $\\frac{c}{d}$, for example by rewriting them with a common denominator. A juice mix of $2 : 3$ is stronger than $3 : 5$ because $\\frac{2}{3} = \\frac{10}{15}$ > $\\frac{9}{15} = \\frac{3}{5}$.",
+    "比较 $a : b$ 与 $c : d$，就是比较分数 $\\frac{a}{b}$ 与 $\\frac{c}{d}$，例如先通分。果汁与水按 $2 : 3$ 调的比按 $3 : 5$ 调的更浓，因为 $\\frac{2}{3} = \\frac{10}{15}$ > $\\frac{9}{15} = \\frac{3}{5}$。",
   ),
   ["writing-ratios-using-fractions", "comparing-fractions"],
   ["6.RP.A.3"],
@@ -380,8 +380,8 @@ export const reasoningWithEquivalentRatios = topic(
         const k = rng.int(2, 12);
         return numberProblem({
           prompt: t(
-            `The ratio of ${th.a.en} to ${th.b.en} in a collection is $${ratio(a, b)}$. There are ${a * k} ${th.a.en}. How many ${th.b.en} are there?`,
-            `一组物品中${th.a["zh-CN"]}与${th.b["zh-CN"]}的比是 $${ratio(a, b)}$。有 ${a * k} 个${th.a["zh-CN"]}，有多少个${th.b["zh-CN"]}？`,
+            `The ratio of ${th.a.en} to ${th.b.en} in a collection is $${ratio(a, b)}$. There are $${a * k}$ ${th.a.en}. How many ${th.b.en} are there?`,
+            `一组物品中${th.a["zh-CN"]}与${th.b["zh-CN"]}的比是 $${ratio(a, b)}$。有 $${a * k}$ 个${th.a["zh-CN"]}，有多少个${th.b["zh-CN"]}？`,
           ),
           answer: b * k,
           form: "integer",
@@ -410,8 +410,8 @@ export const reasoningWithEquivalentRatios = topic(
         const name = askA ? th.a : th.b;
         return numberProblem({
           prompt: t(
-            `The ratio of ${th.a.en} to ${th.b.en} is $${ratio(a, b)}$, and there are ${total} of them altogether. How many ${name.en} are there?`,
-            `${th.a["zh-CN"]}与${th.b["zh-CN"]}的比是 $${ratio(a, b)}$，一共有 ${total} 个。${name["zh-CN"]}有多少个？`,
+            `The ratio of ${th.a.en} to ${th.b.en} is $${ratio(a, b)}$, and there are $${total}$ of them altogether. How many ${name.en} are there?`,
+            `${th.a["zh-CN"]}与${th.b["zh-CN"]}的比是 $${ratio(a, b)}$，一共有 $${total}$ 个。${name["zh-CN"]}有多少个？`,
           ),
           answer,
           form: "integer",
@@ -430,8 +430,8 @@ export const furtherReasoningWithEquivalentRatios = topic(
   "further-reasoning-with-equivalent-ratios",
   t("Further Reasoning With Equivalent Ratios", "用等比推理（进阶）"),
   t(
-    "The difference between the terms also scales. With a ratio of 2 : 5 and 21 more of the second kind, the difference 3 parts is 21, so one part is 7. A ratio of three quantities a : b : c works the same way, with a + b + c parts in all.",
-    "两项之差也按同样倍数变化。比是 2 : 5，第二种多 21 个，相差的 3 份是 21，所以每份是 7。三个量的连比 a : b : c 也一样，总共有 a + b + c 份。",
+    "The difference between the terms also scales. With a ratio of $2 : 5$ and $21$ more of the second kind, the difference $3$ parts is $21$, so one part is $7$. A ratio of three quantities a : b : c works the same way, with a + b + c parts in all.",
+    "两项之差也按同样倍数变化。比是 $2 : 5$，第二种多 $21$ 个，相差的 $3$ 份是 $21$，所以每份是 $7$。三个量的连比 a : b : c 也一样，总共有 a + b + c 份。",
   ),
   ["reasoning-with-equivalent-ratios"],
   ["6.RP.A.3"],
@@ -455,8 +455,8 @@ export const furtherReasoningWithEquivalentRatios = topic(
         const name = askA ? th.a : th.b;
         return numberProblem({
           prompt: t(
-            `The ratio of ${th.a.en} to ${th.b.en} is $${ratio(a, b)}$. There are ${diff} more ${th.b.en} than ${th.a.en}. How many ${name.en} are there?`,
-            `${th.a["zh-CN"]}与${th.b["zh-CN"]}的比是 $${ratio(a, b)}$。${th.b["zh-CN"]}比${th.a["zh-CN"]}多 ${diff} 个。${name["zh-CN"]}有多少个？`,
+            `The ratio of ${th.a.en} to ${th.b.en} is $${ratio(a, b)}$. There are $${diff}$ more ${th.b.en} than ${th.a.en}. How many ${name.en} are there?`,
+            `${th.a["zh-CN"]}与${th.b["zh-CN"]}的比是 $${ratio(a, b)}$。${th.b["zh-CN"]}比${th.a["zh-CN"]}多 $${diff}$ 个。${name["zh-CN"]}有多少个？`,
           ),
           answer,
           form: "integer",
@@ -487,8 +487,8 @@ export const furtherReasoningWithEquivalentRatios = topic(
         const answer = parts[which]! * k;
         return numberProblem({
           prompt: t(
-            `A bag holds red, green and blue beads in the ratio $${ratio(a, b, c)}$. There are ${total} beads. How many ${colors[which]!.en} beads are there?`,
-            `袋子里红、绿、蓝珠子的比是 $${ratio(a, b, c)}$，共 ${total} 颗。${colors[which]!["zh-CN"]}珠子有多少颗？`,
+            `A bag holds red, green and blue beads in the ratio $${ratio(a, b, c)}$. There are $${total}$ beads. How many ${colors[which]!.en} beads are there?`,
+            `袋子里红、绿、蓝珠子的比是 $${ratio(a, b, c)}$，共 $${total}$ 颗。${colors[which]!["zh-CN"]}珠子有多少颗？`,
           ),
           answer,
           form: "integer",
@@ -540,8 +540,8 @@ export const ratioTables = topic(
           form: "integer",
           wrong: [a * k + (b - a), b * (k + 1), b * ks[hole - 1]! + b],
           solution: t(
-            `The first column is $${ratio(a * ks[0]!, b * ks[0]!)}$, which simplifies to $${ratio(a, b)}$. The top entry $${a * k}$ is $${a} \\times ${k}$, so the bottom entry is $${b} \\times ${k} = ${b * k}$.`,
-            `第一列是 $${ratio(a * ks[0]!, b * ks[0]!)}$，化简为 $${ratio(a, b)}$。上面的数 $${a * k} = ${a} \\times ${k}$，所以下面的数是 $${b} \\times ${k} = ${b * k}$。`,
+            `The first column is $${ratio(a * ks[0]!, b * ks[0]!)}$${ks[0] === 1 ? "" : `, which simplifies to $${ratio(a, b)}$`}. The top entry $${a * k}$ is $${a} \\times ${k}$, so the bottom entry is $${b} \\times ${k} = ${b * k}$.`,
+            `第一列是 $${ratio(a * ks[0]!, b * ks[0]!)}$${ks[0] === 1 ? "" : `，化简为 $${ratio(a, b)}$`}。上面的数 $${a * k} = ${a} \\times ${k}$，所以下面的数是 $${b} \\times ${k} = ${b * k}$。`,
           ),
         });
       },
@@ -563,15 +563,15 @@ export const ratioTables = topic(
         const x = p * m;
         return numberProblem({
           prompt: t(
-            `A recipe uses ${a} cups of flour for every ${b} muffins. Complete the ratio table: how many muffins can be made with ${x} cups of flour? $$${tableLatex(["flour (cups)", "muffins"], [String(a), String(x)], [String(b), "\\square"])}$$`,
-            `一份食谱每 ${b} 个松饼用 ${a} 杯面粉。补全比例表：用 ${x} 杯面粉可以做多少个松饼？$$${tableLatex(["面粉（杯）", "松饼（个）"], [String(a), String(x)], [String(b), "\\square"])}$$`,
+            `A recipe uses $${a}$ cups of flour for every $${b}$ muffins. Complete the ratio table: how many muffins can be made with $${x}$ cups of flour? $$${tableLatex(["flour (cups)", "muffins"], [String(a), String(x)], [String(b), "\\square"])}$$`,
+            `一份食谱每 $${b}$ 个松饼用 $${a}$ 杯面粉。补全比例表：用 $${x}$ 杯面粉可以做多少个松饼？$$${tableLatex(["面粉（杯）", "松饼（个）"], [String(a), String(x)], [String(b), "\\square"])}$$`,
           ),
           answer: q * m,
           form: "integer",
           wrong: [x + (b - a), b * m, q * (m + 1)],
           solution: t(
-            `Divide both entries by $${g}$: $${ratio(a, b)} = ${ratio(p, q)}$. Then multiply by $${m}$: $${ratio(p * m, q * m)}$. So ${x} cups make $${q * m}$ muffins.`,
-            `两项都除以 $${g}$：$${ratio(a, b)} = ${ratio(p, q)}$。再乘 $${m}$：$${ratio(p * m, q * m)}$。所以 ${x} 杯可以做 $${q * m}$ 个松饼。`,
+            `Divide both entries by $${g}$: $${ratio(a, b)} = ${ratio(p, q)}$. Then multiply by $${m}$: $${ratio(p * m, q * m)}$. So $${x}$ cups make $${q * m}$ muffins.`,
+            `两项都除以 $${g}$：$${ratio(a, b)} = ${ratio(p, q)}$。再乘 $${m}$：$${ratio(p * m, q * m)}$。所以 $${x}$ 杯可以做 $${q * m}$ 个松饼。`,
           ),
         });
       },
@@ -804,15 +804,15 @@ export const solvingProblemsUsingUnitRates = topic(
         while (m === n);
         return numberProblem({
           prompt: t(
-            `${n} ${it.many.en} cost $\\$${n * unit}$. At the same price, how many dollars do ${m} ${m === 1 ? it.one.en : it.many.en} cost?`,
-            `${n} ${it.many["zh-CN"]}共 $\\$${n * unit}$。按同样的价格，${m} ${it.many["zh-CN"]}要多少美元？`,
+            `$${n}$ ${it.many.en} cost $\\$${n * unit}$. At the same price, how many dollars do $${m}$ ${m === 1 ? it.one.en : it.many.en} cost?`,
+            `$${n}$ ${it.many["zh-CN"]}共 $\\$${n * unit}$。按同样的价格，$${m}$ ${it.many["zh-CN"]}要多少美元？`,
           ),
           answer: m * unit,
           form: "integer",
           wrong: [n * unit + (m - n), unit, m * (unit + 1)],
           solution: t(
-            `One costs $\\$${n * unit} \\div ${n} = \\$${unit}$, so ${m} cost $${m} \\times \\$${unit} = \\$${m * unit}$.`,
-            `单价是 $\\$${n * unit} \\div ${n} = \\$${unit}$，所以 ${m} ${it.many["zh-CN"]}要 $${m} \\times \\$${unit} = \\$${m * unit}$。`,
+            `One costs $\\$${n * unit} \\div ${n} = \\$${unit}$, so $${m}$ cost $${m} \\times \\$${unit} = \\$${m * unit}$.`,
+            `单价是 $\\$${n * unit} \\div ${n} = \\$${unit}$，所以 $${m}$ ${it.many["zh-CN"]}要 $${m} \\times \\$${unit} = \\$${m * unit}$。`,
           ),
         });
       },
@@ -839,8 +839,8 @@ export const solvingProblemsUsingUnitRates = topic(
         const correct = pa < pb ? 0 : 1;
         return choiceProblem({
           prompt: t(
-            `Store A sells ${na} ${it.many.en} for $\\$${cents(na * pa)}$. Store B sells ${nb} ${it.many.en} for $\\$${cents(nb * pb)}$. Which store has the lower price for one ${it.one.en}?`,
-            `A 店 ${na} ${it.many["zh-CN"]}卖 $\\$${cents(na * pa)}$，B 店 ${nb} ${it.many["zh-CN"]}卖 $\\$${cents(nb * pb)}$。哪家店的单价更低？`,
+            `Store A sells $${na}$ ${it.many.en} for $\\$${cents(na * pa)}$. Store B sells $${nb}$ ${it.many.en} for $\\$${cents(nb * pb)}$. Which store has the lower price for one ${it.one.en}?`,
+            `A 店 $${na}$ ${it.many["zh-CN"]}卖 $\\$${cents(na * pa)}$，B 店 $${nb}$ ${it.many["zh-CN"]}卖 $\\$${cents(nb * pb)}$。哪家店的单价更低？`,
           ),
           options: [t("Store A", "A 店"), t("Store B", "B 店")],
           correct,
@@ -858,8 +858,8 @@ export const speedAsAUnitRate = topic(
   "speed-as-a-unit-rate",
   t("Speed as a Unit Rate", "速度是单位率"),
   t(
-    "Speed is the distance traveled per unit of time: speed = distance ÷ time. A car that goes 150 miles in 3 hours travels 50 miles per hour, so in 5 hours it goes 250 miles.",
-    "速度是单位时间内走过的路程：速度 = 路程 ÷ 时间。汽车 3 小时行驶 150 英里，速度是每小时 50 英里，5 小时能行驶 250 英里。",
+    "Speed is the distance traveled per unit of time: speed = distance ÷ time. A car that goes $150$ miles in $3$ hours travels $50$ miles per hour, so in $5$ hours it goes $250$ miles.",
+    "速度是单位时间内走过的路程：速度 = 路程 ÷ 时间。汽车 $3$ 小时行驶 $150$ 英里，速度是每小时 $50$ 英里，$5$ 小时能行驶 $250$ 英里。",
   ),
   ["solving-problems-using-unit-rates"],
   ["6.RP.A.2", "6.RP.A.3b"],
@@ -902,8 +902,8 @@ export const speedAsAUnitRate = topic(
         const time = rng.int(2, 9);
         return numberProblem({
           prompt: t(
-            `${kind.who.en} travels ${v * time} ${kind.d.en} in ${time} ${kind.tu.en} at a constant speed. What is its speed in ${kind.per.en}?`,
-            `${kind.who["zh-CN"]}匀速行驶，${time} ${kind.tu["zh-CN"]}行驶了 ${v * time} ${kind.d["zh-CN"]}。速度是多少${kind.per["zh-CN"]}？`,
+            `${kind.who.en} travels $${v * time}$ ${kind.d.en} in $${time}$ ${kind.tu.en} at a constant speed. What is its speed in ${kind.per.en}?`,
+            `${kind.who["zh-CN"]}匀速行驶，$${time}$ ${kind.tu["zh-CN"]}行驶了 $${v * time}$ ${kind.d["zh-CN"]}。速度是多少${kind.per["zh-CN"]}？`,
           ),
           answer: v,
           form: "integer",
@@ -929,8 +929,8 @@ export const speedAsAUnitRate = topic(
         if (askDistance)
           return numberProblem({
             prompt: t(
-              `A train travels at a constant speed of ${v} miles per hour. How many miles does it travel in ${time} hours?`,
-              `一列火车以 ${v} 英里/小时的速度匀速行驶。${time} 小时行驶多少英里？`,
+              `A train travels at a constant speed of $${v}$ miles per hour. How many miles does it travel in $${time}$ hours?`,
+              `一列火车以 $${v}$ 英里/小时的速度匀速行驶。$${time}$ 小时行驶多少英里？`,
             ),
             answer: v * time,
             form: "integer",
@@ -942,8 +942,8 @@ export const speedAsAUnitRate = topic(
           });
         return numberProblem({
           prompt: t(
-            `A train travels at a constant speed of ${v} miles per hour. How many hours does it take to travel ${v * time} miles?`,
-            `一列火车以 ${v} 英里/小时的速度匀速行驶。行驶 ${v * time} 英里需要多少小时？`,
+            `A train travels at a constant speed of $${v}$ miles per hour. How many hours does it take to travel $${v * time}$ miles?`,
+            `一列火车以 $${v}$ 英里/小时的速度匀速行驶。行驶 $${v * time}$ 英里需要多少小时？`,
           ),
           answer: time,
           form: "integer",
@@ -973,8 +973,8 @@ function gridFigure(n: number): Figure {
   return {
     svg: svgDocument(176, body),
     alt: t(
-      `A 10-by-10 grid of squares with ${Math.floor(n / 10)} full rows shaded and ${n % 10} more squares shaded in the next row.`,
-      `一个 10 × 10 的方格图，涂色的有 ${Math.floor(n / 10)} 个整行，下一行另有 ${n % 10} 格。`,
+      `A 10-by-10 grid of squares with ${Math.floor(n / 10)} full rows shaded${n % 10 === 0 ? "" : ` and ${n % 10} more squares shaded in the next row`}.`,
+      `一个 10 × 10 的方格图，涂色的有 ${Math.floor(n / 10)} 个整行${n % 10 === 0 ? "" : `，下一行另有 ${n % 10} 格`}。`,
     ),
   };
 }
@@ -997,8 +997,8 @@ export const understandingPercentagesUsingModels = topic(
   "understanding-percentages-using-models",
   t("Understanding Percentages Using Models", "用模型理解百分数"),
   t(
-    "Percent means “per hundred”: 37% is 37 out of 100. On a 10-by-10 grid, 37 shaded squares show 37%. A bar split into 4 equal parts with 1 part shaded shows 1/4 = 25/100 = 25%.",
-    "百分数表示“每一百中的多少”：37% 就是 100 份中的 37 份。在 10 × 10 的方格图中，涂色 37 格表示 37%。一个长条平均分成 4 份，涂色 1 份，表示 1/4 = 25/100 = 25%。",
+    "Percent means “per hundred”: $37\\%$ is $37$ out of $100$. On a $10$-by-$10$ grid, $37$ shaded squares show $37\\%$. A bar split into $4$ equal parts with $1$ part shaded shows $\\frac{1}{4} = \\frac{25}{100} = 25\\%$.",
+    "百分数表示“每一百中的多少”：$37\\%$ 就是 $100$ 份中的 $37$ 份。在 $10 \\times 10$ 的方格图中，涂色 $37$ 格表示 $37\\%$。一个长条平均分成 $4$ 份，涂色 $1$ 份，表示 $\\frac{1}{4} = \\frac{25}{100} = 25\\%$。",
   ),
   ["equivalent-fractions", "decimal-fractions"],
   ["6.RP.A.3c"],
@@ -1489,8 +1489,8 @@ export const findingAPercentageGivenTwoNumbersWordProblems = topic(
         const name = rng.pick(["Maya", "Leo", "Nora", "Sam", "Iris"]);
         return numberProblem({
           prompt: t(
-            `${name} made ${part} of ${whole} free throws. What percent of the free throws did ${name} make?`,
-            `${name} 投了 ${whole} 次罚球，投中 ${part} 次。投中的次数占百分之几？`,
+            `${name} made $${part}$ of $${whole}$ free throws. What percent of the free throws did ${name} make?`,
+            `${name} 投了 $${whole}$ 次罚球，投中 $${part}$ 次。投中的次数占百分之几？`,
           ),
           answer: pct,
           percent: true,
@@ -1518,8 +1518,8 @@ export const findingAPercentageGivenTwoNumbersWordProblems = topic(
         if (!Number.isInteger(pct)) return this.generate(rng);
         return numberProblem({
           prompt: t(
-            `A club has ${a} members who play the piano and ${b} who play the guitar. Each member plays exactly one of them. What percent of the members play the guitar?`,
-            `一个社团中有 ${a} 名成员弹钢琴，${b} 名成员弹吉他，每人只弹其中一种。弹吉他的成员占百分之几？`,
+            `A club has $${a}$ members who play the piano and $${b}$ who play the guitar. Each member plays exactly one of them. What percent of the members play the guitar?`,
+            `一个社团中有 $${a}$ 名成员弹钢琴，$${b}$ 名成员弹吉他，每人只弹其中一种。弹吉他的成员占百分之几？`,
           ),
           answer: pct,
           percent: true,
@@ -1539,8 +1539,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentageWordProblems = topic(
   "finding-part-of-a-number-given-a-whole-and-a-percentage-word-problems",
   t("Finding Part of a Number Given a Whole and a Percentage: Word Problems", "求一个数的百分之几的应用题"),
   t(
-    "In a word problem, find the whole and the percent, then multiply. If 40% of 30 students walk to school, 12 walk, and the other 60%, or 18 students, do not.",
-    "应用题中先找出整体与百分数，再相乘。30 名学生中 40% 步行上学，就是 12 人；其余 60%，即 18 人，不步行上学。",
+    "In a word problem, find the whole and the percent, then multiply. If $40\\%$ of $30$ students walk to school, $12$ walk, and the other $60\\%$, or $18$ students, do not.",
+    "应用题中先找出整体与百分数，再相乘。$30$ 名学生中 $40\\%$ 步行上学，就是 $12$ 人；其余 $60\\%$，即 $18$ 人，不步行上学。",
   ),
   ["finding-part-of-a-number-given-a-whole-and-a-percentage"],
   ["6.RP.A.3c"],
@@ -1556,8 +1556,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentageWordProblems = topic(
         const { whole, pct, part } = percentWhole(rng, rng.bool());
         return numberProblem({
           prompt: t(
-            `A school has ${whole} students, and ${pct}% of them take the bus. How many students take the bus?`,
-            `一所学校有 ${whole} 名学生，其中 ${pct}% 乘校车。乘校车的学生有多少名？`,
+            `A school has $${whole}$ students, and $${pct}\\%$ of them take the bus. How many students take the bus?`,
+            `一所学校有 $${whole}$ 名学生，其中 $${pct}\\%$ 乘校车。乘校车的学生有多少名？`,
           ),
           answer: part,
           form: "integer",
@@ -1578,8 +1578,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentageWordProblems = topic(
         const rest = whole - part;
         return numberProblem({
           prompt: t(
-            `A store has ${whole} shirts, and ${pct}% of them are on sale. How many shirts are not on sale?`,
-            `一家商店有 ${whole} 件衬衫，其中 ${pct}% 在打折。不打折的衬衫有多少件？`,
+            `A store has $${whole}$ shirts, and $${pct}\\%$ of them are on sale. How many shirts are not on sale?`,
+            `一家商店有 $${whole}$ 件衬衫，其中 $${pct}\\%$ 在打折。不打折的衬衫有多少件？`,
           ),
           answer: rest,
           form: "integer",
@@ -1601,8 +1601,8 @@ export const convertingUnitsOfLengthToLargerUnitsUsingLongDivision = topic(
   "converting-units-of-length-to-larger-units-using-long-division",
   t("Converting Units of Length to Larger Units Using Long Division", "用长除法把长度单位化成较大单位"),
   t(
-    "To convert a large number of small units, divide by the conversion factor with long division. The quotient is the number of larger units and the remainder is what is left in smaller units: 1,000 inches ÷ 12 = 83 R 4, so 1,000 in = 83 ft 4 in = 83 1/3 ft.",
-    "把较多的小单位化成大单位，用长除法除以进率。商是大单位的个数，余数是剩下的小单位：1000 ÷ 12 = 83 余 4，所以 1000 英寸 = 83 英尺 4 英寸 = 83 1/3 英尺。",
+    "To convert a large number of small units, divide by the conversion factor with long division. The quotient is the number of larger units and the remainder is what is left in smaller units: $1$,$000$ inches ÷ $12 = 83$ R $4$, so $1$,$000$ in = $83$ ft $4$ in = $83$ $\\frac{1}{3}$ ft.",
+    "把较多的小单位化成大单位，用长除法除以进率。商是大单位的个数，余数是剩下的小单位：$1000 \\div 12 = 83$ 余 $4$，所以 $1000$ 英寸 = $83$ 英尺 $4$ 英寸 = $83$ $\\frac{1}{3}$ 英尺。",
   ),
   ["converting-customary-units-of-length-to-larger-units", "multi-digit-by-two-digit-division-using-partial-quotients"],
   ["6.RP.A.3d"],

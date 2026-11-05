@@ -1493,8 +1493,8 @@ export const polygons = topic(
           capital(polygonNames[n]!),
           others.map((k) => capital(polygonNames[k]!)),
           t(
-            `Count the sides: there are ${n}, so it is a${n === 8 ? "n" : ""} ${polygonNames[n]!.en}.`,
-            `数一数边：有 ${n} 条，所以是${polygonNames[n]!["zh-CN"]}。`,
+            `Count the sides: there are $${n}$, so it is a${n === 8 ? "n" : ""} ${polygonNames[n]!.en}.`,
+            `数一数边：有 $${n}$ 条，所以是${polygonNames[n]!["zh-CN"]}。`,
           ),
           fig(
             [{ kind: "polygon", points: randomPolygon(rng, n), accent: true }],
@@ -1525,8 +1525,8 @@ export const polygons = topic(
             form: "integer",
             wrong: [n + 1, n - 1, 2 * n],
             solution: t(
-              `A${n === 8 ? "n" : ""} ${polygonNames[n]!.en} has ${n} sides, and a polygon has as many vertices and angles as sides: ${n}.`,
-              `${polygonNames[n]!["zh-CN"]}有 ${n} 条边，多边形的顶点数、角数都等于边数：${n}。`,
+              `A${n === 8 ? "n" : ""} ${polygonNames[n]!.en} has $${n}$ sides, and a polygon has as many vertices and angles as sides: $${n}$.`,
+              `${polygonNames[n]!["zh-CN"]}有 $${n}$ 条边，多边形的顶点数、角数都等于边数：$${n}$。`,
             ),
           });
         }
@@ -1539,8 +1539,8 @@ export const polygons = topic(
             capital(polygonNames[n]!),
             [n - 1, n + 1, n + 2, n - 2].filter((k) => k >= 3 && k <= 10).map((k) => capital(polygonNames[k]!)),
             t(
-              `A polygon has as many sides as ${part.en}, so it has ${n} sides: a${n === 8 ? "n" : ""} ${polygonNames[n]!.en}.`,
-              `多边形的边数等于它的${part["zh-CN"].slice(1)}数，所以有 ${n} 条边：${polygonNames[n]!["zh-CN"]}。`,
+              `A polygon has as many sides as ${part.en}, so it has $${n}$ sides: a${n === 8 ? "n" : ""} ${polygonNames[n]!.en}.`,
+              `多边形的边数等于它的${part["zh-CN"].slice(1)}数，所以有 $${n}$ 条边：${polygonNames[n]!["zh-CN"]}。`,
             ),
           );
         }
@@ -1556,8 +1556,8 @@ export const polygons = topic(
           capital(polygonNames[target]!),
           [more ? n - 1 : n + 1, n, target + (more ? 1 : -1)].filter((k) => k >= 3 && k <= 10).map((k) => capital(polygonNames[k]!)),
           t(
-            `A${n === 8 ? "n" : ""} ${polygonNames[n]!.en} has ${n} sides, so ${target} sides make a${target === 8 ? "n" : ""} ${polygonNames[target]!.en}.`,
-            `${polygonNames[n]!["zh-CN"]}有 ${n} 条边，${target} 条边的是${polygonNames[target]!["zh-CN"]}。`,
+            `A${n === 8 ? "n" : ""} ${polygonNames[n]!.en} has $${n}$ sides, so $${target}$ sides make a${target === 8 ? "n" : ""} ${polygonNames[target]!.en}.`,
+            `${polygonNames[n]!["zh-CN"]}有 $${n}$ 条边，$${target}$ 条边的是${polygonNames[target]!["zh-CN"]}。`,
           ),
         );
       },
@@ -2002,8 +2002,8 @@ export const classifyingQuadrilaterals = topic(
       id: "every-one-is-also",
       title: t("Is every one also…?", "是不是都是……？"),
       explanation: t(
-        "Every square is a rhombus, since it has four equal sides. Not every rhombus is a square, since a rhombus need not have right angles.",
-        "正方形都是菱形，因为它四条边都相等。菱形不都是正方形，因为菱形不一定有直角。",
+        "Every square is a rhombus, since it has four equal sides. Not every rhombus is a square, since a rhombus need not have right angles. A trapezoid has at least one pair of parallel sides, so every parallelogram is a trapezoid.",
+        "正方形都是菱形，因为它四条边都相等。菱形不都是正方形，因为菱形不一定有直角。梯形至少有一组对边平行，所以平行四边形都是梯形。",
       ),
       generate(rng) {
         const all: (QuadKind | "quadrilateral")[] = [...quadKinds, "quadrilateral"];
@@ -2040,16 +2040,16 @@ export const classifyingQuadrilaterals = topic(
         const desc: Record<QuadKind, Text> = {
           square: t(`sides of ${a}, ${a}, ${a} and ${a} cm and four right angles`, `四条边都是 ${a} 厘米，四个角都是直角`),
           rectangle: t(
-            `sides of ${a}, ${b}, ${a} and ${b} cm and four right angles`,
-            `四条边依次是 ${a}、${b}、${a}、${b} 厘米，四个角都是直角`,
+            `sides of $${a}$, $${b}$, $${a}$ and $${b}$ cm and four right angles`,
+            `四条边依次是 $${a}$、$${b}$、$${a}$、$${b}$ 厘米，四个角都是直角`,
           ),
           rhombus: t(
-            `sides of ${a}, ${a}, ${a} and ${a} cm and angles of ${angle}°, ${180 - angle}°, ${angle}° and ${180 - angle}°`,
-            `四条边都是 ${a} 厘米，四个角依次是 ${angle}°、${180 - angle}°、${angle}°、${180 - angle}°`,
+            `sides of $${a}$, $${a}$, $${a}$ and $${a}$ cm and angles of $${angle}$°, $${180 - angle}$°, $${angle}$° and $${180 - angle}$°`,
+            `四条边都是 $${a}$ 厘米，四个角依次是 $${angle}$°、$${180 - angle}$°、$${angle}$°、$${180 - angle}$°`,
           ),
           parallelogram: t(
-            `two pairs of parallel sides, sides of ${a}, ${b}, ${a} and ${b} cm, and angles of ${angle}°, ${180 - angle}°, ${angle}° and ${180 - angle}°`,
-            `两组对边分别平行，四条边依次是 ${a}、${b}、${a}、${b} 厘米，四个角依次是 ${angle}°、${180 - angle}°、${angle}°、${180 - angle}°`,
+            `two pairs of parallel sides, sides of $${a}$, $${b}$, $${a}$ and $${b}$ cm, and angles of $${angle}$°, $${180 - angle}$°, $${angle}$° and $${180 - angle}$°`,
+            `两组对边分别平行，四条边依次是 $${a}$、$${b}$、$${a}$、$${b}$ 厘米，四个角依次是 $${angle}$°、$${180 - angle}$°、$${angle}$°、$${180 - angle}$°`,
           ),
           trapezoid: t(
             `exactly one pair of parallel sides, of ${Math.max(a, b)} cm and ${Math.min(a, b)} cm`,

@@ -100,8 +100,8 @@ export const divisibilityOfIntegersBy2510_4And8 = topic(
                   `末位数字是 $${last}$，${last % 5 === 0 ? "是 $0$ 或 $5$" : "既不是 $0$ 也不是 $5$"}`,
                 )
               : t(
-                  `The last digit is $${last}$, ${last === 0 ? "which is" : "not"} $0$`,
-                  `末位数字是 $${last}$，${last === 0 ? "是" : "不是"} $0$`,
+                  last === 0 ? "The last digit is $0$" : `The last digit is $${last}$, not $0$`,
+                  last === 0 ? "末位数字是 $0$" : `末位数字是 $${last}$，不是 $0$`,
                 );
         return divisibleQuestion(n, d, reason);
       },

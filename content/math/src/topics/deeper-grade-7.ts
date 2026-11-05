@@ -15,8 +15,8 @@ const upThenDownSame: KnowledgePointDef = {
   id: "up-and-down-by-the-same-percent",
   title: t("Up and down by the same percent", "先升后降相同的百分数"),
   explanation: t(
-    "A rise followed by a fall of the same percent does not return to the start. The second percent applies to a larger amount, so more is taken away than was added. The two multipliers show exactly what happens: their product is 1 minus the square of the rate. So the overall result is always a loss, and the size of the loss does not depend on the starting value at all, or on the order.",
-    "先升后降相同的百分数，并不会回到起点。第二个百分数作用于更大的量，所以减去的比加上的多。两个乘数准确地说明了这一点：它们的积是 1 减去比率的平方。所以总的结果总是减少，减少的幅度完全不取决于起始值，也不取决于顺序。",
+    "A rise followed by a fall of the same percent does not return to the start. The second percent applies to a larger amount, so more is taken away than was added. The two multipliers show exactly what happens: their product is $1$ minus the square of the rate. So the overall result is always a loss, and the size of the loss does not depend on the starting value at all, or on the order.",
+    "先升后降相同的百分数，并不会回到起点。第二个百分数作用于更大的量，所以减去的比加上的多。两个乘数准确地说明了这一点：它们的积是 $1$ 减去比率的平方。所以总的结果总是减少，减少的幅度完全不取决于起始值，也不取决于顺序。",
   ),
   generate(rng) {
     const rate = rng.int(2, 90);
@@ -25,8 +25,8 @@ const upThenDownSame: KnowledgePointDef = {
     const down = Q.of(100 - rate, 100);
     return numberProblem({
       prompt: t(
-        `A price rises by ${rate}% and then falls by ${rate}%. By what percent of the original is the final price lower than the original?`,
-        `一个价格先上涨 ${rate}%，再下降 ${rate}%。最终价格比原价低原价的百分之几？`,
+        `A price rises by $${rate}\\%$ and then falls by $${rate}\\%$. By what percent of the original is the final price lower than the original?`,
+        `一个价格先上涨 $${rate}\\%$，再下降 $${rate}\\%$。最终价格比原价低原价的百分之几？`,
       ),
       answer,
       form: "decimal",
@@ -92,8 +92,8 @@ const originalFromTwoChanges: KnowledgePointDef = {
     const final = (sale * (100 + tax)) / 100;
     return numberProblem({
       prompt: t(
-        `A coat is sold at ${discount}% off, and a ${tax}% tax is then added to the sale price. The final cost is ${final} dollars. What was the original price, in dollars?`,
-        `一件外套打折 ${discount}%，然后在售价上加 ${tax}% 的税。最终花费 ${final} 美元。原价是多少美元？`,
+        `A coat is sold at $${discount}\\%$ off, and a $${tax}\\%$ tax is then added to the sale price. The final cost is $${final}$ dollars. What was the original price, in dollars?`,
+        `一件外套打折 $${discount}\\%$，然后在售价上加 $${tax}\\%$ 的税。最终花费 $${final}$ 美元。原价是多少美元？`,
       ),
       answer: original,
       form: "integer",
@@ -105,8 +105,8 @@ const originalFromTwoChanges: KnowledgePointDef = {
         original + 400,
       ],
       solution: t(
-        `The overall multiplier is $${(100 - discount) / 100} \\times ${(100 + tax) / 100}$. Dividing, ${final} comes from ${sale} before the tax, and ${sale} comes from ${original} before the discount.`,
-        `总的乘数是 $${(100 - discount) / 100} \\times ${(100 + tax) / 100}$。倒着除，${final} 是税前的 ${sale}，${sale} 是打折前的 ${original}。`,
+        `The overall multiplier is $${(100 - discount) / 100} \\times ${(100 + tax) / 100}$. Dividing, $${final}$ comes from $${sale}$ before the tax, and $${sale}$ comes from $${original}$ before the discount.`,
+        `总的乘数是 $${(100 - discount) / 100} \\times ${(100 + tax) / 100}$。倒着除，$${final}$ 是税前的 $${sale}$，$${sale}$ 是打折前的 $${original}$。`,
       ),
     });
   },
@@ -209,8 +209,8 @@ const alternatingPowers: KnowledgePointDef = {
   id: "a-sum-of-powers-of-negative-one",
   title: t("A sum of powers of negative one", "负一的幂之和"),
   explanation: t(
-    "Powers of $-1$ alternate between $-1$ and 1, since each further factor flips the sign. An even exponent gives 1 and an odd exponent gives $-1$. In a long sum, each neighboring pair of terms cancels to zero. So the whole sum depends only on whether the last exponent is even or odd. This is the same sign rule that decides whether any product with many negative factors is positive or negative.",
-    "$-1$ 的幂在 $-1$ 和 1 之间交替，因为每多一个因数符号就翻转一次。偶数指数得 1，奇数指数得 $-1$。在很长的和中，每相邻两项抵消为零。所以整个和只取决于最后的指数是偶数还是奇数。这也是决定多个负因数之积是正还是负的符号规律。",
+    "Powers of $-1$ alternate between $-1$ and $1$, since each further factor flips the sign. An even exponent gives $1$ and an odd exponent gives $-1$. In a long sum, each neighboring pair of terms cancels to zero. So the whole sum depends only on whether the last exponent is even or odd. This is the same sign rule that decides whether any product with many negative factors is positive or negative.",
+    "$-1$ 的幂在 $-1$ 和 $1$ 之间交替，因为每多一个因数符号就翻转一次。偶数指数得 $1$，奇数指数得 $-1$。在很长的和中，每相邻两项抵消为零。所以整个和只取决于最后的指数是偶数还是奇数。这也是决定多个负因数之积是正还是负的符号规律。",
   ),
   generate(rng) {
     const n = rng.int(11, 400);
@@ -313,8 +313,8 @@ const consecutiveIntegers: KnowledgePointDef = {
   id: "consecutive-integers-with-a-given-sum",
   title: t("Consecutive integers with a given sum", "和一定的连续整数"),
   explanation: t(
-    "Consecutive integers can be written with one variable: $n$, $n + 1$, $n + 2$ and so on, and consecutive even or odd ones go up by 2. Adding them gives a two-step equation. Look out for what the question asks for: the variable is the smallest number, and the question may want a different one. For an odd number of consecutive integers, the middle one equals the mean, which gives a useful check on the answer.",
-    "连续整数可以用一个变量表示：$n$、$n + 1$、$n + 2$ 等，连续偶数或奇数每次加 2。把它们相加得到一个两步方程。要注意问题问的是什么：变量是最小的数，问题可能要的是另一个。奇数个连续整数的中间数等于平均数，这可以用来检验答案。",
+    "Consecutive integers can be written with one variable: $n$, $n + 1$, $n + 2$ and so on, and consecutive even or odd ones go up by $2$. Adding them gives a two-step equation. Look out for what the question asks for: the variable is the smallest number, and the question may want a different one. For an odd number of consecutive integers, the middle one equals the mean, which gives a useful check on the answer.",
+    "连续整数可以用一个变量表示：$n$、$n + 1$、$n + 2$ 等，连续偶数或奇数每次加 $2$。把它们相加得到一个两步方程。要注意问题问的是什么：变量是最小的数，问题可能要的是另一个。奇数个连续整数的中间数等于平均数，这可以用来检验答案。",
   ),
   generate(rng) {
     const step = rng.pick([1, 2]);
@@ -329,8 +329,8 @@ const consecutiveIntegers: KnowledgePointDef = {
     const offset = (step * count * (count - 1)) / 2;
     return numberProblem({
       prompt: t(
-        `The sum of ${count} ${nameEn} is $${sum}$. What is the ${asksLargest ? "largest" : "smallest"} of them?`,
-        `${count} 个${nameZh}的和是 $${sum}$。其中${asksLargest ? "最大" : "最小"}的数是多少？`,
+        `The sum of $${count}$ ${nameEn} is $${sum}$. What is the ${asksLargest ? "largest" : "smallest"} of them?`,
+        `$${count}$ 个${nameZh}的和是 $${sum}$。其中${asksLargest ? "最大" : "最小"}的数是多少？`,
       ),
       answer,
       form: "integer",
@@ -364,8 +364,8 @@ const agesEquation: KnowledgePointDef = {
     const adult = multiple * futureKid - answer;
     return numberProblem({
       prompt: t(
-        `A parent is ${adult} years old and a child is ${kid}. In how many years will the parent be ${multiple} times as old as the child?`,
-        `家长 ${adult} 岁，孩子 ${kid} 岁。多少年后家长的年龄是孩子的 ${multiple} 倍？`,
+        `A parent is $${adult}$ years old and a child is $${kid}$. In how many years will the parent be $${multiple}$ times as old as the child?`,
+        `家长 $${adult}$ 岁，孩子 $${kid}$ 岁。多少年后家长的年龄是孩子的 $${multiple}$ 倍？`,
       ),
       answer,
       form: "integer",
@@ -435,8 +435,8 @@ const ticketsSystem: KnowledgePointDef = {
     const answer = asksAdults ? adults : children;
     return numberProblem({
       prompt: t(
-        `A show sold ${count} tickets for ${cost} dollars in all. Adult tickets cost ${adult} dollars and child tickets cost ${child} dollars. How many ${asksAdults ? "adult" : "child"} tickets were sold?`,
-        `一场演出共卖出 ${count} 张票，收入 ${cost} 美元。成人票 ${adult} 美元，儿童票 ${child} 美元。卖出多少张${asksAdults ? "成人" : "儿童"}票？`,
+        `A show sold $${count}$ tickets for $${cost}$ dollars in all. Adult tickets cost $${adult}$ dollars and child tickets cost $${child}$ dollars. How many ${asksAdults ? "adult" : "child"} tickets were sold?`,
+        `一场演出共卖出 $${count}$ 张票，收入 $${cost}$ 美元。成人票 $${adult}$ 美元，儿童票 $${child}$ 美元。卖出多少张${asksAdults ? "成人" : "儿童"}票？`,
       ),
       answer,
       form: "integer",
@@ -449,8 +449,8 @@ const ticketsSystem: KnowledgePointDef = {
         Math.floor(count / 2),
       ],
       solution: t(
-        `With $a$ adult tickets, $${adult}a + ${child}(${count} - a) = ${cost}$. This gives $${adult - child === 1 ? "" : adult - child}a = ${cost - child * count}$, so $a = ${adults}$ and there are ${children} child tickets.`,
-        `设成人票 $a$ 张，$${adult}a + ${child}(${count} - a) = ${cost}$。得 $${adult - child === 1 ? "" : adult - child}a = ${cost - child * count}$，所以 $a = ${adults}$，儿童票 ${children} 张。`,
+        `With $a$ adult tickets, $${adult}a + ${child}(${count} - a) = ${cost}$. This gives $${adult - child === 1 ? "" : adult - child}a = ${cost - child * count}$, so $a = ${adults}$ and there are $${children}$ child tickets.`,
+        `设成人票 $a$ 张，$${adult}a + ${child}(${count} - a) = ${cost}$。得 $${adult - child === 1 ? "" : adult - child}a = ${cost - child * count}$，所以 $a = ${adults}$，儿童票 $${children}$ 张。`,
       ),
     });
   },
@@ -461,7 +461,7 @@ const compoundCount: KnowledgePointDef = {
   title: t("Counting integers in a compound inequality", "数复合不等式中的整数"),
   explanation: t(
     "A compound inequality is solved by doing the same operation to all three parts. Once the variable stands alone in the middle, the bounds show which integers qualify. Whether each end counts depends on its sign: a strict sign leaves the end out, and an inclusive sign keeps it in. To count them, subtract the smallest qualifying integer from the largest and add one, because both ends of this list are included.",
-    "解复合不等式时，对三个部分都做同样的运算。变量单独留在中间后，边界就说明哪些整数符合。每一端算不算，取决于它的符号：严格的符号不包括这一端，包含的符号则包括。要数个数，就用最大的符合条件的整数减去最小的，再加 1，因为这列数的两端都算在内。",
+    "解复合不等式时，对三个部分都做同样的运算。变量单独留在中间后，边界就说明哪些整数符合。每一端算不算，取决于它的符号：严格的符号不包括这一端，包含的符号则包括。要数个数，就用最大的符合条件的整数减去最小的，再加 $1$，因为这列数的两端都算在内。",
   ),
   generate(rng) {
     const k = rng.int(2, 5);
@@ -496,8 +496,8 @@ const anglesInRatio: KnowledgePointDef = {
   id: "triangle-angles-in-a-ratio",
   title: t("Triangle angles in a ratio", "三角形的角成比例"),
   explanation: t(
-    "When the angles of a triangle are in a given ratio, write them as multiples of one unknown. As the three angles add up to 180 degrees, the sum of the ratio numbers tells how many equal parts make 180. Divide to find one part, and multiply to get the angle that is asked for. The three angles should then add back up to 180, and their sizes also show whether the triangle is acute, right or obtuse.",
-    "当三角形的角成给定的比时，就把它们写成一个未知数的倍数。由于三个角加起来是 180 度，比中各数的和说明 180 度被分成多少等份。做除法得到一份，再相乘得到所求的角。三个角加起来应该还是 180，它们的大小也能说明三角形是锐角、直角还是钝角三角形。",
+    "When the angles of a triangle are in a given ratio, write them as multiples of one unknown. As the three angles add up to $180$ degrees, the sum of the ratio numbers tells how many equal parts make $180$. Divide to find one part, and multiply to get the angle that is asked for. The three angles should then add back up to $180$, and their sizes also show whether the triangle is acute, right or obtuse.",
+    "当三角形的角成给定的比时，就把它们写成一个未知数的倍数。由于三个角加起来是 $180$ 度，比中各数的和说明 $180$ 度被分成多少等份。做除法得到一份，再相乘得到所求的角。三个角加起来应该还是 $180$，它们的大小也能说明三角形是锐角、直角还是钝角三角形。",
   ),
   generate(rng) {
     const [a, b, c] = rng.pick([
@@ -524,8 +524,8 @@ const anglesInRatio: KnowledgePointDef = {
     const answer = which === "smallest" ? a * unit : c * unit;
     return numberProblem({
       prompt: t(
-        `The angles of a triangle are in the ratio ${a}:${b}:${c}. What is the ${which} angle, in degrees?`,
-        `三角形三个角的比是 ${a}:${b}:${c}。${which === "smallest" ? "最小" : "最大"}的角是多少度？`,
+        `The angles of a triangle are in the ratio $${a}:${b}:${c}$. What is the ${which} angle, in degrees?`,
+        `三角形三个角的比是 $${a}:${b}:${c}$。${which === "smallest" ? "最小" : "最大"}的角是多少度？`,
       ),
       answer,
       form: "integer",
@@ -537,8 +537,8 @@ const anglesInRatio: KnowledgePointDef = {
         answer + unit,
       ],
       solution: t(
-        `The parts add up to ${parts}, so one part is $180^\\circ \\div ${parts} = ${unit}^\\circ$. The ${which} angle is $${which === "smallest" ? a : c} \\times ${unit}^\\circ = ${answer}^\\circ$.`,
-        `各份之和是 ${parts}，所以一份是 $180^\\circ \\div ${parts} = ${unit}^\\circ$。${which === "smallest" ? "最小" : "最大"}的角是 $${which === "smallest" ? a : c} \\times ${unit}^\\circ = ${answer}^\\circ$。`,
+        `The parts add up to $${parts}$, so one part is $180^\\circ \\div ${parts} = ${unit}^\\circ$. The ${which} angle is $${which === "smallest" ? a : c} \\times ${unit}^\\circ = ${answer}^\\circ$.`,
+        `各份之和是 $${parts}$，所以一份是 $180^\\circ \\div ${parts} = ${unit}^\\circ$。${which === "smallest" ? "最小" : "最大"}的角是 $${which === "smallest" ? a : c} \\times ${unit}^\\circ = ${answer}^\\circ$。`,
       ),
     });
   },
@@ -575,8 +575,8 @@ const clockAtAnyTime: KnowledgePointDef = {
   id: "clock-angles-between-the-hours",
   title: t("Clock angles between the hours", "非整点时的钟面夹角"),
   explanation: t(
-    "On a clock, the minute hand turns 6 degrees each minute, and the hour hand turns only half a degree each minute. So between the hours, the hour hand lies part of the way from one mark to the next, and forgetting this is the usual mistake. Measure both hands from 12, subtract, and if the result is more than 180 degrees, subtract it from 360 to get the smaller of the two angles.",
-    "钟面上，分针每分钟转 6 度，时针每分钟只转半度。所以在两个整点之间，时针位于两个刻度之间的某处，忘记这一点是常见的差错。从 12 开始分别量两针的角度，相减，如果结果大于 180 度，就用 360 减去它，得到两个角中较小的一个。",
+    "On a clock, the minute hand turns $6$ degrees each minute, and the hour hand turns only half a degree each minute. So between the hours, the hour hand lies part of the way from one mark to the next, and forgetting this is the usual mistake. Measure both hands from $12$, subtract, and if the result is more than $180$ degrees, subtract it from $360$ to get the smaller of the two angles.",
+    "钟面上，分针每分钟转 $6$ 度，时针每分钟只转半度。所以在两个整点之间，时针位于两个刻度之间的某处，忘记这一点是常见的差错。从 $12$ 开始分别量两针的角度，相减，如果结果大于 $180$ 度，就用 $360$ 减去它，得到两个角中较小的一个。",
   ),
   generate(rng) {
     const hour = rng.int(1, 12);
@@ -587,8 +587,8 @@ const clockAtAnyTime: KnowledgePointDef = {
     const answer = Math.min(gap, 360 - gap);
     return numberProblem({
       prompt: t(
-        `What is the smaller angle between the hands of a clock at ${hour}:${minute}, in degrees?`,
-        `${hour}:${minute} 时，钟面上两针所成的较小的角是多少度？`,
+        `What is the smaller angle between the hands of a clock at $${hour}:${minute}$, in degrees?`,
+        `$${hour}:${minute}$ 时，钟面上两针所成的较小的角是多少度？`,
       ),
       answer,
       form: "integer",
@@ -627,8 +627,8 @@ const midpointsOfParts: KnowledgePointDef = {
       form: "integer",
       wrong: [whole, Math.round(part / 2), whole - part, Math.round(Math.abs(whole - 2 * part) / 2), answer + 1],
       solution: t(
-        `We have $MB = ${part / 2}$ and $BN = ${(whole - part) / 2}$. So $MN$ is half of $AB$ plus half of $BC$, which is half of $AC$: ${answer}.`,
-        `$MB = ${part / 2}$，$BN = ${(whole - part) / 2}$。所以 $MN$ 是 $AB$ 的一半加 $BC$ 的一半，也就是 $AC$ 的一半：${answer}。`,
+        `We have $MB = ${part / 2}$ and $BN = ${(whole - part) / 2}$. So $MN$ is half of $AB$ plus half of $BC$, which is half of $AC$: $${answer}$.`,
+        `$MB = ${part / 2}$，$BN = ${(whole - part) / 2}$。所以 $MN$ 是 $AB$ 的一半加 $BC$ 的一半，也就是 $AC$ 的一半：$${answer}$。`,
       ),
     });
   },
@@ -638,8 +638,8 @@ const areaWithPercentSides: KnowledgePointDef = {
   id: "the-area-after-percent-changes-to-the-sides",
   title: t("The area after percent changes to the sides", "边按百分比变化后的面积"),
   explanation: t(
-    "Area is a product of two lengths, and so changes in the sides combine by multiplying and not by adding. Raising the length by one percent and lowering the width by another does not change the area by the difference of the two. Write each change as a multiplier, multiply the two, and read the overall change. Choosing a simple rectangle, such as one with sides of 100 and 100, is a good way to confirm the answer.",
-    "面积是两个长度的积，所以边的变化是相乘，不是相加。把长增加一个百分数、宽减少另一个百分数，面积的变化并不等于这两个百分数的差。把每个变化写成乘数，相乘，再读出总的变化。选一个简单的长方形，比如边长都是 100，可以用来确认答案。",
+    "Area is a product of two lengths, and so changes in the sides combine by multiplying and not by adding. Raising the length by one percent and lowering the width by another does not change the area by the difference of the two. Write each change as a multiplier, multiply the two, and read the overall change. Choosing a simple rectangle, such as one with sides of $100$ and $100$, is a good way to confirm the answer.",
+    "面积是两个长度的积，所以边的变化是相乘，不是相加。把长增加一个百分数、宽减少另一个百分数，面积的变化并不等于这两个百分数的差。把每个变化写成乘数，相乘，再读出总的变化。选一个简单的长方形，比如边长都是 $100$，可以用来确认答案。",
   ),
   generate(rng) {
     const up = 10 * rng.int(1, 6);
@@ -649,8 +649,8 @@ const areaWithPercentSides: KnowledgePointDef = {
     const answer = (area * factor) / 10000;
     return numberProblem({
       prompt: t(
-        `A rectangle has an area of ${area} square centimeters. Its length is increased by ${up}% and its width is decreased by ${down}%. What is the new area, in square centimeters?`,
-        `一个长方形的面积是 ${area} 平方厘米。长增加 ${up}%，宽减少 ${down}%。新的面积是多少平方厘米？`,
+        `A rectangle has an area of $${area}$ square centimeters. Its length is increased by $${up}\\%$ and its width is decreased by $${down}\\%$. What is the new area, in square centimeters?`,
+        `一个长方形的面积是 $${area}$ 平方厘米。长增加 $${up}\\%$，宽减少 $${down}\\%$。新的面积是多少平方厘米？`,
       ),
       answer,
       wrong: [(area * (100 + up - down)) / 100, area, (area * (100 + up)) / 100, (area * (100 - down)) / 100, answer + 10],
@@ -706,8 +706,8 @@ const combinedMean: KnowledgePointDef = {
     const answer = Q.of(total, a + b);
     return numberProblem({
       prompt: t(
-        `A class of ${a} students has a mean score of ${meanA}, and a class of ${b} students has a mean score of ${meanB}. What is the mean score of all the students together? Give an exact value.`,
-        `一个 ${a} 人的班平均分是 ${meanA}，一个 ${b} 人的班平均分是 ${meanB}。所有学生的平均分是多少？写出准确值。`,
+        `A class of $${a}$ students has a mean score of $${meanA}$, and a class of $${b}$ students has a mean score of $${meanB}$. What is the mean score of all the students together? Give an exact value.`,
+        `一个 $${a}$ 人的班平均分是 $${meanA}$，一个 $${b}$ 人的班平均分是 $${meanB}$。所有学生的平均分是多少？写出准确值。`,
       ),
       answer,
       wrong: [Q.of(meanA + meanB, 2), Q.of(total), Q.of(meanA + meanB), answer.add(Q.of(1)), Q.of(total, 2)],

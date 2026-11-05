@@ -26,15 +26,15 @@ const ratioAfterAdding: KnowledgePointDef = {
     const answer = (r - q) * k;
     return numberProblem({
       prompt: t(
-        `A bag has ${p * k} red beads and ${q * k} blue beads. How many blue beads must be added so that the ratio of red to blue becomes ${p}:${r}?`,
-        `袋子里有 ${p * k} 颗红珠子和 ${q * k} 颗蓝珠子。要加多少颗蓝珠子，才能使红珠子与蓝珠子的比变成 ${p}:${r}？`,
+        `A bag has $${p * k}$ red beads and $${q * k}$ blue beads. How many blue beads must be added so that the ratio of red to blue becomes $${p}:${r}$?`,
+        `袋子里有 $${p * k}$ 颗红珠子和 $${q * k}$ 颗蓝珠子。要加多少颗蓝珠子，才能使红珠子与蓝珠子的比变成 $${p}:${r}$？`,
       ),
       answer,
       form: "integer",
       wrong: [r - q, r * k, r, answer + k, p * k - q * k, answer + 2, answer + 1],
       solution: t(
-        `The red beads stay at ${p * k}, which is ${k} groups of ${p}. So the blue beads must become $${r} \\times ${k} = ${r * k}$, which means adding $${r * k} - ${q * k} = ${answer}$.`,
-        `红珠子还是 ${p * k} 颗，也就是 ${k} 组 ${p}。所以蓝珠子要变成 $${r} \\times ${k} = ${r * k}$ 颗，要加 $${r * k} - ${q * k} = ${answer}$ 颗。`,
+        `The red beads stay at $${p * k}$, which is $${k}$ groups of $${p}$. So the blue beads must become $${r} \\times ${k} = ${r * k}$, which means adding $${r * k} - ${q * k} = ${answer}$.`,
+        `红珠子还是 $${p * k}$ 颗，也就是 $${k}$ 组 $${p}$。所以蓝珠子要变成 $${r} \\times ${k} = ${r * k}$ 颗，要加 $${r * k} - ${q * k} = ${answer}$ 颗。`,
       ),
     });
   },
@@ -113,8 +113,8 @@ const totalFromTheRest: KnowledgePointDef = {
   id: "the-total-from-the-rest-of-a-group",
   title: t("The total from the rest of a group", "由其余部分求总数"),
   explanation: t(
-    "Percents of a group add up to 100. If a problem gives a percent for one part but a count for the other part, the given percent and the given count do not match. So first subtract from 100 to find what percent the count stands for. Then find the total from that part and its percent. Using the given percent with the given count is the mistake this problem is designed to bring to light.",
-    "一个群体的各部分百分比加起来是 100。如果题目给了一部分的百分比，却给了另一部分的数量，那么这个百分比和这个数量并不对应。所以先用 100 减，求出这个数量对应的百分比。再由这部分和它的百分比求总数。把给出的百分比和给出的数量配在一起，正是这类题要暴露的错误。",
+    "Percents of a group add up to $100$. If a problem gives a percent for one part but a count for the other part, the given percent and the given count do not match. So first subtract from $100$ to find what percent the count stands for. Then find the total from that part and its percent. Using the given percent with the given count is the mistake this problem is designed to bring to light.",
+    "一个群体的各部分百分比加起来是 $100$。如果题目给了一部分的百分比，却给了另一部分的数量，那么这个百分比和这个数量并不对应。所以先用 $100$ 减，求出这个数量对应的百分比。再由这部分和它的百分比求总数。把给出的百分比和给出的数量配在一起，正是这类题要暴露的错误。",
   ),
   generate(rng) {
     const pct = rng.pick([5, 10, 15, 20, 25, 30, 35, 40, 45, 55, 60, 65, 70, 75, 80, 85, 90]);
@@ -122,15 +122,15 @@ const totalFromTheRest: KnowledgePointDef = {
     const rest = (total * (100 - pct)) / 100;
     return numberProblem({
       prompt: t(
-        `In a school, ${pct}% of the students walk to school. The other ${rest} students ride. How many students are in the school?`,
-        `一所学校有 ${pct}% 的学生步行上学，其余 ${rest} 名学生乘车。这所学校有多少名学生？`,
+        `In a school, $${pct}\\%$ of the students walk to school. The other $${rest}$ students ride. How many students are in the school?`,
+        `一所学校有 $${pct}\\%$ 的学生步行上学，其余 $${rest}$ 名学生乘车。这所学校有多少名学生？`,
       ),
       answer: total,
       form: "integer",
       wrong: [total + rest, Math.round((rest * pct) / 100), rest + pct, Math.round((rest * 100) / pct), total - 20],
       solution: t(
-        `The ${rest} students are $100\\% - ${pct}\\% = ${100 - pct}\\%$ of the school. So the total is $${rest} \\div ${(100 - pct) / 100} = ${total}$.`,
-        `这 ${rest} 名学生占全校的 $100\\% - ${pct}\\% = ${100 - pct}\\%$。所以总数是 $${rest} \\div ${(100 - pct) / 100} = ${total}$。`,
+        `The $${rest}$ students are $100\\% - ${pct}\\% = ${100 - pct}\\%$ of the school. So the total is $${rest} \\div ${(100 - pct) / 100} = ${total}$.`,
+        `这 $${rest}$ 名学生占全校的 $100\\% - ${pct}\\% = ${100 - pct}\\%$。所以总数是 $${rest} \\div ${(100 - pct) / 100} = ${total}$。`,
       ),
     });
   },
@@ -140,23 +140,23 @@ const swappingPercent: KnowledgePointDef = {
   id: "swapping-a-percent-and-its-number",
   title: t("Swapping a percent and its number", "交换百分数和它的数"),
   explanation: t(
-    "A percent is a multiplication by a number over 100, and multiplication can be done in either order. So $a\\%$ of $b$ always equals $b\\%$ of $a$, as each is $a \\times b \\div 100$. This turns some awkward problems into easy ones. For instance, 36% of 25 is the same as 25% of 36, and a quarter of 36 can be found at once. Look for a friendly percent hidden in the number.",
-    "百分数就是乘一个除以 100 的数，而乘法可以交换顺序。所以 $a\\%$ 的 $b$ 总是等于 $b\\%$ 的 $a$，它们都是 $a \\times b \\div 100$。这能把一些难算的题变容易。例如，25 的 36% 等于 36 的 25%，而 36 的四分之一马上就能算出。要留意藏在数里的好算的百分数。",
+    "A percent is a multiplication by a number over $100$, and multiplication can be done in either order. So $a\\%$ of $b$ always equals $b\\%$ of $a$, as each is $a \\times b \\div 100$. This turns some awkward problems into easy ones. For instance, $36\\%$ of $25$ is the same as $25\\%$ of $36$, and a quarter of $36$ can be found at once. Look for a friendly percent hidden in the number.",
+    "百分数就是乘一个除以 $100$ 的数，而乘法可以交换顺序。所以 $a\\%$ 的 $b$ 总是等于 $b\\%$ 的 $a$，它们都是 $a \\times b \\div 100$。这能把一些难算的题变容易。例如，$25$ 的 $36\\%$ 等于 $36$ 的 $25\\%$，而 $36$ 的四分之一马上就能算出。要留意藏在数里的好算的百分数。",
   ),
   generate(rng) {
     const a = rng.int(2, 99);
     const answer = rng.pick([...Array(98).keys()].map((i) => i + 2).filter((v) => v !== a));
     return numberProblem({
       prompt: t(
-        `Find the missing number: $${a}\\%$ of ${answer} equals $\\square\\%$ of ${a}.`,
-        `求缺失的数：${answer} 的 $${a}\\%$ 等于 ${a} 的 $\\square\\%$。`,
+        `Find the missing number: $${a}\\%$ of $${answer}$ equals $\\square\\%$ of $${a}$.`,
+        `求缺失的数：$${answer}$ 的 $${a}\\%$ 等于 $${a}$ 的 $\\square\\%$。`,
       ),
       answer,
       form: "integer",
       wrong: [a, 100 - answer, a + answer, Math.abs(a - answer), answer + 1],
       solution: t(
-        `Each side is $${a} \\times ${answer} \\div 100$, so the missing number is ${answer}.`,
-        `两边都是 $${a} \\times ${answer} \\div 100$，所以缺失的数是 ${answer}。`,
+        `Each side is $${a} \\times ${answer} \\div 100$, so the missing number is $${answer}$.`,
+        `两边都是 $${a} \\times ${answer} \\div 100$，所以缺失的数是 $${answer}$。`,
       ),
     });
   },
@@ -450,7 +450,7 @@ const changeInLinearExpression: KnowledgePointDef = {
   title: t("How much an expression grows", "算式增加多少"),
   explanation: t(
     "A linear expression is easy to reason about without working out its value twice. The constant term stays the same whatever the variable does, so it never contributes to a change. Each step up in the variable adds the coefficient. So if the variable goes up by some amount, the expression goes up by the coefficient times that amount. The starting value of the variable does not matter at all, which often surprises people.",
-    "线性算式不用算两次值就能分析。不管变量怎样变化，常数项都不变，所以它对变化没有贡献。变量每增加 1，算式就增加一个系数。所以变量增加多少，算式就增加系数乘以这个量。变量的起始值完全不起作用，这一点常常出人意料。",
+    "线性算式不用算两次值就能分析。不管变量怎样变化，常数项都不变，所以它对变化没有贡献。变量每增加 $1$，算式就增加一个系数。所以变量增加多少，算式就增加系数乘以这个量。变量的起始值完全不起作用，这一点常常出人意料。",
   ),
   generate(rng) {
     const a = rng.int(2, 15);
@@ -459,15 +459,15 @@ const changeInLinearExpression: KnowledgePointDef = {
     const answer = a * change;
     return numberProblem({
       prompt: t(
-        `The value of $x$ goes up by ${change}. By how much does $${a}x + ${b}$ go up?`,
-        `$x$ 的值增加了 ${change}。$${a}x + ${b}$ 增加了多少？`,
+        `The value of $x$ goes up by $${change}$. By how much does $${a}x + ${b}$ go up?`,
+        `$x$ 的值增加了 $${change}$。$${a}x + ${b}$ 增加了多少？`,
       ),
       answer,
       form: "integer",
       wrong: [a + change, answer + b, change, a * change + a, a + b + change],
       solution: t(
-        `The ${b} does not change, and each 1 added to $x$ adds ${a}. So the change is $${a} \\times ${change} = ${answer}$.`,
-        `${b} 不变，$x$ 每增加 1 就增加 ${a}。所以变化是 $${a} \\times ${change} = ${answer}$。`,
+        `The $${b}$ does not change, and each $1$ added to $x$ adds $${a}$. So the change is $${a} \\times ${change} = ${answer}$.`,
+        `$${b}$ 不变，$x$ 每增加 $1$ 就增加 $${a}$。所以变化是 $${a} \\times ${change} = ${answer}$。`,
       ),
     });
   },
@@ -712,8 +712,8 @@ const madAfterChange: KnowledgePointDef = {
           : [`every value is multiplied by ${times} and then ${add} is added`, `每个值都乘以 ${times} 再加 ${add}`];
     return numberProblem({
       prompt: t(
-        `A data set has a mean absolute deviation of ${mad}. Then ${change[0]}. What is the new mean absolute deviation?`,
-        `一个数据集的平均绝对偏差是 ${mad}。然后${change[1]}。新的平均绝对偏差是多少？`,
+        `A data set has a mean absolute deviation of $${mad}$. Then ${change[0]}. What is the new mean absolute deviation?`,
+        `一个数据集的平均绝对偏差是 $${mad}$。然后${change[1]}。新的平均绝对偏差是多少？`,
       ),
       answer,
       form: "integer",
@@ -746,8 +746,8 @@ const meanWithoutOutlier: KnowledgePointDef = {
     const total = n * mean;
     return numberProblem({
       prompt: t(
-        `A data set of ${n} values has a mean of ${mean}. One value, ${outlier}, is an outlier and is removed. What is the mean of the remaining values?`,
-        `一个有 ${n} 个值的数据集，平均数是 ${mean}。其中一个值 ${outlier} 是离群值，被去掉了。其余各值的平均数是多少？`,
+        `A data set of $${n}$ values has a mean of $${mean}$. One value, $${outlier}$, is an outlier and is removed. What is the mean of the remaining values?`,
+        `一个有 $${n}$ 个值的数据集，平均数是 $${mean}$。其中一个值 $${outlier}$ 是离群值，被去掉了。其余各值的平均数是多少？`,
       ),
       answer,
       form: "integer",
@@ -775,15 +775,15 @@ const copiesForMode: KnowledgePointDef = {
     const answer = high - low + 1;
     return numberProblem({
       prompt: t(
-        `In a data set, the value ${value} appears ${high} times and is the only mode. The value ${other} appears ${low} ${low === 1 ? "time" : "times"}. How many more copies of ${other} must be added for ${other} to become the only mode?`,
-        `在一个数据集中，${value} 出现 ${high} 次，是唯一的众数。${other} 出现 ${low} 次。至少要再加入多少个 ${other}，才能使 ${other} 成为唯一的众数？`,
+        `In a data set, the value $${value}$ appears $${high}$ times and is the only mode. The value $${other}$ appears $${low}$ ${low === 1 ? "time" : "times"}. How many more copies of $${other}$ must be added for $${other}$ to become the only mode?`,
+        `在一个数据集中，$${value}$ 出现 $${high}$ 次，是唯一的众数。$${other}$ 出现 $${low}$ 次。至少要再加入多少个 $${other}$，才能使 $${other}$ 成为唯一的众数？`,
       ),
       answer,
       form: "integer",
       wrong: [high - low, high, high + 1, answer + 1, high + low, answer + 2],
       solution: t(
-        `${other} must appear ${high + 1} times, one more than ${value}. That takes $${high + 1} - ${low} = ${answer}$ more copies.`,
-        `${other} 必须出现 ${high + 1} 次，比 ${value} 多一次。所以要再加 $${high + 1} - ${low} = ${answer}$ 个。`,
+        `$${other}$ must appear $${high + 1}$ times, one more than the $${high}$ times that $${value}$ appears. That takes $${high + 1} - ${low} = ${answer}$ more copies.`,
+        `$${other}$ 必须出现 $${high + 1}$ 次，比 $${value}$ 出现的 $${high}$ 次多一次。所以要再加 $${high + 1} - ${low} = ${answer}$ 个。`,
       ),
     });
   },

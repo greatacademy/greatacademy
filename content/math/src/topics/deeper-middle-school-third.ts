@@ -51,8 +51,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           time.div(dist),
           [dist.div(time), dist.mul(time), time],
           [
-            `Divide hours by miles: $${frac(c, d)} \\div ${frac(a, b)} = ${frac(c, d)} \\times ${frac(b, a)}$.`,
-            `小时数除以英里数：$${frac(c, d)} \\div ${frac(a, b)} = ${frac(c, d)} \\times ${frac(b, a)}$。`,
+            `Divide hours by miles: $${frac(c, d)} \\div ${frac(a, b)} = ${frac(c, d)} \\times ${frac(b, a)} = ${time.div(dist).toLatex()}$.`,
+            `小时数除以英里数：$${frac(c, d)} \\div ${frac(a, b)} = ${frac(c, d)} \\times ${frac(b, a)} = ${time.div(dist).toLatex()}$。`,
           ],
         );
       },
@@ -91,7 +91,7 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       "the-price-before-the-increase",
       ["The price before the increase", "涨价前的价格"],
       [
-        "After an increase the new amount is more than 100 percent of the original. So the original comes from dividing by the multiplier, and taking the percent off the new amount gives too small a number.",
+        "After an increase the new amount is more than $100$ percent of the original. So the original comes from dividing by the multiplier, and taking the percent off the new amount gives too small a number.",
         "涨价后新价是原价的百分之一百多。所以原价要用新价除以这个倍数；从新价中减去这个百分比，结果会偏小。",
       ],
       (rng) => {
@@ -100,14 +100,14 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
         const now = (orig * (100 + p)) / 100;
         return whole(
           [
-            `After a ${p}% increase, a bike costs ${now} dollars. What did it cost before the increase, in dollars?`,
-            `涨价 ${p}% 后，一辆自行车售价 ${now} 美元。涨价前是多少美元？`,
+            `After a $${p}\\%$ increase, a bike costs $${now}$ dollars. What did it cost before the increase, in dollars?`,
+            `涨价 $${p}\\%$ 后，一辆自行车售价 $${now}$ 美元。涨价前是多少美元？`,
           ],
           orig,
           [Math.round((now * (100 - p)) / 100), now - p, now],
           [
-            `$${now} \\div ${(100 + p) / 100} = ${orig}$, since the new price is ${100 + p}% of the old one.`,
-            `$${now} \\div ${(100 + p) / 100} = ${orig}$，因为新价是原价的 ${100 + p}%。`,
+            `$${now} \\div ${(100 + p) / 100} = ${orig}$, since the new price is $${100 + p}\\%$ of the old one.`,
+            `$${now} \\div ${(100 + p) / 100} = ${orig}$，因为新价是原价的 $${100 + p}\\%$。`,
           ],
         );
       },
@@ -224,8 +224,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           -2 * start,
           [-start, 2 * start, 0],
           [
-            `The opposite is $${-start}$, and $${-start} - (${start}) = ${-2 * start}$.`,
-            `相反数是 $${-start}$，$${-start} - (${start}) = ${-2 * start}$。`,
+            `The opposite is $${-start}$, and $${-start} - ${start < 0 ? `(${start})` : start} = ${-2 * start}$.`,
+            `相反数是 $${-start}$，$${-start} - ${start < 0 ? `(${start})` : start} = ${-2 * start}$。`,
           ],
         );
       },
@@ -247,8 +247,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           -b,
           [b, -a * b + a, a - b === -b ? -b - 1 : a - b],
           [
-            `The product is negative and ${a} is positive, so the factor is negative: $-${a * b} \\div ${a} = -${b}$.`,
-            `积为负，${a} 为正，所以这个因数为负：$-${a * b} \\div ${a} = -${b}$。`,
+            `The product is negative and $${a}$ is positive, so the factor is negative: $-${a * b} \\div ${a} = -${b}$.`,
+            `积为负，$${a}$ 为正，所以这个因数为负：$-${a * b} \\div ${a} = -${b}$。`,
           ],
         );
       },
@@ -341,8 +341,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       "the-missing-digit-for-divisibility-by-4",
       ["The missing digit for divisibility by 4", "能被 4 整除时缺少的数字"],
       [
-        "Only the last two digits decide whether a number divides by 4, since every multiple of 100 does. So try the digits in order until the last two digits form a multiple of 4.",
-        "能否被 4 整除只看最后两位，因为 100 的倍数都能被 4 整除。所以依次试数字，直到最后两位是 4 的倍数。",
+        "Only the last two digits decide whether a number divides by $4$, since every multiple of $100$ does. So try the digits in order until the last two digits form a multiple of $4$.",
+        "能否被 $4$ 整除只看最后两位，因为 $100$ 的倍数都能被 $4$ 整除。所以依次试数字，直到最后两位是 $4$ 的倍数。",
       ],
       (rng) => {
         const head = rng.int(10, 99);
@@ -351,14 +351,14 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
         while ((10 * d + u) % 4 !== 0) d += 1;
         return whole(
           [
-            `What is the smallest digit that can go in the box so that the number divides by 4? $$${head}\\square${u}$$`,
-            `方框里填什么最小的数字，才能使这个数被 4 整除？$$${head}\\square${u}$$`,
+            `What is the smallest digit that can go in the box so that the number divides by $4$? $$${head}\\square${u}$$`,
+            `方框里填什么最小的数字，才能使这个数被 $4$ 整除？$$${head}\\square${u}$$`,
           ],
           d,
           [d + 1, d + 2, u],
           [
-            `The last two digits must form a multiple of 4, and $${10 * d + u} \\div 4 = ${(10 * d + u) / 4}$.`,
-            `最后两位必须是 4 的倍数，$${10 * d + u} \\div 4 = ${(10 * d + u) / 4}$。`,
+            `The last two digits must form a multiple of $4$, and $${10 * d + u} \\div 4 = ${(10 * d + u) / 4}$.`,
+            `最后两位必须是 $4$ 的倍数，$${10 * d + u} \\div 4 = ${(10 * d + u) / 4}$。`,
           ],
         );
       },
@@ -383,7 +383,10 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           [`What number has the prime factorization $${parts.join(" \\cdot ")}$?`, `质因数分解为 $${parts.join(" \\cdot ")}$ 的数是多少？`],
           n,
           [2 * a * (b > 0 ? 3 * b : 1) * q * c, 2 ** a + 3 ** b + q ** c, n * 2],
-          [`Multiply the powers: the result is ${n}.`, `把各个幂相乘：结果是 ${n}。`],
+          [
+            `Multiply the powers: $${[2 ** a, ...(b > 0 ? [3 ** b] : []), q ** c].join(" \\times ")} = ${n}$.`,
+            `把各个幂相乘：$${[2 ** a, ...(b > 0 ? [3 ** b] : []), q ** c].join(" \\times ")} = ${n}$。`,
+          ],
         );
       },
     ),
@@ -393,8 +396,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       "the-greatest-of-the-powers",
       ["The greatest of the powers", "几个幂中最大的"],
       [
-        "Between 0 and 1, higher powers get smaller, so a number is greater than its square and cube. Between $-1$ and 0, odd powers stay negative, so the square is the greatest.",
-        "在 0 和 1 之间，幂越高越小，所以这个数大于它的平方和立方。在 $-1$ 和 0 之间，奇次幂仍为负数，所以平方最大。",
+        "Between $0$ and $1$, higher powers get smaller, so a number is greater than its square and cube. Between $-1$ and $0$, odd powers stay negative, so the square is the greatest.",
+        "在 $0$ 和 $1$ 之间，幂越高越小，所以这个数大于它的平方和立方。在 $-1$ 和 $0$ 之间，奇次幂仍为负数，所以平方最大。",
       ],
       (rng) => {
         const d = rng.int(3, 12);
@@ -408,12 +411,12 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           neg ? ["x", "x^{3}", "x^{4}"] : ["x^{2}", "x^{3}", "x^{4}"],
           neg
             ? [
-                `$x$ and $x^{3}$ are negative, and $x^{2}$ is greater than $x^{4}$ because the size of $x$ is below 1.`,
-                `$x$ 和 $x^{3}$ 是负数；$x$ 的大小小于 1，所以 $x^{2}$ 大于 $x^{4}$。`,
+                `$x$ and $x^{3}$ are negative, and $x^{2}$ is greater than $x^{4}$ because the size of $x$ is below $1$.`,
+                `$x$ 和 $x^{3}$ 是负数；$x$ 的大小小于 $1$，所以 $x^{2}$ 大于 $x^{4}$。`,
               ]
             : [
-                `$x$ is between 0 and 1, so each higher power is smaller, leaving $x$ the greatest.`,
-                `$x$ 在 0 和 1 之间，幂越高越小，所以 $x$ 最大。`,
+                `$x$ is between $0$ and $1$, so each higher power is smaller, leaving $x$ the greatest.`,
+                `$x$ 在 $0$ 和 $1$ 之间，幂越高越小，所以 $x$ 最大。`,
               ],
         );
       },
@@ -424,8 +427,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       "a-long-sum-of-powers",
       ["A long sum of powers", "一长串幂的和"],
       [
-        "Consecutive powers of $-1$ alternate, so each odd power and the next even power cancel. A sum with an even number of terms is 0, and with an odd number of terms it is $-1$.",
-        "$-1$ 的连续幂交替出现，所以一个奇次幂和下一个偶次幂相互抵消。偶数项之和是 0，奇数项之和是 $-1$。",
+        "Consecutive powers of $-1$ alternate, so each odd power and the next even power cancel. A sum with an even number of terms is $0$, and with an odd number of terms it is $-1$.",
+        "$-1$ 的连续幂交替出现，所以一个奇次幂和下一个偶次幂相互抵消。偶数项之和是 $0$，奇数项之和是 $-1$。",
       ],
       (rng) => {
         const n = rng.int(5, 120);
@@ -438,8 +441,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           answer,
           [n, -n, 1],
           [
-            `The terms cancel in pairs, and ${n} terms leave ${n % 2 === 0 ? "nothing over, so the sum is 0" : "one $-1$ over"}.`,
-            `各项两两抵消，${n} 项${n % 2 === 0 ? "没有剩余，所以和是 0" : "剩下一个 $-1$"}。`,
+            `The terms cancel in pairs, and $${n}$ terms leave ${n % 2 === 0 ? "nothing over, so the sum is 0" : "one $-1$ over"}.`,
+            `各项两两抵消，$${n}$ 项${n % 2 === 0 ? "没有剩余，所以和是 0" : "剩下一个 $-1$"}。`,
           ],
         );
       },
@@ -465,8 +468,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           a - c,
           [a + c, c - a, a],
           [
-            `$${a} - \\square = ${c}$, so the exponent is found by $${a} - (${c})$.`,
-            `$${a} - \\square = ${c}$，所以指数是 $${a} - (${c})$。`,
+            `$${a} - \\square = ${c}$, so the exponent is $${a} - ${c < 0 ? `(${c})` : c} = ${a - c}$.`,
+            `$${a} - \\square = ${c}$，所以指数是 $${a} - ${c < 0 ? `(${c})` : c} = ${a - c}$。`,
           ],
         );
       },
@@ -579,7 +582,7 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       ["Zeros at the end", "末尾的零"],
       [
         "The power of ten counts the places the point moves, and some of those places are filled by the digits already after the point. Only the places left over become zeros.",
-        "10 的指数表示小数点移动的位数，其中一些位由小数点后已有的数字占据。只有剩下的位才变成零。",
+        "$10$ 的指数表示小数点移动的位数，其中一些位由小数点后已有的数字占据。只有剩下的位才变成零。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
@@ -597,8 +600,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           zeros,
           [n, n + 1, zeros - 1],
           [
-            `The point moves ${n} places and ${two ? 2 : 1} of them are taken by digits, leaving ${zeros} zeros.`,
-            `小数点移动 ${n} 位，其中 ${two ? 2 : 1} 位由数字占据，剩下 ${zeros} 个零。`,
+            `The point moves $${n}$ places and ${two ? "$2$ of them are" : "$1$ of them is"} taken by digits, leaving $${zeros}$ ${zeros === 1 ? "zero" : "zeros"}.`,
+            `小数点移动 $${n}$ 位，其中 $${two ? 2 : 1}$ 位由数字占据，剩下 $${zeros}$ 个零。`,
           ],
         );
       },
@@ -634,8 +637,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       "a-difference-below-one",
       ["A difference below 1", "差小于 1"],
       [
-        "When a difference of the leading numbers falls below 1, the answer is not yet in scientific notation. Multiply the leading number by ten and lower the power of ten by one.",
-        "前面的数之差小于 1 时，结果还不是科学记数法。把前面的数乘 10，同时把 10 的指数减 1。",
+        "When a difference of the leading numbers falls below $1$, the answer is not yet in scientific notation. Multiply the leading number by ten and lower the power of ten by one.",
+        "前面的数之差小于 $1$ 时，结果还不是科学记数法。把前面的数乘 $10$，同时把 $10$ 的指数减 $1$。",
       ],
       (rng) => {
         const d = rng.int(1, 9);
@@ -650,8 +653,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           `${d} \\times 10^{${n - 1}}`,
           [`${d} \\times 10^{${n}}`, `0.${d} \\times 10^{${n}}`, `${d} \\times 10^{${n + 1}}`],
           [
-            `The difference is $0.${d} \\times 10^{${n}}$, and moving to a leading number of at least 1 gives $${d} \\times 10^{${n - 1}}$.`,
-            `差是 $0.${d} \\times 10^{${n}}$，把前面的数变成至少为 1，得 $${d} \\times 10^{${n - 1}}$。`,
+            `The difference is $0.${d} \\times 10^{${n}}$, and moving to a leading number of at least $1$ gives $${d} \\times 10^{${n - 1}}$.`,
+            `差是 $0.${d} \\times 10^{${n}}$，把前面的数变成至少为 $1$，得 $${d} \\times 10^{${n - 1}}$。`,
           ],
         );
       },
@@ -719,7 +722,7 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       ["A sum as a decimal", "和写成小数"],
       [
         "Negative powers of ten name decimal places, so they can be read directly into a decimal. Each number fills its own place, and the sum can be written down digit by digit.",
-        "10 的负指数对应小数位，可以直接读成小数。每个数占自己的数位，和可以逐位写出。",
+        "$10$ 的负指数对应小数位，可以直接读成小数。每个数占自己的数位，和可以逐位写出。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
@@ -734,8 +737,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           answer,
           [Q.of(a + b, 10 ** n), Q.of(a + b, 10 ** (n + 1)), Q.of(a * 10 + b, 10 ** n)],
           [
-            `The digit ${a} goes in place ${n} after the point and ${b} in the place after it: $${((a * 10 + b) / 10 ** (n + 1)).toFixed(n + 1)}$.`,
-            `数字 ${a} 在小数点后第 ${n} 位，${b} 在下一位：$${((a * 10 + b) / 10 ** (n + 1)).toFixed(n + 1)}$。`,
+            `The digit $${a}$ goes in place $${n}$ after the point and $${b}$ in the place after it: $${((a * 10 + b) / 10 ** (n + 1)).toFixed(n + 1)}$.`,
+            `数字 $${a}$ 在小数点后第 $${n}$ 位，$${b}$ 在下一位：$${((a * 10 + b) / 10 ** (n + 1)).toFixed(n + 1)}$。`,
           ],
         );
       },
@@ -746,8 +749,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       "the-power-after-tidying-the-product",
       ["The power after tidying the product", "整理积后的指数"],
       [
-        "Multiplying adds the powers of ten, but the product of the leading numbers may reach 10. Then it must be tidied, which raises the power of ten by one more.",
-        "相乘时指数相加，但前面的数之积可能达到 10。这时要整理，指数还要再加 1。",
+        "Multiplying adds the powers of ten, but the product of the leading numbers may reach $10$. Then it must be tidied, which raises the power of ten by one more.",
+        "相乘时指数相加，但前面的数之积可能达到 $10$。这时要整理，指数还要再加 $1$。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
@@ -757,8 +760,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
         const power = m + n + 1;
         return integer(
           [
-            `In scientific notation, $(${a} \\times 10^{${m}})(${b} \\times 10^{${n}}) = c \\times 10^{k}$ with $c$ between 1 and 10. What is $k$?`,
-            `用科学记数法表示，$(${a} \\times 10^{${m}})(${b} \\times 10^{${n}}) = c \\times 10^{k}$，其中 $c$ 在 1 和 10 之间。$k$ 是多少？`,
+            `In scientific notation, $(${a} \\times 10^{${m}})(${b} \\times 10^{${n}}) = c \\times 10^{k}$ with $c$ between $1$ and $10$. What is $k$?`,
+            `用科学记数法表示，$(${a} \\times 10^{${m}})(${b} \\times 10^{${n}}) = c \\times 10^{k}$，其中 $c$ 在 $1$ 和 $10$ 之间。$k$ 是多少？`,
           ],
           power,
           [m + n, m * n, m + n + 2],
@@ -935,8 +938,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           `(\\sqrt{${n}})^{2} + ${k}`,
           [`\\sqrt{${n}} + ${k}`, `${k}\\sqrt{${n}}`, frac(`\\sqrt{${n}}`, k)],
           [
-            `$(\\sqrt{${n}})^{2} = ${n}$, so the sum is ${n + k}. The others still contain $\\sqrt{${n}}$.`,
-            `$(\\sqrt{${n}})^{2} = ${n}$，所以和是 ${n + k}。其他的仍含 $\\sqrt{${n}}$。`,
+            `$(\\sqrt{${n}})^{2} = ${n}$, so the sum is $${n + k}$. The others still contain $\\sqrt{${n}}$.`,
+            `$(\\sqrt{${n}})^{2} = ${n}$，所以和是 $${n + k}$。其他的仍含 $\\sqrt{${n}}$。`,
           ],
         );
       },
@@ -951,22 +954,33 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
         "根式是不能写成分数的根。完全平方数和完全立方数的根其实是整数，所以先化简再计数。",
       ],
       (rng) => {
-        const items = Array.from({ length: rng.int(4, 6) }, () => {
+        const draw = () => {
           const kind = rng.int(0, 3);
           if (kind === 0) return { latex: `\\sqrt{${rng.int(2, 15) ** 2}}`, surd: false };
           if (kind === 1) return { latex: `\\sqrt[3]{${rng.int(2, 6) ** 3}}`, surd: false };
           if (kind === 2) return { latex: `\\sqrt{${rng.pick([2, 3, 5, 6, 7, 10, 11, 13, 15, 17])}}`, surd: true };
           return { latex: `\\sqrt[3]{${rng.pick([2, 3, 4, 5, 6, 7, 9, 10, 15, 25])}}`, surd: true };
-        });
-        const count = items.filter((x) => x.surd).length;
+        };
+        const size = rng.int(4, 6);
+        const items: { latex: string; surd: boolean }[] = [];
+        while (items.length < size) {
+          const item = draw();
+          if (!items.some((x) => x.latex === item.latex)) items.push(item);
+        }
+        const surds = items.filter((x) => x.surd).map((x) => x.latex);
+        const count = surds.length;
         const list = items.map((x) => x.latex).join(",\\quad ");
         return whole(
           [`How many of these are surds? $$${list}$$`, `其中有几个根式（不能化为有理数）？$$${list}$$`],
           count,
           [items.length, items.length - count, count + 1],
           [
-            `Roots of perfect squares and cubes are whole numbers, which leaves ${count} ${count === 1 ? "surd" : "surds"}.`,
-            `完全平方数和完全立方数的根是整数，剩下 ${count} 个根式。`,
+            count === 0
+              ? "Each of these is a root of a perfect square or a perfect cube, so each is a whole number and there are $0$ surds."
+              : `Roots of perfect squares and cubes are whole numbers, which leaves $${surds.join(",\\;")}$: that is $${count}$ ${count === 1 ? "surd" : "surds"}.`,
+            count === 0
+              ? "这些都是完全平方数或完全立方数的根，都是整数，所以有 $0$ 个根式。"
+              : `完全平方数和完全立方数的根是整数，剩下 $${surds.join(",\\;")}$，共 $${count}$ 个根式。`,
           ],
         );
       },
@@ -991,8 +1005,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           k * m * m,
           [m, k * m, m * m],
           [
-            `Square both sides: $${k} \\cdot \\square = ${(k * m) ** 2}$, so the box holds ${k * m * m}.`,
-            `两边平方：$${k} \\cdot \\square = ${(k * m) ** 2}$，所以方框里是 ${k * m * m}。`,
+            `Square both sides: $${k} \\cdot \\square = ${(k * m) ** 2}$, so the box holds $${k * m * m}$.`,
+            `两边平方：$${k} \\cdot \\square = ${(k * m) ** 2}$，所以方框里是 $${k * m * m}$。`,
           ],
         );
       },
@@ -1017,8 +1031,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           a * b * b,
           [a * b, b * b, a + b * b],
           [
-            `Square both sides: the quotient is ${b * b}, and $${a} \\times ${b * b} = ${a * b * b}$.`,
-            `两边平方：商是 ${b * b}，$${a} \\times ${b * b} = ${a * b * b}$。`,
+            `Square both sides: the quotient is $${b * b}$, and $${a} \\times ${b * b} = ${a * b * b}$.`,
+            `两边平方：商是 $${b * b}$，$${a} \\times ${b * b} = ${a * b * b}$。`,
           ],
         );
       },
@@ -1151,8 +1165,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           Q.of(a + b, a * b),
           [Q.of(2, a + b), Q.of(1, a + b), Q.of(2, a * b)],
           [
-            `$${frac(1, a)} + ${frac(1, b)} = ${frac(b, a * b)} + ${frac(a, a * b)} = ${frac(a + b, a * b)}$.`,
-            `$${frac(1, a)} + ${frac(1, b)} = ${frac(b, a * b)} + ${frac(a, a * b)} = ${frac(a + b, a * b)}$。`,
+            `$${frac(1, a)} + ${frac(1, b)} = ${frac(b, a * b)} + ${frac(a, a * b)} = ${frac(a + b, a * b)}${Q.of(a + b, a * b).toLatex() === frac(a + b, a * b) ? "" : ` = ${Q.of(a + b, a * b).toLatex()}`}$.`,
+            `$${frac(1, a)} + ${frac(1, b)} = ${frac(b, a * b)} + ${frac(a, a * b)} = ${frac(a + b, a * b)}${Q.of(a + b, a * b).toLatex() === frac(a + b, a * b) ? "" : ` = ${Q.of(a + b, a * b).toLatex()}`}$。`,
           ],
         );
       },
@@ -1182,8 +1196,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
         ]);
         return whole(
           [
-            `Fill in the box, where ${g} is the greatest common factor: $$${g * a} + ${g * b} + ${g * c} = ${g}(${a} + ${b} + \\square)$$`,
-            `填方框，其中 ${g} 是最大公因数：$$${g * a} + ${g * b} + ${g * c} = ${g}(${a} + ${b} + \\square)$$`,
+            `Fill in the box, where $${g}$ is the greatest common factor: $$${g * a} + ${g * b} + ${g * c} = ${g}(${a} + ${b} + \\square)$$`,
+            `填方框，其中 $${g}$ 是最大公因数：$$${g * a} + ${g * b} + ${g * c} = ${g}(${a} + ${b} + \\square)$$`,
           ],
           c,
           [g * c, g * c - g, c + g],
@@ -1216,8 +1230,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           n,
           [n + 1, n - 1, Math.floor(c / a)],
           [
-            `$x = ${n}$ gives ${a * n + b}, which is too little, and $x = ${n + 1}$ gives ${a * (n + 1) + b}, which is too much.`,
-            `$x = ${n}$ 得 ${a * n + b}，太小；$x = ${n + 1}$ 得 ${a * (n + 1) + b}，太大。`,
+            `$x = ${n}$ gives $${a * n + b}$, which is too little, and $x = ${n + 1}$ gives $${a * (n + 1) + b}$, which is too much.`,
+            `$x = ${n}$ 得 $${a * n + b}$，太小；$x = ${n + 1}$ 得 $${a * (n + 1) + b}$，太大。`,
           ],
         );
       },
