@@ -960,7 +960,7 @@ export const theRootTest: TopicDef = {
     "若 ⁿ√|aₙ| → L，则 L < 1 时级数收敛，L > 1 时发散，L = 1 时无法判断。",
   ),
   prerequisites: ["the-ratio-test"],
-  encompasses: [{ topic: "the-ratio-test", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

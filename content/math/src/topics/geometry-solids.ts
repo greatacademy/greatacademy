@@ -3844,7 +3844,6 @@ export const volumesOfRevolution: TopicDef = {
   encompasses: [
     { topic: "volumes-of-right-cones", weight: 0.3 },
     { topic: "volumes-of-cylinders", weight: 0.3 },
-    { topic: "the-coordinate-plane", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GMD.B.4"],

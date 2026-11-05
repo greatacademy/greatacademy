@@ -975,10 +975,7 @@ export const theSssCongruenceCriterion: TopicDef = {
     "由三组边证明三角形全等，并写出与各边对应的全等式。",
   ),
   prerequisites: ["the-sas-congruence-criterion"],
-  encompasses: [
-    { topic: "the-sas-congruence-criterion", weight: 0.2 },
-    { topic: "two-step-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.2 }],
   xp: 13,
   standards: ["CCSS.HSG.CO.B.8", "CCSS.HSG.SRT.B.5"],
   knowledgePoints: [

@@ -1161,7 +1161,6 @@ export const theDomainOfATransformedRadicalFunction: TopicDef = {
   encompasses: [
     { topic: "domain-of-a-function", weight: 0.4 },
     { topic: "the-domain-and-range-of-transformed-functions", weight: 0.3 },
-    { topic: "graphing-the-cube-root-function", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],

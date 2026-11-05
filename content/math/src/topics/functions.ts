@@ -2278,7 +2278,6 @@ export const functionComposition: TopicDef = {
   encompasses: [
     { topic: "introduction-to-functions", weight: 0.5 },
     { topic: "squaring-binomials", weight: 0.3 },
-    { topic: "representations-of-functions", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSF.BF.A.1.C"],

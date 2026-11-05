@@ -1247,10 +1247,7 @@ export const graphingSecantAndCosecant: TopicDef = {
     "把 y = sec x 和 y = csc x 看作余弦与正弦的倒数画出图象，辨认它们，并求它们的渐近线和转折点。",
   ),
   prerequisites: ["graphing-tangent-and-cotangent"],
-  encompasses: [
-    { topic: "graphing-tangent-and-cotangent", weight: 0.3 },
-    { topic: "graphing-sine-and-cosine", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "graphing-sine-and-cosine", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7e"],
   knowledgePoints: [

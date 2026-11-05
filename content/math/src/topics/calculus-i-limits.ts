@@ -720,7 +720,7 @@ export const theProductAndQuotientRulesForLimits: TopicDef = {
     "用积法则与商法则组合已知极限，并用代入法求分式函数的极限。",
   ),
   prerequisites: ["the-sum-rule-for-limits"],
-  encompasses: [{ topic: "the-sum-rule-for-limits", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
