@@ -25,6 +25,7 @@ import { deeperFiguresLinearProgrammingPoints } from "../topics/deeper-figures-l
 import { deeperFiguresMethodsOfProofPoints } from "../topics/deeper-figures-methods-of-proof.ts";
 import { deeperFiguresNumberTheoryPoints } from "../topics/deeper-figures-number-theory.ts";
 import { deeperFiguresProbabilityCollegePoints } from "../topics/deeper-figures-probability-and-statistics.ts";
+import { deeperFiguresProbability2CollegePoints } from "../topics/deeper-figures-probability-and-statistics-2.ts";
 import { deeperGrade4Points } from "../topics/deeper-grade-4.ts";
 import { deeperGrade4MorePoints } from "../topics/deeper-grade-4-more.ts";
 import { deeperGrade7Points } from "../topics/deeper-grade-7.ts";
@@ -191,5 +192,6 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     deeperFiguresLinearProgrammingPoints,
     deeperFiguresNumberTheoryPoints,
     deeperFiguresProbabilityCollegePoints,
+    deeperFiguresProbability2CollegePoints,
   ],
 );

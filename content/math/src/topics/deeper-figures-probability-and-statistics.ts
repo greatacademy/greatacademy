@@ -6,14 +6,14 @@ import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
 
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** Scale maps a value on an axis to a position in the drawing. */
 type Scale = (v: number) => number;
 
 /** chart draws axes with separate scales, since a density is usually far shorter than it is wide. */
-function chart(
+export function chart(
   xRange: readonly [number, number],
   yRange: readonly [number, number],
   xTicks: readonly (readonly [number, string])[],
@@ -32,21 +32,21 @@ function chart(
 }
 
 /** intTicks lists whole-number ticks with their labels. */
-const intTicks = (a: number, b: number, step = 1): [number, string][] => {
+export const intTicks = (a: number, b: number, step = 1): [number, string][] => {
   const out: [number, string][] = [];
   for (let v = a; v <= b; v += step) out.push([v, String(v).replace("-", "−")]);
   return out;
 };
 
 /** tenthTicks lists ticks at multiples of one tenth, labelled in decimals. */
-const tenthTicks = (a: number, b: number, step = 1): [number, string][] => {
+export const tenthTicks = (a: number, b: number, step = 1): [number, string][] => {
   const out: [number, string][] = [];
   for (let v = a; v <= b; v += step) out.push([v / 10, (v / 10).toFixed(1)]);
   return out;
 };
 
 /** curvePath draws a function as a polyline between two values. */
-function curvePath(
+export function curvePath(
   f: (v: number) => number,
   from: number,
   to: number,
@@ -62,7 +62,7 @@ function curvePath(
 }
 
 /** shadeUnder shades the part below a curve between two values. */
-function shadeUnder(f: (v: number) => number, from: number, to: number, x: Scale, y: Scale): string {
+export function shadeUnder(f: (v: number) => number, from: number, to: number, x: Scale, y: Scale): string {
   const pts = Array.from({ length: 61 }, (_, i) => {
     const v = from + ((to - from) * i) / 60;
     return `${x(v)},${y(f(v))}`;
@@ -71,7 +71,7 @@ function shadeUnder(f: (v: number) => number, from: number, to: number, x: Scale
 }
 
 /** bars draws rectangles of a bar chart between given cut points. */
-const bars = (cuts: readonly number[], values: readonly number[], x: Scale, y: Scale) =>
+export const bars = (cuts: readonly number[], values: readonly number[], x: Scale, y: Scale) =>
   values
     .map((v, i) => {
       const [a, b] = [cuts[i] as number, cuts[i + 1] as number];
@@ -80,7 +80,7 @@ const bars = (cuts: readonly number[], values: readonly number[], x: Scale, y: S
     .join("");
 
 /** normal is the density of a normal distribution. */
-const normal = (mu: number, sigma: number) => (v: number) =>
+export const normal = (mu: number, sigma: number) => (v: number) =>
   Math.exp(-((v - mu) ** 2) / (2 * sigma * sigma)) / (sigma * Math.sqrt(2 * Math.PI));
 
 const densityHeight = point(
@@ -304,8 +304,8 @@ function normalArea(rng: Rng, kinds: readonly ShadeKind[]) {
     {
       svg,
       alt: t(
-        `A standard normal curve with ticks at plus and minus ${zText}; the shaded area: ${why[0].replaceAll("$", "")}.`,
-        `标准正态曲线，在正负 ${zText} 处有刻度；阴影：${why[1].replaceAll("$", "")}。`,
+        `A standard normal curve with ticks at plus and minus ${zText}. ${{ left: `Everything to the left of ${zText} is shaded`, right: `Everything to the right of ${zText} is shaded`, between: `The part between −${zText} and ${zText} is shaded`, negLeft: `Everything to the left of −${zText} is shaded`, negRight: `Everything to the right of −${zText} is shaded`, outside: `The two tails beyond −${zText} and ${zText} are shaded` }[kind]}.`,
+        `标准正态曲线，在正负 ${zText} 处有刻度。${{ left: `${zText} 左边全部涂色`, right: `${zText} 右边全部涂色`, between: `−${zText} 与 ${zText} 之间涂色`, negLeft: `−${zText} 左边全部涂色`, negRight: `−${zText} 右边全部涂色`, outside: `−${zText} 和 ${zText} 外侧的两条尾部涂色` }[kind]}。`,
       ),
     },
   );
@@ -973,8 +973,8 @@ const errorArea = point(
       {
         svg,
         alt: t(
-          `Two normal curves with a critical line at c. The shaded area: ${why[0].replaceAll("$", "")}.`,
-          `两条正态曲线和 c 处的临界线。阴影：${why[1].replaceAll("$", "")}。`,
+          `Two normal curves, centered at μ₀ and at μ₁ to its right, with a critical line at c. The area under the ${kind === "one" || kind === "keep" ? "μ₀" : "μ₁"} curve to the ${kind === "one" || kind === "power" ? "right" : "left"} of c is shaded.`,
+          `两条正态曲线，中心分别在 μ₀ 和其右边的 μ₁，c 处有临界线。${kind === "one" || kind === "keep" ? "μ₀" : "μ₁"} 曲线下、c ${kind === "one" || kind === "power" ? "右" : "左"}边的面积涂色。`,
         ),
       },
     );
@@ -1080,7 +1080,7 @@ const bivariateContours = point(
       drawn(
         { xMin: -8, xMax: 8, yMin: -8, yMax: 8, xName: "x", yName: "y" },
         marks,
-        t(`Contour ellipses centered at (${cx}, ${cy}). ${why[0]}.`, `以 (${cx}, ${cy}) 为中心的等高椭圆。${why[1]}。`),
+        t(`Contour ellipses centered at (${cx}, ${cy}). ${observed(why)[0]}.`, `以 (${cx}, ${cy}) 为中心的等高椭圆。${observed(why)[1]}。`),
       ),
     );
   },

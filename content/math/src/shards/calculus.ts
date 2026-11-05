@@ -53,6 +53,7 @@ import { deeperFiguresDifferentialEquationsPoints } from "../topics/deeper-figur
 import { deeperFiguresMultivariableCalculusPoints } from "../topics/deeper-figures-multivariable-calculus.ts";
 import { deeperFiguresPartialDifferentialEquationsPoints } from "../topics/deeper-figures-partial-differential-equations.ts";
 import { deeperFiguresProbabilityCalculusPoints } from "../topics/deeper-figures-probability-and-statistics.ts";
+import { deeperFiguresProbability2CalculusPoints } from "../topics/deeper-figures-probability-and-statistics-2.ts";
 import { deeperFiguresRealAnalysisPoints } from "../topics/deeper-figures-real-analysis.ts";
 import { deeperMultivariableCalculusPoints } from "../topics/deeper-multivariable-calculus.ts";
 import { deeperMultivariableCalculusThirdPoints } from "../topics/deeper-multivariable-calculus-third.ts";
@@ -211,5 +212,6 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     deeperFiguresRealAnalysisPoints,
     deeperFiguresPartialDifferentialEquationsPoints,
     deeperFiguresProbabilityCalculusPoints,
+    deeperFiguresProbability2CalculusPoints,
   ],
 );
