@@ -131,7 +131,7 @@ tools/audit ──► libs/content, content/math
 
 任务以**会话**的方式进行，每个请求一道题（先 `StartTask`，再反复 `SubmitAnswer` 直到得出结果）。会话执行器（`libs/api/src/runner.ts`）是建立在引擎的课程、复习、测验和诊断规则之上的纯状态机。它的状态只保存题目引用（知识点、学习点、种子），从不保存题目本身。
 
-题目实例在服务端由种子生成，也在服务端判分。答案在提交之前绝不发送给客户端。
+题目实例在服务端由种子生成，也在服务端判分，都在学科的分片 Worker 中进行（§6.1）。答案在提交之前绝不发送给客户端。
 
 Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请求交给 `src/server/handler.ts`。页面在服务端渲染时不含学习者数据，在浏览器中通过 Connect 客户端和 TanStack Query 获取，因此页面在服务端从不需要会话。页面语言在服务端决定（`ga-locale` cookie，否则看 `Accept-Language`），所以首屏即为该语言。
 

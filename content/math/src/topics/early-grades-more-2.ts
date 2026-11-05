@@ -270,8 +270,8 @@ const tradingPlaces = earlyTopic(
           10 * h + extra,
           [h, extra === 0 ? 100 * h : extra, n],
           [
-            `${many(h, "hundred")} make ${many(10 * h, "ten")}${extra ? `, and ${extra} more tens make ${10 * h + extra}` : ""}.`,
-            `${h} 个百是 ${10 * h} 个十${extra ? `，再加 ${extra} 个十，是 ${10 * h + extra} 个十` : ""}。`,
+            `Each hundred is 10 tens, so ${many(h, "hundred")} ${h === 1 ? "is" : "are"} ${many(10 * h, "ten")}${extra ? `, and ${extra} more tens make ${10 * h + extra}` : ""}.`,
+            `每个百是 10 个十，所以 ${h} 个百是 ${10 * h} 个十${extra ? `，再加 ${extra} 个十，是 ${10 * h + extra} 个十` : ""}。`,
           ],
           blockRowsFigure([[h, extra, 0]]),
         );
@@ -2296,7 +2296,10 @@ const graphsFromTables = earlyTopic(
           ],
           big - small,
           [big + small, big, small],
-          [`$${big} - ${small} = ${big - small}$.`, `$${big} - ${small} = ${big - small}$。`],
+          [
+            `Read ${big} for Team ${bigLabel} and ${small} for Team ${smallLabel}, then subtract to compare: $${big} - ${small} = ${big - small}$.`,
+            `从表中读出 ${bigLabel} 队是 ${big}，${smallLabel} 队是 ${small}，再相减比较：$${big} - ${small} = ${big - small}$。`,
+          ],
           tableFigure(labels, values),
         );
       },
@@ -2524,8 +2527,8 @@ const shapeRiddles = earlyTopic(
             big.sides - small.sides,
             [big.sides + small.sides, big.sides, small.sides],
             [
-              `$${big.sides} - ${small.sides} = ${big.sides - small.sides}$.`,
-              `$${big.sides} - ${small.sides} = ${big.sides - small.sides}$。`,
+              `The ${big.name[0]} has ${big.sides} and the ${small.name[0]} has ${small.sides}, so subtract: $${big.sides} - ${small.sides} = ${big.sides - small.sides}$.`,
+              `${big.name[1]}有 ${big.sides} 条，${small.name[1]}有 ${small.sides} 条，所以相减：$${big.sides} - ${small.sides} = ${big.sides - small.sides}$。`,
             ],
           );
         if (form === 1)
@@ -2549,8 +2552,8 @@ const shapeRiddles = earlyTopic(
           big.sides + small.sides,
           [big.sides - small.sides, big.sides, big.sides * small.sides],
           [
-            `$${big.sides} + ${small.sides} = ${big.sides + small.sides}$.`,
-            `$${big.sides} + ${small.sides} = ${big.sides + small.sides}$。`,
+            `The ${big.name[0]} has ${big.sides} sides and the ${small.name[0]} has ${small.sides}, so add: $${big.sides} + ${small.sides} = ${big.sides + small.sides}$.`,
+            `${big.name[1]}有 ${big.sides} 条边，${small.name[1]}有 ${small.sides} 条边，所以相加：$${big.sides} + ${small.sides} = ${big.sides + small.sides}$。`,
           ],
         );
       },

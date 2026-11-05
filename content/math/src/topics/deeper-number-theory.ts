@@ -148,7 +148,7 @@ const solutionSpacing = point(
 
 const weightedMu = point(
   "a-weighted-sum-of-the-mobius-function",
-  ["A weighted sum of the Mobius function", "默比乌斯函数的加权和"],
+  ["A weighted sum of the Möbius function", "默比乌斯函数的加权和"],
   [
     "The formula $\\varphi(n) = n \\sum_{d \\mid n} \\frac{\\mu(d)}{d}$ can be read in reverse. So the weighted sum $\\sum_{d \\mid n} \\frac{\\mu(d)}{d}$ equals $\\frac{\\varphi(n)}{n}$, which is the product of $1 - \\frac{1}{p}$ over the primes dividing $n$. Only the primes matter, not their exponents.",
     "公式 $\\varphi(n) = n \\sum_{d \\mid n} \\frac{\\mu(d)}{d}$ 可以反过来读。所以加权和 $\\sum_{d \\mid n} \\frac{\\mu(d)}{d}$ 等于 $\\frac{\\varphi(n)}{n}$，即对 $n$ 的素因子取 $1 - \\frac{1}{p}$ 之积。只有素因子起作用，指数不起作用。",

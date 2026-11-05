@@ -174,7 +174,7 @@ export function compareBarsFigure(
 /** hopsFigure draws an open number line through the stops, with an arrow over each hop labeled by its change; `hideEnd` writes a question mark for the last stop and `hideHop` for the hop at that index. */
 export function hopsFigure(stops: readonly number[], hideEnd = false, hideHop = -1): Figure {
   const sorted = [...stops].sort((a, b) => a - b);
-  const weights = sorted.slice(1).map((v, i) => Math.max(1.6, Math.sqrt(v - (sorted[i] as number))));
+  const weights = sorted.slice(1).map((v, i) => Math.max(2.6, Math.sqrt(v - (sorted[i] as number))));
   const all = weights.reduce((sum, w) => sum + w, 0);
   const place = new Map<number, number>();
   let x = 26;

@@ -631,9 +631,9 @@ const twoSquares = point(
 
 const mobiusInverse = point(
   "inverting-a-mobius-map",
-  ["Inverting a Mobius map", "求默比乌斯变换的逆"],
+  ["Inverting a Möbius map", "求默比乌斯变换的逆"],
   [
-    "Solving $w = \\frac{a z + b}{c z + d}$ for $z$ gives $z = \\frac{d w - b}{a - c w}$, which is again a Mobius transformation. So these maps form a group under composition, and each one is a bijection of the extended plane. A single preimage comes from substituting the value of $w$.",
+    "Solving $w = \\frac{a z + b}{c z + d}$ for $z$ gives $z = \\frac{d w - b}{a - c w}$, which is again a Möbius transformation. So these maps form a group under composition, and each one is a bijection of the extended plane. A single preimage comes from substituting the value of $w$.",
     "由 $w = \\frac{a z + b}{c z + d}$ 解出 $z$，得 $z = \\frac{d w - b}{a - c w}$，它还是默比乌斯变换。所以这些映射在复合下构成群，每一个都是扩充平面上的双射。代入 $w$ 的值就能得到一个原像。",
   ],
   (rng) => {

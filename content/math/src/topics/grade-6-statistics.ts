@@ -419,7 +419,7 @@ const measurements: readonly Measurements[] = [
 export const theMeanOfADataSet: TopicDef = {
   ...topic(
     "the-mean-of-a-data-set",
-    t("The Mean of a Data Set", "数据集的平均数"),
+    t("Finding the Mean", "求平均数"),
     t(
       "The mean of a data set is the sum of the values divided by the number of values. Since mean = sum ÷ count, the sum is mean × count: a team that scores a mean of 15 points over 4 games scores 60 points in all. When a value is added, find the new sum and divide by the new count; averaging the old mean with the new value gives the wrong answer.",
       "一组数据的平均数等于各数据之和除以数据个数。由于平均数 = 总和 ÷ 个数，所以总和 = 平均数 × 个数：一支球队 4 场比赛平均每场得 15 分，一共得 60 分。加入一个新数据时，先求新的总和，再除以新的个数；把原平均数和新数据再平均是错误的。",

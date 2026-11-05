@@ -28,7 +28,7 @@ export const minProseWords = 15;
 
 const cjk = /[一-鿿]/;
 const visualTitle =
-  /graph|plot|diagram|number line|figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|net|polygon|triangle|circle/i;
+  /(?<!crypto)graph(?!ing calculator)|plot|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
 
 /** normalizeTitle reduces a title to lowercase words so that outline and code titles compare equal. */
 export function normalizeTitle(title: string): string {
@@ -61,6 +61,8 @@ export function proseWords(text: string): number {
 export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Outline>): AuditReport {
   const byTitle = new Map<string, string[]>();
   for (const topic of subject.topics.values()) {
+    // A practice-only topic deliberately takes the title of what it practices.
+    if (topic.practiceOnly) continue;
     const key = normalizeTitle(topic.title.en);
     byTitle.set(key, [...(byTitle.get(key) ?? []), topic.id]);
   }
@@ -68,7 +70,8 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
   const used = new Set<string>();
   const gaps: CourseGap[] = [];
   for (const course of subject.courses.values()) {
-    for (const id of course.topics) used.add(id);
+    // A foundation is taught to a learner who needs it, though no course lists it.
+    for (const id of [...course.topics, ...course.foundations]) used.add(id);
     const outline = outlines.get(course.def.id);
     if (!outline) continue;
     const covered = new Set(course.topics.map((id) => normalizeTitle(subject.topics.get(id)?.title.en ?? "")));
@@ -139,7 +142,8 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (noWrong === samplesPerKnowledgePoint) add("no wrong responses listed", path);
       if (leaks > samplesPerKnowledgePoint / 2) add("canonical answer appears in the prompt", path);
     });
-    if (visualTitle.test(topic.title.en) && !hasFigure) add("visual topic without a figure", `${topic.id}: ${topic.title.en}`);
+    if (visualTitle.test(topic.title.en) && !hasFigure && !topic.practiceOnly)
+      add("visual topic without a figure", `${topic.id}: ${topic.title.en}`);
   }
   return { gaps, findings };
 }

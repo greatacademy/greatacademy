@@ -317,8 +317,14 @@ const factFamilies = earlyTopic(
           answer,
           where === 0 ? [a + b, product + a, product - b] : [product - (where === 1 ? b : a), product, product + (where === 1 ? b : a)],
           where === 0
-            ? [`$${times(a, b)} = ${product}$.`, `$${times(a, b)} = ${product}$。`]
-            : [`$${div(product, where === 1 ? b : a)} = ${answer}$.`, `$${div(product, where === 1 ? b : a)} = ${answer}$。`],
+            ? [
+                `The top is the product of the bottom two: $${times(a, b)} = ${product}$.`,
+                `上面的数是下面两个数的积：$${times(a, b)} = ${product}$。`,
+              ]
+            : [
+                `A missing bottom number times the other gives the top, so divide the top by the other: $${div(product, where === 1 ? b : a)} = ${answer}$.`,
+                `下面缺的数乘另一个数得上面的数，所以用上面的数除以另一个数：$${div(product, where === 1 ? b : a)} = ${answer}$。`,
+              ],
           factTriangleFigure(where === 0 ? null : product, where === 1 ? null : a, where === 2 ? null : b, "×"),
         );
       },
@@ -498,7 +504,10 @@ const areaModels = earlyTopic(
           [`The rectangle shows $${times(h, n)}$. What is the product?`, `这个长方形表示 $${times(h, n)}$。积是多少？`],
           h * n,
           [10 * h, ones * h, h + n, h * n + 10],
-          [`$${10 * h} + ${ones * h} = ${h * n}$.`, `$${10 * h} + ${ones * h} = ${h * n}$。`],
+          [
+            `The whole rectangle is its two parts together: $${10 * h} + ${ones * h} = ${h * n}$.`,
+            `整个长方形等于它的两部分之和：$${10 * h} + ${ones * h} = ${h * n}$。`,
+          ],
           areaModelFigure(h, [10, ones], [`${10 * h}`, `${ones * h}`]),
         );
       },
@@ -562,7 +571,10 @@ const arrayMeasureStories = earlyTopic(
           ],
           rows * cols,
           [rows + cols, rows * cols + cols, rows * cols - rows],
-          [`$${times(rows, cols)} = ${rows * cols}$.`, `$${times(rows, cols)} = ${rows * cols}$。`],
+          [
+            `${rows} equal rows of ${cols} make $${times(rows, cols)} = ${rows * cols}$.`,
+            `${rows} 行，每行 ${cols}，一共是 $${times(rows, cols)} = ${rows * cols}$。`,
+          ],
           arrayFigure(rows, cols),
         );
       },
@@ -588,7 +600,10 @@ const arrayMeasureStories = earlyTopic(
               ],
               cols,
               [total - rows, total, total + rows],
-              [`$${div(total, rows)} = ${cols}$.`, `$${div(total, rows)} = ${cols}$。`],
+              [
+                `Sharing ${total} equally among ${rows} rows means dividing: $${div(total, rows)} = ${cols}$.`,
+                `把 ${total} 平均分到 ${rows} 行，要用除法：$${div(total, rows)} = ${cols}$。`,
+              ],
             )
           : whole(
               [
@@ -597,7 +612,10 @@ const arrayMeasureStories = earlyTopic(
               ],
               rows,
               [total - cols, total, total + cols],
-              [`$${div(total, cols)} = ${rows}$.`, `$${div(total, cols)} = ${rows}$。`],
+              [
+                `Finding how many groups of ${cols} make ${total} means dividing: $${div(total, cols)} = ${rows}$.`,
+                `求 ${total} 里有几个 ${cols}，要用除法：$${div(total, cols)} = ${rows}$。`,
+              ],
             );
       },
     ),
@@ -621,7 +639,10 @@ const arrayMeasureStories = earlyTopic(
             ],
             total,
             [size + count, total + size, total - size],
-            [`$${times(count, size)} = ${total}$ meters.`, `$${times(count, size)} = ${total}$ 米。`],
+            [
+              `${count} equal lengths of ${size} meters make $${times(count, size)} = ${total}$ meters.`,
+              `${count} 个 ${size} 米合起来是 $${times(count, size)} = ${total}$ 米。`,
+            ],
           );
         if (form === 1)
           return whole(
@@ -631,7 +652,10 @@ const arrayMeasureStories = earlyTopic(
             ],
             count,
             [total - size, total + size, total],
-            [`$${div(total, size)} = ${count}$ pieces.`, `$${div(total, size)} = ${count}$ 段。`],
+            [
+              `Counting how many ${size}s fit in ${total} means dividing: $${div(total, size)} = ${count}$ pieces.`,
+              `求 ${total} 里有几个 ${size}，要用除法：$${div(total, size)} = ${count}$ 段。`,
+            ],
           );
         return whole(
           [
@@ -674,7 +698,10 @@ const usingALetter = earlyTopic(
             [`What is the value of $${letter}$? $${letter} + ${a} = ${a + b}$`, `$${letter}$ 等于多少？$${letter} + ${a} = ${a + b}$`],
             b,
             [a + b + a, a + b, b + 1],
-            [`$${a + b} - ${a} = ${b}$.`, `$${a + b} - ${a} = ${b}$。`],
+            [
+              `Adding ${a} to $${letter}$ gives ${a + b}, so take the ${a} back off: $${a + b} - ${a} = ${b}$.`,
+              `$${letter}$ 加 ${a} 得 ${a + b}，所以把 ${a} 减回去：$${a + b} - ${a} = ${b}$。`,
+            ],
           );
         }
         const a = rng.int(2, 9);
@@ -687,13 +714,19 @@ const usingALetter = earlyTopic(
             ],
             b,
             [a * b - a, a * b, a * b + a],
-            [`$${times(a, b)} = ${a * b}$.`, `$${times(a, b)} = ${a * b}$。`],
+            [
+              `Ask what times ${a} makes ${a * b}. Since $${times(a, b)} = ${a * b}$, the letter stands for ${b}.`,
+              `想一想 ${a} 乘几得 ${a * b}。因为 $${times(a, b)} = ${a * b}$，所以这个字母表示 ${b}。`,
+            ],
           );
         return whole(
           [`What is the value of $${letter}$? $${letter} \\div ${a} = ${b}$`, `$${letter}$ 等于多少？$${letter} \\div ${a} = ${b}$`],
           a * b,
           [a + b, a * b + a, a * b - b],
-          [`$${times(a, b)} = ${a * b}$.`, `$${times(a, b)} = ${a * b}$。`],
+          [
+            `Dividing $${letter}$ by ${a} gives ${b}, so multiply to undo it: $${times(a, b)} = ${a * b}$.`,
+            `$${letter}$ 除以 ${a} 得 ${b}，所以用乘法还原：$${times(a, b)} = ${a * b}$。`,
+          ],
         );
       },
     ),
@@ -723,7 +756,10 @@ const usingALetter = earlyTopic(
             `${letter} \\div ${boxes} = ${total}`,
             `${boxes} \\div ${letter} = ${total}`,
           ]),
-          [`${boxes} groups of $${letter}$ make ${total}.`, `${boxes} 个 $${letter}$ 合起来是 ${total}。`],
+          [
+            `Equal groups mean multiplying: ${boxes} boxes of $${letter}$ each make ${total}, so ${boxes} times $${letter}$ is ${total}.`,
+            `同样多的几组要用乘法：${boxes} 盒，每盒 $${letter}$，合起来是 ${total}，所以 ${boxes} 乘 $${letter}$ 等于 ${total}。`,
+          ],
         );
       },
     ),
@@ -1300,19 +1336,64 @@ const makingEquivalents = earlyTopic(
         "分子和分母加上同一个数，得到的分数不相等。比如 $\\frac{1}{2}$ 和 $\\frac{2}{3}$ 不相等，画出长条就能看出来。要检查两个分数，就看分子和分母是不是乘了同一个数。只有乘同一个数，大小才不变。",
       ],
       (rng) => {
-        const [n, d] = rng.pick<readonly [number, number]>([
-          [1, 2],
-          [1, 3],
-          [2, 3],
-          [1, 4],
-          [3, 4],
+        // Third-grade denominators are 2, 3, 4, 6 and 8, which limits the families with enough equal fractions.
+        const family = rng.pick<{
+          readonly equal: readonly (readonly [number, number])[];
+          readonly other: readonly (readonly [number, number])[];
+        }>([
+          {
+            equal: [
+              [1, 2],
+              [2, 4],
+              [3, 6],
+              [4, 8],
+            ],
+            other: [
+              [1, 3],
+              [2, 3],
+              [1, 4],
+              [3, 4],
+              [2, 6],
+              [4, 6],
+              [5, 6],
+              [3, 8],
+              [5, 8],
+            ],
+          },
+          {
+            equal: [
+              [2, 2],
+              [3, 3],
+              [4, 4],
+              [6, 6],
+              [8, 8],
+            ],
+            other: [
+              [1, 2],
+              [2, 3],
+              [3, 4],
+              [5, 6],
+              [7, 8],
+              [3, 2],
+              [4, 3],
+              [5, 4],
+            ],
+          },
         ]);
-        const notEqual = rng.pick([fr(n + 1, d + 1), fr(n + 2, d + 2), fr(n, d + 1), fr(n + 1, d)]);
-        const goods = rng.sample([2, 3, 4, 5], 3).map((k) => fr(n * k, d * k));
-        return chooseMath(rng, [`Which fraction is not equal to $${fr(n, d)}$?`, `哪个分数和 $${fr(n, d)}$ 不相等？`], notEqual, goods, [
-          `The others come from multiplying the top and bottom of $${fr(n, d)}$ by the same number.`,
-          `其他分数都是 $${fr(n, d)}$ 的分子和分母乘同一个数得到的。`,
-        ]);
+        const [base, ...goods] = rng.sample(family.equal, 4) as [readonly [number, number], ...(readonly [number, number])[]];
+        const [other] = rng.sample(family.other, 1) as [readonly [number, number]];
+        const notEqual = fr(other[0], other[1]);
+        const name = fr(base[0], base[1]);
+        return chooseMath(
+          rng,
+          [`Which fraction is not equal to $${name}$?`, `哪个分数和 $${name}$ 不相等？`],
+          notEqual,
+          goods.map(([n, d]) => fr(n, d)),
+          [
+            `Draw the bars: each of the others covers the same part of the whole as $${name}$, and $${notEqual}$ does not.`,
+            `画出长条：其他分数都和 $${name}$ 占整体同样多，而 $${notEqual}$ 不是。`,
+          ],
+        );
       },
     ),
   ],
@@ -1473,7 +1554,10 @@ const elapsedOnALine = earlyTopic(
           ["How many minutes long is the time from the first time to the last?", "从第一个时间到最后一个时间，一共是多少分钟？"],
           toHour + after,
           [toHour, after, toHour + after + 60, Math.abs((end % 60) - (start % 60))],
-          [`$${toHour} + ${after} = ${toHour + after}$ minutes.`, `$${toHour} + ${after} = ${toHour + after}$ 分钟。`],
+          [
+            `The time is the two jumps together: $${toHour} + ${after} = ${toHour + after}$ minutes.`,
+            `经过的时间是两次跳的和：$${toHour} + ${after} = ${toHour + after}$ 分钟。`,
+          ],
           timeHopsFigure([start, start + toHour, end]),
         );
       },
@@ -1857,7 +1941,10 @@ const halfSymbols = earlyTopic(
           ],
           per / 2,
           [per, 2 * per, per - 1],
-          [`Half of ${per} is ${per / 2}.`, `${per} 的一半是 ${per / 2}。`],
+          [
+            `A half circle stands for half of what a whole circle does, and half of ${per} is ${per / 2}.`,
+            `半个圆表示的是一个圆的一半，${per} 的一半是 ${per / 2}。`,
+          ],
           halfPictureGraphFigure(labels, halfDots(rng, rowCount)),
         );
       },
@@ -1989,7 +2076,10 @@ const choosingScale = earlyTopic(
           ],
           spaces,
           [value, value + step, spaces + 1],
-          [`$${div(value, step)} = ${spaces}$ spaces.`, `$${div(value, step)} = ${spaces}$ 格。`],
+          [
+            `Each space stands for ${step}, so divide: $${div(value, step)} = ${spaces}$ spaces.`,
+            `每格表示 ${step}，所以用除法：$${div(value, step)} = ${spaces}$ 格。`,
+          ],
         );
       },
     ),
@@ -2210,7 +2300,10 @@ const areaStories = earlyTopic(
           ],
           h,
           [area - w, area + w, area],
-          [`$${div(area, w)} = ${h}$ ${measure[0]}.`, `$${div(area, w)} = ${h}$ ${measure[1]}。`],
+          [
+            `Area is one side times the other, so divide the area by the side you know: $${div(area, w)} = ${h}$ ${measure[0]}.`,
+            `面积等于一条边乘另一条边，所以用面积除以已知的边：$${div(area, w)} = ${h}$ ${measure[1]}。`,
+          ],
         );
       },
     ),

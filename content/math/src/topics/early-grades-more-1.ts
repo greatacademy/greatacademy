@@ -2111,7 +2111,7 @@ const firstCoins = earlyTopic(
     "知道 1 美分、5 美分和 10 美分硬币的面值，并能数同一种硬币。",
   ],
   ["counting-groups-of-ten"],
-  ["1.NBT.A.1"],
+  [],
   [
     earlyPoint(
       "counting-coins-of-one-kind",
@@ -2524,6 +2524,20 @@ const howManyInAllOnAGraph = earlyTopic(
   ],
 );
 
+/** solidReason says what identifies a solid shape. */
+function solidReason(kind: SolidKind): Pair {
+  const name = solidName(kind);
+  const clue: Readonly<Record<SolidKind, Pair>> = {
+    cube: ["it has six flat square faces, all the same size", "它有六个大小相同的正方形平面"],
+    box: ["it has six flat rectangle faces", "它有六个长方形平面"],
+    cylinder: ["it has two flat circles and a curved side", "它有两个圆形平面和一个弯曲的侧面"],
+    cone: ["it has one flat circle and comes to a point", "它有一个圆形平面，顶上是一个尖"],
+    sphere: ["it is round all over, with no flat faces", "它处处都是圆的，没有平面"],
+    pyramid: ["its flat triangle faces meet at a point", "它的三角形平面在顶上交于一点"],
+  } as Readonly<Record<SolidKind, Pair>>;
+  return [`This shape is a ${name[0]}: ${clue[kind][0]}.`, `这个图形是${name[1]}：${clue[kind][1]}。`];
+}
+
 const allSolids: readonly SolidKind[] = ["cube", "box", "cylinder", "cone", "sphere", "pyramid"];
 
 const namingSolidShapes = earlyTopic(
@@ -2555,7 +2569,7 @@ const namingSolidShapes = earlyTopic(
           ["What is the name of this solid shape?", "这个立体图形叫什么？"],
           [name[0], name[1]],
           others.map((k) => solidName(k)),
-          [`This shape is a ${name[0]}.`, `这个图形是${name[1]}。`],
+          [solidReason(kind)[0], solidReason(kind)[1]],
           solidFigure(kind, rng.pick([0.9, 1, 1.1, 1.2, 1.3])),
         );
       },

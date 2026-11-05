@@ -761,7 +761,10 @@ export const elementaryPropertiesOfSetOperations: TopicDef = {
         const id = rng.pick(identities);
         const [a, b] = rng.shuffle(["A", "B", "C", "D"]) as [string, string];
         const right = id.right(a, b);
-        const pool = [a, b, "U", "\\varnothing", `${a} \\cap ${b}`, `${a} \\cup ${b}`, `${a}^{c}`];
+        // An option naming a set the expression does not use could be ruled out at a glance.
+        const pool = [a, b, "U", "\\varnothing", `${a} \\cap ${b}`, `${a} \\cup ${b}`, `${a}^{c}`].filter(
+          (p) => !p.includes(b) || id.left(a, b).includes(b),
+        );
         const opt = (s: string) => t(`$${s}$`, `$${s}$`);
         return oneOf(
           rng,

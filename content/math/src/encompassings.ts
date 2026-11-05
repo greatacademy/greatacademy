@@ -2482,12 +2482,10 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "conditional-variance-for-continuous-random-variables": [
     { topic: "conditional-expectation-for-continuous-random-variables", weight: 0.4 },
   ],
-  "ratio-tables-and-tape-diagrams": [{ topic: "ratios", weight: 0.2 }],
   "unit-prices-and-speed": [{ topic: "unit-rates", weight: 0.4 }],
   "percent-applications-interest-and-discounts": [{ topic: "percent-of-a-number", weight: 0.2 }],
   "classifying-rational-and-irrational-numbers": [{ topic: "square-roots-and-cube-roots", weight: 0.4 }],
   "approximating-square-roots": [{ topic: "square-roots-and-cube-roots", weight: 0.3 }],
-  "relative-frequency-tables": [{ topic: "two-way-frequency-tables", weight: 0.2 }],
   histograms: [{ topic: "dot-plots", weight: 0.2 }],
   "simplifying-expressions-with-surds": [
     { topic: "adding-and-subtracting-radicals", weight: 0.5 },

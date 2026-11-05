@@ -13977,6 +13977,7 @@ export const satMathFundamentals: CourseDef = {
             "area-of-thirty-sixty-ninety-triangles",
             "area-of-equilateral-triangles",
             "perimeter",
+            "modeling-geometry-problems-using-linear-equations",
             "area-of-rectangles-and-squares",
             "diagonals-of-squares",
             "solving-geometry-problems-by-manipulating-radicals",

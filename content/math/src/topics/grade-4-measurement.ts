@@ -314,7 +314,7 @@ export const unitsOfMass = topic(
 
 export const unitsOfTimeAndElapsedTime = topic(
   "units-of-time-and-elapsed-time",
-  t("Units of Time", "时间单位"),
+  t("Units of Time and Elapsed Time", "时间单位与经过的时间"),
   t(
     "Units of time are the second, minute, hour, day and week: 1 min = 60 s, 1 h = 60 min, 1 day = 24 h and 1 week = 7 days. The time between a start and an end is the elapsed time.",
     "时间单位有秒、分钟、小时、天和周：1 分钟 = 60 秒，1 小时 = 60 分钟，1 天 = 24 小时，1 周 = 7 天。从开始到结束经过的时间叫经过时间。",

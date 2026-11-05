@@ -118,7 +118,7 @@ function orderedOptions(rng: Rng, correct: Q, wrong: readonly Q[]): Q[] {
 function concluded(solution: Text, answer: Text): Text {
   if (solution.en.length >= 25 && solution.en.includes(answer.en.replace(/\.$/, ""))) return solution;
   return t(
-    `${solution.en} So the answer is ${answer.en.replace(/\.$/, "")}.`,
+    `${solution.en} The answer: ${answer.en.replace(/\.$/, "")}.`,
     `${solution["zh-CN"]} 所以答案是 ${answer["zh-CN"].replace(/。$/, "")}。`,
   );
 }

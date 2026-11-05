@@ -504,88 +504,6 @@ export const scientificNotation: TopicDef = {
   ],
 };
 
-export const operationsInScientificNotation: TopicDef = {
-  id: "operations-in-scientific-notation",
-  title: t("Multiplying and Dividing in Scientific Notation", "科学记数法的乘除"),
-  summary: t(
-    "Multiply and divide numbers in scientific notation, and write the result in scientific notation.",
-    "用科学记数法表示的数相乘、相除，结果仍用科学记数法表示。",
-  ),
-  prerequisites: ["scientific-notation", "product-and-quotient-rules"],
-  encompasses: [
-    { topic: "scientific-notation", weight: 0.5 },
-    { topic: "product-and-quotient-rules", weight: 0.2 },
-  ],
-  xp: 12,
-  standards: ["CCSS.8.EE.A.4"],
-  knowledgePoints: [
-    {
-      id: "multiplying-in-scientific-notation",
-      title: t("Multiplying", "乘法"),
-      explanation: t(
-        "Multiply the numbers and the powers of ten separately, adding the exponents. If the number part reaches $10$ or more, move one factor of $10$ into the power:\n\n$$(4 \\times 10^{3})(3 \\times 10^{5}) = 12 \\times 10^{8} = 1.2 \\times 10^{9}$$",
-        "数字部分与 $10$ 的幂分别相乘，指数相加。若数字部分大于或等于 $10$，就把一个 $10$ 移入幂中：\n\n$$(4 \\times 10^{3})(3 \\times 10^{5}) = 12 \\times 10^{8} = 1.2 \\times 10^{9}$$",
-      ),
-      generate(rng) {
-        const a = Q.of(rng.int(11, 99), 10);
-        const b = rng.bool(0.5) ? Q.of(rng.int(2, 9)) : Q.of(rng.int(11, 49), 10);
-        const [m, n] = [rng.int(-6, 9), rng.int(-6, 9)];
-        const p = a.mul(b);
-        const r = normalize(p.mul(scientificValue(1, m + n)));
-        return scientificProblem({
-          prompt: t(
-            `Compute $(${sci(a, m)})(${sci(b, n)})$. Write the answer in scientific notation.`,
-            `计算 $(${sci(a, m)})(${sci(b, n)})$，结果用科学记数法表示。`,
-          ),
-          answer: r,
-          wrong: [
-            [r.a, m + n],
-            [r.a, m * n],
-            [r.a, r.n + 1],
-          ],
-          solution: t(
-            `Multiply the numbers and add the exponents:${steps(`(${dec(a)} \\times ${dec(b)}) \\times 10^{${m} + ${n < 0 ? `(${n})` : n}} = ${dec(p)} \\times 10^{${m + n}}${p.cmp(Q.of(10)) >= 0 ? ` = ${sci(r.a, r.n)}` : ""}`)}`,
-            `数字相乘，指数相加：${steps(`(${dec(a)} \\times ${dec(b)}) \\times 10^{${m} + ${n < 0 ? `(${n})` : n}} = ${dec(p)} \\times 10^{${m + n}}${p.cmp(Q.of(10)) >= 0 ? ` = ${sci(r.a, r.n)}` : ""}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "dividing-in-scientific-notation",
-      title: t("Dividing", "除法"),
-      explanation: t(
-        "Divide the numbers and the powers of ten separately, subtracting the exponents. If the number part is less than $1$, move one factor of $10$ out of the power:\n\n$$\\frac{3 \\times 10^{4}}{6 \\times 10^{9}} = 0.5 \\times 10^{-5} = 5 \\times 10^{-6}$$",
-        "数字部分与 $10$ 的幂分别相除，指数相减。若数字部分小于 $1$，就从幂中移出一个 $10$：\n\n$$\\frac{3 \\times 10^{4}}{6 \\times 10^{9}} = 0.5 \\times 10^{-5} = 5 \\times 10^{-6}$$",
-      ),
-      generate(rng) {
-        const b = rng.pick([2, 4, 5, 8, 1.5, 2.5, 1.2, 1.6].map((x) => Q.of(Math.round(x * 10), 10)));
-        const qt = Q.of(rng.int(11, 99), 10);
-        const product = qt.mul(b);
-        const a = product.cmp(Q.of(10)) >= 0 ? product.div(Q.of(10)) : product;
-        const [m, n] = [rng.int(-5, 9), rng.int(-5, 9)];
-        const ratio = a.div(b);
-        const r = normalize(ratio.mul(scientificValue(1, m - n)));
-        return scientificProblem({
-          prompt: t(
-            `Compute $\\frac{${sci(a, m)}}{${sci(b, n)}}$. Write the answer in scientific notation.`,
-            `计算 $\\frac{${sci(a, m)}}{${sci(b, n)}}$，结果用科学记数法表示。`,
-          ),
-          answer: r,
-          wrong: [
-            [r.a, m + n],
-            [r.a, n - m],
-            [r.a, m - n],
-          ],
-          solution: t(
-            `Divide the numbers and subtract the exponents:${steps(`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${n < 0 ? `(${n})` : n}} = ${dec(ratio)} \\times 10^{${m - n}}${ratio.cmp(Q.one) < 0 ? ` = ${sci(r.a, r.n)}` : ""}`)}`,
-            `数字相除，指数相减：${steps(`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${n < 0 ? `(${n})` : n}} = ${dec(ratio)} \\times 10^{${m - n}}${ratio.cmp(Q.one) < 0 ? ` = ${sci(r.a, r.n)}` : ""}`)}`,
-          ),
-        });
-      },
-    },
-  ],
-};
-
 /** exponentTopics are the exponent and scientific notation topics. */
 export const exponentTopics: readonly TopicDef[] = [
   powersOfRationalNumbers,
@@ -593,5 +511,4 @@ export const exponentTopics: readonly TopicDef[] = [
   productAndQuotientRules,
   powerRules,
   scientificNotation,
-  operationsInScientificNotation,
 ];
