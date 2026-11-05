@@ -1592,7 +1592,7 @@ export const packingRectangularBoxes = topic(
           wrong: [counts[0]! + counts[1]! + counts[2]!, counts[0]! * counts[1]!, answer * 2],
           solution: t(
             `Along the edges the crate holds $${big.map((v, i) => `\\frac{${v}}{${small[i]}}`).join(", ")}$, that is, $${counts.join(", ")}$ boxes. In all, $${counts.join(" \\cdot ")} = ${answer}$ boxes.`,
-            `沿三条棱分别能放 $${big.map((v, i) => `\\frac{${v}}{${small[i]}}`).join("，")}$，即 $${counts.join("，")}$ 个箱子。共 $${counts.join(" \\cdot ")} = ${answer}$ 个。`,
+            `沿三条棱分别能放 $${big.map((v, i) => `\\frac{${v}}{${small[i]}}`).join(", ")}$，即 $${counts.join(", ")}$ 个箱子。共 $${counts.join(" \\cdot ")} = ${answer}$ 个。`,
           ),
         });
       },
@@ -1627,7 +1627,7 @@ export const packingRectangularBoxes = topic(
           wrong: [byVolume, big.map((v) => Math.ceil(v / e)).reduce((x, y) => x * y, 1), counts[0]! * counts[1]!],
           solution: t(
             `Only whole cubes fit along each edge: $${big.map((v) => `\\left\\lfloor \\frac{${v}}{${e}} \\right\\rfloor`).join(", ")}$ give $${counts.join(", ")}$. So at most $${counts.join(" \\cdot ")} = ${answer}$ cubes fit.`,
-            `沿每条棱只能放整数个正方体：$${big.map((v) => `\\left\\lfloor \\frac{${v}}{${e}} \\right\\rfloor`).join("，")}$ 分别为 $${counts.join("，")}$。所以最多能装 $${counts.join(" \\cdot ")} = ${answer}$ 个。`,
+            `沿每条棱只能放整数个正方体：$${big.map((v) => `\\left\\lfloor \\frac{${v}}{${e}} \\right\\rfloor`).join(", ")}$ 分别为 $${counts.join(", ")}$。所以最多能装 $${counts.join(" \\cdot ")} = ${answer}$ 个。`,
           ),
         });
       },

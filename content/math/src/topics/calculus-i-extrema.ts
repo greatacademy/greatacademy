@@ -364,7 +364,7 @@ export const globalVsLocalExtremaAndCriticalPoints: TopicDef = {
                   )
                 : t(
                     `The graph ${max ? "rises and then falls" : "falls and then rises"} at $x = ${at.join(", ")}$, so there ${at.length === 1 ? "is $1$" : `are $${at.length}$`}.`,
-                    `图像在 $x = ${at.join("、")}$ 处${max ? "先升后降" : "先降后升"}，所以共有 $${at.length}$ 个。`,
+                    `图像在 $x = ${at.join(", ")}$ 处${max ? "先升后降" : "先降后升"}，所以共有 $${at.length}$ 个。`,
                   ),
           }),
           figure: zigzagFigure(ys, "f"),

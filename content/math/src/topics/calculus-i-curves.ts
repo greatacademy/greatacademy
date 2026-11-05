@@ -32,7 +32,7 @@ function productFigure(roots: readonly number[], s: number, name: string): Figur
     svg: plane({ xMin: -6, xMax: 6, yMin: -6, yMax: 6 }, [{ kind: "curve", f: (x) => g(x) / k, from, to, accent: true }]),
     alt: t(
       `The graph of $${name}$, a smooth curve that meets the $x$-axis only at $x = ${distinct.join(", ")}$; it is ${g(to) > 0 ? "above" : "below"} the axis at the right end.`,
-      `$${name}$ 的图像是一条光滑曲线，只在 $x = ${distinct.join("、")}$ 处与 $x$ 轴相交或相切；在右端它位于 $x$ 轴${g(to) > 0 ? "上方" : "下方"}。`,
+      `$${name}$ 的图像是一条光滑曲线，只在 $x = ${distinct.join(", ")}$ 处与 $x$ 轴相交或相切；在右端它位于 $x$ 轴${g(to) > 0 ? "上方" : "下方"}。`,
     ),
   };
 }
@@ -177,7 +177,7 @@ export const interpretingTheGraphOfAFunctionsDerivative: TopicDef = {
               wrong: [simple.map(String), ...(other.length > 0 ? [other.map(String)] : [])],
               solution: t(
                 `$f'$ changes from ${max ? "positive to negative" : "negative to positive"} at $x = ${at.join(", ")}$, so $f$ has a local ${max ? "maximum" : "minimum"} at ${at.length === 1 ? "this point" : "each of them"}.${touch >= 0 ? ` At $x = ${simple[touch]}$ the graph of $f'$ only touches the axis, so $f$ has no extremum there.` : ""}`,
-                `$f'$ 在 $x = ${at.join("、")}$ 处${max ? "由正变负" : "由负变正"}，所以 $f$ 在${at.length === 1 ? "该点" : "这些点"}处有局部${max ? "极大值" : "极小值"}。${touch >= 0 ? `在 $x = ${simple[touch]}$ 处 $f'$ 的图像只与 $x$ 轴相切，所以 $f$ 在那里没有极值。` : ""}`,
+                `$f'$ 在 $x = ${at.join(", ")}$ 处${max ? "由正变负" : "由负变正"}，所以 $f$ 在${at.length === 1 ? "该点" : "这些点"}处有局部${max ? "极大值" : "极小值"}。${touch >= 0 ? `在 $x = ${simple[touch]}$ 处 $f'$ 的图像只与 $x$ 轴相切，所以 $f$ 在那里没有极值。` : ""}`,
               ),
             }),
             figure: productFigure(roots, s, "f'"),
@@ -260,7 +260,7 @@ export const interpretingTheGraphOfAFunctionsDerivativeConcavity: TopicDef = {
               wrong: [zigzagXs.slice(1, -1).map(String), ...(zeros.length > 0 ? [zeros.map(String)] : [])],
               solution: t(
                 `$f'$ switches between increasing and decreasing at $x = ${at.join(", ")}$, where its graph turns. There the concavity of $f$ changes.`,
-                `$f'$ 在 $x = ${at.join("、")}$ 处图像转向，在递增与递减之间切换。$f$ 的凹凸性在这些点改变。`,
+                `$f'$ 在 $x = ${at.join(", ")}$ 处图像转向，在递增与递减之间切换。$f$ 的凹凸性在这些点改变。`,
               ),
             }),
             figure: zigzagFigure(ys, "f'"),

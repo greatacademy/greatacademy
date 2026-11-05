@@ -1708,7 +1708,7 @@ export const speedDistanceTime: TopicDef = {
       title: t("Average speed", "平均速度"),
       explanation: t(
         "Average speed is **total distance divided by total time**, not the average of the speeds. Driving $120$ km at $40$ km/h ($3$ hours) and back at $60$ km/h ($2$ hours) covers $240$ km in $5$ hours:\n\n$$\\frac{240}{5} = 48 \\text{ km/h}, \\text{ not } \\frac{40 + 60}{2} = 50.$$\n\nThe slower part takes longer, so it counts for more.",
-        "平均速度是**总路程除以总时间**，而不是各速度的平均数。以 $40$ 千米/时开 $120$ 千米（$3$ 小时），再以 $60$ 千米/时开回来（$2$ 小时），$5$ 小时共行驶 $240$ 千米：\n\n$$\\frac{240}{5} = 48 \\text{ 千米/时}，\\text{而不是 } \\frac{40 + 60}{2} = 50.$$\n\n较慢的一段用时更长，所以所占的分量更大。",
+        "平均速度是**总路程除以总时间**，而不是各速度的平均数。以 $40$ 千米/时开 $120$ 千米（$3$ 小时），再以 $60$ 千米/时开回来（$2$ 小时），$5$ 小时共行驶 $240$ 千米：\n\n$$\\frac{240}{5} = 48 \\text{ 千米/时},\\quad\\text{而不是 } \\frac{40 + 60}{2} = 50.$$\n\n较慢的一段用时更长，所以所占的分量更大。",
       ),
       generate(rng) {
         if (rng.bool()) {

@@ -359,7 +359,7 @@ const pooledDecision = point(
       rng,
       [
         `A pooled two-tailed $t$ test at the $5\\%$ level, with $n_{1} = ${n1}$ and $n_{2} = ${n2}$, gives $t = ${stat}$. The two-tailed critical values are $${shown.join(", ")}$. What is the decision?`,
-        `$5\\%$ 水平的合并双尾 $t$ 检验，$n_{1} = ${n1}$，$n_{2} = ${n2}$，得 $t = ${stat}$。双尾临界值是 $${shown.join("，")}$。应作何决定？`,
+        `$5\\%$ 水平的合并双尾 $t$ 检验，$n_{1} = ${n1}$，$n_{2} = ${n2}$，得 $t = ${stat}$。双尾临界值是 $${shown.join(", ")}$。应作何决定？`,
       ],
       option,
       [rejects ? no : yes, trapYes, trapNo],
@@ -494,7 +494,7 @@ const pairedDecision = point(
       rng,
       [
         `A two-tailed paired $t$ test at the $5\\%$ level on $${n}$ pairs gives $t = ${stat}$. The two-tailed critical values are $${shown.join(", ")}$. What is the decision?`,
-        `对 $${n}$ 对数据做 $5\\%$ 水平的配对双尾 $t$ 检验，得 $t = ${stat}$。双尾临界值是 $${shown.join("，")}$。应作何决定？`,
+        `对 $${n}$ 对数据做 $5\\%$ 水平的配对双尾 $t$ 检验，得 $t = ${stat}$。双尾临界值是 $${shown.join(", ")}$。应作何决定？`,
       ],
       option,
       [rejects ? no : yes, trap, trapNo],

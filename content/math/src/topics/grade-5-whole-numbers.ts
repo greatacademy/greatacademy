@@ -975,13 +975,13 @@ export const comparingNegativeNumbers = topic(
         const options = xs.map((x) => mathText(String(x)));
         return choiceProblem({
           prompt: least
-            ? t(`Which number is the least: $${xs.join(", ")}$?`, `$${xs.join("，")}$ 中哪个数最小？`)
-            : t(`Which number is the greatest: $${xs.join(", ")}$?`, `$${xs.join("，")}$ 中哪个数最大？`),
+            ? t(`Which number is the least: $${xs.join(", ")}$?`, `$${xs.join(", ")}$ 中哪个数最小？`)
+            : t(`Which number is the greatest: $${xs.join(", ")}$?`, `$${xs.join(", ")}$ 中哪个数最大？`),
           options,
           correct: xs.indexOf(v),
           solution: t(
             `In order from least to greatest: $${[...xs].sort((a, b) => a - b).join(", ")}$.`,
-            `从小到大排列：$${[...xs].sort((a, b) => a - b).join("，")}$。`,
+            `从小到大排列：$${[...xs].sort((a, b) => a - b).join(", ")}$。`,
           ),
         });
       },

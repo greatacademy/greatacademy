@@ -269,7 +269,7 @@ export const findingTheAreaBetweenACurveAndTheXAxisWhenTheyIntersect: TopicDef =
             wrong: [net, net.abs(), pieces[0]!.abs()],
             solution: t(
               `The curve crosses the axis at $x = ${inside.join(", ")}$. On the pieces the integrals are $${pieces.map((q) => q.toLatex()).join(", ")}$, so the total area is $${pieces.map((q) => q.abs().toLatex()).join(" + ")} = ${answer.toLatex()}$.`,
-              `曲线在 $x = ${inside.join("、")}$ 处穿过 $x$ 轴。各段上的积分为 $${pieces.map((q) => q.toLatex()).join(", ")}$，所以总面积为 $${pieces.map((q) => q.abs().toLatex()).join(" + ")} = ${answer.toLatex()}$。`,
+              `曲线在 $x = ${inside.join(", ")}$ 处穿过 $x$ 轴。各段上的积分为 $${pieces.map((q) => q.toLatex()).join(", ")}$，所以总面积为 $${pieces.map((q) => q.abs().toLatex()).join(" + ")} = ${answer.toLatex()}$。`,
             ),
           });
         }
@@ -964,7 +964,7 @@ export const furtherOptimizingFunctionsUsingGraphsOfDerivatives: TopicDef = {
               wrong: [other, peaks, zs.map((z) => z.x.toLatex())],
               solution: t(
                 `$f'$ changes from ${wantMax ? "positive to negative" : "negative to positive"} at $x = ${right.join(", ")}$, so $f$ has a local ${wantMax ? "maximum" : "minimum"} there.${other.length ? ` At $x = ${other.join(", ")}$ the change is the other way.` : ""}`,
-                `$f'$ 在 $x = ${right.join("、")}$ 处由${wantMax ? "正变负" : "负变正"}，所以 $f$ 在那里取得局部${wantMax ? "极大值" : "极小值"}。${other.length ? `在 $x = ${other.join("、")}$ 处变号方向相反。` : ""}`,
+                `$f'$ 在 $x = ${right.join(", ")}$ 处由${wantMax ? "正变负" : "负变正"}，所以 $f$ 在那里取得局部${wantMax ? "极大值" : "极小值"}。${other.length ? `在 $x = ${other.join(", ")}$ 处变号方向相反。` : ""}`,
               ),
             }),
             figure: zigzagFigure(ys, "f'"),

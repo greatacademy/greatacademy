@@ -98,7 +98,7 @@ function formulaProblem(rng: Rng, rule: Rule) {
     wrong: [...others, raw, answer.mul(Q.of(2))],
     solution: t(
       `The width is $\\Delta x = \\frac{${g.b.toLatex()} - ${par(g.a)}}{${g.n}} = ${g.dx.toLatex()}$. Then $${values.join(", ")}$, and the approximation is $${riemannSteps(g, rule)} = ${answer.toLatex()}$.`,
-      `宽度 $\\Delta x = \\frac{${g.b.toLatex()} - ${par(g.a)}}{${g.n}} = ${g.dx.toLatex()}$。$${values.join("，")}$，近似值为 $${riemannSteps(g, rule)} = ${answer.toLatex()}$。`,
+      `宽度 $\\Delta x = \\frac{${g.b.toLatex()} - ${par(g.a)}}{${g.n}} = ${g.dx.toLatex()}$。$${values.join(", ")}$，近似值为 $${riemannSteps(g, rule)} = ${answer.toLatex()}$。`,
     ),
   });
 }
