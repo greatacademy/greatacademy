@@ -18497,7 +18497,7 @@ export const partialDifferentialEquations: CourseDef = {
         },
         {
           title: t("First-Order Equations", "一阶方程"),
-          topics: ["the-transport-equation", "the-method-of-characteristics"],
+          topics: ["the-transport-equation", "the-method-of-characteristics", "nonlinear-transport-and-shocks"],
         },
         {
           title: t("Separation of Variables", "分离变量"),
@@ -18512,9 +18512,12 @@ export const partialDifferentialEquations: CourseDef = {
           title: t("Diffusion", "扩散"),
           topics: [
             "the-heat-equation",
+            "the-heat-kernel",
             "solving-the-heat-equation-on-an-interval",
+            "the-maximum-principle-for-heat",
             "the-heat-equation-with-insulated-ends",
             "nonhomogeneous-heat-problems",
+            "robin-boundary-conditions",
             "finite-differences-for-the-heat-equation",
           ],
         },
@@ -18525,7 +18528,18 @@ export const partialDifferentialEquations: CourseDef = {
       modules: [
         {
           title: t("Waves", "波"),
-          topics: ["the-wave-equation", "dalemberts-formula", "the-wave-equation-on-a-finite-string"],
+          topics: [
+            "the-wave-equation",
+            "dalemberts-formula",
+            "domains-of-dependence",
+            "the-wave-equation-on-a-finite-string",
+            "reflection-at-a-boundary",
+            "energy-of-a-vibrating-string",
+            "damped-waves",
+            "the-vibrating-membrane",
+            "dispersion-relations",
+            "finite-differences-for-the-wave-equation",
+          ],
         },
       ],
     },
@@ -18534,7 +18548,7 @@ export const partialDifferentialEquations: CourseDef = {
       modules: [
         {
           title: t("Equilibrium", "平衡"),
-          topics: ["laplaces-equation", "laplaces-equation-in-a-rectangle-and-a-disc"],
+          topics: ["laplaces-equation", "laplaces-equation-in-a-rectangle-and-a-disc", "poissons-equation", "well-posed-problems"],
         },
       ],
     },
