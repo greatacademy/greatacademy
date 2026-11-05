@@ -552,7 +552,9 @@ export const dividingMixedNumbersWordProblems = topic(
       ),
       generate(rng) {
         const time = mixedNumber(rng, 2, 4);
-        const dist = mixedNumber(rng, 9, 4);
+        const drawn = mixedNumber(rng, 9, 4);
+        // Equal numbers would make the speed 1 and the division empty.
+        const dist = drawn.eq(time) ? drawn.add(Q.of(1)) : drawn;
         const v = dist.div(time);
         return numberProblem({
           prompt: t(

@@ -60,8 +60,8 @@ export const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
                 `按运算顺序，\`${a}*${x}^2 + ${b}/${x} + ${c}\` 会被计算为 $${a}(${x})^2 + \\frac{${b}}{${x}} + ${c} = ${a * x * x + c} + \\frac{${b}}{${x}} = ${ungrouped.toLatex()}$。`,
               )
             : t(
-                `Evaluate the grouped numerator and denominator at $x = ${x}$: numerator $= ${a}(${x})^2 + ${b} = ${num}$, denominator $= ${x} + ${c} = ${den}$. Dividing gives $\\frac{${num}}{${den}} = ${grouped.toLatex()}$.`,
-                `在 $x = ${x}$ 处分别计算括号内的分子与分母：分子 $= ${a}(${x})^2 + ${b} = ${num}$，分母 $= ${x} + ${c} = ${den}$。相除得 $\\frac{${num}}{${den}} = ${grouped.toLatex()}$。`,
+                `Evaluate the grouped numerator and denominator at $x = ${x}$: numerator $= ${a}(${x})^2 + ${b} = ${num}$, denominator $= ${x} + ${c} = ${den}$. Dividing gives $${`\\frac{${num}}{${den}}` === grouped.toLatex() ? grouped.toLatex() : `\\frac{${num}}{${den}} = ${grouped.toLatex()}`}$.`,
+                `在 $x = ${x}$ 处分别计算括号内的分子与分母：分子 $= ${a}(${x})^2 + ${b} = ${num}$，分母 $= ${x} + ${c} = ${den}$。相除得 $${`\\frac{${num}}{${den}}` === grouped.toLatex() ? grouped.toLatex() : `\\frac{${num}}{${den}} = ${grouped.toLatex()}`}$。`,
               ),
         });
       },

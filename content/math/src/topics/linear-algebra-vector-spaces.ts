@@ -2359,8 +2359,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
           return oneOf(rng, prompt, right, wrong, solution);
         }
         const prompt = t(
-          `For a vector $\\mathbf{u}$ with identifier index ${Math.abs(sc1)}, which vector space axiom guarantees that there exists a vector $-\\mathbf{u}$ such that $\\mathbf{u} + (-\\mathbf{u}) = \\mathbf{0}$?`,
-          `对于向量 $\\mathbf{u}$（编号 ${Math.abs(sc1)}），哪条向量空间公理保证必定存在向量 $-\\mathbf{u}$ 使得 $\\mathbf{u} + (-\\mathbf{u}) = \\mathbf{0}$？`,
+          `For a vector $\\mathbf{u}$, which vector space axiom guarantees that there exists a vector $-\\mathbf{u}$ such that $\\mathbf{u} + (-\\mathbf{u}) = \\mathbf{0}$?`,
+          `对于向量 $\\mathbf{u}$，哪条向量空间公理保证必定存在向量 $-\\mathbf{u}$ 使得 $\\mathbf{u} + (-\\mathbf{u}) = \\mathbf{0}$？`,
         );
         const right = t(`Existence of additive inverse`, `加法逆元（负元）的存在性`);
         const wrong = [

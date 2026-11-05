@@ -552,8 +552,8 @@ export const thePowerReducingFormulasForSineAndCosine: TopicDef = {
             m$(right),
             [m$(sum(e, Q.zero, e)), m$(sum(A.mul(Q.of(1, 4)), Q.zero, A.mul(Q.of(-1, 4)))), m$(poly([e, ""], [e.neg(), c2]))],
             t(
-              `Use $\\sin\\theta\\cos\\theta = \\frac{1}{2}\\sin 2\\theta$, then reduce the square:${steps(`${expr} = ${a} \\cdot \\frac{1}{4}\\sin^{2} ${kx(2 * k)} = ${a} \\cdot \\frac{1}{4} \\cdot \\frac{1 - ${c4}}{2} = ${right}`)}`,
-              `利用 $\\sin\\theta\\cos\\theta = \\frac{1}{2}\\sin 2\\theta$，再对平方降幂：${steps(`${expr} = ${a} \\cdot \\frac{1}{4}\\sin^{2} ${kx(2 * k)} = ${a} \\cdot \\frac{1}{4} \\cdot \\frac{1 - ${c4}}{2} = ${right}`)}`,
+              `Use $\\sin\\theta\\cos\\theta = \\frac{1}{2}\\sin 2\\theta$, then reduce the square:${steps(`${expr} = ${a === 1 ? "" : `${a} \\cdot `}\\frac{1}{4}\\sin^{2} ${kx(2 * k)} = ${a === 1 ? "" : `${a} \\cdot `}\\frac{1}{4} \\cdot \\frac{1 - ${c4}}{2} = ${right}`)}`,
+              `利用 $\\sin\\theta\\cos\\theta = \\frac{1}{2}\\sin 2\\theta$，再对平方降幂：${steps(`${expr} = ${a === 1 ? "" : `${a} \\cdot `}\\frac{1}{4}\\sin^{2} ${kx(2 * k)} = ${a === 1 ? "" : `${a} \\cdot `}\\frac{1}{4} \\cdot \\frac{1 - ${c4}}{2} = ${right}`)}`,
             ),
           );
         }

@@ -1348,6 +1348,7 @@ export const interpretingDataFromProportionalRelationships = topic(
         const job = rng.pick(jobs);
         const kq = job.money ? Q.of(rng.int(16, 60), 2) : Q.of(rng.int(8, 20) * 5);
         const k = dec(kq);
+        const stated = job.k(job.money ? kq.toNumber().toFixed(2) : k);
         const wrongs: Text[] = [
           t("The amount of $x$ for one unit of $y$", "$y$ 为 1 个单位时 $x$ 的量"),
           t(`The value of $y$ when $x = ${k}$`, `$x = ${k}$ 时 $y$ 的值`),
@@ -1359,11 +1360,11 @@ export const interpretingDataFromProportionalRelationships = topic(
             `The equation $y = ${k}x$ gives ${job.what.en}. What does $${k}$ represent?`,
             `方程 $y = ${k}x$ 表示${job.what["zh-CN"]}。$${k}$ 表示什么？`,
           ),
-          t(capitalized(job.k(k).en), job.k(k)["zh-CN"]),
+          t(capitalized(stated.en), stated["zh-CN"]),
           wrongs,
           t(
-            `When $x = 1$, $y = ${k}$, so $${k}$ is the value of $y$ for one unit of $x$: ${job.k(k).en}.`,
-            `$x = 1$ 时 $y = ${k}$，所以 $${k}$ 是 $x$ 为 1 个单位时 $y$ 的值：${job.k(k)["zh-CN"]}。`,
+            `When $x = 1$, $y = ${k}$, so $${k}$ is the value of $y$ for one unit of $x$: ${stated.en}.`,
+            `$x = 1$ 时 $y = ${k}$，所以 $${k}$ 是 $x$ 为 1 个单位时 $y$ 的值：${stated["zh-CN"]}。`,
           ),
         );
       },

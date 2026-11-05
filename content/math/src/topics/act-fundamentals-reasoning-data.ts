@@ -933,8 +933,8 @@ export const reasoningAboutMultiLegTravel = topic(
         }
         return numberProblem({
           prompt: t(
-            `A cyclist's trip has two legs: $${t1}$ hours at $${r1}$ kilometers per hour, then $${d2}$ kilometers at $${r2}$ kilometers per hour. How many hours does the whole trip take?`,
-            `一名骑手的行程分两段：以 $${r1}$ 千米/时骑 $${t1}$ 小时，再以 $${r2}$ 千米/时骑 $${d2}$ 千米。全程用多少小时？`,
+            `A driver's trip has two legs: $${t1}$ hours at $${r1}$ kilometers per hour, then $${d2}$ kilometers at $${r2}$ kilometers per hour. How many hours does the whole trip take?`,
+            `一名司机的行程分两段：以 $${r1}$ 千米/时开 $${t1}$ 小时，再以 $${r2}$ 千米/时开 $${d2}$ 千米。全程用多少小时？`,
           ),
           answer: t1 + t2,
           wrong: [t1 + d2, Q.of(d1 + d2, r1 + r2), t2, Q.of(d1 + d2, r1)],

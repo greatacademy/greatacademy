@@ -723,7 +723,7 @@ export const boxPlots: TopicDef = {
             percent: true,
             wrong: [25, 50, 75, 100, Math.round((100 * (s[j]! - s[i]!)) / (s[4] - s[0]))],
             solution: t(
-              `$${s[i]}$ is ${fiveNames[i]!.en} and $${s[j]}$ is ${fiveNames[j]!.en}. Between them lie ${parts} of the four quarters of the data:${steps(`${parts} \\times 25\\% = ${pct}\\%`)}`,
+              `$${s[i]}$ is ${fiveNames[i]!.en} and $${s[j]}$ is ${fiveNames[j]!.en}. Between them ${parts === 1 ? "lies 1" : `lie ${parts}`} of the four quarters of the data:${steps(`${parts} \\times 25\\% = ${pct}\\%`)}`,
               `$${s[i]}$ 是${fiveNames[i]!["zh-CN"]}，$${s[j]}$ 是${fiveNames[j]!["zh-CN"]}。它们之间有 ${parts} 个四分之一的数据：${steps(`${parts} \\times 25\\% = ${pct}\\%`)}`,
             ),
           }),

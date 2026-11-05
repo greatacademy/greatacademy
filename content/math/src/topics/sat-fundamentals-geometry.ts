@@ -222,8 +222,8 @@ export const solvingProblemsDescribingCongruentTriangles = topic(
           answer: ask ? x : len,
           wrong: ask ? [len, Q.of(s + r, p + q), x + 1] : [x, p * x, len + r],
           solution: t(
-            `$${pair[0]}$ and $${pair[1]}$ are corresponding sides, so${steps(`${linear(p, r)} = ${linear(q, s)}`, `${p - q === 1 ? "" : p - q}x = ${s - r}`, `x = ${x}`)}${ask ? "" : `Then $${pair[0]} = ${p} \\cdot ${x} + ${r} = ${len}$.`}`,
-            `$${pair[0]}$ 与 $${pair[1]}$ 是对应边，所以${steps(`${linear(p, r)} = ${linear(q, s)}`, `${p - q === 1 ? "" : p - q}x = ${s - r}`, `x = ${x}`)}${ask ? "" : `于是 $${pair[0]} = ${p} \\cdot ${x} + ${r} = ${len}$。`}`,
+            `$${pair[0]}$ and $${pair[1]}$ are corresponding sides, so${steps(`${linear(p, r)} = ${linear(q, s)}`, ...(p - q === 1 ? [] : [`${p - q}x = ${s - r}`]), `x = ${x}`)}${ask ? "" : `Then $${pair[0]} = ${p} \\cdot ${x} + ${r} = ${len}$.`}`,
+            `$${pair[0]}$ 与 $${pair[1]}$ 是对应边，所以${steps(`${linear(p, r)} = ${linear(q, s)}`, ...(p - q === 1 ? [] : [`${p - q}x = ${s - r}`]), `x = ${x}`)}${ask ? "" : `于是 $${pair[0]} = ${p} \\cdot ${x} + ${r} = ${len}$。`}`,
           ),
         });
       },
@@ -756,8 +756,8 @@ export const solvingParallelLineProblemsFromDescriptions = topic(
           answer: x,
           wrong: [Q.of(180 - r - s, p + q), angle, Q.of(s + r, p - q)],
           solution: t(
-            `${pair[0]!.toUpperCase()}${pair.slice(1)} are equal:${steps(`${linear(p, r)} = ${linear(q, s)}`, `${p - q === 1 ? "" : p - q}x = ${s - r}`, `x = ${x}`)}`,
-            `${zh}相等：${steps(`${linear(p, r)} = ${linear(q, s)}`, `${p - q === 1 ? "" : p - q}x = ${s - r}`, `x = ${x}`)}`,
+            `${pair[0]!.toUpperCase()}${pair.slice(1)} are equal:${steps(`${linear(p, r)} = ${linear(q, s)}`, ...(p - q === 1 ? [] : [`${p - q}x = ${s - r}`]), `x = ${x}`)}`,
+            `${zh}相等：${steps(`${linear(p, r)} = ${linear(q, s)}`, ...(p - q === 1 ? [] : [`${p - q}x = ${s - r}`]), `x = ${x}`)}`,
           ),
         });
       },

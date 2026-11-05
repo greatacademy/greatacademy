@@ -612,7 +612,7 @@ export const usingExperimentalProbabilityToMakePredictions: TopicDef = {
           const answer = p.mul(Q.of(m));
           return numberProblem({
             prompt: t(
-              `${tr.en(n, k)} Based on these results, in how many of the next ${m} trials can you expect that ${tr.event.en}?`,
+              `${tr.en(n, k)} Based on these results, in how many of the next ${m} trials would you expect that ${tr.event.en}?`,
               `${tr.zh(n, k)}根据这些结果，在接下来的 ${m} 次中，预计有多少次${tr.event["zh-CN"]}？`,
             ),
             answer,

@@ -130,6 +130,9 @@ const _triples: readonly (readonly [number, number, number])[] = [
 
 const halfPi = Math.PI / 2;
 
+/** evenHalfPi writes k times pi over two, for an even k. */
+const evenHalfPi = (k: number): string => (k === 2 ? "\\pi" : `${k / 2}\\pi`);
+
 /** arcsinFigure graphs y = arcsin x from (−1, −π/2) to (1, π/2). */
 const arcsinFigure: Figure = {
   svg: plane({ xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 0.5, labelEvery: 2 }, [
@@ -472,7 +475,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
         }
         if (type === "range-scaled") {
           const k = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
-          const ans = k % 2 === 0 ? `(-${k / 2}pi, ${k / 2}pi)` : `\\left(-\\frac{${k}\\pi}{2}, \\frac{${k}\\pi}{2}\\right)`;
+          const ans = k % 2 === 0 ? `(-${evenHalfPi(k)}, ${evenHalfPi(k)})` : `\\left(-\\frac{${k}\\pi}{2}, \\frac{${k}\\pi}{2}\\right)`;
           return oneOf(
             rng,
             t(`What is the range of $f(x) = ${k}\\arctan x$?`, `$f(x) = ${k}\\arctan x$ 的值域是什么？`),
@@ -521,7 +524,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
         const askAsymptote = rng.pick(["pos", "neg", "sym"] as const);
         const kTex = k === 1 ? "" : `${k}`;
         if (askAsymptote === "pos") {
-          const ans = k === 1 ? "y = \\frac{\\pi}{2}" : k % 2 === 0 ? `y = ${k / 2}pi` : `y = \\frac{${k}\\pi}{2}`;
+          const ans = k === 1 ? "y = \\frac{\\pi}{2}" : k % 2 === 0 ? `y = ${evenHalfPi(k)}` : `y = \\frac{${k}\\pi}{2}`;
           return oneOf(
             rng,
             t(
@@ -529,15 +532,15 @@ export const graphingTheInverseTangentFunction: TopicDef = {
               `当 $x \\to \\infty$ 时，$f(x) = ${kTex}\\arctan x$ 的水平渐近线是什么？`,
             ),
             t(`$${ans}$`, `$${ans}$`),
-            [t("y = pi", "y = pi"), t("y = 0", "y = 0"), t("y = 1", "y = 1")],
+            [t(`$y = ${kTex}\\pi$`, `$y = ${kTex}\\pi$`), t("$y = 0$", "$y = 0$"), t(`$y = ${k}$`, `$y = ${k}$`)],
             t(
-              `As $x \\to \\infty$, $\\arctan x \\to \\pi/2$, so $f(x) \\to ${ans}$.`,
-              `当 $x \\to \\infty$ 时，$\\arctan x \\to \\pi/2$，因此 $f(x) \\to ${ans}$。`,
+              `As $x \\to \\infty$, $\\arctan x \\to \\pi/2$, so the asymptote is $${ans}$.`,
+              `当 $x \\to \\infty$ 时，$\\arctan x \\to \\pi/2$，因此水平渐近线是 $${ans}$。`,
             ),
           );
         }
         if (askAsymptote === "neg") {
-          const ans = k === 1 ? "y = -\\frac{\\pi}{2}" : k % 2 === 0 ? `y = -${k / 2}pi` : `y = -\\frac{${k}\\pi}{2}`;
+          const ans = k === 1 ? "y = -\\frac{\\pi}{2}" : k % 2 === 0 ? `y = -${evenHalfPi(k)}` : `y = -\\frac{${k}\\pi}{2}`;
           return oneOf(
             rng,
             t(
@@ -545,10 +548,10 @@ export const graphingTheInverseTangentFunction: TopicDef = {
               `当 $x \\to -\\infty$ 时，$f(x) = ${kTex}\\arctan x$ 的水平渐近线是什么？`,
             ),
             t(`$${ans}$`, `$${ans}$`),
-            [t("y = -pi", "y = -pi"), t("y = 0", "y = 0"), t("y = -1", "y = -1")],
+            [t(`$y = -${kTex}\\pi$`, `$y = -${kTex}\\pi$`), t("$y = 0$", "$y = 0$"), t(`$y = -${k}$`, `$y = -${k}$`)],
             t(
-              `As $x \\to -\\infty$, $\\arctan x \\to -\\pi/2$, so $f(x) \\to ${ans}$.`,
-              `当 $x \\to -\\infty$ 时，$\\arctan x \\to -\\pi/2$，因此 $f(x) \\to ${ans}$。`,
+              `As $x \\to -\\infty$, $\\arctan x \\to -\\pi/2$, so the asymptote is $${ans}$.`,
+              `当 $x \\to -\\infty$ 时，$\\arctan x \\to -\\pi/2$，因此水平渐近线是 $${ans}$。`,
             ),
           );
         }
@@ -940,7 +943,7 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
         "勾股恒等式可以变形，使 1 减去正弦或余弦的平方变为另一个函数的平方。由 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 可得：\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -968,7 +971,7 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
         "当两个因式只在中间的符号上不同时，它们的积是平方差，可以再用勾股恒等式化简。共轭因式相乘形成平方差：\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -1015,7 +1018,7 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
         "正弦和余弦的四次方可以看作平方的平方，所以先按平方差分解，再用恒等式化简。识别高次幂中的平方差公式：\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -1060,7 +1063,7 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
         "在分式中，把勾股恒等式中的式子换成与它相等的单项，再因式分解，约去分子和分母的公因式。代换 $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ 以约去分式中的公因式：\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -1112,7 +1115,7 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
         "把勾股恒等式两边同除以余弦的平方，得到联系正割和正切的恒等式，可以把一个函数的平方换成另一个。将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边同除以 $\\cos^{2}\\theta$ 得 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$。因此：\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -1141,7 +1144,7 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
         "找出 $\\sec^{2}\\theta - \\tan^{2}\\theta$，或 $\\sec^{2}\\theta - 1$，先把它换成更简单的等值式，再约分。含 $\\sec^{2}\\theta - 1$ 或 $\\sec^{2}\\theta - \\tan^{2}\\theta$ 的分式可直接化简：\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -1193,7 +1196,7 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
         "正割和正切的高次幂常常可以按平方差分解，分解后其中一个因式化简为一个数或一项。应用平方差公式：\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
@@ -1201,16 +1204,28 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
             expr: `\\sec^4(${arg}) - \\tan^4(${arg})`,
             ans: `\\sec^2(${arg}) + \\tan^2(${arg})`,
             wrong: ["1", `\\sec^2(${arg}) - \\tan^2(${arg})`, "0"],
+            sol: t(
+              `Factor as a difference of squares and use $\\sec^2 A - \\tan^2 A = 1$: $(\\sec^2(${arg}) - \\tan^2(${arg}))(\\sec^2(${arg}) + \\tan^2(${arg})) = \\sec^2(${arg}) + \\tan^2(${arg})$.`,
+              `分解为平方差，并用 $\\sec^2 A - \\tan^2 A = 1$：$(\\sec^2(${arg}) - \\tan^2(${arg}))(\\sec^2(${arg}) + \\tan^2(${arg})) = \\sec^2(${arg}) + \\tan^2(${arg})$。`,
+            ),
           },
           {
             expr: `\\frac{\\sec^4(${arg}) - \\tan^4(${arg})}{\\sec^2(${arg}) + \\tan^2(${arg})}`,
             ans: "1",
             wrong: ["-1", "0", `\\sec^2(${arg})`],
+            sol: t(
+              `Factor the numerator as a difference of squares and cancel the denominator. What is left is $\\sec^2(${arg}) - \\tan^2(${arg}) = 1$.`,
+              `把分子分解为平方差，约去分母，剩下 $\\sec^2(${arg}) - \\tan^2(${arg}) = 1$。`,
+            ),
           },
           {
             expr: `\\tan^4(${arg}) - \\sec^4(${arg})`,
             ans: `-(\\sec^2(${arg}) + \\tan^2(${arg}))`,
             wrong: ["-1", "1", `\\sec^2(${arg}) + \\tan^2(${arg})`],
+            sol: t(
+              `Take out a minus sign, factor as a difference of squares and use $\\sec^2 A - \\tan^2 A = 1$: $-(\\sec^2(${arg}) - \\tan^2(${arg}))(\\sec^2(${arg}) + \\tan^2(${arg})) = -(\\sec^2(${arg}) + \\tan^2(${arg}))$.`,
+              `提出负号，分解为平方差，并用 $\\sec^2 A - \\tan^2 A = 1$：$-(\\sec^2(${arg}) - \\tan^2(${arg}))(\\sec^2(${arg}) + \\tan^2(${arg})) = -(\\sec^2(${arg}) + \\tan^2(${arg}))$。`,
+            ),
           },
         ]);
         return oneOf(
@@ -1218,10 +1233,7 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
           t(`Simplify $${item.expr}$.`, `化简 $${item.expr}$。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
-            `Factor as a difference of squares: $(\\sec^2 A - \\tan^2 A)(\\sec^2 A + \\tan^2 A) = ${item.ans}$.`,
-            `分解为平方差：$(\\sec^2 A - \\tan^2 A)(\\sec^2 A + \\tan^2 A) = ${item.ans}$。`,
-          ),
+          item.sol,
         );
       },
     },
@@ -2363,7 +2375,7 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
             ans: t(`$2\\sin^2(${arg})$`, `$2\\sin^2(${arg})$`),
             wrong: [
               t(`$2\\cos^2(${arg})$`, `$2\\cos^2(${arg})$`),
-              t(`$\\sin(4${arg})$`, `$\\sin(4${arg})$`),
+              t(`$\\sin(${4 * k}${v})$`, `$\\sin(${4 * k}${v})$`),
               t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
             ],
             sol: t(

@@ -250,6 +250,7 @@ export const ratesOfChangeInAppliedContexts: TopicDef = {
           const amount = rounded(p0 * Math.exp(kL * t0), 1);
           if (!answer || !amount || answer.eq(amount)) continue;
           const f = `${p0}e^{${kL}t}`;
+          const scale = k.mul(Q.of(p0)).toNumber();
           const [what, unit] = growth
             ? [t("bacteria in a culture", "培养皿中的细菌数"), t("bacteria per hour", "个每小时")]
             : [t("grams of a radioactive substance", "放射性物质的克数"), t("grams per hour", "克每小时")];
@@ -262,8 +263,8 @@ export const ratesOfChangeInAppliedContexts: TopicDef = {
             form: "decimal",
             wrong: [amount, answer.neg()],
             solution: t(
-              `The derivative is $${kL * p0}e^{${kL}t}$. At $t = ${t0}$ it is $${kL * p0}e^{${Math.round(kL * t0 * 100) / 100}} \\approx ${answer.toNumber()}$ ${unit.en}.`,
-              `导数为 $${kL * p0}e^{${kL}t}$。在 $t = ${t0}$ 时为 $${kL * p0}e^{${Math.round(kL * t0 * 100) / 100}} \\approx ${answer.toNumber()}$ ${unit["zh-CN"]}。`,
+              `The derivative is $${scale}e^{${kL}t}$. At $t = ${t0}$ it is $${scale}e^{${Math.round(kL * t0 * 100) / 100}} \\approx ${answer.toNumber()}$ ${unit.en}.`,
+              `导数为 $${scale}e^{${kL}t}$。在 $t = ${t0}$ 时为 $${scale}e^{${Math.round(kL * t0 * 100) / 100}} \\approx ${answer.toNumber()}$ ${unit["zh-CN"]}。`,
             ),
           });
         }

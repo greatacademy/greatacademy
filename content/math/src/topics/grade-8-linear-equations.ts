@@ -428,7 +428,7 @@ const rates: readonly Rate[] = [
   },
   {
     verb: t("prints", "打印"),
-    quantity: t("number of pages printed", "打印的页数"),
+    quantity: t("page count", "打印的页数"),
     thing: t("Printer", "打印机"),
     x: "m",
     y: "p",

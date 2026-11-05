@@ -524,8 +524,12 @@ function integrateScaled(rng: Rng, rule: TrigRule, kinds: { en: string; zh: stri
       `${coef(Q.of(k * rule.sign))}${rule.F(u)} + C`,
     ],
     solution: t(
-      `${kinds.en} Differentiating $${rule.F(u)}$ also multiplies by $${c}$ (chain rule), so divide by $${c}$: $${answer}$.`,
-      `${kinds.zh}对 $${rule.F(u)}$ 求导还会乘以 $${c}$（链式法则），所以除以 $${c}$：$${answer}$。`,
+      c === 1
+        ? `${kinds.en} So the integral is $${answer}$.`
+        : `${kinds.en} Differentiating $${rule.F(u)}$ also multiplies by $${c}$ (chain rule), so divide by $${c}$: $${answer}$.`,
+      c === 1
+        ? `${kinds.zh}所以积分是 $${answer}$。`
+        : `${kinds.zh}对 $${rule.F(u)}$ 求导还会乘以 $${c}$（链式法则），所以除以 $${c}$：$${answer}$。`,
     ),
   });
 }

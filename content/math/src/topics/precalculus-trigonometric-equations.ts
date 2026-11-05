@@ -1590,11 +1590,13 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
             expr: "\\tan\\left(x - \\frac{\\pi}{4}\\right) = 0",
             ans: "\\frac{\\pi}{4}",
             wrong: ["0", "\\frac{3\\pi}{4}", "\\frac{5\\pi}{4}"],
+            shift: { inner: "x - \\frac{\\pi}{4}", range: "\\left[-\\frac{\\pi}{4}, \\frac{3\\pi}{4}\\right)", zero: "0" },
           },
           {
             expr: "\\tan\\left(x + \\frac{\\pi}{3}\\right) = 0",
             ans: "\\frac{2\\pi}{3}",
             wrong: ["\\frac{\\pi}{3}", "0", "\\frac{5\\pi}{6}"],
+            shift: { inner: "x + \\frac{\\pi}{3}", range: "\\left[\\frac{\\pi}{3}, \\frac{4\\pi}{3}\\right)", zero: "\\pi" },
           },
           {
             expr: "\\tan(2x) = \\frac{\\sqrt{3}}{3}",
@@ -1604,15 +1606,22 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
         ]);
         const v = rng.pick(["x", "\\theta", "t", "u", "z"]);
         const promptExpr = item.expr.replaceAll("x", v);
+        const shift = "shift" in item ? item.shift : undefined;
+        const inner = shift?.inner.replaceAll("x", v);
         return oneOf(
           rng,
           t(`Solve $${promptExpr}$ for $${v} \\in [0, \\pi)$.`, `在 $${v} \\in [0, \\pi)$ 上解方程 $${promptExpr}$。`),
           t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
-          t(
-            `The inner angle $2${v}$ runs over $[0, 2\\pi)$, so find its values there and divide by $2$: $${v} = ${item.ans}$.`,
-            `令内层变量在 $[0, 2\\pi)$ 内取值并除以频率系数：$${v} = ${item.ans}$。`,
-          ),
+          shift
+            ? t(
+                `The inner angle $${inner}$ runs over $${shift.range}$, and there its tangent is $0$ only when it equals $${shift.zero}$. So $${v} = ${item.ans}$.`,
+                `内层角 $${inner}$ 的取值范围是 $${shift.range}$，在这个范围内只有它等于 $${shift.zero}$ 时正切才为 $0$。所以 $${v} = ${item.ans}$。`,
+              )
+            : t(
+                `The inner angle $2${v}$ runs over $[0, 2\\pi)$, so find its values there and divide by $2$: $${v} = ${item.ans}$.`,
+                `内层角 $2${v}$ 的取值范围是 $[0, 2\\pi)$，先求出它在这个范围内的值，再除以 $2$：$${v} = ${item.ans}$。`,
+              ),
         );
       },
     },

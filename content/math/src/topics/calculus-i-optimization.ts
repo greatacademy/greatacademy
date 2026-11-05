@@ -960,15 +960,15 @@ export const calculatingVelocityForStraightLineMotionUsingDifferentiation: Topic
           if (!v) continue;
           return numberProblem({
             prompt: t(
-              `A mass on a spring has position $s(t) = ${a}\\sin(${w === 1 ? "" : w}t)$ cm after $t$ seconds. Find its velocity at $t = ${ts[s0]}$, in cm/s, to three decimal places.`,
-              `弹簧上的物体 $t$ 秒后的位置为 $s(t) = ${a}\\sin(${w === 1 ? "" : w}t)$ 厘米。求它在 $t = ${ts[s0]}$ 时的速度（厘米/秒），精确到三位小数。`,
+              `A mass on a spring has position $s(t) = ${a}\\sin(${w === 1 ? "" : w}t)$ cm after $t$ seconds. Find its velocity at $t = ${ts[s0]}$, in cm/s${Number.isInteger(a * w * c) ? "" : ", to three decimal places"}.`,
+              `弹簧上的物体 $t$ 秒后的位置为 $s(t) = ${a}\\sin(${w === 1 ? "" : w}t)$ 厘米。求它在 $t = ${ts[s0]}$ 时的速度（厘米/秒）${Number.isInteger(a * w * c) ? "" : "，精确到三位小数"}。`,
             ),
             answer: v,
             form: "decimal",
             wrong: [rounded(a * c, 3) ?? v, v.neg()],
             solution: t(
-              `$v(t) = ${a * w}\\cos(${w === 1 ? "" : w}t)$, so $v(${ts[s0]}) = ${a * w}\\cos\\left(${w === 1 ? ts[s0] : `${w} \\cdot ${ts[s0]}`}\\right) \\approx ${v.toNumber()}$ cm/s.`,
-              `$v(t) = ${a * w}\\cos(${w === 1 ? "" : w}t)$，所以 $v(${ts[s0]}) = ${a * w}\\cos\\left(${w === 1 ? ts[s0] : `${w} \\cdot ${ts[s0]}`}\\right) \\approx ${v.toNumber()}$ 厘米/秒。`,
+              `$v(t) = ${a * w}\\cos(${w === 1 ? "" : w}t)$, so $v(${ts[s0]}) = ${a * w}\\cos\\left(${w === 1 ? ts[s0] : `${w} \\cdot ${ts[s0]}`}\\right) ${Number.isInteger(a * w * c) ? "=" : "\\approx"} ${v.toNumber()}$ cm/s.`,
+              `$v(t) = ${a * w}\\cos(${w === 1 ? "" : w}t)$，所以 $v(${ts[s0]}) = ${a * w}\\cos\\left(${w === 1 ? ts[s0] : `${w} \\cdot ${ts[s0]}`}\\right) ${Number.isInteger(a * w * c) ? "=" : "\\approx"} ${v.toNumber()}$ 厘米/秒。`,
             ),
           });
         }

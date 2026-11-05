@@ -639,6 +639,7 @@ export const interpretingDescriptionsOfPhysicalPhenomena = topic(
             out: ["length of the spring, in centimeters", "弹簧的长度（厘米）"],
             at: (n: number) => [`with $${n}$ kilograms hung from it`, `挂 $${n}$ 千克时，`],
             how: ["How many kilograms must hang from it for its length to be", "挂多少千克时，弹簧的长度等于"],
+            unit: "cm",
             inp: ["kilograms", "千克"],
           },
           {
@@ -647,6 +648,7 @@ export const interpretingDescriptionsOfPhysicalPhenomena = topic(
             out: ["height of the candle, in centimeters", "蜡烛的高度（厘米）"],
             at: (n: number) => [`after $${n}$ hours`, `经过 $${n}$ 小时后，`],
             how: ["After how many hours is the height of the candle", "经过多少小时后，蜡烛的高度等于"],
+            unit: "cm",
             inp: ["hours", "小时"],
           },
           {
@@ -655,6 +657,7 @@ export const interpretingDescriptionsOfPhysicalPhenomena = topic(
             out: ["temperature of the water, in °C", "水温（°C）"],
             at: (n: number) => [`after $${n}$ minutes`, `经过 $${n}$ 分钟后，`],
             how: ["After how many minutes is the temperature of the water", "经过多少分钟后，水温等于"],
+            unit: "°C",
             inp: ["minutes", "分钟"],
           },
         ]);
@@ -667,7 +670,7 @@ export const interpretingDescriptionsOfPhysicalPhenomena = topic(
         return numberProblem({
           prompt: askOut
             ? t(`${ctx.en(a, r)} What is the ${ctx.out[0]}, ${ctx.at(n)[0]}?`, `${ctx.zh(a, r)}${ctx.at(n)[1]}${ctx.out[1]}是多少？`)
-            : t(`${ctx.en(a, r)} ${ctx.how[0]} $${out}$?`, `${ctx.zh(a, r)}${ctx.how[1]} $${out}$？`),
+            : t(`${ctx.en(a, r)} ${ctx.how[0]} $${out}$ ${ctx.unit}?`, `${ctx.zh(a, r)}${ctx.how[1]} $${out}$ ${ctx.unit}？`),
           answer: askOut ? out : n,
           wrong: askOut ? [down ? a + r * n : a - r * n, r * n, a * r * n] : [Q.of(out, r), Q.of(a + out, r), n + 1],
           solution: t(

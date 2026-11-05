@@ -483,7 +483,7 @@ export const theDegreeOfAVertex: TopicDef = {
             sorted.filter(([a, b]) => a === v || b === v).length === d ? d - 1 : sorted.filter(([a, b]) => a === v || b === v).length,
           ],
           solution: t(
-            `Each of the $${ownLoops}$ loop${ownLoops === 1 ? "" : "s"} at $${vx(v)}$ counts $2$, and every other edge at $${vx(v)}$ counts $1$: $\\deg(${vx(v)}) = ${d}$.`,
+            `${ownLoops === 1 ? "The loop" : `Each of the $${ownLoops}$ loops`} at $${vx(v)}$ counts $2$, and every other edge at $${vx(v)}$ counts $1$: $\\deg(${vx(v)}) = ${d}$.`,
             `$${vx(v)}$ 处的 $${ownLoops}$ 个环各计 $2$，其余与 $${vx(v)}$ 关联的边各计 $1$：$\\deg(${vx(v)}) = ${d}$。`,
           ),
         });

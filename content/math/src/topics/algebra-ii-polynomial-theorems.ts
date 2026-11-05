@@ -898,8 +898,8 @@ export const solvingPolynomialEquationsUsingTheGcf: TopicDef = {
             [String(k), String(r1), String(r2)],
           ],
           solution: t(
-            `Take out the greatest common factor $${poly([k, pw(j)])}$ and factor the trinomial:${steps(`${P(cs)} = ${gcfLatex}(${P(quad)}) = ${gcfLatex}${lf(1, -r1)}${lf(1, -r2)} = 0`)}The factor $${pw(j)}$ gives $x = 0$, and the binomials give $x = ${r1}$ and $x = ${r2}$.`,
-            `提取最大公因式 $${poly([k, pw(j)])}$，再分解三项式：${steps(`${P(cs)} = ${gcfLatex}(${P(quad)}) = ${gcfLatex}${lf(1, -r1)}${lf(1, -r2)} = 0`)}因式 $${pw(j)}$ 给出 $x = 0$，两个二项式给出 $x = ${r1}$ 和 $x = ${r2}$。`,
+            `Take out the greatest common factor $${poly([k, pw(j)])}$ and factor ${r1 + r2 === 0 ? "the difference of squares" : "the trinomial"}:${steps(`${P(cs)} = ${gcfLatex}(${P(quad)}) = ${gcfLatex}${lf(1, -r1)}${lf(1, -r2)} = 0`)}The factor $${pw(j)}$ gives $x = 0$, and the binomials give $x = ${r1}$ and $x = ${r2}$.`,
+            `提取最大公因式 $${poly([k, pw(j)])}$，再分解${r1 + r2 === 0 ? "平方差" : "三项式"}：${steps(`${P(cs)} = ${gcfLatex}(${P(quad)}) = ${gcfLatex}${lf(1, -r1)}${lf(1, -r2)} = 0`)}因式 $${pw(j)}$ 给出 $x = 0$，两个二项式给出 $x = ${r1}$ 和 $x = ${r2}$。`,
           ),
         });
       },

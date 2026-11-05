@@ -1358,7 +1358,9 @@ export const volumesOfRectangularPrismsWithFractionalEdgeLengthsWordProblems = t
       ),
       generate(rng) {
         const u = rng.pick(["ft", "in"] as const);
-        const [l, w, h] = edges(rng);
+        const [l, w, drawn] = edges(rng);
+        // A height of 1 would make the volume equal to the base and the question empty.
+        const h = drawn.eq(Q.one) ? Q.of(2) : drawn;
         const base = l.mul(w);
         const v = base.mul(h);
         const what = rng.pick([

@@ -96,8 +96,8 @@ const binomialShape = point(
       name(p),
       [0.2, 0.5, 0.8].filter((v) => v !== p).map(name),
       [
-        `The bars pile up around $${tallest}$, and the mean $np$ must lie near them. Among the choices, only $p = ${p}$ gives that, since $${n}(${p}) = ${n * p}$.`,
-        `条形集中在 $${tallest}$ 附近，均值 $np$ 必须在它们附近。选项中只有 $p = ${p}$ 符合，因为 $${n}(${p}) = ${n * p}$。`,
+        `The bars pile up around $${tallest}$, and the mean $np$ must lie near them. Among the choices, only $p = ${p}$ gives that, since $${n}(${p}) = ${+(n * p).toFixed(6)}$.`,
+        `条形集中在 $${tallest}$ 附近，均值 $np$ 必须在它们附近。选项中只有 $p = ${p}$ 符合，因为 $${n}(${p}) = ${+(n * p).toFixed(6)}$。`,
       ],
       {
         svg,

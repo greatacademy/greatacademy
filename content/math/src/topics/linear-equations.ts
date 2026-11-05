@@ -1810,22 +1810,30 @@ export const furtherSpeedDistanceTime: TopicDef = {
         "较快的物体追赶先出发的较慢物体时，两者走过的**路程相同**时追上。一辆卡车以 $50$ 千米/时出发，$2$ 小时后一辆小汽车以 $75$ 千米/时沿同一路线追赶。若小汽车开了 $t$ 小时，卡车就开了 $t + 2$ 小时：\n\n$$75t = 50(t + 2) \\;\\Rightarrow\\; 25t = 100 \\;\\Rightarrow\\; t = 4.$$",
       ),
       generate(rng) {
-        const time = rng.int(1, 6);
+        // A truck stays under 90 km/h, however the head start and the gap fall out.
+        let time = rng.int(1, 6);
         const gap = 5 * rng.int(1, 4);
+        if (gap * time > 90) time = rng.int(1, 4);
         const head = rng.pick([1, 2, 3].filter((h) => (gap * time) % h === 0));
         const r1 = (gap * time) / head;
         const r2 = r1 + gap;
-        const walking = r1 <= 15;
+        const walking = r1 <= 6;
+        const cycling = !walking && r1 <= 20;
         return numberProblem({
           prompt: walking
             ? t(
                 `Mo leaves home on foot at $${r1}$ km/h. $${head}$ hour${head === 1 ? "" : "s"} later his sister follows the same route by bike at $${r2}$ km/h. How many hours after she leaves does she catch up with him?`,
                 `小默以 $${r1}$ 千米/时的速度从家步行出发。$${head}$ 小时后，他姐姐骑自行车以 $${r2}$ 千米/时的速度沿同一路线追赶。姐姐出发后多少小时追上他？`,
               )
-            : t(
-                `A truck leaves a depot at $${r1}$ km/h. $${head}$ hour${head === 1 ? "" : "s"} later a car leaves the same depot along the same road at $${r2}$ km/h. How many hours after the car leaves does it catch up with the truck?`,
-                `一辆卡车以 $${r1}$ 千米/时的速度从车场出发。$${head}$ 小时后，一辆小汽车以 $${r2}$ 千米/时的速度从同一车场沿同一条路出发。小汽车出发后多少小时追上卡车？`,
-              ),
+            : cycling
+              ? t(
+                  `A cyclist leaves a town at $${r1}$ km/h. $${head}$ hour${head === 1 ? "" : "s"} later a motorcyclist leaves the same town along the same road at $${r2}$ km/h. How many hours after the motorcyclist leaves does the motorcyclist catch up with the cyclist?`,
+                  `一名骑车人以 $${r1}$ 千米/时的速度从镇上出发。$${head}$ 小时后，一名摩托车手以 $${r2}$ 千米/时的速度从同一地点沿同一条路出发。摩托车手出发后多少小时追上骑车人？`,
+                )
+              : t(
+                  `A truck leaves a depot at $${r1}$ km/h. $${head}$ hour${head === 1 ? "" : "s"} later a car leaves the same depot along the same road at $${r2}$ km/h. How many hours after the car leaves does it catch up with the truck?`,
+                  `一辆卡车以 $${r1}$ 千米/时的速度从车场出发。$${head}$ 小时后，一辆小汽车以 $${r2}$ 千米/时的速度从同一车场沿同一条路出发。小汽车出发后多少小时追上卡车？`,
+                ),
           answer: time,
           wrong: [frac(r1 * head, r1 + r2), time + head, frac(r2 * head, gap)],
           solution: t(

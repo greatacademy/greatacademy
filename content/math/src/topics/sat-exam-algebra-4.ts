@@ -225,6 +225,19 @@ export const satExamAlgebra4: ExamSpec[] = [
     const T1 = a * p + b * q;
     const T2 = c * p + d * q;
     const det = a * d - b * c;
+    if (det === 0 && hard)
+      return spr(
+        t(
+          `Two pens and one eraser cost $\\$${2 * p + q}$. Three pens and one eraser cost $\\$${3 * p + q}$. What is the total price of one pen and one eraser, in dollars?`,
+          `两支钢笔和一块橡皮共 $${2 * p + q}$ 美元。三支钢笔和一块橡皮共 $${3 * p + q}$ 美元。一支钢笔和一块橡皮共多少美元？`,
+        ),
+        p + q,
+        [p, q, 2 * p + q],
+        t(
+          `The second purchase has one more pen, so a pen costs $\\$${p}$. Then the eraser costs $\\$${q}$, and together they cost $\\$${p + q}$.`,
+          `第二次购买多一支钢笔，所以钢笔 $${p}$ 美元。于是橡皮 $${q}$ 美元，两者共 $${p + q}$ 美元。`,
+        ),
+      );
     if (det === 0)
       return spr(
         t(

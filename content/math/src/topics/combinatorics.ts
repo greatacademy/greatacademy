@@ -1120,7 +1120,7 @@ export const independentEvents: TopicDef = {
             answer: ans,
             wrong: [Q.of(6 - k, 6), Q.of(1, 2).add(Q.of(6 - k, 6)), Q.of(5 - k, 12)],
             solution: t(
-              `The coin and the die are independent. $${6 - k}$ of the $6$ numbers are greater than $${k}$:${steps(`\\frac{1}{2} \\cdot ${fr(6 - k, 6)} = ${ratioL(6 - k, 12)}`)}`,
+              `The coin and the die are independent. $${6 - k}$ of the $6$ numbers ${6 - k === 1 ? "is" : "are"} greater than $${k}$:${steps(`\\frac{1}{2} \\cdot ${fr(6 - k, 6)} = ${ratioL(6 - k, 12)}`)}`,
               `硬币和骰子相互独立。$6$ 个点数中有 $${6 - k}$ 个大于 $${k}$：${steps(`\\frac{1}{2} \\cdot ${fr(6 - k, 6)} = ${ratioL(6 - k, 12)}`)}`,
             ),
           });

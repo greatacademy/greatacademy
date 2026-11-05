@@ -716,7 +716,7 @@ type Quantity = readonly [string, string, string, string, number, number];
 /** quantities are quantities whose sizes vary from case to case, so that no particular value is claimed as a fact. */
 const quantities: readonly Quantity[] = [
   ["the population of a city", "一座城市的人口", "people", "人", 5, 7],
-  ["the number of visitors to a website in a year", "一个网站一年的访问人次", "visits", "人次", 6, 9],
+  ["the traffic to a website in a year", "一个网站一年的访问量", "visits", "人次", 6, 9],
   ["the area of a farm", "一个农场的面积", "square meters", "平方米", 5, 7],
   ["the amount of water in a reservoir", "一个水库的蓄水量", "liters", "升", 8, 11],
   ["the length of a bacterium", "一个细菌的长度", "meters", "米", -7, -6],

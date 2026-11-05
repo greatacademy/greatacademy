@@ -1916,7 +1916,7 @@ export const understandingRemaindersUsingModels: TopicDef = {
             form: "integer",
             wrong: [q, d - r, n - d * q + d],
             solution: t(
-              `There are $${n}$ counters. $${q}$ groups of $${d}$ use $${d * q}$ counters, and $${n} - ${d * q} = ${r}$ are left over.`,
+              `There are $${n}$ counters. $${q}$ groups of $${d}$ use $${d * q}$ counters, and $${n} - ${d * q} = ${r}$ ${r === 1 ? "is" : "are"} left over.`,
               `共有 $${n}$ 个圆片。分成 $${q}$ 组，每组 $${d}$ 个，用去 $${d * q}$ 个，还剩 $${n} - ${d * q} = ${r}$ 个。`,
             ),
           }),
@@ -2259,7 +2259,7 @@ export const interpretingRemaindersInContext: TopicDef = {
           form: "integer",
           wrong: [q, r, q + r],
           solution: t(
-            `$${n} \\div ${d} = ${qr(q, r).en}$. $${q}$ groups hold $${d * q}$, and the other $${r}$ need one more, so the answer is $${q + 1}$.`,
+            `$${n} \\div ${d} = ${qr(q, r).en}$. $${q}$ groups hold $${d * q}$, and the other $${r}$ ${r === 1 ? "needs" : "need"} one more, so the answer is $${q + 1}$.`,
             `$${n} \\div ${d} = ${qr(q, r).zh}$。$${q}$ 组能装 $${d * q}$，剩下的 $${r}$ 还需要再加一组，所以答案是 $${q + 1}$。`,
           ),
         });
@@ -2303,7 +2303,7 @@ export const interpretingRemaindersInContext: TopicDef = {
           form: "integer",
           wrong: [q, q + 1, d - r],
           solution: t(
-            `$${n} \\div ${d} = ${qr(q, r).en}$: after $${q}$ full groups of $${d}$, $${r}$ are left over.`,
+            `$${n} \\div ${d} = ${qr(q, r).en}$: after $${q}$ full groups of $${d}$, $${r}$ ${r === 1 ? "is" : "are"} left over.`,
             `$${n} \\div ${d} = ${qr(q, r).zh}$：分成 $${q}$ 组、每组 $${d}$ 个后，还剩 $${r}$。`,
           ),
         });

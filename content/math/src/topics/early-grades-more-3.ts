@@ -1773,7 +1773,7 @@ const scalesAndBeakers = earlyTopic(
       "adding-to-a-measure",
       ["Adding to a measure", "在读数的基础上增减"],
       [
-        "Once you have read a scale or a cup, you can use the number in a story. If there are 6 liters in a tub and someone pours in 3 more, then add. If some are poured out, then subtract. If you need to know how much more will fill it up, subtract what is there from the top of the scale.",
+        "Once you have read a scale or a beaker, you can use the number in a story. If there are 6 liters in a tub and someone pours in 3 more, then add. If some are poured out, then subtract. If you need to know how much more will fill it up, subtract what is there from the top of the scale.",
         "读出秤或量杯的数后，就可以用在故事里。桶里有 6 升水，又倒进 3 升，就用加法。如果倒出一些，就用减法。如果要知道还要多少才能装满，就用最上面的刻度减去现在的数。",
       ],
       (rng) => {
@@ -1785,13 +1785,13 @@ const scalesAndBeakers = earlyTopic(
           const more = rng.int(1, max - level);
           return whole(
             [
-              `${more} more ${more === 1 ? "liter is" : "liters are"} poured into this cup. How many liters are in it now?`,
+              `${more} more ${more === 1 ? "liter is" : "liters are"} poured into this beaker. How many liters are in it now?`,
               `再往这个量杯里倒 ${more} 升水。现在有多少升水？`,
             ],
             level + more,
             [Math.abs(level - more), level, level + more + 1],
             [
-              `The cup shows ${level} liters, and $${level} + ${more} = ${level + more}$.`,
+              `The beaker shows ${level} liters, and $${level} + ${more} = ${level + more}$.`,
               `量杯里有 ${level} 升，$${level} + ${more} = ${level + more}$。`,
             ],
             figure,
@@ -1801,20 +1801,20 @@ const scalesAndBeakers = earlyTopic(
           const out = rng.int(1, level - 1);
           return whole(
             [
-              `${out} ${out === 1 ? "liter is" : "liters are"} poured out of this cup. How many liters are left?`,
+              `${out} ${out === 1 ? "liter is" : "liters are"} poured out of this beaker. How many liters are left?`,
               `从这个量杯里倒出 ${out} 升水。还剩多少升水？`,
             ],
             level - out,
             [level + out, level, out],
             [
-              `The cup shows ${level} liters, and $${level} - ${out} = ${level - out}$.`,
+              `The beaker shows ${level} liters, and $${level} - ${out} = ${level - out}$.`,
               `量杯里有 ${level} 升，$${level} - ${out} = ${level - out}$。`,
             ],
             figure,
           );
         }
         return whole(
-          ["How many more liters will fill this cup up to the top mark?", "还要倒多少升水，才能到最上面的刻度？"],
+          ["How many more liters will fill this beaker up to the top mark?", "还要倒多少升水，才能到最上面的刻度？"],
           max - level,
           [level, max, max + level],
           [

@@ -2635,8 +2635,8 @@ export const modelingWithSystems: TopicDef = {
         const correct = options.indexOf(0);
         return choiceProblem({
           prompt: t(
-            `${p.prompt(0).en} ${p.vars.en} Which system models the situation?`,
-            `${p.prompt(0)["zh-CN"]}${p.vars["zh-CN"]}哪个方程组符合题意？`,
+            `${p.prompt(0).en.replace(/ How many [^?]*\?$/, "")} ${p.vars.en} Which system models the situation?`,
+            `${p.prompt(0)["zh-CN"].replace(/[^。]*？$/, "")}${p.vars["zh-CN"]}哪个方程组符合题意？`,
           ),
           options: options.map((i) => same(`$${candidates[i]!}$`)),
           correct,

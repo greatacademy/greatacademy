@@ -2249,7 +2249,7 @@ export const proofsInvolvingMediansAndCentroids: TopicDef = {
             form: "integer",
             wrong: [area / 2, area / 3, area / 6, area / 4],
             solution: t(
-              `The medians split $\\triangle ABC$ into six triangles of equal area, $${area} \\div 6 = ${area / 6}$ each. $${name}$ is made of ${answer / (area / 6)} of them, ${part.en} of the whole:${steps(`${answer}`)}`,
+              `The medians split $\\triangle ABC$ into six triangles of equal area, $${area} \\div 6 = ${area / 6}$ each. $${name}$ ${answer / (area / 6) === 1 ? "is one" : `is made of ${answer / (area / 6)}`} of them, ${part.en} of the whole:${steps(`${answer}`)}`,
               `三条中线把 $\\triangle ABC$ 分成六个面积相等的三角形，每个面积为 $${area} \\div 6 = ${area / 6}$。$${name}$ 由其中 ${answer / (area / 6)} 个组成，占总面积的${part["zh-CN"]}：${steps(`${answer}`)}`,
             ),
           }),

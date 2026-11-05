@@ -600,8 +600,9 @@ export const relatingTheCircumferenceAndAreaOfACircle = topic(
       generate(rng) {
         if (rng.bool()) {
           // Measured circles: the radius to the nearest tenth and the circumference to the nearest whole unit.
-          const r = Q.of(rng.int(25, 400), 10);
-          const c = Math.round((2 * Math.PI * Number(r.n)) / 10);
+          const tenths = rng.int(25, 400);
+          const r = Q.of(tenths, 10);
+          const c = Math.round((2 * Math.PI * tenths) / 10);
           const half = Q.of(c, 2);
           const a = half.mul(r);
           const thing = rng.pick([

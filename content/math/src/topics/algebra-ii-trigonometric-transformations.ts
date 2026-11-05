@@ -421,13 +421,14 @@ function graphProblem(rng: Rng, w: Wave, candidates: readonly Wave[], u0 = -8): 
 function periodProblem(w: Wave, expanded = false): Problem {
   const P = periodOf(w);
   const base = basePeriod(w.f);
+  const quotient = `\\frac{${piTex(base)}}{${w.b.toLatex()}}`;
   return piProblem(
     t(`What is the period of $y = ${waveTex(w, expanded)}$?`, `$y = ${waveTex(w, expanded)}$ 的周期是多少？`),
     P,
     both(
       `The period of $y = \\${w.f} x$ is $${piTex(base)}$. Multiplying $x$ by $b = ${w.b.toLatex()}$ compresses the graph horizontally by the factor $b$ (stretches it when $b < 1$), so the period is $\\frac{${piTex(base)}}{b}$; the other parameters do not change it:`,
       `$y = \\${w.f} x$ 的周期为 $${piTex(base)}$。把 $x$ 乘以 $b = ${w.b.toLatex()}$ 会把图象沿水平方向压缩为原来的 $\\frac{1}{b}$（$b < 1$ 时为拉伸），所以周期为 $\\frac{${piTex(base)}}{b}$；其他参数不改变周期：`,
-      `\\frac{${piTex(base)}}{${w.b.toLatex()}} = ${piTex(P)}`,
+      quotient === piTex(P) ? quotient : `${quotient} = ${piTex(P)}`,
     ),
     [base.mul(w.b), Q.one.div(w.b), base, base.div(w.b).mul(Q.of(2)), base.div(w.b).div(Q.of(2))],
   );
@@ -500,8 +501,8 @@ function conditionText(w: Wave, target: Target): Text {
       );
     case "zero":
       return t(
-        `Setting $y = 0$ gives $${aTex}${f}${signed(w.d)} = 0$, so $${f} = ${levelTex(s ?? 0)}$`,
-        `令 $y = 0$ 得 $${aTex}${f}${signed(w.d)} = 0$，所以 $${f} = ${levelTex(s ?? 0)}$`,
+        `Setting $y = 0$ gives $${aTex}${f}${signed(w.d)} = 0$${aTex === "" && signed(w.d) === "" ? "" : `, so $${f} = ${levelTex(s ?? 0)}$`}`,
+        `令 $y = 0$ 得 $${aTex}${f}${signed(w.d)} = 0$${aTex === "" && signed(w.d) === "" ? "" : `，所以 $${f} = ${levelTex(s ?? 0)}$`}`,
       );
     case "localMin":
       return t(
@@ -2343,8 +2344,8 @@ const modelingWithTrigonometricFunctions: TopicDef = {
           m = rng.int(-8, 15);
           M = m + 2 * rng.int(3, 9);
           intro = t(
-            `On a summer day the temperature ranges from a low of $${m}^\\circ\\text{C}$ to a high of $${M}^\\circ\\text{C}$. It is modeled by $T(t) = a\\cos(b(t - c)) + d$ with $a > 0$.`,
-            `某个夏日的气温从最低 $${m}^\\circ\\text{C}$ 变化到最高 $${M}^\\circ\\text{C}$。气温用 $T(t) = a\\cos(b(t - c)) + d$（$a > 0$）表示。`,
+            `On one day the temperature ranges from a low of $${m}^\\circ\\text{C}$ to a high of $${M}^\\circ\\text{C}$. It is modeled by $T(t) = a\\cos(b(t - c)) + d$ with $a > 0$.`,
+            `某一天的气温从最低 $${m}^\\circ\\text{C}$ 变化到最高 $${M}^\\circ\\text{C}$。气温用 $T(t) = a\\cos(b(t - c)) + d$（$a > 0$）表示。`,
           );
         }
         const a = (M - m) / 2;

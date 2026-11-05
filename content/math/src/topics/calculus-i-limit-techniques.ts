@@ -402,8 +402,12 @@ function identityLimit(rng: Rng, forms: readonly IdentityForm[], identity: { en:
   const rootTwo = Math.abs(Math.abs(value) - Math.SQRT2) < 1e-9;
   const scaled = rootTwo ? ratio.mul(Q.of(Math.sign(value))) : ratio.mul(Q.of(Math.round(value * 2), 2));
   const answer = rootTwo ? radical(scaled, 2) : scaled.toLatex();
-  const top = k === 1 ? form.top : `${k}(${form.top})`.replace(/^(-?\d+)\((\\[a-z]+(?:\^\{2\})? ?\d?x)\)$/, "$1$2");
-  const bottom = q === 1 ? form.bottom : `${q}(${form.bottom})`.replace(/^(-?\d+)\((\\[a-z]+(?:\^\{2\})? ?\d?x)\)$/, "$1$2");
+  const top =
+    k === 1 ? form.top : `${k}(${form.top})`.replace(/^(-?\d+)\((\\[a-z]+(?:\^\{2\})? ?\d?x)\)$/, "$1$2").replace(/^-1(?=[(\\])/, "-");
+  const bottom =
+    q === 1
+      ? form.bottom
+      : `${q}(${form.bottom})`.replace(/^(-?\d+)\((\\[a-z]+(?:\^\{2\})? ?\d?x)\)$/, "$1$2").replace(/^-1(?=[(\\])/, "-");
   const expr = `\\frac{${top}}{${bottom}}`;
   const v = rootTwo ? radical(Q.of(Math.sign(value)), 2) : Q.of(Math.round(value * 2), 2).toLatex();
   const vp = value < 0 && !ratio.eq(Q.one) ? `\\left(${v}\\right)` : v;

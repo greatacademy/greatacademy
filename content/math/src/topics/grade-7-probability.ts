@@ -549,6 +549,8 @@ export const experimentalProbabilityForCompoundEvents = topic(
         const [name, inEvent] = rng.pick(r.events);
         const picked = r.outcomes.map((o, i) => [o, counts[i]!] as const).filter(([o]) => inEvent(o));
         const k = sum(picked.map(([, c]) => c));
+        const raw = `\\frac{${picked.map(([, c]) => c).join(" + ")}}{${n}}`;
+        const shown = raw === frac(k, n) ? raw : `${raw} = ${frac(k, n)}`;
         return numberProblem({
           prompt: t(
             `${r.intro(n).en}${outcomeTable(r, counts).en}What is the experimental probability of ${name.en}?`,
@@ -558,15 +560,19 @@ export const experimentalProbabilityForCompoundEvents = topic(
           // Only one of the outcomes, the theoretical probability, and the count over the number of outcomes.
           wrong: [Q.of(picked[0]![1], n), Q.of(picked.length, r.outcomes.length), Q.of(k, n - k)],
           solution: t(
-            `The event is made of ${
+            `${
               picked.length === 1
-                ? picked[0]![0]
-                : `${picked
+                ? `The event is the single outcome ${picked[0]![0]}. Divide its frequency by the ${n} trials:`
+                : `The event is made of ${picked
                     .slice(0, -1)
                     .map(([o]) => o)
-                    .join(", ")} and ${picked.at(-1)![0]}`
-            }. Add their frequencies and divide by the ${n} trials:${steps(`\\frac{${picked.map(([, c]) => c).join(" + ")}}{${n}} = ${frac(k, n)}`)}`,
-            `这个事件由 ${picked.map(([o]) => o).join("、")} 组成。把它们的频数相加，再除以试验次数 ${n}：${steps(`\\frac{${picked.map(([, c]) => c).join(" + ")}}{${n}} = ${frac(k, n)}`)}`,
+                    .join(", ")} and ${picked.at(-1)![0]}. Add their frequencies and divide by the ${n} trials:`
+            }${steps(shown)}`,
+            `${
+              picked.length === 1
+                ? `这个事件只有一个结果 ${picked[0]![0]}。用它的频数除以试验次数 ${n}：`
+                : `这个事件由 ${picked.map(([o]) => o).join("、")} 组成。把它们的频数相加，再除以试验次数 ${n}：`
+            }${steps(shown)}`,
           ),
         });
       },

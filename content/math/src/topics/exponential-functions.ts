@@ -1870,8 +1870,8 @@ function evaluateModelProblem(rng: Rng, kind: Kind): Problem {
     answer,
     wrong: [...(simple.sign() > 0 ? [roundQ(simple)] : []), roundQ(f.pow(n - 1).mul(Q.of(p))), roundQ(f.mul(Q.of(p * n)))],
     solution: t(
-      `Substitute $t = ${n}$:${steps(`${c.name}(${n}) = ${p}(${dec(f)})^{${n}} = ${dec(value)} \\approx ${answer.toLatex()}`)}`,
-      `代入 $t = ${n}$：${steps(`${c.name}(${n}) = ${p}(${dec(f)})^{${n}} = ${dec(value)} \\approx ${answer.toLatex()}`)}`,
+      `Substitute $t = ${n}$:${steps(`${c.name}(${n}) = ${p}(${dec(f)})^{${n}} = ${value.eq(answer) ? dec(value) : `${dec(value)} \\approx ${answer.toLatex()}`}`)}`,
+      `代入 $t = ${n}$：${steps(`${c.name}(${n}) = ${p}(${dec(f)})^{${n}} = ${value.eq(answer) ? dec(value) : `${dec(value)} \\approx ${answer.toLatex()}`}`)}`,
     ),
   });
 }

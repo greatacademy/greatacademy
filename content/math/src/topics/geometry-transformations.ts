@@ -553,6 +553,9 @@ function complementaryConverseProof(rng: Rng): Proof {
 }
 
 /** furtherProvingPerpendicularLineTheorems proves that perpendicular lines form four right angles and relates perpendicular sides to complementary angles. */
+/** rotationAngle writes the angle of one step of a rotational symmetry, exactly. */
+const rotationAngle = (order: number) => (Number.isInteger(360 / order) ? `${360 / order}` : `\\frac{360}{${order}}`);
+
 export const furtherProvingPerpendicularLineTheorems: TopicDef = {
   id: "further-proving-perpendicular-line-theorems",
   title: t("Further Proving Perpendicular Line Theorems", "进一步证明垂线的定理"),
@@ -1877,10 +1880,10 @@ export const rotationalSymmetry: TopicDef = {
             solution: t(
               s.order === 1
                 ? `No rotation by less than $360^\\circ$ maps ${anOf(s.name.en)} onto itself, so its order is $1$.`
-                : `A rotation by $${360 / s.order}^\\circ$ about the center maps the ${s.name.en} onto itself, and it looks the same in $${s.order}$ positions in a full turn: the order is $${s.order}$.`,
+                : `A rotation by $${rotationAngle(s.order)}^\\circ$ about the center maps the ${s.name.en} onto itself, and it looks the same in $${s.order}$ positions in a full turn: the order is $${s.order}$.`,
               s.order === 1
                 ? `没有小于 $360^\\circ$ 的旋转能把${s.name["zh-CN"]}映到自身，所以阶数是 $1$。`
-                : `绕中心旋转 $${360 / s.order}^\\circ$ 能把${s.name["zh-CN"]}映到自身，旋转一整圈有 $${s.order}$ 个位置看起来相同：阶数是 $${s.order}$。`,
+                : `绕中心旋转 $${rotationAngle(s.order)}^\\circ$ 能把${s.name["zh-CN"]}映到自身，旋转一整圈有 $${s.order}$ 个位置看起来相同：阶数是 $${s.order}$。`,
             ),
           }),
           figure: shapeFigure(rng, s),
