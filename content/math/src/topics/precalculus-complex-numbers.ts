@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import {
   choiceProblem,
   equationProblem,
@@ -540,6 +541,7 @@ export const theArgumentOfAComplexNumber: TopicDef = {
     },
     {
       id: "argument-quadrant-rules",
+      figure: precalculusDrawings4["the-argument-of-a-complex-number#argument-quadrant-rules"],
       title: t("Quadrant adjustment rules for argument", "辐角的象限转换法则"),
       explanation: t(
         "To find the argument $\\theta \\in [0^\\circ, 360^\\circ)$ of $z = a + bi$, first compute the acute reference angle $\\alpha = \\arctan\\left(\\left|\\frac{b}{a}\\right|\\right)$:\n\n- **Quadrant I** ($a > 0, b > 0$): $\\theta = \\alpha$\n- **Quadrant II** ($a < 0, b > 0$): $\\theta = 180^\\circ - \\alpha$\n- **Quadrant III** ($a < 0, b < 0$): $\\theta = 180^\\circ + \\alpha$\n- **Quadrant IV** ($a > 0, b < 0$): $\\theta = 360^\\circ - \\alpha$",
@@ -1404,6 +1406,7 @@ export const productsOfComplexNumbersExpressedInPolarForm: TopicDef = {
   knowledgePoints: [
     {
       id: "multiplication-rule-in-polar-form",
+      figure: precalculusDrawings4["products-of-complex-numbers-expressed-in-polar-form#multiplication-rule-in-polar-form"],
       title: t("Multiplication rule in polar form", "三角形式的乘法法则"),
       explanation: t(
         "To multiply two complex numbers in polar form, **multiply their moduli** and **add their arguments**:\n\n$$z_1 z_2 = r_1 r_2 \\left[\\cos(\\theta_1 + \\theta_2) + i\\sin(\\theta_1 + \\theta_2)\\right]$$\n\nIf the resulting angle exceeds $360^\\circ$ (or $2\\pi$), subtract full turns to express it in $[0, 360^\\circ)$ or $[0, 2\\pi)$.",
@@ -1494,6 +1497,7 @@ export const quotientsOfComplexNumbersExpressedInPolarForm: TopicDef = {
   knowledgePoints: [
     {
       id: "division-rule-in-polar-form",
+      figure: precalculusDrawings4["quotients-of-complex-numbers-expressed-in-polar-form#division-rule-in-polar-form"],
       title: t("Division rule in polar form", "三角形式的除法法则"),
       explanation: t(
         "To divide two complex numbers in polar form, **divide their moduli** and **subtract their arguments**:\n\n$$\\frac{z_1}{z_2} = \\frac{r_1}{r_2}\\left[\\cos(\\theta_1 - \\theta_2) + i\\sin(\\theta_1 - \\theta_2)\\right]$$\n\nIf the resulting angle is negative, add $360^\\circ$ (or $2\\pi$) to bring it into $[0, 360^\\circ)$ or $[0, 2\\pi)$.",

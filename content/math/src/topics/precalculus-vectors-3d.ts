@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (Part 2: 3D Vectors, Dot Product, and Cross Product,
@@ -1033,6 +1034,7 @@ export const calculatingAVectorProjection: TopicDef = {
   knowledgePoints: [
     {
       id: "vector-projection-formula",
+      figure: precalculusDrawings4["calculating-a-vector-projection#vector-projection-formula"],
       title: t("Vector projection formula", "向量投影的公式与计算"),
       explanation: t(
         "The vector projection of $\\mathbf{u}$ onto $\\mathbf{v}$ is the vector parallel to $\\mathbf{v}$ obtained by multiplying the unit vector in the direction of $\\mathbf{v}$ by the scalar projection:\n\n$$\\text{proj}_{\\mathbf{v}}\\mathbf{u} = \\left(\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|^2}\\right)\\mathbf{v} = \\left(\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}}\\right)\\mathbf{v}$$",

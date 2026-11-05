@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, linear, poly, Q, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, expressionProblem, numberProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -218,6 +219,7 @@ export const deMoivresTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "powers-in-polar-form",
+      figure: precalculusDrawings4["de-moivres-theorem#powers-in-polar-form"],
       title: t("Raise a complex number in polar form to a power", "计算三角形式复数的幂"),
       explanation: t(
         "Multiplying complex numbers in polar form multiplies the moduli and adds the arguments. Multiplying $z = r(\\cos\\theta + i\\sin\\theta)$ by itself $n$ times therefore multiplies $r$ by itself $n$ times and adds $\\theta$ to itself $n$ times. This is **De Moivre's theorem**:\n\n$$\\left[r(\\cos\\theta + i\\sin\\theta)\\right]^{n} = r^{n}(\\cos n\\theta + i\\sin n\\theta)$$\n\nFor example, $\\left[2\\left(\\cos\\frac{\\pi}{5} + i\\sin\\frac{\\pi}{5}\\right)\\right]^{3} = 8\\left(\\cos\\frac{3\\pi}{5} + i\\sin\\frac{3\\pi}{5}\\right)$.\n\nIf $n\\theta$ is $2\\pi$ or more, subtract multiples of $2\\pi$ to bring it into $[0, 2\\pi)$. Note that the power applies to the **angle inside** the cosine and sine, not to the cosine and sine themselves.",
@@ -842,6 +844,7 @@ export const theRootsOfUnity: TopicDef = {
     },
     {
       id: "counting-roots-of-unity",
+      figure: precalculusDrawings4["the-roots-of-unity#counting-roots-of-unity"],
       title: t("Count roots of unity by location", "按位置统计单位根的个数"),
       explanation: t(
         "Since the $n$th roots of unity sit at the angles $0^{\\circ}, \\frac{360^{\\circ}}{n}, \\frac{2 \\cdot 360^{\\circ}}{n}, \\ldots$, their positions can be counted:\n\n- $1$ is always a root; $-1$ (at $180^{\\circ}$) is a root exactly when $n$ is even. So there are $2$ real roots when $n$ is even and $1$ when $n$ is odd.\n- The nonreal roots come in conjugate pairs, so half of them have a positive imaginary part.\n\nFor $n = 8$ the roots are at $0^{\\circ}, 45^{\\circ}, \\ldots, 315^{\\circ}$: $2$ are real, $3$ have a positive imaginary part, and $1$ lies strictly inside quadrant I.",
@@ -1121,6 +1124,7 @@ export const squareRootsOfComplexNumbers: TopicDef = {
     },
     {
       id: "square-roots-in-polar-form",
+      figure: precalculusDrawings4["square-roots-of-complex-numbers#square-roots-in-polar-form"],
       title: t("Find square roots in polar form", "在三角形式下求平方根"),
       explanation: t(
         "If $w = r\\,\\text{cis}\\,\\theta$, then by De Moivre's theorem $\\left(\\sqrt{r}\\,\\text{cis}\\frac{\\theta}{2}\\right)^{2} = w$. Adding $360^{\\circ}$ to $\\theta$ describes the same $w$ but halves to an angle $180^{\\circ}$ further on, so $w$ has exactly two square roots, which are opposite each other:\n\n$$\\sqrt{r}\\,\\text{cis}\\frac{\\theta}{2} \\qquad\\text{and}\\qquad \\sqrt{r}\\,\\text{cis}\\left(\\frac{\\theta}{2} + 180^{\\circ}\\right)$$\n\nFor $w = 9\\,\\text{cis}\\,100^{\\circ}$: $3\\,\\text{cis}\\,50^{\\circ}$ and $3\\,\\text{cis}\\,230^{\\circ}$.",

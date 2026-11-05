@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -1234,6 +1235,7 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
   knowledgePoints: [
     {
       id: "standard-form-with-center-h-k-hyperbola",
+      figure: precalculusDrawings4["equations-of-hyperbolas-centered-at-a-general-point#standard-form-with-center-h-k-hyperbola"],
       title: t("Standard form of a translated hyperbola", "平移双曲线的标准方程"),
       explanation: t(
         "Moving the center from the origin to $(h, k)$ replaces $x$ by $x - h$ and $y$ by $y - k$. The positive term tells which way the hyperbola opens, and $a$ always goes with it.\n\nFor a hyperbola centered at $(h, k)$:\n\n- Horizontal transverse axis:\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- Vertical transverse axis:\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
@@ -1448,6 +1450,7 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
     },
     {
       id: "asymptotes-of-translated-vertical-hyperbolas",
+      figure: precalculusDrawings4["asymptotes-of-hyperbolas-centered-at-a-general-point#asymptotes-of-translated-vertical-hyperbolas"],
       title: t("Asymptotes of translated vertical hyperbolas", "平移竖直双曲线的渐近线"),
       explanation: t(
         "For a hyperbola that opens up and down, the slopes of the asymptotes are the square root under the positive term divided by the other one. For $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{a}{b}$:\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
@@ -1674,6 +1677,7 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
   knowledgePoints: [
     {
       id: "length-of-the-conjugate-axis",
+      figure: precalculusDrawings4["conjugate-axes-of-hyperbolas#length-of-the-conjugate-axis"],
       title: t("Length of the conjugate axis", "虚轴的长度"),
       explanation: t(
         "The segment perpendicular to the transverse axis at the center of length $2b$ is called the conjugate axis of the hyperbola:\n\n$$\\text{Conjugate axis length} = 2b$$",
@@ -1775,6 +1779,7 @@ export const fociOfHyperbolas: TopicDef = {
     },
     {
       id: "foci-of-translated-hyperbolas",
+      figure: precalculusDrawings4["foci-of-hyperbolas#foci-of-translated-hyperbolas"],
       title: t("Foci of a translated hyperbola", "平移双曲线的焦点坐标"),
       explanation: t(
         "For a hyperbola with center $(h, k)$ and focal distance $c = \\sqrt{a^{2} + b^{2}}$:\n\n- Horizontal hyperbola: foci at $(h \\pm c, k)$\n- Vertical hyperbola: foci at $(h, k \\pm c)$",

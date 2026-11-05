@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Mark, type Point, paren, poly, Q, sketch } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (modules 5.16 and 5.17: 2D Vectors).
@@ -818,6 +819,7 @@ export const parallelVectors: TopicDef = {
   knowledgePoints: [
     {
       id: "collinearity-condition",
+      figure: precalculusDrawings4["parallel-vectors#collinearity-condition"],
       title: t("Collinearity condition for vectors", "向量平行的共线条件"),
       explanation: t(
         "Two non-zero vectors $\\mathbf{u}$ and $\\mathbf{v}$ are **parallel** (or collinear), written $\\mathbf{u} \\parallel \\mathbf{v}$, if and only if there exists a non-zero scalar $k$ such that:\n\n$$\\mathbf{u} = k\\mathbf{v}$$",
@@ -1639,6 +1641,7 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
   knowledgePoints: [
     {
       id: "direction-angle-quadrant-i-and-axes",
+      figure: precalculusDrawings4["calculating-the-direction-of-cartesian-vectors-in-2d#direction-angle-quadrant-i-and-axes"],
       title: t("Direction angle on coordinate axes and Quadrant I", "坐标轴上及第一象限向量的方向角"),
       explanation: t(
         "The **direction angle** $\\theta \\in [0^\\circ, 360^\\circ)$ of vector $\\mathbf{v} = \\langle x, y \\rangle$ is measured counterclockwise from the positive $x$-axis.\n\n- Along axes: $\\langle c, 0 \\rangle$ has $\\theta = 0^\\circ$ ($c > 0$) or $180^\\circ$ ($c < 0$); $\\langle 0, c \\rangle$ has $\\theta = 90^\\circ$ ($c > 0$) or $270^\\circ$ ($c < 0$).\n- In Quadrant I ($x > 0, y > 0$): $\\theta = \\arctan\\left(\\frac{y}{x}\\right)$.",

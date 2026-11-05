@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, numberProblem, solutionsProblem } from "../problems.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.13 to 4.15: elementary, transformed,
@@ -623,6 +624,7 @@ export const elementaryTrigonometricEquationsContainingSecant: TopicDef = {
     },
     {
       id: "solve-elementary-secant-equations-degrees",
+      figure: precalculusDrawings4["elementary-trigonometric-equations-containing-secant#solve-elementary-secant-equations-degrees"],
       title: t("Solve sec(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解正割方程（角度制）"),
       explanation: t(
         "Take the reciprocal to get an equation in cosine, then use the reference angle and the signs of cosine in each quadrant to list the degree solutions. Use $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$:\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",

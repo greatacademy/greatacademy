@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, plane, Q, svgDocument } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { numberProblem } from "../problems.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
@@ -541,6 +542,7 @@ const asymptotesFromDrawing: KnowledgePointDef = {
 
 const sumOnComplexPlane: KnowledgePointDef = {
   id: "reading-a-sum-on-the-complex-plane",
+  figure: precalculusDrawings4["arithmetic-in-the-complex-plane#reading-a-sum-on-the-complex-plane"],
   title: t("Reading a sum on the complex plane", "在复平面上读和"),
   explanation: t(
     "A complex number is a point of the plane, with the real part across and the imaginary part up. Adding complex numbers works like adding vectors: the real parts add and the imaginary parts add, which forms a parallelogram with the origin. So reading two points off the grid and adding by parts gives the fourth corner of that parallelogram.",
@@ -1355,6 +1357,7 @@ const expectedFromBars: KnowledgePointDef = {
 
 const empiricalFromCurve: KnowledgePointDef = {
   id: "the-empirical-rule-from-a-shaded-curve",
+  figure: precalculusDrawings4["the-empirical-rule-for-the-normal-distribution#the-empirical-rule-from-a-shaded-curve"],
   title: t("The empirical rule from a shaded curve", "由阴影曲线用经验法则"),
   explanation: t(
     "About 68 percent of a normal distribution lies within one standard deviation of the mean, 95 percent within two, and 99.7 percent within three. The curve is symmetric, so half of each of these lies on either side of the mean. Translate the shaded bounds into standard deviations from the mean, and then combine the pieces of the rule that are needed.",

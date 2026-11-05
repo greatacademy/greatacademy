@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { article, choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
 
 // Precalculus Unit 6 Part 2: Matrix Inverses, Systems, and Linear Transformations in the Plane
@@ -1635,6 +1636,7 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "matrices-for-right-angle-rotations",
+      figure: precalculusDrawings4["right-angle-rotations-as-linear-transformations#matrices-for-right-angle-rotations"],
       title: t("Matrices for right-angle rotations", "直角旋转的标准矩阵"),
       explanation: t(
         "The columns of a rotation matrix are the images of the two unit vectors, which are easy to find for right angles. Standard counterclockwise rotation matrices about the origin:\n- By $90^\\circ$: $R_{90^\\circ} = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$\n- By $180^\\circ$: $R_{180^\\circ} = \\begin{pmatrix} -1 & 0 \\\\ 0 & -1 \\end{pmatrix} = -I$\n- By $270^\\circ$: $R_{270^\\circ} = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$",
@@ -1888,6 +1890,7 @@ export const rotationsAsLinearTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "general-rotation-matrix-formula",
+      figure: precalculusDrawings4["rotations-as-linear-transformations#general-rotation-matrix-formula"],
       title: t("General rotation matrix formula", "平面旋转矩阵的一般公式"),
       explanation: t(
         "The first column is where the horizontal unit vector lands after rotating, and the second column is where the vertical unit vector lands. A counterclockwise rotation by angle $\\theta$ about the origin is represented by the matrix $R_\\theta = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$.",

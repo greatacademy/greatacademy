@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 
 import { ask, point } from "../university-kit.ts";
 
@@ -32,33 +33,36 @@ const pow = (base: string, e: number) => (e === 1 ? base : `${base}^{${e}}`);
 const timesPi = (q: ReturnType<typeof frac>) =>
   q.eq(Q.of(0, 1)) ? "0" : q.eq(Q.of(1, 1)) ? "\\pi" : q.eq(Q.of(-1, 1)) ? "-\\pi" : `${q.toLatex()} \\pi`;
 
-const addingArguments = point(
-  "arguments-of-products-and-quotients",
-  ["Arguments of products and quotients", "积与商的辐角"],
-  [
-    "Multiplying complex numbers multiplies their moduli and adds their arguments, and dividing subtracts the arguments. So the polar form makes multiplication a rotation combined with a scaling. Reduce the resulting angle to the range from 0 up to a full turn, because arguments repeat every full turn.",
-    "复数相乘时模相乘、辐角相加，相除时辐角相减。所以极坐标形式把乘法变成旋转加伸缩。要把得到的角化到从 0 到一整圈的范围内，因为辐角每一整圈重复一次。",
-  ],
-  (rng) => {
-    const [a, b] = [15 * rng.int(1, 23), 15 * rng.int(1, 23)];
-    const [r, s] = [rng.int(2, 9), rng.int(2, 9)];
-    const product = rng.bool();
-    const answer = ((product ? a + b : a - b) + 720) % 360;
-    const [word, wordZh] = product ? ["zw", "zw"] : ["\\frac{z}{w}", "\\frac{z}{w}"];
-    return ask(
-      [
-        `$|z| = ${r}$ with argument $${a}^\\circ$, and $|w| = ${s}$ with argument $${b}^\\circ$. What is the argument of $${word}$ in degrees, from 0 up to 360?`,
-        `$|z| = ${r}$，辐角 $${a}^\\circ$；$|w| = ${s}$，辐角 $${b}^\\circ$。$${wordZh}$ 的辐角是多少度（从 0 到 360）？`,
-      ],
-      answer,
-      [(a + b + 180) % 360, ((a - b + 720) % 360) + (product ? 0 : 15), (a * b) % 360, (answer + 90) % 360],
-      [
-        `Arguments ${product ? "add when numbers multiply" : "subtract when numbers divide"}: $${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$. Adding or removing whole turns of $360$ brings this to ${answer} degrees. The moduli play no part.`,
-        `${product ? "相乘时辐角相加" : "相除时辐角相减"}：$${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$。加上或减去整数个 $360$ 后，得 ${answer} 度。模不起作用。`,
-      ],
-    );
-  },
-);
+const addingArguments = {
+  ...point(
+    "arguments-of-products-and-quotients",
+    ["Arguments of products and quotients", "积与商的辐角"],
+    [
+      "Multiplying complex numbers multiplies their moduli and adds their arguments, and dividing subtracts the arguments. So the polar form makes multiplication a rotation combined with a scaling. Reduce the resulting angle to the range from 0 up to a full turn, because arguments repeat every full turn.",
+      "复数相乘时模相乘、辐角相加，相除时辐角相减。所以极坐标形式把乘法变成旋转加伸缩。要把得到的角化到从 0 到一整圈的范围内，因为辐角每一整圈重复一次。",
+    ],
+    (rng) => {
+      const [a, b] = [15 * rng.int(1, 23), 15 * rng.int(1, 23)];
+      const [r, s] = [rng.int(2, 9), rng.int(2, 9)];
+      const product = rng.bool();
+      const answer = ((product ? a + b : a - b) + 720) % 360;
+      const [word, wordZh] = product ? ["zw", "zw"] : ["\\frac{z}{w}", "\\frac{z}{w}"];
+      return ask(
+        [
+          `$|z| = ${r}$ with argument $${a}^\\circ$, and $|w| = ${s}$ with argument $${b}^\\circ$. What is the argument of $${word}$ in degrees, from 0 up to 360?`,
+          `$|z| = ${r}$，辐角 $${a}^\\circ$；$|w| = ${s}$，辐角 $${b}^\\circ$。$${wordZh}$ 的辐角是多少度（从 0 到 360）？`,
+        ],
+        answer,
+        [(a + b + 180) % 360, ((a - b + 720) % 360) + (product ? 0 : 15), (a * b) % 360, (answer + 90) % 360],
+        [
+          `Arguments ${product ? "add when numbers multiply" : "subtract when numbers divide"}: $${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$. Adding or removing whole turns of $360$ brings this to ${answer} degrees. The moduli play no part.`,
+          `${product ? "相乘时辐角相加" : "相除时辐角相减"}：$${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$。加上或减去整数个 $360$ 后，得 ${answer} 度。模不起作用。`,
+        ],
+      );
+    },
+  ),
+  figure: precalculusDrawings4["the-polar-form-of-a-complex-number#arguments-of-products-and-quotients"],
+};
 
 const imageOfACircle = point(
   "the-image-of-a-circle-under-a-power",

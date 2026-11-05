@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q } from "@ga/subject-math";
-
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 // Precalculus unit 12: Statistics, modules 12.41 (Analyzing Data), 12.42
@@ -1051,6 +1051,7 @@ const residualsAndResidualPlots: TopicDef = {
     },
     {
       id: "reading-residual-plots",
+      figure: precalculusDrawings4["residuals-and-residual-plots#reading-residual-plots"],
       title: t("Reading residual plots", "阅读残差图"),
       explanation: t(
         "A **residual plot** shows the residual $e$ of each data point against $x$.\n\n- If the residuals are scattered randomly above and below $0$ with no pattern, a linear model is appropriate.\n- If they form a curve, for example positive at both ends and negative in the middle, the relationship is not linear and another model (such as a quadratic or exponential one) fits better.",
@@ -1377,6 +1378,7 @@ const quadraticRegression: TopicDef = {
   knowledgePoints: [
     {
       id: "predicting-with-a-quadratic-model",
+      figure: precalculusDrawings4["quadratic-regression#predicting-with-a-quadratic-model"],
       title: t("Predicting with a quadratic model", "用二次模型作预测"),
       explanation: t(
         "When a scatter plot rises and then falls (or falls and then rises), a **quadratic regression** fits a model $\\hat{y} = ax^2 + bx + c$ by least squares; technology finds the coefficients. To predict, substitute the value of $x$.\n\nWith $\\hat{y} = -0.5x^2 + 4x + 1$, at $x = 3$ the prediction is $-4.5 + 12 + 1 = 8.5$.",
@@ -1445,6 +1447,7 @@ const quadraticRegression: TopicDef = {
     },
     {
       id: "the-extreme-value-of-a-quadratic-model",
+      figure: precalculusDrawings4["quadratic-regression#the-extreme-value-of-a-quadratic-model"],
       title: t("The extreme value of a quadratic model", "二次模型的最值"),
       explanation: t(
         "The model $\\hat{y} = ax^2 + bx + c$ has its vertex at\n\n$$x = -\\frac{b}{2a}.$$\n\nIf $a < 0$ it predicts a maximum there, and if $a > 0$ a minimum. Substitute this $x$ to find the predicted extreme value.\n\nFor $\\hat{y} = -0.2x^2 + 2.4x + 3$: $x = -\\frac{2.4}{-0.4} = 6$ and the maximum is $-7.2 + 14.4 + 3 = 10.2$.",
@@ -1523,6 +1526,7 @@ const semiLogScatterPlots: TopicDef = {
   knowledgePoints: [
     {
       id: "transforming-data-points",
+      figure: precalculusDrawings4["semi-log-scatter-plots#transforming-data-points"],
       title: t("Transforming data points", "变换数据点"),
       explanation: t(
         "A **semi-log scatter plot** keeps $x$ but plots $\\log y$ (the common logarithm) on the vertical axis: the data point $(x, y)$ becomes $(x, \\log y)$.\n\nWith the product rule, $\\log(d \\times 10^k) = \\log d + k$. Using $\\log 3 \\approx 0.477$, the point $(2, 3000)$ becomes $(2, \\log 3000) \\approx (2, 3.477)$.",

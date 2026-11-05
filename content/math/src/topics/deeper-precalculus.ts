@@ -7,6 +7,7 @@ import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { numberProblem } from "../problems.ts";
 
 /** frac writes a rational number. */
@@ -498,6 +499,7 @@ const missingCoefficient: KnowledgePointDef = {
 
 const fromKnownAngle: KnowledgePointDef = {
   id: "solutions-of-a-sine-equation-from-one-known-angle",
+  figure: precalculusDrawings4["elementary-trigonometric-equations-containing-sine#solutions-of-a-sine-equation-from-one-known-angle"],
   title: t("Solutions of a sine equation from one known angle", "由一个已知角求正弦方程的解"),
   explanation: t(
     "Sine equations do not need a special value to be solved exactly. Once one acute angle with the right sine is known, its reflections give all the others in a full turn. The same sine appears again in the second quadrant, at the straight angle minus the known angle. The opposite sine appears in the third and fourth quadrants, at the known angle past a straight angle and at the known angle short of a full turn.",
@@ -657,6 +659,8 @@ const parallelPair: KnowledgePointDef = {
 
 const coefficientsOfVector: KnowledgePointDef = {
   id: "the-coefficient-of-a-vector-written-in-terms-of-two-others",
+  figure:
+    precalculusDrawings4["linear-combinations-of-vectors-and-their-properties#the-coefficient-of-a-vector-written-in-terms-of-two-others"],
   title: t("The coefficient of a vector written in terms of two others", "用两个向量表示另一个向量时的系数"),
   explanation: t(
     "Any vector in the plane can be written as a combination of two non-parallel vectors, in exactly one way. To find the coefficients, compare components: the first components give one linear equation, and the second components give another. This turns a question about vectors into a system of two equations in two unknowns. Eliminating one coefficient finds the other, and the requirement that the vectors are not parallel is what makes the system solvable.",

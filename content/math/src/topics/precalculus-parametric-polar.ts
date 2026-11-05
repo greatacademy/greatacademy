@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, type PlaneMark, type Point, plane, poly, Q } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem } from "../problems.ts";
 
 // Precalculus units 8 & 9: Parametric Equations and Polar Coordinates
@@ -749,6 +750,7 @@ export const parametricEquationsOfEllipses: TopicDef = {
     },
     {
       id: "ellipse-axes-and-eccentric-angle",
+      figure: precalculusDrawings4["parametric-equations-of-ellipses#ellipse-axes-and-eccentric-angle"],
       title: t("Semi-axes lengths and eccentric angle", "椭圆的半轴长与离心角"),
       explanation: t(
         "For an ellipse $x = h + a\\cos\\theta, y = k + b\\sin\\theta$:\n- The center is $(h, k)$.\n- The semi-major axis length is $\\max(a, b)$, and the length of the major axis is $2\\max(a, b)$.\n- The semi-minor axis length is $\\min(a, b)$, and the length of the minor axis is $2\\min(a, b)$.\n- The parameter $\\theta$ is called the **eccentric angle**. It corresponds to the angle of a point on the circumscribed auxiliary circle, and is generally not the geometric angle from the origin to $(x, y)$.",
@@ -875,6 +877,7 @@ export const parametricEquationsOfParabolas: TopicDef = {
     },
     {
       id: "standard-vertical-parabola-parametric",
+      figure: precalculusDrawings4["parametric-equations-of-parabolas#standard-vertical-parabola-parametric"],
       title: t("Parametric equations of vertical parabolas $x^2 = 4py$", "铅直抛物线 $x^2 = 4py$ 的参数方程"),
       explanation: t(
         "A standard vertical parabola with vertex at $(0, 0)$ has Cartesian equation $x^2 = 4py$ with focus at $(0, p)$.\nSetting $x = 2pt$ into the equation gives:\n$$(2pt)^2 = 4py \\implies 4p^2 t^2 = 4py \\implies y = pt^2$$\nThus, its parametric equations are:\n$$x = 2pt, \\quad y = pt^2 \\quad (t \\in \\mathbb{R})$$",
@@ -963,6 +966,7 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
   knowledgePoints: [
     {
       id: "shifted-vertical-parabola-parametric",
+      figure: precalculusDrawings4["parametric-equations-of-parabolas-centered-at-hk#shifted-vertical-parabola-parametric"],
       title: t("Shifted vertical parabola parametric equations", "顶点在 (h, k) 的铅直抛物线参数方程"),
       explanation: t(
         "Translating a standard vertical parabola with vertex $(h, k)$ gives the Cartesian equation:\n$$(x - h)^2 = 4p(y - k)$$\nIts parametric equations are obtained by shifting the standard form $(2pt, pt^2)$:\n$$x = h + 2pt, \\quad y = k + pt^2 \\quad (t \\in \\mathbb{R})$$\nAt $t = 0$, $(x, y) = (h, k)$, which is the vertex of the parabola.",
@@ -996,6 +1000,7 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
     },
     {
       id: "shifted-horizontal-parabola-parametric",
+      figure: precalculusDrawings4["parametric-equations-of-parabolas-centered-at-hk#shifted-horizontal-parabola-parametric"],
       title: t("Shifted horizontal parabola parametric equations", "顶点在 (h, k) 的水平抛物线参数方程"),
       explanation: t(
         "A parabola opening horizontally with vertex at $(h, k)$ has Cartesian equation:\n$$(y - k)^2 = 4p(x - h)$$\nIts parametric equations are:\n$$x = h + pt^2, \\quad y = k + 2pt \\quad (t \\in \\mathbb{R})$$\nAt $t = 0$, $(x, y) = (h, k)$ gives the vertex.",
@@ -1400,6 +1405,7 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
     },
     {
       id: "cartesian-to-polar",
+      figure: precalculusDrawings4["converting-from-polar-coordinates-to-cartesian-coordinates#cartesian-to-polar"],
       title: t("Convert Cartesian coordinates to polar coordinates", "将直角坐标转换为极坐标"),
       explanation: t(
         "To convert Cartesian coordinates $(x, y)$ into polar coordinates $(r, \\theta)$ with $r > 0$ and $0 \\le \\theta < 2\\pi$:\n1. Find the distance $r = \\sqrt{x^2 + y^2}$.\n2. Find the reference angle $\\alpha = \\arctan|y/x|$.\n3. Determine $\\theta$ by identifying the quadrant of $(x, y)$:\n   - Quadrant I: $\\theta = \\alpha$\n   - Quadrant II: $\\theta = \\pi - \\alpha$\n   - Quadrant III: $\\theta = \\pi + \\alpha$\n   - Quadrant IV: $\\theta = 2\\pi - \\alpha$",
@@ -1485,6 +1491,7 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
     },
     {
       id: "circle-at-origin-conversion",
+      figure: precalculusDrawings4["polar-equations-of-circles-centered-at-the-origin#circle-at-origin-conversion"],
       title: t("Convert r = a to Cartesian equation", "将 r = a 转化为直角坐标方程"),
       explanation: t(
         "Since polar and Cartesian coordinates are related by $x^2 + y^2 = r^2$, squaring both sides of $r = a$ gives:\n$$r^2 = a^2 \\implies x^2 + y^2 = a^2$$\nFor instance, the polar circle $r = 5$ has Cartesian equation $x^2 + y^2 = 25$.",
@@ -1650,6 +1657,7 @@ export const polarEquationsOfRadialLines: TopicDef = {
     },
     {
       id: "radial-line-to-cartesian",
+      figure: precalculusDrawings4["polar-equations-of-radial-lines#radial-line-to-cartesian"],
       title: t("Convert $\\theta = \\alpha$ to a Cartesian equation", "将 $\\theta = \\alpha$ 转化为直角坐标方程"),
       explanation: t(
         "A fixed angle with any distance describes a whole line through the origin, because negative distances reach the points on the opposite side. To convert $\\theta = \\alpha$ into Cartesian coordinates, take the tangent of both sides:\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\nFor example, $\\theta = \\frac{\\pi}{3}$ gives $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$.",
@@ -2064,6 +2072,7 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
     },
     {
       id: "pole-as-polar-intersection",
+      figure: precalculusDrawings4["finding-intersections-of-polar-curves#pole-as-polar-intersection"],
       title: t("The pole as an intersection point", "极点作为交点的检验"),
       explanation: t(
         "The pole is represented by $(0, \\theta)$ for **any** angle $\\theta$. As a result, two polar curves can both pass through the pole at different angles $\\theta_1 \\ne \\theta_2$.\nSuch a shared point may not show up by simply equating $r_1(\\theta) = r_2(\\theta)$!\n\nTo verify if the pole is an intersection point:\n1. Check whether there is a $\\theta_1$ with $r_1(\\theta_1) = 0$.\n2. Check whether there is a $\\theta_2$ with $r_2(\\theta_2) = 0$.\nIf both curves pass through $r = 0$, the pole $(0, 0)$ is an intersection point.",

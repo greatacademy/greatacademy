@@ -3,6 +3,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, frac, fraction, integer, skill } from "./third-kit.ts";
@@ -1420,38 +1421,41 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "dilations-and-reflections-as-linear-transformations": [
-    skill(
-      "reflecting-twice",
-      ["Reflecting twice", "两次反射"],
-      [
-        "Reflecting in the same line twice returns every point, so the matrix of a reflection squared is the identity. Reflecting in both axes in turn is the same as turning by a half turn.",
-        "在同一条直线上反射两次，每个点都回到原处，所以反射矩阵的平方是单位矩阵。依次在两条轴上反射，等于旋转半圈。",
-      ],
-      (rng) => {
-        const x = nz(rng, 12);
-        const y = nz(rng, 12);
-        const both = rng.bool();
-        return chooseFilled(
-          rng,
-          [
-            both
-              ? `The point $(${x}, ${y})$ is reflected in the $x$-axis and then in the $y$-axis. Where does it end?`
-              : `The point $(${x}, ${y})$ is reflected in the line $y = x$ twice. Where does it end?`,
-            both
-              ? `点 $(${x}, ${y})$ 先在 $x$ 轴上反射，再在 $y$ 轴上反射。它最后在哪里？`
-              : `点 $(${x}, ${y})$ 在直线 $y = x$ 上反射两次。它最后在哪里？`,
-          ],
-          both ? `(${-x}, ${-y})` : `(${x}, ${y})`,
-          both ? [`(${x}, ${y})`, `(${y}, ${x})`, `(${x}, ${-y})`] : [`(${y}, ${x})`, `(${-x}, ${-y})`, `(${-y}, ${-x})`],
-          [
-            both
-              ? "Each reflection changes the sign of one coordinate, which together form a half turn."
-              : "Two reflections in one line undo each other.",
-            both ? "每次反射改变一个坐标的符号，合起来是旋转半圈。" : "在同一条直线上的两次反射互相抵消。",
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "reflecting-twice",
+        ["Reflecting twice", "两次反射"],
+        [
+          "Reflecting in the same line twice returns every point, so the matrix of a reflection squared is the identity. Reflecting in both axes in turn is the same as turning by a half turn.",
+          "在同一条直线上反射两次，每个点都回到原处，所以反射矩阵的平方是单位矩阵。依次在两条轴上反射，等于旋转半圈。",
+        ],
+        (rng) => {
+          const x = nz(rng, 12);
+          const y = nz(rng, 12);
+          const both = rng.bool();
+          return chooseFilled(
+            rng,
+            [
+              both
+                ? `The point $(${x}, ${y})$ is reflected in the $x$-axis and then in the $y$-axis. Where does it end?`
+                : `The point $(${x}, ${y})$ is reflected in the line $y = x$ twice. Where does it end?`,
+              both
+                ? `点 $(${x}, ${y})$ 先在 $x$ 轴上反射，再在 $y$ 轴上反射。它最后在哪里？`
+                : `点 $(${x}, ${y})$ 在直线 $y = x$ 上反射两次。它最后在哪里？`,
+            ],
+            both ? `(${-x}, ${-y})` : `(${x}, ${y})`,
+            both ? [`(${x}, ${y})`, `(${y}, ${x})`, `(${x}, ${-y})`] : [`(${y}, ${x})`, `(${-x}, ${-y})`, `(${-y}, ${-x})`],
+            [
+              both
+                ? "Each reflection changes the sign of one coordinate, which together form a half turn."
+                : "Two reflections in one line undo each other.",
+              both ? "每次反射改变一个坐标的符号，合起来是旋转半圈。" : "在同一条直线上的两次反射互相抵消。",
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings4["dilations-and-reflections-as-linear-transformations#reflecting-twice"],
+    },
   ],
   "shear-and-stretch-as-linear-transformations": [
     skill(

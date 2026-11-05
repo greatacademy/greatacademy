@@ -3,6 +3,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, gcd, integer, skill } from "./third-kit.ts";
@@ -173,39 +174,42 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "equations-of-hyperbolas-centered-at-the-origin": [
-    skill(
-      "asymptotes-of-a-hyperbola",
-      ["Asymptotes of a hyperbola", "双曲线的渐近线"],
-      [
-        "Far from the center, the 1 in the equation hardly matters, so the curve approaches the lines found by replacing 1 with 0. For $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$ these are $y = \\pm\\frac{b}{a}x$.",
-        "离中心很远时，方程中的 1 几乎不起作用，所以曲线趋近于把 1 换成 0 得到的直线。对 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，它们是 $y = \\pm\\frac{b}{a}x$。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        let b = rng.int(2, 12);
-        if (b === a) b += 1;
-        const across = rng.bool();
-        const slope = across ? Q.of(b, a) : Q.of(a, b);
-        const other = across ? Q.of(a, b) : Q.of(b, a);
-        const equation = across
-          ? `\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1`
-          : `\\frac{y^{2}}{${a * a}} - \\frac{x^{2}}{${b * b}} = 1`;
-        return chooseFilled(
-          rng,
-          [`Find the asymptotes of $${equation}$.`, `求 $${equation}$ 的渐近线。`],
-          `y = \\pm ${slope.toLatex()}x`,
-          [
-            `y = \\pm ${other.toLatex()}x`,
-            `y = \\pm ${(across ? Q.of(b * b, a * a) : Q.of(a * a, b * b)).toLatex()}x`,
-            `y = ${slope.toLatex()}x`,
-          ],
-          [
-            `Replacing 1 with 0 and solving for $y$ gives slopes of $\\pm ${slope.toLatex()}$.`,
-            `把 1 换成 0 再解出 $y$，得斜率 $\\pm ${slope.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "asymptotes-of-a-hyperbola",
+        ["Asymptotes of a hyperbola", "双曲线的渐近线"],
+        [
+          "Far from the center, the 1 in the equation hardly matters, so the curve approaches the lines found by replacing 1 with 0. For $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$ these are $y = \\pm\\frac{b}{a}x$.",
+          "离中心很远时，方程中的 1 几乎不起作用，所以曲线趋近于把 1 换成 0 得到的直线。对 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，它们是 $y = \\pm\\frac{b}{a}x$。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          let b = rng.int(2, 12);
+          if (b === a) b += 1;
+          const across = rng.bool();
+          const slope = across ? Q.of(b, a) : Q.of(a, b);
+          const other = across ? Q.of(a, b) : Q.of(b, a);
+          const equation = across
+            ? `\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1`
+            : `\\frac{y^{2}}{${a * a}} - \\frac{x^{2}}{${b * b}} = 1`;
+          return chooseFilled(
+            rng,
+            [`Find the asymptotes of $${equation}$.`, `求 $${equation}$ 的渐近线。`],
+            `y = \\pm ${slope.toLatex()}x`,
+            [
+              `y = \\pm ${other.toLatex()}x`,
+              `y = \\pm ${(across ? Q.of(b * b, a * a) : Q.of(a * a, b * b)).toLatex()}x`,
+              `y = ${slope.toLatex()}x`,
+            ],
+            [
+              `Replacing 1 with 0 and solving for $y$ gives slopes of $\\pm ${slope.toLatex()}$.`,
+              `把 1 换成 0 再解出 $y$，得斜率 $\\pm ${slope.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings4["equations-of-hyperbolas-centered-at-the-origin#asymptotes-of-a-hyperbola"],
+    },
   ],
   "equations-of-hyperbolas-centered-at-a-general-point": [
     skill(
@@ -663,28 +667,31 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     },
   ],
   "polar-equations-of-radial-lines": [
-    skill(
-      "two-angles-for-one-line",
-      ["Two angles for one line", "一条直线的两个角"],
-      [
-        "A radial line extends through the pole in both directions when $r$ may be negative. So $\\theta = \\alpha$ and $\\theta = \\alpha + 180^{\\circ}$ describe the same line.",
-        "$r$ 可以为负时，径向直线向两个方向穿过极点。所以 $\\theta = \\alpha$ 和 $\\theta = \\alpha + 180^{\\circ}$ 表示同一条直线。",
-      ],
-      (rng) => {
-        const angle = rng.int(1, 35) * 5;
-        const usable = angle === 90 ? 95 : angle;
-        return chooseFilled(
-          rng,
-          [
-            `With $r$ allowed to be negative, which equation describes the same line as $\\theta = ${usable}^{\\circ}$?`,
-            `$r$ 可以为负时，哪个方程与 $\\theta = ${usable}^{\\circ}$ 表示同一条直线？`,
-          ],
-          `\\theta = ${usable + 180}^{\\circ}`,
-          [`\\theta = ${usable + 90}^{\\circ}`, `\\theta = ${180 - usable}^{\\circ}`, `\\theta = ${360 - usable}^{\\circ}`],
-          [`Adding half a turn gives the opposite ray of the same line.`, `加半圈得到同一条直线上相反的射线。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "two-angles-for-one-line",
+        ["Two angles for one line", "一条直线的两个角"],
+        [
+          "A radial line extends through the pole in both directions when $r$ may be negative. So $\\theta = \\alpha$ and $\\theta = \\alpha + 180^{\\circ}$ describe the same line.",
+          "$r$ 可以为负时，径向直线向两个方向穿过极点。所以 $\\theta = \\alpha$ 和 $\\theta = \\alpha + 180^{\\circ}$ 表示同一条直线。",
+        ],
+        (rng) => {
+          const angle = rng.int(1, 35) * 5;
+          const usable = angle === 90 ? 95 : angle;
+          return chooseFilled(
+            rng,
+            [
+              `With $r$ allowed to be negative, which equation describes the same line as $\\theta = ${usable}^{\\circ}$?`,
+              `$r$ 可以为负时，哪个方程与 $\\theta = ${usable}^{\\circ}$ 表示同一条直线？`,
+            ],
+            `\\theta = ${usable + 180}^{\\circ}`,
+            [`\\theta = ${usable + 90}^{\\circ}`, `\\theta = ${180 - usable}^{\\circ}`, `\\theta = ${360 - usable}^{\\circ}`],
+            [`Adding half a turn gives the opposite ray of the same line.`, `加半圈得到同一条直线上相反的射线。`],
+          );
+        },
+      ),
+      figure: precalculusDrawings4["polar-equations-of-radial-lines#two-angles-for-one-line"],
+    },
   ],
   "finding-intersections-of-polar-curves": [
     {

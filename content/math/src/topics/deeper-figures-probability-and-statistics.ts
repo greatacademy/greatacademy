@@ -5,6 +5,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
@@ -404,123 +405,129 @@ const zFromCurve = point(
   },
 );
 
-const lineEquation = point(
-  "the-equation-of-a-drawn-regression-line",
-  ["The equation of a drawn regression line", "图中回归线的方程"],
-  [
-    "A regression line summarizes a scatter plot. To read its equation, find the intercept where it meets the vertical axis and the slope from two clear points on the line itself. The individual data points do not lie on the line, so they should not be used to compute the slope, and the sign of the slope shows the trend.",
-    "回归线概括散点图。要读它的方程，就找它与纵轴的交点得到截距，再用直线上两个清楚的点求斜率。各数据点不在直线上，所以不应该用它们计算斜率，斜率的符号显示趋势。",
-  ],
-  (rng) => {
-    const b = rng.int(-2, 6);
-    const [num, den] = rng.pick<Point>([
-      [1, 1],
-      [1, 2],
-      [2, 1],
-      [3, 2],
-      [-1, 1],
-      [-1, 2],
-      [-2, 1],
-      [-3, 2],
-    ]);
-    const m = Q.of(num, den);
-    const eq = (slope: Q, intercept: number) => {
-      const s = slope.eq(Q.one) ? "" : slope.eq(Q.one.neg()) ? "-" : slope.toLatex();
-      return `\\hat{y} = ${s}x${intercept === 0 ? "" : intercept < 0 ? ` - ${-intercept}` : ` + ${intercept}`}`;
-    };
-    const f = (x: number) => (num * x) / den + b;
-    const xs = [1, 2, 3, 4, 5, 6, 7];
-    const marks: PlaneMark[] = [{ kind: "curve", f, from: 0, to: 8, accent: true }];
-    for (const x of xs) marks.push({ kind: "point", at: [x, f(x) + rng.pick([-1, -0.5, 0.5, 1])] });
-    const ys = xs.map(f);
-    const top = Math.max(b, ...ys) + 2;
-    const bottom = Math.min(b, ...ys) - 2;
-    return choose(
-      rng,
-      ["Which equation describes the line fitted through the scatter plot?", "哪个方程描述拟合散点图的直线？"],
-      same(eq(m, b)),
-      [
-        same(eq(m.neg(), b)),
-        same(eq(m, b + 2)),
-        same(eq(Q.of(den, Math.abs(num)).mul(Q.of(Math.sign(num), 1)), b)),
-        same(eq(m, -b === b ? b - 2 : -b)),
-        same(eq(m.neg(), b + 2)),
-      ],
-      [
-        `The line meets the vertical axis at $${b}$, and it changes by $${num}$ for every $${den}$ across. So its slope is $${m.toLatex()}$, which gives $${eq(m, b)}$.`,
-        `直线与纵轴交于 $${b}$，每向右 $${den}$ 变化 $${num}$。所以斜率是 $${m.toLatex()}$，得 $${eq(m, b)}$。`,
-      ],
-      drawn(
-        { xMin: -1, xMax: 9, yMin: Math.floor(bottom), yMax: Math.ceil(top), xName: "x", yName: "y" },
-        marks,
-        t(
-          `Scattered points around a line through (0, ${b}) and (${den}, ${b + num}).`,
-          `散布在一条直线周围的点，直线过 (0, ${b}) 和 (${den}, ${b + num})。`,
+const lineEquation = {
+  ...point(
+    "the-equation-of-a-drawn-regression-line",
+    ["The equation of a drawn regression line", "图中回归线的方程"],
+    [
+      "A regression line summarizes a scatter plot. To read its equation, find the intercept where it meets the vertical axis and the slope from two clear points on the line itself. The individual data points do not lie on the line, so they should not be used to compute the slope, and the sign of the slope shows the trend.",
+      "回归线概括散点图。要读它的方程，就找它与纵轴的交点得到截距，再用直线上两个清楚的点求斜率。各数据点不在直线上，所以不应该用它们计算斜率，斜率的符号显示趋势。",
+    ],
+    (rng) => {
+      const b = rng.int(-2, 6);
+      const [num, den] = rng.pick<Point>([
+        [1, 1],
+        [1, 2],
+        [2, 1],
+        [3, 2],
+        [-1, 1],
+        [-1, 2],
+        [-2, 1],
+        [-3, 2],
+      ]);
+      const m = Q.of(num, den);
+      const eq = (slope: Q, intercept: number) => {
+        const s = slope.eq(Q.one) ? "" : slope.eq(Q.one.neg()) ? "-" : slope.toLatex();
+        return `\\hat{y} = ${s}x${intercept === 0 ? "" : intercept < 0 ? ` - ${-intercept}` : ` + ${intercept}`}`;
+      };
+      const f = (x: number) => (num * x) / den + b;
+      const xs = [1, 2, 3, 4, 5, 6, 7];
+      const marks: PlaneMark[] = [{ kind: "curve", f, from: 0, to: 8, accent: true }];
+      for (const x of xs) marks.push({ kind: "point", at: [x, f(x) + rng.pick([-1, -0.5, 0.5, 1])] });
+      const ys = xs.map(f);
+      const top = Math.max(b, ...ys) + 2;
+      const bottom = Math.min(b, ...ys) - 2;
+      return choose(
+        rng,
+        ["Which equation describes the line fitted through the scatter plot?", "哪个方程描述拟合散点图的直线？"],
+        same(eq(m, b)),
+        [
+          same(eq(m.neg(), b)),
+          same(eq(m, b + 2)),
+          same(eq(Q.of(den, Math.abs(num)).mul(Q.of(Math.sign(num), 1)), b)),
+          same(eq(m, -b === b ? b - 2 : -b)),
+          same(eq(m.neg(), b + 2)),
+        ],
+        [
+          `The line meets the vertical axis at $${b}$, and it changes by $${num}$ for every $${den}$ across. So its slope is $${m.toLatex()}$, which gives $${eq(m, b)}$.`,
+          `直线与纵轴交于 $${b}$，每向右 $${den}$ 变化 $${num}$。所以斜率是 $${m.toLatex()}$，得 $${eq(m, b)}$。`,
+        ],
+        drawn(
+          { xMin: -1, xMax: 9, yMin: Math.floor(bottom), yMax: Math.ceil(top), xName: "x", yName: "y" },
+          marks,
+          t(
+            `Scattered points around a line through (0, ${b}) and (${den}, ${b + num}).`,
+            `散布在一条直线周围的点，直线过 (0, ${b}) 和 (${den}, ${b + num})。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: precalculusDrawings4["linear-regression#the-equation-of-a-drawn-regression-line"],
+};
 
-const residualPattern = point(
-  "what-a-residual-plot-shows",
-  ["What a residual plot shows", "残差图显示什么"],
-  [
-    "A residual plot shows what the fitted line missed. Residuals scattered evenly around zero support the linear model. A curved band means that the relationship is not linear, and a band that fans out means that the spread changes with $x$. So the shape of the plot checks the model, even when the line itself looks reasonable.",
-    "残差图显示拟合直线遗漏的东西。残差均匀地散布在零附近，支持线性模型。弯曲的带状说明关系不是线性的，呈扇形散开说明分散程度随 $x$ 变化。所以即使直线本身看起来合理，图的形状也能检验模型。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["random", "curve", "fan"] as const);
-    const flip = rng.sign();
-    const noise = () => rng.int(-10, 10) / 10;
-    const marks: PlaneMark[] = [{ kind: "segment", a: [0, 0], b: [10, 0], dashed: true }];
-    for (let i = 0; i < 16; i++) {
-      const x = 0.4 + (i * 9.2) / 15;
-      const y =
+const residualPattern = {
+  ...point(
+    "what-a-residual-plot-shows",
+    ["What a residual plot shows", "残差图显示什么"],
+    [
+      "A residual plot shows what the fitted line missed. Residuals scattered evenly around zero support the linear model. A curved band means that the relationship is not linear, and a band that fans out means that the spread changes with $x$. So the shape of the plot checks the model, even when the line itself looks reasonable.",
+      "残差图显示拟合直线遗漏的东西。残差均匀地散布在零附近，支持线性模型。弯曲的带状说明关系不是线性的，呈扇形散开说明分散程度随 $x$ 变化。所以即使直线本身看起来合理，图的形状也能检验模型。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["random", "curve", "fan"] as const);
+      const flip = rng.sign();
+      const noise = () => rng.int(-10, 10) / 10;
+      const marks: PlaneMark[] = [{ kind: "segment", a: [0, 0], b: [10, 0], dashed: true }];
+      for (let i = 0; i < 16; i++) {
+        const x = 0.4 + (i * 9.2) / 15;
+        const y =
+          kind === "random"
+            ? 2 * noise()
+            : kind === "curve"
+              ? flip * (0.17 * (x - 5) ** 2 - 1.6) + 0.5 * noise()
+              : (x / 2.5) * rng.sign() * (0.5 + 0.5 * Math.abs(noise()));
+        marks.push({ kind: "point", at: [Math.round(x * 100) / 100, Math.round(y * 100) / 100], accent: true });
+      }
+      const names: Record<string, Pair> = {
+        random: ["The linear model looks suitable", "线性模型看起来合适"],
+        curve: ["The relationship is not linear", "关系不是线性的"],
+        fan: ["The spread of the residuals changes with $x$", "残差的分散程度随 $x$ 变化"],
+        big: ["The slope of the line must be zero", "直线的斜率必须为零"],
+      };
+      const why: Pair =
         kind === "random"
-          ? 2 * noise()
+          ? ["The residuals scatter evenly around zero with no pattern", "残差均匀地散布在零附近，没有规律"]
           : kind === "curve"
-            ? flip * (0.17 * (x - 5) ** 2 - 1.6) + 0.5 * noise()
-            : (x / 2.5) * rng.sign() * (0.5 + 0.5 * Math.abs(noise()));
-      marks.push({ kind: "point", at: [Math.round(x * 100) / 100, Math.round(y * 100) / 100], accent: true });
-    }
-    const names: Record<string, Pair> = {
-      random: ["The linear model looks suitable", "线性模型看起来合适"],
-      curve: ["The relationship is not linear", "关系不是线性的"],
-      fan: ["The spread of the residuals changes with $x$", "残差的分散程度随 $x$ 变化"],
-      big: ["The slope of the line must be zero", "直线的斜率必须为零"],
-    };
-    const why: Pair =
-      kind === "random"
-        ? ["The residuals scatter evenly around zero with no pattern", "残差均匀地散布在零附近，没有规律"]
-        : kind === "curve"
-          ? ["The residuals form a curved band instead of an even scatter", "残差构成弯曲的带状，而不是均匀的散布"]
-          : ["The band of residuals gets wider as $x$ grows", "残差的带随 $x$ 增大而变宽"];
-    return choose(
-      rng,
-      [
-        "The plot shows the residuals of a fitted line against $x$. What does it suggest?",
-        "图中是拟合直线的残差对 $x$ 的图。它说明了什么？",
-      ],
-      names[kind] as Pair,
-      Object.keys(names)
-        .filter((n) => n !== kind)
-        .map((n) => names[n] as Pair),
-      [
-        `${why[0]}, so ${(names[kind] as Pair)[0].charAt(0).toLowerCase()}${(names[kind] as Pair)[0].slice(1)}.`,
-        `${why[1]}，所以${(names[kind] as Pair)[1]}。`,
-      ],
-      drawn(
-        { xMin: -1, xMax: 11, yMin: -5, yMax: 5, xName: "x" },
-        marks,
-        t(
-          `A plot of 16 residuals against x, with a dashed line at zero. ${{ random: "The points scatter on both sides of the line", curve: flip > 0 ? "The points are high at both ends and low in the middle" : "The points are low at both ends and high in the middle", fan: "The points lie close to the line on the left and far from it on the right" }[kind]}.`,
-          `16 个残差对 x 的图，零处有虚线。${{ random: "这些点散布在虚线两侧", curve: flip > 0 ? "这些点两端高、中间低" : "这些点两端低、中间高", fan: "这些点在左边靠近虚线，在右边远离虚线" }[kind]}。`,
+            ? ["The residuals form a curved band instead of an even scatter", "残差构成弯曲的带状，而不是均匀的散布"]
+            : ["The band of residuals gets wider as $x$ grows", "残差的带随 $x$ 增大而变宽"];
+      return choose(
+        rng,
+        [
+          "The plot shows the residuals of a fitted line against $x$. What does it suggest?",
+          "图中是拟合直线的残差对 $x$ 的图。它说明了什么？",
+        ],
+        names[kind] as Pair,
+        Object.keys(names)
+          .filter((n) => n !== kind)
+          .map((n) => names[n] as Pair),
+        [
+          `${why[0]}, so ${(names[kind] as Pair)[0].charAt(0).toLowerCase()}${(names[kind] as Pair)[0].slice(1)}.`,
+          `${why[1]}，所以${(names[kind] as Pair)[1]}。`,
+        ],
+        drawn(
+          { xMin: -1, xMax: 11, yMin: -5, yMax: 5, xName: "x" },
+          marks,
+          t(
+            `A plot of 16 residuals against x, with a dashed line at zero. ${{ random: "The points scatter on both sides of the line", curve: flip > 0 ? "The points are high at both ends and low in the middle" : "The points are low at both ends and high in the middle", fan: "The points lie close to the line on the left and far from it on the right" }[kind]}.`,
+            `16 个残差对 x 的图，零处有虚线。${{ random: "这些点散布在虚线两侧", curve: flip > 0 ? "这些点两端高、中间低" : "这些点两端低、中间高", fan: "这些点在左边靠近虚线，在右边远离虚线" }[kind]}。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: precalculusDrawings4["residuals-and-residual-plots#what-a-residual-plot-shows"],
+};
 
 const jointRectangle = point(
   "a-joint-probability-from-a-shaded-rectangle",

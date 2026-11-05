@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, gcd, plane, Q } from "@ga/subject-math";
 import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
+import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -598,6 +599,8 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
   knowledgePoints: [
     {
       id: "evaluating-arcsin-and-arccos-special",
+      figure:
+        precalculusDrawings4["evaluating-expressions-containing-inverse-trigonometric-functions#evaluating-arcsin-and-arccos-special"],
       title: t("Exact values of arcsin and arccos", "反正弦与反余弦的精确值"),
       explanation: t(
         "To evaluate $\\arcsin(v)$ or $\\arccos(v)$, find the unique angle in the principal range whose trigonometric ratio equals $v$:\n\n$$\\arcsin\\left(\\frac{\\sqrt{3}}{2}\\right) = \\frac{\\pi}{3}, \\quad \\arccos\\left(-\\frac{1}{2}\\right) = \\frac{2\\pi}{3}$$",
@@ -651,6 +654,7 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
     },
     {
       id: "evaluating-arctan-special",
+      figure: precalculusDrawings4["evaluating-expressions-containing-inverse-trigonometric-functions#evaluating-arctan-special"],
       title: t("Exact values of arctan", "反正切的精确值"),
       explanation: t(
         "The inverse tangent gives the angle whose tangent is $x$. Many angles share a tangent, so the answer is the one between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$.\n\nFor $y = \\arctan x$, the angle must lie in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$:\n\n$$\\arctan(1) = \\frac{\\pi}{4}, \\quad \\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$$",
@@ -713,6 +717,10 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
   knowledgePoints: [
     {
       id: "compositions-using-reference-triangles",
+      figure:
+        precalculusDrawings4[
+          "further-evaluating-expressions-containing-inverse-trigonometric-functions#compositions-using-reference-triangles"
+        ],
       title: t("Evaluating trig of inverse trig using triangles", "借助参考直角三角形计算复合三角值"),
       explanation: t(
         "To find $\\cos(\\arcsin(3/5))$, let $\\theta = \\arcsin(3/5)$. In a right triangle, the opposite side is $3$ and hypotenuse is $5$, so the adjacent side is $\\sqrt{5^{2} - 3^{2}} = 4$. Thus, $\\cos \\theta = \\frac{4}{5}$.",
@@ -778,6 +786,10 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
     },
     {
       id: "evaluating-inverse-trig-outside-principal-range",
+      figure:
+        precalculusDrawings4[
+          "further-evaluating-expressions-containing-inverse-trigonometric-functions#evaluating-inverse-trig-outside-principal-range"
+        ],
       title: t("Inverse trig of trig outside principal range", "主值区间外的反三角复合值"),
       explanation: t(
         "An inverse trigonometric function always returns an angle in its principal range, so when the inner angle lies outside that range, find the angle in the range with the same value. While $\\sin(\\arcsin x) = x$ always holds for $x \\in [-1, 1]$, $\\arcsin(\\sin \\theta) = \\theta$ holds **only** when $\\theta \\in [-\\pi/2, \\pi/2]$. For $\\theta = 5\\pi/6$:\n\n$$\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{6}\\right)\\right) = \\arcsin\\left(\\frac{1}{2}\\right) = \\frac{\\pi}{6}$$",
