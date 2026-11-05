@@ -90,7 +90,9 @@ import { deeperComplexAnalysisPoints } from "./topics/deeper-complex-analysis.ts
 import { deeperDifferentialEquationsPoints } from "./topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "./topics/deeper-discrete-mathematics.ts";
 import { deeperGrade4Points } from "./topics/deeper-grade-4.ts";
+import { deeperGrade4MorePoints } from "./topics/deeper-grade-4-more.ts";
 import { deeperGrade5Points } from "./topics/deeper-grade-5.ts";
+import { deeperGrade5MorePoints } from "./topics/deeper-grade-5-more.ts";
 import { deeperGrade6Points } from "./topics/deeper-grade-6.ts";
 import { deeperGrade7Points } from "./topics/deeper-grade-7.ts";
 import { deeperGrade8Points } from "./topics/deeper-grade-8.ts";
@@ -284,6 +286,8 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperGrade4Points[topic.id] ?? []),
       ...(deeperAbstractAlgebraPoints[topic.id] ?? []),
       ...(deeperCalculusIPoints[topic.id] ?? []),
+      ...(deeperGrade5MorePoints[topic.id] ?? []),
+      ...(deeperGrade4MorePoints[topic.id] ?? []),
       ...(deeperNumberTheoryPoints[topic.id] ?? []),
       ...(deeperPartialDifferentialEquationsPoints[topic.id] ?? []),
       ...(deeperRealAnalysisPoints[topic.id] ?? []),
