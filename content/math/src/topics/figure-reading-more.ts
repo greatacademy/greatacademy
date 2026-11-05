@@ -183,8 +183,8 @@ const washerFromDrawing: KnowledgePointDef = {
   id: "the-outer-and-inner-radius-from-a-drawing",
   title: t("The outer and inner radius from a drawing", "由图读外半径和内半径"),
   explanation: t(
-    "To turn a region about the x-axis, picture a thin slice at a value of x. It sweeps out a washer, whose outer radius reaches the curve further from the axis and whose inner radius reaches the nearer one. The volume adds up pi times outer squared minus inner squared. Squaring the difference of the radii is the classic error, since it is a different number.",
-    "把区域绕 x 轴旋转时，想象在某个 x 处的一条细薄切片。它扫出一个垫圈，外半径到离轴较远的曲线，内半径到较近的曲线。体积把 π 乘外半径平方减内半径平方累加起来。把两半径之差平方是典型的错误，那是另一个数。",
+    "To turn a region about the $x$-axis, picture a thin slice at a value of $x$. It sweeps out a washer, whose outer radius reaches the curve further from the axis and whose inner radius reaches the nearer one. The volume adds up $\\pi$ times outer squared minus inner squared. Squaring the difference of the radii is the classic error, since it is a different number.",
+    "把区域绕 $x$ 轴旋转时，想象在某个 $x$ 处的一条细薄切片。它扫出一个垫圈，外半径到离轴较远的曲线，内半径到较近的曲线。体积把 $\\pi$ 乘外半径平方减内半径平方累加起来。把两半径之差平方是典型的错误，那是另一个数。",
   ),
   generate(rng) {
     const linear = (a: number) => (a === 1 ? "x" : `${a}x`);
@@ -360,8 +360,8 @@ const petalLimits: KnowledgePointDef = {
   id: "the-limits-of-one-petal-from-a-drawing",
   title: t("The limits of one petal", "一片花瓣的积分限"),
   explanation: t(
-    "A petal of a polar rose starts and ends where the radius is zero. For $r = a \\cos(k\\theta)$ this happens when $k\\theta$ is an odd multiple of a right angle, so the petal along the positive x-axis runs from minus to plus pi over twice k. Those values, and not a full turn, are the limits of the area integral for that single petal.",
-    "极坐标玫瑰线的一片花瓣在半径为零处开始和结束。对 $r = a \\cos(k\\theta)$，这发生在 $k\\theta$ 是直角的奇数倍时，所以沿 x 轴正向的花瓣从负到正的 π 除以 2k。单片花瓣的面积积分用这两个值作积分限，而不是转一整圈。",
+    "A petal of a polar rose starts and ends where the radius is zero. For $r = a \\cos(k\\theta)$ this happens when $k\\theta$ is an odd multiple of a right angle, so the petal along the positive $x$-axis runs from $-\\frac{\\pi}{2k}$ to $\\frac{\\pi}{2k}$. Those values, and not a full turn, are the limits of the area integral for that single petal.",
+    "极坐标玫瑰线的一片花瓣在半径为零处开始和结束。对 $r = a \\cos(k\\theta)$，这发生在 $k\\theta$ 是直角的奇数倍时，所以沿 $x$ 轴正向的花瓣从 $-\\frac{\\pi}{2k}$ 到 $\\frac{\\pi}{2k}$。单片花瓣的面积积分用这两个值作积分限，而不是转一整圈。",
   ),
   generate(rng) {
     const k = rng.int(2, 8);
@@ -408,8 +408,8 @@ const seriesSumFromPlot: KnowledgePointDef = {
   id: "the-sum-of-a-series-from-its-partial-sums",
   title: t("A sum from its partial sums", "由部分和看级数的和"),
   explanation: t(
-    "The sum of a series is by definition the limit of its partial sums. So plotting the partial sums shows whether the series converges: the dots settle toward a horizontal level, and that level is the sum. For a geometric series with first term a and ratio r, that level is a divided by one minus r, which you can compare with the plot.",
-    "级数的和按定义是部分和的极限。所以画出部分和，就能看出级数是否收敛：点逐渐靠近一个水平高度，这个高度就是和。对首项为 a、公比为 r 的几何级数，这个高度是 a 除以 1 减 r，可以和图对照。",
+    "The sum of a series is by definition the limit of its partial sums. So plotting the partial sums shows whether the series converges: the dots settle toward a horizontal level, and that level is the sum. For a geometric series with first term $a$ and ratio $r$, that level is $\\frac{a}{1 - r}$, which you can compare with the plot.",
+    "级数的和按定义是部分和的极限。所以画出部分和，就能看出级数是否收敛：点逐渐靠近一个水平高度，这个高度就是和。对首项为 $a$、公比为 $r$ 的几何级数，这个高度是 $\\frac{a}{1 - r}$，可以和图对照。",
   ),
   generate(rng) {
     const [num, den] = rng.pick([
@@ -455,8 +455,8 @@ const fociFromDrawing: KnowledgePointDef = {
   id: "the-foci-from-a-drawn-ellipse",
   title: t("The foci from a drawn ellipse", "由图中的椭圆求焦点"),
   explanation: t(
-    "The drawing gives both semi-axes of an ellipse directly: a is the longer distance from center to edge and b is the shorter one. The foci sit on the longer axis, at a distance c from the center with c squared equal to a squared minus b squared. A common slip is to add the squares, as with a hyperbola, which puts the foci outside the curve.",
-    "图直接给出椭圆的两个半轴：a 是中心到边缘较长的距离，b 是较短的距离。焦点在长轴上，到中心的距离 c 满足 c 的平方等于 a 的平方减 b 的平方。常见差错是像双曲线那样把平方相加，这会把焦点放到曲线外面。",
+    "The drawing gives both semi-axes of an ellipse directly: $a$ is the longer distance from center to edge and $b$ is the shorter one. The foci sit on the longer axis, at a distance $c$ from the center with $c^2 = a^2 - b^2$. A common slip is to add the squares, as with a hyperbola, which puts the foci outside the curve.",
+    "图直接给出椭圆的两个半轴：$a$ 是中心到边缘较长的距离，$b$ 是较短的距离。焦点在长轴上，到中心的距离 $c$ 满足 $c^2 = a^2 - b^2$。常见差错是像双曲线那样把平方相加，这会把焦点放到曲线外面。",
   ),
   generate(rng) {
     const triples = [
@@ -502,8 +502,8 @@ const asymptotesFromDrawing: KnowledgePointDef = {
   id: "asymptote-slopes-from-a-drawn-hyperbola",
   title: t("Asymptote slopes from a drawn hyperbola", "由图中的双曲线求渐近线斜率"),
   explanation: t(
-    "For a hyperbola opening left and right, the vertices are at distance a from the center along the x-axis, and the asymptotes pass through the corners of a box with half-width a and half-height b. So the slopes are plus or minus b over a. Reading the numbers from the grid, then checking against the dashed lines, avoids turning the fraction upside down.",
-    "对向左右张开的双曲线，顶点在 x 轴上到中心距离为 a 的地方，渐近线经过半宽为 a、半高为 b 的矩形的角。所以斜率是正负 b 除以 a。从网格读出数字，再和虚线对照，就不会把分数颠倒。",
+    "For a hyperbola opening left and right, the vertices are at distance $a$ from the center along the $x$-axis, and the asymptotes pass through the corners of a box with half-width $a$ and half-height $b$. So the slopes are $\\pm\\frac{b}{a}$. Reading the numbers from the grid, then checking against the dashed lines, avoids turning the fraction upside down.",
+    "对向左右张开的双曲线，顶点在 $x$ 轴上到中心距离为 $a$ 的地方，渐近线经过半宽为 $a$、半高为 $b$ 的矩形的角。所以斜率是 $\\pm\\frac{b}{a}$。从网格读出数字，再和虚线对照，就不会把分数颠倒。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -606,8 +606,8 @@ const argumentFromDrawing: KnowledgePointDef = {
   id: "the-argument-from-a-drawn-point",
   title: t("The argument from a drawn point", "由图中的点求辐角"),
   explanation: t(
-    "The principal argument is the angle from the positive real axis to the point, between minus pi and pi. The quadrant must come from the picture, because the arctangent of the imaginary part over the real part cannot tell opposite points apart. So for a point in the third quadrant, the argument is a negative angle beyond minus a right angle, and not the angle given by the arctangent.",
-    "主辐角是从正实轴到这个点的角，在 -π 到 π 之间。象限必须从图上看，因为虚部除以实部的反正切分不清相对的两个点。所以第三象限的点，辐角是比负直角更负的角，而不是反正切给出的那个角。",
+    "The principal argument is the angle from the positive real axis to the point, between $-\\pi$ and $\\pi$. The quadrant must come from the picture, because the arctangent of the imaginary part over the real part cannot tell opposite points apart. So for a point in the third quadrant, the argument is a negative angle beyond minus a right angle, and not the angle given by the arctangent.",
+    "主辐角是从正实轴到这个点的角，在 $-\\pi$ 到 $\\pi$ 之间。象限必须从图上看，因为虚部除以实部的反正切分不清相对的两个点。所以第三象限的点，辐角是比负直角更负的角，而不是反正切给出的那个角。",
   ),
   generate(rng) {
     const s = rng.int(1, 4);
@@ -649,8 +649,8 @@ const rootsOnCircle: KnowledgePointDef = {
   id: "the-number-from-its-roots-on-a-circle",
   title: t("A number from its roots on a circle", "由圆上的根求原数"),
   explanation: t(
-    "The n-th roots of a complex number lie evenly spaced on a circle around the origin. So the number of points gives n, and the radius of the circle is the n-th root of the size of the number. Reversing this, the size of the number is the radius raised to the power n, which can be read directly from a drawing of the roots.",
-    "复数的 n 次方根均匀分布在以原点为中心的圆上。所以点的个数就是 n，圆的半径是这个数的模的 n 次方根。反过来，这个数的模就是半径的 n 次方，可以直接从根的图中读出。",
+    "The $n$-th roots of a complex number lie evenly spaced on a circle around the origin. So the number of points gives $n$, and the radius of the circle is the $n$-th root of the size of the number. Reversing this, the size of the number is the radius raised to the power $n$, which can be read directly from a drawing of the roots.",
+    "复数的 $n$ 次方根均匀分布在以原点为中心的圆上。所以点的个数就是 $n$，圆的半径是这个数的模的 $n$ 次方根。反过来，这个数的模就是半径的 $n$ 次方，可以直接从根的图中读出。",
   ),
   generate(rng) {
     const n = rng.int(3, 6);
@@ -734,8 +734,8 @@ const rotationScalingFromDrawing: KnowledgePointDef = {
   id: "a-rotation-scaling-matrix-from-a-drawing",
   title: t("A rotation-scaling matrix from a drawing", "由图写旋转缩放矩阵"),
   explanation: t(
-    "A rotation-scaling matrix has the form with a and minus b on top, and b and a below. It sends the first basis vector to the point (a, b). So the image of that one vector determines the whole matrix, and this is why the map is pictured so simply: every vector is turned by the same angle and stretched by the same factor.",
-    "旋转缩放矩阵的形式是第一行为 a 和 -b，第二行为 b 和 a。它把第一个基向量送到点 (a, b)。所以这一个向量的像决定整个矩阵，这也是这种映射的图形如此简单的原因：每个向量都转过同样的角度并按同样的倍数伸缩。",
+    "A rotation-scaling matrix has the form with $a$ and $-b$ on top, and $b$ and $a$ below. It sends the first basis vector to the point $(a, b)$. So the image of that one vector determines the whole matrix, and this is why the map is pictured so simply: every vector is turned by the same angle and stretched by the same factor.",
+    "旋转缩放矩阵的形式是第一行为 $a$ 和 $-b$，第二行为 $b$ 和 $a$。它把第一个基向量送到点 $(a, b)$。所以这一个向量的像决定整个矩阵，这也是这种映射的图形如此简单的原因：每个向量都转过同样的角度并按同样的倍数伸缩。",
   ),
   generate(rng) {
     const pick = () => rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -2067,8 +2067,8 @@ const dihedralFromPolygon: KnowledgePointDef = {
   id: "following-a-symmetry-of-a-polygon",
   title: t("Following a symmetry of a polygon", "跟踪多边形的对称变换"),
   explanation: t(
-    "The dihedral group is made of the rotations and reflections of a regular polygon. To follow one, track a single vertex: a rotation moves every vertex the same number of steps round the polygon, and a reflection in the axis through vertex 1 sends vertex k to the vertex the same number of steps the other way round. Working with numbers modulo n keeps this exact.",
-    "二面体群由正多边形的旋转和反射组成。要跟踪一个变换，就跟踪一个顶点：旋转把每个顶点沿多边形移动同样的步数，经过顶点 1 的轴的反射，把顶点 k 送到反方向同样步数的顶点。用模 n 的数来算，结果就很准确。",
+    "The dihedral group is made of the rotations and reflections of a regular polygon. To follow one, track a single vertex: a rotation moves every vertex the same number of steps round the polygon, and a reflection in the axis through vertex 1 sends vertex $k$ to the vertex the same number of steps the other way round. Working with numbers modulo $n$ keeps this exact.",
+    "二面体群由正多边形的旋转和反射组成。要跟踪一个变换，就跟踪一个顶点：旋转把每个顶点沿多边形移动同样的步数，经过顶点 1 的轴的反射，把顶点 $k$ 送到反方向同样步数的顶点。用模 $n$ 的数来算，结果就很准确。",
   ),
   generate(rng) {
     const n = rng.int(4, 8);
@@ -2120,8 +2120,8 @@ const rootOrderFromCircle: KnowledgePointDef = {
   id: "the-order-of-a-root-of-unity-from-a-drawing",
   title: t("The order of a root of unity from a drawing", "由图读单位根的阶"),
   explanation: t(
-    "The n-th roots of unity are evenly spaced on the unit circle, and they form a cyclic group under multiplication. Multiplying by a root turns the plane through its angle. So its order is the number of equal turns needed to come back to one, and this equals n divided by the greatest common divisor of n and the number of steps from one to the root.",
-    "n 次单位根均匀分布在单位圆上，在乘法下构成循环群。乘一个根就是把平面转过它的角。所以它的阶就是回到 1 需要转的次数，等于 n 除以 n 和从 1 到这个根的步数的最大公约数。",
+    "The $n$-th roots of unity are evenly spaced on the unit circle, and they form a cyclic group under multiplication. Multiplying by a root turns the plane through its angle. So its order is the number of equal turns needed to come back to one, and this equals $n$ divided by the greatest common divisor of $n$ and the number of steps from one to the root.",
+    "$n$ 次单位根均匀分布在单位圆上，在乘法下构成循环群。乘一个根就是把平面转过它的角。所以它的阶就是回到 1 需要转的次数，等于 $n$ 除以 $n$ 和从 1 到这个根的步数的最大公约数。",
   ),
   generate(rng) {
     const n = rng.pick([4, 5, 6, 8, 9, 10, 12]);
@@ -2210,8 +2210,8 @@ const adjacencyFromGraph: KnowledgePointDef = {
   id: "an-entry-of-the-adjacency-matrix-from-a-drawing",
   title: t("Walk counts from a drawn graph", "由图数走法"),
   explanation: t(
-    "The entry in row i and column j of the adjacency matrix counts the edges between those vertices, and the same entry of the matrix squared counts walks of length two. A walk of length two from i to j passes through some common neighbor, so counting those neighbors on a drawing gives the same number without any multiplication. This is why powers of the matrix count walks.",
-    "邻接矩阵第 i 行第 j 列的元素是这两个顶点之间的边数，矩阵平方的同一元素是长度为 2 的走法数。从 i 到 j 长度为 2 的走法要经过一个公共邻点，所以在图上数这些邻点，不用做乘法就能得到同样的数。这就是矩阵的幂能计数走法的原因。",
+    "The entry in row $i$ and column $j$ of the adjacency matrix counts the edges between those vertices, and the same entry of the matrix squared counts walks of length two. A walk of length two from $i$ to $j$ passes through some common neighbor, so counting those neighbors on a drawing gives the same number without any multiplication. This is why powers of the matrix count walks.",
+    "邻接矩阵第 $i$ 行第 $j$ 列的元素是这两个顶点之间的边数，矩阵平方的同一元素是长度为 2 的走法数。从 $i$ 到 $j$ 长度为 2 的走法要经过一个公共邻点，所以在图上数这些邻点，不用做乘法就能得到同样的数。这就是矩阵的幂能计数走法的原因。",
   ),
   generate(rng) {
     const n = rng.int(5, 6);
@@ -2257,8 +2257,8 @@ const edgesToTree: KnowledgePointDef = {
   id: "edges-to-remove-to-get-a-tree",
   title: t("Edges to remove to get a tree", "要去掉几条边才成树"),
   explanation: t(
-    "A tree on n vertices has exactly n minus one edges, whichever tree it is. So a connected graph with more edges has extra ones that close cycles, and removing each of these while staying connected leaves a spanning tree. The number that must go is the number of edges minus the number of vertices plus one, and it does not depend on which edges are chosen.",
-    "n 个顶点的树恰好有 n - 1 条边，不管是哪棵树。所以边更多的连通图有一些多余的边构成圈，逐条去掉它们并保持连通，就留下一棵生成树。必须去掉的边数等于边数减顶点数加 1，和选哪些边无关。",
+    "A tree on $n$ vertices has exactly $n - 1$ edges, whichever tree it is. So a connected graph with more edges has extra ones that close cycles, and removing each of these while staying connected leaves a spanning tree. The number that must go is the number of edges minus the number of vertices plus one, and it does not depend on which edges are chosen.",
+    "$n$ 个顶点的树恰好有 $n - 1$ 条边，不管是哪棵树。所以边更多的连通图有一些多余的边构成圈，逐条去掉它们并保持连通，就留下一棵生成树。必须去掉的边数等于边数减顶点数加 1，和选哪些边无关。",
   ),
   generate(rng) {
     const n = rng.int(5, 7);

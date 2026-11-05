@@ -627,8 +627,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "continuous-independence-factorization",
         title: t("Testing independence by factorability of joint PDF", "根据联合密度的可乘积分解检验独立性"),
         explanation: t(
-          "If the joint density splits into a function of one variable times a function of the other on a rectangle, the variables carry no information about each other. If f(x, y) = g(x) h(y) on a product domain [a, b] x [c, d], then X and Y are independent.",
-          "如果在矩形区域上联合密度可以分解为一个变量的函数乘以另一个变量的函数，那么两个变量彼此不提供任何信息。若在笛卡尔积区间 [a, b] x [c, d] 上 f(x, y) = g(x) h(y)，则 X 与 Y 相互独立。",
+          "If the joint density splits into a function of one variable times a function of the other on a rectangle, the variables carry no information about each other. If $f(x, y) = g(x) h(y)$ on a product domain $[a, b] \\times [c, d]$, then $X$ and $Y$ are independent.",
+          "如果在矩形区域上联合密度可以分解为一个变量的函数乘以另一个变量的函数，那么两个变量彼此不提供任何信息。若在笛卡尔积区间 $[a, b] \\times [c, d]$ 上 $f(x, y) = g(x) h(y)$，则 $X$ 与 $Y$ 相互独立。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(2, 8);
@@ -1810,8 +1810,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "lotus-for-two-variables-concept",
         title: t("Understanding the direct expectation integral/sum under LOTUS", "理解 LOTUS 下直接期望积分与求和的概念"),
         explanation: t(
-          "You can average a function of two variables directly against their joint density, without first working out the distribution of the function itself. E[g(X, Y)] = ∬ g(x, y) f(x, y) dy dx eliminates the need to determine the density of g(X, Y).",
-          "可以直接用联合密度对两个变量的函数求平均，而不必先求出这个函数本身的分布。E[g(X, Y)] = ∬ g(x, y) f(x, y) dy dx 免除了求解 g(X, Y) 本身概率密度的繁琐步骤。",
+          "You can average a function of two variables directly against their joint density, without first working out the distribution of the function itself. $E[g(X, Y)] = \\iint g(x, y) f(x, y) \\, dy \\, dx$ eliminates the need to determine the density of $g(X, Y)$.",
+          "可以直接用联合密度对两个变量的函数求平均，而不必先求出这个函数本身的分布。$E[g(X, Y)] = \\iint g(x, y) f(x, y) \\, dy \\, dx$ 免除了求解 $g(X, Y)$ 本身概率密度的繁琐步骤。",
         ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(2, 50);

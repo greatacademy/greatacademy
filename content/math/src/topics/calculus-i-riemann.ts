@@ -852,8 +852,8 @@ export const applyingTheFundamentalTheoremToExponentialAndTrigonometricFunctions
       id: "exponential-and-reciprocal-integrals",
       title: t("Exponential and reciprocal integrals", "指数函数与倒数函数的积分"),
       explanation: t(
-        "Find the antiderivative, evaluate it at both limits and subtract, using the facts that e to the zero is one and the logarithm of one is zero. Give exact answers: $\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$ and $\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$. Remember $e^{0} = 1$ and $\\ln 1 = 0$.",
-        "求出原函数，在上下限处分别求值再相减，并利用 e 的零次幂为 1、1 的对数为 0 这两个事实。给出精确答案：$\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$，$\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$。记住 $e^{0} = 1$，$\\ln 1 = 0$。",
+        "Find the antiderivative, evaluate it at both limits and subtract, using the facts that $e^{0} = 1$ and $\\ln 1 = 0$. Give exact answers: $\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$ and $\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$. Remember $e^{0} = 1$ and $\\ln 1 = 0$.",
+        "求出原函数，在上下限处分别求值再相减，并利用 $e^{0} = 1$、$\\ln 1 = 0$ 这两个事实。给出精确答案：$\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$，$\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$。记住 $e^{0} = 1$，$\\ln 1 = 0$。",
       ),
       generate(rng) {
         const k = rng.int(1, 9);

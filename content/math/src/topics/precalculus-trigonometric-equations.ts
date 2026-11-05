@@ -1541,8 +1541,8 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
       id: "solve-transformed-tangent-equations",
       title: t("Solve transformed tangent equations on [0, π)", "在 [0, π) 上求解变换正切方程"),
       explanation: t(
-        "Tangent repeats every half turn, so after finding one solution for the inner angle, add multiples of pi to cover the whole stretched interval before solving for the variable. For $\\tan(2x) = 1$ on $[0, \\pi)$:\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
-        "正切每半周重复一次，所以求出内层角的一个解后，加上 π 的倍数覆盖整个伸缩后的区间，再解出变量。在 $[0, \\pi)$ 上求解 $\\tan(2x) = 1$：\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
+        "Tangent repeats every half turn, so after finding one solution for the inner angle, add multiples of $\\pi$ to cover the whole stretched interval before solving for the variable. For $\\tan(2x) = 1$ on $[0, \\pi)$:\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
+        "正切每半周重复一次，所以求出内层角的一个解后，加上 $\\pi$ 的倍数覆盖整个伸缩后的区间，再解出变量。在 $[0, \\pi)$ 上求解 $\\tan(2x) = 1$：\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
       ),
       generate(rng) {
         const item = rng.pick([

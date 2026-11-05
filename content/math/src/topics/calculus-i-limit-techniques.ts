@@ -1095,8 +1095,8 @@ export const limitsInvolvingTheExponentialFunction: TopicDef = {
       id: "limits-of-one-plus-a-over-x",
       title: t("Limits of (1 + a/x)^(bx)", "(1 + a/x)^(bx) 的极限"),
       explanation: t(
-        "This limit defines the number e, and a substitution shows that changing the constants changes the answer to e raised to their product. The number $e$ is the limit\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\nSubstituting $x = au$ gives $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$, and raising to the power $b$: $\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$.",
-        "这个极限定义了数 e，换元可以说明改变常数后，答案变为 e 的它们乘积次幂。数 $e$ 定义为极限\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\n代换 $x = au$ 得 $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$，再取 $b$ 次方：$\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$。",
+        "This limit defines the number $e$, and a substitution shows that changing the constants changes the answer to $e$ raised to their product. The number $e$ is the limit\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\nSubstituting $x = au$ gives $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$, and raising to the power $b$: $\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$.",
+        "这个极限定义了数 $e$，换元可以说明改变常数后，答案变为 $e$ 的它们乘积次幂。数 $e$ 定义为极限\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\n代换 $x = au$ 得 $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$，再取 $b$ 次方：$\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);

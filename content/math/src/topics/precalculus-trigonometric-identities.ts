@@ -1049,8 +1049,8 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
       id: "secant-tangent-fractions",
       title: t("Fractions involving secant and tangent", "含正割与正切的分式"),
       explanation: t(
-        "Look for the difference of the squares of secant and tangent, or secant squared minus one, and replace it by its simpler equal before cancelling. Fractions containing $\\sec^{2}\\theta - 1$ or $\\sec^{2}\\theta - \\tan^{2}\\theta$ can be simplified directly:\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
-        "找出正割平方与正切平方之差，或正割平方减 1，先把它换成更简单的等值式，再约分。含 $\\sec^{2}\\theta - 1$ 或 $\\sec^{2}\\theta - \\tan^{2}\\theta$ 的分式可直接化简：\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
+        "Look for the difference $\\sec^{2}\\theta - \\tan^{2}\\theta$, or $\\sec^{2}\\theta - 1$, and replace it by its simpler equal before cancelling. Fractions containing $\\sec^{2}\\theta - 1$ or $\\sec^{2}\\theta - \\tan^{2}\\theta$ can be simplified directly:\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
+        "找出 $\\sec^{2}\\theta - \\tan^{2}\\theta$，或 $\\sec^{2}\\theta - 1$，先把它换成更简单的等值式，再约分。含 $\\sec^{2}\\theta - 1$ 或 $\\sec^{2}\\theta - \\tan^{2}\\theta$ 的分式可直接化简：\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1736,8 +1736,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-in-radians-twelfths",
       title: t("Exact sine for radian multiples of π/12", "π/12 弧度倍角处的正弦精确值"),
       explanation: t(
-        "Radian multiples of a twelfth of pi are sums or differences of the special angles with denominators three, four and six, so write the angle that way first. In radians, $\\frac{5\\pi}{12} = 75^{\\circ}$ and $\\frac{\\pi}{12} = 15^{\\circ}$:\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
-        "π/12 的倍数可以写成分母为 3、4、6 的特殊角的和或差，所以先把角写成这样的形式。在弧度制下，$\\frac{5\\pi}{12} = 75^{\\circ}$，$\\frac{\\pi}{12} = 15^{\\circ}$：\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "Radian multiples of $\\frac{\\pi}{12}$ are sums or differences of the special angles with denominators $3$, $4$ and $6$, so write the angle that way first. In radians, $\\frac{5\\pi}{12} = 75^{\\circ}$ and $\\frac{\\pi}{12} = 15^{\\circ}$:\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "$\\frac{\\pi}{12}$ 的倍数可以写成分母为 $3$、$4$、$6$ 的特殊角的和或差，所以先把角写成这样的形式。在弧度制下，$\\frac{5\\pi}{12} = 75^{\\circ}$，$\\frac{\\pi}{12} = 15^{\\circ}$：\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1951,8 +1951,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       id: "exact-tangent-in-radians",
       title: t("Exact tangent in radians", "弧度制下的正切精确值"),
       explanation: t(
-        "These values come from the same sum and difference formulas, with the radian angles written as sums or differences of a quarter of pi and a sixth of pi. In radians:\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
-        "这些值来自同样的和角与差角公式，把弧度角写成 π/4 与 π/6 的和或差即可。在弧度制下：\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
+        "These values come from the same sum and difference formulas, with the radian angles written as sums or differences of $\\frac{\\pi}{4}$ and $\\frac{\\pi}{6}$. In radians:\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
+        "这些值来自同样的和角与差角公式，把弧度角写成 $\\frac{\\pi}{4}$ 与 $\\frac{\\pi}{6}$ 的和或差即可。在弧度制下：\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([

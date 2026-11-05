@@ -858,8 +858,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "evaluating-fpc-factor-squared",
         title: t("Evaluating the squared finite population correction factor", "计算有限总体校正因子的平方值"),
         explanation: t(
-          "When sampling without replacement from a small population, each draw tells you more, so the variance is multiplied by this correction factor below one. The squared FPC factor is (N - n) / (N - 1).",
-          "从小总体中不放回抽样时，每次抽取提供的信息更多，所以方差要乘以这个小于 1 的修正因子。有限总体校正因子的平方为 (N - n) / (N - 1)。",
+          "When sampling without replacement from a small population, each draw tells you more, so the variance is multiplied by this correction factor below one. The squared FPC factor is $\\frac{N - n}{N - 1}$.",
+          "从小总体中不放回抽样时，每次抽取提供的信息更多，所以方差要乘以这个小于 1 的修正因子。有限总体校正因子的平方为 $\\frac{N - n}{N - 1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(100, 500);
@@ -1262,8 +1262,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "bernoulli-log-likelihood-expression",
         title: t("Expressing the log-likelihood of a Bernoulli sample", "表示伯努利样本的对数似然函数"),
         explanation: t(
-          "Taking logarithms turns the product into a sum, which is easier to differentiate and has its maximum at the same parameter value. ln L(p) = k ln(p) + (n - k) ln(1 - p).",
-          "取对数把乘积变成和，更容易求导，而且最大值出现在相同的参数值处。ln L(p) = k ln(p) + (n - k) ln(1 - p)。",
+          "Taking logarithms turns the product into a sum, which is easier to differentiate and has its maximum at the same parameter value. $\\ln L(p) = k \\ln p + (n - k) \\ln(1 - p)$.",
+          "取对数把乘积变成和，更容易求导，而且最大值出现在相同的参数值处。$\\ln L(p) = k \\ln p + (n - k) \\ln(1 - p)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = 2 * rng.int(3, 20) + 1; // odd n guarantees k !== n - k

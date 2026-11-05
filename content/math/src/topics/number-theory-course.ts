@@ -118,7 +118,7 @@ const sumOfDivisors = topic(
       "sigma-of-a-number",
       ["The sum of the divisors", "求因数和"],
       [
-        "The function sigma adds all positive divisors of a number, including one and the number itself. It is multiplicative, so for coprime parts the sums multiply. This makes a factorization the fast way: find the sum for each prime power separately, then multiply. Forgetting the number itself is the usual slip when listing divisors by hand.",
+        "The function $\\sigma$ adds all positive divisors of a number, including one and the number itself. It is multiplicative, so for coprime parts the sums multiply. This makes a factorization the fast way: find the sum for each prime power separately, then multiply. Forgetting the number itself is the usual slip when listing divisors by hand.",
         "函数 $\\sigma$ 把一个数的所有正因数相加，包括 1 和这个数本身。它是积性函数，所以互质部分的和可以相乘。因此用分解式最快：分别求每个质数幂的和，再相乘。手工列举时最常见的差错是漏掉这个数本身。",
       ],
       (rng) => {
@@ -171,7 +171,7 @@ const perfectNumbers = topic(
       "the-aliquot-sum",
       ["The sum of proper divisors", "真因数之和"],
       [
-        "The proper divisors of a number are all its positive divisors except the number itself. Their sum is sigma of the number minus the number. Comparing this sum with the number is what sorts numbers into kinds. Note that one counts as a proper divisor of every number greater than one, which is easily left out when adding them.",
+        "The proper divisors of a number are all its positive divisors except the number itself. Their sum is $\\sigma$ of the number minus the number. Comparing this sum with the number is what sorts numbers into kinds. Note that one counts as a proper divisor of every number greater than one, which is easily left out when adding them.",
         "一个数的真因数是除它本身以外的所有正因数。它们的和等于这个数的 $\\sigma$ 值减去这个数。把这个和与这个数比较，就能给数分类。注意 1 是每个大于 1 的数的真因数，相加时很容易漏掉。",
       ],
       (rng) => {
@@ -232,8 +232,8 @@ const sieve = topic(
       "where-the-sieve-can-stop",
       ["Where the sieve can stop", "筛法可以停在哪里"],
       [
-        "A composite number up to N has a prime factor no larger than the square root of N, because two factors both above the root would multiply to more than N. So the sieve can stop once it has crossed out the multiples of every prime up to the root. Everything left is prime, without testing any further.",
-        "不超过 N 的合数，一定有一个不大于 N 的平方根的质因数，因为两个都大于平方根的因数相乘会超过 N。所以筛法把不超过平方根的每个质数的倍数划掉后就可以停止。剩下的都是质数，不用再检验。",
+        "A composite number up to $N$ has a prime factor no larger than the square root of $N$, because two factors both above the root would multiply to more than $N$. So the sieve can stop once it has crossed out the multiples of every prime up to the root. Everything left is prime, without testing any further.",
+        "不超过 $N$ 的合数，一定有一个不大于 $N$ 的平方根的质因数，因为两个都大于平方根的因数相乘会超过 $N$。所以筛法把不超过平方根的每个质数的倍数划掉后就可以停止。剩下的都是质数，不用再检验。",
       ],
       (rng) => {
         const n = rng.int(30, 2000);
@@ -292,8 +292,8 @@ const countingPrimes = topic(
       "the-prime-counting-function",
       ["The prime counting function", "质数计数函数"],
       [
-        "The function pi of x counts the primes up to x, and it has nothing to do with the circle constant. The value does not change between one prime and the next, so it is a staircase that rises by one at each prime. Note that two counts as prime, and that one does not, which is the commonest source of an off-by-one error.",
-        "函数 π(x) 数不超过 x 的质数个数，它和圆周率没有关系。在相邻两个质数之间，它的值不变，所以它是一段段台阶，每遇到一个质数就升高 1。注意 2 是质数，1 不是，这是差一错误最常见的来源。",
+        "The function $\\pi(x)$ counts the primes up to $x$, and it has nothing to do with the circle constant. The value does not change between one prime and the next, so it is a staircase that rises by one at each prime. Note that two counts as prime, and that one does not, which is the commonest source of an off-by-one error.",
+        "函数 $\\pi(x)$ 数不超过 $x$ 的质数个数，它和圆周率没有关系。在相邻两个质数之间，它的值不变，所以它是一段段台阶，每遇到一个质数就升高 1。注意 2 是质数，1 不是，这是差一错误最常见的来源。",
       ],
       (rng) => {
         const x = rng.int(12, 120);
@@ -314,8 +314,8 @@ const countingPrimes = topic(
       "estimating-with-the-prime-number-theorem",
       ["Estimating with the prime number theorem", "用素数定理估计"],
       [
-        "The prime number theorem says that the number of primes up to x is close to x divided by the natural logarithm of x, in the sense that the ratio tends to one. The estimate runs a little low, but it shows how primes thin out: near x, about one number in every ln x is prime, though the gaps vary a great deal.",
-        "素数定理说，不超过 x 的质数个数接近 x 除以 x 的自然对数，意思是两者之比趋向于 1。这个估计略微偏低，但它显示了质数怎样变稀：在 x 附近，大约每 ln x 个数中有一个质数，不过间隔变化很大。",
+        "The prime number theorem says that the number of primes up to $x$ is close to $\\frac{x}{\\ln x}$, in the sense that the ratio tends to one. The estimate runs a little low, but it shows how primes thin out: near $x$, about one number in every $\\ln x$ is prime, though the gaps vary a great deal.",
+        "素数定理说，不超过 $x$ 的质数个数接近 $\\frac{x}{\\ln x}$，意思是两者之比趋向于 1。这个估计略微偏低，但它显示了质数怎样变稀：在 $x$ 附近，大约每 $\\ln x$ 个数中有一个质数，不过间隔变化很大。",
       ],
       (rng) => {
         const x = 1000 * rng.int(1, 40);
@@ -407,8 +407,8 @@ const fermatLittle = topic(
       "reducing-the-exponent",
       ["Reducing the exponent", "约简指数"],
       [
-        "For a prime p and a number a not divisible by it, a to the power p − 1 leaves remainder one. So exponents may be reduced modulo p − 1, not modulo p. This turns an enormous exponent into one smaller than p. The theorem needs p to be prime and a to be coprime to it, and both conditions should be checked first.",
-        "对质数 p 和不被它整除的数 a，a 的 p − 1 次幂除以 p 余 1。所以指数可以模 p − 1 约简，而不是模 p。这能把极大的指数变成比 p 小的指数。这个定理要求 p 是质数且 a 与它互质，这两个条件要先检查。",
+        "For a prime $p$ and a number $a$ not divisible by it, $a^{p-1}$ leaves remainder one. So exponents may be reduced modulo $p - 1$, not modulo $p$. This turns an enormous exponent into one smaller than $p$. The theorem needs $p$ to be prime and $a$ to be coprime to it, and both conditions should be checked first.",
+        "对质数 $p$ 和不被它整除的数 $a$，$a^{p-1}$ 除以 $p$ 余 1。所以指数可以模 $p - 1$ 约简，而不是模 $p$。这能把极大的指数变成比 $p$ 小的指数。这个定理要求 $p$ 是质数且 $a$ 与它互质，这两个条件要先检查。",
       ],
       (rng) => {
         const p = rng.pick([5, 7, 11, 13, 17, 19, 23, 29, 31]);
@@ -431,8 +431,8 @@ const fermatLittle = topic(
       "an-inverse-from-a-power",
       ["An inverse from a power", "用幂求逆元"],
       [
-        "Fermat's little theorem also supplies inverses. Since a multiplied by a to the power p − 2 equals a to the power p − 1, which is one, the inverse of a modulo p is a to the power p − 2. This gives a route that uses only repeated squaring, as an alternative to running the extended Euclidean algorithm.",
-        "费马小定理也能给出逆元。因为 a 乘 a 的 p − 2 次幂等于 a 的 p − 1 次幂，也就是 1，所以 a 模 p 的逆元是 a 的 p − 2 次幂。这是一条只用反复平方的途径，可以替代扩展欧几里得算法。",
+        "Fermat's little theorem also supplies inverses. Since $a \\cdot a^{p-2} = a^{p-1}$, which is one, the inverse of $a$ modulo $p$ is $a^{p-2}$. This gives a route that uses only repeated squaring, as an alternative to running the extended Euclidean algorithm.",
+        "费马小定理也能给出逆元。因为 $a \\cdot a^{p-2} = a^{p-1}$，也就是 1，所以 $a$ 模 $p$ 的逆元是 $a^{p-2}$。这是一条只用反复平方的途径，可以替代扩展欧几里得算法。",
       ],
       (rng) => {
         const p = rng.pick([7, 11, 13, 17, 19, 23, 29]);
@@ -466,8 +466,8 @@ const totientFunction = topic(
       "totient-of-a-number",
       ["The totient of a number", "求欧拉函数值"],
       [
-        "Euler's function phi of n counts the numbers from one to n that share no factor with n. From the factorization, each prime contributes a fraction of one minus its reciprocal, so phi of n is n times the product of those fractions. Removing the multiples of each prime separately works only because the primes are distinct, which the product takes into account.",
-        "欧拉函数 φ(n) 数 1 到 n 中与 n 没有公因数的数。由分解式，每个质数贡献 1 减其倒数这个比例，所以 φ(n) 是 n 乘这些比例之积。分别去掉每个质数的倍数之所以可行，是因为这些质数互不相同，而乘积已把这一点考虑在内。",
+        "Euler's function $\\varphi(n)$ counts the numbers from one to $n$ that share no factor with $n$. From the factorization, each prime contributes a fraction of one minus its reciprocal, so $\\varphi(n)$ is $n$ times the product of those fractions. Removing the multiples of each prime separately works only because the primes are distinct, which the product takes into account.",
+        "欧拉函数 $\\varphi(n)$ 数 1 到 $n$ 中与 $n$ 没有公因数的数。由分解式，每个质数贡献 1 减其倒数这个比例，所以 $\\varphi(n)$ 是 $n$ 乘这些比例之积。分别去掉每个质数的倍数之所以可行，是因为这些质数互不相同，而乘积已把这一点考虑在内。",
       ],
       (rng) => {
         const n = pickComposite(rng, 10, 300);
@@ -488,8 +488,8 @@ const totientFunction = topic(
       "fractions-in-lowest-terms",
       ["Fractions in lowest terms", "最简分数的个数"],
       [
-        "The totient counts something visible: the fractions between zero and one with a given denominator that are already in lowest terms. A fraction k over n reduces exactly when k and n share a factor, so the fractions that do not reduce are counted by phi of n. This gives a useful check for small denominators, by listing them.",
-        "欧拉函数数的东西看得见：分母给定、在 0 和 1 之间、已是最简形式的分数。分数 k/n 能约分，当且仅当 k 和 n 有公因数，所以不能约分的分数个数就是 φ(n)。对较小的分母，可以列出来作为检验。",
+        "The totient counts something visible: the fractions between zero and one with a given denominator that are already in lowest terms. A fraction $\\frac{k}{n}$ reduces exactly when $k$ and $n$ share a factor, so the fractions that do not reduce are counted by $\\varphi(n)$. This gives a useful check for small denominators, by listing them.",
+        "欧拉函数数的东西看得见：分母给定、在 0 和 1 之间、已是最简形式的分数。分数 $\\frac{k}{n}$ 能约分，当且仅当 $k$ 和 $n$ 有公因数，所以不能约分的分数个数就是 $\\varphi(n)$。对较小的分母，可以列出来作为检验。",
       ],
       (rng) => {
         const n = rng.int(6, 120);
@@ -529,8 +529,8 @@ const eulerTheorem = topic(
       "reducing-modulo-the-totient",
       ["Reducing modulo the totient", "模欧拉函数约简"],
       [
-        "Euler's theorem extends Fermat's: for a base coprime to n, the base to the power phi of n leaves remainder one. So exponents reduce modulo phi of n. The condition that base and modulus are coprime matters, and without it the statement can fail. When n is prime, phi of n is n − 1, and this is just Fermat's little theorem again.",
-        "欧拉定理推广了费马小定理：底数与 n 互质时，底数的 φ(n) 次幂余 1。所以指数可以模 φ(n) 约简。底数和模数互质这个条件很重要，缺少它，结论可能不成立。当 n 是质数时，φ(n) 就是 n − 1，这正是费马小定理。",
+        "Euler's theorem extends Fermat's: for a base coprime to $n$, the base to the power $\\varphi(n)$ leaves remainder one. So exponents reduce modulo $\\varphi(n)$. The condition that base and modulus are coprime matters, and without it the statement can fail. When $n$ is prime, $\\varphi(n)$ is $n - 1$, and this is just Fermat's little theorem again.",
+        "欧拉定理推广了费马小定理：底数与 $n$ 互质时，底数的 $\\varphi(n)$ 次幂余 1。所以指数可以模 $\\varphi(n)$ 约简。底数和模数互质这个条件很重要，缺少它，结论可能不成立。当 $n$ 是质数时，$\\varphi(n)$ 就是 $n - 1$，这正是费马小定理。",
       ],
       (rng) => {
         const n = rng.pick([8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 26, 27, 28, 30]);
@@ -553,8 +553,8 @@ const eulerTheorem = topic(
       "the-last-two-digits",
       ["The last two digits", "最后两位数字"],
       [
-        "The last two digits of a number are its remainder modulo 100. For a base coprime to 100, Euler's theorem applies with phi of 100 equal to 40, so only the exponent modulo 40 matters. This means that a base ending in 1, 3, 7 or 9 can have its last two digits found with just a few multiplications, however large the power.",
-        "一个数的最后两位数字就是它模 100 的余数。底数与 100 互质时，可以用欧拉定理，φ(100) = 40，所以只有指数模 40 才重要。这意味着，以 1、3、7、9 结尾的底数，不论幂多大，只需几次乘法就能求出最后两位数字。",
+        "The last two digits of a number are its remainder modulo 100. For a base coprime to 100, Euler's theorem applies with $\\varphi(100) = 40$, so only the exponent modulo 40 matters. This means that a base ending in 1, 3, 7 or 9 can have its last two digits found with just a few multiplications, however large the power.",
+        "一个数的最后两位数字就是它模 100 的余数。底数与 100 互质时，可以用欧拉定理，$\\varphi(100) = 40$，所以只有指数模 40 才重要。这意味着，以 1、3、7、9 结尾的底数，不论幂多大，只需几次乘法就能求出最后两位数字。",
       ],
       (rng) => {
         const a = rng.pick([3, 7, 9, 11, 13, 17, 19, 21, 23, 27, 29, 31, 33, 37, 39]);
@@ -592,8 +592,8 @@ const wilson = topic(
       "factorials-just-below-a-prime",
       ["Factorials just below a prime", "略小于质数的阶乘"],
       [
-        "Wilson's theorem says that (p − 1)! leaves remainder p − 1 modulo a prime p, because each factor pairs with its inverse, leaving only one and p − 1. Dividing by p − 1 and by p − 2 in turn gives the neighbours: (p − 2)! leaves one, since p − 1 is congruent to minus one. So these large factorials need no multiplication at all.",
-        "威尔逊定理说，(p − 1)! 模质数 p 余 p − 1，因为每个因数都和它的逆配对，只剩下 1 和 p − 1。依次除以 p − 1 和 p − 2，就得到相邻的情况：(p − 2)! 余 1，因为 p − 1 同余于 −1。所以这些很大的阶乘根本不用做乘法。",
+        "Wilson's theorem says that $(p - 1)!$ leaves remainder $p - 1$ modulo a prime $p$, because each factor pairs with its inverse, leaving only one and $p - 1$. Dividing by $p - 1$ and by $p - 2$ in turn gives the neighbours: $(p - 2)!$ leaves one, since $p - 1$ is congruent to $-1$. So these large factorials need no multiplication at all.",
+        "威尔逊定理说，$(p - 1)!$ 模质数 $p$ 余 $p - 1$，因为每个因数都和它的逆配对，只剩下 1 和 $p - 1$。依次除以 $p - 1$ 和 $p - 2$，就得到相邻的情况：$(p - 2)!$ 余 1，因为 $p - 1$ 同余于 $-1$。所以这些很大的阶乘根本不用做乘法。",
       ],
       (rng) => {
         const p = rng.pick(primesUpTo(100).filter((q) => q > 5));
@@ -787,8 +787,8 @@ const discreteLogs = topic(
       "solving-for-the-exponent",
       ["Solving for the exponent", "求指数"],
       [
-        "The discrete logarithm of h to base g modulo p is the exponent x with g to the x equal to h. For a primitive root, every nonzero remainder has exactly one such exponent from zero to p − 2. Small cases are solved by listing powers. For large primes no fast method is known, which is exactly why cryptography relies on this problem.",
-        "h 以 g 为底模 p 的离散对数，是满足 g 的 x 次幂等于 h 的指数 x。对原根，每个非零余数恰有一个这样的指数，取值从 0 到 p − 2。小的情况可以列出幂来求解。对大的质数，还不知道快速的方法，这正是密码学依赖这个问题的原因。",
+        "The discrete logarithm of $h$ to base $g$ modulo $p$ is the exponent $x$ with $g^x = h$. For a primitive root, every nonzero remainder has exactly one such exponent from zero to $p - 2$. Small cases are solved by listing powers. For large primes no fast method is known, which is exactly why cryptography relies on this problem.",
+        "$h$ 以 $g$ 为底模 $p$ 的离散对数，是满足 $g^x = h$ 的指数 $x$。对原根，每个非零余数恰有一个这样的指数，取值从 0 到 $p - 2$。小的情况可以列出幂来求解。对大的质数，还不知道快速的方法，这正是密码学依赖这个问题的原因。",
       ],
       (rng) => {
         const p = rng.pick([7, 11, 13, 17, 19, 23, 29, 31]);
@@ -852,8 +852,8 @@ const quadraticResidues = topic(
       "recognizing-a-residue",
       ["Recognizing a quadratic residue", "识别二次剩余"],
       [
-        "A number is a quadratic residue modulo a prime when it is congruent to a perfect square and not divisible by the prime. To list the residues, square only the numbers from one to half of p, because x and −x have the same square. The remaining nonzero remainders are the nonresidues, and these cannot be square roots of anything modulo p.",
-        "一个数如果同余于完全平方数且不被质数整除，就是模这个质数的二次剩余。要列出二次剩余，只需把 1 到 p 的一半的数平方，因为 x 和 −x 的平方相同。其余的非零余数是二次非剩余，模 p 时它们不是任何数的平方。",
+        "A number is a quadratic residue modulo a prime when it is congruent to a perfect square and not divisible by the prime. To list the residues, square only the numbers from one to half of $p$, because $x$ and $-x$ have the same square. The remaining nonzero remainders are the nonresidues, and these cannot be square roots of anything modulo $p$.",
+        "一个数如果同余于完全平方数且不被质数整除，就是模这个质数的二次剩余。要列出二次剩余，只需把 1 到 $p$ 的一半的数平方，因为 $x$ 和 $-x$ 的平方相同。其余的非零余数是二次非剩余，模 $p$ 时它们不是任何数的平方。",
       ],
       (rng) => {
         const p = rng.pick(oddPrimes.filter((q) => q > 10 && q < 100));
@@ -894,8 +894,8 @@ const quadraticResidues = topic(
       "counting-residues",
       ["Counting residues", "数二次剩余的个数"],
       [
-        "Modulo an odd prime p, squaring sends x and −x to the same value and no other pair collides, so the p − 1 nonzero remainders produce exactly half that many squares. There are therefore as many residues as nonresidues. The count does not depend on anything else about p, and a composite modulus behaves quite differently, so primality is essential.",
-        "模奇质数 p 时，平方把 x 和 −x 送到同一个值，其他的数不会相撞，所以 p − 1 个非零余数恰好产生一半那么多的平方数。因此二次剩余和二次非剩余一样多。这个个数和 p 的其他性质无关，合数模数的情况很不相同，所以质数这个条件很关键。",
+        "Modulo an odd prime $p$, squaring sends $x$ and $-x$ to the same value and no other pair collides, so the $p - 1$ nonzero remainders produce exactly half that many squares. There are therefore as many residues as nonresidues. The count does not depend on anything else about $p$, and a composite modulus behaves quite differently, so primality is essential.",
+        "模奇质数 $p$ 时，平方把 $x$ 和 $-x$ 送到同一个值，其他的数不会相撞，所以 $p - 1$ 个非零余数恰好产生一半那么多的平方数。因此二次剩余和二次非剩余一样多。这个个数和 $p$ 的其他性质无关，合数模数的情况很不相同，所以质数这个条件很关键。",
       ],
       (rng) => {
         const p = rng.pick(primesUpTo(300).filter((q) => q > 2));
@@ -929,8 +929,8 @@ const legendreSymbol = topic(
       "evaluating-the-symbol",
       ["Evaluating the Legendre symbol", "计算勒让德符号"],
       [
-        "The Legendre symbol of a over p records whether a is a square modulo the odd prime p: one for a residue, minus one for a nonresidue, and zero when p divides a. The numerator can be reduced modulo p first, since the symbol depends only on the remainder. For small primes, a list of the squares settles the matter.",
-        "勒让德符号 (a/p) 记录 a 模奇质数 p 是否为平方数：二次剩余为 1，二次非剩余为 −1，p 整除 a 时为 0。分子可以先模 p 约简，因为符号只取决于余数。对较小的质数，列出平方数就能解决问题。",
+        "The Legendre symbol $\\left(\\frac{a}{p}\\right)$ records whether $a$ is a square modulo the odd prime $p$: $1$ for a residue, $-1$ for a nonresidue, and $0$ when $p$ divides $a$. The numerator can be reduced modulo $p$ first, since the symbol depends only on the remainder. For small primes, a list of the squares settles the matter.",
+        "勒让德符号 $\\left(\\frac{a}{p}\\right)$ 记录 $a$ 模奇质数 $p$ 是否为平方数：二次剩余为 $1$，二次非剩余为 $-1$，$p$ 整除 $a$ 时为 $0$。分子可以先模 $p$ 约简，因为符号只取决于余数。对较小的质数，列出平方数就能解决问题。",
       ],
       (rng) => {
         const p = rng.pick(oddPrimes.filter((q) => q >= 5 && q < 40));
@@ -994,8 +994,8 @@ const eulerCriterion = topic(
       "the-half-power",
       ["The half power", "半幂"],
       [
-        "Euler's criterion says that a to the power (p − 1)/2 is congruent to the Legendre symbol of a over p. By Fermat's little theorem, the square of this half power is one, so it can only be one or minus one, and minus one is written as p − 1. This gives a calculation by repeated squaring, with no need for a table of squares.",
-        "欧拉判别法说，a 的 (p − 1)/2 次幂同余于勒让德符号 (a/p)。由费马小定理，这个半幂的平方是 1，所以它只能是 1 或 −1，而 −1 写作 p − 1。这样就可以用反复平方来计算，不需要平方数表。",
+        "Euler's criterion says that $a^{(p-1)/2}$ is congruent to the Legendre symbol $\\left(\\frac{a}{p}\\right)$. By Fermat's little theorem, the square of this half power is one, so it can only be $1$ or $-1$, and $-1$ is written as $p - 1$. This gives a calculation by repeated squaring, with no need for a table of squares.",
+        "欧拉判别法说，$a^{(p-1)/2}$ 同余于勒让德符号 $\\left(\\frac{a}{p}\\right)$。由费马小定理，这个半幂的平方是 1，所以它只能是 $1$ 或 $-1$，而 $-1$ 写作 $p - 1$。这样就可以用反复平方来计算，不需要平方数表。",
       ],
       (rng) => {
         const p = rng.pick(oddPrimes.filter((q) => q > 5));
@@ -1017,8 +1017,8 @@ const eulerCriterion = topic(
       "when-minus-one-is-a-square",
       ["When −1 is a square", "−1 何时是平方数"],
       [
-        "Applying Euler's criterion to minus one gives minus one to the power (p − 1)/2, which is one when (p − 1)/2 is even. So minus one is a square modulo an odd prime exactly when the prime leaves remainder one on division by four. For primes leaving remainder three, no number squares to minus one, as with the real numbers.",
-        "把欧拉判别法用于 −1，得到 −1 的 (p − 1)/2 次幂，当 (p − 1)/2 是偶数时为 1。所以 −1 模奇质数是平方数，当且仅当这个质数除以 4 余 1。对除以 4 余 3 的质数，没有数的平方等于 −1，就像在实数中一样。",
+        "Applying Euler's criterion to $-1$ gives $(-1)^{(p-1)/2}$, which is one when $(p - 1)/2$ is even. So $-1$ is a square modulo an odd prime exactly when the prime leaves remainder one on division by four. For primes leaving remainder three, no number squares to $-1$, as with the real numbers.",
+        "把欧拉判别法用于 $-1$，得到 $(-1)^{(p-1)/2}$，当 $(p - 1)/2$ 是偶数时为 1。所以 $-1$ 模奇质数是平方数，当且仅当这个质数除以 4 余 1。对除以 4 余 3 的质数，没有数的平方等于 $-1$，就像在实数中一样。",
       ],
       (rng) => {
         const pick = rng.pick(primesUpTo(300).filter((q) => q % 4 === 1));
@@ -1054,8 +1054,8 @@ const reciprocity = topic(
       "flipping-a-symbol",
       ["Flipping a symbol", "翻转符号"],
       [
-        "Quadratic reciprocity links two odd primes: the symbol of p over q equals the symbol of q over p, except that the sign changes when both primes leave remainder three on division by four. After flipping, the larger number can be reduced modulo the smaller one. Repeating this makes the numbers fall quickly, as in the Euclidean algorithm, until the value is easy to see.",
-        "二次互反律联系两个奇质数：(p/q) 等于 (q/p)，只有当两个质数除以 4 都余 3 时才变号。翻转之后，较大的数可以模较小的数约简。重复这样做，数会很快变小，就像欧几里得算法一样，直到结果一目了然。",
+        "Quadratic reciprocity links two odd primes: $\\left(\\frac{p}{q}\\right)$ equals $\\left(\\frac{q}{p}\\right)$, except that the sign changes when both primes leave remainder three on division by four. After flipping, the larger number can be reduced modulo the smaller one. Repeating this makes the numbers fall quickly, as in the Euclidean algorithm, until the value is easy to see.",
+        "二次互反律联系两个奇质数：$\\left(\\frac{p}{q}\\right)$ 等于 $\\left(\\frac{q}{p}\\right)$，只有当两个质数除以 4 都余 3 时才变号。翻转之后，较大的数可以模较小的数约简。重复这样做，数会很快变小，就像欧几里得算法一样，直到结果一目了然。",
       ],
       (rng) => {
         const pool = oddPrimes.filter((q) => q >= 5 && q < 90);
@@ -1186,8 +1186,8 @@ const pythagoreanTriples = topic(
       "generating-a-triple",
       ["Generating a triple", "生成勾股数"],
       [
-        "Every primitive Pythagorean triple comes from two coprime numbers m and n of opposite parity, with m larger: the legs are m squared minus n squared and twice mn, and the hypotenuse is m squared plus n squared. Checking the identity by expanding is a good exercise. Scaling a primitive triple by any factor then gives all the others.",
-        "每个本原勾股数都来自两个互质且奇偶性相反的数 m 和 n（m 较大）：两条直角边是 $m^2 - n^2$ 和 $2mn$，斜边是 $m^2 + n^2$。展开验证这个恒等式是很好的练习。把本原勾股数乘任意倍数，就得到其余所有勾股数。",
+        "Every primitive Pythagorean triple comes from two coprime numbers $m$ and $n$ of opposite parity, with $m$ larger: the legs are $m^2 - n^2$ and $2mn$, and the hypotenuse is $m^2 + n^2$. Checking the identity by expanding is a good exercise. Scaling a primitive triple by any factor then gives all the others.",
+        "每个本原勾股数都来自两个互质且奇偶性相反的数 $m$ 和 $n$（$m$ 较大）：两条直角边是 $m^2 - n^2$ 和 $2mn$，斜边是 $m^2 + n^2$。展开验证这个恒等式是很好的练习。把本原勾股数乘任意倍数，就得到其余所有勾股数。",
       ],
       (rng) => {
         const m = rng.int(2, 12);
@@ -1297,8 +1297,8 @@ const multiplicativeFunctions = topic(
       "when-the-parts-share-a-factor",
       ["When the parts share a factor", "当两部分有公因数时"],
       [
-        "Multiplicativity needs coprime parts, and the product of the values is wrong otherwise. For the totient, the correction is that phi of ab equals phi of a times phi of b times the greatest common divisor over phi of that divisor. So the true value exceeds the naive product. It helps to refactor the product into prime powers rather than trust the shortcut.",
-        "积性要求两部分互质，否则值的积就是错的。对欧拉函数，修正公式是 φ(ab) = φ(a)φ(b) · d/φ(d)，其中 d 是最大公因数。所以真实值比简单的积要大。最好把积重新分解成质数幂，而不要相信这个捷径。",
+        "Multiplicativity needs coprime parts, and the product of the values is wrong otherwise. For the totient, the correction is that $\\varphi(ab) = \\varphi(a)\\varphi(b) \\cdot \\frac{d}{\\varphi(d)}$, where $d$ is the greatest common divisor. So the true value exceeds the naive product. It helps to refactor the product into prime powers rather than trust the shortcut.",
+        "积性要求两部分互质，否则值的积就是错的。对欧拉函数，修正公式是 $\\varphi(ab) = \\varphi(a)\\varphi(b) \\cdot \\frac{d}{\\varphi(d)}$，其中 $d$ 是最大公因数。所以真实值比简单的积要大。最好把积重新分解成质数幂，而不要相信这个捷径。",
       ],
       (rng) => {
         const d = rng.pick([2, 3, 4, 5, 6]);
@@ -1361,8 +1361,8 @@ const mobiusFunction = topic(
       "inverting-a-divisor-sum",
       ["Inverting a divisor sum", "反演因数和"],
       [
-        "When F of n is the sum of f of d over the divisors d of n, Möbius inversion recovers f from F: f of n is the sum, over divisors d, of mu of d times F of n over d. The terms with a repeated prime vanish. For a prime power, only two terms survive, so f at that power is the difference of two consecutive values of F.",
-        "如果 F(n) 是 f(d) 对 n 的所有因数 d 之和，默比乌斯反演可以由 F 求出 f：f(n) 是 $\\mu(d)F(n/d)$ 对所有因数 d 之和。含重复质数的项都消失了。对质数幂，只留下两项，所以 f 在这个幂处的值是 F 相邻两个值之差。",
+        "When $F(n)$ is the sum of $f(d)$ over the divisors $d$ of $n$, Möbius inversion recovers $f$ from $F$: $f(n)$ is the sum, over divisors $d$, of $\\mu(d)F(n/d)$. The terms with a repeated prime vanish. For a prime power, only two terms survive, so $f$ at that power is the difference of two consecutive values of $F$.",
+        "如果 $F(n)$ 是 $f(d)$ 对 $n$ 的所有因数 $d$ 之和，默比乌斯反演可以由 $F$ 求出 $f$：$f(n)$ 是 $\\mu(d)F(n/d)$ 对所有因数 $d$ 之和。含重复质数的项都消失了。对质数幂，只留下两项，所以 $f$ 在这个幂处的值是 $F$ 相邻两个值之差。",
       ],
       (rng) => {
         const p = rng.pick([2, 3, 5, 7]);
@@ -1492,8 +1492,8 @@ const pell = topic(
       "the-fundamental-solution",
       ["The fundamental solution", "基本解"],
       [
-        "Pell's equation asks for whole numbers with x squared minus d times y squared equal to one, where d is not a square. Trying y equal to one, two, three and so on, and checking whether d times y squared plus one is a square, finds the smallest solution for small d. That solution, called the fundamental one, determines all the others.",
-        "佩尔方程要求整数满足 $x^2 - dy^2 = 1$，其中 d 不是平方数。依次试 y = 1、2、3……，检查 $dy^2 + 1$ 是否为平方数，就能在 d 较小时找到最小解。这个解叫基本解，它决定了所有其他的解。",
+        "Pell's equation asks for whole numbers with $x^2 - dy^2 = 1$, where $d$ is not a square. Trying $y = 1, 2, 3$ and so on, and checking whether $dy^2 + 1$ is a square, finds the smallest solution for small $d$. That solution, called the fundamental one, determines all the others.",
+        "佩尔方程要求整数满足 $x^2 - dy^2 = 1$，其中 $d$ 不是平方数。依次试 $y = 1, 2, 3$……，检查 $dy^2 + 1$ 是否为平方数，就能在 $d$ 较小时找到最小解。这个解叫基本解，它决定了所有其他的解。",
       ],
       (rng) => {
         const d = rng.pick(pellValues);
@@ -1516,8 +1516,8 @@ const pell = topic(
       "the-next-solution",
       ["The next solution", "下一个解"],
       [
-        "Solutions of Pell's equation combine like numbers of the form $x + y\\sqrt{d}$, and multiplying two solutions gives another. So squaring the fundamental solution gives the next: the new x is x squared plus d times y squared, and the new y is twice xy. Repeating this produces infinitely many solutions, and all of them arise as powers of the fundamental one.",
-        "佩尔方程的解可以像 $x + y\\sqrt{d}$ 形式的数那样组合，两个解相乘得到另一个解。所以把基本解平方就得到下一个解：新的 x 是 $x^2 + dy^2$，新的 y 是 $2xy$。重复这样做可以得到无穷多个解，而且所有的解都是基本解的幂。",
+        "Solutions of Pell's equation combine like numbers of the form $x + y\\sqrt{d}$, and multiplying two solutions gives another. So squaring the fundamental solution gives the next: the new $x$ is $x^2 + dy^2$, and the new $y$ is $2xy$. Repeating this produces infinitely many solutions, and all of them arise as powers of the fundamental one.",
+        "佩尔方程的解可以像 $x + y\\sqrt{d}$ 形式的数那样组合，两个解相乘得到另一个解。所以把基本解平方就得到下一个解：新的 $x$ 是 $x^2 + dy^2$，新的 $y$ 是 $2xy$。重复这样做可以得到无穷多个解，而且所有的解都是基本解的幂。",
       ],
       (rng) => {
         const d = rng.pick(pellValues.filter((v) => (pellSolution(v) as [number, number])[1] <= 30));

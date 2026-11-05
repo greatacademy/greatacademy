@@ -479,7 +479,7 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
       "a-ring-from-its-circumferences",
       ["A ring from its circumferences", "由周长求圆环"],
       [
-        "A circumference gives a radius after dividing by two pi. The area of a ring is then pi times the difference of the squares of the radii, not the square of the difference.",
+        "A circumference gives a radius after dividing by $2\\pi$. The area of a ring is then $\\pi$ times the difference of the squares of the radii, not the square of the difference.",
         "周长除以 $2\\pi$ 得半径。圆环的面积是 $\\pi$ 乘半径平方的差，而不是差的平方。",
       ],
       (rng) => {
@@ -830,8 +830,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
       "secant-squared-from-the-tangent",
       ["Secant squared from the tangent", "由正切求正割的平方"],
       [
-        "Dividing the Pythagorean identity by the square of cosine gives one plus tangent squared equals secant squared. So the tangent alone fixes the square of the secant, whatever the quadrant.",
-        "把毕达哥拉斯恒等式除以余弦的平方，得到一加正切平方等于正割平方。所以只由正切就能确定正割的平方，与象限无关。",
+        "Dividing the Pythagorean identity by the square of cosine gives $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$. So the tangent alone fixes the square of the secant, whatever the quadrant.",
+        "把毕达哥拉斯恒等式除以余弦的平方，得到 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$。所以只由正切就能确定正割的平方，与象限无关。",
       ],
       (rng) => {
         const [a, b, c] = rng.pick<readonly [number, number, number]>([
@@ -970,8 +970,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
       "a-cone-with-its-height-missing",
       ["A cone with its height missing", "缺高的圆锥"],
       [
-        "The volume of a cone is one third of pi times the square of the radius times the height. So multiply the volume by 3, divide by the square of the radius, and pi cancels.",
-        "圆锥的体积是三分之一乘 $\\pi$ 乘半径的平方再乘高。所以把体积乘 3，除以半径的平方，$\\pi$ 就约去了。",
+        "The volume of a cone is $\\frac{1}{3}\\pi$ times the square of the radius times the height. So multiply the volume by 3, divide by the square of the radius, and $\\pi$ cancels.",
+        "圆锥的体积是 $\\frac{1}{3}\\pi$ 乘半径的平方再乘高。所以把体积乘 3，除以半径的平方，$\\pi$ 就约去了。",
       ],
       (rng) => {
         const r = rng.int(2, 10);
@@ -1764,8 +1764,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
       "the-volume-of-the-inscribed-sphere",
       ["The volume of the inscribed sphere", "内切球的体积"],
       [
-        "A sphere inscribed in a cube touches each face, so its diameter equals the edge. The radius is half the edge, and the volume uses four thirds of pi times the cube of the radius.",
-        "内切于立方体的球与每个面相切，所以直径等于棱长。半径是棱长的一半，体积是三分之四乘 $\\pi$ 乘半径的立方。",
+        "A sphere inscribed in a cube touches each face, so its diameter equals the edge. The radius is half the edge, and the volume uses $\\frac{4}{3}\\pi$ times the cube of the radius.",
+        "内切于立方体的球与每个面相切，所以直径等于棱长。半径是棱长的一半，体积是 $\\frac{4}{3}\\pi$ 乘半径的立方。",
       ],
       (rng) => {
         const u = rng.int(1, 10);

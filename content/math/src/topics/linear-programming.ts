@@ -595,8 +595,8 @@ const dualProgram = topic(
       "the-objective-of-the-dual",
       ["The objective of the dual", "对偶的目标"],
       [
-        "Every linear program has a partner called its dual. For a program maximizing c times x subject to Ax at most b with x nonnegative, the dual minimizes b times y subject to A transpose y at least c with y nonnegative. There is one dual variable for each constraint, so the right sides of the primal become the costs of the dual, and the roles swap.",
-        "每个线性规划都有一个称为对偶的伙伴。对于在 Ax 不超过 b、x 非负的条件下使 c 与 x 的乘积最大的规划，它的对偶是在 A 的转置乘 y 至少为 c、y 非负的条件下使 b 与 y 的乘积最小。每个约束对应一个对偶变量，所以原问题的右端变成对偶的系数，两者角色互换。",
+        "Every linear program has a partner called its dual. For a program maximizing $c^T x$ subject to $Ax \\le b$ with $x \\ge 0$, the dual minimizes $b^T y$ subject to $A^T y \\ge c$ with $y \\ge 0$. There is one dual variable for each constraint, so the right sides of the primal become the costs of the dual, and the roles swap.",
+        "每个线性规划都有一个称为对偶的伙伴。对于在 $Ax \\le b$、$x \\ge 0$ 的条件下使 $c^T x$ 最大的规划，它的对偶是在 $A^T y \\ge c$、$y \\ge 0$ 的条件下使 $b^T y$ 最小。每个约束对应一个对偶变量，所以原问题的右端变成对偶的系数，两者角色互换。",
       ],
       (rng) => {
         const c1 = rng.int(2, 9);
@@ -935,8 +935,8 @@ const improvingTransport = topic(
       "counting-basic-cells",
       ["Counting basic cells", "数基本格"],
       [
-        "A balanced transportation problem with m sources and n destinations has m plus n minus one independent constraints, because one of the row and column totals follows from all the others. So a basic plan uses that many cells, and the northwest corner rule produces exactly that number. A plan using fewer is degenerate, and a zero shipment is written in an extra cell to keep the count correct.",
-        "m 个产地、n 个销地的平衡运输问题有 m + n − 1 个独立约束，因为行列总和中有一个可由其他的推出。所以基本方案使用这么多个格子，西北角法则恰好产生这个数目。使用更少格子的方案是退化的，要在一个额外的格子里写上零运量，使数目保持正确。",
+        "A balanced transportation problem with $m$ sources and $n$ destinations has $m + n - 1$ independent constraints, because one of the row and column totals follows from all the others. So a basic plan uses that many cells, and the northwest corner rule produces exactly that number. A plan using fewer is degenerate, and a zero shipment is written in an extra cell to keep the count correct.",
+        "$m$ 个产地、$n$ 个销地的平衡运输问题有 $m + n - 1$ 个独立约束，因为行列总和中有一个可由其他的推出。所以基本方案使用这么多个格子，西北角法则恰好产生这个数目。使用更少格子的方案是退化的，要在一个额外的格子里写上零运量，使数目保持正确。",
       ],
       (rng) => {
         const m = rng.int(2, 9);
@@ -1243,8 +1243,8 @@ const matrixGames = topic(
       "a-mixed-strategy-value",
       ["The value of a mixed strategy", "混合策略的值"],
       [
-        "When no saddle point exists, each player mixes rows or columns at random, and von Neumann's minimax theorem says the guarantees then meet, a fact equal to strong duality for a suitable pair of programs. For a two by two game, the row player makes the opponent indifferent between columns. This gives the formula that the value is ad minus bc, over a plus d minus b minus c.",
-        "没有鞍点时，每一方都随机混合各行或各列，冯·诺伊曼的极小极大定理说，这时双方的保证值相等，这相当于一对相应规划的强对偶。对二乘二博弈，行方使对手在各列之间无差别。这就给出公式：值等于 ad − bc 除以 a + d − b − c。",
+        "When no saddle point exists, each player mixes rows or columns at random, and von Neumann's minimax theorem says the guarantees then meet, a fact equal to strong duality for a suitable pair of programs. For a two by two game, the row player makes the opponent indifferent between columns. This gives the formula that the value is $\\frac{ad - bc}{a + d - b - c}$.",
+        "没有鞍点时，每一方都随机混合各行或各列，冯·诺伊曼的极小极大定理说，这时双方的保证值相等，这相当于一对相应规划的强对偶。对二乘二博弈，行方使对手在各列之间无差别。这就给出公式：值等于 $\\frac{ad - bc}{a + d - b - c}$。",
       ],
       (rng) => {
         const low1 = rng.int(0, 4);

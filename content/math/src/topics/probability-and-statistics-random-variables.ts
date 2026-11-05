@@ -159,8 +159,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "mode-of-polynomial-pdf",
         title: t("Finding the mode from a polynomial PDF", "由多项式型概率密度函数求解众数"),
         explanation: t(
-          "For a continuous random variable with differentiable PDF f(x), the mode occurs at a critical point where f'(x) = 0 and f''(x) < 0 (or at the boundary).",
-          "对于概率密度函数 f(x) 可微的连续型随机变量，众数出现在满足 f'(x) = 0 且 f''(x) < 0 的驻点（或区间边界）处。",
+          "For a continuous random variable with differentiable PDF $f(x)$, the mode occurs at a critical point where $f'(x) = 0$ and $f''(x) < 0$ (or at the boundary).",
+          "对于概率密度函数 $f(x)$ 可微的连续型随机变量，众数出现在满足 $f'(x) = 0$ 且 $f''(x) < 0$ 的驻点（或区间边界）处。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 45);

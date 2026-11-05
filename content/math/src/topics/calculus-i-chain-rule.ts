@@ -212,8 +212,8 @@ export const theChainRuleWithExponentialFunctions: TopicDef = {
       id: "other-bases-to-an-inner-function",
       title: t("Other bases to an inner function", "其他底数的内层函数次幂"),
       explanation: t(
-        "Any base can be written as e raised to its natural logarithm, which is why the derivative of a power of another base carries that extra logarithm factor. $$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\nFor example, $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$.",
-        "任何底数都可以写成 e 的其自然对数次幂，所以其他底数的指数函数的导数会多一个对数因子。$$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\n例如 $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$。",
+        "Any base can be written as $e$ raised to its natural logarithm, which is why the derivative of a power of another base carries that extra logarithm factor. $$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\nFor example, $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$.",
+        "任何底数都可以写成 $e$ 的其自然对数次幂，所以其他底数的指数函数的导数会多一个对数因子。$$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\n例如 $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 5, 10]);

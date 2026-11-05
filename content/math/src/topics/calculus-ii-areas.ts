@@ -993,8 +993,8 @@ export const volumesOfSolidsWithCircularCrossSections: TopicDef = {
       id: "circular-cross-sections",
       title: t("Circular cross sections", "圆形截面"),
       explanation: t(
-        "Each slice is a full circle whose diameter spans the base region, so its area is a quarter of pi times the square of that length. A circle with diameter $s$ has area $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$, so $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$. Remember to halve the diameter before squaring.",
-        "每个截面都是一个整圆，它的直径横跨底面区域，所以面积是 π/4 乘以这个长度的平方。直径为 $s$ 的圆面积为 $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$，所以 $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$。注意先把直径减半再平方。",
+        "Each slice is a full circle whose diameter spans the base region, so its area is $\\frac{\\pi}{4}$ times the square of that length. A circle with diameter $s$ has area $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$, so $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$. Remember to halve the diameter before squaring.",
+        "每个截面都是一个整圆，它的直径横跨底面区域，所以面积是 $\\frac{\\pi}{4}$ 乘以这个长度的平方。直径为 $s$ 的圆面积为 $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$，所以 $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$。注意先把直径减半再平方。",
       ),
       generate(rng) {
         const section: Section = {

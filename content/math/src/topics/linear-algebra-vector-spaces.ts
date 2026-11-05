@@ -2286,8 +2286,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
       id: "identify-vector-space-axioms",
       title: t("Identifying vector space axioms", "识别向量空间公理"),
       explanation: t(
-        "The axioms include associativity and commutativity of addition, existence of zero and additive inverses, distributivity of scalar multiplication over vector addition c(u+v) = cu+cv, distributivity over scalar addition (c+d)u = cu+du, associativity of scaling c(du) = (cd)u, and 1u = u.",
-        "公理包括加法结合律、加法交换律、零元存在性、负元存在性、数乘对向量加法的分配律 c(u+v) = cu+cv、数乘对标量加法的分配律 (c+d)u = cu+du、数乘结合律 c(du) = (cd)u 以及标量乘单位元 1u = u。",
+        "The axioms include associativity and commutativity of addition, existence of zero and additive inverses, distributivity of scalar multiplication over vector addition $c(u+v) = cu+cv$, distributivity over scalar addition $(c+d)u = cu+du$, associativity of scaling $c(du) = (cd)u$, and $1u = u$.",
+        "公理包括加法结合律、加法交换律、零元存在性、负元存在性、数乘对向量加法的分配律 $c(u+v) = cu+cv$、数乘对标量加法的分配律 $(c+d)u = cu+du$、数乘结合律 $c(du) = (cd)u$ 以及标量乘单位元 $1u = u$。",
       ),
       generate(rng) {
         const type = rng.pick(["distrib-vector", "distrib-scalar", "assoc-scalar", "inverse"]);

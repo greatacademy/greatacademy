@@ -270,8 +270,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-expectation",
         title: t("Expected value of a continuous uniform distribution", "连续均匀分布的期望值"),
         explanation: t(
-          "A uniform density is symmetric about the center of its interval, so the mean is the midpoint of the two endpoints. For X ~ U(a, b), the expected value is the midpoint E[X] = (a + b) / 2.",
-          "均匀密度关于区间中点对称，所以均值是两个端点的中点。对于 X ~ U(a, b)，期望值为区间中点 E[X] = (a + b) / 2。",
+          "A uniform density is symmetric about the center of its interval, so the mean is the midpoint of the two endpoints. For $X \\sim U(a, b)$, the expected value is the midpoint $E[X] = \\frac{a + b}{2}$.",
+          "均匀密度关于区间中点对称，所以均值是两个端点的中点。对于 $X \\sim U(a, b)$，期望值为区间中点 $E[X] = \\frac{a + b}{2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(-20, 20);
@@ -970,8 +970,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "f-distribution-mean",
         title: t("Mean of the F-distribution", "F 分布的均值"),
         explanation: t(
-          "The mean of an F variable depends only on the denominator degrees of freedom, and it is slightly greater than one, approaching one for large samples. For X ~ F(d1, d2) with d2 > 2, E[X] = d2 / (d2 - 2), depending only on denominator degrees of freedom.",
-          "F 变量的均值只取决于分母的自由度，它略大于 1，样本很大时趋于 1。对于 d2 > 2 的 X ~ F(d1, d2)，其均值仅由分母自由度决定：E[X] = d2 / (d2 - 2)。",
+          "The mean of an $F$ variable depends only on the denominator degrees of freedom, and it is slightly greater than one, approaching one for large samples. For $X \\sim F(d_1, d_2)$ with $d_2 > 2$, $E[X] = \\frac{d_2}{d_2 - 2}$, depending only on denominator degrees of freedom.",
+          "$F$ 变量的均值只取决于分母的自由度，它略大于 1，样本很大时趋于 1。对于 $d_2 > 2$ 的 $X \\sim F(d_1, d_2)$，其均值仅由分母自由度决定：$E[X] = \\frac{d_2}{d_2 - 2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const d1 = rng.int(1, 20);

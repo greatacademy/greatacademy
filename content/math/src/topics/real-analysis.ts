@@ -35,8 +35,8 @@ const epsilonForSequences = topic(
       "finding-n-for-a-reciprocal-sequence",
       ["Finding N for a reciprocal sequence", "求倒数型数列的 N"],
       [
-        "A sequence converges to L when, for every tolerance $\\varepsilon$, all terms from some index N onward lie within $\\varepsilon$ of L. For a sequence of the form L plus c over n, the distance is c over n, so the condition becomes n greater than c over $\\varepsilon$. The strict inequality matters when that quotient is a whole number, since the index itself then just fails.",
-        "数列收敛于 L，是指对每个误差 $\\varepsilon$，从某个下标 N 起的所有项都在 L 的 $\\varepsilon$ 范围之内。对形如 L 加 c/n 的数列，距离是 c/n，所以条件变成 n 大于 c 除以 $\\varepsilon$。当这个商是整数时，严格不等号很重要，因为这个下标本身恰好不满足。",
+        "A sequence converges to $L$ when, for every tolerance $\\varepsilon$, all terms from some index $N$ onward lie within $\\varepsilon$ of $L$. For a sequence of the form $L + \\frac{c}{n}$, the distance is $\\frac{c}{n}$, so the condition becomes $n > \\frac{c}{\\varepsilon}$. The strict inequality matters when that quotient is a whole number, since the index itself then just fails.",
+        "数列收敛于 $L$，是指对每个误差 $\\varepsilon$，从某个下标 $N$ 起的所有项都在 $L$ 的 $\\varepsilon$ 范围之内。对形如 $L + \\frac{c}{n}$ 的数列，距离是 $\\frac{c}{n}$，所以条件变成 $n > \\frac{c}{\\varepsilon}$。当这个商是整数时，严格不等号很重要，因为这个下标本身恰好不满足。",
       ],
       (rng) => {
         const L = rng.int(-6, 9);
@@ -100,8 +100,8 @@ const suprema = topic(
       "bounds-of-a-sequence-set",
       ["Bounds of a sequence set", "数列集合的界"],
       [
-        "The set of values a plus b over n, for b positive, falls towards a as n grows, so its largest element is at n equal to one and its infimum is a, which no term reaches. The set of values a minus b over n rises instead, and the roles swap. Drawing a few terms settles which bound is an actual element and which is only a limit.",
-        "当 b 为正时，a 加 b/n 这些值随 n 增大而下降趋向 a，所以最大元素在 n = 1 处，下确界是 a，而没有一项能达到它。a 减 b/n 这些值则上升，两者的角色互换。画出几项，就能看清哪个界是真正的元素，哪个只是极限。",
+        "The set of values $a + \\frac{b}{n}$, for $b$ positive, falls towards $a$ as $n$ grows, so its largest element is at $n = 1$ and its infimum is $a$, which no term reaches. The set of values $a - \\frac{b}{n}$ rises instead, and the roles swap. Drawing a few terms settles which bound is an actual element and which is only a limit.",
+        "当 $b$ 为正时，$a + \\frac{b}{n}$ 这些值随 $n$ 增大而下降趋向 $a$，所以最大元素在 $n = 1$ 处，下确界是 $a$，而没有一项能达到它。$a - \\frac{b}{n}$ 这些值则上升，两者的角色互换。画出几项，就能看清哪个界是真正的元素，哪个只是极限。",
       ],
       (rng) => {
         const a = rng.int(-6, 9);
@@ -285,8 +285,8 @@ const cauchySequences = topic(
       "a-cauchy-index",
       ["Finding a Cauchy index", "求柯西下标"],
       [
-        "A sequence is Cauchy when its terms eventually stay close to one another, whatever their indices. This makes no mention of a limit, which is the point: in the real numbers, completeness makes Cauchy sequences converge, so convergence can be shown without knowing the limit. For c over n, terms with indices at least N differ by less than c over N, and this bound is the best one.",
-        "如果数列的项最终彼此保持接近，不论下标是多少，这个数列就是柯西数列。这里完全没有提到极限，这正是关键：在实数中，完备性使柯西数列收敛，所以可以在不知道极限的情况下证明收敛。对 c/n，下标不小于 N 的项相差小于 c/N，这个界是最好的。",
+        "A sequence is Cauchy when its terms eventually stay close to one another, whatever their indices. This makes no mention of a limit, which is the point: in the real numbers, completeness makes Cauchy sequences converge, so convergence can be shown without knowing the limit. For $\\frac{c}{n}$, terms with indices at least $N$ differ by less than $\\frac{c}{N}$, and this bound is the best one.",
+        "如果数列的项最终彼此保持接近，不论下标是多少，这个数列就是柯西数列。这里完全没有提到极限，这正是关键：在实数中，完备性使柯西数列收敛，所以可以在不知道极限的情况下证明收敛。对 $\\frac{c}{n}$，下标不小于 $N$ 的项相差小于 $\\frac{c}{N}$，这个界是最好的。",
       ],
       (rng) => {
         const c = rng.int(2, 12);
@@ -522,8 +522,8 @@ const epsilonDelta = topic(
       "delta-for-a-square",
       ["Delta for the square function", "平方函数的 δ"],
       [
-        "For a nonlinear function the slope changes, so a proof first restricts the input to a bounded region. For the square function near a, the difference of squares factors as the input distance times x plus a, and restricting x to within one of a bounds that factor by twice a plus one. Then $\\delta$ is the smaller of one and $\\varepsilon$ over that bound.",
-        "对非线性函数，斜率会变化，所以证明时先把输入限制在有界区域内。对 a 附近的平方函数，平方差分解成输入距离乘 x + a，把 x 限制在距 a 不超过 1 的范围内后，这个因子不超过 2a + 1。于是 $\\delta$ 取 1 和 $\\varepsilon$ 除以这个界中较小的那个。",
+        "For a nonlinear function the slope changes, so a proof first restricts the input to a bounded region. For the square function near $a$, the difference of squares factors as the input distance times $x + a$, and restricting $x$ to within $1$ of $a$ bounds that factor by $2a + 1$. Then $\\delta$ is the smaller of $1$ and $\\varepsilon$ over that bound.",
+        "对非线性函数，斜率会变化，所以证明时先把输入限制在有界区域内。对 $a$ 附近的平方函数，平方差分解成输入距离乘 $x + a$，把 $x$ 限制在距 $a$ 不超过 $1$ 的范围内后，这个因子不超过 $2a + 1$。于是 $\\delta$ 取 $1$ 和 $\\varepsilon$ 除以这个界中较小的那个。",
       ],
       (rng) => {
         const a = rng.int(1, 12);
@@ -820,8 +820,8 @@ const compactness = topic(
       "extreme-values-on-a-compact-interval",
       ["Extreme values on a compact interval", "紧区间上的最值"],
       [
-        "A continuous function on a compact set attains a maximum and a minimum. This can fail on a set that is not compact, as with one over x on an open interval near zero. For a quadratic on a closed interval, the extreme values lie at the vertex, when it is inside the interval, or at the endpoints, so comparing those few values finds both of them.",
-        "紧集上的连续函数能取到最大值和最小值。在非紧集上这可能不成立，比如 1/x 在靠近零的开区间上。对闭区间上的二次函数，最值在顶点（当它在区间内时）或端点取到，所以比较这几个值就能找到它们。",
+        "A continuous function on a compact set attains a maximum and a minimum. This can fail on a set that is not compact, as with $\\frac{1}{x}$ on an open interval near zero. For a quadratic on a closed interval, the extreme values lie at the vertex, when it is inside the interval, or at the endpoints, so comparing those few values finds both of them.",
+        "紧集上的连续函数能取到最大值和最小值。在非紧集上这可能不成立，比如 $\\frac{1}{x}$ 在靠近零的开区间上。对闭区间上的二次函数，最值在顶点（当它在区间内时）或端点取到，所以比较这几个值就能找到它们。",
       ],
       (rng) => {
         const c = rng.int(-5, 6);
@@ -887,8 +887,8 @@ const uniformContinuity = topic(
       "what-fails-to-be-uniformly-continuous",
       ["What fails to be uniformly continuous", "什么不是一致连续的"],
       [
-        "By the Heine–Cantor theorem, a continuous function on a compact set is uniformly continuous, so a failure needs a domain that is not compact. Even there, failure needs a growing slope. So one over x on an open interval at zero fails, and the square function on the whole line fails, whereas a bounded slope, as for a sine or a line, keeps uniform continuity on an unbounded domain.",
-        "由海涅–康托尔定理，紧集上的连续函数是一致连续的，所以不一致连续只能发生在非紧的定义域上。即使在那里，也还需要斜率不断增大。所以开区间上靠近零的 1/x 不是一致连续的，整条直线上的平方函数也不是；而斜率有界时，比如正弦或直线，在无界定义域上仍是一致连续的。",
+        "By the Heine–Cantor theorem, a continuous function on a compact set is uniformly continuous, so a failure needs a domain that is not compact. Even there, failure needs a growing slope. So $\\frac{1}{x}$ on an open interval at zero fails, and the square function on the whole line fails, whereas a bounded slope, as for a sine or a line, keeps uniform continuity on an unbounded domain.",
+        "由海涅–康托尔定理，紧集上的连续函数是一致连续的，所以不一致连续只能发生在非紧的定义域上。即使在那里，也还需要斜率不断增大。所以开区间上靠近零的 $\\frac{1}{x}$ 不是一致连续的，整条直线上的平方函数也不是；而斜率有界时，比如正弦或直线，在无界定义域上仍是一致连续的。",
       ],
       (rng) => {
         const k = rng.int(2, 9);
@@ -1189,8 +1189,8 @@ const uniformConvergence = topic(
       "a-pointwise-limit",
       ["A pointwise limit", "逐点极限"],
       [
-        "A sequence of functions converges pointwise when the values converge at each fixed x. This can break continuity: $x^n$ on the unit interval is continuous for every n, yet its limit is zero for x below one and one at x equal to one. Pointwise convergence lets the speed vary from point to point, and near one here the convergence becomes slower and slower.",
-        "如果在每个固定的 x 处函数值都收敛，函数列就逐点收敛。这可能破坏连续性：单位区间上的 $x^n$ 对每个 n 都连续，但它的极限在 x 小于 1 时是 0，在 x = 1 时是 1。逐点收敛允许速度随点而变，这里在 1 附近，收敛越来越慢。",
+        "A sequence of functions converges pointwise when the values converge at each fixed $x$. This can break continuity: $x^n$ on the unit interval is continuous for every $n$, yet its limit is $0$ for $x < 1$ and $1$ at $x = 1$. Pointwise convergence lets the speed vary from point to point, and near $1$ here the convergence becomes slower and slower.",
+        "如果在每个固定的 $x$ 处函数值都收敛，函数列就逐点收敛。这可能破坏连续性：单位区间上的 $x^n$ 对每个 $n$ 都连续，但它的极限在 $x < 1$ 时是 $0$，在 $x = 1$ 时是 $1$。逐点收敛允许速度随点而变，这里在 $1$ 附近，收敛越来越慢。",
       ],
       (rng) => {
         const c = rng.int(-8, 9);
@@ -1282,8 +1282,8 @@ const weierstrassTest = topic(
       "the-tail-of-a-power-series",
       ["The tail of a power series", "幂级数的尾部"],
       [
-        "A power series converges uniformly on any closed interval inside its interval of convergence, and the M-test shows it. On the interval where the size of x is at most one over r, each power is at most the matching power of one over r. So the tail after N terms is at most a geometric sum, and this bound does not depend on x, which is what uniformity means.",
-        "幂级数在收敛区间内部的任何闭区间上一致收敛，M 判别法能说明这一点。在 x 的大小不超过 1/r 的区间上，每个幂不超过 1/r 对应的幂。所以 N 项之后的尾部不超过一个几何级数的和，而这个界与 x 无关，这正是一致性的含义。",
+        "A power series converges uniformly on any closed interval inside its interval of convergence, and the M-test shows it. On the interval where $|x| \\le \\frac{1}{r}$, each power is at most the matching power of $\\frac{1}{r}$. So the tail after $N$ terms is at most a geometric sum, and this bound does not depend on $x$, which is what uniformity means.",
+        "幂级数在收敛区间内部的任何闭区间上一致收敛，M 判别法能说明这一点。在 $|x| \\le \\frac{1}{r}$ 的区间上，每个幂不超过 $\\frac{1}{r}$ 对应的幂。所以 $N$ 项之后的尾部不超过一个几何级数的和，而这个界与 $x$ 无关，这正是一致性的含义。",
       ],
       (rng) => {
         const r = rng.int(2, 6);
@@ -1317,8 +1317,8 @@ const contractions = topic(
       "the-fixed-point-of-a-contraction",
       ["The fixed point of a contraction", "压缩映射的不动点"],
       [
-        "A contraction shrinks all distances by a constant factor below one. On a complete metric space it has exactly one fixed point, and iterating from any starting point converges to it, as the iterates form a Cauchy sequence. Completeness is essential, because otherwise the limit could be missing from the space. For a linear map, the fixed point comes straight from solving x equal to f of x.",
-        "压缩映射把所有距离按小于 1 的固定比例缩小。在完备度量空间上，它恰有一个不动点，从任何起点迭代都收敛到它，因为迭代序列是柯西数列。完备性至关重要，否则极限可能不在这个空间里。对线性映射，不动点可以直接由解 x = f(x) 得到。",
+        "A contraction shrinks all distances by a constant factor below one. On a complete metric space it has exactly one fixed point, and iterating from any starting point converges to it, as the iterates form a Cauchy sequence. Completeness is essential, because otherwise the limit could be missing from the space. For a linear map, the fixed point comes straight from solving $x = f(x)$.",
+        "压缩映射把所有距离按小于 1 的固定比例缩小。在完备度量空间上，它恰有一个不动点，从任何起点迭代都收敛到它，因为迭代序列是柯西数列。完备性至关重要，否则极限可能不在这个空间里。对线性映射，不动点可以直接由解 $x = f(x)$ 得到。",
       ],
       (rng) => {
         const q = rng.int(2, 9);

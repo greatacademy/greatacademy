@@ -737,8 +737,8 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
       "a-hemisphere-on-a-cylinder",
       ["A hemisphere on a cylinder", "圆柱上的半球"],
       [
-        "A solid made of joined pieces has the sum of their volumes. A hemisphere is half a sphere, so it contributes two thirds of pi times the cube of the radius, and the cylinder adds its base times its height.",
-        "由几部分拼成的立体，体积是各部分之和。半球是半个球，贡献三分之二乘 $\\pi$ 乘半径的立方；圆柱再加上底面积乘高。",
+        "A solid made of joined pieces has the sum of their volumes. A hemisphere is half a sphere, so it contributes $\\frac{2}{3}\\pi$ times the cube of the radius, and the cylinder adds its base times its height.",
+        "由几部分拼成的立体，体积是各部分之和。半球是半个球，贡献 $\\frac{2}{3}\\pi$ 乘半径的立方；圆柱再加上底面积乘高。",
       ],
       (rng) => {
         const u = rng.int(1, 4);

@@ -2449,8 +2449,8 @@ export const vectorsOverTheComplexNumbers: TopicDef = {
       id: "complex-vector-decomposition",
       title: t("Complex Vector Decomposition", "复向量的分解"),
       explanation: t(
-        "Splitting each entry into its real and imaginary parts writes a complex vector as a real vector plus i times another real vector. Express a complex vector $\\mathbf{v} \\in \\mathbb{C}^n$ as $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ and find its conjugate.",
-        "把每个分量拆成实部和虚部，就把复向量写成一个实向量加上 i 乘以另一个实向量。将复向量 $\\mathbf{v} \\in \\mathbb{C}^n$ 表示为 $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ 并求其复共轭。",
+        "Splitting each entry into its real and imaginary parts writes a complex vector as a real vector plus $i$ times another real vector. Express a complex vector $\\mathbf{v} \\in \\mathbb{C}^n$ as $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ and find its conjugate.",
+        "把每个分量拆成实部和虚部，就把复向量写成一个实向量加上 $i$ 乘以另一个实向量。将复向量 $\\mathbf{v} \\in \\mathbb{C}^n$ 表示为 $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ 并求其复共轭。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-6, 6);

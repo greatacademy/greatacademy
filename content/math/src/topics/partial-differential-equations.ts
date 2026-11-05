@@ -171,8 +171,8 @@ const transport = topic(
       "a-value-of-the-moving-profile",
       ["A value of the moving profile", "移动波形的值"],
       [
-        "The transport equation says that the time derivative plus c times the x derivative is zero. Its solution is the starting profile sliding to the right at speed c without changing shape: u of x and t equals f of x minus ct. To find a value, trace back to the point where the profile came from. Substitution confirms that the chain rule makes the two terms cancel.",
-        "输运方程说，时间导数加 c 乘 x 的导数等于零。它的解是初始波形以速度 c 向右滑动，形状不变：u(x, t) 等于 f(x − ct)。求值时，要追溯到波形出发的位置。代入后可以确认，链式法则使这两项相消。",
+        "The transport equation says that $u_t + cu_x = 0$. Its solution is the starting profile sliding to the right at speed $c$ without changing shape: $u(x, t) = f(x - ct)$. To find a value, trace back to the point where the profile came from. Substitution confirms that the chain rule makes the two terms cancel.",
+        "输运方程说，$u_t + cu_x = 0$。它的解是初始波形以速度 $c$ 向右滑动，形状不变：$u(x, t) = f(x - ct)$。求值时，要追溯到波形出发的位置。代入后可以确认，链式法则使这两项相消。",
       ],
       (rng) => {
         const c = rng.int(2, 6);
@@ -199,8 +199,8 @@ const transport = topic(
       "the-foot-of-a-characteristic",
       ["The foot of a characteristic", "特征线的起点"],
       [
-        "The lines along which the solution stays constant are called characteristics. For speed c, they are the straight lines x minus ct equal to a constant in the plane of x and t. Each one starts from a point on the x axis, called its foot, and carries that point's initial value forward. So the speed may be negative, in which case the characteristics lean to the left.",
-        "解保持不变的那些直线称为特征线。速度为 c 时，它们是 x − ct 等于常数的直线，位于 x-t 平面中。每条特征线都从 x 轴上的一点出发，这一点称为它的起点，并把该点的初始值向前传递。速度也可以是负的，这时特征线向左倾斜。",
+        "The lines along which the solution stays constant are called characteristics. For speed $c$, they are the straight lines $x - ct$ equal to a constant in the plane of $x$ and $t$. Each one starts from a point on the $x$ axis, called its foot, and carries that point's initial value forward. So the speed may be negative, in which case the characteristics lean to the left.",
+        "解保持不变的那些直线称为特征线。速度为 $c$ 时，它们是 $x - ct$ 等于常数的直线，位于 $x$-$t$ 平面中。每条特征线都从 $x$ 轴上的一点出发，这一点称为它的起点，并把该点的初始值向前传递。速度也可以是负的，这时特征线向左倾斜。",
       ],
       (rng) => {
         const c = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
@@ -236,8 +236,8 @@ const characteristics = topic(
       "a-constant-source",
       ["A constant source", "常数源项"],
       [
-        "The method of characteristics follows a curve along which a first-order equation becomes an ordinary one. With a constant source s on the right side, the solution along a characteristic changes at the rate s, rather than remaining constant. So the value at time t is the initial value at the foot, plus s times t. In this way the partial differential equation reduces to a one-line integration.",
-        "特征线法沿一条曲线，使一阶方程变成常微分方程。右端有常数源项 s 时，解沿特征线以速率 s 变化，而不是保持不变。所以时刻 t 的值等于起点的初始值加 s 乘 t。这样偏微分方程就化成了一行积分。",
+        "The method of characteristics follows a curve along which a first-order equation becomes an ordinary one. With a constant source $s$ on the right side, the solution along a characteristic changes at the rate $s$, rather than remaining constant. So the value at time $t$ is the initial value at the foot, plus $st$. In this way the partial differential equation reduces to a one-line integration.",
+        "特征线法沿一条曲线，使一阶方程变成常微分方程。右端有常数源项 $s$ 时，解沿特征线以速率 $s$ 变化，而不是保持不变。所以时刻 $t$ 的值等于起点的初始值加 $st$。这样偏微分方程就化成了一行积分。",
       ],
       (rng) => {
         const c = rng.int(2, 5);
@@ -265,8 +265,8 @@ const characteristics = topic(
       "a-variable-speed",
       ["A variable speed", "变化的速度"],
       [
-        "Characteristics need not be straight. For the time derivative plus x times the x derivative equal to zero, the speed at each place is x, so a characteristic solves the ordinary equation dx over dt equal to x, and it is an exponential curve. Following it back from a point at time t lands at x times $e^{-t}$. The solution there equals the initial value at that foot.",
-        "特征线不一定是直线。对于时间导数加 x 乘 x 的导数等于零的方程，每处的速度是 x，所以特征线满足常微分方程 dx/dt = x，它是指数曲线。从时刻 t 的一点沿它回溯，到达 x 乘 $e^{-t}$。这一点的解等于这个起点的初始值。",
+        "Characteristics need not be straight. For $u_t + xu_x = 0$, the speed at each place is $x$, so a characteristic solves the ordinary equation $\\frac{dx}{dt} = x$, and it is an exponential curve. Following it back from a point at time $t$ lands at $xe^{-t}$. The solution there equals the initial value at that foot.",
+        "特征线不一定是直线。对于方程 $u_t + xu_x = 0$，每处的速度是 $x$，所以特征线满足常微分方程 $\\frac{dx}{dt} = x$，它是指数曲线。从时刻 $t$ 的一点沿它回溯，到达 $xe^{-t}$。这一点的解等于这个起点的初始值。",
       ],
       (rng) => {
         const k = rng.int(2, 5);
@@ -303,8 +303,8 @@ const separation = topic(
       "the-eigenvalues-for-fixed-ends",
       ["The eigenvalues for fixed ends", "固定端点的特征值"],
       [
-        "Separation of variables looks for solutions that are a product of a function of x and a function of t. Substituting and dividing gives one side depending only on x and the other only on t, so both equal a constant. The x equation with zero values at both ends then allows only special constants, called eigenvalues: the square of n pi over L, with sines as eigenfunctions.",
-        "分离变量法寻找 x 的函数与 t 的函数之积形式的解。代入并相除后，一边只依赖 x，另一边只依赖 t，所以两边都等于常数。x 的方程在两端取零值时，只允许特殊的常数，称为特征值：n 乘 π 除以 L 的平方，特征函数是正弦。",
+        "Separation of variables looks for solutions that are a product of a function of $x$ and a function of $t$. Substituting and dividing gives one side depending only on $x$ and the other only on $t$, so both equal a constant. The $x$ equation with zero values at both ends then allows only special constants, called eigenvalues: $\\left(\\frac{n\\pi}{L}\\right)^2$, with sines as eigenfunctions.",
+        "分离变量法寻找 $x$ 的函数与 $t$ 的函数之积形式的解。代入并相除后，一边只依赖 $x$，另一边只依赖 $t$，所以两边都等于常数。$x$ 的方程在两端取零值时，只允许特殊的常数，称为特征值：$\\left(\\frac{n\\pi}{L}\\right)^2$，特征函数是正弦。",
       ],
       (rng) => {
         const L = rng.int(2, 9);
@@ -328,8 +328,8 @@ const separation = topic(
       "the-time-equation",
       ["The time equation", "时间方程"],
       [
-        "Once the eigenvalue is known, the equation for T is an ordinary one that can be solved directly. For diffusion, the time factor satisfies T prime equal to minus c lambda times T, whose solution is an exponential decay at the rate c times the eigenvalue. Thus each mode has its own rate, fixed by the same constant that the x equation supplied, and the two equations stay linked through it.",
-        "知道特征值后，T 的方程就是可以直接求解的常微分方程。对扩散问题，时间因子满足 $T' = -c\\lambda T$，它的解是以 c 乘特征值为速率的指数衰减。因此每个模态都有自己的速率，由 x 的方程提供的同一个常数确定，两个方程通过它保持联系。",
+        "Once the eigenvalue is known, the equation for $T$ is an ordinary one that can be solved directly. For diffusion, the time factor satisfies $T' = -c\\lambda T$, whose solution is an exponential decay at the rate $c$ times the eigenvalue. Thus each mode has its own rate, fixed by the same constant that the $x$ equation supplied, and the two equations stay linked through it.",
+        "知道特征值后，$T$ 的方程就是可以直接求解的常微分方程。对扩散问题，时间因子满足 $T' = -c\\lambda T$，它的解是以 $c$ 乘特征值为速率的指数衰减。因此每个模态都有自己的速率，由 $x$ 的方程提供的同一个常数确定，两个方程通过它保持联系。",
       ],
       (rng) => {
         const c = rng.int(2, 9);
@@ -430,8 +430,8 @@ const heatSeries = topic(
       "the-exponent-of-a-mode",
       ["The exponent of a mode", "模态的指数"],
       [
-        "With both ends held at zero, an initial temperature equal to one sine mode stays in that shape and merely shrinks. Mode n on an interval of length L decays by the factor e to the minus c times the square of n pi over L, times t. A general initial temperature is a Fourier sine series, and then each of its terms decays on its own, by this same formula.",
-        "两端保持为零时，等于一个正弦模态的初始温度保持这个形状，只是不断缩小。长度为 L 的区间上第 n 个模态按 e 的负 c 乘 (nπ/L) 的平方再乘 t 次方衰减。一般的初始温度是傅里叶正弦级数，这时每一项都按同样的公式各自衰减。",
+        "With both ends held at zero, an initial temperature equal to one sine mode stays in that shape and merely shrinks. Mode $n$ on an interval of length $L$ decays by the factor $e^{-c(n\\pi/L)^2 t}$. A general initial temperature is a Fourier sine series, and then each of its terms decays on its own, by this same formula.",
+        "两端保持为零时，等于一个正弦模态的初始温度保持这个形状，只是不断缩小。长度为 $L$ 的区间上第 $n$ 个模态按因子 $e^{-c(n\\pi/L)^2 t}$ 衰减。一般的初始温度是傅里叶正弦级数，这时每一项都按同样的公式各自衰减。",
       ],
       (rng) => {
         const c = rng.int(1, 9);
@@ -585,8 +585,8 @@ const nonhomogeneous = topic(
       "a-steady-state-with-a-source",
       ["A steady state with a source", "有热源的稳态"],
       [
-        "A heat source adds a constant to the right side of the equation. In the steady state the time derivative is zero, so the second x derivative equals minus the source divided by the diffusivity, and the temperature is a parabola rather than a line. With both ends at zero, it is q times x times L minus x, over twice c, and the rod is hottest in the middle.",
-        "热源在方程右端加了一个常数。在稳态下时间导数为零，所以对 x 的二阶导数等于负的热源除以扩散系数，温度是抛物线而不是直线。两端为零时，它等于 q 乘 x 乘 (L − x) 再除以 2c，杆的中间最热。",
+        "A heat source adds a constant to the right side of the equation. In the steady state the time derivative is zero, so the second $x$ derivative equals minus the source divided by the diffusivity, and the temperature is a parabola rather than a line. With both ends at zero, it is $\\frac{qx(L - x)}{2c}$, and the rod is hottest in the middle.",
+        "热源在方程右端加了一个常数。在稳态下时间导数为零，所以对 $x$ 的二阶导数等于负的热源除以扩散系数，温度是抛物线而不是直线。两端为零时，它等于 $\\frac{qx(L - x)}{2c}$，杆的中间最热。",
       ],
       (rng) => {
         const L = rng.int(2, 12);
@@ -627,8 +627,8 @@ const waveEquation = topic(
       "a-standing-wave",
       ["A standing wave", "驻波"],
       [
-        "The wave equation sets the second time derivative equal to c squared times the second x derivative, with c the wave speed. Separating variables gives standing waves, a fixed shape in x multiplied by an oscillation in t. Unlike a heat mode, a wave mode does not decay: energy is conserved, and it oscillates forever at its own frequency, which is proportional to its number in x.",
-        "波动方程令时间的二阶导数等于 c 的平方乘 x 的二阶导数，c 是波速。分离变量得到驻波，也就是 x 的固定形状乘以 t 的振荡。与热模态不同，波的模态不衰减：能量守恒，它以自己的频率永远振荡，这个频率与它在 x 方向的序号成正比。",
+        "The wave equation sets $u_{tt} = c^2 u_{xx}$, with $c$ the wave speed. Separating variables gives standing waves, a fixed shape in $x$ multiplied by an oscillation in $t$. Unlike a heat mode, a wave mode does not decay: energy is conserved, and it oscillates forever at its own frequency, which is proportional to its number in $x$.",
+        "波动方程令 $u_{tt} = c^2 u_{xx}$，$c$ 是波速。分离变量得到驻波，也就是 $x$ 的固定形状乘以 $t$ 的振荡。与热模态不同，波的模态不衰减：能量守恒，它以自己的频率永远振荡，这个频率与它在 $x$ 方向的序号成正比。",
       ],
       (rng) => {
         const c = rng.int(2, 9);
@@ -653,8 +653,8 @@ const waveEquation = topic(
       "the-period-of-a-string",
       ["The period of a string", "弦的周期"],
       [
-        "A string fixed at both ends has modes numbered by n, with angular frequency n pi c over L. So the period of mode n is two L over n times c. The first mode is the fundamental, and the others are its harmonics, with frequencies at whole multiples of it. That is why a string sounds a musical note, while a drum, whose frequencies are not whole multiples, generally does not.",
-        "两端固定的弦有按 n 编号的模态，角频率是 nπc/L。所以第 n 个模态的周期是 2L 除以 nc。第一个模态是基频，其他的是它的谐波，频率是基频的整数倍。这就是弦能发出乐音的原因，而鼓的频率不是整数倍，通常就发不出乐音。",
+        "A string fixed at both ends has modes numbered by $n$, with angular frequency $\\frac{n\\pi c}{L}$. So the period of mode $n$ is $\\frac{2L}{nc}$. The first mode is the fundamental, and the others are its harmonics, with frequencies at whole multiples of it. That is why a string sounds a musical note, while a drum, whose frequencies are not whole multiples, generally does not.",
+        "两端固定的弦有按 $n$ 编号的模态，角频率是 $\\frac{n\\pi c}{L}$。所以第 $n$ 个模态的周期是 $\\frac{2L}{nc}$。第一个模态是基频，其他的是它的谐波，频率是基频的整数倍。这就是弦能发出乐音的原因，而鼓的频率不是整数倍，通常就发不出乐音。",
       ],
       (rng) => {
         const L = rng.int(2, 9);
@@ -689,8 +689,8 @@ const dAlembert = topic(
       "an-initial-shape",
       ["An initial shape", "初始形状"],
       [
-        "On the whole line, the wave equation factors into two transport equations, one moving right and one moving left. With initial shape f and zero initial velocity, the solution is half of f at x minus ct, plus half of f at x plus ct. So an initial bump splits into two equal halves that travel in opposite directions at speed c, and each keeps the shape of the original.",
-        "在整条直线上，波动方程可以分解为两个输运方程，一个向右移动，一个向左移动。初始形状为 f、初始速度为零时，解是 f 在 x − ct 处的一半加上 f 在 x + ct 处的一半。所以初始的凸起分成相等的两半，以速度 c 向相反方向传播，每一半都保持原来的形状。",
+        "On the whole line, the wave equation factors into two transport equations, one moving right and one moving left. With initial shape $f$ and zero initial velocity, the solution is $\\frac{1}{2}f(x - ct) + \\frac{1}{2}f(x + ct)$. So an initial bump splits into two equal halves that travel in opposite directions at speed $c$, and each keeps the shape of the original.",
+        "在整条直线上，波动方程可以分解为两个输运方程，一个向右移动，一个向左移动。初始形状为 $f$、初始速度为零时，解是 $\\frac{1}{2}f(x - ct) + \\frac{1}{2}f(x + ct)$。所以初始的凸起分成相等的两半，以速度 $c$ 向相反方向传播，每一半都保持原来的形状。",
       ],
       (rng) => {
         const c = rng.int(2, 5);
@@ -718,8 +718,8 @@ const dAlembert = topic(
       "an-initial-velocity",
       ["An initial velocity", "初始速度"],
       [
-        "An initial velocity g adds a second term to d'Alembert's formula: one over two c, times the integral of g from x minus ct to x plus ct. So the value at a point depends only on initial data in that interval, called its domain of dependence. Information therefore travels no faster than the speed c, in sharp contrast with the heat equation, where any disturbance is felt everywhere at once.",
-        "初始速度 g 给达朗贝尔公式增加第二项：1/(2c) 乘 g 从 x − ct 到 x + ct 的积分。所以一点的值只依赖这个区间上的初始数据，这个区间称为它的依赖域。因此信息的传播速度不超过 c，这与热方程形成鲜明对比，热方程的任何扰动都会立即在各处被感受到。",
+        "An initial velocity $g$ adds a second term to d'Alembert's formula: $\\frac{1}{2c}$ times the integral of $g$ from $x - ct$ to $x + ct$. So the value at a point depends only on initial data in that interval, called its domain of dependence. Information therefore travels no faster than the speed $c$, in sharp contrast with the heat equation, where any disturbance is felt everywhere at once.",
+        "初始速度 $g$ 给达朗贝尔公式增加第二项：$\\frac{1}{2c}$ 乘 $g$ 从 $x - ct$ 到 $x + ct$ 的积分。所以一点的值只依赖这个区间上的初始数据，这个区间称为它的依赖域。因此信息的传播速度不超过 $c$，这与热方程形成鲜明对比，热方程的任何扰动都会立即在各处被感受到。",
       ],
       (rng) => {
         const c = rng.int(2, 5);
@@ -755,8 +755,8 @@ const waveSeries = topic(
       "a-plucked-mode-later",
       ["A plucked mode later on", "拨动的模态在之后的值"],
       [
-        "If a string is released from rest in the shape of mode n, it keeps that shape and its size oscillates: u equals a sine in x times a cosine of n pi c t over L. After one half period, the cosine is minus one, so the string is exactly upside down. After a full period, it is back where it began. A general shape is a sum of such modes.",
-        "如果弦从静止开始、形状为第 n 个模态，它保持这个形状，大小不断振荡：u 等于 x 的正弦乘以 nπct/L 的余弦。经过半个周期，余弦是 −1，弦恰好上下颠倒。经过一个完整周期，它回到起始位置。一般的形状是这样的模态之和。",
+        "If a string is released from rest in the shape of mode $n$, it keeps that shape and its size oscillates: $u$ equals a sine in $x$ times $\\cos\\frac{n\\pi c t}{L}$. After one half period, the cosine is $-1$, so the string is exactly upside down. After a full period, it is back where it began. A general shape is a sum of such modes.",
+        "如果弦从静止开始、形状为第 $n$ 个模态，它保持这个形状，大小不断振荡：$u$ 等于 $x$ 的正弦乘以 $\\cos\\frac{n\\pi c t}{L}$。经过半个周期，余弦是 $-1$，弦恰好上下颠倒。经过一个完整周期，它回到起始位置。一般的形状是这样的模态之和。",
       ],
       (rng) => {
         const L = rng.int(2, 8);
@@ -785,8 +785,8 @@ const waveSeries = topic(
       "the-coefficient-from-a-velocity",
       ["The coefficient from a velocity", "由速度得系数"],
       [
-        "When a string starts flat with an initial velocity, the solution uses the sine in time rather than the cosine. Differentiating in t brings down the frequency n pi c over L, so the size of the mode is the initial velocity's coefficient divided by that frequency. So a higher mode responds with a smaller size to the same velocity, which is why a struck string has few high harmonics.",
-        "弦从平直状态开始并有初始速度时，解用时间的正弦而不是余弦。对 t 求导会带下频率 nπc/L，所以模态的大小等于初始速度的系数除以这个频率。因此同样的速度下，高阶模态的响应更小，这就是被敲击的弦高次谐波很少的原因。",
+        "When a string starts flat with an initial velocity, the solution uses the sine in time rather than the cosine. Differentiating in $t$ brings down the frequency $\\frac{n\\pi c}{L}$, so the size of the mode is the initial velocity's coefficient divided by that frequency. So a higher mode responds with a smaller size to the same velocity, which is why a struck string has few high harmonics.",
+        "弦从平直状态开始并有初始速度时，解用时间的正弦而不是余弦。对 $t$ 求导会带下频率 $\\frac{n\\pi c}{L}$，所以模态的大小等于初始速度的系数除以这个频率。因此同样的速度下，高阶模态的响应更小，这就是被敲击的弦高次谐波很少的原因。",
       ],
       (rng) => {
         const L = rng.int(2, 8);
@@ -884,8 +884,8 @@ const laplaceRegions = topic(
       "a-boundary-value-on-a-disc",
       ["A boundary value on a disc", "圆盘上的边界值"],
       [
-        "In polar coordinates, separation on a disc gives the harmonic functions r to the n times cosine or sine of n theta. Bounded solutions avoid negative powers of r, since these blow up at the centre. So if the boundary value on the circle of radius R is a times the cosine of n theta, then the solution inside is a times r over R to the power n, times that cosine.",
-        "在极坐标中，圆盘上的分离变量给出调和函数：r 的 n 次方乘 $n\\theta$ 的余弦或正弦。有界的解不含 r 的负幂，因为它们在圆心处爆破。所以如果半径为 R 的圆周上的边界值是 a 乘 $n\\theta$ 的余弦，那么内部的解是 a 乘 r/R 的 n 次方，再乘这个余弦。",
+        "In polar coordinates, separation on a disc gives the harmonic functions $r^n \\cos n\\theta$ or $r^n \\sin n\\theta$. Bounded solutions avoid negative powers of $r$, since these blow up at the centre. So if the boundary value on the circle of radius $R$ is $a\\cos n\\theta$, then the solution inside is $a\\left(\\frac{r}{R}\\right)^n$ times that cosine.",
+        "在极坐标中，圆盘上的分离变量给出调和函数：$r^n \\cos n\\theta$ 或 $r^n \\sin n\\theta$。有界的解不含 $r$ 的负幂，因为它们在圆心处爆破。所以如果半径为 $R$ 的圆周上的边界值是 $a\\cos n\\theta$，那么内部的解是 $a\\left(\\frac{r}{R}\\right)^n$ 再乘这个余弦。",
       ],
       (rng) => {
         const R = rng.int(2, 6);
@@ -951,8 +951,8 @@ const eigenfunctions = topic(
       "eigenvalues-for-mixed-ends",
       ["Eigenvalues for mixed ends", "混合端点的特征值"],
       [
-        "Boundary conditions choose the eigenfunctions. If one end is fixed at zero and the other insulated, a sine must start at zero and be flat at the far end, so it fits an odd number of quarter waves. The eigenvalues are thus the square of two n minus one times pi over two L. Other conditions yield other sets, but the separated problem always has the same structure.",
-        "边界条件决定特征函数。如果一端固定为零，另一端绝热，正弦必须从零开始，并在另一端变平，所以它容纳奇数个四分之一波。因此特征值是 (2n − 1)π/(2L) 的平方。其他条件给出其他的集合，但分离后的问题结构总是相同的。",
+        "Boundary conditions choose the eigenfunctions. If one end is fixed at zero and the other insulated, a sine must start at zero and be flat at the far end, so it fits an odd number of quarter waves. The eigenvalues are thus $\\left(\\frac{(2n - 1)\\pi}{2L}\\right)^2$. Other conditions yield other sets, but the separated problem always has the same structure.",
+        "边界条件决定特征函数。如果一端固定为零，另一端绝热，正弦必须从零开始，并在另一端变平，所以它容纳奇数个四分之一波。因此特征值是 $\\left(\\frac{(2n - 1)\\pi}{2L}\\right)^2$。其他条件给出其他的集合，但分离后的问题结构总是相同的。",
       ],
       (rng) => {
         const L = rng.int(1, 6);
@@ -1018,8 +1018,8 @@ const fourierData = topic(
       "the-coefficient-of-a-constant",
       ["The coefficient of a constant", "常数的系数"],
       [
-        "To match an initial condition, expand it in the eigenfunctions. By orthogonality, the sine coefficient is two over L times the integral of the function times that mode. For a constant function, the result is zero for even modes and four times the constant, over n pi, for odd ones. The coefficients fall slowly, because a constant does not match the zero boundary values of the sine modes.",
-        "要匹配初始条件，就把它按特征函数展开。根据正交性，正弦系数是 2/L 乘函数与这个模态之积的积分。对常数函数，偶数模态的结果是零，奇数模态的结果是 4 倍常数除以 nπ。系数下降得很慢，因为常数与正弦模态的零边界值不相符。",
+        "To match an initial condition, expand it in the eigenfunctions. By orthogonality, the sine coefficient is $\\frac{2}{L}$ times the integral of the function times that mode. For a constant function, the result is zero for even modes and four times the constant, over $n\\pi$, for odd ones. The coefficients fall slowly, because a constant does not match the zero boundary values of the sine modes.",
+        "要匹配初始条件，就把它按特征函数展开。根据正交性，正弦系数是 $\\frac{2}{L}$ 乘函数与这个模态之积的积分。对常数函数，偶数模态的结果是零，奇数模态的结果是 4 倍常数除以 $n\\pi$。系数下降得很慢，因为常数与正弦模态的零边界值不相符。",
       ],
       (rng) => {
         const c = rng.int(2, 25);
@@ -1049,8 +1049,8 @@ const fourierData = topic(
       "evaluating-a-sum-of-modes",
       ["Evaluating a sum of modes", "求模态之和的值"],
       [
-        "A solution from a few modes is evaluated term by term. Since each term is a product of a coefficient, a space factor and a time factor, it helps to check the space factor first. At the midpoint of the interval, the sine of n pi over two is one, minus one, or zero, depending on n. So even modes vanish there, and odd modes alternate in sign.",
-        "由几个模态构成的解要逐项求值。因为每一项都是系数、空间因子和时间因子之积，先检查空间因子会有帮助。在区间中点，nπ/2 的正弦是 1、−1 或 0，取决于 n。所以偶数模态在那里为零，奇数模态的符号交替变化。",
+        "A solution from a few modes is evaluated term by term. Since each term is a product of a coefficient, a space factor and a time factor, it helps to check the space factor first. At the midpoint of the interval, $\\sin\\frac{n\\pi}{2}$ is $1$, $-1$, or $0$, depending on $n$. So even modes vanish there, and odd modes alternate in sign.",
+        "由几个模态构成的解要逐项求值。因为每一项都是系数、空间因子和时间因子之积，先检查空间因子会有帮助。在区间中点，$\\sin\\frac{n\\pi}{2}$ 是 $1$、$-1$ 或 $0$，取决于 $n$。所以偶数模态在那里为零，奇数模态的符号交替变化。",
       ],
       (rng) => {
         const L = rng.int(2, 8);
@@ -1084,8 +1084,8 @@ const finiteDifferences = topic(
       "one-step-of-the-explicit-scheme",
       ["One step of the explicit scheme", "显式格式的一步"],
       [
-        "A computer solves the heat equation on a grid. The explicit scheme replaces each derivative by a difference, which gives a new value equal to the old value plus r times the sum of the two neighbours minus twice the old value. Here r is c times the time step over the square of the grid spacing. Each new value thus depends only on three old values nearby.",
-        "计算机在网格上求解热方程。显式格式用差分代替每个导数，得到的新值等于旧值加 r 乘（两个邻点之和减去旧值的两倍）。这里 r 是 c 乘时间步长除以网格间距的平方。因此每个新值只依赖附近的三个旧值。",
+        "A computer solves the heat equation on a grid. The explicit scheme replaces each derivative by a difference, which gives a new value equal to the old value plus $r$ times the sum of the two neighbours minus twice the old value. Here $r$ is $c$ times the time step over the square of the grid spacing. Each new value thus depends only on three old values nearby.",
+        "计算机在网格上求解热方程。显式格式用差分代替每个导数，得到的新值等于旧值加 $r$ 乘（两个邻点之和减去旧值的两倍）。这里 $r$ 是 $c$ 乘时间步长除以网格间距的平方。因此每个新值只依赖附近的三个旧值。",
       ],
       (rng) => {
         const r = rng.pick([Q.of(1, 4), Q.of(1, 2), Q.of(1, 5), Q.of(2, 5), Q.of(1, 3)]);

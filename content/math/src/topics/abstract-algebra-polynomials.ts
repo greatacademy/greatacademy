@@ -1043,8 +1043,8 @@ export const theDivisionRingOfQuaternions: TopicDef = {
       id: "multiplying-quaternion-units",
       title: t("Products of i, j, k", "i、j、k 的乘积"),
       explanation: t(
-        "The quaternion units square to minus one and multiply cyclically, with the order reversed giving a minus sign. $jik = (ji)k = -k \\cdot k = -k^2 = 1$, and $i^3 j = (i^2)(ij) = -k$.",
-        "四元数单位的平方都等于负 1，它们按循环顺序相乘，顺序反过来时会多出一个负号。$jik = (ji)k = -k \\cdot k = -k^2 = 1$，$i^3 j = (i^2)(ij) = -k$。",
+        "The quaternion units square to $-1$ and multiply cyclically, with the order reversed giving a minus sign. $jik = (ji)k = -k \\cdot k = -k^2 = 1$, and $i^3 j = (i^2)(ij) = -k$.",
+        "四元数单位的平方都等于 $-1$，它们按循环顺序相乘，顺序反过来时会多出一个负号。$jik = (ji)k = -k \\cdot k = -k^2 = 1$，$i^3 j = (i^2)(ij) = -k$。",
       ),
       generate(rng) {
         const unitQ: Record<string, Quat> = { i: [0, 1, 0, 0], j: [0, 0, 1, 0], k: [0, 0, 0, 1] };

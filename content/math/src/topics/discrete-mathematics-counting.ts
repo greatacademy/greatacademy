@@ -865,8 +865,8 @@ export const partitionsOfNaturalNumbers: TopicDef = {
       id: "partitions-into-k-parts",
       title: t("Partitions into k parts", "分成 k 部分"),
       explanation: t(
-        "Partitions with exactly k parts either contain a part equal to one or, after subtracting one from every part, become partitions of a smaller number. Partitions of $7$ into exactly $3$ parts: $5 + 1 + 1$, $4 + 2 + 1$, $3 + 3 + 1$, $3 + 2 + 2$, so $p(7, 3) = 4$. Check: $p(6, 2) + p(4, 3) = 3 + 1 = 4$.",
-        "恰有 k 个部分的划分，要么含有等于 1 的部分，要么在每个部分都减去 1 之后变成一个更小的数的划分。把 $7$ 分成恰好 $3$ 部分：$5 + 1 + 1$、$4 + 2 + 1$、$3 + 3 + 1$、$3 + 2 + 2$，所以 $p(7, 3) = 4$。验证：$p(6, 2) + p(4, 3) = 3 + 1 = 4$。",
+        "Partitions with exactly $k$ parts either contain a part equal to one or, after subtracting one from every part, become partitions of a smaller number. Partitions of $7$ into exactly $3$ parts: $5 + 1 + 1$, $4 + 2 + 1$, $3 + 3 + 1$, $3 + 2 + 2$, so $p(7, 3) = 4$. Check: $p(6, 2) + p(4, 3) = 3 + 1 = 4$.",
+        "恰有 $k$ 个部分的划分，要么含有等于 1 的部分，要么在每个部分都减去 1 之后变成一个更小的数的划分。把 $7$ 分成恰好 $3$ 部分：$5 + 1 + 1$、$4 + 2 + 1$、$3 + 3 + 1$、$3 + 2 + 2$，所以 $p(7, 3) = 4$。验证：$p(6, 2) + p(4, 3) = 3 + 1 = 4$。",
       ),
       generate(rng) {
         const k = rng.int(2, 4);

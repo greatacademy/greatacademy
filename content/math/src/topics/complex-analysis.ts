@@ -58,8 +58,8 @@ const complexFunctions = topic(
       "the-real-and-imaginary-parts-of-a-square",
       ["Parts of a quadratic function", "二次函数的实部和虚部"],
       [
-        "A complex function sends each complex number to another, so it can be written as u plus i times v, with u and v real functions of x and y. For the square of z, expanding gives u as $x^2 - y^2$ and v as $2xy$. Thinking of a complex function as two linked real functions is the first step towards the Cauchy–Riemann equations.",
-        "复变函数把每个复数送到另一个复数，所以可以写成 u 加 i 乘 v，其中 u 和 v 是 x 和 y 的实函数。对 z 的平方，展开后得 u 为 $x^2 - y^2$，v 为 $2xy$。把复变函数看成两个相互联系的实函数，是通向柯西–黎曼方程的第一步。",
+        "A complex function sends each complex number to another, so it can be written as $u + iv$, with $u$ and $v$ real functions of $x$ and $y$. For $z^2$, expanding gives $u$ as $x^2 - y^2$ and $v$ as $2xy$. Thinking of a complex function as two linked real functions is the first step towards the Cauchy–Riemann equations.",
+        "复变函数把每个复数送到另一个复数，所以可以写成 $u + iv$，其中 $u$ 和 $v$ 是 $x$ 和 $y$ 的实函数。对 $z^2$，展开后得 $u$ 为 $x^2 - y^2$，$v$ 为 $2xy$。把复变函数看成两个相互联系的实函数，是通向柯西–黎曼方程的第一步。",
       ],
       (rng) => {
         const a = rng.int(-6, 6);
@@ -88,8 +88,8 @@ const complexFunctions = topic(
       "the-reciprocal-function",
       ["The reciprocal function", "倒数函数"],
       [
-        "The reciprocal of a complex number comes from multiplying above and below by its conjugate, which makes the denominator the real number $x^2 + y^2$. So the real part of one over z is x over that sum, and the imaginary part is minus y over it. The sign of the imaginary part flips, which is a common place to slip when working quickly.",
-        "复数的倒数可以通过分子分母同乘共轭得到，这样分母变成实数 $x^2 + y^2$。所以 1/z 的实部是 x 除以这个和，虚部是 −y 除以它。虚部的符号相反，快速计算时这里常常出错。",
+        "The reciprocal of a complex number comes from multiplying above and below by its conjugate, which makes the denominator the real number $x^2 + y^2$. So the real part of $\\frac{1}{z}$ is $x$ over that sum, and the imaginary part is $-y$ over it. The sign of the imaginary part flips, which is a common place to slip when working quickly.",
+        "复数的倒数可以通过分子分母同乘共轭得到，这样分母变成实数 $x^2 + y^2$。所以 $\\frac{1}{z}$ 的实部是 $x$ 除以这个和，虚部是 $-y$ 除以它。虚部的符号相反，快速计算时这里常常出错。",
       ],
       (rng) => {
         const { a, b, r } = signedTriple(rng);
@@ -128,8 +128,8 @@ const complexLimits = topic(
       "a-limit-along-a-line",
       ["A limit along a line", "沿直线的极限"],
       [
-        "In the plane, z can approach a point along infinitely many paths, and a limit must give the same value on all of them. The quotient of the conjugate of z by z itself depends only on direction: along the line y equal to mx, it is constant. So different lines give different values, which proves the limit at zero does not exist.",
-        "在平面上，z 可以沿无穷多条路径趋近一点，极限必须在所有路径上给出相同的值。z 的共轭除以 z 这个商只取决于方向：沿直线 y = mx，它是常数。所以不同的直线给出不同的值，这就证明了在零处极限不存在。",
+        "In the plane, $z$ can approach a point along infinitely many paths, and a limit must give the same value on all of them. The quotient $\\frac{\\bar{z}}{z}$ depends only on direction: along the line $y = mx$, it is constant. So different lines give different values, which proves the limit at zero does not exist.",
+        "在平面上，$z$ 可以沿无穷多条路径趋近一点，极限必须在所有路径上给出相同的值。商 $\\frac{\\bar{z}}{z}$只取决于方向：沿直线 $y = mx$，它是常数。所以不同的直线给出不同的值，这就证明了在零处极限不存在。",
       ],
       (rng) => {
         const m = rng.int(2, 20);
@@ -192,8 +192,8 @@ const complexDerivative = topic(
       "differentiating-a-power",
       ["Differentiating a polynomial", "多项式求导"],
       [
-        "The complex derivative is defined by the same quotient as the real one, but with h complex and approaching zero from every direction. Where it exists, the familiar rules hold: the power, sum, product and chain rules all carry over. So the derivative of a polynomial is computed as usual and then evaluated, with the complex arithmetic kept until the very end.",
-        "复导数由与实导数相同的商定义，只是 h 是复数，从各个方向趋于零。导数存在时，熟悉的法则都成立：幂、和、积、链式法则都适用。所以多项式的导数可以照常计算再代入求值，复数运算留到最后进行。",
+        "The complex derivative is defined by the same quotient as the real one, but with $h$ complex and approaching zero from every direction. Where it exists, the familiar rules hold: the power, sum, product and chain rules all carry over. So the derivative of a polynomial is computed as usual and then evaluated, with the complex arithmetic kept until the very end.",
+        "复导数由与实导数相同的商定义，只是 $h$ 是复数，从各个方向趋于零。导数存在时，熟悉的法则都成立：幂、和、积、链式法则都适用。所以多项式的导数可以照常计算再代入求值，复数运算留到最后进行。",
       ],
       (rng) => {
         const a = rng.int(-4, 5);
@@ -259,8 +259,8 @@ const cauchyRiemann = topic(
       "choosing-a-constant-for-the-equations",
       ["Choosing a constant", "选择常数"],
       [
-        "Approaching along the real and imaginary directions and comparing gives the Cauchy–Riemann equations: the x derivative of u equals the y derivative of v, and the y derivative of u is minus the x derivative of v. Together with continuity of the partial derivatives, these are exactly the conditions for the function to be complex differentiable. They link u and v tightly, so that one nearly determines the other.",
-        "沿实方向和虚方向趋近并比较，就得到柯西–黎曼方程：u 对 x 的偏导等于 v 对 y 的偏导，u 对 y 的偏导等于 v 对 x 的偏导的相反数。加上偏导数连续，这些正是函数复可导的条件。它们把 u 和 v 紧密联系在一起，一个几乎决定了另一个。",
+        "Approaching along the real and imaginary directions and comparing gives the Cauchy–Riemann equations: $u_x = v_y$ and $u_y = -v_x$. Together with continuity of the partial derivatives, these are exactly the conditions for the function to be complex differentiable. They link $u$ and $v$ tightly, so that one nearly determines the other.",
+        "沿实方向和虚方向趋近并比较，就得到柯西–黎曼方程：$u_x = v_y$，$u_y = -v_x$。加上偏导数连续，这些正是函数复可导的条件。它们把 $u$ 和 $v$ 紧密联系在一起，一个几乎决定了另一个。",
       ],
       (rng) => {
         const p = rng.int(2, 20);
@@ -280,8 +280,8 @@ const cauchyRiemann = topic(
       "a-derivative-from-partials",
       ["A derivative from partial derivatives", "由偏导数求导数"],
       [
-        "When a function is analytic, its derivative can be read from the partial derivatives: it equals the x derivative of u plus i times the x derivative of v. So differentiation in the complex sense can be carried out with real partial derivatives alone. Using the y derivatives instead gives the same value, because of the equations, and comparing both ways makes a good check.",
-        "函数解析时，它的导数可以从偏导数读出：它等于 u 对 x 的偏导加 i 乘 v 对 x 的偏导。所以复意义下的求导只用实的偏导数就能完成。根据方程，改用对 y 的偏导会得到相同的值，比较两种算法是很好的检验。",
+        "When a function is analytic, its derivative can be read from the partial derivatives: it equals $u_x + iv_x$. So differentiation in the complex sense can be carried out with real partial derivatives alone. Using the $y$ derivatives instead gives the same value, because of the equations, and comparing both ways makes a good check.",
+        "函数解析时，它的导数可以从偏导数读出：它等于 $u_x + iv_x$。所以复意义下的求导只用实的偏导数就能完成。根据方程，改用对 $y$ 的偏导会得到相同的值，比较两种算法是很好的检验。",
       ],
       (rng) => {
         const p = rng.int(1, 6);
@@ -347,8 +347,8 @@ const harmonic = topic(
       "finding-a-harmonic-conjugate",
       ["Finding a harmonic conjugate", "求共轭调和函数"],
       [
-        "A harmonic conjugate of u is a function v that makes u plus iv analytic. It is found by integrating the Cauchy–Riemann equations, and it is unique up to an added constant. For a linear function ax plus by, the conjugate is ay minus bx, corresponding to multiplying z by the constant a minus bi. A value at one point then fixes the constant.",
-        "u 的共轭调和函数是使 u + iv 解析的函数 v。它通过积分柯西–黎曼方程得到，并且除了相差一个常数外是唯一的。对线性函数 ax + by，共轭函数是 ay − bx，对应于用常数 a − bi 乘 z。再给定一点的值，就能确定这个常数。",
+        "A harmonic conjugate of $u$ is a function $v$ that makes $u + iv$ analytic. It is found by integrating the Cauchy–Riemann equations, and it is unique up to an added constant. For a linear function $ax + by$, the conjugate is $ay - bx$, corresponding to multiplying $z$ by the constant $a - bi$. A value at one point then fixes the constant.",
+        "$u$ 的共轭调和函数是使 $u + iv$ 解析的函数 $v$。它通过积分柯西–黎曼方程得到，并且除了相差一个常数外是唯一的。对线性函数 $ax + by$，共轭函数是 $ay - bx$，对应于用常数 $a - bi$ 乘 $z$。再给定一点的值，就能确定这个常数。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
@@ -384,8 +384,8 @@ const complexExponential = topic(
       "evaluating-the-exponential",
       ["Evaluating the exponential", "计算指数函数"],
       [
-        "The exponential of x plus iy is $e^x$ times the cosine of y plus i times the sine of y. Its modulus is $e^x$, set by the real part, and its argument is y, set by the imaginary part. So the exponential turns horizontal lines into rays and vertical lines into circles, and it is never zero, because its modulus is always positive.",
-        "x + iy 的指数函数是 $e^x$ 乘以 y 的余弦加 i 乘 y 的正弦。它的模是 $e^x$，由实部决定；它的辐角是 y，由虚部决定。所以指数函数把水平线变成射线，把竖直线变成圆，而且它从不为零，因为模总是正的。",
+        "The exponential of $x + iy$ is $e^x(\\cos y + i\\sin y)$. Its modulus is $e^x$, set by the real part, and its argument is $y$, set by the imaginary part. So the exponential turns horizontal lines into rays and vertical lines into circles, and it is never zero, because its modulus is always positive.",
+        "$x + iy$ 的指数函数是 $e^x(\\cos y + i\\sin y)$。它的模是 $e^x$，由实部决定；它的辐角是 $y$，由虚部决定。所以指数函数把水平线变成射线，把竖直线变成圆，而且它从不为零，因为模总是正的。",
       ],
       (rng) => {
         const r = rng.int(2, 15);
@@ -443,8 +443,8 @@ const complexLog = topic(
       "the-principal-argument-in-a-logarithm",
       ["The imaginary part of the logarithm", "对数的虚部"],
       [
-        "The logarithm of z is the natural logarithm of its modulus plus i times its argument. Because the argument has many values, a single choice must be made, and the principal logarithm takes the argument above minus pi up to pi. This makes the function discontinuous across the negative real axis, called the branch cut, where the argument jumps from pi to values near minus pi.",
-        "z 的对数是它的模的自然对数加 i 乘它的辐角。由于辐角有多个值，必须作出选择，主值对数取大于 −π 且不超过 π 的辐角。这使函数在负实轴上不连续，负实轴称为分支割线，辐角在那里从 π 跳到接近 −π 的值。",
+        "The logarithm of $z$ is the natural logarithm of its modulus plus $i$ times its argument: $\\log z = \\ln|z| + i\\arg z$. Because the argument has many values, a single choice must be made, and the principal logarithm takes the argument above $-\\pi$ up to $\\pi$. This makes the function discontinuous across the negative real axis, called the branch cut, where the argument jumps from $\\pi$ to values near $-\\pi$.",
+        "$z$ 的对数是它的模的自然对数加 $i$ 乘它的辐角：$\\log z = \\ln|z| + i\\arg z$。由于辐角有多个值，必须作出选择，主值对数取大于 $-\\pi$ 且不超过 $\\pi$ 的辐角。这使函数在负实轴上不连续，负实轴称为分支割线，辐角在那里从 $\\pi$ 跳到接近 $-\\pi$ 的值。",
       ],
       (rng) => {
         const a = rng.int(1, 30);
@@ -512,8 +512,8 @@ const contourIntegrals = topic(
       "the-conjugate-around-a-circle",
       ["The conjugate around a circle", "共轭沿圆周积分"],
       [
-        "A contour integral is computed by parametrizing the path, so that z and dz are written in terms of a real variable, and then integrating over its range. Around a circle of radius r centred at zero, z is r times $e^{it}$. For the conjugate of z, the two exponentials cancel, leaving a constant integrand, and the result grows with the square of the radius.",
-        "围道积分通过把路径参数化来计算，把 z 和 dz 都用实变量表示，再在其范围内积分。沿以零为中心、半径为 r 的圆周，z 是 r 乘 $e^{it}$。对 z 的共轭，两个指数相消，被积函数成了常数，结果随半径的平方增长。",
+        "A contour integral is computed by parametrizing the path, so that $z$ and $dz$ are written in terms of a real variable, and then integrating over its range. Around a circle of radius $r$ centred at zero, $z = re^{it}$. For the conjugate $\\bar{z}$, the two exponentials cancel, leaving a constant integrand, and the result grows with the square of the radius.",
+        "围道积分通过把路径参数化来计算，把 $z$ 和 $dz$ 都用实变量表示，再在其范围内积分。沿以零为中心、半径为 $r$ 的圆周，$z = re^{it}$。对共轭 $\\bar{z}$，两个指数相消，被积函数成了常数，结果随半径的平方增长。",
       ],
       (rng) => {
         const r = rng.int(2, 13);
@@ -538,8 +538,8 @@ const contourIntegrals = topic(
       "integrating-along-a-segment",
       ["Integrating along a segment", "沿线段积分"],
       [
-        "For a segment from one point to another, a parametrization is the starting point plus t times the difference, with t from zero to one. The integral of z along a segment comes to half the difference of the squares of the end points. That the answer depends only on the ends is a first sign of the theorem to come, as z has an antiderivative.",
-        "对从一点到另一点的线段，参数化为起点加 t 乘差，t 从 0 到 1。z 沿线段的积分是端点平方之差的一半。答案只取决于端点，这是后面定理的第一个迹象，因为 z 有原函数。",
+        "For a segment from one point to another, a parametrization is the starting point plus $t$ times the difference, with $t$ from zero to one. The integral of $z$ along a segment comes to half the difference of the squares of the end points. That the answer depends only on the ends is a first sign of the theorem to come, as $z$ has an antiderivative.",
+        "对从一点到另一点的线段，参数化为起点加 $t$ 乘差，$t$ 从 0 到 1。$z$ 沿线段的积分是端点平方之差的一半。答案只取决于端点，这是后面定理的第一个迹象，因为 $z$ 有原函数。",
       ],
       (rng) => {
         const a = rng.int(-6, 6);
@@ -576,8 +576,8 @@ const cauchyTheorem = topic(
       "whether-a-pole-is-enclosed",
       ["Whether a pole is enclosed", "极点是否被包围"],
       [
-        "Cauchy's theorem says that the integral of an analytic function around a closed path vanishes when the function is analytic on and inside the path. For c over z minus a around a circle, everything depends on where a lies. If a is outside, the function is analytic inside and the integral is zero. If a is inside, the integral is $2\\pi i$ times c.",
-        "柯西定理说，如果函数在闭路径上及其内部解析，那么它沿这条路径的积分为零。对 c 除以 z − a 沿圆周的积分，一切取决于 a 的位置。如果 a 在外面，函数在内部解析，积分为零。如果 a 在里面，积分是 $2\\pi i$ 乘 c。",
+        "Cauchy's theorem says that the integral of an analytic function around a closed path vanishes when the function is analytic on and inside the path. For $\\frac{c}{z - a}$ around a circle, everything depends on where $a$ lies. If $a$ is outside, the function is analytic inside and the integral is zero. If $a$ is inside, the integral is $2\\pi i c$.",
+        "柯西定理说，如果函数在闭路径上及其内部解析，那么它沿这条路径的积分为零。对 $\\frac{c}{z - a}$ 沿圆周的积分，一切取决于 $a$ 的位置。如果 $a$ 在外面，函数在内部解析，积分为零。如果 $a$ 在里面，积分是 $2\\pi i c$。",
       ],
       (rng) => {
         const c = rng.int(1, 12);
@@ -607,8 +607,8 @@ const cauchyTheorem = topic(
       "using-an-antiderivative",
       ["Using an antiderivative", "使用原函数"],
       [
-        "When an analytic function has an antiderivative on a simply connected region, the integral along any path depends only on the end points, and it equals the difference of the antiderivative there. This is the complex fundamental theorem of calculus. It gives results at once for polynomials and exponentials, with no parametrization, and it fails for one over z around the origin, since no single-valued antiderivative exists there.",
-        "解析函数在单连通区域上有原函数时，沿任何路径的积分只取决于端点，等于原函数在端点的差。这就是复的微积分基本定理。它使多项式和指数函数的结果立刻可得，不需要参数化；对原点周围的 1/z 它就不成立了，因为那里没有单值的原函数。",
+        "When an analytic function has an antiderivative on a simply connected region, the integral along any path depends only on the end points, and it equals the difference of the antiderivative there. This is the complex fundamental theorem of calculus. It gives results at once for polynomials and exponentials, with no parametrization, and it fails for $\\frac{1}{z}$ around the origin, since no single-valued antiderivative exists there.",
+        "解析函数在单连通区域上有原函数时，沿任何路径的积分只取决于端点，等于原函数在端点的差。这就是复的微积分基本定理。它使多项式和指数函数的结果立刻可得，不需要参数化；对原点周围的 $\\frac{1}{z}$ 它就不成立了，因为那里没有单值的原函数。",
       ],
       (rng) => {
         const p = rng.int(1, 5);
@@ -645,8 +645,8 @@ const cauchyFormula = topic(
       "the-value-from-the-formula",
       ["The value from the formula", "由公式得到函数值"],
       [
-        "Cauchy's integral formula says that the integral of f of z over z minus a, around a contour enclosing a, is $2\\pi i$ times f of a. So the values of an analytic function inside a contour are fixed by its values on the contour. No real function behaves like this, and the formula is the source of almost every strong property of analytic functions.",
-        "柯西积分公式说，f(z) 除以 z − a 沿包围 a 的围道积分，等于 $2\\pi i$ 乘 f(a)。所以解析函数在围道内部的值由它在围道上的值决定。实函数没有这样的性质，这个公式几乎是解析函数所有强性质的来源。",
+        "Cauchy's integral formula says that the integral of $\\frac{f(z)}{z - a}$, around a contour enclosing $a$, is $2\\pi i f(a)$. So the values of an analytic function inside a contour are fixed by its values on the contour. No real function behaves like this, and the formula is the source of almost every strong property of analytic functions.",
+        "柯西积分公式说，$\\frac{f(z)}{z - a}$ 沿包围 $a$ 的围道积分，等于 $2\\pi i f(a)$。所以解析函数在围道内部的值由它在围道上的值决定。实函数没有这样的性质，这个公式几乎是解析函数所有强性质的来源。",
       ],
       (rng) => {
         const a = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -672,8 +672,8 @@ const cauchyFormula = topic(
       "a-derivative-from-the-formula",
       ["A derivative from the formula", "由公式得到导数"],
       [
-        "Differentiating under the integral sign extends the formula to derivatives: the integral of f of z over the square of z minus a is $2\\pi i$ times the derivative of f at a, and higher powers bring higher derivatives with a factorial. Thus an analytic function has derivatives of all orders. A function differentiable once in the complex sense is differentiable infinitely often, unlike any real result.",
-        "在积分号下求导，把公式推广到导数：f(z) 除以 (z − a) 的平方的积分，等于 $2\\pi i$ 乘 f 在 a 处的导数；更高的幂给出更高阶导数，并带有阶乘。因此解析函数有任意阶导数。复意义下可导一次的函数可以无限次求导，这与任何实的结果都不同。",
+        "Differentiating under the integral sign extends the formula to derivatives: the integral of $\\frac{f(z)}{(z - a)^2}$ is $2\\pi i$ times the derivative $f'(a)$, and higher powers bring higher derivatives with a factorial. Thus an analytic function has derivatives of all orders. A function differentiable once in the complex sense is differentiable infinitely often, unlike any real result.",
+        "在积分号下求导，把公式推广到导数：$\\frac{f(z)}{(z - a)^2}$ 的积分，等于 $2\\pi i$ 乘导数 $f'(a)$；更高的幂给出更高阶导数，并带有阶乘。因此解析函数有任意阶导数。复意义下可导一次的函数可以无限次求导，这与任何实的结果都不同。",
       ],
       (rng) => {
         const a = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -708,8 +708,8 @@ const estimates = topic(
       "a-cauchy-estimate",
       ["A Cauchy estimate", "柯西估计"],
       [
-        "If an analytic function is bounded by M on a circle of radius r about a point, the nth derivative at that point is at most n factorial times M over $r^n$. For an entire bounded function, r may be taken as large as we like, so the first derivative vanishes everywhere and the function is constant. This is Liouville's theorem, and it quickly yields the fundamental theorem of algebra.",
-        "如果解析函数在以某点为中心、半径为 r 的圆周上不超过 M，那么在这一点的 n 阶导数至多是 n 的阶乘乘 M 除以 $r^n$。对有界整函数，r 可以任意大，所以一阶导数处处为零，函数是常数。这就是刘维尔定理，由它很快能得到代数基本定理。",
+        "If an analytic function is bounded by $M$ on a circle of radius $r$ about a point, the $n$th derivative at that point is at most $\\frac{n!\\,M}{r^n}$. For an entire bounded function, $r$ may be taken as large as we like, so the first derivative vanishes everywhere and the function is constant. This is Liouville's theorem, and it quickly yields the fundamental theorem of algebra.",
+        "如果解析函数在以某点为中心、半径为 $r$ 的圆周上不超过 $M$，那么在这一点的 $n$ 阶导数至多是 $\\frac{n!\\,M}{r^n}$。对有界整函数，$r$ 可以任意大，所以一阶导数处处为零，函数是常数。这就是刘维尔定理，由它很快能得到代数基本定理。",
       ],
       (rng) => {
         const M = rng.int(2, 30);
@@ -736,8 +736,8 @@ const estimates = topic(
       "the-maximum-modulus",
       ["The maximum modulus", "最大模"],
       [
-        "The maximum modulus principle says that a nonconstant analytic function on a bounded region reaches its largest modulus only on the boundary. So finding the maximum means looking at the boundary circle. For z squared plus a positive constant on a disc, the triangle inequality gives an upper bound, and a positive real point on the circle attains it, so this bound is exact.",
-        "最大模原理说，有界区域上非常数的解析函数只在边界上达到最大模。所以求最大值就是看边界圆周。对圆盘上的 z 的平方加正常数，三角不等式给出上界，而圆周上的正实数点可以达到它，所以这个界是准确的。",
+        "The maximum modulus principle says that a nonconstant analytic function on a bounded region reaches its largest modulus only on the boundary. So finding the maximum means looking at the boundary circle. For $z^2$ plus a positive constant on a disc, the triangle inequality gives an upper bound, and a positive real point on the circle attains it, so this bound is exact.",
+        "最大模原理说，有界区域上非常数的解析函数只在边界上达到最大模。所以求最大值就是看边界圆周。对圆盘上的 $z^2$ 加正常数，三角不等式给出上界，而圆周上的正实数点可以达到它，所以这个界是准确的。",
       ],
       (rng) => {
         const r = rng.int(2, 12);
@@ -771,8 +771,8 @@ const taylorComplex = topic(
       "the-radius-from-the-nearest-singularity",
       ["The radius from the nearest singularity", "由最近奇点得半径"],
       [
-        "An analytic function equals its Taylor series on the largest disc around the centre that avoids its singularities. So the radius of convergence is the distance from the centre to the nearest singularity, with no test needed. This explains a puzzle from real calculus: one over one plus $x^2$ is smooth on the real line, yet its series has radius one, because of singularities at i and minus i.",
-        "解析函数在以中心为圆心、不包含奇点的最大圆盘上等于它的泰勒级数。所以收敛半径就是中心到最近奇点的距离，不需要任何判别法。这解释了实微积分中的一个谜题：$\\frac{1}{1 + x^2}$ 在实数线上是光滑的，但它的级数半径是 1，因为 i 和 −i 处有奇点。",
+        "An analytic function equals its Taylor series on the largest disc around the centre that avoids its singularities. So the radius of convergence is the distance from the centre to the nearest singularity, with no test needed. This explains a puzzle from real calculus: $\\frac{1}{1 + x^2}$ is smooth on the real line, yet its series has radius one, because of singularities at $i$ and $-i$.",
+        "解析函数在以中心为圆心、不包含奇点的最大圆盘上等于它的泰勒级数。所以收敛半径就是中心到最近奇点的距离，不需要任何判别法。这解释了实微积分中的一个谜题：$\\frac{1}{1 + x^2}$ 在实数线上是光滑的，但它的级数半径是 1，因为 $i$ 和 $-i$ 处有奇点。",
       ],
       (rng) => {
         const { a, b, r } = signedTriple(rng);
@@ -798,8 +798,8 @@ const taylorComplex = topic(
       "a-coefficient-from-a-geometric-series",
       ["A coefficient from a geometric series", "由几何级数得系数"],
       [
-        "Many Taylor series come from the geometric series, without computing derivatives at all. One over a minus z equals one over a, times the sum of powers of z over a, for the size of z below a. Since a power series is unique, any way of obtaining the expansion gives the same coefficients, and manipulating known series is usually the shortest route.",
-        "很多泰勒级数来自几何级数，根本不用计算导数。当 z 的大小小于 a 时，1/(a − z) 等于 1/a 乘 z/a 的各次幂之和。因为幂级数是唯一的，任何得到展开式的方法给出的系数都相同，操作已知级数通常是最短的途径。",
+        "Many Taylor series come from the geometric series, without computing derivatives at all. $\\frac{1}{a - z}$ equals $\\frac{1}{a}$ times the sum of powers of $\\frac{z}{a}$, for $|z| < |a|$. Since a power series is unique, any way of obtaining the expansion gives the same coefficients, and manipulating known series is usually the shortest route.",
+        "很多泰勒级数来自几何级数，根本不用计算导数。当 $|z| < |a|$ 时，$\\frac{1}{a - z}$ 等于 $\\frac{1}{a}$ 乘 $\\frac{z}{a}$ 的各次幂之和。因为幂级数是唯一的，任何得到展开式的方法给出的系数都相同，操作已知级数通常是最短的途径。",
       ],
       (rng) => {
         const a = rng.int(2, 7);
@@ -834,8 +834,8 @@ const laurent = topic(
       "a-coefficient-of-an-exponential-quotient",
       ["The exponential over a power", "指数除以幂"],
       [
-        "A Laurent series extends a Taylor series by allowing negative powers, and it represents a function analytic on an annulus around a singularity. The easiest way to find one is to divide a known series. For the exponential of kz over $z^n$, shifting the powers of the exponential series down by n gives the expansion, and the term in one over z comes from the power n minus one.",
-        "洛朗级数通过允许负幂来推广泰勒级数，它表示在奇点周围的圆环上解析的函数。求它最简单的方法是用已知级数相除。对 $e^{kz}$ 除以 $z^n$，把指数级数的幂下移 n，就得到展开式，1/z 项来自 n − 1 次幂。",
+        "A Laurent series extends a Taylor series by allowing negative powers, and it represents a function analytic on an annulus around a singularity. The easiest way to find one is to divide a known series. For $\\frac{e^{kz}}{z^n}$, shifting the powers of the exponential series down by $n$ gives the expansion, and the term in $\\frac{1}{z}$ comes from the power $n - 1$.",
+        "洛朗级数通过允许负幂来推广泰勒级数，它表示在奇点周围的圆环上解析的函数。求它最简单的方法是用已知级数相除。对 $\\frac{e^{kz}}{z^n}$，把指数级数的幂下移 $n$，就得到展开式，$\\frac{1}{z}$ 项来自 $n - 1$ 次幂。",
       ],
       (rng) => {
         const k = rng.int(2, 6);
@@ -861,8 +861,8 @@ const laurent = topic(
       "a-coefficient-of-a-rational-function",
       ["A rational function near a pole", "极点附近的有理函数"],
       [
-        "The same function has different Laurent series on different annuli, so the region must be stated. For c over z times z minus a on the punctured disc inside the size of a, the factor one over z minus a is analytic and has a geometric series. Multiplying through by c over z gives a single negative power, whose coefficient is the value of the other factor at zero.",
-        "同一个函数在不同的圆环上有不同的洛朗级数，所以必须说明区域。对 c 除以 z(z − a)，在小于 a 的大小的去心圆盘上，因子 1/(z − a) 解析，有几何级数。乘上 c/z，就只有一个负幂项，它的系数是另一个因子在零处的值。",
+        "The same function has different Laurent series on different annuli, so the region must be stated. For $\\frac{c}{z(z - a)}$ on the punctured disc $0 < |z| < |a|$, the factor $\\frac{1}{z - a}$ is analytic and has a geometric series. Multiplying through by $\\frac{c}{z}$ gives a single negative power, whose coefficient is the value of the other factor at zero.",
+        "同一个函数在不同的圆环上有不同的洛朗级数，所以必须说明区域。对 $\\frac{c}{z(z - a)}$，在去心圆盘 $0 < |z| < |a|$ 上，因子 $\\frac{1}{z - a}$ 解析，有几何级数。乘上 $\\frac{c}{z}$，就只有一个负幂项，它的系数是另一个因子在零处的值。",
       ],
       (rng) => {
         const a = rng.pick([-9, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -896,8 +896,8 @@ const singularities = topic(
       "the-order-of-a-pole",
       ["The order of a pole", "极点的阶"],
       [
-        "A pole of order n at a means that the function behaves like a nonzero constant over the nth power of z minus a. To read the order from a quotient, count how many times the factor vanishes in the denominator, and subtract any cancellation by the numerator. Other factors of the denominator do not count, since they do not vanish at that point.",
-        "在 a 处的 n 阶极点，意味着函数的行为像一个非零常数除以 z − a 的 n 次幂。要从商中读出阶数，就数这个因子在分母中出现几次，再减去分子约掉的次数。分母的其他因子不算，因为它们在这一点不为零。",
+        "A pole of order $n$ at $a$ means that the function behaves like a nonzero constant over $(z - a)^n$. To read the order from a quotient, count how many times the factor vanishes in the denominator, and subtract any cancellation by the numerator. Other factors of the denominator do not count, since they do not vanish at that point.",
+        "在 $a$ 处的 $n$ 阶极点，意味着函数的行为像一个非零常数除以 $(z - a)^n$。要从商中读出阶数，就数这个因子在分母中出现几次，再减去分子约掉的次数。分母的其他因子不算，因为它们在这一点不为零。",
       ],
       (rng) => {
         const a = rng.int(-5, 5);
@@ -925,8 +925,8 @@ const singularities = topic(
       "classifying-a-singularity",
       ["Classifying a singularity", "判断奇点类型"],
       [
-        "An isolated singularity falls into one of three types, seen in the Laurent series. It is removable when there are no negative powers, and then the function extends analytically, as sin z over z does. It is a pole when there are finitely many negative powers, and essential when there are infinitely many, as with the exponential of one over z, where the Casorati–Weierstrass theorem describes wild behaviour nearby.",
-        "孤立奇点分为三种，可以从洛朗级数看出。没有负幂时是可去奇点，这时函数可以解析延拓，比如 sin z / z。负幂有有限多个时是极点，有无穷多个时是本性奇点，比如 1/z 的指数函数，卡索拉蒂–魏尔斯特拉斯定理描述了它附近的剧烈行为。",
+        "An isolated singularity falls into one of three types, seen in the Laurent series. It is removable when there are no negative powers, and then the function extends analytically, as $\\frac{\\sin z}{z}$ does. It is a pole when there are finitely many negative powers, and essential when there are infinitely many, as with $e^{1/z}$, where the Casorati–Weierstrass theorem describes wild behaviour nearby.",
+        "孤立奇点分为三种，可以从洛朗级数看出。没有负幂时是可去奇点，这时函数可以解析延拓，比如 $\\frac{\\sin z}{z}$。负幂有有限多个时是极点，有无穷多个时是本性奇点，比如 $e^{1/z}$，卡索拉蒂–魏尔斯特拉斯定理描述了它附近的剧烈行为。",
       ],
       (rng) => {
         const k = rng.int(2, 19);
@@ -990,8 +990,8 @@ const residues = topic(
       "the-residue-at-a-simple-pole",
       ["The residue at a simple pole", "单极点的留数"],
       [
-        "The residue at a point is the coefficient of one over z minus a in the Laurent series there. At a simple pole there is a quick rule: multiply by z minus a and take the limit, which amounts to covering up that factor and substituting a in what is left. The method needs the pole to be simple, and a higher pole needs the derivative version instead.",
-        "在一点的留数是那里洛朗级数中 1/(z − a) 的系数。在单极点有一个快捷法则：乘以 z − a 再取极限，也就是盖住这个因子，把 a 代入剩下的部分。这个方法要求极点是单极点，高阶极点要改用求导的方法。",
+        "The residue at a point is the coefficient of $\\frac{1}{z - a}$ in the Laurent series there. At a simple pole there is a quick rule: multiply by $z - a$ and take the limit, which amounts to covering up that factor and substituting $a$ in what is left. The method needs the pole to be simple, and a higher pole needs the derivative version instead.",
+        "在一点的留数是那里洛朗级数中 $\\frac{1}{z - a}$ 的系数。在单极点有一个快捷法则：乘以 $z - a$ 再取极限，也就是盖住这个因子，把 $a$ 代入剩下的部分。这个方法要求极点是单极点，高阶极点要改用求导的方法。",
       ],
       (rng) => {
         const a = rng.int(-6, 6);
@@ -1016,8 +1016,8 @@ const residues = topic(
       "the-residue-at-a-double-pole",
       ["The residue at a double pole", "二阶极点的留数"],
       [
-        "At a double pole, the residue of g over the square of z minus a is the derivative of g at a, because expanding g gives a term in z minus a whose coefficient is that derivative. Substituting a into g gives the coefficient of the wrong power, which is the usual mistake. The general rule for order n takes the derivative of order n minus one and divides by a factorial.",
-        "在二阶极点，g 除以 (z − a) 的平方的留数是 g 在 a 处的导数，因为展开 g 时，z − a 那一项的系数就是这个导数。把 a 代入 g 得到的是另一个幂的系数，这是常见的错误。n 阶的一般法则是求 n − 1 阶导数再除以阶乘。",
+        "At a double pole, the residue of $\\frac{g(z)}{(z - a)^2}$ is the derivative $g'(a)$, because expanding $g$ gives a term in $z - a$ whose coefficient is that derivative. Substituting $a$ into $g$ gives the coefficient of the wrong power, which is the usual mistake. The general rule for order $n$ takes the derivative of order $n - 1$ and divides by a factorial.",
+        "在二阶极点，$\\frac{g(z)}{(z - a)^2}$ 的留数是导数 $g'(a)$，因为展开 $g$ 时，$z - a$ 那一项的系数就是这个导数。把 $a$ 代入 $g$ 得到的是另一个幂的系数，这是常见的错误。$n$ 阶的一般法则是求 $n - 1$ 阶导数再除以阶乘。",
       ],
       (rng) => {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -1052,8 +1052,8 @@ const residueTheorem = topic(
       "adding-the-enclosed-residues",
       ["Adding the enclosed residues", "把被包围的留数相加"],
       [
-        "The residue theorem says that a closed contour integral equals $2\\pi i$ times the sum of the residues of the poles it encloses. So poles outside the contour do not count, which is the point to check first. With two simple poles inside a contour, the residues of c over the product of z minus a and z minus b cancel exactly, and the integral vanishes.",
-        "留数定理说，闭围道积分等于 $2\\pi i$ 乘它所包围的极点的留数之和。所以围道外的极点不算，这是首先要检查的。围道内有两个单极点时，c 除以 (z − a)(z − b) 的留数恰好相消，积分为零。",
+        "The residue theorem says that a closed contour integral equals $2\\pi i$ times the sum of the residues of the poles it encloses. So poles outside the contour do not count, which is the point to check first. With two simple poles inside a contour, the residues of $\\frac{c}{(z - a)(z - b)}$ cancel exactly, and the integral vanishes.",
+        "留数定理说，闭围道积分等于 $2\\pi i$ 乘它所包围的极点的留数之和。所以围道外的极点不算，这是首先要检查的。围道内有两个单极点时，$\\frac{c}{(z - a)(z - b)}$ 的留数恰好相消，积分为零。",
       ],
       (rng) => {
         const r = rng.int(2, 7);
@@ -1151,8 +1151,8 @@ const mobiusMaps = topic(
       "fixed-points-of-a-transformation",
       ["Fixed points of a transformation", "变换的不动点"],
       [
-        "A fixed point of a Möbius transformation solves z equal to f of z, and clearing the denominator gives a quadratic. So a map other than the identity has at most two fixed points in the extended plane. A map fixing three points must therefore be the identity, and this is the reason why three points and their images determine a Möbius transformation exactly.",
-        "默比乌斯变换的不动点满足 z = f(z)，去分母后得到二次方程。所以恒等映射以外的映射在扩充平面上至多有两个不动点。固定三个点的映射必然是恒等映射，这就是三个点及其像恰好决定一个默比乌斯变换的原因。",
+        "A fixed point of a Möbius transformation solves $z = f(z)$, and clearing the denominator gives a quadratic. So a map other than the identity has at most two fixed points in the extended plane. A map fixing three points must therefore be the identity, and this is the reason why three points and their images determine a Möbius transformation exactly.",
+        "默比乌斯变换的不动点满足 $z = f(z)$，去分母后得到二次方程。所以恒等映射以外的映射在扩充平面上至多有两个不动点。固定三个点的映射必然是恒等映射，这就是三个点及其像恰好决定一个默比乌斯变换的原因。",
       ],
       (rng) => {
         const p = rng.int(-6, 6);
