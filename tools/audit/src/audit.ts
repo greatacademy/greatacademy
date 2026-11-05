@@ -25,6 +25,8 @@ export interface AuditReport {
 export const samplesPerKnowledgePoint = 40;
 /** minProseWords is the fewest words an explanation needs outside its math. */
 export const minProseWords = 15;
+/** minSolutionWords is the fewest words a solution with no equation or relation needs outside its math. */
+export const minSolutionWords = 10;
 
 const cjk = /[一-鿿]/;
 const visualTitle =
@@ -51,6 +53,13 @@ export function parseOutline(markdown: string): Outline {
 /** proseWords counts the words of an explanation outside its $…$ and $$…$$ math. */
 export function proseWords(text: string): number {
   return text.replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, " ").match(/[A-Za-z]{2,}/g)?.length ?? 0;
+}
+
+/** hasRelation tells whether the math of a text states an equation or another relation, which shows a step of work. */
+export function hasRelation(text: string): boolean {
+  return [...text.matchAll(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g)].some((math) =>
+    /=|<|>|\\n?e\b|\\[lg]e\b|\\approx|\\equiv|\\Rightarrow|\\to\b/.test(math[0]),
+  );
 }
 
 /**
@@ -110,6 +119,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       let leaks = 0;
       const answerIndexes = new Set<number>();
       const terse = new Set<string>();
+      let unworked = 0;
       for (let seed = 1; seed <= samplesPerKnowledgePoint; seed++) {
         let problem: ReturnType<typeof generateProblem>;
         try {
@@ -127,6 +137,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
         if (!problem.wrong?.length) noWrong++;
         if (!cjk.test(problem.prompt["zh-CN"])) add("zh prompt without Chinese", `${path} seed ${seed}`);
         if (problem.solution.en.length < 25) terse.add(problem.solution.en);
+        if (proseWords(problem.solution.en) < minSolutionWords && !hasRelation(problem.solution.en)) unworked++;
         const canonical = problem.canonical;
         if (
           problem.answer.input.kind !== "choice" &&
@@ -137,6 +148,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
           leaks++;
       }
       for (const solution of terse) add("terse solution (under 25 characters)", `${path}: ${solution}`);
+      if (unworked > samplesPerKnowledgePoint / 2) add(`solution with no relation and under ${minSolutionWords} words of prose`, path);
       if (choices === samplesPerKnowledgePoint && answerIndexes.size === 1) add("choice answer always at the same index", path);
       if (choices === samplesPerKnowledgePoint && options === 2) add("two-option choice", path);
       if (noWrong === samplesPerKnowledgePoint) add("no wrong responses listed", path);

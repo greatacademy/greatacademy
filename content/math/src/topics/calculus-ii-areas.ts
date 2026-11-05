@@ -2,7 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { functionProblem, numberProblem } from "../problems.ts";
+import { functionProblem, numberProblem, steps } from "../problems.ts";
 import { fac, type Poly, pAt, pLatex } from "./calculus-common.ts";
 import { antiderivativeAt, antiderivativeLatex } from "./calculus-i-riemann.ts";
 import { pMul, pSum } from "./calculus-ii-fractions-improper.ts";
@@ -130,8 +130,8 @@ export const integratingRatesOfChange: TopicDef = {
           answer,
           wrong: [intQ(R, a, b), answer.neg(), Q.of(pAt(d, b) - pAt(d, a))],
           solution: t(
-            `The change is $${int(a, b, `(${pLatex(d, "t")})`, "t")} = ${answer.toLatex()}$ liters.`,
-            `变化量为 $${int(a, b, `(${pLatex(d, "t")})`, "t")} = ${answer.toLatex()}$ 升。`,
+            `The rate of change is inflow minus outflow, $(${rl}) - (${ll}) = ${pLatex(d, "t")}$. Integrate it over the interval:${steps(`${int(a, b, `(${pLatex(d, "t")})`, "t")} = ${antiderivativeAt(d, b).toLatex()} - (${antiderivativeAt(d, a).toLatex()}) = ${answer.toLatex()}`)}The change is $${answer.toLatex()}$ liters.`,
+            `变化率是流入减流出，$(${rl}) - (${ll}) = ${pLatex(d, "t")}$。在区间上积分：${steps(`${int(a, b, `(${pLatex(d, "t")})`, "t")} = ${antiderivativeAt(d, b).toLatex()} - (${antiderivativeAt(d, a).toLatex()}) = ${answer.toLatex()}`)}变化量为 $${answer.toLatex()}$ 升。`,
           ),
         });
       },

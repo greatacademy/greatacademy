@@ -4,7 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { steps } from "../problems.ts";
 import { ask, choose, point, same, topic } from "../university-kit.ts";
 
 /** interval writes a closed interval in LaTeX. */
@@ -775,7 +775,10 @@ const stieltjes = topic(
           [`Evaluate $\\int_{0}^{${b}} x^{${m}}\\, d(x^{2})$.`, `计算 $\\int_{0}^{${b}} x^{${m}}\\, d(x^{2})$。`],
           Q.of(2 * b ** (m + 2), m + 2),
           [Q.of(b ** (m + 1), m + 1), Q.of(b ** (m + 2), m + 2), Q.of(2 * b ** (m + 1), m + 1)],
-          [`Replace $d(x^{2})$ by $2x\\,dx$, and integrate $2x^{${m + 1}}$.`, `把 $d(x^{2})$ 换成 $2x\\,dx$，再积分 $2x^{${m + 1}}$。`],
+          [
+            `Since $x^{2}$ is smooth, replace $d(x^{2})$ by $2x\\,dx$:${steps(`\\int_{0}^{${b}} 2x^{${m + 1}}\\, dx = \\frac{2 \\cdot ${b}^{${m + 2}}}{${m + 2}} = ${Q.of(2 * b ** (m + 2), m + 2).toLatex()}`)}`,
+            `因为 $x^{2}$ 光滑，把 $d(x^{2})$ 换成 $2x\\,dx$：${steps(`\\int_{0}^{${b}} 2x^{${m + 1}}\\, dx = \\frac{2 \\cdot ${b}^{${m + 2}}}{${m + 2}} = ${Q.of(2 * b ** (m + 2), m + 2).toLatex()}`)}`,
+          ],
         );
       },
     ),
@@ -1259,8 +1262,8 @@ const powerUniform = topic(
           Q.of(big, big - r),
           [Q.of(r, big - r), Q.of(big, r), Q.of(big - r, big)],
           [
-            `The geometric sum is $\\frac{1}{1 - ${Q.of(r, big).toLatex()}}$.`,
-            `几何级数的和是 $\\frac{1}{1 - ${Q.of(r, big).toLatex()}}$。`,
+            `A geometric series with ratio less than 1 sums to $\\frac{1}{1 - \\text{ratio}}$: $\\frac{1}{1 - ${Q.of(r, big).toLatex()}} = ${Q.of(big, big - r).toLatex()}$.`,
+            `公比小于 1 的几何级数，和是 $\\frac{1}{1 - \\text{公比}}$：$\\frac{1}{1 - ${Q.of(r, big).toLatex()}} = ${Q.of(big, big - r).toLatex()}$。`,
           ],
         );
       },
@@ -1379,7 +1382,10 @@ const bernstein = topic(
           ],
           Q.of(p * p * n + p * (q - p), q * q * n),
           [Q.of(p * p, q * q), Q.of(p * (q - p), q * q * n), Q.of(p * p * n - p * (q - p), q * q * n)],
-          [`Add $x^{2}$ and $\\frac{x(1 - x)}{${n}}$.`, `把 $x^{2}$ 和 $\\frac{x(1 - x)}{${n}}$ 相加。`],
+          [
+            `The Bernstein polynomial of $x^{2}$ is $x^{2} + \\frac{x(1 - x)}{n}$:${steps(`${Q.of(p * p, q * q).toLatex()} + ${Q.of(p * (q - p), q * q * n).toLatex()} = ${Q.of(p * p * n + p * (q - p), q * q * n).toLatex()}`)}`,
+            `$x^{2}$ 的伯恩斯坦多项式是 $x^{2} + \\frac{x(1 - x)}{n}$：${steps(`${Q.of(p * p, q * q).toLatex()} + ${Q.of(p * (q - p), q * q * n).toLatex()} = ${Q.of(p * p * n + p * (q - p), q * q * n).toLatex()}`)}`,
+          ],
         );
       },
     ),
@@ -1686,7 +1692,10 @@ const outerMeasure = topic(
           [`What is the outer measure of $[${a}, ${b}] \\cup [${c}, ${d}]$?`, `$[${a}, ${b}] \\cup [${c}, ${d}]$ 的外测度是多少？`],
           d - a,
           [b - a + (d - c), d - c, b - c],
-          [`Together they cover exactly $[${a}, ${d}]$.`, `它们合起来恰好覆盖 $[${a}, ${d}]$。`],
+          [
+            `The intervals overlap, since $${c}$ lies in the first. Their union is the single interval $[${a}, ${d}]$, and the outer measure of an interval is its length: $${d} - (${a}) = ${d - a}$.`,
+            `两个区间有重叠，因为 $${c}$ 在第一个区间内。它们的并是一个区间 $[${a}, ${d}]$，而区间的外测度就是长度：$${d} - (${a}) = ${d - a}$。`,
+          ],
         );
       },
     ),

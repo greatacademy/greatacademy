@@ -1001,8 +1001,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           2 * k,
           [k, 4 * k, 2 * k + 1],
           [
-            `$${k}\\theta$ runs over $${2 * k}$ half turns, with one solution in each.`,
-            `$${k}\\theta$ 走过 $${2 * k}$ 个半圈，每个半圈一个解。`,
+            `As $\\theta$ runs over $[0, 2\\pi)$, $${k}\\theta$ runs over $[0, ${2 * k}\\pi)$. Tangent has period $\\pi$ and takes each value once per period, and this interval holds $${2 * k}$ periods, so there are $${2 * k}$ solutions.`,
+            `当 $\\theta$ 走遍 $[0, 2\\pi)$ 时，$${k}\\theta$ 走遍 $[0, ${2 * k}\\pi)$。正切的周期是 $\\pi$，每个周期内每个值恰好取到一次；这个区间含 $${2 * k}$ 个周期，所以有 $${2 * k}$ 个解。`,
           ],
         );
       },
@@ -1059,7 +1059,10 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           count,
           [s.angles.length + c.angles.length === count ? count + 1 : s.angles.length + c.angles.length, count - 1, 2],
-          [`The solutions are $${all}$.`, `解是 $${all}$。`],
+          [
+            `A product is zero when a factor is zero. The sine factor gives $${s.angles.map((a) => `${a}^{\\circ}`).join(", ")}$ and the cosine factor gives $${c.angles.map((a) => `${a}^{\\circ}`).join(", ")}$. Without repeats, the solutions are $${all}$.`,
+            `积为零时，必有一个因式为零。正弦因式给出 $${s.angles.map((a) => `${a}^{\\circ}`).join(", ")}$，余弦因式给出 $${c.angles.map((a) => `${a}^{\\circ}`).join(", ")}$。去掉重复后，解是 $${all}$。`,
+          ],
         );
       },
     ),

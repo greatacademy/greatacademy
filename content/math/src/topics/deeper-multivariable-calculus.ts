@@ -2002,8 +2002,8 @@ const averageOverBox: KnowledgePointDef = {
       answer,
       wrong: [Q.of(c * (a * b * d) ** 2, 8), Q.of(c * a * b * d, 2), Q.of(c * a * b * d, 4), Q.of(a * b * d, 8)],
       solution: t(
-        `The coordinates have averages $${Q.of(a, 2).toLatex()}$, $${Q.of(b, 2).toLatex()}$ and $${Q.of(d, 2).toLatex()}$. Multiplying them by $${c}$ gives $${answer.toLatex()}$.`,
-        `各坐标的平均值是 $${Q.of(a, 2).toLatex()}$、$${Q.of(b, 2).toLatex()}$、$${Q.of(d, 2).toLatex()}$。它们与 $${c}$ 相乘，得 $${answer.toLatex()}$。`,
+        `The integral over the box separates into one integral per variable, so the average of the product is the product of the averages. Each coordinate averages half its length: $${c} \\cdot ${Q.of(a, 2).toLatex()} \\cdot ${Q.of(b, 2).toLatex()} \\cdot ${Q.of(d, 2).toLatex()} = ${answer.toLatex()}$.`,
+        `长方体上的积分可以拆成每个变量各一个积分，所以积的平均值等于平均值的积。每个坐标的平均值是其长度的一半：$${c} \\cdot ${Q.of(a, 2).toLatex()} \\cdot ${Q.of(b, 2).toLatex()} \\cdot ${Q.of(d, 2).toLatex()} = ${answer.toLatex()}$。`,
       ),
     });
   },

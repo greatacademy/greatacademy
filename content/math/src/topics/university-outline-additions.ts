@@ -782,8 +782,8 @@ const schwarzChristoffel = topic(
           alpha.sub(Q.of(1, 1)),
           [alpha, Q.of(1, 1).sub(alpha), alpha.add(Q.of(1, 1))],
           [
-            `The exponent is $\\alpha - 1$ with $\\alpha = ${alpha.toLatex()}$.`,
-            `指数是 $\\alpha - 1$，其中 $\\alpha = ${alpha.toLatex()}$。`,
+            `An interior angle $\\alpha\\pi$ matches the factor $(z - x_k)^{\\alpha - 1}$, so the exponent is $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$.`,
+            `内角 $\\alpha\\pi$ 对应因子 $(z - x_k)^{\\alpha - 1}$，所以指数是 $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$。`,
           ],
         );
       },
@@ -922,7 +922,10 @@ const ellipsoidMethod = topic(
           ],
           2 * (n + 1) * k,
           [(n + 1) * k, 2 * n * k, 2 * (n + 1) + k],
-          [`The bound is $2(${n} + 1) \\cdot ${k}$.`, `上界是 $2(${n} + 1) \\cdot ${k}$。`],
+          [
+            `Each step multiplies the volume by at most $e^{-1/(2(n + 1))}$, so a factor of $e^{${k}}$ takes at most $2(n + 1) \\cdot ${k}$ steps: $2(${n} + 1) \\cdot ${k} = ${2 * (n + 1) * k}$.`,
+            `每一步至多把体积乘以 $e^{-1/(2(n + 1))}$，所以缩小 $e^{${k}}$ 倍至多需要 $2(n + 1) \\cdot ${k}$ 步：$2(${n} + 1) \\cdot ${k} = ${2 * (n + 1) * k}$。`,
+          ],
         );
       },
     ),
@@ -1167,7 +1170,10 @@ const fundamentalSolutions = topic(
           ],
           Q.of(u * r1, r2),
           [Q.of(u * r1 * r1, r2 * r2), Q.of(u * r2, r1), Q.of(u, r2)],
-          [`Multiply by $\\frac{${r1}}{${r2}}$.`, `乘以 $\\frac{${r1}}{${r2}}$。`],
+          [
+            `In space the potential of a point source is proportional to $\\frac{1}{r}$, so $u(${r2}) = ${u} \\cdot \\frac{${r1}}{${r2}} = ${Q.of(u * r1, r2).toLatex()}$.`,
+            `空间中点源的势与 $\\frac{1}{r}$ 成正比，所以 $u(${r2}) = ${u} \\cdot \\frac{${r1}}{${r2}} = ${Q.of(u * r1, r2).toLatex()}$。`,
+          ],
         );
       },
     ),

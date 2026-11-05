@@ -3,7 +3,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { steps } from "../problems.ts";
 import { ask, choose, point, same, topic } from "../university-kit.ts";
 
 const conservationLaws = topic(
@@ -332,8 +332,8 @@ const eigenvalues2d = topic(
           Q.of(m * m * b * b + n * n * a * a, a * a * b * b),
           [Q.of(m * b + n * a, a * b), Q.of(m * m + n * n, a * a + b * b), Q.of(n * n * b * b + m * m * a * a + 1, a * a * b * b)],
           [
-            `Add $\\frac{${m}^{2}}{${a}^{2}}$ and $\\frac{${n}^{2}}{${b}^{2}}$.`,
-            `把 $\\frac{${m}^{2}}{${a}^{2}}$ 和 $\\frac{${n}^{2}}{${b}^{2}}$ 相加。`,
+            `The eigenvalue of mode $(m, n)$ is $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$, so $k = \\frac{${m}^{2}}{${a}^{2}} + \\frac{${n}^{2}}{${b}^{2}} = ${Q.of(m * m * b * b + n * n * a * a, a * a * b * b).toLatex()}$.`,
+            `模式 $(m, n)$ 的特征值是 $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$，所以 $k = \\frac{${m}^{2}}{${a}^{2}} + \\frac{${n}^{2}}{${b}^{2}} = ${Q.of(m * m * b * b + n * n * a * a, a * a * b * b).toLatex()}$。`,
           ],
         );
       },
@@ -805,8 +805,8 @@ const greens1d = topic(
           Q.of(f * x * (big - x), 2),
           [f * x * (big - x), Q.of(f * x * x, 2), Q.of(x * (big - x), 2)],
           [
-            `The integral equals $\\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x})$.`,
-            `积分等于 $\\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x})$。`,
+            `Integrating the constant source against the Green's function gives $u(x) = \\frac{f}{2}x(L - x)$, which indeed has $-u'' = f$ and vanishes at both ends:${steps(`u(${x}) = \\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x}) = ${Q.of(f * x * (big - x), 2).toLatex()}`)}`,
+            `常数源项对格林函数积分，得 $u(x) = \\frac{f}{2}x(L - x)$；它确实满足 $-u'' = f$，且在两端为零：${steps(`u(${x}) = \\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x}) = ${Q.of(f * x * (big - x), 2).toLatex()}`)}`,
           ],
         );
       },
@@ -1149,8 +1149,8 @@ const bessel = topic(
           Q.of(4 * b * b - a * a, 4 * b * b),
           [Q.of(4 * b * b + a * a, 4 * b * b), Q.of(2 * b * b - a * a, 2 * b * b), Q.of(a * a, 4 * b * b)],
           [
-            `The terms are $1 - \\left(\\frac{x}{2}\\right)^{2}$ with $x = ${v.toLatex()}$.`,
-            `这些项是 $1 - \\left(\\frac{x}{2}\\right)^{2}$，其中 $x = ${v.toLatex()}$。`,
+            `The series starts $J_0(x) = 1 - \\left(\\frac{x}{2}\\right)^{2} + \\cdots$. With $x = ${v.toLatex()}$:${steps(`1 - \\left(\\frac{${a}}{${2 * b}}\\right)^{2} = 1 - \\frac{${a * a}}{${4 * b * b}} = ${Q.of(4 * b * b - a * a, 4 * b * b).toLatex()}`)}`,
+            `级数开头是 $J_0(x) = 1 - \\left(\\frac{x}{2}\\right)^{2} + \\cdots$。取 $x = ${v.toLatex()}$：${steps(`1 - \\left(\\frac{${a}}{${2 * b}}\\right)^{2} = 1 - \\frac{${a * a}}{${4 * b * b}} = ${Q.of(4 * b * b - a * a, 4 * b * b).toLatex()}`)}`,
           ],
         );
       },

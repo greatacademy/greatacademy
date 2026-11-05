@@ -4,7 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { steps } from "../problems.ts";
 import { ask, choose, point, same, topic } from "../university-kit.ts";
 
 /** fraction draws a proper fraction p over q in lowest terms from denominators up to `top`. */
@@ -546,7 +546,10 @@ const schwarzLemma = topic(
           ],
           Q.of(m * z, big),
           [m, Q.of(z, big), Q.of(m, big)],
-          [`The rescaled lemma gives $\\frac{${m} \\cdot ${z}}{${big}}$.`, `缩放后的引理给出 $\\frac{${m} \\cdot ${z}}{${big}}$。`],
+          [
+            `Rescale: $g(w) = \\frac{f(${big}w)}{${m}}$ maps the unit disk to itself and fixes 0, so $|g(w)| \\le |w|$ by the Schwarz lemma. With $w = \\frac{${z}}{${big}}$, this says $|f(${z})| \\le \\frac{${m} \\cdot ${z}}{${big}} = ${Q.of(m * z, big).toLatex()}$.`,
+            `缩放：$g(w) = \\frac{f(${big}w)}{${m}}$ 把单位圆盘映到自身且固定 0，由施瓦茨引理得 $|g(w)| \\le |w|$。取 $w = \\frac{${z}}{${big}}$，得 $|f(${z})| \\le \\frac{${m} \\cdot ${z}}{${big}} = ${Q.of(m * z, big).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -1002,8 +1005,8 @@ const gamma = topic(
           Q.of(sign * k, fact),
           [Q.of(-sign * k, fact), Q.of(sign * k, fact * (n + 1)), 0],
           [
-            `The residue of $\\Gamma$ is $\\frac{(-1)^{${n}}}{${n}!}$, times ${k}.`,
-            `$\\Gamma$ 的留数是 $\\frac{(-1)^{${n}}}{${n}!}$，再乘 ${k}。`,
+            `The residue of $\\Gamma$ at $z = -n$ is $\\frac{(-1)^{n}}{n!}$, and a constant factor carries through: $${k} \\cdot \\frac{(-1)^{${n}}}{${n}!} = ${Q.of(sign * k, fact).toLatex()}$.`,
+            `$\\Gamma$ 在 $z = -n$ 处的留数是 $\\frac{(-1)^{n}}{n!}$，常数因子照乘：$${k} \\cdot \\frac{(-1)^{${n}}}{${n}!} = ${Q.of(sign * k, fact).toLatex()}$。`,
           ],
         );
       },
@@ -1070,8 +1073,8 @@ const sineProduct = topic(
           Q.of(top, bottom),
           [Q.of(top, bottom * 2), Q.of(m * m - 1, m * m), Q.of(bottom, top)],
           [
-            `Multiply the ${big} factors $1 - \\frac{1}{${m * m} n^{2}}$ together.`,
-            `把 ${big} 个因子 $1 - \\frac{1}{${m * m} n^{2}}$ 乘起来。`,
+            `At $z = \\frac{1}{${m}}$, each factor is $1 - \\frac{1}{${m * m} n^{2}}$. Multiply them:${steps(`${Array.from({ length: big }, (_, i) => `\\frac{${m * m * (i + 1) ** 2 - 1}}{${m * m * (i + 1) ** 2}}`).join(" \\cdot ")} = ${Q.of(top, bottom).toLatex()}`)}`,
+            `在 $z = \\frac{1}{${m}}$ 处，每个因子是 $1 - \\frac{1}{${m * m} n^{2}}$。把它们乘起来：${steps(`${Array.from({ length: big }, (_, i) => `\\frac{${m * m * (i + 1) ** 2 - 1}}{${m * m * (i + 1) ** 2}}`).join(" \\cdot ")} = ${Q.of(top, bottom).toLatex()}`)}`,
           ],
         );
       },
@@ -1231,8 +1234,8 @@ const jordan = topic(
           same(`\\frac{\\pi e^{-${a * b}}}{${b}}`),
           [same(`\\frac{\\pi e^{-${a}}}{${b}}`), same(`\\frac{\\pi}{${b}}`), same(`\\frac{2\\pi e^{-${a * b}}}{${b}}`)],
           [
-            `The residue at $${b}i$ gives $\\frac{\\pi e^{-${a} \\cdot ${b}}}{${b}}$.`,
-            `$${b}i$ 处的留数给出 $\\frac{\\pi e^{-${a} \\cdot ${b}}}{${b}}$。`,
+            `Write the cosine as the real part of $e^{${a}ix}$ and close the contour above; Jordan's lemma makes the arc vanish. The only pole inside is $${b}i$, with residue $\\frac{e^{${a}i(${b}i)}}{2 \\cdot ${b}i} = \\frac{e^{-${a * b}}}{${2 * b}i}$. So the integral is the real part of $2\\pi i$ times this:${steps(`2\\pi i \\cdot \\frac{e^{-${a * b}}}{${2 * b}i} = \\frac{\\pi e^{-${a * b}}}{${b}}`)}`,
+            `把余弦写成 $e^{${a}ix}$ 的实部，在上半平面闭合围道；由若尔当引理，圆弧上的积分趋于零。围道内唯一的极点是 $${b}i$，留数为 $\\frac{e^{${a}i(${b}i)}}{2 \\cdot ${b}i} = \\frac{e^{-${a * b}}}{${2 * b}i}$。所以积分是 $2\\pi i$ 乘它的实部：${steps(`2\\pi i \\cdot \\frac{e^{-${a * b}}}{${2 * b}i} = \\frac{\\pi e^{-${a * b}}}{${b}}`)}`,
           ],
         );
       },
@@ -1404,8 +1407,8 @@ const keyhole = topic(
           same(`e^{2\\pi i \\cdot ${r}}`),
           [same(`e^{\\pi i \\cdot ${r}}`), same(`e^{-2\\pi i \\cdot ${r}}`), same(`e^{2\\pi i}`)],
           [
-            `The argument grows by $2\\pi$, and the power multiplies it by ${r === "" ? "" : `$${r}$`}.`,
-            `辐角增加 $2\\pi$，幂再把它乘 $${r}$。`,
+            `Going from above the cut to below it adds $2\\pi$ to $\\arg z$. So $z^{${r}}$, whose argument is $${r}\\arg z$, gains $2\\pi \\cdot ${r}$, which multiplies it by $e^{2\\pi i \\cdot ${r}}$.`,
+            `从切割上方到下方，$\\arg z$ 增加 $2\\pi$。$z^{${r}}$ 的辐角是 $${r}\\arg z$，因此增加 $2\\pi \\cdot ${r}$，即乘以 $e^{2\\pi i \\cdot ${r}}$。`,
           ],
         );
       },
@@ -1573,7 +1576,10 @@ const casorati = topic(
           ],
           Q.of(a ** n, fact),
           [Q.of(a, fact), Q.of(a ** n, fact * (n + 1)), a ** n + 1],
-          [`The exponential series gives $\\frac{(${a}/z)^{${n}}}{${n}!}$.`, `指数级数给出 $\\frac{(${a}/z)^{${n}}}{${n}!}$。`],
+          [
+            `Put $w = \\frac{${a}}{z}$ in $e^{w} = \\sum \\frac{w^{n}}{n!}$. The term with $z^{-${n}}$ is $\\frac{(${a}/z)^{${n}}}{${n}!}$, so the coefficient is $\\frac{${a}^{${n}}}{${n}!} = ${Q.of(a ** n, fact).toLatex()}$.`,
+            `在 $e^{w} = \\sum \\frac{w^{n}}{n!}$ 中令 $w = \\frac{${a}}{z}$。含 $z^{-${n}}$ 的项是 $\\frac{(${a}/z)^{${n}}}{${n}!}$，所以系数是 $\\frac{${a}^{${n}}}{${n}!} = ${Q.of(a ** n, fact).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -1748,7 +1754,10 @@ const joukowski = topic(
           ],
           Q.of(k * (a * a + 1), a),
           [Q.of(k * (a * a - 1), a), Q.of(k, a), k * a],
-          [`Add $${a}$ and $\\frac{1}{${a}}$, then multiply by ${k}.`, `把 $${a}$ 和 $\\frac{1}{${a}}$ 相加，再乘 ${k}。`],
+          [
+            `The sum $z + \\frac{1}{z}$ does not change when $z$ is replaced by $\\frac{1}{z}$:${steps(`${k}\\left(${a} + \\frac{1}{${a}}\\right) = ${k} \\cdot \\frac{${a * a + 1}}{${a}} = ${Q.of(k * (a * a + 1), a).toLatex()}`)}`,
+            `把 $z$ 换成 $\\frac{1}{z}$ 时，和 $z + \\frac{1}{z}$ 不变：${steps(`${k}\\left(${a} + \\frac{1}{${a}}\\right) = ${k} \\cdot \\frac{${a * a + 1}}{${a}} = ${Q.of(k * (a * a + 1), a).toLatex()}`)}`,
+          ],
         );
       },
     ),

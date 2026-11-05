@@ -2,7 +2,7 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, linear, poly, Q } from "@ga/subject-math";
 
-import { functionProblem } from "../problems.ts";
+import { functionProblem, steps } from "../problems.ts";
 import { oneOf, par } from "./calculus-common.ts";
 
 // Calculus I unit 8: Integration, module 8.23.
@@ -274,6 +274,12 @@ export const theSumRuleForIndefiniteIntegrals: TopicDef = {
           const i = deg - j;
           return [Q.of(c, i + 1), xPow(i + 1)] as const;
         });
+        const shownTerms = [...terms]
+          .reverse()
+          .map(([c], j) => [c, deg - j] as const)
+          .filter(([c]) => c !== 0)
+          .map(([c, i]) => `\\frac{${c}}{${i + 1}}x^{${i + 1}}`)
+          .join(" + ");
         return functionProblem({
           prompt: t(`Find $\\int (${integrand}) \\, dx$.`, `求 $\\int (${integrand}) \\, dx$。`),
           answer: plusC(...anti),
@@ -283,7 +289,10 @@ export const theSumRuleForIndefiniteIntegrals: TopicDef = {
             plusC(...anti.slice(0, -1)),
             plusC(...[...terms].reverse().map(([c, _], j) => [c * (deg - j), xPow(Math.max(deg - j - 1, 0))] as const)),
           ],
-          solution: t(`Integrate term by term: $${plusC(...anti)}$.`, `逐项积分：$${plusC(...anti)}$。`),
+          solution: t(
+            `Integrate term by term. Each power goes up by 1, and each coefficient is divided by the new power:${steps(`\\int (${integrand}) \\, dx = ${shownTerms} + C = ${plusC(...anti)}`)}`,
+            `逐项积分。每一项的次数加 1，系数除以新的次数：${steps(`\\int (${integrand}) \\, dx = ${shownTerms} + C = ${plusC(...anti)}`)}`,
+          ),
         });
       },
     },

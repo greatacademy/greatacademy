@@ -723,8 +723,8 @@ const poissonExpected = point(
       answer,
       [eq.mul(Q.of(N * lambda ** x, 1)), eq.mul(Q.of(N, 1)), eq.mul(Q.of(N * lambda ** x, 2 * fact))],
       [
-        `The probability is $\\frac{${dec(eq)} \\cdot ${lambda ** x}}{${fact}}$. Multiplying by $${N}$ gives $${dec(answer)}$.`,
-        `概率是 $\\frac{${dec(eq)} \\cdot ${lambda ** x}}{${fact}}$。乘以 $${N}$，得 $${dec(answer)}$。`,
+        `The Poisson probability is $P(X = ${x}) = \\frac{e^{-${lambda}} \\cdot ${lambda}^{${x}}}{${x}!} = \\frac{${dec(eq)} \\cdot ${lambda ** x}}{${fact}}$. The expected count is $N$ times this: $${N} \\cdot \\frac{${dec(eq)} \\cdot ${lambda ** x}}{${fact}} = ${dec(answer)}$.`,
+        `泊松概率是 $P(X = ${x}) = \\frac{e^{-${lambda}} \\cdot ${lambda}^{${x}}}{${x}!} = \\frac{${dec(eq)} \\cdot ${lambda ** x}}{${fact}}$。期望计数是 $N$ 乘这个概率：$${N} \\cdot \\frac{${dec(eq)} \\cdot ${lambda ** x}}{${fact}} = ${dec(answer)}$。`,
       ],
     );
   },

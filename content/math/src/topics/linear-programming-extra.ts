@@ -4,7 +4,7 @@
 import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { steps } from "../problems.ts";
 import { ask, choose, point, topic } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
 import { arcsFigure } from "./linear-programming-more.ts";
@@ -923,8 +923,8 @@ const addRow = topic(
           r - a * x - b * y,
           [a * x + b * y - r, r, r - x - y],
           [
-            `Subtract $${a} \\cdot ${x} + ${b} \\cdot ${y}$ from the right side ${r}.`,
-            `从右端 ${r} 减去 $${a} \\cdot ${x} + ${b} \\cdot ${y}$。`,
+            `Put the point into the new constraint and solve for $s$: $s = ${r} - (${a} \\cdot ${x} + ${b} \\cdot ${y}) = ${r} - ${a * x + b * y} = ${r - a * x - b * y}$.`,
+            `把这一点代入新约束，解出 $s$：$s = ${r} - (${a} \\cdot ${x} + ${b} \\cdot ${y}) = ${r} - ${a * x + b * y} = ${r - a * x - b * y}$。`,
           ],
         );
       },
@@ -1540,7 +1540,10 @@ const unimodular = topic(
             b * c - a * d === a * d - b * c ? a * d - b * c + 1 : b * c - a * d,
             a + d === a * d - b * c ? a * d - b * c + 2 : a + d,
           ],
-          [`Compute $(${a})(${d}) - (${b})(${c})$.`, `计算 $(${a})(${d}) - (${b})(${c})$。`],
+          [
+            `The determinant of a $2 \\times 2$ matrix is $ad - bc$: $(${a})(${d}) - (${b})(${c}) = ${a * d} - (${b * c}) = ${a * d - b * c}$.`,
+            `$2 \\times 2$ 矩阵的行列式是 $ad - bc$：$(${a})(${d}) - (${b})(${c}) = ${a * d} - (${b * c}) = ${a * d - b * c}$。`,
+          ],
         );
       },
     ),
@@ -1771,8 +1774,8 @@ const gamesLp = topic(
           Q.of(a * d - b * c, den),
           [Q.of(a * d + b * c, den), Q.of(a + d, 2), Q.of(a * d - b * c, den + 1)],
           [
-            `Compute $\\frac{${a} \\cdot ${d} - ${b} \\cdot ${c}}{${den}}$.`,
-            `计算 $\\frac{${a} \\cdot ${d} - ${b} \\cdot ${c}}{${den}}$。`,
+            `The diagonal entries are large and the others small, so there is no saddle point. For such a game the value is $\\frac{ad - bc}{a + d - b - c}$:${steps(`\\frac{${a} \\cdot ${d} - ${b} \\cdot ${c}}{${den}} = ${Q.of(a * d - b * c, den).toLatex()}`)}`,
+            `对角线上的数大，其余的数小，所以没有鞍点。这样的博弈值为 $\\frac{ad - bc}{a + d - b - c}$：${steps(`\\frac{${a} \\cdot ${d} - ${b} \\cdot ${c}}{${den}} = ${Q.of(a * d - b * c, den).toLatex()}`)}`,
           ],
         );
       },

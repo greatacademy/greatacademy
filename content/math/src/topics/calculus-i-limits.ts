@@ -2,7 +2,7 @@ import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
-import { functionProblem, numberProblem } from "../problems.ts";
+import { functionProblem, numberProblem, steps } from "../problems.ts";
 import {
   bare,
   exactDiv,
@@ -743,14 +743,15 @@ export const theProductAndQuotientRulesForLimits: TopicDef = {
         const f = values[form] === undefined ? 0 : form;
         const answer = values[f]!;
         const expr = exprs[f]!;
+        const shown = [`\\frac{(${A})(${B})}{${C}}`, `\\frac{${A}}{${B} + (${C})}`, `(${A})\\left[${B} - (${C})\\right]`][f]!;
         const given = `$${lim(a)} f(x) = ${A}$, $${lim(a)} g(x) = ${B}$ ${"and"} $${lim(a)} h(x) = ${C}$`;
         return numberProblem({
           prompt: t(`Given ${given}, find $${lim(a)} ${expr}$.`, `已知 ${given.replace("and", "，")}，求 $${lim(a)} ${expr}$。`),
           answer,
           wrong: [Q.of(A * B * C), Q.of(A + B, C), answer.neg()],
           solution: t(
-            `Replace each function by its limit: the result is $${answer.toLatex()}$.`,
-            `把每个函数换成它的极限：结果为 $${answer.toLatex()}$。`,
+            `The limit of a product, sum or quotient is the same combination of the limits, and the denominator's limit is not zero:${steps(`${lim(a)} ${expr} = ${shown} = ${answer.toLatex()}`)}`,
+            `积、和、商的极限等于极限的同样组合，而且分母的极限不为零：${steps(`${lim(a)} ${expr} = ${shown} = ${answer.toLatex()}`)}`,
           ),
         });
       },

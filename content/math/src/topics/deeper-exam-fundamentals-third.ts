@@ -1891,7 +1891,10 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
           [`What percent of the students who take the bus are in Grade 9?${text}`, `坐公交的学生中，九年级学生占百分之几？${textZh}`],
           (a * 100) / total,
           [100 - (a * 100) / total, a, Math.round((a * 100) / (a + c))],
-          [`$${a} \\div ${total}$ is ${(a * 100) / total} percent.`, `$${a} \\div ${total}$ 是百分之 ${(a * 100) / total}。`],
+          [
+            `Only the Bus column counts: ${a} of its ${total} students are in Grade 9. $\\frac{${a}}{${total}} = ${(a * 100) / total}\\%$.`,
+            `只看公交这一列：${total} 名学生中有 ${a} 名是九年级。$\\frac{${a}}{${total}} = ${(a * 100) / total}\\%$。`,
+          ],
         );
       },
     ),
@@ -1940,7 +1943,10 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
           ],
           v + r * (t2 - t1),
           [v + r * t2, v - r * (t2 - t1), v + r],
-          [`${t2 - t1} minutes pass, for a change of ${r * (t2 - t1)}.`, `经过 ${t2 - t1} 分钟，变化量是 ${r * (t2 - t1)}。`],
+          [
+            `Count the time from the known reading: ${t2 - t1} minutes pass, so the change is $${r} \\cdot ${t2 - t1} = ${r * (t2 - t1)}$, and the reading becomes $${v} + (${r * (t2 - t1)}) = ${v + r * (t2 - t1)}$.`,
+            `从已知读数算起：经过 ${t2 - t1} 分钟，变化量是 $${r} \\cdot ${t2 - t1} = ${r * (t2 - t1)}$，读数变为 $${v} + (${r * (t2 - t1)}) = ${v + r * (t2 - t1)}$。`,
+          ],
         );
       },
     ),

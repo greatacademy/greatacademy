@@ -690,7 +690,10 @@ const membrane = topic(
           ],
           count,
           [count + 1, count + 2, count === 1 ? 4 : Math.ceil(count / 2), 0].filter((v) => v !== count),
-          [`The solutions are ${"$"}${list}${"$"}, which makes ${count}.`, `解是 ${"$"}${list}${"$"}，共 ${count} 个。`],
+          [
+            `Try $m = 1, 2, \\ldots$ while $m^2 < ${value}$, and keep each $m$ for which $${value} - m^2$ is a square. That gives ${"$"}${list}${"$"}, which makes ${count}.`,
+            `依次试 $m = 1, 2, \\ldots$（$m^2 < ${value}$），保留使 $${value} - m^2$ 为平方数的 $m$。得到 ${"$"}${list}${"$"}，共 ${count} 个。`,
+          ],
         );
       },
     ),

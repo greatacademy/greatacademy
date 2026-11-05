@@ -1270,7 +1270,7 @@ export const theCartesianCoordinateSystem = topic(
               [Math.abs(x), Math.abs(y)],
             ],
             solution: t(
-              `From the origin, $${name}$ is $${dirEn}$, so $${name} = ${pointLatex([x, y])}$.`,
+              `From the origin, $${name}$ is ${dirEn}, so $${name} = ${pointLatex([x, y])}$.`,
               `从原点出发，$${name}$ 在${dirZh}处，所以 $${name} = ${pointLatex([x, y])}$。`,
             ),
           }),

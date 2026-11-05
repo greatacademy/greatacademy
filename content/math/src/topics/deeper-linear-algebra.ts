@@ -2358,8 +2358,8 @@ const unitVectorEntry: KnowledgePointDef = {
       answer,
       wrong: [Q.of(entry), Q.of(entry, norm * norm * scale * scale), answer.neg(), Q.of(norm * scale, entry)],
       solution: t(
-        `The norm is $${norm * scale}$, and dividing $${entry}$ by it gives $${answer.toLatex()}$.`,
-        `范数是 $${norm * scale}$，用它除 $${entry}$，得 $${answer.toLatex()}$。`,
+        `First the norm: $\\|\\mathbf{v}\\| = \\sqrt{${entries.map((e) => `(${e})^2`).join(" + ")}} = ${norm * scale}$. A unit vector divides each entry by the norm: $\\frac{${entry}}{${norm * scale}} = ${answer.toLatex()}$.`,
+        `先求范数：$\\|\\mathbf{v}\\| = \\sqrt{${entries.map((e) => `(${e})^2`).join(" + ")}} = ${norm * scale}$。单位向量是每个分量除以范数：$\\frac{${entry}}{${norm * scale}} = ${answer.toLatex()}$。`,
       ),
     });
   },
@@ -2384,8 +2384,8 @@ const monomialNorm: KnowledgePointDef = {
       answer,
       wrong: [Q.of(c * c, n + 1), Q.of(c, 2 * n + 1), Q.of(c * c, 2 * n), Q.of(c, n + 1)],
       solution: t(
-        `The square of $f$ is $${c * c}t^{${2 * n}}$, and its integral over $[0, 1]$ is $${answer.toLatex()}$.`,
-        `$f$ 的平方是 $${c * c}t^{${2 * n}}$，它在 $[0, 1]$ 上的积分是 $${answer.toLatex()}$。`,
+        `$\\|f\\|^2 = \\langle f, f \\rangle = \\int_0^1 ${c * c}t^{${2 * n}}\\,dt = \\frac{${c * c}}{${2 * n + 1}} = ${answer.toLatex()}$, using the power rule on the square of $f$.`,
+        `对 $f$ 的平方用幂法则：$\\|f\\|^2 = \\langle f, f \\rangle = \\int_0^1 ${c * c}t^{${2 * n}}\\,dt = \\frac{${c * c}}{${2 * n + 1}} = ${answer.toLatex()}$。`,
       ),
     });
   },

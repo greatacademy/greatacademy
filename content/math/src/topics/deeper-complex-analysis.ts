@@ -53,8 +53,8 @@ const addingArguments = point(
       answer,
       [(a + b + 180) % 360, ((a - b + 720) % 360) + (product ? 0 : 15), (a * b) % 360, (answer + 90) % 360],
       [
-        `Arguments ${product ? "add" : "subtract"}, and $${a} ${product ? "+" : "-"} ${b}$ reduces to ${answer} degrees.`,
-        `辐角${product ? "相加" : "相减"}，$${a} ${product ? "+" : "-"} ${b}$ 化简后是 ${answer} 度。`,
+        `Arguments ${product ? "add when numbers multiply" : "subtract when numbers divide"}: $${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$. Adding or removing whole turns of $360$ brings this to ${answer} degrees. The moduli play no part.`,
+        `${product ? "相乘时辐角相加" : "相除时辐角相减"}：$${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$。加上或减去整数个 $360$ 后，得 ${answer} 度。模不起作用。`,
       ],
     );
   },
@@ -597,8 +597,8 @@ const squaredCosine = point(
       answer,
       [a * a + b * b, 2 * a * a + 2 * b * b, 2 * (a + b) * (a + b), answer + 2 * a * b].filter((v) => v !== answer),
       [
-        `Expanding gives $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$, which integrates to $${2 * a * a} \\pi + ${b * b} \\pi$.`,
-        `展开得 $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$，积分得 $${2 * a * a} \\pi + ${b * b} \\pi$。`,
+        `Expanding gives $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$. Over a full period, $\\int \\cos \\theta \\, d\\theta = 0$ and $\\int \\cos^2 \\theta \\, d\\theta = \\pi$, so the integral is $${a * a}(2\\pi) + ${b * b}\\pi = ${answer}\\pi$.`,
+        `展开得 $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$。在一个完整周期上，$\\int \\cos \\theta \\, d\\theta = 0$，$\\int \\cos^2 \\theta \\, d\\theta = \\pi$，所以积分为 $${a * a}(2\\pi) + ${b * b}\\pi = ${answer}\\pi$。`,
       ],
     );
   },

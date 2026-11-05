@@ -5,7 +5,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, steps } from "../problems.ts";
 
 /** nonzero picks a nonzero integer from -r to r. */
 const nonzero = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -1362,8 +1362,8 @@ const telescopingWithGap: KnowledgePointDef = {
       answer,
       wrong: [Q.of(k, a), Q.of(k), Q.of(k, a + 1), Q.of(2 * k)],
       solution: t(
-        `The terms telescope and leave $${Q.of(k, a).toLatex()}$ times $${reciprocals.map((r) => r.toLatex()).join(" + ")}$, which is $${answer.toLatex()}$.`,
-        `各项裂项相消后，留下 $${Q.of(k, a).toLatex()}$ 乘以 $${reciprocals.map((r) => r.toLatex()).join(" + ")}$，即 $${answer.toLatex()}$。`,
+        `Split the term: $\\frac{${k}}{n(n + ${a})} = ${Q.of(k, a).toLatex()}\\left(\\frac{1}{n} - \\frac{1}{n + ${a}}\\right)$. Each negative term cancels a positive term ${a} places later, so only the first ${a} positive terms stay:${steps(`${Q.of(k, a).toLatex()}\\left(${reciprocals.map((r) => r.toLatex()).join(" + ")}\\right) = ${answer.toLatex()}`)}`,
+        `把通项拆开：$\\frac{${k}}{n(n + ${a})} = ${Q.of(k, a).toLatex()}\\left(\\frac{1}{n} - \\frac{1}{n + ${a}}\\right)$。每个负项与 ${a} 个位置之后的正项抵消，只留下前 ${a} 个正项：${steps(`${Q.of(k, a).toLatex()}\\left(${reciprocals.map((r) => r.toLatex()).join(" + ")}\\right) = ${answer.toLatex()}`)}`,
       ),
     });
   },

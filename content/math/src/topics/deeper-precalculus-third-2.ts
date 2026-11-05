@@ -86,8 +86,12 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           most ? a + b : Math.abs(a - b),
           most ? [Math.abs(a - b), Math.max(a, b), a * b] : [a + b, Math.min(a, b), Math.abs(a - b) + 1],
           [
-            most ? `Pointing the same way gives $${a} + ${b}$.` : `Pointing in opposite ways gives $|${a} - ${b}|$.`,
-            most ? `方向相同时是 $${a} + ${b}$。` : `方向相反时是 $|${a} - ${b}|$。`,
+            most
+              ? `By the triangle law, the sum is longest when the vectors point the same way: $${a} + ${b} = ${a + b}$.`
+              : `By the triangle law, the sum is shortest when the vectors point in opposite ways: $|${a} - ${b}| = ${Math.abs(a - b)}$.`,
+            most
+              ? `由三角形法则，方向相同时和最长：$${a} + ${b} = ${a + b}$。`
+              : `由三角形法则，方向相反时和最短：$|${a} - ${b}| = ${Math.abs(a - b)}$。`,
           ],
         );
       },
@@ -1225,7 +1229,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           ],
           vec(p * a - q * c, p * b - q * d),
           [vec(p * a + q * c, p * b + q * d), vec(a - c, b - d), vec(p * c - q * a, p * d - q * b)],
-          [`Linearity gives $${p}${vec(a, b)} - ${q}${vec(c, d)}$.`, `由线性性得 $${p}${vec(a, b)} - ${q}${vec(c, d)}$。`],
+          [
+            `A linear map respects combinations: $T(${p}\\mathbf{u} - ${q}\\mathbf{v}) = ${p}${vec(a, b)} - ${q}${vec(c, d)} = ${vec(p * a - q * c, p * b - q * d)}$.`,
+            `线性变换保持线性组合：$T(${p}\\mathbf{u} - ${q}\\mathbf{v}) = ${p}${vec(a, b)} - ${q}${vec(c, d)} = ${vec(p * a - q * c, p * b - q * d)}$。`,
+          ],
         );
       },
     ),

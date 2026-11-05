@@ -146,8 +146,8 @@ const baseExpansions = topic(
           v,
           [d0 + d1 + d2 + d3, d0 * b * b + d1 * b + d2, v + b],
           [
-            `Compute $${d0} \\cdot ${b}^{3} + ${d1} \\cdot ${b}^{2} + ${d2} \\cdot ${b} + ${d3}$.`,
-            `计算 $${d0} \\cdot ${b}^{3} + ${d1} \\cdot ${b}^{2} + ${d2} \\cdot ${b} + ${d3}$。`,
+            `Each digit counts a power of ${b}: $${d0} \\cdot ${b}^{3} + ${d1} \\cdot ${b}^{2} + ${d2} \\cdot ${b} + ${d3} = ${d0 * b ** 3} + ${d1 * b * b} + ${d2 * b} + ${d3} = ${v}$.`,
+            `每个数码表示 ${b} 的一个幂的个数：$${d0} \\cdot ${b}^{3} + ${d1} \\cdot ${b}^{2} + ${d2} \\cdot ${b} + ${d3} = ${d0 * b ** 3} + ${d1 * b * b} + ${d2 * b} + ${d3} = ${v}$。`,
           ],
         );
       },
@@ -249,7 +249,10 @@ const fermatFactor = topic(
           ],
           a - b,
           [a + b, a, b],
-          [`The factors are $${a} - ${b}$ and $${a} + ${b}$.`, `因数是 $${a} - ${b}$ 和 $${a} + ${b}$。`],
+          [
+            `A difference of squares factors: $${n} = ${a}^{2} - ${b}^{2} = (${a} - ${b})(${a} + ${b}) = ${a - b} \\cdot ${a + b}$. The smaller factor is $${a - b}$.`,
+            `平方差可以分解：$${n} = ${a}^{2} - ${b}^{2} = (${a} - ${b})(${a} + ${b}) = ${a - b} \\cdot ${a + b}$。较小的因数是 $${a - b}$。`,
+          ],
         );
       },
     ),
@@ -927,7 +930,10 @@ const averageOrder = topic(
           [`How many pairs $1 \\le a < b \\le ${n}$ have $\\gcd(a, b) = 1$?`, `有多少对 $1 \\le a < b \\le ${n}$ 满足 $\\gcd(a, b) = 1$？`],
           sum,
           [sum + 1, (n * (n - 1)) / 2 === sum ? sum + 2 : (n * (n - 1)) / 2, sum + totient(n)],
-          [`Add $\\varphi(b)$ for $b$ from 2 to ${n}.`, `对 $b$ 从 2 到 ${n} 求 $\\varphi(b)$ 的和。`],
+          [
+            `For each $b$, exactly $\\varphi(b)$ values of $a < b$ are coprime to $b$. So the count is $\\varphi(2) + \\varphi(3) + \\cdots + \\varphi(${n}) = ${sum}$.`,
+            `对每个 $b$，恰有 $\\varphi(b)$ 个 $a < b$ 与 $b$ 互素。所以个数是 $\\varphi(2) + \\varphi(3) + \\cdots + \\varphi(${n}) = ${sum}$。`,
+          ],
         );
       },
     ),
@@ -958,7 +964,10 @@ const primeSize = topic(
           ],
           Q.of(10 * c, 23 * k),
           [Q.of(c, 23 * k), Q.of(10 * c, 23), Q.of(23 * k, 10 * c)],
-          [`Divide ${c} by the product $${k} \\cdot 2.3$.`, `用 ${c} 除以乘积 $${k} \\cdot 2.3$。`],
+          [
+            `The power of 10 stays in front, so $\\frac{x}{\\ln x} \\approx \\frac{${c} \\cdot 10^{${k}}}{${k} \\cdot 2.3}$ and $m = \\frac{${c}}{${k} \\cdot 2.3} = ${Q.of(10 * c, 23 * k).toLatex()}$.`,
+            `10 的幂保留在外面，所以 $\\frac{x}{\\ln x} \\approx \\frac{${c} \\cdot 10^{${k}}}{${k} \\cdot 2.3}$，$m = \\frac{${c}}{${k} \\cdot 2.3} = ${Q.of(10 * c, 23 * k).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -1638,8 +1647,8 @@ const gaussLemma = topic(
           v,
           [-v, 0, 2],
           [
-            `Here ${p} is ${r} modulo 8, which is ${v === 1 ? "" : "not "}$\\pm 1$.`,
-            `这里 ${p} 模 8 余 ${r}，它${v === 1 ? "是" : "不是"} $\\pm 1$。`,
+            `The symbol of 2 is $1$ exactly when $p \\equiv \\pm 1 \\pmod 8$, and $-1$ otherwise. Here $${p} \\equiv ${r} \\pmod 8$, which is ${v === 1 ? "" : "not "}$\\pm 1$, so the symbol is $${v}$.`,
+            `当且仅当 $p \\equiv \\pm 1 \\pmod 8$ 时，2 的符号为 $1$，否则为 $-1$。这里 $${p} \\equiv ${r} \\pmod 8$，它${v === 1 ? "是" : "不是"} $\\pm 1$，所以符号是 $${v}$。`,
           ],
         );
       },
@@ -1670,7 +1679,10 @@ const quadraticForms = topic(
           [`What is the discriminant of $${a}x^{2} + ${b}xy + ${c}y^{2}$?`, `$${a}x^{2} + ${b}xy + ${c}y^{2}$ 的判别式是多少？`],
           b * b - 4 * a * c,
           [b * b + 4 * a * c, 4 * a * c - b * b, b * b - a * c],
-          [`Compute $${b}^{2} - 4 \\cdot ${a} \\cdot ${c}$.`, `计算 $${b}^{2} - 4 \\cdot ${a} \\cdot ${c}$。`],
+          [
+            `The discriminant of $ax^2 + bxy + cy^2$ is $b^2 - 4ac$: $${b}^{2} - 4 \\cdot ${a} \\cdot ${c} = ${b * b} - ${4 * a * c} = ${b * b - 4 * a * c}$.`,
+            `$ax^2 + bxy + cy^2$ 的判别式是 $b^2 - 4ac$：$${b}^{2} - 4 \\cdot ${a} \\cdot ${c} = ${b * b} - ${4 * a * c} = ${b * b - 4 * a * c}$。`,
+          ],
         );
       },
     ),
@@ -1797,7 +1809,10 @@ const periodicCf = topic(
           ],
           Q.of(2 * a * a + 1, 2 * a),
           [Q.of(2 * a * a - 1, 2 * a), Q.of(a * a + 1, a), Q.of(2 * a * a + 1, a)],
-          [`Compute $${a} + \\frac{1}{${2 * a}}$.`, `计算 $${a} + \\frac{1}{${2 * a}}$。`],
+          [
+            `The convergent using the terms $${a}$ and $${2 * a}$ is $${a} + \\frac{1}{${2 * a}} = \\frac{${a} \\cdot ${2 * a} + 1}{${2 * a}} = ${Q.of(2 * a * a + 1, 2 * a).toLatex()}$.`,
+            `用 $${a}$ 和 $${2 * a}$ 这两项的渐近分数是 $${a} + \\frac{1}{${2 * a}} = \\frac{${a} \\cdot ${2 * a} + 1}{${2 * a}} = ${Q.of(2 * a * a + 1, 2 * a).toLatex()}$。`,
+          ],
         );
       },
     ),

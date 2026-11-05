@@ -660,8 +660,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           up / 100,
           [100 + p - q, ((100 + q) * (100 - p)) / 100, 100 + q - p],
           [
-            `$${(100 + p) / 100} \\times ${(100 - q) / 100}$ gives ${up / 100} percent.`,
-            `$${(100 + p) / 100} \\times ${(100 - q) / 100}$ 得百分之 ${up / 100}。`,
+            `A rise of ${p} percent multiplies by ${(100 + p) / 100}, and a fall of ${q} percent multiplies by ${(100 - q) / 100}. Percents do not simply add: $${(100 + p) / 100} \\times ${(100 - q) / 100} = ${up / 100}\\%$ of the original.`,
+            `上涨百分之 ${p} 就是乘以 ${(100 + p) / 100}，下降百分之 ${q} 就是乘以 ${(100 - q) / 100}。百分数不能直接相加：$${(100 + p) / 100} \\times ${(100 - q) / 100} = ${up / 100}\\%$，这是相对于原价的。`,
           ],
         );
       },
@@ -737,8 +737,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           closed ? 2 * k + 1 : 2 * k - 1,
           [2 * k, closed ? 2 * k - 1 : 2 * k + 1, k],
           [
-            `The integers run from ${closed ? a - k : a - k + 1} to ${closed ? a + k : a + k - 1}.`,
-            `这些整数从 ${closed ? a - k : a - k + 1} 到 ${closed ? a + k : a + k - 1}。`,
+            `The distance from $x$ to ${a} is ${closed ? "at most" : "less than"} ${k}, so the integers run from ${closed ? a - k : a - k + 1} to ${closed ? a + k : a + k - 1}. That is $${closed ? a + k : a + k - 1} - (${closed ? a - k : a - k + 1}) + 1 = ${closed ? 2 * k + 1 : 2 * k - 1}$ integers.`,
+            `$x$ 到 ${a} 的距离${closed ? "不超过" : "小于"} ${k}，所以这些整数从 ${closed ? a - k : a - k + 1} 到 ${closed ? a + k : a + k - 1}。个数是 $${closed ? a + k : a + k - 1} - (${closed ? a - k : a - k + 1}) + 1 = ${closed ? 2 * k + 1 : 2 * k - 1}$。`,
           ],
         );
       },
@@ -1037,7 +1037,10 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           ],
           Q.of(a * b, 3),
           [Q.of(a + b, 3), Q.of(a, 3 * b), Q.of(3 * b, a)],
-          [`$\\frac{${a}}{3} \\cdot ${b}$ gives the exponent.`, `$\\frac{${a}}{3} \\cdot ${b}$ 就是指数。`],
+          [
+            `Write the root as a power: $\\sqrt[3]{x^{${a}}} = x^{${a}/3}$. A power of a power multiplies the exponents: $k = \\frac{${a}}{3} \\cdot ${b} = ${Q.of(a * b, 3).toLatex()}$.`,
+            `把根式写成幂：$\\sqrt[3]{x^{${a}}} = x^{${a}/3}$。幂的幂，指数相乘：$k = \\frac{${a}}{3} \\cdot ${b} = ${Q.of(a * b, 3).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -1708,7 +1711,10 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           ],
           `${co(gap)}a`,
           [`${gap + 2}a`, `${co(gap)}a^{2}`, `${gap + 1}a`],
-          [`The solutions are $${r}a$ and $${s}a$.`, `解是 $${r}a$ 和 $${s}a$。`],
+          [
+            `Look for two multiples of $a$ with sum $${r + s}a$ and product $${r * s}a^{2}$: the solutions are $${r}a$ and $${s}a$. Their difference is $|${r}a - (${s}a)| = ${co(gap)}a$.`,
+            `找 $a$ 的两个倍数，和为 $${r + s}a$，积为 $${r * s}a^{2}$：解是 $${r}a$ 和 $${s}a$。它们的差是 $|${r}a - (${s}a)| = ${co(gap)}a$。`,
+          ],
         );
       },
     ),

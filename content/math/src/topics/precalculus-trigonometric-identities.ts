@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, gcd, plane, Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.9 to 4.12: inverse functions,
 // identities, sum/difference formulas, and double-angle formulas).
@@ -951,8 +951,16 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
           { expr: `1 - \\cos^2(${arg})`, ans: `\\sin^2(${arg})`, wrong: [`\\cos^2(${arg})`, `-\\sin^2(${arg})`, "1"] },
           { expr: `\\sin^2(${arg}) + \\cos^2(${arg})`, ans: "1", wrong: ["0", "-1", `2\\sin^2(${arg})`] },
           { expr: `\\sin^2(${arg}) + \\cos^2(${arg}) - 1`, ans: "0", wrong: ["1", "-1", `\\cos^2(${arg})`] },
-          { expr: `\\frac{1 - \\cos^2(${arg})}{\\sin(${arg})}`, ans: `\\sin(${arg})`, wrong: [`\\cos(${arg})`, "1", `\\sin^2(${arg})`] },
-          { expr: `\\frac{1 - \\sin^2(${arg})}{\\cos(${arg})}`, ans: `\\cos(${arg})`, wrong: [`\\sin(${arg})`, "1", `\\cos^2(${arg})`] },
+          {
+            expr: `\\frac{1 - \\cos^2(${arg})}{\\sin(${arg})}`,
+            ans: `\\sin(${arg})`,
+            wrong: [`\\cos(${arg})`, "1", `\\sin^2(${arg})`],
+          },
+          {
+            expr: `\\frac{1 - \\sin^2(${arg})}{\\cos(${arg})}`,
+            ans: `\\cos(${arg})`,
+            wrong: [`\\sin(${arg})`, "1", `\\cos^2(${arg})`],
+          },
         ]);
         return oneOf(
           rng,
@@ -1067,16 +1075,32 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
-          { expr: `\\frac{1 - \\sin^2(${arg})}{\\cos(${arg})}`, ans: `\\cos(${arg})`, wrong: [`\\sin(${arg})`, "1", `\\cos^2(${arg})`] },
-          { expr: `\\frac{1 - \\cos^2(${arg})}{\\sin(${arg})}`, ans: `\\sin(${arg})`, wrong: [`\\cos(${arg})`, "1", `\\sin^2(${arg})`] },
+          {
+            expr: `\\frac{1 - \\sin^2(${arg})}{\\cos(${arg})}`,
+            ans: `\\cos(${arg})`,
+            top: `\\cos^2(${arg})`,
+            bottom: `\\cos(${arg})`,
+            wrong: [`\\sin(${arg})`, "1", `\\cos^2(${arg})`],
+          },
+          {
+            expr: `\\frac{1 - \\cos^2(${arg})}{\\sin(${arg})}`,
+            ans: `\\sin(${arg})`,
+            top: `\\sin^2(${arg})`,
+            bottom: `\\sin(${arg})`,
+            wrong: [`\\cos(${arg})`, "1", `\\sin^2(${arg})`],
+          },
           {
             expr: `\\frac{1 - \\cos^2(${arg})}{1 - \\sin^2(${arg})}`,
             ans: `\\tan^2(${arg})`,
+            top: `\\sin^2(${arg})`,
+            bottom: `\\cos^2(${arg})`,
             wrong: [`\\cot^2(${arg})`, "1", `\\sin^2(${arg})`],
           },
           {
             expr: `\\frac{1 - \\sin^2(${arg})}{1 - \\cos^2(${arg})}`,
             ans: `\\cot^2(${arg})`,
+            top: `\\cos^2(${arg})`,
+            bottom: `\\sin^2(${arg})`,
             wrong: [`\\tan^2(${arg})`, "1", `\\cos^2(${arg})`],
           },
         ]);
@@ -1085,7 +1109,10 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
           t(`Simplify $${item.expr}$.`, `化简 $${item.expr}$。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(`Substitute Pythagorean identities and reduce: $${item.ans}$.`, `代入勾股恒等式并约分：$${item.ans}$。`),
+          t(
+            `Since $\\sin^2 + \\cos^2 = 1$, we have $1 - \\sin^2 = \\cos^2$ and $1 - \\cos^2 = \\sin^2$:${steps(`${item.expr} = \\frac{${item.top}}{${item.bottom}} = ${item.ans}`)}`,
+            `由 $\\sin^2 + \\cos^2 = 1$，得 $1 - \\sin^2 = \\cos^2$，$1 - \\cos^2 = \\sin^2$：${steps(`${item.expr} = \\frac{${item.top}}{${item.bottom}} = ${item.ans}`)}`,
+          ),
         );
       },
     },

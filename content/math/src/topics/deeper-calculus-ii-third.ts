@@ -6,7 +6,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, paren, poly, Q } from "@ga/subject-math";
 
-import { functionProblem } from "../problems.ts";
+import { functionProblem, steps } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
 /** nz picks a nonzero integer from -r to r. */
@@ -368,8 +368,8 @@ const shellShiftedAxis = point(
       answer,
       [inner(0).mul(Q.of(2)), inner(c), inner(-c).mul(Q.of(2))],
       [
-        `$V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy$, with radius $y + ${c}$. Evaluating gives $${answer.toLatex()}\\pi$.`,
-        `$V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy$，半径是 $y + ${c}$。计算得 $${answer.toLatex()}\\pi$。`,
+        `A shell at height $y$ has radius $y + ${c}$ and length $${g}$. Multiply out and integrate:${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
+        `高度 $y$ 处的柱壳半径是 $y + ${c}$，长度是 $${g}$。展开后积分：${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
       ],
     );
   },

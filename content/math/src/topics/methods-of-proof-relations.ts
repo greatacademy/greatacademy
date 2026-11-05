@@ -291,8 +291,8 @@ export const theDomainAndRangeOfARelation: TopicDef = {
           values: askDom ? dom : ran,
           wrong: [askDom ? ran : dom, [...dom, ...ran]],
           solution: t(
-            `The ${askDom ? "first" : "second"} coordinates are $${setTex(askDom ? dom : ran)}$.`,
-            `${askDom ? "第一个" : "第二个"}坐标组成 $${setTex(askDom ? dom : ran)}$。`,
+            `The ${askDom ? "domain" : "range"} collects the ${askDom ? "first" : "second"} coordinate of each pair in $R$, with repeats dropped: $${setTex(askDom ? dom : ran)}$.`,
+            `${askDom ? "定义域" : "值域"}由 $R$ 中每一对的${askDom ? "第一个" : "第二个"}坐标组成，重复的只算一次：$${setTex(askDom ? dom : ran)}$。`,
           ),
         });
       },

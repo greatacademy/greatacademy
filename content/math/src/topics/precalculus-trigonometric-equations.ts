@@ -527,8 +527,8 @@ export const elementaryTrigonometricEquationsContainingTangent: TopicDef = {
           t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
           t(
-            `The equation is $\\tan ${v} = ${item.val}$. Solutions in $[0, 2\\pi)$ are $${v} = ${item.ans}$.`,
-            `方程为 $\\tan ${v} = ${item.val}$。在 $[0, 2\\pi)$ 上的解为 $${v} = ${item.ans}$。`,
+            `Divide by the coefficient: $\\tan ${v} = ${item.val}$. Tangent takes this value at $${item.ans.split(", ")[0]}$ and repeats every $\\pi$, so adding $\\pi$ gives the other solution in $[0, 2\\pi)$: $${v} = ${item.ans}$.`,
+            `除以系数：$\\tan ${v} = ${item.val}$。正切在 $${item.ans.split(", ")[0]}$ 处取这个值，并且每隔 $\\pi$ 重复一次；加上 $\\pi$ 得到 $[0, 2\\pi)$ 上的另一个解：$${v} = ${item.ans}$。`,
           ),
         );
       },
