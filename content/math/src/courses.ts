@@ -18243,10 +18243,12 @@ export const realAnalysis: CourseDef = {
           title: t("Bounds and Limits", "界和极限"),
           topics: [
             "supremum-and-infimum",
+            "the-archimedean-property",
             "suprema-of-sets-of-reals",
             "limits-of-sequences",
             "proving-the-finite-limit-of-a-sequence",
             "the-epsilon-definition-for-sequences",
+            "the-algebra-of-limits",
           ],
         },
         {
@@ -18266,7 +18268,12 @@ export const realAnalysis: CourseDef = {
       modules: [
         {
           title: t("Convergence of Series", "级数的收敛"),
-          topics: ["harmonic-series-and-p-series", "absolute-and-conditional-convergence-of-series"],
+          topics: [
+            "harmonic-series-and-p-series",
+            "absolute-and-conditional-convergence-of-series",
+            "rearrangements-of-series",
+            "cauchy-products-of-series",
+          ],
         },
       ],
     },
@@ -18275,11 +18282,24 @@ export const realAnalysis: CourseDef = {
       modules: [
         {
           title: t("Rigorous Limits", "严格的极限"),
-          topics: ["defining-continuity-at-a-point", "epsilon-delta-proofs-of-limits", "the-sequential-criterion-for-continuity"],
+          topics: [
+            "defining-continuity-at-a-point",
+            "kinds-of-discontinuities",
+            "epsilon-delta-proofs-of-limits",
+            "the-sequential-criterion-for-continuity",
+            "the-bisection-proof",
+          ],
         },
         {
           title: t("Topology of the Line", "直线的拓扑"),
-          topics: ["distances-in-metric-spaces", "open-and-closed-sets-of-reals", "compactness-on-the-real-line", "uniform-continuity"],
+          topics: [
+            "distances-in-metric-spaces",
+            "complete-metric-spaces",
+            "open-and-closed-sets-of-reals",
+            "compactness-on-the-real-line",
+            "open-covers",
+            "uniform-continuity",
+          ],
         },
       ],
     },
@@ -18288,7 +18308,14 @@ export const realAnalysis: CourseDef = {
       modules: [
         {
           title: t("The Derivative", "导数"),
-          topics: ["differentiability-in-analysis", "the-mean-value-theorem", "bounds-from-the-mean-value-theorem"],
+          topics: [
+            "differentiability-in-analysis",
+            "the-mean-value-theorem",
+            "rolles-theorem-and-counting-zeros",
+            "darbouxs-theorem",
+            "bounds-from-the-mean-value-theorem",
+            "taylors-theorem-with-remainder",
+          ],
         },
         {
           title: t("The Riemann Integral", "黎曼积分"),
@@ -18296,6 +18323,9 @@ export const realAnalysis: CourseDef = {
             "defining-definite-integrals-using-left-and-right-riemann-sums",
             "upper-and-lower-darboux-sums",
             "riemann-integrability",
+            "bounds-and-means-of-integrals",
+            "the-fundamental-theorem-in-analysis",
+            "sets-of-measure-zero",
           ],
         },
       ],
@@ -18305,7 +18335,12 @@ export const realAnalysis: CourseDef = {
       modules: [
         {
           title: t("Uniform Convergence", "一致收敛"),
-          topics: ["pointwise-and-uniform-convergence", "the-weierstrass-m-test", "the-contraction-mapping-principle"],
+          topics: [
+            "pointwise-and-uniform-convergence",
+            "exchanging-limits-and-integrals",
+            "the-weierstrass-m-test",
+            "the-contraction-mapping-principle",
+          ],
         },
       ],
     },
