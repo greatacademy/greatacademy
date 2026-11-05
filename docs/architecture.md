@@ -148,7 +148,7 @@ The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands re
 
 ### 6.1 Subjects as Workers
 
-Generators are code, so content cannot be loaded as data, and a Worker has a size limit: 3 MB compressed on the free plan, 10 MB on paid plans. All of mathematics compresses to about 7.7 MB, and more subjects are planned. So subjects run in Workers of their own:
+Generators are code, so content cannot be loaded as data. A Worker has limits on both plans: 64 MiB uncompressed, 1 second to execute its global scope, and 128 MB of memory per isolate. All of mathematics is about 29 MB uncompressed and its shards load in about 460 ms under Node when added up, and more subjects are planned, so one Worker would reach these limits. So subjects run in Workers of their own:
 
 ```text
 web Worker ──service binding──► subject gateway ──service bindings──► subject shards
@@ -162,17 +162,19 @@ web Worker ──service binding──► subject gateway ──service bindings
 
 Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed.
 
-| Worker | Compressed size (gzip -9) | Module load under Node |
+| Worker | Uncompressed size | Module load under Node |
 | :--- | :--- | :--- |
-| `ga-web` | about 2.1 MB | |
-| `ga-math` (gateway) | 0.99 MB | 51 ms |
-| `ga-math-school` | 1.36 MB | 62 ms |
-| `ga-math-algebra` | 1.49 MB | 108 ms |
-| `ga-math-calculus` | 2.25 MB | 133 ms |
-| `ga-math-college` | 1.87 MB | 112 ms |
-| `ga-math-exam` | 0.76 MB | 49 ms |
+| `ga-web` | 6.8 MB | |
+| `ga-math` (gateway) | 5.9 MB | 51 ms |
+| `ga-math-school` | 4.7 MB | 62 ms |
+| `ga-math-algebra` | 5.8 MB | 108 ms |
+| `ga-math-calculus` | 8.7 MB | 133 ms |
+| `ga-math-college` | 6.8 MB | 112 ms |
+| `ga-math-exam` | 2.6 MB | 49 ms |
 
-A shard that nears 3 MB is split in two: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
+A shard is split in two when its startup time or memory nears the limits, which `startup_time_ms` in the deployment output and production metrics show: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
+
+Service binding calls add no request fee and no charge for duration; the CPU time of every Worker in a call is billed, and the hops add little. Each Worker writes its own logs, so one request could write three log events. The gateway and shards therefore log 1% of their invocations (`headSamplingRate`). The web Worker logs every request, and errors from the gateway and shards reach it through RPC.
 
 ## 7. Storage
 
