@@ -7,6 +7,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Explanation, FigureView } from "../../components/Figure.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
+import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -201,7 +202,7 @@ function QuestionFlow({
           </div>
         )}
       </Card>
-      {pending && <FeedbackView feedback={pending.feedback} problem={question.problem} onContinue={onContinue} />}
+      {pending && <FeedbackView feedback={pending.feedback} problem={question.problem} session={session} onContinue={onContinue} />}
     </div>
   );
 }
@@ -248,33 +249,6 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
       </div>
     </div>
   );
-}
-
-function ProblemPrompt({ problem }: { problem?: ProblemView }) {
-  const { tx } = useI18n();
-  return (
-    <div className="space-y-4">
-      <Markdown source={tx(problem?.prompt)} className="text-lg" />
-      <FigureView figure={problem?.figure} />
-    </div>
-  );
-}
-
-/** AnswerText shows an answer as the learner would have given it: an option, math or text. */
-function AnswerText({ problem, answer }: { problem?: ProblemView; answer: string }) {
-  const { tx, m } = useI18n();
-  const input = problem?.input?.kind;
-  if (answer === "") return <span className="text-muted italic">{m.skipped}</span>;
-  if (input?.case === "choice") {
-    const drawn = input.value.figures[Number(answer)];
-    return drawn ? (
-      <FigureView figure={drawn} className="answer-figure" />
-    ) : (
-      <Markdown source={tx(input.value.options[Number(answer)])} inline />
-    );
-  }
-  if (input?.case === "math") return <Tex tex={[input.value.prefix, answer, input.value.suffix].filter(Boolean).join(" ")} />;
-  return <span>{answer}</span>;
 }
 
 function AnswerInput({
@@ -388,8 +362,20 @@ function AnswerInput({
   }
 }
 
-function FeedbackView({ feedback, problem, onContinue }: { feedback: Feedback; problem?: ProblemView; onContinue(): void }) {
+function FeedbackView({
+  feedback,
+  problem,
+  session,
+  onContinue,
+}: {
+  feedback: Feedback;
+  problem?: ProblemView;
+  session: Session;
+  onContinue(): void;
+}) {
   const { m, tx } = useI18n();
+  const task = session.task?.kind;
+  const topicId = task?.case === "lesson" || task?.case === "review" ? task.value.topicId : undefined;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
@@ -422,7 +408,17 @@ function FeedbackView({ feedback, problem, onContinue }: { feedback: Feedback; p
         <Markdown source={tx(feedback.solution)} className="mt-2" />
         <FigureView figure={feedback.solutionFigure} className="mt-3" />
       </details>
-      <div className="flex justify-end">
+      <div className={`flex items-center gap-3 ${topicId && !feedback.correct ? "justify-between" : "justify-end"}`}>
+        {topicId && !feedback.correct && (
+          <Link
+            to="/learn/$courseId/topics/$topicId"
+            params={{ courseId: session.courseId, topicId }}
+            target="_blank"
+            className="text-sm font-medium text-accent hover:underline"
+          >
+            {m.rereadLesson}
+          </Link>
+        )}
         <Button onClick={onContinue} className="px-6">
           {m.next} <ArrowRight size={16} />
         </Button>
@@ -471,7 +467,14 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
         >
           <div className="flex items-center justify-between gap-3">
             <div className="text-sm font-medium text-muted">
-              {i + 1}. <Markdown source={tx(item.title)} inline />
+              {i + 1}.{" "}
+              <Link
+                to="/learn/$courseId/topics/$topicId"
+                params={{ courseId: session.courseId, topicId: item.topicId }}
+                className="hover:underline"
+              >
+                <Markdown source={tx(item.title)} inline />
+              </Link>
             </div>
             {item.correct ? (
               <CheckCircle size={22} weight="fill" className="text-good" />

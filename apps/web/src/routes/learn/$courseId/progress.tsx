@@ -6,20 +6,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Markdown } from "../../../components/Markdown.tsx";
 import { buttonClass, Card, ErrorNote, Spinner } from "../../../components/ui.tsx";
 import { useRequireSession } from "../../../lib/hooks.ts";
-import { type Messages, useI18n } from "../../../lib/i18n.tsx";
+import { useI18n } from "../../../lib/i18n.tsx";
 import { catalog, learning } from "../../../lib/rpc.ts";
+import { statusStyle } from "../../../lib/topic-status.ts";
 
 export const Route = createFileRoute("/learn/$courseId/progress")({ component: Progress });
-
-const statusStyle: Record<TopicStatus, { key: keyof Messages["status"]; dot: string; chip: string }> = {
-  [TopicStatus.UNSPECIFIED]: { key: "locked", dot: "bg-line", chip: "bg-page text-muted" },
-  [TopicStatus.LOCKED]: { key: "locked", dot: "bg-line", chip: "bg-page text-muted" },
-  [TopicStatus.AVAILABLE]: { key: "available", dot: "bg-accent", chip: "bg-accent-soft text-accent" },
-  [TopicStatus.FAILED]: { key: "failed", dot: "bg-bad", chip: "bg-bad-soft text-bad" },
-  [TopicStatus.LEARNED]: { key: "learned", dot: "bg-good", chip: "bg-good-soft text-good" },
-  [TopicStatus.DUE]: { key: "due", dot: "bg-warn", chip: "bg-warn-soft text-warn" },
-  [TopicStatus.ASSUMED]: { key: "assumed", dot: "bg-muted", chip: "bg-page text-muted" },
-};
 
 function Progress() {
   const { courseId } = Route.useParams();
@@ -68,7 +59,12 @@ function Progress() {
                   const s = statusStyle[p?.status ?? TopicStatus.LOCKED];
                   const learned = p?.status === TopicStatus.LEARNED || p?.status === TopicStatus.DUE;
                   return (
-                    <div key={t.id} className="flex items-center gap-3 rounded-xl border border-line px-3 py-2.5">
+                    <Link
+                      key={t.id}
+                      to="/learn/$courseId/topics/$topicId"
+                      params={{ courseId, topicId: t.id }}
+                      className="flex min-w-0 items-center gap-3 rounded-xl border border-line px-3 py-2.5 transition hover:border-accent/50"
+                    >
                       <span className={`size-2.5 shrink-0 rounded-full ${s.dot}`} />
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-medium">
@@ -87,7 +83,7 @@ function Progress() {
                         )}
                       </div>
                       <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>{m.status[s.key]}</span>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>

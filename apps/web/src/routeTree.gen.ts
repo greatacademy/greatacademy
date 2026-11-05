@@ -16,7 +16,9 @@ import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
 import { Route as LearnCourseIdIndexRouteImport } from './routes/learn/$courseId/index'
+import { Route as LearnCourseIdHistoryRouteImport } from './routes/learn/$courseId/history'
 import { Route as LearnCourseIdProgressRouteImport } from './routes/learn/$courseId/progress'
+import { Route as LearnCourseIdTopicsTopicIdRouteImport } from './routes/learn/$courseId/topics/$topicId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,11 +55,22 @@ const LearnCourseIdIndexRoute = LearnCourseIdIndexRouteImport.update({
   path: '/learn/$courseId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnCourseIdHistoryRoute = LearnCourseIdHistoryRouteImport.update({
+  id: '/learn/$courseId/history',
+  path: '/learn/$courseId/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnCourseIdProgressRoute = LearnCourseIdProgressRouteImport.update({
   id: '/learn/$courseId/progress',
   path: '/learn/$courseId/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnCourseIdTopicsTopicIdRoute =
+  LearnCourseIdTopicsTopicIdRouteImport.update({
+    id: '/learn/$courseId/topics/$topicId',
+    path: '/learn/$courseId/topics/$topicId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,8 +79,10 @@ export interface FileRoutesByFullPath {
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId/': typeof LearnCourseIdIndexRoute
+  '/learn/$courseId/topics/$topicId': typeof LearnCourseIdTopicsTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,8 +91,10 @@ export interface FileRoutesByTo {
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId': typeof LearnCourseIdIndexRoute
+  '/learn/$courseId/topics/$topicId': typeof LearnCourseIdTopicsTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,8 +104,10 @@ export interface FileRoutesById {
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId/': typeof LearnCourseIdIndexRoute
+  '/learn/$courseId/topics/$topicId': typeof LearnCourseIdTopicsTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +118,10 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/courses/$courseId'
     | '/session/$sessionId'
+    | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId/'
+    | '/learn/$courseId/topics/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +130,10 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/courses/$courseId'
     | '/session/$sessionId'
+    | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId'
+    | '/learn/$courseId/topics/$topicId'
   id:
     | '__root__'
     | '/'
@@ -119,8 +142,10 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/courses/$courseId'
     | '/session/$sessionId'
+    | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId/'
+    | '/learn/$courseId/topics/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -130,8 +155,10 @@ export interface RootRouteChildren {
   ApiSplatRoute: typeof ApiSplatRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   SessionSessionIdRoute: typeof SessionSessionIdRoute
+  LearnCourseIdHistoryRoute: typeof LearnCourseIdHistoryRoute
   LearnCourseIdProgressRoute: typeof LearnCourseIdProgressRoute
   LearnCourseIdIndexRoute: typeof LearnCourseIdIndexRoute
+  LearnCourseIdTopicsTopicIdRoute: typeof LearnCourseIdTopicsTopicIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -185,11 +212,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnCourseIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$courseId/history': {
+      id: '/learn/$courseId/history'
+      path: '/learn/$courseId/history'
+      fullPath: '/learn/$courseId/history'
+      preLoaderRoute: typeof LearnCourseIdHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/$courseId/progress': {
       id: '/learn/$courseId/progress'
       path: '/learn/$courseId/progress'
       fullPath: '/learn/$courseId/progress'
       preLoaderRoute: typeof LearnCourseIdProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/$courseId/topics/$topicId': {
+      id: '/learn/$courseId/topics/$topicId'
+      path: '/learn/$courseId/topics/$topicId'
+      fullPath: '/learn/$courseId/topics/$topicId'
+      preLoaderRoute: typeof LearnCourseIdTopicsTopicIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -202,8 +243,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSplatRoute: ApiSplatRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   SessionSessionIdRoute: SessionSessionIdRoute,
+  LearnCourseIdHistoryRoute: LearnCourseIdHistoryRoute,
   LearnCourseIdProgressRoute: LearnCourseIdProgressRoute,
   LearnCourseIdIndexRoute: LearnCourseIdIndexRoute,
+  LearnCourseIdTopicsTopicIdRoute: LearnCourseIdTopicsTopicIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

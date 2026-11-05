@@ -1,0 +1,33 @@
+import type { ProblemView } from "@ga/proto/learning/v1/learning_pb";
+
+import { useI18n } from "../lib/i18n.tsx";
+import { FigureView } from "./Figure.tsx";
+import { Markdown, Tex } from "./Markdown.tsx";
+
+/** ProblemPrompt shows a problem's prompt and its drawing. */
+export function ProblemPrompt({ problem }: { problem?: ProblemView }) {
+  const { tx } = useI18n();
+  return (
+    <div className="space-y-4">
+      <Markdown source={tx(problem?.prompt)} className="text-lg" />
+      <FigureView figure={problem?.figure} />
+    </div>
+  );
+}
+
+/** AnswerText shows an answer as the learner would have given it: an option, math or text. */
+export function AnswerText({ problem, answer }: { problem?: ProblemView; answer: string }) {
+  const { tx, m } = useI18n();
+  const input = problem?.input?.kind;
+  if (answer === "") return <span className="text-muted italic">{m.skipped}</span>;
+  if (input?.case === "choice") {
+    const drawn = input.value.figures[Number(answer)];
+    return drawn ? (
+      <FigureView figure={drawn} className="answer-figure" />
+    ) : (
+      <Markdown source={tx(input.value.options[Number(answer)])} inline />
+    );
+  }
+  if (input?.case === "math") return <Tex tex={[input.value.prefix, answer, input.value.suffix].filter(Boolean).join(" ")} />;
+  return <span>{answer}</span>;
+}

@@ -1,6 +1,6 @@
 import { Code, ConnectError } from "@connectrpc/connect";
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { ChartBar, Lightning, MapTrifold, Target } from "@phosphor-icons/react";
+import { ChartBar, ClockCounterClockwise, Lightning, MapTrifold, Target } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -63,9 +63,14 @@ function Dashboard() {
           <div className="text-sm text-muted">{m.dashboard}</div>
           <h1 className="text-2xl font-semibold tracking-tight">{tx(course.data?.course?.title)}</h1>
         </div>
-        <Link to="/learn/$courseId/progress" params={{ courseId }} className={buttonClass("secondary")}>
-          <MapTrifold size={18} /> {m.progress}
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link to="/learn/$courseId/history" params={{ courseId }} className={buttonClass("secondary")}>
+            <ClockCounterClockwise size={18} /> {m.history}
+          </Link>
+          <Link to="/learn/$courseId/progress" params={{ courseId }} className={buttonClass("secondary")}>
+            <MapTrifold size={18} /> {m.progress}
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
