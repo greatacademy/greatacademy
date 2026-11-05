@@ -90,6 +90,8 @@ const cleanup = (s: string) =>
   normalizeLatex(s)
     .replace(/\\left|\\right|\\big|\\Big/g, "")
     .replace(/∞/g, "\\infty")
+    .replace(/(?<![\\a-zA-Z])(?:infinity|inf)(?![a-zA-Z])/g, "\\infty ")
+    .replace(/([)\]])\s*[uU]\s*(?=[([])/g, "$1\\cup ")
     .replace(/\\(?:text|mathrm|operatorname)\{\s*([^{}]*?)\s*\}/g, " $1 ")
     .trim();
 

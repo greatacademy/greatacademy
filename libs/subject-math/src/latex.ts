@@ -122,10 +122,39 @@ const relCommands: Record<string, RelOp> = { "\\le": "<=", "\\leq": "<=", "\\ge"
 const mulCommands = new Set(["\\cdot", "\\times", "\\ast"]);
 const fracCommands = new Set(["\\frac", "\\dfrac", "\\tfrac"]);
 
-/** normalizeLatex maps Unicode symbols and spacing to the LaTeX the parser reads. */
-export function normalizeLatex(s: string): string {
+// One argument of a shorthand \frac or \sqrt: a digit, a letter, or a Greek letter.
+const shortArg = String.raw`(\d|[a-zA-Z]|\\(?:pi|theta|alpha|beta|gamma|lambda|mu|sigma|phi|omega)(?![a-zA-Z]))`;
+const fracShort = new RegExp(String.raw`\\([dt]?frac)\s*${shortArg}\s*${shortArg}`, "g");
+const fracShortTop = new RegExp(String.raw`\\([dt]?frac)\s*${shortArg}\s*(?=\{)`, "g");
+const fracShortBottom = new RegExp(String.raw`\\([dt]?frac)(\{(?:[^{}]|\{[^{}]*\})*\})\s*${shortArg}`, "g");
+const sqrtShort = new RegExp(String.raw`\\sqrt\s*${shortArg}`, "g");
+
+/**
+ * mathfieldForms rewrites what the math field writes for ordinary keystrokes
+ * into the forms the parser reads: "1/2" gives \frac12, "[" gives \lbrack, "{"
+ * gives \lbrace, and names it does not know whole come out split, as in
+ * cs\operatorname{\mathrm{ch}} for "csch".
+ */
+function mathfieldForms(s: string): string {
   return s
-    .normalize("NFKC")
+    .replace(/\\lbrace(?![a-zA-Z])/g, "\\{")
+    .replace(/\\rbrace(?![a-zA-Z])/g, "\\}")
+    .replace(/\\lbrack(?![a-zA-Z])/g, "[")
+    .replace(/\\rbrack(?![a-zA-Z])/g, "]")
+    .replace(/\\operatorname\{\\mathrm\{([^{}]*)\}\}/g, "\\operatorname{$1}")
+    .replace(/(?<![\\a-zA-Z])(cs|arcs)\\operatorname\{ch\}/g, "\\operatorname{$1ch}")
+    .replace(/(?<![\\a-zA-Z])ar\\operatorname\{sech\}/g, "\\operatorname{arsech}")
+    .replace(/(?<![\\a-zA-Z])arc\\cot(?![a-zA-Z])/g, "\\operatorname{arccot}")
+    .replace(/(?<![\\a-zA-Z])ar\\coth(?![a-zA-Z])/g, "\\operatorname{arcoth}")
+    .replace(fracShort, "\\$1{$2}{$3}")
+    .replace(fracShortTop, "\\$1{$2}")
+    .replace(fracShortBottom, "\\$1$2{$3}")
+    .replace(sqrtShort, "\\sqrt{$1}");
+}
+
+/** normalizeLatex maps Unicode symbols, spacing and the math field's forms to the LaTeX the parser reads. */
+export function normalizeLatex(s: string): string {
+  return mathfieldForms(s.normalize("NFKC"))
     .replace(/−/g, "-")
     .replace(/[×⋅·]/g, "\\cdot ")
     .replace(/÷/g, "/")

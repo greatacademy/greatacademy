@@ -70,8 +70,8 @@ const feedback = {
   commonFactor: t("Factor out the greatest common factor of the coefficients.", "请提出各项系数的最大公因数。"),
   point: t("Write the ordered pair or vector, such as $(3, -2)$.", "请写出有序数对或向量，例如 $(3, -2)$。"),
   solutions: t(
-    "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
-    "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 $\\varnothing$。",
+    "List the solutions separated by commas, such as $x = 2, x = -5$, or type none if there are none.",
+    "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 none。",
   ),
 } satisfies Record<string, Text>;
 
@@ -135,6 +135,12 @@ export function stripUnit(response: string, unit: string): string {
   return response.replace(pattern, "");
 }
 
+/** plainNumber removes what a learner may write in a number without changing it: a dollar sign, commas between thousands. */
+function plainNumber(response: string): string {
+  const s = response.trim().replace(/^(-?)\s*\\?\$/, "$1");
+  return /^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(s) ? s.replaceAll(",", "") : s;
+}
+
 /**
  * numberChecker accepts a single number equal to expected.value (a rational
  * such as "-3", "3/4" or "2.5"), written in expected.form:
@@ -157,7 +163,7 @@ export const numberChecker: Checker = {
     const variable = typeof e.var === "string" ? e.var : undefined;
     const unit = typeof e.unit === "string" ? e.unit : undefined;
     const text = e.percent === true ? response.replace(/\\?%\s*$/, "") : unit ? stripUnit(response, unit) : response;
-    const parsed = parse(() => parseLatex(text));
+    const parsed = parse(() => parseLatex(plainNumber(text)));
     if (isVerdict(parsed)) return parsed;
     let node: Node;
     if (isRelation(parsed)) {
@@ -394,7 +400,7 @@ export const scientificChecker: Checker = {
   id: "scientific",
   check(expected, response) {
     const value = Q.parse(str(obj(expected), "value"));
-    const parsed = parse(() => parseLatex(response));
+    const parsed = parse(() => parseLatex(response.replace(/(\d)\s*[xX]\s*(?=10)/, "$1\\times ")));
     if (isVerdict(parsed)) return parsed;
     if (isRelation(parsed)) return wrong(feedback.scientific);
     const p = scientificParts(parsed);
@@ -497,6 +503,8 @@ const emptySet = new Set([
   "norealsolution",
   "norealsolutions",
   "none",
+  "empty",
+  "emptyset",
   "无解",
   "没有解",
   "无实数解",

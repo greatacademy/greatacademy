@@ -1,7 +1,16 @@
 import { CheckerRegistry } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { mathCheckers } from "./checkers.ts";
+import {
+  expressionChecker,
+  functionChecker,
+  intervalChecker,
+  mathCheckers,
+  numberChecker,
+  pointChecker,
+  scientificChecker,
+  solutionsChecker,
+} from "./checkers.ts";
 import { isSimplifiedRadical } from "./forms.ts";
 import { inequalityLatexOf, intervalLatex, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { parseExpression } from "./latex.ts";
@@ -774,5 +783,47 @@ describe("simplified monomial quotients", () => {
     ["2x(x+1)^{2}", "2x(x+1)^{2}", true],
   ])("judges %s as %s in lowest terms", (expr, response, lowest) => {
     expect(accepts("expression", { expr, form: "lowest" }, response)).toBe(lowest);
+  });
+});
+
+describe("what the math field writes for ordinary keystrokes", () => {
+  const accepts = (
+    checker: { check(expected: unknown, response: string): { correct: boolean } },
+    expected: unknown,
+    responses: string[],
+  ) => {
+    for (const r of responses) expect(checker.check(expected, r).correct, r).toBe(true);
+  };
+  it("reads fractions and roots without braces", () => {
+    accepts(numberChecker, { value: "1/2" }, ["\\frac12", "\\frac{1}2", "\\frac1{2}"]);
+    accepts(numberChecker, { value: "7/2" }, ["3\\frac12", "\\frac72"]);
+    accepts(numberChecker, { value: "-3/4" }, ["-\\frac34"]);
+    accepts(pointChecker, { values: ["1/2", "5"] }, ["\\left(\\frac12,5\\right)"]);
+    accepts(expressionChecker, { expr: "\\frac{1}{2}x" }, ["\\frac12x", "\\frac{x}{2}"]);
+    accepts(functionChecker, { expr: "\\sqrt{2}x", vars: ["x"] }, ["\\sqrt2x"]);
+  });
+  it("reads brackets and braces", () => {
+    accepts(intervalChecker, { set: "[1,2]" }, ["\\left\\lbrack1,2\\right\\rbrack"]);
+    accepts(intervalChecker, { set: "[1,2)" }, ["\\left\\lbrack1,2\\right)"]);
+    accepts(intervalChecker, { set: "(1,2]" }, ["\\left(1,2\\right\\rbrack"]);
+    accepts(solutionsChecker, { values: ["1", "2"] }, ["\\left\\lbrace1,2\\right\\rbrace", "\\lbrace1,2\\rbrace"]);
+    accepts(solutionsChecker, { values: [] }, ["\\left\\lbrace\\right\\rbrace", "empty", "none", "nosolution"]);
+  });
+  it("reads a union and infinity as typed", () => {
+    accepts(intervalChecker, { set: "(1,2)\\cup(3,4)" }, ["\\left(1,2\\right)U\\left(3,4\\right)", "(1,2)u(3,4)"]);
+    accepts(intervalChecker, { set: "(12,\\infty)" }, ["\\left(12,inf\\right)", "(12,infinity)"]);
+    accepts(intervalChecker, { set: "(-\\infty,1)\\cup(3,\\infty)" }, ["x<1\\lor x>3"]);
+  });
+  it("reads function names that come out split", () => {
+    accepts(functionChecker, { expr: "\\operatorname{sech}(x)", vars: ["x"] }, ["\\operatorname{\\mathrm{sech}}\\left(x\\right)"]);
+    accepts(functionChecker, { expr: "\\operatorname{csch}(x)", vars: ["x"] }, ["cs\\operatorname{\\mathrm{ch}}x"]);
+  });
+  it("ignores a dollar sign and thousands commas in a number", () => {
+    accepts(numberChecker, { value: "5" }, ["\\$5"]);
+    accepts(numberChecker, { value: "1200" }, ["1,200", "\\$1,200"]);
+    expect(numberChecker.check({ value: "12" }, "1,2").correct).toBe(false);
+  });
+  it("reads a times sign typed as x", () => {
+    accepts(scientificChecker, { value: "810000000" }, ["8.1x10^8", "8.1\\times10^8", "8.1\\cdot10^8"]);
   });
 });
