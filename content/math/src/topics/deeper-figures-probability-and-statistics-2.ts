@@ -7,7 +7,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import { ask, choose, point, same } from "../university-kit.ts";
-import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./deeper-figures-probability-and-statistics.ts";
+import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
 import { label } from "./figure-reading-more.ts";
 
 /** binom returns n choose k. */
@@ -561,7 +561,11 @@ const tTails = point(
             `两条曲线是自由度为 $${low}$ 和 $${high}$ 的 $t$ 密度。哪条曲线的自由度是 $${low}$？`,
           ],
       right,
-      [wrong],
+      [
+        wrong,
+        ["Either: the tails of the two curves are the same", "都可以：两条曲线的尾部相同"],
+        ["Neither: a $t$ density has lighter tails than both", "都不是：$t$ 密度的尾部比两条曲线都薄"],
+      ],
       [
         `Fewer degrees of freedom give a lower peak and heavier tails, which is curve $${heavyIsA ? "A" : "B"}$.`,
         `自由度越小，峰值越低、尾部越厚，也就是曲线 $${heavyIsA ? "A" : "B"}$。`,
@@ -970,16 +974,21 @@ const regionDecision = point(
     const z = kind === "right" ? (rng.bool(0.8) ? size : -size) : rng.bool(0.8) ? -size : size;
     const inRegion = kind === "right" ? z >= c : z <= -c;
     const cut = kind === "right" ? c : -c;
-    const reject: [string, string] = ["Reject $H_0$", "拒绝 $H_0$"];
-    const keep: [string, string] = ["Do not reject $H_0$", "不拒绝 $H_0$"];
+    const rejectIn: [string, string] = ["Reject $H_0$, since $z$ is in the critical region", "拒绝 $H_0$，因为 $z$ 在拒绝域内"];
+    const rejectOut: [string, string] = ["Reject $H_0$, since $z$ is outside the critical region", "拒绝 $H_0$，因为 $z$ 在拒绝域外"];
+    const keepIn: [string, string] = ["Do not reject $H_0$, since $z$ is in the critical region", "不拒绝 $H_0$，因为 $z$ 在拒绝域内"];
+    const keepOut: [string, string] = [
+      "Do not reject $H_0$, since $z$ is outside the critical region",
+      "不拒绝 $H_0$，因为 $z$ 在拒绝域外",
+    ];
     return choose(
       rng,
       [
         `The shaded part, beyond $z = ${cut}$, is the critical region of a test with statistic $Z$. The observed value is $z = ${z}$. What is the decision?`,
         `阴影部分（$z = ${cut}$ 之外）是统计量 $Z$ 的检验的拒绝域。观测值为 $z = ${z}$。结论是什么？`,
       ],
-      inRegion ? reject : keep,
-      [inRegion ? keep : reject],
+      inRegion ? rejectIn : keepOut,
+      inRegion ? [keepIn, rejectOut, keepOut] : [rejectOut, keepIn, rejectIn],
       [
         `The critical region is ${kind === "right" ? `$z \\ge ${c}$` : `$z \\le ${-c}$`}, and $z = ${z}$ is ${inRegion ? "in" : "not in"} it.`,
         `拒绝域为 ${kind === "right" ? `$z \\ge ${c}$` : `$z \\le ${-c}$`}，$z = ${z}$ ${inRegion ? "在" : "不在"}其中。`,
