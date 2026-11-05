@@ -95,6 +95,7 @@ import { deeperGrade6Points } from "./topics/deeper-grade-6.ts";
 import { deeperGrade7Points } from "./topics/deeper-grade-7.ts";
 import { deeperGrade8Points } from "./topics/deeper-grade-8.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
+import { deeperLinearProgrammingPoints } from "./topics/deeper-linear-programming.ts";
 import { deeperMethodsOfProofPoints } from "./topics/deeper-methods-of-proof.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
 import { deeperPrealgebraPoints } from "./topics/deeper-prealgebra.ts";
@@ -280,6 +281,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperGrade4Points[topic.id] ?? []),
       ...(deeperAbstractAlgebraPoints[topic.id] ?? []),
       ...(deeperCalculusIPoints[topic.id] ?? []),
+      ...(deeperLinearProgrammingPoints[topic.id] ?? []),
       ...(deeperComplexAnalysisPoints[topic.id] ?? []),
       ...(deeperCalculusIIPoints[topic.id] ?? []),
       ...(deeperDifferentialEquationsPoints[topic.id] ?? []),
