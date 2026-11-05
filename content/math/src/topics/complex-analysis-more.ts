@@ -399,8 +399,8 @@ const windingNumbers = topic(
           winding,
           [-winding, winding + 1, winding - 1, 3],
           [
-            `A ray from $P$ crosses the curve with net count ${winding}: the inner loop is wound twice, the outer region once, and the outside not at all, with the sign set by the arrow.`,
-            `从 $P$ 出发的射线穿过曲线的净次数是 ${winding}：内环区域绕两圈，外环区域绕一圈，外部不绕，符号由箭头决定。`,
+            `A ray from $P$ crosses the curve with net count $${winding}$: the inner loop is wound twice, the outer region once, and the outside not at all, with the sign set by the arrow.`,
+            `从 $P$ 出发的射线穿过曲线的净次数是 $${winding}$：内环区域绕两圈，外环区域绕一圈，外部不绕，符号由箭头决定。`,
           ],
           figure,
         );

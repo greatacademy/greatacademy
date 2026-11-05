@@ -27,6 +27,12 @@ const thereAreOne = /\b([Tt]here) are (\$1\$|1) (?=[a-z])/g;
 /** mathSpan matches an escaped dollar sign or a span of display or inline math. */
 const mathSpan = /\\\$|\$\$[\s\S]*?\$\$|\$(?:\\.|[^$\\])*\$/g;
 
+/** bareNegative matches a negative number written outside math, where its hyphen would not read as a minus sign: "the point -2". */
+const bareNegative = /(?<![\w$)\]}.\-−])-(\d+(?:\.\d+)?)(?![\w%])/;
+
+/** spanOrNegative matches what polishSpans changes: a span of math, or a negative number outside math. */
+const spanOrNegative = new RegExp(`${mathSpan.source}|${bareNegative.source}`, "g");
+
 /** verbatimTex matches TeX whose characters are names, not products: "\mathrm{1E0}" or "x_{1i}". */
 const verbatimTex = /(\\(?:text|mathrm|operatorname|mathbf|mathbb|mathcal)\{[^{}]*\}|_\{[^{}]*\})/;
 
@@ -43,9 +49,10 @@ function simplifyMath(tex: string): string {
   return chain.length < 3 ? dropped : chain.filter((value, i) => i === 0 || value.trim() !== chain[i - 1]?.trim()).join(" = ");
 }
 
-/** polishSpans applies simplifyMath to every span of math of a text. */
+/** polishSpans applies simplifyMath to every span of math of a text, and puts the negative numbers outside math into math. */
 function polishSpans(text: string): string {
-  return text.replace(mathSpan, (span) => {
+  return text.replace(spanOrNegative, (span, negative?: string) => {
+    if (negative !== undefined) return `$-${negative}$`;
     if (span === "\\$") return span;
     const delimiter = span.startsWith("$$") ? "$$" : "$";
     return delimiter + simplifyMath(span.slice(delimiter.length, -delimiter.length)) + delimiter;

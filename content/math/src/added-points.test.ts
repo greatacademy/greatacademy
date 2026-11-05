@@ -4,6 +4,7 @@ import { readdirSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { addedPointXp, finishTopics } from "./finish.ts";
 import { algebraShardTopics } from "./shards/algebra.ts";
 import { calculusShardTopics } from "./shards/calculus.ts";
 import { collegeShardTopics } from "./shards/college.ts";
@@ -18,6 +19,15 @@ for (const topic of [...schoolShardTopics, ...algebraShardTopics, ...calculusSha
 }
 
 describe("added knowledge points", () => {
+  it("add to the topic's expected minutes", () => {
+    const topic = algebraShardTopics[0];
+    const point = topic?.knowledgePoints[0];
+    if (!topic || !point) throw new Error("no topic");
+    const [finished] = finishTopics([topic], [{ [topic.id]: [point, point] }]);
+    expect(finished?.xp).toBe(topic.xp + 2 * addedPointXp);
+    expect(finished?.knowledgePoints).toHaveLength(topic.knowledgePoints.length + 2);
+  });
+
   // finishTopics looks each topic up in the maps, so an entry for a topic of another shard, or a map nobody registers, would silently vanish.
   it("all reach a topic of a shard", async () => {
     const lost: string[] = [];

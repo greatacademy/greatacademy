@@ -46,4 +46,11 @@ describe("polishText", () => {
     expect(en("a $11$ in by a 8-inch and A 18 and a 89-dollar fee")).toBe("an $11$ in by an 8-inch and An 18 and an 89-dollar fee");
     expect(en("a 12 and a 110")).toBe("a 12 and a 110");
   });
+
+  it("puts negative numbers outside math into math", () => {
+    const polished = (en: string) => polishText({ en, "zh-CN": en }).en;
+    expect(polished("around the point -2?")).toBe("around the point $-2$?");
+    expect(polished("values 5, -1.5, 3")).toBe("values 5, $-1.5$, 3");
+    expect(polished("$x = -2$ and 3-4 and x-2 and -3x and -5% and \\$-5")).toBe("$x = -2$ and 3-4 and x-2 and -3x and -5% and \\$-5");
+  });
 });

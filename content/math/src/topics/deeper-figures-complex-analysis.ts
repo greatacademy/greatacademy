@@ -242,10 +242,10 @@ const rootsFromPicture = point(
 
 const windingFromLoop = point(
   "the-winding-number-of-a-drawn-loop",
-  ["The winding number of a drawn loop", "读图中回路的卷绕数"],
+  ["The winding number of a drawn loop", "读图中回路的环绕数"],
   [
     "The winding number of a loop about a point counts its net counterclockwise turns around that point. To read it, draw a ray from the point to infinity and add one for each crossing where the loop passes counterclockwise and subtract one for each crossing where it passes clockwise. A point outside the loop has winding number zero.",
-    "回路关于一点的卷绕数计算它绕该点逆时针转过的净圈数。读取时，从该点向无穷远画一条射线，回路每逆时针穿过一次加一，每顺时针穿过一次减一。回路外的点卷绕数为零。",
+    "回路关于一点的环绕数计算它绕该点逆时针转过的净圈数。读取时，从该点向无穷远画一条射线，回路每逆时针穿过一次加一，每顺时针穿过一次减一。回路外的点环绕数为零。",
   ],
   (rng) => {
     const quarter = rng.int(0, 3);
@@ -280,13 +280,13 @@ const windingFromLoop = point(
     return ask(
       [
         "The loop is traced once in the direction of its arrows. What is its winding number about $P$?",
-        "回路按箭头方向走一遍。它关于 $P$ 的卷绕数是多少？",
+        "回路按箭头方向走一遍。它关于 $P$ 的环绕数是多少？",
       ],
       answer,
       [1, 2, -1, -2, 0],
       [
         `${body[0]}, and the arrows run ${counterclockwise ? "counterclockwise" : "clockwise"}. So the winding number is $${answer}$.`,
-        `${body[1]}，箭头方向是${counterclockwise ? "逆时针" : "顺时针"}。所以卷绕数是 $${answer}$。`,
+        `${body[1]}，箭头方向是${counterclockwise ? "逆时针" : "顺时针"}。所以环绕数是 $${answer}$。`,
       ],
       fig(
         { ...argand(5), labelEvery: 1 },
@@ -757,7 +757,7 @@ const argumentPrincipleFromDrawing = point(
   ["The argument principle from a drawing", "由图用辐角原理"],
   [
     "The argument principle says that the image of a counterclockwise contour under $f$ winds around the origin as many times as the zeros inside minus the poles inside, counted with multiplicity. A drawing that marks zeros and poles therefore gives that winding number by counting. Zeros and poles outside the contour have no effect on it.",
-    "辐角原理说，逆时针围线在 $f$ 下的像绕原点的圈数等于内部零点个数减内部极点个数，按重数计算。所以标出零点和极点的图，只要数一数就能得到这个卷绕数。围线外部的零点和极点对它没有影响。",
+    "辐角原理说，逆时针围线在 $f$ 下的像绕原点的圈数等于内部零点个数减内部极点个数，按重数计算。所以标出零点和极点的图，只要数一数就能得到这个环绕数。围线外部的零点和极点对它没有影响。",
   ],
   (rng) => {
     const [h, k] = [rng.int(-1, 1), rng.int(-1, 1)];
@@ -784,7 +784,7 @@ const argumentPrincipleFromDrawing = point(
       [zerosIn + polesIn, polesIn - zerosIn, zerosIn, zerosIn + (flip ? 2 : 1) - polesIn],
       [
         `Inside the contour there are $${zerosIn}$ filled and $${polesIn}$ hollow dots, and the dots outside do not count. So the winding number is zeros minus poles, which is $${zerosIn} - ${polesIn} = ${answer}$.`,
-        `围线内部有 $${zerosIn}$ 个实心点和 $${polesIn}$ 个空心点，外部的点不计入。所以卷绕数是零点数减极点数，即 $${zerosIn} - ${polesIn} = ${answer}$。`,
+        `围线内部有 $${zerosIn}$ 个实心点和 $${polesIn}$ 个空心点，外部的点不计入。所以环绕数是零点数减极点数，即 $${zerosIn} - ${polesIn} = ${answer}$。`,
       ],
       fig(
         argand(5),
