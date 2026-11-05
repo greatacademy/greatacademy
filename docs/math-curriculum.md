@@ -4,6 +4,7 @@
 > Companion: [math-curriculum.zh-CN.md](math-curriculum.zh-CN.md) (中文).
 > Full per-course content (description, overview, outcomes, and every unit → module → topic) is in [math-courses/](math-courses/). Machine-readable data for all courses is in [math-courses/math-academy-courses.json](math-courses/math-academy-courses.json).
 > Related: [the-math-academy-way.md](the-math-academy-way.md), [math-academy-website.md](math-academy-website.md).
+> Beyond the catalog: outlines of our own for Grades 1 to 3 and for Number Theory, Real Analysis, Complex Analysis, Linear Programming and Partial Differential Equations are also in [math-courses/](math-courses/), and each says so at its top.
 
 This document records Math Academy's complete math course system as the reference for building Great Academy's math content. The catalog runs from 4th grade arithmetic to upper-division undergraduate mathematics.
 

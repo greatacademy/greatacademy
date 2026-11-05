@@ -108,6 +108,11 @@ import { precalculusVector3DTopics } from "../topics/precalculus-vectors-3d.ts";
 import { realAnalysisTopics } from "../topics/real-analysis.ts";
 import { realAnalysisExtraTopics } from "../topics/real-analysis-extra.ts";
 import { realAnalysisMoreTopics } from "../topics/real-analysis-more.ts";
+import {
+  complexAnalysisOutlineTopics,
+  partialDifferentialEquationsOutlineTopics,
+  realAnalysisOutlineTopics,
+} from "../topics/university-outline-additions.ts";
 
 /** calculusShardTopics are the finished topics of the `calculus` shard. */
 export const calculusShardTopics: readonly TopicDef[] = finishTopics(
@@ -165,6 +170,9 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     ...realAnalysisTopics,
     ...realAnalysisMoreTopics,
     ...realAnalysisExtraTopics,
+    ...realAnalysisOutlineTopics,
+    ...complexAnalysisOutlineTopics,
+    ...partialDifferentialEquationsOutlineTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,

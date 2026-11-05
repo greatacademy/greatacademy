@@ -4,6 +4,7 @@
 > 英文版：[math-curriculum.md](math-curriculum.md)。
 > 逐课程完整内容在 [math-courses/](math-courses/) 中，每门课一个文件，包括描述、概览、学习成果，以及 单元 → 模块 → 知识点 的完整列表。全部课程的机器可读数据在 [math-courses/math-academy-courses.json](math-courses/math-academy-courses.json)。逐课程文件保留官网英文原文，未翻译，以保证名称准确。
 > 相关文档：[the-math-academy-way.zh-CN.md](the-math-academy-way.zh-CN.md)、[math-academy-website.zh-CN.md](math-academy-website.zh-CN.md)。
+> 目录之外：一至三年级以及数论、实分析、复分析、线性规划和偏微分方程的自有大纲也在 [math-courses/](math-courses/) 中，每份大纲开头都有说明。
 
 本文记录 Math Academy 完整的数学课程体系，作为 Great Academy 建设数学内容的参照。课程范围从四年级算术一直到本科高年级数学。
 

@@ -97,6 +97,7 @@ import { probabilityAndStatisticsNonparametricTopics } from "../topics/probabili
 import { probabilityAndStatisticsParametricInferenceTopics } from "../topics/probability-and-statistics-parametric-inference.ts";
 import { probabilityAndStatisticsRandomVariablesTopics } from "../topics/probability-and-statistics-random-variables.ts";
 import { probabilityAndStatisticsRegressionTopics } from "../topics/probability-and-statistics-regression.ts";
+import { linearProgrammingOutlineTopics, numberTheoryOutlineTopics } from "../topics/university-outline-additions.ts";
 
 /** collegeShardTopics are the finished topics of the `college` shard. */
 export const collegeShardTopics: readonly TopicDef[] = finishTopics(
@@ -118,6 +119,8 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     ...numberTheoryCourseTopics,
     ...numberTheoryMoreTopics,
     ...numberTheoryExtraTopics,
+    ...numberTheoryOutlineTopics,
+    ...linearProgrammingOutlineTopics,
     ...linearProgrammingTopics,
     ...linearProgrammingMoreTopics,
     ...linearProgrammingExtraTopics,
