@@ -5,7 +5,6 @@
 import type { CourseDef, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dotPlot } from "@ga/subject-math";
-
 import {
   arrayFigure,
   barGraphFigure,
@@ -21,6 +20,8 @@ import {
   polygonFigure,
 } from "../early-grades-kit.ts";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import {
   blockRowsFigure,
   type CutKind,
@@ -599,13 +600,33 @@ const arraysByRowsAndColumns = earlyTopic(
       (rng) => {
         const rows = rng.int(2, 6);
         const cols = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => v !== rows));
-        return chooseMath(
-          rng,
-          ["Which addition adds the rows of this array?", "哪个加法是按行相加的？"],
-          repeatSum(cols, rows),
-          rng.shuffle([repeatSum(rows, cols), `${rows} + ${cols}`, repeatSum(cols, rows + 1), repeatSum(cols + 1, rows)]),
-          [`There are ${rows} rows with ${cols} in each row.`, `有 ${rows} 行，每行 ${cols} 个。`],
-          arrayFigure(rows, cols),
+        return reasoned(
+          chooseMath(
+            rng,
+            ["Which addition adds the rows of this array?", "哪个加法是按行相加的？"],
+            repeatSum(cols, rows),
+            rng.shuffle([repeatSum(rows, cols), `${rows} + ${cols}`, repeatSum(cols, rows + 1), repeatSum(cols + 1, rows)]),
+            [`There are ${rows} rows with ${cols} in each row.`, `有 ${rows} 行，每行 ${cols} 个。`],
+            arrayFigure(rows, cols),
+          ),
+          [
+            [
+              `$${repeatSum(rows, cols)}$`,
+              `This adds the columns, with ${rows} in each. Adding the rows uses the ${cols} dots in each row.`,
+              `这是把列加起来，每列 ${rows} 个。把行加起来要用每行的 ${cols} 个点。`,
+            ],
+            [
+              `$${rows} + ${cols}$`,
+              "This adds the number of rows and the number in a row, not the dots in every row.",
+              "这是把行数和每行的个数相加，不是把每一行的点加起来。",
+            ],
+            [
+              `$${repeatSum(cols, rows + 1)}$`,
+              `This has one addend too many: there are ${rows} rows.`,
+              `这里多了一个加数：只有 ${rows} 行。`,
+            ],
+            [`$${repeatSum(cols + 1, rows)}$`, `Each row has ${cols} dots, not ${cols + 1}.`, `每行有 ${cols} 个点，不是 ${cols + 1} 个。`],
+          ],
         );
       },
     ),
@@ -693,31 +714,34 @@ const addingOnALine = earlyTopic(
       ),
       figure: gradeDrawings["jumping-by-tens-then-ones"],
     },
-    earlyPoint(
-      "the-missing-jump",
-      ["The missing jump", "缺少的一跳"],
-      [
-        "If you know where a jump starts and where it lands, you can find its size by subtracting. A jump from 47 to 67 is a jump of 20, because $67 - 47 = 20$. A jump over tens and ones will always look bigger on the line. Look at the numbers, and not only at the size of the arc.",
-        "知道一跳从哪里开始、落到哪里，就能用减法求出这一跳有多大。从 47 跳到 67 是跳了 20，因为 $67 - 47 = 20$。跳十的那一步在图上总是更长。但还是要看数，不能只看弧线有多大。",
-      ],
-      (rng) => {
-        const a = rng.int(12, 60);
-        const tens = rng.int(1, 3);
-        const ones = rng.int(1, 9);
-        const big = rng.bool();
-        const answer = big ? 10 * tens : ones;
-        return whole(
-          ["What number goes at the question mark above the jump?", "这一跳上方的问号处应该填几？"],
-          answer,
-          big ? [tens, a + 10 * tens, ones] : [10 * ones, a + 10 * tens + ones, 10 * tens],
-          [
-            `That jump goes from ${big ? a : a + 10 * tens} to ${big ? a + 10 * tens : a + 10 * tens + ones}, which is a jump of ${answer}.`,
-            `这一跳从 ${big ? a : a + 10 * tens} 到 ${big ? a + 10 * tens : a + 10 * tens + ones}，跳了 ${answer}。`,
-          ],
-          hopsFigure([a, a + 10 * tens, a + 10 * tens + ones], false, big ? 0 : 1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-missing-jump",
+        ["The missing jump", "缺少的一跳"],
+        [
+          "If you know where a jump starts and where it lands, you can find its size by subtracting. A jump from 47 to 67 is a jump of 20, because $67 - 47 = 20$. A jump over tens and ones will always look bigger on the line. Look at the numbers, and not only at the size of the arc.",
+          "知道一跳从哪里开始、落到哪里，就能用减法求出这一跳有多大。从 47 跳到 67 是跳了 20，因为 $67 - 47 = 20$。跳十的那一步在图上总是更长。但还是要看数，不能只看弧线有多大。",
+        ],
+        (rng) => {
+          const a = rng.int(12, 60);
+          const tens = rng.int(1, 3);
+          const ones = rng.int(1, 9);
+          const big = rng.bool();
+          const answer = big ? 10 * tens : ones;
+          return whole(
+            ["What number goes at the question mark above the jump?", "这一跳上方的问号处应该填几？"],
+            answer,
+            big ? [tens, a + 10 * tens, ones] : [10 * ones, a + 10 * tens + ones, 10 * tens],
+            [
+              `That jump goes from ${big ? a : a + 10 * tens} to ${big ? a + 10 * tens : a + 10 * tens + ones}, which is a jump of ${answer}.`,
+              `这一跳从 ${big ? a : a + 10 * tens} 到 ${big ? a + 10 * tens : a + 10 * tens + ones}，跳了 ${answer}。`,
+            ],
+            hopsFigure([a, a + 10 * tens, a + 10 * tens + ones], false, big ? 0 : 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["adding-on-an-open-number-line#the-missing-jump"],
+    },
     earlyPoint(
       "choosing-the-jumps",
       ["Choosing the jumps", "选择怎样跳"],
@@ -731,14 +755,33 @@ const addingOnALine = earlyTopic(
         let ones = rng.int(1, 9);
         if (ones === tens) ones = ones === 9 ? 8 : ones + 1;
         const b = 10 * tens + ones;
-        return chooseMath(
-          rng,
-          [`To find $${a} + ${b}$ starting at ${a}, which pair of jumps is right?`, `从 ${a} 开始求 $${a} + ${b}$，哪两跳是对的？`],
-          `+${10 * tens},\\ +${ones}`,
-          [`+${tens},\\ +${10 * ones}`, `+${tens},\\ +${ones}`, `+${10 * tens},\\ +${10 * ones}`],
+        return reasoned(
+          chooseMath(
+            rng,
+            [`To find $${a} + ${b}$ starting at ${a}, which pair of jumps is right?`, `从 ${a} 开始求 $${a} + ${b}$，哪两跳是对的？`],
+            `+${10 * tens},\\ +${ones}`,
+            [`+${tens},\\ +${10 * ones}`, `+${tens},\\ +${ones}`, `+${10 * tens},\\ +${10 * ones}`],
+            [
+              `${b} is ${10 * tens} and ${ones}, so jump ${10 * tens} and then ${ones}.`,
+              `${b} 是 ${10 * tens} 和 ${ones}，所以先跳 ${10 * tens}，再跳 ${ones}。`,
+            ],
+          ),
           [
-            `${b} is ${10 * tens} and ${ones}, so jump ${10 * tens} and then ${ones}.`,
-            `${b} 是 ${10 * tens} 和 ${ones}，所以先跳 ${10 * tens}，再跳 ${ones}。`,
+            [
+              `$+${tens},\\ +${10 * ones}$`,
+              `The tens and ones are mixed up: the ${tens} in ${b} means ${10 * tens}, and the ${ones} means ${ones}.`,
+              `十和一弄混了：${b} 中的 ${tens} 表示 ${10 * tens}，${ones} 表示 ${ones}。`,
+            ],
+            [
+              `$+${tens},\\ +${ones}$`,
+              `The ${tens} in ${b} is in the tens place, so it means ${10 * tens}, not ${tens}.`,
+              `${b} 中的 ${tens} 在十位上，所以表示 ${10 * tens}，不是 ${tens}。`,
+            ],
+            [
+              `$+${10 * tens},\\ +${10 * ones}$`,
+              `The ${ones} in ${b} is in the ones place, so it means ${ones}, not ${10 * ones}.`,
+              `${b} 中的 ${ones} 在个位上，所以表示 ${ones}，不是 ${10 * ones}。`,
+            ],
           ],
         );
       },
@@ -877,14 +920,34 @@ const makingARoundNumber = earlyTopic(
         const a = 10 * tens + 10 - gap;
         const b = rng.int(gap + 11, 49);
         const round = a + gap;
-        return chooseMath(
-          rng,
-          [`Which sum is the same as $${a} + ${b}$?`, `哪个算式的和与 $${a} + ${b}$ 相同？`],
-          `${round} + ${b - gap}`,
-          rng.shuffle([`${round} + ${b}`, `${round} + ${b + gap}`, `${round - 10} + ${b}`, `${a} + ${b - gap}`]),
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Which sum is the same as $${a} + ${b}$?`, `哪个算式的和与 $${a} + ${b}$ 相同？`],
+            `${round} + ${b - gap}`,
+            rng.shuffle([`${round} + ${b}`, `${round} + ${b + gap}`, `${round - 10} + ${b}`, `${a} + ${b - gap}`]),
+            [
+              `${a} went up by ${gap} and ${b} went down by ${gap}, so the sum stays at ${a + b}.`,
+              `${a} 增加了 ${gap}，${b} 减少了 ${gap}，所以和还是 ${a + b}。`,
+            ],
+          ),
           [
-            `${a} went up by ${gap} and ${b} went down by ${gap}, so the sum stays at ${a + b}.`,
-            `${a} 增加了 ${gap}，${b} 减少了 ${gap}，所以和还是 ${a + b}。`,
+            [
+              `$${round} + ${b}$`,
+              `Only ${a} went up, so this sum is ${gap} too big. Take ${gap} from ${b} as well.`,
+              `只有 ${a} 变大了，所以这个和多了 ${gap}。还要从 ${b} 里减去 ${gap}。`,
+            ],
+            [
+              `$${round} + ${b + gap}$`,
+              `Both numbers went up, so the sum changes. When one goes up, the other must go down.`,
+              `两个数都变大了，和也就变了。一个数变大，另一个就要变小。`,
+            ],
+            [`$${round - 10} + ${b}$`, `This sum is ${round - 10 + b}, not ${a + b}.`, `这个和是 ${round - 10 + b}，不是 ${a + b}。`],
+            [
+              `$${a} + ${b - gap}$`,
+              `Here ${b} went down but ${a} stayed the same, so this sum is ${gap} too small.`,
+              `这里 ${b} 变小了，${a} 却没变，所以这个和少了 ${gap}。`,
+            ],
           ],
         );
       },
@@ -1351,33 +1414,36 @@ const storiesWithBars = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "a-part-in-a-bar",
-      ["A part in a bar", "线段图中的一部分"],
-      [
-        "If the question mark is in the cut bar, you know the whole and one part. You must find what is left, so subtract the part from the whole. It does not matter if the words in the story say that something was added. The bar model shows you the sum to do, whatever the words might suggest.",
-        "如果问号在切开的长条里，就是知道整体和一部分。要求剩下的部分，就用整体减去这部分。即使故事里说的是又来了一些，也一样。不管字面上看起来像什么，线段图都会告诉你该怎么算。",
-      ],
-      (rng) => {
-        const all = rng.int(44, 99);
-        const a = rng.int(15, all - 12);
-        const name = rng.pick(earlyNames);
-        const thing = rng.pick(earlyThings);
-        return whole(
-          [
-            `${name} had ${a} ${thing.en} and then got some more. Now there are ${all}. How many did ${name} get? Use the bar model.`,
-            `${name} 原来有 ${a} ${thing.unit}${thing.zh}，后来又得到一些，现在有 ${all} ${thing.unit}。${name} 得到了多少${thing.unit}？请看线段图。`,
-          ],
-          all - a,
-          [all + a, all, a],
-          [
-            `The whole is ${all} and one part is ${a}, and $${all} - ${a} = ${all - a}$.`,
-            `整体是 ${all}，一部分是 ${a}，$${all} - ${a} = ${all - a}$。`,
-          ],
-          partWholeBarFigure([a, all - a], 1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "a-part-in-a-bar",
+        ["A part in a bar", "线段图中的一部分"],
+        [
+          "If the question mark is in the cut bar, you know the whole and one part. You must find what is left, so subtract the part from the whole. It does not matter if the words in the story say that something was added. The bar model shows you the sum to do, whatever the words might suggest.",
+          "如果问号在切开的长条里，就是知道整体和一部分。要求剩下的部分，就用整体减去这部分。即使故事里说的是又来了一些，也一样。不管字面上看起来像什么，线段图都会告诉你该怎么算。",
+        ],
+        (rng) => {
+          const all = rng.int(44, 99);
+          const a = rng.int(15, all - 12);
+          const name = rng.pick(earlyNames);
+          const thing = rng.pick(earlyThings);
+          return whole(
+            [
+              `${name} had ${a} ${thing.en} and then got some more. Now there are ${all}. How many did ${name} get? Use the bar model.`,
+              `${name} 原来有 ${a} ${thing.unit}${thing.zh}，后来又得到一些，现在有 ${all} ${thing.unit}。${name} 得到了多少${thing.unit}？请看线段图。`,
+            ],
+            all - a,
+            [all + a, all, a],
+            [
+              `The whole is ${all} and one part is ${a}, and $${all} - ${a} = ${all - a}$.`,
+              `整体是 ${all}，一部分是 ${a}，$${all} - ${a} = ${all - a}$。`,
+            ],
+            partWholeBarFigure([a, all - a], 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["stories-with-bar-models#a-part-in-a-bar"],
+    },
     earlyPoint(
       "comparing-with-two-bars",
       ["Comparing with two bars", "用两个长条比较"],
@@ -1429,34 +1495,37 @@ const twoStepBars = earlyTopic(
   ["two-step-word-problems-within-100", "stories-with-bar-models"],
   ["2.OA.A.1"],
   [
-    earlyPoint(
-      "a-whole-with-three-parts",
-      ["A whole with three parts", "有三部分的整体"],
-      [
-        "Some stories have three amounts to put together. In the bar model, the bar is cut into three parts. If the whole is the question, add two of the parts first, and then add the third. Choose two that are easy to put together, as the order you use will not change the answer in any way.",
-        "有些故事有三个数要合起来。线段图上，长条被切成三部分。如果要求整体，就先把其中两部分加起来，再加第三部分。选两个好加的数先加，加的顺序不会改变答案。",
-      ],
-      (rng) => {
-        const a = rng.int(12, 28);
-        const b = rng.int(12, 28);
-        const c = rng.int(11, 26);
-        const name = rng.pick(earlyNames);
-        const thing = rng.pick(earlyThings);
-        return whole(
-          [
-            `${name} collects ${a} ${thing.en} on Monday, ${b} on Tuesday and ${c} on Wednesday. How many ${thing.en} is that in all?`,
-            `${name} 星期一收集了 ${a} ${thing.unit}${thing.zh}，星期二收集了 ${b} ${thing.unit}，星期三收集了 ${c} ${thing.unit}。一共收集了多少${thing.unit}${thing.zh}？`,
-          ],
-          a + b + c,
-          [a + b, b + c, a + b + c - 10],
-          [
-            `$${a} + ${b} = ${a + b}$, and $${a + b} + ${c} = ${a + b + c}$.`,
-            `$${a} + ${b} = ${a + b}$，$${a + b} + ${c} = ${a + b + c}$。`,
-          ],
-          partWholeBarFigure([a, b, c], -1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "a-whole-with-three-parts",
+        ["A whole with three parts", "有三部分的整体"],
+        [
+          "Some stories have three amounts to put together. In the bar model, the bar is cut into three parts. If the whole is the question, add two of the parts first, and then add the third. Choose two that are easy to put together, as the order you use will not change the answer in any way.",
+          "有些故事有三个数要合起来。线段图上，长条被切成三部分。如果要求整体，就先把其中两部分加起来，再加第三部分。选两个好加的数先加，加的顺序不会改变答案。",
+        ],
+        (rng) => {
+          const a = rng.int(12, 28);
+          const b = rng.int(12, 28);
+          const c = rng.int(11, 26);
+          const name = rng.pick(earlyNames);
+          const thing = rng.pick(earlyThings);
+          return whole(
+            [
+              `${name} collects ${a} ${thing.en} on Monday, ${b} on Tuesday and ${c} on Wednesday. How many ${thing.en} is that in all?`,
+              `${name} 星期一收集了 ${a} ${thing.unit}${thing.zh}，星期二收集了 ${b} ${thing.unit}，星期三收集了 ${c} ${thing.unit}。一共收集了多少${thing.unit}${thing.zh}？`,
+            ],
+            a + b + c,
+            [a + b, b + c, a + b + c - 10],
+            [
+              `$${a} + ${b} = ${a + b}$, and $${a + b} + ${c} = ${a + b + c}$.`,
+              `$${a} + ${b} = ${a + b}$，$${a + b} + ${c} = ${a + b + c}$。`,
+            ],
+            partWholeBarFigure([a, b, c], -1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["two-step-stories-with-bar-models#a-whole-with-three-parts"],
+    },
     earlyPoint(
       "taking-away-two-amounts",
       ["Taking away two amounts", "减去两部分"],
@@ -1790,17 +1859,41 @@ const changeFromADollar = earlyTopic(
         const p = rng.int(0, 4);
         const change = 25 * q + 10 * d + 5 * n + p;
         const price = 100 - change;
-        return choose(
-          rng,
+        return reasoned(
+          choose(
+            rng,
+            [
+              `A snack costs ${price} cents and you pay with \\$1. Which coins are the right change?`,
+              `一份零食 ${price} 美分，你付了 1 美元。哪一组硬币是正确的找零？`,
+            ],
+            coinGroup(q, d, n, p),
+            rng.shuffle([coinGroup(q, d + 1, n, p), coinGroup(q + 1, d, n, p), coinGroup(q, d, n + 1, p), coinGroup(q, d, n, p + 1)]),
+            [
+              `The change is $100 - ${price} = ${change}$ cents, which those coins make.`,
+              `找零是 $100 - ${price} = ${change}$ 美分，这组硬币正好是这么多。`,
+            ],
+          ),
           [
-            `A snack costs ${price} cents and you pay with \\$1. Which coins are the right change?`,
-            `一份零食 ${price} 美分，你付了 1 美元。哪一组硬币是正确的找零？`,
-          ],
-          coinGroup(q, d, n, p),
-          rng.shuffle([coinGroup(q, d + 1, n, p), coinGroup(q + 1, d, n, p), coinGroup(q, d, n + 1, p), coinGroup(q, d, n, p + 1)]),
-          [
-            `The change is $100 - ${price} = ${change}$ cents, which those coins make.`,
-            `找零是 $100 - ${price} = ${change}$ 美分，这组硬币正好是这么多。`,
+            [
+              coinGroup(q, d + 1, n, p)[0],
+              `These coins make ${change + 10} cents, but the change is ${change} cents.`,
+              `这些硬币是 ${change + 10} 美分，但应找 ${change} 美分。`,
+            ],
+            [
+              coinGroup(q + 1, d, n, p)[0],
+              `These coins make ${change + 25} cents, but the change is ${change} cents.`,
+              `这些硬币是 ${change + 25} 美分，但应找 ${change} 美分。`,
+            ],
+            [
+              coinGroup(q, d, n + 1, p)[0],
+              `These coins make ${change + 5} cents, but the change is ${change} cents.`,
+              `这些硬币是 ${change + 5} 美分，但应找 ${change} 美分。`,
+            ],
+            [
+              coinGroup(q, d, n, p + 1)[0],
+              `These coins make ${change + 1} cents, but the change is ${change} cents.`,
+              `这些硬币是 ${change + 1} 美分，但应找 ${change} 美分。`,
+            ],
           ],
         );
       },
@@ -2150,32 +2243,35 @@ const makingLinePlots = earlyTopic(
   ["line-plots-of-lengths"],
   ["2.MD.D.9"],
   [
-    earlyPoint(
-      "dots-from-a-list",
-      ["Dots from a list", "根据数据画点"],
-      [
-        "To make a line plot, draw a number line that covers all of your measurements, and put one dot above a number each time it appears on your list. So if the length 6 shows up three times, there will be three dots above the 6. Cross off each measurement as you plot it, so that none gets counted twice.",
-        "画线图时，先画一条能包括所有数据的数轴。一个数在数据里出现几次，就在它上面画几个点。所以长度 6 出现三次，6 上面就有三个点。画一个划掉一个，就不会重复了。",
-      ],
-      (rng) => {
-        const low = rng.int(2, 9);
-        const values = [...Array(rng.int(7, 10)).keys()].map(() => low + rng.int(0, 3));
-        const target = rng.pick(values);
-        const answer = values.filter((v) => v === target).length;
-        return whole(
-          [
-            `The lengths of some sticks are ${values.join(", ")} inches. On a line plot, how many dots go above ${target}?`,
-            `一些小棒的长度是 ${values.join("、")} 英寸。在线图上，${target} 的上面要画几个点？`,
-          ],
-          answer,
-          [target, values.length, answer + 1],
-          [
-            `${target} appears ${answer} ${answer === 1 ? "time" : "times"} in the list, so it gets ${answer} ${answer === 1 ? "dot" : "dots"}.`,
-            `${target} 在数据中出现了 ${answer} 次，所以画 ${answer} 个点。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "dots-from-a-list",
+        ["Dots from a list", "根据数据画点"],
+        [
+          "To make a line plot, draw a number line that covers all of your measurements, and put one dot above a number each time it appears on your list. So if the length 6 shows up three times, there will be three dots above the 6. Cross off each measurement as you plot it, so that none gets counted twice.",
+          "画线图时，先画一条能包括所有数据的数轴。一个数在数据里出现几次，就在它上面画几个点。所以长度 6 出现三次，6 上面就有三个点。画一个划掉一个，就不会重复了。",
+        ],
+        (rng) => {
+          const low = rng.int(2, 9);
+          const values = [...Array(rng.int(7, 10)).keys()].map(() => low + rng.int(0, 3));
+          const target = rng.pick(values);
+          const answer = values.filter((v) => v === target).length;
+          return whole(
+            [
+              `The lengths of some sticks are ${values.join(", ")} inches. On a line plot, how many dots go above ${target}?`,
+              `一些小棒的长度是 ${values.join("、")} 英寸。在线图上，${target} 的上面要画几个点？`,
+            ],
+            answer,
+            [target, values.length, answer + 1],
+            [
+              `${target} appears ${answer} ${answer === 1 ? "time" : "times"} in the list, so it gets ${answer} ${answer === 1 ? "dot" : "dots"}.`,
+              `${target} 在数据中出现了 ${answer} 次，所以画 ${answer} 个点。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["making-line-plots#dots-from-a-list"],
+    },
     earlyPoint(
       "how-many-were-measured",
       ["How many were measured", "一共量了多少个"],
@@ -2245,57 +2341,63 @@ const graphsFromTables = earlyTopic(
   ["reading-bar-graphs"],
   ["2.MD.D.10"],
   [
-    earlyPoint(
-      "how-tall-should-the-bar-be",
-      ["How tall the bar should be", "长条应该画多高"],
-      [
-        "A table and a bar graph can show the same information. Each number in the table tells you how tall to draw one bar. Find the label in the top row of the table, and read the number below it. Then the bar for that label must reach exactly that number on the scale of the graph.",
-        "表格和条形图可以表示同样的信息。表格里的每个数，告诉你一个长条要画多高。在表格第一行找到标签，读出下面的数。这个标签的长条就要正好画到刻度上的这个数。",
-      ],
-      (rng) => {
-        const labels = ["A", "B", "C", "D"];
-        const values = labels.map(() => rng.int(1, 12));
-        const i = rng.int(0, 3);
-        const other = values[(i + 1) % 4] as number;
-        return whole(
-          [
-            `You are making a bar graph from this table. What number should the bar for ${labels[i]} reach?`,
-            `要根据这张表画条形图。${labels[i]} 的长条应该画到几？`,
-          ],
-          values[i] as number,
-          [other === values[i] ? (values[i] as number) + 1 : other, values.reduce((sum, v) => sum + v, 0), i + 1],
-          [
-            `The table shows ${values[i]} under ${labels[i]}, so the bar reaches ${values[i]}.`,
-            `表中 ${labels[i]} 下面是 ${values[i]}，所以长条画到 ${values[i]}。`,
-          ],
-          tableFigure(labels, values),
-        );
-      },
-    ),
-    earlyPoint(
-      "filling-a-table-from-a-graph",
-      ["Filling a table from a graph", "根据统计图填表"],
-      [
-        "You can also go from a graph back to a table. Look at the top of a bar, and read across to the scale on the left. That number goes in the table under the label for that bar. If a bar stops between two labeled marks, count the small marks to see what they are worth.",
-        "也可以根据统计图填表。看长条的顶端，横着对到左边的刻度，读出的数就填在表中这个标签的下面。如果长条停在两个标了数的刻度之间，就要看小格代表多少。",
-      ],
-      (rng) => {
-        const labels = ["A", "B", "C"];
-        const step = rng.pick([1, 2, 5]);
-        const values = labels.map(() => step * rng.int(1, step === 1 ? 10 : 8));
-        const i = rng.int(0, 2);
-        return whole(
-          [
-            `The table should match this graph. What number goes under ${labels[i]}?`,
-            `这张表要和统计图一致。${labels[i]} 的下面应该填几？`,
-          ],
-          values[i] as number,
-          [(values[i] as number) / step, (values[i] as number) + step, values.reduce((sum, v) => sum + v, 0)],
-          [`The bar for ${labels[i]} reaches ${values[i]} on the scale.`, `${labels[i]} 的长条画到刻度 ${values[i]}。`],
-          barGraphFigure(labels, values, step),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "how-tall-should-the-bar-be",
+        ["How tall the bar should be", "长条应该画多高"],
+        [
+          "A table and a bar graph can show the same information. Each number in the table tells you how tall to draw one bar. Find the label in the top row of the table, and read the number below it. Then the bar for that label must reach exactly that number on the scale of the graph.",
+          "表格和条形图可以表示同样的信息。表格里的每个数，告诉你一个长条要画多高。在表格第一行找到标签，读出下面的数。这个标签的长条就要正好画到刻度上的这个数。",
+        ],
+        (rng) => {
+          const labels = ["A", "B", "C", "D"];
+          const values = labels.map(() => rng.int(1, 12));
+          const i = rng.int(0, 3);
+          const other = values[(i + 1) % 4] as number;
+          return whole(
+            [
+              `You are making a bar graph from this table. What number should the bar for ${labels[i]} reach?`,
+              `要根据这张表画条形图。${labels[i]} 的长条应该画到几？`,
+            ],
+            values[i] as number,
+            [other === values[i] ? (values[i] as number) + 1 : other, values.reduce((sum, v) => sum + v, 0), i + 1],
+            [
+              `The table shows ${values[i]} under ${labels[i]}, so the bar reaches ${values[i]}.`,
+              `表中 ${labels[i]} 下面是 ${values[i]}，所以长条画到 ${values[i]}。`,
+            ],
+            tableFigure(labels, values),
+          );
+        },
+      ),
+      figure: gradeDrawings2["graphs-from-tables#how-tall-should-the-bar-be"],
+    },
+    {
+      ...earlyPoint(
+        "filling-a-table-from-a-graph",
+        ["Filling a table from a graph", "根据统计图填表"],
+        [
+          "You can also go from a graph back to a table. Look at the top of a bar, and read across to the scale on the left. That number goes in the table under the label for that bar. If a bar stops between two labeled marks, count the small marks to see what they are worth.",
+          "也可以根据统计图填表。看长条的顶端，横着对到左边的刻度，读出的数就填在表中这个标签的下面。如果长条停在两个标了数的刻度之间，就要看小格代表多少。",
+        ],
+        (rng) => {
+          const labels = ["A", "B", "C"];
+          const step = rng.pick([1, 2, 5]);
+          const values = labels.map(() => step * rng.int(1, step === 1 ? 10 : 8));
+          const i = rng.int(0, 2);
+          return whole(
+            [
+              `The table should match this graph. What number goes under ${labels[i]}?`,
+              `这张表要和统计图一致。${labels[i]} 的下面应该填几？`,
+            ],
+            values[i] as number,
+            [(values[i] as number) / step, (values[i] as number) + step, values.reduce((sum, v) => sum + v, 0)],
+            [`The bar for ${labels[i]} reaches ${values[i]} on the scale.`, `${labels[i]} 的长条画到刻度 ${values[i]}。`],
+            barGraphFigure(labels, values, step),
+          );
+        },
+      ),
+      figure: gradeDrawings2["graphs-from-tables#filling-a-table-from-a-graph"],
+    },
     earlyPoint(
       "comparing-amounts-in-a-table",
       ["Comparing amounts in a table", "比较表中的数"],
@@ -2339,71 +2441,77 @@ const equalShares = earlyTopic(
   ["halves-thirds-and-fourths-of-shapes"],
   ["2.G.A.3"],
   [
-    earlyPoint(
-      "which-rectangle-is-cut-fairly",
-      ["Which rectangle is cut fairly", "哪个长方形分得公平"],
-      [
-        "Shares are only equal when every part is exactly the same size. Having the right number of parts is not enough. A rectangle cut into two pieces, one large and one small, is not cut into halves. To test a cut, imagine fitting one part on top of another, and see whether they would match.",
-        "只有每一份都一样大，才算相等的份。只有份数对还不够。一个长方形分成一大一小两块，就不是平均分成两半。要检查分得对不对，可以想象把一份放到另一份上面，看它们能不能完全重合。",
-      ],
-      (rng) => {
-        const fair = rng.pick<CutKind>(["tall", "wide", "diagonal"]);
-        const labels = ["A", "B", "C"];
-        const uneven = rng.shuffle<CutKind>([fair, "uneven", rng.pick<CutKind>(["uneven", "tallThree", "wideThree"])]);
-        const at = uneven.indexOf(fair);
-        const say = (i: number): Pair => [`Rectangle ${labels[i]}`, `长方形 ${labels[i]}`];
-        return choose(
-          rng,
-          ["Which rectangle is cut into two equal shares?", "哪个长方形被分成了相等的两份？"],
-          say(at),
-          [0, 1, 2].filter((i) => i !== at).map(say),
-          [
-            `Rectangle ${labels[at]} has exactly two parts of the same size. The others do not.`,
-            `长方形 ${labels[at]} 正好分成大小相同的两份，其他长方形不是这样。`,
-          ],
-          rectangleCutsFigure(
-            labels,
-            uneven.map((kind) => ({ kind, shaded: rng.int(0, 1) })),
-          ),
-        );
-      },
-    ),
-    earlyPoint(
-      "same-size-different-shape",
-      ["Same size but different shape", "大小相同，形状不同"],
-      [
-        "A half is always half of the whole, however you make the cut. Half of a rectangle cut across, half cut down the middle, and half cut from corner to corner can all look different, but they each cover exactly the same amount. So equal shares of the same whole do not need to have the same shape.",
-        "不管怎样分，一半总是整体的一半。一个长方形横着分、竖着分或沿对角线分，得到的一半看起来都不一样，但大小完全相同。所以同一个整体的相等的份，不一定形状相同。",
-      ],
-      (rng) => {
-        const family = rng.pick<{ kinds: CutKind[]; parts: number }>([
-          { kinds: ["tall", "wide", "diagonal"], parts: 2 },
-          { kinds: ["tallThree", "wideThree"], parts: 3 },
-          { kinds: ["grid", "cross", "tallFour", "wideFour"], parts: 4 },
-        ]);
-        const cuts = rng.sample(family.kinds, 2);
-        const shaded = rng.int(1, family.parts - 1);
-        const labels = ["A", "B"];
-        const same: Pair = ["They are the same size", "一样大"];
-        const a: Pair = ["The shaded part of A is larger", "A 的涂色部分更大"];
-        const b: Pair = ["The shaded part of B is larger", "B 的涂色部分更大"];
-        const c: Pair = ["They cannot be compared", "无法比较"];
-        return choose(
-          rng,
-          ["Both rectangles are the same size. How do the shaded parts compare?", "两个长方形一样大。涂色部分比较起来怎么样？"],
-          same,
-          rng.shuffle([a, b, c]),
-          [
-            `In each rectangle, ${shaded} of ${family.parts} equal shares of the same whole ${shaded === 1 ? "is" : "are"} shaded, so the shaded parts are the same size.`,
-            `两个长方形都平均分成 ${family.parts} 份，涂了其中的 ${shaded} 份，整体又一样大，所以涂色部分一样大。`,
-          ],
-          rectangleCutsFigure(
-            labels,
-            cuts.map((kind) => ({ kind, shaded })),
-          ),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "which-rectangle-is-cut-fairly",
+        ["Which rectangle is cut fairly", "哪个长方形分得公平"],
+        [
+          "Shares are only equal when every part is exactly the same size. Having the right number of parts is not enough. A rectangle cut into two pieces, one large and one small, is not cut into halves. To test a cut, imagine fitting one part on top of another, and see whether they would match.",
+          "只有每一份都一样大，才算相等的份。只有份数对还不够。一个长方形分成一大一小两块，就不是平均分成两半。要检查分得对不对，可以想象把一份放到另一份上面，看它们能不能完全重合。",
+        ],
+        (rng) => {
+          const fair = rng.pick<CutKind>(["tall", "wide", "diagonal"]);
+          const labels = ["A", "B", "C"];
+          const uneven = rng.shuffle<CutKind>([fair, "uneven", rng.pick<CutKind>(["uneven", "tallThree", "wideThree"])]);
+          const at = uneven.indexOf(fair);
+          const say = (i: number): Pair => [`Rectangle ${labels[i]}`, `长方形 ${labels[i]}`];
+          return choose(
+            rng,
+            ["Which rectangle is cut into two equal shares?", "哪个长方形被分成了相等的两份？"],
+            say(at),
+            [0, 1, 2].filter((i) => i !== at).map(say),
+            [
+              `Rectangle ${labels[at]} has exactly two parts of the same size. The others do not.`,
+              `长方形 ${labels[at]} 正好分成大小相同的两份，其他长方形不是这样。`,
+            ],
+            rectangleCutsFigure(
+              labels,
+              uneven.map((kind) => ({ kind, shaded: rng.int(0, 1) })),
+            ),
+          );
+        },
+      ),
+      figure: gradeDrawings2["equal-shares-can-look-different#which-rectangle-is-cut-fairly"],
+    },
+    {
+      ...earlyPoint(
+        "same-size-different-shape",
+        ["Same size but different shape", "大小相同，形状不同"],
+        [
+          "A half is always half of the whole, however you make the cut. Half of a rectangle cut across, half cut down the middle, and half cut from corner to corner can all look different, but they each cover exactly the same amount. So equal shares of the same whole do not need to have the same shape.",
+          "不管怎样分，一半总是整体的一半。一个长方形横着分、竖着分或沿对角线分，得到的一半看起来都不一样，但大小完全相同。所以同一个整体的相等的份，不一定形状相同。",
+        ],
+        (rng) => {
+          const family = rng.pick<{ kinds: CutKind[]; parts: number }>([
+            { kinds: ["tall", "wide", "diagonal"], parts: 2 },
+            { kinds: ["tallThree", "wideThree"], parts: 3 },
+            { kinds: ["grid", "cross", "tallFour", "wideFour"], parts: 4 },
+          ]);
+          const cuts = rng.sample(family.kinds, 2);
+          const shaded = rng.int(1, family.parts - 1);
+          const labels = ["A", "B"];
+          const same: Pair = ["They are the same size", "一样大"];
+          const a: Pair = ["The shaded part of A is larger", "A 的涂色部分更大"];
+          const b: Pair = ["The shaded part of B is larger", "B 的涂色部分更大"];
+          const c: Pair = ["They cannot be compared", "无法比较"];
+          return choose(
+            rng,
+            ["Both rectangles are the same size. How do the shaded parts compare?", "两个长方形一样大。涂色部分比较起来怎么样？"],
+            same,
+            rng.shuffle([a, b, c]),
+            [
+              `In each rectangle, ${shaded} of ${family.parts} equal shares of the same whole ${shaded === 1 ? "is" : "are"} shaded, so the shaded parts are the same size.`,
+              `两个长方形都平均分成 ${family.parts} 份，涂了其中的 ${shaded} 份，整体又一样大，所以涂色部分一样大。`,
+            ],
+            rectangleCutsFigure(
+              labels,
+              cuts.map((kind) => ({ kind, shaded })),
+            ),
+          );
+        },
+      ),
+      figure: gradeDrawings2["equal-shares-can-look-different#same-size-different-shape"],
+    },
     earlyPoint(
       "how-many-shares-make-the-whole",
       ["How many shares make the whole", "几份合成一个整体"],
@@ -2471,40 +2579,43 @@ const shapeRiddles = earlyTopic(
   ["counting-sides-and-angles"],
   ["2.G.A.1"],
   [
-    earlyPoint(
-      "guess-the-shape",
-      ["Guess the shape", "猜一猜是什么图形"],
-      [
-        "A shape riddle tells you about its sides or corners, and you have to name it. Remember that a polygon has as many corners as it has sides. A triangle has 3, a quadrilateral has 4, a pentagon has 5, a hexagon has 6, and an octagon has 8. So a clue about corners is really a clue about sides.",
-        "图形谜语会告诉你边或角的情况，你要说出它的名称。记住，多边形有几条边，就有几个角。三角形有 3 条边，四边形有 4 条，五边形有 5 条，六边形有 6 条，八边形有 8 条。所以关于角的线索，其实也是关于边的线索。",
-      ],
-      (rng) => {
-        const shape = rng.pick(polygonNames);
-        const corners = rng.bool();
-        const others = rng.sample(
-          polygonNames.filter((p) => p !== shape),
-          3,
-        );
-        return choose(
-          rng,
-          corners
-            ? [
-                `I am a closed shape with straight sides and ${shape.sides} corners. What am I?`,
-                `我是由直边围成的封闭图形，有 ${shape.sides} 个角。我是什么图形？`,
-              ]
-            : [
-                `I am a closed shape with ${shape.sides} straight sides. What am I?`,
-                `我是由 ${shape.sides} 条直边围成的封闭图形。我是什么图形？`,
-              ],
-          shape.name,
-          others.map((p) => p.name),
-          [
-            `Every ${shape.name[0]} has ${shape.sides} sides and ${shape.sides} corners.`,
-            `${shape.name[1]}有 ${shape.sides} 条边和 ${shape.sides} 个角。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "guess-the-shape",
+        ["Guess the shape", "猜一猜是什么图形"],
+        [
+          "A shape riddle tells you about its sides or corners, and you have to name it. Remember that a polygon has as many corners as it has sides. A triangle has 3, a quadrilateral has 4, a pentagon has 5, a hexagon has 6, and an octagon has 8. So a clue about corners is really a clue about sides.",
+          "图形谜语会告诉你边或角的情况，你要说出它的名称。记住，多边形有几条边，就有几个角。三角形有 3 条边，四边形有 4 条，五边形有 5 条，六边形有 6 条，八边形有 8 条。所以关于角的线索，其实也是关于边的线索。",
+        ],
+        (rng) => {
+          const shape = rng.pick(polygonNames);
+          const corners = rng.bool();
+          const others = rng.sample(
+            polygonNames.filter((p) => p !== shape),
+            3,
+          );
+          return choose(
+            rng,
+            corners
+              ? [
+                  `I am a closed shape with straight sides and ${shape.sides} corners. What am I?`,
+                  `我是由直边围成的封闭图形，有 ${shape.sides} 个角。我是什么图形？`,
+                ]
+              : [
+                  `I am a closed shape with ${shape.sides} straight sides. What am I?`,
+                  `我是由 ${shape.sides} 条直边围成的封闭图形。我是什么图形？`,
+                ],
+            shape.name,
+            others.map((p) => p.name),
+            [
+              `Every ${shape.name[0]} has ${shape.sides} sides and ${shape.sides} corners.`,
+              `${shape.name[1]}有 ${shape.sides} 条边和 ${shape.sides} 个角。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["shape-riddles#guess-the-shape"],
+    },
     earlyPoint(
       "naming-an-unusual-shape",
       ["Naming an unusual shape", "说出不常见图形的名称"],

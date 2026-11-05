@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
 import { height, rectangle, sides } from "./area.ts";
@@ -123,6 +124,7 @@ export const areasOfRectangles = topic(
   [
     {
       id: "fractional-and-decimal-side-lengths",
+      figure: gradeDrawings3["areas-of-rectangles#fractional-and-decimal-side-lengths"],
       title: t("Fraction and decimal side lengths", "边长是分数或小数"),
       explanation: t(
         "A rectangle $3.5$ m long and $2.4$ m wide has area $3.5 \\times 2.4 = 8.4\\text{ m}^2$. One $2\\frac{1}{2}$ ft by $1\\frac{1}{3}$ ft has area $\\frac{5}{2} \\times \\frac{4}{3} = \\frac{10}{3} = 3\\frac{1}{3}\\text{ ft}^2$: write mixed numbers as fractions before multiplying.",
@@ -241,6 +243,7 @@ export const areasOfRightTriangles = topic(
   [
     {
       id: "area-from-the-legs",
+      figure: gradeDrawings3["areas-of-right-triangles#area-from-the-legs"],
       title: t("Area from the legs", "由直角边求面积"),
       explanation: t(
         "A right triangle has sides $5$ m, $12$ m and $13$ m. The legs are the two shorter sides, which meet at the right angle, so $A = \\frac{1}{2} \\times 5 \\times 12 = 30\\text{ m}^2$. Multiplying by $13$ would be a mistake.",
@@ -271,6 +274,7 @@ export const areasOfRightTriangles = topic(
     },
     {
       id: "missing-leg",
+      figure: gradeDrawings3["areas-of-right-triangles#missing-leg"],
       title: t("A missing leg", "求未知的直角边"),
       explanation: t(
         "A right triangle has area $36\\text{ cm}^2$ and one leg $8$ cm. Since $\\frac{1}{2} \\times 8 \\times b = 36$, we get $4b = 36$, so the other leg is $b = 9$ cm. Dividing $36$ by $8$ alone forgets the half.",
@@ -314,6 +318,7 @@ export const areasOfTriangles = topic(
   [
     {
       id: "height-inside-the-triangle",
+      figure: gradeDrawings3["areas-of-triangles#height-inside-the-triangle"],
       title: t("The height inside the triangle", "高在三角形内部"),
       explanation: t(
         "A triangle has base $14$ cm, height $8$ cm and a slanted side of $10$ cm. The height is the dashed segment that meets the base at a right angle, so $A = \\frac{1}{2} \\times 14 \\times 8 = 56\\text{ cm}^2$.",
@@ -353,6 +358,7 @@ export const areasOfTriangles = topic(
     },
     {
       id: "height-outside-the-triangle",
+      figure: gradeDrawings3["areas-of-triangles#height-outside-the-triangle"],
       title: t("The height outside the triangle", "高在三角形外部"),
       explanation: t(
         "In an obtuse triangle with base $6$ m, the height from the top vertex may fall on the extension of the base, $4$ m past its end. The height is still the distance to the line containing the base, here $5$ m, so $A = \\frac{1}{2} \\times 6 \\times 5 = 15\\text{ m}^2$. The extension is not part of the base.",
@@ -434,6 +440,7 @@ export const areasAndPerimetersOfParallelograms = topic(
   [
     {
       id: "area-of-a-parallelogram",
+      figure: gradeDrawings3["areas-and-perimeters-of-parallelograms#area-of-a-parallelogram"],
       title: t("Area", "面积"),
       explanation: t(
         "Base $15$ m, slanted side $10$ m, height $8$ m: $A = bh = 15 \\times 8 = 120\\text{ m}^2$. The slanted side is not perpendicular to the base, so $15 \\times 10$ is not the area.",
@@ -500,6 +507,7 @@ export const findingAreasOfPolygonsUsingDecomposition = topic(
   [
     {
       id: "rectilinear-figures",
+      figure: gradeDrawings3["finding-areas-of-polygons-using-decomposition#rectilinear-figures"],
       title: t("Figures made of rectangles", "由长方形组成的图形"),
       explanation: t(
         "An L-shape is $12$ m wide at the bottom and $9$ m tall on the left; its top edge is $7$ m and its right edge is $4$ m. Cut it with a vertical line: the left part is $7 \\times 9 = 63\\text{ m}^2$, and the right part is $12 - 7 = 5$ m wide and $4$ m tall, $20\\text{ m}^2$. The total is $83\\text{ m}^2$.",
@@ -541,6 +549,7 @@ export const findingAreasOfPolygonsUsingDecomposition = topic(
     },
     {
       id: "rectangles-and-triangles",
+      figure: gradeDrawings3["finding-areas-of-polygons-using-decomposition#rectangles-and-triangles"],
       title: t("A rectangle and a triangle", "长方形加三角形"),
       explanation: t(
         "A house-shaped pentagon is a rectangle $10$ ft wide and $6$ ft tall with a triangle $3$ ft tall on top. The area is $10 \\times 6 + \\frac{1}{2} \\times 10 \\times 3 = 60 + 15 = 75\\text{ ft}^2$.",
@@ -1128,6 +1137,7 @@ export const linesOfSymmetry = topic(
   [
     {
       id: "counting-lines-of-symmetry",
+      figure: gradeDrawings3["lines-of-symmetry#counting-lines-of-symmetry"],
       title: t("Counting lines of symmetry", "数对称轴"),
       explanation: t(
         "Imagine folding the figure. A rectangle folds onto itself along its 2 middle lines but not along a diagonal, so it has 2 lines of symmetry. A regular hexagon has 6: 3 through opposite vertices and 3 through the midpoints of opposite sides.",
@@ -1150,6 +1160,7 @@ export const linesOfSymmetry = topic(
     },
     {
       id: "testing-a-line-of-symmetry",
+      figure: gradeDrawings3["lines-of-symmetry#testing-a-line-of-symmetry"],
       title: t("Testing a line", "判断一条直线是不是对称轴"),
       explanation: t(
         "To test a line, imagine folding along it: it is a line of symmetry only if every corner lands on a corner. The diagonal of a long rectangle is not, because a fold along it carries a corner outside the rectangle.",
@@ -1659,6 +1670,7 @@ export const findingAreasAndPerimetersInTheCoordinatePlane = topic(
   [
     {
       id: "perimeters-of-rectangles-from-vertices",
+      figure: gradeDrawings3["finding-areas-and-perimeters-in-the-coordinate-plane#perimeters-of-rectangles-from-vertices"],
       title: t("Perimeters of rectangles", "长方形的周长"),
       explanation: t(
         "Find the length of one horizontal side and one vertical side from the coordinates, then the perimeter is $2 \\times$ (length $+$ width).\n\nRectangle $A(-5, 2)$, $B(3, 2)$, $C(3, 7)$, $D(-5, 7)$: $AB = 5 + 3 = 8$ and $BC = 7 - 2 = 5$, so the perimeter is $2(8 + 5) = 26$ units.",
@@ -1692,6 +1704,7 @@ export const findingAreasAndPerimetersInTheCoordinatePlane = topic(
     },
     {
       id: "areas-of-triangles-from-vertices",
+      figure: gradeDrawings3["finding-areas-and-perimeters-in-the-coordinate-plane#areas-of-triangles-from-vertices"],
       title: t("Areas of triangles", "三角形的面积"),
       explanation: t(
         "Triangle $A(-3, -2)$, $B(5, -2)$, $C(1, 4)$: the base $AB$ is horizontal and $3 + 5 = 8$ units long. The height is the vertical distance from $C$ to the line $y = -2$, which is $4 + 2 = 6$. The area is $\\frac{1}{2} \\times 8 \\times 6 = 24$ square units.",

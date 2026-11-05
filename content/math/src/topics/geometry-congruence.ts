@@ -2,8 +2,10 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, sketch } from "@ga/subject-math";
 import { motionDrawings } from "../explanation-drawings-angles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { congruenceDrawings } from "../explanation-drawings-triangles.ts";
 import { choiceProblem, numberProblem, reasonChoice, steps, verdictChoice, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Geometry, module 1.3: congruence. The ASA, AAS, SAS, SSS and HL criteria,
 // choosing among them, rigid motions, the properties of congruence, and
@@ -1101,6 +1103,7 @@ export const theSssCongruenceCriterion: TopicDef = {
     },
     {
       id: "solving-with-sss",
+      figure: geometryDrawings2["the-sss-congruence-criterion#solving-with-sss"],
       title: t("Unknowns in SSS", "SSS 中的未知量"),
       explanation: t(
         "When two sides of a triangle are given by expressions, each expression must equal one of the other triangle's sides, and both must give the same value of $x$.\n\n$\\triangle ABC$ has sides $7$, $10$, $13$, and $\\triangle DEF$ has sides $7$, $x + 6$ and $3x - 2$. Trying $x + 6 = 10$ gives $x = 4$, and then $3x - 2 = 10 \\ne 13$. Trying $x + 6 = 13$ gives $x = 7$, and then $3x - 2 = 19 \\ne 10$. Neither works, so no value of $x$ makes the triangles congruent. With $3x - 5$ instead of $3x - 2$, $x = 4$ gives $10$ and $7$: no. With $2x + 5$, $x = 4$ gives $10$ and $13$: yes, $x = 4$.",
@@ -1384,6 +1387,7 @@ export const combiningCongruenceCriteriaForTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "choosing-a-criterion",
+      figure: geometryDrawings2["combining-congruence-criteria-for-triangles#choosing-a-criterion"],
       title: t("Choosing a criterion", "选择判定方法"),
       explanation: t(
         "Sort the three pairs of congruent parts:\n\n- three sides: **SSS**;\n- two sides and the angle between them: **SAS**;\n- two angles and the side between them: **ASA**;\n- two angles and a side not between them: **AAS**;\n- right triangles with congruent hypotenuses and a pair of congruent legs: **HL**.\n\nTwo combinations do not prove congruence: three angles (**AAA**), and two sides with an angle that is not between them (**SSA**), unless that angle is a right angle, which is HL.",
@@ -1674,6 +1678,7 @@ export const rigidMotionsAndCongruence: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-rigid-motions",
+      figure: geometryDrawings2["rigid-motions-and-congruence#recognizing-rigid-motions"],
       title: t("Rigid motions", "刚性变换"),
       explanation: t(
         "A **rigid motion** is a transformation that keeps every distance (and so every angle): translations, rotations, reflections, and any sequence of them.\n\nTwo figures are **congruent** exactly when a sequence of rigid motions maps one onto the other. Dilations with a scale factor other than $1$ and stretches change lengths, so they are not rigid motions.\n\n$(x, y) \\to (-y + 3, x)$ rotates $90^\\circ$ about the origin and then translates: rigid. $(x, y) \\to (2x, y)$ doubles horizontal lengths: not rigid.",
@@ -1904,16 +1909,36 @@ export const propertiesOfCongruence: TopicDef = {
             `两个图形都与同一个图形 $${y}$ 全等，所以它们彼此全等。`,
           ),
         };
-        return choiceProblem({
-          prompt: cat(t("Which property justifies the statement?", "下面的结论依据的是哪条性质？"), "\n\n", statement),
-          options: propertyOrder.map((p) => propertyNames[p]),
-          correct: propertyOrder.indexOf(prop),
-          solution: cat(why[prop], t(` This is the ${propertyNames[prop].en}.`, `这是${propertyNames[prop]["zh-CN"]}。`)),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: cat(t("Which property justifies the statement?", "下面的结论依据的是哪条性质？"), "\n\n", statement),
+            options: propertyOrder.map((p) => propertyNames[p]),
+            correct: propertyOrder.indexOf(prop),
+            solution: cat(why[prop], t(` This is the ${propertyNames[prop].en}.`, `这是${propertyNames[prop]["zh-CN"]}。`)),
+          }),
+          [
+            [
+              propertyNames.reflexive.en,
+              "The reflexive property is about a figure and itself, and this statement involves different figures.",
+              "自反性说的是图形与它自身，而这个命题涉及不同的图形。",
+            ],
+            [
+              propertyNames.symmetric.en,
+              "The symmetric property reverses one congruence, and this statement is something else.",
+              "对称性是把一个全等关系反过来，而这个命题不是这样。",
+            ],
+            [
+              propertyNames.transitive.en,
+              "The transitive property chains two congruences through a third figure, and this statement does not.",
+              "传递性是通过第三个图形把两个全等关系连起来，而这个命题不是这样。",
+            ],
+          ],
+        );
       },
     },
     {
       id: "rewriting-congruence-statements",
+      figure: geometryDrawings2["properties-of-congruence#rewriting-congruence-statements"],
       title: t("Rewriting congruence statements", "改写全等式"),
       explanation: t(
         "A congruence statement may list the vertices in any order, as long as corresponding vertices keep the same positions. By the symmetric property, the two triangles may also swap sides.\n\nFrom $\\triangle ABC \\cong \\triangle DEF$: $\\triangle BCA \\cong \\triangle EFD$ and $\\triangle FDE \\cong \\triangle CAB$ are both true, but $\\triangle BCA \\cong \\triangle DEF$ is not, since it pairs $B$ with $D$.",

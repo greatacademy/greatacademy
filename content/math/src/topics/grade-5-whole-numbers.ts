@@ -2,7 +2,9 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { Q, svgDocument } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // 5th Grade Math: whole number expressions, negative numbers, and the standard algorithms for multiplication and division.
 
@@ -731,15 +733,34 @@ export const additiveComparisonsOfWholeNumberExpressions = topic(
         const lessT = t(`$A$ is ${k} less than $B$.`, `$A$ 比 $B$ 小 ${k}。`);
         const times = t(`$A$ is ${k} times as large as $B$.`, `$A$ 是 $B$ 的 ${k} 倍。`);
         const eq = t("$A$ and $B$ are equal.", "$A$ 与 $B$ 相等。");
-        return pickChoice(
-          rng,
-          t(`$A = ${A}$ and $B = ${B}$. Which statement is true?`, `$A = ${A}$，$B = ${B}$。下面哪种说法正确？`),
-          bigger ? greater : lessT,
-          [bigger ? lessT : greater, times, eq],
-          t(
-            `Both sums contain $${B}$. $A$ then ${bigger ? "adds" : "subtracts"} $${k}$, so $A$ is $B$ ${bigger ? "plus" : "minus"} $${k}$: it is ${k} ${bigger ? "greater" : "less"} than $B$.`,
-            `两个式子都含有 $${B}$。$A$ 又${bigger ? "加上" : "减去"}了 $${k}$，所以 $A$ 等于 $B$ ${bigger ? "加" : "减"} $${k}$，即 $A$ 比 $B$ ${bigger ? "大" : "小"} ${k}。`,
+        return reasoned(
+          pickChoice(
+            rng,
+            t(`$A = ${A}$ and $B = ${B}$. Which statement is true?`, `$A = ${A}$，$B = ${B}$。下面哪种说法正确？`),
+            bigger ? greater : lessT,
+            [bigger ? lessT : greater, times, eq],
+            t(
+              `Both sums contain $${B}$. $A$ then ${bigger ? "adds" : "subtracts"} $${k}$, so $A$ is $B$ ${bigger ? "plus" : "minus"} $${k}$: it is ${k} ${bigger ? "greater" : "less"} than $B$.`,
+              `两个式子都含有 $${B}$。$A$ 又${bigger ? "加上" : "减去"}了 $${k}$，所以 $A$ 等于 $B$ ${bigger ? "加" : "减"} $${k}$，即 $A$ 比 $B$ ${bigger ? "大" : "小"} ${k}。`,
+            ),
           ),
+          [
+            [
+              (bigger ? lessT : greater).en,
+              `$A$ ${bigger ? "adds" : "subtracts"} $${k}$, so it goes the other way.`,
+              `$A$ 是${bigger ? "加上" : "减去"} $${k}$，方向正好相反。`,
+            ],
+            [
+              times.en,
+              `$A$ only ${bigger ? "adds" : "subtracts"} $${k}$, and nothing is multiplied.`,
+              `$A$ 只是${bigger ? "加上" : "减去"} $${k}$，没有乘法。`,
+            ],
+            [
+              eq.en,
+              `$A$ has the same parts as $B$ and also ${bigger ? "adds" : "subtracts"} $${k}$, so they are not equal.`,
+              `$A$ 含有和 $B$ 相同的部分，还要${bigger ? "加上" : "减去"} $${k}$，所以两者不相等。`,
+            ],
+          ],
         );
       },
     },
@@ -867,6 +888,7 @@ export const negativeNumbers = topic(
   [
     {
       id: "reading-negative-numbers-on-number-lines",
+      figure: gradeDrawings2["negative-numbers#reading-negative-numbers-on-number-lines"],
       title: t("Reading negative numbers on a number line", "在数轴上读负数"),
       explanation: t(
         "Numbers to the left of $0$ are negative. A point $4$ ticks to the left of $0$, where each tick is $1$, is at $-4$.",

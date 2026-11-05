@@ -2,6 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { article, choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -326,6 +327,7 @@ export const verticalAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "vertical-angles-and-linear-pairs",
+      figure: gradeDrawings3["vertical-angles#vertical-angles-and-linear-pairs"],
       title: t("Vertical angles and linear pairs", "对顶角与邻补角"),
       explanation: t(
         "Two crossing lines form four angles. Opposite angles are **vertical angles**, and they are equal. Neighboring angles form a linear pair, so they are supplementary.\n\nIf one of the four angles is $50^\\circ$, the angle opposite it is also $50^\\circ$, and each of the other two is $180^\\circ - 50^\\circ = 130^\\circ$.",
@@ -370,6 +372,7 @@ export const verticalAngles: TopicDef = {
     },
     {
       id: "equations-from-crossing-lines",
+      figure: gradeDrawings3["vertical-angles#equations-from-crossing-lines"],
       title: t("Equations from crossing lines", "由相交直线列方程"),
       explanation: t(
         "When angles are written with a variable, the angle relationships give equations: vertical angles are equal, and a linear pair adds up to $180^\\circ$.\n\nIf vertical angles measure $(3x + 10)^\\circ$ and $(5x - 30)^\\circ$, then $3x + 10 = 5x - 30$, so $40 = 2x$ and $x = 20$. Each angle is $3 \\cdot 20 + 10 = 70^\\circ$.",
@@ -857,6 +860,7 @@ export const anglesOfATriangle: TopicDef = {
     },
     {
       id: "triangle-angle-equations",
+      figure: gradeDrawings3["angles-of-a-triangle#triangle-angle-equations"],
       title: t("Equations from the angle sum", "由内角和列方程"),
       explanation: t(
         "When the angles of a triangle are written with a variable, their sum gives an equation. Add the angles, set the sum equal to $180$, and solve.\n\nIf the angles are $x^\\circ$, $(2x + 10)^\\circ$ and $(3x - 10)^\\circ$, then $x + (2x + 10) + (3x - 10) = 180$, so $6x = 180$ and $x = 30$. The angles are $30^\\circ$, $70^\\circ$ and $80^\\circ$; check that they add up to $180^\\circ$.",
@@ -933,6 +937,7 @@ export const exteriorAnglesOfTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "the-exterior-angle-theorem",
+      figure: gradeDrawings3["exterior-angles-of-triangles#the-exterior-angle-theorem"],
       title: t("The exterior angle theorem", "外角定理"),
       explanation: t(
         "Extending one side of a triangle forms an **exterior angle**. It forms a linear pair with the interior angle beside it, and the other two interior angles are its **remote interior angles**.\n\nAn exterior angle equals the sum of its two remote interior angles: both it and their sum are $180^\\circ$ minus the interior angle beside it. If the remote interior angles are $45^\\circ$ and $60^\\circ$, the exterior angle is $45^\\circ + 60^\\circ = 105^\\circ$.",
@@ -995,6 +1000,7 @@ export const exteriorAnglesOfTriangles: TopicDef = {
     },
     {
       id: "exterior-angle-equations",
+      figure: gradeDrawings3["exterior-angles-of-triangles#exterior-angle-equations"],
       title: t("Equations from exterior angles", "由外角列方程"),
       explanation: t(
         "When the angles are written with a variable, the theorem gives an equation: the exterior angle equals the sum of the remote interior angles.\n\nIf the remote interior angles are $x^\\circ$ and $(2x + 5)^\\circ$ and the exterior angle is $110^\\circ$, then $x + (2x + 5) = 110$, so $3x = 105$ and $x = 35$.",
@@ -1073,6 +1079,7 @@ export const classifyingTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-by-sides",
+      figure: gradeDrawings3["classifying-triangles#classifying-by-sides"],
       title: t("Classifying by sides", "按边分类"),
       explanation: t(
         "By its sides, a triangle is\n\n- **equilateral** when all three sides are equal;\n- **isosceles** when at least two sides are equal;\n- **scalene** when no two sides are equal.\n\nEqual sides are often marked with matching tick marks. Every equilateral triangle is also isosceles; we name it by the more specific word.",
@@ -1127,6 +1134,7 @@ export const classifyingTriangles: TopicDef = {
     },
     {
       id: "classifying-by-angles",
+      figure: gradeDrawings3["classifying-triangles#classifying-by-angles"],
       title: t("Classifying by angles", "按角分类"),
       explanation: t(
         "By its largest angle, a triangle is\n\n- **acute** when all three angles are acute;\n- **right** when one angle is a right angle;\n- **obtuse** when one angle is obtuse.\n\nA triangle cannot have two right or obtuse angles, so its largest angle decides.",
@@ -1181,6 +1189,7 @@ export const isoscelesTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "base-angles",
+      figure: gradeDrawings3["isosceles-triangles#base-angles"],
       title: t("Base angles", "底角"),
       explanation: t(
         "In an isosceles triangle the two equal sides are the **legs**; the angle between them is the **vertex angle**, and the other two are the **base angles**. The base angles are equal.\n\nIf the vertex angle is $40^\\circ$, the base angles share $180^\\circ - 40^\\circ = 140^\\circ$, so each is $70^\\circ$. If a base angle is $70^\\circ$, the vertex angle is $180^\\circ - 2 \\cdot 70^\\circ = 40^\\circ$. In an equilateral triangle all three angles are equal, so each is $60^\\circ$.",
@@ -1460,6 +1469,7 @@ export const anglesOfPolygons: TopicDef = {
     },
     {
       id: "missing-angles-in-polygons",
+      figure: gradeDrawings3["angles-of-polygons#missing-angles-in-polygons"],
       title: t("Missing angles in polygons", "多边形中的未知角"),
       explanation: t(
         "To find a missing angle of a polygon, subtract the known angles from the angle sum.\n\nThe angles of a quadrilateral add up to $360^\\circ$, so if three of them are $80^\\circ$, $95^\\circ$ and $110^\\circ$, the fourth is $360^\\circ - 80^\\circ - 95^\\circ - 110^\\circ = 75^\\circ$.",

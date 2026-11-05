@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
 import { angleDrawings } from "../explanation-drawings-angles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { coordinateDrawings, specialDrawings } from "../explanation-drawings-solids.ts";
 import { congruenceDrawings, similarityDrawings } from "../explanation-drawings-triangles.ts";
 import { choiceProblem, expressionProblem, numberProblem, pointProblem, radicalProblem, steps, why } from "../problems.ts";
@@ -514,6 +515,7 @@ export const thePythagoreanTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-the-hypotenuse",
+      figure: geometryDrawings2["the-pythagorean-theorem#finding-the-hypotenuse"],
       title: t("Finding the hypotenuse", "求斜边"),
       explanation: t(
         "In a right triangle, the side opposite the right angle is the **hypotenuse**; it is the longest side. The other two sides are the **legs**. The **Pythagorean theorem** says that if the legs are $a$ and $b$ and the hypotenuse is $c$, then\n\n$$a^2 + b^2 = c^2.$$\n\nWith legs $6$ and $8$: $c^2 = 36 + 64 = 100$, so $c = 10$ (a length is positive, so take the positive root).",
@@ -600,6 +602,7 @@ export const thePythagoreanTheorem: TopicDef = {
     },
     {
       id: "lengths-in-simplest-radical-form",
+      figure: geometryDrawings2["the-pythagorean-theorem#lengths-in-simplest-radical-form"],
       title: t("Answers in simplest radical form", "最简根式形式的答案"),
       explanation: t(
         "Most right triangles do not have three whole-number sides. Then leave the length exact, in simplest radical form.\n\nWith legs $4$ and $6$: $c^2 = 16 + 36 = 52$, so $c = \\sqrt{52} = \\sqrt{4 \\cdot 13} = 2\\sqrt{13}$.",
@@ -1056,6 +1059,7 @@ export const areaOfIsoscelesRightTriangles: TopicDef = {
     },
     {
       id: "sides-from-the-area",
+      figure: geometryDrawings2["area-of-isosceles-right-triangles#sides-from-the-area"],
       title: t("Sides from the area", "由面积求边长"),
       explanation: t(
         "Reverse the formula: $s^2 = 2A$, so $s = \\sqrt{2A}$; then the hypotenuse is $s\\sqrt{2}$.\n\nAn isosceles right triangle with area $32$ has $s^2 = 64$, so its legs are $8$ and its hypotenuse is $8\\sqrt{2}$.",
@@ -1807,6 +1811,7 @@ export const proofsInvolvingIsoscelesTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "proving-the-isosceles-triangle-theorem",
+      figure: geometryDrawings2["proofs-involving-isosceles-triangles#proving-the-isosceles-triangle-theorem"],
       title: t("The isosceles triangle theorem", "等腰三角形定理"),
       explanation: t(
         "Two triangles are **congruent** ($\\cong$) when their corresponding sides and angles are equal. The **SAS** criterion says that two sides and the angle between them are enough; then every other pair of corresponding parts is equal too (**CPCTC**: corresponding parts of congruent triangles are congruent).\n\n**Isosceles triangle theorem:** if $AB = AC$, then $\\angle B = \\angle C$. Draw the bisector $AD$ of $\\angle A$. Then $AB = AC$ (given), $\\angle BAD = \\angle CAD$ (definition of a bisector) and $AD = AD$ (reflexive property), so $\\triangle ABD \\cong \\triangle ACD$ by SAS, and $\\angle B = \\angle C$ by CPCTC.",
@@ -1816,6 +1821,7 @@ export const proofsInvolvingIsoscelesTriangles: TopicDef = {
     },
     {
       id: "proving-the-converse",
+      figure: geometryDrawings2["proofs-involving-isosceles-triangles#proving-the-converse"],
       title: t("The converse", "逆定理"),
       explanation: t(
         "**Converse:** if $\\angle B = \\angle C$, then $AB = AC$. Draw the bisector $AD$ again. Now the equal parts are $\\angle B = \\angle C$, $\\angle BAD = \\angle CAD$ and the common side $AD$, which is not between the two angles. The **AAS** criterion (two angles and a side not between them) gives $\\triangle ABD \\cong \\triangle ACD$, and CPCTC gives $AB = AC$.",
@@ -1825,6 +1831,7 @@ export const proofsInvolvingIsoscelesTriangles: TopicDef = {
     },
     {
       id: "the-bisector-of-the-vertex-angle",
+      figure: geometryDrawings2["proofs-involving-isosceles-triangles#the-bisector-of-the-vertex-angle"],
       title: t("The bisector of the vertex angle", "顶角的平分线"),
       explanation: t(
         "The same congruence $\\triangle ABD \\cong \\triangle ACD$ gives more. By CPCTC, $BD = CD$, so $D$ is the midpoint of $BC$, and $\\angle ADB = \\angle ADC$. These two angles form a linear pair, so they add up to $180^\\circ$; being equal, each is $90^\\circ$.\n\nSo the bisector of the vertex angle of an isosceles triangle is the perpendicular bisector of its base.",
@@ -1834,6 +1841,7 @@ export const proofsInvolvingIsoscelesTriangles: TopicDef = {
     },
     {
       id: "using-the-isosceles-triangle-theorems",
+      figure: geometryDrawings2["proofs-involving-isosceles-triangles#using-the-isosceles-triangle-theorems"],
       title: t("Using the theorems", "运用定理"),
       explanation: t(
         "Equal angles give equal opposite sides, and equal sides give equal opposite angles. If $\\angle B = \\angle C$, $AB = 3x + 2$ and $AC = 5x - 8$, then $3x + 2 = 5x - 8$, so $x = 5$ and $AB = 17$.\n\nIf $AB = AC$, $\\angle B = (2x + 10)^\\circ$ and $\\angle C = (3x - 15)^\\circ$, then $x = 25$, each base angle is $60^\\circ$, and $\\angle A = 180^\\circ - 120^\\circ = 60^\\circ$.",
@@ -2226,6 +2234,7 @@ export const proofsInvolvingMediansAndCentroids: TopicDef = {
     },
     {
       id: "the-median-of-an-isosceles-triangle",
+      figure: geometryDrawings2["proofs-involving-medians-and-centroids#the-median-of-an-isosceles-triangle"],
       title: t("The median of an isosceles triangle", "等腰三角形底边上的中线"),
       explanation: t(
         "In an isosceles triangle with $AB = AC$, let $M$ be the midpoint of the base $BC$. Then $AB = AC$ (given), $BM = CM$ (definition of a midpoint) and $AM = AM$ (reflexive property), so $\\triangle ABM \\cong \\triangle ACM$ by the **SSS** criterion: three pairs of equal sides.\n\nBy CPCTC, $\\angle AMB = \\angle AMC$; they form a linear pair, so each is $90^\\circ$. The median to the base is perpendicular to the base.",
@@ -2235,6 +2244,7 @@ export const proofsInvolvingMediansAndCentroids: TopicDef = {
     },
     {
       id: "medians-and-area",
+      figure: geometryDrawings2["proofs-involving-medians-and-centroids#medians-and-area"],
       title: t("Medians and area", "中线与面积"),
       explanation: t(
         "A median $AM$ splits $\\triangle ABC$ into $\\triangle ABM$ and $\\triangle ACM$. Their bases $BM$ and $CM$ are equal and they share the height from $A$, so they have **equal areas**: each is half of the whole.\n\nThe three medians split the triangle into six small triangles of equal area. So each of $\\triangle GBC$, $\\triangle GCA$, $\\triangle GAB$ is one third of the area, and a triangle such as $\\triangle GBM$ is one sixth. If $\\triangle ABC$ has area $60$: $\\triangle ABM$ has $30$, $\\triangle GBC$ has $20$, $\\triangle GBM$ has $10$.",

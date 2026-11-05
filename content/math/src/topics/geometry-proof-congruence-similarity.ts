@@ -2,9 +2,11 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, sketch } from "@ga/subject-math";
 import { angleDrawings, motionDrawings } from "../explanation-drawings-angles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { at, graphFigure } from "../graph-figures.ts";
 import { movedPoint, movedPolygon, viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -733,22 +735,49 @@ export const identifyingAngleTheorems: TopicDef = {
         const [a, b] = rng.bool() ? pair : [pair[1], pair[0]];
         const statement = kind === 4 ? supp(a, b) : cong(a, b);
         const r = transversalTheorems[kind]!;
-        return {
-          ...choiceProblem({
-            prompt: cat(
-              t("Lines $\\ell$ and $m$ are parallel. Which justifies the statement?", "直线 $\\ell$ 与 $m$ 平行。下面的结论依据的是什么？"),
-              "\n\n",
-              statement,
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: cat(
+                t(
+                  "Lines $\\ell$ and $m$ are parallel. Which justifies the statement?",
+                  "直线 $\\ell$ 与 $m$ 平行。下面的结论依据的是什么？",
+                ),
+                "\n\n",
+                statement,
+              ),
+              options: transversalTheorems.map((x) => reasons[x]),
+              correct: kind,
+              solution: t(
+                `Angles $${a}$ and $${b}$ are ${["vertical angles", "corresponding angles", "alternate interior angles", "alternate exterior angles", "consecutive interior angles"][kind]}, so the statement follows from the ${reasons[r].en}.`,
+                `角 $${a}$ 与角 $${b}$ 是${["对顶角", "同位角", "内错角", "外错角", "同旁内角"][kind]}，所以结论依据的是${reasons[r]["zh-CN"]}。`,
+              ),
+            }),
+            figure: parallelFigure(rng, true),
+          },
+          [
+            ...transversalTheorems.map(
+              (x, i) =>
+                [
+                  reasons[x].en,
+                  [
+                    "Vertical angles sit opposite each other at one intersection, and these two do not.",
+                    "Corresponding angles sit in the same position at the two intersections, and these two do not.",
+                    "Alternate interior angles lie between the lines on opposite sides of the transversal, and these two do not.",
+                    "Alternate exterior angles lie outside the lines on opposite sides of the transversal, and these two do not.",
+                    "Consecutive interior angles lie between the lines on the same side of the transversal, and these two do not.",
+                  ][i]!,
+                  [
+                    "对顶角在同一个交点处彼此相对，而这两个角不是。",
+                    "同位角在两个交点处位置相同，而这两个角不是。",
+                    "内错角在两条直线之间、截线的两侧，而这两个角不是。",
+                    "外错角在两条直线之外、截线的两侧，而这两个角不是。",
+                    "同旁内角在两条直线之间、截线的同侧，而这两个角不是。",
+                  ][i]!,
+                ] as const,
             ),
-            options: transversalTheorems.map((x) => reasons[x]),
-            correct: kind,
-            solution: t(
-              `Angles $${a}$ and $${b}$ are ${["vertical angles", "corresponding angles", "alternate interior angles", "alternate exterior angles", "consecutive interior angles"][kind]}, so the statement follows from the ${reasons[r].en}.`,
-              `角 $${a}$ 与角 $${b}$ 是${["对顶角", "同位角", "内错角", "外错角", "同旁内角"][kind]}，所以结论依据的是${reasons[r]["zh-CN"]}。`,
-            ),
-          }),
-          figure: parallelFigure(rng, true),
-        };
+          ],
+        );
       },
     },
     {
@@ -1999,6 +2028,7 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "choosing-a-rotation-rule",
+      figure: geometryDrawings2["rotation-rules-in-the-coordinate-plane#choosing-a-rotation-rule"],
       title: t("Rotations as functions", "把旋转看成函数"),
       explanation: t(
         "A transformation is a function: its input is a point and its output is the image. We write $R_{\\theta}$ for the rotation by $\\theta$ about the origin, counterclockwise when $\\theta > 0$ and clockwise when $\\theta < 0$:\n\n- $R_{90^\\circ}(x, y) = (-y, x)$\n- $R_{180^\\circ}(x, y) = (-x, -y)$\n- $R_{-90^\\circ}(x, y) = (y, -x)$\n\nTo find the rule from one point and its image, check which formula sends that point to that image.",
@@ -2541,23 +2571,42 @@ export const dilationsOfGeometricFigures: TopicDef = {
         ];
         const byLengths = rng.bool();
         const ab = q * rng.int(1, 4);
-        return choiceProblem({
-          prompt: byLengths
-            ? t(
-                `A dilation maps a segment of length $${ab}$ to a segment of length $${(ab * p) / q}$. Is it an enlargement or a reduction?`,
-                `一次位似把长为 $${ab}$ 的线段映到长为 $${(ab * p) / q}$ 的线段。这是放大还是缩小？`,
-              )
-            : t(
-                `Is a dilation with scale factor $${k.toLatex()}$ an enlargement or a reduction?`,
-                `比例因子为 $${k.toLatex()}$ 的位似是放大还是缩小？`,
-              ),
-          options,
-          correct,
-          solution: t(
-            `The scale factor is $${k.toLatex()}$, which is ${correct === 0 ? "greater than" : correct === 1 ? "less than" : "equal to"} $1$, so the answer is: ${options[correct]!.en.toLowerCase()}.`,
-            `比例因子是 $${k.toLatex()}$，它${correct === 0 ? "大于" : correct === 1 ? "小于" : "等于"} $1$，所以答案是：${options[correct]!["zh-CN"]}。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: byLengths
+              ? t(
+                  `A dilation maps a segment of length $${ab}$ to a segment of length $${(ab * p) / q}$. Is it an enlargement or a reduction?`,
+                  `一次位似把长为 $${ab}$ 的线段映到长为 $${(ab * p) / q}$ 的线段。这是放大还是缩小？`,
+                )
+              : t(
+                  `Is a dilation with scale factor $${k.toLatex()}$ an enlargement or a reduction?`,
+                  `比例因子为 $${k.toLatex()}$ 的位似是放大还是缩小？`,
+                ),
+            options,
+            correct,
+            solution: t(
+              `The scale factor is $${k.toLatex()}$, which is ${correct === 0 ? "greater than" : correct === 1 ? "less than" : "equal to"} $1$, so the answer is: ${options[correct]!.en.toLowerCase()}.`,
+              `比例因子是 $${k.toLatex()}$，它${correct === 0 ? "大于" : correct === 1 ? "小于" : "等于"} $1$，所以答案是：${options[correct]!["zh-CN"]}。`,
+            ),
+          }),
+          [
+            [
+              options[0]!.en,
+              `An enlargement needs a scale factor greater than $1$, and here it is $${k.toLatex()}$.`,
+              `放大要求比例因子大于 $1$，而这里它是 $${k.toLatex()}$。`,
+            ],
+            [
+              options[1]!.en,
+              `A reduction needs a scale factor less than $1$, and here it is $${k.toLatex()}$.`,
+              `缩小要求比例因子小于 $1$，而这里它是 $${k.toLatex()}$。`,
+            ],
+            [
+              options[2]!.en,
+              `Lengths stay the same only when the scale factor is $1$, and here it is $${k.toLatex()}$.`,
+              `只有比例因子为 $1$ 时长度才不变，而这里它是 $${k.toLatex()}$。`,
+            ],
+          ],
+        );
       },
     },
     {

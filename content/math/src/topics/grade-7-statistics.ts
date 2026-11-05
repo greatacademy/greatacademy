@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import type { Axis, FiveNumberSummary } from "@ga/subject-math";
 import { boxPlot, dec, dotPlot, Q, svgDocument } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -1568,6 +1569,7 @@ export const calculatingModesAndMediansFromHistograms = topic(
   [
     {
       id: "the-modal-class-from-a-histogram",
+      figure: gradeDrawings3["calculating-modes-and-medians-from-histograms#the-modal-class-from-a-histogram"],
       title: t("The modal class from a histogram", "从直方图求众数组"),
       explanation: t(
         "Read the class under the tallest bar. If the bars over $10$–$20$, $20$–$30$, $30$–$40$ and $40$–$50$ have heights $4, 9, 12, 5$, the modal class is $30$ to $40$. The answer is the class, read on the horizontal axis, not the height $12$ read on the vertical axis.",
@@ -1602,6 +1604,7 @@ export const calculatingModesAndMediansFromHistograms = topic(
     },
     {
       id: "the-class-of-the-median-from-a-histogram",
+      figure: gradeDrawings3["calculating-modes-and-medians-from-histograms#the-class-of-the-median-from-a-histogram"],
       title: t("The class of the median from a histogram", "从直方图求中位数所在的组"),
       explanation: t(
         "First add all the bar heights to get the number of values. With heights $4, 9, 12, 5$ there are $30$ values, so the median is between the $15$th and $16$th. The running totals are $4, 13, 25, 30$, so both lie in the third bar: the median is between $30$ and $40$.",
@@ -1649,6 +1652,7 @@ export const calculatingMeansFromHistograms = topic(
   [
     {
       id: "estimating-a-total-from-a-histogram",
+      figure: gradeDrawings3["calculating-means-from-histograms#estimating-a-total-from-a-histogram"],
       title: t("Estimating a total from a histogram", "由直方图估计总和"),
       explanation: t(
         "A histogram of travel times has bars of heights $4, 9, 7$ over $0$–$10$, $10$–$20$ and $20$–$30$ minutes. Treat the $4$ times in the first bar as $5$ minutes each, and so on:\n\n$$5 \\times 4 + 15 \\times 9 + 25 \\times 7 = 20 + 135 + 175 = 330 \\text{ min}.$$\n\nUse the midpoints, not the left edges of the bars.",
@@ -1681,6 +1685,7 @@ export const calculatingMeansFromHistograms = topic(
     },
     {
       id: "estimating-a-mean-from-a-histogram",
+      figure: gradeDrawings3["calculating-means-from-histograms#estimating-a-mean-from-a-histogram"],
       title: t("Estimating a mean from a histogram", "由直方图估计平均数"),
       explanation: t(
         "With bar heights $4, 9, 7$ over $0$–$10$, $10$–$20$, $20$–$30$, the estimated total is $330$ minutes and there are $4 + 9 + 7 = 20$ values, so the estimated mean is $330 \\div 20 = 16.5$ minutes. Divide by the number of values, the sum of the heights, not by the number of bars.",
@@ -1987,6 +1992,7 @@ export const comparingMedians = topic(
     },
     {
       id: "medians-on-box-plots",
+      figure: gradeDrawings3["comparing-medians#medians-on-box-plots"],
       title: t("Medians on box plots", "箱线图中的中位数"),
       explanation: t(
         "On two box plots drawn on the same scale, the median is the line inside each box. If A’s line is at $16$ and B’s at $11$, A’s median is $5$ greater. The edges of the box are the quartiles and the ends of the whiskers are the least and greatest values; neither is the median.",
@@ -2185,6 +2191,7 @@ export const comparingDataSetsUsingRangeAndQuartiles = topic(
   [
     {
       id: "ranges-and-iqrs-on-box-plots",
+      figure: gradeDrawings3["comparing-data-sets-using-range-and-quartiles#ranges-and-iqrs-on-box-plots"],
       title: t("Ranges and IQRs on box plots", "箱线图中的极差和四分位距"),
       explanation: t(
         "For box plots with A: $4, 9, 12, 14, 20$ and B: $6, 10, 11, 15, 17$ (minimum, quartiles, median, maximum), the ranges are $20 - 4 = 16$ and $17 - 6 = 11$, and the IQRs are $14 - 9 = 5$ and $15 - 10 = 5$. A has the greater range, but the middle halves are equally spread.",
@@ -2332,6 +2339,7 @@ export const comparingDataSetVisualizationsUsingStandardDeviationAndMad = topic(
     },
     {
       id: "shifted-data-keeps-its-spread",
+      figure: gradeDrawings3["comparing-data-set-visualizations-using-standard-deviation-and-mad#shifted-data-keeps-its-spread"],
       title: t("Shifted data keeps its spread", "平移后分散程度不变"),
       explanation: t(
         "If B’s dot plot is A’s moved $5$ to the right, every value of B is $5$ more than a value of A. The mean goes up by $5$, but every distance from the mean stays the same, so the MAD and the standard deviation do not change.",

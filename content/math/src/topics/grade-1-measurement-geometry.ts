@@ -5,7 +5,6 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { svgDocument } from "@ga/subject-math";
-
 import {
   barGraphFigure,
   clockFigure,
@@ -20,7 +19,9 @@ import {
   slicedCircleFigure,
   tallyFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { plural } from "./grade-2-numbers-operations.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
@@ -84,16 +85,28 @@ const comparingLengths = earlyTopic(
         const asksLongest = rng.bool();
         const target = asksLongest ? Math.max(...lengths) : Math.min(...lengths);
         const correct = labels[lengths.indexOf(target)] as string;
-        return pickChoice(
-          rng,
-          t(`Which bar is the ${asksLongest ? "longest" : "shortest"}?`, `哪个长条${asksLongest ? "最长" : "最短"}？`),
-          barName(correct),
-          labels.filter((label) => label !== correct).map(barName),
-          t(
-            `All the bars start at the same line, and bar ${correct} ${asksLongest ? "reaches the farthest" : "stops the soonest"}.`,
-            `所有长条都从同一条线开始，长条 ${correct} ${asksLongest ? "伸得最远" : "最先停下"}。`,
+        return reasoned(
+          pickChoice(
+            rng,
+            t(`Which bar is the ${asksLongest ? "longest" : "shortest"}?`, `哪个长条${asksLongest ? "最长" : "最短"}？`),
+            barName(correct),
+            labels.filter((label) => label !== correct).map(barName),
+            t(
+              `All the bars start at the same line, and bar ${correct} ${asksLongest ? "reaches the farthest" : "stops the soonest"}.`,
+              `所有长条都从同一条线开始，长条 ${correct} ${asksLongest ? "伸得最远" : "最先停下"}。`,
+            ),
+            lengthBarsFigure(labels, lengths),
           ),
-          lengthBarsFigure(labels, lengths),
+          [
+            ...labels.map(
+              (label) =>
+                [
+                  barName(label).en,
+                  `Bar ${label} ${asksLongest ? "stops before" : "goes past"} bar ${correct}.`,
+                  `长条 ${label} 比长条 ${correct} ${asksLongest ? "短" : "长"}。`,
+                ] as const,
+            ),
+          ],
         );
       },
     ),
@@ -559,30 +572,36 @@ const firstPictureGraphs = earlyTopic(
   ["tally-charts"],
   ["1.MD.C.4"],
   [
-    earlyPoint(
-      "reading-a-first-picture-graph",
-      ["Reading a picture graph", "读象形统计图"],
-      [
-        "A picture graph shows how many there are in each group by giving each thing its own dot. Each row belongs to one group, and its label is at the start of the row. Count the dots in a row to find how many are in that group. The row that stretches farthest has the most, if the dots are all the same size.",
-        "象形统计图给每个东西画一个点，用来表示每组有多少。每一行属于一组，开头写着这组的标记。数一数一行里的点，就知道这组有多少。点的大小都一样时，伸得最远的那一行最多。",
-      ],
-      (rng) => {
-        const values = graphValues(rng, 1, 9);
-        return readingFromGraph(rng, dotMark, values, pictureGraphFigure(graphLabels, values, 1));
-      },
-    ),
-    earlyPoint(
-      "comparing-on-a-picture-graph",
-      ["Comparing on a picture graph", "在象形统计图上比较"],
-      [
-        "A picture graph makes it easy to compare groups. The dots in two rows line up one above the other, so you can match them in pairs. The dots with no partner show how many more one row has. To find how many two rows have together, count all the dots in both rows, or add up the two counts.",
-        "象形统计图很方便比较。两行的点上下对齐，可以一对一对地配起来。没有伙伴的点，就说明一行比另一行多多少。要知道两行一共有多少，就数两行所有的点，或者把两个数相加。",
-      ],
-      (rng) => {
-        const values = graphValues(rng, 1, 9);
-        return comparingOnGraph(rng, dotMark, values, pictureGraphFigure(graphLabels, values, 1));
-      },
-    ),
+    {
+      ...earlyPoint(
+        "reading-a-first-picture-graph",
+        ["Reading a picture graph", "读象形统计图"],
+        [
+          "A picture graph shows how many there are in each group by giving each thing its own dot. Each row belongs to one group, and its label is at the start of the row. Count the dots in a row to find how many are in that group. The row that stretches farthest has the most, if the dots are all the same size.",
+          "象形统计图给每个东西画一个点，用来表示每组有多少。每一行属于一组，开头写着这组的标记。数一数一行里的点，就知道这组有多少。点的大小都一样时，伸得最远的那一行最多。",
+        ],
+        (rng) => {
+          const values = graphValues(rng, 1, 9);
+          return readingFromGraph(rng, dotMark, values, pictureGraphFigure(graphLabels, values, 1));
+        },
+      ),
+      figure: gradeDrawings2["first-picture-graphs#reading-a-first-picture-graph"],
+    },
+    {
+      ...earlyPoint(
+        "comparing-on-a-picture-graph",
+        ["Comparing on a picture graph", "在象形统计图上比较"],
+        [
+          "A picture graph makes it easy to compare groups. The dots in two rows line up one above the other, so you can match them in pairs. The dots with no partner show how many more one row has. To find how many two rows have together, count all the dots in both rows, or add up the two counts.",
+          "象形统计图很方便比较。两行的点上下对齐，可以一对一对地配起来。没有伙伴的点，就说明一行比另一行多多少。要知道两行一共有多少，就数两行所有的点，或者把两个数相加。",
+        ],
+        (rng) => {
+          const values = graphValues(rng, 1, 9);
+          return comparingOnGraph(rng, dotMark, values, pictureGraphFigure(graphLabels, values, 1));
+        },
+      ),
+      figure: gradeDrawings2["first-picture-graphs#comparing-on-a-picture-graph"],
+    },
   ],
 );
 
@@ -593,30 +612,36 @@ const firstBarGraphs = earlyTopic(
   ["first-picture-graphs"],
   ["1.MD.C.4"],
   [
-    earlyPoint(
-      "reading-a-first-bar-graph",
-      ["Reading a bar graph", "读条形统计图"],
-      [
-        "A bar graph uses the height of a bar in place of a row of dots. To read a bar, look at where its top lies, then follow that level across to the numbers at the side. That number tells you how many are in that group. The tallest bar has the most, and the shortest bar has the fewest.",
-        "条形统计图用条的高度代替一行点。读一个条时，先看它的顶端在哪里，再沿着这个高度横着看到旁边的数。这个数就说明这组有多少。最高的条最多，最矮的条最少。",
-      ],
-      (rng) => {
-        const values = graphValues(rng, 1, 10);
-        return readingFromGraph(rng, barMark, values, barGraphFigure(graphLabels, values, 1));
-      },
-    ),
-    earlyPoint(
-      "comparing-on-a-bar-graph",
-      ["Comparing on a bar graph", "在条形统计图上比较"],
-      [
-        "To compare two bars, read each one against the numbers at the side. The gap between their tops shows how many more one bar has, and you can count the steps of that gap or subtract the numbers. To find how many two bars have together, read them both and add. Reading each bar with care comes first in either case.",
-        "比较两个条时，先对着旁边的数读出每个条。两个顶端之间的差距说明一个条比另一个多多少，可以数差距有几格，也可以用减法。要知道两个条一共有多少，就把它们都读出来再相加。无论哪种，都要先仔细读好每个条。",
-      ],
-      (rng) => {
-        const values = graphValues(rng, 1, 10);
-        return comparingOnGraph(rng, barMark, values, barGraphFigure(graphLabels, values, 1));
-      },
-    ),
+    {
+      ...earlyPoint(
+        "reading-a-first-bar-graph",
+        ["Reading a bar graph", "读条形统计图"],
+        [
+          "A bar graph uses the height of a bar in place of a row of dots. To read a bar, look at where its top lies, then follow that level across to the numbers at the side. That number tells you how many are in that group. The tallest bar has the most, and the shortest bar has the fewest.",
+          "条形统计图用条的高度代替一行点。读一个条时，先看它的顶端在哪里，再沿着这个高度横着看到旁边的数。这个数就说明这组有多少。最高的条最多，最矮的条最少。",
+        ],
+        (rng) => {
+          const values = graphValues(rng, 1, 10);
+          return readingFromGraph(rng, barMark, values, barGraphFigure(graphLabels, values, 1));
+        },
+      ),
+      figure: gradeDrawings2["first-bar-graphs#reading-a-first-bar-graph"],
+    },
+    {
+      ...earlyPoint(
+        "comparing-on-a-bar-graph",
+        ["Comparing on a bar graph", "在条形统计图上比较"],
+        [
+          "To compare two bars, read each one against the numbers at the side. The gap between their tops shows how many more one bar has, and you can count the steps of that gap or subtract the numbers. To find how many two bars have together, read them both and add. Reading each bar with care comes first in either case.",
+          "比较两个条时，先对着旁边的数读出每个条。两个顶端之间的差距说明一个条比另一个多多少，可以数差距有几格，也可以用减法。要知道两个条一共有多少，就把它们都读出来再相加。无论哪种，都要先仔细读好每个条。",
+        ],
+        (rng) => {
+          const values = graphValues(rng, 1, 10);
+          return comparingOnGraph(rng, barMark, values, barGraphFigure(graphLabels, values, 1));
+        },
+      ),
+      figure: gradeDrawings2["first-bar-graphs#comparing-on-a-bar-graph"],
+    },
   ],
 );
 
@@ -767,55 +792,58 @@ const definingAttributes = earlyTopic(
             );
       },
     ),
-    earlyPoint(
-      "what-makes-a-shape-that-shape",
-      ["What makes a shape that shape", "什么决定一个图形"],
-      [
-        "A shape gets its name from its sides and corners, and nothing else. A triangle is a triangle because it has 3 straight sides, whether it is big or small, red or blue, and however it is turned. So when you decide what a shape is, count its sides and corners, and pay no attention to its color or size.",
-        "图形的名字只由它的边和角决定。三角形之所以是三角形，是因为它有 3 条直边，不管它是大是小、是红是蓝，也不管它怎么摆放。所以判断一个图形时，要数它的边和角，不用管它的颜色和大小。",
-      ],
-      (rng) => {
-        const fact = rng.pick(shapeFacts);
-        if (rng.bool()) {
-          const other = rng.pick(shapeFacts.filter((candidate) => candidate !== fact));
-          const wrongRule = t(other.rule[0], other.rule[1]);
+    {
+      ...earlyPoint(
+        "what-makes-a-shape-that-shape",
+        ["What makes a shape that shape", "什么决定一个图形"],
+        [
+          "A shape gets its name from its sides and corners, and nothing else. A triangle is a triangle because it has 3 straight sides, whether it is big or small, red or blue, and however it is turned. So when you decide what a shape is, count its sides and corners, and pay no attention to its color or size.",
+          "图形的名字只由它的边和角决定。三角形之所以是三角形，是因为它有 3 条直边，不管它是大是小、是红是蓝，也不管它怎么摆放。所以判断一个图形时，要数它的边和角，不用管它的颜色和大小。",
+        ],
+        (rng) => {
+          const fact = rng.pick(shapeFacts);
+          if (rng.bool()) {
+            const other = rng.pick(shapeFacts.filter((candidate) => candidate !== fact));
+            const wrongRule = t(other.rule[0], other.rule[1]);
+            return pickChoice(
+              rng,
+              t(`Which of these is true of every ${fact.en}?`, `下面哪一句对所有的${fact.zh}都成立？`),
+              t(fact.rule[0], fact.rule[1]),
+              [
+                wrongRule,
+                ...rng.sample(
+                  [
+                    t("It is red.", "它是红色的。"),
+                    t("It is small enough to hold in your hand.", "它小得可以拿在手里。"),
+                    t("It has a dot in the middle.", "它中间有一个点。"),
+                    t("It is blue.", "它是蓝色的。"),
+                    t("It is bigger than a book.", "它比一本书大。"),
+                  ],
+                  2,
+                ),
+              ],
+              t(
+                `Sides and corners decide what a ${fact.en} is, and color and size do not matter. ${fact.rule[0]}`,
+                `边和角决定${fact.zh}是什么，颜色和大小无关紧要。${fact.rule[1]}`,
+              ),
+            );
+          }
+          const others = rng.sample(
+            shapeFacts.filter((other) => other !== fact),
+            3,
+          );
+          const article = (name: string) => (name === "hexagon" ? "A hexagon" : `A ${name}`);
           return pickChoice(
             rng,
-            t(`Which of these is true of every ${fact.en}?`, `下面哪一句对所有的${fact.zh}都成立？`),
-            t(fact.rule[0], fact.rule[1]),
-            [
-              wrongRule,
-              ...rng.sample(
-                [
-                  t("It is red.", "它是红色的。"),
-                  t("It is small enough to hold in your hand.", "它小得可以拿在手里。"),
-                  t("It has a dot in the middle.", "它中间有一个点。"),
-                  t("It is blue.", "它是蓝色的。"),
-                  t("It is bigger than a book.", "它比一本书大。"),
-                ],
-                2,
-              ),
-            ],
-            t(
-              `Sides and corners decide what a ${fact.en} is, and color and size do not matter. ${fact.rule[0]}`,
-              `边和角决定${fact.zh}是什么，颜色和大小无关紧要。${fact.rule[1]}`,
-            ),
+            t(`Which shape is this? ${fact.rule[0]}`, `这是什么图形？${fact.rule[1]}`),
+            t(article(fact.en), fact.zh),
+            others.map((other) => t(article(other.en), other.zh)),
+            t(`That is what makes a shape a ${fact.en}.`, `这正是${fact.zh}的特征。`),
           );
-        }
-        const others = rng.sample(
-          shapeFacts.filter((other) => other !== fact),
-          3,
-        );
-        const article = (name: string) => (name === "hexagon" ? "A hexagon" : `A ${name}`);
-        return pickChoice(
-          rng,
-          t(`Which shape is this? ${fact.rule[0]}`, `这是什么图形？${fact.rule[1]}`),
-          t(article(fact.en), fact.zh),
-          others.map((other) => t(article(other.en), other.zh)),
-          t(`That is what makes a shape a ${fact.en}.`, `这正是${fact.zh}的特征。`),
-        );
-      },
-    ),
+        },
+      ),
+      figure: gradeDrawings2["defining-attributes-of-shapes#what-makes-a-shape-that-shape"],
+    },
   ],
 );
 
@@ -955,34 +983,37 @@ const composingShapes = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "pieces-to-finish-a-shape",
-      ["Pieces to finish a shape", "还要几块才能拼好"],
-      [
-        "A big shape can be built from many small pieces of the same shape. Think of a rectangle being covered with square tiles, some of them already in place. To finish it, you need one tile for each empty space. Count the empty spaces, or count them all and take away the ones already filled, and you know how many are needed.",
-        "一个大图形可以由许多相同的小块拼成。想象用正方形瓷砖铺一个长方形，有些已经铺好了。要铺完，每个空位需要一块瓷砖。数一数空位，或者数出总数再减去已经铺好的，就知道还需要多少块。",
-      ],
-      (rng) => {
-        const rows = rng.int(2, 4);
-        const columns = rng.int(2, 6);
-        const total = rows * columns;
-        const placed = rng.int(1, total - 1);
-        const answer = total - placed;
-        return whole(
-          [
-            "The shaded squares are already in place. How many more squares will finish this rectangle?",
-            "涂色的小正方形已经拼好了。还要多少个小正方形才能拼好这个长方形？",
-          ],
-          answer,
-          [placed, total, rows + columns],
-          [
-            `The rectangle holds ${total} squares and ${placed} are placed, and $${total} - ${placed} = ${answer}$.`,
-            `这个长方形一共有 ${total} 个小正方形，已经拼好 ${placed} 个，$${total} - ${placed} = ${answer}$。`,
-          ],
-          gridFigure(rows, columns, placed),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "pieces-to-finish-a-shape",
+        ["Pieces to finish a shape", "还要几块才能拼好"],
+        [
+          "A big shape can be built from many small pieces of the same shape. Think of a rectangle being covered with square tiles, some of them already in place. To finish it, you need one tile for each empty space. Count the empty spaces, or count them all and take away the ones already filled, and you know how many are needed.",
+          "一个大图形可以由许多相同的小块拼成。想象用正方形瓷砖铺一个长方形，有些已经铺好了。要铺完，每个空位需要一块瓷砖。数一数空位，或者数出总数再减去已经铺好的，就知道还需要多少块。",
+        ],
+        (rng) => {
+          const rows = rng.int(2, 4);
+          const columns = rng.int(2, 6);
+          const total = rows * columns;
+          const placed = rng.int(1, total - 1);
+          const answer = total - placed;
+          return whole(
+            [
+              "The shaded squares are already in place. How many more squares will finish this rectangle?",
+              "涂色的小正方形已经拼好了。还要多少个小正方形才能拼好这个长方形？",
+            ],
+            answer,
+            [placed, total, rows + columns],
+            [
+              `The rectangle holds ${total} squares and ${placed} are placed, and $${total} - ${placed} = ${answer}$.`,
+              `这个长方形一共有 ${total} 个小正方形，已经拼好 ${placed} 个，$${total} - ${placed} = ${answer}$。`,
+            ],
+            gridFigure(rows, columns, placed),
+          );
+        },
+      ),
+      figure: gradeDrawings2["composing-shapes#pieces-to-finish-a-shape"],
+    },
   ],
 );
 

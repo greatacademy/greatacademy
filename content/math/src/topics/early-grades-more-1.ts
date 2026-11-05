@@ -5,7 +5,6 @@
 
 import type { CourseDef, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-
 import {
   barGraphFigure,
   clockFigure,
@@ -20,6 +19,8 @@ import {
   tenFramesFigure,
 } from "../early-grades-kit.ts";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import {
   type BarMeasure,
   blockRowsFigure,
@@ -433,77 +434,86 @@ const numberLinesTo120 = earlyTopic(
   ["counting-to-120"],
   ["1.NBT.A.1"],
   [
-    earlyPoint(
-      "reading-a-line-marked-by-ones",
-      ["Reading a line marked by ones", "读每格是一的数轴"],
-      [
-        "On this number line each small space is worth 1. Only the two ends have numbers written on them. To read a point, start at the nearer end and count the spaces to the point. Count forward from the left end, or count back from the right end. Both ways reach the same number.",
-        "这条数轴上每一小格是 1，只有两端写了数。读一个点时，从近的一端开始，数到这个点有几格。可以从左端往后数，也可以从右端往回数，得到的数是一样的。",
-      ],
-      (rng) => {
-        const lo = 10 * rng.int(0, 11);
-        const mark = lo + rng.int(1, 9);
-        return whole(
-          ["What number does the dot show?", "这个点表示什么数？"],
-          mark,
-          [mark - lo, lo + 10 - (mark - lo), mark + 10],
-          [
-            `The dot is ${mark - lo} ${mark - lo === 1 ? "space" : "spaces"} past ${lo}, so it shows ${mark}.`,
-            `这个点在 ${lo} 后面第 ${mark - lo} 格，所以表示 ${mark}。`,
-          ],
-          numberLineFigure(lo, lo + 10, 1, mark, false),
-        );
-      },
-    ),
-    earlyPoint(
-      "reading-a-line-marked-by-tens",
-      ["Reading a line marked by tens", "读每格是十的数轴"],
-      [
-        "A number line does not always count by ones. Here each space is worth 10, so the marks go 10, 20, 30 and so on. Before you read a point, look at how much each space is worth. Then count by tens from the start to the point. Reading each space as 1 will give an answer that is far too small.",
-        "数轴不一定按一来数。这里每格是 10，所以刻度是 10、20、30 等。读点之前，先看每格是多少。再从起点开始十个十个地数到这个点。如果把每格当成 1，答案就太小了。",
-      ],
-      (rng) => {
-        const hi = rng.pick([60, 70, 80, 90, 100, 110, 120]);
-        const lo = rng.pick([0, 10, 20]);
-        const spaces = (hi - lo) / 10;
-        const k = rng.int(1, spaces - 1);
-        const mark = lo + 10 * k;
-        return whole(
-          ["Each space is worth 10. What number does the dot show?", "每格是 10。这个点表示什么数？"],
-          mark,
-          [lo + k, k, mark + 10, mark - 10],
-          [
-            `The dot is ${k} spaces past ${lo}. Counting by tens from ${lo} reaches ${mark}.`,
-            `这个点在 ${lo} 后面第 ${k} 格。从 ${lo} 开始十个十个地数，数到 ${mark}。`,
-          ],
-          numberLineFigure(lo, hi, 10, mark, false),
-        );
-      },
-    ),
-    earlyPoint(
-      "which-number-lies-between",
-      ["Which number lies between", "哪个数在中间"],
-      [
-        "On a number line, smaller numbers are on the left and larger numbers are on the right. A number lies between two others when it is larger than the left one and smaller than the right one. Check both sides, as a number can pass one test and fail the other. Take special care around 100.",
-        "在数轴上，小的数在左边，大的数在右边。一个数比左边的数大、比右边的数小，它就在这两个数之间。两边都要检查，因为一个数可能只满足一边。100 附近要特别小心。",
-      ],
-      (rng) => {
-        const low = rng.int(15, 105);
-        const gap = rng.int(3, 8);
-        const high = low + gap;
-        const answer = low + rng.int(1, gap - 1);
-        return chooseMath(
-          rng,
-          [`Which number lies between ${low} and ${high}?`, `哪个数在 ${low} 和 ${high} 之间？`],
-          `${answer}`,
-          [`${low - rng.int(1, 3)}`, `${high + rng.int(1, 3)}`, `${low + 10 + gap}`, `${Math.max(low - 10, 1)}`],
-          [
-            `${answer} is larger than ${low} and smaller than ${high}, so it lies between them.`,
-            `${answer} 比 ${low} 大，比 ${high} 小，所以在它们之间。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "reading-a-line-marked-by-ones",
+        ["Reading a line marked by ones", "读每格是一的数轴"],
+        [
+          "On this number line each small space is worth 1. Only the two ends have numbers written on them. To read a point, start at the nearer end and count the spaces to the point. Count forward from the left end, or count back from the right end. Both ways reach the same number.",
+          "这条数轴上每一小格是 1，只有两端写了数。读一个点时，从近的一端开始，数到这个点有几格。可以从左端往后数，也可以从右端往回数，得到的数是一样的。",
+        ],
+        (rng) => {
+          const lo = 10 * rng.int(0, 11);
+          const mark = lo + rng.int(1, 9);
+          return whole(
+            ["What number does the dot show?", "这个点表示什么数？"],
+            mark,
+            [mark - lo, lo + 10 - (mark - lo), mark + 10],
+            [
+              `The dot is ${mark - lo} ${mark - lo === 1 ? "space" : "spaces"} past ${lo}, so it shows ${mark}.`,
+              `这个点在 ${lo} 后面第 ${mark - lo} 格，所以表示 ${mark}。`,
+            ],
+            numberLineFigure(lo, lo + 10, 1, mark, false),
+          );
+        },
+      ),
+      figure: gradeDrawings2["number-lines-to-120#reading-a-line-marked-by-ones"],
+    },
+    {
+      ...earlyPoint(
+        "reading-a-line-marked-by-tens",
+        ["Reading a line marked by tens", "读每格是十的数轴"],
+        [
+          "A number line does not always count by ones. Here each space is worth 10, so the marks go 10, 20, 30 and so on. Before you read a point, look at how much each space is worth. Then count by tens from the start to the point. Reading each space as 1 will give an answer that is far too small.",
+          "数轴不一定按一来数。这里每格是 10，所以刻度是 10、20、30 等。读点之前，先看每格是多少。再从起点开始十个十个地数到这个点。如果把每格当成 1，答案就太小了。",
+        ],
+        (rng) => {
+          const hi = rng.pick([60, 70, 80, 90, 100, 110, 120]);
+          const lo = rng.pick([0, 10, 20]);
+          const spaces = (hi - lo) / 10;
+          const k = rng.int(1, spaces - 1);
+          const mark = lo + 10 * k;
+          return whole(
+            ["Each space is worth 10. What number does the dot show?", "每格是 10。这个点表示什么数？"],
+            mark,
+            [lo + k, k, mark + 10, mark - 10],
+            [
+              `The dot is ${k} spaces past ${lo}. Counting by tens from ${lo} reaches ${mark}.`,
+              `这个点在 ${lo} 后面第 ${k} 格。从 ${lo} 开始十个十个地数，数到 ${mark}。`,
+            ],
+            numberLineFigure(lo, hi, 10, mark, false),
+          );
+        },
+      ),
+      figure: gradeDrawings2["number-lines-to-120#reading-a-line-marked-by-tens"],
+    },
+    {
+      ...earlyPoint(
+        "which-number-lies-between",
+        ["Which number lies between", "哪个数在中间"],
+        [
+          "On a number line, smaller numbers are on the left and larger numbers are on the right. A number lies between two others when it is larger than the left one and smaller than the right one. Check both sides, as a number can pass one test and fail the other. Take special care around 100.",
+          "在数轴上，小的数在左边，大的数在右边。一个数比左边的数大、比右边的数小，它就在这两个数之间。两边都要检查，因为一个数可能只满足一边。100 附近要特别小心。",
+        ],
+        (rng) => {
+          const low = rng.int(15, 105);
+          const gap = rng.int(3, 8);
+          const high = low + gap;
+          const answer = low + rng.int(1, gap - 1);
+          return chooseMath(
+            rng,
+            [`Which number lies between ${low} and ${high}?`, `哪个数在 ${low} 和 ${high} 之间？`],
+            `${answer}`,
+            [`${low - rng.int(1, 3)}`, `${high + rng.int(1, 3)}`, `${low + 10 + gap}`, `${Math.max(low - 10, 1)}`],
+            [
+              `${answer} is larger than ${low} and smaller than ${high}, so it lies between them.`,
+              `${answer} 比 ${low} 大，比 ${high} 小，所以在它们之间。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["number-lines-to-120#which-number-lies-between"],
+    },
   ],
 );
 
@@ -977,56 +987,90 @@ const factTriangles = earlyTopic(
   ["related-addition-and-subtraction-facts"],
   ["1.OA.C.6"],
   [
-    earlyPoint(
-      "the-missing-number-of-a-triangle",
-      ["The missing number of a triangle", "三角形中缺少的数"],
-      [
-        "A fact triangle has the whole at the top and the two parts at the bottom corners. If the whole is missing, add the two parts. If a part is missing, subtract the part you know from the whole. Look at where the question mark is before you decide whether to add or subtract.",
-        "算式三角形的顶上是整体，下面两个角是两部分。如果缺整体，就把两部分相加。如果缺一部分，就用整体减去知道的那部分。决定加还是减之前，先看问号在哪里。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const b = rng.int(2, 9);
-        const c = a + b;
-        const where = rng.int(0, 2);
-        const answer = where === 0 ? c : where === 1 ? a : b;
-        const known = where === 1 ? b : a;
-        return whole(
-          ["What number goes at the question mark?", "问号处应该填几？"],
-          answer,
-          where === 0 ? [Math.abs(a - b), a, b] : [c + known, c, known],
-          where === 0
-            ? [`The whole is missing, so add the parts: $${a} + ${b} = ${c}$.`, `缺的是整体，所以把两部分相加：$${a} + ${b} = ${c}$。`]
-            : [
-                `A part is missing, so subtract from the whole: $${c} - ${known} = ${answer}$.`,
-                `缺的是一部分，所以用整体减：$${c} - ${known} = ${answer}$。`,
+    {
+      ...earlyPoint(
+        "the-missing-number-of-a-triangle",
+        ["The missing number of a triangle", "三角形中缺少的数"],
+        [
+          "A fact triangle has the whole at the top and the two parts at the bottom corners. If the whole is missing, add the two parts. If a part is missing, subtract the part you know from the whole. Look at where the question mark is before you decide whether to add or subtract.",
+          "算式三角形的顶上是整体，下面两个角是两部分。如果缺整体，就把两部分相加。如果缺一部分，就用整体减去知道的那部分。决定加还是减之前，先看问号在哪里。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 9);
+          const b = rng.int(2, 9);
+          const c = a + b;
+          const where = rng.int(0, 2);
+          const answer = where === 0 ? c : where === 1 ? a : b;
+          const known = where === 1 ? b : a;
+          return whole(
+            ["What number goes at the question mark?", "问号处应该填几？"],
+            answer,
+            where === 0 ? [Math.abs(a - b), a, b] : [c + known, c, known],
+            where === 0
+              ? [`The whole is missing, so add the parts: $${a} + ${b} = ${c}$.`, `缺的是整体，所以把两部分相加：$${a} + ${b} = ${c}$。`]
+              : [
+                  `A part is missing, so subtract from the whole: $${c} - ${known} = ${answer}$.`,
+                  `缺的是一部分，所以用整体减：$${c} - ${known} = ${answer}$。`,
+                ],
+            factTriangleFigure(where === 0 ? null : c, where === 1 ? null : a, where === 2 ? null : b),
+          );
+        },
+      ),
+      figure: gradeDrawings2["fact-triangles#the-missing-number-of-a-triangle"],
+    },
+    {
+      ...earlyPoint(
+        "facts-from-a-triangle",
+        ["Facts from a triangle", "从三角形读算式"],
+        [
+          "The three numbers in a triangle make four number sentences: two additions and two subtractions. In the additions, the whole comes after the equal sign. In the subtractions, the whole comes first. A sentence that puts the whole in the wrong place, or that brings in another number, does not belong to this triangle.",
+          "三角形里的三个数可以写成四个算式：两个加法，两个减法。加法里，整体写在等号后面。减法里，整体写在最前面。把整体放错位置，或者用了别的数的算式，都不属于这个三角形。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 9);
+          const b = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== a));
+          const c = a + b;
+          const right = rng.pick([`${a} + ${b} = ${c}`, `${b} + ${a} = ${c}`, `${c} - ${a} = ${b}`, `${c} - ${b} = ${a}`]);
+          return reasoned(
+            chooseMath(
+              rng,
+              ["Which number sentence belongs to this fact triangle?", "哪个算式属于这个算式三角形？"],
+              right,
+              [`${a} + ${c} = ${b}`, `${a} - ${b} = ${c}`, `${b} - ${c} = ${a}`, `${a} + ${b} = ${c + 1}`, `${c} + ${a} = ${b}`],
+              [
+                `It uses ${a}, ${b} and ${c} with ${c} as the whole, and it is true.`,
+                `它用了 ${a}、${b} 和 ${c}，${c} 是整体，算式也是对的。`,
               ],
-          factTriangleFigure(where === 0 ? null : c, where === 1 ? null : a, where === 2 ? null : b),
-        );
-      },
-    ),
-    earlyPoint(
-      "facts-from-a-triangle",
-      ["Facts from a triangle", "从三角形读算式"],
-      [
-        "The three numbers in a triangle make four number sentences: two additions and two subtractions. In the additions, the whole comes after the equal sign. In the subtractions, the whole comes first. A sentence that puts the whole in the wrong place, or that brings in another number, does not belong to this triangle.",
-        "三角形里的三个数可以写成四个算式：两个加法，两个减法。加法里，整体写在等号后面。减法里，整体写在最前面。把整体放错位置，或者用了别的数的算式，都不属于这个三角形。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const b = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== a));
-        const c = a + b;
-        const right = rng.pick([`${a} + ${b} = ${c}`, `${b} + ${a} = ${c}`, `${c} - ${a} = ${b}`, `${c} - ${b} = ${a}`]);
-        return chooseMath(
-          rng,
-          ["Which number sentence belongs to this fact triangle?", "哪个算式属于这个算式三角形？"],
-          right,
-          [`${a} + ${c} = ${b}`, `${a} - ${b} = ${c}`, `${b} - ${c} = ${a}`, `${a} + ${b} = ${c + 1}`, `${c} + ${a} = ${b}`],
-          [`It uses ${a}, ${b} and ${c} with ${c} as the whole, and it is true.`, `它用了 ${a}、${b} 和 ${c}，${c} 是整体，算式也是对的。`],
-          factTriangleFigure(c, a, b),
-        );
-      },
-    ),
+              factTriangleFigure(c, a, b),
+            ),
+            [
+              [
+                `$${a} + ${c} = ${b}$`,
+                `$${c}$ is the total, so adding to it cannot make the smaller number $${b}$.`,
+                `$${c}$ 是总数，所以加上别的数不可能得到更小的 $${b}$。`,
+              ],
+              [
+                `$${a} - ${b} = ${c}$`,
+                `Taking away cannot make a bigger number: subtraction starts from the total, $${c}$.`,
+                `减法不会得到更大的数：减法要从总数 $${c}$ 开始。`,
+              ],
+              [
+                `$${b} - ${c} = ${a}$`,
+                `Subtraction starts from the total, $${c}$, not from a part.`,
+                `减法要从总数 $${c}$ 开始，不是从一部分开始。`,
+              ],
+              [`$${a} + ${b} = ${c + 1}$`, `$${a} + ${b}$ is $${c}$, not $${c + 1}$.`, `$${a} + ${b}$ 等于 $${c}$，不是 $${c + 1}$。`],
+              [
+                `$${c} + ${a} = ${b}$`,
+                `$${c}$ is the total, so adding to it cannot make the smaller number $${b}$.`,
+                `$${c}$ 是总数，所以加上别的数不可能得到更小的 $${b}$。`,
+              ],
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["fact-triangles#facts-from-a-triangle"],
+    },
     earlyPoint(
       "the-fourth-fact-of-a-family",
       ["The fourth fact of a family", "一组算式中的第四个"],
@@ -1374,30 +1418,33 @@ const partAndWholeBars = earlyTopic(
   ["word-problems-with-a-missing-part", "three-addend-word-problems"],
   ["1.OA.A.1", "1.OA.A.2"],
   [
-    earlyPoint(
-      "the-whole-from-its-parts",
-      ["The whole from its parts", "由部分求整体"],
-      [
-        "A bar model is a picture of a story. The long bar on top is the whole, and the bar below is the same length, cut into parts. The numbers are written inside. If the long bar has the question mark, the parts are known. Add the parts together to find out what the whole is.",
-        "线段图是故事的图画。上面的长条是整体，下面的长条一样长，但被切成了几部分。数写在长条里。如果问号在上面的长条里，说明两部分都知道，把它们加起来就得到整体。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        const b = rng.int(2, 19 - a);
-        const name = rng.pick(earlyNames);
-        const thing = rng.pick(earlyThings);
-        return whole(
-          [
-            `${name} has ${a} ${thing.en} in a bag and ${b} in a box. The bar model shows the story. How many ${thing.en} are there in all?`,
-            `${name} 的袋子里有 ${a} ${thing.unit}${thing.zh}，盒子里有 ${b} ${thing.unit}。线段图表示这个故事。一共有多少${thing.unit}${thing.zh}？`,
-          ],
-          a + b,
-          [Math.abs(a - b), a, b],
-          [`The whole is made of the two parts, and $${a} + ${b} = ${a + b}$.`, `整体由两部分组成，$${a} + ${b} = ${a + b}$。`],
-          partWholeBarFigure([a, b], -1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-whole-from-its-parts",
+        ["The whole from its parts", "由部分求整体"],
+        [
+          "A bar model is a picture of a story. The long bar on top is the whole, and the bar below is the same length, cut into parts. The numbers are written inside. If the long bar has the question mark, the parts are known. Add the parts together to find out what the whole is.",
+          "线段图是故事的图画。上面的长条是整体，下面的长条一样长，但被切成了几部分。数写在长条里。如果问号在上面的长条里，说明两部分都知道，把它们加起来就得到整体。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          const b = rng.int(2, 19 - a);
+          const name = rng.pick(earlyNames);
+          const thing = rng.pick(earlyThings);
+          return whole(
+            [
+              `${name} has ${a} ${thing.en} in a bag and ${b} in a box. The bar model shows the story. How many ${thing.en} are there in all?`,
+              `${name} 的袋子里有 ${a} ${thing.unit}${thing.zh}，盒子里有 ${b} ${thing.unit}。线段图表示这个故事。一共有多少${thing.unit}${thing.zh}？`,
+            ],
+            a + b,
+            [Math.abs(a - b), a, b],
+            [`The whole is made of the two parts, and $${a} + ${b} = ${a + b}$.`, `整体由两部分组成，$${a} + ${b} = ${a + b}$。`],
+            partWholeBarFigure([a, b], -1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["part-and-whole-bar-models#the-whole-from-its-parts"],
+    },
     earlyPoint(
       "a-part-from-the-whole",
       ["A part from the whole", "由整体求部分"],
@@ -1898,16 +1945,36 @@ const digitalClocks = earlyTopic(
         const next = clockHour(h + 1);
         const say = (a: number, b: boolean): Pair => (b ? [`half past ${a}`, `${a} 点半`] : [`${a} o'clock`, `${a} 点`]);
         const correct = say(h, half);
-        return choose(
-          rng,
-          ["What time does this clock show?", "这个钟显示的是什么时间？"],
-          correct,
-          rng.shuffle([say(h, !half), say(next, half), say(next, !half), say(clockHour(h - 1), half)]),
+        return reasoned(
+          choose(
+            rng,
+            ["What time does this clock show?", "这个钟显示的是什么时间？"],
+            correct,
+            rng.shuffle([say(h, !half), say(next, half), say(next, !half), say(clockHour(h - 1), half)]),
+            [
+              `The hour is ${h} and the minutes are ${half ? "30, which is half past" : "00, which means exactly on the hour"}.`,
+              `小时是 ${h}，分钟是 ${half ? "30，也就是半点" : "00，也就是整点"}。`,
+            ],
+            digitalClockFigure(h, half ? 30 : 0),
+          ),
           [
-            `The hour is ${h} and the minutes are ${half ? "30, which is half past" : "00, which means exactly on the hour"}.`,
-            `小时是 ${h}，分钟是 ${half ? "30，也就是半点" : "00，也就是整点"}。`,
+            [
+              say(h, !half)[0],
+              `The hour is right, but ${half ? "$30$ minutes means half past" : "$00$ minutes means on the hour"}.`,
+              `小时对了，但${half ? "$30$ 分表示半点" : "$00$ 分表示整点"}。`,
+            ],
+            [say(next, half)[0], `The number before the colon is the hour, and it is $${h}$.`, `冒号前面的数是小时，它是 $${h}$。`],
+            [
+              say(next, !half)[0],
+              `The hour is $${h}$, and ${half ? "$30$ minutes means half past" : "$00$ minutes means on the hour"}.`,
+              `小时是 $${h}$，而且${half ? "$30$ 分表示半点" : "$00$ 分表示整点"}。`,
+            ],
+            [
+              say(clockHour(h - 1), half)[0],
+              `The number before the colon is the hour, and it is $${h}$.`,
+              `冒号前面的数是小时，它是 $${h}$。`,
+            ],
           ],
-          digitalClockFigure(h, half ? 30 : 0),
         );
       },
     ),
@@ -2015,19 +2082,38 @@ const hourAndHalfHourLater = earlyTopic(
         const later = rng.bool();
         const target = clockHour(later ? h + 1 : h - 1);
         const opposite = clockHour(later ? h - 1 : h + 1);
-        return choose(
-          rng,
+        return reasoned(
+          choose(
+            rng,
+            [
+              `What time is ${later ? "one hour after" : "one hour before"} the time on this clock?`,
+              `${later ? "这个钟上的时间过一小时是几点？" : "比这个钟上的时间早一小时是几点？"}`,
+            ],
+            [clockText(target, m), clockText(target, m)],
+            [clockText(opposite, m), clockText(h, m === 0 ? 30 : 0), clockText(target, m === 0 ? 30 : 0)].map((s): Pair => [s, s]),
+            [
+              `The clock shows ${clockText(h, m)}. The minutes stay the same and the hour ${later ? "goes on" : "goes back"} by one, which gives ${clockText(target, m)}.`,
+              `钟上是 ${clockText(h, m)}。分钟不变，小时${later ? "多" : "少"} 1，所以是 ${clockText(target, m)}。`,
+            ],
+            clockFigure(h, m),
+          ),
           [
-            `What time is ${later ? "one hour after" : "one hour before"} the time on this clock?`,
-            `${later ? "这个钟上的时间过一小时是几点？" : "比这个钟上的时间早一小时是几点？"}`,
+            [
+              clockText(opposite, m),
+              `This goes the wrong way: the hour ${later ? "goes on" : "goes back"} by one.`,
+              `方向反了：小时应该${later ? "加" : "减"}一。`,
+            ],
+            [
+              clockText(h, m === 0 ? 30 : 0),
+              "This keeps the hour and changes the minutes, but one hour changes the hour.",
+              "这里小时没变，分钟变了，但过一小时变的是小时。",
+            ],
+            [
+              clockText(target, m === 0 ? 30 : 0),
+              "The hour is right, but the minutes stay the same after one hour.",
+              "小时对了，但过一小时分钟不变。",
+            ],
           ],
-          [clockText(target, m), clockText(target, m)],
-          [clockText(opposite, m), clockText(h, m === 0 ? 30 : 0), clockText(target, m === 0 ? 30 : 0)].map((s): Pair => [s, s]),
-          [
-            `The clock shows ${clockText(h, m)}. The minutes stay the same and the hour ${later ? "goes on" : "goes back"} by one, which gives ${clockText(target, m)}.`,
-            `钟上是 ${clockText(h, m)}。分钟不变，小时${later ? "多" : "少"} 1，所以是 ${clockText(target, m)}。`,
-          ],
-          clockFigure(h, m),
         );
       },
     ),
@@ -2477,57 +2563,63 @@ const howManyInAllOnAGraph = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "two-rows-of-a-picture-graph",
-      ["Two rows of a picture graph", "象形统计图的两行"],
-      [
-        "In this picture graph each dot stands for one thing. A question may ask about only some of the rows, so read it carefully. If it asks how many are in two rows together, count the dots in those two rows and add them. Leave out the other rows, since they are not part of the question.",
-        "这张象形统计图中，每个点代表一个东西。问题可能只问其中几行，所以要看清楚。如果问两行一共有多少，就数这两行的点再相加。其他的行不算，因为问题里没有问到它们。",
-      ],
-      (rng) => {
-        const values = graphValues(rng, 2, 9);
-        const labels = ["A", "B", "C"];
-        const [i, j] = rng.sample([0, 1, 2], 2) as [number, number];
-        const other = 3 - i - j;
-        const answer = values[i]! + values[j]!;
-        return whole(
-          [`How many are in rows ${labels[i]} and ${labels[j]} together?`, `${labels[i]} 行和 ${labels[j]} 行一共有多少个？`],
-          answer,
-          [values[0] + values[1] + values[2], Math.abs(values[i]! - values[j]!), values[other]! + values[i]!],
-          [
-            `Row ${labels[i]} has ${values[i]} and row ${labels[j]} has ${values[j]}, and $${values[i]} + ${values[j]} = ${answer}$.`,
-            `${labels[i]} 行有 ${values[i]} 个，${labels[j]} 行有 ${values[j]} 个，$${values[i]} + ${values[j]} = ${answer}$。`,
-          ],
-          pictureGraphFigure(labels, values, 1),
-        );
-      },
-    ),
-    earlyPoint(
-      "how-many-more-than-the-other-two",
-      ["The difference from the other two", "和另外两条比较"],
-      [
-        "A bar graph can answer a question in two steps. To compare the tallest bar with the other two together, first add the other two. Then subtract to find the difference between that sum and the tallest bar. Read each value from where the top of the bar meets the scale on the left.",
-        "条形图可以回答要两步的问题。要把最高的一条和另外两条合起来比较，先把另外两条相加。再用减法求这个和与最高的一条相差多少。每个数都要从条的顶端对着左边的刻度来读。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 4);
-        const b = rng.int(2, 4);
-        const c = a + b + rng.int(1, 4);
-        const order = rng.shuffle([a, b, c]);
-        const labels = ["A", "B", "C"];
-        const tall = labels[order.indexOf(c)] as string;
-        return whole(
-          [`How many more does bar ${tall} show than the other two bars together?`, `长条 ${tall} 比另外两条合起来多多少？`],
-          c - a - b,
-          [c - a, c - b, c + a + b, a + b],
-          [
-            `The other two make $${a} + ${b} = ${a + b}$, and $${c} - ${a + b} = ${c - a - b}$.`,
-            `另外两条合起来是 $${a} + ${b} = ${a + b}$，$${c} - ${a + b} = ${c - a - b}$。`,
-          ],
-          barGraphFigure(labels, order, 1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "two-rows-of-a-picture-graph",
+        ["Two rows of a picture graph", "象形统计图的两行"],
+        [
+          "In this picture graph each dot stands for one thing. A question may ask about only some of the rows, so read it carefully. If it asks how many are in two rows together, count the dots in those two rows and add them. Leave out the other rows, since they are not part of the question.",
+          "这张象形统计图中，每个点代表一个东西。问题可能只问其中几行，所以要看清楚。如果问两行一共有多少，就数这两行的点再相加。其他的行不算，因为问题里没有问到它们。",
+        ],
+        (rng) => {
+          const values = graphValues(rng, 2, 9);
+          const labels = ["A", "B", "C"];
+          const [i, j] = rng.sample([0, 1, 2], 2) as [number, number];
+          const other = 3 - i - j;
+          const answer = values[i]! + values[j]!;
+          return whole(
+            [`How many are in rows ${labels[i]} and ${labels[j]} together?`, `${labels[i]} 行和 ${labels[j]} 行一共有多少个？`],
+            answer,
+            [values[0] + values[1] + values[2], Math.abs(values[i]! - values[j]!), values[other]! + values[i]!],
+            [
+              `Row ${labels[i]} has ${values[i]} and row ${labels[j]} has ${values[j]}, and $${values[i]} + ${values[j]} = ${answer}$.`,
+              `${labels[i]} 行有 ${values[i]} 个，${labels[j]} 行有 ${values[j]} 个，$${values[i]} + ${values[j]} = ${answer}$。`,
+            ],
+            pictureGraphFigure(labels, values, 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["how-many-in-all-on-a-graph#two-rows-of-a-picture-graph"],
+    },
+    {
+      ...earlyPoint(
+        "how-many-more-than-the-other-two",
+        ["The difference from the other two", "和另外两条比较"],
+        [
+          "A bar graph can answer a question in two steps. To compare the tallest bar with the other two together, first add the other two. Then subtract to find the difference between that sum and the tallest bar. Read each value from where the top of the bar meets the scale on the left.",
+          "条形图可以回答要两步的问题。要把最高的一条和另外两条合起来比较，先把另外两条相加。再用减法求这个和与最高的一条相差多少。每个数都要从条的顶端对着左边的刻度来读。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 4);
+          const b = rng.int(2, 4);
+          const c = a + b + rng.int(1, 4);
+          const order = rng.shuffle([a, b, c]);
+          const labels = ["A", "B", "C"];
+          const tall = labels[order.indexOf(c)] as string;
+          return whole(
+            [`How many more does bar ${tall} show than the other two bars together?`, `长条 ${tall} 比另外两条合起来多多少？`],
+            c - a - b,
+            [c - a, c - b, c + a + b, a + b],
+            [
+              `The other two make $${a} + ${b} = ${a + b}$, and $${c} - ${a + b} = ${c - a - b}$.`,
+              `另外两条合起来是 $${a} + ${b} = ${a + b}$，$${c} - ${a + b} = ${c - a - b}$。`,
+            ],
+            barGraphFigure(labels, order, 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["how-many-in-all-on-a-graph#how-many-more-than-the-other-two"],
+    },
   ],
 );
 
@@ -2557,64 +2649,70 @@ const namingSolidShapes = earlyTopic(
   ["defining-attributes-of-shapes"],
   ["1.G.A.1", "1.G.A.2"],
   [
-    earlyPoint(
-      "the-name-of-a-solid",
-      ["The name of a solid", "立体图形的名称"],
-      [
-        "Solid shapes are not flat, so you can hold them in your hand. A box of cereal is a rectangular prism, and a number cube is a cube. A can of soup is a cylinder, and a party hat is a cone. A ball is a sphere, and a pyramid has a pointed top with sides shaped like triangles.",
-        "立体图形不是扁平的，可以拿在手里。一盒麦片是长方体，一个数字方块是正方体。一个汤罐头是圆柱，一顶派对帽是圆锥。一个球就是球体，棱锥有一个尖顶，侧面是三角形。",
-      ],
-      (rng) => {
-        const kind = rng.pick(allSolids);
-        const others = rng.sample(
-          allSolids.filter((k) => k !== kind),
-          3,
-        );
-        const name = solidName(kind);
-        return choose(
-          rng,
-          ["What is the name of this solid shape?", "这个立体图形叫什么？"],
-          [name[0], name[1]],
-          others.map((k) => solidName(k)),
-          [solidReason(kind)[0], solidReason(kind)[1]],
-          solidFigure(kind, rng.pick([0.9, 1, 1.1, 1.2, 1.3])),
-        );
-      },
-    ),
-    earlyPoint(
-      "what-a-solid-can-do",
-      ["What a solid can do", "立体图形的特点"],
-      [
-        "Curved surfaces roll, and flat surfaces stack. A sphere has no flat faces and rolls in every direction. A cylinder has two flat circles and rolls on its side. A cone has one flat circle and a point. A cube and a rectangular prism have six flat faces, so they stack well and do not roll at all.",
-        "曲面能滚，平面能叠。球没有平面，朝哪个方向都能滚。圆柱有两个圆形的平面，躺倒就能滚。圆锥有一个圆形的平面和一个尖顶。正方体和长方体有六个平面，能叠得很稳，根本不会滚。",
-      ],
-      (rng) => {
-        const clue = rng.pick<{ en: string; zh: string; kind: SolidKind }>([
-          { en: "has no flat faces and rolls in every direction", zh: "没有平面，朝哪个方向都能滚", kind: "sphere" },
-          { en: "has two flat circles and rolls on its side", zh: "有两个圆形的平面，躺倒能滚", kind: "cylinder" },
-          { en: "has one flat circle and a point on top", zh: "有一个圆形的平面和一个尖顶", kind: "cone" },
-          { en: "has six square faces that are all the same size", zh: "有六个大小相同的正方形面", kind: "cube" },
-          { en: "has six flat faces, and not all of them are squares", zh: "有六个平面，但不都是正方形", kind: "box" },
-          {
-            en: "has a flat bottom and faces shaped like triangles that meet at a point",
-            zh: "底面是平的，三角形的面在顶上交于一点",
-            kind: "pyramid",
-          },
-        ]);
-        const others = rng.sample(
-          allSolids.filter((k) => k !== clue.kind),
-          3,
-        );
-        const name = solidName(clue.kind);
-        return choose(
-          rng,
-          [`Which shape ${clue.en}?`, `哪个图形${clue.zh}？`],
-          [name[0], name[1]],
-          others.map((k) => solidName(k)),
-          [`A ${name[0]} ${clue.en}.`, `${name[1]}${clue.zh}。`],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-name-of-a-solid",
+        ["The name of a solid", "立体图形的名称"],
+        [
+          "Solid shapes are not flat, so you can hold them in your hand. A box of cereal is a rectangular prism, and a number cube is a cube. A can of soup is a cylinder, and a party hat is a cone. A ball is a sphere, and a pyramid has a pointed top with sides shaped like triangles.",
+          "立体图形不是扁平的，可以拿在手里。一盒麦片是长方体，一个数字方块是正方体。一个汤罐头是圆柱，一顶派对帽是圆锥。一个球就是球体，棱锥有一个尖顶，侧面是三角形。",
+        ],
+        (rng) => {
+          const kind = rng.pick(allSolids);
+          const others = rng.sample(
+            allSolids.filter((k) => k !== kind),
+            3,
+          );
+          const name = solidName(kind);
+          return choose(
+            rng,
+            ["What is the name of this solid shape?", "这个立体图形叫什么？"],
+            [name[0], name[1]],
+            others.map((k) => solidName(k)),
+            [solidReason(kind)[0], solidReason(kind)[1]],
+            solidFigure(kind, rng.pick([0.9, 1, 1.1, 1.2, 1.3])),
+          );
+        },
+      ),
+      figure: gradeDrawings2["naming-solid-shapes#the-name-of-a-solid"],
+    },
+    {
+      ...earlyPoint(
+        "what-a-solid-can-do",
+        ["What a solid can do", "立体图形的特点"],
+        [
+          "Curved surfaces roll, and flat surfaces stack. A sphere has no flat faces and rolls in every direction. A cylinder has two flat circles and rolls on its side. A cone has one flat circle and a point. A cube and a rectangular prism have six flat faces, so they stack well and do not roll at all.",
+          "曲面能滚，平面能叠。球没有平面，朝哪个方向都能滚。圆柱有两个圆形的平面，躺倒就能滚。圆锥有一个圆形的平面和一个尖顶。正方体和长方体有六个平面，能叠得很稳，根本不会滚。",
+        ],
+        (rng) => {
+          const clue = rng.pick<{ en: string; zh: string; kind: SolidKind }>([
+            { en: "has no flat faces and rolls in every direction", zh: "没有平面，朝哪个方向都能滚", kind: "sphere" },
+            { en: "has two flat circles and rolls on its side", zh: "有两个圆形的平面，躺倒能滚", kind: "cylinder" },
+            { en: "has one flat circle and a point on top", zh: "有一个圆形的平面和一个尖顶", kind: "cone" },
+            { en: "has six square faces that are all the same size", zh: "有六个大小相同的正方形面", kind: "cube" },
+            { en: "has six flat faces, and not all of them are squares", zh: "有六个平面，但不都是正方形", kind: "box" },
+            {
+              en: "has a flat bottom and faces shaped like triangles that meet at a point",
+              zh: "底面是平的，三角形的面在顶上交于一点",
+              kind: "pyramid",
+            },
+          ]);
+          const others = rng.sample(
+            allSolids.filter((k) => k !== clue.kind),
+            3,
+          );
+          const name = solidName(clue.kind);
+          return choose(
+            rng,
+            [`Which shape ${clue.en}?`, `哪个图形${clue.zh}？`],
+            [name[0], name[1]],
+            others.map((k) => solidName(k)),
+            [`A ${name[0]} ${clue.en}.`, `${name[1]}${clue.zh}。`],
+          );
+        },
+      ),
+      figure: gradeDrawings2["naming-solid-shapes#what-a-solid-can-do"],
+    },
     earlyPoint(
       "counting-solids-in-a-row",
       ["Counting solids in a row", "数一排立体图形"],

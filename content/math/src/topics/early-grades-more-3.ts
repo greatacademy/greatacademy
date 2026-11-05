@@ -5,7 +5,6 @@
 import type { CourseDef, Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { svgDocument } from "@ga/subject-math";
-
 import {
   arrayFigure,
   barGraphFigure,
@@ -18,6 +17,8 @@ import {
   polygonFigure,
 } from "../early-grades-kit.ts";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import {
   areaModelFigure,
   beakerFigure,
@@ -297,39 +298,42 @@ const factFamilies = earlyTopic(
   ["relating-multiplication-and-division"],
   ["3.OA.B.6"],
   [
-    earlyPoint(
-      "the-missing-number-in-a-triangle",
-      ["The missing number in a triangle", "三角形中缺少的数"],
-      [
-        "A fact triangle shows three numbers that belong together. The product goes on top, and the two factors go at the bottom corners. If the top is missing, multiply the two corners. If a corner is missing, divide the top by the corner you can see. The same triangle gives you two multiplication facts and two division facts.",
-        "算式三角形表示三个有关系的数。积写在上面，两个因数写在下面的两个角上。上面的数不知道，就把下面两个数相乘。下面的数不知道，就用上面的数除以看得到的那个因数。一个三角形可以写出两个乘法算式和两个除法算式。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const b = rng.int(2, 9);
-        const product = a * b;
-        const where = rng.int(0, 2);
-        const answer = where === 0 ? product : where === 1 ? a : b;
-        return whole(
-          [
-            "The top number is the product of the two bottom numbers. What number goes at the question mark?",
-            "上面的数是下面两个数的积。问号处应该填几？",
-          ],
-          answer,
-          where === 0 ? [a + b, product + a, product - b] : [product - (where === 1 ? b : a), product, product + (where === 1 ? b : a)],
-          where === 0
-            ? [
-                `The top is the product of the bottom two: $${times(a, b)} = ${product}$.`,
-                `上面的数是下面两个数的积：$${times(a, b)} = ${product}$。`,
-              ]
-            : [
-                `A missing bottom number times the other gives the top, so divide the top by the other: $${div(product, where === 1 ? b : a)} = ${answer}$.`,
-                `下面缺的数乘另一个数得上面的数，所以用上面的数除以另一个数：$${div(product, where === 1 ? b : a)} = ${answer}$。`,
-              ],
-          factTriangleFigure(where === 0 ? null : product, where === 1 ? null : a, where === 2 ? null : b, "×"),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-missing-number-in-a-triangle",
+        ["The missing number in a triangle", "三角形中缺少的数"],
+        [
+          "A fact triangle shows three numbers that belong together. The product goes on top, and the two factors go at the bottom corners. If the top is missing, multiply the two corners. If a corner is missing, divide the top by the corner you can see. The same triangle gives you two multiplication facts and two division facts.",
+          "算式三角形表示三个有关系的数。积写在上面，两个因数写在下面的两个角上。上面的数不知道，就把下面两个数相乘。下面的数不知道，就用上面的数除以看得到的那个因数。一个三角形可以写出两个乘法算式和两个除法算式。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 9);
+          const b = rng.int(2, 9);
+          const product = a * b;
+          const where = rng.int(0, 2);
+          const answer = where === 0 ? product : where === 1 ? a : b;
+          return whole(
+            [
+              "The top number is the product of the two bottom numbers. What number goes at the question mark?",
+              "上面的数是下面两个数的积。问号处应该填几？",
+            ],
+            answer,
+            where === 0 ? [a + b, product + a, product - b] : [product - (where === 1 ? b : a), product, product + (where === 1 ? b : a)],
+            where === 0
+              ? [
+                  `The top is the product of the bottom two: $${times(a, b)} = ${product}$.`,
+                  `上面的数是下面两个数的积：$${times(a, b)} = ${product}$。`,
+                ]
+              : [
+                  `A missing bottom number times the other gives the top, so divide the top by the other: $${div(product, where === 1 ? b : a)} = ${answer}$.`,
+                  `下面缺的数乘另一个数得上面的数，所以用上面的数除以另一个数：$${div(product, where === 1 ? b : a)} = ${answer}$。`,
+                ],
+            factTriangleFigure(where === 0 ? null : product, where === 1 ? null : a, where === 2 ? null : b, "×"),
+          );
+        },
+      ),
+      figure: gradeDrawings2["fact-families-for-multiplying-and-dividing#the-missing-number-in-a-triangle"],
+    },
     earlyPoint(
       "division-as-a-missing-factor",
       ["Division as a missing factor", "把除法看成求因数"],
@@ -464,32 +468,35 @@ const areaModels = earlyTopic(
   ["splitting-a-factor-to-multiply", "area-of-a-rectangle-by-multiplying"],
   ["3.MD.C.7", "3.OA.B.5"],
   [
-    earlyPoint(
-      "the-area-of-one-part",
-      ["The area of one part", "一部分的面积"],
-      [
-        "A larger multiplication can be drawn as a rectangle. Split the long side into tens and ones, so the rectangle has two parts. Each part is a smaller multiplication. The side of each part goes on the outside, and its area goes on the inside. To find a part's area, multiply the two sides of that part only.",
-        "较大的乘法可以画成一个长方形。把长边分成十和一，长方形就分成了两部分，每部分都是一个较小的乘法。每部分的边长写在外面，面积写在里面。求一部分的面积，只要把这部分的两条边相乘。",
-      ],
-      (rng) => {
-        const h = rng.int(3, 8);
-        const ones = rng.int(2, 9);
-        const tensPart = rng.bool();
-        const answer = tensPart ? 10 * h : ones * h;
-        return whole(
-          ["What is the area of the part with the question mark?", "问号这部分的面积是多少？"],
-          answer,
-          tensPart ? [h + 10, h, 10 * h + ones * h] : [h + ones, ones, 10 * h + ones * h],
-          tensPart
-            ? [`This part is $${h}$ by 10, and $${times(h, 10)} = ${answer}$.`, `这部分是 $${h}$ 乘 10，$${times(h, 10)} = ${answer}$。`]
-            : [
-                `This part is $${h}$ by ${ones}, and $${times(h, ones)} = ${answer}$.`,
-                `这部分是 $${h}$ 乘 ${ones}，$${times(h, ones)} = ${answer}$。`,
-              ],
-          areaModelFigure(h, [10, ones], tensPart ? ["?", `${ones * h}`] : [`${10 * h}`, "?"]),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-area-of-one-part",
+        ["The area of one part", "一部分的面积"],
+        [
+          "A larger multiplication can be drawn as a rectangle. Split the long side into tens and ones, so the rectangle has two parts. Each part is a smaller multiplication. The side of each part goes on the outside, and its area goes on the inside. To find a part's area, multiply the two sides of that part only.",
+          "较大的乘法可以画成一个长方形。把长边分成十和一，长方形就分成了两部分，每部分都是一个较小的乘法。每部分的边长写在外面，面积写在里面。求一部分的面积，只要把这部分的两条边相乘。",
+        ],
+        (rng) => {
+          const h = rng.int(3, 8);
+          const ones = rng.int(2, 9);
+          const tensPart = rng.bool();
+          const answer = tensPart ? 10 * h : ones * h;
+          return whole(
+            ["What is the area of the part with the question mark?", "问号这部分的面积是多少？"],
+            answer,
+            tensPart ? [h + 10, h, 10 * h + ones * h] : [h + ones, ones, 10 * h + ones * h],
+            tensPart
+              ? [`This part is $${h}$ by 10, and $${times(h, 10)} = ${answer}$.`, `这部分是 $${h}$ 乘 10，$${times(h, 10)} = ${answer}$。`]
+              : [
+                  `This part is $${h}$ by ${ones}, and $${times(h, ones)} = ${answer}$.`,
+                  `这部分是 $${h}$ 乘 ${ones}，$${times(h, ones)} = ${answer}$。`,
+                ],
+            areaModelFigure(h, [10, ones], tensPart ? ["?", `${ones * h}`] : [`${10 * h}`, "?"]),
+          );
+        },
+      ),
+      figure: gradeDrawings2["area-models-for-multiplying#the-area-of-one-part"],
+    },
     {
       ...earlyPoint(
         "adding-the-two-parts",
@@ -527,17 +534,29 @@ const areaModels = earlyTopic(
         const h = rng.int(3, 9);
         const ones = rng.int(2, 9);
         const n = 10 + ones;
-        return chooseMath(
-          rng,
-          [`Which is the same as $${times(h, n)}$?`, `哪个算式和 $${times(h, n)}$ 相等？`],
-          `${times(h, 10)} + ${times(h, ones)}`,
-          rng.shuffle([
-            `${times(h, 10)} + ${ones}`,
-            `${h} + ${times(10, ones)}`,
-            `${times(h, 10)} \\times ${times(h, ones)}`,
-            `${times(h, 1)} + ${times(h, ones)}`,
-          ]),
-          [`${n} is 10 and ${ones}, and each part is multiplied by ${h}.`, `${n} 是 10 和 ${ones}，两部分都要乘 ${h}。`],
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Which is the same as $${times(h, n)}$?`, `哪个算式和 $${times(h, n)}$ 相等？`],
+            `${times(h, 10)} + ${times(h, ones)}`,
+            rng.shuffle([
+              `${times(h, 10)} + ${ones}`,
+              `${h} + ${times(10, ones)}`,
+              `${times(h, 10)} \\times ${times(h, ones)}`,
+              `${times(h, 1)} + ${times(h, ones)}`,
+            ]),
+            [`${n} is 10 and ${ones}, and each part is multiplied by ${h}.`, `${n} 是 10 和 ${ones}，两部分都要乘 ${h}。`],
+          ),
+          [
+            [`$${times(h, 10)} + ${ones}$`, `The ${ones} must also be multiplied by ${h}.`, `${ones} 也要乘以 ${h}。`],
+            [
+              `$${h} + ${times(10, ones)}$`,
+              `This multiplies 10 by ${ones} and leaves ${h} on its own, but both parts of ${n} are multiplied by ${h}.`,
+              `这里用 10 乘 ${ones}，而 ${h} 单独放着，但 ${n} 的两部分都要乘以 ${h}。`,
+            ],
+            [`$${times(h, 10)} \\times ${times(h, ones)}$`, "The two parts are added, not multiplied.", "两部分要相加，不是相乘。"],
+            [`$${times(h, 1)} + ${times(h, ones)}$`, `The tens part of ${n} is 10, not 1.`, `${n} 中十的部分是 10，不是 1。`],
+          ],
         );
       },
     ),
@@ -1181,31 +1200,34 @@ const equivalentOnLines = earlyTopic(
   ["equal-fractions-with-pictures"],
   ["3.NF.A.3"],
   [
-    earlyPoint(
-      "the-same-point-on-two-lines",
-      ["The same point on two lines", "两条线上的同一点"],
-      [
-        "Two fractions are equal if they sit at the same point on the number line. To see this, draw one line under another, both from 0 to 1. If one line is cut into twice as many spaces, then each mark on the top line lines up with a mark on the bottom line. The two names are for the same number.",
-        "两个分数如果在数轴的同一个位置，它们就相等。可以把一条数轴画在另一条下面，都从 0 到 1。如果下面一条分的格数是上面的两倍，上面的每个刻度都会对着下面的一个刻度。这两个名称说的是同一个数。",
-      ],
-      (rng) => {
-        const { n, d, m, e } = pickEqualPair(rng);
-        return chooseMath(
-          rng,
-          [
-            `The top dot shows $${fr(n, d)}$. What fraction on the bottom line is equal to it?`,
-            `上面的点表示 $${fr(n, d)}$。下面数轴上哪个分数和它相等？`,
-          ],
-          fr(m, e),
-          rng.shuffle([fr(n, e), fr(m, d), fr(m + 1, e), fr(m === 1 ? 3 : m - 1, e)]),
-          [
-            `It lines up with the mark ${m} ${m === 1 ? "space" : "spaces"} along the bottom line, which has ${e} spaces.`,
-            `它对着下面数轴的第 ${m} 格，下面的数轴一共有 ${e} 格。`,
-          ],
-          twoFractionLinesFigure(d, n, e, m),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-same-point-on-two-lines",
+        ["The same point on two lines", "两条线上的同一点"],
+        [
+          "Two fractions are equal if they sit at the same point on the number line. To see this, draw one line under another, both from 0 to 1. If one line is cut into twice as many spaces, then each mark on the top line lines up with a mark on the bottom line. The two names are for the same number.",
+          "两个分数如果在数轴的同一个位置，它们就相等。可以把一条数轴画在另一条下面，都从 0 到 1。如果下面一条分的格数是上面的两倍，上面的每个刻度都会对着下面的一个刻度。这两个名称说的是同一个数。",
+        ],
+        (rng) => {
+          const { n, d, m, e } = pickEqualPair(rng);
+          return chooseMath(
+            rng,
+            [
+              `The top dot shows $${fr(n, d)}$. What fraction on the bottom line is equal to it?`,
+              `上面的点表示 $${fr(n, d)}$。下面数轴上哪个分数和它相等？`,
+            ],
+            fr(m, e),
+            rng.shuffle([fr(n, e), fr(m, d), fr(m + 1, e), fr(m === 1 ? 3 : m - 1, e)]),
+            [
+              `It lines up with the mark ${m} ${m === 1 ? "space" : "spaces"} along the bottom line, which has ${e} spaces.`,
+              `它对着下面数轴的第 ${m} 格，下面的数轴一共有 ${e} 格。`,
+            ],
+            twoFractionLinesFigure(d, n, e, m),
+          );
+        },
+      ),
+      figure: gradeDrawings2["equivalent-fractions-on-number-lines#the-same-point-on-two-lines"],
+    },
     earlyPoint(
       "spaces-on-the-bottom-line",
       ["Spaces on the bottom line", "下面数轴上的格数"],
@@ -1442,29 +1464,32 @@ const comparingWithPictures = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "comparing-on-two-lines",
-      ["Comparing on two lines", "用两条数轴比较"],
-      [
-        "On number lines of the same length, the fraction farther to the right is the greater one. It does not matter how the lines are cut. Find each dot, and see which is farther from 0. If the dots line up, the fractions are equal. This method also works well for fractions with quite different bottom numbers.",
-        "在一样长的数轴上，越靠右的分数越大，和数轴怎样分没有关系。找到每个点，看哪个离 0 更远。如果两个点对齐，两个分数就相等。分母差得很多的分数，也可以用这个方法。",
-      ],
-      (rng) => {
-        const [d1, d2] = rng.sample([2, 3, 4, 6, 8], 2) as [number, number];
-        const n1 = rng.int(1, d1 - 1);
-        const n2 = rng.int(1, d2 - 1);
-        const diff = n1 * d2 - n2 * d1;
-        return compareProblem(
-          fr(n1, d1),
-          fr(n2, d2),
-          diff < 0 ? 0 : diff === 0 ? 1 : 2,
-          diff === 0
-            ? t("The two dots line up, so the fractions are equal.", "两个点对齐，所以两个分数相等。")
-            : t(`The ${diff > 0 ? "top" : "bottom"} dot is farther from 0.`, `${diff > 0 ? "上面" : "下面"}的点离 0 更远。`),
-          twoFractionLinesFigure(d1, n1, d2, n2),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "comparing-on-two-lines",
+        ["Comparing on two lines", "用两条数轴比较"],
+        [
+          "On number lines of the same length, the fraction farther to the right is the greater one. It does not matter how the lines are cut. Find each dot, and see which is farther from 0. If the dots line up, the fractions are equal. This method also works well for fractions with quite different bottom numbers.",
+          "在一样长的数轴上，越靠右的分数越大，和数轴怎样分没有关系。找到每个点，看哪个离 0 更远。如果两个点对齐，两个分数就相等。分母差得很多的分数，也可以用这个方法。",
+        ],
+        (rng) => {
+          const [d1, d2] = rng.sample([2, 3, 4, 6, 8], 2) as [number, number];
+          const n1 = rng.int(1, d1 - 1);
+          const n2 = rng.int(1, d2 - 1);
+          const diff = n1 * d2 - n2 * d1;
+          return compareProblem(
+            fr(n1, d1),
+            fr(n2, d2),
+            diff < 0 ? 0 : diff === 0 ? 1 : 2,
+            diff === 0
+              ? t("The two dots line up, so the fractions are equal.", "两个点对齐，所以两个分数相等。")
+              : t(`The ${diff > 0 ? "top" : "bottom"} dot is farther from 0.`, `${diff > 0 ? "上面" : "下面"}的点离 0 更远。`),
+            twoFractionLinesFigure(d1, n1, d2, n2),
+          );
+        },
+      ),
+      figure: gradeDrawings2["comparing-fractions-with-pictures-and-lines#comparing-on-two-lines"],
+    },
     earlyPoint(
       "the-whole-matters",
       ["The whole matters", "整体很重要"],
@@ -1532,16 +1557,32 @@ const elapsedOnALine = earlyTopic(
           const after = 5 * rng.int(2, 8);
           const end = start + toHour + after;
           const answer = clockText(end);
-          return choose(
-            rng,
-            ["The jumps start at the first time. What time do they end?", "从第一个时间开始跳。跳到什么时间结束？"],
-            [answer, answer],
-            rng.shuffle([clockText(end + 60), clockText(end - 60), clockText(end - 10), clockText(end + 10)]).map((s): Pair => [s, s]),
+          return reasoned(
+            choose(
+              rng,
+              ["The jumps start at the first time. What time do they end?", "从第一个时间开始跳。跳到什么时间结束？"],
+              [answer, answer],
+              rng.shuffle([clockText(end + 60), clockText(end - 60), clockText(end - 10), clockText(end + 10)]).map((s): Pair => [s, s]),
+              [
+                `${toHour} minutes reach ${clockText(start + toHour)}, and ${after} more minutes reach ${answer}.`,
+                `${toHour} 分钟到 ${clockText(start + toHour)}，再过 ${after} 分钟到 ${answer}。`,
+              ],
+              timeHopsFigure([start, start + toHour, end], true),
+            ),
             [
-              `${toHour} minutes reach ${clockText(start + toHour)}, and ${after} more minutes reach ${answer}.`,
-              `${toHour} 分钟到 ${clockText(start + toHour)}，再过 ${after} 分钟到 ${answer}。`,
+              [
+                clockText(end + 60),
+                "This is one hour too late: the jumps add only minutes here.",
+                "这晚了一小时：这里的跳跃加的只是分钟。",
+              ],
+              [
+                clockText(end - 60),
+                "This is one hour too early: the hour changes when the jumps pass the hour mark.",
+                "这早了一小时：跳跃经过整点时，小时才会变。",
+              ],
+              [clockText(end - 10), "This is 10 minutes too early: add both jumps.", "这早了 10 分钟：两次跳跃都要加上。"],
+              [clockText(end + 10), "This is 10 minutes too late: add only the two jumps.", "这晚了 10 分钟：只加这两次跳跃。"],
             ],
-            timeHopsFigure([start, start + toHour, end], true),
           );
         },
       ),
@@ -1933,32 +1974,35 @@ const halfSymbols = earlyTopic(
   ["scaled-picture-graphs"],
   ["3.MD.B.3"],
   [
-    earlyPoint(
-      "what-half-a-symbol-means",
-      ["What half a symbol means", "半个图案表示多少"],
-      [
-        "In a picture graph, a key tells you what one whole symbol stands for. Half a symbol stands for half of that amount. So if a whole circle means 10 books, a half circle means 5 books. Halves only work for keys that can be cut in half evenly, such as 2, 4, 6 and 10, so graphs like these use those keys.",
-        "象形统计图的图例告诉你一个完整的图案表示多少。半个图案就表示它的一半。所以如果一个圆表示 10 本书，半个圆就表示 5 本书。只有 2、4、6、10 这样能平均分成两半的数，才能这样用半个图案，所以这种图常用这些数作图例。",
-      ],
-      (rng) => {
-        const per = rng.pick([2, 4, 6, 8, 10, 20]);
-        const rowCount = rng.int(2, 3);
-        const labels = ["A", "B", "C"].slice(0, rowCount);
-        return whole(
-          [
-            `In this graph, each whole circle stands for ${per} books. How many books does a half circle stand for?`,
-            `在这张图中，一个完整的圆表示 ${per} 本书。半个圆表示多少本书？`,
-          ],
-          per / 2,
-          [per, 2 * per, per - 1],
-          [
-            `A half circle stands for half of what a whole circle does, and half of ${per} is ${per / 2}.`,
-            `半个圆表示的是一个圆的一半，${per} 的一半是 ${per / 2}。`,
-          ],
-          halfPictureGraphFigure(labels, halfDots(rng, rowCount)),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "what-half-a-symbol-means",
+        ["What half a symbol means", "半个图案表示多少"],
+        [
+          "In a picture graph, a key tells you what one whole symbol stands for. Half a symbol stands for half of that amount. So if a whole circle means 10 books, a half circle means 5 books. Halves only work for keys that can be cut in half evenly, such as 2, 4, 6 and 10, so graphs like these use those keys.",
+          "象形统计图的图例告诉你一个完整的图案表示多少。半个图案就表示它的一半。所以如果一个圆表示 10 本书，半个圆就表示 5 本书。只有 2、4、6、10 这样能平均分成两半的数，才能这样用半个图案，所以这种图常用这些数作图例。",
+        ],
+        (rng) => {
+          const per = rng.pick([2, 4, 6, 8, 10, 20]);
+          const rowCount = rng.int(2, 3);
+          const labels = ["A", "B", "C"].slice(0, rowCount);
+          return whole(
+            [
+              `In this graph, each whole circle stands for ${per} books. How many books does a half circle stand for?`,
+              `在这张图中，一个完整的圆表示 ${per} 本书。半个圆表示多少本书？`,
+            ],
+            per / 2,
+            [per, 2 * per, per - 1],
+            [
+              `A half circle stands for half of what a whole circle does, and half of ${per} is ${per / 2}.`,
+              `半个圆表示的是一个圆的一半，${per} 的一半是 ${per / 2}。`,
+            ],
+            halfPictureGraphFigure(labels, halfDots(rng, rowCount)),
+          );
+        },
+      ),
+      figure: gradeDrawings2["picture-graphs-with-half-symbols#what-half-a-symbol-means"],
+    },
     {
       ...earlyPoint(
         "reading-a-row-with-a-half",
@@ -1992,37 +2036,40 @@ const halfSymbols = earlyTopic(
       ),
       figure: gradeDrawings["reading-a-row-with-a-half"],
     },
-    earlyPoint(
-      "comparing-rows-with-halves",
-      ["Comparing rows with halves", "比较有半个图案的行"],
-      [
-        "To compare two rows, you can find the value of each row and subtract. There is also a quicker way. Find how many more symbols one row has, and multiply that by the key. If one row has $1\\frac{1}{2}$ more circles and each circle is 4, then it has $4 + 2$, or 6, more. Either way gives the same answer.",
-        "要比较两行，可以先算出每行的值，再相减。还有一种更快的办法：先看一行比另一行多几个图案，再乘图例的数。如果一行多 $1\\frac{1}{2}$ 个圆，每个圆表示 4，就多 $4 + 2$，等于 6。两种方法答案一样。",
-      ],
-      (rng) => {
-        const per = rng.pick([2, 4, 6, 10]);
-        const labels = ["A", "B", "C"];
-        const dots = halfDots(rng, 3);
-        const [i, j] = rng.sample([0, 1, 2], 2) as [number, number];
-        dots[i] = (dots[j] as number) + rng.int(1, 3) + 0.5;
-        const big = dots[i] as number;
-        const small = dots[j] as number;
-        const answer = (big - small) * per;
-        return whole(
-          [
-            `Each whole circle stands for ${per} votes. How many more votes does row ${labels[i]} have than row ${labels[j]}?`,
-            `一个完整的圆表示 ${per} 票。${labels[i]} 这一行比 ${labels[j]} 这一行多多少票？`,
-          ],
-          answer,
-          [big - small + 0.5, big * per, small * per, answer + per].map((v) => Math.round(v)),
-          [
-            `Row ${labels[i]} has ${big * per} votes and row ${labels[j]} has ${small * per}, and $${big * per} - ${small * per} = ${answer}$.`,
-            `${labels[i]} 这一行有 ${big * per} 票，${labels[j]} 这一行有 ${small * per} 票，$${big * per} - ${small * per} = ${answer}$。`,
-          ],
-          halfPictureGraphFigure(labels, dots),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "comparing-rows-with-halves",
+        ["Comparing rows with halves", "比较有半个图案的行"],
+        [
+          "To compare two rows, you can find the value of each row and subtract. There is also a quicker way. Find how many more symbols one row has, and multiply that by the key. If one row has $1\\frac{1}{2}$ more circles and each circle is 4, then it has $4 + 2$, or 6, more. Either way gives the same answer.",
+          "要比较两行，可以先算出每行的值，再相减。还有一种更快的办法：先看一行比另一行多几个图案，再乘图例的数。如果一行多 $1\\frac{1}{2}$ 个圆，每个圆表示 4，就多 $4 + 2$，等于 6。两种方法答案一样。",
+        ],
+        (rng) => {
+          const per = rng.pick([2, 4, 6, 10]);
+          const labels = ["A", "B", "C"];
+          const dots = halfDots(rng, 3);
+          const [i, j] = rng.sample([0, 1, 2], 2) as [number, number];
+          dots[i] = (dots[j] as number) + rng.int(1, 3) + 0.5;
+          const big = dots[i] as number;
+          const small = dots[j] as number;
+          const answer = (big - small) * per;
+          return whole(
+            [
+              `Each whole circle stands for ${per} votes. How many more votes does row ${labels[i]} have than row ${labels[j]}?`,
+              `一个完整的圆表示 ${per} 票。${labels[i]} 这一行比 ${labels[j]} 这一行多多少票？`,
+            ],
+            answer,
+            [big - small + 0.5, big * per, small * per, answer + per].map((v) => Math.round(v)),
+            [
+              `Row ${labels[i]} has ${big * per} votes and row ${labels[j]} has ${small * per}, and $${big * per} - ${small * per} = ${answer}$.`,
+              `${labels[i]} 这一行有 ${big * per} 票，${labels[j]} 这一行有 ${small * per} 票，$${big * per} - ${small * per} = ${answer}$。`,
+            ],
+            halfPictureGraphFigure(labels, dots),
+          );
+        },
+      ),
+      figure: gradeDrawings2["picture-graphs-with-half-symbols#comparing-rows-with-halves"],
+    },
   ],
 );
 
@@ -2036,66 +2083,72 @@ const choosingScale = earlyTopic(
   ["scaled-bar-graphs"],
   ["3.MD.B.3"],
   [
-    earlyPoint(
-      "which-scale-fits",
-      ["Which scale fits", "哪种刻度合适"],
-      [
-        "A good scale lets all the bars fit on the graph, and lets you read them exactly. If the numbers are all multiples of 5, a scale that counts by 5s is a good choice. A scale that counts by 1s would make the graph much too tall, and a scale that counts by 100s would make all of the bars tiny and hard to read.",
-        "好的刻度能让所有的条都画得下，读起来也准确。如果这些数都是 5 的倍数，按 5 增加的刻度就很合适。按 1 增加，图就太高了。按 100 增加，所有的条都很矮，很难读。",
-      ],
-      (rng) => {
-        const options: readonly { step: number; say: Pair }[] = [
-          { step: 2, say: ["Count by 2s", "按 2 增加"] },
-          { step: 5, say: ["Count by 5s", "按 5 增加"] },
-          { step: 10, say: ["Count by 10s", "按 10 增加"] },
-          { step: 100, say: ["Count by 100s", "按 100 增加"] },
-          { step: 1000, say: ["Count by 1000s", "按 1000 增加"] },
-        ];
-        const at = rng.int(0, 3);
-        const best = options[at] as (typeof options)[number];
-        const pool: readonly number[] = best.step === 5 ? [1, 3, 5, 7, 9] : [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const data = rng.sample(pool, 4).map((v) => v * best.step);
-        const others = options.filter((o) => o !== best);
-        return choose(
-          rng,
-          [
-            `These numbers go on a bar graph: ${data.join(", ")}. Which scale is the best choice?`,
-            `要把这些数画成条形图：${data.join("、")}。哪种刻度最合适？`,
-          ],
-          best.say,
-          rng.shuffle(others).map((o) => o.say),
-          [
-            `All of the numbers are multiples of ${best.step}, and a scale counting by ${best.step}s fits them with a graph of a good size.`,
-            `这些数都是 ${best.step} 的倍数，按 ${best.step} 增加的刻度，图的大小也正合适。`,
-          ],
-        );
-      },
-    ),
-    earlyPoint(
-      "how-many-spaces-tall",
-      ["How many spaces tall", "画多少格高"],
-      [
-        "When a scale counts by more than 1, a bar is not as many spaces tall as its value. To find the height, divide the value by the step. A value of 35 on a scale counting by 5s is 7 spaces tall, as $35 \\div 5 = 7$. If you drew 35 spaces, then the bar would not fit on the graph.",
-        "刻度不是按 1 增加时，条的格数和它表示的数不一样。求高度，就用这个数除以每格的大小。按 5 增加的刻度上，35 就是 7 格高，因为 $35 \\div 5 = 7$。如果画 35 格，就画不下了。",
-      ],
-      (rng) => {
-        const step = rng.pick([2, 5, 10, 20]);
-        const spaces = rng.int(2, 9);
-        const value = step * spaces;
-        return whole(
-          [
-            `A bar graph's scale counts by ${step}s. How many spaces tall should a bar for ${value} be?`,
-            `条形图的刻度按 ${step} 增加。表示 ${value} 的条应该画多少格高？`,
-          ],
-          spaces,
-          [value, value + step, spaces + 1],
-          [
-            `Each space stands for ${step}, so divide: $${div(value, step)} = ${spaces}$ spaces.`,
-            `每格表示 ${step}，所以用除法：$${div(value, step)} = ${spaces}$ 格。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "which-scale-fits",
+        ["Which scale fits", "哪种刻度合适"],
+        [
+          "A good scale lets all the bars fit on the graph, and lets you read them exactly. If the numbers are all multiples of 5, a scale that counts by 5s is a good choice. A scale that counts by 1s would make the graph much too tall, and a scale that counts by 100s would make all of the bars tiny and hard to read.",
+          "好的刻度能让所有的条都画得下，读起来也准确。如果这些数都是 5 的倍数，按 5 增加的刻度就很合适。按 1 增加，图就太高了。按 100 增加，所有的条都很矮，很难读。",
+        ],
+        (rng) => {
+          const options: readonly { step: number; say: Pair }[] = [
+            { step: 2, say: ["Count by 2s", "按 2 增加"] },
+            { step: 5, say: ["Count by 5s", "按 5 增加"] },
+            { step: 10, say: ["Count by 10s", "按 10 增加"] },
+            { step: 100, say: ["Count by 100s", "按 100 增加"] },
+            { step: 1000, say: ["Count by 1000s", "按 1000 增加"] },
+          ];
+          const at = rng.int(0, 3);
+          const best = options[at] as (typeof options)[number];
+          const pool: readonly number[] = best.step === 5 ? [1, 3, 5, 7, 9] : [1, 2, 3, 4, 5, 6, 7, 8, 9];
+          const data = rng.sample(pool, 4).map((v) => v * best.step);
+          const others = options.filter((o) => o !== best);
+          return choose(
+            rng,
+            [
+              `These numbers go on a bar graph: ${data.join(", ")}. Which scale is the best choice?`,
+              `要把这些数画成条形图：${data.join("、")}。哪种刻度最合适？`,
+            ],
+            best.say,
+            rng.shuffle(others).map((o) => o.say),
+            [
+              `All of the numbers are multiples of ${best.step}, and a scale counting by ${best.step}s fits them with a graph of a good size.`,
+              `这些数都是 ${best.step} 的倍数，按 ${best.step} 增加的刻度，图的大小也正合适。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["choosing-a-scale-and-drawing-bars#which-scale-fits"],
+    },
+    {
+      ...earlyPoint(
+        "how-many-spaces-tall",
+        ["How many spaces tall", "画多少格高"],
+        [
+          "When a scale counts by more than 1, a bar is not as many spaces tall as its value. To find the height, divide the value by the step. A value of 35 on a scale counting by 5s is 7 spaces tall, as $35 \\div 5 = 7$. If you drew 35 spaces, then the bar would not fit on the graph.",
+          "刻度不是按 1 增加时，条的格数和它表示的数不一样。求高度，就用这个数除以每格的大小。按 5 增加的刻度上，35 就是 7 格高，因为 $35 \\div 5 = 7$。如果画 35 格，就画不下了。",
+        ],
+        (rng) => {
+          const step = rng.pick([2, 5, 10, 20]);
+          const spaces = rng.int(2, 9);
+          const value = step * spaces;
+          return whole(
+            [
+              `A bar graph's scale counts by ${step}s. How many spaces tall should a bar for ${value} be?`,
+              `条形图的刻度按 ${step} 增加。表示 ${value} 的条应该画多少格高？`,
+            ],
+            spaces,
+            [value, value + step, spaces + 1],
+            [
+              `Each space stands for ${step}, so divide: $${div(value, step)} = ${spaces}$ spaces.`,
+              `每格表示 ${step}，所以用除法：$${div(value, step)} = ${spaces}$ 格。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["choosing-a-scale-and-drawing-bars#how-many-spaces-tall"],
+    },
     earlyPoint(
       "reading-a-bar-between-marks",
       ["Reading a bar between marks", "读两个刻度之间的条"],
@@ -2446,21 +2499,47 @@ const lShapes = earlyTopic(
         ],
         (rng) => {
           const { w, h, cw, ch, area } = lData(rng);
-          return chooseMath(
-            rng,
-            ["Which calculation gives the area of this shape?", "哪个算式能算出这个图形的面积？"],
-            `${times(w, h)} - ${times(cw, ch)}`,
-            rng.shuffle([
-              `${times(w, h)} + ${times(cw, ch)}`,
-              `${w} + ${h} - ${cw} - ${ch}`,
-              `${times(w - cw, h - ch)}`,
-              `${times(w, h)} - ${cw + ch}`,
-            ]),
+          // A 2 by 2 corner has as much area as its sides add up to, so the sum would be right there.
+          const notTheCorner = cw + ch === cw * ch ? ([cw, `${cw}`] as const) : ([cw + ch, `${cw} + ${ch}`] as const);
+          return reasoned(
+            chooseMath(
+              rng,
+              ["Which calculation gives the area of this shape?", "哪个算式能算出这个图形的面积？"],
+              `${times(w, h)} - ${times(cw, ch)}`,
+              rng.shuffle([
+                `${times(w, h)} + ${times(cw, ch)}`,
+                `${w} + ${h} - ${cw} - ${ch}`,
+                `${times(w - cw, h - ch)}`,
+                `${times(w, h)} - ${notTheCorner[0]}`,
+              ]),
+              [
+                `The big rectangle is $${times(w, h)}$, and the missing corner is $${times(cw, ch)}$. The area is ${area}.`,
+                `大长方形是 $${times(w, h)}$，缺掉的角是 $${times(cw, ch)}$，面积是 ${area}。`,
+              ],
+              lShapeFigure(w, h, cw, ch, { bottom: `${w}`, left: `${h}`, notchBottom: `${cw}`, notchSide: `${ch}` }),
+            ),
             [
-              `The big rectangle is $${times(w, h)}$, and the missing corner is $${times(cw, ch)}$. The area is ${area}.`,
-              `大长方形是 $${times(w, h)}$，缺掉的角是 $${times(cw, ch)}$，面积是 ${area}。`,
+              [
+                `$${times(w, h)} + ${times(cw, ch)}$`,
+                "The corner is missing, so its area is taken away, not added.",
+                "这个角是缺的，所以它的面积要减去，不是加上。",
+              ],
+              [
+                `$${w} + ${h} - ${cw} - ${ch}$`,
+                "This adds and subtracts side lengths, but area comes from multiplying.",
+                "这是在加减边长，但面积要用乘法。",
+              ],
+              [
+                `$${times(w - cw, h - ch)}$`,
+                "This is only the small rectangle left at one corner: the L shape has more than that.",
+                "这只是一角剩下的小长方形：L 形比它大。",
+              ],
+              [
+                `$${times(w, h)} - ${notTheCorner[0]}$`,
+                `The corner's area is $${times(cw, ch)}$, not $${notTheCorner[1]}$.`,
+                `这个角的面积是 $${times(cw, ch)}$，不是 $${notTheCorner[1]}$。`,
+              ],
             ],
-            lShapeFigure(w, h, cw, ch, { bottom: `${w}`, left: `${h}`, notchBottom: `${cw}`, notchSide: `${ch}` }),
           );
         },
       ),
@@ -2661,74 +2740,80 @@ const quadCategories = earlyTopic(
       ),
       figure: gradeDrawings["naming-the-special-quadrilaterals"],
     },
-    earlyPoint(
-      "which-statement-is-true",
-      ["Which statement is true", "哪句话是对的"],
-      [
-        "Categories can overlap. Every square is a rectangle, because it has 4 square corners. Every square is also a rhombus, because it has 4 equal sides. All three are quadrilaterals. But the reverse is not always true: many rectangles are not squares, and many rhombuses are not squares. Think of a picture to test each statement.",
-        "类别之间可以重叠。每个正方形都是长方形，因为它有 4 个直角。每个正方形也都是菱形，因为它有 4 条相等的边。这三种都是四边形。但反过来不一定对：很多长方形不是正方形，很多菱形也不是正方形。想一个图形来检验每句话。",
-      ],
-      (rng) => {
-        const yes = rng.pick<Pair>([
-          ["Every square is a rectangle", "每个正方形都是长方形"],
-          ["Every square is a rhombus", "每个正方形都是菱形"],
-          ["Every rectangle is a quadrilateral", "每个长方形都是四边形"],
-          ["Every rhombus is a quadrilateral", "每个菱形都是四边形"],
-          ["Every square is a quadrilateral", "每个正方形都是四边形"],
-          ["Some rectangles are squares", "有些长方形是正方形"],
-          ["Some rhombuses are squares", "有些菱形是正方形"],
-        ]);
-        return choose(
-          rng,
-          ["Which statement is true?", "哪句话是对的？"],
-          yes,
-          rng.shuffle<Pair>([
-            ["Every rectangle is a square", "每个长方形都是正方形"],
-            ["Every rhombus is a square", "每个菱形都是正方形"],
-            ["Every quadrilateral is a rectangle", "每个四边形都是长方形"],
-            ["Every quadrilateral is a rhombus", "每个四边形都是菱形"],
-            ["No square is a rectangle", "正方形都不是长方形"],
-            ["No rhombus is a quadrilateral", "菱形都不是四边形"],
-          ]),
-          [
-            `"${yes[0]}" is true, and the others each have a shape that shows they are false.`,
-            `“${yes[1]}”是对的，其他几句话都能找到不符合的图形。`,
-          ],
-        );
-      },
-    ),
-    earlyPoint(
-      "quadrilaterals-of-other-kinds",
-      ["Quadrilaterals of other kinds", "其他的四边形"],
-      [
-        "A quadrilateral is any closed shape with 4 straight sides, and many quadrilaterals belong to none of the special categories. A shape can have 4 sides of different lengths and no square corners. It is still a quadrilateral, even though it is not a rectangle, a rhombus or a square. Count the sides to decide.",
-        "四边形是有 4 条直边的封闭图形。很多四边形不属于任何一种特殊的类别。一个图形可以有 4 条长短不同的边，也没有直角，它还是四边形，虽然不是长方形、菱形或正方形。数一数边就能判断。",
-      ],
-      (rng) => {
-        const corners: [number, number][] = [
-          [rng.int(0, 2), rng.int(2, 3)],
-          [rng.int(7, 10), rng.int(0, 1)],
-          [rng.int(6, 9), rng.int(7, 9)],
-          [rng.int(1, 3), rng.int(5, 6)],
-        ];
-        return choose(
-          rng,
-          ["Which statement about this shape is true?", "关于这个图形，哪句话是对的？"],
-          ["It is a quadrilateral, but not a rectangle", "它是四边形，但不是长方形"],
-          rng.shuffle<Pair>([
-            ["It is a rectangle", "它是长方形"],
-            ["It is a square", "它是正方形"],
-            ["It is not a quadrilateral", "它不是四边形"],
-            ["It is a rhombus", "它是菱形"],
-          ]),
-          [
-            "It has 4 straight sides, but its sides are not all equal and its corners are not square.",
-            "它有 4 条直边，但边不都相等，角也不是直角。",
-          ],
-          polygonFigure(corners, t("A closed shape with straight sides.", "一个由直边围成的封闭图形。")),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "which-statement-is-true",
+        ["Which statement is true", "哪句话是对的"],
+        [
+          "Categories can overlap. Every square is a rectangle, because it has 4 square corners. Every square is also a rhombus, because it has 4 equal sides. All three are quadrilaterals. But the reverse is not always true: many rectangles are not squares, and many rhombuses are not squares. Think of a picture to test each statement.",
+          "类别之间可以重叠。每个正方形都是长方形，因为它有 4 个直角。每个正方形也都是菱形，因为它有 4 条相等的边。这三种都是四边形。但反过来不一定对：很多长方形不是正方形，很多菱形也不是正方形。想一个图形来检验每句话。",
+        ],
+        (rng) => {
+          const yes = rng.pick<Pair>([
+            ["Every square is a rectangle", "每个正方形都是长方形"],
+            ["Every square is a rhombus", "每个正方形都是菱形"],
+            ["Every rectangle is a quadrilateral", "每个长方形都是四边形"],
+            ["Every rhombus is a quadrilateral", "每个菱形都是四边形"],
+            ["Every square is a quadrilateral", "每个正方形都是四边形"],
+            ["Some rectangles are squares", "有些长方形是正方形"],
+            ["Some rhombuses are squares", "有些菱形是正方形"],
+          ]);
+          return choose(
+            rng,
+            ["Which statement is true?", "哪句话是对的？"],
+            yes,
+            rng.shuffle<Pair>([
+              ["Every rectangle is a square", "每个长方形都是正方形"],
+              ["Every rhombus is a square", "每个菱形都是正方形"],
+              ["Every quadrilateral is a rectangle", "每个四边形都是长方形"],
+              ["Every quadrilateral is a rhombus", "每个四边形都是菱形"],
+              ["No square is a rectangle", "正方形都不是长方形"],
+              ["No rhombus is a quadrilateral", "菱形都不是四边形"],
+            ]),
+            [
+              `"${yes[0]}" is true, and the others each have a shape that shows they are false.`,
+              `“${yes[1]}”是对的，其他几句话都能找到不符合的图形。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["quadrilateral-categories#which-statement-is-true"],
+    },
+    {
+      ...earlyPoint(
+        "quadrilaterals-of-other-kinds",
+        ["Quadrilaterals of other kinds", "其他的四边形"],
+        [
+          "A quadrilateral is any closed shape with 4 straight sides, and many quadrilaterals belong to none of the special categories. A shape can have 4 sides of different lengths and no square corners. It is still a quadrilateral, even though it is not a rectangle, a rhombus or a square. Count the sides to decide.",
+          "四边形是有 4 条直边的封闭图形。很多四边形不属于任何一种特殊的类别。一个图形可以有 4 条长短不同的边，也没有直角，它还是四边形，虽然不是长方形、菱形或正方形。数一数边就能判断。",
+        ],
+        (rng) => {
+          const corners: [number, number][] = [
+            [rng.int(0, 2), rng.int(2, 3)],
+            [rng.int(7, 10), rng.int(0, 1)],
+            [rng.int(6, 9), rng.int(7, 9)],
+            [rng.int(1, 3), rng.int(5, 6)],
+          ];
+          return choose(
+            rng,
+            ["Which statement about this shape is true?", "关于这个图形，哪句话是对的？"],
+            ["It is a quadrilateral, but not a rectangle", "它是四边形，但不是长方形"],
+            rng.shuffle<Pair>([
+              ["It is a rectangle", "它是长方形"],
+              ["It is a square", "它是正方形"],
+              ["It is not a quadrilateral", "它不是四边形"],
+              ["It is a rhombus", "它是菱形"],
+            ]),
+            [
+              "It has 4 straight sides, but its sides are not all equal and its corners are not square.",
+              "它有 4 条直边，但边不都相等，角也不是直角。",
+            ],
+            polygonFigure(corners, t("A closed shape with straight sides.", "一个由直边围成的封闭图形。")),
+          );
+        },
+      ),
+      figure: gradeDrawings2["quadrilateral-categories#quadrilaterals-of-other-kinds"],
+    },
   ],
 );
 

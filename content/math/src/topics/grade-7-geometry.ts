@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Compass, dec, linear, type Mark, type Point, Q, sketch } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, numberProblem, pointLatex, steps, unitLatex, verdictChoice, yesNo } from "../problems.ts";
 import { rectangle, scaleneTriangle, sides } from "./area.ts";
@@ -254,6 +255,7 @@ export const measuresOfSegments = topic(
     },
     {
       id: "lengths-on-a-number-line",
+      figure: gradeDrawings3["measures-of-segments#lengths-on-a-number-line"],
       title: t("Lengths on a number line", "数轴上的长度"),
       explanation: t(
         "On a number line, the length of a segment is the larger coordinate minus the smaller one. For $A$ at $-6$ and $B$ at $2$, $AB = 2 - (-6) = 8$. Counting the units from $-6$ to $0$ and from $0$ to $2$ gives the same $6 + 2 = 8$; subtracting $6 - 2 = 4$ would be wrong.",
@@ -468,6 +470,7 @@ export const midpoints = topic(
   [
     {
       id: "midpoint-on-a-number-line",
+      figure: gradeDrawings3["midpoints#midpoint-on-a-number-line"],
       title: t("The midpoint on a number line", "数轴上的中点"),
       explanation: t(
         "The midpoint of $\\overline{AB}$ with $A$ at $-7$ and $B$ at $4$ is at $\\frac{-7 + 4}{2} = \\frac{-3}{2} = -1.5$. Check: from $-7$ to $-1.5$ is $5.5$ units, and from $-1.5$ to $4$ is also $5.5$ units. Half the length, $\\frac{4 - (-7)}{2} = 5.5$, is the distance to the midpoint, not its coordinate.",
@@ -675,6 +678,7 @@ export const collinearPoints = topic(
     },
     {
       id: "collinear-points-in-the-coordinate-plane",
+      figure: gradeDrawings3["collinear-points#collinear-points-in-the-coordinate-plane"],
       title: t("Collinear points in the coordinate plane", "坐标平面中的共线点"),
       explanation: t(
         "$A(3, -2)$ and $B(3, 4)$ have the same $x$-coordinate, so they lie on a vertical line, and every point with $x$-coordinate $3$, such as $(3, 9)$, is collinear with them. $P(1, 1)$ and $Q(3, 4)$ are $2$ right and $3$ up from each other; repeating that step from $Q$ gives $(5, 7)$, which is on the same line.",
@@ -961,6 +965,7 @@ export const segmentBisectorsAndThePerpendicularBisectorTheorem = topic(
     },
     {
       id: "the-perpendicular-bisector-theorem",
+      figure: gradeDrawings3["segment-bisectors-and-the-perpendicular-bisector-theorem#the-perpendicular-bisector-theorem"],
       title: t("The perpendicular bisector theorem", "垂直平分线定理"),
       explanation: t(
         "Line $\\ell$ is the perpendicular bisector of $\\overline{AB}$, and $P$ is on $\\ell$. By the theorem, $PA = PB$. If $PA = 4x - 3$ and $PB = 2x + 9$, then $4x - 3 = 2x + 9$, so $x = 6$ and $PA = PB = 21$.",
@@ -1113,6 +1118,7 @@ export const congruentAngles = topic(
   [
     {
       id: "identifying-congruent-angles",
+      figure: gradeDrawings3["congruent-angles#identifying-congruent-angles"],
       title: t("Identifying congruent angles", "辨认全等的角"),
       explanation: t(
         "Two angles are **congruent**, written $\\angle ABC \\cong \\angle DEF$, when $m\\angle ABC = m\\angle DEF$. Only the opening between the arms matters: an angle of $40^\\circ$ with long arms is congruent to an angle of $40^\\circ$ with short arms that points the other way.",
@@ -1348,6 +1354,7 @@ export const complementaryAngles = topic(
   [
     {
       id: "complements-in-a-figure",
+      figure: gradeDrawings3["complementary-angles#complements-in-a-figure"],
       title: t("Complements in a figure", "图中的余角"),
       explanation: t(
         "A small square at a vertex marks a right angle. If a ray splits a right angle into a $35^\\circ$ angle and an angle $x^\\circ$, then $x + 35 = 90$, so $x = 55$.",
@@ -1389,6 +1396,7 @@ export const supplementaryAngles = topic(
   [
     {
       id: "supplements-in-a-figure",
+      figure: gradeDrawings3["supplementary-angles#supplements-in-a-figure"],
       title: t("Supplements in a figure", "图中的补角"),
       explanation: t(
         "A straight angle measures $180^\\circ$. If a ray from a point on a line splits the straight angle into a $112^\\circ$ angle and an angle $x^\\circ$, then $x + 112 = 180$, so $x = 68$.",
@@ -1452,6 +1460,7 @@ export const angleBisectors = topic(
   [
     {
       id: "halves-and-wholes",
+      figure: gradeDrawings3["angle-bisectors#halves-and-wholes"],
       title: t("Halves and wholes", "一半与整体"),
       explanation: t(
         "If $\\overrightarrow{BD}$ bisects $\\angle ABC$ and $m\\angle ABC = 84^\\circ$, then each half is $84 \\div 2 = 42^\\circ$. If instead $m\\angle DBC = 42^\\circ$ is given, the whole angle is $2 \\cdot 42 = 84^\\circ$.",
@@ -1622,6 +1631,7 @@ export const solvingProblemsWithAngles = topic(
   [
     {
       id: "angles-on-a-line-and-around-a-point",
+      figure: gradeDrawings3["solving-problems-with-angles#angles-on-a-line-and-around-a-point"],
       title: t("Angles on a line and around a point", "直线上与一点周围的角"),
       explanation: t(
         "Rays from a point on a line split the straight angle: if the parts are $40^\\circ$, $x^\\circ$ and $65^\\circ$, then $x = 180 - 40 - 65 = 75$. Rays from a point split the full turn: if the angles are $90^\\circ$, $120^\\circ$, $85^\\circ$ and $x^\\circ$, then $x = 360 - 90 - 120 - 85 = 65$.",
@@ -1682,6 +1692,7 @@ export const solvingProblemsWithAngles = topic(
     },
     {
       id: "chaining-angle-relationships",
+      figure: gradeDrawings3["solving-problems-with-angles#chaining-angle-relationships"],
       title: t("Chaining angle relationships", "连用多个角的关系"),
       explanation: t(
         "Lines $AB$ and $CD$ cross at $O$, and $\\overrightarrow{OE} \\perp \\overline{AB}$. If $m\\angle COE = 30^\\circ$, then $\\angle AOC$ is the rest of the right angle $\\angle AOE$: $90 - 30 = 60^\\circ$. Its vertical angle $\\angle BOD$ is also $60^\\circ$, and $\\angle AOD$, its supplement along line $CD$, is $180 - 60 = 120^\\circ$.",
@@ -1804,6 +1815,7 @@ export const heightsOfTriangles = topic(
   [
     {
       id: "recognizing-a-height",
+      figure: gradeDrawings3["heights-of-triangles#recognizing-a-height"],
       title: t("Recognizing a height", "认出三角形的高"),
       explanation: t(
         "The height to base $\\overline{BC}$ starts at the opposite vertex $A$ and meets the line through $B$ and $C$ at a right angle. It is usually not a side and usually does not go to the midpoint of $\\overline{BC}$.\n\nIf the angle at $B$ or $C$ is obtuse, the height falls outside the triangle: extend $\\overline{BC}$ and drop the perpendicular from $A$ to the extension.",
@@ -1871,6 +1883,7 @@ export const heightsOfTriangles = topic(
     },
     {
       id: "heights-in-the-coordinate-plane",
+      figure: gradeDrawings3["heights-of-triangles#heights-in-the-coordinate-plane"],
       title: t("Heights in the coordinate plane", "坐标平面中的高"),
       explanation: t(
         "When the base is horizontal, the height is vertical, so its length is the difference of the $y$-coordinates of the opposite vertex and the base. For $A(1, 2)$, $B(7, 2)$ and $C(9, 6)$, the height to $\\overline{AB}$ is $6 - 2 = 4$. It does not matter that $C$ is not above $\\overline{AB}$: the height falls outside the triangle.\n\nWhen the base is vertical, the height is horizontal and is the difference of the $x$-coordinates.",
@@ -1953,6 +1966,7 @@ export const propertiesOfRectanglesAndSquares = topic(
   [
     {
       id: "diagonals-of-rectangles",
+      figure: gradeDrawings3["properties-of-rectangles-and-squares#diagonals-of-rectangles"],
       title: t("Diagonals of rectangles", "长方形的对角线"),
       explanation: t(
         "In rectangle $ABCD$ with diagonals meeting at $E$, the diagonals are congruent and bisect each other, so\n\n$$AE = BE = CE = DE \\quad\\text{and}\\quad AC = BD = 2 \\cdot AE.$$\n\nIf $AE = 2x + 3$ and $DE = 4x - 7$, then $2x + 3 = 4x - 7$, so $x = 5$ and $AE = 13$. If instead $AC = 5x + 2$ and $BE = 2x + 4$, then $5x + 2 = 2(2x + 4)$, so $x = 6$.",
@@ -2013,6 +2027,7 @@ export const propertiesOfRectanglesAndSquares = topic(
     },
     {
       id: "angles-in-rectangles",
+      figure: gradeDrawings3["properties-of-rectangles-and-squares#angles-in-rectangles"],
       title: t("Angles in rectangles", "长方形中的角"),
       explanation: t(
         "Each corner of a rectangle is $90^\\circ$, and a diagonal cuts the rectangle into two right triangles. If diagonal $\\overline{AC}$ makes $m\\angle BAC = 35^\\circ$, then\n\n- $m\\angle CAD = 90 - 35 = 55^\\circ$, the rest of the corner at $A$;\n- $m\\angle BCA = 180 - 90 - 35 = 55^\\circ$, from the angles of $\\triangle ABC$;\n- $m\\angle ACD = 90 - 55 = 35^\\circ$, the rest of the corner at $C$.",
@@ -2072,6 +2087,7 @@ export const propertiesOfRectanglesAndSquares = topic(
     },
     {
       id: "diagonals-of-squares",
+      figure: gradeDrawings3["properties-of-rectangles-and-squares#diagonals-of-squares"],
       title: t("Diagonals of squares", "正方形的对角线"),
       explanation: t(
         "In square $ABCD$ with diagonals meeting at $E$:\n\n- the four segments $AE$, $BE$, $CE$ and $DE$ are equal, as in any rectangle;\n- the diagonals are perpendicular, so $m\\angle AEB = 90^\\circ$;\n- each diagonal splits a corner in half, so $m\\angle BAC = 45^\\circ$.\n\nIf $m\\angle ABD = (3x + 6)^\\circ$, then $3x + 6 = 45$ and $x = 13$.",
@@ -2239,6 +2255,7 @@ export const propertiesOfTrapezoids = topic(
     },
     {
       id: "isosceles-trapezoids-with-algebra",
+      figure: gradeDrawings3["properties-of-trapezoids#isosceles-trapezoids-with-algebra"],
       title: t("Isosceles trapezoids with algebra", "用方程解等腰梯形问题"),
       explanation: t(
         "In an isosceles trapezoid $ABCD$ with bases $\\overline{AB}$ and $\\overline{DC}$, the legs are congruent, $AD = BC$, and so are the diagonals, $AC = BD$. If $AC = 3x - 4$ and $BD = x + 10$, then $3x - 4 = x + 10$, so $x = 7$ and each diagonal is $17$.",
@@ -2284,6 +2301,7 @@ export const propertiesOfTrapezoids = topic(
     },
     {
       id: "the-midsegment-of-a-trapezoid",
+      figure: gradeDrawings3["properties-of-trapezoids#the-midsegment-of-a-trapezoid"],
       title: t("The midsegment of a trapezoid", "梯形的中位线"),
       explanation: t(
         "The **midsegment** of a trapezoid joins the midpoints of its legs. It is parallel to the bases, and its length is their average:\n\n$$m = \\frac{b_1 + b_2}{2}.$$\n\nWith bases $10$ and $16$, the midsegment is $\\frac{10 + 16}{2} = 13$. With one base $10$ and midsegment $13$, the other base is $2 \\cdot 13 - 10 = 16$.",

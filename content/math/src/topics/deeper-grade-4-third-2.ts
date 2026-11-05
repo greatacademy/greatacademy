@@ -4,8 +4,8 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import { earlyNames, lowestNumerator } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -741,31 +741,34 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
     ),
   ],
   "plotting-decimals-on-number-lines": [
-    skill(
-      "hundredth-steps-between-two-decimals",
-      ["Hundredth steps between two decimals", "两个小数之间的百分之一步"],
-      [
-        "Each tenth on a number line holds ten hundredths. To count the steps of 0.01 between two decimals, write both in hundredths and subtract.",
-        "数轴上每个十分之一有十个百分之一。要数两个小数之间有几步 0.01，就把它们都写成百分之几再相减。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 8);
-        const b = rng.int(a * 10 + 1, 99);
-        const bText = (b / 100).toFixed(2);
-        return whole(
-          [
-            `A point starts at $0.${a}$ and moves in steps of $0.01$ up to $${bText}$. How many steps does it take?`,
-            `一个点从 $0.${a}$ 出发，每步走 $0.01$，走到 $${bText}$。要走多少步？`,
-          ],
-          b - a * 10,
-          [b - a, b, b - a * 10 + 1],
-          [
-            `$0.${a}$ is ${a * 10} hundredths and $${bText}$ is ${b} hundredths, and $${b} - ${a * 10} = ${b - a * 10}$.`,
-            `$0.${a}$ 是 ${a * 10} 个百分之一，$${bText}$ 是 ${b} 个百分之一，$${b} - ${a * 10} = ${b - a * 10}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "hundredth-steps-between-two-decimals",
+        ["Hundredth steps between two decimals", "两个小数之间的百分之一步"],
+        [
+          "Each tenth on a number line holds ten hundredths. To count the steps of 0.01 between two decimals, write both in hundredths and subtract.",
+          "数轴上每个十分之一有十个百分之一。要数两个小数之间有几步 0.01，就把它们都写成百分之几再相减。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 8);
+          const b = rng.int(a * 10 + 1, 99);
+          const bText = (b / 100).toFixed(2);
+          return whole(
+            [
+              `A point starts at $0.${a}$ and moves in steps of $0.01$ up to $${bText}$. How many steps does it take?`,
+              `一个点从 $0.${a}$ 出发，每步走 $0.01$，走到 $${bText}$。要走多少步？`,
+            ],
+            b - a * 10,
+            [b - a, b, b - a * 10 + 1],
+            [
+              `$0.${a}$ is ${a * 10} hundredths and $${bText}$ is ${b} hundredths, and $${b} - ${a * 10} = ${b - a * 10}$.`,
+              `$0.${a}$ 是 ${a * 10} 个百分之一，$${bText}$ 是 ${b} 个百分之一，$${b} - ${a * 10} = ${b - a * 10}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["plotting-decimals-on-number-lines#hundredth-steps-between-two-decimals"],
+    },
   ],
   "converting-fractions-to-decimals": [
     skill(
@@ -1043,153 +1046,165 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
     ),
   ],
   "measuring-angles-using-a-protractor": [
-    skill(
-      "the-other-scale-of-a-protractor",
-      ["The other scale of a protractor", "量角器的另一圈刻度"],
-      [
-        "A protractor has two scales that run opposite ways, and the two numbers at any mark add to $180$. If a reading does not fit how the angle looks, the other scale is the one to use.",
-        "量角器有两圈方向相反的刻度，同一刻度线上的两个数相加等于 $180$。如果读数与角的样子不符，就应该用另一圈刻度。",
-      ],
-      (rng) => {
-        const wrong = rng.int(91, 175);
-        return whole(
-          [
-            `An angle is clearly acute, but a student read $${wrong}^\\circ$ from the wrong scale of a protractor. What is its measure, in degrees?`,
-            `一个角明显是锐角，但学生从量角器的错误刻度上读到 $${wrong}^\\circ$。它是多少度？`,
-          ],
-          180 - wrong,
-          [wrong - 90, 90 - (wrong - 90) + 10, 360 - wrong],
-          [
-            `The two scales add to $180$ at each mark: $180 - ${wrong} = ${180 - wrong}$.`,
-            `同一刻度线上的两个数相加是 $180$：$180 - ${wrong} = ${180 - wrong}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-other-scale-of-a-protractor",
+        ["The other scale of a protractor", "量角器的另一圈刻度"],
+        [
+          "A protractor has two scales that run opposite ways, and the two numbers at any mark add to $180$. If a reading does not fit how the angle looks, the other scale is the one to use.",
+          "量角器有两圈方向相反的刻度，同一刻度线上的两个数相加等于 $180$。如果读数与角的样子不符，就应该用另一圈刻度。",
+        ],
+        (rng) => {
+          const wrong = rng.int(91, 175);
+          return whole(
+            [
+              `An angle is clearly acute, but a student read $${wrong}^\\circ$ from the wrong scale of a protractor. What is its measure, in degrees?`,
+              `一个角明显是锐角，但学生从量角器的错误刻度上读到 $${wrong}^\\circ$。它是多少度？`,
+            ],
+            180 - wrong,
+            [wrong - 90, 90 - (wrong - 90) + 10, 360 - wrong],
+            [
+              `The two scales add to $180$ at each mark: $180 - ${wrong} = ${180 - wrong}$.`,
+              `同一刻度线上的两个数相加是 $180$：$180 - ${wrong} = ${180 - wrong}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["measuring-angles-using-a-protractor#the-other-scale-of-a-protractor"],
+    },
   ],
   "right-straight-full-and-null-angles": [
-    skill(
-      "how-far-a-minute-hand-turns",
-      ["How far a minute hand turns", "分针转过的角度"],
-      [
-        "A full turn is $360^\\circ$ and the minute hand makes one in $60$ minutes. So it sweeps $6^\\circ$ each minute, and a quarter of an hour is a right angle.",
-        "转一整圈是 $360^\\circ$，分针 $60$ 分钟转一圈。所以每分钟转 $6^\\circ$，一刻钟正好是一个直角。",
-      ],
-      (rng) => {
-        const m = rng.int(1, 60);
-        return whole(
-          [`How many degrees does a clock's minute hand turn in ${m} minute${m > 1 ? "s" : ""}?`, `钟面上的分针 ${m} 分钟转过多少度？`],
-          6 * m,
-          [m, 30 * m, 360 - 6 * m],
-          [
-            `Each minute is $360 \\div 60 = 6$ degrees, so $${m} \\times 6 = ${6 * m}$.`,
-            `每分钟转 $360 \\div 60 = 6$ 度，所以 $${m} \\times 6 = ${6 * m}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "how-far-a-minute-hand-turns",
+        ["How far a minute hand turns", "分针转过的角度"],
+        [
+          "A full turn is $360^\\circ$ and the minute hand makes one in $60$ minutes. So it sweeps $6^\\circ$ each minute, and a quarter of an hour is a right angle.",
+          "转一整圈是 $360^\\circ$，分针 $60$ 分钟转一圈。所以每分钟转 $6^\\circ$，一刻钟正好是一个直角。",
+        ],
+        (rng) => {
+          const m = rng.int(1, 60);
+          return whole(
+            [`How many degrees does a clock's minute hand turn in ${m} minute${m > 1 ? "s" : ""}?`, `钟面上的分针 ${m} 分钟转过多少度？`],
+            6 * m,
+            [m, 30 * m, 360 - 6 * m],
+            [
+              `Each minute is $360 \\div 60 = 6$ degrees, so $${m} \\times 6 = ${6 * m}$.`,
+              `每分钟转 $360 \\div 60 = 6$ 度，所以 $${m} \\times 6 = ${6 * m}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["right-straight-full-and-null-angles#how-far-a-minute-hand-turns"],
+    },
   ],
   "classifying-figures-based-on-angles": [
-    skill(
-      "classifying-from-two-angles",
-      ["Classifying from two angles", "由两个角判断类型"],
-      [
-        "The angles of a triangle total $180^\\circ$, so two angles fix the third. Find it before classifying, since the third angle may be the right or obtuse one.",
-        "三角形的内角和是 $180^\\circ$，所以知道两个角就能求出第三个。先求出它再判断类型，因为第三个角可能是直角或钝角。",
-      ],
-      (rng) => {
-        const kind = rng.int(0, 2);
-        const c = kind === 0 ? rng.int(50, 85) : kind === 1 ? 90 : rng.int(95, 150);
-        const a = rng.int(5, 180 - c - 5);
-        const b = 180 - c - a;
-        if (kind === 0 && (a >= 90 || b >= 90)) {
-          const fixedA = rng.int(50, 85);
-          const fixedC = rng.int(Math.max(50, 95 - fixedA), 85);
-          const fixedB = 180 - fixedA - fixedC;
+    {
+      ...skill(
+        "classifying-from-two-angles",
+        ["Classifying from two angles", "由两个角判断类型"],
+        [
+          "The angles of a triangle total $180^\\circ$, so two angles fix the third. Find it before classifying, since the third angle may be the right or obtuse one.",
+          "三角形的内角和是 $180^\\circ$，所以知道两个角就能求出第三个。先求出它再判断类型，因为第三个角可能是直角或钝角。",
+        ],
+        (rng) => {
+          const kind = rng.int(0, 2);
+          const c = kind === 0 ? rng.int(50, 85) : kind === 1 ? 90 : rng.int(95, 150);
+          const a = rng.int(5, 180 - c - 5);
+          const b = 180 - c - a;
+          if (kind === 0 && (a >= 90 || b >= 90)) {
+            const fixedA = rng.int(50, 85);
+            const fixedC = rng.int(Math.max(50, 95 - fixedA), 85);
+            const fixedB = 180 - fixedA - fixedC;
+            return choose(
+              rng,
+              [
+                `Two angles of a triangle measure $${fixedA}^\\circ$ and $${fixedB}^\\circ$. What kind of triangle is it?`,
+                `三角形的两个角是 $${fixedA}^\\circ$ 和 $${fixedB}^\\circ$。它是什么三角形？`,
+              ],
+              ["Acute", "锐角三角形"],
+              [
+                ["Right", "直角三角形"],
+                ["Obtuse", "钝角三角形"],
+              ],
+              [
+                `The third angle is $${fixedC}^\\circ$, and all three are under $90^\\circ$.`,
+                `第三个角是 $${fixedC}^\\circ$，三个角都小于 $90^\\circ$。`,
+              ],
+            );
+          }
+          const names: readonly Pair[] = [
+            ["Acute", "锐角三角形"],
+            ["Right", "直角三角形"],
+            ["Obtuse", "钝角三角形"],
+          ];
           return choose(
             rng,
             [
-              `Two angles of a triangle measure $${fixedA}^\\circ$ and $${fixedB}^\\circ$. What kind of triangle is it?`,
-              `三角形的两个角是 $${fixedA}^\\circ$ 和 $${fixedB}^\\circ$。它是什么三角形？`,
+              `Two angles of a triangle measure $${a}^\\circ$ and $${b}^\\circ$. What kind of triangle is it?`,
+              `三角形的两个角是 $${a}^\\circ$ 和 $${b}^\\circ$。它是什么三角形？`,
             ],
-            ["Acute", "锐角三角形"],
-            [
-              ["Right", "直角三角形"],
-              ["Obtuse", "钝角三角形"],
-            ],
-            [
-              `The third angle is $${fixedC}^\\circ$, and all three are under $90^\\circ$.`,
-              `第三个角是 $${fixedC}^\\circ$，三个角都小于 $90^\\circ$。`,
-            ],
-          );
-        }
-        const names: readonly Pair[] = [
-          ["Acute", "锐角三角形"],
-          ["Right", "直角三角形"],
-          ["Obtuse", "钝角三角形"],
-        ];
-        return choose(
-          rng,
-          [
-            `Two angles of a triangle measure $${a}^\\circ$ and $${b}^\\circ$. What kind of triangle is it?`,
-            `三角形的两个角是 $${a}^\\circ$ 和 $${b}^\\circ$。它是什么三角形？`,
-          ],
-          names[kind]!,
-          names.filter((_, i) => i !== kind),
-          kind === 0
-            ? [
-                `The third angle is $${c}^\\circ$, and all three are under $90^\\circ$.`,
-                `第三个角是 $${c}^\\circ$，三个角都小于 $90^\\circ$。`,
-              ]
-            : kind === 1
+            names[kind]!,
+            names.filter((_, i) => i !== kind),
+            kind === 0
               ? [
-                  `The third angle is $180^\\circ - ${a + b}^\\circ = 90^\\circ$, a right angle.`,
-                  `第三个角是 $180^\\circ - ${a + b}^\\circ = 90^\\circ$，是直角。`,
+                  `The third angle is $${c}^\\circ$, and all three are under $90^\\circ$.`,
+                  `第三个角是 $${c}^\\circ$，三个角都小于 $90^\\circ$。`,
                 ]
-              : [
-                  `The third angle is $180^\\circ - ${a + b}^\\circ = ${c}^\\circ$, which is obtuse.`,
-                  `第三个角是 $180^\\circ - ${a + b}^\\circ = ${c}^\\circ$，是钝角。`,
-                ],
-        );
-      },
-    ),
+              : kind === 1
+                ? [
+                    `The third angle is $180^\\circ - ${a + b}^\\circ = 90^\\circ$, a right angle.`,
+                    `第三个角是 $180^\\circ - ${a + b}^\\circ = 90^\\circ$，是直角。`,
+                  ]
+                : [
+                    `The third angle is $180^\\circ - ${a + b}^\\circ = ${c}^\\circ$, which is obtuse.`,
+                    `第三个角是 $180^\\circ - ${a + b}^\\circ = ${c}^\\circ$，是钝角。`,
+                  ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["classifying-figures-based-on-angles#classifying-from-two-angles"],
+    },
   ],
   "parallel-and-perpendicular-lines": [
-    skill(
-      "chains-of-line-relations",
-      ["Chains of line relations", "直线关系的传递"],
-      [
-        "In a flat plane, two lines perpendicular to the same line never meet, so they are parallel. A line perpendicular to one of two parallel lines is perpendicular to the other as well.",
-        "在同一平面内，垂直于同一条直线的两条直线不相交，所以互相平行。垂直于两条平行线之一的直线，也垂直于另一条。",
-      ],
-      (rng) => {
-        const [a, b, c] = rng.sample(["k", "l", "m", "n", "p", "q", "r", "s"], 3) as [string, string, string];
-        const form = rng.int(0, 2);
-        const sign = (x: boolean) => (x ? "\\perp" : "\\parallel");
-        const first = form !== 1;
-        const second = form !== 1 ? form === 0 : false;
-        const isParallel = first === second;
-        const parallel: Pair = ["Parallel", "平行"];
-        const perpendicular: Pair = ["Perpendicular", "垂直"];
-        return choose(
-          rng,
-          [
-            `In a plane, line $${a} ${sign(first)} ${b}$ and line $${b} ${sign(second)} ${c}$. How are lines $${a}$ and $${c}$ related?`,
-            `在同一平面内，$${a} ${sign(first)} ${b}$，$${b} ${sign(second)} ${c}$。直线 $${a}$ 和 $${c}$ 有什么关系？`,
-          ],
-          isParallel ? parallel : perpendicular,
-          [isParallel ? perpendicular : parallel, ["They meet, but not at a right angle", "相交但不垂直"]],
-          isParallel
-            ? [
-                `Both relations to $${b}$ match, so $${a}$ and $${c}$ run the same way and never meet.`,
-                `两条直线与 $${b}$ 的关系相同，所以 $${a}$ 和 $${c}$ 方向相同，不会相交。`,
-              ]
-            : [
-                `$${c}$ runs the same way as $${b}$, and $${a}$ crosses $${b}$ at a right angle, so $${a} \\perp ${c}$.`,
-                `$${c}$ 与 $${b}$ 方向相同，$${a}$ 与 $${b}$ 垂直相交，所以 $${a} \\perp ${c}$。`,
-              ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "chains-of-line-relations",
+        ["Chains of line relations", "直线关系的传递"],
+        [
+          "In a flat plane, two lines perpendicular to the same line never meet, so they are parallel. A line perpendicular to one of two parallel lines is perpendicular to the other as well.",
+          "在同一平面内，垂直于同一条直线的两条直线不相交，所以互相平行。垂直于两条平行线之一的直线，也垂直于另一条。",
+        ],
+        (rng) => {
+          const [a, b, c] = rng.sample(["k", "l", "m", "n", "p", "q", "r", "s"], 3) as [string, string, string];
+          const form = rng.int(0, 2);
+          const sign = (x: boolean) => (x ? "\\perp" : "\\parallel");
+          const first = form !== 1;
+          const second = form !== 1 ? form === 0 : false;
+          const isParallel = first === second;
+          const parallel: Pair = ["Parallel", "平行"];
+          const perpendicular: Pair = ["Perpendicular", "垂直"];
+          return choose(
+            rng,
+            [
+              `In a plane, line $${a} ${sign(first)} ${b}$ and line $${b} ${sign(second)} ${c}$. How are lines $${a}$ and $${c}$ related?`,
+              `在同一平面内，$${a} ${sign(first)} ${b}$，$${b} ${sign(second)} ${c}$。直线 $${a}$ 和 $${c}$ 有什么关系？`,
+            ],
+            isParallel ? parallel : perpendicular,
+            [isParallel ? perpendicular : parallel, ["They meet, but not at a right angle", "相交但不垂直"]],
+            isParallel
+              ? [
+                  `Both relations to $${b}$ match, so $${a}$ and $${c}$ run the same way and never meet.`,
+                  `两条直线与 $${b}$ 的关系相同，所以 $${a}$ 和 $${c}$ 方向相同，不会相交。`,
+                ]
+              : [
+                  `$${c}$ runs the same way as $${b}$, and $${a}$ crosses $${b}$ at a right angle, so $${a} \\perp ${c}$.`,
+                  `$${c}$ 与 $${b}$ 方向相同，$${a}$ 与 $${b}$ 垂直相交，所以 $${a} \\perp ${c}$。`,
+                ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["parallel-and-perpendicular-lines#chains-of-line-relations"],
+    },
   ],
 };

@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Axis, dec, dotPlot, Q } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -1592,6 +1593,7 @@ export const measuringRangeAndMadFromDotPlots = topic(
   [
     {
       id: "the-range-from-a-dot-plot",
+      figure: gradeDrawings3["measuring-range-and-mad-from-dot-plots#the-range-from-a-dot-plot"],
       title: t("The range from a dot plot", "从点图求极差"),
       explanation: t(
         "If the leftmost dot is at $2$ and the rightmost at $9$, the range is $9 - 2 = 7$, even if the number line runs from $0$ to $10$. The height of the stacks does not matter for the range.",
@@ -1677,6 +1679,7 @@ export const measuringQuartilesAndIqrFromDotPlots = topic(
   [
     {
       id: "a-quartile-from-a-dot-plot",
+      figure: gradeDrawings3["measuring-quartiles-and-iqr-from-dot-plots#a-quartile-from-a-dot-plot"],
       title: t("A quartile from a dot plot", "从点图求四分位数"),
       explanation: t(
         "A dot plot with $11$ dots has its median at the $6$th dot from the left. The lower half is the first $5$ dots, so $Q_1$ is the $3$rd dot; the upper half is the last $5$ dots, so $Q_3$ is the $9$th dot. Count across the stacks from left to right, and from the bottom of each stack up.",
@@ -1709,6 +1712,7 @@ export const measuringQuartilesAndIqrFromDotPlots = topic(
     },
     {
       id: "the-iqr-from-a-dot-plot",
+      figure: gradeDrawings3["measuring-quartiles-and-iqr-from-dot-plots#the-iqr-from-a-dot-plot"],
       title: t("The interquartile range from a dot plot", "从点图求四分位距"),
       explanation: t(
         "For a dot plot with $Q_1 = 3$ and $Q_3 = 7$, the IQR is $7 - 3 = 4$: the middle half of the dots lie within a stretch of $4$ units. Find both quartiles by counting, then subtract; do not confuse the IQR with the range, which uses the end dots.",
@@ -1741,6 +1745,7 @@ export const measuringQuartilesAndIqrFromDotPlots = topic(
     },
     {
       id: "the-five-number-summary-from-a-dot-plot",
+      figure: gradeDrawings3["measuring-quartiles-and-iqr-from-dot-plots#the-five-number-summary-from-a-dot-plot"],
       title: t("The five-number summary from a dot plot", "从点图求五数概括"),
       explanation: t(
         "The five-number summary of a dot plot is the leftmost dot, $Q_1$, the median, $Q_3$ and the rightmost dot. It is what a box plot of the same data would show.",

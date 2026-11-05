@@ -15,6 +15,7 @@ import {
   radical,
   simplifyRadical,
 } from "@ga/subject-math";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { coordinateDrawings } from "../explanation-drawings-solids.ts";
 import { annotate, graphFigure, legs, plain, at as plainAt, riseOf, root, sideLabels } from "../graph-figures.ts";
 import {
@@ -242,6 +243,7 @@ export const findingEquationsOfParallelLines: TopicDef = {
   knowledgePoints: [
     {
       id: "parallel-line-in-point-slope-form",
+      figure: geometryDrawings2["finding-equations-of-parallel-lines#parallel-line-in-point-slope-form"],
       title: t("A parallel line in point-slope form", "用点斜式写平行线"),
       explanation: t(
         "A line parallel to a given line has the **same slope**. Knowing the slope $m$ and one point $(h, k)$ is enough for the point-slope form\n\n$$y - k = m(x - h).$$\n\nFor the line through $(-2, 5)$ parallel to $3x - 6y = 4$: solving for $y$ gives $y = \\frac{1}{2}x - \\frac{2}{3}$, so the slope is $\\frac{1}{2}$, and the parallel line is\n\n$$y - 5 = \\frac{1}{2}(x + 2).$$",
@@ -274,6 +276,7 @@ export const findingEquationsOfParallelLines: TopicDef = {
     },
     {
       id: "parallel-line-in-standard-form",
+      figure: geometryDrawings2["finding-equations-of-parallel-lines#parallel-line-in-standard-form"],
       title: t("A parallel line in standard form", "用标准式写平行线"),
       explanation: t(
         "To give the answer in standard form $Ax + By = C$, write the parallel line in point-slope form first, then move the $x$-term to the left side and clear fractions so that $A$, $B$ and $C$ are integers without a common factor and $A > 0$.\n\nThe line through $(4, 1)$ parallel to $y = -\\frac{2}{3}x + 5$:\n\n$$y - 1 = -\\frac{2}{3}(x - 4) \\;\\Rightarrow\\; y = -\\frac{2}{3}x + \\frac{11}{3} \\;\\Rightarrow\\; 2x + 3y = 11.$$",
@@ -313,6 +316,7 @@ export const findingEquationsOfParallelLines: TopicDef = {
     },
     {
       id: "parallel-to-a-line-through-two-points",
+      figure: geometryDrawings2["finding-equations-of-parallel-lines#parallel-to-a-line-through-two-points"],
       title: t("Parallel to a line through two points", "与过两点的直线平行"),
       explanation: t(
         "When the given line is described by two of its points, find its slope with the slope formula first.\n\nThe line through $A(1, -2)$ and $B(5, 4)$ has slope $\\frac{4 - (-2)}{5 - 1} = \\frac{3}{2}$. The parallel line through $(2, 7)$ is found by substituting the point:\n\n$$7 = \\frac{3}{2} \\cdot 2 + b \\;\\Rightarrow\\; b = 4, \\qquad y = \\frac{3}{2}x + 4.$$",
@@ -357,6 +361,7 @@ export const findingEquationsOfParallelLines: TopicDef = {
     },
     {
       id: "parallel-horizontal-and-vertical-lines",
+      figure: geometryDrawings2["finding-equations-of-parallel-lines#parallel-horizontal-and-vertical-lines"],
       title: t("Parallel horizontal and vertical lines", "平行的水平线与竖直线"),
       explanation: t(
         "A line parallel to a **vertical** line is vertical too: every point on it has the same $x$-coordinate, so through $(h, k)$ it is $x = h$. A line parallel to a **horizontal** line is horizontal: through $(h, k)$ it is $y = k$.\n\nThe line through $(3, -4)$ parallel to $x = -1$ is $x = 3$; the line through $(3, -4)$ parallel to the $x$-axis is $y = -4$.",
@@ -418,6 +423,7 @@ export const findingEquationsOfPerpendicularLines: TopicDef = {
   knowledgePoints: [
     {
       id: "perpendicular-line-in-point-slope-form",
+      figure: geometryDrawings2["finding-equations-of-perpendicular-lines#perpendicular-line-in-point-slope-form"],
       title: t("A perpendicular line in point-slope form", "用点斜式写垂线"),
       explanation: t(
         "A line perpendicular to a line of slope $m$ has the **negative reciprocal** slope $-\\frac{1}{m}$. With that slope and the point $(h, k)$, write $y - k = -\\frac{1}{m}(x - h)$.\n\nFor the line through $(1, -3)$ perpendicular to $2x + 5y = 10$: the given line is $y = -\\frac{2}{5}x + 2$, with slope $-\\frac{2}{5}$, so the perpendicular slope is $\\frac{5}{2}$ and\n\n$$y + 3 = \\frac{5}{2}(x - 1).$$",
@@ -450,6 +456,7 @@ export const findingEquationsOfPerpendicularLines: TopicDef = {
     },
     {
       id: "perpendicular-line-in-standard-form",
+      figure: geometryDrawings2["finding-equations-of-perpendicular-lines#perpendicular-line-in-standard-form"],
       title: t("A perpendicular line in standard form", "用标准式写垂线"),
       explanation: t(
         "Find the perpendicular slope, write the line in point-slope form, then rearrange it into standard form $Ax + By = C$ with integers and $A > 0$.\n\nThe line through $(2, 3)$ perpendicular to $y = 4x - 1$ has slope $-\\frac{1}{4}$:\n\n$$y - 3 = -\\frac{1}{4}(x - 2) \\;\\Rightarrow\\; y = -\\frac{1}{4}x + \\frac{7}{2} \\;\\Rightarrow\\; x + 4y = 14.$$",

@@ -1,6 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, type Point, poly, Q, sketch, solutionsChecker } from "@ga/subject-math";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { probabilityDrawings } from "../explanation-drawings-solids.ts";
 import { choiceProblem, expressionProblem, numberProblem, steps, why, yesNo } from "../problems.ts";
 
@@ -1427,6 +1428,7 @@ export const vennDiagramsInProbability: TopicDef = {
     },
     {
       id: "probabilities-from-a-venn-diagram",
+      figure: geometryDrawings2["venn-diagrams-in-probability#probabilities-from-a-venn-diagram"],
       title: t("Probabilities from a Venn diagram", "由韦恩图求概率"),
       explanation: t(
         "When one member of $U$ is chosen at random, each is equally likely, so\n\n$$P(A) = \\frac{n(A)}{n(U)}$$\n\nIn the diagram above, $P(A) = \\frac{17}{42}$ and $P(B) = \\frac{23}{42}$. Use the total of **all** regions, including the one outside both circles, as the denominator.",
@@ -1477,6 +1479,7 @@ export const geometricProbability: TopicDef = {
   knowledgePoints: [
     {
       id: "probability-on-a-segment",
+      figure: geometryDrawings2["geometric-probability#probability-on-a-segment"],
       title: t("Probability on a segment", "线段上的概率"),
       explanation: t(
         "When a point is chosen at random on a segment, every part of the same length is equally likely to contain it. So the probability that it lands in a part is\n\n$$P = \\frac{\\text{length of the part}}{\\text{length of the whole segment}}$$\n\nA point is chosen on the number line between $0$ and $20$. The probability that it lies between $6$ and $11$ is $\\frac{11 - 6}{20} = \\frac{5}{20} = \\frac{1}{4}$.",
@@ -1688,6 +1691,7 @@ export const theUnionOfSets: TopicDef = {
   knowledgePoints: [
     {
       id: "listing-a-union",
+      figure: geometryDrawings2["the-union-of-sets#listing-a-union"],
       title: t("Listing a union", "列举并集"),
       explanation: t(
         "The **union** $A \\cup B$ is the set of elements in $A$ **or** in $B$ (or in both). List every element of $A$, then add the elements of $B$ not yet listed; an element in both is written once.\n\n$\\{1, 3, 5, 7\\} \\cup \\{3, 4, 5, 6\\} = \\{1, 3, 4, 5, 6, 7\\}$.\n\nIn a Venn diagram, $A \\cup B$ is everything inside at least one of the circles.",
@@ -1745,6 +1749,7 @@ export const theUnionOfSets: TopicDef = {
     },
     {
       id: "counting-a-union-from-a-venn-diagram",
+      figure: geometryDrawings2["the-union-of-sets#counting-a-union-from-a-venn-diagram"],
       title: t("Counting a union from a Venn diagram", "由韦恩图计算并集的元素个数"),
       explanation: t(
         "$A \\cup B$ covers three regions of a Venn diagram: $A$ only, both, and $B$ only. Add those three numbers, counting the overlap once, and leave out the region outside both circles.\n\nWith $12$ in $A$ only, $5$ in both, $18$ in $B$ only and $7$ outside: $n(A \\cup B) = 12 + 5 + 18 = 35$. Adding $n(A) + n(B) = 17 + 23 = 40$ would count the $5$ in the overlap twice.",
@@ -1799,6 +1804,7 @@ export const theIntersectionOfSets: TopicDef = {
   knowledgePoints: [
     {
       id: "listing-an-intersection",
+      figure: geometryDrawings2["the-intersection-of-sets#listing-an-intersection"],
       title: t("Listing an intersection", "列举交集"),
       explanation: t(
         "The **intersection** $A \\cap B$ is the set of elements in $A$ **and** in $B$: those they have in common. In a Venn diagram it is the overlap of the circles.\n\n$\\{1, 3, 5, 7\\} \\cap \\{3, 4, 5, 6\\} = \\{3, 5\\}$. Sets with no common element are **disjoint**: $\\{1, 2\\} \\cap \\{5, 6\\} = \\varnothing$.",
@@ -2051,6 +2057,7 @@ export const computingProbabilitiesForCompoundEventsUsingVennDiagrams: TopicDef 
     },
     {
       id: "unions-from-a-venn-diagram",
+      figure: geometryDrawings2["computing-probabilities-for-compound-events-using-venn-diagrams#unions-from-a-venn-diagram"],
       title: t("P(A ∪ B) from a Venn diagram", "由韦恩图求 P(A ∪ B)"),
       explanation: t(
         'The event "$A$ or $B$" is the union $A \\cup B$: everything inside at least one circle. Add the three regions inside the circles, the overlap once.\n\nIn the diagram of the previous step, $P(A \\cup B) = \\frac{12 + 5 + 18}{42} = \\frac{35}{42} = \\frac{5}{6}$.',
@@ -2346,6 +2353,7 @@ export const computingProbabilitiesForThreeEventsUsingVennDiagrams: TopicDef = {
     },
     {
       id: "unions-of-three-events",
+      figure: venn3Figure([12, 5, 18, 7, 3, 14, 9, 11]),
       title: t("Unions with three events", "三个事件的并"),
       explanation: t(
         "For a union, add every region inside at least one of the circles named, each region once. $A \\cup B$ covers six of the eight regions: all but $C$ only and the outside. $A \\cup B \\cup C$ is everything except the outside region.\n\nIn the diagram above, $P(A \\cup B \\cup C) = \\frac{79 - 11}{79} = \\frac{68}{79}$.",
@@ -2355,6 +2363,7 @@ export const computingProbabilitiesForThreeEventsUsingVennDiagrams: TopicDef = {
     },
     {
       id: "complements-and-exactly-one-with-three-events",
+      figure: venn3Figure([12, 5, 18, 7, 3, 14, 9, 11]),
       title: t('Complements and "exactly one" with three events', "三个事件的对立事件与“恰好一个”"),
       explanation: t(
         "A prime excludes a circle: $A \\cap B \\cap C'$ is the region in $A$ and $B$ but outside $C$; $A \\cap B' \\cap C'$ is $A$ only. \"Exactly one\" is the three regions that belong to a single circle, and $(A \\cup B \\cup C)'$ is the region outside all three.\n\nIn the diagram of the first step, $P(\\text{exactly one}) = \\frac{12 + 18 + 9}{79} = \\frac{39}{79}$.",
@@ -2407,6 +2416,7 @@ export const theAdditionLawOfProbability: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-the-union",
+      figure: geometryDrawings2["the-addition-law-of-probability#finding-the-union"],
       title: t("Finding P(A ∪ B)", "求 P(A ∪ B)"),
       explanation: t(
         "Adding $P(A)$ and $P(B)$ counts the overlap $A \\cap B$ twice, once in each circle. Subtract it once:\n\n$$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$\n\nIf $P(A) = 0.4$, $P(B) = 0.35$ and $P(A \\cap B) = 0.15$, then $P(A \\cup B) = 0.4 + 0.35 - 0.15 = 0.6$.",
@@ -2622,6 +2632,7 @@ export const mutuallyExclusiveEvents: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-mutually-exclusive-events",
+      figure: geometryDrawings2["mutually-exclusive-events#recognizing-mutually-exclusive-events"],
       title: t("Recognizing mutually exclusive events", "识别互斥事件"),
       explanation: t(
         'Events $A$ and $B$ are **mutually exclusive** when they cannot happen together: they share no outcome, so $A \\cap B = \\varnothing$. In a Venn diagram their circles do not overlap.\n\nDrawing a card numbered $1$ to $10$: "even" and "less than $2$" are mutually exclusive, since $\\{2, 4, 6, 8, 10\\} \\cap \\{1\\} = \\varnothing$. "Even" and "a multiple of $3$" are not: both contain $6$.',

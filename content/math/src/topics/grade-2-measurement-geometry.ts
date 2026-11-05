@@ -4,7 +4,6 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dotPlot, svgDocument } from "@ga/subject-math";
-
 import {
   barGraphFigure,
   clockFigure,
@@ -23,7 +22,9 @@ import {
   rulerFigure,
   slicedCircleFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { plural } from "./grade-2-numbers-operations.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
@@ -704,73 +705,79 @@ const sumsOnANumberLine = earlyTopic(
   ["subtracting-within-100"],
   ["2.MD.B.6"],
   [
-    earlyPoint(
-      "jumping-right-to-add",
-      ["Jumping right to add", "向右跳表示加"],
-      [
-        "A number line is like a ruler that goes on and on, with each number the same distance from the next. To add, begin at the first number and move right by the second number. Where you land is the sum. The tick marks may count by fives or tens, so check what each space is worth before moving.",
-        "数轴就像一把长长的尺子，相邻两个数之间的距离都一样。要做加法，就从第一个数开始，向右移动第二个数那么多。落在哪里，和就是几。刻度可能按 5 或按 10 增加，所以移动之前，先看清每一格代表多少。",
-      ],
-      (rng) => {
-        const step = rng.pick([5, 10]);
-        const lo = step === 5 ? 5 * rng.int(0, 10) : 0;
-        const ticks = 10;
-        const hi = lo + ticks * step;
-        const start = lo + step * rng.int(1, 5);
-        const jump = step * rng.int(1, Math.floor((hi - start) / step));
-        const answer = start + jump;
-        return {
-          ...whole(
+    {
+      ...earlyPoint(
+        "jumping-right-to-add",
+        ["Jumping right to add", "向右跳表示加"],
+        [
+          "A number line is like a ruler that goes on and on, with each number the same distance from the next. To add, begin at the first number and move right by the second number. Where you land is the sum. The tick marks may count by fives or tens, so check what each space is worth before moving.",
+          "数轴就像一把长长的尺子，相邻两个数之间的距离都一样。要做加法，就从第一个数开始，向右移动第二个数那么多。落在哪里，和就是几。刻度可能按 5 或按 10 增加，所以移动之前，先看清每一格代表多少。",
+        ],
+        (rng) => {
+          const step = rng.pick([5, 10]);
+          const lo = step === 5 ? 5 * rng.int(0, 10) : 0;
+          const ticks = 10;
+          const hi = lo + ticks * step;
+          const start = lo + step * rng.int(1, 5);
+          const jump = step * rng.int(1, Math.floor((hi - start) / step));
+          const answer = start + jump;
+          return {
+            ...whole(
+              [
+                `The marked point is at the start. Move right by ${jump}. Which number do you land on?`,
+                `标出的点是起点。向右移动 ${jump}。落在哪个数上？`,
+              ],
+              answer,
+              [start - jump > 0 ? start - jump : start, answer + step, jump],
+              [
+                `Moving right means adding: $${start} + ${jump} = ${answer}$, which is ${jump / step === 1 ? "1 space" : `${jump / step} spaces`} of ${step} from the start.`,
+                `向右移动就是加：$${start} + ${jump} = ${answer}$，也就是从起点跳 ${jump / step} 格，每格 ${step}。`,
+              ],
+              numberLineFigure(lo, hi, step, start),
+            ),
+            solutionFigure: jumpsFigure(
+              lo,
+              hi,
+              step,
+              Array.from({ length: jump / step + 1 }, (_, i) => start + i * step),
+            ),
+          };
+        },
+      ),
+      figure: gradeDrawings2["sums-and-differences-on-a-number-line#jumping-right-to-add"],
+    },
+    {
+      ...earlyPoint(
+        "jumping-left-to-subtract",
+        ["Jumping left to subtract", "向左跳表示减"],
+        [
+          "To subtract on a number line, begin at the larger number and move left by the amount taken away. Where you land is the difference. Moving left makes numbers smaller, and moving right makes them larger, so the direction tells you the operation. Counting the spaces you pass, not the tick marks you touch, keeps your count correct.",
+          "在数轴上做减法，就从较大的数开始，向左移动减去的数那么多。落在哪里，差就是几。向左移动，数变小；向右移动，数变大，所以方向说明了运算。要数经过的格子，不要数碰到的刻度，这样才数得对。",
+        ],
+        (rng) => {
+          const step = rng.pick([5, 10]);
+          const lo = step === 5 ? 5 * rng.int(0, 10) : 0;
+          const ticks = 10;
+          const start = lo + step * rng.int(5, ticks);
+          const jump = step * rng.int(1, (start - lo) / step);
+          const answer = start - jump;
+          return whole(
             [
-              `The marked point is at the start. Move right by ${jump}. Which number do you land on?`,
-              `标出的点是起点。向右移动 ${jump}。落在哪个数上？`,
+              `The marked point is at the start. Move left by ${jump}. Which number do you land on?`,
+              `标出的点是起点。向左移动 ${jump}。落在哪个数上？`,
             ],
             answer,
-            [start - jump > 0 ? start - jump : start, answer + step, jump],
+            [start + jump, answer + step],
             [
-              `Moving right means adding: $${start} + ${jump} = ${answer}$, which is ${jump / step === 1 ? "1 space" : `${jump / step} spaces`} of ${step} from the start.`,
-              `向右移动就是加：$${start} + ${jump} = ${answer}$，也就是从起点跳 ${jump / step} 格，每格 ${step}。`,
+              `Moving left means subtracting: $${start} - ${jump} = ${answer}$, which is ${jump / step === 1 ? "1 space" : `${jump / step} spaces`} of ${step} from the start.`,
+              `向左移动就是减：$${start} - ${jump} = ${answer}$，也就是从起点跳 ${jump / step} 格，每格 ${step}。`,
             ],
-            numberLineFigure(lo, hi, step, start),
-          ),
-          solutionFigure: jumpsFigure(
-            lo,
-            hi,
-            step,
-            Array.from({ length: jump / step + 1 }, (_, i) => start + i * step),
-          ),
-        };
-      },
-    ),
-    earlyPoint(
-      "jumping-left-to-subtract",
-      ["Jumping left to subtract", "向左跳表示减"],
-      [
-        "To subtract on a number line, begin at the larger number and move left by the amount taken away. Where you land is the difference. Moving left makes numbers smaller, and moving right makes them larger, so the direction tells you the operation. Counting the spaces you pass, not the tick marks you touch, keeps your count correct.",
-        "在数轴上做减法，就从较大的数开始，向左移动减去的数那么多。落在哪里，差就是几。向左移动，数变小；向右移动，数变大，所以方向说明了运算。要数经过的格子，不要数碰到的刻度，这样才数得对。",
-      ],
-      (rng) => {
-        const step = rng.pick([5, 10]);
-        const lo = step === 5 ? 5 * rng.int(0, 10) : 0;
-        const ticks = 10;
-        const start = lo + step * rng.int(5, ticks);
-        const jump = step * rng.int(1, (start - lo) / step);
-        const answer = start - jump;
-        return whole(
-          [
-            `The marked point is at the start. Move left by ${jump}. Which number do you land on?`,
-            `标出的点是起点。向左移动 ${jump}。落在哪个数上？`,
-          ],
-          answer,
-          [start + jump, answer + step],
-          [
-            `Moving left means subtracting: $${start} - ${jump} = ${answer}$, which is ${jump / step === 1 ? "1 space" : `${jump / step} spaces`} of ${step} from the start.`,
-            `向左移动就是减：$${start} - ${jump} = ${answer}$，也就是从起点跳 ${jump / step} 格，每格 ${step}。`,
-          ],
-          numberLineFigure(lo, lo + ticks * step, step, start),
-        );
-      },
-    ),
+            numberLineFigure(lo, lo + ticks * step, step, start),
+          );
+        },
+      ),
+      figure: gradeDrawings2["sums-and-differences-on-a-number-line#jumping-left-to-subtract"],
+    },
   ],
 );
 
@@ -913,23 +920,35 @@ const amAndPm = earlyTopic(
         const [right, wrong] = asksAm ? [mornings, evenings] : [evenings, mornings];
         const correct = rng.pick(right);
         const others = rng.sample(wrong, 3);
-        return pickChoice(
-          rng,
-          t(
-            `Which of these most likely happens in the ${asksAm ? "a.m." : "p.m."}?`,
-            `下面哪件事最有可能发生在${asksAm ? "上午" : "下午"}？`,
+        return reasoned(
+          pickChoice(
+            rng,
+            t(
+              `Which of these most likely happens in the ${asksAm ? "a.m." : "p.m."}?`,
+              `下面哪件事最有可能发生在${asksAm ? "上午" : "下午"}？`,
+            ),
+            correct,
+            others,
+            asksAm
+              ? t(
+                  `A.m. is from midnight to noon, so it fits "${correct.en.toLowerCase()}", and the others come after noon.`,
+                  `上午是午夜到中午，所以应该是“${correct["zh-CN"]}”，其他的都在中午之后。`,
+                )
+              : t(
+                  `P.m. is from noon to midnight, so it fits "${correct.en.toLowerCase()}", and the others come before noon.`,
+                  `下午是中午到午夜，所以应该是“${correct["zh-CN"]}”，其他的都在中午之前。`,
+                ),
           ),
-          correct,
-          others,
-          asksAm
-            ? t(
-                `A.m. is from midnight to noon, so it fits "${correct.en.toLowerCase()}", and the others come after noon.`,
-                `上午是午夜到中午，所以应该是“${correct["zh-CN"]}”，其他的都在中午之后。`,
-              )
-            : t(
-                `P.m. is from noon to midnight, so it fits "${correct.en.toLowerCase()}", and the others come before noon.`,
-                `下午是中午到午夜，所以应该是“${correct["zh-CN"]}”，其他的都在中午之前。`,
-              ),
+          [
+            ...others.map(
+              (o) =>
+                [
+                  o.en,
+                  `This usually happens ${asksAm ? "after noon, in the p.m." : "before noon, in the a.m."}`,
+                  `这件事通常发生在${asksAm ? "中午以后，也就是下午" : "中午以前，也就是上午"}。`,
+                ] as const,
+            ),
+          ],
         );
       },
     ),
@@ -1160,32 +1179,35 @@ const linePlotsOfLengths = earlyTopic(
   ["measuring-length-in-inches-and-centimeters"],
   ["2.MD.D.9"],
   [
-    earlyPoint(
-      "reading-marks-on-a-line-plot",
-      ["Reading marks on a line plot", "读线图上的点"],
-      [
-        "A line plot is a number line with marks stacked above it. Each mark stands for one thing that was measured, and the number below it tells its length. So to find how many things have one length, count the marks in that one stack. The number below tells you the length, and the marks tell you how many.",
-        "线图是在数轴上方摞起一些点。每个点代表一个被测量的东西，下面的数说明它的长度。所以要知道某个长度的东西有几个，就数那一摞的点。下面的数说明长度，点说明有几个。",
-      ],
-      (rng) => {
-        const { values } = linePlotData(rng);
-        const v = rng.pick(values);
-        const answer = values.filter((x) => x === v).length;
-        return whole(
-          [
-            `This line plot shows the lengths of some pencils, in inches. How many pencils are ${unitCount(v, inch)} long?`,
-            `这个线图表示一些铅笔的长度（英寸）。长 ${v} 英寸的铅笔有多少支？`,
-          ],
-          answer,
-          [v, values.length],
-          [
-            `There ${answer === 1 ? "is 1 mark" : `are ${answer} marks`} above the ${v}, one for each pencil.`,
-            `${v} 上方有 ${answer} 个点，每个点是一支铅笔。`,
-          ],
-          linePlotFigure(values),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "reading-marks-on-a-line-plot",
+        ["Reading marks on a line plot", "读线图上的点"],
+        [
+          "A line plot is a number line with marks stacked above it. Each mark stands for one thing that was measured, and the number below it tells its length. So to find how many things have one length, count the marks in that one stack. The number below tells you the length, and the marks tell you how many.",
+          "线图是在数轴上方摞起一些点。每个点代表一个被测量的东西，下面的数说明它的长度。所以要知道某个长度的东西有几个，就数那一摞的点。下面的数说明长度，点说明有几个。",
+        ],
+        (rng) => {
+          const { values } = linePlotData(rng);
+          const v = rng.pick(values);
+          const answer = values.filter((x) => x === v).length;
+          return whole(
+            [
+              `This line plot shows the lengths of some pencils, in inches. How many pencils are ${unitCount(v, inch)} long?`,
+              `这个线图表示一些铅笔的长度（英寸）。长 ${v} 英寸的铅笔有多少支？`,
+            ],
+            answer,
+            [v, values.length],
+            [
+              `There ${answer === 1 ? "is 1 mark" : `are ${answer} marks`} above the ${v}, one for each pencil.`,
+              `${v} 上方有 ${answer} 个点，每个点是一支铅笔。`,
+            ],
+            linePlotFigure(values),
+          );
+        },
+      ),
+      figure: gradeDrawings2["line-plots-of-lengths#reading-marks-on-a-line-plot"],
+    },
     earlyPoint(
       "finding-the-most-common-length",
       ["The most common length", "最常见的长度"],
@@ -1241,74 +1263,80 @@ const pictureGraphs = earlyTopic(
   ["first-picture-graphs"],
   ["2.MD.D.10"],
   [
-    earlyPoint(
-      "how-many-more-in-a-row",
-      ["How many more in a row", "一行多多少"],
-      [
-        "In a picture graph each row shows one group, and each picture stands for one thing in the group. To see how many more one group has than another, compare the two rows. The pictures that line up cancel out, and the extra ones at the end of the longer row are the answer to your question.",
-        "象形统计图中，每一行表示一组，每个图案代表组里的一个东西。要知道一组比另一组多多少，就比较这两行。对齐的图案可以不管，较长的那一行末尾多出来的，就是答案。",
-      ],
-      (rng) => {
-        const story = rng.pick(graphStories);
-        const labels = ["A", "B", "C", "D"];
-        const values = labels.map(() => rng.int(2, 11));
-        const [i, j] = rng.sample([0, 1, 2, 3], 2) as [number, number];
-        const big = Math.max(values[i] as number, values[j] as number);
-        const small = Math.min(values[i] as number, values[j] as number);
-        if (big === small) values[i] = big + 1 > 11 ? big - 1 : big + 1;
-        const vi = values[i] as number;
-        const vj = values[j] as number;
-        const [hi, lo] = vi > vj ? [i, j] : [j, i];
-        const answer = Math.abs(vi - vj);
-        return whole(
-          [
-            `${story.en} How many more ${story.thing} does row ${labels[hi]} have than row ${labels[lo]}?`,
-            `${story.zh}${labels[hi]} 行比 ${labels[lo]} 行多多少${story.zhThing}？`,
-          ],
-          answer,
-          [vi + vj, Math.max(vi, vj)],
-          [
-            `Row ${labels[hi]} has ${Math.max(vi, vj)} dots and row ${labels[lo]} has ${Math.min(vi, vj)}, and $${Math.max(vi, vj)} - ${Math.min(vi, vj)} = ${answer}$.`,
-            `${labels[hi]} 行有 ${Math.max(vi, vj)} 个点，${labels[lo]} 行有 ${Math.min(vi, vj)} 个点，$${Math.max(vi, vj)} - ${Math.min(vi, vj)} = ${answer}$。`,
-          ],
-          pictureGraphFigure(labels, values, 1),
-        );
-      },
-    ),
-    earlyPoint(
-      "adding-rows-of-a-picture-graph",
-      ["Adding rows of a picture graph", "把象形统计图的行加起来"],
-      [
-        "A picture graph can also tell how many there are in several rows together. Count the pictures in each row and write the number down. Then add the numbers. If you are asked for all the rows, leave none out, and if you are asked for just two of them, take care to use the ones that were named.",
-        "象形统计图也能说明几行一共有多少。数出每一行的图案，把数写下来，再相加。如果问的是所有的行，一行也不能漏；如果只问其中两行，就要用题目说的那两行。",
-      ],
-      (rng) => {
-        const story = rng.pick(graphStories);
-        const labels = ["A", "B", "C", "D"];
-        const values = labels.map(() => rng.int(2, 10));
-        const all = rng.bool();
-        const [i, j] = rng.sample([0, 1, 2, 3], 2) as [number, number];
-        const shown = all ? values : [values[i] as number, values[j] as number];
-        const answer = shown.reduce((s, v) => s + v, 0);
-        return whole(
-          all
-            ? [`${story.en} How many ${story.thing} are there in all?`, `${story.zh}一共有多少${story.zhThing}？`]
-            : [
-                `${story.en} How many ${story.thing} do rows ${labels[i]} and ${labels[j]} have together?`,
-                `${story.zh}${labels[i]} 行和 ${labels[j]} 行一共有多少${story.zhThing}？`,
-              ],
-          answer,
-          all
-            ? [answer - (values[3] as number), 4]
-            : [Math.abs((values[i] as number) - (values[j] as number)), values.reduce((s, v) => s + v, 0)],
-          [
-            `The rows have ${all ? shown.join(", ") : shown.join(" and ")} dots, and $${shown.join(" + ")} = ${answer}$.`,
-            `这几行分别有 ${shown.join("、")} 个点，$${shown.join(" + ")} = ${answer}$。`,
-          ],
-          pictureGraphFigure(labels, values, 1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "how-many-more-in-a-row",
+        ["How many more in a row", "一行多多少"],
+        [
+          "In a picture graph each row shows one group, and each picture stands for one thing in the group. To see how many more one group has than another, compare the two rows. The pictures that line up cancel out, and the extra ones at the end of the longer row are the answer to your question.",
+          "象形统计图中，每一行表示一组，每个图案代表组里的一个东西。要知道一组比另一组多多少，就比较这两行。对齐的图案可以不管，较长的那一行末尾多出来的，就是答案。",
+        ],
+        (rng) => {
+          const story = rng.pick(graphStories);
+          const labels = ["A", "B", "C", "D"];
+          const values = labels.map(() => rng.int(2, 11));
+          const [i, j] = rng.sample([0, 1, 2, 3], 2) as [number, number];
+          const big = Math.max(values[i] as number, values[j] as number);
+          const small = Math.min(values[i] as number, values[j] as number);
+          if (big === small) values[i] = big + 1 > 11 ? big - 1 : big + 1;
+          const vi = values[i] as number;
+          const vj = values[j] as number;
+          const [hi, lo] = vi > vj ? [i, j] : [j, i];
+          const answer = Math.abs(vi - vj);
+          return whole(
+            [
+              `${story.en} How many more ${story.thing} does row ${labels[hi]} have than row ${labels[lo]}?`,
+              `${story.zh}${labels[hi]} 行比 ${labels[lo]} 行多多少${story.zhThing}？`,
+            ],
+            answer,
+            [vi + vj, Math.max(vi, vj)],
+            [
+              `Row ${labels[hi]} has ${Math.max(vi, vj)} dots and row ${labels[lo]} has ${Math.min(vi, vj)}, and $${Math.max(vi, vj)} - ${Math.min(vi, vj)} = ${answer}$.`,
+              `${labels[hi]} 行有 ${Math.max(vi, vj)} 个点，${labels[lo]} 行有 ${Math.min(vi, vj)} 个点，$${Math.max(vi, vj)} - ${Math.min(vi, vj)} = ${answer}$。`,
+            ],
+            pictureGraphFigure(labels, values, 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["picture-graphs-of-single-units#how-many-more-in-a-row"],
+    },
+    {
+      ...earlyPoint(
+        "adding-rows-of-a-picture-graph",
+        ["Adding rows of a picture graph", "把象形统计图的行加起来"],
+        [
+          "A picture graph can also tell how many there are in several rows together. Count the pictures in each row and write the number down. Then add the numbers. If you are asked for all the rows, leave none out, and if you are asked for just two of them, take care to use the ones that were named.",
+          "象形统计图也能说明几行一共有多少。数出每一行的图案，把数写下来，再相加。如果问的是所有的行，一行也不能漏；如果只问其中两行，就要用题目说的那两行。",
+        ],
+        (rng) => {
+          const story = rng.pick(graphStories);
+          const labels = ["A", "B", "C", "D"];
+          const values = labels.map(() => rng.int(2, 10));
+          const all = rng.bool();
+          const [i, j] = rng.sample([0, 1, 2, 3], 2) as [number, number];
+          const shown = all ? values : [values[i] as number, values[j] as number];
+          const answer = shown.reduce((s, v) => s + v, 0);
+          return whole(
+            all
+              ? [`${story.en} How many ${story.thing} are there in all?`, `${story.zh}一共有多少${story.zhThing}？`]
+              : [
+                  `${story.en} How many ${story.thing} do rows ${labels[i]} and ${labels[j]} have together?`,
+                  `${story.zh}${labels[i]} 行和 ${labels[j]} 行一共有多少${story.zhThing}？`,
+                ],
+            answer,
+            all
+              ? [answer - (values[3] as number), 4]
+              : [Math.abs((values[i] as number) - (values[j] as number)), values.reduce((s, v) => s + v, 0)],
+            [
+              `The rows have ${all ? shown.join(", ") : shown.join(" and ")} dots, and $${shown.join(" + ")} = ${answer}$.`,
+              `这几行分别有 ${shown.join("、")} 个点，$${shown.join(" + ")} = ${answer}$。`,
+            ],
+            pictureGraphFigure(labels, values, 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["picture-graphs-of-single-units#adding-rows-of-a-picture-graph"],
+    },
   ],
 );
 
@@ -1319,27 +1347,30 @@ const readingBarGraphs = earlyTopic(
   ["first-bar-graphs"],
   ["2.MD.D.10"],
   [
-    earlyPoint(
-      "the-value-of-a-bar-by-ones",
-      ["The value of a bar", "一个条的值"],
-      [
-        "A bar graph shows each amount as a bar. To read a bar, look at its top and follow the line straight across to the numbers at the side. The number there is the amount. The bar's width means nothing, and the letter under the bar only tells you which one it is, so your eyes need only check the height.",
-        "条形图用条来表示数量。读一个条时，看它的顶端，顺着线横着看到旁边的数。那个数就是数量。条的宽度没有意义，条下面的字母只说明它是哪一条，所以只要看高度就行。",
-      ],
-      (rng) => {
-        const labels = ["A", "B", "C", "D"];
-        const values = labels.map(() => rng.int(1, 10));
-        const i = rng.int(0, 3);
-        const answer = values[i] as number;
-        return whole(
-          [`What is the value of bar ${labels[i]} in this graph?`, `这个图中条 ${labels[i]} 的值是多少？`],
-          answer,
-          [Math.max(...values)],
-          [`The top of bar ${labels[i]} lines up with ${answer} on the scale.`, `条 ${labels[i]} 的顶端对着刻度 ${answer}。`],
-          barGraphFigure(labels, values, 1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-value-of-a-bar-by-ones",
+        ["The value of a bar", "一个条的值"],
+        [
+          "A bar graph shows each amount as a bar. To read a bar, look at its top and follow the line straight across to the numbers at the side. The number there is the amount. The bar's width means nothing, and the letter under the bar only tells you which one it is, so your eyes need only check the height.",
+          "条形图用条来表示数量。读一个条时，看它的顶端，顺着线横着看到旁边的数。那个数就是数量。条的宽度没有意义，条下面的字母只说明它是哪一条，所以只要看高度就行。",
+        ],
+        (rng) => {
+          const labels = ["A", "B", "C", "D"];
+          const values = labels.map(() => rng.int(1, 10));
+          const i = rng.int(0, 3);
+          const answer = values[i] as number;
+          return whole(
+            [`What is the value of bar ${labels[i]} in this graph?`, `这个图中条 ${labels[i]} 的值是多少？`],
+            answer,
+            [Math.max(...values)],
+            [`The top of bar ${labels[i]} lines up with ${answer} on the scale.`, `条 ${labels[i]} 的顶端对着刻度 ${answer}。`],
+            barGraphFigure(labels, values, 1),
+          );
+        },
+      ),
+      figure: gradeDrawings2["reading-bar-graphs#the-value-of-a-bar-by-ones"],
+    },
     earlyPoint(
       "adding-and-comparing-bars",
       ["Adding and comparing bars", "把条相加和比较"],
@@ -1532,58 +1563,64 @@ const namingPolygons = earlyTopic(
   ["defining-attributes-of-shapes"],
   ["2.G.A.1"],
   [
-    earlyPoint(
-      "the-name-of-a-drawn-shape",
-      ["The name of a drawn shape", "说出图形的名称"],
-      [
-        "A shape's name depends on how many straight sides it has, and not on how it looks or which way it faces. Three sides make a triangle, four make a quadrilateral, five make a pentagon and six make a hexagon. A stretched or lopsided shape keeps its name, so count the sides each time and do not trust the first look.",
-        "图形的名称取决于它有几条直边，而不是它看起来怎样，或朝哪个方向。三条边是三角形，四条边是四边形，五条边是五边形，六条边是六边形。被拉长或歪斜的图形名称不变，所以每次都要数边，不要只凭第一眼。",
-      ],
-      (rng) => {
-        const kind = rng.pick(polygonKinds);
-        const name = (k: PolygonKind) => t(`A ${k.en}`, k.zh);
-        return pickChoice(
-          rng,
-          t("What is this shape called?", "这个图形叫什么？"),
-          name(kind),
-          polygonKinds.filter((k) => k !== kind).map(name),
-          t(`It has ${kind.sides} straight sides, so it is a ${kind.en}.`, `它有 ${kind.sides} 条直边，所以它是${kind.zh}。`),
-          polygonIn(rng, kind),
-        );
-      },
-    ),
-    earlyPoint(
-      "the-name-from-the-number-of-sides",
-      ["The name from the number of sides", "由边数说出名称"],
-      [
-        "You can name a shape without seeing it, if you are told how many sides or angles it has. A closed shape with straight sides has the same number of angles as it has sides, since each corner joins two sides. So a shape with five angles has five sides as well, and it is a pentagon however it is drawn.",
-        "知道一个图形有几条边或几个角，不用看图也能说出它的名称。由直边围成的封闭图形，角的个数和边的条数相同，因为每个角连着两条边。所以有五个角的图形也有五条边，不管怎么画，它都是五边形。",
-      ],
-      (rng) => {
-        const who = rng.pick(earlyNames);
-        const kind = rng.pick(polygonKinds);
-        const byAngles = rng.bool();
-        const name = (k: PolygonKind) => t(`A ${k.en}`, k.zh);
-        return pickChoice(
-          rng,
-          byAngles
-            ? t(
-                `${who} draws a closed shape with straight sides and exactly ${kind.sides} angles. What is it?`,
-                `${who} 画了一个由直边围成的封闭图形，它正好有 ${kind.sides} 个角。它是什么图形？`,
-              )
-            : t(
-                `${who} draws a closed shape with exactly ${kind.sides} straight sides. What is it?`,
-                `${who} 画了一个正好有 ${kind.sides} 条直边的封闭图形。它是什么图形？`,
-              ),
-          name(kind),
-          polygonKinds.filter((k) => k !== kind).map(name),
-          t(
-            `A shape with ${kind.sides} sides and ${kind.sides} angles is a ${kind.en}.`,
-            `有 ${kind.sides} 条边和 ${kind.sides} 个角的图形是${kind.zh}。`,
-          ),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "the-name-of-a-drawn-shape",
+        ["The name of a drawn shape", "说出图形的名称"],
+        [
+          "A shape's name depends on how many straight sides it has, and not on how it looks or which way it faces. Three sides make a triangle, four make a quadrilateral, five make a pentagon and six make a hexagon. A stretched or lopsided shape keeps its name, so count the sides each time and do not trust the first look.",
+          "图形的名称取决于它有几条直边，而不是它看起来怎样，或朝哪个方向。三条边是三角形，四条边是四边形，五条边是五边形，六条边是六边形。被拉长或歪斜的图形名称不变，所以每次都要数边，不要只凭第一眼。",
+        ],
+        (rng) => {
+          const kind = rng.pick(polygonKinds);
+          const name = (k: PolygonKind) => t(`A ${k.en}`, k.zh);
+          return pickChoice(
+            rng,
+            t("What is this shape called?", "这个图形叫什么？"),
+            name(kind),
+            polygonKinds.filter((k) => k !== kind).map(name),
+            t(`It has ${kind.sides} straight sides, so it is a ${kind.en}.`, `它有 ${kind.sides} 条直边，所以它是${kind.zh}。`),
+            polygonIn(rng, kind),
+          );
+        },
+      ),
+      figure: gradeDrawings2["naming-polygons-by-their-sides#the-name-of-a-drawn-shape"],
+    },
+    {
+      ...earlyPoint(
+        "the-name-from-the-number-of-sides",
+        ["The name from the number of sides", "由边数说出名称"],
+        [
+          "You can name a shape without seeing it, if you are told how many sides or angles it has. A closed shape with straight sides has the same number of angles as it has sides, since each corner joins two sides. So a shape with five angles has five sides as well, and it is a pentagon however it is drawn.",
+          "知道一个图形有几条边或几个角，不用看图也能说出它的名称。由直边围成的封闭图形，角的个数和边的条数相同，因为每个角连着两条边。所以有五个角的图形也有五条边，不管怎么画，它都是五边形。",
+        ],
+        (rng) => {
+          const who = rng.pick(earlyNames);
+          const kind = rng.pick(polygonKinds);
+          const byAngles = rng.bool();
+          const name = (k: PolygonKind) => t(`A ${k.en}`, k.zh);
+          return pickChoice(
+            rng,
+            byAngles
+              ? t(
+                  `${who} draws a closed shape with straight sides and exactly ${kind.sides} angles. What is it?`,
+                  `${who} 画了一个由直边围成的封闭图形，它正好有 ${kind.sides} 个角。它是什么图形？`,
+                )
+              : t(
+                  `${who} draws a closed shape with exactly ${kind.sides} straight sides. What is it?`,
+                  `${who} 画了一个正好有 ${kind.sides} 条直边的封闭图形。它是什么图形？`,
+                ),
+            name(kind),
+            polygonKinds.filter((k) => k !== kind).map(name),
+            t(
+              `A shape with ${kind.sides} sides and ${kind.sides} angles is a ${kind.en}.`,
+              `有 ${kind.sides} 条边和 ${kind.sides} 个角的图形是${kind.zh}。`,
+            ),
+          );
+        },
+      ),
+      figure: gradeDrawings2["naming-polygons-by-their-sides#the-name-from-the-number-of-sides"],
+    },
   ],
 );
 
@@ -1594,58 +1631,64 @@ const countingSidesAndAngles = earlyTopic(
   ["naming-polygons-by-their-sides"],
   ["2.G.A.1"],
   [
-    earlyPoint(
-      "angles-of-a-drawn-shape",
-      ["Angles of a drawn shape", "图形的角"],
-      [
-        "An angle is the corner made where two sides of a shape meet. To count angles, pick a corner to begin with, go around the shape in one direction, and stop when you get back. Marking your starting corner helps you to avoid counting it twice. You should find as many angles as there are sides, and that gives you a check.",
-        "角是图形两条边相交形成的尖角。数角时，选一个角作为开始，沿着一个方向绕图形一周，回到开始的地方就停下。在开始的角上做个记号，就不会数两次。角的个数应该和边的条数一样多，这也是一种检查。",
-      ],
-      (rng) => {
-        const kind = rng.pick(polygonKinds);
-        const asksAngles = rng.bool();
-        return whole(
-          asksAngles
-            ? ["How many angles does this shape have?", "这个图形有几个角？"]
-            : ["How many sides does this shape have?", "这个图形有几条边？"],
-          kind.sides,
-          [kind.sides * 2, kind.sides === 3 ? 6 : kind.sides - 3],
-          [
-            `Going around the shape once, you pass ${kind.sides} sides and ${kind.sides} corners, so it is a ${kind.en}.`,
-            `绕图形一周，经过 ${kind.sides} 条边和 ${kind.sides} 个角，所以它是${kind.zh}。`,
-          ],
-          polygonIn(rng, kind),
-        );
-      },
-    ),
-    earlyPoint(
-      "sides-of-several-shapes",
-      ["Sides of several shapes", "几个图形的边数"],
-      [
-        "If you know a shape's name, you know how many sides it has without looking. So you can find the total for several shapes by adding the sides of each. Say the number for each name to yourself and then add. Remember that a triangle has three, a quadrilateral four, a pentagon five and a hexagon six.",
-        "知道图形的名称，不用看就知道它有几条边。所以可以把每个图形的边数相加，求出几个图形一共有几条边。先在心里说出每个名称对应的数，再相加。记住三角形有三条，四边形有四条，五边形有五条，六边形有六条。",
-      ],
-      (rng) => {
-        const [a, b] = rng.sample(polygonKinds, 2) as [PolygonKind, PolygonKind];
-        const na = rng.int(1, 3);
-        const nb = rng.int(1, 3);
-        const answer = na * a.sides + nb * b.sides;
-        const who = rng.pick(earlyNames);
-        const many = (n: number, k: PolygonKind) => `${n} ${k.en}${n === 1 ? "" : "s"}`;
-        return whole(
-          [
-            `${who} draws ${many(na, a)} and ${many(nb, b)}. How many sides are there in all?`,
-            `${who} 画了 ${na} 个${a.zh}和 ${nb} 个${b.zh}。一共有多少条边？`,
-          ],
-          answer,
-          [na + nb, a.sides + b.sides],
-          [
-            `The ${a.en}${na === 1 ? " has" : "s have"} ${na * a.sides} sides and the ${b.en}${nb === 1 ? " has" : "s have"} ${nb * b.sides} sides, and $${na * a.sides} + ${nb * b.sides} = ${answer}$.`,
-            `${a.zh}一共有 ${na * a.sides} 条边，${b.zh}一共有 ${nb * b.sides} 条边，$${na * a.sides} + ${nb * b.sides} = ${answer}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "angles-of-a-drawn-shape",
+        ["Angles of a drawn shape", "图形的角"],
+        [
+          "An angle is the corner made where two sides of a shape meet. To count angles, pick a corner to begin with, go around the shape in one direction, and stop when you get back. Marking your starting corner helps you to avoid counting it twice. You should find as many angles as there are sides, and that gives you a check.",
+          "角是图形两条边相交形成的尖角。数角时，选一个角作为开始，沿着一个方向绕图形一周，回到开始的地方就停下。在开始的角上做个记号，就不会数两次。角的个数应该和边的条数一样多，这也是一种检查。",
+        ],
+        (rng) => {
+          const kind = rng.pick(polygonKinds);
+          const asksAngles = rng.bool();
+          return whole(
+            asksAngles
+              ? ["How many angles does this shape have?", "这个图形有几个角？"]
+              : ["How many sides does this shape have?", "这个图形有几条边？"],
+            kind.sides,
+            [kind.sides * 2, kind.sides === 3 ? 6 : kind.sides - 3],
+            [
+              `Going around the shape once, you pass ${kind.sides} sides and ${kind.sides} corners, so it is a ${kind.en}.`,
+              `绕图形一周，经过 ${kind.sides} 条边和 ${kind.sides} 个角，所以它是${kind.zh}。`,
+            ],
+            polygonIn(rng, kind),
+          );
+        },
+      ),
+      figure: gradeDrawings2["counting-sides-and-angles#angles-of-a-drawn-shape"],
+    },
+    {
+      ...earlyPoint(
+        "sides-of-several-shapes",
+        ["Sides of several shapes", "几个图形的边数"],
+        [
+          "If you know a shape's name, you know how many sides it has without looking. So you can find the total for several shapes by adding the sides of each. Say the number for each name to yourself and then add. Remember that a triangle has three, a quadrilateral four, a pentagon five and a hexagon six.",
+          "知道图形的名称，不用看就知道它有几条边。所以可以把每个图形的边数相加，求出几个图形一共有几条边。先在心里说出每个名称对应的数，再相加。记住三角形有三条，四边形有四条，五边形有五条，六边形有六条。",
+        ],
+        (rng) => {
+          const [a, b] = rng.sample(polygonKinds, 2) as [PolygonKind, PolygonKind];
+          const na = rng.int(1, 3);
+          const nb = rng.int(1, 3);
+          const answer = na * a.sides + nb * b.sides;
+          const who = rng.pick(earlyNames);
+          const many = (n: number, k: PolygonKind) => `${n} ${k.en}${n === 1 ? "" : "s"}`;
+          return whole(
+            [
+              `${who} draws ${many(na, a)} and ${many(nb, b)}. How many sides are there in all?`,
+              `${who} 画了 ${na} 个${a.zh}和 ${nb} 个${b.zh}。一共有多少条边？`,
+            ],
+            answer,
+            [na + nb, a.sides + b.sides],
+            [
+              `The ${a.en}${na === 1 ? " has" : "s have"} ${na * a.sides} sides and the ${b.en}${nb === 1 ? " has" : "s have"} ${nb * b.sides} sides, and $${na * a.sides} + ${nb * b.sides} = ${answer}$.`,
+              `${a.zh}一共有 ${na * a.sides} 条边，${b.zh}一共有 ${nb * b.sides} 条边，$${na * a.sides} + ${nb * b.sides} = ${answer}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["counting-sides-and-angles#sides-of-several-shapes"],
+    },
   ],
 );
 
@@ -1741,42 +1784,45 @@ const rowsAndColumnsOfSquares = earlyTopic(
   ["arrays-and-repeated-addition"],
   ["2.G.A.2"],
   [
-    earlyPoint(
-      "counting-squares-in-a-rectangle",
-      ["Counting squares in a rectangle", "数长方形里的方格"],
-      [
-        "A rectangle can be cut into equal squares set out in straight rows and columns. Rows go across, and columns go up and down. As with an array, you do not need to count one by one. Count the squares in one row, and then add this number once for each row. Your eyes can check the columns too.",
-        "长方形可以分成相同的方格，排成整齐的行和列。行是横着的，列是竖着的。和点阵一样，不用一个一个地数。数出一行有几个方格，有几行就把这个数加几次。还可以用眼睛再查查每一列。",
-      ],
-      (rng) => {
-        const rows = rng.int(2, 5);
-        const columns = rng.int(2, 6);
-        const total = rows * columns;
-        const shaded = rng.bool() ? total : rng.int(1, total - 1);
-        const sum = Array(rows).fill(`${columns}`).join(" + ");
-        return shaded === total
-          ? whole(
-              ["How many squares is this rectangle cut into?", "这个长方形被分成了多少个方格？"],
-              total,
-              [rows + columns, 2 * (rows + columns)],
-              [
-                `There are ${rows} rows of ${columns} squares, so $${sum} = ${total}$.`,
-                `有 ${rows} 行，每行 ${columns} 个方格，所以 $${sum} = ${total}$。`,
-              ],
-              gridFigure(rows, columns),
-            )
-          : whole(
-              ["How many squares of this rectangle are not shaded?", "这个长方形有多少个方格没有涂色？"],
-              total - shaded,
-              [shaded, total],
-              [
-                `There are $${sum} = ${total}$ squares, and ${shaded} of them are shaded, so $${total} - ${shaded} = ${total - shaded}$ are not.`,
-                `一共有 $${sum} = ${total}$ 个方格，其中 ${shaded} 个涂了颜色，所以 $${total} - ${shaded} = ${total - shaded}$ 个没有涂。`,
-              ],
-              gridFigure(rows, columns, shaded),
-            );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "counting-squares-in-a-rectangle",
+        ["Counting squares in a rectangle", "数长方形里的方格"],
+        [
+          "A rectangle can be cut into equal squares set out in straight rows and columns. Rows go across, and columns go up and down. As with an array, you do not need to count one by one. Count the squares in one row, and then add this number once for each row. Your eyes can check the columns too.",
+          "长方形可以分成相同的方格，排成整齐的行和列。行是横着的，列是竖着的。和点阵一样，不用一个一个地数。数出一行有几个方格，有几行就把这个数加几次。还可以用眼睛再查查每一列。",
+        ],
+        (rng) => {
+          const rows = rng.int(2, 5);
+          const columns = rng.int(2, 6);
+          const total = rows * columns;
+          const shaded = rng.bool() ? total : rng.int(1, total - 1);
+          const sum = Array(rows).fill(`${columns}`).join(" + ");
+          return shaded === total
+            ? whole(
+                ["How many squares is this rectangle cut into?", "这个长方形被分成了多少个方格？"],
+                total,
+                [rows + columns, 2 * (rows + columns)],
+                [
+                  `There are ${rows} rows of ${columns} squares, so $${sum} = ${total}$.`,
+                  `有 ${rows} 行，每行 ${columns} 个方格，所以 $${sum} = ${total}$。`,
+                ],
+                gridFigure(rows, columns),
+              )
+            : whole(
+                ["How many squares of this rectangle are not shaded?", "这个长方形有多少个方格没有涂色？"],
+                total - shaded,
+                [shaded, total],
+                [
+                  `There are $${sum} = ${total}$ squares, and ${shaded} of them are shaded, so $${total} - ${shaded} = ${total - shaded}$ are not.`,
+                  `一共有 $${sum} = ${total}$ 个方格，其中 ${shaded} 个涂了颜色，所以 $${total} - ${shaded} = ${total - shaded}$ 个没有涂。`,
+                ],
+                gridFigure(rows, columns, shaded),
+              );
+        },
+      ),
+      figure: gradeDrawings2["rows-and-columns-of-squares#counting-squares-in-a-rectangle"],
+    },
     earlyPoint(
       "cutting-a-tray-into-pieces",
       ["Cutting a tray into pieces", "把一盘切成小块"],

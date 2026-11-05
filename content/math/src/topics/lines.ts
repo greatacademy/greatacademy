@@ -1,9 +1,11 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { annotate, at, graphFigure, guides, plain, riseOf, riseRun, slopeFigure, walkTo } from "../graph-figures.ts";
 import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -685,6 +687,7 @@ export const slopeInterceptForm: TopicDef = {
     },
     {
       id: "reading-from-a-graph",
+      figure: gradeDrawings3["slope-intercept-form#reading-from-a-graph"],
       title: t("The equation of a graphed line", "由图像写方程"),
       explanation: t(
         "To write the equation of a graphed line, read the $y$-intercept $b$ where the line crosses the $y$-axis, then find the slope from two grid points of the line as rise over run.\n\nIf a line crosses the $y$-axis at $(0, -3)$ and also passes through $(2, 2)$, then $m = \\frac{5}{2}$ and the line is $y = \\frac{5}{2}x - 3$.",
@@ -2311,19 +2314,39 @@ export const systemsWithNoSolutionOrInfinitelyManySolutions: TopicDef = {
       generate(rng) {
         const kind = rng.int(0, 2);
         const { e1, e2, k } = specialSystem(rng, kind);
-        return choiceProblem({
-          prompt: t(
-            `How many solutions does the system have? $$${system(eqOf(e1), eqOf(e2))}$$`,
-            `方程组有几个解？$$${system(eqOf(e1), eqOf(e2))}$$`,
-          ),
-          options: solutionCounts,
-          correct: kind,
-          solution: specialReason(e1, e2, kind, k),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `How many solutions does the system have? $$${system(eqOf(e1), eqOf(e2))}$$`,
+              `方程组有几个解？$$${system(eqOf(e1), eqOf(e2))}$$`,
+            ),
+            options: solutionCounts,
+            correct: kind,
+            solution: specialReason(e1, e2, kind, k),
+          }),
+          [
+            [
+              solutionCounts[0]!.en,
+              "Exactly one solution needs two lines that cross, but eliminating here removes both variables, so the lines are parallel or the same.",
+              "恰有一个解要求两条直线相交，但这里消元后两个变量都消失了，所以两条直线平行或重合。",
+            ],
+            [
+              solutionCounts[1]!.en,
+              "No solution needs elimination to end in a false statement such as $0 = 5$, and it does not here.",
+              "无解要求消元后得到像 $0 = 5$ 这样的假命题，而这里并非如此。",
+            ],
+            [
+              solutionCounts[2]!.en,
+              "Infinitely many solutions needs elimination to end in a true statement such as $0 = 0$, and it does not here.",
+              "无穷多个解要求消元后得到像 $0 = 0$ 这样的真命题，而这里并非如此。",
+            ],
+          ],
+        );
       },
     },
     {
       id: "by-slopes-and-intercepts",
+      figure: gradeDrawings3["systems-with-no-solution-or-infinitely-many-solutions#by-slopes-and-intercepts"],
       title: t("Recognizing them by slopes and intercepts", "用斜率和截距识别"),
       explanation: t(
         "The solutions of a system are the common points of two lines, so compare the lines in slope-intercept form:\n\n- different slopes: the lines cross once, **one solution**;\n- equal slopes, different $y$-intercepts: parallel lines, **no solution**;\n- equal slopes and equal $y$-intercepts: the same line, **infinitely many solutions**.",
@@ -2443,12 +2466,31 @@ export const consistencyAndDependency: TopicDef = {
           t("So the system is inconsistent.", "所以方程组不相容。"),
           t("So the system is consistent and dependent.", "所以方程组相容且相关。"),
         ][kind]!;
-        return choiceProblem({
-          prompt: t(`Classify the system $$${system(eqOf(e1), eqOf(e2))}$$`, `判断方程组 $$${system(eqOf(e1), eqOf(e2))}$$ 的类型。`),
-          options: classes,
-          correct,
-          solution: t(`${reason.en} ${end.en}`, `${reason["zh-CN"]}${end["zh-CN"]}`),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Classify the system $$${system(eqOf(e1), eqOf(e2))}$$`, `判断方程组 $$${system(eqOf(e1), eqOf(e2))}$$ 的类型。`),
+            options: classes,
+            correct,
+            solution: t(`${reason.en} ${end.en}`, `${reason["zh-CN"]}${end["zh-CN"]}`),
+          }),
+          [
+            [
+              classes[0]!.en,
+              "Independent means the lines cross at one point, but these two lines have the same slope.",
+              "独立表示两条直线交于一点，但这两条直线斜率相同。",
+            ],
+            [
+              classes[1]!.en,
+              "Dependent means both equations describe the same line, and these two do not.",
+              "相关表示两个方程表示同一条直线，而这两个方程不是。",
+            ],
+            [
+              classes[2]!.en,
+              "Inconsistent means the system has no solution at all, and this one has a solution.",
+              "不相容表示方程组完全没有解，而这个方程组有解。",
+            ],
+          ],
+        );
       },
     },
     {

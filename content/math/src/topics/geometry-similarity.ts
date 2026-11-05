@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
 import { motionDrawings } from "../explanation-drawings-angles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { similarityDrawings } from "../explanation-drawings-triangles.ts";
 import { stagedPolygon } from "../graph-figures.ts";
 import { choiceProblem, numberProblem, pointLatex, pointProblem, reasonChoice, steps, verdictChoice } from "../problems.ts";
@@ -646,6 +647,7 @@ export const areasOfSimilarPolygons: TopicDef = {
     },
     {
       id: "area-from-the-scale-factor",
+      figure: geometryDrawings2["areas-of-similar-polygons#area-from-the-scale-factor"],
       title: t("Area from the scale factor", "由相似比求面积"),
       explanation: t(
         "To find the area of the image, multiply the original area by $k^{2}$, not by $k$.\n\nA polygon of area $20 \\text{ cm}^{2}$ is enlarged with scale factor $\\frac{3}{2}$. The new area is $\\left(\\frac{3}{2}\\right)^{2} \\cdot 20 = \\frac{9}{4} \\cdot 20 = 45 \\text{ cm}^{2}$.",
@@ -1732,6 +1734,7 @@ export const combiningSimilarityCriteriaForTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "choosing-a-criterion",
+      figure: geometryDrawings2["combining-similarity-criteria-for-triangles#choosing-a-criterion"],
       title: t("Choosing a criterion", "选择判定方法"),
       explanation: t(
         "Three criteria prove triangles similar:\n\n- **AA**: two pairs of congruent angles;\n- **SSS**: all three pairs of sides proportional;\n- **SAS**: two pairs of sides proportional and the angles **between** them congruent.\n\nOne pair of angles, two pairs of proportional sides alone, or two proportional sides with a congruent angle that is **not** between them (SSA) are not enough.",
@@ -2383,6 +2386,7 @@ export const provingSimilarityStatements: TopicDef = {
     },
     {
       id: "proving-proportions-and-angles",
+      figure: geometryDrawings2["proving-similarity-statements#proving-proportions-and-angles"],
       title: t("Proving proportions and angles", "证明比例式与角相等"),
       explanation: t(
         "Similar triangles give two kinds of conclusions: corresponding angles are congruent, and corresponding sides are proportional. A proportion can then be rewritten as a product by multiplying both sides.\n\nGiven $\\angle B \\cong \\angle E$ and $\\angle C \\cong \\angle F$:\n\n1. $\\triangle ABC \\sim \\triangle DEF$: AA.\n2. $\\frac{AB}{DE} = \\frac{BC}{EF}$: corresponding sides of similar triangles are proportional.\n3. $AB \\cdot EF = DE \\cdot BC$: multiplication property of equality.",

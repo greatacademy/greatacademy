@@ -1,8 +1,10 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, dec, linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { specialDrawings, trigDrawings } from "../explanation-drawings-solids.ts";
 import { choiceProblem, numberProblem, radicalProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Geometry, unit 4 (continued): quadrilaterals (diagonals of squares,
 // properties of parallelograms and the proofs of their properties and
@@ -1132,6 +1134,7 @@ export const provingPropertiesOfParallelograms: TopicDef = {
   knowledgePoints: [
     {
       id: "proving-opposite-sides-and-angles",
+      figure: geometryDrawings2["proving-properties-of-parallelograms#proving-opposite-sides-and-angles"],
       title: t("Opposite sides and angles", "对边与对角"),
       explanation: t(
         "To prove that the opposite sides of parallelogram $ABCD$ are congruent, draw the diagonal $AC$ and show that it splits the parallelogram into two congruent triangles:\n\n1. $AB \\parallel DC$ and $BC \\parallel AD$: definition of a parallelogram.\n2. $\\angle BAC = \\angle DCA$ and $\\angle BCA = \\angle DAC$: alternate interior angles, with $AC$ as the transversal.\n3. $AC = AC$: reflexive property.\n4. $\\triangle ABC \\cong \\triangle CDA$: ASA, since $AC$ lies between the angles.\n5. $AB = CD$, $BC = DA$, and also $\\angle B = \\angle D$: corresponding parts of congruent triangles.\n\nTake care with the order of the letters: $A$ corresponds to $C$, $B$ to $D$, $C$ to $A$.",
@@ -1142,6 +1145,7 @@ export const provingPropertiesOfParallelograms: TopicDef = {
     },
     {
       id: "proving-the-diagonals-bisect-each-other",
+      figure: geometryDrawings2["proving-properties-of-parallelograms#proving-the-diagonals-bisect-each-other"],
       title: t("The diagonals bisect each other", "对角线互相平分"),
       explanation: t(
         "Once opposite sides are known to be congruent, that fact can be cited as a reason. Let the diagonals of parallelogram $ABCD$ meet at $E$:\n\n1. $AB \\parallel DC$: definition of a parallelogram.\n2. $AB = DC$: opposite sides of a parallelogram are congruent.\n3. $\\angle BAE = \\angle DCE$ (transversal $AC$) and $\\angle ABE = \\angle CDE$ (transversal $BD$): alternate interior angles.\n4. $\\triangle ABE \\cong \\triangle CDE$: ASA.\n5. $AE = CE$ and $BE = DE$: corresponding parts of congruent triangles. So $E$ is the midpoint of both diagonals.",
@@ -1151,6 +1155,7 @@ export const provingPropertiesOfParallelograms: TopicDef = {
     },
     {
       id: "proving-with-consecutive-angles",
+      figure: geometryDrawings2["proving-properties-of-parallelograms#proving-with-consecutive-angles"],
       title: t("Opposite angles from consecutive angles", "由邻角证明对角相等"),
       explanation: t(
         "Opposite angles can also be proved equal without triangles. In parallelogram $ABCD$:\n\n1. $\\angle A + \\angle D = 180^\\circ$: consecutive interior angles, since $AB \\parallel DC$ with transversal $AD$.\n2. $\\angle C + \\angle D = 180^\\circ$: consecutive interior angles, since $AD \\parallel BC$ with transversal $DC$.\n3. $\\angle A + \\angle D = \\angle C + \\angle D$: substitution.\n4. $\\angle A = \\angle C$: subtraction property of equality.",
@@ -1439,6 +1444,7 @@ export const provingCriteriaForParallelogramsAndRectangles: TopicDef = {
   knowledgePoints: [
     {
       id: "proving-the-side-criteria",
+      figure: geometryDrawings2["proving-criteria-for-parallelograms-and-rectangles#proving-the-side-criteria"],
       title: t("Criteria from the sides", "由边判定"),
       explanation: t(
         "The converses of the properties are criteria: they prove that a quadrilateral **is** a parallelogram. To prove that $ABCD$ with $AB = CD$ and $BC = DA$ is a parallelogram, draw the diagonal $AC$:\n\n1. $AC = AC$: reflexive property, so $\\triangle ABC \\cong \\triangle CDA$ by SSS.\n2. $\\angle BAC = \\angle DCA$: corresponding parts, so $AB \\parallel DC$ by the converse of the alternate interior angles theorem.\n3. Likewise $\\angle BCA = \\angle DAC$ gives $BC \\parallel AD$.\n4. Both pairs of opposite sides are parallel: $ABCD$ is a parallelogram by definition.\n\nIf instead one pair is given both parallel and congruent ($AB \\parallel DC$, $AB = DC$), alternate interior angles give $\\angle BAC = \\angle DCA$, and the triangles are congruent by SAS.",
@@ -1449,6 +1455,7 @@ export const provingCriteriaForParallelogramsAndRectangles: TopicDef = {
     },
     {
       id: "proving-the-diagonal-criterion",
+      figure: geometryDrawings2["proving-criteria-for-parallelograms-and-rectangles#proving-the-diagonal-criterion"],
       title: t("Diagonals that bisect each other", "对角线互相平分"),
       explanation: t(
         "If the diagonals of $ABCD$ bisect each other at $E$, the quadrilateral is a parallelogram:\n\n1. $\\angle AEB = \\angle CED$: vertical angles.\n2. $\\triangle AEB \\cong \\triangle CED$: SAS, with $AE = CE$ and $BE = DE$.\n3. $AB = CD$ and $\\angle ABE = \\angle CDE$: corresponding parts.\n4. $AB \\parallel DC$: converse of the alternate interior angles theorem, with $BD$ as the transversal.\n5. $AB$ and $DC$ are both parallel and congruent, so $ABCD$ is a parallelogram.",
@@ -1458,6 +1465,7 @@ export const provingCriteriaForParallelogramsAndRectangles: TopicDef = {
     },
     {
       id: "proving-the-rectangle-criterion",
+      figure: geometryDrawings2["proving-criteria-for-parallelograms-and-rectangles#proving-the-rectangle-criterion"],
       title: t("Congruent diagonals make a rectangle", "对角线相等的平行四边形是矩形"),
       explanation: t(
         "A **rectangle** is a parallelogram with a right angle (and then all four angles are right). If parallelogram $ABCD$ has $AC = DB$:\n\n1. $AB = DC$: opposite sides; $BC = CB$: reflexive property.\n2. $\\triangle ABC \\cong \\triangle DCB$: SSS, so $\\angle ABC = \\angle DCB$.\n3. $\\angle ABC + \\angle DCB = 180^\\circ$: consecutive interior angles, since $AB \\parallel DC$.\n4. Substituting, $2\\angle ABC = 180^\\circ$, so $\\angle ABC = 90^\\circ$ and $ABCD$ is a rectangle.",
@@ -1467,6 +1475,7 @@ export const provingCriteriaForParallelogramsAndRectangles: TopicDef = {
     },
     {
       id: "values-that-make-a-parallelogram",
+      figure: geometryDrawings2["proving-criteria-for-parallelograms-and-rectangles#values-that-make-a-parallelogram"],
       title: t("Values that make a parallelogram", "使四边形成为平行四边形的值"),
       explanation: t(
         "A criterion tells which condition to impose. To make $ABCD$ a parallelogram, make both pairs of opposite sides equal, or make the diagonals bisect each other. To make parallelogram $ABCD$ a rectangle, make its diagonals equal.\n\nIf the diagonals of $ABCD$ meet at $E$ with $AE = 5x - 3$ and $CE = 2x + 9$, they bisect each other when $5x - 3 = 2x + 9$, that is, when $x = 4$.",
@@ -1575,25 +1584,32 @@ export const anglesAndSidesInRightTriangles: TopicDef = {
           ),
           hyp: t(`$${right}$ is opposite the right angle at $${R}$.`, `$${right}$ 是直角 $${R}$ 所对的边。`),
         }[kind];
-        return {
-          ...choiceProblem({
-            prompt: t(
-              `In right triangle $${R}${U}${V}$, the right angle is at $${R}$. ${question.en}`,
-              `在直角三角形 $${R}${U}${V}$ 中，直角在 $${R}$。${question["zh-CN"]}`,
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: t(
+                `In right triangle $${R}${U}${V}$, the right angle is at $${R}$. ${question.en}`,
+                `在直角三角形 $${R}${U}${V}$ 中，直角在 $${R}$。${question["zh-CN"]}`,
+              ),
+              options: sides.map((s) => same(`$${s}$`)),
+              correct: sides.indexOf(right),
+              solution: why,
+            }),
+            figure: rightFigure(
+              rng,
+              rng.int(3, 6),
+              rng.int(3, 6),
+              { letters: `${R}${U}${V}`, ...(atU ? { atU: "" } : { atV: "" }) },
+              `Right triangle ${R}${U}${V} with the right angle at ${R} and angle ${P} marked.`,
+              `直角三角形 ${R}${U}${V}，直角在 ${R}，标出了角 ${P}。`,
             ),
-            options: sides.map((s) => same(`$${s}$`)),
-            correct: sides.indexOf(right),
-            solution: why,
-          }),
-          figure: rightFigure(
-            rng,
-            rng.int(3, 6),
-            rng.int(3, 6),
-            { letters: `${R}${U}${V}`, ...(atU ? { atU: "" } : { atV: "" }) },
-            `Right triangle ${R}${U}${V} with the right angle at ${R} and angle ${P} marked.`,
-            `直角三角形 ${R}${U}${V}，直角在 ${R}，标出了角 ${P}。`,
-          ),
-        };
+          },
+          [
+            [`$${seg(U, V)}$`, "This is the hypotenuse, across from the right angle.", "这是斜边，与直角相对。"],
+            [`$${seg(R, O)}$`, `This is the leg across from $\\angle ${P}$.`, `这是与 $\\angle ${P}$ 相对的直角边。`],
+            [`$${seg(R, P)}$`, `This is the leg that helps form $\\angle ${P}$.`, `这是构成 $\\angle ${P}$ 的直角边。`],
+          ],
+        );
       },
     },
     {
@@ -1804,6 +1820,7 @@ export const theTrigonometricRatios: TopicDef = {
     },
     {
       id: "naming-the-ratio",
+      figure: geometryDrawings2["the-trigonometric-ratios#naming-the-ratio"],
       title: t("Which ratio is it?", "是哪个三角比？"),
       explanation: t(
         "To recognize a ratio, ask which sides it uses, seen from the angle in question. In right triangle $ABC$ with the right angle at $C$, $\\frac{BC}{AB}$ is opposite over hypotenuse for $\\angle A$, so it is $\\sin A$; for $\\angle B$, $BC$ is adjacent, so the same fraction is $\\cos B$.",
@@ -2536,6 +2553,7 @@ export const theReciprocalTrigonometricRatios: TopicDef = {
   knowledgePoints: [
     {
       id: "reciprocal-ratios-from-sides",
+      figure: geometryDrawings2["the-reciprocal-trigonometric-ratios#reciprocal-ratios-from-sides"],
       title: t("Reciprocal ratios from the sides", "由边求倒数三角比"),
       explanation: t(
         "The **reciprocal ratios** turn the three ratios upside down:\n\n$$\\csc \\theta = \\frac{1}{\\sin \\theta} = \\frac{\\text{hypotenuse}}{\\text{opposite}}, \\qquad \\sec \\theta = \\frac{1}{\\cos \\theta} = \\frac{\\text{hypotenuse}}{\\text{adjacent}}, \\qquad \\cot \\theta = \\frac{1}{\\tan \\theta} = \\frac{\\text{adjacent}}{\\text{opposite}}.$$\n\nThey are the **cosecant**, **secant** and **cotangent**. Note the pairing: the secant goes with the cosine and the cosecant with the sine. For the angle opposite $5$ in the $5$-$12$-$13$ triangle: $\\csc \\theta = \\frac{13}{5}$, $\\sec \\theta = \\frac{13}{12}$, $\\cot \\theta = \\frac{12}{5}$.",
@@ -2728,6 +2746,7 @@ export const trigonometricRatiosInSimilarRightTriangles: TopicDef = {
     },
     {
       id: "scaling-a-right-triangle",
+      figure: geometryDrawings2["trigonometric-ratios-in-similar-right-triangles#scaling-a-right-triangle"],
       title: t("Scaling a right triangle", "放缩直角三角形"),
       explanation: t(
         "Multiplying every side of a triangle by $k$ multiplies the numerator and the denominator of each ratio by $k$, so the ratios do not change. If $\\cos A = \\frac{5}{13}$ in $\\triangle ABC$ and each side is tripled to make $\\triangle DEF$ with $D$ corresponding to $A$, then $\\cos D = \\frac{15}{39} = \\frac{5}{13}$ as well.",
@@ -2852,6 +2871,7 @@ export const trigonometricFunctionsOfComplementaryAngles: TopicDef = {
     },
     {
       id: "equations-with-complementary-angles",
+      figure: geometryDrawings2["trigonometric-functions-of-complementary-angles#equations-with-complementary-angles"],
       title: t("Equations with complementary angles", "关于互余角的方程"),
       explanation: t(
         "If $\\sin \\alpha = \\cos \\beta$ for acute angles $\\alpha$ and $\\beta$, then $\\alpha + \\beta = 90^\\circ$. So\n\n$$\\sin(2x + 10)^\\circ = \\cos(3x - 5)^\\circ$$\n\ngives $(2x + 10) + (3x - 5) = 90$, $5x + 5 = 90$, $x = 17$. Check: the angles are $44^\\circ$ and $46^\\circ$, both acute.",
@@ -2947,6 +2967,7 @@ export const specialTrigonometricRatios: TopicDef = {
     },
     {
       id: "special-angles-from-exact-values",
+      figure: geometryDrawings2["special-trigonometric-ratios#special-angles-from-exact-values"],
       title: t("Special angles from exact values", "由精确值求特殊角"),
       explanation: t(
         "Read the table backwards: if $\\tan \\theta = \\sqrt{3}$ and $\\theta$ is acute, then $\\theta = 60^\\circ$. First isolate the ratio: $2\\cos \\theta = \\sqrt{2}$ gives $\\cos \\theta = \\frac{\\sqrt{2}}{2}$, so $\\theta = 45^\\circ$.",

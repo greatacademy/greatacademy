@@ -4,8 +4,8 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import { lowestNumerator } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -529,31 +529,34 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "two-digit-by-one-digit-multiplication-using-area-models": [
-    skill(
-      "the-factors-from-the-parts",
-      ["The factors from the parts", "由各部分求因数"],
-      [
-        "An area model's parts show the factors. If the parts are 80 and 12 and the side is 4, then the other side was split into $80 \\div 4 = 20$ and $12 \\div 4 = 3$, which is 23.",
-        "面积模型的各部分显示了因数。如果两部分是 80 和 12，一边是 4，另一边就分成 $80 \\div 4 = 20$ 和 $12 \\div 4 = 3$，也就是 23。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const tens = rng.int(1, 9);
-        const ones = rng.int(1, 9);
-        return whole(
-          [
-            `An area model has one side of ${a}. Its two parts have areas ${a * tens * 10} and ${a * ones}. What two-digit number is the other side?`,
-            `一个面积模型的一边是 ${a}，两部分的面积分别是 ${a * tens * 10} 和 ${a * ones}。另一边是什么两位数？`,
-          ],
-          tens * 10 + ones,
-          [a * tens * 10 + a * ones, ones * 10 + tens, tens + ones],
-          [
-            `Divide each part by ${a}: ${tens * 10} and ${ones}. Together the side is ${tens * 10 + ones}.`,
-            `每部分除以 ${a}：得 ${tens * 10} 和 ${ones}。合起来这一边是 ${tens * 10 + ones}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-factors-from-the-parts",
+        ["The factors from the parts", "由各部分求因数"],
+        [
+          "An area model's parts show the factors. If the parts are 80 and 12 and the side is 4, then the other side was split into $80 \\div 4 = 20$ and $12 \\div 4 = 3$, which is 23.",
+          "面积模型的各部分显示了因数。如果两部分是 80 和 12，一边是 4，另一边就分成 $80 \\div 4 = 20$ 和 $12 \\div 4 = 3$，也就是 23。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 9);
+          const tens = rng.int(1, 9);
+          const ones = rng.int(1, 9);
+          return whole(
+            [
+              `An area model has one side of ${a}. Its two parts have areas ${a * tens * 10} and ${a * ones}. What two-digit number is the other side?`,
+              `一个面积模型的一边是 ${a}，两部分的面积分别是 ${a * tens * 10} 和 ${a * ones}。另一边是什么两位数？`,
+            ],
+            tens * 10 + ones,
+            [a * tens * 10 + a * ones, ones * 10 + tens, tens + ones],
+            [
+              `Divide each part by ${a}: ${tens * 10} and ${ones}. Together the side is ${tens * 10 + ones}.`,
+              `每部分除以 ${a}：得 ${tens * 10} 和 ${ones}。合起来这一边是 ${tens * 10 + ones}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["two-digit-by-one-digit-multiplication-using-area-models#the-factors-from-the-parts"],
+    },
   ],
   "multi-digit-by-one-digit-multiplication-using-area-models": [
     skill(
@@ -669,31 +672,34 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "two-digit-by-one-digit-division-using-area-models": [
-    skill(
-      "the-total-area-from-the-side-lengths",
-      ["The dividend from the model", "由模型求被除数"],
-      [
-        "A division area model has the divisor on one side and the quotient's parts on the other. Its total area is the number divided, so multiply each part and add them.",
-        "除法面积模型的一边是除数，另一边是商的各部分。总面积就是被除数，所以把每部分相乘再相加。",
-      ],
-      (rng) => {
-        const d = rng.int(2, 9);
-        const t10 = rng.int(1, 3) * 10;
-        const o = rng.int(1, 9);
-        return whole(
-          [
-            `A division model has side ${d} on one edge, and the other edge is split into ${t10} and ${o}. What number was divided?`,
-            `一个除法模型一边长 ${d}，另一边分成 ${t10} 和 ${o}。被除数是多少？`,
-          ],
-          d * (t10 + o),
-          [d + t10 + o, d * t10, d * o],
-          [
-            `The area is $${d} \\times ${t10} + ${d} \\times ${o} = ${d * t10} + ${d * o} = ${d * (t10 + o)}$.`,
-            `面积是 $${d} \\times ${t10} + ${d} \\times ${o} = ${d * t10} + ${d * o} = ${d * (t10 + o)}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-total-area-from-the-side-lengths",
+        ["The dividend from the model", "由模型求被除数"],
+        [
+          "A division area model has the divisor on one side and the quotient's parts on the other. Its total area is the number divided, so multiply each part and add them.",
+          "除法面积模型的一边是除数，另一边是商的各部分。总面积就是被除数，所以把每部分相乘再相加。",
+        ],
+        (rng) => {
+          const d = rng.int(2, 9);
+          const t10 = rng.int(1, 3) * 10;
+          const o = rng.int(1, 9);
+          return whole(
+            [
+              `A division model has side ${d} on one edge, and the other edge is split into ${t10} and ${o}. What number was divided?`,
+              `一个除法模型一边长 ${d}，另一边分成 ${t10} 和 ${o}。被除数是多少？`,
+            ],
+            d * (t10 + o),
+            [d + t10 + o, d * t10, d * o],
+            [
+              `The area is $${d} \\times ${t10} + ${d} \\times ${o} = ${d * t10} + ${d * o} = ${d * (t10 + o)}$.`,
+              `面积是 $${d} \\times ${t10} + ${d} \\times ${o} = ${d * t10} + ${d * o} = ${d * (t10 + o)}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["two-digit-by-one-digit-division-using-area-models#the-total-area-from-the-side-lengths"],
+    },
   ],
   "multi-digit-by-one-digit-division-using-area-models": [
     rebuildDividend("the-number-divided-up-to-three-digits", ["The number divided, from three digits", "三位数的被除数"], [112, 899]),

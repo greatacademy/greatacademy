@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type Point, plane, Q, sketch, svgDocument } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, yesNo } from "../problems.ts";
 import { fractionPlot } from "./grade-4-measurement.ts";
 
@@ -990,6 +991,7 @@ export const graphingPatterns = topic(
     },
     {
       id: "extending-a-graphed-pattern",
+      figure: gradeDrawings2["graphing-patterns#extending-a-graphed-pattern"],
       title: t("Extending beyond the graph", "延续到图像之外"),
       explanation: t(
         "If the points go $1$ right and $4$ up each time from $(0, 0)$, then at $x = 12$ the $y$-coordinate is $4 \\times 12 = 48$.",
@@ -1507,6 +1509,7 @@ export const polygons = topic(
     },
     {
       id: "sides-vertices-and-names",
+      figure: gradeDrawings2["polygons#sides-vertices-and-names"],
       title: t("Sides, vertices and names", "边数、顶点数与名称"),
       explanation: t(
         "An octagon has $8$ sides, $8$ vertices and $8$ angles. A polygon with one more side than a pentagon is a hexagon.",
@@ -1703,6 +1706,7 @@ export const quadrilaterals = topic(
   [
     {
       id: "identifying-quadrilaterals",
+      figure: gradeDrawings2["quadrilaterals#identifying-quadrilaterals"],
       title: t("The best name for a quadrilateral", "四边形最准确的名称"),
       explanation: t(
         "A parallelogram with four right angles but sides of two different lengths is best called a rectangle. If its sides were all equal too, it would be a square.",
@@ -1740,6 +1744,7 @@ export const quadrilaterals = topic(
     },
     {
       id: "properties-of-quadrilaterals",
+      figure: gradeDrawings2["quadrilaterals#properties-of-quadrilaterals"],
       title: t("Properties of quadrilaterals", "四边形的特征"),
       explanation: t(
         "Every rhombus has two pairs of parallel sides, but not every rhombus has four right angles.",
@@ -1839,6 +1844,7 @@ export const rectanglesRhombusesAndSquares = topic(
     },
     {
       id: "sides-from-perimeters",
+      figure: gradeDrawings2["rectangles-rhombuses-and-squares#sides-from-perimeters"],
       title: t("A side from the perimeter", "由周长求边长"),
       explanation: t(
         "Work backward from the perimeter. For a square, divide it by $4$. For a rectangle, half the perimeter is length plus width, so subtract the known side from half the perimeter.\n\nA square with perimeter $36$ in has sides of $36 \\div 4 = 9$ in.",
@@ -2003,6 +2009,7 @@ export const classifyingQuadrilaterals = topic(
   [
     {
       id: "every-one-is-also",
+      figure: gradeDrawings2["classifying-quadrilaterals#every-one-is-also"],
       title: t("Is every one also…?", "是不是都是……？"),
       explanation: t(
         "Every square is a rhombus, since it has four equal sides. Not every rhombus is a square, since a rhombus need not have right angles. A trapezoid has at least one pair of parallel sides, so every parallelogram is a trapezoid.",

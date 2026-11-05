@@ -2,7 +2,9 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { dotPlot, gcd, type Mark, type Point, Q, sketch, svgDocument } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choiceProblem, mixedLatex, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // 4th Grade Math: units of measure and conversions, line plots, and the geometry of points, lines and angles.
 
@@ -1240,6 +1242,7 @@ export const rightStraightFullAndNullAngles = topic(
   [
     {
       id: "measures-of-special-angles",
+      figure: gradeDrawings2["right-straight-full-and-null-angles#measures-of-special-angles"],
       title: t("Measures of the special angles", "特殊角的度数"),
       explanation: t(
         "Four angles have special names. A right angle is a quarter turn, a straight angle is a half turn and looks like a straight line, a full angle is a whole turn, and a null angle is no turn at all.\n\nA right angle is $90^\\circ$, a straight angle $180^\\circ$, a full angle $360^\\circ$ and a null angle $0^\\circ$. So $2$ right angles make a straight angle and $4$ make a full angle.",
@@ -1279,6 +1282,7 @@ export const rightStraightFullAndNullAngles = topic(
     },
     {
       id: "naming-angles-on-a-clock",
+      figure: gradeDrawings2["right-straight-full-and-null-angles#naming-angles-on-a-clock"],
       title: t("Angles on a clock", "钟面上的角"),
       explanation: t(
         "At $3{:}00$ the hands of a clock form a right angle, at $6{:}00$ a straight angle, and at $12{:}00$ a null angle.",
@@ -1334,6 +1338,7 @@ export const acuteObtuseAndReflexAngles = topic(
   [
     {
       id: "classifying-angles-by-measure",
+      figure: gradeDrawings2["acute-obtuse-and-reflex-angles#classifying-angles-by-measure"],
       title: t("Classifying by measure", "按度数分类"),
       explanation: t(
         "Classify an angle by comparing its measure with $90^\\circ$, $180^\\circ$ and $360^\\circ$. An acute angle is less than $90^\\circ$, an obtuse angle is between $90^\\circ$ and $180^\\circ$, and a reflex angle is between $180^\\circ$ and $360^\\circ$.\n\n$35^\\circ$ is acute, $90^\\circ$ right, $125^\\circ$ obtuse, $180^\\circ$ straight and $250^\\circ$ reflex.",
@@ -1486,23 +1491,43 @@ export const classifyingFiguresBasedOnAngles = topic(
         do a = rng.int(Math.max(1, 180 - big - 89), Math.min(89, 180 - big - 1));
         while (k === 0 && (180 - big - a >= 90 || 180 - big - a > big || a > big));
         const angles = rng.shuffle([big, a, 180 - big - a]);
-        return choiceProblem({
-          prompt: t(
-            `A triangle has angles of $${angles.map((v) => `${v}^\\circ`).join("$, $")}$. What kind of triangle is it?`,
-            `一个三角形的三个角分别是 $${angles.map((v) => `${v}^\\circ`).join("$、$")}$。它是什么三角形？`,
-          ),
-          options: triangleKinds,
-          correct: k,
-          solution: [
-            t("All three angles are less than $90^\\circ$: an acute triangle.", "三个角都小于 $90^\\circ$：锐角三角形。"),
-            t("One angle is $90^\\circ$: a right triangle.", "有一个角是 $90^\\circ$：直角三角形。"),
-            t(`$${big}^\\circ$ is obtuse: an obtuse triangle.`, `$${big}^\\circ$ 是钝角：钝角三角形。`),
-          ][k]!,
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `A triangle has angles of $${angles.map((v) => `${v}^\\circ`).join("$, $")}$. What kind of triangle is it?`,
+              `一个三角形的三个角分别是 $${angles.map((v) => `${v}^\\circ`).join("$、$")}$。它是什么三角形？`,
+            ),
+            options: triangleKinds,
+            correct: k,
+            solution: [
+              t("All three angles are less than $90^\\circ$: an acute triangle.", "三个角都小于 $90^\\circ$：锐角三角形。"),
+              t("One angle is $90^\\circ$: a right triangle.", "有一个角是 $90^\\circ$：直角三角形。"),
+              t(`$${big}^\\circ$ is obtuse: an obtuse triangle.`, `$${big}^\\circ$ 是钝角：钝角三角形。`),
+            ][k]!,
+          }),
+          [
+            [
+              triangleKinds[0]!.en,
+              `An acute triangle has all angles less than $90^\\circ$, and one here is $${big}^\\circ$.`,
+              `锐角三角形的所有角都小于 $90^\\circ$，而这里有一个角是 $${big}^\\circ$。`,
+            ],
+            [
+              triangleKinds[1]!.en,
+              `A right triangle has an angle of exactly $90^\\circ$, and the largest here is $${big}^\\circ$.`,
+              `直角三角形有一个角恰好是 $90^\\circ$，而这里最大的角是 $${big}^\\circ$。`,
+            ],
+            [
+              triangleKinds[2]!.en,
+              `An obtuse triangle has an angle greater than $90^\\circ$, and the largest here is $${big}^\\circ$.`,
+              `钝角三角形有一个角大于 $90^\\circ$，而这里最大的角是 $${big}^\\circ$。`,
+            ],
+          ],
+        );
       },
     },
     {
       id: "counting-right-angles-in-shapes",
+      figure: gradeDrawings2["classifying-figures-based-on-angles#counting-right-angles-in-shapes"],
       title: t("Right angles in shapes", "图形中的直角"),
       explanation: t(
         "To count right angles in several shapes, find how many each shape has, multiply by the number of copies, and add. Rectangles and squares have $4$ right angles, a right triangle has exactly $1$, and a regular pentagon or hexagon has none, since its angles are larger than $90^\\circ$.\n\n$2$ squares and $3$ right triangles have $2 \\times 4 + 3 \\times 1 = 11$ right angles.",
@@ -1693,6 +1718,7 @@ export const solvingAngleProblems = topic(
     },
     {
       id: "angle-word-problems",
+      figure: gradeDrawings2["solving-angle-problems#angle-word-problems"],
       title: t("Word problems", "应用题"),
       explanation: t(
         "In an angle word problem, decide what the angles do. If parts make up a whole angle, add or subtract; if the same turn is repeated, multiply or divide.\n\nA sprinkler turns $45^\\circ$ at a time. To turn $180^\\circ$ it needs $180 \\div 45 = 4$ turns.",
@@ -1876,6 +1902,7 @@ export const modelingWithRectangles = topic(
     },
     {
       id: "finding-a-missing-side",
+      figure: gradeDrawings2["modeling-with-rectangles#finding-a-missing-side"],
       title: t("A missing side", "求未知的边长"),
       explanation: t(
         "A rectangle with perimeter $30$ m and length $9$ m: the length and width add up to $15$ m, so the width is $6$ m.",

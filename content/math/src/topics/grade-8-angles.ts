@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Compass, linear, type Mark, type Point, Q, sketch } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, numberProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 import { polygonName } from "./angles.ts";
@@ -437,6 +438,7 @@ const correspondingAngles = topic(
   [
     {
       id: "identifying-corresponding-angles",
+      figure: gradeDrawings3["corresponding-angles#identifying-corresponding-angles"],
       title: t("Identifying corresponding angles", "识别同位角"),
       explanation: t(
         "A **transversal** crosses two lines and makes four angles at each crossing. **Corresponding angles** are in the same position at the two crossings: both above their line and right of the transversal, for example.\n\nTo find the angle corresponding to $\\angle 2$ (above $\\ell$, right of the transversal), look at the crossing with $m$ for the angle above $m$ and right of the transversal: $\\angle 6$.",
@@ -463,6 +465,7 @@ const correspondingAngles = topic(
     },
     {
       id: "using-corresponding-angles",
+      figure: gradeDrawings3["corresponding-angles#using-corresponding-angles"],
       title: t("Using corresponding angles", "利用同位角求角"),
       explanation: t(
         "When the lines are parallel, corresponding angles are **equal**. Combined with what you know at one crossing (vertical angles are equal, a linear pair adds up to $180^\\circ$), one angle gives all eight.\n\nIf $\\ell \\parallel m$ and the angle above $\\ell$, right of the transversal, is $65^\\circ$, then the corresponding angle at $m$ is $65^\\circ$, and the angle beside it on $m$ (a linear pair) is $180^\\circ - 65^\\circ = 115^\\circ$.",
@@ -533,6 +536,7 @@ const alternateAngles = topic(
   [
     {
       id: "identifying-alternate-angles",
+      figure: gradeDrawings3["alternate-angles#identifying-alternate-angles"],
       title: t("Identifying alternate angles", "识别内错角与外错角"),
       explanation: t(
         "Angles between the two lines are **interior**; the others are **exterior**.\n\n- **Alternate interior angles** are both interior, on opposite sides of the transversal, at different crossings.\n- **Alternate exterior angles** are both exterior, on opposite sides of the transversal, at different crossings.\n\nIf $\\angle 3$ is below $\\ell$ and left of the transversal, it is interior; its alternate interior angle is above $m$ and right of the transversal: $\\angle 6$.",
@@ -561,6 +565,7 @@ const alternateAngles = topic(
     },
     {
       id: "alternate-angle-equations",
+      figure: gradeDrawings3["alternate-angles#alternate-angle-equations"],
       title: t("Equations from alternate angles", "由错角列方程"),
       explanation: t(
         "When the lines are parallel, alternate interior angles are equal and so are alternate exterior angles. If the angles are written with a variable, set the expressions equal.\n\nIf alternate interior angles measure $(3x - 15)^\\circ$ and $(x + 45)^\\circ$, then $3x - 15 = x + 45$, so $2x = 60$ and $x = 30$. Each angle measures $30 + 45 = 75^\\circ$.",
@@ -652,6 +657,7 @@ const consecutiveAngles = topic(
     },
     {
       id: "consecutive-angle-equations",
+      figure: gradeDrawings3["consecutive-angles#consecutive-angle-equations"],
       title: t("Equations from consecutive angles", "由同旁角列方程"),
       explanation: t(
         "When the lines are parallel and consecutive angles are written with a variable, their sum is $180^\\circ$.\n\nIf consecutive interior angles measure $(2x + 15)^\\circ$ and $(3x - 10)^\\circ$, then $(2x + 15) + (3x - 10) = 180$, so $5x + 5 = 180$, $5x = 175$ and $x = 35$. The angles are $85^\\circ$ and $95^\\circ$, which do add up to $180^\\circ$.",
@@ -722,6 +728,7 @@ const angleCriteriaForParallelLines = topic(
   [
     {
       id: "are-the-lines-parallel",
+      figure: gradeDrawings3["angle-criteria-for-parallel-lines#are-the-lines-parallel"],
       title: t("Are the lines parallel?", "两直线平行吗"),
       explanation: t(
         "The converses of the angle-pair facts tell when two lines cut by a transversal are parallel:\n\n- corresponding, alternate interior or alternate exterior angles are **equal**, or\n- consecutive interior or consecutive exterior angles are **supplementary**.\n\nIf alternate interior angles measure $68^\\circ$ and $72^\\circ$, the lines are **not** parallel: they meet somewhere, however close to parallel they look.",
@@ -951,6 +958,7 @@ const problemSolvingWithAnglesOfTriangles = topic(
   [
     {
       id: "angles-in-a-ratio",
+      figure: gradeDrawings3["problem-solving-with-angles-of-triangles#angles-in-a-ratio"],
       title: t("Angles in a ratio", "按比例分配的角"),
       explanation: t(
         "If the angles of a triangle are in the ratio $p : q : r$, write them as $px$, $qx$ and $rx$. Their sum is $180^\\circ$:\n\n$$(p + q + r)x = 180.$$\n\nFor the ratio $2 : 3 : 4$: $9x = 180$, so $x = 20$, and the angles are $40^\\circ$, $60^\\circ$ and $80^\\circ$.",
@@ -1167,6 +1175,7 @@ const theTriangleInequality = topic(
     },
     {
       id: "range-of-the-third-side",
+      figure: gradeDrawings3["the-triangle-inequality#range-of-the-third-side"],
       title: t("The range of the third side", "第三边的范围"),
       explanation: t(
         "If two sides of a triangle are $a$ and $b$ with $a \\ge b$, the third side $c$ must satisfy\n\n$$a - b < c < a + b.$$\n\nWith sides $5$ and $9$: $4 < c < 14$. If $c$ is a whole number, it can be any of $5, 6, \\ldots, 13$; neither $4$ nor $14$ works, because then the sides would lie flat.",
@@ -1391,6 +1400,7 @@ const regularPolygons = topic(
   [
     {
       id: "recognizing-regular-polygons",
+      figure: gradeDrawings3["regular-polygons#recognizing-regular-polygons"],
       title: t("Recognizing regular polygons", "识别正多边形"),
       explanation: t(
         "A polygon is **regular** only when **both** its sides are all equal **and** its angles are all equal. Either one alone is not enough:\n\n- a rhombus that is not a square has four equal sides but two different angles;\n- a rectangle that is not a square has four right angles but two different side lengths.\n\nA square has both, so it is a regular quadrilateral.",

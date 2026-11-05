@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { t } from "@ga/content";
 import { gcd, lcm, Q, svgDocument } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choiceProblem, mixedLatex, numberProblem, steps } from "../problems.ts";
 import { barFigure, coprimeTo, fr, mathText, mx, pickChoice, properFraction, twoBarsFigure } from "./grade-4-fractions.ts";
 
@@ -1669,6 +1670,7 @@ export const multiplyingMixedNumbersWordProblems = topic(
     },
     {
       id: "areas-and-scaling-with-mixed-numbers",
+      figure: gradeDrawings2["multiplying-mixed-numbers-word-problems#areas-and-scaling-with-mixed-numbers"],
       title: t("Areas and scaling", "面积与放缩"),
       explanation: t(
         "The area of a rectangle is length times width, also when the sides are mixed numbers. Write each side as an improper fraction and multiply. A rug $2\\frac{1}{2}$ yards by $1\\frac{1}{3}$ yards has area $\\frac{5}{2} \\times \\frac{4}{3} = \\frac{20}{6} = 3\\frac{1}{3}$ square yards.",
@@ -1724,6 +1726,7 @@ export const connectingFractionMultiplicationAndArea = topic(
   [
     {
       id: "area-of-a-unit-fraction-tile",
+      figure: gradeDrawings2["connecting-fraction-multiplication-and-area#area-of-a-unit-fraction-tile"],
       title: t("The area of one small rectangle", "一个小长方形的面积"),
       explanation: t(
         "A unit square cut into $3$ rows and $4$ columns has $12$ equal tiles, each $\\frac{1}{3}$ by $\\frac{1}{4}$ unit, with area $\\frac{1}{12}$ square unit.",
@@ -1791,6 +1794,7 @@ export const findingAreasUsingFractionMultiplication = topic(
   [
     {
       id: "areas-with-fraction-sides",
+      figure: gradeDrawings2["finding-areas-using-fraction-multiplication#areas-with-fraction-sides"],
       title: t("Fraction side lengths", "边长是分数"),
       explanation: t(
         "The area of a rectangle with fraction side lengths is still length times width. Multiply the fractions and simplify. A rectangle $\\frac{5}{6}$ meter by $\\frac{3}{4}$ meter has area $\\frac{5}{6} \\times \\frac{3}{4} = \\frac{15}{24} = \\frac{5}{8}$ square meter. The area is smaller than either side because both sides are less than $1$.",
@@ -1816,6 +1820,7 @@ export const findingAreasUsingFractionMultiplication = topic(
     },
     {
       id: "areas-with-mixed-number-sides",
+      figure: gradeDrawings2["finding-areas-using-fraction-multiplication#areas-with-mixed-number-sides"],
       title: t("Mixed number side lengths", "边长是带分数"),
       explanation: t(
         "When the sides are mixed numbers, write them as improper fractions, multiply, and write the answer as a mixed number. A rectangle $3\\frac{1}{2}$ feet by $2\\frac{1}{4}$ feet has area $\\frac{7}{2} \\times \\frac{9}{4} = \\frac{63}{8} = 7\\frac{7}{8}$ square feet. Area is measured in square units.",

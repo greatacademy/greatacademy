@@ -3,6 +3,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
@@ -83,31 +84,34 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
     ),
   ],
   "angles-and-angle-measures": [
-    skill(
-      "an-angle-cut-into-equal-angles",
-      ["An angle cut into equal angles", "把角平均分"],
-      [
-        "Angle measures add up, so rays from the vertex cut an angle into smaller angles whose measures total the original. Equal smaller angles are found by dividing.",
-        "角的度数可以相加，所以从顶点引出的射线把角分成几个小角，小角的度数和等于原来的角。相等的小角用除法求。",
-      ],
-      (rng) => {
-        const k = rng.int(2, 6);
-        const each = rng.int(5, 30);
-        const whole_ = k * each;
-        return whole(
-          [
-            `Rays from the vertex cut an angle of $${whole_}^\\circ$ into $${k}$ equal angles. What is the measure of each, in degrees?`,
-            `从顶点引出的射线把 $${whole_}^\\circ$ 的角分成 $${k}$ 个相等的角。每个角是多少度？`,
-          ],
-          each,
-          [whole_ - k, whole_ * k, k + each],
-          [
-            `The $${k}$ equal angles fill the whole angle, so $${whole_} \\div ${k} = ${each}$.`,
-            `$${k}$ 个相等的角合成整个角，所以 $${whole_} \\div ${k} = ${each}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "an-angle-cut-into-equal-angles",
+        ["An angle cut into equal angles", "把角平均分"],
+        [
+          "Angle measures add up, so rays from the vertex cut an angle into smaller angles whose measures total the original. Equal smaller angles are found by dividing.",
+          "角的度数可以相加，所以从顶点引出的射线把角分成几个小角，小角的度数和等于原来的角。相等的小角用除法求。",
+        ],
+        (rng) => {
+          const k = rng.int(2, 6);
+          const each = rng.int(5, 30);
+          const whole_ = k * each;
+          return whole(
+            [
+              `Rays from the vertex cut an angle of $${whole_}^\\circ$ into $${k}$ equal angles. What is the measure of each, in degrees?`,
+              `从顶点引出的射线把 $${whole_}^\\circ$ 的角分成 $${k}$ 个相等的角。每个角是多少度？`,
+            ],
+            each,
+            [whole_ - k, whole_ * k, k + each],
+            [
+              `The $${k}$ equal angles fill the whole angle, so $${whole_} \\div ${k} = ${each}$.`,
+              `$${k}$ 个相等的角合成整个角，所以 $${whole_} \\div ${k} = ${each}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["angles-and-angle-measures#an-angle-cut-into-equal-angles"],
+    },
   ],
   "dot-plots": [
     skill(

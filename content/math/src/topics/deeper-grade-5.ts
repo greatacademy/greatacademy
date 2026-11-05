@@ -5,6 +5,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 
 import { mixedLatex, numberProblem } from "../problems.ts";
 
@@ -81,6 +82,7 @@ const integersBetween: KnowledgePointDef = {
 
 const elevationGap: KnowledgePointDef = {
   id: "the-gap-across-zero",
+  figure: gradeDrawings2["negative-numbers#the-gap-across-zero"],
   title: t("The gap across zero", "跨过零的差距"),
   explanation: t(
     "Temperatures and heights can lie on either side of zero. To find the gap between one value above zero and one below it, add their distances from zero, since the path from one to the other goes through zero. Subtracting these distances only works when both values are on the same side. Picturing the values on a vertical number line makes it clear which of the two cases a problem is showing.",
@@ -869,6 +871,7 @@ const ruleBetweenPatterns: KnowledgePointDef = {
 
 const squareWithSamePerimeter: KnowledgePointDef = {
   id: "a-square-with-the-same-perimeter",
+  figure: gradeDrawings2["rectangles-rhombuses-and-squares#a-square-with-the-same-perimeter"],
   title: t("A square with the same perimeter", "周长相同的正方形"),
   explanation: t(
     "A piece of wire keeps its length when it is bent into a new shape, and so the perimeter stays the same. A rectangle and a square made from one wire have the same perimeter, but not the same area. Find the perimeter from the first shape, and then divide by 4 to find the side of the square. Among rectangles with one fixed perimeter, the square always has the largest area.",
@@ -905,6 +908,7 @@ const squareWithSamePerimeter: KnowledgePointDef = {
 
 const diagonalsFromVertex: KnowledgePointDef = {
   id: "diagonals-from-one-vertex",
+  figure: gradeDrawings2["polygons#diagonals-from-one-vertex"],
   title: t("Diagonals from one vertex", "从一个顶点出发的对角线"),
   explanation: t(
     "A diagonal joins two vertices of a polygon that are not next to each other. From any one vertex, a line cannot go to that vertex itself or to its two neighbors, since those are sides. So a polygon with $n$ sides has $n - 3$ diagonals from each vertex. A quadrilateral therefore has one, which agrees with a picture. These diagonals also cut the polygon into triangles, one more than the number of diagonals.",

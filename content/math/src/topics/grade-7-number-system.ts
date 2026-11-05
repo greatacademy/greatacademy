@@ -1,6 +1,7 @@
 import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, isTerminating, mixedLatex, numberProblem } from "../problems.ts";
 import { compareProblem, mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -108,6 +109,7 @@ export const subtractingAPositiveNumberFromASmallerPositiveNumber = topic(
   [
     {
       id: "smaller-minus-larger",
+      figure: gradeDrawings3["subtracting-a-positive-number-from-a-smaller-positive-number#smaller-minus-larger"],
       title: t("Subtracting a larger number", "减去较大的数"),
       explanation: t(
         "Subtracting a positive number means moving left on the number line. When the number taken away is larger, the result passes zero and becomes negative: it is the opposite of the larger number minus the smaller one.\n\n$4 - 9$: start at $4$ and move $9$ units left. Moving $4$ units reaches $0$, and $5$ more reach $-5$. So $4 - 9 = -(9 - 4) = -5$.",
@@ -421,6 +423,7 @@ export const addingAPositiveNumberToANegativeNumber = topic(
   [
     {
       id: "negative-plus-positive-integers",
+      figure: gradeDrawings3["adding-a-positive-number-to-a-negative-number#negative-plus-positive-integers"],
       title: t("Integers", "整数"),
       explanation: t(
         "Adding a positive number moves right on the number line. Starting from a negative number, the sum stays negative if the move is shorter than the distance to zero, and becomes positive if it is longer.\n\n$-8 + 3$: from $-8$ move $3$ right to $-5$. $-3 + 8$: from $-3$ move $8$ right, past $0$, to $5$.",
@@ -488,6 +491,7 @@ export const addingANegativeNumber = topic(
   [
     {
       id: "positive-plus-negative",
+      figure: gradeDrawings3["adding-a-negative-number#positive-plus-negative"],
       title: t("A positive number plus a negative number", "正数加负数"),
       explanation: t(
         "Adding a negative number has the same effect as subtracting its absolute value: it moves left on the number line. So rewrite the sum as a subtraction and work it out.\n\n$5 + (-8) = 5 - 8 = -3$ and $9 + (-4) = 9 - 4 = 5$.",
@@ -724,6 +728,7 @@ export const interpretingAdditiveOppositesAndAdditionUsingAbsoluteValue = topic(
   [
     {
       id: "locating-a-sum-on-the-number-line",
+      figure: gradeDrawings3["interpreting-additive-opposites-and-addition-using-absolute-value#locating-a-sum-on-the-number-line"],
       title: t("Where is p + q?", "p + q 在哪里？"),
       explanation: t(
         "The sum $p + q$ lies at distance $|q|$ from $p$ on the number line: to the right of $p$ when $q$ is positive and to the left when $q$ is negative.\n\n$3.5 + (-6)$ is $|-6| = 6$ units to the left of $3.5$, at $-2.5$.",
@@ -756,6 +761,7 @@ export const interpretingAdditiveOppositesAndAdditionUsingAbsoluteValue = topic(
     },
     {
       id: "distance-between-rational-numbers",
+      figure: gradeDrawings3["interpreting-additive-opposites-and-addition-using-absolute-value#distance-between-rational-numbers"],
       title: t("The distance between two numbers", "两数之间的距离"),
       explanation: t(
         "The distance between two numbers on the number line is the absolute value of their difference. Subtract in either order and take the absolute value; a distance is never negative.\n\nThe distance between $-4.5$ and $2.25$ is $|2.25 - (-4.5)| = |6.75| = 6.75$.",

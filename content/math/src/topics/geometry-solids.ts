@@ -1,6 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, num, type Point, Q, radical, simplifyRadical, sketch } from "@ga/subject-math";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { solidDrawings } from "../explanation-drawings-solids.ts";
 import {
   article,
@@ -447,6 +448,7 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
   knowledgePoints: [
     {
       id: "prisms-and-pyramids",
+      figure: geometryDrawings2["identifying-three-dimensional-shapes#prisms-and-pyramids"],
       title: t("Prisms and pyramids", "棱柱与棱锥"),
       explanation: t(
         "A **solid** is a three-dimensional shape. A **prism** has two congruent, parallel faces called **bases**, joined by rectangles. A **pyramid** has one base, and triangles rise from the sides of the base to meet at a single point, the **apex**.\n\nPrisms and pyramids are named after the shape of the base: a prism whose bases are hexagons is a **hexagonal prism**, and a pyramid whose base is a square is a **square pyramid**. A prism with rectangular bases is a **rectangular prism** (a box), and a rectangular prism whose faces are all squares is a **cube**.\n\nFor example, a solid whose faces are $2$ pentagons and $5$ rectangles is a pentagonal prism.",
@@ -512,6 +514,7 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
     },
     {
       id: "solids-with-curved-surfaces",
+      figure: geometryDrawings2["identifying-three-dimensional-shapes#solids-with-curved-surfaces"],
       title: t("Cylinders, cones and spheres", "圆柱、圆锥与球"),
       explanation: t(
         "Some solids have curved surfaces. A **cylinder** has two congruent, parallel circular bases joined by a curved surface. A **cone** has one circular base and a curved surface that narrows to a single point, its apex. A **sphere** is the set of all points in space at the same distance, the **radius**, from a center; half of a sphere, cut through its center, is a **hemisphere**.\n\nEveryday objects are modeled by solids: a can of soup is a cylinder, an ice-cream cone is a cone, a basketball is a sphere and a shoebox is a rectangular prism.",
@@ -540,6 +543,7 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
     },
     {
       id: "polyhedra",
+      figure: geometryDrawings2["identifying-three-dimensional-shapes#polyhedra"],
       title: t("Polyhedra", "多面体"),
       explanation: t(
         "A **polyhedron** (plural *polyhedra*) is a solid whose faces are all polygons. Prisms, pyramids and cubes are polyhedra. Cylinders, cones, spheres and hemispheres are not, because part of their surface is curved.\n\nOf a cone, a cube, a sphere and a cylinder, only the cube is a polyhedron.",
@@ -612,6 +616,7 @@ export const facesVerticesAndEdgesOfPolyhedrons: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-for-prisms",
+      figure: geometryDrawings2["faces-vertices-and-edges-of-polyhedrons#counting-for-prisms"],
       title: t("Counting for prisms", "棱柱的计数"),
       explanation: t(
         "A **face** of a polyhedron is one of its flat polygon surfaces, an **edge** is a segment where two faces meet, and a **vertex** is a corner where edges meet.\n\nA prism whose bases have $n$ sides has\n\n- $n + 2$ faces: two bases and $n$ rectangles;\n- $2n$ vertices: $n$ on each base;\n- $3n$ edges: $n$ on each base and $n$ joining the bases.\n\nA pentagonal prism has $7$ faces, $10$ vertices and $15$ edges.",
@@ -638,6 +643,7 @@ export const facesVerticesAndEdgesOfPolyhedrons: TopicDef = {
     },
     {
       id: "counting-for-pyramids",
+      figure: geometryDrawings2["faces-vertices-and-edges-of-polyhedrons#counting-for-pyramids"],
       title: t("Counting for pyramids", "棱锥的计数"),
       explanation: t(
         "A pyramid whose base has $n$ sides has\n\n- $n + 1$ faces: the base and $n$ triangles;\n- $n + 1$ vertices: $n$ on the base and the apex;\n- $2n$ edges: $n$ around the base and $n$ rising to the apex.\n\nA hexagonal pyramid has $7$ faces, $7$ vertices and $12$ edges.",
@@ -728,6 +734,7 @@ export const netsOfPolyhedrons: TopicDef = {
   knowledgePoints: [
     {
       id: "folding-a-net",
+      figure: geometryDrawings2["nets-of-polyhedrons#folding-a-net"],
       title: t("The solid of a net", "展开图对应的立体图形"),
       explanation: t(
         "A **net** of a polyhedron is a flat pattern of its faces, joined edge to edge, that folds up into the solid.\n\nA net of a prism has two copies of the base and a strip of rectangles, one for each side of the base. A net of a pyramid has one base with a triangle on each of its sides.\n\nSo a net made of one hexagon with six triangles around it folds into a hexagonal pyramid.",
@@ -771,6 +778,7 @@ export const netsOfPolyhedrons: TopicDef = {
     },
     {
       id: "opposite-faces-of-a-cube",
+      figure: geometryDrawings2["nets-of-polyhedrons#opposite-faces-of-a-cube"],
       title: t("Opposite faces of a cube", "正方体的相对面"),
       explanation: t(
         "A cube has $6$ square faces in $3$ pairs of opposite faces. In a net, two squares in a straight row with exactly one square between them become opposite faces: in a row of four squares, the first and third are opposite, and so are the second and fourth. A square attached above the row and a square attached below it are opposite each other.\n\nTwo squares that share an edge in the net are never opposite: they meet along that edge.",
@@ -814,6 +822,7 @@ export const netsOfPolyhedrons: TopicDef = {
     },
     {
       id: "nets-of-a-cube",
+      figure: geometryDrawings2["nets-of-polyhedrons#nets-of-a-cube"],
       title: t("Is it a net of a cube?", "是不是正方体的展开图"),
       explanation: t(
         "Not every pattern of six squares folds into a cube. Fold it in your mind, one square at a time: if two squares would land on the same face, the pattern is not a net.\n\n- A row of five or more squares overlaps itself.\n- Two squares attached on the same side of a row of four both land on the same face.\n- A $2 \\times 3$ block of squares cannot fold closed.\n\nA row of four squares with one square attached above it and one below it, anywhere along the row, is always a net of a cube.",
@@ -931,6 +940,7 @@ export const findingSurfaceAreasUsingNets: TopicDef = {
   knowledgePoints: [
     {
       id: "nets-of-boxes",
+      figure: geometryDrawings2["finding-surface-areas-using-nets#nets-of-boxes"],
       title: t("Nets of boxes", "长方体的展开图"),
       explanation: t(
         "The **surface area** of a polyhedron is the total area of its faces, which is the area of its net. It is measured in square units.\n\nA box $l$ long, $w$ wide and $h$ high has three pairs of equal rectangular faces, so\n\n$$S = 2lw + 2lh + 2wh.$$\n\nA box $5$ cm by $3$ cm by $2$ cm has $S = 2 \\cdot 15 + 2 \\cdot 10 + 2 \\cdot 6 = 62\\text{ cm}^2$.",
@@ -1002,6 +1012,7 @@ export const findingSurfaceAreasUsingNets: TopicDef = {
     },
     {
       id: "nets-of-triangular-prisms",
+      figure: geometryDrawings2["finding-surface-areas-using-nets#nets-of-triangular-prisms"],
       title: t("Nets of triangular prisms", "三棱柱的展开图"),
       explanation: t(
         "The net of a triangular prism has two triangles and three rectangles. Each rectangle is as long as the prism, and as wide as one side of the triangle, so the three rectangles together have area (perimeter of the triangle) × (length).\n\nA prism of length $10$ cm whose bases are right triangles with legs $3$ and $4$ cm and hypotenuse $5$ cm has\n\n$$S = 2 \\cdot \\tfrac{1}{2} \\cdot 3 \\cdot 4 + (3 + 4 + 5) \\cdot 10 = 12 + 120 = 132\\text{ cm}^2.$$",
@@ -1032,6 +1043,7 @@ export const findingSurfaceAreasUsingNets: TopicDef = {
     },
     {
       id: "nets-of-square-pyramids",
+      figure: geometryDrawings2["finding-surface-areas-using-nets#nets-of-square-pyramids"],
       title: t("Nets of square pyramids", "四棱锥的展开图"),
       explanation: t(
         "The net of a square pyramid is a square with a triangle on each side. If the base has side $s$ and each triangle has height $l$ (measured from the base side to the apex), then\n\n$$S = s^2 + 4 \\cdot \\tfrac{1}{2} s l = s^2 + 2sl.$$\n\nWith $s = 6$ cm and $l = 5$ cm, $S = 36 + 60 = 96\\text{ cm}^2$.",
@@ -1349,6 +1361,7 @@ export const theFivePlatonicSolids: TopicDef = {
   knowledgePoints: [
     {
       id: "naming-platonic-solids",
+      figure: geometryDrawings2["the-five-platonic-solids#naming-platonic-solids"],
       title: t("The five Platonic solids", "五种正多面体"),
       explanation: t(
         "A **Platonic solid** (regular polyhedron) is a convex polyhedron whose faces are congruent regular polygons, with the same number of faces meeting at every vertex. There are exactly five:\n\n| Solid | Faces | At each vertex | $F$ | $V$ | $E$ |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n| Tetrahedron | triangles | $3$ | $4$ | $4$ | $6$ |\n| Cube | squares | $3$ | $6$ | $8$ | $12$ |\n| Octahedron | triangles | $4$ | $8$ | $6$ | $12$ |\n| Dodecahedron | pentagons | $3$ | $12$ | $20$ | $30$ |\n| Icosahedron | triangles | $5$ | $20$ | $12$ | $30$ |\n\nThe name gives the number of faces: *tetra* $4$, *octa* $8$, *dodeca* $12$, *icosa* $20$.",
@@ -1383,6 +1396,7 @@ export const theFivePlatonicSolids: TopicDef = {
     },
     {
       id: "counting-platonic-solids",
+      figure: geometryDrawings2["the-five-platonic-solids#counting-platonic-solids"],
       title: t("Counting with Platonic solids", "正多面体的计数"),
       explanation: t(
         "The counts follow from the faces. An icosahedron has $20$ triangular faces, so it has $\\frac{20 \\cdot 3}{2} = 30$ edges; $5$ faces meet at each vertex, so it has $\\frac{20 \\cdot 3}{5} = 12$ vertices. Euler's formula checks the result: $12 - 30 + 20 = 2$.\n\nThe face angles around one vertex add up to the number of faces there times the angle of one face: at a vertex of an icosahedron, $5 \\cdot 60^\\circ = 300^\\circ$.",
@@ -1473,6 +1487,7 @@ export const theFivePlatonicSolids: TopicDef = {
     },
     {
       id: "why-only-five",
+      figure: geometryDrawings2["the-five-platonic-solids#why-only-five"],
       title: t("Why only five", "为什么只有五种"),
       explanation: t(
         "At each vertex of a convex polyhedron, at least $3$ faces meet, and their angles must add up to **less than** $360^\\circ$: at exactly $360^\\circ$ they lie flat, and above it they cannot fit.\n\n- Equilateral triangles ($60^\\circ$): $3$, $4$ or $5$ at a vertex ($180^\\circ$, $240^\\circ$, $300^\\circ$), but $6$ make $360^\\circ$.\n- Squares ($90^\\circ$): only $3$ ($270^\\circ$).\n- Regular pentagons ($108^\\circ$): only $3$ ($324^\\circ$).\n- Regular hexagons ($120^\\circ$): $3$ already make $360^\\circ$.\n\nThat leaves five possibilities, the five Platonic solids.",
@@ -2392,6 +2407,7 @@ export const theDistanceFormulaInThreeDimensions: TopicDef = {
   knowledgePoints: [
     {
       id: "distance-from-the-origin",
+      figure: geometryDrawings2["the-distance-formula-in-three-dimensions#distance-from-the-origin"],
       title: t("Distance from the origin", "到原点的距离"),
       explanation: t(
         "In space, a point has three coordinates $(x, y, z)$ on three perpendicular axes. The point $(x, y, z)$ is the far corner of a box with edges $|x|$, $|y|$ and $|z|$ whose opposite corner is the origin, so its distance from the origin is the diagonal of that box:\n\n$$d = \\sqrt{x^2 + y^2 + z^2}.$$\n\nThe point $(2, -3, 6)$ is $\\sqrt{4 + 9 + 36} = \\sqrt{49} = 7$ units from the origin.",
@@ -2495,6 +2511,7 @@ export const volumesOfPyramids: TopicDef = {
   knowledgePoints: [
     {
       id: "pyramids-on-rectangles",
+      figure: geometryDrawings2["volumes-of-pyramids#pyramids-on-rectangles"],
       title: t("Pyramids on rectangles", "底面为长方形的棱锥"),
       explanation: t(
         "The **height** of a pyramid is the perpendicular distance from its apex to the plane of its base. A pyramid holds exactly one third of the prism with the same base and height:\n\n$$V = \\frac{1}{3}Bh,$$\n\nwhere $B$ is the area of the base. A pyramid on a $6$ cm by $5$ cm rectangle with height $8$ cm has $V = \\frac{1}{3} \\cdot 30 \\cdot 8 = 80\\text{ cm}^3$.",
@@ -2531,6 +2548,7 @@ export const volumesOfPyramids: TopicDef = {
     },
     {
       id: "pyramids-on-triangles",
+      figure: geometryDrawings2["volumes-of-pyramids#pyramids-on-triangles"],
       title: t("Pyramids on triangles", "底面为三角形的棱锥"),
       explanation: t(
         "The formula $V = \\frac{1}{3}Bh$ works for any base: find the area of the base first. A triangular pyramid whose base is a triangle with base $6$ cm and height $4$ cm, and whose height is $9$ cm, has $B = \\frac{1}{2} \\cdot 6 \\cdot 4 = 12\\text{ cm}^2$ and $V = \\frac{1}{3} \\cdot 12 \\cdot 9 = 36\\text{ cm}^3$.\n\nKeep the two heights apart: one belongs to the triangle, the other to the pyramid.",
@@ -2690,6 +2708,7 @@ export const surfaceAreasOfPyramids: TopicDef = {
     },
     {
       id: "lateral-area-of-regular-pyramids",
+      figure: geometryDrawings2["surface-areas-of-pyramids#lateral-area-of-regular-pyramids"],
       title: t("Lateral area of regular pyramids", "正棱锥的侧面积"),
       explanation: t(
         "The **lateral area** of a pyramid is the area of its triangular faces only. A regular pyramid whose base has $n$ edges of length $s$ has $n$ congruent triangles:\n\n$$L = n \\cdot \\frac{1}{2}sl = \\frac{1}{2}Pl,$$\n\nwhere $P = ns$ is the perimeter of the base. A regular hexagonal pyramid with base edge $4$ cm and slant height $9$ cm has $L = \\frac{1}{2} \\cdot 24 \\cdot 9 = 108\\text{ cm}^2$.",
@@ -2958,6 +2977,7 @@ export const volumesOfCylinders: TopicDef = {
     },
     {
       id: "approximating-with-pi",
+      figure: geometryDrawings2["volumes-of-cylinders#approximating-with-pi"],
       title: t("Approximating with 3.14", "用 3.14 近似计算"),
       explanation: t(
         "For a decimal answer, replace $\\pi$ by an approximation such as $3.14$ at the end.\n\nA cylinder with radius $2$ m and height $10$ m has $V = 40\\pi \\approx 40 \\cdot 3.14 = 125.6\\text{ m}^3$.",
@@ -3151,6 +3171,7 @@ export const surfaceAreasOfCylinders: TopicDef = {
     },
     {
       id: "open-cylinders-and-missing-heights",
+      figure: geometryDrawings2["surface-areas-of-cylinders#open-cylinders-and-missing-heights"],
       title: t("Open cylinders and missing heights", "无盖圆柱与未知的高"),
       explanation: t(
         "A cylinder open at the top, like a cup, has one base: $S = \\pi r^2 + 2\\pi r h$.\n\nTo find a missing height, substitute and solve. A cylinder with radius $2$ cm and surface area $40\\pi\\text{ cm}^2$ has $8\\pi + 4\\pi h = 40\\pi$, so $4h = 32$ and $h = 8$ cm.",
@@ -3247,6 +3268,7 @@ export const volumesOfRightCones: TopicDef = {
     },
     {
       id: "cones-and-cylinders",
+      figure: geometryDrawings2["volumes-of-right-cones#cones-and-cylinders"],
       title: t("Cones and cylinders", "圆锥与圆柱"),
       explanation: t(
         "A cone and a cylinder with the same base and the same height have volumes in the ratio $1 : 3$. If such a cylinder holds $60\\pi\\text{ cm}^3$, the cone holds $20\\pi\\text{ cm}^3$; if the cone holds $15\\text{ cm}^3$, the cylinder holds $45\\text{ cm}^3$.\n\nIt takes three cones of water to fill the cylinder.",
@@ -3433,6 +3455,7 @@ export const slantHeightsOfRightCones: TopicDef = {
     },
     {
       id: "radius-from-slant-height",
+      figure: geometryDrawings2["slant-heights-of-right-cones#radius-from-slant-height"],
       title: t("Radius or diameter", "求半径或由直径求母线"),
       explanation: t(
         "In the same way, $r = \\sqrt{l^2 - h^2}$. If the diameter is given, halve it before using the right triangle: a cone with diameter $10$ cm and height $12$ cm has $r = 5$ cm and $l = \\sqrt{25 + 144} = 13$ cm.",
@@ -3520,6 +3543,7 @@ export const surfaceAreasOfRightCones: TopicDef = {
     },
     {
       id: "total-surface-area-of-a-cone",
+      figure: geometryDrawings2["surface-areas-of-right-cones#total-surface-area-of-a-cone"],
       title: t("Total surface area", "表面积"),
       explanation: t(
         "Add the circular base to the lateral area:\n\n$$S = \\pi r^2 + \\pi r l.$$\n\nA cone with radius $3$ cm and slant height $5$ cm has $S = 9\\pi + 15\\pi = 24\\pi\\text{ cm}^2$.",
@@ -3643,6 +3667,7 @@ export const volumesOfSpheres: TopicDef = {
     },
     {
       id: "volume-of-a-hemisphere",
+      figure: geometryDrawings2["volumes-of-spheres#volume-of-a-hemisphere"],
       title: t("Volume of a hemisphere", "半球的体积"),
       explanation: t(
         "Cutting a sphere through its center gives two equal halves called hemispheres. Each half holds half of the sphere's volume, and the radius of the hemisphere is the radius of the sphere.\n\nA hemisphere is half a sphere, so its volume is\n\n$$V = \\frac{1}{2} \\cdot \\frac{4}{3}\\pi r^3 = \\frac{2}{3}\\pi r^3.$$\n\nA hemispherical bowl with radius $6$ cm holds $\\frac{2}{3}\\pi \\cdot 216 = 144\\pi\\text{ cm}^3$.",
@@ -3716,6 +3741,7 @@ export const surfaceAreasOfSpheres: TopicDef = {
   knowledgePoints: [
     {
       id: "surface-area-of-a-sphere",
+      figure: geometryDrawings2["surface-areas-of-spheres#surface-area-of-a-sphere"],
       title: t("Surface area of a sphere", "球的表面积"),
       explanation: t(
         "A sphere of radius $r$ has surface area\n\n$$S = 4\\pi r^2,$$\n\nexactly four times the area of a circle through its center (a **great circle**). A sphere with radius $5$ cm has $S = 4\\pi \\cdot 25 = 100\\pi\\text{ cm}^2$.",
@@ -3748,6 +3774,7 @@ export const surfaceAreasOfSpheres: TopicDef = {
     },
     {
       id: "radius-from-the-surface-area",
+      figure: geometryDrawings2["surface-areas-of-spheres#radius-from-the-surface-area"],
       title: t("Radius from the surface area", "由表面积求半径"),
       explanation: t(
         "Substitute into $S = 4\\pi r^2$, divide by $4\\pi$ and take the square root.\n\nA sphere with surface area $196\\pi\\text{ cm}^2$ has $r^2 = 49$, so $r = 7$ cm.",
@@ -3774,6 +3801,7 @@ export const surfaceAreasOfSpheres: TopicDef = {
     },
     {
       id: "hemispheres-and-volume",
+      figure: geometryDrawings2["surface-areas-of-spheres#hemispheres-and-volume"],
       title: t("Hemispheres, and surface area from volume", "半球，以及由体积求表面积"),
       explanation: t(
         "A solid hemisphere has a curved surface, half of $4\\pi r^2$, and a flat circular face $\\pi r^2$:\n\n$$S = 2\\pi r^2 + \\pi r^2 = 3\\pi r^2.$$\n\nTo pass from volume to surface area, find the radius first: a sphere with volume $36\\pi\\text{ cm}^3$ has $r^3 = 27$, $r = 3$ cm, and $S = 36\\pi\\text{ cm}^2$.",
@@ -3936,6 +3964,7 @@ export const conicalFrustums: TopicDef = {
     },
     {
       id: "surface-area-of-a-frustum",
+      figure: geometryDrawings2["conical-frustums#surface-area-of-a-frustum"],
       title: t("Surface area of a frustum", "圆台的表面积"),
       explanation: t(
         "The slant height $l$ of a frustum is measured along its side, between the two circles. Its lateral area is the difference of the lateral areas of the two cones, which works out to\n\n$$L = \\pi(R + r)l.$$\n\nThe total surface area adds the two circles: $S = \\pi(R + r)l + \\pi R^2 + \\pi r^2$. If the height is given, the slant height is the hypotenuse of a right triangle with legs $h$ and $R - r$.\n\nWith $R = 7$, $r = 4$ and $l = 5$: $L = 55\\pi$ and $S = 55\\pi + 49\\pi + 16\\pi = 120\\pi$.",
@@ -3991,6 +4020,7 @@ export const volumesOfRevolution: TopicDef = {
   knowledgePoints: [
     {
       id: "solids-of-revolution",
+      figure: geometryDrawings2["volumes-of-revolution#solids-of-revolution"],
       title: t("Solids of revolution", "旋转体"),
       explanation: t(
         "Rotating a plane shape a full turn about a line in its plane, the **axis**, sweeps out a **solid of revolution**. Each point of the shape traces a circle around the axis.\n\n- A rectangle rotated about one of its sides makes a cylinder.\n- A right triangle rotated about one of its legs makes a cone.\n- A semicircle rotated about its diameter makes a sphere.\n- A right trapezoid rotated about the side perpendicular to its bases makes a frustum of a cone.",
@@ -4076,6 +4106,7 @@ export const volumesOfRevolution: TopicDef = {
     },
     {
       id: "rotating-rectangles",
+      figure: geometryDrawings2["volumes-of-revolution#rotating-rectangles"],
       title: t("Rotating rectangles", "旋转长方形"),
       explanation: t(
         "When a rectangle is rotated about one of its sides, that side becomes the height of the cylinder and the adjacent side becomes its radius.\n\nThe rectangle with vertices $(0, 0)$, $(5, 0)$, $(5, 2)$ and $(0, 2)$ rotated about the $x$-axis makes a cylinder with height $5$ and radius $2$, so $V = \\pi \\cdot 2^2 \\cdot 5 = 20\\pi$. Rotated about the $y$-axis it makes a cylinder with height $2$ and radius $5$: $V = 50\\pi$.",
@@ -4105,6 +4136,7 @@ export const volumesOfRevolution: TopicDef = {
     },
     {
       id: "rotating-right-triangles",
+      figure: geometryDrawings2["volumes-of-revolution#rotating-right-triangles"],
       title: t("Rotating right triangles", "旋转直角三角形"),
       explanation: t(
         "When a right triangle is rotated about one of its legs, that leg becomes the height of the cone and the other leg its radius.\n\nThe triangle with vertices $(0, 0)$, $(6, 0)$ and $(0, 3)$ rotated about the $x$-axis makes a cone with height $6$ and radius $3$: $V = \\frac{1}{3}\\pi \\cdot 9 \\cdot 6 = 18\\pi$. Rotated about the $y$-axis it makes a cone with height $3$ and radius $6$: $V = 36\\pi$.",

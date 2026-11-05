@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type Interval, linear, num, paren, plane, poly, Q, relSymbol, union } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import {
   choiceProblem,
@@ -780,6 +781,7 @@ export const graphingLinearEquations = topic(
   [
     {
       id: "reading-a-solution-from-the-graph",
+      figure: gradeDrawings3["graphing-linear-equations#reading-a-solution-from-the-graph"],
       title: t("Reading a solution from the graph", "从图像读出解"),
       explanation: t(
         "Each point on the line is a solution of its equation. To find $y$ for a given $x$, go from $x$ on the $x$-axis straight up or down to the line, then across to the $y$-axis. On a line through $(0, 3)$ and $(2, -1)$, the point above or below $x = 4$ is $(4, -5)$, so $y = -5$ when $x = 4$.",
@@ -815,6 +817,7 @@ export const graphingLinearEquations = topic(
     },
     {
       id: "matching-an-equation-to-its-graph",
+      figure: gradeDrawings3["graphing-linear-equations#matching-an-equation-to-its-graph"],
       title: t("Matching an equation to its graph", "根据图像选方程"),
       explanation: t(
         "To check whether an equation has a given line as its graph, read two points of the line and substitute them. The line through $(0, 1)$ and $(2, 5)$ is the graph of $y = 2x + 1$: $2(0) + 1 = 1$ and $2(2) + 1 = 5$. It is not the graph of $y = x + 2$, because $(0, 1)$ does not satisfy it.",
@@ -931,6 +934,7 @@ export const compoundInequalities = topic(
     },
     {
       id: "writing-from-a-graph",
+      figure: gradeDrawings3["compound-inequalities#writing-from-a-graph"],
       title: t("Writing a compound inequality from a graph", "根据图像写复合不等式"),
       explanation: t(
         "A segment from an open circle at $-3$ to a closed dot at $4$ shows $-3 < x \\le 4$. Two rays, one to the left from a closed dot at $-1$ and one to the right from an open circle at $2$, show $x \\le -1 \\text{ or } x > 2$.",
@@ -1230,6 +1234,7 @@ export const representingSolutionsToInequalitiesOnNumberLines = topic(
   [
     {
       id: "describing-the-graph-of-the-solutions",
+      figure: gradeDrawings3["representing-solutions-to-inequalities-on-number-lines#describing-the-graph-of-the-solutions"],
       title: t("Describing the graph of the solutions", "描述解的图像"),
       explanation: t(
         "Solve, then read the result: $-4x + 1 \\ge 9$ gives $-4x \\ge 8$, so $x \\le -2$. Its graph is a closed dot at $-2$, shaded to the left.",
@@ -1253,6 +1258,7 @@ export const representingSolutionsToInequalitiesOnNumberLines = topic(
     },
     {
       id: "choosing-the-inequality-for-a-graph",
+      figure: gradeDrawings3["representing-solutions-to-inequalities-on-number-lines#choosing-the-inequality-for-a-graph"],
       title: t("Choosing the inequality for a graph", "根据图像选不等式"),
       explanation: t(
         "To decide which inequality a graph shows, solve each candidate and compare it with the graph. A graph with an open circle at $3$ shaded to the left shows $x < 3$. It matches $-2x > -6$, because dividing by $-2$ gives $x < 3$, but not $-2x < -6$.",

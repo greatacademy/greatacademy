@@ -2,6 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, lcm, type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choiceProblem, numberProblem, steps, yesNo } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -1303,6 +1304,7 @@ export const twoDigitByOneDigitMultiplicationUsingAreaModels: TopicDef = {
     },
     {
       id: "adding-the-parts",
+      figure: gradeDrawings2["two-digit-by-one-digit-multiplication-using-area-models#adding-the-parts"],
       title: t("Adding the parts", "把各部分相加"),
       explanation: t(
         "An area model splits the two-digit factor into tens and ones. Each part is a smaller product that is easy to find, and the whole area is the sum of the parts:\n\n$$6 \\times 47 = 6 \\times 40 + 6 \\times 7 = 240 + 42 = 282$$\n\nBoth parts must be multiplied by $6$; $6 \\times 40 + 7$ forgets the ones.",
@@ -2667,6 +2669,7 @@ export const twoDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
     },
     {
       id: "finding-the-quotient-from-a-model",
+      figure: gradeDrawings2["two-digit-by-one-digit-division-using-area-models#finding-the-quotient-from-a-model"],
       title: t("Finding the quotient", "求出商"),
       explanation: t(
         "The whole length of the rectangle is the quotient: add the lengths of the parts. For $72 \\div 6$: $10 + 2 = 12$, so $72 \\div 6 = 12$.",

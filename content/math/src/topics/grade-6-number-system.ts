@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q, sketch, svgDocument } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem } from "../problems.ts";
 import { compareProblem, fr, mathText, pickChoice, properFraction } from "./grade-4-fractions.ts";
@@ -219,6 +220,7 @@ export const findingSideLengthsUsingFractionDivision = topic(
   [
     {
       id: "side-from-a-fractional-area",
+      figure: gradeDrawings3["finding-side-lengths-using-fraction-division#side-from-a-fractional-area"],
       title: t("Fractional area and side", "面积和边长都是分数"),
       explanation: t(
         "The area of a rectangle is length times width, so a missing side is the area divided by the known side. Divide by multiplying by the reciprocal.\n\nArea $\\frac{3}{4}$ square foot, width $\\frac{1}{2}$ foot: length $= \\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = \\frac{3}{2} = 1\\frac{1}{2}$ feet.",
@@ -1046,6 +1048,7 @@ export const comparingRationalNumbers = topic(
   [
     {
       id: "comparing-two-rational-numbers",
+      figure: gradeDrawings3["comparing-rational-numbers#comparing-two-rational-numbers"],
       title: t("Comparing two numbers", "比较两个数"),
       explanation: t(
         "On a number line, a number to the left is smaller. To compare a fraction and a decimal, write both as decimals first. With negative numbers, the one farther from zero is smaller.\n\n$-\\frac{3}{4}$ or $-0.7$? $-\\frac{3}{4} = -0.75$, which is left of $-0.7$, so $-\\frac{3}{4} < -0.7$.",
@@ -1129,6 +1132,7 @@ export const orderingRationalNumbers = topic(
   [
     {
       id: "ordering-least-to-greatest",
+      figure: gradeDrawings3["ordering-rational-numbers#ordering-least-to-greatest"],
       title: t("Least to greatest", "从小到大排列"),
       explanation: t(
         "Write every number as a decimal, then place them in order as on a number line: negatives first, the one farthest from zero first, then the positives.\n\n$0.4$, $-1.8$, $\\frac{3}{4}$, $-2\\frac{1}{2}$ are $0.4$, $-1.8$, $0.75$, $-2.5$, so the order is $-2\\frac{1}{2}, -1.8, 0.4, \\frac{3}{4}$.",
@@ -1157,6 +1161,7 @@ export const orderingRationalNumbers = topic(
     },
     {
       id: "finding-the-least",
+      figure: gradeDrawings3["ordering-rational-numbers#finding-the-least"],
       title: t("Finding the least", "找出最小的数"),
       explanation: t(
         "To find the least number, write them all as decimals, rounding long ones, and look for the one farthest left on the number line. Among negatives, the one with the largest absolute value is the least.\n\nAmong $-1.6$, $-1\\frac{2}{3}$, $-\\frac{3}{2}$: they are about $-1.6$, $-1.67$ and $-1.5$, so $-1\\frac{2}{3}$ is the least.",
@@ -1396,6 +1401,7 @@ export const reflectionsOfPointsInTheCoordinatePlane = topic(
   [
     {
       id: "reflecting-across-an-axis",
+      figure: gradeDrawings3["reflections-of-points-in-the-coordinate-plane#reflecting-across-an-axis"],
       title: t("Reflecting across one axis", "关于一条坐标轴对称"),
       explanation: t(
         "Reflecting across the $x$-axis flips a point up or down, so the $y$-coordinate changes sign and $x$ stays. Reflecting across the $y$-axis flips it left or right, so the $x$-coordinate changes sign and $y$ stays.\n\nAcross the $x$-axis, $(-2, 5)$ goes to $(-2, -5)$; across the $y$-axis it goes to $(2, 5)$.",
@@ -1422,6 +1428,7 @@ export const reflectionsOfPointsInTheCoordinatePlane = topic(
     },
     {
       id: "identifying-the-reflection",
+      figure: gradeDrawings3["reflections-of-points-in-the-coordinate-plane#identifying-the-reflection"],
       title: t("Which reflection?", "是哪种对称？"),
       explanation: t(
         "$(4, -1)$ and $(-4, -1)$ differ only in the sign of $x$, so they are reflections of each other across the $y$-axis.",
@@ -1500,6 +1507,7 @@ export const solvingProblemsInTheCoordinatePlane = topic(
     },
     {
       id: "the-fourth-vertex-of-a-rectangle",
+      figure: gradeDrawings3["solving-problems-in-the-coordinate-plane#the-fourth-vertex-of-a-rectangle"],
       title: t("Completing a rectangle", "补全长方形"),
       explanation: t(
         "A rectangle has vertices $(-2, 3)$, $(4, 3)$ and $(4, -1)$. The fourth vertex shares its $x$-coordinate with $(-2, 3)$ and its $y$-coordinate with $(4, -1)$: $(-2, -1)$.",

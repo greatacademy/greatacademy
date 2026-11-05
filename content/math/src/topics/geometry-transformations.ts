@@ -2,9 +2,11 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, paren, plane, Q, sketch } from "@ga/subject-math";
 import { angleDrawings, motionDrawings } from "../explanation-drawings-angles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { tracked } from "../graph-figures.ts";
 import { movedPoint, movedPolygon } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -1163,6 +1165,7 @@ export const combiningStretchesOfGeometricFigures: TopicDef = {
     },
     {
       id: "areas-under-combined-stretches",
+      figure: geometryDrawings2["combining-stretches-of-geometric-figures#areas-under-combined-stretches"],
       title: t("Areas under combined stretches", "组合伸缩下的面积"),
       explanation: t(
         "The stretch $(x, y) \\to (ax, by)$ multiplies horizontal lengths by $a$ and vertical lengths by $b$, so it multiplies every area by $ab$. For a dilation, $a = b = k$, and areas are multiplied by $k^2$.\n\nA triangle of area $10$ stretched horizontally by $3$ and vertically by $\\frac{1}{2}$ has area $10 \\cdot 3 \\cdot \\frac{1}{2} = 15$.",
@@ -1452,6 +1455,7 @@ export const combiningGeometricTransformations: TopicDef = {
     },
     {
       id: "a-single-rule-for-two-transformations",
+      figure: geometryDrawings2["combining-geometric-transformations#a-single-rule-for-two-transformations"],
       title: t("A single rule for two transformations", "用一条规则表示两个变换"),
       explanation: t(
         "Two reflections or rotations about the origin combine into a single one. To find its rule, apply the first rule to $(x, y)$, then apply the second rule to the result.\n\nReflect across the $x$-axis, then across the line $y = x$:\n\n$$(x, y) \\to (x, -y) \\to (-y, x).$$\n\nThe second rule swaps the coordinates of $(x, -y)$. The result, $(x, y) \\to (-y, x)$, is the rotation of $90^\\circ$ counterclockwise about the origin.",
@@ -1471,18 +1475,29 @@ export const combiningGeometricTransformations: TopicDef = {
         }
         const options = rng.shuffle([result, ...others]);
         const named = linearMoves.find((l) => linKey(l.m) === linKey(result))!;
-        return choiceProblem({
-          prompt: t(
-            `Which rule describes ${first.name.en}, followed by ${second.name.en}?`,
-            `先作${first.name["zh-CN"]}，再作${second.name["zh-CN"]}，哪条规则描述了这个组合？`,
-          ),
-          options: options.map((m) => same(`$${linRule(m)}$`)),
-          correct: options.findIndex((m) => linKey(m) === linKey(result)),
-          solution: t(
-            `Apply $${linRule(first.m)}$, then $${linRule(second.m)}$ to the result:${steps(`(x, y) \\to (${coord(first.m[0], first.m[1])}, ${coord(first.m[2], first.m[3])}) \\to (${coord(result[0], result[1])}, ${coord(result[2], result[3])})`)}This is ${named.name.en}.`,
-            `先应用 $${linRule(first.m)}$，再对结果应用 $${linRule(second.m)}$：${steps(`(x, y) \\to (${coord(first.m[0], first.m[1])}, ${coord(first.m[2], first.m[3])}) \\to (${coord(result[0], result[1])}, ${coord(result[2], result[3])})`)}这就是${named.name["zh-CN"]}。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Which rule describes ${first.name.en}, followed by ${second.name.en}?`,
+              `先作${first.name["zh-CN"]}，再作${second.name["zh-CN"]}，哪条规则描述了这个组合？`,
+            ),
+            options: options.map((m) => same(`$${linRule(m)}$`)),
+            correct: options.findIndex((m) => linKey(m) === linKey(result)),
+            solution: t(
+              `Apply $${linRule(first.m)}$, then $${linRule(second.m)}$ to the result:${steps(`(x, y) \\to (${coord(first.m[0], first.m[1])}, ${coord(first.m[2], first.m[3])}) \\to (${coord(result[0], result[1])}, ${coord(result[2], result[3])})`)}This is ${named.name.en}.`,
+              `先应用 $${linRule(first.m)}$，再对结果应用 $${linRule(second.m)}$：${steps(`(x, y) \\to (${coord(first.m[0], first.m[1])}, ${coord(first.m[2], first.m[3])}) \\to (${coord(result[0], result[1])}, ${coord(result[2], result[3])})`)}这就是${named.name["zh-CN"]}。`,
+            ),
+          }),
+          [
+            [
+              `$${linRule(reverse)}$`,
+              "This does the two moves in the opposite order, and order matters here.",
+              "这是按相反的次序做两次变换，而这里次序有影响。",
+            ],
+            [`$${linRule(first.m)}$`, "This is the first move alone: the second one is left out.", "这只是第一次变换：第二次被漏掉了。"],
+            [`$${linRule(second.m)}$`, "This is the second move alone: the first one is left out.", "这只是第二次变换：第一次被漏掉了。"],
+          ],
+        );
       },
     },
   ],

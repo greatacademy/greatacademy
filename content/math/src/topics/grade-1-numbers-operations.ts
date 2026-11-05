@@ -4,7 +4,6 @@
 
 import type { Figure, Problem, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-
 import {
   countersFigure,
   earlyNames,
@@ -16,7 +15,9 @@ import {
   numberLineFigure,
   tenFramesFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { blocksFigure, numberWordsEn, numberWordsZh, plural } from "./grade-2-numbers-operations.ts";
 import { compareProblem, mathText, pickChoice } from "./grade-4-fractions.ts";
 
@@ -410,41 +411,44 @@ const countingOn = earlyTopic(
   ["counting-to-120"],
   ["1.OA.C.5"],
   [
-    earlyPoint(
-      "counting-on-along-a-number-line",
-      ["Counting on along a number line", "在数轴上往后数"],
-      [
-        "Adding means moving forward along the numbers. Put your finger on the marked number and make one hop to the right for every one you are adding. Say the next number at each hop, and do not count the place where you began. The number you stop on is the total, and there was no need to count from one.",
-        "加法就是沿着数往前走。把手指放在标出的数上，加几就向右跳几下。每跳一下，就说出下一个数，开始的地方不算。停在哪个数上，总数就是几，不需要从一开始数。",
-      ],
-      (rng) => {
-        const a = rng.int(3, 15);
-        const b = rng.int(2, Math.min(5, 20 - a));
-        const lo = Math.max(0, a - rng.int(0, 2));
-        const answer = a + b;
-        return {
-          ...whole(
-            [
-              `The marked point is at ${a}. Count on ${b} more. What number do you reach?`,
-              `标出的点在 ${a}。再往后数 ${b} 个。到了哪个数？`,
-            ],
-            answer,
-            [answer - 1, a, b],
-            [
-              `Starting after ${a}, count ${b} hops to the right, and you land on ${answer}.`,
-              `从 ${a} 开始向右跳 ${b} 下，落在 ${answer} 上。`,
-            ],
-            numberLineFigure(lo, lo + 10, 1, a),
-          ),
-          solutionFigure: jumpsFigure(
-            lo,
-            lo + 10,
-            1,
-            Array.from({ length: b + 1 }, (_, i) => a + i),
-          ),
-        };
-      },
-    ),
+    {
+      ...earlyPoint(
+        "counting-on-along-a-number-line",
+        ["Counting on along a number line", "在数轴上往后数"],
+        [
+          "Adding means moving forward along the numbers. Put your finger on the marked number and make one hop to the right for every one you are adding. Say the next number at each hop, and do not count the place where you began. The number you stop on is the total, and there was no need to count from one.",
+          "加法就是沿着数往前走。把手指放在标出的数上，加几就向右跳几下。每跳一下，就说出下一个数，开始的地方不算。停在哪个数上，总数就是几，不需要从一开始数。",
+        ],
+        (rng) => {
+          const a = rng.int(3, 15);
+          const b = rng.int(2, Math.min(5, 20 - a));
+          const lo = Math.max(0, a - rng.int(0, 2));
+          const answer = a + b;
+          return {
+            ...whole(
+              [
+                `The marked point is at ${a}. Count on ${b} more. What number do you reach?`,
+                `标出的点在 ${a}。再往后数 ${b} 个。到了哪个数？`,
+              ],
+              answer,
+              [answer - 1, a, b],
+              [
+                `Starting after ${a}, count ${b} hops to the right, and you land on ${answer}.`,
+                `从 ${a} 开始向右跳 ${b} 下，落在 ${answer} 上。`,
+              ],
+              numberLineFigure(lo, lo + 10, 1, a),
+            ),
+            solutionFigure: jumpsFigure(
+              lo,
+              lo + 10,
+              1,
+              Array.from({ length: b + 1 }, (_, i) => a + i),
+            ),
+          };
+        },
+      ),
+      figure: gradeDrawings2["counting-on-to-add#counting-on-along-a-number-line"],
+    },
     earlyPoint(
       "starting-from-the-bigger-number",
       ["Starting from the bigger number", "从较大的数开始"],
@@ -478,39 +482,42 @@ const countingBack = earlyTopic(
   ["counting-on-to-add"],
   ["1.OA.C.5"],
   [
-    earlyPoint(
-      "counting-back-along-a-number-line",
-      ["Counting back along a number line", "在数轴上往前数"],
-      [
-        "Taking away means moving backward along the numbers. Put your finger on the marked number and make one hop to the left for each one you are taking away. Say each number as you land on it, without counting where you began. The number you stop on is what is left, and it must be less than the start.",
-        "减法就是沿着数往回走。把手指放在标出的数上，减几就向左跳几下。每落在一个数上，就说出这个数，开始的地方不算。停在哪个数上，剩下的就是几，它一定比开始的数小。",
-      ],
-      (rng) => {
-        const a = rng.int(6, 20);
-        const b = rng.int(2, 5);
-        const hi = Math.min(20, a + rng.int(0, 2));
-        const lo = Math.max(0, hi - 10);
-        const answer = a - b;
-        return {
-          ...whole(
-            [`The marked point is at ${a}. Count back ${b}. What number do you reach?`, `标出的点在 ${a}。往前数 ${b} 个。到了哪个数？`],
-            answer,
-            [a + b, a, answer + 1],
-            [
-              `Starting at ${a}, count ${b} hops to the left, and you land on ${answer}.`,
-              `从 ${a} 开始向左跳 ${b} 下，落在 ${answer} 上。`,
-            ],
-            numberLineFigure(lo, lo + 10, 1, a),
-          ),
-          solutionFigure: jumpsFigure(
-            lo,
-            lo + 10,
-            1,
-            Array.from({ length: b + 1 }, (_, i) => a - i),
-          ),
-        };
-      },
-    ),
+    {
+      ...earlyPoint(
+        "counting-back-along-a-number-line",
+        ["Counting back along a number line", "在数轴上往前数"],
+        [
+          "Taking away means moving backward along the numbers. Put your finger on the marked number and make one hop to the left for each one you are taking away. Say each number as you land on it, without counting where you began. The number you stop on is what is left, and it must be less than the start.",
+          "减法就是沿着数往回走。把手指放在标出的数上，减几就向左跳几下。每落在一个数上，就说出这个数，开始的地方不算。停在哪个数上，剩下的就是几，它一定比开始的数小。",
+        ],
+        (rng) => {
+          const a = rng.int(6, 20);
+          const b = rng.int(2, 5);
+          const hi = Math.min(20, a + rng.int(0, 2));
+          const lo = Math.max(0, hi - 10);
+          const answer = a - b;
+          return {
+            ...whole(
+              [`The marked point is at ${a}. Count back ${b}. What number do you reach?`, `标出的点在 ${a}。往前数 ${b} 个。到了哪个数？`],
+              answer,
+              [a + b, a, answer + 1],
+              [
+                `Starting at ${a}, count ${b} hops to the left, and you land on ${answer}.`,
+                `从 ${a} 开始向左跳 ${b} 下，落在 ${answer} 上。`,
+              ],
+              numberLineFigure(lo, lo + 10, 1, a),
+            ),
+            solutionFigure: jumpsFigure(
+              lo,
+              lo + 10,
+              1,
+              Array.from({ length: b + 1 }, (_, i) => a - i),
+            ),
+          };
+        },
+      ),
+      figure: gradeDrawings2["counting-back-to-subtract#counting-back-along-a-number-line"],
+    },
     earlyPoint(
       "counting-back-in-your-head",
       ["Counting back in your head", "在心里往前数"],
@@ -785,15 +792,34 @@ const addingThreeNumbers = earlyTopic(
         const other = rng.pick([2, 3, 4, 5, 6, 7, 8].filter((v) => v !== k && v !== 10 - k && v + k !== 10 && v + (10 - k) !== 10));
         const nums = rng.shuffle([k, 10 - k, other]);
         const shown = nums.join(" + ");
-        return pickChoice(
-          rng,
-          t(`To work out $${shown}$, which two numbers should you add first to make ten?`, `要算 $${shown}$，应该先加哪两个数来凑成十？`),
-          mathText(`${k} + ${10 - k}`),
-          [mathText(`${k} + ${other}`), mathText(`${10 - k} + ${other}`), mathText(`${other} + ${other}`)],
-          t(
-            `$${k} + ${10 - k} = 10$, and then $10 + ${other} = ${10 + other}$.`,
-            `$${k} + ${10 - k} = 10$，然后 $10 + ${other} = ${10 + other}$。`,
+        return reasoned(
+          pickChoice(
+            rng,
+            t(`To work out $${shown}$, which two numbers should you add first to make ten?`, `要算 $${shown}$，应该先加哪两个数来凑成十？`),
+            mathText(`${k} + ${10 - k}`),
+            [mathText(`${k} + ${other}`), mathText(`${10 - k} + ${other}`), mathText(`${other} + ${other}`)],
+            t(
+              `$${k} + ${10 - k} = 10$, and then $10 + ${other} = ${10 + other}$.`,
+              `$${k} + ${10 - k} = 10$，然后 $10 + ${other} = ${10 + other}$。`,
+            ),
           ),
+          [
+            [
+              mathText(`${k} + ${other}`).en,
+              `$${k} + ${other} = ${k + other}$, which is not $10$.`,
+              `$${k} + ${other} = ${k + other}$，不是 $10$。`,
+            ],
+            [
+              mathText(`${10 - k} + ${other}`).en,
+              `$${10 - k} + ${other} = ${10 - k + other}$, which is not $10$.`,
+              `$${10 - k} + ${other} = ${10 - k + other}$，不是 $10$。`,
+            ],
+            [
+              mathText(`${other} + ${other}`).en,
+              `$${other} + ${other} = ${2 * other}$, and it also uses one number twice.`,
+              `$${other} + ${other} = ${2 * other}$，而且把一个数用了两次。`,
+            ],
+          ],
         );
       },
     ),

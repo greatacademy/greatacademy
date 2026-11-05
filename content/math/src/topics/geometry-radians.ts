@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, type Mark, type Point, Q, q, radical, sketch } from "@ga/subject-math";
 import { radianDrawings } from "../explanation-drawings-circles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { expressionProblem, numberProblem, radicalProblem, steps, unitLatex, why } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -653,6 +654,7 @@ export const trigonometricRatiosWithRadians: TopicDef = {
   knowledgePoints: [
     {
       id: "exact-ratios-of-radian-angles",
+      figure: geometryDrawings2["trigonometric-ratios-with-radians#exact-ratios-of-radian-angles"],
       title: t("Exact ratios of π/6, π/4 and π/3", "π/6、π/4、π/3 的精确三角比"),
       explanation: t(
         "The special angles in radians are $\\frac{\\pi}{6} = 30^\\circ$, $\\frac{\\pi}{4} = 45^\\circ$ and $\\frac{\\pi}{3} = 60^\\circ$. An angle has the same ratios whichever unit measures it, so convert and use the special right triangles:\n\n| | $\\frac{\\pi}{6}$ | $\\frac{\\pi}{4}$ | $\\frac{\\pi}{3}$ |\n| :--- | :---: | :---: | :---: |\n| $\\sin$ | $\\frac{1}{2}$ | $\\frac{\\sqrt{2}}{2}$ | $\\frac{\\sqrt{3}}{2}$ |\n| $\\cos$ | $\\frac{\\sqrt{3}}{2}$ | $\\frac{\\sqrt{2}}{2}$ | $\\frac{1}{2}$ |\n| $\\tan$ | $\\frac{\\sqrt{3}}{3}$ | $1$ | $\\sqrt{3}$ |\n\nFor example, $6\\sin \\frac{\\pi}{3} = 6\\sin 60^\\circ = 6 \\cdot \\frac{\\sqrt{3}}{2} = 3\\sqrt{3}$.",
@@ -682,6 +684,7 @@ export const trigonometricRatiosWithRadians: TopicDef = {
     },
     {
       id: "special-angles-in-radians",
+      figure: geometryDrawings2["trigonometric-ratios-with-radians#special-angles-in-radians"],
       title: t("Special angles in radians from exact values", "由精确值求弧度制特殊角"),
       explanation: t(
         "Read the table backwards and give the angle in radians. If $2\\sin \\theta = \\sqrt{3}$ and $\\theta$ is acute, then $\\sin \\theta = \\frac{\\sqrt{3}}{2}$, so $\\theta = 60^\\circ = \\frac{\\pi}{3}$.",
@@ -712,6 +715,7 @@ export const trigonometricRatiosWithRadians: TopicDef = {
     },
     {
       id: "exact-sides-with-radian-angles",
+      figure: geometryDrawings2["trigonometric-ratios-with-radians#exact-sides-with-radian-angles"],
       title: t("Exact sides with special angles in radians", "用弧度制特殊角求精确边长"),
       explanation: t(
         "Set up the ratio exactly as with degrees, then use the exact value. In right triangle $ABC$ with $\\angle A = \\frac{\\pi}{6}$ and hypotenuse $AB = 10$, the side opposite $A$ is\n\n$$BC = 10\\sin \\frac{\\pi}{6} = 10 \\cdot \\frac{1}{2} = 5.$$\n\nIf instead the side adjacent to $A$ is $AC = 6$, the hypotenuse is $\\frac{6}{\\cos \\frac{\\pi}{6}} = \\frac{6}{\\frac{\\sqrt{3}}{2}} = \\frac{12}{\\sqrt{3}} = 4\\sqrt{3}$.",
@@ -756,6 +760,7 @@ export const trigonometricRatiosWithRadians: TopicDef = {
     },
     {
       id: "sides-with-decimal-radian-angles",
+      figure: geometryDrawings2["trigonometric-ratios-with-radians#sides-with-decimal-radian-angles"],
       title: t("Sides with angles in radians, using a calculator", "用计算器求弧度制角的边长"),
       explanation: t(
         "For an angle such as $0.9$ radians, use a calculator set to **radian mode**; in degree mode it would read $0.9$ as $0.9^\\circ$. In right triangle $ABC$ with $\\angle A = 0.9$ and hypotenuse $AB = 12$, the side opposite $A$ is\n\n$$BC = 12\\sin 0.9 \\approx 12 \\cdot 0.7833 \\approx 9.4.$$",

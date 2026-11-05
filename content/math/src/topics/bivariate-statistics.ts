@@ -1,8 +1,10 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { dec, linear, num, type PlaneMark, type PlaneView, paren, plane, Q } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, equationProblem, numberProblem, pointLatex, reasonChoice, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** Pt is a data point (x, y). */
 export type Pt = readonly [number, number];
@@ -296,6 +298,7 @@ export const scatterPlots: TopicDef = {
     },
     {
       id: "making-a-scatter-plot",
+      figure: gradeDrawings3["scatter-plots#making-a-scatter-plot"],
       title: t("Plotting the data", "描点画散点图"),
       explanation: t(
         "To make a scatter plot from a table, plot one point for each column: the $x$-value is the first coordinate, so go right $x$ units, then up $y$ units.\n\nA common mistake is to swap the coordinates: the pair $x = 2$, $y = 7$ is the point $(2, 7)$, not $(7, 2)$.",
@@ -907,15 +910,34 @@ export const interpretingTrendLineCoefficients: TopicDef = {
         const md = drawModel(rng);
         const up = md.m.sign() > 0;
         const a = md.m.abs();
-        return shuffledChoice(rng, {
-          prompt: t(`${md.intro.en} What does the slope of the trend line mean?`, `${md.intro["zh-CN"]}趋势线的斜率表示什么？`),
-          correct: slopeMeaning(md.c, a, up),
-          wrong: [slopeMeaning(md.c, a, !up), slopeMeaning(md.c, md.b, up), interceptMeaning(md.c, a)],
-          solution: t(
-            `The slope is $${dec(md.m)}$, the change in $y$ for each increase of $1$ in $x$. It is ${up ? "positive, an increase" : "negative, a decrease"}: for ${md.c.each[0]}, the predicted ${md.c.yName[0]} ${up ? "increases" : "decreases"} by $${dec(a)}$ ${md.c.yUnit[0]}.`,
-            `斜率是 $${dec(md.m)}$，即 $x$ 每增加 $1$ 时 $y$ 的变化量。它是${up ? "正数，表示增加" : "负数，表示减少"}：${md.c.each[1]}，预测的${md.c.yName[1]}${up ? "增加" : "减少"} $${dec(a)}$ ${md.c.yUnit[1]}。`,
-          ),
-        });
+        return reasoned(
+          shuffledChoice(rng, {
+            prompt: t(`${md.intro.en} What does the slope of the trend line mean?`, `${md.intro["zh-CN"]}趋势线的斜率表示什么？`),
+            correct: slopeMeaning(md.c, a, up),
+            wrong: [slopeMeaning(md.c, a, !up), slopeMeaning(md.c, md.b, up), interceptMeaning(md.c, a)],
+            solution: t(
+              `The slope is $${dec(md.m)}$, the change in $y$ for each increase of $1$ in $x$. It is ${up ? "positive, an increase" : "negative, a decrease"}: for ${md.c.each[0]}, the predicted ${md.c.yName[0]} ${up ? "increases" : "decreases"} by $${dec(a)}$ ${md.c.yUnit[0]}.`,
+              `斜率是 $${dec(md.m)}$，即 $x$ 每增加 $1$ 时 $y$ 的变化量。它是${up ? "正数，表示增加" : "负数，表示减少"}：${md.c.each[1]}，预测的${md.c.yName[1]}${up ? "增加" : "减少"} $${dec(a)}$ ${md.c.yUnit[1]}。`,
+            ),
+          }),
+          [
+            [
+              slopeMeaning(md.c, a, !up).en,
+              "The direction is reversed: the sign of the slope says whether the prediction rises or falls.",
+              "方向反了：斜率的符号决定预测值是增加还是减少。",
+            ],
+            [
+              slopeMeaning(md.c, md.b, up).en,
+              "This uses the $y$-intercept as the rate: the change per unit is the slope.",
+              "这里把 $y$ 轴截距当成了变化率：每单位的变化量是斜率。",
+            ],
+            [
+              interceptMeaning(md.c, a).en,
+              "This reads the slope as a starting value: the slope is a change per unit, not a value at $x = 0$.",
+              "这里把斜率当成了起始值：斜率是每单位的变化量，不是 $x = 0$ 时的值。",
+            ],
+          ],
+        );
       },
     },
     {
@@ -929,18 +951,37 @@ export const interpretingTrendLineCoefficients: TopicDef = {
         const md = drawModel(rng);
         const up = md.m.sign() > 0;
         const a = md.m.abs();
-        return shuffledChoice(rng, {
-          prompt: t(
-            `${md.intro.en} What does the $y$-intercept of the trend line mean?`,
-            `${md.intro["zh-CN"]}趋势线的 $y$ 轴截距表示什么？`,
-          ),
-          correct: interceptMeaning(md.c, md.b),
-          wrong: [interceptMeaning(md.c, a), slopeMeaning(md.c, md.b, up), slopeMeaning(md.c, md.b, !up)],
-          solution: t(
-            `The $y$-intercept is $${dec(md.b)}$, the predicted value of $y$ when $x = 0$: when ${md.c.zero[0]}, the predicted ${md.c.yName[0]} is $${dec(md.b)}$ ${md.c.yUnit[0]}.`,
-            `$y$ 轴截距是 $${dec(md.b)}$，即 $x = 0$ 时 $y$ 的预测值：${md.c.zero[1]}，预测的${md.c.yName[1]}是 $${dec(md.b)}$ ${md.c.yUnit[1]}。`,
-          ),
-        });
+        return reasoned(
+          shuffledChoice(rng, {
+            prompt: t(
+              `${md.intro.en} What does the $y$-intercept of the trend line mean?`,
+              `${md.intro["zh-CN"]}趋势线的 $y$ 轴截距表示什么？`,
+            ),
+            correct: interceptMeaning(md.c, md.b),
+            wrong: [interceptMeaning(md.c, a), slopeMeaning(md.c, md.b, up), slopeMeaning(md.c, md.b, !up)],
+            solution: t(
+              `The $y$-intercept is $${dec(md.b)}$, the predicted value of $y$ when $x = 0$: when ${md.c.zero[0]}, the predicted ${md.c.yName[0]} is $${dec(md.b)}$ ${md.c.yUnit[0]}.`,
+              `$y$ 轴截距是 $${dec(md.b)}$，即 $x = 0$ 时 $y$ 的预测值：${md.c.zero[1]}，预测的${md.c.yName[1]}是 $${dec(md.b)}$ ${md.c.yUnit[1]}。`,
+            ),
+          }),
+          [
+            [
+              interceptMeaning(md.c, a).en,
+              "This uses the slope's number: the value at $x = 0$ is the $y$-intercept.",
+              "这里用的是斜率的数值：$x = 0$ 时的值是 $y$ 轴截距。",
+            ],
+            [
+              slopeMeaning(md.c, md.b, up).en,
+              "This reads the intercept as a rate: it is a single value at $x = 0$, not a change per unit.",
+              "这里把截距当成了变化率：它是 $x = 0$ 时的一个值，不是每单位的变化量。",
+            ],
+            [
+              slopeMeaning(md.c, md.b, !up).en,
+              "This reads the intercept as a rate: it is a single value at $x = 0$, not a change per unit.",
+              "这里把截距当成了变化率：它是 $x = 0$ 时的一个值，不是每单位的变化量。",
+            ],
+          ],
+        );
       },
     },
     {

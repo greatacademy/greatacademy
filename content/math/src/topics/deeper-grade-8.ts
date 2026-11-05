@@ -5,6 +5,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -690,6 +691,7 @@ const isoscelesExterior: KnowledgePointDef = {
 
 const bendBetweenParallels: KnowledgePointDef = {
   id: "the-angle-at-a-bend-between-parallel-lines",
+  figure: gradeDrawings3["alternate-angles#the-angle-at-a-bend-between-parallel-lines"],
   title: t("The angle at a bend between parallel lines", "平行线之间折线的夹角"),
   explanation: t(
     "A path can bend at a point between two parallel lines. To find the angle at the bend, draw a third line through that point, parallel to the others. This splits the angle at the bend into two parts. Each part is an alternate angle to one of the given angles, so it equals that angle. The angle at the bend is therefore their sum. Drawing an extra line like this is a standard step in geometry.",

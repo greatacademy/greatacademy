@@ -1,6 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Mark, type Point, sketch } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { numberProblem, steps } from "../problems.ts";
 
@@ -110,6 +111,7 @@ export const perimeter: TopicDef = {
   knowledgePoints: [
     {
       id: "perimeter-of-polygons",
+      figure: gradeDrawings3["perimeter#perimeter-of-polygons"],
       title: t("Perimeter of a polygon", "多边形的周长"),
       explanation: t(
         "The **perimeter** of a polygon is the distance around it: the sum of its side lengths. It is a length, so it is measured in units such as centimeters.\n\nA rectangle has two pairs of equal sides, so a rectangle $8$ cm long and $5$ cm wide has perimeter $2 \\cdot 8 + 2 \\cdot 5 = 26$ cm. A square with side $s$ has perimeter $4s$.",
@@ -172,6 +174,7 @@ export const perimeter: TopicDef = {
     },
     {
       id: "missing-side-from-perimeter",
+      figure: gradeDrawings3["perimeter#missing-side-from-perimeter"],
       title: t("A missing side", "求未知边长"),
       explanation: t(
         "Knowing the perimeter, you can find a missing side. For a rectangle, half the perimeter is one length plus one width.\n\nA rectangle with perimeter $30$ m and width $6$ m has $l + 6 = 15$, so its length is $9$ m. A square with perimeter $36$ m has side $36 \\div 4 = 9$ m.",
@@ -232,6 +235,7 @@ export const areaOfRectanglesAndSquares: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-a-rectangle",
+      figure: gradeDrawings3["area-of-rectangles-and-squares#area-of-a-rectangle"],
       title: t("Area of a rectangle", "长方形的面积"),
       explanation: t(
         "The **area** of a shape is how many unit squares it takes to cover it. It is measured in square units, such as square centimeters ($\\text{cm}^2$).\n\nA rectangle $l$ long and $w$ wide is covered by $w$ rows of $l$ unit squares, so its area is\n\n$$A = l \\cdot w.$$\n\nA rectangle $8$ cm by $5$ cm has area $40\\text{ cm}^2$; a square with side $s$ has area $s^2$. Do not confuse area with perimeter: the same rectangle's perimeter is $26$ cm.",
@@ -278,6 +282,7 @@ export const areaOfRectanglesAndSquares: TopicDef = {
     },
     {
       id: "missing-side-from-area",
+      figure: gradeDrawings3["area-of-rectangles-and-squares#missing-side-from-area"],
       title: t("A missing side from the area", "由面积求边长"),
       explanation: t(
         "Since $A = l \\cdot w$, a missing side is the area divided by the known side: $l = A \\div w$.\n\nA rectangle with area $48\\text{ m}^2$ and width $6$ m is $48 \\div 6 = 8$ m long. A square with area $49\\text{ m}^2$ has side $7$ m, since $7^2 = 49$.",
@@ -400,6 +405,7 @@ export const areaOfParallelograms: TopicDef = {
     },
     {
       id: "missing-base-or-height",
+      figure: gradeDrawings3["area-of-parallelograms#missing-base-or-height"],
       title: t("A missing base or height", "求底或高"),
       explanation: t(
         "Since $A = b \\cdot h$, a missing base or height is the area divided by the other: $h = A \\div b$ and $b = A \\div h$.\n\nA parallelogram with area $54\\text{ m}^2$ and base $9$ m has height $54 \\div 9 = 6$ m.",
@@ -555,6 +561,7 @@ export const areaOfTrapezoids: TopicDef = {
   knowledgePoints: [
     {
       id: "the-trapezoid-formula",
+      figure: gradeDrawings3["area-of-trapezoids#the-trapezoid-formula"],
       title: t("The trapezoid formula", "梯形面积公式"),
       explanation: t(
         "A **trapezoid** has a pair of parallel sides, its **bases** $b_1$ and $b_2$; the height $h$ is the distance between them. Two copies of a trapezoid, one turned over, make a parallelogram with base $b_1 + b_2$, so\n\n$$A = \\tfrac{1}{2} (b_1 + b_2) h.$$\n\nA trapezoid with bases $6$ m and $10$ m and height $4$ m has area $\\tfrac{1}{2} \\cdot 16 \\cdot 4 = 32\\text{ m}^2$.",

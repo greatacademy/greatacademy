@@ -3,8 +3,8 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
-
 import { earlyNames, earlyThings } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
 /** skill builds a knowledge point from its texts and generator. */
@@ -673,32 +673,35 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "sums-and-differences-on-a-number-line": [
-    skill(
-      "the-size-of-the-jump",
-      ["The size of the jump", "跳了多远"],
-      [
-        "The jump between two points on a number line is their difference, in either direction. Subtract the smaller from the larger to find how far apart they are.",
-        "数轴上两点之间的跳跃距离就是它们的差，不论方向。用大数减小数，就知道相隔多远。",
-      ],
-      (rng) => {
-        const a = rng.int(5, 60);
-        const d = rng.int(5, 39);
-        const right = rng.bool();
-        const [x, y] = right ? [a, a + d] : [a + d, a];
-        return whole(
-          [
-            `On a number line, a jump starts at ${x} and lands on ${y}. How long is the jump?`,
-            `数轴上，一次跳跃从 ${x} 开始，落在 ${y}。这次跳了多远？`,
-          ],
-          d,
-          [a + a + d, y, d + 1],
-          [
-            `The distance between ${a} and ${a + d} is $${a + d} - ${a} = ${d}$, whichever way the jump goes.`,
-            `${a} 和 ${a + d} 之间的距离是 $${a + d} - ${a} = ${d}$，与跳的方向无关。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-size-of-the-jump",
+        ["The size of the jump", "跳了多远"],
+        [
+          "The jump between two points on a number line is their difference, in either direction. Subtract the smaller from the larger to find how far apart they are.",
+          "数轴上两点之间的跳跃距离就是它们的差，不论方向。用大数减小数，就知道相隔多远。",
+        ],
+        (rng) => {
+          const a = rng.int(5, 60);
+          const d = rng.int(5, 39);
+          const right = rng.bool();
+          const [x, y] = right ? [a, a + d] : [a + d, a];
+          return whole(
+            [
+              `On a number line, a jump starts at ${x} and lands on ${y}. How long is the jump?`,
+              `数轴上，一次跳跃从 ${x} 开始，落在 ${y}。这次跳了多远？`,
+            ],
+            d,
+            [a + a + d, y, d + 1],
+            [
+              `The distance between ${a} and ${a + d} is $${a + d} - ${a} = ${d}$, whichever way the jump goes.`,
+              `${a} 和 ${a + d} 之间的距离是 $${a + d} - ${a} = ${d}$，与跳的方向无关。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["sums-and-differences-on-a-number-line#the-size-of-the-jump"],
+    },
   ],
   "telling-time-to-five-minutes": [
     skill(
@@ -849,30 +852,33 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "picture-graphs-of-single-units": [
-    skill(
-      "the-missing-row",
-      ["The missing row", "缺少的一行"],
-      [
-        "If the total of a graph is known, a hidden row can be worked out. Add the rows you can see and subtract from the total; the rest belongs to the hidden row.",
-        "如果知道统计图的总数，就能算出被遮住的一行。把看得见的行相加，再从总数中减去，剩下的就是被遮住的一行。",
-      ],
-      (rng) => {
-        const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
-        const total = a + b + c;
-        return whole(
-          [
-            `A picture graph shows ${total} votes in all. Row A has ${a} dots and row B has ${b}. Each dot is one vote. How many dots does row C have?`,
-            `一张图画统计图一共有 ${total} 票。A 行有 ${a} 个点，B 行有 ${b} 个点。每个点代表一票。C 行有多少个点？`,
-          ],
-          c,
-          [a + b, total, c + 1],
-          [
-            `Rows A and B hold $${a} + ${b} = ${a + b}$, and $${total} - ${a + b} = ${c}$ are left for row C.`,
-            `A、B 两行共有 $${a} + ${b} = ${a + b}$，$${total} - ${a + b} = ${c}$，所以 C 行有 ${c} 个点。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-missing-row",
+        ["The missing row", "缺少的一行"],
+        [
+          "If the total of a graph is known, a hidden row can be worked out. Add the rows you can see and subtract from the total; the rest belongs to the hidden row.",
+          "如果知道统计图的总数，就能算出被遮住的一行。把看得见的行相加，再从总数中减去，剩下的就是被遮住的一行。",
+        ],
+        (rng) => {
+          const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
+          const total = a + b + c;
+          return whole(
+            [
+              `A picture graph shows ${total} votes in all. Row A has ${a} dots and row B has ${b}. Each dot is one vote. How many dots does row C have?`,
+              `一张图画统计图一共有 ${total} 票。A 行有 ${a} 个点，B 行有 ${b} 个点。每个点代表一票。C 行有多少个点？`,
+            ],
+            c,
+            [a + b, total, c + 1],
+            [
+              `Rows A and B hold $${a} + ${b} = ${a + b}$, and $${total} - ${a + b} = ${c}$ are left for row C.`,
+              `A、B 两行共有 $${a} + ${b} = ${a + b}$，$${total} - ${a + b} = ${c}$，所以 C 行有 ${c} 个点。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["picture-graphs-of-single-units#the-missing-row"],
+    },
   ],
   "reading-bar-graphs": [
     skill(
@@ -912,60 +918,66 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "naming-polygons-by-their-sides": [
-    skill(
-      "sides-from-the-name",
-      ["Sides from the name", "由名称说边数"],
-      [
-        "A polygon's name tells its number of sides: triangle 3, quadrilateral 4, pentagon 5, hexagon 6, octagon 8. Several of the same shape have that many sides each.",
-        "多边形的名称说明了它的边数：三角形 3，四边形 4，五边形 5，六边形 6，八边形 8。几个相同的图形，每个都有这么多条边。",
-      ],
-      (rng) => {
-        const kinds: readonly [Pair, number][] = [
-          [["triangles", "三角形"], 3],
-          [["quadrilaterals", "四边形"], 4],
-          [["pentagons", "五边形"], 5],
-          [["hexagons", "六边形"], 6],
-          [["octagons", "八边形"], 8],
-        ];
-        const [name, sides] = rng.pick(kinds);
-        const k = rng.int(2, 9);
-        return whole(
-          [`How many sides do ${k} ${name[0]} have in all? They do not touch.`, `${k} 个${name[1]}一共有多少条边？它们互不接触。`],
-          k * sides,
-          [k + sides, sides, k * (sides + 1)],
-          [
-            `Each of the ${name[0]} has ${sides} sides. Counting by ${sides}s ${k} times reaches ${k * sides}.`,
-            `每个${name[1]}有 ${sides} 条边。${sides} 个 ${sides} 个地数 ${k} 次，得到 ${k * sides}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "sides-from-the-name",
+        ["Sides from the name", "由名称说边数"],
+        [
+          "A polygon's name tells its number of sides: triangle 3, quadrilateral 4, pentagon 5, hexagon 6, octagon 8. Several of the same shape have that many sides each.",
+          "多边形的名称说明了它的边数：三角形 3，四边形 4，五边形 5，六边形 6，八边形 8。几个相同的图形，每个都有这么多条边。",
+        ],
+        (rng) => {
+          const kinds: readonly [Pair, number][] = [
+            [["triangles", "三角形"], 3],
+            [["quadrilaterals", "四边形"], 4],
+            [["pentagons", "五边形"], 5],
+            [["hexagons", "六边形"], 6],
+            [["octagons", "八边形"], 8],
+          ];
+          const [name, sides] = rng.pick(kinds);
+          const k = rng.int(2, 9);
+          return whole(
+            [`How many sides do ${k} ${name[0]} have in all? They do not touch.`, `${k} 个${name[1]}一共有多少条边？它们互不接触。`],
+            k * sides,
+            [k + sides, sides, k * (sides + 1)],
+            [
+              `Each of the ${name[0]} has ${sides} sides. Counting by ${sides}s ${k} times reaches ${k * sides}.`,
+              `每个${name[1]}有 ${sides} 条边。${sides} 个 ${sides} 个地数 ${k} 次，得到 ${k * sides}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["naming-polygons-by-their-sides#sides-from-the-name"],
+    },
   ],
   "counting-sides-and-angles": [
-    skill(
-      "angles-match-sides",
-      ["Angles match sides", "角数和边数相同"],
-      [
-        "Every polygon has as many angles as sides, because each corner joins two sides and going around meets each once. So the angle count gives the side count at once.",
-        "每个多边形的角数和边数相同，因为每个角连接两条边，绕一圈每个都遇到一次。所以知道角数就立刻知道边数。",
-      ],
-      (rng) => {
-        const a = rng.int(3, 12);
-        const k = rng.int(2, 6);
-        return whole(
-          [
-            `A closed shape with straight sides has ${a} angles. Grace draws ${k} of these shapes. How many sides do they have in all?`,
-            `一个由直边围成的封闭图形有 ${a} 个角。Grace 画了 ${k} 个这样的图形。它们一共有多少条边？`,
-          ],
-          a * k,
-          [a + k, a, a * k + k],
-          [
-            `Each shape has as many sides as angles, ${a}. Adding ${a} for each of the ${k} shapes gives ${a * k} sides.`,
-            `每个图形的边数和角数相同，都是 ${a}。${k} 个图形，每个加一次 ${a}，得到 ${a * k} 条边。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "angles-match-sides",
+        ["Angles match sides", "角数和边数相同"],
+        [
+          "Every polygon has as many angles as sides, because each corner joins two sides and going around meets each once. So the angle count gives the side count at once.",
+          "每个多边形的角数和边数相同，因为每个角连接两条边，绕一圈每个都遇到一次。所以知道角数就立刻知道边数。",
+        ],
+        (rng) => {
+          const a = rng.int(3, 12);
+          const k = rng.int(2, 6);
+          return whole(
+            [
+              `A closed shape with straight sides has ${a} angles. Grace draws ${k} of these shapes. How many sides do they have in all?`,
+              `一个由直边围成的封闭图形有 ${a} 个角。Grace 画了 ${k} 个这样的图形。它们一共有多少条边？`,
+            ],
+            a * k,
+            [a + k, a, a * k + k],
+            [
+              `Each shape has as many sides as angles, ${a}. Adding ${a} for each of the ${k} shapes gives ${a * k} sides.`,
+              `每个图形的边数和角数相同，都是 ${a}。${k} 个图形，每个加一次 ${a}，得到 ${a * k} 条边。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["counting-sides-and-angles#angles-match-sides"],
+    },
   ],
   "faces-of-a-cube": [
     skill(
@@ -999,30 +1011,33 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "rows-and-columns-of-squares": [
-    skill(
-      "the-missing-rows-from-the-total",
-      ["Rows from the total", "由总数求行数"],
-      [
-        "A rectangle cut into equal rows has the same number of squares in each row. Counting by that number shows how many rows it takes to reach the total.",
-        "分成相同行的长方形，每行方块数相同。按这个数往上数，就能知道多少行才到总数。",
-      ],
-      (rng) => {
-        const per = rng.int(2, 5);
-        const rows = rng.int(2, 5);
-        const who = rng.pick(earlyNames);
-        return whole(
-          [
-            `${who} cuts a tray of brownies into ${per * rows} equal pieces, with ${per} pieces in each row. How many rows are there?`,
-            `${who} 把一盘布朗尼切成 ${per * rows} 块相同的，每行 ${per} 块。一共有几行？`,
-          ],
-          rows,
-          [per * rows, per, rows + 1],
-          [
-            `Counting by ${per}s reaches ${per * rows} after ${rows} counts, so there are ${rows} rows.`,
-            `${per} 个 ${per} 个地数，数 ${rows} 次到 ${per * rows}，所以有 ${rows} 行。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-missing-rows-from-the-total",
+        ["Rows from the total", "由总数求行数"],
+        [
+          "A rectangle cut into equal rows has the same number of squares in each row. Counting by that number shows how many rows it takes to reach the total.",
+          "分成相同行的长方形，每行方块数相同。按这个数往上数，就能知道多少行才到总数。",
+        ],
+        (rng) => {
+          const per = rng.int(2, 5);
+          const rows = rng.int(2, 5);
+          const who = rng.pick(earlyNames);
+          return whole(
+            [
+              `${who} cuts a tray of brownies into ${per * rows} equal pieces, with ${per} pieces in each row. How many rows are there?`,
+              `${who} 把一盘布朗尼切成 ${per * rows} 块相同的，每行 ${per} 块。一共有几行？`,
+            ],
+            rows,
+            [per * rows, per, rows + 1],
+            [
+              `Counting by ${per}s reaches ${per * rows} after ${rows} counts, so there are ${rows} rows.`,
+              `${per} 个 ${per} 个地数，数 ${rows} 次到 ${per * rows}，所以有 ${rows} 行。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["rows-and-columns-of-squares#the-missing-rows-from-the-total"],
+    },
   ],
 };

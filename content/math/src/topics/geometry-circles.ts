@@ -2,7 +2,9 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, linear, type Mark, type Point, poly, Q, q, radical, sketch } from "@ga/subject-math";
 import { partsDrawings } from "../explanation-drawings-circles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, unitLatex, why } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -238,22 +240,45 @@ export const circles: TopicDef = {
           t("Both endpoints are on the circle and it passes through the center", "两个端点都在圆上，并且经过圆心"),
           t("Both endpoints are on the circle, but it does not pass through the center", "两个端点都在圆上，但不经过圆心"),
         ];
-        return {
-          ...choiceProblem({
-            prompt: t("What is the highlighted segment in circle $O$?", "圆 $O$ 中突出显示的线段是什么？"),
-            options,
-            correct: kind,
-            solution: t(
-              `${reasons[kind]!.en}, so it is ${options[kind]!.en.toLowerCase()}.`,
-              `${reasons[kind]!["zh-CN"]}，所以它是${options[kind]!["zh-CN"]}。`,
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: t("What is the highlighted segment in circle $O$?", "圆 $O$ 中突出显示的线段是什么？"),
+              options,
+              correct: kind,
+              solution: t(
+                `${reasons[kind]!.en}, so it is ${options[kind]!.en.toLowerCase()}.`,
+                `${reasons[kind]!["zh-CN"]}，所以它是${options[kind]!["zh-CN"]}。`,
+              ),
+            }),
+            figure: figure(
+              [circleAt(), ...center(), seg(pa, pb, true), { kind: "dot", at: pa }, { kind: "dot", at: pb }],
+              "Circle O with one highlighted segment.",
+              "圆 O，其中一条线段被突出显示。",
             ),
-          }),
-          figure: figure(
-            [circleAt(), ...center(), seg(pa, pb, true), { kind: "dot", at: pa }, { kind: "dot", at: pb }],
-            "Circle O with one highlighted segment.",
-            "圆 O，其中一条线段被突出显示。",
-          ),
-        };
+          },
+          [
+            [
+              "A radius",
+              "A radius has one end at the center, and this segment has both ends on the circle.",
+              "半径有一端在圆心，而这条线段两端都在圆上。",
+            ],
+            [
+              "A diameter",
+              kind === 0
+                ? "A diameter has both ends on the circle, and one end of this segment is the center."
+                : "A diameter passes through the center, and this segment does not.",
+              kind === 0 ? "直径两端都在圆上，而这条线段有一端是圆心。" : "直径过圆心，而这条线段不过圆心。",
+            ],
+            [
+              options[2]!.en,
+              kind === 0
+                ? "A chord has both ends on the circle, and one end of this segment is the center."
+                : "It does join two points of the circle, but it passes through the center, and that has its own name.",
+              kind === 0 ? "弦两端都在圆上，而这条线段有一端是圆心。" : "它确实连接圆上两点，但它过圆心，这样的线段有专门的名称。",
+            ],
+          ],
+        );
       },
     },
     {
@@ -326,35 +351,54 @@ export const arcsSegmentsAndSectorsOfCircles: TopicDef = {
             "弦 $AB$ 经过圆心，是直径，所以这段弧是半个圆",
           ),
         ];
-        return {
-          ...choiceProblem({
-            prompt: t(
-              `Is the highlighted arc $${arcTex("AXB")}$ of circle $O$ a minor arc, a major arc or a semicircle?`,
-              `圆 $O$ 中突出显示的弧 $${arcTex("AXB")}$ 是劣弧、优弧还是半圆？`,
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: t(
+                `Is the highlighted arc $${arcTex("AXB")}$ of circle $O$ a minor arc, a major arc or a semicircle?`,
+                `圆 $O$ 中突出显示的弧 $${arcTex("AXB")}$ 是劣弧、优弧还是半圆？`,
+              ),
+              options,
+              correct: kind,
+              solution: t(
+                `It is ${options[kind]!.en.toLowerCase()}: ${reasons[kind]!.en}.`,
+                `它是${options[kind]!["zh-CN"]}：${reasons[kind]!["zh-CN"]}。`,
+              ),
+            }),
+            figure: figure(
+              [
+                circleAt(),
+                ...center("O", dirOf(s + m / 2 + 180)),
+                ...arcAt(s, s + m),
+                { kind: "segment", a: on(s), b: on(s + m), dashed: true },
+                ...pointsAt([
+                  [s, "A"],
+                  [s + m, "B"],
+                  [s + m / 2, "X"],
+                ]),
+              ],
+              "Circle O with points A, X and B on it; the arc AXB is highlighted and chord AB is dashed.",
+              "圆 O 上有点 A、X、B；弧 AXB 被突出显示，弦 AB 用虚线画出。",
             ),
-            options,
-            correct: kind,
-            solution: t(
-              `It is ${options[kind]!.en.toLowerCase()}: ${reasons[kind]!.en}.`,
-              `它是${options[kind]!["zh-CN"]}：${reasons[kind]!["zh-CN"]}。`,
-            ),
-          }),
-          figure: figure(
+          },
+          [
             [
-              circleAt(),
-              ...center("O", dirOf(s + m / 2 + 180)),
-              ...arcAt(s, s + m),
-              { kind: "segment", a: on(s), b: on(s + m), dashed: true },
-              ...pointsAt([
-                [s, "A"],
-                [s + m, "B"],
-                [s + m / 2, "X"],
-              ]),
+              options[0]!.en,
+              `A minor arc is smaller than a semicircle, and this arc ${kind === 1 ? "is larger" : "is exactly half the circle"}.`,
+              `劣弧比半圆小，而这条弧${kind === 1 ? "比半圆大" : "正好是半个圆"}。`,
             ],
-            "Circle O with points A, X and B on it; the arc AXB is highlighted and chord AB is dashed.",
-            "圆 O 上有点 A、X、B；弧 AXB 被突出显示，弦 AB 用虚线画出。",
-          ),
-        };
+            [
+              options[1]!.en,
+              `A major arc is larger than a semicircle, and this arc ${kind === 0 ? "is smaller" : "is exactly half the circle"}.`,
+              `优弧比半圆大，而这条弧${kind === 0 ? "比半圆小" : "正好是半个圆"}。`,
+            ],
+            [
+              options[2]!.en,
+              "A semicircle has a diameter as its chord, and chord $AB$ does not pass through the center here.",
+              "半圆所对的弦是直径，而这里弦 $AB$ 不过圆心。",
+            ],
+          ],
+        );
       },
     },
     {
@@ -700,6 +744,7 @@ export const areasOfCircles: TopicDef = {
     },
     {
       id: "approximating-area",
+      figure: geometryDrawings2["areas-of-circles#approximating-area"],
       title: t("Approximating the area", "面积的近似值"),
       explanation: t(
         "For a decimal value, use an approximation of $\\pi$ such as $3.14$. Square the radius first, then multiply.\n\nA circle with radius $4$ cm has area $A \\approx 3.14 \\cdot 4^2 = 3.14 \\cdot 16 = 50.24\\text{ cm}^2$.",
@@ -737,6 +782,7 @@ export const areasOfCircles: TopicDef = {
     },
     {
       id: "radius-from-area",
+      figure: geometryDrawings2["areas-of-circles#radius-from-area"],
       title: t("The radius from the area", "由面积求半径"),
       explanation: t(
         "Since $A = \\pi r^2$, dividing the area by $\\pi$ gives $r^2$, and the radius is its square root.\n\nA circle with area $49\\pi\\text{ cm}^2$ has $r^2 = 49$, so $r = 7$ cm and the diameter is $14$ cm.",
@@ -781,6 +827,7 @@ export const areasOfCircles: TopicDef = {
     },
     {
       id: "area-and-circumference",
+      figure: geometryDrawings2["areas-of-circles#area-and-circumference"],
       title: t("From circumference to area and back", "周长与面积互求"),
       explanation: t(
         "To go from the circumference to the area, or back, pass through the radius.\n\nA circle with circumference $10\\pi$ m has radius $5$ m, so its area is $25\\pi\\text{ m}^2$. A circle with area $64\\pi\\text{ m}^2$ has radius $8$ m, so its circumference is $16\\pi$ m.",

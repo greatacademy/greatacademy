@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, integer, signed, skill } from "./third-kit.ts";
@@ -51,40 +52,43 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
     ),
   ],
   "calculating-perimeters-in-the-plane": [
-    skill(
-      "the-perimeter-of-a-right-triangle",
-      ["The perimeter of a right triangle", "直角三角形的周长"],
-      [
-        "When two sides of a triangle lie along grid lines, their lengths come from subtracting coordinates. The third side then comes from the Pythagorean theorem, and the perimeter adds all three.",
-        "三角形有两条边沿着网格线时，它们的长度由坐标相减得到。第三条边用勾股定理求，周长是三条边的和。",
-      ],
-      (rng) => {
-        const [p, q, r] = rng.pick<[number, number, number]>([
-          [3, 4, 5],
-          [6, 8, 10],
-          [5, 12, 13],
-          [8, 15, 17],
-          [9, 12, 15],
-          [7, 24, 25],
-        ]);
-        const x = rng.int(-9, 9);
-        const y = rng.int(-9, 9);
-        const left = rng.bool() ? 1 : -1;
-        const down = rng.bool() ? 1 : -1;
-        return whole(
-          [
-            `Find the perimeter of the triangle with vertices $(${x}, ${y})$, $(${x + left * p}, ${y})$ and $(${x}, ${y + down * q})$.`,
-            `求顶点为 $(${x}, ${y})$、$(${x + left * p}, ${y})$ 和 $(${x}, ${y + down * q})$ 的三角形的周长。`,
-          ],
-          p + q + r,
-          [p + q, 2 * (p + q), (p * q) / 2],
-          [
-            `The legs are $${p}$ and $${q}$, read off the coordinates. The third side is $\\sqrt{${p}^2 + ${q}^2} = ${r}$, so the perimeter is $${p} + ${q} + ${r} = ${p + q + r}$.`,
-            `由坐标读出两条直角边是 $${p}$ 和 $${q}$。第三边是 $\\sqrt{${p}^2 + ${q}^2} = ${r}$，所以周长是 $${p} + ${q} + ${r} = ${p + q + r}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-perimeter-of-a-right-triangle",
+        ["The perimeter of a right triangle", "直角三角形的周长"],
+        [
+          "When two sides of a triangle lie along grid lines, their lengths come from subtracting coordinates. The third side then comes from the Pythagorean theorem, and the perimeter adds all three.",
+          "三角形有两条边沿着网格线时，它们的长度由坐标相减得到。第三条边用勾股定理求，周长是三条边的和。",
+        ],
+        (rng) => {
+          const [p, q, r] = rng.pick<[number, number, number]>([
+            [3, 4, 5],
+            [6, 8, 10],
+            [5, 12, 13],
+            [8, 15, 17],
+            [9, 12, 15],
+            [7, 24, 25],
+          ]);
+          const x = rng.int(-9, 9);
+          const y = rng.int(-9, 9);
+          const left = rng.bool() ? 1 : -1;
+          const down = rng.bool() ? 1 : -1;
+          return whole(
+            [
+              `Find the perimeter of the triangle with vertices $(${x}, ${y})$, $(${x + left * p}, ${y})$ and $(${x}, ${y + down * q})$.`,
+              `求顶点为 $(${x}, ${y})$、$(${x + left * p}, ${y})$ 和 $(${x}, ${y + down * q})$ 的三角形的周长。`,
+            ],
+            p + q + r,
+            [p + q, 2 * (p + q), (p * q) / 2],
+            [
+              `The legs are $${p}$ and $${q}$, read off the coordinates. The third side is $\\sqrt{${p}^2 + ${q}^2} = ${r}$, so the perimeter is $${p} + ${q} + ${r} = ${p + q + r}$.`,
+              `由坐标读出两条直角边是 $${p}$ 和 $${q}$。第三边是 $\\sqrt{${p}^2 + ${q}^2} = ${r}$，所以周长是 $${p} + ${q} + ${r} = ${p + q + r}$。`,
+            ],
+          );
+        },
+      ),
+      figure: geometryDrawings2["calculating-perimeters-in-the-plane#the-perimeter-of-a-right-triangle"],
+    },
   ],
   "coin-problems": [
     skill(

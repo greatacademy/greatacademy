@@ -4,8 +4,8 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import { earlyNames, lowestNumerator } from "../early-grades-kit.ts";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -694,38 +694,41 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "the-cartesian-coordinate-system": [
-    skill(
-      "reflecting-a-point-in-an-axis",
-      ["Reflecting a point in an axis", "点关于坐标轴对称"],
-      [
-        "Reflecting a point in the $x$-axis changes the sign of its second coordinate, since the point moves up or down. Reflecting in the $y$-axis changes the sign of its first coordinate instead.",
-        "关于 $x$ 轴对称时，点上下移动，第二个坐标变号。关于 $y$ 轴对称时，第一个坐标变号。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 15);
-        const b = a + rng.int(1, 9);
-        const sa = rng.bool() ? a : -a;
-        const sb = rng.bool() ? b : -b;
-        const xAxis = rng.bool();
-        return chooseMath(
-          rng,
-          xAxis
-            ? [`Where does $(${sa}, ${sb})$ land after a reflection in the $x$-axis?`, `$(${sa}, ${sb})$ 关于 $x$ 轴对称的点是哪个？`]
-            : [`Where does $(${sa}, ${sb})$ land after a reflection in the $y$-axis?`, `$(${sa}, ${sb})$ 关于 $y$ 轴对称的点是哪个？`],
-          xAxis ? `(${sa}, ${-sb})` : `(${-sa}, ${sb})`,
-          [xAxis ? `(${-sa}, ${sb})` : `(${sa}, ${-sb})`, `(${-sa}, ${-sb})`, `(${sb}, ${sa})`],
-          xAxis
-            ? [
-                `The first coordinate stays and the second changes sign: $(${sa}, ${-sb})$.`,
-                `第一个坐标不变，第二个变号：$(${sa}, ${-sb})$。`,
-              ]
-            : [
-                `The second coordinate stays and the first changes sign: $(${-sa}, ${sb})$.`,
-                `第二个坐标不变，第一个变号：$(${-sa}, ${sb})$。`,
-              ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "reflecting-a-point-in-an-axis",
+        ["Reflecting a point in an axis", "点关于坐标轴对称"],
+        [
+          "Reflecting a point in the $x$-axis changes the sign of its second coordinate, since the point moves up or down. Reflecting in the $y$-axis changes the sign of its first coordinate instead.",
+          "关于 $x$ 轴对称时，点上下移动，第二个坐标变号。关于 $y$ 轴对称时，第一个坐标变号。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 15);
+          const b = a + rng.int(1, 9);
+          const sa = rng.bool() ? a : -a;
+          const sb = rng.bool() ? b : -b;
+          const xAxis = rng.bool();
+          return chooseMath(
+            rng,
+            xAxis
+              ? [`Where does $(${sa}, ${sb})$ land after a reflection in the $x$-axis?`, `$(${sa}, ${sb})$ 关于 $x$ 轴对称的点是哪个？`]
+              : [`Where does $(${sa}, ${sb})$ land after a reflection in the $y$-axis?`, `$(${sa}, ${sb})$ 关于 $y$ 轴对称的点是哪个？`],
+            xAxis ? `(${sa}, ${-sb})` : `(${-sa}, ${sb})`,
+            [xAxis ? `(${-sa}, ${sb})` : `(${sa}, ${-sb})`, `(${-sa}, ${-sb})`, `(${sb}, ${sa})`],
+            xAxis
+              ? [
+                  `The first coordinate stays and the second changes sign: $(${sa}, ${-sb})$.`,
+                  `第一个坐标不变，第二个变号：$(${sa}, ${-sb})$。`,
+                ]
+              : [
+                  `The second coordinate stays and the first changes sign: $(${-sa}, ${sb})$.`,
+                  `第二个坐标不变，第一个变号：$(${-sa}, ${sb})$。`,
+                ],
+          );
+        },
+      ),
+      figure: gradeDrawings3["the-cartesian-coordinate-system#reflecting-a-point-in-an-axis"],
+    },
   ],
   "rational-numbers-in-the-coordinate-plane": [
     skill(

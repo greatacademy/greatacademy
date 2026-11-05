@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, radical, sketch } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { article, choiceProblem, numberProblem, pointLatex, radicalProblem, steps, yesNo } from "../problems.ts";
 import {
@@ -421,6 +422,7 @@ const understandingAndProvingThePythagoreanTheorem = topic(
   [
     {
       id: "squares-on-the-sides",
+      figure: gradeDrawings3["understanding-and-proving-the-pythagorean-theorem#squares-on-the-sides"],
       title: t("Squares on the sides", "三边上的正方形"),
       explanation: t(
         "Draw a square on each side of a right triangle. The square on a side of length $a$ has area $a^2$, so the Pythagorean theorem says: **the area of the square on the hypotenuse equals the sum of the areas of the squares on the legs.**\n\nIf the squares on the legs have areas $9$ and $16$, the square on the hypotenuse has area $9 + 16 = 25$, and the hypotenuse is $\\sqrt{25} = 5$ long.",
@@ -492,6 +494,7 @@ const understandingAndProvingThePythagoreanTheorem = topic(
     },
     {
       id: "the-rearrangement-proof",
+      figure: gradeDrawings3["understanding-and-proving-the-pythagorean-theorem#the-rearrangement-proof"],
       title: t("The rearrangement proof", "拼图证明"),
       explanation: t(
         "Place four copies of a right triangle with legs $a$ and $b$ and hypotenuse $c$ in the corners of a square of side $a + b$. The space left in the middle is a square of side $c$. So\n\n$$c^2 = (a + b)^2 - 4 \\cdot \\tfrac{1}{2}ab.$$\n\nWith $a = 3$ and $b = 4$: the large square has area $7^2 = 49$, the four triangles have area $4 \\cdot \\tfrac{1}{2} \\cdot 3 \\cdot 4 = 24$, and the middle square has area $49 - 24 = 25 = 3^2 + 4^2$. The same happens for any legs, which proves $a^2 + b^2 = c^2$.",
@@ -541,6 +544,7 @@ const understandingAndProvingThePythagoreanTheorem = topic(
     },
     {
       id: "the-inner-square-proof",
+      figure: gradeDrawings3["understanding-and-proving-the-pythagorean-theorem#the-inner-square-proof"],
       title: t("The inner-square proof", "弦图证明"),
       explanation: t(
         "A square of side $c$ can be cut into four copies of a right triangle with legs $a < b$ and hypotenuse $c$, plus a small square in the middle. The side of the small square is the difference of the legs, $b - a$. Adding the pieces,\n\n$$c^2 = 4 \\cdot \\tfrac{1}{2}ab + (b - a)^2.$$\n\nWith legs $3$ and $5$: the small square has side $2$ and area $4$, the four triangles have area $4 \\cdot \\tfrac{1}{2} \\cdot 3 \\cdot 5 = 30$, and $c^2 = 30 + 4 = 34 = 3^2 + 5^2$.",
@@ -889,6 +893,7 @@ const solvingRealWorldProblemsUsingThePythagoreanTheorem = topic(
   [
     {
       id: "ladders-ramps-and-wires",
+      figure: gradeDrawings3["solving-real-world-problems-using-the-pythagorean-theorem#ladders-ramps-and-wires"],
       title: t("Ladders, ramps and wires", "梯子、斜坡和拉线"),
       explanation: t(
         "A ladder against a wall, a wire from the top of a pole, a kite string and a ramp each form a right triangle with the ground: the ground is one leg, the vertical height is the other, and the slanted object is the **hypotenuse**.\n\nDecide which side is unknown before you compute. A $10$-ft ladder whose foot is $6$ ft from a wall reaches $x$ ft up, where $x^2 + 6^2 = 10^2$: $x^2 = 100 - 36 = 64$, so $x = 8$ ft.",
@@ -929,6 +934,7 @@ const solvingRealWorldProblemsUsingThePythagoreanTheorem = topic(
     },
     {
       id: "diagonals-of-rectangles",
+      figure: gradeDrawings3["solving-real-world-problems-using-the-pythagorean-theorem#diagonals-of-rectangles"],
       title: t("Diagonals of rectangles", "长方形的对角线"),
       explanation: t(
         "A diagonal cuts a rectangle into two right triangles. The length and the width are the legs, and the diagonal is the hypotenuse: $d^2 = w^2 + h^2$.\n\nA TV screen $48$ in wide and $20$ in tall has diagonal $d$ with $d^2 = 48^2 + 20^2 = 2304 + 400 = 2704$, so $d = 52$ in. To find a side from the diagonal, subtract: $h^2 = d^2 - w^2$.",
@@ -968,6 +974,7 @@ const solvingRealWorldProblemsUsingThePythagoreanTheorem = topic(
     },
     {
       id: "shortcuts",
+      figure: gradeDrawings3["solving-real-world-problems-using-the-pythagorean-theorem#shortcuts"],
       title: t("Shortcuts", "抄近路"),
       explanation: t(
         "Going straight across a rectangle is shorter than going along two of its sides. The straight route is the hypotenuse of the right triangle whose legs are the two sides, so the distance saved is\n\n$$(a + b) - \\sqrt{a^2 + b^2}.$$\n\nAlong sides of $30$ m and $40$ m you walk $70$ m, but straight across you walk $\\sqrt{900 + 1600} = 50$ m, so you save $70 - 50 = 20$ m.",
@@ -1051,6 +1058,7 @@ const findingTheDistanceBetweenTwoPoints = topic(
   [
     {
       id: "distance-on-the-grid",
+      figure: gradeDrawings3["finding-the-distance-between-two-points-using-the-pythagorean-theorem#distance-on-the-grid"],
       title: t("Distance on the grid", "网格上的距离"),
       explanation: t(
         "To find the distance between two points that are not on the same horizontal or vertical line, draw a right triangle: a horizontal leg and a vertical leg meet at a corner, and the segment between the points is the hypotenuse. Count the length of each leg, then use the Pythagorean theorem.\n\nFrom $(1, 2)$ to $(4, 6)$ the legs are $3$ and $4$, so the distance is $\\sqrt{9 + 16} = 5$. The distance is not $3 + 4 = 7$: that is the length of the path along the legs.",
@@ -1206,6 +1214,7 @@ const applyingThePythagoreanTheoremInThreeDimensions = topic(
   [
     {
       id: "the-diagonal-of-a-box",
+      figure: gradeDrawings3["applying-the-pythagorean-theorem-to-three-dimensional-figures#the-diagonal-of-a-box"],
       title: t("The diagonal of a box", "长方体的对角线"),
       explanation: t(
         "The diagonal of a box runs from a bottom corner to the opposite top corner. Find it in two steps:\n\n1. The diagonal $e$ of the bottom face: $e^2 = l^2 + w^2$.\n2. The diagonal $e$, the height $h$ and the box's diagonal $d$ form a right triangle standing up inside the box: $d^2 = e^2 + h^2$.\n\nFor a $3 \\times 4 \\times 12$ box: $e^2 = 9 + 16 = 25$, then $d^2 = 25 + 144 = 169$, so $d = 13$. The diagonal is the longest straight rod that fits inside the box.",
@@ -1267,6 +1276,7 @@ const applyingThePythagoreanTheoremInThreeDimensions = topic(
     },
     {
       id: "heights-and-slant-heights",
+      figure: gradeDrawings3["applying-the-pythagorean-theorem-to-three-dimensional-figures#heights-and-slant-heights"],
       title: t("Heights and slant heights", "高和斜高"),
       explanation: t(
         "Inside a right cone, the height $h$, the radius $r$ and the slant height $l$ form a right triangle with the slant height as hypotenuse: $l^2 = r^2 + h^2$.\n\nInside a pyramid with a square base of side $s$, the height $h$, **half the base side** $\\tfrac{s}{2}$ and the slant height $l$ (the height of a triangular face) form a right triangle: $l^2 = h^2 + \\left(\\tfrac{s}{2}\\right)^2$. A pyramid with base side $12$ and height $8$ has $l^2 = 64 + 36 = 100$, so $l = 10$.",
@@ -1355,6 +1365,7 @@ const applyingThePythagoreanTheoremInThreeDimensions = topic(
     },
     {
       id: "the-longest-rod-in-a-cylinder",
+      figure: gradeDrawings3["applying-the-pythagorean-theorem-to-three-dimensional-figures#the-longest-rod-in-a-cylinder"],
       title: t("The longest rod in a cylinder", "圆柱内的最长直棒"),
       explanation: t(
         "The longest straight rod that fits inside a cylinder runs from a point on the bottom rim to the opposite point on the top rim. It is the hypotenuse of a right triangle whose legs are the **diameter** of the base and the height: $d^2 = (2r)^2 + h^2$.\n\nA can with radius $3$ cm and height $8$ cm holds a rod of length $\\sqrt{6^2 + 8^2} = \\sqrt{100} = 10$ cm. Using the radius instead of the diameter gives a rod that is too short.",
@@ -1729,6 +1740,7 @@ const solvingRealWorldVolumeProblems = topic(
     },
     {
       id: "volumes-of-composite-solids",
+      figure: gradeDrawings3["solving-real-world-problems-involving-volumes-of-cylinders-cones-and-spheres#volumes-of-composite-solids"],
       title: t("Volumes of composite solids", "组合体的体积"),
       explanation: t(
         "A composite solid is made of simpler solids. Find the volume of each part and add.\n\nA silo is a cylinder with radius $3$ m and height $10$ m topped by a hemisphere with radius $3$ m:\n\n$$\\pi \\cdot 3^2 \\cdot 10 + \\tfrac{2}{3}\\pi \\cdot 3^3 = 90\\pi + 18\\pi = 108\\pi \\text{ m}^3.$$\n\nA hemisphere is half a sphere, so its volume is $\\tfrac{2}{3}\\pi r^3$; two hemispheres make a whole sphere.",

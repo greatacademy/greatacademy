@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { article, choiceProblem, expressionProblem, mixedLatex, numberProblem, reasonChoice, verdictChoice, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -909,6 +910,7 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
   [
     {
       id: "is-the-graph-proportional",
+      figure: gradeDrawings3["understanding-proportional-relationships-using-graphs#is-the-graph-proportional"],
       title: t("Is the graph proportional?", "图像是否成正比例？"),
       explanation: t(
         "A graph shows a proportional relationship only if it is a straight line and it passes through $(0, 0)$. The line through $(0, 2)$ and $(4, 6)$ is straight but misses the origin, so it is not proportional.",
@@ -997,6 +999,7 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
     },
     {
       id: "constant-of-proportionality-from-a-graph",
+      figure: gradeDrawings3["understanding-proportional-relationships-using-graphs#constant-of-proportionality-from-a-graph"],
       title: t("The constant of proportionality from a graph", "由图像求比例常数"),
       explanation: t(
         "The graph of a proportional relationship is a straight line through the origin. Read any point on the line other than the origin; its $y$ divided by its $x$ is the constant of proportionality.\n\nThe line of a proportional relationship passes through $(6, 4)$. Then $k = \\frac{4}{6} = \\frac{2}{3}$, and the equation is $y = \\frac{2}{3}x$.",

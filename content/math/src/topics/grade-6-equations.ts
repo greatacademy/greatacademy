@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q, relSymbol } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import {
   choiceProblem,
@@ -837,6 +838,7 @@ export const representingInequalitiesOnNumberLines = topic(
   [
     {
       id: "writing-an-inequality-from-a-graph",
+      figure: gradeDrawings3["representing-inequalities-on-number-lines#writing-an-inequality-from-a-graph"],
       title: t("Reading a graph", "根据图像写不等式"),
       explanation: t(
         "A closed dot at $-3$ with shading to the right shows $x \\ge -3$; an open circle at $4$ with shading to the left shows $x < 4$.",
@@ -867,6 +869,7 @@ export const representingInequalitiesOnNumberLines = topic(
     },
     {
       id: "describing-the-graph-of-an-inequality",
+      figure: gradeDrawings3["representing-inequalities-on-number-lines#describing-the-graph-of-an-inequality"],
       title: t("Describing the graph", "描述不等式的图像"),
       explanation: t(
         "$6 \\ge x$ means $x \\le 6$: a closed dot at $6$ with shading to the left. Read the inequality starting from $x$ before deciding the direction.",
@@ -1382,6 +1385,7 @@ export const analyzingTwoVariableEquationsUsingGraphs = topic(
   [
     {
       id: "reading-values-from-a-graph",
+      figure: gradeDrawings3["analyzing-two-variable-equations-using-graphs#reading-values-from-a-graph"],
       title: t("Reading values", "读取数值"),
       explanation: t(
         "Every point on the graph of an equation is a pair $(x, y)$ that fits it. To read $y$ for a given $x$, go to that $x$ on the horizontal axis, move up or down to the line, then read across to the vertical axis.\n\nOn the graph of $y = 2x + 1$, the point above $x = 4$ is $(4, 9)$, so $y = 9$ when $x = 4$.",

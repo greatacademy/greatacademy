@@ -4,9 +4,10 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import { earlyNames } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
 /** skill builds a knowledge point from its texts and generator. */
@@ -498,14 +499,33 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
         const a = rng.int(11, 99);
         const b = rng.int(101, 999);
         const right = a + b * 10;
-        return chooseMath(
-          rng,
-          [`Which is the correct value of $${show(a, 2)} + ${show(b, 1)}$?`, `$${show(a, 2)} + ${show(b, 1)}$ 的正确值是哪个？`],
-          show(right, 2),
-          [show(a + b, 2), show(a + b, 1), show(a * 10 + b * 10 + 1, 2)],
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Which is the correct value of $${show(a, 2)} + ${show(b, 1)}$?`, `$${show(a, 2)} + ${show(b, 1)}$ 的正确值是哪个？`],
+            show(right, 2),
+            [show(a + b, 2), show(a + b, 1), show(a * 10 + b * 10 + 1, 2)],
+            [
+              `Write $${show(b, 1)}$ as $${show(b * 10, 2)}$ so the points line up: $${show(a, 2)} + ${show(b * 10, 2)} = ${show(right, 2)}$. Lining up the right-hand digits gives $${show(a + b, 2)}$.`,
+              `把 $${show(b, 1)}$ 写成 $${show(b * 10, 2)}$，使小数点对齐：$${show(a, 2)} + ${show(b * 10, 2)} = ${show(right, 2)}$。对齐最右边的数字会得到 $${show(a + b, 2)}$。`,
+            ],
+          ),
           [
-            `Write $${show(b, 1)}$ as $${show(b * 10, 2)}$ so the points line up: $${show(a, 2)} + ${show(b * 10, 2)} = ${show(right, 2)}$. Lining up the right-hand digits gives $${show(a + b, 2)}$.`,
-            `把 $${show(b, 1)}$ 写成 $${show(b * 10, 2)}$，使小数点对齐：$${show(a, 2)} + ${show(b * 10, 2)} = ${show(right, 2)}$。对齐最右边的数字会得到 $${show(a + b, 2)}$。`,
+            [
+              `$${show(a + b, 2)}$`,
+              "The digits were lined up from the right, not by the decimal point.",
+              "这里是从右边对齐数字，而不是对齐小数点。",
+            ],
+            [
+              `$${show(a + b, 1)}$`,
+              "The digits were lined up from the right, not by the decimal point.",
+              "这里是从右边对齐数字，而不是对齐小数点。",
+            ],
+            [
+              `$${show(a * 10 + b * 10 + 1, 2)}$`,
+              "This treats the hundredths of the first number as tenths, which makes it ten times too big.",
+              "这里把第一个数的百分位当成了十分位，它就大了十倍。",
+            ],
           ],
         );
       },
@@ -1171,160 +1191,172 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
     ),
   ],
   "graphing-patterns": [
-    skill(
-      "a-far-point-on-the-graph",
-      ["A far point on the graph", "图像上较远的点"],
-      [
-        "Points graphed from two patterns that start at 0 lie on a line through the origin. The second coordinate is a fixed multiple of the first, which reaches points far beyond the graph.",
-        "由两个从 0 开始的数列画出的点在一条过原点的直线上。第二个坐标是第一个坐标的固定倍数，由此可以求出图外很远的点。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 5);
-        const k = rng.int(2, 6);
-        const x = a * rng.int(11, 60);
-        return whole(
-          [
-            `A graph shows the points $(0, 0)$, $(${a}, ${a * k})$ and $(${2 * a}, ${2 * a * k})$, formed from two patterns. If the patterns continue, what is the second coordinate when the first is ${x}?`,
-            `一个图像显示由两个数列得到的点 $(0, 0)$、$(${a}, ${a * k})$ 和 $(${2 * a}, ${2 * a * k})$。如果数列继续下去，第一个坐标是 ${x} 时，第二个坐标是多少？`,
-          ],
-          x * k,
-          [x + k, x + a * k, x * a],
-          [
-            `The second coordinate is always ${k} times the first: $${x} \\times ${k} = ${x * k}$.`,
-            `第二个坐标总是第一个的 ${k} 倍：$${x} \\times ${k} = ${x * k}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-far-point-on-the-graph",
+        ["A far point on the graph", "图像上较远的点"],
+        [
+          "Points graphed from two patterns that start at 0 lie on a line through the origin. The second coordinate is a fixed multiple of the first, which reaches points far beyond the graph.",
+          "由两个从 0 开始的数列画出的点在一条过原点的直线上。第二个坐标是第一个坐标的固定倍数，由此可以求出图外很远的点。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 5);
+          const k = rng.int(2, 6);
+          const x = a * rng.int(11, 60);
+          return whole(
+            [
+              `A graph shows the points $(0, 0)$, $(${a}, ${a * k})$ and $(${2 * a}, ${2 * a * k})$, formed from two patterns. If the patterns continue, what is the second coordinate when the first is ${x}?`,
+              `一个图像显示由两个数列得到的点 $(0, 0)$、$(${a}, ${a * k})$ 和 $(${2 * a}, ${2 * a * k})$。如果数列继续下去，第一个坐标是 ${x} 时，第二个坐标是多少？`,
+            ],
+            x * k,
+            [x + k, x + a * k, x * a],
+            [
+              `The second coordinate is always ${k} times the first: $${x} \\times ${k} = ${x * k}$.`,
+              `第二个坐标总是第一个的 ${k} 倍：$${x} \\times ${k} = ${x * k}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["graphing-patterns#a-far-point-on-the-graph"],
+    },
   ],
   quadrilaterals: [
-    skill(
-      "the-missing-angle-of-a-quadrilateral",
-      ["The missing angle of a quadrilateral", "四边形中缺少的角"],
-      [
-        "A diagonal cuts any quadrilateral into two triangles, so its angles total $360^\\circ$. The missing angle is what remains after subtracting the three known angles from that total.",
-        "对角线把任意四边形分成两个三角形，所以内角和是 $360^\\circ$。从总和中减去三个已知角，就得到缺少的角。",
-      ],
-      (rng) => {
-        const a = rng.int(65, 115);
-        const b = rng.int(65, 115);
-        const c = rng.int(65, 115);
-        const d = 360 - a - b - c;
-        return whole(
-          [
-            `Three angles of a quadrilateral measure $${a}^\\circ$, $${b}^\\circ$ and $${c}^\\circ$. What is the fourth angle, in degrees?`,
-            `四边形的三个角分别是 $${a}^\\circ$、$${b}^\\circ$ 和 $${c}^\\circ$。第四个角是多少度？`,
-          ],
-          d,
-          [Math.abs(180 - a - b - c), a + b + c, 360 - a - b],
-          [`The angles total 360, and $360 - ${a} - ${b} - ${c} = ${d}$.`, `内角和是 360，$360 - ${a} - ${b} - ${c} = ${d}$。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-missing-angle-of-a-quadrilateral",
+        ["The missing angle of a quadrilateral", "四边形中缺少的角"],
+        [
+          "A diagonal cuts any quadrilateral into two triangles, so its angles total $360^\\circ$. The missing angle is what remains after subtracting the three known angles from that total.",
+          "对角线把任意四边形分成两个三角形，所以内角和是 $360^\\circ$。从总和中减去三个已知角，就得到缺少的角。",
+        ],
+        (rng) => {
+          const a = rng.int(65, 115);
+          const b = rng.int(65, 115);
+          const c = rng.int(65, 115);
+          const d = 360 - a - b - c;
+          return whole(
+            [
+              `Three angles of a quadrilateral measure $${a}^\\circ$, $${b}^\\circ$ and $${c}^\\circ$. What is the fourth angle, in degrees?`,
+              `四边形的三个角分别是 $${a}^\\circ$、$${b}^\\circ$ 和 $${c}^\\circ$。第四个角是多少度？`,
+            ],
+            d,
+            [Math.abs(180 - a - b - c), a + b + c, 360 - a - b],
+            [`The angles total 360, and $360 - ${a} - ${b} - ${c} = ${d}$.`, `内角和是 360，$360 - ${a} - ${b} - ${c} = ${d}$。`],
+          );
+        },
+      ),
+      figure: gradeDrawings2["quadrilaterals#the-missing-angle-of-a-quadrilateral"],
+    },
   ],
   "perimeters-of-shapes": [
-    skill(
-      "a-side-from-a-regular-perimeter",
-      ["A side from a regular perimeter", "由正多边形的周长求边长"],
-      [
-        "A regular polygon's sides are all equal, so its perimeter is the side times the number of sides. Dividing the perimeter by the number of sides undoes that.",
-        "正多边形的各边都相等，所以周长是边长乘边数。周长除以边数就能还原边长。",
-      ],
-      (rng) => {
-        const shapes: readonly [string, string, number][] = [
-          ["square", "正方形", 4],
-          ["regular pentagon", "正五边形", 5],
-          ["regular hexagon", "正六边形", 6],
-          ["regular octagon", "正八边形", 8],
-          ["equilateral triangle", "等边三角形", 3],
-        ];
-        const [en, zh, n] = rng.pick(shapes);
-        const side = rng.int(11, 199);
-        return decimal(
-          [
-            `A ${en} has a perimeter of $${show(side * n, 1)}$ meters. How many meters long is each side?`,
-            `一个${zh}的周长是 $${show(side * n, 1)}$ 米。每条边长多少米？`,
-          ],
-          Q.of(side, 10),
-          [Q.of(side * n, 10 * (n + 1)), Q.of(side * n, 100), Q.of(side * 2, 10)],
-          [
-            `It has ${n} equal sides: $${show(side * n, 1)} \\div ${n} = ${show(side, 1)}$.`,
-            `它有 ${n} 条相等的边：$${show(side * n, 1)} \\div ${n} = ${show(side, 1)}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-side-from-a-regular-perimeter",
+        ["A side from a regular perimeter", "由正多边形的周长求边长"],
+        [
+          "A regular polygon's sides are all equal, so its perimeter is the side times the number of sides. Dividing the perimeter by the number of sides undoes that.",
+          "正多边形的各边都相等，所以周长是边长乘边数。周长除以边数就能还原边长。",
+        ],
+        (rng) => {
+          const shapes: readonly [string, string, number][] = [
+            ["square", "正方形", 4],
+            ["regular pentagon", "正五边形", 5],
+            ["regular hexagon", "正六边形", 6],
+            ["regular octagon", "正八边形", 8],
+            ["equilateral triangle", "等边三角形", 3],
+          ];
+          const [en, zh, n] = rng.pick(shapes);
+          const side = rng.int(11, 199);
+          return decimal(
+            [
+              `A ${en} has a perimeter of $${show(side * n, 1)}$ meters. How many meters long is each side?`,
+              `一个${zh}的周长是 $${show(side * n, 1)}$ 米。每条边长多少米？`,
+            ],
+            Q.of(side, 10),
+            [Q.of(side * n, 10 * (n + 1)), Q.of(side * n, 100), Q.of(side * 2, 10)],
+            [
+              `It has ${n} equal sides: $${show(side * n, 1)} \\div ${n} = ${show(side, 1)}$.`,
+              `它有 ${n} 条相等的边：$${show(side * n, 1)} \\div ${n} = ${show(side, 1)}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["perimeters-of-shapes#a-side-from-a-regular-perimeter"],
+    },
   ],
   "classifying-quadrilaterals": [
-    skill(
-      "one-right-angle-settles-the-rest",
-      ["One right angle settles the rest", "一个直角决定其余的角"],
-      [
-        "Next to each other, the angles of a parallelogram add to $180^\\circ$. So a parallelogram with one right angle has four, making it a rectangle, and a square if its sides are also equal.",
-        "平行四边形的相邻两角和是 $180^\\circ$。所以有一个直角的平行四边形有四个直角，是长方形；如果边也都相等，就是正方形。",
-      ],
-      (rng) => {
-        const a = rng.int(3, 20);
-        const b = a + rng.int(1, 9);
-        const angle = rng.int(40, 140);
-        const form = rng.int(0, 3);
-        const sq: Pair = ["Square", "正方形"];
-        const re: Pair = ["Rectangle", "长方形"];
-        const rh: Pair = ["Rhombus", "菱形"];
-        const pa: Pair = ["Parallelogram", "平行四边形"];
-        const unequal = angle === 90 ? 75 : angle;
-        const data: readonly [Pair, Pair, Pair][] = [
-          [
+    {
+      ...skill(
+        "one-right-angle-settles-the-rest",
+        ["One right angle settles the rest", "一个直角决定其余的角"],
+        [
+          "Next to each other, the angles of a parallelogram add to $180^\\circ$. So a parallelogram with one right angle has four, making it a rectangle, and a square if its sides are also equal.",
+          "平行四边形的相邻两角和是 $180^\\circ$。所以有一个直角的平行四边形有四个直角，是长方形；如果边也都相等，就是正方形。",
+        ],
+        (rng) => {
+          const a = rng.int(3, 20);
+          const b = a + rng.int(1, 9);
+          const angle = rng.int(40, 140);
+          const form = rng.int(0, 3);
+          const sq: Pair = ["Square", "正方形"];
+          const re: Pair = ["Rectangle", "长方形"];
+          const rh: Pair = ["Rhombus", "菱形"];
+          const pa: Pair = ["Parallelogram", "平行四边形"];
+          const unequal = angle === 90 ? 75 : angle;
+          const data: readonly [Pair, Pair, Pair][] = [
             [
-              `A parallelogram has a right angle and adjacent sides of $${a}$ cm and $${a}$ cm.`,
-              `一个平行四边形有一个直角，相邻两边是 $${a}$ 厘米和 $${a}$ 厘米。`,
+              [
+                `A parallelogram has a right angle and adjacent sides of $${a}$ cm and $${a}$ cm.`,
+                `一个平行四边形有一个直角，相邻两边是 $${a}$ 厘米和 $${a}$ 厘米。`,
+              ],
+              sq,
+              [
+                `One right angle gives four, and all the sides are equal, so it is a square.`,
+                `一个直角意味着四个直角，且各边相等，所以是正方形。`,
+              ],
             ],
-            sq,
             [
-              `One right angle gives four, and all the sides are equal, so it is a square.`,
-              `一个直角意味着四个直角，且各边相等，所以是正方形。`,
+              [
+                `A parallelogram has a right angle and adjacent sides of $${a}$ cm and $${b}$ cm.`,
+                `一个平行四边形有一个直角，相邻两边是 $${a}$ 厘米和 $${b}$ 厘米。`,
+              ],
+              re,
+              [
+                `One right angle gives four, but the adjacent sides differ, so it is a rectangle and not a square.`,
+                `一个直角意味着四个直角，但相邻两边不等，所以是长方形，不是正方形。`,
+              ],
             ],
-          ],
-          [
             [
-              `A parallelogram has a right angle and adjacent sides of $${a}$ cm and $${b}$ cm.`,
-              `一个平行四边形有一个直角，相邻两边是 $${a}$ 厘米和 $${b}$ 厘米。`,
+              [
+                `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of $${a}$ cm and $${a}$ cm.`,
+                `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 $${a}$ 厘米和 $${a}$ 厘米。`,
+              ],
+              rh,
+              [`All the sides are equal, but no angle is right.`, `各边相等，但没有直角。`],
             ],
-            re,
             [
-              `One right angle gives four, but the adjacent sides differ, so it is a rectangle and not a square.`,
-              `一个直角意味着四个直角，但相邻两边不等，所以是长方形，不是正方形。`,
+              [
+                `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of $${a}$ cm and $${b}$ cm.`,
+                `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 $${a}$ 厘米和 $${b}$ 厘米。`,
+              ],
+              pa,
+              [
+                `No angle is right and the adjacent sides differ, so no more specific name fits.`,
+                `没有直角，相邻两边也不等，所以没有更具体的名称。`,
+              ],
             ],
-          ],
-          [
-            [
-              `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of $${a}$ cm and $${a}$ cm.`,
-              `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 $${a}$ 厘米和 $${a}$ 厘米。`,
-            ],
-            rh,
-            [`All the sides are equal, but no angle is right.`, `各边相等，但没有直角。`],
-          ],
-          [
-            [
-              `A parallelogram has an angle of $${unequal}^\\circ$ and adjacent sides of $${a}$ cm and $${b}$ cm.`,
-              `一个平行四边形有一个 $${unequal}^\\circ$ 的角，相邻两边是 $${a}$ 厘米和 $${b}$ 厘米。`,
-            ],
-            pa,
-            [
-              `No angle is right and the adjacent sides differ, so no more specific name fits.`,
-              `没有直角，相邻两边也不等，所以没有更具体的名称。`,
-            ],
-          ],
-        ];
-        const [desc, correct, why] = data[form]!;
-        return choose(
-          rng,
-          [`${desc[0]} What is its most specific name?`, `${desc[1]}它最具体的名称是什么？`],
-          correct,
-          [sq, re, rh, pa].filter((x) => x !== correct),
-          why,
-        );
-      },
-    ),
+          ];
+          const [desc, correct, why] = data[form]!;
+          return choose(
+            rng,
+            [`${desc[0]} What is its most specific name?`, `${desc[1]}它最具体的名称是什么？`],
+            correct,
+            [sq, re, rh, pa].filter((x) => x !== correct),
+            why,
+          );
+        },
+      ),
+      figure: gradeDrawings2["classifying-quadrilaterals#one-right-angle-settles-the-rest"],
+    },
   ],
 };

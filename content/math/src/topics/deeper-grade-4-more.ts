@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -462,51 +463,57 @@ const bagsFromKilograms = skill(
   },
 );
 
-const minuteHand = skill(
-  "how-far-the-minute-hand-turns",
-  ["How far the minute hand turns", "分针转过的角度"],
-  [
-    "The minute hand makes a full turn of $360^\\circ$ in 60 minutes. So in one minute it turns $360 \\div 60 = 6$ degrees. To find the turn for any number of minutes, multiply that number by 6. Fifteen minutes gives a right angle, as the clock face shows.",
-    "分针 60 分钟转一整圈，即 $360^\\circ$。所以它每分钟转 $360 \\div 60 = 6$ 度。要求任意分钟数转过的角度，就用分钟数乘 6。15 分钟正好是一个直角，从钟面上也能看出来。",
-  ],
-  (rng) => {
-    const m = rng.int(2, 58);
-    const answer = 6 * m;
-    return whole(
-      [`Through how many degrees does the minute hand of a clock turn in ${m} minutes?`, `钟面上的分针 ${m} 分钟转过多少度？`],
-      answer,
-      [30 * m, m, 360 - answer, answer + 6],
-      [`It turns 6 degrees each minute, and $6 \\times ${m} = ${answer}$.`, `它每分钟转 6 度，$6 \\times ${m} = ${answer}$。`],
-    );
-  },
-);
+const minuteHand = {
+  ...skill(
+    "how-far-the-minute-hand-turns",
+    ["How far the minute hand turns", "分针转过的角度"],
+    [
+      "The minute hand makes a full turn of $360^\\circ$ in 60 minutes. So in one minute it turns $360 \\div 60 = 6$ degrees. To find the turn for any number of minutes, multiply that number by 6. Fifteen minutes gives a right angle, as the clock face shows.",
+      "分针 60 分钟转一整圈，即 $360^\\circ$。所以它每分钟转 $360 \\div 60 = 6$ 度。要求任意分钟数转过的角度，就用分钟数乘 6。15 分钟正好是一个直角，从钟面上也能看出来。",
+    ],
+    (rng) => {
+      const m = rng.int(2, 58);
+      const answer = 6 * m;
+      return whole(
+        [`Through how many degrees does the minute hand of a clock turn in ${m} minutes?`, `钟面上的分针 ${m} 分钟转过多少度？`],
+        answer,
+        [30 * m, m, 360 - answer, answer + 6],
+        [`It turns 6 degrees each minute, and $6 \\times ${m} = ${answer}$.`, `它每分钟转 6 度，$6 \\times ${m} = ${answer}$。`],
+      );
+    },
+  ),
+  figure: gradeDrawings2["connecting-angles-and-circles#how-far-the-minute-hand-turns"],
+};
 
-const aroundAPoint = skill(
-  "the-angle-left-around-a-point",
-  ["The angle left around a point", "一点周围剩下的角"],
-  [
-    "Angles that fill the space around a point make one full turn, which is $360^\\circ$. So when all the angles but one are known, add the known angles and subtract the total from 360. The answer may be larger than a straight angle, in which case it is a reflex angle.",
-    "铺满一点周围的角合起来是一整圈，即 $360^\\circ$。所以当只有一个角未知时，把已知的角相加，再用 360 减去这个和。结果可能比平角大，这时它是一个优角。",
-  ],
-  (rng) => {
-    const a = rng.int(25, 130);
-    const b = rng.int(25, 110);
-    const c = rng.int(25, 90);
-    const answer = 360 - a - b - c;
-    return whole(
-      [
-        `Four angles fill the space around a point. Three of them measure $${a}^\\circ$, $${b}^\\circ$ and $${c}^\\circ$. How many degrees is the fourth?`,
-        `四个角铺满一点的周围。其中三个角分别是 $${a}^\\circ$、$${b}^\\circ$ 和 $${c}^\\circ$。第四个角是多少度？`,
-      ],
-      answer,
-      [180 - (a + b + c) > 0 ? 180 - (a + b + c) : a + b + c, a + b + c, answer + 10, answer - 10],
-      [
-        `The three angles add to ${a + b + c} degrees, and $360 - ${a + b + c} = ${answer}$.`,
-        `这三个角的和是 ${a + b + c} 度，$360 - ${a + b + c} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const aroundAPoint = {
+  ...skill(
+    "the-angle-left-around-a-point",
+    ["The angle left around a point", "一点周围剩下的角"],
+    [
+      "Angles that fill the space around a point make one full turn, which is $360^\\circ$. So when all the angles but one are known, add the known angles and subtract the total from 360. The answer may be larger than a straight angle, in which case it is a reflex angle.",
+      "铺满一点周围的角合起来是一整圈，即 $360^\\circ$。所以当只有一个角未知时，把已知的角相加，再用 360 减去这个和。结果可能比平角大，这时它是一个优角。",
+    ],
+    (rng) => {
+      const a = rng.int(25, 130);
+      const b = rng.int(25, 110);
+      const c = rng.int(25, 90);
+      const answer = 360 - a - b - c;
+      return whole(
+        [
+          `Four angles fill the space around a point. Three of them measure $${a}^\\circ$, $${b}^\\circ$ and $${c}^\\circ$. How many degrees is the fourth?`,
+          `四个角铺满一点的周围。其中三个角分别是 $${a}^\\circ$、$${b}^\\circ$ 和 $${c}^\\circ$。第四个角是多少度？`,
+        ],
+        answer,
+        [180 - (a + b + c) > 0 ? 180 - (a + b + c) : a + b + c, a + b + c, answer + 10, answer - 10],
+        [
+          `The three angles add to ${a + b + c} degrees, and $360 - ${a + b + c} = ${answer}$.`,
+          `这三个角的和是 ${a + b + c} 度，$360 - ${a + b + c} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: gradeDrawings2["acute-obtuse-and-reflex-angles#the-angle-left-around-a-point"],
+};
 
 /** deeperGrade4MorePoints maps topics of 4th Grade Math to a second set of further knowledge points. */
 export const deeperGrade4MorePoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

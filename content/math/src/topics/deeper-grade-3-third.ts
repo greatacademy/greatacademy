@@ -3,8 +3,8 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
-
 import { earlyNames, earlyThings } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
 /** skill builds a knowledge point from its texts and generator. */
@@ -655,32 +655,35 @@ export const deeperGrade3ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "fractions-on-the-number-line": [
-    skill(
-      "the-point-past-one",
-      ["A point past one", "超过 1 的点"],
-      [
-        "A number line keeps going past 1, with the same equal parts in each whole. The point 5 parts from 0, when each whole has 4 parts, is at $\\frac{5}{4}$, which lies between 1 and 2.",
-        "数轴在 1 之后继续延伸，每个整数之间都有相同的等份。如果每个单位分成 4 份，距 0 有 5 份的点在 $\\frac{5}{4}$，位于 1 和 2 之间。",
-      ],
-      (rng) => {
-        const d = rng.int(2, 8);
-        const k = rng.int(1, 2);
-        const extra = rng.int(1, d - 1);
-        const n = k * d + extra;
-        return whole(
-          [
-            `Each space from one whole number to the next on a number line is cut into ${d} equal parts. A point is ${extra} part${extra > 1 ? "s" : ""} past ${k}. It is at $\\frac{a}{${d}}$. What is $a$?`,
-            `数轴上每两个相邻整数之间都平均分成 ${d} 份。一个点在 ${k} 之后 ${extra} 份。它的位置是 $\\frac{a}{${d}}$。$a$ 是多少？`,
-          ],
-          n,
-          [extra, k + extra, n + d],
-          [
-            `${k} is ${k * d} parts from 0, and ${extra} more make ${n}, so the point is at $\\frac{${n}}{${d}}$.`,
-            `${k} 距 0 有 ${k * d} 份，再加 ${extra} 份是 ${n} 份，所以这个点在 $\\frac{${n}}{${d}}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-point-past-one",
+        ["A point past one", "超过 1 的点"],
+        [
+          "A number line keeps going past 1, with the same equal parts in each whole. The point 5 parts from 0, when each whole has 4 parts, is at $\\frac{5}{4}$, which lies between 1 and 2.",
+          "数轴在 1 之后继续延伸，每个整数之间都有相同的等份。如果每个单位分成 4 份，距 0 有 5 份的点在 $\\frac{5}{4}$，位于 1 和 2 之间。",
+        ],
+        (rng) => {
+          const d = rng.int(2, 8);
+          const k = rng.int(1, 2);
+          const extra = rng.int(1, d - 1);
+          const n = k * d + extra;
+          return whole(
+            [
+              `Each space from one whole number to the next on a number line is cut into ${d} equal parts. A point is ${extra} part${extra > 1 ? "s" : ""} past ${k}. It is at $\\frac{a}{${d}}$. What is $a$?`,
+              `数轴上每两个相邻整数之间都平均分成 ${d} 份。一个点在 ${k} 之后 ${extra} 份。它的位置是 $\\frac{a}{${d}}$。$a$ 是多少？`,
+            ],
+            n,
+            [extra, k + extra, n + d],
+            [
+              `${k} is ${k * d} parts from 0, and ${extra} more make ${n}, so the point is at $\\frac{${n}}{${d}}$.`,
+              `${k} 距 0 有 ${k * d} 份，再加 ${extra} 份是 ${n} 份，所以这个点在 $\\frac{${n}}{${d}}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["fractions-on-the-number-line#the-point-past-one"],
+    },
   ],
   "equal-fractions-with-pictures": [
     skill(
@@ -943,182 +946,197 @@ export const deeperGrade3ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "area-of-a-rectangle-by-multiplying": [
-    skill(
-      "doubling-a-side-of-a-rectangle",
-      ["Doubling a side of a rectangle", "把长方形的一边加倍"],
-      [
-        "Doubling one side of a rectangle doubles the number of rows or columns, and so it doubles the area. The other side stays the same, so the area grows by the same factor.",
-        "把长方形的一边加倍，行数或列数也加倍，所以面积也加倍。另一边不变，面积按同样的倍数增大。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        const b = rng.int(2, 12);
-        const k = rng.int(2, 3);
-        return whole(
-          [
-            `A rectangle is ${a} cm by ${b} cm. Its side of ${a} cm is made ${k} times as long, and the other side stays. What is the new area, in square centimeters?`,
-            `一个长方形长 ${a} 厘米、宽 ${b} 厘米。把 ${a} 厘米的边变成原来的 ${k} 倍，另一边不变。新的面积是多少平方厘米？`,
-          ],
-          k * a * b,
-          [a * b, k * a + b, k * k * a * b],
-          [
-            `The new sides are ${k * a} cm and ${b} cm, so the area is $${k * a} \\times ${b} = ${k * a * b}$, which is ${k} times the old ${a * b}.`,
-            `新的边长是 ${k * a} 厘米和 ${b} 厘米，面积是 $${k * a} \\times ${b} = ${k * a * b}$，是原来 ${a * b} 的 ${k} 倍。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "doubling-a-side-of-a-rectangle",
+        ["Doubling a side of a rectangle", "把长方形的一边加倍"],
+        [
+          "Doubling one side of a rectangle doubles the number of rows or columns, and so it doubles the area. The other side stays the same, so the area grows by the same factor.",
+          "把长方形的一边加倍，行数或列数也加倍，所以面积也加倍。另一边不变，面积按同样的倍数增大。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          const b = rng.int(2, 12);
+          const k = rng.int(2, 3);
+          return whole(
+            [
+              `A rectangle is ${a} cm by ${b} cm. Its side of ${a} cm is made ${k} times as long, and the other side stays. What is the new area, in square centimeters?`,
+              `一个长方形长 ${a} 厘米、宽 ${b} 厘米。把 ${a} 厘米的边变成原来的 ${k} 倍，另一边不变。新的面积是多少平方厘米？`,
+            ],
+            k * a * b,
+            [a * b, k * a + b, k * k * a * b],
+            [
+              `The new sides are ${k * a} cm and ${b} cm, so the area is $${k * a} \\times ${b} = ${k * a * b}$, which is ${k} times the old ${a * b}.`,
+              `新的边长是 ${k * a} 厘米和 ${b} 厘米，面积是 $${k * a} \\times ${b} = ${k * a * b}$，是原来 ${a * b} 的 ${k} 倍。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["area-of-a-rectangle-by-multiplying#doubling-a-side-of-a-rectangle"],
+    },
   ],
   "area-of-combined-rectangles": [
-    skill(
-      "an-l-shape-from-its-sides",
-      ["An L shape from a big rectangle", "由大长方形求 L 形"],
-      [
-        "An L shape can be seen as a big rectangle with a corner rectangle taken out. Find both areas and subtract, without having to split the L into two parts.",
-        "L 形可以看作大长方形去掉一个角上的小长方形。求出两个面积再相减，不必把 L 形分成两部分。",
-      ],
-      (rng) => {
-        const w = rng.int(6, 12);
-        const h = rng.int(6, 12);
-        const a = rng.int(2, w - 2);
-        const b = rng.int(2, h - 2);
-        return whole(
-          [
-            `An L-shaped floor is a ${w} m by ${h} m rectangle with a ${a} m by ${b} m corner removed. What is its area, in square meters?`,
-            `一块 L 形地面是由 ${w} 米乘 ${h} 米的长方形去掉一个 ${a} 米乘 ${b} 米的角得到的。它的面积是多少平方米？`,
-          ],
-          w * h - a * b,
-          [w * h + a * b, w * h, (w - a) * (h - b)],
-          [
-            `The big rectangle is $${w} \\times ${h} = ${w * h}$ and the corner is $${a} \\times ${b} = ${a * b}$, so the L is $${w * h} - ${a * b} = ${w * h - a * b}$.`,
-            `大长方形是 $${w} \\times ${h} = ${w * h}$，角是 $${a} \\times ${b} = ${a * b}$，所以 L 形是 $${w * h} - ${a * b} = ${w * h - a * b}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "an-l-shape-from-its-sides",
+        ["An L shape from a big rectangle", "由大长方形求 L 形"],
+        [
+          "An L shape can be seen as a big rectangle with a corner rectangle taken out. Find both areas and subtract, without having to split the L into two parts.",
+          "L 形可以看作大长方形去掉一个角上的小长方形。求出两个面积再相减，不必把 L 形分成两部分。",
+        ],
+        (rng) => {
+          const w = rng.int(6, 12);
+          const h = rng.int(6, 12);
+          const a = rng.int(2, w - 2);
+          const b = rng.int(2, h - 2);
+          return whole(
+            [
+              `An L-shaped floor is a ${w} m by ${h} m rectangle with a ${a} m by ${b} m corner removed. What is its area, in square meters?`,
+              `一块 L 形地面是由 ${w} 米乘 ${h} 米的长方形去掉一个 ${a} 米乘 ${b} 米的角得到的。它的面积是多少平方米？`,
+            ],
+            w * h - a * b,
+            [w * h + a * b, w * h, (w - a) * (h - b)],
+            [
+              `The big rectangle is $${w} \\times ${h} = ${w * h}$ and the corner is $${a} \\times ${b} = ${a * b}$, so the L is $${w * h} - ${a * b} = ${w * h - a * b}$.`,
+              `大长方形是 $${w} \\times ${h} = ${w * h}$，角是 $${a} \\times ${b} = ${a * b}$，所以 L 形是 $${w * h} - ${a * b} = ${w * h - a * b}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["area-of-combined-rectangles#an-l-shape-from-its-sides"],
+    },
   ],
   "perimeter-of-polygons": [
-    skill(
-      "a-side-from-a-regular-perimeter",
-      ["A side from a perimeter with equal sides", "由周长求等边图形的边长"],
-      [
-        "If all sides of a polygon are equal, its perimeter is the side times the number of sides. Dividing the perimeter by the number of sides gives the length of one side.",
-        "如果多边形的边都相等，周长就是边长乘以边数。周长除以边数，就得到一条边的长度。",
-      ],
-      (rng) => {
-        const kinds: readonly [Pair, number][] = [
-          [["equilateral triangle", "等边三角形"], 3],
-          [["square", "正方形"], 4],
-          [["pentagon with all sides equal", "各边相等的五边形"], 5],
-          [["hexagon with all sides equal", "各边相等的六边形"], 6],
-          [["octagon with all sides equal", "各边相等的八边形"], 8],
-        ];
-        const [name, n] = rng.pick(kinds);
-        const s = rng.int(2, 12);
-        return whole(
-          [
-            `A ${name[0]} has a perimeter of ${n * s} cm. How long is each side, in centimeters?`,
-            `一个${name[1]}的周长是 ${n * s} 厘米。每条边长多少厘米？`,
-          ],
-          s,
-          [n * s - n, n, s + 1],
-          [
-            `All ${n} sides are equal, so one side is $${n * s} \\div ${n} = ${s}$.`,
-            `${n} 条边都相等，所以一条边是 $${n * s} \\div ${n} = ${s}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-side-from-a-regular-perimeter",
+        ["A side from a perimeter with equal sides", "由周长求等边图形的边长"],
+        [
+          "If all sides of a polygon are equal, its perimeter is the side times the number of sides. Dividing the perimeter by the number of sides gives the length of one side.",
+          "如果多边形的边都相等，周长就是边长乘以边数。周长除以边数，就得到一条边的长度。",
+        ],
+        (rng) => {
+          const kinds: readonly [Pair, number][] = [
+            [["equilateral triangle", "等边三角形"], 3],
+            [["square", "正方形"], 4],
+            [["pentagon with all sides equal", "各边相等的五边形"], 5],
+            [["hexagon with all sides equal", "各边相等的六边形"], 6],
+            [["octagon with all sides equal", "各边相等的八边形"], 8],
+          ];
+          const [name, n] = rng.pick(kinds);
+          const s = rng.int(2, 12);
+          return whole(
+            [
+              `A ${name[0]} has a perimeter of ${n * s} cm. How long is each side, in centimeters?`,
+              `一个${name[1]}的周长是 ${n * s} 厘米。每条边长多少厘米？`,
+            ],
+            s,
+            [n * s - n, n, s + 1],
+            [
+              `All ${n} sides are equal, so one side is $${n * s} \\div ${n} = ${s}$.`,
+              `${n} 条边都相等，所以一条边是 $${n * s} \\div ${n} = ${s}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["perimeter-of-polygons#a-side-from-a-regular-perimeter"],
+    },
   ],
   "same-perimeter-or-same-area": [
-    skill(
-      "the-longest-perimeter-for-an-area",
-      ["The longest perimeter for an area", "面积一定时最大的周长"],
-      [
-        "Rectangles with the same area can have very different perimeters. The longest, thinnest one has the greatest perimeter; with whole sides that is the one with a side of 1.",
-        "面积相同的长方形周长可能相差很大。最细长的那个周长最大；边长为整数时，就是有一条边长为 1 的那个。",
-      ],
-      (rng) => {
-        const area = rng.int(12, 60);
-        return whole(
-          [
-            `A rectangle with whole-number sides has an area of ${area} square centimeters. What is the largest perimeter it can have, in centimeters?`,
-            `一个边长为整数的长方形面积是 ${area} 平方厘米。它的周长最大是多少厘米？`,
-          ],
-          2 * (area + 1),
-          [area + 1, 2 * area, 4 * Math.ceil(Math.sqrt(area))],
-          [
-            `The thinnest rectangle is 1 cm by ${area} cm, with perimeter $2 \\times (1 + ${area}) = ${2 * (area + 1)}$.`,
-            `最细长的长方形是 1 厘米乘 ${area} 厘米，周长是 $2 \\times (1 + ${area}) = ${2 * (area + 1)}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-longest-perimeter-for-an-area",
+        ["The longest perimeter for an area", "面积一定时最大的周长"],
+        [
+          "Rectangles with the same area can have very different perimeters. The longest, thinnest one has the greatest perimeter; with whole sides that is the one with a side of 1.",
+          "面积相同的长方形周长可能相差很大。最细长的那个周长最大；边长为整数时，就是有一条边长为 1 的那个。",
+        ],
+        (rng) => {
+          const area = rng.int(12, 60);
+          return whole(
+            [
+              `A rectangle with whole-number sides has an area of ${area} square centimeters. What is the largest perimeter it can have, in centimeters?`,
+              `一个边长为整数的长方形面积是 ${area} 平方厘米。它的周长最大是多少厘米？`,
+            ],
+            2 * (area + 1),
+            [area + 1, 2 * area, 4 * Math.ceil(Math.sqrt(area))],
+            [
+              `The thinnest rectangle is 1 cm by ${area} cm, with perimeter $2 \\times (1 + ${area}) = ${2 * (area + 1)}$.`,
+              `最细长的长方形是 1 厘米乘 ${area} 厘米，周长是 $2 \\times (1 + ${area}) = ${2 * (area + 1)}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["same-perimeter-or-same-area#the-longest-perimeter-for-an-area"],
+    },
   ],
   "sorting-quadrilaterals": [
-    skill(
-      "true-of-every-rectangle",
-      ["True of every shape in a family", "一族图形共有的性质"],
-      [
-        "A name can cover several shapes. Every square is a rectangle and a rhombus, but not every rectangle is a square. A statement about a family must hold for all its members.",
-        "一个名称可以包含多种图形。每个正方形都是长方形和菱形，但不是每个长方形都是正方形。关于一族图形的说法必须对其中每一个都成立。",
-      ],
-      (rng) => {
-        const facts: readonly [Pair, Pair, readonly Pair[]][] = [
-          [
-            ["rectangle", "长方形"],
-            ["four right angles", "四个直角"],
+    {
+      ...skill(
+        "true-of-every-rectangle",
+        ["True of every shape in a family", "一族图形共有的性质"],
+        [
+          "A name can cover several shapes. Every square is a rectangle and a rhombus, but not every rectangle is a square. A statement about a family must hold for all its members.",
+          "一个名称可以包含多种图形。每个正方形都是长方形和菱形，但不是每个长方形都是正方形。关于一族图形的说法必须对其中每一个都成立。",
+        ],
+        (rng) => {
+          const facts: readonly [Pair, Pair, readonly Pair[]][] = [
             [
-              ["four equal sides", "四条相等的边"],
-              ["no parallel sides", "没有平行的边"],
-              ["exactly one pair of parallel sides", "恰好一组平行的边"],
-            ],
-          ],
-          [
-            ["rhombus", "菱形"],
-            ["four equal sides", "四条相等的边"],
-            [
+              ["rectangle", "长方形"],
               ["four right angles", "四个直角"],
-              ["no parallel sides", "没有平行的边"],
-              ["exactly one pair of parallel sides", "恰好一组平行的边"],
+              [
+                ["four equal sides", "四条相等的边"],
+                ["no parallel sides", "没有平行的边"],
+                ["exactly one pair of parallel sides", "恰好一组平行的边"],
+              ],
             ],
-          ],
-          [
-            ["square", "正方形"],
-            ["four equal sides and four right angles", "四条相等的边和四个直角"],
             [
-              ["four equal sides and no right angles", "四条相等的边，没有直角"],
-              ["exactly one right angle", "恰好一个直角"],
-              ["exactly one pair of parallel sides", "恰好一组平行的边"],
-            ],
-          ],
-          [
-            ["trapezoid", "梯形"],
-            ["at least one pair of parallel sides", "至少一组平行的边"],
-            [
-              ["four right angles", "四个直角"],
+              ["rhombus", "菱形"],
               ["four equal sides", "四条相等的边"],
-              ["no parallel sides", "没有平行的边"],
+              [
+                ["four right angles", "四个直角"],
+                ["no parallel sides", "没有平行的边"],
+                ["exactly one pair of parallel sides", "恰好一组平行的边"],
+              ],
             ],
-          ],
-        ];
-        const [name, right, wrong] = rng.pick(facts);
-        const names = rng.pick(earlyNames);
-        return choose(
-          rng,
-          [
-            `${names} draws a ${name[0]}. What must it have, however it is drawn?`,
-            `${names} 画了一个${name[1]}。无论怎么画，它一定有什么？`,
-          ],
-          right,
-          wrong,
-          [
-            `Being a ${name[0]} means having ${right[0]}; the other features can fail for some ${name[0]}s or never hold.`,
-            `作为${name[1]}就要有${right[1]}；其他特征对某些${name[1]}不成立，或者永远不成立。`,
-          ],
-        );
-      },
-    ),
+            [
+              ["square", "正方形"],
+              ["four equal sides and four right angles", "四条相等的边和四个直角"],
+              [
+                ["four equal sides and no right angles", "四条相等的边，没有直角"],
+                ["exactly one right angle", "恰好一个直角"],
+                ["exactly one pair of parallel sides", "恰好一组平行的边"],
+              ],
+            ],
+            [
+              ["trapezoid", "梯形"],
+              ["at least one pair of parallel sides", "至少一组平行的边"],
+              [
+                ["four right angles", "四个直角"],
+                ["four equal sides", "四条相等的边"],
+                ["no parallel sides", "没有平行的边"],
+              ],
+            ],
+          ];
+          const [name, right, wrong] = rng.pick(facts);
+          const names = rng.pick(earlyNames);
+          return choose(
+            rng,
+            [
+              `${names} draws a ${name[0]}. What must it have, however it is drawn?`,
+              `${names} 画了一个${name[1]}。无论怎么画，它一定有什么？`,
+            ],
+            right,
+            wrong,
+            [
+              `Being a ${name[0]} means having ${right[0]}; the other features can fail for some ${name[0]}s or never hold.`,
+              `作为${name[1]}就要有${right[1]}；其他特征对某些${name[1]}不成立，或者永远不成立。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["sorting-quadrilaterals#true-of-every-rectangle"],
+    },
   ],
   "equal-parts-of-shapes": [
     skill(

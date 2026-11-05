@@ -4,6 +4,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -636,6 +637,7 @@ const twoStepTime: KnowledgePointDef = {
 
 const equalAnglesAroundPoint: KnowledgePointDef = {
   id: "equal-angles-around-a-point",
+  figure: gradeDrawings2["sums-of-angles#equal-angles-around-a-point"],
   title: t("Equal angles around a point", "一点周围相等的角"),
   explanation: t(
     "All the angles around a point add up to a full turn of $360$ degrees. If one angle is known and the rest are equal, take the known angle away from $360$ first. What remains is shared equally among the other angles, so divide it by how many there are. Doing these steps in the wrong order gives a wrong answer, as the known angle does not take part in the sharing at all.",
@@ -663,6 +665,7 @@ const equalAnglesAroundPoint: KnowledgePointDef = {
 
 const clockAngle: KnowledgePointDef = {
   id: "the-angle-between-clock-hands-on-the-hour",
+  figure: gradeDrawings2["solving-angle-problems#the-angle-between-clock-hands-on-the-hour"],
   title: t("The angle between clock hands on the hour", "整点时钟面上两针的夹角"),
   explanation: t(
     "A clock face is a circle of 360 degrees cut into 12 equal hours, so each hour mark is 30 degrees from the next one. On the hour, the minute hand points at 12, and the hour hand points at the hour mark. The angle between them is 30 degrees for each hour between the hands. There are two ways round the clock, and the smaller angle is the one that goes the shorter way. As the hours pass, the hour hand also turns 30 degrees each hour.",

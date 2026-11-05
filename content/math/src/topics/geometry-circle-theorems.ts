@@ -2,7 +2,9 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, linear, type Mark, type Point, plane, type Q, q, sketch } from "@ga/subject-math";
 import { theoremDrawings } from "../explanation-drawings-circles.ts";
+import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -2407,10 +2409,11 @@ export const circleSimilarity: TopicDef = {
     },
     {
       id: "circumferences-of-similar-circles",
+      figure: geometryDrawings2["circle-similarity#circumferences-of-similar-circles"],
       title: t("Circumferences of similar circles", "相似圆的周长"),
       explanation: t(
-        "A dilation with scale factor $k$ multiplies every length by $k$, including the circumference: $C = 2\\pi r$ becomes $2\\pi (kr) = k \\cdot C$.\n\nA circle with circumference $36$ cm dilated with scale factor $\\frac{2}{3}$ has circumference $\\frac{2}{3} \\cdot 36 = 24$ cm. Likewise, if two circles have circumferences $30$ m and $45$ m and the first has radius $4$ m, the second has radius $4 \\cdot \\frac{45}{30} = 6$ m.",
-        "比例因子为 $k$ 的位似把每个长度都乘以 $k$，周长也不例外：$C = 2\\pi r$ 变为 $2\\pi (kr) = k \\cdot C$。\n\n周长为 $36$ 厘米的圆，经比例因子为 $\\frac{2}{3}$ 的位似后，周长是 $\\frac{2}{3} \\cdot 36 = 24$ 厘米。同样，若两个圆的周长分别是 $30$ 米和 $45$ 米，第一个圆的半径是 $4$ 米，则第二个圆的半径是 $4 \\cdot \\frac{45}{30} = 6$ 米。",
+        "A dilation with scale factor $k$ multiplies every length by $k$, including the circumference: $C = 2\\pi r$ becomes $2\\pi (kr) = k \\cdot C$.\n\nA circle with circumference $36$ cm dilated with scale factor $\\frac{2}{3}$ has circumference $\\frac{2}{3} \\cdot 36 = 24$ cm. Likewise, if two circles have circumferences $8\\pi$ m and $12\\pi$ m and the first has radius $4$ m, the second has radius $4 \\cdot \\frac{12\\pi}{8\\pi} = 6$ m.",
+        "比例因子为 $k$ 的位似把每个长度都乘以 $k$，周长也不例外：$C = 2\\pi r$ 变为 $2\\pi (kr) = k \\cdot C$。\n\n周长为 $36$ 厘米的圆，经比例因子为 $\\frac{2}{3}$ 的位似后，周长是 $\\frac{2}{3} \\cdot 36 = 24$ 厘米。同样，若两个圆的周长分别是 $8\\pi$ 米和 $12\\pi$ 米，第一个圆的半径是 $4$ 米，则第二个圆的半径是 $4 \\cdot \\frac{12\\pi}{8\\pi} = 6$ 米。",
       ),
       generate(rng) {
         const [a, b] = rng.pick(scales);
@@ -2432,27 +2435,27 @@ export const circleSimilarity: TopicDef = {
             ),
           });
         }
-        const m = rng.int(2, 9);
-        const [ca, cb] = [a * m * 3, b * m * 3];
         const ra = a * rng.int(1, 5);
         const rb = (ra * b) / a;
+        const [ca, cb] = [2 * ra, 2 * rb];
         return numberProblem({
           prompt: t(
-            `Circles $A$ and $B$ have circumferences $${tex(ca, u)}$ and $${tex(cb, u)}$. The radius of circle $A$ is $${tex(ra, u)}$. Find the radius of circle $B$.`,
-            `圆 $A$ 与圆 $B$ 的周长分别是 $${tex(ca, u)}$ 和 $${tex(cb, u)}$。圆 $A$ 的半径是 $${tex(ra, u)}$。求圆 $B$ 的半径。`,
+            `Circles $A$ and $B$ have circumferences $${tex(`${ca}\\pi`, u)}$ and $${tex(`${cb}\\pi`, u)}$. The radius of circle $A$ is $${tex(ra, u)}$. Find the radius of circle $B$.`,
+            `圆 $A$ 与圆 $B$ 的周长分别是 $${tex(`${ca}\\pi`, u)}$ 和 $${tex(`${cb}\\pi`, u)}$。圆 $A$ 的半径是 $${tex(ra, u)}$。求圆 $B$ 的半径。`,
           ),
           answer: rb,
           unit: u,
           wrong: [q(ra * a, b), q(ra * b * b, a * a), ra + cb - ca],
           solution: t(
-            `The circumferences are in the ratio of the scale factor, and so are the radii:${steps(`k = \\frac{${cb}}{${ca}} = ${ratioTex(b, a)}`, `r_B = ${ratioTex(b, a)} \\cdot ${ra} = ${tex(q(rb, 1).toLatex(), u)}`)}`,
-            `周长之比等于比例因子，半径之比也一样：${steps(`k = \\frac{${cb}}{${ca}} = ${ratioTex(b, a)}`, `r_B = ${ratioTex(b, a)} \\cdot ${ra} = ${tex(q(rb, 1).toLatex(), u)}`)}`,
+            `The circumferences are in the ratio of the scale factor, and so are the radii:${steps(`k = \\frac{${cb}\\pi}{${ca}\\pi} = ${ratioTex(b, a)}`, `r_B = ${ratioTex(b, a)} \\cdot ${ra} = ${tex(q(rb, 1).toLatex(), u)}`)}`,
+            `周长之比等于比例因子，半径之比也一样：${steps(`k = \\frac{${cb}\\pi}{${ca}\\pi} = ${ratioTex(b, a)}`, `r_B = ${ratioTex(b, a)} \\cdot ${ra} = ${tex(q(rb, 1).toLatex(), u)}`)}`,
           ),
         });
       },
     },
     {
       id: "areas-of-similar-circles",
+      figure: geometryDrawings2["circle-similarity#areas-of-similar-circles"],
       title: t("Areas of similar circles", "相似圆的面积"),
       explanation: t(
         "Areas are multiplied by the **square** of the scale factor: $\\pi r^2$ becomes $\\pi (kr)^2 = k^2 \\cdot \\pi r^2$.\n\nA circle with area $45\\text{ cm}^2$ dilated with scale factor $\\frac{2}{3}$ has area $\\frac{4}{9} \\cdot 45 = 20\\text{ cm}^2$. Going back, if two circles have areas $18$ and $50$, the ratio of areas is $\\frac{50}{18} = \\frac{25}{9}$, so the scale factor is $\\sqrt{\\frac{25}{9}} = \\frac{5}{3}$.",
@@ -2603,22 +2606,42 @@ export const provingCircleSimilarity: TopicDef = {
           option(ruleTex(a, b), "(0, 0)", k),
         ];
         const shuffled = rng.shuffle(options);
-        return choiceProblem({
-          prompt: t(
-            `Which sequence of transformations maps ${circleTex("A", A)} onto ${circleTex("B", B)}?`,
-            `下列哪一组变换把${circleTexZh("A", A)}变为${circleTexZh("B", B)}？`,
-          ),
-          options: shuffled,
-          correct: shuffled.indexOf(options[0]!),
-          solution: t(
-            `The translation must move the center $(${A.h}, ${A.k})$ onto $${centerB}$: $${ruleTex(a, b)}$. The dilation must keep that center in place, so its center is $${centerB}$, and it must take the radius $${A.r}$ to $${B.r}$, so its scale factor is $${k === `\\frac{${B.r}}{${A.r}}` ? k : `\\frac{${B.r}}{${A.r}} = ${k}`}$.`,
-            `平移要把圆心 $(${A.h}, ${A.k})$ 移到 $${centerB}$：$${ruleTex(a, b)}$。位似要使这个圆心不动，所以位似中心是 $${centerB}$；还要把半径 $${A.r}$ 变为 $${B.r}$，所以比例因子是 $${k === `\\frac{${B.r}}{${A.r}}` ? k : `\\frac{${B.r}}{${A.r}} = ${k}`}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Which sequence of transformations maps ${circleTex("A", A)} onto ${circleTex("B", B)}?`,
+              `下列哪一组变换把${circleTexZh("A", A)}变为${circleTexZh("B", B)}？`,
+            ),
+            options: shuffled,
+            correct: shuffled.indexOf(options[0]!),
+            solution: t(
+              `The translation must move the center $(${A.h}, ${A.k})$ onto $${centerB}$: $${ruleTex(a, b)}$. The dilation must keep that center in place, so its center is $${centerB}$, and it must take the radius $${A.r}$ to $${B.r}$, so its scale factor is $${k === `\\frac{${B.r}}{${A.r}}` ? k : `\\frac{${B.r}}{${A.r}} = ${k}`}$.`,
+              `平移要把圆心 $(${A.h}, ${A.k})$ 移到 $${centerB}$：$${ruleTex(a, b)}$。位似要使这个圆心不动，所以位似中心是 $${centerB}$；还要把半径 $${A.r}$ 变为 $${B.r}$，所以比例因子是 $${k === `\\frac{${B.r}}{${A.r}}` ? k : `\\frac{${B.r}}{${A.r}} = ${k}`}$。`,
+            ),
+          }),
+          [
+            [
+              options[1]!.en,
+              "The scale factor is upside down: it is the new radius over the old one.",
+              "比例因子颠倒了：应该是新半径比旧半径。",
+            ],
+            [
+              options[2]!.en,
+              "The translation goes the wrong way: it must carry the center of $A$ onto the center of $B$.",
+              "平移方向反了：它应把圆 $A$ 的圆心移到圆 $B$ 的圆心。",
+            ],
+            [
+              options[3]!.en,
+              "Dilating about the origin moves the center away from where the translation put it: dilate about the center of $B$.",
+              "以原点为中心位似会把圆心从平移后的位置移开：应以圆 $B$ 的圆心为中心。",
+            ],
+          ],
+        );
       },
     },
     {
       id: "the-translation-and-the-scale-factor",
+      figure: geometryDrawings2["proving-circle-similarity#the-translation-and-the-scale-factor"],
       title: t("The translation and the scale factor", "平移与比例因子"),
       explanation: t(
         "The translation is found from the centers, the scale factor from the radii.\n\nFor circle $A$ with center $(-2, 5)$ and radius $4$, and circle $B$ with center $(3, 1)$ and radius $10$: the translation $(x, y) \\to (x + a, y + b)$ has $a = 3 - (-2) = 5$ and $b = 1 - 5 = -4$, so $(a, b) = (5, -4)$; the scale factor is $\\frac{10}{4} = \\frac{5}{2}$.",
@@ -2661,6 +2684,7 @@ export const provingCircleSimilarity: TopicDef = {
     },
     {
       id: "the-proof-that-all-circles-are-similar",
+      figure: geometryDrawings2["proving-circle-similarity#the-proof-that-all-circles-are-similar"],
       title: t("The proof that all circles are similar", "所有圆都相似的证明"),
       explanation: t(
         "**Theorem:** any two circles are similar. Let circle $A$ have center $A$ and radius $r$, and circle $B$ center $B$ and radius $s$.\n\n1. Translate circle $A$ so that $A$ goes to $B$. The image is a circle with center $B$ and radius $r$, because a translation preserves distances.\n2. Dilate that image about $B$ with scale factor $\\frac{s}{r}$. Each of its points, at distance $r$ from $B$, goes to distance $r \\cdot \\frac{s}{r} = s$ from $B$, because a dilation multiplies distances from its center by the scale factor.\n3. The final image is the set of all points at distance $s$ from $B$, which is circle $B$ by the definition of a circle.\n4. A translation followed by a dilation is a similarity transformation, so circle $A$ is similar to circle $B$.",

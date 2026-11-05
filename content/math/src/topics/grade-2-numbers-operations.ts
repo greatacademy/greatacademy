@@ -4,7 +4,6 @@
 
 import type { Figure, Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-
 import {
   arrayFigure,
   baseTenFigure,
@@ -17,7 +16,9 @@ import {
   nearbyWrong,
   numberLineFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { compareProblem, mathText, pickChoice } from "./grade-4-fractions.ts";
 
 /** whole builds a problem whose answer is a whole number, with a figure when one is given. */
@@ -132,40 +133,43 @@ const skipCountingTwosFivesTens = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "a-missing-point-on-a-skip-count",
-      ["A missing point on a skip count", "跳着数时缺少的点"],
-      [
-        "A number line can show skip counting, with one tick mark for each jump. Start at the number you know and count the jumps to the marked point, saying the skip count aloud as you go. The size of the jump never changes, so every space between two tick marks is worth the same amount as the others.",
-        "数轴可以表示跳着数，每跳一次对应一个刻度。从知道的数出发，数一数到标出的点要跳几次，一边跳一边大声数。每次跳的大小不变，所以任意两个相邻刻度之间的一格都代表同样多。",
-      ],
-      (rng) => {
-        const step = rng.pick([2, 5, 10]);
-        const lo = step * rng.int(0, step === 2 ? 30 : step === 5 ? 12 : 6);
-        const jumps = rng.int(4, 7);
-        const at = rng.int(1, jumps - 1);
-        const answer = lo + at * step;
-        return {
-          ...whole(
-            [`This number line counts by ${step}s. What number is at the marked point?`, `这条数轴按 ${step} 数。标出的点是多少？`],
-            answer,
-            [lo + at, answer - step + 1],
-            [
-              `The point is ${at === 1 ? "1 jump" : `${at} jumps`} of ${step} from ${lo}. Counting on gives ${answer}.`,
-              `这个点离 ${lo} 有 ${at} 跳，每跳 ${step}。往后数得到 ${answer}。`,
-            ],
-            numberLineFigure(lo, lo + jumps * step, step, answer, false),
-          ),
-          solutionFigure: jumpsFigure(
-            lo,
-            lo + jumps * step,
-            step,
-            Array.from({ length: at + 1 }, (_, i) => lo + i * step),
-            false,
-          ),
-        };
-      },
-    ),
+    {
+      ...earlyPoint(
+        "a-missing-point-on-a-skip-count",
+        ["A missing point on a skip count", "跳着数时缺少的点"],
+        [
+          "A number line can show skip counting, with one tick mark for each jump. Start at the number you know and count the jumps to the marked point, saying the skip count aloud as you go. The size of the jump never changes, so every space between two tick marks is worth the same amount as the others.",
+          "数轴可以表示跳着数，每跳一次对应一个刻度。从知道的数出发，数一数到标出的点要跳几次，一边跳一边大声数。每次跳的大小不变，所以任意两个相邻刻度之间的一格都代表同样多。",
+        ],
+        (rng) => {
+          const step = rng.pick([2, 5, 10]);
+          const lo = step * rng.int(0, step === 2 ? 30 : step === 5 ? 12 : 6);
+          const jumps = rng.int(4, 7);
+          const at = rng.int(1, jumps - 1);
+          const answer = lo + at * step;
+          return {
+            ...whole(
+              [`This number line counts by ${step}s. What number is at the marked point?`, `这条数轴按 ${step} 数。标出的点是多少？`],
+              answer,
+              [lo + at, answer - step + 1],
+              [
+                `The point is ${at === 1 ? "1 jump" : `${at} jumps`} of ${step} from ${lo}. Counting on gives ${answer}.`,
+                `这个点离 ${lo} 有 ${at} 跳，每跳 ${step}。往后数得到 ${answer}。`,
+              ],
+              numberLineFigure(lo, lo + jumps * step, step, answer, false),
+            ),
+            solutionFigure: jumpsFigure(
+              lo,
+              lo + jumps * step,
+              step,
+              Array.from({ length: at + 1 }, (_, i) => lo + i * step),
+              false,
+            ),
+          };
+        },
+      ),
+      figure: gradeDrawings2["skip-counting-by-2s-5s-and-10s#a-missing-point-on-a-skip-count"],
+    },
   ],
 );
 
@@ -313,19 +317,38 @@ const arraysAndRepeatedAddition = earlyTopic(
         const rows = rng.int(3, 5);
         const columns = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => v !== rows));
         const sum = (count: number, each: number) => mathText(Array(count).fill(`${each}`).join(" + "));
-        return pickChoice(
-          rng,
-          rng.pick([
-            t("This array has one addend for each row. Which sum matches it?", "这个点阵每一行对应一个加数。哪个加法与它相符？"),
-            t("Which sum adds the rows of this array?", "哪个加法是把这个点阵的每行加起来？"),
-          ]),
-          sum(rows, columns),
-          [mathText(`${rows} + ${columns}`), sum(rows - 1, columns), sum(rows + 1, columns)],
-          t(
-            `There are ${rows} rows with ${columns} dots in each, so ${columns} is added ${rows} times.`,
-            `有 ${rows} 行，每行 ${columns} 个点，所以 ${columns} 加了 ${rows} 次。`,
+        return reasoned(
+          pickChoice(
+            rng,
+            rng.pick([
+              t("This array has one addend for each row. Which sum matches it?", "这个点阵每一行对应一个加数。哪个加法与它相符？"),
+              t("Which sum adds the rows of this array?", "哪个加法是把这个点阵的每行加起来？"),
+            ]),
+            sum(rows, columns),
+            [mathText(`${rows} + ${columns}`), sum(rows - 1, columns), sum(rows + 1, columns)],
+            t(
+              `There are ${rows} rows with ${columns} dots in each, so ${columns} is added ${rows} times.`,
+              `有 ${rows} 行，每行 ${columns} 个点，所以 ${columns} 加了 ${rows} 次。`,
+            ),
+            arrayFigure(rows, columns),
           ),
-          arrayFigure(rows, columns),
+          [
+            [
+              mathText(`${rows} + ${columns}`).en,
+              "This adds the number of rows and the number in a row, not the dots in every row.",
+              "这是把行数和每行的个数相加，不是把每一行的点加起来。",
+            ],
+            [
+              sum(rows - 1, columns).en,
+              `This has only ${rows - 1} addends, but the array has ${rows} rows.`,
+              `这里只有 ${rows - 1} 个加数，而点阵有 ${rows} 行。`,
+            ],
+            [
+              sum(rows + 1, columns).en,
+              `This has ${rows + 1} addends, but the array has ${rows} rows.`,
+              `这里有 ${rows + 1} 个加数，而点阵只有 ${rows} 行。`,
+            ],
+          ],
         );
       },
     ),

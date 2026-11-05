@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type Mark, type Point, Q, sketch } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { numberProblem, steps, unitLatex } from "../problems.ts";
 import { rectangle, sides } from "./area.ts";
@@ -678,6 +679,7 @@ export const compositeShapesWithCircles = topic(
   [
     {
       id: "areas-with-semicircles",
+      figure: gradeDrawings3["composite-shapes-with-circles#areas-with-semicircles"],
       title: t("Areas with semicircles", "含半圆的面积"),
       explanation: t(
         "A $10$ cm by $6$ cm rectangle with a semicircle on one $6$ cm side: the semicircle has radius $3$ cm and area $\\frac{1}{2}\\pi \\cdot 3^2 = \\frac{9}{2}\\pi$. If it is added on, the area is $60 + \\frac{9}{2}\\pi\\text{ cm}^2$; if it is cut out, the area is $60 - \\frac{9}{2}\\pi\\text{ cm}^2$.",
@@ -709,6 +711,7 @@ export const compositeShapesWithCircles = topic(
     },
     {
       id: "perimeters-with-semicircles",
+      figure: gradeDrawings3["composite-shapes-with-circles#perimeters-with-semicircles"],
       title: t("Perimeters with semicircles", "含半圆的周长"),
       explanation: t(
         "Go around the outside. For a $10$ cm by $6$ cm rectangle with a semicircle on a $6$ cm side, the edges are $10$, $6$ and $10$, plus the curve, half of a circle of diameter $6$: $\\frac{1}{2}\\pi \\cdot 6 = 3\\pi$. The perimeter is $26 + 3\\pi$ cm.\n\nThe $6$ cm side under the semicircle is no longer on the outside, so it does not count, whether the semicircle is added on or cut out.",
@@ -739,6 +742,7 @@ export const compositeShapesWithCircles = topic(
     },
     {
       id: "regions-around-circles",
+      figure: gradeDrawings3["composite-shapes-with-circles#regions-around-circles"],
       title: t("Regions around circles", "圆周围的区域"),
       explanation: t(
         "A circular pond of radius $3$ m sits in a square lawn $10$ m on each side. The grass covers the square minus the circle. Using $3.14$ for $\\pi$:\n\n$$10^2 - 3.14 \\cdot 3^2 = 100 - 28.26 = 71.74\\text{ m}^2.$$",
@@ -836,6 +840,7 @@ export const findingAreasAndPerimetersOfPartCircles = topic(
   [
     {
       id: "areas-of-part-circles",
+      figure: gradeDrawings3["finding-areas-and-perimeters-of-part-circles#areas-of-part-circles"],
       title: t("Areas of part-circles", "部分圆的面积"),
       explanation: t(
         "A quarter circle of radius $6$ cm has area $\\frac{1}{4}\\pi \\cdot 6^2 = 9\\pi\\text{ cm}^2$. A semicircle of diameter $10$ cm has radius $5$ cm, so its area is $\\frac{1}{2}\\pi \\cdot 5^2 = \\frac{25}{2}\\pi\\text{ cm}^2$. Halve a diameter before squaring.",
@@ -871,6 +876,7 @@ export const findingAreasAndPerimetersOfPartCircles = topic(
     },
     {
       id: "perimeters-of-part-circles",
+      figure: gradeDrawings3["finding-areas-and-perimeters-of-part-circles#perimeters-of-part-circles"],
       title: t("Perimeters of part-circles", "部分圆的周长"),
       explanation: t(
         "The perimeter of a part-circle is its arc plus its straight edges. A semicircle of radius $5$ has arc $\\frac{1}{2} \\cdot 2\\pi \\cdot 5 = 5\\pi$ and a diameter $10$, so its perimeter is $10 + 5\\pi$. A quarter circle of radius $8$ has arc $\\frac{1}{4} \\cdot 2\\pi \\cdot 8 = 4\\pi$ and two radii, so its perimeter is $16 + 4\\pi$.",
@@ -899,6 +905,7 @@ export const findingAreasAndPerimetersOfPartCircles = topic(
     },
     {
       id: "part-circles-with-approximations",
+      figure: gradeDrawings3["finding-areas-and-perimeters-of-part-circles#part-circles-with-approximations"],
       title: t("Part-circles with 3.14", "用 3.14 计算部分圆"),
       explanation: t(
         "With $3.14$ for $\\pi$, a three-quarter circle of radius $4$ cm has\n\n$$\\text{area } \\tfrac{3}{4} \\cdot 3.14 \\cdot 4^2 = 37.68\\text{ cm}^2, \\qquad \\text{perimeter } \\tfrac{3}{4} \\cdot 2 \\cdot 3.14 \\cdot 4 + 4 + 4 = 26.84\\text{ cm}.$$\n\nThe two radii are part of the perimeter: they are the straight edges of the cut.",
@@ -998,6 +1005,7 @@ export const volumesOfTriangularPrisms = topic(
   [
     {
       id: "volume-of-a-triangular-prism",
+      figure: gradeDrawings3["volumes-of-triangular-prisms#volume-of-a-triangular-prism"],
       title: t("Volume of a triangular prism", "三棱柱的体积"),
       explanation: t(
         "A prism whose triangular face has base $6$ cm and height $4$ cm, and which is $10$ cm long, has\n\n$$V = \\tfrac{1}{2} \\cdot 6 \\cdot 4 \\cdot 10 = 120\\text{ cm}^3.$$\n\nUse the height of the triangle, which is perpendicular to its base, not a slanted side.",
@@ -1120,6 +1128,7 @@ export const surfaceAreasOfTriangularPrisms = topic(
   [
     {
       id: "surface-area-of-a-right-triangular-prism",
+      figure: gradeDrawings3["surface-areas-of-triangular-prisms#surface-area-of-a-right-triangular-prism"],
       title: t("Surface area of a right triangular prism", "直角三棱柱的表面积"),
       explanation: t(
         "For a prism $10$ cm long on a right triangle with legs $3$ and $4$ cm and slanted side $5$ cm:\n\n- the two triangles: $2 \\cdot \\tfrac{1}{2} \\cdot 3 \\cdot 4 = 12$;\n- the three rectangles: $(3 + 4 + 5) \\cdot 10 = 120$.\n\nThe surface area is $12 + 120 = 132\\text{ cm}^2$.",
@@ -1167,6 +1176,7 @@ export const surfaceAreasOfTriangularPrisms = topic(
     },
     {
       id: "tents-and-roofs",
+      figure: gradeDrawings3["surface-areas-of-triangular-prisms#tents-and-roofs"],
       title: t("Tents and roofs", "帐篷与屋顶"),
       explanation: t(
         "A tent is a prism on an isosceles triangle. If the triangle has base $6$ ft, height $4$ ft and slanted sides $5$ ft, and the tent is $8$ ft long, then the fabric for the two ends and the two slanted sides is\n\n$$2 \\cdot \\tfrac{1}{2} \\cdot 6 \\cdot 4 + 2 \\cdot 5 \\cdot 8 = 24 + 80 = 104\\text{ ft}^2.$$\n\nA floor adds $6 \\cdot 8 = 48\\text{ ft}^2$. The roof rectangles are as wide as the slanted sides, not the height.",

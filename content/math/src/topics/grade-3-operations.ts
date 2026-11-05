@@ -4,7 +4,6 @@
 
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-
 import {
   arrayFigure,
   baseTenFigure,
@@ -17,7 +16,9 @@ import {
   nearbyWrong,
   numberLineFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
 /** whole builds a problem whose answer is a whole number. */
@@ -602,40 +603,43 @@ const divisionAsGrouping = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "division-by-repeated-subtraction",
-      ["Division by repeated subtraction", "用连减做除法"],
-      [
-        "Taking away the same number again and again until nothing is left is another way to see division. Each time you subtract, you make one more group. So the number of subtractions is the quotient. A number line shows this as equal jumps backward from the starting number all the way down to zero.",
-        "一次又一次减去同一个数，直到减完，是看待除法的另一种方式。每减一次，就多分出一组。所以减的次数就是商。在数轴上，这就是从开始的数向左等距地跳，一直跳到 0。",
-      ],
-      (rng) => {
-        const each = rng.int(2, 6);
-        const jumps = rng.int(2, 8);
-        const total = each * jumps;
-        return {
-          ...whole(
-            [
-              `On the number line, start at ${total} and jump back by ${each} each time. How many jumps reach 0?`,
-              `在数轴上，从 ${total} 开始，每次向回跳 ${each}。跳多少次到 0？`,
-            ],
-            jumps,
-            [total - each, each],
-            [
-              `Counting back by ${each} from ${total} reaches 0 after ${jumps} jumps, so $${total} \\div ${each} = ${jumps}$.`,
-              `从 ${total} 开始 ${each} 个 ${each} 个地往回数，跳 ${jumps} 次到 0，所以 $${total} \\div ${each} = ${jumps}$。`,
-            ],
-          ),
-          figure: numberLineFigure(0, total, each, total),
-          solutionFigure: jumpsFigure(
-            0,
-            total,
-            each,
-            Array.from({ length: jumps + 1 }, (_, i) => total - i * each),
-          ),
-        };
-      },
-    ),
+    {
+      ...earlyPoint(
+        "division-by-repeated-subtraction",
+        ["Division by repeated subtraction", "用连减做除法"],
+        [
+          "Taking away the same number again and again until nothing is left is another way to see division. Each time you subtract, you make one more group. So the number of subtractions is the quotient. A number line shows this as equal jumps backward from the starting number all the way down to zero.",
+          "一次又一次减去同一个数，直到减完，是看待除法的另一种方式。每减一次，就多分出一组。所以减的次数就是商。在数轴上，这就是从开始的数向左等距地跳，一直跳到 0。",
+        ],
+        (rng) => {
+          const each = rng.int(2, 6);
+          const jumps = rng.int(2, 8);
+          const total = each * jumps;
+          return {
+            ...whole(
+              [
+                `On the number line, start at ${total} and jump back by ${each} each time. How many jumps reach 0?`,
+                `在数轴上，从 ${total} 开始，每次向回跳 ${each}。跳多少次到 0？`,
+              ],
+              jumps,
+              [total - each, each],
+              [
+                `Counting back by ${each} from ${total} reaches 0 after ${jumps} jumps, so $${total} \\div ${each} = ${jumps}$.`,
+                `从 ${total} 开始 ${each} 个 ${each} 个地往回数，跳 ${jumps} 次到 0，所以 $${total} \\div ${each} = ${jumps}$。`,
+              ],
+            ),
+            figure: numberLineFigure(0, total, each, total),
+            solutionFigure: jumpsFigure(
+              0,
+              total,
+              each,
+              Array.from({ length: jumps + 1 }, (_, i) => total - i * each),
+            ),
+          };
+        },
+      ),
+      figure: gradeDrawings2["division-as-making-groups#division-by-repeated-subtraction"],
+    },
   ],
 );
 
@@ -1032,18 +1036,39 @@ const arithmeticPatterns = earlyTopic(
         const odd = a % 2 === 1 && b % 2 === 1;
         const even = t("Even", "偶数");
         const oddText = t("Odd", "奇数");
-        return pickChoice(
-          rng,
-          t(`Is the product $${a} \\times ${b}$ even or odd?`, `积 $${a} \\times ${b}$ 是偶数还是奇数？`),
-          odd ? oddText : even,
+        return reasoned(
+          pickChoice(
+            rng,
+            t(`Is the product $${a} \\times ${b}$ even or odd?`, `积 $${a} \\times ${b}$ 是偶数还是奇数？`),
+            odd ? oddText : even,
+            [
+              odd ? even : oddText,
+              t("It depends on the order of the factors", "取决于因数的顺序"),
+              t("It cannot be told without multiplying", "不算出来就不能判断"),
+            ],
+            odd
+              ? t(`Both ${a} and ${b} are odd, and a product of two odd numbers is odd.`, `${a} 和 ${b} 都是奇数，两个奇数的积是奇数。`)
+              : t(`At least one of ${a} and ${b} is even, so the product is even.`, `${a} 和 ${b} 中至少有一个是偶数，所以积是偶数。`),
+          ),
           [
-            odd ? even : oddText,
-            t("It depends on the order of the factors", "取决于因数的顺序"),
-            t("It cannot be told without multiplying", "不算出来就不能判断"),
+            [
+              (odd ? even : oddText).en,
+              odd
+                ? "Both factors are odd, so no factor of 2 appears in the product."
+                : "At least one factor is even, so the product has a factor of 2.",
+              odd ? "两个因数都是奇数，所以积里没有因数 2。" : "至少有一个因数是偶数，所以积里有因数 2。",
+            ],
+            [
+              "It depends on the order of the factors",
+              "Changing the order of the factors does not change the product.",
+              "交换因数的顺序不会改变积。",
+            ],
+            [
+              "It cannot be told without multiplying",
+              "The ones digits of the factors decide it, so no multiplying is needed.",
+              "看因数的个位就能判断，不用算出来。",
+            ],
           ],
-          odd
-            ? t(`Both ${a} and ${b} are odd, and a product of two odd numbers is odd.`, `${a} 和 ${b} 都是奇数，两个奇数的积是奇数。`)
-            : t(`At least one of ${a} and ${b} is even, so the product is even.`, `${a} 和 ${b} 中至少有一个是偶数，所以积是偶数。`),
         );
       },
     ),

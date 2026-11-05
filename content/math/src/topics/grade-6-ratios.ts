@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q, svgDocument } from "@ga/subject-math";
+import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
 import { choiceProblem, mixedLatex, numberProblem, yesNo } from "../problems.ts";
 import { compareProblem, fr, mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -604,6 +605,7 @@ export const graphingRatios = topic(
   [
     {
       id: "reading-a-ratio-graph",
+      figure: gradeDrawings3["graphing-ratios#reading-a-ratio-graph"],
       title: t("Reading a ratio graph", "读比的图像"),
       explanation: t(
         "If the points $(2, 3)$, $(4, 6)$ and $(6, 9)$ show the ratio of $x$ to $y$, then the ratio is $2 : 3$, and when $x = 10$, $y = 15$.",
@@ -633,6 +635,7 @@ export const graphingRatios = topic(
     },
     {
       id: "points-on-a-ratio-graph",
+      figure: gradeDrawings3["graphing-ratios#points-on-a-ratio-graph"],
       title: t("Which point belongs on the graph?", "哪个点在图像上？"),
       explanation: t(
         "The points on a ratio graph are pairs $(x, y)$ in the same ratio, so they all lie on one straight line through $(0, 0)$. To test a point, check that its coordinates form an equivalent ratio.\n\nFor the ratio $2 : 3$, the point $(8, 12)$ belongs on the graph because $8 : 12 = 2 : 3$; the point $(8, 9)$ does not.",
@@ -696,6 +699,7 @@ export const tapeDiagrams = topic(
   [
     {
       id: "tape-diagrams-with-a-total",
+      figure: gradeDrawings3["tape-diagrams#tape-diagrams-with-a-total"],
       title: t("Tape diagrams with a total", "已知总数的线段图"),
       explanation: t(
         "In a tape diagram each box is the same size. When the total is given, count all the boxes, divide the total by that count to get one box, then multiply by the boxes asked for.\n\nA has $3$ boxes, B has $5$ boxes, and the total is $40$. The $8$ boxes make $40$, so one box is $5$ and B is $5 \\times 5 = 25$.",
@@ -727,6 +731,7 @@ export const tapeDiagrams = topic(
     },
     {
       id: "tape-diagrams-with-a-difference",
+      figure: gradeDrawings3["tape-diagrams#tape-diagrams-with-a-difference"],
       title: t("Tape diagrams with a difference", "已知差的线段图"),
       explanation: t(
         "When the difference is given, count only the extra boxes: they are what makes one tape longer. Divide the difference by the extra boxes to get one box.\n\nA has $3$ boxes, B has $5$ boxes, and B is $12$ more than A. The $2$ extra boxes are $12$, so one box is $6$ and A is $3 \\times 6 = 18$.",
@@ -1030,6 +1035,7 @@ export const understandingPercentagesUsingModels = topic(
     },
     {
       id: "percent-from-a-bar-model",
+      figure: gradeDrawings3["understanding-percentages-using-models#percent-from-a-bar-model"],
       title: t("Percent on a bar model", "长条模型中的百分数"),
       explanation: t(
         "When a bar is not cut into $100$ parts, write the shaded part as a fraction, then rewrite it with denominator $100$. The numerator is the percent.\n\nA bar of $5$ equal parts with $2$ shaded shows $\\frac{2}{5} = \\frac{40}{100} = 40\\%$.",

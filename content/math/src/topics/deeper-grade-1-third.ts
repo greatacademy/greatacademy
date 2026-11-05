@@ -3,8 +3,9 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
-
 import { earlyNames, earlyThings } from "../early-grades-kit.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
 /** skill builds a knowledge point from its texts and generator. */
@@ -484,17 +485,32 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
         const a = rng.int(4, 12);
         const b = rng.int(2, 8);
         const { who, thing } = storyThing(rng);
-        return chooseMath(
-          rng,
+        return reasoned(
+          chooseMath(
+            rng,
+            [
+              `${who} has ${a} ${thing.en} and gets ${b} more. Which number sentence tells this story?`,
+              `${who} 有 ${a} 个${thing.zh}，又得到 ${b} 个。哪个算式与这个故事相符？`,
+            ],
+            `${a} + ${b} = \\square`,
+            [`${a} - ${b} = \\square`, `${a} + \\square = ${b}`, `\\square - ${b} = ${a}`],
+            [
+              `Getting more joins ${b} to the ${a} already there, so the total is $${a} + ${b}$.`,
+              `又得到一些，就是把 ${b} 和原有的 ${a} 合起来，所以总数是 $${a} + ${b}$。`,
+            ],
+          ),
           [
-            `${who} has ${a} ${thing.en} and gets ${b} more. Which number sentence tells this story?`,
-            `${who} 有 ${a} 个${thing.zh}，又得到 ${b} 个。哪个算式与这个故事相符？`,
-          ],
-          `${a} + ${b} = \\square`,
-          [`${a} - ${b} = \\square`, `${a} + \\square = ${b}`, `\\square - ${b} = ${a}`],
-          [
-            `Getting more joins ${b} to the ${a} already there, so the total is $${a} + ${b}$.`,
-            `又得到一些，就是把 ${b} 和原有的 ${a} 合起来，所以总数是 $${a} + ${b}$。`,
+            [`$${a} - ${b} = \\square$`, "This takes away, but the story gets more.", "这是减，但故事里是又得到了一些。"],
+            [
+              `$${a} + \\square = ${b}$`,
+              `This makes $${b}$ the total, but $${b}$ is how many more were added.`,
+              `这把 $${b}$ 当成了总数，但 $${b}$ 是又得到的数量。`,
+            ],
+            [
+              `$\\square - ${b} = ${a}$`,
+              "This starts from the total and takes away, but the story starts with what is there and adds.",
+              "这是从总数开始减，但故事是从原有的数量开始加。",
+            ],
           ],
         );
       },
@@ -898,53 +914,59 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "first-picture-graphs": [
-    skill(
-      "votes-in-all-on-a-picture-graph",
-      ["Votes in all on a picture graph", "图画统计图上的总票数"],
-      [
-        "Each dot on a picture graph stands for one vote, so the number of votes in all is the sum over every row. Add the rows one at a time and leave none out.",
-        "图画统计图上的每个点代表一票，所以总票数是所有行的和。一行一行地相加，不要漏掉任何一行。",
-      ],
-      (rng) => {
-        const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
-        return whole(
-          [
-            `On a picture graph the cats row has ${a} dots, the dogs row has ${b} and the fish row has ${c}. Each dot is one vote. How many votes are there in all?`,
-            `一张图画统计图上，猫这一行有 ${a} 个点，狗这一行有 ${b} 个点，鱼这一行有 ${c} 个点。每个点代表一票。一共有多少票？`,
-          ],
-          a + b + c,
-          [a + b, Math.max(a, b, c), a + b + c + 1],
-          [`Add all three rows: $${a} + ${b} + ${c} = ${a + b + c}$.`, `把三行相加：$${a} + ${b} + ${c} = ${a + b + c}$。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "votes-in-all-on-a-picture-graph",
+        ["Votes in all on a picture graph", "图画统计图上的总票数"],
+        [
+          "Each dot on a picture graph stands for one vote, so the number of votes in all is the sum over every row. Add the rows one at a time and leave none out.",
+          "图画统计图上的每个点代表一票，所以总票数是所有行的和。一行一行地相加，不要漏掉任何一行。",
+        ],
+        (rng) => {
+          const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
+          return whole(
+            [
+              `On a picture graph the cats row has ${a} dots, the dogs row has ${b} and the fish row has ${c}. Each dot is one vote. How many votes are there in all?`,
+              `一张图画统计图上，猫这一行有 ${a} 个点，狗这一行有 ${b} 个点，鱼这一行有 ${c} 个点。每个点代表一票。一共有多少票？`,
+            ],
+            a + b + c,
+            [a + b, Math.max(a, b, c), a + b + c + 1],
+            [`Add all three rows: $${a} + ${b} + ${c} = ${a + b + c}$.`, `把三行相加：$${a} + ${b} + ${c} = ${a + b + c}$。`],
+          );
+        },
+      ),
+      figure: gradeDrawings2["first-picture-graphs#votes-in-all-on-a-picture-graph"],
+    },
   ],
   "first-bar-graphs": [
-    skill(
-      "how-many-more-on-a-bar-graph",
-      ["How many more on a bar graph", "条形统计图上多多少"],
-      [
-        "The top of a bar shows its value, so the difference between two bars is how far apart their tops are. Read both values and subtract the smaller from the larger.",
-        "条形的顶端表示它的数值，所以两个条形的差就是它们顶端相隔的距离。读出两个数，用大数减小数。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 8);
-        const b = a + rng.int(1, 9);
-        const [p, q] = rng.shuffle(["A", "B", "C", "D", "E", "F"]).slice(0, 2) as [string, string];
-        return whole(
-          [
-            `On a bar graph, the bar for class ${p} stops at ${b} and the bar for class ${q} stops at ${a}. How many more cans did class ${p} collect than class ${q}?`,
-            `在一张条形统计图上，${p} 班的条形到 ${b}，${q} 班的条形到 ${a}。${p} 班比 ${q} 班多收集了多少个罐子？`,
-          ],
-          b - a,
-          [a + b, b, b - a + 1],
-          [
-            `Read the tops, ${b} and ${a}, and subtract: $${b} - ${a} = ${b - a}$.`,
-            `读出顶端的数 ${b} 和 ${a}，相减：$${b} - ${a} = ${b - a}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "how-many-more-on-a-bar-graph",
+        ["How many more on a bar graph", "条形统计图上多多少"],
+        [
+          "The top of a bar shows its value, so the difference between two bars is how far apart their tops are. Read both values and subtract the smaller from the larger.",
+          "条形的顶端表示它的数值，所以两个条形的差就是它们顶端相隔的距离。读出两个数，用大数减小数。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 8);
+          const b = a + rng.int(1, 9);
+          const [p, q] = rng.shuffle(["A", "B", "C", "D", "E", "F"]).slice(0, 2) as [string, string];
+          return whole(
+            [
+              `On a bar graph, the bar for class ${p} stops at ${b} and the bar for class ${q} stops at ${a}. How many more cans did class ${p} collect than class ${q}?`,
+              `在一张条形统计图上，${p} 班的条形到 ${b}，${q} 班的条形到 ${a}。${p} 班比 ${q} 班多收集了多少个罐子？`,
+            ],
+            b - a,
+            [a + b, b, b - a + 1],
+            [
+              `Read the tops, ${b} and ${a}, and subtract: $${b} - ${a} = ${b - a}$.`,
+              `读出顶端的数 ${b} 和 ${a}，相减：$${b} - ${a} = ${b - a}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["first-bar-graphs#how-many-more-on-a-bar-graph"],
+    },
   ],
   "defining-attributes-of-shapes": [
     skill(
@@ -993,43 +1015,46 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "composing-shapes": [
-    skill(
-      "how-many-pieces-for-several-shapes",
-      ["How many pieces for several shapes", "拼几个图形要多少块"],
-      [
-        "If one larger shape takes a set number of pieces, several of them take that number of pieces again and again. Two triangles make one square, so three squares take six triangles.",
-        "如果拼一个大图形需要固定数量的小块，拼几个就重复几次。两个三角形拼成一个正方形，所以三个正方形需要六个三角形。",
-      ],
-      (rng) => {
-        const kinds: readonly [Pair, Pair][] = [
-          [
-            ["squares", "正方形"],
-            ["rectangles", "长方形"],
-          ],
-          [
-            ["triangles", "三角形"],
-            ["squares", "正方形"],
-          ],
-          [
-            ["half circles", "半圆"],
-            ["circles", "圆"],
-          ],
-        ];
-        const [piece, big] = rng.pick(kinds);
-        const k = rng.int(2, 10);
-        return whole(
-          [
-            `Each of the ${big[0]} takes 2 ${piece[0]}. How many ${piece[0]} do ${k} ${big[0]} take?`,
-            `2 个${piece[1]}能拼成 1 个${big[1]}。拼 ${k} 个${big[1]}需要多少个${piece[1]}？`,
-          ],
-          2 * k,
-          [k, k + 2, 2 * k + 1],
-          [
-            `Each of the ${k} needs 2 pieces, and counting by 2s ${k} times reaches ${2 * k}.`,
-            `${k} 个中每个都需要 2 块，两个两个地数 ${k} 次，得到 ${2 * k}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "how-many-pieces-for-several-shapes",
+        ["How many pieces for several shapes", "拼几个图形要多少块"],
+        [
+          "If one larger shape takes a set number of pieces, several of them take that number of pieces again and again. Two triangles make one square, so three squares take six triangles.",
+          "如果拼一个大图形需要固定数量的小块，拼几个就重复几次。两个三角形拼成一个正方形，所以三个正方形需要六个三角形。",
+        ],
+        (rng) => {
+          const kinds: readonly [Pair, Pair][] = [
+            [
+              ["squares", "正方形"],
+              ["rectangles", "长方形"],
+            ],
+            [
+              ["triangles", "三角形"],
+              ["squares", "正方形"],
+            ],
+            [
+              ["half circles", "半圆"],
+              ["circles", "圆"],
+            ],
+          ];
+          const [piece, big] = rng.pick(kinds);
+          const k = rng.int(2, 10);
+          return whole(
+            [
+              `Each of the ${big[0]} takes 2 ${piece[0]}. How many ${piece[0]} do ${k} ${big[0]} take?`,
+              `2 个${piece[1]}能拼成 1 个${big[1]}。拼 ${k} 个${big[1]}需要多少个${piece[1]}？`,
+            ],
+            2 * k,
+            [k, k + 2, 2 * k + 1],
+            [
+              `Each of the ${k} needs 2 pieces, and counting by 2s ${k} times reaches ${2 * k}.`,
+              `${k} 个中每个都需要 2 块，两个两个地数 ${k} 次，得到 ${2 * k}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings2["composing-shapes#how-many-pieces-for-several-shapes"],
+    },
   ],
 };
