@@ -32,18 +32,55 @@ export function examSlug(title: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** examTopic builds the topic of a spec: two knowledge points and an encompassing of each Fundamentals topic. */
+/**
+ * unpracticedBases names the Fundamentals topics that an exam topic builds on but whose
+ * skill its questions do not perform. They stay prerequisites and earn no implicit credit.
+ */
+export const unpracticedBases: Readonly<Record<string, readonly string[]>> = {
+  "sat-exam-identifying-intercepts-of-functions-from-graphs": ["interpreting-descriptions-of-physical-phenomena"],
+  "sat-exam-comparing-data-sets": ["comparing-effects-of-data-change-on-measures-of-centrality"],
+  "sat-exam-the-slope-of-a-best-fit-line": ["comparing-data-points-to-lines-of-best-fit"],
+  "sat-exam-making-predictions-using-best-fit-lines": ["scatter-plots"],
+  "sat-exam-interpreting-time-series-graphs": ["the-average-rate-of-change-of-a-function"],
+  "sat-exam-interpreting-graphs-of-quadratic-functions-in-modeling-contexts": ["maximizing-profit-and-break-even-points"],
+  "sat-exam-higher-degree-polynomials": ["end-behavior"],
+  "act-exam-finding-points-and-zeros-of-a-function": ["interpreting-descriptions-of-physical-phenomena"],
+  "act-exam-evaluating-a-multivariable-function": ["many-variable-equations"],
+  "act-exam-computing-with-complex-numbers": ["cyclic-property-of-the-imaginary-unit"],
+  "act-exam-matching-functions-to-representations": ["linear-functions-in-tabular-form"],
+  "act-exam-using-a-linear-model": ["scatter-plots"],
+  "act-exam-finding-a-probability-from-a-sample-space": ["tree-diagrams-for-independent-events"],
+  "act-exam-comparing-two-totals": ["numerical-word-problems"],
+  "act-exam-computing-overtime-pay": ["multistep-numerical-word-problems"],
+  "act-exam-finding-counts-from-waste-and-limits": ["multistep-numerical-word-problems"],
+  "act-exam-packing-into-whole-groups": ["division-of-whole-numbers-with-decimal-quotients-and-rounding"],
+  "act-exam-identifying-a-necessary-conclusion": ["necessary-and-sufficient-conditions"],
+  "act-exam-counting-character-codes": ["permutations-with-repetition"],
+  "act-exam-solving-logarithmic-equations": ["solving-exponential-equations-using-logarithms"],
+  "act-exam-working-with-a-rate-of-change": ["rates-of-change-in-applied-contexts"],
+  "act-exam-finding-a-median-from-frequencies": ["calculating-means-from-frequency-tables"],
+  "act-exam-finding-lengths-in-figures-with-the-pythagorean-theorem": ["solving-problems-with-embedded-right-triangles"],
+  "act-exam-identifying-features-of-exponential-functions": ["extrema-of-exponential-functions"],
+  "act-exam-identifying-features-of-a-solid": ["composite-solids"],
+  "act-exam-identifying-characteristics-of-radical-expressions": ["square-roots-with-domain-restrictions"],
+  "act-exam-expressing-related-quantities": ["modeling-with-linear-equations"],
+  "act-exam-evaluating-expressions-after-solving": ["equations-with-variables-on-both-sides"],
+};
+
+/** examTopic builds the topic of a spec: two knowledge points and an encompassing of each Fundamentals topic it practices. */
 export function examTopic(exam: Exam, spec: ExamSpec): TopicDef {
   const name = exam.toUpperCase();
+  const id = `${exam}-exam-${examSlug(spec.title.en)}`;
+  const unpracticed = unpracticedBases[id] ?? [];
   return {
-    id: `${exam}-exam-${examSlug(spec.title.en)}`,
+    id,
     title: spec.title,
     summary: t(
       `${name}-style questions on ${spec.title.en.toLowerCase()}, at exam difficulty and pace.`,
       `${name} 风格的“${spec.title["zh-CN"]}”题目，难度与节奏同考试一致。`,
     ),
     prerequisites: [...spec.base],
-    encompasses: spec.base.map((topic) => ({ topic, weight: 0.5 })),
+    encompasses: spec.base.filter((topic) => !unpracticed.includes(topic)).map((topic) => ({ topic, weight: 0.5 })),
     xp: 8,
     practiceOnly: true,
     knowledgePoints: [
