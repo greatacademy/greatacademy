@@ -8,6 +8,7 @@ import { deeperGrade2ThirdPoints } from "../topics/deeper-grade-2-third.ts";
 import { deeperGrade3ThirdPoints } from "../topics/deeper-grade-3-third.ts";
 import { deeperGrade4Points } from "../topics/deeper-grade-4.ts";
 import { deeperGrade4MorePoints } from "../topics/deeper-grade-4-more.ts";
+import { deeperGrade4ThirdPoints } from "../topics/deeper-grade-4-third.ts";
 import { deeperGrade5Points } from "../topics/deeper-grade-5.ts";
 import { deeperGrade5MorePoints } from "../topics/deeper-grade-5-more.ts";
 import { deeperGrade6Points } from "../topics/deeper-grade-6.ts";
@@ -113,5 +114,6 @@ export const schoolShardTopics: readonly TopicDef[] = finishTopics(
     deeperGrade1ThirdPoints,
     deeperGrade2ThirdPoints,
     deeperGrade3ThirdPoints,
+    deeperGrade4ThirdPoints,
   ],
 );
