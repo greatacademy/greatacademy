@@ -44,8 +44,8 @@ const missingAddend = (id: string, title: Pair, lo: [number, number], hi: [numbe
         a,
         [sum + b, a + 10, a > 10 ? a - 10 : a + 100],
         [
-          `Subtract the known addend: $${commas(sum)} - ${commas(b)} = ${commas(a)}$. Adding back gives ${commas(sum)}, as it should.`,
-          `减去已知的加数：$${commas(sum)} - ${commas(b)} = ${commas(a)}$。加回去得 ${commas(sum)}，正确。`,
+          `Subtract the known addend: $${commas(sum)} - ${commas(b)} = ${commas(a)}$. Adding back gives $${commas(sum)}$, as it should.`,
+          `减去已知的加数：$${commas(sum)} - ${commas(b)} = ${commas(a)}$。加回去得 $${commas(sum)}$，正确。`,
         ],
       );
     },
@@ -92,14 +92,14 @@ const rebuildDividend = (id: string, title: Pair, quotient: [number, number]) =>
       const rest: Pair = r > 0 ? [` with remainder ${r}`, `，余 ${r}`] : ["", ""];
       return whole(
         [
-          `A division by ${d} gives ${commas(q)}${rest[0]}. What number was divided?`,
-          `一个数除以 ${d} 得 ${commas(q)}${rest[1]}。被除数是多少？`,
+          `A division by ${d} gives $${commas(q)}$${rest[0]}. What number was divided?`,
+          `一个数除以 ${d} 得 $${commas(q)}$${rest[1]}。被除数是多少？`,
         ],
         n,
         [d * q, d + q + r, d * q - r + 2 * d],
         [
-          `Multiply back: $${d} \\times ${commas(q)} = ${commas(d * q)}$${r > 0 ? `, then add the remainder to get ${commas(n)}` : ""}.`,
-          `乘回去：$${d} \\times ${commas(q)} = ${commas(d * q)}$${r > 0 ? `，再加上余数得 ${commas(n)}` : ""}。`,
+          `Multiply back: $${d} \\times ${commas(q)} = ${commas(d * q)}$${r > 0 ? `, then add the remainder to get $${commas(n)}$` : ""}.`,
+          `乘回去：$${d} \\times ${commas(q)} = ${commas(d * q)}$${r > 0 ? `，再加上余数得 $${commas(n)}$` : ""}。`,
         ],
       );
     },
@@ -133,8 +133,8 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           value,
           [Number([...sorted].reverse().join("")), Number(ds.join("")), value + 9],
           [
-            `The thousands place counts most, so the digits go from ${big ? "largest to smallest" : "smallest to largest"}: ${commas(value)}.`,
-            `千位最重要，所以数字按${big ? "从大到小" : "从小到大"}排列：${commas(value)}。`,
+            `The thousands place counts most, so the digits go from ${big ? "largest to smallest" : "smallest to largest"}: $${commas(value)}$.`,
+            `千位最重要，所以数字按${big ? "从大到小" : "从小到大"}排列：$${commas(value)}$。`,
           ],
         );
       },
@@ -162,8 +162,8 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           commas(n),
           [commas(a * 1000 + x * 100 + o), commas(a * 10000 + x * 10 + o), commas(a * 10000 + x * 100 + o * 10)],
           [
-            `There are ${a} ten thousands, no thousands, ${x} hundreds, no tens and ${o} ones: ${commas(n)}.`,
-            `有 ${a} 个万，没有千，${x} 个百，没有十，${o} 个一：${commas(n)}。`,
+            `There are ${a} ten thousands, no thousands, ${x} hundreds, no tens and ${o} ones: $${commas(n)}$.`,
+            `有 ${a} 个万，没有千，${x} 个百，没有十，${o} 个一：$${commas(n)}$。`,
           ],
         );
       },
@@ -237,8 +237,8 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           n,
           [a * 1000 + b * 100 + c, a * 10000 + b * 10 + c, a * 100 + b * 10 + c],
           [
-            `There are no thousands and no tens, so zeros hold those places: ${commas(n)}.`,
-            `没有千和十，所以这些数位用 0 占位：${commas(n)}。`,
+            `There are no thousands and no tens, so zeros hold those places: $${commas(n)}$.`,
+            `没有千和十，所以这些数位用 0 占位：$${commas(n)}$。`,
           ],
         );
       },
@@ -333,8 +333,8 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
         const v = d * 10 ** k;
         return whole(
           [
-            `A digit ${d} is worth ${commas(v)}. How much is the same digit worth one place to its right?`,
-            `数字 ${d} 的值是 ${commas(v)}。同样的数字在它右边一位时值多少？`,
+            `A digit ${d} is worth $${commas(v)}$. How much is the same digit worth one place to its right?`,
+            `数字 ${d} 的值是 $${commas(v)}$。同样的数字在它右边一位时值多少？`,
           ],
           v / 10,
           [v * 10, d, v - 10],
@@ -493,8 +493,8 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           commas(exact),
           [commas(Math.floor(exact / 10)), commas(exact * 10), commas(a + b)],
           [
-            `Only ${commas(exact)} is close to the estimate of ${commas(est)}. The others are far too small or too large.`,
-            `只有 ${commas(exact)} 接近估算值 ${commas(est)}。其他答案太小或太大。`,
+            `Only $${commas(exact)}$ is close to the estimate of $${commas(est)}$. The others are far too small or too large.`,
+            `只有 $${commas(exact)}$ 接近估算值 $${commas(est)}$。其他答案太小或太大。`,
           ],
         );
       },

@@ -24,6 +24,7 @@ export function mathTextIssue(text: string, locale: Locale): string | undefined 
   }
   const outside = plain.replace(mathSpans, " ");
   if (latexCommand.test(outside)) return "LaTeX outside math";
+  if (outside.includes("{,}")) return "a TeX thousands separator outside math";
   for (const [span] of plain.matchAll(mathSpans)) {
     if (/(^|[^\\a-z])[-+]\s*-\s*\d/.test(span) && !span.includes("\\pm")) return "doubled sign";
     if (/(^|[^\\]);\s*\\(Rightarrow|implies)\b/.test(span)) return "spacing command without a backslash";

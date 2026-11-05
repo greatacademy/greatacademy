@@ -73,8 +73,8 @@ function takeAwayFigure(w: number, a: number, d: number): Figure {
   return {
     svg: barsSvg(w, d, (i) => (i >= w * d - a ? "cross" : "shade")),
     alt: t(
-      `${w} equal bars, each cut into ${d} equal parts; ${a} part${a === 1 ? " is" : "s are"} crossed out and the rest are shaded.`,
-      `${w} 个同样的长条，每个都平均分成 ${d} 份；划掉了 ${a} 份，其余的涂了颜色。`,
+      `${w === 1 ? "A bar cut" : `${w} equal bars, each cut`} into ${d} equal parts; ${a} part${a === 1 ? " is" : "s are"} crossed out and the rest are shaded.`,
+      `${w === 1 ? "一个长条，平均分成" : `${w} 个同样的长条，每个都平均分成`} ${d} 份；划掉了 ${a} 份，其余的涂了颜色。`,
     ),
   };
 }

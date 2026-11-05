@@ -758,7 +758,7 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
         "把正切、余切、正割和余割用正弦和余弦表示，常常能约去因式，得到简单得多的式子。将式子全部化为正弦与余弦进行化简：\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "\\beta", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5]);
         const kTex = k === 1 ? "" : `${k}`;
         const item = rng.pick([
@@ -790,7 +790,7 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
         "通过将正切、余切、正割和余割转化为正弦和余弦来约简分式：\n\n$$\\frac{\\tan \\theta}{\\sec \\theta} = \\frac{\\sin \\theta / \\cos \\theta}{1 / \\cos \\theta} = \\sin \\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "\\alpha", "\\beta", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5]);
         const kTex = k === 1 ? "" : `${k}`;
         const item = rng.pick([

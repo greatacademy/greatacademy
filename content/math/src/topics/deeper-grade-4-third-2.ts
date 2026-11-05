@@ -44,8 +44,8 @@ const metricGap = (id: string, big: Pair, small: Pair, title: Pair) =>
       const other = (k - 1) * 1000 + rng.int(100, 950);
       return whole(
         [
-          `How many ${small[0]} more is ${k} ${big[0]} than ${commas(other)} ${small[0]}?`,
-          `${k} ${big[1]}比 ${commas(other)} ${small[1]}多多少${small[1]}？`,
+          `How many ${small[0]} more is ${k} ${big[0]} than $${commas(other)}$ ${small[0]}?`,
+          `${k} ${big[1]}比 $${commas(other)}$ ${small[1]}多多少${small[1]}？`,
         ],
         k * 1000 - other,
         [other - k, Math.abs(k * 100 - other), k * 1000 + other],
@@ -940,8 +940,8 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
           count,
           [(l * 100) / size > 1 ? Math.floor((l * 100) / size) : count + 1, l * size, count * 10],
           [
-            `${l} liter${l > 1 ? "s are" : " is"} ${commas(l * 1000)} milliliters, and $${commas(l * 1000)} \\div ${size} = ${count}$.`,
-            `${l} 升是 ${commas(l * 1000)} 毫升，$${commas(l * 1000)} \\div ${size} = ${count}$。`,
+            `${l} liter${l > 1 ? "s are" : " is"} $${commas(l * 1000)}$ milliliters, and $${commas(l * 1000)} \\div ${size} = ${count}$.`,
+            `${l} 升是 $${commas(l * 1000)}$ 毫升，$${commas(l * 1000)} \\div ${size} = ${count}$。`,
           ],
         );
       },

@@ -65,6 +65,16 @@ export const unpracticedBases: Readonly<Record<string, readonly string[]>> = {
   "act-exam-identifying-characteristics-of-radical-expressions": ["square-roots-with-domain-restrictions"],
   "act-exam-expressing-related-quantities": ["modeling-with-linear-equations"],
   "act-exam-evaluating-expressions-after-solving": ["equations-with-variables-on-both-sides"],
+  "act-exam-evaluating-a-function-in-context": ["interpreting-rate-of-change-and-initial-value-in-context"],
+  "act-exam-determining-function-outputs": ["finding-a-function-input-for-a-given-output"],
+  "act-exam-finding-inputs-of-exponential-functions": ["solving-exponential-equations-using-logarithms", "negative-exponents"],
+  "act-exam-solving-exponential-equations": ["negative-exponents"],
+  "act-exam-finding-points-in-standard-position": ["extending-the-pythagorean-identity-to-all-quadrants"],
+  "act-exam-applying-quotient-and-angle-identities": ["simplifying-expressions-using-basic-trigonometric-identities"],
+  "act-exam-reading-trend-graphs": ["the-average-rate-of-change-of-a-function"],
+  "act-exam-working-with-event-relationships": ["venn-diagrams-in-probability"],
+  "act-exam-identifying-true-statements-about-integers": ["comparing-quantities-under-constraints"],
+  "act-exam-identifying-consequences-of-inequalities": ["further-solving-linear-inequalities"],
 };
 
 /** examTopic builds the topic of a spec: two knowledge points and an encompassing of each Fundamentals topic it practices. */

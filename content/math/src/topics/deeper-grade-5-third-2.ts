@@ -246,8 +246,8 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
           10 ** last,
           [10 ** (last + 1), last === 1 ? 2 : 10 ** (last - 1), d],
           [
-            `The two ${d}s are ${last} place${last > 1 ? "s" : ""} apart, and each place is worth ten times the next: ${commas(10 ** last)}.`,
-            `两个 ${d} 相隔 ${last} 位，每一位都是下一位的十倍：${commas(10 ** last)} 倍。`,
+            `The two ${d}s are ${last} place${last > 1 ? "s" : ""} apart, and each place is worth ten times the next: $${commas(10 ** last)}$.`,
+            `两个 ${d} 相隔 ${last} 位，每一位都是下一位的十倍：$${commas(10 ** last)}$ 倍。`,
           ],
         );
       },
@@ -582,14 +582,14 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
         return choose(
           rng,
           [
-            `In $${text}$, the digit ${digit} is in the ${placeOf(start)[0]} place. Which place is it in after multiplying by ${commas(10 ** p)}?`,
-            `在 $${text}$ 中，数字 ${digit} 在${placeOf(start)[1]}。乘 ${commas(10 ** p)} 后它在哪一位？`,
+            `In $${text}$, the digit ${digit} is in the ${placeOf(start)[0]} place. Which place is it in after multiplying by $${commas(10 ** p)}$?`,
+            `在 $${text}$ 中，数字 ${digit} 在${placeOf(start)[1]}。乘 $${commas(10 ** p)}$ 后它在哪一位？`,
           ],
           [`The ${land[0]} place`, land[1]],
           [...wrongs, ...options].slice(0, 3).map((w): Pair => [`The ${w[0]} place`, w[1]]),
           [
-            `${commas(10 ** p)} moves each digit ${p} place${p > 1 ? "s" : ""} to the left, from the ${placeOf(start)[0]} to the ${land[0]}.`,
-            `${commas(10 ** p)} 使每个数字向左移 ${p} 位，从${placeOf(start)[1]}到${land[1]}。`,
+            `$${commas(10 ** p)}$ moves each digit ${p} place${p > 1 ? "s" : ""} to the left, from the ${placeOf(start)[0]} to the ${land[0]}.`,
+            `$${commas(10 ** p)}$ 使每个数字向左移 ${p} 位，从${placeOf(start)[1]}到${land[1]}。`,
           ],
         );
       },
@@ -766,14 +766,14 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
         return choose(
           rng,
           [
-            `In $${text}$, the digit ${digit} is in the ${placeOf(start)[0]} place. Which place is it in after dividing by ${commas(10 ** p)}?`,
-            `在 $${text}$ 中，数字 ${digit} 在${placeOf(start)[1]}。除以 ${commas(10 ** p)} 后它在哪一位？`,
+            `In $${text}$, the digit ${digit} is in the ${placeOf(start)[0]} place. Which place is it in after dividing by $${commas(10 ** p)}$?`,
+            `在 $${text}$ 中，数字 ${digit} 在${placeOf(start)[1]}。除以 $${commas(10 ** p)}$ 后它在哪一位？`,
           ],
           [`The ${land[0]} place`, land[1]],
           others.map((w): Pair => [`The ${w[0]} place`, w[1]]),
           [
-            `${commas(10 ** p)} moves each digit ${p} place${p > 1 ? "s" : ""} to the right, from the ${placeOf(start)[0]} to the ${land[0]}.`,
-            `${commas(10 ** p)} 使每个数字向右移 ${p} 位，从${placeOf(start)[1]}到${land[1]}。`,
+            `$${commas(10 ** p)}$ moves each digit ${p} place${p > 1 ? "s" : ""} to the right, from the ${placeOf(start)[0]} to the ${land[0]}.`,
+            `$${commas(10 ** p)}$ 使每个数字向右移 ${p} 位，从${placeOf(start)[1]}到${land[1]}。`,
           ],
         );
       },
@@ -801,8 +801,8 @@ export const deeperGrade5Third2Points: Readonly<Record<string, readonly Knowledg
           answer,
           [Q.of(n, 10 ** (places + p)), Q.of(n * 10 ** (p + 1), 10 ** places), Q.of(n, 10 ** places)],
           [
-            `Multiply back by ${commas(10 ** p)}: the point moves ${p} place${p > 1 ? "s" : ""} to the right.`,
-            `乘回 ${commas(10 ** p)}：小数点向右移 ${p} 位。`,
+            `Multiply back by $${commas(10 ** p)}$: the point moves ${p} place${p > 1 ? "s" : ""} to the right.`,
+            `乘回 $${commas(10 ** p)}$：小数点向右移 ${p} 位。`,
           ],
         );
       },
