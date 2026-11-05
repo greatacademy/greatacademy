@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, paren, plane, Q, sketch } from "@ga/subject-math";
 
+import { movedPoint, movedPolygon } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -74,6 +75,9 @@ const z = (n: number) => n + 0;
 
 /** scaled multiplies a point by k. */
 const scaled = (k: Q, p: XY): QP => [k.mul(Q.of(p[0])), k.mul(Q.of(p[1]))];
+
+/** toPoint is a point with rational coordinates as numbers, for a figure. */
+const toPoint = (p: QP): Point => [Number(p[0].n) / Number(p[0].d), Number(p[1].n) / Number(p[1].d)];
 
 /** times writes k·v for a rule: "3x", "\frac{1}{2}y", "y" for k = 1. */
 const times = (k: Q, v: string) => (k.eq(Q.one) ? v : `${k.toLatex()}${v}`);
@@ -716,18 +720,21 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
         const k = rng.pick(niceScales);
         const p = pickScaledPoint(rng, k, Number(k.d) * 4);
         const name = rng.pick(["P", "A", "Q", "M"]);
-        return pointProblem({
-          prompt: t(
-            `A dilation with center at the origin and scale factor $${k.toLatex()}$ maps $${name}${pl(p)}$ to $${name}'$. Find the coordinates of $${name}'$.`,
-            `以原点为中心、比例因子为 $${k.toLatex()}$ 的位似把 $${name}${pl(p)}$ 映到 $${name}'$。求 $${name}'$ 的坐标。`,
-          ),
-          answer: scaled(k, p),
-          wrong: [scaled(Q.one.div(k), p), [Q.of(p[0]).add(k), Q.of(p[1]).add(k)], [k.mul(Q.of(p[0])), p[1]]],
-          solution: t(
-            `Multiply both coordinates by the scale factor:${scaleSteps(`${name}'`, k, p)}`,
-            `把两个坐标都乘以比例因子：${scaleSteps(`${name}'`, k, p)}`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `A dilation with center at the origin and scale factor $${k.toLatex()}$ maps $${name}${pl(p)}$ to $${name}'$. Find the coordinates of $${name}'$.`,
+              `以原点为中心、比例因子为 $${k.toLatex()}$ 的位似把 $${name}${pl(p)}$ 映到 $${name}'$。求 $${name}'$ 的坐标。`,
+            ),
+            answer: scaled(k, p),
+            wrong: [scaled(Q.one.div(k), p), [Q.of(p[0]).add(k), Q.of(p[1]).add(k)], [k.mul(Q.of(p[0])), p[1]]],
+            solution: t(
+              `Multiply both coordinates by the scale factor:${scaleSteps(`${name}'`, k, p)}`,
+              `把两个坐标都乘以比例因子：${scaleSteps(`${name}'`, k, p)}`,
+            ),
+          }),
+          solutionFigure: movedPoint(name, p, toPoint(scaled(k, p)), { kind: "scale" }),
+        };
       },
     },
     {
@@ -765,6 +772,13 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
               ),
             }),
             figure: graph(named(tri, ["A", "B", "C"]), "Triangle ABC on a coordinate grid.", "坐标网格上的三角形 ABC。"),
+            solutionFigure: movedPolygon(
+              ["A", "B", "C"],
+              tri,
+              tri.map((v) => toPoint(scaled(k, v))),
+              { kind: "scale" },
+              i,
+            ),
           };
         }
       },
@@ -780,19 +794,22 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
         const k = rng.pick(niceScales);
         const p = pickScaledPoint(rng, k, Number(k.d) * 3);
         const image = scaled(k, p);
-        return numberProblem({
-          prompt: t(
-            `A dilation with center at the origin maps $P${pl(p)}$ to $P'${pl(image)}$. Find the scale factor.`,
-            `以原点为中心的位似把 $P${pl(p)}$ 映到 $P'${pl(image)}$。求比例因子。`,
-          ),
-          answer: k,
-          form: "fraction",
-          wrong: [Q.one.div(k), image[0].sub(Q.of(p[0]))],
-          solution: t(
-            `Divide an image coordinate by the matching preimage coordinate:${steps(`k = \\frac{${image[0].toLatex()}}{${p[0]}} = ${k.toLatex()}`)}`,
-            `用像的坐标除以对应的原像坐标：${steps(`k = \\frac{${image[0].toLatex()}}{${p[0]}} = ${k.toLatex()}`)}`,
-          ),
-        });
+        return {
+          ...numberProblem({
+            prompt: t(
+              `A dilation with center at the origin maps $P${pl(p)}$ to $P'${pl(image)}$. Find the scale factor.`,
+              `以原点为中心的位似把 $P${pl(p)}$ 映到 $P'${pl(image)}$。求比例因子。`,
+            ),
+            answer: k,
+            form: "fraction",
+            wrong: [Q.one.div(k), image[0].sub(Q.of(p[0]))],
+            solution: t(
+              `Divide an image coordinate by the matching preimage coordinate:${steps(`k = \\frac{${image[0].toLatex()}}{${p[0]}} = ${k.toLatex()}`)}`,
+              `用像的坐标除以对应的原像坐标：${steps(`k = \\frac{${image[0].toLatex()}}{${p[0]}} = ${k.toLatex()}`)}`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", p, toPoint(image), { kind: "scale" }),
+        };
       },
     },
     {
@@ -811,18 +828,21 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
         const r = scaled(k, off);
         const image: QP = [r[0].add(Q.of(c[0])), r[1].add(Q.of(c[1]))];
         const back = scaled(Q.one.div(k), off);
-        return pointProblem({
-          prompt: t(
-            `A dilation with center $C${pl(c)}$ and scale factor $${k.toLatex()}$ maps $P${pl(p)}$ to $P'$. Find the coordinates of $P'$.`,
-            `以 $C${pl(c)}$ 为中心、比例因子为 $${k.toLatex()}$ 的位似把 $P${pl(p)}$ 映到 $P'$。求 $P'$ 的坐标。`,
-          ),
-          answer: image,
-          wrong: [scaled(k, p), [back[0].add(Q.of(c[0])), back[1].add(Q.of(c[1]))], [r[0].add(Q.of(p[0])), r[1].add(Q.of(p[1]))]],
-          solution: t(
-            `The offset of $P$ from $C$ is $${pl(off)}$. Multiply it by $${k.toLatex()}$ to get $${pl(r)}$, then add $C$:${steps(`P' = (${c[0]} + ${paren(r[0])}, \\; ${c[1]} + ${paren(r[1])}) = ${pl(image)}`)}`,
-            `$P$ 相对于 $C$ 的差是 $${pl(off)}$。乘以 $${k.toLatex()}$ 得 $${pl(r)}$，再加上 $C$：${steps(`P' = (${c[0]} + ${paren(r[0])}, \\; ${c[1]} + ${paren(r[1])}) = ${pl(image)}`)}`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `A dilation with center $C${pl(c)}$ and scale factor $${k.toLatex()}$ maps $P${pl(p)}$ to $P'$. Find the coordinates of $P'$.`,
+              `以 $C${pl(c)}$ 为中心、比例因子为 $${k.toLatex()}$ 的位似把 $P${pl(p)}$ 映到 $P'$。求 $P'$ 的坐标。`,
+            ),
+            answer: image,
+            wrong: [scaled(k, p), [back[0].add(Q.of(c[0])), back[1].add(Q.of(c[1]))], [r[0].add(Q.of(p[0])), r[1].add(Q.of(p[1]))]],
+            solution: t(
+              `The offset of $P$ from $C$ is $${pl(off)}$. Multiply it by $${k.toLatex()}$ to get $${pl(r)}$, then add $C$:${steps(`P' = (${c[0]} + ${paren(r[0])}, \\; ${c[1]} + ${paren(r[1])}) = ${pl(image)}`)}`,
+              `$P$ 相对于 $C$ 的差是 $${pl(off)}$。乘以 $${k.toLatex()}$ 得 $${pl(r)}$，再加上 $C$：${steps(`P' = (${c[0]} + ${paren(r[0])}, \\; ${c[1]} + ${paren(r[1])}) = ${pl(image)}`)}`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", p, toPoint(image), { kind: "scale", center: c, centerName: "C" }),
+        };
       },
     },
   ],

@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, sketch } from "@ga/subject-math";
 
+import { movedPoint, movedPolygon } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -1579,22 +1580,25 @@ export const translationsOfGeometricFigures: TopicDef = {
         const [h, v] = [rng.nonZero(-6, 6), rng.nonZero(-6, 6)];
         const name = rng.pick(["P", "A", "Q", "M"]);
         const d = shift(h, v);
-        return pointProblem({
-          prompt: t(
-            `The point $${name}${pl([x, y])}$ is translated ${d.en}. Find the coordinates of its image $${name}'$.`,
-            `把点 $${name}${pl([x, y])}$ ${d["zh-CN"]}。求它的像 $${name}'$ 的坐标。`,
-          ),
-          answer: [x + h, y + v],
-          wrong: [
-            [x - h, y - v],
-            [x + v, y + h],
-            [x + h, y - v],
-          ],
-          solution: t(
-            `Add $${h}$ to the $x$-coordinate and $${v}$ to the $y$-coordinate:${steps(`${name}' = (${x} + ${h < 0 ? `(${h})` : h}, ${y} + ${v < 0 ? `(${v})` : v}) = ${pl([x + h, y + v])}`)}`,
-            `把 $x$ 坐标加上 $${h}$，$y$ 坐标加上 $${v}$：${steps(`${name}' = (${x} + ${h < 0 ? `(${h})` : h}, ${y} + ${v < 0 ? `(${v})` : v}) = ${pl([x + h, y + v])}`)}`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `The point $${name}${pl([x, y])}$ is translated ${d.en}. Find the coordinates of its image $${name}'$.`,
+              `把点 $${name}${pl([x, y])}$ ${d["zh-CN"]}。求它的像 $${name}'$ 的坐标。`,
+            ),
+            answer: [x + h, y + v],
+            wrong: [
+              [x - h, y - v],
+              [x + v, y + h],
+              [x + h, y - v],
+            ],
+            solution: t(
+              `Add $${h}$ to the $x$-coordinate and $${v}$ to the $y$-coordinate:${steps(`${name}' = (${x} + ${h < 0 ? `(${h})` : h}, ${y} + ${v < 0 ? `(${v})` : v}) = ${pl([x + h, y + v])}`)}`,
+              `把 $x$ 坐标加上 $${h}$，$y$ 坐标加上 $${v}$：${steps(`${name}' = (${x} + ${h < 0 ? `(${h})` : h}, ${y} + ${v < 0 ? `(${v})` : v}) = ${pl([x + h, y + v])}`)}`,
+            ),
+          }),
+          solutionFigure: movedPoint(name, [x, y], [x + h, y + v], { kind: "slide" }),
+        };
       },
     },
     {
@@ -1630,6 +1634,13 @@ export const translationsOfGeometricFigures: TopicDef = {
               ),
             }),
             figure: graph(polygonMarks(tri, triangleNames), "Triangle ABC on a coordinate grid.", "坐标网格上的三角形 ABC。"),
+            solutionFigure: movedPolygon(
+              triangleNames,
+              tri,
+              tri.map(([a, b]): XY => [a + h, b + v]),
+              { kind: "slide" },
+              i,
+            ),
           };
         }
       },
@@ -1672,6 +1683,7 @@ export const translationsOfGeometricFigures: TopicDef = {
               "A point P and its image P′ on a coordinate grid.",
               "坐标网格上的点 P 和它的像 P′。",
             ),
+            solutionFigure: movedPoint("P", [x, y], [x + a, y + b], { kind: "slide" }),
           };
         }
       },
@@ -1687,22 +1699,25 @@ export const translationsOfGeometricFigures: TopicDef = {
         const [x, y] = [rng.int(-6, 6), rng.int(-6, 6)];
         const [h, v] = [rng.nonZero(-6, 6), rng.nonZero(-6, 6)];
         const [px, py] = [x + h, y + v];
-        return pointProblem({
-          prompt: t(
-            `The translation $${translationRule(h, v)}$ maps $P$ to $P'${pl([px, py])}$. Find the coordinates of $P$.`,
-            `平移 $${translationRule(h, v)}$ 把 $P$ 映到 $P'${pl([px, py])}$。求 $P$ 的坐标。`,
-          ),
-          answer: [x, y],
-          wrong: [
-            [px + h, py + v],
-            [px - v, py - h],
-            [px - h, py + v],
-          ],
-          solution: t(
-            `Undo the translation by subtracting $${h}$ from $x$ and $${v}$ from $y$:${steps(`P = (${px} - ${h < 0 ? `(${h})` : h}, ${py} - ${v < 0 ? `(${v})` : v}) = ${pl([x, y])}`)}`,
-            `把 $x$ 减去 $${h}$，$y$ 减去 $${v}$，还原平移：${steps(`P = (${px} - ${h < 0 ? `(${h})` : h}, ${py} - ${v < 0 ? `(${v})` : v}) = ${pl([x, y])}`)}`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `The translation $${translationRule(h, v)}$ maps $P$ to $P'${pl([px, py])}$. Find the coordinates of $P$.`,
+              `平移 $${translationRule(h, v)}$ 把 $P$ 映到 $P'${pl([px, py])}$。求 $P$ 的坐标。`,
+            ),
+            answer: [x, y],
+            wrong: [
+              [px + h, py + v],
+              [px - v, py - h],
+              [px - h, py + v],
+            ],
+            solution: t(
+              `Undo the translation by subtracting $${h}$ from $x$ and $${v}$ from $y$:${steps(`P = (${px} - ${h < 0 ? `(${h})` : h}, ${py} - ${v < 0 ? `(${v})` : v}) = ${pl([x, y])}`)}`,
+              `把 $x$ 减去 $${h}$，$y$ 减去 $${v}$，还原平移：${steps(`P = (${px} - ${h < 0 ? `(${h})` : h}, ${py} - ${v < 0 ? `(${v})` : v}) = ${pl([x, y])}`)}`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", [x, y], [px, py], { kind: "slide" }),
+        };
       },
     },
   ],
@@ -1783,6 +1798,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
             "A point P on a coordinate grid.",
             "坐标网格上的点 P。",
           ),
+          solutionFigure: movedPoint("P", p, image, { kind: "turn", degrees: cw ? -90 : 90 }),
         };
       },
     },
@@ -1808,18 +1824,21 @@ export const rotationsOfGeometricFigures: TopicDef = {
           t(", the same as $90^\\circ$ clockwise,", "，相当于顺时针 $90^\\circ$"),
           t(", the same as $90^\\circ$ counterclockwise,", "，相当于逆时针 $90^\\circ$"),
         ][kind]!;
-        return pointProblem({
-          prompt: t(
-            `Rotate $${pl(p)}$ by ${name.en} about the origin. Find the image.`,
-            `把 $${pl(p)}$ 绕原点旋转${name["zh-CN"]}。求像的坐标。`,
-          ),
-          answer: image,
-          wrong: [rotQ(p, 4 - q), rotQ(p, q + 2), [-p[0], p[1]]],
-          solution: t(
-            `A rotation of ${name.en}${same90.en} follows $${rotationRules[q - 1]}$:${steps(`${pl(p)} \\to ${pl(image)}`)}`,
-            `旋转${name["zh-CN"]}${same90["zh-CN"]}，规则是 $${rotationRules[q - 1]}$：${steps(`${pl(p)} \\to ${pl(image)}`)}`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Rotate $${pl(p)}$ by ${name.en} about the origin. Find the image.`,
+              `把 $${pl(p)}$ 绕原点旋转${name["zh-CN"]}。求像的坐标。`,
+            ),
+            answer: image,
+            wrong: [rotQ(p, 4 - q), rotQ(p, q + 2), [-p[0], p[1]]],
+            solution: t(
+              `A rotation of ${name.en}${same90.en} follows $${rotationRules[q - 1]}$:${steps(`${pl(p)} \\to ${pl(image)}`)}`,
+              `旋转${name["zh-CN"]}${same90["zh-CN"]}，规则是 $${rotationRules[q - 1]}$：${steps(`${pl(p)} \\to ${pl(image)}`)}`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", p, image, { kind: "turn", degrees: [180, 270, -270][kind]! }),
+        };
       },
     },
     {
@@ -1856,6 +1875,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
             "A point P and its image P′ under a rotation about the origin.",
             "点 P 和它绕原点旋转后的像 P′。",
           ),
+          solutionFigure: movedPoint("P", p, image, { kind: "turn", degrees: [90, 180, -90][k]! }),
         };
       },
     },
@@ -1898,6 +1918,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
               "A center of rotation C and a point P on a coordinate grid.",
               "坐标网格上的旋转中心 C 和点 P。",
             ),
+            solutionFigure: movedPoint("P", p, image, { kind: "turn", degrees: [90, 180, -90][kind]!, center: c, centerName: "C" }),
           };
         }
       },
@@ -1933,18 +1954,21 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
         const p = pickPoint(rng, 9);
         const k = rng.int(0, 2);
         const image = rotQ(p, [1, 3, 2][k]!);
-        return choiceProblem({
-          prompt: t(
-            `A rotation about the origin maps $${pl(p)}$ to $${pl(image)}$. Which rule describes it?`,
-            `绕原点的一次旋转把 $${pl(p)}$ 映到 $${pl(image)}$。哪条规则描述了这次旋转？`,
-          ),
-          options: ruleOptions.map((r) => same(`$${r}$`)),
-          correct: k,
-          solution: t(
-            `Substitute $x = ${p[0]}$ and $y = ${p[1]}$ into $${ruleOptions[k]}$: it gives $${pl(image)}$. The rule $(x, y) \\to (y, x)$ is a reflection, not a rotation.`,
-            `把 $x = ${p[0]}$，$y = ${p[1]}$ 代入 $${ruleOptions[k]}$，得到 $${pl(image)}$。规则 $(x, y) \\to (y, x)$ 是轴对称（反射），不是旋转。`,
-          ),
-        });
+        return {
+          ...choiceProblem({
+            prompt: t(
+              `A rotation about the origin maps $${pl(p)}$ to $${pl(image)}$. Which rule describes it?`,
+              `绕原点的一次旋转把 $${pl(p)}$ 映到 $${pl(image)}$。哪条规则描述了这次旋转？`,
+            ),
+            options: ruleOptions.map((r) => same(`$${r}$`)),
+            correct: k,
+            solution: t(
+              `Substitute $x = ${p[0]}$ and $y = ${p[1]}$ into $${ruleOptions[k]}$: it gives $${pl(image)}$. The rule $(x, y) \\to (y, x)$ is a reflection, not a rotation.`,
+              `把 $x = ${p[0]}$，$y = ${p[1]}$ 代入 $${ruleOptions[k]}$，得到 $${pl(image)}$。规则 $(x, y) \\to (y, x)$ 是轴对称（反射），不是旋转。`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", p, image, { kind: "turn", degrees: [90, -90, 180][k]! }),
+        };
       },
     },
     {
@@ -1993,18 +2017,21 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
         const q = [1, 3, 2][k]!;
         const image = rotQ(p, q);
         const rule = ruleOptions[k]!.replace("(x, y) \\to ", "");
-        return pointProblem({
-          prompt: t(
-            `The function $f(x, y) = ${rule}$ rotates the plane about the origin, and $f(P) = ${pl(image)}$. Find $P$.`,
-            `函数 $f(x, y) = ${rule}$ 把平面绕原点旋转，且 $f(P) = ${pl(image)}$。求 $P$。`,
-          ),
-          answer: p,
-          wrong: [rotQ(image, q), [image[1], image[0]], [-image[0], -image[1]]],
-          solution: t(
-            `$f$ is a rotation by $${[90, -90, 180][k]}^\\circ$, so undo it with a rotation by $${[-90, 90, 180][k]}^\\circ$:${steps(`P = ${pl(p)}`)}Check: $f${pl(p)} = ${pl(image)}$.`,
-            `$f$ 是旋转 $${[90, -90, 180][k]}^\\circ$，所以用旋转 $${[-90, 90, 180][k]}^\\circ$ 还原：${steps(`P = ${pl(p)}`)}检验：$f${pl(p)} = ${pl(image)}$。`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `The function $f(x, y) = ${rule}$ rotates the plane about the origin, and $f(P) = ${pl(image)}$. Find $P$.`,
+              `函数 $f(x, y) = ${rule}$ 把平面绕原点旋转，且 $f(P) = ${pl(image)}$。求 $P$。`,
+            ),
+            answer: p,
+            wrong: [rotQ(image, q), [image[1], image[0]], [-image[0], -image[1]]],
+            solution: t(
+              `$f$ is a rotation by $${[90, -90, 180][k]}^\\circ$, so undo it with a rotation by $${[-90, 90, 180][k]}^\\circ$:${steps(`P = ${pl(p)}`)}Check: $f${pl(p)} = ${pl(image)}$.`,
+              `$f$ 是旋转 $${[90, -90, 180][k]}^\\circ$，所以用旋转 $${[-90, 90, 180][k]}^\\circ$ 还原：${steps(`P = ${pl(p)}`)}检验：$f${pl(p)} = ${pl(image)}$。`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", image, p, { kind: "turn", degrees: [-90, 90, 180][k]! }),
+        };
       },
     },
   ],
@@ -2057,6 +2084,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
             "A point P on a coordinate grid.",
             "坐标网格上的点 P。",
           ),
+          solutionFigure: movedPoint("P", p, image, { kind: "flip", a: [0, 0], b: k === 0 ? [1, 0] : [0, 1] }),
         };
       },
     },
@@ -2090,6 +2118,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
             `A point P and the line ${k === 2 ? "y = x" : "y = −x"} on a coordinate grid.`,
             `坐标网格上的点 P 和直线 ${k === 2 ? "y = x" : "y = −x"}。`,
           ),
+          solutionFigure: movedPoint("P", p, image, { kind: "flip", a: [0, 0], b: [1, k === 2 ? 1 : -1] }),
         };
       },
     },
@@ -2133,6 +2162,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
               `A point P and the line ${line.replace("-", "−")} on a coordinate grid.`,
               `坐标网格上的点 P 和直线 ${line.replace("-", "−")}。`,
             ),
+            solutionFigure: movedPoint("P", p, image, { kind: "flip", a: vertical ? [h, 0] : [0, h], b: vertical ? [h, 1] : [1, h] }),
           };
         }
       },
@@ -2169,6 +2199,18 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
             "A point P and its image P′ under a reflection.",
             "点 P 和它在一次轴对称下的像 P′。",
           ),
+          solutionFigure: movedPoint("P", p, image, {
+            kind: "flip",
+            a: [0, 0],
+            b: (
+              [
+                [1, 0],
+                [0, 1],
+                [1, 1],
+                [1, -1],
+              ] as const
+            )[k]!,
+          }),
         };
       },
     },
@@ -2224,6 +2266,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
               `A point P and the line ${line.replace(/-/g, "−")} on a coordinate grid.`,
               `坐标网格上的点 P 和直线 ${line.replace(/-/g, "−")}。`,
             ),
+            solutionFigure: movedPoint("P", p, image, { kind: "flip", a: [0, c], b: [1, up ? c + 1 : c - 1] }),
           };
         }
       },
@@ -2272,6 +2315,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
               "A point P and its image P′ under a reflection.",
               "点 P 和它在一次轴对称下的像 P′。",
             ),
+            solutionFigure: movedPoint("P", p, q, { kind: "flip", a: m, b: [m[0] + v[1], m[1] - v[0]] }),
           };
         }
       },
@@ -2295,15 +2339,18 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
           if (!within([p, image, foot], 9)) continue;
           const line = `y = ${linear(m, b)}`;
           const perpB = Q.of(p[1]).add(Q.of(p[0], m));
-          return pointProblem({
-            prompt: t(`Reflect $P${pl(p)}$ across the line $${line}$. Find $P'$.`, `作 $P${pl(p)}$ 关于直线 $${line}$ 的对称点 $P'$。`),
-            answer: image,
-            wrong: [foot, [p[1], p[0]], [2 * foot[0] + p[0], 2 * foot[1] + p[1]]],
-            solution: t(
-              `The perpendicular through $P$ has slope $${Q.of(-1, m).toLatex()}$: $y = ${linear(Q.of(-1, m), perpB)}$. It meets $${line}$ at $F${pl(foot)}$, the midpoint of $\\overline{PP'}$. So${steps(`P' = (2 \\cdot ${foot[0] < 0 ? `(${foot[0]})` : foot[0]} - ${p[0] < 0 ? `(${p[0]})` : p[0]}, \\; 2 \\cdot ${foot[1] < 0 ? `(${foot[1]})` : foot[1]} - ${p[1] < 0 ? `(${p[1]})` : p[1]}) = ${pl(image)}`)}`,
-              `过 $P$ 的垂线斜率为 $${Q.of(-1, m).toLatex()}$：$y = ${linear(Q.of(-1, m), perpB)}$。它与 $${line}$ 交于 $F${pl(foot)}$，即 $\\overline{PP'}$ 的中点。所以${steps(`P' = (2 \\cdot ${foot[0] < 0 ? `(${foot[0]})` : foot[0]} - ${p[0] < 0 ? `(${p[0]})` : p[0]}, \\; 2 \\cdot ${foot[1] < 0 ? `(${foot[1]})` : foot[1]} - ${p[1] < 0 ? `(${p[1]})` : p[1]}) = ${pl(image)}`)}`,
-            ),
-          });
+          return {
+            ...pointProblem({
+              prompt: t(`Reflect $P${pl(p)}$ across the line $${line}$. Find $P'$.`, `作 $P${pl(p)}$ 关于直线 $${line}$ 的对称点 $P'$。`),
+              answer: image,
+              wrong: [foot, [p[1], p[0]], [2 * foot[0] + p[0], 2 * foot[1] + p[1]]],
+              solution: t(
+                `The perpendicular through $P$ has slope $${Q.of(-1, m).toLatex()}$: $y = ${linear(Q.of(-1, m), perpB)}$. It meets $${line}$ at $F${pl(foot)}$, the midpoint of $\\overline{PP'}$. So${steps(`P' = (2 \\cdot ${foot[0] < 0 ? `(${foot[0]})` : foot[0]} - ${p[0] < 0 ? `(${p[0]})` : p[0]}, \\; 2 \\cdot ${foot[1] < 0 ? `(${foot[1]})` : foot[1]} - ${p[1] < 0 ? `(${p[1]})` : p[1]}) = ${pl(image)}`)}`,
+                `过 $P$ 的垂线斜率为 $${Q.of(-1, m).toLatex()}$：$y = ${linear(Q.of(-1, m), perpB)}$。它与 $${line}$ 交于 $F${pl(foot)}$，即 $\\overline{PP'}$ 的中点。所以${steps(`P' = (2 \\cdot ${foot[0] < 0 ? `(${foot[0]})` : foot[0]} - ${p[0] < 0 ? `(${p[0]})` : p[0]}, \\; 2 \\cdot ${foot[1] < 0 ? `(${foot[1]})` : foot[1]} - ${p[1] < 0 ? `(${p[1]})` : p[1]}) = ${pl(image)}`)}`,
+              ),
+            }),
+            solutionFigure: movedPoint("P", p, image, { kind: "flip", a: foot, b: [foot[0] + 1, foot[1] + m] }),
+          };
         }
       },
     },
