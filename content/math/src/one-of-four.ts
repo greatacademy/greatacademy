@@ -1,7 +1,7 @@
 import type { Generator, Locale, Problem, Text, TopicDef } from "@ga/content";
 import { joinText, t } from "@ga/content";
 
-import { choiceProblem } from "./problems.ts";
+import { choiceProblem, withMistakes } from "./problems.ts";
 
 /** maxOptionLength bounds the prompts that can serve as options; longer ones hold tables or matrices too big for a button. */
 const maxOptionLength = 220;
@@ -25,17 +25,23 @@ const sameWords = (a: readonly Text[], b: readonly Text[]) => a.every((x) => b.s
 /** bare drops the stop at the end of an answer, so that it can be quoted or followed by another stop. */
 const bare = (text: string) => text.replace(/[.。]$/, "");
 
-/** settled writes a question with its answer and solution, leaving out a solution's own repeat of the answer. */
-function settled(problem: Problem, answer: Text): Text {
+/** verdict writes a question's answer and solution, leaving out a solution's own repeat of the answer. */
+function verdict(problem: Problem, answer: Text): Text {
   const rest = (locale: Locale, stops: readonly string[]) => {
     const solution = problem.solution[locale];
     const lead = stops.map((stop) => `${bare(answer[locale])}${stop}`).find((l) => solution.startsWith(l));
     return lead ? solution.slice(lead.length).trimStart() : solution;
   };
   return t(
-    `${problem.prompt.en} **${bare(answer.en)}.** ${rest("en", [".", ":"]).replace(/^[a-z](?=[a-z])/, (c) => c.toUpperCase())}`,
-    `${problem.prompt["zh-CN"]} **${bare(answer["zh-CN"])}。** ${rest("zh-CN", ["。", "："])}`,
+    `**${bare(answer.en)}.** ${rest("en", [".", ":"]).replace(/^[a-z](?=[a-z])/, (c) => c.toUpperCase())}`,
+    `**${bare(answer["zh-CN"])}。** ${rest("zh-CN", ["。", "："])}`,
   );
+}
+
+/** settled writes a question with its answer and solution. */
+function settled(problem: Problem, answer: Text): Text {
+  const said = verdict(problem, answer);
+  return t(`${problem.prompt.en} ${said.en}`, `${problem.prompt["zh-CN"]} ${said["zh-CN"]}`);
 }
 
 /**
@@ -61,12 +67,12 @@ export function oneOfFour(generate: Generator): Generator {
     }
     if (others.length < 3) return first;
     const options = rng.shuffle([first, ...others].map((p) => p.prompt));
-    const explained = others.map((p) => {
+    const answerOf = (p: Problem) => {
       const given = twoOptions(p);
-      const answerText = given?.options[given.correct] as Text;
-      return settled(p, answerText);
-    });
-    return choiceProblem({
+      return given?.options[given.correct] as Text;
+    };
+    const explained = others.map((p) => settled(p, answerOf(p)));
+    const problem = choiceProblem({
       prompt: t(
         `Exactly one of these questions has the answer "${bare(label.en)}". Which one?`,
         `下列问题中恰有一个的答案是“${bare(label["zh-CN"])}”。是哪一个？`,
@@ -75,6 +81,10 @@ export function oneOfFour(generate: Generator): Generator {
       correct: options.indexOf(first.prompt),
       solution: joinText([settled(first, label), t("The others go the other way:", "其余问题的答案相反："), ...explained]),
     });
+    return withMistakes(
+      problem,
+      others.map((p) => ({ response: p.prompt.en, why: verdict(p, answerOf(p)) })),
+    );
   };
 }
 
