@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, sketch } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -1236,10 +1236,25 @@ export const provingConsecutiveAngleConverse: TopicDef = {
                 `当且仅当两角全等时平行；这里两个角是 $${ma}^\\circ$ 和 $${mb}^\\circ$`,
               );
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t("Are lines $\\ell$ and $m$ parallel?", "直线 $\\ell$ 与 $m$ 平行吗？"),
-            options: yesNo,
-            correct: isParallel ? 0 : 1,
+            holds: isParallel,
+            yes: t(
+              `these ${name.en} angles are ${kind === 3 ? "supplementary" : "congruent"}`,
+              `这对${name["zh-CN"]}${kind === 3 ? "互补" : "全等"}`,
+            ),
+            no: t(
+              `these ${name.en} angles are not ${kind === 3 ? "supplementary" : "congruent"}`,
+              `这对${name["zh-CN"]}不${kind === 3 ? "互补" : "全等"}`,
+            ),
+            yesWrong: t("the lines look as if they would never meet", "这两条直线看上去永远不会相交"),
+            noWrong:
+              kind === 3
+                ? t(`$${ma}^\\circ$ and $${mb}^\\circ$ are not congruent`, `$${ma}^\\circ$ 与 $${mb}^\\circ$ 不全等`)
+                : t(
+                    `$${ma}^\\circ$ and $${mb}^\\circ$ do not add up to $180^\\circ$`,
+                    `$${ma}^\\circ$ 与 $${mb}^\\circ$ 的和不是 $180^\\circ$`,
+                  ),
             solution: t(
               `The marked angles are ${name.en} angles, so ${rule.en}. ${isParallel ? "So $\\ell \\parallel m$." : "So $\\ell$ and $m$ are not parallel."}`,
               `标出的两个角是${name["zh-CN"]}，${rule["zh-CN"]}。${isParallel ? "所以 $\\ell \\parallel m$。" : "所以 $\\ell$ 与 $m$ 不平行。"}`,

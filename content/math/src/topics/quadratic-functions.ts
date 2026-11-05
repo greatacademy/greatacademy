@@ -287,27 +287,21 @@ export const graphingElementaryQuadraticFunctions: TopicDef = {
         ),
       },
       generate(rng) {
-        const [a1, a2] = rng.sample(positiveAs, 2) as [Q, Q];
+        const as = rng.sample(positiveAs, rng.int(3, 4)) as Q[];
         const narrow = rng.bool();
-        const bigger = a1.cmp(a2) > 0 ? 0 : 1;
-        const correct = narrow ? bigger : 1 - bigger;
-        const options = [a1, a2].map((a) => same(`$y = ${front(a)}x^{2}$`));
-        const pick = correct === 0 ? a1 : a2;
+        const sorted = [...as].sort((x, y) => x.cmp(y));
+        const pick = narrow ? sorted[sorted.length - 1]! : sorted[0]!;
+        const graphs = as.map((a) => `$y = ${front(a)}x^{2}$`);
+        const listed = `${graphs.slice(0, -1).join(", ")} or ${graphs[graphs.length - 1]}`;
         return choiceProblem({
           prompt: narrow
-            ? t(
-                `Which is narrower: the graph of $y = ${front(a1)}x^{2}$ or the graph of $y = ${front(a2)}x^{2}$?`,
-                `$y = ${front(a1)}x^{2}$ 与 $y = ${front(a2)}x^{2}$ 的图象，哪个更窄？`,
-              )
-            : t(
-                `Which is wider: the graph of $y = ${front(a1)}x^{2}$ or the graph of $y = ${front(a2)}x^{2}$?`,
-                `$y = ${front(a1)}x^{2}$ 与 $y = ${front(a2)}x^{2}$ 的图象，哪个更宽？`,
-              ),
-          options,
-          correct,
+            ? t(`Which graph is the narrowest: ${listed}?`, `${graphs.join("、")} 的图象中，哪个最窄？`)
+            : t(`Which graph is the widest: ${listed}?`, `${graphs.join("、")} 的图象中，哪个最宽？`),
+          options: graphs.map(same),
+          correct: as.indexOf(pick),
           solution: t(
-            `The ${narrow ? "larger" : "smaller"} coefficient gives the ${narrow ? "narrower" : "wider"} parabola: $${num(pick)}$ is ${narrow ? "larger" : "smaller"} than $${num(correct === 0 ? a2 : a1)}$, so $y = ${front(pick)}x^{2}$ is ${narrow ? "narrower" : "wider"}.`,
-            `系数越${narrow ? "大" : "小"}，抛物线越${narrow ? "窄" : "宽"}：$${num(pick)}$ ${narrow ? "大于" : "小于"} $${num(correct === 0 ? a2 : a1)}$，所以 $y = ${front(pick)}x^{2}$ 更${narrow ? "窄" : "宽"}。`,
+            `The ${narrow ? "largest" : "smallest"} coefficient gives the ${narrow ? "narrowest" : "widest"} parabola. Of $${as.map(num).join(", ")}$ the ${narrow ? "largest" : "smallest"} is $${num(pick)}$, so $y = ${front(pick)}x^{2}$ is the ${narrow ? "narrowest" : "widest"}.`,
+            `系数越${narrow ? "大" : "小"}，抛物线越${narrow ? "窄" : "宽"}。$${as.map(num).join(", ")}$ 中最${narrow ? "大" : "小"}的是 $${num(pick)}$，所以 $y = ${front(pick)}x^{2}$ 最${narrow ? "窄" : "宽"}。`,
           ),
         });
       },

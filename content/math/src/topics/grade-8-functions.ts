@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { linear, num, type PlaneMark, plane, Q } from "@ga/subject-math";
 
-import { article, choiceProblem, numberProblem, pointLatex, steps, yesNo } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointLatex, steps, verdictChoice } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // 8th Grade Math, functions: describing a relationship from its graph, telling linear functions from nonlinear ones,
@@ -333,10 +333,17 @@ export const linearFunctionsVersusNonlinearFunctions = topic(
         const isLinear = new Set(diffs).size === 1;
         const row = (name: string, vs: number[]) => `${name} & ${vs.map((v) => num(v)).join(" & ")}`;
         const table = `\\begin{array}{c|cccc} ${row("x", xs)} \\\\ \\hline ${row("y", ys)} \\end{array}`;
-        return choiceProblem({
+        const shownDiffs = isLinear ? [diffs[0]!, diffs[1]!, diffs[2]! + 1] : diffs;
+        return verdictChoice(rng, {
           prompt: t(`Could this table come from a linear function?${steps(table)}`, `这个表格可能来自一次函数吗？${steps(table)}`),
-          options: yesNo,
-          correct: isLinear ? 0 : 1,
+          holds: isLinear,
+          yes: t(`$y$ changes by $${diffs[0]}$ at every step`, `$y$ 每一步都变化 $${diffs[0]}$`),
+          no: t(
+            `the changes in $y$ are $${shownDiffs.join(", ")}$, not all equal`,
+            `$y$ 的变化量是 $${shownDiffs.join(", ")}$，并不都相等`,
+          ),
+          yesWrong: t("the $x$-values go up in equal steps", "$x$ 以相等的步长增加"),
+          noWrong: t("$y$ is not a constant multiple of $x$", "$y$ 不是 $x$ 的常数倍"),
           solution: isLinear
             ? t(
                 `The $x$-values go up by $${step}$ each time, and the $y$-values change by $${diffs[0]}$ every time, so the table fits a linear function.`,
@@ -522,7 +529,8 @@ export const comparingPropertiesOfTwoFunctionsRepresentedDifferently = topic(
       generate(rng) {
         // Half the time both rates are negative, so that comparing their sizes gives the wrong answer.
         const negative = rng.bool();
-        const [ma, mb] = rng.sample([1, 2, 3, 4, 5, 6], 2).map((m) => (negative || rng.bool() ? -m : m)) as [number, number];
+        const [ma, picked] = rng.sample([1, 2, 3, 4, 5, 6], 2).map((m) => (negative || rng.bool() ? -m : m)) as [number, number];
+        const mb = rng.bool(0.2) ? ma : picked;
         const [ba, bb] = [rng.int(-9, 9), rng.int(-9, 9)];
         const step = rng.int(1, 3);
         const x0 = rng.int(-1, 2);
@@ -531,7 +539,12 @@ export const comparingPropertiesOfTwoFunctionsRepresentedDifferently = topic(
         const [eqName, tableName] = tableFirst ? ["B", "A"] : ["A", "B"];
         const [mEq, mTable] = tableFirst ? [mb, ma] : [ma, mb];
         const [bEq, bTable] = tableFirst ? [bb, ba] : [ba, bb];
-        const options = [t("Function A", "函数 A"), t("Function B", "函数 B")];
+        const options = [
+          t("Function A", "函数 A"),
+          t("Function B", "函数 B"),
+          t("The two rates of change are equal", "两个变化率相等"),
+          t("It cannot be determined from an equation and a table", "只凭一个方程和一个表格无法判断"),
+        ];
         const greaterIsA = ma > mb;
         const [y0, y1] = [mTable * xs[0]! + bTable, mTable * xs[1]! + bTable];
         return choiceProblem({
@@ -540,10 +553,10 @@ export const comparingPropertiesOfTwoFunctionsRepresentedDifferently = topic(
             `函数 ${eqName} 是 $y = ${linear(mEq, bEq)}$。函数 ${tableName} 是一次函数，其数值表如下：${steps(tableOf(mTable, bTable, xs))}哪个函数的变化率更大？`,
           ),
           options,
-          correct: greaterIsA ? 0 : 1,
+          correct: ma === mb ? 2 : greaterIsA ? 0 : 1,
           solution: t(
-            `The rate of change of function ${eqName} is the coefficient of $x$, $${mEq}$. For function ${tableName}, $\\frac{${num(y1)} - ${y0 < 0 ? `(${y0})` : y0}}{${step}} = ${mTable}$. Since $${Math.max(ma, mb)} > ${Math.min(ma, mb)}$, function ${greaterIsA ? "A" : "B"} has the greater rate of change.`,
-            `函数 ${eqName} 的变化率是 $x$ 的系数 $${mEq}$。函数 ${tableName} 的变化率为 $\\frac{${num(y1)} - ${y0 < 0 ? `(${y0})` : y0}}{${step}} = ${mTable}$。因为 $${Math.max(ma, mb)} > ${Math.min(ma, mb)}$，所以函数 ${greaterIsA ? "A" : "B"} 的变化率更大。`,
+            `The rate of change of function ${eqName} is the coefficient of $x$, $${mEq}$. For function ${tableName}, $\\frac{${num(y1)} - ${y0 < 0 ? `(${y0})` : y0}}{${step}} = ${mTable}$. ${ma === mb ? "The two rates are equal." : `Since $${Math.max(ma, mb)} > ${Math.min(ma, mb)}$, function ${greaterIsA ? "A" : "B"} has the greater rate of change.`}`,
+            `函数 ${eqName} 的变化率是 $x$ 的系数 $${mEq}$。函数 ${tableName} 的变化率为 $\\frac{${num(y1)} - ${y0 < 0 ? `(${y0})` : y0}}{${step}} = ${mTable}$。${ma === mb ? "两个变化率相等。" : `因为 $${Math.max(ma, mb)} > ${Math.min(ma, mb)}$，所以函数 ${greaterIsA ? "A" : "B"} 的变化率更大。`}`,
           ),
         });
       },

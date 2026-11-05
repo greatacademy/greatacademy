@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Interval, type PlaneMark, plane, poly, Q, union } from "@ga/subject-math";
 
-import { choiceProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, yesNo } from "../problems.ts";
+import { choiceProblem, intervalProblem, numberProblem, pointProblem, reasonChoice, solutionsProblem, yesNo } from "../problems.ts";
 import { bare, fac, lim, oneOf, range, sqrtLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 3: Continuity, modules 3.7 (Continuity) and 3.8 (Removing
@@ -122,8 +122,6 @@ function breakReason(b: Break): Text {
   );
 }
 
-const continuousAt = (b: Break) => b.L === b.R && b.value === b.L;
-
 /** yesNoProblem asks a yes-or-no question. */
 const yesNoProblem = (prompt: Text, yes: boolean, solution: Text) =>
   choiceProblem({ prompt, options: yesNo, correct: yes ? 0 : 1, solution });
@@ -151,15 +149,29 @@ export const determiningContinuityFromGraphs: TopicDef = {
       generate(rng) {
         const kind = rng.pick<BreakKind>(["continuous", "continuous", "hole", "moved", "jump"]);
         const b = makeBreak(rng, rng.int(-3, 3), kind);
+        const unbroken = t(
+          `Yes, because the graph passes through $x = ${b.a}$ without a break.`,
+          `是，因为图像在 $x = ${b.a}$ 处没有断开。`,
+        );
+        const hole = t(
+          `No, because the graph has a hole at $x = ${b.a}$ and no point there.`,
+          `否，因为图像在 $x = ${b.a}$ 处有一个空心点，且该处没有点。`,
+        );
+        const moved = t(
+          `No, because the filled point at $x = ${b.a}$ is away from the curve.`,
+          `否，因为 $x = ${b.a}$ 处的实心点偏离了曲线。`,
+        );
+        const jump = t(`No, because the graph jumps to a new height at $x = ${b.a}$.`, `否，因为图像在 $x = ${b.a}$ 处跳到另一个高度。`);
         return {
-          ...yesNoProblem(
-            t(
+          ...reasonChoice(rng, {
+            prompt: t(
               `The graph of $y = f(x)$ is shown. Is $f$ continuous at $x = ${b.a}$?`,
               `图中是 $y = f(x)$ 的图像。$f$ 在 $x = ${b.a}$ 处连续吗？`,
             ),
-            continuousAt(b),
-            breakReason(b),
-          ),
+            correct: kind === "continuous" ? unbroken : kind === "hole" ? hole : kind === "moved" ? moved : jump,
+            wrong: [unbroken, hole, moved, jump],
+            solution: breakReason(b),
+          }),
           figure: breakGraph(rng, b),
         };
       },
@@ -319,14 +331,25 @@ export const definingContinuityAtAPoint: TopicDef = {
           [String(v), `x = ${a}`],
           [right.latex, `x > ${a}`],
         ]);
-        return yesNoProblem(
-          t(`Let $$${f}$$ Is $f$ continuous at $x = ${a}$?`, `设 $$${f}$$ $f$ 在 $x = ${a}$ 处连续吗？`),
-          cont,
-          t(
+        const allEqual = t(
+          "Yes, because both one-sided limits and the value there are all equal.",
+          "是，因为两个单侧极限与该点的函数值都相等。",
+        );
+        const sidesDiffer = t("No, because the left-sided and right-sided limits differ.", "否，因为左极限与右极限不相等。");
+        const valueDiffers = t(
+          "No, because the limits agree but the value there is different.",
+          "否，因为两个极限相等，但该点的函数值不同。",
+        );
+        const defined = t(`Yes, because $f(${a})$ is defined.`, `是，因为 $f(${a})$ 有定义。`);
+        return reasonChoice(rng, {
+          prompt: t(`Let $$${f}$$ Is $f$ continuous at $x = ${a}$?`, `设 $$${f}$$ $f$ 在 $x = ${a}$ 处连续吗？`),
+          correct: cont ? allEqual : L !== R ? sidesDiffer : valueDiffers,
+          wrong: [allEqual, sidesDiffer, valueDiffers, defined],
+          solution: t(
             `$${lim(a, -1)} f(x) = ${L}$, $${lim(a, 1)} f(x) = ${R}$ and $f(${a}) = ${v}$. ${cont ? "All three are equal, so $f$ is continuous there." : "They are not all equal, so $f$ is not continuous there."}`,
             `$${lim(a, -1)} f(x) = ${L}$，$${lim(a, 1)} f(x) = ${R}$，$f(${a}) = ${v}$。${cont ? "三者相等，所以 $f$ 在该点连续。" : "三者不全相等，所以 $f$ 在该点不连续。"}`,
           ),
-        );
+        });
       },
     },
   ],

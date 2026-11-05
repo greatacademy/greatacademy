@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
 
-import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
 import { height, rectangle, sides } from "./area.ts";
 import { prismSvg } from "./grade-5-measurement.ts";
 
@@ -1162,10 +1162,13 @@ export const linesOfSymmetry = topic(
         const pts = all.slice(0, f.points.length);
         const line = stretch([all[f.points.length]!, all[f.points.length + 1]!]);
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t(`Is the dashed line a line of symmetry of this ${f.name.en}?`, `虚线是这个${f.name["zh-CN"]}的对称轴吗？`),
-            options: yesNo,
-            correct: f.yes ? 0 : 1,
+            holds: f.yes,
+            yes: t("folding along it lands every corner on a corner", "沿它对折，每个角都落在另一个角上"),
+            no: t("folding along it carries a corner to a spot with no corner", "沿它对折，有的角落到了没有角的地方"),
+            yesWrong: t("it cuts the figure into two pieces of equal area", "它把图形分成面积相等的两部分"),
+            noWrong: t("a line of symmetry must be horizontal or vertical", "对称轴必须是水平的或竖直的"),
             solution: f.why,
           }),
           figure: fig(

@@ -26,6 +26,7 @@ import {
   pointProblem,
   solutionsProblem,
   steps,
+  verdictChoice,
   yesNo,
 } from "../problems.ts";
 
@@ -451,10 +452,15 @@ export const representationsOfFunctions: TopicDef = {
           );
         }
         const diagram = `$$\\begin{array}{rcl} ${rows.map(([x, y]) => `${x} & \\longmapsto & ${y}`).join(" \\\\ ")} \\end{array}$$`;
-        return choiceProblem({
+        const inputs = rows.map(([x]) => x);
+        const suspect = inputs.find((x, i) => inputs.indexOf(x) !== i) ?? rng.pick(inputs);
+        return verdictChoice(rng, {
           prompt: t(`Does this mapping diagram show a function?${diagram}`, `这个映射图表示函数吗？${diagram}`),
-          options: yesNo,
-          correct: isFunction ? 0 : 1,
+          holds: isFunction,
+          yes: t("every input has exactly one arrow leaving it", "每个输入恰好引出一个箭头"),
+          no: t(`two arrows leave the input $${suspect}$`, `输入 $${suspect}$ 引出了两个箭头`),
+          yesWrong: t("every input has at least one arrow leaving it", "每个输入至少引出一个箭头"),
+          noWrong: t("two arrows end at the same output", "有两个箭头指向同一个输出"),
           solution: note,
         });
       },
@@ -846,10 +852,13 @@ export const verticalLineTest: TopicDef = {
         const kind = rng.int(0, 5);
         const isFunction = kind < 3;
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t("Is this the graph of a function?", "这是函数的图象吗？"),
-            options: yesNo,
-            correct: isFunction ? 0 : 1,
+            holds: isFunction,
+            yes: t("every vertical line meets the graph at most once", "每条竖直线与图形最多交于一点"),
+            no: t("some vertical line meets the graph more than once", "存在与图形交于不止一点的竖直线"),
+            yesWrong: t("every horizontal line meets the graph at most once", "每条水平线与图形最多交于一点"),
+            noWrong: t("some horizontal line meets the graph more than once", "存在与图形交于不止一点的水平线"),
             solution: isFunction
               ? t(
                   "Every vertical line meets the graph at most once, so it is the graph of a function.",
@@ -887,10 +896,13 @@ export const verticalLineTest: TopicDef = {
         ];
         const isFunction = openL || openR;
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t("Is this the graph of a function?", "这是函数的图象吗？"),
-            options: yesNo,
-            correct: isFunction ? 0 : 1,
+            holds: isFunction,
+            yes: t(`at most one of the two dots at $x = ${a}$ is filled`, `$x = ${a}$ 处的两个点中至多有一个是实心点`),
+            no: t(`both of the dots at $x = ${a}$ are filled`, `$x = ${a}$ 处的两个点都是实心点`),
+            yesWrong: t(`the two pieces do not join at $x = ${a}$`, `两段在 $x = ${a}$ 处没有连起来`),
+            noWrong: t(`one of the dots at $x = ${a}$ is open, so the graph has a gap`, `$x = ${a}$ 处有一个空心点，所以图形有缺口`),
             solution: isFunction
               ? t(
                   `At $x = ${a}$ at least one of the dots at $(${a}, ${yl})$ and $(${a}, ${yr})$ is open, so the line $x = ${a}$ meets the graph at most once. Every other vertical line meets it once: it is a function.`,
@@ -2460,7 +2472,13 @@ export const describingFunctionComposition: TopicDef = {
         const reversed = applyStep(first, applyStep(second, "x"));
         const [a, b] = [stepText(first), stepText(second)];
         if (rng.bool()) {
-          const options = rng.shuffle([right, reversed]);
+          const inner = [applyStep(first, "x"), applyStep(second, "x")];
+          const options = rng.shuffle([
+            right,
+            reversed,
+            `${inner[0]} ${inner[1]!.startsWith("-") ? `- ${inner[1]!.slice(1)}` : `+ ${inner[1]}`}`,
+            `(${inner[0]})(${inner[1]})`,
+          ]);
           return choiceProblem({
             prompt: t(
               `A function $h$ takes $x$, first ${a.en}, then ${b.en}. Which formula is $h(x)$?`,
@@ -2476,10 +2494,18 @@ export const describingFunctionComposition: TopicDef = {
         }
         const fName = rng.pick(["f", "g"] as const);
         const gName = fName === "f" ? "g" : "f";
-        const options = rng.shuffle([0, 1]);
+        const options = rng.shuffle([0, 1, 2, 3]);
         const words = [
           t(`First ${a.en}, then ${b.en}`, `先${a["zh-CN"]}，再${b["zh-CN"]}`),
           t(`First ${b.en}, then ${a.en}`, `先${b["zh-CN"]}，再${a["zh-CN"]}`),
+          t(
+            `Do each to $x$ on its own (${a.en}; ${b.en}), then add the results`,
+            `对 $x$ 分别操作（${a["zh-CN"]}；${b["zh-CN"]}），再把结果相加`,
+          ),
+          t(
+            `Do each to $x$ on its own (${a.en}; ${b.en}), then multiply the results`,
+            `对 $x$ 分别操作（${a["zh-CN"]}；${b["zh-CN"]}），再把结果相乘`,
+          ),
         ];
         return choiceProblem({
           prompt: t(

@@ -172,10 +172,12 @@ export const unitRates: TopicDef = {
         const ea = q(rng.int(4, 30) * 10, 100);
         let eb = q(rng.int(4, 30) * 10, 100);
         while (eb.eq(ea)) eb = q(rng.int(4, 30) * 10, 100);
+        if (rng.bool(0.2)) eb = ea;
         if (rng.bool()) [na, nb] = [nb, na];
         const ta = ea.mul(Q.of(na));
         const tb = eb.mul(Q.of(nb));
-        const correct = ea.cmp(eb) < 0 ? 0 : 1;
+        const order = ea.cmp(eb);
+        const correct = order < 0 ? 0 : order > 0 ? 1 : 2;
         return choiceProblem({
           prompt: t(
             `A store sells ${item.what.en} in two packages: $${na}$ for $\\$${money(ta)}$, or $${nb}$ for $\\$${money(tb)}$. Which is the better buy?`,
@@ -184,11 +186,13 @@ export const unitRates: TopicDef = {
           options: [
             t(`$${na}$ for $\\$${money(ta)}$`, `$${na}$ 份 $${money(ta)}$ 元`),
             t(`$${nb}$ for $\\$${money(tb)}$`, `$${nb}$ 份 $${money(tb)}$ 元`),
+            t("They cost the same per unit", "每份的价格相同"),
+            t("It cannot be determined, because the packages have different sizes", "无法判断，因为两种包装的份数不同"),
           ],
           correct,
           solution: t(
-            `Per unit: $\\frac{${money(ta)}}{${na}} = ${money(ea)}$ and $\\frac{${money(tb)}}{${nb}} = ${money(eb)}$. The ${correct === 0 ? "first" : "second"} costs less per unit.`,
-            `每份的价格：$\\frac{${money(ta)}}{${na}} = ${money(ea)}$，$\\frac{${money(tb)}}{${nb}} = ${money(eb)}$。第${correct === 0 ? "一" : "二"}种每份更便宜。`,
+            `Per unit: $\\frac{${money(ta)}}{${na}} = ${money(ea)}$ and $\\frac{${money(tb)}}{${nb}} = ${money(eb)}$. ${correct === 2 ? "They cost the same per unit." : `The ${correct === 0 ? "first" : "second"} costs less per unit.`}`,
+            `每份的价格：$\\frac{${money(ta)}}{${na}} = ${money(ea)}$，$\\frac{${money(tb)}}{${nb}} = ${money(eb)}$。${correct === 2 ? "两种每份的价格相同。" : `第${correct === 0 ? "一" : "二"}种每份更便宜。`}`,
           ),
         });
       },

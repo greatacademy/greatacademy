@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, numberProblem, pointLatex, pointProblem, reasonChoice, steps, verdictChoice } from "../problems.ts";
 
 // Geometry, module 1.4: similarity. Similar polygons and their sides, angles
 // and areas, similarity transformations, the AA, SSS and SAS criteria, proofs
@@ -336,11 +336,18 @@ export const similarityAndSimilarPolygons: TopicDef = {
             `矩形 ABCD，${r1[0]} × ${r1[1]}；矩形 EFGH，${r2[0]} × ${r2[1]}。`,
           );
           const cmp = similar ? "=" : "\\ne";
+          const claimed = fr(s2[1] + (similar ? 1 : 0), s1[1]);
           return {
-            ...choiceProblem({
+            ...verdictChoice(rng, {
               prompt: t("Are the two rectangles similar?", "这两个矩形相似吗？"),
-              options: yesNo,
-              correct: similar ? 0 : 1,
+              holds: similar,
+              yes: t(`both side ratios equal $${fr(s2[0], s1[0])}$`, `两个边长比都等于 $${fr(s2[0], s1[0])}$`),
+              no: t(`the side ratios are $${fr(s2[0], s1[0])}$ and $${claimed}$`, `两个边长比分别是 $${fr(s2[0], s1[0])}$ 和 $${claimed}$`),
+              yesWrong: t("all the angles of both rectangles are right angles", "两个矩形的角都是直角"),
+              noWrong: t(
+                `the sides grow by different amounts, $${Math.abs(s2[0] - s1[0])}$ and $${Math.abs(s2[1] - s1[1])}$`,
+                `两组边增加的量不同，分别是 $${Math.abs(s2[0] - s1[0])}$ 和 $${Math.abs(s2[1] - s1[1])}$`,
+              ),
               solution: t(
                 `Compare the shorter sides and the longer sides:${steps(`\\frac{${s2[0]}}{${s1[0]}} = ${fr(s2[0], s1[0])}, \\qquad \\frac{${s2[1]}}{${s1[1]}} = ${fr(s2[1], s1[1])}`)}The ratios are ${similar ? "equal" : "not equal"} ($${fr(s2[0], s1[0])} ${cmp} ${fr(s2[1], s1[1])}$), so the rectangles are ${similar ? "" : "not "}similar.`,
                 `比较短边与短边、长边与长边：${steps(`\\frac{${s2[0]}}{${s1[0]}} = ${fr(s2[0], s1[0])}, \\qquad \\frac{${s2[1]}}{${s1[1]}} = ${fr(s2[1], s1[1])}`)}两个比${similar ? "相等" : "不相等"}（$${fr(s2[0], s1[0])} ${cmp} ${fr(s2[1], s1[1])}$），所以这两个矩形${similar ? "相似" : "不相似"}。`,
@@ -1172,11 +1179,19 @@ export const theAASimilarityCriterion: TopicDef = {
           const t2 = posed(byAngles(x, y), pickPose(rng));
           const [p1, p2] = sideBySide(t1, t2, rng.pick([0.7, 1, 1.4]));
           const deg = (v: number) => `${v}°`;
+          const angleList = (vs: readonly number[]) => `${vs.join("^\\circ, ")}^\\circ`;
+          const claimed = similar ? [x, y - 5, z + 5] : [x, y, z];
           return {
-            ...choiceProblem({
+            ...verdictChoice(rng, {
               prompt: t(`Is $${tri(L1)}$ similar to $${tri(L2)}$?`, `$${tri(L1)}$ 与 $${tri(L2)}$ 相似吗？`),
-              options: yesNo,
-              correct: similar ? 0 : 1,
+              holds: similar,
+              yes: t(`both triangles have the angles $${angleList([a, b, c])}$`, `两个三角形的角都是 $${angleList([a, b, c])}$`),
+              no: t(
+                `one triangle has the angles $${angleList([a, b, c])}$ and the other $${angleList(claimed)}$`,
+                `一个三角形的角是 $${angleList([a, b, c])}$，另一个是 $${angleList(claimed)}$`,
+              ),
+              yesWrong: t("the triangles have one pair of congruent angles", "两个三角形有一组相等的角"),
+              noWrong: t("the two triangles have different sizes", "两个三角形大小不同"),
               solution: t(
                 `The third angle of $${tri(L1)}$ is $180^\\circ - ${a}^\\circ - ${b}^\\circ = ${c}^\\circ$, and that of $${tri(L2)}$ is $180^\\circ - ${x}^\\circ - ${y}^\\circ = ${z}^\\circ$. The angles are $${[a, b, c].join("^\\circ, ")}^\\circ$ and $${[x, y, z].join("^\\circ, ")}^\\circ$: ${similar ? "the same three angles, so the triangles are similar by AA." : "not the same angles, so the triangles are not similar."}`,
                 `$${tri(L1)}$ 的第三个角为 $180^\\circ - ${a}^\\circ - ${b}^\\circ = ${c}^\\circ$，$${tri(L2)}$ 的第三个角为 $180^\\circ - ${x}^\\circ - ${y}^\\circ = ${z}^\\circ$。两组角分别是 $${[a, b, c].join("^\\circ, ")}^\\circ$ 和 $${[x, y, z].join("^\\circ, ")}^\\circ$：${similar ? "三个角相同，所以由 AA 两三角形相似。" : "角不相同，所以两三角形不相似。"}`,
@@ -1343,11 +1358,15 @@ export const theSSSSimilarityCriterion: TopicDef = {
           const letters = rng.pick(sixLetters);
           const [L1, L2] = [letters.slice(0, 3), letters.slice(3)];
           const [p1, p2] = sideBySide(bySides(s1), posed(bySides(s2t), pose), v / u);
+          const claimed = x.map((w, i) => fr(y[i]! + (similar && i === 2 ? 1 : 0), w));
           return {
-            ...choiceProblem({
+            ...verdictChoice(rng, {
               prompt: t(`Is $${tri(L1)}$ similar to $${tri(L2)}$?`, `$${tri(L1)}$ 与 $${tri(L2)}$ 相似吗？`),
-              options: yesNo,
-              correct: similar ? 0 : 1,
+              holds: similar,
+              yes: t(`all three side ratios equal $${fr(y[0]!, x[0]!)}$`, `三个边长比都等于 $${fr(y[0]!, x[0]!)}$`),
+              no: t(`the side ratios are $${claimed.join(", ")}$, not all equal`, `三个边长比是 $${claimed.join(", ")}$，不全相等`),
+              yesWrong: t("two of the three side ratios are equal", "三个边长比中有两个相等"),
+              noWrong: t("the sides differ by different amounts", "对应边相差的量不同"),
               solution: t(
                 `Sort the sides and compare:${steps(sortedRatios(s1, s2))}${similar ? "All three ratios are equal, so the triangles are similar by SSS." : "The ratios are not all equal, so the triangles are not similar."}`,
                 `把边排序后比较：${steps(sortedRatios(s1, s2))}${similar ? "三个比都相等，所以由 SSS 两三角形相似。" : "三个比不全相等，所以两三角形不相似。"}`,
@@ -1505,11 +1524,21 @@ export const theSASSimilarityCriterion: TopicDef = {
                     "The included angles match, but the sides are not proportional, so the triangles are not similar.",
                     "夹角相等，但两边不成比例，所以两三角形不相似。",
                   );
+          const proportional = t(
+            "Yes, because the sides next to the marked angles are proportional and those angles are congruent.",
+            "是，因为标出角的两边成比例，并且这两个角相等。",
+          );
+          const anglesDiffer = t("No, because the marked angles are not congruent.", "否，因为标出的两个角不相等。");
+          const sidesDiffer = t("No, because the sides next to the marked angles are not proportional.", "否，因为标出角的两边不成比例。");
+          const angleOnly = t(
+            "Yes, because the marked angles are congruent, so the sides need no checking.",
+            "是，因为标出的两个角相等，所以不必检查边。",
+          );
           return {
-            ...choiceProblem({
+            ...reasonChoice(rng, {
               prompt: t(`Is $${tri(L1)}$ similar to $${tri(L2)}$?`, `$${tri(L1)}$ 与 $${tri(L2)}$ 相似吗？`),
-              options: yesNo,
-              correct: similar ? 0 : 1,
+              correct: similar ? proportional : th2 !== theta ? anglesDiffer : sidesDiffer,
+              wrong: [proportional, anglesDiffer, sidesDiffer, angleOnly],
               solution: t(
                 `Compare the sides next to the marked angles, shorter with shorter:${steps(ratios)}${reason.en}`,
                 `比较标出角的两边，短边比短边：${steps(ratios)}${reason["zh-CN"]}`,
@@ -3070,14 +3099,24 @@ export const theTriangleProportionalityTheorem: TopicDef = {
           `三角形 ${A}${B}${C}，${D} 在 ${A}${B} 上，${E} 在 ${A}${C} 上；${A}${D} = ${AD}，${D}${B} = ${DB}，${A}${E} = ${AE}，${E}${C} = ${ecFinal}。`,
         );
         const cmp = isParallel ? "=" : "\\ne";
+        const claimed = fr(AE, ecFinal + (isParallel ? 1 : 0));
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t(
               `Is $\\overline{${D}${E}}$ parallel to $\\overline{${B}${C}}$?`,
               `$\\overline{${D}${E}}$ 与 $\\overline{${B}${C}}$ 平行吗？`,
             ),
-            options: yesNo,
-            correct: isParallel ? 0 : 1,
+            holds: isParallel,
+            yes: t(
+              `$\\frac{${A}${D}}{${D}${B}}$ and $\\frac{${A}${E}}{${E}${C}}$ both equal $${fr(AD, DB)}$`,
+              `$\\frac{${A}${D}}{${D}${B}}$ 与 $\\frac{${A}${E}}{${E}${C}}$ 都等于 $${fr(AD, DB)}$`,
+            ),
+            no: t(
+              `$\\frac{${A}${D}}{${D}${B}} = ${fr(AD, DB)}$ but $\\frac{${A}${E}}{${E}${C}} = ${claimed}$`,
+              `$\\frac{${A}${D}}{${D}${B}} = ${fr(AD, DB)}$，而 $\\frac{${A}${E}}{${E}${C}} = ${claimed}$`,
+            ),
+            yesWrong: t(`$\\overline{${D}${E}}$ joins two sides of the triangle`, `$\\overline{${D}${E}}$ 连接了三角形的两条边`),
+            noWrong: t(`$${A}${D} \\ne ${A}${E}$`, `$${A}${D} \\ne ${A}${E}$`),
             solution: t(
               `Compare the ratios:${steps(`\\frac{${A}${D}}{${D}${B}} = \\frac{${AD}}{${DB}} = ${fr(AD, DB)}, \\quad \\frac{${A}${E}}{${E}${C}} = \\frac{${AE}}{${ecFinal}} = ${fr(AE, ecFinal)}`)}Since $${fr(AD, DB)} ${cmp} ${fr(AE, ecFinal)}$, ${isParallel ? `the sides are divided proportionally, so $\\overline{${D}${E}} \\parallel \\overline{${B}${C}}$ by the converse of the triangle proportionality theorem.` : "the sides are not divided proportionally, so the segments are not parallel."}`,
               `比较两个比：${steps(`\\frac{${A}${D}}{${D}${B}} = \\frac{${AD}}{${DB}} = ${fr(AD, DB)}, \\quad \\frac{${A}${E}}{${E}${C}} = \\frac{${AE}}{${ecFinal}} = ${fr(AE, ecFinal)}`)}因为 $${fr(AD, DB)} ${cmp} ${fr(AE, ecFinal)}$，${isParallel ? `两边被分成比例线段，由三角形比例定理的逆定理，$\\overline{${D}${E}} \\parallel \\overline{${B}${C}}$。` : "两边没有被分成比例线段，所以不平行。"}`,

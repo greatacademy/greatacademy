@@ -16,7 +16,7 @@ import {
   union,
 } from "@ga/subject-math";
 
-import { choiceProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, yesNo } from "../problems.ts";
+import { choiceProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, verdictChoice, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -438,13 +438,16 @@ export const oneToOneFunctions: TopicDef = {
           [i, j] = rng.sample([0, 1, 2, 3, 4], 2).sort() as [number, number];
           ys[j] = ys[i]!;
         }
-        return choiceProblem({
+        return verdictChoice(rng, {
           prompt: t(
             `The table shows the function $f$.${valueTable("f", xs, ys)}Is $f$ one-to-one?`,
             `下表给出了函数 $f$。${valueTable("f", xs, ys)}$f$ 是一一对应的吗？`,
           ),
-          options: yesNo,
-          correct: repeat ? 1 : 0,
+          holds: !repeat,
+          yes: t("the five outputs are all different", "五个输出各不相同"),
+          no: t(`the output $${repeat ? ys[i] : ys[0]}$ appears twice`, `输出 $${repeat ? ys[i] : ys[0]}$ 出现了两次`),
+          yesWrong: t("every input has exactly one output", "每个输入恰有一个输出"),
+          noWrong: t("the outputs do not increase from left to right", "输出没有从左到右递增"),
           solution: repeat
             ? t(
                 `The output $${ys[i]}$ appears twice: $f(${xs[i]}) = f(${xs[j]}) = ${ys[i]}$. So $f$ is not one-to-one.`,
@@ -470,10 +473,13 @@ export const oneToOneFunctions: TopicDef = {
         const { maxXs, minXs } = turning(pts);
         const turn = [...maxXs, ...minXs].sort((a, b) => a - b)[0]!;
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t(`${graphShown.en} Is $f$ one-to-one?`, `${graphShown["zh-CN"]}$f$ 是一一对应的吗？`),
-            options: yesNo,
-            correct: yes ? 0 : 1,
+            holds: yes,
+            yes: t("every horizontal line meets the graph at most once", "每条水平线与图象至多交于一点"),
+            no: t("some horizontal line meets the graph more than once", "存在与图象交于不止一点的水平线"),
+            yesWrong: t("every vertical line meets the graph at most once", "每条竖直线与图象至多交于一点"),
+            noWrong: t("some vertical line meets the graph more than once", "存在与图象交于不止一点的竖直线"),
             solution: yes
               ? t(
                   `The graph ${pts[0]![1] < pts[1]![1] ? "rises" : "falls"} all the way, so every horizontal line meets it at most once. $f$ is one-to-one.`,

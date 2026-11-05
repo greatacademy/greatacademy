@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, functionProblem, numberProblem, solutionsProblem, yesNo } from "../problems.ts";
+import { expressionProblem, functionProblem, numberProblem, reasonChoice, solutionsProblem } from "../problems.ts";
 import { bare, fac, lim, oneOf, type Poly, pAt, par, pDer, pLatex, power, range, sumLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 4: Introduction to Differentiation, module 4.9. Topic 4.9.1
@@ -13,10 +13,6 @@ const quadratic = (rng: Rng): Poly => [rng.int(-6, 6), rng.int(-5, 5), rng.nonZe
 
 /** cubic is a cubic with small coefficients. */
 const cubic = (rng: Rng): Poly => [rng.int(-6, 6), rng.int(-5, 5), rng.int(-3, 3), rng.nonZero(-2, 2)];
-
-/** yesNoProblem asks a yes-or-no question. */
-const yesNoProblem = (prompt: Text, yes: boolean, solution: Text) =>
-  choiceProblem({ prompt, options: yesNo, correct: yes ? 0 : 1, solution });
 
 /** quotientSteps works out [f(a + h) − f(a)]/h for f = sx² + bx + c, with a a number or "x". */
 function quotientSteps(p: Poly, a: number | "x"): string {
@@ -399,15 +395,25 @@ export const continuityAndDifferentiabilityOfFunctions: TopicDef = {
           ),
         };
         const figure: Figure = { svg: plane(view, marks), alt: t("The graph of y = f(x).", "y = f(x) 的图像。") };
+        const reasons: Record<Smoothness, Text> = {
+          smooth: t("Yes, because the graph has a single non-vertical tangent line there.", "是，因为图像在该处有唯一一条非竖直的切线。"),
+          corner: t("No, because the graph has a corner there.", "否，因为图像在该处有一个角点。"),
+          cusp: t("No, because the graph has a cusp there.", "否，因为图像在该处有一个尖点。"),
+          vertical: t("No, because the tangent line there is vertical.", "否，因为该处的切线是竖直的。"),
+          jump: t("No, because $f$ is not continuous there.", "否，因为 $f$ 在该处不连续。"),
+        };
+        const continuous = t("Yes, because $f$ is continuous there.", "是，因为 $f$ 在该处连续。");
+        const faults = [reasons.corner, reasons.cusp, reasons.vertical, reasons.jump];
         return {
-          ...yesNoProblem(
-            t(
+          ...reasonChoice(rng, {
+            prompt: t(
               `The graph of $y = f(x)$ is shown. Is $f$ differentiable at $x = ${a}$?`,
               `图中是 $y = f(x)$ 的图像。$f$ 在 $x = ${a}$ 处可导吗？`,
             ),
-            kind === "smooth",
-            why[kind],
-          ),
+            correct: reasons[kind],
+            wrong: [reasons.smooth, continuous, ...rng.shuffle(faults)].filter((r) => r !== reasons[kind]).slice(0, 3),
+            solution: why[kind],
+          }),
           figure,
         };
       },

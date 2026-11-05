@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { gcd, linear, type Mark, type PlaneMark, type PlaneView, plane, Q, sketch } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 import { pickTriangle, polygonMarks } from "./geometry-proof-congruence-similarity.ts";
 import { applyAll, type Move, rigidMoves, same2, sequenceName, translation } from "./geometry-transformations.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
@@ -498,17 +498,25 @@ const applyingSequencesOfRigidMotions = topic(
                 `The images $${pl(first)}$ and $${pl(second)}$ differ, so the order matters.`,
                 `像 $${pl(first)}$ 和 $${pl(second)}$ 不同，所以顺序重要。`,
               );
-          return yesNoProblem(
-            t(
+          const shownSecond: XY = equal ? [first[0] + 1, first[1]] : second;
+          return verdictChoice(rng, {
+            prompt: t(
               `The point $P${pl(p)}$ is mapped by ${m1.name.en}, followed by ${m2.name.en}. Would doing the two transformations in the opposite order send $P$ to the same point?`,
               `对点 $P${pl(p)}$ 先作${m1.name["zh-CN"]}，然后作${m2.name["zh-CN"]}。如果按相反的顺序施行这两个变换，$P$ 会被映到同一个点吗？`,
             ),
-            equal,
-            t(
+            holds: equal,
+            yes: t(`both orders end at $${pl(first)}$`, `两种顺序都停在 $${pl(first)}$`),
+            no: t(
+              `one order ends at $${pl(first)}$ and the other at $${pl(shownSecond)}$`,
+              `一种顺序停在 $${pl(first)}$，另一种停在 $${pl(shownSecond)}$`,
+            ),
+            yesWrong: t("rigid motions keep lengths and angles", "刚体运动保持长度和角度"),
+            noWrong: t("changing the order always changes the image", "改变顺序总会改变像"),
+            solution: t(
               `In the given order:\n\n${trace([m1, m2], p, "P").en}\n\nIn the opposite order:\n\n${trace([m2, m1], p, "P").en}\n\n${verdict.en}`,
               `按给出的顺序：\n\n${trace([m1, m2], p, "P")["zh-CN"]}\n\n按相反的顺序：\n\n${trace([m2, m1], p, "P")["zh-CN"]}\n\n${verdict["zh-CN"]}`,
             ),
-          );
+          });
         }
       },
     },
@@ -615,19 +623,29 @@ const congruenceThroughRigidMotions = topic(
                 `Both are right triangles with legs along the grid. The legs of $\\triangle ABC$ have lengths $AB = ${p}$ and $AC = ${q}$; the legs of $\\triangle DEF$ have lengths $DE = ${p}$ and $DF = ${q2}$. Rigid motions keep lengths, so no sequence of them maps one triangle onto the other: they are not congruent.`,
                 `两个都是直角边沿网格线的直角三角形。$\\triangle ABC$ 的直角边长 $AB = ${p}$，$AC = ${q}$；$\\triangle DEF$ 的直角边长 $DE = ${p}$，$DF = ${q2}$。刚体运动保持长度，所以没有一串刚体运动能把一个三角形映到另一个上：它们不全等。`,
               );
-          return yesNoProblem(
-            t(
-              `Triangle $ABC$ has vertices ${ca.join(", ")} and triangle $DEF$ has vertices ${cd.join(", ")}. Is there a sequence of rigid motions that maps $\\triangle ABC$ onto $\\triangle DEF$?`,
-              `三角形 $ABC$ 的顶点是 ${ca.join("，")}，三角形 $DEF$ 的顶点是 ${cd.join("，")}。是否有一串刚体运动把 $\\triangle ABC$ 映到 $\\triangle DEF$ 上？`,
-            ),
-            congruent,
-            solution,
-            graph(
+          const shownLeg = congruent ? q + 1 : q2;
+          return {
+            ...verdictChoice(rng, {
+              prompt: t(
+                `Triangle $ABC$ has vertices ${ca.join(", ")} and triangle $DEF$ has vertices ${cd.join(", ")}. Is there a sequence of rigid motions that maps $\\triangle ABC$ onto $\\triangle DEF$?`,
+                `三角形 $ABC$ 的顶点是 ${ca.join("，")}，三角形 $DEF$ 的顶点是 ${cd.join("，")}。是否有一串刚体运动把 $\\triangle ABC$ 映到 $\\triangle DEF$ 上？`,
+              ),
+              holds: congruent,
+              yes: t(`the legs of both triangles have lengths $${p}$ and $${q}$`, `两个三角形的直角边长都是 $${p}$ 和 $${q}$`),
+              no: t(
+                `the legs have lengths $${p}$ and $${q}$ in one triangle but $${p}$ and $${shownLeg}$ in the other`,
+                `一个三角形的直角边长是 $${p}$ 和 $${q}$，另一个却是 $${p}$ 和 $${shownLeg}$`,
+              ),
+              yesWrong: t("both are right triangles", "两个都是直角三角形"),
+              noWrong: t("the triangles are in different positions on the grid", "两个三角形在网格上的位置不同"),
+              solution: solution,
+            }),
+            figure: graph(
               [...polygonMarks(tri, ABC, false), ...polygonMarks(img, ["D", "E", "F"])],
               "Triangles ABC and DEF on a coordinate grid.",
               "坐标网格上的三角形 ABC 和 DEF。",
             ),
-          );
+          };
         }
       },
     },

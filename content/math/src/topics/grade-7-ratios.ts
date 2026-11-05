@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q } from "@ga/subject-math";
 
-import { article, choiceProblem, expressionProblem, mixedLatex, numberProblem, yesNo } from "../problems.ts";
+import { article, choiceProblem, expressionProblem, mixedLatex, numberProblem, reasonChoice, verdictChoice, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // 7th Grade Math: unit prices and unit rates with fractions and mixed numbers, proportional relationships in
@@ -771,13 +771,23 @@ export const understandingProportionalRelationshipsUsingTables = topic(
           if (ys.some((y) => y <= 0)) ys = ys.map((y) => y + 3);
         }
         const proportional = xs.every((x, i) => Q.of(ys[i]!, x).eq(Q.of(ys[0]!, xs[0]!)));
-        return choiceProblem({
+        const first = Q.of(ys[0]!, xs[0]!).toLatex();
+        // When the table is proportional, the option for "no" quotes a quotient that a slip would give.
+        const j = proportional ? 1 : xs.findIndex((x, i) => !Q.of(ys[i]!, x).eq(Q.of(ys[0]!, xs[0]!)));
+        const other = Q.of(ys[j]! + (proportional ? 1 : 0), xs[j]!).toLatex();
+        return verdictChoice(rng, {
           prompt: t(
             `Is the relationship between $x$ and $y$ in the table proportional? $$${xyTable(xs.map(String), ys.map(String))}$$`,
             `表格中 $x$ 与 $y$ 的关系是正比例关系吗？$$${xyTable(xs.map(String), ys.map(String))}$$`,
           ),
-          options: yesNo,
-          correct: proportional ? 0 : 1,
+          holds: proportional,
+          yes: t(`$\\frac{y}{x} = ${first}$ in every column`, `每一列的 $\\frac{y}{x}$ 都等于 $${first}$`),
+          no: t(
+            `$\\frac{y}{x}$ is $${first}$ at $x = ${xs[0]}$ but $${other}$ at $x = ${xs[j]}$`,
+            `$\\frac{y}{x}$ 在 $x = ${xs[0]}$ 处是 $${first}$，在 $x = ${xs[j]}$ 处却是 $${other}$`,
+          ),
+          yesWrong: t("$y$ increases whenever $x$ increases", "$x$ 增大时 $y$ 也增大"),
+          noWrong: t("the table does not include $x = 0$", "表格中没有 $x = 0$"),
           solution: proportional
             ? t(
                 `Divide each $y$ by its $x$: $${quotientsLatex(xs, ys)}$. All the quotients are equal, so the relationship is proportional with $k = ${Q.of(ys[0]!, xs[0]!).toLatex()}$.`,
@@ -895,6 +905,10 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
         "只有当图像是直线并且经过 $(0, 0)$ 时，才表示正比例关系。过 $(0, 2)$ 和 $(4, 6)$ 的直线是直的，但不过原点，所以不是正比例关系。",
       ),
       generate(rng) {
+        const straightThroughOrigin = t("Yes, because it is a straight line through the origin.", "是，因为它是一条过原点的直线。");
+        const missesOrigin = t("No, because it is a straight line that misses the origin.", "否，因为它是一条不过原点的直线。");
+        const notStraight = t("No, because it passes through the origin but is not a straight line.", "否，因为它经过原点，但不是直线。");
+        const rising = t("Yes, because $y$ increases as $x$ increases.", "是，因为 $x$ 增大时 $y$ 也增大。");
         const kind = rng.int(0, 3);
         if (kind === 3) {
           const c = rng.int(2, 3);
@@ -905,13 +919,13 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
           ];
           const curve: PlaneMark = { kind: "curve", f: (x) => (x * x) / c, from: 0, accent: true };
           return {
-            ...choiceProblem({
+            ...reasonChoice(rng, {
               prompt: t(
                 `The graph shown passes through the points ${pointList(shown, false)}. Does it show a proportional relationship?`,
                 `图中的图像经过点 ${pointList(shown, true)}。它表示正比例关系吗？`,
               ),
-              options: yesNo,
-              correct: 1,
+              correct: notStraight,
+              wrong: [straightThroughOrigin, missesOrigin, rising],
               solution: t(
                 `It passes through the origin, but it is not a straight line: $\\frac{${shown[1]![1]}}{${shown[1]![0]}} \\ne \\frac{${shown[2]![1]}}{${shown[2]![0]}}$. So it is not proportional.`,
                 `它经过原点，但不是直线：$\\frac{${shown[1]![1]}}{${shown[1]![0]}} \\ne \\frac{${shown[2]![1]}}{${shown[2]![0]}}$。所以不是正比例关系。`,
@@ -943,13 +957,13 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
         const proportional = b === 0;
         const line: PlaneMark = { kind: "line", a: [0, b], b: [q, p + b], accent: true };
         return {
-          ...choiceProblem({
+          ...reasonChoice(rng, {
             prompt: t(
               `The graph shown passes through the points ${pointList(shown, false)}. Does it show a proportional relationship?`,
               `图中的图像经过点 ${pointList(shown, true)}。它表示正比例关系吗？`,
             ),
-            options: yesNo,
-            correct: proportional ? 0 : 1,
+            correct: proportional ? straightThroughOrigin : missesOrigin,
+            wrong: [proportional ? missesOrigin : straightThroughOrigin, notStraight, rising],
             solution: proportional
               ? t(
                   `It is a straight line through the origin, so it is proportional: $k = \\frac{${shown[1]![1]}}{${shown[1]![0]}} = ${k.toLatex()}$.`,

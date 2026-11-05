@@ -1036,7 +1036,7 @@ const graphSolution: Record<Fn, Text> = {
 };
 
 /** identifyProblem shows the graph of f in a random window and asks which function it is. */
-function identifyProblem(rng: Rng, f: Fn, options: readonly Fn[]): Problem {
+function identifyProblem(rng: Rng, f: Fn, options: readonly Fn[], also: readonly Text[] = []): Problem {
   const w = rng.int(6, 8);
   const u0 = rng.int(-w + 1, -1);
   return {
@@ -1044,7 +1044,7 @@ function identifyProblem(rng: Rng, f: Fn, options: readonly Fn[]): Problem {
       rng,
       t("Which function is graphed?", "图中是哪个函数的图象？"),
       same(`$y = \\${f} x$`),
-      options.filter((g) => g !== f).map((g) => same(`$y = \\${g} x$`)),
+      [...options.filter((g) => g !== f).map((g) => same(`$y = \\${g} x$`)), ...also],
       graphSolution[f],
     ),
     figure: graphFigure(f, u0, w),
@@ -1175,7 +1175,8 @@ export const graphingSineAndCosine: TopicDef = {
         "两个图象都是在 $y = -1$ 与 $y = 1$ 之间、每隔 $2\\pi$ 重复的波形，$y = \\cos x$ 的图象是把 $y = \\sin x$ 的图象向左平移 $\\frac{\\pi}{2}$。在 $x = 0$ 处区分它们：$y = \\sin x$ 经过原点并且上升，$y = \\cos x$ 则在最高点 $(0, 1)$。图中是 $y = \\cos x$。",
       ),
       figure: graphFigure("cos", -4, 8),
-      generate: (rng) => identifyProblem(rng, rng.pick<Fn>(["sin", "cos"]), ["sin", "cos"]),
+      generate: (rng) =>
+        identifyProblem(rng, rng.pick<Fn>(["sin", "cos"]), ["sin", "cos"], [same("$y = -\\sin x$"), same("$y = -\\cos x$")]),
     },
     {
       id: "key-points-of-the-sine-and-cosine-graphs",

@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { type Compass, linear, type Mark, type Point, Q, sketch } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, numberProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 import { polygonName } from "./angles.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
@@ -744,13 +744,27 @@ const angleCriteriaForParallelLines = topic(
             ? t(`they are supplementary ($${a} + ${b} = 180$)`, `它们互补（$${a} + ${b} = 180$）`)
             : t(`they are not supplementary ($${a} + ${b} = ${a + b}$)`, `它们不互补（$${a} + ${b} = ${a + b}$）`);
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t(
               `A transversal crosses lines $\\ell$ and $m$, and the marked angles measure $${degTex(a)}$ and $${degTex(b)}$. Are $\\ell$ and $m$ parallel?`,
               `一条截线与直线 $\\ell$、$m$ 相交，标出的两个角分别是 $${degTex(a)}$ 和 $${degTex(b)}$。$\\ell$ 与 $m$ 平行吗？`,
             ),
-            options: yesNo,
-            correct: holds ? 0 : 1,
+            holds: holds,
+            yes: t(
+              `these ${kind.name.en} are ${kind.equal ? "equal" : "supplementary"}`,
+              `这对${kind.name["zh-CN"]}${kind.equal ? "相等" : "互补"}`,
+            ),
+            no: t(
+              `these ${kind.name.en} are not ${kind.equal ? "equal" : "supplementary"}`,
+              `这对${kind.name["zh-CN"]}不${kind.equal ? "相等" : "互补"}`,
+            ),
+            yesWrong: t("the lines look as if they would never meet", "这两条直线看上去永远不会相交"),
+            noWrong: kind.equal
+              ? t(
+                  `$${degTex(a)}$ and $${degTex(b)}$ do not add up to $180^\\circ$`,
+                  `$${degTex(a)}$ 与 $${degTex(b)}$ 的和不是 $180^\\circ$`,
+                )
+              : t(`$${degTex(a)}$ and $${degTex(b)}$ are not equal`, `$${degTex(a)}$ 与 $${degTex(b)}$ 不相等`),
             solution: t(
               `The marked angles are ${kind.name.en}, and ${test.en}. ${holds ? "So the lines are parallel." : `So the lines are not parallel: parallel lines would make them ${kind.equal ? "equal" : "supplementary"}.`}`,
               `标出的两个角是${kind.name["zh-CN"]}，${test["zh-CN"]}。${holds ? "所以两直线平行。" : `所以两直线不平行：若两直线平行，它们应当${kind.equal ? "相等" : "互补"}。`}`,

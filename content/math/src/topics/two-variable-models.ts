@@ -10,6 +10,7 @@ import {
   numberProblem,
   pointLatex,
   pointProblem,
+  reasonChoice,
   steps,
   yesNo,
 } from "../problems.ts";
@@ -2027,13 +2028,17 @@ export const systemsOfLinearInequalities: TopicDef = {
         const [ok1, ok2] = [satisfies(q1, x, y), satisfies(q2, x, y)];
         const [c1, c2] = [checkPoint(q1, x, y), checkPoint(q2, x, y)];
         const ok = ok1 && ok2;
-        return choiceProblem({
+        const both = t("Yes, because it satisfies both inequalities.", "是，因为它满足两个不等式。");
+        const failsFirst = t("No, because it fails only the first inequality.", "否，因为它只不满足第一个不等式。");
+        const failsSecond = t("No, because it fails only the second inequality.", "否，因为它只不满足第二个不等式。");
+        const failsBoth = t("No, because it fails both inequalities.", "否，因为它两个不等式都不满足。");
+        return reasonChoice(rng, {
           prompt: t(
             `Is $${pointLatex([x, y])}$ a solution of the system $$${systemLatex([ineqLatex(q1), ineqLatex(q2)])}$$`,
             `$${pointLatex([x, y])}$ 是不等式组 $$${systemLatex([ineqLatex(q1), ineqLatex(q2)])}$$ 的解吗？`,
           ),
-          options: yesNo,
-          correct: ok ? 0 : 1,
+          correct: ok ? both : ok1 ? failsSecond : ok2 ? failsFirst : failsBoth,
+          wrong: [both, failsFirst, failsSecond, failsBoth],
           solution: t(
             `First inequality: ${c1.en} Second inequality: ${c2.en} ${ok ? "Both hold, so the point is a solution." : "The point fails at least one inequality, so it is not a solution."}`,
             `第一个不等式：${c1["zh-CN"]}第二个不等式：${c2["zh-CN"]}${ok ? "两个都成立，所以是解。" : "至少一个不成立，所以不是解。"}`,

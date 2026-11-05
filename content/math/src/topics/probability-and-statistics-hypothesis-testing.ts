@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
-import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, reasonChoice } from "../problems.ts";
 
 /** PHI holds the standard normal cumulative probabilities the problems quote. */
 const PHI = new Map<number, string>([
@@ -1491,13 +1491,29 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
           const [s1, s2, n1, n2] = swap ? [small, big, nb, na] : [big, small, na, nb];
           const F = Q.of(big, small);
           const reject = F.cmp(Q.parse(crit)) >= 0;
-          return choiceProblem({
+          const value = F.toNumber().toFixed(3);
+          const rejects = t(
+            `Reject $H_0$, because $F \\approx ${value}$ is at least $${crit}$`,
+            `拒绝 $H_0$，因为 $F \\approx ${value}$ 不小于 $${crit}$`,
+          );
+          const keeps = t(
+            `Do not reject $H_0$, because $F \\approx ${value}$ is less than $${crit}$`,
+            `不拒绝 $H_0$，因为 $F \\approx ${value}$ 小于 $${crit}$`,
+          );
+          return reasonChoice(rng, {
             prompt: t(
               `Sample 1 has $n_1 = ${n1}$ and $s_1^{2} = ${s1}$; sample 2 has $n_2 = ${n2}$ and $s_2^{2} = ${s2}$. Test $H_0: \\sigma_1^{2} = \\sigma_2^{2}$ against $H_1: \\sigma_1^{2} \\neq \\sigma_2^{2}$ at $\\alpha = 0.05$. With the larger variance in the numerator, the critical value is $F_{0.025}(${na - 1}, ${nb - 1}) = ${crit}$. What is the conclusion?`,
               `样本 1：$n_1 = ${n1}$，$s_1^{2} = ${s1}$；样本 2：$n_2 = ${n2}$，$s_2^{2} = ${s2}$。在 $\\alpha = 0.05$ 下检验 $H_0: \\sigma_1^{2} = \\sigma_2^{2}$ 对 $H_1: \\sigma_1^{2} \\neq \\sigma_2^{2}$。把较大方差放在分子上，临界值为 $F_{0.025}(${na - 1}, ${nb - 1}) = ${crit}$。结论是什么？`,
             ),
-            options: [t("Reject $H_0$", "拒绝 $H_0$"), t("Do not reject $H_0$", "不拒绝 $H_0$")],
-            correct: reject ? 0 : 1,
+            correct: reject ? rejects : keeps,
+            wrong: [
+              reject ? keeps : rejects,
+              t("Reject $H_0$, because the two sample variances are different numbers", "拒绝 $H_0$，因为两个样本方差的数值不同"),
+              t(
+                `Do not reject $H_0$, because $F = \\frac{${small}}{${big}} \\approx ${Q.of(small, big).toNumber().toFixed(3)}$ is less than $${crit}$`,
+                `不拒绝 $H_0$，因为 $F = \\frac{${small}}{${big}} \\approx ${Q.of(small, big).toNumber().toFixed(3)}$ 小于 $${crit}$`,
+              ),
+            ],
             solution: t(
               `$F = \\frac{${big}}{${small}} \\approx ${F.toNumber().toFixed(3)}$, which is ${reject ? "at least" : "less than"} $${crit}$, so ${reject ? "reject" : "do not reject"} $H_0$.`,
               `$F = \\frac{${big}}{${small}} \\approx ${F.toNumber().toFixed(3)}$，${reject ? "不小于" : "小于"} $${crit}$，所以${reject ? "拒绝" : "不拒绝"} $H_0$。`,

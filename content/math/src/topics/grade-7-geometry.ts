@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { t } from "@ga/content";
 import { type Compass, dec, linear, type Mark, type Point, Q, sketch } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointLatex, steps, unitLatex, yesNo } from "../problems.ts";
+import { choiceProblem, numberProblem, pointLatex, steps, unitLatex, verdictChoice, yesNo } from "../problems.ts";
 import { rectangle, scaleneTriangle, sides } from "./area.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
@@ -633,11 +633,15 @@ export const collinearPoints = topic(
         const list = `$${trio[0]}$, $${trio[1]}$ and $${trio[2]}$`;
         const listZh = `$${trio[0]}$、$${trio[1]}$、$${trio[2]}$`;
         const outsider = pick.find((q) => q.line > 1);
+        const suspect = outsider?.name ?? trio[2]!;
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t(`Are points ${list} collinear?`, `点 ${listZh} 共线吗？`),
-            options: yesNo,
-            correct: kind === 0 ? 0 : 1,
+            holds: kind === 0,
+            yes: t("all three lie on one straight line", "三个点都在同一条直线上"),
+            no: t(`$${suspect}$ is not on the line through the other two`, `$${suspect}$ 不在经过另外两点的直线上`),
+            yesWrong: t("any three points can be joined by straight segments", "任意三个点都可以用线段连起来"),
+            noWrong: t("the three points are not evenly spaced", "这三个点的间距不相等"),
             solution:
               kind === 0
                 ? t(`All three lie on the same line, so they are collinear.`, `三个点都在同一条直线上，所以它们共线。`)

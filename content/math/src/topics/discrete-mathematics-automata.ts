@@ -1,7 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem, numberProblem, yesNo } from "../problems.ts";
+import { choiceProblem, numberProblem, verdictChoice, yesNo } from "../problems.ts";
 import { range } from "./methods-of-proof-common.ts";
 
 // Discrete Mathematics unit 8: finite-state machines, Turing machines and algorithmic complexity.
@@ -275,13 +275,24 @@ export const deterministicFiniteAutomata: TopicDef = {
         const w = randomWord(rng, rng.int(4, 7));
         const s = trace(m, w);
         const last = s[s.length - 1]!;
-        return choiceProblem({
+        const accepted = m.accept[last]!;
+        const states = range(0, m.k - 1);
+        return verdictChoice(rng, {
           prompt: t(
             `A DFA has transition table $${dfaTable(m)}$ ${DFA_NOTE.en} Does it accept $${w}$?`,
             `一个 DFA 的转移表为 $${dfaTable(m)}$${DFA_NOTE["zh-CN"]}它接受 $${w}$ 吗？`,
           ),
-          options: yesNo,
-          correct: m.accept[last] ? 0 : 1,
+          holds: accepted,
+          yes: t(
+            `the run ends in the accepting state $${qx(accepted ? last : states.find((q) => m.accept[q])!)}$`,
+            `运行停在接受状态 $${qx(accepted ? last : states.find((q) => m.accept[q])!)}$`,
+          ),
+          no: t(
+            `the run ends in $${qx(accepted ? states.find((q) => !m.accept[q])! : last)}$, which is not accepting`,
+            `运行停在 $${qx(accepted ? states.find((q) => !m.accept[q])! : last)}$，它不是接受状态`,
+          ),
+          yesWrong: t("the run passes through an accepting state along the way", "运行途中经过了接受状态"),
+          noWrong: t(`the run does not end in the start state $${qx(0)}$`, `运行没有停在初始状态 $${qx(0)}$`),
           solution: t(
             `The run is $${traceTex(s)}$, ending in $${qx(last)}$, which is ${m.accept[last] ? "" : "not "}accepting.`,
             `运行过程为 $${traceTex(s)}$，停在 $${qx(last)}$，它${m.accept[last] ? "是" : "不是"}接受状态。`,
@@ -494,13 +505,21 @@ export const nondeterministicFiniteAutomata: TopicDef = {
         const sets = nfaSets(m, w);
         const last = sets[sets.length - 1]!;
         const yes = last.some((q) => m.accept[q]);
-        return choiceProblem({
+        const claimed = last.find((q) => m.accept[q]) ?? range(0, m.k - 1).find((q) => m.accept[q])!;
+        const claimedSet = last.filter((q) => !m.accept[q]);
+        return verdictChoice(rng, {
           prompt: t(
             `An NFA has transition table $${nfaTable(m)}$ ${DFA_NOTE.en} Does it accept $${w}$?`,
             `一个 NFA 的转移表为 $${nfaTable(m)}$${DFA_NOTE["zh-CN"]}它接受 $${w}$ 吗？`,
           ),
-          options: yesNo,
-          correct: yes ? 0 : 1,
+          holds: yes,
+          yes: t(`the final set of states contains the accepting state $${qx(claimed)}$`, `最终的状态集含有接受状态 $${qx(claimed)}$`),
+          no: t(
+            `the final set of states is $${stateSetTex(claimedSet)}$, with no accepting state`,
+            `最终的状态集是 $${stateSetTex(claimedSet)}$，不含接受状态`,
+          ),
+          yesWrong: t("some branch passes through an accepting state along the way", "某个分支途中经过了接受状态"),
+          noWrong: t("some branch dies or ends in a state that is not accepting", "某个分支中途消失或停在非接受状态"),
           solution: t(
             `The sets of possible states are $${sets.map(stateSetTex).join(" \\to ")}$. The final set ${yes ? "contains" : "does not contain"} an accepting state.`,
             `可能状态的集合依次为 $${sets.map(stateSetTex).join(" \\to ")}$。最终的集合${yes ? "含有" : "不含"}接受状态。`,

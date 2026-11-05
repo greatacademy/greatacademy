@@ -1,8 +1,8 @@
-import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, linear, type PlaneMark, Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem, steps, verdictChoice } from "../problems.ts";
 import { lineMark, near, type Pair, type Pt, pearson, plainLine, scatterFigure, shuffledChoice, xsOf } from "./bivariate-statistics.ts";
 import { jointTable, m, mdTable, sum, twoWays } from "./grade-7-statistics.ts";
 
@@ -23,10 +23,6 @@ function topic(
 ): TopicDef {
   return { id, title, summary, prerequisites, encompasses: [], xp: 10, standards: ccss(...standards), knowledgePoints };
 }
-
-/** yesNoProblem asks a yes-or-no question, with Yes always first. */
-const yesNoProblem = (prompt: Text, yes: boolean, solution: Text): Problem =>
-  choiceProblem({ prompt, options: yesNo, correct: yes ? 0 : 1, solution });
 
 /** cap capitalizes the first letter of an English phrase. */
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -451,7 +447,12 @@ export const assessingTheFitOfATrendLine = topic(
           return {
             ...choiceProblem({
               prompt: t("Which line fits the data better?", "哪条直线对数据拟合得更好？"),
-              options: [t("The solid line", "实线"), t("The dashed line", "虚线")],
+              options: [
+                t("The solid line", "实线"),
+                t("The dashed line", "虚线"),
+                t("They fit equally well, since each has points on both sides", "拟合得一样好，因为每条直线两侧都有点"),
+                t("It cannot be told, since neither passes through every point", "无法判断，因为没有一条直线经过所有的点"),
+              ],
               correct: solidGood ? 0 : 1,
               solution: t(
                 `Add up the vertical distances from the points to each line: about $${one(solid)}$ for the solid line and about $${one(dashed)}$ for the dashed line. The ${better.en} line passes closer to the points, with points on both sides of it, so it fits better. ${why.en}`,
@@ -905,10 +906,21 @@ export const identifyingAssociationInTwoWayTables = topic(
         const yes = rng.int(0, 1) === 0;
         const s = survey(rng, yes ? 20 : 0);
         const work = rowPercents(st, s);
-        return yesNoProblem(
-          surveyPrompt(st, s, t(`Is there an association between ${st.vars[0]}?`, `${st.vars[1]}之间有关联吗？`)),
-          yes,
-          yes
+        // Each right-test option quotes percents, and only the one that goes with the answer quotes the true ones.
+        const [p0, p1] = s.pcts;
+        const shown = yes ? [p0, p1] : [p0, p0 > 50 ? p0 - 30 : p0 + 30];
+        const about = yes ? Math.round((p0 + p1) / 2) : p0;
+        return verdictChoice(rng, {
+          prompt: surveyPrompt(st, s, t(`Is there an association between ${st.vars[0]}?`, `${st.vars[1]}之间有关联吗？`)),
+          holds: yes,
+          yes: t(
+            `$${shown[0]}\\%$ of ${st.groups[0][0]} and $${shown[1]}\\%$ of ${st.groups[1][0]} ${st.act[0]}`,
+            `${st.groups[0][1]}中有 $${shown[0]}\\%$、${st.groups[1][1]}中有 $${shown[1]}\\%$ ${st.act[1]}`,
+          ),
+          no: t(`about $${about}\\%$ of each group ${st.act[0]}`, `两组中都约有 $${about}\\%$ ${st.act[1]}`),
+          yesWrong: t("the counts in the first column differ", "第一列中的频数不同"),
+          noWrong: t("the two groups have different sizes", "两组的人数不同"),
+          solution: yes
             ? t(
                 `${work.en}The percents differ by $${Math.abs(s.pcts[0] - s.pcts[1])}$ points, so whether people ${st.act[0]} depends on their group: there is an association.`,
                 `${work["zh-CN"]}两个百分比相差 $${Math.abs(s.pcts[0] - s.pcts[1])}$ 个百分点，是否${st.act[1]}与所在的组有关：有关联。`,
@@ -917,7 +929,7 @@ export const identifyingAssociationInTwoWayTables = topic(
                 `${work.en}The percents are about the same, so whether people ${st.act[0]} does not depend on their group: there is no association. The counts in the table differ only because the groups have different sizes.`,
                 `${work["zh-CN"]}两个百分比大致相同，是否${st.act[1]}与所在的组无关：没有关联。表中的频数不同，只是因为两组的人数不同。`,
               ),
-        );
+        });
       },
     },
     {
@@ -968,7 +980,12 @@ export const identifyingAssociationInTwoWayTables = topic(
           const work = rowPercents(st, s);
           return choiceProblem({
             prompt: surveyPrompt(st, s, t(`Which group is more likely to ${st.act[0]}?`, `哪一组更可能${st.act[1]}？`)),
-            options: [t(cap(st.groups[0][0]), st.groups[0][1]), t(cap(st.groups[1][0]), st.groups[1][1])],
+            options: [
+              t(cap(st.groups[0][0]), st.groups[0][1]),
+              t(cap(st.groups[1][0]), st.groups[1][1]),
+              t(`The two groups are equally likely to ${st.act[0]}`, `两组${st.act[1]}的可能性相同`),
+              t("It cannot be determined, because the groups have different sizes", "无法判断，因为两组的人数不同"),
+            ],
             correct: higher,
             solution: misleading
               ? t(

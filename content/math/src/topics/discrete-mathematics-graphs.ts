@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { article, choiceProblem, numberProblem, yesNo } from "../problems.ts";
+import { article, choiceProblem, numberProblem, verdictChoice, yesNo } from "../problems.ts";
 import {
   allPairs,
   bfs,
@@ -694,10 +694,13 @@ export const completeAndBipartiteGraphs: TopicDef = {
         }
         const yes = isBipartite(g);
         return withFigure(
-          choiceProblem({
+          verdictChoice(rng, {
             prompt: t(`${graphIntro(g).en} Is $G$ bipartite?`, `${graphIntro(g)["zh-CN"]}$G$ 是二部图吗？`),
-            options: yesNo,
-            correct: yes ? 0 : 1,
+            holds: yes,
+            yes: t("two colors can alternate along every edge", "沿每条边都能交替涂两种颜色"),
+            no: t("it contains a cycle of odd length", "它含有长度为奇数的圈"),
+            yesWrong: t("every vertex has at least one neighbor", "每个顶点都至少有一个邻点"),
+            noWrong: t("it contains a cycle", "它含有圈"),
             solution: yes
               ? t(
                   "Alternating two colors along edges never puts the same color on both ends of an edge, so $G$ is bipartite.",

@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q, svgDocument } from "@ga/subject-math";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, verdictChoice } from "../problems.ts";
 import {
   cayleyTex,
   cyclicGroup,
@@ -1752,19 +1752,30 @@ export const abelianGroups: TopicDef = {
         const order = shuffled(rng, g);
         const pair = order.flatMap((a) => order.filter((b) => g.op(a, b) !== g.op(b, a)).map((b) => [a, b] as const))[0];
         const L = g.labels;
-        return factProblem({
+        // For an abelian group the option for "no" claims a product that the table does not have.
+        const [a, b] = pair ?? [order[1]!, order[2]!];
+        const claimed = pair ? g.op(b, a) : order.find((x) => x !== g.op(b, a))!;
+        const reason: Text =
+          pair === undefined
+            ? t("The table is symmetric about its main diagonal.", "表格关于主对角线对称。")
+            : t(
+                `$${L[pair[0]]} \\ast ${L[pair[1]]} = ${L[g.op(pair[0], pair[1])]}$ but $${L[pair[1]]} \\ast ${L[pair[0]]} = ${L[g.op(pair[1], pair[0])]}$.`,
+                `$${L[pair[0]]} \\ast ${L[pair[1]]} = ${L[g.op(pair[0], pair[1])]}$，而 $${L[pair[1]]} \\ast ${L[pair[0]]} = ${L[g.op(pair[1], pair[0])]}$。`,
+              );
+        return verdictChoice(rng, {
           prompt: t(
             `Is the group with Cayley table $${cayleyTex(g, order)}$ abelian?`,
             `凯莱表为 $${cayleyTex(g, order)}$ 的群是阿贝尔群吗？`,
           ),
           holds: g.abelian,
-          reason:
-            pair === undefined
-              ? t("The table is symmetric about its main diagonal.", "表格关于主对角线对称。")
-              : t(
-                  `$${L[pair[0]]} \\ast ${L[pair[1]]} = ${L[g.op(pair[0], pair[1])]}$ but $${L[pair[1]]} \\ast ${L[pair[0]]} = ${L[g.op(pair[1], pair[0])]}$.`,
-                  `$${L[pair[0]]} \\ast ${L[pair[1]]} = ${L[g.op(pair[0], pair[1])]}$，而 $${L[pair[1]]} \\ast ${L[pair[0]]} = ${L[g.op(pair[1], pair[0])]}$。`,
-                ),
+          yes: t("the table is symmetric about its main diagonal", "表格关于主对角线对称"),
+          no: t(
+            `$${L[a]} \\ast ${L[b]} = ${L[g.op(a, b)]}$ but $${L[b]} \\ast ${L[a]} = ${L[claimed]}$`,
+            `$${L[a]} \\ast ${L[b]} = ${L[g.op(a, b)]}$，而 $${L[b]} \\ast ${L[a]} = ${L[claimed]}$`,
+          ),
+          yesWrong: t("every row contains every element exactly once", "每一行都恰好含每个元素一次"),
+          noWrong: t("the table is not symmetric about its other diagonal", "表格关于另一条对角线不对称"),
+          solution: t(`${g.abelian ? "Yes" : "No"}. ${reason.en}`, `${g.abelian ? "是" : "否"}。${reason["zh-CN"]}`),
         });
       },
     },

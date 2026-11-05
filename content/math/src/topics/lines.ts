@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1416,13 +1416,17 @@ export const systemsOfLinearEquations: TopicDef = {
         const check = (e: Lin) =>
           `${num(e[0])} \\cdot ${paren(p[0])} ${e[1] < 0 ? "-" : "+"} ${Math.abs(e[1])} \\cdot ${paren(p[1])} = ${value(e)}`;
         const ok2 = value(e2) === e2[2];
-        return choiceProblem({
+        const shown = yes ? e2[2] + 1 : value(e2);
+        return verdictChoice(rng, {
           prompt: t(
             `Is $${pointLatex(p)}$ a solution of the system $$${system(eqOf(e1), eqOf(e2))}$$`,
             `$${pointLatex(p)}$ 是方程组 $$${system(eqOf(e1), eqOf(e2))}$$ 的解吗？`,
           ),
-          options: yesNo,
-          correct: yes ? 0 : 1,
+          holds: yes,
+          yes: t("it makes both equations true", "它使两个方程都成立"),
+          no: t(`the second equation gives $${shown}$, not $${e2[2]}$`, `第二个方程得到 $${shown}$，而不是 $${e2[2]}$`),
+          yesWrong: t("it makes the first equation true", "它使第一个方程成立"),
+          noWrong: t(`the first equation gives $${e1[2] + 1}$, not $${e1[2]}$`, `第一个方程得到 $${e1[2] + 1}$，而不是 $${e1[2]}$`),
           solution: t(
             `Substitute into each equation: ${steps(check(e1), check(e2))}${ok2 ? "Both equations hold, so it is a solution." : `The second equation needs $${e2[2]}$, so the pair is not a solution.`}`,
             `代入每个方程：${steps(check(e1), check(e2))}${ok2 ? "两个方程都成立，所以是解。" : `第二个方程右边是 $${e2[2]}$，不成立，所以不是解。`}`,

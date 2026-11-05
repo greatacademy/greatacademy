@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, sketch } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, numberProblem, reasonChoice, steps, verdictChoice, yesNo } from "../problems.ts";
 
 // Geometry, module 1.3: congruence. The ASA, AAS, SAS, SSS and HL criteria,
 // choosing among them, rigid motions, the properties of congruence, and
@@ -855,8 +855,24 @@ export const theSasCongruenceCriterion: TopicDef = {
         const parts = kind === 0 ? [S(i), A(k), S(j)] : kind === 1 ? [S(i), A(i), S(j)] : [S(i), A(k, i), S(j)];
         const yes = kind === 0;
         const [en, zh] = pairAlt(n1, n2);
+        const included = t(
+          "Yes, because the marked angle is between the two marked sides in both triangles.",
+          "能，因为在两个三角形中，标出的角都是两条标出的边的夹角。",
+        );
+        const neither = t(
+          "No, because the marked angle is not between the two marked sides, so this is SSA.",
+          "不能，因为标出的角不是两条标出的边的夹角，这是 SSA。",
+        );
+        const oneOnly = t(
+          "No, because the marked angle is between the two marked sides in only one triangle.",
+          "不能，因为标出的角只在一个三角形中是两条标出的边的夹角。",
+        );
+        const anyAngle = t(
+          "Yes, because two sides and an angle match, whichever angle it is.",
+          "能，因为两条边和一个角相等，不管是哪个角。",
+        );
         return {
-          ...choiceProblem({
+          ...reasonChoice(rng, {
             prompt: cat(
               t("In the figure, ", "图中，"),
               andList(parts.map((p) => factText(p, n1, n2, null))),
@@ -865,8 +881,8 @@ export const theSasCongruenceCriterion: TopicDef = {
                 `。这些条件能由 SAS 证明 $${triName(n1)} \\cong ${triName(n2)}$ 吗？`,
               ),
             ),
-            options: yesNo,
-            correct: yes ? 0 : 1,
+            correct: [included, neither, oneOnly][kind]!,
+            wrong: [included, neither, oneOnly, anyAngle],
             solution: yes
               ? t(
                   `Yes. $${ang(n1, k)}$ is between $${seg(n1, i)}$ and $${seg(n1, j)}$, and $${ang(n2, k)}$ is between the corresponding sides of $${triName(n2)}$.`,
@@ -1005,14 +1021,21 @@ export const theSssCongruenceCriterion: TopicDef = {
         const look2: Look = { sides: shown.map(String) };
         const [en, zh] = pairAlt(n1, n2);
         const sorted = (s: readonly number[]) => [...s].sort((a, b) => a - b).join(", ");
+        const claimed = yes ? sides.map((s, i) => (i === 2 ? s + 1 : s)) : shown;
         return {
-          ...choiceProblem({
+          ...verdictChoice(rng, {
             prompt: t(
               `Are $${triName(n1)}$ and $${triName(n2)}$ congruent by SSS?`,
               `$${triName(n1)}$ 与 $${triName(n2)}$ 能由 SSS 判定全等吗？`,
             ),
-            options: yesNo,
-            correct: yes ? 0 : 1,
+            holds: yes,
+            yes: t(`sorted, the sides are $${sorted(sides)}$ in both triangles`, `按大小排列，两个三角形的边长都是 $${sorted(sides)}$`),
+            no: t(
+              `sorted, the sides are $${sorted(sides)}$ in one triangle and $${sorted(claimed)}$ in the other`,
+              `按大小排列，一个三角形的边长是 $${sorted(sides)}$，另一个是 $${sorted(claimed)}$`,
+            ),
+            yesWrong: t("at least two pairs of sides match", "至少有两组边相等"),
+            noWrong: t("the sides are listed in a different order", "边的排列顺序不同"),
             solution: yes
               ? t(
                   `Sorted, the sides are $${sorted(sides)}$ in both triangles, so the three sides match in pairs and the triangles are congruent by SSS.`,

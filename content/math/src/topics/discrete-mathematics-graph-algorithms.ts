@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem, numberProblem, yesNo } from "../problems.ts";
+import { numberProblem, verdictChoice } from "../problems.ts";
 import {
   adjacencyMatrix,
   allArcs,
@@ -445,10 +445,13 @@ export const directedAcyclicGraphs: TopicDef = {
         const g = rng.bool() ? randomDag(rng, n, m) : randomCyclic(rng, n, m - 2);
         const yes = isAcyclic(g);
         return fig(
-          choiceProblem({
+          verdictChoice(rng, {
             prompt: t(`${digraphIntro(g).en} Is $G$ acyclic?`, `${digraphIntro(g)["zh-CN"]}$G$ 是无环的吗？`),
-            options: yesNo,
-            correct: yes ? 0 : 1,
+            holds: yes,
+            yes: t("deleting sources one at a time removes every vertex", "逐个删去源可以删去所有顶点"),
+            no: t("deleting sources gets stuck with vertices left over", "逐个删去源会卡住，还剩下顶点"),
+            yesWrong: t("it has a vertex with no incoming arcs", "它有一个没有入弧的顶点"),
+            noWrong: t("it has a cycle if the arrows are ignored", "不看箭头方向时它含有圈"),
             solution: yes
               ? t(
                   `Deleting sources one at a time removes every vertex, in the order $${kahn(g).map(vx).join(", ")}$, so $G$ is acyclic.`,
@@ -555,14 +558,18 @@ export const topologicalOrdering: TopicDef = {
         }
         const pos = new Map(order.map((v, i) => [v, i] as const));
         const bad = g.edges.filter(([a, b]) => pos.get(a)! > pos.get(b)!);
+        const arc = bad[0] ?? g.edges[0]!;
         return fig(
-          choiceProblem({
+          verdictChoice(rng, {
             prompt: t(
               `${digraphIntro(g).en} Is $${order.map(vx).join(", ")}$ a topological ordering of $G$?`,
               `${digraphIntro(g)["zh-CN"]}$${order.map(vx).join(", ")}$ 是 $G$ 的拓扑排序吗？`,
             ),
-            options: yesNo,
-            correct: bad.length === 0 ? 0 : 1,
+            holds: bad.length === 0,
+            yes: t("every arc goes from an earlier vertex to a later one", "每条弧都从前面的顶点指向后面的顶点"),
+            no: t(`the arc $(${vx(arc[0])}, ${vx(arc[1])})$ points backward`, `弧 $(${vx(arc[0])}, ${vx(arc[1])})$ 指向前面`),
+            yesWrong: t("the ordering starts with a vertex with no incoming arcs", "这个顺序以一个没有入弧的顶点开头"),
+            noWrong: t("a DAG has only one topological ordering, and this is not it", "有向无环图只有一种拓扑排序，而这不是那一种"),
             solution:
               bad.length === 0
                 ? t("Every arc goes from an earlier vertex to a later one, so it is.", "每条弧都从前面的顶点指向后面的顶点，所以是。")

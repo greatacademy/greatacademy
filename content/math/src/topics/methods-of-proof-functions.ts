@@ -1629,7 +1629,7 @@ export const theCardinalityOfThePowerSetOfNaturalNumbers: TopicDef = {
       ),
       generate(rng) {
         const k = rng.int(2, 5);
-        const m = rng.int(1, 9);
+        const m = rng.int(1, 6);
         const r = m % k;
         const kind = rng.int(0, 4);
         const [en, zh, test] = (
@@ -1654,7 +1654,13 @@ export const theCardinalityOfThePowerSetOfNaturalNumbers: TopicDef = {
             `在 $\\{1, 2, 3, \\dots\\}$ 的子集与二进制序列的对应下，${zh}对应序列的前八位是什么？`,
           ),
           opt(right),
-          [opt(bits((n) => !test(n))), opt(bits((n) => test(n + 1))), opt(bits((n) => test(n - 1)))],
+          [
+            bits((n) => !test(n)),
+            bits((n) => test(n + 1)),
+            bits((n) => test(n - 1)),
+            bits((n) => test(n) !== (n === 1)),
+            bits((n) => test(n) !== (n === 8)),
+          ].map(opt),
           t(
             `Digit $n$ is $1$ exactly when $n$ is in the set: $${right}\\dots$.`,
             `当且仅当 $n$ 在集合中时第 $n$ 位为 $1$：$${right}\\dots$。`,

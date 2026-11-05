@@ -1,6 +1,6 @@
-import type { Rng, TopicDef } from "@ga/content";
+import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, linear, poly, Q } from "@ga/subject-math";
+import { dec, linear, plane, poly, Q } from "@ga/subject-math";
 
 import { numberProblem, pointProblem } from "../problems.ts";
 
@@ -726,6 +726,42 @@ export const exploringFunctionsUsingTechnology: TopicDef = {
   ],
 };
 
+/** tracedCurve samples a curve given by its parameter from 0 to 2π. */
+const tracedCurve = (at: (u: number) => readonly [number, number]) => Array.from({ length: 241 }, (_, i) => at((i * Math.PI) / 120));
+
+/** parametricModeFigure draws x = 4 cos t, y = 3 sin 2t with its velocity arrow at t = π/6. */
+const parametricModeFigure: Figure = (() => {
+  const start: readonly [number, number] = [2 * Math.sqrt(3), (3 * Math.sqrt(3)) / 2];
+  return {
+    svg: plane({ xMin: -6, xMax: 6, yMin: -5, yMax: 5 }, [
+      { kind: "path", points: tracedCurve((u) => [4 * Math.cos(u), 3 * Math.sin(2 * u)]), accent: true },
+      { kind: "arrow", from: start, to: [start[0] - 1, start[1] + 1.5] },
+      { kind: "point", at: start, accent: true },
+    ]),
+    alt: t(
+      "A figure-eight curve x = 4 cos t, y = 3 sin 2t, with an arrow showing the velocity at t = π/6, pointing up and to the left.",
+      "8 字形曲线 x = 4 cos t，y = 3 sin 2t，箭头表示 t = π/6 时的速度，指向左上方。",
+    ),
+  };
+})();
+
+/** polarModeFigure draws the cardioid r = 2 + 2 cos θ with its radius at θ = π/2. */
+const polarModeFigure: Figure = {
+  svg: plane({ xMin: -3, xMax: 6, yMin: -4, yMax: 4 }, [
+    {
+      kind: "path",
+      points: tracedCurve((u) => [(2 + 2 * Math.cos(u)) * Math.cos(u), (2 + 2 * Math.cos(u)) * Math.sin(u)]),
+      accent: true,
+    },
+    { kind: "segment", a: [0, 0], b: [0, 2], dashed: true },
+    { kind: "point", at: [0, 2], accent: true },
+  ]),
+  alt: t(
+    "The cardioid r = 2 + 2 cos θ, with a dashed radius from the origin to the point (0, 2) at θ = π/2.",
+    "心形线 r = 2 + 2 cos θ，一条虚线极径从原点连到 θ = π/2 处的点 (0, 2)。",
+  ),
+};
+
 /** plottingParametricAndPolarCurvesUsingTechnology practices using parametric and polar calculator modes with numerical derivatives and integrals. */
 export const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
   id: "plotting-parametric-and-polar-curves-using-technology",
@@ -746,9 +782,10 @@ export const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
       id: "parametric-mode-tracing-and-direction",
       title: t("Tracing Parametric Curves and Speed in Parametric Mode", "参数模式下的曲线追踪与速率计算"),
       explanation: t(
-        "In Parametric (`PAR`) mode, a graphing calculator plots $(x(t), y(t))$ as $t$ increases from $T_{\\min}$ to $T_{\\max}$ in steps of $T_{\\text{step}}$. Combining numerical derivatives `nDeriv` of $x(t)$ and $y(t)$ lets you compute the slope $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$ and the speed $\\sqrt{(x'(t))^2 + (y'(t))^2}$.",
-        "在参数（`PAR`）模式下，图形计算器令 $t$ 从 $T_{\\min}$ 以步长 $T_{\\text{step}}$ 递增到 $T_{\\max}$，依次绘制点 $(x(t), y(t))$。结合 $x(t)$ 与 $y(t)$ 的数值导数 `nDeriv`，可以求出切线斜率 $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$ 以及速率 $\\sqrt{(x'(t))^2 + (y'(t))^2}$。",
+        "In Parametric (`PAR`) mode, a graphing calculator plots $(x(t), y(t))$ as $t$ increases from $T_{\\min}$ to $T_{\\max}$ in steps of $T_{\\text{step}}$. Combining numerical derivatives `nDeriv` of $x(t)$ and $y(t)$ lets you compute the slope $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$ and the speed $\\sqrt{(x'(t))^2 + (y'(t))^2}$.\n\nThe figure shows $x = 4\\cos t$, $y = 3\\sin 2t$ for $0 \\le t \\le 2\\pi$, with the velocity arrow at $t = \\frac{\\pi}{6}$: there $x' = -2$ and $y' = 3$, so the slope is $-\\frac{3}{2}$ and the speed is $\\sqrt{13}$.",
+        "在参数（`PAR`）模式下，图形计算器令 $t$ 从 $T_{\\min}$ 以步长 $T_{\\text{step}}$ 递增到 $T_{\\max}$，依次绘制点 $(x(t), y(t))$。结合 $x(t)$ 与 $y(t)$ 的数值导数 `nDeriv`，可以求出切线斜率 $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$ 以及速率 $\\sqrt{(x'(t))^2 + (y'(t))^2}$。\n\n图中是 $x = 4\\cos t$，$y = 3\\sin 2t$（$0 \\le t \\le 2\\pi$），箭头表示 $t = \\frac{\\pi}{6}$ 时的速度：此时 $x' = -2$，$y' = 3$，所以斜率为 $-\\frac{3}{2}$，速率为 $\\sqrt{13}$。",
       ),
+      figure: parametricModeFigure,
       generate: (rng: Rng) => {
         const [dx, dy, hyp] = rng.pick([
           [3, 4, 5],
@@ -794,9 +831,10 @@ export const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
       id: "polar-mode-windows-and-area-integrals",
       title: t("Tracing Polar Curves and Rates of Change in Polar Mode", "极坐标曲线追踪与极坐标模式下的变化率"),
       explanation: t(
-        "In Polar (`POL`) mode, the calculator plots $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$ as $\\theta$ sweeps from $\\theta_{\\min}$ to $\\theta_{\\max}$. From calculator values of $r(\\theta_0)$ and $r'(\\theta_0)$, you can determine both the Cartesian coordinate rates $x'(\\theta_0), y'(\\theta_0)$ and the rate $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(\\theta_0))^2$ at which the radius vector sweeps out area.",
-        "在极坐标（`POL`）模式下，当 $\\theta$ 从 $\\theta_{\\min}$ 扫过到 $\\theta_{\\max}$ 时，计算器绘制点 $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$。利用计算器给出的 $r(\\theta_0)$ 与 $r'(\\theta_0)$，既可以求直角坐标的变化率 $x'(\\theta_0), y'(\\theta_0)$，也可以求极径扫过面积的变化率 $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(\\theta_0))^2$。",
+        "In Polar (`POL`) mode, the calculator plots $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$ as $\\theta$ sweeps from $\\theta_{\\min}$ to $\\theta_{\\max}$. From calculator values of $r(\\theta_0)$ and $r'(\\theta_0)$, you can determine both the Cartesian coordinate rates $x'(\\theta_0), y'(\\theta_0)$ and the rate $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(\\theta_0))^2$ at which the radius vector sweeps out area.\n\nThe figure shows $r = 2 + 2\\cos\\theta$ with the radius at $\\theta = \\frac{\\pi}{2}$: there $r = 2$ and $r' = -2$, so $\\frac{dA}{d\\theta} = \\frac{1}{2}(2)^2 = 2$.",
+        "在极坐标（`POL`）模式下，当 $\\theta$ 从 $\\theta_{\\min}$ 扫过到 $\\theta_{\\max}$ 时，计算器绘制点 $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$。利用计算器给出的 $r(\\theta_0)$ 与 $r'(\\theta_0)$，既可以求直角坐标的变化率 $x'(\\theta_0), y'(\\theta_0)$，也可以求极径扫过面积的变化率 $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(\\theta_0))^2$。\n\n图中是 $r = 2 + 2\\cos\\theta$ 以及 $\\theta = \\frac{\\pi}{2}$ 处的极径：此时 $r = 2$，$r' = -2$，所以 $\\frac{dA}{d\\theta} = \\frac{1}{2}(2)^2 = 2$。",
       ),
+      figure: polarModeFigure,
       generate: (rng: Rng) => {
         const rVal = rng.int(2, 9);
         const drVal = -rng.int(2, 8);

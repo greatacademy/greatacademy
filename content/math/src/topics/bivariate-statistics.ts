@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { dec, linear, num, type PlaneMark, type PlaneView, paren, plane, Q } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, numberProblem, pointLatex, steps } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointLatex, reasonChoice, steps } from "../problems.ts";
 
 /** Pt is a data point (x, y). */
 export type Pt = readonly [number, number];
@@ -823,13 +823,25 @@ export const predictionsWithTrendLines: TopicDef = {
         const hi = rng.int(hi0 - quarter, hi0);
         const inside = rng.bool();
         const x0 = inside ? rng.int(lo + 1, hi - 1) : lo > 1 && rng.bool() ? rng.int(Math.max(1, lo - 5), lo - 1) : hi + rng.int(1, 6);
-        return choiceProblem({
+        const interpolates = t(
+          `An interpolation, because $x = ${x0}$ is within the range of the data`,
+          `内插，因为 $x = ${x0}$ 在数据范围以内`,
+        );
+        const extrapolates = t(
+          `An extrapolation, because $x = ${x0}$ is outside the range of the data`,
+          `外推，因为 $x = ${x0}$ 在数据范围以外`,
+        );
+        return reasonChoice(rng, {
           prompt: t(
             `${md.intro.en} The data used to draw it have $x$-values from $${lo}$ to $${hi}$. Is predicting the ${md.c.yName[0]} for ${md.c.at(x0)[0]} an interpolation or an extrapolation?`,
             `${md.intro["zh-CN"]}画这条趋势线所用的数据，$x$ 值从 $${lo}$ 到 $${hi}$。预测${md.c.at(x0)[1]}的${md.c.yName[1]}是内插还是外推？`,
           ),
-          options: [t("An interpolation", "内插"), t("An extrapolation", "外推")],
-          correct: inside ? 0 : 1,
+          correct: inside ? interpolates : extrapolates,
+          wrong: [
+            inside ? extrapolates : interpolates,
+            t("An interpolation, because the prediction comes from the trend line", "内插，因为预测值来自趋势线"),
+            t(`An extrapolation, because no data point is known to have $x = ${x0}$`, `外推，因为不知道是否有 $x = ${x0}$ 的数据点`),
+          ],
           solution: inside
             ? t(
                 `$x = ${x0}$ lies between $${lo}$ and $${hi}$, within the range of the data, so the prediction is an interpolation.`,

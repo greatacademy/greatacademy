@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q, svgDocument } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 
 // Conditional probability (Geometry 6.18) and combinatorics (Geometry 6.19).
 
@@ -1223,13 +1223,28 @@ export const independentEvents: TopicDef = {
         const row = c.rows[i as 0 | 1];
         const col = c.cols[j as 0 | 1];
         const tb = tableMd(c, cells, true);
-        return choiceProblem({
+        const rowShare = Q.of(cell, rowT).toLatex();
+        // When the events are independent, the option for "no" quotes the joint share, a common slip.
+        const shownShare = (yes ? Q.of(cell, total) : Q.of(colT, total)).toLatex();
+        return verdictChoice(rng, {
           prompt: t(
             `${c.intro.en}${tb.en}For ${c.a.en.toLowerCase()} chosen at random, are the events "${c.the.en} ${row.is.en}" and "${c.the.en} ${col.is.en}" independent?`,
             `${c.intro["zh-CN"]}${tb["zh-CN"]}随机选${c.a["zh-CN"]}，事件“${c.the["zh-CN"]}${row.is["zh-CN"]}”与“${c.the["zh-CN"]}${col.is["zh-CN"]}”相互独立吗？`,
           ),
-          options: yesNo,
-          correct: yes ? 0 : 1,
+          holds: yes,
+          yes: t(
+            `the share of "${col.label.en}" is $${rowShare}$ both in the row and in the whole table`,
+            `“${col.label["zh-CN"]}”在这一行和在全表中的比例都是 $${rowShare}$`,
+          ),
+          no: t(
+            `the share of "${col.label.en}" is $${rowShare}$ in the row but $${shownShare}$ in the whole table`,
+            `“${col.label["zh-CN"]}”在这一行中的比例是 $${rowShare}$，在全表中却是 $${shownShare}$`,
+          ),
+          yesWrong: t("one event does not cause the other", "一个事件不会导致另一个事件"),
+          noWrong: t(
+            `$${cell}$ outcomes belong to both events, so the events overlap`,
+            `有 $${cell}$ 个结果同时属于两个事件，所以它们有重叠`,
+          ),
           solution: t(
             `Compare the share of "${col.label.en}" in the row "${row.label.en}" with its share in the whole table: $${ratioL(cell, rowT)}$ and $${ratioL(colT, total)}$. Since $${Q.of(cell, rowT).toLatex()} ${rel} ${Q.of(colT, total).toLatex()}$, they are ${yes ? "" : "not "}independent.`,
             `比较“${col.label["zh-CN"]}”在“${row.label["zh-CN"]}”这一行中的比例与在全表中的比例：$${ratioL(cell, rowT)}$ 和 $${ratioL(colT, total)}$。因为 $${Q.of(cell, rowT).toLatex()} ${rel} ${Q.of(colT, total).toLatex()}$，所以它们${yes ? "" : "不"}独立。`,

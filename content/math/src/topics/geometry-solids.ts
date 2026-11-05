@@ -2,7 +2,17 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, num, type Point, Q, radical, simplifyRadical, sketch } from "@ga/subject-math";
 
-import { article, choiceProblem, expressionProblem, numberProblem, radicalProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
+import {
+  article,
+  choiceProblem,
+  expressionProblem,
+  numberProblem,
+  radicalProblem,
+  reasonChoice,
+  solutionsProblem,
+  steps,
+  yesNo,
+} from "../problems.ts";
 
 const units = ["cm", "m", "in", "ft"] as const;
 
@@ -858,12 +868,21 @@ export const netsOfPolyhedrons: TopicDef = {
             "$2 \\times 3$ 的正方形方块无法折成封闭的正方体。",
           );
         }
-        const isNet = kind <= 2;
+        const rowOfFour = t(
+          "Yes, because it is a row of four squares with one above and one below.",
+          "能，因为它是一行四个正方形，上方和下方各连一个。",
+        );
+        const sameSide = t(
+          "No, because two squares on the same side of a row of four land on the same face.",
+          "不能，因为连在一行四个正方形同一侧的两个正方形会落在同一个面上。",
+        );
+        const rowOfFive = t("No, because a row of five squares overlaps itself.", "不能，因为一行五个正方形折起来会重叠。");
+        const block = t("No, because a $2 \\times 3$ block cannot fold closed.", "不能，因为 $2 \\times 3$ 的方块无法折成封闭的正方体。");
         return {
-          ...choiceProblem({
+          ...reasonChoice(rng, {
             prompt: t("Can this pattern of six squares be folded into a cube?", "这六个正方形组成的图形能折成正方体吗？"),
-            options: yesNo,
-            correct: isNet ? 0 : 1,
+            correct: kind <= 2 ? rowOfFour : kind === 3 ? sameSide : kind === 4 ? rowOfFive : block,
+            wrong: [rowOfFour, sameSide, rowOfFive, block],
             solution: reason,
           }),
           figure: figure(squaresNet(cells), "A pattern of six squares joined edge to edge.", "由六个正方形沿边连接组成的图形。"),

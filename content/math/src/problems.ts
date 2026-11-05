@@ -1,4 +1,4 @@
-import type { Problem, Text } from "@ga/content";
+import type { Problem, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import {
   type Coefficient,
@@ -486,6 +486,52 @@ export function choiceProblem(p: ChoiceProblem): Problem {
 
 /** yesNo are the options of a yes-or-no question. */
 export const yesNo: readonly Text[] = [t("Yes", "是"), t("No", "否")];
+
+/** ReasonChoice describes a choice among answers that carry their reasons, of which one is right. */
+export interface ReasonChoice {
+  readonly prompt: Text;
+  readonly correct: Text;
+  /** wrong are the other options; one that repeats an earlier option is dropped. */
+  readonly wrong: readonly Text[];
+  readonly solution: Text;
+}
+
+/** reasonChoice builds a choice problem from its correct option and its wrong ones, in a random order. */
+export function reasonChoice(rng: Rng, p: ReasonChoice): Problem {
+  const seen = new Set([p.correct.en]);
+  const wrong = p.wrong.filter((w) => {
+    if (seen.has(w.en)) return false;
+    seen.add(w.en);
+    return true;
+  });
+  const options = rng.shuffle([p.correct, ...wrong]);
+  return choiceProblem({ prompt: p.prompt, options, correct: options.indexOf(p.correct), solution: p.solution });
+}
+
+/** VerdictChoice describes a yes-or-no question whose options each give a verdict and a reason. */
+export interface VerdictChoice {
+  readonly prompt: Text;
+  readonly holds: boolean;
+  /** yes is the reason given by the right test when the answer is yes; it is written so that it is false when the answer is no. */
+  readonly yes: Text;
+  /** no is the reason given by the right test when the answer is no; it is written so that it is false when the answer is yes. */
+  readonly no: Text;
+  /** yesWrong is a reason for yes that comes from a misconception: never a sound reason, whatever the answer. */
+  readonly yesWrong: Text;
+  /** noWrong is a reason for no that comes from a misconception: never a sound reason, whatever the answer. */
+  readonly noWrong: Text;
+  readonly solution: Text;
+}
+
+/** verdictChoice asks a yes-or-no question with four options, two reasons for each verdict, so that a guesser passes a quarter of the time. */
+export function verdictChoice(rng: Rng, p: VerdictChoice): Problem {
+  const because = (verdict: Text, reason: Text) =>
+    t(`${verdict.en}, because ${reason.en}.`, `${verdict["zh-CN"]}，因为${reason["zh-CN"].startsWith("$") ? " " : ""}${reason["zh-CN"]}。`);
+  const yes = (reason: Text) => because(yesNo[0]!, reason);
+  const no = (reason: Text) => because(yesNo[1]!, reason);
+  const [right, other] = p.holds ? [yes(p.yes), no(p.no)] : [no(p.no), yes(p.yes)];
+  return reasonChoice(rng, { prompt: p.prompt, correct: right, wrong: [other, yes(p.yesWrong), no(p.noWrong)], solution: p.solution });
+}
 
 /** steps writes solution steps on lines of their own: a step of pure math as display math, and a step that already contains math delimiters as a paragraph of text. */
 export function steps(...lines: readonly string[]): string {
