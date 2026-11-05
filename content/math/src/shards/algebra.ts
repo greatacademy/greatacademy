@@ -30,6 +30,7 @@ import { decimalAndPercentTopics } from "../topics/decimals-and-percents.ts";
 import { deeperAlgebraThirdPoints } from "../topics/deeper-algebra-third.ts";
 import { deeperAlgebraThird2Points } from "../topics/deeper-algebra-third-2.ts";
 import { deeperAlgebraFundamentalsThirdPoints } from "../topics/deeper-exam-fundamentals-third.ts";
+import { figureChoicePoints } from "../topics/deeper-figure-choices.ts";
 import { deeperGrade5Points } from "../topics/deeper-grade-5.ts";
 import { deeperGrade5MorePoints } from "../topics/deeper-grade-5-more.ts";
 import { deeperGrade6Points } from "../topics/deeper-grade-6.ts";
@@ -145,5 +146,6 @@ export const algebraShardTopics: readonly TopicDef[] = finishTopics(
     deeperAlgebraThird2Points,
     deeperRemainingAlgebraThirdPoints,
     deeperAlgebraFundamentalsThirdPoints,
+    figureChoicePoints,
   ],
 );

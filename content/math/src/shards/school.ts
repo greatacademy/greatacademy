@@ -4,6 +4,7 @@ import type { TopicDef } from "@ga/content";
 
 import { finishTopics } from "../finish.ts";
 import { deeperSchoolFundamentalsThirdPoints } from "../topics/deeper-exam-fundamentals-third-2.ts";
+import { figureChoicePoints } from "../topics/deeper-figure-choices.ts";
 import { deeperGrade1ThirdPoints } from "../topics/deeper-grade-1-third.ts";
 import { deeperGrade2ThirdPoints } from "../topics/deeper-grade-2-third.ts";
 import { deeperGrade3ThirdPoints } from "../topics/deeper-grade-3-third.ts";
@@ -131,5 +132,6 @@ export const schoolShardTopics: readonly TopicDef[] = finishTopics(
     deeperMiddleSchoolThirdPoints,
     deeperMiddleSchoolThird2Points,
     deeperSchoolFundamentalsThirdPoints,
+    figureChoicePoints,
   ],
 );
