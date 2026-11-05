@@ -18340,7 +18340,12 @@ export const complexAnalysis: CourseDef = {
         },
         {
           title: t("Elementary Functions", "初等函数"),
-          topics: ["the-complex-exponential-function", "the-complex-logarithm"],
+          topics: [
+            "the-complex-exponential-function",
+            "the-complex-logarithm",
+            "complex-trigonometric-and-hyperbolic-functions",
+            "complex-powers-and-branches",
+          ],
         },
       ],
     },
@@ -18349,7 +18354,14 @@ export const complexAnalysis: CourseDef = {
       modules: [
         {
           title: t("Cauchy's Theorems", "柯西定理"),
-          topics: ["contour-integrals", "cauchys-integral-theorem", "cauchys-integral-formula", "cauchys-estimates-and-liouvilles-theorem"],
+          topics: [
+            "contour-integrals",
+            "the-ml-inequality",
+            "cauchys-integral-theorem",
+            "winding-numbers",
+            "cauchys-integral-formula",
+            "cauchys-estimates-and-liouvilles-theorem",
+          ],
         },
       ],
     },
@@ -18358,11 +18370,24 @@ export const complexAnalysis: CourseDef = {
       modules: [
         {
           title: t("Series", "级数"),
-          topics: ["taylor-series-of-analytic-functions", "laurent-series", "classifying-isolated-singularities"],
+          topics: [
+            "taylor-series-of-analytic-functions",
+            "power-series-on-discs",
+            "zeros-of-analytic-functions",
+            "laurent-series",
+            "laurent-series-on-annuli",
+            "classifying-isolated-singularities",
+          ],
         },
         {
           title: t("Residues", "留数"),
-          topics: ["computing-residues", "the-residue-theorem"],
+          topics: [
+            "computing-residues",
+            "the-residue-theorem",
+            "the-argument-principle-and-rouches-theorem",
+            "trigonometric-integrals-by-residues",
+            "improper-integrals-by-residues",
+          ],
         },
       ],
     },
@@ -18371,7 +18396,7 @@ export const complexAnalysis: CourseDef = {
       modules: [
         {
           title: t("Conformal Maps", "共形映射"),
-          topics: ["mobius-transformations", "conformal-maps"],
+          topics: ["mobius-transformations", "the-cross-ratio", "conformal-maps", "conformal-maps-of-regions"],
         },
       ],
     },

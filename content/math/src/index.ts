@@ -80,6 +80,7 @@ import { calculusIITaylorTopics } from "./topics/calculus-ii-taylor.ts";
 import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { complexAnalysisTopics } from "./topics/complex-analysis.ts";
+import { complexAnalysisMoreTopics } from "./topics/complex-analysis-more.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { deeperAbstractAlgebraPoints } from "./topics/deeper-abstract-algebra.ts";
@@ -450,6 +451,7 @@ export const math: SubjectDef = {
     ...linearProgrammingTopics,
     ...linearProgrammingMoreTopics,
     ...complexAnalysisTopics,
+    ...complexAnalysisMoreTopics,
     ...realAnalysisTopics,
     ...earlyGradesMoreTopics,
     ...methodsOfProofFunctionTopics,
