@@ -720,7 +720,22 @@ export function verdictChoice(rng: Rng, p: VerdictChoice): Problem {
   const yes = (reason: Text) => because(yesNo[0]!, reason);
   const no = (reason: Text) => because(yesNo[1]!, reason);
   const [right, other] = p.holds ? [yes(p.yes), no(p.no)] : [no(p.no), yes(p.yes)];
-  return reasonChoice(rng, { prompt: p.prompt, correct: right, wrong: [other, yes(p.yesWrong), no(p.noWrong)], solution: p.solution });
+  const [wrongVerdict, rightVerdict] = [
+    t("Wrong verdict: that reason does not hold here.", "结论错了：这个理由在这里不成立。"),
+    t(
+      "Right verdict, but that reason is not sound: it would not settle the question in other cases either.",
+      "结论对了，但理由不成立：换成别的情形，它同样不能说明问题。",
+    ),
+  ];
+  const offTarget = t("Wrong verdict, and that reason is not sound in any case.", "结论错了，而且这个理由无论如何都不成立。");
+  return withMistakes(
+    reasonChoice(rng, { prompt: p.prompt, correct: right, wrong: [other, yes(p.yesWrong), no(p.noWrong)], solution: p.solution }),
+    [
+      { response: other.en, why: wrongVerdict },
+      { response: yes(p.yesWrong).en, why: p.holds ? rightVerdict : offTarget },
+      { response: no(p.noWrong).en, why: p.holds ? offTarget : rightVerdict },
+    ],
+  );
 }
 
 /** steps writes solution steps on lines of their own: a step of pure math as display math, and a step that already contains math delimiters as a paragraph of text. */
