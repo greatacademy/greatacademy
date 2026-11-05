@@ -4,6 +4,8 @@
  */
 export const outlineAliases: ReadonlyMap<string, readonly string[]> = new Map<string, readonly string[]>([
   ["Introduction to Ratios", ["ratios"]],
+  ["The Mean of a Data Set", ["the-mean-of-a-data-set", "mean-of-a-data-set"]],
+  ["Units of Time", ["units-of-time-and-elapsed-time"]],
   ["Radicals as Fractional Exponents", ["writing-radicals-using-fractional-exponents"]],
   ["Collecting Like Terms in Linear Expressions", ["simplifying-linear-expressions", "identifying-like-terms-in-linear-expressions"]],
   [
