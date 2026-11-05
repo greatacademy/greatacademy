@@ -528,7 +528,7 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
           { fn: "arccos", val: "-1", ans: "\\pi" },
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
-        const promptStr = mult === 1 ? `${item.fn}\\left(${item.val}\\right)` : `${mult}${item.fn}\\left(${item.val}\\right)`;
+        const promptStr = mult === 1 ? `\\${item.fn}\\left(${item.val}\\right)` : `${mult}\\${item.fn}\\left(${item.val}\\right)`;
         const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
         const wrongList = [
           "\\frac{\\pi}{6}",
@@ -548,8 +548,8 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $${item.fn}(${item.val}) = ${item.ans}$, the answer is $${ansStr}$.`,
-            `因为 $${item.fn}(${item.val}) = ${item.ans}$，答案为 $${ansStr}$。`,
+            `Since $\\${item.fn}(${item.val}) = ${item.ans}$, the answer is $${ansStr}$.`,
+            `因为 $\\${item.fn}(${item.val}) = ${item.ans}$，答案为 $${ansStr}$。`,
           ),
         );
       },

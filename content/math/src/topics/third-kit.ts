@@ -5,7 +5,7 @@ import { t } from "@ga/content";
 import type { Q } from "@ga/subject-math";
 
 import { numberProblem } from "../problems.ts";
-import type { Pair } from "./early-grades-more-kit.ts";
+import { chooseMath, type Pair } from "./early-grades-more-kit.ts";
 
 /** skill builds a knowledge point from its texts and generator. */
 export const skill = (id: string, title: Pair, explanation: Pair, generate: KnowledgePointDef["generate"]): KnowledgePointDef => ({
@@ -52,3 +52,20 @@ export const signed = (n: number) => (n < 0 ? ` - ${-n}` : ` + ${n}`);
 
 /** gcd finds the greatest common factor of two whole numbers. */
 export const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+/** chooseFilled builds a choice problem with four options, filling in near misses of the answer when wrong answers coincide. */
+export const chooseFilled = (
+  rng: Parameters<KnowledgePointDef["generate"]>[0],
+  prompt: Pair,
+  correct: string,
+  wrong: readonly string[],
+  solution: Pair,
+) => {
+  const options: string[] = [];
+  for (const option of wrong) if (option !== correct && !options.includes(option)) options.push(option);
+  for (let step = 1; options.length < 3 && step < 30; step++) {
+    const near = correct.replace(/-?\d+/, (n) => String(Number(n) + step));
+    if (near !== correct && !options.includes(near)) options.push(near);
+  }
+  return chooseMath(rng, prompt, correct, options, solution);
+};
