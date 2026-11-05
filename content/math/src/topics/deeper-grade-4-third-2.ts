@@ -147,32 +147,6 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
       },
     ),
   ],
-  "equivalent-fractions": [
-    skill(
-      "the-fraction-that-does-not-belong",
-      ["The fraction that does not belong", "找出不相等的分数"],
-      [
-        "Equivalent fractions come from multiplying the top and the bottom by the same number. Adding the same number to both does not keep the value, and that is the usual slip.",
-        "分子和分母同时乘同一个数，得到相等的分数。同时加同一个数不能保持分数的值，这是常见的错误。",
-      ],
-      (rng) => {
-        const d = rng.int(3, 9);
-        const n = rng.int(1, d - 1);
-        const add = rng.int(1, 5);
-        const [a, b, c] = rng.sample([2, 3, 4, 5, 6], 3) as [number, number, number];
-        return chooseMath(
-          rng,
-          [`Which fraction is not equal to $${frac(n, d)}$?`, `哪个分数不等于 $${frac(n, d)}$？`],
-          frac(n + add, d + add),
-          [frac(n * a, d * a), frac(n * b, d * b), frac(n * c, d * c)],
-          [
-            `$${frac(n + add, d + add)}$ adds ${add} to both numbers, which changes the value. The others multiply both by the same number.`,
-            `$${frac(n + add, d + add)}$ 是分子分母同时加 ${add}，值变了。其他的都是同时乘同一个数。`,
-          ],
-        );
-      },
-    ),
-  ],
   "least-common-denominators": [
     skill(
       "the-least-common-denominator-of-three",
@@ -1064,30 +1038,6 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
             `Both rays start at $${a}$ and head toward $${b}$ and $${c}$. Starting at $${b}$ or $${c}$ would give a different ray.`,
             `两条射线都从 $${a}$ 出发，朝 $${b}$ 和 $${c}$ 的方向。从 $${b}$ 或 $${c}$ 出发就是另一条射线。`,
           ],
-        );
-      },
-    ),
-  ],
-  "angles-and-angle-measures": [
-    skill(
-      "an-angle-cut-into-equal-angles",
-      ["An angle cut into equal angles", "把角平均分"],
-      [
-        "Angle measures add up, so rays from the vertex cut an angle into smaller angles whose measures total the original. Equal smaller angles are found by dividing.",
-        "角的度数可以相加，所以从顶点引出的射线把角分成几个小角，小角的度数和等于原来的角。相等的小角用除法求。",
-      ],
-      (rng) => {
-        const k = rng.int(2, 6);
-        const each = rng.int(5, 30);
-        const whole_ = k * each;
-        return whole(
-          [
-            `Rays from the vertex cut an angle of $${whole_}^\\circ$ into ${k} equal angles. What is the measure of each, in degrees?`,
-            `从顶点引出的射线把 $${whole_}^\\circ$ 的角分成 ${k} 个相等的角。每个角是多少度？`,
-          ],
-          each,
-          [whole_ - k, whole_ * k, k + each],
-          [`$${whole_} \\div ${k} = ${each}$.`, `$${whole_} \\div ${k} = ${each}$。`],
         );
       },
     ),

@@ -44,7 +44,7 @@ function terminatingMean(rng: Rng, n: number, lo: number, hi: number): number[] 
 }
 
 /** dotPlotFigure draws a data set as a dot plot, with alt text listing how many dots sit at each value. */
-function dotPlotFigure(xs: readonly number[], axis: Axis): Figure {
+export function dotPlotFigure(xs: readonly number[], axis: Axis): Figure {
   const counts = [...new Set(sorted(xs))].map((v) => [v, xs.filter((x) => x === v).length] as const);
   return {
     svg: dotPlot(xs, axis),
@@ -56,7 +56,7 @@ function dotPlotFigure(xs: readonly number[], axis: Axis): Figure {
 }
 
 /** boxPlotFigure draws a five-number summary as a box plot, with alt text giving the five numbers. */
-function boxPlotFigure(s: FiveNumberSummary, axis: Axis): Figure {
+export function boxPlotFigure(s: FiveNumberSummary, axis: Axis): Figure {
   const [lo, q1, med, q3, hi] = s;
   return {
     svg: boxPlot(s, axis),

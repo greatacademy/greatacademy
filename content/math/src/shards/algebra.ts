@@ -27,6 +27,7 @@ import { areaTopics } from "../topics/area.ts";
 import { bivariateStatisticsTopics } from "../topics/bivariate-statistics.ts";
 import { compoundInequalityTopics } from "../topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "../topics/decimals-and-percents.ts";
+import { deeperAlgebraThirdPoints } from "../topics/deeper-algebra-third.ts";
 import { deeperGrade5Points } from "../topics/deeper-grade-5.ts";
 import { deeperGrade5MorePoints } from "../topics/deeper-grade-5-more.ts";
 import { deeperGrade6Points } from "../topics/deeper-grade-6.ts";
@@ -130,5 +131,13 @@ export const algebraShardTopics: readonly TopicDef[] = finishTopics(
     ...algebraIITrigonometricGraphTopics,
     ...algebraIITrigonometricTransformationTopics,
   ],
-  [deeperPrealgebraPoints, deeperGrade8Points, deeperGrade7Points, deeperGrade6Points, deeperGrade5Points, deeperGrade5MorePoints],
+  [
+    deeperPrealgebraPoints,
+    deeperGrade8Points,
+    deeperGrade7Points,
+    deeperGrade6Points,
+    deeperGrade5Points,
+    deeperGrade5MorePoints,
+    deeperAlgebraThirdPoints,
+  ],
 );

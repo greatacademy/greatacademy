@@ -15,6 +15,8 @@ import { deeperGrade5MorePoints } from "../topics/deeper-grade-5-more.ts";
 import { deeperGrade5ThirdPoints } from "../topics/deeper-grade-5-third.ts";
 import { deeperGrade5Third2Points } from "../topics/deeper-grade-5-third-2.ts";
 import { deeperGrade6Points } from "../topics/deeper-grade-6.ts";
+import { deeperGrade6ThirdPoints } from "../topics/deeper-grade-6-third.ts";
+import { deeperGrade6Third2Points } from "../topics/deeper-grade-6-third-2.ts";
 import { deeperGrade7Points } from "../topics/deeper-grade-7.ts";
 import { deeperGrade8Points } from "../topics/deeper-grade-8.ts";
 import { deeperPrealgebraPoints } from "../topics/deeper-prealgebra.ts";
@@ -121,5 +123,7 @@ export const schoolShardTopics: readonly TopicDef[] = finishTopics(
     deeperGrade4Third2Points,
     deeperGrade5ThirdPoints,
     deeperGrade5Third2Points,
+    deeperGrade6ThirdPoints,
+    deeperGrade6Third2Points,
   ],
 );

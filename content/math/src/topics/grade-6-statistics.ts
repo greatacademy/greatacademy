@@ -1471,7 +1471,7 @@ export const frequencyTables = topic(
 // Measures from dot plots
 
 /** dotPlotFigure draws a data set as a dot plot, with alt text listing how many dots sit at each value. */
-function dotPlotFigure(xs: readonly number[], axis: Axis): Figure {
+export function dotPlotFigure(xs: readonly number[], axis: Axis): Figure {
   const counts = [...new Set(sorted(xs))].map((v) => [v, xs.filter((x) => x === v).length] as const);
   return {
     svg: dotPlot(xs, axis),
