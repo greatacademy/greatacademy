@@ -16155,6 +16155,7 @@ export const actMathFundamentals: CourseDef = {
         {
           title: t("Polygons", "多边形"),
           topics: [
+            "classifying-quadrilaterals",
             "exterior-angles-of-polygons",
             "congruent-polygons",
             "regular-polygons",
