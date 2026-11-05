@@ -86,6 +86,7 @@ import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { deeperAbstractAlgebraPoints } from "./topics/deeper-abstract-algebra.ts";
 import { deeperCalculusIPoints } from "./topics/deeper-calculus-i.ts";
 import { deeperCalculusIIPoints } from "./topics/deeper-calculus-ii.ts";
+import { deeperComplexAnalysisPoints } from "./topics/deeper-complex-analysis.ts";
 import { deeperDifferentialEquationsPoints } from "./topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "./topics/deeper-discrete-mathematics.ts";
 import { deeperGrade4Points } from "./topics/deeper-grade-4.ts";
@@ -279,6 +280,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperGrade4Points[topic.id] ?? []),
       ...(deeperAbstractAlgebraPoints[topic.id] ?? []),
       ...(deeperCalculusIPoints[topic.id] ?? []),
+      ...(deeperComplexAnalysisPoints[topic.id] ?? []),
       ...(deeperCalculusIIPoints[topic.id] ?? []),
       ...(deeperDifferentialEquationsPoints[topic.id] ?? []),
       ...(deeperDiscreteMathematicsPoints[topic.id] ?? []),
