@@ -2,9 +2,9 @@
 
 > 来源：<https://www.mathacademy.com/courses>，以及其链接的全部 37 个课程页 `/courses/<slug>`，抓取于 2026-10-30。
 > 英文版：[math-curriculum.md](math-curriculum.md)。
-> 逐课程完整内容在 [math-courses/](math-courses/) 中，每门课一个文件，包括描述、概览、学习成果，以及 单元 → 模块 → 知识点 的完整列表。全部课程的机器可读数据在 [math-courses/math-academy-courses.json](math-courses/math-academy-courses.json)。逐课程文件保留官网英文原文，未翻译，以保证名称准确。
+> 逐课程完整内容在 [math-courses/](math-courses/) 中，每门课一个文件，包括描述、概览、学习成果，以及 单元 → 模块 → 知识点 的完整列表。全部课程的机器可读数据在 [math-courses/math-academy-courses.json](math-courses/math-academy-courses.json)。来自目录的 37 门课程文件保留官网英文原文，未翻译，以保证名称准确。
 > 相关文档：[the-math-academy-way.zh-CN.md](the-math-academy-way.zh-CN.md)、[math-academy-website.zh-CN.md](math-academy-website.zh-CN.md)。
-> 目录之外：一至三年级以及数论、实分析、复分析、线性规划和偏微分方程的自有大纲也在 [math-courses/](math-courses/) 中，每份大纲开头都有说明。
+> 目录之外：一至三年级以及数论、实分析、复分析、线性规划和偏微分方程的自有大纲也在 [math-courses/](math-courses/) 中，每份大纲开头都有说明。[第 7 节](#7-目录之外的课程)列出了这些课程。
 
 本文记录 Math Academy 完整的数学课程体系，作为 Great Academy 建设数学内容的参照。课程范围从四年级算术一直到本科高年级数学。
 
@@ -537,3 +537,113 @@ ACT Math Fundamentals 的后续课程，帮助学生在 ACT 数学部分取得�
    - XP 值；
    - 知识点在图谱中的真实先后关系（编号只是展示顺序）。
    这些都需要自己编写。不过官网的顺序和名称已经是一个很好的起始骨架。
+
+## 7. 目录之外的课程
+
+下面 8 门课不在 Math Academy 目录中，大纲是 Great Academy 自己写的：一至三年级依据共同核心州立标准（Common Core），5 门大学课依据各自的标准教材。上文的 37 门课程和所有统计数字都不包括它们。
+
+```mermaid
+flowchart LR
+  G1[1st Grade] --> G2[2nd Grade] --> G3[3rd Grade]
+  MOP[Methods of Proof] --> NT[Number Theory]
+  C2[Calculus II] & MOP --> RA[Real Analysis]
+  MVC[Multivariable Calculus] --> CA[Complex Analysis]
+  LA[Linear Algebra] --> LP[Linear Programming]
+  DE[Differential Equations] & MVC --> PDE[Partial Differential Equations]
+```
+
+说明：
+- 图中只画这 8 门课自己的大纲写明的先修课。一至三年级的大纲没有指定后续课程，所以图中没有 3rd Grade 到 4th Grade 的连线。
+
+| 课程 | 分组 | 先修课 | 单元 | 模块 | 知识点 |
+|---|---|---|---|---|---|
+| [一年级数学](math-courses/1st-grade-math.zh-CN.md) | 小学 | 数数和初步的数感 | 13 | 21 | 61 |
+| [二年级数学](math-courses/2nd-grade-math.zh-CN.md) | 小学 | 一年级数学 | 14 | 22 | 65 |
+| [三年级数学](math-courses/3rd-grade-math.zh-CN.md) | 小学 | 二年级数学 | 14 | 26 | 65 |
+| [数论](math-courses/number-theory.zh-CN.md) | 大学 | 证明方法 | 5 | 10 | 78 |
+| [实分析](math-courses/real-analysis.zh-CN.md) | 大学 | 微积分 II 和证明方法 | 5 | 8 | 82 |
+| [复分析](math-courses/complex-analysis.zh-CN.md) | 大学 | 多元微积分 | 4 | 7 | 59 |
+| [线性规划](math-courses/linear-programming.zh-CN.md) | 大学 | 线性代数 | 4 | 8 | 52 |
+| [偏微分方程](math-courses/partial-differential-equations.zh-CN.md) | 大学 | 微分方程和多元微积分 | 4 | 6 | 56 |
+
+合计：8 门课程 · 63 个单元 · 108 个模块 · 518 个知识点位置。
+
+### 一年级数学
+
+数到 120、十和一、20 以内的加减法、应用题、整十数加减、长度、时间、初步的统计图和图形。
+
+- **先修：** 数数和初步的数感
+- **依据：** 该年级的共同核心州立标准（Common Core）
+- **规模：** 13 个单元 · 21 个模块 · 61 个知识点
+- **完整内容：** [math-courses/1st-grade-math.zh-CN.md](math-courses/1st-grade-math.zh-CN.md)
+- **单元：** 1. 120 以内的数 (6); 2. 20 以内的加减法 (10); 3. 应用题 (5); 4. 整十数的加减 (4); 5. 长度和时间 (4); 6. 统计 (3); 7. 图形 (3); 8. 用多种方式看数 (6); 9. 加减法的策略 (7); 10. 故事和线段图 (3); 11. 两位数加法 (2); 12. 测量、钟表和硬币 (5); 13. 分类、统计图和立体图形 (3)
+
+### 二年级数学
+
+1000 以内的位值、100 和 1000 以内的加减法、应用题、测量长度、时间、钱币、统计图和图形。
+
+- **先修：** 一年级数学
+- **依据：** 该年级的共同核心州立标准（Common Core）
+- **规模：** 14 个单元 · 22 个模块 · 65 个知识点
+- **完整内容：** [math-courses/2nd-grade-math.zh-CN.md](math-courses/2nd-grade-math.zh-CN.md)
+- **单元：** 1. 数的规律 (3); 2. 1000 以内的位值 (7); 3. 加法和减法 (7); 4. 应用题 (3); 5. 长度 (7); 6. 时间和钱币 (4); 7. 统计 (3); 8. 几何 (5); 9. 数数和位值的规律 (7); 10. 心算策略 (7); 11. 用图解决问题 (3); 12. 钱和时间 (4); 13. 测量和数据 (3); 14. 思考图形 (2)
+
+### 三年级数学
+
+乘法和除法的意义，10 乘 10 以内的算式，以及使计算更容易的运算律；两步应用题和数的规律；取近似和三位数加减法；数轴上的分数；钟表读到分钟，质量和容积；带比例的统计图和线图；面积、周长和四边形的分类。
+
+- **先修：** 二年级数学
+- **依据：** 该年级的共同核心州立标准（Common Core）
+- **规模：** 14 个单元 · 26 个模块 · 65 个知识点
+- **完整内容：** [math-courses/3rd-grade-math.zh-CN.md](math-courses/3rd-grade-math.zh-CN.md)
+- **单元：** 1. 乘法 (9); 2. 除法 (4); 3. 解决问题和规律 (4); 4. 数位 (5); 5. 分数 (5); 6. 测量和数据 (6); 7. 几何 (7); 8. 乘除法的策略 (6); 9. 用数来推理 (3); 10. 数轴上的分数和相等的分数 (5); 11. 时间和度量 (4); 12. 统计图 (3); 13. 面积和周长 (3); 14. 思考四边形 (1)
+
+### 数论
+
+因数和质数，通过费马定理和欧拉定理研究模 n 的幂，原根和离散对数，二次剩余和互反律，算术函数和质数的大小，经典的整数方程，以及分解和公钥密码学。
+
+- **先修：** 证明方法
+- **依据：** 本科第一门课程的标准内容，如 Niven、Zuckerman 和 Montgomery 或 Hardy 和 Wright 的教材
+- **规模：** 5 个单元 · 10 个模块 · 78 个知识点
+- **完整内容：** [math-courses/number-theory.zh-CN.md](math-courses/number-theory.zh-CN.md)
+- **单元：** 1. 因数和质数 (18); 2. 同余 (33); 3. 二次剩余 (7); 4. 整数方程 (15); 5. 计算和密码学 (5)
+
+### 实分析
+
+微积分的严格基础：完备性，数列和级数，用 ε 和 δ 研究极限和连续，紧性和连通性，黎曼积分和斯蒂尔杰斯积分，测度初步，以及一致收敛及其应用。
+
+- **先修：** 微积分 II 和证明方法
+- **依据：** 第一门课程的标准内容，如 Abbott 的教材或 Rudin《数学分析原理》的前十一章
+- **规模：** 5 个单元 · 8 个模块 · 82 个知识点
+- **完整内容：** [math-courses/real-analysis.zh-CN.md](math-courses/real-analysis.zh-CN.md)
+- **单元：** 1. 数列 (17); 2. 级数 (9); 3. 极限和连续 (22); 4. 微分和积分 (20); 5. 函数列 (14)
+
+### 复分析
+
+复变函数的微积分：解析函数和柯西–黎曼方程，围道积分和柯西定理，泰勒级数和洛朗级数，留数及其应用，解析延拓，共形映射，以及狄利克雷问题。
+
+- **先修：** 多元微积分
+- **依据：** 第一门课程的标准内容，如 Churchill 和 Brown 或 Ahlfors 的教材
+- **规模：** 4 个单元 · 7 个模块 · 59 个知识点
+- **完整内容：** [math-courses/complex-analysis.zh-CN.md](math-courses/complex-analysis.zh-CN.md)
+- **单元：** 1. 解析函数 (14); 2. 积分 (12); 3. 级数和留数 (24); 4. 解析映射的几何 (9)
+
+### 线性规划
+
+线性约束下的优化：建立规划，图解法和单纯形法，对偶和灵敏度，建模技巧，运输、指派和流问题，整数规划和分支定界，大规模规划，以及矩阵博弈。
+
+- **先修：** 线性代数
+- **依据：** 第一门课程的标准内容，如 Chvátal、Vanderbei 或 Bertsimas 和 Tsitsiklis 的教材
+- **规模：** 4 个单元 · 8 个模块 · 52 个知识点
+- **完整内容：** [math-courses/linear-programming.zh-CN.md](math-courses/linear-programming.zh-CN.md)
+- **单元：** 1. 基础 (12); 2. 单纯形法 (10); 3. 对偶 (14); 4. 应用 (16)
+
+### 偏微分方程
+
+多变量的方程：分类，特征线和激波，分离变量和施图姆-刘维尔问题，热方程、波动方程和拉普拉斯方程，积分变换，格林函数，特殊函数，以及有限差分及其稳定性。
+
+- **先修：** 微分方程和多元微积分
+- **依据：** 第一门课程的标准内容，如 Strauss 或 Haberman 的教材
+- **规模：** 4 个单元 · 6 个模块 · 56 个知识点
+- **完整内容：** [math-courses/partial-differential-equations.zh-CN.md](math-courses/partial-differential-equations.zh-CN.md)
+- **单元：** 1. 初步概念 (13); 2. 热方程 (12); 3. 波动方程 (14); 4. 拉普拉斯方程 (17)

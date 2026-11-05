@@ -4,7 +4,7 @@
 > Companion: [math-curriculum.zh-CN.md](math-curriculum.zh-CN.md) (中文).
 > Full per-course content (description, overview, outcomes, and every unit → module → topic) is in [math-courses/](math-courses/). Machine-readable data for all courses is in [math-courses/math-academy-courses.json](math-courses/math-academy-courses.json).
 > Related: [the-math-academy-way.md](the-math-academy-way.md), [math-academy-website.md](math-academy-website.md).
-> Beyond the catalog: outlines of our own for Grades 1 to 3 and for Number Theory, Real Analysis, Complex Analysis, Linear Programming and Partial Differential Equations are also in [math-courses/](math-courses/), and each says so at its top.
+> Beyond the catalog: outlines of our own for Grades 1 to 3 and for Number Theory, Real Analysis, Complex Analysis, Linear Programming and Partial Differential Equations are also in [math-courses/](math-courses/), and each says so at its top. [Section 7](#7-courses-beyond-the-catalog) lists them.
 
 This document records Math Academy's complete math course system as the reference for building Great Academy's math content. The catalog runs from 4th grade arithmetic to upper-division undergraduate mathematics.
 
@@ -527,3 +527,113 @@ Mathematical Methods for the Physical Sciences II continues the development of a
    - XP values,
    - the topic ordering inside the graph (the numbered order is display order only).
    These must be authored. The page order and names are a strong starting skeleton.
+
+## 7. Courses beyond the catalog
+
+These 8 courses are not in Math Academy's catalog, and their outlines are Great Academy's own: Grades 1 to 3 follow the Common Core State Standards, and the 5 university courses follow standard textbooks for each subject. The 37 courses and all the figures above do not include them.
+
+```mermaid
+flowchart LR
+  G1[1st Grade] --> G2[2nd Grade] --> G3[3rd Grade]
+  MOP[Methods of Proof] --> NT[Number Theory]
+  C2[Calculus II] & MOP --> RA[Real Analysis]
+  MVC[Multivariable Calculus] --> CA[Complex Analysis]
+  LA[Linear Algebra] --> LP[Linear Programming]
+  DE[Differential Equations] & MVC --> PDE[Partial Differential Equations]
+```
+
+Notes:
+- The map shows only the prerequisites these 8 outlines state. The outlines for Grades 1 to 3 name no successor, so the map has no line from 3rd Grade to 4th Grade.
+
+| Course | Group | Prerequisite(s) | Units | Modules | Topics |
+|---|---|---|---|---|---|
+| [1st Grade Math](math-courses/1st-grade-math.md) | Elementary School | Counting and early number sense | 13 | 21 | 61 |
+| [2nd Grade Math](math-courses/2nd-grade-math.md) | Elementary School | 1st Grade Math | 14 | 22 | 65 |
+| [3rd Grade Math](math-courses/3rd-grade-math.md) | Elementary School | 2nd Grade Math | 14 | 26 | 65 |
+| [Number Theory](math-courses/number-theory.md) | University | Methods of Proof | 5 | 10 | 78 |
+| [Real Analysis](math-courses/real-analysis.md) | University | Calculus II and Methods of Proof | 5 | 8 | 82 |
+| [Complex Analysis](math-courses/complex-analysis.md) | University | Multivariable Calculus | 4 | 7 | 59 |
+| [Linear Programming](math-courses/linear-programming.md) | University | Linear Algebra | 4 | 8 | 52 |
+| [Partial Differential Equations](math-courses/partial-differential-equations.md) | University | Differential Equations and Multivariable Calculus | 4 | 6 | 56 |
+
+Totals: 8 courses · 63 units · 108 modules · 518 topic slots.
+
+### 1st Grade Math
+
+Counting to 120, tens and ones, adding and subtracting within 20, word problems, adding tens, length, time, first graphs and shapes.
+
+- **Prerequisite(s):** Counting and early number sense
+- **Basis:** the Common Core State Standards for this grade
+- **Size:** 13 units · 21 modules · 61 topics
+- **Full content:** [math-courses/1st-grade-math.md](math-courses/1st-grade-math.md)
+- **Units:** 1. Numbers to 120 (6); 2. Adding and Subtracting Within 20 (10); 3. Word Problems (5); 4. Adding and Subtracting Tens (4); 5. Length and Time (4); 6. Data (3); 7. Shapes (3); 8. Seeing Numbers in Many Ways (6); 9. Strategies for Adding and Subtracting (7); 10. Stories and Bar Models (3); 11. Adding Two-Digit Numbers (2); 12. Measuring, Clocks and Coins (5); 13. Sorting, Graphs and Solids (3)
+
+### 2nd Grade Math
+
+Place value to 1000, adding and subtracting within 100 and 1000, word problems, measuring length, time, money, graphs and shapes.
+
+- **Prerequisite(s):** 1st Grade Math
+- **Basis:** the Common Core State Standards for this grade
+- **Size:** 14 units · 22 modules · 65 topics
+- **Full content:** [math-courses/2nd-grade-math.md](math-courses/2nd-grade-math.md)
+- **Units:** 1. Number Patterns (3); 2. Place Value to 1000 (7); 3. Adding and Subtracting (7); 4. Word Problems (3); 5. Length (7); 6. Time and Money (4); 7. Data (3); 8. Geometry (5); 9. Counting and Place Value Patterns (7); 10. Mental Strategies (7); 11. Stories With Models (3); 12. Money and Time (4); 13. Measuring and Data (3); 14. Thinking About Shapes (2)
+
+### 3rd Grade Math
+
+The meaning of multiplication and division, the facts up to 10 times 10, and the properties that make them easier; two-step word problems and number patterns; rounding and three-digit addition and subtraction; fractions as numbers on a number line; time to the minute, mass and liquid volume; scaled graphs and line plots; area, perimeter and the sorting of quadrilaterals.
+
+- **Prerequisite(s):** 2nd Grade Math
+- **Basis:** the Common Core State Standards for this grade
+- **Size:** 14 units · 26 modules · 65 topics
+- **Full content:** [math-courses/3rd-grade-math.md](math-courses/3rd-grade-math.md)
+- **Units:** 1. Multiplication (9); 2. Division (4); 3. Problem Solving and Patterns (4); 4. Place Value (5); 5. Fractions (5); 6. Measurement and Data (6); 7. Geometry (7); 8. Multiplication and Division Strategies (6); 9. Reasoning With Numbers (3); 10. Fractions on Lines and Equal Fractions (5); 11. Time and Measures (4); 12. Graphs (3); 13. Area and Perimeter (3); 14. Thinking About Quadrilaterals (1)
+
+### Number Theory
+
+Divisors and primes, powers modulo n through the theorems of Fermat and Euler, primitive roots and discrete logarithms, quadratic residues and reciprocity, arithmetic functions and the size of the primes, classic equations in whole numbers, and factoring and public-key cryptography.
+
+- **Prerequisite(s):** Methods of Proof
+- **Basis:** the standard content of a first undergraduate course, as in Niven, Zuckerman and Montgomery or Hardy and Wright
+- **Size:** 5 units · 10 modules · 78 topics
+- **Full content:** [math-courses/number-theory.md](math-courses/number-theory.md)
+- **Units:** 1. Divisors and Primes (18); 2. Congruences (33); 3. Quadratic Residues (7); 4. Equations in Whole Numbers (15); 5. Computation and Cryptography (5)
+
+### Real Analysis
+
+The rigorous foundations of calculus: completeness, sequences and series, limits and continuity through epsilons and deltas, compactness and connectedness, the Riemann and Stieltjes integrals, a first look at measure, and uniform convergence with its applications.
+
+- **Prerequisite(s):** Calculus II and Methods of Proof
+- **Basis:** the standard content of a first course, as in Abbott or the first eleven chapters of Rudin's Principles
+- **Size:** 5 units · 8 modules · 82 topics
+- **Full content:** [math-courses/real-analysis.md](math-courses/real-analysis.md)
+- **Units:** 1. Sequences (17); 2. Series (9); 3. Limits and Continuity (22); 4. Differentiation and Integration (20); 5. Sequences of Functions (14)
+
+### Complex Analysis
+
+Calculus for functions of a complex variable: analytic functions and the Cauchy–Riemann equations, contour integrals and Cauchy's theorems, Taylor and Laurent series, residues and their applications, analytic continuation, conformal maps, and the Dirichlet problem.
+
+- **Prerequisite(s):** Multivariable Calculus
+- **Basis:** the standard content of a first course, as in Churchill and Brown or Ahlfors
+- **Size:** 4 units · 7 modules · 59 topics
+- **Full content:** [math-courses/complex-analysis.md](math-courses/complex-analysis.md)
+- **Units:** 1. Analytic Functions (14); 2. Integration (12); 3. Series and Residues (24); 4. Geometry of Analytic Maps (9)
+
+### Linear Programming
+
+Optimization with linear constraints: formulating programs, the graphical and simplex methods, duality and sensitivity, modeling techniques, transportation, assignment and flow problems, integer programs and branch and bound, large programs, and matrix games.
+
+- **Prerequisite(s):** Linear Algebra
+- **Basis:** the standard content of a first course, as in Chvátal, Vanderbei or Bertsimas and Tsitsiklis
+- **Size:** 4 units · 8 modules · 52 topics
+- **Full content:** [math-courses/linear-programming.md](math-courses/linear-programming.md)
+- **Units:** 1. Foundations (12); 2. The Simplex Method (10); 3. Duality (14); 4. Applications (16)
+
+### Partial Differential Equations
+
+Equations in several variables: classification, characteristics and shocks, separation of variables and Sturm-Liouville problems, the heat, wave and Laplace equations, transforms, Green's functions, special functions, and finite differences with their stability.
+
+- **Prerequisite(s):** Differential Equations and Multivariable Calculus
+- **Basis:** the standard content of a first course, as in Strauss or Haberman
+- **Size:** 4 units · 6 modules · 56 topics
+- **Full content:** [math-courses/partial-differential-equations.md](math-courses/partial-differential-equations.md)
+- **Units:** 1. First Ideas (13); 2. The Heat Equation (12); 3. The Wave Equation (14); 4. Laplace's Equation (17)
