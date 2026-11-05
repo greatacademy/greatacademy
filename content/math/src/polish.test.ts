@@ -1,10 +1,55 @@
 import { t } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { polishText } from "./polish.ts";
+import { alignedChain, displayEquations, polishText } from "./polish.ts";
 
 const en = (text: string) => polishText(t(text, "中")).en;
 const zh = (text: string) => polishText(t("a", text))["zh-CN"];
+
+describe("displayEquations", () => {
+  const en = (s: string) => displayEquations(t(s, s)).en;
+
+  it("sets a wide equation on a line of its own, and leaves a short one in its sentence", () => {
+    expect(en("Multiply: $3x^2 + 12x + 7 = 3(x + 2)^2 - 5 + 100$, so we are done.")).toBe(
+      "Multiply:\n\n$$3x^2 + 12x + 7 = 3(x + 2)^2 - 5 + 100$$\n\nso we are done.",
+    );
+    expect(en("So $x = 5$, and $y = 3$.")).toBe("So $x = 5$, and $y = 3$.");
+    expect(en("Integrate: $\\int x \\, dx = x^2 / 2$.")).toBe("Integrate:\n\n$$\\int x \\, dx = x^2 / 2$$");
+  });
+
+  it("keeps a unit with its number", () => {
+    const line = "Then $3x^2 + 12x + 7 = 3(x + 2)^2 - 5 + 100$ m/s.";
+    expect(en(line)).toBe(line);
+  });
+
+  it("gives a matrix a line of its own", () => {
+    expect(en("Let $\\begin{pmatrix} 1 \\end{pmatrix}$ be it, and go on.")).toBe(
+      "Let\n\n$$\\begin{pmatrix} 1 \\end{pmatrix}$$\n\nbe it, and go on.",
+    );
+  });
+
+  it("keeps math in place in tables, lists and brackets", () => {
+    const wide = "$3x^2 + 12x + 7 = 3(x + 2)^2 - 5 + 100$";
+    for (const line of [`| ${wide} |`, `- ${wide}`, `1. ${wide}`, `It holds (since ${wide}).`, `**${wide}**`]) expect(en(line)).toBe(line);
+  });
+
+  it("breaks a long chain at its signs", () => {
+    expect(alignedChain("x = 1")).toBe("x = 1");
+    expect(alignedChain("a = b = c")).toBe("a = b = c");
+    expect(alignedChain("(x + 1)(x + 2)(x + 3) = (x^2 + 3x + 2)(x + 3) = x^3 + 6x^2 + 11x + 6")).toBe(
+      "\\begin{aligned} (x + 1)(x + 2)(x + 3) &= (x^2 + 3x + 2)(x + 3) \\\\ &= x^3 + 6x^2 + 11x + 6 \\end{aligned}",
+    );
+    expect(alignedChain("x_1 = 100000000000000, y_1 = 100000000000000, z = 300000")).toBe(
+      "x_1 = 100000000000000, y_1 = 100000000000000, z = 300000",
+    );
+  });
+
+  it("leaves a sign inside braces out of the chain", () => {
+    expect(alignedChain("\\sum_{k=1}^{100000000000000} k = 100000000000000000000")).toBe(
+      "\\sum_{k=1}^{100000000000000} k = 100000000000000000000",
+    );
+  });
+});
 
 describe("polishText", () => {
   it("drops what a generated step leaves behind", () => {

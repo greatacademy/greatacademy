@@ -126,13 +126,111 @@ export function polishText(text: Text, topicId = ""): Text {
   return { en: polishEnglish(polished(text.en)), "zh-CN": polished(text["zh-CN"]) };
 }
 
+/** visibleLength estimates how wide a piece of TeX is when typeset: command names and braces take no room of their own. */
+const visibleLength = (tex: string) => tex.replace(/\\[a-zA-Z]+/g, "x").replace(/[{}\s^_]/g, "").length;
+
+/** topLevelRelations gives the positions of the equals and approximately-equals signs of TeX outside all brackets. */
+function topLevelRelations(tex: string): readonly { readonly at: number; readonly length: number }[] {
+  const found: { at: number; length: number }[] = [];
+  let depth = 0;
+  for (let i = 0; i < tex.length; i++) {
+    const c = tex[i] as string;
+    if (c === "\\" && tex.startsWith("\\approx", i) && depth === 0) {
+      found.push({ at: i, length: 7 });
+      i += 6;
+    } else if (c === "\\" && (tex.startsWith("\\{", i) || tex.startsWith("\\}", i))) i += 1;
+    else if ("({[".includes(c)) depth += 1;
+    else if (")}]".includes(c)) depth -= 1;
+    else if (c === "=" && depth === 0) found.push({ at: i, length: 1 });
+  }
+  return found;
+}
+
+/** tallTex matches what needs the room of a line of its own: an integral, a sum, a product or a limit. */
+const tallTex = /\\(?:int|iint|sum|prod|lim)\b/;
+
+/** deservesDisplay tells whether an equation written inline would read better on a line of its own: it is wide, or tall. */
+function deservesDisplay(tex: string): boolean {
+  if (/\\begin\{[pbv]matrix\}/.test(tex)) return true;
+  if (!tex.includes("=") || tex.includes("\\text") || tex.includes("\\begin")) return false;
+  return visibleLength(tex) >= 22 || tallTex.test(tex) || (tex.match(/\\frac/g)?.length ?? 0) >= 2;
+}
+
+/** alignedChain breaks a wide chain of equalities into lines with their signs aligned, and leaves anything else as it is. */
+export function alignedChain(tex: string): string {
+  const relations = topLevelRelations(tex);
+  if (relations.length < 2 || visibleLength(tex) < 30 || /\\begin|\\\\|&|\\quad|(?<!\\),\s|;|\\text/.test(tex)) return tex;
+  const pieces: string[] = [tex.slice(0, (relations[0] as { at: number }).at).trim()];
+  relations.forEach((r, i) => {
+    const end = relations[i + 1]?.at ?? tex.length;
+    pieces.push(`&${tex.slice(r.at, r.at + r.length)} ${tex.slice(r.at + r.length, end).trim()}`);
+  });
+  const [first, second, ...rest] = pieces;
+  return `\\begin{aligned} ${first} ${second} ${rest.map((p) => `\\\\ ${p}`).join(" ")} \\end{aligned}`;
+}
+
+/** listOrTable matches a line of Markdown that must stay on one line. */
+const listOrTable = /^\s*(?:\||[-*+] |\d+[.)] |#|>)/;
+
+/** insidePhrase tells whether a line has an unclosed bracket or emphasis before a position: the math there is part of a phrase. */
+function insidePhrase(before: string): boolean {
+  const plain = before.replace(/\$[^$]*\$/g, "");
+  const count = (re: RegExp) => plain.match(re)?.length ?? 0;
+  return count(/[(（]/g) > count(/[)）]/g) || count(/\*\*/g) % 2 === 1 || count(/[“]/g) > count(/[”]/g);
+}
+
+/** unitTail matches a few words finishing a sentence after math, such as a unit: they cannot stand alone on a line. */
+const unitTail = /^\s*[^\s.,;，。；、$][^.。$]{0,14}[.。]?\s*$/;
+
+/** displayLine sets the wide equations of one line of a solution apart, so that each stands on a line of its own. */
+function displayLine(line: string): string {
+  if (listOrTable.test(line)) return line;
+  let out = "";
+  let last = 0;
+  for (const match of line.matchAll(/\\\$|\$\$[^$]*\$\$|\$((?:\\.|[^$\\])*)\$/g)) {
+    const tex = match[1];
+    const start = match.index;
+    if (tex === undefined) {
+      if (match[0].startsWith("$$")) {
+        out += `${line.slice(last, start)}$$${alignedChain(match[0].slice(2, -2))}$$`;
+        last = start + match[0].length;
+      }
+      continue;
+    }
+    if (!deservesDisplay(tex) || insidePhrase(line.slice(0, start))) continue;
+    const after = start + match[0].length;
+    if (unitTail.test(line.slice(after))) continue;
+    const stop = /^[.,;，。；、]/.test(line.slice(after)) ? 1 : 0;
+    const lead = line.slice(last, start).trimEnd();
+    out += `${lead}\n\n$$${alignedChain(tex)}$$\n\n`;
+    last = after + stop;
+    while (line[last] === " ") last += 1;
+  }
+  const tail = line.slice(last);
+  return (out + tail).replace(/^\n+/, "").replace(/\n+$/, "");
+}
+
+/**
+ * displayEquations sets the wide equations of a solution on lines of their own, breaking long chains of equalities at
+ * their signs, because a derivation is read step by step, and a run of inline math wraps at places that hide its steps.
+ */
+export function displayEquations(text: Text): Text {
+  const set = (s: string) =>
+    s
+      .split("\n")
+      .map(displayLine)
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n");
+  return { en: set(text.en), "zh-CN": set(text["zh-CN"]) };
+}
+
 /** polishProblem applies polishText to what a learner reads of a problem; the answer is left to the checker. */
 export function polishProblem(problem: Problem, topicId = ""): Problem {
   const { input } = problem.answer;
   return {
     ...problem,
     prompt: polishText(problem.prompt, topicId),
-    solution: polishText(problem.solution, topicId),
+    solution: displayEquations(polishText(problem.solution, topicId)),
     answer:
       input.kind === "choice"
         ? { ...problem.answer, input: { ...input, options: input.options.map((option) => polishText(option, topicId)) } }
