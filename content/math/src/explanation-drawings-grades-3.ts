@@ -26,22 +26,28 @@ import {
   wedge,
 } from "./explanation-drawings-kit.ts";
 
-const edge = (a: Point, b: Point, tone?: "action" | "result", dashed = false): PlaneMark => ({
+/** edge is a segment of the plane between two points. */
+export const edge = (a: Point, b: Point, tone?: "action" | "result", dashed = false): PlaneMark => ({
   kind: "segment",
   a,
   b,
   ...(tone && { tone }),
   ...(dashed && { dashed }),
 });
-const outline = (points: readonly Point[], tone?: "action" | "result"): PlaneMark[] =>
+/** outline joins the points of the plane into a closed chain. */
+export const outline = (points: readonly Point[], tone?: "action" | "result"): PlaneMark[] =>
   points.map((p, i) => edge(p, points[(i + 1) % points.length] as Point, tone));
-const dash = (a: Point, b: Point): Mark => seg(a, b, undefined, true);
-const ticks = (a: Point, b: Point, count = 1): Mark => ({ kind: "ticks", a, b, count });
-const arrows = (a: Point, b: Point, count = 1): Mark => ({ kind: "arrows", a, b, count });
-const mid = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+/** dash is a dashed segment. */
+export const dash = (a: Point, b: Point): Mark => seg(a, b, undefined, true);
+/** ticks marks a segment with equal-length ticks. */
+export const ticks = (a: Point, b: Point, count = 1): Mark => ({ kind: "ticks", a, b, count });
+/** arrows marks a segment as parallel. */
+export const arrows = (a: Point, b: Point, count = 1): Mark => ({ kind: "arrows", a, b, count });
+/** mid is the point halfway between two points. */
+export const mid = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 
 /** tape draws rows of equal boxes with a name and a value inside the boxes. */
-function tape(rows: readonly (readonly [string, number])[], value: string, extra = 0): Mark[] {
+export function tape(rows: readonly (readonly [string, number])[], value: string, extra = 0): Mark[] {
   return rows.flatMap(([label, n], r) => {
     const y = -r * 1.2;
     return [
@@ -56,7 +62,7 @@ function tape(rows: readonly (readonly [string, number])[], value: string, extra
 }
 
 /** realLine draws a number line with x = v − lo, with whole numbers marked every labelEvery. */
-function realLine(lo: number, hi: number, labelEvery = 1, y = 0, scale = 1): Mark[] {
+export function realLine(lo: number, hi: number, labelEvery = 1, y = 0, scale = 1): Mark[] {
   const marks: Mark[] = [seg([-0.5, y], [(hi - lo) * scale + 0.5, y])];
   for (let v = lo; v <= hi; v += 1) {
     marks.push(seg([(v - lo) * scale, y - 0.1], [(v - lo) * scale, y + 0.1]));
@@ -66,7 +72,7 @@ function realLine(lo: number, hi: number, labelEvery = 1, y = 0, scale = 1): Mar
 }
 
 /** ray graphs an inequality on a line from lo to hi: a closed or open circle at v, shaded to the end or to another place. */
-function ray(lo: number, hi: number, v: number, closed: boolean, to: number, y = 0): Mark[] {
+export function ray(lo: number, hi: number, v: number, closed: boolean, to: number, y = 0): Mark[] {
   const x = v - lo;
   const end = to - lo;
   const r = 0.17;
@@ -78,7 +84,7 @@ function ray(lo: number, hi: number, v: number, closed: boolean, to: number, y =
 }
 
 /** stacks draws a dot plot of the sorted values over a line from lo to hi, with a tone for the dots at the given places of the list. */
-function stacks(
+export function stacks(
   values: readonly number[],
   lo: number,
   hi: number,
@@ -95,7 +101,7 @@ function stacks(
 }
 
 /** boxPlot draws a box plot of a five-number summary, in the units of a line from lo. */
-function boxPlot(
+export function boxPlot(
   [a, b, c, d, e]: readonly [number, number, number, number, number],
   lo: number,
   y: number,
@@ -115,7 +121,7 @@ function boxPlot(
 }
 
 /** histogram draws touching bars over the class edges, with their heights on top. */
-function histogram(
+export function histogram(
   edges: readonly number[],
   heights: readonly number[],
   tones: Readonly<Record<number, "action" | "result">> = {},
@@ -134,20 +140,21 @@ function histogram(
 }
 
 /** rays draws rays from the origin at the given degrees. */
-const rays = (...degrees: readonly number[]): Mark[] => degrees.map((d) => seg([0, 0], on(d, 3.2)));
+export const rays = (...degrees: readonly number[]): Mark[] => degrees.map((d) => seg([0, 0], on(d, 3.2)));
 
 /** between marks the angle between two rays from the origin. */
-const between = (a: number, b: number, label: string, tone: "accent" | "action" | "result" = "accent"): Mark =>
+export const between = (a: number, b: number, label: string, tone: "accent" | "action" | "result" = "accent"): Mark =>
   angle([0, 0], on(a, 3.2), on(b, 3.2), tone, label);
 
 /** triPrism draws a prism on a triangle with its length going back. */
-function triPrism(a: Point, b: Point, c: Point, dx: number, dy: number): Mark[] {
+export function triPrism(a: Point, b: Point, c: Point, dx: number, dy: number): Mark[] {
   const up = (p: Point): Point => [p[0] + dx, p[1] + dy];
   return [poly(a, b, c), seg(b, up(b)), seg(c, up(c)), seg(up(b), up(c)), dash(a, up(a)), dash(up(a), up(b)), dash(up(a), up(c))];
 }
 
 const quartileData = [2, 3, 3, 4, 4, 5, 6, 7, 7, 8, 9];
-const mini = (x: number, body: readonly Mark[], label: string): Mark[] =>
+/** mini is a small pair of axes with marks on it, placed at x, with a label under it. */
+export const mini = (x: number, body: readonly Mark[], label: string): Mark[] =>
   shift([seg([-2.2, 0], [2.2, 0]), seg([0, -2.2], [0, 2.2]), ...body, text([0, -2.2], label, "s")], x);
 
 /** gradeDrawings3 are further explanation drawings of grades 6 to 8, by topic and knowledge point. */

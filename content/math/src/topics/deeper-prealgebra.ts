@@ -5,6 +5,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -446,6 +447,7 @@ const raiseFromNew: KnowledgePointDef = {
 
 const missingSubtrahend: KnowledgePointDef = {
   id: "the-number-subtracted-from-a-negative-number",
+  figure: gradeDrawings4["subtracting-a-positive-number-from-a-negative-number#the-number-subtracted-from-a-negative-number"],
   title: t("The number subtracted from a negative number", "从负数中减去的数"),
   explanation: t(
     "Subtracting a positive number moves to the left on the number line, so a result further below zero than the start shows how far the move went. The amount subtracted is the distance between the start and the result. Since both of them lie below zero, this distance is the difference of their sizes, not the sum. Putting the number found back into the subtraction is a quick way of checking that it lands on the stated result.",
@@ -713,6 +715,7 @@ const coefficientFromSolution: KnowledgePointDef = {
 
 const extremeInteger: KnowledgePointDef = {
   id: "the-extreme-integer-solution-of-an-inequality",
+  figure: gradeDrawings4["solving-multi-step-inequalities#the-extreme-integer-solution-of-an-inequality"],
   title: t("The extreme integer solution of an inequality", "不等式的最大或最小整数解"),
   explanation: t(
     "Solving an inequality gives a boundary, and that boundary is often not a whole number. To find the least or greatest integer solution, solve first and then look along the number line from the boundary in the allowed direction. If the boundary is itself an integer, it counts only when the sign includes equality. A negative coefficient flips the sign during the division, and this changes which direction is allowed. Testing the integer found, and its neighbor, confirms the result.",

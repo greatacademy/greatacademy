@@ -18,6 +18,7 @@ import {
   relSymbol,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { annotate, at, onAxis, plain, riseRun, setText, shift } from "../graph-figures.ts";
 import {
   choiceProblem,
@@ -313,6 +314,7 @@ export const absoluteValueExpressions: TopicDef = {
     },
     {
       id: "distance-on-the-number-line",
+      figure: algebraDrawings["absolute-value-expressions#distance-on-the-number-line"],
       title: t("Distance on the number line", "数轴上的距离"),
       explanation: t(
         "The distance between two numbers $a$ and $b$ on the number line is $|a - b|$. The order does not matter, since $|a - b| = |b - a|$. For example, the distance between $-6$ and $4$ is $|-6 - 4| = |-10| = 10$.\n\nIn the same way, $|x - 3|$ is the distance between $x$ and $3$, and $|x + 3| = |x - (-3)|$ is the distance between $x$ and $-3$.",
@@ -1285,6 +1287,7 @@ export const absoluteValueGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "vertex-of-a-translated-graph",
+      figure: algebraDrawings["absolute-value-graphs#vertex-of-a-translated-graph"],
       title: t("The vertex", "顶点"),
       explanation: t(
         "The graph of $y = |x|$ is a V with its corner, the **vertex**, at $(0, 0)$: it follows $y = -x$ to the left of $0$ and $y = x$ to the right.\n\nThe graph of $y = |x - h| + k$ is the same V moved so that its vertex is at $(h, k)$: $h$ units right and $k$ units up. Watch the sign of $h$: $y = |x + 2| - 1 = |x - (-2)| + (-1)$ has its vertex at $(-2, -1)$.",
@@ -1311,6 +1314,7 @@ export const absoluteValueGraphs: TopicDef = {
     },
     {
       id: "equations-from-graphs",
+      figure: algebraDrawings["absolute-value-graphs#equations-from-graphs"],
       title: t("Equations from graphs", "由图象写解析式"),
       explanation: t(
         "To find the equation of a translated V of the same shape as $y = |x|$, read off the vertex $(h, k)$ and write $y = |x - h| + k$. Check with another point: one unit right of the vertex, the graph is one unit higher.",
@@ -1343,6 +1347,7 @@ export const absoluteValueGraphs: TopicDef = {
     },
     {
       id: "translating-the-graph",
+      figure: algebraDrawings["absolute-value-graphs#translating-the-graph"],
       title: t("Translating the graph", "平移图象"),
       explanation: t(
         "Moving the graph of $y = |x|$ right by $h$ units replaces $x$ with $x - h$; moving it up by $k$ units adds $k$. So moving it $3$ units **left** and $2$ units **down** gives\n\n$$y = |x - (-3)| - 2 = |x + 3| - 2.$$",
@@ -1389,6 +1394,7 @@ export const verticalReflectionsOfAbsoluteValueGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "opening-upward-or-downward",
+      figure: algebraDrawings["vertical-reflections-of-absolute-value-graphs#opening-upward-or-downward"],
       title: t("Opening upward or downward", "开口向上或向下"),
       explanation: t(
         "A minus sign in front of the absolute value turns every $y$-value into its opposite, so the graph of $y = -|x|$ is the graph of $y = |x|$ reflected in the $x$-axis: a V that opens **downward**.\n\nThe graph of $y = -|x - h| + k$ opens downward with its vertex at $(h, k)$, which is now the **highest** point.",
@@ -1415,6 +1421,7 @@ export const verticalReflectionsOfAbsoluteValueGraphs: TopicDef = {
     },
     {
       id: "equations-of-downward-graphs",
+      figure: algebraDrawings["vertical-reflections-of-absolute-value-graphs#equations-of-downward-graphs"],
       title: t("Equations from graphs", "由图象写解析式"),
       explanation: t(
         "If a V of the same shape as $y = |x|$ opens downward with vertex $(h, k)$, its equation is $y = -|x - h| + k$. If it opens upward, it is $y = |x - h| + k$.",
@@ -1448,6 +1455,7 @@ export const verticalReflectionsOfAbsoluteValueGraphs: TopicDef = {
     },
     {
       id: "reflecting-in-the-x-axis",
+      figure: algebraDrawings["vertical-reflections-of-absolute-value-graphs#reflecting-in-the-x-axis"],
       title: t("Reflecting in the x-axis", "关于 x 轴翻折"),
       explanation: t(
         "Reflecting the graph of $y = f(x)$ in the $x$-axis gives $y = -f(x)$: **every** term changes sign, including the constant. The reflection of $y = |x - 1| + 3$ is\n\n$$y = -(|x - 1| + 3) = -|x - 1| - 3,$$\n\nwhose vertex is $(1, -3)$: the vertex is reflected too.",
@@ -1494,6 +1502,7 @@ export const stretchesOfAbsoluteValueGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "slopes-of-the-arms",
+      figure: algebraDrawings["stretches-of-absolute-value-graphs#slopes-of-the-arms"],
       title: t("Slopes of the arms", "两支的斜率"),
       explanation: t(
         "For $a > 0$, the graph of $y = a|x|$ multiplies every $y$-value of $y = |x|$ by $a$. Its right arm is the line $y = ax$, with slope $a$, and its left arm is $y = -ax$, with slope $-a$.\n\nAdding $k$ moves the graph up without changing the slopes: the arms of $y = 3|x| - 2$ have slopes $3$ and $-3$.",
@@ -1521,6 +1530,7 @@ export const stretchesOfAbsoluteValueGraphs: TopicDef = {
     },
     {
       id: "narrower-and-wider-graphs",
+      figure: algebraDrawings["stretches-of-absolute-value-graphs#narrower-and-wider-graphs"],
       title: t("Narrower and wider", "变窄与变宽"),
       explanation: t(
         "In $y = a|x|$ with $a > 0$, a larger $a$ makes the arms steeper, so the V is **narrower**. For $a > 1$ the graph is a vertical stretch of $y = |x|$ (narrower); for $0 < a < 1$ it is a vertical compression (wider). For example, $y = 4|x|$ is narrower than $y = \\frac{1}{2}|x|$.",
@@ -1561,6 +1571,7 @@ export const stretchesOfAbsoluteValueGraphs: TopicDef = {
     },
     {
       id: "stretched-graphs-from-graphs",
+      figure: algebraDrawings["stretches-of-absolute-value-graphs#stretched-graphs-from-graphs"],
       title: t("Equations from graphs", "由图象写解析式"),
       explanation: t(
         "To find $a$ and $k$ in $y = a|x| + k$ from a graph, read the vertex $(0, k)$, then move right from the vertex to a point on the graph: $a$ is the rise divided by the run. If the graph passes through $(0, -1)$ and $(2, 0)$, then $a = \\frac{1}{2}$ and $y = \\frac{1}{2}|x| - 1$.",
@@ -1644,6 +1655,7 @@ export const combiningTransformationsOfAbsoluteValueGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "describing-transformations",
+      figure: algebraDrawings["combining-transformations-of-absolute-value-graphs#describing-transformations"],
       title: t("Describing the transformations", "描述变换"),
       explanation: t(
         "The graph of $y = a|x - h| + k$ comes from $y = |x|$ in steps:\n\n1. if $a < 0$, reflect in the $x$-axis;\n2. stretch vertically by the factor $|a|$ (a compression if $|a| < 1$);\n3. shift so that the vertex moves to $(h, k)$.\n\nFor $y = -2|x + 3| - 1$: reflect, stretch by $2$, then shift $3$ units left and $1$ unit down.",
@@ -1692,6 +1704,7 @@ export const combiningTransformationsOfAbsoluteValueGraphs: TopicDef = {
     },
     {
       id: "combined-equations-from-graphs",
+      figure: algebraDrawings["combining-transformations-of-absolute-value-graphs#combined-equations-from-graphs"],
       title: t("Equations from graphs", "由图象写解析式"),
       explanation: t(
         "To write $y = a|x - h| + k$ from a graph: read the vertex $(h, k)$; then go one or more units right of the vertex to a point on the graph and divide the change in $y$ by the change in $x$ to get $a$. The sign of $a$ is negative when the graph opens downward.\n\nIf the vertex is $(1, 2)$ and the graph passes through $(3, -2)$, then $a = \\frac{-2 - 2}{3 - 1} = -2$ and $y = -2|x - 1| + 2$.",
@@ -1821,6 +1834,7 @@ export const domainAndRangeOfAbsoluteValueFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "domain-and-range-from-an-equation",
+      figure: algebraDrawings["domain-and-range-of-absolute-value-functions#domain-and-range-from-an-equation"],
       title: t("From an equation", "由解析式求"),
       explanation: t(
         "Every real number can be put into $f(x) = a|x - h| + k$, so the **domain** is $(-\\infty, \\infty)$.\n\nThe **range** is decided by the vertex: if $a > 0$ the V opens upward and its lowest value is $k$, so the range is $[k, \\infty)$; if $a < 0$ it opens downward and the range is $(-\\infty, k]$. For $f(x) = -2|x - 5| + 3$ the range is $(-\\infty, 3]$.",
@@ -1860,6 +1874,7 @@ export const domainAndRangeOfAbsoluteValueFunctions: TopicDef = {
     },
     {
       id: "domain-and-range-from-a-graph",
+      figure: algebraDrawings["domain-and-range-of-absolute-value-functions#domain-and-range-from-a-graph"],
       title: t("From a graph on an interval", "由区间上的图象求"),
       explanation: t(
         "When the graph is drawn only between two endpoints, the domain is the interval between their $x$-coordinates. For the range, find the lowest and highest $y$-values on the graph: they occur at the endpoints or at the vertex, if the vertex is between them.\n\nThe graph of $y = |x - 1|$ from $(-2, 3)$ to $(2, 1)$ has domain $[-2, 2]$ and range $[0, 3]$, because the vertex $(1, 0)$ is on it.",
@@ -1930,6 +1945,7 @@ export const domainAndRangeOfAbsoluteValueFunctions: TopicDef = {
     },
     {
       id: "range-on-a-closed-interval",
+      figure: algebraDrawings["domain-and-range-of-absolute-value-functions#range-on-a-closed-interval"],
       title: t("Range on a closed interval", "闭区间上的值域"),
       explanation: t(
         "To find the range of $f(x) = a|x - h| + k$ for $p \\le x \\le q$, evaluate $f$ at both ends, and also at the vertex $x = h$ if $p < h < q$. The range runs from the least of these values to the greatest.\n\nFor $f(x) = 2|x + 1| - 3$ on $-3 \\le x \\le 2$: $f(-3) = 1$, $f(2) = 3$ and $f(-1) = -3$, so the range is $[-3, 3]$, not $[1, 3]$.",
@@ -1988,6 +2004,7 @@ export const rootsOfAbsoluteValueFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "how-many-roots",
+      figure: algebraDrawings["roots-of-absolute-value-functions#how-many-roots"],
       title: t("How many roots", "零点的个数"),
       explanation: t(
         "The graph of $f(x) = a|x - h| + k$ is a V with vertex $(h, k)$, so its number of roots depends on where the vertex is and which way the V opens:\n\n- vertex below the $x$-axis and opening upward, or above and opening downward: **two** roots;\n- vertex on the $x$-axis ($k = 0$): **one** root, $x = h$;\n- vertex above and opening upward, or below and opening downward: **no** roots.\n\nIn short: two roots when $a$ and $k$ have opposite signs, none when they have the same sign.",
@@ -2078,6 +2095,7 @@ export const rootsOfAbsoluteValueFunctions: TopicDef = {
     },
     {
       id: "roots-from-the-graph",
+      figure: algebraDrawings["roots-of-absolute-value-functions#roots-from-the-graph"],
       title: t("Roots from the graph", "由图象求零点"),
       explanation: t(
         "The roots are the $x$-coordinates of the points where the V meets the $x$-axis. Because the V is symmetric about the vertical line through its vertex, two roots are always the same distance from $x = h$ on either side.",

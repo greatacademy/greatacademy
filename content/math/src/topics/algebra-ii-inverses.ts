@@ -1,6 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, linear, num, type PlaneMark, type PlaneView, type Point, plane, poly, Q } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, at, plain, riseRun } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, numberProblem, pointProblem, solutionsProblem, steps, why } from "../problems.ts";
 
@@ -245,6 +246,7 @@ export const calculatingTheInverseOfAFunction: TopicDef = {
     },
     {
       id: "inverses-of-square-root-functions",
+      figure: algebraDrawings2["calculating-the-inverse-of-a-function#inverses-of-square-root-functions"],
       title: t("Inverses of square-root functions", "根式函数的反函数"),
       explanation: t(
         "Undo a square root by squaring. For $f(x) = 2\\sqrt{x + 1} - 3$, swap: $x = 2\\sqrt{y + 1} - 3$. Then\n\n$$\\frac{x + 3}{2} = \\sqrt{y + 1}, \\quad y + 1 = \\left(\\frac{x + 3}{2}\\right)^{2}, \\quad f^{-1}(x) = \\frac{(x + 3)^{2}}{4} - 1.$$\n\nThe formula is a parabola, but $f^{-1}$ is only its right half: the domain of $f^{-1}$ is the range of $f$, here $x \\ge -3$.",
@@ -319,6 +321,7 @@ export const inversesOfQuadraticFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "inverses-of-shifted-squares",
+      figure: algebraDrawings2["inverses-of-quadratic-functions#inverses-of-shifted-squares"],
       title: t("Inverses of shifted squares", "平移后平方函数的反函数"),
       explanation: t(
         "A quadratic function is invertible only on one side of its vertex. For $f(x) = (x - 3)^{2} + 1$ with $x \\ge 3$, swap: $x = (y - 3)^{2} + 1$, so $(y - 3)^{2} = x - 1$ and\n\n$$y - 3 = \\pm\\sqrt{x - 1}.$$\n\nThe outputs of $f^{-1}$ are the inputs of $f$, so $y \\ge 3$ and $y - 3 \\ge 0$: take the **positive** root, $f^{-1}(x) = \\sqrt{x - 1} + 3$. With the domain $x \\le 3$ instead, $y - 3 \\le 0$ and $f^{-1}(x) = -\\sqrt{x - 1} + 3$.",
@@ -469,6 +472,7 @@ export const plottingXAsAFunctionOfY: TopicDef = {
   knowledgePoints: [
     {
       id: "points-on-x-as-a-function-of-y",
+      figure: algebraDrawings2["plotting-x-as-a-function-of-y#points-on-x-as-a-function-of-y"],
       title: t("Points on the graph", "图象上的点"),
       explanation: t(
         "In an equation such as $x = y^{2} - 2y$, $x$ is a **function of $y$**: choose $y$ first, then compute $x$. The graph is still drawn in the usual plane, with $x$ across and $y$ up.\n\nFor $y = 3$: $x = 3^{2} - 2 \\cdot 3 = 3$, so the point $(3, 3)$ is on the graph. For $y = -1$: $x = 1 + 2 = 3$, so $(3, -1)$ is on it too. Write the point as $(x, y)$, not in the order the numbers were found.",
@@ -499,6 +503,7 @@ export const plottingXAsAFunctionOfY: TopicDef = {
     },
     {
       id: "sideways-parabolas",
+      figure: algebraDrawings2["plotting-x-as-a-function-of-y#sideways-parabolas"],
       title: t("Sideways parabolas", "开口向左右的抛物线"),
       explanation: t(
         "The graph of $x = a(y - k)^{2} + h$ is the graph of $y = a(x - h)^{2} + k$ with the roles of $x$ and $y$ swapped: a parabola on its side.\n\n- Its **vertex** is $(h, k)$ (the $x$-coordinate is the number added outside).\n- Its axis of symmetry is the horizontal line $y = k$.\n- It opens to the **right** when $a > 0$ (since $x \\ge h$) and to the **left** when $a < 0$.\n\n$x = -(y + 2)^{2} + 4$ has vertex $(4, -2)$ and opens to the left.",
@@ -537,6 +542,7 @@ export const plottingXAsAFunctionOfY: TopicDef = {
     },
     {
       id: "matching-sideways-graphs",
+      figure: algebraDrawings2["plotting-x-as-a-function-of-y#matching-sideways-graphs"],
       title: t("Matching graphs and equations", "图象与方程配对"),
       explanation: t(
         "To match a sideways parabola with its equation, read the vertex $(h, k)$ and the direction it opens, then find $a$ from one more point: one unit above or below the vertex, $x = a + h$.\n\nIf the vertex is $(1, 2)$, the graph opens to the left, and it passes through $(-1, 3)$, then $-1 = a + 1$, so $a = -2$ and the equation is $x = -2(y - 2)^{2} + 1$.",
@@ -613,6 +619,7 @@ export const periodicFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-period-from-a-graph",
+      figure: algebraDrawings2["periodic-functions#the-period-from-a-graph"],
       title: t("The period from a graph", "从图象求周期"),
       explanation: t(
         "A function $f$ is **periodic** with period $p > 0$ if $f(x + p) = f(x)$ for every $x$: the graph repeats itself every $p$ units to the right. The **period** is the smallest such $p$.\n\nTo read it from a graph, pick a recognizable point, such as a peak, and measure the horizontal distance to the next point where the same pattern starts again. If the peaks are at $x = -3, 1, 5$, the period is $4$.",
@@ -673,6 +680,7 @@ export const periodicFunctions: TopicDef = {
     },
     {
       id: "periodic-values-from-a-graph",
+      figure: algebraDrawings2["periodic-functions#periodic-values-from-a-graph"],
       title: t("Values far along the graph", "图象远处的函数值"),
       explanation: t(
         "When only part of a periodic graph is visible, first read the period, then shift the input back into the window by a multiple of the period.\n\nIf the graph has period $3$ and passes through $(1, 4)$, then $f(31) = f(31 - 10 \\cdot 3) = f(1) = 4$.",
@@ -740,6 +748,7 @@ export const evenAndOddFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "even-and-odd-from-a-graph",
+      figure: algebraDrawings2["even-and-odd-functions#even-and-odd-from-a-graph"],
       title: t("Even and odd graphs", "奇偶函数的图象"),
       explanation: t(
         "A function is **even** if $f(-x) = f(x)$ for every $x$: its graph is symmetric about the $y$-axis, so folding along the $y$-axis matches the two halves. It is **odd** if $f(-x) = -f(x)$: its graph is symmetric about the origin, so a half-turn about $(0, 0)$ matches it with itself.\n\nTest a few points: if $(2, 3)$ is on the graph, an even function also passes through $(-2, 3)$, an odd one through $(-2, -3)$. A graph that fails both is neither. An odd function defined at $0$ passes through the origin, since $f(0) = -f(0)$.",
@@ -1051,6 +1060,7 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
   knowledgePoints: [
     {
       id: "vertical-asymptotes",
+      figure: algebraDrawings2["unbounded-behavior-of-functions-near-a-point#vertical-asymptotes"],
       title: t("Vertical asymptotes", "竖直渐近线"),
       explanation: t(
         "Near a value where the denominator of a fraction is $0$ and the numerator is not, the fraction divides by tinier and tinier numbers, so it grows **without bound**. The graph then hugs the vertical line there, a **vertical asymptote**.\n\nFactor the denominator and cancel common factors first: a factor that cancels leaves only a hole in the graph, not an asymptote.\n\n$$f(x) = \\frac{x - 1}{x^{2} + x - 2} = \\frac{x - 1}{(x - 1)(x + 2)}$$\n\nThe factor $x - 1$ cancels, so the only vertical asymptote is $x = -2$.",
@@ -1119,6 +1129,7 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
     },
     {
       id: "unbounded-behavior-from-a-graph",
+      figure: algebraDrawings2["unbounded-behavior-of-functions-near-a-point#unbounded-behavior-from-a-graph"],
       title: t("Unbounded behavior from a graph", "从图象看无界行为"),
       explanation: t(
         "On a graph, a vertical asymptote $x = h$ is often drawn dashed. Follow each branch toward it: a branch that shoots up goes to $\\infty$, one that plunges down goes to $-\\infty$. Read the left side ($x \\to h^{-}$) and the right side ($x \\to h^{+}$) separately; they may agree or not.",
@@ -1267,6 +1278,7 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
     },
     {
       id: "average-rate-of-change-from-a-graph",
+      figure: algebraDrawings2["the-average-rate-of-change-of-a-function#average-rate-of-change-from-a-graph"],
       title: t("From a graph", "由图象求"),
       explanation: t(
         "On a graph, the average rate of change from $a$ to $b$ is the slope of the **secant line** joining the points of the graph above $x = a$ and $x = b$. Read the two heights, then divide the rise by the run. What the graph does in between does not matter.",

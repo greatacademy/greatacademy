@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
@@ -118,33 +119,36 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
     ),
   ],
   "consistency-and-dependency": [
-    skill(
-      "the-coefficient-that-makes-no-solution",
-      ["The coefficient that makes no solution", "使方程组无解的系数"],
-      [
-        "A system has no solution when its lines are parallel and different. So the coefficients on the left must be in one ratio, while the constants on the right are not in that ratio.",
-        "方程组无解，当且仅当两条直线平行且不重合。所以左边的系数要成同一比例，而右边的常数不成这个比例。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 9);
-        const b = nz(rng, 9);
-        const c = rng.int(1, 9);
-        const k = rng.int(2, 6);
-        const d = k * c + rng.int(1, 9);
-        return integer(
-          [
-            `For what value of $t$ does the system $${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}y = ${c}$, $${k * a}x + ty = ${d}$ have no solution?`,
-            `$t$ 为何值时，方程组 $${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}y = ${c}$，$${k * a}x + ty = ${d}$ 无解？`,
-          ],
-          k * b,
-          [b, -k * b, k * b + k],
-          [
-            `The second left side must be $${k}$ times the first, so $t = ${k * b}$. The constant $${d}$ is not $${k}$ times $${c}$, so the lines differ.`,
-            `第二个方程的左边必须是第一个的 $${k}$ 倍，所以 $t = ${k * b}$。常数 $${d}$ 不是 $${c}$ 的 $${k}$ 倍，所以两条直线不重合。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-coefficient-that-makes-no-solution",
+        ["The coefficient that makes no solution", "使方程组无解的系数"],
+        [
+          "A system has no solution when its lines are parallel and different. So the coefficients on the left must be in one ratio, while the constants on the right are not in that ratio.",
+          "方程组无解，当且仅当两条直线平行且不重合。所以左边的系数要成同一比例，而右边的常数不成这个比例。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 9);
+          const b = nz(rng, 9);
+          const c = rng.int(1, 9);
+          const k = rng.int(2, 6);
+          const d = k * c + rng.int(1, 9);
+          return integer(
+            [
+              `For what value of $t$ does the system $${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}y = ${c}$, $${k * a}x + ty = ${d}$ have no solution?`,
+              `$t$ 为何值时，方程组 $${a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}y = ${c}$，$${k * a}x + ty = ${d}$ 无解？`,
+            ],
+            k * b,
+            [b, -k * b, k * b + k],
+            [
+              `The second left side must be $${k}$ times the first, so $t = ${k * b}$. The constant $${d}$ is not $${k}$ times $${c}$, so the lines differ.`,
+              `第二个方程的左边必须是第一个的 $${k}$ 倍，所以 $t = ${k * b}$。常数 $${d}$ 不是 $${c}$ 的 $${k}$ 倍，所以两条直线不重合。`,
+            ],
+          );
+        },
+      ),
+      figure: algebraDrawings["consistency-and-dependency#the-coefficient-that-makes-no-solution"],
+    },
   ],
   "end-behavior": [
     skill(
@@ -404,33 +408,36 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
     ),
   ],
   "range-advanced-cases": [
-    skill(
-      "the-range-of-a-reciprocal-function",
-      ["The range of a reciprocal function", "倒数函数的值域"],
-      [
-        "A fraction with a constant top can be very large or very small but never zero. So $\\frac{a}{x - h} + k$ takes every value except $k$, which is the horizontal asymptote.",
-        "分子是常数的分数可以很大或很小，但不会是零。所以 $\\frac{a}{x - h} + k$ 取到除 $k$ 以外的所有值，$k$ 就是水平渐近线。",
-      ],
-      (rng) => {
-        const a = nz(rng, 9);
-        let h = nz(rng, 9);
-        const k = nz(rng, 9);
-        if (h === k) h = -h;
-        return chooseFilled(
-          rng,
-          [
-            `Find the range of $f(x) = ${frac(a, factorOf(h).replace(/[()]/g, ""))}${signed(k)}$.`,
-            `求 $f(x) = ${frac(a, factorOf(h).replace(/[()]/g, ""))}${signed(k)}$ 的值域。`,
-          ],
-          `y \\ne ${k}`,
-          [`y \\ne ${h}`, `y > ${k}`, `\\text{all real numbers}`],
-          [
-            `The fraction is never $0$, so $f(x)$ is never $${k}$, and it takes every other value.`,
-            `分数不会是 $0$，所以 $f(x)$ 不会等于 $${k}$，其他值都能取到。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-range-of-a-reciprocal-function",
+        ["The range of a reciprocal function", "倒数函数的值域"],
+        [
+          "A fraction with a constant top can be very large or very small but never zero. So $\\frac{a}{x - h} + k$ takes every value except $k$, which is the horizontal asymptote.",
+          "分子是常数的分数可以很大或很小，但不会是零。所以 $\\frac{a}{x - h} + k$ 取到除 $k$ 以外的所有值，$k$ 就是水平渐近线。",
+        ],
+        (rng) => {
+          const a = nz(rng, 9);
+          let h = nz(rng, 9);
+          const k = nz(rng, 9);
+          if (h === k) h = -h;
+          return chooseFilled(
+            rng,
+            [
+              `Find the range of $f(x) = ${frac(a, factorOf(h).replace(/[()]/g, ""))}${signed(k)}$.`,
+              `求 $f(x) = ${frac(a, factorOf(h).replace(/[()]/g, ""))}${signed(k)}$ 的值域。`,
+            ],
+            `y \\ne ${k}`,
+            [`y \\ne ${h}`, `y > ${k}`, `\\text{all real numbers}`],
+            [
+              `The fraction is never $0$, so $f(x)$ is never $${k}$, and it takes every other value.`,
+              `分数不会是 $0$，所以 $f(x)$ 不会等于 $${k}$，其他值都能取到。`,
+            ],
+          );
+        },
+      ),
+      figure: algebraDrawings["range-advanced-cases#the-range-of-a-reciprocal-function"],
+    },
   ],
   "recursive-formulas-for-arithmetic-sequences": [
     skill(
@@ -487,31 +494,34 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
     ),
   ],
   "speed-time-graphs": [
-    skill(
-      "distance-from-the-area",
-      ["Distance from the area", "由面积求路程"],
-      [
-        "The area under a speed-time graph is the distance traveled, because speed times time is distance. A speed-up from rest makes a triangle, and steady speed makes a rectangle.",
-        "速度-时间图象下方的面积就是路程，因为速度乘时间就是路程。从静止加速得到三角形，匀速得到矩形。",
-      ],
-      (rng) => {
-        const v = 2 * rng.int(1, 15);
-        const t = rng.int(2, 20);
-        const s = rng.int(2, 30);
-        return whole(
-          [
-            `A speed-time graph rises in a straight line from $0$ to $${v}$ m/s over $${t}$ s, and then stays level for $${s}$ s. How far does the object travel, in meters?`,
-            `速度-时间图象在 $${t}$ 秒内从 $0$ 沿直线升到 $${v}$ 米/秒，然后保持水平 $${s}$ 秒。物体走了多少米？`,
-          ],
-          (v * t) / 2 + v * s,
-          [v * t + v * s, v * s, (v * (t + s)) / 2],
-          [
-            `The area under the graph is the distance. The triangle has area $${(v * t) / 2}$ and the rectangle has area $${v * s}$, so the total is $${(v * t) / 2 + v * s}$ m.`,
-            `图象下方的面积就是路程。三角形面积是 $${(v * t) / 2}$，矩形面积是 $${v * s}$，所以总路程是 $${(v * t) / 2 + v * s}$ 米。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "distance-from-the-area",
+        ["Distance from the area", "由面积求路程"],
+        [
+          "The area under a speed-time graph is the distance traveled, because speed times time is distance. A speed-up from rest makes a triangle, and steady speed makes a rectangle.",
+          "速度-时间图象下方的面积就是路程，因为速度乘时间就是路程。从静止加速得到三角形，匀速得到矩形。",
+        ],
+        (rng) => {
+          const v = 2 * rng.int(1, 15);
+          const t = rng.int(2, 20);
+          const s = rng.int(2, 30);
+          return whole(
+            [
+              `A speed-time graph rises in a straight line from $0$ to $${v}$ m/s over $${t}$ s, and then stays level for $${s}$ s. How far does the object travel, in meters?`,
+              `速度-时间图象在 $${t}$ 秒内从 $0$ 沿直线升到 $${v}$ 米/秒，然后保持水平 $${s}$ 秒。物体走了多少米？`,
+            ],
+            (v * t) / 2 + v * s,
+            [v * t + v * s, v * s, (v * (t + s)) / 2],
+            [
+              `The area under the graph is the distance. The triangle has area $${(v * t) / 2}$ and the rectangle has area $${v * s}$, so the total is $${(v * t) / 2 + v * s}$ m.`,
+              `图象下方的面积就是路程。三角形面积是 $${(v * t) / 2}$，矩形面积是 $${v * s}$，所以总路程是 $${(v * t) / 2 + v * s}$ 米。`,
+            ],
+          );
+        },
+      ),
+      figure: algebraDrawings["speed-time-graphs#distance-from-the-area"],
+    },
   ],
   "systems-with-decimal-coefficients": [
     skill(

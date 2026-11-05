@@ -2,6 +2,8 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choose, chooseMath, whole } from "./early-grades-more-kit.ts";
 import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
@@ -256,228 +258,246 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
     ),
   ],
   "vertical-angles": [
-    skill(
-      "the-angles-around-a-crossing",
-      ["The angles around a crossing", "交点周围的角"],
-      [
-        "Two crossing lines make four angles totaling $360$ degrees, in two equal pairs. So knowing the sum of a vertical pair gives each of the four angles directly.",
-        "两条相交直线形成四个角，总和 $360$ 度，并且两两相等。所以知道一对对顶角的和，就能直接得到四个角。",
-      ],
-      (rng) => {
-        const each = rng.int(16, 80);
-        const asked = rng.bool();
-        return whole(
-          asked
-            ? [
-                `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}$ degrees. What is the measure of each of the other two angles, in degrees?`,
-                `两条直线相交，一对对顶角的和是 $${2 * each}$ 度。另外两个角各是多少度？`,
-              ]
-            : [
-                `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}$ degrees. What is the sum of the other two angles, in degrees?`,
-                `两条直线相交，一对对顶角的和是 $${2 * each}$ 度。另外两个角的和是多少度？`,
-              ],
-          asked ? 180 - each : 360 - 2 * each,
-          asked ? [each, 180 - 2 * each, 360 - 2 * each] : [2 * each, 180 - each, 180 - 2 * each],
-          [
-            `Each angle of the pair is $${each}$, so each other angle is $${180 - each}$, and the two together are $${360 - 2 * each}$.`,
-            `这一对每个角是 $${each}$，所以其余每个角是 $${180 - each}$，两个合起来是 $${360 - 2 * each}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-angles-around-a-crossing",
+        ["The angles around a crossing", "交点周围的角"],
+        [
+          "Two crossing lines make four angles totaling $360$ degrees, in two equal pairs. So knowing the sum of a vertical pair gives each of the four angles directly.",
+          "两条相交直线形成四个角，总和 $360$ 度，并且两两相等。所以知道一对对顶角的和，就能直接得到四个角。",
+        ],
+        (rng) => {
+          const each = rng.int(16, 80);
+          const asked = rng.bool();
+          return whole(
+            asked
+              ? [
+                  `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}$ degrees. What is the measure of each of the other two angles, in degrees?`,
+                  `两条直线相交，一对对顶角的和是 $${2 * each}$ 度。另外两个角各是多少度？`,
+                ]
+              : [
+                  `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}$ degrees. What is the sum of the other two angles, in degrees?`,
+                  `两条直线相交，一对对顶角的和是 $${2 * each}$ 度。另外两个角的和是多少度？`,
+                ],
+            asked ? 180 - each : 360 - 2 * each,
+            asked ? [each, 180 - 2 * each, 360 - 2 * each] : [2 * each, 180 - each, 180 - 2 * each],
+            [
+              `Each angle of the pair is $${each}$, so each other angle is $${180 - each}$, and the two together are $${360 - 2 * each}$.`,
+              `这一对每个角是 $${each}$，所以其余每个角是 $${180 - each}$，两个合起来是 $${360 - 2 * each}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["vertical-angles#the-angles-around-a-crossing"],
+    },
   ],
   "classifying-triangles": [
-    skill(
-      "what-a-triangle-must-be",
-      ["What a triangle must be", "三角形一定是什么"],
-      [
-        "A triangle has one name by sides and one by angles, and some pairs cannot happen. An equilateral triangle has three $60$ degree angles, so it can be neither right nor obtuse.",
-        "三角形按边和按角各有一个名称，有些组合不可能。等边三角形三个角都是 $60$ 度，所以不可能是直角或钝角三角形。",
-      ],
-      (rng) => {
-        const impossible: [string, string, string, string][] = [
-          [
-            "An equilateral right triangle",
-            "等边直角三角形",
-            "All three angles of an equilateral triangle measure $60^\\circ$, so none of them is a right angle.",
-            "等边三角形的三个角都是 $60^\\circ$，所以没有直角。",
-          ],
-          [
-            "An equilateral obtuse triangle",
-            "等边钝角三角形",
-            "All three angles of an equilateral triangle measure $60^\\circ$, so none of them is obtuse.",
-            "等边三角形的三个角都是 $60^\\circ$，所以没有钝角。",
-          ],
-          [
-            "A right triangle with two obtuse angles",
-            "有两个钝角的直角三角形",
-            "Two obtuse angles alone add up to more than $180^\\circ$, which is the total of all three angles.",
-            "两个钝角的和已经超过 $180^\\circ$，而三个角的和才是 $180^\\circ$。",
-          ],
-          [
-            "A triangle with two right angles",
-            "有两个直角的三角形",
-            "Two right angles already add up to $180^\\circ$, which leaves $0^\\circ$ for the third angle.",
-            "两个直角的和已经是 $180^\\circ$，第三个角只剩 $0^\\circ$。",
-          ],
-        ];
-        const possible: [string, string][] = [
-          ["An isosceles right triangle", "等腰直角三角形"],
-          ["An isosceles obtuse triangle", "等腰钝角三角形"],
-          ["A scalene right triangle", "不等边直角三角形"],
-          ["A scalene obtuse triangle", "不等边钝角三角形"],
-          ["An isosceles acute triangle", "等腰锐角三角形"],
-          ["A scalene acute triangle", "不等边锐角三角形"],
-          ["An equilateral acute triangle", "等边锐角三角形"],
-        ];
-        const bad = rng.pick(impossible);
-        return choose(
-          rng,
-          ["Which of these triangles cannot exist?", "下面哪种三角形不可能存在？"],
-          [bad[0], bad[1]],
-          rng.sample(possible, 3),
-          [`${bad[0]} cannot exist. ${bad[2]}`, `${bad[1]}不可能存在。${bad[3]}`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "what-a-triangle-must-be",
+        ["What a triangle must be", "三角形一定是什么"],
+        [
+          "A triangle has one name by sides and one by angles, and some pairs cannot happen. An equilateral triangle has three $60$ degree angles, so it can be neither right nor obtuse.",
+          "三角形按边和按角各有一个名称，有些组合不可能。等边三角形三个角都是 $60$ 度，所以不可能是直角或钝角三角形。",
+        ],
+        (rng) => {
+          const impossible: [string, string, string, string][] = [
+            [
+              "An equilateral right triangle",
+              "等边直角三角形",
+              "All three angles of an equilateral triangle measure $60^\\circ$, so none of them is a right angle.",
+              "等边三角形的三个角都是 $60^\\circ$，所以没有直角。",
+            ],
+            [
+              "An equilateral obtuse triangle",
+              "等边钝角三角形",
+              "All three angles of an equilateral triangle measure $60^\\circ$, so none of them is obtuse.",
+              "等边三角形的三个角都是 $60^\\circ$，所以没有钝角。",
+            ],
+            [
+              "A right triangle with two obtuse angles",
+              "有两个钝角的直角三角形",
+              "Two obtuse angles alone add up to more than $180^\\circ$, which is the total of all three angles.",
+              "两个钝角的和已经超过 $180^\\circ$，而三个角的和才是 $180^\\circ$。",
+            ],
+            [
+              "A triangle with two right angles",
+              "有两个直角的三角形",
+              "Two right angles already add up to $180^\\circ$, which leaves $0^\\circ$ for the third angle.",
+              "两个直角的和已经是 $180^\\circ$，第三个角只剩 $0^\\circ$。",
+            ],
+          ];
+          const possible: [string, string][] = [
+            ["An isosceles right triangle", "等腰直角三角形"],
+            ["An isosceles obtuse triangle", "等腰钝角三角形"],
+            ["A scalene right triangle", "不等边直角三角形"],
+            ["A scalene obtuse triangle", "不等边钝角三角形"],
+            ["An isosceles acute triangle", "等腰锐角三角形"],
+            ["A scalene acute triangle", "不等边锐角三角形"],
+            ["An equilateral acute triangle", "等边锐角三角形"],
+          ];
+          const bad = rng.pick(impossible);
+          return choose(
+            rng,
+            ["Which of these triangles cannot exist?", "下面哪种三角形不可能存在？"],
+            [bad[0], bad[1]],
+            rng.sample(possible, 3),
+            [`${bad[0]} cannot exist. ${bad[2]}`, `${bad[1]}不可能存在。${bad[3]}`],
+          );
+        },
+      ),
+      figure: gradeDrawings4["classifying-triangles#what-a-triangle-must-be"],
+    },
   ],
   "isosceles-triangles": [
-    skill(
-      "two-cases-for-the-given-angle",
-      ["Two cases for the given angle", "已知角的两种情况"],
-      [
-        "If the known angle of an isosceles triangle could be a base angle or the vertex, both cases must be tried. An angle of 90 degrees or more can only be the vertex, because two of them would be too large.",
-        "如果等腰三角形的已知角可能是底角也可能是顶角，两种情况都要试。90 度或以上的角只能是顶角，因为两个这样的角太大了。",
-      ],
-      (rng) => {
-        const drawn = rng.int(5, 40) * 2;
-        const even = drawn === 60 ? 58 : drawn;
-        const e = 180 - 2 * even;
-        const v = (180 - even) / 2;
-        const answer = Math.max(even, e, v);
-        return whole(
-          [
-            `One angle of an isosceles triangle is $${even}^\\circ$. What is the greatest possible measure of another angle of the triangle, in degrees?`,
-            `等腰三角形的一个角是 $${even}^\\circ$。另一个角最大可能是多少度？`,
-          ],
-          answer,
-          [180 - even, 2 * even, Math.min(e, v)],
-          [
-            `As a base angle, it leaves a vertex of $${e}^\\circ$. As the vertex, it leaves base angles of $${v}^\\circ$. ${answer === even ? `As a base angle, it also has an equal partner of $${even}^\\circ$, so the` : "The"} greatest measure is $${answer}^\\circ$.`,
-            `作为底角，顶角是 $${e}^\\circ$。作为顶角，底角是 $${v}^\\circ$。${answer === even ? `作为底角时，另一个底角也是 $${even}^\\circ$，所以` : ""}最大的是 $${answer}^\\circ$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "two-cases-for-the-given-angle",
+        ["Two cases for the given angle", "已知角的两种情况"],
+        [
+          "If the known angle of an isosceles triangle could be a base angle or the vertex, both cases must be tried. An angle of 90 degrees or more can only be the vertex, because two of them would be too large.",
+          "如果等腰三角形的已知角可能是底角也可能是顶角，两种情况都要试。90 度或以上的角只能是顶角，因为两个这样的角太大了。",
+        ],
+        (rng) => {
+          const drawn = rng.int(5, 40) * 2;
+          const even = drawn === 60 ? 58 : drawn;
+          const e = 180 - 2 * even;
+          const v = (180 - even) / 2;
+          const answer = Math.max(even, e, v);
+          return whole(
+            [
+              `One angle of an isosceles triangle is $${even}^\\circ$. What is the greatest possible measure of another angle of the triangle, in degrees?`,
+              `等腰三角形的一个角是 $${even}^\\circ$。另一个角最大可能是多少度？`,
+            ],
+            answer,
+            [180 - even, 2 * even, Math.min(e, v)],
+            [
+              `As a base angle, it leaves a vertex of $${e}^\\circ$. As the vertex, it leaves base angles of $${v}^\\circ$. ${answer === even ? `As a base angle, it also has an equal partner of $${even}^\\circ$, so the` : "The"} greatest measure is $${answer}^\\circ$.`,
+              `作为底角，顶角是 $${e}^\\circ$。作为顶角，底角是 $${v}^\\circ$。${answer === even ? `作为底角时，另一个底角也是 $${even}^\\circ$，所以` : ""}最大的是 $${answer}^\\circ$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["isosceles-triangles#two-cases-for-the-given-angle"],
+    },
   ],
   "area-of-parallelograms": [
-    skill(
-      "two-heights-of-one-parallelogram",
-      ["Two heights of one parallelogram", "同一平行四边形的两条高"],
-      [
-        "A parallelogram has one area but two base and height pairs. So the two products are equal, and any three of the four lengths give the last one.",
-        "平行四边形只有一个面积，却有两组底和高。所以两个乘积相等，四个长度中知道三个就能求出第四个。",
-      ],
-      (rng) => {
-        // Sides p m and q m with heights q k and p k: k < m keeps each height shorter than the slanted side.
-        const [p, q] = rng.pick<[number, number]>([
-          [2, 3],
-          [3, 2],
-          [3, 4],
-          [4, 3],
-          [2, 5],
-          [5, 2],
-          [3, 5],
-          [5, 3],
-          [4, 5],
-          [5, 4],
-        ]);
-        const m = rng.int(3, 8);
-        const k = rng.int(2, m - 1);
-        const b1 = p * m;
-        const b2 = q * m;
-        const h1 = q * k;
-        const h2 = p * k;
-        const area = b1 * h1;
-        return whole(
-          [
-            `A parallelogram has sides of $${b1}$ cm and $${b2}$ cm. The height to the $${b1}$ cm side is $${h1}$ cm. What is the height to the $${b2}$ cm side, in cm?`,
-            `平行四边形两边长 $${b1}$ 厘米和 $${b2}$ 厘米。到 $${b1}$ 厘米边的高是 $${h1}$ 厘米。到 $${b2}$ 厘米边的高是多少厘米？`,
-          ],
-          h2,
-          [h1, area, b1 + b2],
-          [
-            `The area is $${b1} \\times ${h1} = ${area}$, and $${area} \\div ${b2} = ${h2}$.`,
-            `面积是 $${b1} \\times ${h1} = ${area}$，$${area} \\div ${b2} = ${h2}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "two-heights-of-one-parallelogram",
+        ["Two heights of one parallelogram", "同一平行四边形的两条高"],
+        [
+          "A parallelogram has one area but two base and height pairs. So the two products are equal, and any three of the four lengths give the last one.",
+          "平行四边形只有一个面积，却有两组底和高。所以两个乘积相等，四个长度中知道三个就能求出第四个。",
+        ],
+        (rng) => {
+          // Sides p m and q m with heights q k and p k: k < m keeps each height shorter than the slanted side.
+          const [p, q] = rng.pick<[number, number]>([
+            [2, 3],
+            [3, 2],
+            [3, 4],
+            [4, 3],
+            [2, 5],
+            [5, 2],
+            [3, 5],
+            [5, 3],
+            [4, 5],
+            [5, 4],
+          ]);
+          const m = rng.int(3, 8);
+          const k = rng.int(2, m - 1);
+          const b1 = p * m;
+          const b2 = q * m;
+          const h1 = q * k;
+          const h2 = p * k;
+          const area = b1 * h1;
+          return whole(
+            [
+              `A parallelogram has sides of $${b1}$ cm and $${b2}$ cm. The height to the $${b1}$ cm side is $${h1}$ cm. What is the height to the $${b2}$ cm side, in cm?`,
+              `平行四边形两边长 $${b1}$ 厘米和 $${b2}$ 厘米。到 $${b1}$ 厘米边的高是 $${h1}$ 厘米。到 $${b2}$ 厘米边的高是多少厘米？`,
+            ],
+            h2,
+            [h1, area, b1 + b2],
+            [
+              `The area is $${b1} \\times ${h1} = ${area}$, and $${area} \\div ${b2} = ${h2}$.`,
+              `面积是 $${b1} \\times ${h1} = ${area}$，$${area} \\div ${b2} = ${h2}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["area-of-parallelograms#two-heights-of-one-parallelogram"],
+    },
   ],
   "area-of-trapezoids": [
-    skill(
-      "the-missing-base-of-a-trapezoid",
-      ["The missing base of a trapezoid", "梯形缺失的底"],
-      [
-        "Twice the area divided by the height gives the sum of the two bases. Taking away the known base leaves the other, and forgetting to double the area is the usual slip.",
-        "面积的两倍除以高，得到两底之和。减去已知的底，就是另一个底；忘记把面积乘 $2$ 是常见错误。",
-      ],
-      (rng) => {
-        const h = rng.int(2, 12);
-        const b1 = rng.int(2, 20);
-        const drawn = rng.int(2, 10) * 2 - (b1 % 2 === 0 ? 0 : 1);
-        const b2 = drawn === b1 ? drawn + 2 : drawn;
-        const area = ((b1 + b2) * h) / 2;
-        const shownArea = `${area}`;
-        return whole(
-          [
-            `A trapezoid has area $${shownArea}$ square cm and height $${h}$ cm. One base is $${b1}$ cm. How long is the other base, in cm?`,
-            `梯形的面积是 $${shownArea}$ 平方厘米，高 $${h}$ 厘米，一条底长 $${b1}$ 厘米。另一条底长多少厘米？`,
-          ],
-          b2,
-          [b1 + b2, Number.isInteger(area / h) ? area / h : b2 + 1, b2 + b1 + 1],
-          [
-            `$2 \\times ${shownArea} \\div ${h} = ${b1 + b2}$, and $${b1 + b2} - ${b1} = ${b2}$.`,
-            `$2 \\times ${shownArea} \\div ${h} = ${b1 + b2}$，$${b1 + b2} - ${b1} = ${b2}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-missing-base-of-a-trapezoid",
+        ["The missing base of a trapezoid", "梯形缺失的底"],
+        [
+          "Twice the area divided by the height gives the sum of the two bases. Taking away the known base leaves the other, and forgetting to double the area is the usual slip.",
+          "面积的两倍除以高，得到两底之和。减去已知的底，就是另一个底；忘记把面积乘 $2$ 是常见错误。",
+        ],
+        (rng) => {
+          const h = rng.int(2, 12);
+          const b1 = rng.int(2, 20);
+          const drawn = rng.int(2, 10) * 2 - (b1 % 2 === 0 ? 0 : 1);
+          const b2 = drawn === b1 ? drawn + 2 : drawn;
+          const area = ((b1 + b2) * h) / 2;
+          const shownArea = `${area}`;
+          return whole(
+            [
+              `A trapezoid has area $${shownArea}$ square cm and height $${h}$ cm. One base is $${b1}$ cm. How long is the other base, in cm?`,
+              `梯形的面积是 $${shownArea}$ 平方厘米，高 $${h}$ 厘米，一条底长 $${b1}$ 厘米。另一条底长多少厘米？`,
+            ],
+            b2,
+            [b1 + b2, Number.isInteger(area / h) ? area / h : b2 + 1, b2 + b1 + 1],
+            [
+              `$2 \\times ${shownArea} \\div ${h} = ${b1 + b2}$, and $${b1 + b2} - ${b1} = ${b2}$.`,
+              `$2 \\times ${shownArea} \\div ${h} = ${b1 + b2}$，$${b1 + b2} - ${b1} = ${b2}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["area-of-trapezoids#the-missing-base-of-a-trapezoid"],
+    },
   ],
   "composite-shapes": [
-    skill(
-      "subtracting-a-hole",
-      ["Subtracting a hole", "减去一个洞"],
-      [
-        "A shape with a piece removed has the area of the whole minus the area of the piece. This is often quicker than cutting what remains into smaller rectangles.",
-        "挖去一块的图形，面积是整体减去这一块。这常常比把剩下的部分切成小长方形更快。",
-      ],
-      (rng) => {
-        const w = rng.int(8, 30);
-        const h = rng.int(8, 30);
-        const a = rng.int(2, w - 3);
-        const b = rng.int(2, h - 3);
-        const path = rng.int(1, 2);
-        const area = w * h - a * b * path;
-        return whole(
-          path === 1
-            ? [
-                `A rectangular garden is $${w}$ m by $${h}$ m. A pond of $${a}$ m by $${b}$ m is inside it. What area of the garden is not pond, in square meters?`,
-                `长方形花园长 $${w}$ 米、宽 $${h}$ 米，里面有一个 $${a}$ 米 × $${b}$ 米的池塘。花园中不是池塘的面积是多少平方米？`,
-              ]
-            : [
-                `A rectangular garden is $${w}$ m by $${h}$ m. A corner of $${a}$ m by $${b}$ m is paved, and so is another piece of the same size. What area is not paved, in square meters?`,
-                `长方形花园长 $${w}$ 米、宽 $${h}$ 米。一角 $${a}$ 米 × $${b}$ 米铺了砖，另一块同样大小的地方也铺了砖。没铺砖的面积是多少平方米？`,
-              ],
-          area,
-          [w * h, (w - a) * (h - b), 2 * (w + h)],
-          [
-            `$${w} \\times ${h} - ${path === 1 ? "" : "2 \\times "}${a} \\times ${b} = ${area}$.`,
-            `$${w} \\times ${h} - ${path === 1 ? "" : "2 \\times "}${a} \\times ${b} = ${area}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "subtracting-a-hole",
+        ["Subtracting a hole", "减去一个洞"],
+        [
+          "A shape with a piece removed has the area of the whole minus the area of the piece. This is often quicker than cutting what remains into smaller rectangles.",
+          "挖去一块的图形，面积是整体减去这一块。这常常比把剩下的部分切成小长方形更快。",
+        ],
+        (rng) => {
+          const w = rng.int(8, 30);
+          const h = rng.int(8, 30);
+          const a = rng.int(2, w - 3);
+          const b = rng.int(2, h - 3);
+          const path = rng.int(1, 2);
+          const area = w * h - a * b * path;
+          return whole(
+            path === 1
+              ? [
+                  `A rectangular garden is $${w}$ m by $${h}$ m. A pond of $${a}$ m by $${b}$ m is inside it. What area of the garden is not pond, in square meters?`,
+                  `长方形花园长 $${w}$ 米、宽 $${h}$ 米，里面有一个 $${a}$ 米 × $${b}$ 米的池塘。花园中不是池塘的面积是多少平方米？`,
+                ]
+              : [
+                  `A rectangular garden is $${w}$ m by $${h}$ m. A corner of $${a}$ m by $${b}$ m is paved, and so is another piece of the same size. What area is not paved, in square meters?`,
+                  `长方形花园长 $${w}$ 米、宽 $${h}$ 米。一角 $${a}$ 米 × $${b}$ 米铺了砖，另一块同样大小的地方也铺了砖。没铺砖的面积是多少平方米？`,
+                ],
+            area,
+            [w * h, (w - a) * (h - b), 2 * (w + h)],
+            [
+              `$${w} \\times ${h} - ${path === 1 ? "" : "2 \\times "}${a} \\times ${b} = ${area}$.`,
+              `$${w} \\times ${h} - ${path === 1 ? "" : "2 \\times "}${a} \\times ${b} = ${area}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["composite-shapes#subtracting-a-hole"],
+    },
   ],
   "comparing-data-sets": [
     skill(
@@ -773,32 +793,35 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
     ),
   ],
   "representations-of-functions": [
-    skill(
-      "the-rule-behind-a-table",
-      ["The rule behind a table", "表格背后的规则"],
-      [
-        "A table, a rule and a graph can show one function. To find a linear rule from a table, take the change per step as the multiplier and the output at zero as the constant.",
-        "表格、规则和图像可以表示同一个函数。要由表格求线性规则，每步的变化是乘数，输入为 $0$ 时的输出是常数。",
-      ],
-      (rng) => {
-        const m = rng.int(2, 9) * (rng.bool() ? 1 : -1);
-        let b = rng.int(1, 12) * (rng.bool() ? 1 : -1);
-        if (b === m) b += 1;
-        const xs = [1, 2, 3];
-        const pairs = xs.map((x) => `(${x}, ${m * x + b})`).join(", ");
-        const line = (mm: number, bb: number) => `y = ${mm}x${signed(bb)}`;
-        return chooseMath(
-          rng,
-          [`Which rule gives the points ${`$${pairs}$`}?`, `哪个规则给出点 $${pairs}$？`],
-          line(m, b),
-          [line(b, m), line(m, -b), line(-m, b)],
-          [
-            `$y$ changes by $${m}$ per step, and stepping back from $x = 1$ to $x = 0$ gives $${b}$.`,
-            `每步 $y$ 变化 $${m}$，从 $x = 1$ 退回到 $x = 0$ 得 $${b}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-rule-behind-a-table",
+        ["The rule behind a table", "表格背后的规则"],
+        [
+          "A table, a rule and a graph can show one function. To find a linear rule from a table, take the change per step as the multiplier and the output at zero as the constant.",
+          "表格、规则和图像可以表示同一个函数。要由表格求线性规则，每步的变化是乘数，输入为 $0$ 时的输出是常数。",
+        ],
+        (rng) => {
+          const m = rng.int(2, 9) * (rng.bool() ? 1 : -1);
+          let b = rng.int(1, 12) * (rng.bool() ? 1 : -1);
+          if (b === m) b += 1;
+          const xs = [1, 2, 3];
+          const pairs = xs.map((x) => `(${x}, ${m * x + b})`).join(", ");
+          const line = (mm: number, bb: number) => `y = ${mm}x${signed(bb)}`;
+          return chooseMath(
+            rng,
+            [`Which rule gives the points ${`$${pairs}$`}?`, `哪个规则给出点 $${pairs}$？`],
+            line(m, b),
+            [line(b, m), line(m, -b), line(-m, b)],
+            [
+              `$y$ changes by $${m}$ per step, and stepping back from $x = 1$ to $x = 0$ gives $${b}$.`,
+              `每步 $y$ 变化 $${m}$，从 $x = 1$ 退回到 $x = 0$ 得 $${b}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["representations-of-functions#the-rule-behind-a-table"],
+    },
   ],
   "increasing-and-decreasing": [
     skill(

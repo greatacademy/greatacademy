@@ -3,6 +3,8 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choose, chooseMath, whole } from "./early-grades-more-kit.ts";
 import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
@@ -198,35 +200,38 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "representing-solutions-to-inequalities-on-number-lines": [
-    skill(
-      "the-first-whole-number-on-the-graph",
-      ["The first integer on the graph", "图像上的第一个整数"],
-      [
-        "An open circle leaves out its endpoint, so the first integer on the graph is one step past it. Dividing by a negative number reverses the arrow, which sets the direction of that step.",
-        "空心圆不含端点，所以图像上的第一个整数还要走一步。除以负数会使箭头反向，也决定了这一步的方向。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const bound = rng.int(-9, 12);
-        const b = rng.int(1, 20);
-        const neg = rng.bool();
-        const c = neg ? -a * bound + b : a * bound + b;
-        const answer = neg ? bound - 1 : bound + 1;
-        return integer(
-          neg
-            ? [`What is the greatest integer that solves $-${a}x + ${b} > ${c}$?`, `满足 $-${a}x + ${b} > ${c}$ 的最大整数是多少？`]
-            : [`What is the smallest integer that solves $${a}x + ${b} > ${c}$?`, `满足 $${a}x + ${b} > ${c}$ 的最小整数是多少？`],
-          answer,
-          [bound, neg ? bound + 1 : bound - 1, -bound],
-          [
+    {
+      ...skill(
+        "the-first-whole-number-on-the-graph",
+        ["The first integer on the graph", "图像上的第一个整数"],
+        [
+          "An open circle leaves out its endpoint, so the first integer on the graph is one step past it. Dividing by a negative number reverses the arrow, which sets the direction of that step.",
+          "空心圆不含端点，所以图像上的第一个整数还要走一步。除以负数会使箭头反向，也决定了这一步的方向。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 9);
+          const bound = rng.int(-9, 12);
+          const b = rng.int(1, 20);
+          const neg = rng.bool();
+          const c = neg ? -a * bound + b : a * bound + b;
+          const answer = neg ? bound - 1 : bound + 1;
+          return integer(
             neg
-              ? `The solutions are $x < ${bound}$, so the greatest integer is ${answer}.`
-              : `The solutions are $x > ${bound}$, so the smallest integer is ${answer}.`,
-            neg ? `解是 $x < ${bound}$，所以最大整数是 ${answer}。` : `解是 $x > ${bound}$，所以最小整数是 ${answer}。`,
-          ],
-        );
-      },
-    ),
+              ? [`What is the greatest integer that solves $-${a}x + ${b} > ${c}$?`, `满足 $-${a}x + ${b} > ${c}$ 的最大整数是多少？`]
+              : [`What is the smallest integer that solves $${a}x + ${b} > ${c}$?`, `满足 $${a}x + ${b} > ${c}$ 的最小整数是多少？`],
+            answer,
+            [bound, neg ? bound + 1 : bound - 1, -bound],
+            [
+              neg
+                ? `The solutions are $x < ${bound}$, so the greatest integer is ${answer}.`
+                : `The solutions are $x > ${bound}$, so the smallest integer is ${answer}.`,
+              neg ? `解是 $x < ${bound}$，所以最大整数是 ${answer}。` : `解是 $x > ${bound}$，所以最小整数是 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["representing-solutions-to-inequalities-on-number-lines#the-first-whole-number-on-the-graph"],
+    },
   ],
   "further-solving-linear-inequalities": [
     skill(
@@ -283,32 +288,35 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "horizontal-and-vertical-lines": [
-    skill(
-      "the-rectangle-inside-four-lines",
-      ["The rectangle inside four lines", "四条直线围成的长方形"],
-      [
-        "Two vertical and two horizontal lines enclose a rectangle. Its width is the distance between the vertical lines and its height is the distance between the horizontal ones.",
-        "两条竖直线和两条水平线围成一个长方形。宽是两条竖直线的距离，高是两条水平线的距离。",
-      ],
-      (rng) => {
-        const x1 = rng.int(-9, 3);
-        const w = rng.int(2, 12);
-        const y1 = rng.int(-9, 3);
-        const h = rng.int(2, 12);
-        return whole(
-          [
-            `What is the area of the rectangle enclosed by $x = ${x1}$, $x = ${x1 + w}$, $y = ${y1}$ and $y = ${y1 + h}$?`,
-            `$x = ${x1}$、$x = ${x1 + w}$、$y = ${y1}$ 和 $y = ${y1 + h}$ 围成的长方形面积是多少？`,
-          ],
-          w * h,
-          [2 * (w + h), w + h, Math.abs(x1 + w) * Math.abs(y1 + h) === w * h ? w * h + 1 : Math.abs(x1 + w) * Math.abs(y1 + h)],
-          [
-            `The width is $${w}$ and the height is $${h}$, and $${w} \\times ${h} = ${w * h}$.`,
-            `宽是 $${w}$，高是 $${h}$，$${w} \\times ${h} = ${w * h}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-rectangle-inside-four-lines",
+        ["The rectangle inside four lines", "四条直线围成的长方形"],
+        [
+          "Two vertical and two horizontal lines enclose a rectangle. Its width is the distance between the vertical lines and its height is the distance between the horizontal ones.",
+          "两条竖直线和两条水平线围成一个长方形。宽是两条竖直线的距离，高是两条水平线的距离。",
+        ],
+        (rng) => {
+          const x1 = rng.int(-9, 3);
+          const w = rng.int(2, 12);
+          const y1 = rng.int(-9, 3);
+          const h = rng.int(2, 12);
+          return whole(
+            [
+              `What is the area of the rectangle enclosed by $x = ${x1}$, $x = ${x1 + w}$, $y = ${y1}$ and $y = ${y1 + h}$?`,
+              `$x = ${x1}$、$x = ${x1 + w}$、$y = ${y1}$ 和 $y = ${y1 + h}$ 围成的长方形面积是多少？`,
+            ],
+            w * h,
+            [2 * (w + h), w + h, Math.abs(x1 + w) * Math.abs(y1 + h) === w * h ? w * h + 1 : Math.abs(x1 + w) * Math.abs(y1 + h)],
+            [
+              `The width is $${w}$ and the height is $${h}$, and $${w} \\times ${h} = ${w * h}$.`,
+              `宽是 $${w}$，高是 $${h}$，$${w} \\times ${h} = ${w * h}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["horizontal-and-vertical-lines#the-rectangle-inside-four-lines"],
+    },
   ],
   "measures-of-segments": [
     skill(
@@ -400,118 +408,127 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "congruent-angles": [
-    skill(
-      "the-whole-angle-from-its-bisector",
-      ["The whole angle from its bisector", "由角平分线求整个角"],
-      [
-        "A bisector cuts an angle into two congruent angles, which gives an equation. The measure of the whole angle comes from substituting the solution and then doubling.",
-        "角平分线把角分成两个相等的角，由此得到方程。把解代入后再乘 2，才是整个角的度数。",
-      ],
-      (rng) => {
-        const c = rng.int(1, 5);
-        const a = c + rng.int(1, 4);
-        const x = rng.int(3, 12);
-        const half = rng.int(15, 80);
-        const b = half - a * x;
-        const d = half - c * x;
-        return whole(
-          [
-            `Ray $BD$ bisects $\\angle ABC$, with $m\\angle ABD = (${a}x${signed(b)})^\\circ$ and $m\\angle DBC = (${c}x${signed(d)})^\\circ$. What is $m\\angle ABC$, in degrees?`,
-            `射线 $BD$ 平分 $\\angle ABC$，$m\\angle ABD = (${a}x${signed(b)})^\\circ$，$m\\angle DBC = (${c}x${signed(d)})^\\circ$。$m\\angle ABC$ 是多少度？`,
-          ],
-          2 * half,
-          [half, x, 180 - half],
-          [
-            `Setting them equal gives $x = ${x}$, so each part is $${half}^\\circ$ and the whole is $${2 * half}^\\circ$.`,
-            `令两者相等，得 $x = ${x}$，每部分是 $${half}^\\circ$，整个角是 $${2 * half}^\\circ$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-whole-angle-from-its-bisector",
+        ["The whole angle from its bisector", "由角平分线求整个角"],
+        [
+          "A bisector cuts an angle into two congruent angles, which gives an equation. The measure of the whole angle comes from substituting the solution and then doubling.",
+          "角平分线把角分成两个相等的角，由此得到方程。把解代入后再乘 2，才是整个角的度数。",
+        ],
+        (rng) => {
+          const c = rng.int(1, 5);
+          const a = c + rng.int(1, 4);
+          const x = rng.int(3, 12);
+          const half = rng.int(15, 80);
+          const b = half - a * x;
+          const d = half - c * x;
+          return whole(
+            [
+              `Ray $BD$ bisects $\\angle ABC$, with $m\\angle ABD = (${a}x${signed(b)})^\\circ$ and $m\\angle DBC = (${c}x${signed(d)})^\\circ$. What is $m\\angle ABC$, in degrees?`,
+              `射线 $BD$ 平分 $\\angle ABC$，$m\\angle ABD = (${a}x${signed(b)})^\\circ$，$m\\angle DBC = (${c}x${signed(d)})^\\circ$。$m\\angle ABC$ 是多少度？`,
+            ],
+            2 * half,
+            [half, x, 180 - half],
+            [
+              `Setting them equal gives $x = ${x}$, so each part is $${half}^\\circ$ and the whole is $${2 * half}^\\circ$.`,
+              `令两者相等，得 $x = ${x}$，每部分是 $${half}^\\circ$，整个角是 $${2 * half}^\\circ$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["congruent-angles#the-whole-angle-from-its-bisector"],
+    },
   ],
   "corresponding-angles": [
-    skill(
-      "the-value-that-makes-lines-parallel",
-      ["The value that makes lines parallel", "使两线平行的值"],
-      [
-        "The converse also holds: when corresponding angles are equal, the lines are parallel. So setting the two expressions equal finds the value that makes the lines parallel.",
-        "逆命题也成立：同位角相等时两直线平行。所以令两个表达式相等，就能求出使两线平行的值。",
-      ],
-      (rng) => {
-        const c = rng.int(2, 5);
-        const a = c + rng.int(1, 4);
-        const x = rng.int(3, 15);
-        const drawn = rng.int(30, 150);
-        const angle = drawn === a * x || drawn === c * x ? a * x + c * x : drawn;
-        const b = angle - a * x;
-        const d = angle - c * x;
-        return whole(
-          [
-            `A transversal crosses lines $\\ell$ and $m$. Corresponding angles measure $(${a}x${signed(b)})^\\circ$ and $(${c}x${signed(d)})^\\circ$. For what value of $x$ are $\\ell$ and $m$ parallel?`,
-            `一条截线与直线 $\\ell$、$m$ 相交。同位角分别是 $(${a}x${signed(b)})^\\circ$ 和 $(${c}x${signed(d)})^\\circ$。$x$ 为何值时 $\\ell$ 与 $m$ 平行？`,
-          ],
-          x,
-          [angle, x + a - c, 180 - angle],
-          [
-            `Corresponding angles must be equal: $${a}x${signed(b)} = ${c}x${signed(d)}$, so $${a - c === 1 ? "" : a - c}x = ${d - b}$ and $x = ${x}$.`,
-            `同位角必须相等：$${a}x${signed(b)} = ${c}x${signed(d)}$，所以 $${a - c === 1 ? "" : a - c}x = ${d - b}$，$x = ${x}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-value-that-makes-lines-parallel",
+        ["The value that makes lines parallel", "使两线平行的值"],
+        [
+          "The converse also holds: when corresponding angles are equal, the lines are parallel. So setting the two expressions equal finds the value that makes the lines parallel.",
+          "逆命题也成立：同位角相等时两直线平行。所以令两个表达式相等，就能求出使两线平行的值。",
+        ],
+        (rng) => {
+          const c = rng.int(2, 5);
+          const a = c + rng.int(1, 4);
+          const x = rng.int(3, 15);
+          const drawn = rng.int(30, 150);
+          const angle = drawn === a * x || drawn === c * x ? a * x + c * x : drawn;
+          const b = angle - a * x;
+          const d = angle - c * x;
+          return whole(
+            [
+              `A transversal crosses lines $\\ell$ and $m$. Corresponding angles measure $(${a}x${signed(b)})^\\circ$ and $(${c}x${signed(d)})^\\circ$. For what value of $x$ are $\\ell$ and $m$ parallel?`,
+              `一条截线与直线 $\\ell$、$m$ 相交。同位角分别是 $(${a}x${signed(b)})^\\circ$ 和 $(${c}x${signed(d)})^\\circ$。$x$ 为何值时 $\\ell$ 与 $m$ 平行？`,
+            ],
+            x,
+            [angle, x + a - c, 180 - angle],
+            [
+              `Corresponding angles must be equal: $${a}x${signed(b)} = ${c}x${signed(d)}$, so $${a - c === 1 ? "" : a - c}x = ${d - b}$ and $x = ${x}$.`,
+              `同位角必须相等：$${a}x${signed(b)} = ${c}x${signed(d)}$，所以 $${a - c === 1 ? "" : a - c}x = ${d - b}$，$x = ${x}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["corresponding-angles#the-value-that-makes-lines-parallel"],
+    },
   ],
   "consecutive-angles": [
-    skill(
-      "consecutive-angles-in-a-ratio",
-      ["Consecutive angles in a ratio", "成比例的同旁内角"],
-      [
-        "Consecutive interior angles between parallel lines add up to $180$ degrees. So a ratio splits $180$ degrees into equal shares, and each angle is a number of those shares.",
-        "两平行线间的同旁内角之和是 $180$ 度。所以比把 $180$ 度分成若干等份，每个角占若干份。",
-      ],
-      (rng) => {
-        const [p, q] = rng.pick<[number, number]>([
-          [1, 2],
-          [1, 3],
-          [1, 4],
-          [1, 5],
-          [2, 3],
-          [1, 8],
-          [4, 5],
-          [1, 9],
-          [7, 8],
-          [5, 7],
-          [1, 11],
-          [3, 7],
-          [2, 7],
-          [1, 14],
-          [1, 17],
-          [5, 13],
-          [7, 11],
-          [9, 11],
-          [3, 17],
-          [7, 13],
-        ]);
-        const each = 180 / (p + q);
-        const large = rng.bool();
-        return whole(
-          large
-            ? [
-                `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the larger angle, in degrees?`,
-                `两平行线间的同旁内角之比是 $${p} : ${q}$。较大的角是多少度？`,
-              ]
-            : [
-                `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the smaller angle, in degrees?`,
-                `两平行线间的同旁内角之比是 $${p} : ${q}$。较小的角是多少度？`,
-              ],
-          (large ? q : p) * each,
-          [(large ? p : q) * each, each, 90],
-          [
-            `One share is $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? ", and the smaller angle is one share" : `, and $${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}.`,
-            `一份是 $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? "，较小的角就是一份" : `，$${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "consecutive-angles-in-a-ratio",
+        ["Consecutive angles in a ratio", "成比例的同旁内角"],
+        [
+          "Consecutive interior angles between parallel lines add up to $180$ degrees. So a ratio splits $180$ degrees into equal shares, and each angle is a number of those shares.",
+          "两平行线间的同旁内角之和是 $180$ 度。所以比把 $180$ 度分成若干等份，每个角占若干份。",
+        ],
+        (rng) => {
+          const [p, q] = rng.pick<[number, number]>([
+            [1, 2],
+            [1, 3],
+            [1, 4],
+            [1, 5],
+            [2, 3],
+            [1, 8],
+            [4, 5],
+            [1, 9],
+            [7, 8],
+            [5, 7],
+            [1, 11],
+            [3, 7],
+            [2, 7],
+            [1, 14],
+            [1, 17],
+            [5, 13],
+            [7, 11],
+            [9, 11],
+            [3, 17],
+            [7, 13],
+          ]);
+          const each = 180 / (p + q);
+          const large = rng.bool();
+          return whole(
+            large
+              ? [
+                  `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the larger angle, in degrees?`,
+                  `两平行线间的同旁内角之比是 $${p} : ${q}$。较大的角是多少度？`,
+                ]
+              : [
+                  `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the smaller angle, in degrees?`,
+                  `两平行线间的同旁内角之比是 $${p} : ${q}$。较小的角是多少度？`,
+                ],
+            (large ? q : p) * each,
+            [(large ? p : q) * each, each, 90],
+            [
+              `One share is $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? ", and the smaller angle is one share" : `, and $${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}.`,
+              `一份是 $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? "，较小的角就是一份" : `，$${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["consecutive-angles#consecutive-angles-in-a-ratio"],
+    },
   ],
   "comparing-data-sets-using-range-and-quartiles": [
     skill(
@@ -752,33 +769,36 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "volumes-of-triangular-prisms": [
-    skill(
-      "a-house-shaped-prism",
-      ["A house-shaped prism", "房子形状的棱柱"],
-      [
-        "Any prism has a volume of base area times length, whatever shape its cross-section has. A house shape is a rectangle with a triangle on top, so add those two areas first.",
-        "任何棱柱的体积都是底面积乘长度，不管截面是什么形状。房子形状是长方形上面加三角形，所以先把两个面积相加。",
-      ],
-      (rng) => {
-        const w = rng.int(2, 12) * 2;
-        const h = rng.int(3, 12);
-        const roof = rng.int(2, 9);
-        const l = rng.int(5, 25);
-        const area = w * h + (w * roof) / 2;
-        return whole(
-          [
-            `A shed is a prism ${l} m long. Its end is a rectangle ${w} m wide and ${h} m high, with a triangular roof ${roof} m high on top. What is its volume, in cubic meters?`,
-            `一个棚屋是长 ${l} 米的棱柱。端面是宽 ${w} 米、高 ${h} 米的长方形，上面有高 ${roof} 米的三角形屋顶。它的体积是多少立方米？`,
-          ],
-          area * l,
-          [(w * h + w * roof) * l, w * h * l, w * (h + roof) * l],
-          [
-            `The end has area $${w * h} + ${(w * roof) / 2} = ${area}$, and $${area} \\times ${l} = ${area * l}$.`,
-            `端面面积是 $${w * h} + ${(w * roof) / 2} = ${area}$，$${area} \\times ${l} = ${area * l}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-house-shaped-prism",
+        ["A house-shaped prism", "房子形状的棱柱"],
+        [
+          "Any prism has a volume of base area times length, whatever shape its cross-section has. A house shape is a rectangle with a triangle on top, so add those two areas first.",
+          "任何棱柱的体积都是底面积乘长度，不管截面是什么形状。房子形状是长方形上面加三角形，所以先把两个面积相加。",
+        ],
+        (rng) => {
+          const w = rng.int(2, 12) * 2;
+          const h = rng.int(3, 12);
+          const roof = rng.int(2, 9);
+          const l = rng.int(5, 25);
+          const area = w * h + (w * roof) / 2;
+          return whole(
+            [
+              `A shed is a prism ${l} m long. Its end is a rectangle ${w} m wide and ${h} m high, with a triangular roof ${roof} m high on top. What is its volume, in cubic meters?`,
+              `一个棚屋是长 ${l} 米的棱柱。端面是宽 ${w} 米、高 ${h} 米的长方形，上面有高 ${roof} 米的三角形屋顶。它的体积是多少立方米？`,
+            ],
+            area * l,
+            [(w * h + w * roof) * l, w * h * l, w * (h + roof) * l],
+            [
+              `The end has area $${w * h} + ${(w * roof) / 2} = ${area}$, and $${area} \\times ${l} = ${area * l}$.`,
+              `端面面积是 $${w * h} + ${(w * roof) / 2} = ${area}$，$${area} \\times ${l} = ${area * l}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["volumes-of-triangular-prisms#a-house-shaped-prism"],
+    },
   ],
   "surface-areas-of-triangular-prisms": [
     skill(
@@ -966,66 +986,72 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "calculating-modes-and-medians-from-histograms": [
-    skill(
-      "the-share-of-the-modal-class",
-      ["The share of the modal class", "众数组所占的比例"],
-      [
-        "The tallest bar of a histogram marks the modal class. Its height counts the values in it, so its share of the data is its height divided by the sum of all the heights.",
-        "直方图中最高的条形是众数组。它的高度是这一组的个数，所以它所占的比例是高度除以所有高度之和。",
-      ],
-      (rng) => {
-        const total = rng.pick([20, 25, 50, 100]);
-        const max = Math.round(total * rng.pick([0.4, 0.48, 0.52, 0.6]));
-        const rest = total - max;
-        const a = rng.int(1, Math.floor(rest / 3));
-        const b = rng.int(1, Math.floor(rest / 3));
-        const c = rest - a - b;
-        const bars = rng.shuffle([max, a, b, c]);
-        const percent = (max * 100) / total;
-        return whole(
-          [
-            `A histogram has four bars with heights ${bars.join(", ")}. What percent of the values are in the modal class?`,
-            `直方图有四个条形，高度分别是 ${bars.join("、")}。众数组的数据占百分之几？`,
-          ],
-          percent,
-          [max, 25, 100 - percent],
-          [
-            `The tallest bar is ${max} of ${total} values, which is ${percent}%.`,
-            `最高的条形是 ${total} 个数据中的 ${max} 个，即 ${percent}%。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-share-of-the-modal-class",
+        ["The share of the modal class", "众数组所占的比例"],
+        [
+          "The tallest bar of a histogram marks the modal class. Its height counts the values in it, so its share of the data is its height divided by the sum of all the heights.",
+          "直方图中最高的条形是众数组。它的高度是这一组的个数，所以它所占的比例是高度除以所有高度之和。",
+        ],
+        (rng) => {
+          const total = rng.pick([20, 25, 50, 100]);
+          const max = Math.round(total * rng.pick([0.4, 0.48, 0.52, 0.6]));
+          const rest = total - max;
+          const a = rng.int(1, Math.floor(rest / 3));
+          const b = rng.int(1, Math.floor(rest / 3));
+          const c = rest - a - b;
+          const bars = rng.shuffle([max, a, b, c]);
+          const percent = (max * 100) / total;
+          return whole(
+            [
+              `A histogram has four bars with heights ${bars.join(", ")}. What percent of the values are in the modal class?`,
+              `直方图有四个条形，高度分别是 ${bars.join("、")}。众数组的数据占百分之几？`,
+            ],
+            percent,
+            [max, 25, 100 - percent],
+            [
+              `The tallest bar is ${max} of ${total} values, which is ${percent}%.`,
+              `最高的条形是 ${total} 个数据中的 ${max} 个，即 ${percent}%。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["calculating-modes-and-medians-from-histograms#the-share-of-the-modal-class"],
+    },
   ],
   "calculating-means-from-histograms": [
-    skill(
-      "the-greatest-possible-total",
-      ["The greatest possible total", "可能的最大总和"],
-      [
-        "A histogram hides the exact values, so a total can only be estimated. Using each class's upper end gives a total that the data cannot exceed, while the midpoints give a balanced estimate.",
-        "直方图隐藏了准确的值，所以总和只能估计。用每组的上限得到数据不可能超过的总和，用组中值则得到较均衡的估计。",
-      ],
-      (rng) => {
-        const w = rng.pick([4, 6, 10, 20]);
-        const start = rng.int(1, 5) * w;
-        const fs = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
-        const ups = [start + w, start + 2 * w, start + 3 * w];
-        const total = fs.reduce((s, f, i) => s + f * ups[i]!, 0);
-        const low = fs.reduce((s, f, i) => s + f * (ups[i]! - w), 0);
-        return whole(
-          [
-            `A histogram has classes ${start} to ${ups[0]}, ${ups[0]} to ${ups[1]} and ${ups[1]} to ${ups[2]}, with frequencies ${fs.join(", ")}. Each class includes its upper end. What is the greatest possible total of the values?`,
-            `直方图的组为 ${start} 到 ${ups[0]}、${ups[0]} 到 ${ups[1]}、${ups[1]} 到 ${ups[2]}，频数为 ${fs.join("、")}，每组都包含其上限。这些数据的总和最大可能是多少？`,
-          ],
-          total,
-          [low, (total + low) / 2, ups[2]! * 3],
-          [
-            `Put every value at the top of its class: $${fs.map((f, i) => `${f} \\times ${ups[i]}`).join(" + ")} = ${total}$.`,
-            `每个值都取所在组的上限：$${fs.map((f, i) => `${f} \\times ${ups[i]}`).join(" + ")} = ${total}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-greatest-possible-total",
+        ["The greatest possible total", "可能的最大总和"],
+        [
+          "A histogram hides the exact values, so a total can only be estimated. Using each class's upper end gives a total that the data cannot exceed, while the midpoints give a balanced estimate.",
+          "直方图隐藏了准确的值，所以总和只能估计。用每组的上限得到数据不可能超过的总和，用组中值则得到较均衡的估计。",
+        ],
+        (rng) => {
+          const w = rng.pick([4, 6, 10, 20]);
+          const start = rng.int(1, 5) * w;
+          const fs = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
+          const ups = [start + w, start + 2 * w, start + 3 * w];
+          const total = fs.reduce((s, f, i) => s + f * ups[i]!, 0);
+          const low = fs.reduce((s, f, i) => s + f * (ups[i]! - w), 0);
+          return whole(
+            [
+              `A histogram has classes ${start} to ${ups[0]}, ${ups[0]} to ${ups[1]} and ${ups[1]} to ${ups[2]}, with frequencies ${fs.join(", ")}. Each class includes its upper end. What is the greatest possible total of the values?`,
+              `直方图的组为 ${start} 到 ${ups[0]}、${ups[0]} 到 ${ups[1]}、${ups[1]} 到 ${ups[2]}，频数为 ${fs.join("、")}，每组都包含其上限。这些数据的总和最大可能是多少？`,
+            ],
+            total,
+            [low, (total + low) / 2, ups[2]! * 3],
+            [
+              `Put every value at the top of its class: $${fs.map((f, i) => `${f} \\times ${ups[i]}`).join(" + ")} = ${total}$.`,
+              `每个值都取所在组的上限：$${fs.map((f, i) => `${f} \\times ${ups[i]}`).join(" + ")} = ${total}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["calculating-means-from-histograms#the-greatest-possible-total"],
+    },
   ],
   "comparing-medians": [
     skill(
@@ -1386,34 +1412,37 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "describing-the-functional-relationship-between-two-quantities-from-a-graph": [
-    skill(
-      "the-fastest-part-of-a-trip",
-      ["The fastest part of a trip", "行程中最快的一段"],
-      [
-        "On a graph of distance against time, a steeper part means more distance in the same time. In a table with equal time steps, the largest change between neighbors is the fastest part.",
-        "在路程与时间的图像上，越陡表示相同时间走得越远。在时间间隔相同的表中，相邻变化最大的一段最快。",
-      ],
-      (rng) => {
-        const steps = rng.sample([2, 4, 6, 9, 11, 13, 15, 18], 4) as number[];
-        let run = rng.int(0, 9);
-        const totals = [run, ...steps.map((s) => (run += s))];
-        const best = steps.indexOf(Math.max(...steps));
-        const hour = (i: number): [string, string] => [`Hour ${i + 1}`, `第 ${i + 1} 小时`];
-        return choose(
-          rng,
-          [
-            `A cyclist's distance from home, in km, at the start of each hour and at the end was ${totals.join(", ")}. In which hour was the cyclist fastest?`,
-            `骑车人每小时开始时和最后离家的距离（千米）依次是 ${totals.join("、")}。哪一小时骑得最快？`,
-          ],
-          hour(best),
-          [0, 1, 2, 3].filter((i) => i !== best).map(hour),
-          [
-            `The hourly changes are ${steps.join(", ")}, and ${steps[best]} is the largest.`,
-            `每小时的变化是 ${steps.join("、")}，${steps[best]} 最大。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-fastest-part-of-a-trip",
+        ["The fastest part of a trip", "行程中最快的一段"],
+        [
+          "On a graph of distance against time, a steeper part means more distance in the same time. In a table with equal time steps, the largest change between neighbors is the fastest part.",
+          "在路程与时间的图像上，越陡表示相同时间走得越远。在时间间隔相同的表中，相邻变化最大的一段最快。",
+        ],
+        (rng) => {
+          const steps = rng.sample([2, 4, 6, 9, 11, 13, 15, 18], 4) as number[];
+          let run = rng.int(0, 9);
+          const totals = [run, ...steps.map((s) => (run += s))];
+          const best = steps.indexOf(Math.max(...steps));
+          const hour = (i: number): [string, string] => [`Hour ${i + 1}`, `第 ${i + 1} 小时`];
+          return choose(
+            rng,
+            [
+              `A cyclist's distance from home, in km, at the start of each hour and at the end was ${totals.join(", ")}. In which hour was the cyclist fastest?`,
+              `骑车人每小时开始时和最后离家的距离（千米）依次是 ${totals.join("、")}。哪一小时骑得最快？`,
+            ],
+            hour(best),
+            [0, 1, 2, 3].filter((i) => i !== best).map(hour),
+            [
+              `The hourly changes are ${steps.join(", ")}, and ${steps[best]} is the largest.`,
+              `每小时的变化是 ${steps.join("、")}，${steps[best]} 最大。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#the-fastest-part-of-a-trip"],
+    },
   ],
   "linear-functions-versus-nonlinear-functions": [
     skill(

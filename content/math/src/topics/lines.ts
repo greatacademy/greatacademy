@@ -1,7 +1,10 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { annotate, at, graphFigure, guides, plain, riseOf, riseRun, slopeFigure, walkTo } from "../graph-figures.ts";
 import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
@@ -223,6 +226,7 @@ export const theCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-coordinates",
+      figure: algebraDrawings["the-coordinate-plane#reading-coordinates"],
       title: t("Reading coordinates", "读出点的坐标"),
       explanation: t(
         "The **coordinate plane** is formed by two perpendicular number lines: the horizontal **$x$-axis** and the vertical **$y$-axis**, which cross at the **origin** $(0, 0)$.\n\nEvery point has an **ordered pair** of coordinates $(x, y)$: $x$ tells how far to go right (positive) or left (negative) from the origin, and $y$ how far to go up (positive) or down (negative). The $x$-coordinate always comes first.\n\nFor example, to reach $(-3, 2)$, go $3$ to the left and $2$ up. A point on the $y$-axis has $x$-coordinate $0$, such as $(0, -4)$.",
@@ -264,6 +268,7 @@ export const theCoordinatePlane: TopicDef = {
     },
     {
       id: "locating-points",
+      figure: algebraDrawings["the-coordinate-plane#locating-points"],
       title: t("Locating a point", "找到给定坐标的点"),
       explanation: t(
         "To locate the point $(x, y)$, start at the origin, move $x$ units along the $x$-axis, then $y$ units parallel to the $y$-axis.\n\nOrder matters: $(2, -5)$ is $2$ right and $5$ down, while $(-5, 2)$ is $5$ left and $2$ up.",
@@ -1411,6 +1416,7 @@ export const parallelLinesInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "parallel-slopes",
+      figure: gradeDrawings5["parallel-lines-in-the-coordinate-plane#parallel-slopes"],
       title: t("Parallel lines have equal slopes", "平行线的斜率相等"),
       explanation: t(
         "Two different lines are **parallel** exactly when they have the same slope (or are both vertical): they rise equally over every run, so they never meet.\n\n$y = 2x + 1$ and $y = 2x - 5$ are parallel. To compare a line in standard form, find its slope $-\\frac{A}{B}$: $4x - 2y = 3$ has slope $2$, so it is parallel to them as well.",
@@ -1440,6 +1446,7 @@ export const parallelLinesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "parallel-line-through-a-point",
+      figure: gradeDrawings5["parallel-lines-in-the-coordinate-plane#parallel-line-through-a-point"],
       title: t("A parallel line through a point", "过一点作平行线"),
       explanation: t(
         "The line through $(4, -1)$ parallel to $y = \\frac{1}{2}x + 3$ has the same slope $\\frac{1}{2}$. Find its $y$-intercept by substituting the point:\n\n$$-1 = \\frac{1}{2} \\cdot 4 + b \\;\\Rightarrow\\; b = -3,$$\n\nso the line is $y = \\frac{1}{2}x - 3$.",
@@ -1494,6 +1501,7 @@ export const parallelLinesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "parallel-same-or-intersecting",
+      figure: gradeDrawings5["parallel-lines-in-the-coordinate-plane#parallel-same-or-intersecting"],
       title: t("Parallel, the same line, or intersecting", "平行、重合还是相交"),
       explanation: t(
         "To compare two lines, write both in slope-intercept form.\n\n- Different slopes: the lines **intersect** in one point.\n- Same slope, different $y$-intercepts: the lines are **parallel**.\n- Same slope and same $y$-intercept: the equations describe **the same line**, like $y = 3x - 1$ and $6x - 2y = 2$.",
@@ -1553,6 +1561,7 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "perpendicular-slopes",
+      figure: gradeDrawings5["perpendicular-lines-in-the-coordinate-plane#perpendicular-slopes"],
       title: t("Negative reciprocal slopes", "互为负倒数的斜率"),
       explanation: t(
         "Two lines with slopes $m_1$ and $m_2$ are **perpendicular** exactly when $m_1 m_2 = -1$, that is, when each slope is the **negative reciprocal** of the other:\n\n$$m_2 = -\\frac{1}{m_1}.$$\n\nA line perpendicular to a line of slope $\\frac{2}{3}$ has slope $-\\frac{3}{2}$; perpendicular to slope $-4$, slope $\\frac{1}{4}$. (A horizontal and a vertical line are perpendicular too.)",
@@ -1595,6 +1604,7 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "perpendicular-line-through-a-point",
+      figure: gradeDrawings5["perpendicular-lines-in-the-coordinate-plane#perpendicular-line-through-a-point"],
       title: t("A perpendicular line through a point", "过一点作垂线"),
       explanation: t(
         "To write the line through $(2, 5)$ perpendicular to $y = -\\frac{2}{3}x + 1$, take the negative reciprocal slope $\\frac{3}{2}$ and substitute the point:\n\n$$5 = \\frac{3}{2} \\cdot 2 + b \\;\\Rightarrow\\; b = 2,$$\n\nso the line is $y = \\frac{3}{2}x + 2$.",
@@ -1642,6 +1652,7 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "parallel-perpendicular-or-neither",
+      figure: gradeDrawings5["perpendicular-lines-in-the-coordinate-plane#parallel-perpendicular-or-neither"],
       title: t("Parallel, perpendicular or neither", "平行、垂直还是都不是"),
       explanation: t(
         "Find both slopes. Equal slopes mean parallel lines (or the same line); slopes whose product is $-1$ mean perpendicular lines; otherwise the lines are neither. For example, $y = -2x + 1$ and $x - 2y = 6$ have slopes $-2$ and $\\frac{1}{2}$, whose product is $-1$: they are perpendicular.",
@@ -1738,6 +1749,7 @@ export const systemsOfLinearEquations: TopicDef = {
     },
     {
       id: "solving-by-graphing",
+      figure: gradeDrawings4["systems-of-linear-equations#solving-by-graphing"],
       title: t("Solving by graphing", "图像法解方程组"),
       explanation: t(
         "Each equation of a system in $x$ and $y$ has a line as its graph. A point lies on both lines exactly when it satisfies both equations, so the solution of the system is the **point of intersection** of the two lines.\n\nRead the intersection from the graph, then check it in both equations.",
@@ -2451,6 +2463,7 @@ export const consistencyAndDependency: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-systems",
+      figure: algebraDrawings["consistency-and-dependency#classifying-systems"],
       title: t("Classifying a system", "方程组的分类"),
       explanation: t(
         "A system is **consistent** if it has at least one solution, and **inconsistent** if it has none. A consistent system of two linear equations is **independent** if it has exactly one solution and **dependent** if it has infinitely many (its equations are equivalent).\n\n| Solutions | Lines | Class |\n| :--- | :--- | :--- |\n| One | Intersecting | Consistent, independent |\n| Infinitely many | The same line | Consistent, dependent |\n| None | Parallel | Inconsistent |",

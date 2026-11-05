@@ -16,6 +16,7 @@ import {
   Q,
   realLine,
 } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { annotate, onAxis, plain, setText as setAlt } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, steps, why } from "../problems.ts";
 
@@ -3255,6 +3256,7 @@ export const graphingExponentialGrowthFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "growth-equation-from-graph",
+      figure: algebraDrawings["graphing-exponential-growth-functions#growth-equation-from-graph"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "The graph of $y = a \\cdot b^{x}$ with $a > 0$ and $b > 1$ rises from left to right, ever more steeply. It crosses the $y$-axis at $(0, a)$, and each step of $1$ to the right multiplies the height by $b$. From the points $(0, 2)$ and $(1, 6)$: $a = 2$ and $b = \\frac{6}{2} = 3$, so $y = 2(3)^{x}$.",
@@ -3264,6 +3266,7 @@ export const graphingExponentialGrowthFunctions: TopicDef = {
     },
     {
       id: "growth-horizontal-asymptote",
+      figure: algebraDrawings["graphing-exponential-growth-functions#growth-horizontal-asymptote"],
       title: t("The horizontal asymptote", "水平渐近线"),
       explanation: t(
         "As $x$ decreases, $b^{x}$ (with $b > 1$) gets closer and closer to $0$ without reaching it: $2^{-10} = \\frac{1}{1024}$. So the graph of $y = a \\cdot b^{x}$ approaches the $x$-axis on the left. This line is a **horizontal asymptote**. Adding $k$ shifts the graph up by $k$, and the asymptote becomes $y = k$: for $y = 3(2)^{x} - 4$ it is $y = -4$.",
@@ -3273,6 +3276,7 @@ export const graphingExponentialGrowthFunctions: TopicDef = {
     },
     {
       id: "growth-range",
+      figure: algebraDrawings["graphing-exponential-growth-functions#growth-range"],
       title: t("The range", "值域"),
       explanation: t(
         "$b^{x}$ takes every positive value, so for $a > 0$ the function $y = a \\cdot b^{x} + k$ takes every value above the asymptote and none on or below it:\n\n$$\\text{range of } a \\cdot b^{x} + k = (k, \\infty)$$\n\nThe endpoint $k$ is excluded: the graph never touches its asymptote.",
@@ -3298,6 +3302,7 @@ export const graphingExponentialDecayFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "decay-equation-from-graph",
+      figure: algebraDrawings["graphing-exponential-decay-functions#decay-equation-from-graph"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "With $0 < b < 1$ the graph of $y = a \\cdot b^{x}$ ($a > 0$) falls from left to right, levelling off toward the $x$-axis. It still crosses the $y$-axis at $(0, a)$, and each step of $1$ to the right multiplies the height by $b$, now a fraction. From $(0, 8)$ and $(1, 4)$: $a = 8$ and $b = \\frac{4}{8} = \\frac{1}{2}$, so $y = 8\\left(\\frac{1}{2}\\right)^{x}$.",
@@ -3307,6 +3312,7 @@ export const graphingExponentialDecayFunctions: TopicDef = {
     },
     {
       id: "decay-horizontal-asymptote",
+      figure: algebraDrawings["graphing-exponential-decay-functions#decay-horizontal-asymptote"],
       title: t("The horizontal asymptote", "水平渐近线"),
       explanation: t(
         "For $0 < b < 1$, $b^{x}$ gets closer and closer to $0$ as $x$ **increases**: $\\left(\\frac{1}{2}\\right)^{10} = \\frac{1}{1024}$. So the graph of a decay function approaches its asymptote on the right. As before, $y = a \\cdot b^{x} + k$ has the asymptote $y = k$.",
@@ -3316,6 +3322,7 @@ export const graphingExponentialDecayFunctions: TopicDef = {
     },
     {
       id: "range-with-reflections",
+      figure: algebraDrawings["graphing-exponential-decay-functions#range-with-reflections"],
       title: t("Ranges and reflections", "值域与翻折"),
       explanation: t(
         "A negative coefficient $a$ reflects the graph across its asymptote: $y = -2\\left(\\frac{1}{2}\\right)^{x} + 3$ lies entirely **below** $y = 3$. So for $y = a \\cdot b^{x} + k$:\n\n- if $a > 0$, the range is $(k, \\infty)$;\n- if $a < 0$, the range is $(-\\infty, k)$.\n\nThe asymptote's value $k$ is never taken.",

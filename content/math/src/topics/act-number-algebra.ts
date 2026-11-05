@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 
 import { expressionProblem, numberProblem, pointProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -1470,56 +1471,59 @@ const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
   ["solving-systems-of-nonlinear-equations"],
   ["A-REI.C.7", "A-REI.D.11"],
   [
-    kp(
-      "reading-solutions-from-a-graph",
-      t("Reading the solutions from a graph", "从图象读出解"),
-      t(
-        "Each solution of a system is a point that lies on the graph of every equation, so once the graphs are drawn, the solutions are the points where they cross. Read the coordinates of each crossing point from the grid, then substitute them into both equations to confirm that the reading is exact.",
-        "方程组的每个解都是同时位于每个方程图象上的点，所以画出图象后，解就是图象的交点。从网格上读出每个交点的坐标，再代入两个方程，确认读数准确。",
+    {
+      ...kp(
+        "reading-solutions-from-a-graph",
+        t("Reading the solutions from a graph", "从图象读出解"),
+        t(
+          "Each solution of a system is a point that lies on the graph of every equation, so once the graphs are drawn, the solutions are the points where they cross. Read the coordinates of each crossing point from the grid, then substitute them into both equations to confirm that the reading is exact.",
+          "方程组的每个解都是同时位于每个方程图象上的点，所以画出图象后，解就是图象的交点。从网格上读出每个交点的坐标，再代入两个方程，确认读数准确。",
+        ),
+        (rng) => {
+          const a = rng.pick([1, -1]);
+          const h = rng.int(-2, 2);
+          const v = a > 0 ? rng.int(-6, -1) : rng.int(1, 6);
+          const f = (x: number) => a * (x - h) ** 2 + v;
+          const [x1, x2] = rng
+            .sample([-3, -2, -1, 1, 2, 3], 2)
+            .map((d) => h + d)
+            .sort((p, q) => p - q) as [number, number];
+          const m = a * (x1 + x2 - 2 * h);
+          const b = f(x1) - m * x1;
+          const parabola = vertexForm(a, h, v);
+          const line = linear(m, b);
+          return {
+            ...pointProblem({
+              prompt: t(
+                `The graphs of the equations of the system $y = ${parabola}$, $y = ${line}$ are shown. Which solution has the greater $x$-coordinate?`,
+                `图中是方程组 $y = ${parabola}$，$y = ${line}$ 中两个方程的图象。哪个解的 $x$ 坐标较大？`,
+              ),
+              answer: [x2, f(x2)],
+              wrong: [
+                [x1, f(x1)],
+                [f(x2), x2],
+                [h, v],
+              ],
+              solution: t(
+                `The graphs cross at $(${x1}, ${f(x1)})$ and $(${x2}, ${f(x2)})$, and the second has the greater $x$-coordinate. Check it in both equations: $${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$ and $${lineAt(m, b, x2)} = ${f(x2)}$.`,
+                `两个图象交于 $(${x1}, ${f(x1)})$ 和 $(${x2}, ${f(x2)})$，后者的 $x$ 坐标较大。代入两个方程检验：$${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$，$${lineAt(m, b, x2)} = ${f(x2)}$。`,
+              ),
+            }),
+            figure: {
+              svg: plane(systemsView, [
+                { kind: "curve", f },
+                { kind: "line", a: [0, b], b: [1, m + b], accent: true },
+              ]),
+              alt: t(
+                `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
+                `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
+              ),
+            },
+          };
+        },
       ),
-      (rng) => {
-        const a = rng.pick([1, -1]);
-        const h = rng.int(-2, 2);
-        const v = a > 0 ? rng.int(-6, -1) : rng.int(1, 6);
-        const f = (x: number) => a * (x - h) ** 2 + v;
-        const [x1, x2] = rng
-          .sample([-3, -2, -1, 1, 2, 3], 2)
-          .map((d) => h + d)
-          .sort((p, q) => p - q) as [number, number];
-        const m = a * (x1 + x2 - 2 * h);
-        const b = f(x1) - m * x1;
-        const parabola = vertexForm(a, h, v);
-        const line = linear(m, b);
-        return {
-          ...pointProblem({
-            prompt: t(
-              `The graphs of the equations of the system $y = ${parabola}$, $y = ${line}$ are shown. Which solution has the greater $x$-coordinate?`,
-              `图中是方程组 $y = ${parabola}$，$y = ${line}$ 中两个方程的图象。哪个解的 $x$ 坐标较大？`,
-            ),
-            answer: [x2, f(x2)],
-            wrong: [
-              [x1, f(x1)],
-              [f(x2), x2],
-              [h, v],
-            ],
-            solution: t(
-              `The graphs cross at $(${x1}, ${f(x1)})$ and $(${x2}, ${f(x2)})$, and the second has the greater $x$-coordinate. Check it in both equations: $${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$ and $${lineAt(m, b, x2)} = ${f(x2)}$.`,
-              `两个图象交于 $(${x1}, ${f(x1)})$ 和 $(${x2}, ${f(x2)})$，后者的 $x$ 坐标较大。代入两个方程检验：$${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$，$${lineAt(m, b, x2)} = ${f(x2)}$。`,
-            ),
-          }),
-          figure: {
-            svg: plane(systemsView, [
-              { kind: "curve", f },
-              { kind: "line", a: [0, b], b: [1, m + b], accent: true },
-            ]),
-            alt: t(
-              `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
-              `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
-            ),
-          },
-        };
-      },
-    ),
+      figure: algebraDrawings["solving-systems-of-nonlinear-equations-using-graphs#reading-solutions-from-a-graph"],
+    },
     kp(
       "a-parabola-and-a-horizontal-line",
       t("A parabola and a horizontal line", "抛物线与水平线"),

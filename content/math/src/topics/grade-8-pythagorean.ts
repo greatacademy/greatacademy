@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, radical, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { article, choiceProblem, numberProblem, pointLatex, radicalProblem, steps, yesNo } from "../problems.ts";
 import {
@@ -205,6 +206,7 @@ const theConverseOfThePythagoreanTheorem = topic(
   [
     {
       id: "is-it-a-right-triangle",
+      figure: gradeDrawings5["the-converse-of-the-pythagorean-theorem#is-it-a-right-triangle"],
       title: t("Is it a right triangle?", "是直角三角形吗？"),
       explanation: t(
         "The **converse of the Pythagorean theorem**: if the square of the longest side of a triangle equals the sum of the squares of the other two sides, the triangle is a right triangle. If the two are not equal, it is not a right triangle.\n\nAlways test with the longest side. When some sides are decimals or radicals, square every side first: the largest square belongs to the longest side.\n\nSides $1.5$, $2.5$ and $2$: the longest side is $2.5$, and $1.5^2 + 2^2 = 2.25 + 4 = 6.25 = 2.5^2$, so the triangle is a right triangle.",
@@ -230,6 +232,7 @@ const theConverseOfThePythagoreanTheorem = topic(
     },
     {
       id: "which-angle-is-the-right-angle",
+      figure: gradeDrawings5["the-converse-of-the-pythagorean-theorem#which-angle-is-the-right-angle"],
       title: t("Which angle is the right angle?", "哪个角是直角？"),
       explanation: t(
         "When the converse shows that a triangle is a right triangle, its right angle is the angle **opposite the longest side**, the hypotenuse. It is not at either end of that side.\n\nIn triangle $ABC$ with $AB = 5$, $BC = 13$ and $AC = 12$: $5^2 + 12^2 = 25 + 144 = 169 = 13^2$, so the triangle is a right triangle. The longest side is $BC$, and the angle opposite it is $\\angle A$, so $\\angle A$ is the right angle.",
@@ -262,6 +265,7 @@ const theConverseOfThePythagoreanTheorem = topic(
     },
     {
       id: "which-set-forms-a-right-triangle",
+      figure: gradeDrawings5["the-converse-of-the-pythagorean-theorem#which-set-forms-a-right-triangle"],
       title: t("Which set forms a right triangle?", "哪组数能构成直角三角形？"),
       explanation: t(
         "To find which set of lengths forms a right triangle, test each set with the converse, always using its longest length.\n\nMultiplying the sides of a right triangle by the same number gives another right triangle: $6$, $8$, $10$ works because $36 + 64 = 100$. Adding the same number to each side does not: for $4$, $5$, $6$, $16 + 25 = 41 \\ne 36$.",
@@ -1708,6 +1712,8 @@ const solvingRealWorldVolumeProblems = topic(
   [
     {
       id: "filling-one-container-with-another",
+      figure:
+        gradeDrawings5["solving-real-world-problems-involving-volumes-of-cylinders-cones-and-spheres#filling-one-container-with-another"],
       title: t("Filling one container with another", "用一个容器装满另一个容器"),
       explanation: t(
         "To find how many full scoops fill a container, divide the container's volume by the scoop's volume. Leave both in terms of $\\pi$: the $\\pi$'s cancel.\n\nA cylindrical tank with radius $6$ and height $10$ holds $360\\pi$. A cone-shaped cup with radius $2$ and height $6$ holds $\\tfrac{1}{3}\\pi \\cdot 2^2 \\cdot 6 = 8\\pi$. It takes $360\\pi \\div 8\\pi = 45$ cups. Remember the $\\tfrac{1}{3}$ for cones and the $\\tfrac{4}{3}$ for spheres.",

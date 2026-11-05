@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
 import { height, rectangle, sides } from "./area.ts";
@@ -166,6 +167,7 @@ export const areasOfRectangles = topic(
     },
     {
       id: "missing-side-length",
+      figure: gradeDrawings4["areas-of-rectangles#missing-side-length"],
       title: t("A missing side length", "求未知边长"),
       explanation: t(
         "The area of a rectangle is length times width, so a missing side is the area divided by the known side. With mixed numbers, write them as improper fractions first.\n\nA rectangle has area $7\\frac{1}{2}\\text{ m}^2$ and length $3$ m. Since $A = lw$, the width is $7\\frac{1}{2} \\div 3 = \\frac{15}{2} \\times \\frac{1}{3} = \\frac{5}{2} = 2\\frac{1}{2}$ m.",

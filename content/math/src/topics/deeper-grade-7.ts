@@ -5,6 +5,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -494,6 +495,7 @@ const compoundCount: KnowledgePointDef = {
 
 const anglesInRatio: KnowledgePointDef = {
   id: "triangle-angles-in-a-ratio",
+  figure: gradeDrawings4["angles-of-a-triangle#triangle-angles-in-a-ratio"],
   title: t("Triangle angles in a ratio", "三角形的角成比例"),
   explanation: t(
     "When the angles of a triangle are in a given ratio, write them as multiples of one unknown. As the three angles add up to $180$ degrees, the sum of the ratio numbers tells how many equal parts make $180$. Divide to find one part, and multiply to get the angle that is asked for. The three angles should then add back up to $180$, and their sizes also show whether the triangle is acute, right or obtuse.",
@@ -546,6 +548,7 @@ const anglesInRatio: KnowledgePointDef = {
 
 const bisectorsOfNeighbors: KnowledgePointDef = {
   id: "the-angle-between-two-bisectors",
+  figure: gradeDrawings4["angle-bisectors#the-angle-between-two-bisectors"],
   title: t("The angle between two bisectors", "两条角平分线的夹角"),
   explanation: t(
     "When two angles share a side and each is bisected, the angle between the two bisectors is made of one half from each angle. So it is half of the two angles together, and the separate sizes do not matter. If the two angles form a straight line, the bisectors are always at a right angle, which is a neat result. The same reasoning works for any pair of adjacent angles, and a sketch with the halves marked makes it clear.",
@@ -573,6 +576,7 @@ const bisectorsOfNeighbors: KnowledgePointDef = {
 
 const clockAtAnyTime: KnowledgePointDef = {
   id: "clock-angles-between-the-hours",
+  figure: gradeDrawings4["solving-problems-with-angles#clock-angles-between-the-hours"],
   title: t("Clock angles between the hours", "非整点时的钟面夹角"),
   explanation: t(
     "On a clock, the minute hand turns $6$ degrees each minute, and the hour hand turns only half a degree each minute. So between the hours, the hour hand lies part of the way from one mark to the next, and forgetting this is the usual mistake. Measure both hands from $12$, subtract, and if the result is more than $180$ degrees, subtract it from $360$ to get the smaller of the two angles.",
@@ -636,6 +640,7 @@ const midpointsOfParts: KnowledgePointDef = {
 
 const areaWithPercentSides: KnowledgePointDef = {
   id: "the-area-after-percent-changes-to-the-sides",
+  figure: gradeDrawings4["area-of-rectangles-and-squares#the-area-after-percent-changes-to-the-sides"],
   title: t("The area after percent changes to the sides", "边按百分比变化后的面积"),
   explanation: t(
     "Area is a product of two lengths, and so changes in the sides combine by multiplying and not by adding. Raising the length by one percent and lowering the width by another does not change the area by the difference of the two. Write each change as a multiplier, multiply the two, and read the overall change. Choosing a simple rectangle, such as one with sides of $100$ and $100$, is a good way to confirm the answer.",

@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Axis, boxPlot, dec, dotPlot, type FiveNumberSummary, Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, isTerminating, numberProblem, steps } from "../problems.ts";
 
@@ -579,6 +580,7 @@ export const dotPlots: TopicDef = {
     },
     {
       id: "the-median-from-a-dot-plot",
+      figure: gradeDrawings4["dot-plots#the-median-from-a-dot-plot"],
       title: t("The median from a dot plot", "从点图求中位数"),
       explanation: t(
         "A dot plot already shows the data sorted, from left to right and from the bottom of each stack up. To find the median, count the dots and then count from the left to the middle one, or to the middle two.\n\nThe dot plot above has $13$ dots, so the median is the $7$th from the left: $3$.",
@@ -701,6 +703,7 @@ export const boxPlots: TopicDef = {
     },
     {
       id: "quarters-of-the-data",
+      figure: gradeDrawings4["box-plots#quarters-of-the-data"],
       title: t("Quarters of the data", "四分之一的数据"),
       explanation: t(
         "The five marks of a box plot split the data into four parts with about the same number of values in each: about $25\\%$ of the data lie between the minimum and $Q_1$, $25\\%$ between $Q_1$ and the median, and so on. A long part means its quarter of the data is spread out, not that it holds more values.\n\nIn the box plot of the previous step, about $50\\%$ of the values lie between $6$ and $12$, and about $75\\%$ are at least $6$.",

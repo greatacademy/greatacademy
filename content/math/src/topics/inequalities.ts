@@ -1,6 +1,7 @@
 import type { Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, num, poly, relSymbol } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, type InequalityOp, inequalityLatex, inequalityProblem, steps, yesNo } from "../problems.ts";
 
@@ -52,6 +53,7 @@ export const inequalitiesAndSolutions: TopicDef = {
     },
     {
       id: "writing-inequalities",
+      figure: gradeDrawings4["inequalities-and-solutions#writing-inequalities"],
       title: t("Writing inequalities", "写出不等式"),
       explanation: t(
         'Phrases translate into symbols:\n\n| Phrase | Symbol |\n| :--- | :--- |\n| less than, below | $<$ |\n| at most, no more than | $\\le$ |\n| greater than, above | $>$ |\n| at least, no less than | $\\ge$ |\n\n"$x$ is at least $-3$" means $x$ can be $-3$ or anything greater: $x \\ge -3$.',

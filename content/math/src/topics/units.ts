@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, dec, gcd, linear, num, paren, Q, q } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 
 import {
   choiceProblem,
@@ -770,6 +771,7 @@ export const convertingUnitsOfArea: TopicDef = {
     },
     {
       id: "areas-of-rectangles-in-other-units",
+      figure: algebraDrawings["converting-units-of-area#areas-of-rectangles-in-other-units"],
       title: t("Areas in another unit", "用另一种单位表示面积"),
       explanation: t(
         "To find the area of a rectangle in a different unit from its sides, either convert the sides first, or find the area and then convert it with the squared factor. A rectangle $1.2$ m by $0.5$ m is $120$ cm by $50$ cm, so its area is\n\n$$120 \\cdot 50 = 6000\\text{ cm}^2 \\qquad \\text{or} \\qquad 1.2 \\cdot 0.5 = 0.6\\text{ m}^2 = 0.6 \\cdot 10000\\text{ cm}^2 = 6000\\text{ cm}^2$$",
@@ -1409,6 +1411,7 @@ export const directVariation: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-direct-variation",
+      figure: algebraDrawings["direct-variation#recognizing-direct-variation"],
       title: t("Recognizing direct variation", "识别正比例关系"),
       explanation: t(
         "$y$ **varies directly** with $x$ when $y = kx$ for some constant $k \\ne 0$, the **constant of variation**. Then the ratio $\\frac{y}{x}$ is the same for every pair with $x \\ne 0$, and the graph is a line through the origin.\n\nThe points $(2, 6)$, $(3, 9)$, $(5, 15)$ show direct variation: $\\frac{6}{2} = \\frac{9}{3} = \\frac{15}{5} = 3$. The points $(1, 5)$, $(2, 7)$, $(3, 9)$ do not: $\\frac{5}{1} \\ne \\frac{7}{2}$, even though $y$ grows steadily.",

@@ -1,6 +1,8 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q, relSymbol } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { guides, plain, riseRun } from "../graph-figures.ts";
 import {
   choiceProblem,
@@ -394,6 +396,7 @@ export const modelingWithTwoVariableLinearEquations: TopicDef = {
     },
     {
       id: "slope-and-intercept-in-context",
+      figure: gradeDrawings5["modeling-with-two-variable-linear-equations#slope-and-intercept-in-context"],
       title: t("The meaning of the slope and the intercept", "斜率与截距的含义"),
       explanation: t(
         "In a model $y = mx + b$, the graph's **slope** $m$ is the rate: the change in $y$ for each increase of $1$ in $x$. Its **$y$-intercept** $b$ is the value of $y$ when $x = 0$, usually the starting amount. In $V = -30t + 900$ for a pool, the slope $-30$ says the pool loses $30$ liters each minute, and the intercept $900$ is the amount of water at the start.",
@@ -601,6 +604,7 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
     },
     {
       id: "intercepts-of-a-total",
+      figure: gradeDrawings5["modeling-totals-with-two-variable-equations#intercepts-of-a-total"],
       title: t("The intercepts of a total", "总量方程的截距"),
       explanation: t(
         "The intercepts of the graph of $ax + by = T$ describe the extreme cases. The $x$-intercept, where $y = 0$, is the number of items of the first kind when there are none of the second; the $y$-intercept, where $x = 0$, the other way round. For $9x + 5y = 720$: the $x$-intercept is $(80, 0)$, so $80$ adult tickets alone bring in $\\$720$; the $y$-intercept is $(0, 144)$.",
@@ -726,6 +730,7 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
   knowledgePoints: [
     {
       id: "rate-from-a-graph",
+      figure: gradeDrawings5["analyzing-graphs-of-linear-models#rate-from-a-graph"],
       title: t("The rate of change from a graph", "由图像求变化率"),
       explanation: t(
         "The axes of a graph of a situation often count in steps larger than $1$, so read the **numbers on the axes**, not the grid squares. Pick two points on the line and divide the change in the vertical quantity by the change in the horizontal one: this slope is the rate, in units of the vertical quantity per unit of the horizontal one.\n\nIf a tank holds $400$ liters at $t = 0$ and $100$ liters at $t = 20$ minutes, the slope is $\\frac{100 - 400}{20 - 0} = -15$ liters per minute: the tank loses $15$ liters each minute.",
@@ -763,6 +768,7 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
     },
     {
       id: "values-from-a-graph",
+      figure: gradeDrawings5["analyzing-graphs-of-linear-models#values-from-a-graph"],
       title: t("Reading values and intercepts", "读出数值和截距"),
       explanation: t(
         "Each point $(x, y)$ of the graph pairs an input with its output. The intercept on the vertical axis is the value at the start, $x = 0$. When a quantity decreases, the intercept on the horizontal axis is the input at which it reaches $0$: a tank that drains along a line through $(0, 400)$ and $(80, 0)$ is empty after $80$ minutes.",
@@ -1029,6 +1035,7 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
     },
     {
       id: "when-two-models-are-equal",
+      figure: algebraDrawings["further-modeling-with-two-variable-equations#when-two-models-are-equal"],
       title: t("When two models are equal", "两个模型何时相等"),
       explanation: t(
         "To compare two plans, write a model for each and set them equal. Plan A costs $30 + 4x$ and plan B costs $12 + 7x$ for $x$ units:\n\n$$30 + 4x = 12 + 7x \\;\\Rightarrow\\; 18 = 3x \\;\\Rightarrow\\; x = 6.$$\n\nAt $6$ units the plans cost the same; on a graph, this is where the two lines intersect.",
@@ -1174,6 +1181,7 @@ export const distanceTimeGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-a-distance-time-graph",
+      figure: algebraDrawings["distance-time-graphs#reading-a-distance-time-graph"],
       title: t("Reading a distance-time graph", "读距离—时间图"),
       explanation: t(
         "A **distance-time graph** shows how far something is from a starting point, $d$, against time, $t$. A line going up means moving away; a **horizontal** line means the distance does not change, so the traveler is stopped; a line going down means coming back.\n\nThe **total distance traveled** adds up every part of the trip: going $12$ km out and $12$ km back is $24$ km, even though the trip ends where it started.",
@@ -1247,6 +1255,7 @@ export const distanceTimeGraphs: TopicDef = {
     },
     {
       id: "speed-from-a-distance-time-graph",
+      figure: algebraDrawings["distance-time-graphs#speed-from-a-distance-time-graph"],
       title: t("Speed from the slope", "由斜率求速度"),
       explanation: t(
         "On a distance-time graph, the slope of a segment is the change in distance divided by the change in time: the **speed** during that part of the trip. A steeper segment means a higher speed. A segment going down has a negative slope; its speed is the size of the slope.\n\nFrom $(1, 12)$ to $(3, 30)$, the speed is $\\frac{30 - 12}{3 - 1} = 9$ km/h.",
@@ -1434,6 +1443,7 @@ export const speedTimeGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-a-speed-time-graph",
+      figure: algebraDrawings["speed-time-graphs#reading-a-speed-time-graph"],
       title: t("Reading a speed-time graph", "读速度—时间图"),
       explanation: t(
         "A **speed-time graph** shows speed, $v$, against time, $t$. Unlike a distance-time graph, a **horizontal** segment above the axis means moving at a **constant speed**, not standing still; the object is stopped only where the speed is $0$. A segment going up means speeding up, and one going down means slowing down.",
@@ -1506,6 +1516,7 @@ export const speedTimeGraphs: TopicDef = {
     },
     {
       id: "acceleration-from-a-speed-time-graph",
+      figure: algebraDrawings["speed-time-graphs#acceleration-from-a-speed-time-graph"],
       title: t("Acceleration from the slope", "由斜率求加速度"),
       explanation: t(
         "The slope of a speed-time graph is the change in speed per second: the **acceleration**, in meters per second per second ($\\text{m/s}^2$). Speeding up gives a positive acceleration, slowing down a negative one, and a constant speed an acceleration of $0$.\n\nFrom $(4, 12)$ to $(10, 0)$, the acceleration is $\\frac{0 - 12}{10 - 4} = -2\\ \\text{m/s}^2$.",
@@ -1577,6 +1588,7 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "distance-at-constant-speed",
+      figure: algebraDrawings["distance-from-speed-time-graphs#distance-at-constant-speed"],
       title: t("Distance at a constant speed", "匀速运动的路程"),
       explanation: t(
         "At a constant speed, distance is speed times time. On a speed-time graph this product is the **area of the rectangle** under the horizontal segment: its height is the speed and its width is the time. At $12$ m/s from $t = 5$ to $t = 15$, the distance is $12 \\cdot 10 = 120$ m.",
@@ -1614,6 +1626,7 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
     },
     {
       id: "distance-while-changing-speed",
+      figure: algebraDrawings["distance-from-speed-time-graphs#distance-while-changing-speed"],
       title: t("Distance while the speed changes", "变速运动的路程"),
       explanation: t(
         "The distance traveled is the **area under** the speed-time graph in every case. While speeding up from rest, the region is a triangle: from $0$ to $10$ m/s in $4$ s covers $\\frac{1}{2} \\cdot 4 \\cdot 10 = 20$ m. Between two nonzero speeds it is a trapezoid: from $6$ to $10$ m/s in $4$ s covers $\\frac{1}{2}(6 + 10) \\cdot 4 = 32$ m.",
@@ -1653,6 +1666,7 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
     },
     {
       id: "total-distance-and-average-speed",
+      figure: algebraDrawings["distance-from-speed-time-graphs#total-distance-and-average-speed"],
       title: t("Total distance and average speed", "总路程与平均速度"),
       explanation: t(
         "For a whole trip, split the region under the graph into rectangles, triangles and trapezoids and add their areas. The **average speed** is the total distance divided by the total time: a trip of $150$ m in $20$ s has an average speed of $7.5$ m/s.",
@@ -1899,6 +1913,7 @@ export const graphingStrictLinearInequalities: TopicDef = {
     },
     {
       id: "dashed-boundary-and-side",
+      figure: algebraDrawings["graphing-strict-linear-inequalities#dashed-boundary-and-side"],
       title: t("The graph of a strict inequality", "严格不等式的图像"),
       explanation: t(
         "The solutions of $y > mx + b$ are the points **above** the line $y = mx + b$, and those of $y < mx + b$ the points **below** it: a **half-plane**. To graph it, draw the boundary line $y = mx + b$ **dashed**, because its points are not solutions of a strict inequality, and shade the side of the solutions.\n\nIf the inequality is written the other way round, read it from $y$: $2x - 1 < y$ means $y > 2x - 1$, shaded above.",
@@ -1924,6 +1939,7 @@ export const graphingStrictLinearInequalities: TopicDef = {
     },
     {
       id: "strict-inequality-from-a-graph",
+      figure: algebraDrawings["graphing-strict-linear-inequalities#strict-inequality-from-a-graph"],
       title: t("The inequality of a graph", "由图像写不等式"),
       explanation: t(
         "To read an inequality from its graph, find the equation $y = mx + b$ of the boundary from its $y$-intercept and slope. A dashed line means a strict inequality; shading above means $y >$, shading below means $y <$.",
@@ -2037,6 +2053,7 @@ export const graphingNonStrictLinearInequalities: TopicDef = {
     },
     {
       id: "inequality-from-a-graph",
+      figure: algebraDrawings["graphing-non-strict-linear-inequalities#inequality-from-a-graph"],
       title: t("Reading any inequality from a graph", "由图像读出不等式"),
       explanation: t(
         "To read an inequality from a graph, combine three observations: the equation of the boundary line, whether it is solid ($\\le$, $\\ge$) or dashed ($<$, $>$), and whether the shading is above ($y >$, $y \\ge$) or below ($y <$, $y \\le$).",
@@ -2105,6 +2122,7 @@ export const furtherGraphingLinearInequalities: TopicDef = {
   knowledgePoints: [
     {
       id: "solving-for-y-first",
+      figure: algebraDrawings["further-graphing-linear-inequalities#solving-for-y-first"],
       title: t("Inequalities in standard form", "标准式不等式"),
       explanation: t(
         "To see which side of the boundary to shade for $ax + by < c$, solve for $y$. Dividing by a **negative** coefficient of $y$ reverses the inequality:\n\n$$2x - 3y < 6 \\;\\Rightarrow\\; -3y < -2x + 6 \\;\\Rightarrow\\; y > \\tfrac{2}{3}x - 2,$$\n\nso the graph has a dashed boundary and is shaded above.",
@@ -2132,6 +2150,7 @@ export const furtherGraphingLinearInequalities: TopicDef = {
     },
     {
       id: "horizontal-and-vertical-boundaries",
+      figure: algebraDrawings["further-graphing-linear-inequalities#horizontal-and-vertical-boundaries"],
       title: t("Horizontal and vertical boundaries", "水平和竖直的边界"),
       explanation: t(
         "An inequality in one variable can be graphed in the plane too. The solutions of $x > 2$ are all points with $x$-coordinate greater than $2$: the region to the **right** of the vertical line $x = 2$, drawn dashed. The solutions of $y \\le -1$ are the points on or **below** the horizontal line $y = -1$, drawn solid.",
@@ -2309,6 +2328,7 @@ export const systemsOfLinearInequalities: TopicDef = {
     },
     {
       id: "system-from-a-graph",
+      figure: algebraDrawings["systems-of-linear-inequalities#system-from-a-graph"],
       title: t("The graph of a system", "不等式组的图像"),
       explanation: t(
         "The solutions of a system of inequalities are the points in the **overlap** of the regions of its inequalities. To read a system from its graph, write one inequality for each boundary line: its equation, solid or dashed, and the side on which the overlap lies.",

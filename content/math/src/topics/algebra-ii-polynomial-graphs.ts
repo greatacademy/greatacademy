@@ -15,6 +15,7 @@ import {
   type RealSet,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, guides } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
@@ -339,6 +340,7 @@ export const graphingElementaryCubicFunctions: TopicDef = {
     },
     {
       id: "the-center-of-a-cubic-curve",
+      figure: algebraDrawings2["graphing-elementary-cubic-functions#the-center-of-a-cubic-curve"],
       title: t("The center of a cubic curve", "三次曲线的对称中心"),
       explanation: t(
         "The graph of $y = a(x - h)^{3} + k$ is the graph of $y = ax^{3}$ translated $h$ units right and $k$ units up. Its center moves from $(0, 0)$ to $(h, k)$, and the curve is symmetric about that point.\n\nFor $y = 2(x + 1)^{3} - 4$, write $x + 1 = x - (-1)$: $h = -1$ and $k = -4$, so the center is $(-1, -4)$. The sign of $h$ is the opposite of the sign inside the parentheses.",
@@ -435,6 +437,7 @@ export const graphingCubicCurvesContainingThreeDistinctRealRoots: TopicDef = {
   knowledgePoints: [
     {
       id: "the-y-intercept-of-a-factored-cubic",
+      figure: algebraDrawings2["graphing-cubic-curves-containing-three-distinct-real-roots#the-y-intercept-of-a-factored-cubic"],
       title: t("The $y$-intercept", "$y$ 轴截距"),
       explanation: t(
         "To sketch $f(x) = a(x - p)(x - q)(x - r)$, start with the intercepts.\n\n- The roots $p$, $q$ and $r$ are the $x$-intercepts.\n- The $y$-intercept is $f(0)$: substitute $x = 0$ into every factor.\n\nFor $f(x) = 2(x - 1)(x + 3)(x - 4)$:\n\n$$f(0) = 2(0 - 1)(0 + 3)(0 - 4) = 2 \\cdot (-1) \\cdot 3 \\cdot (-4) = 24$$\n\nso the graph crosses the $y$-axis at $(0, 24)$. Count the negative factors carefully: here there are two, so the product is positive.",
@@ -500,6 +503,7 @@ export const graphingCubicCurvesContainingThreeDistinctRealRoots: TopicDef = {
     },
     {
       id: "a-cubic-from-its-graph",
+      figure: algebraDrawings2["graphing-cubic-curves-containing-three-distinct-real-roots#a-cubic-from-its-graph"],
       title: t("The equation from the graph", "由图象求方程"),
       explanation: t(
         "A cubic that crosses the $x$-axis at $p$, $q$ and $r$ is $f(x) = a(x - p)(x - q)(x - r)$ for some $a$. One more point of the graph fixes $a$.\n\nIf the graph crosses the $x$-axis at $-1$, $2$ and $3$ and passes through $(0, 3)$, then $f(x) = a(x + 1)(x - 2)(x - 3)$ and\n\n$$3 = a(0 + 1)(0 - 2)(0 - 3) = 6a \\quad\\Rightarrow\\quad a = \\frac{1}{2}$$\n\nso $f(x) = \\frac{1}{2}(x + 1)(x - 2)(x - 3)$. Check the direction: the graph rises at the right, as $a > 0$ requires.",
@@ -661,6 +665,7 @@ export const graphingCubicCurvesContainingADoubleRoot: TopicDef = {
     },
     {
       id: "a-cubic-with-a-double-root-from-its-graph",
+      figure: algebraDrawings2["graphing-cubic-curves-containing-a-double-root#a-cubic-with-a-double-root-from-its-graph"],
       title: t("The equation from the graph", "由图象求方程"),
       explanation: t(
         "A cubic whose graph touches the $x$-axis at $p$ and crosses it at $q$ has a double root $p$ and a simple root $q$: $f(x) = a(x - p)^{2}(x - q)$. The degrees add up to $3$, as they must for a cubic. Then a marked point gives $a$.\n\nIf the graph touches the $x$-axis at $2$, crosses it at $-1$ and passes through $(0, -2)$:\n\n$$-2 = a(0 - 2)^{2}(0 + 1) = 4a \\quad\\Rightarrow\\quad a = -\\frac{1}{2}$$\n\nso $f(x) = -\\frac{1}{2}(x - 2)^{2}(x + 1)$.",
@@ -734,6 +739,7 @@ export const graphingCubicCurvesContainingOneDistinctRealRoot: TopicDef = {
   knowledgePoints: [
     {
       id: "the-real-roots",
+      figure: algebraDrawings2["graphing-cubic-curves-containing-one-distinct-real-root#the-real-roots"],
       title: t("A quadratic factor without real roots", "没有实根的二次因式"),
       explanation: t(
         "A cubic always has at least one real root, but it may have only one. In $f(x) = (x - 2)(x^{2} + 2x + 5)$ the quadratic factor has discriminant $2^{2} - 4 \\cdot 1 \\cdot 5 = -16 < 0$, so it is never zero (in fact always positive). The only real root is $x = 2$, and the graph crosses the $x$-axis just once.\n\nLikewise $x^{2} + 9$ has no real roots: $x^{2} + 9 = 0$ would need $x^{2} = -9$. So $(x + 1)(x^{2} + 9)$ has the single real root $-1$; $\\pm 3$ are not roots.",
@@ -841,6 +847,7 @@ export const graphingCubicCurvesContainingOneDistinctRealRoot: TopicDef = {
     },
     {
       id: "a-triple-root-from-the-graph",
+      figure: algebraDrawings2["graphing-cubic-curves-containing-one-distinct-real-root#a-triple-root-from-the-graph"],
       title: t("A triple root from the graph", "由图象求三重根的方程"),
       explanation: t(
         "The cubic $f(x) = a(x - h)^{3}$ has the single root $h$ with multiplicity $3$. Its graph is $y = ax^{3}$ moved $h$ units right: it crosses the $x$-axis at $h$ and flattens out there.\n\nIf such a graph crosses the $x$-axis at $1$ and passes through $(3, 4)$, then $h = 1$ and\n\n$$4 = a(3 - 1)^{3} = 8a \\quad\\Rightarrow\\quad a = \\frac{1}{2}$$\n\nso $f(x) = \\frac{1}{2}(x - 1)^{3}$.",
@@ -943,6 +950,7 @@ export const graphingGeneralPolynomials: TopicDef = {
   knowledgePoints: [
     {
       id: "behavior-at-a-root",
+      figure: algebraDrawings2["graphing-general-polynomials#behavior-at-a-root"],
       title: t("Behavior at a root", "根处的图象形状"),
       explanation: t(
         "The multiplicity $m$ of a root decides what the graph does there:\n\n- $m = 1$: it crosses the $x$-axis, like a line;\n- $m$ even ($2, 4, \\dots$): it touches the $x$-axis and turns back, like a parabola;\n- $m$ odd and at least $3$: it flattens out as it crosses, like $y = x^{3}$.\n\nThe graph of $f(x) = (x + 3)(x - 1)^{2}(x - 4)^{3}$ crosses at $-3$, touches at $1$, and flattens out as it crosses at $4$.",

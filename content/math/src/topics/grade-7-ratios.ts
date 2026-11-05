@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { article, choiceProblem, expressionProblem, mixedLatex, numberProblem, reasonChoice, verdictChoice, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -1033,6 +1034,7 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
     },
     {
       id: "meaning-of-a-point-on-the-graph",
+      figure: gradeDrawings4["understanding-proportional-relationships-using-graphs#meaning-of-a-point-on-the-graph"],
       title: t("The meaning of a point", "图像上一点的含义"),
       explanation: t(
         "On the graph of the cost $y$ of $x$ tickets, the point $(4, 30)$ means $4$ tickets cost $\\$30$, and the point $(1, 7.5)$ means one ticket costs $\\$7.50$: $7.5$ is the unit rate.",

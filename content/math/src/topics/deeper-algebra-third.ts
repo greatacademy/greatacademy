@@ -4,6 +4,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
@@ -114,76 +115,82 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
     },
   ],
   "dot-plots": [
-    skill(
-      "the-fraction-of-the-dots",
-      ["The fraction of the dots", "点数所占的分数"],
-      [
-        "Each dot in a dot plot is one value, so the number of dots is the size of the data set. A fraction of the data compares the dots that qualify with all of the dots.",
-        "点图中每个点是一个数据，所以点的总数就是数据的个数。数据所占的分数，是符合条件的点数与所有点数的比。",
-      ],
-      (rng) => {
-        const lo = rng.int(0, 9);
-        const n = rng.pick([10, 12, 15, 16, 18, 20, 24]);
-        const xs = [lo, lo + 8, ...Array.from({ length: n - 2 }, () => rng.int(lo, lo + 8))];
-        const v = [...xs].sort((a, b) => a - b)[Math.floor(n / 2)]! + rng.int(0, 1);
-        const count = xs.filter((x) => x >= v).length;
-        return {
-          ...fraction(
-            [
-              `The dot plot shows a data set. What fraction of the values are at least $${v}$?`,
-              `点图表示一组数据。至少为 $${v}$ 的数据占几分之几？`,
-            ],
-            Q.of(count, n),
-            [Q.of(n - count, n), Q.of(count, n + 1), Q.of(xs.filter((x) => x > v).length, n)],
-            [
-              `$${count}$ of the $${n}$ dots are at $${v}$ or above, so the fraction is $${frac(count, n)}$.`,
-              `$${n}$ 个点中有 $${count}$ 个在 $${v}$ 或以上，所以是 $${frac(count, n)}$。`,
-            ],
-          ),
-          figure: dotPlotFigure(xs, { min: lo, max: lo + 8, step: 1 }),
-        };
-      },
-    ),
+    {
+      ...skill(
+        "the-fraction-of-the-dots",
+        ["The fraction of the dots", "点数所占的分数"],
+        [
+          "Each dot in a dot plot is one value, so the number of dots is the size of the data set. A fraction of the data compares the dots that qualify with all of the dots.",
+          "点图中每个点是一个数据，所以点的总数就是数据的个数。数据所占的分数，是符合条件的点数与所有点数的比。",
+        ],
+        (rng) => {
+          const lo = rng.int(0, 9);
+          const n = rng.pick([10, 12, 15, 16, 18, 20, 24]);
+          const xs = [lo, lo + 8, ...Array.from({ length: n - 2 }, () => rng.int(lo, lo + 8))];
+          const v = [...xs].sort((a, b) => a - b)[Math.floor(n / 2)]! + rng.int(0, 1);
+          const count = xs.filter((x) => x >= v).length;
+          return {
+            ...fraction(
+              [
+                `The dot plot shows a data set. What fraction of the values are at least $${v}$?`,
+                `点图表示一组数据。至少为 $${v}$ 的数据占几分之几？`,
+              ],
+              Q.of(count, n),
+              [Q.of(n - count, n), Q.of(count, n + 1), Q.of(xs.filter((x) => x > v).length, n)],
+              [
+                `$${count}$ of the $${n}$ dots are at $${v}$ or above, so the fraction is $${frac(count, n)}$.`,
+                `$${n}$ 个点中有 $${count}$ 个在 $${v}$ 或以上，所以是 $${frac(count, n)}$。`,
+              ],
+            ),
+            figure: dotPlotFigure(xs, { min: lo, max: lo + 8, step: 1 }),
+          };
+        },
+      ),
+      figure: gradeDrawings4["dot-plots#the-fraction-of-the-dots"],
+    },
   ],
   "box-plots": [
-    skill(
-      "how-many-values-from-the-quarters",
-      ["How many values from the quarters", "由四分之一求个数"],
-      [
-        "A box plot cuts the data into four parts with about the same number of values, however wide each part looks. So the number of values in a part comes from the size of the data set.",
-        "箱线图把数据分成四部分，每部分的数据个数大致相同，不管看起来多宽。所以每部分的个数由数据总数决定。",
-      ],
-      (rng) => {
-        const n = rng.pick([20, 40, 60, 80, 100, 120, 200]);
-        const q1 = rng.int(3, 7);
-        const med = q1 + rng.int(1, 4);
-        const q3 = med + rng.int(1, 4);
-        const lo = rng.int(0, q1 - 1);
-        const hi = q3 + rng.int(1, 5);
-        const form = rng.int(0, 3);
-        const [en, zh, parts] = (
-          [
-            [`greater than ${q3}`, `大于 ${q3}`, 1],
-            [`less than ${q1}`, `小于 ${q1}`, 1],
-            [`between ${q1} and ${q3}`, `在 ${q1} 和 ${q3} 之间`, 2],
-            [`greater than ${q1}`, `大于 ${q1}`, 3],
-          ] as const
-        )[form]!;
-        const answer = (n * parts) / 4;
-        return whole(
-          [
-            `The box plot summarizes $${n}$ scores. About how many of the scores are ${en}?`,
-            `箱线图概括了 $${n}$ 个分数。大约有多少个分数${zh}？`,
-          ],
-          answer,
-          [n, n / 2 === answer ? n / 4 : n / 2, (n * (parts === 3 ? 1 : 3)) / 4, q3 - q1],
-          [
-            `That range covers $${parts}$ of the $4$ parts, and $${n} \\times ${frac(parts, 4)} = ${answer}$.`,
-            `这个范围占 $4$ 部分中的 $${parts}$ 部分，$${n} \\times ${frac(parts, 4)} = ${answer}$。`,
-          ],
-          boxPlotFigure([lo, q1, med, q3, hi], { min: 0, max: 20, step: 1, labelEvery: 2 }),
-        );
-      },
-    ),
+    {
+      ...skill(
+        "how-many-values-from-the-quarters",
+        ["How many values from the quarters", "由四分之一求个数"],
+        [
+          "A box plot cuts the data into four parts with about the same number of values, however wide each part looks. So the number of values in a part comes from the size of the data set.",
+          "箱线图把数据分成四部分，每部分的数据个数大致相同，不管看起来多宽。所以每部分的个数由数据总数决定。",
+        ],
+        (rng) => {
+          const n = rng.pick([20, 40, 60, 80, 100, 120, 200]);
+          const q1 = rng.int(3, 7);
+          const med = q1 + rng.int(1, 4);
+          const q3 = med + rng.int(1, 4);
+          const lo = rng.int(0, q1 - 1);
+          const hi = q3 + rng.int(1, 5);
+          const form = rng.int(0, 3);
+          const [en, zh, parts] = (
+            [
+              [`greater than ${q3}`, `大于 ${q3}`, 1],
+              [`less than ${q1}`, `小于 ${q1}`, 1],
+              [`between ${q1} and ${q3}`, `在 ${q1} 和 ${q3} 之间`, 2],
+              [`greater than ${q1}`, `大于 ${q1}`, 3],
+            ] as const
+          )[form]!;
+          const answer = (n * parts) / 4;
+          return whole(
+            [
+              `The box plot summarizes $${n}$ scores. About how many of the scores are ${en}?`,
+              `箱线图概括了 $${n}$ 个分数。大约有多少个分数${zh}？`,
+            ],
+            answer,
+            [n, n / 2 === answer ? n / 4 : n / 2, (n * (parts === 3 ? 1 : 3)) / 4, q3 - q1],
+            [
+              `That range covers $${parts}$ of the $4$ parts, and $${n} \\times ${frac(parts, 4)} = ${answer}$.`,
+              `这个范围占 $4$ 部分中的 $${parts}$ 部分，$${n} \\times ${frac(parts, 4)} = ${answer}$。`,
+            ],
+            boxPlotFigure([lo, q1, med, q3, hi], { min: 0, max: 20, step: 1, labelEvery: 2 }),
+          );
+        },
+      ),
+      figure: gradeDrawings4["box-plots#how-many-values-from-the-quarters"],
+    },
   ],
 };

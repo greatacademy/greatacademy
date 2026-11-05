@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { type Axis, dec, dotPlot, Q } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -1548,6 +1549,7 @@ export const measuringCentralityFromDotPlots = topic(
     },
     {
       id: "the-mode-from-a-dot-plot",
+      figure: gradeDrawings4["measuring-centrality-from-dot-plots#the-mode-from-a-dot-plot"],
       title: t("The mode from a dot plot", "从点图求众数"),
       explanation: t(
         "In a dot plot the mode is the value under the tallest stack. In the dot plot of the previous step the tallest stack has $4$ dots, at $3$, so the mode is $3$: the value, not the height of the stack.",
@@ -1886,6 +1888,7 @@ export const symmetrySkewAndOutliers = topic(
     },
     {
       id: "skew-and-the-mean-and-median",
+      figure: gradeDrawings4["symmetry-skew-and-outliers#skew-and-the-mean-and-median"],
       title: t("Skew and the mean and median", "偏斜与平均数、中位数"),
       explanation: t(
         "The dot plot of the previous step is skewed right. Its median is $3$, but its mean is $\\frac{59}{18} \\approx 3.3$: the dots in the tail at $5$, $6$ and $7$ pull the mean to the right of the median. In left-skewed data the mean is to the left of the median, and in symmetric data the two are equal.",
@@ -1917,6 +1920,7 @@ export const symmetrySkewAndOutliers = topic(
     },
     {
       id: "an-outlier-in-a-dot-plot",
+      figure: gradeDrawings4["symmetry-skew-and-outliers#an-outlier-in-a-dot-plot"],
       title: t("An outlier in a dot plot", "点图中的离群值"),
       explanation: t(
         "In a dot plot an outlier usually stands apart, with a gap between it and the other dots. Confirm it with the $1.5 \\times \\text{IQR}$ rule: find $Q_1$ and $Q_3$ by counting dots, and check whether the value lies beyond $Q_1 - 1.5 \\times \\text{IQR}$ or $Q_3 + 1.5 \\times \\text{IQR}$.",

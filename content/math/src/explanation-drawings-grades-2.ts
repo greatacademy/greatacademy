@@ -136,7 +136,7 @@ const factTriangle = (top: string, left: string, right: string): Mark[] => [
 ];
 
 /** clock draws a clock face with hands pointing at the given time, numbering the hours that are multiples of numberEvery. */
-function clock(hour: number, minute: number, numberEvery = 1): Mark[] {
+export function clock(hour: number, minute: number, numberEvery = 1): Mark[] {
   const minuteAt = 90 - minute * 6;
   const hourAt = 90 - (hour % 12) * 30 - minute / 2;
   const marks: Mark[] = [ring(3)];
@@ -150,7 +150,7 @@ function clock(hour: number, minute: number, numberEvery = 1): Mark[] {
 }
 
 /** corner draws an angle at the origin from degrees a to degrees b, with a label. */
-const corner = (a: number, b: number, label?: string, r = 3): Mark[] => {
+export const corner = (a: number, b: number, label?: string, r = 3): Mark[] => {
   const from = on(a, r);
   const to = on(b, r);
   return [seg([0, 0], from), seg([0, 0], to), angle([0, 0], from, to, "accent", label)];

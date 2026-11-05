@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { linear, num, type PlaneMark, plane, Q } from "@ga/subject-math";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { article, choiceProblem, numberProblem, pointLatex, steps, verdictChoice } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -150,6 +151,7 @@ export const describingTheFunctionalRelationshipBetweenTwoQuantitiesFromAGraph =
   [
     {
       id: "reading-the-intervals",
+      figure: gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#reading-the-intervals"],
       title: t("Finding when the quantity changes in a given way", "找出量以某种方式变化的时段"),
       explanation: t(
         "Read the graph piece by piece from left to right. A piece that rises means the quantity increases during that time, a horizontal piece means it stays the same, and a piece that falls means it decreases. Of two rising pieces, the steeper one is the faster increase, even if the other one ends higher.",
@@ -183,6 +185,7 @@ export const describingTheFunctionalRelationshipBetweenTwoQuantitiesFromAGraph =
     },
     {
       id: "describing-the-whole-graph",
+      figure: gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#describing-the-whole-graph"],
       title: t("Describing the whole graph", "描述整个图像"),
       explanation: t(
         "A graph that rises steeply, then is horizontal, then falls gently describes a quantity that increases quickly, then stays the same, and then decreases slowly. The order matters, and so does the steepness: a gentle fall is a slow decrease.",
@@ -563,6 +566,7 @@ export const comparingPropertiesOfTwoFunctionsRepresentedDifferently = topic(
     },
     {
       id: "comparing-initial-values",
+      figure: gradeDrawings5["comparing-properties-of-two-functions-represented-differently#comparing-initial-values"],
       title: t("Comparing initial values", "比较初始值"),
       explanation: t(
         "Function A is $y = 3x - 4$, so its initial value is $-4$. Function B is linear and its graph passes through $(2, 9)$ and $(5, 15)$: its rate of change is $\\frac{15 - 9}{5 - 2} = 2$, so at $x = 0$ it is $9 - 2 \\cdot 2 = 5$. B's initial value is greater by $5 - (-4) = 9$.",

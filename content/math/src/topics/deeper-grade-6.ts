@@ -5,6 +5,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { mixedLatex, numberProblem } from "../problems.ts";
 
@@ -82,6 +83,7 @@ const closingSpeeds: KnowledgePointDef = {
 
 const givingToEqualize: KnowledgePointDef = {
   id: "giving-away-to-make-two-amounts-equal",
+  figure: gradeDrawings4["tape-diagrams#giving-away-to-make-two-amounts-equal"],
   title: t("Giving away to make two amounts equal", "给出多少使两个量相等"),
   explanation: t(
     "A tape diagram shows why moving an amount from one person to another changes the gap by twice as much. The giver loses that amount, and the receiver gains it. So to make two amounts equal, only half of the difference needs to be moved. First use the total and the ratio to find both amounts, and then halve their difference. Moving the whole difference would simply swap the two amounts around.",
@@ -265,6 +267,7 @@ const leftoverAfterFilling: KnowledgePointDef = {
 
 const numbersAtADistance: KnowledgePointDef = {
   id: "numbers-at-a-given-distance",
+  figure: gradeDrawings4["interpreting-absolute-value#numbers-at-a-given-distance"],
   title: t("Numbers at a given distance", "距离一定的数"),
   explanation: t(
     "Absolute value measures distance, and distance works from any starting number, not only from zero. On a number line, two numbers lie at a given distance from a starting point, one on each side. Moving right adds the distance, and moving left subtracts it. When the starting number is negative, these moves can cross zero or go further below it, so sketching a quick number line helps to keep the signs straight.",
@@ -293,6 +296,7 @@ const numbersAtADistance: KnowledgePointDef = {
 
 const halfwayPoint: KnowledgePointDef = {
   id: "the-number-halfway-between-two-rationals",
+  figure: gradeDrawings4["identifying-rational-numbers-on-a-number-line#the-number-halfway-between-two-rationals"],
   title: t("The number halfway between two rationals", "两个有理数正中间的数"),
   explanation: t(
     "The number halfway between two numbers is their mean: add them and divide by 2. This is true even when one is negative, and the sum then partly cancels. Thinking of a number line shows why. Starting from the smaller number, go half of the distance towards the larger one. Both ways give the same result, and using one to check the other catches any slip with the signs or the fractions.",
@@ -322,6 +326,7 @@ const halfwayPoint: KnowledgePointDef = {
 
 const distanceToReflection: KnowledgePointDef = {
   id: "the-distance-from-a-point-to-its-reflection",
+  figure: gradeDrawings4["reflections-of-points-in-the-coordinate-plane#the-distance-from-a-point-to-its-reflection"],
   title: t("The distance from a point to its reflection", "点与它的对称点的距离"),
   explanation: t(
     "Reflecting a point in an axis keeps its distance from that axis and moves it to the other side. So the point and its image are twice as far apart as the point is from the axis. Reflecting across the $x$-axis changes the sign of the $y$-coordinate, and so the distance depends on $y$ alone. Reflecting across the $y$-axis depends on $x$ alone. Only the size of the coordinate matters here, not its sign.",
@@ -351,6 +356,7 @@ const distanceToReflection: KnowledgePointDef = {
 
 const cornerFromArea: KnowledgePointDef = {
   id: "a-missing-corner-from-the-area",
+  figure: gradeDrawings4["finding-areas-and-perimeters-in-the-coordinate-plane#a-missing-corner-from-the-area"],
   title: t("A missing corner from the area", "由面积求缺失的顶点"),
   explanation: t(
     "Coordinates and area can work together in reverse. Two corners on a horizontal line give the width of a rectangle. Dividing the area by this width gives the height, and the height tells how far up the other corners lie. So the missing coordinate is the known coordinate plus the height. When the rectangle lies below that line, subtract instead. A small sketch shows at once which of the two cases applies.",
@@ -476,6 +482,7 @@ const changeInLinearExpression: KnowledgePointDef = {
 
 const perimeterExpression: KnowledgePointDef = {
   id: "a-perimeter-as-an-expression",
+  figure: gradeDrawings4["simplifying-linear-expressions#a-perimeter-as-an-expression"],
   title: t("A perimeter as an expression", "用算式表示周长"),
   explanation: t(
     "When the sides of a rectangle are written with a variable, the perimeter is an expression too. Add the length and the width, and then double the result, or else add all four sides. Either way, gather the terms with the variable and gather the constants. Forgetting to double only part of the sum is a common slip. Trying a small value of the variable checks that the simplified form is right.",
@@ -597,6 +604,7 @@ const mostWithBudget: KnowledgePointDef = {
 
 const secondHeight: KnowledgePointDef = {
   id: "the-second-height-of-a-parallelogram",
+  figure: gradeDrawings4["areas-and-perimeters-of-parallelograms#the-second-height-of-a-parallelogram"],
   title: t("The second height of a parallelogram", "平行四边形的另一条高"),
   explanation: t(
     "A parallelogram has two pairs of sides, and each pair has its own height. The area is the same whichever pair is used, so one base and height can be used to find the other height. Each height goes with the side it is perpendicular to. Pairing a side with the wrong height is the usual mistake. A height can never be longer than the neighboring side, and that gives a quick way to check.",
@@ -630,6 +638,7 @@ const secondHeight: KnowledgePointDef = {
 
 const altitudeToHypotenuse: KnowledgePointDef = {
   id: "the-height-onto-the-longest-side",
+  figure: gradeDrawings4["areas-of-right-triangles#the-height-onto-the-longest-side"],
   title: t("The height onto the longest side", "最长边上的高"),
   explanation: t(
     "A right triangle has an easy area, because its two shorter sides are a base and a height. That same area can be computed with the longest side as the base, using the height onto it. So setting the two expressions for the area equal gives this new height, with no need for a formula for it. The result is always shorter than either of the shorter sides, which gives a useful check.",
@@ -664,6 +673,7 @@ const altitudeToHypotenuse: KnowledgePointDef = {
 
 const pictureFrame: KnowledgePointDef = {
   id: "the-area-of-a-border",
+  figure: gradeDrawings4["finding-areas-of-polygons-using-decomposition#the-area-of-a-border"],
   title: t("The area of a border", "边框的面积"),
   explanation: t(
     "Some shapes are found by taking one area away from another, rather than by adding pieces. The area of a border is the outer rectangle minus the inner one. A border of a given width makes each side of the inner rectangle shorter by twice that width, because the border lies on both ends. Subtracting the width only once is the typical slip, so a labeled sketch of the frame is worth drawing first.",
@@ -694,6 +704,7 @@ const pictureFrame: KnowledgePointDef = {
 
 const madAfterChange: KnowledgePointDef = {
   id: "the-mad-after-changing-every-value",
+  figure: gradeDrawings4["mean-absolute-deviation#the-mad-after-changing-every-value"],
   title: t("The MAD after changing every value", "所有值变化后的平均绝对偏差"),
   explanation: t(
     "The mean absolute deviation measures how far values lie from their mean. Adding the same number to every value slides the whole data set along the number line, and it moves the mean by the same amount, so no distance changes and the MAD stays the same. Multiplying every value by a number stretches all the distances by that number, and so the MAD is multiplied as well. No data values are needed to see this.",

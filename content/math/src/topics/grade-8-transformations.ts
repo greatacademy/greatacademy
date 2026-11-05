@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, linear, type Mark, type PlaneMark, type PlaneView, plane, Q, sketch } from "@ga/subject-math";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { annotate, at, graphFigure, riseRun, stagedPolygon, tracked, trail } from "../graph-figures.ts";
 import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, yesNo } from "../problems.ts";
@@ -221,6 +222,7 @@ const verifyingPropertiesOfRigidMotions = topic(
   [
     {
       id: "corresponding-measures",
+      figure: gradeDrawings5["verifying-properties-of-rigid-motions#corresponding-measures"],
       title: t("Measures of the image", "像的度量"),
       explanation: t(
         "A **rigid motion** is a translation, a reflection, a rotation, or a sequence of them. It moves a figure without stretching or bending it:\n\n- segments go to segments of the **same length**;\n- angles go to angles of the **same measure**;\n- parallel lines go to parallel lines.\n\nTo use this, match each part with its image. If a rigid motion maps $A$ to $Q$, $B$ to $R$ and $C$ to $P$, then $\\overline{AB}$ goes to $\\overline{QR}$ and $\\angle C$ goes to $\\angle P$. So $AB = 7$ gives $QR = 7$, and $m\\angle C = 50^\\circ$ gives $m\\angle P = 50^\\circ$.",
@@ -296,6 +298,7 @@ const verifyingPropertiesOfRigidMotions = topic(
     },
     {
       id: "what-a-rigid-motion-keeps",
+      figure: gradeDrawings5["verifying-properties-of-rigid-motions#what-a-rigid-motion-keeps"],
       title: t("What a rigid motion keeps", "刚体运动保持什么"),
       explanation: t(
         "Every rigid motion keeps lengths, angle measures and parallel lines. Other features depend on the motion:\n\n- A **translation** slides every segment without turning it, so each image segment is parallel to its preimage.\n- A **rotation** of $90^\\circ$ turns every segment a quarter turn, so each image segment is perpendicular to its preimage; a $180^\\circ$ rotation turns segments into parallel ones.\n- A **reflection** flips the figure over: if $A$, $B$, $C$, $D$ go around counterclockwise, then $A'$, $B'$, $C'$, $D'$ go around clockwise. Translations and rotations keep the direction.\n\nAn angle never changes its measure: if $m\\angle B = 70^\\circ$, then $m\\angle B' = 70^\\circ$, not $110^\\circ$ or $160^\\circ$.",
@@ -454,6 +457,7 @@ const applyingSequencesOfRigidMotions = topic(
   [
     {
       id: "a-figure-under-a-sequence",
+      figure: gradeDrawings5["applying-sequences-of-rigid-motions#a-figure-under-a-sequence"],
       title: t("A figure under a sequence", "图形在变换序列下的像"),
       explanation: t(
         "To apply a sequence of rigid motions to a figure, apply them **in the order given** to each vertex, each motion to the image of the one before.\n\nRotate triangle $ABC$ $90^\\circ$ counterclockwise about the origin, then translate by $(x, y) \\to (x + 2, y - 3)$. For $B(4, 1)$:\n\n1. Rotation: $B_1 = (-1, 4)$\n2. Translation: $B' = (1, 1)$\n\nIn the other order, the translation gives $(6, -2)$ and the rotation then gives $(2, 6)$, a different point.",
@@ -493,6 +497,7 @@ const applyingSequencesOfRigidMotions = topic(
     },
     {
       id: "does-the-order-matter",
+      figure: gradeDrawings5["applying-sequences-of-rigid-motions#does-the-order-matter"],
       title: t("Does the order matter?", "顺序重要吗？"),
       explanation: t(
         "Changing the order of two rigid motions usually changes the image, so check by applying them both ways.\n\nFor $P(3, 2)$, reflecting across the $x$-axis and then translating by $(x, y) \\to (x, y + 4)$ gives $(3, -2)$, then $(3, 2)$. Translating first gives $(3, 6)$, then $(3, -6)$. The images differ, so the order matters.\n\nSome pairs give the same image in either order, such as two translations, or a reflection across the $x$-axis and a translation that only moves points left or right.",
@@ -548,6 +553,7 @@ const applyingSequencesOfRigidMotions = topic(
     },
     {
       id: "a-single-motion-for-a-sequence",
+      figure: gradeDrawings5["applying-sequences-of-rigid-motions#a-single-motion-for-a-sequence"],
       title: t("A single motion for a sequence", "用一个运动代替一串运动"),
       explanation: t(
         "Some sequences have the same effect as a single motion. Follow the general point $(x, y)$ through the sequence.\n\n- Two translations make one translation: $(x, y) \\to (x + 3, y - 1)$ followed by $(x, y) \\to (x - 5, y + 4)$ is $(x, y) \\to (x - 2, y + 3)$.\n- Reflecting across the $x$-axis and then across the $y$-axis gives $(x, y) \\to (x, -y) \\to (-x, -y)$: a rotation of $180^\\circ$ about the origin.\n- Two $90^\\circ$ counterclockwise rotations make a $180^\\circ$ rotation, and reflecting twice across the same line brings every point back.",
@@ -621,6 +627,7 @@ const congruenceThroughRigidMotions = topic(
   [
     {
       id: "are-the-figures-congruent",
+      figure: gradeDrawings5["congruence-through-rigid-motions#are-the-figures-congruent"],
       title: t("Are the figures congruent?", "两个图形全等吗？"),
       explanation: t(
         "Two figures are **congruent** if a sequence of rigid motions maps one onto the other. Since rigid motions keep lengths and angles, congruent figures have equal corresponding sides and angles.\n\nTo show two figures are congruent, find such a sequence. To show they are not, find a length or angle that cannot match: if one right triangle has legs $3$ and $5$ and another has legs $3$ and $4$, no rigid motion can map one onto the other.",
@@ -677,6 +684,7 @@ const congruenceThroughRigidMotions = topic(
     },
     {
       id: "using-a-congruence-statement",
+      figure: gradeDrawings5["congruence-through-rigid-motions#using-a-congruence-statement"],
       title: t("Using a congruence statement", "运用全等式"),
       explanation: t(
         "In a congruence statement such as $\\triangle ABC \\cong \\triangle QRP$, letters in the same position correspond: $A \\leftrightarrow Q$, $B \\leftrightarrow R$, $C \\leftrightarrow P$. So $\\overline{AB}$ corresponds to $\\overline{QR}$, $\\overline{BC}$ to $\\overline{RP}$, and $\\angle C$ to $\\angle P$.\n\nIf $AB = 2x + 3$ and the sides of $\\triangle QRP$ are $PQ = 9$, $QR = 15$ and $RP = 11$, then $AB = QR$:\n\n$$2x + 3 = 15, \\quad 2x = 12, \\quad x = 6.$$",
@@ -749,6 +757,7 @@ const congruenceThroughRigidMotions = topic(
     },
     {
       id: "finding-the-sequence",
+      figure: gradeDrawings5["congruence-through-rigid-motions#finding-the-sequence"],
       title: t("Finding the sequence", "找出变换序列"),
       explanation: t(
         "To find a sequence of rigid motions that maps one figure onto another, follow one vertex at a time. A candidate sequence works only if it sends **every** vertex to its image.\n\nFor example, if $A(1, 2)$ maps to $A'(-4, 3)$, then rotating $90^\\circ$ counterclockwise about the origin gives $(-2, 1)$, and the translation $(x, y) \\to (x - 2, y + 2)$ finishes the job. Check $B$ and $C$ the same way before deciding.",
@@ -844,6 +853,7 @@ const usingSimilarTrianglesToExplainSlope = topic(
   [
     {
       id: "similar-slope-triangles",
+      figure: gradeDrawings5["using-similar-triangles-to-explain-slope#similar-slope-triangles"],
       title: t("Similar slope triangles", "相似的斜率三角形"),
       explanation: t(
         "A **slope triangle** of a line has a horizontal leg (the run), a vertical leg (the rise), and its third side on the line.\n\nAny two slope triangles of the same line are **similar** by the angle-angle criterion: both have a right angle, and their angles where the line crosses the horizontal legs are corresponding angles of parallel lines, so they are equal. Corresponding sides of similar triangles are proportional, so every slope triangle has the same ratio $\\dfrac{\\text{rise}}{\\text{run}}$: the slope.\n\nIf one slope triangle has rise $4$ and run $6$, a slope triangle with run $9$ has rise $r$ with $\\dfrac{r}{9} = \\dfrac{4}{6}$, so $r = 6$.",
@@ -890,6 +900,7 @@ const usingSimilarTrianglesToExplainSlope = topic(
     },
     {
       id: "is-the-point-on-the-line",
+      figure: gradeDrawings5["using-similar-triangles-to-explain-slope#is-the-point-on-the-line"],
       title: t("Is the point on the line?", "点在直线上吗？"),
       explanation: t(
         "Because all slope triangles of a line are similar, a point $C$ lies on the line through $A$ and $B$ exactly when the slope from $A$ to $C$ equals the slope from $A$ to $B$.\n\nThe line through $A(1, 2)$ and $B(4, 4)$ has slope $\\dfrac{4 - 2}{4 - 1} = \\dfrac{2}{3}$. For $C(10, 8)$, the slope from $A$ is $\\dfrac{8 - 2}{10 - 1} = \\dfrac{6}{9} = \\dfrac{2}{3}$, so $C$ is on the line. For $C(10, 9)$ it is $\\dfrac{7}{9}$, so $C$ is not.",
@@ -938,6 +949,7 @@ const usingSimilarTrianglesToExplainSlope = topic(
     },
     {
       id: "deriving-the-equation-of-a-line",
+      figure: gradeDrawings5["using-similar-triangles-to-explain-slope#deriving-the-equation-of-a-line"],
       title: t("Deriving the equation of a line", "推导直线的方程"),
       explanation: t(
         "Slope triangles give the equation of a line.\n\n- For a line through the origin with slope $m$, any point $(x, y)$ on it makes a slope triangle from the origin with run $x$ and rise $y$. So $\\dfrac{y}{x} = m$, that is, $y = mx$.\n- For a line through $(0, b)$ with slope $m$, the slope triangle from $(0, b)$ to $(x, y)$ has run $x$ and rise $y - b$. So $\\dfrac{y - b}{x} = m$, that is, $y = mx + b$.\n\nThe line through $(0, 1)$ and $(4, 7)$ has slope $\\dfrac{7 - 1}{4} = \\dfrac{3}{2}$, so its equation is $y = \\dfrac{3}{2}x + 1$.",
@@ -1024,6 +1036,7 @@ const describingASequence = topic(
   [
     {
       id: "choosing-the-sequence",
+      figure: gradeDrawings5["describing-a-sequence-of-transformations-that-maps-one-figure-onto-another#choosing-the-sequence"],
       title: t("Choosing the sequence", "选出变换序列"),
       explanation: t(
         "Two figures are **similar** if a sequence of rigid motions and dilations maps one onto the other. To describe such a sequence:\n\n1. Compare corresponding lengths to find the **scale factor** $k = \\dfrac{A'B'}{AB}$.\n2. Dilate about the origin by $k$, which multiplies every coordinate by $k$.\n3. Find the translation that moves the dilated figure onto the image.\n\nIf $A(2, 4)$ and $B(6, 4)$ map to $A'(0, 1)$ and $B'(2, 1)$, then $k = \\dfrac{2}{4} = \\dfrac{1}{2}$. The dilation sends $A$ to $(1, 2)$, so the translation is $(x, y) \\to (x - 1, y - 1)$. Check the other vertices before deciding.",
@@ -1081,6 +1094,7 @@ const describingASequence = topic(
     },
     {
       id: "finding-the-translation",
+      figure: gradeDrawings5["describing-a-sequence-of-transformations-that-maps-one-figure-onto-another#finding-the-translation"],
       title: t("Finding the translation", "求平移"),
       explanation: t(
         "When a dilation about the origin is followed by a translation $(x, y) \\to (x + a, y + b)$, find the scale factor first, then the translation:\n\n1. $k$ is the ratio of the change in a coordinate between two image points to the change between the preimage points.\n2. The dilation sends $A$ to $(kx_A, ky_A)$; the translation must carry this point to $A'$, so $a = x_{A'} - kx_A$ and $b = y_{A'} - ky_A$.\n\n$A(2, 1)$ and $B(4, 3)$ map to $A'(1, 5)$ and $B'(7, 11)$. Then $k = \\dfrac{7 - 1}{4 - 2} = 3$, the dilation sends $A$ to $(6, 3)$, and $(a, b) = (1 - 6, 5 - 3) = (-5, 2)$.",

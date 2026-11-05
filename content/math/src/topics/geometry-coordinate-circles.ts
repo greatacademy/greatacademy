@@ -19,6 +19,7 @@ import {
   surdLatex,
 } from "@ga/subject-math";
 import { chordDrawings, planeCircleDrawings } from "../explanation-drawings-circles.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import {
   choiceProblem,
   equationProblem,
@@ -841,6 +842,7 @@ export const determiningCirclePropertiesByCompletingTheSquare: TopicDef = {
     },
     {
       id: "circle-point-or-nothing",
+      figure: gradeDrawings5["determining-circle-properties-by-completing-the-square#circle-point-or-nothing"],
       title: t("A circle, a point or nothing", "圆、一个点还是没有点"),
       explanation: t(
         "Not every equation $x^{2} + y^{2} + Dx + Ey + F = 0$ is a circle. Complete the square to get $(x - h)^{2} + (y - k)^{2} = c$:\n\n- $c > 0$: a circle with radius $\\sqrt{c}$;\n- $c = 0$: only the single point $(h, k)$, since a sum of squares is $0$ only when both are $0$;\n- $c < 0$: no points at all, since a sum of squares is never negative.\n\nFor example $x^{2} + y^{2} - 2x + 4y + 9 = 0$ becomes $(x - 1)^{2} + (y + 2)^{2} = -4$: no point satisfies it.",

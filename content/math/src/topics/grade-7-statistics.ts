@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import type { Axis, FiveNumberSummary } from "@ga/subject-math";
 import { boxPlot, dec, dotPlot, Q, svgDocument } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -2303,6 +2304,7 @@ export const comparingDataSetVisualizationsUsingStandardDeviationAndMad = topic(
   [
     {
       id: "the-greater-spread-on-dot-plots",
+      figure: gradeDrawings4["comparing-data-set-visualizations-using-standard-deviation-and-mad#the-greater-spread-on-dot-plots"],
       title: t("The greater spread on dot plots", "从点图看哪组更分散"),
       explanation: t(
         "If A’s dots stand in tall stacks at $9$, $10$ and $11$ and B’s few dots lie from $4$ to $16$, B has the greater MAD and standard deviation: its values lie farther from the mean. Tall stacks show many values close together, which means a small spread, not a large one.",

@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, sketch } from "@ga/subject-math";
 import { angleDrawings, motionDrawings } from "../explanation-drawings-angles.ts";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { at, graphFigure } from "../graph-figures.ts";
 import { movedPoint, movedPolygon, viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
@@ -559,6 +560,7 @@ export const identifyingAnglePostulates: TopicDef = {
     },
     {
       id: "naming-angle-postulates",
+      figure: gradeDrawings5["identifying-angle-postulates#naming-angle-postulates"],
       title: t("Naming the postulate", "说出所用的公设"),
       explanation: t(
         "Each postulate fits a particular kind of statement:\n\n- **Angle Addition Postulate**: two adjacent angles add up to the angle they make together.\n- **Linear Pair Postulate**: a linear pair adds up to $180^\\circ$.\n- **Corresponding Angles Postulate**: *if* two parallel lines are cut by a transversal, *then* corresponding angles are congruent.\n- **Converse of the Corresponding Angles Postulate**: *if* corresponding angles are congruent, *then* the lines are parallel.\n\nThe postulate and its converse swap what is known and what is concluded: watch which one the statement starts from.",

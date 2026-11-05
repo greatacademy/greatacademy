@@ -18,6 +18,7 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, at, onAxis, setText as setAlt, shift } from "../graph-figures.ts";
 import {
   choiceProblem,
@@ -734,6 +735,7 @@ export const graphTransformationsOfSquareRootFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-endpoint",
+      figure: algebraDrawings2["graph-transformations-of-square-root-functions#the-endpoint"],
       title: t("The endpoint", "端点"),
       explanation: t(
         "The graph of $y = \\sqrt{x}$ starts at the **endpoint** $(0, 0)$. The graph of $y = a\\sqrt{x - h} + k$ is that graph shifted $h$ units right and $k$ units up, after a vertical stretch or reflection, so it starts at $(h, k)$: the root is $0$ when $x = h$, and then $y = k$.\n\nThe same holds for $y = a\\sqrt{h - x} + k$, whose graph is reflected in a vertical line and extends to the left. For $y = -2\\sqrt{x + 4} + 1$, the root is $0$ at $x = -4$, so the endpoint is $(-4, 1)$.",
@@ -1675,6 +1677,7 @@ export const findingIntersectionsOfLinesAndRadicalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "horizontal-lines",
+      figure: algebraDrawings2["finding-intersections-of-lines-and-radical-functions#horizontal-lines"],
       title: t("Horizontal lines", "水平直线"),
       explanation: t(
         "The graph of $y = a\\sqrt{x - h} + k$ meets the horizontal line $y = m$ where $a\\sqrt{x - h} + k = m$. Solve for $x$; the point is $(x, m)$.\n\nFor $y = 2\\sqrt{x + 1} - 3$ and $y = 5$: $2\\sqrt{x + 1} = 8$, $\\sqrt{x + 1} = 4$, $x = 15$. They meet at $(15, 5)$.",
@@ -1706,6 +1709,7 @@ export const findingIntersectionsOfLinesAndRadicalFunctions: TopicDef = {
     },
     {
       id: "slanted-lines",
+      figure: algebraDrawings2["finding-intersections-of-lines-and-radical-functions#slanted-lines"],
       title: t("Slanted lines", "斜直线"),
       explanation: t(
         "To intersect $y = \\sqrt{ax + b}$ with the line $y = mx + c$, solve $\\sqrt{ax + b} = mx + c$: square, solve the quadratic, and reject the roots where $mx + c < 0$. They are extraneous: there the line is below the $x$-axis, while the graph of the root never is. Each remaining root $x$ gives the point $(x, mx + c)$.\n\nFor $y = \\sqrt{x + 7}$ and $y = x + 1$: the roots are $2$ and $-3$, and only $x = 2$ gives $x + 1 \\ge 0$. The point is $(2, 3)$.",

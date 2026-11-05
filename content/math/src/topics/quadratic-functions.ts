@@ -21,6 +21,7 @@ import {
   surdLatex,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { annotate, at, guides, plain } from "../graph-figures.ts";
 import {
   choiceProblem,
@@ -239,6 +240,7 @@ export const graphingElementaryQuadraticFunctions: TopicDef = {
     },
     {
       id: "finding-a-from-a-point",
+      figure: algebraDrawings["graphing-elementary-quadratic-functions#finding-a-from-a-point"],
       title: t("Finding $a$ from a point", "由一个点求 $a$"),
       explanation: t(
         "If the graph of $y = ax^{2}$ passes through a point, the coordinates of the point satisfy the equation. Substitute them and solve for $a$. Through $(3, 18)$:\n\n$$18 = a \\cdot 3^{2} = 9a \\quad\\Rightarrow\\quad a = \\frac{18}{9} = 2$$\n\nDivide by the **square** of the $x$-coordinate, not by the $x$-coordinate itself.",
@@ -362,6 +364,7 @@ export const verticalReflectionsOfQuadraticFunctions: TopicDef = {
     },
     {
       id: "reflecting-in-the-x-axis",
+      figure: algebraDrawings["vertical-reflections-of-quadratic-functions#reflecting-in-the-x-axis"],
       title: t("Reflecting in the $x$-axis", "关于 $x$ 轴翻折"),
       explanation: t(
         "Reflecting in the $x$-axis keeps every $x$-coordinate and changes the sign of every $y$-coordinate: the point $(2, 12)$ goes to $(2, -12)$. So the reflection of $y = ax^{2}$ is $y = -ax^{2}$; for example, $y = 3x^{2}$ becomes $y = -3x^{2}$, and $y = -\\frac{1}{2}x^{2}$ becomes $y = \\frac{1}{2}x^{2}$.",
@@ -480,6 +483,7 @@ export const graphsOfGeneralQuadraticFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-y-intercept",
+      figure: algebraDrawings["graphs-of-general-quadratic-functions#the-y-intercept"],
       title: t("The $y$-intercept", "$y$ 轴截距"),
       explanation: t(
         "The graph of any **quadratic function** $y = ax^{2} + bx + c$ with $a \\ne 0$ is a parabola. It opens upward when $a > 0$ and downward when $a < 0$.\n\nThe graph meets the $y$-axis where $x = 0$, and there $y = a \\cdot 0^{2} + b \\cdot 0 + c = c$. So the $y$-intercept is $(0, c)$: for $y = 2x^{2} - 5x + 3$ it is $(0, 3)$.",
@@ -508,6 +512,7 @@ export const graphsOfGeneralQuadraticFunctions: TopicDef = {
     },
     {
       id: "points-on-the-graph",
+      figure: algebraDrawings["graphs-of-general-quadratic-functions#points-on-the-graph"],
       title: t("Points on the graph", "图象上的点"),
       explanation: t(
         "A point lies on the graph of $y = ax^{2} + bx + c$ exactly when its coordinates satisfy the equation. Is $(-2, 13)$ on $y = 2x^{2} - 3x - 1$?\n\n$$2 \\cdot (-2)^{2} - 3 \\cdot (-2) - 1 = 8 + 6 - 1 = 13$$\n\nThe output is $13$, so yes. Keep the parentheses around a negative input: $(-2)^{2} = 4$.",
@@ -538,6 +543,7 @@ export const graphsOfGeneralQuadraticFunctions: TopicDef = {
     },
     {
       id: "matching-a-graph",
+      figure: algebraDrawings["graphs-of-general-quadratic-functions#matching-a-graph"],
       title: t("Matching an equation to a graph", "由图象选方程"),
       explanation: t(
         "To match an equation to a parabola, check the features that are easy to read:\n\n1. the direction: upward needs $a > 0$, downward $a < 0$;\n2. the $y$-intercept: the graph crosses the $y$-axis at $(0, c)$;\n3. if two equations still fit, test another point of the graph, such as the vertex.",
@@ -685,6 +691,7 @@ export const rootsOfQuadraticFunctions: TopicDef = {
     },
     {
       id: "roots-with-the-quadratic-formula",
+      figure: algebraDrawings["roots-of-quadratic-functions#roots-with-the-quadratic-formula"],
       title: t("Roots with the quadratic formula", "用求根公式求零点"),
       explanation: t(
         "When $ax^{2} + bx + c$ does not factor over the integers, find the roots with the quadratic formula\n\n$$x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$$\n\nFor $f(x) = x^{2} - 4x + 1$: $x = \\frac{4 \\pm \\sqrt{16 - 4}}{2} = \\frac{4 \\pm 2\\sqrt{3}}{2} = 2 \\pm \\sqrt{3}$. The graph crosses the $x$-axis at $x = 2 + \\sqrt{3} \\approx 3.73$ and $x = 2 - \\sqrt{3} \\approx 0.27$.",
@@ -736,6 +743,7 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-x-intercepts",
+      figure: algebraDrawings["the-discriminant-of-a-quadratic-function#counting-x-intercepts"],
       title: t("Counting $x$-intercepts", "数与 $x$ 轴的交点"),
       explanation: t(
         "The $x$-intercepts of $y = ax^{2} + bx + c$ are the real solutions of $ax^{2} + bx + c = 0$, so the discriminant $b^{2} - 4ac$ counts them:\n\n- positive: the parabola crosses the $x$-axis twice;\n- zero: it touches the $x$-axis at one point, its vertex;\n- negative: it does not meet the $x$-axis.\n\nFor $y = 2x^{2} - 3x + 4$: $9 - 32 = -23 < 0$, so no $x$-intercepts.",
@@ -780,6 +788,7 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
     },
     {
       id: "the-discriminant-from-a-graph",
+      figure: algebraDrawings["the-discriminant-of-a-quadratic-function#the-discriminant-from-a-graph"],
       title: t("The sign of the discriminant from a graph", "由图象判断判别式的符号"),
       explanation: t(
         "Read the argument backwards: count the points where the parabola meets the $x$-axis.\n\n- Two crossings: $b^{2} - 4ac > 0$.\n- The vertex on the $x$-axis: $b^{2} - 4ac = 0$.\n- No meeting point: $b^{2} - 4ac < 0$. This happens when the vertex is above the $x$-axis and the parabola opens upward, or below it and the parabola opens downward.",
@@ -826,6 +835,7 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
     },
     {
       id: "touching-the-x-axis",
+      figure: algebraDrawings["the-discriminant-of-a-quadratic-function#touching-the-x-axis"],
       title: t("Parabolas that touch the $x$-axis", "与 $x$ 轴相切的抛物线"),
       explanation: t(
         "A parabola touches the $x$-axis at exactly one point when its discriminant is $0$. To find the constant $c$ for which $y = 2x^{2} - 12x + c$ does this:\n\n$$(-12)^{2} - 4 \\cdot 2 \\cdot c = 0 \\Rightarrow 144 - 8c = 0 \\Rightarrow c = 18$$",
@@ -956,6 +966,7 @@ export const theAxisOfSymmetryOfAParabola: TopicDef = {
     },
     {
       id: "mirror-points",
+      figure: algebraDrawings["the-axis-of-symmetry-of-a-parabola#mirror-points"],
       title: t("Mirror-image points", "对称点"),
       explanation: t(
         "Two points of a parabola at the same height are mirror images across the axis of symmetry, at the same distance from it on opposite sides. If the axis is $x = 1$ and $(4, 7)$ is on the parabola, $4$ is $3$ to the right of $1$, so $(1 - 3, 7) = (-2, 7)$ is on it too. In general the mirror image of $(p, q)$ across $x = h$ is $(2h - p, q)$.\n\nThis gives a quick second point from the $y$-intercept: $(0, c)$ is mirrored to $(2h, c)$.",
@@ -1024,6 +1035,7 @@ export const theAverageOfTheRootsFormula: TopicDef = {
   knowledgePoints: [
     {
       id: "the-axis-from-the-roots",
+      figure: algebraDrawings["the-average-of-the-roots-formula#the-axis-from-the-roots"],
       title: t("The axis of symmetry from the roots", "由零点求对称轴"),
       explanation: t(
         "The two $x$-intercepts of a parabola are at the same height, $0$, so they are mirror images across the axis of symmetry. The axis lies halfway between them, at the **average of the roots**:\n\n$$x = \\frac{r + s}{2}$$\n\nFor $y = 2(x - 5)(x + 1)$ the roots are $5$ and $-1$, so the axis is $x = \\frac{5 + (-1)}{2} = 2$.",
@@ -1049,6 +1061,7 @@ export const theAverageOfTheRootsFormula: TopicDef = {
     },
     {
       id: "the-vertex-from-the-roots",
+      figure: algebraDrawings["the-average-of-the-roots-formula#the-vertex-from-the-roots"],
       title: t("The vertex from the roots", "由零点求顶点"),
       explanation: t(
         "The vertex lies on the axis of symmetry. So to find the vertex of $y = a(x - r)(x - s)$, average the roots to get its $x$-coordinate, then substitute it to get the $y$-coordinate. For $y = 2(x - 5)(x + 1)$:\n\n$$x = \\frac{5 + (-1)}{2} = 2, \\qquad y = 2(2 - 5)(2 + 1) = 2 \\cdot (-3) \\cdot 3 = -18$$\n\nThe vertex is $(2, -18)$.",
@@ -1125,6 +1138,7 @@ export const theVertexFormOfAParabola: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-the-vertex",
+      figure: algebraDrawings["the-vertex-form-of-a-parabola#reading-the-vertex"],
       title: t("Reading the vertex", "读出顶点"),
       explanation: t(
         "A quadratic function in **vertex form** is\n\n$$y = a(x - h)^{2} + k$$\n\nIts graph is the parabola $y = ax^{2}$ moved so that its vertex is at $(h, k)$; the axis of symmetry is $x = h$. Read $h$ with the opposite sign of the number in the parentheses: $y = 3(x + 2)^{2} - 5$ is $3(x - (-2))^{2} + (-5)$, so the vertex is $(-2, -5)$.",
@@ -1193,6 +1207,7 @@ export const theVertexFormOfAParabola: TopicDef = {
     },
     {
       id: "expanding-vertex-form",
+      figure: algebraDrawings["the-vertex-form-of-a-parabola#expanding-vertex-form"],
       title: t("From vertex form to standard form", "由顶点式化为一般式"),
       explanation: t(
         "To write $y = a(x - h)^{2} + k$ in standard form, square the binomial, distribute $a$, and add $k$:\n\n$$y = 2(x - 3)^{2} + 1 = 2(x^{2} - 6x + 9) + 1 = 2x^{2} - 12x + 18 + 1 = 2x^{2} - 12x + 19$$\n\nMultiply every term of the square by $a$, including the constant $9$.",
@@ -1237,6 +1252,7 @@ export const writingTheEquationOfAParabolaInVertexForm: TopicDef = {
   knowledgePoints: [
     {
       id: "completing-the-square",
+      figure: algebraDrawings["writing-the-equation-of-a-parabola-in-vertex-form#completing-the-square"],
       title: t("Completing the square", "配方"),
       explanation: t(
         "To write $y = x^{2} + bx + c$ in vertex form, add and subtract $\\left(\\frac{b}{2}\\right)^{2}$ to make a perfect square:\n\n$$y = x^{2} - 6x + 11 = (x^{2} - 6x + 9) - 9 + 11 = (x - 3)^{2} + 2$$\n\nSo $h = 3$, $k = 2$, and the vertex is $(3, 2)$. Half of $b = -6$ is $-3$, which gives $(x - 3)^{2}$.",
@@ -1268,6 +1284,7 @@ export const writingTheEquationOfAParabolaInVertexForm: TopicDef = {
     },
     {
       id: "with-a-leading-coefficient",
+      figure: algebraDrawings["writing-the-equation-of-a-parabola-in-vertex-form#with-a-leading-coefficient"],
       title: t("With a leading coefficient", "二次项系数不为 1"),
       explanation: t(
         "When $a \\ne 1$, factor $a$ out of the $x$-terms first, complete the square inside, and multiply the subtracted square by $a$ when taking it out:\n\n$$y = 2x^{2} + 12x + 5 = 2(x^{2} + 6x) + 5 = 2(x^{2} + 6x + 9) - 2 \\cdot 9 + 5 = 2(x + 3)^{2} - 13$$\n\nThe vertex is $(-3, -13)$. Forgetting the factor $2$ in $2 \\cdot 9$ is the usual slip.",
@@ -1300,6 +1317,7 @@ export const writingTheEquationOfAParabolaInVertexForm: TopicDef = {
     },
     {
       id: "from-the-vertex-and-a-point",
+      figure: algebraDrawings["writing-the-equation-of-a-parabola-in-vertex-form#from-the-vertex-and-a-point"],
       title: t("From the vertex and a point", "由顶点和一点求方程"),
       explanation: t(
         "If a parabola has vertex $(h, k)$, its equation is $y = a(x - h)^{2} + k$ for some $a$. Substitute another point of the parabola to find $a$. With vertex $(1, -4)$ and the point $(3, 4)$:\n\n$$4 = a(3 - 1)^{2} - 4 \\Rightarrow 8 = 4a \\Rightarrow a = 2$$\n\nso $y = 2(x - 1)^{2} - 4$. Do not forget to move $k$ before dividing.",
@@ -1381,6 +1399,7 @@ export const domainAndRangeOfQuadraticFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "from-a-graph",
+      figure: algebraDrawings["domain-and-range-of-quadratic-functions#from-a-graph"],
       title: t("Domain and range from a graph", "从图象求定义域和值域"),
       explanation: t(
         "Every real number can be squared, so the **domain** of a quadratic function is all real numbers, $\\mathbb{R}$. The **range** depends on the vertex $(h, k)$:\n\n- opening upward, the outputs are $k$ and everything above: the range is $[k, \\infty)$;\n- opening downward, the range is $(-\\infty, k]$.\n\nThe bracket at $k$ is closed, because the vertex is on the graph.",
@@ -1418,6 +1437,7 @@ export const domainAndRangeOfQuadraticFunctions: TopicDef = {
     },
     {
       id: "from-vertex-form",
+      figure: algebraDrawings["domain-and-range-of-quadratic-functions#from-vertex-form"],
       title: t("Domain and range from vertex form", "由顶点式求定义域和值域"),
       explanation: t(
         "In $f(x) = a(x - h)^{2} + k$ the vertex is $(h, k)$ and the sign of $a$ gives the direction. For $f(x) = -3(x + 1)^{2} + 4$: the parabola opens downward from $(-1, 4)$, so the range is $(-\\infty, 4]$. The domain is $\\mathbb{R}$, as for every quadratic function.",
@@ -1455,6 +1475,7 @@ export const domainAndRangeOfQuadraticFunctions: TopicDef = {
     },
     {
       id: "from-standard-form",
+      figure: algebraDrawings["domain-and-range-of-quadratic-functions#from-standard-form"],
       title: t("Range from standard form", "由一般式求值域"),
       explanation: t(
         "For $f(x) = ax^{2} + bx + c$, find the vertex first: its $x$-coordinate is $-\\frac{b}{2a}$, and its $y$-coordinate is the value of $f$ there. For $f(x) = 2x^{2} - 8x + 3$:\n\n$$x = -\\frac{-8}{4} = 2, \\qquad f(2) = 8 - 16 + 3 = -5$$\n\nThe parabola opens upward, so the range is $[-5, \\infty)$. The $y$-intercept $3$ is not the minimum.",
@@ -1676,6 +1697,7 @@ export const findingIntersectionsOfLinesAndQuadraticFunctions: TopicDef = {
     },
     {
       id: "counting-intersections",
+      figure: algebraDrawings["finding-intersections-of-lines-and-quadratic-functions#counting-intersections"],
       title: t("Counting intersection points", "数交点个数"),
       explanation: t(
         "Setting the equations of a line and a parabola equal and moving everything to one side gives a quadratic equation; its discriminant counts the intersection points. For $y = x^{2} + 1$ and $y = 2x - 3$:\n\n$$x^{2} + 1 = 2x - 3 \\Rightarrow x^{2} - 2x + 4 = 0, \\qquad (-2)^{2} - 4 \\cdot 1 \\cdot 4 = -12 < 0$$\n\nso the line misses the parabola. A discriminant of $0$ means the line touches the parabola at one point: it is **tangent** to it.",
@@ -1707,6 +1729,7 @@ export const findingIntersectionsOfLinesAndQuadraticFunctions: TopicDef = {
     },
     {
       id: "tangent-lines",
+      figure: algebraDrawings["finding-intersections-of-lines-and-quadratic-functions#tangent-lines"],
       title: t("Tangent lines", "切线"),
       explanation: t(
         "To find the constant $k$ for which the line $y = mx + k$ is tangent to a parabola, set the equations equal, collect terms, and make the discriminant $0$. For $y = x^{2} + 2x + 3$ and $y = 4x + k$:\n\n$$x^{2} - 2x + (3 - k) = 0, \\qquad (-2)^{2} - 4(3 - k) = 0 \\Rightarrow 4k - 8 = 0 \\Rightarrow k = 2$$",
@@ -1778,6 +1801,7 @@ export const modelingDownwardsVerticalMotion: TopicDef = {
   knowledgePoints: [
     {
       id: "height-of-a-dropped-object",
+      figure: algebraDrawings["modeling-downwards-vertical-motion#height-of-a-dropped-object"],
       title: t("The height of a dropped object", "下落物体的高度"),
       explanation: t(
         "An object dropped from a height $h_{0}$ falls faster and faster. Ignoring air resistance, its height $t$ seconds later is\n\n$$h = -16t^{2} + h_{0} \\text{ (feet)} \\qquad \\text{or} \\qquad h = -5t^{2} + h_{0} \\text{ (meters)}$$\n\nwhere $-5$ rounds $-4.9$. Dropped from $200$ feet, after $3$ seconds it is at $h = -16 \\cdot 3^{2} + 200 = -144 + 200 = 56$ feet. The graph against $t$ is half of a downward parabola with vertex $(0, h_{0})$.",
@@ -1884,6 +1908,7 @@ export const modelingUpwardsVerticalMotion: TopicDef = {
   knowledgePoints: [
     {
       id: "time-to-the-maximum-height",
+      figure: algebraDrawings["modeling-upwards-vertical-motion#time-to-the-maximum-height"],
       title: t("When it reaches its maximum height", "何时到达最大高度"),
       explanation: t(
         "An object thrown **upward** with speed $v$ from height $h_{0}$ has height\n\n$$h = -16t^{2} + vt + h_{0}$$\n\nThe graph is a downward parabola, so the object is highest at the vertex, on the axis of symmetry $t = -\\frac{b}{2a}$. For $h = -16t^{2} + 48t + 6$: $t = -\\frac{48}{2 \\cdot (-16)} = 1.5$ seconds.",
@@ -1913,6 +1938,7 @@ export const modelingUpwardsVerticalMotion: TopicDef = {
     },
     {
       id: "the-maximum-height",
+      figure: algebraDrawings["modeling-upwards-vertical-motion#the-maximum-height"],
       title: t("The maximum height", "最大高度"),
       explanation: t(
         "The maximum height is the $h$-coordinate of the vertex: find the time of the vertex, then substitute it. For $h = -16t^{2} + 64t + 5$:\n\n$$t = -\\frac{64}{-32} = 2, \\qquad h = -16 \\cdot 2^{2} + 64 \\cdot 2 + 5 = -64 + 128 + 5 = 69$$\n\nThe maximum height is $69$ feet, reached after $2$ seconds.",
@@ -2362,6 +2388,7 @@ export const maximizingProfitAndBreakEvenPoints: TopicDef = {
   knowledgePoints: [
     {
       id: "the-most-profitable-quantity",
+      figure: algebraDrawings["maximizing-profit-and-break-even-points#the-most-profitable-quantity"],
       title: t("The most profitable quantity", "利润最大时的件数"),
       explanation: t(
         "A profit function such as $P(x) = -2x^{2} + 160x - 1800$ is a downward parabola, so profit is greatest at the vertex:\n\n$$x = -\\frac{b}{2a} = -\\frac{160}{2 \\cdot (-2)} = 40$$\n\nMaking and selling $40$ items gives the most profit. Producing more than that lowers the profit again.",
@@ -2389,6 +2416,7 @@ export const maximizingProfitAndBreakEvenPoints: TopicDef = {
     },
     {
       id: "the-maximum-profit",
+      figure: algebraDrawings["maximizing-profit-and-break-even-points#the-maximum-profit"],
       title: t("The maximum profit", "最大利润"),
       explanation: t(
         "The maximum profit is the value of $P$ at the vertex. For $P(x) = -2x^{2} + 160x - 1800$, the vertex is at $x = 40$:\n\n$$P(40) = -2 \\cdot 40^{2} + 160 \\cdot 40 - 1800 = -3200 + 6400 - 1800 = 1400$$\n\nThe maximum profit is $\\$1400$. It is a value of $P$, not the number of items.",
@@ -2463,6 +2491,7 @@ export const maximizingProfitAndBreakEvenPoints: TopicDef = {
     },
     {
       id: "profitable-quantities",
+      figure: algebraDrawings["maximizing-profit-and-break-even-points#profitable-quantities"],
       title: t("When the business makes a profit", "何时盈利"),
       explanation: t(
         "A downward profit parabola is above the $x$-axis between its roots. So the business makes a profit, $P(x) > 0$, exactly for quantities strictly between the two break-even points. With break-even points $10$ and $90$, it profits for $10 < x < 90$, the interval $(10, 90)$; at $10$ and $90$ the profit is $0$, not positive.",

@@ -6,6 +6,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -220,6 +221,7 @@ const otherNumberFromGcfLcm: KnowledgePointDef = {
 
 const squareTiles: KnowledgePointDef = {
   id: "the-largest-square-tile-for-a-floor",
+  figure: gradeDrawings5["finding-greatest-common-factors-using-prime-factorization#the-largest-square-tile-for-a-floor"],
   title: t("The largest square tile for a floor", "铺地面的最大正方形地砖"),
   explanation: t(
     "A square tile covers a rectangle exactly only if its side divides both of the rectangle's sides. So the largest possible tile has a side equal to the greatest common factor of the two lengths. Next, find how many tiles fit along each side by dividing, and multiply these two counts. Dividing the area by the side, instead of by the tile's area, is the usual mistake, as a tile is two-dimensional.",
@@ -655,6 +657,7 @@ const sidesFromAngleRatio: KnowledgePointDef = {
 
 const isoscelesExterior: KnowledgePointDef = {
   id: "an-exterior-angle-of-an-isosceles-triangle",
+  figure: gradeDrawings5["exterior-angles-of-triangles#an-exterior-angle-of-an-isosceles-triangle"],
   title: t("An exterior angle of an isosceles triangle", "等腰三角形的外角"),
   explanation: t(
     "An exterior angle equals the sum of the two interior angles that are not next to it. In an isosceles triangle, this has a useful form. At the apex, the two opposite angles are the equal base angles, so the exterior angle is twice one of them. At a base vertex, the exterior angle is next to one base angle, which is found first, and the base angles then give the apex by the angle sum.",

@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { dec, type Mark, type Point, Q, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem, steps, unitLatex } from "../problems.ts";
 import { rectangle, sides } from "./area.ts";
@@ -350,6 +351,7 @@ export const calculatingPerimetersAndAreasOfScaledShapes = topic(
   [
     {
       id: "actual-perimeters-and-areas",
+      figure: gradeDrawings4["calculating-perimeters-and-areas-of-scaled-shapes#actual-perimeters-and-areas"],
       title: t("Actual perimeters and areas", "实际的周长和面积"),
       explanation: t(
         "A room is drawn as a $5$ cm by $4$ cm rectangle at the scale $1\\text{ cm} : 3\\text{ m}$. First find the actual lengths: $5 \\cdot 3 = 15$ m and $4 \\cdot 3 = 12$ m. Then the actual perimeter is $2(15 + 12) = 54$ m and the actual area is $15 \\cdot 12 = 180\\text{ m}^2$.\n\nThe drawn area is $20\\text{ cm}^2$, and $20 \\cdot 3 = 60$ is wrong: each square centimeter stands for $3 \\cdot 3 = 9\\text{ m}^2$.",
@@ -536,6 +538,7 @@ export const relatingTheCircumferenceAndAreaOfACircle = topic(
   [
     {
       id: "area-from-circumference",
+      figure: gradeDrawings4["relating-the-circumference-and-area-of-a-circle#area-from-circumference"],
       title: t("Area from the circumference", "由周长求面积"),
       explanation: t(
         "The radius links the circumference and the area of a circle. From the circumference, find the radius with $r = \\frac{C}{2\\pi}$, then use it in the area formula $A = \\pi r^2$.\n\nA circle has a circumference of $31.4$ cm. Using $3.14$ for $\\pi$:\n\n$$r = \\frac{C}{2\\pi} = \\frac{31.4}{6.28} = 5\\text{ cm}, \\qquad A = \\pi r^2 = 3.14 \\cdot 25 = 78.5\\text{ cm}^2.$$\n\nUse the radius, not the diameter, in $\\pi r^2$.",
@@ -564,6 +567,7 @@ export const relatingTheCircumferenceAndAreaOfACircle = topic(
     },
     {
       id: "circumference-from-area",
+      figure: gradeDrawings4["relating-the-circumference-and-area-of-a-circle#circumference-from-area"],
       title: t("Circumference from the area", "由面积求周长"),
       explanation: t(
         "A circle has an area of $113.04\\text{ cm}^2$. Using $3.14$ for $\\pi$, $r^2 = 113.04 \\div 3.14 = 36$, so $r = 6$ cm, the number whose square is $36$. Then\n\n$$C = 2\\pi r = 2 \\cdot 3.14 \\cdot 6 = 37.68\\text{ cm}.$$",
@@ -1051,6 +1055,7 @@ export const volumesOfTriangularPrisms = topic(
     },
     {
       id: "missing-dimensions-from-volume",
+      figure: gradeDrawings4["volumes-of-triangular-prisms#missing-dimensions-from-volume"],
       title: t("Missing dimensions from the volume", "由体积求未知尺寸"),
       explanation: t(
         "If a triangular prism has volume $180\\text{ cm}^3$ and its triangle has base $8$ cm and height $5$ cm, the base area is $\\frac{1}{2} \\cdot 8 \\cdot 5 = 20\\text{ cm}^2$, so the length is $180 \\div 20 = 9$ cm. If instead the length and the triangle's base are known, divide the volume by the length to get the base area, then solve $\\frac{1}{2} \\cdot b \\cdot h = B$.",
@@ -1323,6 +1328,7 @@ export const surfaceAreasOfCombinedRectangularPrisms = topic(
     },
     {
       id: "painting-combined-prisms",
+      figure: gradeDrawings4["surface-areas-of-combined-rectangular-prisms#painting-combined-prisms"],
       title: t("Painting combined prisms", "给组合体刷漆"),
       explanation: t(
         "If the combined solid sits on the floor, its bottom face is not painted either. For a $4 \\times 3 \\times 2$ box on a $10 \\times 6 \\times 5$ box, the painted area is\n\n$$52 + 280 - 2 \\cdot 12 - 10 \\cdot 6 = 248.$$\n\nSubtract the contact area twice and the bottom once.",
@@ -1459,6 +1465,7 @@ export const crossSectionsOfThreeDimensionalShapes = topic(
   [
     {
       id: "naming-cross-sections",
+      figure: gradeDrawings4["cross-sections-of-three-dimensional-shapes#naming-cross-sections"],
       title: t("Naming cross-sections", "说出截面的形状"),
       explanation: t(
         "Imagine where the plane meets each face. A cylinder sliced parallel to its base gives a circle; sliced straight down through its center, it gives a rectangle as tall as the cylinder and as wide as its diameter. A square pyramid sliced parallel to its base gives a smaller square; sliced straight down through its top point, it gives a triangle.",
@@ -1498,6 +1505,7 @@ export const crossSectionsOfThreeDimensionalShapes = topic(
     },
     {
       id: "areas-of-cross-sections",
+      figure: gradeDrawings4["cross-sections-of-three-dimensional-shapes#areas-of-cross-sections"],
       title: t("Areas of cross-sections", "截面的面积"),
       explanation: t(
         "Find the shape of the cross-section, then its dimensions from the solid. A $10 \\times 4 \\times 6$ cm prism sliced parallel to its $10 \\times 4$ base gives a $10 \\times 4$ rectangle, area $40\\text{ cm}^2$. A cylinder of radius $3$ cm and height $8$ cm sliced through its center perpendicular to its base gives a $6 \\times 8$ rectangle, area $48\\text{ cm}^2$, because its width is the diameter.",

@@ -20,6 +20,7 @@ import {
   svgDocument,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 
 import {
   choiceProblem,
@@ -387,6 +388,7 @@ export const intervalNotation: TopicDef = {
     },
     {
       id: "graphs-of-bounded-intervals",
+      figure: algebraDrawings["interval-notation#graphs-of-bounded-intervals"],
       title: t("Reading graphs of intervals", "读区间的图像"),
       explanation: t(
         "On a number line, a **closed dot** marks an endpoint that is included and an **open circle** one that is excluded; the shaded segment between them holds the other numbers of the set. A segment from an open circle at $-1$ to a closed dot at $4$ is $(-1, 4]$.",
@@ -504,6 +506,7 @@ export const unboundedIntervals: TopicDef = {
     },
     {
       id: "graphs-of-unbounded-intervals",
+      figure: algebraDrawings["unbounded-intervals#graphs-of-unbounded-intervals"],
       title: t("Reading graphs of rays", "读射线的图像"),
       explanation: t(
         "A ray on a number line starts at a dot or a circle and has an arrow at the other end: the set goes on without end. An arrow to the right reaches $\\infty$, an arrow to the left $-\\infty$. A ray from a closed dot at $2$ to the left is $(-\\infty, 2]$.",

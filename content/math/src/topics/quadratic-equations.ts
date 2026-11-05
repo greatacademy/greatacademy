@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, gcd, linear, num, poly, Q, type Surd, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 
 import { choiceProblem, equationProblem, numberProblem, pointProblem, solutionsProblem, steps, whySet, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -1892,6 +1893,7 @@ export const modelingWithQuadraticEquations: TopicDef = {
   knowledgePoints: [
     {
       id: "rectangles",
+      figure: algebraDrawings["modeling-with-quadratic-equations#rectangles"],
       title: t("Areas of rectangles", "长方形的面积"),
       explanation: t(
         "Name the unknown, write the area as a product, and solve. A length must be positive, so reject a negative solution.\n\nThe length of a rectangle is $3$ m more than its width, and its area is $40$ m². With width $w$:\n\n$$w(w + 3) = 40 \\Rightarrow w^{2} + 3w - 40 = 0 \\Rightarrow (w + 8)(w - 5) = 0$$\n\nSo $w = 5$ (not $-8$): the width is $5$ m and the length $8$ m.",

@@ -1,6 +1,7 @@
 import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, num, poly, Q } from "@ga/subject-math";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choiceProblem, numberProblem, pointLatex, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -358,6 +359,7 @@ export const horizontalAndVerticalLines = topic(
     },
     {
       id: "points-on-a-horizontal-or-vertical-line",
+      figure: gradeDrawings5["horizontal-and-vertical-lines#points-on-a-horizontal-or-vertical-line"],
       title: t("Points on the line", "直线上的点"),
       explanation: t(
         "The line $y = -2$ is horizontal, and a point lies on it exactly when its $y$-coordinate is $-2$: $(7, -2)$ is on it, but $(-2, 7)$ is not. The line $x = 4$ is vertical, and it is parallel to the $y$-axis, not the $x$-axis.",
@@ -480,6 +482,7 @@ export const slopeAsAUnitRateInProportionalRelationships = topic(
   [
     {
       id: "unit-rate-from-two-points",
+      figure: gradeDrawings5["slope-as-a-unit-rate-in-proportional-relationships#unit-rate-from-two-points"],
       title: t("The unit rate from two points on the graph", "由图像上的两点求单位比率"),
       explanation: t(
         "A car's distance $d$ (miles) is proportional to the time $t$ (hours), and the graph passes through $(2, 110)$ and $(5, 275)$. The slope is $\\frac{275 - 110}{5 - 2} = \\frac{165}{3} = 55$, so the car travels $55$ miles per hour. Dividing the other way, $\\frac{3}{165}$, gives hours per mile instead.",

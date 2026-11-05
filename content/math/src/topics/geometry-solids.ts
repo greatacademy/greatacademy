@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, num, type Point, Q, radical, simplifyRadical, sketch } from "@ga/subject-math";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { solidDrawings } from "../explanation-drawings-solids.ts";
 import {
   article,
@@ -670,6 +671,7 @@ export const facesVerticesAndEdgesOfPolyhedrons: TopicDef = {
     },
     {
       id: "finding-the-base",
+      figure: gradeDrawings4["faces-vertices-and-edges-of-polyhedrons#finding-the-base"],
       title: t("Finding the base from a count", "由计数确定底面"),
       explanation: t(
         "The counts can be read backward. A prism with $24$ edges has $3n = 24$, so each base has $n = 8$ sides: it is an octagonal prism. A pyramid with $9$ faces has $n + 1 = 9$, so its base has $8$ sides.",

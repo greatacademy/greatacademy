@@ -1,6 +1,7 @@
 import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { numberProblem, steps } from "../problems.ts";
 import { graphFigure, monotoneWalk } from "./functions.ts";
@@ -66,54 +67,57 @@ export const identifyingTheNumberOfSolutionsByInspection = topic(
   ["elimination-with-two-transformations"],
   ["8.EE.C.8b"],
   [
-    kp(
-      "comparing-coefficients",
-      t("Comparing coefficients", "比较系数"),
-      t(
-        "Two lines meet once unless they are parallel. If one equation's $x$ and $y$ coefficients are not the same multiple of the other's, the slopes differ and there is one solution. If they are the same multiple but the constants are not, the lines are parallel with no solution. If everything is the same multiple, it is one line, with infinitely many solutions.",
-        "两条直线除非平行，否则恰好相交一次。如果一个方程 $x$ 和 $y$ 的系数不是另一个方程系数的同一倍数，斜率就不同，方程组有一个解。如果是同一倍数而常数项不是，两条直线平行，方程组无解。如果全部是同一倍数，就是同一条直线，有无穷多个解。",
-      ),
-      (rng) => {
-        const a = rng.pick([1, 2, 3, 4, 5]);
-        const b = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
-        const c = rng.int(-12, 12);
-        const k = rng.pick([-3, -2, 2, 3, 4, 5]);
-        const kind = rng.pick(["one", "none", "many"] as const);
-        const a2 = k * a;
-        const b2 = kind === "one" ? k * b + rng.pick([-2, -1, 1, 2]) : k * b;
-        const c2 = kind === "none" ? k * c + rng.pick([-5, -3, -1, 1, 2, 4]) : kind === "many" ? k * c : rng.int(-20, 20);
-        const others = (["one", "none", "many", "two"] as const).filter((x) => x !== kind).map((x) => howMany[x]);
-        const line1 = standard(a, b, c);
-        const line2 = standard(a2, b2 === 0 ? 1 : b2, c2);
-        const b2Shown = b2 === 0 ? 1 : b2;
-        const isOne = kind === "one" || b2Shown !== k * b;
-        const correct = isOne ? howMany.one : howMany[kind];
-        const wrong = isOne ? [howMany.none, howMany.many, howMany.two] : others;
-        return pickChoice(
-          rng,
-          t(
-            `Without solving, how many solutions does this system have?$$\\begin{cases} ${line1} \\\\ ${line2} \\end{cases}$$`,
-            `不必求解，这个方程组有多少个解？$$\\begin{cases} ${line1} \\\\ ${line2} \\end{cases}$$`,
-          ),
-          correct,
-          wrong,
-          isOne
-            ? t(
-                `The $x$ coefficient of the second equation is $${k}$ times the first, but its $y$ coefficient is not, so the slopes differ and the lines cross exactly once.`,
-                `第二个方程 $x$ 的系数是第一个的 $${k}$ 倍，而 $y$ 的系数不是，所以斜率不同，两条直线恰好相交一次。`,
-              )
-            : kind === "none"
+    {
+      ...kp(
+        "comparing-coefficients",
+        t("Comparing coefficients", "比较系数"),
+        t(
+          "Two lines meet once unless they are parallel. If one equation's $x$ and $y$ coefficients are not the same multiple of the other's, the slopes differ and there is one solution. If they are the same multiple but the constants are not, the lines are parallel with no solution. If everything is the same multiple, it is one line, with infinitely many solutions.",
+          "两条直线除非平行，否则恰好相交一次。如果一个方程 $x$ 和 $y$ 的系数不是另一个方程系数的同一倍数，斜率就不同，方程组有一个解。如果是同一倍数而常数项不是，两条直线平行，方程组无解。如果全部是同一倍数，就是同一条直线，有无穷多个解。",
+        ),
+        (rng) => {
+          const a = rng.pick([1, 2, 3, 4, 5]);
+          const b = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+          const c = rng.int(-12, 12);
+          const k = rng.pick([-3, -2, 2, 3, 4, 5]);
+          const kind = rng.pick(["one", "none", "many"] as const);
+          const a2 = k * a;
+          const b2 = kind === "one" ? k * b + rng.pick([-2, -1, 1, 2]) : k * b;
+          const c2 = kind === "none" ? k * c + rng.pick([-5, -3, -1, 1, 2, 4]) : kind === "many" ? k * c : rng.int(-20, 20);
+          const others = (["one", "none", "many", "two"] as const).filter((x) => x !== kind).map((x) => howMany[x]);
+          const line1 = standard(a, b, c);
+          const line2 = standard(a2, b2 === 0 ? 1 : b2, c2);
+          const b2Shown = b2 === 0 ? 1 : b2;
+          const isOne = kind === "one" || b2Shown !== k * b;
+          const correct = isOne ? howMany.one : howMany[kind];
+          const wrong = isOne ? [howMany.none, howMany.many, howMany.two] : others;
+          return pickChoice(
+            rng,
+            t(
+              `Without solving, how many solutions does this system have?$$\\begin{cases} ${line1} \\\\ ${line2} \\end{cases}$$`,
+              `不必求解，这个方程组有多少个解？$$\\begin{cases} ${line1} \\\\ ${line2} \\end{cases}$$`,
+            ),
+            correct,
+            wrong,
+            isOne
               ? t(
-                  `Both coefficients of the second equation are $${k}$ times those of the first, but $${k} \\cdot ${c} = ${k * c}$ is not its constant $${c2}$. The lines are parallel and distinct, so they never meet.`,
-                  `第二个方程的两个系数都是第一个的 $${k}$ 倍，但 $${k} \\cdot ${c} = ${k * c}$ 不等于它的常数项 $${c2}$。两条直线平行且不重合，永不相交。`,
+                  `The $x$ coefficient of the second equation is $${k}$ times the first, but its $y$ coefficient is not, so the slopes differ and the lines cross exactly once.`,
+                  `第二个方程 $x$ 的系数是第一个的 $${k}$ 倍，而 $y$ 的系数不是，所以斜率不同，两条直线恰好相交一次。`,
                 )
-              : t(
-                  `Every number in the second equation is $${k}$ times the one in the first, so both equations describe the same line and each of its points is a solution.`,
-                  `第二个方程的每个数都是第一个方程对应数的 $${k}$ 倍，所以两个方程表示同一条直线，线上每个点都是解。`,
-                ),
-        );
-      },
-    ),
+              : kind === "none"
+                ? t(
+                    `Both coefficients of the second equation are $${k}$ times those of the first, but $${k} \\cdot ${c} = ${k * c}$ is not its constant $${c2}$. The lines are parallel and distinct, so they never meet.`,
+                    `第二个方程的两个系数都是第一个的 $${k}$ 倍，但 $${k} \\cdot ${c} = ${k * c}$ 不等于它的常数项 $${c2}$。两条直线平行且不重合，永不相交。`,
+                  )
+                : t(
+                    `Every number in the second equation is $${k}$ times the one in the first, so both equations describe the same line and each of its points is a solution.`,
+                    `第二个方程的每个数都是第一个方程对应数的 $${k}$ 倍，所以两个方程表示同一条直线，线上每个点都是解。`,
+                  ),
+          );
+        },
+      ),
+      figure: gradeDrawings5["identifying-the-number-of-solutions-to-a-system-by-inspection#comparing-coefficients"],
+    },
     kp(
       "choosing-a-value-for-a-number-of-solutions",
       t("Choosing a value for a number of solutions", "选取数值使解的个数符合要求"),
@@ -184,77 +188,83 @@ export const identifyingMaximumAndMinimumValuesOfAFunction = topic(
   ["increasing-and-decreasing"],
   ["8.F.B.5", "HSF.IF.B.4"],
   [
-    kp(
-      "the-greatest-or-least-value",
-      t("The greatest or least value", "最大值或最小值"),
-      t(
-        "The **maximum** of a function is its greatest output, and the **minimum** is its least. On a graph they are the $y$-coordinates of the highest and lowest points, so read across to the vertical axis, not down to the horizontal one. A maximum need not be at the right end, since where the graph is highest depends only on height.",
-        "函数的**最大值**是它最大的输出，**最小值**是它最小的输出。在图象上，它们是最高点和最低点的纵坐标，所以要向纵轴读数，而不是向横轴读数。最大值不一定在最右端，因为图象最高的位置只取决于高度。",
+    {
+      ...kp(
+        "the-greatest-or-least-value",
+        t("The greatest or least value", "最大值或最小值"),
+        t(
+          "The **maximum** of a function is its greatest output, and the **minimum** is its least. On a graph they are the $y$-coordinates of the highest and lowest points, so read across to the vertical axis, not down to the horizontal one. A maximum need not be at the right end, since where the graph is highest depends only on height.",
+          "函数的**最大值**是它最大的输出，**最小值**是它最小的输出。在图象上，它们是最高点和最低点的纵坐标，所以要向纵轴读数，而不是向横轴读数。最大值不一定在最右端，因为图象最高的位置只取决于高度。",
+        ),
+        (rng) => {
+          const name = rng.pick(["f", "g", "h"]);
+          const pts = walkWithUniqueExtreme(rng);
+          const ys = pts.map((p) => p[1]);
+          const wantMax = rng.bool();
+          const answer = wantMax ? Math.max(...ys) : Math.min(...ys);
+          const other = wantMax ? Math.min(...ys) : Math.max(...ys);
+          const at = pts.find((p) => p[1] === answer)?.[0] as number;
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The whole graph of $${name}$ is shown. What is the ${wantMax ? "maximum" : "minimum"} value of $${name}$?`,
+                `如图是 $${name}$ 的完整图象。$${name}$ 的${wantMax ? "最大值" : "最小值"}是多少？`,
+              ),
+              answer,
+              wrong: [
+                at === answer ? answer + 1 : at,
+                other,
+                pts[pts.length - 1]?.[1] === answer ? answer - 1 : (pts[pts.length - 1]?.[1] as number),
+                answer + 2,
+              ],
+              solution: t(
+                `The ${wantMax ? "highest" : "lowest"} point of the graph is $(${at}, ${answer})$. The value of the function there is its $y$-coordinate, $${answer}$; the input $${at}$ only says where it happens.`,
+                `图象的${wantMax ? "最高点" : "最低点"}是 $(${at}, ${answer})$。函数在该点的值是纵坐标 $${answer}$；输入 $${at}$ 只说明它在何处取得。`,
+              ),
+            }),
+            figure: graphFigure([{ pts: pts as [number, number][] }], name),
+          };
+        },
       ),
-      (rng) => {
-        const name = rng.pick(["f", "g", "h"]);
-        const pts = walkWithUniqueExtreme(rng);
-        const ys = pts.map((p) => p[1]);
-        const wantMax = rng.bool();
-        const answer = wantMax ? Math.max(...ys) : Math.min(...ys);
-        const other = wantMax ? Math.min(...ys) : Math.max(...ys);
-        const at = pts.find((p) => p[1] === answer)?.[0] as number;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The whole graph of $${name}$ is shown. What is the ${wantMax ? "maximum" : "minimum"} value of $${name}$?`,
-              `如图是 $${name}$ 的完整图象。$${name}$ 的${wantMax ? "最大值" : "最小值"}是多少？`,
-            ),
-            answer,
-            wrong: [
-              at === answer ? answer + 1 : at,
-              other,
-              pts[pts.length - 1]?.[1] === answer ? answer - 1 : (pts[pts.length - 1]?.[1] as number),
-              answer + 2,
-            ],
-            solution: t(
-              `The ${wantMax ? "highest" : "lowest"} point of the graph is $(${at}, ${answer})$. The value of the function there is its $y$-coordinate, $${answer}$; the input $${at}$ only says where it happens.`,
-              `图象的${wantMax ? "最高点" : "最低点"}是 $(${at}, ${answer})$。函数在该点的值是纵坐标 $${answer}$；输入 $${at}$ 只说明它在何处取得。`,
-            ),
-          }),
-          figure: graphFigure([{ pts: pts as [number, number][] }], name),
-        };
-      },
-    ),
-    kp(
-      "where-the-extreme-value-occurs",
-      t("Where the extreme value occurs", "最值在何处取得"),
-      t(
-        "A question can ask for the input instead of the output: where does the function reach its maximum or minimum? Then the answer is the $x$-coordinate of that point. Read the wording closely, since the value of the function and the place it occurs are two different numbers, and a graph gives both of them from the same point.",
-        "题目也可能问输入而不是输出：函数在哪里取得最大值或最小值？这时答案是该点的横坐标。要仔细看清题目，因为函数值与取得它的位置是两个不同的数，图象上的同一个点同时给出它们。",
+      figure: gradeDrawings5["identifying-maximum-and-minimum-values-of-a-function#the-greatest-or-least-value"],
+    },
+    {
+      ...kp(
+        "where-the-extreme-value-occurs",
+        t("Where the extreme value occurs", "最值在何处取得"),
+        t(
+          "A question can ask for the input instead of the output: where does the function reach its maximum or minimum? Then the answer is the $x$-coordinate of that point. Read the wording closely, since the value of the function and the place it occurs are two different numbers, and a graph gives both of them from the same point.",
+          "题目也可能问输入而不是输出：函数在哪里取得最大值或最小值？这时答案是该点的横坐标。要仔细看清题目，因为函数值与取得它的位置是两个不同的数，图象上的同一个点同时给出它们。",
+        ),
+        (rng) => {
+          const name = rng.pick(["f", "g", "h"]);
+          const pts = walkWithUniqueExtreme(rng);
+          const ys = pts.map((p) => p[1]);
+          const wantMax = rng.bool();
+          const value = wantMax ? Math.max(...ys) : Math.min(...ys);
+          const otherValue = wantMax ? Math.min(...ys) : Math.max(...ys);
+          const answer = pts.find((p) => p[1] === value)?.[0] as number;
+          const otherAt = pts.find((p) => p[1] === otherValue)?.[0] as number;
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The whole graph of $${name}$ is shown. For what value of $x$ does $${name}$ reach its ${wantMax ? "maximum" : "minimum"}?`,
+                `如图是 $${name}$ 的完整图象。当 $x$ 为何值时，$${name}$ 取得${wantMax ? "最大值" : "最小值"}？`,
+              ),
+              answer,
+              solveFor: "x",
+              wrong: [value === answer ? answer + 1 : value, otherAt, -answer === answer ? answer - 1 : -answer, answer + 2],
+              solution: t(
+                `The ${wantMax ? "highest" : "lowest"} point is $(${answer}, ${value})$. The question asks where this happens, so the answer is its input, $${answer}$${value === answer ? "" : `, not the value $${value}$`}.`,
+                `${wantMax ? "最高点" : "最低点"}是 $(${answer}, ${value})$。题目问的是在何处取得，所以答案是它的输入 $${answer}$${value === answer ? "" : `，而不是函数值 $${value}$`}。`,
+              ),
+            }),
+            figure: graphFigure([{ pts: pts as [number, number][] }], name),
+          };
+        },
       ),
-      (rng) => {
-        const name = rng.pick(["f", "g", "h"]);
-        const pts = walkWithUniqueExtreme(rng);
-        const ys = pts.map((p) => p[1]);
-        const wantMax = rng.bool();
-        const value = wantMax ? Math.max(...ys) : Math.min(...ys);
-        const otherValue = wantMax ? Math.min(...ys) : Math.max(...ys);
-        const answer = pts.find((p) => p[1] === value)?.[0] as number;
-        const otherAt = pts.find((p) => p[1] === otherValue)?.[0] as number;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The whole graph of $${name}$ is shown. For what value of $x$ does $${name}$ reach its ${wantMax ? "maximum" : "minimum"}?`,
-              `如图是 $${name}$ 的完整图象。当 $x$ 为何值时，$${name}$ 取得${wantMax ? "最大值" : "最小值"}？`,
-            ),
-            answer,
-            solveFor: "x",
-            wrong: [value === answer ? answer + 1 : value, otherAt, -answer === answer ? answer - 1 : -answer, answer + 2],
-            solution: t(
-              `The ${wantMax ? "highest" : "lowest"} point is $(${answer}, ${value})$. The question asks where this happens, so the answer is its input, $${answer}$${value === answer ? "" : `, not the value $${value}$`}.`,
-              `${wantMax ? "最高点" : "最低点"}是 $(${answer}, ${value})$。题目问的是在何处取得，所以答案是它的输入 $${answer}$${value === answer ? "" : `，而不是函数值 $${value}$`}。`,
-            ),
-          }),
-          figure: graphFigure([{ pts: pts as [number, number][] }], name),
-        };
-      },
-    ),
+      figure: gradeDrawings5["identifying-maximum-and-minimum-values-of-a-function#where-the-extreme-value-occurs"],
+    },
   ],
 );
 

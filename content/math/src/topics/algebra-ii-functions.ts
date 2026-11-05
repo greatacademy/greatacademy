@@ -15,6 +15,7 @@ import {
   type RealSet,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, at, guides, onAxis, setText as setAlt, stretchOf } from "../graph-figures.ts";
 import { choiceProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, verdictChoice, yesNo } from "../problems.ts";
 
@@ -226,6 +227,7 @@ export const localExtrema: TopicDef = {
   knowledgePoints: [
     {
       id: "local-extrema-from-a-graph",
+      figure: algebraDrawings2["local-extrema#local-extrema-from-a-graph"],
       title: t("Local extrema on a graph", "图象上的极值"),
       explanation: t(
         "A function $f$ has a **local maximum** at $x = c$ if $f(c)$ is at least as large as every value of $f$ at inputs close to $c$, on both sides. On a graph it is the top of a hill. A **local minimum** is the bottom of a valley.\n\nThe value $f(c)$ is the local maximum (or minimum) **value**; $x = c$ is where it occurs. In this course an endpoint of the domain is never a local extremum, because the graph does not continue on both sides of it.\n\nA graph rising to $(-1, 4)$, falling to $(2, -3)$ and then rising again has a local maximum at $x = -1$ and a local minimum at $x = 2$.",
@@ -270,6 +272,7 @@ export const localExtrema: TopicDef = {
     },
     {
       id: "local-and-global-extrema",
+      figure: algebraDrawings2["local-extrema#local-and-global-extrema"],
       title: t("Local and global extrema", "极值与最值"),
       explanation: t(
         "The **global** maximum is the largest value of $f$ on its whole domain; a **local** maximum only has to beat the values nearby. A hilltop that is also the highest point of the graph is both. A lower hilltop is only a local maximum.\n\nLikewise a valley floor is a local minimum, and it is also the global minimum when no point of the graph, including the endpoints, is lower.",
@@ -467,6 +470,7 @@ export const oneToOneFunctions: TopicDef = {
     },
     {
       id: "the-horizontal-line-test",
+      figure: algebraDrawings2["one-to-one-functions#the-horizontal-line-test"],
       title: t("The horizontal line test", "水平线检验"),
       explanation: t(
         "Two inputs with the same output are two points of the graph at the same height. So a function is one-to-one exactly when **no horizontal line meets its graph more than once**: the **horizontal line test**.\n\nA graph that always rises (or always falls) passes the test. A graph that rises and then falls fails it: a horizontal line just below the top meets it twice.",
@@ -521,6 +525,7 @@ export const oneToOneFunctions: TopicDef = {
     },
     {
       id: "inputs-with-equal-outputs",
+      figure: algebraDrawings2["one-to-one-functions#inputs-with-equal-outputs"],
       title: t("Inputs with equal outputs", "输出相同的输入"),
       explanation: t(
         "The graphs of $a(x - h)^{2} + k$ and $a|x - h| + k$ are symmetric about the line $x = h$. An input $c$ and its mirror image $2h - c$, the same distance from $h$ on the other side, give the same output.\n\nFor $f(x) = (x - 3)^{2} + 1$: $f(1) = f(5) = 5$, since $1$ and $5$ are both $2$ away from $3$.",
@@ -575,6 +580,7 @@ export const graphsOfInverseFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-on-the-inverse",
+      figure: algebraDrawings2["graphs-of-inverse-functions#points-on-the-inverse"],
       title: t("Points on the inverse", "反函数图象上的点"),
       explanation: t(
         "If $f(a) = b$, then $f^{-1}(b) = a$. So the point $(a, b)$ is on the graph of $f$ exactly when $(b, a)$ is on the graph of $f^{-1}$: **swap the coordinates**.\n\nIf $(2, 7)$ is on the graph of $f$, then $(7, 2)$ is on the graph of $f^{-1}$.",
@@ -606,6 +612,7 @@ export const graphsOfInverseFunctions: TopicDef = {
     },
     {
       id: "inverse-values-from-a-graph",
+      figure: algebraDrawings2["graphs-of-inverse-functions#inverse-values-from-a-graph"],
       title: t("Inverse values from a graph", "从图象读反函数值"),
       explanation: t(
         "To find $f^{-1}(b)$ from the graph of $f$, look for the point of the graph at **height** $b$ and read its $x$-coordinate. Do not read $f(b)$: that is the height above $x = b$.\n\nIf the graph passes through $(-2, 3)$, then $f^{-1}(3) = -2$.",
@@ -644,6 +651,7 @@ export const graphsOfInverseFunctions: TopicDef = {
     },
     {
       id: "inverses-of-lines",
+      figure: algebraDrawings2["graphs-of-inverse-functions#inverses-of-lines"],
       title: t("Inverses of lines", "直线的反函数"),
       explanation: t(
         "Swapping coordinates reflects the graph in the line $y = x$. A line with slope $m \\ne 0$ becomes a line with slope $\\frac{1}{m}$, since rise and run swap. Its $y$-intercept $(0, b)$ becomes the $x$-intercept $(b, 0)$ of the inverse.\n\nFor $f(x) = 2x + 6$: the graph of $f^{-1}$ has slope $\\frac{1}{2}$, $x$-intercept $6$, and $y$-intercept $-3$ (the swap of the $x$-intercept $(-3, 0)$ of $f$).",
@@ -728,6 +736,7 @@ export const domainAndRangeOfInverseFunctions: TopicDef = {
     },
     {
       id: "domain-and-range-from-a-graph",
+      figure: algebraDrawings2["domain-and-range-of-inverse-functions#domain-and-range-from-a-graph"],
       title: t("From a graph", "从图象求"),
       explanation: t(
         "Read the domain and range of $f$ from its graph, then swap them. An open dot leaves its coordinate out.\n\nIf the graph of $f$ runs from a filled dot at $(-4, 5)$ down to an open dot at $(3, -1)$, then $f$ has domain $[-4, 3)$ and range $(-1, 5]$, so $f^{-1}$ has domain $(-1, 5]$ and range $[-4, 3)$.",
@@ -812,6 +821,7 @@ export const invertibleFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "restricting-parabolas-and-v-shapes",
+      figure: algebraDrawings2["invertible-functions#restricting-parabolas-and-v-shapes"],
       title: t("Restricting parabolas and V shapes", "限制抛物线与 V 形图象"),
       explanation: t(
         "A function is **invertible** (has an inverse function) exactly when it is one-to-one: otherwise some output would have to go back to two inputs.\n\n$f(x) = (x - 2)^{2}$ is not one-to-one, but on $[2, \\infty)$ it always increases, and on $(-\\infty, 2]$ it always decreases. Restricting the domain to either half makes it invertible. The largest interval containing $x = 5$ on which $f$ is one-to-one is $[2, \\infty)$. The same works for $a|x - h| + k$, split at $x = h$.",
@@ -840,6 +850,7 @@ export const invertibleFunctions: TopicDef = {
     },
     {
       id: "restricting-a-graph",
+      figure: algebraDrawings2["invertible-functions#restricting-a-graph"],
       title: t("Restricting a graph", "限制图象"),
       explanation: t(
         "On a graph, the function is one-to-one between two neighboring turning points (or a turning point and an endpoint), since it only rises or only falls there. The turning points themselves can be included.\n\nIf a graph turns at $x = -2$ and $x = 3$ and is defined on $[-5, 5]$, the largest interval containing $x = 1$ on which it is one-to-one is $[-2, 3]$.",

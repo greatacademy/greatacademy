@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { t } from "@ga/content";
 import { type Compass, dec, linear, type Mark, type Point, Q, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, numberProblem, pointLatex, steps, unitLatex, verdictChoice, yesNo } from "../problems.ts";
 import { rectangle, scaleneTriangle, sides } from "./area.ts";
@@ -1039,6 +1040,7 @@ export const segmentBisectorsAndThePerpendicularBisectorTheorem = topic(
     },
     {
       id: "the-converse",
+      figure: gradeDrawings4["segment-bisectors-and-the-perpendicular-bisector-theorem#the-converse"],
       title: t("Points the same distance from both ends", "到两端距离相等的点"),
       explanation: t(
         "The converse of the theorem: a point that is the same distance from $A$ and from $B$ lies on the perpendicular bisector of $\\overline{AB}$. If $PA = PB = 7.5$ cm, then $P$ is on it. If $PA = 7.5$ cm and $PB = 8$ cm, it is not, however close the two distances are.",
@@ -1164,6 +1166,7 @@ export const congruentAngles = topic(
     },
     {
       id: "congruent-angles-with-algebra",
+      figure: gradeDrawings4["congruent-angles#congruent-angles-with-algebra"],
       title: t("Congruent angles with algebra", "用方程求全等的角"),
       explanation: t(
         "If $\\angle P \\cong \\angle Q$ with $m\\angle P = (3x + 12)^\\circ$ and $m\\angle Q = (5x - 20)^\\circ$, the measures are equal:\n\n$$3x + 12 = 5x - 20 \\;\\Rightarrow\\; 32 = 2x \\;\\Rightarrow\\; x = 16.$$\n\nEach angle measures $3 \\cdot 16 + 12 = 60^\\circ$. Substitute into both expressions to check.",
@@ -1364,6 +1367,7 @@ export const complementaryAngles = topic(
     },
     {
       id: "equations-for-complementary-angles",
+      figure: gradeDrawings4["complementary-angles#equations-for-complementary-angles"],
       title: t("Equations for complementary angles", "互余的角的方程"),
       explanation: t(
         "Complementary angles add up to $90^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $90$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are complementary with $m\\angle P = (2x + 10)^\\circ$ and $m\\angle Q = (3x + 5)^\\circ$, then\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\nand $m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$.",
@@ -1373,6 +1377,7 @@ export const complementaryAngles = topic(
     },
     {
       id: "an-angle-and-its-complement",
+      figure: gradeDrawings4["complementary-angles#an-angle-and-its-complement"],
       title: t("An angle and its complement", "一个角与它的余角"),
       explanation: t(
         "Call the complement $x$ and write the angle in terms of $x$. If an angle is $4$ times its complement, then $x + 4x = 90$, so $x = 18$ and the angle is $72^\\circ$. If an angle is $20^\\circ$ more than its complement, then $x + (x + 20) = 90$, so $x = 35$ and the angle is $55^\\circ$.",
@@ -1406,6 +1411,7 @@ export const supplementaryAngles = topic(
     },
     {
       id: "equations-for-supplementary-angles",
+      figure: gradeDrawings4["supplementary-angles#equations-for-supplementary-angles"],
       title: t("Equations for supplementary angles", "互补的角的方程"),
       explanation: t(
         "Supplementary angles add up to $180^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $180$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are supplementary with $m\\angle P = (4x - 6)^\\circ$ and $m\\angle Q = (2x + 6)^\\circ$, then\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\nand $m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$.",
@@ -1415,6 +1421,7 @@ export const supplementaryAngles = topic(
     },
     {
       id: "an-angle-and-its-supplement",
+      figure: gradeDrawings4["supplementary-angles#an-angle-and-its-supplement"],
       title: t("An angle and its supplement", "一个角与它的补角"),
       explanation: t(
         "Call the supplement $x$ and write the angle in terms of $x$. If an angle is $3$ times its supplement, then $x + 3x = 180$, so $x = 45$ and the angle is $135^\\circ$. If an angle is $40^\\circ$ less than its supplement, then $x + (x - 40) = 180$, so $x = 110$ and the angle is $70^\\circ$.",
@@ -1507,6 +1514,7 @@ export const angleBisectors = topic(
     },
     {
       id: "bisectors-with-algebra",
+      figure: gradeDrawings4["angle-bisectors#bisectors-with-algebra"],
       title: t("Bisectors with algebra", "用方程解角平分线问题"),
       explanation: t(
         "Write an equation from the bisector. If $m\\angle ABD = (2x + 5)^\\circ$ and $m\\angle DBC = (4x - 15)^\\circ$, the halves are equal: $2x + 5 = 4x - 15$, so $x = 10$. If $m\\angle ABC = (6x + 4)^\\circ$ and $m\\angle ABD = (2x + 12)^\\circ$, the whole is twice the half: $6x + 4 = 2(2x + 12)$, so $x = 10$.",
@@ -1849,6 +1857,7 @@ export const heightsOfTriangles = topic(
     },
     {
       id: "heights-for-each-base",
+      figure: gradeDrawings4["heights-of-triangles#heights-for-each-base"],
       title: t("A height for each base", "每条底边上的高"),
       explanation: t(
         "Any side can be the base. Each choice of base has its own height, from the opposite vertex: the height to $\\overline{BC}$ comes from $A$, the height to $\\overline{CA}$ from $B$, and the height to $\\overline{AB}$ from $C$. Find the vertex that is not on the base, then the segment from it that is perpendicular to the base.",
@@ -2185,6 +2194,7 @@ export const propertiesOfTrapezoids = topic(
   [
     {
       id: "angles-of-trapezoids",
+      figure: gradeDrawings4["properties-of-trapezoids#angles-of-trapezoids"],
       title: t("Angles of trapezoids", "梯形的角"),
       explanation: t(
         "In trapezoid $ABCD$ with $\\overline{AB} \\parallel \\overline{DC}$, the angles at the two ends of a leg are supplementary: $m\\angle A + m\\angle D = 180^\\circ$ and $m\\angle B + m\\angle C = 180^\\circ$.\n\nIn an isosceles trapezoid, the two angles on the same base are also equal: $m\\angle A = m\\angle B$ and $m\\angle C = m\\angle D$. So if $m\\angle A = 70^\\circ$, then $m\\angle B = 70^\\circ$ and $m\\angle C = m\\angle D = 110^\\circ$.",
@@ -2450,6 +2460,7 @@ export const congruentPolygons = topic(
   [
     {
       id: "corresponding-parts",
+      figure: gradeDrawings4["congruent-polygons#corresponding-parts"],
       title: t("Corresponding parts", "对应部分"),
       explanation: t(
         "In $\\triangle ABC \\cong \\triangle RPQ$, the vertices are matched by position: $A \\leftrightarrow R$, $B \\leftrightarrow P$ and $C \\leftrightarrow Q$. So $\\overline{BC}$ corresponds to $\\overline{PQ}$, and $\\angle B \\cong \\angle P$. The letters of the second triangle are not in alphabetical order, so read each one from its position in the statement.",
@@ -2500,6 +2511,7 @@ export const congruentPolygons = topic(
     },
     {
       id: "measures-of-congruent-triangles",
+      figure: gradeDrawings4["congruent-polygons#measures-of-congruent-triangles"],
       title: t("Measures of congruent triangles", "全等三角形的度量"),
       explanation: t(
         "Corresponding parts of congruent figures have equal measures. If $\\triangle ABC \\cong \\triangle FDE$ and $BC = 9$, then $DE = 9$, because $B \\leftrightarrow D$ and $C \\leftrightarrow E$.\n\nTo find an angle that is not given, first find the third angle of the triangle you know, then carry it across: if $m\\angle A = 50^\\circ$ and $m\\angle B = 60^\\circ$, then $m\\angle C = 70^\\circ$, so $m\\angle E = 70^\\circ$.",
@@ -2584,6 +2596,7 @@ export const congruentPolygons = topic(
     },
     {
       id: "congruent-polygons-with-algebra",
+      figure: gradeDrawings4["congruent-polygons#congruent-polygons-with-algebra"],
       title: t("Congruent polygons with algebra", "用方程解全等多边形问题"),
       explanation: t(
         "When corresponding parts are given as expressions, set them equal. If $\\triangle ABC \\cong \\triangle DEF$, $AB = 2x + 5$ and $DE = 4x - 3$, then $\\overline{AB}$ corresponds to $\\overline{DE}$, so $2x + 5 = 4x - 3$ and $x = 4$. Check that you matched corresponding parts: $\\overline{AB}$ does not correspond to $\\overline{EF}$.",

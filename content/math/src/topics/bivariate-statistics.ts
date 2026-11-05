@@ -1,7 +1,9 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { dec, linear, num, type PlaneMark, type PlaneView, paren, plane, Q } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choiceProblem, equationProblem, numberProblem, pointLatex, reasonChoice, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -203,6 +205,7 @@ export const scatterPlots: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-a-scatter-plot",
+      figure: gradeDrawings5["scatter-plots#reading-a-scatter-plot"],
       title: t("Reading a scatter plot", "读散点图"),
       explanation: t(
         "**Bivariate data** pair two measurements of each item, such as the hours a student studied and the score the student got. A **scatter plot** shows each pair as one point $(x, y)$: the first variable on the $x$-axis, the second on the $y$-axis.\n\nTo read the data of one item, find its point and read both coordinates. If the student who studied $4$ hours is the point $(4, 7)$, that student scored $7$.",
@@ -255,6 +258,7 @@ export const scatterPlots: TopicDef = {
     },
     {
       id: "counting-points",
+      figure: gradeDrawings5["scatter-plots#counting-points"],
       title: t("Counting points that meet a condition", "数出满足条件的点"),
       explanation: t(
         "A scatter plot answers questions about the whole data set. To count the items with $x > 5$, count the points strictly to the right of the vertical line $x = 5$; for $x \\ge 5$, count the points on that line too.\n\nLikewise, $y < 3$ means the points strictly below the horizontal line $y = 3$.",
@@ -366,6 +370,7 @@ export const trendLines: TopicDef = {
   knowledgePoints: [
     {
       id: "judging-a-trend-line",
+      figure: gradeDrawings5["trend-lines#judging-a-trend-line"],
       title: t("A good trend line", "好的趋势线"),
       explanation: t(
         "When the points of a scatter plot lie roughly along a line, a **trend line** (line of best fit) summarizes them. A good trend line:\n\n- follows the direction of the points: rising when they rise, falling when they fall;\n- runs through the middle of the points, with about as many above it as below it;\n- need not pass through any of the points.\n\nA line with all the points on one side of it is too high or too low, even if its direction is right.",
@@ -756,6 +761,7 @@ export const predictionsWithTrendLines: TopicDef = {
   knowledgePoints: [
     {
       id: "predicting-a-value",
+      figure: gradeDrawings5["predictions-with-trend-lines#predicting-a-value"],
       title: t("Predicting $y$ from $x$", "由 $x$ 预测 $y$"),
       explanation: t(
         "A trend line turns a scatter plot into a formula for predictions: substitute the value of $x$ into its equation.\n\nIf $y = 2.5x + 40$ models test scores, where $x$ is hours studied, a student who studies $6$ hours is predicted to score $y = 2.5 \\cdot 6 + 40 = 55$ points. The prediction is an estimate: actual students score above or below the line.",
@@ -1141,6 +1147,7 @@ export const linearCorrelation: TopicDef = {
     },
     {
       id: "strength-of-a-correlation",
+      figure: algebraDrawings["linear-correlation#strength-of-a-correlation"],
       title: t("Strong and weak correlation", "强相关与弱相关"),
       explanation: t(
         "The **strength** of a linear correlation is how closely the points follow a line. In a **strong** correlation they lie close to a line; in a **weak** one the trend is visible but the points are widely scattered around it.\n\nStrength and direction are separate: a correlation can be strong and negative, or weak and positive. Steepness is not strength: a gently rising cloud of points can show a strong correlation if the points hug a line.",
@@ -1728,6 +1735,7 @@ export const selectingARegressionModel: TopicDef = {
     },
     {
       id: "model-from-a-scatter-plot",
+      figure: algebraDrawings["selecting-a-regression-model#model-from-a-scatter-plot"],
       title: t("Choosing a model from a scatter plot", "由散点图选择模型"),
       explanation: t(
         "The shape of a scatter plot suggests the model:\n\n- **linear**: the points lie along a straight line, rising or falling at a steady rate;\n- **exponential**: the points curve, changing slowly at first and then faster and faster (growth), or quickly at first and then leveling off toward the $x$-axis (decay), without ever turning around;\n- **quadratic**: the points form a U shape or an upside-down U: they fall and then rise, or rise and then fall.",

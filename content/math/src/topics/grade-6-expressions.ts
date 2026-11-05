@@ -1,6 +1,7 @@
 import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, expressionProblem, factoredProblem, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -473,6 +474,7 @@ export const evaluatingAlgebraicExpressions = topic(
     },
     {
       id: "expressions-with-two-variables",
+      figure: gradeDrawings4["evaluating-algebraic-expressions#expressions-with-two-variables"],
       title: t("Two variables and formulas", "两个变量与公式"),
       explanation: t(
         "Substitute each value for its own letter, then follow the order of operations. Formulas are expressions like this, with letters that stand for measurements.\n\nThe area of a triangle is $A = \\frac{1}{2}bh$; for $b = 10$ and $h = 7$, $A = \\frac{1}{2} \\times 10 \\times 7 = 35$.",

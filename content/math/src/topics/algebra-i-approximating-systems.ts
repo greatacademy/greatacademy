@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type PlaneMark, type PlaneView, plane, poly, Q } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { annotate, at } from "../graph-figures.ts";
 import { numberProblem, pointLatex, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -85,6 +86,7 @@ export const approximatingSolutionsToSystemsOfLinearEquations: TopicDef = {
   knowledgePoints: [
     {
       id: "estimating-from-a-graph",
+      figure: algebraDrawings["approximating-solutions-to-systems-of-linear-equations#estimating-from-a-graph"],
       title: t("Estimating from a graph", "从图象估计"),
       explanation: t(
         "When two lines cross between grid points, a graph only gives an estimate of the solution. Look at where the lines cross, and find the grid point closest to the crossing: if the lines meet a little to the right of $x = 2$ and a little below $y = 1$, the solution is approximately $(2, 1)$. An estimate is not a solution, so substituting it into the equations makes them only nearly true.",
@@ -167,6 +169,7 @@ export const approximatingSolutionsToSystemsOfLinearEquations: TopicDef = {
     },
     {
       id: "confirming-an-estimate",
+      figure: algebraDrawings["approximating-solutions-to-systems-of-linear-equations#confirming-an-estimate"],
       title: t("Confirming an estimate by solving", "通过求解验证估计"),
       explanation: t(
         "To turn an estimate from a graph into the exact solution, solve the system algebraically and compare. For $y = 2x - 1$ and $y = -x + 3$, setting $2x - 1 = -x + 3$ gives $3x = 4$, so $x = \\frac{4}{3} \\approx 1.33$; this agrees with a graph that shows the lines crossing a little to the right of $x = 1$.",
@@ -234,6 +237,7 @@ export const approximatingSolutionsToSystemsOfNonlinearEquations: TopicDef = {
   knowledgePoints: [
     {
       id: "estimating-from-a-graph",
+      figure: algebraDrawings["approximating-solutions-to-systems-of-nonlinear-equations#estimating-from-a-graph"],
       title: t("Estimating from a graph", "从图象估计"),
       explanation: t(
         "A parabola and a line can cross at points whose coordinates are irrational, such as $x = \\frac{1 + \\sqrt{13}}{2} \\approx 2.30$. A graph cannot show such a value exactly, but it shows which grid line each crossing is nearest to, which gives an estimate of each solution to the nearest integer.",
@@ -323,6 +327,7 @@ export const approximatingSolutionsToSystemsOfNonlinearEquations: TopicDef = {
     },
     {
       id: "narrowing-to-tenths",
+      figure: algebraDrawings["approximating-solutions-to-systems-of-nonlinear-equations#narrowing-to-tenths"],
       title: t("Narrowing an estimate to tenths", "把估计缩小到十分位"),
       explanation: t(
         "Once a solution is known to lie between two integers, test the tenths between them to narrow it down. The graphs of $y = x^{2}$ and $y = 5$ cross at a positive $x$ between $2$ and $3$, since $2^{2} = 4 < 5 < 9 = 3^{2}$. Squaring tenths gives $2.2^{2} = 4.84 < 5$ and $2.3^{2} = 5.29 > 5$, so the crossing lies between $x = 2.2$ and $x = 2.3$.",

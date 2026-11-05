@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { gcd, Q } from "@ga/subject-math";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choose, chooseMath, whole } from "./early-grades-more-kit.ts";
 import { frac, fraction, skill } from "./third-kit.ts";
@@ -99,36 +100,39 @@ export const deeperExamThirdPoints: Readonly<Record<string, readonly KnowledgePo
     ),
   ],
   "identifying-maximum-and-minimum-values-of-a-function": [
-    skill(
-      "the-extreme-value-on-an-interval",
-      ["The extreme value on an interval", "区间上的最值"],
-      [
-        "On a closed interval, a parabola's greatest and least values occur at the vertex, if it lies inside, or at the ends. So compare these few values rather than only using the vertex.",
-        "在闭区间上，抛物线的最大值和最小值出现在顶点（如果在区间内）或端点。所以要比较这几个值，不能只看顶点。",
-      ],
-      (rng) => {
-        const h = rng.int(-4, 4);
-        const k = rng.int(1, 9);
-        const left = h + rng.int(1, 3);
-        const right = left + rng.int(1, 4);
-        const g = (x: number) => (x - h) ** 2 + k;
-        const min = rng.bool();
-        const answer = min ? g(left) : g(right);
-        return chooseMath(
-          rng,
-          [
-            `What is the ${min ? "minimum" : "maximum"} value of $f(x) = ${h === 0 ? "x" : `(x ${h < 0 ? `+ ${-h}` : `- ${h}`})`}^{2} + ${k}$ on the interval $${left} \\le x \\le ${right}$?`,
-            `$f(x) = ${h === 0 ? "x" : `(x ${h < 0 ? `+ ${-h}` : `- ${h}`})`}^{2} + ${k}$ 在区间 $${left} \\le x \\le ${right}$ 上的${min ? "最小值" : "最大值"}是多少？`,
-          ],
-          `${answer}`,
-          [`${min ? g(right) : g(left)}`, `${k}`, `${g(right) + g(left)}`],
-          [
-            `The vertex at $x = ${h}$ lies left of the interval, so $f$ rises throughout, and the ${min ? "left" : "right"} end gives ${answer}.`,
-            `顶点 $x = ${h}$ 在区间左侧，所以 $f$ 在区间上一直上升，${min ? "左" : "右"}端点给出 ${answer}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-extreme-value-on-an-interval",
+        ["The extreme value on an interval", "区间上的最值"],
+        [
+          "On a closed interval, a parabola's greatest and least values occur at the vertex, if it lies inside, or at the ends. So compare these few values rather than only using the vertex.",
+          "在闭区间上，抛物线的最大值和最小值出现在顶点（如果在区间内）或端点。所以要比较这几个值，不能只看顶点。",
+        ],
+        (rng) => {
+          const h = rng.int(-4, 4);
+          const k = rng.int(1, 9);
+          const left = h + rng.int(1, 3);
+          const right = left + rng.int(1, 4);
+          const g = (x: number) => (x - h) ** 2 + k;
+          const min = rng.bool();
+          const answer = min ? g(left) : g(right);
+          return chooseMath(
+            rng,
+            [
+              `What is the ${min ? "minimum" : "maximum"} value of $f(x) = ${h === 0 ? "x" : `(x ${h < 0 ? `+ ${-h}` : `- ${h}`})`}^{2} + ${k}$ on the interval $${left} \\le x \\le ${right}$?`,
+              `$f(x) = ${h === 0 ? "x" : `(x ${h < 0 ? `+ ${-h}` : `- ${h}`})`}^{2} + ${k}$ 在区间 $${left} \\le x \\le ${right}$ 上的${min ? "最小值" : "最大值"}是多少？`,
+            ],
+            `${answer}`,
+            [`${min ? g(right) : g(left)}`, `${k}`, `${g(right) + g(left)}`],
+            [
+              `The vertex at $x = ${h}$ lies left of the interval, so $f$ rises throughout, and the ${min ? "left" : "right"} end gives ${answer}.`,
+              `顶点 $x = ${h}$ 在区间左侧，所以 $f$ 在区间上一直上升，${min ? "左" : "右"}端点给出 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings5["identifying-maximum-and-minimum-values-of-a-function#the-extreme-value-on-an-interval"],
+    },
   ],
 };
 

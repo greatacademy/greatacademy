@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { article, choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -1245,6 +1246,7 @@ export const isoscelesTriangles: TopicDef = {
     },
     {
       id: "isosceles-angle-equations",
+      figure: gradeDrawings5["isosceles-triangles#isosceles-angle-equations"],
       title: t("Equations in isosceles triangles", "等腰三角形中的方程"),
       explanation: t(
         "Equal base angles let one variable describe all three angles. If each base angle is $x^\\circ$ and the vertex angle is $(2x + 20)^\\circ$, then $x + x + (2x + 20) = 180$, so $4x + 20 = 180$, $4x = 160$ and $x = 40$.\n\nA relationship stated in words works the same way: if the vertex angle is three times a base angle $x$, then $x + x + 3x = 180$ and $x = 36$.",
@@ -1415,6 +1417,7 @@ export const anglesOfPolygons: TopicDef = {
     },
     {
       id: "angles-of-regular-polygons",
+      figure: gradeDrawings5["angles-of-polygons#angles-of-regular-polygons"],
       title: t("Regular polygons", "正多边形"),
       explanation: t(
         "A **regular** polygon has equal sides and equal angles, so each interior angle is the angle sum divided by $n$:\n\n$$\\frac{(n - 2) \\cdot 180^\\circ}{n}.$$\n\nAn **exterior angle** forms a linear pair with an interior angle. Walking around any convex polygon turns you once around, so its exterior angles add up to $360^\\circ$; in a regular polygon each is $360^\\circ \\div n$. For a regular octagon, each exterior angle is $45^\\circ$ and each interior angle is $180^\\circ - 45^\\circ = 135^\\circ$.",

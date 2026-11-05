@@ -15,6 +15,7 @@ import {
   type RealSet,
   realLine,
 } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, at, guides, plain, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -934,6 +935,7 @@ export const verticalTranslationsOfExponentialGrowthFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "translating-growth-graphs",
+      figure: algebraDrawings2["vertical-translations-of-exponential-growth-functions#translating-growth-graphs"],
       title: t("Writing the translated function", "写出平移后的函数"),
       explanation: t(
         "Adding $k$ to a function moves its graph up $k$ units ($k > 0$) or down $|k|$ units ($k < 0$). For $f(x) = 2^{x}$ moved $3$ units down:\n\n$$g(x) = f(x) - 3 = 2^{x} - 3$$\n\nEvery point moves down $3$, and so does the asymptote: it becomes $y = -3$. Do not put the $-3$ into the exponent: $2^{x - 3}$ is a horizontal shift.",
@@ -964,6 +966,7 @@ export const verticalTranslationsOfExponentialGrowthFunctions: TopicDef = {
     },
     {
       id: "translated-growth-graph-equations",
+      figure: algebraDrawings2["vertical-translations-of-exponential-growth-functions#translated-growth-graph-equations"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "The graph of $y = b^{x} + k$ is the graph of $y = b^{x}$ moved $k$ units vertically, so its horizontal asymptote is $y = k$. Read $k$ from the asymptote, then find $b$ from a point: at $x = 1$ the height is $b + k$. If the asymptote is $y = -2$ and the graph passes through $(1, 1)$, then $b - 2 = 1$, so $b = 3$ and $y = 3^{x} - 2$.",
@@ -1065,6 +1068,7 @@ export const verticalTranslationsOfExponentialDecayFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "translating-decay-graphs",
+      figure: algebraDrawings2["vertical-translations-of-exponential-decay-functions#translating-decay-graphs"],
       title: t("Writing the translated function", "写出平移后的函数"),
       explanation: t(
         "Decay functions translate the same way: adding $k$ moves the graph and its asymptote vertically. For $f(x) = 4\\left(\\frac{1}{3}\\right)^{x}$ moved $2$ units up:\n\n$$g(x) = 4\\left(\\frac{1}{3}\\right)^{x} + 2$$\n\nThe graph now falls toward the asymptote $y = 2$ instead of the $x$-axis.",
@@ -1142,6 +1146,7 @@ export const verticalTranslationsOfExponentialDecayFunctions: TopicDef = {
     },
     {
       id: "x-intercepts-of-translated-graphs",
+      figure: algebraDrawings2["vertical-translations-of-exponential-decay-functions#x-intercepts-of-translated-graphs"],
       title: t("The $x$-intercept", "$x$ 轴截距"),
       explanation: t(
         "A graph moved down crosses the $x$-axis. To find where, set the function equal to $0$ and solve the exponential equation:\n\n$$\\left(\\frac{1}{2}\\right)^{x} - 8 = 0 \\implies \\left(\\frac{1}{2}\\right)^{x} = 8 = \\left(\\frac{1}{2}\\right)^{-3} \\implies x = -3$$\n\nA decay graph crosses on the left of the $y$-axis, a growth graph on the right.",
@@ -1295,6 +1300,7 @@ export const interpretingGraphsOfExponentialFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "percent-change-from-a-graph",
+      figure: algebraDrawings2["interpreting-graphs-of-exponential-functions#percent-change-from-a-graph"],
       title: t("The percent rate of change", "百分变化率"),
       explanation: t(
         "In a model $y = a \\cdot b^{t}$, the graph meets the vertical axis at the starting value $a$, and each step of $1$ in $t$ multiplies $y$ by $b$. If the graph passes through $(0, 4)$ and $(1, 6)$, then $b = \\frac{6}{4} = 1.5$: the quantity grows by $50\\%$ per time unit. If it passes through $(0, 8)$ and $(1, 6)$, then $b = 0.75$ and it falls by $25\\%$ per time unit.",
@@ -1358,6 +1364,7 @@ export const interpretingGraphsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "the-long-run-level",
+      figure: algebraDrawings2["interpreting-graphs-of-exponential-functions#the-long-run-level"],
       title: t("The long-run level", "长期水平"),
       explanation: t(
         "A translated model $y = a \\cdot b^{t} + k$ with $0 < b < 1$ levels off at the asymptote $y = k$: this is the **long-run level** of the quantity. A cooling drink approaches room temperature; a medicine in a steady drip approaches a fixed level. The total change in the long run is the distance from the starting value to $k$: a drink that starts at $9$ and levels off at $2$ falls by $7$ in all.",
@@ -1418,6 +1425,7 @@ export const verticalReflectionsOfExponentialFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "reflecting-across-the-x-axis",
+      figure: algebraDrawings2["vertical-reflections-of-exponential-functions#reflecting-across-the-x-axis"],
       title: t("Writing the reflected function", "写出翻折后的函数"),
       explanation: t(
         "Reflecting a graph across the $x$-axis negates every output: $g(x) = -f(x)$. The **whole** function is negated, the constant term included:\n\n$$f(x) = 2(3)^{x} + 1 \\implies g(x) = -\\left(2(3)^{x} + 1\\right) = -2(3)^{x} - 1$$\n\nThe asymptote $y = 1$ becomes $y = -1$. Changing the exponent to $-x$ would reflect across the $y$-axis instead.",
@@ -1653,6 +1661,7 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "key-points-under-transformations",
+      figure: algebraDrawings2["combining-graph-transformations-of-exponential-functions#key-points-under-transformations"],
       title: t("Key points", "关键点"),
       explanation: t(
         "The points $(0, 1)$ and $(1, b)$ lie on every graph $y = b^{x}$. Under $g(x) = a \\cdot b^{x - h} + k$, a point $(x, y)$ moves to $(x + h, ay + k)$. For $g(x) = 2(3)^{x - 1} - 5$, the point $(1, 3)$ moves to\n\n$$(1 + 1, \\; 2 \\cdot 3 - 5) = (2, 1)$$",
@@ -1963,6 +1972,7 @@ export const graphingLogarithmicFunctions: TopicDef = {
     },
     {
       id: "the-base-from-the-graph",
+      figure: algebraDrawings2["graphing-logarithmic-functions#the-base-from-the-graph"],
       title: t("The base from the graph", "由图象求底数"),
       explanation: t(
         "Every graph $y = \\log_{b} x$ passes through $(1, 0)$, and through $(b, 1)$, since $\\log_{b} b = 1$. So the point at height $1$ gives the base. If the graph passes through $(9, 2)$ instead, then $b^{2} = 9$ and $b = 3$. A falling graph has a base between $0$ and $1$: through $(2, -1)$ means $b^{-1} = 2$, so $b = \\frac{1}{2}$.",
@@ -2006,6 +2016,7 @@ export const graphingLogarithmicFunctions: TopicDef = {
     },
     {
       id: "reflecting-the-exponential-graph",
+      figure: algebraDrawings2["graphing-logarithmic-functions#reflecting-the-exponential-graph"],
       title: t("Reflection of the exponential graph", "与指数函数图象的关系"),
       explanation: t(
         "$y = \\log_{b} x$ and $y = b^{x}$ are inverse functions, so each graph is the reflection of the other across the line $y = x$: swap the coordinates of every point. Since $(3, 8)$ lies on $y = 2^{x}$, the point $(8, 3)$ lies on $y = \\log_{2} x$. The horizontal asymptote $y = 0$ of $b^{x}$ becomes the vertical asymptote $x = 0$ of $\\log_{b} x$.",
@@ -2058,6 +2069,7 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-vertical-asymptote",
+      figure: algebraDrawings2["combining-graph-transformations-of-logarithmic-functions#the-vertical-asymptote"],
       title: t("The vertical asymptote", "竖直渐近线"),
       explanation: t(
         "The graph of a logarithm approaches a vertical line where its argument approaches $0$. So the vertical asymptote of $g(x) = a\\log_{b}(cx - d) + k$ is where $cx - d = 0$:\n\n$$g(x) = 3\\log_{2}(2x - 6) + 1: \\quad 2x - 6 = 0 \\implies x = 3$$\n\nThe stretch $a$ and the vertical shift $k$ do not move the asymptote.",
@@ -2085,6 +2097,7 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
     },
     {
       id: "key-points-of-logarithmic-graphs",
+      figure: algebraDrawings2["combining-graph-transformations-of-logarithmic-functions#key-points-of-logarithmic-graphs"],
       title: t("Key points", "关键点"),
       explanation: t(
         "The graph of $y = \\log_{b} x$ passes through $(1, 0)$ and $(b, 1)$. Under $g(x) = a\\log_{b}(x - h) + k$ the point $(x, y)$ moves to $(x + h, ay + k)$. For $g(x) = 2\\log_{3}(x + 1) - 4$, the point $(3, 1)$ moves to\n\n$$(3 - 1, \\; 2 \\cdot 1 - 4) = (2, -2)$$",

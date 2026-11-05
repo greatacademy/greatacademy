@@ -17,6 +17,8 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings } from "../explanation-drawings-algebra.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { annotate, guides, hits as level, onAxis, setText as setAlt, at as spot, stretchOf } from "../graph-figures.ts";
 import {
   choiceProblem,
@@ -485,6 +487,7 @@ export const graphsOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-values-from-a-graph",
+      figure: gradeDrawings5["graphs-of-functions#reading-values-from-a-graph"],
       title: t("Reading values from a graph", "从图象读函数值"),
       explanation: t(
         "The **graph** of a function $f$ is the set of points $(x, f(x))$. To find $f(a)$ from the graph, go to $x = a$ on the $x$-axis, move up or down to the graph, and read the $y$-coordinate there.\n\nFor example, if the graph passes through $(2, -3)$, then $f(2) = -3$.",
@@ -518,6 +521,7 @@ export const graphsOfFunctions: TopicDef = {
     },
     {
       id: "solving-equations-from-a-graph",
+      figure: gradeDrawings5["graphs-of-functions#solving-equations-from-a-graph"],
       title: t("Solving equations from a graph", "借助图象解方程"),
       explanation: t(
         "To solve $f(x) = c$ from a graph, look for every point of the graph at height $y = c$, and read their $x$-coordinates. Imagine the horizontal line $y = c$: each place it meets the graph gives one solution. There may be one solution, several, or none.",
@@ -554,6 +558,7 @@ export const graphsOfFunctions: TopicDef = {
     },
     {
       id: "points-on-a-graph",
+      figure: gradeDrawings5["graphs-of-functions#points-on-a-graph"],
       title: t("Points on the graph of a formula", "点是否在函数图象上"),
       explanation: t(
         "The point $(a, b)$ lies on the graph of $f$ exactly when $f(a) = b$. For $f(x) = 2x^{2} - 1$:\n\n- $(2, 7)$ is on the graph, because $f(2) = 2(2)^{2} - 1 = 7$;\n- $(7, 2)$ is not, because $f(7) = 97 \\ne 2$.\n\nThe first coordinate is the input and the second the output; do not swap them.",
@@ -659,6 +664,7 @@ export const domainOfAFunction: TopicDef = {
     },
     {
       id: "domain-from-a-graph",
+      figure: algebraDrawings["domain-of-a-function#domain-from-a-graph"],
       title: t("The domain from a graph", "由图象求定义域"),
       explanation: t(
         "On a graph, the domain is the set of $x$-values the graph covers: look at how far it reaches **left and right**. A filled dot means the endpoint belongs to the graph, an open dot that it does not.\n\nWrite the domain in **interval notation**: square brackets $[\\;]$ include an endpoint, parentheses $(\\;)$ exclude it. A graph from a filled dot at $x = -3$ to an open dot at $x = 4$ has domain $[-3, 4)$, that is $-3 \\le x < 4$. If the graph has a gap, join the parts with $\\cup$ (union): $[-5, -1] \\cup (2, 5]$.",
@@ -906,6 +912,7 @@ export const verticalLineTest: TopicDef = {
     },
     {
       id: "endpoints-and-the-vertical-line-test",
+      figure: algebraDrawings["vertical-line-test#endpoints-and-the-vertical-line-test"],
       title: t("Endpoints and the vertical line test", "端点与竖直线检验"),
       explanation: t(
         "Where two pieces of a graph end above each other at the same $x$, the dots decide. An open dot is not part of the graph, so the vertical line meets the graph twice only if **both** dots are filled.\n\n- A filled dot at $(2, 1)$ and an open dot at $(2, 4)$: a function, with $f(2) = 1$.\n- Filled dots at both $(2, 1)$ and $(2, 4)$: not a function.",
@@ -977,6 +984,7 @@ export const globalExtrema: TopicDef = {
   knowledgePoints: [
     {
       id: "maximum-and-minimum-values",
+      figure: gradeDrawings5["global-extrema#maximum-and-minimum-values"],
       title: t("Maximum and minimum values", "最大值与最小值"),
       explanation: t(
         "The **maximum value** of a function is its largest output, the $y$-coordinate of the **highest** point of the graph; the **minimum value** is the $y$-coordinate of the **lowest** point. They are also called the **global extrema**.\n\nThe maximum value is a $y$-value. The $x$-value where it occurs is a different number.",
@@ -1054,6 +1062,7 @@ export const globalExtrema: TopicDef = {
     },
     {
       id: "extrema-that-do-not-exist",
+      figure: gradeDrawings5["global-extrema#extrema-that-do-not-exist"],
       title: t("When there is no maximum or minimum", "没有最值的情形"),
       explanation: t(
         "A graph can approach a height without reaching it. If the graph rises to an **open** dot at $(4, 5)$, the outputs get as close to $5$ as we like but never equal $5$; every output less than $5$ is beaten by a larger one. Then the function has **no maximum value**.\n\nIf some other point of the graph is at height $5$, the maximum value is $5$ after all. Check the dots before answering.",
@@ -1149,6 +1158,7 @@ export const endBehavior: TopicDef = {
   knowledgePoints: [
     {
       id: "end-behavior-from-a-graph",
+      figure: algebraDrawings["end-behavior#end-behavior-from-a-graph"],
       title: t("End behavior from a graph", "从图象看端点行为"),
       explanation: t(
         'The **end behavior** of a function describes its outputs at the far right and the far left of the graph. We write $f(x) \\to \\infty$ as $x \\to \\infty$ (read "$f(x)$ goes to infinity as $x$ goes to infinity") when the graph rises without bound as it goes right, and $f(x) \\to -\\infty$ when it falls without bound.\n\nFor $y = x^{2}$ both ends rise: $f(x) \\to \\infty$ as $x \\to \\infty$ and as $x \\to -\\infty$. Look only at the ends; the turns in the middle do not matter.',
@@ -1278,6 +1288,7 @@ export const rangeOfAFunction: TopicDef = {
     },
     {
       id: "range-from-a-graph",
+      figure: algebraDrawings["range-of-a-function#range-from-a-graph"],
       title: t("The range from a graph", "由图象求值域"),
       explanation: t(
         "On a graph, the range is the set of $y$-values the graph covers: look at how far it reaches **down and up**. The range runs from the minimum to the maximum value, which are often not at the ends of the graph.\n\nAn endpoint of the range is excluded only if the graph reaches that height **only** at an open dot.",
@@ -1368,6 +1379,7 @@ export const rangeAdvancedCases: TopicDef = {
   knowledgePoints: [
     {
       id: "ranges-of-graphs-in-pieces",
+      figure: algebraDrawings["range-advanced-cases#ranges-of-graphs-in-pieces"],
       title: t("Graphs in several pieces", "分段的图象"),
       explanation: t(
         "When a graph comes in pieces, find the $y$-values covered by each piece and join them with $\\cup$. If the pieces cover overlapping heights, the parts merge into one interval; if there is a band of heights that no piece reaches, the range has a gap.\n\nAn open dot leaves a height out only if no other point of the graph is at that height.",
@@ -1411,6 +1423,7 @@ export const rangeAdvancedCases: TopicDef = {
     },
     {
       id: "ranges-of-squares-and-roots",
+      figure: algebraDrawings["range-advanced-cases#ranges-of-squares-and-roots"],
       title: t("Squares and square roots", "平方与平方根"),
       explanation: t(
         "A square is never negative and takes every value $\\ge 0$: $(x - 3)^{2}$ has range $[0, \\infty)$, wherever the $3$ is. So\n\n$$f(x) = (x - 3)^{2} + 2 \\text{ has range } [2, \\infty), \\qquad g(x) = -2(x + 1)^{2} + 5 \\text{ has range } (-\\infty, 5].$$\n\nThe same holds for a square root: $\\sqrt{x - 4}$ takes every value $\\ge 0$, so $\\sqrt{x - 4} - 1$ has range $[-1, \\infty)$. The number inside the square or root shifts the graph sideways and does not change the range.",
@@ -1465,6 +1478,7 @@ export const rootsOfAFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "roots-from-a-graph",
+      figure: algebraDrawings["roots-of-a-function#roots-from-a-graph"],
       title: t("Roots from a graph", "从图象求零点"),
       explanation: t(
         "A **root** (or **zero**) of a function $f$ is an input $x$ with $f(x) = 0$. On the graph, the roots are the $x$-coordinates of the points where the graph meets the $x$-axis: its **$x$-intercepts**.\n\nA root is an $x$-value. The point where the graph meets the $y$-axis gives the $y$-intercept $f(0)$, which is something else.",
@@ -1503,6 +1517,7 @@ export const rootsOfAFunction: TopicDef = {
     },
     {
       id: "roots-of-linear-functions",
+      figure: algebraDrawings["roots-of-a-function#roots-of-linear-functions"],
       title: t("Roots of linear functions", "一次函数的零点"),
       explanation: t(
         "A root of a function is an input where the output is zero; on the graph it is where the line crosses the $x$-axis.\n\nTo find a root from a formula, set the function equal to $0$ and solve. For $f(x) = 4x + 6$:\n\n$$4x + 6 = 0 \\;\\Rightarrow\\; 4x = -6 \\;\\Rightarrow\\; x = -\\frac{3}{2}.$$",
@@ -1528,6 +1543,7 @@ export const rootsOfAFunction: TopicDef = {
     },
     {
       id: "x-and-y-intercepts",
+      figure: algebraDrawings["roots-of-a-function#x-and-y-intercepts"],
       title: t("Intercepts of a graph", "图象的截距"),
       explanation: t(
         "The graph of $f$ meets the $x$-axis at $(r, 0)$ for each root $r$, and meets the $y$-axis at $(0, f(0))$. For $f(x) = 2x - 8$:\n\n- $x$-intercept: $2x - 8 = 0$ gives $x = 4$, the point $(4, 0)$;\n- $y$-intercept: $f(0) = -8$, the point $(0, -8)$.",
@@ -1619,6 +1635,7 @@ export const increasingAndDecreasing: TopicDef = {
   knowledgePoints: [
     {
       id: "intervals-of-increase-and-decrease",
+      figure: gradeDrawings5["increasing-and-decreasing#intervals-of-increase-and-decrease"],
       title: t("Intervals of increase and decrease", "递增区间与递减区间"),
       explanation: t(
         "Reading a graph from left to right, a function is **increasing** where the graph goes up, **decreasing** where it goes down, and **constant** where it is flat. These are intervals of $x$-values, not of $y$-values.\n\nWe write them as **open** intervals, between the $x$-coordinates of the turning points: a graph that rises from $x = -4$ to $x = 1$ and falls from $x = 1$ to $x = 5$ is increasing on $(-4, 1)$ and decreasing on $(1, 5)$. Join separate intervals with $\\cup$.",

@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { type Compass, linear, type Mark, type Point, Q, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choiceProblem, numberProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 import { polygonName } from "./angles.ts";
@@ -300,6 +301,7 @@ const nonAdjacentComplementaryAngles = topic(
   [
     {
       id: "spotting-complementary-angles",
+      figure: gradeDrawings5["non-adjacent-complementary-angles#spotting-complementary-angles"],
       title: t("Spotting complementary angles", "找出互余的角"),
       explanation: t(
         "Two angles are complementary when their measures add up to $90^\\circ$, wherever they are: they do not have to be adjacent, or even in the same figure.\n\nIf $m\\angle A = 28^\\circ$, $m\\angle B = 152^\\circ$, $m\\angle C = 62^\\circ$ and $m\\angle D = 75^\\circ$, then $\\angle A$ and $\\angle C$ are complementary, because $28 + 62 = 90$. $\\angle A$ and $\\angle B$ add up to $180^\\circ$: they are supplementary, not complementary.",
@@ -336,6 +338,7 @@ const nonAdjacentComplementaryAngles = topic(
     },
     {
       id: "complements-in-figures",
+      figure: gradeDrawings5["non-adjacent-complementary-angles#complements-in-figures"],
       title: t("Complements in figures", "图形中的余角"),
       explanation: t(
         "Two kinds of figures hide complementary angles that are not adjacent:\n\n- On a line, two angles on either side of a right angle add up to $180^\\circ - 90^\\circ = 90^\\circ$.\n- In a right triangle, the right angle takes $90^\\circ$ of the $180^\\circ$, so the two acute angles add up to $90^\\circ$.\n\nIn a right triangle with an acute angle of $34^\\circ$, the other acute angle is $90^\\circ - 34^\\circ = 56^\\circ$.",
@@ -385,6 +388,7 @@ const nonAdjacentComplementaryAngles = topic(
     },
     {
       id: "complements-with-algebra",
+      figure: gradeDrawings5["non-adjacent-complementary-angles#complements-with-algebra"],
       title: t("Equations for complements", "互余角的方程"),
       explanation: t(
         "When the angles on either side of a right angle are written with a variable, they still add up to $90^\\circ$, which gives an equation.\n\nIf $m\\angle ABD = (2x + 6)^\\circ$ and $m\\angle EBC = (3x - 6)^\\circ$ with a right angle between them on a line, then $(2x + 6) + (3x - 6) = 90$, so $5x = 90$ and $x = 18$. Then $m\\angle ABD = 2 \\cdot 18 + 6 = 42^\\circ$.",
@@ -625,6 +629,7 @@ const consecutiveAngles = topic(
   [
     {
       id: "consecutive-angles-are-supplementary",
+      figure: gradeDrawings5["consecutive-angles#consecutive-angles-are-supplementary"],
       title: t("Consecutive angles are supplementary", "同旁角互补"),
       explanation: t(
         "**Consecutive interior angles** are both between the lines, on the same side of the transversal; **consecutive exterior angles** are both outside the lines, on the same side. When the lines are parallel, each pair is **supplementary**: the two angles add up to $180^\\circ$.\n\nWhy: one of the pair equals the angle corresponding to the other's linear-pair partner. If $\\ell \\parallel m$ and $\\angle 4 = 70^\\circ$, its consecutive interior partner is $\\angle 6 = 180^\\circ - 70^\\circ = 110^\\circ$.",
@@ -793,6 +798,7 @@ const angleCriteriaForParallelLines = topic(
     },
     {
       id: "making-lines-parallel",
+      figure: gradeDrawings5["angle-criteria-for-parallel-lines#making-lines-parallel"],
       title: t("Making lines parallel", "使两直线平行"),
       explanation: t(
         "To find the value of $x$ that makes two lines parallel, write the condition for the marked pair and solve: equal for corresponding and alternate angles, a sum of $180^\\circ$ for consecutive angles.\n\nIf corresponding angles measure $(4x - 10)^\\circ$ and $(2x + 30)^\\circ$, the lines are parallel when $4x - 10 = 2x + 30$, that is, when $x = 20$.",
@@ -838,6 +844,7 @@ const angleCriteriaForParallelLines = topic(
     },
     {
       id: "reasons-for-parallel-lines",
+      figure: gradeDrawings5["angle-criteria-for-parallel-lines#reasons-for-parallel-lines"],
       title: t("Reasons for parallel lines", "平行的理由"),
       explanation: t(
         "Each criterion names the angle pair it uses, so the reason must match the pair:\n\n- equal corresponding angles: corresponding angles;\n- equal angles between the lines on opposite sides: alternate interior angles;\n- equal angles outside the lines on opposite sides: alternate exterior angles;\n- supplementary angles between the lines on the same side: consecutive interior angles.\n\nVertical angles are always equal, whether or not the lines are parallel, so they prove nothing about $\\ell$ and $m$.",
@@ -994,6 +1001,7 @@ const problemSolvingWithAnglesOfTriangles = topic(
     },
     {
       id: "angles-described-in-words",
+      figure: gradeDrawings5["problem-solving-with-angles-of-triangles#angles-described-in-words"],
       title: t("Angles described in words", "用文字描述的角"),
       explanation: t(
         "When the angles are described by how they compare, let the angle the others are compared with be $x$, write the others in terms of $x$, and use the angle sum.\n\nIf $\\angle B$ is twice $\\angle A$ and $\\angle C$ is $20^\\circ$ more than $\\angle A$: $x + 2x + (x + 20) = 180$, so $4x = 160$ and $x = 40$. The angles are $40^\\circ$, $80^\\circ$ and $60^\\circ$.",
@@ -1049,6 +1057,7 @@ const problemSolvingWithAnglesOfTriangles = topic(
     },
     {
       id: "angles-across-two-triangles",
+      figure: gradeDrawings5["problem-solving-with-angles-of-triangles#angles-across-two-triangles"],
       title: t("Angles across two triangles", "两个三角形中的角"),
       explanation: t(
         "When two segments cross, they form two triangles that meet at a pair of vertical angles. The vertical angles are equal, so the other two angles of one triangle add up to the same as the other two angles of the other triangle.\n\nIf one triangle has angles $50^\\circ$ and $70^\\circ$ and the other has an angle of $65^\\circ$, the angles at the crossing are both $180^\\circ - 120^\\circ = 60^\\circ$, and the missing angle is $180^\\circ - 60^\\circ - 65^\\circ = 55^\\circ$. In one step: $50 + 70 = 65 + x$.",
@@ -1322,6 +1331,7 @@ const exteriorAnglesOfPolygons = topic(
     },
     {
       id: "exterior-angle-equations",
+      figure: gradeDrawings5["exterior-angles-of-polygons#exterior-angle-equations"],
       title: t("Equations with exterior angles", "外角的方程"),
       explanation: t(
         "When the exterior angles are written with a variable, set their sum equal to $360^\\circ$; an interior angle is then $180^\\circ$ minus the exterior angle at the same vertex.\n\nIf the exterior angles of a quadrilateral are $x^\\circ$, $2x^\\circ$, $3x^\\circ$ and $4x^\\circ$: $10x = 360$, so $x = 36$. The largest exterior angle is $144^\\circ$, so the smallest interior angle is $180^\\circ - 144^\\circ = 36^\\circ$.",
@@ -1445,6 +1455,7 @@ const regularPolygons = topic(
     },
     {
       id: "sides-from-angle-relationships",
+      figure: gradeDrawings5["regular-polygons#sides-from-angle-relationships"],
       title: t("Sides from angle relationships", "由角的关系求边数"),
       explanation: t(
         "In a regular polygon with $n$ sides, each exterior angle is $\\frac{360^\\circ}{n}$ and each interior angle is $180^\\circ$ minus that. A relationship between the two angles gives the exterior angle, and then $n$.\n\nIf each interior angle is $4$ times each exterior angle, the two together make $5$ exterior angles, which is $180^\\circ$: each exterior angle is $36^\\circ$, so $n = 360 \\div 36 = 10$.",
@@ -1520,6 +1531,7 @@ const regularPolygons = topic(
     },
     {
       id: "angles-formed-by-a-diagonal",
+      figure: gradeDrawings5["regular-polygons#angles-formed-by-a-diagonal"],
       title: t("Angles formed by a diagonal", "对角线形成的角"),
       explanation: t(
         "A diagonal $AC$ of a regular polygon $ABC\\ldots$ cuts off triangle $ABC$. Its sides $AB$ and $BC$ are sides of the polygon, so they are equal and the triangle is isosceles; the angle at $B$ is an interior angle of the polygon.\n\nIn a regular pentagon, $m\\angle B = 108^\\circ$, so the base angles are $(180^\\circ - 108^\\circ) \\div 2 = 36^\\circ$: $m\\angle BAC = 36^\\circ$.",

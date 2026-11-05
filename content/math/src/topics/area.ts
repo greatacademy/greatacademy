@@ -2,6 +2,7 @@ import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem, steps } from "../problems.ts";
 
@@ -614,6 +615,7 @@ export const areaOfTrapezoids: TopicDef = {
     },
     {
       id: "a-missing-base-or-height",
+      figure: gradeDrawings4["area-of-trapezoids#a-missing-base-or-height"],
       title: t("A missing base or height", "求未知的底或高"),
       explanation: t(
         "The formula $A = \\tfrac{1}{2} (b_1 + b_2) h$ also finds a missing length once the area is known. Doubling the area undoes the $\\tfrac{1}{2}$: $2A = (b_1 + b_2) h$. Then\n\n- for the height, divide by the sum of the bases: $h = \\frac{2A}{b_1 + b_2}$;\n- for a base, divide by the height and subtract the other base: $b_2 = \\frac{2A}{h} - b_1$.\n\nA trapezoid of area $45\\text{ cm}^2$, height $6$ cm and one base $7$ cm has $b_1 + b_2 = \\frac{90}{6} = 15$, so the other base is $8$ cm.",
@@ -685,6 +687,7 @@ export const compositeShapes: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-composite-shapes",
+      figure: gradeDrawings4["composite-shapes#area-of-composite-shapes"],
       title: t("Area by splitting", "分割求面积"),
       explanation: t(
         "To find the area of a shape made of simpler pieces, split it into rectangles and triangles, find each area, and add. Missing lengths come from the given ones: in an L-shape, the full width is the sum of the widths of the parts.\n\nYou can also subtract: an L-shape is a big rectangle with a corner rectangle removed.",
@@ -757,6 +760,7 @@ export const compositeShapes: TopicDef = {
     },
     {
       id: "perimeter-of-composite-shapes",
+      figure: gradeDrawings4["composite-shapes#perimeter-of-composite-shapes"],
       title: t("Perimeter with missing sides", "求有未知边的周长"),
       explanation: t(
         "To find a perimeter, every side needs a length. In a shape whose corners are all right angles, the horizontal sides on the top add up to the bottom, and the vertical sides on the left add up to the right.\n\nIn an L-shape $12$ wide and $9$ tall, the two short sides of the notch are found by subtraction, and the perimeter is $2 \\cdot 12 + 2 \\cdot 9 = 42$, whatever the notch's size.",

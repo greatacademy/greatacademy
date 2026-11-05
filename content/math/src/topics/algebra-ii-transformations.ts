@@ -16,6 +16,7 @@ import {
   type RealSet,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, at, plain, pointMove, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -395,6 +396,7 @@ export const verticalTranslationsOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-under-a-vertical-translation",
+      figure: algebraDrawings2["vertical-translations-of-functions#points-under-a-vertical-translation"],
       title: t("Moving points up and down", "上下移动点"),
       explanation: t(
         "The graph of $y = f(x) + k$ has the same inputs as $y = f(x)$, but every output is $k$ more. So every point $(x, y)$ of the graph of $f$ moves to $(x, y + k)$: the graph shifts **up** $k$ units when $k > 0$ and **down** $|k|$ units when $k < 0$.\n\nIf $(2, 5)$ is on the graph of $y = f(x)$, then $(2, 5 - 3) = (2, 2)$ is on the graph of $y = f(x) - 3$.",
@@ -418,6 +420,7 @@ export const verticalTranslationsOfFunctions: TopicDef = {
     },
     {
       id: "equations-of-vertical-translations",
+      figure: algebraDrawings2["vertical-translations-of-functions#equations-of-vertical-translations"],
       title: t("Writing the new function", "写出新函数"),
       explanation: t(
         "To shift the graph of $f$ up by $k$ units, add $k$ to the whole function: $g(x) = f(x) + k$. To shift it down, subtract.\n\nFor $f(x) = x^2 - 4x + 1$ shifted down $5$ units:\n\n$$g(x) = f(x) - 5 = x^2 - 4x + 1 - 5 = x^2 - 4x - 4$$",
@@ -445,6 +448,7 @@ export const verticalTranslationsOfFunctions: TopicDef = {
     },
     {
       id: "vertical-translations-from-graphs",
+      figure: algebraDrawings2["vertical-translations-of-functions#vertical-translations-from-graphs"],
       title: t("Reading the shift from graphs", "从图象读出平移量"),
       explanation: t(
         "When the graph of $g$ is the graph of $f$ shifted vertically, compare one point of $f$ with the point of $g$ directly above or below it. If $(1, -2)$ is on $f$ and $(1, 2)$ is on $g$, then every point moved up $4$ units and $g(x) = f(x) + 4$.",
@@ -493,6 +497,7 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-under-a-horizontal-translation",
+      figure: algebraDrawings2["horizontal-translations-of-functions#points-under-a-horizontal-translation"],
       title: t("Moving points left and right", "左右移动点"),
       explanation: t(
         "The graph of $y = f(x - h)$ reaches each output of $f$ $h$ units **later**: at $x = p + h$ it computes $f(p + h - h) = f(p)$. So every point $(x, y)$ moves to $(x + h, y)$, which is a shift **right** for $h > 0$.\n\nThe sign looks backwards: $y = f(x + 3) = f(x - (-3))$ is shifted $3$ units **left**, so $(2, 5)$ on $f$ moves to $(-1, 5)$.",
@@ -516,6 +521,7 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
     },
     {
       id: "equations-of-horizontal-translations",
+      figure: algebraDrawings2["horizontal-translations-of-functions#equations-of-horizontal-translations"],
       title: t("Writing the new function", "写出新函数"),
       explanation: t(
         "To shift the graph of $f$ right by $h$ units, replace every $x$ in $f(x)$ with $(x - h)$; to shift it left, replace $x$ with $(x + h)$.\n\nFor $f(x) = x^2 + 3x$ shifted left $2$ units:\n\n$$g(x) = f(x + 2) = (x + 2)^2 + 3(x + 2) = x^2 + 7x + 10$$\n\nYou may leave the answer unexpanded.",
@@ -542,6 +548,7 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
     },
     {
       id: "horizontal-translations-from-graphs",
+      figure: algebraDrawings2["horizontal-translations-of-functions#horizontal-translations-from-graphs"],
       title: t("Reading the shift from graphs", "从图象读出平移量"),
       explanation: t(
         "When the graph of $g$ is the graph of $f$ shifted horizontally, match a point of $f$ with the point of $g$ at the same height, such as the two left endpoints. If the left endpoint of $f$ is $(-3, 1)$ and that of $g$ is $(2, 1)$, the graph moved $5$ units right, so $g(x) = f(x - 5)$ and $h = 5$.",
@@ -603,6 +610,7 @@ export const verticalStretchesOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-under-a-vertical-stretch",
+      figure: algebraDrawings2["vertical-stretches-of-functions#points-under-a-vertical-stretch"],
       title: t("Multiplying the y-coordinates", "纵坐标乘以系数"),
       explanation: t(
         "For $a > 0$, the graph of $y = a f(x)$ multiplies every output of $f$ by $a$, so the point $(x, y)$ moves to $(x, ay)$. Points on the $x$-axis stay where they are.\n\nIf $a > 1$ the graph is **stretched** vertically by a factor of $a$; if $0 < a < 1$ it is **compressed** by a factor of $a$. The point $(4, -6)$ on $f$ moves to $(4, -2)$ on $y = \\frac{1}{3}f(x)$.",
@@ -680,6 +688,7 @@ export const verticalStretchesOfFunctions: TopicDef = {
     },
     {
       id: "vertical-stretches-from-graphs",
+      figure: algebraDrawings2["vertical-stretches-of-functions#vertical-stretches-from-graphs"],
       title: t("Reading the factor from graphs", "从图象读出系数"),
       explanation: t(
         "To find $a$ in $g(x) = a f(x)$ from graphs, pick a point of $f$ off the $x$-axis and divide the $y$-coordinate of $g$ at the same $x$ by it. If $f(2) = 4$ and $g(2) = 2$, then $a = \\frac{2}{4} = \\frac{1}{2}$.",
@@ -730,6 +739,7 @@ export const horizontalStretchesOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-under-a-horizontal-stretch",
+      figure: algebraDrawings2["horizontal-stretches-of-functions#points-under-a-horizontal-stretch"],
       title: t("Dividing the x-coordinates", "横坐标除以系数"),
       explanation: t(
         "For $b > 0$, the graph of $y = f(bx)$ reaches the output $f(p)$ when $bx = p$, that is at $x = \\frac{p}{b}$. So the point $(x, y)$ moves to $\\left(\\frac{x}{b}, y\\right)$: the $x$-coordinates are **divided** by $b$.\n\nThe point $(6, 1)$ on $f$ moves to $(3, 1)$ on $y = f(2x)$ and to $(12, 1)$ on $y = f\\left(\\frac{1}{2}x\\right)$.",
@@ -837,6 +847,7 @@ export const horizontalStretchesOfFunctions: TopicDef = {
     },
     {
       id: "horizontal-stretches-from-graphs",
+      figure: algebraDrawings2["horizontal-stretches-of-functions#horizontal-stretches-from-graphs"],
       title: t("Reading the factor from graphs", "从图象读出系数"),
       explanation: t(
         "To find $b$ in $g(x) = f(bx)$ from graphs, match a point of $f$ off the $y$-axis, such as an endpoint, with the corresponding point of $g$: $b$ is the $x$-coordinate on $f$ divided by the one on $g$. If the right endpoint of $f$ is $(4, 2)$ and that of $g$ is $(2, 2)$, then $b = \\frac{4}{2} = 2$.",
@@ -1330,6 +1341,7 @@ export const constructingFunctionsUsingTransformations: TopicDef = {
     },
     {
       id: "equations-of-transformed-graphs",
+      figure: algebraDrawings2["constructing-functions-using-transformations#equations-of-transformed-graphs"],
       title: t("Equations from graphs", "由图象写解析式"),
       explanation: t(
         "A transformed basic graph $y = a\\,P(x - h) + k$ has its key point, the vertex or starting point, at $(h, k)$. To find $a$, go one unit right of it: a basic graph that rises $1$ there rises $a$ after the stretch.\n\nIf a transformation of $y = \\sqrt{x}$ starts at $(-2, 1)$ and passes through $(-1, 3)$, then $a = 3 - 1 = 2$ and $y = 2\\sqrt{x + 2} + 1$.",
@@ -1402,6 +1414,7 @@ export const verticalReflectionsOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-under-a-vertical-reflection",
+      figure: algebraDrawings2["vertical-reflections-of-functions#points-under-a-vertical-reflection"],
       title: t("Reflecting points", "翻折点"),
       explanation: t(
         "The graph of $y = -f(x)$ takes the opposite of every output of $f$, so the point $(x, y)$ moves to $(x, -y)$: the graph is reflected in the $x$-axis. Points on the $x$-axis, the roots, stay where they are.\n\nThe point $(3, -5)$ on $f$ moves to $(3, 5)$ on $y = -f(x)$.",
@@ -1424,6 +1437,7 @@ export const verticalReflectionsOfFunctions: TopicDef = {
     },
     {
       id: "equations-of-vertical-reflections",
+      figure: algebraDrawings2["vertical-reflections-of-functions#equations-of-vertical-reflections"],
       title: t("Writing the reflected function", "写出翻折后的函数"),
       explanation: t(
         "To reflect the graph of $f$ in the $x$-axis, take the opposite of the **whole** function: every term changes sign. For $f(x) = x^2 - 3x + 2$,\n\n$$-f(x) = -(x^2 - 3x + 2) = -x^2 + 3x - 2.$$",
@@ -1499,6 +1513,7 @@ export const horizontalReflectionsOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "points-under-a-horizontal-reflection",
+      figure: algebraDrawings2["horizontal-reflections-of-functions#points-under-a-horizontal-reflection"],
       title: t("Reflecting points", "翻折点"),
       explanation: t(
         "The graph of $y = f(-x)$ reaches the output $f(p)$ at $x = -p$, so the point $(x, y)$ moves to $(-x, y)$: the graph is reflected in the $y$-axis. The $y$-intercept stays where it is.\n\nThe point $(4, 1)$ on $f$ moves to $(-4, 1)$ on $y = f(-x)$.",
@@ -1521,6 +1536,7 @@ export const horizontalReflectionsOfFunctions: TopicDef = {
     },
     {
       id: "equations-of-horizontal-reflections",
+      figure: algebraDrawings2["horizontal-reflections-of-functions#equations-of-horizontal-reflections"],
       title: t("Writing the reflected function", "写出翻折后的函数"),
       explanation: t(
         "To reflect the graph of $f$ in the $y$-axis, replace every $x$ with $-x$. Even powers of $-x$ equal those of $x$, while odd powers change sign. For $f(x) = 2x^2 + 5x - 1$,\n\n$$f(-x) = 2(-x)^2 + 5(-x) - 1 = 2x^2 - 5x - 1.$$",
@@ -1549,6 +1565,7 @@ export const horizontalReflectionsOfFunctions: TopicDef = {
     },
     {
       id: "recognizing-reflections",
+      figure: algebraDrawings2["horizontal-reflections-of-functions#recognizing-reflections"],
       title: t("Recognizing reflections", "识别翻折"),
       explanation: t(
         "Compare matching points. In a reflection in the $x$-axis, $y = -f(x)$, each point keeps its $x$-coordinate and the graph flips upside down. In a reflection in the $y$-axis, $y = f(-x)$, each point keeps its $y$-coordinate and the graph flips left to right. Doing both, $y = -f(-x)$, sends $(x, y)$ to $(-x, -y)$.",
@@ -1654,6 +1671,7 @@ export const combiningReflectionsWithOtherGraphTransformations: TopicDef = {
     },
     {
       id: "the-order-of-reflections-and-shifts",
+      figure: algebraDrawings2["combining-reflections-with-other-graph-transformations#the-order-of-reflections-and-shifts"],
       title: t("The order of the operations", "变换的顺序"),
       explanation: t(
         "A reflection also reflects any shift made before it.\n\n- Reflect in the $x$-axis, then shift up $3$: $y = -f(x) + 3$. Shift up $3$ first, then reflect: $y = -(f(x) + 3) = -f(x) - 3$.\n- Reflect in the $y$-axis, then shift right $2$: replace $x$ with $-x$, then $x$ with $x - 2$: $y = f(-(x - 2)) = f(2 - x)$. Shift right $2$ first, then reflect: $y = f(-x - 2)$.",
@@ -2059,6 +2077,7 @@ export const absoluteValueGraphTransformations: TopicDef = {
     },
     {
       id: "absolute-value-transformations-from-graphs",
+      figure: algebraDrawings2["absolute-value-graph-transformations#absolute-value-transformations-from-graphs"],
       title: t("Reading the new graphs", "读出新图象"),
       explanation: t(
         "From the graph of $f$:\n\n- $y = |f(x)|$ keeps the parts on or above the $x$-axis and reflects the parts below it upward;\n- $y = f(|x|)$ keeps the part for $x \\ge 0$ and replaces the left half with the mirror image of the right half, so its value at $-p$ is $f(p)$.\n\nIf the graph of $f$ passes through $(3, -2)$, then $|f(3)| = 2$ and $f(|-3|) = -2$.",

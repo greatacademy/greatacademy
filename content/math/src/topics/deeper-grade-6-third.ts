@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { earlyNames, lowestNumerator } from "../early-grades-kit.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -197,27 +198,30 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "graphing-ratios": [
-    skill(
-      "the-height-at-one",
-      ["The height at x = 1", "x = 1 时的高度"],
-      [
-        "A graph of equivalent ratios is a line through the origin. Dividing any point's height by its first coordinate gives the height where $x = 1$, which is the unit rate of the graph.",
-        "等值比的图像是一条过原点的直线。任意一点的纵坐标除以横坐标，就得到 $x = 1$ 时的高度，也就是图像的单位比率。",
-      ],
-      (rng) => {
-        const x = rng.int(2, 12);
-        const y = rng.int(1, 30);
-        return fraction(
-          [
-            `A graph of equivalent ratios of $x$ to $y$ passes through $(${x}, ${y})$. What is $y$ when $x = 1$?`,
-            `$x$ 与 $y$ 的等值比图像经过 $(${x}, ${y})$。$x = 1$ 时 $y$ 是多少？`,
-          ],
-          Q.of(y, x),
-          [Q.of(x, y), Q.of(y - x + 40, 1), Q.of(x + y, x)],
-          [`Divide both coordinates by ${x}: $y = ${frac(y, x)}$.`, `两个坐标都除以 ${x}：$y = ${frac(y, x)}$。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-height-at-one",
+        ["The height at x = 1", "x = 1 时的高度"],
+        [
+          "A graph of equivalent ratios is a line through the origin. Dividing any point's height by its first coordinate gives the height where $x = 1$, which is the unit rate of the graph.",
+          "等值比的图像是一条过原点的直线。任意一点的纵坐标除以横坐标，就得到 $x = 1$ 时的高度，也就是图像的单位比率。",
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const y = rng.int(1, 30);
+          return fraction(
+            [
+              `A graph of equivalent ratios of $x$ to $y$ passes through $(${x}, ${y})$. What is $y$ when $x = 1$?`,
+              `$x$ 与 $y$ 的等值比图像经过 $(${x}, ${y})$。$x = 1$ 时 $y$ 是多少？`,
+            ],
+            Q.of(y, x),
+            [Q.of(x, y), Q.of(y - x + 40, 1), Q.of(x + y, x)],
+            [`Divide both coordinates by ${x}: $y = ${frac(y, x)}$.`, `两个坐标都除以 ${x}：$y = ${frac(y, x)}$。`],
+          );
+        },
+      ),
+      figure: gradeDrawings4["graphing-ratios#the-height-at-one"],
+    },
   ],
   "solving-problems-using-unit-rates": [
     skill(
@@ -759,38 +763,41 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "solving-problems-in-the-coordinate-plane": [
-    skill(
-      "the-area-from-opposite-corners",
-      ["The area from opposite corners", "由对角顶点求面积"],
-      [
-        "Two opposite corners of a rectangle with sides parallel to the axes give both side lengths. The width comes from the first coordinates and the height from the second coordinates.",
-        "边平行于坐标轴的长方形，由两个对角顶点可以得到两条边长。宽来自第一个坐标，高来自第二个坐标。",
-      ],
-      (rng) => {
-        const x1 = rng.int(-9, 2);
-        const y1 = rng.int(-9, 2);
-        const w = rng.int(2, 12);
-        const h = rng.int(2, 12);
-        const area = rng.bool();
-        return whole(
-          area
-            ? [
-                `A rectangle with sides parallel to the axes has opposite corners $(${x1}, ${y1})$ and $(${x1 + w}, ${y1 + h})$. What is its area?`,
-                `边平行于坐标轴的长方形有对角顶点 $(${x1}, ${y1})$ 和 $(${x1 + w}, ${y1 + h})$。它的面积是多少？`,
-              ]
-            : [
-                `A rectangle with sides parallel to the axes has opposite corners $(${x1}, ${y1})$ and $(${x1 + w}, ${y1 + h})$. What is its perimeter?`,
-                `边平行于坐标轴的长方形有对角顶点 $(${x1}, ${y1})$ 和 $(${x1 + w}, ${y1 + h})$。它的周长是多少？`,
-              ],
-          area ? w * h : 2 * (w + h),
-          area ? [2 * (w + h), w + h, w * h + 1] : [w * h, w + h, 2 * (w + h) + 2],
-          [
-            `The width is ${w} and the height is ${h}, so the ${area ? `area is $${w} \\times ${h} = ${w * h}$` : `perimeter is $2(${w} + ${h}) = ${2 * (w + h)}$`}.`,
-            `宽是 ${w}，高是 ${h}，所以${area ? `面积是 $${w} \\times ${h} = ${w * h}$` : `周长是 $2(${w} + ${h}) = ${2 * (w + h)}$`}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-area-from-opposite-corners",
+        ["The area from opposite corners", "由对角顶点求面积"],
+        [
+          "Two opposite corners of a rectangle with sides parallel to the axes give both side lengths. The width comes from the first coordinates and the height from the second coordinates.",
+          "边平行于坐标轴的长方形，由两个对角顶点可以得到两条边长。宽来自第一个坐标，高来自第二个坐标。",
+        ],
+        (rng) => {
+          const x1 = rng.int(-9, 2);
+          const y1 = rng.int(-9, 2);
+          const w = rng.int(2, 12);
+          const h = rng.int(2, 12);
+          const area = rng.bool();
+          return whole(
+            area
+              ? [
+                  `A rectangle with sides parallel to the axes has opposite corners $(${x1}, ${y1})$ and $(${x1 + w}, ${y1 + h})$. What is its area?`,
+                  `边平行于坐标轴的长方形有对角顶点 $(${x1}, ${y1})$ 和 $(${x1 + w}, ${y1 + h})$。它的面积是多少？`,
+                ]
+              : [
+                  `A rectangle with sides parallel to the axes has opposite corners $(${x1}, ${y1})$ and $(${x1 + w}, ${y1 + h})$. What is its perimeter?`,
+                  `边平行于坐标轴的长方形有对角顶点 $(${x1}, ${y1})$ 和 $(${x1 + w}, ${y1 + h})$。它的周长是多少？`,
+                ],
+            area ? w * h : 2 * (w + h),
+            area ? [2 * (w + h), w + h, w * h + 1] : [w * h, w + h, 2 * (w + h) + 2],
+            [
+              `The width is ${w} and the height is ${h}, so the ${area ? `area is $${w} \\times ${h} = ${w * h}$` : `perimeter is $2(${w} + ${h}) = ${2 * (w + h)}$`}.`,
+              `宽是 ${w}，高是 ${h}，所以${area ? `面积是 $${w} \\times ${h} = ${w * h}$` : `周长是 $2(${w} + ${h}) = ${2 * (w + h)}$`}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["solving-problems-in-the-coordinate-plane#the-area-from-opposite-corners"],
+    },
   ],
   "introduction-to-algebraic-expressions": [
     skill(
@@ -1247,31 +1254,34 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
     ),
   ],
   "representing-inequalities-on-number-lines": [
-    skill(
-      "whole-numbers-on-the-graph",
-      ["Whole numbers on the graph", "图像上的整数"],
-      [
-        "A filled circle includes its endpoint and an open circle leaves it out. So counting the whole numbers in a graph between two endpoints depends on the kind of circle at each end.",
-        "实心圆包含端点，空心圆不包含。所以数两个端点之间图像上的整数时，要看两端是什么圆。",
-      ],
-      (rng) => {
-        const lo = rng.int(-9, 15);
-        const hi = lo + rng.int(3, 14);
-        const leftIn = rng.bool();
-        const rightIn = rng.bool();
-        const count = hi - lo - 1 + (leftIn ? 1 : 0) + (rightIn ? 1 : 0);
-        const expr = `${lo} ${leftIn ? "\\le" : "<"} x ${rightIn ? "\\le" : "<"} ${hi}`;
-        return whole(
-          [`How many integers satisfy $${expr}$?`, `有多少个整数满足 $${expr}$？`],
-          count,
-          [hi - lo, hi - lo + 1, hi - lo - 1 === count ? hi - lo - 2 : hi - lo - 1],
-          [
-            `Between ${lo} and ${hi} strictly there are ${hi - lo - 1} integers, and ${leftIn || rightIn ? "each included endpoint adds one" : "neither endpoint is included"}, so ${count}.`,
-            `严格在 ${lo} 和 ${hi} 之间有 ${hi - lo - 1} 个整数，${leftIn || rightIn ? "每个包含的端点再加一个" : "两个端点都不包含"}，所以是 ${count} 个。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "whole-numbers-on-the-graph",
+        ["Whole numbers on the graph", "图像上的整数"],
+        [
+          "A filled circle includes its endpoint and an open circle leaves it out. So counting the whole numbers in a graph between two endpoints depends on the kind of circle at each end.",
+          "实心圆包含端点，空心圆不包含。所以数两个端点之间图像上的整数时，要看两端是什么圆。",
+        ],
+        (rng) => {
+          const lo = rng.int(-9, 15);
+          const hi = lo + rng.int(3, 14);
+          const leftIn = rng.bool();
+          const rightIn = rng.bool();
+          const count = hi - lo - 1 + (leftIn ? 1 : 0) + (rightIn ? 1 : 0);
+          const expr = `${lo} ${leftIn ? "\\le" : "<"} x ${rightIn ? "\\le" : "<"} ${hi}`;
+          return whole(
+            [`How many integers satisfy $${expr}$?`, `有多少个整数满足 $${expr}$？`],
+            count,
+            [hi - lo, hi - lo + 1, hi - lo - 1 === count ? hi - lo - 2 : hi - lo - 1],
+            [
+              `Between ${lo} and ${hi} strictly there are ${hi - lo - 1} integers, and ${leftIn || rightIn ? "each included endpoint adds one" : "neither endpoint is included"}, so ${count}.`,
+              `严格在 ${lo} 和 ${hi} 之间有 ${hi - lo - 1} 个整数，${leftIn || rightIn ? "每个包含的端点再加一个" : "两个端点都不包含"}，所以是 ${count} 个。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["representing-inequalities-on-number-lines#whole-numbers-on-the-graph"],
+    },
   ],
   "introduction-to-two-variable-equations": [
     skill(

@@ -3,8 +3,8 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import { lowestNumerator } from "../early-grades-kit.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 import { dotPlotFigure } from "./grade-6-statistics.ts";
@@ -65,112 +65,124 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
     ),
   ],
   "analyzing-two-variable-equations-using-graphs": [
-    skill(
-      "the-point-on-the-graph",
-      ["The point on the graph", "图像上的点"],
-      [
-        "A point lies on the graph of an equation exactly when its coordinates make the equation true. Substituting the first coordinate for $x$ must give the second coordinate as $y$.",
-        "一个点在方程的图像上，当且仅当它的坐标使方程成立。把第一个坐标代入 $x$，必须得到第二个坐标作为 $y$。",
-      ],
-      (rng) => {
-        const m = rng.int(2, 9);
-        const b = rng.int(1, 9);
-        const x = rng.int(1, 8);
-        const y = m * x + b;
-        return chooseMath(
-          rng,
-          [`Which point lies on the graph of $y = ${m}x + ${b}$?`, `哪个点在 $y = ${m}x + ${b}$ 的图像上？`],
-          `(${x}, ${y})`,
-          [`(${y}, ${x})`, `(${x}, ${y + 1})`, `(${x + 1}, ${y})`],
-          [
-            `$${m} \\times ${x} + ${b} = ${y}$, so $(${x}, ${y})$ makes the equation true.`,
-            `$${m} \\times ${x} + ${b} = ${y}$，所以 $(${x}, ${y})$ 使方程成立。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-point-on-the-graph",
+        ["The point on the graph", "图像上的点"],
+        [
+          "A point lies on the graph of an equation exactly when its coordinates make the equation true. Substituting the first coordinate for $x$ must give the second coordinate as $y$.",
+          "一个点在方程的图像上，当且仅当它的坐标使方程成立。把第一个坐标代入 $x$，必须得到第二个坐标作为 $y$。",
+        ],
+        (rng) => {
+          const m = rng.int(2, 9);
+          const b = rng.int(1, 9);
+          const x = rng.int(1, 8);
+          const y = m * x + b;
+          return chooseMath(
+            rng,
+            [`Which point lies on the graph of $y = ${m}x + ${b}$?`, `哪个点在 $y = ${m}x + ${b}$ 的图像上？`],
+            `(${x}, ${y})`,
+            [`(${y}, ${x})`, `(${x}, ${y + 1})`, `(${x + 1}, ${y})`],
+            [
+              `$${m} \\times ${x} + ${b} = ${y}$, so $(${x}, ${y})$ makes the equation true.`,
+              `$${m} \\times ${x} + ${b} = ${y}$，所以 $(${x}, ${y})$ 使方程成立。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["analyzing-two-variable-equations-using-graphs#the-point-on-the-graph"],
+    },
   ],
   "areas-of-rectangles": [
-    skill(
-      "a-path-around-a-rectangle",
-      ["A path around a rectangle", "长方形四周的小路"],
-      [
-        "A path around a rectangle makes a larger rectangle, adding its width on both sides of each dimension. The path's area is the larger area minus the inner one.",
-        "长方形四周的小路形成一个更大的长方形，每个方向两侧都加上路宽。小路的面积是大面积减去里面的面积。",
-      ],
-      (rng) => {
-        const l = rng.int(6, 20);
-        const w = rng.int(3, 15);
-        const p = rng.int(1, 3);
-        const outer = (l + 2 * p) * (w + 2 * p);
-        return whole(
-          [
-            `A garden is ${l} m long and ${w} m wide. A path ${p} m wide runs all around it. What is the area of the path, in square meters?`,
-            `一个花园长 ${l} 米，宽 ${w} 米。四周有一条宽 ${p} 米的小路。小路的面积是多少平方米？`,
-          ],
-          outer - l * w,
-          [outer, 2 * (l + w) * p, (l + p) * (w + p) - l * w],
-          [
-            `The larger rectangle is ${l + 2 * p} by ${w + 2 * p}, with area ${outer}. Taking away $${l} \\times ${w} = ${l * w}$ leaves ${outer - l * w}.`,
-            `大长方形是 ${l + 2 * p} 乘 ${w + 2 * p}，面积 ${outer}。减去 $${l} \\times ${w} = ${l * w}$，剩下 ${outer - l * w}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-path-around-a-rectangle",
+        ["A path around a rectangle", "长方形四周的小路"],
+        [
+          "A path around a rectangle makes a larger rectangle, adding its width on both sides of each dimension. The path's area is the larger area minus the inner one.",
+          "长方形四周的小路形成一个更大的长方形，每个方向两侧都加上路宽。小路的面积是大面积减去里面的面积。",
+        ],
+        (rng) => {
+          const l = rng.int(6, 20);
+          const w = rng.int(3, 15);
+          const p = rng.int(1, 3);
+          const outer = (l + 2 * p) * (w + 2 * p);
+          return whole(
+            [
+              `A garden is ${l} m long and ${w} m wide. A path ${p} m wide runs all around it. What is the area of the path, in square meters?`,
+              `一个花园长 ${l} 米，宽 ${w} 米。四周有一条宽 ${p} 米的小路。小路的面积是多少平方米？`,
+            ],
+            outer - l * w,
+            [outer, 2 * (l + w) * p, (l + p) * (w + p) - l * w],
+            [
+              `The larger rectangle is ${l + 2 * p} by ${w + 2 * p}, with area ${outer}. Taking away $${l} \\times ${w} = ${l * w}$ leaves ${outer - l * w}.`,
+              `大长方形是 ${l + 2 * p} 乘 ${w + 2 * p}，面积 ${outer}。减去 $${l} \\times ${w} = ${l * w}$，剩下 ${outer - l * w}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["areas-of-rectangles#a-path-around-a-rectangle"],
+    },
   ],
   "areas-of-triangles": [
-    skill(
-      "the-height-from-the-area",
-      ["The height from the area", "由面积求高"],
-      [
-        "A triangle's area is half of base times height. So undoing it means doubling the area before dividing by the base, and leaving out the doubling is the usual slip.",
-        "三角形面积是底乘高的一半。所以还原时要先把面积乘 2，再除以底，漏掉乘 2 是常见错误。",
-      ],
-      (rng) => {
-        const b = rng.int(2, 20);
-        let h = rng.int(2, 20);
-        if ((b * h) % 2 === 1) h += 1;
-        const area = (b * h) / 2;
-        return whole(
-          [
-            `A triangle has an area of $${area}\\text{ cm}^2$ and a base of $${b}\\text{ cm}$. What is its height, in cm?`,
-            `一个三角形面积为 $${area}\\text{ cm}^2$，底为 $${b}\\text{ cm}$。它的高是多少厘米？`,
-          ],
-          h,
-          [Math.floor(area / b), 2 * area, area - b],
-          [
-            `$2 \\times ${area} = ${2 * area}$, and $${2 * area} \\div ${b} = ${h}$.`,
-            `$2 \\times ${area} = ${2 * area}$，$${2 * area} \\div ${b} = ${h}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-height-from-the-area",
+        ["The height from the area", "由面积求高"],
+        [
+          "A triangle's area is half of base times height. So undoing it means doubling the area before dividing by the base, and leaving out the doubling is the usual slip.",
+          "三角形面积是底乘高的一半。所以还原时要先把面积乘 2，再除以底，漏掉乘 2 是常见错误。",
+        ],
+        (rng) => {
+          const b = rng.int(2, 20);
+          let h = rng.int(2, 20);
+          if ((b * h) % 2 === 1) h += 1;
+          const area = (b * h) / 2;
+          return whole(
+            [
+              `A triangle has an area of $${area}\\text{ cm}^2$ and a base of $${b}\\text{ cm}$. What is its height, in cm?`,
+              `一个三角形面积为 $${area}\\text{ cm}^2$，底为 $${b}\\text{ cm}$。它的高是多少厘米？`,
+            ],
+            h,
+            [Math.floor(area / b), 2 * area, area - b],
+            [
+              `$2 \\times ${area} = ${2 * area}$, and $${2 * area} \\div ${b} = ${h}$.`,
+              `$2 \\times ${area} = ${2 * area}$，$${2 * area} \\div ${b} = ${h}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["areas-of-triangles#the-height-from-the-area"],
+    },
   ],
   "lines-of-symmetry": [
-    skill(
-      "sides-from-the-lines-of-symmetry",
-      ["Sides from the lines of symmetry", "由对称轴数求边数"],
-      [
-        "A regular polygon has one line of symmetry for each side. So the number of lines reveals the number of sides, and from that its perimeter can be found.",
-        "正多边形的对称轴条数等于边数。所以由对称轴的条数可以知道边数，进而求出周长。",
-      ],
-      (rng) => {
-        const k = rng.int(3, 20);
-        const s = rng.int(2, 15);
-        return whole(
-          [
-            `A regular polygon has ${k} lines of symmetry and sides of length ${s} cm. What is its perimeter, in cm?`,
-            `一个正多边形有 ${k} 条对称轴，边长 ${s} 厘米。它的周长是多少厘米？`,
-          ],
-          k * s,
-          [k + s, 2 * k * s, (k - 1) * s],
-          [
-            `${k} lines of symmetry mean ${k} sides, and $${k} \\times ${s} = ${k * s}$.`,
-            `${k} 条对称轴表示 ${k} 条边，$${k} \\times ${s} = ${k * s}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "sides-from-the-lines-of-symmetry",
+        ["Sides from the lines of symmetry", "由对称轴数求边数"],
+        [
+          "A regular polygon has one line of symmetry for each side. So the number of lines reveals the number of sides, and from that its perimeter can be found.",
+          "正多边形的对称轴条数等于边数。所以由对称轴的条数可以知道边数，进而求出周长。",
+        ],
+        (rng) => {
+          const k = rng.int(3, 20);
+          const s = rng.int(2, 15);
+          return whole(
+            [
+              `A regular polygon has ${k} lines of symmetry and sides of length ${s} cm. What is its perimeter, in cm?`,
+              `一个正多边形有 ${k} 条对称轴，边长 ${s} 厘米。它的周长是多少厘米？`,
+            ],
+            k * s,
+            [k + s, 2 * k * s, (k - 1) * s],
+            [
+              `${k} lines of symmetry mean ${k} sides, and $${k} \\times ${s} = ${k * s}$.`,
+              `${k} 条对称轴表示 ${k} 条边，$${k} \\times ${s} = ${k * s}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["lines-of-symmetry#sides-from-the-lines-of-symmetry"],
+    },
   ],
   "volumes-of-rectangular-prisms-with-fractional-edge-lengths": [
     skill(
@@ -210,103 +222,112 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
     ),
   ],
   "volumes-of-rectangular-prisms-with-fractional-edge-lengths-word-problems": [
-    skill(
-      "water-still-needed",
-      ["Water still needed", "还需要多少水"],
-      [
-        "The water still needed to fill a tank is a prism of its own: the same length and width, with the empty height. That is quicker than finding two volumes and subtracting.",
-        "把水箱加满还需要的水也是一个长方体：长和宽相同，高是空着的高度。这比求两个体积再相减更快。",
-      ],
-      (rng) => {
-        const l = rng.int(2, 12);
-        const a = rng.int(1, 6);
-        const h = rng.int(4, 9);
-        const b = rng.int(0, 2);
-        const width = Q.of(2 * a + 1, 2);
-        const gap = Q.of(2 * b + 1, 2);
-        const depth = Q.of(h).add(gap.mul(Q.of(-1)));
-        const base = Q.of(l).mul(width);
-        const low = h - b - 1;
-        return fraction(
-          [
-            `A tank is ${l} ft long, $${a}${frac(1, 2)}$ ft wide and ${h} ft tall. The water in it is $${low}${frac(1, 2)}$ ft deep. How many cubic feet of water are still needed to fill it?`,
-            `一个水箱长 ${l} 英尺，宽 $${a}${frac(1, 2)}$ 英尺，高 ${h} 英尺。水深 $${low}${frac(1, 2)}$ 英尺。还需要多少立方英尺的水才能加满？`,
-          ],
-          base.mul(gap),
-          [base.mul(Q.of(h)), base.mul(depth), base],
-          [
-            `The empty height is $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ ft, and $${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)} = ${base.mul(gap).toLatex()}$ gives the volume.`,
-            `空着的高度是 $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ 英尺，$${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)} = ${base.mul(gap).toLatex()}$ 就是所求的体积。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "water-still-needed",
+        ["Water still needed", "还需要多少水"],
+        [
+          "The water still needed to fill a tank is a prism of its own: the same length and width, with the empty height. That is quicker than finding two volumes and subtracting.",
+          "把水箱加满还需要的水也是一个长方体：长和宽相同，高是空着的高度。这比求两个体积再相减更快。",
+        ],
+        (rng) => {
+          const l = rng.int(2, 12);
+          const a = rng.int(1, 6);
+          const h = rng.int(4, 9);
+          const b = rng.int(0, 2);
+          const width = Q.of(2 * a + 1, 2);
+          const gap = Q.of(2 * b + 1, 2);
+          const depth = Q.of(h).add(gap.mul(Q.of(-1)));
+          const base = Q.of(l).mul(width);
+          const low = h - b - 1;
+          return fraction(
+            [
+              `A tank is ${l} ft long, $${a}${frac(1, 2)}$ ft wide and ${h} ft tall. The water in it is $${low}${frac(1, 2)}$ ft deep. How many cubic feet of water are still needed to fill it?`,
+              `一个水箱长 ${l} 英尺，宽 $${a}${frac(1, 2)}$ 英尺，高 ${h} 英尺。水深 $${low}${frac(1, 2)}$ 英尺。还需要多少立方英尺的水才能加满？`,
+            ],
+            base.mul(gap),
+            [base.mul(Q.of(h)), base.mul(depth), base],
+            [
+              `The empty height is $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ ft, and $${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)} = ${base.mul(gap).toLatex()}$ gives the volume.`,
+              `空着的高度是 $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ 英尺，$${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)} = ${base.mul(gap).toLatex()}$ 就是所求的体积。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["volumes-of-rectangular-prisms-with-fractional-edge-lengths-word-problems#water-still-needed"],
+    },
   ],
   "distances-between-points-in-the-coordinate-plane": [
-    skill(
-      "a-point-and-its-reflection",
-      ["A point and its reflection", "点与它的对称点"],
-      [
-        "A point and its reflection in an axis are the same distance from that axis, on opposite sides. So the distance between them is twice the point's distance from the axis.",
-        "点和它关于坐标轴的对称点到这条轴的距离相同，分在两侧。所以它们之间的距离是点到这条轴距离的两倍。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 15);
-        let c = rng.int(2, 15);
-        if (c === a) c += 1;
-        const x = rng.bool() ? a : -a;
-        const y = rng.bool() ? c : -c;
-        const xAxis = rng.bool();
-        const near = xAxis ? c : a;
-        const far = xAxis ? a : c;
-        return whole(
-          xAxis
-            ? [
-                `Point $P(${x}, ${y})$ is reflected in the $x$-axis to point $Q$. How far apart are $P$ and $Q$?`,
-                `点 $P(${x}, ${y})$ 关于 $x$ 轴对称得到点 $Q$。$P$ 和 $Q$ 相距多远？`,
-              ]
-            : [
-                `Point $P(${x}, ${y})$ is reflected in the $y$-axis to point $Q$. How far apart are $P$ and $Q$?`,
-                `点 $P(${x}, ${y})$ 关于 $y$ 轴对称得到点 $Q$。$P$ 和 $Q$ 相距多远？`,
-              ],
-          2 * near,
-          [near, 2 * far, near + far],
-          [
-            `$P$ is $${near}$ from the axis, and $Q$ is $${near}$ on the other side, so they are $2 \\times ${near} = ${2 * near}$ apart.`,
-            `$P$ 到这条轴的距离是 $${near}$，$Q$ 在另一侧也是 $${near}$，所以相距 $2 \\times ${near} = ${2 * near}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-point-and-its-reflection",
+        ["A point and its reflection", "点与它的对称点"],
+        [
+          "A point and its reflection in an axis are the same distance from that axis, on opposite sides. So the distance between them is twice the point's distance from the axis.",
+          "点和它关于坐标轴的对称点到这条轴的距离相同，分在两侧。所以它们之间的距离是点到这条轴距离的两倍。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 15);
+          let c = rng.int(2, 15);
+          if (c === a) c += 1;
+          const x = rng.bool() ? a : -a;
+          const y = rng.bool() ? c : -c;
+          const xAxis = rng.bool();
+          const near = xAxis ? c : a;
+          const far = xAxis ? a : c;
+          return whole(
+            xAxis
+              ? [
+                  `Point $P(${x}, ${y})$ is reflected in the $x$-axis to point $Q$. How far apart are $P$ and $Q$?`,
+                  `点 $P(${x}, ${y})$ 关于 $x$ 轴对称得到点 $Q$。$P$ 和 $Q$ 相距多远？`,
+                ]
+              : [
+                  `Point $P(${x}, ${y})$ is reflected in the $y$-axis to point $Q$. How far apart are $P$ and $Q$?`,
+                  `点 $P(${x}, ${y})$ 关于 $y$ 轴对称得到点 $Q$。$P$ 和 $Q$ 相距多远？`,
+                ],
+            2 * near,
+            [near, 2 * far, near + far],
+            [
+              `$P$ is $${near}$ from the axis, and $Q$ is $${near}$ on the other side, so they are $2 \\times ${near} = ${2 * near}$ apart.`,
+              `$P$ 到这条轴的距离是 $${near}$，$Q$ 在另一侧也是 $${near}$，所以相距 $2 \\times ${near} = ${2 * near}$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["distances-between-points-in-the-coordinate-plane#a-point-and-its-reflection"],
+    },
   ],
   "polygons-in-the-coordinate-plane": [
-    skill(
-      "the-fourth-vertex-of-a-rectangle",
-      ["The fourth vertex of a rectangle", "长方形的第四个顶点"],
-      [
-        "Sides of such a rectangle run along grid lines, so each vertex shares its first coordinate with one neighbor and its second coordinate with the other. That fixes the missing vertex.",
-        "这样的长方形的边沿着网格线，所以每个顶点与一个相邻顶点第一个坐标相同，与另一个相邻顶点第二个坐标相同。由此确定缺少的顶点。",
-      ],
-      (rng) => {
-        const x1 = -rng.int(1, 12);
-        const x2 = rng.int(1, 12);
-        const y1 = -rng.int(1, 12);
-        const y2 = rng.int(1, 12);
-        return chooseMath(
-          rng,
-          [
-            `Rectangle $ABCD$ has $A(${x1}, ${y1})$, $B(${x2}, ${y1})$ and $C(${x2}, ${y2})$. Where is $D$?`,
-            `长方形 $ABCD$ 有 $A(${x1}, ${y1})$、$B(${x2}, ${y1})$ 和 $C(${x2}, ${y2})$。$D$ 在哪里？`,
-          ],
-          `(${x1}, ${y2})`,
-          [`(${y2}, ${x1})`, `(${x1}, ${-y2})`, `(${x1 + x2 === x1 ? x1 + 1 : x1 + x2}, ${y2})`],
-          [
-            `$D$ shares its first coordinate with $A$ and its second with $C$, so it is $(${x1}, ${y2})$.`,
-            `$D$ 的第一个坐标与 $A$ 相同，第二个与 $C$ 相同，所以是 $(${x1}, ${y2})$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-fourth-vertex-of-a-rectangle",
+        ["The fourth vertex of a rectangle", "长方形的第四个顶点"],
+        [
+          "Sides of such a rectangle run along grid lines, so each vertex shares its first coordinate with one neighbor and its second coordinate with the other. That fixes the missing vertex.",
+          "这样的长方形的边沿着网格线，所以每个顶点与一个相邻顶点第一个坐标相同，与另一个相邻顶点第二个坐标相同。由此确定缺少的顶点。",
+        ],
+        (rng) => {
+          const x1 = -rng.int(1, 12);
+          const x2 = rng.int(1, 12);
+          const y1 = -rng.int(1, 12);
+          const y2 = rng.int(1, 12);
+          return chooseMath(
+            rng,
+            [
+              `Rectangle $ABCD$ has $A(${x1}, ${y1})$, $B(${x2}, ${y1})$ and $C(${x2}, ${y2})$. Where is $D$?`,
+              `长方形 $ABCD$ 有 $A(${x1}, ${y1})$、$B(${x2}, ${y1})$ 和 $C(${x2}, ${y2})$。$D$ 在哪里？`,
+            ],
+            `(${x1}, ${y2})`,
+            [`(${y2}, ${x1})`, `(${x1}, ${-y2})`, `(${x1 + x2 === x1 ? x1 + 1 : x1 + x2}, ${y2})`],
+            [
+              `$D$ shares its first coordinate with $A$ and its second with $C$, so it is $(${x1}, ${y2})$.`,
+              `$D$ 的第一个坐标与 $A$ 相同，第二个与 $C$ 相同，所以是 $(${x1}, ${y2})$。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings4["polygons-in-the-coordinate-plane#the-fourth-vertex-of-a-rectangle"],
+    },
   ],
   "comparing-measures-of-spread": [
     skill(

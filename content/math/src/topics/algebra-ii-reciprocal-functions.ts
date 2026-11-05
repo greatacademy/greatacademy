@@ -18,6 +18,7 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
 import { annotate, at, guides, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
@@ -293,6 +294,7 @@ export const graphingReciprocalFunctions: TopicDef = {
     },
     {
       id: "branches-and-asymptotes",
+      figure: algebraDrawings2["graphing-reciprocal-functions#branches-and-asymptotes"],
       title: t("Branches and asymptotes", "两支与渐近线"),
       explanation: t(
         "The graph of $y = \\frac{k}{x}$ has two separate **branches**. Since $xy = k$, $x$ and $y$ have the same sign when $k > 0$ and opposite signs when $k < 0$:\n\n- $k > 0$: the branches lie in quadrants I and III;\n- $k < 0$: they lie in quadrants II and IV.\n\nNear $x = 0$ the value grows without bound, so the $y$-axis is a **vertical asymptote**. As $x \\to \\infty$ or $x \\to -\\infty$, $\\frac{k}{x} \\to 0$, so the $x$-axis is a **horizontal asymptote**. For $y = -\\frac{4}{x}$: as $x \\to 0^{+}$, $y \\to -\\infty$, and as $x \\to 0^{-}$, $y \\to \\infty$.",
@@ -350,6 +352,7 @@ export const graphingReciprocalFunctions: TopicDef = {
     },
     {
       id: "the-constant-from-a-graph",
+      figure: algebraDrawings2["graphing-reciprocal-functions#the-constant-from-a-graph"],
       title: t("Finding k from a graph", "由图象求 k"),
       explanation: t(
         "Every point of the graph of $y = \\frac{k}{x}$ has $xy = k$. So one point read from the graph gives $k$: if the graph passes through $(-2, 3)$, then $k = -2 \\cdot 3 = -6$ and the function is $y = -\\frac{6}{x}$. Check with the branches: they lie in quadrants II and IV, as they must when $k < 0$.",
@@ -405,6 +408,7 @@ export const graphTransformationsOfReciprocalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "asymptotes-of-translated-reciprocals",
+      figure: algebraDrawings2["graph-transformations-of-reciprocal-functions#asymptotes-of-translated-reciprocals"],
       title: t("The asymptotes move with the graph", "渐近线随图象移动"),
       explanation: t(
         "The graph of $y = \\frac{a}{x - h} + k$ is the graph of $y = \\frac{a}{x}$ shifted $h$ units right and $k$ units up, so its asymptotes move too:\n\n- the vertical asymptote is $x = h$, where the denominator is $0$;\n- the horizontal asymptote is $y = k$, the value the fraction never adds.\n\nFor $y = \\frac{5}{x + 2} - 3$: $x + 2 = 0$ at $x = -2$, so the asymptotes are $x = -2$ and $y = -3$. The numerator $a$ moves neither.",
@@ -473,6 +477,7 @@ export const graphTransformationsOfReciprocalFunctions: TopicDef = {
     },
     {
       id: "translations-from-a-graph",
+      figure: algebraDrawings2["graph-transformations-of-reciprocal-functions#translations-from-a-graph"],
       title: t("Matching graphs and functions", "图象与函数配对"),
       explanation: t(
         "To match a graph with a function $y = \\frac{1}{x - h} + k$, read the asymptotes. Where they cross, at $(h, k)$, is the center of the graph, the image of the origin. If the dashed asymptotes are $x = 3$ and $y = -2$, the function is\n\n$$y = \\frac{1}{x - 3} - 2$$\n\nThe points $(4, -1)$ and $(2, -3)$, one unit from the center in each direction, are the images of $(1, 1)$ and $(-1, -1)$.",
@@ -610,6 +615,7 @@ export const combiningGraphTransformationsOfReciprocalFunctions: TopicDef = {
     },
     {
       id: "functions-from-graphs",
+      figure: algebraDrawings2["combining-graph-transformations-of-reciprocal-functions#functions-from-graphs"],
       title: t("The function of a graph", "图象对应的函数"),
       explanation: t(
         "To write $y = \\frac{a}{x - h} + k$ for a graph, read the asymptotes $x = h$ and $y = k$, then find $a$ from one more point $(x, y)$ of the graph: $y - k = \\frac{a}{x - h}$, so $a = (y - k)(x - h)$.\n\nIf the asymptotes are $x = -1$ and $y = 2$ and the graph passes through $(1, \\frac{1}{2})$, then $a = \\left(\\frac{1}{2} - 2\\right)(1 + 1) = -3$:\n\n$$y = -\\frac{3}{x + 1} + 2$$",
@@ -988,6 +994,7 @@ export const findingIntersectionsOfLinesAndReciprocalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "intersections-with-k-over-x",
+      figure: algebraDrawings2["finding-intersections-of-lines-and-reciprocal-functions#intersections-with-k-over-x"],
       title: t("Lines and y = k/x", "直线与 y = k/x"),
       explanation: t(
         "To find where the line $y = x + 1$ meets $y = \\frac{6}{x}$, set the expressions equal and multiply by $x$, which is never $0$ on the graph:\n\n$$\\frac{6}{x} = x + 1 \\implies 6 = x^{2} + x \\implies x^{2} + x - 6 = 0 \\implies (x + 3)(x - 2) = 0$$\n\nAt $x = 2$, $y = 3$; at $x = -3$, $y = -2$. The intersection points are $(2, 3)$ and $(-3, -2)$.",

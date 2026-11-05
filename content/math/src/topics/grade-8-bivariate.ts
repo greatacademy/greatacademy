@@ -1,6 +1,7 @@
 import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, linear, type PlaneMark, Q } from "@ga/subject-math";
+import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choiceProblem, numberProblem, pointProblem, steps, verdictChoice } from "../problems.ts";
 import { lineMark, near, type Pair, type Pt, pearson, plainLine, scatterFigure, shuffledChoice, xsOf } from "./bivariate-statistics.ts";
@@ -204,6 +205,7 @@ export const describingPatternsOfAssociation = topic(
   [
     {
       id: "describing-an-association-in-context",
+      figure: gradeDrawings5["describing-patterns-of-association-in-scatter-plots#describing-an-association-in-context"],
       title: t("Describing an association in context", "结合情境描述关联"),
       explanation: t(
         "Two variables are **associated** when knowing one tells you something about the other. In a scatter plot:\n\n- a **positive association** rises from left to right: items with greater $x$-values tend to have greater $y$-values;\n- a **negative association** falls: items with greater $x$-values tend to have smaller $y$-values;\n- with **no association**, the points show no upward or downward trend.\n\nState an association in the words of the data, with “tend to”: “Students who study longer tend to score higher.” An association is a tendency, not a rule: a student who studied longer than another may still have scored lower.",
@@ -466,6 +468,7 @@ export const assessingTheFitOfATrendLine = topic(
     },
     {
       id: "does-a-line-fit-the-data",
+      figure: gradeDrawings5["informally-assessing-the-fit-of-a-trend-line-to-a-scatter-plot#does-a-line-fit-the-data"],
       title: t("Whether a line fits the data", "直线是否拟合数据"),
       explanation: t(
         "Every scatter plot has a line that fits it best, but that line is a good model only when the data have a **linear** pattern. Before trusting a trend line, check the points:\n\n- they lie close to the line, on both sides of it: the line fits well;\n- they follow a curve, above the line in some places and below it in others: a line does not fit, whichever line is drawn;\n- they are scattered far from the line with no pattern: a line does not fit, and predictions from it would be little better than guesses.",
