@@ -14,6 +14,8 @@ import { abstractAlgebraSubgroupTopics } from "../topics/abstract-algebra-subgro
 import { abstractAlgebraSylowTopics } from "../topics/abstract-algebra-sylow.ts";
 import { combinatoricsTopics } from "../topics/combinatorics.ts";
 import { deeperAbstractAlgebraPoints } from "../topics/deeper-abstract-algebra.ts";
+import { deeperAbstractAlgebraThirdPoints } from "../topics/deeper-abstract-algebra-third.ts";
+import { deeperAbstractAlgebraThird2Points } from "../topics/deeper-abstract-algebra-third-2.ts";
 import { deeperDifferentialEquationsPoints } from "../topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "../topics/deeper-discrete-mathematics.ts";
 import { deeperCollegeThirdPoints } from "../topics/deeper-exam-college-third.ts";
@@ -21,10 +23,19 @@ import { deeperGrade4Points } from "../topics/deeper-grade-4.ts";
 import { deeperGrade4MorePoints } from "../topics/deeper-grade-4-more.ts";
 import { deeperGrade7Points } from "../topics/deeper-grade-7.ts";
 import { deeperLinearAlgebraPoints } from "../topics/deeper-linear-algebra.ts";
+import { deeperLinearAlgebraThirdPoints } from "../topics/deeper-linear-algebra-third.ts";
+import { deeperLinearAlgebraThird2Points } from "../topics/deeper-linear-algebra-third-2.ts";
 import { deeperLinearProgrammingPoints } from "../topics/deeper-linear-programming.ts";
+import { deeperLinearProgrammingThirdPoints } from "../topics/deeper-linear-programming-third.ts";
 import { deeperMethodsOfProofPoints } from "../topics/deeper-methods-of-proof.ts";
+import { deeperMethodsOfProofThirdPoints } from "../topics/deeper-methods-of-proof-third.ts";
+import { deeperMethodsOfProofThird2Points } from "../topics/deeper-methods-of-proof-third-2.ts";
 import { deeperNumberTheoryPoints } from "../topics/deeper-number-theory.ts";
+import { deeperNumberTheoryThirdPoints } from "../topics/deeper-number-theory-third.ts";
 import { deeperPrecalculusPoints } from "../topics/deeper-precalculus.ts";
+import { deeperProbabilityAndStatisticsThirdPoints } from "../topics/deeper-probability-and-statistics-third.ts";
+import { deeperProbabilityAndStatisticsThird2Points } from "../topics/deeper-probability-and-statistics-third-2.ts";
+import { deeperProbabilityAndStatisticsThird3Points } from "../topics/deeper-probability-and-statistics-third-3.ts";
 import { deeperProbabilityStatisticsPoints } from "../topics/deeper-probability-statistics.ts";
 import { deeperRealAnalysisPoints } from "../topics/deeper-real-analysis.ts";
 import { deeperRemainingCollegeThirdPoints } from "../topics/deeper-remaining-college-third.ts";
@@ -157,5 +168,16 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     collegeFigurePoints,
     deeperCollegeThirdPoints,
     deeperRemainingCollegeThirdPoints,
+    deeperLinearAlgebraThirdPoints,
+    deeperLinearAlgebraThird2Points,
+    deeperProbabilityAndStatisticsThirdPoints,
+    deeperProbabilityAndStatisticsThird2Points,
+    deeperProbabilityAndStatisticsThird3Points,
+    deeperMethodsOfProofThirdPoints,
+    deeperMethodsOfProofThird2Points,
+    deeperAbstractAlgebraThirdPoints,
+    deeperAbstractAlgebraThird2Points,
+    deeperNumberTheoryThirdPoints,
+    deeperLinearProgrammingThirdPoints,
   ],
 );

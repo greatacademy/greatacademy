@@ -36,18 +36,29 @@ import { complexAnalysisTopics } from "../topics/complex-analysis.ts";
 import { complexAnalysisExtraTopics } from "../topics/complex-analysis-extra.ts";
 import { complexAnalysisMoreTopics } from "../topics/complex-analysis-more.ts";
 import { deeperCalculusIPoints } from "../topics/deeper-calculus-i.ts";
+import { deeperCalculusIThirdPoints } from "../topics/deeper-calculus-i-third.ts";
+import { deeperCalculusIThird2Points } from "../topics/deeper-calculus-i-third-2.ts";
 import { deeperCalculusIIPoints } from "../topics/deeper-calculus-ii.ts";
+import { deeperCalculusIIThirdPoints } from "../topics/deeper-calculus-ii-third.ts";
+import { deeperCalculusIIThird2Points } from "../topics/deeper-calculus-ii-third-2.ts";
 import { deeperComplexAnalysisPoints } from "../topics/deeper-complex-analysis.ts";
+import { deeperComplexAnalysisThirdPoints } from "../topics/deeper-complex-analysis-third.ts";
 import { deeperDifferentialEquationsPoints } from "../topics/deeper-differential-equations.ts";
+import { deeperDifferentialEquationsThirdPoints } from "../topics/deeper-differential-equations-third.ts";
+import { deeperDifferentialEquationsThird2Points } from "../topics/deeper-differential-equations-third-2.ts";
 import { deeperDiscreteMathematicsPoints } from "../topics/deeper-discrete-mathematics.ts";
 import { deeperMultivariableCalculusPoints } from "../topics/deeper-multivariable-calculus.ts";
+import { deeperMultivariableCalculusThirdPoints } from "../topics/deeper-multivariable-calculus-third.ts";
+import { deeperMultivariableCalculusThird2Points } from "../topics/deeper-multivariable-calculus-third-2.ts";
 import { deeperPartialDifferentialEquationsPoints } from "../topics/deeper-partial-differential-equations.ts";
+import { deeperPartialDifferentialEquationsThirdPoints } from "../topics/deeper-partial-differential-equations-third.ts";
 import { deeperPrecalculusPoints } from "../topics/deeper-precalculus.ts";
 import { deeperPrecalculusThirdPoints } from "../topics/deeper-precalculus-third.ts";
 import { deeperPrecalculusThird2Points } from "../topics/deeper-precalculus-third-2.ts";
 import { deeperPrecalculusThird3Points } from "../topics/deeper-precalculus-third-3.ts";
 import { deeperProbabilityStatisticsPoints } from "../topics/deeper-probability-statistics.ts";
 import { deeperRealAnalysisPoints } from "../topics/deeper-real-analysis.ts";
+import { deeperRealAnalysisThirdPoints } from "../topics/deeper-real-analysis-third.ts";
 import { deeperRemainingCalculusThirdPoints } from "../topics/deeper-remaining-third.ts";
 import { differentialEquationsBvpTopics } from "../topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "../topics/differential-equations-first-order.ts";
@@ -167,13 +178,24 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     deeperDiscreteMathematicsPoints,
     deeperMultivariableCalculusPoints,
     deeperPrecalculusPoints,
-    deeperPrecalculusThirdPoints,
-    deeperPrecalculusThird2Points,
-    deeperPrecalculusThird3Points,
     deeperProbabilityStatisticsPoints,
-    deeperRemainingCalculusThirdPoints,
     figureReadingPoints,
     moreFigureReadingPoints,
     collegeFigurePoints,
+    deeperCalculusIThirdPoints,
+    deeperCalculusIThird2Points,
+    deeperCalculusIIThirdPoints,
+    deeperCalculusIIThird2Points,
+    deeperDifferentialEquationsThirdPoints,
+    deeperDifferentialEquationsThird2Points,
+    deeperPrecalculusThirdPoints,
+    deeperPrecalculusThird2Points,
+    deeperMultivariableCalculusThirdPoints,
+    deeperPrecalculusThird3Points,
+    deeperMultivariableCalculusThird2Points,
+    deeperRemainingCalculusThirdPoints,
+    deeperRealAnalysisThirdPoints,
+    deeperComplexAnalysisThirdPoints,
+    deeperPartialDifferentialEquationsThirdPoints,
   ],
 );
