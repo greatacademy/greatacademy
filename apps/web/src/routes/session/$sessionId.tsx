@@ -7,6 +7,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Explanation, FigureView } from "../../components/Figure.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
+import { PlotField } from "../../components/PlotField.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
@@ -179,7 +180,7 @@ function QuestionFlow({
     <div className="space-y-4">
       <Card className="space-y-6">
         {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
-        <ProblemPrompt problem={question.problem} />
+        <ProblemPrompt problem={question.problem} answering />
         <AnswerInput
           problem={question.problem}
           value={pending ? pending.response : response}
@@ -332,6 +333,19 @@ function AnswerInput({
           })}
           {!disabled && <p className="text-xs text-muted sm:col-span-2">{m.choiceHint}</p>}
         </div>
+      );
+    case "plot":
+      return (
+        <PlotField
+          key={tx(problem?.prompt)}
+          input={input.value}
+          figure={problem?.figure}
+          value={value}
+          onChange={onChange}
+          onSubmit={onSubmit}
+          disabled={disabled}
+          answer={feedback && !feedback.correct ? feedback.answer : undefined}
+        />
       );
     case "math":
       return (

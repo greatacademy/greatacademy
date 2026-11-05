@@ -5,12 +5,14 @@ import { FigureView } from "./Figure.tsx";
 import { Markdown, Tex } from "./Markdown.tsx";
 
 /** ProblemPrompt shows a problem's prompt and its drawing. */
-export function ProblemPrompt({ problem }: { problem?: ProblemView }) {
+export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; answering?: boolean }) {
   const { tx } = useI18n();
+  // While a plot is being answered, its drawing is the input itself.
+  const figure = answering && problem?.input?.kind.case === "plot" ? undefined : problem?.figure;
   return (
     <div className="space-y-4">
       <Markdown source={tx(problem?.prompt)} className="text-lg" />
-      <FigureView figure={problem?.figure} />
+      <FigureView figure={figure} />
     </div>
   );
 }
@@ -29,5 +31,6 @@ export function AnswerText({ problem, answer }: { problem?: ProblemView; answer:
     );
   }
   if (input?.case === "math") return <Tex tex={[input.value.prefix, answer, input.value.suffix].filter(Boolean).join(" ")} />;
+  if (input?.case === "plot") return <Tex tex={answer.replaceAll(";", ";\\;")} />;
   return <span>{answer}</span>;
 }
