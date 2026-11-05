@@ -1176,7 +1176,7 @@ export const linesOfSymmetry = topic(
               { kind: "polygon", points: pts },
               { kind: "segment", a: line[0], b: line[1], dashed: true, accent: true },
             ],
-            `A ${f.name.en} with a dashed line drawn across it.`,
+            `${/^[aeiou]/.test(f.name.en) ? "An" : "A"} ${f.name.en} with a dashed line drawn across it.`,
             `一个${f.name["zh-CN"]}，上面画了一条虚线。`,
           ),
         };
@@ -1272,7 +1272,7 @@ export const volumesOfRectangularPrismsWithFractionalEdgeLengths = topic(
           form: "integer",
           wrong: [v, v.mul(Q.of(n)), Q.of(count, n)],
           solution: t(
-            `Along each edge, ${n} cubes fit in every ${u}: ${[l, w, h].map((e) => `$${mixedLatex(e)} \\times ${n} = ${e.mul(Q.of(n)).toLatex()}$`).join(", ")}. So the number of cubes is${steps(`${a} \\times ${b} \\times ${c} = ${count}`)}Check: $${count} \\times \\frac{1}{${n ** 3}} = ${result(v)}$, the volume $${product([l, w, h], false)}$.`,
+            `Along each edge, ${n} cubes fit in every $1$ ${u}: ${[l, w, h].map((e) => `$${mixedLatex(e)} \\times ${n} = ${e.mul(Q.of(n)).toLatex()}$`).join(", ")}. So the number of cubes is${steps(`${a} \\times ${b} \\times ${c} = ${count}`)}Check: $${count} \\times \\frac{1}{${n ** 3}} = ${result(v)}$, the volume $${product([l, w, h], false)}$.`,
             `沿每条棱，每 1 ${u} 能放 ${n} 个正方体：${[l, w, h].map((e) => `$${mixedLatex(e)} \\times ${n} = ${e.mul(Q.of(n)).toLatex()}$`).join("，")}。所以正方体的个数是${steps(`${a} \\times ${b} \\times ${c} = ${count}`)}检验：$${count} \\times \\frac{1}{${n ** 3}} = ${result(v)}$，正好是体积 $${product([l, w, h], false)}$。`,
           ),
         });

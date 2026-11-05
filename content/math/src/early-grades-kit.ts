@@ -87,8 +87,8 @@ export function countersFigure(n: number, perRow = 5, accented = 0): Figure {
   return {
     svg: svgDocument(rows * 26 + 10, body),
     alt: t(
-      `Counters in ${Math.floor(n / perRow)} full ${Math.floor(n / perRow) === 1 ? "row" : "rows"} of ${perRow}${n % perRow === 0 ? "" : `, with ${n % perRow} more in the last row`}.`,
-      `圆片排成 ${Math.floor(n / perRow)} 个整行，每行 ${perRow} 个${n % perRow === 0 ? "" : `，最后一行还有 ${n % perRow} 个`}。`,
+      accented ? "Counters set out in rows, some of them filled in." : "Counters set out in rows.",
+      accented ? "圆片一行行地排着，其中一些涂了颜色。" : "圆片一行行地排着。",
     ),
   };
 }
@@ -102,7 +102,7 @@ export function arrayFigure(rows: number, columns: number): Figure {
   }
   return {
     svg: svgDocument(rows * gap + 12, body),
-    alt: t(`An array of dots with ${rows} rows and ${columns} columns.`, `一个点阵，共 ${rows} 行 ${columns} 列。`),
+    alt: t("An array of dots set out in rows and columns.", "一个按行和列排好的点阵。"),
   };
 }
 
@@ -126,8 +126,8 @@ export function baseTenFigure(hundreds: number, tens: number, ones: number): Fig
   return {
     svg: svgDocument(70, body),
     alt: t(
-      `Base-ten blocks: ${hundreds} hundreds, ${tens} tens and ${ones} ones.`,
-      `十进制积木：${hundreds} 个百、${tens} 个十和 ${ones} 个一。`,
+      "Base-ten blocks: large squares are hundreds, rods are tens and small squares are ones.",
+      "十进制积木：大方块是百，长条是十，小方块是一。",
     ),
   };
 }
@@ -175,10 +175,7 @@ export function barGraphFigure(labels: readonly string[], values: readonly numbe
   });
   return {
     svg: svgDocument(height + 34, body),
-    alt: t(
-      `A bar graph with bars ${labels.join(", ")} of heights ${values.join(", ")}.`,
-      `条形图，条 ${labels.join("、")} 的高度分别是 ${values.join("、")}。`,
-    ),
+    alt: t(`A bar graph with bars ${labels.join(", ")} and a scale at the side.`, `条形图，有条 ${labels.join("、")}，旁边有刻度。`),
   };
 }
 
@@ -193,8 +190,8 @@ export function pictureGraphFigure(labels: readonly string[], values: readonly n
   return {
     svg: svgDocument(values.length * 28 + 10, body),
     alt: t(
-      `A picture graph with rows ${labels.join(", ")}. Each dot stands for ${per}. The rows stand for ${values.join(", ")}.`,
-      `象形统计图，各行是 ${labels.join("、")}。每个点代表 ${per}。各行分别代表 ${values.join("、")}。`,
+      `A picture graph with rows ${labels.join(", ")}. Each dot stands for ${per}.`,
+      `象形统计图，各行是 ${labels.join("、")}。每个点代表 ${per}。`,
     ),
   };
 }
@@ -212,11 +209,9 @@ export function gridFigure(rows: number, columns: number, shaded = rows * column
     svg: svgDocument(rows * size + 12, body),
     alt: t(
       shaded === rows * columns
-        ? `A rectangle cut into ${rows} rows of ${columns} equal squares, all shaded.`
-        : `A rectangle cut into ${rows} rows of ${columns} equal squares, ${shaded} of them shaded.`,
-      shaded === rows * columns
-        ? `一个长方形，分成 ${rows} 行，每行 ${columns} 个相同的方格，全部涂色。`
-        : `一个长方形，分成 ${rows} 行，每行 ${columns} 个相同的方格，其中 ${shaded} 个涂色。`,
+        ? "A rectangle cut into equal squares, all shaded."
+        : "A rectangle cut into equal squares, some of them shaded.",
+      shaded === rows * columns ? "一个长方形，分成相同的方格，全部涂色。" : "一个长方形，分成相同的方格，其中一些涂色。",
     ),
   };
 }
@@ -288,8 +283,8 @@ export function tenFramesFigure(first: number, second = 0): Figure {
   return {
     svg: svgDocument(2 * cell + 12, body),
     alt: t(
-      `Ten-frames with ${first} filled counters${second ? ` and ${second} hollow counters` : ""}.`,
-      `十格框，里面有 ${first} 个实心圆片${second ? `和 ${second} 个空心圆片` : ""}。`,
+      second ? "Ten-frames holding filled counters and hollow counters." : "A ten-frame holding filled counters.",
+      second ? "十格框，里面有实心圆片和空心圆片。" : "十格框，里面有实心圆片。",
     ),
   };
 }
@@ -313,10 +308,7 @@ export function tallyFigure(labels: readonly string[], values: readonly number[]
   });
   return {
     svg: svgDocument(values.length * 30 + 6, body),
-    alt: t(
-      `A tally chart with rows ${labels.join(", ")}, showing ${values.join(", ")} marks.`,
-      `计数表，各行是 ${labels.join("、")}，分别有 ${values.join("、")} 个记号。`,
-    ),
+    alt: t(`A tally chart with rows ${labels.join(", ")}.`, `计数表，各行是 ${labels.join("、")}。`),
   };
 }
 
@@ -398,10 +390,7 @@ export function slicedCircleFigure(parts: number, shaded: number): Figure {
   for (let i = 0; i < parts; i++) body += `<path d="M ${cx} ${cy} L ${at(i)}"/>`;
   return {
     svg: svgDocument(140, body),
-    alt: t(
-      `A circle cut into ${parts} equal slices, ${shaded} of them shaded.`,
-      `一个圆被平均分成 ${parts} 份，其中 ${shaded} 份涂了颜色。`,
-    ),
+    alt: t("A circle cut into equal slices, some of them shaded.", "一个圆被平均分成几份，其中一些涂了颜色。"),
   };
 }
 

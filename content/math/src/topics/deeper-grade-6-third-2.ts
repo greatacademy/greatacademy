@@ -201,8 +201,8 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
           v.mul(Q.of(times)),
           [v.mul(Q.of(2)), v.mul(Q.of(4)), v.mul(Q.of(8)), v.mul(Q.of(6))],
           [
-            `Each doubled edge doubles the volume, so it is multiplied by $${times}$: $${frac(a * d + n, d)} \\times ${times}$.`,
-            `每条加倍的棱使体积翻一倍，所以乘 $${times}$：$${frac(a * d + n, d)} \\times ${times}$。`,
+            `Each doubled edge doubles the volume, so it is multiplied by $${times}$: $${frac(a * d + n, d)} \\times ${times} = ${v.mul(Q.of(times)).toLatex()}$.`,
+            `每条加倍的棱使体积翻一倍，所以乘 $${times}$：$${frac(a * d + n, d)} \\times ${times} = ${v.mul(Q.of(times)).toLatex()}$。`,
           ],
         );
       },
@@ -234,8 +234,8 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
           base.mul(gap),
           [base.mul(Q.of(h)), base.mul(depth), base],
           [
-            `The empty height is $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ ft, and $${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)}$ gives the volume.`,
-            `空着的高度是 $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ 英尺，$${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)}$ 就是所求的体积。`,
+            `The empty height is $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ ft, and $${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)} = ${base.mul(gap).toLatex()}$ gives the volume.`,
+            `空着的高度是 $${h} - ${low}${frac(1, 2)} = ${frac(2 * b + 1, 2)}$ 英尺，$${l} \\times ${frac(2 * a + 1, 2)} \\times ${frac(2 * b + 1, 2)} = ${base.mul(gap).toLatex()}$ 就是所求的体积。`,
           ],
         );
       },

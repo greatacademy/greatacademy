@@ -245,7 +245,7 @@ const countingOnByTens = earlyTopic(
           answer,
           [answer + 1, answer - 1, start + 4 * d, start + 2 * d + (up ? 1 : -1)],
           [
-            `Each number is 10 ${up ? "more" : "less"} than the one before it, and ${shown[2]} ${up ? "+" : "-"} 10 is ${answer}.`,
+            `Each number is 10 ${up ? "more" : "less"} than the one before it, and $${shown[2]} ${up ? "+" : "-"} 10 = ${answer}$.`,
             `每个数都比前一个数${up ? "多" : "少"} 10，$${shown[2]} ${up ? "+" : "-"} 10 = ${answer}$。`,
           ],
         );
@@ -1262,8 +1262,8 @@ const storiesAsNumberSentences = earlyTopic(
           ? chooseMath(
               rng,
               [
-                `${name} has ${a} ${thing.en} and gets ${b} more. How many ${thing.en} does ${name} have now?`,
-                `${name} 有 ${a} ${thing.unit}${thing.zh}，又得到 ${b} ${thing.unit}。${name} 现在有多少${thing.unit}${thing.zh}？`,
+                `${name} has ${a} ${thing.en} and gets ${b} more. Which number sentence shows how many ${name} has now?`,
+                `${name} 有 ${a} ${thing.unit}${thing.zh}，又得到 ${b} ${thing.unit}。哪个算式能表示 ${name} 现在有多少${thing.unit}？`,
               ],
               `${a} + ${b} = \\square`,
               [`${a} - ${b} = \\square`, `${a} + \\square = ${b}`, `\\square - ${a} = ${b + 1}`],
@@ -1272,8 +1272,8 @@ const storiesAsNumberSentences = earlyTopic(
           : chooseMath(
               rng,
               [
-                `${name} has ${a} ${thing.en} and gets some more. Now ${name} has ${c}. How many did ${name} get?`,
-                `${name} 有 ${a} ${thing.unit}${thing.zh}，又得到一些，现在有 ${c} ${thing.unit}。${name} 得到了多少${thing.unit}？`,
+                `${name} has ${a} ${thing.en} and gets some more. Now ${name} has ${c}. Which number sentence tells this story?`,
+                `${name} 有 ${a} ${thing.unit}${thing.zh}，又得到一些，现在有 ${c} ${thing.unit}。哪个算式与这个故事相符？`,
               ],
               `${a} + \\square = ${c}`,
               [`${a} + ${c} = \\square`, `\\square + ${c} = ${a}`, `${c} + \\square = ${a}`],
@@ -1302,8 +1302,8 @@ const storiesAsNumberSentences = earlyTopic(
           return chooseMath(
             rng,
             [
-              `${name} has ${c} ${thing.en} and gives away ${b}. How many are left?`,
-              `${name} 有 ${c} ${thing.unit}${thing.zh}，送出去 ${b} ${thing.unit}。还剩多少${thing.unit}？`,
+              `${name} has ${c} ${thing.en} and gives away ${b}. Which number sentence shows how many are left?`,
+              `${name} 有 ${c} ${thing.unit}${thing.zh}，送出去 ${b} ${thing.unit}。哪个算式能表示还剩多少${thing.unit}？`,
             ],
             `${c} - ${b} = \\square`,
             [`${c} + ${b} = \\square`, `${b} - ${c} = \\square`, `\\square - ${c} = ${b}`],
@@ -1313,8 +1313,8 @@ const storiesAsNumberSentences = earlyTopic(
           return chooseMath(
             rng,
             [
-              `${name} has ${c} ${thing.en} and gives some away. Now ${left} are left. How many did ${name} give away?`,
-              `${name} 有 ${c} ${thing.unit}${thing.zh}，送出去一些，还剩 ${left} ${thing.unit}。送出去多少${thing.unit}？`,
+              `${name} has ${c} ${thing.en} and gives some away. Now ${left} are left. Which number sentence tells this story?`,
+              `${name} 有 ${c} ${thing.unit}${thing.zh}，送出去一些，还剩 ${left} ${thing.unit}。哪个算式与这个故事相符？`,
             ],
             `${c} - \\square = ${left}`,
             [`${c} + ${left} = \\square`, `${left} - \\square = ${c}`, `\\square - ${c} = ${left}`],
@@ -1323,8 +1323,8 @@ const storiesAsNumberSentences = earlyTopic(
         return chooseMath(
           rng,
           [
-            `${name} had some ${thing.en} and gave away ${b}. Now ${left} are left. How many did ${name} have at first?`,
-            `${name} 原来有一些${thing.zh}，送出去 ${b} ${thing.unit}，还剩 ${left} ${thing.unit}。原来有多少${thing.unit}？`,
+            `${name} had some ${thing.en} and gave away ${b}. Now ${left} are left. Which number sentence tells this story?`,
+            `${name} 原来有一些${thing.zh}，送出去 ${b} ${thing.unit}，还剩 ${left} ${thing.unit}。哪个算式与这个故事相符？`,
           ],
           `\\square - ${b} = ${left}`,
           [`${b} - ${left} = \\square`, `${left} - ${b} = \\square`, `\\square + ${b} = ${left}`],
@@ -1348,8 +1348,8 @@ const storiesAsNumberSentences = earlyTopic(
         return chooseMath(
           rng,
           [
-            `${p} has ${big} ${thing.en} and ${q} has ${small}. How many more does ${p} have than ${q}?`,
-            `${p} 有 ${big} ${thing.unit}${thing.zh}，${q} 有 ${small} ${thing.unit}。${p} 比 ${q} 多多少${thing.unit}？`,
+            `${p} has ${big} ${thing.en} and ${q} has ${small}. Which number sentence shows how many more ${p} has than ${q}?`,
+            `${p} 有 ${big} ${thing.unit}${thing.zh}，${q} 有 ${small} ${thing.unit}。哪个算式能表示 ${p} 比 ${q} 多多少${thing.unit}？`,
           ],
           right,
           [`${big} + ${small} = \\square`, `${small} - ${big} = \\square`, `${big} + \\square = ${small}`],
@@ -1950,7 +1950,7 @@ const digitalClocks = earlyTopic(
       "where-the-hands-are-at-a-digital-time",
       ["Where the hands are at a digital time", "电子钟的时间对应的指针位置"],
       [
-        "You can picture the hands from a digital time. At 7:00, the long hand points to 12 and the short hand points exactly at 7. At 7:30, the long hand points to 6, and the short hand has moved halfway from 7 to 8. Both hands move all the time, so it does not stay on the number.",
+        "You can picture the hands from a digital time. At 7:00, the long hand points to 12 and the short hand points exactly at 7. At 7:30, the long hand points to 6, and the short hand has moved halfway from 7 to 8. Both hands keep moving, so the short hand does not stay on the 7.",
         "看电子钟的时间，可以想出指针的位置。7:00 时，长针指着 12，短针正好指着 7。7:30 时，长针指着 6，短针走到 7 和 8 的中间。两根针一直在走，所以短针不会停在数字上。",
       ],
       (rng) => {

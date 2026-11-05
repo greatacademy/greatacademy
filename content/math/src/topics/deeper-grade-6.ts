@@ -256,7 +256,7 @@ const leftoverAfterFilling: KnowledgePointDef = {
       answer,
       wrong: [Q.of(count), size.sub(answer), answer.div(size), answer.add(Q.of(1)), total.sub(size)],
       solution: t(
-        `The bottles fill ${count} times, since $${count} \\times ${mixedLatex(size)} = ${mixedLatex(size.mul(Q.of(count)))}$ fits but one more does not. The rest is $${mixedLatex(total)} - ${mixedLatex(size.mul(Q.of(count)))} = ${mixedLatex(answer)}$.`,
+        `It fills ${count} bottles, since $${count} \\times ${mixedLatex(size)} = ${mixedLatex(size.mul(Q.of(count)))}$ fits but one more does not. The rest is $${mixedLatex(total)} - ${mixedLatex(size.mul(Q.of(count)))} = ${mixedLatex(answer)}$.`,
         `能装满 ${count} 瓶，因为 $${count} \\times ${mixedLatex(size)} = ${mixedLatex(size.mul(Q.of(count)))}$ 够装，再多一瓶就不够。剩下 $${mixedLatex(total)} - ${mixedLatex(size.mul(Q.of(count)))} = ${mixedLatex(answer)}$。`,
       ),
     });
@@ -300,8 +300,9 @@ const halfwayPoint: KnowledgePointDef = {
   ),
   generate(rng) {
     const d = rng.pick([2, 3, 4, 5, 6]);
-    const low = Q.of(-rng.int(1, 12), d);
-    const high = Q.of(rng.int(1, 12), d);
+    const lowTop = rng.int(1, 12);
+    const low = Q.of(-lowTop, d);
+    const high = Q.of(((lowTop + rng.int(0, 10)) % 12) + 1, d);
     const answer = low.add(high).div(Q.of(2));
     const gap = high.sub(low);
     return numberProblem({

@@ -76,7 +76,7 @@ export const deeperGrade3ThirdPoints: Readonly<Record<string, readonly Knowledge
           [
             line(b, a),
             [`${a} bags and ${b} more ${thing.en}`, `${a} 个袋子，另外还有 ${b} 个${thing.zh}`],
-            [`${a + b} bags with a single one of the ${thing.en} in each bag`, `${a + b} 个袋子，每袋 1 个${thing.zh}`],
+            [`${a + b} bags with just 1 in each bag`, `${a + b} 个袋子，每袋 1 个${thing.zh}`],
           ],
           [
             `Read as ${a} groups of ${b}, there are ${a} bags and ${b} in each. Swapping them gives the same total but tells a different story.`,
@@ -1009,9 +1009,9 @@ export const deeperGrade3ThirdPoints: Readonly<Record<string, readonly Knowledge
         const kinds: readonly [Pair, number][] = [
           [["equilateral triangle", "等边三角形"], 3],
           [["square", "正方形"], 4],
-          [["regular pentagon", "正五边形"], 5],
-          [["regular hexagon", "正六边形"], 6],
-          [["regular octagon", "正八边形"], 8],
+          [["pentagon with all sides equal", "各边相等的五边形"], 5],
+          [["hexagon with all sides equal", "各边相等的六边形"], 6],
+          [["octagon with all sides equal", "各边相等的八边形"], 8],
         ];
         const [name, n] = rng.pick(kinds);
         const s = rng.int(2, 12);

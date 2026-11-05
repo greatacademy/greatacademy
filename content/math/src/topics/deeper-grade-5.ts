@@ -185,7 +185,10 @@ const digitsOfProduct: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [answer === 5 ? 6 : 5, 4, 7, 9],
-      solution: t(`The product is ${product}, which has ${answer} digits.`, `积是 ${product}，有 ${answer} 位。`),
+      solution: t(
+        `The product is $${String(product).replace(/\\B(?=(\\d{3})+$)/g, "{,}")}$, which has ${answer} digits.`,
+        `积是 $${String(product).replace(/\\B(?=(\\d{3})+$)/g, "{,}")}$，有 ${answer} 位。`,
+      ),
     });
   },
 };

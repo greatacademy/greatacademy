@@ -172,7 +172,7 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
         const { who, thing } = storyThing(rng);
         return whole(
           [
-            `${who} has ${have * 10} ${thing.en} and wants ${(have + more) * 10}. ${thing.en} come in bags of 10. How many more bags does ${who} need?`,
+            `${who} has ${have * 10} ${thing.en} and wants ${(have + more) * 10}. They come in bags of 10. How many more bags does ${who} need?`,
             `${who} 有 ${have * 10} 个${thing.zh}，想要 ${(have + more) * 10} 个。${thing.zh}每袋 10 个。${who} 还需要几袋？`,
           ],
           more,
@@ -319,8 +319,8 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
           2 * a + 2,
           [2 * a, 2 * a + 4, 2 * a + 1],
           [
-            `${x} + ${y} is the same as ${a + 1} + ${a + 1}, and that double is ${2 * a + 2}.`,
-            `${x} + ${y} 等于 ${a + 1} + ${a + 1}，这个双倍是 ${2 * a + 2}。`,
+            `Take 1 from the larger and give it to the smaller: $${x} + ${y} = ${a + 1} + ${a + 1}$, and that double is ${2 * a + 2}.`,
+            `从大的数拿 1 给小的数：$${x} + ${y} = ${a + 1} + ${a + 1}$，这个双倍是 ${2 * a + 2}。`,
           ],
         );
       },
@@ -441,8 +441,8 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
           b + c,
           [Math.abs(c - b), c, b + c + 1],
           [
-            `The box is the whole, and ${b} and ${c} are its parts, so it is ${b} + ${c} = ${b + c}. Check: $${b + c} - ${b} = ${c}$.`,
-            `方框是整体，${b} 和 ${c} 是它的两部分，所以是 ${b} + ${c} = ${b + c}。验算：$${b + c} - ${b} = ${c}$。`,
+            `The box is the whole, and ${b} and ${c} are its parts, so it is $${b} + ${c} = ${b + c}$. Check: $${b + c} - ${b} = ${c}$.`,
+            `方框是整体，${b} 和 ${c} 是它的两部分，所以是 $${b} + ${c} = ${b + c}$。验算：$${b + c} - ${b} = ${c}$。`,
           ],
         );
       },
@@ -493,8 +493,8 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
           `${a} + ${b} = \\square`,
           [`${a} - ${b} = \\square`, `${a} + \\square = ${b}`, `\\square - ${b} = ${a}`],
           [
-            `Getting more joins ${b} to the ${a} already there, so the total is ${a} + ${b}.`,
-            `又得到一些，就是把 ${b} 和原有的 ${a} 合起来，所以总数是 ${a} + ${b}。`,
+            `Getting more joins ${b} to the ${a} already there, so the total is $${a} + ${b}$.`,
+            `又得到一些，就是把 ${b} 和原有的 ${a} 合起来，所以总数是 $${a} + ${b}$。`,
           ],
         );
       },
@@ -521,8 +521,8 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
           `${a} - ${b} = \\square`,
           [`${a} + ${b} = \\square`, `${b} - ${a} = \\square`, `\\square + ${a} = ${b}`],
           [
-            `${who} starts with the whole, ${a}, and ${b} leave, so what remains is ${a} - ${b}.`,
-            `${who} 先有全部 ${a} 个，送出 ${b} 个，所以剩下的是 ${a} - ${b}。`,
+            `${who} starts with the whole, ${a}, and ${b} leave, so what remains is $${a} - ${b}$.`,
+            `${who} 先有全部 ${a} 个，送出 ${b} 个，所以剩下的是 $${a} - ${b}$。`,
           ],
         );
       },
@@ -1019,7 +1019,7 @@ export const deeperGrade1ThirdPoints: Readonly<Record<string, readonly Knowledge
         const k = rng.int(2, 10);
         return whole(
           [
-            `It takes 2 ${piece[0]} to make one of the ${big[0]}. How many ${piece[0]} does it take to make ${k} of the ${big[0]}?`,
+            `Each of the ${big[0]} takes 2 ${piece[0]}. How many ${piece[0]} do ${k} ${big[0]} take?`,
             `2 个${piece[1]}能拼成 1 个${big[1]}。拼 ${k} 个${big[1]}需要多少个${piece[1]}？`,
           ],
           2 * k,

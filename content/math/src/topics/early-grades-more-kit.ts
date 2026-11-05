@@ -232,10 +232,7 @@ export function measuredBarsFigure(labels: readonly string[], ways: readonly Bar
   });
   return {
     svg: svgDocument(ways.length * 48 + 6, body),
-    alt: t(
-      `Rows ${labels.join(", ")}, each showing a bar with small blocks laid under it.`,
-      `${labels.join("、")} 几行，每行有一个长条，下面摆着小方块。`,
-    ),
+    alt: t("A bar with small blocks laid under it, in each row.", "每行有一个长条，下面摆着小方块。"),
   };
 }
 
@@ -362,11 +359,15 @@ export function blockRowsFigure(rows: readonly (readonly [number, number, number
       body += `<rect x="${x + c * 10}" y="${top + 40 - (i % 5) * 10}" width="7" height="7" ${accent}/>`;
     }
   });
-  const say = (zh: boolean) =>
-    rows
-      .map(([h, n, o]) => (zh ? `${h ? `${h} 个百、` : ""}${n} 个十和 ${o} 个一` : `${h ? `${h} hundreds, ` : ""}${n} tens and ${o} ones`))
-      .join(zh ? "；" : "; ");
-  return { svg: svgDocument(rows.length * 54 + 6, body), alt: t(`Base-ten blocks: ${say(false)}.`, `十进制积木：${say(true)}。`) };
+  const alt = t(
+    rows.length === 1
+      ? "Base-ten blocks: large squares are hundreds, rods are tens and small squares are ones."
+      : `${rows.length} rows of base-ten blocks: large squares are hundreds, rods are tens and small squares are ones.`,
+    rows.length === 1
+      ? "十进制积木：大方块是百，长条是十，小方块是一。"
+      : `${rows.length} 行十进制积木：大方块是百，长条是十，小方块是一。`,
+  );
+  return { svg: svgDocument(rows.length * 54 + 6, body), alt };
 }
 
 /** digitalClockFigure draws a digital clock showing a time. */
@@ -639,8 +640,8 @@ export function fractionLineFigure(wholes: number, d: number, mark?: number, lab
   return {
     svg: svgDocument(labelTicks ? 60 : 56, fractionLineRow(wholes, d, 22, mark, labelTicks, false)),
     alt: t(
-      `A number line from 0 to ${wholes}, with ${d} equal spaces in each whole${mark === undefined ? "" : `, and a point ${mark} spaces from 0`}.`,
-      `一条从 0 到 ${wholes} 的数轴，每个整数之间平均分成 ${d} 格${mark === undefined ? "" : `，离 0 ${mark} 格的地方有一个点`}。`,
+      `A number line from 0 to ${wholes}, with equal spaces in each whole${mark === undefined ? "" : ", and one marked point"}.`,
+      `一条从 0 到 ${wholes} 的数轴，每个整数之间平均分成若干格${mark === undefined ? "" : "，上面有一个点"}。`,
     ),
   };
 }

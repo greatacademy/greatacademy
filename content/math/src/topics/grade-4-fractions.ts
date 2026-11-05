@@ -123,8 +123,8 @@ export function barFigure(d: number, shaded: number, count = 1): Figure {
   return {
     svg: barsSvg(d, shaded, count),
     alt: t(
-      `${count === 1 ? "A bar cut" : `${count} equal bars, each cut`} into ${d} equal parts; ${shaded} part${shaded === 1 ? " is" : "s are"} shaded.`,
-      `${count === 1 ? "一个长条，平均分成" : `${count} 个同样的长条，每个都平均分成`} ${d} 份，其中 ${shaded} 份涂了颜色。`,
+      `${count === 1 ? "A bar cut" : "Equal bars, each cut"} into equal parts, some of them shaded.`,
+      `${count === 1 ? "一个长条，平均分成" : "几个同样的长条，每个都平均分成"}几份，其中一些涂了颜色。`,
     ),
   };
 }
@@ -145,8 +145,8 @@ export function twoBarsFigure(d1: number, s1: number, d2: number, s2: number): F
   return {
     svg: svgDocument(2 * (h + 14) + 4, body),
     alt: t(
-      `Two bars of the same size: the first is cut into ${d1} equal parts with ${s1} shaded, the second into ${d2} equal parts with ${s2} shaded.`,
-      `两个同样大的长条：第一个平均分成 ${d1} 份，涂色 ${s1} 份；第二个平均分成 ${d2} 份，涂色 ${s2} 份。`,
+      "Two bars of the same size, each cut into equal parts, with some parts of each shaded.",
+      "两个同样大的长条，每个都平均分成几份，各有一些涂了颜色。",
     ),
   };
 }
@@ -240,8 +240,8 @@ const amounts: readonly Amount[] = [
     unit: t("miles", "英里"),
     first: (n, v) => t(`${n} walked ${v} mile in the morning`, `${n} 上午走了 ${v} 英里`),
     second: (_n, v) => t(`and ${v} mile in the afternoon.`, `下午走了 ${v} 英里。`),
-    together: t("How many miles did they walk in all?", "一共走了多少英里？"),
-    difference: t("How many more miles did they walk in the morning than in the afternoon?", "上午比下午多走了多少英里？"),
+    together: t("How many miles is that in all?", "一共走了多少英里？"),
+    difference: t("How many more miles were walked in the morning than in the afternoon?", "上午比下午多走了多少英里？"),
   },
   {
     unit: t("cups", "杯"),
@@ -254,8 +254,8 @@ const amounts: readonly Amount[] = [
     unit: t("hours", "小时"),
     first: (n, v) => t(`${n} read for ${v} hour on Saturday`, `${n} 星期六读了 ${v} 小时书`),
     second: (_n, v) => t(`and ${v} hour on Sunday.`, `星期日读了 ${v} 小时书。`),
-    together: t("How many hours did they read in all?", "一共读了多少小时？"),
-    difference: t("How many more hours did they read on Saturday than on Sunday?", "星期六比星期日多读了多少小时？"),
+    together: t("How many hours of reading is that in all?", "一共读了多少小时？"),
+    difference: t("How many more hours of reading were there on Saturday than on Sunday?", "星期六比星期日多读了多少小时？"),
   },
   {
     unit: t("liters", "升"),
@@ -2105,8 +2105,7 @@ function mixedPair(rng: Rng, op: "add" | "addRegroup" | "sub" | "subBorrow"): Mi
     if (op === "add" && r1 + r2 < d && gcd(r1 + r2, d) === 1) return { w1, r1, w2, r2, d };
     if (op === "addRegroup" && r1 + r2 > d && gcd(r1 + r2 - d, d) === 1) return { w1, r1, w2, r2, d };
     if (op === "sub" && w1 > w2 && r1 > r2 && gcd(r1 - r2, d) === 1) return { w1, r1, w2, r2, d };
-    if (op === "subBorrow" && w1 > w2 + 0 && w1 >= 2 && r1 < r2 && gcd(d + r1 - r2, d) === 1)
-      return { w1, r1, w2: Math.min(w2, w1 - 1), r2, d };
+    if (op === "subBorrow" && w1 >= w2 + 2 && r1 < r2 && gcd(d + r1 - r2, d) === 1) return { w1, r1, w2, r2, d };
   }
 }
 
@@ -2362,7 +2361,7 @@ function mixedWordKP(id: string, subtract: boolean, regroup: boolean): Knowledge
         form: "mixed",
         wrong: subtract
           ? [a.add(b), mixedValue(p.w1 - p.w2, Math.abs(p.r1 - p.r2), p.d)]
-          : [mixedValue(p.w1 + p.w2, p.r1 + p.r2 - (regroup ? p.d : 0), p.d), a.sub(b)],
+          : [mixedValue(p.w1 + p.w2, p.r1 + p.r2 - (regroup ? p.d : 0), p.d), a.sub(b).abs()],
         solution: t(
           `$${x} ${subtract ? "-" : "+"} ${y} = ${mixedLatex(value)}$.`,
           `$${x} ${subtract ? "-" : "+"} ${y} = ${mixedLatex(value)}$。`,

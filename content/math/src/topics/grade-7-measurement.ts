@@ -760,6 +760,7 @@ export const compositeShapesWithCircles = topic(
               `一个半径为 $${lenTex(r, unit)}$ 的${inner["zh-CN"]}位于边长 $${lenTex(s, unit)}$ 的${outer["zh-CN"]}内。取 $\\pi$ 为 $3.14$，求${outer["zh-CN"]}在${inner["zh-CN"]}之外部分的面积。`,
             ),
             answer: left,
+            form: "decimal",
             unit: `${unit}^2`,
             // Subtracting the circumference, and squaring the diameter.
             wrong: [Q.of(s * s).sub(piQ.mul(Q.of(2 * r))), Q.of(s * s).sub(piQ.mul(Q.of(4 * r * r))), circle].filter((w) => w.sign() > 0),

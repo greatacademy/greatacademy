@@ -153,7 +153,7 @@ function largerKPs(prefix: string, conversions: readonly Conversion[], example: 
           form: "mixed",
           wrong: [Q.of(q), r < 10 ? Q.of(q).add(Q.of(r, 10)) : Q.of(q, c.factor), Q.of(q).add(Q.of(1, r))],
           solution: t(
-            `$${tex(total)} \\div ${c.factor} = ${q}$ R ${r}: that is ${amountEn(q, c.big)} and ${amountEn(r, c.small)}, and ${amountEn(r, c.small)} is $\\frac{${r}}{${c.factor}}$ of a ${c.big.one.en}. So it is $${mixedLatex(v)}$ ${c.big.many.en}.`,
+            `$${tex(total)} \\div ${c.factor} = ${q}$ R ${r}: that is ${amountEn(q, c.big)} and ${amountEn(r, c.small)}, and ${amountEn(r, c.small)} is $\\frac{${r}}{${c.factor}}$ of ${c.big.one.en === "hour" ? "an" : "a"} ${c.big.one.en}. So it is $${mixedLatex(v)}$ ${c.big.many.en}.`,
             `$${tex(total)} \\div ${c.factor} = ${q}$ 余 ${r}：即 ${amountZh(q, c.big)} ${amountZh(r, c.small)}，而 ${amountZh(r, c.small)}是 $\\frac{${r}}{${c.factor}}$ ${c.big.one["zh-CN"]}。所以是 $${mixedLatex(v)}$ ${c.big.one["zh-CN"]}。`,
           ),
         });
@@ -1388,7 +1388,7 @@ export const volumesOfRightRectangularPrismsWordProblems = topic(
         const v = l * w * h;
         return numberProblem({
           prompt: t(
-            `${c.what.en} is shaped like a box $${l} \\ ${unitTex(u, 0)}$ long, $${w} \\ ${unitTex(u, 0)}$ wide and $${h} \\ ${unitTex(u, 0)}$ deep. How much ${c.holds.en} does it hold when full, in $${unitTex(u, 2)}$?`,
+            `${c.what.en} is shaped like a box $${l} \\ ${unitTex(u, 0)}$ long, $${w} \\ ${unitTex(u, 0)}$ wide and $${h} \\ ${unitTex(u, 0)}$ deep. What volume of ${c.holds.en} does it hold when full, in $${unitTex(u, 2)}$?`,
             `${c.what["zh-CN"]}是长 $${l} \\ ${unitTex(u, 0)}$、宽 $${w} \\ ${unitTex(u, 0)}$、深 $${h} \\ ${unitTex(u, 0)}$ 的长方体。装满时能装多少 $${unitTex(u, 2)}$ ${c.holds["zh-CN"]}？`,
           ),
           answer: v,

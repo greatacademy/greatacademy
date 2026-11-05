@@ -8,6 +8,8 @@ import { wordsEn, wordsZh } from "./grade-4-whole-numbers.ts";
 
 // 5th Grade Math: decimal place value, rounding, the four operations on decimals, and exponents.
 
+/** texCommas writes a whole number with thousands separators for math. */
+const texCommas = (n: number) => String(n).replace(/\\B(?=(\\d{3})+$)/g, "{,}");
 /** ccss is a helper for writing Common Core codes. */
 const ccss = (...codes: string[]) => codes.map((c) => `CCSS.${c}`);
 
@@ -749,7 +751,7 @@ export const significantFigures = topic(
         const v = sigRound(n, 1);
         const len = String(n).length;
         return numberProblem({
-          prompt: t(`Round ${n} to 1 significant figure.`, `把 ${n} 保留 1 位有效数字。`),
+          prompt: t(`Round $${texCommas(n)}$ to 1 significant figure.`, `把 $${texCommas(n)}$ 保留 1 位有效数字。`),
           answer: v,
           form: "integer",
           wrong: [
@@ -758,8 +760,8 @@ export const significantFigures = topic(
             Math.floor(n / pow10(len - 1)) || 1,
           ],
           solution: t(
-            `The first significant figure is in the ${["", "", "hundreds", "thousands", "ten thousands"][len - 1]} place; round there: ${n} ≈ ${v}.`,
-            `第一个有效数字在${["", "", "百位", "千位", "万位"][len - 1]}上，四舍五入到这一位：${n} ≈ ${v}。`,
+            `The first significant figure is in the ${["", "", "hundreds", "thousands", "ten thousands"][len - 1]} place; round there: $${texCommas(n)} \\approx ${texCommas(v)}$.`,
+            `第一个有效数字在${["", "", "百位", "千位", "万位"][len - 1]}上，四舍五入到这一位：$${texCommas(n)} \\approx ${texCommas(v)}$。`,
           ),
         });
       },
@@ -777,7 +779,7 @@ export const significantFigures = topic(
         const v = sigRound(n, s);
         const len = String(n).length;
         return numberProblem({
-          prompt: t(`Round ${n} to ${sigFigures(s).en}.`, `把 ${n} 保留 ${s} 位有效数字。`),
+          prompt: t(`Round $${texCommas(n)}$ to ${sigFigures(s).en}.`, `把 $${texCommas(n)}$ 保留 ${s} 位有效数字。`),
           answer: v,
           form: "integer",
           wrong: [
@@ -786,8 +788,8 @@ export const significantFigures = topic(
             sigRound(n, s + 1),
           ],
           solution: t(
-            `Keep the first ${s} digits and round at the ${s === 2 ? "second" : "third"} one: ${n} ≈ ${v}.`,
-            `保留前 ${s} 个数字，在第 ${s} 个数字处四舍五入：${n} ≈ ${v}。`,
+            `Keep the first ${s} digits and round at the ${s === 2 ? "second" : "third"} one: $${texCommas(n)} \\approx ${texCommas(v)}$.`,
+            `保留前 ${s} 个数字，在第 ${s} 个数字处四舍五入：$${texCommas(n)} \\approx ${texCommas(v)}$。`,
           ),
         });
       },
@@ -1550,11 +1552,11 @@ function productSteps(n: number, p: number, m: number, q: number): Text {
   const v = D(n * m, P);
   const places = (k: number, en: boolean) => (en ? `${k} decimal place${k === 1 ? "" : "s"}` : `${k} 位小数`);
   const factors =
-    q === 0 ? `$${fix(n, p)}$ has ${places(p, true)}` : `$${fix(n, p)}$ and $${fix(m, q)}$ have ${p} + ${q} = ${P} decimal places in all`;
-  const factorsZh = q === 0 ? `$${fix(n, p)}$ 有 ${p} 位小数` : `$${fix(n, p)}$ 和 $${fix(m, q)}$ 共有 ${p} + ${q} = ${P} 位小数`;
+    q === 0 ? `$${fix(n, p)}$ has ${places(p, true)}` : `$${fix(n, p)}$ and $${fix(m, q)}$ have $${p} + ${q} = ${P}$ decimal places in all`;
+  const factorsZh = q === 0 ? `$${fix(n, p)}$ 有 ${p} 位小数` : `$${fix(n, p)}$ 和 $${fix(m, q)}$ 共有 $${p} + ${q} = ${P}$ 位小数`;
   return t(
-    `Multiply as whole numbers: $${n} \\times ${m} = ${n * m}$. ${factors}, so the product has ${places(P, true)}: $${fix(n * m, P)}${fix(n * m, P) !== dq(v) ? ` = ${dq(v)}` : ""}$.`,
-    `先按整数相乘：$${n} \\times ${m} = ${n * m}$。${factorsZh}，所以积有 ${P} 位小数：$${fix(n * m, P)}${fix(n * m, P) !== dq(v) ? ` = ${dq(v)}` : ""}$。`,
+    `Multiply as whole numbers: $${n} \\times ${m} = ${texCommas(n * m)}$. ${factors}, so the product has ${places(P, true)}: $${fix(n * m, P)}${fix(n * m, P) !== dq(v) ? ` = ${dq(v)}` : ""}$.`,
+    `先按整数相乘：$${n} \\times ${m} = ${texCommas(n * m)}$。${factorsZh}，所以积有 ${P} 位小数：$${fix(n * m, P)}${fix(n * m, P) !== dq(v) ? ` = ${dq(v)}` : ""}$。`,
   );
 }
 

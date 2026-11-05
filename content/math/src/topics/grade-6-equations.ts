@@ -1037,7 +1037,7 @@ export const modelingRealWorldProblemsUsingInequalities = topic(
                   op: "<" as InequalityOp,
                 }
               : {
-                  en: `Jo earns $\\$${a}$ per hour and wants to earn at least $\\$${b}$. Let $h$ be the number of hours she works.`,
+                  en: `Jo earns $\\$${a}$ per hour and wants to earn at least $\\$${b}$. Let $h$ be the number of hours Jo works.`,
                   zh: `Jo 每小时挣 $\\$${a}$，她想至少挣 $\\$${b}$。设她工作 $h$ 小时。`,
                   v: "h",
                   op: ">=" as InequalityOp,

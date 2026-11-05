@@ -69,13 +69,13 @@ export function numberWordsZh(n: number): string {
 
 /** blocksFigure draws base-ten blocks with an alt text that names only the kinds of block present, in the right number. */
 export function blocksFigure(hundreds: number, tens: number, single: number): Figure {
-  const en = (n: number, word: string, many: string) => (n === 0 ? [] : [`${n} ${n === 1 ? word : many}`]);
-  const zh = (n: number, word: string) => (n === 0 ? [] : [`${n} 个${word}`]);
+  const _en = (n: number, word: string, many: string) => (n === 0 ? [] : [`${n} ${n === 1 ? word : many}`]);
+  const _zh = (n: number, word: string) => (n === 0 ? [] : [`${n} 个${word}`]);
   return {
     svg: baseTenFigure(hundreds, tens, single).svg,
     alt: t(
-      `Base-ten blocks: ${[...en(hundreds, "hundred", "hundreds"), ...en(tens, "ten", "tens"), ...en(single, "one", "ones")].join(", ")}.`,
-      `十进制积木：${[...zh(hundreds, "百"), ...zh(tens, "十"), ...zh(single, "一")].join("、")}。`,
+      "Base-ten blocks: large squares are hundreds, rods are tens and small squares are ones.",
+      "十进制积木：大方块是百，长条是十，小方块是一。",
     ),
   };
 }

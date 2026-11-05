@@ -657,7 +657,10 @@ const doublesAndNearDoubles = earlyTopic(
               [`$${n} + ${n} = ${2 * n}$, and one more makes ${answer}.`, `$${n} + ${n} = ${2 * n}$，再多 1 是 ${answer}。`],
             )
           : whole(
-              [`Given that $${n} + ${n} = ${2 * n}$, what is $${a} + ${b}$?`, `已知 $${n} + ${n} = ${2 * n}$，$${a} + ${b}$ 等于多少？`],
+              [
+                `You know that $${n} + ${n} = ${2 * n}$. What is $${a} + ${b}$?`,
+                `你知道 $${n} + ${n} = ${2 * n}$。$${a} + ${b}$ 等于多少？`,
+              ],
               answer,
               [2 * n, 2 * n + 2],
               [

@@ -493,7 +493,7 @@ export const slopeAsAUnitRateInProportionalRelationships = topic(
         const thing = t(c.thing.en.toLowerCase(), c.thing["zh-CN"]);
         return numberProblem({
           prompt: t(
-            `The ${c.quantity.en} $${c.y}$ (${c.yUnit.en}) of a ${thing.en} is proportional to the time $${c.x}$ (${c.xUnit.en}), and the graph passes through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$. What is the slope of the graph, in ${c.rate.en}?`,
+            `The ${c.quantity.en} $${c.y}$ (${c.yUnit.en}) of a ${thing.en} ${c.quantity.en === "earnings" ? "are" : "is"} proportional to the time $${c.x}$ (${c.xUnit.en}), and the graph passes through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$. What is the slope of the graph, in ${c.rate.en}?`,
             `某${thing["zh-CN"]}的${c.quantity["zh-CN"]} $${c.y}$（${c.yUnit["zh-CN"]}）与时间 $${c.x}$（${c.xUnit["zh-CN"]}）成正比，图像经过 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$。图像的斜率是多少（单位：${c.rate["zh-CN"]}）？`,
           ),
           answer: k,

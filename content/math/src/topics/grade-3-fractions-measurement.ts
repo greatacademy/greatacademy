@@ -242,8 +242,8 @@ function fractionLine(d: number, n: number) {
   return {
     svg: figure.svg.replace(`>${d}</text>`, ">1</text>"),
     alt: t(
-      `A number line from 0 to 1, cut into ${d} equal spaces, with a point after ${n} of them.`,
-      `一条从 0 到 1 的数轴，平均分成 ${d} 格，在第 ${n} 格的末端有一个点。`,
+      "A number line from 0 to 1, cut into equal spaces, with one marked point.",
+      "一条从 0 到 1 的数轴，平均分成若干格，上面有一个点。",
     ),
   };
 }
@@ -346,17 +346,15 @@ const comparingFractionsEarly = earlyTopic(
       (rng) => {
         const d = rng.int(3, 12);
         const a = rng.int(1, d - 1);
-        const b = rng.int(1, d - 1);
+        const b = ((a + rng.int(0, d - 3)) % (d - 1)) + 1;
         return compareProblem(
           `\\frac{${a}}{${d}}`,
           `\\frac{${b}}{${d}}`,
           Math.sign(a - b) + 1,
-          a === b
-            ? t(`Both name ${plural(a, "part")} of size $\\frac{1}{${d}}$.`, `两个分数都表示 ${a} 份，每份是 $\\frac{1}{${d}}$。`)
-            : t(
-                `The parts are the same size, and ${plural(Math.max(a, b), "part")} are more than ${plural(Math.min(a, b), "part")}.`,
-                `每份一样大，${Math.max(a, b)} 份比 ${Math.min(a, b)} 份多。`,
-              ),
+          t(
+            `The parts are the same size, and ${plural(Math.max(a, b), "part")} are more than ${plural(Math.min(a, b), "part")}.`,
+            `每份一样大，${Math.max(a, b)} 份比 ${Math.min(a, b)} 份多。`,
+          ),
         );
       },
     ),
@@ -564,7 +562,9 @@ const massAndVolume = earlyTopic(
         const right = options[item.unit as keyof typeof options];
         return pickChoice(
           rng,
-          t(`Which unit is best for measuring ${item.en}?`, `测量${item.zh}，用哪个单位最合适？`),
+          measuresVolume
+            ? t(`Which unit is best for measuring ${item.en}?`, `测量${item.zh}，用哪个单位最合适？`)
+            : t(`Which unit is best for measuring how heavy ${item.en} is?`, `测量${item.zh}有多重，用哪个单位最合适？`),
           right,
           [options.g, options.kg, options.L, options.mL].filter((o) => o !== right),
           t(
@@ -1198,8 +1198,8 @@ const sortingQuadrilaterals = earlyTopic(
       "naming-a-quadrilateral",
       ["Naming a quadrilateral", "说出四边形的名称"],
       [
-        "A quadrilateral is any shape with four straight sides. A rectangle has four square corners. A rhombus has four equal sides. A square has both of these features, so a square is also a rectangle and a rhombus. A shape that belongs to a smaller group always belongs to the larger group that contains it as well.",
-        "四边形是有四条直边的图形。长方形有四个直角。菱形有四条相等的边。正方形这两点都有，所以正方形也是长方形和菱形。属于小类的图形，也总是属于包含它的大类。",
+        "A quadrilateral is any shape with four straight sides. A rectangle has four square corners. A rhombus has four equal sides. A square has both of these features, so a square is also a rectangle and a rhombus. A trapezoid has exactly one pair of parallel sides, that is, two sides that stay the same distance apart and never meet. A shape that belongs to a smaller group always belongs to the larger group that contains it as well.",
+        "四边形是有四条直边的图形。长方形有四个直角。菱形有四条相等的边。正方形这两点都有，所以正方形也是长方形和菱形。梯形恰好有一组平行的边，也就是两条距离处处相等、永远不会相交的边。属于小类的图形，也总是属于包含它的大类。",
       ],
       (rng) => {
         const a = rng.int(3, 20);

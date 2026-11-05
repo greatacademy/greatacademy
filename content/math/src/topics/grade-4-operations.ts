@@ -1887,8 +1887,8 @@ export const understandingRemaindersUsingModels: TopicDef = {
             }),
             figure: figure(
               groupsFigure(g, q, r),
-              `${q} boxed groups of ${g} counters and ${r} counters outside the boxes.`,
-              `${q} 个方框，每个方框里有 ${g} 个圆片，方框外还有 ${r} 个圆片。`,
+              "Boxed groups of counters, and some counters outside the boxes.",
+              "几个方框，每个方框里有一些圆片，方框外还有一些圆片。",
             ),
           };
         }
@@ -2198,7 +2198,7 @@ const dropContexts: readonly Context[] = [
     zh: (n, d) => `面包师有 $${n}$ 个松饼，每盒装 $${d}$ 个。她能装满多少盒？`,
   },
   {
-    en: (n, d) => `A ribbon is $${n}$ cm long. Leo cuts pieces $${d}$ cm long from it. How many whole pieces can he cut?`,
+    en: (n, d) => `A ribbon is $${n}$ cm long. Leo cuts pieces $${d}$ cm long from it. How many whole pieces can Leo cut?`,
     zh: (n, d) => `一根丝带长 $${n}$ 厘米，小乐从中剪下每段长 $${d}$ 厘米的丝带。最多能剪出多少整段？`,
   },
   {
@@ -2269,7 +2269,7 @@ export const interpretingRemaindersInContext: TopicDef = {
       id: "ignoring-the-remainder",
       title: t("When to ignore the remainder", "什么时候不管余数"),
       explanation: t(
-        "A baker puts $30$ muffins into boxes of $8$. $30 \\div 8 = 3 \\text{ R } 6$: she can fill $3$ boxes. The $6$ muffins left over do not fill another box.\n\nWhen the question asks for **full** groups, the answer is the quotient.",
+        "A baker puts $30$ muffins into boxes of $8$. $30 \\div 8 = 3 \\text{ R } 6$: the baker can fill $3$ boxes. The $6$ muffins left over do not fill another box.\n\nWhen the question asks for **full** groups, the answer is the quotient.",
         "面包师把 $30$ 个松饼装进每盒 $8$ 个的盒子。$30 \\div 8 = 3 \\cdots\\cdots 6$：她能装满 $3$ 盒，剩下的 $6$ 个装不满一盒。\n\n当问题问的是**装满**的组数时，答案就是商。",
       ),
       generate(rng) {

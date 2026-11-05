@@ -343,12 +343,21 @@ export const unitsOfTimeAndElapsedTime = topic(
         const start = rng.int(7, 10) * 60 + rng.int(0, 11) * 5;
         const length = rng.int(4, 36) * 5;
         const end = start + length;
-        const clock = (v: number) => `${Math.floor(v / 60)}{:}${String(v % 60).padStart(2, "0")}`;
+        const clock = (v: number) =>
+          `${Math.floor(v / 60) > 12 ? Math.floor(v / 60) - 12 : Math.floor(v / 60)}{:}${String(v % 60).padStart(2, "0")}`;
+        const dayPartEn = (v: number) => (v < 720 ? "a.m." : "p.m.");
+        const dayPartZh = (v: number) => (v < 720 ? "上午" : v < 780 ? "中午" : "下午");
+        const hours = Math.floor(length / 60);
+        const minutes = length % 60;
+        const spanEn = [hours > 0 ? `$${hours}$ ${hours === 1 ? "hour" : "hours"}` : "", minutes > 0 ? `$${minutes}$ minutes` : ""]
+          .filter(Boolean)
+          .join(" and ");
+        const spanZh = [hours > 0 ? `$${hours}$ 小时` : "", minutes > 0 ? `$${minutes}$ 分钟` : ""].join(" ").trim();
         const name = rng.pick(names);
         return numberProblem({
           prompt: t(
-            `${name} started reading at $${clock(start)}$ a.m. and stopped at $${clock(end)}$ a.m. How many minutes did ${name} read?`,
-            `${name} 上午 $${clock(start)}$ 开始读书，上午 $${clock(end)}$ 停下。${name} 读了多少分钟？`,
+            `${name} started reading at $${clock(start)}$ a.m. and stopped at $${clock(end)}$ ${dayPartEn(end)} How many minutes did ${name} read?`,
+            `${name} 上午 $${clock(start)}$ 开始读书，${dayPartZh(end)} $${clock(end)}$ 停下。${name} 读了多少分钟？`,
           ),
           answer: length,
           form: "integer",
@@ -358,8 +367,8 @@ export const unitsOfTimeAndElapsedTime = topic(
             length + 60,
           ],
           solution: t(
-            `From $${clock(start)}$ to $${clock(end)}$ is $${Math.floor(length / 60)}$ hour${Math.floor(length / 60) === 1 ? "" : "s"} and $${length % 60}$ minutes, which is $${length}$ minutes.`,
-            `从 $${clock(start)}$ 到 $${clock(end)}$ 经过了 $${Math.floor(length / 60)}$ 小时 $${length % 60}$ 分钟，即 $${length}$ 分钟。`,
+            `From $${clock(start)}$ to $${clock(end)}$ is ${spanEn}${hours > 0 ? `, which is $${length}$ minutes` : ""}.`,
+            `从 $${clock(start)}$ 到 $${clock(end)}$ 经过了 ${spanZh}${hours > 0 ? `，即 $${length}$ 分钟` : ""}。`,
           ),
         });
       },
@@ -579,7 +588,7 @@ interface Survey {
 const surveys: readonly Survey[] = [
   { what: t("the number of pets each student has", "每名学生养的宠物数"), each: t("pets", "只宠物"), min: 0, max: 5 },
   { what: t("the number of books each student read this month", "每名学生本月读的书的本数"), each: t("books", "本书"), min: 0, max: 8 },
-  { what: t("the number of goals each player scored this season", "每名球员本赛季的进球数"), each: t("goals", "个进球"), min: 0, max: 7 },
+  { what: t("the number of goals each student scored this season", "每名学生本赛季的进球数"), each: t("goals", "个进球"), min: 0, max: 7 },
   { what: t("the number of letters in each student's first name", "每名学生名字的字母数"), each: t("letters", "个字母"), min: 3, max: 9 },
 ];
 
@@ -820,8 +829,8 @@ export const creatingAndInterpretingLinePlotsWithFractions = topic(
         const d = rng.pick([4, 8]);
         let values: number[];
         do values = Array.from({ length: rng.int(7, 11) }, () => rng.int(1, d - 1));
-        while (new Set(values).size < 3);
-        const v = rng.pick(values);
+        while (new Set(values).size < 3 || new Set(values).size === values.length);
+        const v = rng.pick(values.filter((x) => countOf(values, x) >= 2));
         const c = countOf(values, v);
         const total = Q.of(c * v, d);
         return {
@@ -1510,7 +1519,7 @@ export const classifyingFiguresBasedOnAngles = topic(
           form: "integer",
           wrong: [n1 + n2, 4 * (n1 + n2), total + 1].filter((w) => w !== total),
           solution: t(
-            `${s1!.name.en} has $${s1!.right}$ and ${s2!.name.en} has $${s2!.right}$: $${n1} \\times ${s1!.right} + ${n2} \\times ${s2!.right} = ${total}$.`,
+            `${s1!.name.en.charAt(0).toUpperCase()}${s1!.name.en.slice(1)} has $${s1!.right}$ and ${s2!.name.en} has $${s2!.right}$: $${n1} \\times ${s1!.right} + ${n2} \\times ${s2!.right} = ${total}$.`,
             `${s1!.name["zh-CN"]}有 $${s1!.right}$ 个，${s2!.name["zh-CN"]}有 $${s2!.right}$ 个：$${n1} \\times ${s1!.right} + ${n2} \\times ${s2!.right} = ${total}$。`,
           ),
         });

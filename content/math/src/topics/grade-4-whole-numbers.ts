@@ -1916,20 +1916,20 @@ function additionTopic(id: string, title: Text, summary: Text, prerequisites: st
           const ns = sizes(rng);
           const s = ns.reduce((a, b) => a + b, 0);
           const days = [t("Monday", "星期一"), t("Tuesday", "星期二"), t("Wednesday", "星期三")];
-          const partsEn = ns.map((n, i) => `${plain(n)}${i === 0 ? " visitors" : ""} on ${days[i]!.en}`);
+          const partsEn = ns.map((n, i) => `${plain(n)}${i === 0 ? " visits" : ""} on ${days[i]!.en}`);
           const listEn = ns.length === 3 ? `${partsEn[0]}, ${partsEn[1]}, and ${partsEn[2]}` : partsEn.join(" and ");
-          const listZh = ns.map((n, i) => `${days[i]!["zh-CN"]} ${plain(n)} 人`).join("，");
+          const listZh = ns.map((n, i) => `${days[i]!["zh-CN"]} ${plain(n)} 次`).join("，");
           return numberProblem({
             prompt: t(
-              `A museum had ${listEn}. How many visitors did it have in all?`,
-              `一家博物馆的参观人数：${listZh}。一共有多少人参观？`,
+              `A website had ${listEn}. How many visits did it have in all?`,
+              `一个网站的访问次数：${listZh}。一共被访问了多少次？`,
             ),
             answer: s,
             form: "integer",
             wrong: [ns.reduce(noCarrySum), s + 10, s - 100].filter((x) => x !== s),
             solution: t(
-              `"In all" puts the ${ns.length} days together, so add them, lining up the digits by place: $${ns.map(fmt).join(" + ")} = ${fmt(s)}$ visitors.`,
-              `"一共"是把这 ${ns.length} 天的人数合起来，所以把它们相加，相同数位对齐：$${ns.map(fmt).join(" + ")} = ${fmt(s)}$ 人。`,
+              `"In all" puts the ${ns.length} days together, so add them, lining up the digits by place: $${ns.map(fmt).join(" + ")} = ${fmt(s)}$ visits.`,
+              `"一共"是把这 ${ns.length} 天的次数合起来，所以把它们相加，相同数位对齐：$${ns.map(fmt).join(" + ")} = ${fmt(s)}$ 次。`,
             ),
           });
         },
@@ -2166,18 +2166,21 @@ function subtractionTopic(
               `图书馆有 ${plain(a)} 本书，借出了 ${plain(b)} 本。馆里还有多少本书？`,
             ),
             t(
-              `A stadium has ${plain(a)} seats. ${plain(b)} people are already seated. How many seats are empty?`,
-              `体育场有 ${plain(a)} 个座位，已经坐了 ${plain(b)} 人。还有多少个空座位？`,
+              `A warehouse has room for ${plain(a)} boxes. ${plain(b)} boxes are already inside. How many more boxes fit?`,
+              `仓库能放 ${plain(a)} 个箱子，里面已经有 ${plain(b)} 个。还能再放多少个箱子？`,
             ),
             t(
-              `A mountain is ${plain(a)} feet tall and a hill is ${plain(b)} feet tall. How many feet taller is the mountain?`,
-              `一座山高 ${plain(a)} 英尺，一座小山高 ${plain(b)} 英尺。大山比小山高多少英尺？`,
+              `Video A has ${plain(a)} views and video B has ${plain(b)} views. How many more views does video A have?`,
+              `视频 A 的播放次数是 ${plain(a)}，视频 B 的播放次数是 ${plain(b)}。视频 A 比视频 B 多播放多少次？`,
             ),
           ];
           const reasons: Text[] = [
             t("The books lent out leave the library, so subtract them", "借出的书离开了图书馆，所以要减去"),
-            t("The empty seats are the seats not taken, so subtract the people seated", "空座位是没人坐的座位，所以要减去已坐的人数"),
-            t('"How many feet taller" asks for the difference of the heights', '"高多少"求的是两个高度的差'),
+            t(
+              "The room left is the room not yet taken, so subtract the boxes inside",
+              "剩下的位置是还没占用的位置，所以要减去已有的箱子数",
+            ),
+            t('"How many more" asks for the difference of the views', '"多多少次"求的是两个播放次数的差'),
           ];
           return numberProblem({
             prompt: prompts[kind]!,

@@ -73,8 +73,8 @@ function takeAwayFigure(w: number, a: number, d: number): Figure {
   return {
     svg: barsSvg(w, d, (i) => (i >= w * d - a ? "cross" : "shade")),
     alt: t(
-      `${w === 1 ? "A bar cut" : `${w} equal bars, each cut`} into ${d} equal parts; ${a} part${a === 1 ? " is" : "s are"} crossed out and the rest are shaded.`,
-      `${w === 1 ? "一个长条，平均分成" : `${w} 个同样的长条，每个都平均分成`} ${d} 份；划掉了 ${a} 份，其余的涂了颜色。`,
+      `${w === 1 ? "A bar cut" : "Equal bars, each cut"} into equal parts; some parts are crossed out and the rest are shaded.`,
+      `${w === 1 ? "一个长条，平均分成" : "几个同样的长条，每个都平均分成"}几份；划掉了一些，其余的涂了颜色。`,
     ),
   };
 }
@@ -84,8 +84,8 @@ function groupedBarsFigure(w: number, d: number, g: number): Figure {
   return {
     svg: barsSvg(w, d, (i) => (Math.floor(i / g) % 2 === 0 ? "shade" : "light")),
     alt: t(
-      `${w} equal bar${w === 1 ? "" : "s"}, each cut into ${d} equal parts; the parts are colored dark and light in turn, in groups of ${g}.`,
-      `${w} 个同样的长条，每个都平均分成 ${d} 份；每 ${g} 份为一组，深浅颜色交替。`,
+      `${w === 1 ? "A bar" : "Equal bars"} cut into equal parts; groups of parts are colored dark and light in turn.`,
+      `${w === 1 ? "一个长条" : "几个同样的长条"}，平均分成几份；各组深浅颜色交替。`,
     ),
   };
 }
@@ -732,13 +732,13 @@ const wordStories: readonly WordStory[] = [
   {
     sub: false,
     en: (n, x, y, u) =>
-      `${n} walked $${x}$ ${u.en} in the morning and $${y}$ ${u.en} in the afternoon. How many ${u.en} did they walk in all?`,
+      `${n} walked $${x}$ ${u.en} in the morning and $${y}$ ${u.en} in the afternoon. How many ${u.en} did ${n} walk in all?`,
     zh: (n, x, y, u) => `${n} 上午走了 $${x}$ ${u.zh}，下午走了 $${y}$ ${u.zh}。一共走了多少${u.zh}？`,
   },
   {
     sub: false,
     en: (n, x, y, u) =>
-      `${n} used $${x}$ ${u.en} of water for one plant and $${y}$ ${u.en} for another. How much water did they use in all, in ${u.en}?`,
+      `${n} used $${x}$ ${u.en} of water for one plant and $${y}$ ${u.en} for another. How much water did ${n} use in all, in ${u.en}?`,
     zh: (n, x, y, u) => `${n} 给一盆花浇了 $${x}$ ${u.zh}水，给另一盆浇了 $${y}$ ${u.zh}。一共浇了多少${u.zh}水？`,
   },
   {
@@ -749,7 +749,7 @@ const wordStories: readonly WordStory[] = [
   {
     sub: true,
     en: (n, x, y, u) =>
-      `On Monday ${n} practiced for $${x}$ ${u.en}, and on Tuesday for $${y}$ ${u.en}. How much longer did they practice on Monday, in ${u.en}?`,
+      `On Monday ${n} practiced for $${x}$ ${u.en}, and on Tuesday for $${y}$ ${u.en}. How much longer did ${n} practice on Monday, in ${u.en}?`,
     zh: (n, x, y, u) => `${n} 星期一练习了 $${x}$ ${u.zh}，星期二练习了 $${y}$ ${u.zh}。星期一比星期二多练习了多少${u.zh}？`,
   },
 ];
@@ -761,7 +761,9 @@ function wordProblem(rng: Rng, sub: boolean, x: string, y: string, value: Q, wro
     ? { en: "hours", zh: "小时" }
     : s.en("", "", "", measures[0]!).includes("water")
       ? rng.pick([measures[1]!, measures[2]!])
-      : rng.pick([measures[0]!, measures[5]!]);
+      : s.en("", "", "", measures[0]!).includes("rope")
+        ? measures[5]!
+        : rng.pick([measures[0]!, measures[5]!]);
   const n = rng.pick(names);
   return numberProblem({ prompt: t(s.en(n, x, y, u), s.zh(n, x, y, u)), answer: value, form: "mixed", wrong, solution });
 }
@@ -856,10 +858,12 @@ function mixedSteps(m: MixedPair, sub: boolean): Text {
   const first = `${mx(m.w1, m.a, m.b)} ${op} ${mx(m.w2, m.c, m.d)} = ${mx(m.w1, x, L)} ${op} ${mx(m.w2, y, L)}`;
   if (!sub) {
     const s = x + y;
+    const last = `= ${mq(v)}`;
     const line2 = `= ${m.w1 + m.w2}${fr(s, L)}`;
+    const lines = line2 === last ? [first, last] : [first, line2, last];
     return t(
-      `Rewrite the fractions with the common denominator ${L}, then add the whole numbers and the fractions${s > L ? ", regrouping a whole" : ""}:${steps(first, line2, `= ${mq(v)}`)}`,
-      `把分数部分通分成分母 ${L}，再把整数部分和分数部分分别相加${s > L ? "，满一进一" : ""}：${steps(first, line2, `= ${mq(v)}`)}`,
+      `Rewrite the fractions with the common denominator ${L}, then add the whole numbers and the fractions${s > L ? ", regrouping a whole" : ""}:${steps(...lines)}`,
+      `把分数部分通分成分母 ${L}，再把整数部分和分数部分分别相加${s > L ? "，满一进一" : ""}：${steps(...lines)}`,
     );
   }
   if (x >= y)

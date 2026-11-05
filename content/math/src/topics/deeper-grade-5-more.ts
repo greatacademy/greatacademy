@@ -52,6 +52,8 @@ const fraction = (prompt: Pair, answer: Q, wrong: readonly Q[], solution: Pair) 
 /** usd writes an amount in cents with two decimal places. */
 const usd = (cents: number) => (cents / 100).toFixed(2);
 
+/** texCommas writes a whole number with thousands separators for math. */
+const texCommas = (n: number) => String(n).replace(/\\B(?=(\\d{3})+$)/g, "{,}");
 /** gcd is the greatest common factor of two positive whole numbers. */
 const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 
@@ -70,14 +72,14 @@ const nearbyProduct = skill(
     const answer = a * other;
     return whole(
       [
-        `Given that $${a} \\times ${b} = ${a * b}$, what is $${a} \\times ${other}$?`,
-        `已知 $${a} \\times ${b} = ${a * b}$，$${a} \\times ${other}$ 是多少？`,
+        `Given that $${a} \\times ${b} = ${texCommas(a * b)}$, what is $${a} \\times ${other}$?`,
+        `已知 $${a} \\times ${b} = ${texCommas(a * b)}$，$${a} \\times ${other}$ 是多少？`,
       ],
       answer,
       [up ? a * b + 1 : a * b - 1, up ? a * b + b : a * b - b, up ? answer + a : answer - a, answer + 10],
       [
-        `${up ? "One more" : "One fewer"} group of ${a} gives $${a * b} ${up ? "+" : "-"} ${a} = ${answer}$.`,
-        `${up ? "多" : "少"}一组 ${a}，得到 $${a * b} ${up ? "+" : "-"} ${a} = ${answer}$。`,
+        `${up ? "One more" : "One fewer"} group of ${a} gives $${texCommas(a * b)} ${up ? "+" : "-"} ${a} = ${texCommas(answer)}$.`,
+        `${up ? "多" : "少"}一组 ${a}，得到 $${texCommas(a * b)} ${up ? "+" : "-"} ${a} = ${texCommas(answer)}$。`,
       ],
     );
   },
@@ -220,8 +222,8 @@ const decimalTimes = skill(
     const [high, low] = [names[hi] as Pair, names[lo] as Pair];
     return whole(
       [
-        `In ${text}, the ${d} in the ${high[0]} place is worth how many times the ${d} in the ${low[0]} place?`,
-        `在 ${text} 中，${high[1]}上的 ${d} 表示的值是${low[1]}上的 ${d} 表示的值的多少倍？`,
+        `In $${text}$, the ${d} in the ${high[0]} place is worth how many times the ${d} in the ${low[0]} place?`,
+        `在 $${text}$ 中，${high[1]}上的 ${d} 表示的值是${low[1]}上的 ${d} 表示的值的多少倍？`,
       ],
       answer,
       [gap, answer * 10, gap === 1 ? 100 : answer / 10, d * answer],
@@ -279,8 +281,8 @@ const leftOfTen = skill(
       answer,
       [a + b, answer + 100, answer - 10, total * 100 - a],
       [
-        `The two stages add to ${usd(a + b)}, and $${total} - ${usd(a + b)} = ${usd(answer)}$.`,
-        `两段相加是 ${usd(a + b)}，$${total} - ${usd(a + b)} = ${usd(answer)}$。`,
+        `The two stages add to $${usd(a + b)}$, and $${total} - ${usd(a + b)} = ${usd(answer)}$.`,
+        `两段相加是 $${usd(a + b)}$，$${total} - ${usd(a + b)} = ${usd(answer)}$。`,
       ],
     );
   },

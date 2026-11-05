@@ -18,6 +18,12 @@ const skill = (id: string, title: Pair, explanation: Pair, generate: KnowledgePo
 });
 
 /** fraction builds a problem whose answer is a fraction, dropping wrong answers equal to it. */
+/** reduced continues a calculation with the simplest form of a fraction when that differs from it. */
+const reduced = (n: number, d: number) => {
+  const v = Q.of(n, d).toLatex();
+  return v === frac(n, d) ? "" : ` = ${v}`;
+};
+
 const fraction = (prompt: Pair, answer: Q, wrong: readonly Q[], solution: Pair) =>
   numberProblem({
     prompt: t(prompt[0], prompt[1]),
@@ -387,8 +393,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           Q.of(left, d),
           [Q.of(left, piece), Q.of(piece, d), Q.of(count, d), Q.of(total, d), Q.of(left + piece, d)],
           [
-            `${count} pieces use $${frac(piece * count, d)}$ yards, leaving $${frac(left, d)}$ yard.`,
-            `${count} 段用去 $${frac(piece * count, d)}$ 码，剩下 $${frac(left, d)}$ 码。`,
+            `${count} pieces use $${frac(piece * count, d)}$ yards, leaving $${frac(left, d)}${reduced(left, d)}$ yard.`,
+            `${count} 段用去 $${frac(piece * count, d)}$ 码，剩下 $${frac(left, d)}${reduced(left, d)}$ 码。`,
           ],
         );
       },
@@ -412,8 +418,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           Q.of((a * d + n) * k, d),
           [Q.of(a * d + n, d * k), Q.of(a * d + n * k, d), Q.of(a * k * d + n, d)],
           [
-            `Multiply back: $${k} \\times ${frac(a * d + n, d)} = ${frac((a * d + n) * k, d)}$.`,
-            `乘回去：$${k} \\times ${frac(a * d + n, d)} = ${frac((a * d + n) * k, d)}$。`,
+            `Multiply back: $${k} \\times ${frac(a * d + n, d)} = ${frac((a * d + n) * k, d)}${reduced((a * d + n) * k, d)}$.`,
+            `乘回去：$${k} \\times ${frac(a * d + n, d)} = ${frac((a * d + n) * k, d)}${reduced((a * d + n) * k, d)}$。`,
           ],
         );
       },
@@ -467,8 +473,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           Q.of(top, q),
           [Q.of(q, top), Q.of(top * q, 1), Q.of(top - q, 1)],
           [
-            `The divisor is $${top} \\div ${q} = ${frac(top, q)}$. Check: $${q} \\times ${frac(top, q)} = ${top}$.`,
-            `除数是 $${top} \\div ${q} = ${frac(top, q)}$。检验：$${q} \\times ${frac(top, q)} = ${top}$。`,
+            `The divisor is $${top} \\div ${q} = ${frac(top, q)}${reduced(top, q)}$. Check: $${q} \\times ${frac(top, q)} = ${top}$.`,
+            `除数是 $${top} \\div ${q} = ${frac(top, q)}${reduced(top, q)}$。检验：$${q} \\times ${frac(top, q)} = ${top}$。`,
           ],
         );
       },
@@ -496,8 +502,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           Q.of(d, x * d + n),
           [Q.of(d, n), Q.of(x * d + n, d), Q.of(x * n + 1, d)],
           [
-            `$${x}${frac(n, d)} = ${frac(x * d + n, d)}$, whose reciprocal is $${frac(d, x * d + n)}$.`,
-            `$${x}${frac(n, d)} = ${frac(x * d + n, d)}$，它的倒数是 $${frac(d, x * d + n)}$。`,
+            `$${x}${frac(n, d)} = ${frac(x * d + n, d)}$, whose reciprocal is $${frac(d, x * d + n)}${reduced(d, x * d + n)}$.`,
+            `$${x}${frac(n, d)} = ${frac(x * d + n, d)}$，它的倒数是 $${frac(d, x * d + n)}${reduced(d, x * d + n)}$。`,
           ],
         );
       },
@@ -530,8 +536,8 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
           speed,
           [time.div(dist), dist.mul(time), dist],
           [
-            `Divide miles by hours: $${frac(a * d + n, d)} \\div ${frac(b * e + m, e)} = ${frac(a * d + n, d)} \\times ${frac(e, b * e + m)}$.`,
-            `英里数除以小时数：$${frac(a * d + n, d)} \\div ${frac(b * e + m, e)} = ${frac(a * d + n, d)} \\times ${frac(e, b * e + m)}$。`,
+            `Divide miles by hours: $${frac(a * d + n, d)} \\div ${frac(b * e + m, e)} = ${frac(a * d + n, d)} \\times ${frac(e, b * e + m)} = ${speed.toLatex()}$.`,
+            `英里数除以小时数：$${frac(a * d + n, d)} \\div ${frac(b * e + m, e)} = ${frac(a * d + n, d)} \\times ${frac(e, b * e + m)} = ${speed.toLatex()}$。`,
           ],
         );
       },
@@ -733,7 +739,7 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         const s = rng.int(-6, 6);
         const up = rng.int(1, 9) * 5;
         const down = rng.int(1, 9) * 5;
-        const value = (x: number) => (x / 10).toFixed(1);
+        const value = (x: number) => String(x / 10);
         const vertical = rng.bool();
         const p = vertical ? `(${s}, ${value(up)})` : `(${value(up)}, ${s})`;
         const q = vertical ? `(${s}, -${value(down)})` : `(-${value(down)}, ${s})`;

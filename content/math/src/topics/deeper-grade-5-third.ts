@@ -422,7 +422,7 @@ export const deeperGrade5ThirdPoints: Readonly<Record<string, readonly Knowledge
       "the-smallest-number-that-rounds-to-a-quotient",
       ["The smallest number with a rounded quotient", "商四舍五入后的最小被除数"],
       [
-        "A quotient rounds up to a whole number when it is at least a half below it. Multiplying that halfway value by the divisor gives the smallest whole number that works.",
+        "A quotient rounds up to a whole number when it is at most a half below it. Multiplying that halfway value by the divisor gives the smallest whole number that works.",
         "商不小于“某整数减二分之一”时，四舍五入后就是这个整数。把这个中间值乘除数，就得到符合条件的最小整数。",
       ],
       (rng) => {

@@ -138,8 +138,8 @@ export const identifyingTheNumberOfSolutionsByInspection = topic(
             solveFor: "k",
             wrong: [a, -answer, r, answer + 1, b],
             solution: t(
-              `The $y$ coefficients are both known, and $${r * b}$ is $${r}$ times $${b}$. Parallel lines need the $x$ coefficient to be the same multiple, so $k = ${r} \\cdot ${a} = ${answer}$. The constants, $${c2}$ and $${r} \\cdot ${c} = ${r * c}$, differ, so the lines are distinct.`,
-              `两个 $y$ 系数都已知，$${r * b}$ 是 $${b}$ 的 $${r}$ 倍。平行线要求 $x$ 的系数也是这一倍数，所以 $k = ${r} \\cdot ${a} = ${answer}$。常数项 $${c2}$ 与 $${r} \\cdot ${c} = ${r * c}$ 不同，所以两条直线不重合。`,
+              `The $y$ coefficients are both known, and $${r * b}$ is $${r}$ times $${b}$. Parallel lines need the $x$ coefficient to be the same multiple, so $k = ${r} \\cdot ${a} = ${answer}$. The constants, $${c2}$ and $${r} \\cdot ${c < 0 ? `(${c})` : c} = ${r * c}$, differ, so the lines are distinct.`,
+              `两个 $y$ 系数都已知，$${r * b}$ 是 $${b}$ 的 $${r}$ 倍。平行线要求 $x$ 的系数也是这一倍数，所以 $k = ${r} \\cdot ${a} = ${answer}$。常数项 $${c2}$ 与 $${r} \\cdot ${c < 0 ? `(${c})` : c} = ${r * c}$ 不同，所以两条直线不重合。`,
             ),
           });
         }

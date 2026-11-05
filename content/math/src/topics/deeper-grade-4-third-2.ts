@@ -822,7 +822,7 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
           rng,
           [`Write $${a}${frac(n, 100)}$ as a decimal.`, `把 $${a}${frac(n, 100)}$ 写成小数。`],
           `${a}.0${n}`,
-          [`${a}.${n}`, `${a}.${n}0`, `0.${a}0${n}`],
+          [`${a}.${n}`, `${a}.00${n}`, `0.${a}0${n}`],
           [
             `${n} hundredths sit in the second place, so the tenths place holds a zero: $${a}.0${n}$.`,
             `${n} 个百分之一在第二位，所以十分位是 0：$${a}.0${n}$。`,

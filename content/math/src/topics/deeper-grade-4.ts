@@ -7,6 +7,8 @@ import { t } from "@ga/content";
 
 import { numberProblem } from "../problems.ts";
 
+/** commas writes a whole number with thousands separators for math. */
+const commas = (n: number) => String(n).replace(/\B(?=(\d{3})+$)/g, "{,}");
 /** gcd4 is the greatest common factor of two positive integers. */
 const gcd4 = (a: number, b: number): number => (b === 0 ? a : gcd4(b, a % b));
 /** factorsOf lists the factors of a positive integer in increasing order. */
@@ -181,20 +183,20 @@ const whenEventsMeet: KnowledgePointDef = {
     const b = rng.pick([4, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20].filter((v) => v !== a && gcd4(v, a) > 1));
     const answer = (a * b) / gcd4(a, b);
     const scene = rng.pick([
-      ["Two lights flash", "两盏灯闪烁", "seconds", "秒"],
-      ["Two buses leave a stop", "两路公交车从车站发车", "minutes", "分钟"],
-      ["Two bells ring", "两口钟鸣响", "minutes", "分钟"],
-    ]) as [string, string, string, string];
+      ["Two lights flash", "两盏灯闪烁", "seconds", "秒", "flash"],
+      ["Two buses leave a stop", "两路公交车从车站发车", "minutes", "分钟", "leave"],
+      ["Two bells ring", "两口钟鸣响", "minutes", "分钟", "ring"],
+    ]) as [string, string, string, string, string];
     return numberProblem({
       prompt: t(
-        `${scene[0]} together. One repeats every ${a} ${scene[2]} and the other every ${b} ${scene[2]}. After how many ${scene[2]} do they next happen together?`,
+        `${scene[0]} together. One repeats every ${a} ${scene[2]} and the other every ${b} ${scene[2]}. After how many ${scene[2]} do they next ${scene[4]} together?`,
         `${scene[1]}，刚好同时。一个每 ${a} ${scene[3]}重复一次，另一个每 ${b} ${scene[3]}重复一次。再过多少${scene[3]}它们下一次同时发生？`,
       ),
       answer,
       form: "integer",
       wrong: [a * b, a + b, gcd4(a, b), Math.abs(a - b), 2 * answer],
       solution: t(
-        `They happen together at the common multiples of ${a} and ${b}. The least common multiple is ${answer}.`,
+        `They ${scene[4]} together at the common multiples of ${a} and ${b}. The least common multiple is ${answer}.`,
         `它们在 ${a} 和 ${b} 的公倍数时刻同时发生。最小公倍数是 ${answer}。`,
       ),
     });
@@ -328,8 +330,8 @@ const fullHundreds: KnowledgePointDef = {
     const answer = asksLeft ? left : groups;
     return numberProblem({
       prompt: t(
-        `A factory packs ${count} nails into boxes of ${size}. ${asksLeft ? "How many nails are left after filling as many boxes as possible?" : "How many boxes can it fill?"}`,
-        `工厂把 ${count} 枚钉子装进每盒 ${size} 枚的盒子。${asksLeft ? "尽量装满后还剩多少枚？" : "能装满多少盒？"}`,
+        `A factory packs $${commas(count)}$ nails into boxes of ${size}. ${asksLeft ? "How many nails are left after filling as many boxes as possible?" : "How many boxes can it fill?"}`,
+        `工厂把 $${commas(count)}$ 枚钉子装进每盒 ${size} 枚的盒子。${asksLeft ? "尽量装满后还剩多少枚？" : "能装满多少盒？"}`,
       ),
       answer,
       form: "integer",
@@ -784,15 +786,15 @@ const missingAddendAcrossThree: KnowledgePointDef = {
     const total = a + b + answer;
     return numberProblem({
       prompt: t(
-        `Three towns have ${total} people in all. One town has ${a} people and another has ${b}. How many people does the third town have?`,
-        `三个镇一共有 ${total} 人。一个镇有 ${a} 人，另一个镇有 ${b} 人。第三个镇有多少人？`,
+        `Three towns have $${commas(total)}$ people in all. One town has $${commas(a)}$ people and another has $${commas(b)}$. How many people does the third town have?`,
+        `三个镇一共有 $${commas(total)}$ 人。一个镇有 $${commas(a)}$ 人，另一个镇有 $${commas(b)}$ 人。第三个镇有多少人？`,
       ),
       answer,
       form: "integer",
       wrong: [total - a, total - b, a + b, answer + 1000, answer - 100],
       solution: t(
-        `The two known towns have $${a} + ${b} = ${a + b}$ people. The third has $${total} - ${a + b} = ${answer}$.`,
-        `已知的两个镇有 $${a} + ${b} = ${a + b}$ 人。第三个镇有 $${total} - ${a + b} = ${answer}$ 人。`,
+        `The two known towns have $${commas(a)} + ${commas(b)} = ${commas(a + b)}$ people. The third has $${commas(total)} - ${commas(a + b)} = ${commas(answer)}$.`,
+        `已知的两个镇有 $${commas(a)} + ${commas(b)} = ${commas(a + b)}$ 人。第三个镇有 $${commas(total)} - ${commas(a + b)} = ${commas(answer)}$ 人。`,
       ),
     });
   },

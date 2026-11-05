@@ -492,7 +492,7 @@ const estimatingLengths = earlyTopic(
         return pickChoice(
           rng,
           t(
-            `${name} estimates how long or tall ${item.en} is. Which estimate makes the most sense?`,
+            `${name} estimates the size of ${item.en}. Which estimate makes the most sense?`,
             `${name} 估计${item.zh}有多长或多高。哪个估计最合理？`,
           ),
           line(item.right, item.unit),
@@ -1804,10 +1804,7 @@ const rowsAndColumnsOfSquares = earlyTopic(
 function sharedRectangle(parts: number, shaded: number): Figure {
   return {
     svg: gridFigure(parts === 4 ? 2 : 1, parts === 4 ? 2 : parts, shaded).svg,
-    alt: t(
-      `A rectangle cut into ${parts} equal shares, ${shaded} of them shaded.`,
-      `一个长方形被平均分成 ${parts} 份，其中 ${shaded} 份涂了颜色。`,
-    ),
+    alt: t("A rectangle cut into equal shares, some of them shaded.", "一个长方形被平均分成几份，其中一些涂了颜色。"),
   };
 }
 

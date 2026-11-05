@@ -419,7 +419,7 @@ function stepPhrase(rng: Rng): Phrase {
         wrong: [`${a} + ${b} \\times ${c}`, `${a} \\times ${c} + ${b}`, `${a} + ${b} + ${c}`],
       };
     case 1: {
-      const big = a + b + c * rng.int(2, 6);
+      const big = b + c * rng.int(3, 15);
       return {
         en: `Subtract ${b} from ${big}, then divide by ${c}.`,
         zh: `从 ${big} 中减去 ${b}，再除以 ${c}。`,

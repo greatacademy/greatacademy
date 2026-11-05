@@ -117,8 +117,8 @@ export const deeperExamThirdPoints: Readonly<Record<string, readonly KnowledgePo
         return chooseMath(
           rng,
           [
-            `What is the ${min ? "minimum" : "maximum"} value of $f(x) = (x ${h < 0 ? `+ ${-h}` : `- ${h}`})^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ on the interval $${left} \\le x \\le ${right}$?`,
-            `$f(x) = (x ${h < 0 ? `+ ${-h}` : `- ${h}`})^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ 在区间 $${left} \\le x \\le ${right}$ 上的${min ? "最小值" : "最大值"}是多少？`,
+            `What is the ${min ? "minimum" : "maximum"} value of $f(x) = ${h === 0 ? "x" : `(x ${h < 0 ? `+ ${-h}` : `- ${h}`})`}^{2} + ${k}$ on the interval $${left} \\le x \\le ${right}$?`,
+            `$f(x) = ${h === 0 ? "x" : `(x ${h < 0 ? `+ ${-h}` : `- ${h}`})`}^{2} + ${k}$ 在区间 $${left} \\le x \\le ${right}$ 上的${min ? "最小值" : "最大值"}是多少？`,
           ],
           `${answer}`,
           [`${min ? g(right) : g(left)}`, `${k}`, `${g(right) + g(left)}`],

@@ -1098,10 +1098,7 @@ const halvesAndFourths = earlyTopic(
             ? cutBarFigure([1, 1, 1, 1], rng.int(0, 3))
             : {
                 svg: gridFigure(half ? 1 : 2, 2, 1).svg,
-                alt: t(
-                  `A rectangle cut into ${parts} equal shares, one of them shaded.`,
-                  `一个长方形被平均分成 ${parts} 份，其中一份涂了颜色。`,
-                ),
+                alt: t("A rectangle cut into equal shares, with one share shaded.", "一个长方形被平均分成几份，其中一份涂了颜色。"),
               };
         const options = {
           half: t("A half", "二分之一"),

@@ -526,8 +526,8 @@ export const dividingMixedNumbersWordProblems = topic(
         const total = each.mul(Q.of(k));
         const story = rng.pick([
           {
-            en: `A pot holds $${mq(total)}$ liters of soup. Each bowl holds $${mq(each)}$ liters. How many bowls can be filled?`,
-            zh: `一锅汤有 $${mq(total)}$ 升，每碗装 $${mq(each)}$ 升。可以装满多少碗？`,
+            en: `A pot holds $${mq(total)}$ liters of soup. Each jar holds $${mq(each)}$ liters. How many jars can be filled?`,
+            zh: `一锅汤有 $${mq(total)}$ 升，每个罐子装 $${mq(each)}$ 升。可以装满多少个罐子？`,
           },
           {
             en: `A board is $${mq(total)}$ feet long. It is cut into shelves $${mq(each)}$ feet long each. How many shelves are there?`,

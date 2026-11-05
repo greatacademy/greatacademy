@@ -1002,10 +1002,12 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
           ["sevenths", "七", 7],
           ["ninths", "九", 9],
           ["tenths", "十", 10],
+          ["elevenths", "十一", 11],
           ["twelfths", "十二", 12],
         ];
         const [word, zh, d] = rng.pick(bottoms);
-        const n = rng.int(2, Math.min(d - 1, 7));
+        const coprime = (x: number, y: number): boolean => (y === 0 ? x === 1 : coprime(y, x % y));
+        const n = rng.pick([2, 3, 4, 5, 6, 7].filter((top) => top < d && coprime(top, d)));
         const zhn = ["", "一", "二", "三", "四", "五", "六", "七"][n];
         return fraction(
           [`Write "${tops[n]} ${word}" as a fraction.`, `把“${zh}分之${zhn}”写成分数。`],
@@ -1143,8 +1145,8 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
         return whole(
           askTop
             ? [
-                `Write $${n} \\div ${d}$ as a mixed number. What is the top number of its fraction?`,
-                `把 $${n} \\div ${d}$ 写成带分数。分数部分的分子是几？`,
+                `Write $${n} \\div ${d}$ as a mixed number with denominator ${d}. What is the top number of its fraction?`,
+                `把 $${n} \\div ${d}$ 写成分母是 ${d} 的带分数。分数部分的分子是几？`,
               ]
             : [`Write $${n} \\div ${d}$ as a mixed number. What is its whole part?`, `把 $${n} \\div ${d}$ 写成带分数。整数部分是几？`],
           askTop ? r : q,

@@ -2412,7 +2412,7 @@ const equalShares = earlyTopic(
           pick.parts - shaded,
           [shaded === 0 ? pick.parts + 1 : shaded, pick.parts, pick.parts + shaded],
           [
-            `It has ${pick.parts} equal shares and ${shaded} ${shaded === 1 ? "is" : "are"} shaded, so ${pick.parts - shaded} more are needed.`,
+            `It has ${pick.parts} equal shares and ${shaded} ${shaded === 1 ? "is" : "are"} shaded, so ${pick.parts - shaded} more ${pick.parts - shaded === 1 ? "is" : "are"} needed.`,
             `它有 ${pick.parts} 个相等的份，已经涂了 ${shaded} 份，还要再涂 ${pick.parts - shaded} 份。`,
           ],
           rectangleCutsFigure(

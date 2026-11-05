@@ -38,8 +38,8 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           answer,
           [start - 3 * step + step, start - 3 * step - 1, answer - step],
           [
-            `Each number is ${step} less than the one before, and ${start - 3 * step} minus ${step} is ${answer}.`,
-            `每个数都比前一个少 ${step}，${start - 3 * step} 减 ${step} 得 ${answer}。`,
+            `Each number is ${step} less than the one before, and $${start - 3 * step} - ${step} = ${answer}$.`,
+            `每个数都比前一个少 ${step}，$${start - 3 * step} - ${step} = ${answer}$。`,
           ],
         );
       },
@@ -125,8 +125,8 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           10 - tens,
           [tens, 100 - tens * 10, 10 - tens + 1],
           [
-            `${(h + 1) * 100} - ${n} = ${100 - tens * 10}, and ${100 - tens * 10} is ${10 - tens} tens.`,
-            `${(h + 1) * 100} - ${n} = ${100 - tens * 10}，${100 - tens * 10} 是 ${10 - tens} 个十。`,
+            `$${(h + 1) * 100} - ${n} = ${100 - tens * 10}$, and ${100 - tens * 10} is ${10 - tens} tens.`,
+            `$${(h + 1) * 100} - ${n} = ${100 - tens * 10}$，${100 - tens * 10} 是 ${10 - tens} 个十。`,
           ],
         );
       },
@@ -439,16 +439,17 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
         const d = rng.int(7, 35);
         const [p, q] = rng.shuffle(earlyNames).slice(0, 2) as [string, string];
         const thing = rng.pick(earlyThings);
+        const gift = rng.int(2, d - 2);
         return whole(
           [
-            `${p} has ${a} ${thing.en}, which is ${d} fewer than ${q} has. ${q} gives away ${d} ${thing.en}. How many does ${q} have now?`,
-            `${p} 有 ${a} 个${thing.zh}，比 ${q} 少 ${d} 个。${q} 送出 ${d} 个${thing.zh}。${q} 现在有多少个？`,
+            `${p} has ${a} ${thing.en}, which is ${d} fewer than ${q} has. ${q} gives away ${gift} ${thing.en}. How many more must ${p} get to have as many as ${q}?`,
+            `${p} 有 ${a} 个${thing.zh}，比 ${q} 少 ${d} 个。${q} 送出 ${gift} 个${thing.zh}。${p} 还要再得到多少个，才和 ${q} 一样多？`,
           ],
-          a,
-          [a + d, a + 2 * d, a - d > 0 ? a - d : a + 1],
+          d - gift,
+          [d, d + gift, a + d - gift],
           [
-            `${q} had ${d} more than ${p}, which is ${a + d}. Giving away those ${d} leaves ${a}, the same as ${p}.`,
-            `${q} 比 ${p} 多 ${d} 个，也就是 ${a + d} 个。送出这 ${d} 个后剩 ${a} 个，和 ${p} 一样多。`,
+            `${q} had $${a} + ${d} = ${a + d}$ and now has $${a + d} - ${gift} = ${a + d - gift}$. To catch up, ${p} needs $${a + d - gift} - ${a} = ${d - gift}$ more.`,
+            `${q} 原来有 $${a} + ${d} = ${a + d}$ 个，现在有 $${a + d} - ${gift} = ${a + d - gift}$ 个。${p} 还要 $${a + d - gift} - ${a} = ${d - gift}$ 个才一样多。`,
           ],
         );
       },
@@ -534,8 +535,8 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           f * 12 + i,
           [f + i, f * 10 + i, f * 12],
           [
-            `${f} feet are $${f} \\times 12 = ${f * 12}$ inches, and ${i} more make ${f * 12 + i}.`,
-            `${f} 英尺是 $${f} \\times 12 = ${f * 12}$ 英寸，再加 ${i} 英寸是 ${f * 12 + i}。`,
+            `Each foot is 12 inches, so ${f} feet are ${f * 12} inches, counting by 12s. ${i} more make ${f * 12 + i}.`,
+            `每英尺是 12 英寸，12 个 12 个地数，${f} 英尺是 ${f * 12} 英寸，再加 ${i} 英寸是 ${f * 12 + i}。`,
           ],
         );
       },
@@ -635,8 +636,10 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           answer,
           [longer ? (a - d > 0 ? a - d : a + 1) : a + 2 * d, d, answer + 10],
           [
-            `${longer ? "Longer means add" : "Shorter means subtract"}: the second is ${answer} centimeters.`,
-            `${longer ? "长就用加法" : "短就用减法"}：第二根是 ${answer} 厘米。`,
+            longer
+              ? `Longer means add: $${a} + ${d} = ${answer}$ centimeters.`
+              : `Shorter means subtract: $${shown} - ${d} = ${answer}$ centimeters.`,
+            longer ? `更长就用加法：$${a} + ${d} = ${answer}$ 厘米。` : `更短就用减法：$${shown} - ${d} = ${answer}$ 厘米。`,
           ],
         );
       },
@@ -897,8 +900,12 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           answer,
           [more ? a - d : a + d, d, answer + 1],
           [
-            `${more ? "More means add" : "Fewer means subtract"}: bar B stops at ${answer}.`,
-            `${more ? "多就用加法" : "少就用减法"}：B 条形到 ${answer}。`,
+            more
+              ? `More means add: $${a} + ${d} = ${answer}$, so bar B stops at ${answer}.`
+              : `Fewer means subtract: $${a} - ${d} = ${answer}$, so bar B stops at ${answer}.`,
+            more
+              ? `多就用加法：$${a} + ${d} = ${answer}$，所以 B 条形到 ${answer}。`
+              : `少就用减法：$${a} - ${d} = ${answer}$，所以 B 条形到 ${answer}。`,
           ],
         );
       },
@@ -927,8 +934,8 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           k * sides,
           [k + sides, sides, k * (sides + 1)],
           [
-            `Each of the ${name[0]} has ${sides} sides, so ${k} of them have $${k} \\times ${sides} = ${k * sides}$.`,
-            `每个${name[1]}有 ${sides} 条边，所以 ${k} 个有 $${k} \\times ${sides} = ${k * sides}$ 条。`,
+            `Each of the ${name[0]} has ${sides} sides. Counting by ${sides}s ${k} times reaches ${k * sides}.`,
+            `每个${name[1]}有 ${sides} 条边。${sides} 个 ${sides} 个地数 ${k} 次，得到 ${k * sides}。`,
           ],
         );
       },
@@ -953,8 +960,8 @@ export const deeperGrade2ThirdPoints: Readonly<Record<string, readonly Knowledge
           a * k,
           [a + k, a, a * k + k],
           [
-            `Each shape has as many sides as angles, ${a}, so ${k} shapes have $${k} \\times ${a} = ${a * k}$ sides.`,
-            `每个图形的边数和角数相同，都是 ${a}，所以 ${k} 个图形有 $${k} \\times ${a} = ${a * k}$ 条边。`,
+            `Each shape has as many sides as angles, ${a}. Adding ${a} for each of the ${k} shapes gives ${a * k} sides.`,
+            `每个图形的边数和角数相同，都是 ${a}。${k} 个图形，每个加一次 ${a}，得到 ${a * k} 条边。`,
           ],
         );
       },

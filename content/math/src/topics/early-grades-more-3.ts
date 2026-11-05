@@ -1050,8 +1050,8 @@ const unitFractionsOnLine = earlyTopic(
       (rng) => {
         const closest = rng.bool();
         const why: Pair = [
-          `The ${closest ? "larger" : "smaller"} the bottom number, the ${closest ? "smaller" : "larger"} the part.`,
-          `分母越${closest ? "大" : "小"}，每份就越${closest ? "小" : "大"}。`,
+          `The ${closest ? "larger" : "smaller"} the bottom number, the ${closest ? "smaller" : "larger"} the part, so the fraction lies ${closest ? "nearer to 0" : "nearer to 1"}.`,
+          `分母越${closest ? "大" : "小"}，每份就越${closest ? "小" : "大"}，这个分数就离 ${closest ? "0" : "1"} 越近。`,
         ];
         if (rng.bool()) {
           const ds = rng.sample([2, 3, 4, 6, 8], 4);
@@ -2281,17 +2281,17 @@ const areaStories = earlyTopic(
         const w = rng.int(3, 9);
         const h = rng.int(3, 9);
         const area = w * h;
-        const thing = rng.pick<Pair>([
-          ["rug", "地毯"],
-          ["garden bed", "花坛"],
-          ["poster", "海报"],
-          ["table top", "桌面"],
-          ["mat", "垫子"],
-        ]);
-        const measure = rng.pick<Pair>([
-          ["feet", "英尺"],
-          ["meters", "米"],
-          ["inches", "英寸"],
+        const feet: Pair = ["feet", "英尺"];
+        const meters: Pair = ["meters", "米"];
+        const inches: Pair = ["inches", "英寸"];
+        const [thing, measure] = rng.pick<readonly [Pair, Pair]>([
+          [["rug", "地毯"], feet],
+          [["garden bed", "花坛"], feet],
+          [["garden bed", "花坛"], meters],
+          [["hall floor", "大厅地面"], meters],
+          [["poster", "海报"], inches],
+          [["table top", "桌面"], feet],
+          [["place mat", "餐垫"], inches],
         ]);
         return whole(
           [
@@ -2685,7 +2685,7 @@ const quadCategories = earlyTopic(
             "It has 4 straight sides, but its sides are not all equal and its corners are not square.",
             "它有 4 条直边，但边不都相等，角也不是直角。",
           ],
-          polygonFigure(corners, t("A quadrilateral with four uneven sides.", "一个四条边长短不同的四边形。")),
+          polygonFigure(corners, t("A closed shape with straight sides.", "一个由直边围成的封闭图形。")),
         );
       },
     ),

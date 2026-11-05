@@ -37,6 +37,9 @@ const whole = (prompt: Pair, answer: number, wrong: readonly number[], solution:
 /** commas writes a whole number with thousands separators. */
 const commas = (n: number) => String(n).replace(/\B(?=(\d{3})+$)/g, ",");
 
+/** texCommas writes a whole number with thousands separators for math. */
+const texCommas = (n: number) => String(n).replace(/\B(?=(\d{3})+$)/g, "{,}");
+
 /** gcd is the greatest common factor of two positive whole numbers. */
 const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 
@@ -152,10 +155,16 @@ const largeMissingAddend = skill(
     const answer = rng.int(10000, 4000000);
     const c = a + answer;
     return whole(
-      [`What number makes this true? $${a} + \\square = ${c}$`, `什么数使下面的式子成立？$${a} + \\square = ${c}$`],
+      [
+        `What number makes this true? $${texCommas(a)} + \\square = ${texCommas(c)}$`,
+        `什么数使下面的式子成立？$${texCommas(a)} + \\square = ${texCommas(c)}$`,
+      ],
       answer,
       [c + a, answer + 1000, answer - 1000, answer + 10],
-      [`Subtract the known addend: $${c} - ${a} = ${answer}$.`, `减去已知的加数：$${c} - ${a} = ${answer}$。`],
+      [
+        `Subtract the known addend: $${texCommas(c)} - ${texCommas(a)} = ${texCommas(answer)}$.`,
+        `减去已知的加数：$${texCommas(c)} - ${texCommas(a)} = ${texCommas(answer)}$。`,
+      ],
     );
   },
 );
@@ -172,12 +181,15 @@ const startingNumber = skill(
     const c = rng.int(1000, 900000);
     const answer = b + c;
     return whole(
-      [`What number makes this true? $\\square - ${b} = ${c}$`, `什么数使下面的式子成立？$\\square - ${b} = ${c}$`],
+      [
+        `What number makes this true? $\\square - ${texCommas(b)} = ${texCommas(c)}$`,
+        `什么数使下面的式子成立？$\\square - ${texCommas(b)} = ${texCommas(c)}$`,
+      ],
       answer,
       [Math.abs(b - c), answer + 1000, answer - 1000, answer + 100],
       [
-        `The start is what was left plus what was taken away: $${c} + ${b} = ${answer}$.`,
-        `原来的数等于剩下的数加上减去的数：$${c} + ${b} = ${answer}$。`,
+        `The start is what was left plus what was taken away: $${texCommas(c)} + ${texCommas(b)} = ${texCommas(answer)}$.`,
+        `原来的数等于剩下的数加上减去的数：$${texCommas(c)} + ${texCommas(b)} = ${texCommas(answer)}$。`,
       ],
     );
   },

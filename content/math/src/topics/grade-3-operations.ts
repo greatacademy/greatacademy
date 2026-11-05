@@ -658,8 +658,8 @@ const relatingMultiplicationDivision = earlyTopic(
           b,
           [product - a, product + a, a === b ? a + 1 : a],
           [
-            `Division undoes multiplication: ${a} times ${b} is ${product}, so ${product} divided by ${a} is ${b}.`,
-            `除法是乘法的逆运算：${a} 乘 ${b} 是 ${product}，所以 ${product} 除以 ${a} 是 ${b}。`,
+            `Division undoes multiplication: $${a} \\times ${b} = ${product}$, so $${product} \\div ${a} = ${b}$.`,
+            `除法是乘法的逆运算：$${a} \\times ${b} = ${product}$，所以 $${product} \\div ${a} = ${b}$。`,
           ],
         );
       },
@@ -1159,8 +1159,8 @@ const roundingToNearestTen = earlyTopic(
         const ry = Math.round(y / 10) * 10;
         return whole(
           [
-            `Round each number to the nearest ten to estimate ${x} + ${y}. What is the estimate?`,
-            `把每个数取近似到十位，估算 ${x} + ${y}。估算的结果是多少？`,
+            `Round each number to the nearest ten to estimate $${x} + ${y}$. What is the estimate?`,
+            `把每个数取近似到十位，估算 $${x} + ${y}$。估算的结果是多少？`,
           ],
           rx + ry,
           [x + y, rx + ry + 10, rx + ry - 10],
