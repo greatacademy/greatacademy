@@ -77,20 +77,20 @@ const centerPoints = (motion: Motion): Point[] =>
 /** coordinates writes a point for alt text. */
 const coordinates = (p: Point) => `(${Math.round(p[0] * 100) / 100}, ${Math.round(p[1] * 100) / 100})`;
 
-/** movedPoint draws a point, its image in the result color, and the motion between them, for a solution. */
-export function movedPoint(name: string, from: Point, to: Point, motion: Motion): Figure {
+/** movedPoint draws a point, its image in the result color, named imageName, and the motion between them, for a solution. */
+export function movedPoint(name: string, from: Point, to: Point, motion: Motion, imageName = `${name}′`): Figure {
   const away = labelSide(to, from);
   const marks: PlaneMark[] = [
     ...frameMarks(motion),
     ...motionMarks(from, to, motion),
     { kind: "point", at: from, label: name, dir: away, accent: true },
-    { kind: "point", at: to, label: `${name}′`, dir: labelSide(from, to), tone: "result" },
+    { kind: "point", at: to, label: imageName, dir: labelSide(from, to), tone: "result" },
   ];
   return {
     svg: plane(viewAround([from, to, ...centerPoints(motion)]), marks),
     alt: t(
-      `${name} ${coordinates(from)} moves to its image ${name}′ ${coordinates(to)}.`,
-      `${name} ${coordinates(from)} 移到它的像 ${name}′ ${coordinates(to)}。`,
+      `${name} ${coordinates(from)} moves to its image ${imageName} ${coordinates(to)}.`,
+      `${name} ${coordinates(from)} 移到它的像 ${imageName} ${coordinates(to)}。`,
     ),
   };
 }

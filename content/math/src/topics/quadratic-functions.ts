@@ -21,7 +21,7 @@ import {
   surdLatex,
   union,
 } from "@ga/subject-math";
-
+import { annotate, at, guides, plain } from "../graph-figures.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -429,25 +429,34 @@ export const verticalReflectionsOfQuadraticFunctions: TopicDef = {
         p *= rng.sign();
         const qn = q.toNumber();
         const v: PlaneView = down ? { xMin: -6, xMax: 6, yMin: -10, yMax: 2 } : { xMin: -6, xMax: 6, yMin: -2, yMax: 10 };
-        return {
-          ...numberProblem({
-            prompt: t("The graph of $y = ax^{2}$ passes through the marked point. Find $a$.", "$y = ax^{2}$ 的图象经过标出的点。求 $a$。"),
-            answer: a,
-            wrong: [a.neg(), q.div(Q.of(p)), Q.of(p * p).div(q)],
-            solution: t(
-              `The marked point is $${pt(p, q)}$. Substitute it:${steps(`${num(q)} = a \\cdot ${paren(p)}^{2} = ${p * p === 1 ? "" : p * p}a`, `a = ${num(a)}`)}`,
-              `标出的点是 $${pt(p, q)}$。代入：${steps(`${num(q)} = a \\cdot ${paren(p)}^{2} = ${p * p === 1 ? "" : p * p}a`, `a = ${num(a)}`)}`,
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                "The graph of $y = ax^{2}$ passes through the marked point. Find $a$.",
+                "$y = ax^{2}$ 的图象经过标出的点。求 $a$。",
+              ),
+              answer: a,
+              wrong: [a.neg(), q.div(Q.of(p)), Q.of(p * p).div(q)],
+              solution: t(
+                `The marked point is $${pt(p, q)}$. Substitute it:${steps(`${num(q)} = a \\cdot ${paren(p)}^{2} = ${p * p === 1 ? "" : p * p}a`, `a = ${num(a)}`)}`,
+                `标出的点是 $${pt(p, q)}$。代入：${steps(`${num(q)} = a \\cdot ${paren(p)}^{2} = ${p * p === 1 ? "" : p * p}a`, `a = ${num(a)}`)}`,
+              ),
+            }),
+            figure: parabolaFigure(
+              a,
+              0,
+              0,
+              [{ kind: "point", at: [p, qn] }],
+              v,
+              t(`The marked point is (${p}, ${qn}).`, `标出的点是 (${p}, ${qn})。`),
             ),
-          }),
-          figure: parabolaFigure(
-            a,
-            0,
-            0,
-            [{ kind: "point", at: [p, qn] }],
-            v,
-            t(`The marked point is (${p}, ${qn}).`, `标出的点是 (${p}, ${qn})。`),
-          ),
-        };
+          },
+          v,
+          guides([p, qn], at([p, qn])),
+          `With vertex at the origin, ${qn} = a · ${p * p}, so a = ${plain(a)}.`,
+          `顶点在原点，${qn} = a · ${p * p}，所以 a = ${plain(a)}。`,
+        );
       },
     },
   ],
@@ -557,25 +566,31 @@ export const graphsOfGeneralQuadraticFunctions: TopicDef = {
           return same(`$y = ${quad(p, q, r)}$`);
         });
         const up = a > 0;
-        return {
-          ...choiceProblem({
-            prompt: t("Which equation has the graph shown?", "图中的图象是哪个方程的图象？"),
-            options,
-            correct: order.indexOf(0),
-            solution: t(
-              `The parabola opens ${up ? "upward" : "downward"}, so $a ${up ? ">" : "<"} 0$, and it crosses the $y$-axis at $(0, ${c})$, so $c = ${c}$. Of the two equations left, only $y = ${quad(a, b, c)}$ passes through the vertex $(${h}, ${k})$: ${steps(`${plugIn(a, b, c, h)} = ${k}`)}`,
-              `抛物线开口向${up ? "上" : "下"}，所以 $a ${up ? ">" : "<"} 0$；它与 $y$ 轴交于 $(0, ${c})$，所以 $c = ${c}$。剩下的两个方程中，只有 $y = ${quad(a, b, c)}$ 经过顶点 $(${h}, ${k})$：${steps(`${plugIn(a, b, c, h)} = ${k}`)}`,
+        return annotate(
+          {
+            ...choiceProblem({
+              prompt: t("Which equation has the graph shown?", "图中的图象是哪个方程的图象？"),
+              options,
+              correct: order.indexOf(0),
+              solution: t(
+                `The parabola opens ${up ? "upward" : "downward"}, so $a ${up ? ">" : "<"} 0$, and it crosses the $y$-axis at $(0, ${c})$, so $c = ${c}$. Of the two equations left, only $y = ${quad(a, b, c)}$ passes through the vertex $(${h}, ${k})$: ${steps(`${plugIn(a, b, c, h)} = ${k}`)}`,
+                `抛物线开口向${up ? "上" : "下"}，所以 $a ${up ? ">" : "<"} 0$；它与 $y$ 轴交于 $(0, ${c})$，所以 $c = ${c}$。剩下的两个方程中，只有 $y = ${quad(a, b, c)}$ 经过顶点 $(${h}, ${k})$：${steps(`${plugIn(a, b, c, h)} = ${k}`)}`,
+              ),
+            }),
+            figure: parabolaFigure(
+              a,
+              h,
+              k,
+              [{ kind: "point", at: [0, c] }],
+              view,
+              t(`It crosses the y-axis at (0, ${c}).`, `它与 y 轴交于 (0, ${c})。`),
             ),
-          }),
-          figure: parabolaFigure(
-            a,
-            h,
-            k,
-            [{ kind: "point", at: [0, c] }],
-            view,
-            t(`It crosses the y-axis at (0, ${c}).`, `它与 y 轴交于 (0, ${c})。`),
-          ),
-        };
+          },
+          view,
+          [{ kind: "point", at: [h, k], label: at([h, k]), dir: up ? "s" : "n", tone: "result" }],
+          `The vertex is ${at([h, k])} and the graph crosses the y-axis at ${c}.`,
+          `顶点是 ${at([h, k])}，图象与 y 轴交于 ${c}。`,
+        );
       },
     },
   ],
@@ -764,21 +779,29 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
             : sign === 0
               ? t("touches the $x$-axis only at its vertex", "只在顶点处与 $x$ 轴相切")
               : t("does not meet the $x$-axis", "与 $x$ 轴没有交点");
-        return {
-          ...choiceProblem({
-            prompt: t(
-              "The graph of $y = ax^{2} + bx + c$ is shown. What is true of its discriminant?",
-              "如图是 $y = ax^{2} + bx + c$ 的图象。它的判别式满足什么？",
-            ),
-            options,
-            correct: 1 - sign,
-            solution: t(
-              `The parabola ${meets.en}, so ${options[1 - sign]!.en}.`,
-              `抛物线${meets["zh-CN"]}，所以 ${options[1 - sign]!["zh-CN"]}。`,
-            ),
-          }),
-          figure: parabolaFigure(a, h, k),
-        };
+        return annotate(
+          {
+            ...choiceProblem({
+              prompt: t(
+                "The graph of $y = ax^{2} + bx + c$ is shown. What is true of its discriminant?",
+                "如图是 $y = ax^{2} + bx + c$ 的图象。它的判别式满足什么？",
+              ),
+              options,
+              correct: 1 - sign,
+              solution: t(
+                `The parabola ${meets.en}, so ${options[1 - sign]!.en}.`,
+                `抛物线${meets["zh-CN"]}，所以 ${options[1 - sign]!["zh-CN"]}。`,
+              ),
+            }),
+            figure: parabolaFigure(a, h, k),
+          },
+          view,
+          (sign < 0 ? [] : sign === 0 ? [h] : [h - Math.sqrt(-k / toQ(a).toNumber()), h + Math.sqrt(-k / toQ(a).toNumber())]).map(
+            (x): PlaneMark => ({ kind: "point", at: [x, 0], tone: "result" }),
+          ),
+          `The parabola meets the x-axis at ${sign < 0 ? 0 : sign === 0 ? 1 : 2} points.`,
+          `抛物线与 x 轴有 ${sign < 0 ? 0 : sign === 0 ? 1 : 2} 个交点。`,
+        );
       },
     },
     {
@@ -863,19 +886,28 @@ export const theAxisOfSymmetryOfAParabola: TopicDef = {
         do v = drawVertex(rng);
         while (v.h === 0 || v.h === v.k);
         const { a, h, k } = v;
-        return {
-          ...numberProblem({
-            prompt: t("What is the equation of the axis of symmetry of the parabola shown?", "图中抛物线的对称轴方程是什么？"),
-            answer: h,
-            solveFor: "x",
-            wrong: [k, -h],
-            solution: t(
-              `The vertex is $(${h}, ${k})$, so the axis of symmetry is the vertical line $x = ${h}$.`,
-              `顶点是 $(${h}, ${k})$，所以对称轴是竖直线 $x = ${h}$。`,
-            ),
-          }),
-          figure: parabolaFigure(a, h, k),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t("What is the equation of the axis of symmetry of the parabola shown?", "图中抛物线的对称轴方程是什么？"),
+              answer: h,
+              solveFor: "x",
+              wrong: [k, -h],
+              solution: t(
+                `The vertex is $(${h}, ${k})$, so the axis of symmetry is the vertical line $x = ${h}$.`,
+                `顶点是 $(${h}, ${k})$，所以对称轴是竖直线 $x = ${h}$。`,
+              ),
+            }),
+            figure: parabolaFigure(a, h, k),
+          },
+          view,
+          [
+            { kind: "line", a: [h, 0], b: [h, 1], dashed: true, tone: "result" },
+            { kind: "point", at: [h, k], label: at([h, k]), dir: "e", tone: "result" },
+          ],
+          `The axis of symmetry passes through the vertex: x = ${h}.`,
+          `对称轴经过顶点：x = ${h}。`,
+        );
       },
     },
     {
@@ -1341,18 +1373,27 @@ export const domainAndRangeOfQuadraticFunctions: TopicDef = {
         const { a, h, k } = v;
         const up = a.sign() > 0;
         const set = ray(k, up);
-        return {
-          ...intervalProblem({
-            prompt: t("Find the range of the quadratic function whose graph is shown.", "求图中二次函数的值域。"),
-            set,
-            wrong: [ray(k, !up), ray(k, up, false), realLine, ray(h, up)],
-            solution: t(
-              `The parabola opens ${up ? "upward" : "downward"} from its vertex $${pt(h, k)}$, so the outputs are $${k}$ and every number ${up ? "above" : "below"} it: the range is $${intervalLatex(set)}$.`,
-              `抛物线从顶点 $${pt(h, k)}$ 开口向${up ? "上" : "下"}，所以输出是 $${k}$ 及所有${up ? "大于" : "小于"}它的数：值域是 $${intervalLatex(set)}$。`,
-            ),
-          }),
-          figure: parabolaFigure(a, h, k),
-        };
+        return annotate(
+          {
+            ...intervalProblem({
+              prompt: t("Find the range of the quadratic function whose graph is shown.", "求图中二次函数的值域。"),
+              set,
+              wrong: [ray(k, !up), ray(k, up, false), realLine, ray(h, up)],
+              solution: t(
+                `The parabola opens ${up ? "upward" : "downward"} from its vertex $${pt(h, k)}$, so the outputs are $${k}$ and every number ${up ? "above" : "below"} it: the range is $${intervalLatex(set)}$.`,
+                `抛物线从顶点 $${pt(h, k)}$ 开口向${up ? "上" : "下"}，所以输出是 $${k}$ 及所有${up ? "大于" : "小于"}它的数：值域是 $${intervalLatex(set)}$。`,
+              ),
+            }),
+            figure: parabolaFigure(a, h, k),
+          },
+          view,
+          [
+            { kind: "line", a: [0, k], b: [1, k], dashed: true, tone: "action" },
+            { kind: "point", at: [h, k], label: at([h, k]), dir: up ? "s" : "n", tone: "result" },
+          ],
+          `The lowest or highest height is the vertex: y = ${k}.`,
+          `最低或最高的高度在顶点：y = ${k}。`,
+        );
       },
     },
     {

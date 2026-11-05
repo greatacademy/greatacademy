@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, linear, num, type PlaneMark, type PlaneView, type Point, plane, poly, Q } from "@ga/subject-math";
-
+import { annotate, at, plain, riseRun } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, numberProblem, pointProblem, solutionsProblem, steps, why } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -621,21 +621,27 @@ export const periodicFunctions: TopicDef = {
       generate(rng) {
         const p = rng.int(2, 6);
         const ys = periodicPattern(rng, p);
-        return {
-          ...numberProblem({
-            prompt: t(
-              `${graphShown.en} The pattern continues in both directions forever. Find the period of $f$.`,
-              `${graphShown["zh-CN"]}图形向两个方向无限延续。求 $f$ 的周期。`,
-            ),
-            answer: p,
-            wrong: [2 * p, p + 1, p - 1],
-            solution: t(
-              `The graph repeats every $${p}$ units: for example $f(0) = f(${p}) = ${ys[0]}$, and the whole piece from $x = 0$ to $x = ${p}$ is copied again from $x = ${p}$ to $x = ${2 * p}$. No shorter shift fits, so the period is $${p}$.`,
-              `图象每 $${p}$ 个单位重复一次：例如 $f(0) = f(${p}) = ${ys[0]}$，从 $x = 0$ 到 $x = ${p}$ 的整段图形在 $x = ${p}$ 到 $x = ${2 * p}$ 又出现一次。没有更短的平移能重合，所以周期为 $${p}$。`,
-            ),
-          }),
-          figure: periodicFigure(ys),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `${graphShown.en} The pattern continues in both directions forever. Find the period of $f$.`,
+                `${graphShown["zh-CN"]}图形向两个方向无限延续。求 $f$ 的周期。`,
+              ),
+              answer: p,
+              wrong: [2 * p, p + 1, p - 1],
+              solution: t(
+                `The graph repeats every $${p}$ units: for example $f(0) = f(${p}) = ${ys[0]}$, and the whole piece from $x = 0$ to $x = ${p}$ is copied again from $x = ${p}$ to $x = ${2 * p}$. No shorter shift fits, so the period is $${p}$.`,
+                `图象每 $${p}$ 个单位重复一次：例如 $f(0) = f(${p}) = ${ys[0]}$，从 $x = 0$ 到 $x = ${p}$ 的整段图形在 $x = ${p}$ 到 $x = ${2 * p}$ 又出现一次。没有更短的平移能重合，所以周期为 $${p}$。`,
+              ),
+            }),
+            figure: periodicFigure(ys),
+          },
+          view,
+          [{ kind: "arrow", from: [0, ys[0]!], to: [p, ys[0]!], tone: "result" }],
+          `The pattern repeats every ${p}.`,
+          `图象每隔 ${p} 重复一次。`,
+        );
       },
     },
     {
@@ -678,21 +684,27 @@ export const periodicFunctions: TopicDef = {
         const n = rng.bool(0.75) ? rng.int(10, 60) : -rng.int(10, 40);
         const r = mod(n, p);
         const q = (n - r) / p;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `${graphShown.en} The pattern continues in both directions forever. Find $f(${n})$.`,
-              `${graphShown["zh-CN"]}图形向两个方向无限延续。求 $f(${n})$。`,
-            ),
-            answer: ys[r]!,
-            wrong: [ys[mod(n + 1, p)]!, ys[mod(n - 1, p)]!, ys[mod(-n, p)]!],
-            solution: t(
-              `The graph repeats every $${p}$ units. $${n} = ${q} \\cdot ${p}${plus(r)}$, so $f(${n}) = f(${r}) = ${ys[r]}$, read from the graph.`,
-              `图象每 $${p}$ 个单位重复一次。$${n} = ${q} \\cdot ${p}${plus(r)}$，所以 $f(${n}) = f(${r}) = ${ys[r]}$，由图象读出。`,
-            ),
-          }),
-          figure: periodicFigure(ys),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `${graphShown.en} The pattern continues in both directions forever. Find $f(${n})$.`,
+                `${graphShown["zh-CN"]}图形向两个方向无限延续。求 $f(${n})$。`,
+              ),
+              answer: ys[r]!,
+              wrong: [ys[mod(n + 1, p)]!, ys[mod(n - 1, p)]!, ys[mod(-n, p)]!],
+              solution: t(
+                `The graph repeats every $${p}$ units. $${n} = ${q} \\cdot ${p}${plus(r)}$, so $f(${n}) = f(${r}) = ${ys[r]}$, read from the graph.`,
+                `图象每 $${p}$ 个单位重复一次。$${n} = ${q} \\cdot ${p}${plus(r)}$，所以 $f(${n}) = f(${r}) = ${ys[r]}$，由图象读出。`,
+              ),
+            }),
+            figure: periodicFigure(ys),
+          },
+          view,
+          [{ kind: "point", at: [r, ys[r]!], label: at([r, ys[r]!]), dir: "n", tone: "result" }],
+          `${n} = ${p} · ${q} + ${r}, so the value is the one at x = ${r}: ${ys[r]}.`,
+          `${n} = ${p} · ${q} + ${r}，所以函数值等于 x = ${r} 处的值：${ys[r]}。`,
+        );
       },
     },
   ],
@@ -1269,21 +1281,27 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
         const [i, j] = rng.sample(range(0, pts.length - 1), 2).sort((a, b) => a - b) as [number, number];
         const [a, fa] = pts[i]!;
         const [b, fb] = pts[j]!;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `${graphShown.en} Find the average rate of change of $f$ from $x = ${a}$ to $x = ${b}$.`,
-              `${graphShown["zh-CN"]}求 $f$ 从 $x = ${a}$ 到 $x = ${b}$ 的平均变化率。`,
-            ),
-            answer: averageRate(fa, fb, a, b),
-            mistakes: rateMistakes(fa, fb, a, b),
-            solution: t(
-              `The graph passes through $${pt(a, fa)}$ and $${pt(b, fb)}$, so${steps(rateLatex("f", fa, fb, a, b))}`,
-              `图象经过 $${pt(a, fa)}$ 和 $${pt(b, fb)}$，所以${steps(rateLatex("f", fa, fb, a, b))}`,
-            ),
-          }),
-          figure: segmentsFigure(pts),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `${graphShown.en} Find the average rate of change of $f$ from $x = ${a}$ to $x = ${b}$.`,
+                `${graphShown["zh-CN"]}求 $f$ 从 $x = ${a}$ 到 $x = ${b}$ 的平均变化率。`,
+              ),
+              answer: averageRate(fa, fb, a, b),
+              mistakes: rateMistakes(fa, fb, a, b),
+              solution: t(
+                `The graph passes through $${pt(a, fa)}$ and $${pt(b, fb)}$, so${steps(rateLatex("f", fa, fb, a, b))}`,
+                `图象经过 $${pt(a, fa)}$ 和 $${pt(b, fb)}$，所以${steps(rateLatex("f", fa, fb, a, b))}`,
+              ),
+            }),
+            figure: segmentsFigure(pts),
+          },
+          view,
+          [{ kind: "segment", a: [a, fa], b: [b, fb], dashed: true, tone: "result" }, ...riseRun([a, fa], [b, fb])],
+          `From ${at([a, fa])} to ${at([b, fb])} the run is ${b - a} and the rise is ${fb - fa}, a rate of ${plain(averageRate(fa, fb, a, b))}.`,
+          `从 ${at([a, fa])} 到 ${at([b, fb])}，水平变化 ${b - a}，竖直变化 ${fb - fa}，平均变化率是 ${plain(averageRate(fa, fb, a, b))}。`,
+        );
       },
     },
     {

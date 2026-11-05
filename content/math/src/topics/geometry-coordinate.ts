@@ -15,7 +15,7 @@ import {
   radical,
   simplifyRadical,
 } from "@ga/subject-math";
-
+import { annotate, graphFigure, legs, plain, at as plainAt, riseOf, root, sideLabels } from "../graph-figures.ts";
 import {
   equationProblem,
   expressionProblem,
@@ -618,15 +618,27 @@ export const midpointsInTheCoordinatePlane: TopicDef = {
         let B: Point;
         do B = [rng.int(-9, 9), rng.int(-9, 9)];
         while (B[0] === A[0] && B[1] === A[1]);
-        return pointProblem({
-          prompt: t(
-            `Find the midpoint of the segment with endpoints $${pt("A", A)}$ and $${pt("B", B)}$.`,
-            `求以 $${pt("A", A)}$ 和 $${pt("B", B)}$ 为端点的线段的中点。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Find the midpoint of the segment with endpoints $${pt("A", A)}$ and $${pt("B", B)}$.`,
+              `求以 $${pt("A", A)}$ 和 $${pt("B", B)}$ 为端点的线段的中点。`,
+            ),
+            answer: midpointOf(A, B),
+            wrong: midpointWrong(A, B),
+            solution: t(
+              `Average the coordinates of the endpoints:${midpointSteps(A, B)}`,
+              `求两个端点坐标的平均数：${midpointSteps(A, B)}`,
+            ),
+          }),
+          solutionFigure: shapeFigure(
+            ["A", "B"],
+            [A, B],
+            `The midpoint of AB is ${plainAt([(A[0] + B[0]) / 2, (A[1] + B[1]) / 2])}.`,
+            `AB 的中点是 ${plainAt([(A[0] + B[0]) / 2, (A[1] + B[1]) / 2])}。`,
+            [...legs(A, B), { kind: "point", at: [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], label: "M", dir: "se", tone: "result" }],
           ),
-          answer: midpointOf(A, B),
-          wrong: midpointWrong(A, B),
-          solution: t(`Average the coordinates of the endpoints:${midpointSteps(A, B)}`, `求两个端点坐标的平均数：${midpointSteps(A, B)}`),
-        });
+        };
       },
     },
     {
@@ -657,6 +669,13 @@ export const midpointsInTheCoordinatePlane: TopicDef = {
             `Segment AB in the coordinate plane, from ${listPts(["A", "B"], [A, B])}.`,
             `坐标平面中的线段 AB，端点为 ${listPts(["A", "B"], [A, B])}。`,
           ),
+          solutionFigure: shapeFigure(
+            ["A", "B"],
+            [A, B],
+            `The midpoint of AB is ${plainAt([(A[0] + B[0]) / 2, (A[1] + B[1]) / 2])}.`,
+            `AB 的中点是 ${plainAt([(A[0] + B[0]) / 2, (A[1] + B[1]) / 2])}。`,
+            [...legs(A, B), { kind: "point", at: [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], label: "M", dir: "se", tone: "result" }],
+          ),
         };
       },
     },
@@ -673,18 +692,32 @@ export const midpointsInTheCoordinatePlane: TopicDef = {
         do M = [rng.int(-8, 8), rng.int(-8, 8)];
         while (M[0] === A[0] && M[1] === A[1]);
         const B: Point = [2 * M[0] - A[0], 2 * M[1] - A[1]];
-        return pointProblem({
-          prompt: t(
-            `$M${pointLatex(M)}$ is the midpoint of $\\overline{AB}$, and $${pt("A", A)}$. Find the coordinates of $B$.`,
-            `$M${pointLatex(M)}$ 是 $\\overline{AB}$ 的中点，且 $${pt("A", A)}$。求 $B$ 的坐标。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `$M${pointLatex(M)}$ is the midpoint of $\\overline{AB}$, and $${pt("A", A)}$. Find the coordinates of $B$.`,
+              `$M${pointLatex(M)}$ 是 $\\overline{AB}$ 的中点，且 $${pt("A", A)}$。求 $B$ 的坐标。`,
+            ),
+            answer: B,
+            wrong: [midpointOf(A, M), [M[0] - A[0], M[1] - A[1]], [2 * A[0] - M[0], 2 * A[1] - M[1]]],
+            solution: t(
+              `Each coordinate of $M$ is the average of those of $A$ and $B$, so $B = 2M - A$:${steps(`x_B = 2 \\cdot ${paren(M[0])} - ${paren(A[0])} = ${B[0]}`, `y_B = 2 \\cdot ${paren(M[1])} - ${paren(A[1])} = ${B[1]}`)}So $${pt("B", B)}$.`,
+              `$M$ 的每个坐标都是 $A$、$B$ 对应坐标的平均数，所以 $B = 2M - A$：${steps(`x_B = 2 \\cdot ${paren(M[0])} - ${paren(A[0])} = ${B[0]}`, `y_B = 2 \\cdot ${paren(M[1])} - ${paren(A[1])} = ${B[1]}`)}所以 $${pt("B", B)}$。`,
+            ),
+          }),
+          solutionFigure: shapeFigure(
+            ["A", "B"],
+            [A, B],
+            `M is halfway from A to B, so B is ${plainAt(B)}.`,
+            `M 是 A 到 B 的中点，所以 B 是 ${plainAt(B)}。`,
+            [
+              { kind: "arrow", from: A, to: M, tone: "action" },
+              { kind: "arrow", from: M, to: B, tone: "action" },
+              { kind: "point", at: M, label: "M", dir: "se" },
+              { kind: "point", at: B, tone: "result" },
+            ],
           ),
-          answer: B,
-          wrong: [midpointOf(A, M), [M[0] - A[0], M[1] - A[1]], [2 * A[0] - M[0], 2 * A[1] - M[1]]],
-          solution: t(
-            `Each coordinate of $M$ is the average of those of $A$ and $B$, so $B = 2M - A$:${steps(`x_B = 2 \\cdot ${paren(M[0])} - ${paren(A[0])} = ${B[0]}`, `y_B = 2 \\cdot ${paren(M[1])} - ${paren(A[1])} = ${B[1]}`)}So $${pt("B", B)}$.`,
-            `$M$ 的每个坐标都是 $A$、$B$ 对应坐标的平均数，所以 $B = 2M - A$：${steps(`x_B = 2 \\cdot ${paren(M[0])} - ${paren(A[0])} = ${B[0]}`, `y_B = 2 \\cdot ${paren(M[1])} - ${paren(A[1])} = ${B[1]}`)}所以 $${pt("B", B)}$。`,
-          ),
-        });
+        };
       },
     },
   ],
@@ -754,18 +787,30 @@ export const partitioningLineSegments: TopicDef = {
         const B: Point = [A[0] + n * u, A[1] + n * v];
         const P: Point = [A[0] + k * u, A[1] + k * v];
         const f = `\\frac{${k}}{${n}}`;
-        return pointProblem({
-          prompt: t(
-            `Find the point $P$ that is $${f}$ of the way from $${pt("A", A)}$ to $${pt("B", B)}$.`,
-            `求从 $${pt("A", A)}$ 到 $${pt("B", B)}$ 的 $${f}$ 处的点 $P$。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Find the point $P$ that is $${f}$ of the way from $${pt("A", A)}$ to $${pt("B", B)}$.`,
+              `求从 $${pt("A", A)}$ 到 $${pt("B", B)}$ 的 $${f}$ 处的点 $P$。`,
+            ),
+            answer: P,
+            wrong: [[B[0] - k * u, B[1] - k * v], [Q.of(k * B[0], n), Q.of(k * B[1], n)], midpointOf(A, B)],
+            solution: t(
+              `The change from $A$ to $B$ is $(${n * u}, ${n * v})$, and $${f}$ of it is $(${k * u}, ${k * v})$. Add it to $A$:${steps(`P = (${A[0]} + ${paren(k * u)}, ${A[1]} + ${paren(k * v)}) = ${pointLatex(P)}`)}`,
+              `从 $A$ 到 $B$ 的变化量是 $(${n * u}, ${n * v})$，它的 $${f}$ 是 $(${k * u}, ${k * v})$。加到 $A$ 上：${steps(`P = (${A[0]} + ${paren(k * u)}, ${A[1]} + ${paren(k * v)}) = ${pointLatex(P)}`)}`,
+            ),
+          }),
+          solutionFigure: partition(
+            A,
+            B,
+            u,
+            v,
+            n,
+            k,
+            `Cut AB into ${n} equal steps: ${k} steps from A is ${plainAt(P)}.`,
+            `把 AB 分成 ${n} 等份：从 A 走 ${k} 份到达 ${plainAt(P)}。`,
           ),
-          answer: P,
-          wrong: [[B[0] - k * u, B[1] - k * v], [Q.of(k * B[0], n), Q.of(k * B[1], n)], midpointOf(A, B)],
-          solution: t(
-            `The change from $A$ to $B$ is $(${n * u}, ${n * v})$, and $${f}$ of it is $(${k * u}, ${k * v})$. Add it to $A$:${steps(`P = (${A[0]} + ${paren(k * u)}, ${A[1]} + ${paren(k * v)}) = ${pointLatex(P)}`)}`,
-            `从 $A$ 到 $B$ 的变化量是 $(${n * u}, ${n * v})$，它的 $${f}$ 是 $(${k * u}, ${k * v})$。加到 $A$ 上：${steps(`P = (${A[0]} + ${paren(k * u)}, ${A[1]} + ${paren(k * v)}) = ${pointLatex(P)}`)}`,
-          ),
-        });
+        };
       },
     },
     {
@@ -783,18 +828,34 @@ export const partitioningLineSegments: TopicDef = {
         const B: Point = [A[0] + n * u, A[1] + n * v];
         const P: Point = [A[0] + a * u, A[1] + a * v];
         const f = `\\frac{${a}}{${n}}`;
-        return pointProblem({
-          prompt: t(
-            `Point $P$ lies on $\\overline{AB}$ with $AP : PB = ${a} : ${b}$, where $${pt("A", A)}$ and $${pt("B", B)}$. Find the coordinates of $P$.`,
-            `点 $P$ 在 $\\overline{AB}$ 上，且 $AP : PB = ${a} : ${b}$，其中 $${pt("A", A)}$，$${pt("B", B)}$。求 $P$ 的坐标。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Point $P$ lies on $\\overline{AB}$ with $AP : PB = ${a} : ${b}$, where $${pt("A", A)}$ and $${pt("B", B)}$. Find the coordinates of $P$.`,
+              `点 $P$ 在 $\\overline{AB}$ 上，且 $AP : PB = ${a} : ${b}$，其中 $${pt("A", A)}$，$${pt("B", B)}$。求 $P$ 的坐标。`,
+            ),
+            answer: P,
+            wrong: [
+              [A[0] + b * u, A[1] + b * v],
+              [Q.of(A[0]).add(Q.of(a * n * u, b)), Q.of(A[1]).add(Q.of(a * n * v, b))],
+              midpointOf(A, B),
+            ],
+            solution: t(
+              `The ratio $${a} : ${b}$ splits $\\overline{AB}$ into $${n}$ equal parts, so $P$ is $${f}$ of the way from $A$ to $B$. The change from $A$ to $B$ is $(${n * u}, ${n * v})$, and $${f}$ of it is $(${a * u}, ${a * v})$:${steps(`P = (${A[0]} + ${paren(a * u)}, ${A[1]} + ${paren(a * v)}) = ${pointLatex(P)}`)}`,
+              `比 $${a} : ${b}$ 把 $\\overline{AB}$ 分成 $${n}$ 等份，所以 $P$ 在从 $A$ 到 $B$ 的 $${f}$ 处。从 $A$ 到 $B$ 的变化量是 $(${n * u}, ${n * v})$，它的 $${f}$ 是 $(${a * u}, ${a * v})$：${steps(`P = (${A[0]} + ${paren(a * u)}, ${A[1]} + ${paren(a * v)}) = ${pointLatex(P)}`)}`,
+            ),
+          }),
+          solutionFigure: partition(
+            A,
+            B,
+            u,
+            v,
+            n,
+            a,
+            `Cut AB into ${n} equal steps: ${a} steps from A is ${plainAt(P)}.`,
+            `把 AB 分成 ${n} 等份：从 A 走 ${a} 份到达 ${plainAt(P)}。`,
           ),
-          answer: P,
-          wrong: [[A[0] + b * u, A[1] + b * v], [Q.of(A[0]).add(Q.of(a * n * u, b)), Q.of(A[1]).add(Q.of(a * n * v, b))], midpointOf(A, B)],
-          solution: t(
-            `The ratio $${a} : ${b}$ splits $\\overline{AB}$ into $${n}$ equal parts, so $P$ is $${f}$ of the way from $A$ to $B$. The change from $A$ to $B$ is $(${n * u}, ${n * v})$, and $${f}$ of it is $(${a * u}, ${a * v})$:${steps(`P = (${A[0]} + ${paren(a * u)}, ${A[1]} + ${paren(a * v)}) = ${pointLatex(P)}`)}`,
-            `比 $${a} : ${b}$ 把 $\\overline{AB}$ 分成 $${n}$ 等份，所以 $P$ 在从 $A$ 到 $B$ 的 $${f}$ 处。从 $A$ 到 $B$ 的变化量是 $(${n * u}, ${n * v})$，它的 $${f}$ 是 $(${a * u}, ${a * v})$：${steps(`P = (${A[0]} + ${paren(a * u)}, ${A[1]} + ${paren(a * v)}) = ${pointLatex(P)}`)}`,
-          ),
-        });
+        };
       },
     },
     {
@@ -881,27 +942,39 @@ export const theDistanceFormula: TopicDef = {
         const A: Point = [rng.int(-9, 9), rng.int(-9, 9)];
         const B: Point = [A[0] + rng.sign() * p, A[1] + rng.sign() * q];
         const [dx, dy] = [B[0] - A[0], B[1] - A[1]];
-        return numberProblem({
-          prompt: t(`Find the distance between $${pt("A", A)}$ and $${pt("B", B)}$.`, `求 $${pt("A", A)}$ 与 $${pt("B", B)}$ 之间的距离。`),
-          answer: c,
-          mistakes: [
-            why(
-              p + q,
-              "You added the horizontal and vertical distances. They are the legs of a right triangle: square them, add, and take the square root.",
-              "你把水平距离和竖直距离直接相加了。它们是直角三角形的两条直角边：先平方，再相加，然后开平方。",
+        return {
+          ...numberProblem({
+            prompt: t(
+              `Find the distance between $${pt("A", A)}$ and $${pt("B", B)}$.`,
+              `求 $${pt("A", A)}$ 与 $${pt("B", B)}$ 之间的距离。`,
             ),
-            why(c * c, "That is the distance squared. Take the square root.", "这是距离的平方，还要开平方。"),
-            why(
-              Math.abs(dx + dy),
-              "You combined the coordinate differences without squaring them. Square each one first.",
-              "你没有平方就把坐标差合在一起了。要先把每个差平方。",
+            answer: c,
+            mistakes: [
+              why(
+                p + q,
+                "You added the horizontal and vertical distances. They are the legs of a right triangle: square them, add, and take the square root.",
+                "你把水平距离和竖直距离直接相加了。它们是直角三角形的两条直角边：先平方，再相加，然后开平方。",
+              ),
+              why(c * c, "That is the distance squared. Take the square root.", "这是距离的平方，还要开平方。"),
+              why(
+                Math.abs(dx + dy),
+                "You combined the coordinate differences without squaring them. Square each one first.",
+                "你没有平方就把坐标差合在一起了。要先把每个差平方。",
+              ),
+            ],
+            solution: t(
+              `Use the distance formula:${steps(`AB = ${distanceSteps(A, B)}`)}`,
+              `用距离公式：${steps(`AB = ${distanceSteps(A, B)}`)}`,
             ),
-          ],
-          solution: t(
-            `Use the distance formula:${steps(`AB = ${distanceSteps(A, B)}`)}`,
-            `用距离公式：${steps(`AB = ${distanceSteps(A, B)}`)}`,
+          }),
+          solutionFigure: shapeFigure(
+            ["A", "B"],
+            [A, B],
+            `The legs are ${p} and ${q}, so the distance is ${c}.`,
+            `两条直角边是 ${p} 和 ${q}，所以距离是 ${c}。`,
+            legs(A, B),
           ),
-        });
+        };
       },
     },
     {
@@ -924,23 +997,32 @@ export const theDistanceFormula: TopicDef = {
         const [dx, dy] = [B[0] - A[0], B[1] - A[1]];
         const sumSq = (A[0] + B[0]) ** 2 + (A[1] + B[1]) ** 2;
         const diffSq = Math.abs(dx * dx - dy * dy);
-        return radicalProblem({
-          prompt: t(
-            `Find the distance between $${pt("A", A)}$ and $${pt("B", B)}$. Write it in simplest radical form.`,
-            `求 $${pt("A", A)}$ 与 $${pt("B", B)}$ 之间的距离，用最简根式表示。`,
+        return {
+          ...radicalProblem({
+            prompt: t(
+              `Find the distance between $${pt("A", A)}$ and $${pt("B", B)}$. Write it in simplest radical form.`,
+              `求 $${pt("A", A)}$ 与 $${pt("B", B)}$ 之间的距离，用最简根式表示。`,
+            ),
+            answer: simplifyRadical(n),
+            wrong: [
+              `\\sqrt{${n}}`,
+              String(Math.abs(dx) + Math.abs(dy)),
+              ...(sumSq > 0 ? [rootTex(sumSq)] : []),
+              ...(diffSq > 0 ? [rootTex(diffSq)] : []),
+            ],
+            solution: t(
+              `Use the distance formula:${steps(`AB = ${distanceSteps(A, B)}`)}`,
+              `用距离公式：${steps(`AB = ${distanceSteps(A, B)}`)}`,
+            ),
+          }),
+          solutionFigure: shapeFigure(
+            ["A", "B"],
+            [A, B],
+            `The legs are ${Math.abs(dx)} and ${Math.abs(dy)}, so the distance is ${root(n)}.`,
+            `两条直角边是 ${Math.abs(dx)} 和 ${Math.abs(dy)}，所以距离是 ${root(n)}。`,
+            legs(A, B),
           ),
-          answer: simplifyRadical(n),
-          wrong: [
-            `\\sqrt{${n}}`,
-            String(Math.abs(dx) + Math.abs(dy)),
-            ...(sumSq > 0 ? [rootTex(sumSq)] : []),
-            ...(diffSq > 0 ? [rootTex(diffSq)] : []),
-          ],
-          solution: t(
-            `Use the distance formula:${steps(`AB = ${distanceSteps(A, B)}`)}`,
-            `用距离公式：${steps(`AB = ${distanceSteps(A, B)}`)}`,
-          ),
-        });
+        };
       },
     },
     {
@@ -966,19 +1048,36 @@ export const theDistanceFormula: TopicDef = {
           : `(x - ${paren(base)})^2 + (${known} - ${paren(kb)})^2`;
         const shifted = `(${linear(1, -base, v)})`;
         const values = [String(base + q), String(base - q)];
-        return solutionsProblem({
-          prompt: t(
-            `The point $${other}$ is $${c}$ units from $${pointLatex(A)}$. Find all possible values of $${v}$.`,
-            `点 $${other}$ 到 $${pointLatex(A)}$ 的距离是 $${c}$。求 $${v}$ 的所有可能值。`,
+        return {
+          ...solutionsProblem({
+            prompt: t(
+              `The point $${other}$ is $${c}$ units from $${pointLatex(A)}$. Find all possible values of $${v}$.`,
+              `点 $${other}$ 到 $${pointLatex(A)}$ 的距离是 $${c}$。求 $${v}$ 的所有可能值。`,
+            ),
+            values,
+            variable: v,
+            wrong: [[String(base + q)], [String(base - q)], [String(base + c), String(base - c)], [String(q), String(-q)]],
+            solution: t(
+              `Square the distance formula and solve:${steps(`${square} = ${c}^2`, `${paren(d)}^2 + ${shifted}^2 = ${c * c}`, `${shifted}^2 = ${q * q}`, `${linear(1, -base, v)} = \\pm ${q}`)}So $${v} = ${base + q}$ or $${v} = ${base - q}$.`,
+              `把距离公式两边平方后求解：${steps(`${square} = ${c}^2`, `${paren(d)}^2 + ${shifted}^2 = ${c * c}`, `${shifted}^2 = ${q * q}`, `${linear(1, -base, v)} = \\pm ${q}`)}所以 $${v} = ${base + q}$ 或 $${v} = ${base - q}$。`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            fitView([A, unknownY ? [known, base + q] : [base + q, known], unknownY ? [known, base - q] : [base - q, known]]),
+            [
+              ...[base + q, base - q].flatMap((w): PlaneMark[] => {
+                const end: Point = unknownY ? [known, w] : [w, known];
+                return [
+                  { kind: "segment", a: A, b: end, tone: "action" },
+                  { kind: "point", at: end, tone: "result" },
+                ];
+              }),
+              { kind: "point", at: A, label: "A", dir: "nw", accent: true },
+            ],
+            `Two points at distance ${c} from A: ${v} = ${values.join(" or ")}.`,
+            `与 A 距离为 ${c} 的点有两个：${v} = ${values.join(" 或 ")}。`,
           ),
-          values,
-          variable: v,
-          wrong: [[String(base + q)], [String(base - q)], [String(base + c), String(base - c)], [String(q), String(-q)]],
-          solution: t(
-            `Square the distance formula and solve:${steps(`${square} = ${c}^2`, `${paren(d)}^2 + ${shifted}^2 = ${c * c}`, `${shifted}^2 = ${q * q}`, `${linear(1, -base, v)} = \\pm ${q}`)}So $${v} = ${base + q}$ or $${v} = ${base - q}$.`,
-            `把距离公式两边平方后求解：${steps(`${square} = ${c}^2`, `${paren(d)}^2 + ${shifted}^2 = ${c * c}`, `${shifted}^2 = ${q * q}`, `${linear(1, -base, v)} = \\pm ${q}`)}所以 $${v} = ${base + q}$ 或 $${v} = ${base - q}$。`,
-          ),
-        });
+        };
       },
     },
   ],
@@ -1067,27 +1166,42 @@ export const theShortestDistanceBetweenAPointAndALine: TopicDef = {
         ][kind]!;
         const lineEq = `${vertical ? "x" : "y"} = ${c}`;
         const v = vertical ? "x" : "y";
-        return {
-          ...numberProblem({
-            prompt: t(
-              `Find the distance from the point $P${pointLatex(P)}$ to ${given.en}.`,
-              `求点 $P${pointLatex(P)}$ 到${given["zh-CN"]}的距离。`,
-            ),
-            answer,
-            wrong: [Math.abs(otherCoord - c), Math.abs(coord + c), Math.abs(coord) + Math.abs(c)],
-            solution: t(
-              `The line is $${lineEq}$, which is ${vertical ? "vertical" : "horizontal"}, so the shortest segment from $P$ to it is ${vertical ? "horizontal" : "vertical"}. Only the $${v}$-coordinates differ:${steps(`|${coord} - ${paren(c)}| = ${answer}`)}`,
-              `这条直线是 $${lineEq}$，它是${vertical ? "竖直" : "水平"}的，所以从 $P$ 到它的最短线段是${vertical ? "水平" : "竖直"}的，只有 $${v}$ 坐标不同：${steps(`|${coord} - ${paren(c)}| = ${answer}`)}`,
-            ),
-          }),
-          figure: {
-            svg: plane(fitView([P, vertical ? [c, P[1]] : [P[0], c]]), [
-              vertical ? { kind: "line", a: [c, 0], b: [c, 1], accent: true } : { kind: "line", a: [0, c], b: [1, c], accent: true },
-              { kind: "point", at: P, label: "P", dir: "ne" },
-            ]),
-            alt: t(`The point P${plainPt(P)} and the line ${lineEq}.`, `点 P${plainPt(P)} 和直线 ${lineEq}。`),
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `Find the distance from the point $P${pointLatex(P)}$ to ${given.en}.`,
+                `求点 $P${pointLatex(P)}$ 到${given["zh-CN"]}的距离。`,
+              ),
+              answer,
+              wrong: [Math.abs(otherCoord - c), Math.abs(coord + c), Math.abs(coord) + Math.abs(c)],
+              solution: t(
+                `The line is $${lineEq}$, which is ${vertical ? "vertical" : "horizontal"}, so the shortest segment from $P$ to it is ${vertical ? "horizontal" : "vertical"}. Only the $${v}$-coordinates differ:${steps(`|${coord} - ${paren(c)}| = ${answer}`)}`,
+                `这条直线是 $${lineEq}$，它是${vertical ? "竖直" : "水平"}的，所以从 $P$ 到它的最短线段是${vertical ? "水平" : "竖直"}的，只有 $${v}$ 坐标不同：${steps(`|${coord} - ${paren(c)}| = ${answer}`)}`,
+              ),
+            }),
+            figure: {
+              svg: plane(fitView([P, vertical ? [c, P[1]] : [P[0], c]]), [
+                vertical ? { kind: "line", a: [c, 0], b: [c, 1], accent: true } : { kind: "line", a: [0, c], b: [1, c], accent: true },
+                { kind: "point", at: P, label: "P", dir: "ne" },
+              ]),
+              alt: t(`The point P${plainPt(P)} and the line ${lineEq}.`, `点 P${plainPt(P)} 和直线 ${lineEq}。`),
+            },
           },
-        };
+          fitView([P, vertical ? [c, P[1]] : [P[0], c]]),
+          [
+            { kind: "arrow", from: P, to: vertical ? [c, P[1]] : [P[0], c], tone: "action" },
+            {
+              kind: "label",
+              at: [(P[0] + (vertical ? c : P[0])) / 2, (P[1] + (vertical ? P[1] : c)) / 2],
+              text: String(answer),
+              dir: vertical ? "s" : "e",
+            },
+            { kind: "point", at: vertical ? [c, P[1]] : [P[0], c], tone: "result" },
+          ],
+          `The distance from P to the line is ${answer}.`,
+          `P 到直线的距离是 ${answer}。`,
+        );
       },
     },
     {
@@ -1107,15 +1221,23 @@ export const theShortestDistanceBetweenAPointAndALine: TopicDef = {
           [F[1], F[0]],
         ];
         wrong.push([Q.of(P[1]).sub(b).div(m), P[1]]);
-        return pointProblem({
-          prompt: t(
-            `Find the point on the line $${line}$ that is closest to $P${pointLatex(P)}$.`,
-            `求直线 $${line}$ 上离点 $P${pointLatex(P)}$ 最近的点。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Find the point on the line $${line}$ that is closest to $P${pointLatex(P)}$.`,
+              `求直线 $${line}$ 上离点 $P${pointLatex(P)}$ 最近的点。`,
+            ),
+            answer: F,
+            wrong,
+            solution: footSteps(s),
+          }),
+          solutionFigure: graphFigure(
+            fitView([P, F]),
+            footMarks(P, F, m, b),
+            `The perpendicular from P meets the line at ${plainAt(F)}.`,
+            `从 P 作的垂线与直线交于 ${plainAt(F)}。`,
           ),
-          answer: F,
-          wrong,
-          solution: footSteps(s),
-        });
+        };
       },
     },
     {
@@ -1135,15 +1257,23 @@ export const theShortestDistanceBetweenAPointAndALine: TopicDef = {
         const horizontal = Q.of(P[0]).sub(Q.of(P[1]).sub(b).div(m)).abs();
         const foot = footSteps(s);
         const dist = steps(`PF = ${distanceSteps(P, F)}`);
-        return radicalProblem({
-          prompt: t(
-            `Find the distance from the point $P${pointLatex(P)}$ to the line $${line}$. Write it in simplest radical form.`,
-            `求点 $P${pointLatex(P)}$ 到直线 $${line}$ 的距离，用最简根式表示。`,
+        return {
+          ...radicalProblem({
+            prompt: t(
+              `Find the distance from the point $P${pointLatex(P)}$ to the line $${line}$. Write it in simplest radical form.`,
+              `求点 $P${pointLatex(P)}$ 到直线 $${line}$ 的距离，用最简根式表示。`,
+            ),
+            answer: simplifyRadical(n),
+            wrong: [num(vertical), num(horizontal), String(n)],
+            solution: t(`${foot.en} The distance is${dist}`, `${foot["zh-CN"]}距离为${dist}`),
+          }),
+          solutionFigure: graphFigure(
+            fitView([P, F]),
+            [...footMarks(P, F, m, b), ...legs(P, F)],
+            `The perpendicular from P meets the line at ${plainAt(F)}, at distance ${root(n)}.`,
+            `从 P 作的垂线与直线交于 ${plainAt(F)}，距离是 ${root(n)}。`,
           ),
-          answer: simplifyRadical(n),
-          wrong: [num(vertical), num(horizontal), String(n)],
-          solution: t(`${foot.en} The distance is${dist}`, `${foot["zh-CN"]}距离为${dist}`),
-        });
+        };
       },
     },
   ],
@@ -1249,21 +1379,27 @@ export const calculatingPerimetersInThePlane: TopicDef = {
           return acc + Math.abs(r[0] - p[0]) + Math.abs(r[1] - p[1]);
         }, 0);
         const name = shapeName(s);
-        return {
-          ...numberProblem({
-            prompt: t(
-              `Find the perimeter of ${name.en} with vertices ${listTex(s.names, s.pts, "and")}.`,
-              `求${name["zh-CN"]}的周长，顶点为 ${listZh(s.names, s.pts)}。`,
-            ),
-            answer,
-            wrong: [taxi, answer / 2, sides.slice(0, -1).reduce((a, b) => a + b, 0)],
-            solution: t(
-              `Find the length of each side:${sideSteps(s)}Add them: the perimeter is $${sides.join(" + ")} = ${answer}$.`,
-              `求每条边的长度：${sideSteps(s)}相加，周长是 $${sides.join(" + ")} = ${answer}$。`,
-            ),
-          }),
-          figure: shapeFigureOf(s),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `Find the perimeter of ${name.en} with vertices ${listTex(s.names, s.pts, "and")}.`,
+                `求${name["zh-CN"]}的周长，顶点为 ${listZh(s.names, s.pts)}。`,
+              ),
+              answer,
+              wrong: [taxi, answer / 2, sides.slice(0, -1).reduce((a, b) => a + b, 0)],
+              solution: t(
+                `Find the length of each side:${sideSteps(s)}Add them: the perimeter is $${sides.join(" + ")} = ${answer}$.`,
+                `求每条边的长度：${sideSteps(s)}相加，周长是 $${sides.join(" + ")} = ${answer}$。`,
+              ),
+            }),
+            figure: shapeFigureOf(s),
+          },
+          fitView(s.pts),
+          sideLabels(s.pts, sides.map(String)),
+          `The sides are ${sides.join(", ")}, so the perimeter is ${answer}.`,
+          `各边是 ${sides.join("、")}，所以周长是 ${answer}。`,
+        );
       },
     },
     {
@@ -1306,22 +1442,28 @@ export const calculatingPerimetersInThePlane: TopicDef = {
           return acc + Math.abs(r[0] - p[0]) + Math.abs(r[1] - p[1]);
         }, 0);
         const name = shapeName(s);
-        return {
-          ...expressionProblem({
-            prompt: t(
-              `Find the perimeter of ${name.en} with vertices ${listTex(s.names, s.pts, "and")}. Write it in simplest radical form.`,
-              `求${name["zh-CN"]}的周长，顶点为 ${listZh(s.names, s.pts)}。用最简根式表示。`,
-            ),
-            answer,
-            radical: true,
-            wrong: [ns.map((n) => `\\sqrt{${n}}`).join(" + "), rootTex(total), String(taxi)],
-            solution: t(
-              `Find the length of each side:${sideSteps(s)}Add them, combining like terms:${steps(`${terms} = ${answer}`)}`,
-              `求每条边的长度：${sideSteps(s)}相加并合并同类项：${steps(`${terms} = ${answer}`)}`,
-            ),
-          }),
-          figure: shapeFigureOf(s),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: t(
+                `Find the perimeter of ${name.en} with vertices ${listTex(s.names, s.pts, "and")}. Write it in simplest radical form.`,
+                `求${name["zh-CN"]}的周长，顶点为 ${listZh(s.names, s.pts)}。用最简根式表示。`,
+              ),
+              answer,
+              radical: true,
+              wrong: [ns.map((n) => `\\sqrt{${n}}`).join(" + "), rootTex(total), String(taxi)],
+              solution: t(
+                `Find the length of each side:${sideSteps(s)}Add them, combining like terms:${steps(`${terms} = ${answer}`)}`,
+                `求每条边的长度：${sideSteps(s)}相加并合并同类项：${steps(`${terms} = ${answer}`)}`,
+              ),
+            }),
+            figure: shapeFigureOf(s),
+          },
+          fitView(s.pts),
+          sideLabels(s.pts, ns.map(root)),
+          `The sides are ${ns.map(root).join(", ")}.`,
+          `各边是 ${ns.map(root).join("、")}。`,
+        );
       },
     },
   ],
@@ -1422,26 +1564,32 @@ export const calculatingAreasOfRectanglesInThePlane: TopicDef = {
         const xs = pts.map((p) => p[0]);
         const ys = pts.map((p) => p[1]);
         const box = (Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys));
-        return {
-          ...numberProblem({
-            prompt: t(
-              `Find the area of rectangle $ABCD$ with vertices ${listTex(names, pts, "and")}.`,
-              `求矩形 $ABCD$ 的面积，顶点为 ${listZh(names, pts)}。`,
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `Find the area of rectangle $ABCD$ with vertices ${listTex(names, pts, "and")}.`,
+                `求矩形 $ABCD$ 的面积，顶点为 ${listZh(names, pts)}。`,
+              ),
+              answer: area,
+              wrong: [box, n1 * n2, n1 + n2],
+              solution: t(
+                `Find the length and the width with the distance formula:${steps(`AB = ${distanceSteps(pts[0]!, pts[1]!)}`, `BC = ${distanceSteps(pts[1]!, pts[2]!)}`)}Multiply them:${steps(`AB \\cdot BC = \\sqrt{${n1}} \\cdot \\sqrt{${n2}} = \\sqrt{${n1 * n2}} = ${area}`)}`,
+                `用距离公式求长和宽：${steps(`AB = ${distanceSteps(pts[0]!, pts[1]!)}`, `BC = ${distanceSteps(pts[1]!, pts[2]!)}`)}相乘：${steps(`AB \\cdot BC = \\sqrt{${n1}} \\cdot \\sqrt{${n2}} = \\sqrt{${n1 * n2}} = ${area}`)}`,
+              ),
+            }),
+            figure: shapeFigure(
+              names,
+              pts,
+              `Rectangle ABCD with vertices ${listPts(names, pts)}.`,
+              `矩形 ABCD，顶点为 ${listPts(names, pts)}。`,
             ),
-            answer: area,
-            wrong: [box, n1 * n2, n1 + n2],
-            solution: t(
-              `Find the length and the width with the distance formula:${steps(`AB = ${distanceSteps(pts[0]!, pts[1]!)}`, `BC = ${distanceSteps(pts[1]!, pts[2]!)}`)}Multiply them:${steps(`AB \\cdot BC = \\sqrt{${n1}} \\cdot \\sqrt{${n2}} = \\sqrt{${n1 * n2}} = ${area}`)}`,
-              `用距离公式求长和宽：${steps(`AB = ${distanceSteps(pts[0]!, pts[1]!)}`, `BC = ${distanceSteps(pts[1]!, pts[2]!)}`)}相乘：${steps(`AB \\cdot BC = \\sqrt{${n1}} \\cdot \\sqrt{${n2}} = \\sqrt{${n1 * n2}} = ${area}`)}`,
-            ),
-          }),
-          figure: shapeFigure(
-            names,
-            pts,
-            `Rectangle ABCD with vertices ${listPts(names, pts)}.`,
-            `矩形 ABCD，顶点为 ${listPts(names, pts)}。`,
-          ),
-        };
+          },
+          fitView(pts),
+          sideLabels(pts, [root(n1), root(n2), "", ""]),
+          `The sides are ${root(n1)} and ${root(n2)}, so the area is ${area}.`,
+          `两边是 ${root(n1)} 和 ${root(n2)}，所以面积是 ${area}。`,
+        );
       },
     },
     {
@@ -1488,7 +1636,7 @@ export const calculatingAreasOfRectanglesInThePlane: TopicDef = {
 };
 
 /** boxFigure draws a shape with the dashed rectangle around it. */
-function boxFigure(s: Shape, en: string, zh: string): Figure {
+function boxFigure(s: Shape, en: string, zh: string, more: readonly PlaneMark[] = []): Figure {
   const xs = s.pts.map((p) => p[0]);
   const ys = s.pts.map((p) => p[1]);
   const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
@@ -1499,7 +1647,29 @@ function boxFigure(s: Shape, en: string, zh: string): Figure {
     [x0, y1],
   ];
   const box: PlaneMark[] = corners.map((p, i) => ({ kind: "segment", a: p, b: corners[(i + 1) % 4]!, dashed: true }));
-  return shapeFigure(s.names, s.pts, en, zh, box);
+  return shapeFigure(s.names, s.pts, en, zh, [...more, ...box]);
+}
+
+/** footMarks draws a line, a point off it and the foot of the perpendicular from the point as the result. */
+const footMarks = (P: Point, F: Point, m: Q, b: Q): PlaneMark[] => [
+  { kind: "line", a: [0, b.toNumber()], b: riseOf([0, b.toNumber()], m), accent: true },
+  { kind: "segment", a: P, b: F, dashed: true, tone: "action" },
+  { kind: "point", at: P, label: "P", dir: "nw" },
+  { kind: "point", at: F, label: "F", dir: "se", tone: "result" },
+];
+
+/** cutCorners shades the right triangles of the box around a figure that lie outside it, and the figure as the result. */
+const cutCorners = (pts: readonly Point[], corners: readonly (readonly Point[])[]): PlaneMark[] => [
+  ...corners.map((points): PlaneMark => ({ kind: "polygon", points, tone: "action" })),
+  { kind: "polygon", points: pts, tone: "result" },
+];
+
+/** partition draws the n equal steps from A to B, and the point k steps along as the result. */
+function partition(A: Point, B: Point, u: number, v: number, n: number, k: number, en: string, zh: string): Figure {
+  const marks: PlaneMark[] = [{ kind: "arrow", from: A, to: [A[0] + k * u, A[1] + k * v], tone: "action" }];
+  for (let i = 1; i < n; i++) if (i !== k) marks.push({ kind: "point", at: [A[0] + i * u, A[1] + i * v] });
+  marks.push({ kind: "point", at: [A[0] + k * u, A[1] + k * v], label: "P", dir: "se", tone: "result" });
+  return shapeFigure(["A", "B"], [A, B], en, zh, marks);
 }
 
 /** calculatingAreasOfTrianglesAndQuadrilateralsInThePlane finds areas of triangles and quadrilaterals from their vertices. */
@@ -1536,27 +1706,47 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
         const answer = Q.of(base * h, 2);
         const [ax, ac] = vertical ? ["y", "x"] : ["x", "y"];
         const third = level + height;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `Find the area of triangle $ABC$ with vertices ${listTex(names, pts, "and")}.`,
-              `求三角形 $ABC$ 的面积，顶点为 ${listZh(names, pts)}。`,
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `Find the area of triangle $ABC$ with vertices ${listTex(names, pts, "and")}.`,
+                `求三角形 $ABC$ 的面积，顶点为 ${listZh(names, pts)}。`,
+              ),
+              answer,
+              wrong: [base * h, Q.of(base * Math.abs(third), 2), Q.of(base + h, 2)],
+              solution: t(
+                `$AB$ is ${vertical ? "vertical" : "horizontal"}, so use it as the base; the height is the distance from $C$ to it, measured along the $${ac}$-axis:${steps(`b = ${start + base} - ${paren(start)} = ${base}`, `h = |${third} - ${paren(level)}| = ${h}`, `A = \\frac{1}{2} \\cdot ${base} \\cdot ${h} = ${answer.toLatex()}`)}`,
+                `$AB$ 是${vertical ? "竖直" : "水平"}的，把它当作底；高是 $C$ 到它的距离，沿 $${ac}$ 轴方向量：${steps(`b = ${start + base} - ${paren(start)} = ${base}`, `h = |${third} - ${paren(level)}| = ${h}`, `A = \\frac{1}{2} \\cdot ${base} \\cdot ${h} = ${answer.toLatex()}`)}`,
+              ),
+            }),
+            figure: shapeFigure(
+              names,
+              pts,
+              `Triangle ABC with vertices ${listPts(names, pts)}.`,
+              `三角形 ABC，顶点为 ${listPts(names, pts)}。`,
             ),
-            answer,
-            wrong: [base * h, Q.of(base * Math.abs(third), 2), Q.of(base + h, 2)],
-            solution: t(
-              `$AB$ is ${vertical ? "vertical" : "horizontal"}, so use it as the base; the height is the distance from $C$ to it, measured along the $${ac}$-axis:${steps(`b = ${start + base} - ${paren(start)} = ${base}`, `h = |${third} - ${paren(level)}| = ${h}`, `A = \\frac{1}{2} \\cdot ${base} \\cdot ${h} = ${answer.toLatex()}`)}`,
-              `$AB$ 是${vertical ? "竖直" : "水平"}的，把它当作底；高是 $C$ 到它的距离，沿 $${ac}$ 轴方向量：${steps(`b = ${start + base} - ${paren(start)} = ${base}`, `h = |${third} - ${paren(level)}| = ${h}`, `A = \\frac{1}{2} \\cdot ${base} \\cdot ${h} = ${answer.toLatex()}`)}`,
-            ),
-          }),
-          figure: shapeFigure(
-            names,
-            pts,
-            `Triangle ABC with vertices ${listPts(names, pts)}.`,
-            `三角形 ABC，顶点为 ${listPts(names, pts)}。`,
-          ),
-          ...(ax === "x" ? {} : {}),
-        };
+            ...(ax === "x" ? {} : {}),
+          },
+          fitView(pts),
+          [
+            { kind: "segment", a: pts[2]!, b: P(apex, level), dashed: true, tone: "action" },
+            {
+              kind: "label",
+              at: [(pts[2]![0] + P(apex, level)[0]) / 2, (pts[2]![1] + P(apex, level)[1]) / 2],
+              text: String(h),
+              dir: vertical ? "n" : "e",
+            },
+            {
+              kind: "label",
+              at: P(start + base / 2, level),
+              text: String(base),
+              dir: vertical ? (height > 0 ? "w" : "e") : height > 0 ? "s" : "n",
+            },
+          ],
+          `The base is ${base} and the height is ${h}, so the area is ${plain(answer)}.`,
+          `底是 ${base}，高是 ${h}，所以面积是 ${plain(answer)}。`,
+        );
       },
     },
     {
@@ -1611,6 +1801,16 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
             ),
           }),
           figure: boxFigure(s, `Triangle ABC with vertices ${listPts(names, pts)}.`, `三角形 ABC，顶点为 ${listPts(names, pts)}。`),
+          solutionFigure: boxFigure(
+            s,
+            `The box minus the three shaded right triangles leaves an area of ${plain(answer)}.`,
+            `长方形减去三个涂色的直角三角形，剩下的面积是 ${plain(answer)}。`,
+            cutCorners(pts, [
+              [T([0, 0]), T([W, 0]), T([W, q])],
+              [T([W, q]), T([W, H]), T([r, H])],
+              [T([r, H]), T([0, H]), T([0, 0])],
+            ]),
+          ),
         };
       },
     },
@@ -1657,6 +1857,17 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
             ),
           }),
           figure: boxFigure(s, `Quadrilateral ABCD with vertices ${listPts(names, pts)}.`, `四边形 ABCD，顶点为 ${listPts(names, pts)}。`),
+          solutionFigure: boxFigure(
+            s,
+            `The box minus the four shaded right triangles leaves an area of ${plain(answer)}.`,
+            `长方形减去四个涂色的直角三角形，剩下的面积是 ${plain(answer)}。`,
+            cutCorners(pts, [
+              [T([a, 0]), T([W, 0]), T([W, b])],
+              [T([W, b]), T([W, H]), T([c, H])],
+              [T([c, H]), T([0, H]), T([0, d])],
+              [T([0, d]), T([0, 0]), T([a, 0])],
+            ]),
+          ),
         };
       },
     },

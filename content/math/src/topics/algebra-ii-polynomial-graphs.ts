@@ -15,7 +15,7 @@ import {
   type RealSet,
   union,
 } from "@ga/subject-math";
-
+import { annotate, guides } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
 // Algebra II 2.8: graphs of polynomials.
@@ -507,30 +507,36 @@ export const graphingCubicCurvesContainingThreeDistinctRealRoots: TopicDef = {
       ),
       generate(rng) {
         const d = drawPolynomial(rng, () => threeRoots(rng, -4, 4));
-        return {
-          ...expressionProblem({
-            prompt: t(
-              "The graph of a cubic function $f$ is shown. Its $x$-intercepts are at integers, and it passes through the marked point. Find $f(x)$.",
-              "如图是三次函数 $f$ 的图象。它的 $x$ 轴截距都是整数，并且经过标出的点。求 $f(x)$。",
-            ),
-            answer: polyLatex(d.a, d.fs),
-            prefix: "f(x) =",
-            wrong: equationWrongs(d),
-            solution: t(
-              `The graph crosses the $x$-axis at ${rootsOf(d.fs)
-                .map((r) => `$${r}$`)
-                .join(
-                  ", ",
-                )}, so $f(x) = a${polyLatex(Q.one, d.fs)}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
-              `图象在 ${rootsOf(d.fs)
-                .map((r) => `$${r}$`)
-                .join(
-                  "、",
-                )} 处穿过 $x$ 轴，所以 $f(x) = a${polyLatex(Q.one, d.fs)}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
-            ),
-          }),
-          figure: drawnFigure(d),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: t(
+                "The graph of a cubic function $f$ is shown. Its $x$-intercepts are at integers, and it passes through the marked point. Find $f(x)$.",
+                "如图是三次函数 $f$ 的图象。它的 $x$ 轴截距都是整数，并且经过标出的点。求 $f(x)$。",
+              ),
+              answer: polyLatex(d.a, d.fs),
+              prefix: "f(x) =",
+              wrong: equationWrongs(d),
+              solution: t(
+                `The graph crosses the $x$-axis at ${rootsOf(d.fs)
+                  .map((r) => `$${r}$`)
+                  .join(
+                    ", ",
+                  )}, so $f(x) = a${polyLatex(Q.one, d.fs)}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
+                `图象在 ${rootsOf(d.fs)
+                  .map((r) => `$${r}$`)
+                  .join(
+                    "、",
+                  )} 处穿过 $x$ 轴，所以 $f(x) = a${polyLatex(Q.one, d.fs)}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
+              ),
+            }),
+            figure: drawnFigure(d),
+          },
+          view,
+          [...d.fs.map(([r]): PlaneMark => ({ kind: "point", at: [r, 0], tone: "result" })), ...guides(d.mark)],
+          `The roots are ${d.fs.map(([r]) => r).join(", ")}, and the marked point fixes a.`,
+          `根是 ${d.fs.map(([r]) => r).join("、")}，标出的点确定 a。`,
+        );
       },
     },
   ],
@@ -665,28 +671,34 @@ export const graphingCubicCurvesContainingADoubleRoot: TopicDef = {
         const p = d.fs.find(([, m]) => m === 2)![0];
         const q = d.fs.find(([, m]) => m === 1)![0];
         const general = `a${factorLatex([p, 2])}${factorLatex([q, 1])}`;
-        return {
-          ...expressionProblem({
-            prompt: t(
-              "The graph of a cubic function $f$ is shown. Its $x$-intercepts are at integers, and it passes through the marked point. Find $f(x)$.",
-              "如图是三次函数 $f$ 的图象。它的 $x$ 轴截距都是整数，并且经过标出的点。求 $f(x)$。",
-            ),
-            answer: polyLatex(d.a, d.fs),
-            prefix: "f(x) =",
-            wrong: equationWrongs(d, [
-              polyLatex(d.a, simple(d.fs)),
-              polyLatex(d.a, [
-                [p, 1],
-                [q, 2],
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: t(
+                "The graph of a cubic function $f$ is shown. Its $x$-intercepts are at integers, and it passes through the marked point. Find $f(x)$.",
+                "如图是三次函数 $f$ 的图象。它的 $x$ 轴截距都是整数，并且经过标出的点。求 $f(x)$。",
+              ),
+              answer: polyLatex(d.a, d.fs),
+              prefix: "f(x) =",
+              wrong: equationWrongs(d, [
+                polyLatex(d.a, simple(d.fs)),
+                polyLatex(d.a, [
+                  [p, 1],
+                  [q, 2],
+                ]),
               ]),
-            ]),
-            solution: t(
-              `The graph touches the $x$-axis at $${p}$, a double root, and crosses it at $${q}$, so $f(x) = ${general}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
-              `图象在 $${p}$ 处与 $x$ 轴相切（二重根），在 $${q}$ 处穿过 $x$ 轴，所以 $f(x) = ${general}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
-            ),
-          }),
-          figure: drawnFigure(d),
-        };
+              solution: t(
+                `The graph touches the $x$-axis at $${p}$, a double root, and crosses it at $${q}$, so $f(x) = ${general}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
+                `图象在 $${p}$ 处与 $x$ 轴相切（二重根），在 $${q}$ 处穿过 $x$ 轴，所以 $f(x) = ${general}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
+              ),
+            }),
+            figure: drawnFigure(d),
+          },
+          view,
+          [...d.fs.map(([r]): PlaneMark => ({ kind: "point", at: [r, 0], tone: "result" })), ...guides(d.mark)],
+          `The roots are ${d.fs.map(([r]) => r).join(", ")}, and the marked point fixes a.`,
+          `根是 ${d.fs.map(([r]) => r).join("、")}，标出的点确定 a。`,
+        );
       },
     },
   ],
@@ -837,22 +849,28 @@ export const graphingCubicCurvesContainingOneDistinctRealRoot: TopicDef = {
       generate(rng) {
         const d = drawPolynomial(rng, () => [[rng.int(-3, 3), 3]]);
         const h = d.fs[0]![0];
-        return {
-          ...expressionProblem({
-            prompt: t(
-              "The graph of $f(x) = a(x - h)^{3}$ is shown, where $a$ and $h$ are constants. It passes through the marked point. Find $f(x)$.",
-              "如图是 $f(x) = a(x - h)^{3}$ 的图象，其中 $a$、$h$ 是常数。它经过标出的点。求 $f(x)$。",
-            ),
-            answer: polyLatex(d.a, d.fs),
-            prefix: "f(x) =",
-            wrong: equationWrongs(d, [`${front(d.a)}x^{3}${plus(-h)}`]),
-            solution: t(
-              `The graph crosses the $x$-axis only at $${h}$, flattening out there, so $h = ${h}$ and $f(x) = a${factorLatex([h, 3])}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
-              `图象只在 $${h}$ 处穿过 $x$ 轴，并在那里变平，所以 $h = ${h}$，$f(x) = a${factorLatex([h, 3])}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
-            ),
-          }),
-          figure: drawnFigure(d),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: t(
+                "The graph of $f(x) = a(x - h)^{3}$ is shown, where $a$ and $h$ are constants. It passes through the marked point. Find $f(x)$.",
+                "如图是 $f(x) = a(x - h)^{3}$ 的图象，其中 $a$、$h$ 是常数。它经过标出的点。求 $f(x)$。",
+              ),
+              answer: polyLatex(d.a, d.fs),
+              prefix: "f(x) =",
+              wrong: equationWrongs(d, [`${front(d.a)}x^{3}${plus(-h)}`]),
+              solution: t(
+                `The graph crosses the $x$-axis only at $${h}$, flattening out there, so $h = ${h}$ and $f(x) = a${factorLatex([h, 3])}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
+                `图象只在 $${h}$ 处穿过 $x$ 轴，并在那里变平，所以 $h = ${h}$，$f(x) = a${factorLatex([h, 3])}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
+              ),
+            }),
+            figure: drawnFigure(d),
+          },
+          view,
+          [...d.fs.map(([r]): PlaneMark => ({ kind: "point", at: [r, 0], tone: "result" })), ...guides(d.mark)],
+          `The roots are ${d.fs.map(([r]) => r).join(", ")}, and the marked point fixes a.`,
+          `根是 ${d.fs.map(([r]) => r).join("、")}，标出的点确定 a。`,
+        );
       },
     },
   ],
@@ -1041,22 +1059,28 @@ export const graphingGeneralPolynomials: TopicDef = {
         const degree = d.fs.reduce((s, [, m]) => s + m, 0);
         const words = rootWords(d.fs, true);
         const general = `a${polyLatex(Q.one, d.fs)}`;
-        return {
-          ...expressionProblem({
-            prompt: t(
-              `The graph of a polynomial function $f$ of degree $${degree}$ is shown. Its $x$-intercepts are at integers, and it passes through the marked point. Find $f(x)$.`,
-              `如图是 $${degree}$ 次多项式函数 $f$ 的图象。它的 $x$ 轴截距都是整数，并且经过标出的点。求 $f(x)$。`,
-            ),
-            answer: polyLatex(d.a, d.fs),
-            prefix: "f(x) =",
-            wrong: equationWrongs(d, [polyLatex(d.a, simple(d.fs))]),
-            solution: t(
-              `The graph ${words.en}, which gives the multiplicities; they add up to $${degree}$. So $f(x) = ${general}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
-              `图象${words.zh}，由此得到各根的重数，它们的和是 $${degree}$。所以 $f(x) = ${general}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
-            ),
-          }),
-          figure: drawnFigure(d),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: t(
+                `The graph of a polynomial function $f$ of degree $${degree}$ is shown. Its $x$-intercepts are at integers, and it passes through the marked point. Find $f(x)$.`,
+                `如图是 $${degree}$ 次多项式函数 $f$ 的图象。它的 $x$ 轴截距都是整数，并且经过标出的点。求 $f(x)$。`,
+              ),
+              answer: polyLatex(d.a, d.fs),
+              prefix: "f(x) =",
+              wrong: equationWrongs(d, [polyLatex(d.a, simple(d.fs))]),
+              solution: t(
+                `The graph ${words.en}, which gives the multiplicities; they add up to $${degree}$. So $f(x) = ${general}$. Substitute the marked point $(${d.mark[0]}, ${d.mark[1]})$:${substitution(d)}So $f(x) = ${polyLatex(d.a, d.fs)}$.`,
+                `图象${words.zh}，由此得到各根的重数，它们的和是 $${degree}$。所以 $f(x) = ${general}$。代入标出的点 $(${d.mark[0]}, ${d.mark[1]})$：${substitution(d)}所以 $f(x) = ${polyLatex(d.a, d.fs)}$。`,
+              ),
+            }),
+            figure: drawnFigure(d),
+          },
+          view,
+          [...d.fs.map(([r]): PlaneMark => ({ kind: "point", at: [r, 0], tone: "result" })), ...guides(d.mark)],
+          `The roots are ${d.fs.map(([r]) => r).join(", ")}, and the marked point fixes a.`,
+          `根是 ${d.fs.map(([r]) => r).join("、")}，标出的点确定 a。`,
+        );
       },
     },
   ],

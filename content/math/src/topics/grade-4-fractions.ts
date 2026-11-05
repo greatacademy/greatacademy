@@ -1,7 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, lcm, Q, svgDocument } from "@ga/subject-math";
-
+import { jumpArcs } from "../early-grades-kit.ts";
 import { choiceProblem, mixedLatex, numberProblem } from "../problems.ts";
 import { wordsEn, wordsZh } from "./grade-4-whole-numbers.ts";
 
@@ -172,6 +172,28 @@ function gridFigure(n: number, d: number, k: number): Figure {
 interface LinePoint {
   readonly at: number;
   readonly label: string;
+}
+
+/** steppedLine draws the number line of numberLineFigure with the steps from start to the point P, which is the result. */
+function steppedLine(
+  d: number,
+  from: number,
+  to: number,
+  labels: ReadonlyMap<number, string>,
+  start: number,
+  at: number,
+  value: string,
+): Figure {
+  const x = (k: number) => round(20 + ((k - from) / (to - from)) * 280);
+  const line = numberLineFigure(d, from, to, labels, [{ at, label: "P" }]);
+  const stops = Array.from({ length: at - start + 1 }, (_, i) => start + i);
+  return {
+    svg: line.svg.replaceAll('class="accent"', 'class="result"').replace("</svg>", `${jumpArcs(x, 40, stops)}</svg>`),
+    alt: t(
+      `Counting ${at - start} steps from ${labels.get(start)} reaches P, which is ${value}.`,
+      `从 ${labels.get(start)} 往右数 ${at - start} 格到达 P，P 是 ${value}。`,
+    ),
+  };
 }
 
 /** numberLineFigure draws a number line from `from` to `to` (whole numbers of 1/d steps) with labels at the given ticks and labeled points. */
@@ -376,6 +398,7 @@ export const modelingFractionsUsingNumberLines = topic(
             ),
           }),
           figure: numberLineFigure(d, 0, d, wholeLabels(d, 0, d), [{ at: n, label: "P" }]),
+          solutionFigure: steppedLine(d, 0, d, wholeLabels(d, 0, d), 0, n, `${n}/${d}`),
         };
       },
     },
@@ -775,6 +798,7 @@ export const modelingMixedNumbersUsingNumberLines = topic(
             ),
           }),
           figure: numberLineFigure(d, 0, to, wholeLabels(d, 0, to), [{ at: w * d + r, label: "P" }]),
+          solutionFigure: steppedLine(d, 0, to, wholeLabels(d, 0, to), w * d, w * d + r, `${w} ${r}/${d}`),
         };
       },
     },

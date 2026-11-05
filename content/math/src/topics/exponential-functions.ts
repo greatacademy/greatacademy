@@ -16,7 +16,7 @@ import {
   Q,
   realLine,
 } from "@ga/subject-math";
-
+import { annotate, onAxis, plain, setText as setAlt } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, steps, why } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -3119,27 +3119,36 @@ function equationFromGraphProblem(rng: Rng, pairs: readonly { a: Q; b: Q; x0: nu
   ];
   const answer = expo(a, num(b));
   const slope = y1.sub(y0);
-  return {
-    ...expressionProblem({
-      prompt: t(
-        "The graph of $y = a \\cdot b^{x}$ passes through the labeled points. Find its equation.",
-        "如图，$y = a \\cdot b^{x}$ 的图象经过标出的点。求它的解析式。",
-      ),
-      answer,
-      prefix: "y =",
-      wrong: [
-        ...(a.eq(Q.one) ? [] : [expo(b, num(a))]),
-        linear(slope, y0.sub(slope.mul(Q.of(x0)))),
-        expo(y0, num(b)),
-        expo(a, num(Q.one.div(b))),
-      ],
-      solution: t(
-        `Going from $x = ${x0}$ to $x = ${x0 + 1}$ multiplies $y$ by $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$. Then ${x0 === 0 ? `$a = y(0) = ${a.toLatex()}$` : `$a = y(0)$, found from $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$: $a = ${a.toLatex()}$`}. So${steps(`y = ${answer}`)}`,
-        `从 $x = ${x0}$ 到 $x = ${x0 + 1}$，$y$ 乘以 $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$。而 ${x0 === 0 ? `$a = y(0) = ${a.toLatex()}$` : `$a = y(0)$，由 $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$ 得 $a = ${a.toLatex()}$`}。所以${steps(`y = ${answer}`)}`,
-      ),
-    }),
-    figure: expFigure(a, b, 0, pts, dir),
-  };
+  return annotate(
+    {
+      ...expressionProblem({
+        prompt: t(
+          "The graph of $y = a \\cdot b^{x}$ passes through the labeled points. Find its equation.",
+          "如图，$y = a \\cdot b^{x}$ 的图象经过标出的点。求它的解析式。",
+        ),
+        answer,
+        prefix: "y =",
+        wrong: [
+          ...(a.eq(Q.one) ? [] : [expo(b, num(a))]),
+          linear(slope, y0.sub(slope.mul(Q.of(x0)))),
+          expo(y0, num(b)),
+          expo(a, num(Q.one.div(b))),
+        ],
+        solution: t(
+          `Going from $x = ${x0}$ to $x = ${x0 + 1}$ multiplies $y$ by $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$. Then ${x0 === 0 ? `$a = y(0) = ${a.toLatex()}$` : `$a = y(0)$, found from $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$: $a = ${a.toLatex()}$`}. So${steps(`y = ${answer}`)}`,
+          `从 $x = ${x0}$ 到 $x = ${x0 + 1}$，$y$ 乘以 $b = \\frac{${y1.toLatex()}}{${y0.toLatex()}} = ${b.toLatex()}$。而 ${x0 === 0 ? `$a = y(0) = ${a.toLatex()}$` : `$a = y(0)$，由 $a \\cdot ${bracket(b)}^{${x0}} = ${y0.toLatex()}$ 得 $a = ${a.toLatex()}$`}。所以${steps(`y = ${answer}`)}`,
+        ),
+      }),
+      figure: expFigure(a, b, 0, pts, dir),
+    },
+    graphView,
+    [
+      { kind: "arrow", from: pts[0]!, to: pts[1]!, tone: "action" },
+      { kind: "point", at: [0, a.toNumber()], tone: "result" },
+    ],
+    `The graph crosses the y-axis at ${plain(a)}, and each step of 1 in x multiplies y by ${plain(b)}.`,
+    `图象与 y 轴交于 ${plain(a)}，x 每增加 1，y 乘以 ${plain(b)}。`,
+  );
 }
 
 /** shifted writes y = a·b^x + k. */
@@ -3164,16 +3173,22 @@ function asymptoteProblem(rng: Rng, bases: readonly Q[]): Problem {
     ),
   };
   if (fromGraph) {
-    return {
-      ...numberProblem({
-        ...base,
-        prompt: t(
-          `The graph of an exponential function $y = a \\cdot b^{x} + k$ is shown. As $x$ ${direction.en}, the graph gets closer and closer to a horizontal line. What is its equation?`,
-          `如图是指数函数 $y = a \\cdot b^{x} + k$ 的图象。当 $x$ ${direction["zh-CN"]}时，图象越来越接近一条水平直线。这条直线的方程是什么？`,
-        ),
-      }),
-      figure: expFigure(Q.of(a), b, k, [[0, a + k]], growth ? "nw" : "ne"),
-    };
+    return annotate(
+      {
+        ...numberProblem({
+          ...base,
+          prompt: t(
+            `The graph of an exponential function $y = a \\cdot b^{x} + k$ is shown. As $x$ ${direction.en}, the graph gets closer and closer to a horizontal line. What is its equation?`,
+            `如图是指数函数 $y = a \\cdot b^{x} + k$ 的图象。当 $x$ ${direction["zh-CN"]}时，图象越来越接近一条水平直线。这条直线的方程是什么？`,
+          ),
+        }),
+        figure: expFigure(Q.of(a), b, k, [[0, a + k]], growth ? "nw" : "ne"),
+      },
+      graphView,
+      [{ kind: "line", a: [0, k], b: [1, k], dashed: true, tone: "result" }],
+      `The graph approaches the line y = ${k} without reaching it.`,
+      `图象趋近直线 y = ${k}，但不与它相交。`,
+    );
   }
   return numberProblem({
     ...base,
@@ -3196,22 +3211,28 @@ function rangeProblem(rng: Rng, bases: readonly Q[], reflect: boolean): Problem 
   const shiftedSet = [
     above ? { lo: Q.of(a + k), loClosed: false, hiClosed: false } : { hi: Q.of(a + k), loClosed: false, hiClosed: false },
   ];
-  return {
-    ...intervalProblem({
-      prompt: t(
-        `What is the range of $f(x) = ${shifted(a, b, k)}$? Write it in interval notation.`,
-        `$f(x) = ${shifted(a, b, k)}$ 的值域是什么？用区间表示。`,
-      ),
-      set,
-      form: "interval",
-      wrong: [closed, other, realLine, shiftedSet],
-      solution: t(
-        `$${bracket(b)}^{x}$ takes every positive value and never $0$, so $${a}\\cdot${bracket(b)}^{x}$ takes every ${above ? "positive" : "negative"} value. Adding $${k}$ moves these values to ${above ? `everything above $${k}$` : `everything below $${k}$`}, and the asymptote $y = ${k}$ itself is never reached.`,
-        `$${bracket(b)}^{x}$ 取遍所有正数且取不到 $0$，所以 $${a}\\cdot${bracket(b)}^{x}$ 取遍所有${above ? "正数" : "负数"}。加上 $${k}$ 后，取值为${above ? `所有大于 $${k}$ 的数` : `所有小于 $${k}$ 的数`}，而渐近线 $y = ${k}$ 本身取不到。`,
-      ),
-    }),
-    figure: expFigure(Q.of(a), b, k, [], "ne"),
-  };
+  return annotate(
+    {
+      ...intervalProblem({
+        prompt: t(
+          `What is the range of $f(x) = ${shifted(a, b, k)}$? Write it in interval notation.`,
+          `$f(x) = ${shifted(a, b, k)}$ 的值域是什么？用区间表示。`,
+        ),
+        set,
+        form: "interval",
+        wrong: [closed, other, realLine, shiftedSet],
+        solution: t(
+          `$${bracket(b)}^{x}$ takes every positive value and never $0$, so $${a}\\cdot${bracket(b)}^{x}$ takes every ${above ? "positive" : "negative"} value. Adding $${k}$ moves these values to ${above ? `everything above $${k}$` : `everything below $${k}$`}, and the asymptote $y = ${k}$ itself is never reached.`,
+          `$${bracket(b)}^{x}$ 取遍所有正数且取不到 $0$，所以 $${a}\\cdot${bracket(b)}^{x}$ 取遍所有${above ? "正数" : "负数"}。加上 $${k}$ 后，取值为${above ? `所有大于 $${k}$ 的数` : `所有小于 $${k}$ 的数`}，而渐近线 $y = ${k}$ 本身取不到。`,
+        ),
+      }),
+      figure: expFigure(Q.of(a), b, k, [], "ne"),
+    },
+    graphView,
+    [{ kind: "line", a: [0, k], b: [1, k], dashed: true, tone: "action" }, ...onAxis("y", set, above ? 10 : 5)],
+    `The graph stays ${above ? "above" : "below"} the line y = ${k}: the range is ${setAlt(set)}.`,
+    `图象始终在直线 y = ${k} 的${above ? "上方" : "下方"}：值域是 ${setAlt(set)}。`,
+  );
 }
 
 const growthBases = [Q.of(2), Q.of(3), Q.of(3, 2)];

@@ -13,6 +13,7 @@ import {
   earlyPoint,
   earlyThings,
   earlyTopic,
+  jumpsFigure,
   nearbyWrong,
   numberLineFigure,
 } from "../early-grades-kit.ts";
@@ -144,16 +145,25 @@ const skipCountingTwosFivesTens = earlyTopic(
         const jumps = rng.int(4, 7);
         const at = rng.int(1, jumps - 1);
         const answer = lo + at * step;
-        return whole(
-          [`This number line counts by ${step}s. What number is at the marked point?`, `这条数轴按 ${step} 数。标出的点是多少？`],
-          answer,
-          [lo + at, answer - step + 1],
-          [
-            `The point is ${at === 1 ? "1 jump" : `${at} jumps`} of ${step} from ${lo}. Counting on gives ${answer}.`,
-            `这个点离 ${lo} 有 ${at} 跳，每跳 ${step}。往后数得到 ${answer}。`,
-          ],
-          numberLineFigure(lo, lo + jumps * step, step, answer, false),
-        );
+        return {
+          ...whole(
+            [`This number line counts by ${step}s. What number is at the marked point?`, `这条数轴按 ${step} 数。标出的点是多少？`],
+            answer,
+            [lo + at, answer - step + 1],
+            [
+              `The point is ${at === 1 ? "1 jump" : `${at} jumps`} of ${step} from ${lo}. Counting on gives ${answer}.`,
+              `这个点离 ${lo} 有 ${at} 跳，每跳 ${step}。往后数得到 ${answer}。`,
+            ],
+            numberLineFigure(lo, lo + jumps * step, step, answer, false),
+          ),
+          solutionFigure: jumpsFigure(
+            lo,
+            lo + jumps * step,
+            step,
+            Array.from({ length: at + 1 }, (_, i) => lo + i * step),
+            false,
+          ),
+        };
       },
     ),
   ],

@@ -1,7 +1,8 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q } from "@ga/subject-math";
-
+import { annotate, at, graphFigure, guides, plain, riseOf, riseRun, slopeFigure, walkTo } from "../graph-figures.ts";
+import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -231,26 +232,32 @@ export const theCoordinatePlane: TopicDef = {
         const y = x === 0 ? rng.nonZero(-5, 5) : rng.int(-5, 5);
         const name = rng.pick(["P", "A", "B", "Q"]);
         const w = walk(x, y);
-        return {
-          ...pointProblem({
-            prompt: t(`Write the coordinates of point $${name}$.`, `写出点 $${name}$ 的坐标。`),
-            answer: [x, y],
-            wrong: [
-              [y, x],
-              [-x, y],
-              [x, -y],
-            ],
-            solution: t(
-              `To reach $${name}$, ${w.en}, so $${name} = ${pointLatex([x, y])}$.`,
-              `要到达点 $${name}$，${w["zh-CN"]}，所以 $${name} = ${pointLatex([x, y])}$。`,
+        return annotate(
+          {
+            ...pointProblem({
+              prompt: t(`Write the coordinates of point $${name}$.`, `写出点 $${name}$ 的坐标。`),
+              answer: [x, y],
+              wrong: [
+                [y, x],
+                [-x, y],
+                [x, -y],
+              ],
+              solution: t(
+                `To reach $${name}$, ${w.en}, so $${name} = ${pointLatex([x, y])}$.`,
+                `要到达点 $${name}$，${w["zh-CN"]}，所以 $${name} = ${pointLatex([x, y])}$。`,
+              ),
+            }),
+            figure: graph(
+              [{ kind: "point", at: [x, y], label: name, accent: true }],
+              `A point ${name} on a coordinate grid.`,
+              `坐标网格上的一个点 ${name}。`,
             ),
-          }),
-          figure: graph(
-            [{ kind: "point", at: [x, y], label: name, accent: true }],
-            `A point ${name} on a coordinate grid.`,
-            `坐标网格上的一个点 ${name}。`,
-          ),
-        };
+          },
+          view,
+          walkTo([x, y], name),
+          `From the origin, move ${x} along the x-axis and ${y} along the y-axis: ${name} is ${at([x, y])}.`,
+          `从原点出发，水平走 ${x}，竖直走 ${y}：${name} 是 ${at([x, y])}。`,
+        );
       },
     },
     {
@@ -279,22 +286,28 @@ export const theCoordinatePlane: TopicDef = {
         const correct = points.findIndex(([x, y]) => x === a && y === b);
         const names = ["A", "B", "C", "D"];
         const w = walk(a, b);
-        return {
-          ...choiceProblem({
-            prompt: t(`Which point is at $${pointLatex([a, b])}$?`, `哪个点的坐标是 $${pointLatex([a, b])}$？`),
-            options: names.map((n) => same(n)),
-            correct,
-            solution: t(
-              `${w.en[0]!.toUpperCase()}${w.en.slice(1)}: that is point $${names[correct]}$.`,
-              `${w["zh-CN"]}，到达的是点 $${names[correct]}$。`,
+        return annotate(
+          {
+            ...choiceProblem({
+              prompt: t(`Which point is at $${pointLatex([a, b])}$?`, `哪个点的坐标是 $${pointLatex([a, b])}$？`),
+              options: names.map((n) => same(n)),
+              correct,
+              solution: t(
+                `${w.en[0]!.toUpperCase()}${w.en.slice(1)}: that is point $${names[correct]}$.`,
+                `${w["zh-CN"]}，到达的是点 $${names[correct]}$。`,
+              ),
+            }),
+            figure: graph(
+              points.map(([x, y], i) => ({ kind: "point", at: [x, y], label: names[i]!, accent: true })),
+              "Four points A, B, C and D on a coordinate grid.",
+              "坐标网格上的四个点 A、B、C、D。",
             ),
-          }),
-          figure: graph(
-            points.map(([x, y], i) => ({ kind: "point", at: [x, y], label: names[i]!, accent: true })),
-            "Four points A, B, C and D on a coordinate grid.",
-            "坐标网格上的四个点 A、B、C、D。",
-          ),
-        };
+          },
+          view,
+          walkTo([a, b], names[correct]),
+          `The point ${at([a, b])} is ${names[correct]}.`,
+          `点 ${at([a, b])} 是 ${names[correct]}。`,
+        );
       },
     },
     {
@@ -367,40 +380,52 @@ export const slopeOfALine: TopicDef = {
           [x1, y1],
           [x1 + run, y1 + rise],
         ];
-        return {
-          ...numberProblem({
-            prompt: t("Find the slope of the line through the points $A$ and $B$.", "求过点 $A$ 和 $B$ 的直线的斜率。"),
-            answer: m,
-            mistakes: [
-              why(
-                Q.of(run, rise),
-                "That is the run divided by the rise. Slope is the rise divided by the run.",
-                "这是横向变化除以纵向变化。斜率是纵向变化除以横向变化。",
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t("Find the slope of the line through the points $A$ and $B$.", "求过点 $A$ 和 $B$ 的直线的斜率。"),
+              answer: m,
+              mistakes: [
+                why(
+                  Q.of(run, rise),
+                  "That is the run divided by the rise. Slope is the rise divided by the run.",
+                  "这是横向变化除以纵向变化。斜率是纵向变化除以横向变化。",
+                ),
+                why(
+                  m.neg(),
+                  "The size is right, but check the direction: a line that rises from left to right has a positive slope, and one that falls has a negative slope.",
+                  "大小对了，但要看方向：从左到右上升的直线斜率为正，下降的直线斜率为负。",
+                ),
+                ...(run !== 1
+                  ? [
+                      why(
+                        rise,
+                        "That is only the rise. Divide it by the run to get the slope.",
+                        "这只是纵向变化，还要除以横向变化才是斜率。",
+                      ),
+                    ]
+                  : []),
+              ],
+              solution: t(
+                `From $A$ to $B$ the run is $${run}$ and the rise is $${rise}$: ${steps(`m = \\frac{${rise}}{${run}}${m.eq(Q.of(rise)) || (m.n === BigInt(rise) && m.d === BigInt(run)) ? "" : ` = ${num(m)}`}`)}`,
+                `从 $A$ 到 $B$，横向变化是 $${run}$，纵向变化是 $${rise}$：${steps(`m = \\frac{${rise}}{${run}}${m.eq(Q.of(rise)) || (m.n === BigInt(rise) && m.d === BigInt(run)) ? "" : ` = ${num(m)}`}`)}`,
               ),
-              why(
-                m.neg(),
-                "The size is right, but check the direction: a line that rises from left to right has a positive slope, and one that falls has a negative slope.",
-                "大小对了，但要看方向：从左到右上升的直线斜率为正，下降的直线斜率为负。",
-              ),
-              ...(run !== 1
-                ? [why(rise, "That is only the rise. Divide it by the run to get the slope.", "这只是纵向变化，还要除以横向变化才是斜率。")]
-                : []),
-            ],
-            solution: t(
-              `From $A$ to $B$ the run is $${run}$ and the rise is $${rise}$: ${steps(`m = \\frac{${rise}}{${run}}${m.eq(Q.of(rise)) || (m.n === BigInt(rise) && m.d === BigInt(run)) ? "" : ` = ${num(m)}`}`)}`,
-              `从 $A$ 到 $B$，横向变化是 $${run}$，纵向变化是 $${rise}$：${steps(`m = \\frac{${rise}}{${run}}${m.eq(Q.of(rise)) || (m.n === BigInt(rise) && m.d === BigInt(run)) ? "" : ` = ${num(m)}`}`)}`,
+            }),
+            figure: graph(
+              [
+                { kind: "line", a: A, b: B, accent: true },
+                { kind: "point", at: A, label: "A", dir: "nw" },
+                { kind: "point", at: B, label: "B", dir: "se" },
+              ],
+              "A line through two grid points A and B.",
+              "一条经过网格点 A 和 B 的直线。",
             ),
-          }),
-          figure: graph(
-            [
-              { kind: "line", a: A, b: B, accent: true },
-              { kind: "point", at: A, label: "A", dir: "nw" },
-              { kind: "point", at: B, label: "B", dir: "se" },
-            ],
-            "A line through two grid points A and B.",
-            "一条经过网格点 A 和 B 的直线。",
-          ),
-        };
+          },
+          view,
+          riseRun(A, B),
+          `From A to B the run is ${run} and the rise is ${rise}, so the slope is ${plain(m)}.`,
+          `从 A 到 B，水平变化 ${run}，竖直变化 ${rise}，所以斜率是 ${plain(m)}。`,
+        );
       },
     },
     {
@@ -421,31 +446,39 @@ export const slopeOfALine: TopicDef = {
         } while (x1 === x2 || y1 === y2);
         const m = Q.of(y2 - y1, x2 - x1);
         const work = `m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = \\frac{${y2 - y1}}{${x2 - x1}} = ${num(m)}`;
-        return numberProblem({
-          prompt: t(
-            `Find the slope of the line through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$.`,
-            `求过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的斜率。`,
+        return {
+          ...numberProblem({
+            prompt: t(
+              `Find the slope of the line through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$.`,
+              `求过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的斜率。`,
+            ),
+            answer: m,
+            mistakes: [
+              why(
+                m.neg(),
+                "The size is right but the sign is wrong. Subtract the coordinates in the same order on the top and on the bottom.",
+                "大小对了，但符号错了。分子和分母要按相同的顺序相减。",
+              ),
+              why(
+                Q.of(x2 - x1, y2 - y1),
+                "That is the change in $x$ over the change in $y$. Slope is the change in $y$ over the change in $x$.",
+                "这是 $x$ 的变化量除以 $y$ 的变化量。斜率是 $y$ 的变化量除以 $x$ 的变化量。",
+              ),
+              why(
+                Q.of(y2 + y1, x2 - x1),
+                "You added the $y$-coordinates. The top of the slope formula is their difference.",
+                "你把两个纵坐标相加了。斜率公式的分子是它们的差。",
+              ),
+            ],
+            solution: t(`Use the slope formula: ${steps(work)}`, `用斜率公式：${steps(work)}`),
+          }),
+          solutionFigure: slopeFigure(
+            [x1, y1],
+            [x2, y2],
+            `The run is ${x2 - x1} and the rise is ${y2 - y1}, so the slope is ${plain(m)}.`,
+            `水平变化 ${x2 - x1}，竖直变化 ${y2 - y1}，所以斜率是 ${plain(m)}。`,
           ),
-          answer: m,
-          mistakes: [
-            why(
-              m.neg(),
-              "The size is right but the sign is wrong. Subtract the coordinates in the same order on the top and on the bottom.",
-              "大小对了，但符号错了。分子和分母要按相同的顺序相减。",
-            ),
-            why(
-              Q.of(x2 - x1, y2 - y1),
-              "That is the change in $x$ over the change in $y$. Slope is the change in $y$ over the change in $x$.",
-              "这是 $x$ 的变化量除以 $y$ 的变化量。斜率是 $y$ 的变化量除以 $x$ 的变化量。",
-            ),
-            why(
-              Q.of(y2 + y1, x2 - x1),
-              "You added the $y$-coordinates. The top of the slope formula is their difference.",
-              "你把两个纵坐标相加了。斜率公式的分子是它们的差。",
-            ),
-          ],
-          solution: t(`Use the slope formula: ${steps(work)}`, `用斜率公式：${steps(work)}`),
-        });
+        };
       },
     },
     {
@@ -480,12 +513,20 @@ export const slopeOfALine: TopicDef = {
             "两点的 $x$ 坐标相同：直线是竖直的，横向变化为 $0$，斜率不存在。",
           ),
         ][kind]!;
-        return choiceProblem({
-          prompt: t(`What is the slope of the line through $${p}$ and $${q}$?`, `过点 $${p}$ 和 $${q}$ 的直线的斜率是什么？`),
-          options: slopeKinds,
-          correct: kind,
-          solution: reason,
-        });
+        return {
+          ...choiceProblem({
+            prompt: t(`What is the slope of the line through $${p}$ and $${q}$?`, `过点 $${p}$ 和 $${q}$ 的直线的斜率是什么？`),
+            options: slopeKinds,
+            correct: kind,
+            solution: reason,
+          }),
+          solutionFigure: slopeFigure(
+            [x1, y1],
+            [x1 + dx, y1 + dy],
+            `The line through ${at([x1, y1])} and ${at([x1 + dx, y1 + dy])}: the run is ${dx} and the rise is ${dy}.`,
+            `经过 ${at([x1, y1])} 和 ${at([x1 + dx, y1 + dy])} 的直线：水平变化 ${dx}，竖直变化 ${dy}。`,
+          ),
+        };
       },
     },
     {
@@ -508,64 +549,80 @@ export const slopeOfALine: TopicDef = {
             `y - ${paren(y1)} = ${num(m)} \\cdot ${paren(run)} = ${num(rise)}`,
             `y = ${y2}`,
           );
-          return numberProblem({
-            prompt: t(
-              `The line through $${pointLatex([x1, y1])}$ and $(${num(x2)}, y)$ has slope $${num(m)}$. Find $y$.`,
-              `过点 $${pointLatex([x1, y1])}$ 和 $(${num(x2)}, y)$ 的直线的斜率为 $${num(m)}$。求 $y$。`,
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The line through $${pointLatex([x1, y1])}$ and $(${num(x2)}, y)$ has slope $${num(m)}$. Find $y$.`,
+                `过点 $${pointLatex([x1, y1])}$ 和 $(${num(x2)}, y)$ 的直线的斜率为 $${num(m)}$。求 $y$。`,
+              ),
+              answer: y2,
+              solveFor: "y",
+              mistakes: [
+                why(
+                  y1 - rise,
+                  "That moves from the first point the wrong way. Add the change in $y$ to the first $y$-coordinate.",
+                  "这是从第一个点朝相反方向移动。应把 $y$ 的变化量加到第一个点的纵坐标上。",
+                ),
+                why(
+                  rise,
+                  "That is the change in $y$. Add it to the $y$-coordinate of the first point.",
+                  "这是 $y$ 的变化量，还要加上第一个点的纵坐标。",
+                ),
+                why(
+                  Q.of(y1).add(Q.of(run).div(m)),
+                  "You divided the change in $x$ by the slope. The change in $y$ is the slope times the change in $x$.",
+                  "你用 $x$ 的变化量除以了斜率。$y$ 的变化量等于斜率乘 $x$ 的变化量。",
+                ),
+              ],
+              solution: t(`Use the slope formula: ${work}`, `用斜率公式：${work}`),
+            }),
+            solutionFigure: slopeFigure(
+              [x1, y1],
+              [x2, y2],
+              `With slope ${plain(m)} from ${at([x1, y1])}, the other point is ${at([x2, y2])}, so y = ${y2}.`,
+              `从 ${at([x1, y1])} 出发，斜率为 ${plain(m)}，另一点是 ${at([x2, y2])}，所以 y = ${y2}。`,
             ),
-            answer: y2,
-            solveFor: "y",
-            mistakes: [
-              why(
-                y1 - rise,
-                "That moves from the first point the wrong way. Add the change in $y$ to the first $y$-coordinate.",
-                "这是从第一个点朝相反方向移动。应把 $y$ 的变化量加到第一个点的纵坐标上。",
-              ),
-              why(
-                rise,
-                "That is the change in $y$. Add it to the $y$-coordinate of the first point.",
-                "这是 $y$ 的变化量，还要加上第一个点的纵坐标。",
-              ),
-              why(
-                Q.of(y1).add(Q.of(run).div(m)),
-                "You divided the change in $x$ by the slope. The change in $y$ is the slope times the change in $x$.",
-                "你用 $x$ 的变化量除以了斜率。$y$ 的变化量等于斜率乘 $x$ 的变化量。",
-              ),
-            ],
-            solution: t(`Use the slope formula: ${work}`, `用斜率公式：${work}`),
-          });
+          };
         }
         const work = steps(
           `\\frac{${num(y2)} - ${paren(y1)}}{x - ${paren(x1)}} = ${num(m)}`,
           `x - ${paren(x1)} = \\frac{${rise}}{${num(m)}} = ${num(run)}`,
           `x = ${x2}`,
         );
-        return numberProblem({
-          prompt: t(
-            `The line through $${pointLatex([x1, y1])}$ and $(x, ${num(y2)})$ has slope $${num(m)}$. Find $x$.`,
-            `过点 $${pointLatex([x1, y1])}$ 和 $(x, ${num(y2)})$ 的直线的斜率为 $${num(m)}$。求 $x$。`,
+        return {
+          ...numberProblem({
+            prompt: t(
+              `The line through $${pointLatex([x1, y1])}$ and $(x, ${num(y2)})$ has slope $${num(m)}$. Find $x$.`,
+              `过点 $${pointLatex([x1, y1])}$ 和 $(x, ${num(y2)})$ 的直线的斜率为 $${num(m)}$。求 $x$。`,
+            ),
+            answer: x2,
+            solveFor: "x",
+            mistakes: [
+              why(
+                x1 - run,
+                "That moves from the first point the wrong way. Add the change in $x$ to the first $x$-coordinate.",
+                "这是从第一个点朝相反方向移动。应把 $x$ 的变化量加到第一个点的横坐标上。",
+              ),
+              why(
+                run,
+                "That is the change in $x$. Add it to the $x$-coordinate of the first point.",
+                "这是 $x$ 的变化量，还要加上第一个点的横坐标。",
+              ),
+              why(
+                Q.of(x1).add(Q.of(rise).mul(m)),
+                "You multiplied the change in $y$ by the slope. The change in $x$ is the change in $y$ divided by the slope.",
+                "你用 $y$ 的变化量乘了斜率。$x$ 的变化量等于 $y$ 的变化量除以斜率。",
+              ),
+            ],
+            solution: t(`Use the slope formula: ${work}`, `用斜率公式：${work}`),
+          }),
+          solutionFigure: slopeFigure(
+            [x1, y1],
+            [x2, y2],
+            `With slope ${plain(m)} from ${at([x1, y1])}, the other point is ${at([x2, y2])}, so x = ${x2}.`,
+            `从 ${at([x1, y1])} 出发，斜率为 ${plain(m)}，另一点是 ${at([x2, y2])}，所以 x = ${x2}。`,
           ),
-          answer: x2,
-          solveFor: "x",
-          mistakes: [
-            why(
-              x1 - run,
-              "That moves from the first point the wrong way. Add the change in $x$ to the first $x$-coordinate.",
-              "这是从第一个点朝相反方向移动。应把 $x$ 的变化量加到第一个点的横坐标上。",
-            ),
-            why(
-              run,
-              "That is the change in $x$. Add it to the $x$-coordinate of the first point.",
-              "这是 $x$ 的变化量，还要加上第一个点的横坐标。",
-            ),
-            why(
-              Q.of(x1).add(Q.of(rise).mul(m)),
-              "You multiplied the change in $y$ by the slope. The change in $x$ is the change in $y$ divided by the slope.",
-              "你用 $y$ 的变化量乘了斜率。$x$ 的变化量等于 $y$ 的变化量除以斜率。",
-            ),
-          ],
-          solution: t(`Use the slope formula: ${work}`, `用斜率公式：${work}`),
-        });
+        };
       },
     },
   ],
@@ -605,16 +662,25 @@ export const slopeInterceptForm: TopicDef = {
               `A line has slope $${num(m)}$ and crosses the $y$-axis at $${pointLatex([0, b])}$. Write its equation in slope-intercept form.`,
               `一条直线的斜率为 $${num(m)}$，与 $y$ 轴交于 $${pointLatex([0, b])}$。写出它的斜截式方程。`,
             );
-        return equationProblem({
-          prompt,
-          answer,
-          form: "slope-intercept",
-          wrong: [si(b, m), si(m, -b), si(m.neg(), b)],
-          solution: t(
-            `Put $m = ${num(m)}$ and $b = ${num(b)}$ into $y = mx + b$: ${steps(answer)}`,
-            `把 $m = ${num(m)}$，$b = ${num(b)}$ 代入 $y = mx + b$：${steps(answer)}`,
+        return {
+          ...equationProblem({
+            prompt,
+            answer,
+            form: "slope-intercept",
+            wrong: [si(b, m), si(m, -b), si(m.neg(), b)],
+            solution: t(
+              `Put $m = ${num(m)}$ and $b = ${num(b)}$ into $y = mx + b$: ${steps(answer)}`,
+              `把 $m = ${num(m)}$，$b = ${num(b)}$ 代入 $y = mx + b$：${steps(answer)}`,
+            ),
+          }),
+          solutionFigure: slopeFigure(
+            [0, b],
+            riseOf([0, b], m),
+            `The line starts at ${b} on the y-axis and has slope ${plain(m)}.`,
+            `直线从 y 轴上的 ${b} 出发，斜率是 ${plain(m)}。`,
+            true,
           ),
-        });
+        };
       },
     },
     {
@@ -633,23 +699,29 @@ export const slopeInterceptForm: TopicDef = {
         } while (Math.abs(b + rise) > 5);
         const m = Q.of(rise, run);
         const answer = si(m, b);
-        return {
-          ...equationProblem({
-            prompt: t("Write the equation of the line shown, in slope-intercept form.", "写出图中直线的斜截式方程。"),
-            answer,
-            form: "slope-intercept",
-            wrong: [si(Q.of(run, rise), b), si(m.neg(), b), si(m, -b)],
-            solution: t(
-              `The line crosses the $y$-axis at $${pointLatex([0, b])}$, so $b = ${b}$. From there to $${pointLatex([run, b + rise])}$ the run is $${run}$ and the rise is $${rise}$, so $m = ${num(m)}$: ${steps(answer)}`,
-              `直线与 $y$ 轴交于 $${pointLatex([0, b])}$，所以 $b = ${b}$。从这一点到 $${pointLatex([run, b + rise])}$，横向变化是 $${run}$，纵向变化是 $${rise}$，所以 $m = ${num(m)}$：${steps(answer)}`,
+        return annotate(
+          {
+            ...equationProblem({
+              prompt: t("Write the equation of the line shown, in slope-intercept form.", "写出图中直线的斜截式方程。"),
+              answer,
+              form: "slope-intercept",
+              wrong: [si(Q.of(run, rise), b), si(m.neg(), b), si(m, -b)],
+              solution: t(
+                `The line crosses the $y$-axis at $${pointLatex([0, b])}$, so $b = ${b}$. From there to $${pointLatex([run, b + rise])}$ the run is $${run}$ and the rise is $${rise}$, so $m = ${num(m)}$: ${steps(answer)}`,
+                `直线与 $y$ 轴交于 $${pointLatex([0, b])}$，所以 $b = ${b}$。从这一点到 $${pointLatex([run, b + rise])}$，横向变化是 $${run}$，纵向变化是 $${rise}$，所以 $m = ${num(m)}$：${steps(answer)}`,
+              ),
+            }),
+            figure: graph(
+              [lineMark(m, b), { kind: "point", at: [0, b] }, { kind: "point", at: [run, b + rise] }],
+              "A line through two marked grid points, one of them on the y-axis.",
+              "一条经过两个标出的网格点的直线，其中一个点在 y 轴上。",
             ),
-          }),
-          figure: graph(
-            [lineMark(m, b), { kind: "point", at: [0, b] }, { kind: "point", at: [run, b + rise] }],
-            "A line through two marked grid points, one of them on the y-axis.",
-            "一条经过两个标出的网格点的直线，其中一个点在 y 轴上。",
-          ),
-        };
+          },
+          view,
+          [...riseRun([0, b], [run, b + rise]), { kind: "point", at: [0, b], tone: "result" }],
+          `The line crosses the y-axis at ${b}, with a run of ${run} and a rise of ${rise}: the slope is ${plain(m)}.`,
+          `直线与 y 轴交于 ${b}，水平变化 ${run}，竖直变化 ${rise}：斜率是 ${plain(m)}。`,
+        );
       },
     },
     {
@@ -668,28 +740,57 @@ export const slopeInterceptForm: TopicDef = {
         const line = si(m, b);
         const work = `y = ${evalAt(m, x0, b)} = ${num(y)}`;
         if (rng.bool()) {
-          return numberProblem({
-            prompt: t(`The point $(${x0}, y)$ lies on the line $${line}$. Find $y$.`, `点 $(${x0}, y)$ 在直线 $${line}$ 上。求 $y$。`),
-            answer: y,
-            solveFor: "y",
-            wrong: [m.mul(Q.of(x0)).sub(Q.of(b)), m.add(Q.of(x0 + b)), Q.of(x0 + b)],
-            solution: t(`Substitute $x = ${x0}$: ${steps(work)}`, `代入 $x = ${x0}$：${steps(work)}`),
-          });
+          return {
+            ...numberProblem({
+              prompt: t(`The point $(${x0}, y)$ lies on the line $${line}$. Find $y$.`, `点 $(${x0}, y)$ 在直线 $${line}$ 上。求 $y$。`),
+              answer: y,
+              solveFor: "y",
+              wrong: [m.mul(Q.of(x0)).sub(Q.of(b)), m.add(Q.of(x0 + b)), Q.of(x0 + b)],
+              solution: t(`Substitute $x = ${x0}$: ${steps(work)}`, `代入 $x = ${x0}$：${steps(work)}`),
+            }),
+            solutionFigure: graphFigure(
+              viewAround([
+                [x0, y.toNumber()],
+                [0, b],
+              ]),
+              [{ kind: "line", a: [0, b], b: riseOf([0, b], m), accent: true }, ...guides([x0, y.toNumber()], at([x0, y.toNumber()]))],
+              `At x = ${x0} the line is at y = ${plain(y)}.`,
+              `当 x = ${x0} 时，直线上 y = ${plain(y)}。`,
+            ),
+          };
         }
         const on = rng.bool();
         const y0 = on ? y : y.add(Q.of(rng.nonZero(-3, 3)));
-        return choiceProblem({
-          prompt: t(
-            `Does the point $${pointLatex([x0, y0])}$ lie on the line $${line}$?`,
-            `点 $${pointLatex([x0, y0])}$ 在直线 $${line}$ 上吗？`,
+        return {
+          ...choiceProblem({
+            prompt: t(
+              `Does the point $${pointLatex([x0, y0])}$ lie on the line $${line}$?`,
+              `点 $${pointLatex([x0, y0])}$ 在直线 $${line}$ 上吗？`,
+            ),
+            options: yesNo,
+            correct: on ? 0 : 1,
+            solution: t(
+              `Substitute $x = ${x0}$: ${steps(work)}${on ? `This is the $y$-coordinate of the point, so it lies on the line.` : `This is not $${num(y0)}$, so the point is not on the line.`}`,
+              `代入 $x = ${x0}$：${steps(work)}${on ? "这正是该点的 $y$ 坐标，所以点在直线上。" : `这不等于 $${num(y0)}$，所以点不在直线上。`}`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([
+              [x0, y.toNumber()],
+              [x0, y0.toNumber()],
+              [0, b],
+            ]),
+            [
+              { kind: "line", a: [0, b], b: riseOf([0, b], m), accent: true },
+              { kind: "point", at: [x0, y.toNumber()] },
+              { kind: "point", at: [x0, y0.toNumber()], tone: "result" },
+            ],
+            on
+              ? `The point ${at([x0, y0.toNumber()])} lies on the line.`
+              : `At x = ${x0} the line is at y = ${plain(y)}, not ${plain(y0)}.`,
+            on ? `点 ${at([x0, y0.toNumber()])} 在直线上。` : `当 x = ${x0} 时，直线上 y = ${plain(y)}，不是 ${plain(y0)}。`,
           ),
-          options: yesNo,
-          correct: on ? 0 : 1,
-          solution: t(
-            `Substitute $x = ${x0}$: ${steps(work)}${on ? `This is the $y$-coordinate of the point, so it lies on the line.` : `This is not $${num(y0)}$, so the point is not on the line.`}`,
-            `代入 $x = ${x0}$：${steps(work)}${on ? "这正是该点的 $y$ 坐标，所以点在直线上。" : `这不等于 $${num(y0)}$，所以点不在直线上。`}`,
-          ),
-        });
+        };
       },
     },
   ],
@@ -722,29 +823,45 @@ export const propertiesOfLinesInSlopeInterceptForm: TopicDef = {
         const b = rng.nonZero(-9, 9);
         const rhs = rng.bool() ? linear(m, b) : poly([b, ""], [m, "x"]);
         if (rng.bool()) {
-          return numberProblem({
-            prompt: t(`Find the slope of the line $y = ${rhs}$.`, `求直线 $y = ${rhs}$ 的斜率。`),
-            answer: m,
-            wrong: [b, m.neg()],
-            solution: t(`The coefficient of $x$ is the slope: $m = ${num(m)}$.`, `$x$ 的系数就是斜率：$m = ${num(m)}$。`),
-          });
+          return {
+            ...numberProblem({
+              prompt: t(`Find the slope of the line $y = ${rhs}$.`, `求直线 $y = ${rhs}$ 的斜率。`),
+              answer: m,
+              wrong: [b, m.neg()],
+              solution: t(`The coefficient of $x$ is the slope: $m = ${num(m)}$.`, `$x$ 的系数就是斜率：$m = ${num(m)}$。`),
+            }),
+            solutionFigure: slopeFigure(
+              [0, b],
+              riseOf([0, b], m),
+              `The line has slope ${plain(m)} and crosses the y-axis at ${b}.`,
+              `直线的斜率是 ${plain(m)}，与 y 轴交于 ${b}。`,
+            ),
+          };
         }
-        return pointProblem({
-          prompt: t(
-            `Find the $y$-intercept of the line $y = ${rhs}$, as an ordered pair.`,
-            `求直线 $y = ${rhs}$ 与 $y$ 轴的交点，写成有序数对。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Find the $y$-intercept of the line $y = ${rhs}$, as an ordered pair.`,
+              `求直线 $y = ${rhs}$ 与 $y$ 轴的交点，写成有序数对。`,
+            ),
+            answer: [0, b],
+            wrong: [
+              [b, 0],
+              [0, m],
+              [0, -b],
+            ],
+            solution: t(
+              `When $x = 0$, $y = ${num(b)}$, so the $y$-intercept is $${pointLatex([0, b])}$.`,
+              `当 $x = 0$ 时 $y = ${num(b)}$，所以交点是 $${pointLatex([0, b])}$。`,
+            ),
+          }),
+          solutionFigure: slopeFigure(
+            [0, b],
+            riseOf([0, b], m),
+            `The line has slope ${plain(m)} and crosses the y-axis at ${b}.`,
+            `直线的斜率是 ${plain(m)}，与 y 轴交于 ${b}。`,
           ),
-          answer: [0, b],
-          wrong: [
-            [b, 0],
-            [0, m],
-            [0, -b],
-          ],
-          solution: t(
-            `When $x = 0$, $y = ${num(b)}$, so the $y$-intercept is $${pointLatex([0, b])}$.`,
-            `当 $x = 0$ 时 $y = ${num(b)}$，所以交点是 $${pointLatex([0, b])}$。`,
-          ),
-        });
+        };
       },
     },
     {
@@ -766,22 +883,36 @@ export const propertiesOfLinesInSlopeInterceptForm: TopicDef = {
           b = m.mul(Q.of(Number(m.d) * rng.nonZero(-4, 4))).neg();
         }
         const x0 = b.neg().div(m);
-        return pointProblem({
-          prompt: t(
-            `Find the $x$-intercept of the line $${si(m, b)}$, as an ordered pair.`,
-            `求直线 $${si(m, b)}$ 与 $x$ 轴的交点，写成有序数对。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `Find the $x$-intercept of the line $${si(m, b)}$, as an ordered pair.`,
+              `求直线 $${si(m, b)}$ 与 $x$ 轴的交点，写成有序数对。`,
+            ),
+            answer: [x0, 0],
+            wrong: [
+              [x0.neg(), 0],
+              [0, x0],
+              [0, b],
+            ],
+            solution: t(
+              `Set $y = 0$ and solve: ${steps(`0 = ${linear(m, b)}`, `${poly([m, "x"])} = ${num(b.neg())}`, `x = ${num(x0)}`)}The $x$-intercept is $${pointLatex([x0, 0])}$.`,
+              `令 $y = 0$ 并求解：${steps(`0 = ${linear(m, b)}`, `${poly([m, "x"])} = ${num(b.neg())}`, `x = ${num(x0)}`)}与 $x$ 轴的交点是 $${pointLatex([x0, 0])}$。`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([
+              [0, b.toNumber()],
+              [x0.toNumber(), 0],
+            ]),
+            [
+              { kind: "line", a: [0, b.toNumber()], b: [x0.toNumber(), 0], accent: true },
+              { kind: "point", at: [x0.toNumber(), 0], tone: "result" },
+            ],
+            `The line crosses the x-axis at ${plain(x0)}.`,
+            `直线与 x 轴交于 ${plain(x0)}。`,
           ),
-          answer: [x0, 0],
-          wrong: [
-            [x0.neg(), 0],
-            [0, x0],
-            [0, b],
-          ],
-          solution: t(
-            `Set $y = 0$ and solve: ${steps(`0 = ${linear(m, b)}`, `${poly([m, "x"])} = ${num(b.neg())}`, `x = ${num(x0)}`)}The $x$-intercept is $${pointLatex([x0, 0])}$.`,
-            `令 $y = 0$ 并求解：${steps(`0 = ${linear(m, b)}`, `${poly([m, "x"])} = ${num(b.neg())}`, `x = ${num(x0)}`)}与 $x$ 轴的交点是 $${pointLatex([x0, 0])}$。`,
-          ),
-        });
+        };
       },
     },
     {
@@ -852,19 +983,28 @@ export const pointSlopeForm: TopicDef = {
         const m = pickSlopeNotOne(rng);
         const [h, k] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9)];
         const answer = ps(m, h, k);
-        return equationProblem({
-          prompt: t(
-            `Write the equation of the line through $${pointLatex([h, k])}$ with slope $${num(m)}$, in point-slope form.`,
-            `写出过点 $${pointLatex([h, k])}$、斜率为 $${num(m)}$ 的直线的点斜式方程。`,
+        return {
+          ...equationProblem({
+            prompt: t(
+              `Write the equation of the line through $${pointLatex([h, k])}$ with slope $${num(m)}$, in point-slope form.`,
+              `写出过点 $${pointLatex([h, k])}$、斜率为 $${num(m)}$ 的直线的点斜式方程。`,
+            ),
+            answer,
+            form: "point-slope",
+            wrong: [ps(m, -h, -k), ps(m, k, h), ps(m.neg(), h, k)],
+            solution: t(
+              `Substitute $x_1 = ${h}$, $y_1 = ${k}$ and $m = ${num(m)}$ into $y - y_1 = m(x - x_1)$: ${steps(answer)}`,
+              `把 $x_1 = ${h}$，$y_1 = ${k}$，$m = ${num(m)}$ 代入 $y - y_1 = m(x - x_1)$：${steps(answer)}`,
+            ),
+          }),
+          solutionFigure: slopeFigure(
+            [h, k],
+            riseOf([h, k], m),
+            `The line through ${at([h, k])} with slope ${plain(m)}.`,
+            `经过 ${at([h, k])}、斜率为 ${plain(m)} 的直线。`,
+            true,
           ),
-          answer,
-          form: "point-slope",
-          wrong: [ps(m, -h, -k), ps(m, k, h), ps(m.neg(), h, k)],
-          solution: t(
-            `Substitute $x_1 = ${h}$, $y_1 = ${k}$ and $m = ${num(m)}$ into $y - y_1 = m(x - x_1)$: ${steps(answer)}`,
-            `把 $x_1 = ${h}$，$y_1 = ${k}$，$m = ${num(m)}$ 代入 $y - y_1 = m(x - x_1)$：${steps(answer)}`,
-          ),
-        });
+        };
       },
     },
     {
@@ -886,19 +1026,28 @@ export const pointSlopeForm: TopicDef = {
         const [x2, y2] = [x1 + dx, y1 + dy];
         const m = Q.of(dy, dx);
         const answer = ps(m, x1, y1);
-        return equationProblem({
-          prompt: t(
-            `Write the equation of the line through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$, in point-slope form.`,
-            `写出过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的点斜式方程。`,
+        return {
+          ...equationProblem({
+            prompt: t(
+              `Write the equation of the line through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$, in point-slope form.`,
+              `写出过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的点斜式方程。`,
+            ),
+            answer,
+            form: "point-slope",
+            wrong: [ps(Q.of(dx, dy), x1, y1), ps(m.neg(), x1, y1), ps(m, -x1, -y1)],
+            solution: t(
+              `The slope is $m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = ${num(m)}$. Using the point $${pointLatex([x1, y1])}$: ${steps(answer)}`,
+              `斜率 $m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = ${num(m)}$。用点 $${pointLatex([x1, y1])}$：${steps(answer)}`,
+            ),
+          }),
+          solutionFigure: slopeFigure(
+            [x1, y1],
+            [x2, y2],
+            `The run is ${dx} and the rise is ${dy}, so the slope is ${plain(m)}.`,
+            `水平变化 ${dx}，竖直变化 ${dy}，所以斜率是 ${plain(m)}。`,
+            true,
           ),
-          answer,
-          form: "point-slope",
-          wrong: [ps(Q.of(dx, dy), x1, y1), ps(m.neg(), x1, y1), ps(m, -x1, -y1)],
-          solution: t(
-            `The slope is $m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = ${num(m)}$. Using the point $${pointLatex([x1, y1])}$: ${steps(answer)}`,
-            `斜率 $m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = ${num(m)}$。用点 $${pointLatex([x1, y1])}$：${steps(answer)}`,
-          ),
-        });
+        };
       },
     },
     {
@@ -992,21 +1141,32 @@ export const standardForm: TopicDef = {
               `水平直线上每个点的 $y$ 坐标都是 $${k}$：${steps(answer)}`,
             );
         if (rng.bool()) {
-          return equationProblem({
-            prompt: vertical
-              ? t(
-                  `Write the equation of the vertical line through $${pointLatex([h, k])}$.`,
-                  `写出过点 $${pointLatex([h, k])}$ 的竖直直线的方程。`,
-                )
-              : t(
-                  `Write the equation of the horizontal line through $${pointLatex([h, k])}$.`,
-                  `写出过点 $${pointLatex([h, k])}$ 的水平直线的方程。`,
-                ),
-            answer,
-            form: "standard",
-            wrong,
-            solution: reason,
-          });
+          return {
+            ...equationProblem({
+              prompt: vertical
+                ? t(
+                    `Write the equation of the vertical line through $${pointLatex([h, k])}$.`,
+                    `写出过点 $${pointLatex([h, k])}$ 的竖直直线的方程。`,
+                  )
+                : t(
+                    `Write the equation of the horizontal line through $${pointLatex([h, k])}$.`,
+                    `写出过点 $${pointLatex([h, k])}$ 的水平直线的方程。`,
+                  ),
+              answer,
+              form: "standard",
+              wrong,
+              solution: reason,
+            }),
+            solutionFigure: graphFigure(
+              viewAround([[h, k]]),
+              [
+                { kind: "line", a: [h, k], b: vertical ? [h, k + 1] : [h + 1, k], tone: "result" },
+                { kind: "point", at: [h, k], accent: true },
+              ],
+              vertical ? `The vertical line x = ${h} through ${at([h, k])}.` : `The horizontal line y = ${k} through ${at([h, k])}.`,
+              vertical ? `经过 ${at([h, k])} 的竖直直线 x = ${h}。` : `经过 ${at([h, k])} 的水平直线 y = ${k}。`,
+            ),
+          };
         }
         return {
           ...equationProblem({
@@ -1045,19 +1205,28 @@ export const standardForm: TopicDef = {
         const m = Q.of(y2 - y1, x2 - x1);
         const [A, B, C] = standardOf(y2 - y1, x1 - x2, (y2 - y1) * x1 + (x1 - x2) * y1);
         const answer = std(A, B, C);
-        return equationProblem({
-          prompt: t(
-            `Write the equation of the line through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$, in standard form.`,
-            `写出过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的标准式方程。`,
+        return {
+          ...equationProblem({
+            prompt: t(
+              `Write the equation of the line through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$, in standard form.`,
+              `写出过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的标准式方程。`,
+            ),
+            answer,
+            form: "standard",
+            wrong: [std(A, B, -C), std(B, A, C), std(A, -B, C)],
+            solution: t(
+              `The slope is $m = ${num(m)}$, so the line is $${ps(m, x1, y1)}$. Rearrange it: ${steps(answer)}`,
+              `斜率 $m = ${num(m)}$，直线为 $${ps(m, x1, y1)}$。整理得：${steps(answer)}`,
+            ),
+          }),
+          solutionFigure: slopeFigure(
+            [x1, y1],
+            [x2, y2],
+            `The run is ${x2 - x1} and the rise is ${y2 - y1}, so the slope is ${plain(m)}.`,
+            `水平变化 ${x2 - x1}，竖直变化 ${y2 - y1}，所以斜率是 ${plain(m)}。`,
+            true,
           ),
-          answer,
-          form: "standard",
-          wrong: [std(A, B, -C), std(B, A, C), std(A, -B, C)],
-          solution: t(
-            `The slope is $m = ${num(m)}$, so the line is $${ps(m, x1, y1)}$. Rearrange it: ${steps(answer)}`,
-            `斜率 $m = ${num(m)}$，直线为 $${ps(m, x1, y1)}$。整理得：${steps(answer)}`,
-          ),
-        });
+        };
       },
     },
   ],
@@ -1086,34 +1255,67 @@ export const propertiesOfLinesInStandardForm: TopicDef = {
         const eq = std(A, B, C);
         if (rng.bool()) {
           const x0 = Q.of(C, A);
-          return pointProblem({
-            prompt: t(`Find the $x$-intercept of the line $${eq}$, as an ordered pair.`, `求直线 $${eq}$ 与 $x$ 轴的交点，写成有序数对。`),
-            answer: [x0, 0],
-            wrong: [
-              [0, x0],
-              [Q.of(C, B), 0],
-              [x0.neg(), 0],
-            ],
-            solution: t(
-              `Set $y = 0$: ${steps(...(A === 1 ? [] : [`${poly([A, "x"])} = ${num(C)}`]), `x = ${num(x0)}`)}The $x$-intercept is $${pointLatex([x0, 0])}$.`,
-              `令 $y = 0$：${steps(...(A === 1 ? [] : [`${poly([A, "x"])} = ${num(C)}`]), `x = ${num(x0)}`)}与 $x$ 轴的交点是 $${pointLatex([x0, 0])}$。`,
+          return {
+            ...pointProblem({
+              prompt: t(
+                `Find the $x$-intercept of the line $${eq}$, as an ordered pair.`,
+                `求直线 $${eq}$ 与 $x$ 轴的交点，写成有序数对。`,
+              ),
+              answer: [x0, 0],
+              wrong: [
+                [0, x0],
+                [Q.of(C, B), 0],
+                [x0.neg(), 0],
+              ],
+              solution: t(
+                `Set $y = 0$: ${steps(...(A === 1 ? [] : [`${poly([A, "x"])} = ${num(C)}`]), `x = ${num(x0)}`)}The $x$-intercept is $${pointLatex([x0, 0])}$.`,
+                `令 $y = 0$：${steps(...(A === 1 ? [] : [`${poly([A, "x"])} = ${num(C)}`]), `x = ${num(x0)}`)}与 $x$ 轴的交点是 $${pointLatex([x0, 0])}$。`,
+              ),
+            }),
+            solutionFigure: graphFigure(
+              viewAround([
+                [C / A, 0],
+                [0, C / B],
+              ]),
+              [
+                { kind: "line", a: [C / A, 0], b: [0, C / B], accent: true },
+                { kind: "point", at: [0, C / B] },
+                { kind: "point", at: [C / A, 0], tone: "result" },
+              ],
+              `The line crosses the x-axis at ${plain(x0)}.`,
+              `直线与 x 轴交于 ${plain(x0)}。`,
             ),
-          });
+          };
         }
         const y0 = Q.of(C, B);
-        return pointProblem({
-          prompt: t(`Find the $y$-intercept of the line $${eq}$, as an ordered pair.`, `求直线 $${eq}$ 与 $y$ 轴的交点，写成有序数对。`),
-          answer: [0, y0],
-          wrong: [
-            [y0, 0],
-            [0, Q.of(C, A)],
-            [0, y0.neg()],
-          ],
-          solution: t(
-            `Set $x = 0$: ${steps(`${poly([B, "y"])} = ${num(C)}`, `y = ${num(y0)}`)}The $y$-intercept is $${pointLatex([0, y0])}$.`,
-            `令 $x = 0$：${steps(`${poly([B, "y"])} = ${num(C)}`, `y = ${num(y0)}`)}与 $y$ 轴的交点是 $${pointLatex([0, y0])}$。`,
+        return {
+          ...pointProblem({
+            prompt: t(`Find the $y$-intercept of the line $${eq}$, as an ordered pair.`, `求直线 $${eq}$ 与 $y$ 轴的交点，写成有序数对。`),
+            answer: [0, y0],
+            wrong: [
+              [y0, 0],
+              [0, Q.of(C, A)],
+              [0, y0.neg()],
+            ],
+            solution: t(
+              `Set $x = 0$: ${steps(`${poly([B, "y"])} = ${num(C)}`, `y = ${num(y0)}`)}The $y$-intercept is $${pointLatex([0, y0])}$.`,
+              `令 $x = 0$：${steps(`${poly([B, "y"])} = ${num(C)}`, `y = ${num(y0)}`)}与 $y$ 轴的交点是 $${pointLatex([0, y0])}$。`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([
+              [C / A, 0],
+              [0, C / B],
+            ]),
+            [
+              { kind: "line", a: [C / A, 0], b: [0, C / B], accent: true },
+              { kind: "point", at: [C / A, 0] },
+              { kind: "point", at: [0, C / B], tone: "result" },
+            ],
+            `The line crosses the y-axis at ${plain(y0)}.`,
+            `直线与 y 轴交于 ${plain(y0)}。`,
           ),
-        });
+        };
       },
     },
     {
@@ -1150,27 +1352,33 @@ export const propertiesOfLinesInStandardForm: TopicDef = {
         const [A, B, C] = standardOf(b, a, a * b);
         const answer = std(A, B, C);
         const m = Q.of(-b, a);
-        return {
-          ...equationProblem({
-            prompt: t("Write the equation of the line shown, in standard form.", "写出图中直线的标准式方程。"),
-            answer,
-            form: "standard",
-            wrong: [std(...standardOf(a, b, a * b)), std(...standardOf(b, a, -a * b)), std(...standardOf(b, -a, a * b))],
-            solution: t(
-              `The line crosses the axes at $${pointLatex([a, 0])}$ and $${pointLatex([0, b])}$, so its slope is $${num(m)}$ and $${si(m, b)}$. In standard form: ${steps(answer)}`,
-              `直线与坐标轴交于 $${pointLatex([a, 0])}$ 和 $${pointLatex([0, b])}$，所以斜率是 $${num(m)}$，$${si(m, b)}$。化为标准式：${steps(answer)}`,
+        return annotate(
+          {
+            ...equationProblem({
+              prompt: t("Write the equation of the line shown, in standard form.", "写出图中直线的标准式方程。"),
+              answer,
+              form: "standard",
+              wrong: [std(...standardOf(a, b, a * b)), std(...standardOf(b, a, -a * b)), std(...standardOf(b, -a, a * b))],
+              solution: t(
+                `The line crosses the axes at $${pointLatex([a, 0])}$ and $${pointLatex([0, b])}$, so its slope is $${num(m)}$ and $${si(m, b)}$. In standard form: ${steps(answer)}`,
+                `直线与坐标轴交于 $${pointLatex([a, 0])}$ 和 $${pointLatex([0, b])}$，所以斜率是 $${num(m)}$，$${si(m, b)}$。化为标准式：${steps(answer)}`,
+              ),
+            }),
+            figure: graph(
+              [
+                { kind: "line", a: [a, 0], b: [0, b], accent: true },
+                { kind: "point", at: [a, 0] },
+                { kind: "point", at: [0, b] },
+              ],
+              `A line crossing the x-axis at (${a}, 0) and the y-axis at (0, ${b}).`,
+              `一条与 x 轴交于 (${a}, 0)、与 y 轴交于 (0, ${b}) 的直线。`,
             ),
-          }),
-          figure: graph(
-            [
-              { kind: "line", a: [a, 0], b: [0, b], accent: true },
-              { kind: "point", at: [a, 0] },
-              { kind: "point", at: [0, b] },
-            ],
-            `A line crossing the x-axis at (${a}, 0) and the y-axis at (0, ${b}).`,
-            `一条与 x 轴交于 (${a}, 0)、与 y 轴交于 (0, ${b}) 的直线。`,
-          ),
-        };
+          },
+          view,
+          riseRun([a, 0], [0, b]),
+          `From the x-intercept ${a} to the y-intercept ${b}, the slope is ${plain(m)}.`,
+          `从 x 轴截距 ${a} 到 y 轴截距 ${b}，斜率是 ${plain(m)}。`,
+        );
       },
     },
   ],
@@ -1251,19 +1459,34 @@ export const parallelLinesInTheCoordinatePlane: TopicDef = {
         const given = lineIn(m, b0, rng.bool());
         const answer = si(m, b);
         const perp = Q.one.div(m).neg();
-        return equationProblem({
-          prompt: t(
-            `Write in slope-intercept form the equation of the line through $${pointLatex([h, k])}$ parallel to $${given}$.`,
-            `写出过点 $${pointLatex([h, k])}$ 且与 $${given}$ 平行的直线的斜截式方程。`,
+        return {
+          ...equationProblem({
+            prompt: t(
+              `Write in slope-intercept form the equation of the line through $${pointLatex([h, k])}$ parallel to $${given}$.`,
+              `写出过点 $${pointLatex([h, k])}$ 且与 $${given}$ 平行的直线的斜截式方程。`,
+            ),
+            answer,
+            form: "slope-intercept",
+            wrong: [si(m, k), si(perp, Q.of(k).sub(perp.mul(Q.of(h)))), si(m, Q.of(k).add(m.mul(Q.of(h)))), si(m, b0)],
+            solution: t(
+              `The parallel line has the same slope, $${num(m)}$. Substitute the point to find $b$: ${steps(`${num(k)} = ${num(m)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}So the line is $${answer}$.`,
+              `平行线的斜率相同，为 $${num(m)}$。代入该点求 $b$：${steps(`${num(k)} = ${num(m)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}所以直线为 $${answer}$。`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([
+              [h, k],
+              [0, b0],
+            ]),
+            [
+              { kind: "line", a: [0, b0], b: riseOf([0, b0], m), accent: true },
+              { kind: "line", a: [h, k], b: riseOf([h, k], m), tone: "result" },
+              { kind: "point", at: [h, k], tone: "result" },
+            ],
+            `The new line has the same slope, ${plain(m)}, and passes through ${at([h, k])}.`,
+            `新直线斜率相同，都是 ${plain(m)}，并经过 ${at([h, k])}。`,
           ),
-          answer,
-          form: "slope-intercept",
-          wrong: [si(m, k), si(perp, Q.of(k).sub(perp.mul(Q.of(h)))), si(m, Q.of(k).add(m.mul(Q.of(h)))), si(m, b0)],
-          solution: t(
-            `The parallel line has the same slope, $${num(m)}$. Substitute the point to find $b$: ${steps(`${num(k)} = ${num(m)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}So the line is $${answer}$.`,
-            `平行线的斜率相同，为 $${num(m)}$。代入该点求 $b$：${steps(`${num(k)} = ${num(m)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}所以直线为 $${answer}$。`,
-          ),
-        });
+        };
       },
     },
     {
@@ -1380,22 +1603,38 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
         const h = Number(p.d) * rng.nonZero(-3, 3);
         const k = rng.int(-9, 9);
         const b = Q.of(k).sub(p.mul(Q.of(h)));
-        const given = lineIn(m, rng.int(-9, 9), rng.bool());
+        const b0 = rng.int(-9, 9);
+        const given = lineIn(m, b0, rng.bool());
         const answer = si(p, b);
         const inv = Q.one.div(m);
-        return equationProblem({
-          prompt: t(
-            `Write in slope-intercept form the equation of the line through $${pointLatex([h, k])}$ perpendicular to $${given}$.`,
-            `写出过点 $${pointLatex([h, k])}$ 且与 $${given}$ 垂直的直线的斜截式方程。`,
+        return {
+          ...equationProblem({
+            prompt: t(
+              `Write in slope-intercept form the equation of the line through $${pointLatex([h, k])}$ perpendicular to $${given}$.`,
+              `写出过点 $${pointLatex([h, k])}$ 且与 $${given}$ 垂直的直线的斜截式方程。`,
+            ),
+            answer,
+            form: "slope-intercept",
+            wrong: [si(m, Q.of(k).sub(m.mul(Q.of(h)))), si(inv, Q.of(k).sub(inv.mul(Q.of(h)))), si(p, Q.of(k).add(p.mul(Q.of(h))))],
+            solution: t(
+              `The given line has slope $${num(m)}$, so the perpendicular line has slope $${num(p)}$. Substitute the point to find $b$: ${steps(`${num(k)} = ${num(p)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}So the line is $${answer}$.`,
+              `已知直线的斜率是 $${num(m)}$，所以垂线的斜率是 $${num(p)}$。代入该点求 $b$：${steps(`${num(k)} = ${num(p)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}所以直线为 $${answer}$。`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([
+              [h, k],
+              [0, b0],
+            ]),
+            [
+              { kind: "line", a: [0, b0], b: riseOf([0, b0], m), accent: true },
+              { kind: "line", a: [h, k], b: riseOf([h, k], p), tone: "result" },
+              { kind: "point", at: [h, k], tone: "result" },
+            ],
+            `The new line has slope ${plain(p)}, perpendicular to slope ${plain(m)}, and passes through ${at([h, k])}.`,
+            `新直线斜率为 ${plain(p)}，与斜率 ${plain(m)} 垂直，并经过 ${at([h, k])}。`,
           ),
-          answer,
-          form: "slope-intercept",
-          wrong: [si(m, Q.of(k).sub(m.mul(Q.of(h)))), si(inv, Q.of(k).sub(inv.mul(Q.of(h)))), si(p, Q.of(k).add(p.mul(Q.of(h))))],
-          solution: t(
-            `The given line has slope $${num(m)}$, so the perpendicular line has slope $${num(p)}$. Substitute the point to find $b$: ${steps(`${num(k)} = ${num(p)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}So the line is $${answer}$.`,
-            `已知直线的斜率是 $${num(m)}$，所以垂线的斜率是 $${num(p)}$。代入该点求 $b$：${steps(`${num(k)} = ${num(p)} \\cdot ${paren(h)} + b`, `b = ${num(b)}`)}所以直线为 $${answer}$。`,
-          ),
-        });
+        };
       },
     },
     {
@@ -1513,29 +1752,35 @@ export const systemsOfLinearEquations: TopicDef = {
         const b1 = Q.of(y0).sub(m1.mul(Q.of(x0)));
         const b2 = Q.of(y0).sub(m2.mul(Q.of(x0)));
         const [l1, l2] = [si(m1, b1), si(m2, b2)];
-        return {
-          ...pointProblem({
-            prompt: t(
-              `The graphs of the equations of the system $$${system(l1, l2)}$$ are shown. Solve the system.`,
-              `图中是方程组 $$${system(l1, l2)}$$ 中两个方程的图像。解这个方程组。`,
+        return annotate(
+          {
+            ...pointProblem({
+              prompt: t(
+                `The graphs of the equations of the system $$${system(l1, l2)}$$ are shown. Solve the system.`,
+                `图中是方程组 $$${system(l1, l2)}$$ 中两个方程的图像。解这个方程组。`,
+              ),
+              answer: [x0, y0],
+              wrong: [
+                [y0, x0],
+                [0, b1],
+                [0, b2],
+              ],
+              solution: t(
+                `The lines intersect at $${pointLatex([x0, y0])}$. Check: $${evalAt(m1, x0, b1)} = ${y0}$ and $${evalAt(m2, x0, b2)} = ${y0}$.`,
+                `两直线交于 $${pointLatex([x0, y0])}$。检验：$${evalAt(m1, x0, b1)} = ${y0}$，$${evalAt(m2, x0, b2)} = ${y0}$。`,
+              ),
+            }),
+            figure: graph(
+              [lineMark(m1, b1), lineMark(m2, b2, false)],
+              `The lines ${plainLine(m1, b1)} and ${plainLine(m2, b2)}.`,
+              `直线 ${plainLine(m1, b1)} 与 ${plainLine(m2, b2)}。`,
             ),
-            answer: [x0, y0],
-            wrong: [
-              [y0, x0],
-              [0, b1],
-              [0, b2],
-            ],
-            solution: t(
-              `The lines intersect at $${pointLatex([x0, y0])}$. Check: $${evalAt(m1, x0, b1)} = ${y0}$ and $${evalAt(m2, x0, b2)} = ${y0}$.`,
-              `两直线交于 $${pointLatex([x0, y0])}$。检验：$${evalAt(m1, x0, b1)} = ${y0}$，$${evalAt(m2, x0, b2)} = ${y0}$。`,
-            ),
-          }),
-          figure: graph(
-            [lineMark(m1, b1), lineMark(m2, b2, false)],
-            `The lines ${plainLine(m1, b1)} and ${plainLine(m2, b2)}.`,
-            `直线 ${plainLine(m1, b1)} 与 ${plainLine(m2, b2)}。`,
-          ),
-        };
+          },
+          view,
+          guides([x0, y0], at([x0, y0])),
+          `The lines cross at ${at([x0, y0])}.`,
+          `两直线交于 ${at([x0, y0])}。`,
+        );
       },
     },
   ],

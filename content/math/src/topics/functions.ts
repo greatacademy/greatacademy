@@ -17,7 +17,7 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
-
+import { annotate, guides, hits as level, onAxis, setText as setAlt, at as spot, stretchOf } from "../graph-figures.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -495,18 +495,24 @@ export const graphsOfFunctions: TopicDef = {
         const i = rng.int(0, pts.length - 1);
         const [a, y] = pts[i]!;
         const swapped = pts.find((p) => p[1] === a)?.[0];
-        return {
-          ...numberProblem({
-            prompt: t(`The graph of $${name}$ is shown. Find $${name}(${a})$.`, `如图是 $${name}$ 的图象。求 $${name}(${a})$。`),
-            answer: y,
-            wrong: [pts[(i + 1) % pts.length]![1], ...(swapped !== undefined ? [swapped] : []), a],
-            solution: t(
-              `The graph passes through $(${a}, ${y})$, so $${valueLatex(name, a, y)}$.`,
-              `图象经过 $(${a}, ${y})$，所以 $${valueLatex(name, a, y)}$。`,
-            ),
-          }),
-          figure: graphFigure([{ pts }], name),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(`The graph of $${name}$ is shown. Find $${name}(${a})$.`, `如图是 $${name}$ 的图象。求 $${name}(${a})$。`),
+              answer: y,
+              wrong: [pts[(i + 1) % pts.length]![1], ...(swapped !== undefined ? [swapped] : []), a],
+              solution: t(
+                `The graph passes through $(${a}, ${y})$, so $${valueLatex(name, a, y)}$.`,
+                `图象经过 $(${a}, ${y})$，所以 $${valueLatex(name, a, y)}$。`,
+              ),
+            }),
+            figure: graphFigure([{ pts }], name),
+          },
+          view,
+          guides([a, y], spot([a, y])),
+          `At x = ${a} the graph is at height ${y}.`,
+          `当 x = ${a} 时，图象的高度是 ${y}。`,
+        );
       },
     },
     {
@@ -522,21 +528,27 @@ export const graphsOfFunctions: TopicDef = {
         const { pts, hits } = levelWalk(rng, c, -5, 5);
         const wrong: string[][] = [[String(c)]];
         if (hits.length > 1) wrong.push(hits.slice(1).map(String), hits.slice(0, -1).map(String));
-        return {
-          ...solutionsProblem({
-            prompt: t(
-              `The graph of $${name}$ is shown. Solve $${name}(x) = ${c}$.`,
-              `如图是 $${name}$ 的图象。解方程 $${name}(x) = ${c}$。`,
-            ),
-            values: hits.map(String),
-            wrong,
-            solution: t(
-              `The graph is at height $${c}$ at ${hits.map((x) => `$(${x}, ${c})$`).join(" and ")}, so ${hits.map((x) => `$x = ${x}$`).join(" or ")}.`,
-              `图象在 ${hits.map((x) => `$(${x}, ${c})$`).join("、")} 处的高度为 $${c}$，所以 ${hits.map((x) => `$x = ${x}$`).join(" 或 ")}。`,
-            ),
-          }),
-          figure: graphFigure([{ pts }], name),
-        };
+        return annotate(
+          {
+            ...solutionsProblem({
+              prompt: t(
+                `The graph of $${name}$ is shown. Solve $${name}(x) = ${c}$.`,
+                `如图是 $${name}$ 的图象。解方程 $${name}(x) = ${c}$。`,
+              ),
+              values: hits.map(String),
+              wrong,
+              solution: t(
+                `The graph is at height $${c}$ at ${hits.map((x) => `$(${x}, ${c})$`).join(" and ")}, so ${hits.map((x) => `$x = ${x}$`).join(" or ")}.`,
+                `图象在 ${hits.map((x) => `$(${x}, ${c})$`).join("、")} 处的高度为 $${c}$，所以 ${hits.map((x) => `$x = ${x}$`).join(" 或 ")}。`,
+              ),
+            }),
+            figure: graphFigure([{ pts }], name),
+          },
+          view,
+          level(c, hits),
+          `The graph meets y = ${c} at x = ${hits.join(", ")}.`,
+          `图象与 y = ${c} 交于 x = ${hits.join("、")}。`,
+        );
       },
     },
     {
@@ -643,18 +655,27 @@ export const domainOfAFunction: TopicDef = {
           pieces = twoPieces(rng, rng.int(-5, m - 1), m, m2, rng.int(m2 + 1, 5));
         }
         const domain = domainOf(pieces);
-        return {
-          ...intervalProblem({
-            prompt: t(`The graph of $${name}$ is shown. Find the domain of $${name}$.`, `如图是 $${name}$ 的图象。求 $${name}$ 的定义域。`),
-            set: domain,
-            wrong: [rangeOf(pieces), withEnds(domain, true), withEnds(domain, false), hull(domain)],
-            solution: t(
-              `The graph covers the $x$-values ${setText(domain)}: filled dots are included, open dots are not.`,
-              `图象覆盖的 $x$ 值为 ${setText(domain)}：实心点包含在内，空心点不包含在内。`,
-            ),
-          }),
-          figure: graphFigure(pieces, name),
-        };
+        return annotate(
+          {
+            ...intervalProblem({
+              prompt: t(
+                `The graph of $${name}$ is shown. Find the domain of $${name}$.`,
+                `如图是 $${name}$ 的图象。求 $${name}$ 的定义域。`,
+              ),
+              set: domain,
+              wrong: [rangeOf(pieces), withEnds(domain, true), withEnds(domain, false), hull(domain)],
+              solution: t(
+                `The graph covers the $x$-values ${setText(domain)}: filled dots are included, open dots are not.`,
+                `图象覆盖的 $x$ 值为 ${setText(domain)}：实心点包含在内，空心点不包含在内。`,
+              ),
+            }),
+            figure: graphFigure(pieces, name),
+          },
+          view,
+          onAxis("x", domain, 6),
+          `The graph covers x in ${setAlt(domain)}.`,
+          `图象覆盖的 x 是 ${setAlt(domain)}。`,
+        );
       },
     },
     {
@@ -950,21 +971,27 @@ export const globalExtrema: TopicDef = {
         const other = max ? Math.min(...ys) : Math.max(...ys);
         const at = pts.find((p) => p[1] === best)![0];
         const word = extremumWord(max);
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The graph of $${name}$ is shown. What is the ${word.en} value of $${name}$?`,
-              `如图是 $${name}$ 的图象。$${name}$ 的${word["zh-CN"]}是多少？`,
-            ),
-            answer: best,
-            wrong: [at, other, pts[0]![1], pts[pts.length - 1]![1]],
-            solution: t(
-              `The ${max ? "highest" : "lowest"} point of the graph is $(${at}, ${best})$, so the ${word.en} value is $${best}$.`,
-              `图象的最${max ? "高" : "低"}点是 $(${at}, ${best})$，所以${word["zh-CN"]}是 $${best}$。`,
-            ),
-          }),
-          figure: graphFigure([{ pts }], name),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `The graph of $${name}$ is shown. What is the ${word.en} value of $${name}$?`,
+                `如图是 $${name}$ 的图象。$${name}$ 的${word["zh-CN"]}是多少？`,
+              ),
+              answer: best,
+              wrong: [at, other, pts[0]![1], pts[pts.length - 1]![1]],
+              solution: t(
+                `The ${max ? "highest" : "lowest"} point of the graph is $(${at}, ${best})$, so the ${word.en} value is $${best}$.`,
+                `图象的最${max ? "高" : "低"}点是 $(${at}, ${best})$，所以${word["zh-CN"]}是 $${best}$。`,
+              ),
+            }),
+            figure: graphFigure([{ pts }], name),
+          },
+          view,
+          guides([at, best], spot([at, best])),
+          `The graph is ${max ? "highest" : "lowest"} at ${spot([at, best])}.`,
+          `图象在 ${spot([at, best])} 处${max ? "最高" : "最低"}。`,
+        );
       },
     },
     {
@@ -981,22 +1008,28 @@ export const globalExtrema: TopicDef = {
         const ys = pts.map((p) => p[1]);
         const opposite = pts.find((p) => p[1] === (max ? Math.min(...ys) : Math.max(...ys)))![0];
         const word = extremumWord(max);
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The graph of $${name}$ is shown. At what value of $x$ does $${name}$ reach its ${word.en} value?`,
-              `如图是 $${name}$ 的图象。$${name}$ 在 $x$ 取何值时取得${word["zh-CN"]}？`,
-            ),
-            answer: at,
-            solveFor: "x",
-            wrong: [max ? 5 : -5, opposite],
-            solution: t(
-              `The ${max ? "highest" : "lowest"} point is $(${at}, ${max ? 5 : -5})$, so the ${word.en} occurs at $x = ${at}$.`,
-              `最${max ? "高" : "低"}点是 $(${at}, ${max ? 5 : -5})$，所以在 $x = ${at}$ 处取得${word["zh-CN"]}。`,
-            ),
-          }),
-          figure: graphFigure([{ pts }], name),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `The graph of $${name}$ is shown. At what value of $x$ does $${name}$ reach its ${word.en} value?`,
+                `如图是 $${name}$ 的图象。$${name}$ 在 $x$ 取何值时取得${word["zh-CN"]}？`,
+              ),
+              answer: at,
+              solveFor: "x",
+              wrong: [max ? 5 : -5, opposite],
+              solution: t(
+                `The ${max ? "highest" : "lowest"} point is $(${at}, ${max ? 5 : -5})$, so the ${word.en} occurs at $x = ${at}$.`,
+                `最${max ? "高" : "低"}点是 $(${at}, ${max ? 5 : -5})$，所以在 $x = ${at}$ 处取得${word["zh-CN"]}。`,
+              ),
+            }),
+            figure: graphFigure([{ pts }], name),
+          },
+          view,
+          guides([at, max ? Math.max(...ys) : Math.min(...ys)], `x = ${at}`),
+          `The graph is ${max ? "highest" : "lowest"} at x = ${at}.`,
+          `图象在 x = ${at} 处${max ? "最高" : "最低"}。`,
+        );
       },
     },
     {
@@ -1317,18 +1350,24 @@ export const rangeAdvancedCases: TopicDef = {
         const pieces = twoPieces(rng, rng.int(-5, m - 1), m, m2, rng.int(m2 + 1, 5), bands);
         if (m2 === m && !pieces[0]!.openEnd && !pieces[1]!.openStart) pieces[1] = { ...pieces[1]!, openStart: true };
         const set = rangeOf(pieces);
-        return {
-          ...intervalProblem({
-            prompt: t(`The graph of $${name}$ is shown. Find the range of $${name}$.`, `如图是 $${name}$ 的图象。求 $${name}$ 的值域。`),
-            set,
-            wrong: [hull(set), withEnds(set, true), withEnds(set, false), domainOf(pieces), rangeOf([pieces[0]!])],
-            solution: t(
-              `The left piece covers the heights ${setText(rangeOf([pieces[0]!]))} and the right piece ${setText(rangeOf([pieces[1]!]))}. Together: ${setText(set)}.`,
-              `左边一段覆盖的高度为 ${setText(rangeOf([pieces[0]!]))}，右边一段为 ${setText(rangeOf([pieces[1]!]))}。合起来是 ${setText(set)}。`,
-            ),
-          }),
-          figure: graphFigure(pieces, name),
-        };
+        return annotate(
+          {
+            ...intervalProblem({
+              prompt: t(`The graph of $${name}$ is shown. Find the range of $${name}$.`, `如图是 $${name}$ 的图象。求 $${name}$ 的值域。`),
+              set,
+              wrong: [hull(set), withEnds(set, true), withEnds(set, false), domainOf(pieces), rangeOf([pieces[0]!])],
+              solution: t(
+                `The left piece covers the heights ${setText(rangeOf([pieces[0]!]))} and the right piece ${setText(rangeOf([pieces[1]!]))}. Together: ${setText(set)}.`,
+                `左边一段覆盖的高度为 ${setText(rangeOf([pieces[0]!]))}，右边一段为 ${setText(rangeOf([pieces[1]!]))}。合起来是 ${setText(set)}。`,
+              ),
+            }),
+            figure: graphFigure(pieces, name),
+          },
+          view,
+          onAxis("y", set, 6),
+          `The graph covers y in ${setAlt(set)}.`,
+          `图象覆盖的 y 是 ${setAlt(set)}。`,
+        );
       },
     },
     {
@@ -1400,21 +1439,27 @@ export const rootsOfAFunction: TopicDef = {
         if (f0 !== undefined && f0 !== 0) wrong.push([String(f0)]);
         if (hits.length > 1) wrong.push(hits.slice(1).map(String), hits.slice(0, -1).map(String));
         else wrong.push([String(-hits[0]!)]);
-        return {
-          ...solutionsProblem({
-            prompt: t(
-              `The graph of $${name}$ is shown. Find all roots of $${name}$.`,
-              `如图是 $${name}$ 的图象。求 $${name}$ 的所有零点。`,
-            ),
-            values: hits.map(String),
-            wrong,
-            solution: t(
-              `The graph meets the $x$-axis at ${hits.map((x) => `$(${x}, 0)$`).join(" and ")}, so the roots are ${hits.map((x) => `$x = ${x}$`).join(" and ")}.`,
-              `图象与 $x$ 轴交于 ${hits.map((x) => `$(${x}, 0)$`).join("、")}，所以零点是 ${hits.map((x) => `$x = ${x}$`).join("、")}。`,
-            ),
-          }),
-          figure: graphFigure([{ pts }], name),
-        };
+        return annotate(
+          {
+            ...solutionsProblem({
+              prompt: t(
+                `The graph of $${name}$ is shown. Find all roots of $${name}$.`,
+                `如图是 $${name}$ 的图象。求 $${name}$ 的所有零点。`,
+              ),
+              values: hits.map(String),
+              wrong,
+              solution: t(
+                `The graph meets the $x$-axis at ${hits.map((x) => `$(${x}, 0)$`).join(" and ")}, so the roots are ${hits.map((x) => `$x = ${x}$`).join(" and ")}.`,
+                `图象与 $x$ 轴交于 ${hits.map((x) => `$(${x}, 0)$`).join("、")}，所以零点是 ${hits.map((x) => `$x = ${x}$`).join("、")}。`,
+              ),
+            }),
+            figure: graphFigure([{ pts }], name),
+          },
+          view,
+          level(0, hits).slice(1),
+          `The graph crosses the x-axis at x = ${hits.join(", ")}.`,
+          `图象与 x 轴交于 x = ${hits.join("、")}。`,
+        );
       },
     },
     {
@@ -1555,22 +1600,28 @@ export const increasingAndDecreasing: TopicDef = {
             return y0 === y1 ? iv(y0 - 1, y0 + 1, false, false) : iv(Math.min(y0, y1), Math.max(y0, y1), false, false);
           }),
         );
-        return {
-          ...intervalProblem({
-            prompt: t(
-              `The graph of $${name}$ is shown. On which interval or intervals is $${name}$ ${word.en}? Use open intervals.`,
-              `如图是 $${name}$ 的图象。$${name}$ 在哪个或哪些区间上${word["zh-CN"]}？用开区间表示。`,
-            ),
-            set,
-            form: "interval",
-            wrong: [runsOf(pts, dir === 1 ? -1 : 1), withEnds(set, true), yValues],
-            solution: t(
-              `Reading from left to right, the graph is ${dir > 0 ? "going up" : dir < 0 ? "going down" : "flat"} for $x$ in ${setText(set)}.`,
-              `从左往右看，当 $x$ 在 ${setText(set)} 内时，图象${dir > 0 ? "上升" : dir < 0 ? "下降" : "水平"}。`,
-            ),
-          }),
-          figure: graphFigure([{ pts }], name),
-        };
+        return annotate(
+          {
+            ...intervalProblem({
+              prompt: t(
+                `The graph of $${name}$ is shown. On which interval or intervals is $${name}$ ${word.en}? Use open intervals.`,
+                `如图是 $${name}$ 的图象。$${name}$ 在哪个或哪些区间上${word["zh-CN"]}？用开区间表示。`,
+              ),
+              set,
+              form: "interval",
+              wrong: [runsOf(pts, dir === 1 ? -1 : 1), withEnds(set, true), yValues],
+              solution: t(
+                `Reading from left to right, the graph is ${dir > 0 ? "going up" : dir < 0 ? "going down" : "flat"} for $x$ in ${setText(set)}.`,
+                `从左往右看，当 $x$ 在 ${setText(set)} 内时，图象${dir > 0 ? "上升" : dir < 0 ? "下降" : "水平"}。`,
+              ),
+            }),
+            figure: graphFigure([{ pts }], name),
+          },
+          view,
+          [...set.map((i) => stretchOf(pts, i.lo!.toNumber(), i.hi!.toNumber())), ...onAxis("x", set, 6)],
+          `The graph ${word.en} on ${setAlt(set)}.`,
+          `图象在 ${setAlt(set)} 上${word["zh-CN"]}。`,
+        );
       },
     },
     {
@@ -1725,18 +1776,24 @@ export const piecewiseFunctions: TopicDef = {
           { pts: right, openStart: leftFilled },
         ];
         const [value, other] = leftFilled ? [yl, yr] : [yr, yl];
-        return {
-          ...numberProblem({
-            prompt: t(`The graph of $${name}$ is shown. Find $${name}(${a})$.`, `如图是 $${name}$ 的图象。求 $${name}(${a})$。`),
-            answer: value,
-            wrong: [other, Q.of(yl + yr, 2)],
-            solution: t(
-              `At $x = ${a}$ the filled dot is $(${a}, ${value})$; the open dot $(${a}, ${other})$ is not on the graph. So $${valueLatex(name, a, value)}$.`,
-              `在 $x = ${a}$ 处，实心点是 $(${a}, ${value})$，空心点 $(${a}, ${other})$ 不在图象上。所以 $${valueLatex(name, a, value)}$。`,
-            ),
-          }),
-          figure: graphFigure(pieces, name),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(`The graph of $${name}$ is shown. Find $${name}(${a})$.`, `如图是 $${name}$ 的图象。求 $${name}(${a})$。`),
+              answer: value,
+              wrong: [other, Q.of(yl + yr, 2)],
+              solution: t(
+                `At $x = ${a}$ the filled dot is $(${a}, ${value})$; the open dot $(${a}, ${other})$ is not on the graph. So $${valueLatex(name, a, value)}$.`,
+                `在 $x = ${a}$ 处，实心点是 $(${a}, ${value})$，空心点 $(${a}, ${other})$ 不在图象上。所以 $${valueLatex(name, a, value)}$。`,
+              ),
+            }),
+            figure: graphFigure(pieces, name),
+          },
+          view,
+          guides([a, value], spot([a, value])),
+          `At x = ${a} the filled dot is at height ${value}.`,
+          `当 x = ${a} 时，实心点的高度是 ${value}。`,
+        );
       },
     },
   ],

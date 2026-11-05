@@ -1,7 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, paren, plane, Q, sketch } from "@ga/subject-math";
-
+import { tracked } from "../graph-figures.ts";
 import { movedPoint, movedPolygon } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
 
@@ -899,18 +899,21 @@ export const stretchesOfGeometricFigures: TopicDef = {
         const p = pickStretchPoint(rng, horizontal, k);
         const name = stretchName(horizontal, k);
         const image = stretched(horizontal, k, p);
-        return pointProblem({
-          prompt: t(
-            `The point $P${pl(p)}$ is ${name.en}. Find the coordinates of its image $P'$.`,
-            `把点 $P${pl(p)}$ ${name["zh-CN"]}。求它的像 $P'$ 的坐标。`,
-          ),
-          answer: image,
-          wrong: [scaled(k, p), stretched(!horizontal, k, p), horizontal ? [Q.of(p[0]).add(k), p[1]] : [p[0], Q.of(p[1]).add(k)]],
-          solution: t(
-            `A ${horizontal ? "horizontal" : "vertical"} stretch follows the rule $${stretchRule(horizontal, k)}$: it multiplies only the $${horizontal ? "x" : "y"}$-coordinate.${steps(`P' = ${pl(image)}`)}`,
-            `${horizontal ? "水平" : "竖直"}伸缩的规则是 $${stretchRule(horizontal, k)}$：只把 $${horizontal ? "x" : "y"}$ 坐标乘以因子。${steps(`P' = ${pl(image)}`)}`,
-          ),
-        });
+        return {
+          ...pointProblem({
+            prompt: t(
+              `The point $P${pl(p)}$ is ${name.en}. Find the coordinates of its image $P'$.`,
+              `把点 $P${pl(p)}$ ${name["zh-CN"]}。求它的像 $P'$ 的坐标。`,
+            ),
+            answer: image,
+            wrong: [scaled(k, p), stretched(!horizontal, k, p), horizontal ? [Q.of(p[0]).add(k), p[1]] : [p[0], Q.of(p[1]).add(k)]],
+            solution: t(
+              `A ${horizontal ? "horizontal" : "vertical"} stretch follows the rule $${stretchRule(horizontal, k)}$: it multiplies only the $${horizontal ? "x" : "y"}$-coordinate.${steps(`P' = ${pl(image)}`)}`,
+              `${horizontal ? "水平" : "竖直"}伸缩的规则是 $${stretchRule(horizontal, k)}$：只把 $${horizontal ? "x" : "y"}$ 坐标乘以因子。${steps(`P' = ${pl(image)}`)}`,
+            ),
+          }),
+          solutionFigure: movedPoint("P", p, toPoint(image), { kind: "slide" }),
+        };
       },
     },
     {
@@ -1346,15 +1349,18 @@ export const combiningGeometricTransformations: TopicDef = {
           const reversed = applyAll([moves[1]!, moves[0]!], p);
           if (same2(answer, reversed) || same2(answer, p)) continue;
           const trace = traceSteps(moves, p);
-          return pointProblem({
-            prompt: t(
-              `The point $P${pl(p)}$ is mapped by ${sequenceName(moves).en}. Find the coordinates of its image $P'$.`,
-              `对点 $P${pl(p)}$ 先作${sequenceName(moves)["zh-CN"]}。求它的像 $P'$ 的坐标。`,
-            ),
-            answer,
-            wrong: [reversed, moves[0]!.f(p), moves[1]!.f(p)],
-            solution: t(`Apply the transformations in order:\n\n${trace.en}`, `按顺序施行变换：\n\n${trace.zh}`),
-          });
+          return {
+            ...pointProblem({
+              prompt: t(
+                `The point $P${pl(p)}$ is mapped by ${sequenceName(moves).en}. Find the coordinates of its image $P'$.`,
+                `对点 $P${pl(p)}$ 先作${sequenceName(moves)["zh-CN"]}。求它的像 $P'$ 的坐标。`,
+              ),
+              answer,
+              wrong: [reversed, moves[0]!.f(p), moves[1]!.f(p)],
+              solution: t(`Apply the transformations in order:\n\n${trace.en}`, `按顺序施行变换：\n\n${trace.zh}`),
+            }),
+            solutionFigure: tracked(["P", "P′"], [p, moves[0]!.f(p), answer]),
+          };
         }
       },
     },
@@ -1374,15 +1380,18 @@ export const combiningGeometricTransformations: TopicDef = {
           const skipped = applyAll([moves[0]!, moves[2]!], p);
           if (same2(answer, reversed)) continue;
           const trace = traceSteps(moves, p);
-          return pointProblem({
-            prompt: t(
-              `The point $P${pl(p)}$ is mapped by ${sequenceName(moves).en}. Find the coordinates of its image $P'$.`,
-              `对点 $P${pl(p)}$ 先作${sequenceName(moves)["zh-CN"]}。求它的像 $P'$ 的坐标。`,
-            ),
-            answer,
-            wrong: [reversed, skipped, applyAll(moves.slice(0, 2), p)],
-            solution: t(`Apply the transformations in order:\n\n${trace.en}`, `按顺序施行变换：\n\n${trace.zh}`),
-          });
+          return {
+            ...pointProblem({
+              prompt: t(
+                `The point $P${pl(p)}$ is mapped by ${sequenceName(moves).en}. Find the coordinates of its image $P'$.`,
+                `对点 $P${pl(p)}$ 先作${sequenceName(moves)["zh-CN"]}。求它的像 $P'$ 的坐标。`,
+              ),
+              answer,
+              wrong: [reversed, skipped, applyAll(moves.slice(0, 2), p)],
+              solution: t(`Apply the transformations in order:\n\n${trace.en}`, `按顺序施行变换：\n\n${trace.zh}`),
+            }),
+            solutionFigure: tracked(["P", "P′"], [p, moves[0]!.f(p), moves[1]!.f(moves[0]!.f(p)), answer]),
+          };
         }
       },
     },
@@ -1403,18 +1412,21 @@ export const combiningGeometricTransformations: TopicDef = {
           const wrongOrder = m2.inv(m1.inv(image));
           if (same2(wrongOrder, p)) continue;
           const mid = m2.inv(image);
-          return pointProblem({
-            prompt: t(
-              `The point $P$ is mapped by ${sequenceName([m1, m2]).en}. Its image is $P'${pl(image)}$. Find the coordinates of $P$.`,
-              `对点 $P$ 先作${sequenceName([m1, m2])["zh-CN"]}，得到像 $P'${pl(image)}$。求 $P$ 的坐标。`,
-            ),
-            answer: p,
-            wrong: [wrongOrder, m2.f(m1.f(image)), mid],
-            solution: t(
-              `Undo the transformations in reverse order.\n\n1. Undo ${m2.name.en}: $${pl(mid)}$\n2. Undo ${m1.name.en}: $P = ${pl(p)}$`,
-              `按相反的顺序还原各个变换。\n\n1. 还原${m2.name["zh-CN"]}：$${pl(mid)}$\n2. 还原${m1.name["zh-CN"]}：$P = ${pl(p)}$`,
-            ),
-          });
+          return {
+            ...pointProblem({
+              prompt: t(
+                `The point $P$ is mapped by ${sequenceName([m1, m2]).en}. Its image is $P'${pl(image)}$. Find the coordinates of $P$.`,
+                `对点 $P$ 先作${sequenceName([m1, m2])["zh-CN"]}，得到像 $P'${pl(image)}$。求 $P$ 的坐标。`,
+              ),
+              answer: p,
+              wrong: [wrongOrder, m2.f(m1.f(image)), mid],
+              solution: t(
+                `Undo the transformations in reverse order.\n\n1. Undo ${m2.name.en}: $${pl(mid)}$\n2. Undo ${m1.name.en}: $P = ${pl(p)}$`,
+                `按相反的顺序还原各个变换。\n\n1. 还原${m2.name["zh-CN"]}：$${pl(mid)}$\n2. 还原${m1.name["zh-CN"]}：$P = ${pl(p)}$`,
+              ),
+            }),
+            solutionFigure: tracked(["P′", "P"], [image, mid, p]),
+          };
         }
       },
     },
@@ -1779,18 +1791,31 @@ export const reflectiveSymmetry: TopicDef = {
               : line.kind === "y"
                 ? `Q = (${p[0]}, 2 \\cdot ${paren(line.c)} - ${paren(p[1])}) = ${pl(q)}`
                 : `Q = ${pl(q)}`;
-          return pointProblem({
-            prompt: t(
-              `The line $${symLineLatex(line)}$ is a line of symmetry of a figure, and $P${pl(p)}$ is a vertex of the figure. The reflection across the line maps $P$ to another vertex $Q$. Find the coordinates of $Q$.`,
-              `直线 $${symLineLatex(line)}$ 是一个图形的对称轴，$P${pl(p)}$ 是图形的一个顶点。关于这条直线的轴对称把 $P$ 映到另一个顶点 $Q$。求 $Q$ 的坐标。`,
+          return {
+            ...pointProblem({
+              prompt: t(
+                `The line $${symLineLatex(line)}$ is a line of symmetry of a figure, and $P${pl(p)}$ is a vertex of the figure. The reflection across the line maps $P$ to another vertex $Q$. Find the coordinates of $Q$.`,
+                `直线 $${symLineLatex(line)}$ 是一个图形的对称轴，$P${pl(p)}$ 是图形的一个顶点。关于这条直线的轴对称把 $P$ 映到另一个顶点 $Q$。求 $Q$ 的坐标。`,
+              ),
+              answer: q,
+              wrong,
+              solution: t(
+                `Reflect $P$ across $${symLineLatex(line)}$:${steps(work)}`,
+                `把 $P$ 关于 $${symLineLatex(line)}$ 作轴对称：${steps(work)}`,
+              ),
+            }),
+            solutionFigure: movedPoint(
+              "P",
+              p,
+              q,
+              {
+                kind: "flip",
+                a: line.kind === "x" ? [line.c, 0] : line.kind === "y" ? [0, line.c] : [0, 0],
+                b: line.kind === "x" ? [line.c, 1] : line.kind === "y" ? [1, line.c] : [1, line.sign],
+              },
+              "Q",
             ),
-            answer: q,
-            wrong,
-            solution: t(
-              `Reflect $P$ across $${symLineLatex(line)}$:${steps(work)}`,
-              `把 $P$ 关于 $${symLineLatex(line)}$ 作轴对称：${steps(work)}`,
-            ),
-          });
+          };
         }
       },
     },
@@ -1992,41 +2017,47 @@ export const rotationalSymmetry: TopicDef = {
             const q: XY = [2 * c[0] - p[0], 2 * c[1] - p[1]];
             if (same2(p, q)) continue;
             const shape = rng.pick([t("parallelogram", "平行四边形"), t("rectangle", "长方形"), t("rhombus", "菱形")]);
-            return pointProblem({
-              prompt: t(
-                `A ${shape.en} has its center at $C${pl(c)}$, and $P${pl(p)}$ is one of its vertices. A rotation of $180^\\circ$ about $C$ maps the ${shape.en} onto itself and $P$ to the opposite vertex $Q$. Find the coordinates of $Q$.`,
-                `一个${shape["zh-CN"]}的中心是 $C${pl(c)}$，$P${pl(p)}$ 是它的一个顶点。绕 $C$ 旋转 $180^\\circ$ 把这个${shape["zh-CN"]}映到自身，并把 $P$ 映到相对的顶点 $Q$。求 $Q$ 的坐标。`,
-              ),
-              answer: q,
-              wrong: [
-                [z(-p[0]), z(-p[1])],
-                [2 * c[0] + p[0], 2 * c[1] + p[1]],
-                [c[0] - p[0], c[1] - p[1]],
-              ],
-              solution: t(
-                `$C$ is the midpoint of $\\overline{PQ}$, so${steps(`Q = (2 \\cdot ${paren(c[0])} - ${paren(p[0])}, \\; 2 \\cdot ${paren(c[1])} - ${paren(p[1])}) = ${pl(q)}`)}`,
-                `$C$ 是 $\\overline{PQ}$ 的中点，所以${steps(`Q = (2 \\cdot ${paren(c[0])} - ${paren(p[0])}, \\; 2 \\cdot ${paren(c[1])} - ${paren(p[1])}) = ${pl(q)}`)}`,
-              ),
-            });
+            return {
+              ...pointProblem({
+                prompt: t(
+                  `A ${shape.en} has its center at $C${pl(c)}$, and $P${pl(p)}$ is one of its vertices. A rotation of $180^\\circ$ about $C$ maps the ${shape.en} onto itself and $P$ to the opposite vertex $Q$. Find the coordinates of $Q$.`,
+                  `一个${shape["zh-CN"]}的中心是 $C${pl(c)}$，$P${pl(p)}$ 是它的一个顶点。绕 $C$ 旋转 $180^\\circ$ 把这个${shape["zh-CN"]}映到自身，并把 $P$ 映到相对的顶点 $Q$。求 $Q$ 的坐标。`,
+                ),
+                answer: q,
+                wrong: [
+                  [z(-p[0]), z(-p[1])],
+                  [2 * c[0] + p[0], 2 * c[1] + p[1]],
+                  [c[0] - p[0], c[1] - p[1]],
+                ],
+                solution: t(
+                  `$C$ is the midpoint of $\\overline{PQ}$, so${steps(`Q = (2 \\cdot ${paren(c[0])} - ${paren(p[0])}, \\; 2 \\cdot ${paren(c[1])} - ${paren(p[1])}) = ${pl(q)}`)}`,
+                  `$C$ 是 $\\overline{PQ}$ 的中点，所以${steps(`Q = (2 \\cdot ${paren(c[0])} - ${paren(p[0])}, \\; 2 \\cdot ${paren(c[1])} - ${paren(p[1])}) = ${pl(q)}`)}`,
+                ),
+              }),
+              solutionFigure: movedPoint("P", p, q, { kind: "turn", degrees: 180, center: c, centerName: "C" }, "Q"),
+            };
           }
           const q: XY = [z(-p[1]), p[0]];
           const shape = rng.pick([t("square", "正方形"), t("figure", "图形")]);
-          return pointProblem({
-            prompt: t(
-              `A ${shape.en} has rotational symmetry of order $4$ about the origin, and $P${pl(p)}$ is one of its vertices. Find the vertex $Q$ that $P$ is mapped to by a rotation of $90^\\circ$ counterclockwise about the origin.`,
-              `一个${shape["zh-CN"]}关于原点旋转对称，阶数为 $4$，$P${pl(p)}$ 是它的一个顶点。求绕原点逆时针旋转 $90^\\circ$ 后 $P$ 映到的顶点 $Q$。`,
-            ),
-            answer: q,
-            wrong: [
-              [p[1], z(-p[0])],
-              [z(-p[0]), z(-p[1])],
-              [z(-p[1]), z(-p[0])],
-            ],
-            solution: t(
-              `A quarter turn counterclockwise about the origin follows $(x, y) \\to (-y, x)$:${steps(`Q = (${z(-p[1])}, ${p[0]})`)}`,
-              `绕原点逆时针旋转四分之一圈的规则是 $(x, y) \\to (-y, x)$：${steps(`Q = (${z(-p[1])}, ${p[0]})`)}`,
-            ),
-          });
+          return {
+            ...pointProblem({
+              prompt: t(
+                `A ${shape.en} has rotational symmetry of order $4$ about the origin, and $P${pl(p)}$ is one of its vertices. Find the vertex $Q$ that $P$ is mapped to by a rotation of $90^\\circ$ counterclockwise about the origin.`,
+                `一个${shape["zh-CN"]}关于原点旋转对称，阶数为 $4$，$P${pl(p)}$ 是它的一个顶点。求绕原点逆时针旋转 $90^\\circ$ 后 $P$ 映到的顶点 $Q$。`,
+              ),
+              answer: q,
+              wrong: [
+                [p[1], z(-p[0])],
+                [z(-p[0]), z(-p[1])],
+                [z(-p[1]), z(-p[0])],
+              ],
+              solution: t(
+                `A quarter turn counterclockwise about the origin follows $(x, y) \\to (-y, x)$:${steps(`Q = (${z(-p[1])}, ${p[0]})`)}`,
+                `绕原点逆时针旋转四分之一圈的规则是 $(x, y) \\to (-y, x)$：${steps(`Q = (${z(-p[1])}, ${p[0]})`)}`,
+              ),
+            }),
+            solutionFigure: movedPoint("P", p, q, { kind: "turn", degrees: 90 }, "Q"),
+          };
         }
       },
     },

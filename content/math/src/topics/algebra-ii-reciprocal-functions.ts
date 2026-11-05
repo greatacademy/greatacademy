@@ -18,7 +18,7 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
-
+import { annotate, at, guides, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -363,20 +363,26 @@ export const graphingReciprocalFunctions: TopicDef = {
           q = rng.nonZero(-4, 4);
         } while (Math.abs(p * q) < 2 || freePoints(p * q, 0, 0, [[p, q]]).length === 0);
         const k = p * q;
-        return {
-          ...numberProblem({
-            prompt: t("The graph of $y = \\frac{k}{x}$ is shown. Find $k$.", "下图是 $y = \\frac{k}{x}$ 的图象。求 $k$。"),
-            answer: k,
-            solveFor: "k",
-            wrong: [Q.of(p, q), Q.of(p + q), Q.of(-k)],
-            solution: both(
-              `The graph passes through $(${p}, ${q})$, and $xy = k$ on the graph:`,
-              `图象经过 $(${p}, ${q})$，而图象上 $xy = k$：`,
-              `k = ${p} \\cdot ${q < 0 ? `(${q})` : q} = ${k}`,
-            ),
-          }),
-          figure: recipFigure(k, 0, 0, [[p, q]]),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t("The graph of $y = \\frac{k}{x}$ is shown. Find $k$.", "下图是 $y = \\frac{k}{x}$ 的图象。求 $k$。"),
+              answer: k,
+              solveFor: "k",
+              wrong: [Q.of(p, q), Q.of(p + q), Q.of(-k)],
+              solution: both(
+                `The graph passes through $(${p}, ${q})$, and $xy = k$ on the graph:`,
+                `图象经过 $(${p}, ${q})$，而图象上 $xy = k$：`,
+                `k = ${p} \\cdot ${q < 0 ? `(${q})` : q} = ${k}`,
+              ),
+            }),
+            figure: recipFigure(k, 0, 0, [[p, q]]),
+          },
+          view,
+          guides([p, q], at([p, q])),
+          `The point ${at([p, q])} gives k = ${p} · ${q} = ${k}.`,
+          `点 ${at([p, q])} 给出 k = ${p} · ${q} = ${k}。`,
+        );
       },
     },
   ],
@@ -480,19 +486,25 @@ export const graphTransformationsOfReciprocalFunctions: TopicDef = {
           k = rng.int(-3, 3);
         } while (h === 0 && k === 0);
         const y = (hh: number, kk: number) => m(`y = ${recipL(1, hh, kk)}`);
-        return {
-          ...oneOf(
-            rng,
-            t("Which function has the graph shown?", "哪个函数的图象如下图所示？"),
-            y(h, k),
-            [y(-h, k), y(h, -k), y(k, h), y(-h, -k), y(-k, -h)],
-            t(
-              `The asymptotes are $x = ${h}$ and $y = ${k}$, so the graph is $y = \\frac{1}{x}$ shifted to the center $(${h}, ${k})$: $y = ${recipL(1, h, k)}$.`,
-              `渐近线是 $x = ${h}$ 和 $y = ${k}$，所以图象是把 $y = \\frac{1}{x}$ 平移到中心 $(${h}, ${k})$：$y = ${recipL(1, h, k)}$。`,
+        return annotate(
+          {
+            ...oneOf(
+              rng,
+              t("Which function has the graph shown?", "哪个函数的图象如下图所示？"),
+              y(h, k),
+              [y(-h, k), y(h, -k), y(k, h), y(-h, -k), y(-k, -h)],
+              t(
+                `The asymptotes are $x = ${h}$ and $y = ${k}$, so the graph is $y = \\frac{1}{x}$ shifted to the center $(${h}, ${k})$: $y = ${recipL(1, h, k)}$.`,
+                `渐近线是 $x = ${h}$ 和 $y = ${k}$，所以图象是把 $y = \\frac{1}{x}$ 平移到中心 $(${h}, ${k})$：$y = ${recipL(1, h, k)}$。`,
+              ),
             ),
-          ),
-          figure: recipFigure(1, h, k, freePoints(1, h, k, latticePoints(1, h, k))),
-        };
+            figure: recipFigure(1, h, k, freePoints(1, h, k, latticePoints(1, h, k))),
+          },
+          view,
+          shift([0, 0], [h, k]),
+          `The center of the graph moves from the origin to ${at([h, k])}.`,
+          `图象的中心从原点移到 ${at([h, k])}。`,
+        );
       },
     },
   ],
@@ -615,25 +627,31 @@ export const combiningGraphTransformationsOfReciprocalFunctions: TopicDef = {
           const shown: Point[] = other.length ? [[x0, y0], rng.pick(other)] : [[x0, y0]];
           const answer = recipL(a, h, k);
           const sub = (v: number) => (v < 0 ? `(${v})` : String(v));
-          return {
-            ...expressionProblem({
-              prompt: t(
-                "The graph of $f(x) = \\frac{a}{x - h} + k$ is shown. Find $f(x)$.",
-                "下图是 $f(x) = \\frac{a}{x - h} + k$ 的图象。求 $f(x)$。",
-              ),
-              answer,
-              prefix: "f(x) =",
-              wrong: [recipL(a, -h, k), recipL(a, h, -k), recipL(-a, h, k), recipL(y0, h, k), recipL(a, k, h)],
-              solution: both(
-                `The asymptotes are $x = ${h}$ and $y = ${k}$, so $h = ${h}$ and $k = ${k}$. The graph passes through $(${x0}, ${y0})$, so`,
-                `渐近线是 $x = ${h}$ 和 $y = ${k}$，所以 $h = ${h}$，$k = ${k}$。图象经过 $(${x0}, ${y0})$，所以`,
-                `${y0} = \\frac{a}{${x0} - ${sub(h)}} + ${sub(k)}`,
-                `a = (${y0} - ${sub(k)})(${x0} - ${sub(h)}) = ${a}`,
-                `f(x) = ${answer}`,
-              ),
-            }),
-            figure: recipFigure(a, h, k, shown),
-          };
+          return annotate(
+            {
+              ...expressionProblem({
+                prompt: t(
+                  "The graph of $f(x) = \\frac{a}{x - h} + k$ is shown. Find $f(x)$.",
+                  "下图是 $f(x) = \\frac{a}{x - h} + k$ 的图象。求 $f(x)$。",
+                ),
+                answer,
+                prefix: "f(x) =",
+                wrong: [recipL(a, -h, k), recipL(a, h, -k), recipL(-a, h, k), recipL(y0, h, k), recipL(a, k, h)],
+                solution: both(
+                  `The asymptotes are $x = ${h}$ and $y = ${k}$, so $h = ${h}$ and $k = ${k}$. The graph passes through $(${x0}, ${y0})$, so`,
+                  `渐近线是 $x = ${h}$ 和 $y = ${k}$，所以 $h = ${h}$，$k = ${k}$。图象经过 $(${x0}, ${y0})$，所以`,
+                  `${y0} = \\frac{a}{${x0} - ${sub(h)}} + ${sub(k)}`,
+                  `a = (${y0} - ${sub(k)})(${x0} - ${sub(h)}) = ${a}`,
+                  `f(x) = ${answer}`,
+                ),
+              }),
+              figure: recipFigure(a, h, k, shown),
+            },
+            view,
+            [...shift([0, 0], [h, k]), { kind: "point", at: [x0, y0], tone: "result" }],
+            `The center is ${at([h, k])}, and the point ${at([x0, y0])} gives a = ${a}.`,
+            `中心是 ${at([h, k])}，点 ${at([x0, y0])} 给出 a = ${a}。`,
+          );
         }
       },
     },

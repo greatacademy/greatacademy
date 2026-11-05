@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q, relSymbol } from "@ga/subject-math";
-
+import { guides, plain, riseRun } from "../graph-figures.ts";
 import {
   choiceProblem,
   equationProblem,
@@ -67,6 +67,52 @@ function polylineMarks(pts: readonly (readonly [number, number])[]): PlaneMark[]
   for (let i = 0; i + 1 < pts.length; i++) marks.push({ kind: "segment", a: pts[i]!, b: pts[i + 1]!, accent: true });
   for (const p of pts) marks.push({ kind: "point", at: p });
   return marks;
+}
+
+/** legFigure draws a graph of consecutive segments again with one of its legs in the result color and more marks. */
+function legFigure(
+  sc: Scale,
+  pts: readonly (readonly [number, number])[],
+  leg: Leg | undefined,
+  more: readonly PlaneMark[],
+  en: string,
+  zh: string,
+): Figure {
+  return scaledGraph(
+    sc,
+    [...polylineMarks(pts), ...(leg ? [{ kind: "segment", a: leg.from, b: leg.to, tone: "result" } as const] : []), ...more],
+    en,
+    zh,
+  );
+}
+
+/** areaUnder shades the part of a graph's area that a leg covers, down to the horizontal axis. */
+const areaUnder = (l: Leg): PlaneMark => ({ kind: "polygon", points: [l.from, l.to, [l.to[0], 0], [l.from[0], 0]], tone: "result" });
+
+/** niceUnit is the smallest of 1, 2, 5, 10, 20, 50, … that is at least x, for one grid cell of a graph. */
+function niceUnit(x: number): number {
+  for (let p = 1; ; p *= 10) for (const n of [1, 2, 5]) if (n * p >= x) return n * p;
+}
+
+/** plansFigure draws the lines of two plans to a scale that shows where they cross, with more marks from at(x, y), which places a point of the plan in grid cells. */
+function plansFigure(
+  r1: number,
+  f1: number,
+  r2: number,
+  f2: number,
+  reach: number,
+  more: (at: (x: number, y: number) => readonly [number, number]) => readonly PlaneMark[],
+  en: string,
+  zh: string,
+): Figure {
+  const sx = niceUnit(reach / 9);
+  const sy = niceUnit(Math.max(f1 + r1 * 10 * sx, f2 + r2 * 10 * sx) / 7.5);
+  const sc: Scale = { x: sx, y: sy, nx: 10, ny: 8, xName: "x", yName: "y" };
+  const lines: PlaneMark[] = [
+    { kind: "curve", f: (x) => (f1 + r1 * x * sx) / sy, from: 0, to: 10, accent: true },
+    { kind: "curve", f: (x) => (f2 + r2 * x * sx) / sy },
+  ];
+  return scaledGraph(sc, [...lines, ...more((x, y) => [x / sx, y / sy])], en, zh);
 }
 
 // ─── Linear models ────────────────────────────────────────────────────────────
@@ -620,6 +666,10 @@ interface ModelGraph {
   /** j is how many steps of run cells the second marked point is from the start. */
   readonly j: number;
   readonly figure: Figure;
+  /** marks are the line and the marked points of figure, to draw on again in a solution. */
+  readonly marks: readonly PlaneMark[];
+  /** second is the second marked point, in grid cells. */
+  readonly second: readonly [number, number];
 }
 
 /** modelGraph draws a linear model whose marked points lie on grid points. */
@@ -644,17 +694,18 @@ function modelGraph(rng: Rng): ModelGraph {
   const end: [number, number] = c.grows ? [nx, k0 + (rise * nx) / run] : [(k0 * run) / rise, 0];
   const s = c.grows ? 1 : -1;
   const second: [number, number] = [run * j, k0 + s * rise * j];
+  const marks: PlaneMark[] = [
+    { kind: "segment", a: [0, k0], b: end, accent: true },
+    { kind: "point", at: [0, k0] },
+    { kind: "point", at: second },
+  ];
   const figure = scaledGraph(
     sc,
-    [
-      { kind: "segment", a: [0, k0], b: end, accent: true },
-      { kind: "point", at: [0, k0] },
-      { kind: "point", at: second },
-    ],
+    marks,
     `A line starting at (0, ${f}) and passing through (${second[0] * sx}, ${second[1] * sy}).`,
     `一条从 (0, ${f}) 开始、经过 (${second[0] * sx}, ${second[1] * sy}) 的直线。`,
   );
-  return { c, sc, k0, rise, run, f, r, j, figure };
+  return { c, sc, k0, rise, run, f, r, j, figure, marks, second };
 }
 
 export const analyzingGraphsOfLinearModels: TopicDef = {
@@ -700,6 +751,12 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
             ),
           }),
           figure: g.figure,
+          solutionFigure: scaledGraph(
+            sc,
+            [...g.marks, ...riseRun([0, k0], g.second, [String(x2), String(y2 - f)]), { kind: "point", at: g.second, tone: "result" }],
+            `From (0, ${f}) to (${x2}, ${y2}) the run is ${x2} and the rise is ${y2 - f}, so the slope is ${plain(slope)}.`,
+            `从 (0, ${f}) 到 (${x2}, ${y2})，水平变化 ${x2}，竖直变化 ${y2 - f}，所以斜率是 ${plain(slope)}。`,
+          ),
         };
       },
     },
@@ -730,6 +787,12 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
               ),
             }),
             figure: g.figure,
+            solutionFigure: scaledGraph(
+              sc,
+              [...g.marks, { kind: "point", at: [0, k0], label: String(f), dir: "ne", tone: "result" }],
+              `The line meets the vertical axis at ${f}.`,
+              `直线与纵轴交于 ${f}。`,
+            ),
           };
         }
         if (!c.grows && kind === 1) {
@@ -748,6 +811,12 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
               ),
             }),
             figure: g.figure,
+            solutionFigure: scaledGraph(
+              sc,
+              [...g.marks, { kind: "point", at: [(k0 * run) / rise, 0], label: String(empty), dir: "ne", tone: "result" }],
+              `The line meets the horizontal axis at ${empty}.`,
+              `直线与横轴交于 ${empty}。`,
+            ),
           };
         }
         const i = rng.int(1, j);
@@ -769,6 +838,12 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
             ),
           }),
           figure: g.figure,
+          solutionFigure: scaledGraph(
+            sc,
+            [...g.marks, ...guides([run * i, k0 + s * rise * i], `(${xi}, ${yi})`)],
+            `The graph passes through (${xi}, ${yi}).`,
+            `图像经过 (${xi}, ${yi})。`,
+          ),
         };
       },
     },
@@ -803,6 +878,12 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
             ),
           }),
           figure: g.figure,
+          solutionFigure: scaledGraph(
+            sc,
+            [...g.marks, ...riseRun([0, k0], g.second, [String(x2), String(y2 - f)]), { kind: "point", at: [0, k0], tone: "result" }],
+            `The line starts at ${f} and has slope ${plain(slope)}.`,
+            `直线从 ${f} 开始，斜率是 ${plain(slope)}。`,
+          ),
         };
       },
     },
@@ -956,15 +1037,27 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
       generate(rng) {
         const c = rng.pick(planContexts);
         const { r1, r2, f1, f2, d, cross } = plans(rng, c);
-        return numberProblem({
-          prompt: t(`${c.describe(f1, r1, f2, r2).en} ${c.askEqual.en}`, `${c.describe(f1, r1, f2, r2)["zh-CN"]}${c.askEqual["zh-CN"]}`),
-          answer: cross,
-          wrong: [Q.of(f1 + f2, r1 + r2), Q.of(f1, r2), f1 - f2, Q.of(f1 - f2, r1)],
-          solution: t(
-            `For $x$ ${c.units.en}, set the costs equal: ${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${poly([d, "x"])}`, `x = ${cross}`)}`,
-            `设为 $x$ ${c.units["zh-CN"]}，令两者费用相等：${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${poly([d, "x"])}`, `x = ${cross}`)}`,
+        return {
+          ...numberProblem({
+            prompt: t(`${c.describe(f1, r1, f2, r2).en} ${c.askEqual.en}`, `${c.describe(f1, r1, f2, r2)["zh-CN"]}${c.askEqual["zh-CN"]}`),
+            answer: cross,
+            wrong: [Q.of(f1 + f2, r1 + r2), Q.of(f1, r2), f1 - f2, Q.of(f1 - f2, r1)],
+            solution: t(
+              `For $x$ ${c.units.en}, set the costs equal: ${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${poly([d, "x"])}`, `x = ${cross}`)}`,
+              `设为 $x$ ${c.units["zh-CN"]}，令两者费用相等：${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${poly([d, "x"])}`, `x = ${cross}`)}`,
+            ),
+          }),
+          solutionFigure: plansFigure(
+            r1,
+            f1,
+            r2,
+            f2,
+            cross * 1.5,
+            (at) => guides(at(cross, f1 + r1 * cross), `(${cross}, ${f1 + r1 * cross})`),
+            `The two lines cross at x = ${cross}, where both are ${f1 + r1 * cross}.`,
+            `两条直线在 x = ${cross} 处相交，此时两者都是 ${f1 + r1 * cross}。`,
           ),
-        });
+        };
       },
     },
     {
@@ -985,18 +1078,34 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
           t(`so ${c.names[1].en} is cheaper.`, `所以${c.names[1]["zh-CN"]}更便宜。`),
           t("so they cost the same.", "所以两者费用相同。"),
         ][correct]!;
-        return choiceProblem({
-          prompt: t(
-            `${c.describe(f1, r1, f2, r2).en} ${c.askCheaper(u).en}`,
-            `${c.describe(f1, r1, f2, r2)["zh-CN"]}${c.askCheaper(u)["zh-CN"]}`,
+        return {
+          ...choiceProblem({
+            prompt: t(
+              `${c.describe(f1, r1, f2, r2).en} ${c.askCheaper(u).en}`,
+              `${c.describe(f1, r1, f2, r2)["zh-CN"]}${c.askCheaper(u)["zh-CN"]}`,
+            ),
+            options: [c.names[0], c.names[1], t("They cost the same", "两者费用相同")],
+            correct,
+            solution: t(
+              `${c.names[0].en}: $${f1} + ${r1} \\cdot ${u} = ${ca}$. ${c.names[1].en}: $${f2} + ${r2} \\cdot ${u} = ${cb}$, ${verdict.en}`,
+              `${c.names[0]["zh-CN"]}：$${f1} + ${r1} \\cdot ${u} = ${ca}$。${c.names[1]["zh-CN"]}：$${f2} + ${r2} \\cdot ${u} = ${cb}$，${verdict["zh-CN"]}`,
+            ),
+          }),
+          solutionFigure: plansFigure(
+            r1,
+            f1,
+            r2,
+            f2,
+            Math.max(cross, u) * 1.5,
+            (at) => [
+              { kind: "segment", a: at(u, 0), b: at(u, Math.max(ca, cb)), dashed: true, tone: "action" },
+              { kind: "point", at: at(u, Math.max(ca, cb)) },
+              { kind: "point", at: at(u, Math.min(ca, cb)), label: String(Math.min(ca, cb)), dir: "e", tone: "result" },
+            ],
+            `At x = ${u} the costs are ${ca} and ${cb}.`,
+            `当 x = ${u} 时，费用分别是 ${ca} 和 ${cb}。`,
           ),
-          options: [c.names[0], c.names[1], t("They cost the same", "两者费用相同")],
-          correct,
-          solution: t(
-            `${c.names[0].en}: $${f1} + ${r1} \\cdot ${u} = ${ca}$. ${c.names[1].en}: $${f2} + ${r2} \\cdot ${u} = ${cb}$, ${verdict.en}`,
-            `${c.names[0]["zh-CN"]}：$${f1} + ${r1} \\cdot ${u} = ${ca}$。${c.names[1]["zh-CN"]}：$${f2} + ${r2} \\cdot ${u} = ${cb}$，${verdict["zh-CN"]}`,
-          ),
-        });
+        };
       },
     },
   ],
@@ -1044,7 +1153,7 @@ function journey(rng: Rng) {
     `The graph shows the distance $d$, in kilometers, of ${m.a.en} from home $t$ hours after setting out.`,
     `图像表示${m.a["zh-CN"]}出发 $t$ 小时后离家的距离 $d$（千米）。`,
   );
-  return { m, km, pts, legs, figure, intro };
+  return { m, km, pts, legs, figure, intro, sc };
 }
 
 /** legSpeed is the speed of a leg in kilometers per hour. */
@@ -1070,7 +1179,8 @@ export const distanceTimeGraphs: TopicDef = {
         "**距离—时间图**表示物体离出发点的距离 $d$ 随时间 $t$ 的变化。线段上升表示远离出发点；**水平**线段表示距离不变，即停留不动；线段下降表示返回。\n\n**总路程**要把行程的每一段都加起来：去程 $12$ 千米、返程 $12$ 千米，总路程是 $24$ 千米，尽管最后回到了出发点。",
       ),
       generate(rng) {
-        const { m, km, pts, legs, figure, intro } = journey(rng);
+        const drawn = journey(rng);
+        const { m, km, pts, legs, figure, intro } = drawn;
         const kind = rng.int(0, 2);
         if (kind === 0) {
           const i = rng.int(1, pts.length - 2);
@@ -1089,6 +1199,14 @@ export const distanceTimeGraphs: TopicDef = {
               ),
             }),
             figure,
+            solutionFigure: legFigure(
+              drawn.sc,
+              pts,
+              undefined,
+              guides([tx, dy], `(${tx}, ${dy * km})`),
+              `At t = ${tx} the distance is ${dy * km}.`,
+              `当 t = ${tx} 时，距离是 ${dy * km}。`,
+            ),
           };
         }
         if (kind === 1) {
@@ -1105,6 +1223,7 @@ export const distanceTimeGraphs: TopicDef = {
               ),
             }),
             figure,
+            solutionFigure: legFigure(drawn.sc, pts, stop, [], `The flat part lasts ${len} hours.`, `水平的一段持续 ${len} 小时。`),
           };
         }
         const far = Math.max(...pts.map((p) => p[1])) * km;
@@ -1134,7 +1253,8 @@ export const distanceTimeGraphs: TopicDef = {
       ),
       keyPrerequisites: ["speed-distance-time"],
       generate(rng) {
-        const { m, km, legs, figure, intro } = journey(rng);
+        const drawn = journey(rng);
+        const { m, km, legs, figure, intro } = drawn;
         const moving = legs.filter((l) => l.to[1] !== l.from[1]);
         const l = rng.pick(moving);
         const v = legSpeed(l, km);
@@ -1154,6 +1274,14 @@ export const distanceTimeGraphs: TopicDef = {
             ),
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            drawn.pts,
+            l,
+            riseRun(l.from, l.to, [String(dt), String(d2 - d1)]),
+            `In this part the distance changes by ${Math.abs(d2 - d1)} in ${dt} hours, a speed of ${plain(v)}.`,
+            `这一段 ${dt} 小时内距离变化 ${Math.abs(d2 - d1)}，速度是 ${plain(v)}。`,
+          ),
         };
       },
     },
@@ -1165,7 +1293,8 @@ export const distanceTimeGraphs: TopicDef = {
         "描述行程的某一段时，看线段的方向：上升表示远离家，水平表示停留，下降表示返回。比较速度时比较陡峭程度：每小时距离变化最大的线段速度最快。",
       ),
       generate(rng) {
-        const { m, km, legs, figure, intro } = journey(rng);
+        const drawn = journey(rng);
+        const { m, km, legs, figure, intro } = drawn;
         const moving = legs.filter((l) => l.to[1] !== l.from[1]);
         const speeds = moving.map((l) => legSpeed(l, km));
         const best = speeds.reduce((b, v, i) => (v.cmp(speeds[b]!) > 0 ? i : b), 0);
@@ -1187,6 +1316,14 @@ export const distanceTimeGraphs: TopicDef = {
               ),
             }),
             figure,
+            solutionFigure: legFigure(
+              drawn.sc,
+              drawn.pts,
+              moving[best],
+              [],
+              `The steepest part is the fastest, at ${plain(speeds[best]!)}.`,
+              `最陡的一段最快，速度是 ${plain(speeds[best]!)}。`,
+            ),
           };
         }
         const l = rng.pick(legs);
@@ -1207,6 +1344,14 @@ export const distanceTimeGraphs: TopicDef = {
             solution: why,
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            drawn.pts,
+            l,
+            [],
+            `The part in question from t = ${l.from[0]} to t = ${l.to[0]}.`,
+            `所问的一段：从 t = ${l.from[0]} 到 t = ${l.to[0]}。`,
+          ),
         };
       },
     },
@@ -1271,7 +1416,7 @@ function motion(rng: Rng) {
     `The graph shows the speed $v$ of ${v.a.en}, in meters per second, $t$ seconds after it starts.`,
     `图像表示${v.a["zh-CN"]}出发 $t$ 秒后的速度 $v$（米/秒）。`,
   );
-  return { v, sx, sy, pts, legs, figure, intro };
+  return { v, sx, sy, pts, legs, figure, intro, sc };
 }
 
 export const speedTimeGraphs: TopicDef = {
@@ -1294,7 +1439,8 @@ export const speedTimeGraphs: TopicDef = {
         "**速度—时间图**表示速度 $v$ 随时间 $t$ 的变化。与距离—时间图不同，在横轴上方的**水平**线段表示**匀速**运动，而不是静止；只有速度为 $0$ 时物体才停止。线段上升表示加速，下降表示减速。",
       ),
       generate(rng) {
-        const { v, sx, sy, pts, legs, figure, intro } = motion(rng);
+        const drawn = motion(rng);
+        const { v, sx, sy, pts, legs, figure, intro } = drawn;
         if (rng.bool()) {
           const l = rng.pick(legs);
           const correct = l.to[1] > l.from[1] ? 0 : l.to[1] < l.from[1] ? 2 : l.from[1] > 0 ? 1 : 3;
@@ -1323,6 +1469,14 @@ export const speedTimeGraphs: TopicDef = {
               solution: why,
             }),
             figure,
+            solutionFigure: legFigure(
+              drawn.sc,
+              pts,
+              l,
+              [],
+              `The part from ${l.from[0] * sx} to ${l.to[0] * sx}.`,
+              `从 ${l.from[0] * sx} 到 ${l.to[0] * sx} 的一段。`,
+            ),
           };
         }
         const i = rng.int(1, pts.length - 2);
@@ -1338,6 +1492,14 @@ export const speedTimeGraphs: TopicDef = {
             solution: t(`At $t = ${px * sx}$ the graph is at $v = ${py * sy}$.`, `$t = ${px * sx}$ 时图像在 $v = ${py * sy}$ 处。`),
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            pts,
+            undefined,
+            guides([px, py], `(${px * sx}, ${py * sy})`),
+            `At time ${px * sx} the speed is ${py * sy}.`,
+            `时刻 ${px * sx} 的速度是 ${py * sy}。`,
+          ),
         };
       },
     },
@@ -1350,7 +1512,8 @@ export const speedTimeGraphs: TopicDef = {
       ),
       keyPrerequisites: ["slope-of-a-line"],
       generate(rng) {
-        const { v, sx, sy, legs, figure, intro } = motion(rng);
+        const drawn = motion(rng);
+        const { v, sx, sy, legs, figure, intro } = drawn;
         const changing = legs.filter((l) => l.to[1] !== l.from[1]);
         const l = rng.bool(0.85) ? rng.pick(changing) : rng.pick(legs);
         const [t1, t2, v1, v2] = [l.from[0] * sx, l.to[0] * sx, l.from[1] * sy, l.to[1] * sy];
@@ -1369,6 +1532,14 @@ export const speedTimeGraphs: TopicDef = {
             ),
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            drawn.pts,
+            l,
+            riseRun(l.from, l.to, [String(t2 - t1), String(v2 - v1)]),
+            `The speed changes by ${v2 - v1} in ${t2 - t1}, an acceleration of ${plain(a)}.`,
+            `速度在 ${t2 - t1} 内变化 ${v2 - v1}，加速度是 ${plain(a)}。`,
+          ),
         };
       },
     },
@@ -1411,7 +1582,8 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
         "匀速运动时，路程等于速度乘以时间。在速度—时间图上，这个乘积就是水平线段下方**矩形的面积**：高是速度，宽是时间。以 $12$ 米/秒从 $t = 5$ 运动到 $t = 15$，路程是 $12 \\cdot 10 = 120$ 米。",
       ),
       generate(rng) {
-        const { v, sx, sy, legs, figure, intro } = motion(rng);
+        const drawn = motion(rng);
+        const { v, sx, sy, legs, figure, intro } = drawn;
         const l = rng.pick(legs.filter((g) => g.from[1] === g.to[1] && g.from[1] > 0));
         const [t1, t2, sp] = [l.from[0] * sx, l.to[0] * sx, l.from[1] * sy];
         return {
@@ -1428,6 +1600,14 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
             ),
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            drawn.pts,
+            l,
+            [areaUnder(l)],
+            `The distance is the area of the shaded rectangle, ${sp * (t2 - t1)}.`,
+            `距离是涂色长方形的面积 ${sp * (t2 - t1)}。`,
+          ),
         };
       },
     },
@@ -1440,7 +1620,8 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
       ),
       keyPrerequisites: ["area-of-trapezoids"],
       generate(rng) {
-        const { v, sx, sy, legs, figure, intro } = motion(rng);
+        const drawn = motion(rng);
+        const { v, sx, sy, legs, figure, intro } = drawn;
         const l = rng.pick(legs.filter((g) => g.from[1] !== g.to[1]));
         const [t1, t2, v1, v2] = [l.from[0] * sx, l.to[0] * sx, l.from[1] * sy, l.to[1] * sy];
         const d = legArea(l, sx, sy);
@@ -1458,6 +1639,14 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
             ),
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            drawn.pts,
+            l,
+            [areaUnder(l)],
+            `The distance is the shaded area, ${plain(d)}.`,
+            `距离是涂色部分的面积 ${plain(d)}。`,
+          ),
         };
       },
     },
@@ -1469,7 +1658,8 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
         "对于整个行程，把图像下方的区域分成矩形、三角形和梯形，再把面积相加。**平均速度**等于总路程除以总时间：$20$ 秒内行进 $150$ 米，平均速度是 $7.5$ 米/秒。",
       ),
       generate(rng) {
-        const { v, sx, sy, legs, figure, intro } = motion(rng);
+        const drawn = motion(rng);
+        const { v, sx, sy, legs, figure, intro } = drawn;
         const parts = legs.filter((l) => l.from[1] + l.to[1] > 0);
         const total = parts.reduce((s, l) => s.add(legArea(l, sx, sy)), Q.zero);
         const T = legs[legs.length - 1]!.to[0] * sx;
@@ -1491,6 +1681,14 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
               ),
             }),
             figure,
+            solutionFigure: legFigure(
+              drawn.sc,
+              drawn.pts,
+              undefined,
+              parts.map(areaUnder),
+              `The total distance is the shaded area, ${plain(total)}.`,
+              `总路程是涂色部分的面积 ${plain(total)}。`,
+            ),
           };
         }
         const avg = total.div(Q.of(T));
@@ -1508,6 +1706,14 @@ export const distanceFromSpeedTimeGraphs: TopicDef = {
             ),
           }),
           figure,
+          solutionFigure: legFigure(
+            drawn.sc,
+            drawn.pts,
+            undefined,
+            parts.map(areaUnder),
+            `The shaded area is ${plain(total)}; over ${T} that averages ${plain(avg)}.`,
+            `涂色面积是 ${plain(total)}，除以 ${T}，平均是 ${plain(avg)}。`,
+          ),
         };
       },
     },

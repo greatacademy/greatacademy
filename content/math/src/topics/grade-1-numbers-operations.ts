@@ -11,6 +11,7 @@ import {
   earlyPoint,
   earlyThings,
   earlyTopic,
+  jumpsFigure,
   nearbyWrong,
   numberLineFigure,
   tenFramesFigure,
@@ -421,16 +422,27 @@ const countingOn = earlyTopic(
         const b = rng.int(2, Math.min(5, 20 - a));
         const lo = Math.max(0, a - rng.int(0, 2));
         const answer = a + b;
-        return whole(
-          [`The marked point is at ${a}. Count on ${b} more. What number do you reach?`, `标出的点在 ${a}。再往后数 ${b} 个。到了哪个数？`],
-          answer,
-          [answer - 1, a, b],
-          [
-            `Starting after ${a}, count ${b} hops to the right, and you land on ${answer}.`,
-            `从 ${a} 开始向右跳 ${b} 下，落在 ${answer} 上。`,
-          ],
-          numberLineFigure(lo, lo + 10, 1, a),
-        );
+        return {
+          ...whole(
+            [
+              `The marked point is at ${a}. Count on ${b} more. What number do you reach?`,
+              `标出的点在 ${a}。再往后数 ${b} 个。到了哪个数？`,
+            ],
+            answer,
+            [answer - 1, a, b],
+            [
+              `Starting after ${a}, count ${b} hops to the right, and you land on ${answer}.`,
+              `从 ${a} 开始向右跳 ${b} 下，落在 ${answer} 上。`,
+            ],
+            numberLineFigure(lo, lo + 10, 1, a),
+          ),
+          solutionFigure: jumpsFigure(
+            lo,
+            lo + 10,
+            1,
+            Array.from({ length: b + 1 }, (_, i) => a + i),
+          ),
+        };
       },
     ),
     earlyPoint(
@@ -479,13 +491,24 @@ const countingBack = earlyTopic(
         const hi = Math.min(20, a + rng.int(0, 2));
         const lo = Math.max(0, hi - 10);
         const answer = a - b;
-        return whole(
-          [`The marked point is at ${a}. Count back ${b}. What number do you reach?`, `标出的点在 ${a}。往前数 ${b} 个。到了哪个数？`],
-          answer,
-          [a + b, a, answer + 1],
-          [`Starting at ${a}, count ${b} hops to the left, and you land on ${answer}.`, `从 ${a} 开始向左跳 ${b} 下，落在 ${answer} 上。`],
-          numberLineFigure(lo, lo + 10, 1, a),
-        );
+        return {
+          ...whole(
+            [`The marked point is at ${a}. Count back ${b}. What number do you reach?`, `标出的点在 ${a}。往前数 ${b} 个。到了哪个数？`],
+            answer,
+            [a + b, a, answer + 1],
+            [
+              `Starting at ${a}, count ${b} hops to the left, and you land on ${answer}.`,
+              `从 ${a} 开始向左跳 ${b} 下，落在 ${answer} 上。`,
+            ],
+            numberLineFigure(lo, lo + 10, 1, a),
+          ),
+          solutionFigure: jumpsFigure(
+            lo,
+            lo + 10,
+            1,
+            Array.from({ length: b + 1 }, (_, i) => a - i),
+          ),
+        };
       },
     ),
     earlyPoint(

@@ -16,7 +16,7 @@ import {
   type RealSet,
   union,
 } from "@ga/subject-math";
-
+import { annotate, at, plain, pointMove, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, steps } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -350,13 +350,32 @@ const pointQuestion = (p: readonly [Q, Q], g: string) =>
 
 /** imageProblem asks for the image of a point under a transformation, with the given wrong transformations. */
 function imageProblem(p: readonly [Q, Q], g: Tf, wrongTfs: readonly Tf[], solution: Text, written = tfLatex(g)): Problem {
-  return pointProblem({
-    prompt: pointQuestion(p, written),
-    answer: mapPoint(g, p),
-    wrong: [...wrongTfs.map((w) => mapPoint(w, p)), [p[1], p[0]]],
-    solution,
-  });
+  const [u, v] = mapPoint(g, p);
+  return {
+    ...pointProblem({
+      prompt: pointQuestion(p, written),
+      answer: [u, v],
+      wrong: [...wrongTfs.map((w) => mapPoint(w, p)), [p[1], p[0]]],
+      solution,
+    }),
+    solutionFigure: pointMove([p[0].toNumber(), p[1].toNumber()], [u.toNumber(), v.toNumber()]),
+  };
 }
+
+/** imageMarks draws the arrow from a point of f to the same point of g. */
+const imageMarks = (g: Tf, p: Point) => {
+  const [u, v] = mapPoint(g, [Q.of(p[0]), Q.of(p[1])]);
+  return shift(p, [u.toNumber(), v.toNumber()]);
+};
+
+/** imageAlt says where a point of f goes on g, in both languages, for alt text. */
+const imageAlt = (g: Tf, p: Point): [string, string] => {
+  const [u, v] = mapPoint(g, [Q.of(p[0]), Q.of(p[1])]);
+  return [
+    `The point ${at(p)} of f moves to (${plain(u)}, ${plain(v)}) on g.`,
+    `f 上的点 ${at(p)} 移到 g 上的 (${plain(u)}, ${plain(v)})。`,
+  ];
+};
 
 // 3.10.1 Vertical translations.
 
@@ -434,18 +453,23 @@ export const verticalTranslationsOfFunctions: TopicDef = {
         const c = pairCase(rng, () => tf({ k: rng.nonZero(-6, 6) }), { y: [-4, 4] });
         const k = c.tf.k;
         const [x, y] = c.f[0]!;
-        return {
-          ...numberProblem({
-            prompt: solidDashed("Given that $g(x) = f(x) + k$, find $k$.", "已知 $g(x) = f(x) + k$，求 $k$。"),
-            answer: k,
-            wrong: [k.neg()],
-            solution: t(
-              `The point $${pt(x, y)}$ of $f$ moves to $${pt(x, k.add(Q.of(y)))}$ on $g$, a change of $${k.toLatex()}$ in $y$, so $k = ${k.toLatex()}$.`,
-              `$f$ 上的点 $${pt(x, y)}$ 移到 $g$ 上的 $${pt(x, k.add(Q.of(y)))}$，$y$ 变化了 $${k.toLatex()}$，所以 $k = ${k.toLatex()}$。`,
-            ),
-          }),
-          figure: graphFigure(c.f, c.g),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: solidDashed("Given that $g(x) = f(x) + k$, find $k$.", "已知 $g(x) = f(x) + k$，求 $k$。"),
+              answer: k,
+              wrong: [k.neg()],
+              solution: t(
+                `The point $${pt(x, y)}$ of $f$ moves to $${pt(x, k.add(Q.of(y)))}$ on $g$, a change of $${k.toLatex()}$ in $y$, so $k = ${k.toLatex()}$.`,
+                `$f$ 上的点 $${pt(x, y)}$ 移到 $g$ 上的 $${pt(x, k.add(Q.of(y)))}$，$y$ 变化了 $${k.toLatex()}$，所以 $k = ${k.toLatex()}$。`,
+              ),
+            }),
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(c.tf, [x, y]),
+          ...imageAlt(c.tf, [x, y]),
+        );
       },
     },
   ],
@@ -526,18 +550,23 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
         const c = pairCase(rng, () => tf({ h: rng.nonZero(-6, 6) }), { x: [-4, 4] });
         const h = c.tf.h;
         const [x, y] = c.f[0]!;
-        return {
-          ...numberProblem({
-            prompt: solidDashed("Given that $g(x) = f(x - h)$, find $h$.", "已知 $g(x) = f(x - h)$，求 $h$。"),
-            answer: h,
-            wrong: [h.neg()],
-            solution: t(
-              `The left endpoint $${pt(x, y)}$ of $f$ moves to $${pt(h.add(Q.of(x)), y)}$ on $g$, ${units(h)} to the ${h.sign() > 0 ? "right" : "left"}, so $h = ${h.toLatex()}$.`,
-              `$f$ 的左端点 $${pt(x, y)}$ 移到 $g$ 上的 $${pt(h.add(Q.of(x)), y)}$，向${h.sign() > 0 ? "右" : "左"}移动了 $${h.abs().toLatex()}$ 个单位，所以 $h = ${h.toLatex()}$。`,
-            ),
-          }),
-          figure: graphFigure(c.f, c.g),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: solidDashed("Given that $g(x) = f(x - h)$, find $h$.", "已知 $g(x) = f(x - h)$，求 $h$。"),
+              answer: h,
+              wrong: [h.neg()],
+              solution: t(
+                `The left endpoint $${pt(x, y)}$ of $f$ moves to $${pt(h.add(Q.of(x)), y)}$ on $g$, ${units(h)} to the ${h.sign() > 0 ? "right" : "left"}, so $h = ${h.toLatex()}$.`,
+                `$f$ 的左端点 $${pt(x, y)}$ 移到 $g$ 上的 $${pt(h.add(Q.of(x)), y)}$，向${h.sign() > 0 ? "右" : "左"}移动了 $${h.abs().toLatex()}$ 个单位，所以 $h = ${h.toLatex()}$。`,
+              ),
+            }),
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(c.tf, [x, y]),
+          ...imageAlt(c.tf, [x, y]),
+        );
       },
     },
   ],
@@ -640,18 +669,23 @@ export const verticalStretchesOfFunctions: TopicDef = {
         const lim = Math.floor(7 / Number(a.n)) * yStep;
         const c = pairCase(rng, () => tf({ a }), { y: [-Math.min(lim, 6), Math.min(lim, 6)], yStep });
         const [x, y] = c.f.find(([, v]) => v !== 0)!;
-        return {
-          ...numberProblem({
-            prompt: solidDashed("Given that $g(x) = a f(x)$, find $a$.", "已知 $g(x) = a f(x)$，求 $a$。"),
-            answer: a,
-            wrong: [Q.one.div(a), a.neg()],
-            solution: t(
-              `At $x = ${x}$, $f(${x}) = ${y}$ and $g(${x}) = ${a.mul(Q.of(y)).toLatex()}$, so $a = \\frac{${a.mul(Q.of(y)).toLatex()}}{${y}} = ${a.toLatex()}$.`,
-              `在 $x = ${x}$ 处，$f(${x}) = ${y}$，$g(${x}) = ${a.mul(Q.of(y)).toLatex()}$，所以 $a = \\frac{${a.mul(Q.of(y)).toLatex()}}{${y}} = ${a.toLatex()}$。`,
-            ),
-          }),
-          figure: graphFigure(c.f, c.g),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: solidDashed("Given that $g(x) = a f(x)$, find $a$.", "已知 $g(x) = a f(x)$，求 $a$。"),
+              answer: a,
+              wrong: [Q.one.div(a), a.neg()],
+              solution: t(
+                `At $x = ${x}$, $f(${x}) = ${y}$ and $g(${x}) = ${a.mul(Q.of(y)).toLatex()}$, so $a = \\frac{${a.mul(Q.of(y)).toLatex()}}{${y}} = ${a.toLatex()}$.`,
+                `在 $x = ${x}$ 处，$f(${x}) = ${y}$，$g(${x}) = ${a.mul(Q.of(y)).toLatex()}$，所以 $a = \\frac{${a.mul(Q.of(y)).toLatex()}}{${y}} = ${a.toLatex()}$。`,
+              ),
+            }),
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(c.tf, [x, y]),
+          ...imageAlt(c.tf, [x, y]),
+        );
       },
     },
   ],
@@ -770,18 +804,23 @@ export const horizontalStretchesOfFunctions: TopicDef = {
         const c = pairCase(rng, () => tf({ b }), { x: [-Math.min(lim, 6), Math.min(lim, 6)], xStep });
         const [x, y] = c.f[0]![0] !== 0 ? c.f[0]! : c.f[c.f.length - 1]!;
         const u = Q.of(x).div(b);
-        return {
-          ...numberProblem({
-            prompt: solidDashed("Given that $g(x) = f(bx)$, find $b$.", "已知 $g(x) = f(bx)$，求 $b$。"),
-            answer: b,
-            wrong: [Q.one.div(b), b.neg()],
-            solution: t(
-              `The point $${pt(x, y)}$ of $f$ corresponds to $${pt(u, y)}$ on $g$, so $b = \\frac{${x}}{${u.toLatex()}} = ${b.toLatex()}$.`,
-              `$f$ 上的点 $${pt(x, y)}$ 对应 $g$ 上的 $${pt(u, y)}$，所以 $b = \\frac{${x}}{${u.toLatex()}} = ${b.toLatex()}$。`,
-            ),
-          }),
-          figure: graphFigure(c.f, c.g),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: solidDashed("Given that $g(x) = f(bx)$, find $b$.", "已知 $g(x) = f(bx)$，求 $b$。"),
+              answer: b,
+              wrong: [Q.one.div(b), b.neg()],
+              solution: t(
+                `The point $${pt(x, y)}$ of $f$ corresponds to $${pt(u, y)}$ on $g$, so $b = \\frac{${x}}{${u.toLatex()}} = ${b.toLatex()}$.`,
+                `$f$ 上的点 $${pt(x, y)}$ 对应 $g$ 上的 $${pt(u, y)}$，所以 $b = \\frac{${x}}{${u.toLatex()}} = ${b.toLatex()}$。`,
+              ),
+            }),
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(c.tf, [x, y]),
+          ...imageAlt(c.tf, [x, y]),
+        );
       },
     },
   ],
@@ -907,18 +946,23 @@ export const combiningGraphTransformationsTwoOperations: TopicDef = {
         ].filter((w, i, all) => imageKey(w, c.f) !== imageKey(g, c.f) && all.findIndex((v) => tfLatex(v) === tfLatex(w)) === i);
         const [x, y] = c.f[0]!;
         const [u, v] = mapPoint(g, [Q.of(x), Q.of(y)]);
-        return {
-          ...shuffled(
-            rng,
-            solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
-            [g, ...rng.shuffle(wrong).slice(0, 3)].map((w) => same(`$g(x) = ${tfLatex(w)}$`)),
-            t(
-              `For $g(x) = ${tfLatex(g)}$, the left endpoint $${pt(x, y)}$ of $f$ moves to $${pt(u, v)}$, which is the left endpoint of the dashed graph; the other points match too.`,
-              `对于 $g(x) = ${tfLatex(g)}$，$f$ 的左端点 $${pt(x, y)}$ 移到 $${pt(u, v)}$，正是虚线的左端点；其他点也都对应。`,
+        return annotate(
+          {
+            ...shuffled(
+              rng,
+              solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
+              [g, ...rng.shuffle(wrong).slice(0, 3)].map((w) => same(`$g(x) = ${tfLatex(w)}$`)),
+              t(
+                `For $g(x) = ${tfLatex(g)}$, the left endpoint $${pt(x, y)}$ of $f$ moves to $${pt(u, v)}$, which is the left endpoint of the dashed graph; the other points match too.`,
+                `对于 $g(x) = ${tfLatex(g)}$，$f$ 的左端点 $${pt(x, y)}$ 移到 $${pt(u, v)}$，正是虚线的左端点；其他点也都对应。`,
+              ),
             ),
-          ),
-          figure: graphFigure(c.f, c.g),
-        };
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(g, [x, y]),
+          ...imageAlt(g, [x, y]),
+        );
       },
     },
   ],
@@ -1030,18 +1074,23 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
         ].filter((w, i, all) => imageKey(w, c.f) !== imageKey(g, c.f) && all.findIndex((v) => tfLatex(v) === tfLatex(w)) === i);
         const [x, y] = c.f[c.f.length - 1]!;
         const [u, v] = mapPoint(g, [Q.of(x), Q.of(y)]);
-        return {
-          ...shuffled(
-            rng,
-            solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
-            [g, ...rng.shuffle(wrong).slice(0, 3)].map((w) => same(`$g(x) = ${tfLatex(w)}$`)),
-            t(
-              `For $g(x) = ${tfLatex(g)}$, the right endpoint $${pt(x, y)}$ of $f$ moves to $${pt(u, v)}$, which is the right endpoint of the dashed graph; the other points match too.`,
-              `对于 $g(x) = ${tfLatex(g)}$，$f$ 的右端点 $${pt(x, y)}$ 移到 $${pt(u, v)}$，正是虚线的右端点；其他点也都对应。`,
+        return annotate(
+          {
+            ...shuffled(
+              rng,
+              solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
+              [g, ...rng.shuffle(wrong).slice(0, 3)].map((w) => same(`$g(x) = ${tfLatex(w)}$`)),
+              t(
+                `For $g(x) = ${tfLatex(g)}$, the right endpoint $${pt(x, y)}$ of $f$ moves to $${pt(u, v)}$, which is the right endpoint of the dashed graph; the other points match too.`,
+                `对于 $g(x) = ${tfLatex(g)}$，$f$ 的右端点 $${pt(x, y)}$ 移到 $${pt(u, v)}$，正是虚线的右端点；其他点也都对应。`,
+              ),
             ),
-          ),
-          figure: graphFigure(c.f, c.g),
-        };
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(g, [x, y]),
+          ...imageAlt(g, [x, y]),
+        );
       },
     },
   ],
@@ -1195,33 +1244,39 @@ export const constructingFunctionsUsingTransformations: TopicDef = {
           { kind: "point", at: [h + 1, k + an], accent: true },
         ];
         const answer = parentLatex(p, a, Q.of(h), Q.of(k));
-        return {
-          ...expressionProblem({
-            prompt: t(
-              `The graph shown is a transformation of the graph of ${p.name.en}. Write its equation.`,
-              `图中是 ${p.name["zh-CN"]} 的图象经过变换得到的图象。写出它的解析式。`,
-            ),
-            answer,
-            prefix: "y =",
-            wrong: [
-              parentLatex(p, a.neg(), Q.of(h), Q.of(k)),
-              parentLatex(p, a, Q.of(-h), Q.of(k)),
-              parentLatex(p, a, Q.of(h), Q.of(-k)),
-              parentLatex(p, a, Q.of(k), Q.of(h)),
-            ],
-            solution: t(
-              `The key point is $${pt(h, k)}$, and one unit to its right the graph is at $${pt(h + 1, k + an)}$, a change of $${an}$, so $a = ${an}$ and $y = ${answer}$.`,
-              `关键点是 $${pt(h, k)}$，向右一个单位处图象在 $${pt(h + 1, k + an)}$，变化了 $${an}$，所以 $a = ${an}$，$y = ${answer}$。`,
-            ),
-          }),
-          figure: {
-            svg: plane(view, marks),
-            alt: t(
-              `A transformation of the graph of ${p.name.en}, with its key point at ${pt(h, k)} and passing through ${pt(h + 1, k + an)}.`,
-              `${p.name["zh-CN"]} 的图象经过变换得到的图象，关键点为 ${pt(h, k)}，并经过 ${pt(h + 1, k + an)}。`,
-            ),
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: t(
+                `The graph shown is a transformation of the graph of ${p.name.en}. Write its equation.`,
+                `图中是 ${p.name["zh-CN"]} 的图象经过变换得到的图象。写出它的解析式。`,
+              ),
+              answer,
+              prefix: "y =",
+              wrong: [
+                parentLatex(p, a.neg(), Q.of(h), Q.of(k)),
+                parentLatex(p, a, Q.of(-h), Q.of(k)),
+                parentLatex(p, a, Q.of(h), Q.of(-k)),
+                parentLatex(p, a, Q.of(k), Q.of(h)),
+              ],
+              solution: t(
+                `The key point is $${pt(h, k)}$, and one unit to its right the graph is at $${pt(h + 1, k + an)}$, a change of $${an}$, so $a = ${an}$ and $y = ${answer}$.`,
+                `关键点是 $${pt(h, k)}$，向右一个单位处图象在 $${pt(h + 1, k + an)}$，变化了 $${an}$，所以 $a = ${an}$，$y = ${answer}$。`,
+              ),
+            }),
+            figure: {
+              svg: plane(view, marks),
+              alt: t(
+                `A transformation of the graph of ${p.name.en}, with its key point at ${pt(h, k)} and passing through ${pt(h + 1, k + an)}.`,
+                `${p.name["zh-CN"]} 的图象经过变换得到的图象，关键点为 ${pt(h, k)}，并经过 ${pt(h + 1, k + an)}。`,
+              ),
+            },
           },
-        };
+          view,
+          [{ kind: "curve", f: p.f, from: p === parents[2] ? 0 : -8, dashed: true }, ...shift([0, 0], [h, k])],
+          `The parent graph moves so that its key point goes to ${at([h, k])}.`,
+          `母函数图象平移，使关键点移到 ${at([h, k])}。`,
+        );
       },
     },
   ],
@@ -1298,21 +1353,27 @@ export const verticalReflectionsOfFunctions: TopicDef = {
         const f = randomGraph(rng, -6, 6, -6, 6);
         const vs = f.filter(([, y]) => y !== 0);
         const [x, y] = vs.length ? rng.pick(vs) : f[0]!;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The graph of $f$ is shown. Let $g(x) = -f(x)$. Find $g(${x})$.`,
-              `下图是 $f$ 的图象。设 $g(x) = -f(x)$。求 $g(${x})$。`,
-            ),
-            answer: -y,
-            wrong: [y, ...(valueOn(f, -x) ? [valueOn(f, -x)!, valueOn(f, -x)!.neg()] : [])],
-            solution: t(
-              `From the graph, $f(${x}) = ${y}$, so $g(${x}) = -${paren(y)} = ${-y}$.`,
-              `由图象，$f(${x}) = ${y}$，所以 $g(${x}) = -${paren(y)} = ${-y}$。`,
-            ),
-          }),
-          figure: graphFigure(f),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `The graph of $f$ is shown. Let $g(x) = -f(x)$. Find $g(${x})$.`,
+                `下图是 $f$ 的图象。设 $g(x) = -f(x)$。求 $g(${x})$。`,
+              ),
+              answer: -y,
+              wrong: [y, ...(valueOn(f, -x) ? [valueOn(f, -x)!, valueOn(f, -x)!.neg()] : [])],
+              solution: t(
+                `From the graph, $f(${x}) = ${y}$, so $g(${x}) = -${paren(y)} = ${-y}$.`,
+                `由图象，$f(${x}) = ${y}$，所以 $g(${x}) = -${paren(y)} = ${-y}$。`,
+              ),
+            }),
+            figure: graphFigure(f),
+          },
+          view,
+          shift([x, y], [x, -y]),
+          `The point ${at([x, y])} of f reflects to ${at([x, -y])}.`,
+          `f 上的点 ${at([x, y])} 反射到 ${at([x, -y])}。`,
+        );
       },
     },
   ],
@@ -1400,18 +1461,23 @@ export const horizontalReflectionsOfFunctions: TopicDef = {
           const image = mapGraph(g, f)!;
           const [x, y] = f[0]!;
           const [u, v] = mapPoint(g, [Q.of(x), Q.of(y)]);
-          return {
-            ...shuffled(
-              rng,
-              solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
-              [g, ...all.filter((w) => w !== g)].map((w) => same(`$g(x) = ${tfLatex(w)}$`)),
-              t(
-                `The point $${pt(x, y)}$ of $f$ corresponds to $${pt(u, v)}$ on $g$, so $g(x) = ${tfLatex(g)}$.`,
-                `$f$ 上的点 $${pt(x, y)}$ 对应 $g$ 上的 $${pt(u, v)}$，所以 $g(x) = ${tfLatex(g)}$。`,
+          return annotate(
+            {
+              ...shuffled(
+                rng,
+                solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
+                [g, ...all.filter((w) => w !== g)].map((w) => same(`$g(x) = ${tfLatex(w)}$`)),
+                t(
+                  `The point $${pt(x, y)}$ of $f$ corresponds to $${pt(u, v)}$ on $g$, so $g(x) = ${tfLatex(g)}$.`,
+                  `$f$ 上的点 $${pt(x, y)}$ 对应 $g$ 上的 $${pt(u, v)}$，所以 $g(x) = ${tfLatex(g)}$。`,
+                ),
               ),
-            ),
-            figure: graphFigure(f, image),
-          };
+              figure: graphFigure(f, image),
+            },
+            view,
+            imageMarks(g, [x, y]),
+            ...imageAlt(g, [x, y]),
+          );
         }
       },
     },
@@ -1534,18 +1600,23 @@ export const combiningReflectionsWithOtherGraphTransformations: TopicDef = {
         ].filter((w, i, all) => imageKey(w, c.f) !== imageKey(g, c.f) && all.findIndex((v) => write(v).en === write(w).en) === i);
         const [x, y] = c.f[0]!;
         const [u, v] = mapPoint(g, [Q.of(x), Q.of(y)]);
-        return {
-          ...shuffled(
-            rng,
-            solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
-            [g, ...rng.shuffle(wrong).slice(0, 3)].map(write),
-            t(
-              `The left endpoint $${pt(x, y)}$ of $f$ moves to $${pt(u, v)}$ under $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$, an endpoint of the dashed graph; the other points match too.`,
-              `在 $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$ 下，$f$ 的左端点 $${pt(x, y)}$ 移到 $${pt(u, v)}$，正是虚线的一个端点；其他点也都对应。`,
+        return annotate(
+          {
+            ...shuffled(
+              rng,
+              solidDashed("Which is $g(x)$?", "$g(x)$ 是哪一个？"),
+              [g, ...rng.shuffle(wrong).slice(0, 3)].map(write),
+              t(
+                `The left endpoint $${pt(x, y)}$ of $f$ moves to $${pt(u, v)}$ under $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$, an endpoint of the dashed graph; the other points match too.`,
+                `在 $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$ 下，$f$ 的左端点 $${pt(x, y)}$ 移到 $${pt(u, v)}$，正是虚线的一个端点；其他点也都对应。`,
+              ),
             ),
-          ),
-          figure: graphFigure(c.f, c.g),
-        };
+            figure: graphFigure(c.f, c.g),
+          },
+          view,
+          imageMarks(g, [x, y]),
+          ...imageAlt(g, [x, y]),
+        );
       },
     },
   ],
@@ -1907,26 +1978,34 @@ export const absoluteValueGraphTransformations: TopicDef = {
           if (!outer && fm === undefined) continue;
           const answer = outer ? fx!.abs() : fm!;
           const name = outer ? "|f(x)|" : "f(|x|)";
-          return {
-            ...numberProblem({
-              prompt: t(
-                `The graph of $f$ is shown. Let $g(x) = ${name}$. Find $g(${x})$.`,
-                `下图是 $f$ 的图象。设 $g(x) = ${name}$。求 $g(${x})$。`,
-              ),
-              answer,
-              wrong: [...(fx ? [fx, fx.abs()] : []), ...(fm ? [fm, fm.abs().neg(), fm.neg()] : [])],
-              solution: outer
-                ? t(
-                    `From the graph, $f(${x}) = ${fx!.toLatex()}$, which is below the $x$-axis, so $g(${x}) = |${fx!.toLatex()}| = ${answer.toLatex()}$.`,
-                    `由图象，$f(${x}) = ${fx!.toLatex()}$，在 $x$ 轴下方，所以 $g(${x}) = |${fx!.toLatex()}| = ${answer.toLatex()}$。`,
-                  )
-                : t(
-                    `$g(${x}) = f(|${x}|) = f(${-x})$, and from the graph, $f(${-x}) = ${fm!.toLatex()}$.`,
-                    `$g(${x}) = f(|${x}|) = f(${-x})$，由图象，$f(${-x}) = ${fm!.toLatex()}$。`,
-                  ),
-            }),
-            figure: graphFigure(f),
-          };
+          return annotate(
+            {
+              ...numberProblem({
+                prompt: t(
+                  `The graph of $f$ is shown. Let $g(x) = ${name}$. Find $g(${x})$.`,
+                  `下图是 $f$ 的图象。设 $g(x) = ${name}$。求 $g(${x})$。`,
+                ),
+                answer,
+                wrong: [...(fx ? [fx, fx.abs()] : []), ...(fm ? [fm, fm.abs().neg(), fm.neg()] : [])],
+                solution: outer
+                  ? t(
+                      `From the graph, $f(${x}) = ${fx!.toLatex()}$, which is below the $x$-axis, so $g(${x}) = |${fx!.toLatex()}| = ${answer.toLatex()}$.`,
+                      `由图象，$f(${x}) = ${fx!.toLatex()}$，在 $x$ 轴下方，所以 $g(${x}) = |${fx!.toLatex()}| = ${answer.toLatex()}$。`,
+                    )
+                  : t(
+                      `$g(${x}) = f(|${x}|) = f(${-x})$, and from the graph, $f(${-x}) = ${fm!.toLatex()}$.`,
+                      `$g(${x}) = f(|${x}|) = f(${-x})$，由图象，$f(${-x}) = ${fm!.toLatex()}$。`,
+                    ),
+              }),
+              figure: graphFigure(f),
+            },
+            view,
+            shift(outer ? [x, fx!.toNumber()] : [Math.abs(x), fm!.toNumber()], [x, answer.toNumber()]),
+            outer
+              ? `The point below the x-axis reflects up, to height ${plain(answer)}.`
+              : `The value at x = ${Math.abs(x)} is copied to x = ${x}: ${plain(answer)}.`,
+            outer ? `x 轴下方的点向上反射，高度为 ${plain(answer)}。` : `x = ${Math.abs(x)} 处的值复制到 x = ${x}：${plain(answer)}。`,
+          );
         }
       },
     },

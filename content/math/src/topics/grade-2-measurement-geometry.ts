@@ -14,6 +14,7 @@ import {
   earlyPoint,
   earlyTopic,
   gridFigure,
+  jumpsFigure,
   lengthBarsFigure,
   nearbyWrong,
   numberLineFigure,
@@ -718,19 +719,27 @@ const sumsOnANumberLine = earlyTopic(
         const start = lo + step * rng.int(1, 5);
         const jump = step * rng.int(1, Math.floor((hi - start) / step));
         const answer = start + jump;
-        return whole(
-          [
-            `The marked point is at the start. Move right by ${jump}. Which number do you land on?`,
-            `标出的点是起点。向右移动 ${jump}。落在哪个数上？`,
-          ],
-          answer,
-          [start - jump > 0 ? start - jump : start, answer + step, jump],
-          [
-            `Moving right means adding: $${start} + ${jump} = ${answer}$, which is ${jump / step === 1 ? "1 space" : `${jump / step} spaces`} of ${step} from the start.`,
-            `向右移动就是加：$${start} + ${jump} = ${answer}$，也就是从起点跳 ${jump / step} 格，每格 ${step}。`,
-          ],
-          numberLineFigure(lo, hi, step, start),
-        );
+        return {
+          ...whole(
+            [
+              `The marked point is at the start. Move right by ${jump}. Which number do you land on?`,
+              `标出的点是起点。向右移动 ${jump}。落在哪个数上？`,
+            ],
+            answer,
+            [start - jump > 0 ? start - jump : start, answer + step, jump],
+            [
+              `Moving right means adding: $${start} + ${jump} = ${answer}$, which is ${jump / step === 1 ? "1 space" : `${jump / step} spaces`} of ${step} from the start.`,
+              `向右移动就是加：$${start} + ${jump} = ${answer}$，也就是从起点跳 ${jump / step} 格，每格 ${step}。`,
+            ],
+            numberLineFigure(lo, hi, step, start),
+          ),
+          solutionFigure: jumpsFigure(
+            lo,
+            hi,
+            step,
+            Array.from({ length: jump / step + 1 }, (_, i) => start + i * step),
+          ),
+        };
       },
     ),
     earlyPoint(

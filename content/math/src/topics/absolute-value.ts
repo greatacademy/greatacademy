@@ -18,7 +18,7 @@ import {
   relSymbol,
   union,
 } from "@ga/subject-math";
-
+import { annotate, at, onAxis, plain, riseRun, setText, shift } from "../graph-figures.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -1319,19 +1319,25 @@ export const absoluteValueGraphs: TopicDef = {
         const h = rng.int(-4, 4);
         const k = rng.int(-4, 3);
         const answer = absFn(1, h, k);
-        return {
-          ...expressionProblem({
-            prompt: graphPrompt,
-            answer,
-            prefix: "y =",
-            wrong: [absFn(1, -h, k), absFn(1, k, h), absFn(1, h, -k), absFn(1, -h, -k)],
-            solution: t(
-              `The vertex is $${pt(h, k)}$, so the equation is $y = ${answer}$.`,
-              `顶点是 $${pt(h, k)}$，所以解析式是 $y = ${answer}$。`,
-            ),
-          }),
-          figure: vFigure(Q.one, h, Q.of(k), [[h, k]]),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: graphPrompt,
+              answer,
+              prefix: "y =",
+              wrong: [absFn(1, -h, k), absFn(1, k, h), absFn(1, h, -k), absFn(1, -h, -k)],
+              solution: t(
+                `The vertex is $${pt(h, k)}$, so the equation is $y = ${answer}$.`,
+                `顶点是 $${pt(h, k)}$，所以解析式是 $y = ${answer}$。`,
+              ),
+            }),
+            figure: vFigure(Q.one, h, Q.of(k), [[h, k]]),
+          },
+          view,
+          shift([0, 0], [h, k]),
+          `The vertex of y = |x| moves to ${at([h, k])}.`,
+          `y = |x| 的顶点移到 ${at([h, k])}。`,
+        );
       },
     },
     {
@@ -1418,19 +1424,25 @@ export const verticalReflectionsOfAbsoluteValueGraphs: TopicDef = {
         const h = rng.int(-4, 4);
         const k = a < 0 ? rng.int(-3, 4) : rng.int(-4, 3);
         const answer = absFn(a, h, k);
-        return {
-          ...expressionProblem({
-            prompt: graphPrompt,
-            answer,
-            prefix: "y =",
-            wrong: [absFn(-a, h, k), absFn(a, -h, k), absFn(a, h, -k)],
-            solution: t(
-              `The graph opens ${a < 0 ? "downward" : "upward"} and its vertex is $${pt(h, k)}$, so $y = ${answer}$.`,
-              `图象开口向${a < 0 ? "下" : "上"}，顶点是 $${pt(h, k)}$，所以 $y = ${answer}$。`,
-            ),
-          }),
-          figure: vFigure(Q.of(a), h, Q.of(k), [[h, k]]),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: graphPrompt,
+              answer,
+              prefix: "y =",
+              wrong: [absFn(-a, h, k), absFn(a, -h, k), absFn(a, h, -k)],
+              solution: t(
+                `The graph opens ${a < 0 ? "downward" : "upward"} and its vertex is $${pt(h, k)}$, so $y = ${answer}$.`,
+                `图象开口向${a < 0 ? "下" : "上"}，顶点是 $${pt(h, k)}$，所以 $y = ${answer}$。`,
+              ),
+            }),
+            figure: vFigure(Q.of(a), h, Q.of(k), [[h, k]]),
+          },
+          view,
+          shift([0, 0], [h, k]),
+          `The vertex of the graph is ${at([h, k])}, and it opens ${a < 0 ? "downward" : "upward"}.`,
+          `图象的顶点是 ${at([h, k])}，开口向${a < 0 ? "下" : "上"}。`,
+        );
       },
     },
     {
@@ -1544,22 +1556,28 @@ export const stretchesOfAbsoluteValueGraphs: TopicDef = {
         const rise = Number(a.n);
         const k = rng.int(-5, Math.min(5, 6 - rise));
         const answer = absFn(a, 0, k);
-        return {
-          ...expressionProblem({
-            prompt: graphPrompt,
-            answer,
-            prefix: "y =",
-            wrong: [absFn(Q.one.div(a), 0, k), absFn(1, 0, k), absFn(a, 0, -k), absFn(a, k, 0)],
-            solution: t(
-              `The vertex is $${pt(0, k)}$. From there, the graph rises $${rise}$ over a run of $${run}$ to $${pt(run, k + rise)}$, so $a = ${a.toLatex()}$ and $y = ${answer}$.`,
-              `顶点是 $${pt(0, k)}$。从顶点出发，水平向右 $${run}$ 个单位时图象上升 $${rise}$ 个单位到 $${pt(run, k + rise)}$，所以 $a = ${a.toLatex()}$，$y = ${answer}$。`,
-            ),
-          }),
-          figure: vFigure(a, 0, Q.of(k), [
-            [0, k],
-            [run, k + rise],
-          ]),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: graphPrompt,
+              answer,
+              prefix: "y =",
+              wrong: [absFn(Q.one.div(a), 0, k), absFn(1, 0, k), absFn(a, 0, -k), absFn(a, k, 0)],
+              solution: t(
+                `The vertex is $${pt(0, k)}$. From there, the graph rises $${rise}$ over a run of $${run}$ to $${pt(run, k + rise)}$, so $a = ${a.toLatex()}$ and $y = ${answer}$.`,
+                `顶点是 $${pt(0, k)}$。从顶点出发，水平向右 $${run}$ 个单位时图象上升 $${rise}$ 个单位到 $${pt(run, k + rise)}$，所以 $a = ${a.toLatex()}$，$y = ${answer}$。`,
+              ),
+            }),
+            figure: vFigure(a, 0, Q.of(k), [
+              [0, k],
+              [run, k + rise],
+            ]),
+          },
+          view,
+          riseRun([0, k], [run, k + rise]),
+          `From the vertex, a run of ${run} goes with a rise of ${rise}.`,
+          `从顶点出发，水平走 ${run}，竖直走 ${rise}。`,
+        );
       },
     },
   ],
@@ -1651,22 +1669,28 @@ export const combiningTransformationsOfAbsoluteValueGraphs: TopicDef = {
         const answer = absFn(a, h, k);
         const wrong = [absFn(a.neg(), h, k), absFn(a, -h, k), absFn(a, h, -k)];
         if (!a.abs().eq(Q.one)) wrong.push(absFn(Q.one.div(a), h, k));
-        return {
-          ...expressionProblem({
-            prompt: graphPrompt,
-            answer,
-            prefix: "y =",
-            wrong,
-            solution: t(
-              `The vertex is $${pt(h, k)}$ and the graph passes through $${pt(h + run, k + rise)}$, so $a = \\frac{${rise}}{${run}} = ${a.toLatex()}$ and $y = ${answer}$.`,
-              `顶点是 $${pt(h, k)}$，图象经过 $${pt(h + run, k + rise)}$，所以 $a = \\frac{${rise}}{${run}} = ${a.toLatex()}$，$y = ${answer}$。`,
-            ),
-          }),
-          figure: vFigure(a, h, Q.of(k), [
-            [h, k],
-            [h + run, k + rise],
-          ]),
-        };
+        return annotate(
+          {
+            ...expressionProblem({
+              prompt: graphPrompt,
+              answer,
+              prefix: "y =",
+              wrong,
+              solution: t(
+                `The vertex is $${pt(h, k)}$ and the graph passes through $${pt(h + run, k + rise)}$, so $a = \\frac{${rise}}{${run}} = ${a.toLatex()}$ and $y = ${answer}$.`,
+                `顶点是 $${pt(h, k)}$，图象经过 $${pt(h + run, k + rise)}$，所以 $a = \\frac{${rise}}{${run}} = ${a.toLatex()}$，$y = ${answer}$。`,
+              ),
+            }),
+            figure: vFigure(a, h, Q.of(k), [
+              [h, k],
+              [h + run, k + rise],
+            ]),
+          },
+          view,
+          [...riseRun([h, k], [h + run, k + rise]), { kind: "point", at: [h, k], tone: "result" }],
+          `The vertex is ${at([h, k])}; from it, a run of ${run} goes with a rise of ${rise}.`,
+          `顶点是 ${at([h, k])}；从顶点水平走 ${run}，竖直走 ${rise}。`,
+        );
       },
     },
     {
@@ -1826,33 +1850,45 @@ export const domainAndRangeOfAbsoluteValueFunctions: TopicDef = {
         const rangeSet = rangeOn(a, h, k, p, q);
         const ends = union(span(Math.min(fp, fq), true, Math.max(fp, fq), true));
         if (rng.bool(0.3)) {
-          return {
+          return annotate(
+            {
+              ...intervalProblem({
+                prompt: ask("The graph of $f$ is shown. Find the domain of $f$.", "如图是 $f$ 的图象。求 $f$ 的定义域。", asInterval),
+                set: domainSet,
+                form: "interval",
+                wrong: [rangeSet, realLine, toggleEnds(domainSet)],
+                solution: t(
+                  `The graph runs from $x = ${p}$ to $x = ${q}$, including both ends, so the domain is $${intervalLatex(domainSet)}$.`,
+                  `图象从 $x = ${p}$ 到 $x = ${q}$，包括两个端点，所以定义域是 $${intervalLatex(domainSet)}$。`,
+                ),
+              }),
+              figure,
+            },
+            view,
+            onAxis("x", domainSet, 6),
+            `The graph covers x in ${setText(domainSet)}.`,
+            `图象覆盖的 x 是 ${setText(domainSet)}。`,
+          );
+        }
+        return annotate(
+          {
             ...intervalProblem({
-              prompt: ask("The graph of $f$ is shown. Find the domain of $f$.", "如图是 $f$ 的图象。求 $f$ 的定义域。", asInterval),
-              set: domainSet,
+              prompt: ask("The graph of $f$ is shown. Find the range of $f$.", "如图是 $f$ 的图象。求 $f$ 的值域。", asInterval),
+              set: rangeSet,
               form: "interval",
-              wrong: [rangeSet, realLine, toggleEnds(domainSet)],
+              wrong: [ends, domainSet, union(a.sign() > 0 ? ray(">=", k) : ray("<=", k))],
               solution: t(
-                `The graph runs from $x = ${p}$ to $x = ${q}$, including both ends, so the domain is $${intervalLatex(domainSet)}$.`,
-                `图象从 $x = ${p}$ 到 $x = ${q}$，包括两个端点，所以定义域是 $${intervalLatex(domainSet)}$。`,
+                `The lowest and highest points of the graph are at $y = ${num(rangeSet[0]!.lo!)}$ and $y = ${num(rangeSet[0]!.hi!)}$, so the range is $${intervalLatex(rangeSet)}$.`,
+                `图象最低点和最高点分别在 $y = ${num(rangeSet[0]!.lo!)}$ 和 $y = ${num(rangeSet[0]!.hi!)}$，所以值域是 $${intervalLatex(rangeSet)}$。`,
               ),
             }),
             figure,
-          };
-        }
-        return {
-          ...intervalProblem({
-            prompt: ask("The graph of $f$ is shown. Find the range of $f$.", "如图是 $f$ 的图象。求 $f$ 的值域。", asInterval),
-            set: rangeSet,
-            form: "interval",
-            wrong: [ends, domainSet, union(a.sign() > 0 ? ray(">=", k) : ray("<=", k))],
-            solution: t(
-              `The lowest and highest points of the graph are at $y = ${num(rangeSet[0]!.lo!)}$ and $y = ${num(rangeSet[0]!.hi!)}$, so the range is $${intervalLatex(rangeSet)}$.`,
-              `图象最低点和最高点分别在 $y = ${num(rangeSet[0]!.lo!)}$ 和 $y = ${num(rangeSet[0]!.hi!)}$，所以值域是 $${intervalLatex(rangeSet)}$。`,
-            ),
-          }),
-          figure,
-        };
+          },
+          view,
+          onAxis("y", rangeSet, 6),
+          `The graph covers y in ${setText(rangeSet)}.`,
+          `图象覆盖的 y 是 ${setText(rangeSet)}。`,
+        );
       },
     },
     {
@@ -1996,24 +2032,30 @@ export const rootsOfAbsoluteValueFunctions: TopicDef = {
           const roots = kind === 2 ? [Q.of(h - dist), Q.of(h + dist)] : kind === 1 ? [Q.of(h)] : [];
           const f0 = absAt(a, h, k, Q.zero);
           const dots: Point[] = roots.map((r): Point => [r.toNumber(), 0]);
-          return {
-            ...solutionsProblem({
-              prompt: ask("The graph of $f$ is shown. Find all roots of $f$.", "如图是 $f$ 的图象。求 $f$ 的所有零点。", listSolutions),
-              values: sols(roots),
-              wrong: [[String(h)], [k.toLatex()], ...(f0.isZero() ? [] : [[f0.toLatex()]]), sols(roots.slice(0, 1))],
-              solution:
-                roots.length === 0
-                  ? t(
-                      `The graph never meets the $x$-axis, so $f$ has no roots: $\\varnothing$.`,
-                      `图象与 $x$ 轴没有交点，所以 $f$ 没有零点：$\\varnothing$。`,
-                    )
-                  : t(
-                      `The graph meets the $x$-axis at ${roots.map((r) => `$(${r.toLatex()}, 0)$`).join(" and ")}, so ${roots.length === 1 ? "the root is" : "the roots are"} ${solsText(roots).en}.`,
-                      `图象与 $x$ 轴交于 ${roots.map((r) => `$(${r.toLatex()}, 0)$`).join("、")}，所以零点是 ${solsText(roots).zh}。`,
-                    ),
-            }),
-            figure: vFigure(a, h, k, [[h, k.toNumber()], ...dots.filter(([x]) => x !== h)]),
-          };
+          return annotate(
+            {
+              ...solutionsProblem({
+                prompt: ask("The graph of $f$ is shown. Find all roots of $f$.", "如图是 $f$ 的图象。求 $f$ 的所有零点。", listSolutions),
+                values: sols(roots),
+                wrong: [[String(h)], [k.toLatex()], ...(f0.isZero() ? [] : [[f0.toLatex()]]), sols(roots.slice(0, 1))],
+                solution:
+                  roots.length === 0
+                    ? t(
+                        `The graph never meets the $x$-axis, so $f$ has no roots: $\\varnothing$.`,
+                        `图象与 $x$ 轴没有交点，所以 $f$ 没有零点：$\\varnothing$。`,
+                      )
+                    : t(
+                        `The graph meets the $x$-axis at ${roots.map((r) => `$(${r.toLatex()}, 0)$`).join(" and ")}, so ${roots.length === 1 ? "the root is" : "the roots are"} ${solsText(roots).en}.`,
+                        `图象与 $x$ 轴交于 ${roots.map((r) => `$(${r.toLatex()}, 0)$`).join("、")}，所以零点是 ${solsText(roots).zh}。`,
+                      ),
+              }),
+              figure: vFigure(a, h, k, [[h, k.toNumber()], ...dots.filter(([x]) => x !== h)]),
+            },
+            view,
+            dots.map((p): PlaneMark => ({ kind: "point", at: p, tone: "result" })),
+            roots.length ? `The graph meets the x-axis at x = ${roots.map(plain).join(", ")}.` : "The graph does not meet the x-axis.",
+            roots.length ? `图象与 x 轴交于 x = ${roots.map(plain).join("、")}。` : "图象与 x 轴没有交点。",
+          );
         }
       },
     },

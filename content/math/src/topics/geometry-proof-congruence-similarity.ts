@@ -1,8 +1,8 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, sketch } from "@ga/subject-math";
-
-import { movedPoint, movedPolygon } from "../motion-figures.ts";
+import { at, graphFigure } from "../graph-figures.ts";
+import { movedPoint, movedPolygon, viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -1990,18 +1990,32 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
         const qb = b / 90;
         const image = rotQ(p, qa + qb);
         const inner = rotQ(p, qb);
-        return pointProblem({
-          prompt: t(
-            `$R_{\\theta}$ is the rotation by $\\theta$ about the origin (counterclockwise for positive $\\theta$). Find $${rotationSymbol(a)}(${rotationSymbol(b)}${pl(p)})$.`,
-            `$R_{\\theta}$ 表示绕原点旋转 $\\theta$（$\\theta$ 为正时逆时针）。求 $${rotationSymbol(a)}(${rotationSymbol(b)}${pl(p)})$。`,
+        return {
+          ...pointProblem({
+            prompt: t(
+              `$R_{\\theta}$ is the rotation by $\\theta$ about the origin (counterclockwise for positive $\\theta$). Find $${rotationSymbol(a)}(${rotationSymbol(b)}${pl(p)})$.`,
+              `$R_{\\theta}$ 表示绕原点旋转 $\\theta$（$\\theta$ 为正时逆时针）。求 $${rotationSymbol(a)}(${rotationSymbol(b)}${pl(p)})$。`,
+            ),
+            answer: image,
+            wrong: [rotQ(p, qa - qb), rotQ(p, qa), rotQ(p, -(qa + qb))],
+            solution: t(
+              `The angles add: $${a}^\\circ + ${b < 0 ? `(${b}^\\circ)` : `${b}^\\circ`} = ${total}^\\circ$. Step by step:${steps(`${rotationSymbol(b)}${pl(p)} = ${pl(inner)}`, `${rotationSymbol(a)}${pl(inner)} = ${pl(image)}`)}`,
+              `角度相加：$${a}^\\circ + ${b < 0 ? `(${b}^\\circ)` : `${b}^\\circ`} = ${total}^\\circ$。逐步计算：${steps(`${rotationSymbol(b)}${pl(p)} = ${pl(inner)}`, `${rotationSymbol(a)}${pl(inner)} = ${pl(image)}`)}`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([p, inner, image]),
+            [
+              { kind: "turn", center: [0, 0], from: p, degrees: b, tone: "action" },
+              { kind: "turn", center: [0, 0], from: inner, degrees: a, tone: "action" },
+              { kind: "point", at: p, label: "P", dir: "ne", accent: true },
+              { kind: "point", at: inner, dir: "ne" },
+              { kind: "point", at: image, label: "P′", dir: "sw", tone: "result" },
+            ],
+            `P ${at(p)} turns by ${b}° and then by ${a}°, ending at ${at(image)}.`,
+            `P ${at(p)} 先转 ${b}°，再转 ${a}°，到达 ${at(image)}。`,
           ),
-          answer: image,
-          wrong: [rotQ(p, qa - qb), rotQ(p, qa), rotQ(p, -(qa + qb))],
-          solution: t(
-            `The angles add: $${a}^\\circ + ${b < 0 ? `(${b}^\\circ)` : `${b}^\\circ`} = ${total}^\\circ$. Step by step:${steps(`${rotationSymbol(b)}${pl(p)} = ${pl(inner)}`, `${rotationSymbol(a)}${pl(inner)} = ${pl(image)}`)}`,
-            `角度相加：$${a}^\\circ + ${b < 0 ? `(${b}^\\circ)` : `${b}^\\circ`} = ${total}^\\circ$。逐步计算：${steps(`${rotationSymbol(b)}${pl(p)} = ${pl(inner)}`, `${rotationSymbol(a)}${pl(inner)} = ${pl(image)}`)}`,
-          ),
-        });
+        };
       },
     },
     {

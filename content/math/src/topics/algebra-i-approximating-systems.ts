@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type PlaneMark, type PlaneView, plane, poly, Q } from "@ga/subject-math";
-
+import { annotate, at } from "../graph-figures.ts";
 import { numberProblem, pointLatex, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
@@ -104,19 +104,25 @@ export const approximatingSolutionsToSystemsOfLinearEquations: TopicDef = {
             `在同一网格中画出的直线 y = ${plain(l1)} 与 y = ${plain(l2)}。`,
           ),
         };
-        return pickChoice(
-          rng,
-          t(
-            `The graphs of the system $y = ${l1}$, $y = ${l2}$ are shown. Which point is the best estimate of the solution?`,
-            `图中是方程组 $y = ${l1}$，$y = ${l2}$ 的图象。哪个点是方程组的解的最佳估计？`,
+        return annotate(
+          pickChoice(
+            rng,
+            t(
+              `The graphs of the system $y = ${l1}$, $y = ${l2}$ are shown. Which point is the best estimate of the solution?`,
+              `图中是方程组 $y = ${l1}$，$y = ${l2}$ 的图象。哪个点是方程组的解的最佳估计？`,
+            ),
+            pt(X, Y),
+            [pt(Y, X), pt(X + dx, Y), pt(X, Y + dy), pt(X + dx, Y + dy)],
+            t(
+              `The lines cross at about $(${approx(x.toNumber())}, ${approx(y.toNumber())})$, and the nearest grid point is $${pointLatex([X, Y])}$. Solving exactly confirms it: $${l1} = ${l2}$ gives $x = ${x.toLatex()}$, and then $y = ${y.toLatex()}$.`,
+              `两直线大约交于 $(${approx(x.toNumber())}, ${approx(y.toNumber())})$，离它最近的网格点是 $${pointLatex([X, Y])}$。精确求解可以验证：由 $${l1} = ${l2}$ 得 $x = ${x.toLatex()}$，进而 $y = ${y.toLatex()}$。`,
+            ),
+            figure,
           ),
-          pt(X, Y),
-          [pt(Y, X), pt(X + dx, Y), pt(X, Y + dy), pt(X + dx, Y + dy)],
-          t(
-            `The lines cross at about $(${approx(x.toNumber())}, ${approx(y.toNumber())})$, and the nearest grid point is $${pointLatex([X, Y])}$. Solving exactly confirms it: $${l1} = ${l2}$ gives $x = ${x.toLatex()}$, and then $y = ${y.toLatex()}$.`,
-            `两直线大约交于 $(${approx(x.toNumber())}, ${approx(y.toNumber())})$，离它最近的网格点是 $${pointLatex([X, Y])}$。精确求解可以验证：由 $${l1} = ${l2}$ 得 $x = ${x.toLatex()}$，进而 $y = ${y.toLatex()}$。`,
-          ),
-          figure,
+          view,
+          [{ kind: "point", at: [x.toNumber(), y.toNumber()], tone: "result" }],
+          `The lines cross near ${at([X, Y])}.`,
+          `两直线的交点接近 ${at([X, Y])}。`,
         );
       },
     },
@@ -241,31 +247,40 @@ export const approximatingSolutionsToSystemsOfNonlinearEquations: TopicDef = {
         const parabola = poly([1, "x^{2}"], [c, ""]);
         const line = linear(m, b);
         const R = Math.round(hi);
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The graphs of the system $y = ${parabola}$, $y = ${line}$ are shown. To the nearest integer, what is the $x$-coordinate of the solution with the greater $x$-coordinate?`,
-              `图中是方程组 $y = ${parabola}$，$y = ${line}$ 的图象。$x$ 坐标较大的那个解，其 $x$ 坐标最接近哪个整数？`,
-            ),
-            answer: R,
-            form: "integer",
-            wrong: [Math.round(lo), Math.round(m * hi + b), hi > R ? R + 1 : R - 1],
-            solution: t(
-              `The right-hand crossing is closest to the grid line $x = ${R}$. Solving exactly confirms it: $x^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${line}$ gives $${poly([1, "x^{2}"], [-m, "x"], [c - b, ""])} = 0$, whose greater root is $x = ${rootLatex(m, d)} \\approx ${approx(hi)}$.`,
-              `右边的交点离网格线 $x = ${R}$ 最近。精确求解可以验证：由 $x^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${line}$ 得 $${poly([1, "x^{2}"], [-m, "x"], [c - b, ""])} = 0$，它较大的根为 $x = ${rootLatex(m, d)} \\approx ${approx(hi)}$。`,
-            ),
-          }),
-          figure: {
-            svg: plane(tallView, [
-              { kind: "curve", f: (v) => v * v + c },
-              { kind: "line", a: [0, b], b: [1, m + b], accent: true },
-            ]),
-            alt: t(
-              `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
-              `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
-            ),
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `The graphs of the system $y = ${parabola}$, $y = ${line}$ are shown. To the nearest integer, what is the $x$-coordinate of the solution with the greater $x$-coordinate?`,
+                `图中是方程组 $y = ${parabola}$，$y = ${line}$ 的图象。$x$ 坐标较大的那个解，其 $x$ 坐标最接近哪个整数？`,
+              ),
+              answer: R,
+              form: "integer",
+              wrong: [Math.round(lo), Math.round(m * hi + b), hi > R ? R + 1 : R - 1],
+              solution: t(
+                `The right-hand crossing is closest to the grid line $x = ${R}$. Solving exactly confirms it: $x^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${line}$ gives $${poly([1, "x^{2}"], [-m, "x"], [c - b, ""])} = 0$, whose greater root is $x = ${rootLatex(m, d)} \\approx ${approx(hi)}$.`,
+                `右边的交点离网格线 $x = ${R}$ 最近。精确求解可以验证：由 $x^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${line}$ 得 $${poly([1, "x^{2}"], [-m, "x"], [c - b, ""])} = 0$，它较大的根为 $x = ${rootLatex(m, d)} \\approx ${approx(hi)}$。`,
+              ),
+            }),
+            figure: {
+              svg: plane(tallView, [
+                { kind: "curve", f: (v) => v * v + c },
+                { kind: "line", a: [0, b], b: [1, m + b], accent: true },
+              ]),
+              alt: t(
+                `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
+                `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
+              ),
+            },
           },
-        };
+          tallView,
+          [
+            { kind: "segment", a: [hi, 0], b: [hi, m * hi + b], dashed: true, tone: "action" },
+            { kind: "point", at: [hi, m * hi + b], tone: "result" },
+          ],
+          `The curves cross near x = ${R}.`,
+          `两条曲线的交点接近 x = ${R}。`,
+        );
       },
     },
     {

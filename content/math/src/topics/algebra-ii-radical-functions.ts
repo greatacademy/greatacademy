@@ -18,7 +18,7 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
-
+import { annotate, at, onAxis, setText as setAlt, shift } from "../graph-figures.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -977,18 +977,24 @@ export const graphingTheCubeRootFunction: TopicDef = {
         const h = rng.nonZero(-4, 4);
         const k = rng.nonZero(-4, 4);
         const eq = (p: number, q: number, r: number) => same(`$y = ${rootFn(p, shifted(q), r, 3)}$`);
-        return {
-          ...shuffled(
-            rng,
-            t("Which equation has the graph shown?", "图中的图象是哪个方程的图象？"),
-            [eq(a, h, k), eq(a, -h, k), eq(a, h, -k), eq(-a, h, k)],
-            t(
-              `The center of the graph is $${pt(h, k)}$, so the equation has the form $y = a\\sqrt[3]{${shifted(h)}}${plus(k)}$. One unit right of the center, at $${pt(h + 1, k + a)}$, the graph is $${a}$ from the center's height, so $a = ${a}$: $y = ${rootFn(a, shifted(h), k, 3)}$.`,
-              `图象的中心是 $${pt(h, k)}$，所以方程形如 $y = a\\sqrt[3]{${shifted(h)}}${plus(k)}$。在中心右边一个单位处 $${pt(h + 1, k + a)}$，图象与中心的高度差为 $${a}$，所以 $a = ${a}$：$y = ${rootFn(a, shifted(h), k, 3)}$。`,
+        return annotate(
+          {
+            ...shuffled(
+              rng,
+              t("Which equation has the graph shown?", "图中的图象是哪个方程的图象？"),
+              [eq(a, h, k), eq(a, -h, k), eq(a, h, -k), eq(-a, h, k)],
+              t(
+                `The center of the graph is $${pt(h, k)}$, so the equation has the form $y = a\\sqrt[3]{${shifted(h)}}${plus(k)}$. One unit right of the center, at $${pt(h + 1, k + a)}$, the graph is $${a}$ from the center's height, so $a = ${a}$: $y = ${rootFn(a, shifted(h), k, 3)}$.`,
+                `图象的中心是 $${pt(h, k)}$，所以方程形如 $y = a\\sqrt[3]{${shifted(h)}}${plus(k)}$。在中心右边一个单位处 $${pt(h + 1, k + a)}$，图象与中心的高度差为 $${a}$，所以 $a = ${a}$：$y = ${rootFn(a, shifted(h), k, 3)}$。`,
+              ),
             ),
-          ),
-          figure: cbrtFigure(a, h, k),
-        };
+            figure: cbrtFigure(a, h, k),
+          },
+          view,
+          shift([0, 0], [h, k]),
+          `The center of the graph moves from the origin to ${at([h, k])}.`,
+          `图象的中心从原点移到 ${at([h, k])}。`,
+        );
       },
     },
   ],
@@ -1353,22 +1359,32 @@ export const theRangeOfATransformedRadicalFunction: TopicDef = {
       generate(rng) {
         const g = randomSqrtGraph(rng);
         const set = ray(g.a > 0, g.k);
-        return {
-          ...intervalProblem({
-            prompt: t(
-              `The graph of a transformation of $y = \\sqrt{x}$ is shown. Find its range. ${asInterval.en}`,
-              `图中是 $y = \\sqrt{x}$ 经过变换后的图象。求它的值域。${asInterval["zh-CN"]}`,
-            ),
-            set,
-            form: "interval",
-            wrong: [ray(g.s > 0, g.h), ray(g.a < 0, g.k), ray(g.a > 0, g.h), ray(g.a > 0, g.k, false)],
-            solution: t(
-              `The graph starts at $${pt(g.h, g.k)}$ and goes ${g.a > 0 ? "up" : "down"} without end, so it reaches every height ${g.a > 0 ? "$\\ge" : "$\\le"} ${g.k}$. The range is ${setText(set)}.`,
-              `图象从 $${pt(g.h, g.k)}$ 出发，一直向${g.a > 0 ? "上" : "下"}延伸，所以能到达所有 ${g.a > 0 ? "$\\ge" : "$\\le"} ${g.k}$ 的高度。值域是 ${setText(set)}。`,
-            ),
-          }),
-          figure: sqrtFigure(g),
-        };
+        return annotate(
+          {
+            ...intervalProblem({
+              prompt: t(
+                `The graph of a transformation of $y = \\sqrt{x}$ is shown. Find its range. ${asInterval.en}`,
+                `图中是 $y = \\sqrt{x}$ 经过变换后的图象。求它的值域。${asInterval["zh-CN"]}`,
+              ),
+              set,
+              form: "interval",
+              wrong: [ray(g.s > 0, g.h), ray(g.a < 0, g.k), ray(g.a > 0, g.h), ray(g.a > 0, g.k, false)],
+              solution: t(
+                `The graph starts at $${pt(g.h, g.k)}$ and goes ${g.a > 0 ? "up" : "down"} without end, so it reaches every height ${g.a > 0 ? "$\\ge" : "$\\le"} ${g.k}$. The range is ${setText(set)}.`,
+                `图象从 $${pt(g.h, g.k)}$ 出发，一直向${g.a > 0 ? "上" : "下"}延伸，所以能到达所有 ${g.a > 0 ? "$\\ge" : "$\\le"} ${g.k}$ 的高度。值域是 ${setText(set)}。`,
+              ),
+            }),
+            figure: sqrtFigure(g),
+          },
+          view,
+          [
+            { kind: "line", a: [0, g.k], b: [1, g.k], dashed: true, tone: "action" },
+            { kind: "point", at: [g.h, g.k], tone: "result" },
+            ...onAxis("y", set, 8),
+          ],
+          `The endpoint is ${at([g.h, g.k])}, so the range is ${setAlt(set)}.`,
+          `端点是 ${at([g.h, g.k])}，所以值域是 ${setAlt(set)}。`,
+        );
       },
     },
   ],

@@ -13,6 +13,7 @@ import {
   earlyPoint,
   earlyThings,
   earlyTopic,
+  jumpsFigure,
   nearbyWrong,
   numberLineFigure,
 } from "../early-grades-kit.ts";
@@ -626,6 +627,12 @@ const divisionAsGrouping = earlyTopic(
             ],
           ),
           figure: numberLineFigure(0, total, each, total),
+          solutionFigure: jumpsFigure(
+            0,
+            total,
+            each,
+            Array.from({ length: jumps + 1 }, (_, i) => total - i * each),
+          ),
         };
       },
     ),

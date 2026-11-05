@@ -15,7 +15,7 @@ import {
   type RealSet,
   realLine,
 } from "@ga/subject-math";
-
+import { annotate, at, guides, plain, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -975,31 +975,37 @@ export const verticalTranslationsOfExponentialGrowthFunctions: TopicDef = {
           if (b + k > 9 || k === 0 || k === -1 || k === -2 || b + k === 0 || b + k === -1) continue;
           const B = Q.of(b);
           const answer = expT(1, B, 0, k);
-          return {
-            ...expressionProblem({
-              prompt: t(
-                `The graph of $y = b^{x} + k$ is shown, with its horizontal asymptote dashed. Find its equation.`,
-                `如图是 $y = b^{x} + k$ 的图象，虚线是它的水平渐近线。求它的解析式。`,
+          return annotate(
+            {
+              ...expressionProblem({
+                prompt: t(
+                  `The graph of $y = b^{x} + k$ is shown, with its horizontal asymptote dashed. Find its equation.`,
+                  `如图是 $y = b^{x} + k$ 的图象，虚线是它的水平渐近线。求它的解析式。`,
+                ),
+                answer,
+                prefix: "y =",
+                wrong: [expT(1, B, 0, -k), expT(1, B, 0, 1 + k), expT(1, Q.of(b + k), 0, k), expT(1, B, -k, 0)],
+                solution: t(
+                  `The asymptote is $y = ${k}$, so $k = ${k}$. At $x = 1$ the graph is at height $${b + k}$, so $b${plusK(k)} = ${b + k}$ and $b = ${b}$. The equation is $y = ${answer}$.`,
+                  `渐近线是 $y = ${k}$，所以 $k = ${k}$。$x = 1$ 时图象高度为 $${b + k}$，所以 $b${plusK(k)} = ${b + k}$，$b = ${b}$。解析式是 $y = ${answer}$。`,
+                ),
+              }),
+              figure: expGraph(
+                expView,
+                expFn(1, B, 0, k),
+                k,
+                [
+                  { at: [0, 1 + k], dir: "e" },
+                  { at: [1, b + k], dir: "e" },
+                ],
+                true,
               ),
-              answer,
-              prefix: "y =",
-              wrong: [expT(1, B, 0, -k), expT(1, B, 0, 1 + k), expT(1, Q.of(b + k), 0, k), expT(1, B, -k, 0)],
-              solution: t(
-                `The asymptote is $y = ${k}$, so $k = ${k}$. At $x = 1$ the graph is at height $${b + k}$, so $b${plusK(k)} = ${b + k}$ and $b = ${b}$. The equation is $y = ${answer}$.`,
-                `渐近线是 $y = ${k}$，所以 $k = ${k}$。$x = 1$ 时图象高度为 $${b + k}$，所以 $b${plusK(k)} = ${b + k}$，$b = ${b}$。解析式是 $y = ${answer}$。`,
-              ),
-            }),
-            figure: expGraph(
-              expView,
-              expFn(1, B, 0, k),
-              k,
-              [
-                { at: [0, 1 + k], dir: "e" },
-                { at: [1, b + k], dir: "e" },
-              ],
-              true,
-            ),
-          };
+            },
+            expView,
+            [{ kind: "line", a: [0, k], b: [1, k], dashed: true, tone: "result" }, ...shift([0, 1], [0, 1 + k])],
+            `The graph of y = ${b}^x moved so that its asymptote is y = ${k}.`,
+            `y = ${b}^x 的图象平移，渐近线变为 y = ${k}。`,
+          );
         }
       },
     },
@@ -1674,31 +1680,37 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
           const B = Q.of(b);
           const answer = expT(a, B, h, k);
           const side = a > 0 ? t("above", "上方") : t("below", "下方");
-          return {
-            ...expressionProblem({
-              prompt: t(
-                `The graph of $g(x) = a \\cdot b^{x - h} + k$ with $a = 1$ or $a = -1$ is shown; its horizontal asymptote is ${k === 0 ? "the $x$-axis" : "dashed"}, and the marked points lie on grid points. Write $g(x)$.`,
-                `如图是 $g(x) = a \\cdot b^{x - h} + k$（$a = 1$ 或 $a = -1$）的图象，${k === 0 ? "它的水平渐近线是 $x$ 轴" : "虚线是它的水平渐近线"}，标出的点都在格点上。写出 $g(x)$。`,
+          return annotate(
+            {
+              ...expressionProblem({
+                prompt: t(
+                  `The graph of $g(x) = a \\cdot b^{x - h} + k$ with $a = 1$ or $a = -1$ is shown; its horizontal asymptote is ${k === 0 ? "the $x$-axis" : "dashed"}, and the marked points lie on grid points. Write $g(x)$.`,
+                  `如图是 $g(x) = a \\cdot b^{x - h} + k$（$a = 1$ 或 $a = -1$）的图象，${k === 0 ? "它的水平渐近线是 $x$ 轴" : "虚线是它的水平渐近线"}，标出的点都在格点上。写出 $g(x)$。`,
+                ),
+                answer,
+                prefix: "g(x) =",
+                wrong: [expT(a, B, -h, k), expT(-a, B, h, k), expT(a, B, h, -k), expT(a, Q.of(b + 1), h, k)],
+                solution: t(
+                  `The asymptote is $y = ${k}$, so $k = ${k}$, and the graph lies ${side.en} it, so $a = ${a}$. At $x = ${h}$ the graph is $1$ unit from the asymptote, at $(${h}, ${near})$, so $h = ${h}$. At $x = ${h + 1}$ it is $${b}$ units away, at $(${h + 1}, ${far})$, so $b = ${b}$. Hence $g(x) = ${answer}$.`,
+                  `渐近线是 $y = ${k}$，所以 $k = ${k}$；图象在它的${side["zh-CN"]}，所以 $a = ${a}$。在 $x = ${h}$ 处图象离渐近线 $1$ 个单位，位于 $(${h}, ${near})$，所以 $h = ${h}$。在 $x = ${h + 1}$ 处离渐近线 $${b}$ 个单位，位于 $(${h + 1}, ${far})$，所以 $b = ${b}$。因此 $g(x) = ${answer}$。`,
+                ),
+              }),
+              figure: expGraph(
+                expView,
+                expFn(a, B, h, k),
+                k,
+                [
+                  { at: [h, near], dir: "e", bare: true },
+                  { at: [h + 1, far], dir: "e", bare: true },
+                ],
+                a > 0,
               ),
-              answer,
-              prefix: "g(x) =",
-              wrong: [expT(a, B, -h, k), expT(-a, B, h, k), expT(a, B, h, -k), expT(a, Q.of(b + 1), h, k)],
-              solution: t(
-                `The asymptote is $y = ${k}$, so $k = ${k}$, and the graph lies ${side.en} it, so $a = ${a}$. At $x = ${h}$ the graph is $1$ unit from the asymptote, at $(${h}, ${near})$, so $h = ${h}$. At $x = ${h + 1}$ it is $${b}$ units away, at $(${h + 1}, ${far})$, so $b = ${b}$. Hence $g(x) = ${answer}$.`,
-                `渐近线是 $y = ${k}$，所以 $k = ${k}$；图象在它的${side["zh-CN"]}，所以 $a = ${a}$。在 $x = ${h}$ 处图象离渐近线 $1$ 个单位，位于 $(${h}, ${near})$，所以 $h = ${h}$。在 $x = ${h + 1}$ 处离渐近线 $${b}$ 个单位，位于 $(${h + 1}, ${far})$，所以 $b = ${b}$。因此 $g(x) = ${answer}$。`,
-              ),
-            }),
-            figure: expGraph(
-              expView,
-              expFn(a, B, h, k),
-              k,
-              [
-                { at: [h, near], dir: "e", bare: true },
-                { at: [h + 1, far], dir: "e", bare: true },
-              ],
-              a > 0,
-            ),
-          };
+            },
+            expView,
+            [{ kind: "line", a: [0, k], b: [1, k], dashed: true, tone: "result" }, ...shift([0, a], [h, near])],
+            `The asymptote is y = ${k}, and the key point moves to ${at([h, near])}.`,
+            `渐近线是 y = ${k}，关键点移到 ${at([h, near])}。`,
+          );
         }
       },
     },
@@ -1942,24 +1954,30 @@ export const graphingLogarithmicFunctions: TopicDef = {
           if (x > 9) continue;
           const one = rng.bool(0.7);
           const base = falling ? Q.of(1, b) : Q.of(b);
-          return {
-            ...numberProblem({
-              prompt: t("The graph of $y = \\log_{b} x$ is shown. Find the base $b$.", "如图是 $y = \\log_{b} x$ 的图象。求底数 $b$。"),
-              answer: base,
-              solveFor: "b",
-              wrong: [Q.of(x), Q.one.div(base), Q.of(j)],
-              solution: both(
-                `The point $(${x}, ${j})$ means $\\log_{b} ${x} = ${j}$, so`,
-                `点 $(${x}, ${j})$ 表示 $\\log_{b} ${x} = ${j}$，所以`,
-                `b^{${j}} = ${x}`,
-                `b = ${num(base)}`,
-              ),
-            }),
-            figure: logGraph(1, base.toNumber(), 0, 0, [
-              ...(one ? [{ at: [1, 0], dir: falling ? "ne" : "nw" } as const] : []),
-              { at: [x, j], dir: falling ? "sw" : "nw" },
-            ]),
-          };
+          return annotate(
+            {
+              ...numberProblem({
+                prompt: t("The graph of $y = \\log_{b} x$ is shown. Find the base $b$.", "如图是 $y = \\log_{b} x$ 的图象。求底数 $b$。"),
+                answer: base,
+                solveFor: "b",
+                wrong: [Q.of(x), Q.one.div(base), Q.of(j)],
+                solution: both(
+                  `The point $(${x}, ${j})$ means $\\log_{b} ${x} = ${j}$, so`,
+                  `点 $(${x}, ${j})$ 表示 $\\log_{b} ${x} = ${j}$，所以`,
+                  `b^{${j}} = ${x}`,
+                  `b = ${num(base)}`,
+                ),
+              }),
+              figure: logGraph(1, base.toNumber(), 0, 0, [
+                ...(one ? [{ at: [1, 0], dir: falling ? "ne" : "nw" } as const] : []),
+                { at: [x, j], dir: falling ? "sw" : "nw" },
+              ]),
+            },
+            logView,
+            guides([x, j], at([x, j])),
+            `The graph passes through ${at([x, j])}, so the base is ${plain(base)}.`,
+            `图象经过 ${at([x, j])}，所以底数是 ${plain(base)}。`,
+          );
         }
       },
     },
@@ -2126,24 +2144,33 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
         const g = (aa: number, bb: number, hh: number, kk: number) => m(`g(x) = ${logT(aa, numBase(bb), hh, kk)}`);
         const p1: Point = [h + 1, k];
         const p2: Point = [h + b, k + a];
-        return {
-          ...oneOf(rng, {
-            prompt: t(
-              `The graph of $g(x) = a\\log_{b}(x - h) + k$ with $a = 1$ or $a = -1$ is shown; its vertical asymptote is ${h === 0 ? "the $y$-axis" : "dashed"}, and the marked points lie on grid points. Which function is it?`,
-              `如图是 $g(x) = a\\log_{b}(x - h) + k$（$a = 1$ 或 $a = -1$）的图象，${h === 0 ? "它的竖直渐近线是 $y$ 轴" : "虚线是它的竖直渐近线"}，标出的点都在格点上。它是哪个函数？`,
-            ),
-            right: g(a, b, h, k),
-            wrong: [g(a, b, -h, k), g(-a, b, h, k), g(a, b + 1, h, k), g(a, b, h + 1, k)],
-            solution: t(
-              `The asymptote is $x = ${h}$, so $h = ${h}$. The graph passes through $(${p1[0]}, ${k})$, one unit right of the asymptote, so $k = ${k}$. It passes through $(${p2[0]}, ${p2[1]})$, $${b}$ units right of the asymptote and $1$ unit ${a > 0 ? "above" : "below"} $k$, so $b = ${b}$ and $a = ${a}$. Hence $g(x) = ${logT(a, B, h, k)}$.`,
-              `渐近线是 $x = ${h}$，所以 $h = ${h}$。图象经过渐近线右侧 $1$ 个单位处的 $(${p1[0]}, ${k})$，所以 $k = ${k}$。它还经过渐近线右侧 $${b}$ 个单位处的 $(${p2[0]}, ${p2[1]})$，比 $k$ ${a > 0 ? "高" : "低"} $1$，所以 $b = ${b}$，$a = ${a}$。因此 $g(x) = ${logT(a, B, h, k)}$。`,
-            ),
-          }),
-          figure: logGraph(a, b, h, k, [
-            { at: p1, dir: "e", bare: true },
-            { at: p2, dir: "e", bare: true },
-          ]),
-        };
+        return annotate(
+          {
+            ...oneOf(rng, {
+              prompt: t(
+                `The graph of $g(x) = a\\log_{b}(x - h) + k$ with $a = 1$ or $a = -1$ is shown; its vertical asymptote is ${h === 0 ? "the $y$-axis" : "dashed"}, and the marked points lie on grid points. Which function is it?`,
+                `如图是 $g(x) = a\\log_{b}(x - h) + k$（$a = 1$ 或 $a = -1$）的图象，${h === 0 ? "它的竖直渐近线是 $y$ 轴" : "虚线是它的竖直渐近线"}，标出的点都在格点上。它是哪个函数？`,
+              ),
+              right: g(a, b, h, k),
+              wrong: [g(a, b, -h, k), g(-a, b, h, k), g(a, b + 1, h, k), g(a, b, h + 1, k)],
+              solution: t(
+                `The asymptote is $x = ${h}$, so $h = ${h}$. The graph passes through $(${p1[0]}, ${k})$, one unit right of the asymptote, so $k = ${k}$. It passes through $(${p2[0]}, ${p2[1]})$, $${b}$ units right of the asymptote and $1$ unit ${a > 0 ? "above" : "below"} $k$, so $b = ${b}$ and $a = ${a}$. Hence $g(x) = ${logT(a, B, h, k)}$.`,
+                `渐近线是 $x = ${h}$，所以 $h = ${h}$。图象经过渐近线右侧 $1$ 个单位处的 $(${p1[0]}, ${k})$，所以 $k = ${k}$。它还经过渐近线右侧 $${b}$ 个单位处的 $(${p2[0]}, ${p2[1]})$，比 $k$ ${a > 0 ? "高" : "低"} $1$，所以 $b = ${b}$，$a = ${a}$。因此 $g(x) = ${logT(a, B, h, k)}$。`,
+              ),
+            }),
+            figure: logGraph(a, b, h, k, [
+              { at: p1, dir: "e", bare: true },
+              { at: p2, dir: "e", bare: true },
+            ]),
+          },
+          logView,
+          [
+            { kind: "line", a: [h, 0], b: [h, 1], dashed: true, tone: "result" },
+            { kind: "point", at: p1, label: at(p1), dir: "se", tone: "result" },
+          ],
+          `The asymptote is x = ${h}, and the graph passes through ${at(p1)}.`,
+          `渐近线是 x = ${h}，图象经过 ${at(p1)}。`,
+        );
       },
     },
   ],

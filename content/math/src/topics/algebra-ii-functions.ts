@@ -15,7 +15,7 @@ import {
   type RealSet,
   union,
 } from "@ga/subject-math";
-
+import { annotate, at, guides, onAxis, setText as setAlt, stretchOf } from "../graph-figures.ts";
 import { choiceProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, verdictChoice, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -245,21 +245,27 @@ export const localExtrema: TopicDef = {
         const extremeEnds = ends.filter(([, y]) => pts.every(([, w]) => (wantMax ? w <= y : w >= y))).map(([x]) => x);
         const ys = answer.map((x) => pts.find((p) => p[0] === x)![1]);
         const kind = wantMax ? t("maximum", "极大值") : t("minimum", "极小值");
-        return {
-          ...solutionsProblem({
-            prompt: t(
-              `${graphShown.en} Find every $x$-value at which $f$ has a local ${kind.en}. Enter them separated by commas.`,
-              `${graphShown["zh-CN"]}求 $f$ 取得${kind["zh-CN"]}的所有 $x$ 值，用逗号分隔。`,
-            ),
-            values: answer.map(String),
-            wrong: [other.map(String), [...answer, ...extremeEnds].map(String), ys.map(String)],
-            solution: t(
-              `The graph turns ${wantMax ? "from rising to falling" : "from falling to rising"} at $x = ${answer.join(", ")}$. The endpoints do not count. So the local ${wantMax ? "maxima" : "minima"} occur at $x = ${answer.join(", ")}$.`,
-              `图象在 $x = ${answer.join(", ")}$ 处${wantMax ? "由上升转为下降" : "由下降转为上升"}，端点不算。所以 $f$ 在 $x = ${answer.join(", ")}$ 处取得${kind["zh-CN"]}。`,
-            ),
-          }),
-          figure: graphFigure([{ name: "f", pts }]),
-        };
+        return annotate(
+          {
+            ...solutionsProblem({
+              prompt: t(
+                `${graphShown.en} Find every $x$-value at which $f$ has a local ${kind.en}. Enter them separated by commas.`,
+                `${graphShown["zh-CN"]}求 $f$ 取得${kind["zh-CN"]}的所有 $x$ 值，用逗号分隔。`,
+              ),
+              values: answer.map(String),
+              wrong: [other.map(String), [...answer, ...extremeEnds].map(String), ys.map(String)],
+              solution: t(
+                `The graph turns ${wantMax ? "from rising to falling" : "from falling to rising"} at $x = ${answer.join(", ")}$. The endpoints do not count. So the local ${wantMax ? "maxima" : "minima"} occur at $x = ${answer.join(", ")}$.`,
+                `图象在 $x = ${answer.join(", ")}$ 处${wantMax ? "由上升转为下降" : "由下降转为上升"}，端点不算。所以 $f$ 在 $x = ${answer.join(", ")}$ 处取得${kind["zh-CN"]}。`,
+              ),
+            }),
+            figure: graphFigure([{ name: "f", pts }]),
+          },
+          view,
+          answer.flatMap((x, i) => guides([x, ys[i]!])).filter((m) => !(m.kind === "segment" && m.a[0] === 0)),
+          `The local ${kind.en} ${answer.length > 1 ? "values occur" : "value occurs"} at x = ${answer.join(", ")}.`,
+          `${kind["zh-CN"]}出现在 x = ${answer.join("、")}。`,
+        );
       },
     },
     {
@@ -283,18 +289,27 @@ export const localExtrema: TopicDef = {
         const global = isMax ? y === Math.max(...ys) : y === Math.min(...ys);
         const correct = (isMax ? 0 : 2) + (global ? 1 : 0);
         const extremeY = isMax ? Math.max(...ys) : Math.min(...ys);
-        return {
-          ...choiceProblem({
-            prompt: t(`${graphShown.en} Which describes the point $${pt(c, y)}$?`, `${graphShown["zh-CN"]}哪一项描述了点 $${pt(c, y)}$？`),
-            options: extremumOptions,
-            correct,
-            solution: t(
-              `The graph ${isMax ? "rises to" : "falls to"} $${pt(c, y)}$ and then ${isMax ? "falls" : "rises"}, so it is a local ${isMax ? "maximum" : "minimum"}. The ${isMax ? "largest" : "smallest"} value of $f$ on the whole graph is $${extremeY}$, so it ${global ? "is" : "is not"} the global ${isMax ? "maximum" : "minimum"}.`,
-              `图象${isMax ? "上升到" : "下降到"} $${pt(c, y)}$ 后${isMax ? "下降" : "上升"}，所以它是极${isMax ? "大" : "小"}值点。整个图象上 $f$ 的${isMax ? "最大" : "最小"}值是 $${extremeY}$，所以它${global ? "也是" : "不是"}最${isMax ? "大" : "小"}值点。`,
-            ),
-          }),
-          figure: graphFigure([{ name: "f", pts }]),
-        };
+        return annotate(
+          {
+            ...choiceProblem({
+              prompt: t(
+                `${graphShown.en} Which describes the point $${pt(c, y)}$?`,
+                `${graphShown["zh-CN"]}哪一项描述了点 $${pt(c, y)}$？`,
+              ),
+              options: extremumOptions,
+              correct,
+              solution: t(
+                `The graph ${isMax ? "rises to" : "falls to"} $${pt(c, y)}$ and then ${isMax ? "falls" : "rises"}, so it is a local ${isMax ? "maximum" : "minimum"}. The ${isMax ? "largest" : "smallest"} value of $f$ on the whole graph is $${extremeY}$, so it ${global ? "is" : "is not"} the global ${isMax ? "maximum" : "minimum"}.`,
+                `图象${isMax ? "上升到" : "下降到"} $${pt(c, y)}$ 后${isMax ? "下降" : "上升"}，所以它是极${isMax ? "大" : "小"}值点。整个图象上 $f$ 的${isMax ? "最大" : "最小"}值是 $${extremeY}$，所以它${global ? "也是" : "不是"}最${isMax ? "大" : "小"}值点。`,
+              ),
+            }),
+            figure: graphFigure([{ name: "f", pts }]),
+          },
+          view,
+          guides([c, y], at([c, y])),
+          `The turning point is ${at([c, y])}; the extreme height of the whole graph is ${extremeY}.`,
+          `转折点是 ${at([c, y])}；整个图象的最值是 ${extremeY}。`,
+        );
       },
     },
     {
@@ -600,21 +615,31 @@ export const graphsOfInverseFunctions: TopicDef = {
         const pts = monoWalk(rng, rng.int(-6, -4), rng.int(4, 6), -5, 5, 4);
         const [x, y] = rng.pick(pts);
         const fy = valueOn(pts, y);
-        return {
-          ...numberProblem({
-            prompt: t(
-              `${graphShown.en} The function $f$ is one-to-one. Find $f^{-1}(${y})$.`,
-              `${graphShown["zh-CN"]}$f$ 是一一对应的。求 $f^{-1}(${y})$。`,
-            ),
-            answer: x,
-            wrong: [...(fy ? [fy] : []), y, -x],
-            solution: t(
-              `The graph is at height $${y}$ at the point $${pt(x, y)}$, so $f(${x}) = ${y}$ and $f^{-1}(${y}) = ${x}$.`,
-              `图象在点 $${pt(x, y)}$ 处高度为 $${y}$，所以 $f(${x}) = ${y}$，$f^{-1}(${y}) = ${x}$。`,
-            ),
-          }),
-          figure: graphFigure([{ name: "f", pts }]),
-        };
+        return annotate(
+          {
+            ...numberProblem({
+              prompt: t(
+                `${graphShown.en} The function $f$ is one-to-one. Find $f^{-1}(${y})$.`,
+                `${graphShown["zh-CN"]}$f$ 是一一对应的。求 $f^{-1}(${y})$。`,
+              ),
+              answer: x,
+              wrong: [...(fy ? [fy] : []), y, -x],
+              solution: t(
+                `The graph is at height $${y}$ at the point $${pt(x, y)}$, so $f(${x}) = ${y}$ and $f^{-1}(${y}) = ${x}$.`,
+                `图象在点 $${pt(x, y)}$ 处高度为 $${y}$，所以 $f(${x}) = ${y}$，$f^{-1}(${y}) = ${x}$。`,
+              ),
+            }),
+            figure: graphFigure([{ name: "f", pts }]),
+          },
+          view,
+          [
+            { kind: "arrow", from: [0, y], to: [x, y], tone: "action", thin: true },
+            { kind: "arrow", from: [x, y], to: [x, 0], tone: "action", thin: true },
+            { kind: "point", at: [x, 0], label: String(x), dir: y >= 0 ? "s" : "n", tone: "result" },
+          ],
+          `Start at height ${y} on the vertical axis, go across to the graph and down to x = ${x}.`,
+          `从纵轴上的 ${y} 出发，水平走到图象，再竖直走到 x = ${x}。`,
+        );
       },
     },
     {
@@ -837,21 +862,27 @@ export const invertibleFunctions: TopicDef = {
         const set = union(iv(lo, hi));
         const wrong = [union(iv(lo, hi, false, false)), union(iv(pts[0]![0], pts[pts.length - 1]![0]))];
         if (j > 0) wrong.push(union(iv(breaks[j - 1]!, hi)));
-        return {
-          ...intervalProblem({
-            prompt: t(
-              `${graphShown.en} Find the largest interval containing $x = ${c}$ on which $f$ is one-to-one.`,
-              `${graphShown["zh-CN"]}求包含 $x = ${c}$、使 $f$ 一一对应的最大区间。`,
-            ),
-            set,
-            wrong,
-            solution: t(
-              `Around $x = ${c}$ the graph only ${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "rises" : "falls"} from $x = ${lo}$, where it ${j === 0 ? "starts" : "turns"}, to $x = ${hi}$, where it ${j === breaks.length - 2 ? "ends" : "turns"}. So the interval is ${setText(set)}.`,
-              `在 $x = ${c}$ 附近，图象从 $x = ${lo}$ 到 $x = ${hi}$ 一直${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "上升" : "下降"}，两端分别是${j === 0 ? "起点" : "转折点"}和${j === breaks.length - 2 ? "终点" : "转折点"}。所以区间是 ${setText(set)}。`,
-            ),
-          }),
-          figure: graphFigure([{ name: "f", pts }]),
-        };
+        return annotate(
+          {
+            ...intervalProblem({
+              prompt: t(
+                `${graphShown.en} Find the largest interval containing $x = ${c}$ on which $f$ is one-to-one.`,
+                `${graphShown["zh-CN"]}求包含 $x = ${c}$、使 $f$ 一一对应的最大区间。`,
+              ),
+              set,
+              wrong,
+              solution: t(
+                `Around $x = ${c}$ the graph only ${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "rises" : "falls"} from $x = ${lo}$, where it ${j === 0 ? "starts" : "turns"}, to $x = ${hi}$, where it ${j === breaks.length - 2 ? "ends" : "turns"}. So the interval is ${setText(set)}.`,
+                `在 $x = ${c}$ 附近，图象从 $x = ${lo}$ 到 $x = ${hi}$ 一直${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "上升" : "下降"}，两端分别是${j === 0 ? "起点" : "转折点"}和${j === breaks.length - 2 ? "终点" : "转折点"}。所以区间是 ${setText(set)}。`,
+              ),
+            }),
+            figure: graphFigure([{ name: "f", pts }]),
+          },
+          view,
+          [stretchOf(pts, lo, hi), ...onAxis("x", set, 6)],
+          `On ${setAlt(set)} the graph only rises or only falls, and it contains x = ${c}.`,
+          `在 ${setAlt(set)} 上图象只升或只降，并且包含 x = ${c}。`,
+        );
       },
     },
     {

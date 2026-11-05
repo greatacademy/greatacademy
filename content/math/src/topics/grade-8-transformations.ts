@@ -1,7 +1,8 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, linear, type Mark, type PlaneMark, type PlaneView, plane, Q, sketch } from "@ga/subject-math";
-
+import { annotate, at, graphFigure, riseRun, stagedPolygon, tracked, trail } from "../graph-figures.ts";
+import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, yesNo } from "../problems.ts";
 import { pickTriangle, polygonMarks } from "./geometry-proof-congruence-similarity.ts";
 import { applyAll, type Move, rigidMoves, same2, sequenceName, translation } from "./geometry-transformations.ts";
@@ -352,30 +353,39 @@ const verifyingPropertiesOfRigidMotions = topic(
           if (!within([b, b2], 7) || same2(a, a2) || Math.hypot(a2[0] - a[0], a2[1] - a[1]) < 4) continue;
           const horizontal = from.d[1] === 0;
           const [lo, hi] = horizontal ? [a[0], b[0]].sort((p, q) => p - q) : [a[1], b[1]].sort((p, q) => p - q);
-          return {
-            ...pointProblem({
-              prompt: t(
-                `A rigid motion maps $\\overline{AB}$ onto $\\overline{A'B'}$, with $A${pl(a)}$, $B${pl(b)}$ and $A'${pl(a2)}$. The point $B'$ is ${to.words.en} $A'$. Find the coordinates of $B'$.`,
-                `一次刚体运动把 $\\overline{AB}$ 映到 $\\overline{A'B'}$，其中 $A${pl(a)}$，$B${pl(b)}$，$A'${pl(a2)}$。点 $B'$ 在 $A'$ 的${to.words["zh-CN"]}。求 $B'$ 的坐标。`,
+          return annotate(
+            {
+              ...pointProblem({
+                prompt: t(
+                  `A rigid motion maps $\\overline{AB}$ onto $\\overline{A'B'}$, with $A${pl(a)}$, $B${pl(b)}$ and $A'${pl(a2)}$. The point $B'$ is ${to.words.en} $A'$. Find the coordinates of $B'$.`,
+                  `一次刚体运动把 $\\overline{AB}$ 映到 $\\overline{A'B'}$，其中 $A${pl(a)}$，$B${pl(b)}$，$A'${pl(a2)}$。点 $B'$ 在 $A'$ 的${to.words["zh-CN"]}。求 $B'$ 的坐标。`,
+                ),
+                answer: b2,
+                wrong: [along(a2, to.d, -length), [a2[0] + b[0] - a[0], a2[1] + b[1] - a[1]], along(a2, to.d, length + 1)],
+                solution: t(
+                  `$\\overline{AB}$ is ${horizontal ? "horizontal" : "vertical"}, so $AB = ${hi} - ${paren(lo!)} = ${length}$. A rigid motion keeps lengths, so $A'B' = ${length}$ and $B'$ is $${length}$ units ${to.words.en.replace("directly ", "").replace("to the ", "")} $A'$:${steps(`B' = ${pl(b2)}`)}`,
+                  `$\\overline{AB}$ 是${horizontal ? "水平" : "竖直"}线段，所以 $AB = ${hi} - ${paren(lo!)} = ${length}$。刚体运动保持长度，所以 $A'B' = ${length}$，$B'$ 在 $A'$ 的${to.words["zh-CN"]} $${length}$ 个单位处：${steps(`B' = ${pl(b2)}`)}`,
+                ),
+              }),
+              figure: graph(
+                [
+                  { kind: "segment", a, b },
+                  { kind: "point", at: a, label: "A", dir: "nw" },
+                  { kind: "point", at: b, label: "B", dir: "nw" },
+                  { kind: "point", at: a2, label: "A′", dir: "nw", accent: true },
+                ],
+                "Segment AB and the point A′ on a coordinate grid.",
+                "坐标网格上的线段 AB 和点 A′。",
               ),
-              answer: b2,
-              wrong: [along(a2, to.d, -length), [a2[0] + b[0] - a[0], a2[1] + b[1] - a[1]], along(a2, to.d, length + 1)],
-              solution: t(
-                `$\\overline{AB}$ is ${horizontal ? "horizontal" : "vertical"}, so $AB = ${hi} - ${paren(lo!)} = ${length}$. A rigid motion keeps lengths, so $A'B' = ${length}$ and $B'$ is $${length}$ units ${to.words.en.replace("directly ", "").replace("to the ", "")} $A'$:${steps(`B' = ${pl(b2)}`)}`,
-                `$\\overline{AB}$ 是${horizontal ? "水平" : "竖直"}线段，所以 $AB = ${hi} - ${paren(lo!)} = ${length}$。刚体运动保持长度，所以 $A'B' = ${length}$，$B'$ 在 $A'$ 的${to.words["zh-CN"]} $${length}$ 个单位处：${steps(`B' = ${pl(b2)}`)}`,
-              ),
-            }),
-            figure: graph(
-              [
-                { kind: "segment", a, b },
-                { kind: "point", at: a, label: "A", dir: "nw" },
-                { kind: "point", at: b, label: "B", dir: "nw" },
-                { kind: "point", at: a2, label: "A′", dir: "nw", accent: true },
-              ],
-              "Segment AB and the point A′ on a coordinate grid.",
-              "坐标网格上的线段 AB 和点 A′。",
-            ),
-          };
+            },
+            view,
+            [
+              { kind: "segment", a: a2, b: b2, tone: "result" },
+              { kind: "point", at: b2, label: "B′", dir: "se", tone: "result" },
+            ],
+            `A′B′ has the same length as AB, ${length}, so B′ is ${at(b2)}.`,
+            `A′B′ 与 AB 等长，都是 ${length}，所以 B′ 是 ${at(b2)}。`,
+          );
         }
       },
     },
@@ -476,6 +486,7 @@ const applyingSequencesOfRigidMotions = topic(
               ),
             }),
             figure: graph(polygonMarks(tri, ABC), "Triangle ABC on a coordinate grid.", "坐标网格上的三角形 ABC。"),
+            solutionFigure: stagedPolygon(ABC, [tri, mapAll(moves.slice(0, 1), tri), mapAll(moves, tri)], i),
           };
         }
       },
@@ -506,24 +517,32 @@ const applyingSequencesOfRigidMotions = topic(
                 `像 $${pl(first)}$ 和 $${pl(second)}$ 不同，所以顺序重要。`,
               );
           const shownSecond: XY = equal ? [first[0] + 1, first[1]] : second;
-          return verdictChoice(rng, {
-            prompt: t(
-              `The point $P${pl(p)}$ is mapped by ${m1.name.en}, followed by ${m2.name.en}. Would doing the two transformations in the opposite order send $P$ to the same point?`,
-              `对点 $P${pl(p)}$ 先作${m1.name["zh-CN"]}，然后作${m2.name["zh-CN"]}。如果按相反的顺序施行这两个变换，$P$ 会被映到同一个点吗？`,
+          return {
+            ...verdictChoice(rng, {
+              prompt: t(
+                `The point $P${pl(p)}$ is mapped by ${m1.name.en}, followed by ${m2.name.en}. Would doing the two transformations in the opposite order send $P$ to the same point?`,
+                `对点 $P${pl(p)}$ 先作${m1.name["zh-CN"]}，然后作${m2.name["zh-CN"]}。如果按相反的顺序施行这两个变换，$P$ 会被映到同一个点吗？`,
+              ),
+              holds: equal,
+              yes: t(`both orders end at $${pl(first)}$`, `两种顺序都停在 $${pl(first)}$`),
+              no: t(
+                `one order ends at $${pl(first)}$ and the other at $${pl(shownSecond)}$`,
+                `一种顺序停在 $${pl(first)}$，另一种停在 $${pl(shownSecond)}$`,
+              ),
+              yesWrong: t("rigid motions keep lengths and angles", "刚体运动保持长度和角度"),
+              noWrong: t("changing the order always changes the image", "改变顺序总会改变像"),
+              solution: t(
+                `In the given order:\n\n${trace([m1, m2], p, "P").en}\n\nIn the opposite order:\n\n${trace([m2, m1], p, "P").en}\n\n${verdict.en}`,
+                `按给出的顺序：\n\n${trace([m1, m2], p, "P")["zh-CN"]}\n\n按相反的顺序：\n\n${trace([m2, m1], p, "P")["zh-CN"]}\n\n${verdict["zh-CN"]}`,
+              ),
+            }),
+            solutionFigure: graphFigure(
+              viewAround([p, m1.f(p), first, m2.f(p), second]),
+              [...trail(["P", "", ""], [p, m1.f(p), first]), ...trail(["", "", ""], [p, m2.f(p), second])],
+              `In the stated order P ends at ${at(first)}; in the opposite order, at ${at(second)}.`,
+              `按所给顺序 P 到达 ${at(first)}；按相反顺序到达 ${at(second)}。`,
             ),
-            holds: equal,
-            yes: t(`both orders end at $${pl(first)}$`, `两种顺序都停在 $${pl(first)}$`),
-            no: t(
-              `one order ends at $${pl(first)}$ and the other at $${pl(shownSecond)}$`,
-              `一种顺序停在 $${pl(first)}$，另一种停在 $${pl(shownSecond)}$`,
-            ),
-            yesWrong: t("rigid motions keep lengths and angles", "刚体运动保持长度和角度"),
-            noWrong: t("changing the order always changes the image", "改变顺序总会改变像"),
-            solution: t(
-              `In the given order:\n\n${trace([m1, m2], p, "P").en}\n\nIn the opposite order:\n\n${trace([m2, m1], p, "P").en}\n\n${verdict.en}`,
-              `按给出的顺序：\n\n${trace([m1, m2], p, "P")["zh-CN"]}\n\n按相反的顺序：\n\n${trace([m2, m1], p, "P")["zh-CN"]}\n\n${verdict["zh-CN"]}`,
-            ),
-          });
+          };
         }
       },
     },
@@ -763,24 +782,27 @@ const congruenceThroughRigidMotions = topic(
             const mid = rigid.f(p);
             return `${ABC[i]}${pl(p)} \\to ${pl(mid)} \\to ${ABC[i]}'${pl(img[i]!)}`;
           });
-          return pickChoice(
-            rng,
-            t(
-              `Which sequence of rigid motions maps $\\triangle ABC$, with ${coords}, onto $\\triangle A'B'C'$?`,
-              `哪一串刚体运动把 $\\triangle ABC$（${zhCoords}）映到 $\\triangle A'B'C'$ 上？`,
+          return {
+            ...pickChoice(
+              rng,
+              t(
+                `Which sequence of rigid motions maps $\\triangle ABC$, with ${coords}, onto $\\triangle A'B'C'$?`,
+                `哪一串刚体运动把 $\\triangle ABC$（${zhCoords}）映到 $\\triangle A'B'C'$ 上？`,
+              ),
+              sequenceOption(correct),
+              kept.slice(0, 3).map((k) => sequenceOption(k)),
+              t(
+                `Follow each vertex through ${rigid.name.en}, then ${tr.name.en}:${steps(...tracks)}Every vertex lands on its image. Each of the other sequences sends at least one vertex somewhere else.`,
+                `让每个顶点先经过${rigid.name["zh-CN"]}，再经过${tr.name["zh-CN"]}：${steps(...tracks)}每个顶点都落在它的像上。其他每个序列都至少把一个顶点映到别处。`,
+              ),
+              graph(
+                [...polygonMarks(tri, ABC, false), ...polygonMarks(img, primed)],
+                "Triangle ABC and its image A′B′C′ on a coordinate grid.",
+                "坐标网格上的三角形 ABC 和它的像 A′B′C′。",
+              ),
             ),
-            sequenceOption(correct),
-            kept.slice(0, 3).map((k) => sequenceOption(k)),
-            t(
-              `Follow each vertex through ${rigid.name.en}, then ${tr.name.en}:${steps(...tracks)}Every vertex lands on its image. Each of the other sequences sends at least one vertex somewhere else.`,
-              `让每个顶点先经过${rigid.name["zh-CN"]}，再经过${tr.name["zh-CN"]}：${steps(...tracks)}每个顶点都落在它的像上。其他每个序列都至少把一个顶点映到别处。`,
-            ),
-            graph(
-              [...polygonMarks(tri, ABC, false), ...polygonMarks(img, primed)],
-              "Triangle ABC and its image A′B′C′ on a coordinate grid.",
-              "坐标网格上的三角形 ABC 和它的像 A′B′C′。",
-            ),
-          );
+            solutionFigure: stagedPolygon(ABC, [tri, mapAll([rigid], tri), img]),
+          };
         }
       },
     },
@@ -886,17 +908,31 @@ const usingSimilarTrianglesToExplainSlope = topic(
           const m = Q.of(r, s);
           const mc = Q.of(c[1] - a[1], c[0] - a[0]);
           const frac = (p: XY) => `\\frac{${p[1]} - ${paren(a[1])}}{${p[0]} - ${paren(a[0])}}`;
-          return yesNoProblem(
-            t(
-              `A line passes through $A${pl(a)}$ and $B${pl(b)}$. Is the point $C${pl(c)}$ on the line?`,
-              `一条直线经过 $A${pl(a)}$ 和 $B${pl(b)}$。点 $C${pl(c)}$ 在这条直线上吗？`,
+          return {
+            ...yesNoProblem(
+              t(
+                `A line passes through $A${pl(a)}$ and $B${pl(b)}$. Is the point $C${pl(c)}$ on the line?`,
+                `一条直线经过 $A${pl(a)}$ 和 $B${pl(b)}$。点 $C${pl(c)}$ 在这条直线上吗？`,
+              ),
+              onLine,
+              t(
+                `Compare the slopes from $A$:${steps(`\\text{slope of } AB = ${frac(b)} = ${m.toLatex()}`, `\\text{slope of } AC = ${frac(c)} = ${mc.toLatex()}`)}${onLine ? "The slopes are equal, so the slope triangles from $A$ to $B$ and from $A$ to $C$ are similar and $C$ lies on the line." : "The slopes differ, so $C$ is not on the line."}`,
+                `比较从 $A$ 出发的斜率：${steps(`AB \\text{ 的斜率} = ${frac(b)} = ${m.toLatex()}`, `AC \\text{ 的斜率} = ${frac(c)} = ${mc.toLatex()}`)}${onLine ? "两个斜率相等，所以从 $A$ 到 $B$ 和从 $A$ 到 $C$ 的斜率三角形相似，$C$ 在直线上。" : "两个斜率不同，所以 $C$ 不在直线上。"}`,
+              ),
             ),
-            onLine,
-            t(
-              `Compare the slopes from $A$:${steps(`\\text{slope of } AB = ${frac(b)} = ${m.toLatex()}`, `\\text{slope of } AC = ${frac(c)} = ${mc.toLatex()}`)}${onLine ? "The slopes are equal, so the slope triangles from $A$ to $B$ and from $A$ to $C$ are similar and $C$ lies on the line." : "The slopes differ, so $C$ is not on the line."}`,
-              `比较从 $A$ 出发的斜率：${steps(`AB \\text{ 的斜率} = ${frac(b)} = ${m.toLatex()}`, `AC \\text{ 的斜率} = ${frac(c)} = ${mc.toLatex()}`)}${onLine ? "两个斜率相等，所以从 $A$ 到 $B$ 和从 $A$ 到 $C$ 的斜率三角形相似，$C$ 在直线上。" : "两个斜率不同，所以 $C$ 不在直线上。"}`,
+            solutionFigure: graphFigure(
+              viewAround([a, b, c]),
+              [
+                { kind: "line", a, b, accent: true },
+                ...riseRun(a, b),
+                { kind: "point", at: a, label: "A", dir: "nw", accent: true },
+                { kind: "point", at: b, label: "B", dir: "nw", accent: true },
+                { kind: "point", at: c, label: "C", dir: "se", tone: "result" },
+              ],
+              onLine ? `C ${at(c)} lies on the line through A and B.` : `C ${at(c)} does not lie on the line through A and B.`,
+              onLine ? `C ${at(c)} 在经过 A、B 的直线上。` : `C ${at(c)} 不在经过 A、B 的直线上。`,
             ),
-          );
+          };
         }
       },
     },
@@ -917,19 +953,32 @@ const usingSimilarTrianglesToExplainSlope = topic(
         const p: XY = [run, b + rise];
         const answer = `y = ${linear(m, b)}`;
         const start = b === 0 ? t("the origin", "原点") : t(`$${pl([0, b])}$`, ` $${pl([0, b])}$ `);
-        return equationProblem({
-          prompt: t(
-            `A line passes through ${start.en} and $${pl(p)}$. Use a slope triangle to write its equation in slope-intercept form.`,
-            `一条直线经过${start["zh-CN"]}和 $${pl(p)}$。用斜率三角形写出它的斜截式方程。`,
+        return {
+          ...equationProblem({
+            prompt: t(
+              `A line passes through ${start.en} and $${pl(p)}$. Use a slope triangle to write its equation in slope-intercept form.`,
+              `一条直线经过${start["zh-CN"]}和 $${pl(p)}$。用斜率三角形写出它的斜截式方程。`,
+            ),
+            answer,
+            form: "slope-intercept",
+            wrong: [`y = ${linear(Q.of(run, rise), b)}`, `y = ${linear(Q.of(b + rise, run), b)}`, `y = ${linear(m, -b)}`],
+            solution: t(
+              `The slope triangle from $${pl([0, b])}$ to $${pl(p)}$ has run $${run}$ and rise $${b + rise} - ${paren(b)} = ${rise}$, so the slope is $m = ${m.toLatex()}$. Every point $(x, y)$ on the line gives a similar slope triangle from $${pl([0, b])}$, with $\\dfrac{y - ${paren(b)}}{x} = ${m.toLatex()}$:${steps(answer)}`,
+              `从 $${pl([0, b])}$ 到 $${pl(p)}$ 的斜率三角形横向变化为 $${run}$，纵向变化为 $${b + rise} - ${paren(b)} = ${rise}$，所以斜率 $m = ${m.toLatex()}$。直线上的每个点 $(x, y)$ 都与 $${pl([0, b])}$ 构成一个相似的斜率三角形，$\\dfrac{y - ${paren(b)}}{x} = ${m.toLatex()}$：${steps(answer)}`,
+            ),
+          }),
+          solutionFigure: graphFigure(
+            viewAround([[0, b], p]),
+            [
+              { kind: "line", a: [0, b], b: p, tone: "result" },
+              ...riseRun([0, b], p),
+              { kind: "point", at: [0, b], accent: true },
+              { kind: "point", at: p, accent: true },
+            ],
+            `The run is ${run} and the rise is ${rise}, and the line crosses the y-axis at ${b}.`,
+            `水平变化 ${run}，竖直变化 ${rise}，直线与 y 轴交于 ${b}。`,
           ),
-          answer,
-          form: "slope-intercept",
-          wrong: [`y = ${linear(Q.of(run, rise), b)}`, `y = ${linear(Q.of(b + rise, run), b)}`, `y = ${linear(m, -b)}`],
-          solution: t(
-            `The slope triangle from $${pl([0, b])}$ to $${pl(p)}$ has run $${run}$ and rise $${b + rise} - ${paren(b)} = ${rise}$, so the slope is $m = ${m.toLatex()}$. Every point $(x, y)$ on the line gives a similar slope triangle from $${pl([0, b])}$, with $\\dfrac{y - ${paren(b)}}{x} = ${m.toLatex()}$:${steps(answer)}`,
-            `从 $${pl([0, b])}$ 到 $${pl(p)}$ 的斜率三角形横向变化为 $${run}$，纵向变化为 $${b + rise} - ${paren(b)} = ${rise}$，所以斜率 $m = ${m.toLatex()}$。直线上的每个点 $(x, y)$ 都与 $${pl([0, b])}$ 构成一个相似的斜率三角形，$\\dfrac{y - ${paren(b)}}{x} = ${m.toLatex()}$：${steps(answer)}`,
-          ),
-        });
+        };
       },
     },
   ],
@@ -1006,24 +1055,27 @@ const describingASequence = topic(
           if (kept.length < 3) continue;
           const coords = tri.map((p, i) => `$${ABC[i]}${pl(p)}$`);
           const tracks = tri.map((p, i) => `${ABC[i]}${pl(p)} \\to ${pl(dil.f(p))} \\to ${ABC[i]}'${pl(img[i]!)}`);
-          return pickChoice(
-            rng,
-            t(
-              `Which sequence maps $\\triangle ABC$, with ${coords.join(", ")}, onto $\\triangle A'B'C'$?`,
-              `哪一串变换把 $\\triangle ABC$（${coords.join("，")}）映到 $\\triangle A'B'C'$ 上？`,
+          return {
+            ...pickChoice(
+              rng,
+              t(
+                `Which sequence maps $\\triangle ABC$, with ${coords.join(", ")}, onto $\\triangle A'B'C'$?`,
+                `哪一串变换把 $\\triangle ABC$（${coords.join("，")}）映到 $\\triangle A'B'C'$ 上？`,
+              ),
+              sequenceOption(correct),
+              kept.slice(0, 3).map((m) => sequenceOption(m)),
+              t(
+                `Follow each vertex through ${dil.name.en}, then ${tr.name.en}:${steps(...tracks)}Every vertex lands on its image. Each of the other sequences sends at least one vertex somewhere else.`,
+                `让每个顶点先经过${dil.name["zh-CN"]}，再经过${tr.name["zh-CN"]}：${steps(...tracks)}每个顶点都落在它的像上。其他每个序列都至少把一个顶点映到别处。`,
+              ),
+              graph(
+                [...polygonMarks(tri, ABC, false), ...polygonMarks(img, primed)],
+                "Triangle ABC and the similar triangle A′B′C′ on a coordinate grid.",
+                "坐标网格上的三角形 ABC 和与它相似的三角形 A′B′C′。",
+              ),
             ),
-            sequenceOption(correct),
-            kept.slice(0, 3).map((m) => sequenceOption(m)),
-            t(
-              `Follow each vertex through ${dil.name.en}, then ${tr.name.en}:${steps(...tracks)}Every vertex lands on its image. Each of the other sequences sends at least one vertex somewhere else.`,
-              `让每个顶点先经过${dil.name["zh-CN"]}，再经过${tr.name["zh-CN"]}：${steps(...tracks)}每个顶点都落在它的像上。其他每个序列都至少把一个顶点映到别处。`,
-            ),
-            graph(
-              [...polygonMarks(tri, ABC, false), ...polygonMarks(img, primed)],
-              "Triangle ABC and the similar triangle A′B′C′ on a coordinate grid.",
-              "坐标网格上的三角形 ABC 和与它相似的三角形 A′B′C′。",
-            ),
-          );
+            solutionFigure: stagedPolygon(ABC, [tri, mapAll([dil], tri), img]),
+          };
         }
       },
     },
@@ -1046,23 +1098,26 @@ const describingASequence = topic(
           const a2: XY = [ka[0] + h, ka[1] + v];
           const b2: XY = [kb[0] + h, kb[1] + v];
           if (same2(a, ka) || !within([a, b, a2, b2], 12)) continue;
-          return pointProblem({
-            prompt: t(
-              `A dilation about the origin, followed by the translation $(x, y) \\to (x + a, y + b)$, maps $A${pl(a)}$ to $A'${pl(a2)}$ and $B${pl(b)}$ to $B'${pl(b2)}$. Find $(a, b)$.`,
-              `以原点为中心的一次位似，接着平移 $(x, y) \\to (x + a, y + b)$，把 $A${pl(a)}$ 映到 $A'${pl(a2)}$，把 $B${pl(b)}$ 映到 $B'${pl(b2)}$。求 $(a, b)$。`,
-            ),
-            answer: [h, v],
-            vars: ["a", "b"],
-            wrong: [
-              [a2[0] - a[0], a2[1] - a[1]],
-              [ka[0] - a2[0], ka[1] - a2[1]],
-              [Q.of(a2[0]).sub(Q.of(a[0]).div(k)), Q.of(a2[1]).sub(Q.of(a[1]).div(k))],
-            ],
-            solution: t(
-              `Find the scale factor from the $x$-coordinates:${steps(`k = \\frac{${b2[0]} - ${paren(a2[0])}}{${b[0]} - ${paren(a[0])}} = ${k.toLatex()}`)}The dilation sends $A$ to $${pl(ka)}$. The translation carries this point to $A'${pl(a2)}$:${steps(`a = ${a2[0]} - ${paren(ka[0])} = ${h}`, `b = ${a2[1]} - ${paren(ka[1])} = ${v}`)}`,
-              `由 $x$ 坐标求比例因子：${steps(`k = \\frac{${b2[0]} - ${paren(a2[0])}}{${b[0]} - ${paren(a[0])}} = ${k.toLatex()}`)}位似把 $A$ 映到 $${pl(ka)}$。平移把这个点移到 $A'${pl(a2)}$：${steps(`a = ${a2[0]} - ${paren(ka[0])} = ${h}`, `b = ${a2[1]} - ${paren(ka[1])} = ${v}`)}`,
-            ),
-          });
+          return {
+            ...pointProblem({
+              prompt: t(
+                `A dilation about the origin, followed by the translation $(x, y) \\to (x + a, y + b)$, maps $A${pl(a)}$ to $A'${pl(a2)}$ and $B${pl(b)}$ to $B'${pl(b2)}$. Find $(a, b)$.`,
+                `以原点为中心的一次位似，接着平移 $(x, y) \\to (x + a, y + b)$，把 $A${pl(a)}$ 映到 $A'${pl(a2)}$，把 $B${pl(b)}$ 映到 $B'${pl(b2)}$。求 $(a, b)$。`,
+              ),
+              answer: [h, v],
+              vars: ["a", "b"],
+              wrong: [
+                [a2[0] - a[0], a2[1] - a[1]],
+                [ka[0] - a2[0], ka[1] - a2[1]],
+                [Q.of(a2[0]).sub(Q.of(a[0]).div(k)), Q.of(a2[1]).sub(Q.of(a[1]).div(k))],
+              ],
+              solution: t(
+                `Find the scale factor from the $x$-coordinates:${steps(`k = \\frac{${b2[0]} - ${paren(a2[0])}}{${b[0]} - ${paren(a[0])}} = ${k.toLatex()}`)}The dilation sends $A$ to $${pl(ka)}$. The translation carries this point to $A'${pl(a2)}$:${steps(`a = ${a2[0]} - ${paren(ka[0])} = ${h}`, `b = ${a2[1]} - ${paren(ka[1])} = ${v}`)}`,
+                `由 $x$ 坐标求比例因子：${steps(`k = \\frac{${b2[0]} - ${paren(a2[0])}}{${b[0]} - ${paren(a[0])}} = ${k.toLatex()}`)}位似把 $A$ 映到 $${pl(ka)}$。平移把这个点移到 $A'${pl(a2)}$：${steps(`a = ${a2[0]} - ${paren(ka[0])} = ${h}`, `b = ${a2[1]} - ${paren(ka[1])} = ${v}`)}`,
+              ),
+            }),
+            solutionFigure: tracked(["A", "A′"], [a, ka, a2]),
+          };
         }
       },
     },

@@ -252,6 +252,30 @@ export function numberLineFigure(lo: number, hi: number, step: number, mark?: nu
   };
 }
 
+/** jumpArcs draws an arc with an arrowhead for each jump between consecutive stops on a horizontal number line at height y, where x places a number. */
+export function jumpArcs(x: (v: number) => number, y: number, stops: readonly number[]): string {
+  let arcs = "";
+  for (let i = 0; i + 1 < stops.length; i++) {
+    const [from, to] = [x(stops[i]!), x(stops[i + 1]!)];
+    const s = to >= from ? 1 : -1;
+    const f = (v: number) => v.toFixed(2);
+    arcs += `<path class="action" d="M${f(from)} ${y}Q${f((from + to) / 2)} ${y - 16} ${f(to)} ${y}M${f(to - s * 6)} ${y - 3}L${f(to)} ${y}L${f(to - s)} ${y - 7}"/>`;
+  }
+  return arcs;
+}
+
+/** jumpsFigure draws the number line of numberLineFigure with the jumps through stops, the first stop in the accent color and the last as the result. */
+export function jumpsFigure(lo: number, hi: number, step: number, stops: readonly number[], labelAll = true): Figure {
+  const x = (v: number) => 20 + ((v - lo) / (hi - lo)) * 280;
+  const line = numberLineFigure(lo, hi, step, stops[0], labelAll);
+  const last = stops[stops.length - 1]!;
+  const end = `<circle cx="${x(last).toFixed(2)}" cy="24" r="5" class="result" fill="currentColor"/><text x="${x(last).toFixed(2)}" y="12" text-anchor="middle" stroke="none" class="result" fill="currentColor">${last}</text>`;
+  return {
+    svg: line.svg.replace("</svg>", `${jumpArcs(x, 24, stops)}${end}</svg>`),
+    alt: t(`Jumps from ${stops[0]} to ${last} on a number line.`, `在数轴上从 ${stops[0]} 跳到 ${last}。`),
+  };
+}
+
 /** polygonFigure draws a polygon through the given points, scaled from a 0-to-10 square. */
 export function polygonFigure(points: readonly (readonly [number, number])[], alt: Text): Figure {
   const path = points.map(([x, y]) => `${60 + x * 20},${10 + (10 - y) * 12}`).join(" ");

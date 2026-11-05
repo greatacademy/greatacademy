@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
-
+import { stagedPolygon } from "../graph-figures.ts";
 import { choiceProblem, numberProblem, pointLatex, pointProblem, reasonChoice, steps, verdictChoice } from "../problems.ts";
 
 // Geometry, module 1.4: similarity. Similar polygons and their sides, angles
@@ -1050,6 +1050,14 @@ export const similarityTransformations: TopicDef = {
                 `坐标平面上顶点为 ${pts(pre)} 的三角形 ABC 及其像 A′B′C′，顶点为 ${pts(img)}。`,
               ),
             },
+            solutionFigure: stagedPolygon(L, [
+              pre,
+              pre.map((p) => {
+                const q = dilate(k, p);
+                return [q[0], q[1]] as const;
+              }),
+              img,
+            ]),
           };
         }
       },
