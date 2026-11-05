@@ -2,6 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { gcd, lcm, Q, svgDocument } from "@ga/subject-math";
 import { jumpArcs } from "../early-grades-kit.ts";
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, mixedLatex, numberProblem } from "../problems.ts";
 import { wordsEn, wordsZh } from "./grade-4-whole-numbers.ts";
 
@@ -404,6 +405,7 @@ export const modelingFractionsUsingNumberLines = topic(
     },
     {
       id: "choosing-the-point-for-a-fraction",
+      figure: gradeDrawings["choosing-the-point-for-a-fraction"],
       title: t("Finding the point", "找出表示分数的点"),
       explanation: t(
         "On a number line, the denominator tells how many equal steps the space from $0$ to $1$ is cut into, and the numerator tells how many steps to count from $0$.\n\nTo find $\\frac{3}{5}$, cut $0$ to $1$ into $5$ equal steps and go $3$ steps from $0$. Count the spaces, not the tick marks.",
@@ -804,6 +806,7 @@ export const modelingMixedNumbersUsingNumberLines = topic(
     },
     {
       id: "finding-mixed-numbers-on-number-lines",
+      figure: gradeDrawings["finding-mixed-numbers-on-number-lines"],
       title: t("Finding the point", "找出表示带分数的点"),
       explanation: t(
         "To place a mixed number on a number line, first go to its whole-number part, then count steps of the unit fraction from there.\n\nTo find $1\\frac{2}{3}$, go to $1$ and then $2$ steps of $\\frac{1}{3}$ further. The point lies between $1$ and $2$.",
@@ -1094,6 +1097,7 @@ export const findingEquivalentFractionsUsingAreaModels = topic(
     },
     {
       id: "equivalent-fractions-from-grids",
+      figure: gradeDrawings["equivalent-fractions-from-grids"],
       title: t("Cutting a rectangle into rows", "把长方形再分成几行"),
       explanation: t(
         "A rectangle with $2$ of $3$ columns shaded, cut into $4$ rows: $8$ of the $12$ small rectangles are shaded, so $\\frac{2}{3} = \\frac{8}{12}$.",
@@ -1547,6 +1551,7 @@ export const comparingFractionModelsUsingCommonDenominators = topic(
   [
     {
       id: "comparing-two-bar-models",
+      figure: gradeDrawings["comparing-two-bar-models"],
       title: t("Comparing two bars", "比较两个长条"),
       explanation: t(
         "Two bar models are easy to compare once their parts are the same size. Cut the larger parts of one bar into smaller pieces until they match the other bar, then compare the numbers of shaded parts.\n\nThe bars show $\\frac{3}{4}$ and $\\frac{5}{8}$. Cutting each fourth in two gives $\\frac{6}{8}$, so $\\frac{3}{4} > \\frac{5}{8}$.",

@@ -1,7 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type Point, plane, Q, sketch, svgDocument } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, yesNo } from "../problems.ts";
 import { fractionPlot } from "./grade-4-measurement.ts";
 
@@ -1479,6 +1479,7 @@ export const polygons = topic(
   [
     {
       id: "naming-polygons-from-figures",
+      figure: gradeDrawings["naming-polygons-from-figures"],
       title: t("Naming a drawn polygon", "说出图中多边形的名称"),
       explanation: t(
         "A polygon is named by its number of straight sides: $3$ triangle, $4$ quadrilateral, $5$ pentagon, $6$ hexagon, $8$ octagon. Count the sides carefully, marking where you started.\n\nA figure with $6$ straight sides is a hexagon.",
@@ -1796,6 +1797,7 @@ export const rectanglesRhombusesAndSquares = topic(
   [
     {
       id: "perimeters-of-special-quadrilaterals",
+      figure: gradeDrawings["perimeters-of-special-quadrilaterals"],
       title: t("Perimeter from one or two sides", "由一两条边求周长"),
       explanation: t(
         "Perimeter is the total length around a shape. A rhombus and a square have four equal sides, so the perimeter is $4$ times one side. A rectangle has two pairs of equal sides, so it is $2 \\times$ (length $+$ width).\n\nA rhombus with one side $7$ cm has perimeter $4 \\times 7 = 28$ cm.",
@@ -1895,6 +1897,7 @@ export const perimetersOfShapes = topic(
   [
     {
       id: "adding-decimal-side-lengths",
+      figure: gradeDrawings["adding-decimal-side-lengths"],
       title: t("Adding the sides", "把各边相加"),
       explanation: t(
         "Add all the side lengths. With decimals, line up the decimal points, writing zeros so every number has the same number of places.\n\nA quadrilateral with sides $3.2$, $4$, $2.75$ and $5.1$ cm: $3.20 + 4.00 + 2.75 + 5.10 = 15.05$ cm.",
@@ -2026,6 +2029,7 @@ export const classifyingQuadrilaterals = topic(
     },
     {
       id: "naming-from-a-description",
+      figure: gradeDrawings["naming-from-a-description"],
       title: t("Naming from a description", "根据描述命名"),
       explanation: t(
         "Use the sides and angles to find the most specific name. Four right angles make a rectangle; four equal sides make a rhombus; both together make a square. Two pairs of parallel sides without either property make a parallelogram.\n\nA quadrilateral with sides $6, 4, 6, 4$ and four right angles is a rectangle. It is not a square, since its sides are not all equal.",

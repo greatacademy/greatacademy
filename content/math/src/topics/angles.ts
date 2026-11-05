@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { article, choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -57,6 +57,7 @@ export const anglesAndAngleMeasures: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-angles",
+      figure: gradeDrawings["classifying-angles"],
       title: t("Kinds of angles", "角的分类"),
       explanation: t(
         "An **angle** is formed by two rays from a common point, its **vertex**. Its measure, in **degrees** ($^\\circ$), tells how far one ray turns to reach the other; a full turn is $360^\\circ$.\n\n- An **acute** angle measures less than $90^\\circ$.\n- A **right** angle measures exactly $90^\\circ$; it is marked with a small square.\n- An **obtuse** angle measures between $90^\\circ$ and $180^\\circ$.\n- A **straight** angle measures $180^\\circ$: its rays form a line.",
@@ -100,6 +101,7 @@ export const anglesAndAngleMeasures: TopicDef = {
     },
     {
       id: "adjacent-angles",
+      figure: gradeDrawings["adjacent-angles"],
       title: t("Adjacent angles", "相邻的角"),
       explanation: t(
         "Angles that share a vertex and a side, without overlapping, are **adjacent**. Their measures add: if ray $OB$ lies inside $\\angle AOC$, then $\\angle AOB + \\angle BOC = \\angle AOC$.\n\nSo if $\\angle AOC = 110^\\circ$ and $\\angle AOB = 45^\\circ$, then $\\angle BOC = 110^\\circ - 45^\\circ = 65^\\circ$.",

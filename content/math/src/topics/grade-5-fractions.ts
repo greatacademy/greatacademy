@@ -1,7 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, lcm, Q, svgDocument } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, mixedLatex, numberProblem, steps } from "../problems.ts";
 import { barFigure, coprimeTo, fr, mathText, mx, pickChoice, properFraction, twoBarsFigure } from "./grade-4-fractions.ts";
 
@@ -146,6 +146,7 @@ export const addingFractionsAndWholeNumbersUsingModels = topic(
   [
     {
       id: "whole-number-plus-proper-fraction-models",
+      figure: gradeDrawings["whole-number-plus-proper-fraction-models"],
       title: t("A whole number plus a proper fraction", "整数加真分数"),
       explanation: t(
         "In a bar model, each fully shaded bar is $1$ whole and a partly shaded bar is a fraction. Count the full bars for the whole-number part and read the partial bar for the fraction. $3$ full bars and $\\frac{2}{5}$ of another show $3 + \\frac{2}{5} = 3\\frac{2}{5}$.",
@@ -1100,6 +1101,7 @@ export const multiplyingFractionsByUnitFractionsUsingModels = topic(
   [
     {
       id: "unit-fraction-times-unit-fraction-models",
+      figure: gradeDrawings["unit-fraction-times-unit-fraction-models"],
       title: t("A unit fraction of a unit fraction", "单位分数乘单位分数"),
       explanation: t(
         "To model $\\frac{1}{2} \\times \\frac{1}{4}$, cut a square into $4$ columns and shade $1$ of them, then cut it into $2$ rows and shade $1$. The part shaded twice is the product. The square now has $2 \\times 4 = 8$ small rectangles and $1$ of them is shaded twice, so $\\frac{1}{2} \\times \\frac{1}{4} = \\frac{1}{8}$. Taking a part of a part gives something smaller than either.",
@@ -1128,6 +1130,7 @@ export const multiplyingFractionsByUnitFractionsUsingModels = topic(
     },
     {
       id: "unit-fraction-times-fraction-models",
+      figure: gradeDrawings["unit-fraction-times-fraction-models"],
       title: t("A unit fraction of a fraction", "分数乘单位分数"),
       explanation: t(
         "In the area model, the denominators set the grid and the numerators set how many columns and rows are shaded. For $\\frac{1}{3} \\times \\frac{3}{4}$: shade $3$ of $4$ columns and $1$ of $3$ rows. The grid has $12$ small rectangles, and $1 \\times 3 = 3$ are shaded twice. So the product is $\\frac{3}{12} = \\frac{1}{4}$.",
@@ -1169,6 +1172,7 @@ export const multiplyingFractionsUsingModels = topic(
   [
     {
       id: "fraction-times-fraction-models",
+      figure: gradeDrawings["fraction-times-fraction-models"],
       title: t("Reading the product from the model", "从模型中读出积"),
       explanation: t(
         "Read the product from the area model in two counts. The total number of small rectangles is the denominator, and the number shaded twice is the numerator. For $\\frac{2}{5} \\times \\frac{2}{3}$: the grid is $5 \\times 3 = 15$ rectangles and $2 \\times 2 = 4$ are shaded twice, so the product is $\\frac{4}{15}$. This is why you multiply the numerators and multiply the denominators.",
@@ -1745,6 +1749,7 @@ export const connectingFractionMultiplicationAndArea = topic(
     },
     {
       id: "counting-tiles-in-a-fractional-rectangle",
+      figure: gradeDrawings["counting-tiles-in-a-fractional-rectangle"],
       title: t("Counting tiles", "数小块"),
       explanation: t(
         "A rectangle with fractional sides can be covered by small tiles whose sides are unit fractions. For a $\\frac{2}{3}$ by $\\frac{3}{4}$ rectangle, use tiles $\\frac{1}{3}$ by $\\frac{1}{4}$: $2$ fit one way and $3$ the other, so $2 \\times 3 = 6$ tiles. A whole unit square holds $3 \\times 4 = 12$ such tiles, so each tile is $\\frac{1}{12}$ and the area is $\\frac{6}{12} = \\frac{1}{2}$, the same as $\\frac{2}{3} \\times \\frac{3}{4}$.",

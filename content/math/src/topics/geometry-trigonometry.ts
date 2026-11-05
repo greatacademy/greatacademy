@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, dec, linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
-
+import { specialDrawings, trigDrawings } from "../explanation-drawings-solids.ts";
 import { choiceProblem, numberProblem, radicalProblem, steps } from "../problems.ts";
 
 // Geometry, unit 4 (continued): quadrilaterals (diagonals of squares,
@@ -472,6 +472,7 @@ export const diagonalsOfSquares: TopicDef = {
   knowledgePoints: [
     {
       id: "properties-of-the-diagonals",
+      figure: specialDrawings["properties-of-the-diagonals"],
       title: t("Properties of the diagonals", "对角线的性质"),
       explanation: t(
         "The two diagonals of a square $ABCD$ meet at a point $E$, and:\n\n- they are **congruent**: $AC = BD$;\n- they **bisect each other**: $AE = CE$ and $BE = DE$;\n- they are **perpendicular**, and each one bisects the right angles at its ends into $45^\\circ$ angles.\n\nSo all four segments $AE$, $BE$, $CE$, $DE$ are equal, and each diagonal is twice any of them. If $AE = 3x - 4$ and $BD = 4x + 2$, then $BD = 2 \\cdot AE$:\n\n$$4x + 2 = 2(3x - 4) = 6x - 8, \\qquad 10 = 2x, \\qquad x = 5.$$",
@@ -541,6 +542,7 @@ export const diagonalsOfSquares: TopicDef = {
     },
     {
       id: "the-diagonal-from-the-side",
+      figure: specialDrawings["the-diagonal-from-the-side"],
       title: t("The diagonal from the side", "由边长求对角线"),
       explanation: t(
         "A diagonal cuts a square into two isosceles right triangles: the legs are sides $s$ and the hypotenuse is the diagonal $d$. By the Pythagorean theorem $d^2 = s^2 + s^2 = 2s^2$, so\n\n$$d = s\\sqrt{2}.$$\n\nA square with side $6$ has diagonal $6\\sqrt{2}$. A square with side $4\\sqrt{2}$ has diagonal $4\\sqrt{2} \\cdot \\sqrt{2} = 8$.",
@@ -694,6 +696,7 @@ export const propertiesOfParallelograms: TopicDef = {
   knowledgePoints: [
     {
       id: "angles-of-a-parallelogram",
+      figure: specialDrawings["angles-of-a-parallelogram"],
       title: t("Angles of a parallelogram", "平行四边形的角"),
       explanation: t(
         "A **parallelogram** is a quadrilateral whose opposite sides are parallel. Its angles follow from parallel lines:\n\n- **consecutive angles** (next to each other) are consecutive interior angles, so they are **supplementary**;\n- **opposite angles** are **congruent**.\n\nIn parallelogram $ABCD$ with $\\angle A = 70^\\circ$: $\\angle B = \\angle D = 180^\\circ - 70^\\circ = 110^\\circ$ and $\\angle C = 70^\\circ$. The four angles add up to $360^\\circ$, as in every quadrilateral.",
@@ -735,6 +738,7 @@ export const propertiesOfParallelograms: TopicDef = {
     },
     {
       id: "angle-equations-in-parallelograms",
+      figure: specialDrawings["angle-equations-in-parallelograms"],
       title: t("Equations with angles", "关于角的方程"),
       explanation: t(
         "When angles are written with $x$, the properties give an equation: set opposite angles **equal**, or consecutive angles **adding to $180^\\circ$**.\n\nIn parallelogram $ABCD$ with $\\angle A = (2x + 10)^\\circ$ and $\\angle B = (3x - 5)^\\circ$, the angles are consecutive:\n\n$$(2x + 10) + (3x - 5) = 180, \\qquad 5x + 5 = 180, \\qquad x = 35.$$",
@@ -792,6 +796,7 @@ export const propertiesOfParallelograms: TopicDef = {
     },
     {
       id: "opposite-sides-of-a-parallelogram",
+      figure: specialDrawings["opposite-sides-of-a-parallelogram"],
       title: t("Opposite sides", "对边"),
       explanation: t(
         "The opposite sides of a parallelogram are **congruent**. If $AB = 3x - 4$ and $CD = x + 10$, then\n\n$$3x - 4 = x + 10, \\qquad 2x = 14, \\qquad x = 7,$$\n\nand $AB = CD = 3 \\cdot 7 - 4 = 17$. Substitute into both expressions to check that they agree.",
@@ -843,6 +848,7 @@ export const propertiesOfParallelograms: TopicDef = {
     },
     {
       id: "diagonals-of-a-parallelogram",
+      figure: specialDrawings["diagonals-of-a-parallelogram"],
       title: t("Diagonals of a parallelogram", "平行四边形的对角线"),
       explanation: t(
         "The diagonals of a parallelogram **bisect each other**: if they meet at $E$, then $AE = CE$ and $BE = DE$. (They are usually not congruent to each other.) So each diagonal is twice either of its halves.\n\nIf $AE = 2x + 1$ and $CE = 4x - 7$, then $2x + 1 = 4x - 7$, so $x = 4$, $AE = 9$ and $AC = 18$.",
@@ -1543,6 +1549,7 @@ export const anglesAndSidesInRightTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "naming-the-sides",
+      figure: trigDrawings["naming-the-sides"],
       title: t("Opposite, adjacent and hypotenuse", "对边、邻边与斜边"),
       explanation: t(
         "In a right triangle, the **hypotenuse** is the side opposite the right angle. Seen from one of the acute angles, the two legs get names:\n\n- the **opposite side** is the leg across from the angle, the one that does not touch it;\n- the **adjacent side** is the leg that forms the angle together with the hypotenuse.\n\nIn right triangle $ABC$ with the right angle at $C$: seen from $\\angle A$, $BC$ is opposite and $AC$ is adjacent; seen from $\\angle B$ they swap: $AC$ is opposite and $BC$ is adjacent. The hypotenuse $AB$ is the same for both.",
@@ -1591,6 +1598,7 @@ export const anglesAndSidesInRightTriangles: TopicDef = {
     },
     {
       id: "the-other-acute-angle",
+      figure: trigDrawings["the-other-acute-angle"],
       title: t("The other acute angle", "另一个锐角"),
       explanation: t(
         "The angles of a triangle add up to $180^\\circ$ and the right angle takes $90^\\circ$, so the two acute angles of a right triangle add up to $90^\\circ$: they are **complementary**. If one acute angle is $35^\\circ$, the other is $90^\\circ - 35^\\circ = 55^\\circ$.",
@@ -1634,6 +1642,7 @@ export const anglesAndSidesInRightTriangles: TopicDef = {
     },
     {
       id: "acute-angles-as-expressions",
+      figure: trigDrawings["acute-angles-as-expressions"],
       title: t("Acute angles as expressions", "用代数式表示的锐角"),
       explanation: t(
         "When the acute angles are written with $x$, set their sum equal to $90^\\circ$. If they are $(2x + 6)^\\circ$ and $(4x - 12)^\\circ$:\n\n$$(2x + 6) + (4x - 12) = 90, \\qquad 6x - 6 = 90, \\qquad x = 16.$$\n\nThe angles are $38^\\circ$ and $52^\\circ$, which indeed add up to $90^\\circ$.",
@@ -1765,6 +1774,7 @@ export const theTrigonometricRatios: TopicDef = {
   knowledgePoints: [
     {
       id: "the-sine",
+      figure: trigDrawings["the-sine"],
       title: t("The sine", "正弦"),
       explanation: t(
         `${sohcahtoa.en}\n\nIn a right triangle with legs $5$ and $12$ and hypotenuse $13$, the angle $\\theta$ opposite the leg $5$ has\n\n$$\\sin \\theta = \\frac{5}{13}.$$\n\nWrite the ratio as a fraction in lowest terms: with sides $6$, $8$, $10$, the sine of the angle opposite $6$ is $\\frac{6}{10} = \\frac{3}{5}$.`,
@@ -1774,6 +1784,7 @@ export const theTrigonometricRatios: TopicDef = {
     },
     {
       id: "the-cosine",
+      figure: trigDrawings["the-cosine"],
       title: t("The cosine", "余弦"),
       explanation: t(
         "The **cosine** is the adjacent side over the hypotenuse. In the triangle with legs $5$ and $12$ and hypotenuse $13$, the angle $\\theta$ opposite $5$ has adjacent side $12$, so\n\n$$\\cos \\theta = \\frac{12}{13}.$$\n\nThe hypotenuse is always the denominator of the sine and the cosine, so both are less than $1$.",
@@ -1783,6 +1794,7 @@ export const theTrigonometricRatios: TopicDef = {
     },
     {
       id: "the-tangent",
+      figure: trigDrawings["the-tangent"],
       title: t("The tangent", "正切"),
       explanation: t(
         "The **tangent** uses only the legs: opposite over adjacent. For the angle $\\theta$ opposite $5$ in the $5$-$12$-$13$ triangle,\n\n$$\\tan \\theta = \\frac{5}{12},$$\n\nand for the other acute angle the legs swap: its tangent is $\\frac{12}{5}$. A tangent can be greater than $1$.",
@@ -1858,6 +1870,7 @@ export const calculatingTrigonometricRatiosUsingThePythagoreanTheorem: TopicDef 
   knowledgePoints: [
     {
       id: "ratios-with-a-missing-hypotenuse",
+      figure: trigDrawings["ratios-with-a-missing-hypotenuse"],
       title: t("A missing hypotenuse", "缺少斜边"),
       explanation: t(
         "If only the legs are known, find the hypotenuse first. With legs $2$ and $4$: $c = \\sqrt{4 + 16} = \\sqrt{20} = 2\\sqrt{5}$. For the angle $\\theta$ opposite the leg $2$,\n\n$$\\sin \\theta = \\frac{2}{2\\sqrt{5}} = \\frac{1}{\\sqrt{5}} = \\frac{\\sqrt{5}}{5}.$$\n\nGive exact ratios in simplest radical form, with a rational denominator.",
@@ -1906,6 +1919,7 @@ export const calculatingTrigonometricRatiosUsingThePythagoreanTheorem: TopicDef 
     },
     {
       id: "ratios-with-a-missing-leg",
+      figure: trigDrawings["ratios-with-a-missing-leg"],
       title: t("A missing leg", "缺少直角边"),
       explanation: t(
         "If the hypotenuse and one leg are known, subtract to find the other leg. With hypotenuse $7$ and leg $3$: the other leg is $\\sqrt{49 - 9} = \\sqrt{40} = 2\\sqrt{10}$. For the angle $\\theta$ opposite the leg $3$,\n\n$$\\tan \\theta = \\frac{3}{2\\sqrt{10}} = \\frac{3\\sqrt{10}}{20}.$$",
@@ -1961,6 +1975,7 @@ export const calculatingTrigonometricRatiosUsingThePythagoreanTheorem: TopicDef 
     },
     {
       id: "one-ratio-from-another",
+      figure: trigDrawings["one-ratio-from-another"],
       title: t("One ratio from another", "由一个三角比求另一个"),
       explanation: t(
         "Knowing one ratio is enough to find the others: draw a right triangle with those two sides and find the third. If $\\theta$ is acute and $\\sin \\theta = \\frac{2}{3}$, take opposite side $2$ and hypotenuse $3$; the adjacent side is $\\sqrt{9 - 4} = \\sqrt{5}$. So\n\n$$\\cos \\theta = \\frac{\\sqrt{5}}{3}, \\qquad \\tan \\theta = \\frac{2}{\\sqrt{5}} = \\frac{2\\sqrt{5}}{5}.$$",
@@ -2078,6 +2093,7 @@ export const calculatingSideLengthsOfRightTrianglesUsingTrigonometry: TopicDef =
   knowledgePoints: [
     {
       id: "the-unknown-in-the-numerator",
+      figure: trigDrawings["the-unknown-in-the-numerator"],
       title: t("The unknown on top", "未知边在分子"),
       explanation: t(
         "A calculator gives the ratios of any angle (in degree mode): $\\sin 35^\\circ \\approx 0.5736$. To find a side, pick the ratio that links the side you know with the side you want, write the equation, and solve.\n\nIn a right triangle with hypotenuse $12$ and an angle of $35^\\circ$, the side $x$ opposite that angle satisfies\n\n$$\\sin 35^\\circ = \\frac{x}{12}, \\qquad x = 12 \\sin 35^\\circ \\approx 6.9.$$\n\nRound only at the end, not the ratio on the way.",
@@ -2087,6 +2103,7 @@ export const calculatingSideLengthsOfRightTrianglesUsingTrigonometry: TopicDef =
     },
     {
       id: "the-unknown-in-the-denominator",
+      figure: trigDrawings["the-unknown-in-the-denominator"],
       title: t("The unknown underneath", "未知边在分母"),
       explanation: t(
         "When the unknown side is the denominator of the ratio, multiply both sides by $x$ and divide by the ratio. With an angle of $25^\\circ$ whose opposite side is $8$, the hypotenuse $x$ satisfies\n\n$$\\sin 25^\\circ = \\frac{8}{x}, \\qquad x = \\frac{8}{\\sin 25^\\circ} \\approx 18.9.$$\n\nA quick check: the hypotenuse must be the longest side.",
@@ -2096,6 +2113,7 @@ export const calculatingSideLengthsOfRightTrianglesUsingTrigonometry: TopicDef =
     },
     {
       id: "choosing-the-ratio",
+      figure: trigDrawings["choosing-the-ratio"],
       title: t("Choosing the ratio", "选择三角比"),
       explanation: t(
         "Label the two sides involved, as seen from the known angle, then choose:\n\n- opposite and hypotenuse: sine;\n- adjacent and hypotenuse: cosine;\n- opposite and adjacent: tangent.\n\nWith an angle of $32^\\circ$, adjacent side $x$ and opposite side $9$: $\\tan 32^\\circ = \\frac{9}{x}$, so $x = \\frac{9}{\\tan 32^\\circ} \\approx 14.4$.",
@@ -2159,6 +2177,7 @@ export const calculatingAnglesInRightTrianglesUsingTrigonometry: TopicDef = {
     },
     {
       id: "an-angle-from-the-two-legs",
+      figure: trigDrawings["an-angle-from-the-two-legs"],
       title: t("An angle from the two legs", "由两条直角边求角"),
       explanation: t(
         "When the two legs are known, they are the opposite and adjacent sides of each acute angle, so use the tangent. With opposite side $5$ and adjacent side $8$:\n\n$$\\tan \\theta = \\frac{5}{8}, \\qquad \\theta = \\tan^{-1} \\frac{5}{8} \\approx 32.0^\\circ.$$\n\nThe other acute angle is then $90^\\circ - 32.0^\\circ = 58.0^\\circ$.",
@@ -2199,6 +2218,7 @@ export const calculatingAnglesInRightTrianglesUsingTrigonometry: TopicDef = {
     },
     {
       id: "an-angle-from-a-leg-and-the-hypotenuse",
+      figure: trigDrawings["an-angle-from-a-leg-and-the-hypotenuse"],
       title: t("An angle from a leg and the hypotenuse", "由直角边和斜边求角"),
       explanation: t(
         "With the hypotenuse and one leg, use the sine if the leg is opposite the angle and the cosine if it is adjacent. With hypotenuse $9$ and adjacent side $4$:\n\n$$\\cos \\theta = \\frac{4}{9}, \\qquad \\theta = \\cos^{-1} \\frac{4}{9} \\approx 63.6^\\circ.$$\n\nWith opposite side $7$ and hypotenuse $12$: $\\theta = \\sin^{-1} \\frac{7}{12} \\approx 35.7^\\circ$.",
@@ -2271,6 +2291,7 @@ export const modelingWithTrigonometry: TopicDef = {
   knowledgePoints: [
     {
       id: "angles-of-elevation",
+      figure: trigDrawings["angles-of-elevation"],
       title: t("Angles of elevation", "仰角"),
       explanation: t(
         "The **angle of elevation** is the angle between the horizontal and the line of sight up to an object. Standing $30$ m from a tree with eyes $1.6$ m above the ground, you see the top at an angle of elevation of $38^\\circ$. The part of the tree above eye level is the opposite side of a right triangle with adjacent side $30$:\n\n$$30 \\tan 38^\\circ \\approx 23.44, \\qquad \\text{height} \\approx 23.44 + 1.6 \\approx 25.0 \\text{ m}.$$\n\nDraw a sketch, and remember the height of the eyes.",
@@ -2348,6 +2369,7 @@ export const modelingWithTrigonometry: TopicDef = {
     },
     {
       id: "angles-of-depression",
+      figure: trigDrawings["angles-of-depression"],
       title: t("Angles of depression", "俯角"),
       explanation: t(
         "The **angle of depression** is the angle between the horizontal and the line of sight **down** to an object. The horizontal at the top is parallel to the ground, so the angle of depression equals the angle of elevation from the object back up (alternate interior angles).\n\nFrom the top of a $45$ m cliff, a boat is seen at an angle of depression of $22^\\circ$. At the boat, the angle of elevation is $22^\\circ$, the cliff is the opposite side and the distance $d$ to the boat is adjacent:\n\n$$\\tan 22^\\circ = \\frac{45}{d}, \\qquad d = \\frac{45}{\\tan 22^\\circ} \\approx 111.4 \\text{ m}.$$",
@@ -2405,6 +2427,7 @@ export const modelingWithTrigonometry: TopicDef = {
     },
     {
       id: "angles-in-context",
+      figure: trigDrawings["angles-in-context"],
       title: t("Finding angles in context", "实际问题中的角"),
       explanation: t(
         "To find an angle, identify two sides of a right triangle and use an inverse ratio. A $6$ m ladder leans against a wall with its foot $2$ m from the wall. The ground is the side adjacent to the angle the ladder makes with the ground, and the ladder is the hypotenuse:\n\n$$\\theta = \\cos^{-1} \\frac{2}{6} \\approx 70.5^\\circ.$$\n\nA ramp that rises $1$ m over a horizontal distance of $12$ m makes an angle of $\\tan^{-1} \\frac{1}{12} \\approx 4.8^\\circ$ with the ground.",
@@ -2625,6 +2648,7 @@ export const trigonometricRatiosInSimilarRightTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "equal-angles-have-equal-ratios",
+      figure: trigDrawings["equal-angles-have-equal-ratios"],
       title: t("Equal angles, equal ratios", "角相等，三角比相等"),
       explanation: t(
         "Two right triangles with an equal acute angle are similar (AA), so their sides are proportional and every ratio of two sides is the same in both. That is why $\\sin$, $\\cos$ and $\\tan$ depend only on the angle.\n\nIf $\\triangle ABC \\sim \\triangle DEF$ with right angles at $C$ and $F$, and $AC = 8$, $BC = 6$, $AB = 10$, then\n\n$$\\tan D = \\tan A = \\frac{6}{8} = \\frac{3}{4},$$\n\nhowever large $\\triangle DEF$ is.",
@@ -2665,6 +2689,7 @@ export const trigonometricRatiosInSimilarRightTriangles: TopicDef = {
     },
     {
       id: "sides-from-a-similar-triangle",
+      figure: trigDrawings["sides-from-a-similar-triangle"],
       title: t("Sides from a similar triangle", "由相似三角形求边"),
       explanation: t(
         "A ratio found in one triangle can be used in any similar triangle. If $\\triangle ABC$ has $AC = 8$, $BC = 6$, $AB = 10$, then $\\sin A = \\frac{3}{5}$. In a similar triangle $DEF$ with $\\angle D = \\angle A$ and hypotenuse $DE = 25$:\n\n$$EF = DE \\cdot \\sin D = 25 \\cdot \\frac{3}{5} = 15.$$",
@@ -2755,6 +2780,7 @@ export const trigonometricFunctionsOfComplementaryAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "cofunction-identities",
+      figure: trigDrawings["cofunction-identities"],
       title: t("Sine and cosine of complementary angles", "互余角的正弦与余弦"),
       explanation: t(
         "In right triangle $ABC$ with the right angle at $C$, the acute angles are complementary: $\\angle B = 90^\\circ - \\angle A$. The side opposite $A$ is adjacent to $B$, so\n\n$$\\sin A = \\cos B, \\qquad \\cos A = \\sin B, \\qquad \\tan B = \\frac{1}{\\tan A} = \\cot A.$$\n\nFor any acute angle, $\\sin \\theta = \\cos(90^\\circ - \\theta)$. So $\\sin 28^\\circ = \\cos 62^\\circ$: if $\\sin 28^\\circ = \\cos x^\\circ$ with $x$ acute, then $x = 62$.",
@@ -2781,6 +2807,7 @@ export const trigonometricFunctionsOfComplementaryAngles: TopicDef = {
     },
     {
       id: "ratios-of-the-other-acute-angle",
+      figure: trigDrawings["ratios-of-the-other-acute-angle"],
       title: t("Ratios of the other acute angle", "另一个锐角的三角比"),
       explanation: t(
         "In a right triangle, a ratio of one acute angle gives a ratio of the other. If $\\sin A = \\frac{8}{17}$ in right triangle $ABC$ with the right angle at $C$, then $\\cos B = \\frac{8}{17}$ too. If $\\tan A = \\frac{3}{7}$, then $\\tan B = \\frac{7}{3}$.",
@@ -2886,6 +2913,7 @@ export const specialTrigonometricRatios: TopicDef = {
   knowledgePoints: [
     {
       id: "exact-values",
+      figure: trigDrawings["exact-values"],
       title: t("Exact values", "精确值"),
       explanation: t(
         "Read the ratios off the special right triangles. The $45^\\circ$-$45^\\circ$-$90^\\circ$ triangle has sides $1$, $1$, $\\sqrt{2}$; the $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle has sides $1$, $\\sqrt{3}$, $2$, with $1$ opposite $30^\\circ$:\n\n| | $30^\\circ$ | $45^\\circ$ | $60^\\circ$ |\n| :--- | :---: | :---: | :---: |\n| $\\sin$ | $\\frac{1}{2}$ | $\\frac{\\sqrt{2}}{2}$ | $\\frac{\\sqrt{3}}{2}$ |\n| $\\cos$ | $\\frac{\\sqrt{3}}{2}$ | $\\frac{\\sqrt{2}}{2}$ | $\\frac{1}{2}$ |\n| $\\tan$ | $\\frac{\\sqrt{3}}{3}$ | $1$ | $\\sqrt{3}$ |\n\nThe reciprocal ratios follow: $\\sec 30^\\circ = \\frac{2}{\\sqrt{3}} = \\frac{2\\sqrt{3}}{3}$. With a coefficient: $4\\cos 30^\\circ = 4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$.",
@@ -2985,6 +3013,7 @@ export const specialTrigonometricRatios: TopicDef = {
     },
     {
       id: "exact-sides-with-special-angles",
+      figure: trigDrawings["exact-sides-with-special-angles"],
       title: t("Exact sides with special angles", "用特殊角求精确边长"),
       explanation: t(
         "With a special angle, trigonometry gives exact sides. In a right triangle with a $60^\\circ$ angle whose adjacent side is $8$, the opposite side is $8 \\tan 60^\\circ = 8\\sqrt{3}$, and the hypotenuse is\n\n$$\\frac{8}{\\cos 60^\\circ} = \\frac{8}{\\frac{1}{2}} = 16.$$",
@@ -3044,6 +3073,7 @@ export const calculatingAreasOfRightTrianglesUsingTrigonometry: TopicDef = {
   knowledgePoints: [
     {
       id: "area-from-a-leg-and-an-angle",
+      figure: trigDrawings["area-from-a-leg-and-an-angle"],
       title: t("Area from a leg and an angle", "由直角边和角求面积"),
       explanation: t(
         "The area of a right triangle is half the product of its legs. If one leg and an acute angle are known, find the other leg with the tangent. With adjacent leg $6$ and an angle of $35^\\circ$, the other leg is $6 \\tan 35^\\circ$, so\n\n$$A = \\frac{1}{2} \\cdot 6 \\cdot 6 \\tan 35^\\circ = 18 \\tan 35^\\circ \\approx 12.6.$$",
@@ -3089,6 +3119,7 @@ export const calculatingAreasOfRightTrianglesUsingTrigonometry: TopicDef = {
     },
     {
       id: "area-from-the-hypotenuse-and-an-angle",
+      figure: trigDrawings["area-from-the-hypotenuse-and-an-angle"],
       title: t("Area from the hypotenuse and an angle", "由斜边和角求面积"),
       explanation: t(
         "If the hypotenuse $c$ and an acute angle $\\theta$ are known, the legs are $c \\sin \\theta$ and $c \\cos \\theta$, so\n\n$$A = \\frac{1}{2} c \\sin \\theta \\cdot c \\cos \\theta.$$\n\nWith $c = 10$ and $\\theta = 40^\\circ$: $A = \\frac{1}{2} \\cdot 10 \\sin 40^\\circ \\cdot 10 \\cos 40^\\circ \\approx \\frac{1}{2} \\cdot 6.428 \\cdot 7.660 \\approx 24.6$.",
@@ -3127,6 +3158,7 @@ export const calculatingAreasOfRightTrianglesUsingTrigonometry: TopicDef = {
     },
     {
       id: "area-from-two-sides-and-the-included-angle",
+      figure: trigDrawings["area-from-two-sides-and-the-included-angle"],
       title: t("Two sides and the included angle", "两边及其夹角"),
       explanation: t(
         "Any triangle can be split into right triangles by a height. In $\\triangle ABC$ with $CA = b$, $CB = a$ and the angle $C$ between them, the height from $B$ to $CA$ is the side opposite $C$ in a right triangle with hypotenuse $a$, so $h = a \\sin C$ and\n\n$$A = \\frac{1}{2} b h = \\frac{1}{2} a b \\sin C.$$\n\nWith $a = 9$, $b = 7$ and $C = 50^\\circ$: $h = 9 \\sin 50^\\circ \\approx 6.894$ and $A \\approx \\frac{1}{2} \\cdot 7 \\cdot 6.894 \\approx 24.1$.",
@@ -3194,6 +3226,7 @@ export const solvingMultipleRightTrianglesUsingTrigonometry: TopicDef = {
   knowledgePoints: [
     {
       id: "a-shared-height",
+      figure: trigDrawings["a-shared-height"],
       title: t("A shared height", "公共的高"),
       explanation: t(
         "A height $AD$ splits $\\triangle ABC$ into two right triangles that share the side $AD$. Solve the triangle with enough information first, then carry the shared side over.\n\nWith $AB = 10$, $\\angle B = 50^\\circ$ and $\\angle C = 35^\\circ$: in $\\triangle ABD$, $AD = 10 \\sin 50^\\circ \\approx 7.660$; in $\\triangle ADC$, $\\tan 35^\\circ = \\frac{AD}{DC}$, so\n\n$$DC = \\frac{10 \\sin 50^\\circ}{\\tan 35^\\circ} \\approx 10.9.$$\n\nKeep the unrounded value of the shared side for the second step.",
@@ -3255,6 +3288,7 @@ export const solvingMultipleRightTrianglesUsingTrigonometry: TopicDef = {
     },
     {
       id: "two-angles-of-elevation",
+      figure: trigDrawings["two-angles-of-elevation"],
       title: t("Two angles of elevation", "两个仰角"),
       explanation: t(
         "When the height $h$ of an object is seen from two points on a line toward it, each angle of elevation gives a right triangle with the same height. From $P$ the angle is $25^\\circ$; after walking $50$ m toward the object to $Q$, it is $40^\\circ$. The horizontal distances to the base are $\\frac{h}{\\tan 25^\\circ}$ and $\\frac{h}{\\tan 40^\\circ}$, and they differ by $50$:\n\n$$\\frac{h}{\\tan 25^\\circ} - \\frac{h}{\\tan 40^\\circ} = 50, \\qquad h = \\frac{50}{\\frac{1}{\\tan 25^\\circ} - \\frac{1}{\\tan 40^\\circ}} \\approx 52.5 \\text{ m}.$$",
@@ -3313,6 +3347,7 @@ export const solvingMultipleRightTrianglesUsingTrigonometry: TopicDef = {
     },
     {
       id: "stacked-right-triangles",
+      figure: trigDrawings["stacked-right-triangles"],
       title: t("Stacked right triangles", "相叠的直角三角形"),
       explanation: t(
         "Two right triangles can share a hypotenuse of one and a leg of the other. In right triangle $ABC$ (right angle at $B$) and right triangle $ACD$ (right angle at $C$), with $AB = 8$, $\\angle BAC = 30^\\circ$ and $\\angle CAD = 25^\\circ$:\n\n$$AC = \\frac{8}{\\cos 30^\\circ} \\approx 9.238, \\qquad CD = AC \\tan 25^\\circ = \\frac{8 \\tan 25^\\circ}{\\cos 30^\\circ} \\approx 4.3.$$",

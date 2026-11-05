@@ -1,7 +1,9 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
-
+import { angleDrawings } from "../explanation-drawings-angles.ts";
+import { coordinateDrawings, specialDrawings } from "../explanation-drawings-solids.ts";
+import { congruenceDrawings, similarityDrawings } from "../explanation-drawings-triangles.ts";
 import { choiceProblem, expressionProblem, numberProblem, pointProblem, radicalProblem, steps, why } from "../problems.ts";
 
 // Geometry, unit 4: triangles (the Pythagorean theorem, special right triangles,
@@ -335,6 +337,7 @@ export const theExteriorAngleTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "sum-of-exterior-angles",
+      figure: angleDrawings["sum-of-exterior-angles"],
       title: t("The sum of the exterior angles", "外角和"),
       explanation: t(
         "Extend each side of a triangle in turn, so that there is one exterior angle at each vertex. Each exterior angle is $180^\\circ$ minus the interior angle beside it, so the three exterior angles add up to\n\n$$3 \\cdot 180^\\circ - 180^\\circ = 360^\\circ.$$\n\nIf two exterior angles are $110^\\circ$ and $130^\\circ$, the third is $360^\\circ - 110^\\circ - 130^\\circ = 120^\\circ$.",
@@ -382,6 +385,7 @@ export const theExteriorAngleTheorem: TopicDef = {
     },
     {
       id: "exterior-angle-equations",
+      figure: angleDrawings["exterior-angle-equations"],
       title: t("Equations with the exterior angle", "含外角的方程"),
       explanation: t(
         "When the exterior angle and the remote interior angles are all written with $x$, the theorem gives an equation with $x$ on both sides.\n\nIf $\\angle A = (x + 10)^\\circ$, $\\angle C = 2x^\\circ$ and the exterior angle is $\\angle CBD = (4x - 15)^\\circ$, then\n\n$$4x - 15 = (x + 10) + 2x, \\qquad 4x - 15 = 3x + 10, \\qquad x = 25.$$",
@@ -430,6 +434,7 @@ export const theExteriorAngleTheorem: TopicDef = {
     },
     {
       id: "angles-from-exterior-angle-equations",
+      figure: angleDrawings["angles-from-exterior-angle-equations"],
       title: t("Finding the angles", "求出各角"),
       explanation: t(
         "Once $x$ is known, substitute it to find each angle, and check that the answer makes sense.\n\nWith $\\angle A = (x + 10)^\\circ$, $\\angle C = 2x^\\circ$ and $\\angle CBD = (4x - 15)^\\circ$, the equation gives $x = 25$. Then $\\angle A = 35^\\circ$, $\\angle C = 50^\\circ$ and $\\angle CBD = 85^\\circ$; indeed $35^\\circ + 50^\\circ = 85^\\circ$. The interior angle at $B$ is $180^\\circ - 85^\\circ = 95^\\circ$.",
@@ -649,6 +654,7 @@ export const thePythagoreanTheorem: TopicDef = {
     },
     {
       id: "the-converse",
+      figure: congruenceDrawings["the-pythagorean-theorem#the-converse"],
       title: t("The converse", "逆定理"),
       explanation: t(
         "The **converse** of the theorem also holds: if the sides satisfy $a^2 + b^2 = c^2$, the triangle is a right triangle. More generally, compare the square of the longest side $c$ with the sum of the squares of the other two:\n\n- $c^2 = a^2 + b^2$: right;\n- $c^2 < a^2 + b^2$: acute;\n- $c^2 > a^2 + b^2$: obtuse.\n\nFor sides $5$, $7$, $9$: $81 > 25 + 49 = 74$, so the triangle is obtuse.",
@@ -715,6 +721,7 @@ export const isoscelesRightTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "hypotenuse-from-a-leg",
+      figure: specialDrawings["hypotenuse-from-a-leg"],
       title: t("The hypotenuse from a leg", "由直角边求斜边"),
       explanation: t(
         "An **isosceles right triangle** has two equal legs, so its acute angles are both $45^\\circ$: it is a $45^\\circ$-$45^\\circ$-$90^\\circ$ triangle. With legs $s$, the Pythagorean theorem gives $c^2 = s^2 + s^2 = 2s^2$, so\n\n$$c = s\\sqrt{2}.$$\n\nThe sides are in the ratio $1 : 1 : \\sqrt{2}$. A leg of $7$ gives a hypotenuse of $7\\sqrt{2}$; a leg of $3\\sqrt{2}$ gives $3\\sqrt{2} \\cdot \\sqrt{2} = 6$.",
@@ -782,6 +789,7 @@ export const isoscelesRightTriangles: TopicDef = {
     },
     {
       id: "perimeter-of-an-isosceles-right-triangle",
+      figure: specialDrawings["perimeter-of-an-isosceles-right-triangle"],
       title: t("The perimeter", "周长"),
       explanation: t(
         "Find all three sides first, then add them, combining like terms. A triangle with legs $6$ has hypotenuse $6\\sqrt{2}$ and perimeter\n\n$$6 + 6 + 6\\sqrt{2} = 12 + 6\\sqrt{2}.$$\n\nThe whole numbers and the multiples of $\\sqrt{2}$ are unlike terms, so they stay separate.",
@@ -847,6 +855,7 @@ export const thirtySixtyNinetyTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "from-the-shorter-leg",
+      figure: specialDrawings["from-the-shorter-leg"],
       title: t("From the shorter leg", "由较短的直角边"),
       explanation: t(
         "Cut an equilateral triangle with side $2s$ in half along a height: each half is a right triangle with angles $30^\\circ$, $60^\\circ$, $90^\\circ$, hypotenuse $2s$ and shorter leg $s$. By the Pythagorean theorem, the longer leg is $\\sqrt{(2s)^2 - s^2} = s\\sqrt{3}$. So the sides are\n\n$$s : s\\sqrt{3} : 2s.$$\n\nThe shorter leg is opposite the $30^\\circ$ angle. With shorter leg $5$: longer leg $5\\sqrt{3}$, hypotenuse $10$.",
@@ -981,6 +990,7 @@ export const areaOfIsoscelesRightTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "area-from-a-leg",
+      figure: specialDrawings["area-from-a-leg"],
       title: t("From a leg", "由直角边求面积"),
       explanation: t(
         "The legs of a right triangle are a base and its height. In an isosceles right triangle both are $s$, so\n\n$$A = \\frac{1}{2} s \\cdot s = \\frac{s^2}{2}.$$\n\nWith legs $6$: $A = \\frac{36}{2} = 18$. With legs $3\\sqrt{2}$: $A = \\frac{18}{2} = 9$.",
@@ -1013,6 +1023,7 @@ export const areaOfIsoscelesRightTriangles: TopicDef = {
     },
     {
       id: "area-from-the-hypotenuse",
+      figure: specialDrawings["area-of-isosceles-right-triangles#area-from-the-hypotenuse"],
       title: t("From the hypotenuse", "由斜边求面积"),
       explanation: t(
         "In an isosceles right triangle the two legs are equal and serve as base and height. Find a leg from the hypotenuse first, then take half the product of the legs.\n\nFrom the hypotenuse $c$, the legs are $\\frac{c}{\\sqrt{2}}$, so $s^2 = \\frac{c^2}{2}$ and\n\n$$A = \\frac{s^2}{2} = \\frac{c^2}{4}.$$\n\nWith hypotenuse $10$: the legs are $5\\sqrt{2}$, and $A = \\frac{100}{4} = 25$.",
@@ -1116,6 +1127,7 @@ export const areaOfThirtySixtyNinetyTriangles: TopicDef = {
     },
     {
       id: "area-from-the-hypotenuse",
+      figure: specialDrawings["area-of-thirty-sixty-ninety-triangles#area-from-the-hypotenuse"],
       title: t("From the hypotenuse", "由斜边求面积"),
       explanation: t(
         "Find the legs first. With hypotenuse $12$, the shorter leg is $6$ and the longer leg $6\\sqrt{3}$, so\n\n$$A = \\frac{1}{2} \\cdot 6 \\cdot 6\\sqrt{3} = 18\\sqrt{3}.$$\n\nDo not multiply the hypotenuse by a leg: the hypotenuse is not a height of the triangle on a leg.",
@@ -1146,6 +1158,7 @@ export const areaOfThirtySixtyNinetyTriangles: TopicDef = {
     },
     {
       id: "area-from-the-longer-leg",
+      figure: specialDrawings["area-from-the-longer-leg"],
       title: t("From the longer leg", "由较长的直角边求面积"),
       explanation: t(
         "In a $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle the longer leg is $\\sqrt{3}$ times the shorter leg. Find the shorter leg, then the area is half the product of the two legs.\n\nWith longer leg $L$, the shorter leg is $\\frac{L}{\\sqrt{3}} = \\frac{L\\sqrt{3}}{3}$. With $L = 6$: the shorter leg is $2\\sqrt{3}$ and\n\n$$A = \\frac{1}{2} \\cdot 2\\sqrt{3} \\cdot 6 = 6\\sqrt{3}.$$",
@@ -1215,6 +1228,7 @@ export const areaOfEquilateralTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "height-of-an-equilateral-triangle",
+      figure: specialDrawings["height-of-an-equilateral-triangle"],
       title: t("The height", "高"),
       explanation: t(
         "A height of an equilateral triangle with side $s$ cuts it into two $30^\\circ$-$60^\\circ$-$90^\\circ$ triangles with hypotenuse $s$ and shorter leg $\\frac{s}{2}$. The height is the longer leg:\n\n$$h = \\frac{s}{2} \\cdot \\sqrt{3} = \\frac{s\\sqrt{3}}{2}.$$\n\nWith side $10$: $h = 5\\sqrt{3}$.",
@@ -1248,6 +1262,7 @@ export const areaOfEquilateralTriangles: TopicDef = {
     },
     {
       id: "area-from-the-side",
+      figure: specialDrawings["area-from-the-side"],
       title: t("The area from the side", "由边长求面积"),
       explanation: t(
         "The height of an equilateral triangle splits it into two $30^\\circ$-$60^\\circ$-$90^\\circ$ triangles, so the height is $\\frac{\\sqrt{3}}{2}$ times the side.\n\nMultiply half the base by the height:\n\n$$A = \\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^2\\sqrt{3}}{4}.$$\n\nWith side $6$: $A = \\frac{36\\sqrt{3}}{4} = 9\\sqrt{3}$.",
@@ -1576,6 +1591,7 @@ export const provingTriangleTheorems: TopicDef = {
   knowledgePoints: [
     {
       id: "proving-the-angle-sum-theorem",
+      figure: similarityDrawings["proving-the-angle-sum-theorem"],
       title: t("The angle sum theorem", "三角形内角和定理"),
       explanation: t(
         "A **two-column proof** lists statements, each with a reason: something given, a definition, or a theorem already proved.\n\nTo prove that the angles of $\\triangle ABC$ add up to $180^\\circ$, draw the line $DE$ through $C$ parallel to $AB$. Then:\n\n1. $\\angle DCA = \\angle A$ and $\\angle ECB = \\angle B$: alternate interior angles are congruent.\n2. $\\angle DCA + \\angle ACB + \\angle ECB = 180^\\circ$: the three angles make a straight angle.\n3. $\\angle A + \\angle ACB + \\angle B = 180^\\circ$: substitution.",
@@ -1591,6 +1607,7 @@ export const provingTriangleTheorems: TopicDef = {
     },
     {
       id: "proving-the-exterior-angle-theorem",
+      figure: similarityDrawings["proving-the-exterior-angle-theorem"],
       title: t("The exterior angle theorem", "外角定理"),
       explanation: t(
         "With the angle sum theorem proved, it can be used as a reason. In $\\triangle ABC$ with $BC$ extended to $D$:\n\n1. $\\angle A + \\angle B + \\angle ACB = 180^\\circ$: triangle angle sum theorem.\n2. $\\angle ACB + \\angle ACD = 180^\\circ$: the angles form a linear pair.\n3. $\\angle A + \\angle B + \\angle ACB = \\angle ACB + \\angle ACD$: substitution, since both equal $180^\\circ$.\n4. $\\angle A + \\angle B = \\angle ACD$: subtract $\\angle ACB$ from both sides.",
@@ -1600,6 +1617,7 @@ export const provingTriangleTheorems: TopicDef = {
     },
     {
       id: "proving-the-third-angles-theorem",
+      figure: similarityDrawings["proving-the-third-angles-theorem"],
       title: t("The third angles theorem", "第三角定理"),
       explanation: t(
         "**Third angles theorem:** if two angles of one triangle are equal to two angles of another, the third angles are equal too.\n\nGiven $\\angle A = \\angle D$ and $\\angle B = \\angle E$: both angle sums are $180^\\circ$, so $\\angle A + \\angle B + \\angle C = \\angle D + \\angle E + \\angle F$. Substituting $\\angle A$ for $\\angle D$ and $\\angle B$ for $\\angle E$ gives $\\angle A + \\angle B + \\angle C = \\angle A + \\angle B + \\angle F$, and subtracting gives $\\angle C = \\angle F$.",
@@ -1936,6 +1954,7 @@ export const mediansAndCentroids: TopicDef = {
   knowledgePoints: [
     {
       id: "medians",
+      figure: specialDrawings.medians,
       title: t("Medians", "中线"),
       explanation: t(
         "A **median** of a triangle joins a vertex to the midpoint of the opposite side. If $AM$ is a median of $\\triangle ABC$, then $M$ is the midpoint of $BC$, so $BM = MC$ and $BC = 2 \\cdot BM$.\n\nIf $BM = 2x + 3$ and $MC = 4x - 5$, then $2x + 3 = 4x - 5$, so $x = 4$, $BM = 11$ and $BC = 22$.",
@@ -1984,6 +2003,7 @@ export const mediansAndCentroids: TopicDef = {
     },
     {
       id: "the-centroid-theorem",
+      figure: specialDrawings["the-centroid-theorem"],
       title: t("The centroid theorem", "重心定理"),
       explanation: t(
         "The three medians of a triangle meet at one point, the **centroid** $G$. The centroid is two thirds of the way along each median from the vertex:\n\n$$AG = 2 \\cdot GM, \\qquad AM = 3 \\cdot GM, \\qquad AG = \\frac{2}{3} AM.$$\n\nIf $AM = 18$, then $AG = 12$ and $GM = 6$. If $AG = 3x + 1$ and $GM = x + 4$, then $3x + 1 = 2(x + 4)$, so $x = 7$.",
@@ -2059,6 +2079,7 @@ export const mediansAndCentroids: TopicDef = {
     },
     {
       id: "coordinates-of-the-centroid",
+      figure: coordinateDrawings["coordinates-of-the-centroid"],
       title: t("Coordinates of the centroid", "重心的坐标"),
       explanation: t(
         "The three medians of a triangle meet at the centroid, the balance point of the triangle. Its coordinates are found by averaging the coordinates of the three vertices.\n\nThe centroid of the triangle with vertices $(x_1, y_1)$, $(x_2, y_2)$, $(x_3, y_3)$ is the average of the vertices:\n\n$$G = \\left(\\frac{x_1 + x_2 + x_3}{3}, \\frac{y_1 + y_2 + y_3}{3}\\right).$$\n\nFor $A(1, 2)$, $B(7, -1)$, $C(4, 5)$: $G = \\left(\\frac{12}{3}, \\frac{6}{3}\\right) = (4, 2)$.",

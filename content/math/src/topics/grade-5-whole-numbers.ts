@@ -1,7 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { Q, svgDocument } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 // 5th Grade Math: whole number expressions, negative numbers, and the standard algorithms for multiplication and division.
@@ -958,6 +958,7 @@ export const comparingNegativeNumbers = topic(
     },
     {
       id: "finding-the-least-and-greatest",
+      figure: gradeDrawings["finding-the-least-and-greatest"],
       title: t("The least and the greatest", "最小和最大"),
       explanation: t(
         "On a number line, numbers grow from left to right, so the least number is the one farthest left and the greatest is the one farthest right. Every negative number is less than $0$, and among negative numbers the one with the larger digits is farther left. Of $-7$, $3$, $-12$ and $0$, the least is $-12$ and the greatest is $3$. A common mistake is to pick $-7$ as less than $-12$ because $7 < 12$.",

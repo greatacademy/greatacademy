@@ -1,6 +1,8 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
+import { motionDrawings } from "../explanation-drawings-angles.ts";
+import { similarityDrawings } from "../explanation-drawings-triangles.ts";
 import { stagedPolygon } from "../graph-figures.ts";
 import { choiceProblem, numberProblem, pointLatex, pointProblem, reasonChoice, steps, verdictChoice } from "../problems.ts";
 
@@ -240,6 +242,7 @@ export const similarityAndSimilarPolygons: TopicDef = {
   knowledgePoints: [
     {
       id: "corresponding-parts",
+      figure: similarityDrawings["corresponding-parts"],
       title: t("Corresponding parts", "对应部分"),
       explanation: t(
         "Two polygons are **similar** ($\\sim$) when one is a scaled copy of the other: their **corresponding angles are congruent** and their **corresponding sides are proportional**.\n\nA similarity statement lists corresponding vertices in the same order. $\\triangle ABC \\sim \\triangle FDE$ pairs $A \\leftrightarrow F$, $B \\leftrightarrow D$, $C \\leftrightarrow E$. So $\\angle B \\cong \\angle D$, and the side $\\overline{BC}$ corresponds to $\\overline{DE}$ (second and third letters on each side).",
@@ -297,6 +300,7 @@ export const similarityAndSimilarPolygons: TopicDef = {
     },
     {
       id: "deciding-whether-rectangles-are-similar",
+      figure: similarityDrawings["deciding-whether-rectangles-are-similar"],
       title: t("Similar rectangles", "相似的矩形"),
       explanation: t(
         "All angles of a rectangle are right angles, so two rectangles always have congruent corresponding angles. They are similar exactly when their sides are proportional: compare shorter side with shorter side and longer side with longer side.\n\nA $4 \\times 6$ and a $6 \\times 9$ rectangle: $\\frac{6}{4} = \\frac{3}{2}$ and $\\frac{9}{6} = \\frac{3}{2}$, so they are similar. A $4 \\times 6$ and a $6 \\times 8$ rectangle: $\\frac{6}{4} = \\frac{3}{2}$ but $\\frac{8}{6} = \\frac{4}{3}$, so they are not.",
@@ -359,6 +363,7 @@ export const similarityAndSimilarPolygons: TopicDef = {
     },
     {
       id: "finding-the-scale-factor",
+      figure: similarityDrawings["finding-the-scale-factor"],
       title: t("The scale factor", "相似比"),
       explanation: t(
         "The **scale factor** from one polygon to a similar one is the ratio of a side of the second to the corresponding side of the first. It is the scale factor of a dilation that, followed by rigid motions, maps the first polygon onto the second.\n\nIf $\\triangle ABC \\sim \\triangle DEF$ with $AB = 6$ and $DE = 15$, the scale factor from $\\triangle ABC$ to $\\triangle DEF$ is $\\frac{DE}{AB} = \\frac{15}{6} = \\frac{5}{2}$.",
@@ -447,6 +452,7 @@ export const sideLengthsAndAngleMeasuresOfSimilarPolygons: TopicDef = {
   knowledgePoints: [
     {
       id: "missing-side-lengths",
+      figure: similarityDrawings["side-lengths-and-angle-measures-of-similar-polygons#missing-side-lengths"],
       title: t("Missing side lengths", "求未知边长"),
       explanation: t(
         `Corresponding sides of similar polygons are proportional, so a missing side follows from a proportion: a ratio of two sides of one polygon equals the ratio of the corresponding sides of the other.\n\nIf $\\triangle ABC \\sim \\triangle DEF$ with $AB = 4$, $BC = 6$ and $DE = 10$, then${steps("\\frac{EF}{BC} = \\frac{DE}{AB} \\quad\\Rightarrow\\quad \\frac{EF}{6} = \\frac{10}{4} \\quad\\Rightarrow\\quad EF = 15")}`,
@@ -481,6 +487,7 @@ export const sideLengthsAndAngleMeasuresOfSimilarPolygons: TopicDef = {
     },
     {
       id: "missing-angle-measures",
+      figure: similarityDrawings["missing-angle-measures"],
       title: t("Missing angle measures", "求未知角"),
       explanation: t(
         "Corresponding angles of similar polygons are congruent, so an angle of one polygon gives the corresponding angle of the other. Combine this with the angle sum: $180^\\circ$ in a triangle, $360^\\circ$ in a quadrilateral.\n\nIf $\\triangle ABC \\sim \\triangle DEF$, $m\\angle A = 50^\\circ$ and $m\\angle E = 70^\\circ$, then $m\\angle B = m\\angle E = 70^\\circ$, so $m\\angle C = 180^\\circ - 50^\\circ - 70^\\circ = 60^\\circ$.",
@@ -536,6 +543,7 @@ export const sideLengthsAndAngleMeasuresOfSimilarPolygons: TopicDef = {
     },
     {
       id: "sides-given-by-expressions",
+      figure: similarityDrawings["sides-given-by-expressions"],
       title: t("Sides given by expressions", "用式子表示的边"),
       explanation: t(
         `When a side is an expression in $x$, write the proportion of corresponding sides, solve it for that side, then solve the equation for $x$.\n\nIf $\\triangle ABC \\sim \\triangle DEF$ with $AB = 6$, $BC = 9$, $DE = 10$ and $EF = 2x + 3$:${steps("\\frac{2x + 3}{9} = \\frac{10}{6} \\quad\\Rightarrow\\quad 2x + 3 = 15 \\quad\\Rightarrow\\quad x = 6")}`,
@@ -604,6 +612,7 @@ export const areasOfSimilarPolygons: TopicDef = {
   knowledgePoints: [
     {
       id: "ratios-of-perimeters-and-areas",
+      figure: similarityDrawings["ratios-of-perimeters-and-areas"],
       title: t("Ratios of perimeters and areas", "周长比与面积比"),
       explanation: t(
         "If the scale factor from one polygon to a similar one is $k$, every length is multiplied by $k$, so the **perimeter** is multiplied by $k$. Area is length times length, so the **area** is multiplied by $k^{2}$.\n\nIf corresponding sides are in the ratio $2 : 3$, the perimeters are in the ratio $\\frac{2}{3}$ and the areas in the ratio $\\left(\\frac{2}{3}\\right)^{2} = \\frac{4}{9}$.",
@@ -667,6 +676,7 @@ export const areasOfSimilarPolygons: TopicDef = {
     },
     {
       id: "area-from-corresponding-sides",
+      figure: similarityDrawings["area-from-corresponding-sides"],
       title: t("Area from corresponding sides", "由对应边求面积"),
       explanation: t(
         "When the scale factor is not given, find it from a pair of corresponding sides first, then square it.\n\nIf $\\triangle ABC \\sim \\triangle DEF$, $BC = 4$, $EF = 10$ and the area of $\\triangle ABC$ is $12$, then $k = \\frac{10}{4} = \\frac{5}{2}$, and the area of $\\triangle DEF$ is $\\frac{25}{4} \\cdot 12 = 75$.",
@@ -803,6 +813,7 @@ export const workingWithAreasOfSimilarPolygons: TopicDef = {
     },
     {
       id: "side-length-from-areas",
+      figure: similarityDrawings["side-length-from-areas"],
       title: t("Side length from areas", "由面积求边长"),
       explanation: t(
         "Once the scale factor is known from the areas, multiply a side by it to get the corresponding side.\n\nTwo similar triangles have areas $16$ and $36$, and a side of the first is $10$. Then $k = \\sqrt{\\frac{36}{16}} = \\frac{3}{2}$, and the corresponding side of the second is $\\frac{3}{2} \\cdot 10 = 15$, not $\\frac{36}{16} \\cdot 10$.",
@@ -916,6 +927,7 @@ export const similarityTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "dilations-centered-at-the-origin",
+      figure: motionDrawings["dilations-centered-at-the-origin"],
       title: t("Dilations centered at the origin", "以原点为中心的位似"),
       explanation: t(
         "A dilation centered at the origin with scale factor $k$ multiplies both coordinates by $k$:\n\n$$(x, y) \\to (kx, ky).$$\n\nWith $k = \\frac{1}{2}$, the point $(6, -4)$ goes to $(3, -2)$; with $k = 3$, it goes to $(18, -12)$.",
@@ -949,6 +961,7 @@ export const similarityTransformations: TopicDef = {
     },
     {
       id: "dilations-followed-by-rigid-motions",
+      figure: motionDrawings["dilations-followed-by-rigid-motions"],
       title: t("A dilation followed by a rigid motion", "位似后接刚体运动"),
       explanation: t(
         "A **similarity transformation** is a sequence of dilations and rigid motions (translations, reflections, rotations). It maps every figure onto a similar figure. Apply the steps in order, each to the result of the one before.\n\nDilate $(2, -3)$ by $2$ about the origin: $(4, -6)$. Then translate by $(x, y) \\to (x - 5, y + 1)$: $(-1, -5)$. Translating first and then dilating would give a different point, $(-6, -4)$.",
@@ -980,6 +993,7 @@ export const similarityTransformations: TopicDef = {
     },
     {
       id: "describing-a-similarity-transformation",
+      figure: motionDrawings["describing-a-similarity-transformation"],
       title: t("Describing a similarity transformation", "描述相似变换"),
       explanation: t(
         "To describe how one figure maps onto a similar one, find the scale factor from a pair of corresponding sides, dilate the first figure about the origin, then find the rigid motion that moves the dilated figure onto the second.\n\nIf $A(1, 2) \\to A'(5, 3)$ and $B(3, 2) \\to B'(9, 3)$, then $A'B' = 4$ and $AB = 2$, so $k = 2$. Dilating gives $(2, 4)$ and $(6, 4)$; translating by $(x, y) \\to (x + 3, y - 1)$ finishes the job.",
@@ -1149,6 +1163,7 @@ export const theAASimilarityCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "similar-by-two-angles",
+      figure: similarityDrawings["similar-by-two-angles"],
       title: t("Two pairs of angles", "两组角"),
       explanation: t(
         "**AA similarity criterion:** if two angles of one triangle are congruent to two angles of another, the triangles are similar. (The third angles then match too, since each triangle's angles add up to $180^\\circ$.)\n\nA triangle with angles $40^\\circ$ and $75^\\circ$ has third angle $65^\\circ$. It is similar to a triangle with angles $65^\\circ$ and $40^\\circ$, but not to one with angles $40^\\circ$ and $70^\\circ$.",
@@ -1207,6 +1222,7 @@ export const theAASimilarityCriterion: TopicDef = {
     },
     {
       id: "writing-the-similarity-statement",
+      figure: similarityDrawings["writing-the-similarity-statement"],
       title: t("Writing the similarity statement", "写出相似式"),
       explanation: t(
         "A similarity statement must pair vertices with equal angles. Find all three angles of each triangle, then match equal angles.\n\nIf $\\angle A = 50^\\circ$, $\\angle B = 60^\\circ$ (so $\\angle C = 70^\\circ$) and $\\angle D = 70^\\circ$, $\\angle E = 50^\\circ$ (so $\\angle F = 60^\\circ$), then $A \\leftrightarrow E$, $B \\leftrightarrow F$, $C \\leftrightarrow D$, and $\\triangle ABC \\sim \\triangle EFD$.",
@@ -1265,6 +1281,7 @@ export const theAASimilarityCriterion: TopicDef = {
     },
     {
       id: "a-line-parallel-to-a-side",
+      figure: similarityDrawings["a-line-parallel-to-a-side"],
       title: t("A line parallel to a side", "平行于一边的直线"),
       explanation: t(
         `If $D$ is on $\\overline{AB}$, $E$ is on $\\overline{AC}$ and $\\overline{DE} \\parallel \\overline{BC}$, then $\\angle ADE \\cong \\angle ABC$ (corresponding angles) and $\\angle A$ is shared, so $\\triangle ADE \\sim \\triangle ABC$ by AA. Compare **whole** sides: $\\frac{DE}{BC} = \\frac{AD}{AB}$, with $AB = AD + DB$.\n\nIf $AD = 4$, $DB = 6$ and $DE = 6$, then $AB = 10$ and${steps("\\frac{BC}{6} = \\frac{10}{4} \\quad\\Rightarrow\\quad BC = 15")}`,
@@ -1336,6 +1353,7 @@ export const theSSSSimilarityCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "checking-three-ratios",
+      figure: similarityDrawings["checking-three-ratios"],
       title: t("Checking three ratios", "检验三个比"),
       explanation: t(
         "**SSS similarity criterion:** if the three sides of one triangle are proportional to the three sides of another, the triangles are similar.\n\nTo check, sort each triangle's sides from shortest to longest and divide: shortest by shortest, middle by middle, longest by longest. Sides $4, 6, 8$ and $6, 9, 12$: $\\frac{6}{4} = \\frac{9}{6} = \\frac{12}{8} = \\frac{3}{2}$, so similar. Sides $4, 6, 8$ and $6, 9, 11$: $\\frac{11}{8} \\ne \\frac{3}{2}$, so not similar.",
@@ -1387,6 +1405,7 @@ export const theSSSSimilarityCriterion: TopicDef = {
     },
     {
       id: "matching-sides-and-the-scale-factor",
+      figure: similarityDrawings["matching-sides-and-the-scale-factor"],
       title: t("Matching sides and the scale factor", "对应边与相似比"),
       explanation: t(
         "When two triangles are similar by SSS, the shortest side corresponds to the shortest side, and so on, wherever the sides are drawn. The scale factor is any of the equal ratios.\n\nIf $\\triangle ABC$ has sides $AB = 8$, $BC = 6$, $CA = 10$ and $\\triangle DEF$ has sides $DE = 9$, $EF = 15$, $FD = 12$, then $BC \\leftrightarrow DE$, $AB \\leftrightarrow FD$, $CA \\leftrightarrow EF$, and the scale factor from $\\triangle ABC$ to $\\triangle DEF$ is $\\frac{9}{6} = \\frac{3}{2}$.",
@@ -1427,6 +1446,7 @@ export const theSSSSimilarityCriterion: TopicDef = {
     },
     {
       id: "finding-an-unknown-for-sss",
+      figure: similarityDrawings["finding-an-unknown-for-sss"],
       title: t("Finding an unknown side", "求未知边"),
       explanation: t(
         "To make two triangles similar by SSS, the unknown side must give the same ratio as the known pairs. Find the scale factor from a known pair, then solve.\n\n$\\triangle ABC$ has $AB = 4$, $BC = 5$, $CA = 6$, and $\\triangle DEF$ has $DE = 6$, $EF = 7.5$, $FD = 2x + 1$. The scale factor is $\\frac{6}{4} = \\frac{3}{2}$, so $FD = \\frac{3}{2} \\cdot 6 = 9$: $2x + 1 = 9$, $x = 4$.",
@@ -1485,6 +1505,7 @@ export const theSASSimilarityCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "checking-sas",
+      figure: similarityDrawings["checking-sas"],
       title: t("Two sides and the included angle", "两边及其夹角"),
       explanation: t(
         "**SAS similarity criterion:** if two sides of one triangle are proportional to two sides of another and the angles **between** those sides are congruent, the triangles are similar.\n\nSides $4$ and $6$ with $50^\\circ$ between them, and sides $6$ and $9$ with $50^\\circ$ between them: $\\frac{6}{4} = \\frac{9}{6} = \\frac{3}{2}$ and the included angles match, so the triangles are similar. If the angles were $50^\\circ$ and $55^\\circ$, or the sides $6$ and $10$, they would not be.",
@@ -1562,6 +1583,7 @@ export const theSASSimilarityCriterion: TopicDef = {
     },
     {
       id: "triangles-sharing-an-angle",
+      figure: similarityDrawings["triangles-sharing-an-angle"],
       title: t("Triangles sharing an angle", "有公共角的三角形"),
       explanation: t(
         "Two triangles that share an angle are similar by SAS when the sides along that angle are proportional, but check which sides pair up. With $D$ on $\\overline{AB}$ and $E$ on $\\overline{AC}$:\n\n- if $\\frac{AD}{AB} = \\frac{AE}{AC}$, then $\\triangle ADE \\sim \\triangle ABC$;\n- if $\\frac{AD}{AC} = \\frac{AE}{AB}$, then $\\triangle ADE \\sim \\triangle ACB$, so $D$ matches $C$ and $E$ matches $B$.\n\nWith $AD = 3$, $AE = 4$, $AB = 8$, $AC = 6$ and $BC = 10$: $\\frac{3}{6} = \\frac{4}{8} = \\frac{1}{2}$, so $\\triangle ADE \\sim \\triangle ACB$ and $DE = \\frac{1}{2} \\cdot 10 = 5$.",
@@ -1619,6 +1641,7 @@ export const theSASSimilarityCriterion: TopicDef = {
     },
     {
       id: "finding-an-unknown-for-sas",
+      figure: similarityDrawings["finding-an-unknown-for-sas"],
       title: t("Finding an unknown for SAS", "用 SAS 求未知数"),
       explanation: t(
         `When the included angles are congruent, the triangles are similar exactly when the two pairs of sides have the same ratio. Set the ratios equal and solve.\n\nWith $\\angle A \\cong \\angle D$, $AB = 6$, $AC = 8$, $DE = 9$ and $DF = x + 5$:${steps("\\frac{x + 5}{8} = \\frac{9}{6} \\quad\\Rightarrow\\quad x + 5 = 12 \\quad\\Rightarrow\\quad x = 7")}`,
@@ -1782,6 +1805,7 @@ export const combiningSimilarityCriteriaForTriangles: TopicDef = {
     },
     {
       id: "crossing-segments",
+      figure: similarityDrawings["crossing-segments"],
       title: t("Crossing segments", "相交的线段"),
       explanation: t(
         "If $\\overline{AD}$ and $\\overline{BC}$ cross at $E$ and $\\overline{AB} \\parallel \\overline{CD}$, the vertical angles at $E$ are congruent and $\\angle A \\cong \\angle D$ (alternate interior angles), so $\\triangle EAB \\sim \\triangle EDC$ by AA. Note the matching: $A \\leftrightarrow D$, $B \\leftrightarrow C$.\n\nIf $EA = 4$, $ED = 6$ and $AB = 5$, then $\\frac{DC}{5} = \\frac{6}{4}$, so $DC = 7.5$.",
@@ -1857,6 +1881,7 @@ export const combiningSimilarityCriteriaForTriangles: TopicDef = {
     },
     {
       id: "indirect-measurement",
+      figure: similarityDrawings["indirect-measurement"],
       title: t("Indirect measurement with shadows", "利用影子间接测量"),
       explanation: t(
         `At the same moment, the sun's rays make the same angle with level ground everywhere. An upright object and its shadow form a right triangle, so two such triangles are similar by AA, and heights are proportional to shadow lengths.\n\nA $6$-foot person casts a $4$-foot shadow while a tree casts a $30$-foot shadow:${steps("\\frac{h}{30} = \\frac{6}{4} \\quad\\Rightarrow\\quad h = 45 \\text{ feet}")}`,
@@ -2336,6 +2361,7 @@ export const provingSimilarityStatements: TopicDef = {
   knowledgePoints: [
     {
       id: "proving-triangles-similar-with-aa",
+      figure: similarityDrawings["proving-triangles-similar-with-aa"],
       title: t("Proving triangles similar with AA", "用 AA 证明三角形相似"),
       explanation: t(
         "To prove two triangles similar with AA, find two pairs of congruent angles. Parallel lines give corresponding or alternate interior angles; crossing lines give vertical angles; a shared angle is congruent to itself (reflexive property).\n\nGiven $\\overline{DE} \\parallel \\overline{BC}$ in $\\triangle ABC$:\n\n1. $\\angle ADE \\cong \\angle ABC$: corresponding angles.\n2. $\\angle A \\cong \\angle A$: reflexive property.\n3. $\\triangle ADE \\sim \\triangle ABC$: AA similarity criterion.",
@@ -2346,6 +2372,7 @@ export const provingSimilarityStatements: TopicDef = {
     },
     {
       id: "using-similar-triangles-to-prove-parallel-lines",
+      figure: similarityDrawings["using-similar-triangles-to-prove-parallel-lines"],
       title: t("Proving lines parallel with SAS", "用 SAS 证明直线平行"),
       explanation: t(
         "Once two triangles are proved similar, their corresponding angles are congruent, and congruent corresponding angles along a transversal make lines parallel.\n\nGiven $\\frac{AD}{AB} = \\frac{AE}{AC}$ with $D$ on $\\overline{AB}$ and $E$ on $\\overline{AC}$:\n\n1. $\\angle A \\cong \\angle A$: reflexive property.\n2. $\\triangle ADE \\sim \\triangle ABC$: SAS similarity criterion.\n3. $\\angle ADE \\cong \\angle ABC$: corresponding angles of similar triangles.\n4. $\\overline{DE} \\parallel \\overline{BC}$: converse of the corresponding angles theorem.",
@@ -2382,6 +2409,7 @@ export const theMidpointTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "length-of-a-midsegment",
+      figure: similarityDrawings["length-of-a-midsegment"],
       title: t("The length of a midsegment", "中位线的长"),
       explanation: t(
         "A **midsegment** of a triangle joins the midpoints of two sides. **Midpoint theorem:** a midsegment is parallel to the third side and half as long. (The small triangle is similar to the whole one with scale factor $\\frac{1}{2}$, by SAS.)\n\nIf $D$ and $E$ are the midpoints of $\\overline{AB}$ and $\\overline{AC}$ and $BC = 18$, then $DE = 9$. If instead $DE = 7$, then $BC = 14$.",
@@ -2466,6 +2494,7 @@ export const theMidpointTheorem: TopicDef = {
     },
     {
       id: "the-midsegment-triangle",
+      figure: similarityDrawings["the-midsegment-triangle"],
       title: t("The midsegment triangle", "中点三角形"),
       explanation: t(
         "The three midsegments of a triangle form a smaller triangle. Each of its sides is half of the side it is parallel to, so its perimeter is half the perimeter of the original triangle.\n\nIf the sides of $\\triangle ABC$ are $10$, $14$ and $16$, the triangle formed by the midpoints has sides $5$, $7$, $8$ and perimeter $20$.",
@@ -2586,6 +2615,7 @@ export const theMidpointTheorem: TopicDef = {
     },
     {
       id: "angles-at-a-midsegment",
+      figure: similarityDrawings["angles-at-a-midsegment"],
       title: t("Angles at a midsegment", "中位线处的角"),
       explanation: t(
         "Since a midsegment is parallel to the third side, the angles it makes are corresponding angles or consecutive interior angles of parallel lines.\n\nIf $\\overline{DE}$ joins the midpoints of $\\overline{AB}$ and $\\overline{AC}$ and $m\\angle B = 65^\\circ$, then $m\\angle ADE = 65^\\circ$ (corresponding angles) and $m\\angle BDE = 180^\\circ - 65^\\circ = 115^\\circ$ (consecutive interior angles).",
@@ -2848,6 +2878,7 @@ export const provingTheMidpointTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "proving-the-theorem",
+      figure: similarityDrawings["proving-the-theorem"],
       title: t("Proving the theorem", "证明定理"),
       explanation: t(
         "Let $D$ and $E$ be the midpoints of $\\overline{AB}$ and $\\overline{AC}$.\n\n1. $AD = \\frac{1}{2}AB$ and $AE = \\frac{1}{2}AC$: definition of a midpoint.\n2. $\\frac{AD}{AB} = \\frac{AE}{AC} = \\frac{1}{2}$, and $\\angle A \\cong \\angle A$.\n3. $\\triangle ADE \\sim \\triangle ABC$ by SAS, with scale factor $\\frac{1}{2}$.\n4. So $DE = \\frac{1}{2}BC$, and $\\angle ADE \\cong \\angle ABC$.\n5. Congruent corresponding angles make $\\overline{DE} \\parallel \\overline{BC}$.",
@@ -2857,6 +2888,7 @@ export const provingTheMidpointTheorem: TopicDef = {
     },
     {
       id: "proving-the-converse",
+      figure: similarityDrawings["proving-the-midpoint-theorem#proving-the-converse"],
       title: t("Proving the converse", "证明逆定理"),
       explanation: t(
         "**Converse:** the line through the midpoint of one side of a triangle, parallel to a second side, passes through the midpoint of the third side.\n\nWith $D$ the midpoint of $\\overline{AB}$ and $\\overline{DE} \\parallel \\overline{BC}$: corresponding angles give $\\angle ADE \\cong \\angle ABC$, and $\\angle A$ is shared, so $\\triangle ADE \\sim \\triangle ABC$ by AA. Then $\\frac{AE}{AC} = \\frac{AD}{AB} = \\frac{1}{2}$, so $E$ is the midpoint of $\\overline{AC}$.",
@@ -2931,6 +2963,7 @@ export const theTriangleProportionalityTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "dividing-sides-proportionally",
+      figure: similarityDrawings["dividing-sides-proportionally"],
       title: t("Dividing sides proportionally", "按比例分两边"),
       explanation: t(
         "**Triangle proportionality theorem:** if a line parallel to one side of a triangle meets the other two sides at $D$ and $E$, it divides them proportionally:\n\n$$\\frac{AD}{DB} = \\frac{AE}{EC}.$$\n\nIf $AD = 6$, $DB = 4$ and $AE = 9$, then $\\frac{6}{4} = \\frac{9}{EC}$, so $EC = 6$. (The midpoint theorem is the case $AD = DB$.)",
@@ -3009,6 +3042,7 @@ export const theTriangleProportionalityTheorem: TopicDef = {
     },
     {
       id: "proportionality-with-algebra",
+      figure: similarityDrawings["proportionality-with-algebra"],
       title: t("Proportionality with algebra", "含未知数的比例"),
       explanation: t(
         `A line parallel to one side of a triangle cuts the other two sides in the same ratio, so $\\frac{AD}{DB} = \\frac{AE}{EC}$ holds even when some of the lengths are unknown.\n\nWhen a segment is an expression, write the proportion, cross-multiply and solve.\n\nWith $AD = 4$, $DB = 6$, $AE = x + 2$ and $EC = 9$:${steps("\\frac{4}{6} = \\frac{x + 2}{9} \\quad\\Rightarrow\\quad 6(x + 2) = 36 \\quad\\Rightarrow\\quad x = 4")}`,
@@ -3069,6 +3103,7 @@ export const theTriangleProportionalityTheorem: TopicDef = {
     },
     {
       id: "the-converse",
+      figure: similarityDrawings["the-triangle-proportionality-theorem#the-converse"],
       title: t("The converse", "逆定理"),
       explanation: t(
         "**Converse:** if a segment divides two sides of a triangle proportionally, it is parallel to the third side. So to decide whether $\\overline{DE} \\parallel \\overline{BC}$, compare $\\frac{AD}{DB}$ with $\\frac{AE}{EC}$.\n\n$AD = 5$, $DB = 3$, $AE = 10$, $EC = 6$: $\\frac{5}{3} = \\frac{10}{6}$, so parallel. With $EC = 7$ instead, $\\frac{10}{7} \\ne \\frac{5}{3}$, so not parallel.",

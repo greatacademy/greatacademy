@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, sketch } from "@ga/subject-math";
+import { angleDrawings, motionDrawings } from "../explanation-drawings-angles.ts";
 import { at, graphFigure } from "../graph-figures.ts";
 import { movedPoint, movedPolygon, viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice } from "../problems.ts";
@@ -457,6 +458,7 @@ export const identifyingAnglePostulates: TopicDef = {
   knowledgePoints: [
     {
       id: "angle-addition-postulate",
+      figure: angleDrawings["angle-addition-postulate"],
       title: t("The Angle Addition Postulate", "角的加法公设"),
       explanation: t(
         "A **postulate** is a statement accepted without proof; theorems are then proved from postulates.\n\nThe **Angle Addition Postulate**: if point $B$ lies inside $\\angle AOC$, then $m\\angle AOB + m\\angle BOC = m\\angle AOC$.\n\nIf $m\\angle AOB = (2x + 5)^\\circ$, $m\\angle BOC = (3x - 10)^\\circ$ and $m\\angle AOC = 70^\\circ$, then $(2x + 5) + (3x - 10) = 70$, so $5x - 5 = 70$ and $x = 15$.",
@@ -501,6 +503,7 @@ export const identifyingAnglePostulates: TopicDef = {
     },
     {
       id: "linear-pair-postulate",
+      figure: angleDrawings["linear-pair-postulate"],
       title: t("The Linear Pair Postulate", "邻补角公设"),
       explanation: t(
         "Two adjacent angles whose outer sides form a line are a **linear pair**. The **Linear Pair Postulate**: the angles of a linear pair are supplementary.\n\nIf a linear pair measures $(4x + 10)^\\circ$ and $(2x - 10)^\\circ$, then $(4x + 10) + (2x - 10) = 180$, so $6x = 180$ and $x = 30$. The first angle is $4 \\cdot 30 + 10 = 130^\\circ$.",
@@ -600,6 +603,7 @@ export const identifyingAnglePostulates: TopicDef = {
     },
     {
       id: "making-lines-parallel",
+      figure: angleDrawings["making-lines-parallel"],
       title: t("Making lines parallel", "使两直线平行"),
       explanation: t(
         "By the Converse of the Corresponding Angles Postulate, lines $\\ell$ and $m$ are parallel exactly when a pair of corresponding angles is congruent. To find the value of $x$ that makes them parallel, set the corresponding angles equal.\n\nIf corresponding angles measure $(3x + 15)^\\circ$ and $(5x - 25)^\\circ$, then $3x + 15 = 5x - 25$, so $40 = 2x$ and $x = 20$.",
@@ -658,6 +662,7 @@ export const identifyingAngleTheorems: TopicDef = {
   knowledgePoints: [
     {
       id: "congruent-supplements-and-complements",
+      figure: angleDrawings["congruent-supplements-and-complements"],
       title: t("Congruent supplements and complements", "等角的补角与余角"),
       explanation: t(
         "A **theorem** is a statement proved from postulates and earlier theorems.\n\n- **Congruent Supplements Theorem**: angles supplementary to the same angle (or to congruent angles) are congruent.\n- **Congruent Complements Theorem**: angles complementary to the same angle (or to congruent angles) are congruent.\n\nIf $\\angle 1$ and $\\angle 3$ are both supplementary to $\\angle 2$, with $m\\angle 1 = (2x + 10)^\\circ$ and $m\\angle 3 = (4x - 30)^\\circ$, then $2x + 10 = 4x - 30$, so $x = 20$.",
@@ -688,6 +693,7 @@ export const identifyingAngleTheorems: TopicDef = {
     },
     {
       id: "theorems-about-parallel-lines",
+      figure: angleDrawings["theorems-about-parallel-lines"],
       title: t("Theorems about parallel lines", "关于平行线的定理"),
       explanation: t(
         "When two parallel lines are cut by a transversal, the Corresponding Angles Postulate leads to three theorems:\n\n- **Alternate Interior Angles Theorem**: alternate interior angles are congruent.\n- **Alternate Exterior Angles Theorem**: alternate exterior angles are congruent.\n- **Consecutive Interior Angles Theorem**: consecutive interior angles are supplementary.\n\nThe **Vertical Angles Theorem** needs no parallel lines: it relates angles at the same crossing.",
@@ -930,40 +936,49 @@ export const provingAlternateAngleTheorems: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
-    proofKp(
-      "alternate-interior-reasons",
-      t("Reasons in the proof", "证明中的理由"),
-      cat(
-        proofExplanation,
-        "\n\n",
-        t(
-          "**Alternate Interior Angles Theorem.** Given $\\ell \\parallel m$, prove $\\angle 3 \\cong \\angle 6$:\n\n1. $\\ell \\parallel m$ — Given\n2. $\\angle 3 \\cong \\angle 7$ — Corresponding Angles Postulate\n3. $\\angle 7 \\cong \\angle 6$ — Vertical Angles Theorem\n4. $\\angle 3 \\cong \\angle 6$ — Transitive Property of Congruence",
-          "**内错角定理。** 已知 $\\ell \\parallel m$，求证 $\\angle 3 \\cong \\angle 6$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $\\angle 3 \\cong \\angle 7$ — 同位角公设\n3. $\\angle 7 \\cong \\angle 6$ — 对顶角定理\n4. $\\angle 3 \\cong \\angle 6$ — 全等的传递性",
+    {
+      ...proofKp(
+        "alternate-interior-reasons",
+        t("Reasons in the proof", "证明中的理由"),
+        cat(
+          proofExplanation,
+          "\n\n",
+          t(
+            "**Alternate Interior Angles Theorem.** Given $\\ell \\parallel m$, prove $\\angle 3 \\cong \\angle 6$:\n\n1. $\\ell \\parallel m$ — Given\n2. $\\angle 3 \\cong \\angle 7$ — Corresponding Angles Postulate\n3. $\\angle 7 \\cong \\angle 6$ — Vertical Angles Theorem\n4. $\\angle 3 \\cong \\angle 6$ — Transitive Property of Congruence",
+            "**内错角定理。** 已知 $\\ell \\parallel m$，求证 $\\angle 3 \\cong \\angle 6$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $\\angle 3 \\cong \\angle 7$ — 同位角公设\n3. $\\angle 7 \\cong \\angle 6$ — 对顶角定理\n4. $\\angle 3 \\cong \\angle 6$ — 全等的传递性",
+          ),
         ),
+        "r",
+        (rng) => alternateProof(rng, false),
       ),
-      "r",
-      (rng) => alternateProof(rng, false),
-    ),
-    proofKp(
-      "alternate-interior-statements",
-      t("Statements in the proof", "证明中的陈述"),
-      t(
-        "Each statement must follow from the ones above it by its reason. In the proof that alternate interior angles are congruent, the path goes through a third angle: one corresponding to the first angle and vertical to the second (or the other way round), and the Transitive Property joins the two congruences.\n\nFor $\\angle 4$ and $\\angle 5$: $\\angle 4 \\cong \\angle 8$ (corresponding), $\\angle 8 \\cong \\angle 5$ (vertical), so $\\angle 4 \\cong \\angle 5$.",
-        "每个陈述都要能由前面的陈述按它的理由推出。在证明内错角全等时，要经过第三个角：它与第一个角是同位角，与第二个角是对顶角（或反过来），再用传递性把两个全等连起来。\n\n对 $\\angle 4$ 与 $\\angle 5$：$\\angle 4 \\cong \\angle 8$（同位角），$\\angle 8 \\cong \\angle 5$（对顶角），所以 $\\angle 4 \\cong \\angle 5$。",
+      figure: angleDrawings["alternate-interior-reasons"],
+    },
+    {
+      ...proofKp(
+        "alternate-interior-statements",
+        t("Statements in the proof", "证明中的陈述"),
+        t(
+          "Each statement must follow from the ones above it by its reason. In the proof that alternate interior angles are congruent, the path goes through a third angle: one corresponding to the first angle and vertical to the second (or the other way round), and the Transitive Property joins the two congruences.\n\nFor $\\angle 4$ and $\\angle 5$: $\\angle 4 \\cong \\angle 8$ (corresponding), $\\angle 8 \\cong \\angle 5$ (vertical), so $\\angle 4 \\cong \\angle 5$.",
+          "每个陈述都要能由前面的陈述按它的理由推出。在证明内错角全等时，要经过第三个角：它与第一个角是同位角，与第二个角是对顶角（或反过来），再用传递性把两个全等连起来。\n\n对 $\\angle 4$ 与 $\\angle 5$：$\\angle 4 \\cong \\angle 8$（同位角），$\\angle 8 \\cong \\angle 5$（对顶角），所以 $\\angle 4 \\cong \\angle 5$。",
+        ),
+        "s",
+        (rng) => alternateProof(rng, false),
       ),
-      "s",
-      (rng) => alternateProof(rng, false),
-    ),
-    proofKp(
-      "alternate-exterior-proof",
-      t("The Alternate Exterior Angles Theorem", "外错角定理"),
-      t(
-        "The proof that alternate exterior angles are congruent follows the same pattern. Given $\\ell \\parallel m$, prove $\\angle 1 \\cong \\angle 8$:\n\n1. $\\ell \\parallel m$ — Given\n2. $\\angle 1 \\cong \\angle 5$ — Corresponding Angles Postulate\n3. $\\angle 5 \\cong \\angle 8$ — Vertical Angles Theorem\n4. $\\angle 1 \\cong \\angle 8$ — Transitive Property of Congruence",
-        "外错角全等的证明思路相同。已知 $\\ell \\parallel m$，求证 $\\angle 1 \\cong \\angle 8$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $\\angle 1 \\cong \\angle 5$ — 同位角公设\n3. $\\angle 5 \\cong \\angle 8$ — 对顶角定理\n4. $\\angle 1 \\cong \\angle 8$ — 全等的传递性",
+      figure: angleDrawings["alternate-interior-statements"],
+    },
+    {
+      ...proofKp(
+        "alternate-exterior-proof",
+        t("The Alternate Exterior Angles Theorem", "外错角定理"),
+        t(
+          "The proof that alternate exterior angles are congruent follows the same pattern. Given $\\ell \\parallel m$, prove $\\angle 1 \\cong \\angle 8$:\n\n1. $\\ell \\parallel m$ — Given\n2. $\\angle 1 \\cong \\angle 5$ — Corresponding Angles Postulate\n3. $\\angle 5 \\cong \\angle 8$ — Vertical Angles Theorem\n4. $\\angle 1 \\cong \\angle 8$ — Transitive Property of Congruence",
+          "外错角全等的证明思路相同。已知 $\\ell \\parallel m$，求证 $\\angle 1 \\cong \\angle 8$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $\\angle 1 \\cong \\angle 5$ — 同位角公设\n3. $\\angle 5 \\cong \\angle 8$ — 对顶角定理\n4. $\\angle 1 \\cong \\angle 8$ — 全等的传递性",
+        ),
+        "rs",
+        (rng) => alternateProof(rng, true),
       ),
-      "rs",
-      (rng) => alternateProof(rng, true),
-    ),
+      figure: angleDrawings["alternate-exterior-proof"],
+    },
   ],
 };
 
@@ -982,28 +997,35 @@ export const provingAlternateAngleConverses: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
-    proofKp(
-      "alternate-interior-converse-reasons",
-      t("Proving lines parallel", "证明两直线平行"),
-      t(
-        "The **converse** of a theorem swaps its hypothesis and conclusion. The **Converse of the Alternate Interior Angles Theorem**: if alternate interior angles are congruent, the lines are parallel. It is proved from the Converse of the Corresponding Angles Postulate.\n\nGiven $\\angle 3 \\cong \\angle 6$, prove $\\ell \\parallel m$:\n\n1. $\\angle 3 \\cong \\angle 6$ — Given\n2. $\\angle 6 \\cong \\angle 7$ — Vertical Angles Theorem\n3. $\\angle 3 \\cong \\angle 7$ — Transitive Property of Congruence\n4. $\\ell \\parallel m$ — Converse of the Corresponding Angles Postulate\n\nThe Corresponding Angles Postulate itself cannot be used: it needs $\\ell \\parallel m$, which is what we are proving.",
-        "定理的**逆定理**交换了它的条件和结论。**内错角定理的逆定理**：若内错角全等，则两直线平行。它由同位角公设的逆命题证明。\n\n已知 $\\angle 3 \\cong \\angle 6$，求证 $\\ell \\parallel m$：\n\n1. $\\angle 3 \\cong \\angle 6$ — 已知\n2. $\\angle 6 \\cong \\angle 7$ — 对顶角定理\n3. $\\angle 3 \\cong \\angle 7$ — 全等的传递性\n4. $\\ell \\parallel m$ — 同位角公设的逆命题\n\n这里不能用同位角公设本身：它需要 $\\ell \\parallel m$，而这正是要证明的。",
+    {
+      ...proofKp(
+        "alternate-interior-converse-reasons",
+        t("Proving lines parallel", "证明两直线平行"),
+        t(
+          "The **converse** of a theorem swaps its hypothesis and conclusion. The **Converse of the Alternate Interior Angles Theorem**: if alternate interior angles are congruent, the lines are parallel. It is proved from the Converse of the Corresponding Angles Postulate.\n\nGiven $\\angle 3 \\cong \\angle 6$, prove $\\ell \\parallel m$:\n\n1. $\\angle 3 \\cong \\angle 6$ — Given\n2. $\\angle 6 \\cong \\angle 7$ — Vertical Angles Theorem\n3. $\\angle 3 \\cong \\angle 7$ — Transitive Property of Congruence\n4. $\\ell \\parallel m$ — Converse of the Corresponding Angles Postulate\n\nThe Corresponding Angles Postulate itself cannot be used: it needs $\\ell \\parallel m$, which is what we are proving.",
+          "定理的**逆定理**交换了它的条件和结论。**内错角定理的逆定理**：若内错角全等，则两直线平行。它由同位角公设的逆命题证明。\n\n已知 $\\angle 3 \\cong \\angle 6$，求证 $\\ell \\parallel m$：\n\n1. $\\angle 3 \\cong \\angle 6$ — 已知\n2. $\\angle 6 \\cong \\angle 7$ — 对顶角定理\n3. $\\angle 3 \\cong \\angle 7$ — 全等的传递性\n4. $\\ell \\parallel m$ — 同位角公设的逆命题\n\n这里不能用同位角公设本身：它需要 $\\ell \\parallel m$，而这正是要证明的。",
+        ),
+        "r",
+        (rng) => alternateConverseProof(rng, false),
       ),
-      "r",
-      (rng) => alternateConverseProof(rng, false),
-    ),
-    proofKp(
-      "alternate-exterior-converse-proof",
-      t("The converse for alternate exterior angles", "外错角定理的逆定理"),
-      t(
-        "The **Converse of the Alternate Exterior Angles Theorem** is proved the same way: from congruent alternate exterior angles, a vertical angle gives a congruent pair of corresponding angles, and the Converse of the Corresponding Angles Postulate concludes $\\ell \\parallel m$.\n\nGiven $\\angle 2 \\cong \\angle 7$: $\\angle 7 \\cong \\angle 6$ (vertical), so $\\angle 2 \\cong \\angle 6$ (transitive), and $\\angle 2$ and $\\angle 6$ are corresponding, so $\\ell \\parallel m$.",
-        "**外错角定理的逆定理**的证明方法相同：由全等的外错角，借助对顶角得到一对全等的同位角，再由同位角公设的逆命题得出 $\\ell \\parallel m$。\n\n已知 $\\angle 2 \\cong \\angle 7$：$\\angle 7 \\cong \\angle 6$（对顶角），所以 $\\angle 2 \\cong \\angle 6$（传递性），而 $\\angle 2$ 与 $\\angle 6$ 是同位角，所以 $\\ell \\parallel m$。",
+      figure: angleDrawings["alternate-interior-converse-reasons"],
+    },
+    {
+      ...proofKp(
+        "alternate-exterior-converse-proof",
+        t("The converse for alternate exterior angles", "外错角定理的逆定理"),
+        t(
+          "The **Converse of the Alternate Exterior Angles Theorem** is proved the same way: from congruent alternate exterior angles, a vertical angle gives a congruent pair of corresponding angles, and the Converse of the Corresponding Angles Postulate concludes $\\ell \\parallel m$.\n\nGiven $\\angle 2 \\cong \\angle 7$: $\\angle 7 \\cong \\angle 6$ (vertical), so $\\angle 2 \\cong \\angle 6$ (transitive), and $\\angle 2$ and $\\angle 6$ are corresponding, so $\\ell \\parallel m$.",
+          "**外错角定理的逆定理**的证明方法相同：由全等的外错角，借助对顶角得到一对全等的同位角，再由同位角公设的逆命题得出 $\\ell \\parallel m$。\n\n已知 $\\angle 2 \\cong \\angle 7$：$\\angle 7 \\cong \\angle 6$（对顶角），所以 $\\angle 2 \\cong \\angle 6$（传递性），而 $\\angle 2$ 与 $\\angle 6$ 是同位角，所以 $\\ell \\parallel m$。",
+        ),
+        "rs",
+        (rng) => alternateConverseProof(rng, true),
       ),
-      "rs",
-      (rng) => alternateConverseProof(rng, true),
-    ),
+      figure: angleDrawings["alternate-exterior-converse-proof"],
+    },
     {
       id: "values-that-make-lines-parallel",
+      figure: angleDrawings["values-that-make-lines-parallel"],
       title: t("Values that make lines parallel", "使两直线平行的取值"),
       explanation: t(
         "By the converses, $\\ell \\parallel m$ when alternate interior (or alternate exterior) angles are congruent. Set the two expressions equal and solve.\n\nIf alternate exterior angles measure $(4x - 12)^\\circ$ and $(2x + 30)^\\circ$, then $4x - 12 = 2x + 30$, so $2x = 42$ and $x = 21$.",
@@ -1071,28 +1093,35 @@ export const provingConsecutiveAngleTheorems: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
-    proofKp(
-      "consecutive-interior-reasons",
-      t("Reasons in the proof", "证明中的理由"),
-      t(
-        "**Consecutive Interior Angles Theorem.** Given $\\ell \\parallel m$, prove $m\\angle 3 + m\\angle 5 = 180^\\circ$:\n\n1. $\\ell \\parallel m$ — Given\n2. $\\angle 3 \\cong \\angle 7$ — Corresponding Angles Postulate\n3. $m\\angle 3 = m\\angle 7$ — Definition of congruent angles\n4. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — Linear Pair Postulate\n5. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — Substitution Property of Equality\n\nStep 3 turns a congruence of angles into an equation of measures, so that step 5 can substitute $m\\angle 3$ for $m\\angle 7$.",
-        "**同旁内角定理。** 已知 $\\ell \\parallel m$，求证 $m\\angle 3 + m\\angle 5 = 180^\\circ$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $\\angle 3 \\cong \\angle 7$ — 同位角公设\n3. $m\\angle 3 = m\\angle 7$ — 角全等的定义\n4. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — 邻补角公设\n5. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — 等量代换\n\n第 3 步把角的全等变成度数的等式，第 5 步才能用 $m\\angle 3$ 替换 $m\\angle 7$。",
+    {
+      ...proofKp(
+        "consecutive-interior-reasons",
+        t("Reasons in the proof", "证明中的理由"),
+        t(
+          "**Consecutive Interior Angles Theorem.** Given $\\ell \\parallel m$, prove $m\\angle 3 + m\\angle 5 = 180^\\circ$:\n\n1. $\\ell \\parallel m$ — Given\n2. $\\angle 3 \\cong \\angle 7$ — Corresponding Angles Postulate\n3. $m\\angle 3 = m\\angle 7$ — Definition of congruent angles\n4. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — Linear Pair Postulate\n5. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — Substitution Property of Equality\n\nStep 3 turns a congruence of angles into an equation of measures, so that step 5 can substitute $m\\angle 3$ for $m\\angle 7$.",
+          "**同旁内角定理。** 已知 $\\ell \\parallel m$，求证 $m\\angle 3 + m\\angle 5 = 180^\\circ$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $\\angle 3 \\cong \\angle 7$ — 同位角公设\n3. $m\\angle 3 = m\\angle 7$ — 角全等的定义\n4. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — 邻补角公设\n5. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — 等量代换\n\n第 3 步把角的全等变成度数的等式，第 5 步才能用 $m\\angle 3$ 替换 $m\\angle 7$。",
+        ),
+        "r",
+        consecutiveProof,
       ),
-      "r",
-      consecutiveProof,
-    ),
-    proofKp(
-      "consecutive-interior-statements",
-      t("Statements in the proof", "证明中的陈述"),
-      t(
-        "The proof joins a congruence and a linear pair. The angle corresponding to the first consecutive interior angle forms a linear pair with the second one; substituting equal measures turns that linear pair into the statement to prove.\n\nFor $\\angle 4$ and $\\angle 6$: $\\angle 4 \\cong \\angle 8$, so $m\\angle 4 = m\\angle 8$; $m\\angle 8 + m\\angle 6 = 180^\\circ$; so $m\\angle 4 + m\\angle 6 = 180^\\circ$.",
-        "证明把一个全等和一对邻补角结合起来。与第一个同旁内角成同位角的那个角，和第二个角构成邻补角；用相等的度数代换，就得到要证明的结论。\n\n对 $\\angle 4$ 与 $\\angle 6$：$\\angle 4 \\cong \\angle 8$，所以 $m\\angle 4 = m\\angle 8$；$m\\angle 8 + m\\angle 6 = 180^\\circ$；所以 $m\\angle 4 + m\\angle 6 = 180^\\circ$。",
+      figure: angleDrawings["consecutive-interior-reasons"],
+    },
+    {
+      ...proofKp(
+        "consecutive-interior-statements",
+        t("Statements in the proof", "证明中的陈述"),
+        t(
+          "The proof joins a congruence and a linear pair. The angle corresponding to the first consecutive interior angle forms a linear pair with the second one; substituting equal measures turns that linear pair into the statement to prove.\n\nFor $\\angle 4$ and $\\angle 6$: $\\angle 4 \\cong \\angle 8$, so $m\\angle 4 = m\\angle 8$; $m\\angle 8 + m\\angle 6 = 180^\\circ$; so $m\\angle 4 + m\\angle 6 = 180^\\circ$.",
+          "证明把一个全等和一对邻补角结合起来。与第一个同旁内角成同位角的那个角，和第二个角构成邻补角；用相等的度数代换，就得到要证明的结论。\n\n对 $\\angle 4$ 与 $\\angle 6$：$\\angle 4 \\cong \\angle 8$，所以 $m\\angle 4 = m\\angle 8$；$m\\angle 8 + m\\angle 6 = 180^\\circ$；所以 $m\\angle 4 + m\\angle 6 = 180^\\circ$。",
+        ),
+        "s",
+        consecutiveProof,
       ),
-      "s",
-      consecutiveProof,
-    ),
+      figure: angleDrawings["consecutive-interior-statements"],
+    },
     {
       id: "using-consecutive-interior-angles",
+      figure: angleDrawings["using-consecutive-interior-angles"],
       title: t("Using consecutive interior angles", "运用同旁内角"),
       explanation: t(
         "With $\\ell \\parallel m$, consecutive interior angles add up to $180^\\circ$. When their measures are expressions, solve for $x$ and substitute back.\n\nIf they measure $(3x + 20)^\\circ$ and $(2x - 15)^\\circ$, then $5x + 5 = 180$, so $x = 35$, and the first angle is $3 \\cdot 35 + 20 = 125^\\circ$.",
@@ -1161,28 +1190,35 @@ export const provingConsecutiveAngleConverse: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
-    proofKp(
-      "consecutive-converse-reasons",
-      t("Reasons in the proof", "证明中的理由"),
-      t(
-        "**Converse of the Consecutive Interior Angles Theorem**: if consecutive interior angles are supplementary, the lines are parallel.\n\nGiven $m\\angle 3 + m\\angle 5 = 180^\\circ$, prove $\\ell \\parallel m$:\n\n1. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — Given\n2. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — Linear Pair Postulate\n3. $\\angle 3 \\cong \\angle 7$ — Congruent Supplements Theorem\n4. $\\ell \\parallel m$ — Converse of the Corresponding Angles Postulate\n\nBoth $\\angle 3$ and $\\angle 7$ are supplementary to $\\angle 5$, so they are congruent.",
-        "**同旁内角定理的逆定理**：若同旁内角互补，则两直线平行。\n\n已知 $m\\angle 3 + m\\angle 5 = 180^\\circ$，求证 $\\ell \\parallel m$：\n\n1. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — 已知\n2. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — 邻补角公设\n3. $\\angle 3 \\cong \\angle 7$ — 同角（或等角）的补角相等\n4. $\\ell \\parallel m$ — 同位角公设的逆命题\n\n$\\angle 3$ 与 $\\angle 7$ 都与 $\\angle 5$ 互补，所以它们全等。",
+    {
+      ...proofKp(
+        "consecutive-converse-reasons",
+        t("Reasons in the proof", "证明中的理由"),
+        t(
+          "**Converse of the Consecutive Interior Angles Theorem**: if consecutive interior angles are supplementary, the lines are parallel.\n\nGiven $m\\angle 3 + m\\angle 5 = 180^\\circ$, prove $\\ell \\parallel m$:\n\n1. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — Given\n2. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — Linear Pair Postulate\n3. $\\angle 3 \\cong \\angle 7$ — Congruent Supplements Theorem\n4. $\\ell \\parallel m$ — Converse of the Corresponding Angles Postulate\n\nBoth $\\angle 3$ and $\\angle 7$ are supplementary to $\\angle 5$, so they are congruent.",
+          "**同旁内角定理的逆定理**：若同旁内角互补，则两直线平行。\n\n已知 $m\\angle 3 + m\\angle 5 = 180^\\circ$，求证 $\\ell \\parallel m$：\n\n1. $m\\angle 3 + m\\angle 5 = 180^\\circ$ — 已知\n2. $m\\angle 7 + m\\angle 5 = 180^\\circ$ — 邻补角公设\n3. $\\angle 3 \\cong \\angle 7$ — 同角（或等角）的补角相等\n4. $\\ell \\parallel m$ — 同位角公设的逆命题\n\n$\\angle 3$ 与 $\\angle 7$ 都与 $\\angle 5$ 互补，所以它们全等。",
+        ),
+        "r",
+        consecutiveConverseProof,
       ),
-      "r",
-      consecutiveConverseProof,
-    ),
-    proofKp(
-      "consecutive-converse-statements",
-      t("Statements in the proof", "证明中的陈述"),
-      t(
-        "To use the Congruent Supplements Theorem, the proof first needs a second angle supplementary to the same angle: the linear pair partner of one of the consecutive interior angles. That partner corresponds to the other consecutive interior angle.\n\nGiven $m\\angle 4 + m\\angle 6 = 180^\\circ$: $m\\angle 8 + m\\angle 6 = 180^\\circ$ (linear pair), so $\\angle 4 \\cong \\angle 8$, and these are corresponding angles, so $\\ell \\parallel m$.",
-        "要用“等角的补角相等”，证明先要找到与同一个角互补的另一个角：某个同旁内角的邻补角。这个邻补角与另一个同旁内角是同位角。\n\n已知 $m\\angle 4 + m\\angle 6 = 180^\\circ$：$m\\angle 8 + m\\angle 6 = 180^\\circ$（邻补角），所以 $\\angle 4 \\cong \\angle 8$，它们是同位角，所以 $\\ell \\parallel m$。",
+      figure: angleDrawings["consecutive-converse-reasons"],
+    },
+    {
+      ...proofKp(
+        "consecutive-converse-statements",
+        t("Statements in the proof", "证明中的陈述"),
+        t(
+          "To use the Congruent Supplements Theorem, the proof first needs a second angle supplementary to the same angle: the linear pair partner of one of the consecutive interior angles. That partner corresponds to the other consecutive interior angle.\n\nGiven $m\\angle 4 + m\\angle 6 = 180^\\circ$: $m\\angle 8 + m\\angle 6 = 180^\\circ$ (linear pair), so $\\angle 4 \\cong \\angle 8$, and these are corresponding angles, so $\\ell \\parallel m$.",
+          "要用“等角的补角相等”，证明先要找到与同一个角互补的另一个角：某个同旁内角的邻补角。这个邻补角与另一个同旁内角是同位角。\n\n已知 $m\\angle 4 + m\\angle 6 = 180^\\circ$：$m\\angle 8 + m\\angle 6 = 180^\\circ$（邻补角），所以 $\\angle 4 \\cong \\angle 8$，它们是同位角，所以 $\\ell \\parallel m$。",
+        ),
+        "s",
+        consecutiveConverseProof,
       ),
-      "s",
-      consecutiveConverseProof,
-    ),
+      figure: angleDrawings["consecutive-converse-statements"],
+    },
     {
       id: "deciding-whether-lines-are-parallel",
+      figure: angleDrawings["deciding-whether-lines-are-parallel"],
       title: t("Deciding whether lines are parallel", "判断两直线是否平行"),
       explanation: t(
         "The converses decide whether two lines cut by a transversal are parallel:\n\n- corresponding, alternate interior or alternate exterior angles congruent $\\Rightarrow$ parallel;\n- consecutive interior angles supplementary $\\Rightarrow$ parallel.\n\nIf consecutive interior angles measure $118^\\circ$ and $72^\\circ$, their sum is $190^\\circ \\ne 180^\\circ$, so the lines are not parallel.",
@@ -1425,38 +1461,48 @@ export const provingPerpendicularLineTheorems: TopicDef = {
   xp: 18,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
-    proofKp(
-      "perpendicular-transversal-theorem",
-      t("The Perpendicular Transversal Theorem", "垂直截线定理"),
-      t(
-        "Two lines are **perpendicular** ($\\perp$) when they meet at a right angle. **Perpendicular Transversal Theorem**: if a transversal is perpendicular to one of two parallel lines, it is perpendicular to the other.\n\nGiven $\\ell \\parallel m$ and $t \\perp \\ell$, prove $t \\perp m$:\n\n1. $\\ell \\parallel m$ — Given\n2. $t \\perp \\ell$ — Given\n3. $\\angle 1$ is a right angle — Definition of perpendicular lines\n4. $\\angle 1 \\cong \\angle 5$ — Corresponding Angles Postulate\n5. $\\angle 5$ is a right angle — Definition of congruent angles\n6. $t \\perp m$ — Definition of perpendicular lines",
-        "两条直线相交成直角时**互相垂直**（$\\perp$）。**垂直截线定理**：若截线垂直于两条平行线中的一条，则它也垂直于另一条。\n\n已知 $\\ell \\parallel m$，$t \\perp \\ell$，求证 $t \\perp m$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $t \\perp \\ell$ — 已知\n3. $\\angle 1$ 是直角 — 垂直的定义\n4. $\\angle 1 \\cong \\angle 5$ — 同位角公设\n5. $\\angle 5$ 是直角 — 角全等的定义\n6. $t \\perp m$ — 垂直的定义",
+    {
+      ...proofKp(
+        "perpendicular-transversal-theorem",
+        t("The Perpendicular Transversal Theorem", "垂直截线定理"),
+        t(
+          "Two lines are **perpendicular** ($\\perp$) when they meet at a right angle. **Perpendicular Transversal Theorem**: if a transversal is perpendicular to one of two parallel lines, it is perpendicular to the other.\n\nGiven $\\ell \\parallel m$ and $t \\perp \\ell$, prove $t \\perp m$:\n\n1. $\\ell \\parallel m$ — Given\n2. $t \\perp \\ell$ — Given\n3. $\\angle 1$ is a right angle — Definition of perpendicular lines\n4. $\\angle 1 \\cong \\angle 5$ — Corresponding Angles Postulate\n5. $\\angle 5$ is a right angle — Definition of congruent angles\n6. $t \\perp m$ — Definition of perpendicular lines",
+          "两条直线相交成直角时**互相垂直**（$\\perp$）。**垂直截线定理**：若截线垂直于两条平行线中的一条，则它也垂直于另一条。\n\n已知 $\\ell \\parallel m$，$t \\perp \\ell$，求证 $t \\perp m$：\n\n1. $\\ell \\parallel m$ — 已知\n2. $t \\perp \\ell$ — 已知\n3. $\\angle 1$ 是直角 — 垂直的定义\n4. $\\angle 1 \\cong \\angle 5$ — 同位角公设\n5. $\\angle 5$ 是直角 — 角全等的定义\n6. $t \\perp m$ — 垂直的定义",
+        ),
+        "rs",
+        perpendicularTransversalProof,
       ),
-      "rs",
-      perpendicularTransversalProof,
-    ),
-    proofKp(
-      "lines-perpendicular-to-the-same-line",
-      t("Lines perpendicular to the same line", "垂直于同一直线的两直线"),
-      t(
-        "**Theorem**: in a plane, two lines perpendicular to the same line are parallel.\n\nGiven $\\ell \\perp t$ and $m \\perp t$, prove $\\ell \\parallel m$:\n\n1. $\\ell \\perp t$ — Given\n2. $m \\perp t$ — Given\n3. $\\angle 2$ is a right angle — Definition of perpendicular lines\n4. $\\angle 6$ is a right angle — Definition of perpendicular lines\n5. $\\angle 2 \\cong \\angle 6$ — Right Angles Congruence Theorem\n6. $\\ell \\parallel m$ — Converse of the Corresponding Angles Postulate",
-        "**定理**：在同一平面内，垂直于同一条直线的两条直线平行。\n\n已知 $\\ell \\perp t$，$m \\perp t$，求证 $\\ell \\parallel m$：\n\n1. $\\ell \\perp t$ — 已知\n2. $m \\perp t$ — 已知\n3. $\\angle 2$ 是直角 — 垂直的定义\n4. $\\angle 6$ 是直角 — 垂直的定义\n5. $\\angle 2 \\cong \\angle 6$ — 直角相等定理\n6. $\\ell \\parallel m$ — 同位角公设的逆命题",
+      figure: angleDrawings["perpendicular-transversal-theorem"],
+    },
+    {
+      ...proofKp(
+        "lines-perpendicular-to-the-same-line",
+        t("Lines perpendicular to the same line", "垂直于同一直线的两直线"),
+        t(
+          "**Theorem**: in a plane, two lines perpendicular to the same line are parallel.\n\nGiven $\\ell \\perp t$ and $m \\perp t$, prove $\\ell \\parallel m$:\n\n1. $\\ell \\perp t$ — Given\n2. $m \\perp t$ — Given\n3. $\\angle 2$ is a right angle — Definition of perpendicular lines\n4. $\\angle 6$ is a right angle — Definition of perpendicular lines\n5. $\\angle 2 \\cong \\angle 6$ — Right Angles Congruence Theorem\n6. $\\ell \\parallel m$ — Converse of the Corresponding Angles Postulate",
+          "**定理**：在同一平面内，垂直于同一条直线的两条直线平行。\n\n已知 $\\ell \\perp t$，$m \\perp t$，求证 $\\ell \\parallel m$：\n\n1. $\\ell \\perp t$ — 已知\n2. $m \\perp t$ — 已知\n3. $\\angle 2$ 是直角 — 垂直的定义\n4. $\\angle 6$ 是直角 — 垂直的定义\n5. $\\angle 2 \\cong \\angle 6$ — 直角相等定理\n6. $\\ell \\parallel m$ — 同位角公设的逆命题",
+        ),
+        "rs",
+        perpendicularToSameLineProof,
       ),
-      "rs",
-      perpendicularToSameLineProof,
-    ),
-    proofKp(
-      "congruent-linear-pairs",
-      t("Congruent linear pairs", "全等的邻补角"),
-      t(
-        "**Theorem**: if two lines form a linear pair of congruent angles, the lines are perpendicular.\n\nGiven $\\angle 1 \\cong \\angle 2$, a linear pair, prove $\\ell \\perp t$:\n\n1. $\\angle 1 \\cong \\angle 2$, and they form a linear pair — Given\n2. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — Linear Pair Postulate\n3. $m\\angle 1 = m\\angle 2$ — Definition of congruent angles\n4. $2m\\angle 1 = 180^\\circ$ — Substitution Property of Equality\n5. $m\\angle 1 = 90^\\circ$ — Division Property of Equality\n6. $\\ell \\perp t$ — Definition of perpendicular lines",
-        "**定理**：若两条直线形成一对全等的邻补角，则这两条直线互相垂直。\n\n已知 $\\angle 1 \\cong \\angle 2$ 且它们是邻补角，求证 $\\ell \\perp t$：\n\n1. $\\angle 1 \\cong \\angle 2$，且它们是邻补角 — 已知\n2. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — 邻补角公设\n3. $m\\angle 1 = m\\angle 2$ — 角全等的定义\n4. $2m\\angle 1 = 180^\\circ$ — 等量代换\n5. $m\\angle 1 = 90^\\circ$ — 等式的除法性质\n6. $\\ell \\perp t$ — 垂直的定义",
+      figure: angleDrawings["lines-perpendicular-to-the-same-line"],
+    },
+    {
+      ...proofKp(
+        "congruent-linear-pairs",
+        t("Congruent linear pairs", "全等的邻补角"),
+        t(
+          "**Theorem**: if two lines form a linear pair of congruent angles, the lines are perpendicular.\n\nGiven $\\angle 1 \\cong \\angle 2$, a linear pair, prove $\\ell \\perp t$:\n\n1. $\\angle 1 \\cong \\angle 2$, and they form a linear pair — Given\n2. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — Linear Pair Postulate\n3. $m\\angle 1 = m\\angle 2$ — Definition of congruent angles\n4. $2m\\angle 1 = 180^\\circ$ — Substitution Property of Equality\n5. $m\\angle 1 = 90^\\circ$ — Division Property of Equality\n6. $\\ell \\perp t$ — Definition of perpendicular lines",
+          "**定理**：若两条直线形成一对全等的邻补角，则这两条直线互相垂直。\n\n已知 $\\angle 1 \\cong \\angle 2$ 且它们是邻补角，求证 $\\ell \\perp t$：\n\n1. $\\angle 1 \\cong \\angle 2$，且它们是邻补角 — 已知\n2. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — 邻补角公设\n3. $m\\angle 1 = m\\angle 2$ — 角全等的定义\n4. $2m\\angle 1 = 180^\\circ$ — 等量代换\n5. $m\\angle 1 = 90^\\circ$ — 等式的除法性质\n6. $\\ell \\perp t$ — 垂直的定义",
+        ),
+        "rs",
+        linearPairPerpendicularProof,
       ),
-      "rs",
-      linearPairPerpendicularProof,
-    ),
+      figure: angleDrawings["congruent-linear-pairs"],
+    },
     {
       id: "using-perpendicular-transversals",
+      figure: angleDrawings["using-perpendicular-transversals"],
       title: t("Using perpendicular transversals", "运用垂直截线"),
       explanation: t(
         "By the Perpendicular Transversal Theorem, a transversal perpendicular to one of two parallel lines makes right angles with the other as well. So any angle it forms with the other line measures $90^\\circ$.\n\nIf $\\ell \\parallel m$, $t \\perp \\ell$, and an angle between $t$ and $m$ measures $(4x - 10)^\\circ$, then $4x - 10 = 90$, so $x = 25$.",
@@ -1570,6 +1616,7 @@ export const translationsOfGeometricFigures: TopicDef = {
   knowledgePoints: [
     {
       id: "translating-a-point",
+      figure: motionDrawings["translating-a-point"],
       title: t("Translating a point", "平移一个点"),
       explanation: t(
         "A **transformation** moves every point of the plane to a new position, its **image**; the original point is the **preimage**. The image of $P$ is written $P'$ (\"$P$ prime\").\n\nA **translation** slides every point the same distance in the same direction. Moving right adds to the $x$-coordinate, left subtracts; moving up adds to the $y$-coordinate, down subtracts.\n\nTranslating $P(2, -1)$ $4$ units left and $3$ units up gives $P'(2 - 4, -1 + 3) = P'(-2, 2)$.",
@@ -1603,6 +1650,7 @@ export const translationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "translation-rules",
+      figure: motionDrawings["translation-rules"],
       title: t("Translation rules", "平移的规则"),
       explanation: t(
         "A translation can be written as a **rule** that tells what happens to any point $(x, y)$. The translation $4$ units left and $2$ units up is\n\n$$(x, y) \\to (x - 4, y + 2).$$\n\nA translation moves a whole figure: each vertex moves by the rule, and the image figure has the same size and shape. Under this rule, the vertex $B(1, -3)$ of a triangle goes to $B'(1 - 4, -3 + 2) = B'(-3, -1)$.",
@@ -1647,6 +1695,7 @@ export const translationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "finding-a-translation",
+      figure: motionDrawings["finding-a-translation"],
       title: t("Finding the translation", "求平移"),
       explanation: t(
         "To find the translation that maps $P$ to $P'$, subtract the coordinates of the preimage from those of the image: the rule is $(x, y) \\to (x + a, y + b)$ with\n\n$$a = x_{P'} - x_P, \\quad b = y_{P'} - y_P.$$\n\nIf $P(3, -2)$ maps to $P'(-1, 4)$, then $a = -1 - 3 = -4$ and $b = 4 - (-2) = 6$: the translation moves $4$ units left and $6$ units up.",
@@ -1690,6 +1739,7 @@ export const translationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "finding-the-preimage",
+      figure: motionDrawings["finding-the-preimage"],
       title: t("Finding the preimage", "求原像"),
       explanation: t(
         "To undo a translation, apply the opposite translation. If $(x, y) \\to (x + 3, y - 5)$ maps $P$ to $P'(1, 2)$, then $P$ is found by subtracting $3$ and adding $5$:\n\n$$P = (1 - 3, 2 + 5) = (-2, 7).$$\n\nCheck: $(-2 + 3, 7 - 5) = (1, 2)$.",
@@ -1763,6 +1813,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
   knowledgePoints: [
     {
       id: "quarter-turns",
+      figure: motionDrawings["quarter-turns"],
       title: t("Rotating by 90°", "旋转 90°"),
       explanation: cat(
         t(
@@ -1804,6 +1855,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "half-and-three-quarter-turns",
+      figure: motionDrawings["half-and-three-quarter-turns"],
       title: t("Rotating by 180° and 270°", "旋转 180° 与 270°"),
       explanation: t(
         "A $180^\\circ$ rotation about the origin changes both signs: $(x, y) \\to (-x, -y)$. It is the same clockwise or counterclockwise.\n\nA $270^\\circ$ counterclockwise rotation is the same as a $90^\\circ$ clockwise one: $(x, y) \\to (y, -x)$. Likewise $270^\\circ$ clockwise is $90^\\circ$ counterclockwise.\n\nRotating $(-3, 5)$ by $180^\\circ$ gives $(3, -5)$; by $270^\\circ$ counterclockwise, $(5, 3)$.",
@@ -1843,6 +1895,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "identifying-a-rotation",
+      figure: motionDrawings["identifying-a-rotation"],
       title: t("Identifying a rotation", "判断旋转"),
       explanation: t(
         "To tell which rotation about the origin maps $P$ to $P'$, compare the coordinates with the three rules: a $180^\\circ$ rotation changes both signs; a $90^\\circ$ rotation swaps the coordinates and changes one sign.\n\n$P(2, 5) \\to P'(-5, 2)$ follows $(x, y) \\to (-y, x)$, a $90^\\circ$ counterclockwise rotation. $P(2, 5) \\to P'(5, -2)$ follows $(x, y) \\to (y, -x)$, a $90^\\circ$ clockwise rotation.",
@@ -1881,6 +1934,7 @@ export const rotationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "rotating-about-another-center",
+      figure: motionDrawings["rotating-about-another-center"],
       title: t("Rotating about another center", "绕其他点旋转"),
       explanation: t(
         "To rotate $P$ about a center $C$ other than the origin:\n\n1. Find how $P$ sits relative to $C$: subtract, $(x_P - x_C, y_P - y_C)$.\n2. Rotate that offset with the rule for the origin.\n3. Add $C$ back.\n\nRotating $P(5, 3)$ by $90^\\circ$ counterclockwise about $C(2, 1)$: the offset is $(3, 2)$, it rotates to $(-2, 3)$, and adding $C$ gives $P'(0, 4)$.",
@@ -1973,6 +2027,7 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "composing-rotations",
+      figure: motionDrawings["composing-rotations"],
       title: t("Composing rotations", "旋转的复合"),
       explanation: t(
         "Rotations about the same center combine by adding their angles: $R_{\\alpha}(R_{\\beta}(P)) = R_{\\alpha + \\beta}(P)$. Evaluate from the inside out, or add the angles first. Angles that differ by $360^\\circ$ give the same rotation.\n\n$R_{90^\\circ}(R_{180^\\circ}(2, -3)) = R_{270^\\circ}(2, -3) = R_{-90^\\circ}(2, -3) = (-3, -2)$.",
@@ -2020,6 +2075,7 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "inverting-a-rotation",
+      figure: motionDrawings["inverting-a-rotation"],
       title: t("Inverting a rotation", "旋转的逆"),
       explanation: t(
         "The inverse of a rotation turns back by the same angle: the inverse of $R_{90^\\circ}$ is $R_{-90^\\circ}$, and $R_{180^\\circ}$ is its own inverse.\n\nIf $f(x, y) = (-y, x)$ and $f(P) = (4, -1)$, then $P = R_{-90^\\circ}(4, -1) = (-1, -4)$. Check: $f(-1, -4) = (4, -1)$.",
@@ -2073,6 +2129,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "reflecting-across-the-axes",
+      figure: motionDrawings["reflecting-across-the-axes"],
       title: t("Reflecting across the axes", "关于坐标轴的对称"),
       explanation: t(
         "A **reflection** across a line flips the plane over that line, the **line of reflection**: each point goes to the point on the other side at the same distance, so the line is the perpendicular bisector of every segment $PP'$.\n\n- Across the $x$-axis: $(x, y) \\to (x, -y)$.\n- Across the $y$-axis: $(x, y) \\to (-x, y)$.\n\nThe coordinate along the line stays the same; the other one changes sign. Reflecting $(3, -4)$ across the $y$-axis gives $(-3, -4)$.",
@@ -2104,6 +2161,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "reflecting-across-diagonal-lines",
+      figure: motionDrawings["reflecting-across-diagonal-lines"],
       title: t("Reflecting across y = x and y = −x", "关于 y = x 与 y = −x 的对称"),
       explanation: t(
         "The lines $y = x$ and $y = -x$ run diagonally through the origin.\n\n- Across $y = x$: $(x, y) \\to (y, x)$, the coordinates swap.\n- Across $y = -x$: $(x, y) \\to (-y, -x)$, the coordinates swap and both change sign.\n\nReflecting $(5, -2)$ across $y = x$ gives $(-2, 5)$; across $y = -x$ it gives $(2, -5)$.",
@@ -2138,6 +2196,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "reflecting-across-horizontal-and-vertical-lines",
+      figure: motionDrawings["reflecting-across-horizontal-and-vertical-lines"],
       title: t("Reflecting across other horizontal and vertical lines", "关于其他水平或竖直直线的对称"),
       explanation: t(
         "Across a vertical line $x = h$, the $y$-coordinate stays and the point lands as far past the line as it started before it: $(x, y) \\to (2h - x, y)$. Across a horizontal line $y = k$: $(x, y) \\to (x, 2k - y)$.\n\nReflecting $(5, 1)$ across $x = 2$: the point is $3$ units right of the line, so the image is $3$ units left of it, at $(-1, 1)$; indeed $2 \\cdot 2 - 5 = -1$.",
@@ -2183,6 +2242,7 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "identifying-the-line-of-reflection",
+      figure: motionDrawings["identifying-the-line-of-reflection"],
       title: t("Identifying the line of reflection", "判断对称轴"),
       explanation: t(
         "To identify the line of reflection, compare $P$ and $P'$ with the four rules: the $x$-axis keeps $x$ and negates $y$; the $y$-axis negates $x$ and keeps $y$; $y = x$ swaps the coordinates; $y = -x$ swaps them and negates both.\n\n$(4, -1) \\to (1, -4)$ swaps and negates both coordinates: the line is $y = -x$.",
@@ -2248,6 +2308,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
   knowledgePoints: [
     {
       id: "reflecting-across-shifted-diagonals",
+      figure: motionDrawings["reflecting-across-shifted-diagonals"],
       title: t("Reflecting across y = x + c and y = −x + c", "关于 y = x + c 与 y = −x + c 的对称"),
       explanation: t(
         "To reflect across $y = x + c$, shift everything down by $c$ so the line becomes $y = x$, reflect, and shift back up:\n\n$$(x, y) \\to (y - c, \\; x + c).$$\n\nSimilarly, across $y = -x + c$: $(x, y) \\to (c - y, \\; c - x)$.\n\nAcross $y = x + 2$, the point $(5, 1)$ goes to $(1 - 2, 5 + 2) = (-1, 7)$. Check: the midpoint $(2, 4)$ lies on $y = x + 2$.",
@@ -2287,6 +2348,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
     },
     {
       id: "finding-the-line-of-reflection",
+      figure: motionDrawings["finding-the-line-of-reflection"],
       title: t("Finding the line of reflection", "求对称轴"),
       explanation: t(
         "The line of reflection that maps $P$ to $P'$ is the **perpendicular bisector** of $\\overline{PP'}$: it passes through the midpoint of $\\overline{PP'}$ and is perpendicular to it.\n\nFor $P(1, 1)$ and $P'(5, 3)$: the midpoint is $(3, 2)$; the slope of $\\overline{PP'}$ is $\\frac{2}{4} = \\frac{1}{2}$, so the line has slope $-2$. Then $y - 2 = -2(x - 3)$, that is $y = -2x + 8$.",
@@ -2336,6 +2398,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
     },
     {
       id: "reflecting-across-any-line",
+      figure: motionDrawings["reflecting-across-any-line"],
       title: t("Reflecting across any line", "关于任意直线的对称"),
       explanation: t(
         "To reflect $P$ across a line $y = mx + b$:\n\n1. Write the line through $P$ perpendicular to it (slope $-\\frac{1}{m}$).\n2. Find where the two lines meet: the point $F$, which is the midpoint of $\\overline{PP'}$.\n3. Go as far past $F$ as $P$ is before it: $P' = (2x_F - x_P, \\; 2y_F - y_P)$.\n\nAcross $y = 2x$, for $P(-4, 2)$: the perpendicular through $P$ is $y = -\\frac{1}{2}x$; it meets $y = 2x$ at $F(0, 0)$, so $P' = (4, -2)$.",
@@ -2404,6 +2467,7 @@ export const dilationsOfGeometricFigures: TopicDef = {
   knowledgePoints: [
     {
       id: "image-lengths",
+      figure: motionDrawings["image-lengths"],
       title: t("Lengths in the image", "像的长度"),
       explanation: t(
         "A **dilation** with center $C$ and **scale factor** $k > 0$ moves every point $P$ along the ray $CP$ so that $CP' = k \\cdot CP$. It multiplies every length by $k$ and keeps every angle.\n\nIf $AB = 12$ and the scale factor is $\\frac{3}{4}$, then $A'B' = \\frac{3}{4} \\cdot 12 = 9$.",
@@ -2456,6 +2520,7 @@ export const dilationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "enlargements-and-reductions",
+      figure: motionDrawings["enlargements-and-reductions"],
       title: t("Enlargements and reductions", "放大与缩小"),
       explanation: t(
         "The scale factor tells what a dilation does to size:\n\n- $k > 1$: an **enlargement**, the image is larger.\n- $0 < k < 1$: a **reduction**, the image is smaller.\n- $k = 1$: the image is congruent to the preimage.\n\nA scale factor of $\\frac{7}{5}$ enlarges, since $\\frac{7}{5} > 1$; a scale factor of $0.8$ reduces.",
@@ -2497,6 +2562,7 @@ export const dilationsOfGeometricFigures: TopicDef = {
     },
     {
       id: "distances-from-the-center",
+      figure: motionDrawings["distances-from-the-center"],
       title: t("Distances from the center", "到中心的距离"),
       explanation: t(
         "A dilation with center $C$ keeps $C$ fixed and moves each point along its ray from $C$: $CA' = k \\cdot CA$. So the scale factor is $\\frac{CA'}{CA}$, measured from the center, not $\\frac{AA'}{CA}$.\n\nIf $CA = 4$ and $A'$ lies $6$ units beyond $A$, then $CA' = 10$ and $k = \\frac{10}{4} = \\frac{5}{2}$.",

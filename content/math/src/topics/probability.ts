@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, type Point, poly, Q, sketch, solutionsChecker } from "@ga/subject-math";
-
+import { probabilityDrawings } from "../explanation-drawings-solids.ts";
 import { choiceProblem, expressionProblem, numberProblem, steps, why, yesNo } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -1521,6 +1521,7 @@ export const geometricProbability: TopicDef = {
     },
     {
       id: "probability-with-areas",
+      figure: probabilityDrawings["probability-with-areas"],
       title: t("Probability with areas", "面积中的概率"),
       explanation: t(
         "When a point is chosen at random in a region, such as a dart landing anywhere on a board, the probability that it lands in a part of the region is\n\n$$P = \\frac{\\text{area of the part}}{\\text{area of the whole region}}$$\n\nA board is a $10 \\times 8$ rectangle with a $4 \\times 3$ rectangle inside it. The probability that a dart landing on the board hits the small rectangle is $\\frac{12}{80} = \\frac{3}{20}$.",
@@ -1587,6 +1588,7 @@ export const geometricProbability: TopicDef = {
     },
     {
       id: "probability-with-circles",
+      figure: probabilityDrawings["probability-with-circles"],
       title: t("Probability with circles", "圆中的概率"),
       explanation: t(
         "The same ratio of areas works with circles; the answer then contains $\\pi$. A circle of radius $3$ is drawn inside a $10 \\times 8$ rectangle. A point chosen at random in the rectangle lands in the circle with probability\n\n$$\\frac{\\pi \\cdot 3^2}{10 \\times 8} = \\frac{9\\pi}{80}$$\n\nand outside it with probability $1 - \\frac{9\\pi}{80}$.",

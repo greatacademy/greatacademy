@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, num, type Point, Q, radical, simplifyRadical, sketch } from "@ga/subject-math";
-
+import { solidDrawings } from "../explanation-drawings-solids.ts";
 import {
   article,
   choiceProblem,
@@ -1816,6 +1816,7 @@ export const faceDiagonalsOfCubes: TopicDef = {
   knowledgePoints: [
     {
       id: "face-diagonal-from-the-edge",
+      figure: solidDrawings["face-diagonal-from-the-edge"],
       title: t("Face diagonal from the edge", "由棱长求面对角线"),
       explanation: t(
         "A **face diagonal** of a cube joins opposite corners of one face. It is the hypotenuse of a right triangle whose legs are two edges, so by the Pythagorean theorem ($a^2 + b^2 = c^2$ in a right triangle with hypotenuse $c$):\n\n$$d^2 = s^2 + s^2 = 2s^2, \\qquad d = s\\sqrt{2}.$$\n\nA cube with edge $5$ cm has face diagonals $5\\sqrt{2}$ cm long.",
@@ -1925,6 +1926,7 @@ export const diagonalsOfCubes: TopicDef = {
   knowledgePoints: [
     {
       id: "space-diagonal-from-the-edge",
+      figure: solidDrawings["space-diagonal-from-the-edge"],
       title: t("Diagonal from the edge", "由棱长求体对角线"),
       explanation: t(
         "A **diagonal** of a cube (a space diagonal) joins two opposite corners through the interior. It is the hypotenuse of a right triangle whose legs are an edge $s$ and a face diagonal $s\\sqrt{2}$:\n\n$$D^2 = s^2 + (s\\sqrt{2})^2 = 3s^2, \\qquad D = s\\sqrt{3}.$$\n\nA cube with edge $4$ cm has diagonal $4\\sqrt{3}$ cm.",
@@ -2277,6 +2279,7 @@ export const diagonalsOfRectangularSolids: TopicDef = {
   knowledgePoints: [
     {
       id: "face-diagonals-of-a-box",
+      figure: solidDrawings["face-diagonals-of-a-box"],
       title: t("Face diagonals of a box", "长方体的面对角线"),
       explanation: t(
         "Each face of a box is a rectangle, and its diagonal is the hypotenuse of a right triangle with two edges as legs. The diagonal of the bottom face of a box $l$ long and $w$ wide is $\\sqrt{l^2 + w^2}$.\n\nThe front face of a box $6$ cm long and $4$ cm high has diagonal $\\sqrt{36 + 16} = \\sqrt{52} = 2\\sqrt{13}$ cm.",
@@ -2311,6 +2314,7 @@ export const diagonalsOfRectangularSolids: TopicDef = {
     },
     {
       id: "diagonal-of-a-box",
+      figure: solidDrawings["diagonal-of-a-box"],
       title: t("The diagonal of a box", "长方体的体对角线"),
       explanation: t(
         "The diagonal of a box through its interior is the hypotenuse of a right triangle whose legs are the height $h$ and the diagonal of the bottom face, $\\sqrt{l^2 + w^2}$:\n\n$$D = \\sqrt{l^2 + w^2 + h^2}.$$\n\nA box $3 \\times 4 \\times 12$ cm has $D = \\sqrt{9 + 16 + 144} = \\sqrt{169} = 13$ cm. For a cube, $l = w = h = s$ gives $D = s\\sqrt{3}$ again.",
@@ -2554,6 +2558,7 @@ export const volumesOfPyramids: TopicDef = {
     },
     {
       id: "missing-height-or-base-edge",
+      figure: solidDrawings["missing-height-or-base-edge"],
       title: t("A missing height or base edge", "求未知的高或底边长"),
       explanation: t(
         "Solve $V = \\frac{1}{3}Bh$ for the unknown. The height is $h = \\frac{3V}{B}$. For a square base with edge $s$, $B = s^2 = \\frac{3V}{h}$, so $s = \\sqrt{\\frac{3V}{h}}$.\n\nA square pyramid with volume $96\\text{ cm}^3$ and height $8$ cm has $s^2 = \\frac{288}{8} = 36$, so $s = 6$ cm.",
@@ -2615,6 +2620,7 @@ export const surfaceAreasOfPyramids: TopicDef = {
   knowledgePoints: [
     {
       id: "square-pyramids-from-the-slant-height",
+      figure: solidDrawings["square-pyramids-from-the-slant-height"],
       title: t("Square pyramids from the slant height", "由斜高求四棱锥的表面积"),
       explanation: t(
         "In a **regular pyramid** the base is a regular polygon and the apex is above its center, so the lateral faces are congruent isosceles triangles. The height of each triangle, from the middle of a base edge up to the apex, is the **slant height** $l$. Do not confuse it with the height $h$ of the pyramid, which is shorter.\n\nA square pyramid with base edge $s$ has\n\n$$S = s^2 + 4 \\cdot \\frac{1}{2}sl = s^2 + 2sl.$$\n\nWith $s = 10$ cm and $l = 13$ cm, $S = 100 + 260 = 360\\text{ cm}^2$.",
@@ -2647,6 +2653,7 @@ export const surfaceAreasOfPyramids: TopicDef = {
     },
     {
       id: "slant-height-from-the-height",
+      figure: solidDrawings["slant-height-from-the-height"],
       title: t("Slant height from the height", "由高求斜高"),
       explanation: t(
         "If the height $h$ is given instead, find the slant height first. The height, the slant height and the segment from the center of the base to the middle of an edge form a right triangle. For a square base with edge $s$, that segment is $\\frac{s}{2}$, so by the Pythagorean theorem\n\n$$l = \\sqrt{h^2 + \\left(\\frac{s}{2}\\right)^2}.$$\n\nWith $s = 10$ cm and $h = 12$ cm, $l = \\sqrt{144 + 25} = 13$ cm and $S = 100 + 2 \\cdot 10 \\cdot 13 = 360\\text{ cm}^2$.",
@@ -2916,6 +2923,7 @@ export const volumesOfCylinders: TopicDef = {
   knowledgePoints: [
     {
       id: "volume-in-terms-of-pi",
+      figure: solidDrawings["volume-in-terms-of-pi"],
       title: t("Volume in terms of π", "用 π 表示体积"),
       explanation: t(
         "Like a prism, a cylinder has volume base area times height, $V = Bh$. Its base is a circle of radius $r$, with area $\\pi r^2$, so\n\n$$V = \\pi r^2 h.$$\n\nA cylinder with radius $3$ cm and height $5$ cm has $V = \\pi \\cdot 9 \\cdot 5 = 45\\pi\\text{ cm}^3$. Leaving the answer in terms of $\\pi$ keeps it exact. If the diameter is given, halve it first.",
@@ -2996,6 +3004,7 @@ export const volumesOfCylinders: TopicDef = {
     },
     {
       id: "missing-radius-or-height",
+      figure: solidDrawings["missing-radius-or-height"],
       title: t("A missing radius or height", "求未知的半径或高"),
       explanation: t(
         "Substitute into $V = \\pi r^2 h$ and divide both sides by $\\pi$.\n\nA cylinder with volume $72\\pi\\text{ cm}^3$ and radius $3$ cm has $9h = 72$, so $h = 8$ cm. A cylinder with volume $80\\pi\\text{ cm}^3$ and height $5$ cm has $r^2 = 16$, so $r = 4$ cm.",
@@ -3055,6 +3064,7 @@ export const surfaceAreasOfCylinders: TopicDef = {
   knowledgePoints: [
     {
       id: "lateral-area-of-a-cylinder",
+      figure: solidDrawings["lateral-area-of-a-cylinder"],
       title: t("Lateral area", "侧面积"),
       explanation: t(
         "Cut the curved side of a cylinder straight down and unroll it: it becomes a rectangle. Its height is the height $h$ of the cylinder, and its width is the circumference of the base, $2\\pi r$. So the **lateral area** is\n\n$$L = 2\\pi r h.$$\n\nA cylinder with radius $4$ cm and height $7$ cm has $L = 2\\pi \\cdot 4 \\cdot 7 = 56\\pi\\text{ cm}^2$.",
@@ -3101,6 +3111,7 @@ export const surfaceAreasOfCylinders: TopicDef = {
     },
     {
       id: "total-surface-area-of-a-cylinder",
+      figure: solidDrawings["total-surface-area-of-a-cylinder"],
       title: t("Total surface area", "表面积"),
       explanation: t(
         "The net of a cylinder is two circles and a rectangle. Adding the two bases to the lateral area gives the surface area\n\n$$S = 2\\pi r^2 + 2\\pi r h.$$\n\nA cylinder with radius $3$ cm and height $5$ cm has $S = 18\\pi + 30\\pi = 48\\pi\\text{ cm}^2$.",
@@ -3204,6 +3215,7 @@ export const volumesOfRightCones: TopicDef = {
   knowledgePoints: [
     {
       id: "one-third-of-a-cylinder",
+      figure: solidDrawings["one-third-of-a-cylinder"],
       title: t("One third of a cylinder", "圆柱的三分之一"),
       explanation: t(
         "In a **right cone** the apex is directly above the center of the circular base; the **height** $h$ is the distance from the apex to the base. Like a pyramid, a cone holds one third of the cylinder with the same base and height:\n\n$$V = \\frac{1}{3}\\pi r^2 h.$$\n\nA cone with radius $3$ cm and height $4$ cm has $V = \\frac{1}{3}\\pi \\cdot 9 \\cdot 4 = 12\\pi\\text{ cm}^3$.",
@@ -3273,6 +3285,7 @@ export const volumesOfRightCones: TopicDef = {
     },
     {
       id: "missing-radius-or-height-of-a-cone",
+      figure: solidDrawings["missing-radius-or-height-of-a-cone"],
       title: t("A missing radius or height", "求未知的半径或高"),
       explanation: t(
         "Substitute into $V = \\frac{1}{3}\\pi r^2 h$, divide by $\\pi$ and multiply by $3$.\n\nA cone with volume $50\\pi\\text{ cm}^3$ and radius $5$ cm has $\\frac{1}{3} \\cdot 25h = 50$, so $25h = 150$ and $h = 6$ cm.",
@@ -3352,6 +3365,7 @@ export const slantHeightsOfRightCones: TopicDef = {
   knowledgePoints: [
     {
       id: "slant-height-from-radius-and-height",
+      figure: solidDrawings["slant-height-from-radius-and-height"],
       title: t("Slant height from radius and height", "由半径和高求母线长"),
       explanation: t(
         "The **slant height** $l$ of a right cone is the distance from the apex to any point on the edge of the base. The height $h$, a radius $r$ and the slant height form a right triangle with $l$ as hypotenuse, so\n\n$$l = \\sqrt{r^2 + h^2}.$$\n\nA cone with radius $5$ cm and height $12$ cm has $l = \\sqrt{25 + 144} = 13$ cm; with radius $2$ and height $4$, $l = \\sqrt{20} = 2\\sqrt{5}$.",
@@ -3385,6 +3399,7 @@ export const slantHeightsOfRightCones: TopicDef = {
     },
     {
       id: "height-from-slant-height",
+      figure: solidDrawings["height-from-slant-height"],
       title: t("Height from the slant height", "由母线长求高"),
       explanation: t(
         "The slant height is the hypotenuse, so subtract to find a leg:\n\n$$h = \\sqrt{l^2 - r^2}.$$\n\nA cone with slant height $10$ cm and radius $6$ cm has $h = \\sqrt{100 - 36} = 8$ cm.",
@@ -3472,6 +3487,7 @@ export const surfaceAreasOfRightCones: TopicDef = {
   knowledgePoints: [
     {
       id: "lateral-area-of-a-cone",
+      figure: solidDrawings["lateral-area-of-a-cone"],
       title: t("Lateral area", "侧面积"),
       explanation: t(
         "Unrolled, the curved surface of a cone is a sector of a circle of radius $l$, whose arc is the circumference of the base, $2\\pi r$. Its area is a fraction $\\frac{2\\pi r}{2\\pi l} = \\frac{r}{l}$ of the full circle $\\pi l^2$, so the **lateral area** is\n\n$$L = \\pi r l.$$\n\nA cone with radius $3$ cm and slant height $5$ cm has $L = 15\\pi\\text{ cm}^2$. Use the slant height here, not the height.",
@@ -3538,6 +3554,7 @@ export const surfaceAreasOfRightCones: TopicDef = {
     },
     {
       id: "surface-area-from-the-height",
+      figure: solidDrawings["surface-area-from-the-height"],
       title: t("Surface area from the height", "由高求表面积"),
       explanation: t(
         "If the height is given instead of the slant height, find $l = \\sqrt{r^2 + h^2}$ first.\n\nA cone with radius $6$ cm and height $8$ cm has $l = \\sqrt{36 + 64} = 10$ cm, so $S = 36\\pi + 60\\pi = 96\\pi\\text{ cm}^2$.",
@@ -3589,6 +3606,7 @@ export const volumesOfSpheres: TopicDef = {
   knowledgePoints: [
     {
       id: "volume-of-a-sphere",
+      figure: solidDrawings["volume-of-a-sphere"],
       title: t("Volume of a sphere", "球的体积"),
       explanation: t(
         "A sphere of radius $r$ has volume\n\n$$V = \\frac{4}{3}\\pi r^3.$$\n\nIt is two thirds of the cylinder that just contains it (radius $r$, height $2r$, volume $2\\pi r^3$). A sphere with radius $3$ cm has $V = \\frac{4}{3}\\pi \\cdot 27 = 36\\pi\\text{ cm}^3$; with diameter $4$ cm, $r = 2$ and $V = \\frac{32}{3}\\pi\\text{ cm}^3$.",
@@ -3656,6 +3674,7 @@ export const volumesOfSpheres: TopicDef = {
     },
     {
       id: "radius-from-the-volume",
+      figure: solidDrawings["radius-from-the-volume"],
       title: t("Radius from the volume", "由体积求半径"),
       explanation: t(
         "Substitute into $V = \\frac{4}{3}\\pi r^3$, divide by $\\pi$, multiply by $\\frac{3}{4}$, and take the cube root.\n\nA sphere with volume $288\\pi\\text{ cm}^3$ has $\\frac{4}{3}r^3 = 288$, so $r^3 = 216$ and $r = 6$ cm.",
@@ -3836,6 +3855,7 @@ export const conicalFrustums: TopicDef = {
   knowledgePoints: [
     {
       id: "frustum-as-a-difference-of-cones",
+      figure: solidDrawings["frustum-as-a-difference-of-cones"],
       title: t("A difference of cones", "两个圆锥之差"),
       explanation: t(
         "Cutting a cone by a plane parallel to its base removes a small cone from the top and leaves a **frustum**: a solid with two parallel circular faces of different sizes. Its volume is the volume of the whole cone minus the volume of the small cone.\n\nA cone of radius $6$ cm and height $8$ cm, with the top cone of radius $3$ cm and height $4$ cm cut off, leaves\n\n$$V = \\frac{1}{3}\\pi \\cdot 36 \\cdot 8 - \\frac{1}{3}\\pi \\cdot 9 \\cdot 4 = 96\\pi - 12\\pi = 84\\pi\\text{ cm}^3.$$",

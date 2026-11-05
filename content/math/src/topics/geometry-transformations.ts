@@ -1,6 +1,7 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type PlaneView, type Point, paren, plane, Q, sketch } from "@ga/subject-math";
+import { angleDrawings, motionDrawings } from "../explanation-drawings-angles.ts";
 import { tracked } from "../graph-figures.ts";
 import { movedPoint, movedPolygon } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
@@ -572,35 +573,45 @@ export const furtherProvingPerpendicularLineTheorems: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
-    proofKp(
-      "perpendicular-lines-form-four-right-angles",
-      t("Perpendicular lines form four right angles", "垂直的直线形成四个直角"),
-      t(
-        "**Theorem**: if two lines are perpendicular, all four angles they form are right angles. The definition of perpendicular lines gives one right angle; the others follow from linear pairs or vertical angles.\n\nGiven $\\ell \\perp t$, prove $\\angle 2$ is a right angle:\n\n1. $\\ell \\perp t$ — Given\n2. $\\angle 1$ is a right angle — Definition of perpendicular lines\n3. $m\\angle 1 = 90^\\circ$ — Definition of right angle\n4. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — Linear Pair Postulate\n5. $90^\\circ + m\\angle 2 = 180^\\circ$ — Substitution Property of Equality\n6. $m\\angle 2 = 90^\\circ$ — Subtraction Property of Equality\n7. $\\angle 2$ is a right angle — Definition of right angle\n\nFor the angle vertical to $\\angle 1$, use the Vertical Angles Theorem instead: $\\angle 1 \\cong \\angle 4$, so $m\\angle 4 = m\\angle 1 = 90^\\circ$.",
-        "**定理**：若两条直线互相垂直，则它们形成的四个角都是直角。由垂直的定义得到一个直角；其余的由邻补角或对顶角推出。\n\n已知 $\\ell \\perp t$，求证 $\\angle 2$ 是直角：\n\n1. $\\ell \\perp t$ — 已知\n2. $\\angle 1$ 是直角 — 垂直的定义\n3. $m\\angle 1 = 90^\\circ$ — 直角的定义\n4. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — 邻补角公设\n5. $90^\\circ + m\\angle 2 = 180^\\circ$ — 等量代换\n6. $m\\angle 2 = 90^\\circ$ — 等式的减法性质\n7. $\\angle 2$ 是直角 — 直角的定义\n\n对于 $\\angle 1$ 的对顶角，改用对顶角定理：$\\angle 1 \\cong \\angle 4$，所以 $m\\angle 4 = m\\angle 1 = 90^\\circ$。",
+    {
+      ...proofKp(
+        "perpendicular-lines-form-four-right-angles",
+        t("Perpendicular lines form four right angles", "垂直的直线形成四个直角"),
+        t(
+          "**Theorem**: if two lines are perpendicular, all four angles they form are right angles. The definition of perpendicular lines gives one right angle; the others follow from linear pairs or vertical angles.\n\nGiven $\\ell \\perp t$, prove $\\angle 2$ is a right angle:\n\n1. $\\ell \\perp t$ — Given\n2. $\\angle 1$ is a right angle — Definition of perpendicular lines\n3. $m\\angle 1 = 90^\\circ$ — Definition of right angle\n4. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — Linear Pair Postulate\n5. $90^\\circ + m\\angle 2 = 180^\\circ$ — Substitution Property of Equality\n6. $m\\angle 2 = 90^\\circ$ — Subtraction Property of Equality\n7. $\\angle 2$ is a right angle — Definition of right angle\n\nFor the angle vertical to $\\angle 1$, use the Vertical Angles Theorem instead: $\\angle 1 \\cong \\angle 4$, so $m\\angle 4 = m\\angle 1 = 90^\\circ$.",
+          "**定理**：若两条直线互相垂直，则它们形成的四个角都是直角。由垂直的定义得到一个直角；其余的由邻补角或对顶角推出。\n\n已知 $\\ell \\perp t$，求证 $\\angle 2$ 是直角：\n\n1. $\\ell \\perp t$ — 已知\n2. $\\angle 1$ 是直角 — 垂直的定义\n3. $m\\angle 1 = 90^\\circ$ — 直角的定义\n4. $m\\angle 1 + m\\angle 2 = 180^\\circ$ — 邻补角公设\n5. $90^\\circ + m\\angle 2 = 180^\\circ$ — 等量代换\n6. $m\\angle 2 = 90^\\circ$ — 等式的减法性质\n7. $\\angle 2$ 是直角 — 直角的定义\n\n对于 $\\angle 1$ 的对顶角，改用对顶角定理：$\\angle 1 \\cong \\angle 4$，所以 $m\\angle 4 = m\\angle 1 = 90^\\circ$。",
+        ),
+        (rng) => (rng.bool() ? linearPairRightProof(rng) : verticalRightProof(rng)),
       ),
-      (rng) => (rng.bool() ? linearPairRightProof(rng) : verticalRightProof(rng)),
-    ),
-    proofKp(
-      "perpendicular-sides-make-complementary-angles",
-      t("Perpendicular sides make complementary angles", "两边垂直的相邻角互余"),
-      t(
-        "**Theorem**: if the outer sides of two adjacent angles are perpendicular, the angles are complementary.\n\nGiven $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ with $\\overrightarrow{BD}$ between them, prove $\\angle ABD$ and $\\angle DBC$ are complementary:\n\n1. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — Given\n2. $\\angle ABC$ is a right angle — Definition of perpendicular lines\n3. $m\\angle ABC = 90^\\circ$ — Definition of right angle\n4. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — Angle Addition Postulate\n5. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — Substitution Property of Equality\n6. $\\angle ABD$ and $\\angle DBC$ are complementary — Definition of complementary angles",
-        "**定理**：若两个相邻角的外侧两边互相垂直，则这两个角互余。\n\n已知 $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$，$\\overrightarrow{BD}$ 在它们之间，求证 $\\angle ABD$ 与 $\\angle DBC$ 互余：\n\n1. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — 已知\n2. $\\angle ABC$ 是直角 — 垂直的定义\n3. $m\\angle ABC = 90^\\circ$ — 直角的定义\n4. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — 角的加法公设\n5. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — 等量代换\n6. $\\angle ABD$ 与 $\\angle DBC$ 互余 — 余角的定义",
+      figure: angleDrawings["perpendicular-lines-form-four-right-angles"],
+    },
+    {
+      ...proofKp(
+        "perpendicular-sides-make-complementary-angles",
+        t("Perpendicular sides make complementary angles", "两边垂直的相邻角互余"),
+        t(
+          "**Theorem**: if the outer sides of two adjacent angles are perpendicular, the angles are complementary.\n\nGiven $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ with $\\overrightarrow{BD}$ between them, prove $\\angle ABD$ and $\\angle DBC$ are complementary:\n\n1. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — Given\n2. $\\angle ABC$ is a right angle — Definition of perpendicular lines\n3. $m\\angle ABC = 90^\\circ$ — Definition of right angle\n4. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — Angle Addition Postulate\n5. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — Substitution Property of Equality\n6. $\\angle ABD$ and $\\angle DBC$ are complementary — Definition of complementary angles",
+          "**定理**：若两个相邻角的外侧两边互相垂直，则这两个角互余。\n\n已知 $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$，$\\overrightarrow{BD}$ 在它们之间，求证 $\\angle ABD$ 与 $\\angle DBC$ 互余：\n\n1. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — 已知\n2. $\\angle ABC$ 是直角 — 垂直的定义\n3. $m\\angle ABC = 90^\\circ$ — 直角的定义\n4. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — 角的加法公设\n5. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — 等量代换\n6. $\\angle ABD$ 与 $\\angle DBC$ 互余 — 余角的定义",
+        ),
+        perpendicularSidesProof,
       ),
-      perpendicularSidesProof,
-    ),
-    proofKp(
-      "complementary-adjacent-angles-make-perpendicular-sides",
-      t("Complementary adjacent angles make perpendicular sides", "互余的相邻角两边垂直"),
-      t(
-        "The converse also holds: **if two adjacent angles are complementary, their outer sides are perpendicular.** The proof runs the same steps the other way.\n\nGiven that $\\angle ABD$ and $\\angle DBC$ are complementary, prove $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$:\n\n1. $\\angle ABD$ and $\\angle DBC$ are complementary — Given\n2. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — Definition of complementary angles\n3. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — Angle Addition Postulate\n4. $m\\angle ABC = 90^\\circ$ — Substitution Property of Equality\n5. $\\angle ABC$ is a right angle — Definition of right angle\n6. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — Definition of perpendicular lines",
-        "逆命题也成立：**若两个相邻角互余，则它们的外侧两边互相垂直。** 证明把同样的步骤倒过来。\n\n已知 $\\angle ABD$ 与 $\\angle DBC$ 互余，求证 $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$：\n\n1. $\\angle ABD$ 与 $\\angle DBC$ 互余 — 已知\n2. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — 余角的定义\n3. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — 角的加法公设\n4. $m\\angle ABC = 90^\\circ$ — 等量代换\n5. $\\angle ABC$ 是直角 — 直角的定义\n6. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — 垂直的定义",
+      figure: angleDrawings["perpendicular-sides-make-complementary-angles"],
+    },
+    {
+      ...proofKp(
+        "complementary-adjacent-angles-make-perpendicular-sides",
+        t("Complementary adjacent angles make perpendicular sides", "互余的相邻角两边垂直"),
+        t(
+          "The converse also holds: **if two adjacent angles are complementary, their outer sides are perpendicular.** The proof runs the same steps the other way.\n\nGiven that $\\angle ABD$ and $\\angle DBC$ are complementary, prove $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$:\n\n1. $\\angle ABD$ and $\\angle DBC$ are complementary — Given\n2. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — Definition of complementary angles\n3. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — Angle Addition Postulate\n4. $m\\angle ABC = 90^\\circ$ — Substitution Property of Equality\n5. $\\angle ABC$ is a right angle — Definition of right angle\n6. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — Definition of perpendicular lines",
+          "逆命题也成立：**若两个相邻角互余，则它们的外侧两边互相垂直。** 证明把同样的步骤倒过来。\n\n已知 $\\angle ABD$ 与 $\\angle DBC$ 互余，求证 $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$：\n\n1. $\\angle ABD$ 与 $\\angle DBC$ 互余 — 已知\n2. $m\\angle ABD + m\\angle DBC = 90^\\circ$ — 余角的定义\n3. $m\\angle ABD + m\\angle DBC = m\\angle ABC$ — 角的加法公设\n4. $m\\angle ABC = 90^\\circ$ — 等量代换\n5. $\\angle ABC$ 是直角 — 直角的定义\n6. $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ — 垂直的定义",
+        ),
+        complementaryConverseProof,
       ),
-      complementaryConverseProof,
-    ),
+      figure: angleDrawings["complementary-adjacent-angles-make-perpendicular-sides"],
+    },
     {
       id: "finding-angles-with-perpendicular-lines",
+      figure: angleDrawings["finding-angles-with-perpendicular-lines"],
       title: t("Finding angles with perpendicular lines", "用垂直关系求角"),
       explanation: t(
         "The theorems turn perpendicularity into equations:\n\n- Perpendicular lines form four right angles, so any one of the four angles measures $90^\\circ$.\n- If $\\overrightarrow{BA} \\perp \\overrightarrow{BC}$ and $\\overrightarrow{BD}$ lies between them, then $m\\angle ABD + m\\angle DBC = 90^\\circ$.\n\nIf $m\\angle ABD = (2x + 5)^\\circ$ and $m\\angle DBC = (3x - 15)^\\circ$, then $5x - 10 = 90$, so $5x = 100$ and $x = 20$.",
@@ -711,6 +722,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "dilating-about-the-origin",
+      figure: motionDrawings["dilating-about-the-origin"],
       title: t("Dilating about the origin", "以原点为中心的位似"),
       explanation: t(
         "A dilation with center at the origin and scale factor $k$ multiplies **both** coordinates by $k$:\n\n$$(x, y) \\to (kx, ky).$$\n\nEach image lies on the ray from the origin through the point, $k$ times as far away. With $k = \\frac{3}{2}$, the point $P(4, -6)$ goes to $P'\\left(\\frac{3}{2} \\cdot 4, \\frac{3}{2} \\cdot (-6)\\right) = P'(6, -9)$.",
@@ -739,6 +751,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "dilating-a-figure",
+      figure: motionDrawings["dilating-a-figure"],
       title: t("Dilating a figure", "对图形作位似"),
       explanation: t(
         "To dilate a polygon about the origin, apply the rule $(x, y) \\to (kx, ky)$ to each vertex and join the images in the same order. The image has the same angles, and every side is $k$ times as long.\n\nUnder $(x, y) \\to (\\frac{1}{2}x, \\frac{1}{2}y)$, the vertex $B(-4, 6)$ of triangle $ABC$ goes to $B'(-2, 3)$.",
@@ -785,6 +798,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "scale-factors-from-coordinates",
+      figure: motionDrawings["scale-factors-from-coordinates"],
       title: t("Scale factors from coordinates", "由坐标求比例因子"),
       explanation: t(
         "If a dilation about the origin maps $P(x, y)$ to $P'(x', y')$, then $x' = kx$ and $y' = ky$, so\n\n$$k = \\frac{x'}{x} = \\frac{y'}{y}.$$\n\nIf $P(6, -4)$ maps to $P'(9, -6)$, then $k = \\frac{9}{6} = \\frac{3}{2}$; the $y$-coordinates agree: $\\frac{-6}{-4} = \\frac{3}{2}$. Image over preimage, not the other way round.",
@@ -814,6 +828,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "dilating-about-another-center",
+      figure: motionDrawings["dilating-about-another-center"],
       title: t("Dilating about another center", "以其他点为中心的位似"),
       explanation: t(
         "To dilate $P$ about a center $C$ other than the origin:\n\n1. Find how $P$ sits relative to $C$: $(x_P - x_C, y_P - y_C)$.\n2. Multiply that offset by $k$.\n3. Add $C$ back.\n\nDilating $P(7, 1)$ about $C(3, -1)$ with $k = \\frac{1}{2}$: the offset is $(4, 2)$, half of it is $(2, 1)$, and adding $C$ gives $P'(5, 0)$.",
@@ -888,6 +903,7 @@ export const stretchesOfGeometricFigures: TopicDef = {
   knowledgePoints: [
     {
       id: "horizontal-and-vertical-stretches",
+      figure: motionDrawings["horizontal-and-vertical-stretches"],
       title: t("Horizontal and vertical stretches", "水平与竖直伸缩"),
       explanation: t(
         "A **stretch** multiplies only one coordinate:\n\n- A **vertical stretch** by a factor of $k$ (from the $x$-axis): $(x, y) \\to (x, ky)$. Points on the $x$-axis stay fixed.\n- A **horizontal stretch** by a factor of $k$ (from the $y$-axis): $(x, y) \\to (kx, y)$. Points on the $y$-axis stay fixed.\n\nWhen $0 < k < 1$, the stretch squeezes the figure. Unlike a dilation, a stretch changes the shape of most figures.\n\nStretching $P(3, -4)$ vertically by a factor of $\\frac{5}{2}$ gives $P'(3, -10)$.",
@@ -918,6 +934,7 @@ export const stretchesOfGeometricFigures: TopicDef = {
     },
     {
       id: "areas-of-stretched-figures",
+      figure: motionDrawings["areas-of-stretched-figures"],
       title: t("Areas of stretched figures", "伸缩后图形的面积"),
       explanation: t(
         "A vertical stretch by $k$ multiplies every vertical length by $k$ and leaves horizontal lengths alone (a horizontal stretch does the opposite). So it multiplies areas by $k$, not by $k^2$ as a dilation does.\n\nA $4 \\times 3$ rectangle stretched vertically by a factor of $2$ becomes a $4 \\times 6$ rectangle: its area goes from $12$ to $24$.",
@@ -1334,6 +1351,7 @@ export const combiningGeometricTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "applying-two-transformations",
+      figure: motionDrawings["applying-two-transformations"],
       title: t("Applying two transformations", "施行两个变换"),
       explanation: t(
         "To apply a sequence of transformations, apply them **in the order given**, each one to the image of the one before.\n\nReflect $P(2, 5)$ across the $x$-axis, then translate by $(x, y) \\to (x - 3, y + 1)$:\n\n1. Reflection: $P_1 = (2, -5)$\n2. Translation: $P' = (-1, -4)$\n\nThe order matters: translating first gives $(-1, 6)$, and reflecting that gives $(-1, -6)$, a different point.",
@@ -1366,6 +1384,7 @@ export const combiningGeometricTransformations: TopicDef = {
     },
     {
       id: "sequences-with-dilations",
+      figure: motionDrawings["sequences-with-dilations"],
       title: t("Sequences with dilations", "含位似的变换序列"),
       explanation: t(
         "A sequence may mix rigid motions with dilations. Keep applying each transformation to the latest image.\n\nDilate $P(1, -2)$ about the origin with scale factor $3$, rotate $90^\\circ$ counterclockwise about the origin, then translate by $(x, y) \\to (x + 2, y - 4)$:\n\n1. Dilation: $P_1 = (3, -6)$\n2. Rotation: $P_2 = (6, 3)$\n3. Translation: $P' = (8, -1)$",
@@ -1397,6 +1416,7 @@ export const combiningGeometricTransformations: TopicDef = {
     },
     {
       id: "undoing-a-sequence",
+      figure: motionDrawings["undoing-a-sequence"],
       title: t("Undoing a sequence", "还原变换序列"),
       explanation: t(
         "To find the preimage, undo the transformations **in reverse order**: undo the last one first. A translation is undone by the opposite translation, a reflection by itself, and a rotation by the same rotation in the other direction.\n\nIf $P$ is rotated $90^\\circ$ counterclockwise about the origin and then translated by $(x, y) \\to (x + 1, y - 2)$ to $P'(4, 3)$:\n\n1. Undo the translation: $(4 - 1, 3 + 2) = (3, 5)$\n2. Undo the rotation (rotate $90^\\circ$ clockwise): $P = (5, -3)$\n\nCheck: rotating $(5, -3)$ gives $(3, 5)$, and translating gives $(4, 3)$.",
@@ -1720,6 +1740,7 @@ export const reflectiveSymmetry: TopicDef = {
   knowledgePoints: [
     {
       id: "lines-of-symmetry-of-polygons",
+      figure: motionDrawings["lines-of-symmetry-of-polygons"],
       title: t("Lines of symmetry of polygons", "多边形的对称轴"),
       explanation: t(
         "A figure has **reflective symmetry** when a reflection maps it onto itself; the line of that reflection is a **line of symmetry**, and folding along it makes the two halves match.\n\n- A regular polygon with $n$ sides has $n$ lines of symmetry.\n- A rectangle has $2$ (through the midpoints of opposite sides) and a rhombus has $2$ (its diagonals); a square, which is both, has $4$.\n- An isosceles triangle, an isosceles trapezoid and a kite have $1$.\n- A scalene triangle and a parallelogram that is neither a rectangle nor a rhombus have none: the diagonal of a parallelogram is **not** a line of symmetry.",
@@ -1744,6 +1765,7 @@ export const reflectiveSymmetry: TopicDef = {
     },
     {
       id: "points-paired-by-a-line-of-symmetry",
+      figure: motionDrawings["points-paired-by-a-line-of-symmetry"],
       title: t("Points paired by a line of symmetry", "对称轴配对的点"),
       explanation: t(
         "If a line is a line of symmetry of a figure, reflecting any point of the figure across the line gives another point of the figure.\n\n- Across $x = a$: $(x, y) \\to (2a - x, y)$, since the two points are equally far from $x = a$.\n- Across $y = b$: $(x, y) \\to (x, 2b - y)$.\n- Across $y = x$: $(x, y) \\to (y, x)$; across $y = -x$: $(x, y) \\to (-y, -x)$.\n\nIf $x = 3$ is a line of symmetry and $(5, -2)$ is on the figure, so is $(2 \\cdot 3 - 5, -2) = (1, -2)$.",
@@ -1909,6 +1931,7 @@ export const rotationalSymmetry: TopicDef = {
   knowledgePoints: [
     {
       id: "order-of-rotational-symmetry",
+      figure: motionDrawings["order-of-rotational-symmetry"],
       title: t("Order of rotational symmetry", "旋转对称的阶数"),
       explanation: t(
         "A figure has **rotational symmetry** when a rotation about its center by less than $360^\\circ$ maps it onto itself. The **order** is the number of positions in one full turn in which the figure looks exactly the same, counting the starting position. A figure with no rotational symmetry has order $1$.\n\n- A regular polygon with $n$ sides has order $n$.\n- A parallelogram, including a rectangle or a rhombus, has order $2$: a half turn maps it onto itself. (A square has order $4$.)\n- An isosceles triangle, a kite and a trapezoid have order $1$, although some have a line of symmetry.",
@@ -1937,6 +1960,7 @@ export const rotationalSymmetry: TopicDef = {
     },
     {
       id: "angles-of-rotational-symmetry",
+      figure: motionDrawings["angles-of-rotational-symmetry"],
       title: t("Angles of rotational symmetry", "旋转对称的角"),
       explanation: t(
         "A figure of order $n$ maps onto itself under a rotation by $\\frac{360^\\circ}{n}$ and by every multiple of it. For a regular polygon with $n$ sides, the smallest such angle is $\\frac{360^\\circ}{n}$.\n\nA regular pentagon maps onto itself under rotations of $72^\\circ$, $144^\\circ$, $216^\\circ$ and $288^\\circ$, but not $90^\\circ$. If the smallest angle is $40^\\circ$, the polygon has $\\frac{360}{40} = 9$ sides.",
@@ -2002,6 +2026,7 @@ export const rotationalSymmetry: TopicDef = {
     },
     {
       id: "rotational-symmetry-in-the-coordinate-plane",
+      figure: motionDrawings["rotational-symmetry-in-the-coordinate-plane"],
       title: t("Rotational symmetry in the coordinate plane", "坐标平面中的旋转对称"),
       explanation: t(
         "If a figure has rotational symmetry about a center $C$, rotating any point of the figure about $C$ by an angle of symmetry gives another point of the figure.\n\n- Order $2$ about $C(a, b)$: a half turn maps $(x, y)$ to $(2a - x, 2b - y)$, since $C$ is the midpoint of each point and its image.\n- Order $4$ about the origin: a quarter turn counterclockwise maps $(x, y)$ to $(-y, x)$.\n\nA parallelogram with center $C(1, 2)$ and a vertex $(4, 7)$ has the opposite vertex $(2 - 4, 4 - 7) = (-2, -3)$.",

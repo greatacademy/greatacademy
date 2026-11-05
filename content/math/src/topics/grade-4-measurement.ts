@@ -1,7 +1,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { dotPlot, gcd, type Mark, type Point, Q, sketch, svgDocument } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, mixedLatex, numberProblem } from "../problems.ts";
 
 // 4th Grade Math: units of measure and conversions, line plots, and the geometry of points, lines and angles.
@@ -1161,6 +1161,7 @@ export const measuringAnglesUsingAProtractor = topic(
   [
     {
       id: "reading-a-protractor-from-zero",
+      figure: gradeDrawings["reading-a-protractor-from-zero"],
       title: t("One ray at zero", "一条边对准 0°"),
       explanation: t(
         "One ray is at $0^\\circ$ and the other crosses the scale at $65^\\circ$, so the angle measures $65^\\circ$.",
@@ -1189,6 +1190,7 @@ export const measuringAnglesUsingAProtractor = topic(
     },
     {
       id: "reading-a-protractor-between-two-marks",
+      figure: gradeDrawings["reading-a-protractor-between-two-marks"],
       title: t("Neither ray at zero", "两条边都不在 0°"),
       explanation: t(
         "When neither ray is on $0^\\circ$, read the marks where both rays cross the protractor on the same scale, then subtract the smaller reading from the larger.\n\nThe rays are at $40^\\circ$ and $115^\\circ$, so the angle measures $115^\\circ - 40^\\circ = 75^\\circ$. Reading only one ray would give $115^\\circ$, which is wrong.",
@@ -1356,6 +1358,7 @@ export const acuteObtuseAndReflexAngles = topic(
     },
     {
       id: "finding-reflex-angles",
+      figure: gradeDrawings["finding-reflex-angles"],
       title: t("The reflex angle", "求优角"),
       explanation: t(
         "Two rays from a point make two angles that together fill a full turn. So the reflex angle is $360^\\circ$ minus the smaller angle.\n\nIf the smaller angle between two rays is $70^\\circ$, the reflex angle between them is $360^\\circ - 70^\\circ = 290^\\circ$. Subtracting from $180^\\circ$ gives the wrong angle.",
@@ -1553,6 +1556,7 @@ export const sumsOfAngles = topic(
   [
     {
       id: "adding-several-adjacent-angles",
+      figure: gradeDrawings["adding-several-adjacent-angles"],
       title: t("Adding adjacent angles", "相邻角相加"),
       explanation: t(
         "When an angle is split into parts that do not overlap, its measure is the sum of the parts. Add all the parts, however many there are.\n\nAn angle split into $25^\\circ$, $40^\\circ$ and $30^\\circ$ measures $25^\\circ + 40^\\circ + 30^\\circ = 95^\\circ$.",
@@ -1590,6 +1594,7 @@ export const sumsOfAngles = topic(
     },
     {
       id: "angles-around-a-point",
+      figure: gradeDrawings["angles-around-a-point"],
       title: t("Angles around a point", "围绕一点的角"),
       explanation: t(
         "Angles that fill the space around a point make a full turn, so they add up to $360^\\circ$. To find an unknown one, subtract the known angles from $360^\\circ$.\n\nThree angles around a point measure $100^\\circ$, $130^\\circ$ and $130^\\circ$: together $360^\\circ$, a full turn. If the last were unknown, it would be $360^\\circ - 100^\\circ - 130^\\circ = 130^\\circ$.",
@@ -1642,6 +1647,7 @@ export const solvingAngleProblems = topic(
   [
     {
       id: "unknown-parts-of-right-and-straight-angles",
+      figure: gradeDrawings["unknown-parts-of-right-and-straight-angles"],
       title: t("Part of a right or straight angle", "直角或平角的一部分"),
       explanation: t(
         "The parts of a right angle add up to $90^\\circ$, and the parts of a straight angle add up to $180^\\circ$. Subtract the known part from the whole to find the unknown part. Check first which kind of angle it is.\n\nA straight angle split into $65^\\circ$ and $x$: $x = 180^\\circ - 65^\\circ = 115^\\circ$.",
@@ -1748,6 +1754,7 @@ export const parallelAndPerpendicularLines = topic(
   [
     {
       id: "identifying-parallel-and-perpendicular-lines",
+      figure: gradeDrawings["identifying-parallel-and-perpendicular-lines"],
       title: t("Parallel, perpendicular or neither", "平行、垂直还是都不是"),
       explanation: t(
         "Lines that cross with a right-angle mark are perpendicular; lines marked with matching arrows are parallel.",
@@ -1795,6 +1802,7 @@ export const parallelAndPerpendicularLines = topic(
     },
     {
       id: "parallel-sides-of-shapes",
+      figure: gradeDrawings["parallel-sides-of-shapes"],
       title: t("Parallel sides of shapes", "图形中的平行边"),
       explanation: t(
         "Two sides are parallel if they would never meet, however far they were extended. Count each pair of parallel sides once; a shape may have none, one or several pairs.\n\nA rectangle has $2$ pairs of parallel sides; a regular hexagon has $3$. A triangle has none.",

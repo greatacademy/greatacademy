@@ -20,6 +20,7 @@ import {
   numberLineFigure,
   polygonFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import {
   blockRowsFigure,
   type CutKind,
@@ -665,30 +666,33 @@ const addingOnALine = earlyTopic(
   ["adding-within-100"],
   ["2.NBT.B.5"],
   [
-    earlyPoint(
-      "jumping-by-tens-then-ones",
-      ["Jumping by tens and then ones", "先跳十，再跳一"],
-      [
-        "An open number line has no marks except the ones you draw. Start at the first number. Make one big jump for the tens of the second number, and one small jump for its ones. For example, to add 25 to 47, jump 20 to reach 67, and then jump 5 more to reach 72.",
-        "空白数轴上没有刻度，只有你自己画的点。从第一个数开始，先跳一大步，跳第二个数的十，再跳一小步，跳它的一。比如 47 加 25，先跳 20 到 67，再跳 5 到 72。",
-      ],
-      (rng) => {
-        const a = rng.int(12, 60);
-        const tens = rng.int(1, 3);
-        const ones = rng.int(1, 9);
-        const b = 10 * tens + ones;
-        return whole(
-          [`The jumps show $${a} + ${b}$. Where do they end?`, `图中的跳跃表示 $${a} + ${b}$。最后跳到哪个数？`],
-          a + b,
-          [a + 10 * tens, a + ones, a + b + 10],
-          [
-            `$${a} + ${10 * tens} = ${a + 10 * tens}$, and $${a + 10 * tens} + ${ones} = ${a + b}$.`,
-            `$${a} + ${10 * tens} = ${a + 10 * tens}$，$${a + 10 * tens} + ${ones} = ${a + b}$。`,
-          ],
-          hopsFigure([a, a + 10 * tens, a + b], true),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "jumping-by-tens-then-ones",
+        ["Jumping by tens and then ones", "先跳十，再跳一"],
+        [
+          "An open number line has no marks except the ones you draw. Start at the first number. Make one big jump for the tens of the second number, and one small jump for its ones. For example, to add 25 to 47, jump 20 to reach 67, and then jump 5 more to reach 72.",
+          "空白数轴上没有刻度，只有你自己画的点。从第一个数开始，先跳一大步，跳第二个数的十，再跳一小步，跳它的一。比如 47 加 25，先跳 20 到 67，再跳 5 到 72。",
+        ],
+        (rng) => {
+          const a = rng.int(12, 60);
+          const tens = rng.int(1, 3);
+          const ones = rng.int(1, 9);
+          const b = 10 * tens + ones;
+          return whole(
+            [`The jumps show $${a} + ${b}$. Where do they end?`, `图中的跳跃表示 $${a} + ${b}$。最后跳到哪个数？`],
+            a + b,
+            [a + 10 * tens, a + ones, a + b + 10],
+            [
+              `$${a} + ${10 * tens} = ${a + 10 * tens}$, and $${a + 10 * tens} + ${ones} = ${a + b}$.`,
+              `$${a} + ${10 * tens} = ${a + 10 * tens}$，$${a + 10 * tens} + ${ones} = ${a + b}$。`,
+            ],
+            hopsFigure([a, a + 10 * tens, a + b], true),
+          );
+        },
+      ),
+      figure: gradeDrawings["jumping-by-tens-then-ones"],
+    },
     earlyPoint(
       "the-missing-jump",
       ["The missing jump", "缺少的一跳"],
@@ -1228,31 +1232,34 @@ const subtractingInSteps = earlyTopic(
   ["subtracting-within-1000-with-models"],
   ["2.NBT.B.7"],
   [
-    earlyPoint(
-      "three-jumps-back",
-      ["Three jumps back", "往回跳三次"],
-      [
-        "You can take a three-digit number away in three steps. To find $586 - 243$, first take away 200 to reach 386. Then take away 40 to reach 346. Then take away 3 to reach 343. Each step is easy on its own. The jumps on a number line help you to keep track of where you are.",
-        "三位数可以分三步减去。求 $586 - 243$，先减 200 得 386，再减 40 得 346，再减 3 得 343。每一步都很简单。数轴上的跳能帮你记住走到了哪里。",
-      ],
-      (rng) => {
-        const h = rng.int(1, 3);
-        const tens = rng.int(1, 4);
-        const ones = rng.int(1, 5);
-        const n = 100 * rng.int(4, 9) + 10 * rng.int(5, 9) + rng.int(6, 9);
-        const b = 100 * h + 10 * tens + ones;
-        return whole(
-          [`The jumps show $${n} - ${b}$. Where do they end?`, `图中的跳跃表示 $${n} - ${b}$。最后跳到哪个数？`],
-          n - b,
-          [n - 100 * h, n - 100 * h - 10 * tens, n - b + 100],
-          [
-            `$${n} - ${100 * h} = ${n - 100 * h}$, then $${n - 100 * h} - ${10 * tens} = ${n - 100 * h - 10 * tens}$, then $${n - 100 * h - 10 * tens} - ${ones} = ${n - b}$.`,
-            `$${n} - ${100 * h} = ${n - 100 * h}$，$${n - 100 * h} - ${10 * tens} = ${n - 100 * h - 10 * tens}$，$${n - 100 * h - 10 * tens} - ${ones} = ${n - b}$。`,
-          ],
-          hopsFigure([n, n - 100 * h, n - 100 * h - 10 * tens, n - b], true),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "three-jumps-back",
+        ["Three jumps back", "往回跳三次"],
+        [
+          "You can take a three-digit number away in three steps. To find $586 - 243$, first take away 200 to reach 386. Then take away 40 to reach 346. Then take away 3 to reach 343. Each step is easy on its own. The jumps on a number line help you to keep track of where you are.",
+          "三位数可以分三步减去。求 $586 - 243$，先减 200 得 386，再减 40 得 346，再减 3 得 343。每一步都很简单。数轴上的跳能帮你记住走到了哪里。",
+        ],
+        (rng) => {
+          const h = rng.int(1, 3);
+          const tens = rng.int(1, 4);
+          const ones = rng.int(1, 5);
+          const n = 100 * rng.int(4, 9) + 10 * rng.int(5, 9) + rng.int(6, 9);
+          const b = 100 * h + 10 * tens + ones;
+          return whole(
+            [`The jumps show $${n} - ${b}$. Where do they end?`, `图中的跳跃表示 $${n} - ${b}$。最后跳到哪个数？`],
+            n - b,
+            [n - 100 * h, n - 100 * h - 10 * tens, n - b + 100],
+            [
+              `$${n} - ${100 * h} = ${n - 100 * h}$, then $${n - 100 * h} - ${10 * tens} = ${n - 100 * h - 10 * tens}$, then $${n - 100 * h - 10 * tens} - ${ones} = ${n - b}$.`,
+              `$${n} - ${100 * h} = ${n - 100 * h}$，$${n - 100 * h} - ${10 * tens} = ${n - 100 * h - 10 * tens}$，$${n - 100 * h - 10 * tens} - ${ones} = ${n - b}$。`,
+            ],
+            hopsFigure([n, n - 100 * h, n - 100 * h - 10 * tens, n - b], true),
+          );
+        },
+      ),
+      figure: gradeDrawings["three-jumps-back"],
+    },
     earlyPoint(
       "the-next-step",
       ["The next step", "下一步"],
@@ -2090,35 +2097,38 @@ const distanceAround = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "around-a-rectangle",
-      ["Around a rectangle", "绕长方形一周"],
-      [
-        "Opposite sides of a rectangle are the same length. So when a picture shows only two lengths, there are really four sides to add. You add each length twice. A rectangle with sides of 5 and 3 has a distance around of $5 + 3 + 5 + 3$, which is 16. Adding only the two numbers shown gives half of that.",
-        "长方形相对的两条边一样长。所以图上只标了两个长度时，其实有四条边要加，每个长度要加两次。长和宽分别是 5 和 3 的长方形，绕一周的长度是 $5 + 3 + 5 + 3$，等于 16。只加图上的两个数，只得到它的一半。",
-      ],
-      (rng) => {
-        const w = rng.int(3, 14);
-        const h = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== w));
-        const unit = rng.pick<Pair>([
-          ["cm", "厘米"],
-          ["m", "米"],
-          ["in", "英寸"],
-          ["ft", "英尺"],
-        ]);
-        const total = 2 * (w + h);
-        return whole(
-          [`How long is the distance around this rectangle, in ${unit[0]}?`, `绕这个长方形一周是多少${unit[1]}？`],
-          total,
-          [w + h, w * h, 2 * w + h, total + 2],
-          [
-            `Each length counts twice: $${w} + ${h} + ${w} + ${h} = ${total}$.`,
-            `每个长度都要算两次：$${w} + ${h} + ${w} + ${h} = ${total}$。`,
-          ],
-          labeledRectangleFigure(w, h, unit[0]),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "around-a-rectangle",
+        ["Around a rectangle", "绕长方形一周"],
+        [
+          "Opposite sides of a rectangle are the same length. So when a picture shows only two lengths, there are really four sides to add. You add each length twice. A rectangle with sides of 5 and 3 has a distance around of $5 + 3 + 5 + 3$, which is 16. Adding only the two numbers shown gives half of that.",
+          "长方形相对的两条边一样长。所以图上只标了两个长度时，其实有四条边要加，每个长度要加两次。长和宽分别是 5 和 3 的长方形，绕一周的长度是 $5 + 3 + 5 + 3$，等于 16。只加图上的两个数，只得到它的一半。",
+        ],
+        (rng) => {
+          const w = rng.int(3, 14);
+          const h = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== w));
+          const unit = rng.pick<Pair>([
+            ["cm", "厘米"],
+            ["m", "米"],
+            ["in", "英寸"],
+            ["ft", "英尺"],
+          ]);
+          const total = 2 * (w + h);
+          return whole(
+            [`How long is the distance around this rectangle, in ${unit[0]}?`, `绕这个长方形一周是多少${unit[1]}？`],
+            total,
+            [w + h, w * h, 2 * w + h, total + 2],
+            [
+              `Each length counts twice: $${w} + ${h} + ${w} + ${h} = ${total}$.`,
+              `每个长度都要算两次：$${w} + ${h} + ${w} + ${h} = ${total}$。`,
+            ],
+            labeledRectangleFigure(w, h, unit[0]),
+          );
+        },
+      ),
+      figure: gradeDrawings["around-a-rectangle"],
+    },
   ],
 );
 

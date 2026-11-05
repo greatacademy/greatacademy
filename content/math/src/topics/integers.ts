@@ -1,7 +1,7 @@
 import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { num, paren } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const abs = Math.abs;
@@ -17,6 +17,7 @@ export const integersAndOpposites: TopicDef = {
   knowledgePoints: [
     {
       id: "opposites",
+      figure: gradeDrawings.opposites,
       title: t("Opposites", "相反数"),
       explanation: t(
         "The **integers** are the whole numbers $0, 1, 2, 3, \\dots$ together with their negatives $-1, -2, -3, \\dots$. On a number line, negative numbers lie to the left of $0$.\n\nTwo numbers are **opposites** if they are the same distance from $0$ on opposite sides. The opposite of $a$ is written $-a$. For example, the opposite of $5$ is $-5$, and the opposite of $-5$ is $-(-5) = 5$. The opposite of $0$ is $0$.",
@@ -46,6 +47,7 @@ export const integersAndOpposites: TopicDef = {
     },
     {
       id: "comparing-integers",
+      figure: gradeDrawings["comparing-integers"],
       title: t("Comparing integers", "比较整数大小"),
       explanation: t(
         "On a number line, numbers increase from left to right. Of two integers, the one further to the right is greater.\n\nSo every positive number is greater than every negative number, and among negative numbers, the one closer to $0$ is greater: $-2 > -7$ because $-2$ lies to the right of $-7$.",
@@ -87,6 +89,7 @@ export const absoluteValue: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-absolute-values",
+      figure: gradeDrawings["evaluating-absolute-values"],
       title: t("Evaluating absolute values", "求绝对值"),
       explanation: t(
         "The **absolute value** of a number is its distance from $0$ on the number line, written $|a|$. A distance is never negative, so $|7| = 7$ and $|-7| = 7$. In general, $|a| = a$ when $a \\ge 0$, and $|a| = -a$ when $a < 0$.",

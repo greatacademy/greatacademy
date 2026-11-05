@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, linear, type Mark, type Point, plane, type Q, q, sketch } from "@ga/subject-math";
-
+import { theoremDrawings } from "../explanation-drawings-circles.ts";
 import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -231,6 +231,7 @@ export const inscribedAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "inscribed-angle-from-the-arc",
+      figure: theoremDrawings["inscribed-angle-from-the-arc"],
       title: t("The inscribed angle theorem", "圆周角定理"),
       explanation: t(
         `An **inscribed angle** has its vertex on the circle and its sides are chords. The arc inside the angle is its **intercepted arc**.\n\n**Inscribed angle theorem:** an inscribed angle is half its intercepted arc, and so half the central angle on the same arc:\n\n$$\\angle ACB = \\tfrac{1}{2}\\, m${arcTex("AB")} = \\tfrac{1}{2}\\angle AOB.$$\n\nIf $m${arcTex("AB")} = 110^\\circ$, then $\\angle ACB = \\frac{110^\\circ}{2} = 55^\\circ$. (The proof draws the diameter through $C$: it splits the figure into isosceles triangles whose exterior angles at $O$ are twice their base angles.)`,
@@ -267,6 +268,7 @@ export const inscribedAngles: TopicDef = {
     },
     {
       id: "intercepted-arc-from-the-angle",
+      figure: theoremDrawings["intercepted-arc-from-the-angle"],
       title: t("The arc from the inscribed angle", "由圆周角求弧"),
       explanation: t(
         `Turned around, the theorem says that the intercepted arc, and the central angle on it, are **twice** the inscribed angle:\n\n$$m${arcTex("AB")} = \\angle AOB = 2\\angle ACB.$$\n\nIf $\\angle ACB = 38^\\circ$, then $m${arcTex("AB")} = 76^\\circ$, and the central angle $\\angle AOB$ is $76^\\circ$ too.`,
@@ -306,6 +308,7 @@ export const inscribedAngles: TopicDef = {
     },
     {
       id: "inscribed-angles-on-the-same-arc",
+      figure: theoremDrawings["inscribed-angles-on-the-same-arc"],
       title: t("Inscribed angles on the same arc", "同弧所对的圆周角"),
       explanation: t(
         `Two inscribed angles that intercept the same arc are both half of it, so they are **equal**. If $C$ and $D$ are on the same side of chord $AB$, then\n\n$$\\angle ACB = \\angle ADB.$$\n\nIf $\\angle ACB = (2x + 10)^\\circ$ and $\\angle ADB = (3x - 15)^\\circ$, then $2x + 10 = 3x - 15$, so $x = 25$ and each angle is $60^\\circ$.`,
@@ -395,6 +398,7 @@ export const problemSolvingWithInscribedAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "angles-of-an-inscribed-triangle",
+      figure: theoremDrawings["angles-of-an-inscribed-triangle"],
       title: t("Angles of an inscribed triangle", "圆内接三角形的角"),
       explanation: t(
         `The vertices of an inscribed triangle split the circle into three arcs that add to $360^\\circ$. Each angle of the triangle intercepts the arc **opposite** it, the one between the other two vertices.\n\nIf $m${arcTex("AB")} = 100^\\circ$ and $m${arcTex("BC")} = 140^\\circ$, the third arc is $m${arcTex("CA")} = 360^\\circ - 240^\\circ = 120^\\circ$, so\n\n$$\\angle C = 50^\\circ, \\quad \\angle A = 70^\\circ, \\quad \\angle B = 60^\\circ,$$\n\nwhich add to $180^\\circ$ as they should.`,
@@ -453,6 +457,7 @@ export const problemSolvingWithInscribedAngles: TopicDef = {
     },
     {
       id: "inscribed-angles-with-algebra",
+      figure: theoremDrawings["inscribed-angles-with-algebra"],
       title: t("Inscribed angles with algebra", "含未知数的圆周角"),
       explanation: t(
         `When an inscribed angle and its arc are written with a variable, the theorem gives the equation\n\n$$2 \\cdot (\\text{inscribed angle}) = \\text{intercepted arc}.$$\n\nIf $\\angle ACB = (x + 12)^\\circ$ and $m${arcTex("AB")} = (3x + 4)^\\circ$, then $2(x + 12) = 3x + 4$, so $2x + 24 = 3x + 4$ and $x = 20$. Check: the angle is $32^\\circ$ and the arc $64^\\circ$.`,
@@ -487,6 +492,7 @@ export const problemSolvingWithInscribedAngles: TopicDef = {
     },
     {
       id: "inscribed-angles-and-radii",
+      figure: theoremDrawings["inscribed-angles-and-radii"],
       title: t("Inscribed angles and radii", "圆周角与半径"),
       explanation: t(
         "Radii drawn to the endpoints of a chord make an isosceles triangle, since $OA = OB$. Combine it with the inscribed angle theorem.\n\nIf $\\angle ACB = 35^\\circ$, the central angle is $\\angle AOB = 70^\\circ$, and the base angles of $\\triangle AOB$ are\n\n$$\\angle OAB = \\angle OBA = \\frac{180^\\circ - 70^\\circ}{2} = 55^\\circ.$$\n\nIn general $\\angle OAB = 90^\\circ - \\angle ACB$.",
@@ -592,6 +598,7 @@ export const thalesTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "angles-in-a-semicircle",
+      figure: theoremDrawings["angles-in-a-semicircle"],
       title: t("The angle in a semicircle", "半圆上的圆周角"),
       explanation: t(
         `**Thales' theorem:** if $AB$ is a diameter and $C$ is any other point on the circle, then $\\angle ACB = 90^\\circ$. The angle intercepts a semicircle of $180^\\circ$, and half of that is $90^\\circ$.\n\nSo triangle $ABC$ is a right triangle, and its acute angles add to $90^\\circ$. If $\\angle CAB = 28^\\circ$, then\n\n$$\\angle CBA = 180^\\circ - 90^\\circ - 28^\\circ = 62^\\circ.$$`,
@@ -627,6 +634,7 @@ export const thalesTheorem: TopicDef = {
     },
     {
       id: "the-converse-of-thales-theorem",
+      figure: theoremDrawings["the-converse-of-thales-theorem"],
       title: t("The converse of Thales' theorem", "泰勒斯定理的逆定理"),
       explanation: t(
         `**Converse:** if an inscribed angle $\\angle ACB$ is $90^\\circ$, its intercepted arc is $2 \\cdot 90^\\circ = 180^\\circ$, a semicircle, so $AB$ is a diameter. If $\\angle ACB$ is not $90^\\circ$, the arc is not $180^\\circ$ and $AB$ is not a diameter.\n\nTriangle $ABC$ is inscribed in a circle with $\\angle A = 35^\\circ$ and $\\angle B = 55^\\circ$. Then $\\angle C = 180^\\circ - 35^\\circ - 55^\\circ = 90^\\circ$, so $AB$ is a diameter.`,
@@ -658,6 +666,7 @@ export const thalesTheorem: TopicDef = {
     },
     {
       id: "the-hypotenuse-is-a-diameter",
+      figure: theoremDrawings["the-hypotenuse-is-a-diameter"],
       title: t("The hypotenuse is a diameter", "斜边是直径"),
       explanation: t(
         "By the converse of Thales' theorem, the hypotenuse of a right triangle inscribed in a circle is a **diameter**, and the center of the circle is its midpoint.\n\nA right triangle with legs $6$ cm and $8$ cm has hypotenuse $\\sqrt{6^2 + 8^2} = \\sqrt{100} = 10$ cm. If it is inscribed in a circle, the diameter is $10$ cm and the radius is $5$ cm.",
@@ -726,6 +735,7 @@ export const anglesInInscribedRightTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "acute-angles-with-algebra",
+      figure: theoremDrawings["acute-angles-with-algebra"],
       title: t("Acute angles with algebra", "含未知数的锐角"),
       explanation: t(
         "In a triangle inscribed on a diameter $AB$, the angle at $C$ is $90^\\circ$, so the other two angles add to $90^\\circ$:\n\n$$\\angle CAB + \\angle CBA = 90^\\circ.$$\n\nIf $\\angle CAB = (2x + 4)^\\circ$ and $\\angle CBA = (x + 11)^\\circ$, then $3x + 15 = 90$, so $3x = 75$ and $x = 25$.",
@@ -759,6 +769,7 @@ export const anglesInInscribedRightTriangles: TopicDef = {
     },
     {
       id: "arcs-from-angles",
+      figure: theoremDrawings["arcs-from-angles"],
       title: t("Arcs from the angles", "由角求弧"),
       explanation: t(
         `The diameter $AB$ cuts the circle into two semicircles. On the one containing $C$, the arcs $${arcTex("AC")}$ and $${arcTex("BC")}$ add to $180^\\circ$, and each is twice the inscribed angle at the opposite vertex:\n\n$$m${arcTex("BC")} = 2\\angle CAB, \\qquad m${arcTex("AC")} = 2\\angle CBA.$$\n\nIf $\\angle CAB = 25^\\circ$, then $m${arcTex("BC")} = 50^\\circ$ and $m${arcTex("AC")} = 180^\\circ - 50^\\circ = 130^\\circ$.`,
@@ -800,6 +811,7 @@ export const anglesInInscribedRightTriangles: TopicDef = {
     },
     {
       id: "angles-from-arcs",
+      figure: theoremDrawings["angles-from-arcs"],
       title: t("Angles from the arcs", "由弧求角"),
       explanation: t(
         `Going the other way, each acute angle is half the arc opposite it. If $AB$ is a diameter and $m${arcTex("AC")} = 70^\\circ$ (on the semicircle containing $C$), then\n\n$$\\angle CBA = \\frac{70^\\circ}{2} = 35^\\circ, \\qquad \\angle CAB = 90^\\circ - 35^\\circ = 55^\\circ.$$\n\nThe second also follows from $m${arcTex("BC")} = 180^\\circ - 70^\\circ = 110^\\circ$, whose half is $55^\\circ$.`,
@@ -862,6 +874,7 @@ export const furtherAnglesInInscribedRightTriangles: TopicDef = {
   knowledgePoints: [
     {
       id: "angles-at-the-radius",
+      figure: theoremDrawings["angles-at-the-radius"],
       title: t("Angles at the radius", "半径处的角"),
       explanation: t(
         "Let $AB$ be a diameter of circle $O$ and $C$ a point on the circle. The radius $OC$ equals $OA$ and $OB$, so it splits $\\triangle ABC$ into two **isosceles** triangles.\n\nIf $\\angle CAB = 32^\\circ$:\n\n- in $\\triangle AOC$, $\\angle ACO = \\angle CAO = 32^\\circ$, and $\\angle AOC = 180^\\circ - 64^\\circ = 116^\\circ$;\n- $\\angle BOC$ is an exterior angle of $\\triangle AOC$, so $\\angle BOC = 32^\\circ + 32^\\circ = 64^\\circ$;\n- $\\angle OCB = 90^\\circ - 32^\\circ = 58^\\circ$, which equals $\\angle OBC$.",
@@ -921,6 +934,7 @@ export const furtherAnglesInInscribedRightTriangles: TopicDef = {
     },
     {
       id: "the-radius-is-half-the-hypotenuse",
+      figure: theoremDrawings["the-radius-is-half-the-hypotenuse"],
       title: t("The radius is half the hypotenuse", "半径是斜边的一半"),
       explanation: t(
         "In a right triangle $ABC$ inscribed on the diameter $AB$, the segment from $C$ to the center $O$ is a radius, so\n\n$$OC = OA = OB = \\tfrac{1}{2}AB.$$\n\nThe median to the hypotenuse is half the hypotenuse. If $OC = 2x + 1$ and $AB = 5x - 4$, then $2(2x + 1) = 5x - 4$, so $4x + 2 = 5x - 4$ and $x = 6$: $OC = 13$ and $AB = 26$.",
@@ -964,6 +978,7 @@ export const furtherAnglesInInscribedRightTriangles: TopicDef = {
     },
     {
       id: "radius-angles-with-algebra",
+      figure: theoremDrawings["radius-angles-with-algebra"],
       title: t("Angles at the radius with algebra", "含未知数的半径处的角"),
       explanation: t(
         "In the figure, $\\angle BOC$ is an exterior angle of the isosceles triangle $AOC$, so it is the sum of the two equal angles at $A$ and $C$:\n\n$$\\angle BOC = 2\\angle ACO.$$\n\nIf $\\angle ACO = (x + 9)^\\circ$ and $\\angle BOC = (3x + 4)^\\circ$, then $2(x + 9) = 3x + 4$, so $2x + 18 = 3x + 4$ and $x = 14$.",
@@ -1057,6 +1072,7 @@ export const inscribedQuadrilaterals: TopicDef = {
   knowledgePoints: [
     {
       id: "opposite-angles-are-supplementary",
+      figure: theoremDrawings["opposite-angles-are-supplementary"],
       title: t("Opposite angles", "对角互补"),
       explanation: t(
         `A quadrilateral is **inscribed** in a circle when all four vertices are on it. Opposite angles $\\angle A$ and $\\angle C$ intercept the two arcs between $B$ and $D$, which together make the whole circle:\n\n$$\\angle A + \\angle C = \\tfrac{1}{2} \\cdot 360^\\circ = 180^\\circ.$$\n\nSo opposite angles are **supplementary**. If $\\angle B = 104^\\circ$, then $\\angle D = 180^\\circ - 104^\\circ = 76^\\circ$. Adjacent angles, such as $\\angle A$ and $\\angle B$, need not add to $180^\\circ$.`,
@@ -1093,6 +1109,7 @@ export const inscribedQuadrilaterals: TopicDef = {
     },
     {
       id: "inscribed-quadrilaterals-with-algebra",
+      figure: theoremDrawings["inscribed-quadrilaterals-with-algebra"],
       title: t("Inscribed quadrilaterals with algebra", "含未知数的圆内接四边形"),
       explanation: t(
         "When opposite angles are written with a variable, their sum is $180^\\circ$.\n\nIf $\\angle A = (3x + 5)^\\circ$ and $\\angle C = (2x + 25)^\\circ$, then $5x + 30 = 180$, so $5x = 150$ and $x = 30$. Then $\\angle A = 95^\\circ$ and $\\angle C = 85^\\circ$.",
@@ -1126,6 +1143,7 @@ export const inscribedQuadrilaterals: TopicDef = {
     },
     {
       id: "angles-of-inscribed-quadrilaterals-from-arcs",
+      figure: theoremDrawings["angles-of-inscribed-quadrilaterals-from-arcs"],
       title: t("Angles from arcs", "由弧求角"),
       explanation: t(
         `Each angle of an inscribed quadrilateral intercepts the arc between its two neighbors that does **not** contain the vertex itself: $\\angle A$ intercepts $${arcTex("BCD")}$, made of arcs $${arcTex("BC")}$ and $${arcTex("CD")}$.\n\nIf $m${arcTex("AB")} = 80^\\circ$, $m${arcTex("BC")} = 100^\\circ$ and $m${arcTex("CD")} = 110^\\circ$, then\n\n$$\\angle A = \\frac{100^\\circ + 110^\\circ}{2} = 105^\\circ,$$\n\nand $m${arcTex("DA")} = 360^\\circ - 290^\\circ = 70^\\circ$, so $\\angle B = \\frac{110^\\circ + 70^\\circ}{2} = 90^\\circ$.`,
@@ -1220,6 +1238,7 @@ export const tangentLinesToCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "tangents-are-perpendicular-to-radii",
+      figure: theoremDrawings["tangents-are-perpendicular-to-radii"],
       title: t("Tangents are perpendicular to radii", "切线垂直于半径"),
       explanation: t(
         "A **tangent** to a circle is a line that touches the circle at exactly one point, the **point of tangency**. A tangent is **perpendicular** to the radius drawn to the point of tangency.\n\nIf $PA$ is tangent to circle $O$ at $A$, then $\\angle OAP = 90^\\circ$, and triangle $OAP$ is a right triangle. If $\\angle AOP = 52^\\circ$, then\n\n$$\\angle APO = 180^\\circ - 90^\\circ - 52^\\circ = 38^\\circ.$$",
@@ -1258,6 +1277,7 @@ export const tangentLinesToCircles: TopicDef = {
     },
     {
       id: "lengths-with-tangents",
+      figure: theoremDrawings["lengths-with-tangents"],
       title: t("Lengths with tangents", "与切线有关的长度"),
       explanation: t(
         "Since $\\angle OAP = 90^\\circ$, the radius $OA$ and the tangent segment $PA$ are the legs of a right triangle whose hypotenuse is $OP$:\n\n$$OA^2 + PA^2 = OP^2.$$\n\nIf the radius is $5$ cm and $OP = 13$ cm, then $PA^2 = 169 - 25 = 144$ and $PA = 12$ cm.",
@@ -1309,6 +1329,7 @@ export const tangentLinesToCircles: TopicDef = {
     },
     {
       id: "testing-for-tangency",
+      figure: theoremDrawings["testing-for-tangency"],
       title: t("Testing for tangency", "判断是否相切"),
       explanation: t(
         "Conversely, a line through a point $A$ of the circle that is perpendicular to the radius $OA$ is a tangent. To test whether $PA$ is tangent, check whether $\\angle OAP = 90^\\circ$ with the converse of the Pythagorean theorem: is $OA^2 + PA^2 = OP^2$?\n\nWith $OA = 8$, $PA = 15$ and $OP = 17$: $64 + 225 = 289 = 17^2$, so $PA$ is tangent. With $OP = 18$ instead, $289 \\ne 324$, so it is not.",
@@ -1395,6 +1416,7 @@ export const tangentTangentLinesToCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "tangent-segments-are-equal",
+      figure: theoremDrawings["tangent-segments-are-equal"],
       title: t("Tangent segments are equal", "切线长相等"),
       explanation: t(
         "From a point $P$ outside a circle, two tangents can be drawn, touching the circle at $A$ and $B$. The **tangent segments** are equal:\n\n$$PA = PB.$$\n\n(Triangles $OAP$ and $OBP$ are right triangles with the same hypotenuse $OP$ and equal legs $OA = OB$, so they are congruent.) If $PA = 3x - 4$ and $PB = x + 10$, then $3x - 4 = x + 10$, so $2x = 14$, $x = 7$ and $PA = PB = 17$.",
@@ -1441,6 +1463,7 @@ export const tangentTangentLinesToCircles: TopicDef = {
     },
     {
       id: "the-angle-between-two-tangents",
+      figure: theoremDrawings["the-angle-between-two-tangents"],
       title: t("The angle between two tangents", "两条切线的夹角"),
       explanation: t(
         `In quadrilateral $OAPB$ the angles at $A$ and $B$ are right angles, and the four angles add to $360^\\circ$. So the angle between the tangents and the central angle are **supplementary**:\n\n$$\\angle APB + \\angle AOB = 180^\\circ.$$\n\nIf $\\angle AOB = 130^\\circ$, then $\\angle APB = 50^\\circ$. The central angle is the minor arc $${arcTex("AB")}$, so the angle can also come from an arc: if the major arc measures $250^\\circ$, the minor arc is $110^\\circ$ and $\\angle APB = 70^\\circ$.`,
@@ -1520,6 +1543,7 @@ export const tangentTangentLinesToCircles: TopicDef = {
     },
     {
       id: "the-line-to-the-center",
+      figure: theoremDrawings["the-line-to-the-center"],
       title: t("The line to the center", "连接圆心的线段"),
       explanation: t(
         "Two tangents drawn from the same outside point are equal in length, and the segment from that point to the center splits the figure into two congruent right triangles.\n\nThe congruent right triangles $OAP$ and $OBP$ show that $OP$ **bisects** both $\\angle APB$ and $\\angle AOB$:\n\n$$\\angle APO = \\angle BPO = \\tfrac{1}{2}\\angle APB, \\qquad \\angle AOP = 90^\\circ - \\angle APO.$$\n\nIf $\\angle APB = 64^\\circ$, then $\\angle APO = 32^\\circ$ and $\\angle AOP = 58^\\circ$.",
@@ -1695,6 +1719,7 @@ export const secantSecantAnglesToCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "chords-intersecting-inside",
+      figure: theoremDrawings["chords-intersecting-inside"],
       title: t("Chords intersecting inside the circle", "圆内相交的两弦"),
       explanation: t(
         `A **secant** is a line that meets a circle at two points. When chords $AC$ and $BD$ meet at $E$ inside the circle, the angle between them is half the **sum** of the arc it intercepts and the arc intercepted by its vertical angle:\n\n$$\\angle AEB = \\frac{m${arcTex("AB")} + m${arcTex("CD")}}{2}.$$\n\n(Draw $BC$: $\\angle AEB$ is an exterior angle of $\\triangle BEC$, so it is the sum of two inscribed angles.) If $m${arcTex("AB")} = 70^\\circ$ and $m${arcTex("CD")} = 110^\\circ$, then $\\angle AEB = 90^\\circ$. The adjacent angle $\\angle AED$ is $180^\\circ - \\angle AEB$.`,
@@ -1736,6 +1761,7 @@ export const secantSecantAnglesToCircles: TopicDef = {
     },
     {
       id: "secants-intersecting-outside",
+      figure: theoremDrawings["secants-intersecting-outside"],
       title: t("Secants intersecting outside the circle", "圆外相交的两条割线"),
       explanation: t(
         `When two secants from a point $P$ outside the circle meet it at $A$, $B$ and at $C$, $D$, the angle at $P$ is half the **difference** of the far arc and the near arc it intercepts:\n\n$$\\angle P = \\frac{m${arcTex("BD")} - m${arcTex("AC")}}{2}.$$\n\n(Draw $AD$: the inscribed angle $\\angle BAD$ is an exterior angle of $\\triangle PAD$, so $\\angle P = \\angle BAD - \\angle ADC$.) If the far arc is $130^\\circ$ and the near arc $40^\\circ$, then $\\angle P = \\frac{90^\\circ}{2} = 45^\\circ$.`,
@@ -1770,6 +1796,7 @@ export const secantSecantAnglesToCircles: TopicDef = {
     },
     {
       id: "finding-arcs-from-secant-angles",
+      figure: theoremDrawings["finding-arcs-from-secant-angles"],
       title: t("Finding arcs from the angle", "由角求弧"),
       explanation: t(
         `The two formulas can be solved for an unknown arc.\n\n- Inside: if $\\angle AEB = 75^\\circ$ and $m${arcTex("AB")} = 60^\\circ$, then $\\frac{60 + m${arcTex("CD")}}{2} = 75$, so $60 + m${arcTex("CD")} = 150$ and $m${arcTex("CD")} = 90^\\circ$.\n- Outside: if $\\angle P = 35^\\circ$ and the near arc is $50^\\circ$, then the far arc minus $50^\\circ$ is $70^\\circ$, so the far arc is $120^\\circ$.`,
@@ -1897,6 +1924,7 @@ export const secantTangentAnglesToCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "secant-and-tangent",
+      figure: theoremDrawings["secant-and-tangent"],
       title: t("A secant and a tangent", "一条割线与一条切线"),
       explanation: t(
         `When a tangent at $T$ and a secant through $A$ and $B$ meet at a point $P$ outside the circle, the rule for two secants still holds: the angle is half the difference of the far arc and the near arc,\n\n$$\\angle P = \\frac{m${arcTex("BT")} - m${arcTex("TA")}}{2}.$$\n\nIf the far arc $${arcTex("BT")}$ is $150^\\circ$ and the near arc $${arcTex("TA")}$ is $60^\\circ$, then $\\angle P = \\frac{90^\\circ}{2} = 45^\\circ$.`,
@@ -1931,6 +1959,7 @@ export const secantTangentAnglesToCircles: TopicDef = {
     },
     {
       id: "finding-arcs-from-secant-tangent-angles",
+      figure: theoremDrawings["finding-arcs-from-secant-tangent-angles"],
       title: t("Finding arcs from the angle", "由角求弧"),
       explanation: t(
         `Solve the formula for the unknown arc. If $\\angle P = 30^\\circ$ and the far arc is $140^\\circ$, then\n\n$$\\frac{140^\\circ - m${arcTex("TA")}}{2} = 30^\\circ,$$\n\nso $140^\\circ - m${arcTex("TA")} = 60^\\circ$ and the near arc is $80^\\circ$. In general the far arc is the near arc plus $2\\angle P$.`,
@@ -1973,6 +2002,7 @@ export const secantTangentAnglesToCircles: TopicDef = {
     },
     {
       id: "two-tangents-and-their-arcs",
+      figure: theoremDrawings["two-tangents-and-their-arcs"],
       title: t("Two tangents and their arcs", "两条切线与所夹的弧"),
       explanation: t(
         `For two tangents from $P$ touching at $A$ and $B$, the same rule uses the major and minor arcs between $A$ and $B$:\n\n$$\\angle APB = \\frac{m(\\text{major arc}) - m(\\text{minor arc})}{2}.$$\n\nIf the minor arc is $100^\\circ$, the major arc is $260^\\circ$ and $\\angle APB = \\frac{160^\\circ}{2} = 80^\\circ$, which agrees with $180^\\circ - 100^\\circ$. Going back, if $\\angle APB = 50^\\circ$, the minor arc is $180^\\circ - 50^\\circ = 130^\\circ$ and the major arc $230^\\circ$.`,
@@ -2094,6 +2124,7 @@ export const theTangentChordTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "the-angle-from-the-arc",
+      figure: theoremDrawings["the-angle-from-the-arc"],
       title: t("The angle from the arc", "由弧求弦切角"),
       explanation: t(
         `A tangent and a chord that meet at the point of tangency $A$ form a **tangent-chord angle**. **Tangent-chord theorem:** it is half the arc inside it:\n\n$$\\angle TAB = \\tfrac{1}{2}\\, m${arcTex("AB")}.$$\n\n(The radius $OA$ is perpendicular to the tangent, so $\\angle TAB = 90^\\circ - \\angle OAB$, which is half the central angle.) If $m${arcTex("AB")} = 124^\\circ$, then $\\angle TAB = 62^\\circ$, and the angle on the other side of the chord is $\\angle SAB = 180^\\circ - 62^\\circ = 118^\\circ$.`,
@@ -2137,6 +2168,7 @@ export const theTangentChordTheorem: TopicDef = {
     },
     {
       id: "the-arc-from-the-angle",
+      figure: theoremDrawings["the-arc-from-the-angle"],
       title: t("The arc from the angle", "由弦切角求弧"),
       explanation: t(
         `The intercepted arc is twice the tangent-chord angle: $m${arcTex("AB")} = 2\\angle TAB$. If $\\angle TAB = 47^\\circ$, the arc is $94^\\circ$.\n\nWith algebra: if $\\angle TAB = (x + 15)^\\circ$ and $m${arcTex("AB")} = (3x - 5)^\\circ$, then $2(x + 15) = 3x - 5$, so $2x + 30 = 3x - 5$ and $x = 35$.`,
@@ -2197,6 +2229,7 @@ export const theTangentChordTheorem: TopicDef = {
     },
     {
       id: "tangent-chord-and-inscribed-angles",
+      figure: theoremDrawings["tangent-chord-and-inscribed-angles"],
       title: t("Tangent-chord and inscribed angles", "弦切角与圆周角"),
       explanation: t(
         `Both the tangent-chord angle $\\angle TAB$ and an inscribed angle $\\angle ACB$ on the other side of the chord intercept arc $${arcTex("AB")}$, so they are **equal**:\n\n$$\\angle TAB = \\angle ACB.$$\n\nIf $\\angle TAB = 52^\\circ$ and $\\angle ABC = 71^\\circ$ in triangle $ABC$, then $\\angle ACB = 52^\\circ$ and $\\angle BAC = 180^\\circ - 52^\\circ - 71^\\circ = 57^\\circ$.`,

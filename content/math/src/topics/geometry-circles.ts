@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, linear, type Mark, type Point, poly, Q, q, radical, sketch } from "@ga/subject-math";
-
+import { partsDrawings } from "../explanation-drawings-circles.ts";
 import { choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, unitLatex, why } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -172,6 +172,7 @@ export const circles: TopicDef = {
   knowledgePoints: [
     {
       id: "radius-and-diameter",
+      figure: partsDrawings["radius-and-diameter"],
       title: t("Radius and diameter", "半径与直径"),
       explanation: t(
         "A **circle** is the set of all points in a plane at the same distance from a fixed point, its **center**. A circle with center $O$ is called circle $O$.\n\n- A **radius** is a segment from the center to a point on the circle. All radii of a circle have the same length, also called the radius $r$.\n- A **diameter** is a segment through the center whose endpoints are on the circle. It is made of two radii, so\n\n$$d = 2r, \\qquad r = \\frac{d}{2}.$$\n\nA circle with radius $7$ cm has diameter $14$ cm; a circle with diameter $30$ m has radius $15$ m.",
@@ -220,6 +221,7 @@ export const circles: TopicDef = {
     },
     {
       id: "parts-of-a-circle",
+      figure: partsDrawings["parts-of-a-circle"],
       title: t("Radii, diameters and chords", "半径、直径与弦"),
       explanation: t(
         "A **chord** is a segment whose endpoints are both on the circle. A diameter is a chord that passes through the center; it is the longest chord of the circle.\n\nSo, for a segment drawn in a circle:\n\n- from the center to the circle: a **radius**;\n- from the circle to the circle through the center: a **diameter**;\n- from the circle to the circle, not through the center: a **chord** (but not a diameter).",
@@ -256,6 +258,7 @@ export const circles: TopicDef = {
     },
     {
       id: "inside-on-or-outside",
+      figure: partsDrawings["circles#inside-on-or-outside"],
       title: t("Inside, on or outside", "圆内、圆上与圆外"),
       explanation: t(
         "Compare the distance from a point $P$ to the center $O$ with the radius $r$:\n\n- if $OP < r$, then $P$ is **inside** the circle (in its interior);\n- if $OP = r$, then $P$ is **on** the circle;\n- if $OP > r$, then $P$ is **outside** the circle (in its exterior).\n\nIf you are given the diameter, halve it first. A circle with diameter $20$ cm has radius $10$ cm, so a point $12$ cm from the center is outside it.",
@@ -304,6 +307,7 @@ export const arcsSegmentsAndSectorsOfCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-arcs",
+      figure: partsDrawings["classifying-arcs"],
       title: t("Minor arcs, major arcs and semicircles", "劣弧、优弧与半圆"),
       explanation: t(
         `Two points $A$ and $B$ on a circle split it into two **arcs**. A whole circle measures $360^\\circ$.\n\n- If $AB$ is a diameter, each arc is a **semicircle**, measuring $180^\\circ$.\n- Otherwise the smaller arc is the **minor arc**, less than $180^\\circ$, and the larger one is the **major arc**, more than $180^\\circ$.\n\nA minor arc is named by its endpoints, $${arcTex("AB")}$. A major arc or a semicircle is named with a third point on it, $${arcTex("AXB")}$, so that it is clear which arc is meant.`,
@@ -355,6 +359,7 @@ export const arcsSegmentsAndSectorsOfCircles: TopicDef = {
     },
     {
       id: "measures-of-arcs",
+      figure: partsDrawings["measures-of-arcs"],
       title: t("Measures of minor and major arcs", "劣弧与优弧的度数"),
       explanation: t(
         `The minor arc and the major arc between the same two points make up the whole circle, so their measures add to $360^\\circ$:\n\n$$m${arcTex("AB")} + m${arcTex("ACB")} = 360^\\circ.$$\n\nIf minor arc $${arcTex("AB")}$ measures $70^\\circ$, major arc $${arcTex("ACB")}$ measures $360^\\circ - 70^\\circ = 290^\\circ$.`,
@@ -414,6 +419,7 @@ export const arcsSegmentsAndSectorsOfCircles: TopicDef = {
     },
     {
       id: "sectors-and-segments",
+      figure: partsDrawings["sectors-and-segments"],
       title: t("Sectors and segments", "扇形与弓形"),
       explanation: t(
         "Two kinds of regions of a circle have names:\n\n- A **sector** is bounded by two radii and the arc between them, like a slice of pizza.\n- A **segment** of a circle is bounded by a chord and the arc it cuts off.\n\nEach is **minor** or **major** as its arc is a minor or a major arc. A minor sector looks like a narrow wedge; a major sector is the rest of the circle, a disk with a wedge cut out.",
@@ -470,6 +476,7 @@ export const theCircumferenceOfACircle: TopicDef = {
   knowledgePoints: [
     {
       id: "circumference-in-terms-of-pi",
+      figure: partsDrawings["circumference-in-terms-of-pi"],
       title: t("Circumference in terms of π", "用 π 表示周长"),
       explanation: t(
         "The **circumference** $C$ of a circle is its perimeter, the distance around it. For every circle, the circumference divided by the diameter is the same number, called $\\pi$ (pi), about $3.14159$. So\n\n$$C = \\pi d = 2\\pi r.$$\n\nAn exact answer keeps the symbol $\\pi$: a circle with radius $7$ cm has circumference $2\\pi \\cdot 7 = 14\\pi$ cm.",
@@ -512,6 +519,7 @@ export const theCircumferenceOfACircle: TopicDef = {
     },
     {
       id: "approximating-circumference",
+      figure: partsDrawings["approximating-circumference"],
       title: t("Approximating the circumference", "周长的近似值"),
       explanation: t(
         "To get a decimal value, replace $\\pi$ with an approximation such as $3.14$.\n\nA circle with diameter $12$ m has circumference $C = \\pi d \\approx 3.14 \\cdot 12 = 37.68$ m. If you know the radius, double it first: a circle with radius $5$ m has $C \\approx 3.14 \\cdot 10 = 31.4$ m.",
@@ -546,6 +554,7 @@ export const theCircumferenceOfACircle: TopicDef = {
     },
     {
       id: "radius-from-circumference",
+      figure: partsDrawings["radius-from-circumference"],
       title: t("The radius from the circumference", "由周长求半径"),
       explanation: t(
         "Since $C = \\pi d$, the diameter is $d = C \\div \\pi$, and the radius is half of that.\n\nA circle with circumference $18\\pi$ cm has diameter $18$ cm and radius $9$ cm. With the approximation $3.14$, a circle with circumference $31.4$ m has diameter $31.4 \\div 3.14 = 10$ m.",
@@ -647,6 +656,7 @@ export const areasOfCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "area-from-the-radius",
+      figure: partsDrawings["area-from-the-radius"],
       title: t("Area from the radius", "由半径求面积"),
       explanation: t(
         "The area of a circle with radius $r$ is\n\n$$A = \\pi r^2.$$\n\nA circle with radius $6$ cm has area $\\pi \\cdot 6^2 = 36\\pi\\text{ cm}^2$. If you are given the diameter, halve it before squaring: a circle with diameter $10$ m has radius $5$ m and area $25\\pi\\text{ m}^2$, not $100\\pi\\text{ m}^2$.",
@@ -847,6 +857,7 @@ export const centralAnglesAndArcs: TopicDef = {
   knowledgePoints: [
     {
       id: "central-angles",
+      figure: partsDrawings["central-angles"],
       title: t("Central angles", "圆心角"),
       explanation: t(
         `A **central angle** has its vertex at the center of the circle. The measure of a minor arc is defined as the measure of its central angle:\n\n$$m${arcTex("AB")} = \\angle AOB,$$\n\nand the major arc measures $360^\\circ$ minus that. If $\\angle AOB = 75^\\circ$, then $m${arcTex("AB")} = 75^\\circ$ and $m${arcTex("ACB")} = 285^\\circ$.`,
@@ -899,6 +910,7 @@ export const centralAnglesAndArcs: TopicDef = {
     },
     {
       id: "adding-arcs",
+      figure: partsDrawings["adding-arcs"],
       title: t("Adding arcs", "弧的加法"),
       explanation: t(
         `Adjacent arcs add like adjacent angles: if $B$ is on arc $${arcTex("ABC")}$, then\n\n$$m${arcTex("ABC")} = m${arcTex("AB")} + m${arcTex("BC")}.$$\n\nThe central angles all the way around the center add to $360^\\circ$. If radii $OA$, $OB$, $OC$ make $\\angle AOB = 100^\\circ$ and $\\angle BOC = 140^\\circ$, then $m${arcTex("ABC")} = 240^\\circ$ and the remaining arc $${arcTex("CA")}$ measures $360^\\circ - 240^\\circ = 120^\\circ$.`,
@@ -964,6 +976,7 @@ export const centralAnglesAndArcs: TopicDef = {
     },
     {
       id: "central-angles-with-algebra",
+      figure: partsDrawings["central-angles-with-algebra"],
       title: t("Central angles with algebra", "含未知数的圆心角"),
       explanation: t(
         "When central angles are written with a variable, their sum around the center gives an equation.\n\nIf three radii split a circle into central angles $(2x + 10)^\\circ$, $(3x)^\\circ$ and $(5x - 50)^\\circ$, then\n\n$$(2x + 10) + 3x + (5x - 50) = 360,$$\n\nso $10x - 40 = 360$, $10x = 400$ and $x = 40$.",
@@ -1052,6 +1065,7 @@ export const calculatingArcLengthsOfCircularSectors: TopicDef = {
   knowledgePoints: [
     {
       id: "arc-length",
+      figure: partsDrawings["arc-length"],
       title: t("Arc length", "弧长"),
       explanation: t(
         "An arc with central angle $\\theta^\\circ$ is the fraction $\\frac{\\theta}{360}$ of the whole circle, so its **arc length** is that fraction of the circumference:\n\n$$L = \\frac{\\theta}{360} \\cdot 2\\pi r.$$\n\nIn a circle of radius $9$ cm, an arc of $80^\\circ$ has length $\\frac{80}{360} \\cdot 18\\pi = \\frac{2}{9} \\cdot 18\\pi = 4\\pi$ cm.",
@@ -1083,6 +1097,7 @@ export const calculatingArcLengthsOfCircularSectors: TopicDef = {
     },
     {
       id: "major-arc-length",
+      figure: partsDrawings["major-arc-length"],
       title: t("Length of a major arc", "优弧的长"),
       explanation: t(
         "A major arc has central angle $360^\\circ - \\theta$, where $\\theta$ is the minor central angle. Either use that angle, or subtract the minor arc from the circumference.\n\nIn a circle of radius $6$ m, if $\\angle AOB = 120^\\circ$, the major arc measures $240^\\circ$ and has length $\\frac{240}{360} \\cdot 12\\pi = 8\\pi$ m.",
@@ -1130,6 +1145,7 @@ export const calculatingArcLengthsOfCircularSectors: TopicDef = {
     },
     {
       id: "radius-or-angle-from-arc-length",
+      figure: partsDrawings["radius-or-angle-from-arc-length"],
       title: t("The radius or the angle from the arc length", "由弧长求半径或圆心角"),
       explanation: t(
         "The arc length formula connects three quantities, so knowing two of them gives the third.\n\nIf an arc of $60^\\circ$ has length $5\\pi$ cm, then $\\frac{60}{360} \\cdot 2\\pi r = 5\\pi$, so $\\frac{\\pi r}{3} = 5\\pi$ and $r = 15$ cm. If an arc of a circle with radius $10$ cm has length $4\\pi$ cm, then $\\frac{\\theta}{360} \\cdot 20\\pi = 4\\pi$, so $\\frac{\\theta}{360} = \\frac{1}{5}$ and $\\theta = 72^\\circ$.",
@@ -1190,6 +1206,7 @@ export const calculatingAreasOfCircularSectors: TopicDef = {
   knowledgePoints: [
     {
       id: "sector-area",
+      figure: partsDrawings["sector-area"],
       title: t("Area of a sector", "扇形的面积"),
       explanation: t(
         "A sector with central angle $\\theta^\\circ$ is the fraction $\\frac{\\theta}{360}$ of the whole disk, so its area is that fraction of the area of the circle:\n\n$$A = \\frac{\\theta}{360} \\cdot \\pi r^2.$$\n\nA sector of $40^\\circ$ in a circle of radius $6$ cm has area $\\frac{40}{360} \\cdot 36\\pi = \\frac{1}{9} \\cdot 36\\pi = 4\\pi\\text{ cm}^2$.",
@@ -1221,6 +1238,7 @@ export const calculatingAreasOfCircularSectors: TopicDef = {
     },
     {
       id: "major-sector-area",
+      figure: partsDrawings["major-sector-area"],
       title: t("Area of a major sector", "优扇形的面积"),
       explanation: t(
         "A major sector has central angle $360^\\circ - \\theta$, where $\\theta$ is the angle of the minor sector. Use that angle in the formula, or subtract the minor sector from the whole circle.\n\nIn a circle of radius $3$ m with $\\angle AOB = 120^\\circ$, the major sector has angle $240^\\circ$ and area $\\frac{240}{360} \\cdot 9\\pi = 6\\pi\\text{ m}^2$.",
@@ -1252,6 +1270,7 @@ export const calculatingAreasOfCircularSectors: TopicDef = {
     },
     {
       id: "approximating-sector-area",
+      figure: partsDrawings["approximating-sector-area"],
       title: t("Approximating the area of a sector", "扇形面积的近似值"),
       explanation: t(
         "For a decimal value, use $3.14$ for $\\pi$ after simplifying the fraction of the circle.\n\nA sector of $72^\\circ$ in a circle of radius $10$ cm is $\\frac{72}{360} = \\frac{1}{5}$ of the circle, so its area is about $\\frac{1}{5} \\cdot 3.14 \\cdot 100 = 62.8\\text{ cm}^2$.",
@@ -1308,6 +1327,7 @@ export const furtherCalculatingAreasOfSectors: TopicDef = {
   knowledgePoints: [
     {
       id: "angle-from-sector-area",
+      figure: partsDrawings["angle-from-sector-area"],
       title: t("The angle from the area", "由面积求圆心角"),
       explanation: t(
         "The area of a sector divided by the area of its circle is the fraction $\\frac{\\theta}{360}$:\n\n$$\\frac{\\theta}{360} = \\frac{A_{\\text{sector}}}{\\pi r^2}.$$\n\nA sector of area $10\\pi\\text{ cm}^2$ in a circle of radius $6$ cm is $\\frac{10\\pi}{36\\pi} = \\frac{5}{18}$ of the circle, so $\\theta = \\frac{5}{18} \\cdot 360 = 100^\\circ$.",
@@ -1335,6 +1355,7 @@ export const furtherCalculatingAreasOfSectors: TopicDef = {
     },
     {
       id: "radius-from-sector-area",
+      figure: partsDrawings["radius-from-sector-area"],
       title: t("The radius from the area", "由面积求半径"),
       explanation: t(
         "If you know a sector's area and angle, write the area formula and solve for $r^2$, then take the square root.\n\nA sector of $90^\\circ$ with area $16\\pi\\text{ m}^2$ gives $\\frac{1}{4}\\pi r^2 = 16\\pi$, so $r^2 = 64$ and $r = 8$ m.",
@@ -1363,6 +1384,7 @@ export const furtherCalculatingAreasOfSectors: TopicDef = {
     },
     {
       id: "sector-area-from-arc-length",
+      figure: partsDrawings["sector-area-from-arc-length"],
       title: t("Area from the arc length", "由弧长求面积"),
       explanation: t(
         "A sector's arc length and area are the same fraction of the circumference and of the area of the circle. So if the arc length is $L$, the sector is $\\frac{L}{2\\pi r}$ of the circle, and\n\n$$A = \\frac{L}{2\\pi r} \\cdot \\pi r^2 = \\frac{1}{2} L r.$$\n\nA sector of a circle of radius $6$ cm with arc length $4\\pi$ cm has area $\\frac{1}{2} \\cdot 4\\pi \\cdot 6 = 12\\pi\\text{ cm}^2$.",
@@ -1391,6 +1413,7 @@ export const furtherCalculatingAreasOfSectors: TopicDef = {
     },
     {
       id: "perimeter-of-a-sector",
+      figure: partsDrawings["perimeter-of-a-sector"],
       title: t("Perimeter of a sector", "扇形的周长"),
       explanation: t(
         "The boundary of a sector is two radii and an arc, so its perimeter is\n\n$$P = 2r + L.$$\n\nA sector of $90^\\circ$ in a circle of radius $8$ cm has arc length $\\frac{1}{4} \\cdot 16\\pi = 4\\pi$ cm, so its perimeter is $(16 + 4\\pi)$ cm. The radii and the arc are not like terms: leave the answer as a sum.",
@@ -1447,6 +1470,7 @@ export const problemSolvingWithCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-a-ring",
+      figure: partsDrawings["area-of-a-ring"],
       title: t("Area of a ring", "圆环的面积"),
       explanation: t(
         "The region between two circles with the same center is a **ring** (an annulus). Its area is the area of the large circle minus the area of the small one:\n\n$$A = \\pi R^2 - \\pi r^2.$$\n\nFor radii $5$ cm and $3$ cm, $A = 25\\pi - 9\\pi = 16\\pi\\text{ cm}^2$. Square each radius separately: $(5 - 3)^2 \\pi = 4\\pi$ is wrong.",
@@ -1490,6 +1514,7 @@ export const problemSolvingWithCircles: TopicDef = {
     },
     {
       id: "area-of-shapes-with-semicircles",
+      figure: partsDrawings["area-of-shapes-with-semicircles"],
       title: t("Areas of shapes with semicircles", "含半圆图形的面积"),
       explanation: t(
         "Split a composite shape into pieces you know. A semicircle on a side of length $w$ has radius $\\frac{w}{2}$ and area $\\frac{1}{2}\\pi \\left(\\frac{w}{2}\\right)^2$.\n\nA $10$ cm by $6$ cm rectangle with a semicircle on a $6$ cm side has area $60 + \\frac{1}{2}\\pi \\cdot 3^2 = \\left(60 + \\frac{9}{2}\\pi\\right)\\text{ cm}^2$. If the semicircle is cut out instead, subtract it: $\\left(60 - \\frac{9}{2}\\pi\\right)\\text{ cm}^2$.",
@@ -1542,6 +1567,7 @@ export const problemSolvingWithCircles: TopicDef = {
     },
     {
       id: "perimeter-of-shapes-with-semicircles",
+      figure: partsDrawings["perimeter-of-shapes-with-semicircles"],
       title: t("Perimeters of shapes with semicircles", "含半圆图形的周长"),
       explanation: t(
         "The perimeter is the length of the outside boundary only. A semicircle of diameter $w$ adds half a circumference, $\\frac{1}{2}\\pi w$, and the side it is drawn on is no longer part of the boundary.\n\nA $10$ cm by $6$ cm rectangle with a semicircle on a $6$ cm side has perimeter $10 + 10 + 6 + 3\\pi = (26 + 3\\pi)$ cm.",
@@ -1586,6 +1612,7 @@ export const problemSolvingWithCircles: TopicDef = {
     },
     {
       id: "shaded-regions-with-quarter-circles",
+      figure: partsDrawings["shaded-regions-with-quarter-circles"],
       title: t("Shaded regions", "阴影部分的面积"),
       explanation: t(
         "To find the area of a region left over when one shape is removed from another, subtract the areas.\n\nA quarter circle with radius $s$ drawn inside a square of side $s$, centered at a corner, has area $\\frac{1}{4}\\pi s^2$. For $s = 6$ cm, the part of the square outside it has area $(36 - 9\\pi)\\text{ cm}^2$, about $7.7\\text{ cm}^2$.",
@@ -1666,6 +1693,7 @@ export const circlesInscribedInSquares: TopicDef = {
   knowledgePoints: [
     {
       id: "side-and-radius",
+      figure: partsDrawings["side-and-radius"],
       title: t("Side and radius", "边长与半径"),
       explanation: t(
         "A circle **inscribed** in a square touches all four sides. Its diameter goes straight across the square, so it equals the side:\n\n$$d = s, \\qquad r = \\frac{s}{2}.$$\n\nA circle of radius $5$ cm fits exactly in a square of side $10$ cm, whose perimeter is $40$ cm and area $100\\text{ cm}^2$.",
@@ -1732,6 +1760,7 @@ export const circlesInscribedInSquares: TopicDef = {
     },
     {
       id: "area-of-an-inscribed-circle",
+      figure: partsDrawings["area-of-an-inscribed-circle"],
       title: t("Area of an inscribed circle", "内切圆的面积"),
       explanation: t(
         "The inscribed circle of a square of side $s$ has radius $\\frac{s}{2}$, so its area is\n\n$$\\pi \\left(\\frac{s}{2}\\right)^2 = \\frac{\\pi s^2}{4},$$\n\na quarter of $\\pi$ times the area of the square. A square of side $8$ m has an inscribed circle of area $16\\pi\\text{ m}^2$; a square of area $36\\text{ m}^2$ has side $6$ m and an inscribed circle of area $9\\pi\\text{ m}^2$.",
@@ -1780,6 +1809,7 @@ export const circlesInscribedInSquares: TopicDef = {
     },
     {
       id: "between-the-square-and-the-circle",
+      figure: partsDrawings["between-the-square-and-the-circle"],
       title: t("Between the square and the circle", "正方形与圆之间"),
       explanation: t(
         "The four corners of the square outside its inscribed circle have total area\n\n$$s^2 - \\frac{\\pi s^2}{4}.$$\n\nFor $s = 10$ cm that is $(100 - 25\\pi)\\text{ cm}^2$. The circumference of the inscribed circle is $\\pi s$: for a square of perimeter $40$ cm, the side is $10$ cm and the circle's circumference is $10\\pi$ cm.",
@@ -1856,6 +1886,7 @@ export const squaresInscribedInCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-an-inscribed-square",
+      figure: partsDrawings["area-of-an-inscribed-square"],
       title: t("Area of an inscribed square", "内接正方形的面积"),
       explanation: t(
         "A square **inscribed** in a circle has all four vertices on the circle. Its diagonals are diameters, and they are perpendicular and meet at the center. They cut the square into four right triangles whose legs are radii, so\n\n$$A = 4 \\cdot \\frac{1}{2} r^2 = 2r^2.$$\n\nA square inscribed in a circle of radius $5$ cm has area $50\\text{ cm}^2$. In terms of the diameter, $A = \\frac{d^2}{2}$.",
@@ -1905,6 +1936,7 @@ export const squaresInscribedInCircles: TopicDef = {
     },
     {
       id: "side-of-an-inscribed-square",
+      figure: partsDrawings["side-of-an-inscribed-square"],
       title: t("Side of an inscribed square", "内接正方形的边长"),
       explanation: t(
         "From $s^2 = A = 2r^2$, the side of the inscribed square is\n\n$$s = \\sqrt{2r^2} = r\\sqrt{2}.$$\n\nA square inscribed in a circle of radius $6$ cm has side $6\\sqrt{2}$ cm. Going the other way, a square of side $s$ fits in a circle of radius $\\frac{s}{\\sqrt{2}} = \\frac{s\\sqrt{2}}{2}$: for $s = 4$, $r = 2\\sqrt{2}$.",
@@ -1962,6 +1994,7 @@ export const squaresInscribedInCircles: TopicDef = {
     },
     {
       id: "between-the-circle-and-the-square",
+      figure: partsDrawings["between-the-circle-and-the-square"],
       title: t("Between the circle and the square", "圆与正方形之间"),
       explanation: t(
         "The part of a circle outside its inscribed square has area $\\pi r^2 - 2r^2$: for $r = 4$ cm that is $(16\\pi - 32)\\text{ cm}^2$.\n\nIf the square is given, find $r^2$ from its area first: a square of side $6$ m has area $36 = 2r^2$, so $r^2 = 18$ and the circle has area $18\\pi\\text{ m}^2$.",

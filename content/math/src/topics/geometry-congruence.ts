@@ -1,7 +1,8 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, sketch } from "@ga/subject-math";
-
+import { motionDrawings } from "../explanation-drawings-angles.ts";
+import { congruenceDrawings } from "../explanation-drawings-triangles.ts";
 import { choiceProblem, numberProblem, reasonChoice, steps, verdictChoice, yesNo } from "../problems.ts";
 
 // Geometry, module 1.3: congruence. The ASA, AAS, SAS, SSS and HL criteria,
@@ -458,6 +459,7 @@ export const theAsaCongruenceCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "congruence-statements",
+      figure: congruenceDrawings["congruence-statements"],
       title: t("Congruence statements", "全等的表示"),
       explanation: t(
         "Two triangles are **congruent** ($\\cong$) when they have the same size and shape: their corresponding sides and corresponding angles are equal.\n\nA **congruence statement** lists corresponding vertices in the same order. $\\triangle ABC \\cong \\triangle PQR$ says $A \\leftrightarrow P$, $B \\leftrightarrow Q$ and $C \\leftrightarrow R$, so $\\overline{AB} \\cong \\overline{PQ}$, $\\overline{BC} \\cong \\overline{QR}$, $\\overline{CA} \\cong \\overline{RP}$ and $\\angle A \\cong \\angle P$, $\\angle B \\cong \\angle Q$, $\\angle C \\cong \\angle R$.\n\nIf $\\triangle BCA \\cong \\triangle RPQ$ and $AC = 9$, match by position: $B \\leftrightarrow R$, $C \\leftrightarrow P$, $A \\leftrightarrow Q$, so $\\overline{AC}$ corresponds to $\\overline{QP}$ and $QP = 9$.",
@@ -512,6 +514,7 @@ export const theAsaCongruenceCriterion: TopicDef = {
     },
     {
       id: "applying-asa",
+      figure: congruenceDrawings["applying-asa"],
       title: t("The ASA criterion", "ASA 判定"),
       explanation: t(
         "Checking all six pairs of parts is not necessary. The **ASA (angle–side–angle) criterion**: if two angles and the **included side** (the side between them) of one triangle are congruent to two angles and the included side of another, the triangles are congruent.\n\nIn $\\triangle ABC$ the side between $\\angle A$ and $\\angle B$ is $\\overline{AB}$. So if $\\angle A \\cong \\angle D$ and $\\angle B \\cong \\angle E$, the fact that completes ASA is $\\overline{AB} \\cong \\overline{DE}$. The sides must correspond too: $\\overline{AB} \\cong \\overline{EF}$ would not do.\n\nIn figures, congruent sides carry the same number of tick marks, and congruent angles are marked with arcs.",
@@ -565,6 +568,7 @@ export const theAsaCongruenceCriterion: TopicDef = {
     },
     {
       id: "solving-with-asa",
+      figure: congruenceDrawings["solving-with-asa"],
       title: t("Unknowns in ASA", "ASA 中的未知量"),
       explanation: t(
         "When two triangles are congruent by ASA, each marked measure of one triangle equals the corresponding measure of the other. That gives an equation for an unknown.\n\nIf $\\angle A \\cong \\angle D$, $\\angle B \\cong \\angle E$ and $\\overline{AB} \\cong \\overline{DE}$ with $AB = 14$ and $DE = 3x + 2$, then $3x + 2 = 14$, so $3x = 12$ and $x = 4$.",
@@ -639,6 +643,7 @@ export const theAasCongruenceCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "third-angles",
+      figure: congruenceDrawings["third-angles"],
       title: t("Why AAS works", "AAS 为什么成立"),
       explanation: t(
         "If two angles of one triangle are congruent to two angles of another, the third angles are congruent too, because each triangle's angles add up to $180^\\circ$.\n\nThat is why the **AAS (angle–angle–side) criterion** holds: two angles and a **non-included side** (a side not between them) of one triangle congruent to the corresponding parts of another make the triangles congruent. Once the third angles are known to match, the side lies between two matching angles, and ASA applies.\n\nIf $m\\angle A = m\\angle D = 50^\\circ$ and $m\\angle B = m\\angle E = 75^\\circ$, then $m\\angle C = m\\angle F = 180^\\circ - 50^\\circ - 75^\\circ = 55^\\circ$.",
@@ -681,6 +686,7 @@ export const theAasCongruenceCriterion: TopicDef = {
     },
     {
       id: "asa-or-aas",
+      figure: congruenceDrawings["asa-or-aas"],
       title: t("ASA or AAS", "ASA 还是 AAS"),
       explanation: t(
         "With two pairs of congruent angles and one pair of congruent sides, look at where the side is:\n\n- between the two angles: **ASA**;\n- not between them: **AAS**;\n- not a pair of corresponding sides at all: neither criterion applies.\n\nGiven $\\angle A \\cong \\angle D$ and $\\angle B \\cong \\angle E$: with $\\overline{AB} \\cong \\overline{DE}$ it is ASA; with $\\overline{BC} \\cong \\overline{EF}$ it is AAS; with $\\overline{BC} \\cong \\overline{DF}$ the sides do not correspond, and the triangles are not shown to be congruent.",
@@ -726,6 +732,7 @@ export const theAasCongruenceCriterion: TopicDef = {
     },
     {
       id: "solving-with-aas",
+      figure: congruenceDrawings["solving-with-aas"],
       title: t("Unknowns in AAS", "AAS 中的未知量"),
       explanation: t(
         "When the angle marked with an unknown is not one of the angles shown in the other triangle, find its partner first with the angle sum.\n\nSuppose $\\triangle ABC \\cong \\triangle DEF$ by AAS, with $m\\angle A = 40^\\circ$ and $m\\angle B = 65^\\circ$, and $m\\angle F = (2x + 15)^\\circ$. The partner of $\\angle F$ is $\\angle C$, and $m\\angle C = 180^\\circ - 40^\\circ - 65^\\circ = 75^\\circ$. So $2x + 15 = 75$, $2x = 60$ and $x = 30$.",
@@ -785,6 +792,7 @@ export const theSasCongruenceCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "included-angles",
+      figure: congruenceDrawings["included-angles"],
       title: t("Included angles", "夹角"),
       explanation: t(
         "The **included angle** of two sides of a triangle is the angle between them, at the vertex they share.\n\nIn $\\triangle PQR$, the sides $\\overline{PQ}$ and $\\overline{QR}$ share the vertex $Q$, so their included angle is $\\angle Q$. Conversely, $\\angle P$ is included between the two sides that end at $P$: $\\overline{PQ}$ and $\\overline{PR}$.",
@@ -836,6 +844,7 @@ export const theSasCongruenceCriterion: TopicDef = {
     },
     {
       id: "applying-sas",
+      figure: congruenceDrawings["applying-sas"],
       title: t("The SAS criterion", "SAS 判定"),
       explanation: t(
         "The **SAS (side–angle–side) criterion**: if two sides and the included angle of one triangle are congruent to two sides and the included angle of another, the triangles are congruent.\n\nThe angle must be the one between the sides. Two sides and an angle that is not between them (**SSA**) do not prove congruence: the third side can swing into two different positions. With $\\overline{AB} \\cong \\overline{DE}$ and $\\overline{BC} \\cong \\overline{EF}$, the angle for SAS is $\\angle B \\cong \\angle E$; $\\angle A \\cong \\angle D$ would be SSA.",
@@ -907,6 +916,7 @@ export const theSasCongruenceCriterion: TopicDef = {
     },
     {
       id: "solving-with-sas",
+      figure: congruenceDrawings["solving-with-sas"],
       title: t("Unknowns in SAS", "SAS 中的未知量"),
       explanation: t(
         "Once two triangles are congruent by SAS, every pair of corresponding parts is equal, including the parts that were not marked.\n\nIf $\\overline{AB} \\cong \\overline{DE}$, $\\angle B \\cong \\angle E$ and $\\overline{BC} \\cong \\overline{EF}$, then $\\triangle ABC \\cong \\triangle DEF$, so the third sides match as well: with $AC = 17$ and $DF = 4x - 3$, $4x - 3 = 17$, $4x = 20$ and $x = 5$.",
@@ -987,6 +997,7 @@ export const theSssCongruenceCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "applying-sss",
+      figure: congruenceDrawings["applying-sss"],
       title: t("The SSS criterion", "SSS 判定"),
       explanation: t(
         "The **SSS (side–side–side) criterion**: if the three sides of one triangle are congruent to the three sides of another, the triangles are congruent. Three side lengths fix a triangle completely.\n\nTo check, compare the side lengths sorted by size. A triangle with sides $5$, $7$, $9$ is congruent to one with sides $9$, $5$, $7$, but not to one with sides $5$, $7$, $10$.",
@@ -1046,6 +1057,7 @@ export const theSssCongruenceCriterion: TopicDef = {
     },
     {
       id: "matching-vertices",
+      figure: congruenceDrawings["matching-vertices"],
       title: t("Matching the vertices", "对应顶点"),
       explanation: t(
         "To write the congruence statement, match the sides by length, then match the vertices: a vertex is where its two sides meet.\n\nIf $AB = 6$, $BC = 8$, $CA = 11$ and $DE = 8$, $EF = 11$, $FD = 6$: $\\overline{AB} \\leftrightarrow \\overline{FD}$ and $\\overline{BC} \\leftrightarrow \\overline{DE}$. $B$ is on both $\\overline{AB}$ and $\\overline{BC}$, so it matches the point on both $\\overline{FD}$ and $\\overline{DE}$, which is $D$. In the same way $A \\leftrightarrow F$ and $C \\leftrightarrow E$, so $\\triangle ABC \\cong \\triangle FDE$.",
@@ -1175,6 +1187,7 @@ export const theHlCongruenceCriterion: TopicDef = {
   knowledgePoints: [
     {
       id: "hypotenuse-and-leg",
+      figure: congruenceDrawings["hypotenuse-and-leg"],
       title: t("The HL criterion", "HL 判定"),
       explanation: t(
         "The **HL (hypotenuse–leg) criterion**: if the hypotenuse and a leg of one right triangle are congruent to the hypotenuse and a leg of another right triangle, the triangles are congruent.\n\nThis is a special case where two sides and a non-included angle are enough, because the angle is a right angle. By the Pythagorean theorem the other legs are equal too, so SSS applies.\n\nOther criteria still work for right triangles: two legs and the right angle between them is SAS; a leg and an acute angle next to it, with the right angle, is ASA.",
@@ -1222,6 +1235,7 @@ export const theHlCongruenceCriterion: TopicDef = {
     },
     {
       id: "missing-legs",
+      figure: congruenceDrawings["missing-legs"],
       title: t("The missing leg", "求另一条直角边"),
       explanation: t(
         "Right triangles congruent by HL have all their parts equal, so the leg that was not given can be found in either triangle with the Pythagorean theorem.\n\nIf $\\angle C$ and $\\angle F$ are right angles, $AB = DE = 17$ and $AC = DF = 8$, then $BC = \\sqrt{17^2 - 8^2} = \\sqrt{225} = 15$, and since $\\triangle ABC \\cong \\triangle DEF$, $EF = BC = 15$.",
@@ -1264,6 +1278,7 @@ export const theHlCongruenceCriterion: TopicDef = {
     },
     {
       id: "solving-with-hl",
+      figure: congruenceDrawings["solving-with-hl"],
       title: t("Unknowns in HL", "HL 中的未知量"),
       explanation: t(
         "For HL, the hypotenuse must match the hypotenuse and a leg must match a leg. The hypotenuse is the side opposite the right angle, and it is always the longest side.\n\nIf right triangles $ABC$ and $DEF$ have right angles at $C$ and $F$, $AB = 25$, $AC = 7$, $DF = 7$ and $DE = 5x - 5$, then for $\\triangle ABC \\cong \\triangle DEF$ by HL, $5x - 5 = 25$, so $5x = 30$ and $x = 6$.",
@@ -1381,6 +1396,7 @@ export const combiningCongruenceCriteriaForTriangles: TopicDef = {
     },
     {
       id: "shared-sides",
+      figure: congruenceDrawings["shared-sides"],
       title: t("Shared sides", "公共边"),
       explanation: t(
         "When two triangles share a side, that side is congruent to itself (the **Reflexive Property**). It counts as one pair of congruent sides even though nothing marks it.\n\nIn a figure where $\\triangle UXV$ and $\\triangle UYV$ share $\\overline{UV}$: if $\\overline{UX} \\cong \\overline{UY}$ and $\\overline{VX} \\cong \\overline{VY}$, then with $\\overline{UV} \\cong \\overline{UV}$ the triangles are congruent by SSS. If instead $\\overline{UX} \\cong \\overline{UY}$ and $\\angle XUV \\cong \\angle YUV$, the angle at $U$ lies between $\\overline{UX}$ and $\\overline{UV}$, so it is SAS.",
@@ -1444,6 +1460,7 @@ export const combiningCongruenceCriteriaForTriangles: TopicDef = {
     },
     {
       id: "vertical-angles",
+      figure: congruenceDrawings["vertical-angles"],
       title: t("Vertical angles", "对顶角"),
       explanation: t(
         "When two segments cross, they form two triangles that meet at the crossing point. The angles of the triangles at that point are **vertical angles**, so they are congruent: another pair of congruent parts that nothing marks.\n\nIf $\\overline{AD}$ and $\\overline{BE}$ cross at $C$, then $\\angle ACB \\cong \\angle DCE$. With $\\overline{AC} \\cong \\overline{DC}$ and $\\overline{BC} \\cong \\overline{EC}$, the vertical angles lie between the congruent sides, so $\\triangle ABC \\cong \\triangle DEC$ by SAS.",
@@ -1679,6 +1696,7 @@ export const rigidMotionsAndCongruence: TopicDef = {
     },
     {
       id: "identifying-the-motion",
+      figure: motionDrawings["identifying-the-motion"],
       title: t("Identifying the motion", "识别变换"),
       explanation: t(
         "To identify the rigid motion that maps a triangle onto its image, compare each vertex with its image:\n\n- every vertex moves by the same vector: a translation;\n- $(x, y) \\to (x, -y)$: a reflection across the $x$-axis;\n- $(x, y) \\to (-x, y)$: a reflection across the $y$-axis;\n- $(x, y) \\to (-y, x)$: a rotation of $90^\\circ$ counterclockwise about the origin;\n- $(x, y) \\to (-x, -y)$: a rotation of $180^\\circ$ about the origin.\n\n$A(2, 5) \\to A'(-5, 2)$ and $B(4, 1) \\to B'(-1, 4)$ follow $(x, y) \\to (-y, x)$: a $90^\\circ$ rotation.",
@@ -1751,6 +1769,7 @@ export const rigidMotionsAndCongruence: TopicDef = {
     },
     {
       id: "corresponding-parts-of-images",
+      figure: congruenceDrawings["corresponding-parts-of-images"],
       title: t("Corresponding parts", "对应部分"),
       explanation: t(
         "When a rigid motion maps $\\triangle ABC$ onto $\\triangle DEF$, each vertex goes to a vertex, and each side and angle goes to the side or angle between the images. The image has the same lengths and angles.\n\nIf the motion maps $A$ to $F$, $B$ to $D$ and $C$ to $E$, then $\\overline{AB}$ goes to $\\overline{FD}$. With $AB = 2x + 1$ and $FD = 13$: $2x + 1 = 13$, so $x = 6$.",
@@ -2526,6 +2545,7 @@ export const provingCongruenceStatements: TopicDef = {
   knowledgePoints: [
     {
       id: "proofs-with-sss-and-sas",
+      figure: congruenceDrawings["proofs-with-sss-and-sas"],
       title: t("Proofs with SSS and SAS", "用 SSS 和 SAS 证明"),
       explanation: t(
         "A **two-column proof** lists statements, each with its reason. A congruence proof collects three pairs of congruent parts, names the criterion, and then may use **CPCTC** (corresponding parts of congruent triangles are congruent) to conclude about any other pair of parts.\n\n**Given:** $C$ is the midpoint of $\\overline{AD}$ and of $\\overline{BE}$. **Prove:** $\\overline{AB} \\cong \\overline{DE}$.\n\n1. $C$ is the midpoint of $\\overline{AD}$ and $\\overline{BE}$ —— Given\n2. $\\overline{AC} \\cong \\overline{DC}$ —— Definition of midpoint\n3. $\\overline{BC} \\cong \\overline{EC}$ —— Definition of midpoint\n4. $\\angle ACB \\cong \\angle DCE$ —— Vertical Angles Theorem\n5. $\\triangle ABC \\cong \\triangle DEC$ —— SAS\n6. $\\overline{AB} \\cong \\overline{DE}$ —— CPCTC\n\nA side shared by both triangles is justified by the Reflexive Property.",
@@ -2538,6 +2558,7 @@ export const provingCongruenceStatements: TopicDef = {
     },
     {
       id: "proofs-with-asa-and-aas",
+      figure: congruenceDrawings["proofs-with-asa-and-aas"],
       title: t("Proofs with ASA and AAS", "用 ASA 和 AAS 证明"),
       explanation: t(
         "Congruent angles often come from parallel lines (alternate interior angles), from crossing lines (vertical angles) or from a bisector.\n\n**Given:** $\\overline{AB} \\parallel \\overline{DE}$, and $C$ is the midpoint of $\\overline{AD}$. **Prove:** $\\overline{AB} \\cong \\overline{DE}$.\n\n1. $\\overline{AB} \\parallel \\overline{DE}$ —— Given\n2. $\\angle BAC \\cong \\angle EDC$ —— Alternate Interior Angles Theorem\n3. $C$ is the midpoint of $\\overline{AD}$ —— Given\n4. $\\overline{AC} \\cong \\overline{DC}$ —— Definition of midpoint\n5. $\\angle ACB \\cong \\angle DCE$ —— Vertical Angles Theorem\n6. $\\triangle ABC \\cong \\triangle DEC$ —— ASA, since $\\overline{AC}$ lies between the angles at $A$ and $C$\n7. $\\overline{AB} \\cong \\overline{DE}$ —— CPCTC",
@@ -2553,6 +2574,7 @@ export const provingCongruenceStatements: TopicDef = {
     },
     {
       id: "proofs-with-right-angles",
+      figure: congruenceDrawings["proofs-with-right-angles"],
       title: t("Proofs with right angles", "含直角的证明"),
       explanation: t(
         "A perpendicular segment gives right angles (definition of perpendicular lines), and all right angles are congruent (Right Angles Congruence Theorem). Right triangles can then be proved congruent by HL or by SAS.\n\n**Given:** $\\overline{UV} \\perp \\overline{XY}$, and $\\overline{UX} \\cong \\overline{UY}$. **Prove:** $\\overline{XV} \\cong \\overline{YV}$.\n\n1. $\\overline{UV} \\perp \\overline{XY}$ —— Given\n2. $\\angle UVX$ and $\\angle UVY$ are right angles —— Definition of perpendicular lines\n3. $\\overline{UX} \\cong \\overline{UY}$ —— Given\n4. $\\overline{UV} \\cong \\overline{UV}$ —— Reflexive Property\n5. $\\triangle UVX \\cong \\triangle UVY$ —— HL\n6. $\\overline{XV} \\cong \\overline{YV}$ —— CPCTC",

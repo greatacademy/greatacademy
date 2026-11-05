@@ -15,6 +15,7 @@ import {
   radical,
   simplifyRadical,
 } from "@ga/subject-math";
+import { coordinateDrawings } from "../explanation-drawings-solids.ts";
 import { annotate, graphFigure, legs, plain, at as plainAt, riseOf, root, sideLabels } from "../graph-figures.ts";
 import {
   equationProblem,
@@ -489,6 +490,7 @@ export const findingEquationsOfPerpendicularLines: TopicDef = {
     },
     {
       id: "perpendicular-to-a-line-through-two-points",
+      figure: coordinateDrawings["perpendicular-to-a-line-through-two-points"],
       title: t("Perpendicular to a line through two points", "与过两点的直线垂直"),
       explanation: t(
         "Find the slope of the given line from its two points, take the negative reciprocal, and substitute the point.\n\nThe line through $A(-1, 2)$ and $B(3, 4)$ has slope $\\frac{4 - 2}{3 - (-1)} = \\frac{1}{2}$, so a perpendicular line has slope $-2$. Through $(1, 5)$:\n\n$$5 = -2 \\cdot 1 + b \\;\\Rightarrow\\; b = 7, \\qquad y = -2x + 7.$$",
@@ -527,6 +529,7 @@ export const findingEquationsOfPerpendicularLines: TopicDef = {
     },
     {
       id: "perpendicular-horizontal-and-vertical-lines",
+      figure: coordinateDrawings["perpendicular-horizontal-and-vertical-lines"],
       title: t("Perpendicular horizontal and vertical lines", "互相垂直的水平线与竖直线"),
       explanation: t(
         "A horizontal line and a vertical line are perpendicular. So a line perpendicular to a **vertical** line is horizontal: through $(h, k)$ it is $y = k$. A line perpendicular to a **horizontal** line is vertical: through $(h, k)$ it is $x = h$.\n\nThe line through $(-5, 2)$ perpendicular to $x = 4$ is $y = 2$; the line through $(-5, 2)$ perpendicular to the $x$-axis is $x = -5$.",
@@ -643,6 +646,7 @@ export const midpointsInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "midpoint-from-a-graph",
+      figure: coordinateDrawings["midpoint-from-a-graph"],
       title: t("The midpoint of a graphed segment", "由图像求中点"),
       explanation: t(
         "To find the midpoint of a segment drawn on a grid, read the coordinates of its endpoints first, then average them. A segment from $A(-4, 1)$ to $B(2, 5)$ has midpoint $\\left(\\frac{-4 + 2}{2}, \\frac{1 + 5}{2}\\right) = (-1, 3)$.",
@@ -1142,6 +1146,7 @@ export const theShortestDistanceBetweenAPointAndALine: TopicDef = {
   knowledgePoints: [
     {
       id: "distance-to-horizontal-and-vertical-lines",
+      figure: coordinateDrawings["distance-to-horizontal-and-vertical-lines"],
       title: t("Distance to a horizontal or vertical line", "点到水平线或竖直线的距离"),
       explanation: t(
         "The **distance from a point to a line** is the length of the shortest segment joining them, which is the segment **perpendicular** to the line.\n\nTo a vertical line $x = a$ the perpendicular is horizontal, so the distance from $(x_0, y_0)$ is $|x_0 - a|$. To a horizontal line $y = c$ it is $|y_0 - c|$. The point $(-3, 5)$ is $|-3 - 4| = 7$ units from $x = 4$ and $|5 - (-1)| = 6$ units from $y = -1$.",
@@ -1206,6 +1211,7 @@ export const theShortestDistanceBetweenAPointAndALine: TopicDef = {
     },
     {
       id: "the-foot-of-the-perpendicular",
+      figure: coordinateDrawings["the-foot-of-the-perpendicular"],
       title: t("The foot of the perpendicular", "垂足"),
       explanation: t(
         "The point of a line closest to a point $P$ is the **foot of the perpendicular** $F$: where the line through $P$ perpendicular to the given line meets it.\n\n1. Write the perpendicular through $P$, with the negative reciprocal slope.\n2. Solve the two equations together to find their intersection.\n\nFor $P(1, 7)$ and $y = 2x$: the perpendicular through $P$ is $y = -\\frac{1}{2}x + \\frac{15}{2}$. Setting $2x = -\\frac{1}{2}x + \\frac{15}{2}$ gives $x = 3$, then $y = 6$, so $F = (3, 6)$.",
@@ -1242,6 +1248,7 @@ export const theShortestDistanceBetweenAPointAndALine: TopicDef = {
     },
     {
       id: "distance-from-a-point-to-a-line",
+      figure: coordinateDrawings["distance-from-a-point-to-a-line"],
       title: t("The distance from a point to a line", "点到直线的距离"),
       explanation: t(
         "To find the distance from $P$ to a slanted line, find the foot of the perpendicular $F$, then the distance $PF$ with the distance formula.\n\nFor $P(1, 7)$ and $y = 2x$, the foot is $F(3, 6)$, so the distance is $\\sqrt{(3 - 1)^2 + (6 - 7)^2} = \\sqrt{5}$. (The distance from $(x_0, y_0)$ to $Ax + By = C$ is also given by the formula $\\frac{|Ax_0 + By_0 - C|}{\\sqrt{A^2 + B^2}}$, which you can use to check: $\\frac{|2 \\cdot 1 - 7|}{\\sqrt{5}} = \\sqrt{5}$.)",
@@ -1365,6 +1372,7 @@ export const calculatingPerimetersInThePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "perimeters-with-whole-number-sides",
+      figure: coordinateDrawings["perimeters-with-whole-number-sides"],
       title: t("Perimeters with whole-number sides", "边长为整数的周长"),
       explanation: t(
         "The perimeter of a polygon is the sum of its side lengths. In the coordinate plane, find each side with the distance formula; a horizontal or vertical side is just the difference of the coordinates that change.\n\nTriangle $A(0, 0)$, $B(6, 0)$, $C(6, 8)$ has $AB = 6$, $BC = 8$ and $CA = \\sqrt{6^2 + 8^2} = 10$, so its perimeter is $6 + 8 + 10 = 24$.",
@@ -1404,6 +1412,7 @@ export const calculatingPerimetersInThePlane: TopicDef = {
     },
     {
       id: "perimeters-in-simplest-radical-form",
+      figure: coordinateDrawings["perimeters-in-simplest-radical-form"],
       title: t("Perimeters in simplest radical form", "用最简根式表示周长"),
       explanation: t(
         "When some sides are irrational, write each side in simplest radical form, then add: combine whole numbers, and combine like radicals.\n\nTriangle $A(0, 0)$, $B(4, 0)$, $C(2, 4)$ has $AB = 4$, $BC = \\sqrt{(-2)^2 + 4^2} = \\sqrt{20} = 2\\sqrt{5}$ and $CA = \\sqrt{(-2)^2 + (-4)^2} = 2\\sqrt{5}$, so its perimeter is $4 + 4\\sqrt{5}$.",
@@ -1487,6 +1496,7 @@ export const calculatingAreasOfRectanglesInThePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "rectangles-with-horizontal-and-vertical-sides",
+      figure: coordinateDrawings["rectangles-with-horizontal-and-vertical-sides"],
       title: t("Rectangles with horizontal and vertical sides", "边水平、竖直的矩形"),
       explanation: t(
         "When the sides of a rectangle are horizontal and vertical, its width is the difference of the $x$-coordinates and its height the difference of the $y$-coordinates.\n\nThe rectangle with vertices $A(-3, -1)$, $B(4, -1)$, $C(4, 5)$ and $D(-3, 5)$ has width $4 - (-3) = 7$ and height $5 - (-1) = 6$, so its area is $7 \\cdot 6 = 42$.",
@@ -1539,6 +1549,7 @@ export const calculatingAreasOfRectanglesInThePlane: TopicDef = {
     },
     {
       id: "tilted-rectangles",
+      figure: coordinateDrawings["tilted-rectangles"],
       title: t("Tilted rectangles", "倾斜的矩形"),
       explanation: t(
         "When the sides are slanted, find the length and the width with the distance formula, then multiply.\n\nRectangle $A(0, 0)$, $B(2, 1)$, $C(0, 5)$, $D(-2, 4)$ has $AB = \\sqrt{2^2 + 1^2} = \\sqrt{5}$ and $BC = \\sqrt{(-2)^2 + 4^2} = \\sqrt{20}$, so its area is $\\sqrt{5} \\cdot \\sqrt{20} = \\sqrt{100} = 10$. (Multiplying the width and height of the rectangle around it, $4 \\cdot 5 = 20$, would be wrong.)",
@@ -1687,6 +1698,7 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
   knowledgePoints: [
     {
       id: "triangles-with-a-horizontal-or-vertical-side",
+      figure: coordinateDrawings["triangles-with-a-horizontal-or-vertical-side"],
       title: t("A horizontal or vertical base", "水平或竖直的底"),
       explanation: t(
         "If one side of a triangle is horizontal, use it as the base: its length is the difference of the $x$-coordinates, and the height is the vertical distance from the third vertex to that side. Then $A = \\frac{1}{2}bh$. (For a vertical side, swap the roles of $x$ and $y$.)\n\nFor $A(-2, 1)$, $B(5, 1)$ and $C(3, 7)$: the base $AB = 7$, the height is $7 - 1 = 6$, so the area is $\\frac{1}{2} \\cdot 7 \\cdot 6 = 21$.",
@@ -1816,6 +1828,7 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
     },
     {
       id: "areas-of-quadrilaterals",
+      figure: coordinateDrawings["areas-of-quadrilaterals"],
       title: t("Areas of quadrilaterals", "四边形的面积"),
       explanation: t(
         "The same idea works for a quadrilateral: subtract from the rectangle around it the right triangles at its corners.\n\nFor $A(2, 0)$, $B(6, 3)$, $C(4, 6)$, $D(0, 2)$: the rectangle is $6$ by $6$, area $36$. The corner triangles have areas $\\frac{1}{2} \\cdot 4 \\cdot 3 = 6$, $\\frac{1}{2} \\cdot 2 \\cdot 3 = 3$, $\\frac{1}{2} \\cdot 4 \\cdot 4 = 8$ and $\\frac{1}{2} \\cdot 2 \\cdot 2 = 2$, so the area of $ABCD$ is $36 - 6 - 3 - 8 - 2 = 17$.",

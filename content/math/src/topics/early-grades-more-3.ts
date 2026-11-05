@@ -17,6 +17,7 @@ import {
   labeledRectangleFigure,
   polygonFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import {
   areaModelFigure,
   beakerFigure,
@@ -489,29 +490,32 @@ const areaModels = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "adding-the-two-parts",
-      ["Adding the two parts", "把两部分加起来"],
-      [
-        "The whole rectangle is made of its two parts, so the product is the sum of their areas. For $6 \\times 14$, the parts are $6 \\times 10$, which is 60, and $6 \\times 4$, which is 24. Together they make 84. Remember to add the two areas. Multiplying them or forgetting one of them gives a wrong answer.",
-        "整个长方形由两部分组成，所以积就是两部分面积的和。求 $6 \\times 14$，两部分是 $6 \\times 10 = 60$ 和 $6 \\times 4 = 24$，合起来是 84。记住要把两个面积相加。把它们相乘或漏掉一个，答案都不对。",
-      ],
-      (rng) => {
-        const h = rng.int(3, 8);
-        const ones = rng.int(2, 9);
-        const n = 10 + ones;
-        return whole(
-          [`The rectangle shows $${times(h, n)}$. What is the product?`, `这个长方形表示 $${times(h, n)}$。积是多少？`],
-          h * n,
-          [10 * h, ones * h, h + n, h * n + 10],
-          [
-            `The whole rectangle is its two parts together: $${10 * h} + ${ones * h} = ${h * n}$.`,
-            `整个长方形等于它的两部分之和：$${10 * h} + ${ones * h} = ${h * n}$。`,
-          ],
-          areaModelFigure(h, [10, ones], [`${10 * h}`, `${ones * h}`]),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "adding-the-two-parts",
+        ["Adding the two parts", "把两部分加起来"],
+        [
+          "The whole rectangle is made of its two parts, so the product is the sum of their areas. For $6 \\times 14$, the parts are $6 \\times 10$, which is 60, and $6 \\times 4$, which is 24. Together they make 84. Remember to add the two areas. Multiplying them or forgetting one of them gives a wrong answer.",
+          "整个长方形由两部分组成，所以积就是两部分面积的和。求 $6 \\times 14$，两部分是 $6 \\times 10 = 60$ 和 $6 \\times 4 = 24$，合起来是 84。记住要把两个面积相加。把它们相乘或漏掉一个，答案都不对。",
+        ],
+        (rng) => {
+          const h = rng.int(3, 8);
+          const ones = rng.int(2, 9);
+          const n = 10 + ones;
+          return whole(
+            [`The rectangle shows $${times(h, n)}$. What is the product?`, `这个长方形表示 $${times(h, n)}$。积是多少？`],
+            h * n,
+            [10 * h, ones * h, h + n, h * n + 10],
+            [
+              `The whole rectangle is its two parts together: $${10 * h} + ${ones * h} = ${h * n}$.`,
+              `整个长方形等于它的两部分之和：$${10 * h} + ${ones * h} = ${h * n}$。`,
+            ],
+            areaModelFigure(h, [10, ones], [`${10 * h}`, `${ones * h}`]),
+          );
+        },
+      ),
+      figure: gradeDrawings["adding-the-two-parts"],
+    },
     earlyPoint(
       "choosing-the-split",
       ["Choosing the split", "选择怎样拆分"],
@@ -995,26 +999,29 @@ const unitFractionsOnLine = earlyTopic(
   ["fractions-on-the-number-line"],
   ["3.NF.A.2"],
   [
-    earlyPoint(
-      "one-space-from-zero",
-      ["One space from zero", "离 0 一格"],
-      [
-        "The whole on a number line is the space from 0 to 1. If it is cut into 4 equal spaces, each space is one fourth, so the first mark after 0 is $\\frac{1}{4}$. Count the spaces, not the marks. There is one more mark than there are spaces, so counting marks would give a wrong answer of one fifth.",
-        "数轴上的一个整体，就是从 0 到 1 这一段。如果平均分成 4 格，每格就是四分之一，所以 0 后面的第一个刻度是 $\\frac{1}{4}$。要数格子，不是数刻度。刻度比格子多一个，数刻度就会错答成五分之一。",
-      ],
-      (rng) => {
-        const d = rng.pick([2, 3, 4, 6, 8]);
-        const wholes = rng.bool() ? 1 : 2;
-        return chooseMath(
-          rng,
-          ["What fraction does the dot show?", "这个点表示什么分数？"],
-          fr(1, d),
-          rng.shuffle([fr(1, d + 1), fr(d, 1), fr(1, d * 2), fr(2, d + 1)]),
-          [`There are ${d} equal spaces from 0 to 1, and the dot is 1 space from 0.`, `从 0 到 1 平均分成 ${d} 格，这个点离 0 有 1 格。`],
-          fractionLineFigure(wholes, d, 1),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "one-space-from-zero",
+        ["One space from zero", "离 0 一格"],
+        [
+          "The whole on a number line is the space from 0 to 1. If it is cut into 4 equal spaces, each space is one fourth, so the first mark after 0 is $\\frac{1}{4}$. Count the spaces, not the marks. There is one more mark than there are spaces, so counting marks would give a wrong answer of one fifth.",
+          "数轴上的一个整体，就是从 0 到 1 这一段。如果平均分成 4 格，每格就是四分之一，所以 0 后面的第一个刻度是 $\\frac{1}{4}$。要数格子，不是数刻度。刻度比格子多一个，数刻度就会错答成五分之一。",
+        ],
+        (rng) => {
+          const d = rng.pick([2, 3, 4, 6, 8]);
+          const wholes = rng.bool() ? 1 : 2;
+          return chooseMath(
+            rng,
+            ["What fraction does the dot show?", "这个点表示什么分数？"],
+            fr(1, d),
+            rng.shuffle([fr(1, d + 1), fr(d, 1), fr(1, d * 2), fr(2, d + 1)]),
+            [`There are ${d} equal spaces from 0 to 1, and the dot is 1 space from 0.`, `从 0 到 1 平均分成 ${d} 格，这个点离 0 有 1 格。`],
+            fractionLineFigure(wholes, d, 1),
+          );
+        },
+      ),
+      figure: gradeDrawings["one-space-from-zero"],
+    },
     earlyPoint(
       "how-many-to-reach-one",
       ["How many to reach one", "几个单位分数到 1"],
@@ -1510,33 +1517,36 @@ const elapsedOnALine = earlyTopic(
   ["elapsed-time-in-minutes"],
   ["3.MD.A.1"],
   [
-    earlyPoint(
-      "jumping-to-an-end-time",
-      ["Jumping to an end time", "跳到结束时间"],
-      [
-        "A time line works like a number line whose numbers are times. Start at the first time and jump forward by the minutes you have. It helps to make the first jump land on the hour, because the minutes begin again from zero there. Remember that an hour has 60 minutes, and not 100, so 3:50 and 10 minutes is 4:00.",
-        "时间线就像写着时间的数轴。从开始的时间出发，往前跳给定的分钟数。第一跳最好落在整点，因为那里分钟又从 0 开始。记住，一小时是 60 分钟，不是 100 分钟，所以 3:50 过 10 分钟是 4:00。",
-      ],
-      (rng) => {
-        const hour = rng.int(1, 10);
-        const toHour = 5 * rng.int(1, 6);
-        const start = 60 * hour + 60 - toHour;
-        const after = 5 * rng.int(2, 8);
-        const end = start + toHour + after;
-        const answer = clockText(end);
-        return choose(
-          rng,
-          ["The jumps start at the first time. What time do they end?", "从第一个时间开始跳。跳到什么时间结束？"],
-          [answer, answer],
-          rng.shuffle([clockText(end + 60), clockText(end - 60), clockText(end - 10), clockText(end + 10)]).map((s): Pair => [s, s]),
-          [
-            `${toHour} minutes reach ${clockText(start + toHour)}, and ${after} more minutes reach ${answer}.`,
-            `${toHour} 分钟到 ${clockText(start + toHour)}，再过 ${after} 分钟到 ${answer}。`,
-          ],
-          timeHopsFigure([start, start + toHour, end], true),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "jumping-to-an-end-time",
+        ["Jumping to an end time", "跳到结束时间"],
+        [
+          "A time line works like a number line whose numbers are times. Start at the first time and jump forward by the minutes you have. It helps to make the first jump land on the hour, because the minutes begin again from zero there. Remember that an hour has 60 minutes, and not 100, so 3:50 and 10 minutes is 4:00.",
+          "时间线就像写着时间的数轴。从开始的时间出发，往前跳给定的分钟数。第一跳最好落在整点，因为那里分钟又从 0 开始。记住，一小时是 60 分钟，不是 100 分钟，所以 3:50 过 10 分钟是 4:00。",
+        ],
+        (rng) => {
+          const hour = rng.int(1, 10);
+          const toHour = 5 * rng.int(1, 6);
+          const start = 60 * hour + 60 - toHour;
+          const after = 5 * rng.int(2, 8);
+          const end = start + toHour + after;
+          const answer = clockText(end);
+          return choose(
+            rng,
+            ["The jumps start at the first time. What time do they end?", "从第一个时间开始跳。跳到什么时间结束？"],
+            [answer, answer],
+            rng.shuffle([clockText(end + 60), clockText(end - 60), clockText(end - 10), clockText(end + 10)]).map((s): Pair => [s, s]),
+            [
+              `${toHour} minutes reach ${clockText(start + toHour)}, and ${after} more minutes reach ${answer}.`,
+              `${toHour} 分钟到 ${clockText(start + toHour)}，再过 ${after} 分钟到 ${answer}。`,
+            ],
+            timeHopsFigure([start, start + toHour, end], true),
+          );
+        },
+      ),
+      figure: gradeDrawings["jumping-to-an-end-time"],
+    },
     earlyPoint(
       "adding-the-jumps",
       ["Adding the jumps", "把跳的时间加起来"],
@@ -1949,36 +1959,39 @@ const halfSymbols = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "reading-a-row-with-a-half",
-      ["Reading a row with a half", "读有半个图案的一行"],
-      [
-        "To read a row with a half symbol, multiply the whole symbols by the key, and then add half of the key. If each circle is 4 and there are 3 and a half circles, then the row shows $3 \\times 4$, which is 12, and then 2 more for the half, making 14. Counting the half as a whole symbol gives 16.",
-        "读有半个图案的一行时，先用完整图案的个数乘图例的数，再加上图例的一半。如果每个圆表示 4，有 3 个半圆，就是 $3 \\times 4 = 12$，再加半个圆的 2，一共 14。把半个圆当成一整个，就会算成 16。",
-      ],
-      (rng) => {
-        const per = rng.pick([2, 4, 6, 10]);
-        const labels = ["A", "B", "C"];
-        const dots = halfDots(rng, 3);
-        dots[rng.int(0, 2)] = rng.int(1, 5) + 0.5;
-        const half = dots.findIndex((v) => v % 1 !== 0);
-        const value = dots[half] as number;
-        const answer = value * per;
-        return whole(
-          [
-            `Each whole circle stands for ${per} stickers. How many stickers does row ${labels[half]} show?`,
-            `一个完整的圆表示 ${per} 张贴纸。${labels[half]} 这一行表示多少张贴纸？`,
-          ],
-          answer,
-          [(Math.floor(value) + 1) * per, Math.floor(value) * per, Math.floor(value) + 1],
-          [
-            `${Math.floor(value)} whole circles make ${Math.floor(value) * per}, and the half circle adds ${per / 2}, which makes ${answer}.`,
-            `${Math.floor(value)} 个完整的圆是 ${Math.floor(value) * per}，半个圆再加 ${per / 2}，一共 ${answer}。`,
-          ],
-          halfPictureGraphFigure(labels, dots),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "reading-a-row-with-a-half",
+        ["Reading a row with a half", "读有半个图案的一行"],
+        [
+          "To read a row with a half symbol, multiply the whole symbols by the key, and then add half of the key. If each circle is 4 and there are 3 and a half circles, then the row shows $3 \\times 4$, which is 12, and then 2 more for the half, making 14. Counting the half as a whole symbol gives 16.",
+          "读有半个图案的一行时，先用完整图案的个数乘图例的数，再加上图例的一半。如果每个圆表示 4，有 3 个半圆，就是 $3 \\times 4 = 12$，再加半个圆的 2，一共 14。把半个圆当成一整个，就会算成 16。",
+        ],
+        (rng) => {
+          const per = rng.pick([2, 4, 6, 10]);
+          const labels = ["A", "B", "C"];
+          const dots = halfDots(rng, 3);
+          dots[rng.int(0, 2)] = rng.int(1, 5) + 0.5;
+          const half = dots.findIndex((v) => v % 1 !== 0);
+          const value = dots[half] as number;
+          const answer = value * per;
+          return whole(
+            [
+              `Each whole circle stands for ${per} stickers. How many stickers does row ${labels[half]} show?`,
+              `一个完整的圆表示 ${per} 张贴纸。${labels[half]} 这一行表示多少张贴纸？`,
+            ],
+            answer,
+            [(Math.floor(value) + 1) * per, Math.floor(value) * per, Math.floor(value) + 1],
+            [
+              `${Math.floor(value)} whole circles make ${Math.floor(value) * per}, and the half circle adds ${per / 2}, which makes ${answer}.`,
+              `${Math.floor(value)} 个完整的圆是 ${Math.floor(value) * per}，半个圆再加 ${per / 2}，一共 ${answer}。`,
+            ],
+            halfPictureGraphFigure(labels, dots),
+          );
+        },
+      ),
+      figure: gradeDrawings["reading-a-row-with-a-half"],
+    },
     earlyPoint(
       "comparing-rows-with-halves",
       ["Comparing rows with halves", "比较有半个图案的行"],
@@ -2270,73 +2283,79 @@ const areaStories = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "finding-a-missing-side-from-area",
-      ["Finding a missing side from area", "由面积求边长"],
-      [
-        "If you know the area of a rectangle and one side, you can find the other side by dividing. A rug has an area of 42 square feet and is 7 feet long. The other side times 7 must make 42, so it is $42 \\div 7$, or 6 feet. Subtracting the side from the area does not mean anything here.",
-        "知道长方形的面积和一条边，就能用除法求另一条边。一块地毯面积是 42 平方英尺，长 7 英尺。另一条边乘 7 要等于 42，所以是 $42 \\div 7$，等于 6 英尺。用面积减边长，在这里没有意义。",
-      ],
-      (rng) => {
-        const w = rng.int(3, 9);
-        const h = rng.int(3, 9);
-        const area = w * h;
-        const feet: Pair = ["feet", "英尺"];
-        const meters: Pair = ["meters", "米"];
-        const inches: Pair = ["inches", "英寸"];
-        const [thing, measure] = rng.pick<readonly [Pair, Pair]>([
-          [["rug", "地毯"], feet],
-          [["garden bed", "花坛"], feet],
-          [["garden bed", "花坛"], meters],
-          [["hall floor", "大厅地面"], meters],
-          [["poster", "海报"], inches],
-          [["table top", "桌面"], feet],
-          [["place mat", "餐垫"], inches],
-        ]);
-        return whole(
-          [
-            `A rectangular ${thing[0]} has an area of ${area} square ${measure[0]}. One side is ${w} ${measure[0]} long. How many ${measure[0]} long is the other side?`,
-            `一个长方形的${thing[1]}，面积是 ${area} 平方${measure[1]}，一条边长 ${w} ${measure[1]}。另一条边长多少${measure[1]}？`,
-          ],
-          h,
-          [area - w, area + w, area],
-          [
-            `Area is one side times the other, so divide the area by the side you know: $${div(area, w)} = ${h}$ ${measure[0]}.`,
-            `面积等于一条边乘另一条边，所以用面积除以已知的边：$${div(area, w)} = ${h}$ ${measure[1]}。`,
-          ],
-        );
-      },
-    ),
-    earlyPoint(
-      "comparing-two-areas",
-      ["Comparing two areas", "比较两个面积"],
-      [
-        "To compare two rectangles, find the area of each one and then compare the two areas. A longer rectangle is not always larger, because the other side also matters. A rectangle 8 by 2 has an area of 16, while a rectangle 5 by 4 has an area of 20. So the shorter one in this case is larger.",
-        "要比较两个长方形，先求出每个的面积，再比较。长一点的长方形不一定大，因为另一条边也有关系。8 乘 2 的长方形面积是 16，而 5 乘 4 的长方形面积是 20。所以这里更短的那个反而更大。",
-      ],
-      (rng) => {
-        const [p, q] = rng.sample(earlyNames, 2) as [string, string];
-        const w1 = rng.int(3, 10);
-        const h1 = rng.int(2, 7);
-        const w2 = rng.int(3, 10);
-        let h2 = rng.int(2, 7);
-        if (w1 * h1 === w2 * h2) h2 = h2 === 7 ? 6 : h2 + 1;
-        const a1 = w1 * h1;
-        const a2 = w2 * h2;
-        return whole(
-          [
-            `${p}'s garden is ${w1} meters by ${h1} meters. ${q}'s garden is ${w2} meters by ${h2} meters. How many square meters larger is the larger garden?`,
-            `${p} 的花园长 ${w1} 米、宽 ${h1} 米，${q} 的花园长 ${w2} 米、宽 ${h2} 米。大的花园比小的花园大多少平方米？`,
-          ],
-          Math.abs(a1 - a2),
-          [Math.abs(w1 + h1 - w2 - h2) + 1, Math.max(a1, a2), a1 + a2],
-          [
-            `The areas are ${a1} and ${a2} square meters, and their difference is ${Math.abs(a1 - a2)}.`,
-            `面积分别是 ${a1} 和 ${a2} 平方米，相差 ${Math.abs(a1 - a2)} 平方米。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "finding-a-missing-side-from-area",
+        ["Finding a missing side from area", "由面积求边长"],
+        [
+          "If you know the area of a rectangle and one side, you can find the other side by dividing. A rug has an area of 42 square feet and is 7 feet long. The other side times 7 must make 42, so it is $42 \\div 7$, or 6 feet. Subtracting the side from the area does not mean anything here.",
+          "知道长方形的面积和一条边，就能用除法求另一条边。一块地毯面积是 42 平方英尺，长 7 英尺。另一条边乘 7 要等于 42，所以是 $42 \\div 7$，等于 6 英尺。用面积减边长，在这里没有意义。",
+        ],
+        (rng) => {
+          const w = rng.int(3, 9);
+          const h = rng.int(3, 9);
+          const area = w * h;
+          const feet: Pair = ["feet", "英尺"];
+          const meters: Pair = ["meters", "米"];
+          const inches: Pair = ["inches", "英寸"];
+          const [thing, measure] = rng.pick<readonly [Pair, Pair]>([
+            [["rug", "地毯"], feet],
+            [["garden bed", "花坛"], feet],
+            [["garden bed", "花坛"], meters],
+            [["hall floor", "大厅地面"], meters],
+            [["poster", "海报"], inches],
+            [["table top", "桌面"], feet],
+            [["place mat", "餐垫"], inches],
+          ]);
+          return whole(
+            [
+              `A rectangular ${thing[0]} has an area of ${area} square ${measure[0]}. One side is ${w} ${measure[0]} long. How many ${measure[0]} long is the other side?`,
+              `一个长方形的${thing[1]}，面积是 ${area} 平方${measure[1]}，一条边长 ${w} ${measure[1]}。另一条边长多少${measure[1]}？`,
+            ],
+            h,
+            [area - w, area + w, area],
+            [
+              `Area is one side times the other, so divide the area by the side you know: $${div(area, w)} = ${h}$ ${measure[0]}.`,
+              `面积等于一条边乘另一条边，所以用面积除以已知的边：$${div(area, w)} = ${h}$ ${measure[1]}。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings["finding-a-missing-side-from-area"],
+    },
+    {
+      ...earlyPoint(
+        "comparing-two-areas",
+        ["Comparing two areas", "比较两个面积"],
+        [
+          "To compare two rectangles, find the area of each one and then compare the two areas. A longer rectangle is not always larger, because the other side also matters. A rectangle 8 by 2 has an area of 16, while a rectangle 5 by 4 has an area of 20. So the shorter one in this case is larger.",
+          "要比较两个长方形，先求出每个的面积，再比较。长一点的长方形不一定大，因为另一条边也有关系。8 乘 2 的长方形面积是 16，而 5 乘 4 的长方形面积是 20。所以这里更短的那个反而更大。",
+        ],
+        (rng) => {
+          const [p, q] = rng.sample(earlyNames, 2) as [string, string];
+          const w1 = rng.int(3, 10);
+          const h1 = rng.int(2, 7);
+          const w2 = rng.int(3, 10);
+          let h2 = rng.int(2, 7);
+          if (w1 * h1 === w2 * h2) h2 = h2 === 7 ? 6 : h2 + 1;
+          const a1 = w1 * h1;
+          const a2 = w2 * h2;
+          return whole(
+            [
+              `${p}'s garden is ${w1} meters by ${h1} meters. ${q}'s garden is ${w2} meters by ${h2} meters. How many square meters larger is the larger garden?`,
+              `${p} 的花园长 ${w1} 米、宽 ${h1} 米，${q} 的花园长 ${w2} 米、宽 ${h2} 米。大的花园比小的花园大多少平方米？`,
+            ],
+            Math.abs(a1 - a2),
+            [Math.abs(w1 + h1 - w2 - h2) + 1, Math.max(a1, a2), a1 + a2],
+            [
+              `The areas are ${a1} and ${a2} square meters, and their difference is ${Math.abs(a1 - a2)}.`,
+              `面积分别是 ${a1} 和 ${a2} 平方米，相差 ${Math.abs(a1 - a2)} 平方米。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings["comparing-two-areas"],
+    },
   ],
 );
 
@@ -2359,85 +2378,94 @@ const lShapes = earlyTopic(
   ["area-of-combined-rectangles"],
   ["3.MD.C.7"],
   [
-    earlyPoint(
-      "counting-squares-in-an-l",
-      ["Counting squares in an L", "数 L 形里的方格"],
-      [
-        "An L shape on a grid is made of unit squares. Its area is how many squares are inside it. Rather than counting one at a time, count the squares in each row, or look for rectangles you can find quickly. Do not count the squares in the cut-out corner, because they are not part of the shape at all.",
-        "方格纸上的 L 形由单位正方形组成，它的面积就是里面有多少个方格。不用一个一个地数，可以按行来数，或者找能很快算出的长方形。缺掉的那个角里的方格不算，因为它们根本不属于这个图形。",
-      ],
-      (rng) => {
-        const { w, h, cw, ch, area } = lData(rng);
-        return whole(
-          [
-            "Each small square is 1 square unit. What is the area of this shape, in square units?",
-            "每个小方格是 1 平方单位。这个图形的面积是多少平方单位？",
-          ],
-          area,
-          [w * h, cw * ch, area + 1, 2 * (w + h)],
-          [
-            `The full rectangle would have ${w * h} squares, and the cut-out corner removes ${cw * ch}, which leaves ${area}.`,
-            `完整的长方形有 ${w * h} 个方格，缺掉的角少了 ${cw * ch} 个，还剩 ${area} 个。`,
-          ],
-          lShapeFigure(w, h, cw, ch, {}, { grid: true }),
-        );
-      },
-    ),
-    earlyPoint(
-      "splitting-an-l-into-two",
-      ["Splitting an L into two", "把 L 形分成两部分"],
-      [
-        "An L shape can be split into two rectangles by a straight line. Find the area of each rectangle, and then add the two areas together. You sometimes have to work out a side that is not labeled, by subtracting. In this picture, the dashed line shows one way to split the shape, and there is another way that also works.",
-        "L 形可以用一条直线分成两个长方形。分别求出每个长方形的面积，再加起来。有时要用减法算出没有标的边。在这张图上，虚线是一种分法，还有另一种分法也可以。",
-      ],
-      (rng) => {
-        const { w, h, cw, ch, area } = lData(rng);
-        return whole(
-          [
-            "The dashed line splits this shape into two rectangles. What is the total area, in square units?",
-            "虚线把这个图形分成两个长方形。总面积是多少平方单位？",
-          ],
-          area,
-          [w * h, area + cw, w + h, area - ch],
-          [`The two rectangles have areas that add up to ${area}.`, `两个长方形的面积加起来是 ${area}。`],
-          lShapeFigure(
-            w,
-            h,
-            cw,
-            ch,
-            { bottom: `${w}`, right: `${h - ch}`, notchBottom: `${cw}`, notchSide: `${ch}`, top: `${w - cw}`, left: `${h}` },
-            { split: true },
-          ),
-        );
-      },
-    ),
-    earlyPoint(
-      "taking-away-a-corner",
-      ["Taking away a corner", "减去一个角"],
-      [
-        "Another way to find the area of an L shape is to imagine the whole rectangle around it. Find the area of that big rectangle. Then find the area of the missing corner, and take it away. This often uses fewer steps than splitting the shape. Check that the sides you use belong to the rectangle you want.",
-        "求 L 形面积的另一种方法，是想象它外面的大长方形。先求大长方形的面积，再求缺掉的角的面积，然后减去。这常常比分成两部分步骤更少。要检查用的边是不是属于要算的那个长方形。",
-      ],
-      (rng) => {
-        const { w, h, cw, ch, area } = lData(rng);
-        return chooseMath(
-          rng,
-          ["Which calculation gives the area of this shape?", "哪个算式能算出这个图形的面积？"],
-          `${times(w, h)} - ${times(cw, ch)}`,
-          rng.shuffle([
-            `${times(w, h)} + ${times(cw, ch)}`,
-            `${w} + ${h} - ${cw} - ${ch}`,
-            `${times(w - cw, h - ch)}`,
-            `${times(w, h)} - ${cw + ch}`,
-          ]),
-          [
-            `The big rectangle is $${times(w, h)}$, and the missing corner is $${times(cw, ch)}$. The area is ${area}.`,
-            `大长方形是 $${times(w, h)}$，缺掉的角是 $${times(cw, ch)}$，面积是 ${area}。`,
-          ],
-          lShapeFigure(w, h, cw, ch, { bottom: `${w}`, left: `${h}`, notchBottom: `${cw}`, notchSide: `${ch}` }),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "counting-squares-in-an-l",
+        ["Counting squares in an L", "数 L 形里的方格"],
+        [
+          "An L shape on a grid is made of unit squares. Its area is how many squares are inside it. Rather than counting one at a time, count the squares in each row, or look for rectangles you can find quickly. Do not count the squares in the cut-out corner, because they are not part of the shape at all.",
+          "方格纸上的 L 形由单位正方形组成，它的面积就是里面有多少个方格。不用一个一个地数，可以按行来数，或者找能很快算出的长方形。缺掉的那个角里的方格不算，因为它们根本不属于这个图形。",
+        ],
+        (rng) => {
+          const { w, h, cw, ch, area } = lData(rng);
+          return whole(
+            [
+              "Each small square is 1 square unit. What is the area of this shape, in square units?",
+              "每个小方格是 1 平方单位。这个图形的面积是多少平方单位？",
+            ],
+            area,
+            [w * h, cw * ch, area + 1, 2 * (w + h)],
+            [
+              `The full rectangle would have ${w * h} squares, and the cut-out corner removes ${cw * ch}, which leaves ${area}.`,
+              `完整的长方形有 ${w * h} 个方格，缺掉的角少了 ${cw * ch} 个，还剩 ${area} 个。`,
+            ],
+            lShapeFigure(w, h, cw, ch, {}, { grid: true }),
+          );
+        },
+      ),
+      figure: gradeDrawings["counting-squares-in-an-l"],
+    },
+    {
+      ...earlyPoint(
+        "splitting-an-l-into-two",
+        ["Splitting an L into two", "把 L 形分成两部分"],
+        [
+          "An L shape can be split into two rectangles by a straight line. Find the area of each rectangle, and then add the two areas together. You sometimes have to work out a side that is not labeled, by subtracting. In this picture, the dashed line shows one way to split the shape, and there is another way that also works.",
+          "L 形可以用一条直线分成两个长方形。分别求出每个长方形的面积，再加起来。有时要用减法算出没有标的边。在这张图上，虚线是一种分法，还有另一种分法也可以。",
+        ],
+        (rng) => {
+          const { w, h, cw, ch, area } = lData(rng);
+          return whole(
+            [
+              "The dashed line splits this shape into two rectangles. What is the total area, in square units?",
+              "虚线把这个图形分成两个长方形。总面积是多少平方单位？",
+            ],
+            area,
+            [w * h, area + cw, w + h, area - ch],
+            [`The two rectangles have areas that add up to ${area}.`, `两个长方形的面积加起来是 ${area}。`],
+            lShapeFigure(
+              w,
+              h,
+              cw,
+              ch,
+              { bottom: `${w}`, right: `${h - ch}`, notchBottom: `${cw}`, notchSide: `${ch}`, top: `${w - cw}`, left: `${h}` },
+              { split: true },
+            ),
+          );
+        },
+      ),
+      figure: gradeDrawings["splitting-an-l-into-two"],
+    },
+    {
+      ...earlyPoint(
+        "taking-away-a-corner",
+        ["Taking away a corner", "减去一个角"],
+        [
+          "Another way to find the area of an L shape is to imagine the whole rectangle around it. Find the area of that big rectangle. Then find the area of the missing corner, and take it away. This often uses fewer steps than splitting the shape. Check that the sides you use belong to the rectangle you want.",
+          "求 L 形面积的另一种方法，是想象它外面的大长方形。先求大长方形的面积，再求缺掉的角的面积，然后减去。这常常比分成两部分步骤更少。要检查用的边是不是属于要算的那个长方形。",
+        ],
+        (rng) => {
+          const { w, h, cw, ch, area } = lData(rng);
+          return chooseMath(
+            rng,
+            ["Which calculation gives the area of this shape?", "哪个算式能算出这个图形的面积？"],
+            `${times(w, h)} - ${times(cw, ch)}`,
+            rng.shuffle([
+              `${times(w, h)} + ${times(cw, ch)}`,
+              `${w} + ${h} - ${cw} - ${ch}`,
+              `${times(w - cw, h - ch)}`,
+              `${times(w, h)} - ${cw + ch}`,
+            ]),
+            [
+              `The big rectangle is $${times(w, h)}$, and the missing corner is $${times(cw, ch)}$. The area is ${area}.`,
+              `大长方形是 $${times(w, h)}$，缺掉的角是 $${times(cw, ch)}$，面积是 ${area}。`,
+            ],
+            lShapeFigure(w, h, cw, ch, { bottom: `${w}`, left: `${h}`, notchBottom: `${cw}`, notchSide: `${ch}` }),
+          );
+        },
+      ),
+      figure: gradeDrawings["taking-away-a-corner"],
+    },
   ],
 );
 
@@ -2451,91 +2479,100 @@ const perimeterStories = earlyTopic(
   ["perimeter-of-polygons", "area-of-l-shapes"],
   ["3.MD.D.8"],
   [
-    earlyPoint(
-      "putting-a-fence-around",
-      ["Putting a fence around", "围栅栏"],
-      [
-        "Stories about fences, borders and frames are asking for a perimeter, which is the distance all the way around. In a rectangle, add the long side and the short side, and then double the result, because each length appears twice. So a garden 7 meters by 3 meters needs $2 \\times 10$, or 20, meters of fence. Do not multiply the two sides.",
-        "关于栅栏、花边和相框的故事，问的是周长，也就是绕一圈的距离。长方形要把长边和短边相加，再乘 2，因为每个长度都出现两次。所以长 7 米、宽 3 米的花园，需要 $2 \\times 10 = 20$ 米栅栏。不要把两条边相乘。",
-      ],
-      (rng) => {
-        const w = rng.int(4, 15);
-        const h = rng.int(2, 9);
-        const job = rng.pick<readonly [string, string, string, string]>([
-          ["garden", "fence", "花园", "四周围一圈栅栏"],
-          ["playground", "fence", "操场", "四周围一圈栅栏"],
-          ["pond", "path", "水池", "四周修一圈小路"],
-          ["vegetable garden", "low wall", "菜园", "四周砌一圈矮墙"],
-        ]);
-        return whole(
-          [
-            `A rectangular ${job[0]} is ${w} meters long and ${h} meters wide, with a ${job[1]} all the way around it. How many meters long is the ${job[1]}?`,
-            `一个长方形的${job[2]}长 ${w} 米、宽 ${h} 米，${job[3]}。这一圈长多少米？`,
-          ],
-          2 * (w + h),
-          [w + h, w * h, 2 * w + h],
-          [
-            `$${w} + ${h} = ${w + h}$, and $${times(2, w + h)} = ${2 * (w + h)}$ meters.`,
-            `$${w} + ${h} = ${w + h}$，$${times(2, w + h)} = ${2 * (w + h)}$ 米。`,
-          ],
-        );
-      },
-    ),
-    earlyPoint(
-      "a-missing-side-from-the-perimeter",
-      ["A missing side from the perimeter", "由周长求一条边"],
-      [
-        "If you know a rectangle's perimeter and one side, work back. Half of the perimeter is one long side and one short side together. Subtract the side you know from this half, and you get the other side. So with a perimeter of 26 and a side of 8, half is 13, and the other side is 5.",
-        "知道长方形的周长和一条边，可以倒着算。周长的一半就是一条长边和一条短边的和。用这一半减去知道的边，就得到另一条边。所以周长是 26，一条边是 8，一半是 13，另一条边是 5。",
-      ],
-      (rng) => {
-        const w = rng.int(4, 15);
-        let h = rng.int(2, 12);
-        if (h === w) h += 1;
-        const p = 2 * (w + h);
-        return whole(
-          [
-            `A rectangle has a perimeter of ${p} centimeters. One side is ${w} centimeters long. How many centimeters long is the side next to it?`,
-            `一个长方形的周长是 ${p} 厘米，一条边长 ${w} 厘米。和它相邻的一条边长多少厘米？`,
-          ],
-          h,
-          [p - w, p - 2 * w, w + h],
-          [
-            `Half of ${p} is ${w + h}, and $${w + h} - ${w} = ${h}$ centimeters.`,
-            `${p} 的一半是 ${w + h}，$${w + h} - ${w} = ${h}$ 厘米。`,
-          ],
-        );
-      },
-    ),
-    earlyPoint(
-      "perimeter-of-an-l",
-      ["Perimeter of an L", "L 形的周长"],
-      [
-        "An L shape has 6 sides, so add 6 lengths to find its perimeter. A surprising fact is that its perimeter equals that of the rectangle around it, because the two inner sides of the notch make up for the parts that were cut away. You can use this as a shortcut, or as a check on your answer.",
-        "L 形有 6 条边，所以要加 6 个长度才能求出周长。有趣的是，它的周长和外面大长方形的周长一样，因为缺口里面的两条边正好补上了切掉的部分。可以用这一点算得更快，也可以用来检查答案。",
-      ],
-      (rng) => {
-        const { w, h, cw, ch } = lData(rng);
-        const p = 2 * (w + h);
-        return whole(
-          ["What is the perimeter of this shape, in units?", "这个图形的周长是多少单位？"],
-          p,
-          [w + h, p - cw, p - ch, w * h - cw * ch],
-          [
-            `$${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${p}$.`,
-            `$${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${p}$。`,
-          ],
-          lShapeFigure(w, h, cw, ch, {
-            bottom: `${w}`,
-            right: `${h - ch}`,
-            notchBottom: `${cw}`,
-            notchSide: `${ch}`,
-            top: `${w - cw}`,
-            left: `${h}`,
-          }),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "putting-a-fence-around",
+        ["Putting a fence around", "围栅栏"],
+        [
+          "Stories about fences, borders and frames are asking for a perimeter, which is the distance all the way around. In a rectangle, add the long side and the short side, and then double the result, because each length appears twice. So a garden 7 meters by 3 meters needs $2 \\times 10$, or 20, meters of fence. Do not multiply the two sides.",
+          "关于栅栏、花边和相框的故事，问的是周长，也就是绕一圈的距离。长方形要把长边和短边相加，再乘 2，因为每个长度都出现两次。所以长 7 米、宽 3 米的花园，需要 $2 \\times 10 = 20$ 米栅栏。不要把两条边相乘。",
+        ],
+        (rng) => {
+          const w = rng.int(4, 15);
+          const h = rng.int(2, 9);
+          const job = rng.pick<readonly [string, string, string, string]>([
+            ["garden", "fence", "花园", "四周围一圈栅栏"],
+            ["playground", "fence", "操场", "四周围一圈栅栏"],
+            ["pond", "path", "水池", "四周修一圈小路"],
+            ["vegetable garden", "low wall", "菜园", "四周砌一圈矮墙"],
+          ]);
+          return whole(
+            [
+              `A rectangular ${job[0]} is ${w} meters long and ${h} meters wide, with a ${job[1]} all the way around it. How many meters long is the ${job[1]}?`,
+              `一个长方形的${job[2]}长 ${w} 米、宽 ${h} 米，${job[3]}。这一圈长多少米？`,
+            ],
+            2 * (w + h),
+            [w + h, w * h, 2 * w + h],
+            [
+              `$${w} + ${h} = ${w + h}$, and $${times(2, w + h)} = ${2 * (w + h)}$ meters.`,
+              `$${w} + ${h} = ${w + h}$，$${times(2, w + h)} = ${2 * (w + h)}$ 米。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings["putting-a-fence-around"],
+    },
+    {
+      ...earlyPoint(
+        "a-missing-side-from-the-perimeter",
+        ["A missing side from the perimeter", "由周长求一条边"],
+        [
+          "If you know a rectangle's perimeter and one side, work back. Half of the perimeter is one long side and one short side together. Subtract the side you know from this half, and you get the other side. So with a perimeter of 26 and a side of 8, half is 13, and the other side is 5.",
+          "知道长方形的周长和一条边，可以倒着算。周长的一半就是一条长边和一条短边的和。用这一半减去知道的边，就得到另一条边。所以周长是 26，一条边是 8，一半是 13，另一条边是 5。",
+        ],
+        (rng) => {
+          const w = rng.int(4, 15);
+          let h = rng.int(2, 12);
+          if (h === w) h += 1;
+          const p = 2 * (w + h);
+          return whole(
+            [
+              `A rectangle has a perimeter of ${p} centimeters. One side is ${w} centimeters long. How many centimeters long is the side next to it?`,
+              `一个长方形的周长是 ${p} 厘米，一条边长 ${w} 厘米。和它相邻的一条边长多少厘米？`,
+            ],
+            h,
+            [p - w, p - 2 * w, w + h],
+            [
+              `Half of ${p} is ${w + h}, and $${w + h} - ${w} = ${h}$ centimeters.`,
+              `${p} 的一半是 ${w + h}，$${w + h} - ${w} = ${h}$ 厘米。`,
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings["perimeter-of-rectangles-and-word-problems#a-missing-side-from-the-perimeter"],
+    },
+    {
+      ...earlyPoint(
+        "perimeter-of-an-l",
+        ["Perimeter of an L", "L 形的周长"],
+        [
+          "An L shape has 6 sides, so add 6 lengths to find its perimeter. A surprising fact is that its perimeter equals that of the rectangle around it, because the two inner sides of the notch make up for the parts that were cut away. You can use this as a shortcut, or as a check on your answer.",
+          "L 形有 6 条边，所以要加 6 个长度才能求出周长。有趣的是，它的周长和外面大长方形的周长一样，因为缺口里面的两条边正好补上了切掉的部分。可以用这一点算得更快，也可以用来检查答案。",
+        ],
+        (rng) => {
+          const { w, h, cw, ch } = lData(rng);
+          const p = 2 * (w + h);
+          return whole(
+            ["What is the perimeter of this shape, in units?", "这个图形的周长是多少单位？"],
+            p,
+            [w + h, p - cw, p - ch, w * h - cw * ch],
+            [
+              `$${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${p}$.`,
+              `$${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${p}$。`,
+            ],
+            lShapeFigure(w, h, cw, ch, {
+              bottom: `${w}`,
+              right: `${h - ch}`,
+              notchBottom: `${cw}`,
+              notchSide: `${ch}`,
+              top: `${w - cw}`,
+              left: `${h}`,
+            }),
+          );
+        },
+      ),
+      figure: gradeDrawings["perimeter-of-an-l"],
+    },
   ],
 );
 
@@ -2597,30 +2634,33 @@ const quadCategories = earlyTopic(
   ["sorting-quadrilaterals"],
   ["3.G.A.1"],
   [
-    earlyPoint(
-      "naming-the-special-quadrilaterals",
-      ["Naming the special quadrilaterals", "认识特殊的四边形"],
-      [
-        "A rectangle has 4 square corners. A rhombus has 4 equal sides. A square has both of these features, so it has 4 square corners and 4 equal sides. To name a shape, look at its corners and then at its sides. A shape can be turned on its side and still have the same name, so do not go by how it is placed.",
-        "长方形有 4 个直角。菱形有 4 条相等的边。正方形这两个特点都有：4 个直角，4 条相等的边。说图形的名称时，先看角，再看边。图形转一转，名称也不变，所以不要只看它是怎么放的。",
-      ],
-      (rng) => {
-        const kind = rng.pick(quadKinds);
-        const other: Pair[] = [...quadKinds.filter((k) => k !== kind).map((k) => k.name), ["pentagon", "五边形"], ["triangle", "三角形"]];
-        return choose(
-          rng,
-          ["Which is the best name for this shape?", "这个图形最准确的名称是什么？"],
-          kind.name,
-          rng.shuffle(other),
-          kind.name[0] === "square"
-            ? ["It has 4 square corners and 4 equal sides.", "它有 4 个直角和 4 条相等的边。"]
-            : kind.name[0] === "rectangle"
-              ? ["It has 4 square corners, but its sides are not all equal.", "它有 4 个直角，但边不都相等。"]
-              : ["It has 4 equal sides, but its corners are not square.", "它有 4 条相等的边，但角不是直角。"],
-          polygonFigure(kind.make(rng), t("A quadrilateral.", "一个四边形。")),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "naming-the-special-quadrilaterals",
+        ["Naming the special quadrilaterals", "认识特殊的四边形"],
+        [
+          "A rectangle has 4 square corners. A rhombus has 4 equal sides. A square has both of these features, so it has 4 square corners and 4 equal sides. To name a shape, look at its corners and then at its sides. A shape can be turned on its side and still have the same name, so do not go by how it is placed.",
+          "长方形有 4 个直角。菱形有 4 条相等的边。正方形这两个特点都有：4 个直角，4 条相等的边。说图形的名称时，先看角，再看边。图形转一转，名称也不变，所以不要只看它是怎么放的。",
+        ],
+        (rng) => {
+          const kind = rng.pick(quadKinds);
+          const other: Pair[] = [...quadKinds.filter((k) => k !== kind).map((k) => k.name), ["pentagon", "五边形"], ["triangle", "三角形"]];
+          return choose(
+            rng,
+            ["Which is the best name for this shape?", "这个图形最准确的名称是什么？"],
+            kind.name,
+            rng.shuffle(other),
+            kind.name[0] === "square"
+              ? ["It has 4 square corners and 4 equal sides.", "它有 4 个直角和 4 条相等的边。"]
+              : kind.name[0] === "rectangle"
+                ? ["It has 4 square corners, but its sides are not all equal.", "它有 4 个直角，但边不都相等。"]
+                : ["It has 4 equal sides, but its corners are not square.", "它有 4 条相等的边，但角不是直角。"],
+            polygonFigure(kind.make(rng), t("A quadrilateral.", "一个四边形。")),
+          );
+        },
+      ),
+      figure: gradeDrawings["naming-the-special-quadrilaterals"],
+    },
     earlyPoint(
       "which-statement-is-true",
       ["Which statement is true", "哪句话是对的"],

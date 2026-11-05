@@ -17,6 +17,7 @@ import {
   numberLineFigure,
   pictureGraphFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { numberProblem } from "../problems.ts";
 import { barFigure, compareProblem, pickChoice, twoBarsFigure } from "./grade-4-fractions.ts";
 
@@ -878,31 +879,34 @@ const areaWithUnitSquares = earlyTopic(
         };
       },
     ),
-    earlyPoint(
-      "rows-of-unit-squares",
-      ["Rows of unit squares", "成行的单位正方形"],
-      [
-        "A rectangle covered with unit squares is an array of squares. Every row has the same number of squares, so the area is the number of rows times the number in each row. This is why area connects to multiplication. It is much quicker than counting, and it works just as well when the grid is not fully drawn.",
-        "铺满单位正方形的长方形，就是一个正方形组成的阵列。每行的个数相同，所以面积等于行数乘每行的个数。这就是面积和乘法的联系。这比数快得多，即使方格没有全部画出来也同样适用。",
-      ],
-      (rng) => {
-        const rows = rng.int(2, 8);
-        const columns = rng.int(2, 9);
-        const answer = rows * columns;
-        return {
-          ...count(
-            ["What is the area of this rectangle, in square units?", "这个长方形的面积是多少平方单位？"],
-            answer,
-            [rows + columns, 2 * (rows + columns)],
-            [
-              `There are ${rows} rows of ${columns} squares, so $${rows} \\times ${columns} = ${answer}$ square units.`,
-              `有 ${rows} 行，每行 ${columns} 个正方形，所以 $${rows} \\times ${columns} = ${answer}$ 平方单位。`,
-            ],
-          ),
-          figure: gridFigure(rows, columns),
-        };
-      },
-    ),
+    {
+      ...earlyPoint(
+        "rows-of-unit-squares",
+        ["Rows of unit squares", "成行的单位正方形"],
+        [
+          "A rectangle covered with unit squares is an array of squares. Every row has the same number of squares, so the area is the number of rows times the number in each row. This is why area connects to multiplication. It is much quicker than counting, and it works just as well when the grid is not fully drawn.",
+          "铺满单位正方形的长方形，就是一个正方形组成的阵列。每行的个数相同，所以面积等于行数乘每行的个数。这就是面积和乘法的联系。这比数快得多，即使方格没有全部画出来也同样适用。",
+        ],
+        (rng) => {
+          const rows = rng.int(2, 8);
+          const columns = rng.int(2, 9);
+          const answer = rows * columns;
+          return {
+            ...count(
+              ["What is the area of this rectangle, in square units?", "这个长方形的面积是多少平方单位？"],
+              answer,
+              [rows + columns, 2 * (rows + columns)],
+              [
+                `There are ${rows} rows of ${columns} squares, so $${rows} \\times ${columns} = ${answer}$ square units.`,
+                `有 ${rows} 行，每行 ${columns} 个正方形，所以 $${rows} \\times ${columns} = ${answer}$ 平方单位。`,
+              ],
+            ),
+            figure: gridFigure(rows, columns),
+          };
+        },
+      ),
+      figure: gradeDrawings["rows-of-unit-squares"],
+    },
   ],
 );
 

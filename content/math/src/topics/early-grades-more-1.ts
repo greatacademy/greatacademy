@@ -19,6 +19,7 @@ import {
   tallyFigure,
   tenFramesFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import {
   type BarMeasure,
   blockRowsFigure,
@@ -251,35 +252,38 @@ const countingOnByTens = earlyTopic(
         );
       },
     ),
-    earlyPoint(
-      "where-tens-jumps-land",
-      ["Where jumps of ten land", "跳十跳到哪里"],
-      [
-        "Each jump on this number line is a jump of ten. Follow the jumps one at a time and say the number you land on. Starting at 17, the jumps land on 27, 37 and 47. Because each jump is the same, you can count the jumps and raise the tens digit by that many.",
-        "这条数轴上每跳一次是 10。一跳一跳地跟着走，说出落到的数。从 17 开始，依次落在 27、37、47。因为每跳都一样，也可以数一数跳了几次，让十位增加这么多。",
-      ],
-      (rng) => {
-        const jumps = rng.int(2, 4);
-        const ones = rng.int(1, 9);
-        const start = 10 * rng.int(0, 7) + ones;
-        const up = rng.bool();
-        const low = start;
-        const stops = up
-          ? [...Array(jumps + 1).keys()].map((i) => low + 10 * i)
-          : [...Array(jumps + 1).keys()].map((i) => low + 10 * (jumps - i));
-        const answer = stops[jumps] as number;
-        return whole(
-          ["The jumps start at the first number. Where do they end?", "从第一个数开始跳。最后跳到哪个数？"],
-          answer,
-          [up ? answer + 10 : answer - 10, up ? start + jumps : stops[0]! - jumps, up ? answer - 10 : answer + 10],
-          [
-            `Each jump changes the tens digit by 1. After ${jumps} jumps from ${stops[0]} you land on ${answer}.`,
-            `每跳一次，十位变化 1。从 ${stops[0]} 跳 ${jumps} 次，落在 ${answer}。`,
-          ],
-          hopsFigure(stops, true),
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "where-tens-jumps-land",
+        ["Where jumps of ten land", "跳十跳到哪里"],
+        [
+          "Each jump on this number line is a jump of ten. Follow the jumps one at a time and say the number you land on. Starting at 17, the jumps land on 27, 37 and 47. Because each jump is the same, you can count the jumps and raise the tens digit by that many.",
+          "这条数轴上每跳一次是 10。一跳一跳地跟着走，说出落到的数。从 17 开始，依次落在 27、37、47。因为每跳都一样，也可以数一数跳了几次，让十位增加这么多。",
+        ],
+        (rng) => {
+          const jumps = rng.int(2, 4);
+          const ones = rng.int(1, 9);
+          const start = 10 * rng.int(0, 7) + ones;
+          const up = rng.bool();
+          const low = start;
+          const stops = up
+            ? [...Array(jumps + 1).keys()].map((i) => low + 10 * i)
+            : [...Array(jumps + 1).keys()].map((i) => low + 10 * (jumps - i));
+          const answer = stops[jumps] as number;
+          return whole(
+            ["The jumps start at the first number. Where do they end?", "从第一个数开始跳。最后跳到哪个数？"],
+            answer,
+            [up ? answer + 10 : answer - 10, up ? start + jumps : stops[0]! - jumps, up ? answer - 10 : answer + 10],
+            [
+              `Each jump changes the tens digit by 1. After ${jumps} jumps from ${stops[0]} you land on ${answer}.`,
+              `每跳一次，十位变化 1。从 ${stops[0]} 跳 ${jumps} 次，落在 ${answer}。`,
+            ],
+            hopsFigure(stops, true),
+          );
+        },
+      ),
+      figure: gradeDrawings["where-tens-jumps-land"],
+    },
     earlyPoint(
       "how-many-jumps-of-ten",
       ["How many jumps of ten", "跳了几次十"],

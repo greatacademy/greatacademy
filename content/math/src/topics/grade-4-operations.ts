@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, lcm, type Mark, type Point, sketch } from "@ga/subject-math";
-
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { choiceProblem, numberProblem, steps, yesNo } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -1266,6 +1266,7 @@ export const twoDigitByOneDigitMultiplicationUsingAreaModels: TopicDef = {
   knowledgePoints: [
     {
       id: "parts-of-the-model",
+      figure: gradeDrawings["parts-of-the-model"],
       title: t("The parts of an area model", "面积模型的各部分"),
       explanation: t(
         "A rectangle that is $6$ wide and $47$ long has area $6 \\times 47$. Split the long side into tens and ones, $47 = 40 + 7$, to make two smaller rectangles:\n\n- the tens part has area $6 \\times 40 = 240$;\n- the ones part has area $6 \\times 7 = 42$.",
@@ -1345,6 +1346,7 @@ export const multiDigitByOneDigitMultiplicationUsingAreaModels: TopicDef = {
   knowledgePoints: [
     {
       id: "hundreds-tens-and-ones",
+      figure: gradeDrawings["hundreds-tens-and-ones"],
       title: t("Hundreds, tens and ones", "百、十和一"),
       explanation: t(
         "Split a three-digit number into hundreds, tens and ones, and the area model has three parts. For $4 \\times 326$, split $326 = 300 + 20 + 6$:\n\n$$4 \\times 300 = 1{,}200, \\quad 4 \\times 20 = 80, \\quad 4 \\times 6 = 24$$",
@@ -1609,6 +1611,7 @@ export const twoDigitByTwoDigitMultiplicationUsingAreaModels: TopicDef = {
   knowledgePoints: [
     {
       id: "four-parts",
+      figure: gradeDrawings["four-parts"],
       title: t("The four parts", "四个部分"),
       explanation: t(
         "For $23 \\times 45$, split both numbers into tens and ones: $23 = 20 + 3$ and $45 = 40 + 5$. The rectangle splits into four parts:\n\n$$20 \\times 40 = 800, \\quad 20 \\times 5 = 100, \\quad 3 \\times 40 = 120, \\quad 3 \\times 5 = 15$$\n\nTens times tens gives hundreds: $20 \\times 40 = 800$, not $80$.",
@@ -2626,6 +2629,7 @@ export const twoDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
   knowledgePoints: [
     {
       id: "missing-side-lengths",
+      figure: gradeDrawings["two-digit-by-one-digit-division-using-area-models#missing-side-lengths"],
       title: t("Missing side lengths", "未知的边长"),
       explanation: t(
         "In division, the area model shows the total area (the dividend) and one side (the divisor). The other side is the quotient.\n\nFor $72 \\div 6$, split $72$ into $60 + 12$. The part with area $60$ has length $60 \\div 6 = 10$, and the part with area $12$ has length $12 \\div 6 = 2$.",
@@ -2783,6 +2787,7 @@ export const multiDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
   knowledgePoints: [
     {
       id: "three-part-models",
+      figure: gradeDrawings["three-part-models"],
       title: t("Models with three parts", "三部分的模型"),
       explanation: t(
         "In a division area model the area is the dividend and one side is the divisor; the unknown side is the quotient. Split the area into parts that each divide easily, and divide each part to find its length. For $963 \\div 3$, split $963 = 900 + 60 + 3$:\n\n$$900 \\div 3 = 300, \\quad 60 \\div 3 = 20, \\quad 3 \\div 3 = 1$$\n\nThese are the lengths of the three parts.",

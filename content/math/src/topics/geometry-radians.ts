@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, type Mark, type Point, Q, q, radical, sketch } from "@ga/subject-math";
-
+import { radianDrawings } from "../explanation-drawings-circles.ts";
 import { expressionProblem, numberProblem, radicalProblem, steps, unitLatex, why } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -144,6 +144,7 @@ export const introductionToRadians: TopicDef = {
   knowledgePoints: [
     {
       id: "radian-measure-from-arc-length",
+      figure: radianDrawings["radian-measure-from-arc-length"],
       title: t("Radian measure from arc length", "由弧长求弧度"),
       explanation: t(
         "In a circle of radius $r$, the length $s$ of an arc is proportional to $r$ for a fixed central angle, so the ratio $\\frac{s}{r}$ depends only on the angle. That ratio is the angle's measure in **radians**:\n\n$$\\theta = \\frac{s}{r}.$$\n\nAn angle of $1$ radian cuts off an arc exactly as long as the radius. If an arc of length $12$ cm lies on a circle of radius $5$ cm, its central angle measures $\\frac{12}{5} = 2.4$ radians. Radians are a ratio of two lengths, so they carry no unit of length.",
@@ -264,6 +265,7 @@ export const calculatingArcLengthUsingRadians: TopicDef = {
   knowledgePoints: [
     {
       id: "arc-length-with-radians",
+      figure: radianDrawings["arc-length-with-radians"],
       title: t("Arc length with an angle in terms of π", "圆心角含 π 时的弧长"),
       explanation: t(
         "Multiplying $\\theta = \\frac{s}{r}$ by $r$ gives the arc length when the central angle $\\theta$ is in radians:\n\n$$s = r\\theta.$$\n\nIn a circle of radius $9$ cm, an arc with central angle $\\frac{2\\pi}{3}$ has length $9 \\cdot \\frac{2\\pi}{3} = 6\\pi$ cm. This agrees with the degree formula, since $\\frac{2\\pi}{3}$ is $120^\\circ$ and $\\frac{120}{360} \\cdot 18\\pi = 6\\pi$, but needs no fraction of $360$.",
@@ -299,6 +301,7 @@ export const calculatingArcLengthUsingRadians: TopicDef = {
     },
     {
       id: "arc-length-with-decimal-radians",
+      figure: radianDrawings["arc-length-with-decimal-radians"],
       title: t("Arc length with an angle not in terms of π", "圆心角不含 π 时的弧长"),
       explanation: t(
         "A radian measure need not involve $\\pi$. The formula $s = r\\theta$ works the same way: in a circle of radius $8$ m, a central angle of $1.5$ radians cuts off an arc of length $8 \\cdot 1.5 = 12$ m.",
@@ -326,6 +329,7 @@ export const calculatingArcLengthUsingRadians: TopicDef = {
     },
     {
       id: "radius-or-angle-from-arc-length-in-radians",
+      figure: radianDrawings["radius-or-angle-from-arc-length-in-radians"],
       title: t("The radius or the angle from the arc length", "由弧长求半径或圆心角"),
       explanation: t(
         "The formula $s = r\\theta$ links three quantities; knowing two gives the third.\n\nIf an arc of $\\frac{3\\pi}{4}$ radians has length $6\\pi$ cm, then $r \\cdot \\frac{3\\pi}{4} = 6\\pi$, so $r = 6\\pi \\cdot \\frac{4}{3\\pi} = 8$ cm. If an arc of length $10\\pi$ m lies on a circle of radius $12$ m, its central angle is $\\theta = \\frac{s}{r} = \\frac{10\\pi}{12} = \\frac{5\\pi}{6}$ radians.",
@@ -387,6 +391,7 @@ export const calculatingAreasOfSectorsUsingRadians: TopicDef = {
   knowledgePoints: [
     {
       id: "sector-area-with-radians",
+      figure: radianDrawings["sector-area-with-radians"],
       title: t("Sector area with an angle in terms of π", "圆心角含 π 时的扇形面积"),
       explanation: t(
         "A full turn of $2\\pi$ radians gives the whole disk, of area $\\pi r^2$. A sector with central angle $\\theta$ radians is the fraction $\\frac{\\theta}{2\\pi}$ of it:\n\n$$A = \\frac{\\theta}{2\\pi} \\cdot \\pi r^2 = \\frac{1}{2} r^2 \\theta.$$\n\nA sector of $\\frac{\\pi}{3}$ in a circle of radius $6$ cm has area $\\frac{1}{2} \\cdot 36 \\cdot \\frac{\\pi}{3} = 6\\pi\\text{ cm}^2$.",
@@ -422,6 +427,7 @@ export const calculatingAreasOfSectorsUsingRadians: TopicDef = {
     },
     {
       id: "sector-area-from-decimal-angle-or-arc-length",
+      figure: radianDrawings["sector-area-from-decimal-angle-or-arc-length"],
       title: t("Sector area from a decimal angle or the arc length", "由小数弧度或弧长求扇形面积"),
       explanation: t(
         "The formula $A = \\frac{1}{2} r^2 \\theta$ works for any angle in radians: a sector of $0.8$ radians in a circle of radius $5$ m has area $\\frac{1}{2} \\cdot 25 \\cdot 0.8 = 10\\text{ m}^2$.\n\nSince the arc length is $s = r\\theta$, the formula can also be written $A = \\frac{1}{2} r \\cdot r\\theta = \\frac{1}{2} r s$. A sector with radius $6$ cm and arc length $7$ cm has area $\\frac{1}{2} \\cdot 6 \\cdot 7 = 21\\text{ cm}^2$, with no angle needed.",
@@ -473,6 +479,7 @@ export const calculatingAreasOfSectorsUsingRadians: TopicDef = {
     },
     {
       id: "radius-or-angle-from-sector-area",
+      figure: radianDrawings["radius-or-angle-from-sector-area"],
       title: t("The radius or the angle from the sector area", "由扇形面积求半径或圆心角"),
       explanation: t(
         "Solve $A = \\frac{1}{2} r^2 \\theta$ for the unknown.\n\nIf a sector of $\\frac{\\pi}{4}$ radians has area $8\\pi\\text{ cm}^2$, then $\\frac{1}{2} r^2 \\cdot \\frac{\\pi}{4} = 8\\pi$, so $\\frac{\\pi}{8} r^2 = 8\\pi$, $r^2 = 64$ and $r = 8$ cm. If a sector of a circle with radius $6$ m has area $15\\pi\\text{ m}^2$, then $\\frac{1}{2} \\cdot 36 \\cdot \\theta = 15\\pi$, so $\\theta = \\frac{15\\pi}{18} = \\frac{5\\pi}{6}$ radians.",

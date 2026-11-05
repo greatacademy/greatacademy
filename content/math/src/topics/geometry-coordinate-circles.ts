@@ -18,7 +18,7 @@ import {
   surd,
   surdLatex,
 } from "@ga/subject-math";
-
+import { chordDrawings, planeCircleDrawings } from "../explanation-drawings-circles.ts";
 import {
   choiceProblem,
   equationProblem,
@@ -301,6 +301,7 @@ export const circlesInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "center-and-radius-from-a-graph",
+      figure: planeCircleDrawings["center-and-radius-from-a-graph"],
       title: t("Center and radius from a graph", "从图象读圆心和半径"),
       explanation: t(
         "A circle in the coordinate plane is fixed by its **center** $(h, k)$ and its **radius** $r$.\n\n- The center is midway between the leftmost and rightmost points of the circle, and midway between its lowest and highest points.\n- The radius is the distance from the center to any point of the circle. Count it along a grid line: from the center straight right to the circle, for example.\n\nIf a circle's leftmost point is $(-1, 2)$ and its rightmost point is $(7, 2)$, its center is $(3, 2)$ and its radius is $7 - 3 = 4$.",
@@ -352,6 +353,7 @@ export const circlesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "radius-from-the-center-and-a-point",
+      figure: planeCircleDrawings["radius-from-the-center-and-a-point"],
       title: t("The radius from the center and a point", "由圆心和圆上一点求半径"),
       explanation: t(
         "The radius is the distance from the center to a point of the circle. Draw a right triangle whose legs are the horizontal and vertical changes between the two points; the radius is its hypotenuse.\n\nA circle with center $(1, -2)$ passes through $(4, 4)$. The legs are $4 - 1 = 3$ and $4 - (-2) = 6$, so by the Pythagorean theorem\n\n$$r^{2} = 3^{2} + 6^{2} = 45, \\qquad r = \\sqrt{45} = 3\\sqrt{5}.$$",
@@ -380,6 +382,7 @@ export const circlesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "inside-on-or-outside",
+      figure: planeCircleDrawings["circles-in-the-coordinate-plane#inside-on-or-outside"],
       title: t("Inside, on or outside", "圆内、圆上还是圆外"),
       explanation: t(
         "To locate a point $P$, compare its distance from the center with the radius. Comparing the **squares** avoids square roots: with $d^{2} = (\\Delta x)^{2} + (\\Delta y)^{2}$,\n\n- $d^{2} < r^{2}$: $P$ is inside the circle;\n- $d^{2} = r^{2}$: $P$ is on the circle;\n- $d^{2} > r^{2}$: $P$ is outside the circle.\n\nFor the circle with center $(2, 1)$ and radius $5$, the point $(6, 4)$ has $d^{2} = 4^{2} + 3^{2} = 25 = 5^{2}$: it is on the circle. The point $(7, 3)$ has $d^{2} = 5^{2} + 2^{2} = 29 > 25$: it is outside.",
@@ -445,6 +448,7 @@ export const equationsOfCirclesCenteredAtTheOrigin: TopicDef = {
   knowledgePoints: [
     {
       id: "equation-from-the-radius",
+      figure: planeCircleDrawings["equation-from-the-radius"],
       title: t("The equation from the radius", "由半径写方程"),
       explanation: t(
         "A point $(x, y)$ is on the circle with center $(0, 0)$ and radius $r$ exactly when its distance from the origin is $r$. By the Pythagorean theorem that distance is $\\sqrt{x^{2} + y^{2}}$, so squaring both sides gives the equation of the circle:\n\n$$x^{2} + y^{2} = r^{2}.$$\n\nThe right side is the **square** of the radius. The circle of radius $6$ is $x^{2} + y^{2} = 36$; the circle of radius $2\\sqrt{3}$ is $x^{2} + y^{2} = (2\\sqrt{3})^{2} = 12$.",
@@ -538,6 +542,7 @@ export const equationsOfCircles: TopicDef = {
   knowledgePoints: [
     {
       id: "center-and-radius-from-standard-form",
+      figure: planeCircleDrawings["center-and-radius-from-standard-form"],
       title: t("Center and radius from the standard form", "由标准方程读圆心和半径"),
       explanation: t(
         "A point $(x, y)$ is on the circle with center $(h, k)$ and radius $r$ when its horizontal and vertical distances from the center, $x - h$ and $y - k$, satisfy the Pythagorean theorem. This gives the **standard form** of the equation of a circle:\n\n$$(x - h)^{2} + (y - k)^{2} = r^{2}.$$\n\nThe center's coordinates appear with **minus signs**: $(x + 4)^{2} + (y - 1)^{2} = 18$ is $(x - (-4))^{2} + (y - 1)^{2} = 18$, so the center is $(-4, 1)$ and the radius is $\\sqrt{18} = 3\\sqrt{2}$.",
@@ -1076,6 +1081,7 @@ export const intersectionsOfCirclesWithLines: TopicDef = {
     },
     {
       id: "intersection-points",
+      figure: planeCircleDrawings["intersection-points"],
       title: t("Intersection points", "交点"),
       explanation: t(
         "For a circle not centered at the origin, substitute the same way, then find each $y$ from the line. For $y = 2x - 1$ and $(x - 1)^{2} + (y - 1)^{2} = 5$: $y - 1 = 2x - 2$, so\n\n$$(x - 1)^{2} + (2x - 2)^{2} = 5 \\;\\Rightarrow\\; 5x^{2} - 10x + 5 = 5 \\;\\Rightarrow\\; x(x - 2) = 0.$$\n\nWith $x = 0$ the line gives $y = -1$, and with $x = 2$ it gives $y = 3$: the points are $(0, -1)$ and $(2, 3)$.",
@@ -1253,6 +1259,7 @@ export const perpendicularBisectorsOfDiametersInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "the-other-endpoint-of-a-diameter",
+      figure: planeCircleDrawings["the-other-endpoint-of-a-diameter"],
       title: t("The other endpoint of a diameter", "直径的另一端点"),
       explanation: t(
         "The center $M$ is the midpoint of a diameter $AB$, so the step from $A$ to $M$ repeats from $M$ to $B$. For the circle $(x - 2)^{2} + (y + 1)^{2} = 25$ and $A(5, 3)$: from $A$ to $M(2, -1)$ is $3$ left and $4$ down, so\n\n$$B = (2 - 3, -1 - 4) = (-1, -5).$$\n\nIn one formula, $B = (2h - x_A, 2k - y_A)$.",
@@ -1285,6 +1292,7 @@ export const perpendicularBisectorsOfDiametersInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "perpendicular-bisector-of-a-diameter",
+      figure: planeCircleDrawings["perpendicular-bisector-of-a-diameter"],
       title: t("The perpendicular bisector of a diameter", "直径的垂直平分线"),
       explanation: t(
         "The **perpendicular bisector** of a segment passes through its midpoint and is perpendicular to it. For a diameter, the midpoint is the center, so the perpendicular bisector of a diameter is the line through the center with the negative reciprocal slope — it contains another diameter.\n\nFor the diameter from $A(-1, 1)$ to $B(5, 5)$: the center is $(2, 3)$, the slope of $AB$ is $\\frac{4}{6} = \\frac{2}{3}$, so the bisector has slope $-\\frac{3}{2}$, and $3 = -\\frac{3}{2} \\cdot 2 + b$ gives $y = -\\frac{3}{2}x + 6$.",
@@ -1317,6 +1325,7 @@ export const perpendicularBisectorsOfDiametersInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "endpoints-of-the-perpendicular-diameter",
+      figure: planeCircleDrawings["endpoints-of-the-perpendicular-diameter"],
       title: t("The perpendicular diameter", "与之垂直的直径"),
       explanation: t(
         "If $A$ is $a$ units right and $b$ units up from the center, rotating that step by a quarter turn gives $-b$ right and $a$ up: the slopes $\\frac{b}{a}$ and $-\\frac{a}{b}$ are negative reciprocals, and both steps have the same length. So the diameter perpendicular to $AB$ has endpoints\n\n$$(h - b, k + a) \\quad\\text{and}\\quad (h + b, k - a).$$\n\nWith center $(1, 2)$ and $A(4, 3)$, the step is $(3, 1)$, so the perpendicular diameter ends at $(0, 5)$ and $(2, -1)$.",
@@ -1400,6 +1409,7 @@ export const perpendicularBisectorsOfChords: TopicDef = {
   knowledgePoints: [
     {
       id: "length-of-a-chord",
+      figure: chordDrawings["length-of-a-chord"],
       title: t("The length of a chord", "弦长"),
       explanation: t(
         "The **perpendicular bisector of any chord passes through the center** of the circle: the center is the same distance from both endpoints, and the points equidistant from two points form their perpendicular bisector. Equivalently, the perpendicular segment $OM$ from the center to a chord $AB$ meets it at its midpoint.\n\nSo $OMA$ is a right triangle with hypotenuse the radius $OA = r$ and legs $OM = d$ (the distance from the center to the chord) and $AM = \\frac{1}{2}AB$:\n\n$$r^{2} = d^{2} + AM^{2}.$$\n\nIf $r = 10$ and $d = 6$, then $AM = \\sqrt{100 - 36} = 8$ and the chord is $AB = 16$.",
@@ -1431,6 +1441,7 @@ export const perpendicularBisectorsOfChords: TopicDef = {
     },
     {
       id: "distance-from-the-center",
+      figure: chordDrawings["distance-from-the-center"],
       title: t("The distance from the center", "弦心距"),
       explanation: t(
         "Halve the chord first: the leg of the right triangle is **half** the chord. In a circle of radius $13$, a chord of length $24$ has half-length $12$, so its distance from the center is\n\n$$d = \\sqrt{13^{2} - 12^{2}} = \\sqrt{25} = 5.$$",
@@ -1461,6 +1472,7 @@ export const perpendicularBisectorsOfChords: TopicDef = {
     },
     {
       id: "radius-from-a-chord",
+      figure: chordDrawings["radius-from-a-chord"],
       title: t("The radius from a chord", "由弦求半径"),
       explanation: t(
         "If the chord and its distance from the center are known, the radius is the hypotenuse. A chord of length $16$ at distance $4$ from the center gives\n\n$$r = \\sqrt{8^{2} + 4^{2}} = \\sqrt{80} = 4\\sqrt{5}.$$",
@@ -1518,6 +1530,7 @@ export const perpendicularBisectorsOfChordsInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "perpendicular-bisector-of-a-chord",
+      figure: planeCircleDrawings["perpendicular-bisector-of-a-chord"],
       title: t("The perpendicular bisector of a chord", "弦的垂直平分线"),
       explanation: t(
         "The perpendicular bisector of a chord passes through the center, so when the center is known you need only the slope: the negative reciprocal of the chord's slope.\n\nThe points $P(-3, 4)$ and $Q(4, 3)$ lie on $x^{2} + y^{2} = 25$. The chord $PQ$ has slope $\\frac{3 - 4}{4 - (-3)} = -\\frac{1}{7}$, so its perpendicular bisector has slope $7$ and passes through the center $(0, 0)$: $y = 7x$.",
@@ -1561,6 +1574,7 @@ export const perpendicularBisectorsOfChordsInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "center-from-three-points",
+      figure: planeCircleDrawings["center-from-three-points"],
       title: t("The center from three points", "由三点求圆心"),
       explanation: t(
         "The perpendicular bisectors of two chords both pass through the center, so the center is where they meet. The perpendicular bisector of $PQ$ is the set of points $(x, y)$ equally far from $P$ and $Q$; setting the squared distances equal makes the squares $x^{2}$ and $y^{2}$ cancel, leaving a linear equation.\n\nFor $A(0, 6)$, $B(2, 2)$ and $C(6, 2)$: the bisector of $BC$ is $x = 4$; the bisector of $AB$ comes from\n\n$$x^{2} + (y - 6)^{2} = (x - 2)^{2} + (y - 2)^{2} \\;\\Rightarrow\\; x - 2y = -7.$$\n\nWith $x = 4$, the equation $4 - 2y = -7$ gives $y = 5.5$, so the center is $(4, 5.5)$.",
@@ -1593,6 +1607,7 @@ export const perpendicularBisectorsOfChordsInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "chord-cut-by-a-line",
+      figure: planeCircleDrawings["chord-cut-by-a-line"],
       title: t("A chord cut by a line", "直线截得的弦"),
       explanation: t(
         "A horizontal line $y = c$ cuts a chord from the circle $(x - h)^{2} + (y - k)^{2} = r^{2}$ when its distance $d = |c - k|$ from the center is less than $r$. The perpendicular from the center to the chord bisects it, so the chord has length\n\n$$2\\sqrt{r^{2} - d^{2}}.$$\n\nThe line $y = 5$ and the circle $(x + 1)^{2} + (y - 2)^{2} = 25$: $d = 3$, so the chord is $2\\sqrt{25 - 9} = 8$ long. A vertical line $x = c$ works the same way with $d = |c - h|$.",
@@ -1665,6 +1680,7 @@ export const thalesTheoremInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "right-angle-or-not",
+      figure: planeCircleDrawings["right-angle-or-not"],
       title: t("Is the angle a right angle?", "这个角是直角吗？"),
       explanation: t(
         "**Thales' theorem**: if $AB$ is a diameter of a circle and $P$ is any other point of the circle, then $\\angle APB = 90^\\circ$. The converse holds too: if $\\angle APB = 90^\\circ$, then $P$ lies on the circle with diameter $AB$.\n\nSo to test whether $\\angle APB$ is a right angle, test whether $P$ is on the circle with diameter $AB$: is its distance from the midpoint $M$ of $AB$ equal to $MA$? For $A(-5, 0)$, $B(5, 0)$ and $P(3, 4)$: $M = (0, 0)$, $MA^{2} = 25$ and $MP^{2} = 9 + 16 = 25$, so $\\angle APB = 90^\\circ$. (Check: the slopes of $PA$ and $PB$ are $\\frac{1}{2}$ and $-2$.)",
@@ -1699,6 +1715,7 @@ export const thalesTheoremInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "circumcircle-of-a-right-triangle",
+      figure: planeCircleDrawings["circumcircle-of-a-right-triangle"],
       title: t("The circle through a right triangle", "直角三角形的外接圆"),
       explanation: t(
         "By the converse of Thales' theorem, the circle through the three vertices of a right triangle has the **hypotenuse as a diameter**. Its center is the midpoint of the hypotenuse, and $r^{2}$ is the squared distance from the center to any vertex.\n\nTo find the hypotenuse, compare the squared side lengths: the longest side is the hypotenuse, and its square equals the sum of the other two. For $A(1, 1)$, $B(5, 3)$ and $C(3, 7)$: $AB^{2} = 20$, $BC^{2} = 20$ and $AC^{2} = 40 = 20 + 20$, so $AC$ is the hypotenuse. The center is its midpoint $(2, 4)$, and $r^{2} = (1 - 2)^{2} + (1 - 4)^{2} = 10$, so the circle is $(x - 2)^{2} + (y - 4)^{2} = 10$.",
@@ -1746,6 +1763,7 @@ export const thalesTheoremInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "missing-coordinate",
+      figure: planeCircleDrawings["missing-coordinate"],
       title: t("A missing coordinate", "求未知坐标"),
       explanation: t(
         "If $\\angle APB = 90^\\circ$, then $P$ lies on the circle with diameter $AB$. Write that circle's equation and substitute the known coordinate of $P$.\n\nFor $A(-4, 1)$, $B(6, 1)$ and $P(5, y)$ with $y > 1$: the circle has center $(1, 1)$ and $r^{2} = 25$, so\n\n$$(5 - 1)^{2} + (y - 1)^{2} = 25 \\;\\Rightarrow\\; (y - 1)^{2} = 9 \\;\\Rightarrow\\; y = 4.$$\n\n(The other solution, $y = -2$, is below $AB$.)",
