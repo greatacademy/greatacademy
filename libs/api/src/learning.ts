@@ -34,7 +34,7 @@ import {
 import { type LearningService, type Task as TaskMessage, TopicStatus, type XpSummarySchema } from "@ga/proto/learning/v1/learning_pb";
 
 import { dbKey, userIdKey } from "./context.ts";
-import { sessionMessage, taskMessage, text } from "./convert.ts";
+import { figure, sessionMessage, taskMessage, text } from "./convert.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, type RunState, runTask, startRun } from "./runner.ts";
 
@@ -282,6 +282,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
             correct: v.correct,
             ...(v.feedback && { message: text(v.feedback) }),
             solution: text(answered.problem.solution),
+            ...(answered.problem.solutionFigure && { solutionFigure: figure(answered.problem.solutionFigure) }),
             answer: answered.problem.canonical,
           },
         }),

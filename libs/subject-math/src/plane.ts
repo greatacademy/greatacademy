@@ -2,7 +2,7 @@
 // docs/content.md §4. SVG clip paths are not allowed in figures, so every
 // curve, line and region is clipped to the view here.
 
-import type { Compass, Point } from "./figures.ts";
+import { type Compass, type Point, type Tone, toneClass } from "./figures.ts";
 
 /** PlaneView is the visible window of the coordinate plane, with grid lines every step and numbers every labelEvery grid lines. */
 export interface PlaneView {
@@ -37,11 +37,26 @@ export type PlaneMark =
       readonly from?: number;
       readonly to?: number;
       readonly accent?: boolean;
+      readonly tone?: Tone;
       readonly dashed?: boolean;
     }
   /** line draws the whole line through a and b. */
-  | { readonly kind: "line"; readonly a: Point; readonly b: Point; readonly accent?: boolean; readonly dashed?: boolean }
-  | { readonly kind: "segment"; readonly a: Point; readonly b: Point; readonly accent?: boolean; readonly dashed?: boolean }
+  | {
+      readonly kind: "line";
+      readonly a: Point;
+      readonly b: Point;
+      readonly accent?: boolean;
+      readonly tone?: Tone;
+      readonly dashed?: boolean;
+    }
+  | {
+      readonly kind: "segment";
+      readonly a: Point;
+      readonly b: Point;
+      readonly accent?: boolean;
+      readonly tone?: Tone;
+      readonly dashed?: boolean;
+    }
   /** point draws a dot, hollow when open, with an optional label. */
   | {
       readonly kind: "point";
@@ -50,14 +65,31 @@ export type PlaneMark =
       readonly label?: string;
       readonly dir?: Compass;
       readonly accent?: boolean;
+      readonly tone?: Tone;
     }
   /** circle draws the circle with center and radius r. */
-  | { readonly kind: "circle"; readonly center: Point; readonly r: number; readonly accent?: boolean; readonly dashed?: boolean }
+  | {
+      readonly kind: "circle";
+      readonly center: Point;
+      readonly r: number;
+      readonly accent?: boolean;
+      readonly tone?: Tone;
+      readonly dashed?: boolean;
+    }
   /** region shades the part of the view where every half-plane holds, and inside or outside the disk if one is given. */
   | { readonly kind: "region"; readonly halfPlanes: readonly HalfPlane[]; readonly disk?: Disk }
   | { readonly kind: "label"; readonly at: Point; readonly text: string; readonly dir: Compass }
   /** arrow draws a straight arrow from from to to, left out when either end is outside the view. */
-  | { readonly kind: "arrow"; readonly from: Point; readonly to: Point; readonly accent?: boolean; readonly thin?: boolean }
+  | {
+      readonly kind: "arrow";
+      readonly from: Point;
+      readonly to: Point;
+      readonly accent?: boolean;
+      readonly tone?: Tone;
+      readonly thin?: boolean;
+    }
+  /** turn draws the arc with an arrowhead that from sweeps out when it turns by degrees about center, counterclockwise when degrees is positive; left out when it leaves the view. */
+  | { readonly kind: "turn"; readonly center: Point; readonly from: Point; readonly degrees: number; readonly tone?: Tone }
   /** contour draws the level curve f(x, y) = level over the view. */
   | {
       readonly kind: "contour";
@@ -67,9 +99,9 @@ export type PlaneMark =
       readonly dashed?: boolean;
     }
   /** path draws a closed or open chain of points, broken where it leaves the view. */
-  | { readonly kind: "path"; readonly points: readonly Point[]; readonly accent?: boolean; readonly dashed?: boolean }
+  | { readonly kind: "path"; readonly points: readonly Point[]; readonly accent?: boolean; readonly tone?: Tone; readonly dashed?: boolean }
   /** polygon shades a polygon, which need not be convex and has to lie inside the view. */
-  | { readonly kind: "polygon"; readonly points: readonly Point[] };
+  | { readonly kind: "polygon"; readonly points: readonly Point[]; readonly tone?: Tone };
 
 const size = 260;
 const pad = 22;
@@ -186,9 +218,8 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
   const sx = (x: number) => round(pad + (x - xMin) * s);
   const sy = (y: number) => round(pad + (yMax - y) * s);
   const [w, h] = [round((xMax - xMin) * s + 2 * pad), round((yMax - yMin) * s + 2 * pad)];
-  const attrs = (m: { accent?: boolean; dashed?: boolean }) =>
-    `${m.accent ? ' class="accent"' : ""}${m.dashed ? ' stroke-dasharray="6 4"' : ""}`;
-  const polyline = (pts: readonly Point[], m: { accent?: boolean; dashed?: boolean }) =>
+  const attrs = (m: { accent?: boolean; tone?: Tone; dashed?: boolean }) => `${toneClass(m)}${m.dashed ? ' stroke-dasharray="6 4"' : ""}`;
+  const polyline = (pts: readonly Point[], m: { accent?: boolean; tone?: Tone; dashed?: boolean }) =>
     `<polyline points="${pts.map((p) => `${sx(p[0])},${sy(p[1])}`).join(" ")}"${attrs(m)} stroke-width="2"/>`;
 
   let grid = `<g stroke-width="0.6" stroke-opacity="0.2">`;
@@ -280,8 +311,28 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
         const [ux, uy] = [(x2 - x1) / length, (y2 - y1) / length];
         const barb = (side: number) =>
           `${round(x2 - head * ux + side * head * 0.5 * uy)},${round(y2 - head * uy - side * head * 0.5 * ux)}`;
-        const cls = m.accent ? ' class="accent"' : "";
+        const cls = toneClass(m);
         body += `<g${cls} stroke-width="${width}"><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><polyline points="${barb(1)} ${x2},${y2} ${barb(-1)}"/></g>`;
+        break;
+      }
+      case "turn": {
+        const [r0, a0] = [
+          Math.hypot(m.from[0] - m.center[0], m.from[1] - m.center[1]),
+          Math.atan2(m.from[1] - m.center[1], m.from[0] - m.center[0]),
+        ];
+        const n = Math.max(2, Math.ceil(Math.abs(m.degrees) / 3));
+        const at = (i: number): Point => {
+          const a = a0 + ((m.degrees * Math.PI) / 180) * (i / n);
+          return [m.center[0] + r0 * Math.cos(a), m.center[1] + r0 * Math.sin(a)];
+        };
+        const arc = Array.from({ length: n + 1 }, (_, i) => at(i));
+        if (arc.some((p) => p[0] < xMin || p[0] > xMax || p[1] < yMin || p[1] > yMax)) break;
+        const [tip, before] = [arc[n]!, arc[n - 1]!];
+        const [x2, y2, x1, y1] = [sx(tip[0]), sy(tip[1]), sx(before[0]), sy(before[1])];
+        const length = Math.hypot(x2 - x1, y2 - y1) || 1;
+        const [ux, uy] = [(x2 - x1) / length, (y2 - y1) / length];
+        const barb = (side: number) => `${round(x2 - 8 * ux + side * 4 * uy)},${round(y2 - 8 * uy - side * 4 * ux)}`;
+        body += `<g${toneClass(m)} stroke-width="2"><polyline points="${arc.map((p) => `${sx(p[0])},${sy(p[1])}`).join(" ")}"/><polyline points="${barb(1)} ${x2},${y2} ${barb(-1)}"/></g>`;
         break;
       }
       case "contour": {
@@ -312,7 +363,7 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
         break;
       }
       case "polygon":
-        regions += `<polygon class="accent" points="${m.points.map((p) => `${sx(p[0])},${sy(p[1])}`).join(" ")}" fill="currentColor" fill-opacity="0.15" stroke="none"/>`;
+        regions += `<polygon${toneClass({ accent: true, ...(m.tone && { tone: m.tone }) })} points="${m.points.map((p) => `${sx(p[0])},${sy(p[1])}`).join(" ")}" fill="currentColor" fill-opacity="0.15" stroke="none"/>`;
         break;
       case "curve": {
         const lo = Math.max(m.from ?? xMin, xMin);
@@ -358,7 +409,7 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
       }
       case "point": {
         const fill = m.open ? 'fill="none"' : 'fill="currentColor"';
-        dots += `<circle cx="${sx(m.at[0])}" cy="${sy(m.at[1])}" r="3.5" ${fill}${m.accent ? ' class="accent"' : ""} stroke-width="1.5"/>`;
+        dots += `<circle cx="${sx(m.at[0])}" cy="${sy(m.at[1])}" r="3.5" ${fill}${toneClass(m)} stroke-width="1.5"/>`;
         if (m.label) {
           const u = offsets[m.dir ?? "ne"];
           const d = 9 + Math.abs(u[0]) * 3.2 * m.label.length;

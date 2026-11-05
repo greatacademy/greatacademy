@@ -12,7 +12,7 @@ const draws = 60;
 /** twoOptions gives the options and the answer of a two-option question with no figure, if the problem is one. */
 function twoOptions(problem: Problem): { readonly options: readonly Text[]; readonly correct: number } | undefined {
   const { answer } = problem;
-  if (answer.checker !== "choice" || problem.figure) return undefined;
+  if (answer.checker !== "choice" || problem.figure || problem.solutionFigure) return undefined;
   const input = answer.input as { readonly kind?: string; readonly options?: readonly Text[] } | undefined;
   if (input?.kind !== "choice" || input.options?.length !== 2) return undefined;
   if (problem.prompt.en.length > maxOptionLength || problem.prompt.en.includes("$$")) return undefined;

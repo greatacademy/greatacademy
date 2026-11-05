@@ -231,6 +231,8 @@ message WorkedExample {
   ga.common.v1.Text solution = 2;
   // answer is the canonical response, as a learner would enter it.
   string answer = 3;
+  // solution_figure is a drawing that shows the solution.
+  optional ga.common.v1.Figure solution_figure = 4;
 }
 
 message LessonProgress {
@@ -295,6 +297,8 @@ message Feedback {
   ga.common.v1.Text solution = 3;
   // answer is the canonical response.
   string answer = 4;
+  // solution_figure is a drawing that shows the solution.
+  optional ga.common.v1.Figure solution_figure = 5;
 }
 
 // Result ends a session.
@@ -317,4 +321,6 @@ message ResultItem {
   ga.common.v1.Text solution = 5;
   string answer = 6;
   string response = 7;
+  // solution_figure is a drawing that shows the solution.
+  optional ga.common.v1.Figure solution_figure = 8;
 }

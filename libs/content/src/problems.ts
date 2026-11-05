@@ -128,8 +128,10 @@ function checkSample(
       }
     }
   }
-  const figure = a.figure && figureIssue(a.figure);
-  if (figure) return figure;
+  for (const drawn of [a.figure, a.solutionFigure]) {
+    const figure = drawn && figureIssue(drawn);
+    if (figure) return figure;
+  }
   const { answer } = a;
   if (!subject.checkers.has(answer.checker)) return `unknown checker ${answer.checker}`;
   if (answer.input.kind === "choice") {

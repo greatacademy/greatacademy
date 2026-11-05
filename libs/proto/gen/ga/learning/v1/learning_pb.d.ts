@@ -751,6 +751,13 @@ export declare type WorkedExample = Message<"ga.learning.v1.WorkedExample"> & {
    * @generated from field: string answer = 3;
    */
   answer: string;
+
+  /**
+   * solution_figure is a drawing that shows the solution.
+   *
+   * @generated from field: optional ga.common.v1.Figure solution_figure = 4;
+   */
+  solutionFigure?: Figure | undefined;
 };
 
 /**
@@ -1000,6 +1007,13 @@ export declare type Feedback = Message<"ga.learning.v1.Feedback"> & {
    * @generated from field: string answer = 4;
    */
   answer: string;
+
+  /**
+   * solution_figure is a drawing that shows the solution.
+   *
+   * @generated from field: optional ga.common.v1.Figure solution_figure = 5;
+   */
+  solutionFigure?: Figure | undefined;
 };
 
 /**
@@ -1093,6 +1107,13 @@ export declare type ResultItem = Message<"ga.learning.v1.ResultItem"> & {
    * @generated from field: string response = 7;
    */
   response: string;
+
+  /**
+   * solution_figure is a drawing that shows the solution.
+   *
+   * @generated from field: optional ga.common.v1.Figure solution_figure = 8;
+   */
+  solutionFigure?: Figure | undefined;
 };
 
 /**

@@ -1,7 +1,7 @@
 import { figureIssue, same } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { boxPlot, dotPlot, sketch } from "./figures.ts";
+import { boxPlot, dotPlot, sketch, toneClass } from "./figures.ts";
 import { plane } from "./plane.ts";
 
 const axis = { min: 0, max: 10, step: 1, labelEvery: 2 };
@@ -150,5 +150,22 @@ describe("plane", () => {
     expect(outside).toContain('fill-rule="evenodd"');
     expect(outside.match(/Z/g)).toHaveLength(2);
     expect(figureIssue({ svg: outside, alt })).toBeUndefined();
+  });
+});
+
+describe("tones", () => {
+  it("colors marks by their role, the tone before the accent", () => {
+    expect(toneClass({ accent: true })).toBe(' class="accent"');
+    expect(toneClass({ accent: true, tone: "result" })).toBe(' class="result"');
+    expect(toneClass({})).toBe("");
+    expect(sketch([{ kind: "segment", a: [0, 0], b: [1, 1], tone: "action" }])).toContain('class="action"');
+  });
+
+  it("draws a turn with its arrowhead, unless it leaves the view", () => {
+    const view = { xMin: -4, xMax: 4, yMin: -4, yMax: 4 };
+    const turn = (degrees: number, from: readonly [number, number]) =>
+      plane(view, [{ kind: "turn", center: [0, 0], from, degrees, tone: "action" }]);
+    expect(turn(90, [3, 0])).toContain('class="action"');
+    expect(turn(90, [3.9, 3.9])).not.toContain('class="action"');
   });
 });

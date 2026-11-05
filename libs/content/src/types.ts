@@ -39,6 +39,8 @@ export interface Problem {
   readonly answer: AnswerSpec;
   /** solution is the worked solution, shown after an answer and in worked examples. */
   readonly solution: Text;
+  /** solutionFigure is a drawing that shows the solution, such as the prompt's figure with the answer worked out on it; it stays hidden until the solution is shown. */
+  readonly solutionFigure?: Figure;
   /** canonical is a response the checker must accept; it is also the answer shown after a wrong attempt. */
   readonly canonical: string;
   /** wrong are plausible mistaken responses the checker must reject; the compiler checks them. */

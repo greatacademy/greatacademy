@@ -3,8 +3,10 @@ import { isText, type Text } from "./text.ts";
 /**
  * Figure is a static drawing shown with a problem or an explanation. svg is
  * a self-contained SVG document drawn in `currentColor`, so that it follows
- * the client's text color in light and dark themes; class "accent" marks the
- * parts the client may draw in its accent color. Text inside the drawing is
+ * the client's text color in light and dark themes. Three classes mark the
+ * parts a client draws in color: "accent" the subject of the figure, "action"
+ * what is done to it, such as the arc of a rotation, and "result" what comes
+ * out, such as the image or the answer. Text inside the drawing is
  * language-neutral (numbers, letters, units); alt describes the figure in
  * every locale for screen readers.
  */

@@ -159,6 +159,11 @@ describe("sampleGenerators", () => {
     ["NaN in texts", () => problem(Number.NaN), "contains NaN"],
     ["unknown checkers", () => ({ ...problem(1), answer: { ...problem(1).answer, checker: "nope" } }), "unknown checker"],
     ["unsafe figures", () => ({ ...problem(1), figure: { svg: '<svg viewBox="0 0 1 1"><script/></svg>', alt: same("x") } }), "<script>"],
+    [
+      "unsafe solution figures",
+      () => ({ ...problem(1), solutionFigure: { svg: '<svg viewBox="0 0 1 1"><script/></svg>', alt: same("x") } }),
+      "<script>",
+    ],
   ] as const)("reports %s", (_, generate, message) => {
     const issues = sampleGenerators(withGenerator(generate as TopicDef["knowledgePoints"][number]["generate"]), { samples: 5 });
     expect(issues.map((i) => i.message).join("\n")).toContain(message);

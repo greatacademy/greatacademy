@@ -13,8 +13,9 @@ export declare const file_ga_common_v1_figure: GenFile;
 
 /**
  * Figure is a static drawing. svg is a self-contained SVG document limited to
- * drawing elements and drawn in currentColor; elements with class "accent" may
- * be drawn in the client's accent color. alt describes it for screen readers.
+ * drawing elements and drawn in currentColor; a client colors elements with
+ * class "accent" (the subject of the figure), "action" (what is done to it) and
+ * "result" (what comes out). alt describes it for screen readers.
  *
  * @generated from message ga.common.v1.Figure
  */

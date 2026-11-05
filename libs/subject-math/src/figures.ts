@@ -78,12 +78,27 @@ export type Point = readonly [number, number];
 /** Compass is the direction from a point to its label. */
 export type Compass = "n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw";
 
+/** Tone is the role a mark in color plays: what is done to the subject of the figure, or what comes out. */
+export type Tone = "action" | "result";
+
+/** toneClass writes the class attribute of a mark. */
+export function toneClass(m: { readonly accent?: boolean; readonly tone?: Tone }): string {
+  return m.tone ? ` class="${m.tone}"` : m.accent ? ' class="accent"' : "";
+}
+
 /** Mark is one element of a geometry sketch. */
 export type Mark =
-  | { readonly kind: "segment"; readonly a: Point; readonly b: Point; readonly accent?: boolean; readonly dashed?: boolean }
-  | { readonly kind: "polygon"; readonly points: readonly Point[]; readonly accent?: boolean }
+  | {
+      readonly kind: "segment";
+      readonly a: Point;
+      readonly b: Point;
+      readonly accent?: boolean;
+      readonly tone?: Tone;
+      readonly dashed?: boolean;
+    }
+  | { readonly kind: "polygon"; readonly points: readonly Point[]; readonly accent?: boolean; readonly tone?: Tone }
   /** shade fills the region inside points but outside each of holes, with no outline. */
-  | { readonly kind: "shade"; readonly points: readonly Point[]; readonly holes?: readonly (readonly Point[])[] }
+  | { readonly kind: "shade"; readonly points: readonly Point[]; readonly holes?: readonly (readonly Point[])[]; readonly tone?: Tone }
   /** arc marks the angle at vertex between the rays to from and to (the smaller one), with an optional label inside. */
   | {
       readonly kind: "arc";
@@ -92,13 +107,14 @@ export type Mark =
       readonly to: Point;
       readonly label?: string;
       readonly accent?: boolean;
+      readonly tone?: Tone;
     }
   /** right marks a right angle at vertex with a small square. */
   | { readonly kind: "right"; readonly vertex: Point; readonly from: Point; readonly to: Point }
   | { readonly kind: "label"; readonly at: Point; readonly text: string; readonly dir: Compass; readonly italic?: boolean }
   /** side labels the segment from a to b on its right-hand side (outside a counterclockwise polygon). */
   | { readonly kind: "side"; readonly a: Point; readonly b: Point; readonly text: string }
-  | { readonly kind: "dot"; readonly at: Point }
+  | { readonly kind: "dot"; readonly at: Point; readonly tone?: Tone }
   /** ticks marks congruent segments with count small strokes. */
   | { readonly kind: "ticks"; readonly a: Point; readonly b: Point; readonly count: number }
   /** arrows marks parallel segments with count chevrons pointing from a to b. */
@@ -183,18 +199,18 @@ export function sketch(marks: readonly Mark[]): string {
     switch (m.kind) {
       case "segment": {
         const [a, b] = [at(m.a), at(m.b)];
-        const attrs = `${m.accent ? ' class="accent"' : ""}${m.dashed ? ' stroke-dasharray="5 4"' : ""}`;
+        const attrs = `${toneClass(m)}${m.dashed ? ' stroke-dasharray="5 4"' : ""}`;
         body += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"${attrs}/>`;
         break;
       }
       case "shade": {
         const ring = (ps: readonly Point[]) => `M${ps.map((q) => at(q).join(",")).join(" L")} Z`;
         const d = [m.points, ...(m.holes ?? [])].map(ring).join(" ");
-        body += `<path class="accent" d="${d}" fill="currentColor" fill-opacity="0.2" fill-rule="evenodd" stroke="none"/>`;
+        body += `<path${toneClass({ accent: true, ...(m.tone && { tone: m.tone }) })} d="${d}" fill="currentColor" fill-opacity="0.2" fill-rule="evenodd" stroke="none"/>`;
         break;
       }
       case "polygon":
-        body += `<polygon points="${m.points.map((p) => at(p).join(",")).join(" ")}"${m.accent ? ' class="accent"' : ""}/>`;
+        body += `<polygon points="${m.points.map((p) => at(p).join(",")).join(" ")}"${toneClass(m)}/>`;
         break;
       case "arc": {
         const v = at(m.vertex);
@@ -207,7 +223,7 @@ export function sketch(marks: readonly Mark[]): string {
         const r = Math.abs(delta) < 0.6 ? 34 : 22;
         const p1 = [round(v[0] + u[0] * r), round(v[1] + u[1] * r)];
         const p2 = [round(v[0] + w[0] * r), round(v[1] + w[1] * r)];
-        const cls = m.accent ? ' class="accent"' : "";
+        const cls = toneClass(m);
         body += `<path d="M${p1[0]} ${p1[1]}A${r} ${r} 0 0 ${delta > 0 ? 1 : 0} ${p2[0]} ${p2[1]}"${cls}/>`;
         const mid = a1 + delta / 2;
         bounds.grow(v[0] + Math.cos(mid) * r, v[1] + Math.sin(mid) * r);
@@ -240,7 +256,7 @@ export function sketch(marks: readonly Mark[]): string {
       }
       case "dot": {
         const p = at(m.at);
-        body += `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="currentColor" stroke="none"/>`;
+        body += `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="currentColor" stroke="none"${toneClass(m)}/>`;
         break;
       }
       case "ticks":

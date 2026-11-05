@@ -228,6 +228,7 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
           {shown ? (
             <div className="space-y-3 border-t border-accent/20 pt-4">
               <Markdown source={tx(ex.solution)} />
+              <FigureView figure={ex.solutionFigure} />
               <div className="text-sm">
                 <span className="mr-2 text-muted">{m.answer}:</span>
                 <AnswerText problem={ex.problem} answer={ex.answer} />
@@ -408,6 +409,7 @@ function FeedbackView({ feedback, problem, onContinue }: { feedback: Feedback; p
       <details open={!feedback.correct} className="group">
         <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
         <Markdown source={tx(feedback.solution)} className="mt-2" />
+        <FigureView figure={feedback.solutionFigure} className="mt-3" />
       </details>
       <div className="flex justify-end">
         <Button onClick={onContinue} className="px-6">
@@ -483,6 +485,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
             <details>
               <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
               <Markdown source={tx(item.solution)} className="mt-2" />
+              <FigureView figure={item.solutionFigure} className="mt-3" />
             </details>
           )}
         </Card>

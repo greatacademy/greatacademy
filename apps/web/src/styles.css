@@ -106,3 +106,9 @@
 .figure-ga .accent {
   color: var(--color-accent);
 }
+.figure-ga .action {
+  color: var(--color-warn);
+}
+.figure-ga .result {
+  color: var(--color-good);
+}

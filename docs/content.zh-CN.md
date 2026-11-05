@@ -96,7 +96,7 @@ const sameSign: KnowledgePointDef = {
 - **必定终止。** 凡是“重试直到满足条件”的循环，都必须对参数的每一种取值成功。要检查极端值：除数为 9、被除数为两位数时，不存在所要求形式的商，若生成器抽到它并不断重试，抽样就会卡死。
 - **每个值都有定义。** 错误答案与正确答案由同一组参数算出，因此每一个都要防护：可能为零的分母、定义域之外某点的函数值、越过列表末尾的下标。
 - **模板字符串。** 插入 `${…}` 的文字必须写成模板字符串；写在普通引号字符串里，它会原样显示给学习者。
-- **图形。** 题目可以带一个题面引用的 `figure`，knowledge point 可以带一个随讲解展示的 `figure`。`Figure` 是 `{ svg, alt }`：带 `viewBox` 的自包含 SVG 图，用 `currentColor` 绘制，从而在浅色和深色主题下都跟随客户端的文字颜色；客户端可用强调色绘制的部分带 class `accent`。图中的文字与语言无关（数字、字母、单位）；`alt` 用每种语言描述图形，供屏幕阅读器使用，并写明题目需要的数据，例如图像上的点或条形的高度，让看不到图的读者也能作答。客户端直接内嵌 SVG，所以只能使用绘图元素（`svg`、`g`、`line`、`polyline`、`polygon`、`path`、`circle`、`ellipse`、`rect`、`text`、`tspan`、`title`、`defs`、`marker`），不能有事件处理器、`style` 属性、链接或 `url()`。
+- **图形。** 题目可以带一个题面引用的 `figure` 和一个展示解答的 `solutionFigure`（在显示解答之前保持隐藏），knowledge point 可以带一个随讲解展示的 `figure`。`Figure` 是 `{ svg, alt }`：带 `viewBox` 的自包含 SVG 图，用 `currentColor` 绘制，从而在浅色和深色主题下都跟随客户端的文字颜色；图的主体带 class `accent`，对它做的动作（如旋转的弧线）带 `action`，得到的结果（如像）带 `result`，由客户端分别着色。图中的文字与语言无关（数字、字母、单位）；`alt` 用每种语言描述图形，供屏幕阅读器使用，并写明题目需要的数据，例如图像上的点或条形的高度，让看不到图的读者也能作答。客户端直接内嵌 SVG，所以只能使用绘图元素（`svg`、`g`、`line`、`polyline`、`polygon`、`path`、`circle`、`ellipse`、`rect`、`text`、`tspan`、`title`、`defs`、`marker`），不能有事件处理器、`style` 属性、链接或 `url()`。
 
 ## 5. 答案与判定器
 

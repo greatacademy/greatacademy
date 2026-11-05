@@ -90,7 +90,12 @@ async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape
       count: l.kpCount,
       title: text(kp.title),
       explanation: text(kp.explanation),
-      example: { problem: problemView(example!), solution: text(example!.solution), answer: example!.canonical },
+      example: {
+        problem: problemView(example!),
+        solution: text(example!.solution),
+        answer: example!.canonical,
+        ...(example!.solutionFigure && { solutionFigure: figure(example!.solutionFigure) }),
+      },
       ...(kp.figure && { figure: figure(kp.figure) }),
     },
   };
@@ -111,6 +116,7 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
           solution: text(p.solution),
           answer: p.canonical,
           response: a.response,
+          ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
         };
       })
     : [];
