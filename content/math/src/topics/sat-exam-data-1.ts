@@ -99,7 +99,7 @@ const contexts = [
   ],
   [
     "residents of a city",
-    "people at a downtown coffee shop",
+    "the people at a downtown coffee shop",
     "某市的居民",
     "市中心咖啡馆里的人",
     "support a new bus line",
@@ -107,7 +107,7 @@ const contexts = [
   ],
   [
     "customers of a store",
-    "customers who filled out an online review",
+    "the customers who filled out an online review",
     "某商店的顾客",
     "在网上写评论的顾客",
     "are satisfied with the store",
@@ -143,10 +143,7 @@ const boxFig = (min: number, q1: number, med: number, q3: number, max: number, l
       ],
       labels: ticks.map((v) => [px(v), 212, String(v)] as const),
     },
-    t(
-      `A box plot with minimum ${min}, first quartile ${q1}, median ${med}, third quartile ${q3} and maximum ${max}.`,
-      `箱线图，最小值 ${min}，第一四分位数 ${q1}，中位数 ${med}，第三四分位数 ${q3}，最大值 ${max}。`,
-    ),
+    t("A box plot on a number line.", "数轴上的箱线图。"),
   );
 };
 
@@ -416,16 +413,24 @@ export const satExamData1: ExamSpec[] = [
           `总分必须是 $5(${m}) = ${5 * m}$，所以第五个值是 $${5 * m} - ${sum(xs)} = ${miss}$。`,
         ),
       );
-    const ys = sorted(pickData(rng, 4, 10, 40));
-    const med = ys[1]! + rng.int(1, Math.max(1, ys[2]! - ys[1]! + 3));
+    const v1 = rng.int(10, 30);
+    const v2 = v1 + rng.int(1, 4);
+    const xv = v2 + rng.int(1, 4);
+    const v4 = xv + 2 * rng.int(1, 4);
+    const v5 = v4 + rng.int(1, 5);
+    const v6 = v5 + rng.int(1, 5);
+    const midpoint = (xv + v4) / 2;
     return spr(
       t(
-        `The data set $${list(ys.slice(0, 2))}, x, ${list(ys.slice(2))}$ is written in increasing order, with $x$ in the middle, and its median is $${Math.max(ys[1]!, Math.min(ys[2]!, med))}$. What is the value of $x$?`,
-        `数据集 $${list(ys.slice(0, 2))}, x, ${list(ys.slice(2))}$ 按递增顺序排列，$x$ 在中间，中位数为 $${Math.max(ys[1]!, Math.min(ys[2]!, med))}$。$x$ 的值是多少？`,
+        `The data set $${v1}, ${v2}, x, ${v4}, ${v5}, ${v6}$ is written in increasing order, and its median is $${midpoint}$. What is the value of $x$?`,
+        `数据集 $${v1}, ${v2}, x, ${v4}, ${v5}, ${v6}$ 按递增顺序排列，中位数为 $${midpoint}$。$x$ 的值是多少？`,
       ),
-      Math.max(ys[1]!, Math.min(ys[2]!, med)),
-      [ys[0]!, ys[3]! + 1, ys[1]! + ys[2]! + 1],
-      t(`With five values, the middle one is the median, so $x$ equals it.`, `五个值时，中间的值就是中位数，所以 $x$ 等于它。`),
+      xv,
+      [midpoint, v4, 2 * midpoint + v4],
+      t(
+        `With six values, the median is the mean of the third and fourth: $\\frac{x + ${v4}}{2} = ${midpoint}$, so $x = 2(${midpoint}) - ${v4} = ${xv}$.`,
+        `六个值时，中位数是第三和第四个值的平均数：$\\frac{x + ${v4}}{2} = ${midpoint}$，所以 $x = 2(${midpoint}) - ${v4} = ${xv}$。`,
+      ),
     );
   }),
   showTips("Tabular Datasets", "表格数据", ["frequency-tables"], (rng, hard) => {
@@ -560,8 +565,8 @@ export const satExamData1: ExamSpec[] = [
         most,
         [least, tops[2]! * sum(fr), tops[2]! * fr[2]!],
         t(
-          `Take each value at the top of its group: ${tops[0]!}, ${tops[1]!} and ${tops[2]!}.`,
-          `每个值取其组的上限：${tops[0]!}、${tops[1]!} 和 ${tops[2]!}。`,
+          `Take each value at the top of its group: $${tops[0]!}$, $${tops[1]!}$ and $${tops[2]!}$.`,
+          `每个值取其组的上限：$${tops[0]!}$、$${tops[1]!}$ 和 $${tops[2]!}$。`,
         ),
       );
     return spr(
@@ -681,7 +686,10 @@ export const satExamData1: ExamSpec[] = [
         ),
         Q.of(tot, n).sub(Q.of(2)),
         [Q.of(tot, n), Q.of(tot, 4).sub(Q.of(2)), 2],
-        t(`The mean is $\\frac{${tot}}{${n}}$ and the median is $2$.`, `平均数是 $\\frac{${tot}}{${n}}$，中位数是 $2$。`),
+        t(
+          `The mean is $\\frac{${tot}}{${n}}$ and the median is $2$, so the difference is $${Q.of(tot, n).sub(Q.of(2)).toLatex()}$.`,
+          `平均数是 $\\frac{${tot}}{${n}}$，中位数是 $2$，所以差是 $${Q.of(tot, n).sub(Q.of(2)).toLatex()}$。`,
+        ),
       );
     },
   ),
@@ -905,7 +913,7 @@ export const satExamData1: ExamSpec[] = [
     },
   ),
   probTips("Calculating Conditional Probabilities", "计算条件概率", ["the-multiplication-law-for-conditional-probability"], (rng, hard) => {
-    const [n, p, q] = [rng.int(5, 20) * 20, rng.int(2, 8) * 10, rng.int(1, 9) * 10];
+    const [n, p, q] = [rng.int(1, 8) * 100, rng.int(2, 8) * 10, rng.int(1, 9) * 10];
     const A = (n * p) / 100;
     const both = (A * q) / 100;
     if (!hard)
@@ -993,14 +1001,7 @@ export const satExamData1: ExamSpec[] = [
     const b = rng.int(1, 6);
     const xs = [1, 2, 3, 4, 5, 6, 7, 8];
     const pts = xs.map((x) => [x, Math.min(30, m * x + b + rng.pick([-1, 0, 1]))] as const);
-    const fig = dotsFigure(
-      pts,
-      { x: [0, 9], y: [0, 32], dx: 1, dy: 4 },
-      t(
-        `A scatterplot of eight points that rises steadily from about $(1, ${m + b})$ to about $(8, ${8 * m + b})$.`,
-        `八个点的散点图，从约 $(1, ${m + b})$ 稳定上升到约 $(8, ${8 * m + b})$。`,
-      ),
-    );
+    const fig = dotsFigure(pts, { x: [0, 9], y: [0, 32], dx: 1, dy: 4 }, t("A scatterplot of eight points.", "八个点的散点图。"));
     const lead = m === 1 ? "" : `${m}`;
     if (!hard)
       return mc(
@@ -1066,14 +1067,7 @@ export const satExamData1: ExamSpec[] = [
   modelTips("Interpreting Data Plots", "解释数据图", ["scatter-plots"], (rng, hard) => {
     const ys = pickData(rng, 7, 2, 20);
     const pts = ys.map((y, i) => [i + 1, y] as const);
-    const fig = dotsFigure(
-      pts,
-      { x: [0, 8], y: [0, 22], dx: 1, dy: 2 },
-      t(
-        `A plot of seven points with $y$-values ${ys.join(", ")} at $x = 1$ to $7$.`,
-        `七个点的图，$x = 1$ 到 $7$ 时 $y$ 值为 ${ys.join("、")}。`,
-      ),
-    );
+    const fig = dotsFigure(pts, { x: [0, 8], y: [0, 22], dx: 1, dy: 2 }, t("A plot of seven points.", "七个点的图。"));
     const top = Math.max(...ys);
     if (!hard)
       return spr(
@@ -1099,7 +1093,7 @@ export const satExamData1: ExamSpec[] = [
     const fig = curveFigure(
       (x) => top - a * (x - peak) * (x - peak),
       { x: [0, 2 * peak], y: [0, top + 4], dx: 1, dy: 4 },
-      t(`A temperature curve that rises to ${top} at hour ${peak} and then falls.`, `温度曲线，在第 ${peak} 小时升到 ${top}，然后下降。`),
+      t("A curve of temperature against time.", "温度随时间变化的曲线。"),
     );
     if (!hard)
       return spr(

@@ -61,8 +61,8 @@ function rightTriangleFigure(bc: number, ac: number): Figure {
   return {
     svg: sketch(marks),
     alt: t(
-      `Right triangle ABC with the right angle at C. Leg BC, opposite angle A, is ${bc}, and leg AC, next to angle A, is ${ac}.`,
-      `直角三角形 ABC，直角在 C。∠A 的对边 BC 为 ${bc}，∠A 的邻边 AC 为 ${ac}。`,
+      `Right triangle ABC with the right angle at C, BC = ${bc} and AC = ${ac}.`,
+      `直角三角形 ABC，直角在 C，BC = ${bc}，AC = ${ac}。`,
     ),
   };
 }

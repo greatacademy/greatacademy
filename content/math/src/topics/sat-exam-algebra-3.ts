@@ -2,7 +2,7 @@ import type { Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mod, sg, spr, tx, words } from "../exam.ts";
+import { cx, mc, mod, par, sg, spr, tx, words } from "../exam.ts";
 import { lineFigure, pointsFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Algebra: graphs of lines, parallel and perpendicular lines, and modeling with linear functions.
@@ -59,7 +59,7 @@ function runner(rng: Rng) {
       zh: "储蓄账户余额（美元）",
       tu: t("month", "月"),
       tw: t("months", "个月"),
-      start: t("the balance when the account was opened", "开户时的余额"),
+      start: t("The balance when the account was opened", "开户时的余额"),
       up: true,
     },
     {
@@ -67,7 +67,7 @@ function runner(rng: Rng) {
       zh: "水池中的水量（加仑）",
       tu: t("hour", "小时"),
       tw: t("hours", "小时"),
-      start: t("the water in the pool before filling", "注水前水池中的水量"),
+      start: t("The water in the pool before filling", "注水前水池中的水量"),
       up: true,
     },
     {
@@ -156,7 +156,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       `y = ${cx(m)} ${sg(b)}`,
       wrong,
       t(
-        `The slope is $\\frac{${y2} - (${y1})}{${x2} - ${x1}} = ${m}$. Then $${y1} = ${m}(${x1}) + b$ gives $b = ${b}$.`,
+        `The slope is $\\frac{${y2} - ${par(y1)}}{${x2} - ${x1}} = ${m}$. Then $${y1} = ${m}(${x1}) + b$ gives $b = ${b}$.`,
         `斜率为 $\\frac{${y2} - (${y1})}{${x2} - ${x1}} = ${m}$。再由 $${y1} = ${m}(${x1}) + b$ 得 $b = ${b}$。`,
       ),
     );
@@ -330,7 +330,7 @@ export const satExamAlgebra3: ExamSpec[] = [
           `f(x) = ${cx(m)} ${sg(b)}`,
           wrong,
           t(
-            `$f(0)$ gives the intercept $${b}$. The slope is $\\frac{${fa} - (${b})}{${a}} = ${m}$.`,
+            `$f(0)$ gives the intercept $${b}$. The slope is $\\frac{${fa} - ${par(b)}}{${a}} = ${m}$.`,
             `$f(0)$ 给出截距 $${b}$。斜率为 $\\frac{${fa} - (${b})}{${a}} = ${m}$。`,
           ),
         );
@@ -342,7 +342,7 @@ export const satExamAlgebra3: ExamSpec[] = [
         b,
         [m, fa - m, fa + m * a],
         t(
-          `The slope is $\\frac{${fc} - (${fa})}{${c} - ${a}} = ${m}$. Going back $${a}$ from $x = ${a}$ gives $f(0) = ${fa} - ${a}(${m}) = ${b}$.`,
+          `The slope is $\\frac{${fc} - ${par(fa)}}{${c} - ${a}} = ${m}$. Going back $${a}$ from $x = ${a}$ gives $f(0) = ${fa} - ${a}(${m}) = ${b}$.`,
           `斜率为 $\\frac{${fc} - (${fa})}{${c} - ${a}} = ${m}$。从 $x = ${a}$ 回退 $${a}$，得 $f(0) = ${fa} - ${a}(${m}) = ${b}$。`,
         ),
       );
@@ -502,7 +502,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       return mc(
         rng,
         t(
-          `${c.en[0]!.toUpperCase()}${c.en.slice(1, -1)} is $${s}$ at the start and changes by $${m}$ each ${c.tu.en}. Which function gives the value after $x$ ${c.tw.en}?`,
+          `${c.en[0]!.toUpperCase()}${c.en.slice(1)} is $${s}$ at the start and changes by $${m}$ each ${c.tu.en}. Which function gives the value after $x$ ${c.tw.en}?`,
           `${c.zh}开始时为 $${s}$，每${c.tu["zh-CN"]}变化 $${m}$。哪个函数给出 $x$ ${c.tw["zh-CN"]}后的值？`,
         ),
         good,
@@ -512,7 +512,7 @@ export const satExamAlgebra3: ExamSpec[] = [
     return mc(
       rng,
       t(
-        `${c.en[0]!.toUpperCase()}${c.en.slice(1, -1)} is $${s + m * a}$ after $${a}$ ${c.tw.en} and $${s + m * b}$ after $${b}$ ${c.tw.en}, changing at a constant rate. Which function gives the value after $x$ ${c.tw.en}?`,
+        `${c.en[0]!.toUpperCase()}${c.en.slice(1)} is $${s + m * a}$ after $${a}$ ${c.tw.en} and $${s + m * b}$ after $${b}$ ${c.tw.en}, changing at a constant rate. Which function gives the value after $x$ ${c.tw.en}?`,
         `${c.zh}在 $${a}$ ${c.tw["zh-CN"]}后为 $${s + m * a}$，在 $${b}$ ${c.tw["zh-CN"]}后为 $${s + m * b}$，以恒定速率变化。哪个函数给出 $x$ ${c.tw["zh-CN"]}后的值？`,
       ),
       good,

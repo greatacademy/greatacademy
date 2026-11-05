@@ -2,7 +2,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { ask, mod, sg, words } from "../exam.ts";
+import { ask, askExact, mod, sg, words } from "../exam.ts";
 
 // ACT Math Prep, Algebra: the expressions, equations, inequalities and models that have no SAT Math Prep counterpart.
 
@@ -289,8 +289,8 @@ export const actExamAlgebra: ExamSpec[] = [
         `方程组 $x + y + z = ${x + y + z}$，$${a}x + y + z = ${a * x + y + z}$，$x + ${b}y + z = ${x + b * y + z}$ 有唯一解。$z$ 的值是多少？`,
         z,
         [x === z ? z + 1 : x, y === z ? z + 2 : y, x + y + z, z + 3],
-        `Subtracting the first equation gives $${a - 1}x = ${(a - 1) * x}$ and $${b - 1}y = ${(b - 1) * y}$, so $x = ${x}$ and $y = ${y}$.`,
-        `减去第一个方程得 $${a - 1}x = ${(a - 1) * x}$，$${b - 1}y = ${(b - 1) * y}$，所以 $x = ${x}$，$y = ${y}$。`,
+        `Subtracting the first equation gives $${a - 1}x = ${(a - 1) * x}$ and $${b - 1}y = ${(b - 1) * y}$, so $x = ${x}$ and $y = ${y}$. Then $z = ${x + y + z} - ${x} - ${y} = ${z}$.`,
+        `减去第一个方程得 $${a - 1}x = ${(a - 1) * x}$，$${b - 1}y = ${(b - 1) * y}$，所以 $x = ${x}$，$y = ${y}$。于是 $z = ${x + y + z} - ${x} - ${y} = ${z}$。`,
       );
     },
   ),
@@ -308,8 +308,8 @@ export const actExamAlgebra: ExamSpec[] = [
       );
     return ask(
       rng,
-      `What is the coefficient of $x^2$ in the expansion of $(x + ${a})^4$ when it is multiplied by $${b}$?`,
-      `$(x + ${a})^4$ 的展开式乘 $${b}$ 后，$x^2$ 的系数是多少？`,
+      `What is the coefficient of $x^2$ in the expansion of $${b}(x + ${a})^4$?`,
+      `$${b}(x + ${a})^4$ 的展开式中，$x^2$ 的系数是多少？`,
       6 * a * a * b,
       [4 * a * a * b, 6 * a * b, 6 * a * a, 4 * a * b],
       `The binomial coefficient is $6$, so the term is $6(${a})^2x^2$, and then multiply by $${b}$.`,
@@ -325,8 +325,8 @@ export const actExamAlgebra: ExamSpec[] = [
         `$x(x - ${r})(x + ${s}) = 0$ 的最大解是多少？`,
         r,
         [s, -s, 0, r + s],
-        `The solutions are $0$, $${r}$ and $${-s}$.`,
-        `解是 $0$、$${r}$ 和 $${-s}$。`,
+        `A product is $0$ when a factor is $0$, so the solutions are $0$, $${r}$ and $${-s}$. The greatest is $${r}$.`,
+        `积为 $0$ 时某个因式为 $0$，所以解是 $0$、$${r}$ 和 $${-s}$，最大的是 $${r}$。`,
       );
     return ask(
       rng,
@@ -476,14 +476,23 @@ export const actExamAlgebra: ExamSpec[] = [
         `The distance from $${c === 0 ? -1 : c}$ is $${d}$ in each direction.`,
         `到 $${c === 0 ? -1 : c}$ 的距离在两个方向上都是 $${d}$。`,
       );
-    return ask(
+    const v = rng.pick([-3, -2, -1, 0, 1, 2, 3]);
+    const count = v < 0 ? 0 : v === 0 ? 1 : 2;
+    const inner = `|x ${sg(c === 0 ? 1 : c)}|`;
+    const [whyEn, whyZh] =
+      v < 0
+        ? ["an absolute value is never negative", "绝对值不可能为负"]
+        : v === 0
+          ? ["only the value that makes the inside zero works", "只有使绝对值内部为零的值才满足"]
+          : ["the inside can equal either a positive number or its opposite", "绝对值内部可以等于这个正数或它的相反数"];
+    return askExact(
       rng,
-      `How many real solutions does $${a}|x ${sg(c === 0 ? 1 : c)}| + ${d} = ${d - a}$ have?`,
-      `$${a}|x ${sg(c === 0 ? 1 : c)}| + ${d} = ${d - a}$ 有多少个实数解？`,
-      0,
-      [1, 2, 3],
-      `It gives $|x ${sg(c === 0 ? 1 : c)}| = -1$, and an absolute value is never negative.`,
-      `得到 $|x ${sg(c === 0 ? 1 : c)}| = -1$，而绝对值不可能为负。`,
+      `How many real solutions does $${a}${inner} + ${d} = ${d + a * v}$ have?`,
+      `$${a}${inner} + ${d} = ${d + a * v}$ 有多少个实数解？`,
+      count,
+      [0, 1, 2, 3].filter((n) => n !== count),
+      `It gives $${inner} = ${v}$, and ${whyEn}.`,
+      `得到 $${inner} = ${v}$，而${whyZh}。`,
     );
   }),
   absTips("Solving Absolute Value Inequalities", "解绝对值不等式", ["absolute-value-inequalities"], (rng, hard) => {

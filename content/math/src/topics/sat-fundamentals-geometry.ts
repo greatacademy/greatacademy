@@ -1621,7 +1621,7 @@ export const isoscelesTrianglesInCircles = topic(
               ),
           answer: back ? theta : base,
           unit: "°",
-          wrong: back ? [180 - base, 90 - base, 2 * base] : [180 - theta, theta / 2, 90 - theta],
+          wrong: back ? [180 - base, 90 - base, 2 * base] : [180 - theta, theta / 2, theta, 90 + theta / 2],
           solution: t(
             `$OA = OB$ are radii, so $\\angle OAB = \\angle OBA$ and${back ? steps(`\\angle AOB = 180^\\circ - 2 \\cdot ${base}^\\circ = ${theta}^\\circ`) : steps(`\\angle OAB = \\frac{180^\\circ - ${theta}^\\circ}{2} = ${base}^\\circ`)}`,
             `$OA = OB$ 都是半径，所以 $\\angle OAB = \\angle OBA$，${back ? steps(`\\angle AOB = 180^\\circ - 2 \\cdot ${base}^\\circ = ${theta}^\\circ`) : steps(`\\angle OAB = \\frac{180^\\circ - ${theta}^\\circ}{2} = ${base}^\\circ`)}`,

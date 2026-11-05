@@ -387,6 +387,7 @@ export const applyingDefinedOperations = topic(
         const value = op.f(x, b);
         const slope = op.f(1, b) - op.f(0, b);
         const rest = op.f(0, b);
+        const tail = rest === 0 ? "" : `${rest < 0 ? "-" : "+"} ${Math.abs(rest)}`;
         if (slope === 0) return applyingDefinedOperations.knowledgePoints[1]!.generate(rng);
         return numberProblem({
           prompt: t(
@@ -396,8 +397,8 @@ export const applyingDefinedOperations = topic(
           answer: x,
           wrong: distinct(Q.of(x), [Q.of(value - rest), Q.of(value, slope), Q.of(value + rest, slope), Q.of(op.f(value, b))]),
           solution: t(
-            `By the rule, $x \\diamond ${b} = ${slope === 1 ? "x" : `${slope}x`} ${rest < 0 ? "-" : "+"} ${Math.abs(rest)}$. So $${slope === 1 ? "x" : `${slope}x`} ${rest < 0 ? "-" : "+"} ${Math.abs(rest)} = ${value}$, which gives $x = \\frac{${value - rest}}{${slope}} = ${x}$.`,
-            `按规则，$x \\diamond ${b} = ${slope === 1 ? "x" : `${slope}x`} ${rest < 0 ? "-" : "+"} ${Math.abs(rest)}$。所以 $${slope === 1 ? "x" : `${slope}x`} ${rest < 0 ? "-" : "+"} ${Math.abs(rest)} = ${value}$，得 $x = \\frac{${value - rest}}{${slope}} = ${x}$。`,
+            `By the rule, $x \\diamond ${b} = ${slope === 1 ? "x" : `${slope}x`} ${tail}$. So $${slope === 1 ? "x" : `${slope}x`} ${tail} = ${value}$, which gives $x = \\frac{${value - rest}}{${slope}} = ${x}$.`,
+            `按规则，$x \\diamond ${b} = ${slope === 1 ? "x" : `${slope}x`} ${tail}$。所以 $${slope === 1 ? "x" : `${slope}x`} ${tail} = ${value}$，得 $x = \\frac{${value - rest}}{${slope}} = ${x}$。`,
           ),
         });
       },
@@ -843,7 +844,7 @@ export const jointVariation = topic(
         ]);
         const factor = () => rng.pick([2, 3, 4, 5]);
         const fx = factor();
-        const fy = factor();
+        const fy = rng.pick([2, 3, 4, 5].filter((v) => v !== fx));
         const fw = factor();
         const answer = form.f(Q.of(fx), Q.of(fy), Q.of(fw));
         const words = (f: number, en: boolean) =>
@@ -1434,7 +1435,7 @@ function vertexForm(a: number, h: number, v: number): string {
 }
 
 /** lineAt writes m · x + b with the number x substituted, for checking a point on y = mx + b. */
-const lineAt = (m: number, b: number, x: number) => `${m} \\cdot ${paren(x)} ${b < 0 ? "-" : "+"} ${Math.abs(b)}`;
+const lineAt = (m: number, b: number, x: number) => `${m} \\cdot ${paren(x)}${b === 0 ? "" : ` ${b < 0 ? "-" : "+"} ${Math.abs(b)}`}`;
 
 /** plain writes a LaTeX expression for alt text: superscript squares, true minus signs and no braces. */
 const plain = (latex: string) =>
@@ -1584,8 +1585,8 @@ const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
           pt(x0, y0),
           [pt(x3, onParabola(x3)), pt(x4, onLine(x4)), ...swapped],
           t(
-            `Substitute $(${x0}, ${y0})$: $${paren(x0)}^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${y0}$ and $${lineAt(m, b, x0)} = ${y0}$, so it lies on both graphs. The point $(${x3}, ${onParabola(x3)})$ lies on the parabola, but the line gives $${onLine(x3)}$ at $x = ${x3}$; the point $(${x4}, ${onLine(x4)})$ lies on the line, but the parabola gives $${onParabola(x4)}$ at $x = ${x4}$.`,
-            `代入 $(${x0}, ${y0})$：$${paren(x0)}^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${y0}$，且 $${lineAt(m, b, x0)} = ${y0}$，所以它在两个图象上。点 $(${x3}, ${onParabola(x3)})$ 在抛物线上，但直线在 $x = ${x3}$ 处给出 $${onLine(x3)}$；点 $(${x4}, ${onLine(x4)})$ 在直线上，但抛物线在 $x = ${x4}$ 处给出 $${onParabola(x4)}$。`,
+            `Substitute $(${x0}, ${y0})$: $${paren(x0)}^{2}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${y0}$ and $${lineAt(m, b, x0)} = ${y0}$, so it lies on both graphs. The point $(${x3}, ${onParabola(x3)})$ lies on the parabola, but the line gives $${onLine(x3)}$ at $x = ${x3}$; the point $(${x4}, ${onLine(x4)})$ lies on the line, but the parabola gives $${onParabola(x4)}$ at $x = ${x4}$.`,
+            `代入 $(${x0}, ${y0})$：$${paren(x0)}^{2}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${y0}$，且 $${lineAt(m, b, x0)} = ${y0}$，所以它在两个图象上。点 $(${x3}, ${onParabola(x3)})$ 在抛物线上，但直线在 $x = ${x3}$ 处给出 $${onLine(x3)}$；点 $(${x4}, ${onLine(x4)})$ 在直线上，但抛物线在 $x = ${x4}$ 处给出 $${onParabola(x4)}$。`,
           ),
         );
       },

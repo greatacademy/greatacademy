@@ -432,14 +432,18 @@ export const satExamData2: ExamSpec[] = [
           [a * 100, a * 10, a * 10000],
           t(`$${a}(1{,}000) = ${a * 1000}$.`, `$${a}(1{,}000) = ${a * 1000}$。`),
         );
+      const size = [100, 125, 200, 250, 500][n % 5]!;
       return spr(
         t(
-          `A pitcher holds $${a}$ liters of juice. How many servings of $${n * 50}$ milliliters is that? Give an exact value, which may be a fraction. ($1$ liter $= 1{,}000$ milliliters)`,
-          `一壶装有 $${a}$ 升果汁。这相当于多少份 $${n * 50}$ 毫升？（给出确切值，可以是分数。$1$ 升 $= 1{,}000$ 毫升）`,
+          `A dispenser holds $${a}$ liters of juice. How many servings of $${size}$ milliliters does it fill? ($1$ liter $= 1{,}000$ milliliters)`,
+          `一个饮料桶装有 $${a}$ 升果汁。它能装满多少份 $${size}$ 毫升？（$1$ 升 $= 1{,}000$ 毫升）`,
         ),
-        Q.of(a * 1000, n * 50),
-        [Q.of(a * 100, n * 50), a * 1000, Q.of(a, n * 50)],
-        t(`$\\frac{${a * 1000}}{${n * 50}}$ servings.`, `$\\frac{${a * 1000}}{${n * 50}}$ 份。`),
+        (a * 1000) / size,
+        [Q.of(a * 100, size), a * 1000, Q.of(a, size)],
+        t(
+          `$${a}$ liters is $${a * 1000}$ milliliters, and $\\frac{${a * 1000}}{${size}} = ${(a * 1000) / size}$ servings.`,
+          `$${a}$ 升是 $${a * 1000}$ 毫升，$\\frac{${a * 1000}}{${size}} = ${(a * 1000) / size}$ 份。`,
+        ),
       );
     },
   ),
@@ -475,8 +479,8 @@ export const satExamData2: ExamSpec[] = [
       );
     return spr(
       t(
-        `A movie runs for $${a}$ hours $${c}$ minutes. What is its length in minutes?`,
-        `一部电影时长 $${a}$ 小时 $${c}$ 分钟。它是多少分钟？`,
+        `A road trip lasts $${a}$ hours $${c}$ minutes. What is its length in minutes?`,
+        `一次公路旅行历时 $${a}$ 小时 $${c}$ 分钟。它是多少分钟？`,
       ),
       60 * a + c,
       [100 * a + c, a + c, 60 * (a + c)],
@@ -575,16 +579,18 @@ export const satExamData2: ExamSpec[] = [
         [a * k * 5, b * k, k * 5],
         t(`Each centimeter represents $${k * 5}$ kilometers.`, `每厘米代表 $${k * 5}$ 千米。`),
       );
+    const m = rng.int(2, 3);
+    const [bm, top] = [b * m, a === b ? a + 1 : a];
     return spr(
       t(
-        `The ratio of $a$ to $b$ is $${a}:${b}$, and the ratio of $b$ to $c$ is $${b * k}:${c}$. If $c = ${c}$, what is the value of $a$?`,
-        `$a$ 与 $b$ 的比是 $${a}:${b}$，$b$ 与 $c$ 的比是 $${b * k}:${c}$。若 $c = ${c}$，$a$ 的值是多少？`,
+        `The ratio of $a$ to $b$ is $${top}:${b}$, and the ratio of $b$ to $c$ is $${bm}:${c}$. If $c = ${c * k}$, what is the value of $a$?`,
+        `$a$ 与 $b$ 的比是 $${top}:${b}$，$b$ 与 $c$ 的比是 $${bm}:${c}$。若 $c = ${c * k}$，$a$ 的值是多少？`,
       ),
-      a * k,
-      [b * k, a * c, a + k],
+      top * m * k,
+      [bm * k, top * k, top * c * k],
       t(
-        `From the second ratio, $b = ${b * k}$. Then $a = \\frac{${a}}{${b}}(${b * k}) = ${a * k}$.`,
-        `由第二个比得 $b = ${b * k}$。于是 $a = \\frac{${a}}{${b}}(${b * k}) = ${a * k}$。`,
+        `Since $c = ${c * k}$ is $${k}$ times $${c}$, $b = ${k}(${bm}) = ${bm * k}$. Then $a = \\frac{${top}}{${b}}(${bm * k}) = ${top * m * k}$.`,
+        `因为 $c = ${c * k}$ 是 $${c}$ 的 $${k}$ 倍，所以 $b = ${k}(${bm}) = ${bm * k}$。于是 $a = \\frac{${top}}{${b}}(${bm * k}) = ${top * m * k}$。`,
       ),
     );
   }),

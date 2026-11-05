@@ -659,7 +659,7 @@ export const findingAFunctionInputForAGivenOutput = topic(
         "求 $f(4)$ 是把 $4$ 代入 $x$。反过来问“$x$ 取何值时 $f(x) = 17$”，就是令函数式等于 $17$ 并求解。对于 $f(x) = 3x - 4$，方程 $3x - 4 = 17$ 给出 $x = 7$，所以 $f(7) = 17$。",
       ),
       (rng) => {
-        const a = rng.nonZero(-8, 9);
+        const a = rng.pick([-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
         const b = rng.int(-15, 15);
         const x = rng.int(-9, 12);
         const c = a * x + b;
@@ -774,9 +774,9 @@ export const linearFunctionsContainingUnknownParameters = topic(
         "求出参数后，先写出完整的函数，再回答题目真正的问题。若 $f(x) = ax - 4$ 且 $f(2) = 6$，则 $2a - 4 = 6$，$a = 5$，所以 $f(x) = 5x - 4$，$f(-3) = -19$。很多错误答案来自求出参数后就停下了。",
       ),
       (rng) => {
-        const a = rng.nonZero(-7, 8);
+        const a = rng.pick([-7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
         const b = rng.nonZero(-12, 12);
-        const p = rng.nonZero(-5, 6);
+        const p = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5, 6]);
         let r = rng.int(-6, 8);
         if (r === p) r = p + 1;
         const fp = a * p + b;
@@ -789,8 +789,8 @@ export const linearFunctionsContainingUnknownParameters = topic(
           answer: fr,
           wrong: distinct(Q.of(fr), [Q.of(a), Q.of(a * r), Q.of(fp * r + b), Q.of(fp + r)]),
           solution: t(
-            `First find $a$: $${p}a ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fp}$, so $a = ${a}$ and $f(x) = ${linear(a, b)}$. Then $f(${r}) = ${num(a)} \\cdot ${num(r)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fr}$.`,
-            `先求 $a$：$${p}a ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fp}$，所以 $a = ${a}$，$f(x) = ${linear(a, b)}$。于是 $f(${r}) = ${num(a)} \\cdot ${num(r)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fr}$。`,
+            `First find $a$: $${p}a ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fp}$, so $a = ${a}$ and $f(x) = ${linear(a, b)}$. Then $f(${r}) = ${a}(${r}) ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fr}$.`,
+            `先求 $a$：$${p}a ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fp}$，所以 $a = ${a}$，$f(x) = ${linear(a, b)}$。于是 $f(${r}) = ${a}(${r}) ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${fr}$。`,
           ),
         });
       },

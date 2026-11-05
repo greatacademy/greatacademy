@@ -206,7 +206,7 @@ export const satExamGeometry2: ExamSpec[] = [
     },
   ),
   solidTips("Volumes of Spheres", "球的体积", ["volumes-of-spheres"], (rng, hard) => {
-    const r = rng.int(1, 30) * 3;
+    const r = rng.int(2, 30);
     const v = Q.of(4 * r ** 3, 3).toLatex();
     if (!hard)
       return mc(
@@ -774,7 +774,9 @@ export const satExamGeometry2: ExamSpec[] = [
     "余函数关系和恒等式",
     ["trigonometric-functions-of-complementary-angles"],
     (rng, hard) => {
-      const a = rng.int(10, 80);
+      const a0 = rng.int(10, 80);
+      // At 45 degrees the sine and cosine coincide, so two options would be correct.
+      const a = a0 === 45 ? 40 : a0;
       const x = rng.int(3, 29);
       if (!hard)
         return mc(

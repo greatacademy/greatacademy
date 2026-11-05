@@ -36,8 +36,8 @@ export const deeperExamThirdPoints: Readonly<Record<string, readonly KnowledgePo
           k * c + add,
           [k * (a + b) + add, k * c, c + add],
           [
-            `$${a * a} + ${b * b} = ${c * c}$, whose root is ${c}, and $${k} \\times ${c} + ${add} = ${k * c + add}$.`,
-            `$${a * a} + ${b * b} = ${c * c}$，开方得 ${c}，$${k} \\times ${c} + ${add} = ${k * c + add}$。`,
+            `$${a * a} + ${b * b} = ${c * c}$, whose root is $${c}$, and $${k} \\times ${c} + ${add} = ${k * c + add}$.`,
+            `$${a * a} + ${b * b} = ${c * c}$，开方得 $${c}$，$${k} \\times ${c} + ${add} = ${k * c + add}$。`,
           ],
         );
       },

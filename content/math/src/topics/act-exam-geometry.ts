@@ -1,7 +1,7 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { ask, mod, sg, sketchFigure, words } from "../exam.ts";
+import { ask, askExact, mod, sg, sketchFigure, words } from "../exam.ts";
 import {
   diameterFigure,
   diameterTriangleFigure,
@@ -337,12 +337,12 @@ export const actExamGeometry: ExamSpec[] = [
   triangleTips("Applying the Triangle Inequality", "运用三角形不等式", ["the-triangle-inequality"], (rng, hard) => {
     const [a, b] = [rng.int(3, 12), rng.int(13, 25)];
     if (!hard)
-      return ask(
+      return askExact(
         rng,
         `Two sides of a triangle have lengths $${a}$ and $${b}$. Which could be the length of the third side?`,
         `三角形两边长为 $${a}$ 和 $${b}$。第三边的长可能是多少？`,
         b,
-        [b - a, a + b, a + b + 1, b - a - 1 === 0 ? a + b + 2 : b - a - 1],
+        rng.bool() || b - a < 2 ? [b - a, a + b, a + b + 1] : [b - a - 1, b - a, a + b],
         `The third side must lie strictly between $${b - a}$ and $${a + b}$.`,
         `第三边必须严格介于 $${b - a}$ 和 $${a + b}$ 之间。`,
         polyFigure(
@@ -476,7 +476,9 @@ export const actExamGeometry: ExamSpec[] = [
     );
   }),
   polygonTips("Finding Angles in Parallelograms", "求平行四边形的角", ["properties-of-parallelograms"], (rng, hard) => {
-    const [a, x, k] = [rng.int(35, 145), rng.int(10, 20), rng.int(2, 5)];
+    const [a0, x, k] = [rng.int(35, 145), rng.int(10, 20), rng.int(2, 5)];
+    // A right angle would make the parallelogram a rectangle and every angle equal.
+    const a = a0 === 90 ? 100 : a0;
     const c = rng.int(1, 15);
     if (!hard)
       return ask(
@@ -708,8 +710,8 @@ export const actExamGeometry: ExamSpec[] = [
       if (!hard)
         return ask(
           rng,
-          `A ladder $${c * k}$ feet long leans against a vertical wall with its foot $${p * k}$ feet from the wall. How high up the wall does it reach, in feet?`,
-          `$${c * k}$ 英尺长的梯子靠在竖直墙上，梯脚离墙 $${p * k}$ 英尺。梯子顶到墙上多高（英尺）？`,
+          `A straight cable $${c * k}$ feet long runs from a point on a vertical tower to a stake on level ground $${p * k}$ feet from the tower's base. How high up the tower is the cable attached, in feet?`,
+          `一根 $${c * k}$ 英尺长的直缆绳从竖直塔架上的一点连到水平地面上的木桩，木桩离塔底 $${p * k}$ 英尺。缆绳固定在塔上多高处（英尺）？`,
           q * k,
           [(c - p) * k, (c + p) * k, c * k, q * k + 1],
           `$\\sqrt{${c * k}^2 - ${p * k}^2}$.`,
@@ -1214,12 +1216,12 @@ export const actExamGeometry: ExamSpec[] = [
         );
       return ask(
         rng,
-        `A square is inscribed in a circle, so that its diagonal is a diameter. If the circle's radius is $${p * k}$ and the square's diagonal is $d$, what is $d$ divided by $${k}$?`,
-        `正方形内接于圆，其对角线是直径。若圆的半径是 $${p * k}$，正方形对角线为 $d$，$d$ 除以 $${k}$ 是多少？`,
-        2 * p,
-        [p, 4 * p, p * k, 2 * p * k],
-        `$d = 2(${p * k}) = ${2 * p * k}$.`,
-        `$d = 2(${p * k}) = ${2 * p * k}$。`,
+        `A square is inscribed in a circle of radius $${p * k}$. What is the area of the square?`,
+        `正方形内接于半径为 $${p * k}$ 的圆。正方形的面积是多少？`,
+        2 * (p * k) ** 2,
+        [(p * k) ** 2, 4 * (p * k) ** 2, 2 * p * k, 8 * p * k],
+        `The diagonal is a diameter, $${2 * p * k}$. A square's diagonal is $\\sqrt{2}$ times its side, so the side squared is $\\frac{${2 * p * k}^2}{2} = ${2 * (p * k) ** 2}$, and that is the area.`,
+        `对角线是直径，长 $${2 * p * k}$。正方形的对角线是边长的 $\\sqrt{2}$ 倍，所以边长的平方是 $\\frac{${2 * p * k}^2}{2} = ${2 * (p * k) ** 2}$，这就是面积。`,
         squareInCircleFigure(`${p * k}`),
       );
     },

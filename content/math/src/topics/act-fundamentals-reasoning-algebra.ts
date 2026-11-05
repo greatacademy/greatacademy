@@ -241,7 +241,7 @@ export const formingRelatedConditionalStatements = topic(
           ),
           k.correct,
           k.wrong,
-          t(`Because ${k.why.en}: ${k.correct.en}`, `因为${k.why["zh-CN"]}：${k.correct["zh-CN"]}`),
+          t(`${k.why.en[0]?.toUpperCase()}${k.why.en.slice(1)}: ${k.correct.en}`, `${k.why["zh-CN"]}：${k.correct["zh-CN"]}`),
         );
       },
     ),
@@ -946,8 +946,8 @@ export const reasoningWithTrigonometricIdentities = topic(
           answer,
           wrong: [answer.neg(), Q.of(a, b), Q.of(b, a), Q.of(c, size), Q.of(-b, a)],
           solution: t(
-            `By the identity the other ratio has size $\\frac{${size}}{${c}}$, because ${c}^2 - ${givenSin ? a : b}^2 = ${size}^2. The quadrant fixes the sign.${steps(want === "tan" ? `${other}, \\quad \\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = ${answer.toLatex()}` : `\\${want}\\theta = ${answer.toLatex()}`)}`,
-            `由恒等式，另一个比值的大小是 $\\frac{${size}}{${c}}$，因为 ${c}^2 - ${givenSin ? a : b}^2 = ${size}^2。符号由象限决定。${steps(want === "tan" ? `${other}, \\quad \\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = ${answer.toLatex()}` : `\\${want}\\theta = ${answer.toLatex()}`)}`,
+            `By the identity the other ratio has size $\\frac{${size}}{${c}}$, because $${c}^2 - ${givenSin ? a : b}^2 = ${size}^2$. The quadrant fixes the sign.${steps(want === "tan" ? `${other}, \\quad \\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = ${answer.toLatex()}` : `\\${want}\\theta = ${answer.toLatex()}`)}`,
+            `由恒等式，另一个比值的大小是 $\\frac{${size}}{${c}}$，因为 $${c}^2 - ${givenSin ? a : b}^2 = ${size}^2$。符号由象限决定。${steps(want === "tan" ? `${other}, \\quad \\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = ${answer.toLatex()}` : `\\${want}\\theta = ${answer.toLatex()}`)}`,
           ),
         });
       },
@@ -1142,8 +1142,8 @@ export const solvingForAnUnknownInALogarithmStatement = topic(
           solveFor: "x",
           wrong: [b * k - c, k ** b - c, b ** k + c, b ** k === answer ? b ** k + 1 : b ** k],
           solution: t(
-            `A logarithm is an exponent, so the statement says that $${b}$ to the power $${k}$ equals the argument.${steps(`${c === 0 ? "x" : poly([1, "x"], [c, ""])} = ${b}^{${k}} = ${b ** k}`, `x = ${answer}`)}`,
-            `对数就是指数，所以这个式子说明 $${b}$ 的 $${k}$ 次幂等于真数。${steps(`${c === 0 ? "x" : poly([1, "x"], [c, ""])} = ${b}^{${k}} = ${b ** k}`, `x = ${answer}`)}`,
+            `A logarithm is an exponent, so the statement says that $${b}$ to the power $${k}$ equals the argument.${steps(`${c === 0 ? "x" : poly([1, "x"], [c, ""])} = ${b}^{${k}} = ${b ** k}`, ...(c === 0 ? [] : [`x = ${answer}`]))}`,
+            `对数就是指数，所以这个式子说明 $${b}$ 的 $${k}$ 次幂等于真数。${steps(`${c === 0 ? "x" : poly([1, "x"], [c, ""])} = ${b}^{${k}} = ${b ** k}`, ...(c === 0 ? [] : [`x = ${answer}`]))}`,
           ),
         });
       },

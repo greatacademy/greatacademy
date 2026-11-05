@@ -2,7 +2,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mod, sg, spr, tx, words } from "../exam.ts";
+import { cx, mc, mcExact, mod, sg, spr, tx, words } from "../exam.ts";
 
 // SAT Math Prep, Advanced Math: polynomial, rational and exponential expressions, and quadratic equations.
 
@@ -476,15 +476,18 @@ export const satExamAdvanced1: ExamSpec[] = [
     const n = rng.pick([2, 3, 4, 5]);
     const m = rng.int(1, n - 1 || 1);
     const k = rng.int(2, 5);
+    const root = `${n === 2 ? "\\sqrt" : `\\sqrt[${n}]`}{${m === 1 ? "x" : `x^{${m}}`}}`;
     return mc(
       rng,
       t(
-        `For $x > 0$, which expression is equivalent to $\\sqrt[${n}]{x^{${m}}} \\cdot x^{${k}}$?`,
-        `当 $x > 0$ 时，哪个式子与 $\\sqrt[${n}]{x^{${m}}} \\cdot x^{${k}}$ 等价？`,
+        `For $x > 0$, which expression is equivalent to $${root} \\cdot x^{${k}}$?`,
+        `当 $x > 0$ 时，哪个式子与 $${root} \\cdot x^{${k}}$ 等价？`,
       ),
       `x^{${Q.of(m + n * k, n).toLatex()}}`,
       [
-        `x^{${Q.of(m * k, n).toLatex()}}`,
+        `x^{${Q.of(m * k, n)
+          .add(Q.of(m * k === n ? 2 : 0))
+          .toLatex()}}`,
         `x^{${Q.of(n + m * k, m + n).toLatex()}}`,
         `x^{${Q.of(n + m, n)
           .add(Q.of(k + 1))
@@ -527,8 +530,8 @@ export const satExamAdvanced1: ExamSpec[] = [
         n ** p + 1,
         [n ** p, n ** p + 2, 2 * n ** p + 1],
         t(
-          `Factor out $${n}^{${a}}$: $${n}^{${a}}(${n}^{${p}} + 1) = ${n ** p + 1} \\cdot ${n}^{${a}}$.`,
-          `提出 $${n}^{${a}}$：$${n}^{${a}}(${n}^{${p}} + 1) = ${n ** p + 1} \\cdot ${n}^{${a}}$。`,
+          `Factor out $${n}^{${a}}$: $${n}^{${a}}(${p === 1 ? n : `${n}^{${p}}`} + 1) = ${n ** p + 1} \\cdot ${n}^{${a}}$.`,
+          `提出 $${n}^{${a}}$：$${n}^{${a}}(${p === 1 ? n : `${n}^{${p}}`} + 1) = ${n ** p + 1} \\cdot ${n}^{${a}}$。`,
         ),
       );
     },
@@ -557,9 +560,10 @@ export const satExamAdvanced1: ExamSpec[] = [
     );
   }),
   quadTips("Solving Quadratic Equations Using the Zero-Product Rule", "用零积法解二次方程", ["zero-product-rule"], (rng, hard) => {
-    const [a, b, d] = [rng.int(2, 6), rng.int(1, 9), rng.int(1, 9)];
+    const [a, b, d0] = [rng.int(2, 6), rng.int(1, 9), rng.int(1, 9)];
+    const d = d0 === b ? d0 + 1 : d0;
     if (!hard)
-      return mc(
+      return mcExact(
         rng,
         t(`Which value is a solution of $(x - ${b})(x + ${d}) = 0$?`, `哪个值是 $(x - ${b})(x + ${d}) = 0$ 的解？`),
         b,
@@ -618,14 +622,14 @@ export const satExamAdvanced1: ExamSpec[] = [
       const r = rng.int(1, 7);
       const s = rng.pick([1, 2, 3, 4].filter((v) => v % a !== 0));
       if (!hard)
-        return mc(
+        return mcExact(
           rng,
           t(
             `Which value is a solution of $${a}x^2 ${tx(s - a * r)} - ${r * s} = 0$?`,
             `哪个值是 $${a}x^2 ${tx(s - a * r)} - ${r * s} = 0$ 的解？`,
           ),
           r,
-          [-r, s, a * r],
+          [-r, s === r ? r + a : s, a * r],
           t(
             `Factor: $(${a}x + ${s})(x - ${r}) = 0$. So $x = ${r}$ or $x = ${Q.of(-s, a).toLatex()}$.`,
             `分解：$(${a}x + ${s})(x - ${r}) = 0$。所以 $x = ${r}$ 或 $x = ${Q.of(-s, a).toLatex()}$。`,
@@ -718,8 +722,21 @@ export const satExamAdvanced1: ExamSpec[] = [
       const lim = a * k * k;
       const eq = `${a === 1 ? "" : a}x^2 + ${2 * a * k}x + c = 0`;
       const D = `${(2 * a * k) ** 2} - ${4 * a}c`;
+      if (!hard && rng.bool()) {
+        const down = `${a === 1 ? "-" : -a}x^2 + ${2 * a * k}x + c = 0`;
+        return mcExact(
+          rng,
+          t(`For which value of $c$ does $${down}$ have two distinct real solutions?`, `$c$ 取何值时，$${down}$ 有两个不同的实数解？`),
+          -lim + rng.int(1, 5),
+          [-lim, -lim - 1, -lim - 3],
+          t(
+            `The discriminant $${(2 * a * k) ** 2} + ${4 * a}c$ must be positive, so $c > ${-lim}$. Only one option is above $${-lim}$.`,
+            `判别式 $${(2 * a * k) ** 2} + ${4 * a}c$ 必须为正，所以 $c > ${-lim}$。只有一个选项大于 $${-lim}$。`,
+          ),
+        );
+      }
       if (!hard)
-        return mc(
+        return mcExact(
           rng,
           t(`For which value of $c$ does $${eq}$ have two distinct real solutions?`, `$c$ 取何值时，$${eq}$ 有两个不同的实数解？`),
           lim - rng.int(1, 5),
@@ -753,8 +770,21 @@ export const satExamAdvanced1: ExamSpec[] = [
       const lim = a * k * k;
       const eq = `${a === 1 ? "" : a}x^2 + ${2 * a * k}x + c = 0`;
       const D = `${(2 * a * k) ** 2} - ${4 * a}c`;
+      if (!hard && rng.bool()) {
+        const down = `${a === 1 ? "-" : -a}x^2 + ${2 * a * k}x + c = 0`;
+        return mcExact(
+          rng,
+          t(`For which value of $c$ does $${down}$ have no real solutions?`, `$c$ 取何值时，$${down}$ 没有实数解？`),
+          -lim - rng.int(1, 5),
+          [-lim, -lim + 1, -lim + 3],
+          t(
+            `No real solutions require a negative discriminant: $${(2 * a * k) ** 2} + ${4 * a}c < 0$, so $c < ${-lim}$.`,
+            `没有实数解要求判别式为负：$${(2 * a * k) ** 2} + ${4 * a}c < 0$，所以 $c < ${-lim}$。`,
+          ),
+        );
+      }
       if (!hard)
-        return mc(
+        return mcExact(
           rng,
           t(`For which value of $c$ does $${eq}$ have no real solutions?`, `$c$ 取何值时，$${eq}$ 没有实数解？`),
           lim + rng.int(1, 5),
@@ -809,7 +839,9 @@ export const satExamAdvanced1: ExamSpec[] = [
   quadTips("Applying Vieta's Formulas", "应用韦达定理", ["vietas-formulas"], (rng, hard) => {
     const a = rng.int(2, 6);
     const b = rng.nonZero(-9, 9);
-    const c = rng.nonZero(-9, 9);
+    const c0 = rng.nonZero(-9, 9);
+    // The equation must have real solutions, so a positive constant too large for the discriminant changes sign.
+    const c = b * b - 4 * a * c0 > 0 ? c0 : -Math.abs(c0);
     const eq = `${a}x^2 ${tx(b)} ${sg(c)} = 0`;
     const sum = Q.of(-b, a);
     if (!hard)

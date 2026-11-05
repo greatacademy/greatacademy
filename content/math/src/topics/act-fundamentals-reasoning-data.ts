@@ -230,8 +230,9 @@ export const trackingADataChange = topic(
       ),
       (rng) => {
         const n = rng.int(4, 12);
-        const mean = rng.int(50, 90);
-        const d = rng.pick([1, 2, 3, 4]);
+        const mean = rng.int(50, 80);
+        // The score behind the new mean stays at or below 100.
+        const d = rng.int(1, Math.min(4, Math.floor((100 - mean) / (n + 1))));
         const sum = n * mean;
         if (rng.bool()) {
           const newMean = mean + d;
@@ -630,8 +631,8 @@ export const partitioningTotalsUsingRatios = topic(
         const [ctx, unit] = rng.pick(shareContexts) as readonly [Text, Text];
         const three = rng.bool();
         const a = rng.int(1, 5);
-        const b = rng.int(2, 7);
-        const c = three ? rng.int(1, 6) : 0;
+        const b = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => v !== a));
+        const c = three ? rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== a && v !== b)) : 0;
         const parts = a + b + c;
         const size = rng.int(3, 40);
         const total = parts * size;

@@ -3,7 +3,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { ask, mod, sg, words } from "../exam.ts";
+import { ask, askExact, mod, ordinal, sg, words } from "../exam.ts";
 
 // ACT Math Prep, Number and Quantity: exponents and radicals, number theory, complex numbers, matrices and vectors.
 
@@ -72,7 +72,6 @@ const mat = (a: number, b: number, c: number, d: number) => `\\begin{bmatrix} ${
 const four = (rng: Rng, lo: number, hi: number) => [rng.int(lo, hi), rng.int(lo, hi), rng.int(lo, hi), rng.int(lo, hi)] as const;
 const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 const cplx = (a: number, b: number) => (b === 0 ? `${a}` : `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}i`);
-const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
 const composites = [21, 27, 33, 39, 49, 51, 57, 63, 69, 77, 81, 87, 91, 93, 99];
 
 /** actExamNumbers are the exam-style questions of the ACT Number and Quantity unit. */
@@ -151,8 +150,8 @@ export const actExamNumbers: ExamSpec[] = [
     const d = rng.int(2, 4);
     return ask(
       rng,
-      `Light travels about $${3 * d} \\times 10^{${m + 1}}$ meters in the time a signal covers $${d} \\times 10^{${n}}$ meters. The first distance is how many times the second?`,
-      `光传播约 $${3 * d} \\times 10^{${m + 1}}$ 米的时间内，信号传播 $${d} \\times 10^{${n}}$ 米。前一距离是后一距离的多少倍？`,
+      `A space probe is about $${3 * d} \\times 10^{${m + 1}}$ meters from a planet and $${d} \\times 10^{${n}}$ meters from a moon. The first distance is how many times the second?`,
+      `一个空间探测器距离一颗行星约 $${3 * d} \\times 10^{${m + 1}}$ 米，距离一颗卫星 $${d} \\times 10^{${n}}$ 米。前一距离是后一距离的多少倍？`,
       `3 \\times 10^{${m + 1 - n}}`,
       [`${2 * d} \\times 10^{${m + 1 - n}}`, `3 \\times 10^{${m + 1 + n}}`, `${4 * d * d} \\times 10^{${m + 1 + n}}`],
       `Divide the leading numbers and subtract the exponents.`,
@@ -174,14 +173,16 @@ export const actExamNumbers: ExamSpec[] = [
         `指数的分母是根指数。`,
       );
     const e = rng.pick([2, 3]);
+    // The exponent stays a true fraction, and the power stays small enough to work by hand.
+    const top = e === 2 ? rng.pick([3, 5]) : rng.pick([2, 4]);
     return ask(
       rng,
-      `What is the value of $${b ** e}^{\\frac{${p}}{${e}}}$?`,
-      `$${b ** e}^{\\frac{${p}}{${e}}}$ 的值是多少？`,
-      b ** p,
-      [b ** e * p, (b ** e) ** 2, Q.of(b ** e * p, e), b * p],
-      `Since $${b ** e} = ${b}^{${e}}$, the value is $${b}^{${p}}$.`,
-      `因为 $${b ** e} = ${b}^{${e}}$，所以值为 $${b}^{${p}}$。`,
+      `What is the value of $${b ** e}^{\\frac{${top}}{${e}}}$?`,
+      `$${b ** e}^{\\frac{${top}}{${e}}}$ 的值是多少？`,
+      b ** top,
+      [b ** e * top, (b ** e) ** 2, Q.of(b ** e * top, e), b * top],
+      `Since $${b ** e} = ${b}^{${e}}$, the value is $${b}^{${top}}$.`,
+      `因为 $${b ** e} = ${b}^{${e}}$，所以值为 $${b}^{${top}}$。`,
     );
   }),
   powTips("Evaluating Powers", "幂的求值", ["powers-of-integers", "exponents-with-rational-bases"], (rng, hard) => {
@@ -353,26 +354,29 @@ export const actExamNumbers: ExamSpec[] = [
   numTips("Applying Divisibility Conditions", "应用整除条件", ["divisibility-rules"], (rng, hard) => {
     const [k, m] = [rng.int(5, 90), rng.pick([3, 4, 6, 9])];
     const n = m * k;
-    const shown = rng.shuffle([n, n + 1, n + 2, n - 1]).join(", ");
+    // Four consecutive numbers around n, and for 3 never both n and a neighbor three away.
+    const start = n - (m === 3 ? rng.int(1, 2) : rng.int(0, 3));
+    const others = [start, start + 1, start + 2, start + 3].filter((v) => v !== n);
+    const shown = rng.shuffle([n, ...others]).join(", ");
     const [a, b] = [rng.int(1, 9), rng.int(0, 9)];
     const s = a + b;
     const d = (3 - (s % 3)) % 3;
     if (!hard)
-      return ask(
+      return askExact(
         rng,
         `Which of the numbers $${shown}$ is divisible by $${m}$?`,
         `$${shown}$ 中哪个数能被 $${m}$ 整除？`,
         n,
-        [n + 1, n + 2, n - 1],
+        others,
         `$${n} = ${m}(${k})$.`,
         `$${n} = ${m}(${k})$。`,
       );
-    return ask(
+    return askExact(
       rng,
       `The three-digit number $${a}${b}d$ is divisible by $3$, where $d$ is its last digit. What is the smallest possible value of $d$?`,
       `三位数 $${a}${b}d$ 能被 $3$ 整除，$d$ 是末位数字。$d$ 的最小可能值是多少？`,
       d,
-      [d + 1, d + 2, 9 - d === d ? 8 : 9 - d, d + 4],
+      [0, 1, 2, 3].filter((v) => v !== d),
       `A number is divisible by $3$ when its digit sum is, and $${s} + ${d}$ is the first such sum.`,
       `各位数字之和能被 $3$ 整除时该数能被 $3$ 整除，$${s} + ${d}$ 是第一个这样的和。`,
     );
@@ -437,24 +441,24 @@ export const actExamNumbers: ExamSpec[] = [
       const near = dig.filter((d) => d !== at);
       const period4 = [rng.int(1, 3), rng.int(4, 5), rng.int(6, 7), rng.int(8, 9)] as const;
       if (!hard)
-        return ask(
+        return askExact(
           rng,
-          `In the repeating decimal $0.\\overline{${dig.join("")}}$, what digit is in the $${pos}$th place after the decimal point?`,
+          `In the repeating decimal $0.\\overline{${dig.join("")}}$, what digit is in the ${ordinal(pos)} place after the decimal point?`,
           `循环小数 $0.\\overline{${dig.join("")}}$ 小数点后第 $${pos}$ 位是什么数字？`,
           at,
           [...near, at + 1 > 9 ? 0 : at + 1, at === 1 ? 2 : at - 1],
-          `The cycle has length $3$, so use the remainder of $${pos}$ divided by $3$.`,
-          `周期长为 $3$，所以看 $${pos}$ 除以 $3$ 的余数。`,
+          `The cycle has length $3$ and $${pos} = 3(${Math.floor((pos - 1) / 3)}) + ${((pos - 1) % 3) + 1}$, so this place is number $${((pos - 1) % 3) + 1}$ in the cycle: $${at}$.`,
+          `周期长为 $3$，且 $${pos} = 3(${Math.floor((pos - 1) / 3)}) + ${((pos - 1) % 3) + 1}$，所以这一位是循环节中的第 $${((pos - 1) % 3) + 1}$ 个数字：$${at}$。`,
         );
       const v = period4[(pos - 1) % 4]!;
-      return ask(
+      return askExact(
         rng,
-        `In the repeating decimal $0.\\overline{${period4.join("")}}$, what digit is in the $${pos}$th place after the decimal point?`,
+        `In the repeating decimal $0.\\overline{${period4.join("")}}$, what digit is in the ${ordinal(pos)} place after the decimal point?`,
         `循环小数 $0.\\overline{${period4.join("")}}$ 小数点后第 $${pos}$ 位是什么数字？`,
         v,
         period4.filter((d) => d !== v),
-        `The cycle has length $4$, so use the remainder of $${pos}$ divided by $4$.`,
-        `周期长为 $4$，所以看 $${pos}$ 除以 $4$ 的余数。`,
+        `The cycle has length $4$ and $${pos} = 4(${Math.floor((pos - 1) / 4)}) + ${((pos - 1) % 4) + 1}$, so this place is number $${((pos - 1) % 4) + 1}$ in the cycle: $${v}$.`,
+        `周期长为 $4$，且 $${pos} = 4(${Math.floor((pos - 1) / 4)}) + ${((pos - 1) % 4) + 1}$，所以这一位是循环节中的第 $${((pos - 1) % 4) + 1}$ 个数字：$${v}$。`,
       );
     },
   ),
@@ -509,7 +513,7 @@ export const actExamNumbers: ExamSpec[] = [
     );
   }),
   numTips("Identifying Prime Numbers", "识别质数", ["prime-and-composite-numbers"], (rng, hard) => {
-    const p = rng.pick(primes);
+    const p = rng.pick([23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
     const w = rng.shuffle(composites).slice(0, 3);
     const listed = rng.shuffle([p, ...w]).join(", ");
     const lo = rng.int(10, 80);
@@ -518,7 +522,7 @@ export const actExamNumbers: ExamSpec[] = [
       return true;
     }).length;
     if (!hard)
-      return ask(
+      return askExact(
         rng,
         `Which of the numbers $${listed}$ is prime?`,
         `$${listed}$ 中哪个数是质数？`,
@@ -610,7 +614,7 @@ export const actExamNumbers: ExamSpec[] = [
     );
   }),
   numTips("Identifying True Statements About Integers", "判断关于整数的命题", ["comparing-quantities-under-constraints"], (rng, hard) => {
-    const [a, b] = [rng.int(2, 9), rng.int(2, 9)];
+    const [_a, _b] = [rng.int(2, 9), rng.int(2, 9)];
     const c = rng.int(10, 40);
     if (!hard)
       return words(
@@ -623,19 +627,36 @@ export const actExamNumbers: ExamSpec[] = [
         [t(`$y$ is greater than $${c}$.`, `$y$ 大于 $${c}$。`), t(`$x$ is even.`, `$x$ 是偶数。`), t(`$y$ is odd.`, `$y$ 是奇数。`)],
         t(`If $x \\le ${c}$, the sum would be less than $${2 * c + 1}$.`, `若 $x \\le ${c}$，和会小于 $${2 * c + 1}$。`),
       );
+    // Each pair shares a factor, so the least common multiple is less than the product.
+    const [u0, v0, l0] = rng.pick([
+      [4, 6, 12],
+      [4, 10, 20],
+      [6, 8, 24],
+      [6, 9, 18],
+      [6, 10, 30],
+      [8, 12, 24],
+      [9, 12, 36],
+      [10, 15, 30],
+      [12, 18, 36],
+    ] as const);
+    const scale = rng.int(1, 4);
+    const [u, v, l] = [u0 * scale, v0 * scale, l0 * scale];
     return words(
       rng,
       t(
-        `If $n$ is a positive integer divisible by both $${a}$ and $${a * b}$, which statement must be true?`,
-        `若正整数 $n$ 同时能被 $${a}$ 和 $${a * b}$ 整除，哪个说法一定正确？`,
+        `If $n$ is a positive integer divisible by both $${u}$ and $${v}$, which statement must be true?`,
+        `若正整数 $n$ 同时能被 $${u}$ 和 $${v}$ 整除，哪个说法一定正确？`,
       ),
-      t(`$n$ is divisible by $${b}$.`, `$n$ 能被 $${b}$ 整除。`),
+      t(`$n$ is divisible by $${l}$.`, `$n$ 能被 $${l}$ 整除。`),
       [
-        t(`$n$ is divisible by $${a * b * b + 1}$.`, `$n$ 能被 $${a * b * b + 1}$ 整除。`),
-        t(`$n$ equals $${a * b}$.`, `$n$ 等于 $${a * b}$。`),
-        t(`$n$ is divisible by $${a * a * b * b}$.`, `$n$ 能被 $${a * a * b * b}$ 整除。`),
+        t(`$n$ is divisible by $${u * v}$.`, `$n$ 能被 $${u * v}$ 整除。`),
+        t(`$n$ equals $${l}$.`, `$n$ 等于 $${l}$。`),
+        t(`$n$ is divisible by $${u + v}$.`, `$n$ 能被 $${u + v}$ 整除。`),
       ],
-      t(`Any multiple of $${a * b}$ is also a multiple of $${b}$.`, `$${a * b}$ 的倍数也是 $${b}$ 的倍数。`),
+      t(
+        `$n$ is a common multiple of $${u}$ and $${v}$, and every common multiple is a multiple of the least one, $${l}$. It need not equal $${l}$, and $${u * v}$ is too large to be required.`,
+        `$n$ 是 $${u}$ 和 $${v}$ 的公倍数，而每个公倍数都是最小公倍数 $${l}$ 的倍数。它不一定等于 $${l}$，也不一定能被 $${u * v}$ 整除。`,
+      ),
     );
   }),
   complexTips(

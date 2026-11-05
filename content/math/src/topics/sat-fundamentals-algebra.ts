@@ -170,8 +170,8 @@ export const evaluatingNumericalExpressionsContainingRadicals = topic(
             p * a - q * b * b + inner * s[2],
           ],
           solution: t(
-            `Work out each root: $\\sqrt{${a * a}} = ${a}$, $\\sqrt[3]{${b ** 3}} = ${b}$ and $\\sqrt{${s[0]} + ${s[1]}} = \\sqrt{${s[0] + s[1]}} = ${s[2]}$. Then${steps(`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner} \\cdot ${s[2]} = ${value}`)}The root of a sum is not the sum of the roots.`,
-            `先求每个根式：$\\sqrt{${a * a}} = ${a}$，$\\sqrt[3]{${b ** 3}} = ${b}$，$\\sqrt{${s[0]} + ${s[1]}} = \\sqrt{${s[0] + s[1]}} = ${s[2]}$。于是${steps(`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner} \\cdot ${s[2]} = ${value}`)}和的平方根不等于平方根的和。`,
+            `Work out each root: $\\sqrt{${a * a}} = ${a}$, $\\sqrt[3]{${b ** 3}} = ${b}$ and $\\sqrt{${s[0]} + ${s[1]}} = \\sqrt{${s[0] + s[1]}} = ${s[2]}$. Then${steps(`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner === 1 ? s[2] : `${inner} \\cdot ${s[2]}`} = ${value}`)}The root of a sum is not the sum of the roots.`,
+            `先求每个根式：$\\sqrt{${a * a}} = ${a}$，$\\sqrt[3]{${b ** 3}} = ${b}$，$\\sqrt{${s[0]} + ${s[1]}} = \\sqrt{${s[0] + s[1]}} = ${s[2]}$。于是${steps(`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner === 1 ? s[2] : `${inner} \\cdot ${s[2]}`} = ${value}`)}和的平方根不等于平方根的和。`,
           ),
         });
       },
@@ -381,8 +381,8 @@ export const solvingLinearEquationsContainingBinomialsByFactoring = topic(
       (rng) => {
         const b = rng.nonZero(-9, 9);
         const p = rng.int(2, 9);
-        const q = rng.nonZero(-6, 9);
-        if (p + q === 0) return solvingLinearEquationsContainingBinomialsByFactoring.knowledgePoints[0]!.generate(rng);
+        const q = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
+        if (p + q === 0 || p + q === 1) return solvingLinearEquationsContainingBinomialsByFactoring.knowledgePoints[0]!.generate(rng);
         const v = rng.nonZero(-6, 6);
         const x = v - b;
         const total = (p + q) * v;
@@ -1117,8 +1117,8 @@ export const transformationsOfLinearFunctionsInTabularForm = topic(
           answer: value,
           wrong: [at(tb, x + h), at(tb, x), value.sub(Q.of(h))],
           solution: t(
-            `$g(${x}) = f(${x} - ${paren(h)}) = f(${tb.xs[i]})$, and the table gives $f(${tb.xs[i]}) = ${value.toLatex()}$.`,
-            `$g(${x}) = f(${x} - ${paren(h)}) = f(${tb.xs[i]})$，由表格得 $f(${tb.xs[i]}) = ${value.toLatex()}$。`,
+            `$g(${x}) = f(${x} ${h < 0 ? "+" : "-"} ${Math.abs(h)}) = f(${tb.xs[i]})$, and the table gives $f(${tb.xs[i]}) = ${value.toLatex()}$.`,
+            `$g(${x}) = f(${x} ${h < 0 ? "+" : "-"} ${Math.abs(h)}) = f(${tb.xs[i]})$，由表格得 $f(${tb.xs[i]}) = ${value.toLatex()}$。`,
           ),
         });
       },
@@ -1341,8 +1341,8 @@ export const transformingPolynomialFunctions = topic(
           answer: value,
           wrong: [wrongAt(x + h), wrongAt(x), value - 2 * k],
           solution: t(
-            `First $${x} - ${paren(h)} = ${u}$. Then $f(${u}) = ${paren(u)}^3 + ${paren(p)} \\cdot ${paren(u)} + ${paren(q)} = ${u ** 3 + p * u + q}$, so $g(${x}) = ${u ** 3 + p * u + q} + ${paren(k)} = ${value}$.`,
-            `先算 $${x} - ${paren(h)} = ${u}$。再求 $f(${u}) = ${paren(u)}^3 + ${paren(p)} \\cdot ${paren(u)} + ${paren(q)} = ${u ** 3 + p * u + q}$，所以 $g(${x}) = ${u ** 3 + p * u + q} + ${paren(k)} = ${value}$。`,
+            `First $${x} ${h < 0 ? "+" : "-"} ${Math.abs(h)} = ${u}$. Then $f(${u}) = ${paren(u)}^3 + ${paren(p)} \\cdot ${paren(u)} + ${paren(q)} = ${u ** 3 + p * u + q}$, so $g(${x}) = ${u ** 3 + p * u + q} + ${paren(k)} = ${value}$.`,
+            `先算 $${x} ${h < 0 ? "+" : "-"} ${Math.abs(h)} = ${u}$。再求 $f(${u}) = ${paren(u)}^3 + ${paren(p)} \\cdot ${paren(u)} + ${paren(q)} = ${u ** 3 + p * u + q}$，所以 $g(${x}) = ${u ** 3 + p * u + q} + ${paren(k)} = ${value}$。`,
           ),
         });
       },

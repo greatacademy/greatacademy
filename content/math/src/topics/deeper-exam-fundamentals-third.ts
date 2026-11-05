@@ -340,24 +340,28 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
         "正多边形的面积是边心距与周长乘积的一半。反过来，把面积加倍再除以周长，就得到边心距。",
       ],
       (rng) => {
-        const [n, name] = rng.pick<[number, [string, string]]>([
-          [5, ["pentagon", "五边形"]],
-          [6, ["hexagon", "六边形"]],
-          [8, ["octagon", "八边形"]],
-          [10, ["decagon", "十边形"]],
+        const [n, name, most] = rng.pick<[number, [string, string], number]>([
+          [5, ["pentagon", "五边形"], 12],
+          [6, ["hexagon", "六边形"], 9],
+          [8, ["octagon", "八边形"], 7],
+          [10, ["decagon", "十边形"], 5],
         ]);
-        const s = 2 * rng.int(1, 12);
-        const a = rng.int(2, 25);
-        return integer(
+        const half = rng.int(1, most);
+        const s = 2 * half;
+        // The true apothem of this polygon, to the tenth, so that the side and the area belong together.
+        const tenthsOfApothem = Math.round((s / (2 * Math.tan(Math.PI / n))) * 10);
+        const a = Q.of(tenthsOfApothem, 10);
+        const area = (n * half * tenthsOfApothem) / 10;
+        return decimal(
           [
-            `A regular ${name[0]} has side length ${s} and area ${(n * s * a) / 2}. What is its apothem?`,
-            `正${name[1]}的边长是 ${s}，面积是 ${(n * s * a) / 2}。它的边心距是多少？`,
+            `A regular ${name[0]} has side length $${s}$ and area $${area}$. What is its apothem?`,
+            `正${name[1]}的边长是 $${s}$，面积是 $${area}$。它的边心距是多少？`,
           ],
           a,
-          [2 * a, a * s, n * a],
+          [a.mul(Q.of(2)), a.mul(Q.of(s)), a.mul(Q.of(n))],
           [
-            `The perimeter is ${n * s}, and $2 \\cdot ${(n * s * a) / 2} \\div ${n * s} = ${a}$.`,
-            `周长是 ${n * s}，$2 \\cdot ${(n * s * a) / 2} \\div ${n * s} = ${a}$。`,
+            `The area is half the perimeter times the apothem. The perimeter is $${n * s}$, so the apothem is $2 \\cdot ${area} \\div ${n * s} = ${tenthsOfApothem / 10}$.`,
+            `面积等于周长的一半乘边心距。周长是 $${n * s}$，所以边心距是 $2 \\cdot ${area} \\div ${n * s} = ${tenthsOfApothem / 10}$。`,
           ],
         );
       },
@@ -608,10 +612,10 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
         "残差的大小表示点到直线的竖直距离。要比较几个点，就求每个预测值，再取它与观测值之差的绝对值。",
       ],
       (rng) => {
-        const m = nz(rng, 5);
-        const b = rng.int(-10, 10);
-        const xs = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3);
-        const rs = rng.sample([-5, -4, -3, -2, 2, 3, 4, 5, 6, -6], 3);
+        const m = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
+        const b = rng.nonZero(-10, 10);
+        const xs = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4);
+        const rs = rng.sample([-5, -4, -3, -2, 2, 3, 4, 5, 6, -6], 4);
         const pts = xs.map((x, i) => [x, m * x + b + (rs[i] as number)] as const);
         const sizes = rs.map(Math.abs);
         const big = sizes.indexOf(Math.max(...sizes));
@@ -619,14 +623,18 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
         const best = pts[big] as readonly [number, number];
         const tied = sizes.filter((s) => s === Math.max(...sizes)).length > 1;
         const y = tied ? best[1] + (rs[big] as number) : best[1];
+        const listed = pts
+          .map((p, i) => (i === big ? ([p[0], y] as const) : p))
+          .sort((p, q) => p[0] - q[0])
+          .map((p) => `$(${p[0]}, ${p[1]})$`);
         return chooseFilled(
           rng,
           [
-            `The line of best fit is $\\hat{y} = ${m}x${signed(b)}$. Which of these data points is farthest from the line, measured vertically: $(${best[0]}, ${y})$, ${small.map((p) => `$${p}$`).join(", ")}?`,
-            `最佳拟合线是 $\\hat{y} = ${m}x${signed(b)}$。这些数据点中哪个离直线的竖直距离最远：$(${best[0]}, ${y})$，${small.map((p) => `$${p}$`).join("，")}？`,
+            `The line of best fit is $\\hat{y} = ${m}x${signed(b)}$. Which of these data points is farthest from the line, measured vertically: ${listed.join(", ")}?`,
+            `最佳拟合线是 $\\hat{y} = ${m}x${signed(b)}$。这些数据点中哪个离直线的竖直距离最远：${listed.join("，")}？`,
           ],
           `(${best[0]}, ${y})`,
-          [...small, `(${best[0]}, ${m * best[0] + b})`],
+          small,
           [
             `The residual at $x = ${best[0]}$ has the largest size, ${Math.abs(y - m * best[0] - b)}.`,
             `$x = ${best[0]}$ 处残差的绝对值最大，是 ${Math.abs(y - m * best[0] - b)}。`,
@@ -827,14 +835,14 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
         const a = rng.int(10, 70);
         return integer(
           [
-            `Each side of a double cone makes a $${a}^{\\circ}$ angle with its axis. What angle with the axis, in degrees, must a plane missing the vertex make to cut a parabola?`,
-            `双圆锥的每条母线与轴成 $${a}^{\\circ}$ 角。不过顶点的平面与轴成多少度角时，截出的是抛物线？`,
+            `In a double cone, two opposite sides meet at the vertex at a $${2 * a}^{\\circ}$ angle, and the axis bisects that angle. What angle with the axis, in degrees, must a plane missing the vertex make to cut a parabola?`,
+            `双圆锥中，两条相对的母线在顶点处成 $${2 * a}^{\\circ}$ 角，轴平分这个角。不过顶点的平面与轴成多少度角时，截出的是抛物线？`,
           ],
           a,
           [90 - a, 90, 2 * a],
           [
-            `The plane must be parallel to a side, so its angle with the axis is also ${a} degrees.`,
-            `平面必须平行于母线，所以它与轴的夹角也是 ${a} 度。`,
+            `The axis bisects the $${2 * a}^{\\circ}$ angle, so each side makes a $${a}^{\\circ}$ angle with the axis. The plane must be parallel to a side, so its angle with the axis is also $${a}^{\\circ}$.`,
+            `轴平分 $${2 * a}^{\\circ}$ 角，所以每条母线与轴成 $${a}^{\\circ}$ 角。平面必须平行于母线，所以它与轴的夹角也是 $${a}^{\\circ}$。`,
           ],
         );
       },
@@ -2189,16 +2197,20 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
       (rng) => {
         const p = rng.int(2, 9);
         const q = p + rng.int(1, 7);
-        const u = rng.int(2, 9);
-        const v = rng.int(2, 12);
+        const u = rng.int(2, 6);
+        // A perimeter above twice AB leaves the other two sides long enough to form a triangle.
+        const v = 2 * u + rng.int(1, 8);
         return integer(
           [
-            `$\\triangle ABC \\sim \\triangle DEF$, with $AB = ${p * u}$ and $DE = ${q * u}$. The perimeter of $\\triangle ABC$ is ${p * v}. What is the perimeter of $\\triangle DEF$?`,
-            `$\\triangle ABC \\sim \\triangle DEF$，$AB = ${p * u}$，$DE = ${q * u}$。$\\triangle ABC$ 的周长是 ${p * v}。$\\triangle DEF$ 的周长是多少？`,
+            `$\\triangle ABC \\sim \\triangle DEF$, with $AB = ${p * u}$ and $DE = ${q * u}$. The perimeter of $\\triangle ABC$ is $${p * v}$. What is the perimeter of $\\triangle DEF$?`,
+            `$\\triangle ABC \\sim \\triangle DEF$，$AB = ${p * u}$，$DE = ${q * u}$。$\\triangle ABC$ 的周长是 $${p * v}$。$\\triangle DEF$ 的周长是多少？`,
           ],
           q * v,
-          [p * v + (q - p) * u, q * q * v, (p * p * v) / 1],
-          [`The sides scale by $\\frac{${q}}{${p}}$, and so does the perimeter.`, `边按 $\\frac{${q}}{${p}}$ 缩放，周长也一样。`],
+          [p * v + (q - p) * u, q * q * v, p * v + q * u],
+          [
+            `Every length scales by the same ratio, $\\frac{DE}{AB} = \\frac{${q * u}}{${p * u}}$, and so does the perimeter: $${p * v} \\cdot \\frac{${q * u}}{${p * u}} = ${q * v}$.`,
+            `所有长度都按同一比例缩放，$\\frac{DE}{AB} = \\frac{${q * u}}{${p * u}}$，周长也一样：$${p * v} \\cdot \\frac{${q * u}}{${p * u}} = ${q * v}$。`,
+          ],
         );
       },
     ),

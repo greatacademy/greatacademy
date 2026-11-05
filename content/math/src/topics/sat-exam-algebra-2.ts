@@ -95,7 +95,7 @@ const tableTips = mod(
 
 /** linearTable makes rows of y = mx + b at unevenly spaced inputs when hard. */
 function linearTable(rng: Rng, hard: boolean): { m: number; b: number; xs: number[]; ys: number[] } {
-  const m = rng.nonZero(-5, 6);
+  const m = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5, 6]);
   const b = rng.int(-9, 12);
   const start = rng.int(0, 3);
   const xs = hard ? [start, start + 2, start + 5, start + 9] : [start, start + 1, start + 2, start + 3];
@@ -243,14 +243,14 @@ export const satExamAlgebra2: ExamSpec[] = [
       return mc(
         rng,
         t(
-          `Company A charges $\\$${f}$ plus $\\$${r}$ per ${p.one.en}. Company B charges $\\$${gg}$ plus $\\$${s}$ for each. For how many ${p.unit.en} do the two companies charge the same total?`,
+          `Company A charges $\\$${f}$ plus $\\$${r}$ per ${p.one.en}. Company B charges $\\$${gg}$ plus $\\$${s}$ per ${p.one.en}. For how many ${p.unit.en} do the two companies charge the same total?`,
           `A 公司收 $${f}$ 美元，并按每${p.one["zh-CN"]}收 $${r}$ 美元。B 公司收 $${gg}$ 美元，每${p.one["zh-CN"]}收 $${s}$ 美元。多少${p.unit["zh-CN"]}时两家公司总收费相同？`,
         ),
         nn,
         [Q.of(gg - f, r + s), Q.of(gg + f, r - s), nn + 1],
         t(
-          `Set the totals equal: $${f} + ${r}n = ${gg} + ${s}n$. Then $${r - s}n = ${gg - f}$, so $n = ${nn}$.`,
-          `令总额相等：$${f} + ${r}n = ${gg} + ${s}n$。于是 $${r - s}n = ${gg - f}$，所以 $n = ${nn}$。`,
+          `Set the totals equal: $${f} + ${r}n = ${gg} + ${s}n$. Then ${c === 1 ? `$n = ${nn}$` : `$${c}n = ${gg - f}$, so $n = ${nn}$`}.`,
+          `令总额相等：$${f} + ${r}n = ${gg} + ${s}n$。于是 ${c === 1 ? `$n = ${nn}$` : `$${c}n = ${gg - f}$，所以 $n = ${nn}$`}。`,
         ),
       );
     },
@@ -497,7 +497,7 @@ export const satExamAlgebra2: ExamSpec[] = [
     },
   ),
   fnTips("Evaluating Linear Functions", "求一次函数的值", ["introduction-to-functions"], (rng, hard) => {
-    const m = rng.nonZero(-6, 7);
+    const m = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7]);
     const b = rng.int(-9, 12);
     const a = rng.int(2, 9);
     const f = `f(x) = ${cx(m)} ${sg(b)}`;
@@ -625,7 +625,7 @@ export const satExamAlgebra2: ExamSpec[] = [
         m * a + b,
         [m * a, ys[3]! + m, a + b],
         t(
-          `Each step of $1$ in $x$ changes $f$ by $${m}$. So $f(${a}) = ${ys[3]} + (${a - xs[3]!})(${m}) = ${m * a + b}$.`,
+          `Each step of $1$ in $x$ changes $f$ by $${m}$. So $f(${a}) = ${ys[3]} + ${a - xs[3]!}(${m}) = ${m * a + b}$.`,
           `$x$ 每增加 $1$，$f$ 变化 $${m}$。所以 $f(${a}) = ${ys[3]} + (${a - xs[3]!})(${m}) = ${m * a + b}$。`,
         ),
       );
@@ -658,8 +658,8 @@ export const satExamAlgebra2: ExamSpec[] = [
           ys[2]!,
           [ys[1]! + 1, ys[3]! - 1, m * xs[2]!],
           t(
-            `Equal steps in $x$ give equal steps in $y$ of $${m}$, so $k = ${ys[1]} + (${m}) = ${ys[2]}$.`,
-            `$x$ 等距变化时 $y$ 每步变化 $${m}$，所以 $k = ${ys[1]} + (${m}) = ${ys[2]}$。`,
+            `Equal steps in $x$ give equal steps in $y$ of $${m}$, so $k = ${ys[1]} ${sg(m)} = ${ys[2]}$.`,
+            `$x$ 等距变化时 $y$ 每步变化 $${m}$，所以 $k = ${ys[1]} ${sg(m)} = ${ys[2]}$。`,
           ),
         );
       return spr(

@@ -161,12 +161,7 @@ export const actExamStatistics: ExamSpec[] = [
   graphTips("Reading Bar Graphs", "读条形图", ["bar-graphs"], (rng, hard) => {
     const v = [rng.int(2, 18) * 5, rng.int(2, 18) * 5, rng.int(2, 18) * 5, rng.int(2, 18) * 5] as const;
     const [a, b, c, d] = v;
-    const fig = barFigure(
-      ["A", "B", "C", "D"],
-      v,
-      100,
-      t(`A bar graph with values A ${a}, B ${b}, C ${c} and D ${d}.`, `条形图，A 为 ${a}，B 为 ${b}，C 为 ${c}，D 为 ${d}。`),
-    );
+    const fig = barFigure(["A", "B", "C", "D"], v, 100, t("A bar graph of books sold by four stores.", "四家书店销量的条形图。"));
     if (!hard)
       return ask(
         rng,

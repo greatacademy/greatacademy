@@ -264,8 +264,8 @@ export const findingExtremeValuesOfQuadraticFunctionsInStandardForm = topic(
           answer: value,
           wrong: distinct(Q.of(value), [Q.of(h), Q.of(c), Q.of(a * h * h - b * h + c), Q.of(-value)]),
           solution: t(
-            `The vertex is at $x = -\\frac{${b}}{2 \\cdot ${num(a).startsWith("-") ? `(${a})` : a}} = ${h}$, so the ${a > 0 ? "minimum" : "maximum"} value is $f(${h}) = ${num(a)}(${h})^{2} ${b * h < 0 ? "-" : "+"} ${Math.abs(b * h)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${value}$.`,
-            `顶点在 $x = -\\frac{${b}}{2 \\cdot ${num(a).startsWith("-") ? `(${a})` : a}} = ${h}$ 处，所以${a > 0 ? "最小" : "最大"}值为 $f(${h}) = ${num(a)}(${h})^{2} ${b * h < 0 ? "-" : "+"} ${Math.abs(b * h)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${value}$。`,
+            `The vertex is at $x = -\\frac{${b}}{2 \\cdot ${num(a).startsWith("-") ? `(${a})` : a}} = ${h}$, so the ${a > 0 ? "minimum" : "maximum"} value is $f(${h}) = ${a === 1 ? "" : a === -1 ? "-" : num(a)}(${h})^{2} ${b * h < 0 ? "-" : "+"} ${Math.abs(b * h)}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${value}$.`,
+            `顶点在 $x = -\\frac{${b}}{2 \\cdot ${num(a).startsWith("-") ? `(${a})` : a}} = ${h}$ 处，所以${a > 0 ? "最小" : "最大"}值为 $f(${h}) = ${a === 1 ? "" : a === -1 ? "-" : num(a)}(${h})^{2} ${b * h < 0 ? "-" : "+"} ${Math.abs(b * h)}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${value}$。`,
           ),
         });
       },

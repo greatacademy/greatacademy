@@ -213,12 +213,15 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         const ys = xs.map((x) => a * x * x + b * x + c);
         const d = (ys[3] as number) - (ys[2] as number);
         return integer(
-          [`What is $f(4)$ if the table follows its pattern? ${table(xs, ys)}`, `如果表格符合它的规律，$f(4)$ 是多少？${table(xs, ys)}`],
+          [
+            `The table shows values of a quadratic function $f$. What is $f(4)$? ${table(xs, ys)}`,
+            `表格给出二次函数 $f$ 的一些值。$f(4)$ 是多少？${table(xs, ys)}`,
+          ],
           16 * a + 4 * b + c,
           [(ys[3] as number) + d, (ys[3] as number) + 2 * d, (ys[3] as number) + d + a],
           [
-            `The second differences are all ${2 * a}, so the next difference is ${d + 2 * a}.`,
-            `二阶差分都是 ${2 * a}，所以下一个差是 ${d + 2 * a}。`,
+            `The second differences are all $${2 * a}$, so the next difference is $${d + 2 * a}$. Adding it to the last value $${ys[3] as number}$ gives $${16 * a + 4 * b + c}$.`,
+            `二阶差分都是 $${2 * a}$，所以下一个差是 $${d + 2 * a}$。把它加到最后一个值 $${ys[3] as number}$ 上得到 $${16 * a + 4 * b + c}$。`,
           ],
         );
       },
@@ -316,7 +319,7 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         "二次函数的两个零点到对称轴的距离相等。所以把已知零点关于对称轴反射，得到对称轴值的两倍减去这个零点。",
       ],
       (rng) => {
-        const h = rng.int(-9, 9);
+        const h = nz(rng, 9);
         const d = nz(rng, 12);
         return integer(
           [
@@ -326,8 +329,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           h - d,
           [-(h + d), h, 2 * h + d],
           [
-            `The zero is ${d} from the axis, so the other is at $${h} - ${paren(d)} = ${h - d}$.`,
-            `零点与对称轴相差 ${d}，所以另一个在 $${h} - ${paren(d)} = ${h - d}$。`,
+            `The zero is ${Math.abs(d)} from the axis, so the other lies the same distance on the far side: $${h} ${d < 0 ? "+" : "-"} ${Math.abs(d)} = ${h - d}$.`,
+            `零点与对称轴相距 ${Math.abs(d)}，所以另一个在对称轴另一侧相同距离处：$${h} ${d < 0 ? "+" : "-"} ${Math.abs(d)} = ${h - d}$。`,
           ],
         );
       },
@@ -593,20 +596,20 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         "直线在画出的部分之外继续延伸，斜率不变。所以由两个标出的点求斜率，再从其中一点往回数，直到高度变成零。",
       ],
       (rng) => {
-        const r = rng.int(-20, 20);
+        const r = nz(rng, 20);
         const m = nz(rng, 5);
         const p = rng.int(1, 6);
         const q = p + rng.int(1, 6);
         return integer(
           [
-            `A graph shows part of a line through the marked points $(${r + p}, ${m * p})$ and $(${r + q}, ${m * q})$. If the line continues, where does it cross the $x$-axis?`,
-            `图象显示一条直线的一部分，经过标出的点 $(${r + p}, ${m * p})$ 和 $(${r + q}, ${m * q})$。如果直线继续延伸，它在哪里与 $x$ 轴相交？`,
+            `A graph shows part of a line through the marked points $(${r + p}, ${m * p})$ and $(${r + q}, ${m * q})$. If the line continues, at what value of $x$ does it cross the $x$-axis?`,
+            `图象显示一条直线的一部分，经过标出的点 $(${r + p}, ${m * p})$ 和 $(${r + q}, ${m * q})$。如果直线继续延伸，它与 $x$ 轴相交处的 $x$ 值是多少？`,
           ],
           r,
           [r + p, m * p, r - p],
           [
-            `The slope is ${m}, so going back ${p} from the first point reaches height 0.`,
-            `斜率是 ${m}，所以从第一个点往回 ${p} 就到高度 0。`,
+            `The slope is $${m}$, so going back $${p}$ in $x$ from the first point reaches height $0$, at $x = ${r}$.`,
+            `斜率是 $${m}$，所以从第一个点沿 $x$ 往回 $${p}$ 就到高度 $0$，此时 $x = ${r}$。`,
           ],
         );
       },
@@ -753,12 +756,12 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         const m = rng.pick([4, 5, 6, 8, 10, 12, 15]);
         const h = rng.int(1, 9);
         const d = (60 * h) / m;
-        const miles = d * rng.int(1, 3);
+        const miles = d;
         const hours = (miles * m) / 60;
         return integer(
           [
-            `A runner keeps a pace of ${m} minutes per mile. How many hours does it take to run ${miles} miles?`,
-            `跑者保持每英里 ${m} 分钟的配速。跑 ${miles} 英里要多少小时？`,
+            `A cyclist keeps a pace of ${m} minutes per mile. How many hours does it take to ride ${miles} miles?`,
+            `骑行者保持每英里 ${m} 分钟的配速。骑 ${miles} 英里要多少小时？`,
           ],
           hours,
           [miles * m, Math.floor(miles / m), hours + 1],
@@ -1125,12 +1128,15 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         const n = rng.int(2, 50) * 1000;
         return integer(
           [
-            `A random survey in a city of ${n} adults finds that ${p} percent favor a measure, with a margin of error of ${m} percent. What is the largest plausible number of adults in the city who favor it?`,
-            `在有 ${n} 名成年人的城市中，随机调查发现百分之 ${p} 赞成某项措施，误差范围是百分之 ${m}。该市赞成的成年人最多合理估计是多少？`,
+            `A random survey in a city of $${n}$ adults finds that $${p}\\%$ favor a measure, with a margin of error of $${m}$ percentage points. What is the largest plausible number of adults in the city who favor it?`,
+            `在有 $${n}$ 名成年人的城市中，随机调查发现 $${p}\\%$ 赞成某项措施，误差范围是 $${m}$ 个百分点。该市赞成的成年人最多合理估计是多少？`,
           ],
           ((p + m) * n) / 100,
           [(p * n) / 100, ((p - m) * n) / 100, ((p + 2 * m) * n) / 100],
-          [`The top of the interval is ${p + m} percent of ${n}.`, `区间上端是 ${n} 的百分之 ${p + m}。`],
+          [
+            `The largest plausible share is the estimate plus the margin, $${p + m}\\%$, and $${p + m}\\%$ of $${n}$ is $${((p + m) * n) / 100}$.`,
+            `最大合理比例是估计值加误差范围，即 $${p + m}\\%$，而 $${n}$ 的 $${p + m}\\%$ 是 $${((p + m) * n) / 100}$。`,
+          ],
         );
       },
     ),
@@ -1221,8 +1227,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         "把立方根写成分数指数的幂。同底的幂相乘时指数相加，所以把整数指数也写成分母为 3 的分数。",
       ],
       (rng) => {
-        const a = rng.int(1, 9);
-        const b = rng.int(1, 11);
+        const a = rng.int(2, 9);
+        const b = rng.int(2, 11);
         return fraction(
           [
             `For $x > 0$, the expression $x^{${a}} \\cdot \\sqrt[3]{x^{${b}}}$ equals $x^{k}$. What is $k$?`,
@@ -1230,7 +1236,10 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           ],
           Q.of(3 * a + b, 3),
           [Q.of(a * b, 3), Q.of(a + b, 3), Q.of(3 * a + b, 2)],
-          [`$${a} + \\frac{${b}}{3} = \\frac{${3 * a + b}}{3}$.`, `$${a} + \\frac{${b}}{3} = \\frac{${3 * a + b}}{3}$。`],
+          [
+            `A cube root divides the exponent by $3$, and multiplying powers adds exponents: $${a} + \\frac{${b}}{3} = ${Q.of(3 * a + b, 3).toLatex()}$.`,
+            `立方根把指数除以 $3$，同底数幂相乘时指数相加：$${a} + \\frac{${b}}{3} = ${Q.of(3 * a + b, 3).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -1376,20 +1385,20 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
         const b = rng.int(2, 7);
         const r = nz(rng, 9);
         let s = nz(rng, 9);
-        if (r + s === 0) s += 1;
+        if (Math.abs(r + s) < 2) s += 3;
         if (s === 0) s = 2;
         const p = -(r + s);
         const q = r * s;
         return integer(
           [
-            `What is the sum of the solutions of $${b}^{x^{2}${signed(p)}x} = ${b}^{${q}}$?`,
-            `$${b}^{x^{2}${signed(p)}x} = ${b}^{${q}}$ 的解的和是多少？`,
+            `What is the sum of the solutions of $${b}^{x^{2}${signed(p)}x} = ${b}^{${-q}}$?`,
+            `$${b}^{x^{2}${signed(p)}x} = ${b}^{${-q}}$ 的解的和是多少？`,
           ],
           r + s,
-          [p - 1, q, r + s + b],
+          [p, q, r + s + b],
           [
-            `The exponents give $x^{2}${signed(p)}x${signed(-q)} = 0$, whose solutions are ${r} and ${s}.`,
-            `指数相等给出 $x^{2}${signed(p)}x${signed(-q)} = 0$，解是 ${r} 和 ${s}。`,
+            `The bases are equal, so the exponents are equal: $x^{2}${signed(p)}x${signed(q)} = 0$. Its solutions are $${r}$ and $${s}$, with sum $${r + s}$.`,
+            `底数相同，所以指数相等：$x^{2}${signed(p)}x${signed(q)} = 0$。解是 $${r}$ 和 $${s}$，和为 $${r + s}$。`,
           ],
         );
       },
@@ -1945,7 +1954,8 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
       (rng) => {
         const n = rng.int(3, 9);
         const m = rng.int(60, 85);
-        const d = rng.int(1, 3);
+        // The next score stays at or below 100.
+        const d = rng.int(1, Math.min(3, Math.floor((100 - m) / (n + 1))));
         return integer(
           [
             `The mean of ${n} test scores is ${m}. What score on the next test brings the mean to ${m + d}?`,

@@ -222,8 +222,8 @@ export const satExamGeometry1: ExamSpec[] = [
       return mc(
         rng,
         t(
-          `In the figure, the marked angles are formed by two intersecting lines. What is the value of $x$?`,
-          `图中标出的角由两条相交直线构成。$x$ 的值是多少？`,
+          `In the figure, the marked angles are formed where the slanted line crosses line $\\ell$. What is the value of $x$?`,
+          `图中标出的角由斜线与直线 $\\ell$ 相交而成。$x$ 的值是多少？`,
         ),
         a,
         [180 - a === a ? a + 5 : 180 - a, 360 - a, a + 15],
@@ -680,16 +680,16 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     return spr(
       t(
-        `An isosceles right triangle has a hypotenuse of length $${2 * a}$. Its legs have length $${a}\\sqrt{2}$. What is its area?`,
-        `等腰直角三角形的斜边长为 $${2 * a}$，直角边长为 $${a}\\sqrt{2}$。它的面积是多少？`,
+        `An isosceles right triangle has a hypotenuse of length $${2 * a}$. What is its area?`,
+        `等腰直角三角形的斜边长为 $${2 * a}$。它的面积是多少？`,
       ),
       a * a,
       [a * a * 2, a * a * 4, 2 * a],
       t(
-        `The area is half the product of the legs: $\\frac{1}{2}(${a}\\sqrt{2})^2 = ${a * a}$.`,
-        `面积是两直角边之积的一半：$\\frac{1}{2}(${a}\\sqrt{2})^2 = ${a * a}$。`,
+        `The hypotenuse is $\\sqrt{2}$ times a leg, so each leg is $\\frac{${2 * a}}{\\sqrt{2}} = ${a}\\sqrt{2}$. The area is half the product of the legs: $\\frac{1}{2}(${a}\\sqrt{2})^2 = ${a * a}$.`,
+        `斜边是直角边的 $\\sqrt{2}$ 倍，所以每条直角边是 $\\frac{${2 * a}}{\\sqrt{2}} = ${a}\\sqrt{2}$。面积是两直角边之积的一半：$\\frac{1}{2}(${a}\\sqrt{2})^2 = ${a * a}$。`,
       ),
-      polyFigure(rightPts(1, 1), { s: [`${a}√2`, `${a}√2`, `${2 * a}`], right: 1 }),
+      polyFigure(rightPts(1, 1), { s: ["", "", `${2 * a}`], right: 1 }),
     );
   }),
   rightTips("Problem-Solving With Special Triangles", "用特殊三角形解题", ["thirty-sixty-ninety-triangles"], (rng, hard) => {
@@ -1120,6 +1120,8 @@ export const satExamGeometry1: ExamSpec[] = [
   ),
   inscribedTips("Solving Problems Involving Inscribed Squares", "解内接正方形问题", ["squares-inscribed-in-circles"], (rng, hard) => {
     const s = rng.int(2, 30);
+    const half = s % 2 === 0 ? `${s / 2}` : `\\frac{${s}}{2}`;
+    const radius = s === 2 ? "\\sqrt{2}" : s % 2 === 0 ? `${s / 2}\\sqrt{2}` : `\\frac{${s}\\sqrt{2}}{2}`;
     if (!hard)
       return mc(
         rng,
@@ -1127,11 +1129,11 @@ export const satExamGeometry1: ExamSpec[] = [
           `A square with side length $${s}$ is inscribed in a circle. What is the radius of the circle?`,
           `边长为 $${s}$ 的正方形内接于圆。圆的半径是多少？`,
         ),
-        `\\frac{${s}\\sqrt{2}}{2}`,
-        [`${s}\\sqrt{2}`, `\\frac{${s}}{2}`, `${s}`, `${2 * s}\\sqrt{2}`],
+        radius,
+        [`${s}\\sqrt{2}`, half, `${s}`, `${2 * s}\\sqrt{2}`],
         t(
-          `The diagonal $${s}\\sqrt{2}$ is a diameter, so the radius is half of it.`,
-          `对角线 $${s}\\sqrt{2}$ 是直径，所以半径是它的一半。`,
+          `The diagonal $${s}\\sqrt{2}$ is a diameter, so the radius is half of it: $${radius}$.`,
+          `对角线 $${s}\\sqrt{2}$ 是直径，所以半径是它的一半：$${radius}$。`,
         ),
       );
     return spr(

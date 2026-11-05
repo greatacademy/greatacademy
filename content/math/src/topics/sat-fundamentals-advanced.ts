@@ -212,7 +212,11 @@ export const factoringExpressionsContainingBinomials = topic(
         return factoredProblem({
           prompt: t(`Factor $${prompt}$ completely.`, `把 $${prompt}$ 分解彻底。`),
           answer,
-          wrong: [`${lf(1, m)}${lf(1, n)}`, `${lf(1, p - m)}${lf(1, p - n)}`, `${lf(1, p + m)}${lf(1, n)}`],
+          wrong: [
+            `${lf(1, m)}${lf(1, n)}`,
+            (p === n ? `${lf(1, p - n)}${lf(1, p - m)}` : `${lf(1, p - m)}${lf(1, p - n)}`).replace("(x)", "x"),
+            `${lf(1, p + m)}${lf(1, n)}`,
+          ],
           solution: t(
             `Let $u = ${linear(1, p)}$. Then${steps(`u^2 ${m + n < 0 ? "-" : "+"} ${Math.abs(m + n) === 1 ? "" : Math.abs(m + n)}u ${m * n < 0 ? "-" : "+"} ${Math.abs(m * n)} = ${lf(1, m, "u")}${lf(1, n, "u")}`, `= ${answer}`)}`,
             `令 $u = ${linear(1, p)}$，则${steps(`u^2 ${m + n < 0 ? "-" : "+"} ${Math.abs(m + n) === 1 ? "" : Math.abs(m + n)}u ${m * n < 0 ? "-" : "+"} ${Math.abs(m * n)} = ${lf(1, m, "u")}${lf(1, n, "u")}`, `= ${answer}`)}`,
@@ -335,8 +339,8 @@ export const perfectSquareQuadraticEquationsWithOneOrNoSolutions = topic(
           label(count),
           [0, 1, 2].filter((n) => n !== count).map(label),
           t(
-            `${trinomial ? `The left side is $${lf(1, h)}^2 + ${paren(k)}$. ` : ""}Moving the constant $${k}$ to the right side gives $${lf(1, h)}^2 = ${c}$. ${count === 2 ? "A positive number has two square roots, so there are two solutions." : count === 1 ? `Only $${linear(1, h)} = 0$ works, so there is exactly one solution.` : "A square cannot be negative, so there are no real solutions."}`,
-            `${trinomial ? `左边是 $${lf(1, h)}^2 + ${paren(k)}$。` : ""}把常数 $${k}$ 移到右边得 $${lf(1, h)}^2 = ${c}$。${count === 2 ? "正数有两个平方根，所以有两个解。" : count === 1 ? `只有 $${linear(1, h)} = 0$ 成立，所以恰有一个解。` : "平方不可能是负数，所以没有实数解。"}`,
+            `${trinomial ? `The left side is $${lf(1, h)}^2 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$. ` : ""}Moving the constant $${k}$ to the right side gives $${lf(1, h)}^2 = ${c}$. ${count === 2 ? "A positive number has two square roots, so there are two solutions." : count === 1 ? `Only $${linear(1, h)} = 0$ works, so there is exactly one solution.` : "A square cannot be negative, so there are no real solutions."}`,
+            `${trinomial ? `左边是 $${lf(1, h)}^2 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$。` : ""}把常数 $${k}$ 移到右边得 $${lf(1, h)}^2 = ${c}$。${count === 2 ? "正数有两个平方根，所以有两个解。" : count === 1 ? `只有 $${linear(1, h)} = 0$ 成立，所以恰有一个解。` : "平方不可能是负数，所以没有实数解。"}`,
           ),
         );
       },
@@ -545,10 +549,10 @@ export const fittingQuadraticFunctionsToDataUsingVertexForm = topic(
         "如果顶点是 $(h, k)$，函数就是 $f(x) = a(x - h)^2 + k$，只有 $a$ 未知。代入另一个点 $(x_1, y_1)$：$y_1 = a(x_1 - h)^2 + k$，所以 $a = \\frac{y_1 - k}{(x_1 - h)^2}$。",
       ),
       (rng) => {
-        const h = rng.int(0, 10);
-        const k = rng.int(-20, 60);
+        const h = rng.int(1, 10);
+        const k = rng.nonZero(-20, 60);
         const a = rng.pick([Q.of(-2), Q.of(-1), Q.of(-1, 2), Q.of(1, 2), Q.of(1), Q.of(2), Q.of(3), Q.of(-3)]);
-        let d = rng.nonZero(-4, 4);
+        let d = rng.pick([-4, -3, -2, 2, 3, 4]);
         if (a.d === 2n && d % 2 !== 0) d *= 2;
         const x1 = h + d;
         const y1 = a.mul(Q.of(d * d)).add(Q.of(k));
@@ -720,7 +724,9 @@ export const solvingSystemsOfNonlinearEquationsByIdentifyingStructure = topic(
       ),
       (rng) => {
         const S = rng.nonZero(-12, 12);
-        const P = rng.int(-30, 30);
+        // Real x and y exist only when the product is at most the square of half the sum.
+        const drawn = rng.int(-30, Math.min(30, Math.floor((S * S) / 4)));
+        const P = drawn === 0 ? -6 : drawn;
         const ask = rng.pick(["x^2 + y^2", "(x - y)^2"] as const);
         const value = ask === "x^2 + y^2" ? S * S - 2 * P : S * S - 4 * P;
         if (value < 0) return solvingSystemsOfNonlinearEquationsByIdentifyingStructure.knowledgePoints[1]!.generate(rng);
@@ -1003,8 +1009,8 @@ export const reasoningAboutCoefficientsInQuadraticEquationsUsingTheFactorTheorem
           answer: askB ? b : c,
           wrong: askB ? [-b, Q.of(-(a * r * r + c), -r), r + s] : [-c, r * s, a * r * r + b * r],
           solution: t(
-            `By the factor theorem the polynomial is zero at $x = ${r}$:${steps(askB ? `${a === 1 ? "" : a}${paren(r)}^2 + b \\cdot ${paren(r)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = 0` : `${a === 1 ? "" : a}${paren(r)}^2 ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${paren(r)} + c = 0`, askB ? `${a * r * r + c} ${r < 0 ? "-" : "+"} ${Math.abs(r)}b = 0` : `${a * r * r + b * r} + c = 0`, `${askB ? "b" : "c"} = ${askB ? b : c}`)}`,
-            `由因式定理，多项式在 $x = ${r}$ 处为零：${steps(askB ? `${a === 1 ? "" : a}${paren(r)}^2 + b \\cdot ${paren(r)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = 0` : `${a === 1 ? "" : a}${paren(r)}^2 ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${paren(r)} + c = 0`, askB ? `${a * r * r + c} ${r < 0 ? "-" : "+"} ${Math.abs(r)}b = 0` : `${a * r * r + b * r} + c = 0`, `${askB ? "b" : "c"} = ${askB ? b : c}`)}`,
+            `By the factor theorem the polynomial is zero at $x = ${r}$:${steps(askB ? `${a === 1 ? "" : `${a} \\cdot `}${paren(r)}^2 + b \\cdot ${paren(r)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = 0` : `${a === 1 ? "" : `${a} \\cdot `}${paren(r)}^2 ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${paren(r)} + c = 0`, askB ? `${a * r * r + c} ${r < 0 ? "-" : "+"} ${Math.abs(r)}b = 0` : `${a * r * r + b * r} + c = 0`, `${askB ? "b" : "c"} = ${askB ? b : c}`)}`,
+            `由因式定理，多项式在 $x = ${r}$ 处为零：${steps(askB ? `${a === 1 ? "" : `${a} \\cdot `}${paren(r)}^2 + b \\cdot ${paren(r)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = 0` : `${a === 1 ? "" : `${a} \\cdot `}${paren(r)}^2 ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${paren(r)} + c = 0`, askB ? `${a * r * r + c} ${r < 0 ? "-" : "+"} ${Math.abs(r)}b = 0` : `${a * r * r + b * r} + c = 0`, `${askB ? "b" : "c"} = ${askB ? b : c}`)}`,
           ),
         });
       },
@@ -1561,21 +1567,25 @@ export const determiningUnknownParametersInExponentialFunctions = topic(
         "对于 $f(x) = a \\cdot b^x + c$，水平渐近线为 $y = c$，并且由于 $b^0 = 1$，$f(0) = a + c$。所以渐近线给出 $c$，$y$ 轴截距给出 $a = f(0) - c$，再用一个点求出 $b$。",
       ),
       (rng) => {
-        const a = rng.nonZero(-8, 9);
+        const a = rng.pick([-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
         const b = rng.int(2, 5);
-        const c = rng.int(-15, 15);
-        const ask = rng.pick(["a", "b"] as const);
+        const c = rng.nonZero(-15, 15);
+        const ask = rng.pick(["b", "f(2)"] as const);
         const f1 = a * b + c;
+        const f2 = a * b * b + c;
         return numberProblem({
           prompt: t(
             `The graph of $f(x) = a \\cdot b^x + c$ has the horizontal asymptote $y = ${c}$, crosses the $y$-axis at $y = ${a + c}$ and passes through $(1, ${f1})$. What is $${ask}$?`,
             `$f(x) = a \\cdot b^x + c$ 的图像有水平渐近线 $y = ${c}$，与 $y$ 轴交于 $y = ${a + c}$，并经过 $(1, ${f1})$。$${ask}$ 是多少？`,
           ),
-          answer: ask === "a" ? a : b,
-          wrong: ask === "a" ? [a + c, a + 2 * c, -a] : [Q.of(f1, a + c || 1), Q.of(f1 - c), Q.of(b + 1)].filter((w) => !w.eq(Q.of(b))),
+          answer: ask === "b" ? b : f2,
+          wrong:
+            ask === "b"
+              ? [Q.of(f1, a + c || 1), Q.of(f1 - c), Q.of(b + 1)].filter((w) => !w.eq(Q.of(b)))
+              : [2 * a * b + c, a * b * b, f1 * b].filter((w) => w !== f2).map((w) => Q.of(w)),
           solution: t(
-            `The asymptote gives $c = ${c}$. Then $f(0) = a + c = ${a + c}$, so $a = ${a}$.${ask === "b" ? ` Finally $f(1) = ${a}b ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${f1}$, so $b = ${b}$.` : ""}`,
-            `由渐近线得 $c = ${c}$。于是 $f(0) = a + c = ${a + c}$，所以 $a = ${a}$。${ask === "b" ? `最后 $f(1) = ${a}b ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${f1}$，所以 $b = ${b}$。` : ""}`,
+            `The asymptote gives $c = ${c}$. Then $f(0) = a + c = ${a + c}$, so $a = ${a}$. Next $f(1) = ${a}b ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${f1}$, so $b = ${b}$.${ask === "b" ? "" : ` Finally $f(2) = ${a} \\cdot ${b}^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${f2}$.`}`,
+            `由渐近线得 $c = ${c}$。于是 $f(0) = a + c = ${a + c}$，所以 $a = ${a}$。再由 $f(1) = ${a}b ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${f1}$ 得 $b = ${b}$。${ask === "b" ? "" : `最后 $f(2) = ${a} \\cdot ${b}^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${f2}$。`}`,
           ),
         });
       },
@@ -1826,7 +1836,7 @@ export const solvingManyVariableRationalEquations = topic(
           wrong: [
             `\\frac{${a === 1 ? "" : a}z - ${b === 1 ? "" : b}x}{${c}xz}`,
             `\\frac{${c}xz}{${a === 1 ? "" : a}x - ${b === 1 ? "" : b}z}`,
-            `\\frac{${c}}{${a - b}}`,
+            `\\frac{${c}xz}{${a === 1 ? "" : a}z + ${b === 1 ? "" : b}x}`,
           ],
           solution: t(
             `Multiply both sides by $xyz$, then factor out $y$:${steps(`${a === 1 ? "" : a}yz - ${b === 1 ? "" : b}xy = ${c}xz`, `y(${a === 1 ? "" : a}z - ${b === 1 ? "" : b}x) = ${c}xz`, `y = ${answer}`)}`,

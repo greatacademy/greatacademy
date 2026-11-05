@@ -1,7 +1,7 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mod, sg, spr, words } from "../exam.ts";
+import { cx, mc, mcExact, mod, par, sg, spr, words } from "../exam.ts";
 import { linesFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Algebra: systems of linear equations, special solution counts, and linear inequalities.
@@ -171,8 +171,8 @@ export const satExamAlgebra4: ExamSpec[] = [
       x0,
       [y0 === x0 ? x0 + 1 : y0, x0 + 1, -x0 === x0 ? x0 + 2 : -x0],
       t(
-        `Multiply to match the $y$ coefficients: use $${d}$ times the first and $${b}$ times the second. Subtracting gives $${det}x = ${det * x0}$, so $x = ${x0}$.`,
-        `乘以某数使 $y$ 系数相同：第一式乘 $${d}$，第二式乘 $${b}$。相减得 $${det}x = ${det * x0}$，所以 $x = ${x0}$。`,
+        `Match the $y$ coefficients: ${d === 1 ? `multiply the second equation by $${b}$` : `multiply the first equation by $${d}$ and the second by $${b}$`}. Subtracting gives $${cx(det)} = ${det * x0}$${det === 1 ? "" : `, so $x = ${x0}$`}.`,
+        `让 $y$ 系数相同：${d === 1 ? `第二式乘 $${b}$` : `第一式乘 $${d}$，第二式乘 $${b}$`}。相减得 $${cx(det)} = ${det * x0}$${det === 1 ? "" : `，所以 $x = ${x0}$`}。`,
       ),
     );
   }),
@@ -713,20 +713,21 @@ export const satExamAlgebra4: ExamSpec[] = [
             `解 $${gap} + ${a}n < ${b}n$：$n > \\frac{${gap}}{${b - a}}$。下一个整数是 $${Math.floor(gap / (b - a)) + 1}$。`,
           ),
         );
-      const cap = rng.int(3, 8);
-      const box = cap * rng.int(5, 9);
+      const box = rng.int(3, 8) * rng.int(5, 9);
       const m = rng.int(6, 12);
-      const limit = box * m + rng.int(1, box - 1);
+      const tools = 10 * rng.int(4, 12);
+      const limit = tools + box * m + rng.int(1, box - 1);
+      const ignored = Math.floor(limit / box);
       return spr(
         t(
-          `A truck can carry at most $${limit}$ kilograms. Crates weigh $${box}$ kilograms each, and each crate must be loaded with the others by $${cap}$ workers. What is the greatest number of crates the truck can carry?`,
-          `一辆卡车最多载重 $${limit}$ 千克。每个板条箱重 $${box}$ 千克，由 $${cap}$ 名工人一起装车。卡车最多能载多少个板条箱？`,
+          `A truck can carry at most $${limit}$ kilograms and already holds $${tools}$ kilograms of tools. Crates weigh $${box}$ kilograms each. What is the greatest number of crates that can be added?`,
+          `一辆卡车最多载重 $${limit}$ 千克，车上已有 $${tools}$ 千克工具。每个板条箱重 $${box}$ 千克。最多还能装多少个板条箱？`,
         ),
         m,
-        [m + 1, Q.of(limit, cap), Q.of(limit, box + cap)],
+        [m + 1, ignored === m ? m - 1 : ignored, Q.of(limit - tools, box)],
         t(
-          `The number of workers does not affect the weight. Solve $${box}c \\le ${limit}$ to get $c \\le \\frac{${limit}}{${box}}$, and round down to $${m}$.`,
-          `工人数不影响重量。解 $${box}c \\le ${limit}$ 得 $c \\le \\frac{${limit}}{${box}}$，向下取整为 $${m}$。`,
+          `The tools and the crates share the limit. Solve $${tools} + ${box}c \\le ${limit}$ to get $c \\le \\frac{${limit - tools}}{${box}}$, and round down to $${m}$, since only whole crates can be added.`,
+          `工具和板条箱共用载重上限。解 $${tools} + ${box}c \\le ${limit}$ 得 $c \\le \\frac{${limit - tools}}{${box}}$，只能装整箱，所以向下取整为 $${m}$。`,
         ),
       );
     },
@@ -736,18 +737,19 @@ export const satExamAlgebra4: ExamSpec[] = [
     const b = rng.int(1, 9);
     const lo = rng.int(-3, 3);
     const hi = lo + rng.int(3, 6);
+    const inside = rng.int(lo + 1, hi - 1);
     if (!hard)
-      return mc(
+      return mcExact(
         rng,
         t(
           `Which value of $x$ satisfies $${a * lo + b} < ${a}x + ${b} < ${a * hi + b}$?`,
           `哪个 $x$ 的值满足 $${a * lo + b} < ${a}x + ${b} < ${a * hi + b}$？`,
         ),
-        lo + 1,
-        [lo, hi, hi + 1],
+        inside,
+        rng.bool() ? [lo, hi, hi + 1] : [lo - 1, lo, hi],
         t(
-          `Subtract $${b}$ and divide by $${a}$: $${lo} < x < ${hi}$. Only $${lo + 1}$ lies strictly between, and the endpoints are excluded.`,
-          `减 $${b}$ 再除以 $${a}$：$${lo} < x < ${hi}$。只有 $${lo + 1}$ 严格在其间，端点不包括在内。`,
+          `Subtract $${b}$ and divide by $${a}$: $${lo} < x < ${hi}$. Only $${inside}$ lies strictly between, and the endpoints are excluded.`,
+          `减 $${b}$ 再除以 $${a}$：$${lo} < x < ${hi}$。只有 $${inside}$ 严格在其间，端点不包括在内。`,
         ),
       );
     const count = hi - lo + 1;
@@ -759,8 +761,8 @@ export const satExamAlgebra4: ExamSpec[] = [
       count,
       [count - 1, count - 2, hi],
       t(
-        `Simplify to $${lo} \\le x \\le ${hi}$. Both ends count, so there are $${hi} - (${lo}) + 1 = ${count}$ integers.`,
-        `化简为 $${lo} \\le x \\le ${hi}$。两端都计入，所以共 $${hi} - (${lo}) + 1 = ${count}$ 个整数。`,
+        `Simplify to $${lo} \\le x \\le ${hi}$. Both ends count, so there are $${hi} - ${par(lo)} + 1 = ${count}$ integers.`,
+        `化简为 $${lo} \\le x \\le ${hi}$。两端都计入，所以共 $${hi} - ${par(lo)} + 1 = ${count}$ 个整数。`,
       ),
     );
   }),

@@ -489,7 +489,7 @@ export const solvingQuadraticEquationsContainingUnknownParameters = topic(
         "若 $x = 2$ 是 $x^{2} + kx - 10 = 0$ 的一个解，代入它求参数：$4 + 2k - 10 = 0$，所以 $k = 3$。方程为 $x^{2} + 3x - 10 = (x - 2)(x + 5) = 0$，另一个解是 $x = -5$。检验：两个解之积等于常数项：$2(-5) = -10$。",
       ),
       (rng) => {
-        const r = nonzero(rng, 6);
+        const r = rng.int(2, 6) * (rng.bool() ? 1 : -1);
         let s = 0;
         do s = nonzero(rng, 7);
         while (s === r);

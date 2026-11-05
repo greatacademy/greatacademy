@@ -1,7 +1,7 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { ask, curveFigure, mod, sg, words } from "../exam.ts";
+import { ask, curveFigure, mod, ordinal, sg, words } from "../exam.ts";
 import { curvePlot, polyFigure, sasPts } from "../exam-figures.ts";
 
 // ACT Math Prep, Functions: notation, logarithms, graphs and their features, sequences and trigonometric functions.
@@ -464,10 +464,7 @@ export const actExamFunctions: ExamSpec[] = [
     const fig = curveFigure(
       f,
       { x: [-10, 10], y: [-6, 20], dx: 2, dy: 2 },
-      t(
-        `A line segment from $x = ${lo}$ to $x = ${hi}$, rising from a height of $-4$ to a height of $${m * w - 4}$.`,
-        `一条线段，从 $x = ${lo}$ 到 $x = ${hi}$，高度从 $-4$ 升到 $${m * w - 4}$。`,
-      ),
+      t("A line segment on a coordinate grid.", "坐标网格上的一条线段。"),
     );
     if (!hard)
       return ask(
@@ -644,13 +641,13 @@ export const actExamFunctions: ExamSpec[] = [
     const figA = curveFigure(
       up,
       { x: [-8, 8], y: [-20, 20], dx: 2, dy: 5 },
-      t(`An upward parabola crossing the $x$-axis at $${-r}$ and $${s}$.`, `开口向上的抛物线，与 $x$ 轴交于 $${-r}$ 和 $${s}$。`),
+      t("A parabola on a coordinate grid.", "坐标网格上的一条抛物线。"),
     );
     const down = (x: number) => -(x - h) * (x - h) + k;
     const figB = curveFigure(
       down,
       { x: [-10, 10], y: [-16, 16], dx: 2, dy: 4 },
-      t(`A downward parabola with vertex $(${h}, ${k})$.`, `开口向下的抛物线，顶点为 $(${h}, ${k})$。`),
+      t("A parabola on a coordinate grid.", "坐标网格上的一条抛物线。"),
     );
     if (!hard)
       return ask(
@@ -685,10 +682,7 @@ export const actExamFunctions: ExamSpec[] = [
     const fig = curveFigure(
       (x) => (Math.abs(x - c) < 0.08 ? Number.NaN : x < c ? x + p : q),
       { x: [-8, 8], y: [-12, 12], dx: 1, dy: 1 },
-      t(
-        `For $x < ${c}$ the graph is the line $y = x ${p === 0 ? "" : sg(p)}$; for $x > ${c}$ it is the horizontal line $y = ${q}$.`,
-        `当 $x < ${c}$ 时，图像是直线 $y = x ${p === 0 ? "" : sg(p)}$；当 $x > ${c}$ 时，是水平线 $y = ${q}$。`,
-      ),
+      t("A graph made of two pieces on a coordinate grid.", "坐标网格上由两段组成的图象。"),
     );
     if (!hard)
       return ask(
@@ -726,7 +720,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     return ask(
       rng,
-      `In an arithmetic sequence, the $${n}$th term is $${a + (n - 1) * d}$ and the $${n + k}$th term is $${a + (n + k - 1) * d}$. What is the common difference?`,
+      `In an arithmetic sequence, the ${ordinal(n)} term is $${a + (n - 1) * d}$ and the ${ordinal(n + k)} term is $${a + (n + k - 1) * d}$. What is the common difference?`,
       `等差数列第 $${n}$ 项是 $${a + (n - 1) * d}$，第 $${n + k}$ 项是 $${a + (n + k - 1) * d}$。公差是多少？`,
       d,
       [k * d, d + 1, k, Q.of(a + (n + k - 1) * d, n + k)],
@@ -748,7 +742,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     return ask(
       rng,
-      `A geometric sequence has first term $${a}$ and common ratio $${r}$. What is its $${n}$th term?`,
+      `A geometric sequence has first term $${a}$ and common ratio $${r}$. What is its ${ordinal(n)} term?`,
       `等比数列首项为 $${a}$，公比为 $${r}$。第 $${n}$ 项是多少？`,
       a * r ** (n - 1),
       [a * r ** n, (a * r) ** (n - 1), a + (n - 1) * r, a * r * (n - 1)],
@@ -989,7 +983,9 @@ export const actExamFunctions: ExamSpec[] = [
     "判断等价的三角表示",
     ["simplifying-trigonometric-expressions-using-cofunction-identities"],
     (rng, hard) => {
-      const a = rng.int(5, 85);
+      const a0 = rng.int(5, 85);
+      // At 45 degrees the sine and cosine coincide, so two options would be correct.
+      const a = a0 === 45 ? 40 : a0;
       const k = rng.int(1, 3);
       if (!hard)
         return ask(
@@ -1053,10 +1049,7 @@ export const actExamFunctions: ExamSpec[] = [
       const fig = curveFigure(
         (x) => a * Math.sin(b * x) + d,
         { x: [-7, 7], y: [-11, 11], dx: 1, dy: 1 },
-        t(
-          `A sine wave centered on $y = ${d}$ with amplitude ${a} and ${b} full ${b === 1 ? "cycle" : "cycles"} every $2\\pi$.`,
-          `正弦波，以 $y = ${d}$ 为中心，振幅 ${a}，每 $2\\pi$ 有 ${b} 个完整周期。`,
-        ),
+        t("A wave on a coordinate grid.", "坐标网格上的一条波形曲线。"),
       );
       const shift = d === 0 ? "" : ` ${sg(d)}`;
       const lead = a === 1 ? "" : `${a}`;

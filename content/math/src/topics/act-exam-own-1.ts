@@ -285,8 +285,8 @@ export const actOwnAlgebra1: Record<string, ExamSpec["make"]> = {
         `一家健身房收 $\\$${f}$ 注册费，每次 $\\$${r}$。Sam 用 $\\$${budget}$ 最多能支付多少次？`,
         n,
         [n + 1, n - 1, Math.floor(budget / r)],
-        `Solve $${f} + ${r}v \\le ${budget}$: $v \\le ${budget - f} / ${r}$. Only whole visits count, so round down to $${n}$.`,
-        `解 $${f} + ${r}v \\le ${budget}$：$v \\le ${budget - f} / ${r}$。次数必须是整数，向下取整得 $${n}$。`,
+        `Solve $${f} + ${r}v \\le ${budget}$: $v \\le \\frac{${budget - f}}{${r}}$. Only whole visits count, so round down to $${n}$.`,
+        `解 $${f} + ${r}v \\le ${budget}$：$v \\le \\frac{${budget - f}}{${r}}$。次数必须是整数，向下取整得 $${n}$。`,
       );
     }
     const goal = f + r * n - rng.int(0, r - 1);
@@ -296,8 +296,8 @@ export const actOwnAlgebra1: Record<string, ExamSpec["make"]> = {
       `一个学校社团有 $\\$${f}$，每张卡片卖 $\\$${r}$。要拥有至少 $\\$${goal}$，最少要卖多少张？`,
       n,
       [n + 1, n - 1, Math.ceil(goal / r)],
-      `Solve $${f} + ${r}c \\ge ${goal}$: $c \\ge ${goal - f} / ${r}$. Only whole cards can be sold, so round up to $${n}$.`,
-      `解 $${f} + ${r}c \\ge ${goal}$：$c \\ge ${goal - f} / ${r}$。卡片数必须是整数，向上取整得 $${n}$。`,
+      `Solve $${f} + ${r}c \\ge ${goal}$: $c \\ge \\frac{${goal - f}}{${r}}$. Only whole cards can be sold, so round up to $${n}$.`,
+      `解 $${f} + ${r}c \\ge ${goal}$：$c \\ge \\frac{${goal - f}}{${r}}$。卡片数必须是整数，向上取整得 $${n}$。`,
     );
   },
   "Graphing Linear Inequalities": (rng, hard) => {

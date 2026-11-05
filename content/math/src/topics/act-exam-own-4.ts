@@ -47,10 +47,7 @@ function boxPlot(v: readonly [number, number, number, number, number], lo: numbe
       ],
       labels,
     },
-    t(
-      `A box plot with minimum ${min}, first quartile ${q1}, median ${med}, third quartile ${q3} and maximum ${max}.`,
-      `箱线图：最小值 ${min}，第一四分位数 ${q1}，中位数 ${med}，第三四分位数 ${q3}，最大值 ${max}。`,
-    ),
+    t("A box plot on a number line.", "数轴上的箱线图。"),
   );
 }
 

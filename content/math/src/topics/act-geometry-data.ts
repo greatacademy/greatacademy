@@ -92,7 +92,7 @@ export const conicSectionsAsSlicesOfACone = topic(
           t(`$${alpha}^{\\circ} < ${theta}^{\\circ} < 90^{\\circ}$`, `$${alpha}^{\\circ} < ${theta}^{\\circ} < 90^{\\circ}$`),
           t("the plane is parallel to a side of the cone", "平面平行于圆锥的一条母线"),
           t(
-            `$${theta}^{\\circ} < ${alpha}^{\\circ}$, so the plane cuts both halves of the cone`,
+            `$${theta}^{\\circ} < ${alpha}^{\\circ}$, which makes the plane cut both halves of the cone`,
             `$${theta}^{\\circ} < ${alpha}^{\\circ}$，平面截到圆锥的上下两部分`,
           ),
         ][kind]!;
@@ -1046,8 +1046,8 @@ export const adjustingOutcomesToATargetProbability = topic(
           form: "integer",
           wrong: distinct(Q.of(x), [naive, Q.of(finalA), Q.of(finalT - T), Q.of(p * T - a > 0 ? p * T - a : x + 1)]),
           solution: t(
-            `Solve $\\frac{${a} + x}{${T} + x} = \\frac{${p}}{${q}}$:${steps(`${q}(${a} + x) = ${p}(${T} + x)`, `${q * a} + ${q}x = ${p * T} + ${p}x`, `${q - p === 1 ? "" : q - p}x = ${p * T - q * a}`)}So $x = ${x}$.`,
-            `解 $\\frac{${a} + x}{${T} + x} = \\frac{${p}}{${q}}$：${steps(`${q}(${a} + x) = ${p}(${T} + x)`, `${q * a} + ${q}x = ${p * T} + ${p}x`, `${q - p === 1 ? "" : q - p}x = ${p * T - q * a}`)}所以 $x = ${x}$。`,
+            `Solve $\\frac{${a} + x}{${T} + x} = \\frac{${p}}{${q}}$:${steps(`${q}(${a} + x) = ${p === 1 ? `${T} + x` : `${p}(${T} + x)`}`, `${q * a} + ${q}x = ${p * T} + ${p === 1 ? "" : p}x`, `${q - p === 1 ? "" : q - p}x = ${p * T - q * a}`)}${q - p === 1 ? "" : `So $x = ${x}$.`}`,
+            `解 $\\frac{${a} + x}{${T} + x} = \\frac{${p}}{${q}}$：${steps(`${q}(${a} + x) = ${p === 1 ? `${T} + x` : `${p}(${T} + x)`}`, `${q * a} + ${q}x = ${p * T} + ${p === 1 ? "" : p}x`, `${q - p === 1 ? "" : q - p}x = ${p * T - q * a}`)}${q - p === 1 ? "" : `所以 $x = ${x}$。`}`,
           ),
         });
       },

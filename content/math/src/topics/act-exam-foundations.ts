@@ -269,7 +269,7 @@ export const actExamFoundations: ExamSpec[] = [
         `$\\frac{${a}}{${b}} + \\frac{${c}}{${d}}$ 等于多少？`,
         Q.of(a * d + c * b, b * d),
         [Q.of(a + c, b + d), Q.of(a + c, b * d), Q.of(a * c, b * d), Q.of(a * d + c * b + 1, b * d)],
-        `The common denominator is $${b * d}$.`,
+        `A common denominator is $${b * d}$.`,
         `公分母是 $${b * d}$。`,
       );
     return ask(
@@ -299,7 +299,7 @@ export const actExamFoundations: ExamSpec[] = [
         `$\\frac{${a}}{${b}} - \\frac{${c}}{${d}}$ 等于多少？`,
         Q.of(a * d - c * b, b * d),
         [Q.of(a - c, b - d), Q.of(a - c, b * d), Q.of(a * d + c * b, b * d), Q.of(a * d - c * b + 1, b * d)],
-        `The common denominator is $${b * d}$.`,
+        `A common denominator is $${b * d}$.`,
         `公分母是 $${b * d}$。`,
       );
     return ask(
@@ -633,8 +633,8 @@ export const actExamFoundations: ExamSpec[] = [
     if (!hard)
       return ask(
         rng,
-        `A cyclist rides $${d * h}$ miles in $${h}$ hours. What is the average speed, in miles per hour?`,
-        `骑手 $${h}$ 小时骑了 $${d * h}$ 英里。平均速度是每小时多少英里？`,
+        `A car travels $${d * h}$ miles in $${h}$ hours. What is the average speed, in miles per hour?`,
+        `一辆汽车 $${h}$ 小时行驶了 $${d * h}$ 英里。平均速度是每小时多少英里？`,
         d,
         [d * h, d + h, Q.of(h, d), d + 10],
         `Divide the distance by the time.`,
@@ -889,14 +889,17 @@ export const actExamFoundations: ExamSpec[] = [
         `The profit per item is $\\$${p - c}$.`,
         `每件利润 $${p - c}$ 美元。`,
       );
+    const list = 20 * ((p % 3) + 1);
+    const sale = (list * (100 - d)) / 100;
+    const fee = Math.min(f, n * 4 * (sale - c) - 1);
     return ask(
       rng,
-      `A vendor buys $${n * 4}$ items at $\\$${c}$ each and pays a $\\$${f}$ table fee. The vendor sells all the items at a list price of $\\$${p * 20}$ each, less a discount of $${d}\\%$. What is the profit, in dollars?`,
-      `小贩以每件 $${c}$ 美元买入 $${n * 4}$ 件，并付 $${f}$ 美元摊位费。全部按标价每件 $${p * 20}$ 美元减 $${d}\\%$ 折扣卖出。利润是多少美元？`,
-      n * 4 * ((p * (100 - d)) / 5 - c) - f,
-      [n * 4 * (p * 20 - c) - f, n * 4 * ((p * (100 - d)) / 5 - c), n * 4 * ((p * d) / 5 - c) - f, n * 4 * ((p * (100 - d)) / 5) - f],
-      `Each item sells for $\\$${(p * (100 - d)) / 5}$ after the discount.`,
-      `折后每件售价 $${(p * (100 - d)) / 5}$ 美元。`,
+      `A vendor buys $${n * 4}$ items at $\\$${c}$ each and pays a $\\$${fee}$ table fee. The vendor sells all the items at a list price of $\\$${list}$ each, less a discount of $${d}\\%$. What is the profit, in dollars?`,
+      `小贩以每件 $${c}$ 美元买入 $${n * 4}$ 件，并付 $${fee}$ 美元摊位费。全部按标价每件 $${list}$ 美元减 $${d}\\%$ 折扣卖出。利润是多少美元？`,
+      n * 4 * (sale - c) - fee,
+      [n * 4 * (list - c) - fee, n * 4 * (sale - c), n * 4 * ((list * d) / 100 - c) - fee, n * 4 * sale - fee],
+      `Each item sells for $\\$${sale}$ after the discount, so the sales bring $${n * 4}(${sale}) = ${n * 4 * sale}$ dollars. Subtract the cost of the items, $${n * 4}(${c}) = ${n * 4 * c}$, and the fee, $${fee}$.`,
+      `折后每件售价 $${sale}$ 美元，所以销售额为 $${n * 4}(${sale}) = ${n * 4 * sale}$ 美元。减去进货成本 $${n * 4}(${c}) = ${n * 4 * c}$ 和摊位费 $${fee}$。`,
     );
   }),
   moneyTips("Computing Overtime Pay", "计算加班工资", ["multistep-numerical-word-problems"], (rng, hard) => {
@@ -952,7 +955,7 @@ export const actExamFoundations: ExamSpec[] = [
         `$${b * u}$ 的 $\\frac{${a}}{${b}}$ 是多少？`,
         a * u,
         [u, b * u - a, a * b * u, a * u + 1],
-        `One $${b}$th of $${b * u}$ is $${u}$.`,
+        `$\\frac{1}{${b}}$ of $${b * u}$ is $${u}$.`,
         `$${b * u}$ 的 $${b}$ 分之一是 $${u}$。`,
       );
     return ask(

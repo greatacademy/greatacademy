@@ -58,8 +58,16 @@ function convertProblem(rng: Rng, units: readonly Unit[], base: Unit, amounts: (
       (w) => !w.eq(value),
     ),
     solution: t(
-      `Go through the base unit, ${base.en}: $${show(amount)}$ ${from.en} is $${show(inBase)}$ ${base.en}, which is $${show(value)}$ ${to.en}.`,
-      `通过基本单位${base.zh}换算：$${show(amount)}$ ${from.zh}是 $${show(inBase)}$ ${base.zh}，即 $${show(value)}$ ${to.zh}。`,
+      from.size.eq(base.size)
+        ? `The amount is already in the base unit, ${base.en}. Divide by the number of ${base.en} in each of the new units, $${show(to.size.div(base.size))}$: $${show(amount)}$ ${from.en} is $${show(value)}$ ${to.en}.`
+        : to.size.eq(base.size)
+          ? `The new unit is the base unit, ${base.en}. Multiply by the number of ${base.en} in each of the old units, $${show(from.size.div(base.size))}$: $${show(amount)}$ ${from.en} is $${show(value)}$ ${to.en}.`
+          : `Go through the base unit, ${base.en}: $${show(amount)}$ ${from.en} is $${show(inBase)}$ ${base.en}, which is $${show(value)}$ ${to.en}.`,
+      from.size.eq(base.size)
+        ? `数量已经用基本单位${base.zh}表示。除以每个新单位所含的${base.zh}数 $${show(to.size.div(base.size))}$：$${show(amount)}$ ${from.zh}是 $${show(value)}$ ${to.zh}。`
+        : to.size.eq(base.size)
+          ? `新单位就是基本单位${base.zh}。乘以每个原单位所含的${base.zh}数 $${show(from.size.div(base.size))}$：$${show(amount)}$ ${from.zh}是 $${show(value)}$ ${to.zh}。`
+          : `通过基本单位${base.zh}换算：$${show(amount)}$ ${from.zh}是 $${show(inBase)}$ ${base.zh}，即 $${show(value)}$ ${to.zh}。`,
     ),
   });
 }
@@ -126,7 +134,7 @@ export const manipulatingRatiosInVariousContexts = topic(
           ["red marbles to blue marbles", "红色弹珠与蓝色弹珠", "marbles", "颗弹珠", "red marbles", "红色弹珠", "blue marbles", "蓝色弹珠"],
           ["adults to children at a concert", "音乐会上成人与儿童", "people", "人", "adults", "成人", "children", "儿童"],
           [
-            "flour to sugar in a mix, by weight",
+            "flour to sugar by weight in a mix",
             "混合物中面粉与糖的重量",
             "grams",
             "克",
@@ -629,21 +637,24 @@ export const interpretingDescriptionsOfPhysicalPhenomena = topic(
               `A spring is $${a}$ cm long with nothing attached and stretches $${r}$ cm for each kilogram hung from it.`,
             zh: (a: number, r: number) => `一根弹簧不挂物体时长 $${a}$ cm，每挂 $1$ 千克伸长 $${r}$ cm。`,
             out: ["length of the spring, in centimeters", "弹簧的长度（厘米）"],
-            name: ["length of the spring", "弹簧的长度"],
+            at: (n: number) => [`with $${n}$ kilograms hung from it`, `挂 $${n}$ 千克时，`],
+            how: ["How many kilograms must hang from it for its length to be", "挂多少千克时，弹簧的长度等于"],
             inp: ["kilograms", "千克"],
           },
           {
             en: (a: number, r: number) => `A candle is $${a}$ cm tall when lit and burns down $${r}$ cm each hour.`,
             zh: (a: number, r: number) => `一支蜡烛点燃时高 $${a}$ cm，每小时燃烧 $${r}$ cm。`,
             out: ["height of the candle, in centimeters", "蜡烛的高度（厘米）"],
-            name: ["height of the candle", "蜡烛的高度"],
+            at: (n: number) => [`after $${n}$ hours`, `经过 $${n}$ 小时后，`],
+            how: ["After how many hours is the height of the candle", "经过多少小时后，蜡烛的高度等于"],
             inp: ["hours", "小时"],
           },
           {
             en: (a: number, r: number) => `Water in a tank is $${a}$ °C and is heated by $${r}$ °C each minute.`,
             zh: (a: number, r: number) => `水箱里的水温为 $${a}$ °C，每分钟升高 $${r}$ °C。`,
             out: ["temperature of the water, in °C", "水温（°C）"],
-            name: ["temperature of the water", "水温"],
+            at: (n: number) => [`after $${n}$ minutes`, `经过 $${n}$ 分钟后，`],
+            how: ["After how many minutes is the temperature of the water", "经过多少分钟后，水温等于"],
             inp: ["minutes", "分钟"],
           },
         ]);
@@ -655,14 +666,8 @@ export const interpretingDescriptionsOfPhysicalPhenomena = topic(
         const askOut = rng.bool();
         return numberProblem({
           prompt: askOut
-            ? t(
-                `${ctx.en(a, r)} What is the ${ctx.out[0]} after $${n}$ ${ctx.inp[0]}?`,
-                `${ctx.zh(a, r)}经过 $${n}$ ${ctx.inp[1]}后，${ctx.out[1]}是多少？`,
-              )
-            : t(
-                `${ctx.en(a, r)} After how many ${ctx.inp[0]} is the ${ctx.name[0]} equal to $${out}$?`,
-                `${ctx.zh(a, r)}经过多少${ctx.inp[1]}后，${ctx.name[1]}等于 $${out}$？`,
-              ),
+            ? t(`${ctx.en(a, r)} What is the ${ctx.out[0]}, ${ctx.at(n)[0]}?`, `${ctx.zh(a, r)}${ctx.at(n)[1]}${ctx.out[1]}是多少？`)
+            : t(`${ctx.en(a, r)} ${ctx.how[0]} $${out}$?`, `${ctx.zh(a, r)}${ctx.how[1]} $${out}$？`),
           answer: askOut ? out : n,
           wrong: askOut ? [down ? a + r * n : a - r * n, r * n, a * r * n] : [Q.of(out, r), Q.of(a + out, r), n + 1],
           solution: t(
@@ -858,7 +863,7 @@ export const combiningMeans = topic(
         const m1 = rng.int(10, 60);
         const m2 = rng.int(10, 60);
         const total = n1 * m1 + n2 * m2;
-        if (total % (n1 + n2) !== 0) return combiningMeans.knowledgePoints[1]!.generate(rng);
+        if (m1 === m2 || total % (n1 + n2) !== 0) return combiningMeans.knowledgePoints[1]!.generate(rng);
         const m = total / (n1 + n2);
         return numberProblem({
           prompt: t(

@@ -159,7 +159,7 @@ export const satExamAlgebra1: ExamSpec[] = [
     (rng, hard) => {
       const v = rng.int(2, 9);
       const a = rng.int(5, 9);
-      const c = rng.int(2, a - 1);
+      const c = rng.int(2, a - 2);
       const b = rng.int(2, 15);
       const d = (a - c) * v + b;
       const eq = `${a}x + ${b} = ${c}x + ${d}`;
@@ -235,8 +235,8 @@ export const satExamAlgebra1: ExamSpec[] = [
         w,
         [(p + q) * c, c, p * c],
         t(
-          `Multiply every term by $${p * q}$: $${q}x = ${p}x + ${p * q * c}$. Subtract $${p}x$: $${q - p}x = ${p * q * c}$, so $x = ${w}$.`,
-          `每一项乘以 $${p * q}$：$${q}x = ${p}x + ${p * q * c}$。减去 $${p}x$：$${q - p}x = ${p * q * c}$，所以 $x = ${w}$。`,
+          `Multiply every term by $${p * q}$: $${q}x = ${p}x + ${p * q * c}$. Subtract $${p}x$: ${q - p === 1 ? `$x = ${w}$` : `$${q - p}x = ${p * q * c}$, so $x = ${w}$`}.`,
+          `每一项乘以 $${p * q}$：$${q}x = ${p}x + ${p * q * c}$。减去 $${p}x$：${q - p === 1 ? `$x = ${w}$` : `$${q - p}x = ${p * q * c}$，所以 $x = ${w}$`}。`,
         ),
       );
     },

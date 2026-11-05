@@ -771,8 +771,8 @@ export const transformationsOfBestFitLines = topic(
           wrong: distinct(answer, [b, shiftX ? b.add(m.mul(Q.of(k))) : b.sub(Q.of(k)), shiftX ? b.sub(Q.of(k)) : b.add(m.mul(Q.of(k)))]),
           solution: shiftX
             ? t(
-                `Increasing every $x$ by $${k}$ moves the line $${k}$ units to the right: the new line is $y = ${dec(m)}(x - ${paren(k)}) + ${dec(b)}$, so $c = ${dec(b)} - ${paren(dec(m))} \\cdot ${paren(k)} = ${dec(answer)}$.`,
-                `每个 $x$ 都增加 $${k}$，直线向右移动 $${k}$ 个单位：新直线为 $y = ${dec(m)}(x - ${paren(k)}) + ${dec(b)}$，所以 $c = ${dec(b)} - ${paren(dec(m))} \\cdot ${paren(k)} = ${dec(answer)}$。`,
+                `${k > 0 ? "Increasing" : "Decreasing"} every $x$ by $${Math.abs(k)}$ moves the line $${Math.abs(k)}$ units to the ${k > 0 ? "right" : "left"}: the new line is $y = ${dec(m)}(x ${k > 0 ? "-" : "+"} ${Math.abs(k)}) + ${dec(b)}$, so $c = ${dec(b)} - ${paren(dec(m))} \\cdot ${paren(k)} = ${dec(answer)}$.`,
+                `每个 $x$ 都${k > 0 ? "增加" : "减少"} $${Math.abs(k)}$，直线向${k > 0 ? "右" : "左"}移动 $${Math.abs(k)}$ 个单位：新直线为 $y = ${dec(m)}(x ${k > 0 ? "-" : "+"} ${Math.abs(k)}) + ${dec(b)}$，所以 $c = ${dec(b)} - ${paren(dec(m))} \\cdot ${paren(k)} = ${dec(answer)}$。`,
               )
             : t(
                 `Every point moves ${k > 0 ? "up" : "down"} $${Math.abs(k)}$ units, so the line does too and its slope is unchanged: $c = ${dec(b)} ${k > 0 ? "+" : "-"} ${Math.abs(k)} = ${dec(answer)}$.`,

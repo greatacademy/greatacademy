@@ -207,6 +207,27 @@ export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Opti
   };
 }
 
+/**
+ * mcExact is mc for a question where values other than the answer could also be true, such as "which value is a solution" or "which of these numbers is prime".
+ * The distractors stay exactly as given, listed from least to greatest when numeric, because a distractor moved to balance the order could be a second correct option.
+ */
+export function mcExact(rng: Rng, prompt: Text, correct: Option, wrong: readonly Option[], solution: Text, figure?: Figure): Problem {
+  const key = latexOf(correct);
+  const keys = [...new Set([key, ...wrong.map(latexOf)])].slice(0, 4);
+  const values = [correct, ...wrong].map(optionValue);
+  const ordered = values.every((v) => v !== undefined)
+    ? keys
+        .map((l) => ({ l, v: optionValue(l) as Q }))
+        .sort((a, b) => a.v.cmp(b.v))
+        .map((o) => o.l)
+    : rng.shuffle(keys);
+  const options = ordered.map((l) => t(`$${l}$`, `$${l}$`));
+  return {
+    ...choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
+    ...(figure && { figure }),
+  };
+}
+
 /** words builds a four-option question whose options are sentences or phrases, in shuffled order. */
 export function words(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text, figure?: Figure): Problem {
   const seen = new Set([correct.en]);
@@ -227,8 +248,18 @@ export function spr(prompt: Text, answer: Coefficient, wrong: readonly Coefficie
   };
 }
 
+/** ordinal writes a position with its English suffix, as in "$22$nd" and "$13$th". */
+export function ordinal(n: number): string {
+  const teen = n % 100 >= 11 && n % 100 <= 13;
+  const suffix = teen ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th");
+  return `$${n}$${suffix}`;
+}
+
 /** sg writes a signed term after an expression: sg(3) is "+ 3", sg(-3) is "- 3" and sg(0) is empty. */
 export const sg = (n: number, suffix = ""): string => (n === 0 ? "" : `${n < 0 ? "-" : "+"} ${Math.abs(n)}${suffix}`);
+
+/** par writes a number to subtract or multiply by: par(3) is "3" and par(-3) is "(-3)". */
+export const par = (n: number): string => (n < 0 ? `(${n})` : `${n}`);
 
 /** cx writes a leading coefficient with a variable: cx(1, "x") is "x", cx(-1, "x") is "-x" and cx(3, "x") is "3x". */
 export const cx = (c: number, v = "x"): string => (c === 1 ? v : c === -1 ? `-${v}` : `${c}${v}`);
@@ -343,6 +374,20 @@ export function sketchFigure(s: Sketch, alt: Text): Figure {
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none" stroke="currentColor">${[...segs, ...circles, ...labels].join("")}</svg>`,
     alt,
   };
+}
+
+/** askExact is mcExact with the English and Chinese texts side by side, for ACT Math Prep. */
+export function askExact(
+  rng: Rng,
+  en: string,
+  zh: string,
+  correct: Option,
+  wrong: readonly Option[],
+  solEn: string,
+  solZh: string,
+  figure?: Figure,
+): Problem {
+  return mcExact(rng, t(en, zh), correct, wrong, t(solEn, solZh), figure);
 }
 
 /** ask builds a four-option question from English and Chinese strings, the short form used across ACT Math Prep. */

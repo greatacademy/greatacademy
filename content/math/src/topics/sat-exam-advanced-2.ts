@@ -41,10 +41,7 @@ const parabolaFig = (a: number, h: number, k: number) =>
   curveFigure(
     (x) => a * (x - h) * (x - h) + k,
     { x: [h - 5, h + 5], y: [Math.min(k, k + a * 9) - 2, Math.max(k, k + a * 9) + 2], dx: 1, dy: Math.ceil(Math.abs(a * 9) / 6) || 1 },
-    t(
-      `A parabola with vertex $(${h}, ${k})$ that opens ${a > 0 ? "up" : "down"}.`,
-      `顶点为 $(${h}, ${k})$、开口向${a > 0 ? "上" : "下"}的抛物线。`,
-    ),
+    t("A parabola on a coordinate grid.", "坐标网格上的一条抛物线。"),
   );
 
 /** satExamAdvanced2 are the exam-style questions on quadratic functions, quadratic models and polynomials. */
@@ -194,8 +191,8 @@ export const satExamAdvanced2: ExamSpec[] = [
           h,
           [y, d, 2 * h],
           t(
-            `Equal outputs lie symmetrically about the axis, which is halfway between: $\\frac{(${h - d}) + (${h + d})}{2} = ${h}$.`,
-            `输出相等的点关于对称轴对称，对称轴在正中间：$\\frac{(${h - d}) + (${h + d})}{2} = ${h}$。`,
+            `Equal outputs lie symmetrically about the axis, which is halfway between: $\\frac{${h - d} ${sg(h + d)}}{2} = ${h}$.`,
+            `输出相等的点关于对称轴对称，对称轴在正中间：$\\frac{${h - d} ${sg(h + d)}}{2} = ${h}$。`,
           ),
         );
       const e = d + rng.int(1, 4);
@@ -370,10 +367,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       const fig = curveFigure(
         (x) => -a * (x - h) * (x - h) + k,
         { x: [0, 2 * h + 1], y: [0, k + a * h], dx: 1, dy: a * h },
-        t(
-          `A downward parabola from the origin with its peak at $(${h}, ${k})$, reaching height zero again at $x = ${2 * h}$.`,
-          `从原点出发向下开口的抛物线，最高点为 $(${h}, ${k})$，在 $x = ${2 * h}$ 处高度再次为零。`,
-        ),
+        t("A parabola on a coordinate grid.", "坐标网格上的一条抛物线。"),
       );
       if (!hard)
         return mc(
@@ -488,11 +482,7 @@ export const satExamAdvanced2: ExamSpec[] = [
     const s = rng.int(1, 3);
     const scale = rng.pick([0.25, 0.5, 0.75]);
     const f = (x: number) => scale * (x + r) * x * (x - s);
-    const fig = curveFigure(
-      f,
-      { x: [-4, 4], y: [-8, 8], dx: 1, dy: 2 },
-      t(`A cubic curve crossing the $x$-axis at $${-r}$, $0$ and $${s}$.`, `一条三次曲线，与 $x$ 轴交于 $${-r}$、$0$ 和 $${s}$。`),
-    );
+    const fig = curveFigure(f, { x: [-4, 4], y: [-8, 8], dx: 1, dy: 2 }, t("A curve on a coordinate grid.", "坐标网格上的一条曲线。"));
     if (!hard)
       return mc(
         rng,

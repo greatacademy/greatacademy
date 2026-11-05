@@ -261,7 +261,15 @@ export const actOwnAlgebra2: Record<string, ExamSpec["make"]> = {
     );
   },
   "Combining Rational Expressions": (rng, hard) => {
-    const [b, c] = [rng.int(2, 9), rng.int(2, 7)];
+    const c = rng.int(2, 7);
+    // The second numerator stays coprime to c, so the sum is already in lowest terms.
+    const b = rng.pick(
+      [2, 3, 4, 5, 6, 7, 8, 9].filter((v) => {
+        let [m, n] = [v, c];
+        while (n !== 0) [m, n] = [n, m % n];
+        return m === 1;
+      }),
+    );
     const a = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== c));
     if (!hard)
       return ask(
@@ -415,14 +423,15 @@ export const actOwnAlgebra2: Record<string, ExamSpec["make"]> = {
         `Substitute $h = ${h}$: $${a} + ${b}(${h}) = ${a + b * h}$.`,
         `代入 $h = ${h}$：$${a} + ${b}(${h}) = ${a + b * h}$。`,
       );
+    const [full, level] = [2 * a + b * h, 2 * a];
     return ask(
       rng,
-      `A candle's height, in centimeters, is $H = ${a * 2} - ${b}t$, where $t$ is hours burned. After how many hours is the height $${2 * a - b * h}$ centimeters?`,
-      `一支蜡烛的高度（厘米）为 $H = ${a * 2} - ${b}t$，$t$ 是燃烧的小时数。多少小时后高度为 $${2 * a - b * h}$ 厘米？`,
+      `The water level in a draining tank, in centimeters, is $H = ${full} - ${b}t$, where $t$ is hours since it began draining. After how many hours is the level $${level}$ centimeters?`,
+      `一个正在排水的水箱的水位（厘米）为 $H = ${full} - ${b}t$，$t$ 是开始排水后的小时数。多少小时后水位为 $${level}$ 厘米？`,
       h,
-      [h + 2, h * b, 2 * a - h],
-      `Set $${a * 2} - ${b}t = ${2 * a - b * h}$. Then $${b}t = ${b * h}$ and $t = ${h}$.`,
-      `令 $${a * 2} - ${b}t = ${2 * a - b * h}$，则 $${b}t = ${b * h}$，$t = ${h}$。`,
+      [h + 2, h * b, full - h],
+      `Set $${full} - ${b}t = ${level}$. Then $${b}t = ${b * h}$ and $t = ${h}$.`,
+      `令 $${full} - ${b}t = ${level}$，则 $${b}t = ${b * h}$，$t = ${h}$。`,
     );
   },
   "Modeling Perimeter Problems": (rng, hard) => {
@@ -438,15 +447,16 @@ export const actOwnAlgebra2: Record<string, ExamSpec["make"]> = {
         `The perimeter gives $2(w + w + ${d}) = ${p}$, so $2w + ${d} = ${p / 2}$ and $w = ${w}$.`,
         `由周长得 $2(w + w + ${d}) = ${p}$，所以 $2w + ${d} = ${p / 2}$，$w = ${w}$。`,
       );
-    const k = rng.int(2, 4);
+    // The base stays shorter than the two equal sides together, so the triangle exists.
+    const extra = 1 + (d % (w - 1));
     return ask(
       rng,
-      `An isosceles triangle has a base that is $${k}$ times the length of each equal side, less $${d}$ inches. Its perimeter is $${(k + 2) * w - d}$ inches. What is the length of each equal side, in inches?`,
-      `一个等腰三角形的底等于腰长的 $${k}$ 倍再减 $${d}$ 英寸，周长为 $${(k + 2) * w - d}$ 英寸。每条腰长多少英寸？`,
+      `An isosceles triangle has a base that is $${extra}$ ${extra === 1 ? "inch" : "inches"} longer than each equal side. Its perimeter is $${3 * w + extra}$ inches. What is the length of each equal side, in inches?`,
+      `一个等腰三角形的底比每条腰长 $${extra}$ 英寸，周长为 $${3 * w + extra}$ 英寸。每条腰长多少英寸？`,
       w,
-      [w + d, k * w - d, w + k],
-      `With equal sides $s$, the perimeter is $s + s + ${k}s - ${d} = ${k + 2}s - ${d}$. Setting it equal gives $${k + 2}s = ${(k + 2) * w}$, so $s = ${w}$.`,
-      `设腰长为 $s$，周长为 $s + s + ${k}s - ${d} = ${k + 2}s - ${d}$。令其相等得 $${k + 2}s = ${(k + 2) * w}$，所以 $s = ${w}$。`,
+      [w + extra, 3 * w, w + 3],
+      `With equal sides $s$, the perimeter is $s + s + (s + ${extra}) = 3s + ${extra}$. Setting it equal gives $3s = ${3 * w}$, so $s = ${w}$.`,
+      `设腰长为 $s$，周长为 $s + s + (s + ${extra}) = 3s + ${extra}$。令其相等得 $3s = ${3 * w}$，所以 $s = ${w}$。`,
     );
   },
   "Modeling Cost Problems": (rng, hard) => {

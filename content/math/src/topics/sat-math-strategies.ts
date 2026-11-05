@@ -234,7 +234,7 @@ export const satMarginOfErrorInterpretation: TopicDef = {
           decrease,
           increase,
           t("The margin of error will remain exactly the same.", "误差范围保持完全不变。"),
-          t("The sample estimate will necessarily become 100%.", "样本估计值必然变为 100%。"),
+          t("The margin of error cannot be predicted from the sample size.", "无法根据样本量判断误差范围的变化。"),
         ]);
 
         const prompt = t(

@@ -1,7 +1,7 @@
 import { t } from "@ga/content";
 
 import type { ExamSpec } from "../exam.ts";
-import { curveFigure, mc, mod, sg, spr, words } from "../exam.ts";
+import { curveFigure, mc, mcExact, mod, sg, spr, words } from "../exam.ts";
 
 // SAT Math Prep, Advanced Math: exponential functions and models, nonlinear equations, multivariable equations, graphs and nonlinear systems.
 
@@ -458,7 +458,7 @@ export const satExamAdvanced3: ExamSpec[] = [
     const fig = curveFigure(
       (x) => Math.abs(x - h) + k,
       { x: [h - 5, h + 5], y: [k - 2, k + 6], dx: 1, dy: 2 },
-      t(`A V-shaped graph with its lowest point at $(${h}, ${k})$.`, `V 形图象，最低点在 $(${h}, ${k})$。`),
+      t("A graph on a coordinate grid.", "坐标网格上的一个图象。"),
     );
     if (!hard)
       return mc(
@@ -478,12 +478,15 @@ export const satExamAdvanced3: ExamSpec[] = [
         fig,
       );
     return spr(
-      t(`What is the minimum value of $f(x) = |x ${sg(-h)}| ${sg(k)} + ${n}$?`, `$f(x) = |x ${sg(-h)}| ${sg(k)} + ${n}$ 的最小值是多少？`),
+      t(
+        `The function $f$ is defined by $f(x) = |x ${sg(-h)}| ${sg(k)}$, and $g(x) = f(x) + ${n}$. What is the minimum value of $g(x)$?`,
+        `函数 $f$ 定义为 $f(x) = |x ${sg(-h)}| ${sg(k)}$，且 $g(x) = f(x) + ${n}$。$g(x)$ 的最小值是多少？`,
+      ),
       k + n,
       [h + n, k, h + k + n + 1],
       t(
-        `The absolute value is at least $0$, so the least output is $${k} + ${n}$, or $${k + n}$.`,
-        `绝对值至少为 $0$，所以最小输出是 $${k + n}$。`,
+        `The absolute value is at least $0$, so the least value of $f(x)$ is $${k}$. Adding $${n}$ raises it to $${k + n}$.`,
+        `绝对值至少为 $0$，所以 $f(x)$ 的最小值是 $${k}$。加上 $${n}$ 后变为 $${k + n}$。`,
       ),
     );
   }),
@@ -611,17 +614,25 @@ export const satExamAdvanced3: ExamSpec[] = [
         ],
         t(`Subtract $${d}$, divide by $${a}h$, then take the positive square root.`, `减去 $${d}$，除以 $${a}h$，再取正平方根。`),
       );
+    // The denominator stays coprime to the coefficient, so the answer needs no reducing.
+    const e = rng.pick(
+      [2, 3, 4, 5, 6, 7, 8, 9, 10, 11].filter((v) => {
+        let [p, q] = [v, a];
+        while (q !== 0) [p, q] = [q, p % q];
+        return p === 1;
+      }),
+    );
     return mc(
       rng,
       t(
-        `If $T = ${a}\\sqrt{\\frac{L}{${d}g}}$, with all variables positive, which equation correctly expresses $L$?`,
-        `若 $T = ${a}\\sqrt{\\frac{L}{${d}g}}$，各变量都为正，哪个方程正确表示 $L$？`,
+        `If $T = ${a}\\sqrt{\\frac{L}{${e}g}}$, with all variables positive, which equation correctly expresses $L$?`,
+        `若 $T = ${a}\\sqrt{\\frac{L}{${e}g}}$，各变量都为正，哪个方程正确表示 $L$？`,
       ),
-      `L = \\frac{${d}gT^2}{${a * a}}`,
-      [`L = \\frac{${d}gT}{${a}}`, `L = \\frac{T^2}{${a * a * d}g}`, `L = ${a * a * d}gT^2`, `L = \\frac{${d}gT^2}{${a}}`],
+      `L = \\frac{${e}gT^2}{${a * a}}`,
+      [`L = \\frac{${e}gT}{${a}}`, `L = \\frac{T^2}{${a * a * e}g}`, `L = ${a * a * e}gT^2`, `L = \\frac{${e}gT^2}{${a}}`],
       t(
-        `Divide by $${a}$ and square: $\\frac{T^2}{${a * a}} = \\frac{L}{${d}g}$. Multiply by $${d}g$.`,
-        `除以 $${a}$ 再平方：$\\frac{T^2}{${a * a}} = \\frac{L}{${d}g}$。再乘以 $${d}g$。`,
+        `Divide by $${a}$ and square: $\\frac{T^2}{${a * a}} = \\frac{L}{${e}g}$. Multiply by $${e}g$.`,
+        `除以 $${a}$ 再平方：$\\frac{T^2}{${a * a}} = \\frac{L}{${e}g}$。再乘以 $${e}g$。`,
       ),
     );
   }),
@@ -636,10 +647,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       const fig = curveFigure(
         (x) => a * (x + r) * (x - s),
         { x: [-7, 7], y: [-14, 14], dx: 1, dy: 2 },
-        t(
-          `A parabola opening ${a > 0 ? "upward" : "downward"} crossing the $x$-axis at $${-r}$ and $${s}$, and the $y$-axis at $${-a * r * s}$.`,
-          `开口向${a > 0 ? "上" : "下"}的抛物线，与 $x$ 轴交于 $${-r}$ 和 $${s}$，与 $y$ 轴交于 $${-a * r * s}$。`,
-        ),
+        t("A parabola on a coordinate grid.", "坐标网格上的一条抛物线。"),
       );
       if (!hard)
         return mc(
@@ -721,11 +729,11 @@ export const satExamAdvanced3: ExamSpec[] = [
       const sys = (c: number) => `y = x^2 ${sg(c)} \\text{ and } y = ${m}x ${sg(c - r * s)}`;
       const c = rng.nonZero(-5, 5);
       if (!hard)
-        return mc(
+        return mcExact(
           rng,
           t(`Which value of $x$ is part of a solution of the system $${sys(c)}$?`, `哪个 $x$ 值是方程组 $${sys(c)}$ 的解的一部分？`),
           s,
-          [-s, m, r * s],
+          [-s, m, r === 1 ? -r : r * s],
           t(
             `Set the right sides equal: $x^2 - ${m}x + ${r * s} = 0$, so $x = ${r}$ or $x = ${s}$.`,
             `令右边相等：$x^2 - ${m}x + ${r * s} = 0$，所以 $x = ${r}$ 或 $x = ${s}$。`,
@@ -856,8 +864,24 @@ export const satExamAdvanced3: ExamSpec[] = [
       const m = rng.int(1, 5) * 2;
       const d = rng.int(1, 9);
       const lim = (m * m) / 4 + d;
+      if (!hard && rng.bool()) {
+        const under = d - (m * m) / 4;
+        return mcExact(
+          rng,
+          t(
+            `For which value of $c$ does the system $y = -x^2 + c$ and $y = ${m}x + ${d}$ have no solution?`,
+            `$c$ 取何值时，方程组 $y = -x^2 + c$ 和 $y = ${m}x + ${d}$ 无解？`,
+          ),
+          under - rng.int(1, 4),
+          [under, under + 1, under + 3],
+          t(
+            `$x^2 + ${m}x + ${d} - c = 0$ has discriminant $${m * m} - 4(${d} - c)$, which is negative when $c < ${under}$.`,
+            `$x^2 + ${m}x + ${d} - c = 0$ 的判别式为 $${m * m} - 4(${d} - c)$，当 $c < ${under}$ 时为负。`,
+          ),
+        );
+      }
       if (!hard)
-        return mc(
+        return mcExact(
           rng,
           t(
             `For which value of $c$ does the system $y = x^2 + c$ and $y = ${m}x + ${d}$ have no solution?`,
