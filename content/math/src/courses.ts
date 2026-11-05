@@ -18399,6 +18399,10 @@ export const linearProgramming: CourseDef = {
             "basic-feasible-solutions",
           ],
         },
+        {
+          title: t("Geometry and Variations", "几何与变化形式"),
+          topics: ["convex-sets-and-convex-combinations", "infeasible-programs-and-farkas-lemma", "minimization-and-surplus-variables"],
+        },
       ],
     },
     {
@@ -18408,6 +18412,10 @@ export const linearProgramming: CourseDef = {
           title: t("Tableaus and Pivots", "单纯形表和主元运算"),
           topics: ["the-simplex-tableau", "pivoting-in-the-simplex-method", "the-two-phase-method", "unboundedness-and-degeneracy"],
         },
+        {
+          title: t("Refinements of the Method", "方法的改进"),
+          topics: ["alternative-optimal-solutions", "the-big-m-method"],
+        },
       ],
     },
     {
@@ -18416,6 +18424,10 @@ export const linearProgramming: CourseDef = {
         {
           title: t("Duality and Sensitivity", "对偶和灵敏度"),
           topics: ["the-dual-of-a-linear-program", "weak-duality", "strong-duality-and-complementary-slackness", "sensitivity-analysis"],
+        },
+        {
+          title: t("Working With the Inverse", "利用逆矩阵"),
+          topics: ["reduced-costs", "the-revised-simplex-method", "the-dual-simplex-method", "right-hand-side-ranging"],
         },
       ],
     },
@@ -18429,11 +18441,13 @@ export const linearProgramming: CourseDef = {
             "improving-a-transportation-plan",
             "the-assignment-problem",
             "maximum-flow-and-minimum-cut",
+            "shortest-paths-as-linear-programs",
+            "minimum-cost-flow",
           ],
         },
         {
           title: t("Beyond the Continuous Case", "连续情形之外"),
-          topics: ["integer-programming", "matrix-games"],
+          topics: ["integer-programming", "gomory-cutting-planes", "matrix-games"],
         },
       ],
     },
