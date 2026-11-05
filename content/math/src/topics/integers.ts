@@ -2,7 +2,7 @@ import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { num, paren } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const abs = Math.abs;
 
@@ -177,7 +177,14 @@ export const addingIntegers: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} + ${paren(b)}$.`, `计算 $${num(a)} + ${paren(b)}$。`),
           answer: sum,
-          wrong: [-sum, a - b],
+          wrong: [-sum],
+          mistakes: [
+            why(
+              a - b,
+              "You subtracted. Numbers of the same sign add up in the same direction, so the sizes add.",
+              "你做了减法。同号的数朝同一方向累加，所以大小要相加。",
+            ),
+          ],
           solution: t(
             `Both numbers are ${s < 0 ? "negative" : "positive"}. Add the absolute values, $${abs(a)} + ${abs(b)} = ${abs(sum)}$, and keep the sign: $${num(a)} + ${paren(b)} = ${num(sum)}$.`,
             `两个数都是${s < 0 ? "负数" : "正数"}。把绝对值相加：$${abs(a)} + ${abs(b)} = ${abs(sum)}$，并保留符号：$${num(a)} + ${paren(b)} = ${num(sum)}$。`,
@@ -204,7 +211,19 @@ export const addingIntegers: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} + ${paren(b)}$.`, `计算 $${num(a)} + ${paren(b)}$。`),
           answer: sum,
-          wrong: [-sum, abs(a) + abs(b), -(abs(a) + abs(b))],
+          wrong: [-sum],
+          mistakes: [
+            why(
+              abs(a) + abs(b),
+              "You added the sizes. Numbers of opposite signs pull in opposite directions, so the sizes partly cancel.",
+              "你把大小相加了。异号的数方向相反，大小会部分抵消。",
+            ),
+            why(
+              -(abs(a) + abs(b)),
+              "You added the sizes. Numbers of opposite signs pull in opposite directions, so the sizes partly cancel.",
+              "你把大小相加了。异号的数方向相反，大小会部分抵消。",
+            ),
+          ],
           solution: t(
             `The signs differ. Subtract the absolute values: $${abs(big)} - ${abs(small)} = ${abs(sum)}$. The number with the larger absolute value, $${num(big)}$, is ${big < 0 ? "negative" : "positive"}, so $${num(a)} + ${paren(b)} = ${num(sum)}$.`,
             `两数异号。绝对值相减：$${abs(big)} - ${abs(small)} = ${abs(sum)}$。绝对值较大的数 $${num(big)}$ 是${big < 0 ? "负数" : "正数"}，所以 $${num(a)} + ${paren(b)} = ${num(sum)}$。`,
@@ -239,7 +258,14 @@ export const subtractingIntegers: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} - ${b}$.`, `计算 $${num(a)} - ${b}$。`),
           answer: d,
-          wrong: [b - a, a + b, -(a + b)],
+          wrong: [b - a, -(a + b)],
+          mistakes: [
+            why(
+              a + b,
+              "You added. Subtracting a positive number moves down the number line.",
+              "你做了加法。减去一个正数是在数轴上向左移动。",
+            ),
+          ],
           solution: t(
             `Add the opposite: ${steps(`${num(a)} - ${b} = ${num(a)} + (-${b}) = ${num(d)}`)}`,
             `加上相反数：${steps(`${num(a)} - ${b} = ${num(a)} + (-${b}) = ${num(d)}`)}`,
@@ -262,7 +288,14 @@ export const subtractingIntegers: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} - (-${b})$.`, `计算 $${num(a)} - (-${b})$。`),
           answer: d,
-          wrong: [a - b, -a - b, -d],
+          wrong: [-a - b, -d],
+          mistakes: [
+            why(
+              a - b,
+              "You left the two minus signs as one subtraction. Subtracting a negative number is the same as adding its opposite.",
+              "你把两个负号当成了一次减法。减去一个负数等于加上它的相反数。",
+            ),
+          ],
           solution: t(
             `Add the opposite of $-${b}$, which is $${b}$: ${steps(`${num(a)} - (-${b}) = ${num(a)} + ${b} = ${num(d)}`)}`,
             `加上 $-${b}$ 的相反数 $${b}$：${steps(`${num(a)} - (-${b}) = ${num(a)} + ${b} = ${num(d)}`)}`,
@@ -298,7 +331,8 @@ export const multiplyingIntegers: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} \\cdot ${paren(b)}$.`, `计算 $${num(a)} \\cdot ${paren(b)}$。`),
           answer: p,
-          wrong: [-p, a + b],
+          wrong: [-p],
+          mistakes: [why(a + b, "You added the numbers. Here they are multiplied.", "你把两个数相加了。这里要相乘。")],
           solution: t(
             `$${abs(a)} \\cdot ${abs(b)} = ${abs(p)}$, and the signs are ${same ? "the same, so the product is positive" : "different, so the product is negative"}: $${num(a)} \\cdot ${paren(b)} = ${num(p)}$.`,
             `$${abs(a)} \\cdot ${abs(b)} = ${abs(p)}$，两数${same ? "同号，所以积为正" : "异号，所以积为负"}：$${num(a)} \\cdot ${paren(b)} = ${num(p)}$。`,

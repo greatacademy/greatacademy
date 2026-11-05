@@ -2,7 +2,7 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, gcd, num, Q, sci } from "@ga/subject-math";
 
-import { expressionProblem, numberProblem, scientificProblem, scientificValue, steps } from "../problems.ts";
+import { expressionProblem, numberProblem, scientificProblem, scientificValue, steps, why } from "../problems.ts";
 
 /** mono writes a monomial: mono(6, [["x", 5], ["y", 1]]) is "6x^{5}y". */
 export function mono(c: number, factors: readonly (readonly [string, number])[]): string {
@@ -225,7 +225,23 @@ export const zeroAndNegativeExponents: TopicDef = {
           prompt: t(`Evaluate $${base(b)}^{-${n}}$.`, `计算 $${base(b)}^{-${n}}$。`),
           answer: value,
           form: "fraction",
-          wrong: [positive.neg(), positive, b.mul(Q.of(-n))],
+          mistakes: [
+            why(
+              positive.neg(),
+              "A negative exponent does not make the value negative. It means the reciprocal.",
+              "负指数不会让结果变成负数，它表示取倒数。",
+            ),
+            why(
+              positive,
+              "That is the value with a positive exponent. The negative exponent means its reciprocal.",
+              "这是正指数时的值。负指数表示取它的倒数。",
+            ),
+            why(
+              b.mul(Q.of(-n)),
+              "You multiplied the base by the exponent. An exponent counts repeated factors.",
+              "你把底数和指数相乘了。指数表示相同因数的个数。",
+            ),
+          ],
           solution: t(
             `A negative exponent is the reciprocal of the positive power:${steps(`${base(b)}^{-${n}} = \\frac{1}{${base(b)}^{${n}}} = \\frac{1}{${num(positive)}} = ${num(value)}`)}`,
             `负指数幂等于正指数幂的倒数：${steps(`${base(b)}^{-${n}} = \\frac{1}{${base(b)}^{${n}}} = \\frac{1}{${num(positive)}} = ${num(value)}`)}`,

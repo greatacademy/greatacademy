@@ -25,6 +25,7 @@ import {
   radicalProblem,
   solutionsProblem,
   steps,
+  why,
 } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -883,7 +884,19 @@ export const theDistanceFormula: TopicDef = {
         return numberProblem({
           prompt: t(`Find the distance between $${pt("A", A)}$ and $${pt("B", B)}$.`, `求 $${pt("A", A)}$ 与 $${pt("B", B)}$ 之间的距离。`),
           answer: c,
-          wrong: [p + q, c * c, Math.abs(dx + dy)],
+          mistakes: [
+            why(
+              p + q,
+              "You added the horizontal and vertical distances. They are the legs of a right triangle: square them, add, and take the square root.",
+              "你把水平距离和竖直距离直接相加了。它们是直角三角形的两条直角边：先平方，再相加，然后开平方。",
+            ),
+            why(c * c, "That is the distance squared. Take the square root.", "这是距离的平方，还要开平方。"),
+            why(
+              Math.abs(dx + dy),
+              "You combined the coordinate differences without squaring them. Square each one first.",
+              "你没有平方就把坐标差合在一起了。要先把每个差平方。",
+            ),
+          ],
           solution: t(
             `Use the distance formula:${steps(`AB = ${distanceSteps(A, B)}`)}`,
             `用距离公式：${steps(`AB = ${distanceSteps(A, B)}`)}`,

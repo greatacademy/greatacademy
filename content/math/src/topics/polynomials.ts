@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, num, poly, svgDocument } from "@ga/subject-math";
 
-import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, say, steps, why, yesNo } from "../problems.ts";
 
 /** Term is a monomial c·xᵃ·yᵇ with an integer coefficient. */
 interface Term {
@@ -445,7 +445,23 @@ export const simplifyingPolynomials: TopicDef = {
           return numberProblem({
             prompt: t(`What is the leading coefficient of $${expr}$?`, `$${expr}$ 的首项系数是多少？`),
             answer: lead.c,
-            wrong: [shown[0]!.c, lead.x, last.c],
+            mistakes: [
+              why(
+                shown[0]!.c,
+                "That is the first coefficient as written. Put the terms in order first: the leading term has the highest power.",
+                "这是写在最前面的系数。应先排好顺序：首项是次数最高的项。",
+              ),
+              why(
+                lead.x,
+                "That is the degree of the leading term. The question asks for its coefficient.",
+                "这是首项的次数，题目问的是它的系数。",
+              ),
+              why(
+                last.c,
+                "That belongs to the term of lowest power. The leading term has the highest power.",
+                "这是次数最低的项的系数。首项是次数最高的项。",
+              ),
+            ],
             solution: t(
               `In standard form, $${expr} = ${standard}$. The leading term is $${mono(lead)}$, so the leading coefficient is $${num(lead.c)}$.`,
               `写成标准形式：$${expr} = ${standard}$。首项是 $${mono(lead)}$，所以首项系数是 $${num(lead.c)}$。`,
@@ -1018,11 +1034,14 @@ export const multiplyingBinomials: TopicDef = {
         return expandProblem({
           prompt: t(`Expand $${expr}$.`, `展开 $${expr}$。`),
           answer,
-          wrong: [
-            write([term(1, 2), term(a * b)]),
-            write(collect([term(1, 2), term(a + b, 1), term(-a * b)])),
-            write(collect([term(1, 2), term(a * b, 1), term(a + b)])),
+          mistakes: [
+            say(
+              write([term(1, 2), term(a * b)]),
+              "The middle terms are missing. You multiplied only first by first and last by last; each term must multiply both terms of the other binomial.",
+              "缺了中间项。你只算了首项乘首项、末项乘末项；每一项都要乘另一个二项式的两项。",
+            ),
           ],
+          wrong: [write(collect([term(1, 2), term(a + b, 1), term(-a * b)])), write(collect([term(1, 2), term(a * b, 1), term(a + b)]))],
           solution: t(
             `Multiply every term of the first binomial by every term of the second:${steps(`${expr} = ${write(products(p, q))} = ${answer}`)}`,
             `用第一个二项式的每一项乘以第二个二项式的每一项：${steps(`${expr} = ${write(products(p, q))} = ${answer}`)}`,
@@ -1051,8 +1070,14 @@ export const multiplyingBinomials: TopicDef = {
         return expandProblem({
           prompt: t(`Expand $${expr}$.`, `展开 $${expr}$。`),
           answer,
+          mistakes: [
+            say(
+              write([term(a * c, 2), term(b * d)]),
+              "The middle terms are missing. You multiplied only first by first and last by last; each term must multiply both terms of the other binomial.",
+              "缺了中间项。你只算了首项乘首项、末项乘末项；每一项都要乘另一个二项式的两项。",
+            ),
+          ],
           wrong: [
-            write([term(a * c, 2), term(b * d)]),
             write(collect([term(a * c, 2), term(a * d, 1), term(b * d)])),
             write(collect([term(a * c, 2), term(a * d + b * c, 1), term(-b * d)])),
           ],

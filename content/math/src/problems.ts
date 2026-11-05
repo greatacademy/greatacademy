@@ -42,6 +42,12 @@ export interface NumberProblem {
   readonly mistakes?: readonly { readonly value: Coefficient; readonly why: Text }[];
 }
 
+/** why pairs a value that a typical mistake produces with what to say about it. */
+export const why = (value: Coefficient, en: string, zh: string) => ({ value, why: t(en, zh) });
+
+/** say pairs a response that a typical mistake produces with what to say about it. */
+export const say = (response: string, en: string, zh: string) => ({ response, why: t(en, zh) });
+
 /** mixedLatex writes a number as an integer or a mixed number: "2\frac{1}{3}", "-\frac{2}{3}". */
 export function mixedLatex(c: Coefficient): string {
   const v = toQ(c);
@@ -223,6 +229,13 @@ export interface ExpressionProblem {
   readonly prefix?: string;
   /** wrong are responses typical mistakes produce; those the checker accepts (equivalent ones, and with a form required, equivalent ones in that form) are dropped. */
   readonly wrong?: readonly string[];
+  /** mistakes are responses that typical mistakes produce, with what to say about each. */
+  readonly mistakes?: readonly { readonly response: string; readonly why: Text }[];
+}
+
+/** equivalentTo tells whether a response equals the answer of an expression problem in another form, which is no mistake of value. */
+function equivalentTo(p: ExpressionProblem, response: string): boolean {
+  return expressionChecker.check({ expr: p.answer, ...(p.positive && { positive: true }) }, response).correct;
 }
 
 /** expressionProblem builds a problem checked by the "expression" checker. */
@@ -235,14 +248,19 @@ export function expressionProblem(p: ExpressionProblem): Problem {
     ...(p.vertex && { form: "vertex" }),
     ...(p.positive && { positive: true }),
   };
-  const wrong = [...new Set(p.wrong ?? [])].filter((w) => !expressionChecker.check(expected, w).correct);
-  return {
+  const rejected = (w: string): boolean => !expressionChecker.check(expected, w).correct;
+  const wrong = [...new Set([...(p.wrong ?? []), ...(p.mistakes ?? []).map((m) => m.response)])].filter(rejected);
+  const problem: Problem = {
     prompt: p.prompt,
     answer: { checker: "expression", expected, input: { kind: "math", ...(p.prefix && { prefix: p.prefix }) } },
     solution: p.solution,
     canonical: p.answer,
     wrong,
   };
+  return withMistakes(
+    problem,
+    (p.mistakes ?? []).filter((m) => rejected(m.response) && !equivalentTo(p, m.response)),
+  );
 }
 
 /** FunctionProblem describes a problem whose answer is a function that may involve trigonometric, exponential or logarithmic functions. */
@@ -325,7 +343,12 @@ export interface SolutionsProblem {
   readonly solution: Text;
   /** wrong are the solution sets typical mistakes produce; sets equal to the answer are dropped. */
   readonly wrong?: readonly (readonly string[])[];
+  /** mistakes are solution sets that typical mistakes produce, with what to say about each; sets equal to the answer are dropped. */
+  readonly mistakes?: readonly { readonly values: readonly string[]; readonly why: Text }[];
 }
+
+/** whySet pairs a solution set that a typical mistake produces with what to say about it. */
+export const whySet = (values: readonly string[], en: string, zh: string) => ({ values, why: t(en, zh) });
 
 /** solutionsLatex writes a solution set as a learner would type it: "x = 3, x = -2", or "\varnothing" when it is empty. */
 export function solutionsLatex(values: readonly string[], variable = "x"): string {
@@ -345,12 +368,16 @@ export function solutionsProblem(p: SolutionsProblem): Problem {
     const set = vs.map(value).filter((s, i, all) => all.findIndex((o) => surdEqual(o, s)) === i);
     return set.length === answer.length && set.every((s) => answer.some((a) => surdEqual(a, s)));
   };
+  const listed = (p.mistakes ?? []).filter((m) => !sameSet(m.values));
   return {
     prompt: p.prompt,
     answer: { checker: "solutions", expected: { var: variable, values: [...p.values] }, input: { kind: "math" } },
     solution: p.solution,
     canonical: solutionsLatex(p.values, variable),
-    wrong: [...new Set((p.wrong ?? []).filter((w) => !sameSet(w)).map((w) => solutionsLatex(w, variable)))],
+    wrong: [
+      ...new Set([...(p.wrong ?? []).filter((w) => !sameSet(w)), ...listed.map((m) => m.values)].map((w) => solutionsLatex(w, variable))),
+    ],
+    ...(listed.length > 0 && { mistakes: listed.map((m) => ({ response: solutionsLatex(m.values, variable), feedback: m.why })) }),
   };
 }
 

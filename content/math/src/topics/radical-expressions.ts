@@ -2,7 +2,7 @@ import type { Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { gcd, linear, num, poly, Q, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, radicalProblem, solutionsProblem, steps } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, radicalProblem, solutionsProblem, steps, why } from "../problems.ts";
 
 /** squareFree are the square-free radicands used in generated problems. */
 const squareFree = [2, 3, 5, 6, 7, 10, 11, 13, 14, 15];
@@ -831,7 +831,16 @@ export const evaluatingRadicalExpressions: TopicDef = {
               ["y", sy],
             ]),
             answer: c,
-            wrong: [sx + sy, x + y, c * c, -c],
+            wrong: [-c],
+            mistakes: [
+              why(
+                sx + sy,
+                "You took the root of each term separately. Add under the radical first, since $\\sqrt{a + b}$ is not $\\sqrt{a} + \\sqrt{b}$.",
+                "你对每一项分别开方了。应先算出根号内的和，因为 $\\sqrt{a + b}$ 不等于 $\\sqrt{a} + \\sqrt{b}$。",
+              ),
+              why(x + y, "That is the number under the radical. Now take its square root.", "这是根号内的数，还要开平方。"),
+              why(c * c, "You squared instead of taking the root.", "你做了平方，而不是开方。"),
+            ],
             solution: t(
               `${steps(`\\sqrt{(${sx})^{2} + (${sy})^{2}} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${c * c}} = ${c}`)}`,
               `${steps(`\\sqrt{(${sx})^{2} + (${sy})^{2}} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${c * c}} = ${c}`)}`,
@@ -869,7 +878,8 @@ export const evaluatingRadicalExpressions: TopicDef = {
         return numberProblem({
           prompt: evaluate(sq(linear(a, b)), [["x", v]]),
           answer: r,
-          wrong: [r * r, -r],
+          wrong: [-r],
+          mistakes: [why(r * r, "You squared instead of taking the root.", "你做了平方，而不是开方。")],
           solution: t(
             `${steps(`${sq(substituted(a, v, b))} = \\sqrt{${r * r}} = ${r}`)}`,
             `${steps(`${sq(substituted(a, v, b))} = \\sqrt{${r * r}} = ${r}`)}`,
@@ -943,7 +953,14 @@ export const evaluatingRadicalExpressions: TopicDef = {
           return numberProblem({
             prompt: evaluate(cb(linear(a, b)), [["x", v]]),
             answer: r,
-            wrong: [-r, r ** 3],
+            mistakes: [
+              why(
+                -r,
+                "The sign is wrong. The cube root keeps the sign of the number inside, since a negative cubed is negative.",
+                "符号错了。立方根与根号内的数同号，因为负数的立方仍为负。",
+              ),
+              why(r ** 3, "You cubed instead of taking the cube root.", "你做了立方，而不是开立方。"),
+            ],
             solution: t(
               `${steps(`${cb(substituted(a, v, b))} = ${cb(String(r ** 3))} = ${r}`)}`,
               `${steps(`${cb(substituted(a, v, b))} = ${cb(String(r ** 3))} = ${r}`)}`,
@@ -959,7 +976,14 @@ export const evaluatingRadicalExpressions: TopicDef = {
             ["y", y],
           ]),
           answer: r,
-          wrong: [-r, r ** 3],
+          mistakes: [
+            why(
+              -r,
+              "The sign is wrong. The cube root keeps the sign of the number inside, since a negative cubed is negative.",
+              "符号错了。立方根与根号内的数同号，因为负数的立方仍为负。",
+            ),
+            why(r ** 3, "You cubed instead of taking the cube root.", "你做了立方，而不是开立方。"),
+          ],
           solution: t(
             `${steps(`${cb(`(${x})^{2} + (${y})`)} = ${cb(String(r ** 3))} = ${r}`)}`,
             `${steps(`${cb(`(${x})^{2} + (${y})`)} = ${cb(String(r ** 3))} = ${r}`)}`,

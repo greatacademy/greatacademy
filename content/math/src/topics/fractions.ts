@@ -2,7 +2,7 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, lcm, num, Q, q } from "@ga/subject-math";
 
-import { mixedLatex, numberProblem, steps } from "../problems.ts";
+import { mixedLatex, numberProblem, steps, why } from "../problems.ts";
 
 /** properFraction draws a fraction in lowest terms between 0 and 1 with a denominator in [2, maxDen]. */
 function properFraction(rng: Rng, maxDen = 12): Q {
@@ -170,7 +170,13 @@ export const addingAndSubtractingFractions: TopicDef = {
           prompt: t(`Evaluate $${num(x)} ${op} ${num(y)}$.`, `计算 $${num(x)} ${op} ${num(y)}$。`),
           answer: result,
           form: "fraction",
-          wrong: [q(add ? Number(x.n) + Number(y.n) : Number(x.n) - Number(y.n), Number(x.d) + Number(y.d))],
+          mistakes: [
+            why(
+              q(add ? Number(x.n) + Number(y.n) : Number(x.n) - Number(y.n), Number(x.d) + Number(y.d)),
+              "You added the denominators. Rewrite both fractions over a common denominator; then only the numerators combine.",
+              "你把分母也相加了。先通分；通分后只有分子相加减。",
+            ),
+          ],
           solution: t(
             `The least common multiple of $${x.d}$ and $${y.d}$ is $${L}$:${steps(`${num(x)} ${op} ${num(y)} = ${fracOf(xn, L)} ${op} ${fracOf(yn, L)} = ${fracOf(raw, L)}${result.d === BigInt(L) ? "" : ` = ${num(result)}`}`)}`,
             `$${x.d}$ 和 $${y.d}$ 的最小公倍数是 $${L}$：${steps(`${num(x)} ${op} ${num(y)} = ${fracOf(xn, L)} ${op} ${fracOf(yn, L)} = ${fracOf(raw, L)}${result.d === BigInt(L) ? "" : ` = ${num(result)}`}`)}`,
@@ -278,7 +284,14 @@ export const multiplyingFractions: TopicDef = {
           prompt: t(`Evaluate $${num(x)} \\cdot ${num(y)}$.`, `计算 $${num(x)} \\cdot ${num(y)}$。`),
           answer: p,
           form: "fraction",
-          wrong: [x.add(y), Q.of(x.n * y.d, x.d * y.n)],
+          mistakes: [
+            why(x.add(y), "You added the fractions. Here they are multiplied.", "你把两个分数相加了。这里要相乘。"),
+            why(
+              Q.of(x.n * y.d, x.d * y.n),
+              "You divided: that flips the second fraction. To multiply, keep both as they are.",
+              "你做的是除法，把第二个分数颠倒了。相乘时两个分数都不颠倒。",
+            ),
+          ],
           solution: t(
             `Multiply the numerators and the denominators:${steps(`${num(x)} \\cdot ${num(y)} = ${fracOf(rawN, rawD)}${p.d === rawD ? "" : ` = ${num(p)}`}`)}`,
             `分子乘分子，分母乘分母：${steps(`${num(x)} \\cdot ${num(y)} = ${fracOf(rawN, rawD)}${p.d === rawD ? "" : ` = ${num(p)}`}`)}`,
@@ -301,7 +314,14 @@ export const multiplyingFractions: TopicDef = {
         return numberProblem({
           prompt: t(`What is $${num(f)}$ of $${w}$?`, `$${w}$ 的 $${num(f)}$ 是多少？`),
           answer,
-          wrong: [part, w * Number(f.n)],
+          wrong: [part],
+          mistakes: [
+            why(
+              w * Number(f.n),
+              "You multiplied by the numerator only. Divide by the denominator as well.",
+              "你只乘了分子，还要除以分母。",
+            ),
+          ],
           solution: t(
             `${steps(`${num(f)} \\cdot ${w} = ${f.n} \\cdot (${w} \\div ${f.d}) = ${f.n} \\cdot ${part} = ${answer}`)}`,
             `${steps(`${num(f)} \\cdot ${w} = ${f.n} \\cdot (${w} \\div ${f.d}) = ${f.n} \\cdot ${part} = ${answer}`)}`,
@@ -364,7 +384,18 @@ export const dividingFractions: TopicDef = {
           prompt: t(`Evaluate $${num(x)} \\div ${num(y)}$.`, `计算 $${num(x)} \\div ${num(y)}$。`),
           answer: result,
           form: "fraction",
-          wrong: [x.mul(y), y.div(x)],
+          mistakes: [
+            why(
+              x.mul(y),
+              "You multiplied without flipping. To divide, multiply by the reciprocal of the divisor.",
+              "你没有颠倒就相乘了。除以一个数，等于乘以它的倒数。",
+            ),
+            why(
+              y.div(x),
+              "You flipped the wrong fraction. Only the divisor, the second fraction, is flipped.",
+              "你颠倒错了分数。只颠倒除数，也就是第二个分数。",
+            ),
+          ],
           solution: t(
             `Multiply by the reciprocal of $${num(y)}$:${steps(`${num(x)} \\div ${num(y)} = ${num(x)} \\cdot ${improper(Q.one.div(y))} = ${num(result)}`)}`,
             `乘 $${num(y)}$ 的倒数：${steps(`${num(x)} \\div ${num(y)} = ${num(x)} \\cdot ${improper(Q.one.div(y))} = ${num(result)}`)}`,

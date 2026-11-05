@@ -895,3 +895,29 @@ describe("mistakes", () => {
     expect(registry.judge(p, "0").feedback).toBeUndefined();
   });
 });
+
+describe("solutionsChecker.same", () => {
+  const p = {
+    prompt: t("p", "p"),
+    solution: t("s", "s"),
+    canonical: "",
+    answer: { checker: "solutions", expected: { var: "x", values: ["3", "-2"] }, input: { kind: "math" as const } },
+    mistakes: [
+      { response: "x = -3, x = 2", feedback: t("signs", "signs") },
+      { response: "\\varnothing", feedback: t("none", "none") },
+    ],
+  };
+
+  it("matches a solution set in any order and form", () => {
+    for (const r of ["x = -3, x = 2", "x = 2, x = -3", "2, -3"]) expect(registry.judge(p, r).feedback?.en).toBe("signs");
+  });
+
+  it("matches the empty set", () => {
+    expect(registry.judge(p, "\\varnothing").feedback?.en).toBe("none");
+  });
+
+  it("leaves other sets and the answer alone", () => {
+    expect(registry.judge(p, "x = 3").feedback?.en).not.toBe("signs");
+    expect(registry.judge(p, "x = 3, x = -2").correct).toBe(true);
+  });
+});

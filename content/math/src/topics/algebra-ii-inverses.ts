@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, linear, num, type PlaneMark, type PlaneView, type Point, plane, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, pointProblem, solutionsProblem, steps, why } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1153,9 +1153,30 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
 /** averageRate is (f(b) - f(a)) / (b - a). */
 const averageRate = (fa: number, fb: number, a: number, b: number) => Q.of(fb - fa, b - a);
 
-/** rateWrong lists the mistakes of an average rate of change. */
-function rateWrong(fa: number, fb: number, a: number, b: number): Q[] {
-  return [Q.of(fb - fa), Q.of(fa - fb, b - a), ...(fb !== fa ? [Q.of(b - a, fb - fa)] : []), Q.of(fb + fa, b - a)];
+/** rateMistakes lists the mistakes of an average rate of change. */
+function rateMistakes(fa: number, fb: number, a: number, b: number) {
+  return [
+    why(
+      Q.of(fb - fa),
+      "That is the change in the output. Divide it by the change in the input.",
+      "这是输出的变化量，还要除以输入的变化量。",
+    ),
+    why(
+      Q.of(fa - fb, b - a),
+      "The sign is wrong: subtract the outputs and the inputs in the same order.",
+      "符号错了：输出和输入要按相同的顺序相减。",
+    ),
+    ...(fb !== fa
+      ? [
+          why(
+            Q.of(b - a, fb - fa),
+            "That is the change in the input over the change in the output. The rate is the other way round.",
+            "这是输入的变化量除以输出的变化量。变化率正好相反。",
+          ),
+        ]
+      : []),
+    why(Q.of(fb + fa, b - a), "You added the outputs. The rate uses their difference.", "你把输出相加了。变化率用的是它们的差。"),
+  ];
 }
 
 /** rateLatex writes the computation of an average rate of change. */
@@ -1201,7 +1222,7 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
             `求 $f(x) = ${polyLatex(p)}$ 从 $x = ${a}$ 到 $x = ${b}$ 的平均变化率。`,
           ),
           answer: averageRate(fa, fb, a, b),
-          wrong: rateWrong(fa, fb, a, b),
+          mistakes: rateMistakes(fa, fb, a, b),
           solution: t(
             `$f(${a}) = ${fa}$ and $f(${b}) = ${fb}$, so${steps(rateLatex("f", fa, fb, a, b))}`,
             `$f(${a}) = ${fa}$，$f(${b}) = ${fb}$，所以${steps(rateLatex("f", fa, fb, a, b))}`,
@@ -1227,7 +1248,7 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
             `下表给出了 $g$ 的一些值。${valueTable("g", xs, ys)}求 $g$ 从 $x = ${a}$ 到 $x = ${b}$ 的平均变化率。`,
           ),
           answer: averageRate(fa, fb, a, b),
-          wrong: rateWrong(fa, fb, a, b),
+          mistakes: rateMistakes(fa, fb, a, b),
           solution: t(`From the table:${steps(rateLatex("g", fa, fb, a, b))}`, `由表格：${steps(rateLatex("g", fa, fb, a, b))}`),
         });
       },
@@ -1255,7 +1276,7 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
               `${graphShown["zh-CN"]}求 $f$ 从 $x = ${a}$ 到 $x = ${b}$ 的平均变化率。`,
             ),
             answer: averageRate(fa, fb, a, b),
-            wrong: rateWrong(fa, fb, a, b),
+            mistakes: rateMistakes(fa, fb, a, b),
             solution: t(
               `The graph passes through $${pt(a, fa)}$ and $${pt(b, fb)}$, so${steps(rateLatex("f", fa, fb, a, b))}`,
               `图象经过 $${pt(a, fa)}$ 和 $${pt(b, fb)}$，所以${steps(rateLatex("f", fa, fb, a, b))}`,
@@ -1294,7 +1315,7 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
         return numberProblem({
           prompt: ctx,
           answer: averageRate(fa, fb, a, b),
-          wrong: rateWrong(fa, fb, a, b),
+          mistakes: rateMistakes(fa, fb, a, b),
           unit: ball ? "m/s" : "L/min",
           solution: t(
             `$${name}(${a}) = ${fa}$ and $${name}(${b}) = ${fb}$, so${steps(rateLatex(name, fa, fb, a, b))}The answer is $${num(averageRate(fa, fb, a, b))}$ ${ball ? "meters per second" : "liters per minute"}.`,

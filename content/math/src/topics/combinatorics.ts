@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q, svgDocument } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, steps, verdictChoice, yesNo } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
 
 // Conditional probability (Geometry 6.18) and combinatorics (Geometry 6.19).
 
@@ -749,7 +749,28 @@ export const theLawOfTotalProbability: TopicDef = {
           ),
           answer: ans,
           form: "decimal",
-          wrong: [Q.of(a * b, 100), Q.of(a * b + a * c, 100), Q.of(b + c, 10), Q.of(a * b + (10 - a) * (10 - c), 100)],
+          mistakes: [
+            why(
+              Q.of(a * b, 100),
+              "That counts only the first case. Add the probability of every path that ends in the event.",
+              "这只算了第一种情况。要把所有通向该事件的路径的概率相加。",
+            ),
+            why(
+              Q.of(a * b + a * c, 100),
+              "You used the same first probability on both paths. The second path starts with the complement.",
+              "你在两条路径上用了同一个起始概率。第二条路径应从它的对立事件开始。",
+            ),
+            why(
+              Q.of(b + c, 10),
+              "You added the conditional probabilities. Weight each by the probability of its case first.",
+              "你直接把条件概率相加了。应先用每种情况的概率给它们加权。",
+            ),
+            why(
+              Q.of(a * b + (10 - a) * (10 - c), 100),
+              "On the second path you used the complement of the conditional probability. Use the probability of the event itself in that case.",
+              "在第二条路径上你用了条件概率的对立值。应使用这种情况下该事件本身的概率。",
+            ),
+          ],
           solution: t(
             `$P(A') = 1 - ${h(10 * a)} = ${h(100 - 10 * a)}$. By the law of total probability:${work}`,
             `$P(A') = 1 - ${h(10 * a)} = ${h(100 - 10 * a)}$。由全概率公式：${work}`,
@@ -778,7 +799,28 @@ export const theLawOfTotalProbability: TopicDef = {
           ),
           answer: ans,
           form: "decimal",
-          wrong: [Q.of(p * x, 10000), Q.of(x + y, 200), Q.of(x + y, 100), Q.of(p * y + (100 - p) * x, 10000)],
+          mistakes: [
+            why(
+              Q.of(p * x, 10000),
+              "That counts only one group. Add the contribution of the other group too.",
+              "这只算了一组，还要加上另一组的部分。",
+            ),
+            why(
+              Q.of(x + y, 200),
+              "You averaged the two rates as if the groups were the same size. Weight each rate by the share of its group.",
+              "你把两个比率直接平均了，好像两组一样大。应按每组所占比例加权。",
+            ),
+            why(
+              Q.of(x + y, 100),
+              "You added the rates. Weight each by the share of its group first.",
+              "你把比率直接相加了。应先按每组所占比例加权。",
+            ),
+            why(
+              Q.of(p * y + (100 - p) * x, 10000),
+              "You swapped the rates between the groups. Match each rate with its own group.",
+              "你把两组的比率弄反了。每个比率要配它自己的组。",
+            ),
+          ],
           solution: t(
             `The two cases are ${s.a.en} (probability $${h(p)}$) and ${s.notA.en} (probability $${h(100 - p)}$):${work}`,
             `两种情况是${s.a["zh-CN"]}（概率 $${h(p)}$）和${s.notA["zh-CN"]}（概率 $${h(100 - p)}$）：${work}`,
@@ -1118,7 +1160,19 @@ export const independentEvents: TopicDef = {
               `掷一枚均匀硬币和一颗均匀的六面骰子。求硬币${heads ? "正面" : "反面"}朝上且骰子点数大于 $${k}$ 的概率。${simplest["zh-CN"]}`,
             ),
             answer: ans,
-            wrong: [Q.of(6 - k, 6), Q.of(1, 2).add(Q.of(6 - k, 6)), Q.of(5 - k, 12)],
+            wrong: [Q.of(5 - k, 12)],
+            mistakes: [
+              why(
+                Q.of(6 - k, 6),
+                "That is only one of the two probabilities. For both events to happen, multiply them.",
+                "这只是其中一个事件的概率。两个事件都发生，要把概率相乘。",
+              ),
+              why(
+                Q.of(1, 2).add(Q.of(6 - k, 6)),
+                "You added the probabilities. For independent events both happening, multiply.",
+                "你把概率相加了。独立事件同时发生，要相乘。",
+              ),
+            ],
             solution: t(
               `The coin and the die are independent. $${6 - k}$ of the $6$ numbers ${6 - k === 1 ? "is" : "are"} greater than $${k}$:${steps(`\\frac{1}{2} \\cdot ${fr(6 - k, 6)} = ${ratioL(6 - k, 12)}`)}`,
               `硬币和骰子相互独立。$6$ 个点数中有 $${6 - k}$ 个大于 $${k}$：${steps(`\\frac{1}{2} \\cdot ${fr(6 - k, 6)} = ${ratioL(6 - k, 12)}`)}`,
@@ -2065,7 +2119,25 @@ export const permutations: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${notation}$.`, `计算 $${notation}$。`),
           answer: ans,
-          wrong: [comb(n, r), n ** r, n * r, perm(n, r + 1), fact(n) / fact(r)],
+          wrong: [perm(n, r + 1)],
+          mistakes: [
+            why(
+              comb(n, r),
+              "That is the number of combinations, where order does not matter. Here order matters, so do not divide by $r!$.",
+              "这是组合数，不考虑顺序。这里顺序有关，不要除以 $r!$。",
+            ),
+            why(
+              n ** r,
+              "That allows repeats, as if each position could use any item again. Each item is used once, so the choices go down by one each time.",
+              "这相当于允许重复，每个位置都能再选任何一项。每一项只能用一次，所以选择数每次减一。",
+            ),
+            why(
+              n * r,
+              "You multiplied $n$ by $r$. Multiply $r$ decreasing factors, starting from $n$.",
+              "你用 $n$ 乘了 $r$。应从 $n$ 开始，连乘 $r$ 个依次减一的因数。",
+            ),
+            why(fact(n) / fact(r), "You divided by $r!$. The formula divides by $(n - r)!$.", "你除以了 $r!$。公式中除以的是 $(n - r)!$。"),
+          ],
           solution: t(
             `Multiply $${r}$ factors, starting at $${n}$:${steps(`${notation} = \\frac{${n}!}{${n - r}!} = ${prodL(n, r)} = ${ans}`)}`,
             `从 $${n}$ 开始连乘 $${r}$ 个因数：${steps(`${notation} = \\frac{${n}!}{${n - r}!} = ${prodL(n, r)} = ${ans}`)}`,
@@ -2116,7 +2188,28 @@ export const permutations: TopicDef = {
         return numberProblem({
           prompt,
           answer: ans,
-          wrong: [comb(n, r), n ** r, n * r, fact(r)],
+          mistakes: [
+            why(
+              comb(n, r),
+              "That is the number of combinations, where order does not matter. Here order matters, so do not divide by $r!$.",
+              "这是组合数，不考虑顺序。这里顺序有关，不要除以 $r!$。",
+            ),
+            why(
+              n ** r,
+              "That allows repeats, as if each position could use any item again. Each item is used once, so the choices go down by one each time.",
+              "这相当于允许重复，每个位置都能再选任何一项。每一项只能用一次，所以选择数每次减一。",
+            ),
+            why(
+              n * r,
+              "You multiplied the two numbers. Count the choices for each position in turn and multiply those.",
+              "你把两个数相乘了。应依次数出每个位置的选择数，再把它们相乘。",
+            ),
+            why(
+              fact(r),
+              "That only arranges the chosen ones among themselves. Start with all the choices for the first position.",
+              "这只是把选出的几个相互排列。应从第一个位置的全部选择开始数。",
+            ),
+          ],
           solution: t(
             `The order matters, so count permutations of $${r}$ from $${n}$:${steps(`{}_{${n}}P_{${r}} = ${prodL(n, r)} = ${ans}`)}`,
             `顺序有关，所以求从 $${n}$ 个中取 $${r}$ 个的排列数：${steps(`{}_{${n}}P_{${r}} = ${prodL(n, r)} = ${ans}`)}`,

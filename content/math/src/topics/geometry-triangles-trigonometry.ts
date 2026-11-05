@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Compass, linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, pointProblem, radicalProblem, steps } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, pointProblem, radicalProblem, steps, why } from "../problems.ts";
 
 // Geometry, unit 4: triangles (the Pythagorean theorem, special right triangles,
 // proofs about triangles, medians and centroids), quadrilaterals (diagonals of
@@ -521,7 +521,19 @@ export const thePythagoreanTheorem: TopicDef = {
             prompt: t("Find $x$.", "求 $x$。"),
             answer: c,
             form: "integer",
-            wrong: [a + b, a * a + b * b, Math.abs(b - a)],
+            mistakes: [
+              why(
+                a + b,
+                "You added the legs. Add their squares, then take the square root.",
+                "你把两条直角边直接相加了。应把它们的平方相加，再开平方。",
+              ),
+              why(a * a + b * b, "That is $c^2$. Take the square root to get the hypotenuse.", "这是 $c^2$，还要开平方才是斜边。"),
+              why(
+                Math.abs(b - a),
+                "You subtracted the legs. The hypotenuse comes from adding their squares.",
+                "你把两条直角边相减了。斜边要由它们的平方相加得到。",
+              ),
+            ],
             solution: t(
               `$x$ is the hypotenuse:${chain(`x^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}`, `x = \\sqrt{${c * c}} = ${c}`)}`,
               `$x$ 是斜边：${chain(`x^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}`, `x = \\sqrt{${c * c}} = ${c}`)}`,
@@ -552,7 +564,19 @@ export const thePythagoreanTheorem: TopicDef = {
             prompt: t("Find $x$.", "求 $x$。"),
             answer: b,
             form: "integer",
-            wrong: [c - a, c * c - a * a, c + a],
+            mistakes: [
+              why(
+                c - a,
+                "You subtracted the lengths. Subtract their squares, then take the square root.",
+                "你直接把长度相减了。应把它们的平方相减，再开平方。",
+              ),
+              why(c * c - a * a, "That is the square of the leg. Take the square root.", "这是直角边的平方，还要开平方。"),
+              why(
+                c + a,
+                "You added. The hypotenuse is the longest side, so a leg comes from subtracting squares.",
+                "你做了加法。斜边是最长的边，所以求直角边要用平方相减。",
+              ),
+            ],
             solution: t(
               `$x$ is a leg and $${c}$ is the hypotenuse:${chain(`x^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${b * b}`, `x = \\sqrt{${b * b}} = ${b}`)}`,
               `$x$ 是直角边，$${c}$ 是斜边：${chain(`x^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${b * b}`, `x = \\sqrt{${b * b}} = ${b}`)}`,

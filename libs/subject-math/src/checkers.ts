@@ -661,6 +661,10 @@ function gcdBig(a: bigint, b: bigint): bigint {
  */
 export const solutionsChecker: Checker = {
   id: "solutions",
+  same(expected, response, mistake) {
+    const values = mistake === "\\varnothing" ? [] : mistake.split(",").map((part) => part.replace(/^[^=]*=/, "").trim());
+    return solutionsChecker.check({ ...obj(expected), values }, response).correct;
+  },
   check(expected, response) {
     const e = obj(expected);
     const variable = typeof e.var === "string" ? e.var : "x";

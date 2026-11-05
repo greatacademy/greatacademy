@@ -2,7 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, gcd, linear, num, poly, Q, type Surd, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, numberProblem, pointProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointProblem, solutionsProblem, steps, whySet, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -22,6 +22,16 @@ function tail(c: Coefficient): string {
 }
 
 /** isSquare tells whether n is the square of an integer. */
+/** rootSlips are the two classic mistakes in reading the solutions off $(x - r)(x - s) = 0$. */
+const rootSlips = (r: number, s: number) => [
+  whySet(
+    [num(-r), num(-s)],
+    "The signs are wrong. A solution makes its factor zero: substitute your values into the factors and check.",
+    "符号错了。解要使对应的因式等于零：把你的值代入因式检验一下。",
+  ),
+  whySet([num(r)], "There is a second solution: the product is zero when either factor is zero.", "还有一个解：任一因式为零时，积都为零。"),
+];
+
 const isSquare = (n: number) => n >= 0 && Math.round(Math.sqrt(n)) ** 2 === n;
 
 /** sqrtSurd is √k for a rational k ≥ 0, in simplest form. */
@@ -340,7 +350,14 @@ export const solvingPerfectSquareQuadraticEquations: TopicDef = {
         return solutionsProblem({
           prompt: solvePrompt(eq),
           values,
-          wrong: [[values[0]!], [num(k), num(k.neg())], ...(slip && slip.sign() > 0 ? [pm(Q.zero, sqrtSurd(slip))] : [])],
+          mistakes: [
+            whySet(
+              [values[0]!],
+              "A positive number has two square roots, one positive and one negative. Give both solutions.",
+              "正数有两个平方根，一正一负。两个解都要写出。",
+            ),
+          ],
+          wrong: [[num(k), num(k.neg())], ...(slip && slip.sign() > 0 ? [pm(Q.zero, sqrtSurd(slip))] : [])],
           solution: t(
             `${isolate ? "Isolate $x^{2}$, then take" : "Take"} the square root of both sides, remembering the negative root:${steps(...(isolate ? [isolate] : []), `x = \\pm\\sqrt{${num(k)}} = ${pmLatex(Q.zero, root)}`)}`,
             `${isolate ? "先把 $x^{2}$ 单独留在一边，再" : ""}两边开平方，不要漏掉负的平方根：${steps(...(isolate ? [isolate] : []), `x = \\pm\\sqrt{${num(k)}} = ${pmLatex(Q.zero, root)}`)}`,
@@ -373,7 +390,19 @@ export const solvingPerfectSquareQuadraticEquations: TopicDef = {
         return solutionsProblem({
           prompt: solvePrompt(eq),
           values,
-          wrong: [pm(Q.of(h), root), [values[0]!], pm(Q.of(-h), surd(Q.of(k)))],
+          mistakes: [
+            whySet(
+              pm(Q.of(h), root),
+              "Check the sign of the number you moved across: undo the addition inside the square by subtracting it.",
+              "注意移过去的数的符号：平方内加了几，就要减去几。",
+            ),
+            whySet(
+              [values[0]!],
+              "A square root gives two cases, one positive and one negative. Give both solutions.",
+              "开平方有正负两种情况，两个解都要写出。",
+            ),
+          ],
+          wrong: [pm(Q.of(-h), surd(Q.of(k)))],
           solution: t(
             `${withCoef ? "Isolate the square, then take" : "Take"} square roots of both sides, then solve for $x$:${steps(...(withCoef ? [`${front(a)}${sq} = ${a * k}, \\quad ${sq} = ${k}`] : []), `${linear(1, h)} = \\pm\\sqrt{${k}}`, `x = ${pmLatex(Q.of(-h), root)}`)}So ${solved(values).en}.`,
             `${withCoef ? "先把平方项单独留在一边，再" : ""}两边开平方，再解出 $x$：${steps(...(withCoef ? [`${front(a)}${sq} = ${a * k}, \\quad ${sq} = ${k}`] : []), `${linear(1, h)} = \\pm\\sqrt{${k}}`, `x = ${pmLatex(Q.of(-h), root)}`)}所以 ${solved(values)["zh-CN"]}。`,
@@ -471,7 +500,8 @@ export const zeroProductRule: TopicDef = {
         return solutionsProblem({
           prompt: solvePrompt(eq),
           values,
-          wrong: [[num(-r), num(-s)], [num(r)], [num(r), num(-s)]],
+          wrong: [[num(r), num(-s)]],
+          mistakes: rootSlips(r, s),
           solution: t(
             `Set each factor equal to zero:${steps(`${linear(1, -r)} = 0 \\quad\\text{or}\\quad ${linear(1, -s)} = 0`)}So ${solved(values).en}.`,
             `令每个因式等于零：${steps(`${linear(1, -r)} = 0 \\quad\\text{或}\\quad ${linear(1, -s)} = 0`)}所以 ${solved(values)["zh-CN"]}。`,
@@ -835,7 +865,8 @@ export const solvingQuadraticEquationsByFactoring: TopicDef = {
         return solutionsProblem({
           prompt: solvePrompt(eq),
           values,
-          wrong: [[num(-r), num(-s)], [num(r)], [num(r), num(-s)]],
+          wrong: [[num(r), num(-s)]],
+          mistakes: rootSlips(r, s),
           solution: factoringSolution([`${lf(1, -r)}${lf(1, -s)} = 0`], values),
         });
       },
@@ -854,12 +885,13 @@ export const solvingQuadraticEquationsByFactoring: TopicDef = {
         const kind = rng.pick(["x2=", "move-c", "product"] as const);
         const eq = kind === "x2=" ? `x^{2} = ${linear(-b, -c)}` : kind === "move-c" ? `${quad(1, b, 0)} = ${-c}` : `x${lf(1, b)} = ${-c}`;
         const values = [num(r), num(s)];
-        const wrong: string[][] = [[num(-r), num(-s)], [num(r)]];
+        const wrong: string[][] = [];
         if (kind === "product") wrong.push([num(-c), num(-c - b)]);
         return solutionsProblem({
           prompt: solvePrompt(eq),
           values,
           wrong,
+          mistakes: rootSlips(r, s),
           solution: factoringSolution(
             [`${quad(1, b, c)} = 0`, `${lf(1, -r)}${lf(1, -s)} = 0`],
             values,

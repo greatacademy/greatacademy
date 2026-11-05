@@ -12,6 +12,7 @@ import {
   inequalityProblem,
   numberProblem,
   steps,
+  why,
 } from "../problems.ts";
 
 /** frac is the exact quotient a / b, for the values that mistakes produce. */
@@ -1373,7 +1374,14 @@ export const modelingWithLinearEquations: TopicDef = {
             `${leftZh}，等于${rightZh}。求这个数。`,
           ),
           answer: n,
-          wrong: [-n, frac(b - d, c - a), frac(b + d, a + c)],
+          wrong: [-n, frac(b + d, a + c)],
+          mistakes: [
+            why(
+              frac(b - d, c - a),
+              "Watch which side each term moves to. Subtract the same term from both sides, and keep track of its sign.",
+              "注意每一项移到哪一边。两边同时减去同一项，并留意它的符号。",
+            ),
+          ],
           solution: t(
             `Let $n$ be the number: ${steps(eq, `${num(b + d)} = ${poly([c - a, "n"])}`, `n = ${num(n)}`)}`,
             `设这个数为 $n$：${steps(eq, `${num(b + d)} = ${poly([c - a, "n"])}`, `n = ${num(n)}`)}`,
@@ -1407,7 +1415,23 @@ export const modelingWithLinearEquations: TopicDef = {
             `${p.what["zh-CN"]}的收费不同：第一家收 $${f1}$ 元，另外每${p.zh}收 $${r1}$ 元；第二家收 $${f2}$ 元，另外每${p.zh}收 $${r2}$ 元。多少${p.zh}时两者费用相同？`,
           ),
           answer: n,
-          wrong: [frac(f2 - f1, r1 + r2), frac(f2 + f1, r1 - r2), frac(f2 - f1, r1)],
+          mistakes: [
+            why(
+              frac(f2 - f1, r1 + r2),
+              "You added the rates. Set the two costs equal: the difference of the fees is divided by the difference of the rates.",
+              "你把单价相加了。令两个费用相等：固定费用之差除以单价之差。",
+            ),
+            why(
+              frac(f2 + f1, r1 - r2),
+              "You added the fees. Set the two costs equal: the difference of the fees is divided by the difference of the rates.",
+              "你把固定费用相加了。令两个费用相等：固定费用之差除以单价之差。",
+            ),
+            why(
+              frac(f2 - f1, r1),
+              "You used only one rate. Both plans change with the amount, so use the difference of the rates.",
+              "你只用了一个单价。两种方案都随数量变化，所以要用单价之差。",
+            ),
+          ],
           solution: t(
             `Set the two costs equal: ${steps(`${poly([f1, ""], [r1, p.v])} = ${f2} + ${r2}${p.v}`, `${poly([r1 - r2, p.v])} = ${f2 - f1}`, `${p.v} = ${n}`)}`,
             `令两者费用相等：${steps(`${poly([f1, ""], [r1, p.v])} = ${f2} + ${r2}${p.v}`, `${poly([r1 - r2, p.v])} = ${f2 - f1}`, `${p.v} = ${n}`)}`,

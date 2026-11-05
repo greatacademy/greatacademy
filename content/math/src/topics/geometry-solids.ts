@@ -11,6 +11,7 @@ import {
   reasonChoice,
   solutionsProblem,
   steps,
+  why,
   yesNo,
 } from "../problems.ts";
 
@@ -68,13 +69,20 @@ function rootProblem(p: { prompt: Text; n: number; solution: Text; wrong?: reado
 }
 
 /** piProblem builds a problem whose answer is c·π, entered in terms of π and fully simplified. */
-export function piProblem(p: { prompt: Text; coef: Coefficient; solution: Text; wrong?: readonly Coefficient[] }): Problem {
+export function piProblem(p: {
+  prompt: Text;
+  coef: Coefficient;
+  solution: Text;
+  wrong?: readonly Coefficient[];
+  mistakes?: readonly { readonly value: Coefficient; readonly why: Text }[];
+}): Problem {
   return expressionProblem({
     prompt: p.prompt,
     answer: piTex(p.coef),
     simplified: true,
     solution: p.solution,
     wrong: (p.wrong ?? []).filter((w) => toQ(w).sign() > 0).map(piTex),
+    mistakes: (p.mistakes ?? []).filter((m) => toQ(m.value).sign() > 0).map((m) => ({ response: piTex(m.value), why: m.why })),
   });
 }
 
@@ -1544,7 +1552,24 @@ export const volumesOfCubes: TopicDef = {
             answer: v,
             form: decimal ? "decimal" : "integer",
             unit: `${u}^3`,
-            wrong: [s.pow(2), s.mul(Q.of(3)), s.pow(2).mul(Q.of(6)), s.mul(Q.of(12))],
+            mistakes: [
+              why(
+                s.pow(2),
+                "That is the area of one face. Volume multiplies three edges, $s^3$.",
+                "这是一个面的面积。体积是三条棱相乘，$s^3$。",
+              ),
+              why(
+                s.mul(Q.of(3)),
+                "You multiplied the edge by $3$. The exponent $3$ means edge times edge times edge.",
+                "你用棱长乘了 $3$。指数 $3$ 的意思是棱长连乘三次。",
+              ),
+              why(s.pow(2).mul(Q.of(6)), "That is the surface area, $6s^2$. Volume is $s^3$.", "这是表面积 $6s^2$。体积是 $s^3$。"),
+              why(
+                s.mul(Q.of(12)),
+                "That is the total length of the $12$ edges. Volume is $s^3$.",
+                "这是 $12$ 条棱的总长度。体积是 $s^3$。",
+              ),
+            ],
             solution: t(
               `Cube the edge:${steps(`V = ${dec(s)}^3 = ${dec(v)}\\text{ ${u}}^3`)}`,
               `把棱长立方：${steps(`V = ${dec(s)}^3 = ${dec(v)}\\text{ ${u}}^3`)}`,
@@ -1573,7 +1598,16 @@ export const volumesOfCubes: TopicDef = {
           answer: s,
           form: "integer",
           unit: u,
-          wrong: [Q.of(v, 3), Q.of(v, 6), s * s, Q.of(v, 12)],
+          wrong: [Q.of(v, 12)],
+          mistakes: [
+            why(Q.of(v, 3), "You divided by $3$. To undo a cube, take the cube root.", "你除以了 $3$。要撤销立方，应该开立方。"),
+            why(
+              Q.of(v, 6),
+              "You divided by $6$, which belongs to surface area. Here take the cube root of the volume.",
+              "你除以了 $6$，那是求表面积时用的。这里要对体积开立方。",
+            ),
+            why(s * s, "That is the area of one face. The edge is the cube root of the volume.", "这是一个面的面积。棱长是体积的立方根。"),
+          ],
           solution: t(
             `Take the cube root:${steps(`s = \\sqrt[3]{${v}} = ${tex(s, u)}`, `\\text{since } ${s}^3 = ${v}`)}`,
             `取立方根：${steps(`s = \\sqrt[3]{${v}} = ${tex(s, u)}`, `\\text{因为 } ${s}^3 = ${v}`)}`,
@@ -1599,7 +1633,16 @@ export const volumesOfCubes: TopicDef = {
             ),
             answer: k ** 3,
             form: "integer",
-            wrong: [k, k * k, 3 * k, 6 * k * k],
+            mistakes: [
+              why(k, "That counts one row. Multiply rows by columns by layers.", "这只数了一行。要用行数乘列数再乘层数。"),
+              why(k * k, "That counts one layer. Multiply by the number of layers too.", "这只数了一层，还要乘层数。"),
+              why(3 * k, "You multiplied by $3$. Cubing means multiplying by itself three times.", "你乘了 $3$。立方是自身连乘三次。"),
+              why(
+                6 * k * k,
+                "That counts the small squares on the outside, the surface. The volume counts all the cubes.",
+                "这数的是外表面的小正方形。体积要数所有小立方体。",
+              ),
+            ],
             solution: t(`The volume $s^3$ becomes $(${k}s)^3 = ${k ** 3}s^3$.`, `体积 $s^3$ 变成 $(${k}s)^3 = ${k ** 3}s^3$。`),
           });
         }
@@ -1651,7 +1694,25 @@ export const surfaceAreasOfCubes: TopicDef = {
             answer: 6 * s * s,
             form: "integer",
             unit: `${u}^2`,
-            wrong: [s ** 3, s * s, 4 * s * s, 6 * s, 12 * s],
+            mistakes: [
+              why(
+                s ** 3,
+                "That is the volume, $s^3$. Surface area adds the areas of the $6$ faces.",
+                "这是体积 $s^3$。表面积是 $6$ 个面的面积之和。",
+              ),
+              why(s * s, "That is the area of one face. A cube has $6$ faces.", "这是一个面的面积。正方体有 $6$ 个面。"),
+              why(
+                4 * s * s,
+                "That counts only $4$ faces. A cube has $6$, including top and bottom.",
+                "这只算了 $4$ 个面。正方体有 $6$ 个面，包括上下两面。",
+              ),
+              why(6 * s, "You did not square the edge. Each face has area $s^2$.", "你没有把棱长平方。每个面的面积是 $s^2$。"),
+              why(
+                12 * s,
+                "That is the total length of the edges. Surface area counts the faces.",
+                "这是所有棱的总长度。表面积要算的是面。",
+              ),
+            ],
             solution: t(
               `Six square faces of area $${s}^2 = ${s * s}$:${steps(`S = 6 \\cdot ${s * s} = ${tex(6 * s * s, u, 2)}`)}`,
               `六个面积为 $${s}^2 = ${s * s}$ 的正方形面：${steps(`S = 6 \\cdot ${s * s} = ${tex(6 * s * s, u, 2)}`)}`,
@@ -1680,7 +1741,15 @@ export const surfaceAreasOfCubes: TopicDef = {
           answer: s,
           form: "integer",
           unit: u,
-          wrong: [s * s, area / 6, Q.of(area, 4), 6 * s],
+          mistakes: [
+            why(area / 6, "That is the area of one face. Take its square root to get the edge.", "这是一个面的面积。还要开平方才是棱长。"),
+            why(Q.of(area, 4), "You divided by $4$. A cube has $6$ equal faces.", "你除以了 $4$。正方体有 $6$ 个相等的面。"),
+            why(
+              6 * s,
+              "That multiplies the edge by $6$. Divide the area by $6$, then take the square root.",
+              "这是棱长乘 $6$。应把面积除以 $6$，再开平方。",
+            ),
+          ],
           solution: t(
             `One face has area $${area} \\div 6 = ${s * s}$:${steps(`s = \\sqrt{${s * s}} = ${tex(s, u)}`)}`,
             `一个面的面积是 $${area} \\div 6 = ${s * s}$：${steps(`s = \\sqrt{${s * s}} = ${tex(s, u)}`)}`,
@@ -2900,7 +2969,24 @@ export const volumesOfCylinders: TopicDef = {
           answer: v,
           form: "decimal",
           unit: `${u}^3`,
-          wrong: [pi.mul(Q.of(2 * r * h)), pi.mul(Q.of(r * h)), Q.of(r * r * h), pi.mul(Q.of(4 * r * r * h))],
+          mistakes: [
+            why(
+              pi.mul(Q.of(2 * r * h)),
+              "That uses $2\\pi r h$, the area of the curved side. Volume is the area of the base times the height, $\\pi r^2 h$.",
+              "这是 $2\\pi r h$，即侧面积。体积是底面积乘高，$\\pi r^2 h$。",
+            ),
+            why(
+              pi.mul(Q.of(r * h)),
+              "You did not square the radius. The base is a circle of area $\\pi r^2$.",
+              "你没有把半径平方。底面是面积为 $\\pi r^2$ 的圆。",
+            ),
+            why(
+              Q.of(r * r * h),
+              "You left out $\\pi$. The base is a circle, so its area is $\\pi r^2$.",
+              "你漏掉了 $\\pi$。底面是圆，面积是 $\\pi r^2$。",
+            ),
+            why(pi.mul(Q.of(4 * r * r * h)), "That squares the diameter. Square the radius instead.", "这是把直径平方了。应该把半径平方。"),
+          ],
           solution: t(
             `${steps(`V = \\pi r^2 h = ${piTex(r * r * h)} \\approx ${r * r * h} \\cdot 3.14 = ${dec(v)}\\text{ ${u}}^3`)}`,
             `${steps(`V = \\pi r^2 h = ${piTex(r * r * h)} \\approx ${r * r * h} \\cdot 3.14 = ${dec(v)}\\text{ ${u}}^3`)}`,
@@ -2986,7 +3072,20 @@ export const surfaceAreasOfCylinders: TopicDef = {
               `求这个圆柱的侧面积（单位：$${unitTex(u, 2)}$）。${inPi["zh-CN"]}`,
             ),
             coef: 2 * r * h,
-            wrong: [r * h, r * r * h, 2 * r * h + 2 * r * r, 4 * r * h],
+            mistakes: [
+              why(
+                r * h,
+                "You left out the $2$: the side unrolls into a rectangle as wide as the circumference.",
+                "你漏掉了 $2$：侧面展开后的矩形，宽等于底面周长。",
+              ),
+              why(r * r * h, "That is the volume. The lateral area is only the curved side.", "这是体积。侧面积只算弯曲的侧面。"),
+              why(
+                2 * r * h + 2 * r * r,
+                "That includes the two bases. The lateral area is only the curved side.",
+                "这包含了两个底面。侧面积只算弯曲的侧面。",
+              ),
+              why(4 * r * h, "You used the diameter where the radius belongs.", "你把直径当成半径代入了。"),
+            ],
             solution: t(
               `${sizeStep(size).en}${steps(`L = 2\\pi r h = 2\\pi \\cdot ${r} \\cdot ${h} = ${piTex(2 * r * h)}`)}`,
               `${sizeStep(size)["zh-CN"]}${steps(`L = 2\\pi r h = 2\\pi \\cdot ${r} \\cdot ${h} = ${piTex(2 * r * h)}`)}`,
@@ -3020,7 +3119,12 @@ export const surfaceAreasOfCylinders: TopicDef = {
               `求这个圆柱的表面积（单位：$${unitTex(u, 2)}$）。${inPi["zh-CN"]}`,
             ),
             coef: s,
-            wrong: [2 * r * h, r * r + 2 * r * h, r * r * h, 2 * r * r + r * h],
+            wrong: [2 * r * r + r * h],
+            mistakes: [
+              why(2 * r * h, "That is only the curved side. Add the two bases.", "这只是弯曲的侧面，还要加上两个底面。"),
+              why(r * r + 2 * r * h, "That counts only one base. A closed cylinder has two.", "这只算了一个底面。封闭的圆柱有两个底面。"),
+              why(r * r * h, "That is the volume, not the surface area.", "这是体积，不是表面积。"),
+            ],
             solution: t(
               `${sizeStep(size).en}${steps(`S = 2\\pi \\cdot ${r}^2 + 2\\pi \\cdot ${r} \\cdot ${h} = ${piTex(2 * r * r)} + ${piTex(2 * r * h)} = ${piTex(s)}`)}`,
               `${sizeStep(size)["zh-CN"]}${steps(`S = 2\\pi \\cdot ${r}^2 + 2\\pi \\cdot ${r} \\cdot ${h} = ${piTex(2 * r * r)} + ${piTex(2 * r * h)} = ${piTex(s)}`)}`,
@@ -3068,7 +3172,14 @@ export const surfaceAreasOfCylinders: TopicDef = {
           ),
           answer: h,
           unit: u,
-          wrong: [Q.of(s, 2 * r), Q.of(s - r * r, 2 * r), Q.of(s, r * r)],
+          wrong: [Q.of(s - r * r, 2 * r), Q.of(s, r * r)],
+          mistakes: [
+            why(
+              Q.of(s, 2 * r),
+              "You left the base in the area. Subtract it first, then divide by $2\\pi r$.",
+              "你没有去掉底面积。应先减去底面积，再除以 $2\\pi r$。",
+            ),
+          ],
           solution: t(
             `${steps(`2\\pi \\cdot ${r}^2 + 2\\pi \\cdot ${r} \\cdot h = ${piTex(s)}`, `${2 * r * r} + ${2 * r}h = ${s}`, `${2 * r}h = ${2 * r * h}`, `h = ${tex(h, u)}`)}`,
             `${steps(`2\\pi \\cdot ${r}^2 + 2\\pi \\cdot ${r} \\cdot h = ${piTex(s)}`, `${2 * r * r} + ${2 * r}h = ${s}`, `${2 * r}h = ${2 * r * h}`, `h = ${tex(h, u)}`)}`,
@@ -3180,7 +3291,15 @@ export const volumesOfRightCones: TopicDef = {
             ),
             answer: h,
             unit: u,
-            wrong: [v.div(Q.of(r * r)), v.mul(Q.of(3)).div(Q.of(r)), v.mul(Q.of(3))],
+            mistakes: [
+              why(
+                v.div(Q.of(r * r)),
+                "You forgot the $\\frac{1}{3}$ in the cone formula. Multiply by $3$ before you divide by $\\pi r^2$.",
+                "你漏掉了圆锥公式中的 $\\frac{1}{3}$。除以 $\\pi r^2$ 之前要先乘 $3$。",
+              ),
+              why(v.mul(Q.of(3)).div(Q.of(r)), "You did not square the radius. Divide by $r^2$.", "你没有把半径平方。应除以 $r^2$。"),
+              why(v.mul(Q.of(3)), "You multiplied by $3$ but did not divide by $r^2$.", "你乘了 $3$，但没有除以 $r^2$。"),
+            ],
             solution: t(
               `${steps(`\\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, ...(r === 1 ? [] : [`${r * r}h = ${r * r * h}`]), `h = ${tex(h, u)}`)}`,
               `${steps(`\\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, ...(r === 1 ? [] : [`${r * r}h = ${r * r * h}`]), `h = ${tex(h, u)}`)}`,
@@ -3194,7 +3313,19 @@ export const volumesOfRightCones: TopicDef = {
           ),
           answer: r,
           unit: u,
-          wrong: [r * r, v.div(Q.of(h)), 3 * r],
+          mistakes: [
+            why(r * r, "That is $r^2$. Take the square root to get the radius.", "这是 $r^2$，还要开平方才是半径。"),
+            why(
+              v.div(Q.of(h)),
+              "You forgot the $\\frac{1}{3}$ in the cone formula and did not take the root. Multiply by $3$, divide by $h$, then take the square root.",
+              "你漏掉了圆锥公式中的 $\\frac{1}{3}$，也没有开方。应先乘 $3$，再除以 $h$，然后开平方。",
+            ),
+            why(
+              3 * r,
+              "You multiplied by $3$ after taking the root. The $3$ goes under the root, with $r^2$.",
+              "你开方之后才乘 $3$。这个 $3$ 要和 $r^2$ 一起留在根号内。",
+            ),
+          ],
           solution: t(
             `${steps(`\\frac{1}{3}\\pi r^2 \\cdot ${h} = ${piTex(v)}`, `${h}r^2 = ${r * r * h}`, `r^2 = ${r * r}`, `r = ${tex(r, u)}`)}`,
             `${steps(`\\frac{1}{3}\\pi r^2 \\cdot ${h} = ${piTex(v)}`, `${h}r^2 = ${r * r * h}`, `r^2 = ${r * r}`, `r = ${tex(r, u)}`)}`,
@@ -3472,7 +3603,13 @@ export const volumesOfSpheres: TopicDef = {
           ...piProblem({
             prompt: volumeIn(t("sphere", "球"), u),
             coef: v,
-            wrong: [4 * r * r, Q.of(4 * r * r, 3), Q.of(r ** 3, 3), Q.of(4 * 8 * r ** 3, 3), 4 * r ** 3],
+            mistakes: [
+              why(4 * r * r, "That is the surface area of a sphere, not its volume.", "这是球的表面积，不是体积。"),
+              why(Q.of(4 * r * r, 3), "You squared the radius. In the volume it is cubed.", "你把半径平方了。体积公式中半径要立方。"),
+              why(Q.of(r ** 3, 3), "You left out the $4$ in $\\frac{4}{3}$.", "你漏掉了 $\\frac{4}{3}$ 中的 $4$。"),
+              why(Q.of(4 * 8 * r ** 3, 3), "You used the diameter where the radius belongs.", "你把直径当成半径代入了。"),
+              why(4 * r ** 3, "You left out the division by $3$ in $\\frac{4}{3}$.", "你漏掉了 $\\frac{4}{3}$ 中的除以 $3$。"),
+            ],
             solution: t(
               `${sizeStep(size).en}${steps(`V = \\frac{4}{3}\\pi \\cdot ${r}^3 = \\frac{4}{3}\\pi \\cdot ${r ** 3} = ${piTex(v)}`)}`,
               `${sizeStep(size)["zh-CN"]}${steps(`V = \\frac{4}{3}\\pi \\cdot ${r}^3 = \\frac{4}{3}\\pi \\cdot ${r ** 3} = ${piTex(v)}`)}`,

@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
 
-import { article, choiceProblem, numberProblem, steps } from "../problems.ts";
+import { article, choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
 
@@ -753,7 +753,23 @@ export const anglesOfATriangle: TopicDef = {
               answer: 90 - a,
               form: "integer",
               unit: "°",
-              wrong: [180 - a, 90 + a, 180 - 2 * a],
+              mistakes: [
+                why(
+                  180 - a,
+                  "You forgot the right angle. In a right triangle the two other angles add to $90^\\circ$.",
+                  "你忘了直角。直角三角形中另外两个角之和是 $90^\\circ$。",
+                ),
+                why(
+                  90 + a,
+                  "You added. The two acute angles add to $90^\\circ$, so subtract from $90^\\circ$.",
+                  "你做了加法。两个锐角之和是 $90^\\circ$，应该从 $90^\\circ$ 中减去。",
+                ),
+                why(
+                  180 - 2 * a,
+                  "You treated the two acute angles as equal. Subtract the given angle from $90^\\circ$.",
+                  "你把两个锐角当成相等了。应从 $90^\\circ$ 中减去已知角。",
+                ),
+              ],
               solution: t(
                 `The angles add up to $180^\\circ$, and one of them is $90^\\circ$:${steps(`x = 180^\\circ - 90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
                 `三个角之和为 $180^\\circ$，其中一个是 $90^\\circ$：${steps(`x = 180^\\circ - 90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
@@ -777,7 +793,29 @@ export const anglesOfATriangle: TopicDef = {
             `The angles of a triangle add up to $180^\\circ$:${steps(`x = 180^\\circ - ${a}^\\circ - ${b}^\\circ = ${c}^\\circ`)}`,
             `三角形内角和为 $180^\\circ$：${steps(`x = 180^\\circ - ${a}^\\circ - ${b}^\\circ = ${c}^\\circ`)}`,
           );
-          const problem = { answer: c, form: "integer", unit: "°", wrong: [a + b, 360 - a - b, Math.abs(a - b)], solution } as const;
+          const problem = {
+            answer: c,
+            form: "integer",
+            unit: "°",
+            mistakes: [
+              why(
+                a + b,
+                "That is the sum of the two known angles. The third is what remains of $180^\\circ$.",
+                "这是两个已知角的和。第三个角是 $180^\\circ$ 减去它后剩下的部分。",
+              ),
+              why(
+                360 - a - b,
+                "You used $360^\\circ$. The angles of a triangle add to $180^\\circ$.",
+                "你用了 $360^\\circ$。三角形内角和是 $180^\\circ$。",
+              ),
+              why(
+                Math.abs(a - b),
+                "You subtracted the two known angles. Subtract both from $180^\\circ$.",
+                "你把两个已知角相减了。应从 $180^\\circ$ 中减去这两个角。",
+              ),
+            ],
+            solution,
+          } as const;
           if (rng.bool(0.3)) {
             return numberProblem({
               prompt: t(

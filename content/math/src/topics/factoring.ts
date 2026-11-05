@@ -2,7 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, linear, poly } from "@ga/subject-math";
 
-import { choiceProblem, factoredProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, factoredProblem, say, steps, withMistakes, yesNo } from "../problems.ts";
 
 /** pw writes a power of a variable: "", "x" or "x^{3}". */
 const pw = (v: string, e: number) => (e === 0 ? "" : e === 1 ? v : `${v}^{${e}}`);
@@ -672,12 +672,21 @@ export const factoringTrinomials: TopicDef = {
         const [m, n] = drawMonic(rng, true);
         const expr = quad(1, m + n, m * n);
         const answer = `${lf(1, m)}${lf(1, n)}`;
-        return factoredProblem({
-          prompt: factorPrompt(expr),
-          answer,
-          wrong: [`${lf(1, -m)}${lf(1, -n)}`, ...trinomialPairs(m, n, (d, e) => `${lf(1, d)}${lf(1, e)}`)],
-          solution: monicSolution(expr, m, n, answer),
-        });
+        return withMistakes(
+          factoredProblem({
+            prompt: factorPrompt(expr),
+            answer,
+            wrong: [`${lf(1, -m)}${lf(1, -n)}`, ...trinomialPairs(m, n, (d, e) => `${lf(1, d)}${lf(1, e)}`)],
+            solution: monicSolution(expr, m, n, answer),
+          }),
+          [
+            say(
+              `${lf(1, -m)}${lf(1, -n)}`,
+              "The signs are wrong: multiply your factors back and compare the middle term with the original.",
+              "符号错了：把你的因式乘回去，对比中间项。",
+            ),
+          ],
+        );
       },
     },
     {

@@ -2,7 +2,7 @@ import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, num, paren, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 /** frac is the exact quotient a / b, for the values that mistakes produce. */
 const frac = (a: number, b: number) => Q.of(a, b);
@@ -37,7 +37,14 @@ export const oneStepEquationsAddition: TopicDef = {
           prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
           answer: x,
           solveFor: "x",
-          wrong: [b + a, -x],
+          wrong: [-x],
+          mistakes: [
+            why(
+              b + a,
+              "That repeats the operation instead of undoing it. Do the opposite on both sides.",
+              "这是把运算又做了一遍，而不是撤销它。两边要做相反的运算。",
+            ),
+          ],
           solution: t(
             `${a > 0 ? `Subtract $${a}$ from` : `Add $${-a}$ to`} both sides: ${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
             `两边同时${a > 0 ? `减去 $${a}$` : `加上 $${-a}$`}：${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
@@ -64,7 +71,18 @@ export const oneStepEquationsAddition: TopicDef = {
           prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
           answer: x,
           solveFor: "x",
-          wrong: [b + a, a - b],
+          mistakes: [
+            why(
+              b + a,
+              "That repeats the operation instead of undoing it. Do the opposite on both sides.",
+              "这是把运算又做了一遍，而不是撤销它。两边要做相反的运算。",
+            ),
+            why(
+              a - b,
+              "You subtracted in the wrong order. Start from the side without $x$ and take away the number that was added to $x$.",
+              "你减的顺序反了。应从不含 $x$ 的一边开始，减去加在 $x$ 上的数。",
+            ),
+          ],
           solution: t(
             `${a > 0 ? `Subtract $${a}$ from` : `Add $${-a}$ to`} both sides: ${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
             `两边同时${a > 0 ? `减去 $${a}$` : `加上 $${-a}$`}：${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
@@ -101,7 +119,15 @@ export const oneStepEquationsMultiplication: TopicDef = {
           prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
           answer: x,
           solveFor: "x",
-          wrong: [-x, b - a, b * a],
+          wrong: [-x],
+          mistakes: [
+            why(
+              b - a,
+              "You subtracted the coefficient. The coefficient multiplies $x$, so divide both sides by it.",
+              "你减去了系数。系数是乘在 $x$ 上的，所以两边要除以它。",
+            ),
+            why(b * a, "You multiplied by the coefficient. To undo a multiplication, divide.", "你乘了系数。要撤销乘法，应该做除法。"),
+          ],
           solution: t(
             `Divide both sides by $${num(a)}$: ${steps(`x = \\frac{${num(b)}}{${num(a)}} = ${num(x)}`)}`,
             `两边同时除以 $${num(a)}$：${steps(`x = \\frac{${num(b)}}{${num(a)}} = ${num(x)}`)}`,
@@ -128,7 +154,15 @@ export const oneStepEquationsMultiplication: TopicDef = {
           prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
           answer: x,
           solveFor: "x",
-          wrong: [-x, frac(b, a), b + d],
+          wrong: [-x],
+          mistakes: [
+            why(
+              frac(b, a),
+              "You divided. The unknown is being divided, so multiply both sides to undo it.",
+              "你做了除法。未知数正在被除，要撤销就应在两边做乘法。",
+            ),
+            why(b + d, "You added the denominator. To undo a division, multiply.", "你加上了分母。要撤销除法，应该做乘法。"),
+          ],
           solution: t(
             `Multiply both sides by $${num(a)}$: ${steps(`x = ${paren(a)} \\cdot ${paren(b)} = ${num(x)}`)}`,
             `两边同时乘以 $${num(a)}$：${steps(`x = ${paren(a)} \\cdot ${paren(b)} = ${num(x)}`)}`,
@@ -257,7 +291,23 @@ export const equationsWithVariablesOnBothSides: TopicDef = {
           prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
           answer: x,
           solveFor: "x",
-          wrong: [-x, ...(a + c !== 0 ? [frac(d - b, a + c)] : []), frac(d + b, a - c)],
+          wrong: [-x],
+          mistakes: [
+            ...(a + c !== 0
+              ? [
+                  why(
+                    frac(d - b, a + c),
+                    "You added the variable terms. To collect them on one side, subtract one from both sides.",
+                    "你把含变量的项相加了。要把它们集中到一边，应在两边同时减去其中一项。",
+                  ),
+                ]
+              : []),
+            why(
+              frac(d + b, a - c),
+              "You added the constant to the other side. To move it, do the opposite of what it does: subtract it from both sides.",
+              "你把常数加到了另一边。移动常数要做相反的运算：两边同时减去它。",
+            ),
+          ],
           solution: t(
             `${c > 0 ? `Subtract $${side(c)}$ from` : `Add $${side(-c)}$ to`} both sides, then solve: ${steps(`${linear(a - c, b)} = ${num(d)}`, `${side(a - c)} = ${num(d - b)}`, `x = ${num(x)}`)}`,
             `两边同时${c > 0 ? `减去 $${side(c)}$` : `加上 $${side(-c)}$`}，再求解：${steps(`${linear(a - c, b)} = ${num(d)}`, `${side(a - c)} = ${num(d - b)}`, `x = ${num(x)}`)}`,

@@ -30,6 +30,7 @@ import {
   pointProblem,
   solutionsProblem,
   steps,
+  why,
   yesNo,
 } from "../problems.ts";
 
@@ -797,7 +798,19 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
             `求 $c$ 的值，使 $y = ${quad(a, b, 0)} + c$ 的图象与 $x$ 轴恰有一个交点。`,
           ),
           answer: c,
-          wrong: [c.neg(), Q.of(b * b, 2 * a), Q.of(b, 2 * a), Q.of(b * b, a)],
+          wrong: [c.neg(), Q.of(b, 2 * a)],
+          mistakes: [
+            why(
+              Q.of(b * b, 2 * a),
+              "You divided by $2a$. Touching means $b^2 - 4ac = 0$, so $c = \\frac{b^2}{4a}$.",
+              "你除以了 $2a$。相切意味着 $b^2 - 4ac = 0$，所以 $c = \\frac{b^2}{4a}$。",
+            ),
+            why(
+              Q.of(b * b, a),
+              "You dropped the $4$. The discriminant is $b^2 - 4ac$, so $c = \\frac{b^2}{4a}$.",
+              "你漏掉了 $4$。判别式是 $b^2 - 4ac$，所以 $c = \\frac{b^2}{4a}$。",
+            ),
+          ],
           solution: t(
             `Set the discriminant equal to $0$:${steps(`${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot c = 0`, `${b * b} ${4 * a > 0 ? "-" : "+"} ${Math.abs(4 * a)}c = 0`, `c = ${num(c)}`)}`,
             `令判别式等于 $0$：${steps(`${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot c = 0`, `${b * b} ${4 * a > 0 ? "-" : "+"} ${Math.abs(4 * a)}c = 0`, `c = ${num(c)}`)}`,

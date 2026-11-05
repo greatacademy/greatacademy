@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, type Point, poly, Q, sketch, solutionsChecker } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, steps, why, yesNo } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -1759,7 +1759,20 @@ export const theUnionOfSets: TopicDef = {
             ),
             answer: n,
             form: "integer",
-            wrong: [n + c[1], sum(c), c[0] + c[2], c[1]],
+            wrong: [sum(c)],
+            mistakes: [
+              why(n + c[1], "You counted the overlap twice. Count it once.", "你把重叠部分数了两次。它只应数一次。"),
+              why(
+                c[0] + c[2],
+                "You left out the overlap. The union includes the elements in both sets.",
+                "你漏掉了重叠部分。并集包含同时属于两个集合的元素。",
+              ),
+              why(
+                c[1],
+                "That is the intersection, the elements in both. The union takes those in either.",
+                "这是交集，即同时属于两个集合的元素。并集包含属于任一集合的元素。",
+              ),
+            ],
             solution: t(
               `Add the three regions inside the circles:${steps(`n(A \\cup B) = ${c[0]} + ${c[1]} + ${c[2]} = ${n}`)}`,
               `把圆内的三个区域相加：${steps(`n(A \\cup B) = ${c[0]} + ${c[1]} + ${c[2]} = ${n}`)}`,

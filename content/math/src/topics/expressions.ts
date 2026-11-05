@@ -2,7 +2,7 @@ import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, num, paren, poly } from "@ga/subject-math";
 
-import { expressionProblem, numberProblem, steps } from "../problems.ts";
+import { expressionProblem, numberProblem, say, steps } from "../problems.ts";
 
 /** times writes a coefficient multiplying a parenthesized value: times(3, -2) is "3(-2)", times(-1, 4) is "-(4)". */
 function times(a: number, value: number): string {
@@ -119,7 +119,19 @@ export const combiningLikeTerms: TopicDef = {
           prompt: t(`Simplify $${expr}$.`, `化简 $${expr}$。`),
           answer,
           simplified: true,
-          wrong: [poly([a - b, v]), poly([a + b, `${v}^{2}`]), expr],
+          wrong: [expr],
+          mistakes: [
+            say(
+              poly([a - b, v]),
+              "Check the sign of the second term. Each coefficient keeps the sign written in front of it, and then they are added.",
+              "检查第二项的符号。每个系数带着它前面的符号，然后再相加。",
+            ),
+            say(
+              poly([a + b, `${v}^{2}`]),
+              "Adding like terms changes only the coefficient. The exponent stays the same.",
+              "合并同类项只改变系数，指数不变。",
+            ),
+          ],
           solution: t(
             `Both terms have the variable part $${v}$, so add the coefficients: ${steps(`${expr} = (${num(a)} ${b < 0 ? "-" : "+"} ${Math.abs(b)})${v} = ${answer}`)}`,
             `两项的变量部分都是 $${v}$，把系数相加：${steps(`${expr} = (${num(a)} ${b < 0 ? "-" : "+"} ${Math.abs(b)})${v} = ${answer}`)}`,
@@ -200,7 +212,19 @@ export const distributiveProperty: TopicDef = {
           prompt: t(`Expand $${expr}$.`, `展开 $${expr}$。`),
           answer,
           simplified: true,
-          wrong: [linear(a * b, c), linear(b, a * c), expr],
+          wrong: [expr],
+          mistakes: [
+            say(
+              linear(a * b, c),
+              "You multiplied only the first term. The factor outside multiplies every term inside.",
+              "你只乘了第一项。括号外的因数要乘括号内的每一项。",
+            ),
+            say(
+              linear(b, a * c),
+              "You multiplied only the second term. The factor outside multiplies every term inside.",
+              "你只乘了第二项。括号外的因数要乘括号内的每一项。",
+            ),
+          ],
           solution: t(
             `Multiply each term by $${a}$: ${steps(`${expr} = ${a} \\cdot ${xTerm(b)} + ${a} \\cdot ${paren(c)} = ${answer}`)}`,
             `用 $${a}$ 乘以每一项：${steps(`${expr} = ${a} \\cdot ${xTerm(b)} + ${a} \\cdot ${paren(c)} = ${answer}`)}`,
@@ -226,7 +250,19 @@ export const distributiveProperty: TopicDef = {
           prompt: t(`Expand $${expr}$.`, `展开 $${expr}$。`),
           answer,
           simplified: true,
-          wrong: [linear(a * b, -a * c), linear(a * b, c), linear(-a * b, -a * c)],
+          wrong: [linear(-a * b, -a * c)],
+          mistakes: [
+            say(
+              linear(a * b, -a * c),
+              "The negative sign reached only the first term. It changes the sign of the second term as well.",
+              "负号只作用到了第一项。第二项的符号也要改变。",
+            ),
+            say(
+              linear(a * b, c),
+              "You multiplied only the first term. The factor outside multiplies every term inside.",
+              "你只乘了第一项。括号外的因数要乘括号内的每一项。",
+            ),
+          ],
           solution: t(
             `Multiply each term by $${num(a)}$: ${steps(`${expr} = ${paren(a)} \\cdot ${xTerm(b)} + ${paren(a)} \\cdot ${paren(c)} = ${answer}`)}`,
             `用 $${num(a)}$ 乘以每一项：${steps(`${expr} = ${paren(a)} \\cdot ${xTerm(b)} + ${paren(a)} \\cdot ${paren(c)} = ${answer}`)}`,

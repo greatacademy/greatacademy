@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, type Mark, type Point, Q, q, radical, sketch } from "@ga/subject-math";
 
-import { expressionProblem, numberProblem, radicalProblem, steps, unitLatex } from "../problems.ts";
+import { expressionProblem, numberProblem, radicalProblem, steps, unitLatex, why } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -162,7 +162,20 @@ export const introductionToRadians: TopicDef = {
               `弧 $AB$ 的长为 $${tex(s, u)}$，半径为 $${tex(r, u)}$。求 $\\angle AOB$ 的弧度数。`,
             ),
             answer: theta,
-            wrong: [q(r, s), s * r, q(s, 2 * r), q(2 * s, r)],
+            wrong: [q(2 * s, r)],
+            mistakes: [
+              why(
+                q(r, s),
+                "That is the radius over the arc. The angle in radians is the arc length over the radius.",
+                "这是半径除以弧长。弧度数是弧长除以半径。",
+              ),
+              why(
+                s * r,
+                "You multiplied. The angle in radians is the arc length divided by the radius.",
+                "你做了乘法。弧度数是弧长除以半径。",
+              ),
+              why(q(s, 2 * r), "You divided by the diameter. Divide by the radius.", "你除以了直径。应该除以半径。"),
+            ],
             solution: t(
               `Divide the arc length by the radius:${steps(`\\theta = \\frac{s}{r} = \\frac{${s}}{${r}} = ${theta.toLatex()}`)}`,
               `用弧长除以半径：${steps(`\\theta = \\frac{s}{r} = \\frac{${s}}{${r}} = ${theta.toLatex()}`)}`,
@@ -211,7 +224,15 @@ export const introductionToRadians: TopicDef = {
           prompt: t(`Convert $${piTex(x)}$ radians to degrees.`, `把 $${piTex(x)}$ 弧度化为角度。`),
           answer: d,
           unit: "°",
-          wrong: [2 * d, q(d, 2), x.mul(q(360)), q(180).div(x)],
+          wrong: [2 * d, q(d, 2)],
+          mistakes: [
+            why(
+              x.mul(q(360)),
+              "You used $360^\\circ$ for $\\pi$ radians. A half turn is $\\pi$ radians, which is $180^\\circ$.",
+              "你把 $\\pi$ 弧度当成了 $360^\\circ$。半圈是 $\\pi$ 弧度，也就是 $180^\\circ$。",
+            ),
+            why(q(180).div(x), "You divided by the coefficient. Multiply it by $180^\\circ$.", "你除以了系数。应该用系数乘 $180^\\circ$。"),
+          ],
           solution: t(
             `Multiply by $\\frac{180^\\circ}{\\pi}$, which replaces $\\pi$ by $180^\\circ$:${steps(`${piTex(x)} \\cdot \\frac{180^\\circ}{\\pi} = ${x.toLatex()} \\cdot 180^\\circ = ${d}^\\circ`)}`,
             `乘以 $\\frac{180^\\circ}{\\pi}$，相当于把 $\\pi$ 换成 $180^\\circ$：${steps(`${piTex(x)} \\cdot \\frac{180^\\circ}{\\pi} = ${x.toLatex()} \\cdot 180^\\circ = ${d}^\\circ`)}`,

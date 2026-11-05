@@ -17,7 +17,7 @@ import {
   realLine,
 } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, intervalProblem, numberProblem, steps } from "../problems.ts";
+import { choiceProblem, expressionProblem, intervalProblem, numberProblem, steps, why } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -214,7 +214,14 @@ export const writingRadicalsUsingFractionalExponents: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${p}^{${e}}$.`, `计算 $${p}^{${e}}$。`),
           answer: value,
-          wrong: [Q.of(p * m, n), negative ? positiveValue : Q.one.div(positiveValue), negative ? positiveValue.neg() : Q.of(r * m)],
+          wrong: [negative ? positiveValue : Q.one.div(positiveValue), negative ? positiveValue.neg() : Q.of(r * m)],
+          mistakes: [
+            why(
+              Q.of(p * m, n),
+              "You multiplied the base by the exponent. The denominator of the exponent is a root and the numerator is a power.",
+              "你用底数乘了指数。指数的分母表示开方，分子表示乘方。",
+            ),
+          ],
           solution: negative
             ? t(
                 `Take the reciprocal of the positive power, then the root, then the power:${steps(`${p}^{${e}} = \\frac{1}{${p}^{\\frac{${m}}{${n}}}}`, `${p}^{\\frac{${m}}{${n}}} = ${work}`)}So $${p}^{${e}} = ${value.toLatex()}$.`,
@@ -1265,7 +1272,19 @@ export const solvingExponentialEquations: TopicDef = {
           prompt: t(`Solve $${b}^{${e}} = ${v}$.`, `解方程 $${b}^{${e}} = ${v}$。`),
           answer: x,
           solveFor: "x",
-          wrong: [k, Q.of(k + c, a), k - c],
+          mistakes: [
+            why(
+              k,
+              "That is the value of the whole exponent. Set the exponent equal to it and solve for $x$.",
+              "这是整个指数的值。令指数等于它，再解出 $x$。",
+            ),
+            why(
+              Q.of(k + c, a),
+              "Check the sign: undo the constant in the exponent by doing the opposite operation.",
+              "注意符号：用相反的运算消去指数中的常数。",
+            ),
+            why(k - c, "You have not divided by the coefficient of $x$ yet.", "你还没有除以 $x$ 的系数。"),
+          ],
           solution: t(
             `Write $${v}$ as a power of $${b}$, then set the exponents equal:${steps(`${b}^{${e}} = ${b}^{${k}}`, ...linearSteps([a, c], [0, k]))}`,
             `把 $${v}$ 写成 $${b}$ 的幂，再令指数相等：${steps(`${b}^{${e}} = ${b}^{${k}}`, ...linearSteps([a, c], [0, k]))}`,
@@ -2156,7 +2175,23 @@ export const exponentialFunctions: TopicDef = {
             `设 $${name}(x) = ${expo(a, num(b))}$，求 $${name}(${x})$。`,
           ),
           answer: value,
-          wrong: [b.mul(Q.of(a)).pow(x), b.mul(Q.of(a * x)), b.pow(-x).mul(Q.of(a))],
+          mistakes: [
+            why(
+              b.mul(Q.of(a)).pow(x),
+              "You multiplied first and then applied the exponent. The exponent belongs only to the base, so do the power first.",
+              "你先相乘再取幂。指数只作用于底数，所以要先算乘方。",
+            ),
+            why(
+              b.mul(Q.of(a * x)),
+              "You multiplied by the exponent. An exponent means repeated multiplication by the base.",
+              "你乘了指数。指数表示底数的连乘。",
+            ),
+            why(
+              b.pow(-x).mul(Q.of(a)),
+              "You used the opposite exponent. Substitute $x$ as it is given.",
+              "你用了相反的指数。应按所给的 $x$ 代入。",
+            ),
+          ],
           solution: t(
             `Compute the power first, then multiply by $${a}$:${steps(`${name}(${x}) = ${a} \\cdot ${bracket(b)}^{${x}} = ${a} \\cdot ${b.pow(x).toLatex()} = ${value.toLatex()}`)}`,
             `先算乘方，再乘以 $${a}$：${steps(`${name}(${x}) = ${a} \\cdot ${bracket(b)}^{${x}} = ${a} \\cdot ${b.pow(x).toLatex()} = ${value.toLatex()}`)}`,

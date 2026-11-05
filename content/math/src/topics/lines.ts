@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, yesNo } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -371,7 +371,21 @@ export const slopeOfALine: TopicDef = {
           ...numberProblem({
             prompt: t("Find the slope of the line through the points $A$ and $B$.", "求过点 $A$ 和 $B$ 的直线的斜率。"),
             answer: m,
-            wrong: [Q.of(run, rise), m.neg(), ...(run !== 1 ? [rise] : [])],
+            mistakes: [
+              why(
+                Q.of(run, rise),
+                "That is the run divided by the rise. Slope is the rise divided by the run.",
+                "这是横向变化除以纵向变化。斜率是纵向变化除以横向变化。",
+              ),
+              why(
+                m.neg(),
+                "The size is right, but check the direction: a line that rises from left to right has a positive slope, and one that falls has a negative slope.",
+                "大小对了，但要看方向：从左到右上升的直线斜率为正，下降的直线斜率为负。",
+              ),
+              ...(run !== 1
+                ? [why(rise, "That is only the rise. Divide it by the run to get the slope.", "这只是纵向变化，还要除以横向变化才是斜率。")]
+                : []),
+            ],
             solution: t(
               `From $A$ to $B$ the run is $${run}$ and the rise is $${rise}$: ${steps(`m = \\frac{${rise}}{${run}}${m.eq(Q.of(rise)) || (m.n === BigInt(rise) && m.d === BigInt(run)) ? "" : ` = ${num(m)}`}`)}`,
               `从 $A$ 到 $B$，横向变化是 $${run}$，纵向变化是 $${rise}$：${steps(`m = \\frac{${rise}}{${run}}${m.eq(Q.of(rise)) || (m.n === BigInt(rise) && m.d === BigInt(run)) ? "" : ` = ${num(m)}`}`)}`,
@@ -413,7 +427,23 @@ export const slopeOfALine: TopicDef = {
             `求过点 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$ 的直线的斜率。`,
           ),
           answer: m,
-          wrong: [m.neg(), Q.of(x2 - x1, y2 - y1), Q.of(y2 + y1, x2 - x1)],
+          mistakes: [
+            why(
+              m.neg(),
+              "The size is right but the sign is wrong. Subtract the coordinates in the same order on the top and on the bottom.",
+              "大小对了，但符号错了。分子和分母要按相同的顺序相减。",
+            ),
+            why(
+              Q.of(x2 - x1, y2 - y1),
+              "That is the change in $x$ over the change in $y$. Slope is the change in $y$ over the change in $x$.",
+              "这是 $x$ 的变化量除以 $y$ 的变化量。斜率是 $y$ 的变化量除以 $x$ 的变化量。",
+            ),
+            why(
+              Q.of(y2 + y1, x2 - x1),
+              "You added the $y$-coordinates. The top of the slope formula is their difference.",
+              "你把两个纵坐标相加了。斜率公式的分子是它们的差。",
+            ),
+          ],
           solution: t(`Use the slope formula: ${steps(work)}`, `用斜率公式：${steps(work)}`),
         });
       },
@@ -485,7 +515,23 @@ export const slopeOfALine: TopicDef = {
             ),
             answer: y2,
             solveFor: "y",
-            wrong: [y1 - rise, rise, Q.of(y1).add(Q.of(run).div(m))],
+            mistakes: [
+              why(
+                y1 - rise,
+                "That moves from the first point the wrong way. Add the change in $y$ to the first $y$-coordinate.",
+                "这是从第一个点朝相反方向移动。应把 $y$ 的变化量加到第一个点的纵坐标上。",
+              ),
+              why(
+                rise,
+                "That is the change in $y$. Add it to the $y$-coordinate of the first point.",
+                "这是 $y$ 的变化量，还要加上第一个点的纵坐标。",
+              ),
+              why(
+                Q.of(y1).add(Q.of(run).div(m)),
+                "You divided the change in $x$ by the slope. The change in $y$ is the slope times the change in $x$.",
+                "你用 $x$ 的变化量除以了斜率。$y$ 的变化量等于斜率乘 $x$ 的变化量。",
+              ),
+            ],
             solution: t(`Use the slope formula: ${work}`, `用斜率公式：${work}`),
           });
         }
@@ -501,7 +547,23 @@ export const slopeOfALine: TopicDef = {
           ),
           answer: x2,
           solveFor: "x",
-          wrong: [x1 - run, run, Q.of(x1).add(Q.of(rise).mul(m))],
+          mistakes: [
+            why(
+              x1 - run,
+              "That moves from the first point the wrong way. Add the change in $x$ to the first $x$-coordinate.",
+              "这是从第一个点朝相反方向移动。应把 $x$ 的变化量加到第一个点的横坐标上。",
+            ),
+            why(
+              run,
+              "That is the change in $x$. Add it to the $x$-coordinate of the first point.",
+              "这是 $x$ 的变化量，还要加上第一个点的横坐标。",
+            ),
+            why(
+              Q.of(x1).add(Q.of(rise).mul(m)),
+              "You multiplied the change in $y$ by the slope. The change in $x$ is the change in $y$ divided by the slope.",
+              "你用 $y$ 的变化量乘了斜率。$x$ 的变化量等于 $y$ 的变化量除以斜率。",
+            ),
+          ],
           solution: t(`Use the slope formula: ${work}`, `用斜率公式：${work}`),
         });
       },
@@ -1281,7 +1343,23 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
         return numberProblem({
           prompt: t(`Find the slope of a line perpendicular to $${given}$.`, `求与 $${given}$ 垂直的直线的斜率。`),
           answer: p,
-          wrong: [m, m.neg(), Q.one.div(m)],
+          mistakes: [
+            why(
+              m,
+              "That is the same slope, which gives a parallel line. A perpendicular slope is the negative reciprocal.",
+              "这是相同的斜率，得到的是平行线。垂直直线的斜率是负倒数。",
+            ),
+            why(
+              m.neg(),
+              "You changed the sign but did not flip the fraction. A perpendicular slope is the negative reciprocal.",
+              "你只改了符号，没有把分数颠倒。垂直直线的斜率是负倒数。",
+            ),
+            why(
+              Q.one.div(m),
+              "You flipped the fraction but did not change the sign. A perpendicular slope is the negative reciprocal.",
+              "你把分数颠倒了，但没有改符号。垂直直线的斜率是负倒数。",
+            ),
+          ],
           solution: t(
             `The given line has slope $${num(m)}$. The perpendicular slope is its negative reciprocal: ${steps(derivation)}`,
             `已知直线的斜率是 $${num(m)}$。垂线的斜率是它的负倒数：${steps(derivation)}`,

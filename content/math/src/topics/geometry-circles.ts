@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, linear, type Mark, type Point, poly, Q, q, radical, sketch } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, unitLatex } from "../problems.ts";
+import { choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, unitLatex, why } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -564,7 +564,19 @@ export const theCircumferenceOfACircle: TopicDef = {
             ),
             answer: d,
             unit: u,
-            wrong: [q(d, 2), 2 * d, piQ.mul(q(d))],
+            mistakes: [
+              why(q(d, 2), "That is the radius. The question asks for the diameter.", "这是半径，题目问的是直径。"),
+              why(
+                2 * d,
+                "That doubles the diameter. Dividing the circumference by $\\pi$ already gives the diameter.",
+                "这是直径的两倍。周长除以 $\\pi$ 就已经是直径了。",
+              ),
+              why(
+                piQ.mul(q(d)),
+                "You multiplied by $3.14$ again. Divide the circumference by $3.14$.",
+                "你又乘了一次 $3.14$。应该用周长除以 $3.14$。",
+              ),
+            ],
             solution: t(
               `Divide the circumference by $\\pi$:${steps(`d \\approx ${c} \\div 3.14 = ${tex(d, u)}`)}`,
               `用周长除以 $\\pi$：${steps(`d \\approx ${c} \\div 3.14 = ${tex(d, u)}`)}`,
@@ -580,7 +592,37 @@ export const theCircumferenceOfACircle: TopicDef = {
           ),
           answer: askRadius ? r : 2 * r,
           unit: u,
-          wrong: askRadius ? [2 * r, q(r, 2), 4 * r] : [r, 4 * r, q(r, 2)],
+          mistakes: askRadius
+            ? [
+                why(
+                  2 * r,
+                  "That is the diameter, the number in front of $\\pi$. The radius is half of it.",
+                  "这是直径，也就是 $\\pi$ 前面的数。半径是它的一半。",
+                ),
+                why(
+                  q(r, 2),
+                  "You halved twice. The number in front of $\\pi$ is $2r$, so halve it once.",
+                  "你除了两次 $2$。$\\pi$ 前面的数是 $2r$，只需除以一次 $2$。",
+                ),
+                why(
+                  4 * r,
+                  "You doubled. The number in front of $\\pi$ is $2r$, so halve it.",
+                  "你乘了 $2$。$\\pi$ 前面的数是 $2r$，应该除以 $2$。",
+                ),
+              ]
+            : [
+                why(r, "That is the radius. The diameter is the number in front of $\\pi$.", "这是半径。直径就是 $\\pi$ 前面的数。"),
+                why(
+                  4 * r,
+                  "You doubled, but the number in front of $\\pi$ already is the diameter.",
+                  "你乘了 $2$，但 $\\pi$ 前面的数已经是直径了。",
+                ),
+                why(
+                  q(r, 2),
+                  "You halved too far. The number in front of $\\pi$ already is the diameter.",
+                  "你除得太多了。$\\pi$ 前面的数已经是直径了。",
+                ),
+              ],
           solution: t(
             `Since $C = \\pi d$, the diameter is $${2 * r}$.${askRadius ? steps(`r = \\frac{${2 * r}}{2} = ${tex(r, u)}`) : steps(`d = ${tex(2 * r, u)}`)}`,
             `由 $C = \\pi d$，直径是 $${2 * r}$。${askRadius ? steps(`r = \\frac{${2 * r}}{2} = ${tex(r, u)}`) : steps(`d = ${tex(2 * r, u)}`)}`,
@@ -670,7 +712,15 @@ export const areasOfCircles: TopicDef = {
           answer: a,
           form: "decimal",
           unit: `${u}^2`,
-          wrong: [piQ.mul(q(2 * r)), piQ.mul(q(4 * r * r)), piQ.mul(q(r)).mul(piQ.mul(q(r)))],
+          mistakes: [
+            why(piQ.mul(q(2 * r)), "That is the circumference, $2\\pi r$. Area is $\\pi r^2$.", "这是周长 $2\\pi r$。面积是 $\\pi r^2$。"),
+            why(piQ.mul(q(4 * r * r)), "That squares the diameter. Square the radius instead.", "这是把直径平方了。应该把半径平方。"),
+            why(
+              piQ.mul(q(r)).mul(piQ.mul(q(r))),
+              "You squared $\\pi$ as well. Only the radius is squared.",
+              "你把 $\\pi$ 也平方了。只有半径要平方。",
+            ),
+          ],
           solution: t(`Use $A = \\pi r^2$:${steps(sq)}`, `用 $A = \\pi r^2$：${steps(sq)}`),
         });
       },
@@ -693,7 +743,25 @@ export const areasOfCircles: TopicDef = {
           ),
           answer: askRadius ? r : 2 * r,
           unit: u,
-          wrong: askRadius ? [r * r, q(r * r, 2), 2 * r] : [r, r * r, 2 * r * r],
+          mistakes: askRadius
+            ? [
+                why(r * r, "That is $r^2$. Take the square root to get the radius.", "这是 $r^2$，还要开平方才是半径。"),
+                why(
+                  q(r * r, 2),
+                  "You halved $r^2$. To undo a square, take the square root.",
+                  "你把 $r^2$ 除以了 $2$。要撤销平方，应该开平方。",
+                ),
+                why(2 * r, "That is the diameter. The question asks for the radius.", "这是直径，题目问的是半径。"),
+              ]
+            : [
+                why(r, "That is the radius. The diameter is twice the radius.", "这是半径。直径是半径的两倍。"),
+                why(r * r, "That is $r^2$. Take the square root, then double.", "这是 $r^2$。先开平方，再乘 $2$。"),
+                why(
+                  2 * r * r,
+                  "You doubled $r^2$. Take the square root first, then double.",
+                  "你把 $r^2$ 乘了 $2$。应先开平方，再乘 $2$。",
+                ),
+              ],
           solution: t(
             `Divide by $\\pi$ and take the square root:${steps(`r^2 = ${r * r}`, `r = ${r}`)}${askRadius ? `The radius is $${tex(r, u)}$.` : `The diameter is $2 \\cdot ${r} = ${tex(2 * r, u)}$.`}`,
             `除以 $\\pi$ 再开平方：${steps(`r^2 = ${r * r}`, `r = ${r}`)}${askRadius ? `半径是 $${tex(r, u)}$。` : `直径是 $2 \\cdot ${r} = ${tex(2 * r, u)}$。`}`,

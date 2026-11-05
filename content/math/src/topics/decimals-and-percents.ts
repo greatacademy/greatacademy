@@ -2,7 +2,7 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, num, Q, q } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
+import { numberProblem, steps, why } from "../problems.ts";
 
 /** terminatingFraction draws a fraction in lowest terms whose denominator divides a power of ten, between 0 and 1. */
 function terminatingFraction(rng: Rng): Q {
@@ -271,7 +271,18 @@ export const percentOfANumber: TopicDef = {
           prompt: t(`What is $${pct(p)}$ of $${dec(whole)}$?`, `$${dec(whole)}$ 的 $${pct(p)}$ 是多少？`),
           answer: part,
           form: "decimal",
-          wrong: [p.mul(whole), whole.div(p).mul(Q.of(100))],
+          mistakes: [
+            why(
+              p.mul(whole),
+              "You used the percent as a whole number. Write it as a decimal or a fraction first.",
+              "你把百分数当成了整数。应先写成小数或分数。",
+            ),
+            why(
+              whole.div(p).mul(Q.of(100)),
+              "You divided by the percent. To find a part of a number, multiply.",
+              "你除以了百分数。求一个数的一部分要用乘法。",
+            ),
+          ],
           solution: t(
             `${steps(`${pct(p)} \\cdot ${dec(whole)} = ${dec(p.div(Q.of(100)))} \\cdot ${dec(whole)} = ${dec(part)}`)}`,
             `${steps(`${pct(p)} \\cdot ${dec(whole)} = ${dec(p.div(Q.of(100)))} \\cdot ${dec(whole)} = ${dec(part)}`)}`,
@@ -294,7 +305,18 @@ export const percentOfANumber: TopicDef = {
           answer: p,
           form: "decimal",
           percent: true,
-          wrong: [whole.div(part).mul(Q.of(100)), part.div(whole)],
+          mistakes: [
+            why(
+              whole.div(part).mul(Q.of(100)),
+              "You divided the whole by the part. The percent is the part over the whole.",
+              "你用整体除以部分。百分比是部分除以整体。",
+            ),
+            why(
+              part.div(whole),
+              "That is the fraction as a decimal. Multiply by $100$ to write it as a percent.",
+              "这是小数形式，还要乘以 $100$ 才是百分比。",
+            ),
+          ],
           solution: t(
             `Divide the part by the whole:${steps(`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))} = ${pct(p)}`)}`,
             `用部分除以整体：${steps(`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))} = ${pct(p)}`)}`,
@@ -318,7 +340,13 @@ export const percentOfANumber: TopicDef = {
           ),
           answer: whole,
           form: "decimal",
-          wrong: [part.mul(p).div(Q.of(100))],
+          mistakes: [
+            why(
+              part.mul(p).div(Q.of(100)),
+              "You took the percent of the given number. That number is already the part; you are looking for the whole.",
+              "你求的是已知数的百分之几。这个已知数本身就是部分，要求的是整体。",
+            ),
+          ],
           solution: t(
             `${steps(`${dec(p.div(Q.of(100)))} \\cdot n = ${dec(part)}`, `n = \\frac{${dec(part)}}{${dec(p.div(Q.of(100)))}} = ${dec(whole)}`)}Check: $${pct(p)}$ of $${dec(whole)}$ is $${dec(part)}$.`,
             `${steps(`${dec(p.div(Q.of(100)))} \\cdot n = ${dec(part)}`, `n = \\frac{${dec(part)}}{${dec(p.div(Q.of(100)))}} = ${dec(whole)}`)}检验：$${dec(whole)}$ 的 $${pct(p)}$ 是 $${dec(part)}$。`,
