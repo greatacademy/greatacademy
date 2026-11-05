@@ -66,7 +66,14 @@ function latexIn(v: Q, form: NumberProblem["form"]): string {
   return v.toLatex();
 }
 
-/** numberProblem builds a problem checked by the "number" checker. */
+/** solutionWritesDecimal tells whether a solution ends up with a number as a decimal, and never as its fraction. */
+function solutionWritesDecimal(v: Q, solution: Text): boolean {
+  if (v.isInteger() || v.d > 10000n || !isTerminating(v) || solution.en.includes(v.toLatex())) return false;
+  const decimal = dec(v).replace(/[.\\{}]/g, "\\$&");
+  return new RegExp(`(?<![\\d.])${decimal}(?!\\d)`).test(solution.en);
+}
+
+/** numberProblem builds a problem checked by the "number" checker. Without a required form, the answer shown after a wrong attempt is written the way the solution writes it. */
 export function numberProblem(p: NumberProblem): Problem {
   const answer = toQ(p.answer);
   const written = (w: Q): string => (p.form === "decimal" && isTerminating(w) ? dec(w) : w.toLatex());
@@ -100,7 +107,7 @@ export function numberProblem(p: NumberProblem): Problem {
       },
     },
     solution: p.solution,
-    canonical: latexIn(answer, p.form),
+    canonical: !p.form && solutionWritesDecimal(answer, p.solution) ? dec(answer) : latexIn(answer, p.form),
     wrong,
     ...(mistakes.length > 0 && { mistakes }),
   };
