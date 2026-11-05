@@ -396,6 +396,8 @@ const meaningOfTheMultiplier: KnowledgePointDef = {
     const c = nonzero(rng, 9);
     const nn = a * a + b * b;
     const answer = Q.of(2 * c, nn);
+    const coefficient = (v: number): string => (v === 1 ? "" : v === -1 ? "-" : String(v));
+    const [ca, cb] = [coefficient(a), coefficient(b)];
     return numberProblem({
       prompt: t(
         `Minimize $x^2 + y^2$ subject to $${poly([a, "x"], [b, "y"])} = ${c}$. Find the multiplier $\\lambda$ in $\\nabla f = \\lambda\\nabla g$ at the minimum.`,
@@ -404,8 +406,8 @@ const meaningOfTheMultiplier: KnowledgePointDef = {
       answer,
       wrong: [Q.of(c, nn), Q.of(c * c, nn), Q.of(nn, 2 * c)],
       solution: t(
-        `The equations $2x = ${a}\\lambda$ and $2y = ${b}\\lambda$ give $x = \\frac{${a}\\lambda}{2}$ and $y = \\frac{${b}\\lambda}{2}$. Substituting gives $\\frac{${nn}\\lambda}{2} = ${c}$, so $\\lambda = ${answer.toLatex()}$.`,
-        `由 $2x = ${a}\\lambda$，$2y = ${b}\\lambda$ 得 $x = \\frac{${a}\\lambda}{2}$，$y = \\frac{${b}\\lambda}{2}$。代入约束得 $\\frac{${nn}\\lambda}{2} = ${c}$，所以 $\\lambda = ${answer.toLatex()}$。`,
+        `The equations $2x = ${ca}\\lambda$ and $2y = ${cb}\\lambda$ give $x = \\frac{${ca}\\lambda}{2}$ and $y = \\frac{${cb}\\lambda}{2}$. Substituting gives $\\frac{${nn}\\lambda}{2} = ${c}$, so $\\lambda = ${answer.toLatex()}$.`,
+        `由 $2x = ${ca}\\lambda$，$2y = ${cb}\\lambda$ 得 $x = \\frac{${ca}\\lambda}{2}$，$y = \\frac{${cb}\\lambda}{2}$。代入约束得 $\\frac{${nn}\\lambda}{2} = ${c}$，所以 $\\lambda = ${answer.toLatex()}$。`,
       ),
     });
   },

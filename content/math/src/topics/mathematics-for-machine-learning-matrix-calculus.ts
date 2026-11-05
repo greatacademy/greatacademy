@@ -339,7 +339,7 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$ for $\\mathbf{x} \\in \\mathbb{R}^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$ at $\\mathbf{x} = ${xVec}$, and report its $x_{${askIdx}}$-component.`,
+              `Let $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$ for $\\mathbf{x} \\in \\mathbb{R}^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x})$ at $\\mathbf{x} = ${xVec}$, and report its $x_{${askIdx}}$-component.`,
               `设 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，其中 $\\mathbf{x} \\in \\mathbb{R}^2$，$A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在 $\\mathbf{x} = ${xVec}$ 处计算梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$，并给出其第 $x_{${askIdx}}$ 个分量。`,
             ),
             answer: ans,
@@ -444,8 +444,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Consider the least-squares residual objective $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$ at $\\mathbf{x} = ${xVec}$, and find its $x_{${askIdx}}$-component.`,
-              `考虑最小二乘残差目标函数 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$，其中 $A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在点 $\\mathbf{x} = ${xVec}$ 处求梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$，并给出其第 $x_{${askIdx}}$ 个分量。`,
+              `Consider the least-squares residual objective $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$, where $A = ${aMat}$ and $\\mathbf{b} = ${bVec}$. Evaluate the gradient $\\nabla_{\\mathbf{x}} f(\\mathbf{x})$ at $\\mathbf{x} = ${xVec}$, and find its $x_{${askIdx}}$-component.`,
+              `考虑最小二乘残差目标函数 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$，其中 $A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在点 $\\mathbf{x} = ${xVec}$ 处求梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x})$，并给出其第 $x_{${askIdx}}$ 个分量。`,
             ),
             answer: ans,
             wrong: [
@@ -536,13 +536,13 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $f(X) = \\mathbf{a}^T X \\mathbf{b}$ for ${article(m)} $${m} \\times ${n}$ matrix $X$, where $${aVec}$ and $${bVec}$. Using the matrix gradient identity $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$, find the entry in row $${row}$, column $${col}$ of the gradient matrix $\\nabla_X f$.`,
-              `设 $f(X) = \\mathbf{a}^T X \\mathbf{b}$，其中 $X$ 为 $${m} \\times ${n}$ 矩阵，$${aVec}$ 且 $${bVec}$。利用矩阵梯度公式 $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$，求梯度矩阵 $\\nabla_X f$ 的第 $${row}$ 行第 $${col}$ 列元素。`,
+              `Let $f(X) = \\mathbf{a}^T X \\mathbf{b}$ for ${article(m)} $${m} \\times ${n}$ matrix $X$, where $${aVec}$ and $${bVec}$. Find the entry in row $${row}$, column $${col}$ of the gradient matrix $\\nabla_X f$.`,
+              `设 $f(X) = \\mathbf{a}^T X \\mathbf{b}$，其中 $X$ 为 $${m} \\times ${n}$ 矩阵，$${aVec}$ 且 $${bVec}$。求梯度矩阵 $\\nabla_X f$ 的第 $${row}$ 行第 $${col}$ 列元素。`,
             ),
             answer: ans,
             wrong: [a[row - 1]! + b[col - 1]!, a.reduce((s, x) => s + x, 0) * b[col - 1]!, -ans],
             solution: t(
-              `The gradient matrix is $\\nabla_X f = \\mathbf{a} \\mathbf{b}^T$. The entry at $(row, col) = (${row}, ${col})$ is $a_{${row}} b_{${col}} = (${a[row - 1]})(${b[col - 1]}) = ${ans}$.`,
+              `The gradient matrix is $\\nabla_X f = \\mathbf{a} \\mathbf{b}^T$. The entry in row $${row}$, column $${col}$ is $a_{${row}} b_{${col}} = (${a[row - 1]})(${b[col - 1]}) = ${ans}$.`,
               `梯度矩阵为 $\\nabla_X f = \\mathbf{a} \\mathbf{b}^T$。第 $(${row}, ${col})$ 个元素即为外积对应项 $a_{${row}} b_{${col}} = (${a[row - 1]})(${b[col - 1]}) = ${ans}$。`,
             ),
           });

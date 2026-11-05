@@ -1,6 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { plane, Q } from "@ga/subject-math";
+import { plane, poly, Q } from "@ga/subject-math";
 import { numberProblem } from "../problems.ts";
 
 export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
@@ -229,34 +229,36 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "evaluating-argmax-and-argmin-functions",
         title: t("Evaluating argmax and argmin of parameterized functions", "计算参数化函数的 argmax 与 argmin"),
         explanation: t(
-          "The maximum is the largest value a function reaches, while the argmax is the input where it is reached, so the two answer different questions. For $f(x) = -a(x - h)^2 + k$ with $a > 0$, $\\max f(x) = k$ and $\\operatorname{argmax}_x f(x) = h$. For $g(x) = a(x - h)^2 + k$, $\\min g(x) = k$ and $\\operatorname{argmin}_x g(x) = h$.",
-          "最大值是函数能达到的最大函数值，而 argmax 是达到它的那个输入，所以两者回答的是不同的问题。对于 $f(x) = -a(x - h)^2 + k$（$a > 0$），$\\max f(x) = k$ 且 $\\operatorname{argmax}_x f(x) = h$。对于 $g(x) = a(x - h)^2 + k$，$\\min g(x) = k$ 且 $\\operatorname{argmin}_x g(x) = h$。",
+          "The maximum is the largest value a function reaches, while the argmax is the input where it is reached, so the two answer different questions. For $f(x) = -a(x - h)^2 + k$ with $a > 0$, $\\max f(x) = k$ and $\\operatorname{argmax}_x f(x) = h$. For $g(x) = a(x - h)^2 + k$, $\\min g(x) = k$ and $\\operatorname{argmin}_x g(x) = h$. A quadratic written out in full is first brought to this form by completing the square.",
+          "最大值是函数能达到的最大函数值，而 argmax 是达到它的那个输入，所以两者回答的是不同的问题。对于 $f(x) = -a(x - h)^2 + k$（$a > 0$），$\\max f(x) = k$ 且 $\\operatorname{argmax}_x f(x) = h$。对于 $g(x) = a(x - h)^2 + k$，$\\min g(x) = k$ 且 $\\operatorname{argmin}_x g(x) = h$。展开写的二次函数要先配方化成这种形式。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 5);
-          const h = rng.int(-9, 12);
+          const h = rng.nonZero(-9, 12);
           const k = rng.int(-15, 25);
           const isMin = rng.bool();
+          const sign = isMin ? 1 : -1;
+          const expanded = poly([sign * a, "x^2"], [-2 * sign * a * h, "x"], [sign * a * h * h + k, ""]);
 
           const aStr = a === 1 ? "" : `${a}`;
           const hStr = h >= 0 ? `- ${h}` : `+ ${-h}`;
-          const kStr = k >= 0 ? `+ ${k}` : `- ${-k}`;
+          const kStr = k === 0 ? "" : k > 0 ? `+ ${k}` : `- ${-k}`;
           const funcLatex = isMin ? `${aStr}(x ${hStr})^2 ${kStr}` : `-${aStr}(x ${hStr})^2 ${kStr}`;
 
           return numberProblem({
             prompt: t(
-              `Given the objective function $f(x) = ${funcLatex}$ defined for all $x \\in \\mathbb{R}$, find the value of $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x \\in \\mathbb{R}} f(x)$.`,
-              `给定定义在所有 $x \\in \\mathbb{R}$ 上的目标函数 $f(x) = ${funcLatex}$，求 $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x \\in \\mathbb{R}} f(x)$ 的值。`,
+              `Given the objective function $f(x) = ${expanded}$ defined for all $x \\in \\mathbb{R}$, find the value of $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x \\in \\mathbb{R}} f(x)$.`,
+              `给定定义在所有 $x \\in \\mathbb{R}$ 上的目标函数 $f(x) = ${expanded}$，求 $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x \\in \\mathbb{R}} f(x)$ 的值。`,
             ),
             answer: h,
             wrong: [-h, k, -k],
             solution: t(
               isMin
-                ? `Since $a = ${a} > 0$, the squared term $(x ${hStr})^2 \\ge 0$ is minimized when $x = ${h}$, giving minimum value $f(${h}) = ${k}$. Therefore, $\\operatorname{argmin}_{x \\in \\mathbb{R}} f(x) = ${h}$.`
-                : `Since $a = ${a} > 0$, the negative term $-${aStr}(x ${hStr})^2 \\le 0$ attains its maximum of $0$ when $x = ${h}$, giving maximum value $f(${h}) = ${k}$. Therefore, $\\operatorname{argmax}_{x \\in \\mathbb{R}} f(x) = ${h}$.`,
+                ? `Completing the square gives $f(x) = ${funcLatex}$. Since $a = ${a} > 0$, the squared term $(x ${hStr})^2 \\ge 0$ is minimized when $x = ${h}$, giving minimum value $f(${h}) = ${k}$. Therefore, $\\operatorname{argmin}_{x \\in \\mathbb{R}} f(x) = ${h}$.`
+                : `Completing the square gives $f(x) = ${funcLatex}$. Since $a = ${a} > 0$, the negative term $-${aStr}(x ${hStr})^2 \\le 0$ attains its maximum of $0$ when $x = ${h}$, giving maximum value $f(${h}) = ${k}$. Therefore, $\\operatorname{argmax}_{x \\in \\mathbb{R}} f(x) = ${h}$.`,
               isMin
-                ? `由于 $a = ${a} > 0$，平方项 $(x ${hStr})^2 \\ge 0$ 在 $x = ${h}$ 时取最小值 $0$，对应的最小值为 $f(${h}) = ${k}$。因此 $\\operatorname{argmin}_{x \\in \\mathbb{R}} f(x) = ${h}$。`
-                : `由于 $a = ${a} > 0$，非正项 $-${aStr}(x ${hStr})^2 \\le 0$ 在 $x = ${h}$ 时取得最大值 $0$，对应的最大值为 $f(${h}) = ${k}$。因此 $\\operatorname{argmax}_{x \\in \\mathbb{R}} f(x) = ${h}$。`,
+                ? `配方得 $f(x) = ${funcLatex}$。由于 $a = ${a} > 0$，平方项 $(x ${hStr})^2 \\ge 0$ 在 $x = ${h}$ 时取最小值 $0$，对应的最小值为 $f(${h}) = ${k}$。因此 $\\operatorname{argmin}_{x \\in \\mathbb{R}} f(x) = ${h}$。`
+                : `配方得 $f(x) = ${funcLatex}$。由于 $a = ${a} > 0$，非正项 $-${aStr}(x ${hStr})^2 \\le 0$ 在 $x = ${h}$ 时取得最大值 $0$，对应的最大值为 $f(${h}) = ${k}$。因此 $\\operatorname{argmax}_{x \\in \\mathbb{R}} f(x) = ${h}$。`,
             ),
           });
         },
@@ -360,8 +362,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
             answer: optArg,
             wrong: [optVal, xs[(bestIdx + 1) % numRows]!, bestIdx + 1],
             solution: t(
-              `Looking at the table, the ${isMin ? "minimum loss" : "maximum accuracy"} is $${optVal}$, which occurs at $x = ${optArg}$. Therefore, $\\operatorname{${isMin ? "argmin" : "argmax"}}_{x} = ${optArg}$.`,
-              `查阅表格，${isMin ? "最小损失" : "最大准确率"}为 $${optVal}$，在 $x = ${optArg}$ 处取得。因此 $\\operatorname{${isMin ? "argmin" : "argmax"}}_{x} = ${optArg}$。`,
+              `Looking at the table, the ${isMin ? "minimum loss" : "maximum accuracy"} is $${optVal}$, which occurs at $x = ${optArg}$. So the ${isMin ? "argmin" : "argmax"} is $${optArg}$, not the value $${optVal}$.`,
+              `查阅表格，${isMin ? "最小损失" : "最大准确率"}为 $${optVal}$，在 $x = ${optArg}$ 处取得。所以 ${isMin ? "argmin" : "argmax"} 是 $${optArg}$，而不是函数值 $${optVal}$。`,
             ),
           });
         },

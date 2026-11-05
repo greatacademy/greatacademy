@@ -457,8 +457,8 @@ const quarterEllipse = point(
     const answer = Q.of(k * a * b * (a * a + a * b + b * b), 3 * (a + b));
     return ask(
       [
-        `Evaluate $\\int_{C} ${poly([k, "xy"])}\\,ds$, where $C$ is the first-quadrant arc of $\\frac{x^{2}}{${a * a}} + \\frac{y^{2}}{${b * b}} = 1$.`,
-        `求 $\\int_{C} ${poly([k, "xy"])}\\,ds$，其中 $C$ 是 $\\frac{x^{2}}{${a * a}} + \\frac{y^{2}}{${b * b}} = 1$ 在第一象限的弧。`,
+        `Evaluate $\\int_{C} ${poly([k, "xy"])}\\,ds$, where $C$ is the first-quadrant arc of $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$.`,
+        `求 $\\int_{C} ${poly([k, "xy"])}\\,ds$，其中 $C$ 是 $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$ 在第一象限的弧。`,
       ],
       answer,
       [Q.of(k * a * b, 2), Q.of(k * a * b * (a + b), 3), Q.of(k * a * b * (a * a + b * b), 3 * (a + b))],
@@ -740,9 +740,10 @@ const potentialChain = point(
     "基本定理指出，从 $A$ 到 $B$ 的梯度积分是 $f(B) - f(A)$。所以积分相当于差值，可以把几个积分串联起来求 $f$ 在新点的值，只要注意每条路径的方向。",
   ],
   (rng) => {
-    const v = rng.int(-20, 20);
+    const drawn = rng.int(-20, 20);
     const i1 = nz(rng, 20);
     const i2 = nz(rng, 20);
+    const v = drawn + i1 - i2 === 0 ? drawn + 1 : drawn;
     const answer = v + i1 - i2;
     return ask(
       [
@@ -767,7 +768,7 @@ const twoPaths = point(
     "沿 $C_{1}$ 前进，再沿 $C_{2}$ 反向返回，构成闭合回路，其积分等于两个路径积分之差。对保守场，这个差必须为零，所以起点和终点相同的两条路径给出不同的值，就证明这个场不是保守场。",
   ],
   (rng) => {
-    const p = rng.int(-20, 20);
+    const p = nz(rng, 20);
     const q = rng.pick([-17, -11, -6, -2, 3, 7, 13, 19].filter((v) => v !== p));
     const answer = p - q;
     return ask(

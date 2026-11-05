@@ -1246,12 +1246,12 @@ export const calculatingFluxThroughClosedSurfaces: TopicDef = {
         const solution = t(
           steps(
             `On each pair of parallel faces, evaluate the flux. At $x = ${L}$, $\\mathbf{n} = \\mathbf{i}$, flux is $(${a} \\times ${L}) \\times (${W} \\times ${H}) = ${a * vol}$. At $x = 0$, $x = 0$ so flux is $0$.`,
-            `Similarly, the $y$-faces give $b \\times \\text{Vol} = ${b * vol}$, and the $z$-faces give $c \\times \\text{Vol} = ${c * vol}$.`,
+            `Similarly, the $y$-faces give $${b} \\times ${vol} = ${b * vol}$, and the $z$-faces give $${c} \\times ${vol} = ${c * vol}$.`,
             `Summing the six faces: $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (${a} + ${b} + ${c}) \\times ${vol} = ${flux}$.`,
           ),
           steps(
             `分别计算三对相对的面上的外向通量。在 $x = ${L}$ 面上，外法向 $\\mathbf{n} = \\mathbf{i}$，通量为 $(${a} \\times ${L}) \\times (${W} \\times ${H}) = ${a * vol}$；在 $x = 0$ 面上，$x = 0$ 故通量为 $0$。`,
-            `同理，$y$ 方向两面净通量为 $b \\times \\text{Vol} = ${b * vol}$，$z$ 方向两面净通量为 $c \\times \\text{Vol} = ${c * vol}$。`,
+            `同理，$y$ 方向两面净通量为 $${b} \\times ${vol} = ${b * vol}$，$z$ 方向两面净通量为 $${c} \\times ${vol} = ${c * vol}$。`,
             `六个面通量求和：$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (${a} + ${b} + ${c}) \\times ${vol} = ${flux}$。`,
           ),
         );

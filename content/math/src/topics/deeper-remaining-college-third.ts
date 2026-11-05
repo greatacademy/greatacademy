@@ -461,8 +461,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           vec(2 * (x[0] - c[0]), 2 * (x[1] - c[1])),
           [vec(x[0] - c[0], x[1] - c[1]), vec(2 * (c[0] - x[0]), 2 * (c[1] - x[1])), vec(2 * x[0], 2 * x[1])],
           [
-            `$2(\\mathbf{x} - \\mathbf{c})$ gives the result, one component at a time.`,
-            `由 $2(\\mathbf{x} - \\mathbf{c})$ 逐个分量得到结果。`,
+            `The gradient is $2(\\mathbf{x} - \\mathbf{c})$, whose components are $2(${x[0]} - (${c[0]})) = ${2 * (x[0] - c[0])}$ and $2(${x[1]} - (${c[1]})) = ${2 * (x[1] - c[1])}$.`,
+            `梯度是 $2(\\mathbf{x} - \\mathbf{c})$，其分量为 $2(${x[0]} - (${c[0]})) = ${2 * (x[0] - c[0])}$ 和 $2(${x[1]} - (${c[1]})) = ${2 * (x[1] - c[1])}$。`,
           ],
         );
       },
@@ -584,12 +584,15 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const total = values.reduce((a, b) => a + b, 0);
         return fraction(
           [
-            `A covariance matrix has eigenvalues $${values.join(", ")}$. What fraction of the total variance do the first ${k === 1 ? "component" : "two components"} keep?`,
+            `A covariance matrix has eigenvalues $${values.join(", ")}$. What fraction of the total variance ${k === 1 ? "does the first component" : "do the first two components"} keep?`,
             `协方差矩阵的特征值是 $${values.join(", ")}$。前 ${k === 1 ? "一" : "两"}个主成分保留了总方差的几分之几？`,
           ],
           Q.of(kept, total),
           [Q.of(k, 4), Q.of(kept, total - kept), Q.of(total - kept, total)],
-          [`$${kept} \\div ${total}$ simplifies to the answer.`, `$${kept} \\div ${total}$ 化简后就是答案。`],
+          [
+            `The kept eigenvalues sum to $${kept}$ and all of them sum to $${total}$, so the share is $${Q.of(kept, total).toLatex()}$.`,
+            `保留的特征值之和是 $${kept}$，全部特征值之和是 $${total}$，所以比例是 $${Q.of(kept, total).toLatex()}$。`,
+          ],
         );
       },
     ),
@@ -903,8 +906,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-hadamard-product-with-the-identity",
       ["The Hadamard product with the identity", "与单位矩阵的阿达马积"],
       [
-        "The identity matrix is not the neutral element of the entrywise product, since its zeros erase every off-diagonal entry. So $A \\circ I$ keeps only the diagonal of $A$, and its entries add up to the trace.",
-        "单位矩阵不是逐元素乘积的中性元，因为它的零消去了所有非对角元素。所以 $A \\circ I$ 只保留 $A$ 的对角线，其元素之和等于迹。",
+        "The identity matrix is not the neutral element of the entrywise product, since its zeros erase every off-diagonal entry. So $A \\odot I$ keeps only the diagonal of $A$, and its entries add up to the trace.",
+        "单位矩阵不是逐元素乘积的中性元，因为它的零消去了所有非对角元素。所以 $A \\odot I$ 只保留 $A$ 的对角线，其元素之和等于迹。",
       ],
       (rng) => {
         const a = [nz(rng, 9), nz(rng, 9), nz(rng, 9)];
@@ -917,7 +920,7 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const trace = a.reduce((x, y) => x + y, 0);
         const all = trace + off.reduce((x, y) => x + y, 0);
         return integer(
-          [`Let $A = ${matrix}$. Find the sum of the entries of $A \\circ I$.`, `设 $A = ${matrix}$。求 $A \\circ I$ 所有元素的和。`],
+          [`Let $A = ${matrix}$. Find the sum of the entries of $A \\odot I$.`, `设 $A = ${matrix}$。求 $A \\odot I$ 所有元素的和。`],
           trace,
           [all, 3, trace + 1],
           [`Only the diagonal survives, and it adds up to ${trace}.`, `只有对角线保留下来，其和是 ${trace}。`],
@@ -939,14 +942,14 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const p = rng.int(2, 9);
         return whole(
           [
-            `A map takes an $${m} \\times ${n}$ matrix to a vector in $\\mathbb{R}^{${p}}$. How many entries does its derivative have?`,
+            `A map takes a matrix of size $${m} \\times ${n}$ to a vector in $\\mathbb{R}^{${p}}$. How many entries does its derivative have?`,
             `一个映射把 $${m} \\times ${n}$ 矩阵变成 $\\mathbb{R}^{${p}}$ 中的向量。它的导数有多少个元素？`,
           ],
           m * n * p,
           [m * n, m + n + p, n * p],
           [
-            `Each of the ${p} outputs has a partial derivative for each of the ${m * n} inputs.`,
-            `${p} 个输出中，每个对 ${m * n} 个输入各有一个偏导数。`,
+            `Each of the ${p} outputs has a partial derivative for each of the ${m * n} inputs, so there are $${p} \\cdot ${m * n} = ${m * n * p}$ entries.`,
+            `${p} 个输出中，每个对 ${m * n} 个输入各有一个偏导数，所以共有 $${p} \\cdot ${m * n} = ${m * n * p}$ 个元素。`,
           ],
         );
       },
@@ -972,7 +975,10 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           ],
           vec(a[0] + 2 * k * x[0], a[1] + 2 * k * x[1]),
           [vec(a[0] + k * x[0], a[1] + k * x[1]), vec(2 * k * x[0], 2 * k * x[1]), vec(a[0] - 2 * k * x[0], a[1] - 2 * k * x[1])],
-          [`$\\mathbf{a} + ${2 * k}\\mathbf{x}$ gives the result.`, `由 $\\mathbf{a} + ${2 * k}\\mathbf{x}$ 得到结果。`],
+          [
+            `The gradient is $\\mathbf{a} + ${2 * k}\\mathbf{x}$, whose components are $${a[0]} + ${2 * k}(${x[0]}) = ${a[0] + 2 * k * x[0]}$ and $${a[1]} + ${2 * k}(${x[1]}) = ${a[1] + 2 * k * x[1]}$.`,
+            `梯度是 $\\mathbf{a} + ${2 * k}\\mathbf{x}$，其分量为 $${a[0]} + ${2 * k}(${x[0]}) = ${a[0] + 2 * k * x[0]}$ 和 $${a[1]} + ${2 * k}(${x[1]}) = ${a[1] + 2 * k * x[1]}$。`,
+          ],
         );
       },
     ),

@@ -104,7 +104,10 @@ export const simpleClosedAndOrientedCurves: TopicDef = {
         }
 
         const prompt = t(`Classify the topological type of the plane curve: ${desc.en}.`, `判断平面曲线的拓扑类型：${desc["zh-CN"]}。`);
-        const solution = t(`The curve is ${right.en.toLowerCase()} because ${sol.en}`, `该曲线为${right["zh-CN"]}，因为${sol["zh-CN"]}`);
+        const solution = t(
+          `The curve is ${right.en.toLowerCase()} because ${sol.en.charAt(0).toLowerCase()}${sol.en.slice(1)}`,
+          `该曲线为${right["zh-CN"]}，因为${sol["zh-CN"]}`,
+        );
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
@@ -340,8 +343,8 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfX: Top
         const ans = k * c * a;
 
         const prompt = t(
-          `Evaluate the line integral $\\int_C ${coeff}x\\,ds$ along the line segment $y = \\frac{${b}}{${a}}x$ from $x = 0$ to $x = ${a}$.`,
-          `计算第一类曲线积分 $\\int_C ${coeff}x\\,ds$，其中曲线 $C$ 为直线段 $y = \\frac{${b}}{${a}}x$ 从 $x = 0$ 到 $x = ${a}$。`,
+          `Evaluate the line integral $\\int_C ${coeff}x\\,ds$ along the line segment $y = ${Q.of(b, a).toLatex()}x$ from $x = 0$ to $x = ${a}$.`,
+          `计算第一类曲线积分 $\\int_C ${coeff}x\\,ds$，其中曲线 $C$ 为直线段 $y = ${Q.of(b, a).toLatex()}x$ 从 $x = 0$ 到 $x = ${a}$。`,
         );
         const solution = t(
           steps(
@@ -427,8 +430,8 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfY: Top
         const ans = k * c * b;
 
         const prompt = t(
-          `Evaluate the line integral $\\int_C ${coeff}y\\,ds$ along the curve $x = \\frac{${a}}{${b}}y$ from $y = 0$ to $y = ${b}$.`,
-          `计算第一类曲线积分 $\\int_C ${coeff}y\\,ds$，其中曲线 $C$ 为直线段 $x = \\frac{${a}}{${b}}y$ 从 $y = 0$ 到 $y = ${b}$。`,
+          `Evaluate the line integral $\\int_C ${coeff}y\\,ds$ along the curve $x = ${Q.of(a, b).toLatex()}y$ from $y = 0$ to $y = ${b}$.`,
+          `计算第一类曲线积分 $\\int_C ${coeff}y\\,ds$，其中曲线 $C$ 为直线段 $x = ${Q.of(a, b).toLatex()}y$ 从 $y = 0$ 到 $y = ${b}$。`,
         );
         const solution = t(
           steps(
@@ -741,8 +744,8 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
       id: "spotting-a-zero-line-integral-on-an-ellipse-by-symmetry",
       title: t("Spotting a zero integral on an ellipse by symmetry", "利用对称性识别椭圆上为零的积分"),
       explanation: t(
-        "The arc length of an ellipse has no elementary formula, but symmetry can still decide some integrals. The ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is symmetric under $x \\mapsto -x$ and under $y \\mapsto -y$, and $ds$ is unchanged by these reflections. So $\\oint_C f\\,ds = 0$ whenever $f$ is odd in $x$ or odd in $y$, such as $x$, $xy^2$ or $y^3$. Functions like $x^2$ or $x^2 + y^4$ are positive and give a positive integral.",
-        "椭圆弧长没有初等公式，但对称性仍能确定某些积分。椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ 关于 $x \\mapsto -x$ 和 $y \\mapsto -y$ 对称，且这些反射不改变 $ds$。所以只要 $f$ 关于 $x$ 或关于 $y$ 为奇函数，如 $x$、$xy^2$ 或 $y^3$，就有 $\\oint_C f\\,ds = 0$。像 $x^2$ 或 $x^2 + y^4$ 这样的正函数给出正的积分。",
+        "The arc length of an ellipse has no elementary formula, but symmetry can still decide some integrals. The ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is symmetric under $x \\mapsto -x$ and under $y \\mapsto -y$, and $ds$ is unchanged by these reflections. So $\\oint_C f\\,ds = 0$ whenever $f$ is odd in $x$ or odd in $y$, such as $x$, $xy^2$ or $y^3$, and also for a sum of such terms. Functions like $x^2$ or $x^2 + y^4$ are positive and give a positive integral.",
+        "椭圆弧长没有初等公式，但对称性仍能确定某些积分。椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ 关于 $x \\mapsto -x$ 和 $y \\mapsto -y$ 对称，且这些反射不改变 $ds$。所以只要 $f$ 关于 $x$ 或关于 $y$ 为奇函数，如 $x$、$xy^2$ 或 $y^3$，就有 $\\oint_C f\\,ds = 0$，这样的项之和也一样。像 $x^2$ 或 $x^2 + y^4$ 这样的正函数给出正的积分。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -761,8 +764,8 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
           o(odd),
           even.map(o),
           t(
-            `$${odd}$ is odd in $x$ or in $y$, so its values on symmetric halves of the ellipse cancel. The other functions are positive on most of the ellipse and never negative, so their integrals are positive.`,
-            `$${odd}$ 关于 $x$ 或 $y$ 是奇函数，在椭圆对称的两半上的值相互抵消。其他函数在椭圆上非负且大部分为正，积分为正。`,
+            `Each term of $${odd}$ is odd in $x$ or in $y$, so its values on symmetric halves of the ellipse cancel. The other functions are positive on most of the ellipse and never negative, so their integrals are positive.`,
+            `$${odd}$ 的每一项都关于 $x$ 或 $y$ 是奇函数，在椭圆对称的两半上的值相互抵消。其他函数在椭圆上非负且大部分为正，积分为正。`,
           ),
         );
       },
@@ -1040,26 +1043,32 @@ export const propertiesOfLineIntegralsWithRespectToXAndY: TopicDef = {
         "与对弧长的积分不同，这些积分依赖于方向，所以沿曲线反向走会改变结果的符号。反转曲线遍历方向会导致坐标微分变号 $dx \\to -dx$ 与 $dy \\to -dy$，因此：\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy)。$$",
       ),
       generate(rng: Rng): Problem {
-        const val = rng.nonZero(-35, 35);
-        const ans = -val;
+        const k = rng.int(2, 5);
+        const m = rng.nonZero(-9, 9);
+        const drawn = rng.nonZero(-9, 9);
+        const n = k * m + drawn === 0 ? drawn + 1 : drawn;
+        const forward = k * m + n;
+        const ans = -forward;
 
         const prompt = t(
-          `If $\\int_C (P\\,dx + Q\\,dy) = ${val}$, find the value of $\\int_{-C} (P\\,dx + Q\\,dy)$.`,
-          `若 $\\int_C (P\\,dx + Q\\,dy) = ${val}$，求 $\\int_{-C} (P\\,dx + Q\\,dy)$ 的值。`,
+          `If $\\int_C P\\,dx = ${m}$ and $\\int_C Q\\,dy = ${n}$, find the value of $\\int_{-C} (${k}P\\,dx + Q\\,dy)$.`,
+          `若 $\\int_C P\\,dx = ${m}$，$\\int_C Q\\,dy = ${n}$，求 $\\int_{-C} (${k}P\\,dx + Q\\,dy)$ 的值。`,
         );
         const solution = t(
           steps(
-            `Reversing the orientation of the curve reverses the sign of the line integral with respect to coordinates:\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy) = -(${val}) = ${ans}.$$ `,
+            `Along $C$ the integral is $\\int_C (${k}P\\,dx + Q\\,dy) = ${k}(${m}) + (${n}) = ${forward}$.`,
+            `Reversing the orientation of the curve reverses the sign of the line integral with respect to coordinates, so the value along $-C$ is $${ans}$.`,
           ),
           steps(
-            `反转曲线的行进方向会导致对坐标的曲线积分变号：\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy) = -(${val}) = ${ans}。$$ `,
+            `沿 $C$ 的积分为 $\\int_C (${k}P\\,dx + Q\\,dy) = ${k}(${m}) + (${n}) = ${forward}$。`,
+            `反转曲线的行进方向会导致对坐标的曲线积分变号，所以沿 $-C$ 的值为 $${ans}$。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [val, 0, ans + 1],
+          wrong: [forward, -k * m + n, -(m + n), k * m - n],
         });
       },
     },
@@ -1637,28 +1646,31 @@ export const propertiesOfLineIntegralsOfVectorValuedFunctions: TopicDef = {
         "沿曲线反方向走会使每一小段位移反向，所以向量场做的功改变符号。反转遍历方向会导致切向微元向量变号 $d\\mathbf{r} \\to -d\\mathbf{r}$，因此：\n\n$$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}。$$",
       ),
       generate(rng: Rng): Problem {
-        const val = rng.nonZero(-30, 30);
-        const ans = -val;
+        const p = rng.nonZero(-15, 15);
+        const drawn = rng.nonZero(-15, 15);
+        const q = p + drawn === 0 ? drawn + 1 || 1 : drawn;
+        const forward = p + q;
+        const ans = -forward;
 
         const prompt = t(
-          `Given that $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = ${val}$, determine the value of $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r}$, where $-C$ is the same curve traversed in reverse.`,
-          `已知 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = ${val}$，求 $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r}$ 的值，其中 $-C$ 为反向遍历的同一曲线。`,
+          `The curve $C$ is $C_1$ followed by $C_2$, with $\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = ${p}$ and $\\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = ${q}$. Determine the value of $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r}$, where $-C$ is the same curve traversed in reverse.`,
+          `曲线 $C$ 由 $C_1$ 接 $C_2$ 组成，$\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = ${p}$，$\\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = ${q}$。求 $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r}$ 的值，其中 $-C$ 为反向遍历的同一曲线。`,
         );
         const solution = t(
           steps(
-            `Reversing the orientation of the curve negates the tangent vector element $d\\mathbf{r}$:`,
-            `$$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = -(${val}) = ${ans}.$$ `,
+            `Integrals add along pieces, so $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = ${p} + (${q}) = ${forward}$.`,
+            `Reversing the orientation of the curve negates the tangent vector element $d\\mathbf{r}$, so $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = ${ans}$.`,
           ),
           steps(
-            `反向遍历曲线使切向位移微元 $d\\mathbf{r}$ 变号：`,
-            `$$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = -(${val}) = ${ans}。$$ `,
+            `积分可按分段相加，所以 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = ${p} + (${q}) = ${forward}$。`,
+            `反向遍历曲线使切向位移微元 $d\\mathbf{r}$ 变号，所以 $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = ${ans}$。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [val, 0, ans + 2],
+          wrong: [forward, q - p, p - q, 0],
         });
       },
     },
@@ -1818,11 +1830,13 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
         const b = rng.nonZero(-3, 3);
         const x1 = rng.int(-2, 2);
         const y1 = rng.int(-2, 2);
-        const x2 = rng.int(-2, 2);
+        const x2Drawn = rng.int(-2, 2);
         const y2 = rng.int(-2, 2);
 
         // f(x, y) = a * x^2 + b * y^2
         const fA = a * x1 * x1 + b * y1 * y1;
+        // Moving x2 to 3 makes f(B) differ from f(A) whenever the drawn end has the same value: x^2 grows past every other value.
+        const x2 = a * x2Drawn * x2Drawn + b * y2 * y2 === fA ? 3 : x2Drawn;
         const fB = a * x2 * x2 + b * y2 * y2;
         const ans = fB - fA;
 
@@ -2132,6 +2146,8 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
         let y1 = rng.int(-2, 3);
         if (x1 === x0 && y1 === y0) y1 += 1;
         const f = (x: number, y: number) => a * x ** 3 * y + b * x + c * y * y;
+        // f is quadratic in y, so at most two values of y repeat f(x0, y0), and this stops.
+        while (f(x1, y1) === f(x0, y0)) y1 += 1;
         const ans = f(x1, y1) - f(x0, y0);
         const g = (x: number, y: number) => a * x ** 3 * y + c * y * y;
         return numberProblem({

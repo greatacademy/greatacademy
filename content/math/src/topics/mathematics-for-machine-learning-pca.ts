@@ -39,8 +39,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
 
             return numberProblem({
               prompt: t(
-                `A dataset with $d = ${d}$ features has a sample covariance matrix $S$ with eigenvalues $\\lambda = [${lambdas.join(", ")}]$. Calculate the total variance $\\operatorname{Tr}(S) = \\sum_{i=1}^{${d}} \\lambda_i$.`,
-                `一个具有 $d = ${d}$ 个特征的数据集，其样本协方差矩阵 $S$ 的特征值为 $\\lambda = [${lambdas.join(", ")}]$。计算数据集的总方差 $\\operatorname{Tr}(S) = \\sum_{i=1}^{${d}} \\lambda_i$。`,
+                `A dataset with $d = ${d}$ features has a sample covariance matrix $S$ with eigenvalues $\\lambda = [${lambdas.join(", ")}]$. Calculate the total variance of the dataset.`,
+                `一个具有 $d = ${d}$ 个特征的数据集，其样本协方差矩阵 $S$ 的特征值为 $\\lambda = [${lambdas.join(", ")}]$。计算数据集的总方差。`,
               ),
               answer: total,
               wrong: [lambdas[0]!, Q.of(total, d), total - lambdas[d - 1]!],
@@ -60,14 +60,14 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `The sample covariance matrix of a 3-dimensional dataset has eigenvalues $\\lambda_1 = ${lam1}$, $\\lambda_2 = ${lam2}$, and $\\lambda_3 = ${lam3}$. What proportion of the total variance is explained by the first principal component? Give your answer as an exact rational number $\\frac{\\lambda_1}{\\sum_{i=1}^3 \\lambda_i}$.`,
-              `一个 3 维数据集的样本协方差矩阵具有特征值 $\\lambda_1 = ${lam1}$、$\\lambda_2 = ${lam2}$ 和 $\\lambda_3 = ${lam3}$。第一主成分解释了总方差的多少比例？以精确有理数 $\\frac{\\lambda_1}{\\sum_{i=1}^3 \\lambda_i}$ 形式作答。`,
+              `The sample covariance matrix of a 3-dimensional dataset has eigenvalues $\\lambda_1 = ${lam1}$, $\\lambda_2 = ${lam2}$, and $\\lambda_3 = ${lam3}$. What proportion of the total variance is explained by the first principal component? Give your answer as an exact fraction.`,
+              `一个 3 维数据集的样本协方差矩阵具有特征值 $\\lambda_1 = ${lam1}$、$\\lambda_2 = ${lam2}$ 和 $\\lambda_3 = ${lam3}$。第一主成分解释了总方差的多少比例？以精确分数作答。`,
             ),
             answer: prop,
             wrong: [Q.of(lam1, lam2 + lam3), Q.of(lam2 + lam3, total), Q.of(1, 3)],
             solution: t(
-              `Total variance is $\\sum_{i=1}^3 \\lambda_i = ${lam1} + ${lam2} + ${lam3} = ${total}$. The proportion explained by the first principal component is $\\frac{${lam1}}{${total}} = ${prop.toLatex()}$.`,
-              `总方差为 $\\sum_{i=1}^3 \\lambda_i = ${lam1} + ${lam2} + ${lam3} = ${total}$。第一主成分解释的比例为 $\\frac{${lam1}}{${total}} = ${prop.toLatex()}$。`,
+              `Total variance is $\\sum_{i=1}^3 \\lambda_i = ${lam1} + ${lam2} + ${lam3} = ${total}$. The proportion explained by the first principal component is $${prop.toLatex()}$.`,
+              `总方差为 $\\sum_{i=1}^3 \\lambda_i = ${lam1} + ${lam2} + ${lam3} = ${total}$。第一主成分解释的比例为 $${prop.toLatex()}$。`,
             ),
           });
         },
@@ -243,8 +243,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A dataset of $n = ${sampleN}$ observations is centered into a matrix $X_c$. The singular value decomposition $X_c = U \\Sigma V^T$ yields a largest singular value of $\\sigma_1 = ${sigma}$. What is the variance $\\lambda_1$ of the first principal component, given by $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1}$? Enter your answer as an exact rational number.`,
-              `包含 $n = ${sampleN}$ 个观测值的数据集经中心化后得到矩阵 $X_c$。其奇异值分解 $X_c = U \\Sigma V^T$ 求得的最大奇异值为 $\\sigma_1 = ${sigma}$。由公式 $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1}$，求第一主成分的方差 $\\lambda_1$（以精确有理数形式作答）。`,
+              `A dataset of $n = ${sampleN}$ observations is centered into a matrix $X_c$. The singular value decomposition $X_c = U \\Sigma V^T$ yields a largest singular value of $\\sigma_1 = ${sigma}$. What is the variance $\\lambda_1$ of the first principal component? Enter your answer as an exact rational number.`,
+              `包含 $n = ${sampleN}$ 个观测值的数据集经中心化后得到矩阵 $X_c$。其奇异值分解 $X_c = U \\Sigma V^T$ 求得的最大奇异值为 $\\sigma_1 = ${sigma}$。求第一主成分的方差 $\\lambda_1$（以精确有理数形式作答）。`,
             ),
             answer: variance,
             wrong: [sigmaSquared, Q.of(sigma, nMinus1), Q.of(sigmaSquared, sampleN)],

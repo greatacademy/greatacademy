@@ -141,8 +141,8 @@ export const interiorAndBoundaryPoints: TopicDef = {
           right,
           names.filter((_, i) => i !== kind),
           t(
-            `At $x = ${x}$, $x^2 ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${x * x + c}$ and $y = ${y} ${rel} ${x * x + c}$, so the point is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
-            `在 $x = ${x}$ 处 $x^2 ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${x * x + c}$，而 $y = ${y} ${rel} ${x * x + c}$，所以该点是${right["zh-CN"]}。`,
+            `At $x = ${x}$, $${poly([1, "x^2"], [c, ""])} = ${x * x + c}$ and $y = ${y} ${rel} ${x * x + c}$, so the point is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
+            `在 $x = ${x}$ 处 $${poly([1, "x^2"], [c, ""])} = ${x * x + c}$，而 $y = ${y} ${rel} ${x * x + c}$，所以该点是${right["zh-CN"]}。`,
           ),
         );
       },
@@ -280,7 +280,7 @@ export const openAndClosedSets: TopicDef = {
           `将集合 $S = ${desc["zh-CN"]}$ 分类为开集、闭集或既非开亦非闭。`,
         );
         const solution = t(
-          `The set is ${/^[aeio]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}. ${reason.en}`,
+          `The set is ${/^neither/i.test(right.en) ? "" : /^[aeio]/i.test(right.en) ? "an " : "a "}${right.en.toLowerCase()}. ${reason.en}`,
           `该集合为${right["zh-CN"]}，因为${reason["zh-CN"]}`,
         );
         return pickChoice(rng, prompt, right, wrong, solution);
@@ -429,32 +429,39 @@ export const levelCurves: TopicDef = {
       id: "finding-equations-of-level-curves",
       title: t("Finding equations of level curves", "求等值线方程"),
       explanation: t(
-        "A **level curve** (or contour line) of $z = f(x, y)$ represents all input points $(x, y)$ where the function takes a constant value $c$. Its equation in the $xy$-plane is simply:\n\n$$f(x, y) = c.$$",
-        "$z = f(x, y)$ 的**等值线**（或等高线）表示函数值取常数 $c$ 的所有输入点 $(x, y)$ 的集合。其在 $xy$ 平面中的方程为：\n\n$$f(x, y) = c。$$",
+        "A **level curve** (or contour line) of $z = f(x, y)$ represents all input points $(x, y)$ where the function takes a constant value $c$. Its equation in the $xy$-plane is simply:\n\n$$f(x, y) = c.$$ The level curve through a point $(x_0, y_0)$ has $c = f(x_0, y_0)$.",
+        "$z = f(x, y)$ 的**等值线**（或等高线）表示函数值取常数 $c$ 的所有输入点 $(x, y)$ 的集合。其在 $xy$ 平面中的方程为：\n\n$$f(x, y) = c。$$ 过点 $(x_0, y_0)$ 的等值线有 $c = f(x_0, y_0)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
-        const b = rng.int(1, 6);
-        const c = rng.int(2, 20);
-        const answer = `${poly([a, "x^2"], [b, "y^2"])} = ${c}`;
+        const b = rng.int(2, 6);
+        const p = rng.nonZero(-3, 3);
+        const q = rng.nonZero(-3, 3);
+        const c = a * p * p + b * q * q;
+        const lhs = poly([a, "x^2"], [b, "y^2"]);
+        const answer = `${lhs} = ${c}`;
 
         const prompt = t(
-          `Find the equation of the level curve of the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ corresponding to $c = ${c}$.`,
-          `求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 对应于 $c = ${c}$ 的等值线方程。`,
+          `Find the equation of the level curve of $f(x, y) = ${lhs}$ that passes through the point $(${p}, ${q})$.`,
+          `求函数 $f(x, y) = ${lhs}$ 经过点 $(${p}, ${q})$ 的等值线方程。`,
         );
         const solution = t(
-          steps(`Set the function expression equal to the constant value $c = ${c}$:`, `$$f(x, y) = ${c} \\implies ${answer}.$$`),
-          steps(`令函数表达式等于常数值 $c = ${c}$：`, `$$f(x, y) = ${c} \\implies ${answer}。$$`),
+          steps(
+            `The value of $f$ at the point is $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$.`,
+            `Set $f$ equal to this constant: $$${answer}.$$`,
+          ),
+          steps(`$f$ 在该点的值为 $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$。`, `令 $f$ 等于这个常数：$$${answer}。$$`),
         );
         return equationProblem({
           prompt,
           solution,
           answer,
           wrong: [
-            `${poly([a, "x"], [b, "y"])} = ${c}`,
+            `${lhs} = ${c + 1}`,
+            `${lhs} = ${p * p + q * q}`,
             `${poly([a, "x^2"], [-b, "y^2"])} = ${c}`,
-            `${poly([b, "x^2"], [a, "y^2"])} = ${c}`,
-          ],
+            `${lhs} = ${a * p + b * q}`,
+          ].filter((w) => w !== answer),
         });
       },
     },
@@ -505,33 +512,41 @@ export const levelSurfaces: TopicDef = {
       id: "finding-equations-of-level-surfaces",
       title: t("Finding equations of level surfaces", "求等值面方程"),
       explanation: t(
-        "A level surface is the three dimensional version of a contour line: all the points where the function takes one fixed value. A **level surface** of a three-variable function $w = F(x, y, z)$ consists of all points in $\\mathbb{R}^3$ where $F(x, y, z) = c$ for a constant $c$.",
-        "等值面是等高线的三维版本：函数取同一个固定值的所有点。三元函数 $w = F(x, y, z)$ 的**等值面**由使 $F(x, y, z) = c$（$c$ 为常数）的所有三维空间点构成。",
+        "A level surface is the three dimensional version of a contour line: all the points where the function takes one fixed value. A **level surface** of a three-variable function $w = F(x, y, z)$ consists of all points in $\\mathbb{R}^3$ where $F(x, y, z) = c$ for a constant $c$. The level surface through a given point has $c$ equal to the value of $F$ there.",
+        "等值面是等高线的三维版本：函数取同一个固定值的所有点。三元函数 $w = F(x, y, z)$ 的**等值面**由使 $F(x, y, z) = c$（$c$ 为常数）的所有三维空间点构成。过某一点的等值面，其 $c$ 等于 $F$ 在该点的值。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
-        const cCoeff = rng.int(1, 5);
-        const k = rng.int(2, 25);
-        const answer = `${poly([a, "x^2"], [b, "y^2"], [cCoeff, "z^2"])} = ${k}`;
+        const cCoeff = rng.int(2, 5);
+        const [p, q, r] = [rng.nonZero(-2, 2), rng.nonZero(-2, 2), rng.nonZero(-3, 3)];
+        const k = a * p * p + b * q * q + cCoeff * r * r;
+        const lhs = poly([a, "x^2"], [b, "y^2"], [cCoeff, "z^2"]);
+        const answer = `${lhs} = ${k}`;
 
         const prompt = t(
-          `Find the equation of the level surface of $F(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [cCoeff, "z^2"])}$ for the constant $c = ${k}$.`,
-          `求函数 $F(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [cCoeff, "z^2"])}$ 对应于常数 $c = ${k}$ 的等值面方程。`,
+          `Find the equation of the level surface of $F(x, y, z) = ${lhs}$ that passes through the point $(${p}, ${q}, ${r})$.`,
+          `求函数 $F(x, y, z) = ${lhs}$ 经过点 $(${p}, ${q}, ${r})$ 的等值面方程。`,
         );
         const solution = t(
-          steps(`Set the function expression equal to the constant value $c = ${k}$:`, `$$F(x, y, z) = ${k} \\implies ${answer}.$$`),
-          steps(`令函数表达式等于常数值 $c = ${k}$：`, `$$F(x, y, z) = ${k} \\implies ${answer}。$$`),
+          steps(
+            `The value of $F$ at the point is $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$.`,
+            `Set $F$ equal to this constant: $$${answer}.$$`,
+          ),
+          steps(
+            `$F$ 在该点的值为 $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$。`,
+            `令 $F$ 等于这个常数：$$${answer}。$$`,
+          ),
         );
         return equationProblem({
           prompt,
           solution,
           answer,
           wrong: [
-            `${poly([a, "x"], [b, "y"], [cCoeff, "z"])} = ${k}`,
+            `${lhs} = ${k + 1}`,
+            `${lhs} = ${p * p + q * q + r * r}`,
             `${poly([a, "x^2"], [b, "y^2"], [-cCoeff, "z^2"])} = ${k}`,
-            `${poly([1, "x^2"], [1, "y^2"], [1, "z^2"])} = ${k}`,
-          ],
+          ].filter((w) => w !== answer),
         });
       },
     },
@@ -834,7 +849,7 @@ export const paraboloids: TopicDef = {
 
         const prompt = t(`Classify the quadric surface defined by the equation $${eq}$.`, `对由方程 $${eq}$ 定义的二次曲面进行分类。`);
         const solution = t(
-          `The equation has one linear variable and two squared variables with ${isElliptic ? "the same sign" : "opposite signs"}, so it is an ${right.en.toLowerCase()}.`,
+          `The equation has one linear variable and two squared variables with ${isElliptic ? "the same sign" : "opposite signs"}, so it is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
           `该方程包含一个一次变量与两个${isElliptic ? "同号" : "异号"}的平方项，因此它是${right["zh-CN"]}。`,
         );
         return pickChoice(rng, prompt, right, wrong, solution);
@@ -895,7 +910,7 @@ export const ellipticCones: TopicDef = {
         const ans = a * k;
 
         const prompt = t(
-          `Find the length of the semi-horizontal axis in the $x$-direction for the elliptical trace of the cone $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ at the plane $z = ${k}$.`,
+          `Find the length of the semi-axis in the $x$-direction of the elliptical trace of the cone $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ at the plane $z = ${k}$.`,
           `求椭圆锥面 $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ 与平面 $z = ${k}$ 相交所得椭圆截痕在 $x$ 方向的半轴长。`,
         );
         const solution = t(
@@ -984,16 +999,16 @@ export const cylinders: TopicDef = {
 
         if (missing === "z") {
           eq = `x^2 + y^2 = ${r * r}`;
-          right = t("z-axis", "z 轴");
-          wrong = [t("x-axis", "x 轴"), t("y-axis", "y 轴"), t("Line y = x", "直线 y = x")];
+          right = t("$z$-axis", "$z$ 轴");
+          wrong = [t("$x$-axis", "$x$ 轴"), t("$y$-axis", "$y$ 轴"), t("The line $y = x$", "直线 $y = x$")];
         } else if (missing === "y") {
           eq = `x^2 + z^2 = ${r * r}`;
-          right = t("y-axis", "y 轴");
-          wrong = [t("x-axis", "x 轴"), t("z-axis", "z 轴"), t("Line z = x", "直线 z = x")];
+          right = t("$y$-axis", "$y$ 轴");
+          wrong = [t("$x$-axis", "$x$ 轴"), t("$z$-axis", "$z$ 轴"), t("The line $z = x$", "直线 $z = x$")];
         } else {
           eq = `y^2 + z^2 = ${r * r}`;
-          right = t("x-axis", "x 轴");
-          wrong = [t("y-axis", "y 轴"), t("z-axis", "z 轴"), t("Line z = y", "直线 z = y")];
+          right = t("$x$-axis", "$x$ 轴");
+          wrong = [t("$y$-axis", "$y$ 轴"), t("$z$-axis", "$z$ 轴"), t("The line $z = y$", "直线 $z = y$")];
         }
 
         const prompt = t(
@@ -1028,8 +1043,8 @@ export const cylinders: TopicDef = {
           answer: y,
           wrong: [a * x * x + b + z, a * z * z + b, a * x + b],
           solution: t(
-            `The surface is a cylinder parallel to the $z$-axis, so $z = ${z}$ plays no role: $y = ${a} \\cdot ${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$.`,
-            `该曲面是平行于 $z$ 轴的柱面，所以 $z = ${z}$ 不起作用：$y = ${a} \\cdot ${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$。`,
+            `The surface is a cylinder parallel to the $z$-axis, so $z = ${z}$ plays no role: $y = ${a === 1 ? "" : `${a} \\cdot `}${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$.`,
+            `该曲面是平行于 $z$ 轴的柱面，所以 $z = ${z}$ 不起作用：$y = ${a === 1 ? "" : `${a} \\cdot `}${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$。`,
           ),
         });
       },
@@ -1195,7 +1210,10 @@ export const identifyingQuadricSurfaces: TopicDef = {
         }
 
         const prompt = t(`Identify the quadric surface defined by the equation $${eq}$.`, `识别由方程 $${eq}$ 定义的二次曲面。`);
-        const solution = t(`The equation $${eq}$ represents an ${right.en.toLowerCase()}.`, `方程 $${eq}$ 表示一个${right["zh-CN"]}。`);
+        const solution = t(
+          `The equation $${eq}$ represents ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
+          `方程 $${eq}$ 表示一个${right["zh-CN"]}。`,
+        );
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
@@ -2177,10 +2195,8 @@ export const theGradientAsANormalVector: TopicDef = {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.nonZero(-3, 3);
-        let pt: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
-        if (pt[0] === 0 && pt[1] === 0 && pt[2] === 0) {
-          pt = [rng.pick([-1, 1]), pt[1], pt[2]];
-        }
+        const pt: Vec3 = [rng.nonZero(-2, 2), rng.nonZero(-2, 2), rng.nonZero(-2, 2)];
+        const level = a * pt[0] ** 2 + b * pt[1] ** 2 + c * pt[2] ** 2;
 
         const ansX = 2 * a * pt[0];
         const ansY = 2 * b * pt[1];
@@ -2188,8 +2204,8 @@ export const theGradientAsANormalVector: TopicDef = {
         const answer: Vec3 = [ansX, ansY, ansZ];
 
         const prompt = t(
-          `Find a normal vector to the level surface $${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = 10$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `求等值面 $${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = 10$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的一个法向量。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+          `The level surface $F(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${level}$ passes through the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Find the normal vector $\\nabla F$ to the surface at that point. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+          `等值面 $F(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${level}$ 经过点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$。求该曲面在这一点的法向量 $\\nabla F$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
         );
         const solution = t(
           steps(
@@ -2210,7 +2226,7 @@ export const theGradientAsANormalVector: TopicDef = {
           vector: true,
           vars: ["x", "y", "z"],
           wrong: [
-            [ansY, ansX, ansZ],
+            [ansX, ansY, -ansZ],
             [-ansX, -ansY, -ansZ],
             [a * pt[0], b * pt[1], c * pt[2]],
           ],
@@ -2730,39 +2746,40 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
         "改变半径会使点在水平和竖直两个方向上移动，所以链式法则要把两个偏导数按相应的权重加起来。对于 $z = f(x, y)$（其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$），由链式法则可得：\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta。$$",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.nonZero(-4, 4);
+        const r0 = rng.int(2, 5);
+        const [thetaText, c4, s4] = rng.pick([
+          ["\\frac{\\pi}{6}", 3, 1],
+          ["\\frac{\\pi}{4}", 2, 2],
+          ["\\frac{\\pi}{3}", 1, 3],
+        ] as const);
         const b = rng.nonZero(-4, 4);
-        const r0 = rng.int(1, 5);
-        // z = a*x + b*y
-        // dz/dr = a*cos(theta) + b*sin(theta). At theta = 0: dz/dr = a.
-        // At theta = pi/2: dz/dr = b.
-        const atZero = rng.bool();
-        const thetaText = atZero ? "0" : "\\frac{\\pi}{2}";
-        const ans = atZero ? a : b;
+        const drawn = rng.nonZero(-4, 4);
+        const a = drawn * c4 + b * s4 === 0 ? drawn + 1 || 1 : drawn;
+        // z = a x^2 + b y^2, so dz/dr = 2 a x cos(theta) + 2 b y sin(theta) = 2 r (a cos^2 + b sin^2) = r (a c4 + b s4) / 2.
+        const ans = Q.of(r0 * (a * c4 + b * s4), 2);
+        const zText = poly([a, "x^2"], [b, "y^2"]);
 
         const prompt = t(
-          `For $z = ${poly([a, "x"], [b, "y"])}$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, find $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$.`,
-          `设 $z = ${poly([a, "x"], [b, "y"])}$，其中 $x = r\\cos\\theta$ 且 $y = r\\sin\\theta$。求 $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$ 的值。`,
+          `For $z = ${zText}$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, find $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$.`,
+          `设 $z = ${zText}$，其中 $x = r\\cos\\theta$ 且 $y = r\\sin\\theta$。求 $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$ 的值。`,
         );
         const solution = t(
           steps(
-            `Apply the polar chain rule: $\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta$.`,
-            `$\\frac{\\partial z}{\\partial x} = ${a}$ and $\\frac{\\partial z}{\\partial y} = ${b}$.`,
-            `At $\\theta = ${thetaText}$, $\\cos(${thetaText}) = ${atZero ? 1 : 0}$ and $\\sin(${thetaText}) = ${atZero ? 0 : 1}$.`,
-            `Thus $\\frac{\\partial z}{\\partial r} = ${ans}$.`,
+            `Apply the polar chain rule: $\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta = ${2 * a}x\\cos\\theta + ${paren(2 * b)}y\\sin\\theta$.`,
+            `Substituting $x$ and $y$ gives $${2 * a}r\\cos^2\\theta + ${paren(2 * b)}r\\sin^2\\theta$.`,
+            `At $\\theta = ${thetaText}$, $\\cos^2\\theta = \\frac{${c4}}{4}$ and $\\sin^2\\theta = \\frac{${s4}}{4}$, and with $r = ${r0}$ the value is $${ans.toLatex()}$.`,
           ),
           steps(
-            `应用极坐标链式法则：$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta$。`,
-            `$\\frac{\\partial z}{\\partial x} = ${a}$ 且 $\\frac{\\partial z}{\\partial y} = ${b}$。`,
-            `在 $\\theta = ${thetaText}$ 处，$\\cos(${thetaText}) = ${atZero ? 1 : 0}$，$\\sin(${thetaText}) = ${atZero ? 0 : 1}$。`,
-            `因此 $\\frac{\\partial z}{\\partial r} = ${ans}$。`,
+            `应用极坐标链式法则：$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta = ${2 * a}x\\cos\\theta + ${paren(2 * b)}y\\sin\\theta$。`,
+            `代入 $x$、$y$ 得 $${2 * a}r\\cos^2\\theta + ${paren(2 * b)}r\\sin^2\\theta$。`,
+            `在 $\\theta = ${thetaText}$ 处，$\\cos^2\\theta = \\frac{${c4}}{4}$，$\\sin^2\\theta = \\frac{${s4}}{4}$，再取 $r = ${r0}$，其值为 $${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [atZero ? b : a, a + b, a * r0],
+          wrong: [Q.of(r0 * (a * s4 + b * c4), 2), Q.of(a * c4 + b * s4, 2), 2 * r0 * (a + b), ans.neg()],
         });
       },
     },
@@ -3108,24 +3125,26 @@ export const theImageOfAnAffineTransformation: TopicDef = {
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.int(-2, 2);
-        const cCoeff = rng.int(-2, 2);
+        const drawnC = rng.int(-2, 2);
         const d = rng.nonZero(-3, 3);
+        // A singular matrix has no area factor to find, so the off-diagonal entry is dropped in that case.
+        const cCoeff = a * d === b * drawnC ? 0 : drawnC;
         const detA = a * d - b * cCoeff;
-        const absDet = Math.abs(detA) === 0 ? 2 : Math.abs(detA);
+        const absDet = Math.abs(detA);
         const areaS = rng.int(2, 8);
         const ans = absDet * areaS;
 
         const prompt = t(
-          `An affine transformation $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ maps a region $S$ of area $Area(S) = ${areaS}$. Find the area of the transformed image $Area(T(S))$, given that $|\\det A| = ${absDet}$.`,
-          `已知仿射变换 $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ 作用于面积为 $Area(S) = ${areaS}$ 的区域 $S$。已知 $|\\det A| = ${absDet}$，求变换后像的面积 $Area(T(S))$。`,
+          `An affine transformation $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ maps a region $S$ of area $${areaS}$. Find the area of the image $T(S)$.`,
+          `已知仿射变换 $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ 作用于面积为 $${areaS}$ 的区域 $S$。求像 $T(S)$ 的面积。`,
         );
         const solution = t(
           steps(
-            `The area scaling factor of an affine transformation is $|\\det(A)|$.`,
+            `The area scaling factor of an affine transformation is $|\\det(A)|$, and here $|\\det(A)| = |(${a})(${d}) - (${b})(${cCoeff})| = ${absDet}$.`,
             `Compute $\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S) = ${absDet} \\cdot ${areaS} = ${ans}$.`,
           ),
           steps(
-            `仿射变换的面积缩放因子为 $|\\det(A)|$。`,
+            `仿射变换的面积缩放因子为 $|\\det(A)|$，这里 $|\\det(A)| = |(${a})(${d}) - (${b})(${cCoeff})| = ${absDet}$。`,
             `计算 $\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S) = ${absDet} \\cdot ${areaS} = ${ans}$。`,
           ),
         );
@@ -3133,7 +3152,7 @@ export const theImageOfAnAffineTransformation: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [areaS, absDet + areaS, ans * 2],
+          wrong: [areaS, absDet + areaS, ans * 2, (a * d + b * cCoeff) * areaS],
         });
       },
     },
@@ -3379,28 +3398,38 @@ export const polarCoordinateTransformations: TopicDef = {
         "雅可比行列式衡量新坐标中的小矩形被拉伸了多少，对极坐标来说它等于半径。对于 $x = r\\cos\\theta$ 与 $y = r\\sin\\theta$，其雅可比矩阵及行列式为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r。$$",
       ),
       generate(rng: Rng): Problem {
-        const r0 = rng.int(2, 35);
+        const [p, q, r0] = rng.pick([
+          [3, 4, 5],
+          [6, 8, 10],
+          [5, 12, 13],
+          [9, 12, 15],
+          [8, 15, 17],
+          [7, 24, 25],
+        ] as const);
+        const swap = rng.bool();
+        const x0 = (swap ? q : p) * rng.pick([-1, 1]);
+        const y0 = (swap ? p : q) * rng.pick([-1, 1]);
         const ans = r0;
 
         const prompt = t(
-          `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$ of the polar transformation $x = r\\cos\\theta, y = r\\sin\\theta$ at $r = ${r0}$.`,
-          `计算极坐标变换 $x = r\\cos\\theta, y = r\\sin\\theta$ 在 $r = ${r0}$ 处的雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$。`,
+          `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$ of the polar transformation $x = r\\cos\\theta, y = r\\sin\\theta$ at the point with Cartesian coordinates $(x, y) = (${x0}, ${y0})$.`,
+          `计算极坐标变换 $x = r\\cos\\theta, y = r\\sin\\theta$ 在直角坐标为 $(x, y) = (${x0}, ${y0})$ 的点处的雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$。`,
         );
         const solution = t(
           steps(
-            `The Jacobian determinant formula is $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = r(\\cos^2\\theta + \\sin^2\\theta) = r$.`,
-            `Evaluating at $r = ${r0}$ yields $J = ${ans}$.`,
+            `The determinant is $J = r\\cos^2\\theta + r\\sin^2\\theta = r$.`,
+            `At this point $r = \\sqrt{${x0 * x0} + ${y0 * y0}} = ${r0}$, so $J = ${ans}$.`,
           ),
           steps(
-            `极坐标变换的雅可比行列式公式为 $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = r(\\cos^2\\theta + \\sin^2\\theta) = r$。`,
-            `在 $r = ${r0}$ 处求值得到 $J = ${ans}$。`,
+            `行列式为 $J = r\\cos^2\\theta + r\\sin^2\\theta = r$。`,
+            `在该点 $r = \\sqrt{${x0 * x0} + ${y0 * y0}} = ${r0}$，所以 $J = ${ans}$。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [r0 * r0, 1, r0 + 2],
+          wrong: [r0 * r0, 1, p + q],
         });
       },
     },
@@ -3654,10 +3683,10 @@ export const theInverseFunctionTheorem: TopicDef = {
         );
         const solution = t(
           steps(
-            `By the Inverse Function Theorem, the Jacobian of the inverse transformation is the reciprocal of the forward Jacobian:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{${jVal}} = ${ans.toLatex()}.$$`,
+            `By the Inverse Function Theorem, the Jacobian of the inverse transformation is the reciprocal of the forward Jacobian:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = ${jVal > 0 ? "" : `\\frac{1}{${jVal}} = `}${ans.toLatex()}.$$`,
           ),
           steps(
-            `由反函数定理，逆变换的雅可比行列式等于正向变换雅可比行列式的倒数：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{${jVal}} = ${ans.toLatex()}。$$`,
+            `由反函数定理，逆变换的雅可比行列式等于正向变换雅可比行列式的倒数：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = ${jVal > 0 ? "" : `\\frac{1}{${jVal}} = `}${ans.toLatex()}。$$`,
           ),
         );
         return numberProblem({
@@ -3838,8 +3867,8 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
-        const x0 = rng.int(-2, 3);
-        const y0 = rng.int(-2, 3);
+        const x0 = rng.nonZero(-2, 3);
+        const y0 = rng.nonZero(-2, 3);
 
         // f1 = a * x^2 + b * y^2, f2 = 2 * x * y
         // Entry (1, 1): df1/dx = 2a*x0
@@ -4093,14 +4122,12 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
         const a = rng.int(-4, 4) || 1;
         const b = rng.int(-4, 4) || 3;
         const cosForm = rng.int(0, 1) === 1;
-        const mono = rng.pick(["x^2", "xy", "y^2"] as const);
+        const mono = rng.pick(cosForm ? (["x^2", "y^2"] as const) : (["x^2", "xy", "y^2"] as const));
         const f = cosForm ? `e^{${poly([a, "x"])}}\\cos(${poly([b, "y"])})` : `e^{${poly([a, "x"], [b, "y"])}}`;
         const coef = cosForm
           ? mono === "x^2"
             ? Q.of(a * a, 2)
-            : mono === "xy"
-              ? Q.zero
-              : Q.of(-b * b, 2)
+            : Q.of(-b * b, 2)
           : mono === "x^2"
             ? Q.of(a * a, 2)
             : mono === "xy"
@@ -4700,8 +4727,8 @@ export const optimizingMultivariableFunctionsUsingLagrangeMultipliers: TopicDef 
           answer: ans,
           wrong: [Q.of(s, 2).pow(m + n), Q.of(y ** m * x ** n), Q.of(x * y)],
           solution: t(
-            `Splitting $${s}$ in the ratio $${m} : ${n}$ gives $x = ${x}$, $y = ${y}$, so the maximum is $${x}^{${m}} \\cdot ${y}^{${n}} = ${ans}$.`,
-            `按 $${m} : ${n}$ 分配 $${s}$ 得 $x = ${x}$，$y = ${y}$，所以最大值为 $${x}^{${m}} \\cdot ${y}^{${n}} = ${ans}$。`,
+            `Splitting $${s}$ in the ratio $${m} : ${n}$ gives $x = ${x}$, $y = ${y}$, so the maximum is $${m === 1 ? x : `${x}^{${m}}`} \\cdot ${n === 1 ? y : `${y}^{${n}}`} = ${ans}$.`,
+            `按 $${m} : ${n}$ 分配 $${s}$ 得 $x = ${x}$，$y = ${y}$，所以最大值为 $${m === 1 ? x : `${x}^{${m}}`} \\cdot ${n === 1 ? y : `${y}^{${n}}`} = ${ans}$。`,
           ),
         });
       },

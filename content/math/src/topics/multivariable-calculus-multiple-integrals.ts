@@ -703,12 +703,12 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
         );
         const solution = t(
           steps(
-            `On each sub-square of side length $\\frac{${W}}{${n}}$ and $\\frac{${H}}{${n}}$, the oscillation of $f$ is $M_{ij} - m_{ij} = a\\left(\\frac{${W}}{${n}}\\right) + b\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$.`,
+            `On each subrectangle with sides $\\frac{${W}}{${n}}$ and $\\frac{${H}}{${n}}$, the oscillation of $f$ is $M_{ij} - m_{ij} = ${a}\\left(\\frac{${W}}{${n}}\\right) + ${b}\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$.`,
             `Summing over all $n^2$ subrectangles with area $\\Delta A = \\frac{${W}\\cdot${H}}{n^2}$ yields:`,
             `$$U(f, P_n) - L(f, P_n) = n^2 \\left(\\frac{${a * W + b * H}}{${n}}\\right)\\left(\\frac{${W * H}}{n^2}\\right) = \\frac{${num}}{${n}} = ${ans.toLatex()}.$$ `,
           ),
           steps(
-            `在边长分别为 $\\frac{${W}}{${n}}$ 与 $\\frac{${H}}{${n}}$ 的每个子方块上，$f$ 的振幅为 $M_{ij} - m_{ij} = a\\left(\\frac{${W}}{${n}}\\right) + b\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$。`,
+            `在边长分别为 $\\frac{${W}}{${n}}$ 与 $\\frac{${H}}{${n}}$ 的每个子矩形上，$f$ 的振幅为 $M_{ij} - m_{ij} = ${a}\\left(\\frac{${W}}{${n}}\\right) + ${b}\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$。`,
             `对全部 $n^2$ 个面积为 $\\Delta A = \\frac{${W}\\cdot${H}}{n^2}$ 的子矩形累加得到：`,
             `$$U(f, P_n) - L(f, P_n) = n^2 \\left(\\frac{${a * W + b * H}}{${n}}\\right)\\left(\\frac{${W * H}}{n^2}\\right) = \\frac{${num}}{${n}} = ${ans.toLatex()}。$$ `,
           ),
@@ -879,14 +879,14 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
           steps(
             `Describe $T$ as $0 \\le x \\le ${c}$ and $0 \\le y \\le ${c} - x$.`,
             `Set up the iterated integral:\n\n$$\\int_0^{${c}} \\int_0^{${c} - x} ${a}x\\,dy\\,dx = \\int_0^{${c}} ${a}x(${c} - x)\\,dx = ${a} \\int_0^{${c}} (${c}x - x^2)\\,dx.$$`,
-            `Evaluate the antiderivative:\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}.$$, `,
-            `Multiply by $${a} = 6(${k})$:\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}.$$ `,
+            `Evaluate the antiderivative:\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}.$$`,
+            `Multiply by $${a}$:\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}.$$ `,
           ),
           steps(
             `将区域 $T$ 表示为 $0 \\le x \\le ${c}$ 与 $0 \\le y \\le ${c} - x$。`,
             `建立二次积分：\n\n$$\\int_0^{${c}} \\int_0^{${c} - x} ${a}x\\,dy\\,dx = \\int_0^{${c}} ${a}x(${c} - x)\\,dx = ${a} \\int_0^{${c}} (${c}x - x^2)\\,dx。$$`,
-            `求原函数值：\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}。$$, `,
-            `乘以常数系数 $${a} = 6(${k})$：\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}。$$ `,
+            `求原函数值：\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}。$$`,
+            `乘以常数系数 $${a}$：\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}。$$ `,
           ),
         );
         return numberProblem({
@@ -1041,10 +1041,10 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
             `\\{(x, y) : 0 \\le x \\le ${a}, ${poly([b, "x^2"])} \\le y \\le ${poly([b * a, "x"])}\\}`,
             `\\{(x, y) : 0 \\le x \\le ${a}, ${poly([b, "x^2"])} \\le y \\le ${poly([b * a, "x"])}\\}`,
           );
-          right = t("Type I (X-simple)", "X-型区域（Type I）");
-          wrong = [t("Type II (Y-simple)", "Y-型区域（Type II）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
+          right = t("Type I", "X-型（Type I）");
+          wrong = [t("Type II", "Y-型（Type II）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
           solText = t(
-            `The variable $x$ lies between constant bounds $0 \\le x \\le ${a}$, and $y$ is bounded between two functions of $x$: $g_1(x) = ${poly([b, "x^2"])}$ and $g_2(x) = ${poly([b * a, "x"])}$.`,
+            `the variable $x$ lies between constant bounds $0 \\le x \\le ${a}$, and $y$ is bounded between two functions of $x$: $g_1(x) = ${poly([b, "x^2"])}$ and $g_2(x) = ${poly([b * a, "x"])}$.`,
             `变量 $x$ 具有常数界 $0 \\le x \\le ${a}$，而 $y$ 夹在 $x$ 的两个函数 $g_1(x) = ${poly([b, "x^2"])}$ 与 $g_2(x) = ${poly([b * a, "x"])}$ 之间。`,
           );
         } else {
@@ -1052,19 +1052,22 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
             `\\{(x, y) : 0 \\le y \\le ${a}, ${poly([b, "y^2"])} \\le x \\le ${poly([b * a, "y"])}\\}`,
             `\\{(x, y) : 0 \\le y \\le ${a}, ${poly([b, "y^2"])} \\le x \\le ${poly([b * a, "y"])}\\}`,
           );
-          right = t("Type II (Y-simple)", "Y-型区域（Type II）");
-          wrong = [t("Type I (X-simple)", "X-型区域（Type I）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
+          right = t("Type II", "Y-型（Type II）");
+          wrong = [t("Type I", "X-型（Type I）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
           solText = t(
-            `The variable $y$ lies between constant bounds $0 \\le y \\le ${a}$, and $x$ is bounded between two functions of $y$: $h_1(y) = ${poly([b, "y^2"])}$ and $h_2(y) = ${poly([b * a, "y"])}$.`,
+            `the variable $y$ lies between constant bounds $0 \\le y \\le ${a}$, and $x$ is bounded between two functions of $y$: $h_1(y) = ${poly([b, "y^2"])}$ and $h_2(y) = ${poly([b * a, "y"])}$.`,
             `变量 $y$ 具有常数界 $0 \\le y \\le ${a}$，而 $x$ 夹在 $y$ 的两个函数 $h_1(y) = ${poly([b, "y^2"])}$ 与 $h_2(y) = ${poly([b * a, "y"])}$ 之间。`,
           );
         }
 
         const prompt = t(
-          `Classify the plane region $D = ${desc.en}$ as Type I, Type II, or neither.`,
-          `将平面区域 $D = ${desc["zh-CN"]}$ 分类为 X-型（Type I）、Y-型（Type II）或两者皆非。`,
+          `The plane region $D$ is written as $D = ${desc.en}$. Is this written form a Type I description, a Type II description, or neither?`,
+          `平面区域 $D$ 写成 $D = ${desc["zh-CN"]}$。这个写法是 X-型（Type I）描述、Y-型（Type II）描述，还是两者皆非？`,
         );
-        const solution = t(`The region is ${right.en} because ${solText.en}`, `该区域为${right["zh-CN"]}，因为${solText["zh-CN"]}`);
+        const solution = t(
+          `This is a ${right.en} description, because ${solText.en}`,
+          `这是${right["zh-CN"]}描述，因为${solText["zh-CN"]}`,
+        );
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
@@ -1668,7 +1671,10 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
           `Classify the 3D solid region $E = ${desc.en}$ as Type I, Type II, or Type III.`,
           `将三维立体区域 $E = ${desc["zh-CN"]}$ 分类为 Type I、Type II 或 Type III 型。`,
         );
-        const solution = t(`The region is ${right.en} because ${sol.en}`, `该区域为${right["zh-CN"]}，因为${sol["zh-CN"]}`);
+        const solution = t(
+          `The region is ${right.en} because ${sol.en.charAt(0).toLowerCase()}${sol.en.slice(1)}`,
+          `该区域为${right["zh-CN"]}，因为${sol["zh-CN"]}`,
+        );
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },

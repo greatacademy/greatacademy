@@ -667,7 +667,8 @@ export const momentsAndCenterOfMass: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const ms = [rng.int(1, 5), rng.int(1, 5), rng.int(1, 5)];
-        const pts = ms.map(() => [rng.int(-4, 5), rng.int(-4, 5)] as const);
+        const xs = rng.sample([-4, -3, -2, -1, 0, 1, 2, 3, 4, 5], 3);
+        const pts = ms.map((_, i) => [xs[i]!, rng.int(-4, 5)] as const);
         const askX = rng.int(0, 1) === 0;
         const m = ms[0]! + ms[1]! + ms[2]!;
         const mom = ms.reduce((s, mi, i) => s + mi * pts[i]![askX ? 0 : 1], 0);

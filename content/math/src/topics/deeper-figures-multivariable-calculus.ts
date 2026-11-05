@@ -802,13 +802,23 @@ const connectedness = point(
       right = answers.apart;
       reason = ["The region has two pieces that no path inside it can join", "区域有两块，区域内的路径无法把它们连接起来"];
     }
+    const altText: Pair = {
+      disk: ["A shaded disk.", "一个阴影圆盘。"] as Pair,
+      ell: ["A shaded L-shaped region.", "一个 L 形阴影区域。"] as Pair,
+      ring: [
+        "A large shaded disk with a smaller unshaded disk removed from its middle.",
+        "一个大的阴影圆盘，中间挖去一个较小的圆盘。",
+      ] as Pair,
+      twoHoles: ["A large shaded disk with two small unshaded disks removed from it.", "一个大的阴影圆盘，其中挖去两个小圆盘。"] as Pair,
+      apart: ["Two shaded disks with a gap between them.", "两个阴影圆盘，中间隔开。"] as Pair,
+    }[kind];
     return choose(
       rng,
       ["Which description fits the shaded region?", "哪个描述符合阴影区域？"],
       right,
       [answers.simple, answers.holes, answers.apart, answers.odd],
       [`${reason[0]}. So the region is ${right[0]}.`, `${reason[1]}。所以这个区域${right[1]}。`],
-      fig(square(6), marks, [`A shaded region. ${reason[0]}.`, `一个阴影区域。${reason[1]}。`]),
+      fig(square(6), marks, altText),
     );
   },
 );

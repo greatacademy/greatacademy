@@ -1135,19 +1135,19 @@ export const theOsculatingPlane: TopicDef = {
         const zComponent = d === 0 ? `${b}t` : poly([b, "t"], [d, ""]);
 
         const prompt = t(
-          `Find the equation of the osculating plane to the helix $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ at $t = 0$. Note that $\\mathbf{r}(0) = (${a}, 0, ${d})$ and a normal vector to the plane is $\\langle 0, -${b}, ${a} \\rangle$.`,
-          `求螺旋线 $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ 在 $t = 0$ 处的密切平面方程。已知 $\\mathbf{r}(0) = (${a}, 0, ${d})$，且该平面的一个法向量为 $\\langle 0, -${b}, ${a} \\rangle$。`,
+          `Find the equation of the osculating plane to the helix $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ at $t = 0$.`,
+          `求螺旋线 $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ 在 $t = 0$ 处的密切平面方程。`,
         );
         const solution = t(
           steps(
             `The point on the curve is $(x_0, y_0, z_0) = (${a}, 0, ${d})$.`,
-            `The normal vector to the osculating plane is $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$.`,
+            `Here $\\mathbf{r}'(0) = \\langle 0, ${a}, ${b} \\rangle$ and $\\mathbf{r}''(0) = \\langle -${a}, 0, 0 \\rangle$, and their cross product is $${a} \\langle 0, -${b}, ${a} \\rangle$. So the binormal, which is normal to the osculating plane, is parallel to $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$.`,
             `The plane equation is $0(x - ${paren(a)}) + ${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$.`,
             `Simplifying gives $${answer}$.`,
           ),
           steps(
             `曲线上对应点为 $(x_0, y_0, z_0) = (${a}, 0, ${d})$。`,
-            `密切平面的法向量为 $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$。`,
+            `这里 $\\mathbf{r}'(0) = \\langle 0, ${a}, ${b} \\rangle$，$\\mathbf{r}''(0) = \\langle -${a}, 0, 0 \\rangle$，二者的叉积为 $${a} \\langle 0, -${b}, ${a} \\rangle$。所以作为密切平面法向量的次法向量平行于 $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$。`,
             `平面方程为 $0(x - ${paren(a)}) + ${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$。`,
             `化简得 $${answer}$。`,
           ),
@@ -1219,17 +1219,17 @@ export const parameterizationByArcLength: TopicDef = {
         const sVal = c * t0;
 
         const prompt = t(
-          `The circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ has constant speed $c = ${c}$. If the curve is parameterized by arc length $s$ starting from $t = 0$, what is the parameter value $t$ when the arc length is $s = ${sVal}$?`,
-          `圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 的速率为恒定常数 $c = ${c}$。若以 $t = 0$ 为起点按弧长 $s$ 进行参数化，当弧长 $s = ${sVal}$ 时对应的参数 $t$ 为多少？`,
+          `If the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ is parameterized by arc length $s$ starting from $t = 0$, what is the parameter value $t$ when the arc length is $s = ${sVal}$?`,
+          `若把圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 以 $t = 0$ 为起点按弧长 $s$ 进行参数化，当弧长 $s = ${sVal}$ 时对应的参数 $t$ 为多少？`,
         );
         const solution = t(
           steps(
-            `The arc length formula for constant speed is $s(t) = \\int_0^t ${c}\\,du = ${c}t$.`,
+            `The speed is $\\sqrt{${a}^2 + ${b}^2} = ${c}$, a constant, so $s(t) = \\int_0^t ${c}\\,du = ${c}t$.`,
             `Invert to express $t$ in terms of $s$: $t = \\frac{s}{${c}}$.`,
             `For $s = ${sVal}$, $t = \\frac{${sVal}}{${c}} = ${t0}$.`,
           ),
           steps(
-            `恒定速率下的弧长公式为 $s(t) = \\int_0^t ${c}\\,du = ${c}t$。`,
+            `速率为 $\\sqrt{${a}^2 + ${b}^2} = ${c}$，是常数，所以 $s(t) = \\int_0^t ${c}\\,du = ${c}t$。`,
             `反解得到 $t$ 关于 $s$ 的表达式：$t = \\frac{s}{${c}}$。`,
             `当 $s = ${sVal}$ 时，$t = \\frac{${sVal}}{${c}} = ${t0}$。`,
           ),
@@ -1473,32 +1473,34 @@ export const radiusOfCurvature: TopicDef = {
       id: "calculating-the-radius-of-curvature",
       title: t("Calculating the radius of curvature", "计算曲率半径"),
       explanation: t(
-        "The radius of curvature $\\rho$ at a point on a curve is the reciprocal of its curvature:\n\n$$\\rho = \\frac{1}{\\kappa}.$$ It represents the radius of the osculating circle (circle of curvature) at that point.",
-        "曲线在某点处的曲率半径 $\\rho$ 为该点曲率的倒数：\n\n$$\\rho = \\frac{1}{\\kappa}。$$ 它表示在该点处的密切圆（曲率圆）的半径。",
+        "The radius of curvature $\\rho$ at a point on a curve is the reciprocal of its curvature:\n\n$$\\rho = \\frac{1}{\\kappa}.$$ It represents the radius of the osculating circle (circle of curvature) at that point. With $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ this reads $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$.",
+        "曲线在某点处的曲率半径 $\\rho$ 为该点曲率的倒数：\n\n$$\\rho = \\frac{1}{\\kappa}。$$ 它表示在该点处的密切圆（曲率圆）的半径。由 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 可写成 $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$。",
       ),
       generate(rng: Rng): Problem {
-        const k = rng.int(2, 40);
-        const ans = k;
+        const speed = rng.int(2, 6);
+        const cross = rng.int(3, 7);
+        const cube = speed ** 3;
+        const ans = Q.of(cube, cross);
 
         const prompt = t(
-          `A curve has curvature $\\kappa = \\frac{1}{${k}}$ at a given point $P$. Find its radius of curvature $\\rho$ at $P$.`,
-          `已知某曲线在点 $P$ 处的曲率为 $\\kappa = \\frac{1}{${k}}$。求该曲线在点 $P$ 处的曲率半径 $\\rho$。`,
+          `At a point $P$ of a curve, $\\|\\mathbf{r}'\\| = ${speed}$ and $\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${cross}$. Find the radius of curvature $\\rho$ at $P$.`,
+          `在曲线的点 $P$ 处，$\\|\\mathbf{r}'\\| = ${speed}$，$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${cross}$。求曲线在点 $P$ 处的曲率半径 $\\rho$。`,
         );
         const solution = t(
           steps(
-            `The radius of curvature is the reciprocal of curvature: $\\rho = \\frac{1}{\\kappa}$.`,
-            `Substitute $\\kappa = \\frac{1}{${k}}$: $\\rho = \\frac{1}{1/${k}} = ${ans}$.`,
+            `The curvature is $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3} = \\frac{${cross}}{${cube}}$.`,
+            `The radius of curvature is its reciprocal: $\\rho = \\frac{1}{\\kappa} = ${ans.toLatex()}$.`,
           ),
           steps(
-            `曲率半径为曲率的倒数：$\\rho = \\frac{1}{\\kappa}$。`,
-            `代入 $\\kappa = \\frac{1}{${k}}$：$\\rho = \\frac{1}{1/${k}} = ${ans}$。`,
+            `曲率为 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3} = \\frac{${cross}}{${cube}}$。`,
+            `曲率半径是它的倒数：$\\rho = \\frac{1}{\\kappa} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [Q.of(1, k), k * k, k + 1],
+          wrong: [Q.of(cross, cube), Q.of(speed * speed, cross), Q.of(cube, cross * cross)],
         });
       },
     },
@@ -1757,6 +1759,10 @@ export const visualizingVectorFields: TopicDef = {
         const kinds = [
           {
             field: `\\langle ${cStr}x, ${cStr}y \\rangle`,
+            why: t(
+              "It is a positive multiple of the position vector $\\langle x, y \\rangle$, so each arrow points away from the origin.",
+              "它是位置向量 $\\langle x, y \\rangle$ 的正数倍，所以每个箭头都背离原点。",
+            ),
             right: t("Points radially outward from the origin", "从原点向外径向发散"),
             wrong: [
               t("Circulates counterclockwise around the origin", "绕原点逆时针环流"),
@@ -1766,6 +1772,10 @@ export const visualizingVectorFields: TopicDef = {
           },
           {
             field: `\\langle -${cStr}y, ${cStr}x \\rangle`,
+            why: t(
+              "Its dot product with $\\langle x, y \\rangle$ is zero, so each arrow is tangent to a circle about the origin; at a point $(1, 0)$ on the positive $x$-axis it points up.",
+              "它与 $\\langle x, y \\rangle$ 的点积为零，所以每个箭头都与以原点为圆心的圆相切；在 $x$ 轴正半轴的点 $(1, 0)$ 处它指向上方。",
+            ),
             right: t("Circulates counterclockwise around the origin", "绕原点逆时针环流"),
             wrong: [
               t("Points radially outward from the origin", "从原点向外径向发散"),
@@ -1775,6 +1785,10 @@ export const visualizingVectorFields: TopicDef = {
           },
           {
             field: `\\langle ${cStr}y, -${cStr}x \\rangle`,
+            why: t(
+              "Its dot product with $\\langle x, y \\rangle$ is zero, so each arrow is tangent to a circle about the origin; at a point $(1, 0)$ on the positive $x$-axis it points down.",
+              "它与 $\\langle x, y \\rangle$ 的点积为零，所以每个箭头都与以原点为圆心的圆相切；在 $x$ 轴正半轴的点 $(1, 0)$ 处它指向下方。",
+            ),
             right: t("Circulates clockwise around the origin", "绕原点顺时针环流"),
             wrong: [
               t("Points radially outward from the origin", "从原点向外径向发散"),
@@ -1784,6 +1798,10 @@ export const visualizingVectorFields: TopicDef = {
           },
           {
             field: `\\langle -${cStr}x, -${cStr}y \\rangle`,
+            why: t(
+              "It is a negative multiple of the position vector $\\langle x, y \\rangle$, so each arrow points toward the origin.",
+              "它是位置向量 $\\langle x, y \\rangle$ 的负数倍，所以每个箭头都指向原点。",
+            ),
             right: t("Points radially inward toward the origin", "向原点径向汇聚"),
             wrong: [
               t("Points radially outward from the origin", "从原点向外径向发散"),
@@ -1798,8 +1816,8 @@ export const visualizingVectorFields: TopicDef = {
           `以下哪项几何描述正确表征了向量场 $\\mathbf{F}(x, y) = ${item.field}$？`,
         );
         const solution = t(
-          `The field $\\mathbf{F}(x, y) = ${item.field}$ ${item.right.en.toLowerCase()}.`,
-          `向量场 $\\mathbf{F}(x, y) = ${item.field}$${item.right["zh-CN"]}。`,
+          `The field $\\mathbf{F}(x, y) = ${item.field}$ ${item.right.en.toLowerCase()}. ${item.why.en}`,
+          `向量场 $\\mathbf{F}(x, y) = ${item.field}$${item.right["zh-CN"]}。${item.why["zh-CN"]}`,
         );
         return pickChoice(rng, prompt, item.right, item.wrong, solution);
       },
@@ -2458,11 +2476,12 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
-        const b = rng.nonZero(-5, 5);
+        const drawn = rng.nonZero(-5, 5);
+        const b = a + drawn === 0 ? a : drawn;
         const ans = -(a + b);
 
         const prompt = t(
-          `Find the value of the constant $k$ that makes the vector field $\\mathbf{F}(x, y, z) = \\left\\langle ${poly([a, "x"], [2, "y"])}, ${poly([b, "y"], [-3, "z"])}, ${poly([1, "kx"], [1, "z"])} \\right\\rangle$ solenoidal (incompressible) everywhere, where the third component is $kx + z$ with $k$ as the coefficient of $z$. That is, $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "x"], [2, "y"])}, ${poly([b, "y"], [-3, "z"])}, x + kz \\rangle$.`,
+          `Find the value of the constant $k$ that makes the vector field $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "x"], [2, "y"])}, ${poly([b, "y"], [-3, "z"])}, x + kz \\rangle$ solenoidal (incompressible) everywhere.`,
           `求使向量场 $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "x"], [2, "y"])}, ${poly([b, "y"], [-3, "z"])}, x + kz \\rangle$ 处处无散（不可压缩）的常数 $k$ 的值。`,
         );
         const solution = t(
@@ -2483,7 +2502,7 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [a + b, a - b, b - a],
+          wrong: [a + b, a - b, b - a, 1 - (a + b)],
         });
       },
     },
