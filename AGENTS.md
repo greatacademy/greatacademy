@@ -22,10 +22,12 @@ Great Academy is an adaptive learning platform for many subjects, starting with 
 
 ```text
 apps/web/            TanStack Start on Cloudflare Workers: pages, Connect API, better-auth
+apps/math-workers/   The gateway and shard Workers of mathematics
 apps/mobile/         Expo app
 libs/content/        Content model, compiler, problem runtime, checkers (subject-agnostic)
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers
+libs/subject-worker/ Worker entrypoints for any subject's gateway and shards
 libs/proto/          Protobuf contracts and generated TypeScript
 libs/db/             Drizzle schema, migrations, repositories
 libs/design/         Design tokens and strings

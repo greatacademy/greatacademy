@@ -1,4 +1,4 @@
-import { generateProblem, type Problem, type ProblemRef, type Rng, type Verdict } from "@ga/content";
+import type { Judged, Problem, ProblemRef, Rng, Verdict } from "@ga/content";
 import {
   answerDiagnostic,
   answerLesson,
@@ -129,14 +129,13 @@ export function canSkip(run: RunState): boolean {
 }
 
 /** answerRun judges a response to the current question and advances the run. */
-export function answerRun(c: CourseEntry, run: RunState, response: string, skip: boolean, now: number, rng: Rng): Answered {
+export async function answerRun(c: CourseEntry, run: RunState, response: string, skip: boolean, now: number, rng: Rng): Promise<Answered> {
   const ref = run.current;
   if (!ref) throw new Error("the session is over");
-  const problem = generateProblem(c.subject, ref);
   const skipped = skip && canSkip(run);
-  const verdict: Verdict = skipped
-    ? { correct: false }
-    : c.subject.checkers.check(problem.answer.checker, problem.answer.expected, response);
+  const { problem, verdict }: Judged = skipped
+    ? { problem: (await c.source.problems([ref]))[0]!, verdict: { correct: false } }
+    : await c.source.judge(ref, response);
   const asked = [...run.asked, { ...ref, response: skipped ? "" : response, correct: verdict.correct, skipped }];
   const correct = asked.filter((a) => a.correct).length;
   const finish = (next: RunState, event: EngineEvent, passed: boolean, placed = 0): Answered => {

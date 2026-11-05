@@ -2,7 +2,7 @@ import { env, waitUntil } from "cloudflare:workers";
 import { createConnectRouter, createContextValues } from "@connectrpc/connect";
 import { type UniversalHandler, universalServerRequestFromFetch, universalServerResponseToFetch } from "@connectrpc/connect/protocol";
 import { catalogService, dbKey, learningService, Registry, userIdKey } from "@ga/api";
-import { compileMath } from "@ga/content-math";
+import type { SubjectGateway } from "@ga/content";
 import { connect } from "@ga/db";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
@@ -12,14 +12,25 @@ import { createAuth } from "./auth.ts";
 /** RPC_PREFIX is where the Connect services are mounted. */
 export const RPC_PREFIX = "/api/rpc";
 
-// Built once per isolate: compiling the content and the routing table is pure.
-const registry = new Registry([compileMath()]);
-const handlers = new Map<string, UniversalHandler>();
-{
+/** subjectGateways are the Workers serving each subject; a new subject adds its binding here. */
+const subjectGateways = (): readonly SubjectGateway[] => [env.SUBJECT_MATH as unknown as SubjectGateway];
+
+let loaded: ReadonlyMap<string, UniversalHandler> | undefined;
+
+/**
+ * routes reads the subject listings and builds the routing table once per
+ * isolate. Concurrent first requests each read for themselves: a promise of one
+ * request must not be awaited by another, which would fail if the first is cancelled.
+ */
+async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
+  if (loaded) return loaded;
+  const registry = await Registry.open(subjectGateways());
+  if (loaded) return loaded;
   const router = createConnectRouter();
   router.service(CatalogService, catalogService(registry));
   router.service(LearningService, learningService({ registry, now: Date.now, seed: () => Math.floor(Math.random() * 0x7fffffff) }));
-  for (const h of router.handlers) handlers.set(h.requestPath, h);
+  loaded = new Map(router.handlers.map((h) => [h.requestPath, h]));
+  return loaded;
 }
 
 /**
@@ -34,7 +45,7 @@ export async function handleApi(request: Request): Promise<Response> {
     const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin);
     if (url.pathname.startsWith("/api/auth/")) return await auth.handler(request);
     if (!url.pathname.startsWith(`${RPC_PREFIX}/`)) return new Response("Not Found", { status: 404 });
-    const handler = handlers.get(url.pathname.slice(RPC_PREFIX.length));
+    const handler = (await routes()).get(url.pathname.slice(RPC_PREFIX.length));
     if (!handler) return new Response("Not Found", { status: 404 });
     const session = await auth.api.getSession({ headers: request.headers });
     const req = universalServerRequestFromFetch(request, {});

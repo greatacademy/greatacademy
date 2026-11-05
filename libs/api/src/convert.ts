@@ -1,5 +1,5 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
-import { type Figure, generateProblem, type InputSpec, type Problem, type Text } from "@ga/content";
+import type { Figure, InputSpec, Problem, Text } from "@ga/content";
 import { diagnosticCandidates, diagnosticLength, type LearnerState, reviewXp, type Task } from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
@@ -65,21 +65,23 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
   }
 }
 
-function question(c: CourseEntry, run: RunState): MessageInitShape<typeof QuestionSchema> {
+async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof QuestionSchema>> {
   const ref = run.current!;
+  const intro = run.kind === "lesson" && run.lesson.kpAsked === 0 && !run.practice;
+  // The question and, when a knowledge point starts, its worked example come in one call.
+  const [problem, example] = await c.source.problems(intro ? [ref, { topic: run.topic, kp: run.lesson.kp, seed: run.example }] : [ref]);
   const q: MessageInitShape<typeof QuestionSchema> = {
     index: run.asked.length,
-    problem: problemView(generateProblem(c.subject, ref)),
+    problem: problemView(problem!),
     feedback: run.kind === "lesson" || run.kind === "review",
     canSkip: canSkip(run),
     total: run.kind === "review" ? run.plan.length : run.kind === "quiz" ? run.topics.length : 0,
   };
   if (run.kind !== "lesson") return q;
   const l = run.lesson;
-  const kp = c.subject.topics.get(run.topic)!.knowledgePoints[l.kp]!;
   const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: l.streak, needed: c.ctx.params.kpStreak };
-  if (l.kpAsked > 0 || run.practice) return { ...q, lesson };
-  const example = generateProblem(c.subject, { topic: run.topic, kp: l.kp, seed: run.example });
+  if (!intro) return { ...q, lesson };
+  const kp = await c.source.lesson(run.topic, l.kp);
   return {
     ...q,
     lesson,
@@ -88,39 +90,45 @@ function question(c: CourseEntry, run: RunState): MessageInitShape<typeof Questi
       count: l.kpCount,
       title: text(kp.title),
       explanation: text(kp.explanation),
-      example: { problem: problemView(example), solution: text(example.solution), answer: example.canonical },
+      example: { problem: problemView(example!), solution: text(example!.solution), answer: example!.canonical },
       ...(kp.figure && { figure: figure(kp.figure) }),
     },
   };
 }
 
-function result(c: CourseEntry, run: RunState): MessageInitShape<typeof ResultSchema> {
+async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof ResultSchema>> {
   const r = run.result!;
-  const items =
-    run.kind === "review" || run.kind === "quiz"
-      ? run.asked.map((a) => {
-          const p = generateProblem(c.subject, a);
-          return {
-            topicId: a.topic,
-            title: text(c.subject.topics.get(a.topic)!.title),
-            correct: a.correct,
-            problem: problemView(p),
-            solution: text(p.solution),
-            answer: p.canonical,
-            response: a.response,
-          };
-        })
-      : [];
+  const listed = run.kind === "review" || run.kind === "quiz";
+  const problems = listed ? await c.source.problems(run.asked.map(({ topic, kp, seed }) => ({ topic, kp, seed }))) : [];
+  const items = listed
+    ? run.asked.map((a, i) => {
+        const p = problems[i]!;
+        return {
+          topicId: a.topic,
+          title: text(c.subject.topics.get(a.topic)!.title),
+          correct: a.correct,
+          problem: problemView(p),
+          solution: text(p.solution),
+          answer: p.canonical,
+          response: a.response,
+        };
+      })
+    : [];
   return { passed: r.passed, correct: r.correct, asked: r.asked, xp: r.xp, placed: r.placed, items };
 }
 
 /** sessionMessage describes a session: its task and its current question or result. */
-export function sessionMessage(c: CourseEntry, id: string, run: RunState, state: LearnerState): MessageInitShape<typeof SessionSchema> {
+export async function sessionMessage(
+  c: CourseEntry,
+  id: string,
+  run: RunState,
+  state: LearnerState,
+): Promise<MessageInitShape<typeof SessionSchema>> {
   return {
     id,
     courseId: c.id,
     task: taskMessage(c, runTask(run), state),
     answered: run.asked.length,
-    step: run.result ? { case: "result", value: result(c, run) } : { case: "question", value: question(c, run) },
+    step: run.result ? { case: "result", value: await result(c, run) } : { case: "question", value: await question(c, run) },
   };
 }

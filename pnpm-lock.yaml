@@ -176,6 +176,37 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
 
+  apps/math-workers:
+    dependencies:
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../../libs/content
+      '@ga/content-math':
+        specifier: workspace:*
+        version: link:../../content/math
+      '@ga/subject-math':
+        specifier: workspace:*
+        version: link:../../libs/subject-math
+      '@ga/subject-worker':
+        specifier: workspace:*
+        version: link:../../libs/subject-worker
+    devDependencies:
+      '@cloudflare/vite-plugin':
+        specifier: 2.0.0-beta.v.7
+        version: 2.0.0-beta.v.7(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))(workerd@1.20261023.1)
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
+      cf:
+        specifier: 1.0.0-beta.25
+        version: 1.0.0-beta.25(@types/node@26.6.3)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vite:
+        specifier: 8.3.5
+        version: 8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0)
+
   apps/mobile:
     dependencies:
       '@bufbuild/protobuf':
@@ -248,9 +279,6 @@ importers:
       '@ga/content':
         specifier: workspace:*
         version: link:../../libs/content
-      '@ga/content-math':
-        specifier: workspace:*
-        version: link:../../content/math
       '@ga/db':
         specifier: workspace:*
         version: link:../../libs/db
@@ -294,6 +322,9 @@ importers:
       '@cloudflare/vite-plugin':
         specifier: 2.0.0-beta.v.7
         version: 2.0.0-beta.v.7(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))(workerd@1.20261023.1)
+      '@ga/math-workers':
+        specifier: workspace:*
+        version: link:../math-workers
       '@tailwindcss/vite':
         specifier: 4.3.3
         version: 4.3.3(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))
@@ -465,6 +496,16 @@ importers:
       vitest:
         specifier: 5.0.3
         version: 5.0.3(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))
+
+  libs/subject-worker:
+    dependencies:
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../content
+    devDependencies:
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
 
   tools/audit:
     dependencies:

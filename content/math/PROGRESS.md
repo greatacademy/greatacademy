@@ -13,7 +13,7 @@ The course catalog and outlines are in [docs/math-curriculum.md](../../docs/math
    - If that course is claimed, add a line under *Requests*. Until it lands, point at the closest existing topic.
    - If that course is open, write the topic yourself in a file named after that course, and add a line under *Handoffs*.
 5. **Shared files: small edits, committed at once.** These files are shared:
-   - `content/math/src/index.ts`: add one import and one spread per topic file.
+   - `content/math/src/shards/<shard>.ts`: add one import and one spread per topic file, in the shard of its stretch of the curriculum. Added knowledge points go through a map in the map list of each shard it touches.
    - `content/math/src/courses.ts`: add your `CourseDef` at the end.
    - `docs/content*.md` and `docs/roadmap*.md`.
    - This file.

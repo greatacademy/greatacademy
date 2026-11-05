@@ -59,12 +59,14 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 
 ```text
 apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
+apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
 apps/mobile/          Expo 应用（iOS、Android）
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
 libs/api/             Connect 服务实现与会话执行器；与传输方式和宿主无关
 libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择、诊断、XP、测验（纯函数）
 libs/content/         内容模型：知识点/课程定义、编译器与校验器、题目运行时、答案判定
 libs/subject-math/    数学学科：数学答案判定器、数学题目生成器的辅助函数
+libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
 libs/design/          设计 token、文案（en、zh-CN），以及为 Web 和移动端生成的形式
 libs/math-ui/         React 组件：数学渲染与数学输入
@@ -82,7 +84,9 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            │                                       ▲
    │            └──► libs/proto                         │
    ├──► libs/math-ui ──► libs/design             libs/subject-math ◄── content/math
-   └──► content/math
+   └╌╌► apps/math-workers（仅开发时，用来一起运行）
+apps/math-workers ──► libs/subject-worker ──► libs/content
+   └──► content/math, libs/subject-math
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
 tools/audit ──► libs/content, content/math
@@ -93,7 +97,8 @@ tools/audit ──► libs/content, content/math
 - `libs/subject-math` 只依赖 `libs/content`。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
-- 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。
+- `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
+- 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。Web Worker 不引入内容，而是通过服务绑定访问学科。
 
 ## 4. 领域模型
 
@@ -119,7 +124,7 @@ tools/audit ──► libs/content, content/math
 1. 客户端调用 `/api/rpc/ga.<domain>.v1.*` 下的 Connect 服务。Web 端携带会话 cookie，移动端携带 bearer token。better-auth 本身位于 `/api/auth/*`。
 2. Worker 用 better-auth 完成认证，再通过 Hyperdrive 从 PostgreSQL 读取学习者状态。每个请求使用独立的数据库客户端。
 3. 服务调用引擎，传入：
-   - 学科图谱（编译后的内容打包进 Worker，并按 isolate 缓存）；
+   - 学科图谱（从学科的 manifest 读取，并按 isolate 缓存）；
    - 学习者状态；
    - 当前时间。
 4. 引擎返回新状态和需要记录的事件。服务在同一个事务中写入两者，然后返回响应。
@@ -133,12 +138,41 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 ## 6. 部署
 
 - **生产：**
-  - 一个 Worker（`apps/web`），用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体。
+  - Web Worker（`apps/web`），用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体，并通过服务绑定连接每个学科的网关 Worker。
+  - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
 - **开发：**
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
 - **移动端：** 用 Expo 构建（EAS），调用同一套 API。
+
+### 6.1 学科作为 Worker
+
+生成器是代码，所以内容不能当作数据加载，而 Worker 有体积上限：免费计划压缩后 3 MB，付费计划 10 MB。全部数学压缩后约 6.5 MB，后续还要增加更多学科。因此学科运行在各自的 Worker 中：
+
+```text
+Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 学科分片
+ Registry                manifest、路由          生成器、判定器
+```
+
+- **Web Worker** 不含内容。它为每个学科绑定一个网关（`SUBJECT_MATH`），绑定列表在 `apps/web/src/server/handler.ts` 中。新增学科只需部署它的 Worker 并增加一个绑定。
+- **网关**实现 `libs/content` 的 `SubjectGateway`：`listing`（课程列表，很小）、`manifest`（不含代码的学科，构建时由 `subjectManifest` 生成），以及 `SubjectSource` 的 `problems`、`lesson`、`judge`，由 `routeSource` 转给持有该 topic 的分片。
+- **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。
+- **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
+
+数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。
+
+| Worker | 压缩后体积（gzip -9） | Node 下的模块加载时间 |
+| :--- | :--- | :--- |
+| `ga-web` | 约 2.1 MB | |
+| `ga-math`（网关） | 0.96 MB | 42 毫秒 |
+| `ga-math-school` | 1.19 MB | 50 毫秒 |
+| `ga-math-algebra` | 1.44 MB | 103 毫秒 |
+| `ga-math-calculus` | 1.87 MB | 107 毫秒 |
+| `ga-math-college` | 1.62 MB | 94 毫秒 |
+| `ga-math-exam` | 0.68 MB | 42 毫秒 |
+
+分片接近 3 MB 时就一分为二：把 topic 移到 `shards/` 下的新文件，在 `apps/math-workers/src/shards/` 下新增入口，并增加一个绑定。学习者状态不记录 topic 属于哪个分片，所以随时都可以这样做。
 
 ## 7. 存储
 

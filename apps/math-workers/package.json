@@ -1,0 +1,52 @@
+{
+  "name": "@ga/math-workers",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./workers": "./workers.ts"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.ts",
+    "build": "cf build",
+    "deploy": "cf build && for shard in school algebra calculus college exam; do cf deploy --prebuilt --worker ga-math-$shard || exit 1; done && cf deploy --prebuilt",
+    "typecheck": "cf workers types && tsc -p tsconfig.json",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "math-workers",
+    "targets": {
+      "generate": {
+        "outputs": [
+          "{projectRoot}/gen"
+        ]
+      },
+      "typecheck": {
+        "dependsOn": [
+          "generate",
+          "^generate"
+        ]
+      },
+      "build": {
+        "dependsOn": [
+          "generate",
+          "^build"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "@ga/content": "workspace:*",
+    "@ga/content-math": "workspace:*",
+    "@ga/subject-math": "workspace:*",
+    "@ga/subject-worker": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "2.0.0-beta.v.7",
+    "@types/node": "26.6.3",
+    "cf": "1.0.0-beta.25",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

@@ -12,10 +12,11 @@ import { catalogService } from "./catalog.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { sessionMessage } from "./convert.ts";
 import { learningService } from "./learning.ts";
-import { Registry } from "./registry.ts";
+import { localGateway, Registry } from "./registry.ts";
 import { type RunState, startRun } from "./runner.ts";
 
-const registry = new Registry([compileMath()]);
+const compiled = compileMath();
+const registry = await Registry.open([localGateway(compiled)]);
 const COURSE = "algebra-foundations";
 
 let db: Db & { close(): Promise<void> };
@@ -65,7 +66,7 @@ afterEach(() => db.close());
 async function correctAnswer(session: Session): Promise<string> {
   const row = await getSession(db, await learnerFor(db, "u1"), session.id);
   const run = row!.state as RunState;
-  return generateProblem(registry.courses.get(COURSE)!.subject, run.current!).canonical;
+  return generateProblem(compiled, run.current!).canonical;
 }
 
 function question(session: Session | undefined) {
@@ -128,12 +129,7 @@ describe("LearningService", () => {
     expect(q.canSkip).toBe(true);
     expect(q.feedback).toBe(false);
     // A learner who knows the first two units: answer correctly on integer and expression topics only.
-    const knows = new Set(
-      registry.courses
-        .get(COURSE)!
-        .course.def.units.slice(0, 2)
-        .flatMap((u) => u.modules.flatMap((m) => m.topics)),
-    );
+    const knows = new Set((await registry.course(COURSE))!.course.def.units.slice(0, 2).flatMap((u) => u.modules.flatMap((m) => m.topics)));
     let s = session!;
     while (s.step.case === "question") {
       const step = s.step.value;
@@ -162,7 +158,7 @@ describe("LearningService", () => {
     const other = await learning.getDashboard({ courseId: "prealgebra" });
     expect(other.diagnosed).toBe(false);
     const task = other.tasks[0]?.kind;
-    const { topics, assumed } = registry.courses.get("prealgebra")!.planner.scope;
+    const { topics, assumed } = (await registry.course("prealgebra"))!.planner.scope;
     const open = topics.filter((t) => !knows.has(t) && !assumed.has(t));
     expect(task?.case === "diagnostic" && task.value.maxQuestions).toBe(diagnosticLength(open.length));
     await learning.skipDiagnostic({ courseId: "prealgebra" });
@@ -170,17 +166,17 @@ describe("LearningService", () => {
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
   });
 
-  it("starts a practice-only lesson with practice, unless the learner failed it", () => {
-    const c = registry.courses.get("sat-math-prep")!;
+  it("starts a practice-only lesson with practice, unless the learner failed it", async () => {
+    const c = (await registry.course("sat-math-prep"))!;
     const topic = c.course.topics.find((t) => t.includes("-exam-"))!;
-    const intro = (state: LearnerState) => {
+    const intro = async (state: LearnerState) => {
       const run = startRun(c, { kind: "lesson", topic }, state, createRng(1));
-      const step = sessionMessage(c, "s", run, state).step;
+      const step = (await sessionMessage(c, "s", run, state)).step;
       return step?.case === "question" ? step.value.intro : undefined;
     };
-    expect(intro(initialState)).toBeUndefined();
+    expect(await intro(initialState)).toBeUndefined();
     const failed = applyEvent(c.ctx, initialState, { type: "lesson", at: now, topic, passed: false, asked: 5, correct: 1 });
-    expect(intro(failed)?.example?.answer).not.toBe("");
+    expect((await intro(failed))?.example?.answer).not.toBe("");
   });
 
   it("teaches a lesson knowledge point by knowledge point and awards its XP", async () => {
@@ -269,7 +265,7 @@ describe("LearningService", () => {
     const learnerId = await learnerFor(db, "u1");
     const stored = await loadState(db, learnerId, "math", initialState);
     expect(stored.seq).toBe(3);
-    expect(replay(registry.subjects.get("math")!.ctx, await events(db, learnerId, "math"), initialState)).toEqual(stored.state);
+    expect(replay((await registry.subject("math"))!.ctx, await events(db, learnerId, "math"), initialState)).toEqual(stored.state);
   });
 
   it("summarizes the profile", async () => {

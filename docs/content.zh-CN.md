@@ -181,6 +181,8 @@ const prealgebra: CourseDef = {
 
 `generateProblem(subject, ref)` 根据 `ProblemRef`（`{ topic, kp, seed }`，`kp` 是 knowledge point 的下标）重新生成题目。服务器只向客户端发送 `viewOf(problem)`：题面、图形和输入规格。答案、标准答案和解答只在学习者作答之后才公开，作答在服务器上判定。
 
+在生产环境中，这些工作运行在独立的 Worker 中。`SubjectManifest` 是不含代码的学科，是构建时由 `subjectManifest` 生成的纯 JSON；`readManifest` 从中重建图谱和索引。`SubjectSource` 提供只有代码才能产生的内容（`problems`、`lesson`、`judge`）。`topicSource` 基于 topic 定义实现它，`routeSource` 基于各持有部分 topic 的分片实现它。学科在 `content/<id>/src/shards/` 中把 topic 分到各分片；每个 topic 只属于一个分片，跨 Worker 传递的内容必须经得起结构化克隆，`content/math` 对此有测试。详见[架构](architecture.zh-CN.md) §6.1。
+
 ## 10. 数学
 
 `libs/subject-math` 在精确计算的基础上实现数学判定器：解析数学输入框产生的 LaTeX 子集（数、变量、`+ - \cdot \times \div /`、省略乘号、`\frac`、`^`、`\sqrt`、括号、`= < > \le \ge`），基于 `bigint` 的有理数运算（`Q`），以及多项式标准形式。判定答案的过程不涉及浮点数。解析器保留作答的书写形式（括号、`\frac` 与 `/`、小数），因此判定器既能判断值，也能判断形式。

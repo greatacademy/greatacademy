@@ -22,10 +22,12 @@ Great Academy 是面向多学科的自适应学习平台，从数学开始。全
 
 ```text
 apps/web/            TanStack Start on Cloudflare Workers：页面、Connect API、better-auth
+apps/math-workers/   数学的网关和分片 Worker
 apps/mobile/         Expo 应用
 libs/content/        内容模型、编译器、题目运行时、判定器（与学科无关）
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数
+libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
 libs/db/             Drizzle schema、迁移、仓储
 libs/design/         设计 token 与文案

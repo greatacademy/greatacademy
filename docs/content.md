@@ -181,6 +181,8 @@ It warns when fewer than `minDistinct` distinct prompts appear; prompts with dif
 
 `generateProblem(subject, ref)` regenerates a problem from a `ProblemRef` (`{ topic, kp, seed }`, where `kp` is the knowledge point's index). The server sends the client only `viewOf(problem)`: the prompt, its figure and the input specification. The answer, the canonical response and the solution are revealed only after the learner responds, and the response is checked on the server.
 
+In production this runs in a Worker of its own. `SubjectManifest` is a subject without its code, plain JSON produced by `subjectManifest` at build time; `readManifest` rebuilds the graph and indexes from it. `SubjectSource` serves what only code can produce (`problems`, `lesson`, `judge`). `topicSource` implements it over topic definitions, and `routeSource` over shards that each hold some of the topics. A subject divides its topics into shards in `content/<id>/src/shards/`; each topic is in exactly one, and what crosses between Workers must survive a structured clone, which `content/math` tests. See [Architecture](architecture.md) §6.1.
+
 ## 10. Mathematics
 
 `libs/subject-math` implements the mathematics checkers on an exact core: a parser for the LaTeX subset that the math input produces (numbers, variables, `+ - \cdot \times \div /`, implicit multiplication, `\frac`, `^`, `\sqrt`, parentheses, `= < > \le \ge`), rational arithmetic on `bigint` (`Q`), and polynomial normal forms. No floating point is involved in judging an answer. The parser keeps the form of the response (parentheses, `\frac` versus `/`, decimals), so checkers judge form as well as value.

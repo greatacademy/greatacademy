@@ -59,12 +59,14 @@ This document describes the system as built: technology choices, repository stru
 
 ```text
 apps/web/             TanStack Start on Workers: pages, better-auth, and libs/api mounted under /api
+apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
 apps/mobile/          Expo app (iOS, Android)
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
 libs/api/             Connect service implementations and the session runner; transport- and host-agnostic
 libs/engine/          Learning engine: graph, frontier, FIRe, task selection, diagnostic, XP, quizzes (pure)
 libs/content/         Content model: topic/course definitions, compiler and validator, problem runtime, answer checking
 libs/subject-math/    The mathematics subject: math answer checkers and helpers for math problem generators
+libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
 libs/design/          Design tokens, strings (en, zh-CN) and their generated forms for web and mobile
 libs/math-ui/         React components: math rendering and math input
@@ -82,7 +84,9 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            │                                       ▲
    │            └──► libs/proto                         │
    ├──► libs/math-ui ──► libs/design             libs/subject-math ◄── content/math
-   └──► content/math
+   └╌╌► apps/math-workers (development only, to run them alongside)
+apps/math-workers ──► libs/subject-worker ──► libs/content
+   └──► content/math, libs/subject-math
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
 tools/audit ──► libs/content, content/math
@@ -93,7 +97,8 @@ tools/audit ──► libs/content, content/math
 - `libs/subject-math` depends only on `libs/content`.
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
-- Only `apps/*` wire storage, transport, authentication and content together.
+- `libs/subject-worker` is the one library that imports the Workers runtime; it knows no subject.
+- Only `apps/*` wire storage, transport, authentication and content together. The web Worker does not import content: it reaches subjects through service bindings.
 
 ## 4. Domain Model
 
@@ -119,26 +124,55 @@ The full model of content is in [Content](content.md). The derived learner state
 1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a bearer token on mobile. better-auth itself is served under `/api/auth/*`.
 2. The Worker authenticates with better-auth and loads the learner's state from PostgreSQL through Hyperdrive. Each request gets its own database client.
 3. The service calls the engine with:
-   - the subject graph, compiled content bundled into the Worker and cached per isolate;
+   - the subject graph, read from the subject's manifest and cached per isolate;
    - the learner state;
    - the current time.
 4. The engine returns new state and the events to record. The service writes both in one transaction and returns the response.
 
 A task is carried out as a **session**, one question per request (`StartTask`, then `SubmitAnswer` until a result). The session runner (`libs/api/src/runner.ts`) is a pure state machine over the engine's lesson, review, quiz and diagnostic rules. Its state holds problem references (topic, knowledge point, seed), never problems.
 
-Problem instances are generated on the server from a seed and graded on the server. The answer is never sent to the client before submission.
+Problem instances are generated on the server from a seed and graded on the server, in the subject's shard Worker (§6.1). The answer is never sent to the client before submission.
 
 The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands requests to `src/server/handler.ts`. Pages are rendered on the server without learner data and fetch it in the browser with the Connect client and TanStack Query, so a page never needs the session on the server. The page language is decided on the server (the `ga-locale` cookie, else `Accept-Language`), so the first render is already in it.
 
 ## 6. Deployment
 
 - **Production:**
-  - One Worker (`apps/web`), deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL and an R2 binding for media.
+  - The web Worker (`apps/web`), deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL, an R2 binding for media, and a service binding to each subject's gateway Worker.
+  - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
   - Migrations are applied with drizzle-kit before a deployment.
 - **Development:**
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).
 - **Mobile:** Expo builds (EAS). The app talks to the same API.
+
+### 6.1 Subjects as Workers
+
+Generators are code, so content cannot be loaded as data, and a Worker has a size limit: 3 MB compressed on the free plan, 10 MB on paid plans. All of mathematics compresses to about 6.5 MB, and more subjects are planned. So subjects run in Workers of their own:
+
+```text
+web Worker ──service binding──► subject gateway ──service bindings──► subject shards
+ Registry                        manifest, routing                     generators, checkers
+```
+
+- **The web Worker** holds no content. It binds one gateway per subject (`SUBJECT_MATH`), and `apps/web/src/server/handler.ts` lists the bindings. Adding a subject deploys its Workers and adds one binding.
+- **The gateway** implements `SubjectGateway` (`libs/content`): `listing` (the courses, small), `manifest` (the subject without its code, generated at build time by `subjectManifest`) and the `SubjectSource` methods `problems`, `lesson` and `judge`, which `routeSource` passes to the shard holding the topic.
+- **A shard** holds the definitions of some of a subject's topics and implements `SubjectSource` with `topicSource`. Its definitions are built on the first call, not at startup.
+- **`Registry`** (`libs/api`) reads the listings once per isolate, which is enough to list courses, and loads a subject's manifest when one of its courses is first used. It keeps the two most recently used subjects, because mathematics takes about 45 MB of memory once indexed and an isolate has 128 MB. A course's scope is computed when first used.
+
+Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed.
+
+| Worker | Compressed size (gzip -9) | Module load under Node |
+| :--- | :--- | :--- |
+| `ga-web` | about 2.1 MB | |
+| `ga-math` (gateway) | 0.96 MB | 42 ms |
+| `ga-math-school` | 1.19 MB | 50 ms |
+| `ga-math-algebra` | 1.44 MB | 103 ms |
+| `ga-math-calculus` | 1.87 MB | 107 ms |
+| `ga-math-college` | 1.62 MB | 94 ms |
+| `ga-math-exam` | 0.68 MB | 42 ms |
+
+A shard that nears 3 MB is split in two: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
 
 ## 7. Storage
 

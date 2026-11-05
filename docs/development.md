@@ -46,6 +46,8 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `db` | `libs/db` | Drizzle schema, migrations, data access; `pnpm nx run db:generate -- --name <change>` after editing the schema |
 | `api` | `libs/api` | Connect services and the session runner, tested end to end on PGlite |
 | `web` | `apps/web` | The web app: TanStack Start on Workers, better-auth, the Connect services under `/api` (§5) |
+| `subject-worker` | `libs/subject-worker` | Worker entrypoints for any subject's gateway and shards |
+| `math-workers` | `apps/math-workers` | The gateway and shard Workers of mathematics ([Architecture](architecture.md) §6.1); `pnpm nx run math-workers:generate` writes the manifest to `gen/`, which targets that need it do first |
 | `mobile` | `apps/mobile` | The Expo app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
@@ -73,7 +75,9 @@ pnpm nx run web:dev                   # http://localhost:5173
 
 - `apps/web/cloudflare.config.ts` declares the Worker: the Hyperdrive binding `HYPERDRIVE`, whose `dev.connectionString` points at the container, and the secret `BETTER_AUTH_SECRET`, read from `.dev.vars` locally (git-ignored).
 - `pnpm nx run web:typecheck` first runs `cf workers types`, which writes the `Env` declarations to `.cloudflare/types`.
+- `apps/web/vite.config.ts` runs the subject Workers alongside the web Worker in development, so `web:dev` needs nothing else. Run it through Nx, which generates the manifest first.
 - `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, and set the secret.
+- Deploy subjects first: `pnpm nx run math-workers:deploy` builds the Workers of mathematics and deploys the shards, then the gateway. Then deploy the web Worker.
 
 To try it: create an account, open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The dashboard offers the next tasks; the progress map shows every topic's status and estimated memory.
 

@@ -36,7 +36,7 @@ import { type LearningService, type Task as TaskMessage, TopicStatus, type XpSum
 import { dbKey, userIdKey } from "./context.ts";
 import { sessionMessage, taskMessage, text } from "./convert.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
-import { answerRun, type RunState, startRun } from "./runner.ts";
+import { answerRun, type RunState, runTask, startRun } from "./runner.ts";
 
 /** LearningDeps are the learning service's dependencies besides the request context. */
 export interface LearningDeps {
@@ -77,8 +77,8 @@ function sameTask(req: TaskMessage | undefined, task: Task): boolean {
 export function learningService(deps: LearningDeps): ServiceImpl<typeof LearningService> {
   const { registry } = deps;
 
-  const course = (id: string): CourseEntry => {
-    const c = registry.courses.get(id);
+  const course = async (id: string): Promise<CourseEntry> => {
+    const c = await registry.course(id);
     if (!c) throw new ConnectError(`unknown course ${id}`, Code.NotFound);
     return c;
   };
@@ -86,7 +86,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
   /** enrolled resolves the learner and checks the enrollment. */
   const enrolled = async (ctx: HandlerContext, courseId: string) => {
     const { db, userId } = auth(ctx);
-    const c = course(courseId);
+    const c = await course(courseId);
     const learnerId = await learnerFor(db, userId);
     if (!(await isEnrolled(db, learnerId, courseId))) throw new ConnectError(`not enrolled in ${courseId}`, Code.FailedPrecondition);
     return { db, c, learnerId };
@@ -121,7 +121,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
   };
 
   const view = async (db: Db, learnerId: string, row: SessionRow) => {
-    const c = course(row.courseId);
+    const c = await course(row.courseId);
     const { state: s } = await state(db, learnerId, c);
     return sessionMessage(c, row.id, row.state as RunState, s);
   };
@@ -135,7 +135,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const now = deps.now();
       const list = [];
       for (const e of await enrollments(db, learnerId)) {
-        const c = registry.courses.get(e.courseId);
+        const c = await registry.course(e.courseId);
         if (!c) continue;
         const { state: s } = await state(db, learnerId, c);
         const p = courseProgress(c.planner, s, now);
@@ -146,7 +146,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
 
     async enroll(req, ctx) {
       const { db, userId } = auth(ctx);
-      const c = course(req.courseId);
+      const c = await course(req.courseId);
       await enroll(db, await learnerFor(db, userId), c.subject.def.id, c.id);
       return {};
     },
@@ -162,7 +162,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         courseId: c.id,
         diagnosed: !diagnosticDue(c.planner, s),
         tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
-        ...(active && run && { active: { id: active.id, task: sessionMessage(c, active.id, run, s).task } }),
+        ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
         stats: { learned: p.learned, total: p.total, due: p.due },
         xp: await xp(db, learnerId, now, req.timeZone),
         xpToQuiz: Math.max(0, c.ctx.params.quizEveryXp - (s.xp - s.xpAtLastQuiz)),
@@ -254,8 +254,8 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         if (row.status !== "active") throw new ConnectError("the session is over", Code.FailedPrecondition);
         const run = row.state as RunState;
         if (req.index !== run.asked.length) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
-        const c = course(row.courseId);
-        const answered = answerRun(c, run, req.response, req.skip, now, rng());
+        const c = await course(row.courseId);
+        const answered = await answerRun(c, run, req.response, req.skip, now, rng());
         const ref = run.current!;
         await recordAnswer(tx, {
           sessionId: row.id,

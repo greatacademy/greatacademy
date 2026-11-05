@@ -28,3 +28,6 @@ android/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Generated at build time (apps/math-workers)
+apps/math-workers/gen/
