@@ -16,6 +16,7 @@ import { combinatoricsTopics } from "../topics/combinatorics.ts";
 import { deeperAbstractAlgebraPoints } from "../topics/deeper-abstract-algebra.ts";
 import { deeperDifferentialEquationsPoints } from "../topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "../topics/deeper-discrete-mathematics.ts";
+import { deeperCollegeThirdPoints } from "../topics/deeper-exam-college-third.ts";
 import { deeperGrade4Points } from "../topics/deeper-grade-4.ts";
 import { deeperGrade4MorePoints } from "../topics/deeper-grade-4-more.ts";
 import { deeperGrade7Points } from "../topics/deeper-grade-7.ts";
@@ -149,5 +150,6 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     figureReadingPoints,
     moreFigureReadingPoints,
     collegeFigurePoints,
+    deeperCollegeThirdPoints,
   ],
 );

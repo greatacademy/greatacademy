@@ -28,6 +28,7 @@ import { bivariateStatisticsTopics } from "../topics/bivariate-statistics.ts";
 import { compoundInequalityTopics } from "../topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "../topics/decimals-and-percents.ts";
 import { deeperAlgebraThirdPoints } from "../topics/deeper-algebra-third.ts";
+import { deeperAlgebraThird2Points } from "../topics/deeper-algebra-third-2.ts";
 import { deeperGrade5Points } from "../topics/deeper-grade-5.ts";
 import { deeperGrade5MorePoints } from "../topics/deeper-grade-5-more.ts";
 import { deeperGrade6Points } from "../topics/deeper-grade-6.ts";
@@ -139,5 +140,6 @@ export const algebraShardTopics: readonly TopicDef[] = finishTopics(
     deeperGrade5Points,
     deeperGrade5MorePoints,
     deeperAlgebraThirdPoints,
+    deeperAlgebraThird2Points,
   ],
 );
