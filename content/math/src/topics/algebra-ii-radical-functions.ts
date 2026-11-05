@@ -807,8 +807,8 @@ export const graphTransformationsOfSquareRootFunctions: TopicDef = {
             ...(stretch > 1 ? [rootFn(reflectX ? -1 : 1, `${stretch}(${sqrtInner(s, h)})`, k)] : []),
           ],
           solution: t(
-            `The ${reflectY ? "reflection in the $y$-axis and the " : ""}horizontal shift act on $x$: $${reflectY ? `\\sqrt{-x}` : "\\sqrt{x}"}$ becomes $${root(2, sqrtInner(s, h))}$. The rest act on the output: multiply by $${a}$ and add $${k}$. So $y = ${answer}$.`,
-            `${reflectY ? "关于 $y$ 轴的翻折和" : ""}水平平移作用在 $x$ 上：$${reflectY ? `\\sqrt{-x}` : "\\sqrt{x}"}$ 变成 $${root(2, sqrtInner(s, h))}$。其余的变换作用在输出上：乘以 $${a}$，再加上 $${k}$。所以 $y = ${answer}$。`,
+            `The ${reflectY ? "reflection in the $y$-axis and the horizontal shift act" : "horizontal shift acts"} on $x$: $${reflectY ? `\\sqrt{-x}` : "\\sqrt{x}"}$ becomes $${root(2, sqrtInner(s, h))}$. ${a === 1 ? `The vertical shift adds $${k}$ to the output.` : `The rest act on the output: multiply by $${a}$ and add $${k}$.`} So $y = ${answer}$.`,
+            `${reflectY ? "关于 $y$ 轴的翻折和" : ""}水平平移作用在 $x$ 上：$${reflectY ? `\\sqrt{-x}` : "\\sqrt{x}"}$ 变成 $${root(2, sqrtInner(s, h))}$。${a === 1 ? `竖直平移把输出加上 $${k}$。` : `其余的变换作用在输出上：乘以 $${a}$，再加上 $${k}$。`}所以 $y = ${answer}$。`,
           ),
         });
       },
@@ -954,8 +954,8 @@ export const graphingTheCubeRootFunction: TopicDef = {
       id: "points-on-the-cube-root-graph",
       title: t("Points on the graph", "图象上的点"),
       explanation: t(
-        "The point $(p, q)$ is on the graph of $y = \\sqrt[3]{x}$ exactly when $q^{3} = p$. The graph passes through all four quadrants' neighbours: it runs from the lower left, through the origin, to the upper right, and it is symmetric about the origin, because $\\sqrt[3]{-x} = -\\sqrt[3]{x}$. So $(-27, -3)$ is on the graph, but $(-27, 3)$ and $(9, 3)$ are not.",
-        "点 $(p, q)$ 在 $y = \\sqrt[3]{x}$ 的图象上当且仅当 $q^{3} = p$。图象从左下方经过原点延伸到右上方，并且关于原点对称，因为 $\\sqrt[3]{-x} = -\\sqrt[3]{x}$。所以 $(-27, -3)$ 在图象上，而 $(-27, 3)$ 和 $(9, 3)$ 不在。",
+        "The point $(p, q)$ is on the graph of $y = \\sqrt[3]{x}$ exactly when $q^{3} = p$. The graph lies in quadrants I and III: it runs from the lower left, through the origin, to the upper right, and it is symmetric about the origin, because $\\sqrt[3]{-x} = -\\sqrt[3]{x}$. So $(-27, -3)$ is on the graph, but $(-27, 3)$ and $(9, 3)$ are not.",
+        "点 $(p, q)$ 在 $y = \\sqrt[3]{x}$ 的图象上当且仅当 $q^{3} = p$。图象位于第一、第三象限：从左下方经过原点延伸到右上方，并且关于原点对称，因为 $\\sqrt[3]{-x} = -\\sqrt[3]{x}$。所以 $(-27, -3)$ 在图象上，而 $(-27, 3)$ 和 $(9, 3)$ 不在。",
       ),
       generate(rng) {
         const n = rng.nonZero(-6, 6);

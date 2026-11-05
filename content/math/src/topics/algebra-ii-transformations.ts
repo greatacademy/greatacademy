@@ -320,6 +320,13 @@ const transformPoly = (f: QPoly, g: Tf): QPoly => pAdd(pScale(pCompose(f, [g.b.m
 
 const tfPoly = (f: QPoly, g: Tf) => pLatex(transformPoly(f, g));
 
+/** substituted writes the quadratic f with a binomial in place of x: "(x + 4)^{2} + 4(x + 4) + 6". */
+function substituted(f: QPoly, inner: string): string {
+  const [c, b, a] = f as [Q, Q, Q];
+  const middle = b.sign() < 0 ? ` - ${front(b.neg())}` : ` + ${front(b)}`;
+  return `${front(a)}(${inner})^{2}${middle}(${inner})${plus(c)}`;
+}
+
 /** randomQuadratic draws ax² + bx + c with small integer coefficients, b and c nonzero. */
 function randomQuadratic(rng: Rng): QPoly {
   return [rng.nonZero(-9, 9), rng.nonZero(-6, 6), rng.pick([1, 1, -1, 2, -2])].map((n) => Q.of(n));
@@ -505,8 +512,8 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
           prefix: "g(x) =",
           wrong: [tfPoly(f, tf({ h: -h })), tfPoly(f, tf({ k: h })), tfPoly(f, tf({ k: -h }))],
           solution: t(
-            `Replace $x$ with $(${shifted(h)})$:${steps(`g(x) = f(${shifted(h)}) = ${answer}`)}`,
-            `把 $x$ 换成 $(${shifted(h)})$：${steps(`g(x) = f(${shifted(h)}) = ${answer}`)}`,
+            `Replace $x$ with $(${shifted(h)})$ and expand:${steps(`g(x) = f(${shifted(h)}) = ${substituted(f, shifted(h))}`, `= ${answer}`)}`,
+            `把 $x$ 换成 $(${shifted(h)})$ 并展开：${steps(`g(x) = f(${shifted(h)}) = ${substituted(f, shifted(h))}`, `= ${answer}`)}`,
           ),
         });
       },
@@ -844,8 +851,8 @@ export const combiningGraphTransformationsTwoOperations: TopicDef = {
             { ...g, h: g.h.mul(g.b) },
           ],
           t(
-            `The $x$-coordinate: $${p[0].toLatex()}${g.b.eq(Q.one) ? "" : ` \\div ${paren(g.b)}`}${plus(g.h)} = ${x.toLatex()}$. The $y$-coordinate: $${g.a.eq(Q.one) ? "" : `${g.a.toLatex()} \\cdot `}${paren(p[1])}${plus(g.k)} = ${y.toLatex()}$. The point is $${pt(x, y)}$.`,
-            `横坐标：$${p[0].toLatex()}${g.b.eq(Q.one) ? "" : ` \\div ${paren(g.b)}`}${plus(g.h)} = ${x.toLatex()}$。纵坐标：$${g.a.eq(Q.one) ? "" : `${g.a.toLatex()} \\cdot `}${paren(p[1])}${plus(g.k)} = ${y.toLatex()}$。所以这个点是 $${pt(x, y)}$。`,
+            `${g.b.eq(Q.one) && g.h.isZero() ? `The $x$-coordinate does not change: $${x.toLatex()}$.` : `The $x$-coordinate: $${p[0].toLatex()}${g.b.eq(Q.one) ? "" : ` \\div ${paren(g.b)}`}${plus(g.h)} = ${x.toLatex()}$.`} ${g.a.eq(Q.one) && g.k.isZero() ? `The $y$-coordinate does not change: $${y.toLatex()}$.` : `The $y$-coordinate: $${g.a.eq(Q.one) ? p[1].toLatex() : `${g.a.toLatex()} \\cdot ${paren(p[1])}`}${plus(g.k)} = ${y.toLatex()}$.`} The point is $${pt(x, y)}$.`,
+            `${g.b.eq(Q.one) && g.h.isZero() ? `横坐标不变：$${x.toLatex()}$。` : `横坐标：$${p[0].toLatex()}${g.b.eq(Q.one) ? "" : ` \\div ${paren(g.b)}`}${plus(g.h)} = ${x.toLatex()}$。`}${g.a.eq(Q.one) && g.k.isZero() ? `纵坐标不变：$${y.toLatex()}$。` : `纵坐标：$${g.a.eq(Q.one) ? p[1].toLatex() : `${g.a.toLatex()} \\cdot ${paren(p[1])}`}${plus(g.k)} = ${y.toLatex()}$。`}所以这个点是 $${pt(x, y)}$。`,
           ),
         );
       },
@@ -877,8 +884,8 @@ export const combiningGraphTransformationsTwoOperations: TopicDef = {
           ),
           candidates.map((c) => same(`$g(x) = ${tfLatex(c)}$`)),
           t(
-            `Apply the operations in order, starting from $f(x)$: the result is $g(x) = ${tfLatex(g)}$.`,
-            `从 $f(x)$ 出发按顺序进行变换，结果是 $g(x) = ${tfLatex(g)}$。`,
+            `Apply the operations in order, starting from $f(x)$. The first gives $y = ${tfLatex(compose(ops.slice(0, 1)))}$, and the second acts on that formula, so $g(x) = ${tfLatex(g)}$.`,
+            `从 $f(x)$ 出发按顺序进行变换。第一步得到 $y = ${tfLatex(compose(ops.slice(0, 1)))}$，第二步作用在这个式子上，所以 $g(x) = ${tfLatex(g)}$。`,
           ),
         );
       },
@@ -1000,8 +1007,8 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
             { ...g, h: g.h.mul(g.b) },
           ],
           t(
-            `$$\\left(\\frac{${p[0].toLatex()}}{${g.b.toLatex()}}${plus(g.h)},\\ ${g.a.toLatex()} \\cdot ${paren(p[1])}${plus(g.k)}\\right) = ${pt(x, y)}$$`,
-            `$$\\left(\\frac{${p[0].toLatex()}}{${g.b.toLatex()}}${plus(g.h)},\\ ${g.a.toLatex()} \\cdot ${paren(p[1])}${plus(g.k)}\\right) = ${pt(x, y)}$$`,
+            `$$\\left(${g.b.eq(Q.one) ? p[0].toLatex() : `\\frac{${p[0].toLatex()}}{${g.b.toLatex()}}`}${plus(g.h)},\\ ${g.a.eq(Q.one) ? p[1].toLatex() : `${g.a.toLatex()} \\cdot ${paren(p[1])}`}${plus(g.k)}\\right) = ${pt(x, y)}$$`,
+            `$$\\left(${g.b.eq(Q.one) ? p[0].toLatex() : `\\frac{${p[0].toLatex()}}{${g.b.toLatex()}}`}${plus(g.h)},\\ ${g.a.eq(Q.one) ? p[1].toLatex() : `${g.a.toLatex()} \\cdot ${paren(p[1])}`}${plus(g.k)}\\right) = ${pt(x, y)}$$`,
           ),
         );
       },
@@ -1127,8 +1134,18 @@ export const constructingFunctionsUsingTransformations: TopicDef = {
             parentLatex(p, g.a, g.h, naive.k.eq(g.k) ? g.k.mul(g.a) : naive.k),
           ],
           solution: t(
-            `Apply the operations in order: the $x$-shift gives $x${plus(g.h.neg())}$ inside, and the vertical operations give the factor $${g.a.toLatex()}$ and the constant $${g.k.toLatex()}$. So $y = ${answer}$.`,
-            `按顺序进行变换：水平平移使函数内部变成 $x${plus(g.h.neg())}$，竖直方向的变换得到系数 $${g.a.toLatex()}$ 和常数 $${g.k.toLatex()}$。所以 $y = ${answer}$。`,
+            `Apply the operations in order; a stretch multiplies the whole current formula, and a shift of $x$ changes only the input:${steps(
+              ...ops.map((_, i) => {
+                const s = compose(ops.slice(0, i + 1));
+                return `y = ${parentLatex(p, s.a, s.h, s.k)}`;
+              }),
+            )}`,
+            `按顺序进行变换；伸缩乘以当前的整个式子，水平平移只改变自变量：${steps(
+              ...ops.map((_, i) => {
+                const s = compose(ops.slice(0, i + 1));
+                return `y = ${parentLatex(p, s.a, s.h, s.k)}`;
+              }),
+            )}`,
           ),
         });
       },
@@ -1159,8 +1176,8 @@ export const constructingFunctionsUsingTransformations: TopicDef = {
             tfPoly(f, { ...g, a: Q.one }),
           ],
           solution: t(
-            `In function notation, $g(x) = ${tfLatex(g)}$. Substitute and simplify:${steps(`g(x) = ${answer}`)}`,
-            `用函数记号表示，$g(x) = ${tfLatex(g)}$。代入并化简：${steps(`g(x) = ${answer}`)}`,
+            `In function notation, $g(x) = ${tfLatex(g)}$. Substitute and simplify:${steps(`g(x) = ${front(g.a)}\\left(${substituted(f, shifted(g.h))}\\right)${plus(g.k)}`, `= ${answer}`)}`,
+            `用函数记号表示，$g(x) = ${tfLatex(g)}$。代入并化简：${steps(`g(x) = ${front(g.a)}\\left(${substituted(f, shifted(g.h))}\\right)${plus(g.k)}`, `= ${answer}`)}`,
           ),
         });
       },
@@ -1486,6 +1503,8 @@ export const combiningReflectionsWithOtherGraphTransformations: TopicDef = {
         const flipA = { ...g, a: g.a.neg() };
         const flipB = { ...g, b: g.b.neg() };
         const write = (w: Tf) => same(`$g(x) = ${linLatex(w.a, w.b, w.b.mul(w.h).neg(), w.k)}$`);
+        const g1 = compose(ops.slice(0, 1));
+        const first = linLatex(g1.a, g1.b, g1.b.mul(g1.h).neg(), g1.k);
         return shuffled(
           rng,
           t(
@@ -1494,8 +1513,8 @@ export const combiningReflectionsWithOtherGraphTransformations: TopicDef = {
           ),
           [g, rev, { ...g, h: g.h.neg(), k: g.k.neg() }, flipA, flipB, { ...rev, h: rev.h.neg(), k: rev.k.neg() }].map(write),
           t(
-            `Apply the operations in order, starting from $f(x)$: the result is $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$.`,
-            `从 $f(x)$ 出发按顺序进行变换，结果是 $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$。`,
+            `Apply the operations in order, starting from $f(x)$. The first gives $y = ${first}$, and the second acts on that formula, so $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$.`,
+            `从 $f(x)$ 出发按顺序进行变换。第一步得到 $y = ${first}$，第二步作用在这个式子上，所以 $g(x) = ${linLatex(g.a, g.b, g.b.mul(g.h).neg(), g.k)}$。`,
           ),
         );
       },

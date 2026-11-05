@@ -433,7 +433,7 @@ export const problemSolvingWithInscribedAngles: TopicDef = {
             unit: "°",
             wrong,
             solution: t(
-              `$\\angle ${vertex}$ intercepts the opposite arc $${arcTex(arcName)}$.${third}It is half of that arc:${steps(`\\angle ${vertex} = \\frac{${arcValue}^\\circ}{2} = ${angle}^\\circ`)}`,
+              `$\\angle ${vertex}$ intercepts the opposite arc $${arcTex(arcName)}$. ${third}It is half of that arc:${steps(`\\angle ${vertex} = \\frac{${arcValue}^\\circ}{2} = ${angle}^\\circ`)}`,
               `$\\angle ${vertex}$ 对着对面的弧 $${arcTex(arcName)}$。${third}它是这段弧的一半：${steps(`\\angle ${vertex} = \\frac{${arcValue}^\\circ}{2} = ${angle}^\\circ`)}`,
             ),
           }),
@@ -691,8 +691,8 @@ export const thalesTheorem: TopicDef = {
             unit: u,
             wrong: [h, q(l1 + l2, 2), l1 + l2],
             solution: t(
-              `The hypotenuse $AB$ is a diameter. By the Pythagorean theorem:${steps(`AB = \\sqrt{${l1}^2 + ${l2}^2} = \\sqrt{${h * h}} = ${h}`, `r = \\frac{${h}}{2} = ${tex(half(h), u)}`)}`,
-              `斜边 $AB$ 是直径。由勾股定理：${steps(`AB = \\sqrt{${l1}^2 + ${l2}^2} = \\sqrt{${h * h}} = ${h}`, `r = \\frac{${h}}{2} = ${tex(half(h), u)}`)}`,
+              `The hypotenuse $AB$ is a diameter. By the Pythagorean theorem:${steps(`AB = \\sqrt{${l1}^2 + ${l2}^2} = \\sqrt{${h * h}} = ${h}`, h % 2 === 0 ? `r = \\frac{${h}}{2} = ${tex(half(h), u)}` : `r = ${tex(half(h), u)}`)}`,
+              `斜边 $AB$ 是直径。由勾股定理：${steps(`AB = \\sqrt{${l1}^2 + ${l2}^2} = \\sqrt{${h * h}} = ${h}`, h % 2 === 0 ? `r = \\frac{${h}}{2} = ${tex(half(h), u)}` : `r = ${tex(half(h), u)}`)}`,
             ),
           }),
           figure: figure(
@@ -1335,7 +1335,9 @@ export const tangentLinesToCircles: TopicDef = {
         const k = rng.int(1, 3);
         const [r, tl] = rng.bool() ? [p0 * k, q0 * k] : [q0 * k, p0 * k];
         const yes = rng.bool();
-        const h = yes ? h0 * k : h0 * k + rng.pick([-2, -1, 1, 2]);
+        const off = rng.pick([-2, -1, 1, 2]);
+        // P must stay outside the circle, so OP stays longer than the radius.
+        const h = yes ? h0 * k : h0 * k + off > r ? h0 * k + off : h0 * k + Math.abs(off);
         const u = pickUnit(rng);
         const sum = r * r + tl * tl;
         return choiceProblem({
@@ -2483,7 +2485,7 @@ export const circleSimilarity: TopicDef = {
             `圆 $A$ 的面积是 $${tex(areaA, u)}^2$，圆 $B$ 的面积是 $${tex(areaB, u)}^2$。求把圆 $A$ 变为与圆 $B$ 全等的圆的位似的比例因子。`,
           ),
           answer: q(a, b),
-          wrong: [q(a * a, b * b), q(b, a), q(areaB - areaA, 1)],
+          wrong: [q(a * a, b * b), q(b, a), q(Math.abs(areaB - areaA), 1)],
           solution: t(
             `The ratio of the areas is the square of the scale factor:${steps(`k^2 = \\frac{${areaB}}{${areaA}} = ${ratioTex(a * a, b * b)}`, `k = \\sqrt{${ratioTex(a * a, b * b)}} = ${ratioTex(a, b)}`)}`,
             `面积之比是比例因子的平方：${steps(`k^2 = \\frac{${areaB}}{${areaA}} = ${ratioTex(a * a, b * b)}`, `k = \\sqrt{${ratioTex(a * a, b * b)}} = ${ratioTex(a, b)}`)}`,
@@ -2608,8 +2610,8 @@ export const provingCircleSimilarity: TopicDef = {
           options: shuffled,
           correct: shuffled.indexOf(options[0]!),
           solution: t(
-            `The translation must move the center $(${A.h}, ${A.k})$ onto $${centerB}$: $${ruleTex(a, b)}$. The dilation must keep that center in place, so its center is $${centerB}$, and it must take the radius $${A.r}$ to $${B.r}$, so its scale factor is $\\frac{${B.r}}{${A.r}} = ${k}$.`,
-            `平移要把圆心 $(${A.h}, ${A.k})$ 移到 $${centerB}$：$${ruleTex(a, b)}$。位似要使这个圆心不动，所以位似中心是 $${centerB}$；还要把半径 $${A.r}$ 变为 $${B.r}$，所以比例因子是 $\\frac{${B.r}}{${A.r}} = ${k}$。`,
+            `The translation must move the center $(${A.h}, ${A.k})$ onto $${centerB}$: $${ruleTex(a, b)}$. The dilation must keep that center in place, so its center is $${centerB}$, and it must take the radius $${A.r}$ to $${B.r}$, so its scale factor is $${k === `\\frac{${B.r}}{${A.r}}` ? k : `\\frac{${B.r}}{${A.r}} = ${k}`}$.`,
+            `平移要把圆心 $(${A.h}, ${A.k})$ 移到 $${centerB}$：$${ruleTex(a, b)}$。位似要使这个圆心不动，所以位似中心是 $${centerB}$；还要把半径 $${A.r}$ 变为 $${B.r}$，所以比例因子是 $${k === `\\frac{${B.r}}{${A.r}}` ? k : `\\frac{${B.r}}{${A.r}} = ${k}`}$。`,
           ),
         });
       },
@@ -2640,8 +2642,8 @@ export const provingCircleSimilarity: TopicDef = {
               [B.h + A.h, B.k + A.k],
             ],
             solution: t(
-              `The translation moves the center of $A$ onto the center of $B$:${steps(`a = ${B.h} - (${A.h}) = ${a}`, `b = ${B.k} - (${A.k}) = ${b}`)}`,
-              `平移把圆 $A$ 的圆心移到圆 $B$ 的圆心：${steps(`a = ${B.h} - (${A.h}) = ${a}`, `b = ${B.k} - (${A.k}) = ${b}`)}`,
+              `The translation moves the center of $A$ onto the center of $B$:${steps(`a = ${B.h} - ${A.h < 0 ? `(${A.h})` : A.h} = ${a}`, `b = ${B.k} - ${A.k < 0 ? `(${A.k})` : A.k} = ${b}`)}`,
+              `平移把圆 $A$ 的圆心移到圆 $B$ 的圆心：${steps(`a = ${B.h} - ${A.h < 0 ? `(${A.h})` : A.h} = ${a}`, `b = ${B.k} - ${A.k < 0 ? `(${A.k})` : A.k} = ${b}`)}`,
             ),
           });
         }

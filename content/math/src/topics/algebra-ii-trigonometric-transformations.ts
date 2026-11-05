@@ -482,23 +482,26 @@ function conditionText(w: Wave, target: Target): Text {
   const s = targetLevel(w, target);
   const f = `\\${w.f} \\theta`;
   const D = Q.of(w.d);
+  const aTex = w.a.eq(Q.one) ? "" : w.a.eq(Q.one.neg()) ? "-" : w.a.toLatex();
+  const noteEn = w.a.eq(Q.one) ? "" : ` (the coefficient $${w.a.toLatex()}$ is ${w.a.sign() > 0 ? "positive" : "negative"})`;
+  const noteZh = w.a.eq(Q.one) ? "" : `（系数 $${w.a.toLatex()}$ 为${w.a.sign() > 0 ? "正" : "负"}）`;
   switch (target) {
     case "asymptote":
       return t(`The graph has a vertical asymptote where $${f}$ is not defined`, `图象在 $${f}$ 无定义处有竖直渐近线`);
     case "max":
       return t(
-        `The maximum $${D.add(amp(w)).toLatex()}$ occurs where $${f} = ${levelTex(s ?? 0)}$ (the coefficient $${w.a.toLatex()}$ is ${w.a.sign() > 0 ? "positive" : "negative"})`,
-        `最大值 $${D.add(amp(w)).toLatex()}$ 在 $${f} = ${levelTex(s ?? 0)}$ 处取得（系数 $${w.a.toLatex()}$ 为${w.a.sign() > 0 ? "正" : "负"}）`,
+        `The maximum $${D.add(amp(w)).toLatex()}$ occurs where $${f} = ${levelTex(s ?? 0)}$${noteEn}`,
+        `最大值 $${D.add(amp(w)).toLatex()}$ 在 $${f} = ${levelTex(s ?? 0)}$ 处取得${noteZh}`,
       );
     case "min":
       return t(
-        `The minimum $${D.sub(amp(w)).toLatex()}$ occurs where $${f} = ${levelTex(s ?? 0)}$ (the coefficient $${w.a.toLatex()}$ is ${w.a.sign() > 0 ? "positive" : "negative"})`,
-        `最小值 $${D.sub(amp(w)).toLatex()}$ 在 $${f} = ${levelTex(s ?? 0)}$ 处取得（系数 $${w.a.toLatex()}$ 为${w.a.sign() > 0 ? "正" : "负"}）`,
+        `The minimum $${D.sub(amp(w)).toLatex()}$ occurs where $${f} = ${levelTex(s ?? 0)}$${noteEn}`,
+        `最小值 $${D.sub(amp(w)).toLatex()}$ 在 $${f} = ${levelTex(s ?? 0)}$ 处取得${noteZh}`,
       );
     case "zero":
       return t(
-        `Setting $y = 0$ gives $${w.a.toLatex()}${f}${signed(w.d)} = 0$, so $${f} = ${levelTex(s ?? 0)}$`,
-        `令 $y = 0$ 得 $${w.a.toLatex()}${f}${signed(w.d)} = 0$，所以 $${f} = ${levelTex(s ?? 0)}$`,
+        `Setting $y = 0$ gives $${aTex}${f}${signed(w.d)} = 0$, so $${f} = ${levelTex(s ?? 0)}$`,
+        `令 $y = 0$ 得 $${aTex}${f}${signed(w.d)} = 0$，所以 $${f} = ${levelTex(s ?? 0)}$`,
       );
     case "localMin":
       return t(
@@ -533,12 +536,21 @@ function firstXProblem(w: Wave, target: Target, expanded = false, extraWrong: re
     targetPrompts[target](waveTex(w, expanded)),
     ans,
     join(
-      both(
-        `Let $\\theta = ${arg}$. ${cond.en}, that is, for integers $k$,`,
-        `令 $\\theta = ${arg}$。${cond["zh-CN"]}，即对整数 $k$，`,
-        thetas,
-      ),
-      both(`Solving $${arg} = \\theta$ for $x$ gives`, `由 $${arg} = \\theta$ 解出 $x$ 得`, xs),
+      // With the plain input x there is nothing to substitute or solve.
+      arg === "x"
+        ? both(
+            `${cond.en.replaceAll("\\theta", "x")}, that is, for integers $k$,`,
+            `${cond["zh-CN"].replaceAll("\\theta", "x")}，即对整数 $k$，`,
+            xs,
+          )
+        : join(
+            both(
+              `Let $\\theta = ${arg}$. ${cond.en}, that is, for integers $k$,`,
+              `令 $\\theta = ${arg}$。${cond["zh-CN"]}，即对整数 $k$，`,
+              thetas,
+            ),
+            both(`Solving $${arg} = \\theta$ for $x$ gives`, `由 $${arg} = \\theta$ 解出 $x$ 得`, xs),
+          ),
       t(`The smallest positive of these is $x = ${piTex(ans)}$.`, `其中最小的正数是 $x = ${piTex(ans)}$。`),
     ),
     wrong,

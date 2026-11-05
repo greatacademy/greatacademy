@@ -368,7 +368,7 @@ export const findingTrigonometricRatiosOfQuadrantalAngles: TopicDef = {
           const [f1, f2] = [rng.pick<Fn>(["sin", "cos"]), rng.pick<Fn>(["sin", "cos"])];
           const [a, b] = [rng.nonZero(-6, 6), rng.nonZero(-6, 6)];
           const [v1, v2] = [exact(f1, d1)![0], exact(f2, d2)![0]];
-          if (v1.isZero() && v2.isZero()) continue;
+          if ((v1.isZero() && v2.isZero()) || (f1 === f2 && d1 === d2)) continue;
           const [c1, c2] = [call(f1, angTex(d1, inRad)), call(f2, angTex(d2, inRad))];
           const expr = `${a === 1 ? "" : a === -1 ? "-" : a}${c1} ${b > 0 ? "+" : "-"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}${c2}`;
           const answer = v1.mul(Q.of(a)).add(v2.mul(Q.of(b)));
@@ -1368,7 +1368,7 @@ function rangeQuestion(rng: Rng, f: Fn): Problem {
     options: yesNo,
     correct: want ? 0 : 1,
     solution: t(
-      `The range of $y = \\${f} x$ is $${rangeTex}$. The number $${sTex(v)}$${sq}${cmpEn} is ${want ? "" : "not "}in the range, so the answer is ${want ? "yes" : "no"}.`,
+      `The range of $y = \\${f} x$ is $${rangeTex}$. The number $${sTex(v)}$${sq}${cmpEn}${cmpEn === "" ? "" : ","} is ${want ? "" : "not "}in the range, so the answer is ${want ? "yes" : "no"}.`,
       `$y = \\${f} x$ 的值域是 $${rangeTex}$。数 $${sTex(v)}$${sqZh}${cmpZh}，${want ? "在" : "不在"}值域内，所以答案是${want ? "是" : "否"}。`,
     ),
   });
@@ -1410,8 +1410,8 @@ function domainQuestion(rng: Rng, f: Fn): Problem {
           `$\\${f} x$ 只在 $${z} = 0$ 处无定义，即 $x = ${form}$。这里 $${z.replace("x", arg(x))} = ${zv} \\ne 0$，所以 $\\${f} ${arg(x)}$ 有定义。`,
         )
       : t(
-          `The function $\\${f} x$ is not defined where $${z} = 0$, at $x = ${form}$. Here $${x} = ${at()}$ with $k = ${k}$, so $${z.replace("x", arg(x))} = 0$ and $\\${f} ${arg(x)}$ is not defined.`,
-          `$\\${f} x$ 在 $${z} = 0$ 处无定义，即 $x = ${form}$。这里 $${x} = ${at()}$，$k = ${k}$，所以 $${z.replace("x", arg(x))} = 0$，$\\${f} ${arg(x)}$ 无定义。`,
+          `The function $\\${f} x$ is not defined where $${z} = 0$, at $x = ${form}$. Here $x = ${asym.off === 0 ? x : `${x} = ${at()}`}$ with $k = ${k}$, so $${z.replace("x", arg(x))} = 0$ and $\\${f} ${arg(x)}$ is not defined.`,
+          `$\\${f} x$ 在 $${z} = 0$ 处无定义，即 $x = ${form}$。这里 $x = ${asym.off === 0 ? x : `${x} = ${at()}`}$，$k = ${k}$，所以 $${z.replace("x", arg(x))} = 0$，$\\${f} ${arg(x)}$ 无定义。`,
         ),
   });
 }

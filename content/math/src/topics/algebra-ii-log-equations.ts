@@ -625,8 +625,8 @@ export const solvingLogarithmicEquationsByCombiningTheLawsOfLogarithms: TopicDef
             values: [sol(r)],
             wrong: [[sol(r), sol(s)], [sol(s)]],
             solution: t(
-              `Use the power and quotient rules, then convert:${steps(`${B.of(`\\frac{x^{2}}{${arg}}`)} = ${k}`, `x^{2} = ${P}(${arg})`, `${poly([1, "x^{2}"], [-P * c, "x"], [-P * a, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}So $x = ${r}$ or $x = ${s}$. $x = ${s}$ makes $${B.of("x")}$ not defined, so the solution is $x = ${r}$.`,
-              `用幂和商的法则合并，再化为指数式：${steps(`${B.of(`\\frac{x^{2}}{${arg}}`)} = ${k}`, `x^{2} = ${P}(${arg})`, `${poly([1, "x^{2}"], [-P * c, "x"], [-P * a, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}所以 $x = ${r}$ 或 $x = ${s}$。$x = ${s}$ 使 $${B.of("x")}$ 无意义，所以方程的解是 $x = ${r}$。`,
+              `Use the power and quotient rules, then convert:${steps(`${B.of(`\\frac{x^{2}}{${arg}}`)} = ${k}`, `x^{2} = ${P === 1 ? arg : `${P}(${arg})`}`, `${poly([1, "x^{2}"], [-P * c, "x"], [-P * a, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}So $x = ${r}$ or $x = ${s}$. $x = ${s}$ makes $${B.of("x")}$ not defined, so the solution is $x = ${r}$.`,
+              `用幂和商的法则合并，再化为指数式：${steps(`${B.of(`\\frac{x^{2}}{${arg}}`)} = ${k}`, `x^{2} = ${P === 1 ? arg : `${P}(${arg})`}`, `${poly([1, "x^{2}"], [-P * c, "x"], [-P * a, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}所以 $x = ${r}$ 或 $x = ${s}$。$x = ${s}$ 使 $${B.of("x")}$ 无意义，所以方程的解是 $x = ${r}$。`,
             ),
           });
         }
@@ -708,7 +708,7 @@ export const solvingLogarithmicEquationsWithLogarithmsOnBothSides: TopicDef = {
             values: values.map(sol),
             wrong: [[sol(r), sol(s)], [], rejected.map(sol)],
             solution: t(
-              `Combine the left side with the product rule and set the arguments equal:${steps(`x(${linear(1, a)}) = ${linear(c, d)}`, quad, orList([r, s]))}${rejected.length ? `$x = ${rejected[0]}$ makes an argument of the original equation negative or $0$, so it is rejected. ` : "Both candidates make every argument positive. "}The solution set is $${values.map((v) => `x = ${v}`).join(", ")}$.`,
+              `Combine the left side with the product rule and set the arguments equal:${steps(`x(${linear(1, a)}) = ${linear(c, d)}`, quad, orList([r, s]))}${rejected.length ? `$x = ${rejected[0]}$ makes an argument of the original equation negative or $0$, so it is rejected. ` : "Both candidates make every argument positive. "}${values.length === 1 ? "The solution is" : "The solutions are"} $${values.map((v) => `x = ${v}`).join(", ")}$.`,
               `用积的法则合并左边，再令真数相等：${steps(`x(${linear(1, a)}) = ${linear(c, d)}`, quad, orList([r, s]))}${rejected.length ? `$x = ${rejected[0]}$ 使原方程的某个真数为负数或 $0$，应舍去。` : "两个候选解都使所有真数为正。"}方程的解是 $${values.map((v) => `x = ${v}`).join(", ")}$。`,
             ),
           });
@@ -737,7 +737,7 @@ export const solvingLogarithmicEquationsWithLogarithmsOnBothSides: TopicDef = {
             values: values.map(sol),
             wrong: [[sol(r), sol(s)], [sol(r)], [sol(-r), sol(-s)]],
             solution: t(
-              `Use the power rule and set the arguments equal:${steps(`x^{2} = ${linear(p, q)}`, `${poly([1, "x^{2}"], [-p, "x"], [-q, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}${s < 0 ? `$x = ${s}$ is rejected, because $${L("x")}$ needs $x > 0$. ` : `Both values are positive, and then $${linear(p, q)} = x^{2}$ is positive too. `}The solution set is $${values.map((v) => `x = ${v}`).join(", ")}$.`,
+              `Use the power rule and set the arguments equal:${steps(`x^{2} = ${linear(p, q)}`, `${poly([1, "x^{2}"], [-p, "x"], [-q, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}${s < 0 ? `$x = ${s}$ is rejected, because $${L("x")}$ needs $x > 0$. ` : `Both values are positive, and then $${linear(p, q)} = x^{2}$ is positive too. `}${values.length === 1 ? "The solution is" : "The solutions are"} $${values.map((v) => `x = ${v}`).join(", ")}$.`,
               `用幂的法则，再令真数相等：${steps(`x^{2} = ${linear(p, q)}`, `${poly([1, "x^{2}"], [-p, "x"], [-q, ""])} = 0`, `(${linear(1, -r)})(${linear(1, -s)}) = 0`)}${s < 0 ? `$${L("x")}$ 要求 $x > 0$，所以舍去 $x = ${s}$。` : `两个值都是正数，此时 $${linear(p, q)} = x^{2}$ 也是正数。`}方程的解是 $${values.map((v) => `x = ${v}`).join(", ")}$。`,
             ),
           });
@@ -833,7 +833,7 @@ export const solvingLogarithmicEquationsUsingTheZeroProductProperty: TopicDef = 
             `Let $u = ${B.of("x")}$, factor, then go back to $x$:`,
             `设 $u = ${B.of("x")}$，因式分解，再回到 $x$：`,
             `${poly([1, "u^{2}"], [-S, "u"], [P, ""])} = 0`,
-            `(${linear(1, -u1, "u")})(${linear(1, -u2, "u")}) = 0`,
+            `${u1 === 0 ? `u(${linear(1, -u2, "u")})` : u2 === 0 ? `u(${linear(1, -u1, "u")})` : `(${linear(1, -u1, "u")})(${linear(1, -u2, "u")})`} = 0`,
             `${B.of("x")} = ${u1} \\quad \\text{or} \\quad ${B.of("x")} = ${u2}`,
             orList([x1, x2]),
           ),
@@ -919,10 +919,10 @@ function expT(a: Coefficient, b: Q, h: number, k: Coefficient, v = "x"): string 
 const expFn = (a: number, b: Q, h: number, k: number) => (x: number) => a * b.toNumber() ** (x - h) + k;
 
 /** units writes "1 unit" or "3 units". */
-const unitsEn = (n: number) => `${Math.abs(n)} ${Math.abs(n) === 1 ? "unit" : "units"}`;
+const unitsEn = (n: number) => `$${Math.abs(n)}$ ${Math.abs(n) === 1 ? "unit" : "units"}`;
 
-/** shiftText describes a vertical translation: "4 units up", "向上平移 4 个单位". */
-const vShift = (k: number) => t(`${unitsEn(k)} ${k > 0 ? "up" : "down"}`, `向${k > 0 ? "上" : "下"}平移 ${Math.abs(k)} 个单位`);
+/** shiftText describes a vertical translation: "$4$ units up", "向上平移 $4$ 个单位". */
+const vShift = (k: number) => t(`${unitsEn(k)} ${k > 0 ? "up" : "down"}`, `向${k > 0 ? "上" : "下"}平移 $${Math.abs(k)}$ 个单位`);
 
 export const verticalTranslationsOfExponentialGrowthFunctions: TopicDef = {
   id: "vertical-translations-of-exponential-growth-functions",
@@ -1540,11 +1540,11 @@ function describe(a: number, h: number, k: number): Text {
   const zh: string[] = [];
   if (h !== 0) {
     en.push(`shift it ${unitsEn(h)} ${h > 0 ? "right" : "left"}`);
-    zh.push(`向${h > 0 ? "右" : "左"}平移 ${Math.abs(h)} 个单位`);
+    zh.push(`向${h > 0 ? "右" : "左"}平移 $${Math.abs(h)}$ 个单位`);
   }
   if (Math.abs(a) !== 1) {
-    en.push(`stretch it vertically by a factor of ${Math.abs(a)}`);
-    zh.push(`竖直方向伸长为原来的 ${Math.abs(a)} 倍`);
+    en.push(`stretch it vertically by a factor of $${Math.abs(a)}$`);
+    zh.push(`竖直方向伸长为原来的 $${Math.abs(a)}$ 倍`);
   }
   if (a < 0) {
     en.push("reflect it across the $x$-axis");
@@ -1552,7 +1552,7 @@ function describe(a: number, h: number, k: number): Text {
   }
   if (k !== 0) {
     en.push(`shift it ${unitsEn(k)} ${k > 0 ? "up" : "down"}`);
-    zh.push(`向${k > 0 ? "上" : "下"}平移 ${Math.abs(k)} 个单位`);
+    zh.push(`向${k > 0 ? "上" : "下"}平移 $${Math.abs(k)}$ 个单位`);
   }
   const first = en.join(", then ");
   return t(`${first.charAt(0).toUpperCase()}${first.slice(1)}.`, `${zh.join("，再")}。`);
@@ -1835,8 +1835,8 @@ export const propertiesOfTransformedExponentialFunctions: TopicDef = {
           options: [t("Increasing", "递增"), t("Decreasing", "递减")],
           correct: increasing ? 0 : 1,
           solution: t(
-            `The base $${num(b)}$ is ${growth ? "greater than $1$" : "between $0$ and $1$"}, so $${num(b)}^{x}$ ${growth ? "increases" : "decreases"}. ${a < 0 ? "The negative factor reverses this, so" : "The factor is positive, so"} $f$ is ${increasing ? "increasing" : "decreasing"}.`,
-            `底数 $${num(b)}$ ${growth ? "大于 $1$" : "在 $0$ 和 $1$ 之间"}，所以 $${num(b)}^{x}$ ${growth ? "递增" : "递减"}。${a < 0 ? "负的系数使它反过来，所以" : "系数为正，所以"} $f$ ${increasing ? "递增" : "递减"}。`,
+            `The base $${num(b)}$ is ${growth ? "greater than $1$" : "between $0$ and $1$"}, so $${growth ? num(b) : `\\left(${num(b)}\\right)`}^{x}$ ${growth ? "increases" : "decreases"}. ${a < 0 ? "The negative factor reverses this, so" : "The factor is positive, so"} $f$ is ${increasing ? "increasing" : "decreasing"}.`,
+            `底数 $${num(b)}$ ${growth ? "大于 $1$" : "在 $0$ 和 $1$ 之间"}，所以 $${growth ? num(b) : `\\left(${num(b)}\\right)`}^{x}$ ${growth ? "递增" : "递减"}。${a < 0 ? "负的系数使它反过来，所以" : "系数为正，所以"} $f$ ${increasing ? "递增" : "递减"}。`,
           ),
         });
       },

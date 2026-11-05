@@ -15,6 +15,9 @@ type Unit = (typeof units)[number];
 
 const pickUnit = (rng: Rng): Unit => rng.pick(units);
 
+/** unitWord names a unit after the word "in", where "in in" would be unreadable. */
+const unitWord = (u: Unit) => (u === "in" ? "inches" : u);
+
 /** tex writes a quantity with a unit in LaTeX: "8\text{ cm}", "24\text{ cm}^2". */
 const tex = (v: number | string, u: Unit, power = 1) => `${v}\\text{ ${u}}${power === 2 ? "^2" : ""}`;
 
@@ -207,8 +210,8 @@ export const circles: TopicDef = {
             unit: u,
             wrong: [d, 2 * d, d - 2],
             solution: t(
-              `A radius is half a diameter:${steps(`r = \\frac{d}{2} = \\frac{${d}}{2} = ${tex(q(d, 2).toLatex(), u)}`)}`,
-              `半径是直径的一半：${steps(`r = \\frac{d}{2} = \\frac{${d}}{2} = ${tex(q(d, 2).toLatex(), u)}`)}`,
+              `A radius is half a diameter:${steps(d % 2 === 0 ? `r = \\frac{d}{2} = \\frac{${d}}{2} = ${tex(q(d, 2).toLatex(), u)}` : `r = \\frac{d}{2} = ${tex(q(d, 2).toLatex(), u)}`)}`,
+              `半径是直径的一半：${steps(d % 2 === 0 ? `r = \\frac{d}{2} = \\frac{${d}}{2} = ${tex(q(d, 2).toLatex(), u)}` : `r = \\frac{d}{2} = ${tex(q(d, 2).toLatex(), u)}`)}`,
             ),
           }),
           figure: figure(measuredCircle(len(d, u), true, s), `A circle with a diameter of ${d} ${u}.`, `一个直径为 ${d} ${u} 的圆。`),
@@ -635,8 +638,8 @@ export const areasOfCircles: TopicDef = {
             unit: `${u}^2`,
             wrong: [piTex(d * d), piTex(d), piTex(q(d * d, 2))],
             solution: t(
-              `The radius is $\\frac{${d}}{2}$. Use $A = \\pi r^2$:${steps(`A = \\pi \\left(\\frac{${d}}{2}\\right)^2 = ${tex(piTex(a), u, 2)}`)}`,
-              `半径是 $\\frac{${d}}{2}$。用 $A = \\pi r^2$：${steps(`A = \\pi \\left(\\frac{${d}}{2}\\right)^2 = ${tex(piTex(a), u, 2)}`)}`,
+              `The radius is $${d % 2 === 0 ? `\\frac{${d}}{2} = ${d / 2}` : `\\frac{${d}}{2}`}$. Use $A = \\pi r^2$:${steps(`A = \\pi ${d % 2 === 0 ? `\\cdot ${d / 2}^2` : `\\left(\\frac{${d}}{2}\\right)^2`} = ${tex(piTex(a), u, 2)}`)}`,
+              `半径是 $${d % 2 === 0 ? `\\frac{${d}}{2} = ${d / 2}` : `\\frac{${d}}{2}`}$。用 $A = \\pi r^2$：${steps(`A = \\pi ${d % 2 === 0 ? `\\cdot ${d / 2}^2` : `\\left(\\frac{${d}}{2}\\right)^2`} = ${tex(piTex(a), u, 2)}`)}`,
             ),
           }),
           figure: figure(measuredCircle(len(d, u), true, s), `A circle with a diameter of ${d} ${u}.`, `一个直径为 ${d} ${u} 的圆。`),
@@ -1521,8 +1524,8 @@ export const problemSolvingWithCircles: TopicDef = {
       id: "shaded-regions-with-quarter-circles",
       title: t("Shaded regions", "阴影部分的面积"),
       explanation: t(
-        "To find the area of a region left over when one shape is removed from another, subtract the areas.\n\nA quarter circle with radius $s$ drawn inside a square of side $s$, centered at a corner, has area $\\frac{1}{4}\\pi s^2$. For $s = 6$ cm, the part of the square outside it has area $36 - 9\\pi\\text{ cm}^2$, about $7.7\\text{ cm}^2$.",
-        "求一个图形去掉另一个图形后剩下部分的面积，就把面积相减。\n\n在边长为 $s$ 的正方形内，以一个顶点为圆心、$s$ 为半径画四分之一圆，它的面积是 $\\frac{1}{4}\\pi s^2$。当 $s = 6$ 厘米时，正方形在它外面的部分面积是 $36 - 9\\pi\\text{ cm}^2$，约为 $7.7\\text{ cm}^2$。",
+        "To find the area of a region left over when one shape is removed from another, subtract the areas.\n\nA quarter circle with radius $s$ drawn inside a square of side $s$, centered at a corner, has area $\\frac{1}{4}\\pi s^2$. For $s = 6$ cm, the part of the square outside it has area $(36 - 9\\pi)\\text{ cm}^2$, about $7.7\\text{ cm}^2$.",
+        "求一个图形去掉另一个图形后剩下部分的面积，就把面积相减。\n\n在边长为 $s$ 的正方形内，以一个顶点为圆心、$s$ 为半径画四分之一圆，它的面积是 $\\frac{1}{4}\\pi s^2$。当 $s = 6$ 厘米时，正方形在它外面的部分面积是 $(36 - 9\\pi)\\text{ cm}^2$，约为 $7.7\\text{ cm}^2$。",
       ),
       generate(rng) {
         const u = pickUnit(rng);
@@ -1857,7 +1860,7 @@ export const squaresInscribedInCircles: TopicDef = {
           const r = rng.int(2, 20);
           return radicalProblem({
             prompt: t(
-              `A square is inscribed in a circle with a radius of $${tex(r, u)}$. Find the side length of the square, in ${u}, in simplest radical form.`,
+              `A square is inscribed in a circle with a radius of $${tex(r, u)}$. Find the side length of the square, in ${unitWord(u)}, in simplest radical form.`,
               `一个正方形内接于半径为 $${tex(r, u)}$ 的圆。求正方形的边长（单位：${u}），写成最简根式。`,
             ),
             answer: [r, 2],
@@ -1873,7 +1876,7 @@ export const squaresInscribedInCircles: TopicDef = {
           const c = q(d, 2);
           return radicalProblem({
             prompt: t(
-              `A square is inscribed in a circle with a diameter of $${tex(d, u)}$. Find the side length of the square, in ${u}, in simplest radical form.`,
+              `A square is inscribed in a circle with a diameter of $${tex(d, u)}$. Find the side length of the square, in ${unitWord(u)}, in simplest radical form.`,
               `一个正方形内接于直径为 $${tex(d, u)}$ 的圆。求正方形的边长（单位：${u}），写成最简根式。`,
             ),
             answer: [c, 2],
@@ -1888,7 +1891,7 @@ export const squaresInscribedInCircles: TopicDef = {
         const c = q(s, 2);
         return radicalProblem({
           prompt: t(
-            `A square with a side of $${tex(s, u)}$ is inscribed in a circle. Find the radius of the circle, in ${u}, in simplest radical form.`,
+            `A square with a side of $${tex(s, u)}$ is inscribed in a circle. Find the radius of the circle, in ${unitWord(u)}, in simplest radical form.`,
             `边长为 $${tex(s, u)}$ 的正方形内接于一个圆。求圆的半径（单位：${u}），写成最简根式。`,
           ),
           answer: [c, 2],

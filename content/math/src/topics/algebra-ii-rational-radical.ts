@@ -466,8 +466,11 @@ export const addingAndSubtractingRationalExpressions: TopicDef = {
       keyPrerequisites: ["least-common-multiple"],
       generate(rng) {
         const [m, n] = rng.sample([1, 2, 3, 4, 5, 6, 8, 9, 10], 2) as [number, number];
-        const a = rng.nonZero(-9, 9);
-        const b = rng.int(1, 9);
+        // Each fraction starts in lowest terms: a numerator shares no factor with its coefficient.
+        let a = rng.nonZero(-9, 9);
+        while (gcd(Math.abs(a), m) > 1) a += a > 0 ? 1 : -1;
+        let b = rng.int(1, 9);
+        while (gcd(b, n) > 1) b += 1;
         const minus = rng.bool();
         const sg = minus ? -1 : 1;
         const op = minus ? "-" : "+";

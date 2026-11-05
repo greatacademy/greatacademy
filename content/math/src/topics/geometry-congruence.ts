@@ -1804,8 +1804,8 @@ export const rigidMotionsAndCongruence: TopicDef = {
             solveFor: "x",
             wrong: [...unknownWrong(u), ...[0, 1, 2].filter((v) => v !== k).map((v) => intOr(sides[v]! - u.d, u.c, -u.x))],
             solution: t(
-              `$\\overline{${sideName(n1, k)}}$ goes to $\\overline{${sideName(n2, k)}}$, and a rigid motion keeps lengths, so $${linear(u.c, u.d)} = ${sides[k]}$:${solveSteps(u)}`,
-              `$\\overline{${sideName(n1, k)}}$ 映到 $\\overline{${sideName(n2, k)}}$，刚性变换保持长度不变，所以 $${linear(u.c, u.d)} = ${sides[k]}$：${solveSteps(u)}`,
+              `$\\overline{${sideName(n1, k)}}$ goes to $\\overline{${sideName(n2, k)}}$, and a rigid motion keeps lengths, so:${solveSteps(u)}`,
+              `$\\overline{${sideName(n1, k)}}$ 映到 $\\overline{${sideName(n2, k)}}$，刚性变换保持长度不变，所以：${solveSteps(u)}`,
             ),
           });
         }
@@ -1977,8 +1977,8 @@ export const propertiesOfCongruence: TopicDef = {
             solveFor: "x",
             wrong: [intOr(d2 - d1, c1 + c2, -x), -x, value, intOr(d1 - d2, c1 - c2, x + 1) === x ? x + 1 : intOr(d1 - d2, c1 - c2, x + 1)],
             solution: t(
-              `By the symmetric and transitive properties, $${p} \\cong ${r}$, so their measures are equal:${steps(`${linear(c1, d1)} = ${linear(c2, d2)}`, collected, `x = ${x}`)}`,
-              `由对称性和传递性，$${p} \\cong ${r}$，所以它们的度量相等：${steps(`${linear(c1, d1)} = ${linear(c2, d2)}`, collected, `x = ${x}`)}`,
+              `By the symmetric and transitive properties, $${p} \\cong ${r}$, so their measures are equal:${steps(`${linear(c1, d1)} = ${linear(c2, d2)}`, ...(Math.abs(c1 - c2) === 1 ? [] : [collected]), `x = ${x}`)}`,
+              `由对称性和传递性，$${p} \\cong ${r}$，所以它们的度量相等：${steps(`${linear(c1, d1)} = ${linear(c2, d2)}`, ...(Math.abs(c1 - c2) === 1 ? [] : [collected]), `x = ${x}`)}`,
             ),
           });
         }

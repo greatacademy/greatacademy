@@ -364,7 +364,7 @@ export const writingRepeatingDecimalsAsFractions: TopicDef = {
           form: "fraction",
           wrong: [Q.of(R, 10 ** m), Q.of(R, 10 ** m + 1), Q.of(R, 9 * m)],
           solution: t(
-            `Let $x = ${repeatingTex(d)}$ and multiply by $${10 ** m}$, since ${m === 1 ? "one digit repeats" : `${m} digits repeat`}:${repeatingSteps(d)}`,
+            `Let $x = ${repeatingTex(d)}$ and multiply by $${10 ** m}$, since ${m === 1 ? "one digit repeats" : `$${m}$ digits repeat`}:${repeatingSteps(d)}`,
             `设 $x = ${repeatingTex(d)}$，因为循环节有 ${m} 位，所以乘以 $${10 ** m}$：${repeatingSteps(d)}`,
           ),
         });
@@ -993,7 +993,9 @@ export const complexNumbers: TopicDef = {
       generate(rng) {
         const kind = rng.int(0, 5);
         const a = kind === 4 ? 0 : rng.nonZero(-12, 12);
-        const b = kind === 5 ? 0 : rng.nonZero(-12, 12);
+        const b0 = kind === 5 ? 0 : rng.nonZero(-12, 12);
+        // The real and imaginary parts differ in size, so that the answer tells them apart.
+        const b = Math.abs(b0) === Math.abs(a) ? b0 + Math.sign(b0) * (Math.abs(b0) === 12 ? -1 : 1) : b0;
         const z = kind === 3 ? poly([b, "i"], [a, ""]) : cx(a, b);
         const real = rng.bool();
         return numberProblem({

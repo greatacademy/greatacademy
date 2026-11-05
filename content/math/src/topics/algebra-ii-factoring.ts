@@ -452,18 +452,18 @@ export const describingRelationshipsUsingPolynomialIdentities: TopicDef = {
         const a = x * x - y * y;
         const b = 2 * x * y;
         const c = x * x + y * y;
-        const ask = rng.pick(["a", "b", "c"] as const);
-        const answer = ask === "a" ? a : ask === "b" ? b : c;
+        const ask = rng.pick(["short", "long", "c"] as const);
+        const answer = ask === "short" ? Math.min(a, b) : ask === "long" ? Math.max(a, b) : c;
         const name: Text =
-          ask === "a"
-            ? t("the leg $a = x^{2} - y^{2}$", "直角边 $a = x^{2} - y^{2}$")
-            : ask === "b"
-              ? t("the leg $b = 2xy$", "直角边 $b = 2xy$")
-              : t("the hypotenuse $c = x^{2} + y^{2}$", "斜边 $c = x^{2} + y^{2}$");
+          ask === "short"
+            ? t("the shorter leg of the triangle", "这个三角形较短的直角边")
+            : ask === "long"
+              ? t("the longer leg of the triangle", "这个三角形较长的直角边")
+              : t("the hypotenuse of the triangle", "这个三角形的斜边");
         return numberProblem({
           prompt: t(
-            `The identity $(x^{2} + y^{2})^{2} = (x^{2} - y^{2})^{2} + (2xy)^{2}$ gives a Pythagorean triple $a^{2} + b^{2} = c^{2}$ for whole numbers $x > y > 0$. With $x = ${x}$ and $y = ${y}$, find ${name.en}.`,
-            `对满足 $x > y > 0$ 的整数，恒等式 $(x^{2} + y^{2})^{2} = (x^{2} - y^{2})^{2} + (2xy)^{2}$ 给出勾股数 $a^{2} + b^{2} = c^{2}$。取 $x = ${x}$，$y = ${y}$，求${name["zh-CN"]}。`,
+            `The identity $(x^{2} + y^{2})^{2} = (x^{2} - y^{2})^{2} + (2xy)^{2}$ gives the sides of a right triangle for whole numbers $x > y > 0$. With $x = ${x}$ and $y = ${y}$, find ${name.en}.`,
+            `对满足 $x > y > 0$ 的整数，恒等式 $(x^{2} + y^{2})^{2} = (x^{2} - y^{2})^{2} + (2xy)^{2}$ 给出一个直角三角形的三边。取 $x = ${x}$，$y = ${y}$，求${name["zh-CN"]}。`,
           ),
           answer,
           wrong: [a, b, c, (x - y) ** 2, (x + y) ** 2, x * y, 2 * x - 2 * y, 2 * x + 2 * y],

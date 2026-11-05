@@ -863,7 +863,7 @@ export const productRuleForLogarithms: TopicDef = {
           {
             prompt: t(`Write $${expr}$ as a single logarithm.`, `把 $${expr}$ 写成一个对数。`),
             answer,
-            wrong: [M + N + K, M * N, ...(K > 1 ? [M * N + K] : [])],
+            wrong: K > 1 ? [M + N + K, M * N, M * N + K] : [M + N, Math.abs(M - N)],
             solution: both(
               "The sum of logarithms is the logarithm of the product:",
               "对数的和等于积的对数：",
@@ -1289,7 +1289,8 @@ export const combiningLawsOfLogarithms: TopicDef = {
             ? `${value.isInteger() ? num(value) : `\\frac{${value.n}b}{${value.d}}`}${value.isInteger() ? "b" : ""}`
             : num(value);
           const answer = poly([i, "p"], [j, "q"], [withB ? 1 : 0, ""]);
-          const factored = `${P}^{${i}} \\cdot ${R}^{${j}}${withB ? " \\cdot b" : ""}`;
+          const pw = (n: number, e: number) => (e === 1 ? String(n) : `${n}^{${e}}`);
+          const factored = `${pw(P, i)} \\cdot ${pw(R, j)}${withB ? " \\cdot b" : ""}`;
           return expressionProblem({
             prompt: t(
               `Let $${logL("b", String(P))} = p$ and $${logL("b", String(R))} = q$. Write $${logL("b", arg)}$ in terms of $p$ and $q$.`,

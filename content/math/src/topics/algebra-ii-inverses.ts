@@ -449,8 +449,8 @@ function sidewaysFigure(a: Q, h: number, k: number): Figure {
   return {
     svg: plane(view, [...polylineMarks(pts), { kind: "point", at: [h, k], accent: true }]),
     alt: t(
-      `A parabola opening to the ${a.sign() > 0 ? "right" : "left"}, with its vertex marked at (${h}, ${k}) and passing through (${num(a.add(Q.of(h)))}, ${k + 1}) and (${num(a.add(Q.of(h)))}, ${k - 1}).`,
-      `一条开口向${a.sign() > 0 ? "右" : "左"}的抛物线，标出了顶点 (${h}, ${k})，并经过 (${num(a.add(Q.of(h)))}, ${k + 1}) 和 (${num(a.add(Q.of(h)))}, ${k - 1})。`,
+      `A parabola opening to the ${a.sign() > 0 ? "right" : "left"}, with its vertex marked at (${h}, ${k}) and passing through (${a.add(Q.of(h)).toString()}, ${k + 1}) and (${a.add(Q.of(h)).toString()}, ${k - 1}).`,
+      `一条开口向${a.sign() > 0 ? "右" : "左"}的抛物线，标出了顶点 (${h}, ${k})，并经过 (${a.add(Q.of(h)).toString()}, ${k + 1}) 和 (${a.add(Q.of(h)).toString()}, ${k - 1})。`,
     ),
   };
 }
@@ -1064,7 +1064,9 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
         const constant = kind === 0;
         const top = constant ? String(rng.nonZero(-9, 9)) : shifted(p);
         const expanded = rng.bool();
-        const bottom = expanded ? polyLatex([h1 * h2, -(h1 + h2), 1]) : `(${shifted(h1)})(${shifted(h2)})`;
+        // A factor x is written first and without parentheses: x(x - 5).
+        const factored = h1 === 0 ? `x(${shifted(h2)})` : h2 === 0 ? `x(${shifted(h1)})` : `(${shifted(h1)})(${shifted(h2)})`;
+        const bottom = expanded ? polyLatex([h1 * h2, -(h1 + h2), 1]) : factored;
         const answer = constant || (p !== h1 && p !== h2) ? [h1, h2] : [p === h1 ? h2 : h1];
         const values = answer.map(String);
         return solutionsProblem({
@@ -1075,8 +1077,8 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
           values,
           wrong: [[String(-h1), String(-h2)], [String(h1), String(h2)], ...(constant ? [] : [[String(p)], [String(p), ...values]])],
           solution: t(
-            `The denominator is $(${shifted(h1)})(${shifted(h2)})$, which is $0$ at $x = ${h1}$ and $x = ${h2}$. ${answer.length === 2 ? "The numerator is not $0$ at either, so both are vertical asymptotes" : `The factor $${shifted(p)}$ cancels with the numerator, leaving a hole at $x = ${p}$, so the only vertical asymptote is $x = ${answer[0]}$`}.`,
-            `分母为 $(${shifted(h1)})(${shifted(h2)})$，在 $x = ${h1}$ 和 $x = ${h2}$ 处为 $0$。${answer.length === 2 ? "分子在这两处都不为 $0$，所以两条都是竖直渐近线" : `因式 $${shifted(p)}$ 与分子约去，在 $x = ${p}$ 处只留下空洞，所以唯一的竖直渐近线是 $x = ${answer[0]}$`}。`,
+            `The denominator is $${factored}$, which is $0$ at $x = ${h1}$ and $x = ${h2}$. ${answer.length === 2 ? "The numerator is not $0$ at either, so both are vertical asymptotes" : `The factor $${shifted(p)}$ cancels with the numerator, leaving a hole at $x = ${p}$, so the only vertical asymptote is $x = ${answer[0]}$`}.`,
+            `分母为 $${factored}$，在 $x = ${h1}$ 和 $x = ${h2}$ 处为 $0$。${answer.length === 2 ? "分子在这两处都不为 $0$，所以两条都是竖直渐近线" : `因式 $${shifted(p)}$ 与分子约去，在 $x = ${p}$ 处只留下空洞，所以唯一的竖直渐近线是 $x = ${answer[0]}$`}。`,
           ),
         });
       },
@@ -1099,7 +1101,7 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
         const topAt = constant ? c : h - p;
         const right = Math.sign(topAt);
         const left = n === 2 ? right : -right;
-        const den = n === 1 ? shifted(h) : `(${shifted(h)})^{2}`;
+        const den = n === 1 ? shifted(h) : h === 0 ? "x^{2}" : `(${shifted(h)})^{2}`;
         return choiceProblem({
           prompt: t(
             `Describe the behavior of $f(x) = \\frac{${top}}{${den}}${plus(v)}$ near $x = ${h}$.`,

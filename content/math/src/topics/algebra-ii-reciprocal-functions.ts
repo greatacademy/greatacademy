@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import {
   type Coefficient,
   type Compass,
+  gcd,
   type Interval,
   intervalLatex,
   linear,
@@ -589,9 +590,9 @@ export const combiningGraphTransformationsOfReciprocalFunctions: TopicDef = {
           ],
           solution: shiftFirst
             ? both(
-                "The shifts come first, and then the outputs are multiplied by",
-                "先平移，再把输出乘以",
-                `${a}: \\quad ${a}\\left(${recipL(1, h, k)}\\right) = ${answer}`,
+                `The shifts come first, and then the outputs are multiplied by $${a}$:`,
+                `先平移，再把输出乘以 $${a}$：`,
+                `${a}\\left(${recipL(1, h, k)}\\right) = ${answer}`,
               )
             : both(
                 "Shift horizontally, multiply the outputs, then shift vertically:",
@@ -771,7 +772,11 @@ export const domainAndRangeOfTransformedReciprocalFunctions: TopicDef = {
         const f = recipL(a, h, k);
         const noShift = (x: number) => (x === 0 ? undefined : Q.of(a, x).add(Q.of(k)));
         const [s, w] = [noShift(lo), noShift(hi)];
-        const wrong: RealSet[] = [union(iv(min, max, false, false)), allBut(k), union(iv(Q.of(k), max))];
+        const wrong: RealSet[] = [
+          union(iv(min, max, false, false)),
+          allBut(k),
+          union(max.cmp(Q.of(k)) > 0 ? iv(Q.of(k), max) : iv(min, Q.of(k))),
+        ];
         if (s && w) wrong.push(union(iv(s.cmp(w) <= 0 ? s : w, s.cmp(w) <= 0 ? w : s)));
         return intervalProblem({
           prompt: t(
@@ -825,16 +830,19 @@ export const inversesOfReciprocalFunctions: TopicDef = {
         const k = rng.nonZero(-7, 7);
         const f = linRecipL(a, b, c, k);
         const shift = Q.of(-c, b);
-        const answer = `${fracL(a, linear(b, -b * k))}${plus(shift)}`;
+        // a / (b(x - k)) in lowest terms, with a positive coefficient of x.
+        const g = gcd(Math.abs(a), Math.abs(b)) * Math.sign(b);
+        const [ra, rb] = [a / g, b / g];
+        const answer = `${fracL(ra, linear(rb, -rb * k))}${plus(shift)}`;
         return expressionProblem({
           prompt: t(`Find the inverse of $f(x) = ${f}$.`, `求 $f(x) = ${f}$ 的反函数。`),
           answer,
           prefix: "f^{-1}(x) =",
           wrong: [
             f,
-            `${fracL(a, linear(b, -b * k))}${plus(shift.neg())}`,
+            `${fracL(ra, linear(rb, -rb * k))}${plus(shift.neg())}`,
             `${fracL(a, linear(1, -k))}${plus(-c)}`,
-            `${fracL(a, linear(b, b * k))}${plus(shift)}`,
+            `${fracL(ra, linear(rb, rb * k))}${plus(shift)}`,
             `${fracL(a, linear(b, -k))}${plus(shift)}`,
           ],
           solution: both(
@@ -843,6 +851,7 @@ export const inversesOfReciprocalFunctions: TopicDef = {
             `x = ${linRecipL(a, b, c, k, "y")}`,
             `${linear(1, -k)} = ${fracL(a, linear(b, c, "y"))}`,
             `${linear(b, c, "y")} = ${fracL(a, linear(1, -k))}`,
+            `${linear(b, 0, "y")} = ${fracL(a, linear(1, -k))}${plus(-c)}`,
             `y = ${answer}`,
           ),
         });

@@ -858,7 +858,7 @@ export const invertibleFunctions: TopicDef = {
             set,
             wrong,
             solution: t(
-              `Around $x = ${c}$ the graph only ${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "rises" : "falls"} from $x = ${lo}$ to $x = ${hi}$, where it ${j === 0 ? "starts" : "turns"} and ${j === breaks.length - 2 ? "ends" : "turns"}. So the interval is ${setText(set)}.`,
+              `Around $x = ${c}$ the graph only ${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "rises" : "falls"} from $x = ${lo}$, where it ${j === 0 ? "starts" : "turns"}, to $x = ${hi}$, where it ${j === breaks.length - 2 ? "ends" : "turns"}. So the interval is ${setText(set)}.`,
               `在 $x = ${c}$ 附近，图象从 $x = ${lo}$ 到 $x = ${hi}$ 一直${valueOn(pts, hi)!.cmp(valueOn(pts, lo)!) > 0 ? "上升" : "下降"}，两端分别是${j === 0 ? "起点" : "转折点"}和${j === breaks.length - 2 ? "终点" : "转折点"}。所以区间是 ${setText(set)}。`,
             ),
           }),

@@ -31,6 +31,12 @@ const len = (v: Coefficient, u: Unit) => `${toQ(v).isInteger() ? toQ(v).toString
 export const tex = (v: Coefficient, u: Unit, power = 1) => `${num(v)}\\text{ ${u}}${power > 1 ? `^{${power}}` : ""}`;
 
 /** unitTex writes a unit of length, area or volume alone: "\text{cm}^3". */
+/** unitWord names a unit after the word "in", where "in in" would be unreadable. */
+const unitWord = (u: Unit) => (u === "in" ? "inches" : u);
+
+/** squareOf writes n^2, with parentheses only around a negative n. */
+const squareOf = (n: number) => (n < 0 ? `(${n})^2` : `${n}^2`);
+
 const unitTex = (u: Unit, power: number) => `\\text{${u}}${power > 1 ? `^{${power}}` : ""}`;
 
 const figure = (marks: readonly Mark[], en: string, zh: string): Figure => ({ svg: sketch(marks), alt: t(en, zh) });
@@ -467,12 +473,12 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
           desc =
             kind === "prism"
               ? t(
-                  `It has $${2 * n}$ vertices: $${n}$ on each of two parallel ${shape.adjective} bases.`,
-                  `它有 $${2 * n}$ 个顶点：两个平行的${p["zh-CN"]}底面上各有 $${n}$ 个。`,
+                  `It has $${2 * n}$ vertices: $${n}$ on each of two parallel bases.`,
+                  `它有 $${2 * n}$ 个顶点：两个平行的底面上各有 $${n}$ 个。`,
                 )
               : t(
-                  `It has $${n + 1}$ vertices: $${n}$ around ${wordArticle(shape.adjective)} ${shape.adjective} base and one apex above it.`,
-                  `它有 $${n + 1}$ 个顶点：${p["zh-CN"]}底面上有 $${n}$ 个，上方还有一个顶点。`,
+                  `It has $${n + 1}$ vertices: $${n}$ around its base and one apex above it.`,
+                  `它有 $${n + 1}$ 个顶点：底面上有 $${n}$ 个，上方还有一个顶点。`,
                 );
         }
         const { options, correct } = shapeOptions(rng, shape, kind);
@@ -486,12 +492,12 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
           solution:
             kind === "prism"
               ? t(
-                  `Two parallel congruent bases joined by rectangles make a prism, and its bases are ${p.en}s: it is ${wordArticle(shape.name.en)} ${shape.name.en}.`,
-                  `由长方形连接的两个平行且全等的底面说明它是棱柱，底面是${p["zh-CN"]}，所以它是${shape.name["zh-CN"]}。`,
+                  `Two parallel congruent bases joined by rectangles make a prism, and each base has $${n}$ sides, so the bases are ${p.en}s: it is ${wordArticle(shape.name.en)} ${shape.name.en}.`,
+                  `由长方形连接的两个平行且全等的底面说明它是棱柱，每个底面有 $${n}$ 条边，即${p["zh-CN"]}，所以它是${shape.name["zh-CN"]}。`,
                 )
               : t(
-                  `One base with triangles meeting at an apex makes a pyramid, and its base is ${wordArticle(p.en)} ${p.en}: it is ${wordArticle(shape.name.en)} ${shape.name.en}.`,
-                  `一个底面加上交于一点的三角形说明它是棱锥，底面是${p["zh-CN"]}，所以它是${shape.name["zh-CN"]}。`,
+                  `One base with triangles meeting at an apex makes a pyramid, and its base has $${n}$ sides, so it is ${wordArticle(p.en)} ${p.en}: the solid is ${wordArticle(shape.name.en)} ${shape.name.en}.`,
+                  `一个底面加上交于一点的三角形说明它是棱锥，底面有 $${n}$ 条边，即${p["zh-CN"]}，所以它是${shape.name["zh-CN"]}。`,
                 ),
         });
       },
@@ -983,7 +989,7 @@ export const findingSurfaceAreasUsingNets: TopicDef = {
           }),
           figure: figure(
             marks,
-            `A net of a box: four rectangles ${h} ${u} high in a row, ${w}, ${l}, ${w} and ${l} ${u} wide, with an ${l} by ${w} rectangle above and below the second one.`,
+            `A net of a box: four rectangles ${h} ${u} high in a row, ${w}, ${l}, ${w} and ${l} ${u} wide, with a rectangle ${l} by ${w} above and below the second one.`,
             `一个长方体的展开图：一排四个高 ${h} ${u} 的长方形，宽依次为 ${w}、${l}、${w}、${l} ${u}，第二个长方形的上下各连着一个 ${l} × ${w} 的长方形。`,
           ),
         };
@@ -1232,8 +1238,8 @@ export const eulersFormulaForPolyhedra: TopicDef = {
       id: "possible-counts",
       title: t("Possible counts", "判断计数是否可能"),
       explanation: t(
-        "Euler's formula is a quick test. If $V - E + F \\ne 2$, no convex polyhedron has those counts.\n\nCan a convex polyhedron have $9$ vertices, $14$ edges and $8$ faces? $9 - 14 + 8 = 3 \\ne 2$, so no.",
-        "欧拉公式可以用来快速检验。如果 $V - E + F \\ne 2$，就没有凸多面体具有这样的计数。\n\n一个凸多面体能有 $9$ 个顶点、$14$ 条棱和 $8$ 个面吗？$9 - 14 + 8 = 3 \\ne 2$，所以不能。",
+        "Euler's formula is a quick test. If $V - E + F \\ne 2$, no convex polyhedron has those counts.\n\nCan a convex polyhedron have $9$ vertices, $14$ edges and $8$ faces? $9 - 14 + 8 = 3 \\ne 2$, so no.\n\nPassing the test alone does not prove that such a polyhedron exists, but every count in these questions that passes it belongs to a real polyhedron.",
+        "欧拉公式可以用来快速检验。如果 $V - E + F \\ne 2$，就没有凸多面体具有这样的计数。\n\n一个凸多面体能有 $9$ 个顶点、$14$ 条棱和 $8$ 个面吗？$9 - 14 + 8 = 3 \\ne 2$，所以不能。\n\n仅通过检验并不能证明这样的多面体存在，不过这些题目中通过检验的计数都对应真实的多面体。",
       ),
       generate(rng) {
         let v: number;
@@ -1254,8 +1260,8 @@ export const eulersFormulaForPolyhedra: TopicDef = {
           correct: possible ? 0 : 1,
           solution: possible
             ? t(
-                `$V - E + F = ${v} - ${e} + ${f} = 2$, as Euler's formula requires, so these counts are possible.`,
-                `$V - E + F = ${v} - ${e} + ${f} = 2$，符合欧拉公式，所以这组计数是可能的。`,
+                `$V - E + F = ${v} - ${e} + ${f} = 2$, as Euler's formula requires, and a convex polyhedron with these counts exists.`,
+                `$V - E + F = ${v} - ${e} + ${f} = 2$，符合欧拉公式，而且确实存在具有这组计数的凸多面体。`,
               )
             : t(
                 `$V - E + F = ${v} - ${e} + ${f} = ${sum} \\ne 2$, so no convex polyhedron has these counts.`,
@@ -1386,7 +1392,7 @@ export const theFivePlatonicSolids: TopicDef = {
         const ask = rng.int(0, 5);
         const angle = interior(s.p);
         const intro = t(
-          `A ${s.name.en} has $${s.f}$ faces, each ${one}, with $${s.q}$ faces meeting at each vertex.`,
+          `${/^[aeiou]/.test(s.name.en) ? "An" : "A"} ${s.name.en} has $${s.f}$ faces, each ${one}, with $${s.q}$ faces meeting at each vertex.`,
           `${s.name["zh-CN"]}有 $${s.f}$ 个面，每个面都是${zh}，每个顶点处有 $${s.q}$ 个面。`,
         );
         const sides = s.f * s.p;
@@ -1467,7 +1473,7 @@ export const theFivePlatonicSolids: TopicDef = {
       id: "why-only-five",
       title: t("Why only five", "为什么只有五种"),
       explanation: t(
-        "At each vertex of a convex polyhedron, at least $3$ faces meet, and their angles must add up to **less than** $360^\\circ$: at exactly $360^\\circ$ they lie flat, and above it they cannot fitBox.\n\n- Equilateral triangles ($60^\\circ$): $3$, $4$ or $5$ at a vertex ($180^\\circ$, $240^\\circ$, $300^\\circ$), but $6$ make $360^\\circ$.\n- Squares ($90^\\circ$): only $3$ ($270^\\circ$).\n- Regular pentagons ($108^\\circ$): only $3$ ($324^\\circ$).\n- Regular hexagons ($120^\\circ$): $3$ already make $360^\\circ$.\n\nThat leaves five possibilities, the five Platonic solids.",
+        "At each vertex of a convex polyhedron, at least $3$ faces meet, and their angles must add up to **less than** $360^\\circ$: at exactly $360^\\circ$ they lie flat, and above it they cannot fit.\n\n- Equilateral triangles ($60^\\circ$): $3$, $4$ or $5$ at a vertex ($180^\\circ$, $240^\\circ$, $300^\\circ$), but $6$ make $360^\\circ$.\n- Squares ($90^\\circ$): only $3$ ($270^\\circ$).\n- Regular pentagons ($108^\\circ$): only $3$ ($324^\\circ$).\n- Regular hexagons ($120^\\circ$): $3$ already make $360^\\circ$.\n\nThat leaves five possibilities, the five Platonic solids.",
         "凸多面体的每个顶点处至少有 $3$ 个面，并且这些面的角之和必须**小于** $360^\\circ$：恰好 $360^\\circ$ 时它们铺成平面，超过时则放不下。\n\n- 正三角形（$60^\\circ$）：每个顶点处可以有 $3$、$4$ 或 $5$ 个（$180^\\circ$、$240^\\circ$、$300^\\circ$），$6$ 个就成了 $360^\\circ$。\n- 正方形（$90^\\circ$）：只能有 $3$ 个（$270^\\circ$）。\n- 正五边形（$108^\\circ$）：只能有 $3$ 个（$324^\\circ$）。\n- 正六边形（$120^\\circ$）：$3$ 个就已经是 $360^\\circ$。\n\n只剩下五种可能，就是五种正多面体。",
       ),
       generate(rng) {
@@ -1588,7 +1594,7 @@ export const volumesOfCubes: TopicDef = {
       id: "small-cubes-in-a-large-cube",
       title: t("Small cubes in a large cube", "大正方体中的小正方体"),
       explanation: t(
-        "A cube with edge $12$ cm can be packed with cubes of edge $3$ cm: $12 \\div 3 = 4$ fitBox along each edge, so it holds $4^3 = 64$ of them. The same answer comes from the volumes: $\\frac{12^3}{3^3} = \\frac{1728}{27} = 64$.\n\nIn the same way, doubling the edge of a cube multiplies its volume by $2^3 = 8$.",
+        "A cube with edge $12$ cm can be packed with cubes of edge $3$ cm: $12 \\div 3 = 4$ fit along each edge, so it holds $4^3 = 64$ of them. The same answer comes from the volumes: $\\frac{12^3}{3^3} = \\frac{1728}{27} = 64$.\n\nIn the same way, doubling the edge of a cube multiplies its volume by $2^3 = 8$.",
         "棱长 $12$ 厘米的正方体可以用棱长 $3$ 厘米的小正方体装满：每条棱上能放 $12 \\div 3 = 4$ 个，所以共能放 $4^3 = 64$ 个。用体积计算也得到同样的结果：$\\frac{12^3}{3^3} = \\frac{1728}{27} = 64$。\n\n同理，正方体的棱长扩大到 $2$ 倍，体积就扩大到 $2^3 = 8$ 倍。",
       ),
       generate(rng) {
@@ -1611,14 +1617,14 @@ export const volumesOfCubes: TopicDef = {
         const big = small * k;
         return numberProblem({
           prompt: t(
-            `How many cubes with edge $${tex(small, u)}$ fitBox exactly inside a cube with edge $${tex(big, u)}$?`,
+            `How many cubes with edge $${tex(small, u)}$ fit exactly inside a cube with edge $${tex(big, u)}$?`,
             `棱长为 $${tex(big, u)}$ 的正方体中恰好能放多少个棱长为 $${tex(small, u)}$ 的小正方体？`,
           ),
           answer: k ** 3,
           form: "integer",
           wrong: [k, k * k, 3 * k, big ** 3],
           solution: t(
-            `Along each edge, $${big} \\div ${small} = ${k}$ small cubes fitBox:${steps(`${k}^3 = ${k ** 3}`)}`,
+            `Along each edge, $${big} \\div ${small} = ${k}$ small cubes fit:${steps(`${k}^3 = ${k ** 3}`)}`,
             `每条棱上能放 $${big} \\div ${small} = ${k}$ 个小正方体：${steps(`${k}^3 = ${k ** 3}`)}`,
           ),
         });
@@ -1768,7 +1774,10 @@ export const faceDiagonalsOfCubes: TopicDef = {
         const s = rng.int(2, 25);
         return {
           ...radicalProblem({
-            prompt: t(`Find the length $d$ of a face diagonal of the cube, in ${u}.`, `求这个正方体面对角线的长 $d$（单位：${u}）。`),
+            prompt: t(
+              `Find the length $d$ of a face diagonal of the cube, in ${unitWord(u)}.`,
+              `求这个正方体面对角线的长 $d$（单位：${u}）。`,
+            ),
             answer: [s, 2],
             wrong: [String(2 * s), `${s}\\sqrt{3}`, `\\sqrt{${2 * s}}`, String(s * s * 2)],
             solution: t(
@@ -1793,19 +1802,21 @@ export const faceDiagonalsOfCubes: TopicDef = {
         const rational = rng.bool();
         const d = rational ? tex(k, u) : `${k}\\sqrt{2}\\text{ ${u}}`;
         const answer: [Q, number] = rational ? [Q.of(k, 2), 2] : [Q.of(k), 1];
+        const rationalized = `\\frac{${k}\\sqrt{2}}{2}`;
+        const edge = radical(Q.of(k, 2), 2) === rationalized ? rationalized : `${rationalized} = ${radical(Q.of(k, 2), 2)}`;
         return radicalProblem({
           prompt: t(
-            `A face diagonal of a cube is $${d}$ long. How long is each edge, in ${u}?`,
-            `一个正方体的面对角线长 $${d}$。它的棱长是多少（单位：${u}）？`,
+            `A face diagonal of a cube is $${d}$ long. How long is each edge, in ${unitWord(u)}? Write it in simplest radical form.`,
+            `一个正方体的面对角线长 $${d}$。它的棱长是多少（单位：${u}）？用最简根式表示。`,
           ),
           answer,
           wrong: rational
-            ? [`\\frac{${k}}{2}`, `${k}\\sqrt{2}`, `\\frac{${k}}{\\sqrt{2}}`]
-            : [`${k}\\sqrt{2}`, `${2 * k}`, `\\frac{${k}}{2}`],
+            ? [Q.of(k, 2).toLatex(), `${k}\\sqrt{2}`, `\\frac{${k}}{\\sqrt{2}}`]
+            : [`${k}\\sqrt{2}`, `${2 * k}`, Q.of(k, 2).toLatex()],
           solution: rational
             ? t(
-                `$s = \\frac{${k}}{\\sqrt{2}}$; rationalize the denominator:${steps(`s = \\frac{${k}\\sqrt{2}}{2} = ${radical(Q.of(k, 2), 2)}`)}`,
-                `$s = \\frac{${k}}{\\sqrt{2}}$，把分母有理化：${steps(`s = \\frac{${k}\\sqrt{2}}{2} = ${radical(Q.of(k, 2), 2)}`)}`,
+                `$s = \\frac{${k}}{\\sqrt{2}}$; rationalize the denominator:${steps(`s = ${edge}`)}`,
+                `$s = \\frac{${k}}{\\sqrt{2}}$，把分母有理化：${steps(`s = ${edge}`)}`,
               )
             : t(
                 `The face diagonal is $s\\sqrt{2}$:${steps(`s\\sqrt{2} = ${k}\\sqrt{2}`, `s = ${k}`)}`,
@@ -1831,7 +1842,7 @@ export const faceDiagonalsOfCubes: TopicDef = {
         const edge = fromVolume ? `s = \\sqrt[3]{${s ** 3}} = ${s}` : `s = \\sqrt{${6 * s * s} \\div 6} = ${s}`;
         return radicalProblem({
           prompt: t(
-            `A cube has a ${given.en}. How long is a face diagonal, in ${u}?`,
+            `A cube has a ${given.en}. How long is a face diagonal, in ${unitWord(u)}?`,
             `一个正方体的${given["zh-CN"]}。它的面对角线有多长（单位：${u}）？`,
           ),
           answer: [s, 2],
@@ -1874,7 +1885,7 @@ export const diagonalsOfCubes: TopicDef = {
         return {
           ...radicalProblem({
             prompt: t(
-              `Find the length $D$ of a diagonal of the cube through its interior, in ${u}.`,
+              `Find the length $D$ of a diagonal of the cube through its interior, in ${unitWord(u)}.`,
               `求这个正方体体对角线的长 $D$（单位：${u}）。`,
             ),
             answer: [s, 3],
@@ -1901,19 +1912,21 @@ export const diagonalsOfCubes: TopicDef = {
         const rational = rng.bool(0.6);
         const d = rational ? tex(k, u) : `${k}\\sqrt{3}\\text{ ${u}}`;
         const answer: [Q, number] = rational ? [Q.of(k, 3), 3] : [Q.of(k), 1];
+        const rationalized = `\\frac{${k}\\sqrt{3}}{3}`;
+        const edge = radical(Q.of(k, 3), 3) === rationalized ? rationalized : `${rationalized} = ${radical(Q.of(k, 3), 3)}`;
         return radicalProblem({
           prompt: t(
-            `A diagonal through the interior of a cube is $${d}$ long. How long is each edge, in ${u}?`,
-            `一个正方体的体对角线长 $${d}$。它的棱长是多少（单位：${u}）？`,
+            `A diagonal through the interior of a cube is $${d}$ long. How long is each edge, in ${unitWord(u)}? Write it in simplest radical form.`,
+            `一个正方体的体对角线长 $${d}$。它的棱长是多少（单位：${u}）？用最简根式表示。`,
           ),
           answer,
           wrong: rational
-            ? [`\\frac{${k}}{3}`, `${k}\\sqrt{3}`, `\\frac{${k}}{\\sqrt{3}}`, radical(Q.of(k, 2), 2)]
-            : [`${k}\\sqrt{3}`, String(3 * k), `\\frac{${k}}{3}`],
+            ? [Q.of(k, 3).toLatex(), `${k}\\sqrt{3}`, `\\frac{${k}}{\\sqrt{3}}`, radical(Q.of(k, 2), 2)]
+            : [`${k}\\sqrt{3}`, String(3 * k), Q.of(k, 3).toLatex()],
           solution: rational
             ? t(
-                `$s = \\frac{${k}}{\\sqrt{3}}$; rationalize the denominator:${steps(`s = \\frac{${k}\\sqrt{3}}{3} = ${radical(Q.of(k, 3), 3)}`)}`,
-                `$s = \\frac{${k}}{\\sqrt{3}}$，把分母有理化：${steps(`s = \\frac{${k}\\sqrt{3}}{3} = ${radical(Q.of(k, 3), 3)}`)}`,
+                `$s = \\frac{${k}}{\\sqrt{3}}$; rationalize the denominator:${steps(`s = ${edge}`)}`,
+                `$s = \\frac{${k}}{\\sqrt{3}}$，把分母有理化：${steps(`s = ${edge}`)}`,
               )
             : t(
                 `The diagonal is $s\\sqrt{3}$:${steps(`s\\sqrt{3} = ${k}\\sqrt{3}`, `s = ${k}`)}`,
@@ -1936,18 +1949,24 @@ export const diagonalsOfCubes: TopicDef = {
         return radicalProblem({
           prompt: fromFace
             ? t(
-                `A face diagonal of a cube is $${s}\\sqrt{2}\\text{ ${u}}$ long. How long is a diagonal through its interior, in ${u}?`,
+                `A face diagonal of a cube is $${s}\\sqrt{2}\\text{ ${u}}$ long. How long is a diagonal through its interior, in ${unitWord(u)}?`,
                 `一个正方体的面对角线长 $${s}\\sqrt{2}\\text{ ${u}}$。它的体对角线有多长（单位：${u}）？`,
               )
             : t(
-                `A diagonal through the interior of a cube is $${s}\\sqrt{3}\\text{ ${u}}$ long. How long is a face diagonal, in ${u}?`,
+                `A diagonal through the interior of a cube is $${s}\\sqrt{3}\\text{ ${u}}$ long. How long is a face diagonal, in ${unitWord(u)}?`,
                 `一个正方体的体对角线长 $${s}\\sqrt{3}\\text{ ${u}}$。它的面对角线有多长（单位：${u}）？`,
               ),
           answer: [s, fromFace ? 3 : 2],
           wrong: fromFace ? [`${s}\\sqrt{2}`, `${s}\\sqrt{6}`, `${s + 1}\\sqrt{2}`] : [`${s}\\sqrt{3}`, `${s}\\sqrt{6}`, String(s)],
           solution: fromFace
-            ? t(`The edge is $${s}$, so:${steps(`D = ${s}\\sqrt{3}`)}`, `棱长是 $${s}$，所以：${steps(`D = ${s}\\sqrt{3}`)}`)
-            : t(`The edge is $${s}$, so:${steps(`d = ${s}\\sqrt{2}`)}`, `棱长是 $${s}$，所以：${steps(`d = ${s}\\sqrt{2}`)}`),
+            ? t(
+                `A face diagonal is $s\\sqrt{2}$, so the edge is $s = ${s}$. The diagonal through the interior is $s\\sqrt{3}$:${steps(`D = ${s}\\sqrt{3}`)}`,
+                `面对角线是 $s\\sqrt{2}$，所以棱长 $s = ${s}$。体对角线是 $s\\sqrt{3}$：${steps(`D = ${s}\\sqrt{3}`)}`,
+              )
+            : t(
+                `The diagonal through the interior is $s\\sqrt{3}$, so the edge is $s = ${s}$. A face diagonal is $s\\sqrt{2}$:${steps(`d = ${s}\\sqrt{2}`)}`,
+                `体对角线是 $s\\sqrt{3}$，所以棱长 $s = ${s}$。面对角线是 $s\\sqrt{2}$：${steps(`d = ${s}\\sqrt{2}`)}`,
+              ),
         });
       },
     },
@@ -2171,7 +2190,7 @@ export const surfaceAreasOfRectangularSolids: TopicDef = {
         return numberProblem({
           prompt: open
             ? t(
-                `An open box (with no lid) is $${tex(l, u)}$ long, $${tex(w, u)}$ wide and $${tex(h, u)}$ high. How much material is needed to make it, in square ${u}?`,
+                `An open box (with no lid) is $${tex(l, u)}$ long, $${tex(w, u)}$ wide and $${tex(h, u)}$ high. How much material is needed to make it, in square ${unitWord(u)}?`,
                 `一个无盖的盒子长 $${tex(l, u)}$、宽 $${tex(w, u)}$、高 $${tex(h, u)}$。做这个盒子需要多少材料（单位：平方 ${u}）？`,
               )
             : t(
@@ -2234,7 +2253,7 @@ export const diagonalsOfRectangularSolids: TopicDef = {
         const n = a * a + b * b;
         return rootProblem({
           prompt: t(
-            `A box is $${tex(l, u)}$ long, $${tex(w, u)}$ wide and $${tex(h, u)}$ high. How long is a diagonal of its ${which.en}, in ${u}? Write it in simplest radical form.`,
+            `A box is $${tex(l, u)}$ long, $${tex(w, u)}$ wide and $${tex(h, u)}$ high. How long is a diagonal of its ${which.en}, in ${unitWord(u)}? Write it in simplest radical form.`,
             `一个长方体长 $${tex(l, u)}$、宽 $${tex(w, u)}$、高 $${tex(h, u)}$。它的${which["zh-CN"]}的对角线有多长（单位：${u}）？用最简根式表示。`,
           ),
           n,
@@ -2260,7 +2279,7 @@ export const diagonalsOfRectangularSolids: TopicDef = {
         return {
           ...rootProblem({
             prompt: t(
-              `Find the length $D$ of the diagonal of the box, in ${u}. Write it in simplest radical form.`,
+              `Find the length $D$ of the diagonal of the box, in ${unitWord(u)}. Write it in simplest radical form.`,
               `求这个长方体体对角线的长 $D$（单位：${u}）。用最简根式表示。`,
             ),
             n,
@@ -2294,7 +2313,7 @@ export const diagonalsOfRectangularSolids: TopicDef = {
         const dTex = dm === 1 ? `${dk}` : `\\sqrt{${d2}}`;
         return rootProblem({
           prompt: t(
-            `A box has a diagonal of $${dTex}\\text{ ${u}}$, a length of $${tex(l, u)}$ and a width of $${tex(w, u)}$. How high is it, in ${u}? Write it in simplest radical form.`,
+            `A box has a diagonal of $${dTex}\\text{ ${u}}$, a length of $${tex(l, u)}$ and a width of $${tex(w, u)}$. How high is it, in ${unitWord(u)}? Write it in simplest radical form.`,
             `一个长方体的体对角线是 $${dTex}\\text{ ${u}}$，长是 $${tex(l, u)}$，宽是 $${tex(w, u)}$。它的高是多少（单位：${u}）？用最简根式表示。`,
           ),
           n: h2,
@@ -2341,14 +2360,13 @@ export const theDistanceFormulaInThreeDimensions: TopicDef = {
           ),
           n,
           wrong: [
-            String(Math.abs(x + y + z)),
-            `\\sqrt{${Math.abs(x + y + z)}}`,
+            ...(x + y + z === 0 ? [] : [String(Math.abs(x + y + z)), `\\sqrt{${Math.abs(x + y + z)}}`]),
             String(Math.abs(x) + Math.abs(y) + Math.abs(z)),
             `\\sqrt{${x * x + y * y}}`,
           ],
           solution: t(
-            `${steps(`d = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = ${rootSteps(n)}`)}`,
-            `${steps(`d = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = ${rootSteps(n)}`)}`,
+            `${steps(`d = \\sqrt{${squareOf(x)} + ${squareOf(y)} + ${squareOf(z)}} = ${rootSteps(n)}`)}`,
+            `${steps(`d = \\sqrt{${squareOf(x)} + ${squareOf(y)} + ${squareOf(z)}} = ${rootSteps(n)}`)}`,
           ),
         });
       },
@@ -2373,10 +2391,10 @@ export const theDistanceFormulaInThreeDimensions: TopicDef = {
             `求点 $(${p.join(", ")})$ 与 $(${q.join(", ")})$ 之间的距离。用最简根式表示。`,
           ),
           n,
-          wrong: [`\\sqrt{${sumWrong}}`, String(sumWrong), ...(plus > 0 ? [rootTex(plus)] : [])],
+          wrong: [...(sumWrong === 0 ? [] : [`\\sqrt{${sumWrong}}`, String(sumWrong)]), ...(plus > 0 ? [rootTex(plus)] : [])],
           solution: t(
-            `The differences are $${delta.join("$, $")}$:${steps(`d = \\sqrt{(${delta[0]})^2 + (${delta[1]})^2 + (${delta[2]})^2} = ${rootSteps(n)}`)}`,
-            `坐标之差是 $${delta.join("$、$")}$：${steps(`d = \\sqrt{(${delta[0]})^2 + (${delta[1]})^2 + (${delta[2]})^2} = ${rootSteps(n)}`)}`,
+            `The differences are $${delta.join("$, $")}$:${steps(`d = \\sqrt{${squareOf(delta[0])} + ${squareOf(delta[1])} + ${squareOf(delta[2])}} = ${rootSteps(n)}`)}`,
+            `坐标之差是 $${delta.join("$、$")}$：${steps(`d = \\sqrt{${squareOf(delta[0])} + ${squareOf(delta[1])} + ${squareOf(delta[2])}} = ${rootSteps(n)}`)}`,
           ),
         });
       },
@@ -2407,8 +2425,8 @@ export const theDistanceFormulaInThreeDimensions: TopicDef = {
           values: [String(z1), String(z2)],
           wrong: [[String(z1)], [String(dz), String(-dz)], [String(-p[2] + dz), String(-p[2] - dz)]],
           solution: t(
-            `${steps(`(${dx})^2 + (${dy})^2 + ${zTex}^2 = ${d2}`, `${zTex}^2 = ${dz * dz}`, `z = ${p[2]} \\pm ${dz}`)}So $z = ${z1}$ or $z = ${z2}$.`,
-            `${steps(`(${dx})^2 + (${dy})^2 + ${zTex}^2 = ${d2}`, `${zTex}^2 = ${dz * dz}`, `z = ${p[2]} \\pm ${dz}`)}所以 $z = ${z1}$ 或 $z = ${z2}$。`,
+            `${steps(`${squareOf(dx)} + ${squareOf(dy)} + ${zTex}^2 = ${d2}`, `${zTex}^2 = ${dz * dz}`, p[2] === 0 ? `z = \\pm ${dz}` : `z = ${p[2]} \\pm ${dz}`)}So $z = ${z1}$ or $z = ${z2}$.`,
+            `${steps(`${squareOf(dx)} + ${squareOf(dy)} + ${zTex}^2 = ${d2}`, `${zTex}^2 = ${dz * dz}`, p[2] === 0 ? `z = \\pm ${dz}` : `z = ${p[2]} \\pm ${dz}`)}所以 $z = ${z1}$ 或 $z = ${z2}$。`,
           ),
         });
       },
@@ -3251,7 +3269,7 @@ export const slantHeightsOfRightCones: TopicDef = {
         return {
           ...rootProblem({
             prompt: t(
-              `Find the slant height $l$ of the cone, in ${u}. Write it in simplest radical form.`,
+              `Find the slant height $l$ of the cone, in ${unitWord(u)}. Write it in simplest radical form.`,
               `求这个圆锥的母线长 $l$（单位：${u}）。用最简根式表示。`,
             ),
             n,
@@ -3284,7 +3302,7 @@ export const slantHeightsOfRightCones: TopicDef = {
         return {
           ...rootProblem({
             prompt: t(
-              `A cone has slant height $${tex(l, u)}$ and radius $${tex(r, u)}$. Find its height, in ${u}. Write it in simplest radical form.`,
+              `A cone has slant height $${tex(l, u)}$ and radius $${tex(r, u)}$. Find its height, in ${unitWord(u)}. Write it in simplest radical form.`,
               `一个圆锥的母线长是 $${tex(l, u)}$，半径是 $${tex(r, u)}$。求它的高（单位：${u}）。用最简根式表示。`,
             ),
             n,
@@ -3317,7 +3335,7 @@ export const slantHeightsOfRightCones: TopicDef = {
           const n = l * l - h * h;
           return rootProblem({
             prompt: t(
-              `A cone has slant height $${tex(l, u)}$ and height $${tex(h, u)}$. Find its radius, in ${u}. Write it in simplest radical form.`,
+              `A cone has slant height $${tex(l, u)}$ and height $${tex(h, u)}$. Find its radius, in ${unitWord(u)}. Write it in simplest radical form.`,
               `一个圆锥的母线长是 $${tex(l, u)}$，高是 $${tex(h, u)}$。求它的半径（单位：${u}）。用最简根式表示。`,
             ),
             n,
@@ -3333,7 +3351,7 @@ export const slantHeightsOfRightCones: TopicDef = {
         const n = r * r + h * h;
         return rootProblem({
           prompt: t(
-            `A cone has diameter $${tex(2 * r, u)}$ and height $${tex(h, u)}$. Find its slant height, in ${u}. Write it in simplest radical form.`,
+            `A cone has diameter $${tex(2 * r, u)}$ and height $${tex(h, u)}$. Find its slant height, in ${unitWord(u)}. Write it in simplest radical form.`,
             `一个圆锥的直径是 $${tex(2 * r, u)}$，高是 $${tex(h, u)}$。求它的母线长（单位：${u}）。用最简根式表示。`,
           ),
           n,
@@ -3867,7 +3885,10 @@ export const volumesOfRevolution: TopicDef = {
       ),
       generate(rng) {
         const u = pickUnit(rng);
-        const [x, y] = [rng.int(2, 12), rng.int(2, 12)];
+        const x = rng.int(2, 12);
+        const other = rng.int(2, 12);
+        // Different lengths, so that "its x leg" names one leg.
+        const y = other === x ? other + 1 : other;
         const cases: readonly [Text, number][] = [
           [
             t(
@@ -3928,8 +3949,8 @@ export const volumesOfRevolution: TopicDef = {
               "每一点都画出一个圆，与轴平行的对边在固定距离处扫出曲面：得到圆柱。",
             ),
             t(
-              "The side on the axis becomes the height, the other side through the axis becomes a radius of the base, and the slanted side sweeps the curved surface of a cone.",
-              "轴上的边成为高，另一条过轴的边成为底面半径，斜边扫出圆锥的侧面：得到圆锥。",
+              "The side on the axis becomes the height, the side that meets the axis at a right angle becomes a radius of the base, and the slanted side sweeps the curved surface of a cone.",
+              "轴上的边成为高，与轴垂直相交的边成为底面半径，斜边扫出圆锥的侧面：得到圆锥。",
             ),
             t("Every point of the curve stays at the same distance from the center: a sphere.", "曲线上每一点到圆心的距离都不变：得到球。"),
             t(

@@ -593,8 +593,8 @@ export const theLawOfCosines: TopicDef = {
               rng,
               fromSides(c, a, b),
               { sides: [`${c}`, `${a}`, `${b}`], angles: [null, null, "θ"], letters: `${L0}${L1}${L2}` },
-              `Triangle ${L0}${L1}${L2} with ${L0}${L1} = ${c}, ${L1}${L2} = ${a}, ${L2}${L0} = ${b}, and θ the obtuse angle at ${L2}.`,
-              `三角形 ${L0}${L1}${L2}，${L0}${L1} = ${c}，${L1}${L2} = ${a}，${L2}${L0} = ${b}，θ 是 ${L2} 处的钝角。`,
+              `Triangle ${L0}${L1}${L2} with ${L0}${L1} = ${c}, ${L1}${L2} = ${a}, ${L2}${L0} = ${b}, and θ the angle at ${L2}.`,
+              `三角形 ${L0}${L1}${L2}，${L0}${L1} = ${c}，${L1}${L2} = ${a}，${L2}${L0} = ${b}，θ 是 ${L2} 处的角。`,
             ),
           };
         }
@@ -1049,7 +1049,7 @@ export const modelingUsingTheLawOfCosines: TopicDef = {
           const { exact, approx } = sideByCosines(p, q, th);
           const answer = rounded(exact, approx);
           if (!answer) continue;
-          const hours = time === 1 ? t("1 hour", "1 小时") : t(`${time} hours`, `${time} 小时`);
+          const hours = time === 1 ? t("$1$ hour", "$1$ 小时") : t(`$${time}$ hours`, `$${time}$ 小时`);
           const work = steps(cosRuleTex("x", p, q, th), `x = \\sqrt{${p * p + q * q} - ${2 * p * q} ${cosOf(th)}} \\approx ${dec(answer)}`);
           return {
             ...numberProblem({

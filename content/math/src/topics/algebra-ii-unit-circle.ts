@@ -853,7 +853,7 @@ export const calculatingReferenceAngles: TopicDef = {
       id: "reference-angles-in-degrees",
       title: t("Reference angles in degrees", "角度制下的参考角"),
       explanation: t(
-        `The **reference angle** of an angle in standard position is the acute angle between its terminal side and the $x$-axis, the nearer half of it. It depends on the quadrant, for $0^\\circ < \\theta < 360^\\circ$:\n\n${referenceTable.en}\n\nFor example, $230^\\circ$ is in Quadrant III, $50^\\circ$ past the negative $x$-axis, so its reference angle is $230^\\circ - 180^\\circ = 50^\\circ$. And $300^\\circ$ is in Quadrant IV, so its reference angle is $360^\\circ - 300^\\circ = 60^\\circ$.`,
+        `The **reference angle** of an angle in standard position is the acute angle between its terminal side and the nearer half of the $x$-axis. It depends on the quadrant, for $0^\\circ < \\theta < 360^\\circ$:\n\n${referenceTable.en}\n\nFor example, $230^\\circ$ is in Quadrant III, $50^\\circ$ past the negative $x$-axis, so its reference angle is $230^\\circ - 180^\\circ = 50^\\circ$. And $300^\\circ$ is in Quadrant IV, so its reference angle is $360^\\circ - 300^\\circ = 60^\\circ$.`,
         `标准位置的角的**参考角**是它的终边与 $x$ 轴（较近的半轴）所成的锐角。对 $0^\\circ < \\theta < 360^\\circ$，按象限计算：\n\n${referenceTable["zh-CN"]}\n\n例如 $230^\\circ$ 在第三象限，比 $x$ 轴负半轴多转 $50^\\circ$，所以参考角是 $230^\\circ - 180^\\circ = 50^\\circ$。$300^\\circ$ 在第四象限，参考角是 $360^\\circ - 300^\\circ = 60^\\circ$。`,
       ),
       generate(rng) {

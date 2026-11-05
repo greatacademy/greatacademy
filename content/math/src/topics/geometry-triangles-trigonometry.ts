@@ -787,7 +787,7 @@ export const isoscelesRightTriangles: TopicDef = {
           radical: true,
           wrong: [
             fromLeg ? `${3 * k}` : `${3 * k}\\sqrt{2}`,
-            fromLeg ? `${3 * k}\\sqrt{2}` : `${2 * k} + ${2 * k}`,
+            fromLeg ? `${3 * k}\\sqrt{2}` : `${6 * k}`,
             fromLeg ? sumTex(k, 2 * k, 2) : sumTex(4 * k, 2 * k, 2),
           ],
           solution: fromLeg

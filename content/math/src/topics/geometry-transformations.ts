@@ -1459,6 +1459,9 @@ const regularNames: Record<number, readonly [string, string]> = {
 };
 
 /** shapeKinds are the kinds of polygon the symmetry problems draw. */
+/** anOf puts the indefinite article before an English noun phrase. */
+const anOf = (noun: string) => `${/^[aeiou]/.test(noun) ? "an" : "a"} ${noun}`;
+
 const shapeKinds = [
   "regular",
   "rectangle",
@@ -1650,7 +1653,7 @@ function pickShape(rng: Rng): Shape {
 function shapeFigure(rng: Rng, s: Shape): Figure {
   const phi = s.points.length > 4 && s.lines === s.points.length ? 0 : rng.int(-20, 20);
   const pts = s.points.map((p) => turn(p, phi));
-  return figure([{ kind: "polygon", points: pts, accent: true }], `A ${s.name.en}.`, `一个${s.name["zh-CN"]}。`);
+  return figure([{ kind: "polygon", points: pts, accent: true }], `${anOf(s.name.en).replace(/^a/, "A")}.`, `一个${s.name["zh-CN"]}。`);
 }
 
 /** lineOfSymmetryName writes a line in LaTeX for prompts. */
@@ -1697,7 +1700,7 @@ export const reflectiveSymmetry: TopicDef = {
             form: "integer",
             wrong: s.wrongLines,
             solution: t(
-              `A ${s.name.en} has ${s.lines === 0 ? "no lines" : s.lines === 1 ? "exactly $1$ line" : `$${s.lines}$ lines`} of symmetry.${s.lines === 0 ? " No reflection maps it onto itself." : ""}`,
+              `${anOf(s.name.en).replace(/^a/, "A")} has ${s.lines === 0 ? "no lines" : s.lines === 1 ? "exactly $1$ line" : `$${s.lines}$ lines`} of symmetry.${s.lines === 0 ? " No reflection maps it onto itself." : ""}`,
               `${s.name["zh-CN"]}${s.lines === 0 ? "没有对称轴：没有任何轴对称能把它映到自身。" : `有 $${s.lines}$ 条对称轴。`}`,
             ),
           }),
@@ -1864,8 +1867,8 @@ export const rotationalSymmetry: TopicDef = {
       id: "order-of-rotational-symmetry",
       title: t("Order of rotational symmetry", "旋转对称的阶数"),
       explanation: t(
-        "A figure has **rotational symmetry** when a rotation about its center by less than $360^\\circ$ maps it onto itself. The **order** is the number of positions in one full turn in which the figure looks exactly the same, counting the starting position. A figure with no rotational symmetry has order $1$.\n\n- A regular polygon with $n$ sides has order $n$.\n- A rectangle, a rhombus and any parallelogram have order $2$: a half turn maps each onto itself.\n- An isosceles triangle, a kite and a trapezoid have order $1$, although some have a line of symmetry.",
-        "如果绕中心旋转一个小于 $360^\\circ$ 的角能把图形映到它自身，这个图形就具有**旋转对称性**。**阶数**是旋转一整圈的过程中，图形看起来完全相同的位置的个数（包括起始位置）。没有旋转对称性的图形阶数为 $1$。\n\n- $n$ 条边的正多边形阶数为 $n$。\n- 长方形、菱形和任何平行四边形阶数为 $2$：转半圈就把它们映到自身。\n- 等腰三角形、筝形和梯形阶数为 $1$，尽管其中有些有对称轴。",
+        "A figure has **rotational symmetry** when a rotation about its center by less than $360^\\circ$ maps it onto itself. The **order** is the number of positions in one full turn in which the figure looks exactly the same, counting the starting position. A figure with no rotational symmetry has order $1$.\n\n- A regular polygon with $n$ sides has order $n$.\n- A parallelogram, including a rectangle or a rhombus, has order $2$: a half turn maps it onto itself. (A square has order $4$.)\n- An isosceles triangle, a kite and a trapezoid have order $1$, although some have a line of symmetry.",
+        "如果绕中心旋转一个小于 $360^\\circ$ 的角能把图形映到它自身，这个图形就具有**旋转对称性**。**阶数**是旋转一整圈的过程中，图形看起来完全相同的位置的个数（包括起始位置）。没有旋转对称性的图形阶数为 $1$。\n\n- $n$ 条边的正多边形阶数为 $n$。\n- 平行四边形（包括长方形和菱形）阶数为 $2$：转半圈就把它映到自身。（正方形阶数为 $4$。）\n- 等腰三角形、筝形和梯形阶数为 $1$，尽管其中有些有对称轴。",
       ),
       generate(rng) {
         const s = pickShape(rng);
@@ -1877,7 +1880,7 @@ export const rotationalSymmetry: TopicDef = {
             wrong: s.wrongOrder,
             solution: t(
               s.order === 1
-                ? `No rotation by less than $360^\\circ$ maps a ${s.name.en} onto itself, so its order is $1$.`
+                ? `No rotation by less than $360^\\circ$ maps ${anOf(s.name.en)} onto itself, so its order is $1$.`
                 : `A rotation by $${360 / s.order}^\\circ$ about the center maps the ${s.name.en} onto itself, and it looks the same in $${s.order}$ positions in a full turn: the order is $${s.order}$.`,
               s.order === 1
                 ? `没有小于 $360^\\circ$ 的旋转能把${s.name["zh-CN"]}映到自身，所以阶数是 $1$。`

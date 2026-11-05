@@ -462,7 +462,7 @@ export const equationsOfCirclesCenteredAtTheOrigin: TopicDef = {
           answer,
           wrong: [circleEq(0, 0, r.r ?? k * m), circleEq(0, 0, 2 * (r.r ?? k * m)), circleEq(0, 0, 2 * r.r2)],
           solution: t(
-            `The right side is the square of the radius, $(${r.tex})^{2} = ${r.r2}$:${steps(answer)}`,
+            `The right side is the square of the radius, $${r.tex.includes("sqrt") ? `(${r.tex})` : r.tex}^{2} = ${r.r2}$:${steps(answer)}`,
             `右边是半径的平方，$(${r.tex})^{2} = ${r.r2}$：${steps(answer)}`,
           ),
         });
@@ -558,8 +558,8 @@ export const equationsOfCircles: TopicDef = {
               [k, h],
             ],
             solution: t(
-              `Write the equation as $${sqTerm("x", h).replace(/\(x [+-] \d+\)/, `(x - ${paren(h)})`)} + ${sqTerm("y", k).replace(/\(y [+-] \d+\)/, `(y - ${paren(k)})`)} = ${c}$. The center is $${pointLatex([h, k])}$.`,
-              `把方程写成 $${sqTerm("x", h).replace(/\(x [+-] \d+\)/, `(x - ${paren(h)})`)} + ${sqTerm("y", k).replace(/\(y [+-] \d+\)/, `(y - ${paren(k)})`)} = ${c}$。圆心是 $${pointLatex([h, k])}$。`,
+              `Write the equation as $(x - ${paren(h)})^{2} + (y - ${paren(k)})^{2} = ${c}$. The center is $${pointLatex([h, k])}$.`,
+              `把方程写成 $(x - ${paren(h)})^{2} + (y - ${paren(k)})^{2} = ${c}$。圆心是 $${pointLatex([h, k])}$。`,
             ),
           });
         return radicalProblem({
@@ -686,18 +686,22 @@ const completedSquareFigure = exampleFigure(
 /** completion writes the steps that turn x² + y² + Dx + Ey + F = 0, with D = −2h and E = −2k, into standard form. */
 function completion(h: number, k: number, F: number): string {
   const r2 = h * h + k * k - F;
+  // A variable with no linear term needs no grouping and no added square.
+  const group = (c: number, v: string, constant: number) => (c === 0 ? `${v}^{2}` : `(${quad(1, -2 * c, constant, v)})`);
   return steps(
-    `(${quad(1, -2 * h, 0)}) + (${quad(1, -2 * k, 0, "y")}) = ${-F}`,
-    `(${quad(1, -2 * h, h * h)}) + (${quad(1, -2 * k, k * k, "y")}) = ${poly([-F, ""], [h * h, ""], [k * k, ""])}`,
+    `${group(h, "x", 0)} + ${group(k, "y", 0)} = ${-F}`,
+    `${group(h, "x", h * h)} + ${group(k, "y", k * k)} = ${poly([-F, ""], [h * h, ""], [k * k, ""])}`,
     `${sqTerm("x", h)} + ${sqTerm("y", k)} = ${r2}`,
   );
 }
 
-const completionIntro = (h: number, k: number): Text =>
-  t(
-    `Group the $x$ terms and the $y$ terms, move the constant to the right, and add $${paren(h)}^{2} = ${h * h}$ and $${paren(k)}^{2} = ${k * k}$ to both sides:`,
-    `把含 $x$ 的项和含 $y$ 的项分组，把常数移到右边，两边同时加上 $${paren(h)}^{2} = ${h * h}$ 和 $${paren(k)}^{2} = ${k * k}$：`,
+const completionIntro = (h: number, k: number): Text => {
+  const added = [h, k].filter((c) => c !== 0).map((c) => `$${paren(c)}^{2} = ${c * c}$`);
+  return t(
+    `Group the $x$ terms and the $y$ terms, move the constant to the right, and add ${added.join(" and ")} to both sides:`,
+    `把含 $x$ 的项和含 $y$ 的项分组，把常数移到右边，两边同时加上 ${added.join(" 和 ")}：`,
   );
+};
 
 export const determiningCirclePropertiesByCompletingTheSquare: TopicDef = {
   id: "determining-circle-properties-by-completing-the-square",
@@ -867,7 +871,7 @@ function interceptProblem(rng: Rng, v: "x" | "y"): Problem {
   const eq = circleEq(h, k, r2);
   const w = v === "x" ? "y" : "x";
   const values = pm(c, s);
-  const sq = `(${linear(1, -c, v)})^{2}`;
+  const sq = sqTerm(v, c);
   const sub = `${sq} + ${paren(-o)}^{2} = ${r2}`;
   const lines = [sub, `${sq} = ${s}`];
   const tail =
@@ -876,8 +880,12 @@ function interceptProblem(rng: Rng, v: "x" | "y"): Problem {
       : s === 0
         ? t(`So $${v} = ${c}$: the circle touches the axis at one point.`, `所以 $${v} = ${c}$：圆与坐标轴只有一个公共点。`)
         : t(
-            `Take square roots: $${v} - ${paren(c)} = \\pm ${rootTex(s)}$, so $${v} = ${pmTex(c, s)}$.`,
-            `开平方：$${v} - ${paren(c)} = \\pm ${rootTex(s)}$，所以 $${v} = ${pmTex(c, s)}$。`,
+            c === 0
+              ? `Take square roots: $${v} = ${pmTex(c, s)}$.`
+              : `Take square roots: $${v} - ${paren(c)} = \\pm ${rootTex(s)}$, so $${v} = ${pmTex(c, s)}$.`,
+            c === 0
+              ? `开平方：$${v} = ${pmTex(c, s)}$。`
+              : `开平方：$${v} - ${paren(c)} = \\pm ${rootTex(s)}$，所以 $${v} = ${pmTex(c, s)}$。`,
           );
   const axis = v === "x" ? t("$x$-intercepts", "$x$ 轴截距") : t("$y$-intercepts", "$y$ 轴截距");
   return solutionsProblem({
@@ -889,8 +897,8 @@ function interceptProblem(rng: Rng, v: "x" | "y"): Problem {
     variable: v,
     wrong: [pm(c, r2 + o * o), pm(-c, s), pm(c, r2), [String(c)]],
     solution: t(
-      `On the ${v}-axis $${w} = 0$. Substitute:${steps(...lines)}${tail.en}`,
-      `在 ${v} 轴上 $${w} = 0$。代入：${steps(...lines)}${tail["zh-CN"]}`,
+      `On the $${v}$-axis $${w} = 0$. Substitute:${steps(...lines)}${tail.en}`,
+      `在 $${v}$ 轴上 $${w} = 0$。代入：${steps(...lines)}${tail["zh-CN"]}`,
     ),
   });
 }
@@ -1052,10 +1060,14 @@ export const intersectionsOfCirclesWithLines: TopicDef = {
             `求直线 $${line}$ 与圆 $${eq}$ 的交点的 $x$ 坐标。`,
           ),
           values: [String(p[0]), String(q[0])],
-          wrong: [
-            [String(p[1]), String(q[1])],
-            [String(-p[0]), String(-q[0])],
-          ],
+          // A slip gives the y-values, the negated x-values or one root only; on a chord of slope -1 or 1
+          // the first two can coincide with the x-values or with each other, so they are compared as sets.
+          wrong: [[p[1], q[1]], [-p[0], -q[0]], [q[0]]]
+            .filter((w, i, all) => {
+              const same = (a: readonly number[], b: readonly number[]) => a.length === b.length && a.every((v) => b.includes(v));
+              return !same(w, [p[0], q[0]]) && !all.slice(0, i).some((earlier) => same(w, earlier));
+            })
+            .map((w) => w.map(String)),
           solution: t(
             `Substitute $${linear(m, b)}$ for $y$, expand, divide by $${1 + m * m}$ and factor:${lineSubstitution(0, 0, r2, m, b, p[0], q[0])}So $x = ${p[0]}$ or $x = ${q[0]}$.`,
             `把 $y$ 换成 $${linear(m, b)}$，展开，除以 $${1 + m * m}$ 后因式分解：${lineSubstitution(0, 0, r2, m, b, p[0], q[0])}所以 $x = ${p[0]}$ 或 $x = ${q[0]}$。`,
@@ -1086,8 +1098,8 @@ export const intersectionsOfCirclesWithLines: TopicDef = {
           answer: R,
           wrong: [P, [R[1], R[0]], q, [R[0], m * R[0] - c0]],
           solution: t(
-            `Substitute the line into the circle:${lineSubstitution(h, k, r2, m, c0, P[0], R[0])}The greater solution is $x = ${R[0]}$, and the line gives $y = ${m} \\cdot ${paren(R[0])} ${c0 < 0 ? "-" : "+"} ${Math.abs(c0)} = ${R[1]}$. The point is $${pointLatex(R)}$.`,
-            `把直线代入圆的方程：${lineSubstitution(h, k, r2, m, c0, P[0], R[0])}较大的解是 $x = ${R[0]}$，由直线得 $y = ${m} \\cdot ${paren(R[0])} ${c0 < 0 ? "-" : "+"} ${Math.abs(c0)} = ${R[1]}$。交点是 $${pointLatex(R)}$。`,
+            `Substitute the line into the circle:${lineSubstitution(h, k, r2, m, c0, P[0], R[0])}The greater solution is $x = ${R[0]}$, and the line gives $y = ${m === 1 ? paren(R[0]) : `${m} \\cdot ${paren(R[0])}`}${c0 === 0 ? "" : ` ${c0 < 0 ? "-" : "+"} ${Math.abs(c0)}`} = ${R[1]}$. The point is $${pointLatex(R)}$.`,
+            `把直线代入圆的方程：${lineSubstitution(h, k, r2, m, c0, P[0], R[0])}较大的解是 $x = ${R[0]}$，由直线得 $y = ${m === 1 ? paren(R[0]) : `${m} \\cdot ${paren(R[0])}`}${c0 === 0 ? "" : ` ${c0 < 0 ? "-" : "+"} ${Math.abs(c0)}`} = ${R[1]}$。交点是 $${pointLatex(R)}$。`,
           ),
         });
       },

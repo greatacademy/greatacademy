@@ -841,8 +841,8 @@ export const determiningTheRootsOfPolynomials: TopicDef = {
           values,
           wrong,
           solution: t(
-            `Set each factor equal to zero. $${xm(r)} = 0$ gives $x = ${r}$, and ${quadStep.en}. The real roots are $${values.join(", ")}$.`,
-            `令每个因式等于零。$${xm(r)} = 0$ 得 $x = ${r}$；${quadStep["zh-CN"]}。实数根是 $${values.join(", ")}$。`,
+            `Set each factor equal to zero. $${xm(r)} = 0$ gives $x = ${r}$, and ${quadStep.en}. ${values.length === 1 ? `The only real root is $${values[0]}$` : `The real roots are $${values.join(", ")}$`}.`,
+            `令每个因式等于零。$${xm(r)} = 0$ 得 $x = ${r}$；${quadStep["zh-CN"]}。${values.length === 1 ? `唯一的实数根是 $${values[0]}$` : `实数根是 $${values.join(", ")}$`}。`,
           ),
         });
       },
@@ -2139,8 +2139,8 @@ export const findingMultiplicitiesOfTheRootsOfQuarticPolynomialsByFactoring: Top
             answer,
             wrong: [1, 4, answer === 3 ? 2 : 3],
             solution: t(
-              `Divide by $${xm(a)}$ again and again until the remainder is not $0$:${arrays.map((l) => steps(l)).join("")}${answer} divisions leave remainder $0$, so $x = ${a}$ has multiplicity $${answer}$.`,
-              `反复除以 $${xm(a)}$，直到余数不为 $0$：${arrays.map((l) => steps(l)).join("")}有 ${answer} 次除法余数为 $0$，所以 $x = ${a}$ 是 $${answer}$ 重根。`,
+              `Divide by $${xm(a)}$ again and again until the remainder is not $0$:${arrays.map((l) => steps(l)).join("")}${answer === 1 ? "One division leaves" : `$${answer}$ divisions leave`} remainder $0$, so $x = ${a}$ has multiplicity $${answer}$.`,
+              `反复除以 $${xm(a)}$，直到余数不为 $0$：${arrays.map((l) => steps(l)).join("")}有 $${answer}$ 次除法余数为 $0$，所以 $x = ${a}$ 是 $${answer}$ 重根。`,
             ),
           });
         }

@@ -336,6 +336,8 @@ export const similarityAndSimilarPolygons: TopicDef = {
             `矩形 ABCD，${r1[0]} × ${r1[1]}；矩形 EFGH，${r2[0]} × ${r2[1]}。`,
           );
           const cmp = similar ? "=" : "\\ne";
+          // A ratio already in lowest terms is not written twice.
+          const ratio = (n: number, d: number) => (fr(n, d) === `\\frac{${n}}{${d}}` ? fr(n, d) : `\\frac{${n}}{${d}} = ${fr(n, d)}`);
           const claimed = fr(s2[1] + (similar ? 1 : 0), s1[1]);
           return {
             ...verdictChoice(rng, {
@@ -349,8 +351,8 @@ export const similarityAndSimilarPolygons: TopicDef = {
                 `两组边增加的量不同，分别是 $${Math.abs(s2[0] - s1[0])}$ 和 $${Math.abs(s2[1] - s1[1])}$`,
               ),
               solution: t(
-                `Compare the shorter sides and the longer sides:${steps(`\\frac{${s2[0]}}{${s1[0]}} = ${fr(s2[0], s1[0])}, \\qquad \\frac{${s2[1]}}{${s1[1]}} = ${fr(s2[1], s1[1])}`)}The ratios are ${similar ? "equal" : "not equal"} ($${fr(s2[0], s1[0])} ${cmp} ${fr(s2[1], s1[1])}$), so the rectangles are ${similar ? "" : "not "}similar.`,
-                `比较短边与短边、长边与长边：${steps(`\\frac{${s2[0]}}{${s1[0]}} = ${fr(s2[0], s1[0])}, \\qquad \\frac{${s2[1]}}{${s1[1]}} = ${fr(s2[1], s1[1])}`)}两个比${similar ? "相等" : "不相等"}（$${fr(s2[0], s1[0])} ${cmp} ${fr(s2[1], s1[1])}$），所以这两个矩形${similar ? "相似" : "不相似"}。`,
+                `Compare the shorter sides and the longer sides:${steps(`${ratio(s2[0], s1[0])}, \\qquad ${ratio(s2[1], s1[1])}`)}The ratios are ${similar ? "equal" : "not equal"} ($${fr(s2[0], s1[0])} ${cmp} ${fr(s2[1], s1[1])}$), so the rectangles are ${similar ? "" : "not "}similar.`,
+                `比较短边与短边、长边与长边：${steps(`${ratio(s2[0], s1[0])}, \\qquad ${ratio(s2[1], s1[1])}`)}两个比${similar ? "相等" : "不相等"}（$${fr(s2[0], s1[0])} ${cmp} ${fr(s2[1], s1[1])}$），所以这两个矩形${similar ? "相似" : "不相似"}。`,
               ),
             }),
             figure: fig,
@@ -688,6 +690,7 @@ export const areasOfSimilarPolygons: TopicDef = {
         const area = u * u * rng.int(1, u === 1 ? 15 : 6);
         const answer = (area / (u * u)) * v * v;
         const k = Q.of(v, u);
+        const power = u === 1 ? `${v}^{2}` : `\\left(${k.toLatex()}\\right)^{2}`;
         return {
           ...numberProblem({
             prompt: t(
@@ -695,10 +698,10 @@ export const areasOfSimilarPolygons: TopicDef = {
               `$${tri(L1)} \\sim ${tri(L2)}$，$${tri(L1)}$ 的面积为 $${area}$。求 $${tri(L2)}$ 的面积。`,
             ),
             answer,
-            wrong: [k.mul(Q.of(area)), Q.of(area * u * u, v * v), area + s2 - s1],
+            wrong: [k.mul(Q.of(area)), Q.of(area * u * u, v * v), area + Math.abs(s2 - s1)],
             solution: t(
-              `The scale factor is $k = \\frac{${s2}}{${s1}} = ${k.toLatex()}$, so areas are multiplied by $k^{2}$:${steps(`\\left(${k.toLatex()}\\right)^{2} \\cdot ${area} = ${answer}`)}`,
-              `相似比为 $k = \\frac{${s2}}{${s1}} = ${k.toLatex()}$，所以面积乘以 $k^{2}$：${steps(`\\left(${k.toLatex()}\\right)^{2} \\cdot ${area} = ${answer}`)}`,
+              `The scale factor is $k = \\frac{${s2}}{${s1}} = ${k.toLatex()}$, so areas are multiplied by $k^{2}$:${steps(`${power} \\cdot ${area} = ${answer}`)}`,
+              `相似比为 $k = \\frac{${s2}}{${s1}} = ${k.toLatex()}$，所以面积乘以 $k^{2}$：${steps(`${power} \\cdot ${area} = ${answer}`)}`,
             ),
           }),
           figure: figure(
@@ -800,7 +803,7 @@ export const workingWithAreasOfSimilarPolygons: TopicDef = {
           ),
           answer: k,
           form: "fraction",
-          wrong: [Q.of(A2, A1), Q.of(a, b), Q.of(A2 - A1)],
+          wrong: [Q.of(A2, A1), Q.of(a, b), Q.of(Math.abs(A2 - A1))],
           solution: t(
             `The ratio of the areas is $k^{2}$:${steps(`k^{2} = \\frac{${A2}}{${A1}} = ${fr(A2, A1)}`, `k = \\sqrt{${fr(A2, A1)}} = ${k.toLatex()}`)}`,
             `面积之比是 $k^{2}$：${steps(`k^{2} = \\frac{${A2}}{${A1}} = ${fr(A2, A1)}`, `k = \\sqrt{${fr(A2, A1)}} = ${k.toLatex()}`)}`,
@@ -831,7 +834,7 @@ export const workingWithAreasOfSimilarPolygons: TopicDef = {
             `$${tri(L1)} \\sim ${tri(L2)}$。$${tri(L1)}$ 的面积为 $${A1}$，$${tri(L2)}$ 的面积为 $${A2}$，$${sideName(L1, i)} = ${side}$。求 $${sideName(L2, i)}$。`,
           ),
           answer,
-          wrong: [Q.of(side * A2, A1), Q.of(side * a, b), side + A2 - A1],
+          wrong: [Q.of(side * A2, A1), Q.of(side * a, b), side + Math.abs(A2 - A1)],
           solution: t(
             `The scale factor is $k = \\sqrt{\\frac{${A2}}{${A1}}} = \\sqrt{${fr(A2, A1)}} = ${fr(b, a)}$. So${steps(`${sideName(L2, i)} = ${fr(b, a)} \\cdot ${side} = ${answer}`)}`,
             `相似比为 $k = \\sqrt{\\frac{${A2}}{${A1}}} = \\sqrt{${fr(A2, A1)}} = ${fr(b, a)}$。所以${steps(`${sideName(L2, i)} = ${fr(b, a)} \\cdot ${side} = ${answer}`)}`,
@@ -1312,7 +1315,12 @@ export const theAASimilarityCriterion: TopicDef = {
 /** sortedRatios writes the ratios of sorted sides of two triangles, for solutions. */
 function sortedRatios(s1: readonly number[], s2: readonly number[]): string {
   const [x, y] = [[...s1].sort((p, q) => p - q), [...s2].sort((p, q) => p - q)];
-  return x.map((v, i) => `\\frac{${y[i]}}{${v}} = ${fr(y[i]!, v)}`).join(", \\quad ");
+  return x
+    .map((v, i) => {
+      const raw = `\\frac{${y[i]}}{${v}}`;
+      return fr(y[i]!, v) === raw ? raw : `${raw} = ${fr(y[i]!, v)}`;
+    })
+    .join(", \\quad ");
 }
 
 export const theSSSSimilarityCriterion: TopicDef = {
@@ -1842,7 +1850,7 @@ export const combiningSimilarityCriteriaForTriangles: TopicDef = {
             ),
             answer: Q.of(num * known, den),
             solveFor: "x",
-            wrong: [Q.of(den * known, num), known + num - den],
+            wrong: [Q.of(den * known, num), known + Math.abs(num - den)],
             solution: t(
               `The vertical angles at $${E}$ are congruent and $\\angle ${A} \\cong \\angle ${D}$ (alternate interior angles), so $\\triangle ${E}${A}${B} \\sim \\triangle ${E}${D}${C}$ by AA, with $${A} \\leftrightarrow ${D}$ and $${B} \\leftrightarrow ${C}$. The scale factor from $\\triangle ${E}${A}${B}$ to $\\triangle ${E}${D}${C}$ is $\\frac{${E}${D}}{${E}${A}} = \\frac{${ED}}{${EA}}$:${steps(line)}`,
               `$${E}$ 处的对顶角相等，$\\angle ${A} \\cong \\angle ${D}$（内错角），所以由 AA，$\\triangle ${E}${A}${B} \\sim \\triangle ${E}${D}${C}$，$${A} \\leftrightarrow ${D}$，$${B} \\leftrightarrow ${C}$。从 $\\triangle ${E}${A}${B}$ 到 $\\triangle ${E}${D}${C}$ 的相似比为 $\\frac{${E}${D}}{${E}${A}} = \\frac{${ED}}{${EA}}$：${steps(line)}`,

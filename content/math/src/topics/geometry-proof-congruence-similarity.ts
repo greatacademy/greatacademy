@@ -517,6 +517,9 @@ export const identifyingAnglePostulates: TopicDef = {
           ],
           180,
         );
+        // Substituting x, written without a coefficient 1 or a term + 0; empty when the label is plain x.
+        const substituted = `${ca === 1 ? x : `${ca} \\cdot ${x}`}${da === 0 ? "" : ` ${da < 0 ? "-" : "+"} ${Math.abs(da)}`}`;
+        const value = ca === 1 && da === 0 ? `x = ${asked}` : `${linear(ca, da)} = ${substituted} = ${asked}`;
         return {
           ...numberProblem({
             prompt: t(
@@ -528,8 +531,8 @@ export const identifyingAnglePostulates: TopicDef = {
             unit: "°",
             wrong: [x, 180 - asked, 90 - asked > 0 ? 90 - asked : 2 * asked],
             solution: t(
-              `By the Linear Pair Postulate, the angles add up to $180^\\circ$:${chain(...work)}Then $${linear(ca, da)} = ${ca} \\cdot ${x} ${da < 0 ? "-" : "+"} ${Math.abs(da)} = ${asked}$, so the angle is $${asked}^\\circ$.`,
-              `由邻补角公设，两角之和为 $180^\\circ$：${chain(...work)}于是 $${linear(ca, da)} = ${ca} \\cdot ${x} ${da < 0 ? "-" : "+"} ${Math.abs(da)} = ${asked}$，所以这个角是 $${asked}^\\circ$。`,
+              `By the Linear Pair Postulate, the angles add up to $180^\\circ$:${chain(...work)}Then $${value}$, so the angle is $${asked}^\\circ$.`,
+              `由邻补角公设，两角之和为 $180^\\circ$：${chain(...work)}于是 $${value}$，所以这个角是 $${asked}^\\circ$。`,
             ),
           }),
           figure: figure(
@@ -1228,11 +1231,11 @@ export const provingConsecutiveAngleConverse: TopicDef = {
         const rule =
           kind === 3
             ? t(
-                `they are parallel exactly when the angles add up to $180^\\circ$; here $${ma}^\\circ + ${mb}^\\circ = ${ma + mb}^\\circ$`,
+                `the lines are parallel exactly when the angles add up to $180^\\circ$; here $${ma}^\\circ + ${mb}^\\circ = ${ma + mb}^\\circ$`,
                 `当且仅当两角之和为 $180^\\circ$ 时平行；这里 $${ma}^\\circ + ${mb}^\\circ = ${ma + mb}^\\circ$`,
               )
             : t(
-                `they are parallel exactly when the angles are congruent; here the angles are $${ma}^\\circ$ and $${mb}^\\circ$`,
+                `the lines are parallel exactly when the angles are congruent; here the angles are $${ma}^\\circ$ and $${mb}^\\circ$`,
                 `当且仅当两角全等时平行；这里两个角是 $${ma}^\\circ$ 和 $${mb}^\\circ$`,
               );
         return {
@@ -1546,12 +1549,12 @@ function pickPoint(rng: Rng, lim = 6): XY {
 /** shift describes a translation in words: "3 units left and 2 units up". */
 export function shift(h: number, v: number): Text {
   const en = [
-    h !== 0 && `${Math.abs(h)} unit${Math.abs(h) === 1 ? "" : "s"} ${h > 0 ? "right" : "left"}`,
-    v !== 0 && `${Math.abs(v)} unit${Math.abs(v) === 1 ? "" : "s"} ${v > 0 ? "up" : "down"}`,
+    h !== 0 && `$${Math.abs(h)}$ unit${Math.abs(h) === 1 ? "" : "s"} ${h > 0 ? "right" : "left"}`,
+    v !== 0 && `$${Math.abs(v)}$ unit${Math.abs(v) === 1 ? "" : "s"} ${v > 0 ? "up" : "down"}`,
   ].filter(Boolean);
   const zh = [
-    h !== 0 && `向${h > 0 ? "右" : "左"} ${Math.abs(h)} 个单位`,
-    v !== 0 && `向${v > 0 ? "上" : "下"} ${Math.abs(v)} 个单位`,
+    h !== 0 && `向${h > 0 ? "右" : "左"} $${Math.abs(h)}$ 个单位`,
+    v !== 0 && `向${v > 0 ? "上" : "下"} $${Math.abs(v)}$ 个单位`,
   ].filter(Boolean);
   return t(en.join(" and "), zh.join("，再"));
 }
@@ -1814,8 +1817,8 @@ export const rotationsOfGeometricFigures: TopicDef = {
         ][kind]!;
         const same90 = [
           t("", ""),
-          t(", the same as $90^\\circ$ clockwise", "，相当于顺时针 $90^\\circ$"),
-          t(", the same as $90^\\circ$ counterclockwise", "，相当于逆时针 $90^\\circ$"),
+          t(", the same as $90^\\circ$ clockwise,", "，相当于顺时针 $90^\\circ$"),
+          t(", the same as $90^\\circ$ counterclockwise,", "，相当于逆时针 $90^\\circ$"),
         ][kind]!;
         return pointProblem({
           prompt: t(
