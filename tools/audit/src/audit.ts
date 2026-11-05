@@ -119,6 +119,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
         add("explanation of something visual without a drawing", path);
 
       let choices = 0;
+      let explained = 0;
       let options = 0;
       let noWrong = 0;
       let leaks = 0;
@@ -138,6 +139,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
           choices++;
           options = problem.answer.input.options.length;
           answerIndexes.add(Number(problem.answer.expected));
+          if (problem.mistakes?.length) explained++;
         }
         if (!problem.wrong?.length) noWrong++;
         if (!cjk.test(problem.prompt["zh-CN"])) add("zh prompt without Chinese", `${path} seed ${seed}`);
@@ -156,6 +158,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (unworked > samplesPerKnowledgePoint / 2) add(`solution with no relation and under ${minSolutionWords} words of prose`, path);
       if (choices === samplesPerKnowledgePoint && answerIndexes.size === 1) add("choice answer always at the same index", path);
       if (choices === samplesPerKnowledgePoint && options === 2) add("two-option choice", path);
+      if (choices > 0 && explained === 0) add("choice whose wrong options are not explained", path);
       if (noWrong === samplesPerKnowledgePoint) add("no wrong responses listed", path);
       if (leaks > samplesPerKnowledgePoint / 2) add("canonical answer appears in the prompt", path);
     });

@@ -232,6 +232,13 @@ function motionChoice(rng: Rng, verb: Pair, right: string, others: readonly stri
     figure: triangleFigure(pts),
     correct: imageFigure(pts, images),
     wrong: others.map((o) => imageFigure(pts, pts.map((motions[o] as (typeof motions)[string]).move))),
+    whys: others.map((o) => {
+      const rule = (motions[o] as (typeof motions)[string]).rule;
+      return t(
+        `This drawing follows the rule $${rule}$, which belongs to a different motion.`,
+        `这张图用的是规则 $${rule}$，那是另一种运动。`,
+      );
+    }),
     solution: t(
       `This motion sends every point by the rule $${motion.rule}$. Apply it to each vertex: ${vertex}. The other drawings use a different rule, so at least one of their vertices lands elsewhere.`,
       `这个变换按规则 $${motion.rule}$ 移动每个点。把它用到每个顶点上：${vertex.replaceAll("$, $", "$，$")}。其余的图用了别的规则，至少有一个顶点落在别处。`,
@@ -272,6 +279,17 @@ function inequalityChoice(rng: Rng, strict: boolean) {
     ),
     correct: halfPlaneFigure(m, b, above, strict),
     wrong: [halfPlaneFigure(m, b, !above, strict), halfPlaneFigure(m, b, above, !strict), halfPlaneFigure(-m, b, above, strict)],
+    whys: [
+      t(
+        "This drawing shades the wrong side of the line. Test a point, such as the origin.",
+        "这张图涂错了直线的一侧。代入一个点检验，比如原点。",
+      ),
+      t(
+        "The boundary is drawn the wrong way: a solid line means its points count, which needs $\\le$ or $\\ge$.",
+        "边界画法不对：实线表示线上的点也算，这要求是 $\\le$ 或 $\\ge$。",
+      ),
+      t("This line has the opposite slope, so it leans the wrong way.", "这条直线的斜率符号相反，倾斜方向错了。"),
+    ],
     solution: t(
       `The boundary is $y = ${linear(coef(m), b)}$, through $${tex([0, b])}$ with slope $${num(coef(m))}$. It is ${strict ? "dashed, because points on it do not satisfy a strict inequality" : "solid, because points on it satisfy the inequality"}. Test the origin: $0 ${sign} ${num(b)}$ is ${holds ? "true" : "false"}, so the shading ${holds ? "includes" : "leaves out"} the origin.`,
       `边界是 $y = ${linear(coef(m), b)}$，经过 $${tex([0, b])}$，斜率为 $${num(coef(m))}$。${strict ? "它画成虚线，因为边界上的点不满足严格不等式" : "它画成实线，因为边界上的点满足不等式"}。用原点检验：$0 ${sign} ${num(b)}$ ${holds ? "成立" : "不成立"}，所以阴影${holds ? "包含" : "不包含"}原点。`,
@@ -302,6 +320,17 @@ function shiftChoice(
     prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
     correct: figure(1, { h, k }),
     wrong: [figure(1, { h: -h, k }), figure(1, { h, k: -k }), figure(-1, { h, k })],
+    whys: [
+      t(
+        "This graph moves sideways the wrong way: $x - h$ moves a graph $h$ to the right.",
+        "这个图像左右平移的方向错了：$x - h$ 使图像向右移 $h$。",
+      ),
+      t(
+        "This graph moves up or down the wrong way: a number added outside moves it up.",
+        "这个图像上下平移的方向错了：在外面加一个正数使图像上移。",
+      ),
+      t("This graph is flipped upside down, which would need a minus sign in front.", "这个图像上下翻转了，那需要前面有负号。"),
+    ],
     solution: t(
       `Inside the function, $${shifted(h)}$ moves the graph ${h > 0 ? "right" : "left"} by $${Math.abs(h)}$: the sign looks opposite to the move, because $x = ${num(h)}$ makes the inside zero. The ${k > 0 ? `$+ ${k}$` : `$- ${-k}$`} outside moves it ${k > 0 ? "up" : "down"} by $${Math.abs(k)}$. So ${start[0]} is at $${tex([h, k])}$, and with no minus sign in front, the graph is not turned over.`,
       `函数内部的 $${shifted(h)}$ 把图像向${h > 0 ? "右" : "左"}移动 $${Math.abs(h)}$：符号看起来与移动方向相反，因为 $x = ${num(h)}$ 时内部为零。外面的 ${k > 0 ? `$+ ${k}$` : `$- ${-k}$`} 把图像向${k > 0 ? "上" : "下"}移动 $${Math.abs(k)}$。所以${start[1]}在 $${tex([h, k])}$；前面没有负号，所以图像没有翻转。`,
@@ -378,6 +407,17 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the point $P${tex([a, b])}$?`, `哪张图画出了点 $P${tex([a, b])}$？`),
           correct: pointFigure([a, b], "P"),
           wrong: [pointFigure([b, a], "P"), pointFigure([-a, b], "P"), pointFigure([a, -b], "P")],
+          whys: [
+            t("This drawing swaps the coordinates: the first one is the move across.", "这张图把坐标对调了：第一个坐标是水平方向的移动。"),
+            t(
+              "This drawing has the wrong sign across: check left or right of the $y$-axis.",
+              "这张图水平方向的符号错了：看点在 $y$ 轴的左边还是右边。",
+            ),
+            t(
+              "This drawing has the wrong sign going up: check above or below the $x$-axis.",
+              "这张图竖直方向的符号错了：看点在 $x$ 轴的上方还是下方。",
+            ),
+          ],
           solution: t(
             `From the origin, move $${Math.abs(a)}$ ${a > 0 ? "right" : "left"} because the first number is $${num(a)}$, then $${Math.abs(b)}$ ${b > 0 ? "up" : "down"} because the second number is $${num(b)}$.`,
             `从原点出发，因为第一个数是 $${num(a)}$，所以向${a > 0 ? "右" : "左"}移动 $${Math.abs(a)}$；因为第二个数是 $${num(b)}$，所以再向${b > 0 ? "上" : "下"}移动 $${Math.abs(b)}$。`,
@@ -418,6 +458,11 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           ),
           correct: image(right),
           wrong: [image(overX ? [-a, b] : [a, -b]), image([-a, -b]), image([b, a])],
+          whys: [
+            t("This image is a reflection across the other axis.", "这是关于另一条轴的反射。"),
+            t("This image changes both signs, which is a half turn about the origin.", "这个像把两个符号都变了，那是绕原点转半圈。"),
+            t("This image swaps the coordinates, which is a reflection across $y = x$.", "这个像把坐标对调了，那是关于 $y = x$ 的反射。"),
+          ],
           solution: t(
             `Across the ${axis[0]}, the ${overX ? "second" : "first"} number changes sign and the other stays, so $P'$ is $${tex(right)}$. The axis is then exactly halfway between the two points.`,
             `关于${axis[1]}翻折时，${overX ? "第二" : "第一"}个数变号，另一个不变，所以 $P'$ 是 $${tex(right)}$。这时这条轴恰好在两点的正中间。`,
@@ -450,6 +495,14 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the line $${equation}$?`, `哪张图画出了直线 $${equation}$？`),
           correct: line(p, q),
           wrong: [line(q, p), line(-p, q), line(p, -q)],
+          whys: [
+            t(
+              "This line swaps the intercepts. To find the $x$-intercept, set $y = 0$.",
+              "这条直线把两个截距对调了。求 $x$ 轴截距时令 $y = 0$。",
+            ),
+            t("This line crosses the $x$-axis on the wrong side of the origin.", "这条直线与 $x$ 轴的交点在原点的另一侧。"),
+            t("This line crosses the $y$-axis on the wrong side of the origin.", "这条直线与 $y$ 轴的交点在原点的另一侧。"),
+          ],
           solution: t(
             `Setting $y = 0$ gives $x = ${num(p)}$, so the line passes through $${tex([p, 0])}$. Setting $x = 0$ gives $y = ${num(q)}$, so it passes through $${tex([0, q])}$. Only one drawing goes through both.`,
             `令 $y = 0$，得 $x = ${num(p)}$，所以直线经过 $${tex([p, 0])}$。令 $x = 0$，得 $y = ${num(q)}$，所以它经过 $${tex([0, q])}$。只有一张图同时经过这两点。`,
@@ -475,6 +528,11 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the line $${equation}$?`, `哪张图画出了直线 $${equation}$？`),
           correct: lineFigure(m, b),
           wrong: [lineFigure(-m, b), lineFigure(m, -b), lineFigure(b, m)],
+          whys: [
+            t("This line has the opposite slope, so it leans the wrong way.", "这条直线的斜率符号相反，倾斜方向错了。"),
+            t("This line crosses the $y$-axis at the opposite of $b$.", "这条直线与 $y$ 轴的交点是 $b$ 的相反数。"),
+            t("This line swaps the slope and the intercept.", "这条直线把斜率和截距对调了。"),
+          ],
           solution: t(
             `The line meets the $y$-axis at $${tex([0, b])}$. The slope is $${num(coef(m))}$, so it ${m > 0 ? "climbs" : "falls"} from left to right, and one step right reaches $${tex(end)}$.`,
             `直线与 $y$ 轴交于 $${tex([0, b])}$。斜率是 $${num(coef(m))}$，所以它从左到右${m > 0 ? "上升" : "下降"}，向右一步到达 $${tex(end)}$。`,
@@ -521,6 +579,11 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the system $${system}$?`, `哪张图画出了方程组 $${system.replace("$ and $", "$，$")}$？`),
           correct: pair(p, b1, q, b2),
           wrong: [pair(-p, b1, q, b2), pair(p, b1, -q, b2), pair(p, -b1 + 1, q, b2)],
+          whys: [
+            t("In this drawing, the first line has the opposite slope.", "这张图中，第一条直线的斜率符号相反。"),
+            t("In this drawing, the second line has the opposite slope.", "这张图中，第二条直线的斜率符号相反。"),
+            t("In this drawing, the first line crosses the $y$-axis at the wrong height.", "这张图中，第一条直线与 $y$ 轴的交点高度不对。"),
+          ],
           solution: t(
             `The first line meets the $y$-axis at $${tex([0, b1])}$ with slope $${num(p)}$, and the second at $${tex([0, b2])}$ with slope $${num(q)}$. They cross at the solution: $${tex([x0, y0])}$ fits both, since $${num(y0)} = ${num(p)} \\cdot ${paren(x0)}${plus(b1)}$ and $${num(y0)} = ${num(q)} \\cdot ${paren(x0)}${plus(b2)}$.`,
             `第一条直线与 $y$ 轴交于 $${tex([0, b1])}$，斜率为 $${num(p)}$；第二条与 $y$ 轴交于 $${tex([0, b2])}$，斜率为 $${num(q)}$。它们的交点就是解：$${tex([x0, y0])}$ 同时满足两个方程，因为 $${num(y0)} = ${num(p)} \\cdot ${paren(x0)}${plus(b1)}$，且 $${num(y0)} = ${num(q)} \\cdot ${paren(x0)}${plus(b2)}$。`,
@@ -590,6 +653,17 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
           correct: figure(a),
           wrong: [figure(-a), figure(a * 2), figure(a / 2)],
+          whys: [
+            t("This parabola opens the wrong way: the sign of $a$ decides that.", "这条抛物线开口方向错了：开口方向由 $a$ 的符号决定。"),
+            t(
+              "This parabola is too narrow: at $x = 1$ it has moved twice as far from the vertex as $a$ says.",
+              "这条抛物线太窄：在 $x = 1$ 处，它离顶点的距离是 $a$ 所示的两倍。",
+            ),
+            t(
+              "This parabola is too wide: at $x = 1$ it has moved half as far from the vertex as $a$ says.",
+              "这条抛物线太宽：在 $x = 1$ 处，它离顶点的距离是 $a$ 所示的一半。",
+            ),
+          ],
           solution: t(
             `The vertex is $${tex([0, c])}$, and at $x = 1$ the parabola reaches $${height}$. Since the coefficient $${num(coef(a))}$ is ${a > 0 ? "positive" : "negative"}, it opens ${a > 0 ? "upward" : "downward"}.`,
             `顶点是 $${tex([0, c])}$，当 $x = 1$ 时抛物线到达 $${height}$。因为系数 $${num(coef(a))}$ 是${a > 0 ? "正数" : "负数"}，所以开口向${a > 0 ? "上" : "下"}。`,
@@ -672,6 +746,17 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
           correct: exponentialFigure(a, b, k),
           wrong: [exponentialFigure(a, 1 / b, k), exponentialFigure(a + 1, b, k), exponentialFigure(a, b, k + 1)],
+          whys: [
+            t("This curve falls to the right, but a base above $1$ makes it rise.", "这条曲线向右下降，但底数大于 $1$ 时曲线上升。"),
+            t(
+              "This curve starts too high: its value at $x = 0$ uses too large an $a$.",
+              "这条曲线起点太高：它在 $x = 0$ 处的值用了过大的 $a$。",
+            ),
+            t(
+              "This curve levels off at the wrong height: the added number is the asymptote.",
+              "这条曲线趋近的高度不对：所加的数就是渐近线。",
+            ),
+          ],
           solution: t(
             `At $x = 0$, $y = ${a + k}$, so the curve crosses the $y$-axis at $${tex([0, a + k])}$. At $x = 1$, $y = ${a * b + k}$. Since the base $${b}$ is greater than $1$, the curve rises to the right, and to the left it comes close to $y = ${k}$.`,
             `当 $x = 0$ 时，$y = ${a + k}$，所以曲线与 $y$ 轴交于 $${tex([0, a + k])}$。当 $x = 1$ 时，$y = ${a * b + k}$。因为底数 $${b}$ 大于 $1$，所以曲线向右上升，向左接近 $y = ${k}$。`,
@@ -697,6 +782,20 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
           correct: exponentialFigure(a, 1 / b, k),
           wrong: [exponentialFigure(a, b, k), exponentialFigure(a + 1, 1 / b, k), exponentialFigure(a, 1 / b, k + 1)],
+          whys: [
+            t(
+              "This curve rises to the right, but a base between $0$ and $1$ makes it fall.",
+              "这条曲线向右上升，但底数在 $0$ 和 $1$ 之间时曲线下降。",
+            ),
+            t(
+              "This curve starts too high: its value at $x = 0$ uses too large an $a$.",
+              "这条曲线起点太高：它在 $x = 0$ 处的值用了过大的 $a$。",
+            ),
+            t(
+              "This curve levels off at the wrong height: the added number is the asymptote.",
+              "这条曲线趋近的高度不对：所加的数就是渐近线。",
+            ),
+          ],
           solution: t(
             `At $x = 0$, $y = ${a + k}$, so the curve crosses the $y$-axis at $${tex([0, a + k])}$. At $x = -1$, $y = ${a * b + k}$. The base is less than $1$, so the curve falls to the right and comes close to $y = ${k}$.`,
             `当 $x = 0$ 时，$y = ${a + k}$，所以曲线与 $y$ 轴交于 $${tex([0, a + k])}$。当 $x = -1$ 时，$y = ${a * b + k}$。底数小于 $1$，所以曲线向右下降，并接近 $y = ${k}$。`,
@@ -729,6 +828,11 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
             curveFigure(logView, (x) => log(x - h) - k, [h + 1, h + b], shape),
             curveFigure(logView, (x) => b ** (x - k) + h, [k, k + 1], shape),
           ],
+          whys: [
+            t("This curve is flipped: with a base above $1$, a logarithm rises.", "这条曲线翻转了：底数大于 $1$ 时，对数上升。"),
+            t("This curve sits at the wrong height: the added number moves it up or down.", "这条曲线高度不对：所加的数使它上下移动。"),
+            t("This is the graph of the inverse function, an exponential.", "这是反函数（指数函数）的图像。"),
+          ],
           solution: t(
             `The curve exists only for $x > ${h}$. It passes through $${tex([h + 1, k])}$, where the logarithm is $0$, and through $${tex([h + b, k + 1])}$, where it is $1$. So it rises to the right.`,
             `曲线只在 $x > ${h}$ 时存在。它经过 $${tex([h + 1, k])}$，这里对数为 $0$；还经过 $${tex([h + b, k + 1])}$，这里对数为 $1$。所以它向右上升。`,
@@ -757,6 +861,14 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
           correct: waveFigure(A, sine, k),
           wrong: [waveFigure(A, !sine, k), waveFigure(-A, sine, k), waveFigure(other, sine, k)],
+          whys: [
+            t(
+              "This wave is the other function: at $x = 0$, sine sits on its midline and cosine at its peak.",
+              "这条波是另一个函数：在 $x = 0$ 处，正弦在中线上，余弦在波峰。",
+            ),
+            t("This wave is flipped: its first move from $x = 0$ goes the wrong way.", "这条波翻转了：它从 $x = 0$ 出发后第一步方向错了。"),
+            t("This wave has the wrong height: the number in front is the amplitude.", "这条波的高度不对：前面的数是振幅。"),
+          ],
           solution: t(
             `The middle line is $y = ${k}$, and the wave swings $${Math.abs(A)}$ above and below it, from $${k - Math.abs(A)}$ to $${k + Math.abs(A)}$. At $x = 0$, $y = ${start}$, because $${name} 0 = ${sine ? 0 : 1}$.${sine ? ` To the right of $x = 0$ the wave ${A > 0 ? "rises" : "falls"}, since $\\sin x$ is positive there and $${num(A)}$ is ${A > 0 ? "positive" : "negative"}.` : ""}`,
             `中线是 $y = ${k}$，曲线在它上下各摆动 $${Math.abs(A)}$，从 $${k - Math.abs(A)}$ 到 $${k + Math.abs(A)}$。当 $x = 0$ 时，$y = ${start}$，因为 $${name} 0 = ${sine ? 0 : 1}$。${sine ? `在 $x = 0$ 右侧曲线${A > 0 ? "上升" : "下降"}，因为此处 $\\sin x$ 为正，而 $${num(A)}$ 为${A > 0 ? "正" : "负"}数。` : ""}`,
@@ -789,6 +901,20 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           figure: f,
           correct: candidate(slope, intercept),
           wrong: [candidate(-m, b), candidate(-m, -b), candidate(m, -b)],
+          whys: [
+            t(
+              "This line is the mirror image of $f$ across the $y$-axis, not across $y = x$.",
+              "这条直线是 $f$ 关于 $y$ 轴的镜像，而不是关于 $y = x$ 的。",
+            ),
+            t(
+              "This line is the mirror image of $f$ across the $x$-axis, not across $y = x$. An inverse is not a negative.",
+              "这条直线是 $f$ 关于 $x$ 轴的镜像，而不是关于 $y = x$ 的。反函数不是相反数。",
+            ),
+            t(
+              "This line is $f$ turned half a turn about the origin. An inverse swaps the coordinates.",
+              "这条直线是 $f$ 绕原点转半圈的结果。反函数要对调坐标。",
+            ),
+          ],
           solution: t(
             `The graph of $f$ passes through $${tex(p)}$ and $${tex(r)}$. Swapping the coordinates gives $${tex([p[1], p[0]])}$ and $${tex([r[1], r[0]])}$, which lie on the graph of $f^{-1}$. The two graphs are mirror images across $y = x$.`,
             `$f$ 的图像经过 $${tex(p)}$ 和 $${tex(r)}$。交换坐标得到 $${tex([p[1], p[0]])}$ 和 $${tex([r[1], r[0]])}$，它们都在 $f^{-1}$ 的图像上。这两个图像关于 $y = x$ 对称。`,
@@ -832,6 +958,11 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           figure: triangleFigure(pts),
           correct: imageFigure(pts, moved(p, q)),
           wrong: [imageFigure(pts, moved(q, p)), imageFigure(pts, moved(-p, q)), imageFigure(pts, moved(p, -q))],
+          whys: [
+            t("This image swaps the two distances: the move across and the move up.", "这个像把水平和竖直两个距离对调了。"),
+            t("This image moves the wrong way across.", "这个像水平方向移反了。"),
+            t("This image moves the wrong way up or down.", "这个像竖直方向移反了。"),
+          ],
           solution: t(
             `Every point moves by $${num(p)}$ across and $${num(q)}$ up. So $A${tex(first)}$ goes to $A'${tex([first[0] + p, first[1] + q])}$, and the other vertices move by the same amount.`,
             `每个点横向移动 $${num(p)}$，纵向移动 $${num(q)}$。所以 $A${tex(first)}$ 移到 $A'${tex([first[0] + p, first[1] + q])}$，其他顶点移动相同的量。`,
@@ -914,6 +1045,17 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           ),
           correct: drawn(right, closed),
           wrong: [drawn(!right, closed), drawn(right, !closed), drawn(!right, !closed)],
+          whys: [
+            t(
+              "The arrow points the wrong way. Dividing by a negative number reverses the inequality.",
+              "箭头方向错了。除以负数时不等号要变向。",
+            ),
+            t(
+              "The dot is wrong: a filled dot means the point counts, an open one that it does not.",
+              "圆点不对：实心表示这一点算，空心表示不算。",
+            ),
+            t("Both the arrow and the dot are wrong.", "箭头和圆点都错了。"),
+          ],
           solution: t(
             `${c === 0 ? "" : `Subtract $${num(c)}$ from both sides: $${num(k)}x ${sign} ${num(d - c)}$. `}Divide by $${num(k)}$${k < 0 ? ", which reverses the inequality" : ""}: $x ${right ? greater : less} ${num(a)}$. So the ${closed ? "dot at" : "circle at"} $${num(a)}$ is ${closed ? "filled" : "open"}, and the arrow points ${right ? "right" : "left"}.`,
             `${c === 0 ? "" : `两边减去 $${num(c)}$：$${num(k)}x ${sign} ${num(d - c)}$。`}两边除以 $${num(k)}$${k < 0 ? "，不等号反向" : ""}：$x ${right ? greater : less} ${num(a)}$。所以 $${num(a)}$ 处是${closed ? "实心点" : "空心圈"}，箭头指向${right ? "右" : "左"}。`,
@@ -938,6 +1080,17 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
           prompt: t(`Which number line has a dot at $\\frac{${n}}{${d}}$?`, `哪条数轴上的点表示 $\\frac{${n}}{${d}}$？`),
           correct: partsFigure(d, n),
           wrong: [partsFigure(d + 1, n), partsFigure(d, other), partsFigure(d - 1 === n ? d + 2 : d - 1, n)],
+          whys: [
+            t(
+              "This line is cut into too many parts: it counts the tick marks, not the spaces.",
+              "这条线分得太多了：它数的是刻度，不是空隙。",
+            ),
+            t("This line is cut correctly, but the dot is the wrong number of parts from $0$.", "这条线分得对，但点离 $0$ 的份数不对。"),
+            t(
+              "This line is cut into the wrong number of parts: the denominator is the number of equal parts.",
+              "这条线分的份数不对：分母就是平均分成的份数。",
+            ),
+          ],
           solution: t(
             `The denominator $${d}$ means the line from $0$ to $1$ is cut into $${d}$ equal parts, which takes $${d + 1}$ tick marks. The numerator $${n}$ means the dot is $${n}$ part${n === 1 ? "" : "s"} from $0$.`,
             `分母 $${d}$ 表示把 $0$ 到 $1$ 平均分成 $${d}$ 份，需要 $${d + 1}$ 个刻度。分子 $${n}$ 表示点距 $0$ 有 $${n}$ 份。`,

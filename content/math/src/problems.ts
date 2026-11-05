@@ -531,6 +531,8 @@ export interface FigureChoice {
   readonly correct: Figure;
   /** wrong are the other drawings; one that repeats an earlier drawing is dropped. */
   readonly wrong: readonly Figure[];
+  /** whys say, at the same positions as wrong, what mistake leads to each wrong drawing; a learner who picks one is told. */
+  readonly whys?: readonly Text[];
   readonly solution: Text;
   /** solutionFigure shows the solution; it defaults to the correct drawing. */
   readonly solutionFigure?: Figure;
@@ -546,15 +548,21 @@ export function figureChoice(rng: Rng, p: FigureChoice): Problem {
     seen.add(f.svg);
     return true;
   });
+  const why = new Map(p.wrong.flatMap((f, i) => (p.whys?.[i] ? [[f, p.whys[i]] as const] : [])));
   const figures = rng.shuffle([p.correct, ...wrong]);
   const options = figures.map((_, i) => {
     const letter = String.fromCharCode(65 + i);
     return t(`Drawing ${letter}`, `图 ${letter}`);
   });
   const correct = figures.indexOf(p.correct);
+  const mistakes = figures.flatMap((f, i) => {
+    const feedback = why.get(f);
+    return feedback ? [{ response: String(i), feedback }] : [];
+  });
   return {
     prompt: p.prompt,
     ...(p.figure && { figure: p.figure }),
+    ...(mistakes.length > 0 && { mistakes }),
     answer: { checker: "choice", expected: correct, input: { kind: "choice", options, figures } },
     solution: p.solution,
     solutionFigure: p.solutionFigure ?? p.correct,
@@ -585,6 +593,46 @@ export function reasonChoice(rng: Rng, p: ReasonChoice): Problem {
   });
   const options = rng.shuffle([p.correct, ...wrong]);
   return choiceProblem({ prompt: p.prompt, options, correct: options.indexOf(p.correct), solution: p.solution });
+}
+
+/** ExplainedChoice describes a choice in which every wrong option says why it is wrong. */
+export interface ExplainedChoice {
+  readonly prompt: Text;
+  readonly correct: Text;
+  /** wrong are the other options with what is wrong with each; one that repeats an earlier option is dropped. */
+  readonly wrong: readonly { readonly option: Text; readonly why: Text }[];
+  /** solution explains the right option; the wrong ones are then gone through in the order they are shown. */
+  readonly solution: Text;
+  readonly figure?: Figure;
+  readonly solutionFigure?: Figure;
+}
+
+/**
+ * explainedChoice builds a choice problem that goes through its options: a learner who picks a wrong one is told what is
+ * wrong with it, and the solution then says the same of every wrong option.
+ */
+export function explainedChoice(rng: Rng, p: ExplainedChoice): Problem {
+  const seen = new Set([p.correct.en]);
+  const wrong = p.wrong.filter((w) => {
+    if (seen.has(w.option.en)) return false;
+    seen.add(w.option.en);
+    return true;
+  });
+  const problem = reasonChoice(rng, { prompt: p.prompt, correct: p.correct, wrong: wrong.map((w) => w.option), solution: p.solution });
+  const { input } = problem.answer;
+  const shown = input.kind === "choice" ? input.options : [];
+  const inOrder = shown.flatMap((o) => wrong.filter((w) => w.option === o));
+  const lines = (locale: "en" | "zh-CN", heading: string) =>
+    `${p.solution[locale]}\n\n${heading}\n\n${inOrder.map((w) => `- ${w.option[locale]} ${w.why[locale]}`).join("\n")}`;
+  return withMistakes(
+    {
+      ...problem,
+      ...(p.figure && { figure: p.figure }),
+      ...(p.solutionFigure && { solutionFigure: p.solutionFigure }),
+      solution: t(lines("en", "The other options:"), lines("zh-CN", "其他选项：")),
+    },
+    wrong.map((w) => ({ response: w.option.en, why: w.why })),
+  );
 }
 
 /** VerdictChoice describes a yes-or-no question whose options each give a verdict and a reason. */
