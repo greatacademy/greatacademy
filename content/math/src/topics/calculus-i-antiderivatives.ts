@@ -49,7 +49,7 @@ export const theAntiderivative: TopicDef = {
     "识别原函数，求 x 的幂的不定积分，并由已知值确定积分常数。",
   ),
   prerequisites: ["the-mean-value-theorem"],
-  encompasses: [{ topic: "selecting-procedures-for-calculating-derivatives", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

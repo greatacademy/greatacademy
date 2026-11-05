@@ -1044,10 +1044,7 @@ export const unboundedBehaviorOfFunctionsNearAPoint: TopicDef = {
     "求分式函数无界增长的位置，即竖直渐近线，并判断它在每一侧趋于 ∞ 还是 −∞。",
   ),
   prerequisites: ["simplifying-rational-expressions-by-factoring", "end-behavior"],
-  encompasses: [
-    { topic: "simplifying-rational-expressions-by-factoring", weight: 0.2 },
-    { topic: "end-behavior", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "simplifying-rational-expressions-by-factoring", weight: 0.2 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [

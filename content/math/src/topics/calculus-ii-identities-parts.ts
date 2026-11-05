@@ -365,10 +365,7 @@ export const integratingProductsOfTrigonometricFunctions: TopicDef = {
     "用积化和差公式求不同角的正弦、余弦乘积的积分。",
   ),
   prerequisites: ["integration-using-the-double-angle-formulas"],
-  encompasses: [
-    { topic: "integration-using-the-double-angle-formulas", weight: 0.3 },
-    { topic: "the-sum-and-difference-formulas-for-sine", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-sum-and-difference-formulas-for-sine", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

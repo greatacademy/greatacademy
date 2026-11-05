@@ -992,7 +992,6 @@ export const factoringSumsAndDifferencesOfCubes: TopicDef = {
   ),
   prerequisites: ["multiplying-polynomials", "factoring-polynomials-using-gcfs", "cube-roots-of-algebraic-perfect-cubes"],
   encompasses: [
-    { topic: "multiplying-polynomials", weight: 0.3 },
     { topic: "cube-roots-of-algebraic-perfect-cubes", weight: 0.3 },
     { topic: "factoring-polynomials-using-gcfs", weight: 0.2 },
   ],

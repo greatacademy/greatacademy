@@ -329,7 +329,7 @@ export const powerRules: TopicDef = {
   title: t("The Power Rules for Exponents", "幂的乘方与积的乘方"),
   summary: t("Raise powers and products to a power, and combine the rules of exponents.", "求幂的乘方与积的乘方，并综合运用指数法则。"),
   prerequisites: ["product-and-quotient-rules"],
-  encompasses: [{ topic: "product-and-quotient-rules", weight: 0.5 }],
+  encompasses: [{ topic: "product-and-quotient-rules", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.8.EE.A.1"],
   knowledgePoints: [

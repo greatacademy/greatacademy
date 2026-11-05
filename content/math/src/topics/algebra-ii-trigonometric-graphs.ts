@@ -1199,10 +1199,7 @@ export const graphingTangentAndCotangent: TopicDef = {
     "画出带竖直渐近线的 y = tan x 和 y = cot x 的图象，辨认它们，并求它们与 x 轴的交点和渐近线。",
   ),
   prerequisites: ["graphing-sine-and-cosine", "further-extensions-of-the-special-trigonometric-ratios"],
-  encompasses: [
-    { topic: "graphing-sine-and-cosine", weight: 0.3 },
-    { topic: "further-extensions-of-the-special-trigonometric-ratios", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "further-extensions-of-the-special-trigonometric-ratios", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -1859,11 +1856,7 @@ export const describingPropertiesOfTheTangentFunction: TopicDef = {
     "描述 y = tan x：定义域与值域、周期 π、奇对称性、零点、竖直渐近线，以及它的递增区间。",
   ),
   prerequisites: ["describing-properties-of-the-cosine-function", "graphing-tangent-and-cotangent"],
-  encompasses: [
-    { topic: "graphing-tangent-and-cotangent", weight: 0.4 },
-    { topic: "describing-properties-of-the-sine-function", weight: 0.2 },
-    { topic: "describing-properties-of-the-cosine-function", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "graphing-tangent-and-cotangent", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSF.TF.A.4"],
   knowledgePoints: propertyKnowledgePoints("tan", {
@@ -1931,7 +1924,6 @@ export const describingPropertiesOfTheCosecantFunction: TopicDef = {
   ),
   prerequisites: ["describing-properties-of-the-secant-function"],
   encompasses: [
-    { topic: "describing-properties-of-the-secant-function", weight: 0.3 },
     { topic: "describing-properties-of-the-sine-function", weight: 0.3 },
     { topic: "graphing-secant-and-cosecant", weight: 0.3 },
   ],
@@ -1966,10 +1958,7 @@ export const describingPropertiesOfTheCotangentFunction: TopicDef = {
     "描述 y = cot x：定义域与值域、周期 π、奇对称性、零点、竖直渐近线，以及它的递减区间。",
   ),
   prerequisites: ["describing-properties-of-the-tangent-function"],
-  encompasses: [
-    { topic: "describing-properties-of-the-tangent-function", weight: 0.4 },
-    { topic: "graphing-tangent-and-cotangent", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "graphing-tangent-and-cotangent", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.4"],
   knowledgePoints: propertyKnowledgePoints("cot", {

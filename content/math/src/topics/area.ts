@@ -436,7 +436,7 @@ export const areaOfTriangles: TopicDef = {
   title: t("Area of Triangles", "三角形的面积"),
   summary: t("Find the area of a triangle from its base and height.", "由底和高求三角形的面积。"),
   prerequisites: ["area-of-parallelograms"],
-  encompasses: [{ topic: "area-of-parallelograms", weight: 0.5 }],
+  encompasses: [],
   xp: 8,
   standards: ["CCSS.6.G.A.1"],
   knowledgePoints: [

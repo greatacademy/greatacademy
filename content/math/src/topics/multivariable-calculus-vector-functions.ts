@@ -2263,7 +2263,7 @@ export const streamFunctions: TopicDef = {
     "对于二维无散场 F = ⟨P, Q⟩，流函数 ψ 满足 P = ∂ψ/∂y 且 Q = -∂ψ/∂x，其等值线即为流线。",
   ),
   prerequisites: ["calculating-potential-functions"],
-  encompasses: [{ topic: "calculating-potential-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

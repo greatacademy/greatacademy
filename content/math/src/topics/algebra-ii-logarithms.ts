@@ -943,10 +943,7 @@ export const quotientRuleForLogarithms: TopicDef = {
     "用 $\\log_{b} \\frac{M}{N} = \\log_{b} M - \\log_{b} N$ 合并、计算和展开对数。",
   ),
   prerequisites: ["product-rule-for-logarithms"],
-  encompasses: [
-    { topic: "product-rule-for-logarithms", weight: 0.3 },
-    { topic: "evaluating-logarithms", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-logarithms", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -1056,7 +1053,6 @@ export const powerRuleForLogarithms: TopicDef = {
   ),
   prerequisites: ["product-rule-for-logarithms"],
   encompasses: [
-    { topic: "product-rule-for-logarithms", weight: 0.2 },
     { topic: "evaluating-logarithms", weight: 0.3 },
     { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
   ],

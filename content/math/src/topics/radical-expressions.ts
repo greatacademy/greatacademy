@@ -512,10 +512,7 @@ export const multiplyingRadicalExpressions: TopicDef = {
     "进行含变量的平方根和立方根的乘法，然后化简：$\\sqrt{6x} \\cdot \\sqrt{10x^{3}} = 2x^{2}\\sqrt{15}$。",
   ),
   prerequisites: ["simplifying-square-roots-with-variables", "cube-roots-of-algebraic-perfect-cubes"],
-  encompasses: [
-    { topic: "simplifying-square-roots-with-variables", weight: 0.6 },
-    { topic: "cube-roots-of-algebraic-perfect-cubes", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "simplifying-square-roots-with-variables", weight: 0.6 }],
   xp: 16,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [

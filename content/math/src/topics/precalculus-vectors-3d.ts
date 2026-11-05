@@ -733,7 +733,7 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
     "利用二维与三维坐标分量计算数量积，并利用数量积为零判定向量垂直。",
   ),
   prerequisites: ["calculating-the-dot-product-using-angle-and-magnitude"],
-  encompasses: [{ topic: "calculating-the-dot-product-using-angle-and-magnitude", weight: 0.4 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11"],
   knowledgePoints: [
@@ -1115,7 +1115,7 @@ export const theCrossProductOfTwoVectors: TopicDef = {
     "理解三维向量叉积（向量积）的概念、模长公式 ||u x v|| = ||u||||v||sin(theta)、右手定则方向及与原两向量的正交性。",
   ),
   prerequisites: ["calculating-the-magnitude-of-cartesian-vectors-in-3d", "calculating-the-dot-product-using-components"],
-  encompasses: [{ topic: "calculating-the-magnitude-of-cartesian-vectors-in-3d", weight: 0.3 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
   knowledgePoints: [
@@ -1335,7 +1335,7 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
     "利用三阶行列式展开计算两个三维向量的叉积，并求与已知两向量均垂直的向量。",
   ),
   prerequisites: ["properties-of-the-cross-product"],
-  encompasses: [{ topic: "properties-of-the-cross-product", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
   knowledgePoints: [

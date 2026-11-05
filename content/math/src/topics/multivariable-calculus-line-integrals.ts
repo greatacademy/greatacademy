@@ -696,7 +696,7 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
     "奇函数被积项在对称椭圆路径上的积分为零，利用对称性可极大简化积分计算。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-circles"],
-  encompasses: [{ topic: "line-integrals-of-scalar-functions-over-circles", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -779,7 +779,7 @@ export const furtherPropertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
     "分段光滑曲线上的曲线积分等于各光滑段上积分之和：$\\int_{C_1 + C_2} f\\,ds = \\int_{C_1} f\\,ds + \\int_{C_2} f\\,ds$。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-circles"],
-  encompasses: [{ topic: "line-integrals-of-scalar-functions-over-circles", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -858,7 +858,7 @@ export const lineIntegralsOfScalarFunctionsOverPolarCurves: TopicDef = {
     "沿极坐标曲线 r = g(θ)，弧长微元为 ds = √(r² + [r'(θ)]²) dθ。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-circles"],
-  encompasses: [{ topic: "line-integrals-of-scalar-functions-over-circles", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -943,12 +943,7 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
     "对坐标的曲线积分 $\\int_C P\\,dx$ 与 $\\int_C Q\\,dy$ 沿有向曲线对 $x$ 或 $y$ 的变化量积分。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-line-segments"],
-  encompasses: [
-    {
-      topic: "line-integrals-of-scalar-functions-over-line-segments",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -3190,13 +3185,7 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
     "格林公式的通量形式把穿过 $C$ 的向外通量与散度的二重积分联系起来：$\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$。",
   ),
   prerequisites: ["greens-theorem-in-circulation-curl-form", "the-divergence-of-a-vector-field"],
-  encompasses: [
-    {
-      topic: "greens-theorem-in-circulation-curl-form",
-      weight: 0.3,
-    },
-    { topic: "the-divergence-of-a-vector-field", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-divergence-of-a-vector-field", weight: 0.3 }],
   xp: 10,
   knowledgePoints: [
     {

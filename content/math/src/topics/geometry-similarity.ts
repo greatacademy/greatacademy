@@ -1456,11 +1456,7 @@ export const theSASSimilarityCriterion: TopicDef = {
     "由两边成比例且夹角相等判定三角形相似，包括有公共角的三角形。",
   ),
   prerequisites: ["the-aa-similarity-criterion", "the-sss-similarity-criterion"],
-  encompasses: [
-    { topic: "the-sss-similarity-criterion", weight: 0.3 },
-    { topic: "proportions", weight: 0.3 },
-    { topic: "the-aa-similarity-criterion", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "proportions", weight: 0.3 }],
   xp: 13,
   standards: ["CCSS.HSG.SRT.B.5"],
   knowledgePoints: [

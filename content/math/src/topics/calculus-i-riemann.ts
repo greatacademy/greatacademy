@@ -175,7 +175,7 @@ export const approximatingAreasWithTheRightRiemannSum: TopicDef = {
     "用右端点近似面积，并判断左、右黎曼和何时高估或低估。",
   ),
   prerequisites: ["approximating-areas-with-the-left-riemann-sum", "determining-intervals-on-which-a-function-is-increasing-or-decreasing"],
-  encompasses: [{ topic: "approximating-areas-with-the-left-riemann-sum", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -241,7 +241,7 @@ export const approximatingAreasWithTheMidpointRiemannSum: TopicDef = {
   title: t("Approximating Areas With the Midpoint Riemann Sum", "用中点黎曼和近似面积"),
   summary: t("Approximate areas with heights taken at the midpoints of the subintervals.", "用子区间中点处的高近似面积。"),
   prerequisites: ["approximating-areas-with-the-right-riemann-sum"],
-  encompasses: [{ topic: "approximating-areas-with-the-left-riemann-sum", weight: 0.3 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -541,10 +541,7 @@ export const approximatingAreasUnderGraphsOfCompositeFunctions: TopicDef = {
     "把四种近似法则用于根式、对数、指数和三角函数。",
   ),
   prerequisites: ["approximating-areas-with-the-midpoint-riemann-sum", "approximating-areas-with-the-trapezoidal-rule"],
-  encompasses: [
-    { topic: "approximating-areas-with-the-midpoint-riemann-sum", weight: 0.3 },
-    { topic: "approximating-areas-with-the-trapezoidal-rule", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -740,10 +737,7 @@ export const theFundamentalTheoremOfCalculus: TopicDef = {
   title: t("The Fundamental Theorem of Calculus", "微积分基本定理"),
   summary: t("Evaluate definite integrals of polynomials and powers with antiderivatives.", "用原函数计算多项式和幂函数的定积分。"),
   prerequisites: ["defining-definite-integrals-using-left-and-right-riemann-sums", "the-sum-rule-for-indefinite-integrals"],
-  encompasses: [
-    { topic: "the-sum-rule-for-indefinite-integrals", weight: 0.4 },
-    { topic: "defining-definite-integrals-using-left-and-right-riemann-sums", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-sum-rule-for-indefinite-integrals", weight: 0.4 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

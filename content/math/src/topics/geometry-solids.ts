@@ -1617,7 +1617,6 @@ export const surfaceAreasOfCubes: TopicDef = {
   ),
   prerequisites: ["finding-surface-areas-using-nets", "volumes-of-cubes"],
   encompasses: [
-    { topic: "volumes-of-cubes", weight: 0.3 },
     { topic: "finding-surface-areas-using-nets", weight: 0.3 },
     { topic: "square-roots-and-cube-roots", weight: 0.3 },
   ],
@@ -2075,7 +2074,6 @@ export const surfaceAreasOfRectangularSolids: TopicDef = {
   prerequisites: ["surface-areas-of-cubes", "volumes-of-rectangular-solids"],
   encompasses: [
     { topic: "finding-surface-areas-using-nets", weight: 0.4 },
-    { topic: "surface-areas-of-cubes", weight: 0.3 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 12,
@@ -3087,10 +3085,7 @@ export const volumesOfRightCones: TopicDef = {
     "求圆锥的体积（πr²h 的三分之一），与圆柱比较，并求未知的半径或高。",
   ),
   prerequisites: ["volumes-of-cylinders", "volumes-of-pyramids"],
-  encompasses: [
-    { topic: "volumes-of-cylinders", weight: 0.4 },
-    { topic: "volumes-of-pyramids", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "volumes-of-cylinders", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.8.G.C.9"],
   knowledgePoints: [
@@ -3563,7 +3558,6 @@ export const surfaceAreasOfSpheres: TopicDef = {
   prerequisites: ["volumes-of-spheres"],
   encompasses: [
     { topic: "square-roots-and-cube-roots", weight: 0.3 },
-    { topic: "volumes-of-spheres", weight: 0.2 },
     { topic: "areas-of-circles", weight: 0.2 },
   ],
   xp: 12,
@@ -3704,10 +3698,7 @@ export const conicalFrustums: TopicDef = {
     "把圆台看成两个圆锥之差，或用公式求它的体积和表面积。",
   ),
   prerequisites: ["surface-areas-of-right-cones"],
-  encompasses: [
-    { topic: "volumes-of-right-cones", weight: 0.4 },
-    { topic: "surface-areas-of-right-cones", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "volumes-of-right-cones", weight: 0.4 }],
   xp: 16,
   knowledgePoints: [
     {

@@ -363,7 +363,6 @@ export const verticalTranslationsOfFunctions: TopicDef = {
   ),
   prerequisites: ["absolute-value-graphs", "the-vertex-form-of-a-parabola"],
   encompasses: [
-    { topic: "absolute-value-graphs", weight: 0.3 },
     { topic: "the-vertex-form-of-a-parabola", weight: 0.1 },
     { topic: "graphs-of-functions", weight: 0.3 },
   ],
@@ -459,10 +458,7 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
     "把任意函数的图象左右平移：y = f(x − h) 把每个点向右移动 h 个单位。",
   ),
   prerequisites: ["vertical-translations-of-functions"],
-  encompasses: [
-    { topic: "vertical-translations-of-functions", weight: 0.3 },
-    { topic: "squaring-binomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "squaring-binomials", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -567,10 +563,7 @@ export const verticalStretchesOfFunctions: TopicDef = {
     "把图象竖直伸缩：y = a·f(x) 把每个纵坐标乘以 a。",
   ),
   prerequisites: ["vertical-translations-of-functions", "stretches-of-absolute-value-graphs"],
-  encompasses: [
-    { topic: "vertical-translations-of-functions", weight: 0.2 },
-    { topic: "stretches-of-absolute-value-graphs", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "stretches-of-absolute-value-graphs", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -671,10 +664,7 @@ export const horizontalStretchesOfFunctions: TopicDef = {
     "把图象水平伸缩：y = f(bx) 把每个横坐标除以 b。",
   ),
   prerequisites: ["horizontal-translations-of-functions", "vertical-stretches-of-functions"],
-  encompasses: [
-    { topic: "vertical-stretches-of-functions", weight: 0.3 },
-    { topic: "horizontal-translations-of-functions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1237,10 +1227,7 @@ export const verticalReflectionsOfFunctions: TopicDef = {
     "把任意函数的图象关于 x 轴翻折：y = −f(x) 改变每个纵坐标的符号。",
   ),
   prerequisites: ["vertical-translations-of-functions", "vertical-reflections-of-absolute-value-graphs"],
-  encompasses: [
-    { topic: "vertical-reflections-of-absolute-value-graphs", weight: 0.3 },
-    { topic: "vertical-reflections-of-quadratic-functions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1331,10 +1318,7 @@ export const horizontalReflectionsOfFunctions: TopicDef = {
     "把任意函数的图象关于 y 轴翻折：y = f(−x) 改变每个横坐标的符号。",
   ),
   prerequisites: ["horizontal-translations-of-functions", "vertical-reflections-of-functions"],
-  encompasses: [
-    { topic: "vertical-reflections-of-functions", weight: 0.3 },
-    { topic: "horizontal-translations-of-functions", weight: 0.1 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [

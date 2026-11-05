@@ -334,7 +334,7 @@ export const intervalNotation: TopicDef = {
     "用区间记号表示 $-2 < x \\le 5$ 这样的有界数集，以及反过来。",
   ),
   prerequisites: ["solving-compound-inequalities"],
-  encompasses: [{ topic: "solving-compound-inequalities", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -451,10 +451,7 @@ export const unboundedIntervals: TopicDef = {
     "把 $x \\ge 3$ 这样的集合写成延伸到 $\\infty$ 或 $-\\infty$ 的区间。",
   ),
   prerequisites: ["interval-notation"],
-  encompasses: [
-    { topic: "interval-notation", weight: 0.5 },
-    { topic: "solving-multi-step-inequalities", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "interval-notation", weight: 0.5 }],
   xp: 12,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -697,10 +694,7 @@ export const intersectionsOfIntervals: TopicDef = {
   title: t("Intersections of Intervals", "区间的交集"),
   summary: t("Find the numbers two intervals have in common, written with $\\cap$.", "求两个区间的公共部分，记作 $\\cap$。"),
   prerequisites: ["unions-of-intervals"],
-  encompasses: [
-    { topic: "unbounded-intervals", weight: 0.5 },
-    { topic: "unions-of-intervals", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "unbounded-intervals", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -2263,10 +2257,7 @@ export const solvingEvenPowerEquations: TopicDef = {
     "通过开偶次方解 $x^{4} = 81$ 等方程，并判断实数解有两个、一个还是没有。",
   ),
   prerequisites: ["solving-odd-power-equations"],
-  encompasses: [
-    { topic: "solving-equations-with-square-roots", weight: 0.5 },
-    { topic: "solving-odd-power-equations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-equations-with-square-roots", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.8.EE.A.2"],
   knowledgePoints: [

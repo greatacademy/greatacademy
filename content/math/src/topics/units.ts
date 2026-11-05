@@ -164,7 +164,7 @@ export const metricUnitsOfLength: TopicDef = {
   title: t("Metric Units of Length", "公制长度单位"),
   summary: t("Convert between meters and kilometers, centimeters and millimeters.", "米与千米、厘米、毫米之间的换算。"),
   prerequisites: ["metric-units-of-mass"],
-  encompasses: [{ topic: "metric-units-of-mass", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.5.MD.A.1"],
   knowledgePoints: [
@@ -565,7 +565,7 @@ export const mixedUnits: TopicDef = {
   title: t("Converting Between Mixed Units", "复名数的换算"),
   summary: t("Convert amounts such as 3 h 25 min to a single unit, and back.", "把 3 h 25 min 这样的量换算成单一单位，以及反过来。"),
   prerequisites: ["units-of-time"],
-  encompasses: [{ topic: "units-of-time", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   knowledgePoints: [
     {
@@ -1670,10 +1670,7 @@ export const inverseVariation: TopicDef = {
     "识别反比例关系，求常数 k = xy，写出 y = k/x 并加以运用。",
   ),
   prerequisites: ["direct-variation"],
-  encompasses: [
-    { topic: "one-step-equations-multiplication", weight: 0.2 },
-    { topic: "direct-variation", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.2 }],
   xp: 15,
   knowledgePoints: [
     {

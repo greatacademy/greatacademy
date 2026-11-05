@@ -1724,10 +1724,7 @@ export const creatingExponentialDecayExpressions: TopicDef = {
     "为每期按固定百分率或比例减少的量写出 $1000(0.85)^{t}$ 这样的表达式。",
   ),
   prerequisites: ["creating-exponential-growth-expressions"],
-  encompasses: [
-    { topic: "creating-exponential-growth-expressions", weight: 0.4 },
-    { topic: "percent-change", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "percent-change", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.2", "CCSS.HSA.SSE.A.1"],
   knowledgePoints: [
@@ -2484,7 +2481,6 @@ export const modelingExponentialDecayWithFunctions: TopicDef = {
   prerequisites: ["modeling-exponential-growth-with-functions", "creating-exponential-decay-expressions"],
   encompasses: [
     { topic: "creating-exponential-decay-expressions", weight: 0.5 },
-    { topic: "modeling-exponential-growth-with-functions", weight: 0.5 },
     { topic: "exponential-functions", weight: 0.3 },
   ],
   xp: 15,
@@ -2525,10 +2521,7 @@ export const interpretingExponentialDecay: TopicDef = {
     "读出衰减模型的衰减率，区分增长与衰减，并求若干期内的总减少率。",
   ),
   prerequisites: ["modeling-exponential-decay-with-functions", "interpreting-exponential-growth"],
-  encompasses: [
-    { topic: "interpreting-exponential-growth", weight: 0.5 },
-    { topic: "creating-exponential-decay-expressions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "creating-exponential-decay-expressions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.B.5", "CCSS.HSF.IF.C.8.B"],
   knowledgePoints: [
@@ -2619,7 +2612,6 @@ export const solvingExponentialDecayProblems: TopicDef = {
   ),
   prerequisites: ["interpreting-exponential-decay", "solving-exponential-growth-problems"],
   encompasses: [
-    { topic: "solving-exponential-growth-problems", weight: 0.5 },
     { topic: "modeling-exponential-decay-with-functions", weight: 0.4 },
     { topic: "solving-exponential-equations", weight: 0.3 },
     { topic: "interpreting-exponential-decay", weight: 0.2 },
@@ -3257,7 +3249,7 @@ export const graphingExponentialDecayFunctions: TopicDef = {
     "根据图象求指数衰减函数，并求它们的渐近线和值域（包括翻折后的图象）。",
   ),
   prerequisites: ["graphing-exponential-growth-functions"],
-  encompasses: [{ topic: "graphing-exponential-growth-functions", weight: 0.6 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [

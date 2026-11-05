@@ -1117,7 +1117,7 @@ export const parametricEquationsOfVerticalHyperbolas: TopicDef = {
     "将主轴沿 y 轴方向的铅直双曲线参数化为 y = k + a sec θ, x = h + b tan θ，并将其与标准方程 (y - k)²/a² - (x - h)²/b² = 1 进行互化。",
   ),
   prerequisites: ["parametric-equations-of-horizontal-hyperbolas"],
-  encompasses: [{ topic: "parametric-equations-of-horizontal-hyperbolas", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [

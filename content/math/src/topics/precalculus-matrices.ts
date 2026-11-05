@@ -1177,7 +1177,7 @@ export const conformabilityForMatrixMultiplication: TopicDef = {
     "通过判断内侧维度是否相等来确定两矩阵是否可乘，并求出乘积矩阵的维度。",
   ),
   prerequisites: ["multiplying-square-matrices"],
-  encompasses: [{ topic: "multiplying-square-matrices", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.8"],
   knowledgePoints: [
@@ -2064,7 +2064,7 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
     "使用对角线乘积差 ad - bc 计算二阶行列式的值，并求解含行列式的方程。",
   ),
   prerequisites: ["multiplying-square-matrices"],
-  encompasses: [{ topic: "multiplying-square-matrices", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.10", "CCSS.HSN.VM.C.12"],
   knowledgePoints: [

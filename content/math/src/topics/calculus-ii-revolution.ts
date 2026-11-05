@@ -506,7 +506,7 @@ export const theShellMethodRotatingARegionAboutTheXAxis: TopicDef = {
     "水平窄条绕 x 轴旋转形成柱壳，所以 V = 2π∫ y·（长度）dy。",
   ),
   prerequisites: ["volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes"],
-  encompasses: [{ topic: "volumes-of-revolution-using-the-disc-method-rotation-about-the-coordinate-axes", weight: 0.2 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -716,7 +716,7 @@ export const theShellMethodRotationAboutTheYAxis: TopicDef = {
     "竖直窄条绕 y 轴旋转形成柱壳，所以 V = 2π∫ x·（高）dx。",
   ),
   prerequisites: ["the-shell-method-rotating-a-region-about-the-x-axis"],
-  encompasses: [{ topic: "the-shell-method-rotating-a-region-about-the-x-axis", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -908,7 +908,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheYAxis: TopicDef = {
     "绕 y 轴旋转时半径为 x，所以 S = 2π∫ x√(1 + f′(x)²) dx；对 x = g(y) 则为 2π∫ g(y)√(1 + g′(y)²) dy。",
   ),
   prerequisites: ["surface-areas-of-revolution-rotation-about-the-x-axis"],
-  encompasses: [{ topic: "surface-areas-of-revolution-rotation-about-the-x-axis", weight: 0.6 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [

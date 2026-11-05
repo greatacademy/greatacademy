@@ -1286,10 +1286,7 @@ export const integrationBySubstitutionWithInverseReciprocalHyperbolicFunctions: 
     "integration-by-substitution-with-inverse-hyperbolic-functions",
     "integration-using-inverse-reciprocal-hyperbolic-functions",
   ],
-  encompasses: [
-    { topic: "integration-using-inverse-reciprocal-hyperbolic-functions", weight: 0.5 },
-    { topic: "integration-by-substitution-with-inverse-hyperbolic-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "integration-using-inverse-reciprocal-hyperbolic-functions", weight: 0.5 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

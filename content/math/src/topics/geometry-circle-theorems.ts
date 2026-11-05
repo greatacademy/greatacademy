@@ -1913,10 +1913,7 @@ export const secantTangentAnglesToCircles: TopicDef = {
     "从圆外一点引的割线与切线（或两条切线）所成的角，等于所夹两弧差的一半。",
   ),
   prerequisites: ["secant-secant-angles-to-circles", "tangent-tangent-lines-to-circles"],
-  encompasses: [
-    { topic: "secant-secant-angles-to-circles", weight: 0.5 },
-    { topic: "tangent-tangent-lines-to-circles", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "tangent-tangent-lines-to-circles", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [

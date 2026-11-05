@@ -1064,7 +1064,6 @@ export const provingConsecutiveAngleTheorems: TopicDef = {
   ),
   prerequisites: ["proving-alternate-angle-theorems"],
   encompasses: [
-    { topic: "proving-alternate-angle-theorems", weight: 0.3 },
     { topic: "identifying-angle-postulates", weight: 0.3 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
@@ -1159,7 +1158,6 @@ export const provingConsecutiveAngleConverse: TopicDef = {
   prerequisites: ["proving-consecutive-angle-theorems", "proving-alternate-angle-converses"],
   encompasses: [
     { topic: "proving-consecutive-angle-theorems", weight: 0.3 },
-    { topic: "proving-alternate-angle-converses", weight: 0.2 },
     { topic: "identifying-angle-theorems", weight: 0.2 },
   ],
   xp: 14,

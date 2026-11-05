@@ -330,7 +330,6 @@ export const closurePropertiesOfPolynomials: TopicDef = {
   encompasses: [
     { topic: "multiplying-polynomials", weight: 0.4 },
     { topic: "adding-and-subtracting-polynomials", weight: 0.4 },
-    { topic: "the-remainder-theorem", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSA.APR.A.1"],

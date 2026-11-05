@@ -466,10 +466,7 @@ export const theLawOfCosines: TopicDef = {
     "用余弦定理由两边及其夹角求第三边，由三边求角。",
   ),
   prerequisites: ["the-law-of-sines"],
-  encompasses: [
-    { topic: "the-law-of-sines", weight: 0.2 },
-    { topic: "the-pythagorean-theorem", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-pythagorean-theorem", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSG.SRT.D.10", "CCSS.HSG.SRT.D.11"],
   knowledgePoints: [
@@ -615,10 +612,7 @@ export const theAreaOfAGeneralTriangle: TopicDef = {
     "用两边之积乘夹角正弦的一半求任意三角形的面积，并由面积反求边。",
   ),
   prerequisites: ["calculating-areas-of-right-triangles-using-trigonometry", "the-law-of-cosines"],
-  encompasses: [
-    { topic: "calculating-areas-of-right-triangles-using-trigonometry", weight: 0.5 },
-    { topic: "the-law-of-cosines", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "calculating-areas-of-right-triangles-using-trigonometry", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSG.SRT.D.9"],
   knowledgePoints: [

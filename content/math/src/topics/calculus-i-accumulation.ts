@@ -324,7 +324,7 @@ export const theAreaBoundedByACurveAndTheYAxis: TopicDef = {
   title: t("The Area Bounded by a Curve and the Y-Axis", "曲线与 y 轴围成的面积"),
   summary: t("Find areas between a curve and the y-axis by integrating with respect to y.", "通过对 y 积分求曲线与 y 轴之间的面积。"),
   prerequisites: ["the-area-bounded-by-a-curve-and-the-x-axis", "integrating-exponential-functions"],
-  encompasses: [{ topic: "the-area-bounded-by-a-curve-and-the-x-axis", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -850,12 +850,10 @@ function extremumTopic(max: boolean): TopicDef {
     prerequisites: max
       ? ["the-integral-as-an-accumulation-function", "the-candidates-test", "interpreting-the-graph-of-a-functions-derivative"]
       : ["maximizing-a-function-using-the-graph-of-its-derivative"],
-    encompasses: max
-      ? [
-          { topic: "the-candidates-test", weight: 0.3 },
-          { topic: "the-integral-as-an-accumulation-function", weight: 0.3 },
-        ]
-      : [{ topic: "maximizing-a-function-using-the-graph-of-its-derivative", weight: 0.5 }],
+    encompasses: [
+      { topic: "the-candidates-test", weight: 0.3 },
+      { topic: "the-integral-as-an-accumulation-function", weight: 0.3 },
+    ],
     xp: 12,
     standards: [],
     knowledgePoints: [

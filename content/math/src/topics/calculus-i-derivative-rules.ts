@@ -29,10 +29,7 @@ export const differentiatingExponentialFunctions: TopicDef = {
   title: t("Differentiating Exponential Functions", "指数函数求导"),
   summary: t("Differentiate $e^x$ and exponential functions with other bases.", "对 $e^x$ 以及其他底数的指数函数求导。"),
   prerequisites: ["the-sum-and-constant-multiple-rules-for-differentiation", "limits-involving-the-exponential-function"],
-  encompasses: [
-    { topic: "the-sum-and-constant-multiple-rules-for-differentiation", weight: 0.4 },
-    { topic: "limits-involving-the-exponential-function", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-sum-and-constant-multiple-rules-for-differentiation", weight: 0.4 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -132,7 +129,6 @@ export const differentiatingLogarithmicFunctions: TopicDef = {
   ),
   prerequisites: ["differentiating-exponential-functions"],
   encompasses: [
-    { topic: "differentiating-exponential-functions", weight: 0.2 },
     { topic: "change-of-base-formula", weight: 0.2 },
     { topic: "combining-laws-of-logarithms", weight: 0.2 },
   ],
@@ -248,11 +244,7 @@ export const differentiatingTrigonometricFunctions: TopicDef = {
     "对正弦、余弦、正切求导，并求三角函数曲线的斜率。",
   ),
   prerequisites: ["the-sum-and-constant-multiple-rules-for-differentiation", "special-limits-involving-cosine"],
-  encompasses: [
-    { topic: "the-sum-and-constant-multiple-rules-for-differentiation", weight: 0.3 },
-    { topic: "special-limits-involving-sine", weight: 0.2 },
-    { topic: "special-limits-involving-cosine", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-sum-and-constant-multiple-rules-for-differentiation", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -701,7 +693,7 @@ export const theQuotientRuleForDifferentiation: TopicDef = {
   title: t("The Quotient Rule for Differentiation", "求导的商法则"),
   summary: t("Differentiate quotients of functions with the quotient rule.", "用商法则对函数之商求导。"),
   prerequisites: ["the-product-rule-for-differentiation"],
-  encompasses: [{ topic: "the-product-rule-for-differentiation", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [

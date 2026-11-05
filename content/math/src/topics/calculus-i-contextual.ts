@@ -401,7 +401,7 @@ export const estimatingDerivativesUsingABackwardDifferenceQuotient: TopicDef = {
     "用向后差商 (f(a) − f(a − h))/h 估计导数。",
   ),
   prerequisites: ["estimating-derivatives-using-a-forward-difference-quotient"],
-  encompasses: [{ topic: "estimating-derivatives-using-a-forward-difference-quotient", weight: 0.5 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -435,7 +435,7 @@ export const estimatingDerivativesUsingACentralDifferenceQuotient: TopicDef = {
     "用中心差商 (f(a + h) − f(a − h))/(2h) 估计导数。",
   ),
   prerequisites: ["estimating-derivatives-using-a-backward-difference-quotient"],
-  encompasses: [{ topic: "estimating-derivatives-using-a-backward-difference-quotient", weight: 0.5 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -1360,7 +1360,7 @@ export const lhopitalsRule: TopicDef = {
     "对 0/0 与 ∞/∞ 型未定式，分别对分子和分母求导来计算极限。",
   ),
   prerequisites: ["selecting-procedures-for-calculating-derivatives"],
-  encompasses: [{ topic: "special-limits-involving-cosine", weight: 0.2 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [

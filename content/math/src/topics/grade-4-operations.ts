@@ -1426,7 +1426,7 @@ export const twoDigitByOneDigitMultiplicationUsingPlaceValue: TopicDef = {
     "用部分积和竖式计算两位数乘一位数。",
   ),
   prerequisites: ["two-digit-by-one-digit-multiplication-using-area-models"],
-  encompasses: [{ topic: "two-digit-by-one-digit-multiplication-using-area-models", weight: 0.6 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.4.NBT.B.5"],
   knowledgePoints: [
@@ -1692,10 +1692,7 @@ export const twoDigitByTwoDigitMultiplicationUsingPlaceValue: TopicDef = {
     "像竖式那样，把两个部分积相加，计算两位数乘两位数。",
   ),
   prerequisites: ["two-digit-by-two-digit-multiplication-using-area-models", "two-digit-by-one-digit-multiplication-using-place-value"],
-  encompasses: [
-    { topic: "two-digit-by-two-digit-multiplication-using-area-models", weight: 0.6 },
-    { topic: "two-digit-by-one-digit-multiplication-using-place-value", weight: 0.7 },
-  ],
+  encompasses: [{ topic: "two-digit-by-one-digit-multiplication-using-place-value", weight: 0.7 }],
   xp: 15,
   standards: ["CCSS.4.NBT.B.5"],
   knowledgePoints: [
@@ -2319,10 +2316,7 @@ export const dividingBy10100And1000: TopicDef = {
     "用末尾有 0 的数除以 10、100、1,000，以及除以 60、400 这样的数。",
   ),
   prerequisites: ["multiplying-by-10-100-and-1000", "relationship-between-multiplication-and-division"],
-  encompasses: [
-    { topic: "multiplying-by-10-100-and-1000", weight: 0.4 },
-    { topic: "relationship-between-multiplication-and-division", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "relationship-between-multiplication-and-division", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.4.NBT.B.6", "CCSS.5.NBT.A.2"],
   knowledgePoints: [
@@ -2625,10 +2619,7 @@ export const twoDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
     "通过求长方形的未知边长，计算两位数除以一位数。",
   ),
   prerequisites: ["dividing-by-one-digit-numbers-using-multiplication"],
-  encompasses: [
-    { topic: "dividing-by-one-digit-numbers-using-multiplication", weight: 0.6 },
-    { topic: "two-digit-by-one-digit-multiplication-using-area-models", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "dividing-by-one-digit-numbers-using-multiplication", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.4.NBT.B.6"],
   knowledgePoints: [
@@ -2854,7 +2845,7 @@ export const twoDigitByOneDigitDivisionUsingPartialQuotients: TopicDef = {
     "一次去掉若干组除数（例如 10 组），再把各部分商相加。",
   ),
   prerequisites: ["two-digit-by-one-digit-division-using-area-models"],
-  encompasses: [{ topic: "two-digit-by-one-digit-division-using-area-models", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.4.NBT.B.6"],
   knowledgePoints: [

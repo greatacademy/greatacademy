@@ -195,7 +195,7 @@ const sampling: TopicDef = {
     "区分总体与样本，判断抽取样本所用的方法，并用随机样本估计总体中的数量。",
   ),
   prerequisites: ["proportions"],
-  encompasses: [{ topic: "proportions", weight: 0.2 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSS.IC.A.1", "CCSS.HSS.IC.B.3"],
   knowledgePoints: [

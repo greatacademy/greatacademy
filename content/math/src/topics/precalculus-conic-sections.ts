@@ -1117,7 +1117,7 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
     "识别并写出中心在原点的双曲线标准方程，区分焦点在 x 轴或 y 轴上的情况，应用定义 |d1 - d2| = 2a。",
   ),
   prerequisites: ["equations-of-ellipses-centered-at-the-origin"],
-  encompasses: [{ topic: "equations-of-ellipses-centered-at-the-origin", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [

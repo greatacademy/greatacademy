@@ -816,10 +816,7 @@ const horizontalTranslationsOfTrigonometricFunctions: TopicDef = {
     "用 y = sin(x − c) 把正弦和余弦波形向左或向右平移，并求平移后波形取得最大值、最小值和零点的位置。",
   ),
   prerequisites: ["vertical-translations-of-trigonometric-functions", "horizontal-translations-of-functions"],
-  encompasses: [
-    { topic: "vertical-translations-of-trigonometric-functions", weight: 0.2 },
-    { topic: "horizontal-translations-of-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "horizontal-translations-of-functions", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -914,10 +911,7 @@ const horizontalStretchesOfTrigonometricFunctions: TopicDef = {
     "用 y = sin bx 把正弦和余弦波形沿水平方向伸缩，求周期 2π/b，并由周期求 b。",
   ),
   prerequisites: ["vertical-stretches-of-trigonometric-functions", "horizontal-stretches-of-functions"],
-  encompasses: [
-    { topic: "vertical-stretches-of-trigonometric-functions", weight: 0.3 },
-    { topic: "horizontal-stretches-of-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "horizontal-stretches-of-functions", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -1256,10 +1250,7 @@ const combiningGraphTransformationsOfTangentAndCotangent: TopicDef = {
     "求 y = a tan(b(x − c)) + d 与 y = a cot(b(x − c)) + d 的周期和渐近线，并把这些方程与图象对应。",
   ),
   prerequisites: ["graph-transformations-of-tangent-and-cotangent", "combining-graph-transformations-of-sine-and-cosine"],
-  encompasses: [
-    { topic: "graph-transformations-of-tangent-and-cotangent", weight: 0.6 },
-    { topic: "combining-graph-transformations-of-sine-and-cosine", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "graph-transformations-of-tangent-and-cotangent", weight: 0.6 }],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -1350,10 +1341,7 @@ const combiningGraphTransformationsOfSecantAndCosecant: TopicDef = {
     "求 y = a sec(b(x − c)) + d 与 y = a csc(b(x − c)) + d 的值域和渐近线，并把这些方程与图象对应。",
   ),
   prerequisites: ["combining-graph-transformations-of-sine-and-cosine", "describing-properties-of-the-cosecant-function"],
-  encompasses: [
-    { topic: "combining-graph-transformations-of-sine-and-cosine", weight: 0.4 },
-    { topic: "graphing-secant-and-cosecant", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "graphing-secant-and-cosecant", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -1535,11 +1523,7 @@ const graphingReflectionsThreeOrMore: TopicDef = {
     "在 a < 0 的 y = a f(b(x − c)) + d 中把对称与伸缩、平移组合起来：求最值、周期与最大值点的位置，并匹配图象。",
   ),
   prerequisites: ["graphing-reflections-of-trigonometric-functions", "combining-graph-transformations-of-tangent-and-cotangent"],
-  encompasses: [
-    { topic: "graphing-reflections-of-trigonometric-functions", weight: 0.6 },
-    { topic: "combining-graph-transformations-of-tangent-and-cotangent", weight: 0.3 },
-    { topic: "combining-graph-transformations-of-secant-and-cosecant", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "graphing-reflections-of-trigonometric-functions", weight: 0.6 }],
   xp: 18,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -1867,10 +1851,7 @@ const propertiesOfTransformedTangentAndCotangentFunctions: TopicDef = {
     "求 y = a tan(bx + φ) + d 与 y = a cot(bx + φ) + d 的周期、竖直渐近线和零点。",
   ),
   prerequisites: ["properties-of-transformed-sine-and-cosine-functions"],
-  encompasses: [
-    { topic: "combining-graph-transformations-of-tangent-and-cotangent", weight: 0.4 },
-    { topic: "properties-of-transformed-sine-and-cosine-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "combining-graph-transformations-of-tangent-and-cotangent", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [

@@ -1471,7 +1471,7 @@ export const slopeFieldsForAutonomousDifferentialEquations: TopicDef = {
     "对 dy/dx = g(y)，同一条水平线上的斜率都相等，整行水平线段标出平衡解。",
   ),
   prerequisites: ["slope-fields-for-directly-integrable-differential-equations", "equilibrium-solutions-of-first-order-odes"],
-  encompasses: [{ topic: "slope-fields-for-directly-integrable-differential-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1513,7 +1513,7 @@ export const slopeFieldsForNonautonomousDifferentialEquations: TopicDef = {
     "当 dy/dx 同时依赖于 x 和 y 时，斜率沿行和列都会变化；等斜线有助于读懂斜率场。",
   ),
   prerequisites: ["slope-fields-for-autonomous-differential-equations"],
-  encompasses: [{ topic: "slope-fields-for-autonomous-differential-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

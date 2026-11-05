@@ -242,10 +242,7 @@ export const dividingPolynomialsUsingSyntheticDivision: TopicDef = {
     "只用系数把多项式除以 $x - c$：移下、乘以 $c$、相加。",
   ),
   prerequisites: ["splitting-rational-expressions-into-terms", "multiplying-polynomials"],
-  encompasses: [
-    { topic: "splitting-rational-expressions-into-terms", weight: 0.2 },
-    { topic: "multiplying-polynomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "multiplying-polynomials", weight: 0.2 }],
   xp: 15,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -361,10 +358,7 @@ export const dividingPolynomialsByLinearBinomialsUsingLongDivision: TopicDef = {
     "用长除法把多项式除以 $ax + b$：首项相除、相乘、相减、重复。",
   ),
   prerequisites: ["dividing-polynomials-using-synthetic-division"],
-  encompasses: [
-    { topic: "dividing-polynomials-using-synthetic-division", weight: 0.3 },
-    { topic: "multiplying-polynomials", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "multiplying-polynomials", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -2181,7 +2175,6 @@ export const theRemainderTheorem: TopicDef = {
   ),
   prerequisites: ["the-factor-theorem"],
   encompasses: [
-    { topic: "the-factor-theorem", weight: 0.4 },
     { topic: "dividing-polynomials-using-synthetic-division", weight: 0.3 },
     { topic: "evaluating-expressions", weight: 0.3 },
   ],

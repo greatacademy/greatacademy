@@ -825,7 +825,7 @@ export const treeDiagramsForDependentEvents: TopicDef = {
   ),
   prerequisites: ["the-law-of-total-probability"],
   encompasses: [
-    { topic: "the-law-of-total-probability", weight: 0.6 },
+    { topic: "the-law-of-total-probability", weight: 0.3 },
     { topic: "the-multiplication-law-for-conditional-probability", weight: 0.5 },
   ],
   xp: 14,
@@ -1251,7 +1251,6 @@ export const treeDiagramsForIndependentEvents: TopicDef = {
   prerequisites: ["independent-events", "tree-diagrams-for-dependent-events", "powers-of-rational-numbers"],
   encompasses: [
     { topic: "independent-events", weight: 0.6 },
-    { topic: "tree-diagrams-for-dependent-events", weight: 0.5 },
     { topic: "powers-of-rational-numbers", weight: 0.2 },
   ],
   xp: 14,

@@ -80,10 +80,7 @@ export const oneStepEquationsMultiplication: TopicDef = {
   title: t("Solving One-Step Multiplication and Division Equations", "解一步乘除法方程"),
   summary: t("Solve $ax = b$ and $\\frac{x}{a} = b$.", "解 $ax = b$ 与 $\\frac{x}{a} = b$。"),
   prerequisites: ["one-step-equations-addition"],
-  encompasses: [
-    { topic: "dividing-integers", weight: 0.5 },
-    { topic: "one-step-equations-addition", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "dividing-integers", weight: 0.5 }],
   xp: 10,
   standards: ["CCSS.6.EE.B.7", "CCSS.7.EE.B.4.A"],
   knowledgePoints: [

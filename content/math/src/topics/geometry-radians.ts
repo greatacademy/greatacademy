@@ -138,7 +138,7 @@ export const introductionToRadians: TopicDef = {
     "把角的弧度定义为弧长与半径之比，并在角度和弧度之间换算。",
   ),
   prerequisites: ["calculating-arc-lengths-of-circular-sectors"],
-  encompasses: [{ topic: "calculating-arc-lengths-of-circular-sectors", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.C.B.5", "CCSS.HSF.TF.A.1"],
   knowledgePoints: [

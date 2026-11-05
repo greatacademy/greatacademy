@@ -118,12 +118,7 @@ export const modelingMixtureProblemsWithFirstOrderLinearOdes: TopicDef = {
     "当流入液体的溶质浓度为 $c_{\\text{in}}$ 时，溶质量 $S(t)$ 满足 $\\frac{dS}{dt} + \\frac{r}{V}S = rc_{\\text{in}}$，并趋于 $S_\\infty = Vc_{\\text{in}}$。",
   ),
   prerequisites: ["modeling-mixture-problems-with-first-order-separable-odes", "general-solutions-of-first-order-linear-odes"],
-  encompasses: [
-    {
-      topic: "modeling-mixture-problems-with-first-order-separable-odes",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -408,7 +403,7 @@ export const inhibitedDecayModelsWithFirstOrderOdes: TopicDef = {
     "牛顿冷却定律 $\\frac{dT}{dt} = -k(T - T_m)$ 描述物体温度趋于环境温度 $T_m$ 的过程。",
   ),
   prerequisites: ["inhibited-growth-models-with-first-order-odes"],
-  encompasses: [{ topic: "inhibited-growth-models-with-first-order-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -615,7 +610,7 @@ export const fallingBodyProblemsWithQuadraticDrag: TopicDef = {
     "高速运动时阻力与 $v^2$ 成正比：$m\\frac{dv}{dt} = mg - cv^2$，终端速度为 $v_{\\text{term}} = \\sqrt{mg/c}$。",
   ),
   prerequisites: ["falling-body-problems-with-linear-drag"],
-  encompasses: [{ topic: "falling-body-problems-with-linear-drag", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

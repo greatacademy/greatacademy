@@ -596,10 +596,7 @@ export const areasOfCircles: TopicDef = {
     "由半径、直径或周长求圆的面积，以及由面积求半径。",
   ),
   prerequisites: ["the-circumference-of-a-circle", "area-of-rectangles-and-squares", "square-roots-and-cube-roots"],
-  encompasses: [
-    { topic: "the-circumference-of-a-circle", weight: 0.3 },
-    { topic: "square-roots-and-cube-roots", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.7.G.B.4"],
   knowledgePoints: [
@@ -1790,7 +1787,6 @@ export const squaresInscribedInCircles: TopicDef = {
   ),
   prerequisites: ["circles-inscribed-in-squares", "simplifying-square-roots", "area-of-triangles"],
   encompasses: [
-    { topic: "circles-inscribed-in-squares", weight: 0.3 },
     { topic: "simplifying-square-roots", weight: 0.3 },
     { topic: "areas-of-circles", weight: 0.3 },
     { topic: "area-of-triangles", weight: 0.2 },

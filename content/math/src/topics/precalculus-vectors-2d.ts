@@ -31,7 +31,7 @@ export const introductionToVectors: TopicDef = {
     "理解向量作为有向线段（既有大小又有方向）的概念，区分标量与向量，并识别向量的起点与终点。",
   ),
   prerequisites: ["the-pythagorean-theorem"],
-  encompasses: [{ topic: "the-pythagorean-theorem", weight: 0.2 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1"],
   knowledgePoints: [

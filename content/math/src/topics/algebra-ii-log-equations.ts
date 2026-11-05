@@ -1060,10 +1060,7 @@ export const verticalTranslationsOfExponentialDecayFunctions: TopicDef = {
     "把 $y = \\left(\\frac{1}{2}\\right)^{x}$ 这样的衰减函数图象竖直平移，根据图象求解析式，并求 $x$ 轴截距。",
   ),
   prerequisites: ["vertical-translations-of-exponential-growth-functions", "graphing-exponential-decay-functions"],
-  encompasses: [
-    { topic: "vertical-translations-of-exponential-growth-functions", weight: 0.6 },
-    { topic: "graphing-exponential-decay-functions", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "graphing-exponential-decay-functions", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7.E"],
   knowledgePoints: [
@@ -1417,10 +1414,7 @@ export const verticalReflectionsOfExponentialFunctions: TopicDef = {
     "把指数函数的图象关于 $x$ 轴翻折，根据翻折后的图象求解析式，并求截距。",
   ),
   prerequisites: ["vertical-translations-of-exponential-decay-functions", "vertical-reflections-of-functions"],
-  encompasses: [
-    { topic: "vertical-translations-of-exponential-decay-functions", weight: 0.4 },
-    { topic: "vertical-reflections-of-functions", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "vertical-reflections-of-functions", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7.E"],
   knowledgePoints: [

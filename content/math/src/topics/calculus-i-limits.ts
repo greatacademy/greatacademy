@@ -1037,10 +1037,7 @@ export const limitsOfExponentialFunctions: TopicDef = {
   title: t("Limits of Exponential Functions", "指数函数的极限"),
   summary: t("Find limits of a·bˣ + c as x → ±∞ and at a point.", "求 a·bˣ + c 在 x → ±∞ 时以及在一点处的极限。"),
   prerequisites: ["limits-at-infinity-from-graphs", "properties-of-transformed-exponential-functions"],
-  encompasses: [
-    { topic: "limits-at-infinity-from-graphs", weight: 0.3 },
-    { topic: "properties-of-transformed-exponential-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "properties-of-transformed-exponential-functions", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1129,10 +1126,7 @@ export const limitsOfLogarithmicFunctions: TopicDef = {
     "求对数函数在定义域边界处、无穷远处以及一点处的极限。",
   ),
   prerequisites: ["infinite-limits-from-graphs", "properties-of-transformed-logarithmic-functions"],
-  encompasses: [
-    { topic: "infinite-limits-from-graphs", weight: 0.3 },
-    { topic: "properties-of-transformed-logarithmic-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "properties-of-transformed-logarithmic-functions", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

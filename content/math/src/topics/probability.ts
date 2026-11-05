@@ -1683,10 +1683,7 @@ export const theUnionOfSets: TopicDef = {
     "求两个集合的并集，并由韦恩图求其元素个数。",
   ),
   prerequisites: ["venn-diagrams-in-probability"],
-  encompasses: [
-    { topic: "venn-diagrams-in-probability", weight: 0.2 },
-    { topic: "sets", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "sets", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSS.CP.A.1"],
   knowledgePoints: [

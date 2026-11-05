@@ -1404,10 +1404,7 @@ export const geometricSequences: TopicDef = {
   title: t("Introduction to Geometric Sequences", "等比数列简介"),
   summary: t("Recognize geometric sequences, find the common ratio and continue the sequence.", "识别等比数列，求公比并写出后续的项。"),
   prerequisites: ["arithmetic-sequences", "operations-with-rational-numbers"],
-  encompasses: [
-    { topic: "arithmetic-sequences", weight: 0.2 },
-    { topic: "operations-with-rational-numbers", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "operations-with-rational-numbers", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [

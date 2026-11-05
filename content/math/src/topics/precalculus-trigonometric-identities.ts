@@ -224,7 +224,7 @@ export const graphingTheInverseCosineFunction: TopicDef = {
     "描述反余弦函数 y = arccos(x) 的定义域、值域、关键点与对称性。",
   ),
   prerequisites: ["graphing-the-inverse-sine-function"],
-  encompasses: [{ topic: "graphing-the-inverse-sine-function", weight: 0.4 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.TF.B.6"],
   knowledgePoints: [
@@ -349,7 +349,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
     "描述反正切函数 y = arctan(x) 的定义域、值域、水平渐近线与对称性。",
   ),
   prerequisites: ["graphing-the-inverse-sine-function", "graphing-tangent-and-cotangent"],
-  encompasses: [{ topic: "graphing-the-inverse-sine-function", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.TF.B.6"],
   knowledgePoints: [
@@ -1187,7 +1187,7 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
     "利用恒等式 1 + cot²(θ) = csc²(θ) 与 csc²(θ) - cot²(θ) = 1 化简三角表达式。",
   ),
   prerequisites: ["simplifying-expressions-using-the-secant-tangent-identity"],
-  encompasses: [{ topic: "simplifying-expressions-using-the-secant-tangent-identity", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.8"],
   knowledgePoints: [
@@ -1467,7 +1467,7 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
     "利用余弦的和角与差角公式 cos(α ± β) = cos α cos β ∓ sin α sin β 展开与化简表达式。",
   ),
   prerequisites: ["the-sum-and-difference-formulas-for-sine"],
-  encompasses: [{ topic: "the-sum-and-difference-formulas-for-sine", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -1574,7 +1574,7 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
     "利用正切的和角与差角公式展开与化简表达式。",
   ),
   prerequisites: ["the-sum-and-difference-formulas-for-cosine"],
-  encompasses: [{ topic: "the-sum-and-difference-formulas-for-sine", weight: 0.3 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2574,10 +2574,7 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
     "掌握并应用 cos(2θ) 的三种等价形式：cos²θ − sin²θ、2cos²θ − 1 和 1 − 2sin²θ。",
   ),
   prerequisites: ["the-sum-and-difference-formulas-for-cosine", "alternate-forms-of-the-pythagorean-identity"],
-  encompasses: [
-    { topic: "the-sum-and-difference-formulas-for-cosine", weight: 0.4 },
-    { topic: "alternate-forms-of-the-pythagorean-identity", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "alternate-forms-of-the-pythagorean-identity", weight: 0.3 }],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2881,10 +2878,7 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
     "通过逆用余弦二倍角公式求 cos(π/8)、cos(5π/12) 等精确值。",
   ),
   prerequisites: ["the-double-angle-formula-for-cosine", "calculating-trigonometric-ratios-using-the-sum-formula-for-cosine"],
-  encompasses: [
-    { topic: "the-double-angle-formula-for-cosine", weight: 0.5 },
-    { topic: "calculating-trigonometric-ratios-using-the-sum-formula-for-cosine", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-double-angle-formula-for-cosine", weight: 0.5 }],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [

@@ -196,7 +196,7 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
     "在 [0, 2π) 或 [0°, 360°) 上求解形如 cos(x) = c 的三角方程。",
   ),
   prerequisites: ["elementary-trigonometric-equations-containing-sine"],
-  encompasses: [{ topic: "elementary-trigonometric-equations-containing-sine", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -368,7 +368,7 @@ export const elementaryTrigonometricEquationsContainingTangent: TopicDef = {
     "利用周期 π 与象限知识在 [0, 2π) 或 [0°, 360°) 上求解形如 tan(x) = c 的方程。",
   ),
   prerequisites: ["elementary-trigonometric-equations-containing-sine"],
-  encompasses: [{ topic: "elementary-trigonometric-equations-containing-sine", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -1049,10 +1049,7 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
     "通过为正弦/余弦加上 2kπ、为正切/余切加上 kπ（k ∈ ℤ）表示实数范围内的通解。",
   ),
   prerequisites: ["elementary-trigonometric-equations-containing-cosine", "elementary-trigonometric-equations-containing-tangent"],
-  encompasses: [
-    { topic: "elementary-trigonometric-equations-containing-cosine", weight: 0.3 },
-    { topic: "elementary-trigonometric-equations-containing-tangent", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "elementary-trigonometric-equations-containing-tangent", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2214,10 +2211,7 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
     "quadratic-trigonometric-equations-containing-sine-or-cosine",
     "simplifying-expressions-using-the-secant-tangent-identity",
   ],
-  encompasses: [
-    { topic: "quadratic-trigonometric-equations-containing-sine-or-cosine", weight: 0.5 },
-    { topic: "simplifying-expressions-using-the-secant-tangent-identity", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "quadratic-trigonometric-equations-containing-sine-or-cosine", weight: 0.5 }],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [

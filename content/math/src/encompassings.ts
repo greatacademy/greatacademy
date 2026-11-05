@@ -6,8 +6,9 @@ import type { EncompassingDef } from "@ga/content";
  * prerequisite is weighted by how much of its vocabulary, in titles, prompts and
  * solutions, the topic uses: under 15% gives no edge, then 0.2, 0.3, 0.4 and 0.5
  * from 30%, 45% and 60%. The weights were calibrated on the authored ones and
- * stop at 0.5 because they were not reviewed one by one. An encompassing
- * written on a topic replaces its entry here; delete the entry when writing one.
+ * stop at 0.5. Each edge was then read against its target's prompts, and the ones
+ * whose target does not perform the source were removed. An encompassing written
+ * on a topic replaces its entry here; delete the entry when writing one.
  */
 export const inferredEncompassings: Readonly<Record<string, readonly EncompassingDef[]>> = {
   "place-value-with-numbers-up-to-seven-digits": [{ topic: "place-value-with-numbers-up-to-four-digits", weight: 0.4 }],
@@ -19,7 +20,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "comparing-place-values": [{ topic: "place-value-with-numbers-up-to-seven-digits", weight: 0.4 }],
   "comparing-whole-numbers": [{ topic: "place-value-with-numbers-up-to-seven-digits", weight: 0.2 }],
   "comparing-whole-numbers-using-place-value": [{ topic: "comparing-whole-numbers", weight: 0.4 }],
-  "rounding-down-whole-numbers": [{ topic: "comparing-whole-numbers", weight: 0.3 }],
   "rounding-up-whole-numbers": [{ topic: "rounding-down-whole-numbers", weight: 0.5 }],
   "rounding-up-the-digit-9": [{ topic: "rounding-up-whole-numbers", weight: 0.5 }],
   "adding-two-digit-whole-numbers": [{ topic: "place-value-with-numbers-up-to-four-digits", weight: 0.3 }],
@@ -55,27 +55,20 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "modeling-fractions-using-number-lines": [{ topic: "fraction-models", weight: 0.2 }],
   "writing-unit-fractions-in-words": [{ topic: "fraction-models", weight: 0.3 }],
   "writing-fractions-in-words": [{ topic: "writing-unit-fractions-in-words", weight: 0.4 }],
-  "improper-fractions": [{ topic: "modeling-fractions-using-number-lines", weight: 0.2 }],
   "models-for-mixed-numbers": [{ topic: "improper-fractions", weight: 0.3 }],
   "modeling-mixed-numbers-using-number-lines": [{ topic: "models-for-mixed-numbers", weight: 0.2 }],
   "interpreting-division-problems-as-mixed-numbers": [
     { topic: "interpreting-fractions-as-division", weight: 0.3 },
     { topic: "division-with-remainders", weight: 0.4 },
   ],
-  "converting-improper-fractions-to-mixed-numbers": [{ topic: "interpreting-division-problems-as-mixed-numbers", weight: 0.2 }],
-  "converting-mixed-numbers-to-improper-fractions": [{ topic: "converting-improper-fractions-to-mixed-numbers", weight: 0.5 }],
   "finding-equivalent-fractions-using-area-models": [{ topic: "fraction-models", weight: 0.4 }],
-  "equivalent-fractions-by-multiplying-and-dividing": [{ topic: "finding-equivalent-fractions-using-area-models", weight: 0.2 }],
   "least-common-denominators": [
     { topic: "equivalent-fractions-by-multiplying-and-dividing", weight: 0.2 },
     { topic: "least-common-multiple-by-listing", weight: 0.3 },
   ],
   "writing-fractions-in-lowest-terms": [{ topic: "equivalent-fractions-by-multiplying-and-dividing", weight: 0.3 }],
   "comparing-fractions": [{ topic: "fraction-models", weight: 0.4 }],
-  "comparing-fractions-using-unit-benchmarks": [
-    { topic: "comparing-fractions", weight: 0.4 },
-    { topic: "improper-fractions", weight: 0.3 },
-  ],
+  "comparing-fractions-using-unit-benchmarks": [{ topic: "comparing-fractions", weight: 0.4 }],
   "comparing-fractions-using-one-half-benchmarks": [{ topic: "comparing-fractions", weight: 0.5 }],
   "comparing-fraction-models-using-common-denominators": [
     { topic: "finding-equivalent-fractions-using-area-models", weight: 0.3 },
@@ -135,10 +128,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "decimal-fractions", weight: 0.2 },
     { topic: "modeling-fractions-using-number-lines", weight: 0.3 },
   ],
-  "comparing-decimals-up-to-hundredths": [
-    { topic: "plotting-decimals-on-number-lines", weight: 0.2 },
-    { topic: "comparing-whole-numbers", weight: 0.3 },
-  ],
+  "comparing-decimals-up-to-hundredths": [{ topic: "comparing-whole-numbers", weight: 0.3 }],
   "converting-fractions-to-decimals": [{ topic: "decimal-fractions", weight: 0.4 }],
   "converting-mixed-numbers-to-decimals": [
     { topic: "converting-fractions-to-decimals", weight: 0.4 },
@@ -148,10 +138,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "converting-fractions-to-decimals", weight: 0.4 },
     { topic: "writing-fractions-in-lowest-terms", weight: 0.2 },
   ],
-  "converting-decimals-to-mixed-numbers": [
-    { topic: "converting-decimals-to-fractions", weight: 0.5 },
-    { topic: "converting-mixed-numbers-to-decimals", weight: 0.5 },
-  ],
+  "converting-decimals-to-mixed-numbers": [{ topic: "converting-decimals-to-fractions", weight: 0.5 }],
   "adding-decimal-fractions": [
     { topic: "decimal-fractions", weight: 0.4 },
     { topic: "adding-fractions-with-like-denominators", weight: 0.2 },
@@ -166,7 +153,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "subtracting-fractions-with-like-denominators", weight: 0.2 },
   ],
   "connecting-angles-and-circles": [{ topic: "angles-and-angle-measures", weight: 0.2 }],
-  "measuring-angles-using-a-protractor": [{ topic: "connecting-angles-and-circles", weight: 0.2 }],
   "right-straight-full-and-null-angles": [{ topic: "angles-and-angle-measures", weight: 0.3 }],
   "acute-obtuse-and-reflex-angles": [{ topic: "right-straight-full-and-null-angles", weight: 0.3 }],
   "classifying-figures-based-on-angles": [{ topic: "acute-obtuse-and-reflex-angles", weight: 0.3 }],
@@ -201,13 +187,9 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "three-and-four-digit-by-one-digit-multiplication", weight: 0.4 },
   ],
   "three-digit-by-three-digit-multiplication": [{ topic: "multi-digit-by-two-digit-multiplication", weight: 0.5 }],
-  "two-digit-by-one-digit-division": [
-    { topic: "two-digit-by-one-digit-division-using-partial-quotients", weight: 0.3 },
-    { topic: "division-with-remainders", weight: 0.5 },
-  ],
+  "two-digit-by-one-digit-division": [{ topic: "division-with-remainders", weight: 0.5 }],
   "three-digit-by-one-digit-division": [{ topic: "two-digit-by-one-digit-division", weight: 0.5 }],
   "four-digit-by-one-digit-division": [{ topic: "three-digit-by-one-digit-division", weight: 0.5 }],
-  "using-fractions-to-represent-division-of-whole-numbers": [{ topic: "interpreting-division-problems-as-mixed-numbers", weight: 0.4 }],
   "dividing-numbers-by-one-digit-numbers-with-rounding": [{ topic: "three-digit-by-one-digit-division", weight: 0.3 }],
   "dividing-numbers-by-one-digit-numbers-interpreting-the-remainder": [
     { topic: "four-digit-by-one-digit-division", weight: 0.2 },
@@ -223,10 +205,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "dividing-by-two-digit-numbers-with-remainders-by-connecting-multiplication-and-division", weight: 0.4 },
     { topic: "multi-digit-by-one-digit-division-using-partial-quotients", weight: 0.5 },
   ],
-  "three-digit-by-two-digit-division": [
-    { topic: "multi-digit-by-two-digit-division-using-partial-quotients", weight: 0.3 },
-    { topic: "three-digit-by-one-digit-division", weight: 0.5 },
-  ],
+  "three-digit-by-two-digit-division": [{ topic: "three-digit-by-one-digit-division", weight: 0.5 }],
   "four-digit-by-two-digit-division": [
     { topic: "three-digit-by-two-digit-division", weight: 0.5 },
     { topic: "four-digit-by-one-digit-division", weight: 0.5 },
@@ -239,11 +218,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "adding-fractions-and-whole-numbers-using-models", weight: 0.4 },
     { topic: "converting-improper-fractions-to-mixed-numbers", weight: 0.3 },
   ],
-  "subtracting-fractions-and-whole-numbers-using-models": [
-    { topic: "adding-fractions-and-whole-numbers-using-models", weight: 0.3 },
-    { topic: "subtracting-fractions-with-like-denominators", weight: 0.3 },
-  ],
-  "subtracting-fractions-and-whole-numbers": [{ topic: "subtracting-fractions-and-whole-numbers-using-models", weight: 0.2 }],
+  "subtracting-fractions-and-whole-numbers-using-models": [{ topic: "subtracting-fractions-with-like-denominators", weight: 0.3 }],
   "estimating-sums-and-differences-of-fractions": [
     { topic: "comparing-fractions-using-one-half-benchmarks", weight: 0.4 },
     { topic: "adding-fractions-with-like-denominators", weight: 0.3 },
@@ -252,18 +227,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "adding-fractions-with-like-denominators-using-models", weight: 0.4 },
     { topic: "comparing-fraction-models-using-common-denominators", weight: 0.4 },
   ],
-  "subtracting-fractions-with-unlike-denominators-using-models": [
-    { topic: "adding-fractions-with-unlike-denominators-using-models", weight: 0.5 },
-    { topic: "subtracting-fractions-with-like-denominators", weight: 0.4 },
-  ],
-  "adding-fractions-with-unlike-denominators": [
-    { topic: "adding-fractions-with-unlike-denominators-using-models", weight: 0.3 },
-    { topic: "least-common-denominators", weight: 0.4 },
-  ],
-  "subtracting-fractions-with-unlike-denominators": [
-    { topic: "subtracting-fractions-with-unlike-denominators-using-models", weight: 0.4 },
-    { topic: "adding-fractions-with-unlike-denominators", weight: 0.5 },
-  ],
+  "subtracting-fractions-with-unlike-denominators-using-models": [{ topic: "subtracting-fractions-with-like-denominators", weight: 0.4 }],
+  "adding-fractions-with-unlike-denominators": [{ topic: "least-common-denominators", weight: 0.4 }],
   "adding-and-subtracting-fractions-with-unlike-denominators-word-problems": [
     { topic: "subtracting-fractions-with-unlike-denominators", weight: 0.5 },
     { topic: "adding-fractions-with-like-denominators-word-problems", weight: 0.4 },
@@ -272,22 +237,15 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "adding-fractions-with-unlike-denominators", weight: 0.5 },
     { topic: "adding-mixed-numbers-with-like-denominators", weight: 0.5 },
   ],
-  "subtracting-mixed-numbers-with-unlike-denominators": [
-    { topic: "adding-mixed-numbers-with-unlike-denominators", weight: 0.5 },
-    { topic: "subtracting-mixed-numbers-with-like-denominators", weight: 0.5 },
-  ],
+  "subtracting-mixed-numbers-with-unlike-denominators": [{ topic: "subtracting-mixed-numbers-with-like-denominators", weight: 0.5 }],
   "subtracting-mixed-numbers-with-unlike-denominators-using-improper-fractions": [
-    { topic: "subtracting-mixed-numbers-with-unlike-denominators", weight: 0.5 },
     { topic: "subtracting-mixed-numbers-with-like-denominators-using-improper-fractions", weight: 0.5 },
   ],
   "adding-and-subtracting-mixed-numbers-with-unlike-denominators-word-problems": [
     { topic: "subtracting-mixed-numbers-with-unlike-denominators", weight: 0.5 },
     { topic: "adding-and-subtracting-fractions-with-unlike-denominators-word-problems", weight: 0.5 },
   ],
-  "multiplying-fractions-by-unit-fractions-using-models": [
-    { topic: "multiplying-fractions-by-whole-numbers", weight: 0.2 },
-    { topic: "finding-equivalent-fractions-using-area-models", weight: 0.3 },
-  ],
+  "multiplying-fractions-by-unit-fractions-using-models": [{ topic: "finding-equivalent-fractions-using-area-models", weight: 0.3 }],
   "multiplying-fractions-using-models": [{ topic: "multiplying-fractions-by-unit-fractions-using-models", weight: 0.5 }],
   "multiplying-fractions-word-problems": [
     { topic: "multiplying-fractions", weight: 0.3 },
@@ -319,27 +277,18 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "multiplying-mixed-numbers", weight: 0.2 },
   ],
   "fraction-multiplication-number-sense": [{ topic: "multiplying-fractions", weight: 0.3 }],
-  "interpreting-fraction-division-using-area-models": [{ topic: "multiplying-fractions-using-models", weight: 0.2 }],
   "dividing-whole-numbers-by-unit-fractions-using-models": [{ topic: "interpreting-fraction-division-using-area-models", weight: 0.3 }],
   "dividing-whole-numbers-by-unit-fractions": [{ topic: "dividing-whole-numbers-by-unit-fractions-using-models", weight: 0.5 }],
   "dividing-unit-fractions-by-whole-numbers-using-models": [{ topic: "interpreting-fraction-division-using-area-models", weight: 0.4 }],
-  "dividing-unit-fractions-by-whole-numbers": [{ topic: "dividing-unit-fractions-by-whole-numbers-using-models", weight: 0.2 }],
-  reciprocals: [
-    { topic: "multiplying-fractions", weight: 0.4 },
-    { topic: "converting-mixed-numbers-to-improper-fractions", weight: 0.3 },
-  ],
+  reciprocals: [{ topic: "converting-mixed-numbers-to-improper-fractions", weight: 0.3 }],
   "dividing-whole-numbers-by-fractions-using-models-whole-number-results": [
     { topic: "dividing-whole-numbers-by-unit-fractions", weight: 0.5 },
   ],
   "dividing-whole-numbers-by-fractions-using-models-fractional-results": [
     { topic: "dividing-whole-numbers-by-fractions-using-models-whole-number-results", weight: 0.5 },
   ],
-  "dividing-whole-numbers-by-fractions": [{ topic: "dividing-whole-numbers-by-fractions-using-models-fractional-results", weight: 0.2 }],
   "dividing-fractions-by-whole-numbers-using-models": [{ topic: "dividing-unit-fractions-by-whole-numbers", weight: 0.3 }],
-  "dividing-fractions-by-whole-numbers": [
-    { topic: "dividing-fractions-by-whole-numbers-using-models", weight: 0.2 },
-    { topic: "reciprocals", weight: 0.3 },
-  ],
+  "dividing-fractions-by-whole-numbers": [{ topic: "reciprocals", weight: 0.3 }],
   "dividing-fractions-and-whole-numbers-word-problems": [
     { topic: "dividing-fractions-by-whole-numbers", weight: 0.4 },
     { topic: "dividing-whole-numbers-by-fractions", weight: 0.2 },
@@ -364,14 +313,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "the-place-value-system-with-decimals", weight: 0.2 },
     { topic: "converting-from-standard-form-to-expanded-form", weight: 0.4 },
   ],
-  "converting-decimals-from-expanded-to-standard-form": [
-    { topic: "converting-decimals-from-standard-to-expanded-form", weight: 0.4 },
-    { topic: "converting-from-expanded-form-to-standard-form", weight: 0.5 },
-  ],
-  "equivalent-decimals": [
-    { topic: "comparing-place-values-with-decimals", weight: 0.4 },
-    { topic: "comparing-decimals-up-to-hundredths", weight: 0.3 },
-  ],
+  "converting-decimals-from-expanded-to-standard-form": [{ topic: "converting-from-expanded-form-to-standard-form", weight: 0.5 }],
+  "equivalent-decimals": [{ topic: "comparing-place-values-with-decimals", weight: 0.4 }],
   "comparing-decimals": [{ topic: "equivalent-decimals", weight: 0.4 }],
   "rounding-down-decimals": [
     { topic: "the-place-value-system-with-decimals", weight: 0.4 },
@@ -396,13 +339,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "adding-numbers-up-to-five-digits", weight: 0.2 },
   ],
   "addition-with-unequal-numbers-of-decimals": [{ topic: "adding-decimals", weight: 0.2 }],
-  "subtracting-decimals": [{ topic: "adding-decimals", weight: 0.4 }],
-  "subtraction-with-unequal-numbers-of-decimals": [
-    { topic: "subtracting-decimals", weight: 0.3 },
-    { topic: "addition-with-unequal-numbers-of-decimals", weight: 0.4 },
-  ],
+  "subtraction-with-unequal-numbers-of-decimals": [{ topic: "subtracting-decimals", weight: 0.3 }],
   "estimating-decimal-addition-with-benchmarks": [{ topic: "estimating-decimal-addition-and-subtraction", weight: 0.5 }],
-  "estimating-decimal-subtraction-with-benchmarks": [{ topic: "estimating-decimal-addition-with-benchmarks", weight: 0.5 }],
   "multiplying-decimals-by-powers-of-ten-using-place-value": [
     { topic: "multiplying-numbers-by-powers-of-ten-using-place-value", weight: 0.3 },
     { topic: "comparing-place-values-with-decimals", weight: 0.3 },
@@ -410,10 +348,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "multiplying-decimals-by-powers-of-ten-using-decimal-point-placement": [
     { topic: "multiplying-decimals-by-powers-of-ten-using-place-value", weight: 0.5 },
   ],
-  "estimating-decimal-multiplication": [
-    { topic: "estimating-decimal-addition-and-subtraction", weight: 0.5 },
-    { topic: "estimating-multi-digit-multiplication", weight: 0.4 },
-  ],
+  "estimating-decimal-multiplication": [{ topic: "estimating-multi-digit-multiplication", weight: 0.4 }],
   "multiplying-a-decimal-by-a-one-digit-whole-number": [
     { topic: "estimating-decimal-multiplication", weight: 0.3 },
     { topic: "three-and-four-digit-by-one-digit-multiplication", weight: 0.2 },
@@ -434,12 +369,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "dividing-decimals-by-powers-of-ten-using-decimal-point-placement": [
     { topic: "dividing-decimals-by-powers-of-ten-using-place-value", weight: 0.4 },
-    { topic: "multiplying-decimals-by-powers-of-ten-using-decimal-point-placement", weight: 0.5 },
   ],
-  "estimating-decimal-division": [
-    { topic: "estimating-decimal-multiplication", weight: 0.3 },
-    { topic: "estimating-multi-digit-division", weight: 0.5 },
-  ],
+  "estimating-decimal-division": [{ topic: "estimating-multi-digit-division", weight: 0.5 }],
   "dividing-decimals-using-place-value-strategies": [
     { topic: "dividing-using-place-value-strategies", weight: 0.3 },
     { topic: "comparing-place-values-with-decimals", weight: 0.3 },
@@ -457,10 +388,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "division-of-whole-numbers-with-decimal-quotients", weight: 0.4 },
     { topic: "dividing-by-two-digit-numbers-by-connecting-multiplication-and-division", weight: 0.4 },
   ],
-  "dividing-three-digit-decimals-by-two-digit-decimals": [
-    { topic: "dividing-decimals-using-the-standard-algorithm", weight: 0.5 },
-    { topic: "multiplying-two-digit-decimals", weight: 0.2 },
-  ],
+  "dividing-three-digit-decimals-by-two-digit-decimals": [{ topic: "dividing-decimals-using-the-standard-algorithm", weight: 0.5 }],
   "dividing-four-digit-and-five-digit-decimals": [
     { topic: "dividing-three-digit-decimals-by-two-digit-decimals", weight: 0.5 },
     { topic: "four-digit-by-two-digit-division", weight: 0.3 },
@@ -513,7 +441,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "creating-and-interpreting-line-plots-with-fractions", weight: 0.2 },
     { topic: "dividing-fractions-by-whole-numbers", weight: 0.2 },
   ],
-  "describing-the-coordinate-plane": [{ topic: "parallel-and-perpendicular-lines", weight: 0.2 }],
   "solving-real-world-problems-using-coordinates": [{ topic: "describing-the-coordinate-plane", weight: 0.2 }],
   "coordinate-planes-as-maps": [{ topic: "solving-real-world-problems-using-coordinates", weight: 0.2 }],
   "connecting-patterns": [{ topic: "identifying-patterns", weight: 0.3 }],
@@ -522,13 +449,9 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "comparing-patterns", weight: 0.3 },
     { topic: "describing-the-coordinate-plane", weight: 0.2 },
   ],
-  "units-of-area-and-volume": [
-    { topic: "understanding-volume-using-unit-cubes", weight: 0.2 },
-    { topic: "units-of-length", weight: 0.2 },
-  ],
+  "units-of-area-and-volume": [{ topic: "units-of-length", weight: 0.2 }],
   "volumes-of-right-rectangular-prisms": [{ topic: "units-of-area-and-volume", weight: 0.2 }],
   "volumes-of-right-rectangular-prisms-word-problems": [{ topic: "volumes-of-right-rectangular-prisms", weight: 0.4 }],
-  polygons: [{ topic: "classifying-figures-based-on-angles", weight: 0.2 }],
   quadrilaterals: [
     { topic: "polygons", weight: 0.2 },
     { topic: "parallel-and-perpendicular-lines", weight: 0.2 },
@@ -554,12 +477,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "ratio-tables": [{ topic: "equivalent-ratios", weight: 0.4 }],
   "graphing-ratios": [{ topic: "describing-the-coordinate-plane", weight: 0.2 }],
   "solving-problems-using-unit-rates": [{ topic: "unit-rates", weight: 0.5 }],
-  "converting-between-percentages-and-fractions": [
-    { topic: "understanding-percentages-using-models", weight: 0.2 },
-    { topic: "writing-fractions-in-lowest-terms", weight: 0.2 },
-  ],
+  "converting-between-percentages-and-fractions": [{ topic: "writing-fractions-in-lowest-terms", weight: 0.2 }],
   "converting-between-percentages-and-decimals": [
-    { topic: "understanding-percentages-using-models", weight: 0.2 },
     { topic: "multiplying-decimals-by-powers-of-ten-using-decimal-point-placement", weight: 0.2 },
   ],
   "comparing-fractions-percents-and-decimals": [
@@ -571,7 +490,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "converting-between-percentages-and-fractions", weight: 0.3 },
     { topic: "multiplying-fractions-by-whole-numbers", weight: 0.2 },
   ],
-  "finding-a-total-given-a-part-and-a-percentage": [{ topic: "finding-part-of-a-number-given-a-whole-and-a-percentage", weight: 0.5 }],
   "finding-a-percentage-given-two-numbers-word-problems": [{ topic: "finding-a-percentage-given-two-numbers", weight: 0.4 }],
   "finding-part-of-a-number-given-a-whole-and-a-percentage-word-problems": [
     { topic: "finding-part-of-a-number-given-a-whole-and-a-percentage", weight: 0.5 },
@@ -646,7 +564,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "one-step-multiplication-equations", weight: 0.3 },
     { topic: "reciprocals", weight: 0.2 },
   ],
-  "one-step-division-equations": [{ topic: "one-step-multiplication-equations", weight: 0.5 }],
   "modeling-real-world-problems-using-one-step-equations": [
     { topic: "one-step-subtraction-equations", weight: 0.2 },
     { topic: "one-step-division-equations", weight: 0.2 },
@@ -665,14 +582,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "one-step-addition-equations", weight: 0.2 },
   ],
   "analyzing-two-variable-equations-using-tables": [{ topic: "ratio-tables", weight: 0.2 }],
-  "analyzing-two-variable-equations-using-graphs": [
-    { topic: "analyzing-two-variable-equations-using-tables", weight: 0.3 },
-    { topic: "graphing-ratios", weight: 0.2 },
-  ],
-  "areas-of-rectangles": [
-    { topic: "finding-areas-using-fraction-multiplication", weight: 0.3 },
-    { topic: "multiplying-two-digit-decimals", weight: 0.2 },
-  ],
+  "analyzing-two-variable-equations-using-graphs": [{ topic: "graphing-ratios", weight: 0.2 }],
+  "areas-of-rectangles": [{ topic: "multiplying-two-digit-decimals", weight: 0.2 }],
   "areas-of-right-triangles": [{ topic: "areas-of-rectangles", weight: 0.2 }],
   "areas-of-triangles": [{ topic: "areas-of-right-triangles", weight: 0.2 }],
   "areas-and-perimeters-of-parallelograms": [
@@ -693,7 +604,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "volumes-of-rectangular-prisms-with-fractional-edge-lengths", weight: 0.4 },
     { topic: "dividing-mixed-numbers", weight: 0.2 },
   ],
-  "distances-between-points-in-the-coordinate-plane": [{ topic: "solving-problems-in-the-coordinate-plane", weight: 0.2 }],
   "polygons-in-the-coordinate-plane": [
     { topic: "distances-between-points-in-the-coordinate-plane", weight: 0.3 },
     { topic: "classifying-quadrilaterals", weight: 0.3 },
@@ -702,7 +612,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "polygons-in-the-coordinate-plane", weight: 0.3 },
     { topic: "areas-of-triangles", weight: 0.3 },
   ],
-  "introduction-to-statistics": [{ topic: "creating-and-interpreting-line-plots", weight: 0.2 }],
   "the-median-of-a-data-set": [{ topic: "median-and-mode", weight: 0.5 }],
   "the-mode-of-a-data-set": [
     { topic: "median-and-mode", weight: 0.4 },
@@ -741,7 +650,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "measuring-centrality-from-dot-plots", weight: 0.4 },
     { topic: "comparing-measures-of-center", weight: 0.3 },
   ],
-  "finding-unit-prices": [{ topic: "solving-problems-using-unit-rates", weight: 0.3 }],
   "working-with-unit-prices": [{ topic: "finding-unit-prices", weight: 0.4 }],
   "solving-multi-step-unit-price-problems": [{ topic: "working-with-unit-prices", weight: 0.3 }],
   "unit-rates-associated-with-ratios-of-fractions": [{ topic: "dividing-fractions", weight: 0.3 }],
@@ -755,13 +663,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "solving-unit-rate-problems-using-ratios-of-fractions", weight: 0.5 },
   ],
   "understanding-proportional-relationships-using-tables": [{ topic: "analyzing-two-variable-equations-using-tables", weight: 0.4 }],
-  "understanding-proportional-relationships-using-graphs": [
-    { topic: "understanding-proportional-relationships-using-tables", weight: 0.3 },
-    { topic: "analyzing-two-variable-equations-using-graphs", weight: 0.2 },
-  ],
-  "understanding-proportional-relationships-from-descriptions": [
-    { topic: "understanding-proportional-relationships-using-tables", weight: 0.3 },
-  ],
+  "understanding-proportional-relationships-using-graphs": [{ topic: "analyzing-two-variable-equations-using-graphs", weight: 0.2 }],
   "interpreting-data-from-proportional-relationships": [
     { topic: "understanding-proportional-relationships-using-graphs", weight: 0.2 },
     { topic: "understanding-proportional-relationships-from-descriptions", weight: 0.3 },
@@ -770,16 +672,12 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "finding-part-of-a-number-given-a-whole-and-a-percentage-word-problems", weight: 0.2 },
     { topic: "converting-between-percentages-and-decimals", weight: 0.2 },
   ],
-  "applying-percentage-decreases": [{ topic: "applying-percentage-increases", weight: 0.5 }],
   "calculating-percentage-change": [{ topic: "applying-percentage-decreases", weight: 0.4 }],
   "finding-original-values-from-percentage-increases": [
     { topic: "applying-percentage-increases", weight: 0.4 },
     { topic: "finding-a-total-given-a-part-and-a-percentage", weight: 0.2 },
   ],
-  "finding-original-values-from-percentage-decreases": [
-    { topic: "finding-original-values-from-percentage-increases", weight: 0.5 },
-    { topic: "applying-percentage-decreases", weight: 0.4 },
-  ],
+  "finding-original-values-from-percentage-decreases": [{ topic: "applying-percentage-decreases", weight: 0.4 }],
   "applying-percentages-in-succession": [{ topic: "calculating-percentage-change", weight: 0.4 }],
   "interpreting-percentage-change": [{ topic: "calculating-percentage-change", weight: 0.4 }],
   "further-percentages-in-commerce-and-finance": [
@@ -840,10 +738,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "solving-multistep-problems-with-rational-numbers": [
     { topic: "solving-problems-using-the-four-operations-on-rational-numbers", weight: 0.2 },
   ],
-  "rational-numbers-as-finite-or-repeating-decimals": [
-    { topic: "dividing-with-negative-numbers", weight: 0.2 },
-    { topic: "division-of-whole-numbers-with-decimal-quotients", weight: 0.2 },
-  ],
+  "rational-numbers-as-finite-or-repeating-decimals": [{ topic: "division-of-whole-numbers-with-decimal-quotients", weight: 0.2 }],
   "squaring-rational-numbers": [
     { topic: "evaluating-exponents-with-fractional-bases", weight: 0.3 },
     { topic: "evaluating-exponents-with-decimal-bases", weight: 0.2 },
@@ -930,10 +825,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "supplementary-angles", weight: 0.5 },
     { topic: "complementary-angles", weight: 0.4 },
     { topic: "vertical-angles", weight: 0.4 },
-  ],
-  "heights-of-triangles": [
-    { topic: "classifying-triangles", weight: 0.3 },
-    { topic: "polygons-in-the-coordinate-plane", weight: 0.2 },
   ],
   "properties-of-rectangles-and-squares": [
     { topic: "classifying-quadrilaterals", weight: 0.2 },
@@ -1026,9 +917,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "simulating-compound-events": [{ topic: "experimental-probability-for-compound-events", weight: 0.2 }],
   "classifying-square-roots-and-cube-roots-as-rational-or-irrational": [{ topic: "the-real-number-system", weight: 0.3 }],
-  "approximating-square-roots-and-cube-roots": [
-    { topic: "classifying-square-roots-and-cube-roots-as-rational-or-irrational", weight: 0.4 },
-  ],
   "comparing-and-ordering-real-numbers": [{ topic: "approximating-square-roots-and-cube-roots", weight: 0.3 }],
   "estimating-expressions-with-irrational-numbers": [{ topic: "approximating-square-roots-and-cube-roots", weight: 0.2 }],
   "the-zeroth-power": [{ topic: "exponents-with-rational-bases", weight: 0.2 }],
@@ -1039,7 +927,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "evaluating-expressions-with-positive-integer-exponents", weight: 0.5 },
   ],
   "the-product-rule-for-exponents": [{ topic: "negative-exponents", weight: 0.3 }],
-  "the-quotient-rule-for-exponents": [{ topic: "the-product-rule-for-exponents", weight: 0.5 }],
   "the-power-rule-for-exponents": [{ topic: "the-product-rule-for-exponents", weight: 0.5 }],
   "the-power-of-product-rule-for-exponents": [{ topic: "the-power-rule-for-exponents", weight: 0.5 }],
   "the-power-of-quotient-rule-for-exponents": [{ topic: "the-power-of-product-rule-for-exponents", weight: 0.4 }],
@@ -1048,7 +935,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "the-power-of-quotient-rule-for-exponents", weight: 0.4 },
   ],
   "writing-numbers-in-scientific-notation": [{ topic: "negative-exponents", weight: 0.3 }],
-  "converting-scientific-notation-to-standard-notation": [{ topic: "writing-numbers-in-scientific-notation", weight: 0.3 }],
   "comparing-numbers-in-scientific-notation": [{ topic: "writing-numbers-in-scientific-notation", weight: 0.2 }],
   "addition-and-subtraction-in-scientific-notation": [{ topic: "writing-numbers-in-scientific-notation", weight: 0.2 }],
   "addition-in-scientific-notation-with-different-powers-of-ten": [
@@ -1064,31 +950,20 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "writing-numbers-in-scientific-notation", weight: 0.3 },
     { topic: "the-product-rule-for-exponents", weight: 0.2 },
   ],
-  "dividing-numbers-in-scientific-notation": [
-    { topic: "multiplying-numbers-in-scientific-notation", weight: 0.5 },
-    { topic: "the-quotient-rule-for-exponents", weight: 0.2 },
-  ],
+  "dividing-numbers-in-scientific-notation": [{ topic: "the-quotient-rule-for-exponents", weight: 0.2 }],
   "estimating-and-comparing-real-world-quantities-using-scientific-notation": [
     { topic: "comparing-numbers-in-scientific-notation", weight: 0.4 },
     { topic: "dividing-numbers-in-scientific-notation", weight: 0.3 },
   ],
   "the-square-root-of-a-perfect-square": [{ topic: "powers-of-rational-numbers", weight: 0.2 }],
   "squaring-a-square-root": [{ topic: "the-square-root-of-a-perfect-square", weight: 0.4 }],
-  "the-cube-root-of-a-perfect-cube": [{ topic: "the-square-root-of-a-perfect-square", weight: 0.5 }],
-  surds: [
-    { topic: "the-cube-root-of-a-perfect-cube", weight: 0.3 },
-    { topic: "classifying-square-roots-and-cube-roots-as-rational-or-irrational", weight: 0.4 },
-  ],
+  surds: [{ topic: "classifying-square-roots-and-cube-roots-as-rational-or-irrational", weight: 0.4 }],
   "the-product-rule-for-radicals": [{ topic: "simplifying-square-roots", weight: 0.5 }],
-  "the-quotient-rule-for-radicals": [{ topic: "the-product-rule-for-radicals", weight: 0.5 }],
   "solving-radical-equations-with-square-roots": [
     { topic: "solving-equations-with-square-roots", weight: 0.3 },
     { topic: "squaring-a-square-root", weight: 0.2 },
   ],
-  "solving-equations-using-cube-roots": [
-    { topic: "the-cube-root-of-a-perfect-cube", weight: 0.3 },
-    { topic: "solving-equations-with-square-roots", weight: 0.3 },
-  ],
+  "solving-equations-using-cube-roots": [{ topic: "the-cube-root-of-a-perfect-cube", weight: 0.3 }],
   "solving-radical-equations-with-cube-roots": [
     { topic: "solving-equations-using-cube-roots", weight: 0.5 },
     { topic: "solving-radical-equations-with-square-roots", weight: 0.5 },
@@ -1102,10 +977,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "the-fundamental-theorem-of-arithmetic", weight: 0.2 },
     { topic: "greatest-common-factor", weight: 0.3 },
   ],
-  "finding-lowest-common-multiples-using-prime-factorization": [
-    { topic: "finding-greatest-common-factors-using-prime-factorization", weight: 0.4 },
-    { topic: "least-common-multiple", weight: 0.3 },
-  ],
+  "finding-lowest-common-multiples-using-prime-factorization": [{ topic: "least-common-multiple", weight: 0.3 }],
   "linear-equations-with-infinitely-many-solutions": [{ topic: "equations-with-parentheses", weight: 0.2 }],
   "linear-equations-with-no-solutions": [],
   "determining-the-number-of-solutions-of-a-linear-equation": [{ topic: "linear-equations-with-no-solutions", weight: 0.2 }],
@@ -1121,7 +993,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "corresponding-angles": [{ topic: "vertical-angles", weight: 0.5 }],
   "alternate-angles": [{ topic: "corresponding-angles", weight: 0.5 }],
   "consecutive-angles": [{ topic: "alternate-angles", weight: 0.5 }],
-  "angle-criteria-for-parallel-lines": [{ topic: "consecutive-angles", weight: 0.5 }],
   "problem-solving-with-angles-of-triangles": [{ topic: "angles-of-a-triangle", weight: 0.5 }],
   "exterior-angles-of-polygons": [{ topic: "angles-of-polygons", weight: 0.5 }],
   "regular-polygons": [{ topic: "exterior-angles-of-polygons", weight: 0.3 }],
@@ -1157,12 +1028,10 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "multiplying-integers": [{ topic: "integers-and-opposites", weight: 0.2 }],
   "product-and-quotient-rules": [{ topic: "zero-and-negative-exponents", weight: 0.2 }],
-  "area-of-rectangles-and-squares": [{ topic: "perimeter", weight: 0.3 }],
   "units-in-formulas": [
     { topic: "unit-rates", weight: 0.2 },
     { topic: "area-of-rectangles-and-squares", weight: 0.3 },
   ],
-  "identifying-three-dimensional-shapes": [{ topic: "angles-of-polygons", weight: 0.2 }],
   "introduction-to-the-inverse-of-a-matrix": [{ topic: "the-determinant-of-a-2x2-matrix", weight: 0.4 }],
   "inverses-of-2x2-matrices": [{ topic: "introduction-to-the-inverse-of-a-matrix", weight: 0.3 }],
   "calculating-the-inverse-of-a-3x3-matrix-using-the-cofactor-method": [
@@ -1181,21 +1050,18 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "linear-transformations-of-points-and-lines-in-the-plane": [{ topic: "the-standard-matrix-of-a-linear-transformation", weight: 0.3 }],
   "linear-transformations-of-objects-in-the-plane": [{ topic: "linear-transformations-of-points-and-lines-in-the-plane", weight: 0.3 }],
   "dilations-and-reflections-as-linear-transformations": [{ topic: "the-standard-matrix-of-a-linear-transformation", weight: 0.3 }],
-  "shear-and-stretch-as-linear-transformations": [{ topic: "dilations-and-reflections-as-linear-transformations", weight: 0.3 }],
   "right-angle-rotations-as-linear-transformations": [{ topic: "the-standard-matrix-of-a-linear-transformation", weight: 0.3 }],
   "rotations-as-linear-transformations": [{ topic: "right-angle-rotations-as-linear-transformations", weight: 0.4 }],
   "combining-linear-transformations-using-2x2-matrices": [
     { topic: "rotations-as-linear-transformations", weight: 0.3 },
     { topic: "multiplying-square-matrices", weight: 0.3 },
   ],
-  "inverting-linear-transformations": [{ topic: "combining-linear-transformations-using-2x2-matrices", weight: 0.2 }],
   "area-scale-factors-of-linear-transformations": [{ topic: "the-geometric-interpretation-of-the-2x2-determinant", weight: 0.3 }],
   "singular-linear-transformations-in-the-plane": [{ topic: "area-scale-factors-of-linear-transformations", weight: 0.3 }],
   "equivalent-sets": [{ topic: "special-sets", weight: 0.2 }],
   "the-conditional-definition-of-a-set": [{ topic: "the-constructive-definition-of-a-set", weight: 0.2 }],
   "describing-sets-using-set-builder-notation": [{ topic: "the-conditional-definition-of-a-set", weight: 0.2 }],
   "describing-planar-regions-using-set-builder-notation": [{ topic: "describing-sets-using-set-builder-notation", weight: 0.2 }],
-  "infinite-sets": [{ topic: "cardinality-of-finite-sets", weight: 0.2 }],
   "set-complements": [{ topic: "the-difference-of-sets", weight: 0.4 }],
   "the-cartesian-product": [],
   "visualizing-cartesian-products": [{ topic: "the-cartesian-product", weight: 0.2 }],
@@ -1223,9 +1089,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "row-and-column-operations-on-determinants": [{ topic: "basic-properties-of-determinants", weight: 0.3 }],
   "conditions-when-a-determinant-equals-zero": [{ topic: "row-and-column-operations-on-determinants", weight: 0.2 }],
   "finding-determinants-using-row-and-column-operations": [{ topic: "row-and-column-operations-on-determinants", weight: 0.3 }],
-  "partitioned-and-block-matrices": [{ topic: "basic-properties-of-determinants", weight: 0.3 }],
   "systems-of-equations-as-augmented-matrices": [{ topic: "representing-3x3-systems-of-equations-using-a-matrix-product", weight: 0.3 }],
-  "elementary-row-operations": [{ topic: "row-echelon-form", weight: 0.2 }],
   "creating-rows-or-columns-containing-zeros-using-gaussian-elimination": [{ topic: "elementary-row-operations", weight: 0.3 }],
   "solving-2x2-singular-systems-of-equations-using-gaussian-elimination": [
     { topic: "solving-2x2-systems-of-equations-using-gaussian-elimination", weight: 0.3 },
@@ -1271,7 +1135,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "the-null-space-of-a-matrix": [{ topic: "subspaces-of-n-dimensional-space", weight: 0.2 }],
   "finding-a-basis-of-a-span": [{ topic: "linear-dependence-and-independence", weight: 0.3 }],
   "finding-a-basis-of-the-null-space-of-a-matrix": [{ topic: "the-null-space-of-a-matrix", weight: 0.2 }],
-  "expressing-the-coordinates-of-a-vector-in-a-given-basis": [{ topic: "finding-a-basis-of-a-span", weight: 0.2 }],
   "writing-vectors-in-different-bases": [{ topic: "expressing-the-coordinates-of-a-vector-in-a-given-basis", weight: 0.4 }],
   "the-change-of-coordinates-matrix": [{ topic: "writing-vectors-in-different-bases", weight: 0.5 }],
   "changing-a-basis-using-the-change-of-coordinates-matrix": [{ topic: "the-change-of-coordinates-matrix", weight: 0.4 }],
@@ -1324,7 +1187,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "calculating-the-eigenvectors-of-a-3x3-matrix-in-the-general-case": [
     { topic: "calculating-the-eigenvectors-of-a-3x3-matrix-with-distinct-eigenvalues", weight: 0.3 },
   ],
-  "diagonalizing-a-2x2-matrix": [{ topic: "invertible-matrix-theorem-in-terms-of-eigenvalues", weight: 0.2 }],
   "properties-of-diagonalization": [{ topic: "diagonalizing-a-2x2-matrix", weight: 0.3 }],
   "diagonalizing-a-3x3-matrix-with-distinct-eigenvalues": [{ topic: "properties-of-diagonalization", weight: 0.4 }],
   "diagonalizing-a-3x3-matrix-in-the-general-case": [{ topic: "diagonalizing-a-3x3-matrix-with-distinct-eigenvalues", weight: 0.2 }],
@@ -1334,7 +1196,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "rotation-scaling-matrices": [{ topic: "finding-complex-eigenvectors-of-real-2x2-matrices", weight: 0.2 }],
   "reducing-real-2x2-matrices-to-rotation-scaling-form": [{ topic: "rotation-scaling-matrices", weight: 0.3 }],
   "block-diagonalization-of-nxn-matrices": [{ topic: "reducing-real-2x2-matrices-to-rotation-scaling-form", weight: 0.4 }],
-  "nilpotent-and-idempotent-matrices": [{ topic: "block-diagonalization-of-nxn-matrices", weight: 0.2 }],
   "generalized-eigenvectors": [{ topic: "nilpotent-and-idempotent-matrices", weight: 0.2 }],
   "ranks-of-generalized-eigenvectors": [{ topic: "generalized-eigenvectors", weight: 0.3 }],
   "finding-generalized-eigenvectors-of-specific-ranks": [{ topic: "ranks-of-generalized-eigenvectors", weight: 0.4 }],
@@ -1408,7 +1269,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases", weight: 0.3 },
   ],
   "qr-factorization": [{ topic: "orthogonal-matrices", weight: 0.2 }],
-  "symmetric-matrices": [{ topic: "calculating-the-eigenvalues-of-a-2x2-matrix", weight: 0.2 }],
   "diagonalization-of-2x2-symmetric-matrices": [{ topic: "symmetric-matrices", weight: 0.2 }],
   "diagonalization-of-3x3-symmetric-matrices": [{ topic: "diagonalization-of-2x2-symmetric-matrices", weight: 0.5 }],
   "spectral-theorem": [{ topic: "diagonalization-of-3x3-symmetric-matrices", weight: 0.2 }],
@@ -1421,13 +1281,8 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "positive-definite-and-negative-definite-quadratic-forms": [
     { topic: "canonical-form-of-a-quadratic-form-using-orthogonal-transformations", weight: 0.2 },
   ],
-  "reducing-a-quadratic-curve-to-its-principal-axes": [{ topic: "positive-definite-and-negative-definite-quadratic-forms", weight: 0.2 }],
-  "classifying-quadratic-curves": [{ topic: "reducing-a-quadratic-curve-to-its-principal-axes", weight: 0.2 }],
   "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained": [
     { topic: "constrained-optimization-of-quadratic-forms", weight: 0.5 },
-  ],
-  "singular-values-of-a-matrix": [
-    { topic: "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained", weight: 0.2 },
   ],
   "computing-the-singular-values-of-a-matrix": [{ topic: "singular-values-of-a-matrix", weight: 0.3 }],
   "singular-value-decomposition-of-2x2-matrices": [{ topic: "computing-the-singular-values-of-a-matrix", weight: 0.3 }],
@@ -1444,13 +1299,10 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "finding-a-least-squares-solution-using-qr-factorization": [
     { topic: "least-squares-solution-of-a-linear-system-with-collinearity", weight: 0.2 },
   ],
-  "weighted-least-squares": [{ topic: "finding-a-least-squares-solution-using-qr-factorization", weight: 0.2 }],
-  "markov-chains": [{ topic: "weighted-least-squares", weight: 0.2 }],
   "steady-state-vectors": [{ topic: "markov-chains", weight: 0.3 }],
   "linear-regression-with-matrices": [],
   "polynomial-regression-with-matrices": [{ topic: "linear-regression-with-matrices", weight: 0.4 }],
   "multiple-linear-regression-with-matrices": [{ topic: "polynomial-regression-with-matrices", weight: 0.2 }],
-  "monotonic-sequences": [{ topic: "limits-of-sequences", weight: 0.2 }],
   "selecting-procedures-for-analyzing-infinite-series": [
     { topic: "the-root-test", weight: 0.3 },
     { topic: "absolute-and-conditional-convergence", weight: 0.3 },
@@ -1463,7 +1315,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "the-not-connective": [{ topic: "the-and-and-or-connectives", weight: 0.5 }],
   "logical-associative-and-commutative-laws": [{ topic: "logical-equivalence", weight: 0.4 }],
   "the-distributive-laws": [{ topic: "logical-associative-and-commutative-laws", weight: 0.3 }],
-  "the-absorption-laws": [{ topic: "the-distributive-laws", weight: 0.5 }],
   "conditional-statements": [{ topic: "the-not-connective", weight: 0.4 }],
   "biconditional-statements": [{ topic: "conditional-statements", weight: 0.4 }],
   "converse-inverse-and-contrapositive": [{ topic: "logical-equivalence-with-conditional-statements", weight: 0.4 }],
@@ -1492,7 +1343,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "the-distributive-laws", weight: 0.2 },
   ],
   "trivial-and-vacuous-proofs": [{ topic: "direct-proof", weight: 0.2 }],
-  "proof-by-contradiction": [{ topic: "proof-by-contrapositive", weight: 0.2 }],
   "proving-irrationality-by-contradiction": [
     { topic: "proof-by-contradiction", weight: 0.2 },
     { topic: "sums-and-products-of-rational-and-irrational-numbers", weight: 0.2 },
@@ -1535,10 +1385,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "continuous-infinite-sets-with-equal-cardinality": [{ topic: "bijections", weight: 0.2 }],
   "cantors-diagonal-argument": [{ topic: "cardinality-of-the-natural-numbers-integers-and-rationals", weight: 0.2 }],
   "the-cantor-bernstein-schroder-theorem": [{ topic: "continuous-infinite-sets-with-equal-cardinality", weight: 0.4 }],
-  "the-cardinality-of-the-power-set-of-natural-numbers": [
-    { topic: "cantors-diagonal-argument", weight: 0.3 },
-    { topic: "power-sets", weight: 0.3 },
-  ],
+  "the-cardinality-of-the-power-set-of-natural-numbers": [{ topic: "power-sets", weight: 0.3 }],
   "modular-residues": [{ topic: "modular-congruence", weight: 0.5 }],
   "the-division-properties-of-modular-arithmetic": [
     { topic: "the-multiplication-properties-of-modular-arithmetic", weight: 0.4 },
@@ -1555,7 +1402,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "the-addition-property-of-modular-arithmetic", weight: 0.2 },
   ],
   "multiplicative-inverses-modulo-n": [
-    { topic: "additive-inverses-modulo-n", weight: 0.5 },
     { topic: "the-multiplication-properties-of-modular-arithmetic", weight: 0.2 },
     { topic: "the-extended-euclidean-algorithm", weight: 0.2 },
   ],
@@ -1575,8 +1421,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "graphical-representations-of-relations", weight: 0.2 },
     { topic: "relations-on-infinite-sets", weight: 0.4 },
   ],
-  "symmetric-and-antisymmetric-relations": [{ topic: "reflexive-and-irreflexive-relations", weight: 0.4 }],
-  "transitive-relations": [{ topic: "symmetric-and-antisymmetric-relations", weight: 0.2 }],
   "proving-a-relation-is-an-equivalence-relation": [
     { topic: "equivalence-relations", weight: 0.2 },
     { topic: "proving-properties-of-modular-congruence", weight: 0.2 },
@@ -1596,15 +1440,10 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "de-morgans-laws-for-logic", weight: 0.3 },
   ],
   "principal-disjunctive-normal-forms": [{ topic: "disjunctive-normal-forms", weight: 0.3 }],
-  "conjunctive-normal-forms": [{ topic: "disjunctive-normal-forms", weight: 0.5 }],
-  "principal-conjunctive-normal-forms": [
-    { topic: "conjunctive-normal-forms", weight: 0.4 },
-    { topic: "principal-disjunctive-normal-forms", weight: 0.5 },
-  ],
+  "principal-conjunctive-normal-forms": [{ topic: "conjunctive-normal-forms", weight: 0.4 }],
   "boolean-polynomials": [{ topic: "boolean-functions-and-logical-operations", weight: 0.2 }],
   "simplifying-logical-expressions-using-karnaugh-maps": [{ topic: "principal-disjunctive-normal-forms", weight: 0.2 }],
   "truth-preserving-boolean-functions": [{ topic: "boolean-functions-and-logical-operations", weight: 0.2 }],
-  "self-dual-boolean-functions": [{ topic: "truth-preserving-boolean-functions", weight: 0.2 }],
   "affine-boolean-functions": [{ topic: "boolean-polynomials", weight: 0.4 }],
   "functionally-complete-sets": [{ topic: "principal-disjunctive-normal-forms", weight: 0.3 }],
   "posts-functional-completeness-theorem": [
@@ -1642,15 +1481,9 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "introduction-to-cryptography", weight: 0.3 },
     { topic: "multiplicative-inverses-modulo-n", weight: 0.2 },
   ],
-  "the-rsa-cryptosystem": [
-    { topic: "eulers-theorem", weight: 0.2 },
-    { topic: "the-linear-cipher", weight: 0.3 },
-  ],
+  "the-rsa-cryptosystem": [{ topic: "eulers-theorem", weight: 0.2 }],
   "one-to-one-transformations-of-discrete-random-variables": [
     { topic: "probability-mass-functions-of-discrete-random-variables", weight: 0.3 },
-  ],
-  "many-to-one-transformations-of-discrete-random-variables": [
-    { topic: "one-to-one-transformations-of-discrete-random-variables", weight: 0.5 },
   ],
   "properties-of-expectation-for-discrete-random-variables": [
     { topic: "expected-values-of-discrete-random-variables", weight: 0.2 },
@@ -1723,7 +1556,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "the-multinomial-theorem", weight: 0.5 },
     { topic: "counting-integer-solutions-of-a-constrained-equation", weight: 0.2 },
   ],
-  "introduction-to-recurrence-relations": [{ topic: "strong-induction-and-recurrence-relations", weight: 0.3 }],
   "first-order-recurrence-relations": [{ topic: "introduction-to-recurrence-relations", weight: 0.2 }],
   "first-order-recurrence-relations-with-polynomial-forcing": [
     { topic: "first-order-recurrence-relations", weight: 0.5 },
@@ -1813,12 +1645,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "shortest-paths-in-unweighted-graphs": [{ topic: "breadth-first-search", weight: 0.3 }],
   "dijkstras-algorithm": [{ topic: "shortest-paths-in-unweighted-graphs", weight: 0.3 }],
-  "moore-machines": [{ topic: "mealy-machines", weight: 0.5 }],
-  "deterministic-finite-automata": [{ topic: "mealy-machines", weight: 0.4 }],
-  "processing-strings-using-deterministic-finite-automata": [
-    { topic: "deterministic-finite-automata", weight: 0.5 },
-    { topic: "binary-integers", weight: 0.3 },
-  ],
+  "processing-strings-using-deterministic-finite-automata": [{ topic: "deterministic-finite-automata", weight: 0.5 }],
   "nondeterministic-finite-automata": [{ topic: "deterministic-finite-automata", weight: 0.5 }],
   "the-language-of-automata": [
     { topic: "processing-strings-using-deterministic-finite-automata", weight: 0.3 },
@@ -1826,10 +1653,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "regular-expressions": [{ topic: "the-language-of-automata", weight: 0.2 }],
   "introduction-to-turing-machines": [{ topic: "deterministic-finite-automata", weight: 0.3 }],
-  "processing-strings-using-turing-machines": [
-    { topic: "introduction-to-turing-machines", weight: 0.5 },
-    { topic: "binary-integers", weight: 0.3 },
-  ],
+  "processing-strings-using-turing-machines": [{ topic: "introduction-to-turing-machines", weight: 0.5 }],
   "nondeterministic-turing-machines": [
     { topic: "processing-strings-using-turing-machines", weight: 0.2 },
     { topic: "nondeterministic-finite-automata", weight: 0.2 },
@@ -1839,7 +1663,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "big-theta-notation": [{ topic: "big-omega-notation", weight: 0.2 }],
   "associative-binary-operations": [{ topic: "introduction-to-binary-operations", weight: 0.3 }],
   "commutative-binary-operations": [{ topic: "introduction-to-binary-operations", weight: 0.2 }],
-  "identities-of-binary-operations": [{ topic: "commutative-binary-operations", weight: 0.4 }],
   "inverses-under-binary-operations": [{ topic: "identities-of-binary-operations", weight: 0.5 }],
   "introduction-to-groups": [
     { topic: "associative-binary-operations", weight: 0.4 },
@@ -1868,10 +1691,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "orders-of-group-elements": [{ topic: "the-order-of-a-group", weight: 0.3 }],
   "computing-inverses-of-elements-in-zn": [{ topic: "multiplicative-inverses-modulo-n", weight: 0.4 }],
-  "cayley-diagrams": [
-    { topic: "cayley-tables", weight: 0.2 },
-    { topic: "orders-of-group-elements", weight: 0.3 },
-  ],
+  "cayley-diagrams": [{ topic: "orders-of-group-elements", weight: 0.3 }],
   "abelian-groups": [
     { topic: "cayley-tables", weight: 0.3 },
     { topic: "general-groups", weight: 0.2 },
@@ -1887,10 +1707,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "properties-of-subgroups": [{ topic: "subgroups-of-scalar-groups", weight: 0.3 }],
   "finite-cyclic-groups": [{ topic: "orders-of-group-elements", weight: 0.2 }],
-  "cyclic-groups": [
-    { topic: "finite-cyclic-groups", weight: 0.4 },
-    { topic: "properties-of-subgroups", weight: 0.3 },
-  ],
+  "cyclic-groups": [{ topic: "properties-of-subgroups", weight: 0.3 }],
   "cyclic-subgroups": [{ topic: "cyclic-groups", weight: 0.4 }],
   "cyclic-subgroups-in-the-complex-plane": [
     { topic: "cyclic-subgroups", weight: 0.5 },
@@ -2136,8 +1953,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "second-order-inhomogeneous-boundary-value-problems": [{ topic: "second-order-homogeneous-boundary-value-problems", weight: 0.2 }],
   "properties-of-fourier-series": [{ topic: "introduction-to-fourier-series", weight: 0.3 }],
   "fourier-sine-series": [{ topic: "properties-of-fourier-series", weight: 0.2 }],
-  "fourier-cosine-series": [{ topic: "fourier-sine-series", weight: 0.5 }],
-  "fourier-series-of-arbitrary-period": [{ topic: "fourier-cosine-series", weight: 0.4 }],
   "convergence-of-fourier-series": [{ topic: "fourier-series-of-arbitrary-period", weight: 0.2 }],
   "solving-odes-using-fourier-series": [{ topic: "differentiating-and-integrating-fourier-series", weight: 0.2 }],
   "solving-ivps-using-fourier-series": [{ topic: "solving-odes-using-fourier-series", weight: 0.3 }],
@@ -2150,22 +1965,11 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "finding-recurrence-relations-for-the-coefficients-of-a-frobenius-solution", weight: 0.3 },
   ],
   "the-modified-euler-method": [{ topic: "eulers-method-calculating-multiple-steps", weight: 0.3 }],
-  "eulers-method-for-systems-of-odes": [{ topic: "the-modified-euler-method", weight: 0.2 }],
   "eulers-method-for-second-order-odes": [{ topic: "eulers-method-for-systems-of-odes", weight: 0.5 }],
-  "the-rk4-method": [{ topic: "the-modified-euler-method", weight: 0.2 }],
-  "the-abm2-method": [{ topic: "the-rk4-method", weight: 0.2 }],
-  "the-implicit-euler-method": [{ topic: "eulers-method-calculating-multiple-steps", weight: 0.3 }],
-  "the-trapezoidal-method": [{ topic: "the-implicit-euler-method", weight: 0.3 }],
   "using-the-implicit-euler-method-with-newtons-method": [{ topic: "the-implicit-euler-method", weight: 0.3 }],
-  "using-the-trapezoidal-method-with-newtons-method": [
-    { topic: "the-trapezoidal-method", weight: 0.2 },
-    { topic: "using-the-implicit-euler-method-with-newtons-method", weight: 0.5 },
-  ],
+  "using-the-trapezoidal-method-with-newtons-method": [{ topic: "the-trapezoidal-method", weight: 0.2 }],
   "order-of-numerical-methods": [{ topic: "error-in-numerical-methods", weight: 0.2 }],
-  "stability-of-numerical-methods": [
-    { topic: "order-of-numerical-methods", weight: 0.2 },
-    { topic: "the-implicit-euler-method", weight: 0.4 },
-  ],
+  "stability-of-numerical-methods": [{ topic: "the-implicit-euler-method", weight: 0.4 }],
   "cumulative-distribution-functions-for-continuous-random-variables": [
     { topic: "calculating-probabilities-with-continuous-random-variables", weight: 0.3 },
   ],
@@ -2326,7 +2130,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "likelihood-functions-for-discrete-probability-distributions": [{ topic: "product-notation", weight: 0.2 }],
   "log-likelihood-functions-for-discrete-probability-distributions": [
     { topic: "likelihood-functions-for-discrete-probability-distributions", weight: 0.4 },
-    { topic: "logarithmic-differentiation", weight: 0.3 },
   ],
   "likelihood-functions-for-continuous-probability-distributions": [
     { topic: "product-notation", weight: 0.2 },
@@ -2334,7 +2137,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "log-likelihood-functions-for-continuous-probability-distributions": [
     { topic: "likelihood-functions-for-continuous-probability-distributions", weight: 0.5 },
-    { topic: "logarithmic-differentiation", weight: 0.3 },
   ],
   "maximum-likelihood-estimation": [
     { topic: "log-likelihood-functions-for-discrete-probability-distributions", weight: 0.3 },
@@ -2372,7 +2174,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "confidence-intervals-for-differences-between-two-means-known-population-variances", weight: 0.4 },
   ],
   "confidence-intervals-for-differences-between-two-means-unknown-unequal-population-variances": [
-    { topic: "confidence-intervals-for-differences-between-two-means-known-population-variances", weight: 0.4 },
     { topic: "confidence-intervals-for-one-mean-unknown-population-variance", weight: 0.3 },
   ],
   "confidence-intervals-for-paired-samples-known-variances": [
@@ -2396,36 +2197,22 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "introduction-to-hypothesis-testing": [{ topic: "the-central-limit-theorem", weight: 0.2 }],
   "hypothesis-tests-for-the-rate-of-a-poisson-distribution": [{ topic: "the-poisson-distribution", weight: 0.5 }],
   "critical-regions-for-left-tailed-hypothesis-tests": [{ topic: "introduction-to-hypothesis-testing", weight: 0.2 }],
-  "critical-regions-for-right-tailed-hypothesis-tests": [{ topic: "critical-regions-for-left-tailed-hypothesis-tests", weight: 0.5 }],
   "two-tailed-hypothesis-tests": [{ topic: "critical-regions-for-right-tailed-hypothesis-tests", weight: 0.5 }],
   "type-i-and-type-ii-errors": [{ topic: "introduction-to-hypothesis-testing", weight: 0.2 }],
-  "hypothesis-tests-for-one-mean-known-population-variance": [
-    { topic: "two-tailed-hypothesis-tests", weight: 0.3 },
-    { topic: "confidence-intervals-for-one-mean-known-population-variance", weight: 0.4 },
-  ],
+  "hypothesis-tests-for-one-mean-known-population-variance": [{ topic: "two-tailed-hypothesis-tests", weight: 0.3 }],
   "hypothesis-tests-for-one-mean-unknown-population-variance": [
     { topic: "hypothesis-tests-for-one-mean-known-population-variance", weight: 0.5 },
-    { topic: "confidence-intervals-for-one-mean-unknown-population-variance", weight: 0.4 },
   ],
-  "hypothesis-tests-for-one-variance": [{ topic: "confidence-intervals-for-one-variance", weight: 0.3 }],
   "hypothesis-tests-for-two-means-known-population-variances": [
     { topic: "hypothesis-tests-for-one-mean-known-population-variance", weight: 0.5 },
-    { topic: "confidence-intervals-for-differences-between-two-means-known-population-variances", weight: 0.4 },
   ],
   "hypothesis-tests-for-two-means-equal-but-unknown-population-variances": [
     { topic: "hypothesis-tests-for-one-mean-unknown-population-variance", weight: 0.4 },
-    { topic: "confidence-intervals-for-differences-between-two-means-unknown-equal-population-variances", weight: 0.4 },
   ],
-  "hypothesis-tests-for-two-means-unequal-and-unknown-population-variances": [
-    { topic: "confidence-intervals-for-differences-between-two-means-unknown-unequal-population-variances", weight: 0.3 },
-  ],
-  "hypothesis-tests-for-two-proportions": [{ topic: "confidence-intervals-for-differences-between-two-proportions", weight: 0.2 }],
   "hypothesis-tests-for-two-means-paired-sample-z-test": [
-    { topic: "confidence-intervals-for-paired-samples-known-variances", weight: 0.5 },
     { topic: "hypothesis-tests-for-one-mean-known-population-variance", weight: 0.4 },
   ],
   "hypothesis-tests-for-two-means-paired-sample-t-test": [
-    { topic: "hypothesis-tests-for-two-means-paired-sample-z-test", weight: 0.5 },
     { topic: "hypothesis-tests-for-one-mean-unknown-population-variance", weight: 0.4 },
   ],
   "hypothesis-tests-for-two-variances": [
@@ -2486,15 +2273,11 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "percent-applications-interest-and-discounts": [{ topic: "percent-of-a-number", weight: 0.2 }],
   "classifying-rational-and-irrational-numbers": [{ topic: "square-roots-and-cube-roots", weight: 0.4 }],
   "approximating-square-roots": [{ topic: "square-roots-and-cube-roots", weight: 0.3 }],
-  histograms: [{ topic: "dot-plots", weight: 0.2 }],
   "simplifying-expressions-with-surds": [
     { topic: "adding-and-subtracting-radicals", weight: 0.5 },
     { topic: "the-product-rule-for-radicals", weight: 0.4 },
   ],
-  "evaluating-numerical-expressions-containing-radicals": [
-    { topic: "the-cube-root-of-a-perfect-cube", weight: 0.4 },
-    { topic: "squaring-a-square-root", weight: 0.2 },
-  ],
+  "evaluating-numerical-expressions-containing-radicals": [{ topic: "squaring-a-square-root", weight: 0.2 }],
   "applying-the-distributive-law-to-radical-expressions": [
     { topic: "simplifying-expressions-with-surds", weight: 0.3 },
     { topic: "multiplying-binomials", weight: 0.5 },
@@ -2528,11 +2311,9 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "border-problems": [{ topic: "finding-areas-between-shapes", weight: 0.2 }],
   "constructing-functions-representing-properties-of-2d-shapes": [{ topic: "area-of-rectangles-and-squares", weight: 0.4 }],
   "equilateral-triangles-inscribed-in-circles": [
-    { topic: "squares-inscribed-in-circles", weight: 0.4 },
     { topic: "area-of-equilateral-triangles", weight: 0.3 },
     { topic: "medians-and-centroids", weight: 0.2 },
   ],
-  "circles-inscribed-in-equilateral-triangles": [{ topic: "equilateral-triangles-inscribed-in-circles", weight: 0.5 }],
   "areas-of-inscribed-triangles": [
     { topic: "angles-in-inscribed-right-triangles", weight: 0.2 },
     { topic: "areas-of-triangles", weight: 0.2 },

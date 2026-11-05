@@ -579,7 +579,7 @@ export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
     "多元函数的极限存在，当且仅当函数沿所有可能趋近该点的路径都趋于同一个值。",
   ),
   prerequisites: ["level-surfaces", "the-finite-limit-of-a-function"],
-  encompasses: [{ topic: "level-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

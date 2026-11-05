@@ -507,7 +507,6 @@ export const thePythagoreanTheorem: TopicDef = {
   encompasses: [
     { topic: "solving-equations-with-square-roots", weight: 0.3 },
     { topic: "simplifying-square-roots", weight: 0.3 },
-    { topic: "classifying-triangles", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.8.G.B.7", "CCSS.8.G.B.6"],

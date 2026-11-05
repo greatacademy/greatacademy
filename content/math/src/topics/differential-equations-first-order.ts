@@ -1287,7 +1287,7 @@ export const clairautDifferentialEquations: TopicDef = {
     "克莱罗方程 y = x y' + f(y') 的通解为一直线族 y = C x + f(C)，并具有一条由包络线构成的奇解。",
   ),
   prerequisites: ["exact-differential-equations"],
-  encompasses: [{ topic: "exact-differential-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1371,7 +1371,7 @@ export const dalembertDifferentialEquations: TopicDef = {
     "达朗贝尔方程 y = x f(y') + g(y') 通过对 x 求导，转化为关于 x(p)（其中 p = y'）的一阶线性常微分方程进行求解。",
   ),
   prerequisites: ["clairaut-differential-equations"],
-  encompasses: [{ topic: "clairaut-differential-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

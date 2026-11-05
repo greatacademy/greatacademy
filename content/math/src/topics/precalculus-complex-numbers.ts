@@ -204,7 +204,7 @@ export const theComplexPlane: TopicDef = {
     "在复平面（阿尔冈图）中将复数 z = a + bi 几何表示为坐标 (a, b)，识别实轴与虚轴，并确定给定复数所在的象限。",
   ),
   prerequisites: ["two-dimensional-vectors-expressed-in-component-form"],
-  encompasses: [{ topic: "two-dimensional-vectors-expressed-in-component-form", weight: 0.2 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
   knowledgePoints: [
@@ -1444,7 +1444,7 @@ export const quotientsOfComplexNumbersExpressedInPolarForm: TopicDef = {
     "使用模长相除、辐角相减的运算法则计算复数三角形式的除法：z1 / z2 = (r1 / r2) [cos(θ1 - θ2) + i sin(θ1 - θ2)]。",
   ),
   prerequisites: ["products-of-complex-numbers-expressed-in-polar-form"],
-  encompasses: [{ topic: "products-of-complex-numbers-expressed-in-polar-form", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.5"],
   knowledgePoints: [

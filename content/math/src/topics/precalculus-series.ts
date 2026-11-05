@@ -1292,7 +1292,6 @@ export const writingGeometricSeriesInSigmaNotation: TopicDef = {
   ),
   prerequisites: ["the-sum-of-a-finite-geometric-series", "expressing-an-arithmetic-series-in-sigma-notation"],
   encompasses: [
-    { topic: "expressing-an-arithmetic-series-in-sigma-notation", weight: 0.3 },
     { topic: "index-of-a-term-in-a-geometric-sequence", weight: 0.5 },
     { topic: "nth-term-of-a-geometric-sequence", weight: 0.5 },
   ],

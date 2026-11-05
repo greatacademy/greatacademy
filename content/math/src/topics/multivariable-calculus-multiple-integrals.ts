@@ -374,7 +374,7 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
     "上黎曼和 U(f, P) 在每个子矩形上取函数值的上确界，给出立体体积的上界近似。",
   ),
   prerequisites: ["approximating-volumes-using-lower-riemann-sums"],
-  encompasses: [{ topic: "approximating-volumes-using-lower-riemann-sums", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -934,7 +934,7 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
     "二重积分具有线性性质、对不重叠子区域的可加性以及保序性。",
   ),
   prerequisites: ["double-integrals-over-non-rectangular-domains"],
-  encompasses: [{ topic: "double-integrals-over-non-rectangular-domains", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1016,7 +1016,7 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
     "X-型区域（Type I）夹在关于 x 的两条连续曲线之间；Y-型区域（Type II）夹在关于 y 的两条连续曲线之间。",
   ),
   prerequisites: ["properties-of-double-integrals"],
-  encompasses: [{ topic: "properties-of-double-integrals", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2567,12 +2567,7 @@ export const cylindricalPolarCoordinates: TopicDef = {
     "柱面坐标系将三维空间点表示为 (r, θ, z)，其中 (r, θ) 为 xy 平面上的极坐标，z 为竖直高度坐标。",
   ),
   prerequisites: ["the-jacobian-of-a-three-dimensional-transformation"],
-  encompasses: [
-    {
-      topic: "the-jacobian-of-a-three-dimensional-transformation",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2766,12 +2761,7 @@ export const sphericalPolarCoordinates: TopicDef = {
     "球面坐标系将空间点表示为 (ρ, θ, φ)，其中 ρ 为与原点的距离，θ 为方位角，φ 为极角（余纬角）。",
   ),
   prerequisites: ["the-jacobian-of-a-three-dimensional-transformation"],
-  encompasses: [
-    {
-      topic: "the-jacobian-of-a-three-dimensional-transformation",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

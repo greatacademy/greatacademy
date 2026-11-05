@@ -605,10 +605,7 @@ export const eulersFormula: TopicDef = {
     "利用欧拉公式 $e^{i\\theta} = \\cos\\theta + i\\sin\\theta$ 把复数写成指数形式 $re^{i\\theta}$，在指数形式与代数形式之间转换，并用指数运算法则进行乘、除与乘方。",
   ),
   prerequisites: ["de-moivres-theorem"],
-  encompasses: [
-    { topic: "de-moivres-theorem", weight: 0.3 },
-    { topic: "the-cis-notation", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-cis-notation", weight: 0.3 }],
   xp: 16,
   knowledgePoints: [
     {

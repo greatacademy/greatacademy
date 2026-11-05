@@ -637,7 +637,6 @@ export const theAasCongruenceCriterion: TopicDef = {
   ),
   prerequisites: ["the-asa-congruence-criterion"],
   encompasses: [
-    { topic: "the-asa-congruence-criterion", weight: 0.4 },
     { topic: "angles-of-a-triangle", weight: 0.2 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
@@ -786,10 +785,7 @@ export const theSasCongruenceCriterion: TopicDef = {
     "由两边及其夹角证明三角形全等，并理解为什么 SSA 不行。",
   ),
   prerequisites: ["the-asa-congruence-criterion"],
-  encompasses: [
-    { topic: "the-asa-congruence-criterion", weight: 0.2 },
-    { topic: "two-step-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.2 }],
   xp: 13,
   standards: ["CCSS.HSG.CO.B.8", "CCSS.HSG.SRT.B.5"],
   knowledgePoints: [
@@ -1158,7 +1154,6 @@ export const theHlCongruenceCriterion: TopicDef = {
   prerequisites: ["the-sss-congruence-criterion", "the-pythagorean-theorem"],
   encompasses: [
     { topic: "the-pythagorean-theorem", weight: 0.3 },
-    { topic: "the-sss-congruence-criterion", weight: 0.2 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 13,

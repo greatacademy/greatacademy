@@ -528,7 +528,7 @@ export const parallelLinesAndTransversals: TopicDef = {
     "认识截线与两条平行线形成的角对，并用它们求角。",
   ),
   prerequisites: ["vertical-angles"],
-  encompasses: [{ topic: "vertical-angles", weight: 0.6 }],
+  encompasses: [{ topic: "vertical-angles", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.8.G.A.5"],
   knowledgePoints: [

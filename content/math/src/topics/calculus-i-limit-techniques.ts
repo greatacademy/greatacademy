@@ -1012,10 +1012,7 @@ export const specialLimitsInvolvingCosine: TopicDef = {
     "利用 lim (1 − cos x)/x = 0 与 lim (1 − cos x)/x² = 1/2 求含余弦的极限。",
   ),
   prerequisites: ["special-limits-involving-sine", "calculating-limits-using-trigonometric-identities"],
-  encompasses: [
-    { topic: "special-limits-involving-sine", weight: 0.3 },
-    { topic: "calculating-limits-using-trigonometric-identities", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "calculating-limits-using-trigonometric-identities", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

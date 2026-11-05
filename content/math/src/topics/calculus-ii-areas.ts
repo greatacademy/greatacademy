@@ -861,7 +861,7 @@ export const volumesOfSolidsWithRectangularCrossSections: TopicDef = {
   title: t("Volumes of Solids With Rectangular Cross Sections", "截面为矩形的立体的体积"),
   summary: t("Integrate the area of rectangular cross sections whose base lies in the region.", "对底边位于区域内的矩形截面的面积积分。"),
   prerequisites: ["volumes-of-solids-with-square-cross-sections"],
-  encompasses: [{ topic: "volumes-of-solids-with-square-cross-sections", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -913,7 +913,7 @@ export const volumesOfSolidsWithTriangularCrossSections: TopicDef = {
     "对等边三角形或等腰直角三角形截面的面积积分。",
   ),
   prerequisites: ["volumes-of-solids-with-square-cross-sections"],
-  encompasses: [{ topic: "volumes-of-solids-with-square-cross-sections", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -968,7 +968,7 @@ export const volumesOfSolidsWithCircularCrossSections: TopicDef = {
   title: t("Volumes of Solids With Circular Cross Sections", "截面为圆形的立体的体积"),
   summary: t("Integrate the area of semicircles or circles whose diameter spans the base.", "对直径横跨底面的半圆或圆的面积积分。"),
   prerequisites: ["volumes-of-solids-with-square-cross-sections"],
-  encompasses: [{ topic: "volumes-of-solids-with-square-cross-sections", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

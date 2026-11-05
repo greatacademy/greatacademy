@@ -47,7 +47,7 @@ export const theNthTermTestForDivergence: TopicDef = {
     "若 lim aₙ ≠ 0（或不存在），则 Σaₙ 发散；若 lim aₙ = 0，此判别法无法得出结论。",
   ),
   prerequisites: ["convergent-and-divergent-infinite-series", "further-determining-limits-of-sequences-using-relative-magnitudes"],
-  encompasses: [{ topic: "convergent-and-divergent-infinite-series", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

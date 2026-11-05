@@ -1170,10 +1170,7 @@ export const rangeOfAFunction: TopicDef = {
     "由数对集合、图象或区间上的一次函数公式求函数的值域。",
   ),
   prerequisites: ["domain-of-a-function", "global-extrema"],
-  encompasses: [
-    { topic: "domain-of-a-function", weight: 0.3 },
-    { topic: "global-extrema", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "global-extrema", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1537,7 +1534,7 @@ export const increasingAndDecreasing: TopicDef = {
   title: t("Increasing and Decreasing Functions", "函数的增减性"),
   summary: t("Find the intervals on which a function increases, decreases or stays constant.", "求函数递增、递减或保持不变的区间。"),
   prerequisites: ["domain-of-a-function", "slope-of-a-line"],
-  encompasses: [{ topic: "domain-of-a-function", weight: 0.2 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.IF.B.4"],
   knowledgePoints: [

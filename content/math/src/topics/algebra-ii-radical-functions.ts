@@ -1410,7 +1410,6 @@ export const rootsOfTransformedRadicalFunctions: TopicDef = {
     { topic: "solving-advanced-radical-equations", weight: 0.3 },
     { topic: "solving-radical-equations", weight: 0.4 },
     { topic: "roots-of-a-function", weight: 0.3 },
-    { topic: "the-range-of-a-transformed-radical-function", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.REI.A.2", "CCSS.HSF.IF.C.7.B"],
