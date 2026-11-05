@@ -261,7 +261,7 @@ export const introductionToFunctions: TopicDef = {
   ),
   prerequisites: ["two-step-equations"],
   encompasses: [
-    { topic: "evaluating-expressions", weight: 0.5 },
+    { topic: "evaluating-expressions", weight: 0.3 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 14,
@@ -370,7 +370,7 @@ export const representationsOfFunctions: TopicDef = {
   title: t("Visual Representations of Functions", "函数的直观表示"),
   summary: t("Read functions given by tables of values and by mapping diagrams.", "读懂用数值表和映射图表示的函数。"),
   prerequisites: ["introduction-to-functions"],
-  encompasses: [{ topic: "introduction-to-functions", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.A.2"],
   knowledgePoints: [
@@ -478,11 +478,7 @@ export const graphsOfFunctions: TopicDef = {
     "从图象读出函数值，借助图象解方程，并判断点是否在函数图象上。",
   ),
   prerequisites: ["representations-of-functions", "the-coordinate-plane"],
-  encompasses: [
-    { topic: "representations-of-functions", weight: 0.4 },
-    { topic: "introduction-to-functions", weight: 0.3 },
-    { topic: "evaluating-expressions", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.IF.A.2", "CCSS.HSA.REI.D.10"],
   knowledgePoints: [
@@ -599,10 +595,7 @@ export const domainOfAFunction: TopicDef = {
     "由数对集合、图象或公式求函数的定义域，并用区间表示。",
   ),
   prerequisites: ["graphs-of-functions", "unions-of-intervals", "square-roots-and-cube-roots"],
-  encompasses: [
-    { topic: "unbounded-intervals", weight: 0.4 },
-    { topic: "graphs-of-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "unbounded-intervals", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -825,10 +818,7 @@ export const verticalLineTest: TopicDef = {
   title: t("The Vertical Line Test", "竖直线检验"),
   summary: t("Decide from a graph whether it is the graph of a function.", "根据图象判断它是否是函数的图象。"),
   prerequisites: ["graphs-of-functions"],
-  encompasses: [
-    { topic: "graphs-of-functions", weight: 0.2 },
-    { topic: "introduction-to-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "introduction-to-functions", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSF.IF.A.1"],
   knowledgePoints: [
@@ -1182,7 +1172,7 @@ export const rangeOfAFunction: TopicDef = {
     "由数对集合、图象或区间上的一次函数公式求函数的值域。",
   ),
   prerequisites: ["domain-of-a-function", "global-extrema"],
-  encompasses: [{ topic: "global-extrema", weight: 0.3 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1300,10 +1290,7 @@ export const rangeAdvancedCases: TopicDef = {
     "求由几段组成的图象的值域，以及由平方和平方根构成的函数的值域。",
   ),
   prerequisites: ["range-of-a-function"],
-  encompasses: [
-    { topic: "range-of-a-function", weight: 0.7 },
-    { topic: "unions-of-intervals", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "range-of-a-function", weight: 0.7 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1394,11 +1381,7 @@ export const rootsOfAFunction: TopicDef = {
     "从图象或公式求函数的零点，并区分零点与 y 轴截距。",
   ),
   prerequisites: ["graphs-of-functions", "properties-of-lines-in-slope-intercept-form"],
-  encompasses: [
-    { topic: "properties-of-lines-in-slope-intercept-form", weight: 0.4 },
-    { topic: "graphs-of-functions", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSF.IF.C.7.A"],
   knowledgePoints: [
@@ -1646,7 +1629,6 @@ export const piecewiseFunctions: TopicDef = {
   ),
   prerequisites: ["graphs-of-functions", "inequalities-and-solutions"],
   encompasses: [
-    { topic: "graphs-of-functions", weight: 0.3 },
     { topic: "inequalities-and-solutions", weight: 0.3 },
     { topic: "evaluating-expressions", weight: 0.4 },
   ],
@@ -1925,7 +1907,6 @@ export const modelingWithLinearFunctions: TopicDef = {
   ),
   prerequisites: ["introduction-to-functions", "slope-intercept-form", "interpreting-linear-expressions"],
   encompasses: [
-    { topic: "two-step-equations", weight: 0.5 },
     { topic: "introduction-to-functions", weight: 0.4 },
     { topic: "interpreting-linear-expressions", weight: 0.4 },
   ],
@@ -2028,7 +2009,6 @@ export const constructingLinearFunctions: TopicDef = {
   ),
   prerequisites: ["modeling-with-linear-functions", "representations-of-functions", "point-slope-form"],
   encompasses: [
-    { topic: "modeling-with-linear-functions", weight: 0.5 },
     { topic: "representations-of-functions", weight: 0.3 },
     { topic: "slope-of-a-line", weight: 0.3 },
   ],
@@ -2155,7 +2135,6 @@ export const arithmeticOfFunctions: TopicDef = {
   prerequisites: ["introduction-to-functions", "adding-and-subtracting-polynomials", "multiplying-binomials"],
   encompasses: [
     { topic: "adding-and-subtracting-polynomials", weight: 0.5 },
-    { topic: "multiplying-binomials", weight: 0.4 },
     { topic: "introduction-to-functions", weight: 0.3 },
   ],
   xp: 15,
@@ -2284,10 +2263,7 @@ export const functionComposition: TopicDef = {
     "复合函数：在某个数处、借助数值表以及以公式形式求 f(g(x))。",
   ),
   prerequisites: ["arithmetic-of-functions", "representations-of-functions", "squaring-binomials"],
-  encompasses: [
-    { topic: "introduction-to-functions", weight: 0.5 },
-    { topic: "squaring-binomials", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "introduction-to-functions", weight: 0.5 }],
   xp: 16,
   standards: ["CCSS.HSF.BF.A.1.C"],
   knowledgePoints: [
@@ -2622,11 +2598,7 @@ export const introductionToInverseFunctions: TopicDef = {
     "撤销一个函数：从数值表读出反函数值，求一次函数的反函数，并用复合检验反函数。",
   ),
   prerequisites: ["function-composition", "rearranging-formulas"],
-  encompasses: [
-    { topic: "function-composition", weight: 0.4 },
-    { topic: "two-step-equations", weight: 0.4 },
-    { topic: "rearranging-formulas", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.4.A"],
   knowledgePoints: [

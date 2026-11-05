@@ -314,7 +314,7 @@ export const threeDimensionalVectorsInComponentForm: TopicDef = {
     "用坐标形式与标准基底表示三维空间向量，并求空间中两点间的位移向量。",
   ),
   prerequisites: ["two-dimensional-vectors-expressed-in-component-form"],
-  encompasses: [{ topic: "two-dimensional-vectors-expressed-in-component-form", weight: 0.4 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
   knowledgePoints: [
@@ -408,7 +408,7 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn3D: TopicDef = {
     "进行三维空间向量的加法、减法与数乘运算，并求解三维向量的线性组合。",
   ),
   prerequisites: ["three-dimensional-vectors-in-component-form"],
-  encompasses: [{ topic: "three-dimensional-vectors-in-component-form", weight: 0.5 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.B.4", "CCSS.HSN.VM.B.5"],
   knowledgePoints: [
@@ -516,7 +516,7 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn3D: TopicDef = {
     "计算三维向量的模长、空间中两点间的距离，并将三维向量单位化。",
   ),
   prerequisites: ["addition-and-scalar-multiplication-of-cartesian-vectors-in-3d"],
-  encompasses: [{ topic: "addition-and-scalar-multiplication-of-cartesian-vectors-in-3d", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.B.5.b"],
   knowledgePoints: [
@@ -923,7 +923,7 @@ export const calculatingAScalarProjection: TopicDef = {
     "计算一个向量在另一个向量方向上的标量投影，并理解其几何意义与符号。",
   ),
   prerequisites: ["the-angle-between-two-vectors"],
-  encompasses: [{ topic: "the-angle-between-two-vectors", weight: 0.4 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11"],
   knowledgePoints: [

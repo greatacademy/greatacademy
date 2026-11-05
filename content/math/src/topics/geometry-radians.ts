@@ -360,10 +360,7 @@ export const calculatingAreasOfSectorsUsingRadians: TopicDef = {
     "用半径平方的一半乘以弧度，或半径乘以弧长的一半，求扇形面积。",
   ),
   prerequisites: ["calculating-arc-length-using-radians", "calculating-areas-of-circular-sectors"],
-  encompasses: [
-    { topic: "calculating-areas-of-circular-sectors", weight: 0.5 },
-    { topic: "calculating-arc-length-using-radians", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "calculating-areas-of-circular-sectors", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSG.C.B.5"],
   knowledgePoints: [

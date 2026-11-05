@@ -379,7 +379,7 @@ export const expressingAnArithmeticSeriesInSigmaNotation: TopicDef = {
   ),
   prerequisites: ["sigma-notation", "index-of-a-term-in-an-arithmetic-sequence"],
   encompasses: [
-    { topic: "sigma-notation", weight: 0.4 },
+    { topic: "sigma-notation", weight: 0.3 },
     { topic: "index-of-a-term-in-an-arithmetic-sequence", weight: 0.5 },
     { topic: "nth-term-of-an-arithmetic-sequence", weight: 0.5 },
   ],
@@ -488,10 +488,7 @@ export const findingTheSumOfAnArithmeticSeries: TopicDef = {
     "用 $S_n = \\frac{n}{2}(a_1 + a_n) = \\frac{n}{2}(2a_1 + (n - 1)d)$ 求等差级数的和，级数可以逐项写出或用求和符号表示。",
   ),
   prerequisites: ["expressing-an-arithmetic-series-in-sigma-notation", "properties-of-finite-series"],
-  encompasses: [
-    { topic: "expressing-an-arithmetic-series-in-sigma-notation", weight: 0.4 },
-    { topic: "index-of-a-term-in-an-arithmetic-sequence", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.SSE.B.4"],
   knowledgePoints: [
@@ -925,7 +922,6 @@ export const modelingWithArithmeticSeries: TopicDef = {
     "modeling-with-arithmetic-sequences",
   ],
   encompasses: [
-    { topic: "calculating-the-number-of-terms-in-an-arithmetic-series", weight: 0.4 },
     { topic: "finding-the-first-term-of-an-arithmetic-series", weight: 0.4 },
     { topic: "modeling-with-arithmetic-sequences", weight: 0.4 },
   ],
@@ -1038,8 +1034,7 @@ export const theSumOfAFiniteGeometricSeries: TopicDef = {
   ),
   prerequisites: ["index-of-a-term-in-a-geometric-sequence"],
   encompasses: [
-    { topic: "index-of-a-term-in-a-geometric-sequence", weight: 0.4 },
-    { topic: "nth-term-of-a-geometric-sequence", weight: 0.4 },
+    { topic: "index-of-a-term-in-a-geometric-sequence", weight: 0.3 },
     { topic: "powers-of-rational-numbers", weight: 0.3 },
   ],
   xp: 16,
@@ -1154,10 +1149,7 @@ export const theSumOfTheFirstNTermsOfAGeometricSeries: TopicDef = {
     "对由通项公式或其中两项给出的等比数列求 $S_n$，并由和求首项。",
   ),
   prerequisites: ["the-sum-of-a-finite-geometric-series", "geometric-sequences-from-two-terms"],
-  encompasses: [
-    { topic: "the-sum-of-a-finite-geometric-series", weight: 0.6 },
-    { topic: "geometric-sequences-from-two-terms", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "the-sum-of-a-finite-geometric-series", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSA.SSE.B.4"],
   knowledgePoints: [
@@ -1398,10 +1390,7 @@ export const sumsOfFiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
     "读出 $\\sum_{k=m}^{n} c \\cdot r^{k}$ 的首项、公比和项数，求出它的值。",
   ),
   prerequisites: ["writing-geometric-series-in-sigma-notation", "the-sum-of-the-first-n-terms-of-a-geometric-series"],
-  encompasses: [
-    { topic: "writing-geometric-series-in-sigma-notation", weight: 0.4 },
-    { topic: "the-sum-of-the-first-n-terms-of-a-geometric-series", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "the-sum-of-the-first-n-terms-of-a-geometric-series", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSA.SSE.B.4"],
   knowledgePoints: [
@@ -2259,10 +2248,7 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
     "用 $(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k}$ 写出展开式的前几项，求二项式系数之和，并由某项的系数求 $n$。",
   ),
   prerequisites: ["expanding-a-binomial-using-binomial-coefficients", "sigma-notation"],
-  encompasses: [
-    { topic: "expanding-a-binomial-using-binomial-coefficients", weight: 0.5 },
-    { topic: "sigma-notation", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "expanding-a-binomial-using-binomial-coefficients", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.C.5"],
   knowledgePoints: [

@@ -168,10 +168,7 @@ export const convertingBetweenExponentialAndLogarithmicForm: TopicDef = {
     "把 $\\log_{b} x = c$ 读作 $b^{c} = x$，在两种形式之间互化，并求未知的真数或底数。",
   ),
   prerequisites: ["exponential-functions", "writing-radicals-using-fractional-exponents"],
-  encompasses: [
-    { topic: "zero-and-negative-exponents", weight: 0.2 },
-    { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "zero-and-negative-exponents", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.5", "CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -428,10 +425,7 @@ export const commonLogarithm: TopicDef = {
     "求以 10 为底的对数，解 $\\log x = c$，并判断 $\\log x$ 在哪两个相邻整数之间。",
   ),
   prerequisites: ["evaluating-logarithms", "scientific-notation"],
-  encompasses: [
-    { topic: "evaluating-logarithms", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "evaluating-logarithms", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -837,10 +831,7 @@ export const productRuleForLogarithms: TopicDef = {
     "用 $\\log_{b} (MN) = \\log_{b} M + \\log_{b} N$ 合并、计算和展开对数。",
   ),
   prerequisites: ["simplifying-logarithmic-expressions"],
-  encompasses: [
-    { topic: "simplifying-logarithmic-expressions", weight: 0.2 },
-    { topic: "evaluating-logarithms", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-logarithms", weight: 0.3 }],
   xp: 13,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -1367,7 +1358,7 @@ export const changeOfBaseFormula: TopicDef = {
     "把 $\\log_{a} x$ 写成 $\\frac{\\log_{b} x}{\\log_{b} a}$，计算对数的积，并用自然对数求任意对数的近似值。",
   ),
   prerequisites: ["combining-laws-of-logarithms"],
-  encompasses: [{ topic: "evaluating-logarithms", weight: 0.3 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [

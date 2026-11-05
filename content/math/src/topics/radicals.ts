@@ -278,7 +278,7 @@ export const rationalizingDenominators: TopicDef = {
   title: t("Rationalizing Denominators", "分母有理化"),
   summary: t("Remove a square root from a denominator by multiplying by the root.", "通过乘以根式去掉分母中的平方根。"),
   prerequisites: ["simplifying-square-roots"],
-  encompasses: [{ topic: "simplifying-square-roots", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [

@@ -351,7 +351,7 @@ export const areaOfParallelograms: TopicDef = {
   title: t("Areas of Parallelograms", "平行四边形的面积"),
   summary: t("Find the area of a parallelogram from its base and height.", "由底和高求平行四边形的面积。"),
   prerequisites: ["area-of-rectangles-and-squares"],
-  encompasses: [{ topic: "area-of-rectangles-and-squares", weight: 0.5 }],
+  encompasses: [],
   xp: 8,
   standards: ["CCSS.6.G.A.1"],
   knowledgePoints: [
@@ -672,10 +672,7 @@ export const compositeShapes: TopicDef = {
   title: t("Areas and Perimeters of Composite Shapes", "组合图形的面积和周长"),
   summary: t("Find the area and perimeter of shapes made of rectangles and triangles.", "求由长方形和三角形组成的图形的面积和周长。"),
   prerequisites: ["area-of-triangles"],
-  encompasses: [
-    { topic: "area-of-rectangles-and-squares", weight: 0.6 },
-    { topic: "perimeter", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "area-of-rectangles-and-squares", weight: 0.6 }],
   xp: 10,
   standards: ["CCSS.6.G.A.1", "CCSS.7.G.B.6"],
   knowledgePoints: [

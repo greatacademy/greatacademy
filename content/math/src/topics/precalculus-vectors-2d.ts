@@ -301,7 +301,7 @@ export const theTriangleLawForTheAdditionOfTwoVectors: TopicDef = {
     "应用三角形法则与平行四边形法则求解向量的和（合向量）与差。",
   ),
   prerequisites: ["introduction-to-vectors"],
-  encompasses: [{ topic: "introduction-to-vectors", weight: 0.2 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.B.4"],
   knowledgePoints: [
@@ -465,7 +465,7 @@ export const theMagnitudeOfAVector: TopicDef = {
     "理解向量模长的符号表示、非负性以及零向量的性质。",
   ),
   prerequisites: ["introduction-to-vectors"],
-  encompasses: [{ topic: "introduction-to-vectors", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1"],
   knowledgePoints: [
@@ -812,7 +812,7 @@ export const parallelVectors: TopicDef = {
     "根据数乘倍数判断两个向量是否平行（共线），并区分同向与反向。",
   ),
   prerequisites: ["introduction-to-vectors"],
-  encompasses: [{ topic: "introduction-to-vectors", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.B.5"],
   knowledgePoints: [
@@ -1091,7 +1091,7 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
     "计算向量的线性组合，应用代数运算性质，并求解未知数乘系数。",
   ),
   prerequisites: ["the-triangle-law-for-the-addition-of-two-vectors", "parallel-vectors"],
-  encompasses: [{ topic: "the-triangle-law-for-the-addition-of-two-vectors", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.B.4", "CCSS.HSN.VM.B.5"],
   knowledgePoints: [
@@ -1304,7 +1304,7 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
     "根据起点和终点坐标，将二维向量表示为坐标分量形式 ⟨x, y⟩ 或标准基底形式 xi + yj。",
   ),
   prerequisites: ["describing-the-position-vector-of-a-point-using-known-vectors"],
-  encompasses: [{ topic: "describing-the-position-vector-of-a-point-using-known-vectors", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
   knowledgePoints: [
@@ -1389,7 +1389,7 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
     "利用直角坐标代数计算二维向量的加法、减法和数乘运算。",
   ),
   prerequisites: ["two-dimensional-vectors-expressed-in-component-form"],
-  encompasses: [{ topic: "two-dimensional-vectors-expressed-in-component-form", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.B.4", "CCSS.HSN.VM.B.5"],
   knowledgePoints: [
@@ -1484,7 +1484,7 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
     "利用勾股定理计算二维直角坐标向量的模长（长度）。",
   ),
   prerequisites: ["addition-and-scalar-multiplication-of-cartesian-vectors-in-2d"],
-  encompasses: [{ topic: "addition-and-scalar-multiplication-of-cartesian-vectors-in-2d", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
   knowledgePoints: [

@@ -462,7 +462,7 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
     "把任意函数的图象左右平移：y = f(x − h) 把每个点向右移动 h 个单位。",
   ),
   prerequisites: ["vertical-translations-of-functions"],
-  encompasses: [{ topic: "squaring-binomials", weight: 0.2 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1092,10 +1092,7 @@ export const constructingFunctionsUsingTransformations: TopicDef = {
     "写出由已知函数经过一系列变换得到的函数的解析式。",
   ),
   prerequisites: ["combining-graph-transformations-three-or-more-operations", "function-composition"],
-  encompasses: [
-    { topic: "combining-graph-transformations-three-or-more-operations", weight: 0.5 },
-    { topic: "function-composition", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "combining-graph-transformations-three-or-more-operations", weight: 0.5 }],
   xp: 18,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.BF.A.1"],
   knowledgePoints: [
@@ -1733,7 +1730,6 @@ export const theDomainAndRangeOfTransformedFunctions: TopicDef = {
   encompasses: [
     { topic: "finding-points-on-transformed-curves", weight: 0.4 },
     { topic: "range-of-a-function", weight: 0.3 },
-    { topic: "domain-of-a-function", weight: 0.2 },
   ],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.A.1"],
@@ -1845,11 +1841,7 @@ export const absoluteValueGraphTransformations: TopicDef = {
     "画 y = |f(x)|（把 x 轴下方的部分翻折到上方）和 y = f(|x|)（把右半部分关于 y 轴对称到左边）的图象。",
   ),
   prerequisites: ["the-domain-and-range-of-transformed-functions"],
-  encompasses: [
-    { topic: "the-domain-and-range-of-transformed-functions", weight: 0.2 },
-    { topic: "combining-reflections-with-other-graph-transformations", weight: 0.3 },
-    { topic: "absolute-value-expressions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "absolute-value-expressions", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [

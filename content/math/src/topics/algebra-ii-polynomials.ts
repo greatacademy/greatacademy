@@ -196,10 +196,7 @@ export const theRealNumberSystem: TopicDef = {
     "把数分类为正整数（自然数）、非负整数、整数、有理数和无理数。",
   ),
   prerequisites: ["fractions-and-decimals", "square-roots-and-cube-roots"],
-  encompasses: [
-    { topic: "square-roots-and-cube-roots", weight: 0.2 },
-    { topic: "fractions-and-decimals", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.8.NS.A.1", "CCSS.HSN.RN.B.3"],
   knowledgePoints: [
@@ -655,7 +652,6 @@ export const sumsAndProductsOfRationalAndIrrationalNumbers: TopicDef = {
   prerequisites: ["the-real-number-system", "adding-and-subtracting-radicals"],
   encompasses: [
     { topic: "the-real-number-system", weight: 0.3 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
     { topic: "adding-and-subtracting-radicals", weight: 0.2 },
   ],
   xp: 12,
@@ -753,7 +749,7 @@ export const imaginaryNumbers: TopicDef = {
     "用虚数单位 $i = \\sqrt{-1}$ 求负数的平方根，并利用 $i^{2} = -1$ 进行虚数的乘法。",
   ),
   prerequisites: ["the-real-number-system", "simplifying-square-roots"],
-  encompasses: [{ topic: "simplifying-square-roots", weight: 0.4 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.CN.A.1"],
   knowledgePoints: [
@@ -979,7 +975,7 @@ export const complexNumbers: TopicDef = {
     "把复数写成 $a + bi$ 的形式，指出它的实部和虚部，并利用复数相等求未知数。",
   ),
   prerequisites: ["imaginary-numbers"],
-  encompasses: [{ topic: "imaginary-numbers", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.CN.A.1"],
   knowledgePoints: [
@@ -1213,7 +1209,6 @@ export const multiplyingComplexNumbers: TopicDef = {
   encompasses: [
     { topic: "multiplying-binomials", weight: 0.4 },
     { topic: "adding-and-subtracting-complex-numbers", weight: 0.3 },
-    { topic: "imaginary-numbers", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSN.CN.A.2"],
@@ -1322,10 +1317,8 @@ export const solvingQuadraticEquationsWithComplexRoots: TopicDef = {
   ),
   prerequisites: ["the-discriminant-of-a-quadratic-equation", "complex-numbers", "quadratic-equations-with-purely-imaginary-solutions"],
   encompasses: [
-    { topic: "the-quadratic-formula", weight: 0.5 },
     { topic: "quadratic-equations-with-purely-imaginary-solutions", weight: 0.4 },
     { topic: "complex-numbers", weight: 0.2 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSN.CN.C.7", "CCSS.HSA.REI.B.4.B"],
@@ -1487,11 +1480,7 @@ export const cyclicPropertyOfTheImaginaryUnit: TopicDef = {
     "利用每四次重复一次的循环 $i, -1, -i, 1$ 化简 $i$ 的乘方。",
   ),
   prerequisites: ["imaginary-numbers", "power-rules"],
-  encompasses: [
-    { topic: "imaginary-numbers", weight: 0.3 },
-    { topic: "power-rules", weight: 0.3 },
-    { topic: "product-and-quotient-rules", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.CN.A.2"],
   knowledgePoints: [

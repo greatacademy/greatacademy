@@ -242,10 +242,7 @@ export const twoStepUnitConversions: TopicDef = {
   title: t("Two-Step Unit Conversions", "两步单位换算"),
   summary: t("Convert between metric units by way of the base unit.", "经由基本单位进行公制单位换算。"),
   prerequisites: ["metric-units-of-length"],
-  encompasses: [
-    { topic: "metric-units-of-length", weight: 0.5 },
-    { topic: "metric-units-of-mass", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "metric-units-of-length", weight: 0.5 }],
   xp: 12,
   knowledgePoints: [
     {
@@ -390,7 +387,7 @@ export const unitsOfTime: TopicDef = {
     "秒、分钟、小时、天、周之间的换算，以及速度单位的换算。",
   ),
   prerequisites: ["two-step-unit-conversions"],
-  encompasses: [{ topic: "two-step-unit-conversions", weight: 0.3 }],
+  encompasses: [{ topic: "two-step-unit-conversions", weight: 0.2 }],
   xp: 15,
   knowledgePoints: [
     {
@@ -1143,10 +1140,7 @@ export const unitsOfRatesOfChange: TopicDef = {
   title: t("Selecting Units for Rates of Change", "变化率的单位"),
   summary: t("Find a rate of change between two times and give it the right units.", "求两个时刻之间的变化率，并写出正确的单位。"),
   prerequisites: ["units-in-formulas"],
-  encompasses: [
-    { topic: "units-in-formulas", weight: 0.3 },
-    { topic: "unit-rates", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "unit-rates", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSN.Q.A.1", "CCSS.HSF.IF.B.6"],
   knowledgePoints: [
@@ -1409,7 +1403,7 @@ export const directVariation: TopicDef = {
     "识别正比例关系，求比例常数，写出方程 y = kx。",
   ),
   prerequisites: ["proportions"],
-  encompasses: [{ topic: "proportions", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.7.RP.A.2"],
   knowledgePoints: [

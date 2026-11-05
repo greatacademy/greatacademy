@@ -189,7 +189,7 @@ export const complementaryAndSupplementaryAngles: TopicDef = {
   title: t("Complementary and Supplementary Angles", "互余与互补的角"),
   summary: t("Find the complement and the supplement of an angle.", "求一个角的余角和补角。"),
   prerequisites: ["angles-and-angle-measures"],
-  encompasses: [{ topic: "angles-and-angle-measures", weight: 0.2 }],
+  encompasses: [],
   xp: 8,
   standards: ["CCSS.7.G.B.5"],
   knowledgePoints: [
@@ -318,10 +318,7 @@ export const verticalAngles: TopicDef = {
     "利用对顶角和邻补角求两直线相交处的未知角。",
   ),
   prerequisites: ["complementary-and-supplementary-angles", "equations-with-variables-on-both-sides"],
-  encompasses: [
-    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.7.G.B.5"],
   knowledgePoints: [
@@ -528,7 +525,7 @@ export const parallelLinesAndTransversals: TopicDef = {
     "认识截线与两条平行线形成的角对，并用它们求角。",
   ),
   prerequisites: ["vertical-angles"],
-  encompasses: [{ topic: "vertical-angles", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.8.G.A.5"],
   knowledgePoints: [
@@ -1030,7 +1027,7 @@ export const classifyingTriangles: TopicDef = {
   title: t("Classifying Triangles", "三角形的分类"),
   summary: t("Classify triangles by their sides and by their angles.", "按边和按角给三角形分类。"),
   prerequisites: ["angles-and-angle-measures"],
-  encompasses: [{ topic: "angles-and-angle-measures", weight: 0.3 }],
+  encompasses: [],
   xp: 6,
   standards: ["CCSS.4.G.A.2"],
   knowledgePoints: [
@@ -1138,10 +1135,7 @@ export const isoscelesTriangles: TopicDef = {
     "利用底角相等求等腰三角形和等边三角形的角。",
   ),
   prerequisites: ["classifying-triangles", "angles-of-a-triangle"],
-  encompasses: [
-    { topic: "angles-of-a-triangle", weight: 0.6 },
-    { topic: "classifying-triangles", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "angles-of-a-triangle", weight: 0.6 }],
   xp: 10,
   standards: ["CCSS.8.G.A.5"],
   knowledgePoints: [
@@ -1311,7 +1305,7 @@ export const anglesOfPolygons: TopicDef = {
     "求多边形的内角和、正多边形的角以及未知角。",
   ),
   prerequisites: ["angles-of-a-triangle"],
-  encompasses: [{ topic: "angles-of-a-triangle", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   knowledgePoints: [
     {

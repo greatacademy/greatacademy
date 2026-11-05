@@ -292,7 +292,7 @@ export const circlesInTheCoordinatePlane: TopicDef = {
   ),
   prerequisites: ["circles", "the-pythagorean-theorem", "the-coordinate-plane"],
   encompasses: [
-    { topic: "the-pythagorean-theorem", weight: 0.4 },
+    { topic: "the-pythagorean-theorem", weight: 0.3 },
     { topic: "circles", weight: 0.3 },
     { topic: "the-coordinate-plane", weight: 0.3 },
   ],
@@ -439,7 +439,7 @@ export const equationsOfCirclesCenteredAtTheOrigin: TopicDef = {
     "写出并读懂圆心在原点的圆的方程 $x^{2} + y^{2} = r^{2}$。",
   ),
   prerequisites: ["circles-in-the-coordinate-plane"],
-  encompasses: [{ topic: "circles-in-the-coordinate-plane", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.1"],
   knowledgePoints: [
@@ -530,7 +530,7 @@ export const equationsOfCircles: TopicDef = {
   ),
   prerequisites: ["equations-of-circles-centered-at-the-origin", "midpoints-in-the-coordinate-plane"],
   encompasses: [
-    { topic: "equations-of-circles-centered-at-the-origin", weight: 0.7 },
+    { topic: "equations-of-circles-centered-at-the-origin", weight: 0.5 },
     { topic: "midpoints-in-the-coordinate-plane", weight: 0.2 },
   ],
   xp: 16,
@@ -912,7 +912,6 @@ export const calculatingCircleIntercepts: TopicDef = {
   ),
   prerequisites: ["determining-circle-properties-by-completing-the-square", "solving-quadratic-equations-by-factoring"],
   encompasses: [
-    { topic: "equations-of-circles", weight: 0.5 },
     { topic: "solving-equations-with-square-roots", weight: 0.4 },
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.3 },
   ],
@@ -1245,7 +1244,7 @@ export const perpendicularBisectorsOfDiametersInTheCoordinatePlane: TopicDef = {
   ),
   prerequisites: ["equations-of-circles", "perpendicular-lines-in-the-coordinate-plane"],
   encompasses: [
-    { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.5 },
+    { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.3 },
     { topic: "equations-of-circles", weight: 0.4 },
     { topic: "midpoints-in-the-coordinate-plane", weight: 0.3 },
   ],
@@ -1395,10 +1394,7 @@ export const perpendicularBisectorsOfChords: TopicDef = {
     "利用圆心到弦的垂线平分弦，建立半径、弦长与弦心距之间的关系。",
   ),
   prerequisites: ["circles", "the-pythagorean-theorem"],
-  encompasses: [
-    { topic: "the-pythagorean-theorem", weight: 0.6 },
-    { topic: "circles", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-pythagorean-theorem", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -1516,11 +1512,7 @@ export const perpendicularBisectorsOfChordsInTheCoordinatePlane: TopicDef = {
     "perpendicular-bisectors-of-diameters-in-the-coordinate-plane",
     "intersection-of-two-lines",
   ],
-  encompasses: [
-    { topic: "perpendicular-bisectors-of-chords", weight: 0.5 },
-    { topic: "perpendicular-bisectors-of-diameters-in-the-coordinate-plane", weight: 0.4 },
-    { topic: "intersection-of-two-lines", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "perpendicular-bisectors-of-chords", weight: 0.5 }],
   xp: 17,
   standards: ["CCSS.HSG.C.A.2", "CCSS.HSG.GPE.B.5"],
   knowledgePoints: [
@@ -1664,9 +1656,7 @@ export const thalesTheoremInTheCoordinatePlane: TopicDef = {
   ),
   prerequisites: ["perpendicular-bisectors-of-diameters-in-the-coordinate-plane", "thales-theorem"],
   encompasses: [
-    { topic: "equations-of-circles", weight: 0.5 },
     { topic: "thales-theorem", weight: 0.4 },
-    { topic: "perpendicular-bisectors-of-diameters-in-the-coordinate-plane", weight: 0.4 },
     { topic: "the-pythagorean-theorem", weight: 0.3 },
     { topic: "midpoints-in-the-coordinate-plane", weight: 0.2 },
   ],

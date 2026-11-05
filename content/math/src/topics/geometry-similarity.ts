@@ -234,10 +234,7 @@ export const similarityAndSimilarPolygons: TopicDef = {
     "读出相似式中的对应关系，判断两个矩形是否相似，并求相似比。",
   ),
   prerequisites: ["dilations-of-geometric-figures"],
-  encompasses: [
-    { topic: "dilations-of-geometric-figures", weight: 0.4 },
-    { topic: "proportions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "dilations-of-geometric-figures", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.SRT.A.2"],
   knowledgePoints: [
@@ -444,8 +441,6 @@ export const sideLengthsAndAngleMeasuresOfSimilarPolygons: TopicDef = {
   encompasses: [
     { topic: "similarity-and-similar-polygons", weight: 0.5 },
     { topic: "proportions", weight: 0.4 },
-    { topic: "angles-of-polygons", weight: 0.2 },
-    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.SRT.A.2", "CCSS.HSG.SRT.B.5"],
@@ -603,11 +598,7 @@ export const areasOfSimilarPolygons: TopicDef = {
     "利用周长按相似比 k 缩放、面积按 k² 缩放来比较相似多边形。",
   ),
   prerequisites: ["side-lengths-and-angle-measures-of-similar-polygons", "area-of-triangles"],
-  encompasses: [
-    { topic: "similarity-and-similar-polygons", weight: 0.3 },
-    { topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.2 },
-    { topic: "multiplying-fractions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "similarity-and-similar-polygons", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.SRT.A.2", "CCSS.7.G.A.1"],
   knowledgePoints: [
@@ -917,10 +908,8 @@ export const similarityTransformations: TopicDef = {
   ),
   prerequisites: ["similarity-and-similar-polygons", "translations-of-geometric-figures", "reflections-in-the-coordinate-plane"],
   encompasses: [
-    { topic: "dilations-of-geometric-figures", weight: 0.4 },
-    { topic: "similarity-and-similar-polygons", weight: 0.3 },
+    { topic: "dilations-of-geometric-figures", weight: 0.3 },
     { topic: "translations-of-geometric-figures", weight: 0.3 },
-    { topic: "reflections-in-the-coordinate-plane", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.SRT.A.2", "CCSS.8.G.A.4"],
@@ -1702,11 +1691,10 @@ export const combiningSimilarityCriteriaForTriangles: TopicDef = {
   ),
   prerequisites: ["the-sas-similarity-criterion"],
   encompasses: [
-    { topic: "the-aa-similarity-criterion", weight: 0.4 },
-    { topic: "the-sas-similarity-criterion", weight: 0.4 },
-    { topic: "the-sss-similarity-criterion", weight: 0.3 },
+    { topic: "the-aa-similarity-criterion", weight: 0.3 },
+    { topic: "the-sas-similarity-criterion", weight: 0.3 },
+    { topic: "the-sss-similarity-criterion", weight: 0.2 },
     { topic: "proportions", weight: 0.3 },
-    { topic: "parallel-lines-and-transversals", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.SRT.B.5"],
@@ -2334,8 +2322,6 @@ export const provingSimilarityStatements: TopicDef = {
   encompasses: [
     { topic: "combining-similarity-criteria-for-triangles", weight: 0.4 },
     { topic: "the-aa-similarity-criterion", weight: 0.3 },
-    { topic: "proving-triangle-theorems", weight: 0.2 },
-    { topic: "proving-alternate-angle-converses", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.SRT.B.5"],
@@ -2382,10 +2368,7 @@ export const theMidpointTheorem: TopicDef = {
     "运用三角形中位线定理：连接三角形两边中点的线段平行于第三边，且等于第三边的一半。",
   ),
   prerequisites: ["the-sas-similarity-criterion", "equations-with-parentheses"],
-  encompasses: [
-    { topic: "parallel-lines-and-transversals", weight: 0.2 },
-    { topic: "equations-with-parentheses", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "parallel-lines-and-transversals", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSG.CO.C.10"],
   knowledgePoints: [
@@ -2934,10 +2917,7 @@ export const theTriangleProportionalityTheorem: TopicDef = {
     "运用平行于三角形一边的直线截其他两边所得线段成比例，以及它的逆定理。",
   ),
   prerequisites: ["the-midpoint-theorem"],
-  encompasses: [
-    { topic: "proportions", weight: 0.4 },
-    { topic: "equations-with-parentheses", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "proportions", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSG.SRT.B.4"],
   knowledgePoints: [

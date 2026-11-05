@@ -205,10 +205,7 @@ export const theLawOfSines: TopicDef = {
     "用正弦定理求任意三角形的边和角，包括已知两边及其中一边对角时的多解情况。",
   ),
   prerequisites: ["calculating-angles-in-right-triangles-using-trigonometry", "angles-of-a-triangle"],
-  encompasses: [
-    { topic: "calculating-angles-in-right-triangles-using-trigonometry", weight: 0.3 },
-    { topic: "angles-of-a-triangle", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "angles-of-a-triangle", weight: 0.1 }],
   xp: 18,
   standards: ["CCSS.HSG.SRT.D.10", "CCSS.HSG.SRT.D.11"],
   knowledgePoints: [
@@ -465,7 +462,7 @@ export const theLawOfCosines: TopicDef = {
     "用余弦定理由两边及其夹角求第三边，由三边求角。",
   ),
   prerequisites: ["the-law-of-sines"],
-  encompasses: [{ topic: "the-pythagorean-theorem", weight: 0.2 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.SRT.D.10", "CCSS.HSG.SRT.D.11"],
   knowledgePoints: [
@@ -807,10 +804,7 @@ export const modelingUsingTheLawOfSines: TopicDef = {
     "用正弦定理求从两处观测到的点的距离，以及由两个仰角求高度。",
   ),
   prerequisites: ["the-law-of-sines", "modeling-with-trigonometry"],
-  encompasses: [
-    { topic: "the-law-of-sines", weight: 0.6 },
-    { topic: "modeling-with-trigonometry", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-law-of-sines", weight: 0.6 }],
   xp: 16,
   standards: ["CCSS.HSG.SRT.D.11"],
   knowledgePoints: [
@@ -974,10 +968,7 @@ export const modelingUsingTheLawOfCosines: TopicDef = {
     "用余弦定理求隔着障碍物的距离、沿不同方向行进者之间的距离，以及三角形地块的角。",
   ),
   prerequisites: ["the-law-of-cosines", "modeling-with-trigonometry"],
-  encompasses: [
-    { topic: "the-law-of-cosines", weight: 0.6 },
-    { topic: "modeling-with-trigonometry", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-law-of-cosines", weight: 0.6 }],
   xp: 16,
   standards: ["CCSS.HSG.SRT.D.11"],
   knowledgePoints: [

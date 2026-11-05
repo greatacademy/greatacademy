@@ -214,7 +214,7 @@ export const theCoordinatePlane: TopicDef = {
     "用坐标表示和确定点的位置，判断点所在的象限。",
   ),
   prerequisites: ["integers-and-opposites"],
-  encompasses: [{ topic: "integers-and-opposites", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.5.G.A.1", "CCSS.6.NS.C.6", "CCSS.6.NS.C.8"],
   knowledgePoints: [
@@ -346,7 +346,6 @@ export const slopeOfALine: TopicDef = {
   encompasses: [
     { topic: "the-coordinate-plane", weight: 0.3 },
     { topic: "subtracting-integers", weight: 0.3 },
-    { topic: "operations-with-rational-numbers", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.8.EE.B.6", "CCSS.8.F.B.4"],
@@ -520,10 +519,7 @@ export const slopeInterceptForm: TopicDef = {
     "写出并使用斜率为 $m$、$y$ 轴截距为 $b$ 的直线方程 $y = mx + b$。",
   ),
   prerequisites: ["slope-of-a-line", "evaluating-expressions"],
-  encompasses: [
-    { topic: "slope-of-a-line", weight: 0.4 },
-    { topic: "evaluating-expressions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-expressions", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.8.EE.B.6", "CCSS.8.F.A.3"],
   knowledgePoints: [
@@ -779,7 +775,6 @@ export const pointSlopeForm: TopicDef = {
   encompasses: [
     { topic: "slope-intercept-form", weight: 0.4 },
     { topic: "distributive-property", weight: 0.3 },
-    { topic: "slope-of-a-line", weight: 0.3 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.2", "CCSS.8.F.B.4"],
@@ -883,11 +878,7 @@ export const standardForm: TopicDef = {
     "把直线方程写成 $Ax + By = C$ 的形式，包括水平和竖直的直线。",
   ),
   prerequisites: ["point-slope-form", "equations-with-variables-on-both-sides"],
-  encompasses: [
-    { topic: "point-slope-form", weight: 0.3 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
-    { topic: "slope-of-a-line", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "slope-of-a-line", weight: 0.3 }],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.2", "CCSS.HSA.CED.A.4"],
   knowledgePoints: [
@@ -1015,10 +1006,7 @@ export const propertiesOfLinesInStandardForm: TopicDef = {
   title: t("Properties of Lines Given in Standard Form", "标准式直线的性质"),
   summary: t("Find the intercepts and the slope of a line $Ax + By = C$.", "求直线 $Ax + By = C$ 的截距和斜率。"),
   prerequisites: ["standard-form", "properties-of-lines-in-slope-intercept-form"],
-  encompasses: [
-    { topic: "standard-form", weight: 0.4 },
-    { topic: "properties-of-lines-in-slope-intercept-form", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "standard-form", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.8.F.B.4", "CCSS.HSA.CED.A.4"],
   knowledgePoints: [
@@ -1144,10 +1132,7 @@ export const parallelLinesInTheCoordinatePlane: TopicDef = {
     "由斜率识别平行线，写出平行线的方程。",
   ),
   prerequisites: ["properties-of-lines-in-standard-form"],
-  encompasses: [
-    { topic: "properties-of-lines-in-standard-form", weight: 0.3 },
-    { topic: "slope-intercept-form", weight: 0.4 },
-  ],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSG.GPE.B.5"],
   knowledgePoints: [
@@ -1274,10 +1259,7 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
   title: t("Perpendicular Lines in the Coordinate Plane", "坐标平面中的垂线"),
   summary: t("Use negative reciprocal slopes to recognize and write perpendicular lines.", "用互为负倒数的斜率识别并写出垂线。"),
   prerequisites: ["parallel-lines-in-the-coordinate-plane"],
-  encompasses: [
-    { topic: "parallel-lines-in-the-coordinate-plane", weight: 0.5 },
-    { topic: "operations-with-rational-numbers", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSG.GPE.B.5"],
   knowledgePoints: [
@@ -1395,10 +1377,7 @@ export const systemsOfLinearEquations: TopicDef = {
     "检验二元一次方程组的解，并由图像求解方程组。",
   ),
   prerequisites: ["slope-intercept-form"],
-  encompasses: [
-    { topic: "slope-intercept-form", weight: 0.3 },
-    { topic: "evaluating-expressions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-expressions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.8.EE.C.8.A", "CCSS.HSA.REI.C.6"],
   knowledgePoints: [
@@ -1521,10 +1500,7 @@ export const introductionToElimination: TopicDef = {
     "通过两个方程相加或相减消去一个变量来解方程组。",
   ),
   prerequisites: ["systems-of-linear-equations", "two-step-equations"],
-  encompasses: [
-    { topic: "systems-of-linear-equations", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.8.EE.C.8.B", "CCSS.HSA.REI.C.6"],
   knowledgePoints: [
@@ -1663,10 +1639,7 @@ export const eliminationWithTwoTransformations: TopicDef = {
     "两个方程分别乘以适当的数，使某个变量的系数互为相反数。",
   ),
   prerequisites: ["elimination-with-one-transformation"],
-  encompasses: [
-    { topic: "elimination-with-one-transformation", weight: 0.7 },
-    { topic: "operations-with-rational-numbers", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "elimination-with-one-transformation", weight: 0.7 }],
   xp: 18,
   standards: ["CCSS.8.EE.C.8.B", "CCSS.HSA.REI.C.5"],
   knowledgePoints: [
@@ -1790,7 +1763,6 @@ export const systemsWithFractionalCoefficients: TopicDef = {
   encompasses: [
     { topic: "elimination-with-two-transformations", weight: 0.6 },
     { topic: "operations-with-rational-numbers", weight: 0.3 },
-    { topic: "least-common-multiple", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.C.6"],
@@ -2002,10 +1974,7 @@ export const systemsWithNoSolutionOrInfinitelyManySolutions: TopicDef = {
     "识别无解或有无穷多个解的线性方程组。",
   ),
   prerequisites: ["elimination-with-one-transformation", "parallel-lines-in-the-coordinate-plane"],
-  encompasses: [
-    { topic: "elimination-with-one-transformation", weight: 0.4 },
-    { topic: "parallel-lines-in-the-coordinate-plane", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.8.EE.C.8.B"],
   knowledgePoints: [
@@ -2218,10 +2187,7 @@ export const solvingSystemsBySubstitution: TopicDef = {
     "把表示一个变量的式子代入另一个方程来解方程组。",
   ),
   prerequisites: ["systems-of-linear-equations", "equations-with-parentheses"],
-  encompasses: [
-    { topic: "systems-of-linear-equations", weight: 0.3 },
-    { topic: "equations-with-parentheses", weight: 0.6 },
-  ],
+  encompasses: [{ topic: "equations-with-parentheses", weight: 0.6 }],
   xp: 15,
   standards: ["CCSS.8.EE.C.8.B", "CCSS.HSA.REI.C.6"],
   knowledgePoints: [
@@ -2337,7 +2303,6 @@ export const intersectionOfTwoLines: TopicDef = {
   encompasses: [
     { topic: "solving-systems-by-substitution", weight: 0.5 },
     { topic: "slope-of-a-line", weight: 0.3 },
-    { topic: "operations-with-rational-numbers", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.C.6", "CCSS.HSA.REI.D.11"],
@@ -2564,10 +2529,7 @@ export const modelingWithSystems: TopicDef = {
   title: t("Modeling Using Systems of Linear Equations", "用线性方程组建模"),
   summary: t("Write and solve systems of equations for problems about two unknown quantities.", "为含两个未知量的问题列出并解方程组。"),
   prerequisites: ["solving-systems-by-substitution", "elimination-with-one-transformation"],
-  encompasses: [
-    { topic: "solving-systems-by-substitution", weight: 0.4 },
-    { topic: "elimination-with-one-transformation", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "solving-systems-by-substitution", weight: 0.4 }],
   xp: 18,
   standards: ["CCSS.8.EE.C.8.C", "CCSS.HSA.CED.A.3"],
   knowledgePoints: [
@@ -2698,10 +2660,7 @@ export const coinProblems: TopicDef = {
   title: t("Modeling Coin Problems Using Systems of Linear Equations", "用方程组解硬币问题"),
   summary: t("Find how many coins of each kind make up a sum of money.", "求一笔钱由每种硬币各多少枚组成。"),
   prerequisites: ["modeling-with-systems", "decimal-arithmetic"],
-  encompasses: [
-    { topic: "modeling-with-systems", weight: 0.6 },
-    { topic: "decimal-arithmetic", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "modeling-with-systems", weight: 0.6 }],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.3"],
   knowledgePoints: [

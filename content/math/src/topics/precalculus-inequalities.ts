@@ -475,7 +475,7 @@ export const solvingQuadraticInequalitiesFromGraphs: TopicDef = {
     "由二次函数的图象读出 $f(x) > 0$、$f(x) \\le 0$ 和 $f(x) \\ge k$ 的解。",
   ),
   prerequisites: ["solving-elementary-quadratic-inequalities", "roots-of-quadratic-functions"],
-  encompasses: [{ topic: "roots-of-quadratic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.REI.D.11"],
   knowledgePoints: [
@@ -577,7 +577,6 @@ export const solvingQuadraticInequalitiesUsingTheGraphicalMethod: TopicDef = {
   prerequisites: ["solving-quadratic-inequalities-from-graphs", "solving-quadratic-equations-with-leading-coefficients-by-factoring"],
   encompasses: [
     { topic: "solving-quadratic-inequalities-from-graphs", weight: 0.5 },
-    { topic: "solving-quadratic-equations-with-leading-coefficients-by-factoring", weight: 0.3 },
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.3 },
   ],
   xp: 15,
@@ -947,7 +946,6 @@ export const determiningUnknownParametersInQuadraticEquationsWithRealSolutions: 
   encompasses: [
     { topic: "the-discriminant-of-a-quadratic-equation", weight: 0.5 },
     { topic: "solving-multi-step-inequalities", weight: 0.3 },
-    { topic: "solving-elementary-quadratic-inequalities", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.4.B"],
@@ -1059,7 +1057,6 @@ export const determiningUnknownParametersInQuadraticEquationsAdvancedCases: Topi
   ],
   encompasses: [
     { topic: "determining-unknown-parameters-in-quadratic-equations-with-no-real-solutions", weight: 0.5 },
-    { topic: "determining-unknown-parameters-in-quadratic-equations-with-real-solutions", weight: 0.3 },
     { topic: "solving-quadratic-inequalities-using-the-graphical-method", weight: 0.4 },
   ],
   xp: 18,
@@ -1329,7 +1326,7 @@ export const solvingPolynomialInequalitiesUsingAGraphicalMethod: TopicDef = {
     "graphing-general-polynomials",
     "inequalities-involving-powers-of-binomials",
   ],
-  encompasses: [{ topic: "solving-quadratic-inequalities-using-the-graphical-method", weight: 0.4 }],
+  encompasses: [{ topic: "solving-quadratic-inequalities-using-the-graphical-method", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.B.4"],
   knowledgePoints: [
@@ -1587,7 +1584,7 @@ export const solvingRadicalInequalities: TopicDef = {
     "解含平方根的不等式，牢记被开方数必须非负，并在两边平方时注意前提条件。",
   ),
   prerequisites: ["solving-radical-equations", "solving-elementary-quadratic-inequalities"],
-  encompasses: [{ topic: "solving-elementary-quadratic-inequalities", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.REI.A.2"],
   knowledgePoints: [
@@ -1903,7 +1900,7 @@ export const solvingInequalitiesInvolvingExponentialFunctionsAndPolynomials: Top
     "解多项式与指数表达式相乘的不等式，利用形如 $e^{x}$ 的指数因式恒为正的性质进行化简。",
   ),
   prerequisites: ["solving-inequalities-involving-exponential-functions", "solving-polynomial-inequalities-using-the-sign-table-method"],
-  encompasses: [{ topic: "solving-inequalities-involving-exponential-functions", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.CED.A.1"],
   knowledgePoints: [

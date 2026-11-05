@@ -355,7 +355,6 @@ export const trendLines: TopicDef = {
   ),
   prerequisites: ["scatter-plots", "slope-intercept-form"],
   encompasses: [
-    { topic: "scatter-plots", weight: 0.3 },
     { topic: "slope-intercept-form", weight: 0.4 },
     { topic: "slope-of-a-line", weight: 0.2 },
   ],
@@ -746,7 +745,6 @@ export const predictionsWithTrendLines: TopicDef = {
   ),
   prerequisites: ["trend-lines", "two-step-equations"],
   encompasses: [
-    { topic: "trend-lines", weight: 0.3 },
     { topic: "evaluating-expressions", weight: 0.3 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
@@ -893,10 +891,7 @@ export const interpretingTrendLineCoefficients: TopicDef = {
     "说明趋势线的斜率和 $y$ 轴截距在实际情境中的含义。",
   ),
   prerequisites: ["trend-lines", "interpreting-linear-expressions"],
-  encompasses: [
-    { topic: "trend-lines", weight: 0.3 },
-    { topic: "interpreting-linear-expressions", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "interpreting-linear-expressions", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.8.SP.A.3", "CCSS.HSS.ID.C.7"],
   knowledgePoints: [
@@ -1065,7 +1060,7 @@ export const linearCorrelation: TopicDef = {
     "描述线性关系的方向与强弱，并把它们与相关系数 $r$ 联系起来。",
   ),
   prerequisites: ["scatter-plots"],
-  encompasses: [{ topic: "scatter-plots", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.8.SP.A.1", "CCSS.HSS.ID.C.8"],
   knowledgePoints: [
@@ -1623,12 +1618,7 @@ export const selectingARegressionModel: TopicDef = {
     "根据表格、散点图或文字描述，为数据选择线性、指数或二次模型。",
   ),
   prerequisites: ["trend-lines", "geometric-sequences", "linear-vs-exponential-growth-and-decay", "graphs-of-general-quadratic-functions"],
-  encompasses: [
-    { topic: "linear-vs-exponential-growth-and-decay", weight: 0.4 },
-    { topic: "geometric-sequences", weight: 0.2 },
-    { topic: "arithmetic-sequences", weight: 0.2 },
-    { topic: "trend-lines", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "linear-vs-exponential-growth-and-decay", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSS.ID.B.6.A", "CCSS.HSF.LE.A.1"],
   knowledgePoints: [

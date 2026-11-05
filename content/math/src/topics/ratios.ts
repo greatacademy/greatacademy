@@ -123,10 +123,7 @@ export const unitRates: TopicDef = {
   title: t("Unit Rates", "单位率"),
   summary: t("Find a rate per one unit and use unit rates to compare.", "求每一个单位的量，用单位率进行比较。"),
   prerequisites: ["ratios", "decimal-arithmetic"],
-  encompasses: [
-    { topic: "ratios", weight: 0.4 },
-    { topic: "decimal-arithmetic", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.6.RP.A.2", "CCSS.6.RP.A.3.B"],
   knowledgePoints: [
@@ -205,10 +202,7 @@ export const proportions: TopicDef = {
   title: t("Proportions", "比例"),
   summary: t("Solve proportions by cross-multiplying, and use them in word problems.", "用交叉相乘解比例，并用于应用题。"),
   prerequisites: ["ratios", "one-step-equations-multiplication"],
-  encompasses: [
-    { topic: "ratios", weight: 0.5 },
-    { topic: "one-step-equations-multiplication", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.7.RP.A.2.C"],
   knowledgePoints: [

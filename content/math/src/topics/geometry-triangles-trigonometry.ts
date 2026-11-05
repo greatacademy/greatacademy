@@ -329,7 +329,6 @@ export const theExteriorAngleTheorem: TopicDef = {
   encompasses: [
     { topic: "exterior-angles-of-triangles", weight: 0.6 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
-    { topic: "angles-of-a-triangle", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSG.CO.C.10"],
@@ -504,10 +503,7 @@ export const thePythagoreanTheorem: TopicDef = {
     "求直角三角形的未知边（精确值或最简根式），并用逆定理判断三角形的类型。",
   ),
   prerequisites: ["solving-equations-with-square-roots", "classifying-triangles"],
-  encompasses: [
-    { topic: "solving-equations-with-square-roots", weight: 0.3 },
-    { topic: "simplifying-square-roots", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-equations-with-square-roots", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.8.G.B.7", "CCSS.8.G.B.6"],
   knowledgePoints: [
@@ -689,11 +685,7 @@ export const isoscelesRightTriangles: TopicDef = {
     "利用 45°-45°-90° 三角形的边长比 1 : 1 : √2 求边长与周长。",
   ),
   prerequisites: ["the-pythagorean-theorem", "isosceles-triangles", "rationalizing-denominators"],
-  encompasses: [
-    { topic: "the-pythagorean-theorem", weight: 0.3 },
-    { topic: "rationalizing-denominators", weight: 0.2 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "rationalizing-denominators", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.HSG.SRT.C.8"],
   knowledgePoints: [
@@ -825,11 +817,7 @@ export const thirtySixtyNinetyTriangles: TopicDef = {
     "利用 30°-60°-90° 三角形的边长比 1 : √3 : 2，由任意一边求其余两边。",
   ),
   prerequisites: ["the-pythagorean-theorem", "isosceles-triangles", "rationalizing-denominators"],
-  encompasses: [
-    { topic: "the-pythagorean-theorem", weight: 0.3 },
-    { topic: "rationalizing-denominators", weight: 0.2 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "rationalizing-denominators", weight: 0.2 }],
   xp: 15,
   standards: ["CCSS.HSG.SRT.C.8"],
   knowledgePoints: [
@@ -1197,7 +1185,6 @@ export const areaOfEquilateralTriangles: TopicDef = {
   encompasses: [
     { topic: "thirty-sixty-ninety-triangles", weight: 0.3 },
     { topic: "area-of-triangles", weight: 0.3 },
-    { topic: "solving-equations-with-square-roots", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSG.SRT.C.8"],
@@ -1557,7 +1544,6 @@ export const provingTriangleTheorems: TopicDef = {
   ),
   prerequisites: ["the-exterior-angle-theorem"],
   encompasses: [
-    { topic: "the-exterior-angle-theorem", weight: 0.3 },
     { topic: "angles-of-a-triangle", weight: 0.2 },
     { topic: "parallel-lines-and-transversals", weight: 0.2 },
   ],
@@ -1773,10 +1759,7 @@ export const proofsInvolvingIsoscelesTriangles: TopicDef = {
     "用全等三角形证明等腰三角形定理及其逆定理，并用它们求边和角。",
   ),
   prerequisites: ["proving-triangle-theorems", "isosceles-triangles"],
-  encompasses: [
-    { topic: "isosceles-triangles", weight: 0.3 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "equations-with-variables-on-both-sides", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSG.CO.C.10"],
   knowledgePoints: [
@@ -1923,11 +1906,7 @@ export const mediansAndCentroids: TopicDef = {
     "利用中线、重心分中线 2 : 1 的性质和重心坐标公式求长度与坐标。",
   ),
   prerequisites: ["the-coordinate-plane", "equations-with-parentheses"],
-  encompasses: [
-    { topic: "equations-with-parentheses", weight: 0.2 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
-    { topic: "the-coordinate-plane", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.10", "CCSS.HSG.GPE.B.4"],
   knowledgePoints: [
@@ -2142,11 +2121,7 @@ export const proofsInvolvingMediansAndCentroids: TopicDef = {
     "推出重心是中线上三分之二处的点，证明有关中线的结论，并用中线分割面积。",
   ),
   prerequisites: ["medians-and-centroids", "proofs-involving-isosceles-triangles", "area-of-triangles"],
-  encompasses: [
-    { topic: "medians-and-centroids", weight: 0.4 },
-    { topic: "area-of-triangles", weight: 0.3 },
-    { topic: "proofs-involving-isosceles-triangles", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "medians-and-centroids", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSG.CO.C.10", "CCSS.HSG.GPE.B.6"],
   knowledgePoints: [

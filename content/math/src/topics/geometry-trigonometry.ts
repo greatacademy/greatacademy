@@ -464,9 +464,8 @@ export const diagonalsOfSquares: TopicDef = {
   ),
   prerequisites: ["isosceles-right-triangles", "area-of-rectangles-and-squares"],
   encompasses: [
-    { topic: "isosceles-right-triangles", weight: 0.4 },
+    { topic: "isosceles-right-triangles", weight: 0.3 },
     { topic: "area-of-rectangles-and-squares", weight: 0.2 },
-    { topic: "rationalizing-denominators", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.11", "CCSS.8.G.B.7"],
@@ -689,10 +688,7 @@ export const propertiesOfParallelograms: TopicDef = {
     "利用平行四边形的角、边和对角线的性质求度量和未知数。",
   ),
   prerequisites: ["angles-of-polygons"],
-  encompasses: [
-    { topic: "parallel-lines-and-transversals", weight: 0.3 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "equations-with-variables-on-both-sides", weight: 0.2 }],
   xp: 15,
   standards: ["CCSS.HSG.CO.C.11"],
   knowledgePoints: [
@@ -1124,11 +1120,7 @@ export const provingPropertiesOfParallelograms: TopicDef = {
     "补全两栏式证明：平行四边形的对边相等、对角相等、对角线互相平分。",
   ),
   prerequisites: ["properties-of-parallelograms", "proving-congruence-statements", "proving-alternate-angle-theorems"],
-  encompasses: [
-    { topic: "properties-of-parallelograms", weight: 0.3 },
-    { topic: "proving-congruence-statements", weight: 0.3 },
-    { topic: "proving-alternate-angle-theorems", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "proving-congruence-statements", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSG.CO.C.11"],
   knowledgePoints: [
@@ -1432,7 +1424,6 @@ export const provingCriteriaForParallelogramsAndRectangles: TopicDef = {
   ),
   prerequisites: ["proving-properties-of-parallelograms", "proving-alternate-angle-converses"],
   encompasses: [
-    { topic: "proving-properties-of-parallelograms", weight: 0.4 },
     { topic: "proving-alternate-angle-converses", weight: 0.3 },
     { topic: "properties-of-parallelograms", weight: 0.3 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
@@ -2628,11 +2619,7 @@ export const trigonometricRatiosInSimilarRightTriangles: TopicDef = {
     "理解三角比与三角形的大小无关，并用它求相似三角形的边。",
   ),
   prerequisites: ["the-trigonometric-ratios", "the-aa-similarity-criterion"],
-  encompasses: [
-    { topic: "the-trigonometric-ratios", weight: 0.3 },
-    { topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.3 },
-    { topic: "the-aa-similarity-criterion", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-trigonometric-ratios", weight: 0.3 }],
   xp: 13,
   standards: ["CCSS.HSG.SRT.C.6"],
   knowledgePoints: [
@@ -2759,9 +2746,7 @@ export const trigonometricFunctionsOfComplementaryAngles: TopicDef = {
   ),
   prerequisites: ["the-reciprocal-trigonometric-ratios"],
   encompasses: [
-    { topic: "the-trigonometric-ratios", weight: 0.3 },
     { topic: "angles-and-sides-in-right-triangles", weight: 0.3 },
-    { topic: "the-reciprocal-trigonometric-ratios", weight: 0.2 },
     { topic: "complementary-and-supplementary-angles", weight: 0.2 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
@@ -2892,7 +2877,7 @@ export const specialTrigonometricRatios: TopicDef = {
   prerequisites: ["the-reciprocal-trigonometric-ratios", "thirty-sixty-ninety-triangles", "isosceles-right-triangles"],
   encompasses: [
     { topic: "thirty-sixty-ninety-triangles", weight: 0.3 },
-    { topic: "isosceles-right-triangles", weight: 0.3 },
+    { topic: "isosceles-right-triangles", weight: 0.2 },
     { topic: "the-trigonometric-ratios", weight: 0.3 },
     { topic: "the-reciprocal-trigonometric-ratios", weight: 0.2 },
   ],
@@ -3203,10 +3188,7 @@ export const solvingMultipleRightTrianglesUsingTrigonometry: TopicDef = {
     "解由两个共边直角三角形组成的图形，从一个三角形推到另一个。",
   ),
   prerequisites: ["modeling-with-trigonometry"],
-  encompasses: [
-    { topic: "modeling-with-trigonometry", weight: 0.2 },
-    { topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.4 }],
   xp: 18,
   standards: ["CCSS.HSG.SRT.C.8"],
   knowledgePoints: [

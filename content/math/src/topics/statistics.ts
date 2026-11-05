@@ -348,11 +348,7 @@ export const comparingDataSets: TopicDef = {
   title: t("Comparing Data Sets", "比较数据集"),
   summary: t("Compare two data sets by their centers and by their spreads.", "通过集中趋势和离散程度比较两组数据。"),
   prerequisites: ["mean-absolute-deviation", "range-and-interquartile-range"],
-  encompasses: [
-    { topic: "range-and-interquartile-range", weight: 0.5 },
-    { topic: "mean-of-a-data-set", weight: 0.3 },
-    { topic: "median-and-mode", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "mean-of-a-data-set", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.7.SP.B.3", "CCSS.7.SP.B.4"],
   knowledgePoints: [
@@ -436,7 +432,7 @@ export const outliers: TopicDef = {
   prerequisites: ["range-and-interquartile-range", "mean-of-a-data-set"],
   encompasses: [
     { topic: "range-and-interquartile-range", weight: 0.5 },
-    { topic: "mean-of-a-data-set", weight: 0.5 },
+    { topic: "mean-of-a-data-set", weight: 0.3 },
   ],
   xp: 12,
   standards: ["CCSS.HSS.ID.A.3"],
@@ -541,7 +537,7 @@ export const dotPlots: TopicDef = {
   title: t("Dot Plots", "点图"),
   summary: t("Read a data set from a dot plot, and find its median.", "从点图中读出数据，并求中位数。"),
   prerequisites: ["median-and-mode"],
-  encompasses: [{ topic: "median-and-mode", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.6.SP.B.4"],
   knowledgePoints: [
@@ -651,7 +647,7 @@ export const boxPlots: TopicDef = {
     "从箱线图中读出五数概括、极差和四分位距，以及各标记之间的数据所占比例。",
   ),
   prerequisites: ["range-and-interquartile-range"],
-  encompasses: [{ topic: "range-and-interquartile-range", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.6.SP.B.4", "CCSS.6.SP.B.5.C"],
   knowledgePoints: [

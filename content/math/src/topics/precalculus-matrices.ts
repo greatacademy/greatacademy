@@ -237,7 +237,7 @@ export const indexNotationForMatrices: TopicDef = {
     "用双下标记号 $a_{ij}$ 定位并计算矩阵第 $i$ 行第 $j$ 列的元素。",
   ),
   prerequisites: ["introduction-to-matrices"],
-  encompasses: [{ topic: "introduction-to-matrices", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSN.VM.C.6"],
   knowledgePoints: [
@@ -364,7 +364,7 @@ export const addingAndSubtractingMatrices: TopicDef = {
     "对同型矩阵按对应元素进行加法与减法运算，并识别运算未定义的情形。",
   ),
   prerequisites: ["introduction-to-matrices"],
-  encompasses: [{ topic: "introduction-to-matrices", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSN.VM.C.8"],
   knowledgePoints: [
@@ -630,7 +630,7 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
     "通过将矩阵的每个元素乘以标量来进行数乘运算，并掌握数乘的分配律。",
   ),
   prerequisites: ["adding-and-subtracting-matrices"],
-  encompasses: [{ topic: "adding-and-subtracting-matrices", weight: 0.4 }],
+  encompasses: [],
   xp: 11,
   standards: ["CCSS.HSN.VM.C.7", "CCSS.HSN.VM.C.8"],
   knowledgePoints: [
@@ -728,7 +728,7 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
     "区分方阵、零矩阵、对角矩阵与单位矩阵，并掌握其结构特征。",
   ),
   prerequisites: ["introduction-to-matrices"],
-  encompasses: [{ topic: "introduction-to-matrices", weight: 0.4 }],
+  encompasses: [{ topic: "introduction-to-matrices", weight: 0.2 }],
   xp: 11,
   standards: ["CCSS.HSN.VM.C.6", "CCSS.HSN.VM.C.10"],
   knowledgePoints: [
@@ -874,7 +874,7 @@ export const theTransposeOfAMatrix: TopicDef = {
     "求 $m \\times n$ 矩阵的转置 $A^T$，理解它是 $n \\times m$ 矩阵，并掌握对称矩阵的概念。",
   ),
   prerequisites: ["index-notation-for-matrices"],
-  encompasses: [{ topic: "index-notation-for-matrices", weight: 0.4 }],
+  encompasses: [],
   xp: 11,
   standards: ["CCSS.HSN.VM.C.6"],
   knowledgePoints: [
@@ -982,7 +982,7 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
     "通过行与列对应相乘求和计算矩阵与列向量的乘积，并理解其为列向量的线性组合。",
   ),
   prerequisites: ["scalar-multiplication-of-matrices"],
-  encompasses: [{ topic: "scalar-multiplication-of-matrices", weight: 0.2 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.8"],
   knowledgePoints: [
@@ -1600,7 +1600,7 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
     "理解单位矩阵在乘法中充当单位元：A I = A 以及 I A = A。",
   ),
   prerequisites: ["zero-square-diagonal-and-identity-matrices", "multiplying-matrices"],
-  encompasses: [{ topic: "zero-square-diagonal-and-identity-matrices", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.10"],
   knowledgePoints: [

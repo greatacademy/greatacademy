@@ -614,10 +614,7 @@ const covariance: TopicDef = {
     "由定义和汇总统计量计算成对数据的协方差，并从散点图判断其符号。",
   ),
   prerequisites: ["variance-and-standard-deviation", "scatter-plots"],
-  encompasses: [
-    { topic: "variance-and-standard-deviation", weight: 0.2 },
-    { topic: "scatter-plots", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "scatter-plots", weight: 0.1 }],
   xp: 16,
   standards: ["CCSS.HSS.ID.B.6"],
   knowledgePoints: [
@@ -744,7 +741,7 @@ const sumsOfSquares: TopicDef = {
     "由数据和汇总统计量计算平方和 $S_{xx}$、$S_{yy}$ 与乘积和 $S_{xy}$，并把它们与方差和协方差联系起来。",
   ),
   prerequisites: ["covariance"],
-  encompasses: [{ topic: "covariance", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSS.ID.B.6"],
   knowledgePoints: [

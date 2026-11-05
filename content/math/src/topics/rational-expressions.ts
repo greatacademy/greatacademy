@@ -260,11 +260,7 @@ export const simplifyingRationalExpressions: TopicDef = {
     "求分式中要排除的值，并通过约去公共的单项式因式和二项式因式化简分式。",
   ),
   prerequisites: ["equivalent-expressions-with-fractions", "greatest-common-factor-of-monomials", "zero-product-rule"],
-  encompasses: [
-    { topic: "greatest-common-factor-of-monomials", weight: 0.4 },
-    { topic: "product-and-quotient-rules", weight: 0.4 },
-    { topic: "equivalent-fractions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "equivalent-fractions", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -503,7 +499,6 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
   prerequisites: ["simplifying-rational-expressions", "factoring-differences-of-squares", "factoring-trinomials"],
   encompasses: [
     { topic: "simplifying-rational-expressions", weight: 0.6 },
-    { topic: "factoring-differences-of-squares", weight: 0.3 },
     { topic: "factoring-trinomials", weight: 0.3 },
     { topic: "factoring-polynomials-using-gcfs", weight: 0.3 },
   ],
@@ -893,10 +888,7 @@ export const rationalEquationsUsingCrossMultiplication: TopicDef = {
     "用交叉相乘解形如 $\\frac{a}{b} = \\frac{c}{d}$、分母中含未知数的方程，并舍去要排除的值。",
   ),
   prerequisites: ["rational-equations-with-one-fractional-term", "proportions"],
-  encompasses: [
-    { topic: "rational-equations-with-one-fractional-term", weight: 0.4 },
-    { topic: "proportions", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "proportions", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSA.REI.A.2"],
   knowledgePoints: [
@@ -1036,7 +1028,7 @@ export const rationalEquationsContainingBinomials: TopicDef = {
     { topic: "rational-equations-using-cross-multiplication", weight: 0.6 },
     { topic: "multiplying-binomials", weight: 0.4 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
-    { topic: "solving-equations-with-square-roots", weight: 0.3 },
+    { topic: "solving-equations-with-square-roots", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.REI.A.2"],
@@ -1188,11 +1180,7 @@ export const rationalEquationsUsingTheFlipMethod: TopicDef = {
     "对两边取倒数，解未知数只在分母中的方程。",
   ),
   prerequisites: ["rational-equations-using-cross-multiplication"],
-  encompasses: [
-    { topic: "rational-equations-using-cross-multiplication", weight: 0.5 },
-    { topic: "rational-equations-with-one-fractional-term", weight: 0.4 },
-    { topic: "equivalent-expressions-with-fractions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "rational-equations-with-one-fractional-term", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSA.REI.A.2"],
   knowledgePoints: [

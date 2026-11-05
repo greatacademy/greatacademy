@@ -210,10 +210,7 @@ export const deMoivresTheorem: TopicDef = {
     "利用棣莫弗定理 [r(cos θ + i sin θ)]ⁿ = rⁿ(cos nθ + i sin nθ) 计算三角形式复数的正整数次幂：模长取 n 次幂，辐角乘以 n。",
   ),
   prerequisites: ["products-of-complex-numbers-expressed-in-polar-form", "the-cis-notation"],
-  encompasses: [
-    { topic: "products-of-complex-numbers-expressed-in-polar-form", weight: 0.4 },
-    { topic: "the-cis-notation", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "products-of-complex-numbers-expressed-in-polar-form", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.5"],
   knowledgePoints: [
@@ -760,10 +757,7 @@ export const theRootsOfUnity: TopicDef = {
     "求方程 $z^n = 1$ 的 $n$ 个解，即 $n$ 次单位根 $e^{2\\pi ik/n}$（$k = 0, 1, \\dots, n - 1$），它们等间隔地分布在单位圆上，并把它们写成代数形式。",
   ),
   prerequisites: ["finding-powers-of-complex-numbers-using-de-moivres-theorem", "eulers-formula"],
-  encompasses: [
-    { topic: "finding-powers-of-complex-numbers-using-de-moivres-theorem", weight: 0.3 },
-    { topic: "eulers-formula", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "eulers-formula", weight: 0.3 }],
   xp: 16,
   knowledgePoints: [
     {
@@ -868,7 +862,7 @@ export const propertiesOfRootsOfUnity: TopicDef = {
     "运用 $n$ 次单位根的性质：每个根都是 $\\omega = e^{2\\pi i/n}$ 的幂，幂以 $n$ 为周期重复，$\\omega^k$ 的共轭与倒数为 $\\omega^{n-k}$，所有根之和为 $0$，且对三次单位根 $\\omega \\ne 1$ 有 $1 + \\omega + \\omega^2 = 0$。",
   ),
   prerequisites: ["the-roots-of-unity"],
-  encompasses: [{ topic: "the-roots-of-unity", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   knowledgePoints: [
     {
@@ -1198,10 +1192,7 @@ export const higherRootsOfComplexNumbers: TopicDef = {
     "求 w = r cis θ 的 n 个 n 次方根 ⁿ√r cis((θ + 360°k)/n)（k = 0, 1, …, n − 1），它们等间隔地分布在半径为 ⁿ√r 的圆上，并把特殊的根写成代数形式。",
   ),
   prerequisites: ["square-roots-of-complex-numbers"],
-  encompasses: [
-    { topic: "square-roots-of-complex-numbers", weight: 0.4 },
-    { topic: "the-roots-of-unity", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 18,
   standards: ["CCSS.HSN.CN.B.5"],
   knowledgePoints: [
@@ -1367,10 +1358,7 @@ export const theFundamentalTheoremOfAlgebraForQuadraticEquations: TopicDef = {
     "把代数基本定理应用于二次多项式：每个二次多项式按重数计恰有两个复数根；用判别式对根分类，并在复数范围内把有非实根的二次式分解为一次因式之积。",
   ),
   prerequisites: ["extending-polynomial-identities-to-the-complex-numbers", "solving-quadratic-equations-with-complex-roots"],
-  encompasses: [
-    { topic: "solving-quadratic-equations-with-complex-roots", weight: 0.4 },
-    { topic: "extending-polynomial-identities-to-the-complex-numbers", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-quadratic-equations-with-complex-roots", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSN.CN.C.9"],
   knowledgePoints: [
@@ -1475,10 +1463,7 @@ export const theFundamentalTheoremOfAlgebraWithCubicEquations: TopicDef = {
     "把代数基本定理应用于三次多项式：三次式按重数计有三个复数根；由于非实根成对共轭出现，实系数三次式有一个或三个实根；并能由已知根构造或补全实系数三次式。",
   ),
   prerequisites: ["the-fundamental-theorem-of-algebra-for-quadratic-equations", "the-factor-theorem"],
-  encompasses: [
-    { topic: "the-fundamental-theorem-of-algebra-for-quadratic-equations", weight: 0.4 },
-    { topic: "the-factor-theorem", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-fundamental-theorem-of-algebra-for-quadratic-equations", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSN.CN.C.9"],
   knowledgePoints: [
@@ -1586,8 +1571,6 @@ export const solvingCubicEquationsWithComplexRoots: TopicDef = {
     "factoring-sums-and-differences-of-cubes",
   ],
   encompasses: [
-    { topic: "the-fundamental-theorem-of-algebra-with-cubic-equations", weight: 0.4 },
-    { topic: "factoring-cubic-polynomials-using-the-factor-theorem", weight: 0.4 },
     { topic: "factoring-sums-and-differences-of-cubes", weight: 0.3 },
     { topic: "solving-quadratic-equations-with-complex-roots", weight: 0.4 },
   ],
@@ -1826,12 +1809,7 @@ export const solvingQuarticEquationsWithComplexRoots: TopicDef = {
     "factoring-quartic-polynomials-using-the-factor-theorem",
     "solving-biquadratic-equations",
   ],
-  encompasses: [
-    { topic: "the-fundamental-theorem-of-algebra-with-quartic-equations", weight: 0.4 },
-    { topic: "solving-cubic-equations-with-complex-roots", weight: 0.3 },
-    { topic: "factoring-quartic-polynomials-using-the-factor-theorem", weight: 0.4 },
-    { topic: "solving-biquadratic-equations", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "solving-biquadratic-equations", weight: 0.4 }],
   xp: 18,
   standards: ["CCSS.HSN.CN.C.9"],
   knowledgePoints: [

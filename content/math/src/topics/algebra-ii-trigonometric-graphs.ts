@@ -302,10 +302,7 @@ export const findingTrigonometricRatiosOfQuadrantalAngles: TopicDef = {
     "由终边与单位圆的交点，求 0°、90°、180°、270°、360°（0、π/2、π、3π/2、2π）的六个三角比。",
   ),
   prerequisites: ["extending-the-trigonometric-ratios-using-angles-in-radians"],
-  encompasses: [
-    { topic: "extending-the-trigonometric-ratios-using-angles-in-radians", weight: 0.3 },
-    { topic: "extending-the-trigonometric-ratios-using-the-unit-circle", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "extending-the-trigonometric-ratios-using-the-unit-circle", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [
@@ -487,8 +484,7 @@ export const findingTrigonometricRatiosOfSpecialAnglesUsingTheUnitCircle: TopicD
   ),
   prerequisites: ["extending-the-trigonometric-ratios-using-angles-in-radians"],
   encompasses: [
-    { topic: "extending-the-trigonometric-ratios-using-angles-in-radians", weight: 0.5 },
-    { topic: "trigonometric-ratios-with-radians", weight: 0.4 },
+    { topic: "extending-the-trigonometric-ratios-using-angles-in-radians", weight: 0.3 },
     { topic: "special-trigonometric-ratios", weight: 0.4 },
   ],
   xp: 15,
@@ -664,10 +660,7 @@ export const evaluatingTrigonometricExpressions: TopicDef = {
     "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle",
     "finding-trigonometric-ratios-of-quadrantal-angles",
   ],
-  encompasses: [
-    { topic: "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle", weight: 0.6 },
-    { topic: "finding-trigonometric-ratios-of-quadrantal-angles", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSF.TF.A.3"],
   knowledgePoints: [
@@ -770,7 +763,6 @@ export const furtherExtensionsOfTheSpecialTrigonometricRatios: TopicDef = {
   ],
   encompasses: [
     { topic: "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle", weight: 0.6 },
-    { topic: "extending-the-trigonometric-ratios-to-large-angles", weight: 0.4 },
     { topic: "the-reciprocal-trigonometric-ratios", weight: 0.3 },
   ],
   xp: 15,
@@ -1889,10 +1881,7 @@ export const describingPropertiesOfTheSecantFunction: TopicDef = {
     "描述 y = sec x：定义域与值域、周期 2π、偶对称性、竖直渐近线、极值，以及单调区间。",
   ),
   prerequisites: ["describing-properties-of-the-tangent-function", "graphing-secant-and-cosecant"],
-  encompasses: [
-    { topic: "graphing-secant-and-cosecant", weight: 0.4 },
-    { topic: "describing-properties-of-the-cosine-function", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "graphing-secant-and-cosecant", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.4"],
   knowledgePoints: propertyKnowledgePoints("sec", {
@@ -1924,10 +1913,7 @@ export const describingPropertiesOfTheCosecantFunction: TopicDef = {
     "描述 y = csc x：定义域与值域、周期 2π、奇对称性、竖直渐近线、极值，以及单调区间。",
   ),
   prerequisites: ["describing-properties-of-the-secant-function"],
-  encompasses: [
-    { topic: "describing-properties-of-the-sine-function", weight: 0.3 },
-    { topic: "graphing-secant-and-cosecant", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "graphing-secant-and-cosecant", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.4"],
   knowledgePoints: propertyKnowledgePoints("csc", {

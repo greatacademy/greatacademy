@@ -406,7 +406,6 @@ export const solvingAdvancedRadicalEquations: TopicDef = {
   encompasses: [
     { topic: "solving-radical-equations", weight: 0.6 },
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.4 },
-    { topic: "solving-odd-power-equations", weight: 0.2 },
   ],
   xp: 20,
   standards: ["CCSS.HSA.REI.A.2"],
@@ -583,12 +582,7 @@ export const graphingTheSquareRootFunction: TopicDef = {
     "画出经过 (0, 0)、(1, 1)、(4, 2)、(9, 3) 的 y = √x 的图象；它的定义域和值域都是 [0, ∞)，并且始终递增。",
   ),
   prerequisites: ["range-of-a-function", "simplifying-square-roots"],
-  encompasses: [
-    { topic: "range-of-a-function", weight: 0.3 },
-    { topic: "domain-of-a-function", weight: 0.3 },
-    { topic: "graphs-of-functions", weight: 0.3 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.B"],
   knowledgePoints: [
@@ -733,10 +727,7 @@ export const graphTransformationsOfSquareRootFunctions: TopicDef = {
     "画 y = a√(x − h) + k 和 y = a√(h − x) + k 的图象：把 y = √x 的图象移到从 (h, k) 出发，并进行伸缩和翻折。",
   ),
   prerequisites: ["graphing-the-square-root-function", "combining-reflections-with-other-graph-transformations"],
-  encompasses: [
-    { topic: "combining-reflections-with-other-graph-transformations", weight: 0.4 },
-    { topic: "graphing-the-square-root-function", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "combining-reflections-with-other-graph-transformations", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSF.IF.C.7.B", "CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -897,10 +888,7 @@ export const graphingTheCubeRootFunction: TopicDef = {
     "画出对所有实数都有定义、经过 (−8, −2)、(−1, −1)、(0, 0)、(1, 1)、(8, 2) 的 y = ∛x 的图象，以及它的变换 y = a∛(x − h) + k。",
   ),
   prerequisites: ["graph-transformations-of-square-root-functions", "cube-roots-of-algebraic-perfect-cubes"],
-  encompasses: [
-    { topic: "cube-roots-of-algebraic-perfect-cubes", weight: 0.2 },
-    { topic: "square-roots-and-cube-roots", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.B", "CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1058,7 +1046,6 @@ export const propertiesOfTransformedSquareRootFunctions: TopicDef = {
   encompasses: [
     { topic: "graph-transformations-of-square-root-functions", weight: 0.4 },
     { topic: "increasing-and-decreasing", weight: 0.3 },
-    { topic: "global-extrema", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.B", "CCSS.HSF.IF.B.4"],
@@ -1157,10 +1144,7 @@ export const theDomainOfATransformedRadicalFunction: TopicDef = {
     "the-domain-and-range-of-transformed-functions",
     "intersections-of-intervals",
   ],
-  encompasses: [
-    { topic: "domain-of-a-function", weight: 0.4 },
-    { topic: "the-domain-and-range-of-transformed-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "domain-of-a-function", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1293,11 +1277,7 @@ export const theRangeOfATransformedRadicalFunction: TopicDef = {
     "由 a 的符号和端点处的值 k 求 a·√(bx + c) + k 的值域，包括限制定义域时和从图象读出的情形。",
   ),
   prerequisites: ["the-domain-of-a-transformed-radical-function"],
-  encompasses: [
-    { topic: "the-domain-of-a-transformed-radical-function", weight: 0.3 },
-    { topic: "properties-of-transformed-square-root-functions", weight: 0.5 },
-    { topic: "range-of-a-function", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "range-of-a-function", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.C.7.B"],
   knowledgePoints: [
@@ -1406,7 +1386,6 @@ export const rootsOfTransformedRadicalFunctions: TopicDef = {
   ),
   prerequisites: ["the-range-of-a-transformed-radical-function", "solving-advanced-radical-equations", "roots-of-a-function"],
   encompasses: [
-    { topic: "solving-advanced-radical-equations", weight: 0.3 },
     { topic: "solving-radical-equations", weight: 0.4 },
     { topic: "roots-of-a-function", weight: 0.3 },
   ],
@@ -1649,11 +1628,7 @@ export const findingIntersectionsOfLinesAndRadicalFunctions: TopicDef = {
     "通过解根式方程并舍去增根，求直线与平方根函数图象的交点，并数出交点的个数。",
   ),
   prerequisites: ["roots-of-transformed-radical-functions", "finding-intersections-of-lines-and-quadratic-functions"],
-  encompasses: [
-    { topic: "solving-advanced-radical-equations", weight: 0.5 },
-    { topic: "finding-intersections-of-lines-and-quadratic-functions", weight: 0.3 },
-    { topic: "roots-of-transformed-radical-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-advanced-radical-equations", weight: 0.5 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.D.11", "CCSS.HSA.REI.A.2"],
   knowledgePoints: [

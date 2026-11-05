@@ -119,12 +119,7 @@ export const calculatingTheInverseOfAFunction: TopicDef = {
     "交换 x 与 y 再解出 y，求反函数的解析式：三次函数、分式函数与根式函数。",
   ),
   prerequisites: ["domain-and-range-of-inverse-functions", "solving-odd-power-equations", "rational-equations-with-one-fractional-term"],
-  encompasses: [
-    { topic: "introduction-to-inverse-functions", weight: 0.5 },
-    { topic: "solving-odd-power-equations", weight: 0.3 },
-    { topic: "rational-equations-with-one-fractional-term", weight: 0.3 },
-    { topic: "domain-and-range-of-inverse-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "solving-odd-power-equations", weight: 0.3 }],
   xp: 18,
   standards: ["CCSS.HSF.BF.B.4.A"],
   knowledgePoints: [
@@ -314,7 +309,7 @@ export const inversesOfQuadraticFunctions: TopicDef = {
   ),
   prerequisites: ["calculating-the-inverse-of-a-function", "invertible-functions", "writing-the-equation-of-a-parabola-in-vertex-form"],
   encompasses: [
-    { topic: "invertible-functions", weight: 0.5 },
+    { topic: "invertible-functions", weight: 0.3 },
     { topic: "calculating-the-inverse-of-a-function", weight: 0.3 },
     { topic: "solving-equations-with-square-roots", weight: 0.3 },
     { topic: "writing-the-equation-of-a-parabola-in-vertex-form", weight: 0.2 },
@@ -468,10 +463,7 @@ export const plottingXAsAFunctionOfY: TopicDef = {
     "画出 x = g(y) 的图象：先取 y 再算 x，并识别开口向左或向右的抛物线。",
   ),
   prerequisites: ["graphs-of-inverse-functions", "the-vertex-form-of-a-parabola"],
-  encompasses: [
-    { topic: "the-vertex-form-of-a-parabola", weight: 0.3 },
-    { topic: "graphs-of-inverse-functions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.BF.B.4.C"],
   knowledgePoints: [
@@ -730,7 +722,7 @@ export const evenAndOddFunctions: TopicDef = {
     "识别关于 y 轴对称的偶函数和关于原点对称的奇函数，并利用对称性求函数值。",
   ),
   prerequisites: ["graphs-of-functions", "simplifying-polynomials"],
-  encompasses: [{ topic: "graphs-of-functions", weight: 0.2 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -883,10 +875,7 @@ export const productsOfEvenAndOddFunctions: TopicDef = {
     "奇偶函数的积与商遵循符号法则：偶·偶与奇·奇为偶函数，偶·奇为奇函数。",
   ),
   prerequisites: ["even-and-odd-functions", "arithmetic-of-functions"],
-  encompasses: [
-    { topic: "even-and-odd-functions", weight: 0.5 },
-    { topic: "arithmetic-of-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "even-and-odd-functions", weight: 0.5 }],
   xp: 12,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1185,7 +1174,6 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
   encompasses: [
     { topic: "units-of-rates-of-change", weight: 0.2 },
     { topic: "slope-of-a-line", weight: 0.3 },
-    { topic: "graphs-of-functions", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.B.6"],

@@ -272,10 +272,7 @@ export const solvingLogarithmicEquationsContainingTheNaturalLogarithm: TopicDef 
     "精确地（用含 $e$ 的式子）或近似地解 $\\ln(2x - 1) = 3$ 这样的方程。",
   ),
   prerequisites: ["solving-logarithmic-equations", "natural-logarithm"],
-  encompasses: [
-    { topic: "solving-logarithmic-equations", weight: 0.6 },
-    { topic: "natural-logarithm", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-logarithmic-equations", weight: 0.6 }],
   xp: 13,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -411,7 +408,6 @@ export const solvingLogarithmicEquationsUsingTheLawsOfLogarithms: TopicDef = {
   encompasses: [
     { topic: "solving-logarithmic-equations", weight: 0.5 },
     { topic: "product-rule-for-logarithms", weight: 0.3 },
-    { topic: "quotient-rule-for-logarithms", weight: 0.2 },
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.3 },
   ],
   xp: 16,
@@ -645,7 +641,7 @@ export const solvingLogarithmicEquationsWithLogarithmsOnBothSides: TopicDef = {
   ),
   prerequisites: ["solving-logarithmic-equations-using-the-laws-of-logarithms"],
   encompasses: [
-    { topic: "solving-logarithmic-equations-using-the-laws-of-logarithms", weight: 0.5 },
+    { topic: "solving-logarithmic-equations-using-the-laws-of-logarithms", weight: 0.3 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
   ],
   xp: 15,
@@ -931,10 +927,7 @@ export const verticalTranslationsOfExponentialGrowthFunctions: TopicDef = {
     "把 $y = a \\cdot b^{x}$ 的图象上下平移，并根据图象求平移后的增长函数。",
   ),
   prerequisites: ["graphing-exponential-growth-functions", "vertical-translations-of-functions"],
-  encompasses: [
-    { topic: "graphing-exponential-growth-functions", weight: 0.5 },
-    { topic: "vertical-translations-of-functions", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "vertical-translations-of-functions", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7.E"],
   knowledgePoints: [
@@ -1059,7 +1052,7 @@ export const verticalTranslationsOfExponentialDecayFunctions: TopicDef = {
     "把 $y = \\left(\\frac{1}{2}\\right)^{x}$ 这样的衰减函数图象竖直平移，根据图象求解析式，并求 $x$ 轴截距。",
   ),
   prerequisites: ["vertical-translations-of-exponential-growth-functions", "graphing-exponential-decay-functions"],
-  encompasses: [{ topic: "graphing-exponential-decay-functions", weight: 0.4 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7.E"],
   knowledgePoints: [
@@ -1289,7 +1282,6 @@ export const interpretingGraphsOfExponentialFunctions: TopicDef = {
   encompasses: [
     { topic: "interpreting-exponential-decay", weight: 0.4 },
     { topic: "interpreting-exponential-growth", weight: 0.4 },
-    { topic: "vertical-translations-of-exponential-decay-functions", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSF.LE.B.5"],
@@ -1566,8 +1558,8 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
   ),
   prerequisites: ["vertical-reflections-of-exponential-functions", "combining-reflections-with-other-graph-transformations"],
   encompasses: [
-    { topic: "vertical-reflections-of-exponential-functions", weight: 0.5 },
-    { topic: "combining-reflections-with-other-graph-transformations", weight: 0.5 },
+    { topic: "vertical-reflections-of-exponential-functions", weight: 0.3 },
+    { topic: "combining-reflections-with-other-graph-transformations", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3"],
@@ -1880,7 +1872,6 @@ export const graphingLogarithmicFunctions: TopicDef = {
   encompasses: [
     { topic: "evaluating-logarithms", weight: 0.4 },
     { topic: "graphs-of-inverse-functions", weight: 0.3 },
-    { topic: "graphing-exponential-growth-functions", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.BF.B.5"],
@@ -2018,7 +2009,7 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
   ),
   prerequisites: ["graphing-logarithmic-functions", "combining-reflections-with-other-graph-transformations"],
   encompasses: [
-    { topic: "graphing-logarithmic-functions", weight: 0.5 },
+    { topic: "graphing-logarithmic-functions", weight: 0.3 },
     { topic: "combining-reflections-with-other-graph-transformations", weight: 0.5 },
   ],
   xp: 15,
@@ -2169,7 +2160,6 @@ export const propertiesOfTransformedLogarithmicFunctions: TopicDef = {
   prerequisites: ["combining-graph-transformations-of-logarithmic-functions", "solving-logarithmic-equations"],
   encompasses: [
     { topic: "combining-graph-transformations-of-logarithmic-functions", weight: 0.5 },
-    { topic: "solving-logarithmic-equations", weight: 0.3 },
     { topic: "solving-multi-step-inequalities", weight: 0.2 },
   ],
   xp: 15,
@@ -2550,10 +2540,7 @@ export const continuouslyCompoundedInterest: TopicDef = {
     "用 $A = Pe^{rt}$ 求连续复利下的余额、时间和利率。",
   ),
   prerequisites: ["modeling-with-compound-interest", "solving-equations-containing-the-exponential-function"],
-  encompasses: [
-    { topic: "modeling-with-compound-interest", weight: 0.5 },
-    { topic: "solving-equations-containing-the-exponential-function", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "solving-equations-containing-the-exponential-function", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSF.LE.A.2", "CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -2684,10 +2671,7 @@ export const convertingBetweenExponents: TopicDef = {
     "在以 $e$ 为底和以其他数为底之间、在不同时间单位之间改写指数模型，以比较增长率。",
   ),
   prerequisites: ["continuously-compounded-interest"],
-  encompasses: [
-    { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
-    { topic: "modeling-with-compound-interest", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSA.SSE.B.3.C", "CCSS.HSF.IF.C.8.B"],
   knowledgePoints: [

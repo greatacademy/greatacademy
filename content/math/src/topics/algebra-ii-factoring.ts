@@ -217,7 +217,6 @@ export const theLeastCommonMultipleOfTwoPolynomials: TopicDef = {
   encompasses: [
     { topic: "the-least-common-multiple-of-two-monomials", weight: 0.5 },
     { topic: "factoring-trinomials", weight: 0.4 },
-    { topic: "factoring-differences-of-squares", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.SSE.A.2"],
@@ -367,7 +366,7 @@ export const describingRelationshipsUsingPolynomialIdentities: TopicDef = {
   prerequisites: ["difference-of-squares-formula"],
   encompasses: [
     { topic: "squaring-binomials", weight: 0.5 },
-    { topic: "difference-of-squares-formula", weight: 0.4 },
+    { topic: "difference-of-squares-formula", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.APR.C.4"],
@@ -666,10 +665,7 @@ export const factoringHigherOrderPolynomialsAsADifferenceOfSquares: TopicDef = {
     "把 $4x^{6} - 9$、$3x^{5} - 12x$、$(x + 2)^{2} - 25$ 等式子作为平方差分解。",
   ),
   prerequisites: ["factoring-differences-of-squares"],
-  encompasses: [
-    { topic: "factoring-differences-of-squares", weight: 0.7 },
-    { topic: "factoring-polynomials-using-gcfs", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "factoring-differences-of-squares", weight: 0.7 }],
   xp: 14,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -832,7 +828,6 @@ export const factoringCubicExpressionsByGrouping: TopicDef = {
   encompasses: [
     { topic: "further-factoring-of-polynomials-using-gcfs", weight: 0.4 },
     { topic: "factoring-polynomials-using-gcfs", weight: 0.5 },
-    { topic: "factoring-differences-of-squares", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.SSE.A.2"],
@@ -989,7 +984,7 @@ export const factoringSumsAndDifferencesOfCubes: TopicDef = {
   ),
   prerequisites: ["multiplying-polynomials", "factoring-polynomials-using-gcfs", "cube-roots-of-algebraic-perfect-cubes"],
   encompasses: [
-    { topic: "cube-roots-of-algebraic-perfect-cubes", weight: 0.3 },
+    { topic: "cube-roots-of-algebraic-perfect-cubes", weight: 0.2 },
     { topic: "factoring-polynomials-using-gcfs", weight: 0.2 },
   ],
   xp: 15,
@@ -1139,11 +1134,7 @@ export const factoringBiquadraticExpressions: TopicDef = {
     "把 $ax^{4} + bx^{2} + c$ 看作 $x^{2}$ 的二次式进行分解，再分解剩下的平方差。",
   ),
   prerequisites: ["factoring-trinomials-with-leading-coefficients", "factoring-higher-order-polynomials-as-a-difference-of-squares"],
-  encompasses: [
-    { topic: "factoring-trinomials-with-leading-coefficients", weight: 0.5 },
-    { topic: "factoring-trinomials", weight: 0.5 },
-    { topic: "factoring-higher-order-polynomials-as-a-difference-of-squares", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "factoring-trinomials", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [

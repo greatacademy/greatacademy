@@ -79,10 +79,7 @@ export const linearEquationsWithUnknownCoefficients: TopicDef = {
     "解 $ax + b = c$ 这类关于 $x$ 的一次方程，用其他字母表示解。",
   ),
   prerequisites: ["equations-with-parentheses"],
-  encompasses: [
-    { topic: "two-step-equations", weight: 0.6 },
-    { topic: "equations-with-parentheses", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.6 }],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -1153,10 +1150,7 @@ export const interpretingLinearExpressions: TopicDef = {
     "说明实际情境中一次式的各项和系数的含义，并写出这样的式子。",
   ),
   prerequisites: ["evaluating-expressions", "unit-rates"],
-  encompasses: [
-    { topic: "evaluating-expressions", weight: 0.3 },
-    { topic: "unit-rates", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.1"],
   knowledgePoints: [
@@ -1261,8 +1255,7 @@ export const modelingWithLinearEquations: TopicDef = {
   prerequisites: ["interpreting-linear-expressions", "equations-with-parentheses"],
   encompasses: [
     { topic: "two-step-equations", weight: 0.6 },
-    { topic: "interpreting-linear-expressions", weight: 0.4 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.5 },
+    { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
@@ -1607,12 +1600,7 @@ export const speedDistanceTime: TopicDef = {
     "使用单位一致的 $d = rt$，解决分两段的行程和平均速度问题。",
   ),
   prerequisites: ["modeling-with-linear-equations", "adding-and-subtracting-fractions"],
-  encompasses: [
-    { topic: "unit-rates", weight: 0.4 },
-    { topic: "modeling-with-linear-equations", weight: 0.3 },
-    { topic: "equations-with-parentheses", weight: 0.3 },
-    { topic: "adding-and-subtracting-fractions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "unit-rates", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSN.Q.A.1"],
   knowledgePoints: [
@@ -1761,11 +1749,7 @@ export const furtherSpeedDistanceTime: TopicDef = {
     "解决两个物体相向而行、追及以及不同速度往返的问题。",
   ),
   prerequisites: ["speed-distance-time"],
-  encompasses: [
-    { topic: "speed-distance-time", weight: 0.6 },
-    { topic: "equations-with-parentheses", weight: 0.3 },
-    { topic: "adding-and-subtracting-fractions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "speed-distance-time", weight: 0.6 }],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
   knowledgePoints: [
@@ -1924,10 +1908,7 @@ export const workProblems: TopicDef = {
     "把工作效率相加，解决多人或多台机器合作的问题。",
   ),
   prerequisites: ["modeling-with-linear-equations", "adding-and-subtracting-fractions"],
-  encompasses: [
-    { topic: "adding-and-subtracting-fractions", weight: 0.5 },
-    { topic: "modeling-with-linear-equations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "adding-and-subtracting-fractions", weight: 0.5 }],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
   knowledgePoints: [

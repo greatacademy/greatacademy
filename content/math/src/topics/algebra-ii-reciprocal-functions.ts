@@ -240,10 +240,7 @@ export const graphingReciprocalFunctions: TopicDef = {
     "求 $y = \\frac{k}{x}$ 图象上的点，描述它的两支和渐近线，并由图象读出 $k$。",
   ),
   prerequisites: ["inverse-variation", "unbounded-behavior-of-functions-near-a-point"],
-  encompasses: [
-    { topic: "inverse-variation", weight: 0.4 },
-    { topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "inverse-variation", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -396,10 +393,7 @@ export const graphTransformationsOfReciprocalFunctions: TopicDef = {
     "平移 $y = \\frac{1}{x}$ 的图象：求 $y = \\frac{a}{x - h} + k$ 的渐近线，写出平移后的函数，并与图象配对。",
   ),
   prerequisites: ["graphing-reciprocal-functions", "combining-graph-transformations-two-operations"],
-  encompasses: [
-    { topic: "graphing-reciprocal-functions", weight: 0.5 },
-    { topic: "combining-graph-transformations-two-operations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "combining-graph-transformations-two-operations", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -662,11 +656,7 @@ export const domainAndRangeOfTransformedReciprocalFunctions: TopicDef = {
     "the-domain-and-range-of-transformed-functions",
     "splitting-rational-expressions-into-terms",
   ],
-  encompasses: [
-    { topic: "combining-graph-transformations-of-reciprocal-functions", weight: 0.3 },
-    { topic: "the-domain-and-range-of-transformed-functions", weight: 0.3 },
-    { topic: "splitting-rational-expressions-into-terms", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -807,11 +797,7 @@ export const inversesOfReciprocalFunctions: TopicDef = {
     "求 $f(x) = \\frac{a}{bx + c} + k$ 的反函数及其值，给出反函数的定义域与值域，并找出以自身为反函数的倒数函数。",
   ),
   prerequisites: ["domain-and-range-of-transformed-reciprocal-functions", "calculating-the-inverse-of-a-function"],
-  encompasses: [
-    { topic: "calculating-the-inverse-of-a-function", weight: 0.4 },
-    { topic: "domain-and-range-of-transformed-reciprocal-functions", weight: 0.4 },
-    { topic: "domain-and-range-of-inverse-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "calculating-the-inverse-of-a-function", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.4.A"],
   knowledgePoints: [
@@ -978,7 +964,6 @@ export const findingIntersectionsOfLinesAndReciprocalFunctions: TopicDef = {
   encompasses: [
     { topic: "finding-intersections-of-lines-and-quadratic-functions", weight: 0.3 },
     { topic: "solving-systems-of-nonlinear-equations", weight: 0.3 },
-    { topic: "graphing-reciprocal-functions", weight: 0.2 },
   ],
   xp: 16,
   standards: ["CCSS.HSA.REI.C.7", "CCSS.HSA.REI.D.11"],

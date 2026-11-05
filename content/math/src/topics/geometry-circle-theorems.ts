@@ -225,10 +225,7 @@ export const inscribedAngles: TopicDef = {
     "运用圆周角定理：圆周角等于它所对弧的度数的一半，同弧所对的圆周角相等。",
   ),
   prerequisites: ["central-angles-and-arcs", "isosceles-triangles"],
-  encompasses: [
-    { topic: "central-angles-and-arcs", weight: 0.4 },
-    { topic: "isosceles-triangles", weight: 0.1 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -391,9 +388,7 @@ export const problemSolvingWithInscribedAngles: TopicDef = {
   prerequisites: ["inscribed-angles", "equations-with-parentheses"],
   encompasses: [
     { topic: "inscribed-angles", weight: 0.6 },
-    { topic: "central-angles-and-arcs", weight: 0.3 },
     { topic: "isosceles-triangles", weight: 0.2 },
-    { topic: "equations-with-parentheses", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.C.A.2"],
@@ -591,10 +586,7 @@ export const thalesTheorem: TopicDef = {
     "半圆所对的圆周角是直角；用它及其逆定理求角和半径。",
   ),
   prerequisites: ["inscribed-angles", "the-pythagorean-theorem"],
-  encompasses: [
-    { topic: "inscribed-angles", weight: 0.3 },
-    { topic: "the-pythagorean-theorem", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-pythagorean-theorem", weight: 0.2 }],
   xp: 13,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -727,7 +719,6 @@ export const anglesInInscribedRightTriangles: TopicDef = {
   prerequisites: ["thales-theorem"],
   encompasses: [
     { topic: "thales-theorem", weight: 0.5 },
-    { topic: "inscribed-angles", weight: 0.4 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 13,
@@ -1060,11 +1051,7 @@ export const inscribedQuadrilaterals: TopicDef = {
     "圆内接四边形的对角互补；结合数值、代数和弧来运用它。",
   ),
   prerequisites: ["problem-solving-with-inscribed-angles", "angles-of-polygons"],
-  encompasses: [
-    { topic: "problem-solving-with-inscribed-angles", weight: 0.4 },
-    { topic: "inscribed-angles", weight: 0.4 },
-    { topic: "angles-of-polygons", weight: 0.1 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.C.A.3"],
   knowledgePoints: [
@@ -1227,10 +1214,7 @@ export const tangentLinesToCircles: TopicDef = {
     "切线垂直于过切点的半径；用它求角和长度，并判断直线是否为切线。",
   ),
   prerequisites: ["circles", "the-pythagorean-theorem"],
-  encompasses: [
-    { topic: "the-pythagorean-theorem", weight: 0.3 },
-    { topic: "circles", weight: 0.1 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -1405,11 +1389,7 @@ export const tangentTangentLinesToCircles: TopicDef = {
     "从圆外一点引的两条切线段相等，它们的夹角与圆心角互补。",
   ),
   prerequisites: ["tangent-lines-to-circles", "central-angles-and-arcs", "angles-of-polygons"],
-  encompasses: [
-    { topic: "tangent-lines-to-circles", weight: 0.5 },
-    { topic: "central-angles-and-arcs", weight: 0.2 },
-    { topic: "angles-of-polygons", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "tangent-lines-to-circles", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -1709,11 +1689,7 @@ export const secantSecantAnglesToCircles: TopicDef = {
     "两弦相交所成的角等于所夹两弧和的一半；从圆外引的两条割线所成的角等于所夹两弧差的一半。",
   ),
   prerequisites: ["problem-solving-with-inscribed-angles", "the-exterior-angle-theorem"],
-  encompasses: [
-    { topic: "problem-solving-with-inscribed-angles", weight: 0.3 },
-    { topic: "the-exterior-angle-theorem", weight: 0.2 },
-    { topic: "two-step-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.2 }],
   xp: 15,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -1915,7 +1891,7 @@ export const secantTangentAnglesToCircles: TopicDef = {
     "从圆外一点引的割线与切线（或两条切线）所成的角，等于所夹两弧差的一半。",
   ),
   prerequisites: ["secant-secant-angles-to-circles", "tangent-tangent-lines-to-circles"],
-  encompasses: [{ topic: "tangent-tangent-lines-to-circles", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -2112,11 +2088,7 @@ export const theTangentChordTheorem: TopicDef = {
     "弦切角等于它所夹弧的度数的一半，也等于弦另一侧所对的圆周角。",
   ),
   prerequisites: ["tangent-lines-to-circles", "problem-solving-with-inscribed-angles"],
-  encompasses: [
-    { topic: "problem-solving-with-inscribed-angles", weight: 0.3 },
-    { topic: "inscribed-angles", weight: 0.3 },
-    { topic: "tangent-lines-to-circles", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "inscribed-angles", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [

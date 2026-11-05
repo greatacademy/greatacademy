@@ -585,7 +585,7 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
     "求反三角函数在单位圆特殊角比值处的精确值。",
   ),
   prerequisites: ["graphing-the-inverse-sine-function"],
-  encompasses: [{ topic: "graphing-the-inverse-sine-function", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.B.6"],
   knowledgePoints: [
@@ -928,7 +928,7 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
     "利用基本的勾股（平方）恒等式 sin²(θ) + cos²(θ) = 1 化简表达式。",
   ),
   prerequisites: ["simplifying-expressions-using-basic-trigonometric-identities", "extending-the-pythagorean-identity-to-all-quadrants"],
-  encompasses: [{ topic: "simplifying-expressions-using-basic-trigonometric-identities", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.8"],
   knowledgePoints: [
@@ -1100,7 +1100,7 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
     "利用恒等式 1 + tan²(θ) = sec²(θ) 及其差的形式 sec²(θ) - tan²(θ) = 1 化简表达式。",
   ),
   prerequisites: ["simplifying-expressions-using-the-pythagorean-identity"],
-  encompasses: [{ topic: "simplifying-expressions-using-the-pythagorean-identity", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.8"],
   knowledgePoints: [
@@ -1360,7 +1360,7 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
     "利用余角恒等式 sin(π/2 - θ) = cos(θ)、cos(π/2 - θ) = sin(θ) 和 tan(π/2 - θ) = cot(θ) 化简表达式。",
   ),
   prerequisites: ["simplifying-expressions-using-basic-trigonometric-identities"],
-  encompasses: [{ topic: "simplifying-expressions-using-basic-trigonometric-identities", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.TF.C.8"],
   knowledgePoints: [
@@ -2003,7 +2003,7 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
     "利用辅助角公式将线性组合 A sin(x) + B cos(x) 化为 R sin(x + φ)，其中 R = √(A² + B²) 且 tan(φ) = B/A。",
   ),
   prerequisites: ["the-sum-and-difference-formulas-for-sine"],
-  encompasses: [{ topic: "the-sum-and-difference-formulas-for-sine", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2309,10 +2309,7 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
     "通过代入 sin(2θ) = 2 sin(θ) cos(θ) 并化简来证明三角恒等式。",
   ),
   prerequisites: ["the-double-angle-formula-for-sine"],
-  encompasses: [
-    { topic: "the-double-angle-formula-for-sine", weight: 0.5 },
-    { topic: "simplifying-expressions-using-basic-trigonometric-identities", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-double-angle-formula-for-sine", weight: 0.5 }],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2574,7 +2571,7 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
     "掌握并应用 cos(2θ) 的三种等价形式：cos²θ − sin²θ、2cos²θ − 1 和 1 − 2sin²θ。",
   ),
   prerequisites: ["the-sum-and-difference-formulas-for-cosine", "alternate-forms-of-the-pythagorean-identity"],
-  encompasses: [{ topic: "alternate-forms-of-the-pythagorean-identity", weight: 0.3 }],
+  encompasses: [],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [

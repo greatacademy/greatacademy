@@ -496,11 +496,7 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
     "识别分式，把两个分式的运算结果化为一个最简分式，并求结果无意义的 $x$ 值。",
   ),
   prerequisites: ["closure-properties-of-polynomials", "simplifying-complex-fractions"],
-  encompasses: [
-    { topic: "adding-rational-expressions-with-unlike-denominators", weight: 0.4 },
-    { topic: "dividing-rational-expressions", weight: 0.3 },
-    { topic: "closure-properties-of-polynomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "dividing-rational-expressions", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.D.7"],
   knowledgePoints: [
@@ -734,11 +730,7 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
     "解含三项（至少两项是分式）的方程：两边同乘最简公分母，并检验增根。",
   ),
   prerequisites: ["closure-properties-of-rational-expressions", "rational-equations-containing-binomials"],
-  encompasses: [
-    { topic: "rational-equations-containing-binomials", weight: 0.3 },
-    { topic: "rational-equations-using-cross-multiplication", weight: 0.3 },
-    { topic: "adding-rational-expressions-with-unlike-denominators", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.REI.A.2"],
   knowledgePoints: [
@@ -1112,10 +1104,7 @@ export const rootsOfRationalFunctions: TopicDef = {
     "求分式函数的零点和截距：分子的零点中不是分母零点的那些。",
   ),
   prerequisites: ["closure-properties-of-rational-expressions", "simplifying-rational-expressions-using-polynomial-factorization"],
-  encompasses: [
-    { topic: "simplifying-rational-expressions-using-polynomial-factorization", weight: 0.3 },
-    { topic: "roots-of-a-function", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "roots-of-a-function", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -1251,10 +1240,7 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
     "unbounded-behavior-of-functions-near-a-point",
     "factoring-cubic-polynomials-using-the-factor-theorem",
   ],
-  encompasses: [
-    { topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.5 },
-    { topic: "roots-of-rational-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.5 }],
   xp: 13,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -1541,7 +1527,7 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
     "比较分子与分母的次数和首项系数，求分式函数的水平渐近线。",
   ),
   prerequisites: ["roots-of-rational-functions", "graph-transformations-of-reciprocal-functions"],
-  encompasses: [{ topic: "end-behavior", weight: 0.3 }],
+  encompasses: [],
   xp: 13,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -1816,10 +1802,7 @@ export const infiniteLimitsOfRationalFunctions: TopicDef = {
     "通过判断每个因式的符号，求分式函数在竖直渐近线处的单侧极限和双侧极限。",
   ),
   prerequisites: ["vertical-asymptotes-of-rational-functions"],
-  encompasses: [
-    { topic: "vertical-asymptotes-of-rational-functions", weight: 0.4 },
-    { topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -1923,10 +1906,7 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
     "求需要先因式分解的分式函数极限，包括空洞处的极限和约分后剩余因式处的极限。",
   ),
   prerequisites: ["infinite-limits-of-rational-functions", "locating-holes-in-rational-functions"],
-  encompasses: [
-    { topic: "infinite-limits-of-rational-functions", weight: 0.6 },
-    { topic: "locating-holes-in-rational-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "infinite-limits-of-rational-functions", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [
@@ -2402,11 +2382,7 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
     "end-behavior-of-rational-functions",
     "infinite-limits-of-rational-functions",
   ],
-  encompasses: [
-    { topic: "identifying-a-rational-function-from-a-graph", weight: 0.4 },
-    { topic: "infinite-limits-of-rational-functions", weight: 0.3 },
-    { topic: "end-behavior-of-rational-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "identifying-a-rational-function-from-a-graph", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [

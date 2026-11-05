@@ -261,7 +261,7 @@ export const equationsOfEllipsesCenteredAtTheOrigin: TopicDef = {
     "识别并写出中心在原点的椭圆标准方程，区分焦点在 x 轴或 y 轴上的情况。",
   ),
   prerequisites: ["introduction-to-ellipses"],
-  encompasses: [{ topic: "introduction-to-ellipses", weight: 0.6 }],
+  encompasses: [{ topic: "introduction-to-ellipses", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -598,7 +598,7 @@ export const findingInterceptsOfEllipses: TopicDef = {
     "通过令 $y = 0$ 和 $x = 0$ 求解椭圆在坐标轴上的截距。",
   ),
   prerequisites: ["equations-of-ellipses-centered-at-a-general-point"],
-  encompasses: [{ topic: "equations-of-ellipses-centered-at-a-general-point", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1041,7 +1041,7 @@ export const theAreaOfAnEllipse: TopicDef = {
     "利用公式 A = πab 计算椭圆面积，并与圆的面积公式进行对比。",
   ),
   prerequisites: ["equations-of-ellipses-centered-at-the-origin"],
-  encompasses: [{ topic: "equations-of-ellipses-centered-at-the-origin", weight: 0.5 }],
+  encompasses: [{ topic: "equations-of-ellipses-centered-at-the-origin", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1462,7 +1462,7 @@ export const findingInterceptsAndIntersectionsOfHyperbolas: TopicDef = {
     "求解双曲线在坐标轴上的截距，并确定双曲线与直线的交点坐标。",
   ),
   prerequisites: ["equations-of-hyperbolas-centered-at-a-general-point"],
-  encompasses: [{ topic: "equations-of-hyperbolas-centered-at-a-general-point", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1558,7 +1558,7 @@ export const transverseAxesOfHyperbolas: TopicDef = {
     "确定连接双曲线两顶点的实轴方向与实轴长 2a。",
   ),
   prerequisites: ["equations-of-hyperbolas-centered-at-the-origin"],
-  encompasses: [{ topic: "equations-of-hyperbolas-centered-at-the-origin", weight: 0.6 }],
+  encompasses: [{ topic: "equations-of-hyperbolas-centered-at-the-origin", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1637,7 +1637,7 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
     "识别双曲线长为 2b 的虚轴以及尺寸为 2a × 2b 的中心基本矩形。",
   ),
   prerequisites: ["transverse-axes-of-hyperbolas"],
-  encompasses: [{ topic: "transverse-axes-of-hyperbolas", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1708,7 +1708,7 @@ export const fociOfHyperbolas: TopicDef = {
     "利用 c² = a² + b² 计算双曲线的焦距和焦点坐标。",
   ),
   prerequisites: ["transverse-axes-of-hyperbolas"],
-  encompasses: [{ topic: "transverse-axes-of-hyperbolas", weight: 0.6 }],
+  encompasses: [{ topic: "transverse-axes-of-hyperbolas", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [

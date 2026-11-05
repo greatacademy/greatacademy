@@ -142,10 +142,7 @@ const probabilityMassFunctions: TopicDef = {
     "用概率质量函数描述离散随机变量，利用概率之和为 1 求缺失的概率，并由表格或公式计算事件的概率。",
   ),
   prerequisites: ["mutually-exclusive-events"],
-  encompasses: [
-    { topic: "mutually-exclusive-events", weight: 0.3 },
-    { topic: "the-complement-of-an-event", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSS.MD.A.1"],
   knowledgePoints: [
@@ -413,7 +410,7 @@ const expectedValues: TopicDef = {
   ),
   prerequisites: ["probability-mass-functions-of-discrete-random-variables", "mean-of-a-data-set"],
   encompasses: [
-    { topic: "probability-mass-functions-of-discrete-random-variables", weight: 0.4 },
+    { topic: "probability-mass-functions-of-discrete-random-variables", weight: 0.2 },
     { topic: "mean-of-a-data-set", weight: 0.2 },
   ],
   xp: 18,
@@ -540,8 +537,7 @@ const theBinomialDistribution: TopicDef = {
   ],
   encompasses: [
     { topic: "combinations", weight: 0.3 },
-    { topic: "tree-diagrams-for-independent-events", weight: 0.4 },
-    { topic: "cumulative-distribution-functions-for-discrete-random-variables", weight: 0.2 },
+    { topic: "tree-diagrams-for-independent-events", weight: 0.2 },
   ],
   xp: 20,
   standards: ["CCSS.HSS.MD.A.3", "CCSS.HSS.MD.A.4"],
@@ -931,10 +927,7 @@ const theGeometricDistribution: TopicDef = {
     "计算几何随机变量 $X \\sim \\text{Geo}(p)$（独立重复试验中直到第一次成功为止的试验次数）的概率，包括尾部概率 $P(X > k) = (1 - p)^k$，并求其均值 $\\frac{1}{p}$。",
   ),
   prerequisites: ["the-binomial-distribution", "the-sum-of-the-first-n-terms-of-a-geometric-series"],
-  encompasses: [
-    { topic: "tree-diagrams-for-independent-events", weight: 0.3 },
-    { topic: "the-sum-of-the-first-n-terms-of-a-geometric-series", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "tree-diagrams-for-independent-events", weight: 0.2 }],
   xp: 18,
   standards: ["CCSS.HSS.MD.A.3"],
   knowledgePoints: [
@@ -1510,7 +1503,7 @@ const theNormalDistribution: TopicDef = {
     "用 z = (x − μ)/σ 把正态随机变量 X ~ N(μ, σ²) 标准化，并利用 Φ 的值求 X 小于、大于或介于给定值之间的概率。",
   ),
   prerequisites: ["symmetry-properties-of-the-standard-normal-distribution"],
-  encompasses: [{ topic: "symmetry-properties-of-the-standard-normal-distribution", weight: 0.5 }],
+  encompasses: [],
   xp: 18,
   standards: ["CCSS.HSS.ID.A.4"],
   knowledgePoints: [
@@ -1628,7 +1621,7 @@ const meanAndVarianceOfTheNormal: TopicDef = {
     "从 X ~ N(μ, σ²) 读出均值、方差与标准差，并通过标准化由已知概率求未知的均值或标准差。",
   ),
   prerequisites: ["the-normal-distribution"],
-  encompasses: [{ topic: "the-normal-distribution", weight: 0.5 }],
+  encompasses: [],
   xp: 18,
   standards: ["CCSS.HSS.ID.A.4"],
   knowledgePoints: [

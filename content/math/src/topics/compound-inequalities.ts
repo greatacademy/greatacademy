@@ -594,7 +594,7 @@ export const unionsOfIntervals: TopicDef = {
   title: t("Unions of Intervals", "区间的并集"),
   summary: t("Combine intervals with $\\cup$ and simplify the result.", "用 $\\cup$ 合并区间并化简结果。"),
   prerequisites: ["unbounded-intervals"],
-  encompasses: [{ topic: "unbounded-intervals", weight: 0.5 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -694,7 +694,7 @@ export const intersectionsOfIntervals: TopicDef = {
   title: t("Intersections of Intervals", "区间的交集"),
   summary: t("Find the numbers two intervals have in common, written with $\\cap$.", "求两个区间的公共部分，记作 $\\cap$。"),
   prerequisites: ["unions-of-intervals"],
-  encompasses: [{ topic: "unbounded-intervals", weight: 0.5 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -938,7 +938,7 @@ export const compoundAndInequalities: TopicDef = {
   encompasses: [
     { topic: "intersections-of-intervals", weight: 0.6 },
     { topic: "solving-multi-step-inequalities", weight: 0.5 },
-    { topic: "unbounded-intervals", weight: 0.5 },
+    { topic: "unbounded-intervals", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
@@ -1250,7 +1250,7 @@ export const introductionToModelingWithInequalities: TopicDef = {
     "把“至少”“介于……之间”等文字表述的限制翻译成不等式。",
   ),
   prerequisites: ["solving-compound-inequalities"],
-  encompasses: [{ topic: "inequalities-and-solutions", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.CED.A.3"],
   knowledgePoints: [
@@ -1980,11 +1980,7 @@ export const solvingEquationsWithSquareRoots: TopicDef = {
     "用开平方解 $x^{2} = k$、$(x - a)^{2} = k$ 等方程，解可能有两个、一个或没有实数解。",
   ),
   prerequisites: ["simplifying-square-roots", "two-step-equations"],
-  encompasses: [
-    { topic: "square-roots-and-cube-roots", weight: 0.5 },
-    { topic: "simplifying-square-roots", weight: 0.4 },
-    { topic: "two-step-equations", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.5 }],
   xp: 18,
   standards: ["CCSS.8.EE.A.2", "CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -2257,7 +2253,7 @@ export const solvingEvenPowerEquations: TopicDef = {
     "通过开偶次方解 $x^{4} = 81$ 等方程，并判断实数解有两个、一个还是没有。",
   ),
   prerequisites: ["solving-odd-power-equations"],
-  encompasses: [{ topic: "solving-equations-with-square-roots", weight: 0.5 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.8.EE.A.2"],
   knowledgePoints: [

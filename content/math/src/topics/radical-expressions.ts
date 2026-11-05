@@ -94,10 +94,7 @@ export const squareRootsOfAlgebraicPerfectSquares: TopicDef = {
     "对正变量，求完全平方单项式的平方根，例如 $\\sqrt{49x^{6}y^{2}} = 7x^{3}y$。",
   ),
   prerequisites: ["square-roots-and-cube-roots", "power-rules"],
-  encompasses: [
-    { topic: "square-roots-and-cube-roots", weight: 0.3 },
-    { topic: "power-rules", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -198,11 +195,7 @@ export const squareRootsWithDomainRestrictions: TopicDef = {
     "当变量可以为负时使用 $\\sqrt{a^{2}} = |a|$，并在取值范围允许时去掉绝对值。",
   ),
   prerequisites: ["square-roots-of-algebraic-perfect-squares", "squaring-binomials"],
-  encompasses: [
-    { topic: "square-roots-of-algebraic-perfect-squares", weight: 0.6 },
-    { topic: "absolute-value", weight: 0.3 },
-    { topic: "squaring-binomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "square-roots-of-algebraic-perfect-squares", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -314,10 +307,7 @@ export const cubeRootsOfAlgebraicPerfectCubes: TopicDef = {
     "求完全立方单项式的立方根，例如 $\\sqrt[3]{-8x^{6}y^{3}} = -2x^{2}y$。",
   ),
   prerequisites: ["square-roots-of-algebraic-perfect-squares"],
-  encompasses: [
-    { topic: "square-roots-of-algebraic-perfect-squares", weight: 0.3 },
-    { topic: "square-roots-and-cube-roots", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -815,7 +805,6 @@ export const evaluatingRadicalExpressions: TopicDef = {
   ),
   prerequisites: ["simplifying-square-roots", "evaluating-expressions"],
   encompasses: [
-    { topic: "simplifying-square-roots", weight: 0.3 },
     { topic: "evaluating-expressions", weight: 0.4 },
     { topic: "square-roots-and-cube-roots", weight: 0.4 },
   ],
@@ -1126,10 +1115,7 @@ export const rationalizingAlgebraicDenominators: TopicDef = {
     "去掉分母中含变量的平方根：$\\frac{6}{\\sqrt{3x}} = \\frac{2\\sqrt{3x}}{x}$。",
   ),
   prerequisites: ["quotient-rule-for-square-roots", "rationalizing-denominators"],
-  encompasses: [
-    { topic: "rationalizing-denominators", weight: 0.6 },
-    { topic: "quotient-rule-for-square-roots", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "rationalizing-denominators", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -1246,10 +1232,7 @@ export const rationalizingTwoTermDenominators: TopicDef = {
     "乘以共轭式，把 $3 - \\sqrt{5}$、$\\sqrt{7} + \\sqrt{3}$ 这样的分母有理化。",
   ),
   prerequisites: ["rationalizing-denominators", "difference-of-squares-formula"],
-  encompasses: [
-    { topic: "rationalizing-denominators", weight: 0.4 },
-    { topic: "difference-of-squares-formula", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "difference-of-squares-formula", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -1377,10 +1360,7 @@ export const furtherRationalizingDenominators: TopicDef = {
     "把 $\\sqrt{x} - 3$、$\\sqrt{x + 2} + \\sqrt{x}$、$\\sqrt[3]{2x}$ 这样的分母有理化。",
   ),
   prerequisites: ["rationalizing-algebraic-denominators", "rationalizing-two-term-denominators"],
-  encompasses: [
-    { topic: "rationalizing-algebraic-denominators", weight: 0.4 },
-    { topic: "rationalizing-two-term-denominators", weight: 0.6 },
-  ],
+  encompasses: [{ topic: "rationalizing-two-term-denominators", weight: 0.6 }],
   xp: 16,
   standards: ["CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -1517,10 +1497,8 @@ export const solvingRadicalEquations: TopicDef = {
   ),
   prerequisites: ["solving-equations-with-square-roots", "squaring-binomials", "equations-with-variables-on-both-sides"],
   encompasses: [
-    { topic: "equations-with-variables-on-both-sides", weight: 0.4 },
-    { topic: "two-step-equations", weight: 0.4 },
+    { topic: "two-step-equations", weight: 0.3 },
     { topic: "squaring-binomials", weight: 0.2 },
-    { topic: "solving-equations-with-square-roots", weight: 0.2 },
   ],
   xp: 20,
   standards: ["CCSS.HSA.REI.A.2"],

@@ -186,7 +186,6 @@ export const absoluteValueExpressions: TopicDef = {
   prerequisites: ["evaluating-expressions"],
   encompasses: [
     { topic: "absolute-value", weight: 0.5 },
-    { topic: "evaluating-expressions", weight: 0.4 },
     { topic: "order-of-operations-with-integers", weight: 0.3 },
   ],
   xp: 12,
@@ -367,10 +366,7 @@ export const rulesOfAbsoluteValue: TopicDef = {
     "利用 |ab| = |a||b| 与 |a/b| = |a|/|b| 求积与商的绝对值并改写式子。",
   ),
   prerequisites: ["absolute-value-expressions", "operations-with-rational-numbers"],
-  encompasses: [
-    { topic: "absolute-value-expressions", weight: 0.3 },
-    { topic: "operations-with-rational-numbers", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   knowledgePoints: [
     {
@@ -629,10 +625,7 @@ export const absoluteValueEquations: TopicDef = {
     "把 |ax + b| = c 拆成两个一次方程求解，并识别只有一个解或无解的情形。",
   ),
   prerequisites: ["absolute-value-expressions", "two-step-equations"],
-  encompasses: [
-    { topic: "two-step-equations", weight: 0.5 },
-    { topic: "absolute-value-expressions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSA.CED.A.1"],
   knowledgePoints: [
@@ -900,10 +893,7 @@ export const equationsConnectingAbsoluteValueAndLinearFunctions: TopicDef = {
     "解形如 |ax + b| = cx + d 的方程：写出两种情况，分别按一次方程求解。",
   ),
   prerequisites: ["further-absolute-value-equations"],
-  encompasses: [
-    { topic: "further-absolute-value-equations", weight: 0.5 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.5 },
-  ],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSA.REI.A.1"],
   knowledgePoints: [
@@ -1107,7 +1097,6 @@ export const absoluteValueInequalities: TopicDef = {
   encompasses: [
     { topic: "compound-and-inequalities", weight: 0.4 },
     { topic: "compound-or-inequalities", weight: 0.4 },
-    { topic: "absolute-value-equations", weight: 0.3 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
@@ -1289,10 +1278,7 @@ export const absoluteValueGraphs: TopicDef = {
     "把 y = |x − h| + k 的图象看作 y = |x| 的 V 形图象平移到顶点 (h, k) 处。",
   ),
   prerequisites: ["absolute-value-expressions", "graphs-of-functions"],
-  encompasses: [
-    { topic: "graphs-of-functions", weight: 0.3 },
-    { topic: "absolute-value-expressions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.B", "CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1616,7 +1602,7 @@ export const combiningTransformationsOfAbsoluteValueGraphs: TopicDef = {
   prerequisites: ["vertical-reflections-of-absolute-value-graphs", "stretches-of-absolute-value-graphs"],
   encompasses: [
     { topic: "vertical-reflections-of-absolute-value-graphs", weight: 0.6 },
-    { topic: "stretches-of-absolute-value-graphs", weight: 0.6 },
+    { topic: "stretches-of-absolute-value-graphs", weight: 0.3 },
     { topic: "absolute-value-graphs", weight: 0.4 },
   ],
   xp: 16,
@@ -1768,11 +1754,7 @@ export const domainAndRangeOfAbsoluteValueFunctions: TopicDef = {
     "求 f(x) = a|x − h| + k 在全体实数上和在闭区间上的定义域与值域。",
   ),
   prerequisites: ["combining-transformations-of-absolute-value-graphs", "range-of-a-function"],
-  encompasses: [
-    { topic: "range-of-a-function", weight: 0.4 },
-    { topic: "domain-of-a-function", weight: 0.2 },
-    { topic: "combining-transformations-of-absolute-value-graphs", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "range-of-a-function", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1927,7 +1909,6 @@ export const rootsOfAbsoluteValueFunctions: TopicDef = {
   encompasses: [
     { topic: "further-absolute-value-equations", weight: 0.4 },
     { topic: "roots-of-a-function", weight: 0.4 },
-    { topic: "combining-transformations-of-absolute-value-graphs", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.B", "CCSS.HSA.REI.D.11"],

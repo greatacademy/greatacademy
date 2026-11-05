@@ -358,7 +358,7 @@ export const dividingPolynomialsByLinearBinomialsUsingLongDivision: TopicDef = {
     "用长除法把多项式除以 $ax + b$：首项相除、相乘、相减、重复。",
   ),
   prerequisites: ["dividing-polynomials-using-synthetic-division"],
-  encompasses: [{ topic: "multiplying-polynomials", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -452,10 +452,7 @@ export const dividingPolynomialsUsingLongDivision: TopicDef = {
     "用长除法把多项式除以二次式，求出商和次数更低的余式。",
   ),
   prerequisites: ["dividing-polynomials-by-linear-binomials-using-long-division"],
-  encompasses: [
-    { topic: "dividing-polynomials-by-linear-binomials-using-long-division", weight: 0.6 },
-    { topic: "multiplying-polynomials", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "dividing-polynomials-by-linear-binomials-using-long-division", weight: 0.6 }],
   xp: 17,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -617,10 +614,7 @@ export const dividingPolynomialsByManipulatingRationalExpressions: TopicDef = {
     "把分子改写成分母的倍数加余式，再拆开分式：$\\frac{x^{2} + 5x + 7}{x + 2} = x + 3 + \\frac{1}{x + 2}$。",
   ),
   prerequisites: ["dividing-polynomials-by-linear-binomials-using-long-division"],
-  encompasses: [
-    { topic: "splitting-rational-expressions-into-terms", weight: 0.5 },
-    { topic: "dividing-polynomials-by-linear-binomials-using-long-division", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "splitting-rational-expressions-into-terms", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -729,11 +723,7 @@ export const determiningTheRootsOfPolynomials: TopicDef = {
     "令因式分解形式中的每个因式等于零，求多项式的根。",
   ),
   prerequisites: ["roots-of-a-function", "solving-quadratic-equations-using-a-difference-of-squares"],
-  encompasses: [
-    { topic: "zero-product-rule", weight: 0.6 },
-    { topic: "roots-of-a-function", weight: 0.3 },
-    { topic: "solving-quadratic-equations-using-a-difference-of-squares", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "zero-product-rule", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.HSA.APR.B.3"],
   knowledgePoints: [
@@ -872,7 +862,7 @@ export const solvingPolynomialEquationsUsingTheGcf: TopicDef = {
   ],
   encompasses: [
     { topic: "determining-the-roots-of-polynomials", weight: 0.5 },
-    { topic: "solving-quadratic-equations-with-no-constant-term", weight: 0.5 },
+    { topic: "solving-quadratic-equations-with-no-constant-term", weight: 0.3 },
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.5 },
     { topic: "factoring-polynomials-using-gcfs", weight: 0.4 },
   ],
@@ -1029,7 +1019,6 @@ export const solvingCubicEquationsByGrouping: TopicDef = {
   encompasses: [
     { topic: "factoring-cubic-expressions-by-grouping", weight: 0.7 },
     { topic: "determining-the-roots-of-polynomials", weight: 0.5 },
-    { topic: "solving-polynomial-equations-using-the-gcf", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.APR.B.3", "CCSS.HSA.SSE.A.2"],
@@ -1270,7 +1259,7 @@ export const theFactorTheorem: TopicDef = {
     "$x - c$ 是 $p(x)$ 的因式当且仅当 $p(c) = 0$：通过求值检验因式，并把根转化为因式。",
   ),
   prerequisites: ["dividing-polynomials-using-synthetic-division", "determining-the-roots-of-polynomials"],
-  encompasses: [{ topic: "determining-the-roots-of-polynomials", weight: 0.4 }],
+  encompasses: [],
   xp: 13,
   standards: ["CCSS.HSA.APR.B.2"],
   knowledgePoints: [
@@ -1576,8 +1565,7 @@ export const factoringCubicPolynomialsUsingTheFactorTheorem: TopicDef = {
   ),
   prerequisites: ["the-factor-theorem", "further-factoring-trinomials-with-leading-coefficients"],
   encompasses: [
-    { topic: "the-factor-theorem", weight: 0.3 },
-    { topic: "dividing-polynomials-using-synthetic-division", weight: 0.5 },
+    { topic: "dividing-polynomials-using-synthetic-division", weight: 0.3 },
     { topic: "factoring-trinomials", weight: 0.5 },
     { topic: "factoring-trinomials-with-leading-coefficients", weight: 0.3 },
   ],
@@ -1865,7 +1853,7 @@ export const multiplicitiesOfTheRootsOfPolynomials: TopicDef = {
     "根 $c$ 的重数是因式 $x - c$ 在多项式因式分解中出现的次数。",
   ),
   prerequisites: ["determining-the-roots-of-polynomials"],
-  encompasses: [{ topic: "determining-the-roots-of-polynomials", weight: 0.5 }],
+  encompasses: [],
   xp: 11,
   standards: ["CCSS.HSA.APR.B.3"],
   knowledgePoints: [
@@ -1983,7 +1971,6 @@ export const findingMultiplicitiesOfTheRootsOfQuarticPolynomialsByFactoring: Top
   encompasses: [
     { topic: "multiplicities-of-the-roots-of-polynomials", weight: 0.7 },
     { topic: "factoring-quartic-polynomials-using-the-factor-theorem", weight: 0.3 },
-    { topic: "factoring-biquadratic-expressions", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.APR.B.3"],

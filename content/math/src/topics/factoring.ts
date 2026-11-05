@@ -71,10 +71,7 @@ export const factoringPolynomialsUsingGcfs: TopicDef = {
     "提取各项的最大公因式或公共二项式因式，分解多项式。",
   ),
   prerequisites: ["greatest-common-factor-of-monomials", "distributive-law-for-polynomials"],
-  encompasses: [
-    { topic: "greatest-common-factor-of-monomials", weight: 0.6 },
-    { topic: "distributive-law-for-polynomials", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "greatest-common-factor-of-monomials", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -277,7 +274,7 @@ export const factoringPerfectSquareTrinomials: TopicDef = {
     "识别形如 $a^{2} \\pm 2ab + b^{2}$ 的三项式，并分解为 $(a \\pm b)^{2}$。",
   ),
   prerequisites: ["squaring-binomials", "factoring-polynomials-using-gcfs"],
-  encompasses: [{ topic: "squaring-binomials", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -385,10 +382,7 @@ export const factoringPerfectSquareTrinomialsWithLeadingCoefficients: TopicDef =
     "分解 $9x^{2} - 12x + 4$ 这类完全平方三项式，包括含公因式的情形。",
   ),
   prerequisites: ["factoring-perfect-square-trinomials"],
-  encompasses: [
-    { topic: "factoring-perfect-square-trinomials", weight: 0.7 },
-    { topic: "factoring-polynomials-using-gcfs", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "factoring-perfect-square-trinomials", weight: 0.7 }],
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -489,10 +483,7 @@ export const factoringDifferencesOfSquares: TopicDef = {
   title: t("Factoring Differences of Squares", "平方差的因式分解"),
   summary: t("Factor $a^{2} - b^{2}$ as $(a + b)(a - b)$.", "把 $a^{2} - b^{2}$ 分解为 $(a + b)(a - b)$。"),
   prerequisites: ["difference-of-squares-formula", "factoring-polynomials-using-gcfs"],
-  encompasses: [
-    { topic: "difference-of-squares-formula", weight: 0.5 },
-    { topic: "factoring-polynomials-using-gcfs", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -665,7 +656,7 @@ export const factoringTrinomials: TopicDef = {
     "找出积为 $c$、和为 $b$ 的两个数，把 $x^{2} + bx + c$ 分解为 $(x + m)(x + n)$。",
   ),
   prerequisites: ["multiplying-binomials", "factoring-polynomials-using-gcfs"],
-  encompasses: [{ topic: "multiplying-binomials", weight: 0.4 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -860,9 +851,8 @@ export const factoringTrinomialsWithLeadingCoefficients: TopicDef = {
   summary: t("Factor $ax^{2} + bx + c$ by grouping and by the $ac$ method.", "用分组分解法和 $ac$ 法分解 $ax^{2} + bx + c$。"),
   prerequisites: ["factoring-trinomials"],
   encompasses: [
-    { topic: "factoring-trinomials", weight: 0.5 },
+    { topic: "factoring-trinomials", weight: 0.3 },
     { topic: "factoring-polynomials-using-gcfs", weight: 0.3 },
-    { topic: "multiplying-binomials", weight: 0.3 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.SSE.A.2"],

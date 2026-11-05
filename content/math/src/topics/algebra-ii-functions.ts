@@ -220,10 +220,7 @@ export const localExtrema: TopicDef = {
     "求函数的极大值与极小值：图象上比附近所有点都高或都低的点。",
   ),
   prerequisites: ["global-extrema", "increasing-and-decreasing"],
-  encompasses: [
-    { topic: "global-extrema", weight: 0.4 },
-    { topic: "increasing-and-decreasing", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "increasing-and-decreasing", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.B.4"],
   knowledgePoints: [
@@ -413,10 +410,7 @@ export const oneToOneFunctions: TopicDef = {
     "判断不同的输入是否总有不同的输出：从数值表、用水平线检验、从解析式判断。",
   ),
   prerequisites: ["vertical-line-test", "absolute-value-graphs", "graphing-elementary-quadratic-functions"],
-  encompasses: [
-    { topic: "absolute-value-graphs", weight: 0.2 },
-    { topic: "graphing-elementary-quadratic-functions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.4.D"],
   knowledgePoints: [
@@ -559,7 +553,6 @@ export const graphsOfInverseFunctions: TopicDef = {
   prerequisites: ["introduction-to-inverse-functions", "one-to-one-functions", "slope-intercept-form"],
   encompasses: [
     { topic: "introduction-to-inverse-functions", weight: 0.4 },
-    { topic: "one-to-one-functions", weight: 0.2 },
     { topic: "slope-intercept-form", weight: 0.2 },
   ],
   xp: 14,
@@ -677,10 +670,7 @@ export const domainAndRangeOfInverseFunctions: TopicDef = {
     "反函数的定义域是原函数的值域，反函数的值域是原函数的定义域。",
   ),
   prerequisites: ["graphs-of-inverse-functions", "range-advanced-cases"],
-  encompasses: [
-    { topic: "graphs-of-inverse-functions", weight: 0.3 },
-    { topic: "range-of-a-function", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "range-of-a-function", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.BF.B.4.C"],
   knowledgePoints: [
@@ -791,7 +781,6 @@ export const invertibleFunctions: TopicDef = {
     { topic: "one-to-one-functions", weight: 0.4 },
     { topic: "domain-and-range-of-inverse-functions", weight: 0.3 },
     { topic: "the-vertex-form-of-a-parabola", weight: 0.3 },
-    { topic: "local-extrema", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.BF.B.4.D"],

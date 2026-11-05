@@ -302,7 +302,7 @@ export const degreeOfAPolynomial: TopicDef = {
     "求单项式的次数，以及一元或多元多项式的次数。",
   ),
   prerequisites: ["introduction-to-polynomials"],
-  encompasses: [{ topic: "introduction-to-polynomials", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSA.SSE.A.1.A"],
   knowledgePoints: [
@@ -887,10 +887,7 @@ export const monomialsBinomialsAndTrinomials: TopicDef = {
   title: t("Monomials, Binomials and Trinomials", "单项式、二项式与三项式"),
   summary: t("Name polynomials by their number of terms and by their degree.", "按项数和次数给多项式命名。"),
   prerequisites: ["adding-and-subtracting-polynomials"],
-  encompasses: [
-    { topic: "degree-of-a-polynomial", weight: 0.4 },
-    { topic: "adding-and-subtracting-polynomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "adding-and-subtracting-polynomials", weight: 0.2 }],
   xp: 10,
   standards: ["CCSS.HSA.SSE.A.1.A"],
   knowledgePoints: [
@@ -1220,7 +1217,7 @@ export const squaringBinomials: TopicDef = {
   prerequisites: ["multiplying-binomials", "power-rules"],
   encompasses: [
     { topic: "multiplying-binomials", weight: 0.6 },
-    { topic: "power-rules", weight: 0.4 },
+    { topic: "power-rules", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSA.APR.A.1", "CCSS.HSA.SSE.A.2"],
@@ -1351,7 +1348,7 @@ export const expandingBinomialsUsingPascalsTriangle: TopicDef = {
     "用杨辉三角中的系数展开 $(a + b)^{n}$，并求展开式中某一项的系数。",
   ),
   prerequisites: ["squaring-binomials", "multiplying-polynomials"],
-  encompasses: [{ topic: "power-rules", weight: 0.4 }],
+  encompasses: [{ topic: "power-rules", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSA.APR.C.5"],
   knowledgePoints: [
@@ -1490,10 +1487,7 @@ export const differenceOfSquaresFormula: TopicDef = {
     "用 $(a + b)(a - b) = a^{2} - b^{2}$ 计算乘积，并用于速算。",
   ),
   prerequisites: ["squaring-binomials"],
-  encompasses: [
-    { topic: "multiplying-binomials", weight: 0.5 },
-    { topic: "power-rules", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "multiplying-binomials", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSA.APR.A.1", "CCSS.HSA.SSE.A.2"],
   knowledgePoints: [

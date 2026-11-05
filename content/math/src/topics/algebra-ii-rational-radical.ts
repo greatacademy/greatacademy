@@ -104,7 +104,6 @@ export const simplifyingRationalExpressionsUsingPolynomialFactorization: TopicDe
   encompasses: [
     { topic: "simplifying-rational-expressions-by-factoring", weight: 0.7 },
     { topic: "factoring-trinomials-with-leading-coefficients", weight: 0.4 },
-    { topic: "factoring-trinomials-using-common-factors", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.6", "CCSS.HSA.SSE.A.2"],
@@ -255,7 +254,6 @@ export const splittingRationalExpressionsIntoTerms: TopicDef = {
   ),
   prerequisites: ["simplifying-rational-expressions"],
   encompasses: [
-    { topic: "simplifying-rational-expressions", weight: 0.3 },
     { topic: "equivalent-expressions-with-fractions", weight: 0.4 },
     { topic: "product-and-quotient-rules", weight: 0.3 },
   ],
@@ -1041,7 +1039,6 @@ export const simplifyingComplexFractions: TopicDef = {
   encompasses: [
     { topic: "dividing-rational-expressions", weight: 0.5 },
     { topic: "adding-rational-expressions-with-unlike-denominators", weight: 0.3 },
-    { topic: "adding-and-subtracting-rational-expressions", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.7"],

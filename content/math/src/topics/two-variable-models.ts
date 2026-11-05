@@ -271,7 +271,6 @@ export const modelingWithTwoVariableLinearEquations: TopicDef = {
   prerequisites: ["slope-intercept-form", "modeling-with-linear-equations"],
   encompasses: [
     { topic: "slope-intercept-form", weight: 0.3 },
-    { topic: "modeling-with-linear-equations", weight: 0.3 },
     { topic: "interpreting-linear-expressions", weight: 0.4 },
   ],
   xp: 15,
@@ -494,11 +493,7 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
     "用 $ax + by = T$ 表示由两类物品组成的总量，并由一个量或截距求另一个量。",
   ),
   prerequisites: ["modeling-with-two-variable-linear-equations", "standard-form"],
-  encompasses: [
-    { topic: "standard-form", weight: 0.3 },
-    { topic: "modeling-with-two-variable-linear-equations", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.2"],
   knowledgePoints: [
@@ -672,7 +667,6 @@ export const analyzingGraphsOfLinearModels: TopicDef = {
   prerequisites: ["modeling-with-two-variable-linear-equations", "properties-of-lines-in-slope-intercept-form"],
   encompasses: [
     { topic: "modeling-with-two-variable-linear-equations", weight: 0.4 },
-    { topic: "properties-of-lines-in-slope-intercept-form", weight: 0.3 },
     { topic: "slope-of-a-line", weight: 0.3 },
   ],
   xp: 15,
@@ -898,8 +892,6 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
   ),
   prerequisites: ["analyzing-graphs-of-linear-models", "point-slope-form"],
   encompasses: [
-    { topic: "analyzing-graphs-of-linear-models", weight: 0.3 },
-    { topic: "point-slope-form", weight: 0.3 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
     { topic: "slope-of-a-line", weight: 0.2 },
   ],
@@ -1066,10 +1058,7 @@ export const distanceTimeGraphs: TopicDef = {
     "从行程图像中读出距离、停留时间和速度，并描述每一段所表示的运动。",
   ),
   prerequisites: ["analyzing-graphs-of-linear-models", "speed-distance-time"],
-  encompasses: [
-    { topic: "speed-distance-time", weight: 0.4 },
-    { topic: "analyzing-graphs-of-linear-models", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "speed-distance-time", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.8.F.B.5", "CCSS.HSF.IF.B.4"],
   knowledgePoints: [
@@ -1293,7 +1282,7 @@ export const speedTimeGraphs: TopicDef = {
     "从速度—时间图中读出速度，描述运动，并由斜率求加速度。",
   ),
   prerequisites: ["distance-time-graphs"],
-  encompasses: [{ topic: "slope-of-a-line", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.8.F.B.5", "CCSS.HSF.IF.B.6"],
   knowledgePoints: [
@@ -1650,10 +1639,7 @@ export const graphingStrictLinearInequalities: TopicDef = {
     "检验 $y < 2x + 1$ 这类不等式的解，并把它们画成以虚线为边界的半平面。",
   ),
   prerequisites: ["slope-intercept-form", "inequalities-and-solutions"],
-  encompasses: [
-    { topic: "slope-intercept-form", weight: 0.3 },
-    { topic: "inequalities-and-solutions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "inequalities-and-solutions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSA.REI.D.12"],
   knowledgePoints: [
@@ -1834,7 +1820,6 @@ export const furtherGraphingLinearInequalities: TopicDef = {
   encompasses: [
     { topic: "graphing-non-strict-linear-inequalities", weight: 0.5 },
     { topic: "solving-multi-step-inequalities", weight: 0.3 },
-    { topic: "properties-of-lines-in-standard-form", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.D.12"],
@@ -1995,11 +1980,7 @@ export const systemsOfLinearInequalities: TopicDef = {
     "检验二元一次不等式组的解，并把它的图像看作几个半平面的公共部分。",
   ),
   prerequisites: ["further-graphing-linear-inequalities", "systems-of-linear-equations"],
-  encompasses: [
-    { topic: "graphing-non-strict-linear-inequalities", weight: 0.5 },
-    { topic: "further-graphing-linear-inequalities", weight: 0.2 },
-    { topic: "systems-of-linear-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "graphing-non-strict-linear-inequalities", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSA.REI.D.12"],
   knowledgePoints: [
@@ -2247,7 +2228,6 @@ export const modelingWithTwoVariableInequalities: TopicDef = {
   encompasses: [
     { topic: "modeling-totals-with-two-variable-equations", weight: 0.4 },
     { topic: "modeling-with-two-step-inequalities", weight: 0.3 },
-    { topic: "graphing-non-strict-linear-inequalities", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.3"],

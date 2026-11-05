@@ -709,10 +709,7 @@ const verticalStretchesOfTrigonometricFunctions: TopicDef = {
     "用 y = a sin x 把正弦和余弦波形沿竖直方向伸缩，读出振幅，并求 y = a sin x + d 的值域。",
   ),
   prerequisites: ["vertical-translations-of-trigonometric-functions", "vertical-stretches-of-functions"],
-  encompasses: [
-    { topic: "vertical-translations-of-trigonometric-functions", weight: 0.3 },
-    { topic: "vertical-stretches-of-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "vertical-stretches-of-functions", weight: 0.3 }],
   xp: 13,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -1451,10 +1448,7 @@ const graphingReflectionsOfTrigonometricFunctions: TopicDef = {
     "graph-transformations-of-tangent-and-cotangent",
     "combining-reflections-with-other-graph-transformations",
   ],
-  encompasses: [
-    { topic: "combining-graph-transformations-of-sine-and-cosine", weight: 0.3 },
-    { topic: "combining-reflections-with-other-graph-transformations", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "combining-reflections-with-other-graph-transformations", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.BF.B.3", "CCSS.HSF.TF.A.4"],
   knowledgePoints: [
@@ -1954,10 +1948,7 @@ const propertiesOfTransformedSecantAndCosecantFunctions: TopicDef = {
     "对任意符号的 a，求 y = a sec(bx + φ) + d 与 y = a csc(bx + φ) + d 的值域、竖直渐近线和局部极值。",
   ),
   prerequisites: ["properties-of-transformed-sine-and-cosine-functions"],
-  encompasses: [
-    { topic: "combining-graph-transformations-of-secant-and-cosecant", weight: 0.4 },
-    { topic: "properties-of-transformed-sine-and-cosine-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "combining-graph-transformations-of-secant-and-cosecant", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSF.IF.C.7e"],
   knowledgePoints: [
@@ -2314,7 +2305,7 @@ const modelingWithTrigonometricFunctions: TopicDef = {
   ),
   prerequisites: ["interpreting-trigonometric-models"],
   encompasses: [
-    { topic: "interpreting-trigonometric-models", weight: 0.6 },
+    { topic: "interpreting-trigonometric-models", weight: 0.3 },
     { topic: "combining-graph-transformations-of-sine-and-cosine", weight: 0.2 },
   ],
   xp: 18,

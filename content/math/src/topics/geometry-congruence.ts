@@ -452,10 +452,7 @@ export const theAsaCongruenceCriterion: TopicDef = {
     "读懂全等的表示，并由两角及其夹边证明三角形全等。",
   ),
   prerequisites: ["identifying-angle-theorems", "angles-of-a-triangle"],
-  encompasses: [
-    { topic: "two-step-equations", weight: 0.2 },
-    { topic: "angles-of-a-triangle", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.HSG.CO.B.7", "CCSS.HSG.CO.B.8"],
   knowledgePoints: [
@@ -636,10 +633,7 @@ export const theAasCongruenceCriterion: TopicDef = {
     "由两角及其中一角的对边证明三角形全等，并区分 AAS 与 ASA。",
   ),
   prerequisites: ["the-asa-congruence-criterion"],
-  encompasses: [
-    { topic: "angles-of-a-triangle", weight: 0.2 },
-    { topic: "two-step-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.2 }],
   xp: 13,
   standards: ["CCSS.HSG.CO.B.8", "CCSS.HSG.SRT.B.5"],
   knowledgePoints: [
@@ -1175,10 +1169,7 @@ export const theHlCongruenceCriterion: TopicDef = {
   title: t("The HL Congruence Criterion", "HL 全等判定"),
   summary: t("Prove right triangles congruent from their hypotenuses and a pair of legs.", "由斜边和一组直角边证明直角三角形全等。"),
   prerequisites: ["the-sss-congruence-criterion", "the-pythagorean-theorem"],
-  encompasses: [
-    { topic: "the-pythagorean-theorem", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "two-step-equations", weight: 0.2 }],
   xp: 13,
   standards: ["CCSS.HSG.SRT.B.5"],
   knowledgePoints: [
@@ -1366,11 +1357,11 @@ export const combiningCongruenceCriteriaForTriangles: TopicDef = {
   ),
   prerequisites: ["the-aas-congruence-criterion", "the-hl-congruence-criterion"],
   encompasses: [
-    { topic: "the-asa-congruence-criterion", weight: 0.3 },
-    { topic: "the-aas-congruence-criterion", weight: 0.3 },
-    { topic: "the-sas-congruence-criterion", weight: 0.3 },
-    { topic: "the-sss-congruence-criterion", weight: 0.3 },
-    { topic: "the-hl-congruence-criterion", weight: 0.3 },
+    { topic: "the-asa-congruence-criterion", weight: 0.2 },
+    { topic: "the-aas-congruence-criterion", weight: 0.2 },
+    { topic: "the-sas-congruence-criterion", weight: 0.2 },
+    { topic: "the-sss-congruence-criterion", weight: 0.2 },
+    { topic: "the-hl-congruence-criterion", weight: 0.2 },
     { topic: "vertical-angles", weight: 0.2 },
   ],
   xp: 15,
@@ -1660,13 +1651,7 @@ export const rigidMotionsAndCongruence: TopicDef = {
     "reflections-in-the-coordinate-plane",
     "dilations-of-geometric-figures",
   ],
-  encompasses: [
-    { topic: "translations-of-geometric-figures", weight: 0.2 },
-    { topic: "rotation-rules-in-the-coordinate-plane", weight: 0.2 },
-    { topic: "reflections-in-the-coordinate-plane", weight: 0.2 },
-    { topic: "two-step-equations", weight: 0.2 },
-    { topic: "dilations-of-geometric-figures", weight: 0.1 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.CO.B.6", "CCSS.HSG.CO.B.7"],
   knowledgePoints: [
@@ -2535,8 +2520,6 @@ export const provingCongruenceStatements: TopicDef = {
   encompasses: [
     { topic: "combining-congruence-criteria-for-triangles", weight: 0.5 },
     { topic: "properties-of-congruence", weight: 0.3 },
-    { topic: "identifying-angle-theorems", weight: 0.2 },
-    { topic: "parallel-lines-and-transversals", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSG.SRT.B.5", "CCSS.HSG.CO.C.10"],

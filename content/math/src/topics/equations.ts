@@ -15,7 +15,7 @@ export const oneStepEquationsAddition: TopicDef = {
   title: t("Solving One-Step Addition and Subtraction Equations", "解一步加减法方程"),
   summary: t("Solve $x + a = b$ by doing the same to both sides.", "通过在两边做相同的运算解 $x + a = b$。"),
   prerequisites: ["evaluating-expressions"],
-  encompasses: [{ topic: "subtracting-integers", weight: 0.5 }],
+  encompasses: [{ topic: "subtracting-integers", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.6.EE.B.7", "CCSS.7.EE.B.4.A"],
   knowledgePoints: [
@@ -313,10 +313,7 @@ export const equationsWithParentheses: TopicDef = {
   title: t("Solving Linear Equations Using the Distributive Property", "用分配律解一次方程"),
   summary: t("Expand parentheses, then solve linear equations.", "先去括号，再解一元一次方程。"),
   prerequisites: ["equations-with-variables-on-both-sides", "simplifying-expressions"],
-  encompasses: [
-    { topic: "equations-with-variables-on-both-sides", weight: 0.8 },
-    { topic: "simplifying-expressions", weight: 0.8 },
-  ],
+  encompasses: [{ topic: "simplifying-expressions", weight: 0.8 }],
   xp: 15,
   standards: ["CCSS.8.EE.C.7.B"],
   knowledgePoints: [

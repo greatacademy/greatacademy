@@ -198,10 +198,7 @@ export const graphingElementaryQuadraticFunctions: TopicDef = {
     "由函数值表画出 $y = ax^{2}$（$a > 0$）的图象，并了解 $a$ 如何改变抛物线的形状。",
   ),
   prerequisites: ["graphs-of-functions"],
-  encompasses: [
-    { topic: "graphs-of-functions", weight: 0.3 },
-    { topic: "evaluating-expressions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-expressions", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSF.IF.C.7.A"],
   knowledgePoints: [
@@ -716,7 +713,6 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
   encompasses: [
     { topic: "the-discriminant-of-a-quadratic-equation", weight: 0.5 },
     { topic: "quadratic-equations-with-one-real-solution", weight: 0.3 },
-    { topic: "roots-of-quadratic-functions", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSA.REI.B.4.B", "CCSS.HSF.IF.C.8.A"],
@@ -830,7 +826,7 @@ export const theAxisOfSymmetryOfAParabola: TopicDef = {
     "从图象或用 $x = -\\frac{b}{2a}$ 求抛物线的对称轴，并用它求对称点。",
   ),
   prerequisites: ["graphs-of-general-quadratic-functions"],
-  encompasses: [{ topic: "graphs-of-general-quadratic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.A", "CCSS.HSF.IF.B.4"],
   knowledgePoints: [
@@ -957,10 +953,7 @@ export const theAverageOfTheRootsFormula: TopicDef = {
     "利用对称轴位于两个零点正中间，求对称轴、顶点或缺少的零点。",
   ),
   prerequisites: ["the-axis-of-symmetry-of-a-parabola", "roots-of-quadratic-functions"],
-  encompasses: [
-    { topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.4 },
-    { topic: "roots-of-quadratic-functions", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.8.A", "CCSS.HSA.APR.B.3"],
   knowledgePoints: [
@@ -1061,10 +1054,7 @@ export const theVertexFormOfAParabola: TopicDef = {
     "从 $y = a(x - h)^{2} + k$ 读出顶点、对称轴和最值，并把它展开成一般式。",
   ),
   prerequisites: ["the-axis-of-symmetry-of-a-parabola", "squaring-binomials"],
-  encompasses: [
-    { topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.3 },
-    { topic: "squaring-binomials", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "squaring-binomials", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.8.A", "CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1176,10 +1166,7 @@ export const writingTheEquationOfAParabolaInVertexForm: TopicDef = {
     "用配方法把 $y = ax^{2} + bx + c$ 化为顶点式，并由顶点和另一点写出抛物线的方程。",
   ),
   prerequisites: ["the-vertex-form-of-a-parabola", "completing-the-square-with-leading-coefficients"],
-  encompasses: [
-    { topic: "completing-the-square-with-leading-coefficients", weight: 0.5 },
-    { topic: "the-vertex-form-of-a-parabola", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "the-vertex-form-of-a-parabola", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.8.A"],
   knowledgePoints: [
@@ -1322,9 +1309,7 @@ export const domainAndRangeOfQuadraticFunctions: TopicDef = {
   prerequisites: ["writing-the-equation-of-a-parabola-in-vertex-form", "range-of-a-function"],
   encompasses: [
     { topic: "range-of-a-function", weight: 0.4 },
-    { topic: "the-vertex-form-of-a-parabola", weight: 0.3 },
     { topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.3 },
-    { topic: "domain-of-a-function", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
@@ -1558,7 +1543,7 @@ export const findingIntersectionsOfLinesAndQuadraticFunctions: TopicDef = {
   prerequisites: ["solving-systems-of-nonlinear-equations", "the-discriminant-of-a-quadratic-function"],
   encompasses: [
     { topic: "solving-systems-of-nonlinear-equations", weight: 0.5 },
-    { topic: "the-discriminant-of-a-quadratic-function", weight: 0.4 },
+    { topic: "the-discriminant-of-a-quadratic-function", weight: 0.3 },
     { topic: "quadratic-equations-with-one-real-solution", weight: 0.2 },
   ],
   xp: 15,
@@ -1713,7 +1698,6 @@ export const modelingDownwardsVerticalMotion: TopicDef = {
   encompasses: [
     { topic: "modeling-with-quadratic-equations", weight: 0.4 },
     { topic: "solving-perfect-square-quadratic-equations", weight: 0.3 },
-    { topic: "graphs-of-general-quadratic-functions", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSA.CED.A.1"],
@@ -1818,7 +1802,6 @@ export const modelingUpwardsVerticalMotion: TopicDef = {
   ),
   prerequisites: ["modeling-downwards-vertical-motion", "the-axis-of-symmetry-of-a-parabola"],
   encompasses: [
-    { topic: "modeling-downwards-vertical-motion", weight: 0.4 },
     { topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.4 },
     { topic: "modeling-with-quadratic-equations", weight: 0.3 },
   ],
@@ -2093,10 +2076,7 @@ export const revenueCostAndProfitFunctions: TopicDef = {
     "用收入函数和成本函数计算利润，并求利润函数 $P(x) = R(x) - C(x)$。",
   ),
   prerequisites: ["arithmetic-of-functions", "modeling-with-linear-functions"],
-  encompasses: [
-    { topic: "arithmetic-of-functions", weight: 0.4 },
-    { topic: "modeling-with-linear-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "arithmetic-of-functions", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.HSF.BF.A.1.B", "CCSS.HSA.CED.A.2"],
   knowledgePoints: [
@@ -2302,7 +2282,6 @@ export const maximizingProfitAndBreakEvenPoints: TopicDef = {
   encompasses: [
     { topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.4 },
     { topic: "roots-of-quadratic-functions", weight: 0.4 },
-    { topic: "revenue-cost-and-profit-functions", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.4", "CCSS.HSA.SSE.B.3"],

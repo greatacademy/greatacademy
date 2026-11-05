@@ -79,7 +79,7 @@ export const approximatingSolutionsToSystemsOfLinearEquations: TopicDef = {
     "当两直线不在网格点处相交时估计线性方程组的解：从图象上读出最近的网格点，在数值表中找出交点位于哪两个 $x$ 值之间，并通过精确求解来验证估计。",
   ),
   prerequisites: ["solving-systems-by-substitution"],
-  encompasses: [{ topic: "systems-of-linear-equations", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.REI.D.11", "CCSS.8.EE.C.8.B"],
   knowledgePoints: [
@@ -222,10 +222,7 @@ export const approximatingSolutionsToSystemsOfNonlinearEquations: TopicDef = {
     "当抛物线与直线不在网格点处相交时估计交点：从图象上读出最接近的整数，在数值表中找出交点位于哪两个 $x$ 值之间，并把范围缩小到十分位。",
   ),
   prerequisites: ["solving-systems-of-nonlinear-equations-using-graphs", "approximating-solutions-to-systems-of-linear-equations"],
-  encompasses: [
-    { topic: "solving-systems-of-nonlinear-equations-using-graphs", weight: 0.4 },
-    { topic: "approximating-solutions-to-systems-of-linear-equations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-systems-of-nonlinear-equations-using-graphs", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.HSA.REI.D.11"],
   knowledgePoints: [

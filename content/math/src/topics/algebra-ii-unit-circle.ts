@@ -548,10 +548,7 @@ export const anglesInTheCoordinatePlane: TopicDef = {
     "把角放在标准位置（从 x 轴正半轴逆时针度量），并判断其终边所在的象限。",
   ),
   prerequisites: ["the-coordinate-plane", "angles-and-angle-measures"],
-  encompasses: [
-    { topic: "the-coordinate-plane", weight: 0.2 },
-    { topic: "angles-and-angle-measures", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [
@@ -726,10 +723,7 @@ export const coterminalAngles: TopicDef = {
     "通过加减整圈 360° 或 2π 求终边相同的角，并判断两个角的终边是否相同。",
   ),
   prerequisites: ["negative-angles-in-the-coordinate-plane", "introduction-to-radians"],
-  encompasses: [
-    { topic: "negative-angles-in-the-coordinate-plane", weight: 0.5 },
-    { topic: "introduction-to-radians", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "negative-angles-in-the-coordinate-plane", weight: 0.3 }],
   xp: 13,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [
@@ -845,7 +839,7 @@ export const calculatingReferenceAngles: TopicDef = {
     "求角度制或弧度制角的参考角，即其终边与 x 轴所成的锐角。",
   ),
   prerequisites: ["coterminal-angles"],
-  encompasses: [{ topic: "coterminal-angles", weight: 0.4 }],
+  encompasses: [],
   xp: 13,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [
@@ -925,11 +919,7 @@ export const propertiesOfTheUnitCircleInTheFirstQuadrant: TopicDef = {
     "认识锐角 θ 的终边与单位圆交于 (cos θ, sin θ)，并由此求坐标与三角比。",
   ),
   prerequisites: ["angles-in-the-coordinate-plane", "special-trigonometric-ratios", "equations-of-circles-centered-at-the-origin"],
-  encompasses: [
-    { topic: "special-trigonometric-ratios", weight: 0.2 },
-    { topic: "equations-of-circles-centered-at-the-origin", weight: 0.2 },
-    { topic: "angles-in-the-coordinate-plane", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "special-trigonometric-ratios", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [
@@ -1038,10 +1028,7 @@ export const extendingTheTrigonometricRatiosUsingTheUnitCircle: TopicDef = {
     "由终边与单位圆的交点定义任意角的 sin θ、cos θ、tan θ，按象限判断它们的符号，并由参考角求值。",
   ),
   prerequisites: ["properties-of-the-unit-circle-in-the-first-quadrant", "calculating-reference-angles"],
-  encompasses: [
-    { topic: "properties-of-the-unit-circle-in-the-first-quadrant", weight: 0.5 },
-    { topic: "calculating-reference-angles", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "properties-of-the-unit-circle-in-the-first-quadrant", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [
@@ -1301,10 +1288,7 @@ export const extendingTheTrigonometricRatiosToLargeAngles: TopicDef = {
     "借助终边相同的角和参考角，求超过一整圈的角（角度制与弧度制）的三角比的符号与值。",
   ),
   prerequisites: ["extending-the-trigonometric-ratios-to-negative-angles"],
-  encompasses: [
-    { topic: "extending-the-trigonometric-ratios-to-negative-angles", weight: 0.5 },
-    { topic: "coterminal-angles", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "coterminal-angles", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.TF.A.2"],
   knowledgePoints: [

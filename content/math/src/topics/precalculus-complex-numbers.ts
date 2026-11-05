@@ -671,7 +671,7 @@ export const geometryInTheComplexPlane: TopicDef = {
     "识别并描述复平面中方程与不等式的几何轨迹，包括圆 |z - z0| = r 和垂直平分线 |z - z1| = |z - z2|。",
   ),
   prerequisites: ["arithmetic-in-the-complex-plane"],
-  encompasses: [{ topic: "arithmetic-in-the-complex-plane", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.5", "CCSS.HSG.GPE.A.1"],
   knowledgePoints: [
@@ -770,7 +770,7 @@ export const theComplexConjugate: TopicDef = {
     "定义复数 z = a + bi 的共轭复数 z̄ = a - bi，在几何上将其解释为关于实轴的对称反射，并运用恒等式 z·z̄ = |z|² = a² + b²。",
   ),
   prerequisites: ["the-complex-plane"],
-  encompasses: [{ topic: "the-complex-plane", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.A.3"],
   knowledgePoints: [
@@ -1187,7 +1187,7 @@ export const extendingPolynomialIdentitiesToTheComplexNumbers: TopicDef = {
     "将平方和公式 a² + b² = (a + bi)(a - bi) 推广到复数域，并在复数范围内彻底因式分解二次多项式。",
   ),
   prerequisites: ["the-complex-conjugate-and-the-roots-of-a-quadratic-equation"],
-  encompasses: [{ topic: "the-complex-conjugate-and-the-roots-of-a-quadratic-equation", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.SSE.A.2", "CCSS.HSN.CN.C.8"],
   knowledgePoints: [
@@ -1382,7 +1382,7 @@ export const productsOfComplexNumbersExpressedInPolarForm: TopicDef = {
     "使用模长相乘、辐角相加的运算法则计算复数三角形式的乘积：z1 z2 = r1 r2 [cos(θ1 + θ2) + i sin(θ1 + θ2)]，并在几何上解释为旋转与伸缩变换。",
   ),
   prerequisites: ["the-polar-form-of-a-complex-number"],
-  encompasses: [{ topic: "the-polar-form-of-a-complex-number", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.5"],
   knowledgePoints: [
@@ -1568,7 +1568,7 @@ export const theCisNotation: TopicDef = {
     "使用紧凑记号 cis(θ) = cos θ + i sin θ 表示复数 r cis(θ)，并高效进行乘法与除法运算。",
   ),
   prerequisites: ["the-polar-form-of-a-complex-number"],
-  encompasses: [{ topic: "the-polar-form-of-a-complex-number", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4", "CCSS.HSN.CN.B.5"],
   knowledgePoints: [

@@ -43,7 +43,7 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
     "利用参考角与象限知识在 [0, 2π) 或 [0°, 360°) 上求解形如 sin(x) = c 的方程。",
   ),
   prerequisites: ["graphing-the-inverse-sine-function"],
-  encompasses: [{ topic: "graphing-the-inverse-sine-function", weight: 0.2 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -1068,7 +1068,7 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
     "通过为正弦/余弦加上 2kπ、为正切/余切加上 kπ（k ∈ ℤ）表示实数范围内的通解。",
   ),
   prerequisites: ["elementary-trigonometric-equations-containing-cosine", "elementary-trigonometric-equations-containing-tangent"],
-  encompasses: [{ topic: "elementary-trigonometric-equations-containing-tangent", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2038,10 +2038,7 @@ export const quadraticTrigonometricEquationsContainingSineOrCosine: TopicDef = {
     "solving-trigonometric-equations-using-the-zero-product-property",
     "simplifying-expressions-using-the-pythagorean-identity",
   ],
-  encompasses: [
-    { topic: "solving-trigonometric-equations-using-the-zero-product-property", weight: 0.5 },
-    { topic: "simplifying-expressions-using-the-pythagorean-identity", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "solving-trigonometric-equations-using-the-zero-product-property", weight: 0.5 }],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -2238,7 +2235,7 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
     "quadratic-trigonometric-equations-containing-sine-or-cosine",
     "simplifying-expressions-using-the-secant-tangent-identity",
   ],
-  encompasses: [{ topic: "quadratic-trigonometric-equations-containing-sine-or-cosine", weight: 0.5 }],
+  encompasses: [{ topic: "quadratic-trigonometric-equations-containing-sine-or-cosine", weight: 0.3 }],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [

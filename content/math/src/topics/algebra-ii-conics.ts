@@ -317,7 +317,7 @@ export const leftAndRightOpeningParabolas: TopicDef = {
     "认识开口向左或向右的抛物线 $(y - k)^{2} = 4p(x - h)$ 与 $x = a(y - k)^{2} + h$，求其上的点，并由图象求方程。",
   ),
   prerequisites: ["upward-and-downward-opening-parabolas"],
-  encompasses: [{ topic: "upward-and-downward-opening-parabolas", weight: 0.4 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.2"],
   knowledgePoints: [
@@ -438,10 +438,7 @@ export const theVertexOfAParabola: TopicDef = {
     "从 $(x - h)^{2} = 4p(y - k)$、$(y - k)^{2} = 4p(x - h)$ 和 $x = a(y - k)^{2} + h$ 读出顶点和对称轴。",
   ),
   prerequisites: ["left-and-right-opening-parabolas"],
-  encompasses: [
-    { topic: "left-and-right-opening-parabolas", weight: 0.3 },
-    { topic: "the-vertex-form-of-a-parabola", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-vertex-form-of-a-parabola", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.2"],
   knowledgePoints: [
@@ -806,10 +803,7 @@ export const calculatingTheFocusOfAParabola: TopicDef = {
     "焦点在对称轴上、距顶点 $p$ 个单位；由圆锥曲线形式、由 $y = a(x - h)^{2} + k$（$p = \\frac{1}{4a}$）以及由一般方程求焦点。",
   ),
   prerequisites: ["the-focus-directrix-property-of-a-parabola", "calculating-the-vertex-of-a-parabola-by-completing-the-square"],
-  encompasses: [
-    { topic: "the-focus-directrix-property-of-a-parabola", weight: 0.4 },
-    { topic: "calculating-the-vertex-of-a-parabola-by-completing-the-square", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "calculating-the-vertex-of-a-parabola-by-completing-the-square", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSG.GPE.A.2"],
   knowledgePoints: [
@@ -917,7 +911,7 @@ export const calculatingTheDirectrixOfAParabola: TopicDef = {
     "准线是在焦点对侧、距顶点 $p$ 个单位的直线；由圆锥曲线形式、顶点式以及由顶点和焦点求准线。",
   ),
   prerequisites: ["calculating-the-focus-of-a-parabola"],
-  encompasses: [{ topic: "calculating-the-focus-of-a-parabola", weight: 0.5 }],
+  encompasses: [{ topic: "calculating-the-focus-of-a-parabola", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.2"],
   knowledgePoints: [
@@ -1035,10 +1029,7 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
     "求开口向左或向右的抛物线与 $x$ 轴、$y$ 轴的交点，以及圆锥曲线形式的抛物线与 $x$ 轴的交点。",
   ),
   prerequisites: ["the-vertex-of-a-parabola", "roots-of-quadratic-functions"],
-  encompasses: [
-    { topic: "roots-of-quadratic-functions", weight: 0.4 },
-    { topic: "the-vertex-of-a-parabola", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "roots-of-quadratic-functions", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -1201,10 +1192,7 @@ export const intersectionsOfParabolasWithLines: TopicDef = {
     "求竖直直线和斜直线与开口向左或向右的抛物线的交点，并用判别式数交点个数。",
   ),
   prerequisites: ["calculating-intercepts-of-parabolas", "finding-intersections-of-lines-and-quadratic-functions"],
-  encompasses: [
-    { topic: "finding-intersections-of-lines-and-quadratic-functions", weight: 0.4 },
-    { topic: "calculating-intercepts-of-parabolas", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "finding-intersections-of-lines-and-quadratic-functions", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSA.REI.C.7"],
   knowledgePoints: [

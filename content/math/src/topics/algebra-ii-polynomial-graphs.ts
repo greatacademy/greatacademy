@@ -292,7 +292,7 @@ export const graphingElementaryCubicFunctions: TopicDef = {
     "画出 $y = x^{3}$ 及其变换 $y = a(x - h)^{3} + k$ 的图象，读出曲线的对称中心和走向。",
   ),
   prerequisites: ["combining-graph-transformations-two-operations"],
-  encompasses: [{ topic: "combining-graph-transformations-two-operations", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.C", "CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -429,11 +429,7 @@ export const graphingCubicCurvesContainingThreeDistinctRealRoots: TopicDef = {
     "由截距和端点行为画出 $y = a(x - p)(x - q)(x - r)$ 的草图，读出它何时为正、何时为负，并由图象求方程。",
   ),
   prerequisites: ["graphing-elementary-cubic-functions", "determining-the-roots-of-polynomials", "end-behavior"],
-  encompasses: [
-    { topic: "determining-the-roots-of-polynomials", weight: 0.4 },
-    { topic: "end-behavior", weight: 0.3 },
-    { topic: "graphing-elementary-cubic-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "determining-the-roots-of-polynomials", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.B.3", "CCSS.HSF.IF.C.7.C"],
   knowledgePoints: [
@@ -720,10 +716,7 @@ export const graphingCubicCurvesContainingOneDistinctRealRoot: TopicDef = {
     "画出 $a(x - p)(x^{2} + bx + c)$（$b^{2} - 4c < 0$）或 $a(x - h)^{3}$ 这类只穿过 $x$ 轴一次的三次曲线。",
   ),
   prerequisites: ["graphing-cubic-curves-containing-three-distinct-real-roots", "the-discriminant-of-a-quadratic-equation"],
-  encompasses: [
-    { topic: "graphing-cubic-curves-containing-three-distinct-real-roots", weight: 0.5 },
-    { topic: "the-discriminant-of-a-quadratic-equation", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-discriminant-of-a-quadratic-equation", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSA.APR.B.3", "CCSS.HSF.IF.C.7.C"],
   knowledgePoints: [
@@ -924,7 +917,6 @@ export const graphingGeneralPolynomials: TopicDef = {
   prerequisites: ["graphing-cubic-curves-containing-a-double-root", "graphing-cubic-curves-containing-one-distinct-real-root"],
   encompasses: [
     { topic: "graphing-cubic-curves-containing-a-double-root", weight: 0.5 },
-    { topic: "graphing-cubic-curves-containing-one-distinct-real-root", weight: 0.3 },
     { topic: "multiplicities-of-the-roots-of-polynomials", weight: 0.3 },
     { topic: "end-behavior", weight: 0.3 },
   ],

@@ -155,10 +155,7 @@ export const writingRadicalsUsingFractionalExponents: TopicDef = {
     "把 $a^{\\frac{1}{n}}$ 理解为 $n$ 次方根，把 $a^{\\frac{m}{n}}$ 理解为方根的乘方，并在根式与分数指数之间互相转换。",
   ),
   prerequisites: ["cube-roots-of-algebraic-perfect-cubes"],
-  encompasses: [
-    { topic: "square-roots-and-cube-roots", weight: 0.4 },
-    { topic: "power-rules", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSN.RN.A.1", "CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -313,7 +310,6 @@ export const productRuleWithAlgebraicExpressions: TopicDef = {
   encompasses: [
     { topic: "product-and-quotient-rules", weight: 0.5 },
     { topic: "zero-and-negative-exponents", weight: 0.3 },
-    { topic: "combining-like-terms", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSN.RN.A.2", "CCSS.8.EE.A.1"],
@@ -1012,7 +1008,6 @@ export const combiningRulesOfExponentsWithAlgebraicExpressions: TopicDef = {
   ),
   prerequisites: ["power-of-quotient-rule-with-algebraic-expressions"],
   encompasses: [
-    { topic: "power-of-quotient-rule-with-algebraic-expressions", weight: 0.4 },
     { topic: "power-of-product-rule-with-algebraic-expressions", weight: 0.5 },
     { topic: "quotient-rule-with-algebraic-expressions", weight: 0.5 },
     { topic: "product-rule-with-algebraic-expressions", weight: 0.5 },
@@ -1241,8 +1236,6 @@ export const solvingExponentialEquations: TopicDef = {
   encompasses: [
     { topic: "equations-with-variables-on-both-sides", weight: 0.4 },
     { topic: "power-rule-with-algebraic-expressions", weight: 0.3 },
-    { topic: "equations-with-parentheses", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.REI.B.3"],
@@ -2133,7 +2126,6 @@ export const exponentialFunctions: TopicDef = {
   prerequisites: ["representations-of-functions", "zero-and-negative-exponents"],
   encompasses: [
     { topic: "powers-of-rational-numbers", weight: 0.3 },
-    { topic: "zero-and-negative-exponents", weight: 0.2 },
     { topic: "introduction-to-functions", weight: 0.2 },
   ],
   xp: 12,
@@ -2331,10 +2323,7 @@ export const interpretingExponentialGrowth: TopicDef = {
     "从增长模型中读出起始值、增长因子和增长率，并求若干期内的总增长率。",
   ),
   prerequisites: ["modeling-exponential-growth-with-functions"],
-  encompasses: [
-    { topic: "creating-exponential-growth-expressions", weight: 0.4 },
-    { topic: "percent-change", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "percent-change", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.B.5", "CCSS.HSF.IF.C.8.B"],
   knowledgePoints: [
@@ -2416,7 +2405,6 @@ export const solvingExponentialGrowthProblems: TopicDef = {
   encompasses: [
     { topic: "modeling-exponential-growth-with-functions", weight: 0.4 },
     { topic: "solving-exponential-equations", weight: 0.3 },
-    { topic: "interpreting-exponential-growth", weight: 0.2 },
     { topic: "square-roots-and-cube-roots", weight: 0.2 },
   ],
   xp: 15,
@@ -2521,7 +2509,7 @@ export const interpretingExponentialDecay: TopicDef = {
     "读出衰减模型的衰减率，区分增长与衰减，并求若干期内的总减少率。",
   ),
   prerequisites: ["modeling-exponential-decay-with-functions", "interpreting-exponential-growth"],
-  encompasses: [{ topic: "creating-exponential-decay-expressions", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.LE.B.5", "CCSS.HSF.IF.C.8.B"],
   knowledgePoints: [
@@ -2614,7 +2602,6 @@ export const solvingExponentialDecayProblems: TopicDef = {
   encompasses: [
     { topic: "modeling-exponential-decay-with-functions", weight: 0.4 },
     { topic: "solving-exponential-equations", weight: 0.3 },
-    { topic: "interpreting-exponential-decay", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSF.LE.A.2"],
@@ -2717,11 +2704,7 @@ export const linearVsExponentialGrowthAndDecay: TopicDef = {
     "从数值表和文字描述中区分线性变化与指数变化，并认识到指数增长终将超过线性增长。",
   ),
   prerequisites: ["modeling-exponential-decay-with-functions", "modeling-with-linear-functions"],
-  encompasses: [
-    { topic: "exponential-functions", weight: 0.3 },
-    { topic: "modeling-exponential-growth-with-functions", weight: 0.2 },
-    { topic: "modeling-with-linear-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "exponential-functions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.1", "CCSS.HSF.LE.A.3"],
   knowledgePoints: [
@@ -2887,9 +2870,8 @@ export const linearVsExponentialModels: TopicDef = {
   ),
   prerequisites: ["linear-vs-exponential-growth-and-decay"],
   encompasses: [
-    { topic: "linear-vs-exponential-growth-and-decay", weight: 0.5 },
+    { topic: "linear-vs-exponential-growth-and-decay", weight: 0.3 },
     { topic: "modeling-exponential-growth-with-functions", weight: 0.3 },
-    { topic: "modeling-exponential-decay-with-functions", weight: 0.2 },
     { topic: "modeling-with-linear-functions", weight: 0.3 },
   ],
   xp: 15,
@@ -3210,7 +3192,7 @@ export const graphingExponentialGrowthFunctions: TopicDef = {
   prerequisites: ["exponential-functions", "range-of-a-function"],
   encompasses: [
     { topic: "exponential-functions", weight: 0.3 },
-    { topic: "range-of-a-function", weight: 0.3 },
+    { topic: "range-of-a-function", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.LE.A.2"],

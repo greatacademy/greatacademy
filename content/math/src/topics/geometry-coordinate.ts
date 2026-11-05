@@ -234,8 +234,6 @@ export const findingEquationsOfParallelLines: TopicDef = {
   encompasses: [
     { topic: "parallel-lines-in-the-coordinate-plane", weight: 0.5 },
     { topic: "point-slope-form", weight: 0.3 },
-    { topic: "standard-form", weight: 0.3 },
-    { topic: "slope-of-a-line", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GPE.B.5"],
@@ -411,9 +409,7 @@ export const findingEquationsOfPerpendicularLines: TopicDef = {
   prerequisites: ["perpendicular-lines-in-the-coordinate-plane", "finding-equations-of-parallel-lines"],
   encompasses: [
     { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.5 },
-    { topic: "finding-equations-of-parallel-lines", weight: 0.4 },
     { topic: "point-slope-form", weight: 0.3 },
-    { topic: "standard-form", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GPE.B.5"],
@@ -605,10 +601,7 @@ export const midpointsInTheCoordinatePlane: TopicDef = {
     "由端点坐标或图像求线段的中点，并由中点求未知端点。",
   ),
   prerequisites: ["the-coordinate-plane", "operations-with-rational-numbers"],
-  encompasses: [
-    { topic: "the-coordinate-plane", weight: 0.3 },
-    { topic: "operations-with-rational-numbers", weight: 0.1 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSG.GPE.B.6"],
   knowledgePoints: [
@@ -742,10 +735,7 @@ export const partitioningLineSegments: TopicDef = {
     "求线段上从一端起若干分之几处的点、按给定比分割线段的点，并由分点求端点。",
   ),
   prerequisites: ["midpoints-in-the-coordinate-plane", "ratios"],
-  encompasses: [
-    { topic: "midpoints-in-the-coordinate-plane", weight: 0.4 },
-    { topic: "ratios", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "ratios", weight: 0.2 }],
   xp: 14,
   standards: ["CCSS.HSG.GPE.B.6"],
   knowledgePoints: [
@@ -872,9 +862,7 @@ export const theDistanceFormula: TopicDef = {
   prerequisites: ["the-pythagorean-theorem", "the-coordinate-plane"],
   encompasses: [
     { topic: "the-pythagorean-theorem", weight: 0.5 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
     { topic: "solving-equations-with-square-roots", weight: 0.2 },
-    { topic: "the-coordinate-plane", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.8.G.B.8", "CCSS.HSG.GPE.B.7"],
@@ -1228,8 +1216,6 @@ export const calculatingPerimetersInThePlane: TopicDef = {
   encompasses: [
     { topic: "the-distance-formula", weight: 0.6 },
     { topic: "perimeter", weight: 0.3 },
-    { topic: "simplifying-square-roots", weight: 0.3 },
-    { topic: "adding-and-subtracting-radicals", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GPE.B.7"],
@@ -1340,7 +1326,6 @@ export const calculatingAreasOfRectanglesInThePlane: TopicDef = {
   encompasses: [
     { topic: "the-distance-formula", weight: 0.4 },
     { topic: "area-of-rectangles-and-squares", weight: 0.5 },
-    { topic: "simplifying-square-roots", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSG.GPE.B.7"],
@@ -1513,11 +1498,7 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
     "由顶点坐标求三角形或四边形的面积：利用水平或竖直的底，或从外接矩形中减去多余部分。",
   ),
   prerequisites: ["calculating-areas-of-rectangles-in-the-plane", "area-of-triangles"],
-  encompasses: [
-    { topic: "area-of-triangles", weight: 0.6 },
-    { topic: "calculating-areas-of-rectangles-in-the-plane", weight: 0.3 },
-    { topic: "area-of-rectangles-and-squares", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "area-of-triangles", weight: 0.6 }],
   xp: 16,
   standards: ["CCSS.HSG.GPE.B.7"],
   knowledgePoints: [

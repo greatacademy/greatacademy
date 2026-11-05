@@ -264,10 +264,7 @@ export const recursiveSequences: TopicDef = {
   title: t("Recursive Sequences", "递推数列"),
   summary: t("Compute terms of a sequence defined by a recursive formula, forward and backward.", "由递推公式向前、向后计算数列的项。"),
   prerequisites: ["introduction-to-sequences", "one-step-equations-multiplication"],
-  encompasses: [
-    { topic: "introduction-to-sequences", weight: 0.3 },
-    { topic: "one-step-equations-multiplication", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3"],
   knowledgePoints: [
@@ -528,10 +525,7 @@ export const arithmeticSequences: TopicDef = {
     "识别等差数列，求公差并补全缺失的项。",
   ),
   prerequisites: ["introduction-to-sequences"],
-  encompasses: [
-    { topic: "introduction-to-sequences", weight: 0.3 },
-    { topic: "subtracting-integers", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "subtracting-integers", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [
@@ -638,10 +632,7 @@ export const recursiveFormulasForArithmeticSequences: TopicDef = {
     "为等差数列写出 $a_1 = \\ldots$，$a_n = a_{n-1} + d$，并加以运用。",
   ),
   prerequisites: ["arithmetic-sequences", "recursive-sequences"],
-  encompasses: [
-    { topic: "arithmetic-sequences", weight: 0.4 },
-    { topic: "recursive-sequences", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "arithmetic-sequences", weight: 0.4 }],
   xp: 10,
   standards: ["CCSS.HSF.BF.A.2"],
   knowledgePoints: [
@@ -726,10 +717,7 @@ export const nthTermOfAnArithmeticSequence: TopicDef = {
   title: t("The Nth Term of an Arithmetic Sequence", "等差数列的通项"),
   summary: t("Use and write the explicit formula $a_n = a_1 + (n - 1)d$.", "使用并写出通项公式 $a_n = a_1 + (n - 1)d$。"),
   prerequisites: ["arithmetic-sequences", "simplifying-expressions"],
-  encompasses: [
-    { topic: "arithmetic-sequences", weight: 0.5 },
-    { topic: "simplifying-expressions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "arithmetic-sequences", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSF.BF.A.2", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [
@@ -839,10 +827,7 @@ export const explicitAndRecursiveArithmeticFormulas: TopicDef = {
     "在等差数列的通项公式与递推公式之间互相转换。",
   ),
   prerequisites: ["recursive-formulas-for-arithmetic-sequences", "nth-term-of-an-arithmetic-sequence"],
-  encompasses: [
-    { topic: "recursive-formulas-for-arithmetic-sequences", weight: 0.5 },
-    { topic: "nth-term-of-an-arithmetic-sequence", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "nth-term-of-an-arithmetic-sequence", weight: 0.5 }],
   xp: 12,
   standards: ["CCSS.HSF.BF.A.2"],
   knowledgePoints: [
@@ -1302,10 +1287,7 @@ export const modelingWithArithmeticSequences: TopicDef = {
   title: t("Modeling with Arithmetic Sequences", "用等差数列建模"),
   summary: t("Solve problems about quantities that change by the same amount at each step.", "解决每一步都变化相同数量的实际问题。"),
   prerequisites: ["index-of-a-term-in-an-arithmetic-sequence", "arithmetic-sequences-from-two-terms"],
-  encompasses: [
-    { topic: "index-of-a-term-in-an-arithmetic-sequence", weight: 0.4 },
-    { topic: "arithmetic-sequences-from-two-terms", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "arithmetic-sequences-from-two-terms", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.BF.A.2", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [
@@ -1405,7 +1387,7 @@ export const geometricSequences: TopicDef = {
   title: t("Introduction to Geometric Sequences", "等比数列简介"),
   summary: t("Recognize geometric sequences, find the common ratio and continue the sequence.", "识别等比数列，求公比并写出后续的项。"),
   prerequisites: ["arithmetic-sequences", "operations-with-rational-numbers"],
-  encompasses: [{ topic: "operations-with-rational-numbers", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [
@@ -1531,7 +1513,7 @@ export const nthTermOfAGeometricSequence: TopicDef = {
   prerequisites: ["geometric-sequences", "powers-of-rational-numbers"],
   encompasses: [
     { topic: "geometric-sequences", weight: 0.5 },
-    { topic: "powers-of-rational-numbers", weight: 0.4 },
+    { topic: "powers-of-rational-numbers", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.BF.A.2", "CCSS.HSF.LE.A.2"],
@@ -1627,10 +1609,7 @@ export const recursiveFormulasForGeometricSequences: TopicDef = {
     "写出并运用 $a_1 = \\ldots$，$a_n = r a_{n-1}$，并在通项公式与递推公式之间转换。",
   ),
   prerequisites: ["nth-term-of-a-geometric-sequence", "recursive-formulas-for-arithmetic-sequences"],
-  encompasses: [
-    { topic: "nth-term-of-a-geometric-sequence", weight: 0.4 },
-    { topic: "recursive-sequences", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.A.2"],
   knowledgePoints: [

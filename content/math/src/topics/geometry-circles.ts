@@ -298,7 +298,7 @@ export const arcsSegmentsAndSectorsOfCircles: TopicDef = {
     "区分劣弧、优弧与半圆，理解它们度数之间的关系，并认识扇形与弓形。",
   ),
   prerequisites: ["circles", "angles-and-angle-measures"],
-  encompasses: [{ topic: "circles", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSG.CO.A.1"],
   knowledgePoints: [
@@ -462,7 +462,7 @@ export const theCircumferenceOfACircle: TopicDef = {
   ),
   prerequisites: ["circles", "decimal-arithmetic"],
   encompasses: [
-    { topic: "circles", weight: 0.3 },
+    { topic: "circles", weight: 0.2 },
     { topic: "decimal-arithmetic", weight: 0.2 },
   ],
   xp: 12,
@@ -771,7 +771,6 @@ export const centralAnglesAndArcs: TopicDef = {
   ),
   prerequisites: ["arcs-segments-and-sectors-of-circles", "two-step-equations", "combining-like-terms"],
   encompasses: [
-    { topic: "arcs-segments-and-sectors-of-circles", weight: 0.5 },
     { topic: "two-step-equations", weight: 0.2 },
     { topic: "combining-like-terms", weight: 0.2 },
   ],
@@ -978,7 +977,6 @@ export const calculatingArcLengthsOfCircularSectors: TopicDef = {
   prerequisites: ["central-angles-and-arcs", "the-circumference-of-a-circle", "multiplying-fractions"],
   encompasses: [
     { topic: "the-circumference-of-a-circle", weight: 0.5 },
-    { topic: "central-angles-and-arcs", weight: 0.3 },
     { topic: "multiplying-fractions", weight: 0.2 },
   ],
   xp: 14,
@@ -1117,7 +1115,6 @@ export const calculatingAreasOfCircularSectors: TopicDef = {
   prerequisites: ["central-angles-and-arcs", "areas-of-circles"],
   encompasses: [
     { topic: "areas-of-circles", weight: 0.5 },
-    { topic: "central-angles-and-arcs", weight: 0.3 },
     { topic: "multiplying-fractions", weight: 0.2 },
   ],
   xp: 14,
@@ -1375,7 +1372,6 @@ export const problemSolvingWithCircles: TopicDef = {
   prerequisites: ["areas-of-circles", "composite-shapes"],
   encompasses: [
     { topic: "areas-of-circles", weight: 0.5 },
-    { topic: "the-circumference-of-a-circle", weight: 0.3 },
     { topic: "composite-shapes", weight: 0.4 },
   ],
   xp: 16,
@@ -1596,10 +1592,7 @@ export const circlesInscribedInSquares: TopicDef = {
     "理解正方形与它的内切圆的关系：圆的直径等于正方形的边长。",
   ),
   prerequisites: ["areas-of-circles"],
-  encompasses: [
-    { topic: "areas-of-circles", weight: 0.5 },
-    { topic: "area-of-rectangles-and-squares", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "area-of-rectangles-and-squares", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.7.G.B.4"],
   knowledgePoints: [
@@ -1789,11 +1782,7 @@ export const squaresInscribedInCircles: TopicDef = {
     "理解圆与它的内接正方形的关系：正方形的对角线是圆的直径。",
   ),
   prerequisites: ["circles-inscribed-in-squares", "simplifying-square-roots", "area-of-triangles"],
-  encompasses: [
-    { topic: "simplifying-square-roots", weight: 0.3 },
-    { topic: "areas-of-circles", weight: 0.3 },
-    { topic: "area-of-triangles", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "areas-of-circles", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSG.C.A.3"],
   knowledgePoints: [

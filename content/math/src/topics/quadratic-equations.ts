@@ -119,10 +119,7 @@ export const introductionToQuadraticEquations: TopicDef = {
     "识别一元二次方程，把它写成一般形式，并检验解。",
   ),
   prerequisites: ["distributive-law-for-polynomials", "equations-with-variables-on-both-sides"],
-  encompasses: [
-    { topic: "simplifying-polynomials", weight: 0.3 },
-    { topic: "evaluating-expressions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "evaluating-expressions", weight: 0.2 }],
   xp: 10,
   standards: ["CCSS.HSA.REI.B.4"],
   knowledgePoints: [
@@ -456,7 +453,7 @@ export const zeroProductRule: TopicDef = {
     "解形如 $(x - r)(x - s) = 0$ 的方程：乘积为零当且仅当某个因式为零。",
   ),
   prerequisites: ["introduction-to-quadratic-equations"],
-  encompasses: [{ topic: "two-step-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -819,7 +816,6 @@ export const solvingQuadraticEquationsByFactoring: TopicDef = {
     { topic: "zero-product-rule", weight: 0.6 },
     { topic: "factoring-trinomials", weight: 0.6 },
     { topic: "factoring-trinomials-using-common-factors", weight: 0.3 },
-    { topic: "introduction-to-quadratic-equations", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.4.B", "CCSS.HSA.SSE.B.3.A"],
@@ -925,7 +921,7 @@ export const solvingQuadraticEquationsWithLeadingCoefficientsByFactoring: TopicD
   summary: t("Solve $ax^{2} + bx + c = 0$ by factoring into $(px + q)(rx + s)$.", "分解为 $(px + q)(rx + s)$，解 $ax^{2} + bx + c = 0$。"),
   prerequisites: ["solving-quadratic-equations-by-factoring", "further-factoring-trinomials-with-leading-coefficients"],
   encompasses: [
-    { topic: "solving-quadratic-equations-by-factoring", weight: 0.5 },
+    { topic: "solving-quadratic-equations-by-factoring", weight: 0.3 },
     { topic: "factoring-trinomials-with-leading-coefficients", weight: 0.6 },
     { topic: "further-factoring-trinomials-with-leading-coefficients", weight: 0.3 },
   ],
@@ -1499,7 +1495,6 @@ export const theQuadraticFormula: TopicDef = {
   encompasses: [
     { topic: "simplifying-square-roots", weight: 0.3 },
     { topic: "order-of-operations-with-integers", weight: 0.3 },
-    { topic: "introduction-to-quadratic-equations", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.4.A", "CCSS.HSA.REI.B.4.B"],

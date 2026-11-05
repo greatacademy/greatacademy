@@ -557,11 +557,7 @@ export const furtherProvingPerpendicularLineTheorems: TopicDef = {
     "证明垂直的直线形成四个直角，以及外侧两边互相垂直的相邻角互余，并用这些定理求未知角。",
   ),
   prerequisites: ["proving-perpendicular-line-theorems"],
-  encompasses: [
-    { topic: "proving-perpendicular-line-theorems", weight: 0.3 },
-    { topic: "identifying-angle-postulates", weight: 0.2 },
-    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "complementary-and-supplementary-angles", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -696,7 +692,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
   ),
   prerequisites: ["dilations-of-geometric-figures", "translations-of-geometric-figures"],
   encompasses: [
-    { topic: "dilations-of-geometric-figures", weight: 0.4 },
+    { topic: "dilations-of-geometric-figures", weight: 0.3 },
     { topic: "translations-of-geometric-figures", weight: 0.2 },
   ],
   xp: 14,
@@ -859,7 +855,7 @@ export const stretchesOfGeometricFigures: TopicDef = {
     "把点和图形沿水平或竖直方向伸缩，求伸缩后图形的面积，并由一个点和它的像判断伸缩。",
   ),
   prerequisites: ["dilations-of-figures-in-the-coordinate-plane"],
-  encompasses: [{ topic: "dilations-of-figures-in-the-coordinate-plane", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.CO.A.2"],
   knowledgePoints: [
@@ -1302,7 +1298,6 @@ export const combiningGeometricTransformations: TopicDef = {
     { topic: "rotation-rules-in-the-coordinate-plane", weight: 0.3 },
     { topic: "reflections-in-the-coordinate-plane", weight: 0.3 },
     { topic: "translations-of-geometric-figures", weight: 0.3 },
-    { topic: "dilations-of-figures-in-the-coordinate-plane", weight: 0.2 },
   ],
   xp: 16,
   standards: ["CCSS.HSG.CO.A.2", "CCSS.HSG.CO.A.5"],
@@ -1680,7 +1675,7 @@ export const reflectiveSymmetry: TopicDef = {
     "数出多边形的对称轴条数，求一条对称轴配对的点，并求坐标平面中图形的对称轴。",
   ),
   prerequisites: ["reflections-in-the-coordinate-plane", "angles-of-polygons"],
-  encompasses: [{ topic: "reflections-in-the-coordinate-plane", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSG.CO.A.3"],
   knowledgePoints: [
@@ -1856,10 +1851,7 @@ export const rotationalSymmetry: TopicDef = {
     "求多边形旋转对称的阶数和把它映到自身的旋转角，并求坐标平面中旋转对称配对的点。",
   ),
   prerequisites: ["reflective-symmetry", "rotations-of-geometric-figures"],
-  encompasses: [
-    { topic: "rotations-of-geometric-figures", weight: 0.3 },
-    { topic: "reflective-symmetry", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "rotations-of-geometric-figures", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSG.CO.A.3"],
   knowledgePoints: [

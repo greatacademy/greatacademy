@@ -327,7 +327,7 @@ export const cartesianEquationsOfParametricCurves: TopicDef = {
     "通过代数消元法或三角恒等式消除参数 t，求解曲线的直角坐标方程（普通方程），并注意自变量的取值范围限制。",
   ),
   prerequisites: ["graphing-curves-defined-parametrically"],
-  encompasses: [{ topic: "graphing-curves-defined-parametrically", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.IF.C.7", "CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -414,7 +414,7 @@ export const findingInterceptsOfCurvesDefinedParametrically: TopicDef = {
     "通过分别令 x(t) = 0 与 y(t) = 0 求解参数 t，进而确定参数曲线与坐标轴的截距及交点坐标。",
   ),
   prerequisites: ["cartesian-equations-of-parametric-curves"],
-  encompasses: [{ topic: "cartesian-equations-of-parametric-curves", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.IF.C.7"],
   knowledgePoints: [
@@ -610,10 +610,7 @@ export const parametricEquationsOfCircles: TopicDef = {
     "使用参数方程 x = h + r cos θ, y = k + r sin θ 表示圆心为 (h, k)、半径为 r 的圆，并在参数方程与标准直角坐标方程之间互相转换。",
   ),
   prerequisites: ["cartesian-equations-of-parametric-curves"],
-  encompasses: [
-    { topic: "equations-of-circles", weight: 0.4 },
-    { topic: "cartesian-equations-of-parametric-curves", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "equations-of-circles", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.1"],
   knowledgePoints: [
@@ -704,7 +701,7 @@ export const parametricEquationsOfEllipses: TopicDef = {
     "将中心在 (h, k) 的椭圆表示为参数方程 x = h + a cos θ, y = k + b sin θ，理解半长轴、半短轴与参数的关系，并区分参数 θ 与几何角。",
   ),
   prerequisites: ["parametric-equations-of-circles"],
-  encompasses: [{ topic: "parametric-equations-of-circles", weight: 0.5 }],
+  encompasses: [{ topic: "parametric-equations-of-circles", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -958,7 +955,7 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
     "写出顶点为 (h, k) 的平移抛物线的参数方程（如 x = h + 2pt, y = k + pt² 或 x = h + pt², y = k + 2pt），并识别其顶点坐标与直角坐标方程。",
   ),
   prerequisites: ["parametric-equations-of-parabolas"],
-  encompasses: [{ topic: "parametric-equations-of-parabolas", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.2"],
   knowledgePoints: [
@@ -1042,7 +1039,7 @@ export const parametricEquationsOfHorizontalHyperbolas: TopicDef = {
     "使用正割与正切函数将水平双曲线参数化为 x = h + a sec θ, y = k + b tan θ，并利用 sec² θ - tan² θ = 1 转化为标准直角坐标方程。",
   ),
   prerequisites: ["cartesian-equations-of-parametric-curves"],
-  encompasses: [{ topic: "cartesian-equations-of-parametric-curves", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1351,7 +1348,7 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
     "利用 x = r cos θ, y = r sin θ 以及 r = √(x² + y²), tan θ = y/x（结合象限判断）实现极坐标 (r, θ) 与直角坐标 (x, y) 之间的互相转换。",
   ),
   prerequisites: ["introduction-to-polar-coordinates"],
-  encompasses: [{ topic: "introduction-to-polar-coordinates", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
   knowledgePoints: [
@@ -1450,7 +1447,7 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
     "掌握以极点为圆心的圆的极坐标方程 $r = a$，理解同心圆族，并实现与直角坐标方程 $x^2 + y^2 = a^2$ 的互化。",
   ),
   prerequisites: ["introduction-to-polar-coordinates"],
-  encompasses: [{ topic: "introduction-to-polar-coordinates", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.1", "CCSS.HSN.CN.B.4"],
   knowledgePoints: [
@@ -1524,7 +1521,7 @@ export const polarEquationsOfRadialLines: TopicDef = {
     "建立并理解过极点的直线与射线的极坐标方程 θ = α，掌握斜率 m = tan α，并将其转换为直角坐标方程 y = (tan α) x。",
   ),
   prerequisites: ["introduction-to-polar-coordinates"],
-  encompasses: [{ topic: "introduction-to-polar-coordinates", weight: 0.4 }],
+  encompasses: [{ topic: "introduction-to-polar-coordinates", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
   knowledgePoints: [
@@ -1845,7 +1842,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
     "掌握在极点处与坐标轴相切的圆的极坐标方程：r = 2a cos θ（圆心为 (a, 0)，半径为 |a|）与 r = 2b sin θ（圆心为 (0, b)，半径为 |b|），并将其转化为直角坐标方程。",
   ),
   prerequisites: ["polar-equations-of-circles-centered-at-the-origin", "converting-from-polar-coordinates-to-cartesian-coordinates"],
-  encompasses: [{ topic: "polar-equations-of-circles-centered-at-the-origin", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.1", "CCSS.HSN.CN.B.4"],
   knowledgePoints: [
@@ -1961,7 +1958,7 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
     "通过联立求解 r₁(θ) = r₂(θ) 寻找极坐标曲线的交点，注意多重极坐标表示，并特别检验极点（r = 0）是否为两曲线的公共交点。",
   ),
   prerequisites: ["polar-equations-of-circles-centered-on-the-coordinate-axes"],
-  encompasses: [{ topic: "polar-equations-of-circles-centered-on-the-coordinate-axes", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
   knowledgePoints: [

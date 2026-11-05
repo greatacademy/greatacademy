@@ -14,7 +14,7 @@ export const inequalitiesAndSolutions: TopicDef = {
   title: t("Inequalities", "不等式"),
   summary: t("Read and write inequalities, and check whether a number is a solution.", "读写不等式，判断一个数是否是不等式的解。"),
   prerequisites: ["evaluating-expressions"],
-  encompasses: [{ topic: "integers-and-opposites", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.6.EE.B.5", "CCSS.6.EE.B.8"],
   knowledgePoints: [
@@ -198,10 +198,7 @@ export const solvingMultiStepInequalities: TopicDef = {
   title: t("Solving Two-Step Inequalities", "解两步不等式"),
   summary: t("Solve linear inequalities with several steps and variables on both sides.", "解需要多步、两边都有变量的一元一次不等式。"),
   prerequisites: ["solving-one-step-inequalities", "equations-with-variables-on-both-sides"],
-  encompasses: [
-    { topic: "solving-one-step-inequalities", weight: 1 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.7 },
-  ],
+  encompasses: [{ topic: "solving-one-step-inequalities", weight: 1 }],
   xp: 15,
   standards: ["CCSS.7.EE.B.4.B"],
   knowledgePoints: [
