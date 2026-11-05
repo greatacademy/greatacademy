@@ -204,7 +204,7 @@ The meaning of multiplication and division, the facts up to 10 times 10, and the
 13.1.2. Area of L Shapes  
 13.1.3. Perimeter of Rectangles and Word Problems
 
-### 14. Thinking About Quadrilaterals (1 topics)
+### 14. Thinking About Quadrilaterals (1 topic)
 
 #### 14.1. Categories of Shapes
 

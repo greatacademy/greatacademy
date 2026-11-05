@@ -10,7 +10,7 @@
 
 ## 要点速览
 
-- **37 门课程，分 8 组：**
+- **37 门课程，分 7 组：**
   - 小学 2 门、初中 4 门；
   - 高中 3 条序列共 10 门；
   - 备考 4 门、AP 2 门；
@@ -21,22 +21,22 @@
 - **全部课程合计 9,270 个知识点位置，但不同的知识点名称只有 3,535 个。** 课程是**同一张知识图谱上的不同视图**，不是彼此独立的内容。例如 "The Law of Total Probability" 出现在 9 门课里。
 - **内容层级统一：** 课程 → 单元（如 "2. Matrices"，标注知识点数）→ 模块（如 "2.4. Gaussian Elimination"）→ 知识点（topic，如 "2.4.3. …"）。
 - **课程规模：**
-  - 一般课程 130–360 个知识点。
-  - 一学年或一学期的标准课约 130–230 个；honors 或压缩型课程约 280–360 个。
+  - 一般课程 129–360 个知识点。
+  - 一学年或一学期的标准课通常约 130–230 个；honors 或压缩型课程通常约 280–360 个。两边都有例外：Precalculus 有 296 个，Integrated Math I (Honors) 有 226 个。
   - 备考 Fundamentals 课程大得多（SAT 651、ACT 905），因为它汇集了考试可能涉及的全部内容。
 - **各序列的内容几乎完全一致：**
   - 传统序列（Algebra I + Geometry + Algebra II）有 582 个不同知识点，整合序列（Integrated Math I–III）有 588 个，只差 6 个仅出现在整合序列中的统计知识点。
   - Honors 整合序列（I–III Honors）的 838 个知识点与 Algebra I + Geometry + Algebra II + Precalculus **完全相同**。
   - AP Calculus AB 是 AP Calculus BC 的严格子集。BC 约等于 Calculus I + II 去掉双曲函数等少数进阶内容，再加上图形计算器知识点。
   - Mathematical Foundations I–III 的 1,038 个知识点**没有一个是独有的**，全部来自 K-12 课程或大学微积分课程。
-- **独有内容只集中在少数课程：** 四年级、离散数学、证明方法、抽象代数、概率统计，以及备考 Prep 课程（SAT/ACT Math Prep 用的是自己的仿真题型知识点）。其余课程都在复用共享知识点。
+- **独有内容集中在少数课程。** 不出现在其他任何课程中的知识点：ACT Math Prep 327 个，SAT Math Prep 243 个，Abstract Algebra 118 个，四年级 116 个，Methods of Proof 99 个，Discrete Mathematics 94 个，ACT Math Fundamentals 88 个，Probability & Statistics 59 个，五年级 54 个。其余课程都不超过 45 个，其中 16 门一个也没有。
 
 ## 1. 目录页信息（/courses）
 
 - 原文称所有课程都 "comprehensive and standards-based"，通常涵盖数百个知识点。
 - 每门课都以自适应诊断开始，找出学生缺失的先修知识和已经掌握的内容。
 - **认证：** 课程获 ACS WASC（美国西部院校协会学校认证委员会）完全认证。
-- **UC a-g：** Math Academy, LLC 已列入加州大学的 Directory of Online Publishers。在家上学的学校可以通过 UC 课程管理门户添加这些课程，之后 Math Academy 即可出具成绩单，用于 UC a-g 学分。
+- **UC a-g：** Math Academy, LLC 已列入加州大学的 Directory of Online Publishers。学生就读的学校（home school）可以通过 UC 课程管理门户添加这些课程，之后 Math Academy 即可出具成绩单，用于 UC a-g 学分。
 - **起点：** 最低一门是 4th Grade Math，要求会 12 以内的乘法表，并能独立阅读。
 - **Prealgebra 与 6–8 年级：** Prealgebra 以精简形式覆盖 6–8 年级课程的相同内容，适合学得快的学生。
 - **高中序列：**
@@ -67,7 +67,8 @@ flowchart LR
   LA --> MVC[Multivariable Calculus] --> DE[Differential Equations] & PS[Probability & Statistics]
   MOP --> DM[Discrete Math]
   MOP & LA --> AA[Abstract Algebra]
-  C2 & BC & MF3 --> MML[Math for ML] & MP1[Math Methods Phys Sci I] --> MP2[Math Methods Phys Sci II]
+  C2 & BC & MF3 --> MML[Math for ML] & MP1[Math Methods Phys Sci I]
+  MP1 --> MP2[Math Methods Phys Sci II]
 ```
 
 说明：
@@ -118,6 +119,8 @@ flowchart LR
 
 合计：37 门课程 · 351 个单元 · 1,334 个模块 · 9,270 个知识点位置 · 3,535 个不同知识点名称。
 
+本文所有数字都来自 2026-10-30 的抓取。2026-11-05 又把 37 个线上课程页的知识点列表与之比对：除 ACT Math Fundamentals 外全部一致。该课程现有 906 个知识点，新增了 "Classifying Quadrilaterals"（4.65.1），同模块的其他知识点依次后移一位。
+
 ## 4. 结构与复用分析
 
 以下数据来自对 37 个课程页知识点名称的比对。
@@ -142,7 +145,7 @@ flowchart LR
 | Calculus II | AP Calculus BC 88% |
 | Linear Algebra | Math Methods Phys Sci I 65%、Math for ML 64% |
 | Multivariable Calculus | Math Methods Phys Sci I 48%、Math Methods Phys Sci II 48% |
-| Differential Equations | Math Methods Phys Sci I 48%、Math Methods Phys Sci II 36% |
+| Differential Equations | Math Methods Phys Sci II 48%、Math Methods Phys Sci I 36% |
 | Probability & Statistics | Math for ML 52% |
 | Math Foundations III | Precalculus 51%、Integrated III (H) 47%、AP Calculus BC 44% |
 
@@ -156,7 +159,7 @@ flowchart LR
   - 对数求导法；
   - 牛顿法；
   - 旋转曲面面积；
-  - 绕 x 轴的柱壳法；
+  - 柱壳法；
   - 根值判别法；
   - 牛顿第二定律。
 - Mathematical Foundations I ∪ II ∪ III（1,038 个）全部取自 K-12 课程和微积分课程，独有知识点为 0。
@@ -164,11 +167,11 @@ flowchart LR
 - Prealgebra 只有 8 个知识点不在 5–8 年级课程中。6–8 年级课程反过来有 218 个知识点既不在 Prealgebra 也不在 Algebra I 中。可见年级课程覆盖更广、更贴合 CCSS 领域划分（如 "Ratios & Proportional Relationships"、"The Number System"、"Expressions & Equations"），Prealgebra 则是精简核心。
 - **备考课程：**
   - SAT Math Fundamentals（651）和 ACT Math Fundamentals（905）主要汇集学校课程的知识点；SAT Fundamentals 有 89% 也在 ACT Fundamentals 中。
-  - SAT Math Prep（284）和 ACT Math Prep（348）几乎全是独有知识点，即"高仿真 SAT 题型"。
+  - SAT Math Prep 和 ACT Math Prep 大部分是独有知识点：SAT Math Prep 的 284 个中有 243 个、ACT Math Prep 的 347 个不同名称中有 327 个不出现在其他课程中。SAT Math Prep 称自己的内容为"高仿真 SAT 题型"。
   - SAT Math Prep 会把卡住的学生引回对应的 Fundamentals 知识点重新讲解。
   - 该课程没有固定终点，持续更新预估 SAT 分数。
 
-**结论：** Math Academy 维护的是一张约 3,500 个知识点的知识图谱。"课程"是从中挑选并排序的一个知识点子集，再按单元、模块分组展示。这与书中的描述一致：课程是共享图谱上的一组知识点，诊断和任务选择都在图谱上运行，而不是在课程上。
+**结论：** 这种重叠说明背后是一张约 3,500 个知识点的知识图谱，"课程"是从中挑选并排序的一个知识点子集，再按单元、模块分组展示。这与书中的描述一致：课程是共享图谱上的一组知识点，诊断和任务选择都在图谱上运行，而不是在课程上。
 
 ## 5. 各课程详情
 
@@ -523,20 +526,20 @@ ACT Math Fundamentals 的后续课程，帮助学生在 ACT 数学部分取得�
 
 ## 6. 对 Great Academy 的启示
 
-1. **先建一张图谱，再从中切出课程。** 覆盖四年级到本科高年级，目标约 3,500 个不同知识点。课程归属、单元/模块分组和显示顺序作为图谱之上的元数据存储，不要做成彼此独立的内容。
-2. **粒度参考：** 每个模块约 7 个知识点，每个单元约 4 个模块，每门课 130–360 个知识点。[math-courses/](math-courses/) 中的知识点名称就是现成的粒度基准：每个对应一个可教的概念，约 10–20 分钟一节课。
+1. **先建一张图谱，再从中切出课程。** 目录从四年级到本科高年级约有 3,500 个不同知识点；我们的图谱加上自有课程和考试知识点，约有 4,100 个。课程归属、单元/模块分组和显示顺序作为图谱之上的元数据存储，不要做成彼此独立的内容。
+2. **粒度参考：** 每个模块约 7 个知识点，每个单元约 4 个模块，每门课 130–360 个知识点。[math-courses/](math-courses/) 中的知识点名称就是现成的粒度基准：每个对应一个可教的概念。
 3. **不同序列是重新排序，不是重写。** 传统与整合序列、honors 压缩序列都能由同一知识点池生成；成人 Foundations 课程也可以从已有知识点中交叉选取。
 4. **备考分两层：** Fundamentals 层复用课程知识点；Prep 层是独立的考试题型知识点，并链接回 Fundamentals 知识点用于补救。
-5. **建议的建设优先级（待定）：**
-   - 先做一条连续主干，例如 Prealgebra → Algebra I → Geometry → Algebra II → Precalculus → Calculus I/II，共 1,378 个不同知识点。
-   - 之后其余大部分 K-12、Foundations 和备考 Fundamentals 课程基本只是重新分组。
-   - 独有内容的课程（4–5 年级、Methods of Proof、Discrete Math、Probability & Statistics、Abstract Algebra）可以放在后面。
+5. **建设顺序：**
+   - 先做了一条连续主干：Prealgebra → Algebra I → Geometry → Algebra II → Precalculus → Calculus I/II（目录中共 1,378 个不同知识点）。
+   - 其余大部分 K-12、Foundations 和备考 Fundamentals 课程基本只是重新分组。
+   - 独有内容多的课程（4–5 年级、Methods of Proof、Discrete Math、Probability & Statistics、Abstract Algebra）需要单独编写。
 6. **官网页面没有提供的东西：**
    - 知识点之间的先修边和包含边；
    - 知识点内部的 knowledge point、例题和习题；
    - XP 值；
    - 知识点在图谱中的真实先后关系（编号只是展示顺序）。
-   这些都需要自己编写。不过官网的顺序和名称已经是一个很好的起始骨架。
+   这些由我们自己编写。官网的顺序和名称是起始骨架。
 
 ## 7. 目录之外的课程
 

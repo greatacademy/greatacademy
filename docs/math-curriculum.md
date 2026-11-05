@@ -10,23 +10,23 @@ This document records Math Academy's complete math course system as the referenc
 
 ## TL;DR
 
-- **37 courses** in 8 groups: elementary (2), middle school (4), high school in three sequences (10), test prep (4), AP (2), Mathematical Foundations for adults (3), and university (12). Two of them are marked "Coming soon" on the catalog page: ACT Math Prep and Abstract Algebra. Abstract Algebra's page already lists its full content and says it is under construction.
+- **37 courses** in 7 groups: elementary (2), middle school (4), high school in three sequences (10), test prep (4), AP (2), Mathematical Foundations for adults (3), and university (12). Two of them are marked "Coming soon" on the catalog page: ACT Math Prep and Abstract Algebra. Abstract Algebra's page already lists its full content and says it is under construction.
 - **9,270 topic slots** across all courses, but only **3,535 distinct topic names**. Courses are *views over one shared knowledge graph*, not separate content silos. A topic like "The Law of Total Probability" appears in 9 courses.
-- **Content hierarchy is uniform:** Course → Unit (e.g. "2. Matrices", with a topic count) → Module (e.g. "2.4. Gaussian Elimination") → Topic (e.g. "2.4.3. …"). Typical courses have 130–360 topics; test-prep "Fundamentals" courses are much larger (SAT 651, ACT 905) because they aggregate everything an exam can touch.
-- **Course sizes cluster:** a standard school-year or semester course is ~130–230 topics; an "honors" or compressed course is ~280–360 topics.
+- **Content hierarchy is uniform:** Course → Unit (e.g. "2. Matrices", with a topic count) → Module (e.g. "2.4. Gaussian Elimination") → Topic (e.g. "2.4.3. …"). Typical courses have 129–360 topics; test-prep "Fundamentals" courses are much larger (SAT 651, ACT 905) because they aggregate everything an exam can touch.
+- **Course sizes cluster:** a standard school-year or semester course is usually ~130–230 topics, and an "honors" or compressed course is usually ~280–360. There are exceptions on both sides: Precalculus has 296 and Integrated Math I (Honors) has 226.
 - **Sequences share content almost exactly:**
   - The traditional sequence (Algebra I + Geometry + Algebra II) and the integrated sequence (Integrated Math I–III) have 582 and 588 distinct topics. The only differences are 6 statistics topics that appear only in the integrated sequence.
   - The honors integrated sequence (I–III Honors) has *exactly* the same 838 topics as Algebra I + Geometry + Algebra II + Precalculus.
   - AP Calculus AB is a strict subset of AP Calculus BC. BC ≈ Calculus I + II, minus hyperbolic functions and a few advanced items, plus graphing-calculator topics.
   - Mathematical Foundations I–III contain no topics of their own: every one of their 1,038 topics also appears in a K-12 course or a university calculus course.
-- **Content is unique only in a few places:** 4th grade, discrete math, methods of proof, abstract algebra, probability & statistics, and the exam-style prep courses (SAT Math Prep and ACT Math Prep use their own practice-problem topics). Everything else reuses shared topics.
+- **Content of a course's own is concentrated in a few places.** The topics that appear in no other course number 327 in ACT Math Prep, 243 in SAT Math Prep, 118 in Abstract Algebra, 116 in 4th Grade, 99 in Methods of Proof, 94 in Discrete Mathematics, 88 in ACT Math Fundamentals, 59 in Probability & Statistics and 54 in 5th Grade. The other courses have 45 or fewer, and 16 have none.
 
 ## 1. Catalog-level facts (from /courses)
 
 - "All of our courses are comprehensive and standards-based, typically covering hundreds of individual topics."
 - Every course starts with an adaptive diagnostic that identifies missing prerequisite knowledge and material the student already knows.
 - **Accreditation:** The courses are fully accredited by ACS WASC (Accrediting Commission for Schools, Western Association of Schools and Colleges).
-- **UC a-g:** Math Academy, LLC is listed in UC's Directory of Online Publishers. A home school can add the courses through its UC course-management portal, so that Math Academy can issue transcripts for UC a-g credit.
+- **UC a-g:** Math Academy, LLC is listed in UC's Directory of Online Publishers. A student's home school, the school they attend, can add the courses through its UC course-management portal, so that Math Academy can issue transcripts for UC a-g credit.
 - **Entry point:** The lowest course is 4th Grade Math. It requires knowing the multiplication tables up to 12 and being able to read independently.
 - **Prealgebra vs. 6th–8th:** Prealgebra covers the same content as the 6th–8th grade courses in a streamlined format, for students who can move faster.
 - **High-school sequences:**
@@ -57,7 +57,8 @@ flowchart LR
   LA --> MVC[Multivariable Calculus] --> DE[Differential Equations] & PS[Probability & Statistics]
   MOP --> DM[Discrete Math]
   MOP & LA --> AA[Abstract Algebra]
-  C2 & BC & MF3 --> MML[Math for ML] & MP1[Math Methods Phys Sci I] --> MP2[Math Methods Phys Sci II]
+  C2 & BC & MF3 --> MML[Math for ML] & MP1[Math Methods Phys Sci I]
+  MP1 --> MP2[Math Methods Phys Sci II]
 ```
 
 Notes:
@@ -108,6 +109,8 @@ Notes:
 
 Totals: 37 courses · 351 units · 1,334 modules · 9,270 topic slots · 3,535 distinct topic names.
 
+All figures in this document come from the 2026-10-30 retrieval. On 2026-11-05 the topic lists on all 37 live pages were compared with it. They match, except that ACT Math Fundamentals now has 906 topics: "Classifying Quadrilaterals" was added as 4.65.1, and the module's other topics moved down by one.
+
 ## 4. Structure and reuse analysis
 
 These figures come from comparing topic names across the 37 course pages.
@@ -132,7 +135,7 @@ These figures come from comparing topic names across the 37 course pages.
 | Calculus II | AP Calculus BC 88% |
 | Linear Algebra | Math Methods Phys Sci I 65%, Math for ML 64% |
 | Multivariable Calculus | Math Methods Phys Sci I 48%, Math Methods Phys Sci II 48% |
-| Differential Equations | Math Methods Phys Sci I 48%, Math Methods Phys Sci II 36% |
+| Differential Equations | Math Methods Phys Sci II 48%, Math Methods Phys Sci I 36% |
 | Probability & Statistics | Math for ML 52% |
 | Math Foundations III | Precalculus 51%, Integrated III (H) 47%, AP Calculus BC 44% |
 
@@ -146,7 +149,7 @@ These figures come from comparing topic names across the 37 course pages.
   - logarithmic differentiation,
   - Newton's method,
   - surface areas of revolution,
-  - the shell method rotated about the x-axis,
+  - the shell method,
   - the root test,
   - Newton's second law.
 - Mathematical Foundations I ∪ II ∪ III (1,038 topics) is drawn entirely from K-12 and calculus courses. It has 0 topics of its own.
@@ -154,11 +157,11 @@ These figures come from comparing topic names across the 37 course pages.
 - Prealgebra has only 8 topics outside the 5th–8th grade courses. 6th–8th Grade cover 218 topics that are in neither Prealgebra nor Algebra I. The grade courses are broader and more standards-aligned (CCSS domains such as "Ratios & Proportional Relationships", "The Number System" and "Expressions & Equations"). Prealgebra is the streamlined core.
 - **Test prep:**
   - SAT Math Fundamentals (651) and ACT Math Fundamentals (905) are mostly aggregations of school-course topics; 89% of SAT Fundamentals is inside ACT Fundamentals.
-  - SAT Math Prep (284) and ACT Math Prep (348) are almost entirely their own topics: "high-fidelity SAT-style problems".
+  - SAT Math Prep and ACT Math Prep are mostly their own topics: 243 of SAT Math Prep's 284 and 327 of ACT Math Prep's 347 distinct names appear in no other course. SAT Math Prep describes its own as "high-fidelity SAT-style problems".
   - SAT Math Prep routes struggling students back to the corresponding Fundamentals topic for instruction.
   - SAT Math Prep has no fixed endpoint and shows a continuously updated estimated SAT score.
 
-**Implication:** Math Academy maintains one knowledge graph of roughly 3,500 topics. A "course" is a curated, ordered subset of topics, grouped into units and modules for display. This matches the book's description, where a course is a set of topics in the shared graph and the diagnostic and task selection operate on the graph rather than on the course.
+**Implication:** The overlap points to one knowledge graph of roughly 3,500 topics, where a "course" is a curated, ordered subset of topics, grouped into units and modules for display. This matches the book's description, where a course is a set of topics in the shared graph and the diagnostic and task selection operate on the graph rather than on the course.
 
 ## 5. Course details
 
@@ -345,7 +348,7 @@ Our ACT Math Fundamentals course develops the complete mathematical foundation r
 
 #### ACT Math Prep
 
-
+The follow-up to ACT Math Fundamentals, aimed at the highest possible score on the math section of the ACT. Students cannot sign up directly and are promoted after completing Fundamentals. The catalog page marks it "Coming soon", but the course page already lists its content.
 
 - **Prerequisite(s):** SAT Math Fundamentals (as printed; promotion from ACT Math Fundamentals)
 - **Size:** 6 units · 39 modules · 348 topics
@@ -504,7 +507,7 @@ Mathematical Methods for the Physical Sciences II continues the development of a
 
 #### Abstract Algebra
 
-
+The core relationships that govern how mathematical objects interact: identifying algebraic structures and reasoning to general conclusions. The course page says it is under construction, with no release date.
 
 - **Prerequisite(s):** Methods of Proof; Linear Algebra
 - **Size:** 9 units · 21 modules · 129 topics
@@ -513,20 +516,20 @@ Mathematical Methods for the Physical Sciences II continues the development of a
 
 ## 6. Implications for Great Academy
 
-1. **Build one graph, then cut courses from it.** Target roughly 3,500 distinct topics to cover grade 4 through upper-division undergraduate math. Store course membership, unit/module grouping and display order as metadata on top of the graph, not as separate content.
-2. **Granularity reference:** about 7 topics per module, about 4 modules per unit, and 130–360 topics per course. The topic names in [math-courses/](math-courses/) are a ready-made granularity benchmark: each is one teachable idea, roughly a 10–20 minute lesson.
+1. **Build one graph, then cut courses from it.** The catalog has roughly 3,500 distinct topics from grade 4 through upper-division undergraduate math. Our graph, with its own courses and exam topics, has about 4,100. Store course membership, unit/module grouping and display order as metadata on top of the graph, not as separate content.
+2. **Granularity reference:** about 7 topics per module, about 4 modules per unit, and 130–360 topics per course. The topic names in [math-courses/](math-courses/) are a ready-made granularity benchmark: each is one teachable idea.
 3. **Sequences are reorderings, not rewrites.** Traditional vs. integrated, and honors compression, can be produced from the same topic pool. Adult "Foundations" courses can be produced as cross-cuts of existing topics.
 4. **Two kinds of test prep:** a "Fundamentals" layer that reuses curricular topics, and a separate "Prep" layer of exam-style practice topics. The Prep topics link back to Fundamentals topics for remediation.
-5. **Priority order suggestion (to be decided):**
-   - Start with one contiguous spine, such as Prealgebra → Algebra I → Geometry → Algebra II → Precalculus → Calculus I/II (1,378 distinct topics).
-   - Most other K-12, Foundations and test-prep courses then become mostly re-groupings.
-   - The unique-content courses (grade 4–5, Methods of Proof, Discrete Math, Probability & Statistics, Abstract Algebra) can come later.
+5. **Build order:**
+   - One contiguous spine came first: Prealgebra → Algebra I → Geometry → Algebra II → Precalculus → Calculus I/II (1,378 distinct topics in the catalog).
+   - Most other K-12, Foundations and test-prep courses are then mostly re-groupings.
+   - Courses with much content of their own (grades 4–5, Methods of Proof, Discrete Math, Probability & Statistics, Abstract Algebra) need their own writing.
 6. **What these pages do not give us:**
    - prerequisite and encompassing edges between topics,
    - knowledge points, worked examples, problems,
    - XP values,
    - the topic ordering inside the graph (the numbered order is display order only).
-   These must be authored. The page order and names are a strong starting skeleton.
+   We author these ourselves. The page order and names are the starting skeleton.
 
 ## 7. Courses beyond the catalog
 
