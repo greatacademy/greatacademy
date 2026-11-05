@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
-import { FigureView } from "../../components/Figure.tsx";
+import { Explanation, FigureView } from "../../components/Figure.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
@@ -216,7 +216,7 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
         <h2 className="text-lg font-semibold">
           <Markdown source={tx(intro.title)} inline />
         </h2>
-        <Markdown source={tx(intro.explanation)} />
+        <Explanation text={tx(intro.explanation)} figures={intro.figures} />
         <FigureView figure={intro.figure} />
       </Card>
       {ex && (

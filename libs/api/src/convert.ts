@@ -97,6 +97,7 @@ async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape
         ...(example!.solutionFigure && { solutionFigure: figure(example!.solutionFigure) }),
       },
       ...(kp.figure && { figure: figure(kp.figure) }),
+      figures: (kp.figures ?? []).map(figure),
     },
   };
 }

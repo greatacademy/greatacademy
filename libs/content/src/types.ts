@@ -59,8 +59,10 @@ export interface KnowledgePointDef {
   readonly title: Text;
   /** explanation introduces the idea before the worked example. */
   readonly explanation: Text;
-  /** figure is a drawing shown with the explanation. */
+  /** figure is a drawing shown after the explanation. */
   readonly figure?: Figure;
+  /** figures are drawings placed inside the explanation, each by a line `{{figure N}}` in every locale, so that words and drawings can alternate. */
+  readonly figures?: readonly Figure[];
   /** keyPrerequisites are the earlier topics this step depends on most directly; they drive remediation. */
   readonly keyPrerequisites?: readonly string[];
   /** generate produces the worked example and the practice problems of this step. */

@@ -11,6 +11,7 @@ export interface KnowledgePointLesson {
   readonly title: Text;
   readonly explanation: Text;
   readonly figure?: Figure;
+  readonly figures?: readonly Figure[];
 }
 
 /** Judged is a generated problem and the verdict on a response to it. */
@@ -95,8 +96,8 @@ export function topicSource(definitions: Iterable<TopicDef>, checkerList: readon
   return {
     problems: async (refs) => refs.map(generate),
     lesson: async (topic, kp) => {
-      const { title, explanation, figure } = point(topic, kp);
-      return { title, explanation, ...(figure && { figure }) };
+      const { title, explanation, figure, figures } = point(topic, kp);
+      return { title, explanation, ...(figure && { figure }), ...(figures && { figures }) };
     },
     judge: async (ref, response) => {
       const problem = generate(ref);

@@ -716,11 +716,19 @@ export declare type KnowledgePointIntro = Message<"ga.learning.v1.KnowledgePoint
   example?: WorkedExample | undefined;
 
   /**
-   * figure is a drawing shown with the explanation.
+   * figure is a drawing shown after the explanation.
    *
    * @generated from field: optional ga.common.v1.Figure figure = 6;
    */
   figure?: Figure | undefined;
+
+  /**
+   * figures are drawings placed inside the explanation, each by a line
+   * "{{figure N}}", N being its index.
+   *
+   * @generated from field: repeated ga.common.v1.Figure figures = 7;
+   */
+  figures: Figure[];
 };
 
 /**

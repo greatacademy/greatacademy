@@ -32,6 +32,9 @@ const cjk = /[一-鿿]/;
 const visualTitle =
   /(?<!crypto)graph(?!ing calculator)|plot|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
 
+const visualExplanation =
+  /\b(rotat|reflect|translat|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|parallel|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
+
 /** normalizeTitle reduces a title to lowercase words so that outline and code titles compare equal. */
 export function normalizeTitle(title: string): string {
   return title
@@ -111,7 +114,8 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       explanations.add(kp.explanation.en);
       if (proseWords(kp.explanation.en) < minProseWords) add(`explanation under ${minProseWords} words of prose`, path);
       if (!cjk.test(kp.explanation["zh-CN"])) add("zh explanation without Chinese", path);
-      if (kp.figure) hasFigure = true;
+      if (kp.figure || kp.figures?.length) hasFigure = true;
+      else if (visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`)) add("explanation of something visual without a drawing", path);
 
       let choices = 0;
       let options = 0;

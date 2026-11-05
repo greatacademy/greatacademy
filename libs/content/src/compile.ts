@@ -1,7 +1,7 @@
 import { CheckerRegistry } from "./checkers.ts";
-import { figureIssue } from "./figure.ts";
+import { explanationParts, figureIssue } from "./figure.ts";
 import type { Text } from "./text.ts";
-import { isText } from "./text.ts";
+import { isText, locales } from "./text.ts";
 import type { CourseDef, KnowledgePointDef, SubjectDef, TopicDef } from "./types.ts";
 
 /** Issue is a problem the compiler found in a subject's content. */
@@ -130,6 +130,16 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       text(`${kpPath} › explanation`, kp.explanation);
       const figure = kp.figure && figureIssue(kp.figure);
       if (figure) error(kpPath, figure);
+      for (const drawn of kp.figures ?? []) {
+        const issue = figureIssue(drawn);
+        if (issue) error(kpPath, issue);
+      }
+      for (const locale of locales) {
+        const placed = explanationParts(kp.explanation[locale] ?? "").filter((part) => typeof part === "number");
+        const expected = (kp.figures ?? []).map((_, i) => i);
+        if (JSON.stringify([...placed].sort((a, b) => a - b)) !== JSON.stringify(expected))
+          error(kpPath, `explanation must place each of its ${expected.length} figures once in ${locale}`);
+      }
       if (typeof kp.generate !== "function") error(kpPath, "generate must be a function");
     }
     if (topic.diagnostic !== undefined && !kpIds.has(topic.diagnostic))

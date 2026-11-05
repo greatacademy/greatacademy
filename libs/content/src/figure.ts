@@ -33,6 +33,20 @@ const elements = new Set([
 ]);
 const forbiddenAttribute = /^(on|href$|xlink:|style$)/i;
 
+/** ExplanationPart is a stretch of an explanation: its text, or the index of a figure placed there. */
+export type ExplanationPart = string | number;
+
+/**
+ * explanationParts splits an explanation at its `{{figure N}}` lines, so that a
+ * client can show words and drawings in turn.
+ */
+export function explanationParts(explanation: string): readonly ExplanationPart[] {
+  return explanation
+    .split(/\{\{figure (\d+)\}\}/)
+    .map((part, i): ExplanationPart => (i % 2 === 1 ? Number(part) : part.trim()))
+    .filter((part) => part !== "");
+}
+
 /**
  * figureIssue tells what is wrong with a figure, or undefined. Clients
  * inline figures, so the SVG is held to a small vocabulary of drawing

@@ -221,8 +221,11 @@ message KnowledgePointIntro {
   ga.common.v1.Text title = 3;
   ga.common.v1.Text explanation = 4;
   WorkedExample example = 5;
-  // figure is a drawing shown with the explanation.
+  // figure is a drawing shown after the explanation.
   optional ga.common.v1.Figure figure = 6;
+  // figures are drawings placed inside the explanation, each by a line
+  // "{{figure N}}", N being its index.
+  repeated ga.common.v1.Figure figures = 7;
 }
 
 // WorkedExample is a problem shown with its solution.

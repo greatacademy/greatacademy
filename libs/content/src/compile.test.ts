@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { CompileError, compileSubject } from "./compile.ts";
-import { figureIssue } from "./figure.ts";
+import { explanationParts, figureIssue } from "./figure.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
@@ -212,6 +212,31 @@ describe("sampleGenerators", () => {
       { samples: 20 },
     );
     expect(issues).toEqual([{ severity: "warning", path: "topic a › kp kp", message: "only 1 distinct prompts in 20 samples" }]);
+  });
+});
+
+describe("explanationParts", () => {
+  it("splits an explanation at the figures it places", () => {
+    expect(explanationParts("Draw it.\n\n{{figure 0}}\n\nThen this.\n\n{{figure 1}}")).toEqual(["Draw it.", 0, "Then this.", 1]);
+    expect(explanationParts("No figure.")).toEqual(["No figure."]);
+  });
+});
+
+describe("figures in an explanation", () => {
+  const drawn = { svg: '<svg viewBox="0 0 1 1"><line/></svg>', alt: same("x") };
+  const withPoint = (explanation: { en: string; "zh-CN": string }, figures: readonly (typeof drawn)[]) =>
+    subject([topic("a", { knowledgePoints: [{ id: "kp", title: same("S"), explanation, figures, generate: () => problem(1) }] })]);
+
+  it("accepts figures placed once in every locale", () => {
+    expect(() => compileSubject(withPoint(same("See\n\n{{figure 0}}"), [drawn]))).not.toThrow();
+  });
+
+  it.each([
+    ["missing in one locale", { en: "See\n\n{{figure 0}}", "zh-CN": "看" }],
+    ["placed twice", same("{{figure 0}} and {{figure 0}}")],
+    ["out of range", same("{{figure 1}}")],
+  ])("rejects a figure %s", (_, explanation) => {
+    expect(() => compileSubject(withPoint(explanation, [drawn]))).toThrow("must place each");
   });
 });
 
