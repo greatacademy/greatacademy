@@ -27,6 +27,7 @@ import { deeperNumberTheoryPoints } from "../topics/deeper-number-theory.ts";
 import { deeperPrecalculusPoints } from "../topics/deeper-precalculus.ts";
 import { deeperProbabilityStatisticsPoints } from "../topics/deeper-probability-statistics.ts";
 import { deeperRealAnalysisPoints } from "../topics/deeper-real-analysis.ts";
+import { deeperRemainingCollegeThirdPoints } from "../topics/deeper-remaining-college-third.ts";
 import { discreteMathematicsAutomataTopics } from "../topics/discrete-mathematics-automata.ts";
 import { discreteMathematicsBooleanTopics } from "../topics/discrete-mathematics-boolean.ts";
 import { discreteMathematicsCountingTopics } from "../topics/discrete-mathematics-counting.ts";
@@ -151,5 +152,6 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     moreFigureReadingPoints,
     collegeFigurePoints,
     deeperCollegeThirdPoints,
+    deeperRemainingCollegeThirdPoints,
   ],
 );

@@ -16,6 +16,7 @@ import { actFundamentalsReasoningGeometryTopics } from "../topics/act-fundamenta
 import { actGeometryDataTopics } from "../topics/act-geometry-data.ts";
 import { actNumberAlgebraTopics } from "../topics/act-number-algebra.ts";
 import { deeperExamThirdPoints } from "../topics/deeper-exam-college-third.ts";
+import { deeperRemainingExamThirdPoints } from "../topics/deeper-remaining-third.ts";
 import { examTopics } from "../topics/exam-topics.ts";
 import { outlineGapTopics } from "../topics/outline-gaps.ts";
 import { satFundamentalsAdvancedTopics } from "../topics/sat-fundamentals-advanced.ts";
@@ -53,5 +54,5 @@ export const examShardTopics: readonly TopicDef[] = finishTopics(
     ...satMathStrategyTopics,
     ...examTopics,
   ],
-  [deeperExamThirdPoints],
+  [deeperExamThirdPoints, deeperRemainingExamThirdPoints],
 );

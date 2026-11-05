@@ -47,6 +47,7 @@ import { deeperPrecalculusThird2Points } from "../topics/deeper-precalculus-thir
 import { deeperPrecalculusThird3Points } from "../topics/deeper-precalculus-third-3.ts";
 import { deeperProbabilityStatisticsPoints } from "../topics/deeper-probability-statistics.ts";
 import { deeperRealAnalysisPoints } from "../topics/deeper-real-analysis.ts";
+import { deeperRemainingCalculusThirdPoints } from "../topics/deeper-remaining-third.ts";
 import { differentialEquationsBvpTopics } from "../topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "../topics/differential-equations-first-order.ts";
 import { differentialEquationsLaplaceTopics } from "../topics/differential-equations-laplace.ts";
@@ -164,6 +165,7 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     deeperPrecalculusThird2Points,
     deeperPrecalculusThird3Points,
     deeperProbabilityStatisticsPoints,
+    deeperRemainingCalculusThirdPoints,
     figureReadingPoints,
     moreFigureReadingPoints,
     collegeFigurePoints,
