@@ -1383,7 +1383,7 @@ export const endBehaviorOfPolynomials = topic(
           endsText(right, left),
           allEnds(right, left),
           t(
-            `Only the leading terms of the factors matter at the ends. Multiplying them gives a leading term with coefficient sign ${lead > 0 ? "positive" : "negative"} and degree $${n}$, ${n % 2 === 0 ? "even, so both ends match" : "odd, so the ends are opposite"}.${steps(`\\text{leading term: } ${poly([lead, n === 1 ? "x" : `x^{${n}}`])}`)}`,
+            `Only the leading terms of the factors matter at the ends. Multiplying them gives a leading term with a ${lead > 0 ? "positive" : "negative"} coefficient and degree $${n}$, which is ${n % 2 === 0 ? "even, so both ends match" : "odd, so the ends are opposite"}.${steps(`\\text{leading term: } ${poly([lead, n === 1 ? "x" : `x^{${n}}`])}`)}`,
             `在两端只有各因式的最高次项起作用。把它们相乘，得到系数为${lead > 0 ? "正" : "负"}、次数为 $${n}$ 的首项，次数是${n % 2 === 0 ? "偶数，所以两端方向相同" : "奇数，所以两端方向相反"}。${steps(`\\text{leading term: } ${poly([lead, n === 1 ? "x" : `x^{${n}}`])}`)}`,
           ),
         );

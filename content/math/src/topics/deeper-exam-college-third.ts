@@ -1,7 +1,7 @@
 // A third knowledge point for the short exam and probability topics, one map for each shard that holds them.
 
 import type { KnowledgePointDef } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { gcd, Q } from "@ga/subject-math";
 
 import { choose, chooseMath, whole } from "./early-grades-more-kit.ts";
 import { frac, fraction, skill } from "./third-kit.ts";
@@ -189,8 +189,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
           expected,
           [expected + seen, left - expected === expected ? expected + 1 : left - expected, left],
           [
-            `The rate is $${frac(seen, done)} = ${frac(n, d)}$, and $${frac(n, d)} \\times ${left} = ${expected}$.`,
-            `比率是 $${frac(seen, done)} = ${frac(n, d)}$，$${frac(n, d)} \\times ${left} = ${expected}$。`,
+            `The rate is $${frac(seen, done)} = ${frac(n / gcd(n, d), d / gcd(n, d))}$, and $${frac(n / gcd(n, d), d / gcd(n, d))} \\times ${left} = ${expected}$.`,
+            `比率是 $${frac(seen, done)} = ${frac(n / gcd(n, d), d / gcd(n, d))}$，$${frac(n / gcd(n, d), d / gcd(n, d))} \\times ${left} = ${expected}$。`,
           ],
         );
       },

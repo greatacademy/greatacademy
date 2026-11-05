@@ -219,7 +219,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           [`$\\vec{AB} = ${vec(u, v)}$ and $A = (${x}, ${y})$. Find $B$.`, `$\\vec{AB} = ${vec(u, v)}$，$A = (${x}, ${y})$。求 $B$。`],
           `(${x + u}, ${y + v})`,
           [`(${x - u}, ${y - v})`, `(${u - x}, ${v - y})`, `(${x + v}, ${y + u})`],
-          [`Add the components to $A$: $(${x} + (${u}), ${y} + (${v}))$.`, `把分量加到 $A$ 上：$(${x} + (${u}), ${y} + (${v}))$。`],
+          [
+            `Add the components to $A$: $(${x} ${u < 0 ? `- ${-u}` : `+ ${u}`}, ${y} ${v < 0 ? `- ${-v}` : `+ ${v}`}) = (${x + u}, ${y + v})$.`,
+            `把分量加到 $A$ 上：$(${x} ${u < 0 ? `- ${-u}` : `+ ${u}`}, ${y} ${v < 0 ? `- ${-v}` : `+ ${v}`}) = (${x + u}, ${y + v})$。`,
+          ],
         );
       },
     ),
@@ -255,7 +258,7 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "bearings-from-the-direction-angle",
       ["Bearings from the direction angle", "由方向角求方位角"],
       [
-        "A bearing is measured clockwise from north, while a direction angle is measured counterclockwise from east. So the bearing is 90 degrees minus the direction angle, adjusted by a full turn if negative.",
+        "A bearing is measured clockwise from north, while a direction angle is measured counterclockwise from east. So the bearing is $90^{\\circ}$ minus the direction angle, adjusted by a full turn if negative.",
         "方位角从正北顺时针量，方向角从正东逆时针量。所以方位角是 90 度减方向角，若为负再加一整圈。",
       ],
       (rng) => {
@@ -269,7 +272,7 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           bearing,
           [angle, (angle + 90) % 360, (bearing + 180) % 360],
           [
-            `Bearings run the other way from north, so $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding 360 gives ${bearing}` : ""}.`,
+            `Bearings run the other way from north, so $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding $360$ gives $${bearing}$` : ""}.`,
             `方位角从正北反向量，所以 $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `，加 360 得 ${bearing}` : ""}。`,
           ],
         );
@@ -671,7 +674,7 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         for (let i = 1; i <= n; i++) trace += p * i + q * i + c;
         return integer(
           [
-            `An $${n} \\times ${n}$ matrix has entries $a_{ij} = ${p}i + ${q}j${c < 0 ? ` - ${-c}` : ` + ${c}`}$. Find the sum of its diagonal entries.`,
+            `A $${n} \\times ${n}$ matrix has entries $a_{ij} = ${p}i + ${q}j${c < 0 ? ` - ${-c}` : ` + ${c}`}$. Find the sum of its diagonal entries.`,
             `$${n} \\times ${n}$ 矩阵的元素为 $a_{ij} = ${p}i + ${q}j${c < 0 ? ` - ${-c}` : ` + ${c}`}$。求对角元素之和。`,
           ],
           trace,
@@ -1371,8 +1374,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           images[r]!,
           images.filter((_, i) => i !== r),
           [
-            `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$, so only ${r} quarter ${r === 1 ? "turn counts" : "turns count"}.`,
-            `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$，所以只有 ${r} 个四分之一圈有效。`,
+            `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$, so only $${r}$ quarter ${r === 1 ? "turn counts" : "turns count"}.`,
+            `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$，所以只有 $${r}$ 个四分之一圈有效。`,
           ],
         );
       },
@@ -1398,8 +1401,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           total,
           [angle, (total + 90) % 360, (angle + n) % 360],
           [
-            `$${n} \\times ${angle} = ${angle * n}$, which leaves ${total} after removing full turns.`,
-            `$${n} \\times ${angle} = ${angle * n}$，去掉整圈后是 ${total}。`,
+            `$${n} \\times ${angle} = ${angle * n}$, which leaves $${total}$ after removing full turns.`,
+            `$${n} \\times ${angle} = ${angle * n}$，去掉整圈后是 $${total}$。`,
           ],
         );
       },
@@ -1453,8 +1456,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           c * b,
           [b, -c * b, c * b + k],
           [
-            `$\\det = ${a}t - ${paren(b)} \\cdot ${paren(c * a)} = 0$ gives $t = ${c * b}$, making the second row ${c} times the first.`,
-            `$\\det = ${a}t - ${paren(b)} \\cdot ${paren(c * a)} = 0$，得 $t = ${c * b}$，第二行是第一行的 ${c} 倍。`,
+            `$\\det = ${a}t - ${paren(b)} \\cdot ${paren(c * a)} = 0$ gives $t = ${c * b}$, making the second row $${c}$ times the first.`,
+            `$\\det = ${a}t - ${paren(b)} \\cdot ${paren(c * a)} = 0$，得 $t = ${c * b}$，第二行是第一行的 $${c}$ 倍。`,
           ],
         );
       },

@@ -2006,6 +2006,8 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
         const f = (x: number) => productAt(a, [[r, 1]], x) / productAt(1, [[p, j], ...(withQ ? ([[q, 1]] as Factor[]) : [])], x);
         const [left, right] = [nearSign(f, p, -1), nearSign(f, p, 1)];
         const left2 = frac(prodL([[r, 1]], a), prodL([[p, j], ...(withQ ? ([[q, 1]] as Factor[]) : [])]));
+        const restPositive = productAt(a, [[r, 1]], p) / (withQ ? productAt(1, [[q, 1]], p) : 1) > 0;
+        const [restEn, restZh] = restPositive ? ["positive", "正"] : ["negative", "负"];
         return choiceProblem({
           prompt: t(
             `Find $${sidedLimit(p, 0)} ${frac(prodL(top, a), prodL(bottom))}$.`,
@@ -2014,8 +2016,8 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
           options: limitOptions,
           correct: limitIndex(left, right),
           solution: t(
-            `Cancel $${facPow(p, k)}$:${steps(`${sidedLimit(p, 0)} ${left2}`)}${j === 2 ? `The leftover square $${facPow(p, 2)}$ is positive on both sides, so both one-sided limits are $${infL(left)}$, and the limit is $${infL(left)}$.` : `The leftover factor $${bare(p)}$ changes sign at $x = ${p}$, so the one-sided limits are $${infL(left)}$ and $${infL(right)}$: the limit does not exist.`}`,
-            `约去 $${facPow(p, k)}$：${steps(`${sidedLimit(p, 0)} ${left2}`)}${j === 2 ? `剩余的平方 $${facPow(p, 2)}$ 在两侧都为正，所以两个单侧极限都是 $${infL(left)}$，极限是 $${infL(left)}$。` : `剩余的因式 $${bare(p)}$ 在 $x = ${p}$ 处变号，所以两个单侧极限分别是 $${infL(left)}$ 和 $${infL(right)}$：极限不存在。`}`,
+            `Cancel $${facPow(p, k)}$:${steps(`${sidedLimit(p, 0)} ${left2}`)}${j === 2 ? `Near $x = ${p}$ the rest of the fraction is ${restEn}, and the leftover square $${facPow(p, 2)}$ is positive on both sides, so both one-sided limits are $${infL(left)}$, and the limit is $${infL(left)}$.` : `Near $x = ${p}$ the rest of the fraction is ${restEn}, and the leftover factor $${bare(p)}$ changes sign at $x = ${p}$, so the one-sided limits are $${infL(left)}$ and $${infL(right)}$: the limit does not exist.`}`,
+            `约去 $${facPow(p, k)}$：${steps(`${sidedLimit(p, 0)} ${left2}`)}${j === 2 ? `在 $x = ${p}$ 附近，其余部分为${restZh}，剩余的平方 $${facPow(p, 2)}$ 在两侧都为正，所以两个单侧极限都是 $${infL(left)}$，极限是 $${infL(left)}$。` : `在 $x = ${p}$ 附近，其余部分为${restZh}，剩余的因式 $${bare(p)}$ 在 $x = ${p}$ 处变号，所以两个单侧极限分别是 $${infL(left)}$ 和 $${infL(right)}$：极限不存在。`}`,
           ),
         });
       },

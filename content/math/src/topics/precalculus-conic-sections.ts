@@ -350,18 +350,18 @@ export const equationsOfEllipsesCenteredAtTheOrigin: TopicDef = {
           `对于椭圆 $${eqStr}$，确定其长轴方向以及半轴长 $a$ 和 $b$ 的值。`,
         );
         const correct = horizontal
-          ? t(`Horizontal; a = ${a}, b = ${b}`, `水平方向；a = ${a}, b = ${b}`)
-          : t(`Vertical; a = ${a}, b = ${b}`, `竖直方向；a = ${a}, b = ${b}`);
+          ? t(`Horizontal; $a = ${a}, b = ${b}$`, `水平方向；$a = ${a}, b = ${b}$`)
+          : t(`Vertical; $a = ${a}, b = ${b}$`, `竖直方向；$a = ${a}, b = ${b}$`);
         const distractors = [
           horizontal
-            ? t(`Vertical; a = ${a}, b = ${b}`, `竖直方向；a = ${a}, b = ${b}`)
-            : t(`Horizontal; a = ${a}, b = ${b}`, `水平方向；a = ${a}, b = ${b}`),
+            ? t(`Vertical; $a = ${a}, b = ${b}$`, `竖直方向；$a = ${a}, b = ${b}$`)
+            : t(`Horizontal; $a = ${a}, b = ${b}$`, `水平方向；$a = ${a}, b = ${b}$`),
           horizontal
-            ? t(`Horizontal; a = ${a2}, b = ${b2}`, `水平方向；a = ${a2}, b = ${b2}`)
-            : t(`Vertical; a = ${a2}, b = ${b2}`, `竖直方向；a = ${a2}, b = ${b2}`),
+            ? t(`Horizontal; $a = ${a2}, b = ${b2}$`, `水平方向；$a = ${a2}, b = ${b2}$`)
+            : t(`Vertical; $a = ${a2}, b = ${b2}$`, `竖直方向；$a = ${a2}, b = ${b2}$`),
           horizontal
-            ? t(`Vertical; a = ${b}, b = ${a}`, `竖直方向；a = ${b}, b = ${a}`)
-            : t(`Horizontal; a = ${b}, b = ${a}`, `水平方向；a = ${b}, b = ${a}`),
+            ? t(`Vertical; $a = ${b}, b = ${a}$`, `竖直方向；$a = ${b}, b = ${a}$`)
+            : t(`Horizontal; $a = ${b}, b = ${a}$`, `水平方向；$a = ${b}, b = ${a}$`),
         ];
         const solution = t(
           `The larger denominator is $${a2} = ${a}^{2}$, so $a = ${a}$. The smaller is $${b2} = ${b}^{2}$, so $b = ${b}$. Because $${a2}$ is under $${horizontal ? "x^{2}" : "y^{2}"}$, the major axis is ${horizontal ? "horizontal" : "vertical"}.`,
@@ -923,22 +923,22 @@ export const verticesAndEccentricityOfEllipses: TopicDef = {
         );
         const correct = aIsHigher
           ? t(
-              "Ellipse A is more elongated (flatter), while Ellipse B is closer to a circle.",
-              "椭圆 A 更加狭长（扁平），而椭圆 B 更接近圆。",
+              "Ellipse $A$ is more elongated (flatter), while Ellipse $B$ is closer to a circle.",
+              "椭圆 $A$ 更加狭长（扁平），而椭圆 $B$ 更接近圆。",
             )
           : t(
-              "Ellipse B is more elongated (flatter), while Ellipse A is closer to a circle.",
-              "椭圆 B 更加狭长（扁平），而椭圆 A 更接近圆。",
+              "Ellipse $B$ is more elongated (flatter), while Ellipse $A$ is closer to a circle.",
+              "椭圆 $B$ 更加狭长（扁平），而椭圆 $A$ 更接近圆。",
             );
         const distractors = [
           aIsHigher
             ? t(
-                "Ellipse B is more elongated (flatter), while Ellipse A is closer to a circle.",
-                "椭圆 B 更加狭长（扁平），而椭圆 A 更接近圆。",
+                "Ellipse $B$ is more elongated (flatter), while Ellipse $A$ is closer to a circle.",
+                "椭圆 $B$ 更加狭长（扁平），而椭圆 $A$ 更接近圆。",
               )
             : t(
-                "Ellipse A is more elongated (flatter), while Ellipse B is closer to a circle.",
-                "椭圆 A 更加狭长（扁平），而椭圆 B 更接近圆。",
+                "Ellipse $A$ is more elongated (flatter), while Ellipse $B$ is closer to a circle.",
+                "椭圆 $A$ 更加狭长（扁平），而椭圆 $B$ 更接近圆。",
               ),
           t("Both ellipses have the exact same shape.", "两椭圆的形状完全相同。"),
           t("The ellipse with lower eccentricity is more elongated.", "离心率较低的椭圆更加扁长。"),
@@ -1125,8 +1125,8 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
       id: "geometric-definition-of-a-hyperbola",
       title: t("Geometric definition of a hyperbola", "双曲线的几何定义"),
       explanation: t(
-        "A hyperbola is the set of all points $P$ in a plane such that the absolute difference of the distances from $P$ to two fixed foci $F_{1}$ and $F_{2}$ is constant and equal to $2a$:\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\nIf $PF_{1} = d_{1}$, then $PF_{2} = d_{1} + 2a$ or $PF_{2} = |d_{1} - 2a|$.",
-        "双曲线是平面内到两定点（焦点 $F_{1}, F_{2}$）的距离差的绝对值为定值 $2a$ 的点的集合：\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\n若点 $P$ 到一个焦点的距离为 $d_{1}$，则到另一个焦点的距离为 $d_{1} + 2a$ 或 $|d_{1} - 2a|$。",
+        "A hyperbola is the set of all points $P$ in a plane such that the absolute difference of the distances from $P$ to two fixed foci $F_{1}$ and $F_{2}$ is constant and equal to $2a$:\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\nIf $PF_{1} = d_{1}$, then $PF_{2} = d_{1} + 2a$ or $PF_{2} = d_{1} - 2a$, and the second is possible only when it is positive.",
+        "双曲线是平面内到两定点（焦点 $F_{1}, F_{2}$）的距离差的绝对值为定值 $2a$ 的点的集合：\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\n若点 $P$ 到一个焦点的距离为 $d_{1}$，则到另一个焦点的距离为 $d_{1} + 2a$ 或 $d_{1} - 2a$，后者只有为正时才可能。",
       ),
       generate(rng) {
         const a = rng.int(3, 10);
@@ -1485,15 +1485,21 @@ export const findingInterceptsAndIntersectionsOfHyperbolas: TopicDef = {
           `确定双曲线 $${eqStr}$ 的所有坐标轴截距点。`,
         );
         const correct = horizontal
-          ? t(`x-intercepts at (±${a}, 0); no y-intercepts`, `x 轴截距为 (±${a}, 0)；无 y 轴截距`)
-          : t(`y-intercepts at (0, ±${a}); no x-intercepts`, `y 轴截距为 (0, ±${a})；无 x 轴截距`);
+          ? t(`$x$-intercepts at $(pm ${a}, 0)$; no $y$-intercepts`, `$x$ 轴截距为 $(pm ${a}, 0)$；无 $y$ 轴截距`)
+          : t(`$y$-intercepts at $(0, pm ${a})$; no $x$-intercepts`, `$y$ 轴截距为 $(0, pm ${a})$；无 $x$ 轴截距`);
         const distractors = [
           horizontal
-            ? t(`y-intercepts at (0, ±${b}); no x-intercepts`, `y 轴截距为 (0, ±${b})；无 x 轴截距`)
-            : t(`x-intercepts at (±${b}, 0); no y-intercepts`, `x 轴截距为 (±${b}, 0)；无 y 轴截距`),
+            ? t(`$y$-intercepts at $(0, pm ${b})$; no $x$-intercepts`, `$y$ 轴截距为 $(0, pm ${b})$；无 $x$ 轴截距`)
+            : t(`$x$-intercepts at $(pm ${b}, 0)$; no $y$-intercepts`, `$x$ 轴截距为 $(pm ${b}, 0)$；无 $y$ 轴截距`),
           horizontal
-            ? t(`x-intercepts at (±${a}, 0) and y-intercepts at (0, ±${b})`, `x 轴截距为 (±${a}, 0)，y 轴截距为 (0, ±${b})`)
-            : t(`y-intercepts at (0, ±${a}) and x-intercepts at (±${b}, 0)`, `y 轴截距为 (0, ±${a})，x 轴截距为 (±${b}, 0)`),
+            ? t(
+                `$x$-intercepts at $(pm ${a}, 0)$ and $y$-intercepts at $(0, pm ${b})$`,
+                `$x$ 轴截距为 $(pm ${a}, 0)$，$y$ 轴截距为 $(0, pm ${b})$`,
+              )
+            : t(
+                `$y$-intercepts at $(0, pm ${a})$ and $x$-intercepts at $(pm ${b}, 0)$`,
+                `$y$ 轴截距为 $(0, pm ${a})$，$x$ 轴截距为 $(pm ${b}, 0)$`,
+              ),
           t("No intercepts on either axis", "与两条坐标轴均无交点"),
         ];
         const solution = t(

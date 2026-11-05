@@ -1,9 +1,28 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { gcd } from "@ga/subject-math";
 import { choiceProblem, numberProblem, solutionsProblem } from "../problems.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.13 to 4.15: elementary, transformed,
 // and advanced trigonometric equations).
+
+/** scaled multiplies an exact value such as $\\frac{\\sqrt{3}}{3}$ by a whole number and simplifies. */
+function scaled(tex: string, by: number): string {
+  if (by === 1 || tex === "0") return tex;
+  const m = /^(-?)(?:\\frac\{(\d*)(\\sqrt\{\d+\})?\}\{(\d+)\}|(\d*)(\\sqrt\{\d+\})?)$/.exec(tex);
+  if (!m) return `${by}\\left(${tex}\\right)`;
+  const top = Number(m[2] || m[5] || 1) * by;
+  const den = Number(m[4] ?? 1);
+  const root = m[3] ?? m[6] ?? "";
+  const g = gcd(top, den);
+  const n = top / g;
+  const d = den / g;
+  const head = n === 1 && root !== "" ? root : `${n}${root}`;
+  return `${m[1]}${d === 1 ? head : `\\frac{${head}}{${d}}`}`;
+}
+
+/** inTurn sorts angles after bringing each into one full turn of degrees. */
+const inTurn = (angles: readonly number[]) => angles.map((a) => ((a % 360) + 360) % 360).sort((a, b) => a - b);
 
 function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
   const seen = new Set([right.en]);
@@ -106,7 +125,7 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
         const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         const ansStr = item.ans.join(", ");
         return solutionsProblem({
           prompt: t(
@@ -117,8 +136,8 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
           values: item.ans,
           wrong: item.wrong,
           solution: t(
-            `Dividing by the coefficient gives $\\sin(${v}^{\\circ}) = ${item.val}$. All solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
-            `两边除以系数得 $\\sin(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
+            `${coeff === 1 ? "The equation is" : `Dividing by $${coeff}$ gives`} $\\sin(${v}^{\\circ}) = ${item.val}$. All solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
+            `${coeff === 1 ? "方程就是" : `两边除以 $${coeff}$ 得`} $\\sin(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
           ),
         });
       },
@@ -169,7 +188,7 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
         const v = rng.pick(["x", "\\theta", "t", "u", "z"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         return oneOf(
           rng,
           t(`Solve $${coeffLatex}\\sin ${v} = ${rhs}$ on $[0, 2\\pi)$.`, `在 $[0, 2\\pi)$ 上求解 $${coeffLatex}\\sin ${v} = ${rhs}$。`),
@@ -278,7 +297,7 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
         const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         const ansStr = item.ans.join(", ");
         return solutionsProblem({
           prompt: t(
@@ -289,8 +308,8 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
           values: item.ans,
           wrong: item.wrong,
           solution: t(
-            `Dividing by the coefficient gives $\\cos(${v}^{\\circ}) = ${item.val}$. All solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
-            `除以系数得 $\\cos(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
+            `${coeff === 1 ? "The equation is" : `Dividing by $${coeff}$ gives`} $\\cos(${v}^{\\circ}) = ${item.val}$. All solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
+            `${coeff === 1 ? "方程就是" : `两边除以 $${coeff}$ 得`} $\\cos(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
           ),
         });
       },
@@ -299,7 +318,7 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
       id: "solve-elementary-cosine-equations-radians",
       title: t("Solve cos(x) = c in radians on [0, 2π)", "在 [0, 2π) 内求解余弦方程（弧度制）"),
       explanation: t(
-        "Cosine is positive in the first and fourth quadrants and negative in the second and third, so each value strictly between minus one and one gives two solutions in one turn. For $\\cos x = c$ on $[0, 2\\pi)$:\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
+        "Cosine is positive in the first and fourth quadrants and negative in the second and third, so each value strictly between $-1$ and $1$ gives two solutions in one turn. For $\\cos x = c$ on $[0, 2\\pi)$:\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
         "余弦在第一、四象限为正，在第二、三象限为负，所以介于 −1 和 1 之间的每个值在一周内都有两个解。在 $[0, 2\\pi)$ 上求解 $\\cos x = c$：\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
       ),
       generate(rng) {
@@ -341,7 +360,7 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
         const v = rng.pick(["x", "\\theta", "t", "u", "z"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         return oneOf(
           rng,
           t(`Solve $${coeffLatex}\\cos ${v} = ${rhs}$ on $[0, 2\\pi)$.`, `在 $[0, 2\\pi)$ 上求解 $${coeffLatex}\\cos ${v} = ${rhs}$。`),
@@ -440,7 +459,7 @@ export const elementaryTrigonometricEquationsContainingTangent: TopicDef = {
         const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         const ansStr = item.ans.join(", ");
         return solutionsProblem({
           prompt: t(
@@ -501,7 +520,7 @@ export const elementaryTrigonometricEquationsContainingTangent: TopicDef = {
         const v = rng.pick(["x", "\\theta", "t", "u", "z"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         return oneOf(
           rng,
           t(`Solve $${coeffLatex}\\tan ${v} = ${rhs}$ on $[0, 2\\pi)$.`, `在 $[0, 2\\pi)$ 上求解 $${coeffLatex}\\tan ${v} = ${rhs}$。`),
@@ -675,7 +694,7 @@ export const elementaryTrigonometricEquationsContainingSecant: TopicDef = {
         const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         const ansStr = item.ans.join(", ");
         return solutionsProblem({
           prompt: t(
@@ -850,7 +869,7 @@ export const elementaryTrigonometricEquationsContainingCosecant: TopicDef = {
         const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         const ansStr = item.ans.join(", ");
         return solutionsProblem({
           prompt: t(
@@ -929,7 +948,7 @@ export const elementaryTrigonometricEquationsContainingCotangent: TopicDef = {
         const v = rng.pick(["x", "\\theta", "t", "u", "z"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         return oneOf(
           rng,
           t(`Solve $${coeffLatex}\\cot ${v} = ${rhs}$ on $[0, 2\\pi)$.`, `在 $[0, 2\\pi)$ 上求解 $${coeffLatex}\\cot ${v} = ${rhs}$。`),
@@ -946,7 +965,7 @@ export const elementaryTrigonometricEquationsContainingCotangent: TopicDef = {
       id: "solve-elementary-cotangent-equations-degrees",
       title: t("Solve cot(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解余切方程（角度制）"),
       explanation: t(
-        "Rewrite the equation as a tangent equation and remember that tangent repeats every one hundred eighty degrees, giving two solutions in a full turn. Use $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$:\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
+        "Rewrite the equation as a tangent equation and remember that tangent repeats every $180^{\\circ}$, giving two solutions in a full turn. Use $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$:\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
         "把方程改写成正切方程，并记住正切每 180° 重复一次，所以一整周内有两个解。利用 $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$：\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
       ),
       generate(rng) {
@@ -1018,7 +1037,7 @@ export const elementaryTrigonometricEquationsContainingCotangent: TopicDef = {
         const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
-        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const rhs = scaled(item.val, coeff);
         const ansStr = item.ans.join(", ");
         return solutionsProblem({
           prompt: t(
@@ -1137,8 +1156,8 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
       id: "particular-solutions-from-general-trig",
       title: t("Evaluate particular degree solutions from general formulas", "由通解公式求特定角度解"),
       explanation: t(
-        "A general solution is a family of angles indexed by an integer, and choosing a specific integer picks out one member of the family. Given a general solution $x = \\alpha + 360k$ or $x = \\alpha + 180k$ in degrees, substitute the specified integer $k$ to find a particular solution.",
-        "通解是一族以整数为下标的角，选定一个具体的整数就得到这族角中的一个。给定角度制下的通解 $x = \\alpha + 360k$ 或 $x = \\alpha + 180k$，代入指定的整数 $k$ 即可求得对应的特解。",
+        "A general solution is a family of angles indexed by an integer, and choosing a specific integer picks out one member of the family. Given a general solution $x = \\alpha + 360k$ or $x = \\alpha + 180k$ in degrees, substitute an integer $k$ to find a particular solution, and choose the integer that lands in the interval you need.",
+        "通解是一族以整数为下标的角，选定一个具体的整数就得到这族角中的一个。给定角度制下的通解 $x = \\alpha + 360k$ 或 $x = \\alpha + 180k$，选取使结果落在给定区间内的整数 $k$ 并代入，即可求得对应的特解。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1155,14 +1174,14 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
         const ans = item.alpha + k * item.period;
         return numberProblem({
           prompt: t(
-            `One branch of the general solution to $${item.fn}(x^{\\circ}) = ${item.val}$ is $x = ${item.alpha} + ${item.period}k$. Find the value of $x$ when $k = ${k}$.`,
-            `方程 $${item.fn}(x^{\\circ}) = ${item.val}$ 的通解分支之一为 $x = ${item.alpha} + ${item.period}k$。求当 $k = ${k}$ 时 $x$ 的值。`,
+            `One branch of the general solution to $${item.fn}(x^{\\circ}) = ${item.val}$ is $x = ${item.alpha} + ${item.period}k$. Find the member of this branch in the interval $[${k * item.period}, ${(k + 1) * item.period})$.`,
+            `方程 $${item.fn}(x^{\\circ}) = ${item.val}$ 的通解分支之一为 $x = ${item.alpha} + ${item.period}k$。求这一分支落在区间 $[${k * item.period}, ${(k + 1) * item.period})$ 内的解。`,
           ),
           answer: ans,
           wrong: [item.alpha - k * item.period, item.alpha + k * 180, item.alpha + (k + 1) * item.period],
           solution: t(
-            `Substitute $k = ${k}$ into $x = ${item.alpha} + ${item.period}k$: $x = ${item.alpha} + ${item.period}(${k}) = ${ans}$.`,
-            `将 $k = ${k}$ 代入 $x = ${item.alpha} + ${item.period}k$：得 $x = ${item.alpha} + ${item.period}(${k}) = ${ans}$。`,
+            `Since $${item.alpha}$ is between $0$ and $${item.period}$, the interval calls for $k = ${k}$, and $x = ${item.alpha} + ${item.period}(${k}) = ${ans}$. Other integers move $x$ out of the interval by whole periods.`,
+            `因为 $${item.alpha}$ 在 $0$ 与 $${item.period}$ 之间，这个区间要求 $k = ${k}$，于是 $x = ${item.alpha} + ${item.period}(${k}) = ${ans}$。其他整数会使 $x$ 移动整数个周期，落到区间之外。`,
           ),
         });
       },
@@ -1238,8 +1257,8 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
           t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
           t(
-            `Solve for the argument $u = ${B}${v}$ first, then divide by $${B}$: $${v} = ${item.ans}$.`,
-            `先求整体参数 $u = ${B}${v}$，然后两边除以 $${B}$ 得：$${v} = ${item.ans}$。`,
+            `Solve for the whole inner angle $${B}${v}$ first, adding multiples of the period, then divide everything by $${B}$: $${v} = ${item.ans}$.`,
+            `先对整个内层角 $${B}${v}$ 求解并加上周期的倍数，再全部除以 $${B}$ 得：$${v} = ${item.ans}$。`,
           ),
         );
       },
@@ -1266,14 +1285,14 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
         const ans = base + k * step;
         return numberProblem({
           prompt: t(
-            `The principal branch of solutions to $${item.fn}(${B}x^{\\circ}) = ${item.val}$ is $x = \\frac{${item.alpha} + ${item.basePeriod}k}{${B}}$. Find $x$ when $k = ${k}$.`,
-            `方程 $${item.fn}(${B}x^{\\circ}) = ${item.val}$ 的主解分支为 $x = \\frac{${item.alpha} + ${item.basePeriod}k}{${B}}$。求当 $k = ${k}$ 时 $x$ 的值。`,
+            `One solution of $${item.fn}(${B}x^{\\circ}) = ${item.val}$ is $x = ${base}$. Moving up from it by whole periods of the left side gives more solutions. Find the solution $${k}$ ${k === 1 ? "period" : "periods"} above $x = ${base}$.`,
+            `$x = ${base}$ 是方程 $${item.fn}(${B}x^{\\circ}) = ${item.val}$ 的一个解。从它向上移动左边函数的整数个周期，得到其他解。求比 $x = ${base}$ 大 $${k}$ 个周期的解。`,
           ),
           answer: ans,
           wrong: [item.alpha + k * step, base + k * item.basePeriod, ans + step],
           solution: t(
-            `Substitute $k = ${k}$: $x = \\frac{${item.alpha} + ${item.basePeriod}(${k})}{${B}} = ${base} + ${k} \\cdot ${step} = ${ans}$.`,
-            `代入 $k = ${k}$：$x = \\frac{${item.alpha} + ${item.basePeriod}(${k})}{${B}} = ${base} + ${k} \\cdot ${step} = ${ans}$。`,
+            `The period of the left side is $\\frac{${item.basePeriod}}{${B}} = ${step}$, so $x = ${base} + ${k} \\cdot ${step} = ${ans}$.`,
+            `左边函数的周期是 $\\frac{${item.basePeriod}}{${B}} = ${step}$，所以 $x = ${base} + ${k} \\cdot ${step} = ${ans}$。`,
           ),
         });
       },
@@ -1354,7 +1373,7 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
           t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
           t(
-            `Find all values of the inner argument in its transformed range, then solve for $${v}$: $${v} = ${item.ans}$.`,
+            `Find every value of the inner angle in the range it covers, then solve for $${v}$: $${v} = ${item.ans}$.`,
             `先求内层表达式在其变换区间内的所有可能值，再解出 $${v}$：$${v} = ${item.ans}$。`,
           ),
         );
@@ -1379,7 +1398,7 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
         ]);
         const v = rng.pick(["x", "t", "u"]);
         const shiftLatex = sign === 1 ? `${v}^{\\circ} - ${shift}^{\\circ}` : `${v}^{\\circ} + ${shift}^{\\circ}`;
-        const ansNums = item.base.map((b) => b + sign * shift);
+        const ansNums = inTurn(item.base.map((b) => b + sign * shift));
         const ans = ansNums.map(String);
         const wrong1 = item.base.map((b) => String(b - sign * shift));
         const wrong2 = item.base.map(String);
@@ -1394,8 +1413,8 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
           values: ans,
           wrong: [wrong1, wrong2, wrong3],
           solution: t(
-            `The inner angle equals $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
-            `内层角等于 $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$，解得 $${v} = ${ansStr}$。`,
+            `The inner angle equals $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$ up to whole turns, so solving for $${v}$ and keeping values in $[0, 360)$ gives $${v} = ${ansStr}$.`,
+            `内层角等于 $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$（可差整数圈），解出 $${v}$ 并保留 $[0, 360)$ 内的值，得 $${v} = ${ansStr}$。`,
           ),
         });
       },
@@ -1473,7 +1492,7 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
           t(`$${v} = ${ansLatex}$`, `$${v} = ${ansLatex}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
           t(
-            `Solve for the argument inside the expanded range, yielding $${v} = ${ansLatex}$.`,
+            `Find every value of the inner angle in the range it covers, then solve for the variable, yielding $${v} = ${ansLatex}$.`,
             `先在扩大后的范围内求出内层参数，再解得 $${v} = ${ansLatex}$。`,
           ),
         );
@@ -1498,7 +1517,7 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
         ]);
         const v = rng.pick(["x", "t", "u"]);
         const shiftLatex = sign === 1 ? `${v}^{\\circ} - ${shift}^{\\circ}` : `${v}^{\\circ} + ${shift}^{\\circ}`;
-        const ansNums = item.base.map((b) => b + sign * shift);
+        const ansNums = inTurn(item.base.map((b) => b + sign * shift));
         const ans = ansNums.map(String);
         const wrong1 = item.base.map((b) => String(b - sign * shift));
         const wrong2 = item.base.map(String);
@@ -1513,8 +1532,8 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
           values: ans,
           wrong: [wrong1, wrong2, wrong3],
           solution: t(
-            `The inner angle equals $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
-            `内层角等于 $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$，解得 $${v} = ${ansStr}$。`,
+            `The inner angle equals $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$ up to whole turns, so solving for $${v}$ and keeping values in $[0, 360)$ gives $${v} = ${ansStr}$.`,
+            `内层角等于 $${item.base.map((d) => `${d}^{\\circ}`).join(", ")}$（可差整数圈），解出 $${v}$ 并保留 $[0, 360)$ 内的值，得 $${v} = ${ansStr}$。`,
           ),
         });
       },
@@ -1591,7 +1610,7 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
           t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
           t(
-            `Set the inner argument in $[0, 2\\pi)$ and divide by frequency: $${v} = ${item.ans}$.`,
+            `The inner angle $2${v}$ runs over $[0, 2\\pi)$, so find its values there and divide by $2$: $${v} = ${item.ans}$.`,
             `令内层变量在 $[0, 2\\pi)$ 内取值并除以频率系数：$${v} = ${item.ans}$。`,
           ),
         );
@@ -1665,41 +1684,49 @@ export const solvingTrigonometricEquationsUsingTheSinCosTanIdentity: TopicDef = 
         const item = rng.pick([
           {
             expr: "\\sin x = \\cos x",
+            tan: "1",
             ans: "\\frac{\\pi}{4}, \\frac{5\\pi}{4}",
             wrong: ["\\frac{3\\pi}{4}, \\frac{7\\pi}{4}", "\\frac{\\pi}{4}, \\frac{3\\pi}{4}", "\\frac{\\pi}{2}, \\frac{3\\pi}{2}"],
           },
           {
             expr: "\\sin x = -\\cos x",
+            tan: "-1",
             ans: "\\frac{3\\pi}{4}, \\frac{7\\pi}{4}",
             wrong: ["\\frac{\\pi}{4}, \\frac{5\\pi}{4}", "\\frac{\\pi}{4}, \\frac{3\\pi}{4}", "0, \\pi"],
           },
           {
             expr: "\\sin x - \\sqrt{3}\\cos x = 0",
+            tan: "\\sqrt{3}",
             ans: "\\frac{\\pi}{3}, \\frac{4\\pi}{3}",
             wrong: ["\\frac{\\pi}{6}, \\frac{7\\pi}{6}", "\\frac{2\\pi}{3}, \\frac{5\\pi}{3}", "\\frac{\\pi}{3}, \\frac{2\\pi}{3}"],
           },
           {
             expr: "\\sin x + \\sqrt{3}\\cos x = 0",
+            tan: "-\\sqrt{3}",
             ans: "\\frac{2\\pi}{3}, \\frac{5\\pi}{3}",
             wrong: ["\\frac{\\pi}{3}, \\frac{4\\pi}{3}", "\\frac{5\\pi}{6}, \\frac{11\\pi}{6}", "\\frac{2\\pi}{3}, \\frac{4\\pi}{3}"],
           },
           {
             expr: "\\sqrt{3}\\sin x - \\cos x = 0",
+            tan: "\\frac{\\sqrt{3}}{3}",
             ans: "\\frac{\\pi}{6}, \\frac{7\\pi}{6}",
             wrong: ["\\frac{\\pi}{3}, \\frac{4\\pi}{3}", "\\frac{5\\pi}{6}, \\frac{11\\pi}{6}", "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"],
           },
           {
             expr: "\\sqrt{3}\\sin x + \\cos x = 0",
+            tan: "-\\frac{\\sqrt{3}}{3}",
             ans: "\\frac{5\\pi}{6}, \\frac{11\\pi}{6}",
             wrong: ["\\frac{\\pi}{6}, \\frac{7\\pi}{6}", "\\frac{2\\pi}{3}, \\frac{5\\pi}{3}", "\\frac{5\\pi}{6}, \\frac{7\\pi}{6}"],
           },
           {
             expr: "3\\sin x - 3\\cos x = 0",
+            tan: "1",
             ans: "\\frac{\\pi}{4}, \\frac{5\\pi}{4}",
             wrong: ["\\frac{3\\pi}{4}, \\frac{7\\pi}{4}", "\\frac{\\pi}{4}", "0, \\pi"],
           },
           {
             expr: "2\\sin x + 2\\sqrt{3}\\cos x = 0",
+            tan: "-\\sqrt{3}",
             ans: "\\frac{2\\pi}{3}, \\frac{5\\pi}{3}",
             wrong: ["\\frac{\\pi}{3}, \\frac{4\\pi}{3}", "\\frac{\\pi}{6}, \\frac{7\\pi}{6}", "\\frac{2\\pi}{3}"],
           },
@@ -1712,8 +1739,8 @@ export const solvingTrigonometricEquationsUsingTheSinCosTanIdentity: TopicDef = 
           t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
           item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
           t(
-            `Divide both sides by $\\cos ${v}$ to get a tangent equation: $\\tan ${v} = \\dots$, yielding $${v} = ${item.ans}$.`,
-            `两边同除以 $\\cos ${v}$ 得到正切方程：$\\tan ${v} = \\dots$，解得 $${v} = ${item.ans}$。`,
+            `Divide both sides by $\\cos ${v}$ to get a tangent equation: $\\tan ${v} = ${item.tan}$, yielding $${v} = ${item.ans}$.`,
+            `两边同除以 $\\cos ${v}$ 得到正切方程：$\\tan ${v} = ${item.tan}$，解得 $${v} = ${item.ans}$。`,
           ),
         );
       },
@@ -2022,7 +2049,7 @@ export const quadraticTrigonometricEquationsContainingSineOrCosine: TopicDef = {
       id: "solve-quadratic-sin-cos-equations",
       title: t("Solve quadratic equations in sin or cos on [0, 2π)", "在 [0, 2π) 上求解正弦或余弦二次方程"),
       explanation: t(
-        "Treat the trigonometric function as the unknown of a quadratic, factor or use the formula, and discard any value outside the range from minus one to one. For $2\\sin^{2} x - \\sin x - 1 = 0$:\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ or } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
+        "Treat the trigonometric function as the unknown of a quadratic, factor or use the formula, and discard any value outside the range from $-1$ to $1$. For $2\\sin^{2} x - \\sin x - 1 = 0$:\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ or } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
         "把三角函数当作二次方程的未知数，因式分解或用求根公式求解，并舍去不在 −1 到 1 之间的值。对于 $2\\sin^{2} x - \\sin x - 1 = 0$：\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ 或 } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
       ),
       generate(rng) {
@@ -2253,8 +2280,8 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
             wrong: ["0, \\pi", "\\frac{\\pi}{3}, \\frac{4\\pi}{3}", "\\frac{\\pi}{6}, \\pi, \\frac{7\\pi}{6}"],
           },
           {
-            expr: "\\sec^2 x - 2\\tan x = 4",
-            ans: "\\text{Substitute } 1 + \\tan^2 x: \\frac{3\\pi}{4}, \\frac{7\\pi}{4}",
+            expr: "\\sec^2 x + 2\\tan x = 0",
+            ans: "\\frac{3\\pi}{4}, \\frac{7\\pi}{4}",
             wrong: ["\\frac{\\pi}{4}, \\frac{5\\pi}{4}", "\\frac{\\pi}{4}, \\frac{3\\pi}{4}", "0, \\pi"],
           },
           {
@@ -2287,8 +2314,7 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
         ]);
         const v = rng.pick(["x", "\\theta", "t", "u", "z"]);
         const promptExpr = item.expr.replaceAll("x", v);
-        // Clean ans display
-        const cleanAns = item.ans.replace("\\text{Substitute } 1 + \\tan^2 x: ", "");
+        const cleanAns = item.ans;
         return oneOf(
           rng,
           t(`Solve $${promptExpr}$ on $[0, 2\\pi)$.`, `在 $[0, 2\\pi)$ 上解方程 $${promptExpr}$。`),
@@ -2305,7 +2331,7 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
       id: "solve-quadratic-tangent-cotangent-degrees",
       title: t("Solve quadratic equations in tangent or cotangent in degrees", "在角度制下求解正切或余切二次方程"),
       explanation: t(
-        "Solve the quadratic for the value of the function, then use the period of one hundred eighty degrees to list every angle in a full turn. Solve the quadratic equation for $\\tan(x^{\\circ})$ or $\\cot(x^{\\circ})$ and list all degree solutions in $[0, 360)$.",
+        "Solve the quadratic for the value of the function, then use the period of $180^{\\circ}$ to list every angle in a full turn. Solve the quadratic equation for $\\tan(x^{\\circ})$ or $\\cot(x^{\\circ})$ and list all degree solutions in $[0, 360)$.",
         "先解二次方程求出函数值，再利用 180° 的周期写出一整周内的所有角。求出 $\\tan(x^{\\circ})$ 或 $\\cot(x^{\\circ})$ 的二次方程解，并列出 $[0, 360)$ 内的所有角度解。",
       ),
       generate(rng) {
@@ -2358,7 +2384,7 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
             ],
           },
           {
-            expr: `${kStr}\\sec^2(x^{\\circ}) - ${2 * k}\\tan(x^{\\circ}) = ${4 * k}`,
+            expr: `${kStr}\\sec^2(x^{\\circ}) + ${2 * k}\\tan(x^{\\circ}) = 0`,
             ans: ["135", "315"],
             wrong: [
               ["45", "225"],

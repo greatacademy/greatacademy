@@ -105,8 +105,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           `(${h - c}, ${k}), (${h + c}, ${k})`,
           [`(${h - a}, ${k}), (${h + a}, ${k})`, `(${h}, ${k - c}), (${h}, ${k + c})`, `(${h - b}, ${k}), (${h + b}, ${k})`],
           [
-            `$c^{2} = ${a * a} - ${b * b}$, so $c = ${c}$. The larger denominator is under $x$, so move ${c} left and right of $(${h}, ${k})$.`,
-            `$c^{2} = ${a * a} - ${b * b}$，所以 $c = ${c}$。较大的分母在 $x$ 下面，所以从 $(${h}, ${k})$ 向左右各移 ${c}。`,
+            `$c^{2} = ${a * a} - ${b * b}$, so $c = ${c}$. The larger denominator is under $x$, so move $${c}$ left and right of $(${h}, ${k})$.`,
+            `$c^{2} = ${a * a} - ${b * b}$，所以 $c = ${c}$。较大的分母在 $x$ 下面，所以从 $(${h}, ${k})$ 向左右各移 $${c}$。`,
           ],
         );
       },
@@ -164,8 +164,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           count,
           [0, 1, 2, 4].filter((n) => n !== count),
           [
-            `The center is ${distance} from the $x$-axis and the ellipse reaches ${b} up and down, which gives ${count}.`,
-            `中心到 $x$ 轴的距离是 ${distance}，椭圆上下各伸展 ${b}，所以有 ${count} 个。`,
+            `The center is $${distance}$ from the $x$-axis and the ellipse reaches $${b}$ up and down, which gives $${count}$.`,
+            `中心到 $x$ 轴的距离是 $${distance}$，椭圆上下各伸展 $${b}$，所以有 $${count}$ 个。`,
           ],
         );
       },
@@ -227,8 +227,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           `(${h - c}, ${k}), (${h + c}, ${k})`,
           [`(${h - a}, ${k}), (${h + a}, ${k})`, `(${h}, ${k - c}), (${h}, ${k + c})`, `(${h - b}, ${k}), (${h + b}, ${k})`],
           [
-            `$c^{2} = ${a * a} + ${b * b}$, so $c = ${c}$, and the foci are ${c} left and right of $(${h}, ${k})$.`,
-            `$c^{2} = ${a * a} + ${b * b}$，所以 $c = ${c}$，焦点在 $(${h}, ${k})$ 左右各 ${c} 处。`,
+            `$c^{2} = ${a * a} + ${b * b}$, so $c = ${c}$, and the foci are $${c}$ left and right of $(${h}, ${k})$.`,
+            `$c^{2} = ${a * a} + ${b * b}$，所以 $c = ${c}$，焦点在 $(${h}, ${k})$ 左右各 $${c}$ 处。`,
           ],
         );
       },
@@ -256,8 +256,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           count,
           [0, 1, 2, 4].filter((n) => n !== count),
           [
-            `The vertices are at $x = \\pm ${a}$, and the line is ${distance} from the center, which gives ${count}.`,
-            `顶点在 $x = \\pm ${a}$，直线到中心的距离是 ${distance}，所以有 ${count} 个。`,
+            `The vertices are at $x = \\pm ${a}$, and the line is $${distance}$ from the center, which gives $${count}$.`,
+            `顶点在 $x = \\pm ${a}$，直线到中心的距离是 $${distance}$，所以有 $${count}$ 个。`,
           ],
         );
       },
@@ -878,8 +878,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           n,
           [n * 2, angle, 360 - angle],
           [
-            `$n \\times ${angle}$ must be a multiple of 360, which first happens at $n = ${n}$.`,
-            `$n \\times ${angle}$ 必须是 360 的倍数，第一次是在 $n = ${n}$ 时。`,
+            `$n \\times ${angle}$ must be a multiple of $360$, which first happens at $n = ${n}$.`,
+            `$n \\times ${angle}$ 必须是 $360$ 的倍数，第一次是在 $n = ${n}$ 时。`,
           ],
         );
       },

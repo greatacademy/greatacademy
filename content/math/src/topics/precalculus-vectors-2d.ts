@@ -88,8 +88,8 @@ export const introductionToVectors: TopicDef = {
           },
           {
             desc: (v: number) => ({
-              en: `A runner accelerating at $${v}\\text{ m/s}^2$ eastward`,
-              zh: `一名跑步者以 $${v}\\text{ m/s}^2$ 向东加速`,
+              en: `A rocket accelerating at $${v}\\text{ m/s}^2$ straight up`,
+              zh: `一枚火箭以 $${v}\\text{ m/s}^2$ 竖直向上加速`,
             }),
             isVector: true,
             concept: { en: "acceleration", zh: "加速度" },
@@ -1273,7 +1273,7 @@ export const describingThePositionVectorOfAPointUsingKnownVectors: TopicDef = {
         const rightAns = `\\frac{${n}}{${sum}}${a} + \\frac{${m}}{${sum}}${b}`;
         const swappedAns = `\\frac{${m}}{${sum}}${a} + \\frac{${n}}{${sum}}${b}`;
         const wrong1 = `\\frac{${m}}{${sum}}${a} - \\frac{${n}}{${sum}}${b}`;
-        const wrong2 = `${m}${a} + ${n}${b}`;
+        const wrong2 = `${m === 1 ? "" : m}${a} + ${n === 1 ? "" : n}${b}`;
 
         return oneOf(
           rng,

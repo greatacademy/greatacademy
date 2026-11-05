@@ -1454,8 +1454,8 @@ export const theFundamentalTheoremOfAlgebraForQuadraticEquations: TopicDef = {
           prefix: "p(x) =",
           wrong: [polyX([1, 2 * p, p * p + q * q]), polyX([1, -2 * p, p * p - q * q]), polyX([1, -p, p * p + q * q])],
           solution: t(
-            `The conjugate $${cx(p, -q)}$ is also a root. Their sum is $${2 * p}$ and their product is $${p * p} + ${q * q} = ${p * p + q * q}$:${steps(`p(x) = x^{2} - (${2 * p})x + ${p * p + q * q} = ${answer}`)}`,
-            `共轭复数 $${cx(p, -q)}$ 也是根。两根之和为 $${2 * p}$，之积为 $${p * p} + ${q * q} = ${p * p + q * q}$：${steps(`p(x) = x^{2} - (${2 * p})x + ${p * p + q * q} = ${answer}`)}`,
+            `The conjugate $${cx(p, -q)}$ is also a root. Their sum is $${2 * p}$ and their product is $${p * p} + ${q * q} = ${p * p + q * q}$:${steps(`p(x) = ${answer}`)}`,
+            `共轭复数 $${cx(p, -q)}$ 也是根。两根之和为 $${2 * p}$，之积为 $${p * p} + ${q * q} = ${p * p + q * q}$：${steps(`p(x) = ${answer}`)}`,
           ),
         });
       },
@@ -1492,7 +1492,7 @@ export const theFundamentalTheoremOfAlgebraWithCubicEquations: TopicDef = {
       generate(rng) {
         const r = rng.int(-6, 6);
         const q = quadKind(rng);
-        const p = `(${linear(1, -r)})(${quadTex(q)})`;
+        const p = r === 0 ? `x(${quadTex(q)})` : `(${linear(1, -r)})(${quadTex(q)})`;
         const reals = new Set([`${r}`, ...q.reals]).size;
         const kind = rng.pick(["nonreal", "distinct"] as const);
         const disc = q.b * q.b - 4 * q.c;
@@ -1623,8 +1623,8 @@ export const solvingCubicEquationsWithComplexRoots: TopicDef = {
           prefix: "x =",
           wrong: [cxr(-s * j, j, 3), cxr(s * j, j, 1), cxr(s * k, k, 3), cxr(0, k, 1)],
           solution: t(
-            `Rewrite as $x^{3} ${plus ? "+" : "-"} ${k ** 3} = 0$ and factor the ${plus ? "sum" : "difference"} of cubes:${steps(`(${lin})(${quad}) = 0`, `x = \\frac{${-s * k} \\pm \\sqrt{${k * k} - ${4 * k * k}}}{2} = \\frac{${-s * k} \\pm ${2 * j === 1 ? "" : 2 * j}i\\sqrt{3}}{2} = ${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}`)}The solutions are $${-s * k}$ and $${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}$.`,
-            `化为 $x^{3} ${plus ? "+" : "-"} ${k ** 3} = 0$，分解立方${plus ? "和" : "差"}：${steps(`(${lin})(${quad}) = 0`, `x = \\frac{${-s * k} \\pm \\sqrt{${k * k} - ${4 * k * k}}}{2} = \\frac{${-s * k} \\pm ${2 * j === 1 ? "" : 2 * j}i\\sqrt{3}}{2} = ${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}`)}解为 $${-s * k}$ 和 $${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}$。`,
+            `Rewrite as $x^{3} ${plus ? "+" : "-"} ${k ** 3} = 0$ and factor the ${plus ? "sum" : "difference"} of cubes:${steps(`(${lin})(${quad}) = 0`, `x = \\frac{${s * k} \\pm \\sqrt{${k * k} - ${4 * k * k}}}{2} = \\frac{${s * k} \\pm ${2 * j === 1 ? "" : 2 * j}i\\sqrt{3}}{2} = ${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}`)}The solutions are $${-s * k}$ and $${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}$.`,
+            `化为 $x^{3} ${plus ? "+" : "-"} ${k ** 3} = 0$，分解立方${plus ? "和" : "差"}：${steps(`(${lin})(${quad}) = 0`, `x = \\frac{${s * k} \\pm \\sqrt{${k * k} - ${4 * k * k}}}{2} = \\frac{${s * k} \\pm ${2 * j === 1 ? "" : 2 * j}i\\sqrt{3}}{2} = ${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}`)}解为 $${-s * k}$ 和 $${s * j} \\pm ${j === 1 ? "" : j}i\\sqrt{3}$。`,
           ),
         });
       },

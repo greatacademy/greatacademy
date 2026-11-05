@@ -633,11 +633,14 @@ const covariance: TopicDef = {
       ),
       generate(rng) {
         const n = rng.pick([4, 5]);
-        const [xs, ys] = pairsWithMeans(rng, n, 1, 12);
+        let [xs, ys] = pairsWithMeans(rng, n, 1, 12);
+        const covSum = (u: readonly number[], v: readonly number[]) => sum(u.map((x, i) => (x - sum(u) / n) * (v[i]! - sum(v) / n)));
+        for (let tries = 0; tries < 100 && covSum(xs, ys) === 0; tries++) {
+          [xs, ys] = pairsWithMeans(rng, n, 1, 12);
+        }
         const mx = sum(xs) / n;
         const my = sum(ys) / n;
-        const prods = xs.map((x, i) => (x - mx) * (ys[i]! - my));
-        const sxy = sum(prods);
+        const sxy = covSum(xs, ys);
         const ans = Q.of(sxy, n);
         const line = xs.map((x, i) => `(${x - mx})(${ys[i]! - my})`).join(" + ");
         return numberProblem({
@@ -1718,12 +1721,13 @@ const exponentialRegression: TopicDef = {
         const b = Q.of(bh, 100);
         const grow = bh > 100;
         const ans = Q.of(Math.abs(bh - 100));
-        const what = rng.pick([
-          ["the number of users of an app", "weeks", "某应用的用户数", "周"],
-          ["the value of a car (in dollars)", "years", "一辆汽车的价值（美元）", "年"],
-          ["the number of bacteria in a culture", "hours", "培养皿中的细菌数", "小时"],
-          ["the mass of a drug in the blood (in milligrams)", "hours", "血液中药物的质量（毫克）", "小时"],
-        ] as const);
+        const contexts = [
+          ["the number of users of an app", "weeks", "某应用的用户数", "周", true],
+          ["the value of a car (in dollars)", "years", "一辆汽车的价值（美元）", "年", false],
+          ["the number of bacteria in a culture", "hours", "培养皿中的细菌数", "小时", true],
+          ["the mass of a drug in the blood (in milligrams)", "hours", "血液中药物的质量（毫克）", "小时", false],
+        ] as const;
+        const what = rng.pick(contexts.filter((c) => c[4] === grow));
         return numberProblem({
           prompt: t(
             `An exponential regression models ${what[0]} after $x$ ${what[1]} by $\\hat{y} = ${a} \\cdot ${dec(b)}^x$. By what percent does the model say the value ${grow ? "increases" : "decreases"} each ${what[1].replace(/s$/, "")}?`,

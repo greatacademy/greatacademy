@@ -1055,8 +1055,8 @@ export const dividingComplexNumbers: TopicDef = {
           simplified: true,
           wrong: [cx(u, -v), cx(-u, v), cx(v, u), cx(-u, -v)],
           solution: t(
-            `Multiply numerator and denominator by the conjugate of the denominator, ${cx(z2.c, -z2.d)}:\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
-            `分子分母同乘分母的共轭复数 ${cx(z2.c, -z2.d)}：\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
+            `Multiply numerator and denominator by the conjugate of the denominator, $${cx(z2.c, -z2.d)}$:\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
+            `分子分母同乘分母的共轭复数 $${cx(z2.c, -z2.d)}$：\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
           ),
         });
       },
@@ -1140,8 +1140,8 @@ export const solvingEquationsByEquatingRealAndImaginaryParts: TopicDef = {
           simplified: true,
           wrong: [cx(x, -y), cx(-x, y), cx(y, x), cx(-x, -y)],
           solution: t(
-            `Substitute $z = x + yi$ and $\\bar{z} = x - yi$:\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\nEquating real parts: $${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$.\nEquating imaginary parts: $${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$.\nThus, $z = ${cx(x, y)}$.`,
-            `代入 $z = x + yi$ 与 $\\bar{z} = x - yi$：\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\n实部相等：$${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$。\n虚部相等：$${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$。\n因此，$z = ${cx(x, y)}$。`,
+            `Substitute $z = x + yi$ and $\\bar{z} = x - yi$:\n$$${k}(x + yi) + (x - yi) = ${poly([k + m, "x"])} + ${poly([k - m, "y"])}i = ${cx(bigA, bigB)}$$\nEquating real parts: $${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$.\nEquating imaginary parts: $${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$.\nThus, $z = ${cx(x, y)}$.`,
+            `代入 $z = x + yi$ 与 $\\bar{z} = x - yi$：\n$$${k}(x + yi) + (x - yi) = ${poly([k + m, "x"])} + ${poly([k - m, "y"])}i = ${cx(bigA, bigB)}$$\n实部相等：$${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$。\n虚部相等：$${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$。\n因此，$z = ${cx(x, y)}$。`,
           ),
         });
       },

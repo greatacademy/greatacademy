@@ -19,6 +19,94 @@ function _piTex(c: Coefficient): string {
   return v.sign() < 0 ? `-${body}` : body;
 }
 
+/** scalePi writes mult times an angle such as -\\frac{2\\pi}{3} in lowest terms. */
+function scalePi(tex: string, mult: number): string {
+  if (tex === "0") return "0";
+  const m = /^(-?)(?:\\frac\{(\d*)\\pi\}\{(\d+)\}|(\d*)\\pi)$/.exec(tex);
+  if (!m) throw new Error(`scalePi: ${tex}`);
+  const num = Number(m[2] || m[4] || 1) * (m[1] === "-" ? -1 : 1);
+  return _piTex(Q.of(num * mult, Number(m[3] ?? 1)));
+}
+
+/** specialSin holds the exact sines of the angles reached by the collapsing problems. */
+const specialSin: Readonly<Record<number, string>> = {
+  30: "\\frac{1}{2}",
+  45: "\\frac{\\sqrt{2}}{2}",
+  60: "\\frac{\\sqrt{3}}{2}",
+  90: "1",
+  120: "\\frac{\\sqrt{3}}{2}",
+  135: "\\frac{\\sqrt{2}}{2}",
+  150: "\\frac{1}{2}",
+};
+
+/** specialCos holds the exact cosines of the angles reached by the collapsing problems. */
+const specialCos: Readonly<Record<number, string>> = {
+  30: "\\frac{\\sqrt{3}}{2}",
+  45: "\\frac{\\sqrt{2}}{2}",
+  60: "\\frac{1}{2}",
+  90: "0",
+  120: "-\\frac{1}{2}",
+  135: "-\\frac{\\sqrt{2}}{2}",
+  150: "-\\frac{\\sqrt{3}}{2}",
+};
+
+/** specialTan holds the exact tangents of the angles reached by the collapsing problems. */
+const specialTan: Readonly<Record<number, string>> = {
+  30: "\\frac{\\sqrt{3}}{3}",
+  45: "1",
+  60: "\\sqrt{3}",
+  120: "-\\sqrt{3}",
+  135: "-1",
+  150: "-\\frac{\\sqrt{3}}{3}",
+};
+
+/** splitAngle writes a special angle as a + b or a - b, with a and b multiples of 5 degrees. */
+function splitAngle(rng: Rng, targets: readonly number[]): { a: number; b: number; isSum: boolean; target: number } {
+  const target = rng.pick(targets);
+  const isSum = rng.bool();
+  let b = 5 * (isSum ? rng.int(1, target / 5 - 1) : rng.int(1, 8));
+  if (b === 90 || (isSum ? target - b : target + b) === 90) b += 5;
+  return { a: isSum ? target - b : target + b, b, isSum, target };
+}
+
+/** negated writes the opposite of a LaTeX number. */
+const negated = (tex: string) => (tex === "0" ? "1" : tex.startsWith("-") ? tex.slice(1) : `-${tex}`);
+
+/** scaleSurd multiplies an exact value such as $\\frac{\\sqrt{6} + \\sqrt{2}}{4}$ by mult and simplifies. */
+function scaleSurd(tex: string, mult: number): string {
+  if (mult === 1) return tex;
+  const whole = /^-?\d+$/.test(tex);
+  if (whole) return `${Number(tex) * mult}`;
+  const m = /^(-?)\\frac\{(.+)\}\{(\d+)\}$/.exec(tex);
+  if (!m) return `${mult}${tex}`;
+  const sign = m[1] ?? "";
+  const top = m[2] ?? "";
+  const den = Number(m[3]);
+  const divisor = gcd(mult, den);
+  const coefficient = mult / divisor;
+  const rest = den / divisor;
+  if (rest > 1) {
+    const scaledTop = coefficient === 1 ? top : `${coefficient}${top}`;
+    return `${sign}\\frac{${scaledTop}}{${rest}}`;
+  }
+  if (top === "1") return `${sign}${coefficient}`;
+  if (top.includes(" ")) {
+    if (sign === "") return top;
+    return top.includes(" + ") ? `-${top.replace(" + ", " - ")}` : top.split(" - ").reverse().join(" - ");
+  }
+  return `${sign}${coefficient === 1 ? "" : coefficient}${top}`;
+}
+
+/** scaleTangent multiplies a value such as $-2 + \\sqrt{3}$ by mult and removes the brackets. */
+function scaleTangent(tex: string, mult: number): string {
+  const m = /^(-?)2 ([+-]) \\sqrt\{3\}$/.exec(tex);
+  const root = `${mult === 1 ? "" : mult}\\sqrt{3}`;
+  return m ? `${m[1]}${2 * mult} ${m[2]} ${root}` : root;
+}
+
+/** mathOption turns LaTeX into a math option in both languages. */
+const mathOption = (tex: string): Text => t(`$${tex}$`, `$${tex}$`);
+
 /** oneOf builds a multiple-choice problem with options shuffled. */
 function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
   const seen = new Set([right.en]);
@@ -196,16 +284,16 @@ export const graphingTheInverseSineFunction: TopicDef = {
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
         const promptStr = mult === 1 ? `\\arcsin\\left(${item.val}\\right)` : `${mult}\\arcsin\\left(${item.val}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
-        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const ansStr = scalePi(item.ans, mult);
+        const wrongStr = item.wrong.map((w) => `$${scalePi(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $\\arcsin(${item.val}) = ${item.ans}$, multiplying by $${mult}$ gives $${ansStr}$.`,
-            `因为 $\\arcsin(${item.val}) = ${item.ans}$，乘以 $${mult}$ 得 $${ansStr}$。`,
+            `The angle in $\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right]$ with sine $${item.val}$ is $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `在 $\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right]$ 中，正弦为 $${item.val}$ 的角是 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -304,7 +392,7 @@ export const graphingTheInverseCosineFunction: TopicDef = {
       id: "key-points-and-symmetry-of-arccos",
       title: t("Key points and evaluation of arccos", "反余弦的关键点与求值"),
       explanation: t(
-        "The graph of inverse cosine is the reflection of the restricted cosine graph in the line through the origin at forty-five degrees, so its key points swap coordinates. Key points on $y = \\arccos x$ include $(-1, \\pi)$, $(0, \\pi/2)$, and $(1, 0)$. Furthermore, $\\arccos(-x) = \\pi - \\arccos x$.",
+        "The graph of inverse cosine is the reflection of the restricted cosine graph in the line $y = x$, so its key points swap coordinates. Key points on $y = \\arccos x$ include $(-1, \\pi)$, $(0, \\pi/2)$, and $(1, 0)$. Furthermore, $\\arccos(-x) = \\pi - \\arccos x$.",
         "反余弦的图象是限制后的余弦图象关于直线 $y = x$ 的对称图形，所以关键点的横纵坐标互换。$y = \\arccos x$ 上的关键点包括 $(-1, \\pi)$、$(0, \\pi/2)$ 与 $(1, 0)$。此外，$\\arccos(-x) = \\pi - \\arccos x$。",
       ),
       generate(rng) {
@@ -321,16 +409,16 @@ export const graphingTheInverseCosineFunction: TopicDef = {
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
         const promptStr = mult === 1 ? `\\arccos\\left(${item.val}\\right)` : `${mult}\\arccos\\left(${item.val}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
-        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const ansStr = scalePi(item.ans, mult);
+        const wrongStr = item.wrong.map((w) => `$${scalePi(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $\\arccos(${item.val}) = ${item.ans}$, multiplying by $${mult}$ gives $${ansStr}$.`,
-            `因为 $\\arccos(${item.val}) = ${item.ans}$，乘以 $${mult}$ 得 $${ansStr}$。`,
+            `The angle in $[0, \\pi]$ with cosine $${item.val}$ is $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `在 $[0, \\pi]$ 中，余弦为 $${item.val}$ 的角是 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -472,7 +560,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
           ),
           t("Odd function, symmetric about the origin", "奇函数，关于原点对称"),
           [
-            t("Even function, symmetric about the y-axis", "偶函数，关于 y 轴对称"),
+            t("Even function, symmetric about the $y$-axis", "偶函数，关于 $y$ 轴对称"),
             t("Periodic with period $\\pi$", "周期函数，周期为 $\\pi$"),
             t("Neither even nor odd", "非奇非偶函数"),
           ],
@@ -529,7 +617,7 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
         const promptStr = mult === 1 ? `\\${item.fn}\\left(${item.val}\\right)` : `${mult}\\${item.fn}\\left(${item.val}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scalePi(item.ans, mult);
         const wrongList = [
           "\\frac{\\pi}{6}",
           "\\frac{\\pi}{4}",
@@ -541,15 +629,15 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scalePi(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $\\${item.fn}(${item.val}) = ${item.ans}$, the answer is $${ansStr}$.`,
-            `因为 $\\${item.fn}(${item.val}) = ${item.ans}$，答案为 $${ansStr}$。`,
+            `$\\${item.fn}(${item.val}) = ${item.ans}$, the angle in the principal range with that ratio${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `$\\${item.fn}(${item.val}) = ${item.ans}$，这是主值区间内具有该比值的角${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -573,7 +661,7 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
         const promptStr = mult === 1 ? `\\arctan\\left(${item.val}\\right)` : `${mult}\\arctan\\left(${item.val}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scalePi(item.ans, mult);
         const wrongList = [
           "0",
           "\\frac{\\pi}{6}",
@@ -585,15 +673,15 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scalePi(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $\\arctan(${item.val}) = ${item.ans}$, multiplying gives $${ansStr}$.`,
-            `因为 $\\arctan(${item.val}) = ${item.ans}$，乘积得 $${ansStr}$。`,
+            `The angle in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ with tangent $${item.val}$ is $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 中，正切为 $${item.val}$ 的角是 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -708,7 +796,7 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
         ]);
         const mult = rng.pick([1, 2, 3]);
         const promptStr = mult === 1 ? item.expr : `${mult}\\left(${item.expr}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scalePi(item.ans, mult);
         const wrongList = [
           "\\frac{\\pi}{6}",
           "\\frac{\\pi}{4}",
@@ -719,15 +807,15 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scalePi(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Evaluate the inner trigonometric value first, then map into the principal range: result is $${ansStr}$.`,
-            `先计算内部三角函数值，再求主值区间内的对应角：结果为 $${ansStr}$。`,
+            `The inner angle is outside the principal range, so look for the angle in the principal range with the same ratio. That angle is $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `里面的角不在主值区间内，所以要找主值区间内比值相同的角。这个角是 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -1205,7 +1293,7 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
           { expr: `\\cot^{2}${v} - \\csc^{2}${v}`, ans: "-1", wrong: ["1", "0", `-\\sin^{2}${v}`] },
           { expr: `\\csc^{2}${v} - 1`, ans: `\\cot^{2}${v}`, wrong: [`\\tan^{2}${v}`, "1", `\\sin^{2}${v}`] },
           { expr: `1 + \\cot^{2}${v}`, ans: `\\csc^{2}${v}`, wrong: [`\\sec^{2}${v}`, "1", `\\cos^{2}${v}`] },
-          { expr: `(\\csc${v} - \\cot${v})(\\csc${v} + \\cot${v})`, ans: "1", wrong: ["-1", "0", "2"] },
+          { expr: `(\\csc ${v} - \\cot ${v})(\\csc ${v} + \\cot ${v})`, ans: "1", wrong: ["-1", "0", "2"] },
           { expr: `\\csc^{2}${v} - \\cot^{2}${v} + 1`, ans: "2", wrong: ["1", "0", `-\\cot^{2}${v}`] },
           { expr: `\\csc^{2}${v}(1 - \\cos^{2}${v})`, ans: "1", wrong: [`\\csc^{2}${v}`, `\\sin^{2}${v}`, "0"] },
         ]);
@@ -1232,9 +1320,17 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
         const item = rng.pick([
           { expr: `\\frac{\\csc^{2}${v} - 1}{\\cot ${v}}`, ans: `\\cot ${v}`, wrong: [`\\tan ${v}`, "1", `\\csc ${v}`] },
-          { expr: `\\frac{1}{\\csc${v} + \\cot${v}}`, ans: `\\csc${v} - \\cot${v}`, wrong: [`\\csc${v} + \\cot${v}`, "1", `\\sin${v}`] },
+          {
+            expr: `\\frac{1}{\\csc ${v} + \\cot ${v}}`,
+            ans: `\\csc ${v} - \\cot ${v}`,
+            wrong: [`\\csc ${v} + \\cot ${v}`, "1", `\\sin ${v}`],
+          },
           { expr: `\\frac{\\csc^{2}${v} - \\cot^{2}${v}}{\\csc ${v}}`, ans: `\\sin ${v}`, wrong: [`\\csc ${v}`, "1", `\\cos ${v}`] },
-          { expr: `\\frac{1}{\\csc${v} - \\cot${v}}`, ans: `\\csc${v} + \\cot${v}`, wrong: [`\\csc${v} - \\cot${v}`, "1", `\\cos${v}`] },
+          {
+            expr: `\\frac{1}{\\csc ${v} - \\cot ${v}}`,
+            ans: `\\csc ${v} + \\cot ${v}`,
+            wrong: [`\\csc ${v} - \\cot ${v}`, "1", `\\cos ${v}`],
+          },
           { expr: `\\frac{\\cot^{2}${v} + 1}{\\csc ${v}}`, ans: `\\csc ${v}`, wrong: [`\\sin ${v}`, `\\cot ${v}`, "1"] },
           { expr: `\\frac{\\csc^{2}${v} - \\cot^{2}${v}}{\\cot ${v}}`, ans: `\\tan ${v}`, wrong: [`\\cot ${v}`, `\\csc ${v}`, "1"] },
         ]);
@@ -1272,27 +1368,30 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
       id: "cofunction-identities-basic",
       title: t("Cofunction identities in radians", "弧度制下的余角恒等式"),
       explanation: t(
-        "Two angles that add up to a right angle are complementary, and each trigonometric function of one equals the cofunction of the other. Complementary angles satisfy:\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
-        "和为直角的两个角互余，其中一个角的三角函数等于另一个角的余函数。互余的两个角满足：\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
+        "Two angles that add up to a right angle are complementary, and each trigonometric function of one equals the cofunction of the other. Complementary angles satisfy:\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$\n\nAdding $\\frac{\\pi}{2}$ instead follows from $\\sin\\left(\\frac{\\pi}{2} + \\theta\\right) = \\cos\\theta$ and $\\cos\\left(\\frac{\\pi}{2} + \\theta\\right) = -\\sin\\theta$, because a quarter turn moves the point $(\\cos\\theta, \\sin\\theta)$ to $(-\\sin\\theta, \\cos\\theta)$.",
+        "和为直角的两个角互余，其中一个角的三角函数等于另一个角的余函数。互余的两个角满足：\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$\n\n如果是加上 $\\frac{\\pi}{2}$，则有 $\\sin\\left(\\frac{\\pi}{2} + \\theta\\right) = \\cos\\theta$，$\\cos\\left(\\frac{\\pi}{2} + \\theta\\right) = -\\sin\\theta$，因为转四分之一圈把点 $(\\cos\\theta, \\sin\\theta)$ 移到 $(-\\sin\\theta, \\cos\\theta)$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
         const item = rng.pick([
-          { expr: `\\sin\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\cos${v}`, wrong: [`\\sin${v}`, `-\\cos${v}`, `\\tan${v}`] },
-          { expr: `\\cos\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\sin${v}`, wrong: [`\\cos${v}`, `-\\sin${v}`, `\\cot${v}`] },
-          { expr: `\\tan\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\cot${v}`, wrong: [`\\tan${v}`, `-\\cot${v}`, `\\sec${v}`] },
-          { expr: `\\sec\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\csc${v}`, wrong: [`\\sec${v}`, `-\\csc${v}`, `\\cos${v}`] },
-          { expr: `\\csc\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\sec${v}`, wrong: [`\\csc${v}`, `-\\sec${v}`, `\\sin${v}`] },
-          { expr: `\\cot\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\tan${v}`, wrong: [`\\cot${v}`, `-\\tan${v}`, `\\cos${v}`] },
-          { expr: `\\sin\\left(\\frac{\\pi}{2} + ${v}\\right)`, ans: `\\cos${v}`, wrong: [`-\\cos${v}`, `\\sin${v}`, `-\\sin${v}`] },
-          { expr: `\\cos\\left(\\frac{\\pi}{2} + ${v}\\right)`, ans: `-\\sin${v}`, wrong: [`\\sin${v}`, `\\cos${v}`, `-\\cos${v}`] },
+          { expr: `\\sin\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\cos ${v}`, wrong: [`\\sin ${v}`, `-\\cos ${v}`, `\\tan ${v}`] },
+          { expr: `\\cos\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\sin ${v}`, wrong: [`\\cos ${v}`, `-\\sin ${v}`, `\\cot ${v}`] },
+          { expr: `\\tan\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\cot ${v}`, wrong: [`\\tan ${v}`, `-\\cot ${v}`, `\\sec ${v}`] },
+          { expr: `\\sec\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\csc ${v}`, wrong: [`\\sec ${v}`, `-\\csc ${v}`, `\\cos ${v}`] },
+          { expr: `\\csc\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\sec ${v}`, wrong: [`\\csc ${v}`, `-\\sec ${v}`, `\\sin ${v}`] },
+          { expr: `\\cot\\left(\\frac{\\pi}{2} - ${v}\\right)`, ans: `\\tan ${v}`, wrong: [`\\cot ${v}`, `-\\tan ${v}`, `\\cos ${v}`] },
+          { expr: `\\sin\\left(\\frac{\\pi}{2} + ${v}\\right)`, ans: `\\cos ${v}`, wrong: [`-\\cos ${v}`, `\\sin ${v}`, `-\\sin ${v}`] },
+          { expr: `\\cos\\left(\\frac{\\pi}{2} + ${v}\\right)`, ans: `-\\sin ${v}`, wrong: [`\\sin ${v}`, `\\cos ${v}`, `-\\cos ${v}`] },
         ]);
         return oneOf(
           rng,
           t(`Simplify $${item.expr}$.`, `化简 $${item.expr}$。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(`By the cofunction identity, $${item.expr} = ${item.ans}$.`, `由余角恒等式可知，$${item.expr} = ${item.ans}$。`),
+          t(
+            `By the identities for $\\frac{\\pi}{2} \\pm \\theta$, $${item.expr} = ${item.ans}$.`,
+            `由 $\\frac{\\pi}{2} \\pm \\theta$ 的恒等式可知，$${item.expr} = ${item.ans}$。`,
+          ),
         );
       },
     },
@@ -1300,8 +1399,8 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
       id: "cofunction-identities-in-degree-expressions",
       title: t("Cofunction identities with numerical angles", "数字角度中的余角恒等式"),
       explanation: t(
-        "Look for pairs of angles that add up to ninety degrees, and rewrite one of them with its cofunction so the two terms can be combined. Since $\\sin(90^{\\circ} - x) = \\cos x$, ratios of complementary angles are equal: $\\sin(70^{\\circ}) = \\cos(20^{\\circ})$, so $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$.",
-        "找出和为九十度的一对角，把其中一个用余函数改写，使两项可以合并。因为 $\\sin(90^{\\circ} - x) = \\cos x$，互余角的对应三角比相等：$\\sin(70^{\\circ}) = \\cos(20^{\\circ})$，因此 $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$。",
+        "Look for pairs of angles that add up to $90^{\\circ}$, and rewrite one of them with its cofunction so the two terms can be combined. Since $\\sin(90^{\\circ} - x) = \\cos x$, ratios of complementary angles are equal: $\\sin(70^{\\circ}) = \\cos(20^{\\circ})$, so $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$.",
+        "找出和为 $90^{\\circ}$ 的一对角，把其中一个用余函数改写，使两项可以合并。因为 $\\sin(90^{\\circ} - x) = \\cos x$，互余角的对应三角比相等：$\\sin(70^{\\circ}) = \\cos(20^{\\circ})$，因此 $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$。",
       ),
       generate(rng) {
         const deg = rng.int(10, 80);
@@ -1373,8 +1472,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
       ),
       generate(rng) {
         const isSum = rng.bool();
-        const a = rng.int(10, 50);
         const b = rng.int(10, 40);
+        const a = b + rng.int(3, 40);
         const opStr = isSum ? "+" : "-";
         const resAngle = isSum ? a + b : a - b;
         return oneOf(
@@ -1386,8 +1485,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
           t(`$\\sin(${resAngle}^{\\circ})$`, `$\\sin(${resAngle}^{\\circ})$`),
           [
             t(`$\\cos(${resAngle}^{\\circ})$`, `$\\cos(${resAngle}^{\\circ})$`),
-            t(`$\\sin(${a + b + 10}^{\\circ})$`, `$\\sin(${a + b + 10}^{\\circ})$`),
-            t(`$\\cos(${Math.abs(a - b)}^{\\circ})$`, `$\\cos(${Math.abs(a - b)}^{\\circ})$`),
+            mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`),
+            mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`),
           ],
           t(
             `By the sine ${isSum ? "sum" : "difference"} formula, $\\sin(\\alpha ${opStr} \\beta) = \\sin \\alpha \\cos \\beta ${opStr} \\cos \\alpha \\sin \\beta$, which gives $\\sin(${resAngle}^\\circ)$.`,
@@ -1404,51 +1503,18 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
         "形如 $\\sin\\alpha\\cos\\beta \\pm \\cos\\alpha\\sin\\beta$ 的式子可以反过来看成一个角的正弦，这个角往往是特殊角。\n\n将式子合并为单个正弦后可直接求出特殊角的值：\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
       ),
       generate(rng) {
-        const item = rng.pick([
-          { a: 40, b: 20, isSum: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 70, b: 25, isSum: false, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 20, b: 10, isSum: true, ans: "\\frac{1}{2}" },
-          { a: 50, b: 20, isSum: false, ans: "\\frac{1}{2}" },
-          { a: 80, b: 20, isSum: false, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 10, b: 20, isSum: true, ans: "\\frac{1}{2}" },
-          { a: 60, b: 15, isSum: true, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 45, b: 30, isSum: true, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 45, b: 30, isSum: false, ans: "\\frac{\\sqrt{6}-\\sqrt{2}}{4}" },
-          { a: 65, b: 5, isSum: false, ans: "1" },
-          { a: 55, b: 35, isSum: true, ans: "1" },
-          { a: 30, b: 15, isSum: true, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 50, b: 10, isSum: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 75, b: 15, isSum: false, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 25, b: 20, isSum: true, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 60, b: 30, isSum: true, ans: "1" },
-          { a: 45, b: 45, isSum: true, ans: "1" },
-          { a: 70, b: 10, isSum: false, ans: "1" },
-          { a: 45, b: 15, isSum: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 55, b: 25, isSum: false, ans: "\\frac{1}{2}" },
-          { a: 40, b: 5, isSum: true, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 75, b: 15, isSum: true, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 35, b: 10, isSum: true, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 40, b: 50, isSum: true, ans: "1" },
-          { a: 65, b: 25, isSum: false, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 80, b: 50, isSum: false, ans: "\\frac{1}{2}" },
-        ]);
-        const opStr = item.isSum ? "+" : "-";
+        const { a, b, isSum, target } = splitAngle(rng, [30, 45, 60, 90, 120, 135, 150]);
+        const opStr = isSum ? "+" : "-";
+        const ans = specialSin[target]!;
+        const expr = `\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})`;
         return oneOf(
           rng,
+          t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
+          mathOption(ans),
+          [specialCos[target]!, negated(ans), "\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{3}}{2}", "0"].map(mathOption),
           t(
-            `Find the exact value of $\\sin(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${opStr} \\cos(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$.`,
-            `求 $\\sin(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${opStr} \\cos(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$ 的精确值。`,
-          ),
-          t(`$${item.ans}$`, `$${item.ans}$`),
-          [
-            t("$0$", "$0$"),
-            t("$1$", "$1$"),
-            t("$\\frac{\\sqrt{2}}{2}$", "$\\frac{\\sqrt{2}}{2}$"),
-            t("$\\frac{1}{2}$", "$\\frac{1}{2}$"),
-          ].filter((o) => o.en !== `$${item.ans}$`),
-          t(
-            `Collapse using the sine ${item.isSum ? "sum" : "difference"} formula: $\\sin(${item.a}^\\circ ${opStr} ${item.b}^\\circ) = ${item.ans}$.`,
-            `应用正弦${item.isSum ? "和角" : "差角"}公式化简：$\\sin(${item.a}^\\circ ${opStr} ${item.b}^\\circ) = ${item.ans}$。`,
+            `Collapse using the sine ${isSum ? "sum" : "difference"} formula: $\\sin(${a}^\\circ ${opStr} ${b}^\\circ) = \\sin(${target}^\\circ) = ${ans}$.`,
+            `利用正弦${isSum ? "和角" : "差角"}公式合并：$\\sin(${a}^\\circ ${opStr} ${b}^\\circ) = \\sin(${target}^\\circ) = ${ans}$。`,
           ),
         );
       },
@@ -1480,8 +1546,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
       ),
       generate(rng) {
         const isSum = rng.bool();
-        const a = rng.int(15, 60);
         const b = rng.int(10, 45);
+        const a = b + rng.int(3, 30);
         const signStr = isSum ? "-" : "+";
         const resAngle = isSum ? a + b : a - b;
         return oneOf(
@@ -1493,8 +1559,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
           t(`$\\cos(${resAngle}^{\\circ})$`, `$\\cos(${resAngle}^{\\circ})$`),
           [
             t(`$\\sin(${resAngle}^{\\circ})$`, `$\\sin(${resAngle}^{\\circ})$`),
-            t(`$\\cos(${a + b + 15}^{\\circ})$`, `$\\cos(${a + b + 15}^{\\circ})$`),
-            t(`$\\sin(${Math.abs(a - b)}^{\\circ})$`, `$\\sin(${Math.abs(a - b)}^{\\circ})$`),
+            mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`),
+            mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`),
           ],
           t(
             `By the cosine ${isSum ? "sum" : "difference"} formula (remembering the sign flip), this equals $\\cos(${resAngle}^\\circ)$.`,
@@ -1511,51 +1577,18 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
         "形如 $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ 的式子可以反过来看成两角和或差的余弦，这个角往往是特殊角。\n\n利用余弦和差公式合并求特殊角：\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
       ),
       generate(rng) {
-        const item = rng.pick([
-          { a: 70, b: 10, isMinus: false, ans: "\\frac{1}{2}" },
-          { a: 40, b: 20, isMinus: true, ans: "\\frac{1}{2}" },
-          { a: 50, b: 20, isMinus: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 75, b: 30, isMinus: false, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 15, b: 30, isMinus: false, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 50, b: 10, isMinus: true, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 35, b: 25, isMinus: false, ans: "\\frac{\\sqrt{2}}{2}" },
-          { a: 80, b: 20, isMinus: true, ans: "\\frac{1}{2}" },
-          { a: 45, b: 15, isMinus: false, ans: "\\frac{\\sqrt{6}-\\sqrt{2}}{4}" },
-          { a: 45, b: 30, isMinus: true, ans: "\\frac{\\sqrt{6}-\\sqrt{2}}{4}" },
-          { a: 45, b: 15, isMinus: true, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 60, b: 15, isMinus: false, ans: "\\frac{\\sqrt{6}-\\sqrt{2}}{4}" },
-          { a: 30, b: 30, isMinus: false, ans: "\\frac{1}{2}" },
-          { a: 60, b: 30, isMinus: false, ans: "0" },
-          { a: 45, b: 45, isMinus: false, ans: "0" },
-          { a: 65, b: 5, isMinus: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 40, b: 10, isMinus: false, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 60, b: 0, isMinus: true, ans: "\\frac{1}{2}" },
-          { a: 70, b: 40, isMinus: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 30, b: 15, isMinus: false, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 80, b: 35, isMinus: false, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 55, b: 25, isMinus: true, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 55, b: 25, isMinus: false, ans: "0" },
-          { a: 60, b: 15, isMinus: true, ans: "\\frac{\\sqrt{6}+\\sqrt{2}}{4}" },
-          { a: 75, b: 45, isMinus: false, ans: "\\frac{\\sqrt{3}}{2}" },
-          { a: 25, b: 20, isMinus: false, ans: "\\frac{\\sqrt{2}}{2}" },
-        ]);
-        const signStr = item.isMinus ? "-" : "+";
+        const { a, b, isSum, target } = splitAngle(rng, [30, 45, 60, 90, 120, 135, 150]);
+        const signStr = isSum ? "-" : "+";
+        const ans = specialCos[target]!;
+        const expr = `\\cos(${a}^{\\circ})\\cos(${b}^{\\circ}) ${signStr} \\sin(${a}^{\\circ})\\sin(${b}^{\\circ})`;
         return oneOf(
           rng,
+          t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
+          mathOption(ans),
+          [specialSin[target]!, negated(ans), "\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{3}}{2}", "0"].map(mathOption),
           t(
-            `Find the exact value of $\\cos(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${signStr} \\sin(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$.`,
-            `求 $\\cos(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${signStr} \\sin(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$ 的精确值。`,
-          ),
-          t(`$${item.ans}$`, `$${item.ans}$`),
-          [
-            t("$0$", "$0$"),
-            t("$1$", "$1$"),
-            t("$\\frac{\\sqrt{3}}{2}$", "$\\frac{\\sqrt{3}}{2}$"),
-            t("$\\frac{1}{2}$", "$\\frac{1}{2}$"),
-          ].filter((o) => o.en !== `$${item.ans}$`),
-          t(
-            `By the cosine formula, the expression equals $\\cos(${item.isMinus ? item.a + item.b : item.a - item.b}^\\circ) = ${item.ans}$.`,
-            `由余弦和差角公式，原式等于 $\\cos(${item.isMinus ? item.a + item.b : item.a - item.b}^\\circ) = ${item.ans}$。`,
+            `The sign in the middle is the opposite of the sign between the angles, so this is $\\cos(${a}^\\circ ${isSum ? "+" : "-"} ${b}^\\circ) = \\cos(${target}^\\circ) = ${ans}$.`,
+            `中间的符号与两角之间的符号相反，所以原式是 $\\cos(${a}^\\circ ${isSum ? "+" : "-"} ${b}^\\circ) = \\cos(${target}^\\circ) = ${ans}$。`,
           ),
         );
       },
@@ -1587,8 +1620,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
       ),
       generate(rng) {
         const isSum = rng.bool();
-        const a = rng.int(20, 60);
         const b = rng.int(10, 30);
+        const a = b + rng.int(3, 29);
         const topSign = isSum ? "+" : "-";
         const botSign = isSum ? "-" : "+";
         const resAngle = isSum ? a + b : a - b;
@@ -1601,8 +1634,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
           t(`$\\tan(${resAngle}^{\\circ})$`, `$\\tan(${resAngle}^{\\circ})$`),
           [
             t(`$\\cot(${resAngle}^{\\circ})$`, `$\\cot(${resAngle}^{\\circ})$`),
-            t(`$\\tan(${a + b + 10}^{\\circ})$`, `$\\tan(${a + b + 10}^{\\circ})$`),
-            t(`$\\tan(${Math.abs(a - b)}^{\\circ})$`, `$\\tan(${Math.abs(a - b)}^{\\circ})$`),
+            mathOption(`\\tan(${isSum ? a - b : a + b}^{\\circ})`),
+            mathOption(`\\cot(${isSum ? a - b : a + b}^{\\circ})`),
           ],
           t(
             `By the tangent ${isSum ? "sum" : "difference"} formula, the expression equals $\\tan(${resAngle}^\\circ)$.`,
@@ -1619,49 +1652,19 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
         "当一个式子恰好具有正切和角或差角公式的形式时，读出两个角，把整个分式换成它们的和或差的正切。利用正切公式合并求特殊角：\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
       ),
       generate(rng) {
-        const item = rng.pick([
-          { a: 50, b: 20, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 20, b: 25, isSum: true, ans: "1" },
-          { a: 40, b: 20, isSum: true, ans: "\\sqrt{3}" },
-          { a: 70, b: 25, isSum: false, ans: "1" },
-          { a: 75, b: 15, isSum: false, ans: "\\sqrt{3}" },
-          { a: 50, b: 5, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 35, b: 10, isSum: true, ans: "1" },
-          { a: 10, b: 20, isSum: true, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 55, b: 5, isSum: false, ans: "1" },
-          { a: 45, b: 15, isSum: true, ans: "-1" },
-          { a: 60, b: 15, isSum: true, ans: "-1" },
-          { a: 80, b: 35, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 70, b: 10, isSum: false, ans: "1" },
-          { a: 45, b: 75, isSum: true, ans: "-1" },
-          { a: 25, b: 5, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 30, b: 15, isSum: true, ans: "\\sqrt{3}" },
-          { a: 60, b: 30, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 65, b: 20, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 45, b: 45, isSum: false, ans: "0" },
-          { a: 30, b: 15, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 20, b: 40, isSum: true, ans: "\\sqrt{3}" },
-          { a: 55, b: 35, isSum: true, ans: "-1" },
-          { a: 40, b: 5, isSum: true, ans: "1" },
-          { a: 25, b: 20, isSum: true, ans: "\\sqrt{3}" },
-          { a: 35, b: 25, isSum: false, ans: "\\frac{\\sqrt{3}}{3}" },
-          { a: 50, b: 50, isSum: true, ans: "0" },
-        ]);
-        const topSign = item.isSum ? "+" : "-";
-        const botSign = item.isSum ? "-" : "+";
+        const { a, b, isSum, target } = splitAngle(rng, [30, 45, 60, 120, 135, 150]);
+        const topSign = isSum ? "+" : "-";
+        const botSign = isSum ? "-" : "+";
+        const ans = specialTan[target]!;
+        const expr = `\\frac{\\tan(${a}^{\\circ}) ${topSign} \\tan(${b}^{\\circ})}{1 ${botSign} \\tan(${a}^{\\circ})\\tan(${b}^{\\circ})}`;
         return oneOf(
           rng,
+          t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
+          mathOption(ans),
+          [negated(ans), "1", "\\sqrt{3}", "\\frac{\\sqrt{3}}{3}", "0"].map(mathOption),
           t(
-            `Find the exact value of $\\frac{\\tan(${item.a}^{\\circ}) ${topSign} \\tan(${item.b}^{\\circ})}{1 ${botSign} \\tan(${item.a}^{\\circ})\\tan(${item.b}^{\\circ})}$.`,
-            `求 $\\frac{\\tan(${item.a}^{\\circ}) ${topSign} \\tan(${item.b}^{\\circ})}{1 ${botSign} \\tan(${item.a}^{\\circ})\\tan(${item.b}^{\\circ})}$ 的精确值。`,
-          ),
-          t(`$${item.ans}$`, `$${item.ans}$`),
-          [t("$1$", "$1$"), t("$\\sqrt{3}$", "$\\sqrt{3}$"), t("$\\frac{\\sqrt{3}}{3}$", "$\\frac{\\sqrt{3}}{3}$"), t("$0$", "$0$")].filter(
-            (o) => o.en !== `$${item.ans}$`,
-          ),
-          t(
-            `Collapse using the tangent formula: $\\tan(${item.isSum ? item.a + item.b : item.a - item.b}^\\circ) = ${item.ans}$.`,
-            `利用正切和差公式化简：$\\tan(${item.isSum ? item.a + item.b : item.a - item.b}^\\circ) = ${item.ans}$。`,
+            `Collapse using the tangent ${isSum ? "sum" : "difference"} formula: $\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$.`,
+            `利用正切${isSum ? "和角" : "差角"}公式合并：$\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$。`,
           ),
         );
       },
@@ -1688,8 +1691,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-of-fifteen-and-seventy-five",
       title: t("Exact sine of 15° and 75°", "15° 与 75° 的正弦精确值"),
       explanation: t(
-        "Angles such as fifteen and seventy-five degrees are sums or differences of familiar special angles, so the sum and difference formulas give their exact values. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\sin(75^{\\circ}) = \\sin(45^{\\circ})\\cos(30^{\\circ}) + \\cos(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{2}}{2}\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$\n\n$$\\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
-        "像 15° 和 75° 这样的角是熟悉的特殊角的和或差，所以用和角与差角公式可以求出它们的精确值。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 以及 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\sin(75^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "Angles such as $15^{\\circ}$ and $75^{\\circ}$ are sums or differences of familiar special angles, so the sum and difference formulas give their exact values. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\sin(75^{\\circ}) = \\sin(45^{\\circ})\\cos(30^{\\circ}) + \\cos(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{2}}{2}\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$\n\n$$\\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "像 $15^{\\circ}$ 和 $75^{\\circ}$ 这样的角是熟悉的特殊角的和或差，所以用和角与差角公式可以求出它们的精确值。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 以及 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\sin(75^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1701,14 +1704,14 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
           { deg: 255, decomp: "270^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
           { deg: 285, decomp: "270^\\circ + 15^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
           { deg: 345, decomp: "360^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: -15, decomp: "-15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: -75, decomp: "-75^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: -15, decomp: "-(45^\\circ - 30^\\circ)", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: -75, decomp: "-(45^\\circ + 30^\\circ)", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
           { deg: 375, decomp: "360^\\circ + 15^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
           { deg: 435, decomp: "360^\\circ + 75^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
         ]);
         const mult = rng.pick([1, 2, 4]);
         const promptStr = mult === 1 ? `\\sin(${item.deg}^\\circ)` : `${mult}\\sin(${item.deg}^\\circ)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scaleSurd(item.ans, mult);
         const wrongList = [
           "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
           "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
@@ -1719,15 +1722,15 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scaleSurd(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Decompose using $${item.decomp}$ and apply the sine formula: result is $${ansStr}$.`,
-            `利用 $${item.decomp}$ 分解并应用正弦和差公式：结果为 $${ansStr}$。`,
+            `Decompose using $${item.decomp}$ and apply the sine formula to get $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `利用 $${item.decomp}$ 分解并应用正弦和差公式，得 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -1745,33 +1748,33 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
           { frac: "\\frac{\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "\\frac{\\pi}{4} - \\frac{\\pi}{6}" },
           { frac: "\\frac{7\\pi}{12}", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\frac{\\pi}{3} + \\frac{\\pi}{4}" },
           { frac: "\\frac{11\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "\\pi - \\frac{\\pi}{12}" },
-          { frac: "\\frac{13\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\pi + \\frac{\\pi}{12}" },
+          { frac: "\\frac{13\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "\\pi + \\frac{\\pi}{12}" },
           { frac: "\\frac{17\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\pi + \\frac{5\\pi}{12}" },
-          { frac: "\\frac{19\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi - \\frac{5\\pi}{12}" },
+          { frac: "\\frac{19\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "2\\pi - \\frac{5\\pi}{12}" },
           { frac: "\\frac{23\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi - \\frac{\\pi}{12}" },
           { frac: "-\\frac{\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "-(\\frac{\\pi}{4} - \\frac{\\pi}{6})" },
           { frac: "-\\frac{5\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "-(\\frac{\\pi}{4} + \\frac{\\pi}{6})" },
-          { frac: "\\frac{25\\pi}{12}", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "2\\pi + \\frac{\\pi}{12}" },
-          { frac: "\\frac{29\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi + \\frac{5\\pi}{12}" },
+          { frac: "\\frac{25\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi + \\frac{\\pi}{12}" },
+          { frac: "\\frac{29\\pi}{12}", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "2\\pi + \\frac{5\\pi}{12}" },
         ]);
         const mult = rng.pick([1, 2, 4]);
         const promptStr = mult === 1 ? `\\sin\\left(${item.frac}\\right)` : `${mult}\\sin\\left(${item.frac}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scaleSurd(item.ans, mult);
         const wrongList = [
           "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
           "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
           "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
           "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
         ].filter((w) => w !== item.ans);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scaleSurd(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
           t(
-            `Write $${item.frac} = ${item.decomp}$ and apply the sine formula: result is $${ansStr}$.`,
-            `将 $${item.frac} = ${item.decomp}$ 并应用正弦公式：结果为 $${ansStr}$。`,
+            `Write $${item.frac} = ${item.decomp}$ and apply the sine formula to get $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `将角写成 $${item.frac} = ${item.decomp}$，应用正弦公式，得 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -1811,8 +1814,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
           { deg: 255, decomp: "270^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
           { deg: 285, decomp: "270^\\circ + 15^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
           { deg: 345, decomp: "360^\\circ - 15^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: -15, decomp: "-15^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: -75, decomp: "-75^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: -15, decomp: "-(45^\\circ - 30^\\circ)", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: -75, decomp: "-(45^\\circ + 30^\\circ)", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
           { deg: -105, decomp: "-105^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
           { deg: -165, decomp: "-165^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
           { deg: 375, decomp: "360^\\circ + 15^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
@@ -1820,7 +1823,7 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
         ]);
         const mult = rng.pick([1, 2, 4]);
         const promptStr = mult === 1 ? `\\cos(${item.deg}^\\circ)` : `${mult}\\cos(${item.deg}^\\circ)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scaleSurd(item.ans, mult);
         const wrongList = [
           "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
           "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
@@ -1831,15 +1834,15 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scaleSurd(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Expand using the cosine formula with $${item.decomp}$: result is $${ansStr}$.`,
-            `应用余弦公式与 $${item.decomp}$ 展开计算：结果为 $${ansStr}$。`,
+            `Expand using the cosine formula with $${item.decomp}$ to get $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `用 $${item.decomp}$ 和余弦公式展开，得 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -1868,22 +1871,22 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
         ]);
         const mult = rng.pick([1, 2, 4]);
         const promptStr = mult === 1 ? `\\cos\\left(${item.frac}\\right)` : `${mult}\\cos\\left(${item.frac}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const ansStr = scaleSurd(item.ans, mult);
         const wrongList = [
           "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
           "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
           "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
           "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
         ].filter((w) => w !== item.ans);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const wrongStr = wrongList.map((w) => `$${scaleSurd(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
           t(
-            `Apply the cosine formula with $${item.decomp}$: $\\cos(${item.frac}) = ${item.ans}$, so the result is $${ansStr}$.`,
-            `应用余弦公式与 $${item.decomp}$ 计算：$\\cos(${item.frac}) = ${item.ans}$，因此结果为 $${ansStr}$。`,
+            `Apply the cosine formula with $${item.decomp}$ to get $\\cos(${item.frac}) = ${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `用 $${item.decomp}$ 和余弦公式计算，得 $\\cos(${item.frac}) = ${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -1915,34 +1918,34 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       ),
       generate(rng) {
         const item = rng.pick([
-          { deg: 15, ans: "2 - \\sqrt{3}", decomp: "45^\\circ - 30^\\circ" },
-          { deg: 75, ans: "2 + \\sqrt{3}", decomp: "45^\\circ + 30^\\circ" },
-          { deg: 105, ans: "-2 - \\sqrt{3}", decomp: "60^\\circ + 45^\\circ" },
-          { deg: 165, ans: "-2 + \\sqrt{3}", decomp: "180^\\circ - 15^\\circ" },
-          { deg: 195, ans: "2 - \\sqrt{3}", decomp: "180^\\circ + 15^\\circ" },
-          { deg: 255, ans: "2 + \\sqrt{3}", decomp: "270^\\circ - 15^\\circ" },
-          { deg: 285, ans: "-2 - \\sqrt{3}", decomp: "270^\\circ + 15^\\circ" },
-          { deg: 345, ans: "-2 + \\sqrt{3}", decomp: "360^\\circ - 15^\\circ" },
-          { deg: -15, ans: "-2 + \\sqrt{3}", decomp: "-15^\\circ" },
-          { deg: -75, ans: "-2 - \\sqrt{3}", decomp: "-75^\\circ" },
-          { deg: 375, ans: "2 - \\sqrt{3}", decomp: "360^\\circ + 15^\\circ" },
-          { deg: 435, ans: "2 + \\sqrt{3}", decomp: "360^\\circ + 75^\\circ" },
+          { deg: 15, ans: "2 - \\sqrt{3}", via: "\\tan(45^\\circ - 30^\\circ)" },
+          { deg: 75, ans: "2 + \\sqrt{3}", via: "\\tan(45^\\circ + 30^\\circ)" },
+          { deg: 105, ans: "-2 - \\sqrt{3}", via: "-\\tan 75^\\circ" },
+          { deg: 165, ans: "-2 + \\sqrt{3}", via: "-\\tan 15^\\circ" },
+          { deg: 195, ans: "2 - \\sqrt{3}", via: "\\tan 15^\\circ" },
+          { deg: 255, ans: "2 + \\sqrt{3}", via: "\\tan 75^\\circ" },
+          { deg: 285, ans: "-2 - \\sqrt{3}", via: "-\\tan 75^\\circ" },
+          { deg: 345, ans: "-2 + \\sqrt{3}", via: "-\\tan 15^\\circ" },
+          { deg: -15, ans: "-2 + \\sqrt{3}", via: "-\\tan 15^\\circ" },
+          { deg: -75, ans: "-2 - \\sqrt{3}", via: "-\\tan 75^\\circ" },
+          { deg: 375, ans: "2 - \\sqrt{3}", via: "\\tan 15^\\circ" },
+          { deg: 435, ans: "2 + \\sqrt{3}", via: "\\tan 75^\\circ" },
         ]);
         const mult = rng.pick([1, 2, 3]);
         const promptStr = mult === 1 ? `\\tan(${item.deg}^\\circ)` : `${mult}\\tan(${item.deg}^\\circ)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}(${item.ans})`;
+        const ansStr = scaleTangent(item.ans, mult);
         const wrongList = ["2 + \\sqrt{3}", "2 - \\sqrt{3}", "-2 - \\sqrt{3}", "-2 + \\sqrt{3}", "\\sqrt{3}"]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}(${w})$`));
+        const wrongStr = wrongList.map((w) => `$${scaleTangent(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Expand using the tangent addition formula with $${item.decomp}$: result is $${ansStr}$.`,
-            `应用正切和角公式与 $${item.decomp}$ 展开：结果为 $${ansStr}$。`,
+            `The tangent repeats every $180^\\circ$ and is an odd function, and the sum and difference formulas give $\\tan 15^\\circ = 2 - \\sqrt{3}$ and $\\tan 75^\\circ = 2 + \\sqrt{3}$. Here $\\tan(${item.deg}^\\circ) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `正切以 $180^\\circ$ 为周期且是奇函数，由和差公式得 $\\tan 15^\\circ = 2 - \\sqrt{3}$，$\\tan 75^\\circ = 2 + \\sqrt{3}$。这里 $\\tan(${item.deg}^\\circ) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -1956,32 +1959,32 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       ),
       generate(rng) {
         const item = rng.pick([
-          { frac: "\\frac{5\\pi}{12}", ans: "2 + \\sqrt{3}" },
-          { frac: "\\frac{\\pi}{12}", ans: "2 - \\sqrt{3}" },
-          { frac: "\\frac{7\\pi}{12}", ans: "-2 - \\sqrt{3}" },
-          { frac: "\\frac{11\\pi}{12}", ans: "-2 + \\sqrt{3}" },
-          { frac: "\\frac{13\\pi}{12}", ans: "2 - \\sqrt{3}" },
-          { frac: "\\frac{17\\pi}{12}", ans: "2 + \\sqrt{3}" },
-          { frac: "\\frac{19\\pi}{12}", ans: "-2 - \\sqrt{3}" },
-          { frac: "\\frac{23\\pi}{12}", ans: "-2 + \\sqrt{3}" },
-          { frac: "-\\frac{\\pi}{12}", ans: "-2 + \\sqrt{3}" },
-          { frac: "-\\frac{5\\pi}{12}", ans: "-2 - \\sqrt{3}" },
-          { frac: "\\frac{25\\pi}{12}", ans: "2 - \\sqrt{3}" },
-          { frac: "\\frac{29\\pi}{12}", ans: "2 + \\sqrt{3}" },
+          { frac: "\\frac{5\\pi}{12}", ans: "2 + \\sqrt{3}", via: "\\tan\\left(\\frac{\\pi}{4} + \\frac{\\pi}{6}\\right)" },
+          { frac: "\\frac{\\pi}{12}", ans: "2 - \\sqrt{3}", via: "\\tan\\left(\\frac{\\pi}{4} - \\frac{\\pi}{6}\\right)" },
+          { frac: "\\frac{7\\pi}{12}", ans: "-2 - \\sqrt{3}", via: "-\\tan \\frac{5\\pi}{12}" },
+          { frac: "\\frac{11\\pi}{12}", ans: "-2 + \\sqrt{3}", via: "-\\tan \\frac{\\pi}{12}" },
+          { frac: "\\frac{13\\pi}{12}", ans: "2 - \\sqrt{3}", via: "\\tan \\frac{\\pi}{12}" },
+          { frac: "\\frac{17\\pi}{12}", ans: "2 + \\sqrt{3}", via: "\\tan \\frac{5\\pi}{12}" },
+          { frac: "\\frac{19\\pi}{12}", ans: "-2 - \\sqrt{3}", via: "-\\tan \\frac{5\\pi}{12}" },
+          { frac: "\\frac{23\\pi}{12}", ans: "-2 + \\sqrt{3}", via: "-\\tan \\frac{\\pi}{12}" },
+          { frac: "-\\frac{\\pi}{12}", ans: "-2 + \\sqrt{3}", via: "-\\tan \\frac{\\pi}{12}" },
+          { frac: "-\\frac{5\\pi}{12}", ans: "-2 - \\sqrt{3}", via: "-\\tan \\frac{5\\pi}{12}" },
+          { frac: "\\frac{25\\pi}{12}", ans: "2 - \\sqrt{3}", via: "\\tan \\frac{\\pi}{12}" },
+          { frac: "\\frac{29\\pi}{12}", ans: "2 + \\sqrt{3}", via: "\\tan \\frac{5\\pi}{12}" },
         ]);
         const mult = rng.pick([1, 2, 3]);
         const promptStr = mult === 1 ? `\\tan\\left(${item.frac}\\right)` : `${mult}\\tan\\left(${item.frac}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}(${item.ans})`;
+        const ansStr = scaleTangent(item.ans, mult);
         const wrongList = ["2 + \\sqrt{3}", "2 - \\sqrt{3}", "-2 - \\sqrt{3}", "-2 + \\sqrt{3}"].filter((w) => w !== item.ans);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}(${w})$`));
+        const wrongStr = wrongList.map((w) => `$${scaleTangent(w, mult)}$`);
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
           t(
-            `Apply the tangent sum formula: $\\tan(${item.frac}) = ${item.ans}$, so the result is $${ansStr}$.`,
-            `应用正切和角公式计算得：$\\tan(${item.frac}) = ${item.ans}$，因此结果为 $${ansStr}$。`,
+            `The tangent repeats every $\\pi$ and is an odd function, and the sum and difference formulas give $\\tan\\frac{\\pi}{12} = 2 - \\sqrt{3}$ and $\\tan\\frac{5\\pi}{12} = 2 + \\sqrt{3}$. Here $\\tan\\left(${item.frac}\\right) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `正切以 $\\pi$ 为周期且是奇函数，由和差公式得 $\\tan\\frac{\\pi}{12} = 2 - \\sqrt{3}$，$\\tan\\frac{5\\pi}{12} = 2 + \\sqrt{3}$。这里 $\\tan\\left(${item.frac}\\right) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
           ),
         );
       },
@@ -2506,10 +2509,7 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
         const cosVal = quadrant.cosSign * b;
         const num = 2 * sinVal * cosVal;
         const den = c * c;
-        const g = Math.abs(gcd(num, den));
-        const ansNum = num / g;
-        const ansDen = den / g;
-        const ansFrac = ansDen === 1 ? `${ansNum}` : `\\frac{${ansNum}}{${ansDen}}`;
+        const ansFrac = Q.of(num, den).toLatex();
         return numberProblem({
           prompt: t(
             `If $\\cos ${v} = ${quadrant.cosTex}$ and $${v}$ is in quadrant ${quadrant.quad}, find $\\sin(2${v})$.`,
@@ -2518,8 +2518,8 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
           answer: Q.of(num, den),
           wrong: [Q.of(-num, den), Q.of(Math.abs(num), den), Q.of(2 * a * b, c * c)],
           solution: t(
-            `In quadrant ${quadrant.quad}, $\\sin ${v} = ${quadrant.sinTex}$. So $\\sin(2${v}) = 2\\cdot${quadrant.sinTex}\\cdot(${quadrant.cosTex}) = ${ansFrac}$.`,
-            `在第${quadrant.quadZh}象限，$\\sin ${v} = ${quadrant.sinTex}$。故 $\\sin(2${v}) = 2\\cdot${quadrant.sinTex}\\cdot(${quadrant.cosTex}) = ${ansFrac}$。`,
+            `In quadrant ${quadrant.quad} the sine is ${quadrant.sinSign > 0 ? "positive" : "negative"}, so $\\sin ${v} = ${quadrant.sinTex}$. So $\\sin(2${v}) = 2\\cdot\\left(${quadrant.sinTex}\\right)\\cdot\\left(${quadrant.cosTex}\\right) = ${ansFrac}$.`,
+            `第${quadrant.quadZh}象限正弦为${quadrant.sinSign > 0 ? "正" : "负"}，所以 $\\sin ${v} = ${quadrant.sinTex}$。故 $\\sin(2${v}) = 2\\cdot\\left(${quadrant.sinTex}\\right)\\cdot\\left(${quadrant.cosTex}\\right) = ${ansFrac}$。`,
           ),
           form: "fraction",
         });
@@ -2776,7 +2776,7 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
             ans: t(`$\\cos(${doubleArg})$`, `$\\cos(${doubleArg})$`),
             wrong: [
               t(`$\\sin(${doubleArg})$`, `$\\sin(${doubleArg})$`),
-              t(`$1 - 2\\sin^2(${arg})$`, `$1 - 2\\sin^2(${arg})$`),
+              t(`$\\cos^2(${arg})$`, `$\\cos^2(${arg})$`),
               t(`$2\\cos(${doubleArg}) - 1$`, `$2\\cos(${doubleArg}) - 1$`),
             ],
             sol: t(
@@ -2993,8 +2993,8 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
         const mult = rng.pick([1, 2, 4]);
         const item = rng.pick(items);
         const promptStr = mult === 1 ? item.expr : `${mult}\\left(${item.expr}\\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
-        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
+        const ansStr = scaleSurd(item.ans, mult);
+        const wrongStr = item.wrong.map((w) => `$${scaleSurd(w, mult)}$`);
         return oneOf(
           rng,
           t(
@@ -3003,7 +3003,10 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
           ),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
-          t(`${item.sol} ✓`, `${item.sol} ✓`),
+          t(
+            `${item.sol}${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
+            `${item.sol}${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
+          ),
         );
       },
     },
@@ -3120,16 +3123,16 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
-        const k = rng.pick([1, 2, 3, 4, 5, 6, 7]);
+        const k = rng.pick([2, 3, 4, 5, 6, 7]);
         const m = rng.pick([1, 2, 3, 4]);
         const arg = m === 1 ? v : `${m}${v}`;
         const doubleArg = `${2 * m}${v}`;
-        const kTex = k === 1 ? "" : `${k}`;
+        const kTex = `${k}`;
         return oneOf(
           rng,
           t(
-            `Simplify $\\dfrac{${2 * k}\\tan(${arg})}{${k === 1 ? "" : k}(1 - \\tan^2(${arg}))}$.`,
-            `化简 $\\dfrac{${2 * k}\\tan(${arg})}{${k === 1 ? "" : k}(1 - \\tan^2(${arg}))}$。`,
+            `Simplify $\\dfrac{${2 * k}\\tan(${arg})}{${k}(1 - \\tan^2(${arg}))}$.`,
+            `化简 $\\dfrac{${2 * k}\\tan(${arg})}{${k}(1 - \\tan^2(${arg}))}$。`,
           ),
           t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
           [
@@ -3138,8 +3141,8 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
             t(`$2\\tan(${arg})$`, `$2\\tan(${arg})$`),
           ],
           t(
-            `Cancel ${k === 1 ? "factor 1" : `factor ${k}`}: $\\frac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})$.`,
-            `约去因子 ${k === 1 ? "1" : k}：$\\frac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})$。`,
+            `Cancel the factor $${k}$: $\\frac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})$.`,
+            `约去因子 $${k}$：$\\frac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})$。`,
           ),
         );
       },
@@ -3222,8 +3225,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
           },
           {
             prompt: t(
-              `Simplify $\\dfrac{\\sin(${doubleArg})}{\\cos(${doubleArg})}$.`,
-              `化简 $\\dfrac{\\sin(${doubleArg})}{\\cos(${doubleArg})}$。`,
+              `Simplify $\\dfrac{2\\sin(${arg})\\cos(${arg})}{\\cos^2(${arg}) - \\sin^2(${arg})}$.`,
+              `化简 $\\dfrac{2\\sin(${arg})\\cos(${arg})}{\\cos^2(${arg}) - \\sin^2(${arg})}$。`,
             ),
             ans: t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
             wrong: [
@@ -3232,8 +3235,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
               t(`$\\cot(${doubleArg})$`, `$\\cot(${doubleArg})$`),
             ],
             sol: t(
-              `By definition, $\\frac{\\sin(${doubleArg})}{\\cos(${doubleArg})} = \\tan(${doubleArg})$.`,
-              `由定义，$\\frac{\\sin(${doubleArg})}{\\cos(${doubleArg})} = \\tan(${doubleArg})$。`,
+              `The numerator is $\\sin(${doubleArg})$ and the denominator is $\\cos(${doubleArg})$, and their ratio is $\\tan(${doubleArg})$.`,
+              `分子是 $\\sin(${doubleArg})$，分母是 $\\cos(${doubleArg})$，它们的比是 $\\tan(${doubleArg})$。`,
             ),
           },
         ];

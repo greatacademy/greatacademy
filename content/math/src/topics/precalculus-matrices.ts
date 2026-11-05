@@ -87,6 +87,21 @@ function det3(m: Mat): number {
   return m[0]![0]! * cofactor3(m, 0, 0) + m[0]![1]! * cofactor3(m, 0, 1) + m[0]![2]! * cofactor3(m, 0, 2);
 }
 
+/** NUMBER matches the whole numbers of an answer, leaving out subscripts and braces. */
+const NUMBER = /(?<![_{\\\w^])-?\d+/g;
+
+/** nearMiss changes one number of an answer, which gives a wrong answer of the same form. */
+function nearMiss(right: Text, index: number, delta: number): Text {
+  const change = (text: string) => {
+    let seen = -1;
+    return text.replace(NUMBER, (found) => {
+      seen++;
+      return seen === index ? String(Number(found) + delta) : found;
+    });
+  };
+  return t(change(right.en), change(right["zh-CN"]));
+}
+
 /** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
 function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
   const seen = new Set([right.en]);
@@ -98,14 +113,14 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
       if (rest.length === 3) break;
     }
   }
-  let fallbackCount = 1;
-  while (rest.length < 3) {
-    const fb = t(`None of the other options (${fallbackCount})`, `以上选项均不正确 (${fallbackCount})`);
-    if (!seen.has(fb.en)) {
-      seen.add(fb.en);
-      rest.push(fb);
+  const count = right.en.match(NUMBER)?.length ?? 0;
+  const start = rest.length < 3 && count > 0 ? rng.int(0, count - 1) : 0;
+  for (let step = 0; step < 3 * count && rest.length < 3; step++) {
+    const miss = nearMiss(right, (start + step) % count, [1, -1, 2][Math.floor(step / count)]!);
+    if (!seen.has(miss.en)) {
+      seen.add(miss.en);
+      rest.push(miss);
     }
-    fallbackCount++;
   }
   const options = [right, ...rest];
   const order = rng.shuffle(options.map((_, i) => i));
@@ -173,7 +188,7 @@ export const introductionToMatrices: TopicDef = {
             t(`$${m} \\times ${Math.max(1, n - 1)}$`, `$${m} \\times ${Math.max(1, n - 1)}$`),
           ],
           t(
-            `Dimensions are always written as $\\text{number of rows} \\times \\text{number of columns}$. Matrix $A$ has $${m}$ horizontal rows and $${n}$ vertical columns, so its dimensions are $${m} \\times ${n}$.`,
+            `Dimensions are always written as $\\text{number of rows} \\times \\text{number of columns}$. Matrix $A$ has $${m}$ horizontal ${m === 1 ? "row" : "rows"} and $${n}$ vertical ${n === 1 ? "column" : "columns"}, so its dimensions are $${m} \\times ${n}$.`,
             `矩阵的维度总是表示为“行数 $\\times$ 列数”。矩阵 $A$ 共有 $${m}$ 个横行和 $${n}$ 个纵列，因此其维度为 $${m} \\times ${n}$。`,
           ),
         );
@@ -329,8 +344,8 @@ export const indexNotationForMatrices: TopicDef = {
           answer: val,
           wrong: [altVal, -val, val + 1, val - 2, val + 3],
           solution: t(
-            `Substitute row index $i = ${i}$ and column index $j = ${j}$ into the definition: $a_{${i}${j}} = ${val}$.`,
-            `将行下标 $i = ${i}$ 和列下标 $j = ${j}$ 代入定义式中，得到 $a_{${i}${j}} = ${val}$。`,
+            `Substitute row index $i = ${i}$ and column index $j = ${j}$ into $a_{ij} = ${formulaLatex}$, which gives $a_{${i}${j}} = ${val}$.`,
+            `将行下标 $i = ${i}$ 和列下标 $j = ${j}$ 代入 $a_{ij} = ${formulaZh}$，得到 $a_{${i}${j}} = ${val}$。`,
           ),
         });
       },
@@ -441,9 +456,9 @@ export const addingAndSubtractingMatrices: TopicDef = {
           ];
           const chosen = rng.pick(matchPairs);
           m1 = chosen[0];
-          n1 = chosen[0];
+          n1 = chosen[1];
           m2 = chosen[0];
-          n2 = chosen[0];
+          n2 = chosen[1];
         }
 
         const pool = [-5, -4, -2, -1, 1, 2, 4, 5];
@@ -465,6 +480,7 @@ export const addingAndSubtractingMatrices: TopicDef = {
                 `Defined; the sum has dimensions $${m1 + m2} \\times ${n1 + n2}$.`,
                 `有定义；和矩阵的维度为 $${m1 + m2} \\times ${n1 + n2}$。`,
               ),
+              t(`Defined; the sum has dimensions $${m1 + m2} \\times ${n1}$.`, `有定义；和矩阵的维度为 $${m1 + m2} \\times ${n1}$。`),
             ],
             t(
               `Both matrices have dimension $${m1} \\times ${n1}$. Since their dimensions match, $A + B$ is defined and produces ${article(m1)} $${m1} \\times ${n1}$ matrix.`,
@@ -486,6 +502,10 @@ export const addingAndSubtractingMatrices: TopicDef = {
             t(
               `Defined; the sum has dimensions $${Math.max(m1, m2)} \\times ${Math.max(n1, n2)}$.`,
               `有定义；和矩阵的维度为 $${Math.max(m1, m2)} \\times ${Math.max(n1, n2)}$。`,
+            ),
+            t(
+              `Defined; the sum has dimensions $${m1 + m2} \\times ${n1 + n2}$.`,
+              `有定义；和矩阵的维度为 $${m1 + m2} \\times ${n1 + n2}$。`,
             ),
           ],
           t(
@@ -1619,6 +1639,7 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
                 `$I_{${n}}$（维度为 $${n} \\times ${n}$），但乘积为 $I_{${n}}$。`,
               ),
               t(`$I_{${m + n}}$, and the product is not defined.`, `$I_{${m + n}}$，且该乘积未定义。`),
+              t(`$I_{${m + 1}}$, and the product is not defined.`, `$I_{${m + 1}}$，且该乘积未定义。`),
             ],
             t(
               `To multiply $A$ on the right by $I$, the number of rows of $I$ must match the $${n}$ columns of $A$. Hence $I$ must be $I_{${n}}$, and multiplying any matrix by the identity leaves it unchanged: $A I_{${n}} = A$.`,
@@ -1646,6 +1667,7 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
               `$I_{${m}}$ (dimension $${m} \\times ${m}$), but the product is $I_{${m}}$.`,
               `$I_{${m}}$（维度为 $${m} \\times ${m}$），但乘积为 $I_{${m}}$。`,
             ),
+            t(`$I_{${n + 1}}$, and the product is not defined.`, `$I_{${n + 1}}$，且该乘积未定义。`),
             t(`$I_{${m} \\times ${n}}$, and the product is $O$.`, `$I_{${m} \\times ${n}}$，且乘积为零矩阵 $O$。`),
           ],
           t(

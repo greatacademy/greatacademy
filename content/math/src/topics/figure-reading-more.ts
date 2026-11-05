@@ -630,8 +630,8 @@ const argumentFromDrawing: KnowledgePointDef = {
       math(right.tex),
       others.map((o) => math(o.tex)),
       t(
-        `The point is at (${x}, ${y}). Measured from the positive real axis, with angles in $(-\\pi, \\pi]$, its angle is $${right.tex}$.`,
-        `这个点在 (${x}, ${y})。从正实轴量起，角度取在 $(-\\pi, \\pi]$，它的角是 $${right.tex}$。`,
+        `The point is at $(${x}, ${y})$. Measured from the positive real axis, with angles in $(-\\pi, \\pi]$, its angle is $${right.tex}$.`,
+        `这个点在 $(${x}, ${y})$。从正实轴量起，角度取在 $(-\\pi, \\pi]$，它的角是 $${right.tex}$。`,
       ),
       drawn(
         square(5),
@@ -711,8 +711,8 @@ const amplitudePhaseFromGraph: KnowledgePointDef = {
       math(write(a, b, w)),
       [math(write(a, -b, w)), math(`${p + q} \\sin ${angle(w)}`), math(write(b, a, w)), math(write(a, b, w + 1))],
       t(
-        `The peak is ${h}, and $\\sqrt{${p}^2 + ${q}^2} = ${h}$. At $x = 0$ the height is $${b}$, which is the coefficient of the cosine, and the wave has ${w === 1 ? "one cycle" : `${w} cycles`} in each $2\\pi$.`,
-        `峰值是 ${h}，而 $\\sqrt{${p}^2 + ${q}^2} = ${h}$。$x = 0$ 时高度是 $${b}$，也就是余弦的系数，而且每个 $2\\pi$ 内有 ${w} 个周期。`,
+        `The peak is $${h}$, and $\\sqrt{${p}^2 + ${q}^2} = ${h}$. At $x = 0$ the height is $${b}$, which is the coefficient of the cosine, and the wave has ${w === 1 ? "one cycle" : `$${w}$ cycles`} in each $2\\pi$.`,
+        `峰值是 $${h}$，而 $\\sqrt{${p}^2 + ${q}^2} = ${h}$。$x = 0$ 时高度是 $${b}$，也就是余弦的系数，而且每个 $2\\pi$ 内有 $${w}$ 个周期。`,
       ),
       drawn(
         { xMin: -7, xMax: 7, yMin: -h - 1, yMax: h + 1, labelEvery: 2 },

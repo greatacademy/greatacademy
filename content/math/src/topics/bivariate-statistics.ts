@@ -152,7 +152,7 @@ export const scenes: readonly Scene[] = [
     items: ["days", "天"],
     item: ["day", "天"],
     x: ["hours of sunshine", "日照时长（小时）"],
-    y: ["number of park visitors, in hundreds", "公园游客数（百人）"],
+    y: ["number of park visitors (in hundreds)", "公园游客数（百人）"],
     dir: 1,
   },
   {

@@ -1439,8 +1439,8 @@ export const solvingPolynomialInequalitiesUsingSpecialFactoringTechniquesAndTheG
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
           solution: t(
-            `Factor out $x$, then factor the difference of squares:${steps(`${polyTex} = x(x^{2} - ${r * r}) = x(x - ${r})(x + ${r})`)}The roots are $-${r}$, $0$, and $${r}$. The solution is $${setL(set)}$.`,
-            `先提出公因式 $x$，再利用平方差公式因式分解：${steps(`${polyTex} = x(x^{2} - ${r * r}) = x(x - ${r})(x + ${r})`)}零点为 $-${r}$、$0$ 和 $${r}$。解集是 $${setL(set)}$。`,
+            `Factor out $x$, then factor the difference of squares:${steps(`${polyTex} = x(x^{2} - ${r * r}) = x(x - ${r})(x + ${r})`)}The roots are $-${r}$, $0$, and $${r}$. The product is positive to the right of the largest root, and its sign changes at each root, so the solution is $${setL(set)}$.`,
+            `先提出公因式 $x$，再利用平方差公式因式分解：${steps(`${polyTex} = x(x^{2} - ${r * r}) = x(x - ${r})(x + ${r})`)}零点为 $-${r}$、$0$ 和 $${r}$。乘积在最大零点的右边为正，每经过一个零点就变号，所以解集是 $${setL(set)}$。`,
           ),
         });
       },
@@ -1459,7 +1459,7 @@ export const solvingPolynomialInequalitiesUsingSpecialFactoringTechniquesAndTheG
           b += 1;
         }
         const polyTex = poly([1, "x^{3}"], [a, "x^{2}"], [-b * b, "x"], [-a * b * b, ""]);
-        const fs = [lin(1, -a), lin(1, b), lin(1, -b)];
+        const fs = [lin(1, a), lin(1, b), lin(1, -b)];
         const op = rng.pick(ops);
         const set = chartSet(1, fs, op);
         return intervalProblem({
@@ -1471,11 +1471,11 @@ export const solvingPolynomialInequalitiesUsingSpecialFactoringTechniquesAndTheG
             `Group terms to factor:${steps(
               `${polyTex} = x^{2}(x ${tail(a)}) - ${b * b}(x ${tail(a)})`,
               `= (x^{2} - ${b * b})(x ${tail(a)}) = (x - ${b})(x + ${b})(x ${tail(a)})`,
-            )}The roots are $${b}$, $-${b}$, and $${-a}$. The solution is $${setL(set)}$.`,
+            )}The roots are $${b}$, $-${b}$, and $${-a}$. The product is positive to the right of the largest root, and its sign changes at each root, so the solution is $${setL(set)}$.`,
             `分组提取公因式：${steps(
               `${polyTex} = x^{2}(x ${tail(a)}) - ${b * b}(x ${tail(a)})`,
               `= (x^{2} - ${b * b})(x ${tail(a)}) = (x - ${b})(x + ${b})(x ${tail(a)})`,
-            )}零点为 $${b}$、$-${b}$ 和 $${-a}$。解集是 $${setL(set)}$。`,
+            )}零点为 $${b}$、$-${b}$ 和 $${-a}$。乘积在最大零点的右边为正，每经过一个零点就变号，所以解集是 $${setL(set)}$。`,
           ),
         });
       },
@@ -1503,11 +1503,11 @@ export const solvingPolynomialInequalitiesUsingSpecialFactoringTechniquesAndTheG
             `Treat as quadratic in $x^{2}$ and factor completely:${steps(
               `${polyTex} = (x^{2} - ${a2})(x^{2} - ${b2})`,
               `= (x - ${a})(x + ${a})(x - ${b})(x + ${b})`,
-            )}The roots are $-${b}, -${a}, ${a}, ${b}$. The solution is $${setL(set)}$.`,
+            )}The roots are $-${b}, -${a}, ${a}, ${b}$. The product is positive to the right of the largest root, and its sign changes at each root, so the solution is $${setL(set)}$.`,
             `视为关于 $x^{2}$ 的二次式并彻底分解：${steps(
               `${polyTex} = (x^{2} - ${a2})(x^{2} - ${b2})`,
               `= (x - ${a})(x + ${a})(x - ${b})(x + ${b})`,
-            )}零点为 $-${b}, -${a}, ${a}, ${b}$。解集是 $${setL(set)}$。`,
+            )}零点为 $-${b}, -${a}, ${a}, ${b}$。乘积在最大零点的右边为正，每经过一个零点就变号，所以解集是 $${setL(set)}$。`,
           ),
         });
       },
@@ -1642,20 +1642,33 @@ export const solvingRadicalInequalities: TopicDef = {
         "求解 $\\sqrt{x + 5} < x - 1$ 时两边都要满足条件：被开方数 $x + 5 \\ge 0 \\implies x \\ge -5$；且因为平方根非负，右侧必须为正：$x - 1 > 0 \\implies x > 1$。随后两边平方：\n\n$$x + 5 < (x - 1)^{2} = x^{2} - 2x + 1 \\implies x^{2} - 3x - 4 > 0 \\implies (x - 4)(x + 1) > 0$$\n\n结合 $x > 1$，唯一有效的区间是 $(4, \\infty)$。",
       ),
       generate(rng) {
-        const r = rng.int(2, 7);
-        const k = rng.int(1, 5);
-        const b = r * r - k;
-        const ineq = `\\sqrt{x ${tail(b)}} < ${r}`;
-        const domainLo = Q.of(-b);
-        const set = union(mk(domainLo, Q.of(k), true, false));
+        const c = rng.int(-4, 6);
+        const d = rng.int(2, 6);
+        const b = d * d - d - c;
+        const [p, q] = [c + 1 - d, c + d];
+        const radicand = linear(1, b);
+        const right = linear(1, -c);
+        const set = ray(">", q);
         return intervalProblem({
-          prompt: solvePrompt(ineq),
+          prompt: solvePrompt(`\\sqrt{${radicand}} < ${right}`),
           set,
           form: "interval",
-          wrong: [union(mk(undefined, Q.of(k), false, false)), complement(set), ray("<", Q.of(k))],
+          wrong: [
+            union(mk(Q.of(-b), Q.of(p), true, false), mk(Q.of(q), undefined, false, false)),
+            ray(">", c),
+            union(mk(Q.of(p), Q.of(q), false, false)),
+          ],
           solution: t(
-            `The radicand must be non-negative: $x ${tail(b)} \\ge 0 \\implies x \\ge ${domainLo.toLatex()}$. Squaring gives $x ${tail(b)} < ${r * r} \\implies x < ${k}$. The solution is $${setL(set)}$.`,
-            `被开方数必须非负：$x ${tail(b)} \\ge 0 \\implies x \\ge ${domainLo.toLatex()}$。两边平方得 $x ${tail(b)} < ${r * r} \\implies x < ${k}$。解集是 $${setL(set)}$。`,
+            `The radicand needs $x \\ge ${-b}$, and a square root is never negative, so the right side must be positive: $x > ${c}$. On these values both sides may be squared:${steps(
+              `${radicand} < (${right})^{2}`,
+              `${quad(1, -(p + q), p * q)} > 0`,
+              `(${linear(1, -p)})(${linear(1, -q)}) > 0`,
+            )}So $x < ${p}$ or $x > ${q}$. But $${p}$ is less than $${c}$, so $x < ${p}$ makes the right side negative and is rejected. The solution is $${setL(set)}$.`,
+            `被开方数要求 $x \\ge ${-b}$；平方根不会是负数，所以右边必须为正：$x > ${c}$。在这些值上两边可以平方：${steps(
+              `${radicand} < (${right})^{2}`,
+              `${quad(1, -(p + q), p * q)} > 0`,
+              `(${linear(1, -p)})(${linear(1, -q)}) > 0`,
+            )}所以 $x < ${p}$ 或 $x > ${q}$。但 $${p}$ 小于 $${c}$，$x < ${p}$ 会使右边为负，应舍去。解集是 $${setL(set)}$。`,
           ),
         });
       },
@@ -1701,7 +1714,7 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
           form: "interval",
           wrong: [ray(reversed[op], xVal), ray(op, Q.of(bk - q, p)), complement(set)],
           solution: t(
-            `Rewrite ${bk} as $${b}^{${k}}$. Since $${b} > 1$, the exponential function is increasing, preserving the inequality:${steps(
+            `Rewrite $${bk}$ as $${b}^{${k}}$. Since $${b} > 1$, the exponential function is increasing, preserving the inequality:${steps(
               `${linear(p, q)} ${opL[op]} ${k}`,
               `x ${opL[op]} ${xVal.toLatex()}`,
             )}The solution is $${setL(set)}$.`,
@@ -1949,8 +1962,8 @@ export const solvingInequalitiesInvolvingExponentialFunctionsAndPolynomials: Top
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
           solution: t(
-            `The factor $x ${tail(-u)}$ is zero at $x = ${u}$, and $2^{x} - ${c}$ is zero at $x = ${e}$. Testing intervals around these two critical numbers yields the solution $${setL(set)}$.`,
-            `因式 $x ${tail(-u)}$ 在 $x = ${u}$ 处为零，因式 $2^{x} - ${c}$ 在 $x = ${e}$ 处为零。围绕这两个关键值检验区间符号，解集为 $${setL(set)}$。`,
+            `The factor $x ${tail(-u)}$ is zero at $x = ${u}$, and $2^{x} - ${c}$ is zero at $x = ${e}$. The product is positive to the right of both zeros and changes sign at each one, which gives the solution $${setL(set)}$.`,
+            `因式 $x ${tail(-u)}$ 在 $x = ${u}$ 处为零，因式 $2^{x} - ${c}$ 在 $x = ${e}$ 处为零。乘积在两个零点的右边为正，每经过一个零点就变号，所以解集为 $${setL(set)}$。`,
           ),
         });
       },
@@ -2209,9 +2222,9 @@ export const furtherSolvingOfRationalInequalities: TopicDef = {
         const c = rng.int(-4, 4);
         const k = rng.pick([2, 3]);
         const numRoot = c + rng.pick([-3, -2, 2, 3]);
-        const b = -numRoot + k * c;
+        const b = (k - 1) * numRoot - k * c;
         const topOrig = linear(1, b);
-        const botOrig = `x ${tail(-c)}`;
+        const botOrig = linear(1, -c);
         const op = rng.pick(ops);
         const topFact = lin(-k + 1, b + k * c);
         const botFact = lin(1, -c, 1, { pole: true });
@@ -2377,8 +2390,8 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
       id: "testing-points-in-systems-of-nonlinear-inequalities",
       title: t("Testing points in a nonlinear system", "在非线性不等式组中代入点检验"),
       explanation: t(
-        "A point $(x_{0}, y_{0})$ satisfies a system of inequalities if and only if it satisfies **every** inequality in the system. For:\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\ y \\le 2x + 1 \\end{cases}$$\n\nFor $(0, 0)$:\n\n- $0 \\ge 0^{2} - 4 = -4$ (true)\n- $0 \\le 2(0) + 1 = 1$ (true)\n\nBoth are satisfied, so $(0, 0)$ lies in the solution set.",
-        "点 $(x_{0}, y_{0})$ 满足不等式组当且仅当它满足组中的**每一个**不等式。例如：\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\ y \\le 2x + 1 \\end{cases}$$\n\n对点 $(0, 0)$：\n\n- $0 \\ge 0^{2} - 4 = -4$（成立）\n- $0 \\le 2(0) + 1 = 1$（成立）\n\n两个条件均满足，因此 $(0, 0)$ 在解集中。",
+        "A point $(x_{0}, y_{0})$ satisfies a system of inequalities if and only if it satisfies **every** inequality in the system. For:\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\\\ y \\le 2x + 1 \\end{cases}$$\n\nFor $(0, 0)$:\n\n- $0 \\ge 0^{2} - 4 = -4$ (true)\n- $0 \\le 2(0) + 1 = 1$ (true)\n\nBoth are satisfied, so $(0, 0)$ lies in the solution set.",
+        "点 $(x_{0}, y_{0})$ 满足不等式组当且仅当它满足组中的**每一个**不等式。例如：\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\\\ y \\le 2x + 1 \\end{cases}$$\n\n对点 $(0, 0)$：\n\n- $0 \\ge 0^{2} - 4 = -4$（成立）\n- $0 \\le 2(0) + 1 = 1$（成立）\n\n两个条件均满足，因此 $(0, 0)$ 在解集中。",
       ),
       generate(rng) {
         const c = rng.int(1, 4);
@@ -2393,8 +2406,8 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
         const satisfies = sat1 && sat2;
         return choiceProblem({
           prompt: t(
-            `Does the point $(${x0}, ${y0})$ satisfy the system $\\begin{cases} ${ineq1} \\ ${ineq2} \\end{cases}$?`,
-            `点 $(${x0}, ${y0})$ 是否满足不等式组 $\\begin{cases} ${ineq1} \\ ${ineq2} \\end{cases}$？`,
+            `Does the point $(${x0}, ${y0})$ satisfy the system $\\begin{cases} ${ineq1} \\\\ ${ineq2} \\end{cases}$?`,
+            `点 $(${x0}, ${y0})$ 是否满足不等式组 $\\begin{cases} ${ineq1} \\\\ ${ineq2} \\end{cases}$？`,
           ),
           options: yesNo,
           correct: satisfies ? 0 : 1,

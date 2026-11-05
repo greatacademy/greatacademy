@@ -28,8 +28,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "coterminal-angles",
       ["Coterminal angles", "终边相同的角"],
       [
-        "Adding or subtracting full turns leaves the terminal side where it was, so such angles are called coterminal. To find the one from 0 up to 360 degrees, add or subtract 360 until it lands there.",
-        "加减整圈不改变终边，这样的角叫终边相同的角。要找 0 到 360 度之间的那个，就反复加减 360，直到落入这个范围。",
+        "Adding or subtracting full turns leaves the terminal side where it was, so such angles are called coterminal. To find the one from $0^{\\circ}$ up to $360^{\\circ}$, add or subtract $360^{\\circ}$ until it lands there.",
+        "加减整圈不改变终边，这样的角叫终边相同的角。要找 $0^{\\circ}$ 到 $360^{\\circ}$ 之间的那个，就反复加减 $360^{\\circ}$，直到落入这个范围。",
       ],
       (rng) => {
         const base = rng.int(1, 71) * 5;
@@ -41,10 +41,10 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
             `在 $0^{\\circ}$ 到 $360^{\\circ}$ 之间，哪个角与 $${angle}^{\\circ}$ 终边相同？写出度数。`,
           ],
           base,
-          [360 - base, (base + 180) % 360, Math.abs(angle) % 180 === base ? base + 5 : Math.abs(angle) % 180],
+          [360 - base, (base + 180) % 360, turns > 0 ? base + 360 : base - 360].filter((w) => w !== base),
           [
-            `$${angle} ${turns > 0 ? "-" : "+"} ${360 * Math.abs(turns)} = ${base}$, which is in the range.`,
-            `$${angle} ${turns > 0 ? "-" : "+"} ${360 * Math.abs(turns)} = ${base}$，在这个范围内。`,
+            `${Math.abs(turns) === 1 ? "One full turn lands" : `$${Math.abs(turns)}$ full turns land`} in the range: $${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$.`,
+            `加减 $${Math.abs(turns)}$ 整圈后落入这个范围：$${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$。`,
           ],
         );
       },
@@ -79,8 +79,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           p + q + r,
           [p + q, 2 * (p + q), (p * q) / 2],
           [
-            `The legs are ${p} and ${q}, so the third side is ${r}, and the sum is ${p + q + r}.`,
-            `两条直角边是 ${p} 和 ${q}，所以第三边是 ${r}，三边之和是 ${p + q + r}。`,
+            `The legs are $${p}$ and $${q}$, read off the coordinates. The third side is $\\sqrt{${p}^2 + ${q}^2} = ${r}$, so the perimeter is $${p} + ${q} + ${r} = ${p + q + r}$.`,
+            `由坐标读出两条直角边是 $${p}$ 和 $${q}$。第三边是 $\\sqrt{${p}^2 + ${q}^2} = ${r}$，所以周长是 $${p} + ${q} + ${r} = ${p + q + r}$。`,
           ],
         );
       },
@@ -155,7 +155,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         const m = rng.int(1, 4);
         const n = rng.int(1, 4);
         const p = rng.int(-8, 8);
-        const q = rng.int(-8, 8);
+        const q0 = rng.int(-8, 8);
+        const q = q0 === p ? (p === 8 ? 7 : p + 1) : q0;
         const degree = m + n;
         const rightUp = a > 0;
         const leftUp = degree % 2 === 0 ? rightUp : !rightUp;
@@ -172,8 +173,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           text(leftUp, rightUp),
           [text(!leftUp, rightUp), text(leftUp, !rightUp), text(!leftUp, !rightUp)],
           [
-            `The degree is ${degree}, which is ${degree % 2 === 0 ? "even" : "odd"}, and the leading coefficient is ${a}.`,
-            `次数是 ${degree}，是${degree % 2 === 0 ? "偶数" : "奇数"}，首项系数是 ${a}。`,
+            `The degree is $${m} + ${n} = ${degree}$, which is ${degree % 2 === 0 ? "even" : "odd"}, and the leading coefficient $${a}$ is ${a > 0 ? "positive" : "negative"}, so the graph behaves like $${a === 1 ? "" : a === -1 ? "-" : a}x^{${degree}}$ at both ends. It ${leftUp ? "rises" : "falls"} to the left and ${rightUp ? "rises" : "falls"} to the right.`,
+            `次数是 $${m} + ${n} = ${degree}$，是${degree % 2 === 0 ? "偶数" : "奇数"}，首项系数 $${a}$ 是${a > 0 ? "正数" : "负数"}，所以图象在两端的走向与 $${a === 1 ? "" : a === -1 ? "-" : a}x^{${degree}}$ 相同：左端${leftUp ? "上升" : "下降"}，右端${rightUp ? "上升" : "下降"}。`,
           ],
         );
       },
@@ -313,11 +314,26 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
             `测量员测得 $A = 30^{\\circ}$，边 $b = ${b}$，$A$ 的对边 $a = ${a}$。有多少个不同的三角形符合这些数据？`,
           ],
           count,
-          [0, 1, 2, 3].filter((n) => n !== count),
-          [
-            `The height is $${b} \\sin 30^{\\circ} = ${height}$. With $a = ${a}$ compared to ${height} and ${b}, there ${count === 1 ? "is 1 triangle" : `are ${count} triangles`}.`,
-            `高是 $${b} \\sin 30^{\\circ} = ${height}$。把 $a = ${a}$ 与 ${height} 和 ${b} 比较，有 ${count} 个三角形。`,
-          ],
+          [0, 1, 2].filter((n) => n !== count),
+          a < height
+            ? [
+                `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} < ${height}$, the side is too short to reach the base line, so there are $0$ triangles.`,
+                `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} < ${height}$，这条边够不到底边所在直线，所以有 $0$ 个三角形。`,
+              ]
+            : a === height
+              ? [
+                  `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a$ equals the height, the side just reaches the base line at a right angle, so there is $1$ triangle.`,
+                  `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a$ 等于高，这条边恰好垂直地碰到底边所在直线，所以有 $1$ 个三角形。`,
+                ]
+              : a < b
+                ? [
+                    `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $${height} < ${a} < ${b}$, the side meets the base line at two points on the same side of $A$, so there are $2$ triangles.`,
+                    `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $${height} < ${a} < ${b}$，这条边与底边所在直线在 $A$ 的同一侧有两个交点，所以有 $2$ 个三角形。`,
+                  ]
+                : [
+                    `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} > ${b}$, the side meets the base line at two points, but only one is on the correct side of $A$, so there is $1$ triangle.`,
+                    `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} > ${b}$，这条边与底边所在直线有两个交点，但只有一个在 $A$ 的正确一侧，所以有 $1$ 个三角形。`,
+                  ],
         );
       },
     ),
@@ -551,8 +567,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "a-combination-at-a-quadrantal-angle",
       ["A combination at a quadrantal angle", "象限角处的组合"],
       [
-        "Every multiple of 90 degrees reduces to one of four positions on the unit circle. So find the remainder after dividing by 360, read off the sine and cosine there, and then combine them.",
-        "90 度的每个倍数都化成单位圆上四个位置之一。所以先求除以 360 的余数，读出那里的正弦和余弦，再组合。",
+        "Every multiple of $90^{\\circ}$ reduces to one of four positions on the unit circle. So add or subtract multiples of $360^{\\circ}$ to land from $0^{\\circ}$ up to $360^{\\circ}$, read off the sine and cosine there, and then combine them.",
+        "$90^{\\circ}$ 的每个倍数都化成单位圆上四个位置之一。所以先加减 $360^{\\circ}$ 的倍数，落到 $0^{\\circ}$ 到 $360^{\\circ}$ 之间，读出那里的正弦和余弦，再组合。",
       ],
       (rng) => {
         const k = rng.int(5, 40) * (rng.bool() ? 1 : -1);
@@ -570,8 +586,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           a * s + b * c,
           [a * c + b * s, -(a * s + b * c), a + b],
           [
-            `$${angle}^{\\circ}$ ends at the same place as $${spot * 90}^{\\circ}$, where sine is ${s} and cosine is ${c}.`,
-            `$${angle}^{\\circ}$ 与 $${spot * 90}^{\\circ}$ 终边相同，那里正弦是 ${s}，余弦是 ${c}。`,
+            `$${angle}^{\\circ}$ ends at the same place as $${spot * 90}^{\\circ}$, where the sine is $${s}$ and the cosine is $${c}$. So the value is $${a} \\cdot (${s}) + ${b} \\cdot (${c}) = ${a * s + b * c}$.`,
+            `$${angle}^{\\circ}$ 与 $${spot * 90}^{\\circ}$ 终边相同，那里正弦是 $${s}$，余弦是 $${c}$。所以值为 $${a} \\cdot (${s}) + ${b} \\cdot (${c}) = ${a * s + b * c}$。`,
           ],
         );
       },

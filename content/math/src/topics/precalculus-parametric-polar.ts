@@ -1,6 +1,6 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { type PlaneMark, type Point, plane, poly, Q } from "@ga/subject-math";
+import { gcd, type PlaneMark, type Point, plane, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem } from "../problems.ts";
 
@@ -19,6 +19,21 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
   const options = [right, ...rest.slice(0, 3)];
   const order = rng.shuffle(options.map((_, i) => i));
   return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
+}
+
+/** twelfthsOf reads an angle written as a fraction of pi, such as \frac{5\pi}{6}, as a multiple of pi over 12. */
+function twelfthsOf(tex: string): number {
+  const found = /^\\frac\{(\d*)\\pi\}\{(\d+)\}$/.exec(tex);
+  return (Number(found?.[1] || 1) * 12) / Number(found?.[2] ?? 1);
+}
+
+/** piAngle writes a multiple of pi over 12 as a reduced angle in the interval from 0 to 2 pi. */
+function piAngle(twelfths: number): string {
+  const n = ((twelfths % 24) + 24) % 24;
+  if (n === 0) return "0";
+  const d = gcd(n, 12);
+  const top = n / d === 1 ? "" : `${n / d}`;
+  return 12 / d === 1 ? `${top}\\pi` : `\\frac{${top}\\pi}{${12 / d}}`;
 }
 
 function sgnTerm(n: number): string {
@@ -324,8 +339,8 @@ export const cartesianEquationsOfParametricCurves: TopicDef = {
         "由参数方程 $x = f(t)$ 与 $y = g(t)$ 求直角坐标方程（普通方程）$y = f(x)$ 的步骤：\n1. 从较简方程中解出参数 $t$（例如 $x = t + h \\implies t = x - h$）。\n2. 将 $t$ 的表达式代入关于 $y$ 的方程中。\n3. 化简所得方程。\n\n例如，若 $x = t + 2$ 且 $y = 3t^2 - 1$，则 $t = x - 2$，代入得 $y = 3(x - 2)^2 - 1$。",
       ),
       generate(rng) {
-        const h = rng.int(-5, 5);
-        const k = rng.int(-5, 5);
+        const h = rng.nonZero(-5, 5);
+        const k = rng.nonZero(-5, 5);
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const xExpr = linExpr(1, h, "t");
         const yExpr = `${a === 1 ? "" : a === -1 ? "-" : a}t^2 ${sgnTerm(k)}`.trim();
@@ -575,8 +590,8 @@ export const findingIntersectionsOfParametricCurvesAndLines: TopicDef = {
             [xStar, yStar + 2],
           ],
           solution: t(
-            `Set the $x$-coordinates equal: $${p1xExpr} = ${p2xExpr} \\implies ${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies t = ${tStar}$.\nSubstitute $t = ${tStar}$ into $y_1(t)$ and $y_2(t)$:\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\nBoth coordinates match at $t = ${tStar}$, giving collision point $(${xStar}, ${yStar})$.`,
-            `令两粒子的 $x$ 坐标相等：$${p1xExpr} = ${p2xExpr} \\implies ${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies t = ${tStar}$。\n将 $t = ${tStar}$ 代入 $y$ 坐标验证：\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\n两坐标在 $t = ${tStar}$ 处完全相同，因此发生碰撞，碰撞点为 $(${xStar}, ${yStar})$。`,
+            `Set the $x$-coordinates equal: $${p1xExpr} = ${p2xExpr} \\implies ${a1 - a2 === 1 ? "" : `${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies `}t = ${tStar}$.\nSubstitute $t = ${tStar}$ into $y_1(t)$ and $y_2(t)$:\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\nBoth coordinates match at $t = ${tStar}$, giving collision point $(${xStar}, ${yStar})$.`,
+            `令两粒子的 $x$ 坐标相等：$${p1xExpr} = ${p2xExpr} \\implies ${a1 - a2 === 1 ? "" : `${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies `}t = ${tStar}$。\n将 $t = ${tStar}$ 代入 $y$ 坐标验证：\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\n两坐标在 $t = ${tStar}$ 处完全相同，因此发生碰撞，碰撞点为 $(${xStar}, ${yStar})$。`,
           ),
         });
       },
@@ -1403,9 +1418,9 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
         ];
         const item = rng.pick(configs);
         const rightChoice = `(${item.r}, ${item.th})`;
-        const wrong1 = `(${item.r}, \\frac{\\pi}{2} - ${item.th})`;
+        const wrong1 = `(${item.r}, ${piAngle(-twelfthsOf(item.th))})`;
         const wrong2 = `(${k}, ${item.th})`;
-        const wrong3 = `(${item.r}, 2\\pi - ${item.th})`;
+        const wrong3 = `(${item.r}, ${piAngle(twelfthsOf(item.th) + 12)})`;
         return oneOf(
           rng,
           t(
@@ -1528,16 +1543,14 @@ export const polarEquationsOfRadialLines: TopicDef = {
             slope: "\\frac{\\sqrt{3}}{3}",
             bad1: "\\sqrt{3}",
             bad2: "-\\frac{\\sqrt{3}}{3}",
-            badAngle: "\\frac{\\pi}{3}",
           },
-          { alpha: "\\frac{\\pi}{4}", deg: "45^\\circ", slope: "1", bad1: "-1", bad2: "\\sqrt{3}", badAngle: "\\frac{\\pi}{6}" },
+          { alpha: "\\frac{\\pi}{4}", deg: "45^\\circ", slope: "1", bad1: "-1", bad2: "\\sqrt{3}" },
           {
             alpha: "\\frac{\\pi}{3}",
             deg: "60^\\circ",
             slope: "\\sqrt{3}",
             bad1: "\\frac{\\sqrt{3}}{3}",
             bad2: "-\\sqrt{3}",
-            badAngle: "\\frac{\\pi}{4}",
           },
           {
             alpha: "\\frac{2\\pi}{3}",
@@ -1545,16 +1558,14 @@ export const polarEquationsOfRadialLines: TopicDef = {
             slope: "-\\sqrt{3}",
             bad1: "\\sqrt{3}",
             bad2: "-\\frac{\\sqrt{3}}{3}",
-            badAngle: "\\frac{3\\pi}{4}",
           },
-          { alpha: "\\frac{3\\pi}{4}", deg: "135^\\circ", slope: "-1", bad1: "1", bad2: "-\\sqrt{3}", badAngle: "\\frac{2\\pi}{3}" },
+          { alpha: "\\frac{3\\pi}{4}", deg: "135^\\circ", slope: "-1", bad1: "1", bad2: "-\\sqrt{3}" },
           {
             alpha: "\\frac{5\\pi}{6}",
             deg: "150^\\circ",
             slope: "-\\frac{\\sqrt{3}}{3}",
             bad1: "\\frac{\\sqrt{3}}{3}",
             bad2: "-\\sqrt{3}",
-            badAngle: "\\frac{\\pi}{6}",
           },
           {
             alpha: "\\frac{7\\pi}{6}",
@@ -1562,7 +1573,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             slope: "\\frac{\\sqrt{3}}{3}",
             bad1: "-\\frac{\\sqrt{3}}{3}",
             bad2: "1",
-            badAngle: "\\frac{5\\pi}{4}",
           },
           {
             alpha: "\\frac{5\\pi}{4}",
@@ -1570,17 +1580,15 @@ export const polarEquationsOfRadialLines: TopicDef = {
             slope: "1",
             bad1: "-1",
             bad2: "\\frac{\\sqrt{3}}{3}",
-            badAngle: "\\frac{4\\pi}{3}",
           },
-          { alpha: "\\frac{4\\pi}{3}", deg: "240^\\circ", slope: "\\sqrt{3}", bad1: "-\\sqrt{3}", bad2: "1", badAngle: "\\frac{5\\pi}{3}" },
-          { alpha: "\\frac{5\\pi}{3}", deg: "300^\\circ", slope: "-\\sqrt{3}", bad1: "\\sqrt{3}", bad2: "1", badAngle: "\\frac{7\\pi}{4}" },
+          { alpha: "\\frac{4\\pi}{3}", deg: "240^\\circ", slope: "\\sqrt{3}", bad1: "-\\sqrt{3}", bad2: "1" },
+          { alpha: "\\frac{5\\pi}{3}", deg: "300^\\circ", slope: "-\\sqrt{3}", bad1: "\\sqrt{3}", bad2: "1" },
           {
             alpha: "\\frac{7\\pi}{4}",
             deg: "315^\\circ",
             slope: "-1",
             bad1: "1",
             bad2: "-\\frac{\\sqrt{3}}{3}",
-            badAngle: "\\frac{11\\pi}{6}",
           },
           {
             alpha: "\\frac{11\\pi}{6}",
@@ -1588,28 +1596,26 @@ export const polarEquationsOfRadialLines: TopicDef = {
             slope: "-\\frac{\\sqrt{3}}{3}",
             bad1: "\\frac{\\sqrt{3}}{3}",
             bad2: "-1",
-            badAngle: "\\frac{5\\pi}{6}",
           },
         ];
         const item = rng.pick(lineData);
         const mode = rng.pick(["slopeRad", "slopeDeg", "pointOnLine"]);
         if (mode === "pointOnLine") {
           const r = rng.int(2, 8);
+          const tw = twelfthsOf(item.alpha);
+          const opposite = piAngle(tw + 12);
+          const at = (angle: string) => t(`$\\left(${r},\\, ${angle}\\right)$`, `$\\left(${r},\\, ${angle}\\right)$`);
           return oneOf(
             rng,
             t(
-              `Which of the following points with $r = ${r}$ lies on the line given by the polar equation $\\theta = ${item.alpha}$?`,
-              `下列哪个极径为 $r = ${r}$ 的点位于极坐标方程 $\\theta = ${item.alpha}$ 所表示的直线上？`,
+              `The polar equation $\\theta = ${item.alpha}$, with $r$ any real number, is a line through the pole. Which of these points lies on the line?`,
+              `极坐标方程 $\\theta = ${item.alpha}$（$r$ 取任意实数）是一条过极点的直线。下列哪个点在这条直线上？`,
             ),
-            t(`$\\left(${r},\\, ${item.alpha}\\right)$`, `$\\left(${r},\\, ${item.alpha}\\right)$`),
-            [
-              t(`$\\left(${r},\\, ${item.badAngle}\\right)$`, `$\\left(${r},\\, ${item.badAngle}\\right)$`),
-              t(`$\\left(${r},\\, -${item.badAngle}\\right)$`, `$\\left(${r},\\, -${item.badAngle}\\right)$`),
-              t(`$\\left(${r},\\, \\frac{\\pi}{2}\\right)$`, `$\\left(${r},\\, \\frac{\\pi}{2}\\right)$`),
-            ],
+            at(opposite),
+            [at(piAngle(tw + 6)), at(piAngle(-tw)), at(piAngle(tw + 4)), at(piAngle(tw + 8))],
             t(
-              `Any point on the line $\\theta = ${item.alpha}$ with radius $r = ${r}$ has coordinates $\\left(${r},\\, ${item.alpha}\\right)$.`,
-              `直线 $\\theta = ${item.alpha}$ 上极径为 $r = ${r}$ 的点极坐标为 $\\left(${r},\\, ${item.alpha}\\right)$。`,
+              `Adding $\\pi$ to the angle and changing the sign of $r$ gives the same point, so $\\left(${r},\\, ${opposite}\\right)$ is the point $\\left(${-r},\\, ${item.alpha}\\right)$, which satisfies $\\theta = ${item.alpha}$. It lies on the opposite ray. The other angles do not differ from $${item.alpha}$ by a multiple of $\\pi$.`,
+              `角加 $\\pi$ 并改变 $r$ 的符号，得到的是同一个点，所以 $\\left(${r},\\, ${opposite}\\right)$ 就是点 $\\left(${-r},\\, ${item.alpha}\\right)$，它满足 $\\theta = ${item.alpha}$，位于反向射线上。其余的角与 $${item.alpha}$ 之差都不是 $\\pi$ 的整数倍。`,
             ),
           );
         }
@@ -1656,7 +1662,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = \\frac{\\sqrt{3}}{3}x",
             bad1: "y = \\sqrt{3}x",
             bad2: "y = -\\frac{\\sqrt{3}}{3}x",
-            badAngle: "\\frac{\\pi}{3}",
             stdEq: (c: number) => (c === 1 ? "x - \\sqrt{3}y = 0" : `${c}x - ${c}\\sqrt{3}y = 0`),
           },
           {
@@ -1666,7 +1671,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = x",
             bad1: "y = -x",
             bad2: "y = 2x",
-            badAngle: "\\frac{\\pi}{6}",
             stdEq: (c: number) => (c === 1 ? "x - y = 0" : `${c}x - ${c}y = 0`),
           },
           {
@@ -1676,7 +1680,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = \\sqrt{3}x",
             bad1: "y = \\frac{\\sqrt{3}}{3}x",
             bad2: "y = -\\sqrt{3}x",
-            badAngle: "\\frac{\\pi}{4}",
             stdEq: (c: number) => (c === 1 ? "\\sqrt{3}x - y = 0" : `${c}\\sqrt{3}x - ${c}y = 0`),
           },
           {
@@ -1686,7 +1689,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = -\\sqrt{3}x",
             bad1: "y = \\sqrt{3}x",
             bad2: "y = -\\frac{\\sqrt{3}}{3}x",
-            badAngle: "\\frac{3\\pi}{4}",
             stdEq: (c: number) => (c === 1 ? "\\sqrt{3}x + y = 0" : `${c}\\sqrt{3}x + ${c}y = 0`),
           },
           {
@@ -1696,7 +1698,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = -x",
             bad1: "y = x",
             bad2: "y = -2x",
-            badAngle: "\\frac{2\\pi}{3}",
             stdEq: (c: number) => (c === 1 ? "x + y = 0" : `${c}x + ${c}y = 0`),
           },
           {
@@ -1706,7 +1707,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = -\\frac{\\sqrt{3}}{3}x",
             bad1: "y = \\frac{\\sqrt{3}}{3}x",
             bad2: "y = -\\sqrt{3}x",
-            badAngle: "\\frac{\\pi}{6}",
             stdEq: (c: number) => (c === 1 ? "x + \\sqrt{3}y = 0" : `${c}x + ${c}\\sqrt{3}y = 0`),
           },
           {
@@ -1716,7 +1716,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = \\frac{\\sqrt{3}}{3}x",
             bad1: "y = -\\frac{\\sqrt{3}}{3}x",
             bad2: "y = x",
-            badAngle: "\\frac{5\\pi}{4}",
             stdEq: (c: number) => (c === 1 ? "x - \\sqrt{3}y = 0" : `${c}x - ${c}\\sqrt{3}y = 0`),
           },
           {
@@ -1726,7 +1725,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = x",
             bad1: "y = -x",
             bad2: "y = \\sqrt{3}x",
-            badAngle: "\\frac{4\\pi}{3}",
             stdEq: (c: number) => (c === 1 ? "x - y = 0" : `${c}x - ${c}y = 0`),
           },
           {
@@ -1736,7 +1734,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = \\sqrt{3}x",
             bad1: "y = -\\sqrt{3}x",
             bad2: "y = x",
-            badAngle: "\\frac{5\\pi}{3}",
             stdEq: (c: number) => (c === 1 ? "\\sqrt{3}x - y = 0" : `${c}\\sqrt{3}x - ${c}y = 0`),
           },
           {
@@ -1746,7 +1743,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = -\\sqrt{3}x",
             bad1: "y = \\sqrt{3}x",
             bad2: "y = x",
-            badAngle: "\\frac{7\\pi}{4}",
             stdEq: (c: number) => (c === 1 ? "\\sqrt{3}x + y = 0" : `${c}\\sqrt{3}x + ${c}y = 0`),
           },
           {
@@ -1756,7 +1752,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = -x",
             bad1: "y = x",
             bad2: "y = -\\sqrt{3}x",
-            badAngle: "\\frac{11\\pi}{6}",
             stdEq: (c: number) => (c === 1 ? "x + y = 0" : `${c}x + ${c}y = 0`),
           },
           {
@@ -1766,7 +1761,6 @@ export const polarEquationsOfRadialLines: TopicDef = {
             eq: "y = -\\frac{\\sqrt{3}}{3}x",
             bad1: "y = \\frac{\\sqrt{3}}{3}x",
             bad2: "y = -x",
-            badAngle: "\\frac{5\\pi}{6}",
             stdEq: (c: number) => (c === 1 ? "x + \\sqrt{3}y = 0" : `${c}x + ${c}\\sqrt{3}y = 0`),
           },
         ];
@@ -1784,7 +1778,10 @@ export const polarEquationsOfRadialLines: TopicDef = {
             ),
             t(`$\\theta = ${item.reducedAlpha}$`, `$\\theta = ${item.reducedAlpha}$`),
             [
-              t(`$\\theta = ${item.badAngle}$`, `$\\theta = ${item.badAngle}$`),
+              t(
+                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
+                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
+              ),
               t(`$r = ${item.reducedAlpha}$`, `$r = ${item.reducedAlpha}$`),
               t(`$\\theta = 0$`, `$\\theta = 0$`),
             ],
@@ -1804,7 +1801,10 @@ export const polarEquationsOfRadialLines: TopicDef = {
             ),
             t(`$\\theta = ${item.reducedAlpha}$`, `$\\theta = ${item.reducedAlpha}$`),
             [
-              t(`$\\theta = ${item.badAngle}$`, `$\\theta = ${item.badAngle}$`),
+              t(
+                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
+                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
+              ),
               t(`$r = ${item.reducedAlpha}$`, `$r = ${item.reducedAlpha}$`),
               t(`$\\theta = 0$`, `$\\theta = 0$`),
             ],
@@ -1872,7 +1872,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
           return oneOf(
             rng,
             t(
-              `Find the polar equation for the circle centered at $(${a}, 0)$ with radius $r = ${radius}$.`,
+              `Find the polar equation for the circle centered at $(${a}, 0)$ with radius $${radius}$.`,
               `求圆心在 $(${a}, 0)$、半径为 $r = ${radius}$ 的圆的极坐标方程。`,
             ),
             t(`$${rightEq}$`, `$${rightEq}$`),
@@ -1921,7 +1921,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
           return oneOf(
             rng,
             t(
-              `Find the polar equation for the circle centered at $(0, ${b})$ with radius $r = ${radius}$.`,
+              `Find the polar equation for the circle centered at $(0, ${b})$ with radius $${radius}$.`,
               `求圆心在 $(0, ${b})$、半径为 $r = ${radius}$ 的圆的极坐标方程。`,
             ),
             t(`$${rightEq}$`, `$${rightEq}$`),
@@ -1982,17 +1982,21 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
           const p1 = `(${eq1}, \\frac{\\pi}{4})`;
           const p2 = `(${eq1}, \\frac{7\\pi}{4})`;
           const rightChoice = `$${p1}$ and $${p2}$`;
-          const wrong1 = `(${eq1}, \\frac{\\pi}{3}) and (${eq1}, \\frac{5\\pi}{3})`;
-          const wrong2 = `(${twoA}, \\frac{\\pi}{4}) and (${twoA}, \\frac{7\\pi}{4})`;
-          const wrong3 = `(${eq1}, \\frac{3\\pi}{4}) and (${eq1}, \\frac{5\\pi}{4})`;
+          const wrong1 = `(${eq1}, \\frac{\\pi}{3})$ and $(${eq1}, \\frac{5\\pi}{3})`;
+          const wrong2 = `(${twoA}, \\frac{\\pi}{4})$ and $(${twoA}, \\frac{7\\pi}{4})`;
+          const wrong3 = `(${eq1}, \\frac{3\\pi}{4})$ and $(${eq1}, \\frac{5\\pi}{4})`;
           return oneOf(
             rng,
             t(
               `Find the intersection points of the polar curves $r = ${eq1}$ and $r = ${twoA}\\cos\\theta$ for $0 \\le \\theta < 2\\pi$.`,
               `求极坐标曲线 $r = ${eq1}$ 与 $r = ${twoA}\\cos\\theta$ 在 $0 \\le \\theta < 2\\pi$ 上的交点坐标。`,
             ),
-            t(rightChoice, rightChoice),
-            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
+            t(rightChoice, rightChoice.replace(" and ", " 和 ")),
+            [
+              t(`$${wrong1}$`, `$${wrong1}$`.replace(" and ", " 和 ")),
+              t(`$${wrong2}$`, `$${wrong2}$`.replace(" and ", " 和 ")),
+              t(`$${wrong3}$`, `$${wrong3}$`.replace(" and ", " 和 ")),
+            ],
             t(
               `Set equations equal: $${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
               `联立方程：$${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
@@ -2005,17 +2009,21 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
           const p1 = `(${eq1}, \\frac{\\pi}{4})`;
           const p2 = `(${eq1}, \\frac{3\\pi}{4})`;
           const rightChoice = `$${p1}$ and $${p2}$`;
-          const wrong1 = `(${eq1}, \\frac{\\pi}{6}) and (${eq1}, \\frac{5\\pi}{6})`;
-          const wrong2 = `(${twoA}, \\frac{\\pi}{4}) and (${twoA}, \\frac{3\\pi}{4})`;
-          const wrong3 = `(${eq1}, \\frac{5\\pi}{4}) and (${eq1}, \\frac{7\\pi}{4})`;
+          const wrong1 = `(${eq1}, \\frac{\\pi}{6})$ and $(${eq1}, \\frac{5\\pi}{6})`;
+          const wrong2 = `(${twoA}, \\frac{\\pi}{4})$ and $(${twoA}, \\frac{3\\pi}{4})`;
+          const wrong3 = `(${eq1}, \\frac{5\\pi}{4})$ and $(${eq1}, \\frac{7\\pi}{4})`;
           return oneOf(
             rng,
             t(
               `Find the intersection points of the polar curves $r = ${eq1}$ and $r = ${twoA}\\sin\\theta$ for $0 \\le \\theta < 2\\pi$.`,
               `求极坐标曲线 $r = ${eq1}$ 与 $r = ${twoA}\\sin\\theta$ 在 $0 \\le \\theta < 2\\pi$ 上的交点坐标。`,
             ),
-            t(rightChoice, rightChoice),
-            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
+            t(rightChoice, rightChoice.replace(" and ", " 和 ")),
+            [
+              t(`$${wrong1}$`, `$${wrong1}$`.replace(" and ", " 和 ")),
+              t(`$${wrong2}$`, `$${wrong2}$`.replace(" and ", " 和 ")),
+              t(`$${wrong3}$`, `$${wrong3}$`.replace(" and ", " 和 ")),
+            ],
             t(
               `Set equations equal: $${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
               `联立方程：$${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
@@ -2031,16 +2039,20 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
         const wrong1 = isCos
           ? `(${a}, \\frac{\\pi}{6}) and (${a}, \\frac{11\\pi}{6})`
           : `(${a}, \\frac{\\pi}{3}) and (${a}, \\frac{2\\pi}{3})`;
-        const wrong2 = `(${twoA}, \\frac{\\pi}{4}) and (${twoA}, \\frac{7\\pi}{4})`;
-        const wrong3 = `(${a}, \\frac{\\pi}{4}) and (${a}, \\frac{5\\pi}{4})`;
+        const wrong2 = `(${twoA}, \\frac{\\pi}{4})$ and $(${twoA}, \\frac{7\\pi}{4})`;
+        const wrong3 = `(${a}, \\frac{\\pi}{4})$ and $(${a}, \\frac{5\\pi}{4})`;
         return oneOf(
           rng,
           t(
             `Find the intersection points of the polar curves $r = ${a}$ and $r = ${eq2}$ for $0 \\le \\theta < 2\\pi$.`,
             `求极坐标曲线 $r = ${a}$ 与 $r = ${eq2}$ 在 $0 \\le \\theta < 2\\pi$ 上的交点坐标。`,
           ),
-          t(rightChoice, rightChoice),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
+          t(rightChoice, rightChoice.replace(" and ", " 和 ")),
+          [
+            t(`$${wrong1}$`, `$${wrong1}$`.replace(" and ", " 和 ")),
+            t(`$${wrong2}$`, `$${wrong2}$`.replace(" and ", " 和 ")),
+            t(`$${wrong3}$`, `$${wrong3}$`.replace(" and ", " 和 ")),
+          ],
           t(
             `Set equations equal: $${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$.\nOn $[0, 2\\pi)$, $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$.\nThe points are $${p1}$ and $${p2}$.`,
             `联立方程：$${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$。\n在 $[0, 2\\pi)$ 内，解得 $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,

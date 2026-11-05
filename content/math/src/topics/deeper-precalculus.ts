@@ -127,15 +127,15 @@ const integersInFourFactors: KnowledgePointDef = {
     const [g1, g2, g3] = [rng.int(2, 6), rng.int(2, 6), rng.int(2, 6)];
     const [b, c, d] = [a + g1, a + g1 + g2, a + g1 + g2 + g3];
     const answer = g1 - 1 + (g3 - 1);
-    const product = [a, b, c, d].map((v) => `(${minus(v)})`).join("");
+    const product = [a, b, c, d].map((v) => (v === 0 ? "x" : `(${minus(v)})`)).join("");
     return numberProblem({
       prompt: t(`How many integers $x$ satisfy $${product} < 0$?`, `有多少个整数 $x$ 满足 $${product} < 0$？`),
       answer,
       form: "integer",
       wrong: [answer + 4, answer + 2, g2 - 1, d - a - 1, answer + 1],
       solution: t(
-        `The product is positive to the right of $${d}$, and its sign changes at each zero. So it is negative on $(${c}, ${d})$ and on $(${a}, ${b})$. The endpoints are excluded, so the intervals hold ${g3 - 1 === 1 ? "one integer" : `${g3 - 1} integers`} and ${g1 - 1 === 1 ? "one integer" : `${g1 - 1} integers`}, which is ${answer} in all.`,
-        `乘积在 $${d}$ 的右边为正，每经过一个零点就变号。所以它在 $(${c}, ${d})$ 和 $(${a}, ${b})$ 上为负。端点不包括在内，两个区间分别含 ${g3 - 1} 个和 ${g1 - 1} 个整数，共 ${answer} 个。`,
+        `The product is positive to the right of $${d}$, and its sign changes at each zero. So it is negative on $(${c}, ${d})$ and on $(${a}, ${b})$. The endpoints are excluded, so the intervals hold $${g3 - 1}$ and $${g1 - 1}$ integers, which is $${answer}$ in all.`,
+        `乘积在 $${d}$ 的右边为正，每经过一个零点就变号。所以它在 $(${c}, ${d})$ 和 $(${a}, ${b})$ 上为负。端点不包括在内，两个区间分别含 $${g3 - 1}$ 个和 $${g1 - 1}$ 个整数，共 $${answer}$ 个。`,
       ),
     });
   },
@@ -228,7 +228,7 @@ const closeToLimit: KnowledgePointDef = {
       form: "integer",
       wrong: [byTerm, answer - 1, answer + 1, answer + 2],
       solution: t(
-        `The infinite sum is $${m * q}$, and the gap after $n$ terms is the infinite sum times the ratio to the power $n$, which is $${m * q} \\cdot \\frac{1}{${q}^{n}}$. Requiring this to be below the tolerance gives $${q}^{n - 1} > ${target}$. Trying powers, $${q}^{${answer - 1}} = ${q ** (answer - 1)}$ is the first to pass ${target}, so $n = ${answer}$.`,
+        `The infinite sum is $${m * q}$, and the gap after $n$ terms is the infinite sum times the ratio to the power $n$, which is $${m * q} \\cdot \\frac{1}{${q}^{n}}$. Requiring this to be below the tolerance gives $${q}^{n - 1} > ${target}$. Trying powers, $${q}^{${answer - 1}} = ${q ** (answer - 1)}$ is the first to pass $${target}$, so $n = ${answer}$.`,
         `无穷级数的和是 $${m * q}$，前 $n$ 项之后的差距等于这个和乘以公比的 $n$ 次幂，即 $${m * q} \\cdot \\frac{1}{${q}^{n}}$。要求它小于误差范围，得 $${q}^{n - 1} > ${target}$。逐个试幂，$${q}^{${answer - 1}} = ${q ** (answer - 1)}$ 最先超过 ${target}，所以 $n = ${answer}$。`,
       ),
     });
@@ -249,15 +249,15 @@ const denominatorFromCount: KnowledgePointDef = {
     const fraction = `\\frac{${minus(a)}}{x - b}`;
     return numberProblem({
       prompt: t(
-        `The inequality $${fraction} \\le 0$, where $b > ${a}$, has exactly ${count} integer solutions. Find $b$.`,
-        `不等式 $${fraction} \\le 0$（其中 $b > ${a}$）恰有 ${count} 个整数解。求 $b$。`,
+        `The inequality $${fraction} \\le 0$, where $b > ${a}$, has exactly $${count}$ integer solutions. Find $b$.`,
+        `不等式 $${fraction} \\le 0$（其中 $b > ${a}$）恰有 $${count}$ 个整数解。求 $b$。`,
       ),
       answer,
       form: "integer",
       wrong: [answer + 1, answer - 1, a - count, count],
       solution: t(
         `The quotient is negative between $${a}$ and $b$, is zero at $x = ${a}$, and does not exist at $x = b$. So the solution set is $[${a}, b)$, whose integers run from $${a}$ up to the one just below $b$. Their number is the distance from $${a}$ to $b$, so $b = ${answer}$.`,
-        `商在 $${a}$ 与 $b$ 之间为负，在 $x = ${a}$ 处为零，在 $x = b$ 处没有意义。所以解集是 $[${a}, b)$，其中的整数从 $${a}$ 一直到比 $b$ 小 1 的数，个数等于 $${a}$ 到 $b$ 的距离，所以 $b = ${answer}$。`,
+        `商在 $${a}$ 与 $b$ 之间为负，在 $x = ${a}$ 处为零，在 $x = b$ 处没有意义。所以解集是 $[${a}, b)$，其中的整数从 $${a}$ 一直到比 $b$ 小 $1$ 的数，个数等于 $${a}$ 到 $b$ 的距离，所以 $b = ${answer}$。`,
       ),
     });
   },
@@ -320,8 +320,8 @@ const gridPoints: KnowledgePointDef = {
       form: "integer",
       wrong: [strict, half, m + 1, answer + 1],
       solution: t(
-        `The boundaries meet where $x^{2} = ${m}$, so the columns run from $x = ${-widest}$ to $x = ${widest}$. A column with a given $x$ holds the integers from $${curve}$ up to $${top}$, both included. The column at $x = 0$ holds ${columns[0]} points, and columns come in matching pairs, so the total is $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$.`,
-        `两条边界在 $x^{2} = ${m}$ 处相交，所以各列从 $x = ${-widest}$ 到 $x = ${widest}$。给定 $x$ 的一列含有从 $${curve}$ 到 $${top}$ 的整数，两端都包括。$x = 0$ 这一列有 ${columns[0]} 个点，其他列左右成对，所以总数是 $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$。`,
+        `The boundaries meet where $x^{2} = ${m}$, so the columns run from $x = ${-widest}$ to $x = ${widest}$. A column with a given $x$ holds the integers from $${curve}$ up to $${top}$, both included. The column at $x = 0$ holds $${columns[0]}$ points, and columns come in matching pairs, so the total is $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$.`,
+        `两条边界在 $x^{2} = ${m}$ 处相交，所以各列从 $x = ${-widest}$ 到 $x = ${widest}$。给定 $x$ 的一列含有从 $${curve}$ 到 $${top}$ 的整数，两端都包括。$x = 0$ 这一列有 $${columns[0]}$ 个点，其他列左右成对，所以总数是 $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$。`,
       ),
     });
   },
@@ -562,8 +562,8 @@ const countMultipleAngle: KnowledgePointDef = {
       form: "integer",
       wrong: [per * m, answer + 1, 2 * answer, per === 2 ? n * m : 2 * n * m],
       solution: t(
-        `As $x$ runs over the interval, the angle $${n}x^{\\circ}$ runs over ${n * m} full cycles. Each cycle holds ${per === 1 ? "one solution" : "two solutions"}, so the total is ${answer}.`,
-        `$x$ 走过这个区间时，角 $${n}x^{\\circ}$ 走过 ${n * m} 个完整周期。每个周期有 ${per} 个解，所以共有 ${answer} 个。`,
+        `As $x$ runs over the interval, the angle $${n}x^{\\circ}$ runs over $${n * m}$ full cycles. Each cycle holds ${per === 1 ? "one solution" : "two solutions"}, so the total is $${answer}$.`,
+        `$x$ 走过这个区间时，角 $${n}x^{\\circ}$ 走过 $${n * m}$ 个完整周期。每个周期有 $${per}$ 个解，所以共有 $${answer}$ 个。`,
       ),
     });
   },
@@ -929,8 +929,8 @@ const squareFromTrace: KnowledgePointDef = {
   id: "the-square-of-a-2x2-matrix-from-its-trace-and-determinant",
   title: t("The square of a 2×2 matrix from its trace and determinant", "用迹和行列式表示 2×2 矩阵的平方"),
   explanation: t(
-    "Every 2×2 matrix satisfies a quadratic equation of its own. Its square equals the trace times the matrix, minus the determinant times the identity, as multiplying out the entries will confirm. This means a square, and then any higher power, can be reduced to a combination of the matrix and the identity. The trace is the sum of the diagonal entries, and the signs in the relation are the part people most easily get wrong.",
-    "每个 2×2 矩阵都满足一个属于自己的二次方程。它的平方等于迹乘以矩阵，减去行列式乘以单位矩阵，把元素乘开就可以验证。这意味着平方以及更高次幂都能化为矩阵与单位矩阵的组合。迹是对角元素之和，而这个关系式中的符号最容易弄错。",
+    "Every $2 \\times 2$ matrix satisfies a quadratic equation of its own. Its square equals the trace times the matrix, minus the determinant times the identity, as multiplying out the entries will confirm. This means a square, and then any higher power, can be reduced to a combination of the matrix and the identity. The trace is the sum of the diagonal entries, and the signs in the relation are the part people most easily get wrong.",
+    "每个 $2 \\times 2$ 矩阵都满足一个属于自己的二次方程。它的平方等于迹乘以矩阵，减去行列式乘以单位矩阵，把元素乘开就可以验证。这意味着平方以及更高次幂都能化为矩阵与单位矩阵的组合。迹是对角元素之和，而这个关系式中的符号最容易弄错。",
   ),
   generate(rng) {
     let [a, b, c, d] = [rng.int(-5, 5), nonzero(rng, 5), nonzero(rng, 5), rng.int(-5, 5)];
@@ -967,8 +967,8 @@ const triangleArea: KnowledgePointDef = {
   id: "the-area-of-a-triangle-from-its-vertices",
   title: t("The area of a triangle from its vertices", "由顶点坐标求三角形的面积"),
   explanation: t(
-    "A 2×2 determinant measures the area of a parallelogram, and a triangle is half of one. To use this for a triangle placed anywhere in the plane, first form two vectors along its sides from a shared vertex, by subtracting coordinates. The determinant of these two side vectors gives the parallelogram on them, and half of its absolute value is the triangle's area. Skipping the subtraction measures a triangle with a vertex at the origin instead.",
-    "2×2 行列式度量平行四边形的面积，而三角形是平行四边形的一半。要把它用于平面上任意位置的三角形，先从一个公共顶点出发，用坐标相减得到沿两条边的向量。这两个边向量的行列式给出以它们为边的平行四边形，其绝对值的一半就是三角形的面积。如果省略相减，量出的就是以原点为顶点的三角形。",
+    "A $2 \\times 2$ determinant measures the area of a parallelogram, and a triangle is half of one. To use this for a triangle placed anywhere in the plane, first form two vectors along its sides from a shared vertex, by subtracting coordinates. The determinant of these two side vectors gives the parallelogram on them, and half of its absolute value is the triangle's area. Skipping the subtraction measures a triangle with a vertex at the origin instead.",
+    "$2 \\times 2$ 行列式度量平行四边形的面积，而三角形是平行四边形的一半。要把它用于平面上任意位置的三角形，先从一个公共顶点出发，用坐标相减得到沿两条边的向量。这两个边向量的行列式给出以它们为边的平行四边形，其绝对值的一半就是三角形的面积。如果省略相减，量出的就是以原点为顶点的三角形。",
   ),
   generate(rng) {
     const [ax, ay] = [rng.int(-6, 6), rng.int(-6, 6)];
@@ -996,8 +996,8 @@ const recoverFromInverse: KnowledgePointDef = {
   id: "recovering-a-matrix-from-its-inverse",
   title: t("Recovering a matrix from its inverse", "由逆矩阵还原矩阵"),
   explanation: t(
-    "Inverting twice brings back the original matrix, so a matrix can be recovered from its inverse by the usual formula for a 2×2 inverse. Swap the diagonal entries, change the signs of the other two entries, and divide by the determinant of the matrix being inverted. The determinant here is that of the given inverse, not of the unknown matrix, and forgetting this division, or its sign, is the mistake to watch for.",
-    "求两次逆就回到原矩阵，所以用通常的 2×2 求逆公式，就能由逆矩阵还原矩阵。交换对角元素，改变另外两个元素的符号，再除以被求逆矩阵的行列式。这里的行列式是已知的逆矩阵的行列式，不是未知矩阵的，要留意不要漏掉这一步除法或它的符号。",
+    "Inverting twice brings back the original matrix, so a matrix can be recovered from its inverse by the usual formula for a $2 \\times 2$ inverse. Swap the diagonal entries, change the signs of the other two entries, and divide by the determinant of the matrix being inverted. The determinant here is that of the given inverse, not of the unknown matrix, and forgetting this division, or its sign, is the mistake to watch for.",
+    "求两次逆就回到原矩阵，所以用通常的 $2 \\times 2$ 求逆公式，就能由逆矩阵还原矩阵。交换对角元素，改变另外两个元素的符号，再除以被求逆矩阵的行列式。这里的行列式是已知的逆矩阵的行列式，不是未知矩阵的，要留意不要漏掉这一步除法或它的符号。",
   ),
   generate(rng) {
     const m = signedIn(rng, 2, 5);
@@ -1639,8 +1639,8 @@ const smallestRealPower: KnowledgePointDef = {
       form: "integer",
       wrong: [2 * answer, answer + 1, answer - 1, answer + 2],
       solution: t(
-        `By De Moivre's theorem, $z^{n}$ has argument $${theta}n$ degrees, and it is real exactly when this is a multiple of $180$. The greatest common divisor of ${theta} and 180 is ${gcd(theta, 180)}, so the smallest such $n$ is $${answer}$.`,
-        `由棣莫弗定理，$z^{n}$ 的幅角是 $${theta}n$ 度，当且仅当它是 $180$ 的倍数时 $z^{n}$ 为实数。${theta} 与 180 的最大公因数是 ${gcd(theta, 180)}，所以最小的 $n$ 是 $${answer}$。`,
+        `By De Moivre's theorem, $z^{n}$ has argument $${theta}n$ degrees, and it is real exactly when this is a multiple of $180$. The greatest common divisor of $${theta}$ and $180$ is $${gcd(theta, 180)}$, so the smallest such $n$ is $${answer}$.`,
+        `由棣莫弗定理，$z^{n}$ 的幅角是 $${theta}n$ 度，当且仅当它是 $180$ 的倍数时 $z^{n}$ 为实数。$${theta}$ 与 $180$ 的最大公因数是 $${gcd(theta, 180)}$，所以最小的 $n$ 是 $${answer}$。`,
       ),
     });
   },

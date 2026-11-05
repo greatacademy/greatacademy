@@ -90,8 +90,8 @@ const fullTurnCount = (rng: Rng, name: string, values: readonly Value[]) => {
     one * k,
     [one, one * 2 * k, one === 1 ? 2 * k : k],
     [
-      `There ${one === 1 ? "is 1 solution" : `are ${one} solutions`} per full turn, and the interval holds ${k} full turns.`,
-      `每一整圈有 ${one} 个解，这个区间含 ${k} 整圈。`,
+      `There ${one === 1 ? "is $1$ solution" : `are $${one}$ solutions`} per full turn, and the interval holds $${k}$ full turns.`,
+      `每一整圈有 $${one}$ 个解，这个区间含 $${k}$ 整圈。`,
     ],
   );
 };
@@ -138,8 +138,8 @@ const reciprocalCount = (rng: Rng, name: string, base: string, values: readonly 
     one * k,
     [one, one * 2 * k, one === 1 ? 2 * k : k],
     [
-      `It is the same as $\\${base} \\theta = ${v.latex}$, with ${one} ${one === 1 ? "solution" : "solutions"} per full turn over ${k} full turns.`,
-      `它等同于 $\\${base} \\theta = ${v.latex}$，每整圈 ${one} 个解，共 ${k} 整圈。`,
+      `It is the same as $\\${base} \\theta = ${v.latex}$, with $${one}$ ${one === 1 ? "solution" : "solutions"} per full turn over $${k}$ full turns.`,
+      `它等同于 $\\${base} \\theta = ${v.latex}$，每整圈 $${one}$ 个解，共 $${k}$ 整圈。`,
     ],
   );
 };
@@ -157,8 +157,8 @@ const halfTurnCount = (rng: Rng, name: string) => {
     k,
     [2 * k, Math.ceil(k / 2), k + 1],
     [
-      `$\\${name}$ repeats every $\\pi$ with one solution each time, and the interval holds ${k} such stretches.`,
-      `$\\${name}$ 的周期是 $\\pi$，每个周期一个解，这个区间含 ${k} 个周期。`,
+      `$\\${name}$ repeats every $\\pi$ with one solution each time, and the interval holds $${k}$ such stretches.`,
+      `$\\${name}$ 的周期是 $\\pi$，每个周期一个解，这个区间含 $${k}$ 个周期。`,
     ],
   );
 };
@@ -202,7 +202,10 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           w - 1,
           [w, w + 1, w - 2 < 0 ? 3 : w - 2],
-          [`$y < 0$ for $${a} < x < ${a + w}$, which holds ${w - 1} integers.`, `$${a} < x < ${a + w}$ 时 $y < 0$，共有 ${w - 1} 个整数。`],
+          [
+            `The intercepts are $x = ${a}$ and $x = ${a + w}$, so $y < 0$ for $${a} < x < ${a + w}$. These are the integers from $${a + 1}$ to $${a + w - 1}$, which is $${w - 1}$ in all.`,
+            `截距是 $x = ${a}$ 和 $x = ${a + w}$，所以 $${a} < x < ${a + w}$ 时 $y < 0$。这些整数从 $${a + 1}$ 到 $${a + w - 1}$，共 $${w - 1}$ 个。`,
+          ],
         );
       },
     ),
@@ -224,8 +227,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           `(-\\infty, ${b}] \\cup \\{${a}\\}`,
           [`(-\\infty, ${b}]`, `[${b}, ${a}]`, `(-\\infty, ${b}] \\cup [${a}, \\infty)`],
           [
-            `The squared factor is positive except at $x = ${a}$, where the product is 0, so $x \\le ${b}$ or $x = ${a}$.`,
-            `平方因子除 $x = ${a}$ 外都为正，那里积为 0，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
+            `The squared factor is positive except at $x = ${a}$, where the product is $0$, so $x \\le ${b}$ or $x = ${a}$.`,
+            `平方因子除 $x = ${a}$ 外都为正，那里积为 $0$，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
           ],
         );
       },
@@ -250,7 +253,10 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           `(-${r}, ${r})`,
           [`(-\\infty, ${r})`, `(${r}, \\infty)`, `(-\\infty, -${r}) \\cup (${r}, \\infty)`],
-          [`Dividing by $${base}^{x} > 0$ leaves $x^{2} < ${r * r}$.`, `除以 $${base}^{x} > 0$，得 $x^{2} < ${r * r}$。`],
+          [
+            `Dividing by $${base}^{x} > 0$ keeps the direction and leaves $x^{2} < ${r * r}$, that is $|x| < ${r}$.`,
+            `除以 $${base}^{x} > 0$，不等号方向不变，得 $x^{2} < ${r * r}$，即 $|x| < ${r}$。`,
+          ],
         );
       },
     ),
@@ -267,15 +273,16 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         const a = rng.int(-15, 15);
         const k = rng.int(1, 15);
         const up = rng.bool();
+        const top = a === 0 ? "x" : `x ${a < 0 ? `+ ${-a}` : `- ${a}`}`;
         return chooseMath(
           rng,
-          [
-            `Solve $${frac(`x ${a < 0 ? `+ ${-a}` : `- ${a}`}`, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$.`,
-            `解 $${frac(`x ${a < 0 ? `+ ${-a}` : `- ${a}`}`, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$。`,
-          ],
+          [`Solve $${frac(top, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$.`, `解 $${frac(top, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$。`],
           up ? `(${a}, \\infty)` : `(-\\infty, ${a})`,
           [up ? `(-\\infty, ${a})` : `(${a}, \\infty)`, `(${-a - 1}, ${-a + 1})`, `(-\\infty, \\infty)`],
-          [`$x^{2} + ${k}$ is always positive, so only the sign of the numerator matters.`, `$x^{2} + ${k}$ 恒为正，所以只看分子的符号。`],
+          [
+            `$x^{2} + ${k}$ is always positive, so only the sign of the numerator matters: $${top} ${up ? ">" : "<"} 0$, that is $x ${up ? ">" : "<"} ${a}$.`,
+            `$x^{2} + ${k}$ 恒为正，所以只看分子的符号：$${top} ${up ? ">" : "<"} 0$，即 $x ${up ? ">" : "<"} ${a}$。`,
+          ],
         );
       },
     ),
@@ -307,7 +314,10 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           options[i]!,
           options.filter((_, n) => n !== i),
-          [`The symbol $${sym}$ decides both the line style and the side.`, `符号 $${sym}$ 同时决定线型和阴影的一侧。`],
+          [
+            `The symbol $${sym}$ ${i < 2 ? "leaves the curve out, so it is dashed" : "includes the curve, so it is solid"}, and points with $y$ ${i % 2 === 0 ? "greater" : "less"} than the curve lie ${i % 2 === 0 ? "above" : "below"} it.`,
+            `符号 $${sym}$ ${i < 2 ? "不含曲线本身，所以画虚线" : "包含曲线本身，所以画实线"}；$y$ ${i % 2 === 0 ? "大于" : "小于"}曲线上的值的点在曲线${i % 2 === 0 ? "上方" : "下方"}。`,
+          ],
         );
       },
     ),
@@ -344,7 +354,7 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "undoing-cosine-outside-the-range",
       ["Undoing cosine outside the range", "在值域之外还原余弦"],
       [
-        "Arccosine always returns an angle from 0 to $\\pi$. Cosine has the same value at $x$ and at $2\\pi - x$, so an angle past $\\pi$ comes back reflected, not unchanged.",
+        "Arccosine always returns an angle from $0$ to $\\pi$. Cosine has the same value at $x$ and at $2\\pi - x$, so an angle past $\\pi$ comes back reflected, not unchanged.",
         "反余弦总是返回 0 到 $\\pi$ 之间的角。余弦在 $x$ 和 $2\\pi - x$ 处相等，所以超过 $\\pi$ 的角会反射回来，而不是不变。",
       ],
       (rng) => {
@@ -418,8 +428,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           answer,
           [Q.of(a, c), Q.of(c, b), Q.of(a, b)],
           [
-            `A right triangle with hypotenuse ${c} and one leg ${a} has other leg ${b}.`,
-            `斜边 ${c}、一条直角边 ${a} 的直角三角形，另一条直角边是 ${b}。`,
+            `The inner angle lies in a right triangle with hypotenuse $${c}$ and one leg $${a}$, so the other leg is $\\sqrt{${c}^{2} - ${a}^{2}} = ${b}$. ${form === 2 ? `Its tangent is $\\frac{${b}}{${a}}$, opposite over adjacent.` : `The ratio asked for is the other leg over the hypotenuse, $\\frac{${b}}{${c}}$.`}`,
+            `里面的角在斜边为 $${c}$、一条直角边为 $${a}$ 的直角三角形中，所以另一条直角边是 $\\sqrt{${c}^{2} - ${a}^{2}} = ${b}$。${form === 2 ? `它的正切是对边比邻边，即 $\\frac{${b}}{${a}}$。` : `所求的比是另一条直角边比斜边，即 $\\frac{${b}}{${c}}$。`}`,
           ],
         );
       },
@@ -563,8 +573,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "an-equation-from-cofunctions",
       ["An equation from cofunctions", "由余函数得到方程"],
       [
-        "Sine of one acute angle equals cosine of the other exactly when the angles add up to 90 degrees. This turns an equation between the functions into a linear equation in $x$.",
-        "一个锐角的正弦等于另一个锐角的余弦，当且仅当两角之和是 90 度。这把函数之间的等式变成 $x$ 的一次方程。",
+        "Sine of one acute angle equals cosine of the other exactly when the angles add up to $90^{\\circ}$. This turns an equation between the functions into a linear equation in $x$.",
+        "一个锐角的正弦等于另一个锐角的余弦，当且仅当两角之和是 $90^{\\circ}$。这把函数之间的等式变成 $x$ 的一次方程。",
       ],
       (rng) => {
         const x = rng.int(3, 12);
@@ -583,7 +593,7 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           x,
           [sum, x + 1, a + c],
           [
-            `The angles add up to 90: $${a + c}x + ${b + d} = 90$, so $x = ${x}$.`,
+            `The angles add up to $90^{\\circ}$: $${a + c}x + ${b + d} = 90$, so $x = ${x}$.`,
             `两角之和是 90：$${a + c}x + ${b + d} = 90$，所以 $x = ${x}$。`,
           ],
         );
@@ -651,8 +661,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "sine-after-a-quarter-or-half-turn",
       ["Sine after a quarter or half turn", "转过四分之一或半圈后的正弦"],
       [
-        "Adding 90 or 180 degrees makes the sum formula very short, because one of its two terms vanishes and the other keeps a simple factor. So $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$ and $\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$.",
-        "加 90 度或 180 度时和角公式很短，因为 $\\sin 90^{\\circ} = 1$，$\\cos 90^{\\circ} = 0$。所以 $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$，$\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$。",
+        "Adding $90^{\\circ}$ or $180^{\\circ}$ makes the sum formula very short, because one of its two terms vanishes and the other keeps a simple factor. So $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$ and $\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$.",
+        "加 $90^{\\circ}$ 或 $180^{\\circ}$ 时和角公式很短，因为 $\\sin 90^{\\circ} = 1$，$\\cos 90^{\\circ} = 0$。所以 $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$，$\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -677,8 +687,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "cosine-after-a-quarter-or-half-turn",
       ["Cosine after a quarter or half turn", "转过四分之一或半圈后的余弦"],
       [
-        "Adding 90 or 180 degrees also shortens the cosine formula. A quarter turn gives $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$, and a half turn gives $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$.",
-        "加 90 度或 180 度也使余弦公式变短。转四分之一圈得 $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$，转半圈得 $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$。",
+        "Adding $90^{\\circ}$ or $180^{\\circ}$ also shortens the cosine formula, because the sine and cosine of these angles are only $0$, $1$ or $-1$, so one of the two products drops out. A quarter turn gives $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$, and a half turn gives $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$.",
+        "加 $90^{\\circ}$ 或 $180^{\\circ}$ 也使余弦公式变短，因为这些角的正弦和余弦只是 $0$、$1$ 或 $-1$，两个乘积中有一个消失。转四分之一圈得 $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$，转半圈得 $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -703,8 +713,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "tangent-of-a-sum-from-two-tangents",
       ["Tangent of a sum from two tangents", "由两个正切求和角正切"],
       [
-        "The tangent sum formula needs only the two tangents: their sum over one minus their product. A product close to 1 makes the result large, and a product of exactly 1 means no tangent exists.",
-        "正切和角公式只需要两个正切：它们的和除以 1 减它们的积。积接近 1 时结果很大，积恰好是 1 时正切不存在。",
+        "The tangent sum formula needs only the two tangents: their sum over one minus their product. A product close to $1$ makes the result large, and a product of exactly $1$ means no tangent exists.",
+        "正切和角公式只需要两个正切：它们的和除以 $1$ 减它们的积。积接近 $1$ 时结果很大，积恰好是 $1$ 时正切不存在。",
       ],
       (rng) => {
         const a = rng.int(2, 15);
@@ -771,8 +781,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(2 * k * a * b, c * c),
           [Q.of(k * a * b, c * c), Q.of(2 * a, b), Q.of(2 * a, c)],
           [
-            `The hypotenuse is ${c}, so $\\sin 2x = 2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)}$.`,
-            `斜边是 ${c}，所以 $\\sin 2x = 2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)}$。`,
+            `Take legs $${a}$ and $${b}$, so the hypotenuse is $${c}$. Then $\\sin 2x = 2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)} = ${Q.of(2 * a * b, c * c).toLatex()}$${k === 1 ? "" : `, and multiplying by $${k}$ gives $${Q.of(2 * k * a * b, c * c).toLatex()}$`}.`,
+            `取两条直角边为 $${a}$ 和 $${b}$，斜边就是 $${c}$。于是 $\\sin 2x = 2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)} = ${Q.of(2 * a * b, c * c).toLatex()}$${k === 1 ? "" : `，乘以 $${k}$ 得 $${Q.of(2 * k * a * b, c * c).toLatex()}$`}。`,
           ],
         );
       },
@@ -824,8 +834,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(c * c - 2 * a * a, c * c),
           [Q.of(2 * a * a - c * c, c * c), Q.of(c * c - a * a, c * c), Q.of(2 * a, c)],
           [
-            `$1 - 2 \\cdot ${frac(a * a, c * c)} = ${frac(c * c - 2 * a * a, c * c)}$.`,
-            `$1 - 2 \\cdot ${frac(a * a, c * c)} = ${frac(c * c - 2 * a * a, c * c)}$。`,
+            `$1 - 2 \\cdot ${frac(a * a, c * c)} = ${Q.of(c * c - 2 * a * a, c * c).toLatex()}$.`,
+            `$1 - 2 \\cdot ${frac(a * a, c * c)} = ${Q.of(c * c - 2 * a * a, c * c).toLatex()}$。`,
           ],
         );
       },
@@ -847,8 +857,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(2 * n * d, d * d - n * n),
           [Q.of(2 * n, d), Q.of(2 * n * d, d * d + n * n), Q.of(n * d, d * d - n * n)],
           [
-            `$${frac(`2 \\cdot ${frac(n, d)}`, `1 - ${frac(n * n, d * d)}`)} = ${frac(2 * n * d, d * d - n * n)}$.`,
-            `$${frac(`2 \\cdot ${frac(n, d)}`, `1 - ${frac(n * n, d * d)}`)} = ${frac(2 * n * d, d * d - n * n)}$。`,
+            `$${frac(`2 \\cdot ${frac(n, d)}`, `1 - ${frac(n * n, d * d)}`)} = ${Q.of(2 * n * d, d * d - n * n).toLatex()}$.`,
+            `$${frac(`2 \\cdot ${frac(n, d)}`, `1 - ${frac(n * n, d * d)}`)} = ${Q.of(2 * n * d, d * d - n * n).toLatex()}$。`,
           ],
         );
       },
@@ -881,8 +891,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-secant-solutions",
       ["Counting secant solutions", "数正割方程的解"],
       [
-        "Secant is the reciprocal of cosine, so its values never lie strictly between $-1$ and 1. Such an equation has no solutions, and any other one matches an equation in cosine.",
-        "正割是余弦的倒数，所以它的值不会严格落在 $-1$ 和 1 之间。这样的方程无解，其他方程都对应一个余弦方程。",
+        "Secant is the reciprocal of cosine, so its values never lie strictly between $-1$ and $1$. Such an equation has no solutions, and any other one matches an equation in cosine.",
+        "正割是余弦的倒数，所以它的值不会严格落在 $-1$ 和 $1$ 之间。这样的方程无解，其他方程都对应一个余弦方程。",
       ],
       (rng) =>
         reciprocalCount(
@@ -898,8 +908,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-cosecant-solutions",
       ["Counting cosecant solutions", "数余割方程的解"],
       [
-        "Cosecant is the reciprocal of sine, so its values never lie strictly between $-1$ and 1. Such an equation has no solutions, and any other one matches an equation in sine.",
-        "余割是正弦的倒数，所以它的值不会严格落在 $-1$ 和 1 之间。这样的方程无解，其他方程都对应一个正弦方程。",
+        "Cosecant is the reciprocal of sine, so its values never lie strictly between $-1$ and $1$. Such an equation has no solutions, and any other one matches an equation in sine.",
+        "余割是正弦的倒数，所以它的值不会严格落在 $-1$ 和 $1$ 之间。这样的方程无解，其他方程都对应一个正弦方程。",
       ],
       (rng) =>
         reciprocalCount(
@@ -943,8 +953,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           answer,
           [Math.max(next(p), next(q)), answer + 360, answer - 360 > 0 ? answer - 360 : answer + 720],
           [
-            `The families are $${p} + 360k$ and $${q} + 360k$, whose first values past ${bound} are ${next(p)} and ${next(q)}.`,
-            `两族是 $${p} + 360k$ 和 $${q} + 360k$，超过 ${bound} 的第一个值是 ${next(p)} 和 ${next(q)}。`,
+            `The families are $${p} + 360k$ and $${q} + 360k$, whose first values past $${bound}$ are $${next(p)}$ and $${next(q)}$.`,
+            `两族是 $${p} + 360k$ 和 $${q} + 360k$，超过 $${bound}$ 的第一个值是 $${next(p)}$ 和 $${next(q)}$。`,
           ],
         );
       },
@@ -991,8 +1001,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           2 * k,
           [k, 4 * k, 2 * k + 1],
           [
-            `$${k}\\theta$ runs over ${2 * k} half turns, with one solution in each.`,
-            `$${k}\\theta$ 走过 ${2 * k} 个半圈，每个半圈一个解。`,
+            `$${k}\\theta$ runs over $${2 * k}$ half turns, with one solution in each.`,
+            `$${k}\\theta$ 走过 $${2 * k}$ 个半圈，每个半圈一个解。`,
           ],
         );
       },

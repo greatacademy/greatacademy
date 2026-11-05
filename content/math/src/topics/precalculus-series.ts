@@ -1580,7 +1580,7 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
             solution: both(
               `Here $a_1 = ${a.toLatex()}$ and $r = ${rL}$. Isolate $${rL}^{n}$ and take logarithms:`,
               `这里 $a_1 = ${a.toLatex()}$，$r = ${rL}$。分离出 $${rL}^{n}$ 再取对数：`,
-              `\\frac{${a.toLatex()}(${rL}^{n} - 1)}{${dec(r.sub(Q.one))}} > ${T.toLatex()} \\implies ${rL}^{n} > ${rhs.isInteger() || terminates(rhs) ? dec(rhs) : rhs.toLatex()}`,
+              `${r.sub(Q.one).toLatex() === "1" ? `${a.toLatex() === "1" ? "" : a.toLatex()}(${rL}^{n} - 1)` : `\\frac{${a.toLatex() === "1" ? "" : a.toLatex()}(${rL}^{n} - 1)}{${dec(r.sub(Q.one))}}`} > ${T.toLatex()} \\implies ${rL}^{n} > ${rhs.isInteger() || terminates(rhs) ? dec(rhs) : rhs.toLatex()}`,
               `n > \\frac{\\ln ${rhs.isInteger() || terminates(rhs) ? dec(rhs) : `\\left(${rhs.toLatex()}\\right)`}}{\\ln ${rL}} \\approx ${x.toFixed(2)} \\implies n = ${n}`,
             ),
           });

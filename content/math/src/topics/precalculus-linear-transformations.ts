@@ -528,8 +528,8 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
             t(`$${mat3Latex(w4)}$`, `$${mat3Latex(w4)}$`),
           ],
           t(
-            `The determinant of the triangular matrix is the product of its diagonal entries: $\\det(A) = 1$. Computing the cofactor matrix $C$ and taking its transpose gives $\\text{adj}(A) = C^T = ${invLatex}$. Hence $A^{-1} = \\frac{1}{1}\\text{adj}(A) = ${invLatex}$.`,
-            `三角形矩阵的行列式为其主对角线元素的乘积：$\\det(A) = 1$。计算代数余子式矩阵 $C$ 并转置得到伴随矩阵 $\\text{adj}(A) = C^T = ${invLatex}$。因此 $A^{-1} = \\frac{1}{1}\\text{adj}(A) = ${invLatex}$。`,
+            `The determinant of the triangular matrix is the product of its diagonal entries: $\\det(A) = 1$. Computing the cofactor matrix $C$ and taking its transpose gives $\\text{adj}(A) = C^T = ${invLatex}$. Hence $A^{-1} = \\text{adj}(A) = ${invLatex}$.`,
+            `三角形矩阵的行列式为其主对角线元素的乘积：$\\det(A) = 1$。计算代数余子式矩阵 $C$ 并转置得到伴随矩阵 $\\text{adj}(A) = C^T = ${invLatex}$。因此 $A^{-1} = \\text{adj}(A) = ${invLatex}$。`,
           ),
         );
       },
@@ -1227,7 +1227,7 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
           t(`$${rightEq}$`, `$${rightEq}$`),
           [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
           t(
-            `A point on $y = ${poly([m, "x"])}$ has direction vector $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$. Applying the matrix transformation:\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\nSince the line passes through the origin $(0, 0)$, its slope is $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$, giving the equation $${rightEq}$.`,
+            `The line $y = ${poly([m, "x"])}$ has direction vector $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$. Applying the matrix transformation:\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\nSince the line passes through the origin $(0, 0)$, its slope is $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$, giving the equation $${rightEq}$.`,
             `直线 $y = ${poly([m, "x"])}$ 的方向向量为 $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$。对方向向量作用矩阵变换：\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\n由于像过原点 $(0, 0)$，斜率为 $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$，故像方程为 $${rightEq}$。`,
           ),
         );
@@ -1470,7 +1470,7 @@ export const dilationsAndReflectionsAsLinearTransformations: TopicDef = {
         ];
         const item = rng.pick(types);
         const x = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
-        const y = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
+        const y = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].filter((v) => Math.abs(v) !== Math.abs(x)));
 
         const xp = item.mat[0][0] * x + item.mat[0][1] * y;
         const yp = item.mat[1][0] * x + item.mat[1][1] * y;
@@ -2958,16 +2958,12 @@ export const areaScaleFactorsOfLinearTransformations: TopicDef = {
         ];
         const ALatex = mat2Latex(A);
 
-        const rightText = preserves
-          ? t(`Preserves orientation, because $\\det(A) = ${det} > 0$`, `保持定向，因为 $\\det(A) = ${det} > 0$`)
-          : t(`Reverses orientation, because $\\det(A) = ${det} < 0$`, `反转定向，因为 $\\det(A) = ${det} < 0$`);
-
-        const wrong1 = preserves
-          ? t(`Reverses orientation, because $\\det(A) = ${det} > 0$`, `反转定向，因为 $\\det(A) = ${det} > 0$`)
-          : t(`Preserves orientation, because $\\det(A) = ${det} < 0$`, `保持定向，因为 $\\det(A) = ${det} < 0$`);
-
-        const wrong2 = t(`Orientation is preserved if and only if $\\det(A) = 0$`, `当且仅当 $\\det(A) = 0$ 时保持定向`);
-        const wrong3 = t(`Orientation cannot be determined from the determinant alone`, `仅凭行列式无法判断定向是否改变`);
+        const keeps = t("It preserves orientation", "保持定向");
+        const flips = t("It reverses orientation", "反转定向");
+        const rightText = preserves ? keeps : flips;
+        const wrong1 = preserves ? flips : keeps;
+        const wrong2 = t("It collapses the plane onto a line, so orientation is lost", "把平面压缩成一条直线，定向不再有意义");
+        const wrong3 = t("Orientation cannot be determined from the determinant alone", "仅凭行列式无法判断定向是否改变");
 
         return oneOf(
           rng,
@@ -3035,7 +3031,7 @@ export const singularLinearTransformationsInThePlane: TopicDef = {
             `The linear transformation with standard matrix $A = ${ALatex}$ is singular because $\\det(A) = 0$. Onto which geometric figure is the entire Cartesian plane $\\mathbb{R}^2$ mapped?`,
             `标准矩阵为 $A = ${ALatex}$ 的线性变换因 $\\det(A) = 0$ 而奇异。整个笛卡尔平面 $\\mathbb{R}^2$ 被映射到了哪种几何图形上？`,
           ),
-          t(`A line through the origin with equation $${lineEq}$`, `过原点的直线 $${lineEq}$`),
+          t(`A line with equation $${lineEq}$`, `直线 $${lineEq}$`),
           [t(`A line with equation $${w1}$`, `直线 $${w1}$`), t(`A line with equation $${w2}$`, `直线 $${w2}$`), t(w3, w3Zh), t(w4, w4Zh)],
           t(
             `Both column vectors of $A$ are parallel to $\\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$. Every vector $A\\mathbf{x}$ is a scalar multiple of this direction vector. Hence the image of the entire plane is the line through the origin with direction vector $\\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$, having equation $${lineEq}$.`,

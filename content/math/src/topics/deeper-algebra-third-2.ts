@@ -1082,6 +1082,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
               ["the price of ice cream", "冰淇淋的价格"],
               ["the color of the cones", "蛋筒的颜色"],
               ["the number of shops closed", "关门的商店数量"],
+              ["the flavor of the ice cream", "冰淇淋的口味"],
+              ["the brand of the sunscreen", "防晒霜的品牌"],
             ],
           },
           {
@@ -1092,6 +1094,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
               ["the brand of the shoes", "鞋的品牌"],
               ["the size of the library", "图书馆的大小"],
               ["the shape of the classroom", "教室的形状"],
+              ["the color of the school uniform", "校服的颜色"],
+              ["the length of the school day", "每天上学的时长"],
             ],
           },
           {
@@ -1102,6 +1106,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
               ["the color of the fire truck", "消防车的颜色"],
               ["the day of the week", "星期几"],
               ["the age of the firefighters", "消防员的年龄"],
+              ["the size of the fire station", "消防站的大小"],
+              ["the name of the street", "街道的名称"],
             ],
           },
           {
@@ -1112,6 +1118,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
               ["the size of the mugs", "杯子的大小"],
               ["the price of milk", "牛奶的价格"],
               ["the number of cafes", "咖啡馆的数量"],
+              ["the brand of the heater", "取暖器的品牌"],
+              ["the flavor of the marshmallows", "棉花糖的口味"],
             ],
           },
           {
@@ -1122,6 +1130,8 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
               ["the height of the trees", "树的高度"],
               ["the taste of the food", "食物的味道"],
               ["the color of the benches", "长椅的颜色"],
+              ["the shape of the menus", "菜单的形状"],
+              ["the length of the park paths", "公园小路的长度"],
             ],
           },
         ];
@@ -1133,17 +1143,9 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
             `数据显示${one.a[1]}和${one.b[1]}正相关。哪个第三因素最能解释这一点？`,
           ],
           one.c,
-          rng.sample(
-            [
-              ...one.w,
-              ["the day the data were collected", "收集数据的日期"],
-              ["the color of the report's cover", "报告封面的颜色"],
-              ["the font used for the table", "表格所用的字体"],
-            ],
-            3,
-          ),
+          rng.sample([...one.w], 3),
           [
-            `${one.c[0]} drives both quantities, so neither needs to cause the other.`,
+            `Here ${one.c[0]} drives both quantities, so neither needs to cause the other.`,
             `${one.c[1]}同时影响这两个量，所以不必是其中一个导致另一个。`,
           ],
         );

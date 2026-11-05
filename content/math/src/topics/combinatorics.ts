@@ -308,7 +308,7 @@ export const conditionalProbabilitiesFromVennDiagrams: TopicDef = {
         return {
           ...numberProblem({
             prompt: t(
-              `A person is chosen at random. The Venn diagram shows the probabilities that the person ${p.aDo.en} ($${p.a}$), ${p.bDo.en} ($${p.b}$), both or neither. Find $P(${tL} \\mid ${cL})$, the probability that the person ${sing(evDo(p, target))} given that the person ${sing(evDo(p, cond))}.${simplest.en}`,
+              `A person is chosen at random. The Venn diagram shows the probabilities for people who ${p.aDo.en} ($${p.a}$), who ${p.bDo.en} ($${p.b}$), who do both and who do neither. Find $P(${tL} \\mid ${cL})$, the probability that the person ${sing(evDo(p, target))} given that the person ${sing(evDo(p, cond))}.${simplest.en}`,
               `随机选一人。维恩图给出了此人${p.aDo["zh-CN"]}（$${p.a}$）、${p.bDo["zh-CN"]}（$${p.b}$）、两者都是或两者都不是的概率。求 $P(${tL} \\mid ${cL})$，即在此人${evDo(p, cond)["zh-CN"]}的条件下，此人${evDo(p, target)["zh-CN"]}的概率。${simplest["zh-CN"]}`,
             ),
             answer: Q.of(c.joint, c.cond),

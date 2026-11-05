@@ -882,7 +882,7 @@ export const theAngleBetweenTwoVectors: TopicDef = {
       id: "determining-the-exact-angle-between-vectors",
       title: t("Determining the exact angle between vectors", "求两向量夹角的精确值"),
       explanation: t(
-        "The angle between two vectors always lies between zero and one hundred eighty degrees, so a single arccosine gives it without any ambiguity. Once $\\cos\\theta$ is determined, the angle $\\theta \\in [0^\\circ, 180^\\circ]$ is found by evaluating $\\arccos(\\cos\\theta)$. Familiar special angles include:\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
+        "The angle between two vectors always lies between $0^{\\circ}$ and $180^{\\circ}$, so a single arccosine gives it without any ambiguity. Once $\\cos\\theta$ is determined, the angle $\\theta \\in [0^\\circ, 180^\\circ]$ is found by evaluating $\\arccos(\\cos\\theta)$. Familiar special angles include:\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
         "两个向量的夹角总在 0° 到 180° 之间，所以用一次反余弦就能毫无歧义地得到它。求出 $\\cos\\theta$ 后，通过 $\\arccos(\\cos\\theta)$ 确定夹角 $\\theta \\in [0^\\circ, 180^\\circ]$。常见特殊角包括：\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
       ),
       generate(rng) {
@@ -1295,10 +1295,11 @@ export const propertiesOfTheCrossProduct: TopicDef = {
         const d = rng.pick([-3, -2, -1, 1, 2, 3]);
 
         const det = a * d - b * c;
-        const right = `${det}(\\mathbf{u} \\times \\mathbf{v})`;
-        const w1 = `${a * d + b * c}(\\mathbf{u} \\times \\mathbf{v})`;
-        const w2 = `${-det}(\\mathbf{u} \\times \\mathbf{v})`;
-        const w3 = `${a * c + b * d}(\\mathbf{u} \\times \\mathbf{v})`;
+        const times = (n: number) => (n === 0 ? "\\mathbf{0}" : `${n === 1 ? "" : n === -1 ? "-" : n}(\\mathbf{u} \\times \\mathbf{v})`);
+        const right = times(det);
+        const w1 = times(a * d + b * c);
+        const w2 = times(-det + (det === 0 ? 1 : 0));
+        const w3 = times(a * c + b * d);
         const w4 = "\\mathbf{0}";
 
         const aStr = a === 1 ? "\\mathbf{u}" : a === -1 ? "-\\mathbf{u}" : `${a}\\mathbf{u}`;
@@ -1709,7 +1710,8 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const u: Vec3 = [rng.pick([1, 2, 3]), 0, 0];
         const v: Vec3 = [0, rng.pick([1, 2, 3]), 0];
-        const wZ = (6 * k) / (u[0] * v[1]);
+        const base = u[0] * v[1];
+        const wZ = (base % 6 === 0 ? 1 : base % 3 === 0 ? 2 : base % 2 === 0 ? 3 : 6) * k;
         const w: Vec3 = [rng.pick([0, 1]), rng.pick([0, 1]), wZ];
 
         const detVal = Math.round(Math.abs(det3(u, v, w)));
@@ -1741,7 +1743,7 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7]);
         const u: Vec3 = [rng.pick([1, 2, 3]), 0, 0];
         const v: Vec3 = [0, rng.pick([1, 2, 3]), 0];
-        const wZ = (3 * k) / (u[0] * v[1]);
+        const wZ = ((u[0] * v[1]) % 3 === 0 ? 1 : 3) * k;
         const w: Vec3 = [rng.pick([0, 1]), rng.pick([0, 1]), wZ];
 
         const detVal = Math.round(Math.abs(det3(u, v, w)));

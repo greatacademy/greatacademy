@@ -1157,8 +1157,8 @@ const projectionFromDrawing: KnowledgePointDef = {
           math(angled(dot * u[0], dot * u[1])),
         ],
         t(
-          `Read $\\mathbf{u} = ${angled(u[0], u[1])}$ and $\\mathbf{v} = ${angled(v[0], v[1])}$. Then $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$ and $\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$, so the projection is $${frac(dot, uu)}\\mathbf{u} = ${right}$.`,
-          `读出 $\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$。于是 $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$，$\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$，所以投影是 $${frac(dot, uu)}\\mathbf{u} = ${right}$。`,
+          `Read $\\mathbf{u} = ${angled(u[0], u[1])}$ and $\\mathbf{v} = ${angled(v[0], v[1])}$. Then $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$ and $\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$, so the projection is $${frac(dot, uu) === "1" ? "" : frac(dot, uu) === "-1" ? "-" : frac(dot, uu)}\\mathbf{u} = ${right}$.`,
+          `读出 $\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$。于是 $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$，$\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$，所以投影是 $${frac(dot, uu) === "1" ? "" : frac(dot, uu) === "-1" ? "-" : frac(dot, uu)}\\mathbf{u} = ${right}$。`,
         ),
       ),
       drawn(
