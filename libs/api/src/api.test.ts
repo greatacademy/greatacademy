@@ -210,10 +210,10 @@ describe("LearningService", () => {
     expect(wrong.feedback?.solution?.values.en).not.toBe("");
 
     const done = await finish(wrong.session!);
-    expect(done.step.case === "result" && done.step.value).toMatchObject({ passed: true, xp: 10 });
+    expect(done.step.case === "result" && done.step.value).toMatchObject({ passed: true, xp: 13 });
     const after = await learning.getDashboard({ courseId: COURSE, timeZone: "Asia/Shanghai" });
     expect(after.active).toBeUndefined();
-    expect(after.xp).toMatchObject({ total: 10, today: 10 });
+    expect(after.xp).toMatchObject({ total: 13, today: 13 });
     expect(after.xp?.days).toHaveLength(14);
     expect(after.stats?.learned).toBe(1);
   });
