@@ -23,6 +23,7 @@ import { deeperGrade7Points } from "../topics/deeper-grade-7.ts";
 import { deeperGrade8Points } from "../topics/deeper-grade-8.ts";
 import { deeperMiddleSchoolThirdPoints } from "../topics/deeper-middle-school-third.ts";
 import { deeperMiddleSchoolThird2Points } from "../topics/deeper-middle-school-third-2.ts";
+import { plottingPoints } from "../topics/deeper-plotting.ts";
 import { deeperPrealgebraPoints } from "../topics/deeper-prealgebra.ts";
 import { earlyGradesMoreTopics } from "../topics/early-grades-more.ts";
 import { gradeOneMeasureTopics } from "../topics/grade-1-measurement-geometry.ts";
@@ -133,5 +134,6 @@ export const schoolShardTopics: readonly TopicDef[] = finishTopics(
     deeperMiddleSchoolThird2Points,
     deeperSchoolFundamentalsThirdPoints,
     figureChoicePoints,
+    plottingPoints,
   ],
 );

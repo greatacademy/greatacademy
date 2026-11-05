@@ -10,7 +10,11 @@ import {
   functionChecker,
   inequalityLatexOf,
   intervalLatex,
+  type PlaneMark,
+  type PlaneView,
   parseExpression,
+  plane,
+  planeGrid,
   primeFactors,
   Q,
   type RealSet,
@@ -593,6 +597,65 @@ export function reasonChoice(rng: Rng, p: ReasonChoice): Problem {
   });
   const options = rng.shuffle([p.correct, ...wrong]);
   return choiceProblem({ prompt: p.prompt, options, correct: options.indexOf(p.correct), solution: p.solution });
+}
+
+/** PlotProblem describes a problem answered by marking points on a drawing in the coordinate plane. */
+export interface PlotProblem {
+  readonly prompt: Text;
+  readonly view: PlaneView;
+  /** step is the distance between the points that can be marked, one by default. */
+  readonly step?: number;
+  /** marks are what the drawing shows before anything is marked. */
+  readonly marks?: readonly PlaneMark[];
+  /** alt describes the drawing without giving the answer. */
+  readonly alt: Text;
+  /** answer is the points to mark: one is checked as a point, several as a set in any order. */
+  readonly answer: readonly (readonly [number, number])[];
+  /** line, when given as [a, b, c], accepts any two different points of the line a·x + b·y = c instead of exactly the answer. */
+  readonly line?: readonly [number, number, number];
+  /** wrong are the points typical mistakes lead to, with what is wrong with them. */
+  readonly wrong: readonly { readonly at: readonly (readonly [number, number])[]; readonly why: Text }[];
+  readonly solution: Text;
+  /** solutionAlt describes the drawing of the solution, which adds the answer to the marks; solutionMarks are added too. */
+  readonly solutionAlt: Text;
+  readonly solutionMarks?: readonly PlaneMark[];
+}
+
+/** plotProblem builds a problem answered by marking points; its solution shows the drawing with the answer in the color of a result. */
+export function plotProblem(p: PlotProblem): Problem {
+  const write = (points: readonly (readonly [number, number])[]) => points.map(([x, y]) => `(${x}, ${y})`).join("; ");
+  const given = p.marks ?? [];
+  const results: readonly PlaneMark[] = p.answer.map((at) => ({ kind: "point", at, tone: "result" }));
+  const canonical = write(p.answer);
+  const [only] = p.answer;
+  const answer: Problem["answer"] = {
+    checker: p.line ? "line-through" : only && p.answer.length === 1 ? "point" : "points",
+    expected: p.line
+      ? { a: p.line[0], b: p.line[1], c: p.line[2] }
+      : only && p.answer.length === 1
+        ? { values: [String(only[0]), String(only[1])] }
+        : { points: p.answer.map(([x, y]) => [x, y]) },
+    input: { kind: "plot", grid: planeGrid(p.view, p.step), points: p.answer.length },
+  };
+  const same = (at: readonly (readonly [number, number])[]) => {
+    const { line } = p;
+    if (line) return at.every(([x, y]) => line[0] * x + line[1] * y === line[2]);
+    const sorted = (points: typeof at) => write([...points].sort(([a, b], [c, d]) => a - c || b - d));
+    return sorted(at) === sorted(p.answer);
+  };
+  const wrong = p.wrong.filter((w) => !same(w.at)).map((w) => ({ response: write(w.at), why: w.why }));
+  return withMistakes(
+    {
+      prompt: p.prompt,
+      figure: { svg: plane(p.view, given), alt: p.alt },
+      answer,
+      solution: p.solution,
+      solutionFigure: { svg: plane(p.view, [...given, ...(p.solutionMarks ?? []), ...results]), alt: p.solutionAlt },
+      canonical,
+      wrong: [...new Set(wrong.map((w) => w.response))],
+    },
+    wrong,
+  );
 }
 
 /** ExplainedChoice describes a choice in which every wrong option says why it is wrong. */

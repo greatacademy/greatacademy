@@ -36,6 +36,7 @@ import { deeperGrade5MorePoints } from "../topics/deeper-grade-5-more.ts";
 import { deeperGrade6Points } from "../topics/deeper-grade-6.ts";
 import { deeperGrade7Points } from "../topics/deeper-grade-7.ts";
 import { deeperGrade8Points } from "../topics/deeper-grade-8.ts";
+import { plottingPoints } from "../topics/deeper-plotting.ts";
 import { deeperPrealgebraPoints } from "../topics/deeper-prealgebra.ts";
 import { deeperRemainingAlgebraThirdPoints } from "../topics/deeper-remaining-third.ts";
 import { equationTopics } from "../topics/equations.ts";
@@ -147,5 +148,6 @@ export const algebraShardTopics: readonly TopicDef[] = finishTopics(
     deeperRemainingAlgebraThirdPoints,
     deeperAlgebraFundamentalsThirdPoints,
     figureChoicePoints,
+    plottingPoints,
   ],
 );

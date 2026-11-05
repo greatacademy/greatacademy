@@ -105,6 +105,7 @@ const sameSign: KnowledgePointDef = {
 | `input.kind` | 客户端显示 | 作答内容 |
 | :--- | :--- | :--- |
 | `choice` | 按顺序显示 `options` | 所选选项的下标 |
+| `plot` | 题目的图、它的 `grid`（窗口、可标记的点之间的距离、窗口在图的 viewBox 中的位置）以及要标出的 `points` 个数 | 这些点写成 `(x, y)`，用 `; ` 连接，全部标出后才算作答 |
 | `math` | 数学输入框，可带 `prefix` 和 `suffix`（例如 `x =` 或 `\text{cm}`） | 学习者输入的 LaTeX |
 | `text` | 普通文本框 | 文本 |
 
@@ -213,7 +214,7 @@ const prealgebra: CourseDef = {
 
 **推断的包含边。** 没有自己包含边的知识点从 `content/math/src/encompassings.ts` 取得，权重最初来自该知识点用到每个直接先修多少词汇，上限为 0.5。每条边都对照两个知识点的样题读过，删除了源知识点并未实际执行目标技能的边，并修正了部分权重。一个知识点同时有两者时测试会失败，所以在知识点上写包含边时要删除这里的条目。
 
-`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem`、`scientificProblem`、`radicalProblem`、`solutionsProblem`、`intervalProblem`、`pointProblem`、`equationProblem`、`factoredProblem`、`functionProblem`（答案以 $+ C$ 结尾时加 `antiderivative`）、`choiceProblem`、`reasonChoice`（一个正确选项加若干错误选项，随机排序）、`verdictChoice`（是非题，四个选项各带一个理由）和 `figureChoice`（一张正确的图加若干错误的图，随机排序）构建题目。它们填写答案规格、标准答案和输入方式（`expressionProblem` 可以指定要求的形式、`positive`，以及显示在输入框前的 `prefix`，如 `y =`），并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec`、科学记数法用 `sci`、最简根式用 `radical`、形如 $a + b\sqrt{m}$ 的数用 `surdLatex` 书写（`surdValue` 精确计算这类数）。实数集合用 `union`、`intersect` 和 `parseIntervals` 构造，用 `intervalLatex` 和 `inequalityLatexOf` 书写。图形用 `dotPlot` 和 `boxPlot` 在 `Axis` 上绘制；几何图形用 `sketch` 由图形自身坐标中的标记绘制：线段、多边形、带空洞的阴影区域、角弧、直角记号、标签、边长、表示等长的短线和表示平行的箭头。函数图像用 `plane` 在坐标平面的一个窗口里绘制：网格、带刻度数字的坐标轴、曲线 $y = f(x)$、直线、线段、圆、实心点与空心点、标签，以及若干半平面同时成立（还可限定在圆内或圆外）的阴影区域，全部裁剪到窗口之内。`sketch` 把每个图形缩放到大致相同的尺寸，使标签大小一致，并让 viewBox 覆盖所画的全部内容，包括标签。要求小数或带分数的答案，标准答案也写成那种形式。
+`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem`、`scientificProblem`、`radicalProblem`、`solutionsProblem`、`intervalProblem`、`pointProblem`、`equationProblem`、`factoredProblem`、`functionProblem`（答案以 $+ C$ 结尾时加 `antiderivative`）、`choiceProblem`、`reasonChoice`（一个正确选项加若干错误选项，随机排序）、`verdictChoice`（是非题，四个选项各带一个理由）、`figureChoice`（一张正确的图加若干错误的图，随机排序）、`explainedChoice`（错误选项各带错在哪里）和 `plotProblem`（在 `plane` 画的图上标点，可判为一个点、用 `points` 判定器判为不计顺序的点集，或用 `line-through` 判定器判为直线上任意两点）构建题目。它们填写答案规格、标准答案和输入方式（`expressionProblem` 可以指定要求的形式、`positive`，以及显示在输入框前的 `prefix`，如 `y =`），并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec`、科学记数法用 `sci`、最简根式用 `radical`、形如 $a + b\sqrt{m}$ 的数用 `surdLatex` 书写（`surdValue` 精确计算这类数）。实数集合用 `union`、`intersect` 和 `parseIntervals` 构造，用 `intervalLatex` 和 `inequalityLatexOf` 书写。图形用 `dotPlot` 和 `boxPlot` 在 `Axis` 上绘制；几何图形用 `sketch` 由图形自身坐标中的标记绘制：线段、多边形、带空洞的阴影区域、角弧、直角记号、标签、边长、表示等长的短线和表示平行的箭头。函数图像用 `plane` 在坐标平面的一个窗口里绘制：网格、带刻度数字的坐标轴、曲线 $y = f(x)$、直线、线段、圆、实心点与空心点、标签，以及若干半平面同时成立（还可限定在圆内或圆外）的阴影区域，全部裁剪到窗口之内。`sketch` 把每个图形缩放到大致相同的尺寸，使标签大小一致，并让 viewBox 覆盖所画的全部内容，包括标签。要求小数或带分数的答案，标准答案也写成那种形式。
 
 编写数学生成器时的常见陷阱：
 
