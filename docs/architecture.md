@@ -73,6 +73,7 @@ libs/math-ui/         React components: math rendering and math input
 content/math/         Authored mathematics content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
+tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
 tools/catalog/        Reference catalogs (the Math Academy course skeleton) for planning content
 docs/                 Documents (English + Simplified Chinese)
 ```
@@ -90,6 +91,7 @@ apps/math-workers ──► libs/subject-worker ──► libs/content
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
 tools/audit ──► libs/content, content/math
+tools/pilot ──► libs/db, libs/engine, content/math
 ```
 
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.

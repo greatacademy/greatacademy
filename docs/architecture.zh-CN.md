@@ -73,6 +73,7 @@ libs/math-ui/         React 组件：数学渲染与数学输入
 content/math/         编写的数学内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
+tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
 tools/catalog/        参考目录（Math Academy 课程骨架），用于规划内容
 docs/                 文档（英文 + 简体中文）
 ```
@@ -90,6 +91,7 @@ apps/math-workers ──► libs/subject-worker ──► libs/content
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
 tools/audit ──► libs/content, content/math
+tools/pilot ──► libs/db, libs/engine, content/math
 ```
 
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。

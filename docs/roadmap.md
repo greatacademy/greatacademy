@@ -28,3 +28,32 @@ Phases, their completion criteria and the current status. Mathematics is the fir
 - **`cf` command line** is in beta; its configuration may change.
 - **Worker size and startup.** Subjects run in Workers of their own, each well under the 64 MiB limit, the 1 second startup limit and the 128 MB memory limit as far as local measurements show ([Architecture](architecture.md) §6.1). This runs in workerd locally; it has not yet been deployed to Cloudflare, so startup time, the latency of calls between Workers and memory there are unmeasured.
 - **Math input on mobile** goes through Expo DOM components (a web view). This needs to be checked on low-end Android devices.
+
+## 3. Pilot
+
+Tests and simulated students show that the content is correct and that the engine behaves. Only real learners can show that the content teaches. The pilot is how we find out, and it has to be run by people: it needs recruited learners and, for minors, the consent of their guardians.
+
+**Who and what.** 20 to 30 learners of Algebra I for four weeks, a mix of levels, each doing about 30 XP a day. Algebra I comes first because its learners are the most numerous and its prerequisites are well covered.
+
+**Measuring learning from outside the platform.** Give the same kind of short paper test, written without the platform's questions, before and after. XP and passed lessons are what the platform says about itself; the test is what checks them.
+
+**Each week.** Run the report and act on it:
+
+```bash
+DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i --since 2026-12-01 --out /tmp/pilot.md
+```
+
+| The report shows | What to do |
+| :--- | :--- |
+| A knowledge point few learners get right the first time | Read its explanation and worked example, and add a step or split the knowledge point. Do not make the question easier |
+| A wrong response that several learners give | Add it as a listed mistake with feedback of its own, or address it in the explanation |
+| A topic with many failed lessons | Check that its prerequisites are really prerequisites, and whether a knowledge point in between is missing |
+| Sessions started but abandoned | Ask the learners why: length, difficulty and display are different fixes |
+
+A rate needs at least 5 learners to be listed, and even then it is a lead to read, not a verdict.
+
+**Watching people learn.** Each week, watch two or three learners do a lesson while thinking aloud. This finds what numbers cannot: which sentences are skipped, and where a learner stops trusting the explanation.
+
+**What the pilot decides.** Whether learners improve on the outside test, how long the course takes against the simulated pace, and which parameters to fit in P10 (the reliability calibration and XP per minute).
+
+The report reads only topic, knowledge point, response and result, and shows no names. Handle its source database like any other learner data.

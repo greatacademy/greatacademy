@@ -35,6 +35,7 @@ libs/math-ui/        数学渲染与输入组件
 content/math/        数学内容
 tools/simulate/      模拟学生
 tools/audit/         内容审计
+tools/pilot/         根据真实作答生成试点报告
 tools/catalog/       参考课程目录
 ```
 

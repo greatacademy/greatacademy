@@ -35,6 +35,7 @@ libs/math-ui/        Math rendering and input components
 content/math/        Mathematics content
 tools/simulate/      Simulated students
 tools/audit/         Content audit
+tools/pilot/         Pilot report from real answers
 tools/catalog/       Reference course catalogs
 ```
 

@@ -51,6 +51,7 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `mobile` | `apps/mobile` | The Expo app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
+| `pilot` | `tools/pilot` | Pilot report for a course from a database: `DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i` ([Roadmap §3](roadmap.md#3-pilot)) |
 
 The table grows with the repository; [Architecture §3](architecture.md#3-repository-structure) shows the target structure.
 
