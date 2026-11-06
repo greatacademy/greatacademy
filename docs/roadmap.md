@@ -19,7 +19,7 @@ Phases, their completion criteria and the current status. Mathematics is the fir
 | P8 Accounts and oversight | Password reset, email verification, account deletion, weekly goals, leagues; guardians linked by invite code who see a learner's progress and set goals; parent and teacher roles, managed learner profiles, reports | — | Partly done: everything before the last clause. Sending email in production needs a verified sender domain |
 | P9 Billing | Subscriptions: Stripe on the web, in-app purchases on mobile | — | Planned |
 | P10 Calibration | Fit topic difficulty and engine parameters from real answers; content analytics per question | — | Planned |
-| P11 More subjects | A second subject on the same core: English, designed in [English Curriculum](english-curriculum.md) and planned in [English Development Plan](english-development-plan.md) | Each course meets the criteria of its stage in the plan | Planned |
+| P11 More subjects | A second subject on the same core: English, designed in [English Curriculum](english-curriculum.md) and planned in [English Development Plan](english-development-plan.md) | Each course meets the criteria of its stage in the plan | In progress: `english-grammar-writing` (41 topics) is written and passes sampling and simulation; deployment, reviewers and the pilot remain |
 
 ## 2. Risks and Open Items
 

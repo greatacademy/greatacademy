@@ -2,7 +2,7 @@
 
 > English | [简体中文](english-curriculum.zh-CN.md)
 
-This document specifies the design of the English subject: its knowledge graph, its courses for native and foreign-language learners, and how it teaches and assesses reading, writing and speaking. It applies the method of [The Math Academy Way](the-math-academy-way.md) and runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md). Nothing here is implemented yet; §12 lists the order of work, and [English Development Plan](english-development-plan.md) breaks it into milestones.
+This document specifies the design of the English subject: its knowledge graph, its courses for native and foreign-language learners, and how it teaches and assesses reading, writing and speaking. It applies the method of [The Math Academy Way](the-math-academy-way.md) and runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md). The first slice of §11 is implemented; §12 lists the order of work, and [English Development Plan](english-development-plan.md) breaks it into milestones.
 
 ---
 

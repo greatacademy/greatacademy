@@ -41,6 +41,8 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `content` | `libs/content` | Content model, compiler, problem runtime, core checkers ([Content](content.md)) |
 | `subject-math` | `libs/subject-math` | Mathematics checkers: LaTeX parser, exact rationals, polynomial forms ([Content §10](content.md#10-mathematics)) |
 | `content-math` | `content/math` | Mathematics topics and courses |
+| `subject-english` | `libs/subject-english` | English checkers and the kit for item banks ([Content §11](content.md#11-english)) |
+| `content-english` | `content/english` | English topics and courses |
 | `engine` | `libs/engine` | Learning engine: frontier, FIRe, task selection, lessons, reviews, quizzes, diagnostic ([Learning Engine](learning-engine.md)) |
 | `proto` | `libs/proto` | Contracts; `pnpm nx run proto:generate` after editing a `.proto` file |
 | `db` | `libs/db` | Drizzle schema, migrations, data access; `pnpm nx run db:generate -- --name <change>` after editing the schema |
@@ -48,6 +50,7 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `web` | `apps/web` | The web app: TanStack Start on Workers, better-auth, the Connect services under `/api` (§5) |
 | `subject-worker` | `libs/subject-worker` | Worker entrypoints for any subject's gateway and shards |
 | `math-workers` | `apps/math-workers` | The gateway and shard Workers of mathematics ([Architecture](architecture.md) §6.1); `pnpm nx run math-workers:generate` writes the manifest to `gen/`, which targets that need it do first |
+| `english-workers` | `apps/english-workers` | The gateway and shard Workers of English, built in the same way |
 | `mobile` | `apps/mobile` | The Expo app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
@@ -78,7 +81,7 @@ pnpm nx run web:dev                   # http://localhost:5173
 - `pnpm nx run web:typecheck` first runs `cf workers types`, which writes the `Env` declarations to `.cloudflare/types`.
 - `apps/web/vite.config.ts` runs the subject Workers alongside the web Worker in development, so `web:dev` needs nothing else. Run it through Nx, which generates the manifest first.
 - `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, and set the secret.
-- Deploy subjects first: `pnpm nx run math-workers:deploy` builds the Workers of mathematics and deploys the shards, then the gateway. Then deploy the web Worker.
+- Deploy subjects first: `pnpm nx run math-workers:deploy` builds the Workers of mathematics and deploys the shards, then the gateway, and `pnpm nx run english-workers:deploy` does the same for English. Then deploy the web Worker.
 
 To try it: create an account, choose "I'm learning myself", open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
 

@@ -61,16 +61,19 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 ```text
 apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
 apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
+apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
 apps/mobile/          Expo 应用（iOS、Android）
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
 libs/api/             Connect 服务实现与会话执行器；与传输方式和宿主无关
 libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择、诊断、XP、测验（纯函数）
 libs/content/         内容模型：知识点/课程定义、编译器与校验器、题目运行时、答案判定
 libs/subject-math/    数学学科：数学答案判定器、数学题目生成器的辅助函数
+libs/subject-english/ 英语学科：句子和单词判定器、题库工具
 libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
 libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和移动端生成的形式
 content/math/         编写的数学内容：知识点、课程
+content/english/      编写的英语内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
@@ -85,18 +88,20 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            └──► libs/proto                         │
    ├──► libs/design
    │                                             libs/subject-math ◄── content/math
-   └╌╌► apps/math-workers（仅开发时，用来一起运行）
+   └╌╌► apps/math-workers, apps/english-workers（仅开发时，用来一起运行）
 apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
+apps/english-workers ──► libs/subject-worker ──► libs/content
+   └──► content/english, libs/subject-english
 apps/mobile ──► libs/proto, libs/design
-tools/simulate ──► libs/engine, content/math
-tools/audit ──► libs/content, content/math
-tools/pilot ──► libs/db, libs/engine, content/math
+tools/simulate ──► libs/engine, content/math, content/english
+tools/audit ──► libs/content, content/math, content/english
+tools/pilot ──► libs/db, libs/engine, content/math, content/english
 ```
 
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。
 - `libs/engine` 只依赖 `libs/content` 的类型。它没有 I/O、没有时钟（时间作为参数传入），也没有随机性（种子作为参数传入）。
-- `libs/subject-math` 只依赖 `libs/content`。
+- `libs/subject-math` 和 `libs/subject-english` 只依赖 `libs/content`。
 - `libs/design` 不依赖仓库内任何库，也没有 I/O，因此 Web 和移动端可以共用。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
@@ -170,7 +175,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 - **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。
 - **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
 
-数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。
+数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语目前只有一个分片 `core`，`apps/english-workers` 下的结构相同。
 
 | Worker | 未压缩体积 | Node 下的模块加载时间 |
 | :--- | :--- | :--- |

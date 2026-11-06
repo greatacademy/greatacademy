@@ -61,16 +61,19 @@ This document describes the system as built: technology choices, repository stru
 ```text
 apps/web/             TanStack Start on Workers: pages, better-auth, and libs/api mounted under /api
 apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
+apps/english-workers/ The Workers serving English: a gateway and its shard
 apps/mobile/          Expo app (iOS, Android)
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
 libs/api/             Connect service implementations and the session runner; transport- and host-agnostic
 libs/engine/          Learning engine: graph, frontier, FIRe, task selection, diagnostic, XP, quizzes (pure)
 libs/content/         Content model: topic/course definitions, compiler and validator, problem runtime, answer checking
 libs/subject-math/    The mathematics subject: math answer checkers and helpers for math problem generators
+libs/subject-english/ The English subject: sentence and word checkers and the kit for item banks
 libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
 libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and mobile
 content/math/         Authored mathematics content: topics, courses
+content/english/      Authored English content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
@@ -85,18 +88,20 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            └──► libs/proto                         │
    ├──► libs/design
    │                                             libs/subject-math ◄── content/math
-   └╌╌► apps/math-workers (development only, to run them alongside)
+   └╌╌► apps/math-workers, apps/english-workers (development only, to run them alongside)
 apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
+apps/english-workers ──► libs/subject-worker ──► libs/content
+   └──► content/english, libs/subject-english
 apps/mobile ──► libs/proto, libs/design
-tools/simulate ──► libs/engine, content/math
-tools/audit ──► libs/content, content/math
-tools/pilot ──► libs/db, libs/engine, content/math
+tools/simulate ──► libs/engine, content/math, content/english
+tools/audit ──► libs/content, content/math, content/english
+tools/pilot ──► libs/db, libs/engine, content/math, content/english
 ```
 
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.
 - `libs/engine` depends only on `libs/content`'s types. It has no I/O, no clock (time is a parameter) and no randomness (seeds are parameters).
-- `libs/subject-math` depends only on `libs/content`.
+- `libs/subject-math` and `libs/subject-english` depend only on `libs/content`.
 - `libs/design` depends on nothing in the repository and has no I/O, so web and mobile share it.
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
@@ -170,7 +175,7 @@ web Worker ──service binding──► subject gateway ──service bindings
 - **A shard** holds the definitions of some of a subject's topics and implements `SubjectSource` with `topicSource`. Its definitions are built on the first call, not at startup.
 - **`Registry`** (`libs/api`) reads the listings once per isolate, which is enough to list courses, and loads a subject's manifest when one of its courses is first used. It keeps the two most recently used subjects, because mathematics takes about 45 MB of memory once indexed and an isolate has 128 MB. A course's scope is computed when first used.
 
-Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed.
+Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed. English has one shard for now, `core`, and the same layout under `apps/english-workers`.
 
 | Worker | Uncompressed size | Module load under Node |
 | :--- | :--- | :--- |

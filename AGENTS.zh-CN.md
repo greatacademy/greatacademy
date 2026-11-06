@@ -25,16 +25,19 @@ Great Academy 是面向多学科的自适应学习平台，从数学开始。全
 ```text
 apps/web/            TanStack Start on Cloudflare Workers：页面、Connect API、better-auth
 apps/math-workers/   数学的网关和分片 Worker
+apps/english-workers/ 英语的网关和分片 Worker
 apps/mobile/         Expo 应用
 libs/content/        内容模型、编译器、题目运行时、判定器（与学科无关）
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数
+libs/subject-english/ 英语判定器和内容工具
 libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
 libs/api/            Connect 服务和会话运行器
 libs/db/             Drizzle schema、迁移、仓储
 libs/design/         颜色 token、配色和外观模型
 content/math/        数学内容
+content/english/     英语内容
 tools/simulate/      模拟学生
 tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告
@@ -60,7 +63,7 @@ pnpm format                                # 用 Biome 格式化并修复
 - 库直接导出源码（`"exports": { ".": "./src/index.ts" }`），库没有构建步骤。
 - 依赖版本精确固定（`savePrefix: ''`）。
 - 每个导出的标识符都有以其名称开头的文档注释。
-- `libs/content`、`libs/engine`、`libs/subject-math`、`libs/design` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
+- `libs/content`、`libs/engine`、`libs/subject-math`、`libs/subject-english`、`libs/design` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
 - 核心代码从不提及具体学科。学科专属逻辑放在 `libs/subject-<id>` 和 `content/<id>` 中。
 - 用 Biome（`biome.json`）格式化和 lint，不要引入 Prettier 或 ESLint。
 - 不要把函数命名为 `fit`、`fdescribe` 之类：Biome 的 `noFocusedTests` 会把对它的调用当作聚焦测试报错。

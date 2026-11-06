@@ -108,8 +108,9 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 | `plot` | The problem's figure, its `grid` (the window, the distance between markable points, and where the window lies in the figure's view box) and how many `points` to mark | The points as `(x, y)`, joined by `; `, once all are marked |
 | `math` | A math field, with optional `prefix` and `suffix` (such as `x =` or `\text{cm}`) | The LaTeX the learner entered |
 | `text` | A plain text field | The text |
+| `order` | The `items`, each with buttons to move it | The indexes of the items in the chosen order, joined by commas |
 
-`checker` names a registered checker and `expected` is that checker's data. The core registers two checkers; subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
+`checker` names a registered checker and `expected` is that checker's data. The core registers three checkers (`choice`, `text` and `order`, whose `expected` lists the right orders); subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
 
 | Checker | `expected` | Accepts |
 | :--- | :--- | :--- |
@@ -140,6 +141,7 @@ const prealgebra: CourseDef = {
 ```
 
 - A course lists its topics in teaching order, grouped into units and modules for display only.
+- `explanationLocale` makes a course teach in one language whatever the interface language. `Registry` in `libs/api` reads every text of the course's lessons, problems and verdicts in that locale, so clients change nothing; titles from the catalog stay in the interface language. Every text is still written in both locales, because another course over the same topics may teach in the other.
 - `group` names the shelf that lists of courses show the course on, such as a stage of schooling. In mathematics, [course-shelves.ts](../content/math/src/course-shelves.ts) assigns it and orders the shelves; a course on no shelf is an error.
 - Every topic appears once, and after all of its prerequisites that are in the course.
 - **Mastery floor.** Topics that every learner of the course is assumed to know. They and their ancestors are never taught or reviewed by the course. A floor topic must not be in the course.
@@ -179,7 +181,7 @@ The compiled graph provides:
 - with the option `textIssue(text, locale)`: produces a prompt, solution or option that the function reports, so a subject can enforce its own writing rules;
 - with the option `maxPositionShare`: for a choice, puts the expected option at one position in more than that share of the samples.
 
-It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures or different sets of options count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject. The option `shard: { index, count }` samples only every `count`-th topic starting at `index`, so a package can split sampling across test files that Vitest runs in parallel; `content/math` uses four, and passes its own `textIssue` (balanced `$`, no LaTeX outside math, no doubled signs, no English runs in Chinese) and a `maxPositionShare` of 0.8.
+It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures or different sets of options or order items count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject. The option `shard: { index, count }` samples only every `count`-th topic starting at `index`, so a package can split sampling across test files that Vitest runs in parallel; `content/math` uses four, and passes its own `textIssue` (balanced `$`, no LaTeX outside math, no doubled signs, no English runs in Chinese) and a `maxPositionShare` of 0.8.
 
 ## 9. Serving Problems
 
@@ -289,3 +291,18 @@ An exam topic is built by `content/math/src/exam.ts` from one specification per 
 
 A question about a figure draws it (`content/math/src/exam-figures.ts`), labeled with the given measures and with "?" at what it asks, unless a drawing would show the answer. Numeric options are listed from least to greatest, as on the real tests. So that "pick the smallest" tells nothing, the position of the answer is drawn at random, and distractors on the side with too many are mirrored across the answer or replaced by a near value; the first distractors a generator lists stay. Other options are shuffled.
 
+## 11. English
+
+`libs/subject-english` holds what English adds to the core, and `content/english` holds its topics. [English Curriculum](english-curriculum.md) gives the design.
+
+**Checkers.** All three normalize what a keyboard varies but a reader does not see: spacing and the shape of quotes.
+
+| Checker | `expected` | Accepts |
+| :--- | :--- | :--- |
+| `sentence` | The accepted sentences | A listed sentence, exact in capitals and punctuation. A response with the right words but other capitals or punctuation gets feedback saying so |
+| `sentence-pattern` | Patterns | A sentence that a pattern stands for: `(x)` makes x optional and `[a\|b]` offers alternatives, so `[Because\|Since] it rained(,) we stayed.` stands for four sentences. The same feedback applies |
+| `word-form` | The accepted words | A listed word, spelled exactly, in either case |
+
+**Item banks.** English has no numbers to generate from, so its generators pick from banks of written items by seed. `choiceGenerator`, `typedGenerator` and `orderGenerator` take a question, a bank and a function that builds the solution from the answer, and the shuffling of options and sentences follows from the seed. Every wrong option of a choice is listed as a wrong response. An order item may list further right orders, and is never shown already in one. Since seeds are chosen at random, a lesson rarely repeats an item rather than never: a topic's test requires at least 8 distinct items per knowledge point.
+
+**Writing rules.** A typed exercise names what to use and supplies the clauses, so that its patterns can list every accepted sentence; a valid sentence that a pattern rejects is a defect of the item, which the pilot report lists for reading. A literal dollar sign is written `\$`, since `$` starts TeX, and `content/english` passes a `textIssue` that rejects an unescaped one.

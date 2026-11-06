@@ -66,9 +66,9 @@ The 41 topics of [§11 of the design](english-curriculum.md#11-first-slice), fro
 
 | Work | Files | Why |
 | :--- | :--- | :--- |
-| `CourseDef.explanationLocale`, passed to clients; lessons and solutions show that locale, and the interface keeps its own | `libs/content`, `libs/proto`, `libs/api`, `apps/web` | Native courses explain in English whatever the interface language |
-| A way to write a literal `$`, and a compiler rule that rejects TeX in English content | `libs/content`, `apps/web/src/components/Markdown.tsx` | Text is Markdown with TeX between `$…$`, so `It costs $5 or $6` would render as math |
-| Item bank helper: pick by seed, vary by template, with no duplicates | `libs/subject-english` | English has no random numbers to generate from |
+| `CourseDef.explanationLocale`; the server reads lessons, problems and verdicts in that locale, and the interface keeps its own | `libs/content`, `libs/api` | Native courses explain in English whatever the interface language |
+| A sampling rule of `content/english` that rejects an unescaped `$`; `\$` already writes a literal one | `content/english` | Text is Markdown with TeX between `$…$`, so `It costs $5 or $6` would render as math |
+| Item bank helper: pick by seed, with the options and the sentences shuffled by seed | `libs/subject-english` | English has no random numbers to generate from |
 | Input `order`: arrange a list by moving items; the response lists the indexes | `libs/content`, `libs/proto`, `apps/web` | `ordering-sentences-in-a-paragraph` |
 
 Audience, audio and reading tasks are not added here; they wait for the stages that use them.
@@ -96,13 +96,13 @@ Written in this order, because each group is the prerequisite of the next and th
 | 3 | The rest of writing (12 topics) | Sampled by the reviewer |
 | 4 | The rest of words (10 topics) | Sampled by the reviewer |
 
-Each topic has 2 to 4 knowledge points, an item bank large enough to pass sampling without repeats within a lesson, wrong responses for every generator, and explanations in both locales. Passages and sentences are original. A content lint rejects items above the course's word level, once a word list exists.
+Each topic has 2 to 4 knowledge points, an item bank large enough to pass sampling and rarely repeat within a lesson (at least 8 items), wrong responses for every generator, and explanations in both locales. Passages and sentences are original. A content lint rejects items above the course's word level, once a word list exists.
 
 **Done when** all 41 topics compile, generators pass `sampleGenerators`, the reviewer's defects are fixed, and encompassing weights have a recorded reason.
 
 ### E1.5 Simulation (S)
 
-`tools/simulate` runs simulated students through the course. It checks that they finish, with about one explicit review per topic or fewer as in mathematics, and that no topic is unreachable or starves its dependents. English has a sparser graph in places, so unusual results lead to looking at the edges first.
+`tools/simulate` runs simulated students through the course. It checks that they finish, with fewer explicit reviews per topic than a mathematics course of the same breadth, and that no topic is unreachable or starves its dependents. English has a sparser graph in places, so unusual results lead to looking at the edges first. A typical student needs 2.45 explicit reviews per topic, against 3.84 on 3rd Grade Math, whose breadth is similar; most fall on word topics that no later topic practices yet. Weights are not raised to improve this number.
 
 ### E1.6 Outside Test and Pilot (M, mostly waiting)
 

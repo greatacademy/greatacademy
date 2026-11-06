@@ -25,16 +25,19 @@ Great Academy is an adaptive learning platform for many subjects, starting with 
 ```text
 apps/web/            TanStack Start on Cloudflare Workers: pages, Connect API, better-auth
 apps/math-workers/   The gateway and shard Workers of mathematics
+apps/english-workers/ The gateway and shard Workers of English
 apps/mobile/         Expo app
 libs/content/        Content model, compiler, problem runtime, checkers (subject-agnostic)
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers
+libs/subject-english/ English checkers and the content kit
 libs/subject-worker/ Worker entrypoints for any subject's gateway and shards
 libs/proto/          Protobuf contracts and generated TypeScript
 libs/api/            Connect services and the session runner
 libs/db/             Drizzle schema, migrations, repositories
 libs/design/         Color tokens, palettes and the appearance model
 content/math/        Mathematics content
+content/english/     English content
 tools/simulate/      Simulated students
 tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
@@ -60,7 +63,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 - Libraries export their source (`"exports": { ".": "./src/index.ts" }`); there is no library build step.
 - Pin exact dependency versions (`savePrefix: ''`).
 - Every exported identifier has a doc comment that starts with its name.
-- `libs/content`, `libs/engine`, `libs/subject-math` and `libs/design` are pure: no I/O, no `Date.now()`, no `Math.random()`. Time and seeds are parameters.
+- `libs/content`, `libs/engine`, `libs/subject-math`, `libs/subject-english` and `libs/design` are pure: no I/O, no `Date.now()`, no `Math.random()`. Time and seeds are parameters.
 - The core never mentions a subject. Subject-specific logic lives in `libs/subject-<id>` and `content/<id>`.
 - Format and lint with Biome (`biome.json`); do not add Prettier or ESLint.
 - Do not name a function `fit`, `fdescribe` or the like: Biome's `noFocusedTests` reports any call to it as a focused test.
