@@ -1117,12 +1117,12 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
     "三幅图：两个相邻的角组成更大的角，邻补角之和是 180°，平行线被截线所截时同位角全等。",
   ),
   "parallel-lines-in-the-coordinate-plane#parallel-slopes": graphed(
-    view(-4, 5, 1, -6, 6),
+    view(-4, 7, 1, -6, 6),
     [
       curveOf((x) => 2 * x + 1),
       curveOf((x) => 2 * x - 5, "action"),
       curveOf((x) => 2 * x - 1.5, "result"),
-      tag([2, 5], "y = 2x + 1", "w"),
+      tag([-1.6, -2], "y = 2x + 1", "w"),
       tag([4, 3], "y = 2x − 5", "e"),
       tag([3, 4.5], "4x − 2y = 3", "e"),
     ],

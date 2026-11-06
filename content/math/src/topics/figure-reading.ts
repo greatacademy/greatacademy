@@ -137,7 +137,7 @@ function wireframe(r: Surface, [u0, u1]: Point, [v0, v1]: Point, alt: Text): Fig
     ["z", project([0, 0, axis])],
   ];
   const [W, H] = [300, 260];
-  const s = Math.min(W, H) / (2.5 * size);
+  const s = Math.min(W, H) / (2.7 * size);
   const px = ([x, y]: Point) => `${Math.round((W / 2 + s * x) * 10) / 10},${Math.round((H / 2 - s * y) * 10) / 10}`;
   const mesh = lines.map((l) => `<polyline class="accent" points="${l.map(px).join(" ")}" stroke-width="0.8"/>`).join("");
   const axes = ends

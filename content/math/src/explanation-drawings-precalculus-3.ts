@@ -205,7 +205,7 @@ export const precalculusDrawings3: Readonly<Record<string, Figure>> = {
     "例如，(x − 2)²/9 − (y + 1)²/4 = 1 的渐近线是 y + 1 = ±(2/3)(x − 2)，过中心 (2, −1)，斜率与平移前相同。",
   ),
   "asymptotes-of-hyperbolas-centered-at-a-general-point#the-center-of-a-hyperbola-from-its-asymptotes": graphed(
-    wide(-3, 5, -3, 9),
+    wide(-5, 5, -3, 9),
     [
       conic(sideways(1, 3, 1, 2)),
       ln([0, 1], [1, 3], "action", true),

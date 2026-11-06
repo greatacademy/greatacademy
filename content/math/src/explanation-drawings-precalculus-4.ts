@@ -311,7 +311,7 @@ export const precalculusDrawings4: Readonly<Record<string, Figure>> = {
     "例如，h = 1、k = −2、p = 1：x = 1 + 2t、y = −2 + t² 描出 (x − 1)² = 4(y + 2)，t = 0 给出顶点 (1, −2)。",
   ),
   "parametric-equations-of-parabolas-centered-at-hk#shifted-horizontal-parabola-parametric": graphed(
-    wide(-4, 4, -4, 6),
+    wide(-6, 4, -4, 6),
     [
       trail((t) => [-2 + t * t, 1 + 2 * t], -2.3, 2.3),
       pt([-2, 1], "t = 0: (−2, 1)", "w", "result"),

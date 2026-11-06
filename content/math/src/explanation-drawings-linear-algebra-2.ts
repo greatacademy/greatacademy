@@ -101,7 +101,7 @@ export const linearAlgebraDrawings2: Readonly<Record<string, Figure>> = {
     "例如，特征值 2 和 1 ± 3i 给出一个 1 × 1 块和一个旋转缩放块。两块的行列式为 2 和 1² + 3² = 10，所以行列式为 2 · 10 = 20，即特征值之积。",
   ),
   "dot-product-in-n-dimensional-euclidean-space#the-cosine-of-an-angle-from-norms-and-a-dot-product": graphed(
-    wide(-1, 5, -1, 5),
+    wide(-1, 8, -1, 5),
     [
       from0([4, 0], "action"),
       from0([3, 4], "result"),

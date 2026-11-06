@@ -119,7 +119,7 @@ export const multivariableDrawings4: Readonly<Record<string, Figure>> = {
     "例如，取 k = 2，c = 1，y = x² 与 y = 2x 交于 x = 0 和 x = 2，二者之间直线在上方。积分为 1 · 2³/6 = 4/3。",
   ),
   "double-integrals-over-non-rectangular-domains#a-nonconstant-integrand-between-a-line-and-a-parabola": graphed(
-    wide(-1, 5, -1, 10, 2),
+    wide(-1, 7, -1, 10, 2),
     [
       between(
         (x) => 3 * x,

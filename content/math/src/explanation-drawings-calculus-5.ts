@@ -980,7 +980,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
     "例如，y′ = y − 1。每一行线段都平行，所以方程是自治的。y = 1 处的一行水平线段说明 g(1) = 0，所以 y = 1 是平衡解。",
   ),
   "slope-fields-for-autonomous-differential-equations#the-steepest-row-of-an-autonomous-field": graphed(
-    wide(-1, 6, -1, 5),
+    wide(-1, 7, -1, 5),
     [
       ...field(
         (_, y) => (y - 1) * (y - 3),
@@ -1123,7 +1123,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
     "例如，f = x³ − x − 1，左界 1，右界 2。f(1) = −1 与 f(2) = 5 异号，由介值定理知其间有根，约为 1.325。",
   ),
   "finding-roots-of-functions-using-a-graphing-calculator#solving-equations-with-a-difference-function": graphed(
-    wide(-3, 3, -3, 5),
+    wide(-3, 4.5, -3, 5),
     [
       curveOf((x) => x * x, undefined, -2.2, 2.2),
       curveOf((x) => x * x - 2, "result", -2.2, 2.2),

@@ -895,7 +895,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
     "把 y = x²（0 ≤ x ≤ 1）绕 y 轴旋转：曲线在 x 处的一小段到轴的距离为 x，所以 S = 2π∫₀¹ x√(1 + 4x²) dx = (π/6)(5√5 − 1)。",
   ),
   "surface-areas-of-revolution-rotation-about-the-y-axis#rotating-x-as-a-function-of-y-about-the-y-axis": graphed(
-    wide(-3, 3, -3, 3),
+    wide(-3, 4, -3, 3),
     [
       { kind: "circle", center: [0, 0], r: 2 },
       joined(
