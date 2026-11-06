@@ -49,7 +49,7 @@ This document describes the system as built: technology choices, repository stru
 | Contracts / RPC | **Protobuf + buf + Connect** (`protobuf-es` v2, `connect-es` v2), `protovalidate` | One contract for the web and mobile clients; JSON on the wire for mobile |
 | Web app | **TanStack Start** (Router, Query, Form) on **Cloudflare Workers**; **React 19** | Built, run and deployed with Cloudflare's **`cf`** command line, not wrangler |
 | UI | **Base UI**, **Tailwind CSS v4**, Phosphor icons | Design tokens from `libs/design` |
-| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Packaged in `libs/math-ui`; reused by the mobile app through Expo DOM components |
+| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; planned for the mobile app through Expo DOM components |
 | Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the mobile app (bearer tokens) |
 | Email | **Resend**, called over HTTP from the Worker with the secrets `RESEND_API_KEY` and `EMAIL_FROM` | Password resets and address verification, in the learner's two languages; a Worker needs no SMTP client |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
@@ -70,12 +70,10 @@ libs/subject-math/    The mathematics subject: math answer checkers and helpers 
 libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
 libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and mobile
-libs/math-ui/         React components: math rendering and math input
 content/math/         Authored mathematics content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
-tools/catalog/        Reference catalogs (the Math Academy course skeleton) for planning content
 docs/                 Documents (English + Simplified Chinese)
 ```
 
@@ -86,11 +84,11 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            │                                       ▲
    │            └──► libs/proto                         │
    ├──► libs/design
-   ├──► libs/math-ui ──► libs/design             libs/subject-math ◄── content/math
+   │                                             libs/subject-math ◄── content/math
    └╌╌► apps/math-workers (development only, to run them alongside)
 apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
-apps/mobile ──► libs/proto, libs/design, libs/math-ui
+apps/mobile ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math
 tools/audit ──► libs/content, content/math
 tools/pilot ──► libs/db, libs/engine, content/math

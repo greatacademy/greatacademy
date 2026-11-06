@@ -49,7 +49,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 契约 / RPC | **Protobuf + buf + Connect**（`protobuf-es` v2、`connect-es` v2）、`protovalidate` | Web 与移动端共用一份契约；移动端走 JSON 传输 |
 | Web 应用 | **TanStack Start**（Router、Query、Form），运行于 **Cloudflare Workers**；**React 19** | 用 Cloudflare 的 **`cf`** 命令行构建、运行和部署，不用 wrangler |
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
-| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 封装在 `libs/math-ui`；移动端通过 Expo DOM components 复用 |
+| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；移动端计划通过 Expo DOM components 复用 |
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与移动端共享会话（bearer token） |
 | 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
@@ -70,12 +70,10 @@ libs/subject-math/    数学学科：数学答案判定器、数学题目生成�
 libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
 libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和移动端生成的形式
-libs/math-ui/         React 组件：数学渲染与数学输入
 content/math/         编写的数学内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
-tools/catalog/        参考目录（Math Academy 课程骨架），用于规划内容
 docs/                 文档（英文 + 简体中文）
 ```
 
@@ -86,11 +84,11 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            │                                       ▲
    │            └──► libs/proto                         │
    ├──► libs/design
-   ├──► libs/math-ui ──► libs/design             libs/subject-math ◄── content/math
+   │                                             libs/subject-math ◄── content/math
    └╌╌► apps/math-workers（仅开发时，用来一起运行）
 apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
-apps/mobile ──► libs/proto, libs/design, libs/math-ui
+apps/mobile ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math
 tools/audit ──► libs/content, content/math
 tools/pilot ──► libs/db, libs/engine, content/math

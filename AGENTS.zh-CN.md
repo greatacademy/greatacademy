@@ -31,14 +31,13 @@ libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数
 libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
+libs/api/            Connect 服务和会话运行器
 libs/db/             Drizzle schema、迁移、仓储
 libs/design/         颜色 token、配色和外观模型
-libs/math-ui/        数学渲染与输入组件
 content/math/        数学内容
 tools/simulate/      模拟学生
 tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告
-tools/catalog/       参考课程目录
 ```
 
 ## 命令

@@ -31,14 +31,13 @@ libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers
 libs/subject-worker/ Worker entrypoints for any subject's gateway and shards
 libs/proto/          Protobuf contracts and generated TypeScript
+libs/api/            Connect services and the session runner
 libs/db/             Drizzle schema, migrations, repositories
 libs/design/         Color tokens, palettes and the appearance model
-libs/math-ui/        Math rendering and input components
 content/math/        Mathematics content
 tools/simulate/      Simulated students
 tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
-tools/catalog/       Reference course catalogs
 ```
 
 ## Commands
