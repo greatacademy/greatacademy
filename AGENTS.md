@@ -12,6 +12,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/development.md](docs/development.md) | Toolchain, commands, local database, running the apps |
 | [docs/roadmap.md](docs/roadmap.md) | Phases, completion criteria, status, risks |
 | [docs/math-curriculum.md](docs/math-curriculum.md) | Reference catalog of a complete mathematics curriculum (37 courses), the plan for content |
+| [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking |
 | [docs/the-math-academy-way.md](docs/the-math-academy-way.md), [docs/math-academy-website.md](docs/math-academy-website.md) | Research notes the design is based on |
 
 ## Project Overview

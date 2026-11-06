@@ -12,6 +12,7 @@
 | [docs/development.zh-CN.md](docs/development.zh-CN.md) | 工具链、命令、本地数据库、运行应用 |
 | [docs/roadmap.zh-CN.md](docs/roadmap.zh-CN.md) | 阶段、完成标准、状态、风险 |
 | [docs/math-curriculum.zh-CN.md](docs/math-curriculum.zh-CN.md) | 完整数学课程体系的参考目录（37 门课），即内容规划依据 |
+| [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语 |
 | [docs/the-math-academy-way.zh-CN.md](docs/the-math-academy-way.zh-CN.md)、[docs/math-academy-website.zh-CN.md](docs/math-academy-website.zh-CN.md) | 设计所依据的研究笔记 |
 
 ## 项目概述
