@@ -266,7 +266,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const { state: s } = await state(tx, learnerId, c, true);
         const task = nextTasks(c.planner, s, now).find((t) => sameTask(req.task, t));
         if (!task) throw new ConnectError("that task is not offered now", Code.FailedPrecondition);
-        const run = startRun(c, task, s, rng());
+        const run = startRun(c, task, s, now, rng());
         return createSession(tx, {
           learnerId,
           subjectId: c.subject.def.id,
@@ -312,7 +312,8 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const run = row.state as RunState;
         if (req.index !== run.asked.length) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
         const c = await course(row.courseId);
-        const answered = await answerRun(c, run, req.response, req.skip, now, rng());
+        const { state: before } = await state(tx, learnerId, c, true);
+        const answered = await answerRun(c, run, before, req.response, req.skip, now, rng());
         const ref = run.current!;
         await recordAnswer(tx, {
           sessionId: row.id,

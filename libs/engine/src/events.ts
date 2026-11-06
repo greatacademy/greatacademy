@@ -4,6 +4,7 @@ import { lessonSpeed } from "./lesson.ts";
 import type { Params } from "./params.ts";
 import { reviewResult } from "./review.ts";
 import { clampSpeed, type LearnerState, newTopicState, type TopicState } from "./state.ts";
+import { eventXp, nextBlowOffs } from "./xp.ts";
 
 /**
  * EngineEvent is a completed task, as recorded in the event log. Learner
@@ -27,11 +28,27 @@ export type EngineEvent =
       readonly passed: boolean;
       readonly asked: number;
       readonly correct: number;
+      /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
+      readonly blownOff?: boolean;
     }
   /** review ends an explicit review. */
-  | { readonly type: "review"; readonly at: number; readonly topic: string; readonly correct: number; readonly total: number }
+  | {
+      readonly type: "review";
+      readonly at: number;
+      readonly topic: string;
+      readonly correct: number;
+      readonly total: number;
+      /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
+      readonly blownOff?: boolean;
+    }
   /** quiz ends a quiz: one result per question, by topic. */
-  | { readonly type: "quiz"; readonly at: number; readonly results: readonly { readonly topic: string; readonly correct: boolean }[] };
+  | {
+      readonly type: "quiz";
+      readonly at: number;
+      readonly results: readonly { readonly topic: string; readonly correct: boolean }[];
+      /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
+      readonly blownOff?: boolean;
+    };
 
 /** EngineContext is what applying events needs besides the state. */
 export interface EngineContext {
@@ -43,33 +60,14 @@ function setTopic(state: LearnerState, id: string, s: TopicState): LearnerState 
   return { ...state, topics: { ...state.topics, [id]: s } };
 }
 
-/** reviewXp is the XP of a perfect review of a topic: a third of its lesson, at least 3. */
-export function reviewXp(topicXp: number): number {
-  return Math.max(3, Math.round(topicXp / 3));
-}
-
-/** eventXp is the XP an event earns. */
-export function eventXp(ctx: EngineContext, e: EngineEvent): number {
-  switch (e.type) {
-    case "placed":
-      return 0;
-    case "lesson":
-      return e.passed ? (ctx.graph.graph.topics.get(e.topic)?.xp ?? 0) : 0;
-    case "review": {
-      const xp = reviewXp(ctx.graph.graph.topics.get(e.topic)?.xp ?? 0);
-      return reviewResult(ctx.params, e.correct, e.total) > 0 ? Math.round((xp * e.correct) / e.total) : 0;
-    }
-    case "quiz": {
-      const n = e.results.length;
-      return n === 0 ? 0 : Math.round((ctx.params.quizXp * e.results.filter((r) => r.correct).length) / n);
-    }
-  }
-}
-
 /** applyEvent folds one event into the learner state. */
 export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEvent): LearnerState {
+  return { ...applyTask(ctx, state, e), blowOffs: nextBlowOffs(ctx.params, state, e) };
+}
+
+function applyTask(ctx: EngineContext, state: LearnerState, e: EngineEvent): LearnerState {
   const { params: p, graph: g } = ctx;
-  const xp = state.xp + eventXp(ctx, e);
+  const xp = state.xp + eventXp(ctx, state, e);
   switch (e.type) {
     case "placed": {
       const tested = new Set(e.tested);

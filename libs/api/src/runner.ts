@@ -7,6 +7,8 @@ import {
   type EngineEvent,
   eventXp,
   finishDiagnostic,
+  fullXp,
+  isBlownOff,
   type LearnerState,
   type LessonProgress,
   nextDiagnosticTopic,
@@ -25,6 +27,8 @@ export interface Asked extends ProblemRef {
   readonly response: string;
   readonly correct: boolean;
   readonly skipped: boolean;
+  /** elapsedMs is the server's time from serving the question to receiving the answer. */
+  readonly elapsedMs: number;
 }
 
 /** RunResult is the outcome of a finished run. */
@@ -32,7 +36,12 @@ export interface RunResult {
   readonly passed: boolean;
   readonly correct: number;
   readonly asked: number;
+  /** xp is the XP the run changed the learner's total by. */
   readonly xp: number;
+  /** full is the XP the task is worth when done well, before any bonus. */
+  readonly full: number;
+  /** blownOff tells that the task was rushed through and so earned no XP. */
+  readonly blownOff: boolean;
   /** placed counts the topics the diagnostic placed as known. */
   readonly placed: number;
 }
@@ -41,6 +50,8 @@ interface RunBase {
   readonly asked: readonly Asked[];
   /** current is the question to answer next; unset once the run is over. */
   readonly current?: ProblemRef;
+  /** servedAt is when the current question was served. */
+  readonly servedAt?: number;
   readonly result?: RunResult;
 }
 
@@ -77,7 +88,8 @@ function diagnosticRef(c: CourseEntry, topic: string, rng: Rng): ProblemRef {
 }
 
 /** startRun begins a run of a task. */
-export function startRun(c: CourseEntry, task: Task, state: LearnerState, rng: Rng): RunState {
+export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: number, rng: Rng): RunState {
+  const served = { asked: [], servedAt: now };
   switch (task.kind) {
     case "lesson":
       return {
@@ -86,7 +98,7 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, rng: R
         lesson: startLesson(task.topic, kpCount(c, task.topic)),
         example: newSeed(rng),
         ...(c.subject.topics.get(task.topic)?.practiceOnly && state.topics[task.topic]?.failedAt === undefined && { practice: true }),
-        asked: [],
+        ...served,
         current: { topic: task.topic, kp: 0, seed: newSeed(rng) },
       };
     case "review": {
@@ -96,19 +108,19 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, rng: R
         topic: task.topic,
         covers: task.covers,
         plan,
-        asked: [],
+        ...served,
         current: { topic: task.topic, kp: plan[0]!, seed: newSeed(rng) },
       };
     }
     case "quiz": {
       const topics = quizPlan(c.planner, state, rng);
-      return { kind: "quiz", topics, asked: [], current: diagnosticRef(c, topics[0]!, rng) };
+      return { kind: "quiz", topics, ...served, current: diagnosticRef(c, topics[0]!, rng) };
     }
     case "diagnostic": {
       const diagnostic = startDiagnostic(diagnosticCandidates(c.planner, state));
       const first = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!first) throw new Error("the course has nothing to diagnose");
-      return { kind: "diagnostic", diagnostic, asked: [], current: diagnosticRef(c, first, rng) };
+      return { kind: "diagnostic", diagnostic, ...served, current: diagnosticRef(c, first, rng) };
     }
   }
 }
@@ -128,19 +140,38 @@ export function canSkip(run: RunState): boolean {
   return run.kind === "diagnostic";
 }
 
-/** answerRun judges a response to the current question and advances the run. */
-export async function answerRun(c: CourseEntry, run: RunState, response: string, skip: boolean, now: number, rng: Rng): Promise<Answered> {
+/** answerRun judges a response to the current question and advances the run; state is the learner's state before the answer. */
+export async function answerRun(
+  c: CourseEntry,
+  run: RunState,
+  state: LearnerState,
+  response: string,
+  skip: boolean,
+  now: number,
+  rng: Rng,
+): Promise<Answered> {
   const ref = run.current;
   if (!ref) throw new Error("the session is over");
   const skipped = skip && canSkip(run);
   const { problem, verdict }: Judged = skipped
     ? { problem: (await c.source.problems([ref]))[0]!, verdict: { correct: false } }
     : await c.source.judge(ref, response);
-  const asked = [...run.asked, { ...ref, response: skipped ? "" : response, correct: verdict.correct, skipped }];
+  const elapsedMs = now - (run.servedAt ?? 0);
+  const asked = [...run.asked, { ...ref, response: skipped ? "" : response, correct: verdict.correct, skipped, elapsedMs }];
   const correct = asked.filter((a) => a.correct).length;
-  const finish = (next: RunState, event: EngineEvent, passed: boolean, placed = 0): Answered => {
-    const result: RunResult = { passed, correct, asked: asked.length, xp: eventXp(c.ctx, event), placed };
-    const { current: _, ...rest } = next;
+  const finish = (next: RunState, finished: EngineEvent, passed: boolean, placed = 0): Answered => {
+    const blownOff = finished.type !== "placed" && isBlownOff(c.ctx.params, passed, asked);
+    const event = blownOff ? { ...finished, blownOff } : finished;
+    const result: RunResult = {
+      passed,
+      correct,
+      asked: asked.length,
+      xp: eventXp(c.ctx, state, event),
+      full: fullXp(c.ctx, event),
+      blownOff,
+      placed,
+    };
+    const { current: _, servedAt: __, ...rest } = next;
     return { run: { ...rest, result } as RunState, problem, verdict, skipped, event };
   };
 
@@ -154,7 +185,12 @@ export async function answerRun(c: CourseEntry, run: RunState, response: string,
       }
       const newKp = lesson.kp !== run.lesson.kp;
       return {
-        run: { ...next, example: newKp ? newSeed(rng) : run.example, current: { topic: run.topic, kp: lesson.kp, seed: newSeed(rng) } },
+        run: {
+          ...next,
+          servedAt: now,
+          example: newKp ? newSeed(rng) : run.example,
+          current: { topic: run.topic, kp: lesson.kp, seed: newSeed(rng) },
+        },
         problem,
         verdict,
         skipped,
@@ -167,7 +203,7 @@ export async function answerRun(c: CourseEntry, run: RunState, response: string,
         return finish(next, event, reviewResult(c.ctx.params, correct, asked.length) > 0);
       }
       return {
-        run: { ...next, current: { topic: run.topic, kp: run.plan[asked.length]!, seed: newSeed(rng) } },
+        run: { ...next, servedAt: now, current: { topic: run.topic, kp: run.plan[asked.length]!, seed: newSeed(rng) } },
         problem,
         verdict,
         skipped,
@@ -179,7 +215,7 @@ export async function answerRun(c: CourseEntry, run: RunState, response: string,
         const event: EngineEvent = { type: "quiz", at: now, results: asked.map((a) => ({ topic: a.topic, correct: a.correct })) };
         return finish(next, event, correct * 2 >= asked.length);
       }
-      return { run: { ...next, current: diagnosticRef(c, run.topics[asked.length]!, rng) }, problem, verdict, skipped };
+      return { run: { ...next, servedAt: now, current: diagnosticRef(c, run.topics[asked.length]!, rng) }, problem, verdict, skipped };
     }
     case "diagnostic": {
       const diagnostic = answerDiagnostic(c.ctx.graph, run.diagnostic, ref.topic, verdict.correct);
@@ -189,7 +225,7 @@ export async function answerRun(c: CourseEntry, run: RunState, response: string,
         const placement = finishDiagnostic(c.planner, diagnostic);
         return finish(next, { type: "placed", at: now, course: c.id, ...placement }, true, placement.known.length);
       }
-      return { run: { ...next, current: diagnosticRef(c, topic, rng) }, problem, verdict, skipped };
+      return { run: { ...next, servedAt: now, current: diagnosticRef(c, topic, rng) }, problem, verdict, skipped };
     }
   }
 }

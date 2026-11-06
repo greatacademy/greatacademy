@@ -202,7 +202,7 @@ describe("LearningService", () => {
     const c = (await registry.course("sat-math-prep"))!;
     const topic = c.course.topics.find((t) => t.includes("-exam-"))!;
     const intro = async (state: LearnerState) => {
-      const run = startRun(c, { kind: "lesson", topic }, state, createRng(1));
+      const run = startRun(c, { kind: "lesson", topic }, state, now, createRng(1));
       const step = (await sessionMessage(c, "s", run, state)).step;
       return step?.case === "question" ? step.value.intro : undefined;
     };

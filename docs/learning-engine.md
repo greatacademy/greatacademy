@@ -19,9 +19,9 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | Event | Recorded when | Data |
 | :--- | :--- | :--- |
 | `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly |
-| `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly |
-| `review` | A review ends | Topic, correct answers, questions |
-| `quiz` | A quiz ends | One result per question, by topic |
+| `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, whether it was blown off (§10) |
+| `review` | A review ends | Topic, correct answers, questions, whether it was blown off |
+| `quiz` | A quiz ends | One result per question, by topic, whether it was blown off |
 
 Because state is derived, a change of parameters or of a rule applies to every learner by replaying, and the event log is the audit trail of every decision.
 
@@ -137,6 +137,13 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `quizCredit`, `quizXp` | 0.5, 15 | One question is half a review |
 | `minLessonShare` | 0.25 | At least one task in four is new learning |
 | `maxReviewStreak` | 4 | About half a study day; no day passes on reviews alone. Three slowed typical learners by putting lessons before the reviews of their prerequisites |
+| `xpPerfectBonus` | 2 | A small reward for all correct, as in Math Academy |
+| `xpNearlyPerfect` | 0.8 | One slip in five costs nothing |
+| `xpNearlyPassable`, `xpNearlyPassableShare` | 0.5, 0.15 | A failed lesson with half right was real work, so it earns a little |
+| `rushSeconds`, `rushMinAnswers` | 6, 2 | Six seconds is too short to read a problem and the feedback before it and think; two such answers are not chance |
+| `blowOffStep`, `blowOffMaxPenalty` | 3, 10 | Three warnings at 0 XP, then 1 XP more for every three more, up to 10 |
+| `blowOffDecay` | 0.2 | Five passed tasks forgive one blown-off task, so that alternating with passed tasks does not escape the penalty |
+| `forecastOverhead` | 1 | Simulated typical students earn 0.6 XP in reviews and quizzes per XP of lessons on a short course and about 1.3 on a long one |
 
 These values come from the book's description and our judgment, not from data. Roadmap P10 recalibrates them against real learners' event logs, and replaying makes the change retroactive.
 
@@ -144,10 +151,10 @@ These values come from the book's description and our judgment, not from data. R
 
 | Student | Ability, XP/day | Days | Explicit reviews per topic | Failed lessons |
 | :--- | :--- | ---: | ---: | ---: |
-| Strong | 0.95, 40 | 6.5 | 0.25 | 0 |
-| Typical | 0.85, 30 | 9.1 | 0.62 | 1.4 |
-| Struggling | 0.70, 20 | 14.7 | 2.10 | 10.4 |
-| Typical, knows integers | 0.85, 30 | 7.2 | 0.77 | 1.2 |
+| Strong | 0.95, 40 | 7.7 | 0.31 | 0.05 |
+| Typical | 0.85, 30 | 10 | 0.76 | 1.8 |
+| Struggling | 0.70, 20 | 16.6 | 2.36 | 11.3 |
+| Typical, knows integers | 0.85, 30 | 7.7 | 0.93 | 1.4 |
 
 Typical learners need fewer than one explicit review per topic, because lessons on later topics review earlier ones implicitly. Struggling learners get more explicit practice: their low speeds withhold implicit credit. The simulator's tests keep these properties from regressing.
 
@@ -175,14 +182,42 @@ Placed topics start at `placedRepNum`, so they come back for review soon and a l
 
 ## 10. XP
 
-XP approximates minutes of focused work and is computed from events:
+XP approximates minutes of focused work and is computed from events. A task has a **full XP**: the topic's `xp` for a lesson, max(3, round(xp / 3)) for a review, 15 for a quiz. What it earns depends on how it went:
 
-| Event | XP |
+| Task | XP |
 | :--- | :--- |
-| Passed lesson | The topic's `xp` |
-| Failed lesson | 0 |
-| Passed review | max(3, round(xp / 3)) × correct / total |
+| Lesson with every answer correct | Full + 2 |
+| Passed lesson, at least 80% correct | Full |
+| Passed lesson, under 80% correct | Full × fraction correct |
+| Failed lesson, at least 50% correct | max(1, round(full × 0.15)) |
+| Failed lesson, under 50% correct | 0 |
+| Passed review or quiz, every answer correct | Full + 2 |
+| Passed review, some wrong | Full × fraction correct |
 | Failed review | 0 |
-| Quiz | 15 × fraction correct |
+| Quiz, some wrong | Full × fraction correct |
+| Blown-off task | 0, or less after repeated ones (below) |
 
-Failures earn no XP: XP rewards results, so it stays an honest measure of progress. The time a failure costs shows in the calendar instead, as the struggling student's extra days in §8 do.
+So XP rewards results and still credits honest effort: a poor lesson earns nothing, and the time it costs shows in the calendar, as the struggling student's extra days in §8 do.
+
+**Blown-off tasks.** A task counts as blown off when it was not passed and at least two wrong answers, making up at least half of its wrong answers, arrived within six seconds of the question being served. The time is the server's, recorded per question, so the client cannot affect it. Failing slowly is never blowing off, nor is passing quickly, and the diagnostic is exempt. The event carries the verdict as `blownOff`, so a replay does not need the times.
+
+The state counts recent blown-off tasks in `blowOffs`. The penalty for one is floor(blowOffs / 3) XP before counting it, capped at 10 and at the task's full XP: the first three cost nothing and serve as warnings, the next three cost 1 XP, and so on. Each passed task lowers the count by 0.2. A subject's XP total never falls below zero. A learner sees the warning on the result page, with what it means.
+
+## 11. Goals and Forecast
+
+A learner sets an XP goal for each weekday, or pauses them. The week's goal is their sum; the dashboard compares today's and this week's XP with them, in the learner's time zone.
+
+The forecast of a course is the lessons' XP not yet learned × (1 + `forecastOverhead`), divided by a pace in XP per day: the learner's average over the last 14 days and fixed paces to compare. It is an estimate, shown as a date, and changes with what the learner does.
+
+## 12. Leagues
+
+Leagues are optional. A learner joins by choosing a public username and turning them on; only the username and weekly XP are shown to others.
+
+- **Week.** A league week starts on Monday 00:00 UTC, so it is one week for everyone. Total XP is unaffected; each week's standings start at zero.
+- **Tiers.** Nine tiers: Iron, Bronze, Silver, Gold, Platinum, Sapphire, Ruby, Emerald, Diamond. A new member starts in Iron.
+- **Groups.** The first XP earned in a week puts the learner in a group of at most 30 in their tier, the one with their pace band if one is open. The band comes from the XP of the last four weeks (under 100, 250, 500 per week, or more), so members can keep up with each other; a smaller platform has fewer full groups, so the band is a preference.
+- **The end of a week.** Ranks go by XP, then by who joined first. The top third (rounded up) moves up and the bottom third (rounded down) moves down, none past the ends. A member with no XP at the end does not move up, and moves down unless in Iron.
+- **Absence.** Each whole week missed lowers the tier by one. Pausing goals does not protect it.
+
+There is no scheduled job: the outcome follows from the group's members and the immutable event log, so it is computed when needed.
+

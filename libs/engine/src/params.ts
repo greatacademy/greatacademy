@@ -49,6 +49,25 @@ export interface Params {
   readonly minLessonShare: number;
   /** maxReviewStreak is how many reviews in a row put a lesson, when one is available, first among the offered tasks. */
   readonly maxReviewStreak: number;
+  /** xpPerfectBonus is the XP added to a task with every answer correct. */
+  readonly xpPerfectBonus: number;
+  /** xpNearlyPerfect is the accuracy from which a passed lesson earns its full XP. */
+  readonly xpNearlyPerfect: number;
+  /** xpNearlyPassable is the accuracy from which a failed lesson still earns xpNearlyPassableShare of its XP. */
+  readonly xpNearlyPassable: number;
+  readonly xpNearlyPassableShare: number;
+  /** rushSeconds is the time under which a wrong answer counts as rushed, from serving the question to receiving the answer. */
+  readonly rushSeconds: number;
+  /** rushMinAnswers is the fewest rushed wrong answers that make a task blown off. */
+  readonly rushMinAnswers: number;
+  /** blowOffStep is how many blown-off tasks raise the penalty by one XP; the first of them cost nothing. */
+  readonly blowOffStep: number;
+  /** blowOffMaxPenalty caps the XP one blown-off task can cost. */
+  readonly blowOffMaxPenalty: number;
+  /** blowOffDecay is how much each passed task reduces the count of recent blown-off tasks. */
+  readonly blowOffDecay: number;
+  /** forecastOverhead is the XP of reviews and quizzes per XP of lessons, for estimating what a course still takes. */
+  readonly forecastOverhead: number;
 }
 
 /** defaultParams are the engine's parameters until calibration (roadmap P10). */
@@ -76,4 +95,14 @@ export const defaultParams: Params = {
   quizXp: 15,
   minLessonShare: 0.25,
   maxReviewStreak: 4,
+  xpPerfectBonus: 2,
+  xpNearlyPerfect: 0.8,
+  xpNearlyPassable: 0.5,
+  xpNearlyPassableShare: 0.15,
+  rushSeconds: 6,
+  rushMinAnswers: 2,
+  blowOffStep: 3,
+  blowOffMaxPenalty: 10,
+  blowOffDecay: 0.2,
+  forecastOverhead: 1,
 };

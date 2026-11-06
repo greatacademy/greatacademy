@@ -113,12 +113,12 @@ describe("event log", () => {
     const l = await learnerFor(db, "u1");
     await record(l, log);
     // Lessons of 12 XP on day 1, then a 4 XP review and a 12 XP lesson on day 2.
-    expect(await totalXp(db, l)).toBe(28);
+    expect(await totalXp(db, l)).toBe(30);
     const utc = await xpByDay(db, l, new Date(t0 - DAY), "UTC");
-    expect(Object.fromEntries(utc)).toEqual({ "2026-10-01": 12, "2026-10-02": 16 });
+    expect(Object.fromEntries(utc)).toEqual({ "2026-10-01": 16, "2026-10-02": 14 });
     // 15:30 UTC is 05:30 the next day at UTC+14.
     const kiritimati = await xpByDay(db, l, new Date(t0 - DAY), "Pacific/Kiritimati");
-    expect(Object.fromEntries(kiritimati)).toEqual({ "2026-10-02": 12, "2026-10-03": 16 });
+    expect(Object.fromEntries(kiritimati)).toEqual({ "2026-10-02": 16, "2026-10-03": 14 });
   });
 });
 

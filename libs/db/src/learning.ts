@@ -49,7 +49,7 @@ export async function loadState(db: Db, learnerId: string, subjectId: string, in
     .from(learnerState)
     .where(and(eq(learnerState.learnerId, learnerId), eq(learnerState.subjectId, subjectId)));
   const [row] = lock ? await q.for("update") : await q;
-  return row ?? { seq: 0, state: initial };
+  return row ? { seq: row.seq, state: { ...initial, ...row.state } } : { seq: 0, state: initial };
 }
 
 /** NewEvent is an event to append with the state that results from it. */

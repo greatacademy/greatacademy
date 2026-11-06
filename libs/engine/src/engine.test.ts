@@ -205,7 +205,7 @@ describe("events", () => {
     const s = applyEvent(ctx, s0, { type: "lesson", at: T0 + 5 * DAY, topic: "c", passed: true, asked: 4, correct: 4 });
     expect(s.topics.c).toMatchObject({ learned: true, repNum: 0, speed: 1.5, last: T0 + 5 * DAY });
     expect(s.topics.b!.repNum).toBeCloseTo(1);
-    expect(s.xp).toBe(12);
+    expect(s.xp).toBe(14);
   });
   it("blocks a failed lesson until its key prerequisites are reviewed", () => {
     const s0 = learnedState(["a", "b"]);
