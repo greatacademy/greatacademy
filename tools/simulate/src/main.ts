@@ -38,6 +38,7 @@ const rows = students.map(({ name, ...student }) => {
     reviews: mean((r) => r.reviews),
     reviewsPerTopic: mean((r) => r.reviewsPerTopic),
     quizzes: mean((r) => r.quizzes),
+    passages: mean((r) => r.passages),
   };
 });
 console.log(courseId);

@@ -1,4 +1,5 @@
-import { compileEnglish } from "@ga/content-english";
+import { compileSubject, type PassageDef, t } from "@ga/content";
+import { compileEnglish, english } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 import { describe, expect, it } from "vitest";
 
@@ -22,6 +23,44 @@ describe("simulated students of English", () => {
 
   it("let struggling students finish", { timeout: 120_000 }, () => {
     expect(course(0.7, 20).every((r) => r.finished)).toBe(true);
+  });
+});
+
+describe("simulated students with passages to read", () => {
+  const courseId = "english-grammar-writing";
+  const passage = (i: number): PassageDef => ({
+    id: `story-${i}`,
+    title: t(`Story ${i}`, `故事 ${i}`),
+    body: "The dog ran to the park and the cat sat on the wall.",
+    topics: [],
+    xp: 5,
+    questions: [
+      {
+        prompt: t("Who ran?", "谁跑了？"),
+        right: t("The dog", "狗"),
+        wrong: [t("The cat", "猫")],
+        solution: t("The dog ran.", "狗跑了。"),
+      },
+    ],
+  });
+  const reading = compileSubject({
+    ...english,
+    lexicon: ["the", "dog", "ran", "to", "park", "and", "cat", "sat", "on", "wall"].map((word) => ({ word })),
+    reading: [{ id: "stories", title: t("Stories", "故事"), passages: Array.from({ length: 200 }, (_, i) => passage(i)) }],
+    courses: english.courses.map((c) => (c.id === courseId ? { ...c, reading: ["stories"] } : c)),
+  });
+  const run = (seed: number) => simulate(reading, courseId, { ability: 0.85, xpPerDay: 30 }, seed);
+
+  it("give reading about its share of the XP and still finish the course", { timeout: 120_000 }, () => {
+    const r = run(1);
+    expect(r.finished).toBe(true);
+    expect(r.passages).toBeGreaterThan(0);
+    expect(r.readingXp / r.xp).toBeGreaterThan(0.1);
+    expect(r.readingXp / r.xp).toBeLessThan(0.25);
+  });
+
+  it("are deterministic for a seed", { timeout: 120_000 }, () => {
+    expect(run(2)).toEqual(run(2));
   });
 });
 
