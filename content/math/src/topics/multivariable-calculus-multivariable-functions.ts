@@ -1,6 +1,9 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
+import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
+import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
+import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 
 import {
   choiceProblem,
@@ -119,6 +122,7 @@ export const interiorAndBoundaryPoints: TopicDef = {
     },
     {
       id: "classifying-points-relative-to-a-region-above-a-parabola",
+      figure: multivariableDrawings1["interior-and-boundary-points#classifying-points-relative-to-a-region-above-a-parabola"],
       title: t("Classifying points relative to a region above a parabola", "判断点相对于抛物线上方区域的位置"),
       explanation: t(
         "For $S = \\{(x, y) : y > x^2 + c\\}$, compare $y$ with $x^2 + c$ at the point. If $y > x^2 + c$, a small disk around the point still satisfies the strict inequality, so it is an interior point. If $y = x^2 + c$ the point lies on the parabola: every disk around it reaches both above and below, so it is a boundary point, even though it does not belong to $S$. If $y < x^2 + c$ the point is exterior.",
@@ -203,6 +207,7 @@ export const interiorsAndBoundariesOfSets: TopicDef = {
     },
     {
       id: "the-length-of-the-boundary-of-a-rectangle",
+      figure: multivariableDrawings1["interiors-and-boundaries-of-sets#the-length-of-the-boundary-of-a-rectangle"],
       title: t("The length of the boundary of a rectangle", "矩形边界的长度"),
       explanation: t(
         "The boundary of a set does not depend on which edges are included: $\\{|x| \\le a, |y| < b\\}$ and $\\{|x| < a, |y| < b\\}$ both have the whole rectangle outline as boundary. Removing a single point from the inside adds that point to the boundary, since every disk around it meets both $S$ and the missing point, but a point has no length. So the boundary length is the perimeter $4a + 4b$ in each case.",
@@ -384,6 +389,7 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
     },
     {
       id: "the-area-of-a-domain",
+      figure: multivariableDrawings1["the-domain-of-a-multivariable-function#the-area-of-a-domain"],
       title: t("The area of a domain", "定义域的面积"),
       explanation: t(
         "To find the domain of a function built from roots and logarithms, collect the conditions from every piece: each square root needs a non-negative argument and each logarithm a positive one. The domain is the set where all of them hold at once. For example $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ needs $x \\ge 0$, $y \\ge 0$ and $x + y \\le c$, a triangle of area $\\frac{c^2}{2}$.",
@@ -552,6 +558,7 @@ export const levelSurfaces: TopicDef = {
     },
     {
       id: "the-shape-of-the-level-surface-through-a-point",
+      figure: multivariableDrawings2["level-surfaces#the-shape-of-the-level-surface-through-a-point"],
       title: t("The shape of the level surface through a point", "过某点的等值面的形状"),
       explanation: t(
         "The level surfaces of $F(x, y, z) = x^2 + y^2 - z^2$ change shape with the level $c$. For $c > 0$, $x^2 + y^2 - z^2 = c$ is a hyperboloid of one sheet; for $c < 0$ it is a hyperboloid of two sheets; for $c = 0$ it is a double cone. To find the surface through a point, first compute $c = F$ at that point.",
@@ -642,6 +649,7 @@ export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
     },
     {
       id: "limits-along-parabolic-paths",
+      figure: multivariableDrawings2["limits-and-continuity-of-multivariable-functions#limits-along-parabolic-paths"],
       title: t("Limits along parabolic paths", "沿抛物线路径的极限"),
       explanation: t(
         "Some functions have the same limit along every straight line through the origin and still have no limit. For $f(x, y) = \\frac{x^2y}{x^4 + y^2}$, every line $y = mx$ gives $0$, but along the parabola $y = kx^2$,\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\nDifferent parabolas give different values, so the limit at the origin does not exist.",
@@ -718,6 +726,7 @@ export const ellipsoids: TopicDef = {
     },
     {
       id: "the-volume-of-an-ellipsoid",
+      figure: multivariableDrawings2["ellipsoids#the-volume-of-an-ellipsoid"],
       title: t("The volume of an ellipsoid", "椭球的体积"),
       explanation: t(
         "The ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ is a unit sphere stretched by $a$, $b$ and $c$ along the three axes. Stretching multiplies volume by $abc$, so the enclosed volume is\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\nRead the semi-axes as the square roots of the denominators, not the denominators themselves.",
@@ -830,6 +839,7 @@ export const paraboloids: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-paraboloids",
+      figure: multivariableDrawings2["paraboloids#classifying-paraboloids"],
       title: t("Classifying paraboloids", "分类抛物面"),
       explanation: t(
         "Paraboloids feature one linear variable (usually $z$) and two quadratic variables:\n\n- **Elliptic paraboloid**: $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ (bowl-shaped, traces are ellipses and parabolas).\n- **Hyperbolic paraboloid**: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$ (saddle-shaped, traces are hyperbolas and parabolas).",
@@ -898,6 +908,7 @@ export const ellipticCones: TopicDef = {
   knowledgePoints: [
     {
       id: "analyzing-traces-of-elliptic-cones",
+      figure: multivariableDrawings2["elliptic-cones#analyzing-traces-of-elliptic-cones"],
       title: t("Analyzing traces of elliptic cones", "分析椭圆锥面的截痕"),
       explanation: t(
         "Slicing a surface with a plane shows its cross sections; for a cone, horizontal slices are ellipses that grow as the plane moves away from the vertex. For the cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, intersecting with horizontal planes $z = k$ yields the ellipse $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$ with semi-axes $a|k|$ and $b|k|$.",
@@ -935,6 +946,7 @@ export const ellipticCones: TopicDef = {
     },
     {
       id: "lines-on-an-elliptic-cone",
+      figure: multivariableDrawings2["elliptic-cones#lines-on-an-elliptic-cone"],
       title: t("Lines on an elliptic cone", "椭圆锥面上的直线"),
       explanation: t(
         "The elliptic cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ is made of lines through the origin. The line $(x, y, z) = s(p, q, r)$ lies on the cone exactly when its direction satisfies the equation, because every term scales by $s^2$:\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\nIf the two sides differ, the line meets the cone only at the origin.",
@@ -984,6 +996,7 @@ export const cylinders: TopicDef = {
   knowledgePoints: [
     {
       id: "identifying-cylinders-and-their-rulings",
+      figure: multivariableDrawings2["cylinders#identifying-cylinders-and-their-rulings"],
       title: t("Identifying cylinders and their rulings", "识别柱面及其母线方向"),
       explanation: t(
         "In $\\mathbb{R}^3$, an equation involving only two of the three variables represents a cylinder whose rulings are parallel to the axis of the missing variable. For example, $x^2 + y^2 = r^2$ has rulings parallel to the $z$-axis.",
@@ -1024,6 +1037,7 @@ export const cylinders: TopicDef = {
     },
     {
       id: "points-on-a-parabolic-cylinder",
+      figure: multivariableDrawings2["cylinders#points-on-a-parabolic-cylinder"],
       title: t("Points on a parabolic cylinder", "抛物柱面上的点"),
       explanation: t(
         "An equation in $\\mathbb{R}^3$ that does not mention $z$, such as $y = ax^2 + b$, describes a cylinder: the parabola in the $xy$-plane is copied to every height. So a point $(x, y, z)$ lies on it exactly when $y = ax^2 + b$, whatever $z$ is. Finding the missing coordinate of a point on the surface uses only $x$ and $y$.",
@@ -1066,6 +1080,7 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "calculating-radius-of-circular-traces",
+      figure: multivariableDrawings2["intersections-of-lines-and-planes-with-surfaces#calculating-radius-of-circular-traces"],
       title: t("Calculating the radius of circular traces", "计算圆形截痕的半径"),
       explanation: t(
         "Substituting the height of the plane into the equation of the sphere leaves the equation of a circle, whose radius shrinks as the plane moves away from the center. Intersecting the sphere $x^2 + y^2 + z^2 = R^2$ with the plane $z = h$ (where $|h| < R$) produces the circle $x^2 + y^2 = R^2 - h^2$ with radius $r = \\sqrt{R^2 - h^2}$.",
@@ -1108,6 +1123,7 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
     },
     {
       id: "where-a-line-meets-a-sphere",
+      figure: multivariableDrawings2["intersections-of-lines-and-planes-with-surfaces#where-a-line-meets-a-sphere"],
       title: t("Where a line meets a sphere", "直线与球面的交点"),
       explanation: t(
         "To intersect a line with a surface, substitute the line's parametric equations into the surface's equation and solve for the parameter. For the line $(t, q, r)$, parallel to the $x$-axis, and the sphere $x^2 + y^2 + z^2 = R^2$, this gives $t^2 = R^2 - q^2 - r^2$. Each real solution $t$ gives one intersection point.",
@@ -1161,6 +1177,7 @@ export const identifyingQuadricSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-quadric-surfaces-from-equations",
+      figure: multivariableDrawings2["identifying-quadric-surfaces#recognizing-quadric-surfaces-from-equations"],
       title: t("Recognizing quadric surfaces from equations", "根据方程识别二次曲面"),
       explanation: t(
         "Standard forms of quadric surfaces:\n\n- Ellipsoid: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$.\n- Hyperboloid of 1 sheet: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$.\n- Hyperboloid of 2 sheets: $-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$.\n- Elliptic cone: $\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$.\n- Elliptic paraboloid: $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$.\n- Hyperbolic paraboloid: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$.",
@@ -1219,6 +1236,7 @@ export const identifyingQuadricSurfaces: TopicDef = {
     },
     {
       id: "identifying-quadric-surfaces-from-their-signs",
+      figure: multivariableDrawings2["identifying-quadric-surfaces#identifying-quadric-surfaces-from-their-signs"],
       title: t("Identifying quadric surfaces from their signs", "根据符号识别二次曲面"),
       explanation: t(
         "When every variable appears squared, count the signs after moving the constant to the right side with $d > 0$. Three positive squares give an ellipsoid, two positive and one negative a hyperboloid of one sheet, one positive and two negative a hyperboloid of two sheets, and two positive and one negative equal to $0$ an elliptic cone. When one variable appears only to the first power, the surface is a paraboloid: elliptic if the two squares have the same sign, hyperbolic if they have opposite signs.",
@@ -1812,6 +1830,7 @@ export const tangentPlanesToSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-equations-of-tangent-planes",
+      figure: multivariableDrawings2["tangent-planes-to-surfaces#finding-equations-of-tangent-planes"],
       title: t("Finding equations of tangent planes", "求切平面方程"),
       explanation: t(
         "The tangent plane is the flat surface that best matches the graph at a point, and its tilt in each direction is given by the partial derivatives there. For a differentiable function $z = f(x, y)$, the tangent plane at $(x_0, y_0, z_0)$ has equation:\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).$$",
@@ -2186,6 +2205,7 @@ export const theGradientAsANormalVector: TopicDef = {
   knowledgePoints: [
     {
       id: "normal-vectors-to-level-surfaces",
+      figure: multivariableDrawings2["the-gradient-as-a-normal-vector#normal-vectors-to-level-surfaces"],
       title: t("Normal vectors to level surfaces", "等值面的法向量"),
       explanation: t(
         "For a level surface $F(x, y, z) = k$, the gradient vector $\\mathbf{n} = \\nabla F(x_0, y_0, z_0)$ is perpendicular to the tangent plane of the surface at $(x_0, y_0, z_0)$.",
@@ -2323,6 +2343,7 @@ export const tangentLinesToLevelCurves: TopicDef = {
     },
     {
       id: "the-slope-of-a-level-curve",
+      figure: multivariableDrawings2["tangent-lines-to-level-curves#the-slope-of-a-level-curve"],
       title: t("The slope of a level curve", "等值线的斜率"),
       explanation: t(
         "The gradient $(f_x, f_y)$ is perpendicular to the level curve through a point, so the tangent line has direction $(f_y, -f_x)$ and slope\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}$$\n\nwhenever $f_y \\ne 0$. This is implicit differentiation written with partial derivatives.",
@@ -2370,6 +2391,7 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "computing-tangent-planes-to-implicit-surfaces",
+      figure: multivariableDrawings2["tangent-planes-to-level-surfaces#computing-tangent-planes-to-implicit-surfaces"],
       title: t("Computing tangent planes to implicit surfaces", "计算隐式曲面的切平面"),
       explanation: t(
         "The gradient is perpendicular to every level surface, so the gradient at the point serves as the normal vector of the tangent plane. For an implicitly defined surface $F(x, y, z) = k$, the tangent plane at $(x_0, y_0, z_0)$ has normal $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$:\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0.$$",
@@ -3016,6 +3038,7 @@ export const affineTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-affine-transformations-on-points",
+      figure: multivariableDrawings3["affine-transformations#evaluating-affine-transformations-on-points"],
       title: t("Evaluating affine transformations on points", "计算点在仿射变换下的像"),
       explanation: t(
         "An affine transformation multiplies by a matrix and then adds a fixed vector, so it can stretch, rotate and shift the plane all at once. An affine transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is represented as:\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f).$$",
@@ -3158,6 +3181,7 @@ export const theImageOfAnAffineTransformation: TopicDef = {
     },
     {
       id: "the-area-of-the-image-of-a-triangle",
+      figure: multivariableDrawings3["the-image-of-an-affine-transformation#the-area-of-the-image-of-a-triangle"],
       title: t("The area of the image of a triangle", "三角形像的面积"),
       explanation: t(
         "An affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ maps triangles to triangles and multiplies every area by $|\\det A|$; the translation $\\mathbf{b}$ does not change areas. So find the area of the original triangle, then multiply by $|\\det A|$. A negative determinant only reverses orientation.",
@@ -3206,6 +3230,7 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
   knowledgePoints: [
     {
       id: "inverting-affine-maps",
+      figure: multivariableDrawings3["the-inverse-of-an-affine-transformation#inverting-affine-maps"],
       title: t("Inverting affine maps", "求仿射变换的逆像"),
       explanation: t(
         "To undo the map, reverse its steps in the opposite order: first remove the shift, then undo the matrix with its inverse. To invert $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, first subtract the translation $\\mathbf{y} - \\mathbf{b}$, then apply the matrix inverse $A^{-1}$:\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b}).$$",
@@ -3254,6 +3279,7 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
     },
     {
       id: "applying-the-inverse-of-a-coupled-affine-map",
+      figure: multivariableDrawings3["the-inverse-of-an-affine-transformation#applying-the-inverse-of-a-coupled-affine-map"],
       title: t("Applying the inverse of a coupled affine map", "求耦合仿射变换的逆像"),
       explanation: t(
         "To find $T^{-1}(u, v)$ for $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, undo the steps in reverse order: subtract the translation, then apply $A^{-1}$:\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\nFor a $2 \\times 2$ matrix, $A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$. Check the answer by applying $T$ to it.",
@@ -3351,6 +3377,7 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
     },
     {
       id: "the-image-of-a-vertical-line-under-a-nonlinear-map",
+      figure: multivariableDrawings3["nonlinear-transformations-of-plane-regions#the-image-of-a-vertical-line-under-a-nonlinear-map"],
       title: t("The image of a vertical line under a nonlinear map", "竖直直线在非线性变换下的像"),
       explanation: t(
         "To find the image of a curve under $T(x, y) = (u, v)$, substitute the curve's description into $u$ and $v$ and eliminate the parameter. Under $T(x, y) = (x + ay^2, y)$ the line $x = c$ goes to the points $(c + ay^2, y)$, so with $v = y$ its image is the parabola\n\n$$u = c + av^2.$$\n\nLines become curves because the map is not linear.",
@@ -3392,6 +3419,7 @@ export const polarCoordinateTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "jacobian-of-polar-coordinate-transformation",
+      figure: multivariableDrawings3["polar-coordinate-transformations#jacobian-of-polar-coordinate-transformation"],
       title: t("Jacobian of polar coordinate transformation", "极坐标变换的雅可比行列式"),
       explanation: t(
         "The Jacobian determinant measures how much a small rectangle in the new coordinates is stretched, and for polar coordinates it equals the radius. For $x = r\\cos\\theta$ and $y = r\\sin\\theta$, the Jacobian matrix and its determinant are:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r.$$",
@@ -3435,6 +3463,7 @@ export const polarCoordinateTransformations: TopicDef = {
     },
     {
       id: "the-area-of-a-polar-rectangle",
+      figure: multivariableDrawings3["polar-coordinate-transformations#the-area-of-a-polar-rectangle"],
       title: t("The area of a polar rectangle", "极坐标矩形的面积"),
       explanation: t(
         "The polar map $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ sends the rectangle $r_1 \\le r \\le r_2$, $\\alpha \\le \\theta \\le \\beta$ to a piece of an annulus. Its area is a fraction $\\frac{\\beta - \\alpha}{2\\pi}$ of the full annulus:\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\nThe same result comes from integrating the Jacobian $r$ over the rectangle.",
@@ -3490,6 +3519,7 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "mapping-hyperbolic-regions-to-rectangles",
+      figure: multivariableDrawings3["transformations-of-regions-between-curves#mapping-hyperbolic-regions-to-rectangles"],
       title: t("Mapping hyperbolic regions to rectangles", "将双曲区域映射为矩形"),
       explanation: t(
         "A region in the first quadrant bounded by hyperbolas $xy = c_1, xy = c_2$ and rays $y = k_1 x, y = k_2 x$ is mapped to a rectangle by setting $u = xy$ and $v = \\frac{y}{x}$.",
@@ -3534,6 +3564,7 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
     },
     {
       id: "the-jacobian-of-the-hyperbola-ray-coordinates",
+      figure: multivariableDrawings3["transformations-of-regions-between-curves#the-jacobian-of-the-hyperbola-ray-coordinates"],
       title: t("The Jacobian of hyperbola and ray coordinates", "双曲线与射线坐标的雅可比行列式"),
       explanation: t(
         "Regions between hyperbolas $xy = c$ and rays $y = mx$ become rectangles in the coordinates $u = xy$, $v = \\frac{y}{x}$. Their Jacobian is\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\nWith constant factors $u = a\\,xy$ and $v = b\\,\\frac{y}{x}$, the Jacobian is multiplied by $ab$.",
@@ -3627,6 +3658,7 @@ export const theJacobian: TopicDef = {
     },
     {
       id: "area-under-a-nonlinear-map-by-the-jacobian",
+      figure: multivariableDrawings3["the-jacobian#area-under-a-nonlinear-map-by-the-jacobian"],
       title: t("Area under a nonlinear map by the Jacobian", "用雅可比行列式求非线性变换下的面积"),
       explanation: t(
         "When $T(u, v) = (x, y)$ is one-to-one on a region $R$, the area of the image is\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\nFor $T(u, v) = (u, uv)$ the Jacobian is $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$, so it stretches area more where $u$ is larger. Integrating $u$ over the rectangle gives the image's area.",
@@ -4485,6 +4517,7 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
   knowledgePoints: [
     {
       id: "optimizing-linear-functions-on-circles-using-lagrange",
+      figure: multivariableDrawings3["lagrange-multipliers-with-one-constraint#optimizing-linear-functions-on-circles-using-lagrange"],
       title: t("Optimizing linear functions on circles using Lagrange", "利用拉格朗日法在圆上优化线性函数"),
       explanation: t(
         "At an extreme point on the constraint, the gradient of the function is parallel to the gradient of the constraint, which gives equations for the point. To find the maximum of $f(x, y) = ax + by$ subject to $x^2 + y^2 = r^2$, apply $\\nabla f = \\lambda \\nabla g$:\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{Max value} = r\\sqrt{a^2 + b^2}.$$",
@@ -4799,6 +4832,7 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
     },
     {
       id: "a-newton-step-for-a-circle-and-a-line",
+      figure: multivariableDrawings3["newtons-method-for-multivariable-functions#a-newton-step-for-a-circle-and-a-line"],
       title: t("A Newton step for a circle and a line", "圆与直线方程组的牛顿迭代一步"),
       explanation: t(
         "Newton's method for a system $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ replaces $\\mathbf{F}$ by its linearization at the current guess and solves that instead:\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\nFor $\\mathbf{F} = (x^2 + y^2 - a, x - y)$ the Jacobian is $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$. Solve the $2 \\times 2$ system for $\\Delta$ rather than inverting the matrix by habit.",

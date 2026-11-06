@@ -6,6 +6,13 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
+import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
+import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
+import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
+import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
+import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
+import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -167,105 +174,114 @@ const tangentSlope = point(
   },
 );
 
-const curvatureVertex = point(
-  "the-curvature-at-the-vertex-of-a-drawn-parabola",
-  ["The curvature at the vertex of a drawn parabola", "所画抛物线顶点处的曲率"],
-  [
-    "For $y = ax^2$, the formula $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ gives $\\kappa = 2\\lvert a \\rvert$ at the vertex, where $y' = 0$. The curve bends most sharply there, and a narrower parabola has a larger $\\lvert a \\rvert$. Find $a$ from a point of the graph.",
-    "对 $y = ax^2$，公式 $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ 在顶点处（$y' = 0$）给出 $\\kappa = 2\\lvert a \\rvert$。曲线在那里弯得最厉害，抛物线越窄，$\\lvert a \\rvert$ 越大。由图像上的一点求 $a$。",
-  ],
-  (rng) => {
-    const k = rng.pick([1, 2, 3]);
-    const height = rng.int(1, 8);
-    const x = rng.bool() ? k : -k;
-    const s = rng.bool() ? 1 : -1;
-    const a = Q.of(s * height, k * k);
-    const answer = Q.of(2 * height, k * k);
-    const P: Point = [x, s * height];
-    return ask(
-      [
-        `The drawn parabola has the form $y = ax^2$ and passes through the marked point. Find its curvature at the vertex.`,
-        `所画的抛物线形如 $y = ax^2$，并过标记点。求它在顶点处的曲率。`,
-      ],
-      answer,
-      [Q.of(height, k * k), Q.of(k * k, 2 * height), Q.of(4 * height, k * k), height],
-      [
-        `The point $${at(P)}$ gives $a = ${a.toLatex()}$. At the vertex $y' = 0$ and $\\lvert y'' \\rvert = 2\\lvert a \\rvert$, so $\\kappa = ${answer.toLatex()}$.`,
-        `由点 $${at(P)}$ 得 $a = ${a.toLatex()}$。在顶点处 $y' = 0$，$\\lvert y'' \\rvert = 2\\lvert a \\rvert$，所以 $\\kappa = ${answer.toLatex()}$。`,
-      ],
-      fig(
-        9,
+const curvatureVertex = {
+  ...point(
+    "the-curvature-at-the-vertex-of-a-drawn-parabola",
+    ["The curvature at the vertex of a drawn parabola", "所画抛物线顶点处的曲率"],
+    [
+      "For $y = ax^2$, the formula $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ gives $\\kappa = 2\\lvert a \\rvert$ at the vertex, where $y' = 0$. The curve bends most sharply there, and a narrower parabola has a larger $\\lvert a \\rvert$. Find $a$ from a point of the graph.",
+      "对 $y = ax^2$，公式 $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ 在顶点处（$y' = 0$）给出 $\\kappa = 2\\lvert a \\rvert$。曲线在那里弯得最厉害，抛物线越窄，$\\lvert a \\rvert$ 越大。由图像上的一点求 $a$。",
+    ],
+    (rng) => {
+      const k = rng.pick([1, 2, 3]);
+      const height = rng.int(1, 8);
+      const x = rng.bool() ? k : -k;
+      const s = rng.bool() ? 1 : -1;
+      const a = Q.of(s * height, k * k);
+      const answer = Q.of(2 * height, k * k);
+      const P: Point = [x, s * height];
+      return ask(
         [
-          { kind: "curve", f: (v) => (s * height * v * v) / (k * k), accent: true },
-          { kind: "point", at: P },
+          `The drawn parabola has the form $y = ax^2$ and passes through the marked point. Find its curvature at the vertex.`,
+          `所画的抛物线形如 $y = ax^2$，并过标记点。求它在顶点处的曲率。`,
         ],
-        [`A parabola with its vertex at the origin through the marked point ${at(P)}.`, `顶点在原点、过标记点 ${at(P)} 的抛物线。`],
-      ),
-    );
-  },
-);
-
-const conservativeField = point(
-  "is-a-drawn-field-conservative",
-  ["Is a drawn field conservative?", "所画的向量场是保守场吗？"],
-  [
-    "A field $(P, Q)$ on the plane is conservative exactly when $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$. A field that swirls around a point has circulation along a circle around it, so it cannot be conservative.",
-    "平面上的场 $(P, Q)$ 是保守场当且仅当 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。绕一点旋转的场沿绕它的圆有环量，所以不可能是保守场。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["swirl", "swirl", "radial", "saddle", "shear"] as const);
-    const a = rng.int(1, 3);
-    const b = rng.int(1, 3);
-    const flip = rng.bool() ? 1 : -1;
-    const f = ((x: number, y: number): [number, number] => {
-      if (kind === "swirl") return [-flip * a * y, flip * b * x];
-      if (kind === "radial") return [flip * a * x, flip * b * y];
-      if (kind === "saddle") return [flip * a * x, -flip * b * y];
-      return [flip * a * y, flip * a * x];
-    }) as (x: number, y: number) => [number, number];
-    const [P, R] = {
-      swirl: [terms([[-flip * a, "y"]]), terms([[flip * b, "x"]])],
-      radial: [terms([[flip * a, "x"]]), terms([[flip * b, "y"]])],
-      saddle: [terms([[flip * a, "x"]]), terms([[-flip * b, "y"]])],
-      shear: [terms([[flip * a, "y"]]), terms([[flip * a, "x"]])],
-    }[kind];
-    const yes = kind !== "swirl";
-    const curl = kind === "swirl" ? flip * (a + b) : 0;
-    const scale = 0.5 / Math.max(a, b);
-    const marks: PlaneMark[] = [];
-    for (let x = -3; x <= 3; x++)
-      for (let y = -3; y <= 3; y++) {
-        const [u, v] = f(x, y);
-        if (u !== 0 || v !== 0) marks.push({ kind: "arrow", from: [x, y], to: [x + scale * u, y + scale * v], accent: true, thin: true });
-      }
-    const zero: Pair = ["Yes, its curl is zero", "是，它的旋度为零"];
-    const circulation: Pair = ["No, its circulation around a circle about the origin is not zero", "不是，它绕原点的圆上的环量不为零"];
-    return choose(
-      rng,
-      [
-        `The drawing shows the field $F = (P, Q)$, whose first component is $P = ${P}$. Is $F$ conservative?`,
-        `图中是向量场 $F = (P, Q)$，它的第一个分量是 $P = ${P}$。$F$ 是保守场吗？`,
-      ],
-      yes ? zero : circulation,
-      yes
-        ? [
-            circulation,
-            ["No, its divergence is not zero", "不是，它的散度不为零"],
-            ["No, its arrows are not all parallel", "不是，它的箭头并不都平行"],
-          ]
-        : [
-            zero,
-            ["Yes, its divergence is zero", "是，它的散度为零"],
-            ["Yes, its arrows have the same length on each circle", "是，每个圆上的箭头长度相同"],
+        answer,
+        [Q.of(height, k * k), Q.of(k * k, 2 * height), Q.of(4 * height, k * k), height],
+        [
+          `The point $${at(P)}$ gives $a = ${a.toLatex()}$. At the vertex $y' = 0$ and $\\lvert y'' \\rvert = 2\\lvert a \\rvert$, so $\\kappa = ${answer.toLatex()}$.`,
+          `由点 $${at(P)}$ 得 $a = ${a.toLatex()}$。在顶点处 $y' = 0$，$\\lvert y'' \\rvert = 2\\lvert a \\rvert$，所以 $\\kappa = ${answer.toLatex()}$。`,
+        ],
+        fig(
+          9,
+          [
+            { kind: "curve", f: (v) => (s * height * v * v) / (k * k), accent: true },
+            { kind: "point", at: P },
           ],
-      [
-        `The arrows show $Q = ${R}$, so $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$.`,
-        `由箭头得 $Q = ${R}$，所以 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$。`,
-      ],
-      fig(4, marks, [`A vector field with arrows at the grid points, equal to (${P}, ${R}).`, `格点上带箭头的向量场，等于 (${P}, ${R})。`]),
-    );
-  },
-);
+          [`A parabola with its vertex at the origin through the marked point ${at(P)}.`, `顶点在原点、过标记点 ${at(P)} 的抛物线。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings1["the-curvature-of-a-plane-curve#the-curvature-at-the-vertex-of-a-drawn-parabola"],
+};
+
+const conservativeField = {
+  ...point(
+    "is-a-drawn-field-conservative",
+    ["Is a drawn field conservative?", "所画的向量场是保守场吗？"],
+    [
+      "A field $(P, Q)$ on the plane is conservative exactly when $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$. A field that swirls around a point has circulation along a circle around it, so it cannot be conservative.",
+      "平面上的场 $(P, Q)$ 是保守场当且仅当 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。绕一点旋转的场沿绕它的圆有环量，所以不可能是保守场。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["swirl", "swirl", "radial", "saddle", "shear"] as const);
+      const a = rng.int(1, 3);
+      const b = rng.int(1, 3);
+      const flip = rng.bool() ? 1 : -1;
+      const f = ((x: number, y: number): [number, number] => {
+        if (kind === "swirl") return [-flip * a * y, flip * b * x];
+        if (kind === "radial") return [flip * a * x, flip * b * y];
+        if (kind === "saddle") return [flip * a * x, -flip * b * y];
+        return [flip * a * y, flip * a * x];
+      }) as (x: number, y: number) => [number, number];
+      const [P, R] = {
+        swirl: [terms([[-flip * a, "y"]]), terms([[flip * b, "x"]])],
+        radial: [terms([[flip * a, "x"]]), terms([[flip * b, "y"]])],
+        saddle: [terms([[flip * a, "x"]]), terms([[-flip * b, "y"]])],
+        shear: [terms([[flip * a, "y"]]), terms([[flip * a, "x"]])],
+      }[kind];
+      const yes = kind !== "swirl";
+      const curl = kind === "swirl" ? flip * (a + b) : 0;
+      const scale = 0.5 / Math.max(a, b);
+      const marks: PlaneMark[] = [];
+      for (let x = -3; x <= 3; x++)
+        for (let y = -3; y <= 3; y++) {
+          const [u, v] = f(x, y);
+          if (u !== 0 || v !== 0) marks.push({ kind: "arrow", from: [x, y], to: [x + scale * u, y + scale * v], accent: true, thin: true });
+        }
+      const zero: Pair = ["Yes, its curl is zero", "是，它的旋度为零"];
+      const circulation: Pair = ["No, its circulation around a circle about the origin is not zero", "不是，它绕原点的圆上的环量不为零"];
+      return choose(
+        rng,
+        [
+          `The drawing shows the field $F = (P, Q)$, whose first component is $P = ${P}$. Is $F$ conservative?`,
+          `图中是向量场 $F = (P, Q)$，它的第一个分量是 $P = ${P}$。$F$ 是保守场吗？`,
+        ],
+        yes ? zero : circulation,
+        yes
+          ? [
+              circulation,
+              ["No, its divergence is not zero", "不是，它的散度不为零"],
+              ["No, its arrows are not all parallel", "不是，它的箭头并不都平行"],
+            ]
+          : [
+              zero,
+              ["Yes, its divergence is zero", "是，它的散度为零"],
+              ["Yes, its arrows have the same length on each circle", "是，每个圆上的箭头长度相同"],
+            ],
+        [
+          `The arrows show $Q = ${R}$, so $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$.`,
+          `由箭头得 $Q = ${R}$，所以 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$。`,
+        ],
+        fig(4, marks, [
+          `A vector field with arrows at the grid points, equal to (${P}, ${R}).`,
+          `格点上带箭头的向量场，等于 (${P}, ${R})。`,
+        ]),
+      );
+    },
+  ),
+  figure: multivariableDrawings1["conservative-vector-fields-in-the-cartesian-plane#is-a-drawn-field-conservative"],
+};
 
 const segmentIntegral = point(
   "a-scalar-line-integral-over-a-drawn-segment",
@@ -316,49 +332,52 @@ const segmentIntegral = point(
   },
 );
 
-const circleIntegral = point(
-  "a-scalar-line-integral-over-a-drawn-circle",
-  ["A scalar line integral over a drawn circle", "所画圆上的标量线积分"],
-  [
-    "On a circle of radius $R$, $ds = R\\,d\\theta$. The cosine and sine terms integrate to zero over a full turn, so for a linear $f$ the integral is $2\\pi R$ times the value of $f$ at the center.",
-    "在半径为 $R$ 的圆上，$ds = R\\,d\\theta$。余弦和正弦项在一整圈上积分为零，所以对线性函数 $f$，积分是 $2\\pi R$ 乘以 $f$ 在圆心的值。",
-  ],
-  (rng) => {
-    const R = rng.int(1, 4);
-    const cx = rng.int(-3, 3);
-    const cy = rng.int(-3, 3);
-    const m = rng.int(-3, 3);
-    const n = rng.pick([-3, -2, -1, 1, 2, 3]);
-    const c = rng.int(-3, 3);
-    const center = m * cx + n * cy + c;
-    const k = 2 * R * center;
-    return ask(
-      [
-        `Let $f(x, y) = ${terms([
-          [m, "x"],
-          [n, "y"],
-          [c, ""],
-        ])}$. Over the drawn circle $C$, $\\oint_C f\\,ds = k\\pi$. Find $k$.`,
-        `设 $f(x, y) = ${terms([
-          [m, "x"],
-          [n, "y"],
-          [c, ""],
-        ])}$。在所画的圆 $C$ 上，$\\oint_C f\\,ds = k\\pi$。求 $k$。`,
-      ],
-      k,
-      [R * center, 2 * R * c, 2 * R * R * center, k + 2 * R],
-      [
-        `The center is $(${cx}, ${cy})$ and $R = ${R}$. There $f = ${center}$, so the integral is $2\\pi(${R})(${center}) = ${piTimes(k)}$.`,
-        `圆心为 $(${cx}, ${cy})$，$R = ${R}$。那里 $f = ${center}$，所以积分为 $2\\pi(${R})(${center}) = ${piTimes(k)}$。`,
-      ],
-      fig(
-        8,
-        [{ kind: "circle", center: [cx, cy], r: R, accent: true }],
-        [`A circle with center (${cx}, ${cy}) and radius ${R}.`, `圆心为 (${cx}, ${cy})、半径为 ${R} 的圆。`],
-      ),
-    );
-  },
-);
+const circleIntegral = {
+  ...point(
+    "a-scalar-line-integral-over-a-drawn-circle",
+    ["A scalar line integral over a drawn circle", "所画圆上的标量线积分"],
+    [
+      "On a circle of radius $R$, $ds = R\\,d\\theta$. The cosine and sine terms integrate to zero over a full turn, so for a linear $f$ the integral is $2\\pi R$ times the value of $f$ at the center.",
+      "在半径为 $R$ 的圆上，$ds = R\\,d\\theta$。余弦和正弦项在一整圈上积分为零，所以对线性函数 $f$，积分是 $2\\pi R$ 乘以 $f$ 在圆心的值。",
+    ],
+    (rng) => {
+      const R = rng.int(1, 4);
+      const cx = rng.int(-3, 3);
+      const cy = rng.int(-3, 3);
+      const m = rng.int(-3, 3);
+      const n = rng.pick([-3, -2, -1, 1, 2, 3]);
+      const c = rng.int(-3, 3);
+      const center = m * cx + n * cy + c;
+      const k = 2 * R * center;
+      return ask(
+        [
+          `Let $f(x, y) = ${terms([
+            [m, "x"],
+            [n, "y"],
+            [c, ""],
+          ])}$. Over the drawn circle $C$, $\\oint_C f\\,ds = k\\pi$. Find $k$.`,
+          `设 $f(x, y) = ${terms([
+            [m, "x"],
+            [n, "y"],
+            [c, ""],
+          ])}$。在所画的圆 $C$ 上，$\\oint_C f\\,ds = k\\pi$。求 $k$。`,
+        ],
+        k,
+        [R * center, 2 * R * c, 2 * R * R * center, k + 2 * R],
+        [
+          `The center is $(${cx}, ${cy})$ and $R = ${R}$. There $f = ${center}$, so the integral is $2\\pi(${R})(${center}) = ${piTimes(k)}$.`,
+          `圆心为 $(${cx}, ${cy})$，$R = ${R}$。那里 $f = ${center}$，所以积分为 $2\\pi(${R})(${center}) = ${piTimes(k)}$。`,
+        ],
+        fig(
+          8,
+          [{ kind: "circle", center: [cx, cy], r: R, accent: true }],
+          [`A circle with center (${cx}, ${cy}) and radius ${R}.`, `圆心为 (${cx}, ${cy})、半径为 ${R} 的圆。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-circles#a-scalar-line-integral-over-a-drawn-circle"],
+};
 
 /** wiggle samples a curved path from A to B that bends by h to one side. */
 function wiggle(A: Point, B: Point, h: number): Point[] {
@@ -493,39 +512,42 @@ const orientedRect = (r: ReturnType<typeof gridRect>, counter: boolean): PlaneMa
   head([(r.x0 + r.x1) / 2, r.y0], [counter ? 1 : -1, 0]),
 ];
 
-const greenCirculation = point(
-  "circulation-around-a-drawn-oriented-rectangle",
-  ["Circulation around a drawn oriented rectangle", "沿所画有向矩形的环量"],
-  [
-    "Green's theorem gives $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$ for a counterclockwise boundary, turning a sum around the edge into a sum over the inside. A clockwise boundary changes the sign.",
-    "格林定理对逆时针边界给出 $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$，把沿边界的求和变成区域内部的求和。顺时针边界改变符号。",
-  ],
-  (rng) => {
-    const r = gridRect(rng);
-    const a = rng.pick([-3, -2, -1, 1, 2, 3]);
-    const b = rng.pick([-3, -2, -1, 1, 2, 3]);
-    const counter = rng.bool();
-    const curl = a + b;
-    const area = r.w * r.h;
-    const answer = (counter ? 1 : -1) * curl * area;
-    return ask(
-      [
-        `Let $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$. Find $\\oint_C F \\cdot dr$ around the drawn rectangle in the direction of its arrow.`,
-        `设 $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$。沿所画矩形按箭头方向求 $\\oint_C F \\cdot dr$。`,
-      ],
-      answer,
-      [-answer, curl, 2 * (r.w + r.h) * curl, (b - a) * area],
-      [
-        `The curl is $${b} - ${paren(-a)} = ${curl}$ and the area is $${r.w} \\cdot ${r.h} = ${area}$. The arrow runs ${counter ? "counterclockwise" : "clockwise"}, so the result is $${answer}$.`,
-        `旋度为 $${b} - ${paren(-a)} = ${curl}$，面积为 $${r.w} \\cdot ${r.h} = ${area}$。箭头是${counter ? "逆时针" : "顺时针"}方向，所以结果为 $${answer}$。`,
-      ],
-      fig(7, orientedRect(r, counter), [
-        `A rectangle from (${r.x0}, ${r.y0}) to (${r.x1}, ${r.y1}) with an arrow going ${counter ? "counterclockwise" : "clockwise"}.`,
-        `从 (${r.x0}, ${r.y0}) 到 (${r.x1}, ${r.y1}) 的矩形，箭头为${counter ? "逆时针" : "顺时针"}方向。`,
-      ]),
-    );
-  },
-);
+const greenCirculation = {
+  ...point(
+    "circulation-around-a-drawn-oriented-rectangle",
+    ["Circulation around a drawn oriented rectangle", "沿所画有向矩形的环量"],
+    [
+      "Green's theorem gives $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$ for a counterclockwise boundary, turning a sum around the edge into a sum over the inside. A clockwise boundary changes the sign.",
+      "格林定理对逆时针边界给出 $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$，把沿边界的求和变成区域内部的求和。顺时针边界改变符号。",
+    ],
+    (rng) => {
+      const r = gridRect(rng);
+      const a = rng.pick([-3, -2, -1, 1, 2, 3]);
+      const b = rng.pick([-3, -2, -1, 1, 2, 3]);
+      const counter = rng.bool();
+      const curl = a + b;
+      const area = r.w * r.h;
+      const answer = (counter ? 1 : -1) * curl * area;
+      return ask(
+        [
+          `Let $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$. Find $\\oint_C F \\cdot dr$ around the drawn rectangle in the direction of its arrow.`,
+          `设 $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$。沿所画矩形按箭头方向求 $\\oint_C F \\cdot dr$。`,
+        ],
+        answer,
+        [-answer, curl, 2 * (r.w + r.h) * curl, (b - a) * area],
+        [
+          `The curl is $${b} - ${paren(-a)} = ${curl}$ and the area is $${r.w} \\cdot ${r.h} = ${area}$. The arrow runs ${counter ? "counterclockwise" : "clockwise"}, so the result is $${answer}$.`,
+          `旋度为 $${b} - ${paren(-a)} = ${curl}$，面积为 $${r.w} \\cdot ${r.h} = ${area}$。箭头是${counter ? "逆时针" : "顺时针"}方向，所以结果为 $${answer}$。`,
+        ],
+        fig(7, orientedRect(r, counter), [
+          `A rectangle from (${r.x0}, ${r.y0}) to (${r.x1}, ${r.y1}) with an arrow going ${counter ? "counterclockwise" : "clockwise"}.`,
+          `从 (${r.x0}, ${r.y0}) 到 (${r.x1}, ${r.y1}) 的矩形，箭头为${counter ? "逆时针" : "顺时针"}方向。`,
+        ]),
+      );
+    },
+  ),
+  figure: multivariableDrawings6["greens-theorem-in-circulation-curl-form#circulation-around-a-drawn-oriented-rectangle"],
+};
 
 const greenHole = point(
   "greens-theorem-on-a-drawn-frame-with-a-hole",
@@ -679,304 +701,322 @@ const greenFlux = point(
   },
 );
 
-const doubleRect = point(
-  "a-double-integral-over-a-drawn-rectangle",
-  ["A double integral over a drawn rectangle", "所画矩形上的二重积分"],
-  [
-    "Over a rectangle, the integral of a linear function equals the area times the value at the center, because the terms that change sign around the center cancel.",
-    "在矩形上，线性函数的积分等于面积乘以中心处的值，因为围绕中心变号的项互相抵消。",
-  ],
-  (rng) => {
-    const r = gridRect(rng);
-    const m = rng.int(-3, 3);
-    const n = rng.pick([-3, -2, -1, 1, 2, 3]);
-    const c = rng.int(-3, 3);
-    const area = r.w * r.h;
-    const center = Q.of(m * (r.x0 + r.x1) + n * (r.y0 + r.y1) + 2 * c, 2);
-    const answer = Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1) + 2 * c), 2);
-    return ask(
-      [
-        `Find $\\iint_R (${terms([
-          [m, "x"],
-          [n, "y"],
-          [c, ""],
-        ])})\\,dA$ over the drawn rectangle $R$.`,
-        `求所画矩形 $R$ 上的 $\\iint_R (${terms([
-          [m, "x"],
-          [n, "y"],
-          [c, ""],
-        ])})\\,dA$。`,
-      ],
-      answer,
-      [center, area, Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1)), 2), Q.of(area * (m * r.x1 + n * r.y1 + c), 1)],
-      [
-        `The area is $${area}$ and the center is $\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)$, where the function equals $${center.toLatex()}$. The product is $${answer.toLatex()}$.`,
-        `面积为 $${area}$，中心为 $\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)$，函数在那里等于 $${center.toLatex()}$。乘积为 $${answer.toLatex()}$。`,
-      ],
-      fig(
-        7,
-        [{ kind: "polygon", points: rectangle(r.x0, r.y0, r.x1, r.y1) }],
-        [`A shaded rectangle from (${r.x0}, ${r.y0}) to (${r.x1}, ${r.y1}).`, `从 (${r.x0}, ${r.y0}) 到 (${r.x1}, ${r.y1}) 的阴影矩形。`],
-      ),
-    );
-  },
-);
+const doubleRect = {
+  ...point(
+    "a-double-integral-over-a-drawn-rectangle",
+    ["A double integral over a drawn rectangle", "所画矩形上的二重积分"],
+    [
+      "Over a rectangle, the integral of a linear function equals the area times the value at the center, because the terms that change sign around the center cancel.",
+      "在矩形上，线性函数的积分等于面积乘以中心处的值，因为围绕中心变号的项互相抵消。",
+    ],
+    (rng) => {
+      const r = gridRect(rng);
+      const m = rng.int(-3, 3);
+      const n = rng.pick([-3, -2, -1, 1, 2, 3]);
+      const c = rng.int(-3, 3);
+      const area = r.w * r.h;
+      const center = Q.of(m * (r.x0 + r.x1) + n * (r.y0 + r.y1) + 2 * c, 2);
+      const answer = Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1) + 2 * c), 2);
+      return ask(
+        [
+          `Find $\\iint_R (${terms([
+            [m, "x"],
+            [n, "y"],
+            [c, ""],
+          ])})\\,dA$ over the drawn rectangle $R$.`,
+          `求所画矩形 $R$ 上的 $\\iint_R (${terms([
+            [m, "x"],
+            [n, "y"],
+            [c, ""],
+          ])})\\,dA$。`,
+        ],
+        answer,
+        [center, area, Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1)), 2), Q.of(area * (m * r.x1 + n * r.y1 + c), 1)],
+        [
+          `The area is $${area}$ and the center is $\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)$, where the function equals $${center.toLatex()}$. The product is $${answer.toLatex()}$.`,
+          `面积为 $${area}$，中心为 $\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)$，函数在那里等于 $${center.toLatex()}$。乘积为 $${answer.toLatex()}$。`,
+        ],
+        fig(
+          7,
+          [{ kind: "polygon", points: rectangle(r.x0, r.y0, r.x1, r.y1) }],
+          [`A shaded rectangle from (${r.x0}, ${r.y0}) to (${r.x1}, ${r.y1}).`, `从 (${r.x0}, ${r.y0}) 到 (${r.x1}, ${r.y1}) 的阴影矩形。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings3["double-integrals-over-rectangular-domains#a-double-integral-over-a-drawn-rectangle"],
+};
 
-const typeTwoLimits = point(
-  "type-ii-limits-of-a-drawn-triangle",
-  ["Type II limits of a drawn triangle", "所画三角形的 II 型积分限"],
-  [
-    "For a type II description, fix $y$ and read the horizontal slice: its left end and right end, written as functions of $y$, are the inner limits, and the range of $y$ gives the outer limits.",
-    "II 型描述中，固定 $y$，读水平截线：它的左端和右端写成 $y$ 的函数就是内层积分限，$y$ 的范围给出外层积分限。",
-  ],
-  (rng) => {
-    const a = rng.int(2, 7);
-    const b = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => v !== a));
-    const right = rng.bool();
-    const slope = Q.of(a, b).toLatex();
-    const edge = `${slope}y`;
-    const form = (lo: string, hi: string, top: string) => same(`\\int_0^{${top}} \\int_{${lo}}^{${hi}} f(x, y)\\,dx\\,dy`);
-    const points: Point[] = right
-      ? [
-          [0, 0],
-          [a, 0],
-          [a, b],
-        ]
-      : [
-          [0, 0],
-          [0, b],
-          [a, b],
-        ];
-    const correct = right ? form(edge, String(a), String(b)) : form("0", edge, String(b));
-    const wrongEdge = `${Q.of(b, a).toLatex()}y`;
-    return choose(
-      rng,
-      ["Which iterated integral, with $x$ inside, covers the shaded triangle?", "哪个累次积分（$x$ 在内层）覆盖阴影三角形？"],
-      correct,
-      right
-        ? [form("0", edge, String(b)), form(edge, String(a), String(a)), form(wrongEdge, String(a), String(b))]
-        : [form(edge, String(a), String(b)), form("0", edge, String(a)), form("0", wrongEdge, String(b))],
-      [
-        `The slanted side joins $(0, 0)$ and $(${a}, ${b})$, so on it $x = ${edge}$. A horizontal slice at height $y$ runs ${right ? `from that side to $x = ${a}$` : "from $x = 0$ to that side"}, with $y$ from $0$ to $${b}$.`,
-        `斜边连接 $(0, 0)$ 和 $(${a}, ${b})$，所以斜边上 $x = ${edge}$。高度 $y$ 处的水平截线${right ? `从斜边到 $x = ${a}$` : "从 $x = 0$ 到斜边"}，$y$ 从 $0$ 到 $${b}$。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
-        [{ kind: "polygon", points }],
-        [`A shaded triangle with corners ${points.map(at).join(", ")}.`, `阴影三角形，顶点为 ${points.map(at).join("、")}。`],
-      ),
-    );
-  },
-);
-
-const partitioned = point(
-  "a-double-integral-over-a-drawn-l-shape",
-  ["A double integral over a drawn L-shape", "所画 L 形上的二重积分"],
-  [
-    "Cut the region into rectangles and add the integrals over the pieces. On a rectangle from $x = 0$ to $x = w$ of height $h$, the integral of $x$ is $h \\cdot \\frac{w^2}{2}$.",
-    "把区域切成矩形，再把各块上的积分相加。在从 $x = 0$ 到 $x = w$、高为 $h$ 的矩形上，$x$ 的积分为 $h \\cdot \\frac{w^2}{2}$。",
-  ],
-  (rng) => {
-    const w = rng.int(3, 7);
-    const narrow = rng.int(1, w - 1);
-    const low = rng.int(1, 4);
-    const high = low + rng.int(1, 4);
-    const useX = rng.bool();
-    const k = rng.int(2, 5);
-    const points: Point[] = [
-      [0, 0],
-      [w, 0],
-      [w, low],
-      [narrow, low],
-      [narrow, high],
-      [0, high],
-    ];
-    const area = w * low + narrow * (high - low);
-    const moment = Q.of(low * w * w + (high - low) * narrow * narrow, 2);
-    const answer = useX ? moment : Q.of(k * area, 1);
-    const prompt = useX ? "x" : String(k);
-    return ask(
-      [`Find $\\iint_R ${prompt}\\,dA$ over the shaded region $R$.`, `求阴影区域 $R$ 上的 $\\iint_R ${prompt}\\,dA$。`],
-      answer,
-      useX
-        ? [Q.of(high * w * w, 2), Q.of(area, 1), Q.of(low * w * w, 2), Q.of(area * w, 2)]
-        : [Q.of(k * w * high, 1), Q.of(area, 1), Q.of(k * w * low, 1), Q.of(k * (w + high), 1)],
-      useX
+const typeTwoLimits = {
+  ...point(
+    "type-ii-limits-of-a-drawn-triangle",
+    ["Type II limits of a drawn triangle", "所画三角形的 II 型积分限"],
+    [
+      "For a type II description, fix $y$ and read the horizontal slice: its left end and right end, written as functions of $y$, are the inner limits, and the range of $y$ gives the outer limits.",
+      "II 型描述中，固定 $y$，读水平截线：它的左端和右端写成 $y$ 的函数就是内层积分限，$y$ 的范围给出外层积分限。",
+    ],
+    (rng) => {
+      const a = rng.int(2, 7);
+      const b = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => v !== a));
+      const right = rng.bool();
+      const slope = Q.of(a, b).toLatex();
+      const edge = `${slope}y`;
+      const form = (lo: string, hi: string, top: string) => same(`\\int_0^{${top}} \\int_{${lo}}^{${hi}} f(x, y)\\,dx\\,dy`);
+      const points: Point[] = right
         ? [
-            `Cut along $y = ${low}$. The lower piece gives $${low} \\cdot \\frac{${w * w}}{2}$ and the upper piece gives $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$, with sum $${moment.toLatex()}$.`,
-            `沿 $y = ${low}$ 切开。下面一块得 $${low} \\cdot \\frac{${w * w}}{2}$，上面一块得 $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$，和为 $${moment.toLatex()}$。`,
+            [0, 0],
+            [a, 0],
+            [a, b],
           ]
         : [
-            `Cut along $y = ${low}$. The pieces have areas $${w * low}$ and $${narrow * (high - low)}$, so the area is $${area}$ and the integral is $${k} \\cdot ${area} = ${k * area}$.`,
-            `沿 $y = ${low}$ 切开。两块面积为 $${w * low}$ 和 $${narrow * (high - low)}$，所以面积为 $${area}$，积分为 $${k} \\cdot ${area} = ${k * area}$。`,
+            [0, 0],
+            [0, b],
+            [a, b],
+          ];
+      const correct = right ? form(edge, String(a), String(b)) : form("0", edge, String(b));
+      const wrongEdge = `${Q.of(b, a).toLatex()}y`;
+      return choose(
+        rng,
+        ["Which iterated integral, with $x$ inside, covers the shaded triangle?", "哪个累次积分（$x$ 在内层）覆盖阴影三角形？"],
+        correct,
+        right
+          ? [form("0", edge, String(b)), form(edge, String(a), String(a)), form(wrongEdge, String(a), String(b))]
+          : [form(edge, String(a), String(b)), form("0", edge, String(a)), form("0", wrongEdge, String(b))],
+        [
+          `The slanted side joins $(0, 0)$ and $(${a}, ${b})$, so on it $x = ${edge}$. A horizontal slice at height $y$ runs ${right ? `from that side to $x = ${a}$` : "from $x = 0$ to that side"}, with $y$ from $0$ to $${b}$.`,
+          `斜边连接 $(0, 0)$ 和 $(${a}, ${b})$，所以斜边上 $x = ${edge}$。高度 $y$ 处的水平截线${right ? `从斜边到 $x = ${a}$` : "从 $x = 0$ 到斜边"}，$y$ 从 $0$ 到 $${b}$。`,
+        ],
+        fig(
+          { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
+          [{ kind: "polygon", points }],
+          [`A shaded triangle with corners ${points.map(at).join(", ")}.`, `阴影三角形，顶点为 ${points.map(at).join("、")}。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings4["double-integrals-over-type-ii-regions#type-ii-limits-of-a-drawn-triangle"],
+};
+
+const partitioned = {
+  ...point(
+    "a-double-integral-over-a-drawn-l-shape",
+    ["A double integral over a drawn L-shape", "所画 L 形上的二重积分"],
+    [
+      "Cut the region into rectangles and add the integrals over the pieces. On a rectangle from $x = 0$ to $x = w$ of height $h$, the integral of $x$ is $h \\cdot \\frac{w^2}{2}$.",
+      "把区域切成矩形，再把各块上的积分相加。在从 $x = 0$ 到 $x = w$、高为 $h$ 的矩形上，$x$ 的积分为 $h \\cdot \\frac{w^2}{2}$。",
+    ],
+    (rng) => {
+      const w = rng.int(3, 7);
+      const narrow = rng.int(1, w - 1);
+      const low = rng.int(1, 4);
+      const high = low + rng.int(1, 4);
+      const useX = rng.bool();
+      const k = rng.int(2, 5);
+      const points: Point[] = [
+        [0, 0],
+        [w, 0],
+        [w, low],
+        [narrow, low],
+        [narrow, high],
+        [0, high],
+      ];
+      const area = w * low + narrow * (high - low);
+      const moment = Q.of(low * w * w + (high - low) * narrow * narrow, 2);
+      const answer = useX ? moment : Q.of(k * area, 1);
+      const prompt = useX ? "x" : String(k);
+      return ask(
+        [`Find $\\iint_R ${prompt}\\,dA$ over the shaded region $R$.`, `求阴影区域 $R$ 上的 $\\iint_R ${prompt}\\,dA$。`],
+        answer,
+        useX
+          ? [Q.of(high * w * w, 2), Q.of(area, 1), Q.of(low * w * w, 2), Q.of(area * w, 2)]
+          : [Q.of(k * w * high, 1), Q.of(area, 1), Q.of(k * w * low, 1), Q.of(k * (w + high), 1)],
+        useX
+          ? [
+              `Cut along $y = ${low}$. The lower piece gives $${low} \\cdot \\frac{${w * w}}{2}$ and the upper piece gives $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$, with sum $${moment.toLatex()}$.`,
+              `沿 $y = ${low}$ 切开。下面一块得 $${low} \\cdot \\frac{${w * w}}{2}$，上面一块得 $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$，和为 $${moment.toLatex()}$。`,
+            ]
+          : [
+              `Cut along $y = ${low}$. The pieces have areas $${w * low}$ and $${narrow * (high - low)}$, so the area is $${area}$ and the integral is $${k} \\cdot ${area} = ${k * area}$.`,
+              `沿 $y = ${low}$ 切开。两块面积为 $${w * low}$ 和 $${narrow * (high - low)}$，所以面积为 $${area}$，积分为 $${k} \\cdot ${area} = ${k * area}$。`,
+            ],
+        fig(
+          { xMin: -1, xMax: 8, yMin: -1, yMax: 9 },
+          [{ kind: "polygon", points }],
+          [`A shaded L-shape with corners ${points.map(at).join(", ")}.`, `阴影 L 形，顶点为 ${points.map(at).join("、")}。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings4["double-integrals-over-partitioned-regions#a-double-integral-over-a-drawn-l-shape"],
+};
+
+const polarArea = {
+  ...point(
+    "the-area-of-a-drawn-piece-of-a-ring",
+    ["The area of a drawn piece of a ring", "所画圆环一部分的面积"],
+    [
+      "In polar coordinates $dA = r\\,dr\\,d\\theta$, so a piece of a ring with radii $a < b$ and angle $\\Delta\\theta$ has area $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$. The factor $r$ appears because a small polar patch gets wider the farther it lies from the origin.",
+      "极坐标下 $dA = r\\,dr\\,d\\theta$，所以半径 $a < b$、角度 $\\Delta\\theta$ 的一段圆环面积为 $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$。出现因子 $r$，是因为极坐标的小块离原点越远就越宽。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 4);
+      const b = rng.int(a + 1, 6);
+      const start = rng.int(0, 3);
+      const quarters = rng.int(1, 3);
+      const from = (start * Math.PI) / 2;
+      const to = from + (quarters * Math.PI) / 2;
+      const ring: Point[] = [];
+      for (let i = 0; i <= 48; i++) {
+        const s = from + ((to - from) * i) / 48;
+        ring.push([b * Math.cos(s), b * Math.sin(s)]);
+      }
+      for (let i = 48; i >= 0; i--) {
+        const s = from + ((to - from) * i) / 48;
+        ring.push([a * Math.cos(s), a * Math.sin(s)]);
+      }
+      const n = quarters * (b * b - a * a);
+      const answer = Q.of(n, 4);
+      return ask(
+        ["The area of the shaded region is $k\\pi$. Find $k$.", "阴影区域的面积为 $k\\pi$。求 $k$。"],
+        answer,
+        [Q.of(quarters * (b - a) * (b - a), 4), Q.of(n, 2), Q.of(quarters * b * b, 4), Q.of(quarters * (b - a), 4)],
+        [
+          `The radii are $${a}$ and $${b}$ and the angle is $${piTimes(quarters, 2)}$, so the area is $\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$.`,
+          `半径为 $${a}$ 和 $${b}$，角度为 $${piTimes(quarters, 2)}$，所以面积为 $\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$。`,
+        ],
+        fig(
+          7,
+          [{ kind: "polygon", points: ring }],
+          [
+            `A shaded piece of a ring about the origin, between radii ${a} and ${b}, covering ${quarters} quarter turn${quarters === 1 ? "" : "s"}.`,
+            `绕原点的一段阴影圆环，半径在 ${a} 和 ${b} 之间，占 ${quarters} 个四分之一圈。`,
           ],
-      fig(
-        { xMin: -1, xMax: 8, yMin: -1, yMax: 9 },
-        [{ kind: "polygon", points }],
-        [`A shaded L-shape with corners ${points.map(at).join(", ")}.`, `阴影 L 形，顶点为 ${points.map(at).join("、")}。`],
-      ),
-    );
-  },
-);
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings4["double-integrals-between-polar-curves#the-area-of-a-drawn-piece-of-a-ring"],
+};
 
-const polarArea = point(
-  "the-area-of-a-drawn-piece-of-a-ring",
-  ["The area of a drawn piece of a ring", "所画圆环一部分的面积"],
-  [
-    "In polar coordinates $dA = r\\,dr\\,d\\theta$, so a piece of a ring with radii $a < b$ and angle $\\Delta\\theta$ has area $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$. The factor $r$ appears because a small polar patch gets wider the farther it lies from the origin.",
-    "极坐标下 $dA = r\\,dr\\,d\\theta$，所以半径 $a < b$、角度 $\\Delta\\theta$ 的一段圆环面积为 $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$。出现因子 $r$，是因为极坐标的小块离原点越远就越宽。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 4);
-    const b = rng.int(a + 1, 6);
-    const start = rng.int(0, 3);
-    const quarters = rng.int(1, 3);
-    const from = (start * Math.PI) / 2;
-    const to = from + (quarters * Math.PI) / 2;
-    const ring: Point[] = [];
-    for (let i = 0; i <= 48; i++) {
-      const s = from + ((to - from) * i) / 48;
-      ring.push([b * Math.cos(s), b * Math.sin(s)]);
-    }
-    for (let i = 48; i >= 0; i--) {
-      const s = from + ((to - from) * i) / 48;
-      ring.push([a * Math.cos(s), a * Math.sin(s)]);
-    }
-    const n = quarters * (b * b - a * a);
-    const answer = Q.of(n, 4);
-    return ask(
-      ["The area of the shaded region is $k\\pi$. Find $k$.", "阴影区域的面积为 $k\\pi$。求 $k$。"],
-      answer,
-      [Q.of(quarters * (b - a) * (b - a), 4), Q.of(n, 2), Q.of(quarters * b * b, 4), Q.of(quarters * (b - a), 4)],
-      [
-        `The radii are $${a}$ and $${b}$ and the angle is $${piTimes(quarters, 2)}$, so the area is $\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$.`,
-        `半径为 $${a}$ 和 $${b}$，角度为 $${piTimes(quarters, 2)}$，所以面积为 $\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$。`,
-      ],
-      fig(
-        7,
-        [{ kind: "polygon", points: ring }],
+const cylindricalPoint = {
+  ...point(
+    "cylindrical-coordinates-of-a-drawn-point",
+    ["Cylindrical coordinates of a drawn point", "所画点的柱坐标"],
+    [
+      "The coordinates $r$ and $\\theta$ describe the shadow of the point in the $xy$-plane: $r$ is its distance from the origin and $\\theta$ is its angle from the positive $x$-axis. The coordinate $z$ does not change.",
+      "坐标 $r$ 和 $\\theta$ 描述点在 $xy$ 平面上的投影：$r$ 是它到原点的距离，$\\theta$ 是它与 $x$ 轴正方向的夹角。坐标 $z$ 不变。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 5);
+      const z = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
+      const octant = rng.int(0, 7);
+      const dirs: Point[] = [
+        [1, 0],
+        [1, 1],
+        [0, 1],
+        [-1, 1],
+        [-1, 0],
+        [-1, -1],
+        [0, -1],
+        [1, -1],
+      ];
+      const d = dirs[octant] as Point;
+      const P: Point = [a * d[0], a * d[1]];
+      const diagonal = octant % 2 === 1;
+      const r = diagonal ? `${a === 1 ? "" : a}\\sqrt{2}` : String(a);
+      const coordinates = (rr: string, n: number) => same(`(r, \\theta, z) = \\left(${rr},\\ ${piTimes(n, 4)},\\ ${z}\\right)`);
+      return choose(
+        rng,
         [
-          `A shaded piece of a ring about the origin, between radii ${a} and ${b}, covering ${quarters} quarter turn${quarters === 1 ? "" : "s"}.`,
-          `绕原点的一段阴影圆环，半径在 ${a} 和 ${b} 之间，占 ${quarters} 个四分之一圈。`,
+          `The drawing shows the $xy$-plane and the shadow $P$ of a point whose height is $z = ${z}$. What are its cylindrical coordinates, with $0 \\le \\theta < 2\\pi$?`,
+          `图中是 $xy$ 平面，$P$ 是一个高度为 $z = ${z}$ 的点的投影。它的柱坐标是什么（$0 \\le \\theta < 2\\pi$）？`,
         ],
-      ),
-    );
-  },
-);
+        coordinates(r, octant),
+        [
+          coordinates(r, (octant + 4) % 8),
+          coordinates(r, (8 - octant) % 8 === octant ? (octant + 2) % 8 : (8 - octant) % 8),
+          coordinates(diagonal ? String(2 * a) : `${a}\\sqrt{2}`, octant),
+          coordinates(r, (octant + 2) % 8),
+        ],
+        [
+          `$P = ${at(P)}$, so $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$ and the angle from the positive $x$-axis is $${piTimes(octant, 4)}$.`,
+          `$P = ${at(P)}$，所以 $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$，与 $x$ 轴正方向的夹角为 $${piTimes(octant, 4)}$。`,
+        ],
+        fig(
+          6,
+          [
+            { kind: "segment", a: [0, 0], b: P, dashed: true },
+            { kind: "point", at: P, label: "P", dir: "n" },
+          ],
+          [`The point P at ${at(P)} joined to the origin by a dashed segment.`, `点 P 位于 ${at(P)}，用虚线与原点相连。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings5["cylindrical-polar-coordinates#cylindrical-coordinates-of-a-drawn-point"],
+};
 
-const cylindricalPoint = point(
-  "cylindrical-coordinates-of-a-drawn-point",
-  ["Cylindrical coordinates of a drawn point", "所画点的柱坐标"],
-  [
-    "The coordinates $r$ and $\\theta$ describe the shadow of the point in the $xy$-plane: $r$ is its distance from the origin and $\\theta$ is its angle from the positive $x$-axis. The coordinate $z$ does not change.",
-    "坐标 $r$ 和 $\\theta$ 描述点在 $xy$ 平面上的投影：$r$ 是它到原点的距离，$\\theta$ 是它与 $x$ 轴正方向的夹角。坐标 $z$ 不变。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 5);
-    const z = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
-    const octant = rng.int(0, 7);
-    const dirs: Point[] = [
-      [1, 0],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-      [-1, 0],
-      [-1, -1],
-      [0, -1],
-      [1, -1],
-    ];
-    const d = dirs[octant] as Point;
-    const P: Point = [a * d[0], a * d[1]];
-    const diagonal = octant % 2 === 1;
-    const r = diagonal ? `${a === 1 ? "" : a}\\sqrt{2}` : String(a);
-    const coordinates = (rr: string, n: number) => same(`(r, \\theta, z) = \\left(${rr},\\ ${piTimes(n, 4)},\\ ${z}\\right)`);
-    return choose(
-      rng,
-      [
-        `The drawing shows the $xy$-plane and the shadow $P$ of a point whose height is $z = ${z}$. What are its cylindrical coordinates, with $0 \\le \\theta < 2\\pi$?`,
-        `图中是 $xy$ 平面，$P$ 是一个高度为 $z = ${z}$ 的点的投影。它的柱坐标是什么（$0 \\le \\theta < 2\\pi$）？`,
-      ],
-      coordinates(r, octant),
-      [
-        coordinates(r, (octant + 4) % 8),
-        coordinates(r, (8 - octant) % 8 === octant ? (octant + 2) % 8 : (8 - octant) % 8),
-        coordinates(diagonal ? String(2 * a) : `${a}\\sqrt{2}`, octant),
-        coordinates(r, (octant + 2) % 8),
-      ],
-      [
-        `$P = ${at(P)}$, so $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$ and the angle from the positive $x$-axis is $${piTimes(octant, 4)}$.`,
-        `$P = ${at(P)}$，所以 $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$，与 $x$ 轴正方向的夹角为 $${piTimes(octant, 4)}$。`,
-      ],
-      fig(
-        6,
+const partialSlope = {
+  ...point(
+    "a-partial-derivative-from-a-drawn-slice",
+    ["A partial derivative from a drawn slice", "由所画截线读偏导数"],
+    [
+      "Holding $y$ fixed slices the surface into a curve in the $xz$-plane. The partial derivative in $x$ is the slope of the tangent to that curve, read as rise over run.",
+      "固定 $y$ 把曲面截成 $xz$ 平面上的曲线。对 $x$ 的偏导数就是这条曲线切线的斜率，用纵向变化除以横向变化读出。",
+    ],
+    (rng) => {
+      const [rise, run] = rng.pick<[number, number]>([
+        [1, 1],
+        [1, 2],
+        [2, 1],
+        [3, 2],
+        [2, 3],
+        [1, 3],
+        [3, 1],
+        [-1, 1],
+        [-1, 2],
+        [-2, 1],
+        [-3, 2],
+        [-2, 3],
+        [-1, 3],
+      ]);
+      const x0 = rng.int(-3, 2);
+      const y0 = rng.int(-3, 3);
+      const z0 = rng.int(-1, 2);
+      const s = rise / run;
+      const bend = rng.pick([-0.25, -0.15, 0.15, 0.25]);
+      const answer = Q.of(rise, run);
+      const P: Point = [x0, z0];
+      const R: Point = [x0 + run, z0 + rise];
+      return ask(
         [
-          { kind: "segment", a: [0, 0], b: P, dashed: true },
-          { kind: "point", at: P, label: "P", dir: "n" },
+          `The solid curve is the slice of $z = f(x, y)$ at $y = ${y0}$, and the dashed line is its tangent at the marked point, with $x = ${x0}$. Find $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$.`,
+          `实线是 $z = f(x, y)$ 在 $y = ${y0}$ 处的截线，虚线是它在标记点（$x = ${x0}$）处的切线。求 $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$。`,
         ],
-        [`The point P at ${at(P)} joined to the origin by a dashed segment.`, `点 P 位于 ${at(P)}，用虚线与原点相连。`],
-      ),
-    );
-  },
-);
-
-const partialSlope = point(
-  "a-partial-derivative-from-a-drawn-slice",
-  ["A partial derivative from a drawn slice", "由所画截线读偏导数"],
-  [
-    "Holding $y$ fixed slices the surface into a curve in the $xz$-plane. The partial derivative in $x$ is the slope of the tangent to that curve, read as rise over run.",
-    "固定 $y$ 把曲面截成 $xz$ 平面上的曲线。对 $x$ 的偏导数就是这条曲线切线的斜率，用纵向变化除以横向变化读出。",
-  ],
-  (rng) => {
-    const [rise, run] = rng.pick<[number, number]>([
-      [1, 1],
-      [1, 2],
-      [2, 1],
-      [3, 2],
-      [2, 3],
-      [1, 3],
-      [3, 1],
-      [-1, 1],
-      [-1, 2],
-      [-2, 1],
-      [-3, 2],
-      [-2, 3],
-      [-1, 3],
-    ]);
-    const x0 = rng.int(-3, 2);
-    const y0 = rng.int(-3, 3);
-    const z0 = rng.int(-1, 2);
-    const s = rise / run;
-    const bend = rng.pick([-0.25, -0.15, 0.15, 0.25]);
-    const answer = Q.of(rise, run);
-    const P: Point = [x0, z0];
-    const R: Point = [x0 + run, z0 + rise];
-    return ask(
-      [
-        `The solid curve is the slice of $z = f(x, y)$ at $y = ${y0}$, and the dashed line is its tangent at the marked point, with $x = ${x0}$. Find $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$.`,
-        `实线是 $z = f(x, y)$ 在 $y = ${y0}$ 处的截线，虚线是它在标记点（$x = ${x0}$）处的切线。求 $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$。`,
-      ],
-      answer,
-      [Q.of(run, rise), Q.of(-rise, run), z0, y0 === 0 ? x0 : y0],
-      [
-        `The tangent passes through $${at(P)}$ and $${at(R)}$, so its slope is $${answer.toLatex()}$.`,
-        `切线过 $${at(P)}$ 和 $${at(R)}$，所以斜率为 $${answer.toLatex()}$。`,
-      ],
-      fig(
-        { xMin: -6, xMax: 6, yMin: -6, yMax: 6, yName: "z" },
+        answer,
+        [Q.of(run, rise), Q.of(-rise, run), z0, y0 === 0 ? x0 : y0],
         [
-          { kind: "curve", f: (x) => z0 + s * (x - x0) + bend * (x - x0) ** 2, accent: true },
-          { kind: "line", a: P, b: R, dashed: true },
-          { kind: "point", at: P },
-          { kind: "point", at: R, open: true },
+          `The tangent passes through $${at(P)}$ and $${at(R)}$, so its slope is $${answer.toLatex()}$.`,
+          `切线过 $${at(P)}$ 和 $${at(R)}$，所以斜率为 $${answer.toLatex()}$。`,
         ],
-        [
-          `A curve in the xz-plane with a dashed tangent at ${at(P)} that also passes through ${at(R)}.`,
-          `xz 平面上的曲线，${at(P)} 处的虚线切线还过 ${at(R)}。`,
-        ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -6, xMax: 6, yMin: -6, yMax: 6, yName: "z" },
+          [
+            { kind: "curve", f: (x) => z0 + s * (x - x0) + bend * (x - x0) ** 2, accent: true },
+            { kind: "line", a: P, b: R, dashed: true },
+            { kind: "point", at: P },
+            { kind: "point", at: R, open: true },
+          ],
+          [
+            `A curve in the xz-plane with a dashed tangent at ${at(P)} that also passes through ${at(R)}.`,
+            `xz 平面上的曲线，${at(P)} 处的虚线切线还过 ${at(R)}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings2["geometric-interpretations-of-partial-derivatives#a-partial-derivative-from-a-drawn-slice"],
+};
 
 const directionalFromArrows = point(
   "a-directional-derivative-from-two-drawn-arrows",
@@ -1085,282 +1125,301 @@ const criticalKind = point(
   },
 );
 
-const lagrangeLine = point(
-  "the-minimum-on-a-drawn-line-from-tangent-level-curves",
-  ["The minimum on a drawn line from tangent level curves", "由相切等值线求所画直线上的最小值"],
-  [
-    "At a constrained extremum the level curve of $f$ is tangent to the constraint, since $\\nabla f$ is parallel to the normal of the constraint. For $f = x^2 + y^2$ the level curves are circles, and the tangent one touches the line at the foot of the perpendicular from the origin.",
-    "在约束极值处，$f$ 的等值线与约束相切，因为 $\\nabla f$ 平行于约束的法向量。对 $f = x^2 + y^2$，等值线是圆，相切的圆在原点到直线的垂足处接触直线。",
-  ],
-  (rng) => {
-    const nonzero = [-4, -3, -2, -1, 1, 2, 3, 4];
-    const p = rng.pick(nonzero);
-    const q = rng.pick(nonzero);
-    const value = p * p + q * q;
-    const circle = (x: number, y: number) => x * x + y * y;
-    const levels = [value, value + 6, Math.max(1, value - 4)];
-    return ask(
-      [
-        "The solid line is a constraint, and the dashed curves are level curves of $f(x, y) = x^2 + y^2$. Find the minimum of $f$ on the line.",
-        "实线是约束，虚线是 $f(x, y) = x^2 + y^2$ 的等值线。求 $f$ 在直线上的最小值。",
-      ],
-      value,
-      [Math.abs(p) + Math.abs(q), value + 6, 2 * value, p * q === value ? value + 1 : Math.abs(p * q)],
-      [
-        `The dashed circle tangent to the line touches it at $${at([p, q])}$, where the radius meets the line at a right angle. There $f = ${p * p} + ${q * q} = ${value}$.`,
-        `与直线相切的虚线圆在 $${at([p, q])}$ 处接触直线，半径在那里与直线垂直。此时 $f = ${p * p} + ${q * q} = ${value}$。`,
-      ],
-      fig(
-        8,
+const lagrangeLine = {
+  ...point(
+    "the-minimum-on-a-drawn-line-from-tangent-level-curves",
+    ["The minimum on a drawn line from tangent level curves", "由相切等值线求所画直线上的最小值"],
+    [
+      "At a constrained extremum the level curve of $f$ is tangent to the constraint, since $\\nabla f$ is parallel to the normal of the constraint. For $f = x^2 + y^2$ the level curves are circles, and the tangent one touches the line at the foot of the perpendicular from the origin.",
+      "在约束极值处，$f$ 的等值线与约束相切，因为 $\\nabla f$ 平行于约束的法向量。对 $f = x^2 + y^2$，等值线是圆，相切的圆在原点到直线的垂足处接触直线。",
+    ],
+    (rng) => {
+      const nonzero = [-4, -3, -2, -1, 1, 2, 3, 4];
+      const p = rng.pick(nonzero);
+      const q = rng.pick(nonzero);
+      const value = p * p + q * q;
+      const circle = (x: number, y: number) => x * x + y * y;
+      const levels = [value, value + 6, Math.max(1, value - 4)];
+      return ask(
         [
-          { kind: "line", a: [p, q], b: [p + q, q - p], accent: true },
-          ...levels.map((level): PlaneMark => ({ kind: "contour", f: circle, level, dashed: true })),
+          "The solid line is a constraint, and the dashed curves are level curves of $f(x, y) = x^2 + y^2$. Find the minimum of $f$ on the line.",
+          "实线是约束，虚线是 $f(x, y) = x^2 + y^2$ 的等值线。求 $f$ 在直线上的最小值。",
         ],
+        value,
+        [Math.abs(p) + Math.abs(q), value + 6, 2 * value, p * q === value ? value + 1 : Math.abs(p * q)],
         [
-          `The line through ${at([p, q])} and ${at([p + q, q - p])}, and dashed circles about the origin.`,
-          `过 ${at([p, q])} 和 ${at([p + q, q - p])} 的直线，以及以原点为圆心的虚线圆。`,
+          `The dashed circle tangent to the line touches it at $${at([p, q])}$, where the radius meets the line at a right angle. There $f = ${p * p} + ${q * q} = ${value}$.`,
+          `与直线相切的虚线圆在 $${at([p, q])}$ 处接触直线，半径在那里与直线垂直。此时 $f = ${p * p} + ${q * q} = ${value}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          8,
+          [
+            { kind: "line", a: [p, q], b: [p + q, q - p], accent: true },
+            ...levels.map((level): PlaneMark => ({ kind: "contour", f: circle, level, dashed: true })),
+          ],
+          [
+            `The line through ${at([p, q])} and ${at([p + q, q - p])}, and dashed circles about the origin.`,
+            `过 ${at([p, q])} 和 ${at([p + q, q - p])} 的直线，以及以原点为圆心的虚线圆。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings3["lagrange-multipliers-with-one-constraint#the-minimum-on-a-drawn-line-from-tangent-level-curves"],
+};
 
-const areaChange = point(
-  "an-integral-through-a-drawn-change-of-variables",
-  ["An integral through a drawn change of variables", "由所画的变量替换求积分"],
-  [
-    "A linear map with images $T(1, 0)$ and $T(0, 1)$ has Jacobian determinant equal to the determinant of those two vectors. It multiplies every area by its absolute value, so $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$ (area of the rectangle in $uv$).",
-    "像为 $T(1, 0)$ 和 $T(0, 1)$ 的线性映射，其雅可比行列式等于这两个向量的行列式。它把每个面积乘以其绝对值，所以 $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$（$uv$ 中矩形的面积）。",
-  ],
-  (rng) => {
-    const vectors: Point[] = [
-      [1, 0],
-      [0, 1],
-      [2, 0],
-      [0, 2],
-      [1, 1],
-      [1, -1],
-      [-1, 1],
-      [2, 1],
-      [1, 2],
-      [-1, 2],
-      [2, -1],
-    ];
-    const u = rng.pick(vectors);
-    const v = rng.pick(vectors.filter((x) => cross(x, u) !== 0));
-    const m = rng.int(1, 2);
-    const n = rng.int(1, 2);
-    const k = rng.int(1, 5);
-    const J = Math.abs(cross(u, v));
-    const answer = k * J * m * n;
-    const corners: Point[] = [
-      [0, 0],
-      [m * u[0], m * u[1]],
-      [m * u[0] + n * v[0], m * u[1] + n * v[1]],
-      [n * v[0], n * v[1]],
-    ];
-    return ask(
-      [
-        `The arrows show $T(1, 0)$ and $T(0, 1)$ for a linear map $T$, and the shaded region $R$ is the image of the rectangle $[0, ${m}] \\times [0, ${n}]$ in the $uv$-plane. Find $\\iint_R ${k}\\,dA$.`,
-        `箭头表示线性映射 $T$ 的 $T(1, 0)$ 和 $T(0, 1)$，阴影区域 $R$ 是 $uv$ 平面上矩形 $[0, ${m}] \\times [0, ${n}]$ 的像。求 $\\iint_R ${k}\\,dA$。`,
-      ],
-      answer,
-      [k * m * n, k * J, J * m * n, answer + k],
-      [
-        `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$, and the rectangle has area $${m * n}$, so the integral is $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$.`,
-        `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$，矩形面积为 $${m * n}$，所以积分为 $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$。`,
-      ],
-      fig(
-        7,
+const areaChange = {
+  ...point(
+    "an-integral-through-a-drawn-change-of-variables",
+    ["An integral through a drawn change of variables", "由所画的变量替换求积分"],
+    [
+      "A linear map with images $T(1, 0)$ and $T(0, 1)$ has Jacobian determinant equal to the determinant of those two vectors. It multiplies every area by its absolute value, so $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$ (area of the rectangle in $uv$).",
+      "像为 $T(1, 0)$ 和 $T(0, 1)$ 的线性映射，其雅可比行列式等于这两个向量的行列式。它把每个面积乘以其绝对值，所以 $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$（$uv$ 中矩形的面积）。",
+    ],
+    (rng) => {
+      const vectors: Point[] = [
+        [1, 0],
+        [0, 1],
+        [2, 0],
+        [0, 2],
+        [1, 1],
+        [1, -1],
+        [-1, 1],
+        [2, 1],
+        [1, 2],
+        [-1, 2],
+        [2, -1],
+      ];
+      const u = rng.pick(vectors);
+      const v = rng.pick(vectors.filter((x) => cross(x, u) !== 0));
+      const m = rng.int(1, 2);
+      const n = rng.int(1, 2);
+      const k = rng.int(1, 5);
+      const J = Math.abs(cross(u, v));
+      const answer = k * J * m * n;
+      const corners: Point[] = [
+        [0, 0],
+        [m * u[0], m * u[1]],
+        [m * u[0] + n * v[0], m * u[1] + n * v[1]],
+        [n * v[0], n * v[1]],
+      ];
+      return ask(
         [
-          { kind: "polygon", points: corners },
-          { kind: "arrow", from: [0, 0], to: u, accent: true },
-          { kind: "arrow", from: [0, 0], to: v, accent: true },
+          `The arrows show $T(1, 0)$ and $T(0, 1)$ for a linear map $T$, and the shaded region $R$ is the image of the rectangle $[0, ${m}] \\times [0, ${n}]$ in the $uv$-plane. Find $\\iint_R ${k}\\,dA$.`,
+          `箭头表示线性映射 $T$ 的 $T(1, 0)$ 和 $T(0, 1)$，阴影区域 $R$ 是 $uv$ 平面上矩形 $[0, ${m}] \\times [0, ${n}]$ 的像。求 $\\iint_R ${k}\\,dA$。`,
         ],
+        answer,
+        [k * m * n, k * J, J * m * n, answer + k],
         [
-          `A shaded parallelogram with corners ${corners.map(at).join(", ")}, and arrows from the origin to ${at(u)} and ${at(v)}.`,
-          `阴影平行四边形，顶点为 ${corners.map(at).join("、")}，以及从原点指向 ${at(u)} 和 ${at(v)} 的箭头。`,
+          `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$, and the rectangle has area $${m * n}$, so the integral is $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$.`,
+          `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$，矩形面积为 $${m * n}$，所以积分为 $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          7,
+          [
+            { kind: "polygon", points: corners },
+            { kind: "arrow", from: [0, 0], to: u, accent: true },
+            { kind: "arrow", from: [0, 0], to: v, accent: true },
+          ],
+          [
+            `A shaded parallelogram with corners ${corners.map(at).join(", ")}, and arrows from the origin to ${at(u)} and ${at(v)}.`,
+            `阴影平行四边形，顶点为 ${corners.map(at).join("、")}，以及从原点指向 ${at(u)} 和 ${at(v)} 的箭头。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings4["computing-areas-using-a-change-of-variables#an-integral-through-a-drawn-change-of-variables"],
+};
 
-const affineImage = point(
-  "the-image-of-a-drawn-vertex-under-an-affine-map",
-  ["The image of a drawn vertex under an affine map", "所画顶点在仿射映射下的像"],
-  [
-    "An affine map is a linear map followed by a shift. Read the coordinates of the point and substitute them into the formula.",
-    "仿射映射是线性映射再加平移。读出点的坐标，代入公式。",
-  ],
-  (rng) => {
-    const a = rng.pick([-2, -1, 1, 2, 3]);
-    const b = rng.pick([-2, -1, 1, 2]);
-    const c = rng.pick([-2, -1, 1, 2]);
-    const d = rng.pick([-2, -1, 1, 2, 3]);
-    const e = rng.int(-4, 4);
-    const f = rng.int(-4, 4);
-    const P: Point = [rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]), rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])];
-    const Q1: Point = [P[0] + rng.int(1, 3) * (P[0] > 0 ? -1 : 1), P[1]];
-    const R: Point = [P[0], P[1] + rng.int(1, 3) * (P[1] > 0 ? -1 : 1)];
-    const image: Point = [a * P[0] + b * P[1] + e, c * P[0] + d * P[1] + f];
-    const first = rng.bool();
-    const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
-    const map = `T(x, y) = \\left(${terms([
-      [a, "x"],
-      [b, "y"],
-      [e, ""],
-    ])},\\ ${terms([
-      [c, "x"],
-      [d, "y"],
-      [f, ""],
-    ])}\\right)`;
-    return ask(
-      [
-        `For $${map}$, find the ${name[0]} coordinate of the image of the vertex $P$ of the drawn triangle.`,
-        `对 $${map}$，求所画三角形的顶点 $P$ 的像的${name[1]}个坐标。`,
-      ],
-      first ? image[0] : image[1],
-      [
-        first ? image[1] : image[0],
-        first ? a * P[1] + b * P[0] + e : c * P[1] + d * P[0] + f,
-        first ? image[0] - e : image[1] - f,
-        (first ? image[0] : image[1]) + 1,
-      ],
-      [`$P = ${at(P)}$, so $T(P) = ${at(image)}$.`, `$P = ${at(P)}$，所以 $T(P) = ${at(image)}$。`],
-      fig(
-        6,
+const affineImage = {
+  ...point(
+    "the-image-of-a-drawn-vertex-under-an-affine-map",
+    ["The image of a drawn vertex under an affine map", "所画顶点在仿射映射下的像"],
+    [
+      "An affine map is a linear map followed by a shift. Read the coordinates of the point and substitute them into the formula.",
+      "仿射映射是线性映射再加平移。读出点的坐标，代入公式。",
+    ],
+    (rng) => {
+      const a = rng.pick([-2, -1, 1, 2, 3]);
+      const b = rng.pick([-2, -1, 1, 2]);
+      const c = rng.pick([-2, -1, 1, 2]);
+      const d = rng.pick([-2, -1, 1, 2, 3]);
+      const e = rng.int(-4, 4);
+      const f = rng.int(-4, 4);
+      const P: Point = [rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]), rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])];
+      const Q1: Point = [P[0] + rng.int(1, 3) * (P[0] > 0 ? -1 : 1), P[1]];
+      const R: Point = [P[0], P[1] + rng.int(1, 3) * (P[1] > 0 ? -1 : 1)];
+      const image: Point = [a * P[0] + b * P[1] + e, c * P[0] + d * P[1] + f];
+      const first = rng.bool();
+      const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
+      const map = `T(x, y) = \\left(${terms([
+        [a, "x"],
+        [b, "y"],
+        [e, ""],
+      ])},\\ ${terms([
+        [c, "x"],
+        [d, "y"],
+        [f, ""],
+      ])}\\right)`;
+      return ask(
         [
-          { kind: "polygon", points: [P, Q1, R] },
-          { kind: "point", at: P, label: "P", dir: "n" },
+          `For $${map}$, find the ${name[0]} coordinate of the image of the vertex $P$ of the drawn triangle.`,
+          `对 $${map}$，求所画三角形的顶点 $P$ 的像的${name[1]}个坐标。`,
         ],
+        first ? image[0] : image[1],
         [
-          `A shaded triangle with corners ${at(P)}, ${at(Q1)} and ${at(R)}, with P at ${at(P)}.`,
-          `阴影三角形，顶点为 ${at(P)}、${at(Q1)} 和 ${at(R)}，P 位于 ${at(P)}。`,
+          first ? image[1] : image[0],
+          first ? a * P[1] + b * P[0] + e : c * P[1] + d * P[0] + f,
+          first ? image[0] - e : image[1] - f,
+          (first ? image[0] : image[1]) + 1,
         ],
-      ),
-    );
-  },
-);
+        [`$P = ${at(P)}$, so $T(P) = ${at(image)}$.`, `$P = ${at(P)}$，所以 $T(P) = ${at(image)}$。`],
+        fig(
+          6,
+          [
+            { kind: "polygon", points: [P, Q1, R] },
+            { kind: "point", at: P, label: "P", dir: "n" },
+          ],
+          [
+            `A shaded triangle with corners ${at(P)}, ${at(Q1)} and ${at(R)}, with P at ${at(P)}.`,
+            `阴影三角形，顶点为 ${at(P)}、${at(Q1)} 和 ${at(R)}，P 位于 ${at(P)}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings3["the-image-of-an-affine-transformation#the-image-of-a-drawn-vertex-under-an-affine-map"],
+};
 
-const inertia = point(
-  "a-moment-of-inertia-of-a-drawn-rectangle",
-  ["A moment of inertia of a drawn rectangle", "所画矩形的转动惯量"],
-  [
-    "The moment of inertia about the $x$-axis weighs each piece by the square of its distance from that axis: $I_x = \\iint y^2 \\delta\\,dA$. For a rectangle $[0, a] \\times [0, b]$ of constant density this is $\\delta \\frac{a b^3}{3}$, and $I_y = \\delta \\frac{b a^3}{3}$.",
-    "绕 $x$ 轴的转动惯量按到该轴距离的平方加权：$I_x = \\iint y^2 \\delta\\,dA$。对常密度矩形 $[0, a] \\times [0, b]$，它等于 $\\delta \\frac{a b^3}{3}$，而 $I_y = \\delta \\frac{b a^3}{3}$。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 6);
-    const b = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== a));
-    const delta = rng.int(1, 4);
-    const aboutX = rng.bool();
-    const answer = Q.of(aboutX ? delta * a * b ** 3 : delta * b * a ** 3, 3);
-    const other = Q.of(aboutX ? delta * b * a ** 3 : delta * a * b ** 3, 3);
-    return ask(
-      [
-        `The drawn rectangular lamina has constant density $\\delta = ${delta}$. Find its moment of inertia about the $${aboutX ? "x" : "y"}$-axis.`,
-        `所画矩形薄片的密度为常数 $\\delta = ${delta}$。求它绕 $${aboutX ? "x" : "y"}$ 轴的转动惯量。`,
-      ],
-      answer,
-      [other, Q.of(aboutX ? delta * a * b * b : delta * b * a * a, 2), delta * a * b, Q.of(aboutX ? a * b ** 3 : b * a ** 3, 3)],
-      [
-        aboutX
-          ? `$I_x = ${delta} \\int_0^{${a}} \\int_0^{${b}} y^2\\,dy\\,dx = ${delta} \\cdot ${a} \\cdot \\frac{${b ** 3}}{3} = ${answer.toLatex()}$.`
-          : `$I_y = ${delta} \\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${delta} \\cdot ${b} \\cdot \\frac{${a ** 3}}{3} = ${answer.toLatex()}$.`,
-        aboutX
-          ? `$I_x = ${delta} \\int_0^{${a}} \\int_0^{${b}} y^2\\,dy\\,dx = ${delta} \\cdot ${a} \\cdot \\frac{${b ** 3}}{3} = ${answer.toLatex()}$。`
-          : `$I_y = ${delta} \\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${delta} \\cdot ${b} \\cdot \\frac{${a ** 3}}{3} = ${answer.toLatex()}$。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 7, yMin: -1, yMax: 7 },
-        [{ kind: "polygon", points: rectangle(0, 0, a, b) }],
-        [`A shaded rectangle from (0, 0) to (${a}, ${b}).`, `从 (0, 0) 到 (${a}, ${b}) 的阴影矩形。`],
-      ),
-    );
-  },
-);
+const inertia = {
+  ...point(
+    "a-moment-of-inertia-of-a-drawn-rectangle",
+    ["A moment of inertia of a drawn rectangle", "所画矩形的转动惯量"],
+    [
+      "The moment of inertia about the $x$-axis weighs each piece by the square of its distance from that axis: $I_x = \\iint y^2 \\delta\\,dA$. For a rectangle $[0, a] \\times [0, b]$ of constant density this is $\\delta \\frac{a b^3}{3}$, and $I_y = \\delta \\frac{b a^3}{3}$.",
+      "绕 $x$ 轴的转动惯量按到该轴距离的平方加权：$I_x = \\iint y^2 \\delta\\,dA$。对常密度矩形 $[0, a] \\times [0, b]$，它等于 $\\delta \\frac{a b^3}{3}$，而 $I_y = \\delta \\frac{b a^3}{3}$。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 6);
+      const b = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== a));
+      const delta = rng.int(1, 4);
+      const aboutX = rng.bool();
+      const answer = Q.of(aboutX ? delta * a * b ** 3 : delta * b * a ** 3, 3);
+      const other = Q.of(aboutX ? delta * b * a ** 3 : delta * a * b ** 3, 3);
+      return ask(
+        [
+          `The drawn rectangular lamina has constant density $\\delta = ${delta}$. Find its moment of inertia about the $${aboutX ? "x" : "y"}$-axis.`,
+          `所画矩形薄片的密度为常数 $\\delta = ${delta}$。求它绕 $${aboutX ? "x" : "y"}$ 轴的转动惯量。`,
+        ],
+        answer,
+        [other, Q.of(aboutX ? delta * a * b * b : delta * b * a * a, 2), delta * a * b, Q.of(aboutX ? a * b ** 3 : b * a ** 3, 3)],
+        [
+          aboutX
+            ? `$I_x = ${delta} \\int_0^{${a}} \\int_0^{${b}} y^2\\,dy\\,dx = ${delta} \\cdot ${a} \\cdot \\frac{${b ** 3}}{3} = ${answer.toLatex()}$.`
+            : `$I_y = ${delta} \\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${delta} \\cdot ${b} \\cdot \\frac{${a ** 3}}{3} = ${answer.toLatex()}$.`,
+          aboutX
+            ? `$I_x = ${delta} \\int_0^{${a}} \\int_0^{${b}} y^2\\,dy\\,dx = ${delta} \\cdot ${a} \\cdot \\frac{${b ** 3}}{3} = ${answer.toLatex()}$。`
+            : `$I_y = ${delta} \\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${delta} \\cdot ${b} \\cdot \\frac{${a ** 3}}{3} = ${answer.toLatex()}$。`,
+        ],
+        fig(
+          { xMin: -1, xMax: 7, yMin: -1, yMax: 7 },
+          [{ kind: "polygon", points: rectangle(0, 0, a, b) }],
+          [`A shaded rectangle from (0, 0) to (${a}, ${b}).`, `从 (0, 0) 到 (${a}, ${b}) 的阴影矩形。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings8["moments-of-inertia-of-laminas-about-the-coordinate-axes#a-moment-of-inertia-of-a-drawn-rectangle"],
+};
 
-const parallelAxis = point(
-  "the-parallel-axis-theorem-with-a-drawn-distance",
-  ["The parallel axis theorem with a drawn distance", "用所画距离应用平行轴定理"],
-  [
-    "If $I_c$ is the moment about an axis through the center of mass, then about a parallel axis at distance $d$ the moment is $I = I_c + M d^2$. The distance is measured between the axes, and the theorem only starts from the axis through the center of mass.",
-    "若 $I_c$ 是绕过质心轴的转动惯量，则绕距离为 $d$ 的平行轴的转动惯量为 $I = I_c + M d^2$。距离在两轴之间度量，定理必须从过质心的轴出发。",
-  ],
-  (rng) => {
-    const M = rng.int(2, 9);
-    const Ic = rng.int(3, 40);
-    const xc = rng.int(-3, 3);
-    const d = rng.int(1, 3) * (rng.bool() ? 1 : -1);
-    const size = Math.abs(d);
-    const up = rng.bool();
-    const whole = Ic + M * size * size;
-    const answer = up ? whole : Ic;
-    return ask(
-      [
+const parallelAxis = {
+  ...point(
+    "the-parallel-axis-theorem-with-a-drawn-distance",
+    ["The parallel axis theorem with a drawn distance", "用所画距离应用平行轴定理"],
+    [
+      "If $I_c$ is the moment about an axis through the center of mass, then about a parallel axis at distance $d$ the moment is $I = I_c + M d^2$. The distance is measured between the axes, and the theorem only starts from the axis through the center of mass.",
+      "若 $I_c$ 是绕过质心轴的转动惯量，则绕距离为 $d$ 的平行轴的转动惯量为 $I = I_c + M d^2$。距离在两轴之间度量，定理必须从过质心的轴出发。",
+    ],
+    (rng) => {
+      const M = rng.int(2, 9);
+      const Ic = rng.int(3, 40);
+      const xc = rng.int(-3, 3);
+      const d = rng.int(1, 3) * (rng.bool() ? 1 : -1);
+      const size = Math.abs(d);
+      const up = rng.bool();
+      const whole = Ic + M * size * size;
+      const answer = up ? whole : Ic;
+      return ask(
+        [
+          up
+            ? `A lamina of mass $${M}$ has moment of inertia $${Ic}$ about the dashed axis through its center of mass. Find its moment about the solid parallel axis.`
+            : `A lamina of mass $${M}$ has moment of inertia $${whole}$ about the solid axis. The dashed parallel axis passes through its center of mass. Find its moment about the dashed axis.`,
+          up
+            ? `质量为 $${M}$ 的薄片绕过质心的虚线轴的转动惯量为 $${Ic}$。求它绕平行的实线轴的转动惯量。`
+            : `质量为 $${M}$ 的薄片绕实线轴的转动惯量为 $${whole}$。平行的虚线轴过它的质心。求它绕虚线轴的转动惯量。`,
+        ],
+        answer,
         up
-          ? `A lamina of mass $${M}$ has moment of inertia $${Ic}$ about the dashed axis through its center of mass. Find its moment about the solid parallel axis.`
-          : `A lamina of mass $${M}$ has moment of inertia $${whole}$ about the solid axis. The dashed parallel axis passes through its center of mass. Find its moment about the dashed axis.`,
-        up
-          ? `质量为 $${M}$ 的薄片绕过质心的虚线轴的转动惯量为 $${Ic}$。求它绕平行的实线轴的转动惯量。`
-          : `质量为 $${M}$ 的薄片绕实线轴的转动惯量为 $${whole}$。平行的虚线轴过它的质心。求它绕虚线轴的转动惯量。`,
-      ],
-      answer,
-      up
-        ? [Ic + M * size, Ic + size * size, Ic * size * size, M * size * size]
-        : [whole + M * size * size, whole - M * size, whole - size * size, M * size * size],
-      [
-        `The axes are $${size}$ apart, so $M d^2 = ${M} \\cdot ${size * size} = ${M * size * size}$, and ${up ? `$I = ${Ic} + ${M * size * size} = ${whole}$` : `$I_c = ${whole} - ${M * size * size} = ${Ic}$`}.`,
-        `两轴相距 $${size}$，所以 $M d^2 = ${M} \\cdot ${size * size} = ${M * size * size}$，${up ? `$I = ${Ic} + ${M * size * size} = ${whole}$` : `$I_c = ${whole} - ${M * size * size} = ${Ic}$`}。`,
-      ],
-      fig(
-        7,
+          ? [Ic + M * size, Ic + size * size, Ic * size * size, M * size * size]
+          : [whole + M * size * size, whole - M * size, whole - size * size, M * size * size],
         [
-          { kind: "line", a: [xc, 0], b: [xc, 1], dashed: true },
-          { kind: "line", a: [xc + d, 0], b: [xc + d, 1], accent: true },
+          `The axes are $${size}$ apart, so $M d^2 = ${M} \\cdot ${size * size} = ${M * size * size}$, and ${up ? `$I = ${Ic} + ${M * size * size} = ${whole}$` : `$I_c = ${whole} - ${M * size * size} = ${Ic}$`}.`,
+          `两轴相距 $${size}$，所以 $M d^2 = ${M} \\cdot ${size * size} = ${M * size * size}$，${up ? `$I = ${Ic} + ${M * size * size} = ${whole}$` : `$I_c = ${whole} - ${M * size * size} = ${Ic}$`}。`,
         ],
-        [
-          `Two vertical lines: a dashed axis at x = ${xc} and a solid axis at x = ${xc + d}.`,
-          `两条竖直线：虚线轴在 x = ${xc}，实线轴在 x = ${xc + d}。`,
-        ],
-      ),
-    );
-  },
-);
+        fig(
+          7,
+          [
+            { kind: "line", a: [xc, 0], b: [xc, 1], dashed: true },
+            { kind: "line", a: [xc + d, 0], b: [xc + d, 1], accent: true },
+          ],
+          [
+            `Two vertical lines: a dashed axis at x = ${xc} and a solid axis at x = ${xc + d}.`,
+            `两条竖直线：虚线轴在 x = ${xc}，实线轴在 x = ${xc + d}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings8["the-parallel-axis-theorem#the-parallel-axis-theorem-with-a-drawn-distance"],
+};
 
-const circularMotion = point(
-  "acceleration-on-a-drawn-circle",
-  ["Acceleration on a drawn circle", "所画圆上的加速度"],
-  [
-    "A particle moving around a circle of radius $R$ at constant speed $v$ has acceleration of size $\\frac{v^2}{R}$ pointing to the center. Its angular speed is $\\frac{v}{R}$.",
-    "沿半径 $R$ 的圆以恒定速率 $v$ 运动的质点，加速度大小为 $\\frac{v^2}{R}$，指向圆心。角速度为 $\\frac{v}{R}$。",
-  ],
-  (rng) => {
-    const R = rng.int(1, 6);
-    const v = rng.int(2, 12);
-    const kind = rng.pick(["acceleration", "angular"] as const);
-    const answer = kind === "acceleration" ? Q.of(v * v, R) : Q.of(v, R);
-    const asked: Pair = kind === "acceleration" ? ["the size of its acceleration", "它的加速度大小"] : ["its angular speed", "它的角速度"];
-    return ask(
-      [
-        `A particle moves around the drawn circle about the origin at constant speed $v = ${v}$. Find ${asked[0]}.`,
-        `质点以恒定速率 $v = ${v}$ 沿所画的绕原点的圆运动。求${asked[1]}。`,
-      ],
-      answer,
-      [Q.of(v, R), Q.of(v * v, R), Q.of(v * v, R * R), v * R, Q.of(R, v)].filter((x) => !(x instanceof Q) || !x.eq(answer)),
-      [
-        `The radius is $${R}$, so the answer is $${kind === "acceleration" ? `\\frac{${v}^2}{${R}}` : `\\frac{${v}}{${R}}`} = ${answer.toLatex()}$.`,
-        `半径为 $${R}$，所以答案为 $${kind === "acceleration" ? `\\frac{${v}^2}{${R}}` : `\\frac{${v}}{${R}}`} = ${answer.toLatex()}$。`,
-      ],
-      fig(
-        7,
-        [{ kind: "circle", center: [0, 0], r: R, accent: true }],
-        [`A circle about the origin with radius ${R}.`, `以原点为圆心、半径为 ${R} 的圆。`],
-      ),
-    );
-  },
-);
+const circularMotion = {
+  ...point(
+    "acceleration-on-a-drawn-circle",
+    ["Acceleration on a drawn circle", "所画圆上的加速度"],
+    [
+      "A particle moving around a circle of radius $R$ at constant speed $v$ has acceleration of size $\\frac{v^2}{R}$ pointing to the center. Its angular speed is $\\frac{v}{R}$.",
+      "沿半径 $R$ 的圆以恒定速率 $v$ 运动的质点，加速度大小为 $\\frac{v^2}{R}$，指向圆心。角速度为 $\\frac{v}{R}$。",
+    ],
+    (rng) => {
+      const R = rng.int(1, 6);
+      const v = rng.int(2, 12);
+      const kind = rng.pick(["acceleration", "angular"] as const);
+      const answer = kind === "acceleration" ? Q.of(v * v, R) : Q.of(v, R);
+      const asked: Pair =
+        kind === "acceleration" ? ["the size of its acceleration", "它的加速度大小"] : ["its angular speed", "它的角速度"];
+      return ask(
+        [
+          `A particle moves around the drawn circle about the origin at constant speed $v = ${v}$. Find ${asked[0]}.`,
+          `质点以恒定速率 $v = ${v}$ 沿所画的绕原点的圆运动。求${asked[1]}。`,
+        ],
+        answer,
+        [Q.of(v, R), Q.of(v * v, R), Q.of(v * v, R * R), v * R, Q.of(R, v)].filter((x) => !(x instanceof Q) || !x.eq(answer)),
+        [
+          `The radius is $${R}$, so the answer is $${kind === "acceleration" ? `\\frac{${v}^2}{${R}}` : `\\frac{${v}}{${R}}`} = ${answer.toLatex()}$.`,
+          `半径为 $${R}$，所以答案为 $${kind === "acceleration" ? `\\frac{${v}^2}{${R}}` : `\\frac{${v}}{${R}}`} = ${answer.toLatex()}$。`,
+        ],
+        fig(
+          7,
+          [{ kind: "circle", center: [0, 0], r: R, accent: true }],
+          [`A circle about the origin with radius ${R}.`, `以原点为圆心、半径为 ${R} 的圆。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings8["circular-motion-about-the-origin#acceleration-on-a-drawn-circle"],
+};
 
 const accelerationComponent = point(
   "the-tangential-acceleration-from-drawn-arrows",
@@ -1462,72 +1521,75 @@ const revolutionSegment = point(
   },
 );
 
-const arcLength = point(
-  "the-length-of-a-drawn-broken-path",
-  ["The length of a drawn broken path", "所画折线路径的长度"],
-  [
-    "Arc length adds up along the pieces of a path. On a straight piece, $\\int \\lVert r'(t) \\rVert\\,dt$ is the distance between its ends.",
-    "弧长沿路径的各段相加。在直线段上，$\\int \\lVert r'(t) \\rVert\\,dt$ 就是两端之间的距离。",
-  ],
-  (rng) => {
-    const legs: readonly [number, number, number][] = [
-      [3, 4, 5],
-      [4, 3, 5],
-      [3, -4, 5],
-      [4, -3, 5],
-      [5, 0, 5],
-      [2, 0, 2],
-      [0, 3, 3],
-      [0, -3, 3],
-      [0, 2, 2],
-      [0, -2, 2],
-    ];
-    const start: Point = [-8, rng.int(-3, 3)];
-    let chosen: [number, number, number][] = [];
-    let points: Point[] = [];
-    for (let attempt = 0; attempt < 30; attempt++) {
-      chosen = [rng.pick(legs), rng.pick(legs), rng.pick(legs)].map((x) => [...x] as [number, number, number]);
-      points = [start];
-      for (const [dx, dy] of chosen) {
-        const last = points[points.length - 1] as Point;
-        points.push([last[0] + dx, last[1] + dy]);
-      }
-      if (points.every(([, y]) => Math.abs(y) <= 8)) break;
-      chosen = [
+const arcLength = {
+  ...point(
+    "the-length-of-a-drawn-broken-path",
+    ["The length of a drawn broken path", "所画折线路径的长度"],
+    [
+      "Arc length adds up along the pieces of a path. On a straight piece, $\\int \\lVert r'(t) \\rVert\\,dt$ is the distance between its ends.",
+      "弧长沿路径的各段相加。在直线段上，$\\int \\lVert r'(t) \\rVert\\,dt$ 就是两端之间的距离。",
+    ],
+    (rng) => {
+      const legs: readonly [number, number, number][] = [
         [3, 4, 5],
+        [4, 3, 5],
         [3, -4, 5],
+        [4, -3, 5],
         [5, 0, 5],
+        [2, 0, 2],
+        [0, 3, 3],
+        [0, -3, 3],
+        [0, 2, 2],
+        [0, -2, 2],
       ];
-      points = [start];
-      for (const [dx, dy] of chosen) {
-        const last = points[points.length - 1] as Point;
-        points.push([last[0] + dx, last[1] + dy]);
+      const start: Point = [-8, rng.int(-3, 3)];
+      let chosen: [number, number, number][] = [];
+      let points: Point[] = [];
+      for (let attempt = 0; attempt < 30; attempt++) {
+        chosen = [rng.pick(legs), rng.pick(legs), rng.pick(legs)].map((x) => [...x] as [number, number, number]);
+        points = [start];
+        for (const [dx, dy] of chosen) {
+          const last = points[points.length - 1] as Point;
+          points.push([last[0] + dx, last[1] + dy]);
+        }
+        if (points.every(([, y]) => Math.abs(y) <= 8)) break;
+        chosen = [
+          [3, 4, 5],
+          [3, -4, 5],
+          [5, 0, 5],
+        ];
+        points = [start];
+        for (const [dx, dy] of chosen) {
+          const last = points[points.length - 1] as Point;
+          points.push([last[0] + dx, last[1] + dy]);
+        }
       }
-    }
-    const total = chosen.reduce((sum, [, , r]) => sum + r, 0);
-    const end = points[points.length - 1] as Point;
-    const straight = Math.round(Math.hypot(end[0] - start[0], end[1] - start[1]));
-    return ask(
-      ["Find the arc length of the drawn broken path.", "求所画折线路径的弧长。"],
-      total,
-      [
-        straight === total ? total + 1 : straight,
-        chosen.reduce((sum, [dx, dy]) => sum + Math.abs(dx) + Math.abs(dy), 0),
-        total + 2,
-        total - 1,
-      ],
-      [
-        `The pieces have lengths ${chosen.map(([, , r]) => `$${r}$`).join(", ")}, which add up to $${total}$.`,
-        `各段长度为 ${chosen.map(([, , r]) => `$${r}$`).join("、")}，总和为 $${total}$。`,
-      ],
-      fig(
-        { xMin: -10, xMax: 10, yMin: -10, yMax: 10, labelEvery: 2 },
-        [{ kind: "path", points, accent: true }, ...points.map((p): PlaneMark => ({ kind: "point", at: p }))],
-        [`A broken path through ${points.map(at).join(", ")}.`, `折线路径，依次经过 ${points.map(at).join("、")}。`],
-      ),
-    );
-  },
-);
+      const total = chosen.reduce((sum, [, , r]) => sum + r, 0);
+      const end = points[points.length - 1] as Point;
+      const straight = Math.round(Math.hypot(end[0] - start[0], end[1] - start[1]));
+      return ask(
+        ["Find the arc length of the drawn broken path.", "求所画折线路径的弧长。"],
+        total,
+        [
+          straight === total ? total + 1 : straight,
+          chosen.reduce((sum, [dx, dy]) => sum + Math.abs(dx) + Math.abs(dy), 0),
+          total + 2,
+          total - 1,
+        ],
+        [
+          `The pieces have lengths ${chosen.map(([, , r]) => `$${r}$`).join(", ")}, which add up to $${total}$.`,
+          `各段长度为 ${chosen.map(([, , r]) => `$${r}$`).join("、")}，总和为 $${total}$。`,
+        ],
+        fig(
+          { xMin: -10, xMax: 10, yMin: -10, yMax: 10, labelEvery: 2 },
+          [{ kind: "path", points, accent: true }, ...points.map((p): PlaneMark => ({ kind: "point", at: p }))],
+          [`A broken path through ${points.map(at).join(", ")}.`, `折线路径，依次经过 ${points.map(at).join("、")}。`],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#the-length-of-a-drawn-broken-path"],
+};
 
 const curveKind = point(
   "simple-and-closed-from-a-drawn-curve",

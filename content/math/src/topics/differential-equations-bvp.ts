@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { choiceProblem, lowestTerms, numberProblem, steps } from "../problems.ts";
 
 /** overPi writes a number divided by pi with one fraction bar: "-\\frac{12}{5\\pi}". */
@@ -247,6 +248,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
     knowledgePoints: [
       {
         id: "inhomogeneous-bvp-solution",
+        figure: differentialEquationsDrawings1["second-order-inhomogeneous-boundary-value-problems#inhomogeneous-bvp-solution"],
         title: t("Maximum deflection under uniform load", "均布载荷下的最大挠度"),
         explanation: t(
           "Integrating the constant load twice gives a parabola, and the two boundary conditions pin it down so that its maximum lies at the center. For $y'' = -q$ with $y(0) = 0$ and $y(L) = 0$, integration yields $y(x) = \\frac{q}{2} x (L - x)$. The maximum occurs at the midpoint $x = L/2$, where $y(L/2) = \\frac{q L^2}{8}$.",
@@ -727,6 +729,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
       },
       {
         id: "the-cosine-series-of-a-linear-function",
+        figure: differentialEquationsDrawings1["fourier-cosine-series#the-cosine-series-of-a-linear-function"],
         title: t("The cosine series of a linear function", "线性函数的余弦级数"),
         explanation: t(
           "The even extension of $f(x) = cx$ from $(0, \\pi)$ is the triangle wave $c|x|$, so its series has cosines only. By parts,\n\n$$a_n = \\frac{2}{\\pi}\\int_{0}^{\\pi} cx\\cos nx\\,dx = \\frac{2c}{\\pi}\\left[\\frac{\\cos nx}{n^{2}}\\right]_{0}^{\\pi} = \\frac{2c\\left((-1)^{n} - 1\\right)}{n^{2}\\pi},$$\n\nwhich is $-\\frac{4c}{n^{2}\\pi}$ for odd $n$ and $0$ for even $n$, while $a_0 = c\\pi$. The coefficients shrink like $\\frac{1}{n^{2}}$, faster than for the sine series, because the triangle wave has no jumps.",

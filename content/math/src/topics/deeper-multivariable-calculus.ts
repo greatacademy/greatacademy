@@ -4,6 +4,13 @@
 import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
+import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
+import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
+import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
+import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
+import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { numberProblem, pointProblem } from "../problems.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
@@ -23,6 +30,7 @@ const coefficient = (n: number) => (n === 1 ? "" : `${n}`);
 
 const tangentParallelToPlane: KnowledgePointDef = {
   id: "where-a-tangent-line-is-parallel-to-the-xy-plane",
+  figure: multivariableDrawings1["tangent-vectors-and-tangent-lines-to-curves#where-a-tangent-line-is-parallel-to-the-xy-plane"],
   title: t("Where a tangent line is parallel to the $xy$-plane", "切线在何处与 $xy$ 平面平行"),
   explanation: t(
     "The tangent line at a point of a curve has the direction $\\mathbf{r}'(t)$. It is parallel to the $xy$-plane exactly when this direction has no vertical part, so solve $z'(t) = 0$ and ignore the other two components.",
@@ -51,6 +59,7 @@ const tangentParallelToPlane: KnowledgePointDef = {
 
 const curvatureOfAHelix: KnowledgePointDef = {
   id: "the-curvature-of-a-helix",
+  figure: multivariableDrawings1["finding-curvature-using-the-cross-product#the-curvature-of-a-helix"],
   title: t("The curvature of a helix", "螺旋线的曲率"),
   explanation: t(
     "For the helix $\\langle a\\cos t, a\\sin t, bt \\rangle$, the cross product formula gives the constant curvature $\\kappa = \\frac{a}{a^2+b^2}$. With $b = 0$ this is the circle's $\\frac{1}{a}$, and stretching the helix upward straightens it and lowers the curvature.",
@@ -78,6 +87,7 @@ const curvatureOfAHelix: KnowledgePointDef = {
 
 const binormalFromTangentAndNormal: KnowledgePointDef = {
   id: "the-binormal-from-the-unit-tangent-and-normal",
+  figure: multivariableDrawings1["binormal-vectors#the-binormal-from-the-unit-tangent-and-normal"],
   title: t("The binormal from the unit tangent and normal", "由单位切向量和法向量求副法向量"),
   explanation: t(
     "The binormal is defined by $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$, in this order. Because $\\mathbf{T}$ and $\\mathbf{N}$ are perpendicular unit vectors, $\\mathbf{B}$ is a unit vector too, so no further normalizing is needed. Reversing the order would flip its sign.",
@@ -178,6 +188,7 @@ const limitByPolar: KnowledgePointDef = {
 
 const directionWithNoChange: KnowledgePointDef = {
   id: "a-direction-in-which-a-function-does-not-change",
+  figure: multivariableDrawings2["directional-derivatives#a-direction-in-which-a-function-does-not-change"],
   title: t("A direction in which a function does not change", "函数值不变的方向"),
   explanation: t(
     "The directional derivative is $\\nabla f \\cdot \\mathbf{u}$. It is zero exactly when $\\mathbf{u}$ is perpendicular to the gradient, which is the direction along the level curve. So swap the components of the gradient and change one sign to find such a direction.",
@@ -287,6 +298,7 @@ const harmonicParameter: KnowledgePointDef = {
 
 const tangentPlaneParallel: KnowledgePointDef = {
   id: "where-a-tangent-plane-is-parallel-to-a-given-plane",
+  figure: multivariableDrawings2["tangent-planes-to-surfaces#where-a-tangent-plane-is-parallel-to-a-given-plane"],
   title: t("Where a tangent plane is parallel to a given plane", "切平面在何处与已知平面平行"),
   explanation: t(
     "The tangent plane to $z = f(x, y)$ has slopes $f_x$ and $f_y$. The plane $z = px + qy + s$ has slopes $p$ and $q$. So the two are parallel where $f_x = p$ and $f_y = q$, which are two equations for the point of tangency.",
@@ -519,6 +531,7 @@ const gaussianOverADisk: KnowledgePointDef = {
 
 const volumeOfACone: KnowledgePointDef = {
   id: "the-volume-of-a-cone-in-cylindrical-coordinates",
+  figure: multivariableDrawings5["triple-integrals-in-cylindrical-polar-coordinates#the-volume-of-a-cone-in-cylindrical-coordinates"],
   title: t("The volume of a cone in cylindrical coordinates", "用柱坐标求圆锥的体积"),
   explanation: t(
     "A cone with its tip at the origin is $z = mr$ in cylindrical coordinates. Between the cone and a plane $z = h$, integrate $r$ from $0$ to $\\frac{h}{m}$ or, more simply, take each height $z$ and integrate over a disk of radius $\\frac{z}{m}$.",
@@ -547,6 +560,7 @@ const volumeOfACone: KnowledgePointDef = {
 
 const volumeOfASphericalCone: KnowledgePointDef = {
   id: "the-volume-of-a-spherical-sector",
+  figure: multivariableDrawings5["triple-integrals-in-spherical-polar-coordinates#the-volume-of-a-spherical-sector"],
   title: t("The volume of a spherical sector", "球扇形的体积"),
   explanation: t(
     "In spherical coordinates, $dV = \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$. The part of a ball with $\\phi \\le \\phi_0$, an ice-cream cone shape, separates into three integrals and has volume $\\frac{2\\pi}{3}R^3(1 - \\cos\\phi_0)$.",
@@ -677,6 +691,7 @@ const swappingStokesSurface: KnowledgePointDef = {
 
 const compositeCentroid: KnowledgePointDef = {
   id: "the-centroid-of-a-region-made-of-two-rectangles",
+  figure: multivariableDrawings8["moments-and-center-of-mass#the-centroid-of-a-region-made-of-two-rectangles"],
   title: t("The centroid of a region made of two rectangles", "两个矩形组成的区域的形心"),
   explanation: t(
     "The moment of a region is the sum of the moments of its parts, so there is no need to integrate over a composite shape. Each part acts as if its area were at its own centroid, and the centroid of the whole is the weighted average by area.",
@@ -765,6 +780,7 @@ const overNumber = (name: string, a: number) => (a === 1 ? name : `\\frac{${name
 
 const helixLength: KnowledgePointDef = {
   id: "the-length-of-a-helix",
+  figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#the-length-of-a-helix"],
   title: t("The length of a helix", "螺旋线的长度"),
   explanation: t(
     "A circular helix has constant speed, because the circular part of its velocity has constant size and its vertical part is constant. So its arc length needs no real integration: it is the speed times the elapsed parameter. Unrolling the cylinder shows why, since the helix then becomes a straight line.",
@@ -793,6 +809,7 @@ const helixLength: KnowledgePointDef = {
 
 const pointAtArcLengthOnHelix: KnowledgePointDef = {
   id: "the-height-on-a-helix-after-a-given-arc-length",
+  figure: multivariableDrawings1["parameterization-by-arc-length#the-height-on-a-helix-after-a-given-arc-length"],
   title: t("The height on a helix after a given arc length", "螺旋线上走过给定弧长后的高度"),
   explanation: t(
     "When the speed is a constant $v$, arc length measured from $t = 0$ is $s = vt$, so $t = \\frac{s}{v}$. Substituting this into the curve gives its parametrization by arc length. Any question about where a point has reached after travelling a set distance then becomes a matter of reading off a coordinate.",
@@ -821,6 +838,7 @@ const pointAtArcLengthOnHelix: KnowledgePointDef = {
 
 const helixCurvature: KnowledgePointDef = {
   id: "the-curvature-of-a-helix",
+  figure: multivariableDrawings1["introduction-to-curvature#the-curvature-of-a-helix"],
   title: t("The curvature of a helix", "螺旋线的曲率"),
   explanation: t(
     "With constant speed $v$, curvature is $\\kappa = \\frac{|\\mathbf{r}''|}{v^2}$. For the helix $\\langle a\\cos t, a\\sin t, bt \\rangle$ this gives $\\frac{a}{a^2 + b^2}$. Setting $b = 0$ recovers a circle of curvature $\\frac{1}{a}$. Raising the pitch stretches the curve out, and so the curvature falls.",
@@ -850,6 +868,7 @@ const helixCurvature: KnowledgePointDef = {
 
 const radiusAtParabolaVertex: KnowledgePointDef = {
   id: "the-radius-of-curvature-at-the-vertex-of-a-parabola",
+  figure: multivariableDrawings1["radius-of-curvature#the-radius-of-curvature-at-the-vertex-of-a-parabola"],
   title: t("The radius of curvature at the vertex of a parabola", "抛物线顶点处的曲率半径"),
   explanation: t(
     "A graph has curvature $\\frac{|y''|}{(1 + y'^2)^{3/2}}$. At the vertex of a parabola the slope is zero, so the denominator is one and the curvature is simply $|y''|$. The circle that best fits the parabola there has the reciprocal of this as its radius, wherever the vertex happens to be located.",
@@ -916,6 +935,7 @@ const divergenceOfRadialPower: KnowledgePointDef = {
 
 const curlOfRotation: KnowledgePointDef = {
   id: "the-curl-of-a-rigid-rotation",
+  figure: multivariableDrawings1["properties-of-the-curl-operator#the-curl-of-a-rigid-rotation"],
   title: t("The curl of a rigid rotation", "刚体转动的旋度"),
   explanation: t(
     "A body rotating with angular velocity $\\boldsymbol{\\omega}$ has the velocity field $\\mathbf{v} = \\boldsymbol{\\omega} \\times \\mathbf{r}$. Its curl is $2\\boldsymbol{\\omega}$, at every point and in every direction. This is the physical meaning of curl: it measures twice the local rate of spin. A field written out in components can often be recognized in this form.",
@@ -945,6 +965,7 @@ const curlOfRotation: KnowledgePointDef = {
 
 const paraboloidCap: KnowledgePointDef = {
   id: "the-volume-of-a-paraboloid-cap",
+  figure: multivariableDrawings2["paraboloids#the-volume-of-a-paraboloid-cap"],
   title: t("The volume of a paraboloid cap", "抛物面帽的体积"),
   explanation: t(
     "A horizontal slice of the solid inside $z = a(x^2 + y^2)$ is a disk whose area grows linearly with height: at height $z$ it is $\\frac{\\pi z}{a}$. Integrating these areas gives a volume exactly half of the cylinder with the same base and height. Slicing is simpler here than integrating under the surface.",
@@ -971,6 +992,7 @@ const paraboloidCap: KnowledgePointDef = {
 
 const ellipticConeVolume: KnowledgePointDef = {
   id: "the-volume-of-an-elliptic-cone",
+  figure: multivariableDrawings2["elliptic-cones#the-volume-of-an-elliptic-cone"],
   title: t("The volume of an elliptic cone", "椭圆锥的体积"),
   explanation: t(
     "A horizontal slice of the cone $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = z^2$ at height $z$ is an ellipse with semi-axes $az$ and $bz$, and so with area $\\pi abz^2$. Integrating from the tip gives one third of the base area times the height, which is the same rule that holds for a circular cone.",
@@ -1000,6 +1022,7 @@ const ellipticConeVolume: KnowledgePointDef = {
 
 const affineCommutator: KnowledgePointDef = {
   id: "affine-maps-do-not-commute",
+  figure: multivariableDrawings3["affine-transformations#affine-maps-do-not-commute"],
   title: t("Affine maps do not commute", "仿射变换不可交换"),
   explanation: t(
     "Composing an affine map with a translation depends on the order. Translating first feeds the shift through the linear part of the map, while translating last simply adds the shift to the result. So $T(S(\\mathbf{x}))$ and $S(T(\\mathbf{x}))$ generally differ, and the difference is the image of the shift under the linear part minus the shift itself.",
@@ -1071,6 +1094,7 @@ const derivativeOfComposition: KnowledgePointDef = {
 
 const linearMaxOnTriangle: KnowledgePointDef = {
   id: "the-maximum-of-a-linear-function-on-a-triangle",
+  figure: multivariableDrawings3["calculating-global-extrema-of-multivariable-functions#the-maximum-of-a-linear-function-on-a-triangle"],
   title: t("The maximum of a linear function on a triangle", "线性函数在三角形上的最大值"),
   explanation: t(
     "A nonconstant linear function has no critical points, so its extreme values on a closed region lie on the boundary. Along each edge it is linear again, so the extremes move to the ends of the edge. On a polygon, then, only the vertices need checking. This is the central idea behind linear programming.",
@@ -1102,6 +1126,7 @@ const linearMaxOnTriangle: KnowledgePointDef = {
 
 const closestToOrigin: KnowledgePointDef = {
   id: "the-minimum-of-a-sum-of-squares-on-a-line",
+  figure: multivariableDrawings3["optimizing-multivariable-functions-using-lagrange-multipliers#the-minimum-of-a-sum-of-squares-on-a-line"],
   title: t("The minimum of a sum of squares on a line", "直线上平方和的最小值"),
   explanation: t(
     "To minimize $x^2 + y^2$ on the line $ax + by = c$, Lagrange's condition says that the gradient $\\langle 2x, 2y \\rangle$ is parallel to $\\langle a, b \\rangle$. So the best point is a multiple of the normal vector, which matches the geometry: the closest point to the origin lies along the perpendicular to the line.",
@@ -1189,6 +1214,7 @@ const subintervalsForMesh: KnowledgePointDef = {
 
 const integralWithMaxMin: KnowledgePointDef = {
   id: "integrating-a-maximum-or-minimum-over-a-square",
+  figure: multivariableDrawings3["double-integrals-over-rectangular-domains#integrating-a-maximum-or-minimum-over-a-square"],
   title: t("Integrating a maximum or minimum over a square", "在正方形上对最大值或最小值积分"),
   explanation: t(
     "Functions like $\\max(x, y)$ have different formulas on the two sides of the diagonal $y = x$, so the square must be split there. By symmetry the two triangles give equal integrals for $\\max$, and it suffices to do one. The minimum and the absolute difference then follow, since $\\max + \\min = x + y$ and $\\max - \\min = |x - y|$.",
@@ -1291,6 +1317,7 @@ const conservativeConstant: KnowledgePointDef = {
 
 const normalFromTotal: KnowledgePointDef = {
   id: "the-normal-acceleration-from-the-total-and-tangential",
+  figure: multivariableDrawings8["the-components-of-acceleration#the-normal-acceleration-from-the-total-and-tangential"],
   title: t("The normal acceleration from the total and tangential", "由总加速度和切向加速度求法向加速度"),
   explanation: t(
     "The tangential and normal components of acceleration are perpendicular, so they combine like the legs of a right triangle: $|\\mathbf{a}|^2 = a_T^2 + a_N^2$. So when the total acceleration and the rate of change of speed are known, the normal part follows, with no need for the curvature or the curve itself.",
@@ -1320,6 +1347,7 @@ const normalFromTotal: KnowledgePointDef = {
 
 const averageOfProductOnTriangle: KnowledgePointDef = {
   id: "the-average-of-xy-over-a-right-triangle",
+  figure: multivariableDrawings8["the-average-value-of-a-multivariable-function#the-average-of-xy-over-a-right-triangle"],
   title: t("The average of $xy$ over a right triangle", "$xy$ 在直角三角形上的平均值"),
   explanation: t(
     "An average value is an integral over the region divided by the region's area. Over the right triangle with legs $a$ and $b$ on the axes, $\\iint xy\\,dA = \\frac{a^2b^2}{24}$, and the area is $\\frac{ab}{2}$. So the average of $xy$ is $\\frac{ab}{12}$, which is not the product of the separate averages of $x$ and $y$.",
@@ -1346,6 +1374,7 @@ const averageOfProductOnTriangle: KnowledgePointDef = {
 
 const chargeOnDisk: KnowledgePointDef = {
   id: "the-charge-on-a-disk-with-radial-density",
+  figure: multivariableDrawings8["density-mass-and-charge-of-plane-laminas#the-charge-on-a-disk-with-radial-density"],
   title: t("The charge on a disk with radial density", "径向密度圆盘上的电荷"),
   explanation: t(
     "When a density depends only on the distance from the centre, polar coordinates reduce the double integral to one variable. The angle contributes a factor of $2\\pi$, and the area element supplies an extra factor of $r$, which is easy to forget. This extra factor is why the outer rings of a disk carry the most charge.",
@@ -1423,6 +1452,10 @@ const rodWithPowerDensity: KnowledgePointDef = {
 
 const probabilityOneBelowOther: KnowledgePointDef = {
   id: "the-probability-that-one-uniform-variable-is-smaller",
+  figure:
+    multivariableDrawings8[
+      "calculating-probabilities-with-continuous-random-variables#the-probability-that-one-uniform-variable-is-smaller"
+    ],
   title: t("The probability that one uniform variable is smaller", "一个均匀变量较小的概率"),
   explanation: t(
     "Two independent uniform variables spread evenly over a rectangle, so a probability about them is a ratio of areas. To compare them, draw the line $y = x$ across the rectangle. When the ranges differ, it is easiest to find the area of the smaller piece, which is a triangle, and subtract its share from one.",
@@ -1450,6 +1483,7 @@ const probabilityOneBelowOther: KnowledgePointDef = {
 
 const marginalOnTriangle: KnowledgePointDef = {
   id: "a-marginal-density-of-a-uniform-triangle",
+  figure: multivariableDrawings8["joint-distributions-for-continuous-random-variables#a-marginal-density-of-a-uniform-triangle"],
   title: t("A marginal density of a uniform triangle", "均匀三角形的边缘密度"),
   explanation: t(
     "A joint density that is uniform on a region equals one over its area there. Its marginal at $x$ is found by integrating out $y$, so it equals the joint density times the length of the vertical slice at $x$. On a triangle these slices shrink, so the marginal is not uniform even though the joint density is.",
@@ -1502,6 +1536,7 @@ const minimumOfExponentials: KnowledgePointDef = {
 
 const torusArea: KnowledgePointDef = {
   id: "the-surface-area-of-a-torus",
+  figure: multivariableDrawings7["areas-of-parametric-surfaces#the-surface-area-of-a-torus"],
   title: t("The surface area of a torus", "环面的面积"),
   explanation: t(
     "For the torus $\\langle (R + r\\cos v)\\cos u, (R + r\\cos v)\\sin u, r\\sin v \\rangle$, the area element is $r(R + r\\cos v)\\,du\\,dv$. Over a full turn of $v$, the cosine term integrates to zero, which leaves $4\\pi^2Rr$. This equals the length of the tube's central circle times the circumference of the tube.",
@@ -1529,6 +1564,7 @@ const torusArea: KnowledgePointDef = {
 
 const sphereSecondMoment: KnowledgePointDef = {
   id: "a-surface-integral-over-a-sphere-by-symmetry",
+  figure: multivariableDrawings7["surface-integrals-over-parametric-surfaces#a-surface-integral-over-a-sphere-by-symmetry"],
   title: t("A surface integral over a sphere by symmetry", "用对称性求球面上的面积分"),
   explanation: t(
     "On a sphere of radius $R$, the coordinates play the same role, so $x^2$, $y^2$ and $z^2$ have equal integrals. Their sum is the constant $R^2$, so each one has the average value $\\frac{R^2}{3}$. Multiplying by the area $4\\pi R^2$ gives the integral with no parametrization at all.",
@@ -1582,6 +1618,7 @@ const integralWithLog: KnowledgePointDef = {
 
 const fluxThroughTiltedTriangle: KnowledgePointDef = {
   id: "the-flux-of-a-constant-field-through-a-tilted-triangle",
+  figure: multivariableDrawings7["flux-in-three-dimensional-vector-fields#the-flux-of-a-constant-field-through-a-tilted-triangle"],
   title: t("The flux of a constant field through a tilted triangle", "常向量场穿过倾斜三角形的通量"),
   explanation: t(
     "The flux of a constant field through a flat surface is the dot product of the field with the area vector, whose size is the area and whose direction is the normal. For a triangle, half the cross product of two edges is that area vector. So there is no integral to do, only one cross product and one dot product.",
@@ -1633,6 +1670,7 @@ const pythagoreanSlopes = [
 
 const curvatureWithSlope: KnowledgePointDef = {
   id: "the-curvature-where-the-slope-is-not-zero",
+  figure: multivariableDrawings1["the-curvature-of-a-plane-curve#the-curvature-where-the-slope-is-not-zero"],
   title: t("The curvature where the slope is not zero", "斜率不为零处的曲率"),
   explanation: t(
     "The curvature of $y = f(x)$ is $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$. At a point where the slope is zero the denominator is 1, so curvature equals $|f''|$. A nonzero slope makes the denominator larger, because the same bending is spread over a longer arc. So the steeper the curve is at a point, the smaller the curvature for the same second derivative.",
@@ -1663,6 +1701,7 @@ const curvatureWithSlope: KnowledgePointDef = {
 
 const squaredLengthRate: KnowledgePointDef = {
   id: "the-rate-of-change-of-a-squared-length",
+  figure: multivariableDrawings1["differentiation-rules-for-vector-valued-functions#the-rate-of-change-of-a-squared-length"],
   title: t("The rate of change of a squared length", "长度平方的变化率"),
   explanation: t(
     "The squared length of a moving vector is $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$, so the product rule for dot products gives $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$. Only the current position and velocity are needed, and not the formula for the curve. If the result is zero, the vector is momentarily neither lengthening nor shortening, because its velocity is perpendicular to it.",
@@ -1779,6 +1818,7 @@ const linearizationError: KnowledgePointDef = {
 
 const horizontalTangent: KnowledgePointDef = {
   id: "where-a-level-curve-has-a-horizontal-tangent",
+  figure: multivariableDrawings2["tangent-lines-to-level-curves#where-a-level-curve-has-a-horizontal-tangent"],
   title: t("Where a level curve has a horizontal tangent", "等值线切线水平的位置"),
   explanation: t(
     "The tangent to a level curve $F(x, y) = k$ is perpendicular to $\\nabla F$. A horizontal tangent therefore means that the gradient points straight up or down, so $F_x = 0$ while $F_y \\ne 0$. The condition $F_x = 0$ gives a line through the origin here, and it must still be combined with the equation of the curve to find the actual points of tangency.",
@@ -1836,6 +1876,7 @@ const distinctPartials: KnowledgePointDef = {
 
 const preimageArea: KnowledgePointDef = {
   id: "the-area-of-a-region-from-the-area-of-its-image",
+  figure: multivariableDrawings3["the-inverse-of-an-affine-transformation#the-area-of-a-region-from-the-area-of-its-image"],
   title: t("The area of a region from the area of its image", "由像的面积求原区域的面积"),
   explanation: t(
     "An affine transformation multiplies every area by $|\\det A|$, where $A$ is its matrix, and the translation has no effect on area. Its inverse is also affine, with matrix $A^{-1}$, whose determinant is $\\frac{1}{\\det A}$. So to go back from an image to the original region, divide by $|\\det A|$. There is no need to find the inverse map or to know the shape of the region.",
@@ -1923,6 +1964,7 @@ const logarithmCrossTerm: KnowledgePointDef = {
 
 const lineAndParabolaMoment: KnowledgePointDef = {
   id: "integrating-x-between-a-line-and-a-parabola",
+  figure: multivariableDrawings4["double-integrals-over-type-i-regions#integrating-x-between-a-line-and-a-parabola"],
   title: t("Integrating x between a line and a parabola", "在直线和抛物线之间对 x 积分"),
   explanation: t(
     "A Type I region is described by first fixing $x$, then letting $y$ run from the lower curve to the upper curve. Here, the curves $y = x^2$ and $y = kx$ cross at $x = 0$ and $x = k$, and the line is on top between them. The inner integral then contributes the height of the region at $x$, multiplied by the integrand, leaving a single integral in $x$.",
@@ -2011,6 +2053,7 @@ const averageOverBox: KnowledgePointDef = {
 
 const twoCylinders: KnowledgePointDef = {
   id: "the-volume-common-to-two-cylinders",
+  figure: multivariableDrawings4["calculating-volumes-of-solids-using-triple-integrals#the-volume-common-to-two-cylinders"],
   title: t("The volume common to two cylinders", "两个圆柱的公共体积"),
   explanation: t(
     "The solid inside both $x^2 + y^2 = r^2$ and $x^2 + z^2 = r^2$ is easiest to slice at fixed $x$. At that value, $y$ and $z$ each run independently between $\\pm\\sqrt{r^2 - x^2}$, so the cross section is a square rather than a circle. Its area is a simple polynomial in $x$, and no circular functions appear, even though the solid is bounded entirely by curved cylinders.",
@@ -2065,6 +2108,7 @@ const distanceOverAnnulus: KnowledgePointDef = {
 
 const sphericalToCartesian: KnowledgePointDef = {
   id: "a-cartesian-coordinate-from-spherical-coordinates",
+  figure: multivariableDrawings5["spherical-polar-coordinates#a-cartesian-coordinate-from-spherical-coordinates"],
   title: t("A Cartesian coordinate from spherical coordinates", "由球坐标求直角坐标"),
   explanation: t(
     "With $\\varphi$ measured down from the positive $z$-axis, the distance of a point from the $z$-axis is $\\rho\\sin\\varphi$. This distance acts as the polar radius in the $xy$-plane, so $x = \\rho\\sin\\varphi\\cos\\theta$ and $y = \\rho\\sin\\varphi\\sin\\theta$. The height is $z = \\rho\\cos\\varphi$. Mixing up the two angles is the usual mistake, and the role of $\\sin\\varphi$ is the thing to remember.",
@@ -2102,6 +2146,7 @@ const sphericalToCartesian: KnowledgePointDef = {
 
 const averageAlongSegment: KnowledgePointDef = {
   id: "the-average-of-a-linear-function-along-a-segment",
+  figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-line-segments#the-average-of-a-linear-function-along-a-segment"],
   title: t("The average of a linear function along a segment", "线性函数沿线段的平均值"),
   explanation: t(
     "The average value of $f$ along a curve $C$ is $\\frac{1}{L}\\int_C f\\,ds$, where $L$ is the length. On a straight segment, a linear function changes at a steady rate with arc length, so its average is the value at the midpoint, and equals the average of the values at the two ends. So the length of the segment, which may be an awkward number, never needs to be computed.",
@@ -2194,6 +2239,7 @@ const astroidArea: KnowledgePointDef = {
 
 const coneSurfaceArea: KnowledgePointDef = {
   id: "the-area-of-a-cone-above-a-disk",
+  figure: multivariableDrawings7["areas-of-surfaces#the-area-of-a-cone-above-a-disk"],
   title: t("The area of a cone above a disk", "圆盘上方的圆锥面积"),
   explanation: t(
     "The surface area above a region is $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$. On the cone $z = k\\sqrt{x^2 + y^2}$, the two partial derivatives change from point to point, but $z_x^2 + z_y^2 = k^2$ everywhere. So the square root is a constant, and the surface area is that constant times the area of the region below. The tilt of the cone is the same at all its points.",
@@ -2221,6 +2267,7 @@ const coneSurfaceArea: KnowledgePointDef = {
 
 const integralOverCylinder: KnowledgePointDef = {
   id: "integrating-the-height-over-a-cylinder",
+  figure: multivariableDrawings7["parametrizations-of-cylinders#integrating-the-height-over-a-cylinder"],
   title: t("Integrating the height over a cylinder", "在圆柱面上对高度积分"),
   explanation: t(
     "A surface integral over a parametrized surface is $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$. On the cylinder $\\langle R\\cos u, R\\sin u, v \\rangle$, the length of the cross product is just $R$, so the area element is $R\\,du\\,dv$. Then a function of the height alone integrates to the factor $2\\pi$ around the cylinder times a single integral along its height.",
@@ -2250,6 +2297,7 @@ const integralOverCylinder: KnowledgePointDef = {
 
 const inverseSquareFlux: KnowledgePointDef = {
   id: "the-flux-of-an-inverse-square-field-through-a-sphere",
+  figure: multivariableDrawings7["flux-through-closed-surfaces#the-flux-of-an-inverse-square-field-through-a-sphere"],
   title: t("The flux of an inverse square field through a sphere", "平方反比场穿过球面的通量"),
   explanation: t(
     "On a sphere of radius $R$ centered at the origin, the field $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ points along the outward normal, with constant size $\\frac{|k|}{R^2}$. Multiplying by the area $4\\pi R^2$ cancels the radius, so every such sphere gets the same flux. The divergence theorem cannot be used directly on the ball here, because the field is not defined at the center.",
@@ -2304,6 +2352,8 @@ const diskMoment: KnowledgePointDef = {
 
 const rectangleCentralMoment: KnowledgePointDef = {
   id: "the-moment-of-inertia-of-a-rectangle-about-a-central-axis",
+  figure:
+    multivariableDrawings8["moments-of-inertia-of-laminas-about-other-axes#the-moment-of-inertia-of-a-rectangle-about-a-central-axis"],
   title: t("The moment of inertia of a rectangle about a central axis", "矩形对中心轴的转动惯量"),
   explanation: t(
     "For an axis through the center of a uniform rectangle, parallel to a side, the distance to the axis runs from $-\\frac{h}{2}$ to $\\frac{h}{2}$. Integrating the squared distance over the rectangle gives $\\frac{\\rho wh^3}{12}$, which is a quarter of the moment about the edge. Only the height across the axis is cubed. This is why a beam is stiffer when set on its narrow side.",
@@ -2357,6 +2407,8 @@ const annulusGyration: KnowledgePointDef = {
 
 const expectedCoordinate: KnowledgePointDef = {
   id: "an-expected-coordinate-from-a-joint-density",
+  figure:
+    multivariableDrawings8["probability-density-functions-of-continuous-random-variables#an-expected-coordinate-from-a-joint-density"],
   title: t("An expected coordinate from a joint density", "由联合密度求坐标的期望"),
   explanation: t(
     "When a joint density on a rectangle is a product of a function of $x$ and a function of $y$, the two variables are independent. The density of $X$ alone then follows from its own factor, normalized over its own interval, and $y$ plays no further part. For a density proportional to $xy$, this gives $X$ a density proportional to $x$, whose mean is two thirds of the way along.",

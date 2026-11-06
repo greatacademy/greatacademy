@@ -1,6 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q, sketch } from "@ga/subject-math";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { article, choiceProblem, expressionProblem, numberProblem, pointProblem, yesNo } from "../problems.ts";
 
@@ -807,6 +808,7 @@ export const cauchySchwarzInequalityAndAngleBetweenTwoVectors: TopicDef = {
   knowledgePoints: [
     {
       id: "angle-cosine-cauchy-schwarz",
+      figure: linearAlgebraDrawings2["cauchy-schwarz-inequality-and-angle-between-two-vectors#angle-cosine-cauchy-schwarz"],
       title: t("Cosine of the Angle Between Vectors", "两向量夹角的余弦值"),
       explanation: t(
         "By the Cauchy-Schwarz inequality, $|u \\cdot v| \\le |u| |v|$ for all vectors $u, v$. The angle $\\theta$ between two nonzero vectors in an inner product space is defined by $\\cos \\theta = \\frac{u \\cdot v}{|u| |v|}$.",
@@ -859,6 +861,7 @@ export const cauchySchwarzInequalityAndAngleBetweenTwoVectors: TopicDef = {
     },
     {
       id: "maximizing-a-linear-expression-on-a-sphere",
+      figure: linearAlgebraDrawings2["cauchy-schwarz-inequality-and-angle-between-two-vectors#maximizing-a-linear-expression-on-a-sphere"],
       title: t("Maximizing a linear expression on a sphere", "在球面上求线性式的最大值"),
       explanation: t(
         "The Cauchy–Schwarz inequality $|u \\cdot v| \\le \\|u\\|\\,\\|v\\|$ turns into an optimization tool. With $u = (a, b, c)$ and $v = (x, y, z)$ on the sphere $x^2 + y^2 + z^2 = R^2$,\n\n$$ax + by + cz \\le R\\sqrt{a^2 + b^2 + c^2},$$\n\nwith equality when $v$ points in the same direction as $u$. So the maximum is $R\\,\\|u\\|$ and the minimum is $-R\\,\\|u\\|$.",
@@ -968,6 +971,7 @@ export const pythagoreanTheoremAndTriangleInequalityInInnerProductSpaces: TopicD
     },
     {
       id: "the-parallelogram-law",
+      figure: linearAlgebraDrawings2["pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces#the-parallelogram-law"],
       title: t("The parallelogram law", "平行四边形定律"),
       explanation: t(
         "Expanding $\\|u + v\\|^2$ and $\\|u - v\\|^2$ with the inner product and adding them cancels the cross terms $\\pm 2\\langle u, v \\rangle$:\n\n$$\\|u + v\\|^2 + \\|u - v\\|^2 = 2\\|u\\|^2 + 2\\|v\\|^2.$$\n\nGeometrically, the squares of the two diagonals of a parallelogram add up to the squares of its four sides. Knowing three of the lengths determines the fourth.",
@@ -1393,6 +1397,7 @@ export const orthogonalMatrices: TopicDef = {
     },
     {
       id: "solving-with-an-orthogonal-matrix",
+      figure: linearAlgebraDrawings2["orthogonal-matrices#solving-with-an-orthogonal-matrix"],
       title: t("Solving $Qx = b$ with an orthogonal matrix", "用正交矩阵解 $Qx = b$"),
       explanation: t(
         "An orthogonal matrix satisfies $Q^TQ = I$, so its inverse is simply its transpose. The system $Qx = b$ is therefore solved by $x = Q^Tb$, a matrix-vector product with no elimination. For the rotation-like matrix $Q = \\frac{1}{c}\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ with $a^2 + b^2 = c^2$, the solution is $x = \\frac{1}{c}\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix} b$.",
@@ -1452,6 +1457,7 @@ export const orthogonalLinearTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "orthogonal-transformation-preserves-geometry",
+      figure: linearAlgebraDrawings2["orthogonal-linear-transformations#orthogonal-transformation-preserves-geometry"],
       title: t("Preservation of Lengths and Dot Products Under Orthogonal Transformations", "正交变换下长度与点积的保持性"),
       explanation: t(
         "A linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ is orthogonal (an isometry) if and only if $T(u) \\cdot T(v) = u \\cdot v$ for all $u, v \\in \\mathbb{R}^n$. Consequently, it preserves lengths: $|T(u)| = |u|$, and preserves angles between vectors.",
@@ -1493,6 +1499,7 @@ export const orthogonalLinearTransformations: TopicDef = {
     },
     {
       id: "distances-under-an-orthogonal-transformation",
+      figure: linearAlgebraDrawings2["orthogonal-linear-transformations#distances-under-an-orthogonal-transformation"],
       title: t("Distances under an orthogonal transformation", "正交变换下的距离"),
       explanation: t(
         "An orthogonal transformation preserves inner products, $\\langle T u, T v \\rangle = \\langle u, v \\rangle$, and therefore lengths, distances and angles. To find $\\|Tu - Tv\\|^2$, use linearity to write it as $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ and expand:\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2.$$",

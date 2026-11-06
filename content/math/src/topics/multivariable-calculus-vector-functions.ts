@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q, type RealSet } from "@ga/subject-math";
+import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
 
 import {
   choiceProblem,
@@ -627,6 +628,7 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "computing-arc-length-of-a-space-curve",
+      figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#computing-arc-length-of-a-space-curve"],
       title: t("Computing the arc length of a space curve", "计算空间曲线的弧长"),
       explanation: t(
         "The speed is the length of the velocity vector, and integrating the speed over the time interval adds up the distance travelled along the curve. For a smooth space curve $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, the arc length from $t = a$ to $t = b$ is given by:\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt.$$",
@@ -662,6 +664,7 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
     },
     {
       id: "arc-length-when-the-speed-is-a-perfect-square",
+      figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#arc-length-when-the-speed-is-a-perfect-square"],
       title: t("Arc length when the speed is a perfect square", "速率为完全平方时的弧长"),
       explanation: t(
         "Arc length $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ is usually hard because of the square root, but some curves make it a perfect square. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$,\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\nso $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$.",
@@ -943,6 +946,7 @@ export const principalNormalVectors: TopicDef = {
     },
     {
       id: "the-principal-normal-of-a-circle-points-to-its-center",
+      figure: multivariableDrawings1["principal-normal-vectors#the-principal-normal-of-a-circle-points-to-its-center"],
       title: t("The principal normal of a circle points to its center", "圆的主法向量指向圆心"),
       explanation: t(
         "The principal unit normal $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ points in the direction the curve is turning. On a circle the curve always turns toward the center, so at a point $P$ of the circle with center $C$,\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\nwhatever the direction of travel or the speed.",
@@ -1069,6 +1073,7 @@ export const binormalVectors: TopicDef = {
     },
     {
       id: "the-binormal-of-a-plane-curve",
+      figure: multivariableDrawings1["binormal-vectors#the-binormal-of-a-plane-curve"],
       title: t("The binormal of a plane curve", "平面曲线的副法向量"),
       explanation: t(
         "For a curve lying in a plane, both $\\mathbf{T}$ and $\\mathbf{N}$ lie in that plane, so $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is a unit normal to the plane. For a circle in a horizontal plane $z = c$, the right-hand rule decides the sign: traversed counterclockwise when viewed from above, $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$; clockwise, $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$. The radius and the speed do not matter.",
@@ -1208,6 +1213,7 @@ export const parameterizationByArcLength: TopicDef = {
   knowledgePoints: [
     {
       id: "reparameterizing-curves-by-arc-length",
+      figure: multivariableDrawings1["parameterization-by-arc-length#reparameterizing-curves-by-arc-length"],
       title: t("Reparameterizing curves by arc length", "按弧长重新参数化曲线"),
       explanation: t(
         "The arc length function starting from $t = 0$ is $s(t) = \\int_0^t \\|\\mathbf{r}'(u)\\|\\,du$. If the speed is a constant $c$, then $s = ct$, which inverts to $t = \\frac{s}{c}$. Substituting $t(s)$ gives the arc length parameterization $\\mathbf{r}(s)$.",
@@ -1244,6 +1250,7 @@ export const parameterizationByArcLength: TopicDef = {
     },
     {
       id: "a-point-at-a-given-arc-length-along-a-line",
+      figure: multivariableDrawings1["parameterization-by-arc-length#a-point-at-a-given-arc-length-along-a-line"],
       title: t("The point at a given arc length along a line", "直线上给定弧长处的点"),
       explanation: t(
         "A line $\\mathbf{r}(t) = P + t\\mathbf{v}$ has constant speed $\\|\\mathbf{v}\\|$, so the arc length from $t = 0$ is $s = \\|\\mathbf{v}\\|t$. Solving $t = s/\\|\\mathbf{v}\\|$ gives the arc length parametrization\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\nwhich moves at unit speed. The point at arc length $s$ is $P$ plus $s$ times the unit vector in the direction of $\\mathbf{v}$.",
@@ -1342,6 +1349,7 @@ export const introductionToCurvature: TopicDef = {
     },
     {
       id: "the-curvature-of-a-circle-is-the-reciprocal-of-its-radius",
+      figure: multivariableDrawings1["introduction-to-curvature#the-curvature-of-a-circle-is-the-reciprocal-of-its-radius"],
       title: t("The curvature of a circle", "圆的曲率"),
       explanation: t(
         "Curvature $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ measures how fast the direction turns per unit of distance travelled. Around a circle of radius $R$ the tangent turns through $2\\pi$ while the point travels $2\\pi R$, at a steady rate, so\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}.$$\n\nThe parametrization's speed and the circle's center do not affect $\\kappa$, because curvature is measured per unit arc length.",
@@ -1430,6 +1438,7 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
     },
     {
       id: "curvature-of-a-cubic-space-curve-by-the-cross-product",
+      figure: multivariableDrawings1["finding-curvature-using-the-cross-product#curvature-of-a-cubic-space-curve-by-the-cross-product"],
       title: t("Curvature of a cubic space curve", "三次空间曲线的曲率"),
       explanation: t(
         "The cross product formula $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ works for any parametrization, so there is no need to reparametrize by arc length first. Compute the first two derivatives, take their cross product, and divide its length by the cube of the speed. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$, $\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$ and $\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$, so\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2).$$\n\nWith $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ this gives $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$.",
@@ -1471,6 +1480,7 @@ export const radiusOfCurvature: TopicDef = {
   knowledgePoints: [
     {
       id: "calculating-the-radius-of-curvature",
+      figure: multivariableDrawings1["radius-of-curvature#calculating-the-radius-of-curvature"],
       title: t("Calculating the radius of curvature", "计算曲率半径"),
       explanation: t(
         "The radius of curvature $\\rho$ at a point on a curve is the reciprocal of its curvature:\n\n$$\\rho = \\frac{1}{\\kappa}.$$ It represents the radius of the osculating circle (circle of curvature) at that point. With $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ this reads $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$.",
@@ -1506,6 +1516,7 @@ export const radiusOfCurvature: TopicDef = {
     },
     {
       id: "the-radius-of-curvature-at-a-vertex-of-an-ellipse",
+      figure: multivariableDrawings1["radius-of-curvature#the-radius-of-curvature-at-a-vertex-of-an-ellipse"],
       title: t("The radius of curvature at a vertex of an ellipse", "椭圆顶点处的曲率半径"),
       explanation: t(
         "For the ellipse $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$, the cross product formula gives\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}.$$\n\nAt the vertex $(A, 0)$, where $t = 0$, this is $\\kappa = \\frac{A}{B^2}$, so the radius of curvature is $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$. At $(0, B)$ the roles swap and $\\rho = \\frac{A^2}{B}$.",
@@ -1548,6 +1559,7 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
   knowledgePoints: [
     {
       id: "computing-curvature-of-function-graphs",
+      figure: multivariableDrawings1["the-curvature-of-a-plane-curve#computing-curvature-of-function-graphs"],
       title: t("Computing curvature of function graphs", "计算显式函数图像的曲率"),
       explanation: t(
         "For a graph the second derivative measures bending, and dividing by a power of one plus the square of the slope corrects for how steep the graph is. For a plane curve given as the graph of a function $y = f(x)$, the curvature formula reduces to:\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}.$$",
@@ -1583,6 +1595,7 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
     },
     {
       id: "curvature-of-a-graph-from-its-slope-and-concavity",
+      figure: multivariableDrawings1["the-curvature-of-a-plane-curve#curvature-of-a-graph-from-its-slope-and-concavity"],
       title: t("Curvature of a graph from $f'$ and $f''$", "由 $f'$ 与 $f''$ 求图像的曲率"),
       explanation: t(
         "For the graph $y = f(x)$ the curvature is\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}.$$\n\nIt grows with the concavity $|f''|$ but is damped where the graph is steep. When the slope is a ratio from a Pythagorean triple, such as $\\frac34$, the denominator is rational: $1 + \\frac{9}{16} = \\frac{25}{16}$, whose $\\frac32$ power is $\\frac{125}{64}$.",
@@ -1748,6 +1761,7 @@ export const visualizingVectorFields: TopicDef = {
   knowledgePoints: [
     {
       id: "interpreting-vector-field-plots",
+      figure: multivariableDrawings1["visualizing-vector-fields#interpreting-vector-field-plots"],
       title: t("Interpreting vector field plots", "解读向量场图像"),
       explanation: t(
         "A vector field plot shows arrows attached to sample points $(x, y)$. Key patterns include:\n\n- Radial fields: $\\mathbf{F} = \\langle x, y \\rangle$ points directly away from the origin.\n- Rotational fields: $\\mathbf{F} = \\langle -y, x \\rangle$ circulates counterclockwise around the origin.\n- Constant fields: $\\mathbf{F} = \\langle c_1, c_2 \\rangle$ have identical vectors at every point.",
@@ -2221,6 +2235,7 @@ export const connectedAndSimplyConnectedRegions: TopicDef = {
     },
     {
       id: "picking-the-simply-connected-region",
+      figure: multivariableDrawings1["connected-and-simply-connected-regions#picking-the-simply-connected-region"],
       title: t("Picking the simply connected region", "挑出单连通区域"),
       explanation: t(
         "A region is connected if any two of its points can be joined by a path inside it, and simply connected if, in addition, every closed curve in it can be shrunk to a point without leaving it. A disk, a half-plane and a rectangle are simply connected. Even the plane with a ray removed is simply connected, because a loop cannot surround the ray's endpoint without crossing the ray. An annulus, a punctured disk or the plane without the origin each have a hole, and two separate disks are not even connected.",
@@ -2329,6 +2344,7 @@ export const streamFunctions: TopicDef = {
     },
     {
       id: "a-velocity-field-from-its-stream-function",
+      figure: multivariableDrawings1["stream-functions#a-velocity-field-from-its-stream-function"],
       title: t("A velocity field from its stream function", "由流函数求速度场"),
       explanation: t(
         "A stream function $\\psi$ determines an incompressible flow through $P = \\frac{\\partial \\psi}{\\partial y}$ and $Q = -\\frac{\\partial \\psi}{\\partial x}$. Such a field is automatically divergence free, since $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$. Differentiating $\\psi$ and evaluating at a point gives the velocity there, which is tangent to the streamline $\\psi = C$ through that point.",
@@ -2606,6 +2622,7 @@ export const theCurlOfAVectorField: TopicDef = {
     },
     {
       id: "the-scalar-curl-of-a-plane-field-at-a-point",
+      figure: multivariableDrawings1["the-curl-of-a-vector-field#the-scalar-curl-of-a-plane-field-at-a-point"],
       title: t("The scalar curl of a plane field at a point", "平面场在某点的标量旋度"),
       explanation: t(
         "For a plane field $\\mathbf{F} = \\langle P, Q \\rangle$, viewed as $\\langle P, Q, 0 \\rangle$ in space, the curl points along $\\mathbf{k}$ with size\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}.$$\n\nThis scalar curl measures the local rotation: positive means a tiny paddle wheel would spin counterclockwise, negative means clockwise.",

@@ -5,6 +5,8 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -143,42 +145,45 @@ const determinantFromSquare = point(
   },
 );
 
-const rankFromImage = point(
-  "the-rank-from-the-image-of-the-basis",
-  ["The rank from the image of the basis", "由基的像读秩"],
-  [
-    "The image of a linear map is spanned by the images of the basis vectors, and the rank is the dimension of that span. Two arrows that are not parallel span the whole plane, so the rank is two. Two parallel arrows span only a line through the origin, so the rank is one, however long the arrows are.",
-    "线性映射的像由基向量的像张成，秩是这个张成空间的维数。两个不平行的箭头张成整个平面，所以秩是二。两个平行的箭头只张成过原点的一条直线，所以不论箭头多长，秩都是一。",
-  ],
-  (rng) => {
-    const full = rng.bool(0.4);
-    let u: Point;
-    let v: Point;
-    if (full) [u, v] = independentPair(rng, 3);
-    else {
-      const w = rng.pick(primitive.filter((p) => Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
-      const [p, q] = rng.sample([-3, -2, -1, 1, 2, 3], 2) as [number, number];
-      u = [p * w[0], p * w[1]];
-      v = [q * w[0], q * w[1]];
-    }
-    const answer = full ? 2 : 1;
-    return ask(
-      [
-        "The arrows show the images under a linear map $T$ of the two standard basis vectors. What is the rank of $T$?",
-        "箭头表示线性映射 $T$ 下两个标准基向量的像。$T$ 的秩是多少？",
-      ],
-      answer,
-      [3 - answer, 0, 3],
-      [
-        full
-          ? "The two arrows are not parallel, so they span the whole plane and the rank is $2$."
-          : "The two arrows lie on one line through the origin, so their span is that line and the rank is $1$.",
-        full ? "两个箭头不平行，所以张成整个平面，秩是 $2$。" : "两个箭头在过原点的同一条直线上，所以张成的就是这条直线，秩是 $1$。",
-      ],
-      fig(6, imageOfSquare(u, v), altOfImage(u, v)),
-    );
-  },
-);
+const rankFromImage = {
+  ...point(
+    "the-rank-from-the-image-of-the-basis",
+    ["The rank from the image of the basis", "由基的像读秩"],
+    [
+      "The image of a linear map is spanned by the images of the basis vectors, and the rank is the dimension of that span. Two arrows that are not parallel span the whole plane, so the rank is two. Two parallel arrows span only a line through the origin, so the rank is one, however long the arrows are.",
+      "线性映射的像由基向量的像张成，秩是这个张成空间的维数。两个不平行的箭头张成整个平面，所以秩是二。两个平行的箭头只张成过原点的一条直线，所以不论箭头多长，秩都是一。",
+    ],
+    (rng) => {
+      const full = rng.bool(0.4);
+      let u: Point;
+      let v: Point;
+      if (full) [u, v] = independentPair(rng, 3);
+      else {
+        const w = rng.pick(primitive.filter((p) => Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
+        const [p, q] = rng.sample([-3, -2, -1, 1, 2, 3], 2) as [number, number];
+        u = [p * w[0], p * w[1]];
+        v = [q * w[0], q * w[1]];
+      }
+      const answer = full ? 2 : 1;
+      return ask(
+        [
+          "The arrows show the images under a linear map $T$ of the two standard basis vectors. What is the rank of $T$?",
+          "箭头表示线性映射 $T$ 下两个标准基向量的像。$T$ 的秩是多少？",
+        ],
+        answer,
+        [3 - answer, 0, 3],
+        [
+          full
+            ? "The two arrows are not parallel, so they span the whole plane and the rank is $2$."
+            : "The two arrows lie on one line through the origin, so their span is that line and the rank is $1$.",
+          full ? "两个箭头不平行，所以张成整个平面，秩是 $2$。" : "两个箭头在过原点的同一条直线上，所以张成的就是这条直线，秩是 $1$。",
+        ],
+        fig(6, imageOfSquare(u, v), altOfImage(u, v)),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings1["image-and-rank-of-a-linear-transformation#the-rank-from-the-image-of-the-basis"],
+};
 
 const kernelFromImage = point(
   "the-kernel-from-collapsed-arrows",
@@ -362,215 +367,230 @@ const eigenFromShear = point(
   },
 );
 
-const coordsInBasis = point(
-  "reading-a-combination-of-two-arrows",
-  ["Reading a combination of two arrows", "读两个箭头的组合"],
-  [
-    "Two arrows that are not parallel span the plane, so every point is exactly one combination of them. To read the coefficients, solve the two coordinate equations given by the drawing. The coefficients are not the coordinates of the point, unless the two arrows happen to be the standard basis vectors.",
-    "两个不平行的箭头张成平面，所以每个点都恰好是它们的一个组合。要读出系数，就解图给出的两个坐标方程。除非两个箭头恰好是标准基向量，否则系数不是点的坐标。",
-  ],
-  (rng) => {
-    const [u, w] = independentPair(rng, 2);
-    const options: [number, number][] = [];
-    for (const s of [-2, -1, 1, 2, 3])
-      for (const c of [-2, -1, 1, 2, 3]) {
-        const P: Point = [s * u[0] + c * w[0], s * u[1] + c * w[1]];
-        if (Math.abs(P[0]) <= 7 && Math.abs(P[1]) <= 7) options.push([s, c]);
-      }
-    const [s, c] = rng.pick(options.length > 0 ? options : [[1, 1] as [number, number]]);
-    const P: Point = [s * u[0] + c * w[0], s * u[1] + c * w[1]];
-    const asksFirst = rng.bool();
-    return ask(
-      asksFirst
-        ? [
-            "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $s$?",
-            "用图中的箭头把点 $P$ 写成 $P = su + tw$。$s$ 是多少？",
-          ]
-        : [
-            "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $t$?",
-            "用图中的箭头把点 $P$ 写成 $P = su + tw$。$t$ 是多少？",
+const coordsInBasis = {
+  ...point(
+    "reading-a-combination-of-two-arrows",
+    ["Reading a combination of two arrows", "读两个箭头的组合"],
+    [
+      "Two arrows that are not parallel span the plane, so every point is exactly one combination of them. To read the coefficients, solve the two coordinate equations given by the drawing. The coefficients are not the coordinates of the point, unless the two arrows happen to be the standard basis vectors.",
+      "两个不平行的箭头张成平面，所以每个点都恰好是它们的一个组合。要读出系数，就解图给出的两个坐标方程。除非两个箭头恰好是标准基向量，否则系数不是点的坐标。",
+    ],
+    (rng) => {
+      const [u, w] = independentPair(rng, 2);
+      const options: [number, number][] = [];
+      for (const s of [-2, -1, 1, 2, 3])
+        for (const c of [-2, -1, 1, 2, 3]) {
+          const P: Point = [s * u[0] + c * w[0], s * u[1] + c * w[1]];
+          if (Math.abs(P[0]) <= 7 && Math.abs(P[1]) <= 7) options.push([s, c]);
+        }
+      const [s, c] = rng.pick(options.length > 0 ? options : [[1, 1] as [number, number]]);
+      const P: Point = [s * u[0] + c * w[0], s * u[1] + c * w[1]];
+      const asksFirst = rng.bool();
+      return ask(
+        asksFirst
+          ? [
+              "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $s$?",
+              "用图中的箭头把点 $P$ 写成 $P = su + tw$。$s$ 是多少？",
+            ]
+          : [
+              "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $t$?",
+              "用图中的箭头把点 $P$ 写成 $P = su + tw$。$t$ 是多少？",
+            ],
+        asksFirst ? s : c,
+        [asksFirst ? c : s, -(asksFirst ? s : c), P[0], P[1]],
+        [
+          `The drawing gives $u = (${u[0]}, ${u[1]})$, $w = (${w[0]}, ${w[1]})$ and $P = (${P[0]}, ${P[1]})$. Solving the two coordinate equations gives $s = ${s}$ and $t = ${c}$.`,
+          `由图得 $u = (${u[0]}, ${u[1]})$，$w = (${w[0]}, ${w[1]})$，$P = (${P[0]}, ${P[1]})$。解两个坐标方程得 $s = ${s}$，$t = ${c}$。`,
+        ],
+        fig(
+          8,
+          [...vector(u, "u"), ...vector(w, "w"), { kind: "point", at: P, label: "P", dir: "n" }],
+          [
+            `Arrows u to (${u[0]}, ${u[1]}) and w to (${w[0]}, ${w[1]}), and the point P at (${P[0]}, ${P[1]}).`,
+            `指向 (${u[0]}, ${u[1]}) 的箭头 u，指向 (${w[0]}, ${w[1]}) 的箭头 w，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
           ],
-      asksFirst ? s : c,
-      [asksFirst ? c : s, -(asksFirst ? s : c), P[0], P[1]],
-      [
-        `The drawing gives $u = (${u[0]}, ${u[1]})$, $w = (${w[0]}, ${w[1]})$ and $P = (${P[0]}, ${P[1]})$. Solving the two coordinate equations gives $s = ${s}$ and $t = ${c}$.`,
-        `由图得 $u = (${u[0]}, ${u[1]})$，$w = (${w[0]}, ${w[1]})$，$P = (${P[0]}, ${P[1]})$。解两个坐标方程得 $s = ${s}$，$t = ${c}$。`,
-      ],
-      fig(
-        8,
-        [...vector(u, "u"), ...vector(w, "w"), { kind: "point", at: P, label: "P", dir: "n" }],
-        [
-          `Arrows u to (${u[0]}, ${u[1]}) and w to (${w[0]}, ${w[1]}), and the point P at (${P[0]}, ${P[1]}).`,
-          `指向 (${u[0]}, ${u[1]}) 的箭头 u，指向 (${w[0]}, ${w[1]}) 的箭头 w，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
-        ],
-      ),
-    );
-  },
-);
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings1["linear-span-of-vectors-in-n-dimensional-euclidean-space#reading-a-combination-of-two-arrows"],
+};
 
-const nullSpaceLine = point(
-  "the-matrix-from-a-drawn-null-space",
-  ["The matrix from a drawn null space", "由图中零空间读矩阵"],
-  [
-    "A vector lies in the null space when every row of the matrix is perpendicular to it. So a matrix whose null space is a given line through the origin must have rows perpendicular to that line. Rows that point along the line are a common mistake: they give the perpendicular line as the null space instead.",
-    "向量在零空间中，当且仅当矩阵的每一行都与它垂直。所以零空间是过原点某条直线的矩阵，它的行必须垂直于这条直线。行沿直线方向是常见错误：那样得到的零空间是垂直的那条直线。",
-  ],
-  (rng) => {
-    const [p, q] = rng.pick(primitive);
-    const m = rng.int(1, 3);
-    const row = (a: number, b: number) => mat(a, b, m * a, m * b);
-    const candidates = (
-      [
-        [p, q],
-        [q, p],
-        [p, -q],
-      ] as Point[]
-    ).filter((c) => dot(c, [p, q]) !== 0);
-    return choose(
-      rng,
-      ["The line drawn is the null space of a matrix. Which matrix is it?", "图中的直线是某个矩阵的零空间。是哪个矩阵？"],
-      same(row(q, -p)),
-      [...candidates.map((c) => same(row(c[0], c[1]))), same(row(q + p, q - p)), same(row(p + 2 * q, q - 2 * p))],
-      [
-        `The line passes through $(${p}, ${q})$, so each row must be perpendicular to that vector. The row $(${q}, ${-p})$ is, since $(${q})(${p}) + (${-p})(${q}) = 0$, and the second row is a multiple of it.`,
-        `直线过点 $(${p}, ${q})$，所以每一行都必须垂直于这个向量。行 $(${q}, ${-p})$ 满足这一点，因为 $(${q})(${p}) + (${-p})(${q}) = 0$，第二行是它的倍数。`,
-      ],
-      fig(
-        5,
-        [{ kind: "line", a: [0, 0], b: [p, q], accent: true }],
-        [`A line through the origin and (${p}, ${q}).`, `过原点和 (${p}, ${q}) 的直线。`],
-      ),
-    );
-  },
-);
-
-const projectionFromDrawing = point(
-  "the-projection-onto-a-drawn-line",
-  ["The projection onto a drawn line", "向图中直线投影"],
-  [
-    "The projection of a vector onto a line through the origin is the point of the line closest to its tip. With a direction $u$ read from the line, it equals $\\frac{v \\cdot u}{u \\cdot u}u$. The difference between the vector and its projection is perpendicular to the line, which gives a way to check the result.",
-    "向量在过原点直线上的投影是直线上离其终点最近的点。从直线上读出方向 $u$ 后，投影等于 $\\frac{v \\cdot u}{u \\cdot u}u$。向量与投影之差垂直于直线，可以用来检验结果。",
-  ],
-  (rng) => {
-    const u = rng.pick(primitive.filter((p) => Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
-    const n: Point = [-u[1], u[0]];
-    const choices: [number, number][] = [];
-    for (const a of [-2, -1, 1, 2, 3])
-      for (const b of [-2, -1, 1, 2]) {
-        if (Math.abs(a * u[0] + b * n[0]) <= 5 && Math.abs(a * u[1] + b * n[1]) <= 5) choices.push([a, b]);
-      }
-    const [a, b] = rng.pick(choices);
-    const v: Point = [a * u[0] + b * n[0], a * u[1] + b * n[1]];
-    const proj: Point = [a * u[0], a * u[1]];
-    const rest: Point = [b * n[0], b * n[1]];
-    return choose(
-      rng,
-      [
-        "The arrow $v$ and a line through the origin are drawn. What is the projection of $v$ onto the line?",
-        "图中画出了箭头 $v$ 和一条过原点的直线。$v$ 在这条直线上的投影是什么？",
-      ],
-      same(col(proj[0], proj[1])),
-      ([rest, u, v, [-proj[0], -proj[1]], [dot(v, u) * u[0], dot(v, u) * u[1]]] as Point[]).map((c) => same(col(c[0], c[1]))),
-      [
-        `Take $u = (${u[0]}, ${u[1]})$ on the line. Then $v \\cdot u = ${dot(v, u)}$ and $u \\cdot u = ${dot(u, u)}$, so the factor is $${a}$ and the projection is $(${proj[0]}, ${proj[1]})$.`,
-        `在直线上取 $u = (${u[0]}, ${u[1]})$。则 $v \\cdot u = ${dot(v, u)}$，$u \\cdot u = ${dot(u, u)}$，所以倍数是 $${a}$，投影是 $(${proj[0]}, ${proj[1]})$。`,
-      ],
-      fig(
-        6,
-        [{ kind: "line", a: [0, 0], b: u }, ...vector(v, "v")],
+const nullSpaceLine = {
+  ...point(
+    "the-matrix-from-a-drawn-null-space",
+    ["The matrix from a drawn null space", "由图中零空间读矩阵"],
+    [
+      "A vector lies in the null space when every row of the matrix is perpendicular to it. So a matrix whose null space is a given line through the origin must have rows perpendicular to that line. Rows that point along the line are a common mistake: they give the perpendicular line as the null space instead.",
+      "向量在零空间中，当且仅当矩阵的每一行都与它垂直。所以零空间是过原点某条直线的矩阵，它的行必须垂直于这条直线。行沿直线方向是常见错误：那样得到的零空间是垂直的那条直线。",
+    ],
+    (rng) => {
+      const [p, q] = rng.pick(primitive);
+      const m = rng.int(1, 3);
+      const row = (a: number, b: number) => mat(a, b, m * a, m * b);
+      const candidates = (
         [
-          `A line through the origin and (${u[0]}, ${u[1]}), and an arrow v to (${v[0]}, ${v[1]}).`,
-          `过原点和 (${u[0]}, ${u[1]}) 的直线，以及指向 (${v[0]}, ${v[1]}) 的箭头 v。`,
-        ],
-      ),
-    );
-  },
-);
-
-const orthogonalPair = point(
-  "spotting-the-perpendicular-pair",
-  ["Spotting the perpendicular pair", "找出垂直的一对"],
-  [
-    "Two vectors are orthogonal exactly when their dot product is zero. Reading coordinates from a drawing and testing the dot product is more reliable than judging angles by eye, particularly when the arrows have different lengths or do not lie along the grid lines of the drawing.",
-    "两个向量正交，当且仅当它们的点积为零。从图中读出坐标并计算点积，比用眼睛判断角度更可靠，尤其是箭头长度不同或不沿网格线的时候。",
-  ],
-  (rng) => {
-    const x = rng.pick(nonzero(3).filter((p) => p[0] !== 0 && p[1] !== 0));
-    const k = rng.pick([1, -1]);
-    const y: Point = [-k * x[1], k * x[0]];
-    const c = rng.pick(nonzero(3).filter((p) => dot(p, x) !== 0 && dot(p, y) !== 0));
-    const d = rng.pick(nonzero(3).filter((p) => dot(p, x) !== 0 && dot(p, y) !== 0 && dot(p, c) !== 0 && cross(p, c) !== 0));
-    const names = rng.shuffle(["a", "b", "c", "d"]) as [string, string, string, string];
-    const pair = (i: number, j: number): Pair => {
-      const [m, n] = [names[i] as string, names[j] as string].sort();
-      return [`$${m}$ and $${n}$`, `$${m}$ 和 $${n}$`];
-    };
-    const vs = [x, y, c, d];
-    return choose(
-      rng,
-      ["Which two of the arrows drawn are perpendicular?", "图中哪两个箭头互相垂直？"],
-      pair(0, 1),
-      [pair(0, 2), pair(1, 3), pair(2, 3), pair(0, 3), pair(1, 2)],
-      [
-        `Reading coordinates gives $(${x[0]}, ${x[1]})$ and $(${y[0]}, ${y[1]})$ for these two arrows, whose dot product is $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$. No other pair has dot product zero.`,
-        `读出这两个箭头的坐标为 $(${x[0]}, ${x[1]})$ 和 $(${y[0]}, ${y[1]})$，点积是 $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$。其他各对的点积都不为零。`,
-      ],
-      fig(
-        4,
-        vs.flatMap((v, i) => vector(v, names[i] as string)),
+          [p, q],
+          [q, p],
+          [p, -q],
+        ] as Point[]
+      ).filter((c) => dot(c, [p, q]) !== 0);
+      return choose(
+        rng,
+        ["The line drawn is the null space of a matrix. Which matrix is it?", "图中的直线是某个矩阵的零空间。是哪个矩阵？"],
+        same(row(q, -p)),
+        [...candidates.map((c) => same(row(c[0], c[1]))), same(row(q + p, q - p)), same(row(p + 2 * q, q - 2 * p))],
         [
-          `Four arrows from the origin: ${vs.map((v, i) => `${names[i]} to (${v[0]}, ${v[1]})`).join(", ")}.`,
-          `从原点出发的四个箭头：${vs.map((v, i) => `${names[i]} 指向 (${v[0]}, ${v[1]})`).join("，")}。`,
+          `The line passes through $(${p}, ${q})$, so each row must be perpendicular to that vector. The row $(${q}, ${-p})$ is, since $(${q})(${p}) + (${-p})(${q}) = 0$, and the second row is a multiple of it.`,
+          `直线过点 $(${p}, ${q})$，所以每一行都必须垂直于这个向量。行 $(${q}, ${-p})$ 满足这一点，因为 $(${q})(${p}) + (${-p})(${q}) = 0$，第二行是它的倍数。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          5,
+          [{ kind: "line", a: [0, 0], b: [p, q], accent: true }],
+          [`A line through the origin and (${p}, ${q}).`, `过原点和 (${p}, ${q}) 的直线。`],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings1["the-null-space-of-a-matrix#the-matrix-from-a-drawn-null-space"],
+};
 
-const orthogonalTransform = point(
-  "applying-a-drawn-orthogonal-map",
-  ["Applying a drawn orthogonal map", "作用图中的正交映射"],
-  [
-    "An orthogonal map sends the standard basis to perpendicular unit vectors, and a drawing of these two arrows fixes the whole map. A point $(x, y)$ goes to $x$ times the first arrow plus $y$ times the second. Using the transpose instead applies the inverse map, which sends the point somewhere else unless the map is its own inverse.",
-    "正交映射把标准基映成互相垂直的单位向量，这两个箭头的图就确定了整个映射。点 $(x, y)$ 映到 $x$ 倍第一个箭头加 $y$ 倍第二个箭头。用转置矩阵则是作用逆映射，除非映射是自身的逆，否则点会被送到别处。",
-  ],
-  (rng) => {
-    const u = rng.pick<Point>([
-      [1, 0],
-      [0, 1],
-      [-1, 0],
-      [0, -1],
-    ]);
-    const sign = rng.sign();
-    const v: Point = [-sign * u[1], sign * u[0]];
-    const P: Point = [rng.nonZero(-4, 4), rng.nonZero(-4, 4)];
-    const image: Point = [P[0] * u[0] + P[1] * v[0], P[0] * u[1] + P[1] * v[1]];
-    const inverse: Point = [P[0] * u[0] + P[1] * u[1], P[0] * v[0] + P[1] * v[1]];
-    return choose(
-      rng,
-      [
-        "The arrows show the images of the standard basis under an orthogonal map $T$. What is $T(P)$ for the point $P$ drawn?",
-        "箭头表示正交映射 $T$ 下标准基的像。对图中的点 $P$，$T(P)$ 是什么？",
-      ],
-      same(col(image[0], image[1])),
-      ([inverse, [-image[0], -image[1]], P, [image[1], image[0]], [image[0], -image[1]], [-image[0], image[1]]] as Point[]).map((c) =>
-        same(col(c[0], c[1])),
-      ),
-      [
-        `The drawing gives $P = (${P[0]}, ${P[1]})$, $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$. So $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$.`,
-        `由图得 $P = (${P[0]}, ${P[1]})$，$T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。所以 $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$。`,
-      ],
-      fig(
-        5,
-        [...imageOfSquare(u, v), { kind: "point", at: P, label: "P", dir: "n" }],
+const projectionFromDrawing = {
+  ...point(
+    "the-projection-onto-a-drawn-line",
+    ["The projection onto a drawn line", "向图中直线投影"],
+    [
+      "The projection of a vector onto a line through the origin is the point of the line closest to its tip. With a direction $u$ read from the line, it equals $\\frac{v \\cdot u}{u \\cdot u}u$. The difference between the vector and its projection is perpendicular to the line, which gives a way to check the result.",
+      "向量在过原点直线上的投影是直线上离其终点最近的点。从直线上读出方向 $u$ 后，投影等于 $\\frac{v \\cdot u}{u \\cdot u}u$。向量与投影之差垂直于直线，可以用来检验结果。",
+    ],
+    (rng) => {
+      const u = rng.pick(primitive.filter((p) => Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
+      const n: Point = [-u[1], u[0]];
+      const choices: [number, number][] = [];
+      for (const a of [-2, -1, 1, 2, 3])
+        for (const b of [-2, -1, 1, 2]) {
+          if (Math.abs(a * u[0] + b * n[0]) <= 5 && Math.abs(a * u[1] + b * n[1]) <= 5) choices.push([a, b]);
+        }
+      const [a, b] = rng.pick(choices);
+      const v: Point = [a * u[0] + b * n[0], a * u[1] + b * n[1]];
+      const proj: Point = [a * u[0], a * u[1]];
+      const rest: Point = [b * n[0], b * n[1]];
+      return choose(
+        rng,
         [
-          `Arrows T(e1) to (${u[0]}, ${u[1]}) and T(e2) to (${v[0]}, ${v[1]}), and the point P at (${P[0]}, ${P[1]}).`,
-          `指向 (${u[0]}, ${u[1]}) 的箭头 T(e1)，指向 (${v[0]}, ${v[1]}) 的箭头 T(e2)，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
+          "The arrow $v$ and a line through the origin are drawn. What is the projection of $v$ onto the line?",
+          "图中画出了箭头 $v$ 和一条过原点的直线。$v$ 在这条直线上的投影是什么？",
         ],
-      ),
-    );
-  },
-);
+        same(col(proj[0], proj[1])),
+        ([rest, u, v, [-proj[0], -proj[1]], [dot(v, u) * u[0], dot(v, u) * u[1]]] as Point[]).map((c) => same(col(c[0], c[1]))),
+        [
+          `Take $u = (${u[0]}, ${u[1]})$ on the line. Then $v \\cdot u = ${dot(v, u)}$ and $u \\cdot u = ${dot(u, u)}$, so the factor is $${a}$ and the projection is $(${proj[0]}, ${proj[1]})$.`,
+          `在直线上取 $u = (${u[0]}, ${u[1]})$。则 $v \\cdot u = ${dot(v, u)}$，$u \\cdot u = ${dot(u, u)}$，所以倍数是 $${a}$，投影是 $(${proj[0]}, ${proj[1]})$。`,
+        ],
+        fig(
+          6,
+          [{ kind: "line", a: [0, 0], b: u }, ...vector(v, "v")],
+          [
+            `A line through the origin and (${u[0]}, ${u[1]}), and an arrow v to (${v[0]}, ${v[1]}).`,
+            `过原点和 (${u[0]}, ${u[1]}) 的直线，以及指向 (${v[0]}, ${v[1]}) 的箭头 v。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["projecting-vectors-onto-one-dimensional-subspaces#the-projection-onto-a-drawn-line"],
+};
+
+const orthogonalPair = {
+  ...point(
+    "spotting-the-perpendicular-pair",
+    ["Spotting the perpendicular pair", "找出垂直的一对"],
+    [
+      "Two vectors are orthogonal exactly when their dot product is zero. Reading coordinates from a drawing and testing the dot product is more reliable than judging angles by eye, particularly when the arrows have different lengths or do not lie along the grid lines of the drawing.",
+      "两个向量正交，当且仅当它们的点积为零。从图中读出坐标并计算点积，比用眼睛判断角度更可靠，尤其是箭头长度不同或不沿网格线的时候。",
+    ],
+    (rng) => {
+      const x = rng.pick(nonzero(3).filter((p) => p[0] !== 0 && p[1] !== 0));
+      const k = rng.pick([1, -1]);
+      const y: Point = [-k * x[1], k * x[0]];
+      const c = rng.pick(nonzero(3).filter((p) => dot(p, x) !== 0 && dot(p, y) !== 0));
+      const d = rng.pick(nonzero(3).filter((p) => dot(p, x) !== 0 && dot(p, y) !== 0 && dot(p, c) !== 0 && cross(p, c) !== 0));
+      const names = rng.shuffle(["a", "b", "c", "d"]) as [string, string, string, string];
+      const pair = (i: number, j: number): Pair => {
+        const [m, n] = [names[i] as string, names[j] as string].sort();
+        return [`$${m}$ and $${n}$`, `$${m}$ 和 $${n}$`];
+      };
+      const vs = [x, y, c, d];
+      return choose(
+        rng,
+        ["Which two of the arrows drawn are perpendicular?", "图中哪两个箭头互相垂直？"],
+        pair(0, 1),
+        [pair(0, 2), pair(1, 3), pair(2, 3), pair(0, 3), pair(1, 2)],
+        [
+          `Reading coordinates gives $(${x[0]}, ${x[1]})$ and $(${y[0]}, ${y[1]})$ for these two arrows, whose dot product is $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$. No other pair has dot product zero.`,
+          `读出这两个箭头的坐标为 $(${x[0]}, ${x[1]})$ 和 $(${y[0]}, ${y[1]})$，点积是 $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$。其他各对的点积都不为零。`,
+        ],
+        fig(
+          4,
+          vs.flatMap((v, i) => vector(v, names[i] as string)),
+          [
+            `Four arrows from the origin: ${vs.map((v, i) => `${names[i]} to (${v[0]}, ${v[1]})`).join(", ")}.`,
+            `从原点出发的四个箭头：${vs.map((v, i) => `${names[i]} 指向 (${v[0]}, ${v[1]})`).join("，")}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["orthogonal-vectors-in-euclidean-spaces#spotting-the-perpendicular-pair"],
+};
+
+const orthogonalTransform = {
+  ...point(
+    "applying-a-drawn-orthogonal-map",
+    ["Applying a drawn orthogonal map", "作用图中的正交映射"],
+    [
+      "An orthogonal map sends the standard basis to perpendicular unit vectors, and a drawing of these two arrows fixes the whole map. A point $(x, y)$ goes to $x$ times the first arrow plus $y$ times the second. Using the transpose instead applies the inverse map, which sends the point somewhere else unless the map is its own inverse.",
+      "正交映射把标准基映成互相垂直的单位向量，这两个箭头的图就确定了整个映射。点 $(x, y)$ 映到 $x$ 倍第一个箭头加 $y$ 倍第二个箭头。用转置矩阵则是作用逆映射，除非映射是自身的逆，否则点会被送到别处。",
+    ],
+    (rng) => {
+      const u = rng.pick<Point>([
+        [1, 0],
+        [0, 1],
+        [-1, 0],
+        [0, -1],
+      ]);
+      const sign = rng.sign();
+      const v: Point = [-sign * u[1], sign * u[0]];
+      const P: Point = [rng.nonZero(-4, 4), rng.nonZero(-4, 4)];
+      const image: Point = [P[0] * u[0] + P[1] * v[0], P[0] * u[1] + P[1] * v[1]];
+      const inverse: Point = [P[0] * u[0] + P[1] * u[1], P[0] * v[0] + P[1] * v[1]];
+      return choose(
+        rng,
+        [
+          "The arrows show the images of the standard basis under an orthogonal map $T$. What is $T(P)$ for the point $P$ drawn?",
+          "箭头表示正交映射 $T$ 下标准基的像。对图中的点 $P$，$T(P)$ 是什么？",
+        ],
+        same(col(image[0], image[1])),
+        ([inverse, [-image[0], -image[1]], P, [image[1], image[0]], [image[0], -image[1]], [-image[0], image[1]]] as Point[]).map((c) =>
+          same(col(c[0], c[1])),
+        ),
+        [
+          `The drawing gives $P = (${P[0]}, ${P[1]})$, $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$. So $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$.`,
+          `由图得 $P = (${P[0]}, ${P[1]})$，$T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。所以 $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$。`,
+        ],
+        fig(
+          5,
+          [...imageOfSquare(u, v), { kind: "point", at: P, label: "P", dir: "n" }],
+          [
+            `Arrows T(e1) to (${u[0]}, ${u[1]}) and T(e2) to (${v[0]}, ${v[1]}), and the point P at (${P[0]}, ${P[1]}).`,
+            `指向 (${u[0]}, ${u[1]}) 的箭头 T(e1)，指向 (${v[0]}, ${v[1]}) 的箭头 T(e2)，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["orthogonal-linear-transformations#applying-a-drawn-orthogonal-map"],
+};
 
 const vectorEquationOfLine = point(
   "the-vector-equation-of-a-drawn-line",

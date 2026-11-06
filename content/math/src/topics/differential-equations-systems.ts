@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
 
 /** par wraps a negative number in parentheses for use as a factor. */
@@ -857,6 +858,10 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
   knowledgePoints: [
     {
       id: "real-solutions-from-complex-eigenvalues",
+      figure:
+        differentialEquationsDrawings1[
+          "solving-homogeneous-systems-of-odes-with-complex-eigenvalues#real-solutions-from-complex-eigenvalues"
+        ],
       title: t("Angular frequency from complex eigenvalues", "复特征值的旋转角频率"),
       explanation: t(
         "A pair of complex eigenvalues produces rotating solutions, with the real part controlling growth and the imaginary part setting the angular frequency. For $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$, the characteristic roots are $\\lambda = \\alpha \\pm i\\beta$, producing trajectories oscillating with angular speed $\\beta$.",
@@ -1420,6 +1425,10 @@ export const phasePortraitsForLinearSystemsWithRepeatedEigenvalues: TopicDef = {
     },
     {
       id: "telling-a-star-node-from-a-degenerate-node",
+      figure:
+        differentialEquationsDrawings1[
+          "phase-portraits-for-linear-systems-with-repeated-eigenvalues#telling-a-star-node-from-a-degenerate-node"
+        ],
       title: t("Telling a star node from a degenerate node", "区分星形结点与退化结点"),
       explanation: t(
         "A repeated eigenvalue $\\lambda$ gives two different portraits. If $A = \\lambda I$, every vector is an eigenvector and trajectories are straight rays: a star (proper) node. Otherwise $A - \\lambda I \\ne 0$, there is only one eigenvector line, and trajectories curve to become tangent to it: a degenerate (improper) node. In both cases the node is stable when $\\lambda < 0$ and unstable when $\\lambda > 0$.",
@@ -1504,6 +1513,10 @@ export const phasePortraitsForLinearSystemsWithZeroEigenvalues: TopicDef = {
     },
     {
       id: "the-nonzero-eigenvalue-of-a-singular-system",
+      figure:
+        differentialEquationsDrawings1[
+          "phase-portraits-for-linear-systems-with-zero-eigenvalues#the-nonzero-eigenvalue-of-a-singular-system"
+        ],
       title: t("The nonzero eigenvalue of a singular system", "奇异方程组的非零特征值"),
       explanation: t(
         "If $\\det(A) = 0$ then $0$ is an eigenvalue, and the other eigenvalue equals the trace because the eigenvalues add up to $\\operatorname{tr}(A)$. Its eigenvector gives the direction of the parallel straight trajectories, and its sign decides the motion. If $\\operatorname{tr}(A) < 0$ trajectories move toward the line of equilibria; if $\\operatorname{tr}(A) > 0$ they move away from it.",
@@ -1546,6 +1559,7 @@ export const phasePortraitsForLinearSystemsWithComplexEigenvalues: TopicDef = {
   knowledgePoints: [
     {
       id: "centers-and-spiral-points",
+      figure: differentialEquationsDrawings1["phase-portraits-for-linear-systems-with-complex-eigenvalues#centers-and-spiral-points"],
       title: t("Frequency of closed orbits around a center", "中心点周围封闭轨道的循环频率"),
       explanation: t(
         "Purely imaginary eigenvalues give closed orbits that circle the origin forever, and their frequency is the imaginary part. For $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$, eigenvalues are $\\pm i\\omega$, producing a center with angular frequency $\\omega$. More generally, $\\begin{pmatrix} 0 & a \\\\ b & 0 \\end{pmatrix}$ with $ab < 0$ has eigenvalues $\\pm i\\sqrt{-ab}$.",
@@ -1868,6 +1882,7 @@ export const matrixExponentials: TopicDef = {
     },
     {
       id: "the-matrix-exponential-of-a-rotation-generator",
+      figure: differentialEquationsDrawings1["matrix-exponentials#the-matrix-exponential-of-a-rotation-generator"],
       title: t("The matrix exponential of a rotation generator", "旋转生成矩阵的矩阵指数"),
       explanation: t(
         "For $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$ we have $A^2 = -\\omega^2 I$, so the even powers in $\\sum A^nt^n/n!$ build a cosine and the odd powers a sine:\n\n$$e^{At} = \\begin{pmatrix} \\cos \\omega t & -\\sin \\omega t \\\\ \\sin \\omega t & \\cos \\omega t \\end{pmatrix}.$$\n\nThis matrix rotates a vector counterclockwise by the angle $\\omega t$. Entry by entry, the sine sits below the diagonal with a plus sign and above it with a minus sign.",

@@ -5,6 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { svgDocument } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
@@ -103,49 +104,55 @@ const setOfVenn = point(
   },
 );
 
-const countsOnVenn = point(
-  "reading-counts-from-a-two-circle-diagram",
-  ["Reading counts from a two-circle diagram", "由两圆图读计数"],
-  [
-    "A Venn diagram with counts splits the elements into separate regions, so that each element is counted once. To find the size of a set, add the regions inside it. The size of a union adds the three regions once each, and the complement counts what lies outside the given set, including the region outside both circles.",
-    "带计数的文氏图把元素分成互不相交的区域，所以每个元素只算一次。要求一个集合的大小，就把它内部的区域相加。并集的大小把三个区域各加一次，补集计算给定集合之外的部分，包括两个圆之外的区域。",
-  ],
-  (rng) => {
-    const [onlyA, both, onlyB, outside] = [rng.int(2, 12), rng.int(1, 9), rng.int(2, 12), rng.int(1, 9)];
-    const q = rng.pick([
-      { tex: "|A \\cup B|", value: onlyA + both + onlyB, parts: [onlyA, both, onlyB] },
-      { tex: "|A \\cap B|", value: both, parts: [both] },
-      { tex: "|A \\setminus B|", value: onlyA, parts: [onlyA] },
-      { tex: "|B \\setminus A|", value: onlyB, parts: [onlyB] },
-      { tex: "|A|", value: onlyA + both, parts: [onlyA, both] },
-      { tex: "|B|", value: onlyB + both, parts: [onlyB, both] },
-      { tex: "|A^c|", value: onlyB + outside, parts: [onlyB, outside] },
-      { tex: "|(A \\cup B)^c|", value: outside, parts: [outside] },
-      { tex: "|A \\triangle B|", value: onlyA + onlyB, parts: [onlyA, onlyB] },
-    ]);
-    const body = `<rect x="10" y="10" width="300" height="170" fill="none"/><circle cx="125" cy="95" r="66" fill="none"/><circle cx="195" cy="95" r="66" fill="none"/>${label(90, 100, String(onlyA))}${label(160, 100, String(both))}${label(232, 100, String(onlyB))}${label(290, 168, String(outside))}${label(72, 32, "A")}${label(246, 32, "B")}`;
-    return ask(
-      [`The numbers give the count of elements in each region. What is $${q.tex}$?`, `图中的数给出每个区域的元素个数。$${q.tex}$ 是多少？`],
-      q.value,
-      [onlyA + both + onlyB + outside, q.value + both, q.value + outside, q.value + 1],
-      [
-        q.parts.length === 1
-          ? `This set is one region of the diagram, which holds $${q.value}$ elements.`
-          : `This set consists of the regions with counts $${q.parts.join(", ")}$, which add up to $${q.value}$.`,
-        q.parts.length === 1
-          ? `这个集合是图中的一个区域，含有 $${q.value}$ 个元素。`
-          : `这个集合由计数为 $${q.parts.join(", ")}$ 的区域组成，总和为 $${q.value}$。`,
-      ],
-      {
-        svg: svgDocument(190, body),
-        alt: t(
-          `Two circles A and B, with ${onlyA} only in A, ${both} in both, ${onlyB} only in B and ${outside} outside.`,
-          `两个圆 A 和 B，只在 A 中有 ${onlyA} 个，两者都有的 ${both} 个，只在 B 中有 ${onlyB} 个，外面有 ${outside} 个。`,
-        ),
-      },
-    );
-  },
-);
+const countsOnVenn = {
+  ...point(
+    "reading-counts-from-a-two-circle-diagram",
+    ["Reading counts from a two-circle diagram", "由两圆图读计数"],
+    [
+      "A Venn diagram with counts splits the elements into separate regions, so that each element is counted once. To find the size of a set, add the regions inside it. The size of a union adds the three regions once each, and the complement counts what lies outside the given set, including the region outside both circles.",
+      "带计数的文氏图把元素分成互不相交的区域，所以每个元素只算一次。要求一个集合的大小，就把它内部的区域相加。并集的大小把三个区域各加一次，补集计算给定集合之外的部分，包括两个圆之外的区域。",
+    ],
+    (rng) => {
+      const [onlyA, both, onlyB, outside] = [rng.int(2, 12), rng.int(1, 9), rng.int(2, 12), rng.int(1, 9)];
+      const q = rng.pick([
+        { tex: "|A \\cup B|", value: onlyA + both + onlyB, parts: [onlyA, both, onlyB] },
+        { tex: "|A \\cap B|", value: both, parts: [both] },
+        { tex: "|A \\setminus B|", value: onlyA, parts: [onlyA] },
+        { tex: "|B \\setminus A|", value: onlyB, parts: [onlyB] },
+        { tex: "|A|", value: onlyA + both, parts: [onlyA, both] },
+        { tex: "|B|", value: onlyB + both, parts: [onlyB, both] },
+        { tex: "|A^c|", value: onlyB + outside, parts: [onlyB, outside] },
+        { tex: "|(A \\cup B)^c|", value: outside, parts: [outside] },
+        { tex: "|A \\triangle B|", value: onlyA + onlyB, parts: [onlyA, onlyB] },
+      ]);
+      const body = `<rect x="10" y="10" width="300" height="170" fill="none"/><circle cx="125" cy="95" r="66" fill="none"/><circle cx="195" cy="95" r="66" fill="none"/>${label(90, 100, String(onlyA))}${label(160, 100, String(both))}${label(232, 100, String(onlyB))}${label(290, 168, String(outside))}${label(72, 32, "A")}${label(246, 32, "B")}`;
+      return ask(
+        [
+          `The numbers give the count of elements in each region. What is $${q.tex}$?`,
+          `图中的数给出每个区域的元素个数。$${q.tex}$ 是多少？`,
+        ],
+        q.value,
+        [onlyA + both + onlyB + outside, q.value + both, q.value + outside, q.value + 1],
+        [
+          q.parts.length === 1
+            ? `This set is one region of the diagram, which holds $${q.value}$ elements.`
+            : `This set consists of the regions with counts $${q.parts.join(", ")}$, which add up to $${q.value}$.`,
+          q.parts.length === 1
+            ? `这个集合是图中的一个区域，含有 $${q.value}$ 个元素。`
+            : `这个集合由计数为 $${q.parts.join(", ")}$ 的区域组成，总和为 $${q.value}$。`,
+        ],
+        {
+          svg: svgDocument(190, body),
+          alt: t(
+            `Two circles A and B, with ${onlyA} only in A, ${both} in both, ${onlyB} only in B and ${outside} outside.`,
+            `两个圆 A 和 B，只在 A 中有 ${onlyA} 个，两者都有的 ${both} 个，只在 B 中有 ${onlyB} 个，外面有 ${outside} 个。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings1["cardinality-of-finite-sets#reading-counts-from-a-two-circle-diagram"],
+};
 
 /** arrowFunction draws a function between two columns of points, numbered on the left and lettered on the right. */
 function arrowFunction(map: readonly number[], letters: readonly string[]): string {

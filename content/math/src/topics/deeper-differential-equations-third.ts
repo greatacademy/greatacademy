@@ -4,6 +4,7 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { linear, paren, poly, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -278,38 +279,41 @@ const turningPoint = point(
   },
 );
 
-const zeroConditions = point(
-  "zero-initial-data-force-the-zero-solution",
-  ["Zero initial data force the zero solution", "零初值迫使解为零"],
-  [
-    "By the uniqueness theorem, a solution of a homogeneous linear equation with continuous coefficients is fixed by $y(a)$ and $y'(a)$. If both are zero, it is the zero solution. So no nonzero solution can have a graph that touches the axis with zero slope.",
-    "由唯一性定理，系数连续的齐次线性方程的解由 $y(a)$ 和 $y'(a)$ 确定。如果二者都为零，解就是零解。所以非零解的图像不可能以零斜率接触坐标轴。",
-  ],
-  (rng) => {
-    const p = nz(rng, 9);
-    const q = nz(rng, 9);
-    const a = rng.int(-5, 5);
-    const b = a + rng.int(1, 6);
-    const eq = poly([1, "y''"], [p, "xy'"], [q, "y"]);
-    return choose(
-      rng,
-      [
-        `$y$ solves $${eq} = 0$ with $y(${a}) = 0$ and $y'(${a}) = 0$. What is $y(${b})$?`,
-        `$y$ 是 $${eq} = 0$ 的解，且 $y(${a}) = 0$，$y'(${a}) = 0$。$y(${b})$ 是多少？`,
-      ],
-      ["$0$", "$0$"],
-      [
-        ["It cannot be determined without solving the equation", "不解方程无法确定"],
-        ["It depends on the two arbitrary constants", "取决于两个任意常数"],
-        [`$${b - a}$`, `$${b - a}$`],
-      ],
-      [
-        `The zero function satisfies the equation and both conditions. The coefficients are continuous, so the solution is unique, and $y$ is zero everywhere.`,
-        `零函数满足方程和两个条件。系数连续，所以解唯一，因此 $y$ 处处为零。`,
-      ],
-    );
-  },
-);
+const zeroConditions = {
+  ...point(
+    "zero-initial-data-force-the-zero-solution",
+    ["Zero initial data force the zero solution", "零初值迫使解为零"],
+    [
+      "By the uniqueness theorem, a solution of a homogeneous linear equation with continuous coefficients is fixed by $y(a)$ and $y'(a)$. If both are zero, it is the zero solution. So no nonzero solution can have a graph that touches the axis with zero slope.",
+      "由唯一性定理，系数连续的齐次线性方程的解由 $y(a)$ 和 $y'(a)$ 确定。如果二者都为零，解就是零解。所以非零解的图像不可能以零斜率接触坐标轴。",
+    ],
+    (rng) => {
+      const p = nz(rng, 9);
+      const q = nz(rng, 9);
+      const a = rng.int(-5, 5);
+      const b = a + rng.int(1, 6);
+      const eq = poly([1, "y''"], [p, "xy'"], [q, "y"]);
+      return choose(
+        rng,
+        [
+          `$y$ solves $${eq} = 0$ with $y(${a}) = 0$ and $y'(${a}) = 0$. What is $y(${b})$?`,
+          `$y$ 是 $${eq} = 0$ 的解，且 $y(${a}) = 0$，$y'(${a}) = 0$。$y(${b})$ 是多少？`,
+        ],
+        ["$0$", "$0$"],
+        [
+          ["It cannot be determined without solving the equation", "不解方程无法确定"],
+          ["It depends on the two arbitrary constants", "取决于两个任意常数"],
+          [`$${b - a}$`, `$${b - a}$`],
+        ],
+        [
+          `The zero function satisfies the equation and both conditions. The coefficients are continuous, so the solution is unique, and $y$ is zero everywhere.`,
+          `零函数满足方程和两个条件。系数连续，所以解唯一，因此 $y$ 处处为零。`,
+        ],
+      );
+    },
+  ),
+  figure: differentialEquationsDrawings1["introduction-to-second-order-linear-odes#zero-initial-data-force-the-zero-solution"],
+};
 
 const affineCombination = point(
   "combinations-that-solve-a-forced-equation",
@@ -707,33 +711,37 @@ const thirdOrderState = point(
   },
 );
 
-const dependentVectors = point(
-  "the-entry-that-makes-vector-solutions-dependent",
-  ["The entry that makes vector solutions dependent", "使向量解线性相关的分量"],
-  [
-    "For a linear system, two solutions are dependent exactly when their Wronskian is zero, and checking one time is enough. So requiring $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$ gives an equation for an unknown entry, which makes the initial vectors parallel.",
-    "对线性方程组，两个解线性相关，当且仅当它们的朗斯基行列式为零，而且检查一个时刻就够了。所以令 $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$，就得到未知分量的方程，这使初始向量平行。",
-  ],
-  (rng) => {
-    const a = rng.int(2, 6);
-    const m = nz(rng, 5);
-    const b = a * m;
-    const c = nz(rng, 9);
-    const answer = m * c;
-    return ask(
-      [
-        `Two solutions of a linear system have $\\mathbf{x}_{1}(0) = \\begin{pmatrix} ${a} \\\\ ${b} \\end{pmatrix}$ and $\\mathbf{x}_{2}(0) = \\begin{pmatrix} ${c} \\\\ k \\end{pmatrix}$. For which $k$ are they linearly dependent?`,
-        `线性方程组的两个解满足 $\\mathbf{x}_{1}(0) = \\begin{pmatrix} ${a} \\\\ ${b} \\end{pmatrix}$，$\\mathbf{x}_{2}(0) = \\begin{pmatrix} ${c} \\\\ k \\end{pmatrix}$。当 $k$ 为何值时，它们线性相关？`,
-      ],
-      answer,
-      [-answer, Q.of(a * c, b), b + c],
-      [
-        `The determinant is $${a}k - ${paren(b)} \\cdot ${paren(c)}$. Setting it to zero gives $k = \\frac{${b * c}}{${a}} = ${answer}$, and then the vectors are parallel.`,
-        `行列式是 $${a}k - ${paren(b)} \\cdot ${paren(c)}$。令它为零，得 $k = \\frac{${b * c}}{${a}} = ${answer}$，此时两个向量平行。`,
-      ],
-    );
-  },
-);
+const dependentVectors = {
+  ...point(
+    "the-entry-that-makes-vector-solutions-dependent",
+    ["The entry that makes vector solutions dependent", "使向量解线性相关的分量"],
+    [
+      "For a linear system, two solutions are dependent exactly when their Wronskian is zero, and checking one time is enough. So requiring $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$ gives an equation for an unknown entry, which makes the initial vectors parallel.",
+      "对线性方程组，两个解线性相关，当且仅当它们的朗斯基行列式为零，而且检查一个时刻就够了。所以令 $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$，就得到未知分量的方程，这使初始向量平行。",
+    ],
+    (rng) => {
+      const a = rng.int(2, 6);
+      const m = nz(rng, 5);
+      const b = a * m;
+      const c = nz(rng, 9);
+      const answer = m * c;
+      return ask(
+        [
+          `Two solutions of a linear system have $\\mathbf{x}_{1}(0) = \\begin{pmatrix} ${a} \\\\ ${b} \\end{pmatrix}$ and $\\mathbf{x}_{2}(0) = \\begin{pmatrix} ${c} \\\\ k \\end{pmatrix}$. For which $k$ are they linearly dependent?`,
+          `线性方程组的两个解满足 $\\mathbf{x}_{1}(0) = \\begin{pmatrix} ${a} \\\\ ${b} \\end{pmatrix}$，$\\mathbf{x}_{2}(0) = \\begin{pmatrix} ${c} \\\\ k \\end{pmatrix}$。当 $k$ 为何值时，它们线性相关？`,
+        ],
+        answer,
+        [-answer, Q.of(a * c, b), b + c],
+        [
+          `The determinant is $${a}k - ${paren(b)} \\cdot ${paren(c)}$. Setting it to zero gives $k = \\frac{${b * c}}{${a}} = ${answer}$, and then the vectors are parallel.`,
+          `行列式是 $${a}k - ${paren(b)} \\cdot ${paren(c)}$。令它为零，得 $k = \\frac{${b * c}}{${a}} = ${answer}$，此时两个向量平行。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    differentialEquationsDrawings1["linear-independence-for-homogeneous-systems-of-odes#the-entry-that-makes-vector-solutions-dependent"],
+};
 
 const longRunOfGeneral = point(
   "the-long-run-depends-on-the-growing-coefficient",

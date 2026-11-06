@@ -6,6 +6,11 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, plane, Q, svgDocument } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
+import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
+import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { numberProblem } from "../problems.ts";
@@ -740,6 +745,7 @@ const amplitudePhaseFromGraph: KnowledgePointDef = {
 
 const rotationScalingFromDrawing: KnowledgePointDef = {
   id: "a-rotation-scaling-matrix-from-a-drawing",
+  figure: linearAlgebraDrawings1["rotation-scaling-matrices#a-rotation-scaling-matrix-from-a-drawing"],
   title: t("A rotation-scaling matrix from a drawing", "由图写旋转缩放矩阵"),
   explanation: t(
     "A rotation-scaling matrix has the form with $a$ and $-b$ on top, and $b$ and $a$ below. It sends the first basis vector to the point $(a, b)$. So the image of that one vector determines the whole matrix, and this is why the map is pictured so simply: every vector is turned by the same angle and stretched by the same factor.",
@@ -810,6 +816,7 @@ const columnSpaceFromLine: KnowledgePointDef = {
 
 const residualFromPlot: KnowledgePointDef = {
   id: "a-residual-from-a-scatter-plot",
+  figure: linearAlgebraDrawings2["linear-regression-with-matrices#a-residual-from-a-scatter-plot"],
   title: t("A residual from a scatter plot", "由散点图读残差"),
   explanation: t(
     "Least squares chooses the line that makes the squared vertical distances to the points as small as possible. Those vertical distances are the residuals: the actual value minus the value on the line. A point above the line has a positive residual, and one below has a negative residual. The horizontal distance to the line plays no part in this at all.",
@@ -1066,6 +1073,7 @@ const logisticFromGraph: KnowledgePointDef = {
 
 const stepFromGraph: KnowledgePointDef = {
   id: "a-step-function-from-its-graph",
+  figure: differentialEquationsDrawings1["the-unit-step-function#a-step-function-from-its-graph"],
   title: t("A step function from its graph", "由图写阶跃函数"),
   explanation: t(
     "The unit step $u(t - a)$ is zero before a and one after it, so a multiple of it switches on a constant at time a. A jump in a graph therefore corresponds to one step term whose coefficient is the size of the jump, up or down. Reading the graph from left to right, write one such term for each jump, starting from the initial level.",
@@ -1176,6 +1184,7 @@ const criticalPointFromContours: KnowledgePointDef = {
 
 const workSignFromDrawing: KnowledgePointDef = {
   id: "the-sign-of-the-work-from-a-drawing",
+  figure: multivariableDrawings6["interpreting-line-integrals-of-vector-valued-functions#the-sign-of-the-work-from-a-drawing"],
   title: t("The sign of the work from a drawing", "由图判断功的符号"),
   explanation: t(
     "The line integral of a field along a curve adds up the part of the field along the direction of travel. So where the arrows point along the path the contribution is positive, where they point against it the contribution is negative, and where they cross at a right angle the contribution is zero. Reversing the direction of the path changes the sign of the integral.",
@@ -1240,6 +1249,7 @@ const workSignFromDrawing: KnowledgePointDef = {
 
 const polarFromPoint: KnowledgePointDef = {
   id: "polar-coordinates-from-a-drawn-point",
+  figure: multivariableDrawings3["polar-coordinate-transformations#polar-coordinates-from-a-drawn-point"],
   title: t("Polar coordinates from a drawn point", "由图中的点写极坐标"),
   explanation: t(
     "Polar coordinates of a point give its distance from the origin and its angle from the positive x-axis. Both can be read from a drawing: the radius with the Pythagorean theorem, and the angle from the quadrant. The formula with the arctangent gives only an angle in the right half of the plane, so a picture guards against being off by half a turn.",
@@ -1866,6 +1876,7 @@ const relationFromDigraph: KnowledgePointDef = {
 
 const floorFromGraph: KnowledgePointDef = {
   id: "reading-a-floor-graph",
+  figure: differentialEquationsDrawings1["the-floor-and-ceiling-functions#reading-a-floor-graph"],
   title: t("Reading a floor graph", "读取整函数的图"),
   explanation: t(
     "The floor function gives the largest integer that does not exceed its input. Its graph is a staircase, with a filled dot at the left end of each step and an open dot at the right end. So reading it at a whole number means taking the height of the step that begins there, and this is the point most often misread from a drawing.",

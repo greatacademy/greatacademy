@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { choiceProblem, isTerminating, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
 
 /** par writes a value in parentheses when it is negative. */
@@ -971,6 +972,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
       },
       {
         id: "the-adams-moulton-corrector-step",
+        figure: differentialEquationsDrawings1["the-abm2-method#the-adams-moulton-corrector-step"],
         title: t("The Adams-Moulton corrector step", "亚当斯-莫尔顿校正步"),
         explanation: t(
           "ABM2 first predicts with Adams-Bashforth and then corrects with the trapezoidal Adams-Moulton formula, evaluating the slope at the predicted point:\n\n$$y^{(p)} = y_n + \\frac{h}{2}(3f_n - f_{n-1}), \\qquad y_{n+1} = y_n + \\frac{h}{2}\\left(f(t_{n+1}, y^{(p)}) + f_n\\right).$$\n\nThe corrector uses $f_n$ once and the predicted slope once, with equal weights.",
@@ -1319,6 +1321,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
       },
       {
         id: "one-newton-iteration-for-a-trapezoidal-step",
+        figure:
+          differentialEquationsDrawings1["using-the-trapezoidal-method-with-newtons-method#one-newton-iteration-for-a-trapezoidal-step"],
         title: t("One Newton iteration for a trapezoidal step", "梯形法步中的一次牛顿迭代"),
         explanation: t(
           "For $y' = -y^{2}$ the trapezoidal step solves $g(y) = y - y_n + \\frac{h}{2}(y_n^{2} + y^{2}) = 0$, with $g'(y) = 1 + hy$. From $y^{(0)} = y_n$, $g(y_n) = hy_n^{2}$ and\n\n$$y^{(1)} = y_n - \\frac{hy_n^{2}}{1 + hy_n}.$$\n\nCompared with backward Euler, the derivative has $h$ in place of $2h$, because only half of the new slope enters the step.",

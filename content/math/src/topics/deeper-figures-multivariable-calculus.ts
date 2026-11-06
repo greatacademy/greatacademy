@@ -5,6 +5,11 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q } from "@ga/subject-math";
+import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
+import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
+import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
+import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -118,41 +123,44 @@ const curveFamilies: readonly Family[] = [
   ),
 ];
 
-const formulaFromLevelCurves = point(
-  "the-function-from-its-level-curves",
-  ["The function from its level curves", "由等值线认函数"],
-  [
-    "Level curves show the shape of a function without any height. Circles about the origin belong to a sum of squares with equal coefficients, unequal coefficients stretch them into ellipses, parallel lines belong to a linear function, translated parabolas to $y$ minus a quadratic, and hyperbolas to a product of the variables.",
-    "等值线不用高度也能表现函数的形状。以原点为圆心的圆对应系数相等的平方和，系数不等时拉伸成椭圆，平行直线对应线性函数，平移的抛物线对应 $y$ 减二次式，双曲线对应变量之积。",
-  ],
-  (rng) => {
-    const right = rng.pick(curveFamilies);
-    const others = rng.shuffle(curveFamilies.filter((f) => f.kind !== right.kind));
-    const kinds = new Set<string>();
-    const wrong = others.filter((f) => !kinds.has(f.kind) && Boolean(kinds.add(f.kind))).map((f) => same(f.tex));
-    return choose(
-      rng,
-      [
-        "The curves drawn are level curves of a function $f(x, y)$. Which function is it?",
-        "图中的曲线是函数 $f(x, y)$ 的等值线。这个函数是哪一个？",
-      ],
-      same(right.tex),
-      wrong,
-      [
-        `The level curves are ${right.clue[0]}, which matches $f(x, y) = ${right.tex}$.`,
-        `等值线是${right.clue[1]}，与 $f(x, y) = ${right.tex}$ 相符。`,
-      ],
-      fig(
-        square(4),
-        right.levels.map((level): PlaneMark => ({ kind: "contour", f: right.f, level, accent: true })),
+const formulaFromLevelCurves = {
+  ...point(
+    "the-function-from-its-level-curves",
+    ["The function from its level curves", "由等值线认函数"],
+    [
+      "Level curves show the shape of a function without any height. Circles about the origin belong to a sum of squares with equal coefficients, unequal coefficients stretch them into ellipses, parallel lines belong to a linear function, translated parabolas to $y$ minus a quadratic, and hyperbolas to a product of the variables.",
+      "等值线不用高度也能表现函数的形状。以原点为圆心的圆对应系数相等的平方和，系数不等时拉伸成椭圆，平行直线对应线性函数，平移的抛物线对应 $y$ 减二次式，双曲线对应变量之积。",
+    ],
+    (rng) => {
+      const right = rng.pick(curveFamilies);
+      const others = rng.shuffle(curveFamilies.filter((f) => f.kind !== right.kind));
+      const kinds = new Set<string>();
+      const wrong = others.filter((f) => !kinds.has(f.kind) && Boolean(kinds.add(f.kind))).map((f) => same(f.tex));
+      return choose(
+        rng,
         [
-          `Level curves in the plane: ${observed(right.clue)[0].replaceAll("$", "")}.`,
-          `平面上的等值线：${observed(right.clue)[1].replaceAll("$", "")}。`,
+          "The curves drawn are level curves of a function $f(x, y)$. Which function is it?",
+          "图中的曲线是函数 $f(x, y)$ 的等值线。这个函数是哪一个？",
         ],
-      ),
-    );
-  },
-);
+        same(right.tex),
+        wrong,
+        [
+          `The level curves are ${right.clue[0]}, which matches $f(x, y) = ${right.tex}$.`,
+          `等值线是${right.clue[1]}，与 $f(x, y) = ${right.tex}$ 相符。`,
+        ],
+        fig(
+          square(4),
+          right.levels.map((level): PlaneMark => ({ kind: "contour", f: right.f, level, accent: true })),
+          [
+            `Level curves in the plane: ${observed(right.clue)[0].replaceAll("$", "")}.`,
+            `平面上的等值线：${observed(right.clue)[1].replaceAll("$", "")}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings2["level-curves#the-function-from-its-level-curves"],
+};
 
 const rateFromLevelCurves = point(
   "a-partial-derivative-from-level-curves",
@@ -203,120 +211,126 @@ const rateFromLevelCurves = point(
   },
 );
 
-const gradientArrow = point(
-  "the-gradient-arrow-among-four",
-  ["The gradient arrow among four", "四个箭头中的梯度"],
-  [
-    "The gradient at a point is perpendicular to the level curve through that point and points toward higher values of the function. So two conditions decide it: the arrow must cross the level curve at a right angle, and it must point to the side where the level labels increase. Arrows along the curve show no change at all.",
-    "一点处的梯度垂直于过该点的等值线，并指向函数值增大的方向。所以由两个条件决定：箭头必须与等值线成直角相交，并指向等值标记增大的一侧。沿曲线的箭头表示函数值没有变化。",
-  ],
-  (rng) => {
-    const [x, y] = rng.pick<Point>([
-      [3, 4],
-      [4, 3],
-      [-3, 4],
-      [-4, 3],
-      [3, -4],
-      [4, -3],
-      [-3, -4],
-      [-4, -3],
-    ]);
-    const rising = rng.bool();
-    const low = rng.int(1, 9);
-    const step = rng.int(1, 5);
-    const levels = (rising ? [0, 1, 2] : [2, 1, 0]).map((j) => low + j * step);
-    const out: Point = [x / 5, y / 5];
-    const along: Point = [-y / 5, x / 5];
-    const tips: Point[] = [
-      [out[0] * 1.8, out[1] * 1.8],
-      [-out[0] * 1.8, -out[1] * 1.8],
-      [along[0] * 1.8, along[1] * 1.8],
-      [-along[0] * 1.8, -along[1] * 1.8],
-    ];
-    const letters = rng.shuffle(["A", "B", "C", "D"]);
-    const correct = letters[rising ? 0 : 1] as string;
-    const compass = ([u, v]: Point) => (Math.abs(u) > Math.abs(v) ? (u > 0 ? "e" : "w") : v > 0 ? "n" : "s") as "e" | "w" | "n" | "s";
-    const marks: PlaneMark[] = [3, 5, 7].flatMap((r, j): PlaneMark[] => [
-      { kind: "circle", center: [0, 0], r },
-      { kind: "label", at: [0, r], text: word(levels[j] as number), dir: "ne" },
-    ]);
-    for (const [i, tip] of tips.entries()) {
-      const to: Point = [x + tip[0], y + tip[1]];
-      marks.push(
-        { kind: "arrow", from: [x, y], to, accent: true },
-        { kind: "label", at: to, text: letters[i] as string, dir: compass(tip) },
+const gradientArrow = {
+  ...point(
+    "the-gradient-arrow-among-four",
+    ["The gradient arrow among four", "四个箭头中的梯度"],
+    [
+      "The gradient at a point is perpendicular to the level curve through that point and points toward higher values of the function. So two conditions decide it: the arrow must cross the level curve at a right angle, and it must point to the side where the level labels increase. Arrows along the curve show no change at all.",
+      "一点处的梯度垂直于过该点的等值线，并指向函数值增大的方向。所以由两个条件决定：箭头必须与等值线成直角相交，并指向等值标记增大的一侧。沿曲线的箭头表示函数值没有变化。",
+    ],
+    (rng) => {
+      const [x, y] = rng.pick<Point>([
+        [3, 4],
+        [4, 3],
+        [-3, 4],
+        [-4, 3],
+        [3, -4],
+        [4, -3],
+        [-3, -4],
+        [-4, -3],
+      ]);
+      const rising = rng.bool();
+      const low = rng.int(1, 9);
+      const step = rng.int(1, 5);
+      const levels = (rising ? [0, 1, 2] : [2, 1, 0]).map((j) => low + j * step);
+      const out: Point = [x / 5, y / 5];
+      const along: Point = [-y / 5, x / 5];
+      const tips: Point[] = [
+        [out[0] * 1.8, out[1] * 1.8],
+        [-out[0] * 1.8, -out[1] * 1.8],
+        [along[0] * 1.8, along[1] * 1.8],
+        [-along[0] * 1.8, -along[1] * 1.8],
+      ];
+      const letters = rng.shuffle(["A", "B", "C", "D"]);
+      const correct = letters[rising ? 0 : 1] as string;
+      const compass = ([u, v]: Point) => (Math.abs(u) > Math.abs(v) ? (u > 0 ? "e" : "w") : v > 0 ? "n" : "s") as "e" | "w" | "n" | "s";
+      const marks: PlaneMark[] = [3, 5, 7].flatMap((r, j): PlaneMark[] => [
+        { kind: "circle", center: [0, 0], r },
+        { kind: "label", at: [0, r], text: word(levels[j] as number), dir: "ne" },
+      ]);
+      for (const [i, tip] of tips.entries()) {
+        const to: Point = [x + tip[0], y + tip[1]];
+        marks.push(
+          { kind: "arrow", from: [x, y], to, accent: true },
+          { kind: "label", at: to, text: letters[i] as string, dir: compass(tip) },
+        );
+      }
+      return choose(
+        rng,
+        [
+          "The circles are level curves of $f$, each labelled with its value. Which arrow at the marked point shows the direction of the gradient of $f$?",
+          "这些圆是 $f$ 的等值线，都标有函数值。标记点处哪个箭头表示 $f$ 的梯度方向？",
+        ],
+        [`Arrow ${correct}`, `箭头 ${correct}`],
+        letters.filter((l) => l !== correct).map((l): Pair => [`Arrow ${l}`, `箭头 ${l}`]),
+        [
+          `The gradient is perpendicular to the circle, so it is one of the two arrows along the radius. The values ${rising ? "rise away from the origin" : "rise toward the origin"}, so the gradient points ${rising ? "outward" : "inward"}, which is arrow ${correct}.`,
+          `梯度垂直于圆，所以是沿半径的两个箭头之一。函数值${rising ? "向远离原点的方向增大" : "向靠近原点的方向增大"}，所以梯度指向${rising ? "外" : "内"}，也就是箭头 ${correct}。`,
+        ],
+        fig(
+          square(8),
+          [...marks, { kind: "point", at: [x, y] }],
+          [
+            `Three circles about the origin labelled ${levels.join(", ")} from the inside out, and four arrows at (${x}, ${y}).`,
+            `三个以原点为圆心的圆，由内向外标有 ${levels.join("，")}，以及位于 (${x}, ${y}) 的四个箭头。`,
+          ],
+        ),
       );
-    }
-    return choose(
-      rng,
-      [
-        "The circles are level curves of $f$, each labelled with its value. Which arrow at the marked point shows the direction of the gradient of $f$?",
-        "这些圆是 $f$ 的等值线，都标有函数值。标记点处哪个箭头表示 $f$ 的梯度方向？",
-      ],
-      [`Arrow ${correct}`, `箭头 ${correct}`],
-      letters.filter((l) => l !== correct).map((l): Pair => [`Arrow ${l}`, `箭头 ${l}`]),
-      [
-        `The gradient is perpendicular to the circle, so it is one of the two arrows along the radius. The values ${rising ? "rise away from the origin" : "rise toward the origin"}, so the gradient points ${rising ? "outward" : "inward"}, which is arrow ${correct}.`,
-        `梯度垂直于圆，所以是沿半径的两个箭头之一。函数值${rising ? "向远离原点的方向增大" : "向靠近原点的方向增大"}，所以梯度指向${rising ? "外" : "内"}，也就是箭头 ${correct}。`,
-      ],
-      fig(
-        square(8),
-        [...marks, { kind: "point", at: [x, y] }],
-        [
-          `Three circles about the origin labelled ${levels.join(", ")} from the inside out, and four arrows at (${x}, ${y}).`,
-          `三个以原点为圆心的圆，由内向外标有 ${levels.join("，")}，以及位于 (${x}, ${y}) 的四个箭头。`,
-        ],
-      ),
-    );
-  },
-);
+    },
+  ),
+  figure: multivariableDrawings2["the-gradient-as-a-normal-vector#the-gradient-arrow-among-four"],
+};
 
-const tangentSlope = point(
-  "the-tangent-to-a-drawn-level-curve",
-  ["The tangent to a drawn level curve", "图中等值线的切线"],
-  [
-    "A tangent line to a level curve is perpendicular to the gradient there. For a circular level curve the gradient runs along the radius, so the tangent has the negative reciprocal of the slope of the radius. Reading the center and the point from the drawing gives the slope of the radius at once.",
-    "等值线的切线垂直于该点的梯度。对于圆形等值线，梯度沿半径方向，所以切线斜率是半径斜率的负倒数。从图中读出圆心和点，立刻得到半径的斜率。",
-  ],
-  (rng) => {
-    const [h, k] = [rng.int(-1, 1), rng.int(-1, 1)];
-    const [dx, dy] = rng.pick<Point>([
-      [3, 4],
-      [4, 3],
-      [-3, 4],
-      [-4, 3],
-      [3, -4],
-      [4, -3],
-      [-3, -4],
-      [-4, -3],
-    ]);
-    const answer = Q.of(-dx, dy);
-    return ask(
-      [
-        "The circle is a level curve of $f$, with its center $C$ and a point $P$ marked. What is the slope of the tangent line to the level curve at $P$?",
-        "这个圆是 $f$ 的等值线，标出了圆心 $C$ 和点 $P$。等值线在 $P$ 处的切线斜率是多少？",
-      ],
-      answer,
-      [Q.of(dy, dx), Q.of(dx, dy), Q.of(-dy, dx)],
-      [
-        `The radius from $C$ to $P$ goes $${dx}$ across and $${dy}$ up, so its slope is $${Q.of(dy, dx).toLatex()}$. The tangent is perpendicular to it, with slope $${answer.toLatex()}$.`,
-        `从 $C$ 到 $P$ 的半径横向 $${dx}$，纵向 $${dy}$，斜率是 $${Q.of(dy, dx).toLatex()}$。切线与它垂直，斜率是 $${answer.toLatex()}$。`,
-      ],
-      fig(
-        square(7),
+const tangentSlope = {
+  ...point(
+    "the-tangent-to-a-drawn-level-curve",
+    ["The tangent to a drawn level curve", "图中等值线的切线"],
+    [
+      "A tangent line to a level curve is perpendicular to the gradient there. For a circular level curve the gradient runs along the radius, so the tangent has the negative reciprocal of the slope of the radius. Reading the center and the point from the drawing gives the slope of the radius at once.",
+      "等值线的切线垂直于该点的梯度。对于圆形等值线，梯度沿半径方向，所以切线斜率是半径斜率的负倒数。从图中读出圆心和点，立刻得到半径的斜率。",
+    ],
+    (rng) => {
+      const [h, k] = [rng.int(-1, 1), rng.int(-1, 1)];
+      const [dx, dy] = rng.pick<Point>([
+        [3, 4],
+        [4, 3],
+        [-3, 4],
+        [-4, 3],
+        [3, -4],
+        [4, -3],
+        [-3, -4],
+        [-4, -3],
+      ]);
+      const answer = Q.of(-dx, dy);
+      return ask(
         [
-          { kind: "circle", center: [h, k], r: 5, accent: true },
-          { kind: "point", at: [h, k], label: "C", dir: "n" },
-          { kind: "point", at: [h + dx, k + dy], label: "P", dir: dy > 0 ? "n" : "s" },
+          "The circle is a level curve of $f$, with its center $C$ and a point $P$ marked. What is the slope of the tangent line to the level curve at $P$?",
+          "这个圆是 $f$ 的等值线，标出了圆心 $C$ 和点 $P$。等值线在 $P$ 处的切线斜率是多少？",
         ],
+        answer,
+        [Q.of(dy, dx), Q.of(dx, dy), Q.of(-dy, dx)],
         [
-          `A circle with center C at (${h}, ${k}) through P at (${h + dx}, ${k + dy}).`,
-          `圆心 C 位于 (${h}, ${k})、经过位于 (${h + dx}, ${k + dy}) 的 P 的圆。`,
+          `The radius from $C$ to $P$ goes $${dx}$ across and $${dy}$ up, so its slope is $${Q.of(dy, dx).toLatex()}$. The tangent is perpendicular to it, with slope $${answer.toLatex()}$.`,
+          `从 $C$ 到 $P$ 的半径横向 $${dx}$，纵向 $${dy}$，斜率是 $${Q.of(dy, dx).toLatex()}$。切线与它垂直，斜率是 $${answer.toLatex()}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          square(7),
+          [
+            { kind: "circle", center: [h, k], r: 5, accent: true },
+            { kind: "point", at: [h, k], label: "C", dir: "n" },
+            { kind: "point", at: [h + dx, k + dy], label: "P", dir: dy > 0 ? "n" : "s" },
+          ],
+          [
+            `A circle with center C at (${h}, ${k}) through P at (${h + dx}, ${k + dy}).`,
+            `圆心 C 位于 (${h}, ${k})、经过位于 (${h + dx}, ${k + dy}) 的 P 的圆。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings2["tangent-lines-to-level-curves#the-tangent-to-a-drawn-level-curve"],
+};
 
 const fieldList: readonly { tex: string; f: (x: number, y: number) => readonly [number, number]; clue: Pair }[] = [
   { tex: "\\langle -y, x \\rangle", f: (x, y) => [-y, x], clue: ["arrows circle the origin counterclockwise", "箭头绕原点逆时针旋转"] },
@@ -413,57 +427,60 @@ const signOptions = (rng: Rng, value: number, prompt: Pair, solution: Pair, figu
   );
 };
 
-const divergenceSign = point(
-  "the-sign-of-divergence-from-a-drawing",
-  ["The sign of divergence from a drawing", "由图判断散度的符号"],
-  [
-    "Divergence measures net outflow near a point. Arrows spreading away from the point give positive divergence, arrows converging on it give negative divergence, and a field in which as much flows in as out has zero divergence. A pure rotation has zero divergence because its arrows run around circles and neither gather nor spread.",
-    "散度度量一点附近的净流出。箭头从该点散开时散度为正，向该点汇聚时散度为负，流入与流出相等时散度为零。纯旋转的散度为零，因为箭头沿圆周运行，既不聚集也不散开。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["spread", "spread", "saddle", "turn"] as const);
-    let f: (x: number, y: number) => readonly [number, number];
-    let value = 0;
-    let reason: Pair;
-    if (kind === "spread") {
-      const s = rng.sign();
-      const [a, b] = [s * rng.int(1, 3), s * rng.int(1, 3)];
-      f = (x, y) => [a * x, b * y];
-      value = a + b;
-      reason =
-        s > 0
-          ? ["All the arrows point away from the origin, so more flows out than in", "所有箭头都背离原点，所以流出多于流入"]
-          : ["All the arrows point toward the origin, so more flows in than out", "所有箭头都指向原点，所以流入多于流出"];
-    } else if (kind === "saddle") {
-      const a = rng.nonZero(-3, 3);
-      f = (x, y) => [a * x, -a * y];
-      reason = [
-        "The arrows come in along one axis and leave along the other at the same rate, so inflow and outflow balance",
-        "箭头沿一条轴流入，沿另一条轴以相同速率流出，所以流入和流出平衡",
-      ];
-    } else {
-      const k = rng.nonZero(-3, 3);
-      f = (x, y) => [-k * y, k * x];
-      reason = [
-        "The arrows run around circles about the origin, so nothing gathers or spreads",
-        "箭头绕原点沿圆周运行，所以既不聚集也不散开",
-      ];
-    }
-    return signOptions(
-      rng,
-      value,
-      ["The linear vector field drawn has constant divergence. What is its sign?", "图中的线性向量场散度为常数。它的符号是什么？"],
-      [
-        `${reason[0]}. So the divergence is ${value > 0 ? "positive" : value < 0 ? "negative" : "zero"}.`,
-        `${reason[1]}。所以散度为${value > 0 ? "正" : value < 0 ? "负" : "零"}。`,
-      ],
-      fig(square(3), field(f, 0.15), [
-        `A linear vector field. The arrow at (1, 0) is (${f(1, 0).join(", ")}) and the arrow at (0, 1) is (${f(0, 1).join(", ")}).`,
-        `一个线性向量场。(1, 0) 处的箭头是 (${f(1, 0).join(", ")})，(0, 1) 处的箭头是 (${f(0, 1).join(", ")})。`,
-      ]),
-    );
-  },
-);
+const divergenceSign = {
+  ...point(
+    "the-sign-of-divergence-from-a-drawing",
+    ["The sign of divergence from a drawing", "由图判断散度的符号"],
+    [
+      "Divergence measures net outflow near a point. Arrows spreading away from the point give positive divergence, arrows converging on it give negative divergence, and a field in which as much flows in as out has zero divergence. A pure rotation has zero divergence because its arrows run around circles and neither gather nor spread.",
+      "散度度量一点附近的净流出。箭头从该点散开时散度为正，向该点汇聚时散度为负，流入与流出相等时散度为零。纯旋转的散度为零，因为箭头沿圆周运行，既不聚集也不散开。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["spread", "spread", "saddle", "turn"] as const);
+      let f: (x: number, y: number) => readonly [number, number];
+      let value = 0;
+      let reason: Pair;
+      if (kind === "spread") {
+        const s = rng.sign();
+        const [a, b] = [s * rng.int(1, 3), s * rng.int(1, 3)];
+        f = (x, y) => [a * x, b * y];
+        value = a + b;
+        reason =
+          s > 0
+            ? ["All the arrows point away from the origin, so more flows out than in", "所有箭头都背离原点，所以流出多于流入"]
+            : ["All the arrows point toward the origin, so more flows in than out", "所有箭头都指向原点，所以流入多于流出"];
+      } else if (kind === "saddle") {
+        const a = rng.nonZero(-3, 3);
+        f = (x, y) => [a * x, -a * y];
+        reason = [
+          "The arrows come in along one axis and leave along the other at the same rate, so inflow and outflow balance",
+          "箭头沿一条轴流入，沿另一条轴以相同速率流出，所以流入和流出平衡",
+        ];
+      } else {
+        const k = rng.nonZero(-3, 3);
+        f = (x, y) => [-k * y, k * x];
+        reason = [
+          "The arrows run around circles about the origin, so nothing gathers or spreads",
+          "箭头绕原点沿圆周运行，所以既不聚集也不散开",
+        ];
+      }
+      return signOptions(
+        rng,
+        value,
+        ["The linear vector field drawn has constant divergence. What is its sign?", "图中的线性向量场散度为常数。它的符号是什么？"],
+        [
+          `${reason[0]}. So the divergence is ${value > 0 ? "positive" : value < 0 ? "negative" : "zero"}.`,
+          `${reason[1]}。所以散度为${value > 0 ? "正" : value < 0 ? "负" : "零"}。`,
+        ],
+        fig(square(3), field(f, 0.15), [
+          `A linear vector field. The arrow at (1, 0) is (${f(1, 0).join(", ")}) and the arrow at (0, 1) is (${f(0, 1).join(", ")}).`,
+          `一个线性向量场。(1, 0) 处的箭头是 (${f(1, 0).join(", ")})，(0, 1) 处的箭头是 (${f(0, 1).join(", ")})。`,
+        ]),
+      );
+    },
+  ),
+  figure: multivariableDrawings1["the-divergence-of-a-vector-field#the-sign-of-divergence-from-a-drawing"],
+};
 
 const curlSign = point(
   "the-sign-of-curl-from-a-drawing",
@@ -583,121 +600,127 @@ const typeOneRegion = point(
   },
 );
 
-const changeOrder = point(
-  "integrating-a-drawn-triangle-the-other-way",
-  ["Integrating a drawn triangle the other way", "换一个方向积分图中的三角形"],
-  [
-    "To integrate with $x$ first, slice the region by horizontal lines. The outer limits are the lowest and highest values of $y$, and the inner limits say where a horizontal slice enters and leaves the region, written as functions of $y$. A line $y = mx$ must first be solved for $x$, which gives $x = y/m$.",
-    "要先对 $x$ 积分，就用水平线切割区域。外层积分限是 $y$ 的最小值和最大值，内层积分限说明水平切片在哪里进入和离开区域，写成 $y$ 的函数。直线 $y = mx$ 要先解出 $x$，得 $x = y/m$。",
-  ],
-  (rng) => {
-    const [mTop, mBottom, a] = rng.pick([
-      ...[1, 2, 3, 4, 5, 6].map((v) => [1, 1, v] as const),
-      ...[1, 2, 3, 4].map((v) => [2, 1, v] as const),
-      ...[1, 2, 3].map((v) => [3, 1, v] as const),
-      ...[2, 4, 6, 8].map((v) => [1, 2, v] as const),
-    ]);
-    const b = (mTop * a) / mBottom;
-    const below = rng.bool();
-    const inverse = mTop === 1 ? (mBottom === 1 ? "y" : `${mBottom}y`) : `\\frac{y}{${mTop}}`;
-    const form = (y1: number, x0: string, x1: string) => `\\int_{0}^{${y1}} \\int_{${x0}}^{${x1}} f(x, y)\\,dx\\,dy`;
-    const right = below ? form(b, inverse, `${a}`) : form(b, "0", inverse);
-    const other = below ? form(b, "0", inverse) : form(b, inverse, `${a}`);
-    const size = Math.max(a, b) + 1;
-    const wrongSlope = mTop === 1 && mBottom === 1 ? "2y" : mTop === 1 ? "\\frac{y}{2}" : `${mTop}y`;
-    return choose(
-      rng,
-      ["Which iterated integral, with $x$ integrated first, covers the shaded triangle?", "哪个先对 $x$ 积分的累次积分覆盖阴影三角形？"],
-      same(right),
-      [
-        same(other),
-        same(below ? form(a, inverse, `${b}`) : form(a, "0", inverse)),
-        same(below ? form(b, wrongSlope, `${a}`) : form(b, "0", wrongSlope)),
-        same(form(b, "0", `${a}`)),
-      ],
-      [
-        `The slanted edge runs through the origin and $(${a}, ${b})$, so on it $x = ${inverse}$. A horizontal slice ${below ? `starts on that edge and ends at $x = ${a}$` : `starts at $x = 0$ and ends on that edge`}, and $y$ runs from $0$ to $${b}$.`,
-        `斜边经过原点和 $(${a}, ${b})$，所以在斜边上 $x = ${inverse}$。水平切片${below ? `从斜边开始，到 $x = ${a}$ 结束` : `从 $x = 0$ 开始，到斜边结束`}，$y$ 从 $0$ 到 $${b}$。`,
-      ],
-      fig(
-        { xMin: -1, xMax: size, yMin: -1, yMax: size },
+const changeOrder = {
+  ...point(
+    "integrating-a-drawn-triangle-the-other-way",
+    ["Integrating a drawn triangle the other way", "换一个方向积分图中的三角形"],
+    [
+      "To integrate with $x$ first, slice the region by horizontal lines. The outer limits are the lowest and highest values of $y$, and the inner limits say where a horizontal slice enters and leaves the region, written as functions of $y$. A line $y = mx$ must first be solved for $x$, which gives $x = y/m$.",
+      "要先对 $x$ 积分，就用水平线切割区域。外层积分限是 $y$ 的最小值和最大值，内层积分限说明水平切片在哪里进入和离开区域，写成 $y$ 的函数。直线 $y = mx$ 要先解出 $x$，得 $x = y/m$。",
+    ],
+    (rng) => {
+      const [mTop, mBottom, a] = rng.pick([
+        ...[1, 2, 3, 4, 5, 6].map((v) => [1, 1, v] as const),
+        ...[1, 2, 3, 4].map((v) => [2, 1, v] as const),
+        ...[1, 2, 3].map((v) => [3, 1, v] as const),
+        ...[2, 4, 6, 8].map((v) => [1, 2, v] as const),
+      ]);
+      const b = (mTop * a) / mBottom;
+      const below = rng.bool();
+      const inverse = mTop === 1 ? (mBottom === 1 ? "y" : `${mBottom}y`) : `\\frac{y}{${mTop}}`;
+      const form = (y1: number, x0: string, x1: string) => `\\int_{0}^{${y1}} \\int_{${x0}}^{${x1}} f(x, y)\\,dx\\,dy`;
+      const right = below ? form(b, inverse, `${a}`) : form(b, "0", inverse);
+      const other = below ? form(b, "0", inverse) : form(b, inverse, `${a}`);
+      const size = Math.max(a, b) + 1;
+      const wrongSlope = mTop === 1 && mBottom === 1 ? "2y" : mTop === 1 ? "\\frac{y}{2}" : `${mTop}y`;
+      return choose(
+        rng,
+        ["Which iterated integral, with $x$ integrated first, covers the shaded triangle?", "哪个先对 $x$ 积分的累次积分覆盖阴影三角形？"],
+        same(right),
         [
-          {
-            kind: "polygon",
-            points: below
-              ? [
-                  [0, 0],
-                  [a, 0],
-                  [a, b],
-                ]
-              : [
-                  [0, 0],
-                  [0, b],
-                  [a, b],
-                ],
-          },
-          { kind: "segment", a: [0, 0], b: [a, b], accent: true },
-          { kind: "segment", a: below ? [a, 0] : [0, b], b: [a, b], accent: true },
+          same(other),
+          same(below ? form(a, inverse, `${b}`) : form(a, "0", inverse)),
+          same(below ? form(b, wrongSlope, `${a}`) : form(b, "0", wrongSlope)),
+          same(form(b, "0", `${a}`)),
         ],
         [
-          `A shaded right triangle with vertices at the origin, (${a}, ${b}) and ${below ? `(${a}, 0)` : `(0, ${b})`}.`,
-          `阴影直角三角形，顶点为原点、(${a}, ${b}) 和 ${below ? `(${a}, 0)` : `(0, ${b})`}。`,
+          `The slanted edge runs through the origin and $(${a}, ${b})$, so on it $x = ${inverse}$. A horizontal slice ${below ? `starts on that edge and ends at $x = ${a}$` : `starts at $x = 0$ and ends on that edge`}, and $y$ runs from $0$ to $${b}$.`,
+          `斜边经过原点和 $(${a}, ${b})$，所以在斜边上 $x = ${inverse}$。水平切片${below ? `从斜边开始，到 $x = ${a}$ 结束` : `从 $x = 0$ 开始，到斜边结束`}，$y$ 从 $0$ 到 $${b}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -1, xMax: size, yMin: -1, yMax: size },
+          [
+            {
+              kind: "polygon",
+              points: below
+                ? [
+                    [0, 0],
+                    [a, 0],
+                    [a, b],
+                  ]
+                : [
+                    [0, 0],
+                    [0, b],
+                    [a, b],
+                  ],
+            },
+            { kind: "segment", a: [0, 0], b: [a, b], accent: true },
+            { kind: "segment", a: below ? [a, 0] : [0, b], b: [a, b], accent: true },
+          ],
+          [
+            `A shaded right triangle with vertices at the origin, (${a}, ${b}) and ${below ? `(${a}, 0)` : `(0, ${b})`}.`,
+            `阴影直角三角形，顶点为原点、(${a}, ${b}) 和 ${below ? `(${a}, 0)` : `(0, ${b})`}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings4["changing-the-order-of-integration-in-double-integrals#integrating-a-drawn-triangle-the-other-way"],
+};
 
-const polarLimits = point(
-  "polar-limits-of-a-drawn-sector",
-  ["Polar limits of a drawn sector", "图中扇形的极坐标积分限"],
-  [
-    "A sector of a ring is a rectangle in polar coordinates: the radius runs between two constants and the angle between two constants. So its limits can be read straight from the drawing. The area element in polar coordinates is $r\\,dr\\,d\\theta$, and leaving out the factor $r$ is the most common mistake.",
-    "圆环的扇形在极坐标下是矩形：半径在两个常数之间，角度也在两个常数之间。所以它的积分限可以直接从图中读出。极坐标的面积元是 $r\\,dr\\,d\\theta$，漏掉因子 $r$ 是最常见的错误。",
-  ],
-  (rng) => {
-    const k = rng.int(0, 6);
-    const span = rng.int(1, Math.min(3, 8 - k));
-    const r1 = rng.int(0, 2);
-    const r2 = r1 + rng.int(1, 3);
-    const form = (a: number, b: number, lo: number, hi: number, jac = "\\,r") =>
-      `\\int_{${piTimes(a, 4)}}^{${piTimes(b, 4)}} \\int_{${lo}}^{${hi}} f${jac}\\,dr\\,d\\theta`;
-    const ray = (r: number, q: number): Point => [r * Math.cos((q * Math.PI) / 4), r * Math.sin((q * Math.PI) / 4)];
-    const n = 24 * span;
-    const arc = (r: number) => Array.from({ length: n + 1 }, (_, i) => ray(r, k + (span * i) / n));
-    const outer = arc(r2);
-    const inner = r1 === 0 ? [[0, 0] as Point] : arc(r1).reverse();
-    return choose(
-      rng,
-      ["Which integral equals $\\iint_R f\\,dA$ over the shaded region $R$?", "哪个积分等于阴影区域 $R$ 上的 $\\iint_R f\\,dA$？"],
-      same(form(k, k + span, r1, r2)),
-      [
-        same(form(k, k + span, r1, r2, "")),
-        same(form(k, k + span + 1, r1, r2)),
-        same(form(k + span, k, r1, r2)),
-        same(form(k, k + span, r1, r2 + 1)),
-      ],
-      [
-        `The region runs from radius $${r1}$ to radius $${r2}$, and from angle $${piTimes(k, 4)}$ to angle $${piTimes(k + span, 4)}$. With the area element $r\\,dr\\,d\\theta$ this gives the integral.`,
-        `区域从半径 $${r1}$ 到半径 $${r2}$，从角 $${piTimes(k, 4)}$ 到角 $${piTimes(k + span, 4)}$。用面积元 $r\\,dr\\,d\\theta$ 得到这个积分。`,
-      ],
-      fig(
-        square(6),
+const polarLimits = {
+  ...point(
+    "polar-limits-of-a-drawn-sector",
+    ["Polar limits of a drawn sector", "图中扇形的极坐标积分限"],
+    [
+      "A sector of a ring is a rectangle in polar coordinates: the radius runs between two constants and the angle between two constants. So its limits can be read straight from the drawing. The area element in polar coordinates is $r\\,dr\\,d\\theta$, and leaving out the factor $r$ is the most common mistake.",
+      "圆环的扇形在极坐标下是矩形：半径在两个常数之间，角度也在两个常数之间。所以它的积分限可以直接从图中读出。极坐标的面积元是 $r\\,dr\\,d\\theta$，漏掉因子 $r$ 是最常见的错误。",
+    ],
+    (rng) => {
+      const k = rng.int(0, 6);
+      const span = rng.int(1, Math.min(3, 8 - k));
+      const r1 = rng.int(0, 2);
+      const r2 = r1 + rng.int(1, 3);
+      const form = (a: number, b: number, lo: number, hi: number, jac = "\\,r") =>
+        `\\int_{${piTimes(a, 4)}}^{${piTimes(b, 4)}} \\int_{${lo}}^{${hi}} f${jac}\\,dr\\,d\\theta`;
+      const ray = (r: number, q: number): Point => [r * Math.cos((q * Math.PI) / 4), r * Math.sin((q * Math.PI) / 4)];
+      const n = 24 * span;
+      const arc = (r: number) => Array.from({ length: n + 1 }, (_, i) => ray(r, k + (span * i) / n));
+      const outer = arc(r2);
+      const inner = r1 === 0 ? [[0, 0] as Point] : arc(r1).reverse();
+      return choose(
+        rng,
+        ["Which integral equals $\\iint_R f\\,dA$ over the shaded region $R$?", "哪个积分等于阴影区域 $R$ 上的 $\\iint_R f\\,dA$？"],
+        same(form(k, k + span, r1, r2)),
         [
-          { kind: "polygon", points: [...outer, ...inner] },
-          { kind: "path", points: outer, accent: true },
-          ...(r1 > 0 ? [{ kind: "path", points: arc(r1), accent: true } as PlaneMark] : []),
-          { kind: "segment", a: ray(r1, k), b: ray(r2, k), accent: true },
-          { kind: "segment", a: ray(r1, k + span), b: ray(r2, k + span), accent: true },
+          same(form(k, k + span, r1, r2, "")),
+          same(form(k, k + span + 1, r1, r2)),
+          same(form(k + span, k, r1, r2)),
+          same(form(k, k + span, r1, r2 + 1)),
         ],
         [
-          `A shaded sector from radius ${r1} to ${r2}, from ${k * 45} to ${(k + span) * 45} degrees.`,
-          `阴影扇形，半径从 ${r1} 到 ${r2}，角度从 ${k * 45} 度到 ${(k + span) * 45} 度。`,
+          `The region runs from radius $${r1}$ to radius $${r2}$, and from angle $${piTimes(k, 4)}$ to angle $${piTimes(k + span, 4)}$. With the area element $r\\,dr\\,d\\theta$ this gives the integral.`,
+          `区域从半径 $${r1}$ 到半径 $${r2}$，从角 $${piTimes(k, 4)}$ 到角 $${piTimes(k + span, 4)}$。用面积元 $r\\,dr\\,d\\theta$ 得到这个积分。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          square(6),
+          [
+            { kind: "polygon", points: [...outer, ...inner] },
+            { kind: "path", points: outer, accent: true },
+            ...(r1 > 0 ? [{ kind: "path", points: arc(r1), accent: true } as PlaneMark] : []),
+            { kind: "segment", a: ray(r1, k), b: ray(r2, k), accent: true },
+            { kind: "segment", a: ray(r1, k + span), b: ray(r2, k + span), accent: true },
+          ],
+          [
+            `A shaded sector from radius ${r1} to ${r2}, from ${k * 45} to ${(k + span) * 45} degrees.`,
+            `阴影扇形，半径从 ${r1} 到 ${r2}，角度从 ${k * 45} 度到 ${(k + span) * 45} 度。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings4["double-integrals-in-plane-polar-coordinates#polar-limits-of-a-drawn-sector"],
+};
 
 const connectedness = point(
   "connected-regions-from-a-drawing",
@@ -968,133 +991,139 @@ const workInConstantField = point(
   },
 );
 
-const greenArea = point(
-  "an-area-from-greens-theorem-and-a-drawing",
-  ["An area from Green's theorem and a drawing", "由格林定理和图求面积"],
-  [
-    "By Green's theorem, the integral $\\oint_C x\\,dy$ around a counterclockwise closed curve equals the area enclosed. So the line integral around a polygon can be found by computing the area from a drawing. When the curve runs clockwise the sign changes, so the arrows matter as much as the shape.",
-    "由格林定理，沿逆时针闭曲线的积分 $\\oint_C x\\,dy$ 等于所围面积。所以沿多边形的线积分可以由图算出面积得到。曲线顺时针走时符号改变，所以箭头和形状同样重要。",
-  ],
-  (rng) => {
-    const triangle = rng.bool();
-    const [x, y] = [rng.int(-5, -1), rng.int(-5, -1)];
-    const [w, h] = [rng.int(2, 5), rng.int(2, 5)];
-    const ccw = rng.bool();
-    const base: Point[] = triangle
-      ? [
-          [x, y],
-          [x + w, y],
-          [x, y + h],
-        ]
-      : [
-          [x, y],
-          [x + w, y],
-          [x + w, y + h],
-          [x, y + h],
-        ];
-    const order = ccw ? base : [...base].reverse();
-    const area = triangle ? Q.of(w * h, 2) : Q.of(w * h);
-    const answer = ccw ? area : area.neg();
-    const marks: PlaneMark[] = [
-      { kind: "polygon", points: base },
-      { kind: "path", points: [...base, base[0] as Point], accent: true },
-    ];
-    order.forEach((p, i) => {
-      const q = order[(i + 1) % order.length] as Point;
-      const [mx, my] = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
-      const length = Math.hypot(q[0] - p[0], q[1] - p[1]);
-      const [ux, uy] = [(q[0] - p[0]) / length, (q[1] - p[1]) / length];
-      marks.push({ kind: "arrow", from: [mx - 0.4 * ux, my - 0.4 * uy], to: [mx + 0.4 * ux, my + 0.4 * uy], accent: true });
-    });
-    return ask(
-      [
-        "The closed curve $C$ is traced along its arrows. What is $\\oint_C x\\,dy$?",
-        "闭曲线 $C$ 沿箭头方向走。$\\oint_C x\\,dy$ 是多少？",
-      ],
-      answer,
-      [answer.neg(), area.mul(Q.of(2)), Q.of(2 * (w + h))],
-      [
-        `The ${triangle ? "triangle" : "rectangle"} has sides $${w}$ and $${h}$, so it encloses area $${area.toLatex()}$. The curve runs ${ccw ? "counterclockwise, so the integral equals the area" : "clockwise, so the integral is minus the area"}, which is $${answer.toLatex()}$.`,
-        `这个${triangle ? "三角形" : "矩形"}的两边是 $${w}$ 和 $${h}$，所以面积是 $${area.toLatex()}$。曲线是${ccw ? "逆时针，所以积分等于面积" : "顺时针，所以积分等于面积的相反数"}，即 $${answer.toLatex()}$。`,
-      ],
-      fig(square(6), marks, [
-        `A ${triangle ? "right triangle" : "rectangle"} with sides ${w} and ${h}, traced ${ccw ? "counterclockwise" : "clockwise"}.`,
-        `两边为 ${w} 和 ${h} 的${triangle ? "直角三角形" : "矩形"}，按${ccw ? "逆时针" : "顺时针"}方向走。`,
-      ]),
-    );
-  },
-);
-
-const centroidOfEll = point(
-  "the-center-of-mass-of-a-drawn-l-shape",
-  ["The center of mass of a drawn L-shape", "图中 L 形的质心"],
-  [
-    "A lamina of constant density made of two rectangles has its center of mass at the average of the two rectangle centers, weighted by their areas. The larger piece pulls the result toward itself. Taking the plain average of the two centers, or the middle of the overall width, ignores the weights and gives the wrong point.",
-    "由两个矩形组成的等密度薄片，其质心是两个矩形中心按面积加权的平均。较大的部分把结果拉向自己。直接平均两个中心，或取总宽度的中点，都忽略了权重，得到错误的点。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 3);
-    const b = rng.int(3, 6);
-    const c = rng.int(1, 4);
-    const d = rng.int(1, b - 1);
-    const [A1, A2] = [a * b, c * d];
-    const asksX = rng.bool();
-    const xBar = Q.of(A1 * a + A2 * (2 * a + c), 2 * (A1 + A2));
-    const yBar = Q.of(A1 * b + A2 * d, 2 * (A1 + A2));
-    const answer = asksX ? xBar : yBar;
-    const plain = asksX ? Q.of(a + 2 * a + c, 4) : Q.of(b + d, 4);
-    return ask(
-      asksX
+const greenArea = {
+  ...point(
+    "an-area-from-greens-theorem-and-a-drawing",
+    ["An area from Green's theorem and a drawing", "由格林定理和图求面积"],
+    [
+      "By Green's theorem, the integral $\\oint_C x\\,dy$ around a counterclockwise closed curve equals the area enclosed. So the line integral around a polygon can be found by computing the area from a drawing. When the curve runs clockwise the sign changes, so the arrows matter as much as the shape.",
+      "由格林定理，沿逆时针闭曲线的积分 $\\oint_C x\\,dy$ 等于所围面积。所以沿多边形的线积分可以由图算出面积得到。曲线顺时针走时符号改变，所以箭头和形状同样重要。",
+    ],
+    (rng) => {
+      const triangle = rng.bool();
+      const [x, y] = [rng.int(-5, -1), rng.int(-5, -1)];
+      const [w, h] = [rng.int(2, 5), rng.int(2, 5)];
+      const ccw = rng.bool();
+      const base: Point[] = triangle
         ? [
-            "The L-shaped lamina has constant density. What is the $x$-coordinate of its center of mass?",
-            "L 形薄片密度为常数。它的质心的 $x$ 坐标是多少？",
+            [x, y],
+            [x + w, y],
+            [x, y + h],
           ]
         : [
-            "The L-shaped lamina has constant density. What is the $y$-coordinate of its center of mass?",
-            "L 形薄片密度为常数。它的质心的 $y$ 坐标是多少？",
+            [x, y],
+            [x + w, y],
+            [x + w, y + h],
+            [x, y + h],
+          ];
+      const order = ccw ? base : [...base].reverse();
+      const area = triangle ? Q.of(w * h, 2) : Q.of(w * h);
+      const answer = ccw ? area : area.neg();
+      const marks: PlaneMark[] = [
+        { kind: "polygon", points: base },
+        { kind: "path", points: [...base, base[0] as Point], accent: true },
+      ];
+      order.forEach((p, i) => {
+        const q = order[(i + 1) % order.length] as Point;
+        const [mx, my] = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+        const length = Math.hypot(q[0] - p[0], q[1] - p[1]);
+        const [ux, uy] = [(q[0] - p[0]) / length, (q[1] - p[1]) / length];
+        marks.push({ kind: "arrow", from: [mx - 0.4 * ux, my - 0.4 * uy], to: [mx + 0.4 * ux, my + 0.4 * uy], accent: true });
+      });
+      return ask(
+        [
+          "The closed curve $C$ is traced along its arrows. What is $\\oint_C x\\,dy$?",
+          "闭曲线 $C$ 沿箭头方向走。$\\oint_C x\\,dy$ 是多少？",
+        ],
+        answer,
+        [answer.neg(), area.mul(Q.of(2)), Q.of(2 * (w + h))],
+        [
+          `The ${triangle ? "triangle" : "rectangle"} has sides $${w}$ and $${h}$, so it encloses area $${area.toLatex()}$. The curve runs ${ccw ? "counterclockwise, so the integral equals the area" : "clockwise, so the integral is minus the area"}, which is $${answer.toLatex()}$.`,
+          `这个${triangle ? "三角形" : "矩形"}的两边是 $${w}$ 和 $${h}$，所以面积是 $${area.toLatex()}$。曲线是${ccw ? "逆时针，所以积分等于面积" : "顺时针，所以积分等于面积的相反数"}，即 $${answer.toLatex()}$。`,
+        ],
+        fig(square(6), marks, [
+          `A ${triangle ? "right triangle" : "rectangle"} with sides ${w} and ${h}, traced ${ccw ? "counterclockwise" : "clockwise"}.`,
+          `两边为 ${w} 和 ${h} 的${triangle ? "直角三角形" : "矩形"}，按${ccw ? "逆时针" : "顺时针"}方向走。`,
+        ]),
+      );
+    },
+  ),
+  figure: multivariableDrawings6["calculating-areas-using-greens-theorem#an-area-from-greens-theorem-and-a-drawing"],
+};
+
+const centroidOfEll = {
+  ...point(
+    "the-center-of-mass-of-a-drawn-l-shape",
+    ["The center of mass of a drawn L-shape", "图中 L 形的质心"],
+    [
+      "A lamina of constant density made of two rectangles has its center of mass at the average of the two rectangle centers, weighted by their areas. The larger piece pulls the result toward itself. Taking the plain average of the two centers, or the middle of the overall width, ignores the weights and gives the wrong point.",
+      "由两个矩形组成的等密度薄片，其质心是两个矩形中心按面积加权的平均。较大的部分把结果拉向自己。直接平均两个中心，或取总宽度的中点，都忽略了权重，得到错误的点。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 3);
+      const b = rng.int(3, 6);
+      const c = rng.int(1, 4);
+      const d = rng.int(1, b - 1);
+      const [A1, A2] = [a * b, c * d];
+      const asksX = rng.bool();
+      const xBar = Q.of(A1 * a + A2 * (2 * a + c), 2 * (A1 + A2));
+      const yBar = Q.of(A1 * b + A2 * d, 2 * (A1 + A2));
+      const answer = asksX ? xBar : yBar;
+      const plain = asksX ? Q.of(a + 2 * a + c, 4) : Q.of(b + d, 4);
+      return ask(
+        asksX
+          ? [
+              "The L-shaped lamina has constant density. What is the $x$-coordinate of its center of mass?",
+              "L 形薄片密度为常数。它的质心的 $x$ 坐标是多少？",
+            ]
+          : [
+              "The L-shaped lamina has constant density. What is the $y$-coordinate of its center of mass?",
+              "L 形薄片密度为常数。它的质心的 $y$ 坐标是多少？",
+            ],
+        answer,
+        [plain, asksX ? yBar : xBar, asksX ? Q.of(a + c, 2) : Q.of(b, 2)],
+        [
+          `Split the shape into rectangles of areas $${A1}$ and $${A2}$, whose centers have ${asksX ? "$x$" : "$y$"}-coordinates $${(asksX ? Q.of(a, 2) : Q.of(b, 2)).toLatex()}$ and $${(asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2)).toLatex()}$. Their average weighted by area is $${answer.toLatex()}$.`,
+          `把图形分成面积为 $${A1}$ 和 $${A2}$ 的两个矩形，它们中心的 ${asksX ? "$x$" : "$y$"} 坐标是 $${(asksX ? Q.of(a, 2) : Q.of(b, 2)).toLatex()}$ 和 $${(asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2)).toLatex()}$。按面积加权的平均是 $${answer.toLatex()}$。`,
+        ],
+        fig(
+          { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
+          [
+            {
+              kind: "polygon",
+              points: [
+                [0, 0],
+                [a + c, 0],
+                [a + c, d],
+                [a, d],
+                [a, b],
+                [0, b],
+              ],
+            },
+            {
+              kind: "path",
+              points: [
+                [0, 0],
+                [a + c, 0],
+                [a + c, d],
+                [a, d],
+                [a, b],
+                [0, b],
+                [0, 0],
+              ],
+              accent: true,
+            },
           ],
-      answer,
-      [plain, asksX ? yBar : xBar, asksX ? Q.of(a + c, 2) : Q.of(b, 2)],
-      [
-        `Split the shape into rectangles of areas $${A1}$ and $${A2}$, whose centers have ${asksX ? "$x$" : "$y$"}-coordinates $${(asksX ? Q.of(a, 2) : Q.of(b, 2)).toLatex()}$ and $${(asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2)).toLatex()}$. Their average weighted by area is $${answer.toLatex()}$.`,
-        `把图形分成面积为 $${A1}$ 和 $${A2}$ 的两个矩形，它们中心的 ${asksX ? "$x$" : "$y$"} 坐标是 $${(asksX ? Q.of(a, 2) : Q.of(b, 2)).toLatex()}$ 和 $${(asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2)).toLatex()}$。按面积加权的平均是 $${answer.toLatex()}$。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
-        [
-          {
-            kind: "polygon",
-            points: [
-              [0, 0],
-              [a + c, 0],
-              [a + c, d],
-              [a, d],
-              [a, b],
-              [0, b],
-            ],
-          },
-          {
-            kind: "path",
-            points: [
-              [0, 0],
-              [a + c, 0],
-              [a + c, d],
-              [a, d],
-              [a, b],
-              [0, b],
-              [0, 0],
-            ],
-            accent: true,
-          },
-        ],
-        [
-          `An L-shape: a rectangle ${a} wide and ${b} tall at the origin, with a rectangle ${c} wide and ${d} tall to its right.`,
-          `L 形：原点处宽 ${a}、高 ${b} 的矩形，其右侧连着宽 ${c}、高 ${d} 的矩形。`,
-        ],
-      ),
-    );
-  },
-);
+          [
+            `An L-shape: a rectangle ${a} wide and ${b} tall at the origin, with a rectangle ${c} wide and ${d} tall to its right.`,
+            `L 形：原点处宽 ${a}、高 ${b} 的矩形，其右侧连着宽 ${c}、高 ${d} 的矩形。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: multivariableDrawings8["moments-and-centers-of-mass-of-plane-laminas#the-center-of-mass-of-a-drawn-l-shape"],
+};
 
 /** deeperFiguresMultivariableCalculusPoints adds knowledge points of Multivariable Calculus that are answered by reading a drawing. */
 export const deeperFiguresMultivariableCalculusPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

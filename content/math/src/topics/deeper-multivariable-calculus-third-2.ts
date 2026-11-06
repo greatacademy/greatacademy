@@ -4,6 +4,11 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
+import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
+import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
+import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
+import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -31,58 +36,70 @@ const quads = [
 /** br writes a vector with angle brackets. */
 const br = (...entries: readonly (string | number)[]) => `\\langle ${entries.join(", ")} \\rangle`;
 
-const separatingProjection = point(
-  "a-projection-that-separates-the-variables",
-  ["A projection that separates the variables", "使变量分离的投影"],
-  [
-    "A triple integral can be set up over any of the three coordinate planes. If the solid is a triangular prism along the $y$-axis, projecting to the $xz$-plane makes the limits for $y$ constant, so an integrand in $y$ alone splits off as a single factor.",
-    "三重积分可以投影到三个坐标平面中的任何一个。如果立体是沿 $y$ 轴的三棱柱，投影到 $xz$ 平面后 $y$ 的积分限是常数，所以只含 $y$ 的被积函数可以单独分离成一个因子。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 6);
-    const b = rng.int(1, 6);
-    const k = rng.int(1, 6);
-    const answer = Q.of(k * a * a * b * b, 4);
-    return ask(
-      [
-        `$E$ is the solid bounded by $x = 0$, $z = 0$, $x + z = ${a}$, $y = 0$ and $y = ${b}$. Evaluate $\\iiint_{E} ${poly([k, "y"])}\\,dV$.`,
-        `$E$ 是由 $x = 0$，$z = 0$，$x + z = ${a}$，$y = 0$ 和 $y = ${b}$ 围成的立体。求 $\\iiint_{E} ${poly([k, "y"])}\\,dV$。`,
-      ],
-      answer,
-      [Q.of(k * a * a * b * b, 2), Q.of(k * a * b * b, 2), Q.of(k * a * a * b, 2)],
-      [
-        `Over the $xz$-plane the solid projects to a triangle of area $${Q.of(a * a, 2).toLatex()}$, and $\\int_{0}^{${b}} ${poly([k, "y"])} \\, dy = ${Q.of(k * b * b, 2).toLatex()}$. The product is $${answer.toLatex()}$.`,
-        `立体在 $xz$ 平面上的投影是面积为 $${Q.of(a * a, 2).toLatex()}$ 的三角形，且 $\\int_{0}^{${b}} ${poly([k, "y"])} \\, dy = ${Q.of(k * b * b, 2).toLatex()}$。两者之积是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const separatingProjection = {
+  ...point(
+    "a-projection-that-separates-the-variables",
+    ["A projection that separates the variables", "使变量分离的投影"],
+    [
+      "A triple integral can be set up over any of the three coordinate planes. If the solid is a triangular prism along the $y$-axis, projecting to the $xz$-plane makes the limits for $y$ constant, so an integrand in $y$ alone splits off as a single factor.",
+      "三重积分可以投影到三个坐标平面中的任何一个。如果立体是沿 $y$ 轴的三棱柱，投影到 $xz$ 平面后 $y$ 的积分限是常数，所以只含 $y$ 的被积函数可以单独分离成一个因子。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 6);
+      const b = rng.int(1, 6);
+      const k = rng.int(1, 6);
+      const answer = Q.of(k * a * a * b * b, 4);
+      return ask(
+        [
+          `$E$ is the solid bounded by $x = 0$, $z = 0$, $x + z = ${a}$, $y = 0$ and $y = ${b}$. Evaluate $\\iiint_{E} ${poly([k, "y"])}\\,dV$.`,
+          `$E$ 是由 $x = 0$，$z = 0$，$x + z = ${a}$，$y = 0$ 和 $y = ${b}$ 围成的立体。求 $\\iiint_{E} ${poly([k, "y"])}\\,dV$。`,
+        ],
+        answer,
+        [Q.of(k * a * a * b * b, 2), Q.of(k * a * b * b, 2), Q.of(k * a * a * b, 2)],
+        [
+          `Over the $xz$-plane the solid projects to a triangle of area $${Q.of(a * a, 2).toLatex()}$, and $\\int_{0}^{${b}} ${poly([k, "y"])} \\, dy = ${Q.of(k * b * b, 2).toLatex()}$. The product is $${answer.toLatex()}$.`,
+          `立体在 $xz$ 平面上的投影是面积为 $${Q.of(a * a, 2).toLatex()}$ 的三角形，且 $\\int_{0}^{${b}} ${poly([k, "y"])} \\, dy = ${Q.of(k * b * b, 2).toLatex()}$。两者之积是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    multivariableDrawings4[
+      "changing-the-order-of-integration-in-triple-integrals-changing-projection#a-projection-that-separates-the-variables"
+    ],
+};
 
-const easierOrder = point(
-  "changing-the-order-to-do-the-easy-integrals-first",
-  ["Changing the order to do the easy integrals first", "改变次序先做容易的积分"],
-  [
-    "The limits $0 \\le z \\le y \\le x \\le a$ describe one region, whatever the order of integration. When the integrand depends only on $x$, it pays to integrate $z$ and $y$ first: together they give the factor $\\frac{x^{2}}{2}$, the area of a triangle.",
-    "限制 $0 \\le z \\le y \\le x \\le a$ 描述同一个区域，与积分次序无关。当被积函数只依赖 $x$ 时，先对 $z$ 和 $y$ 积分更好：二者合起来给出因子 $\\frac{x^{2}}{2}$，即一个三角形的面积。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 6);
-    const k = rng.int(1, 9);
-    const answer = Q.of(k * a ** 4, 8);
-    return ask(
-      [
-        `Evaluate $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${poly([k, "x"])}\\,dx\\,dy\\,dz$ by changing the order of integration.`,
-        `通过改变积分次序，求 $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${poly([k, "x"])}\\,dx\\,dy\\,dz$。`,
-      ],
-      answer,
-      [Q.of(k * a ** 4, 4), Q.of(k * a ** 4, 24), Q.of(k * a ** 3, 6)],
-      [
-        `The region is $0 \\le z \\le y \\le x \\le ${a}$. For fixed $x$, the $z$ and $y$ integrals give $\\frac{x^{2}}{2}$, so the integral is $\\int_{0}^{${a}} ${Q.of(k, 2).toLatex()}x^{3} \\, dx = ${answer.toLatex()}$.`,
-        `区域是 $0 \\le z \\le y \\le x \\le ${a}$。固定 $x$，对 $z$ 和 $y$ 积分得 $\\frac{x^{2}}{2}$，所以积分是 $\\int_{0}^{${a}} ${Q.of(k, 2).toLatex()}x^{3} \\, dx = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const easierOrder = {
+  ...point(
+    "changing-the-order-to-do-the-easy-integrals-first",
+    ["Changing the order to do the easy integrals first", "改变次序先做容易的积分"],
+    [
+      "The limits $0 \\le z \\le y \\le x \\le a$ describe one region, whatever the order of integration. When the integrand depends only on $x$, it pays to integrate $z$ and $y$ first: together they give the factor $\\frac{x^{2}}{2}$, the area of a triangle.",
+      "限制 $0 \\le z \\le y \\le x \\le a$ 描述同一个区域，与积分次序无关。当被积函数只依赖 $x$ 时，先对 $z$ 和 $y$ 积分更好：二者合起来给出因子 $\\frac{x^{2}}{2}$，即一个三角形的面积。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 6);
+      const k = rng.int(1, 9);
+      const answer = Q.of(k * a ** 4, 8);
+      return ask(
+        [
+          `Evaluate $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${poly([k, "x"])}\\,dx\\,dy\\,dz$ by changing the order of integration.`,
+          `通过改变积分次序，求 $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${poly([k, "x"])}\\,dx\\,dy\\,dz$。`,
+        ],
+        answer,
+        [Q.of(k * a ** 4, 4), Q.of(k * a ** 4, 24), Q.of(k * a ** 3, 6)],
+        [
+          `The region is $0 \\le z \\le y \\le x \\le ${a}$. For fixed $x$, the $z$ and $y$ integrals give $\\frac{x^{2}}{2}$, so the integral is $\\int_{0}^{${a}} ${Q.of(k, 2).toLatex()}x^{3} \\, dx = ${answer.toLatex()}$.`,
+          `区域是 $0 \\le z \\le y \\le x \\le ${a}$。固定 $x$，对 $z$ 和 $y$ 积分得 $\\frac{x^{2}}{2}$，所以积分是 $\\int_{0}^{${a}} ${Q.of(k, 2).toLatex()}x^{3} \\, dx = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    multivariableDrawings4[
+      "changing-the-order-of-integration-in-triple-integrals-changing-region#changing-the-order-to-do-the-easy-integrals-first"
+    ],
+};
 
 const ellipticAnnulus = point(
   "the-area-between-two-similar-ellipses",
@@ -111,147 +128,160 @@ const ellipticAnnulus = point(
   },
 );
 
-const differenceOfSquares = point(
-  "a-difference-of-squares-under-a-rotated-rectangle",
-  ["A difference of squares under a rotated rectangle", "旋转矩形上的平方差"],
-  [
-    "With $u = x + y$ and $v = x - y$, a rotated rectangle becomes an ordinary one and $x^{2} - y^{2}$ becomes $uv$. The trap is the area element: the Jacobian of $(x, y)$ in terms of $(u, v)$ has absolute value $\\frac{1}{2}$, not $2$.",
-    "用 $u = x + y$，$v = x - y$，旋转的矩形变成普通矩形，$x^{2} - y^{2}$ 变成 $uv$。陷阱在面积元：$(x, y)$ 关于 $(u, v)$ 的雅可比行列式的绝对值是 $\\frac{1}{2}$，而不是 $2$。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 6);
-    const b = rng.int(1, 6);
-    const k = rng.int(1, 12);
-    const answer = Q.of(k * a * a * b * b, 8);
-    return ask(
-      [
-        `Evaluate $\\iint_{R} ${k}(x^{2} - y^{2})\\,dA$, where $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$.`,
-        `求 $\\iint_{R} ${k}(x^{2} - y^{2})\\,dA$，其中 $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$。`,
-      ],
-      answer,
-      [Q.of(k * a * a * b * b, 4), Q.of(k * a * a * b * b, 2), Q.of(k * a * b, 2)],
-      [
-        `The integral becomes $\\int_{0}^{${a}} \\int_{0}^{${b}} ${k}uv \\cdot \\frac{1}{2} \\, dv \\, du$. The $u$ integral gives $${Q.of(a * a, 2).toLatex()}$ and the $v$ integral gives $${Q.of(b * b, 2).toLatex()}$, so the result is $${answer.toLatex()}$.`,
-        `积分变为 $\\int_{0}^{${a}} \\int_{0}^{${b}} ${k}uv \\cdot \\frac{1}{2} \\, dv \\, du$。对 $u$ 积分得 $${Q.of(a * a, 2).toLatex()}$，对 $v$ 积分得 $${Q.of(b * b, 2).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const differenceOfSquares = {
+  ...point(
+    "a-difference-of-squares-under-a-rotated-rectangle",
+    ["A difference of squares under a rotated rectangle", "旋转矩形上的平方差"],
+    [
+      "With $u = x + y$ and $v = x - y$, a rotated rectangle becomes an ordinary one and $x^{2} - y^{2}$ becomes $uv$. The trap is the area element: the Jacobian of $(x, y)$ in terms of $(u, v)$ has absolute value $\\frac{1}{2}$, not $2$.",
+      "用 $u = x + y$，$v = x - y$，旋转的矩形变成普通矩形，$x^{2} - y^{2}$ 变成 $uv$。陷阱在面积元：$(x, y)$ 关于 $(u, v)$ 的雅可比行列式的绝对值是 $\\frac{1}{2}$，而不是 $2$。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 6);
+      const b = rng.int(1, 6);
+      const k = rng.int(1, 12);
+      const answer = Q.of(k * a * a * b * b, 8);
+      return ask(
+        [
+          `Evaluate $\\iint_{R} ${k}(x^{2} - y^{2})\\,dA$, where $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$.`,
+          `求 $\\iint_{R} ${k}(x^{2} - y^{2})\\,dA$，其中 $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$。`,
+        ],
+        answer,
+        [Q.of(k * a * a * b * b, 4), Q.of(k * a * a * b * b, 2), Q.of(k * a * b, 2)],
+        [
+          `The integral becomes $\\int_{0}^{${a}} \\int_{0}^{${b}} ${k}uv \\cdot \\frac{1}{2} \\, dv \\, du$. The $u$ integral gives $${Q.of(a * a, 2).toLatex()}$ and the $v$ integral gives $${Q.of(b * b, 2).toLatex()}$, so the result is $${answer.toLatex()}$.`,
+          `积分变为 $\\int_{0}^{${a}} \\int_{0}^{${b}} ${k}uv \\cdot \\frac{1}{2} \\, dv \\, du$。对 $u$ 积分得 $${Q.of(a * a, 2).toLatex()}$，对 $v$ 积分得 $${Q.of(b * b, 2).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    multivariableDrawings4["computing-double-integrals-using-a-change-of-variables#a-difference-of-squares-under-a-rotated-rectangle"],
+};
 
-const oppositeDistance = point(
-  "the-distance-across-the-axis",
-  ["The distance across the axis", "穿过轴的距离"],
-  [
-    "Two points with the same $r$ and angles differing by $\\pi$ lie on opposite sides of the $z$-axis, so their horizontal separation is $2r$. Adding the difference in height through the Pythagorean theorem gives the distance, without converting to Cartesian coordinates.",
-    "$r$ 相同、角度相差 $\\pi$ 的两点位于 $z$ 轴的两侧，所以水平距离是 $2r$。再用勾股定理计入高度差就得到距离，不必转换成直角坐标。",
-  ],
-  (rng) => {
-    const [a, b, c] = rng.pick([
-      [4, 3, 5],
-      [12, 5, 13],
-      [8, 15, 17],
-    ] as const);
-    const k = rng.int(1, 3);
-    const [t1, t2] = rng.pick([
-      ["\\frac{\\pi}{6}", "\\frac{7\\pi}{6}"],
-      ["\\frac{\\pi}{4}", "\\frac{5\\pi}{4}"],
-      ["\\frac{\\pi}{3}", "\\frac{4\\pi}{3}"],
-      ["\\frac{\\pi}{2}", "\\frac{3\\pi}{2}"],
-    ] as const);
-    const r = (a * k) / 2;
-    const z1 = rng.int(-6, 6);
-    const z2 = z1 + rng.pick([-1, 1]) * b * k;
-    const answer = c * k;
-    return ask(
-      [
-        `Find the distance between the points with cylindrical coordinates $(${r}, ${t1}, ${z1})$ and $(${r}, ${t2}, ${z2})$.`,
-        `求柱坐标为 $(${r}, ${t1}, ${z1})$ 和 $(${r}, ${t2}, ${z2})$ 的两点之间的距离。`,
-      ],
-      answer,
-      [b * k, (a + b) * k, (r + b * k) * 2],
-      [
-        `The angles differ by $\\pi$, so the horizontal separation is $2 \\cdot ${r} = ${a * k}$. The heights differ by $${b * k}$, and the distance is $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$.`,
-        `两个角相差 $\\pi$，所以水平距离是 $2 \\cdot ${r} = ${a * k}$。高度差是 $${b * k}$，距离是 $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const oppositeDistance = {
+  ...point(
+    "the-distance-across-the-axis",
+    ["The distance across the axis", "穿过轴的距离"],
+    [
+      "Two points with the same $r$ and angles differing by $\\pi$ lie on opposite sides of the $z$-axis, so their horizontal separation is $2r$. Adding the difference in height through the Pythagorean theorem gives the distance, without converting to Cartesian coordinates.",
+      "$r$ 相同、角度相差 $\\pi$ 的两点位于 $z$ 轴的两侧，所以水平距离是 $2r$。再用勾股定理计入高度差就得到距离，不必转换成直角坐标。",
+    ],
+    (rng) => {
+      const [a, b, c] = rng.pick([
+        [4, 3, 5],
+        [12, 5, 13],
+        [8, 15, 17],
+      ] as const);
+      const k = rng.int(1, 3);
+      const [t1, t2] = rng.pick([
+        ["\\frac{\\pi}{6}", "\\frac{7\\pi}{6}"],
+        ["\\frac{\\pi}{4}", "\\frac{5\\pi}{4}"],
+        ["\\frac{\\pi}{3}", "\\frac{4\\pi}{3}"],
+        ["\\frac{\\pi}{2}", "\\frac{3\\pi}{2}"],
+      ] as const);
+      const r = (a * k) / 2;
+      const z1 = rng.int(-6, 6);
+      const z2 = z1 + rng.pick([-1, 1]) * b * k;
+      const answer = c * k;
+      return ask(
+        [
+          `Find the distance between the points with cylindrical coordinates $(${r}, ${t1}, ${z1})$ and $(${r}, ${t2}, ${z2})$.`,
+          `求柱坐标为 $(${r}, ${t1}, ${z1})$ 和 $(${r}, ${t2}, ${z2})$ 的两点之间的距离。`,
+        ],
+        answer,
+        [b * k, (a + b) * k, (r + b * k) * 2],
+        [
+          `The angles differ by $\\pi$, so the horizontal separation is $2 \\cdot ${r} = ${a * k}$. The heights differ by $${b * k}$, and the distance is $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$.`,
+          `两个角相差 $\\pi$，所以水平距离是 $2 \\cdot ${r} = ${a * k}$。高度差是 $${b * k}$，距离是 $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings5["cylindrical-polar-coordinates#the-distance-across-the-axis"],
+};
 
-const offAxisCylinder = point(
-  "a-cylinder-whose-axis-is-not-the-z-axis",
-  ["A cylinder whose axis is not the z-axis", "轴不是 z 轴的圆柱"],
-  [
-    "The equation $r = p\\cos\\theta + q\\sin\\theta$ looks unlike a cylinder, but multiplying by $r$ gives $x^{2} + y^{2} = px + qy$. Completing the square shows a circular cylinder through the $z$-axis, with radius $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$.",
-    "方程 $r = p\\cos\\theta + q\\sin\\theta$ 看起来不像圆柱，但两边乘以 $r$ 得 $x^{2} + y^{2} = px + qy$。配方后可知，这是过 $z$ 轴的圆柱，半径为 $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$。",
-  ],
-  (rng) => {
-    const [a, b, c] = rng.pick(triples);
-    const u = rng.int(1, 3);
-    const p = 2 * a * u * rng.pick([-1, 1]);
-    const q = 2 * b * u * rng.pick([-1, 1]);
-    const answer = c * u;
-    const eq = poly([p, "\\cos\\theta"], [q, "\\sin\\theta"]);
-    return ask(
-      [
-        `The surface with cylindrical equation $r = ${eq}$ is a circular cylinder. Find its radius.`,
-        `柱坐标方程 $r = ${eq}$ 表示的曲面是圆柱。求它的半径。`,
-      ],
-      answer,
-      [2 * c * u, (a + b) * u, c * c * u * u],
-      [
-        `Multiplying by $r$ gives $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$. Completing the square, the radius squared is $${a * u}^{2} + ${b * u}^{2}$, so the radius is $${answer}$.`,
-        `两边乘以 $r$，得 $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$。配方后，半径的平方是 $${a * u}^{2} + ${b * u}^{2}$，所以半径是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const offAxisCylinder = {
+  ...point(
+    "a-cylinder-whose-axis-is-not-the-z-axis",
+    ["A cylinder whose axis is not the z-axis", "轴不是 z 轴的圆柱"],
+    [
+      "The equation $r = p\\cos\\theta + q\\sin\\theta$ looks unlike a cylinder, but multiplying by $r$ gives $x^{2} + y^{2} = px + qy$. Completing the square shows a circular cylinder through the $z$-axis, with radius $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$.",
+      "方程 $r = p\\cos\\theta + q\\sin\\theta$ 看起来不像圆柱，但两边乘以 $r$ 得 $x^{2} + y^{2} = px + qy$。配方后可知，这是过 $z$ 轴的圆柱，半径为 $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$。",
+    ],
+    (rng) => {
+      const [a, b, c] = rng.pick(triples);
+      const u = rng.int(1, 3);
+      const p = 2 * a * u * rng.pick([-1, 1]);
+      const q = 2 * b * u * rng.pick([-1, 1]);
+      const answer = c * u;
+      const eq = poly([p, "\\cos\\theta"], [q, "\\sin\\theta"]);
+      return ask(
+        [
+          `The surface with cylindrical equation $r = ${eq}$ is a circular cylinder. Find its radius.`,
+          `柱坐标方程 $r = ${eq}$ 表示的曲面是圆柱。求它的半径。`,
+        ],
+        answer,
+        [2 * c * u, (a + b) * u, c * c * u * u],
+        [
+          `Multiplying by $r$ gives $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$. Completing the square, the radius squared is $${a * u}^{2} + ${b * u}^{2}$, so the radius is $${answer}$.`,
+          `两边乘以 $r$，得 $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$。配方后，半径的平方是 $${a * u}^{2} + ${b * u}^{2}$，所以半径是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings5["surfaces-in-cylindrical-polar-coordinates#a-cylinder-whose-axis-is-not-the-z-axis"],
+};
 
-const sphericalKinds = point(
-  "recognizing-planes-and-cylinders-in-spherical-form",
-  ["Recognizing planes and cylinders in spherical form", "识别球坐标形式的平面和圆柱"],
-  [
-    "Since $z = \\rho\\cos\\varphi$ and $r = \\rho\\sin\\varphi$, the equation $\\rho = a\\sec\\varphi$ is a plane and $\\rho = a\\csc\\varphi$ is a cylinder. And $\\rho = 2a\\cos\\varphi$ becomes $x^{2} + y^{2} + z^{2} = 2az$ after multiplying by $\\rho$, a sphere not centered at the origin.",
-    "由于 $z = \\rho\\cos\\varphi$，$r = \\rho\\sin\\varphi$，方程 $\\rho = a\\sec\\varphi$ 是平面，$\\rho = a\\csc\\varphi$ 是圆柱。而 $\\rho = 2a\\cos\\varphi$ 两边乘以 $\\rho$ 后变成 $x^{2} + y^{2} + z^{2} = 2az$，是球心不在原点的球面。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 9);
-    const kind = rng.int(0, 3);
-    const eq = [`${a}\\sec\\varphi`, `${a}\\csc\\varphi`, `${2 * a}\\cos\\varphi`, `${a}`][kind] as string;
-    const options: Pair[] = [
-      [`The plane $z = ${a}$`, `平面 $z = ${a}$`],
-      [`The cylinder $x^{2} + y^{2} = ${a * a}$`, `圆柱 $x^{2} + y^{2} = ${a * a}$`],
-      [`The sphere of radius $${a}$ centered at $(0, 0, ${a})$`, `半径为 $${a}$、球心在 $(0, 0, ${a})$ 的球面`],
-      [`The sphere of radius $${a}$ centered at the origin`, `半径为 $${a}$、球心在原点的球面`],
-    ];
-    const correct = options[kind] as Pair;
-    const whys: Pair[] = [
-      [
-        `Multiplying by $\\cos\\varphi$ gives $\\rho\\cos\\varphi = ${a}$, that is $z = ${a}$.`,
-        `两边乘以 $\\cos\\varphi$，得 $\\rho\\cos\\varphi = ${a}$，即 $z = ${a}$。`,
-      ],
-      [
-        `Multiplying by $\\sin\\varphi$ gives $\\rho\\sin\\varphi = ${a}$, that is $r = ${a}$, a cylinder.`,
-        `两边乘以 $\\sin\\varphi$，得 $\\rho\\sin\\varphi = ${a}$，即 $r = ${a}$，是圆柱。`,
-      ],
-      [
-        `Multiplying by $\\rho$ gives $x^{2} + y^{2} + z^{2} = ${2 * a}z$, and completing the square gives the center $(0, 0, ${a})$.`,
-        `两边乘以 $\\rho$，得 $x^{2} + y^{2} + z^{2} = ${2 * a}z$，配方后球心是 $(0, 0, ${a})$。`,
-      ],
-      [
-        `A constant $\\rho$ means a constant distance from the origin, so this is a sphere around the origin.`,
-        `$\\rho$ 为常数表示到原点的距离不变，所以这是以原点为球心的球面。`,
-      ],
-    ];
-    const why = whys[kind] as Pair;
-    return choose(
-      rng,
-      [`Which surface has the spherical equation $\\rho = ${eq}$?`, `球坐标方程 $\\rho = ${eq}$ 表示哪个曲面？`],
-      correct,
-      options.filter((o) => o !== correct),
-      why,
-    );
-  },
-);
+const sphericalKinds = {
+  ...point(
+    "recognizing-planes-and-cylinders-in-spherical-form",
+    ["Recognizing planes and cylinders in spherical form", "识别球坐标形式的平面和圆柱"],
+    [
+      "Since $z = \\rho\\cos\\varphi$ and $r = \\rho\\sin\\varphi$, the equation $\\rho = a\\sec\\varphi$ is a plane and $\\rho = a\\csc\\varphi$ is a cylinder. And $\\rho = 2a\\cos\\varphi$ becomes $x^{2} + y^{2} + z^{2} = 2az$ after multiplying by $\\rho$, a sphere not centered at the origin.",
+      "由于 $z = \\rho\\cos\\varphi$，$r = \\rho\\sin\\varphi$，方程 $\\rho = a\\sec\\varphi$ 是平面，$\\rho = a\\csc\\varphi$ 是圆柱。而 $\\rho = 2a\\cos\\varphi$ 两边乘以 $\\rho$ 后变成 $x^{2} + y^{2} + z^{2} = 2az$，是球心不在原点的球面。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 9);
+      const kind = rng.int(0, 3);
+      const eq = [`${a}\\sec\\varphi`, `${a}\\csc\\varphi`, `${2 * a}\\cos\\varphi`, `${a}`][kind] as string;
+      const options: Pair[] = [
+        [`The plane $z = ${a}$`, `平面 $z = ${a}$`],
+        [`The cylinder $x^{2} + y^{2} = ${a * a}$`, `圆柱 $x^{2} + y^{2} = ${a * a}$`],
+        [`The sphere of radius $${a}$ centered at $(0, 0, ${a})$`, `半径为 $${a}$、球心在 $(0, 0, ${a})$ 的球面`],
+        [`The sphere of radius $${a}$ centered at the origin`, `半径为 $${a}$、球心在原点的球面`],
+      ];
+      const correct = options[kind] as Pair;
+      const whys: Pair[] = [
+        [
+          `Multiplying by $\\cos\\varphi$ gives $\\rho\\cos\\varphi = ${a}$, that is $z = ${a}$.`,
+          `两边乘以 $\\cos\\varphi$，得 $\\rho\\cos\\varphi = ${a}$，即 $z = ${a}$。`,
+        ],
+        [
+          `Multiplying by $\\sin\\varphi$ gives $\\rho\\sin\\varphi = ${a}$, that is $r = ${a}$, a cylinder.`,
+          `两边乘以 $\\sin\\varphi$，得 $\\rho\\sin\\varphi = ${a}$，即 $r = ${a}$，是圆柱。`,
+        ],
+        [
+          `Multiplying by $\\rho$ gives $x^{2} + y^{2} + z^{2} = ${2 * a}z$, and completing the square gives the center $(0, 0, ${a})$.`,
+          `两边乘以 $\\rho$，得 $x^{2} + y^{2} + z^{2} = ${2 * a}z$，配方后球心是 $(0, 0, ${a})$。`,
+        ],
+        [
+          `A constant $\\rho$ means a constant distance from the origin, so this is a sphere around the origin.`,
+          `$\\rho$ 为常数表示到原点的距离不变，所以这是以原点为球心的球面。`,
+        ],
+      ];
+      const why = whys[kind] as Pair;
+      return choose(
+        rng,
+        [`Which surface has the spherical equation $\\rho = ${eq}$?`, `球坐标方程 $\\rho = ${eq}$ 表示哪个曲面？`],
+        correct,
+        options.filter((o) => o !== correct),
+        why,
+      );
+    },
+  ),
+  figure: multivariableDrawings5["surfaces-in-spherical-polar-coordinates#recognizing-planes-and-cylinders-in-spherical-form"],
+};
 
 const zSquaredEllipsoid = point(
   "a-nonconstant-integrand-over-an-ellipsoid",
@@ -360,32 +390,36 @@ const averageOnCurve = point(
   },
 );
 
-const alongParabola = point(
-  "a-line-integral-along-a-parabola",
-  ["A line integral along a parabola", "沿抛物线的线积分"],
-  [
-    "On a curved graph $y = g(x)$, the factor $\\sqrt{1 + g'(x)^{2}}$ changes along the path, so it stays inside the integral. On $y = \\frac{x^{2}}{2}$ it is $\\sqrt{1 + x^{2}}$, and an integrand with a factor of $x$ makes the substitution work.",
-    "在曲线 $y = g(x)$ 上，因子 $\\sqrt{1 + g'(x)^{2}}$ 沿路径变化，所以要留在积分号内。在 $y = \\frac{x^{2}}{2}$ 上它是 $\\sqrt{1 + x^{2}}$，被积函数含因子 $x$ 时可以用换元法。",
-  ],
-  (rng) => {
-    const [a, b, c] = rng.pick(triples);
-    const k = rng.int(1, 12);
-    const X = Q.of(a, b);
-    const answer = Q.of(k * (c ** 3 - b ** 3), 3 * b ** 3);
-    return ask(
-      [
-        `Evaluate $\\int_{C} ${poly([k, "x"])}\\,ds$ along $y = \\frac{x^{2}}{2}$ from $x = 0$ to $x = ${X.toLatex()}$.`,
-        `求 $\\int_{C} ${poly([k, "x"])}\\,ds$，其中 $C$ 是 $y = \\frac{x^{2}}{2}$ 上从 $x = 0$ 到 $x = ${X.toLatex()}$ 的一段。`,
-      ],
-      answer,
-      [Q.of(k * c ** 3, 3 * b ** 3), Q.of(k * a * a, 2 * b * b), Q.of(k * (c ** 3 - b ** 3), b ** 3)],
-      [
-        `$ds = \\sqrt{1 + x^{2}}\\,dx$, and the integral is $${k} \\cdot \\frac{1}{3}\\left[(1 + x^{2})^{3/2}\\right]$ from $0$. At the upper limit $1 + x^{2} = ${Q.of(c * c, b * b).toLatex()}$, whose root is $${Q.of(c, b).toLatex()}$, so the value is $${answer.toLatex()}$.`,
-        `$ds = \\sqrt{1 + x^{2}}\\,dx$，积分是 $${k} \\cdot \\frac{1}{3}\\left[(1 + x^{2})^{3/2}\\right]$，下限为 $0$。在上限处 $1 + x^{2} = ${Q.of(c * c, b * b).toLatex()}$，其平方根是 $${Q.of(c, b).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const alongParabola = {
+  ...point(
+    "a-line-integral-along-a-parabola",
+    ["A line integral along a parabola", "沿抛物线的线积分"],
+    [
+      "On a curved graph $y = g(x)$, the factor $\\sqrt{1 + g'(x)^{2}}$ changes along the path, so it stays inside the integral. On $y = \\frac{x^{2}}{2}$ it is $\\sqrt{1 + x^{2}}$, and an integrand with a factor of $x$ makes the substitution work.",
+      "在曲线 $y = g(x)$ 上，因子 $\\sqrt{1 + g'(x)^{2}}$ 沿路径变化，所以要留在积分号内。在 $y = \\frac{x^{2}}{2}$ 上它是 $\\sqrt{1 + x^{2}}$，被积函数含因子 $x$ 时可以用换元法。",
+    ],
+    (rng) => {
+      const [a, b, c] = rng.pick(triples);
+      const k = rng.int(1, 12);
+      const X = Q.of(a, b);
+      const answer = Q.of(k * (c ** 3 - b ** 3), 3 * b ** 3);
+      return ask(
+        [
+          `Evaluate $\\int_{C} ${poly([k, "x"])}\\,ds$ along $y = \\frac{x^{2}}{2}$ from $x = 0$ to $x = ${X.toLatex()}$.`,
+          `求 $\\int_{C} ${poly([k, "x"])}\\,ds$，其中 $C$ 是 $y = \\frac{x^{2}}{2}$ 上从 $x = 0$ 到 $x = ${X.toLatex()}$ 的一段。`,
+        ],
+        answer,
+        [Q.of(k * c ** 3, 3 * b ** 3), Q.of(k * a * a, 2 * b * b), Q.of(k * (c ** 3 - b ** 3), b ** 3)],
+        [
+          `$ds = \\sqrt{1 + x^{2}}\\,dx$, and the integral is $${k} \\cdot \\frac{1}{3}\\left[(1 + x^{2})^{3/2}\\right]$ from $0$. At the upper limit $1 + x^{2} = ${Q.of(c * c, b * b).toLatex()}$, whose root is $${Q.of(c, b).toLatex()}$, so the value is $${answer.toLatex()}$.`,
+          `$ds = \\sqrt{1 + x^{2}}\\,dx$，积分是 $${k} \\cdot \\frac{1}{3}\\left[(1 + x^{2})^{3/2}\\right]$，下限为 $0$。在上限处 $1 + x^{2} = ${Q.of(c * c, b * b).toLatex()}$，其平方根是 $${Q.of(c, b).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    multivariableDrawings5["line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-x#a-line-integral-along-a-parabola"],
+};
 
 const powerCurveInY = point(
   "a-curve-in-y-with-a-simple-length-element",
@@ -413,62 +447,68 @@ const powerCurveInY = point(
   },
 );
 
-const offCenterCircle = point(
-  "a-circle-that-is-not-centered-at-the-origin",
-  ["A circle that is not centered at the origin", "圆心不在原点的圆"],
-  [
-    "On a circle with center $(a, b)$, writing $x = a + r\\cos t$ makes the cosine term integrate to zero over a full turn. So the integral of $x$ is $a$ times the length of the circle. Treating the center as the origin would lose this term.",
-    "在圆心为 $(a, b)$ 的圆上，写 $x = a + r\\cos t$，余弦项在一整圈上的积分为零。所以 $x$ 的积分等于 $a$ 乘以圆的周长。如果把圆心当成原点，就会丢失这一项。",
-  ],
-  (rng) => {
-    const a = nz(rng, 6);
-    const b = nz(rng, 6);
-    const r = rng.int(1, 6);
-    const k = nz(rng, 5);
-    const m = nz(rng, 9);
-    const answer = 2 * r * (k * a + m);
-    const f = poly([k, "x"], [m, ""]);
-    const circle = `(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${r * r}`;
-    return ask(
-      [
-        `$C$ is the circle $${circle}$. Find $\\frac{1}{\\pi}\\oint_{C} (${f})\\,ds$.`,
-        `$C$ 是圆 $${circle}$。求 $\\frac{1}{\\pi}\\oint_{C} (${f})\\,ds$。`,
-      ],
-      answer,
-      [2 * r * m, r * (k * a + m), 2 * r * r * (k * a + m)],
-      [
-        `The cosine term vanishes over a full turn, so the integrand averages $${poly([k * a + m, ""])}$, its value at the center. The length is $${2 * r}\\pi$, so the result is $${answer}$.`,
-        `余弦项在一整圈上为零，所以被积函数的平均值是 $${poly([k * a + m, ""])}$，即它在圆心处的值。周长是 $${2 * r}\\pi$，所以结果是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const offCenterCircle = {
+  ...point(
+    "a-circle-that-is-not-centered-at-the-origin",
+    ["A circle that is not centered at the origin", "圆心不在原点的圆"],
+    [
+      "On a circle with center $(a, b)$, writing $x = a + r\\cos t$ makes the cosine term integrate to zero over a full turn. So the integral of $x$ is $a$ times the length of the circle. Treating the center as the origin would lose this term.",
+      "在圆心为 $(a, b)$ 的圆上，写 $x = a + r\\cos t$，余弦项在一整圈上的积分为零。所以 $x$ 的积分等于 $a$ 乘以圆的周长。如果把圆心当成原点，就会丢失这一项。",
+    ],
+    (rng) => {
+      const a = nz(rng, 6);
+      const b = nz(rng, 6);
+      const r = rng.int(1, 6);
+      const k = nz(rng, 5);
+      const m = nz(rng, 9);
+      const answer = 2 * r * (k * a + m);
+      const f = poly([k, "x"], [m, ""]);
+      const circle = `(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${r * r}`;
+      return ask(
+        [
+          `$C$ is the circle $${circle}$. Find $\\frac{1}{\\pi}\\oint_{C} (${f})\\,ds$.`,
+          `$C$ 是圆 $${circle}$。求 $\\frac{1}{\\pi}\\oint_{C} (${f})\\,ds$。`,
+        ],
+        answer,
+        [2 * r * m, r * (k * a + m), 2 * r * r * (k * a + m)],
+        [
+          `The cosine term vanishes over a full turn, so the integrand averages $${poly([k * a + m, ""])}$, its value at the center. The length is $${2 * r}\\pi$, so the result is $${answer}$.`,
+          `余弦项在一整圈上为零，所以被积函数的平均值是 $${poly([k * a + m, ""])}$，即它在圆心处的值。周长是 $${2 * r}\\pi$，所以结果是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-circles#a-circle-that-is-not-centered-at-the-origin"],
+};
 
-const quarterEllipse = point(
-  "a-quarter-of-an-ellipse-by-substitution",
-  ["A quarter of an ellipse by substitution", "用换元法求四分之一椭圆"],
-  [
-    "Arc length on an ellipse has no elementary form, but with $x = a\\cos t$ and $y = b\\sin t$ an integrand $xy$ supplies the derivative of $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$. So the substitution in $u$ removes the root, and the integral is elementary.",
-    "椭圆的弧长没有初等形式，但用 $x = a\\cos t$，$y = b\\sin t$ 时，被积函数 $xy$ 正好提供 $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$ 的导数。所以对 $u$ 换元后根号消失，积分是初等的。",
-  ],
-  (rng) => {
-    const [a, b] = rng.sample([1, 2, 3, 4, 5, 6], 2) as [number, number];
-    const k = rng.int(1, 6);
-    const answer = Q.of(k * a * b * (a * a + a * b + b * b), 3 * (a + b));
-    return ask(
-      [
-        `Evaluate $\\int_{C} ${poly([k, "xy"])}\\,ds$, where $C$ is the first-quadrant arc of $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$.`,
-        `求 $\\int_{C} ${poly([k, "xy"])}\\,ds$，其中 $C$ 是 $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$ 在第一象限的弧。`,
-      ],
-      answer,
-      [Q.of(k * a * b, 2), Q.of(k * a * b * (a + b), 3), Q.of(k * a * b * (a * a + b * b), 3 * (a + b))],
-      [
-        `With $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$, the integral becomes a multiple of $\\int \\sqrt{u}\\,du$ from $${b * b}$ to $${a * a}$. It equals $\\frac{${k * a * b}(${a}^{3} - ${b}^{3})}{3(${a}^{2} - ${b}^{2})} = ${answer.toLatex()}$.`,
-        `令 $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$，积分变成 $\\int \\sqrt{u}\\,du$ 从 $${b * b}$ 到 $${a * a}$ 的倍数。结果是 $\\frac{${k * a * b}(${a}^{3} - ${b}^{3})}{3(${a}^{2} - ${b}^{2})} = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const quarterEllipse = {
+  ...point(
+    "a-quarter-of-an-ellipse-by-substitution",
+    ["A quarter of an ellipse by substitution", "用换元法求四分之一椭圆"],
+    [
+      "Arc length on an ellipse has no elementary form, but with $x = a\\cos t$ and $y = b\\sin t$ an integrand $xy$ supplies the derivative of $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$. So the substitution in $u$ removes the root, and the integral is elementary.",
+      "椭圆的弧长没有初等形式，但用 $x = a\\cos t$，$y = b\\sin t$ 时，被积函数 $xy$ 正好提供 $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$ 的导数。所以对 $u$ 换元后根号消失，积分是初等的。",
+    ],
+    (rng) => {
+      const [a, b] = rng.sample([1, 2, 3, 4, 5, 6], 2) as [number, number];
+      const k = rng.int(1, 6);
+      const answer = Q.of(k * a * b * (a * a + a * b + b * b), 3 * (a + b));
+      return ask(
+        [
+          `Evaluate $\\int_{C} ${poly([k, "xy"])}\\,ds$, where $C$ is the first-quadrant arc of $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$.`,
+          `求 $\\int_{C} ${poly([k, "xy"])}\\,ds$，其中 $C$ 是 $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$ 在第一象限的弧。`,
+        ],
+        answer,
+        [Q.of(k * a * b, 2), Q.of(k * a * b * (a + b), 3), Q.of(k * a * b * (a * a + b * b), 3 * (a + b))],
+        [
+          `With $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$, the integral becomes a multiple of $\\int \\sqrt{u}\\,du$ from $${b * b}$ to $${a * a}$. It equals $\\frac{${k * a * b}(${a}^{3} - ${b}^{3})}{3(${a}^{2} - ${b}^{2})} = ${answer.toLatex()}$.`,
+          `令 $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$，积分变成 $\\int \\sqrt{u}\\,du$ 从 $${b * b}$ 到 $${a * a}$ 的倍数。结果是 $\\frac{${k * a * b}(${a}^{3} - ${b}^{3})}{3(${a}^{2} - ${b}^{2})} = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-ellipses#a-quarter-of-an-ellipse-by-substitution"],
+};
 
 const weightedAverage = point(
   "the-average-over-two-pieces-of-different-length",
@@ -499,31 +539,34 @@ const weightedAverage = point(
   },
 );
 
-const polarCircle = point(
-  "a-circle-through-the-pole",
-  ["A circle through the pole", "过极点的圆"],
-  [
-    "In polar form $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$. On $r = 2a\\cos\\theta$, the two squares add to $4a^{2}$, so $ds = 2a\\,d\\theta$ is constant, and writing $ds = r\\,d\\theta$ would be wrong. A single turn takes $\\theta$ from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$.",
-    "在极坐标中 $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$。在 $r = 2a\\cos\\theta$ 上，两个平方之和是 $4a^{2}$，所以 $ds = 2a\\,d\\theta$ 是常数，写成 $ds = r\\,d\\theta$ 是错的。走一圈时 $\\theta$ 从 $-\\frac{\\pi}{2}$ 变到 $\\frac{\\pi}{2}$。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 9);
-    const k = rng.int(1, 12);
-    const answer = 2 * k * a * a;
-    return ask(
-      [
-        `$C$ is the circle $r = ${2 * a}\\cos\\theta$, $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$. Find $\\frac{1}{\\pi}\\oint_{C} ${poly([k, "x"])}\\,ds$.`,
-        `$C$ 是圆 $r = ${2 * a}\\cos\\theta$，$-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$。求 $\\frac{1}{\\pi}\\oint_{C} ${poly([k, "x"])}\\,ds$。`,
-      ],
-      answer,
-      [k * a * a, 4 * k * a * a, 2 * k * a],
-      [
-        `Here $ds = ${2 * a}\\,d\\theta$ and $x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$. Since $\\int \\cos^{2}\\theta\\,d\\theta = \\frac{\\pi}{2}$ on this interval, the value divided by $\\pi$ is $${answer}$.`,
-        `这里 $ds = ${2 * a}\\,d\\theta$，$x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$。由于在这个区间上 $\\int \\cos^{2}\\theta\\,d\\theta = \\frac{\\pi}{2}$，所以除以 $\\pi$ 后的值是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const polarCircle = {
+  ...point(
+    "a-circle-through-the-pole",
+    ["A circle through the pole", "过极点的圆"],
+    [
+      "In polar form $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$. On $r = 2a\\cos\\theta$, the two squares add to $4a^{2}$, so $ds = 2a\\,d\\theta$ is constant, and writing $ds = r\\,d\\theta$ would be wrong. A single turn takes $\\theta$ from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$.",
+      "在极坐标中 $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$。在 $r = 2a\\cos\\theta$ 上，两个平方之和是 $4a^{2}$，所以 $ds = 2a\\,d\\theta$ 是常数，写成 $ds = r\\,d\\theta$ 是错的。走一圈时 $\\theta$ 从 $-\\frac{\\pi}{2}$ 变到 $\\frac{\\pi}{2}$。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 9);
+      const k = rng.int(1, 12);
+      const answer = 2 * k * a * a;
+      return ask(
+        [
+          `$C$ is the circle $r = ${2 * a}\\cos\\theta$, $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$. Find $\\frac{1}{\\pi}\\oint_{C} ${poly([k, "x"])}\\,ds$.`,
+          `$C$ 是圆 $r = ${2 * a}\\cos\\theta$，$-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$。求 $\\frac{1}{\\pi}\\oint_{C} ${poly([k, "x"])}\\,ds$。`,
+        ],
+        answer,
+        [k * a * a, 4 * k * a * a, 2 * k * a],
+        [
+          `Here $ds = ${2 * a}\\,d\\theta$ and $x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$. Since $\\int \\cos^{2}\\theta\\,d\\theta = \\frac{\\pi}{2}$ on this interval, the value divided by $\\pi$ is $${answer}$.`,
+          `这里 $ds = ${2 * a}\\,d\\theta$，$x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$。由于在这个区间上 $\\int \\cos^{2}\\theta\\,d\\theta = \\frac{\\pi}{2}$，所以除以 $\\pi$ 后的值是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-polar-curves#a-circle-through-the-pole"],
+};
 
 const areaFromYdx = point(
   "the-sign-of-a-closed-y-dx-integral",
@@ -586,33 +629,37 @@ const verticalPiece = point(
   },
 );
 
-const quarterCircleSum = point(
-  "p-dx-plus-q-dy-on-a-quarter-circle",
-  ["P dx plus Q dy on a quarter circle", "四分之一圆上的 P dx + Q dy"],
-  [
-    "On a circle, $dx$ and $dy$ both come from the parametrization, and $dx = -r\\sin t\\,dt$ carries a minus sign that is easily lost. Then $y\\,dx$ gives $-r^{2}\\sin^{2}t\\,dt$, and $x\\,dy$ gives $r^{2}\\cos^{2}t\\,dt$, and each square averages one half over a quarter turn.",
-    "在圆上，$dx$ 和 $dy$ 都来自参数化，$dx = -r\\sin t\\,dt$ 带有容易丢失的负号。于是 $y\\,dx$ 给出 $-r^{2}\\sin^{2}t\\,dt$，$x\\,dy$ 给出 $r^{2}\\cos^{2}t\\,dt$，每个平方在四分之一圈上的平均值都是二分之一。",
-  ],
-  (rng) => {
-    const r = rng.int(1, 6);
-    const a = nz(rng, 9);
-    const b = rng.pick([-8, -5, -2, 1, 3, 6, 9].filter((v) => v !== a));
-    const answer = Q.of(r * r * (b - a), 4);
-    const form = poly([a, "y\\,dx"], [b, "x\\,dy"]);
-    return ask(
-      [
-        `$C$ is $x = ${r}\\cos t$, $y = ${r}\\sin t$, $0 \\le t \\le \\frac{\\pi}{2}$. Find $\\frac{1}{\\pi}\\int_{C} ${form}$.`,
-        `$C$ 是 $x = ${r}\\cos t$，$y = ${r}\\sin t$，$0 \\le t \\le \\frac{\\pi}{2}$。求 $\\frac{1}{\\pi}\\int_{C} ${form}$。`,
-      ],
-      answer,
-      [answer.neg(), Q.of(r * r * (a + b), 4), Q.of(r * r * (b - a), 2)],
-      [
-        `The integrand becomes $${r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$. Each square integrates to $\\frac{\\pi}{4}$ over the quarter turn, so the value divided by $\\pi$ is $${answer.toLatex()}$.`,
-        `被积式变为 $${r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$。每个平方在四分之一圈上的积分是 $\\frac{\\pi}{4}$，所以除以 $\\pi$ 后的值是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const quarterCircleSum = {
+  ...point(
+    "p-dx-plus-q-dy-on-a-quarter-circle",
+    ["P dx plus Q dy on a quarter circle", "四分之一圆上的 P dx + Q dy"],
+    [
+      "On a circle, $dx$ and $dy$ both come from the parametrization, and $dx = -r\\sin t\\,dt$ carries a minus sign that is easily lost. Then $y\\,dx$ gives $-r^{2}\\sin^{2}t\\,dt$, and $x\\,dy$ gives $r^{2}\\cos^{2}t\\,dt$, and each square averages one half over a quarter turn.",
+      "在圆上，$dx$ 和 $dy$ 都来自参数化，$dx = -r\\sin t\\,dt$ 带有容易丢失的负号。于是 $y\\,dx$ 给出 $-r^{2}\\sin^{2}t\\,dt$，$x\\,dy$ 给出 $r^{2}\\cos^{2}t\\,dt$，每个平方在四分之一圈上的平均值都是二分之一。",
+    ],
+    (rng) => {
+      const r = rng.int(1, 6);
+      const a = nz(rng, 9);
+      const b = rng.pick([-8, -5, -2, 1, 3, 6, 9].filter((v) => v !== a));
+      const answer = Q.of(r * r * (b - a), 4);
+      const form = poly([a, "y\\,dx"], [b, "x\\,dy"]);
+      return ask(
+        [
+          `$C$ is $x = ${r}\\cos t$, $y = ${r}\\sin t$, $0 \\le t \\le \\frac{\\pi}{2}$. Find $\\frac{1}{\\pi}\\int_{C} ${form}$.`,
+          `$C$ 是 $x = ${r}\\cos t$，$y = ${r}\\sin t$，$0 \\le t \\le \\frac{\\pi}{2}$。求 $\\frac{1}{\\pi}\\int_{C} ${form}$。`,
+        ],
+        answer,
+        [answer.neg(), Q.of(r * r * (a + b), 4), Q.of(r * r * (b - a), 2)],
+        [
+          `The integrand becomes $${r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$. Each square integrates to $\\frac{\\pi}{4}$ over the quarter turn, so the value divided by $\\pi$ is $${answer.toLatex()}$.`,
+          `被积式变为 $${r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$。每个平方在四分之一圈上的积分是 $\\frac{\\pi}{4}$，所以除以 $\\pi$ 后的值是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    multivariableDrawings5["sums-of-line-integrals-with-respect-to-x-and-y-over-parametric-curves#p-dx-plus-q-dy-on-a-quarter-circle"],
+};
 
 const generalSegment = point(
   "p-dx-plus-q-dy-on-a-slanted-segment",
@@ -679,32 +726,38 @@ const twistedCubic = point(
   },
 );
 
-const graphInY = point(
-  "a-vector-line-integral-along-a-graph-x-in-terms-of-y",
-  ["A vector line integral along a graph of x in terms of y", "沿 x 关于 y 的图像的向量线积分"],
-  [
-    "If a curve is a graph $x = g(y)$, then $y$ is the natural parameter, and $dx = g'(y)\\,dy$. Everything must be written in $y$ before integrating, including the term in $dx$, whose factor from the derivative is easily left out.",
-    "如果曲线是图像 $x = g(y)$，$y$ 就是自然的参数，且 $dx = g'(y)\\,dy$。积分前一切都要写成 $y$ 的式子，包括 $dx$ 的项，其中来自导数的因子容易漏掉。",
-  ],
-  (rng) => {
-    const p = nz(rng, 6);
-    const q = nz(rng, 6);
-    const Y = rng.int(1, 6);
-    const answer = Q.of((2 * p + q) * Y ** 3, 3);
-    return ask(
-      [
-        `Evaluate $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = ${br(poly([p, "y"]), poly([q, "x"]))}$ along $x = y^{2}$ from $(0, 0)$ to $(${Y * Y}, ${Y})$.`,
-        `求 $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F} = ${br(poly([p, "y"]), poly([q, "x"]))}$，路径是 $x = y^{2}$ 上从 $(0, 0)$ 到 $(${Y * Y}, ${Y})$ 的一段。`,
-      ],
-      answer,
-      [Q.of((p + q) * Y ** 3, 3), Q.of((2 * q + p) * Y ** 3, 3), Q.of((2 * p + q) * Y ** 2, 2)],
-      [
-        `With $dx = 2y\\,dy$, the first term gives $${poly([2 * p, "y^{2}"])}\\,dy$ and the second gives $${poly([q, "y^{2}"])}\\,dy$. Integrating $${poly([2 * p + q, "y^{2}"])}$ from $0$ to $${Y}$ gives $${answer.toLatex()}$.`,
-        `由 $dx = 2y\\,dy$，第一项给出 $${poly([2 * p, "y^{2}"])}\\,dy$，第二项给出 $${poly([q, "y^{2}"])}\\,dy$。把 $${poly([2 * p + q, "y^{2}"])}$ 从 $0$ 积到 $${Y}$，得 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const graphInY = {
+  ...point(
+    "a-vector-line-integral-along-a-graph-x-in-terms-of-y",
+    ["A vector line integral along a graph of x in terms of y", "沿 x 关于 y 的图像的向量线积分"],
+    [
+      "If a curve is a graph $x = g(y)$, then $y$ is the natural parameter, and $dx = g'(y)\\,dy$. Everything must be written in $y$ before integrating, including the term in $dx$, whose factor from the derivative is easily left out.",
+      "如果曲线是图像 $x = g(y)$，$y$ 就是自然的参数，且 $dx = g'(y)\\,dy$。积分前一切都要写成 $y$ 的式子，包括 $dx$ 的项，其中来自导数的因子容易漏掉。",
+    ],
+    (rng) => {
+      const p = nz(rng, 6);
+      const q = nz(rng, 6);
+      const Y = rng.int(1, 6);
+      const answer = Q.of((2 * p + q) * Y ** 3, 3);
+      return ask(
+        [
+          `Evaluate $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = ${br(poly([p, "y"]), poly([q, "x"]))}$ along $x = y^{2}$ from $(0, 0)$ to $(${Y * Y}, ${Y})$.`,
+          `求 $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F} = ${br(poly([p, "y"]), poly([q, "x"]))}$，路径是 $x = y^{2}$ 上从 $(0, 0)$ 到 $(${Y * Y}, ${Y})$ 的一段。`,
+        ],
+        answer,
+        [Q.of((p + q) * Y ** 3, 3), Q.of((2 * q + p) * Y ** 3, 3), Q.of((2 * p + q) * Y ** 2, 2)],
+        [
+          `With $dx = 2y\\,dy$, the first term gives $${poly([2 * p, "y^{2}"])}\\,dy$ and the second gives $${poly([q, "y^{2}"])}\\,dy$. Integrating $${poly([2 * p + q, "y^{2}"])}$ from $0$ to $${Y}$ gives $${answer.toLatex()}$.`,
+          `由 $dx = 2y\\,dy$，第一项给出 $${poly([2 * p, "y^{2}"])}\\,dy$，第二项给出 $${poly([q, "y^{2}"])}\\,dy$。把 $${poly([2 * p + q, "y^{2}"])}$ 从 $0$ 积到 $${Y}$，得 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    multivariableDrawings6[
+      "line-integrals-of-vector-valued-functions-over-general-curves#a-vector-line-integral-along-a-graph-x-in-terms-of-y"
+    ],
+};
 
 const tangentialComponent = point(
   "work-from-the-tangential-component",
@@ -875,95 +928,104 @@ const turningPoint = point(
   },
 );
 
-const ellipseNormal = point(
-  "the-outward-normal-on-an-ellipse",
-  ["The outward normal on an ellipse", "椭圆上的外法向量"],
-  [
-    "The outward normal on $x^{2} + qy^{2} = c$ is along the gradient $\\langle 2x, 2qy \\rangle$, not along the position vector. These agree only on a circle, so an ellipse has outward normals that do not point straight away from the center, except at its vertices.",
-    "$x^{2} + qy^{2} = c$ 的外法向量沿梯度 $\\langle 2x, 2qy \\rangle$，而不是沿位置向量。两者只在圆上才一致，所以椭圆的外法向量并不背离中心，顶点处除外。",
-  ],
-  (rng) => {
-    const [a, b, h] = rng.pick(triples);
-    const q = rng.int(2, 4);
-    const s1 = rng.pick([-1, 1]);
-    const s2 = rng.pick([-1, 1]);
-    const x0 = s1 * q * a;
-    const y0 = s2 * b;
-    const c = x0 * x0 + q * y0 * y0;
-    const first = rng.bool();
-    const answer = first ? Q.of(s1 * a, h) : Q.of(s2 * b, h);
-    const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
-    return ask(
-      [
-        `Find the ${name[0]} component of the outward unit normal to $x^{2} + ${q}y^{2} = ${c}$ at $(${x0}, ${y0})$.`,
-        `求 $x^{2} + ${q}y^{2} = ${c}$ 在 $(${x0}, ${y0})$ 处的外单位法向量的${name[1]}个分量。`,
-      ],
-      answer,
-      [answer.neg(), first ? Q.of(s2 * b, h) : Q.of(s1 * a, h), first ? Q.of(s1 * a, b) : Q.of(s2 * b, a)],
-      [
-        `The gradient is $${br(2 * x0, 2 * q * y0)}$, a multiple of $${br(s1 * a, s2 * b)}$, which has length $${h}$. So the unit normal is $${br(Q.of(s1 * a, h).toLatex(), Q.of(s2 * b, h).toLatex())}$, and the component is $${answer.toLatex()}$.`,
-        `梯度是 $${br(2 * x0, 2 * q * y0)}$，是 $${br(s1 * a, s2 * b)}$ 的倍数，这个向量的长度是 $${h}$。所以单位法向量是 $${br(Q.of(s1 * a, h).toLatex(), Q.of(s2 * b, h).toLatex())}$，该分量是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const ellipseNormal = {
+  ...point(
+    "the-outward-normal-on-an-ellipse",
+    ["The outward normal on an ellipse", "椭圆上的外法向量"],
+    [
+      "The outward normal on $x^{2} + qy^{2} = c$ is along the gradient $\\langle 2x, 2qy \\rangle$, not along the position vector. These agree only on a circle, so an ellipse has outward normals that do not point straight away from the center, except at its vertices.",
+      "$x^{2} + qy^{2} = c$ 的外法向量沿梯度 $\\langle 2x, 2qy \\rangle$，而不是沿位置向量。两者只在圆上才一致，所以椭圆的外法向量并不背离中心，顶点处除外。",
+    ],
+    (rng) => {
+      const [a, b, h] = rng.pick(triples);
+      const q = rng.int(2, 4);
+      const s1 = rng.pick([-1, 1]);
+      const s2 = rng.pick([-1, 1]);
+      const x0 = s1 * q * a;
+      const y0 = s2 * b;
+      const c = x0 * x0 + q * y0 * y0;
+      const first = rng.bool();
+      const answer = first ? Q.of(s1 * a, h) : Q.of(s2 * b, h);
+      const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
+      return ask(
+        [
+          `Find the ${name[0]} component of the outward unit normal to $x^{2} + ${q}y^{2} = ${c}$ at $(${x0}, ${y0})$.`,
+          `求 $x^{2} + ${q}y^{2} = ${c}$ 在 $(${x0}, ${y0})$ 处的外单位法向量的${name[1]}个分量。`,
+        ],
+        answer,
+        [answer.neg(), first ? Q.of(s2 * b, h) : Q.of(s1 * a, h), first ? Q.of(s1 * a, b) : Q.of(s2 * b, a)],
+        [
+          `The gradient is $${br(2 * x0, 2 * q * y0)}$, a multiple of $${br(s1 * a, s2 * b)}$, which has length $${h}$. So the unit normal is $${br(Q.of(s1 * a, h).toLatex(), Q.of(s2 * b, h).toLatex())}$, and the component is $${answer.toLatex()}$.`,
+          `梯度是 $${br(2 * x0, 2 * q * y0)}$，是 $${br(s1 * a, s2 * b)}$ 的倍数，这个向量的长度是 $${h}$。所以单位法向量是 $${br(Q.of(s1 * a, h).toLatex(), Q.of(s2 * b, h).toLatex())}$，该分量是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings6["outward-pointing-unit-normal-vectors-in-2d#the-outward-normal-on-an-ellipse"],
+};
 
-const constantFluxArc = point(
-  "the-flux-of-a-constant-field-across-an-arc",
-  ["The flux of a constant field across an arc", "常向量场穿过弧的通量"],
-  [
-    "The flux across a curve is $\\int_{C} P\\,dy - Q\\,dx$. For a constant field this depends only on the changes in $x$ and $y$, so any arc between the same endpoints gives the same flux. The shape of the curve does not need to be used at all.",
-    "穿过曲线的通量是 $\\int_{C} P\\,dy - Q\\,dx$。对常向量场，它只依赖 $x$ 和 $y$ 的变化量，所以端点相同的任何弧都给出相同的通量。根本用不到曲线的形状。",
-  ],
-  (rng) => {
-    const p = nz(rng, 6);
-    const q = nz(rng, 6);
-    const X = nz(rng, 4);
-    const answer = p * X * X - q * X;
-    return ask(
-      [
-        `Find the flux $\\int_{C} P\\,dy - Q\\,dx$ of $\\mathbf{F} = ${br(p, q)}$ across the arc of $y = x^{2}$ from $(0, 0)$ to $(${X}, ${X * X})$.`,
-        `求 $\\mathbf{F} = ${br(p, q)}$ 穿过 $y = x^{2}$ 上从 $(0, 0)$ 到 $(${X}, ${X * X})$ 的弧的通量 $\\int_{C} P\\,dy - Q\\,dx$。`,
-      ],
-      answer,
-      [p * X - q * X * X, p * X * X + q * X, -answer],
-      [
-        `$P$ and $Q$ are constant, so the integral is $P$ times the change in $y$, minus $Q$ times the change in $x$. This is $${p} \\cdot ${X * X} - ${q < 0 ? `(${q})` : q} \\cdot ${X < 0 ? `(${X})` : X} = ${answer}$.`,
-        `$P$ 和 $Q$ 是常数，所以积分等于 $P$ 乘以 $y$ 的变化量，减去 $Q$ 乘以 $x$ 的变化量。即 $${p} \\cdot ${X * X} - ${q < 0 ? `(${q})` : q} \\cdot ${X < 0 ? `(${X})` : X} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const constantFluxArc = {
+  ...point(
+    "the-flux-of-a-constant-field-across-an-arc",
+    ["The flux of a constant field across an arc", "常向量场穿过弧的通量"],
+    [
+      "The flux across a curve is $\\int_{C} P\\,dy - Q\\,dx$. For a constant field this depends only on the changes in $x$ and $y$, so any arc between the same endpoints gives the same flux. The shape of the curve does not need to be used at all.",
+      "穿过曲线的通量是 $\\int_{C} P\\,dy - Q\\,dx$。对常向量场，它只依赖 $x$ 和 $y$ 的变化量，所以端点相同的任何弧都给出相同的通量。根本用不到曲线的形状。",
+    ],
+    (rng) => {
+      const p = nz(rng, 6);
+      const q = nz(rng, 6);
+      const X = nz(rng, 4);
+      const answer = p * X * X - q * X;
+      return ask(
+        [
+          `Find the flux $\\int_{C} P\\,dy - Q\\,dx$ of $\\mathbf{F} = ${br(p, q)}$ across the arc of $y = x^{2}$ from $(0, 0)$ to $(${X}, ${X * X})$.`,
+          `求 $\\mathbf{F} = ${br(p, q)}$ 穿过 $y = x^{2}$ 上从 $(0, 0)$ 到 $(${X}, ${X * X})$ 的弧的通量 $\\int_{C} P\\,dy - Q\\,dx$。`,
+        ],
+        answer,
+        [p * X - q * X * X, p * X * X + q * X, -answer],
+        [
+          `$P$ and $Q$ are constant, so the integral is $P$ times the change in $y$, minus $Q$ times the change in $x$. This is $${p} \\cdot ${X * X} - ${q < 0 ? `(${q})` : q} \\cdot ${X < 0 ? `(${X})` : X} = ${answer}$.`,
+          `$P$ 和 $Q$ 是常数，所以积分等于 $P$ 乘以 $y$ 的变化量，减去 $Q$ 乘以 $x$ 的变化量。即 $${p} \\cdot ${X * X} - ${q < 0 ? `(${q})` : q} \\cdot ${X < 0 ? `(${X})` : X} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings6["flux-in-two-dimensional-vector-fields#the-flux-of-a-constant-field-across-an-arc"],
+};
 
-const oneEdge = point(
-  "the-flux-through-one-edge",
-  ["The flux through one edge", "穿过一条边的通量"],
-  [
-    "Green's theorem gives the flux across a whole closed curve, so a single edge has to be done directly. On the top edge of a rectangle the outward normal is $\\langle 0, 1 \\rangle$, so only $Q$ enters, evaluated with $y$ fixed at the height of that edge.",
-    "格林定理给出的是穿过整条闭曲线的通量，所以单独一条边必须直接计算。在矩形的上边，外法向量是 $\\langle 0, 1 \\rangle$，所以只有 $Q$ 起作用，并且 $y$ 固定为这条边的高度。",
-  ],
-  (rng) => {
-    const p = nz(rng, 6);
-    const q = nz(rng, 6);
-    const r = nz(rng, 6);
-    const W = rng.int(1, 6);
-    const H = rng.int(1, 6);
-    const answer = Q.of(q * H * W).add(Q.of(r * W * W, 2));
-    const F = br(poly([p, "x"]), poly([r, "x"], [q, "y"]));
-    return ask(
-      [
-        `Find the outward flux of $\\mathbf{F} = ${F}$ through the top edge of the rectangle $[0, ${W}] \\times [0, ${H}]$ only.`,
-        `只求 $\\mathbf{F} = ${F}$ 穿过矩形 $[0, ${W}] \\times [0, ${H}]$ 上边的外通量。`,
-      ],
-      answer,
-      [answer.neg(), q * H * W, Q.of((p + q) * W * H)],
-      [
-        `On the top edge $y = ${H}$ and $\\mathbf{n} = \\langle 0, 1 \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{n} = ${poly([r, "x"], [q * H, ""])}$. Integrating from $x = 0$ to $x = ${W}$ gives $${answer.toLatex()}$.`,
-        `在上边 $y = ${H}$，$\\mathbf{n} = \\langle 0, 1 \\rangle$，所以 $\\mathbf{F} \\cdot \\mathbf{n} = ${poly([r, "x"], [q * H, ""])}$。从 $x = 0$ 积到 $x = ${W}$，得 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const oneEdge = {
+  ...point(
+    "the-flux-through-one-edge",
+    ["The flux through one edge", "穿过一条边的通量"],
+    [
+      "Green's theorem gives the flux across a whole closed curve, so a single edge has to be done directly. On the top edge of a rectangle the outward normal is $\\langle 0, 1 \\rangle$, so only $Q$ enters, evaluated with $y$ fixed at the height of that edge.",
+      "格林定理给出的是穿过整条闭曲线的通量，所以单独一条边必须直接计算。在矩形的上边，外法向量是 $\\langle 0, 1 \\rangle$，所以只有 $Q$ 起作用，并且 $y$ 固定为这条边的高度。",
+    ],
+    (rng) => {
+      const p = nz(rng, 6);
+      const q = nz(rng, 6);
+      const r = nz(rng, 6);
+      const W = rng.int(1, 6);
+      const H = rng.int(1, 6);
+      const answer = Q.of(q * H * W).add(Q.of(r * W * W, 2));
+      const F = br(poly([p, "x"]), poly([r, "x"], [q, "y"]));
+      return ask(
+        [
+          `Find the outward flux of $\\mathbf{F} = ${F}$ through the top edge of the rectangle $[0, ${W}] \\times [0, ${H}]$ only.`,
+          `只求 $\\mathbf{F} = ${F}$ 穿过矩形 $[0, ${W}] \\times [0, ${H}]$ 上边的外通量。`,
+        ],
+        answer,
+        [answer.neg(), q * H * W, Q.of((p + q) * W * H)],
+        [
+          `On the top edge $y = ${H}$ and $\\mathbf{n} = \\langle 0, 1 \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{n} = ${poly([r, "x"], [q * H, ""])}$. Integrating from $x = 0$ to $x = ${W}$ gives $${answer.toLatex()}$.`,
+          `在上边 $y = ${H}$，$\\mathbf{n} = \\langle 0, 1 \\rangle$，所以 $\\mathbf{F} \\cdot \\mathbf{n} = ${poly([r, "x"], [q * H, ""])}$。从 $x = 0$ 积到 $x = ${W}$，得 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings6["calculating-flux-in-two-dimensional-vector-fields#the-flux-through-one-edge"],
+};
 
 const circulationEqualsFlux = point(
   "when-circulation-equals-flux",
@@ -993,33 +1055,36 @@ const circulationEqualsFlux = point(
   },
 );
 
-const sectorGreen = point(
-  "a-sector-with-a-curl-that-depends-on-r",
-  ["A sector with a curl that depends on r", "旋度依赖 r 的扇形"],
-  [
-    "When the curl depends on the distance from the origin, Green's theorem gives a polar double integral. The area element is $r\\,dr\\,d\\theta$, so a curl of $kr$ produces $kr^{2}$ in the integrand, and the angular width of the sector supplies a simple factor.",
-    "当旋度依赖到原点的距离时，格林定理给出极坐标下的二重积分。面积元是 $r\\,dr\\,d\\theta$，所以旋度 $kr$ 在被积函数中产生 $kr^{2}$，扇形的角宽度提供一个简单的因子。",
-  ],
-  (rng) => {
-    const k = rng.int(1, 9);
-    const R = rng.int(1, 6);
-    const m = rng.int(1, 4);
-    const top = m === 1 ? "\\pi" : `\\frac{\\pi}{${m}}`;
-    const answer = Q.of(k * R ** 3, 3 * m);
-    return ask(
-      [
-        `$C$ is the positively oriented boundary of the sector $0 \\le r \\le ${R}$, $0 \\le \\theta \\le ${top}$, and $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${k}\\sqrt{x^{2} + y^{2}}$. Find $\\frac{1}{\\pi}\\oint_{C} P\\,dx + Q\\,dy$.`,
-        `$C$ 是扇形 $0 \\le r \\le ${R}$，$0 \\le \\theta \\le ${top}$ 的正向边界，且 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${k}\\sqrt{x^{2} + y^{2}}$。求 $\\frac{1}{\\pi}\\oint_{C} P\\,dx + Q\\,dy$。`,
-      ],
-      answer,
-      [Q.of(k * R * R, 2 * m), Q.of(k * R ** 3, m), Q.of(k * R ** 3, 2 * m)],
-      [
-        `By Green's theorem the integral is $\\int_{0}^{${top}} \\int_{0}^{${R}} ${k}r \\cdot r \\, dr \\, d\\theta$. The radial part gives $${Q.of(k * R ** 3, 3).toLatex()}$, and the angle gives $${top}$, so dividing by $\\pi$ leaves $${answer.toLatex()}$.`,
-        `由格林定理，积分是 $\\int_{0}^{${top}} \\int_{0}^{${R}} ${k}r \\cdot r \\, dr \\, d\\theta$。径向部分给出 $${Q.of(k * R ** 3, 3).toLatex()}$，角度给出 $${top}$，除以 $\\pi$ 后得 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const sectorGreen = {
+  ...point(
+    "a-sector-with-a-curl-that-depends-on-r",
+    ["A sector with a curl that depends on r", "旋度依赖 r 的扇形"],
+    [
+      "When the curl depends on the distance from the origin, Green's theorem gives a polar double integral. The area element is $r\\,dr\\,d\\theta$, so a curl of $kr$ produces $kr^{2}$ in the integrand, and the angular width of the sector supplies a simple factor.",
+      "当旋度依赖到原点的距离时，格林定理给出极坐标下的二重积分。面积元是 $r\\,dr\\,d\\theta$，所以旋度 $kr$ 在被积函数中产生 $kr^{2}$，扇形的角宽度提供一个简单的因子。",
+    ],
+    (rng) => {
+      const k = rng.int(1, 9);
+      const R = rng.int(1, 6);
+      const m = rng.int(1, 4);
+      const top = m === 1 ? "\\pi" : `\\frac{\\pi}{${m}}`;
+      const answer = Q.of(k * R ** 3, 3 * m);
+      return ask(
+        [
+          `$C$ is the positively oriented boundary of the sector $0 \\le r \\le ${R}$, $0 \\le \\theta \\le ${top}$, and $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${k}\\sqrt{x^{2} + y^{2}}$. Find $\\frac{1}{\\pi}\\oint_{C} P\\,dx + Q\\,dy$.`,
+          `$C$ 是扇形 $0 \\le r \\le ${R}$，$0 \\le \\theta \\le ${top}$ 的正向边界，且 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${k}\\sqrt{x^{2} + y^{2}}$。求 $\\frac{1}{\\pi}\\oint_{C} P\\,dx + Q\\,dy$。`,
+        ],
+        answer,
+        [Q.of(k * R * R, 2 * m), Q.of(k * R ** 3, m), Q.of(k * R ** 3, 2 * m)],
+        [
+          `By Green's theorem the integral is $\\int_{0}^{${top}} \\int_{0}^{${R}} ${k}r \\cdot r \\, dr \\, d\\theta$. The radial part gives $${Q.of(k * R ** 3, 3).toLatex()}$, and the angle gives $${top}$, so dividing by $\\pi$ leaves $${answer.toLatex()}$.`,
+          `由格林定理，积分是 $\\int_{0}^{${top}} \\int_{0}^{${R}} ${k}r \\cdot r \\, dr \\, d\\theta$。径向部分给出 $${Q.of(k * R ** 3, 3).toLatex()}$，角度给出 $${top}$，除以 $\\pi$ 后得 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings6["greens-theorem-in-polar-coordinates#a-sector-with-a-curl-that-depends-on-r"],
+};
 
 const areaFromFlux = point(
   "an-area-from-a-measured-flux",
@@ -1108,35 +1173,38 @@ const singularPoint = point(
   },
 );
 
-const ellipticCone = point(
-  "the-parameter-of-a-point-on-an-elliptic-cone",
-  ["The parameter of a point on an elliptic cone", "椭圆锥上一点的参数"],
-  [
-    "An elliptic cone is parametrized by $\\langle au\\cos v, bu\\sin v, u \\rangle$, where dividing the first two coordinates by $a$ and $b$ removes the scaling. Then $\\cos^{2}v + \\sin^{2}v = 1$ gives $u$, and this is also the height of the point above the vertex.",
-    "椭圆锥的参数式是 $\\langle au\\cos v, bu\\sin v, u \\rangle$，把前两个坐标分别除以 $a$ 和 $b$ 可以去掉缩放。再由 $\\cos^{2}v + \\sin^{2}v = 1$ 得 $u$，它也是该点在顶点上方的高度。",
-  ],
-  (rng) => {
-    const [A, B, C] = rng.pick(triples);
-    const a = rng.int(2, 5);
-    const b = rng.int(2, 5);
-    const k = rng.int(1, 3);
-    const x = a * A * k * rng.pick([-1, 1]);
-    const y = b * B * k * rng.pick([-1, 1]);
-    const answer = C * k;
-    return ask(
-      [
-        `The cone $\\mathbf{r}(u, v) = \\langle ${a}u\\cos v, ${b}u\\sin v, u \\rangle$, $u \\ge 0$, contains a point with $x = ${x}$ and $y = ${y}$. Find $u$ at this point.`,
-        `锥面 $\\mathbf{r}(u, v) = \\langle ${a}u\\cos v, ${b}u\\sin v, u \\rangle$，$u \\ge 0$，上有一点满足 $x = ${x}$，$y = ${y}$。求该点的 $u$。`,
-      ],
-      answer,
-      [(A + B) * k, a * C * k, answer * answer],
-      [
-        `$u\\cos v = ${Q.of(x, a).toLatex()}$ and $u\\sin v = ${Q.of(y, b).toLatex()}$. Squaring and adding gives $u^{2} = ${answer * answer}$, and with $u \\ge 0$ we get $u = ${answer}$.`,
-        `$u\\cos v = ${Q.of(x, a).toLatex()}$，$u\\sin v = ${Q.of(y, b).toLatex()}$。平方后相加，得 $u^{2} = ${answer * answer}$，由 $u \\ge 0$ 得 $u = ${answer}$。`,
-      ],
-    );
-  },
-);
+const ellipticCone = {
+  ...point(
+    "the-parameter-of-a-point-on-an-elliptic-cone",
+    ["The parameter of a point on an elliptic cone", "椭圆锥上一点的参数"],
+    [
+      "An elliptic cone is parametrized by $\\langle au\\cos v, bu\\sin v, u \\rangle$, where dividing the first two coordinates by $a$ and $b$ removes the scaling. Then $\\cos^{2}v + \\sin^{2}v = 1$ gives $u$, and this is also the height of the point above the vertex.",
+      "椭圆锥的参数式是 $\\langle au\\cos v, bu\\sin v, u \\rangle$，把前两个坐标分别除以 $a$ 和 $b$ 可以去掉缩放。再由 $\\cos^{2}v + \\sin^{2}v = 1$ 得 $u$，它也是该点在顶点上方的高度。",
+    ],
+    (rng) => {
+      const [A, B, C] = rng.pick(triples);
+      const a = rng.int(2, 5);
+      const b = rng.int(2, 5);
+      const k = rng.int(1, 3);
+      const x = a * A * k * rng.pick([-1, 1]);
+      const y = b * B * k * rng.pick([-1, 1]);
+      const answer = C * k;
+      return ask(
+        [
+          `The cone $\\mathbf{r}(u, v) = \\langle ${a}u\\cos v, ${b}u\\sin v, u \\rangle$, $u \\ge 0$, contains a point with $x = ${x}$ and $y = ${y}$. Find $u$ at this point.`,
+          `锥面 $\\mathbf{r}(u, v) = \\langle ${a}u\\cos v, ${b}u\\sin v, u \\rangle$，$u \\ge 0$，上有一点满足 $x = ${x}$，$y = ${y}$。求该点的 $u$。`,
+        ],
+        answer,
+        [(A + B) * k, a * C * k, answer * answer],
+        [
+          `$u\\cos v = ${Q.of(x, a).toLatex()}$ and $u\\sin v = ${Q.of(y, b).toLatex()}$. Squaring and adding gives $u^{2} = ${answer * answer}$, and with $u \\ge 0$ we get $u = ${answer}$.`,
+          `$u\\cos v = ${Q.of(x, a).toLatex()}$，$u\\sin v = ${Q.of(y, b).toLatex()}$。平方后相加，得 $u^{2} = ${answer * answer}$，由 $u \\ge 0$ 得 $u = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings7["parametrizations-of-ellipsoids-and-cones#the-parameter-of-a-point-on-an-elliptic-cone"],
+};
 
 const twoSheets = point(
   "the-gap-between-the-sheets-of-a-hyperboloid",
@@ -1164,144 +1232,159 @@ const twoSheets = point(
   },
 );
 
-const torusArea = point(
-  "the-surface-area-of-a-torus",
-  ["The surface area of a torus", "环面的面积"],
-  [
-    "Revolving a curve about an axis gives an area equal to the length of the curve times the distance traveled by its centroid. For a circle of radius $r$ whose center is at distance $R$ from the axis, this gives $2\\pi r \\cdot 2\\pi R$, which is why $\\pi^{2}$ appears.",
-    "曲线绕轴旋转所得的面积，等于曲线的长度乘以其形心走过的距离。对半径为 $r$、圆心到轴的距离为 $R$ 的圆，结果是 $2\\pi r \\cdot 2\\pi R$，这就是出现 $\\pi^{2}$ 的原因。",
-  ],
-  (rng) => {
-    const r = rng.int(1, 6);
-    const R = r + rng.int(1, 6);
-    const answer = 4 * R * r;
-    return ask(
-      [
-        `The circle $x^{2} + (y - ${R})^{2} = ${r * r}$ is revolved about the $x$-axis. Find the area of the resulting torus divided by $\\pi^{2}$.`,
-        `圆 $x^{2} + (y - ${R})^{2} = ${r * r}$ 绕 $x$ 轴旋转。求所得环面的面积除以 $\\pi^{2}$ 的值。`,
-      ],
-      answer,
-      [2 * R * r, 4 * r * r, 4 * R * R],
-      [
-        `The circle has length $${2 * r}\\pi$, and its center travels $${2 * R}\\pi$ around the axis. The area is the product, so dividing by $\\pi^{2}$ gives $${answer}$.`,
-        `圆的周长是 $${2 * r}\\pi$，圆心绕轴走过 $${2 * R}\\pi$。面积是两者之积，除以 $\\pi^{2}$ 得 $${answer}$。`,
-      ],
-    );
-  },
-);
+const torusArea = {
+  ...point(
+    "the-surface-area-of-a-torus",
+    ["The surface area of a torus", "环面的面积"],
+    [
+      "Revolving a curve about an axis gives an area equal to the length of the curve times the distance traveled by its centroid. For a circle of radius $r$ whose center is at distance $R$ from the axis, this gives $2\\pi r \\cdot 2\\pi R$, which is why $\\pi^{2}$ appears.",
+      "曲线绕轴旋转所得的面积，等于曲线的长度乘以其形心走过的距离。对半径为 $r$、圆心到轴的距离为 $R$ 的圆，结果是 $2\\pi r \\cdot 2\\pi R$，这就是出现 $\\pi^{2}$ 的原因。",
+    ],
+    (rng) => {
+      const r = rng.int(1, 6);
+      const R = r + rng.int(1, 6);
+      const answer = 4 * R * r;
+      return ask(
+        [
+          `The circle $x^{2} + (y - ${R})^{2} = ${r * r}$ is revolved about the $x$-axis. Find the area of the resulting torus divided by $\\pi^{2}$.`,
+          `圆 $x^{2} + (y - ${R})^{2} = ${r * r}$ 绕 $x$ 轴旋转。求所得环面的面积除以 $\\pi^{2}$ 的值。`,
+        ],
+        answer,
+        [2 * R * r, 4 * r * r, 4 * R * R],
+        [
+          `The circle has length $${2 * r}\\pi$, and its center travels $${2 * R}\\pi$ around the axis. The area is the product, so dividing by $\\pi^{2}$ gives $${answer}$.`,
+          `圆的周长是 $${2 * r}\\pi$，圆心绕轴走过 $${2 * R}\\pi$。面积是两者之积，除以 $\\pi^{2}$ 得 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings7["surfaces-of-revolution#the-surface-area-of-a-torus"],
+};
 
-const paraboloidSurface = point(
-  "a-surface-integral-over-a-paraboloid",
-  ["A surface integral over a paraboloid", "抛物面上的曲面积分"],
-  [
-    "On a curved graph, the area factor $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ varies from point to point. On $z = \\frac{x^{2} + y^{2}}{2}$ it equals $\\sqrt{1 + r^{2}}$, and polar coordinates supply the factor $r$ that makes the integral elementary.",
-    "在曲面图像上，面积因子 $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ 随点变化。在 $z = \\frac{x^{2} + y^{2}}{2}$ 上，它等于 $\\sqrt{1 + r^{2}}$，极坐标提供的因子 $r$ 使积分成为初等的。",
-  ],
-  (rng) => {
-    const n = rng.int(2, 6);
-    const k = rng.int(1, 9);
-    const answer = Q.of(2 * k * (n ** 3 - 1), 3);
-    return ask(
-      [
-        `$S$ is the part of $z = \\frac{x^{2} + y^{2}}{2}$ above the disk $x^{2} + y^{2} \\le ${n * n - 1}$. Find $\\frac{1}{\\pi}\\iint_{S} ${k}\\,dS$.`,
-        `$S$ 是 $z = \\frac{x^{2} + y^{2}}{2}$ 在圆盘 $x^{2} + y^{2} \\le ${n * n - 1}$ 上方的部分。求 $\\frac{1}{\\pi}\\iint_{S} ${k}\\,dS$。`,
-      ],
-      answer,
-      [k * (n * n - 1), Q.of(2 * k * n ** 3, 3), Q.of(k * (n ** 3 - 1), 3)],
-      [
-        `$dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$. The radial integral is $\\frac{1}{3}(${n}^{3} - 1)$, as $1 + r^{2}$ reaches $${n * n}$. The angle gives $2\\pi$, so the value is $${answer.toLatex()}$.`,
-        `$dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$。径向积分是 $\\frac{1}{3}(${n}^{3} - 1)$，因为 $1 + r^{2}$ 的上限是 $${n * n}$。角度给出 $2\\pi$，所以结果是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const paraboloidSurface = {
+  ...point(
+    "a-surface-integral-over-a-paraboloid",
+    ["A surface integral over a paraboloid", "抛物面上的曲面积分"],
+    [
+      "On a curved graph, the area factor $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ varies from point to point. On $z = \\frac{x^{2} + y^{2}}{2}$ it equals $\\sqrt{1 + r^{2}}$, and polar coordinates supply the factor $r$ that makes the integral elementary.",
+      "在曲面图像上，面积因子 $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ 随点变化。在 $z = \\frac{x^{2} + y^{2}}{2}$ 上，它等于 $\\sqrt{1 + r^{2}}$，极坐标提供的因子 $r$ 使积分成为初等的。",
+    ],
+    (rng) => {
+      const n = rng.int(2, 6);
+      const k = rng.int(1, 9);
+      const answer = Q.of(2 * k * (n ** 3 - 1), 3);
+      return ask(
+        [
+          `$S$ is the part of $z = \\frac{x^{2} + y^{2}}{2}$ above the disk $x^{2} + y^{2} \\le ${n * n - 1}$. Find $\\frac{1}{\\pi}\\iint_{S} ${k}\\,dS$.`,
+          `$S$ 是 $z = \\frac{x^{2} + y^{2}}{2}$ 在圆盘 $x^{2} + y^{2} \\le ${n * n - 1}$ 上方的部分。求 $\\frac{1}{\\pi}\\iint_{S} ${k}\\,dS$。`,
+        ],
+        answer,
+        [k * (n * n - 1), Q.of(2 * k * n ** 3, 3), Q.of(k * (n ** 3 - 1), 3)],
+        [
+          `$dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$. The radial integral is $\\frac{1}{3}(${n}^{3} - 1)$, as $1 + r^{2}$ reaches $${n * n}$. The angle gives $2\\pi$, so the value is $${answer.toLatex()}$.`,
+          `$dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$。径向积分是 $\\frac{1}{3}(${n}^{3} - 1)$，因为 $1 + r^{2}$ 的上限是 $${n * n}$。角度给出 $2\\pi$，所以结果是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings7["surface-integrals-over-cartesian-surfaces#a-surface-integral-over-a-paraboloid"],
+};
 
-const hemisphereFlux = point(
-  "the-flux-through-a-hemisphere",
-  ["The flux through a hemisphere", "穿过半球面的通量"],
-  [
-    "On a sphere of radius $R$ centered at the origin, a radial field $k\\langle x, y, z \\rangle$ is normal to the surface. So its normal component is the constant $kR$, and the flux is this constant times the surface area, without evaluating any cross product.",
-    "在圆心位于原点、半径为 $R$ 的球面上，径向场 $k\\langle x, y, z \\rangle$ 垂直于曲面。所以它的法向分量是常数 $kR$，通量等于这个常数乘以曲面面积，不必计算任何叉积。",
-  ],
-  (rng) => {
-    const R = rng.int(1, 6);
-    const k = nz(rng, 9);
-    const answer = 2 * k * R ** 3;
-    return ask(
-      [
-        `Find $\\frac{1}{\\pi}\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}$ for $\\mathbf{F} = ${br(poly([k, "x"]), poly([k, "y"]), poly([k, "z"]))}$, where $S$ is the upper hemisphere of $x^{2} + y^{2} + z^{2} = ${R * R}$, with the outward normal.`,
-        `求 $\\frac{1}{\\pi}\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}$，其中 $\\mathbf{F} = ${br(poly([k, "x"]), poly([k, "y"]), poly([k, "z"]))}$，$S$ 是 $x^{2} + y^{2} + z^{2} = ${R * R}$ 的上半球面，取外法向。`,
-      ],
-      answer,
-      [4 * k * R ** 3, 2 * k * R * R, k * R ** 3],
-      [
-        `$\\mathbf{F} \\cdot \\mathbf{n} = ${k * R}$ everywhere, and the hemisphere has area $${2 * R * R}\\pi$. The product divided by $\\pi$ is $${answer}$.`,
-        `处处有 $\\mathbf{F} \\cdot \\mathbf{n} = ${k * R}$，半球面的面积是 $${2 * R * R}\\pi$。两者之积除以 $\\pi$ 等于 $${answer}$。`,
-      ],
-    );
-  },
-);
+const hemisphereFlux = {
+  ...point(
+    "the-flux-through-a-hemisphere",
+    ["The flux through a hemisphere", "穿过半球面的通量"],
+    [
+      "On a sphere of radius $R$ centered at the origin, a radial field $k\\langle x, y, z \\rangle$ is normal to the surface. So its normal component is the constant $kR$, and the flux is this constant times the surface area, without evaluating any cross product.",
+      "在圆心位于原点、半径为 $R$ 的球面上，径向场 $k\\langle x, y, z \\rangle$ 垂直于曲面。所以它的法向分量是常数 $kR$，通量等于这个常数乘以曲面面积，不必计算任何叉积。",
+    ],
+    (rng) => {
+      const R = rng.int(1, 6);
+      const k = nz(rng, 9);
+      const answer = 2 * k * R ** 3;
+      return ask(
+        [
+          `Find $\\frac{1}{\\pi}\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}$ for $\\mathbf{F} = ${br(poly([k, "x"]), poly([k, "y"]), poly([k, "z"]))}$, where $S$ is the upper hemisphere of $x^{2} + y^{2} + z^{2} = ${R * R}$, with the outward normal.`,
+          `求 $\\frac{1}{\\pi}\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}$，其中 $\\mathbf{F} = ${br(poly([k, "x"]), poly([k, "y"]), poly([k, "z"]))}$，$S$ 是 $x^{2} + y^{2} + z^{2} = ${R * R}$ 的上半球面，取外法向。`,
+        ],
+        answer,
+        [4 * k * R ** 3, 2 * k * R * R, k * R ** 3],
+        [
+          `$\\mathbf{F} \\cdot \\mathbf{n} = ${k * R}$ everywhere, and the hemisphere has area $${2 * R * R}\\pi$. The product divided by $\\pi$ is $${answer}$.`,
+          `处处有 $\\mathbf{F} \\cdot \\mathbf{n} = ${k * R}$，半球面的面积是 $${2 * R * R}\\pi$。两者之积除以 $\\pi$ 等于 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings7["calculating-flux-through-parametric-surfaces#the-flux-through-a-hemisphere"],
+};
 
-const downwardFlux = point(
-  "downward-flux-through-a-tilted-plane",
-  ["Downward flux through a tilted plane", "穿过斜平面的向下通量"],
-  [
-    "For a graph $z = g(x, y)$, the upward normal element is $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$. The downward one is its negative. Both the minus signs and the slopes matter: using only the third component of the field would treat the plane as horizontal.",
-    "对图像 $z = g(x, y)$，向上的法向面元是 $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$，向下的是它的相反数。负号和斜率都很重要：只用场的第三个分量，等于把平面当作水平面。",
-  ],
-  (rng) => {
-    const a = nz(rng, 4);
-    const b = nz(rng, 4);
-    const c = rng.int(-6, 6);
-    const p = nz(rng, 6);
-    const q = nz(rng, 6);
-    const r = nz(rng, 6);
-    const W = rng.int(1, 5);
-    const H = rng.int(1, 5);
-    const dot = p * a + q * b - r;
-    const answer = dot * W * H;
-    return ask(
-      [
-        `Find the downward flux of $\\mathbf{F} = ${br(p, q, r)}$ through the part of the plane $z = ${poly([a, "x"], [b, "y"], [c, ""])}$ above $[0, ${W}] \\times [0, ${H}]$.`,
-        `求 $\\mathbf{F} = ${br(p, q, r)}$ 向下穿过平面 $z = ${poly([a, "x"], [b, "y"], [c, ""])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上方部分的通量。`,
-      ],
-      answer,
-      [-answer, -r * W * H, (p * a + q * b + r) * W * H],
-      [
-        `The downward element is $${br(a, b, -1)}\\,dA$, and its dot product with $\\mathbf{F}$ is $${dot}$. The rectangle has area $${W * H}$, so the flux is $${answer}$.`,
-        `向下的面元是 $${br(a, b, -1)}\\,dA$，它与 $\\mathbf{F}$ 的点积是 $${dot}$。矩形面积是 $${W * H}$，所以通量是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const downwardFlux = {
+  ...point(
+    "downward-flux-through-a-tilted-plane",
+    ["Downward flux through a tilted plane", "穿过斜平面的向下通量"],
+    [
+      "For a graph $z = g(x, y)$, the upward normal element is $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$. The downward one is its negative. Both the minus signs and the slopes matter: using only the third component of the field would treat the plane as horizontal.",
+      "对图像 $z = g(x, y)$，向上的法向面元是 $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$，向下的是它的相反数。负号和斜率都很重要：只用场的第三个分量，等于把平面当作水平面。",
+    ],
+    (rng) => {
+      const a = nz(rng, 4);
+      const b = nz(rng, 4);
+      const c = rng.int(-6, 6);
+      const p = nz(rng, 6);
+      const q = nz(rng, 6);
+      const r = nz(rng, 6);
+      const W = rng.int(1, 5);
+      const H = rng.int(1, 5);
+      const dot = p * a + q * b - r;
+      const answer = dot * W * H;
+      return ask(
+        [
+          `Find the downward flux of $\\mathbf{F} = ${br(p, q, r)}$ through the part of the plane $z = ${poly([a, "x"], [b, "y"], [c, ""])}$ above $[0, ${W}] \\times [0, ${H}]$.`,
+          `求 $\\mathbf{F} = ${br(p, q, r)}$ 向下穿过平面 $z = ${poly([a, "x"], [b, "y"], [c, ""])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上方部分的通量。`,
+        ],
+        answer,
+        [-answer, -r * W * H, (p * a + q * b + r) * W * H],
+        [
+          `The downward element is $${br(a, b, -1)}\\,dA$, and its dot product with $\\mathbf{F}$ is $${dot}$. The rectangle has area $${W * H}$, so the flux is $${answer}$.`,
+          `向下的面元是 $${br(a, b, -1)}\\,dA$，它与 $\\mathbf{F}$ 的点积是 $${dot}$。矩形面积是 $${W * H}$，所以通量是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings7["calculating-flux-through-cartesian-surfaces#downward-flux-through-a-tilted-plane"],
+};
 
-const closedCylinder = point(
-  "the-flux-out-of-a-closed-cylinder",
-  ["The flux out of a closed cylinder", "穿出闭合圆柱的通量"],
-  [
-    "A closed cylinder has three faces, and each is handled separately. On the side the normal is radial, on the top it is $\\mathbf{k}$, and on the bottom it is $-\\mathbf{k}$. A face where $z = 0$ gives no flux from a field whose third component is a multiple of $z$.",
-    "闭合圆柱有三个面，要分别处理。侧面的法向量沿径向，顶面是 $\\mathbf{k}$，底面是 $-\\mathbf{k}$。对第三个分量是 $z$ 的倍数的场，$z = 0$ 的面没有通量。",
-  ],
-  (rng) => {
-    const R = rng.int(1, 6);
-    const h = rng.int(1, 6);
-    const k = rng.int(1, 9);
-    const answer = R * R * h * (2 + k);
-    const F = br("x", "y", poly([k, "z"]));
-    return ask(
-      [
-        `Find $\\frac{1}{\\pi}$ times the outward flux of $\\mathbf{F} = ${F}$ through the closed cylinder $x^{2} + y^{2} \\le ${R * R}$, $0 \\le z \\le ${h}$, using all of its faces.`,
-        `用圆柱的所有面，求 $\\mathbf{F} = ${F}$ 穿出闭合圆柱 $x^{2} + y^{2} \\le ${R * R}$，$0 \\le z \\le ${h}$ 的外通量乘以 $\\frac{1}{\\pi}$ 的值。`,
-      ],
-      answer,
-      [k * R * R * h, 2 * R * R * h, 2 * R * R * h * (1 + k)],
-      [
-        `On the side $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$ over area $${2 * R * h}\\pi$, which gives $${2 * R * R * h}\\pi$. The top gives $${k * h} \\cdot ${R * R}\\pi$ and the bottom gives $0$. Dividing the sum by $\\pi$ gives $${answer}$.`,
-        `在侧面 $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$，面积是 $${2 * R * h}\\pi$，得 $${2 * R * R * h}\\pi$。顶面给出 $${k * h} \\cdot ${R * R}\\pi$，底面给出 $0$。总和除以 $\\pi$ 得 $${answer}$。`,
-      ],
-    );
-  },
-);
+const closedCylinder = {
+  ...point(
+    "the-flux-out-of-a-closed-cylinder",
+    ["The flux out of a closed cylinder", "穿出闭合圆柱的通量"],
+    [
+      "A closed cylinder has three faces, and each is handled separately. On the side the normal is radial, on the top it is $\\mathbf{k}$, and on the bottom it is $-\\mathbf{k}$. A face where $z = 0$ gives no flux from a field whose third component is a multiple of $z$.",
+      "闭合圆柱有三个面，要分别处理。侧面的法向量沿径向，顶面是 $\\mathbf{k}$，底面是 $-\\mathbf{k}$。对第三个分量是 $z$ 的倍数的场，$z = 0$ 的面没有通量。",
+    ],
+    (rng) => {
+      const R = rng.int(1, 6);
+      const h = rng.int(1, 6);
+      const k = rng.int(1, 9);
+      const answer = R * R * h * (2 + k);
+      const F = br("x", "y", poly([k, "z"]));
+      return ask(
+        [
+          `Find $\\frac{1}{\\pi}$ times the outward flux of $\\mathbf{F} = ${F}$ through the closed cylinder $x^{2} + y^{2} \\le ${R * R}$, $0 \\le z \\le ${h}$, using all of its faces.`,
+          `用圆柱的所有面，求 $\\mathbf{F} = ${F}$ 穿出闭合圆柱 $x^{2} + y^{2} \\le ${R * R}$，$0 \\le z \\le ${h}$ 的外通量乘以 $\\frac{1}{\\pi}$ 的值。`,
+        ],
+        answer,
+        [k * R * R * h, 2 * R * R * h, 2 * R * R * h * (1 + k)],
+        [
+          `On the side $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$ over area $${2 * R * h}\\pi$, which gives $${2 * R * R * h}\\pi$. The top gives $${k * h} \\cdot ${R * R}\\pi$ and the bottom gives $0$. Dividing the sum by $\\pi$ gives $${answer}$.`,
+          `在侧面 $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$，面积是 $${2 * R * h}\\pi$，得 $${2 * R * R * h}\\pi$。顶面给出 $${k * h} \\cdot ${R * R}\\pi$，底面给出 $0$。总和除以 $\\pi$ 得 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings7["calculating-flux-through-closed-surfaces#the-flux-out-of-a-closed-cylinder"],
+};
 
 const stoppingDistance = point(
   "a-stopping-distance-from-work-and-energy",
@@ -1330,63 +1413,69 @@ const stoppingDistance = point(
   },
 );
 
-const maxSpeedOnCircle = point(
-  "the-greatest-speed-a-force-can-hold-on-a-circle",
-  ["The greatest speed a force can hold on a circle", "力能维持圆周运动的最大速度"],
-  [
-    "Uniform circular motion needs an inward force $mR\\omega^{2}$, equivalently $\\frac{mv^{2}}{R}$. If the inward force has a limit, such as the strength of a string, this limit sets the greatest angular speed, and then the speed follows from $v = R\\omega$.",
-    "匀速圆周运动需要向内的力 $mR\\omega^{2}$，也就是 $\\frac{mv^{2}}{R}$。如果向内的力有上限，例如绳子的强度，这个上限就决定最大角速度，再由 $v = R\\omega$ 得到速度。",
-  ],
-  (rng) => {
-    const m = rng.int(1, 5);
-    const R = rng.int(1, 6);
-    const w = rng.int(2, 9);
-    const F = m * R * w * w;
-    const answer = w * R;
-    return ask(
-      [
-        `A string that breaks at a tension of $${F}$ N holds a particle of mass $${m}$ kg on a circle of radius $${R}$ m. Find the greatest speed it can have, in m/s.`,
-        `一根在张力 $${F}$ N 时会断的绳子，把质量为 $${m}$ kg 的质点维持在半径 $${R}$ m 的圆周上。求它能达到的最大速度（单位：m/s）。`,
-      ],
-      answer,
-      [w, Q.of(F, m), F],
-      [
-        `$\\frac{${m}v^{2}}{${R}} = ${F}$ gives $v^{2} = ${answer * answer}$, so $v = ${answer}$. The corresponding angular speed is $${w}$ rad/s.`,
-        `由 $\\frac{${m}v^{2}}{${R}} = ${F}$ 得 $v^{2} = ${answer * answer}$，所以 $v = ${answer}$。相应的角速度是 $${w}$ rad/s。`,
-      ],
-    );
-  },
-);
+const maxSpeedOnCircle = {
+  ...point(
+    "the-greatest-speed-a-force-can-hold-on-a-circle",
+    ["The greatest speed a force can hold on a circle", "力能维持圆周运动的最大速度"],
+    [
+      "Uniform circular motion needs an inward force $mR\\omega^{2}$, equivalently $\\frac{mv^{2}}{R}$. If the inward force has a limit, such as the strength of a string, this limit sets the greatest angular speed, and then the speed follows from $v = R\\omega$.",
+      "匀速圆周运动需要向内的力 $mR\\omega^{2}$，也就是 $\\frac{mv^{2}}{R}$。如果向内的力有上限，例如绳子的强度，这个上限就决定最大角速度，再由 $v = R\\omega$ 得到速度。",
+    ],
+    (rng) => {
+      const m = rng.int(1, 5);
+      const R = rng.int(1, 6);
+      const w = rng.int(2, 9);
+      const F = m * R * w * w;
+      const answer = w * R;
+      return ask(
+        [
+          `A string that breaks at a tension of $${F}$ N holds a particle of mass $${m}$ kg on a circle of radius $${R}$ m. Find the greatest speed it can have, in m/s.`,
+          `一根在张力 $${F}$ N 时会断的绳子，把质量为 $${m}$ kg 的质点维持在半径 $${R}$ m 的圆周上。求它能达到的最大速度（单位：m/s）。`,
+        ],
+        answer,
+        [w, Q.of(F, m), F],
+        [
+          `$\\frac{${m}v^{2}}{${R}} = ${F}$ gives $v^{2} = ${answer * answer}$, so $v = ${answer}$. The corresponding angular speed is $${w}$ rad/s.`,
+          `由 $\\frac{${m}v^{2}}{${R}} = ${F}$ 得 $v^{2} = ${answer * answer}$，所以 $v = ${answer}$。相应的角速度是 $${w}$ rad/s。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings8["circular-motion-about-the-origin#the-greatest-speed-a-force-can-hold-on-a-circle"],
+};
 
-const massFromTwoAxes = point(
-  "the-mass-from-two-parallel-axes",
-  ["The mass from two parallel axes", "由两条平行轴求质量"],
-  [
-    "Applying the parallel axis theorem to two axes and subtracting removes the unknown moment about the center of mass. What remains is $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$, which gives the mass. It is the squares of the distances that are subtracted.",
-    "对两条轴应用平行轴定理再相减，就消去了关于质心的未知转动惯量。剩下 $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$，由此得到质量。相减的是距离的平方。",
-  ],
-  (rng) => {
-    const M = rng.int(1, 9);
-    const Ic = rng.int(1, 30);
-    const d1 = rng.int(1, 4);
-    const d2 = d1 + rng.int(1, 4);
-    const I1 = Ic + M * d1 * d1;
-    const I2 = Ic + M * d2 * d2;
-    const diff = I2 - I1;
-    return ask(
-      [
-        `A body has moment of inertia $${I1}$ about an axis at distance $${d1}$ from its center of mass, and $${I2}$ about a parallel axis at distance $${d2}$. Find its mass.`,
-        `一个物体关于到质心距离为 $${d1}$ 的轴的转动惯量是 $${I1}$，关于到质心距离为 $${d2}$ 的平行轴的转动惯量是 $${I2}$。求它的质量。`,
-      ],
-      M,
-      [Q.of(diff, d2 - d1), Q.of(diff, d2 * d2), Q.of(I2, d2 * d2)],
-      [
-        `Subtracting the two equations of the theorem removes the moment about the center: $${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$. So $M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$.`,
-        `把定理的两个等式相减，消去关于质心的转动惯量：$${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$。所以 $M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$。`,
-      ],
-    );
-  },
-);
+const massFromTwoAxes = {
+  ...point(
+    "the-mass-from-two-parallel-axes",
+    ["The mass from two parallel axes", "由两条平行轴求质量"],
+    [
+      "Applying the parallel axis theorem to two axes and subtracting removes the unknown moment about the center of mass. What remains is $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$, which gives the mass. It is the squares of the distances that are subtracted.",
+      "对两条轴应用平行轴定理再相减，就消去了关于质心的未知转动惯量。剩下 $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$，由此得到质量。相减的是距离的平方。",
+    ],
+    (rng) => {
+      const M = rng.int(1, 9);
+      const Ic = rng.int(1, 30);
+      const d1 = rng.int(1, 4);
+      const d2 = d1 + rng.int(1, 4);
+      const I1 = Ic + M * d1 * d1;
+      const I2 = Ic + M * d2 * d2;
+      const diff = I2 - I1;
+      return ask(
+        [
+          `A body has moment of inertia $${I1}$ about an axis at distance $${d1}$ from its center of mass, and $${I2}$ about a parallel axis at distance $${d2}$. Find its mass.`,
+          `一个物体关于到质心距离为 $${d1}$ 的轴的转动惯量是 $${I1}$，关于到质心距离为 $${d2}$ 的平行轴的转动惯量是 $${I2}$。求它的质量。`,
+        ],
+        M,
+        [Q.of(diff, d2 - d1), Q.of(diff, d2 * d2), Q.of(I2, d2 * d2)],
+        [
+          `Subtracting the two equations of the theorem removes the moment about the center: $${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$. So $M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$.`,
+          `把定理的两个等式相减，消去关于质心的转动惯量：$${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$。所以 $M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings8["the-parallel-axis-theorem#the-mass-from-two-parallel-axes"],
+};
 
 /** deeperMultivariableCalculusThird2Points maps topics of Multivariable Calculus, from changes of variables to line and surface integrals, to a third knowledge point. */
 export const deeperMultivariableCalculusThird2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

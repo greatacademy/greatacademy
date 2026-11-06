@@ -5,6 +5,12 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text } from "@ga/content"
 import { t } from "@ga/content";
 import type { Compass, PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { plane, poly, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
+import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
+import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 
 import { numberProblem } from "../problems.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
@@ -477,6 +483,7 @@ const readingContours: KnowledgePointDef = {
 /** gradientOnContour asks for the gradient at a point of a level curve, against the tangent and the reversed vectors. */
 const gradientOnContour: KnowledgePointDef = {
   id: "the-gradient-on-a-level-curve",
+  figure: multivariableDrawings2["the-gradient-as-a-normal-vector#the-gradient-on-a-level-curve"],
   title: t("The gradient on a level curve", "等值线上的梯度"),
   explanation: t(
     "At a point of a level curve, the gradient is perpendicular to the curve and points toward larger values of $f$. For an ellipse $ax^2 + by^2 = c$ with positive $a$ and $b$, values grow away from the origin, so the gradient points outward. A vector along the curve has dot product zero with the gradient, which separates the two directions.",
@@ -740,6 +747,7 @@ const recognizingQuadrics: KnowledgePointDef = {
 /** matchingParametrizations asks which parametrization draws the surface shown. */
 const matchingParametrizations: KnowledgePointDef = {
   id: "matching-a-drawing-to-its-parametrization",
+  figure: multivariableDrawings7["parametric-surfaces#matching-a-drawing-to-its-parametrization"],
   title: t("Matching a drawing to its parametrization", "把图形与参数化对应"),
   explanation: t(
     "To see what a parametrization draws, eliminate the parameters. In $\\langle u \\cos v, u \\sin v, u^2 \\rangle$ we have $x^2 + y^2 = u^2 = z$, a paraboloid. In $\\langle 2 \\cos v, 2 \\sin v, u \\rangle$ we have $x^2 + y^2 = 4$ with $z$ free, a cylinder. In $\\langle u \\cos v, u \\sin v, 2u \\rangle$ the height grows in proportion to the distance from the axis, a cone.",
@@ -910,6 +918,7 @@ const limitsFromRegion: KnowledgePointDef = {
 /** polarLimitsFromRegion asks which polar integral covers a shaded sector or ring. */
 const polarLimitsFromRegion: KnowledgePointDef = {
   id: "polar-limits-from-a-drawing",
+  figure: multivariableDrawings4["double-integrals-in-plane-polar-coordinates#polar-limits-from-a-drawing"],
   title: t("Polar limits from a drawing", "从图形确定极坐标积分限"),
   explanation: t(
     "A region bounded by arcs around the origin and rays from the origin is a rectangle in polar coordinates. Read $r$ along a ray, from the inner arc to the outer one, and $\\theta$ from the first ray counterclockwise to the last. Then $dA = r \\, dr \\, d\\theta$: the extra factor $r$ is part of the area element and is easy to forget.",
@@ -1089,6 +1098,7 @@ const linearityFromDrawing: KnowledgePointDef = {
 /** areaFromDeterminant asks for the area of a drawn parallelogram through a determinant. */
 const areaFromDeterminant: KnowledgePointDef = {
   id: "the-area-of-a-parallelogram-from-a-determinant",
+  figure: linearAlgebraDrawings1["basic-properties-of-determinants#the-area-of-a-parallelogram-from-a-determinant"],
   title: t("The area of a parallelogram from a determinant", "用行列式求平行四边形的面积"),
   explanation: t(
     "A linear map scales every area by the absolute value of its determinant. The unit square has area $1$, so the parallelogram spanned by the columns of $A$ has area $|\\det A|$. The sign of the determinant says whether the map keeps or flips orientation, and it does not change the area, which is why the absolute value appears.",
@@ -1118,6 +1128,7 @@ const areaFromDeterminant: KnowledgePointDef = {
 /** projectionFromDrawing asks for the projection of one drawn vector onto another. */
 const projectionFromDrawing: KnowledgePointDef = {
   id: "a-projection-from-a-drawing",
+  figure: linearAlgebraDrawings2["projecting-vectors-onto-one-dimensional-subspaces#a-projection-from-a-drawing"],
   title: t("A projection from a drawing", "由图求投影"),
   explanation: t(
     "The projection of $\\mathbf{v}$ onto $\\mathbf{u}$ is the shadow of $\\mathbf{v}$ on the line through $\\mathbf{u}$. It is the multiple $\\frac{\\mathbf{v} \\cdot \\mathbf{u}}{\\mathbf{u} \\cdot \\mathbf{u}}\\mathbf{u}$, chosen so that what remains of $\\mathbf{v}$ is perpendicular to $\\mathbf{u}$. The order matters: projecting $\\mathbf{u}$ onto $\\mathbf{v}$ gives a vector along $\\mathbf{v}$ instead.",
@@ -1176,6 +1187,7 @@ const projectionFromDrawing: KnowledgePointDef = {
 /** dotSignFromDrawing asks for the sign of a dot product of two drawn vectors. */
 const dotSignFromDrawing: KnowledgePointDef = {
   id: "the-sign-of-a-dot-product-from-a-drawing",
+  figure: linearAlgebraDrawings2["cauchy-schwarz-inequality-and-angle-between-two-vectors#the-sign-of-a-dot-product-from-a-drawing"],
   title: t("The sign of a dot product from a drawing", "由图判断点积的符号"),
   explanation: t(
     "Since $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos \\theta$ and the norms are positive, the sign of the dot product is the sign of $\\cos \\theta$. An acute angle gives a positive dot product, an obtuse angle gives a negative one, and a right angle gives zero. A drawing therefore shows the sign without any arithmetic, though near a right angle the coordinates settle it.",
@@ -1496,6 +1508,7 @@ const complexPortrait: KnowledgePointDef = {
 /** phaseLineFromGraph asks which equilibria of an autonomous equation are stable, from the graph of its right side. */
 const phaseLineFromGraph: KnowledgePointDef = {
   id: "stable-equilibria-from-a-graph",
+  figure: differentialEquationsDrawings1["phase-lines-of-first-order-odes#stable-equilibria-from-a-graph"],
   title: t("Stable equilibria from a graph", "由图判断稳定平衡点"),
   explanation: t(
     "For $\\frac{dx}{dt} = f(x)$, the equilibria are the zeros of $f$. Where $f > 0$ the solution moves right and where $f < 0$ it moves left. So a zero where the graph of $f$ crosses from above the axis to below it attracts from both sides and is stable, and a zero where it crosses from below to above repels and is unstable.",

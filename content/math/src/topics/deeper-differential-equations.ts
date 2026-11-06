@@ -5,6 +5,8 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
+import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { lowestTerms, numberProblem } from "../problems.ts";
 
@@ -1099,6 +1101,7 @@ const stepOnUnshiftedFunction: KnowledgePointDef = {
 
 const integralOfSteps: KnowledgePointDef = {
   id: "integrating-a-sum-of-steps",
+  figure: differentialEquationsDrawings1["the-unit-step-function#integrating-a-sum-of-steps"],
   title: t("Integrating a sum of steps", "对阶跃函数之和积分"),
   explanation: t(
     "The function $u(t - c)$ is $0$ before $t = c$ and $1$ after it. Over the interval from $0$ to $T$ it therefore encloses the area of a rectangle of width $T - c$. A combination of steps adds these rectangles, each scaled by its coefficient, and a negative coefficient subtracts its area.",
@@ -1667,6 +1670,7 @@ const constantBernoulliSolution: KnowledgePointDef = {
 
 const clairautLinesThroughPoint: KnowledgePointDef = {
   id: "the-solution-lines-through-a-point",
+  figure: differentialEquationsDrawings1["clairaut-differential-equations#the-solution-lines-through-a-point"],
   title: t("The solution lines through a point", "过一点的解直线"),
   explanation: t(
     "The general solutions of Clairaut's equation $y = xy' + (y')^2$ are the lines $y = cx + c^2$. To find those through a given point, substitute its coordinates and solve the resulting quadratic in $c$. A point below the singular parabola $y = -\\frac{x^2}{4}$ gets no line, one on it gets one, and one above it gets two.",
@@ -1994,6 +1998,7 @@ const tankTransient: KnowledgePointDef = {
 
 const orthogonalThroughPoint: KnowledgePointDef = {
   id: "the-orthogonal-trajectory-through-a-point",
+  figure: differentialEquationsDrawings1["orthogonal-trajectories#the-orthogonal-trajectory-through-a-point"],
   title: t("The orthogonal trajectory through a point", "过一点的正交轨线"),
   explanation: t(
     "To find orthogonal trajectories, first remove the constant from the family. For $y = cx^n$, dividing gives $y' = \\frac{ny}{x}$, a slope that holds for every curve in the family. A curve crossing at right angles has the negative reciprocal slope, $y' = -\\frac{x}{ny}$. This equation is separable, and its solutions are ellipses. The initial point then fixes the particular ellipse, just as for any other family of solutions.",
@@ -2022,6 +2027,8 @@ const orthogonalThroughPoint: KnowledgePointDef = {
 
 const accelerationFromPower: KnowledgePointDef = {
   id: "the-acceleration-when-speed-is-a-power-of-position",
+  figure:
+    multivariableDrawings8["velocity-and-acceleration-as-functions-of-displacement#the-acceleration-when-speed-is-a-power-of-position"],
   title: t("The acceleration when speed is a power of position", "速度是位置的幂时的加速度"),
   explanation: t(
     "If velocity is given as a function of position, $\\frac{dv}{dx}$ alone is not the acceleration, because it measures the change per metre and not per second. The chain rule supplies the missing factor: $a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$. So the acceleration at a point is the speed there times the slope of the velocity graph. The time never needs to appear in the calculation.",
@@ -2327,6 +2334,8 @@ const mixedEndEigenvalue: KnowledgePointDef = {
 
 const loadedEndSlope: KnowledgePointDef = {
   id: "the-end-slope-of-a-loaded-boundary-value-problem",
+  figure:
+    differentialEquationsDrawings1["second-order-inhomogeneous-boundary-value-problems#the-end-slope-of-a-loaded-boundary-value-problem"],
   title: t("The end slope of a loaded boundary value problem", "受载边值问题的端点斜率"),
   explanation: t(
     "Integrating $y'' = c$ twice gives $y = \\frac{c}{2}x^2 + Ax + B$, with two constants that the boundary conditions must fix. Unlike an initial value problem, the slope at the left end is not given in advance: it is whatever makes the curve arrive correctly at the far end. With $y(0) = y(L) = 0$, the parabola is symmetric about the midpoint, so the two end slopes are equal and opposite.",
@@ -2418,6 +2427,7 @@ const indicialSum: KnowledgePointDef = {
 
 const twoTrapezoidalSteps: KnowledgePointDef = {
   id: "two-trapezoidal-steps-for-pure-decay",
+  figure: differentialEquationsDrawings1["the-trapezoidal-method#two-trapezoidal-steps-for-pure-decay"],
   title: t("Two trapezoidal steps for pure decay", "纯衰减的两个梯形步"),
   explanation: t(
     "For $y' = -ky$, the trapezoidal rule reads $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$. Although the method is implicit, this equation is linear in the new value, so it can be solved at once to give $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$. Each step multiplies by the same factor, so two steps multiply by its square. The size of the factor is always below 1, which is why the method is stable.",

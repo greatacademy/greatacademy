@@ -4,6 +4,7 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -1008,33 +1009,37 @@ const newtonLinear = point(
   },
 );
 
-const trapezoidalFactor = point(
-  "the-amplification-factor-of-the-trapezoidal-method",
-  ["The amplification factor of the trapezoidal method", "梯形法的放大因子"],
-  [
-    "For $y' = -ky$, solving the trapezoidal equation gives $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$. This factor has size below $1$ for every $h$, so the method is stable. But for large $hk$ it nears $-1$, so stiff components oscillate and hardly decay.",
-    "对 $y' = -ky$，解梯形方程得 $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$。对任何 $h$，这个因子的绝对值都小于 $1$，所以方法稳定。但 $hk$ 很大时它接近 $-1$，所以刚性分量会振荡，几乎不衰减。",
-  ],
-  (rng) => {
-    const k = rng.int(1, 20);
-    const h = rng.pick(stepSizes);
-    const half = h.mul(Q.of(k)).div(Q.of(2));
-    const answer = Q.one.sub(half).div(Q.one.add(half));
-    const hk = h.mul(Q.of(k));
-    return ask(
-      [
-        `The trapezoidal method with $h = ${h.toLatex()}$ is applied to $y' = ${poly([-k, "y"])}$. It gives $y_{n + 1} = Ry_{n}$. Find $R$.`,
-        `把步长 $h = ${h.toLatex()}$ 的梯形法用于 $y' = ${poly([-k, "y"])}$，得 $y_{n + 1} = Ry_{n}$。求 $R$。`,
-      ],
-      answer,
-      [Q.one.div(Q.one.add(hk)), Q.one.sub(hk), answer.neg()],
-      [
-        `The method reads $y_{n + 1} = y_{n} - ${half.toLatex()}(y_{n} + y_{n + 1})$, using $\\frac{hk}{2} = ${half.toLatex()}$. Collecting terms gives $R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}$.`,
-        `方法写作 $y_{n + 1} = y_{n} - ${half.toLatex()}(y_{n} + y_{n + 1})$，其中 $\\frac{hk}{2} = ${half.toLatex()}$。合并同类项得 $R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const trapezoidalFactor = {
+  ...point(
+    "the-amplification-factor-of-the-trapezoidal-method",
+    ["The amplification factor of the trapezoidal method", "梯形法的放大因子"],
+    [
+      "For $y' = -ky$, solving the trapezoidal equation gives $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$. This factor has size below $1$ for every $h$, so the method is stable. But for large $hk$ it nears $-1$, so stiff components oscillate and hardly decay.",
+      "对 $y' = -ky$，解梯形方程得 $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$。对任何 $h$，这个因子的绝对值都小于 $1$，所以方法稳定。但 $hk$ 很大时它接近 $-1$，所以刚性分量会振荡，几乎不衰减。",
+    ],
+    (rng) => {
+      const k = rng.int(1, 20);
+      const h = rng.pick(stepSizes);
+      const half = h.mul(Q.of(k)).div(Q.of(2));
+      const answer = Q.one.sub(half).div(Q.one.add(half));
+      const hk = h.mul(Q.of(k));
+      return ask(
+        [
+          `The trapezoidal method with $h = ${h.toLatex()}$ is applied to $y' = ${poly([-k, "y"])}$. It gives $y_{n + 1} = Ry_{n}$. Find $R$.`,
+          `把步长 $h = ${h.toLatex()}$ 的梯形法用于 $y' = ${poly([-k, "y"])}$，得 $y_{n + 1} = Ry_{n}$。求 $R$。`,
+        ],
+        answer,
+        [Q.one.div(Q.one.add(hk)), Q.one.sub(hk), answer.neg()],
+        [
+          `The method reads $y_{n + 1} = y_{n} - ${half.toLatex()}(y_{n} + y_{n + 1})$, using $\\frac{hk}{2} = ${half.toLatex()}$. Collecting terms gives $R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}$.`,
+          `方法写作 $y_{n + 1} = y_{n} - ${half.toLatex()}(y_{n} + y_{n + 1})$，其中 $\\frac{hk}{2} = ${half.toLatex()}$。合并同类项得 $R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    differentialEquationsDrawings1["using-the-trapezoidal-method-with-newtons-method#the-amplification-factor-of-the-trapezoidal-method"],
+};
 
 /** deeperDifferentialEquationsThird2Points maps topics of Differential Equations, from repeated eigenvalues to numerical methods, to a third knowledge point. */
 export const deeperDifferentialEquationsThird2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

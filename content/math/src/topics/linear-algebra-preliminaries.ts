@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, q } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 
 import { choiceProblem, equationProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -912,6 +913,7 @@ export const describingPlanarRegionsUsingSetBuilderNotation: TopicDef = {
     },
     {
       id: "circular-disks-and-regions",
+      figure: linearAlgebraDrawings1["describing-planar-regions-using-set-builder-notation#circular-disks-and-regions"],
       title: t("Circular disks and boundaries", "平面上的圆盘区域与边界"),
       explanation: t(
         "A closed disk centered at $(h, k)$ with radius $r > 0$ is defined in set-builder notation as $\\{(x, y) \\in \\mathbb{R}^2 \\mid (x - h)^2 + (y - k)^2 \\le r^2\\}$. The boundary circle is given by equality $= r^2$, while the open disk uses strict inequality $< r^2$.",
@@ -1591,6 +1593,7 @@ export const visualizingCartesianProducts: TopicDef = {
     },
     {
       id: "cartesian-product-of-intervals",
+      figure: linearAlgebraDrawings1["visualizing-cartesian-products#cartesian-product-of-intervals"],
       title: t("Cartesian product of intervals", "区间的笛卡尔积与平面矩形"),
       explanation: t(
         "If $I_1 = [a, b]$ and $I_2 = [c, d]$ are intervals on the real line, their Cartesian product $I_1 \\times I_2 = \\{(x, y) \\in \\mathbb{R}^2 \\mid a \\le x \\le b, c \\le y \\le d\\}$ is a rectangle in $\\mathbb{R}^2$ with width $b - a$, height $d - c$, and area $(b - a)(d - c)$.",
@@ -1796,6 +1799,7 @@ export const theVectorEquationOfALine: TopicDef = {
   knowledgePoints: [
     {
       id: "vector-equation-from-point-and-direction",
+      figure: linearAlgebraDrawings1["the-vector-equation-of-a-line#vector-equation-from-point-and-direction"],
       title: t("Vector equation from a point and direction vector", "由点和方向向量求直线向量方程"),
       explanation: t(
         "A line in 3D passing through point $P(x_0, y_0, z_0)$ with position vector $\\mathbf{r}_0 = \\langle x_0, y_0, z_0 \\rangle$ and parallel to direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$ has vector equation $\\mathbf{r}(t) = \\mathbf{r}_0 + t \\mathbf{v}$, where $t \\in \\mathbb{R}$ is the scalar parameter.",
@@ -2096,6 +2100,7 @@ export const theVectorEquationOfAPlane: TopicDef = {
   knowledgePoints: [
     {
       id: "normal-vector-and-vector-plane-equation",
+      figure: linearAlgebraDrawings1["the-vector-equation-of-a-plane#normal-vector-and-vector-plane-equation"],
       title: t("Normal vector and the vector equation of a plane", "法向量与平面的点法式向量方程"),
       explanation: t(
         "A plane in 3D is determined by a point $P(x_0, y_0, z_0)$ with position vector $\\mathbf{r}_0$ and a non-zero normal vector $\\mathbf{n} = \\langle A, B, C \\rangle$ perpendicular to the plane. The vector equation is $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$, or equivalently $\\mathbf{n} \\cdot \\mathbf{r} = d$ where $d = \\mathbf{n} \\cdot \\mathbf{r}_0$.",
@@ -2129,6 +2134,7 @@ export const theVectorEquationOfAPlane: TopicDef = {
     },
     {
       id: "plane-through-three-points-vector-form",
+      figure: linearAlgebraDrawings1["the-vector-equation-of-a-plane#plane-through-three-points-vector-form"],
       title: t("Plane passing through three points", "过不共线三点的平面向量法向量"),
       explanation: t(
         "Given three non-collinear points $P, Q, R$, displacement vectors $\\vec{PQ} = \\mathbf{q} - \\mathbf{p}$ and $\\vec{PR} = \\mathbf{r} - \\mathbf{p}$ both lie parallel to the plane. A normal vector to the plane is given by their cross product: $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$.",
@@ -2187,6 +2193,7 @@ export const theCartesianEquationOfAPlane: TopicDef = {
   knowledgePoints: [
     {
       id: "general-linear-equation-of-a-plane",
+      figure: linearAlgebraDrawings1["the-cartesian-equation-of-a-plane#general-linear-equation-of-a-plane"],
       title: t("General linear equation of a plane", "平面的一般方程"),
       explanation: t(
         "A plane is the set of points whose displacement from a fixed point is perpendicular to a normal vector, and the coefficients of the equation are that normal vector's components. Expanding $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$ gives the general linear equation of a plane in $\\mathbb{R}^3$:\n\n$$Ax + By + Cz + D = 0, \\quad \\text{where } D = -(Ax_0 + By_0 + Cz_0)$$",
@@ -2224,6 +2231,7 @@ export const theCartesianEquationOfAPlane: TopicDef = {
     },
     {
       id: "identifying-normal-vectors-from-cartesian-form",
+      figure: linearAlgebraDrawings1["the-cartesian-equation-of-a-plane#identifying-normal-vectors-from-cartesian-form"],
       title: t("Identifying normal vectors and parallel planes", "由一般方程读取法向量与平行平面"),
       explanation: t(
         "In the equation $Ax + By + Cz + D = 0$, the coefficients $\\langle A, B, C \\rangle$ give a normal vector to the plane. Two planes are parallel if their normal vectors are scalar multiples of each other: $\\mathbf{n}_1 = k \\mathbf{n}_2$.",
@@ -2277,6 +2285,7 @@ export const theParametricEquationsOfAPlane: TopicDef = {
   knowledgePoints: [
     {
       id: "two-parameter-form-of-a-plane",
+      figure: linearAlgebraDrawings1["the-parametric-equations-of-a-plane#two-parameter-form-of-a-plane"],
       title: t("Two-parameter vector form of a plane", "平面的双参数方程"),
       explanation: t(
         "A plane through $P(x_0, y_0, z_0)$ spanned by two non-parallel vectors $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ has the two-parameter vector equation:\n\n$$\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}, \\quad s, t \\in \\mathbb{R}$$",
@@ -2371,6 +2380,7 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
   knowledgePoints: [
     {
       id: "direction-vector-of-plane-intersection",
+      figure: linearAlgebraDrawings1["the-intersection-of-two-planes#direction-vector-of-plane-intersection"],
       title: t("Direction vector of the line of intersection", "两平面交线的方向向量"),
       explanation: t(
         "The line of intersection $L$ of two non-parallel planes $\\Pi_1$ and $\\Pi_2$ lies in both planes, so its direction vector $\\mathbf{v}$ is perpendicular to both normal vectors $\\mathbf{n}_1$ and $\\mathbf{n}_2$. Thus, a direction vector is given by their cross product:\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$$",
@@ -2467,6 +2477,7 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
   knowledgePoints: [
     {
       id: "point-plane-distance-formula",
+      figure: linearAlgebraDrawings1["the-shortest-distance-between-a-plane-and-a-point#point-plane-distance-formula"],
       title: t("Point-plane distance formula", "点到平面的距离计算"),
       explanation: t(
         "The shortest path from a point to a plane runs along the normal direction, so the distance is the size of the projection onto the unit normal. The shortest perpendicular distance from a point $P_0(x_0, y_0, z_0)$ to the plane $Ax + By + Cz + D = 0$ is given by the formula:\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
@@ -2512,6 +2523,7 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
     },
     {
       id: "distance-between-parallel-planes",
+      figure: linearAlgebraDrawings1["the-shortest-distance-between-a-plane-and-a-point#distance-between-parallel-planes"],
       title: t("Distance between parallel planes", "两平行平面间的距离"),
       explanation: t(
         "Parallel planes share a normal vector, so the distance between them is the distance from any point of one plane to the other. The distance between two parallel planes $\\Pi_1: Ax + By + Cz + D_1 = 0$ and $\\Pi_2: Ax + By + Cz + D_2 = 0$ is:\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
@@ -2629,6 +2641,7 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
     },
     {
       id: "parallel-and-contained-lines",
+      figure: linearAlgebraDrawings1["the-intersection-between-a-line-and-a-plane#parallel-and-contained-lines"],
       title: t("Parallel and contained lines relative to a plane", "直线与平面的平行与包含关系"),
       explanation: t(
         "If the direction vector $\\mathbf{v}$ of a line is orthogonal to the normal vector $\\mathbf{n}$ of a plane ($\\mathbf{n} \\cdot \\mathbf{v} = 0$), then the line is parallel to the plane. If the base point $P_0$ of the line also satisfies the plane equation, the line is entirely contained within the plane (infinite intersections). Otherwise, the line never meets the plane (no intersections).",

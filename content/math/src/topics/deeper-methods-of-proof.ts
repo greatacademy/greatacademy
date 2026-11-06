@@ -4,6 +4,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -211,6 +212,7 @@ const squaredIndicatorDifference: KnowledgePointDef = {
 
 const symmetricDifference: KnowledgePointDef = {
   id: "the-size-of-a-symmetric-difference",
+  figure: linearAlgebraDrawings1["the-difference-of-sets#the-size-of-a-symmetric-difference"],
   title: t("The size of a symmetric difference", "对称差的大小"),
   explanation: t(
     "The symmetric difference $A \\triangle B$ is the union of the two one-way differences, so it holds the elements in exactly one of the sets. It is what remains of the union after removing the intersection. Since the sizes of $A$ and $B$ together count the union and the intersection once each, $|A \\triangle B| = 2|A \\cup B| - |A| - |B|$.",
@@ -1087,6 +1089,7 @@ const inNeitherSet: KnowledgePointDef = {
 
 const overlapOfProducts: KnowledgePointDef = {
   id: "the-overlap-of-two-products-of-intervals",
+  figure: linearAlgebraDrawings1["visualizing-cartesian-products#the-overlap-of-two-products-of-intervals"],
   title: t("The overlap of two products of intervals", "两个区间之积的重叠部分"),
   explanation: t(
     "A point lies in a product of intervals when each of its coordinates lies in the matching interval. So a point lies in two products at once when its first coordinate lies in both first intervals and its second coordinate lies in both second intervals. The overlap of two rectangles is therefore itself a rectangle, built from the two overlaps of intervals.",

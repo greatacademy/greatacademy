@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { numberProblem, steps } from "../problems.ts";
 
 /** round2 rounds a measured value to two decimal places. */
@@ -218,6 +219,7 @@ export const orthogonalTrajectories: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-orthogonal-trajectories-of-a-family-of-curves",
+      figure: differentialEquationsDrawings1["orthogonal-trajectories#finding-orthogonal-trajectories-of-a-family-of-curves"],
       title: t("Finding orthogonal trajectories of a family of curves", "求解平面曲线族的正交轨迹"),
       explanation: t(
         "Orthogonal trajectories cross every curve of the family at right angles, so their slope is the negative reciprocal of the family's slope at each point. For $y = C x^k$, differentiating yields $\\frac{dy}{dx} = \\frac{k y}{x}$. The orthogonal trajectories satisfy $\\frac{dy}{dx} = -\\frac{x}{k y} \\implies k y\\,dy + x\\,dx = 0$, giving the family $x^2 + k y^2 = C'$.",
@@ -260,6 +262,7 @@ export const orthogonalTrajectories: TopicDef = {
     },
     {
       id: "orthogonal-trajectories-of-exponential-curves",
+      figure: differentialEquationsDrawings1["orthogonal-trajectories#orthogonal-trajectories-of-exponential-curves"],
       title: t("Orthogonal trajectories of exponential curves", "指数曲线族的正交轨线"),
       explanation: t(
         "The recipe is always the same: differentiate the family, eliminate the constant so the slope is a function $f(x, y)$, replace $f$ by $-\\frac{1}{f}$, and solve.\n\nFor $y = Ce^{kx}$: $y' = kCe^{kx} = ky$. The trajectories satisfy $\\frac{dy}{dx} = -\\frac{1}{ky}$, so $ky\\,dy = -dx$ and $\\frac{k}{2}y^{2} = -x + K$, that is $y^{2} = -\\frac{2}{k}x + C'$: a family of parabolas opening away from the direction in which the exponentials grow.",
@@ -649,6 +652,7 @@ export const fallingBodyProblemsWithQuadraticDrag: TopicDef = {
     },
     {
       id: "acceleration-at-a-given-speed",
+      figure: differentialEquationsDrawings1["falling-body-problems-with-quadratic-drag#acceleration-at-a-given-speed"],
       title: t("Acceleration at a given speed", "给定速度时的加速度"),
       explanation: t(
         "Before terminal velocity is reached, the net force is not zero. Dividing $m\\frac{dv}{dt} = mg - cv^{2}$ by $m$ gives the acceleration at any speed:\n\n$$\\frac{dv}{dt} = g - \\frac{c}{m}v^{2} = g\\left(1 - \\frac{v^{2}}{v_{\\text{term}}^{2}}\\right).$$\n\nAt half the terminal speed the drag is a quarter of the weight, so the acceleration is $\\frac{3}{4}g$. A negative value means the object is moving faster than $v_{\\text{term}}$ and slowing down.",

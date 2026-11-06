@@ -5,6 +5,8 @@
 import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { numberProblem, pointProblem } from "../problems.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
@@ -81,6 +83,7 @@ function withEigenvalues(rng: Rng, l1: number, l2: number): number[][] {
 
 const perpendicularPlanes: KnowledgePointDef = {
   id: "the-parameter-that-makes-two-planes-perpendicular",
+  figure: linearAlgebraDrawings1["the-intersection-of-two-planes#the-parameter-that-makes-two-planes-perpendicular"],
   title: t("The parameter that makes two planes perpendicular", "使两平面垂直的参数"),
   explanation: t(
     "The angle between two planes is the angle between their normal vectors. So two planes are perpendicular exactly when the dot product of their normals is zero, which gives one linear equation for an unknown coefficient.",
@@ -109,6 +112,7 @@ const perpendicularPlanes: KnowledgePointDef = {
 
 const parallelPlaneThroughPoint: KnowledgePointDef = {
   id: "the-plane-through-a-point-parallel-to-a-plane",
+  figure: linearAlgebraDrawings1["the-cartesian-equation-of-a-plane#the-plane-through-a-point-parallel-to-a-plane"],
   title: t("The plane through a point parallel to a plane", "过一点且与已知平面平行的平面"),
   explanation: t(
     "Parallel planes share a normal vector, so their equations differ only in the constant on the right. To find the plane through a given point, keep the left side and substitute the point to get the new constant.",
@@ -137,6 +141,7 @@ const parallelPlaneThroughPoint: KnowledgePointDef = {
 
 const footOfPerpendicular: KnowledgePointDef = {
   id: "the-foot-of-the-perpendicular-on-a-plane",
+  figure: linearAlgebraDrawings1["the-shortest-distance-between-a-plane-and-a-point#the-foot-of-the-perpendicular-on-a-plane"],
   title: t("The foot of the perpendicular on a plane", "平面上的垂足"),
   explanation: t(
     "The nearest point of a plane to a point $P$ lies on the line through $P$ along the normal $\\mathbf{n}$. Substitute $P + s\\mathbf{n}$ into the plane's equation, solve for $s$, and the point at that $s$ is the foot of the perpendicular.",
@@ -172,6 +177,7 @@ const footOfPerpendicular: KnowledgePointDef = {
 
 const lineParallelToPlane: KnowledgePointDef = {
   id: "the-parameter-that-makes-a-line-parallel-to-a-plane",
+  figure: linearAlgebraDrawings1["the-intersection-between-a-line-and-a-plane#the-parameter-that-makes-a-line-parallel-to-a-plane"],
   title: t("The parameter that makes a line parallel to a plane", "使直线与平面平行的参数"),
   explanation: t(
     "A line is parallel to a plane, or lies in it, exactly when its direction is perpendicular to the plane's normal. Setting the dot product of the direction and the normal to zero gives an equation for an unknown component of the direction.",
@@ -593,6 +599,7 @@ const parameterForDependence: KnowledgePointDef = {
 
 const planeOfAColumnSpace: KnowledgePointDef = {
   id: "the-equation-of-a-column-space",
+  figure: linearAlgebraDrawings1["the-column-space-of-a-matrix#the-equation-of-a-column-space"],
   title: t("The equation of a column space", "列空间的方程"),
   explanation: t(
     "The column space of a matrix with two independent columns in $\\mathbb{R}^3$ is a plane through the origin. Its normal is perpendicular to both columns, so the cross product of the columns gives the equation of the plane.",
@@ -1021,6 +1028,7 @@ const traceOfAPower: KnowledgePointDef = {
 
 const lengthUnderRotationScaling: KnowledgePointDef = {
   id: "the-length-of-a-vector-under-a-power-of-a-rotation-scaling",
+  figure: linearAlgebraDrawings1["rotation-scaling-matrices#the-length-of-a-vector-under-a-power-of-a-rotation-scaling"],
   title: t("Lengths under powers of a rotation-scaling matrix", "旋转缩放矩阵的幂下的长度"),
   explanation: t(
     "The matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ rotates and multiplies every length by $r = \\sqrt{a^2+b^2}$. Rotation does not change length, so its $n$th power multiplies every length by $r^n$, whatever the direction of the vector.",
@@ -1222,6 +1230,7 @@ const triples = [
 
 const completingARotation: KnowledgePointDef = {
   id: "completing-an-orthogonal-matrix",
+  figure: linearAlgebraDrawings2["orthogonal-matrices#completing-an-orthogonal-matrix"],
   title: t("Completing an orthogonal matrix", "补全正交矩阵"),
   explanation: t(
     "The columns of an orthogonal matrix are perpendicular unit vectors. In the plane, a unit vector $(a, b)$ leaves two perpendicular unit vectors, $(-b, a)$ and $(b, -a)$. The determinant decides between them: $+1$ gives a rotation and $-1$ a reflection.",
@@ -1258,6 +1267,7 @@ const completingARotation: KnowledgePointDef = {
 
 const reflectionFromProjection: KnowledgePointDef = {
   id: "the-reflection-matrix-from-a-projection",
+  figure: linearAlgebraDrawings2["projection-matrices-linear-transformations-and-their-properties#the-reflection-matrix-from-a-projection"],
   title: t("The reflection matrix from a projection", "由投影矩阵得反射矩阵"),
   explanation: t(
     "To reflect $\\mathbf{x}$ in a line, move to its projection $P\\mathbf{x}$ and go the same distance again, which gives $2P\\mathbf{x} - \\mathbf{x}$. So the reflection matrix is $R = 2P - I$, where $P = \\frac{\\mathbf{u}\\mathbf{u}^T}{\\mathbf{u}^T\\mathbf{u}}$ is the projection onto the line along $\\mathbf{u}$.",
@@ -1288,6 +1298,10 @@ const reflectionFromProjection: KnowledgePointDef = {
 
 const leastSquaresError: KnowledgePointDef = {
   id: "the-smallest-squared-error-of-a-least-squares-fit",
+  figure:
+    linearAlgebraDrawings2[
+      "least-squares-solution-of-a-linear-system-without-collinearity#the-smallest-squared-error-of-a-least-squares-fit"
+    ],
   title: t("The smallest squared error of a least-squares fit", "最小二乘拟合的最小平方误差"),
   explanation: t(
     "After finding the least-squares solution, the size of the fit is the length of the residual $\\mathbf{b} - A\\hat{\\mathbf{x}}$. The residual is perpendicular to the column space, so by Pythagoras $\\|\\mathbf{b} - A\\hat{\\mathbf{x}}\\|^2 = \\|\\mathbf{b}\\|^2 - \\|A\\hat{\\mathbf{x}}\\|^2$.",
@@ -1322,6 +1336,7 @@ const leastSquaresError: KnowledgePointDef = {
 
 const perpendicularEigenvectors: KnowledgePointDef = {
   id: "the-second-eigenvector-of-a-symmetric-matrix",
+  figure: linearAlgebraDrawings2["symmetric-matrices#the-second-eigenvector-of-a-symmetric-matrix"],
   title: t("The second eigenvector of a symmetric matrix", "对称矩阵的第二个特征向量"),
   explanation: t(
     "Eigenvectors of a symmetric matrix that belong to different eigenvalues are perpendicular. So knowing one eigenvector is enough to fix the direction of the other in the plane, with no need to know the matrix.",
@@ -1671,6 +1686,7 @@ const planeIntercept: KnowledgePointDef = {
 
 const planeConstantFromSpan: KnowledgePointDef = {
   id: "the-scalar-equation-from-a-parametric-plane",
+  figure: linearAlgebraDrawings1["the-parametric-equations-of-a-plane#the-scalar-equation-from-a-parametric-plane"],
   title: t("The scalar equation from a parametric plane", "由参数平面求标量方程"),
   explanation: t(
     "Both spanning vectors of a plane are perpendicular to its normal, so their cross product $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ is a normal. The value $\\mathbf{n} \\cdot \\mathbf{r}$ is the same at every point of the plane, because moving along $\\mathbf{u}$ or $\\mathbf{v}$ does not change it. So the base point supplies the constant $d = \\mathbf{n} \\cdot \\mathbf{p}$.",
@@ -2175,6 +2191,7 @@ const hermitianDeterminant: KnowledgePointDef = {
 
 const blockDeterminant: KnowledgePointDef = {
   id: "the-determinant-from-a-real-and-a-complex-pair-of-eigenvalues",
+  figure: linearAlgebraDrawings2["block-diagonalization-of-nxn-matrices#the-determinant-from-a-real-and-a-complex-pair-of-eigenvalues"],
   title: t("The determinant from a real eigenvalue and a complex pair", "由实特征值与共轭复特征值求行列式"),
   explanation: t(
     "A real $3 \\times 3$ matrix with a real eigenvalue and a complex pair is similar to a block diagonal matrix, with a $1 \\times 1$ block and a rotation-scaling block. The determinant of a block diagonal matrix is the product of the block determinants, and the rotation-scaling block has determinant $a^2 + b^2$. This is the same as multiplying all three eigenvalues.",
@@ -2300,6 +2317,7 @@ const powerOfThreeBlock: KnowledgePointDef = {
 
 const cosineFromDot: KnowledgePointDef = {
   id: "the-cosine-of-an-angle-from-norms-and-a-dot-product",
+  figure: linearAlgebraDrawings2["dot-product-in-n-dimensional-euclidean-space#the-cosine-of-an-angle-from-norms-and-a-dot-product"],
   title: t("The cosine of an angle from norms and a dot product", "由范数和点积求夹角余弦"),
   explanation: t(
     "In $\\mathbb{R}^n$, the angle between two nonzero vectors is defined through the formula $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$. The Cauchy-Schwarz inequality guarantees that the resulting cosine lies between $-1$ and $1$. So a dot product divided by the two norms gives the cosine, even in dimensions where no picture of the angle can be drawn.",
@@ -2328,6 +2346,7 @@ const cosineFromDot: KnowledgePointDef = {
 
 const unitVectorEntry: KnowledgePointDef = {
   id: "an-entry-of-a-unit-vector",
+  figure: linearAlgebraDrawings2["norm-of-a-vector-in-n-dimensional-euclidean-space#an-entry-of-a-unit-vector"],
   title: t("An entry of a unit vector", "单位向量的分量"),
   explanation: t(
     "Dividing a nonzero vector by its norm gives a vector of length one in the same direction. Each entry is divided by the same number, so the ratios between entries do not change. These entries are the direction cosines of the vector, the cosines of its angles with the coordinate axes, and their squares always add to one.",
@@ -2393,6 +2412,10 @@ const monomialNorm: KnowledgePointDef = {
 
 const triangleBounds: KnowledgePointDef = {
   id: "the-range-of-a-norm-from-the-triangle-inequality",
+  figure:
+    linearAlgebraDrawings2[
+      "pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces#the-range-of-a-norm-from-the-triangle-inequality"
+    ],
   title: t("The range of a norm from the triangle inequality", "由三角不等式求范数的范围"),
   explanation: t(
     "The triangle inequality gives an upper bound, $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$, reached when the vectors point the same way. Applying it again to $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ gives the lower bound $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$, reached when they point opposite ways. Orthogonal vectors give a value strictly in between.",
@@ -2658,6 +2681,7 @@ const coefficientOfDependentVector: KnowledgePointDef = {
 
 const determinantOfChangeOfBasis: KnowledgePointDef = {
   id: "the-determinant-of-a-change-of-coordinates-matrix",
+  figure: linearAlgebraDrawings1["the-change-of-coordinates-matrix#the-determinant-of-a-change-of-coordinates-matrix"],
   title: t("The determinant of a change of coordinates matrix", "坐标变换矩阵的行列式"),
   explanation: t(
     "Let the matrices $B$ and $C$ have two bases as their columns. A vector with $B$-coordinates $\\mathbf{x}$ is $B\\mathbf{x}$, and its $C$-coordinates are therefore $C^{-1}B\\mathbf{x}$. So the matrix that changes coordinates from $B$ to $C$ is $C^{-1}B$, and its determinant is the ratio $\\frac{\\det B}{\\det C}$. The ratio measures how the area of the $B$ parallelogram compares with that of the $C$ parallelogram, and the reverse change has the reciprocal determinant.",
@@ -2826,6 +2850,7 @@ const countingDiagonalForms: KnowledgePointDef = {
 
 const angleInRotationScaling: KnowledgePointDef = {
   id: "the-angle-in-a-rotation-scaling-form",
+  figure: linearAlgebraDrawings1["reducing-real-2x2-matrices-to-rotation-scaling-form#the-angle-in-a-rotation-scaling-form"],
   title: t("The angle in a rotation-scaling form", "旋转缩放形式中的角"),
   explanation: t(
     "The matrix with rows $(a, -b)$ and $(b, a)$ is a rotation followed by a scaling. Its scaling factor is $r = \\sqrt{a^2 + b^2}$, and dividing every entry by $r$ leaves the rotation matrix for an angle $\\theta$. Comparing entries gives $\\cos\\theta = \\frac{a}{r}$ and $\\sin\\theta = \\frac{b}{r}$. In terms of eigenvalues, $a \\pm bi = re^{\\pm i\\theta}$, so that this angle is the argument of a complex eigenvalue.",
@@ -3027,6 +3052,10 @@ const scalarInComplexInnerProduct: KnowledgePointDef = {
 
 const traceOfReflection: KnowledgePointDef = {
   id: "the-trace-of-a-reflection-through-a-subspace",
+  figure:
+    linearAlgebraDrawings2[
+      "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases#the-trace-of-a-reflection-through-a-subspace"
+    ],
   title: t("The trace of a reflection through a subspace", "关于子空间的反射的迹"),
   explanation: t(
     "The orthogonal projection $P$ onto a subspace has the eigenvalue 1 on the subspace and 0 on its orthogonal complement. The reflection through the subspace is $R = 2P - I$, which keeps the subspace and reverses its complement, so that its eigenvalues are $1$ and $-1$. Since the trace is the sum of the eigenvalues, it counts the dimension of the subspace minus that of its complement, with no need to know any entry of the matrix.",
@@ -3214,6 +3243,7 @@ const ellipseForms = [...Array(12).keys()].flatMap((i) =>
 
 const ellipseAreaFromForm: KnowledgePointDef = {
   id: "the-area-of-an-ellipse-from-its-quadratic-form",
+  figure: linearAlgebraDrawings2["reducing-a-quadratic-curve-to-its-principal-axes#the-area-of-an-ellipse-from-its-quadratic-form"],
   title: t("The area of an ellipse from its quadratic form", "由二次型求椭圆的面积"),
   explanation: t(
     "After rotating to principal axes, a positive definite form becomes $\\lambda_1u^2 + \\lambda_2v^2 = d$, an ellipse with semi-axes $\\sqrt{\\frac{d}{\\lambda_1}}$ and $\\sqrt{\\frac{d}{\\lambda_2}}$. Its area is $\\pi$ times their product, $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$. Since the product of the eigenvalues is the determinant of the matrix, the eigenvalues never need to be found. For $ax^2 + 2bxy + cy^2$, the determinant is $ac - b^2$, and the rotation does not change the area.",

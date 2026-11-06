@@ -4,6 +4,10 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
+import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
+import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
+import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -130,62 +134,68 @@ const tangentOnStraightPath = point(
   },
 );
 
-const normalOfParabola = point(
-  "the-normal-points-to-the-concave-side",
-  ["The normal points to the concave side", "法向量指向凹的一侧"],
-  [
-    "The principal normal is perpendicular to the tangent, and of the two perpendicular unit vectors it is the one toward which the curve bends. So for a parabola opening downward, $\\mathbf{N}$ has a negative second component.",
-    "主法向量垂直于切向量，在两个垂直的单位向量中，它是曲线弯向的那一个。所以对开口向下的抛物线，$\\mathbf{N}$ 的第二个分量为负。",
-  ],
-  (rng) => {
-    const [p, q, h] = rng.pick(triples);
-    const b = nz(rng, 4);
-    const t0 = Q.of(p, 2 * b * q);
-    const answer = Q.of(Math.sign(b) * q, h);
-    const r = br("t", poly([b, "t^{2}"]));
-    return ask(
-      [
-        `Find the second component of the principal unit normal of $\\mathbf{r}(t) = ${r}$ at $t = ${t0.toLatex()}$.`,
-        `求 $\\mathbf{r}(t) = ${r}$ 在 $t = ${t0.toLatex()}$ 处的主单位法向量的第二个分量。`,
-      ],
-      answer,
-      [answer.neg(), Q.of(p, h), Q.of(-Math.sign(b) * p, h)],
-      [
-        `The slope there is $\\frac{${p}}{${q}}$, so $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$. The perpendicular direction toward the bend has second component $${answer.toLatex()}$, as the parabola opens ${b > 0 ? "upward" : "downward"}.`,
-        `该处斜率是 $\\frac{${p}}{${q}}$，所以 $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$。抛物线开口${b > 0 ? "向上" : "向下"}，弯曲方向上的垂直单位向量的第二个分量是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const normalOfParabola = {
+  ...point(
+    "the-normal-points-to-the-concave-side",
+    ["The normal points to the concave side", "法向量指向凹的一侧"],
+    [
+      "The principal normal is perpendicular to the tangent, and of the two perpendicular unit vectors it is the one toward which the curve bends. So for a parabola opening downward, $\\mathbf{N}$ has a negative second component.",
+      "主法向量垂直于切向量，在两个垂直的单位向量中，它是曲线弯向的那一个。所以对开口向下的抛物线，$\\mathbf{N}$ 的第二个分量为负。",
+    ],
+    (rng) => {
+      const [p, q, h] = rng.pick(triples);
+      const b = nz(rng, 4);
+      const t0 = Q.of(p, 2 * b * q);
+      const answer = Q.of(Math.sign(b) * q, h);
+      const r = br("t", poly([b, "t^{2}"]));
+      return ask(
+        [
+          `Find the second component of the principal unit normal of $\\mathbf{r}(t) = ${r}$ at $t = ${t0.toLatex()}$.`,
+          `求 $\\mathbf{r}(t) = ${r}$ 在 $t = ${t0.toLatex()}$ 处的主单位法向量的第二个分量。`,
+        ],
+        answer,
+        [answer.neg(), Q.of(p, h), Q.of(-Math.sign(b) * p, h)],
+        [
+          `The slope there is $\\frac{${p}}{${q}}$, so $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$. The perpendicular direction toward the bend has second component $${answer.toLatex()}$, as the parabola opens ${b > 0 ? "upward" : "downward"}.`,
+          `该处斜率是 $\\frac{${p}}{${q}}$，所以 $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$。抛物线开口${b > 0 ? "向上" : "向下"}，弯曲方向上的垂直单位向量的第二个分量是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings1["principal-normal-vectors#the-normal-points-to-the-concave-side"],
+};
 
-const helixBinormal = point(
-  "the-binormal-of-a-helix",
-  ["The binormal of a helix", "螺旋线的副法向量"],
-  [
-    "The binormal $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is the unit normal of the osculating plane. On a helix it makes a constant angle with the axis, and the order of the cross product fixes its sign, so $\\mathbf{N} \\times \\mathbf{T}$ would give the opposite vector.",
-    "副法向量 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是密切平面的单位法向量。在螺旋线上，它与轴的夹角不变，叉积的顺序决定其符号，所以 $\\mathbf{N} \\times \\mathbf{T}$ 会得到相反的向量。",
-  ],
-  (rng) => {
-    const [a, b, c] = rng.pick(triples);
-    const u = rng.int(1, 3);
-    const third = rng.bool();
-    const answer = third ? Q.of(a, c) : Q.of(-b, c);
-    const r = br(`${a * u}\\cos t`, `${a * u}\\sin t`, `${b * u}t`);
-    const name: Pair = third ? ["third", "第三"] : ["second", "第二"];
-    return ask(
-      [
-        `Find the ${name[0]} component of the unit binormal $\\mathbf{B}(0)$ of $\\mathbf{r}(t) = ${r}$.`,
-        `求 $\\mathbf{r}(t) = ${r}$ 的单位副法向量 $\\mathbf{B}(0)$ 的${name[1]}个分量。`,
-      ],
-      answer,
-      [answer.neg(), third ? Q.of(b, c) : Q.of(a, c), Q.of(a, b)],
-      [
-        `At $t = 0$, $\\mathbf{T} = ${br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`)}$ and $\\mathbf{N} = ${br(-1, 0, 0)}$. Their cross product is $${br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`)}$, so the component is $${answer.toLatex()}$.`,
-        `在 $t = 0$ 处，$\\mathbf{T} = ${br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`)}$，$\\mathbf{N} = ${br(-1, 0, 0)}$。叉积是 $${br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`)}$，所以该分量是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const helixBinormal = {
+  ...point(
+    "the-binormal-of-a-helix",
+    ["The binormal of a helix", "螺旋线的副法向量"],
+    [
+      "The binormal $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is the unit normal of the osculating plane. On a helix it makes a constant angle with the axis, and the order of the cross product fixes its sign, so $\\mathbf{N} \\times \\mathbf{T}$ would give the opposite vector.",
+      "副法向量 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是密切平面的单位法向量。在螺旋线上，它与轴的夹角不变，叉积的顺序决定其符号，所以 $\\mathbf{N} \\times \\mathbf{T}$ 会得到相反的向量。",
+    ],
+    (rng) => {
+      const [a, b, c] = rng.pick(triples);
+      const u = rng.int(1, 3);
+      const third = rng.bool();
+      const answer = third ? Q.of(a, c) : Q.of(-b, c);
+      const r = br(`${a * u}\\cos t`, `${a * u}\\sin t`, `${b * u}t`);
+      const name: Pair = third ? ["third", "第三"] : ["second", "第二"];
+      return ask(
+        [
+          `Find the ${name[0]} component of the unit binormal $\\mathbf{B}(0)$ of $\\mathbf{r}(t) = ${r}$.`,
+          `求 $\\mathbf{r}(t) = ${r}$ 的单位副法向量 $\\mathbf{B}(0)$ 的${name[1]}个分量。`,
+        ],
+        answer,
+        [answer.neg(), third ? Q.of(b, c) : Q.of(a, c), Q.of(a, b)],
+        [
+          `At $t = 0$, $\\mathbf{T} = ${br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`)}$ and $\\mathbf{N} = ${br(-1, 0, 0)}$. Their cross product is $${br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`)}$, so the component is $${answer.toLatex()}$.`,
+          `在 $t = 0$ 处，$\\mathbf{T} = ${br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`)}$，$\\mathbf{N} = ${br(-1, 0, 0)}$。叉积是 $${br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`)}$，所以该分量是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings1["the-osculating-plane#the-binormal-of-a-helix"],
+};
 
 const inverseSquare = point(
   "the-size-of-an-inverse-square-field",
@@ -268,40 +278,43 @@ const potentialConstant = point(
   },
 );
 
-const componentCount = point(
-  "counting-connected-pieces",
-  ["Counting connected pieces", "数连通的块数"],
-  [
-    "Removing lines or curves from the plane can split it into pieces, and a removed single point does not. A line separates the plane, a circle separates inside from outside, and two crossing lines make four pieces while two parallel lines make three.",
-    "从平面上去掉直线或曲线可能把它分成几块，而去掉单个点不会。一条直线把平面分开，圆把内外分开；两条相交直线分成四块，两条平行直线分成三块。",
-  ],
-  (rng) => {
-    const a = nz(rng, 9);
-    const b = rng.pick([-8, -6, -4, -2, 2, 4, 6, 8].filter((v) => v !== a));
-    const r = rng.int(1, 9);
-    const kind = rng.int(0, 3);
-    const answer = [4, 3, 2, 1][kind] as number;
-    const set = [
-      `(${poly([1, "x"], [-a, ""])})(${poly([1, "y"], [-b, ""])}) \\ne 0`,
-      `(${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [-b, ""])}) \\ne 0`,
-      `x^{2} + y^{2} \\ne ${r * r}`,
-      `(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} \\ne 0`,
-    ][kind];
-    const whys: Pair[] = [
-      ["The removed set is two crossing lines, which leave four pieces.", "去掉的是两条相交直线，留下四块。"],
-      ["The removed set is two parallel lines, which leave three pieces.", "去掉的是两条平行直线，留下三块。"],
-      ["The removed set is a circle, which leaves the inside and the outside.", "去掉的是一个圆，留下内部和外部。"],
-      ["Only one point is removed, and the rest of the plane stays connected.", "只去掉一个点，平面的其余部分仍然连通。"],
-    ];
-    const why = whys[kind] as Pair;
-    return ask(
-      [`How many connected pieces does $\\{(x, y) : ${set}\\}$ have?`, `$\\{(x, y) : ${set}\\}$ 有多少个连通的块？`],
-      answer,
-      [1, 2, 3, 4],
-      [why[0], why[1]],
-    );
-  },
-);
+const componentCount = {
+  ...point(
+    "counting-connected-pieces",
+    ["Counting connected pieces", "数连通的块数"],
+    [
+      "Removing lines or curves from the plane can split it into pieces, and a removed single point does not. A line separates the plane, a circle separates inside from outside, and two crossing lines make four pieces while two parallel lines make three.",
+      "从平面上去掉直线或曲线可能把它分成几块，而去掉单个点不会。一条直线把平面分开，圆把内外分开；两条相交直线分成四块，两条平行直线分成三块。",
+    ],
+    (rng) => {
+      const a = nz(rng, 9);
+      const b = rng.pick([-8, -6, -4, -2, 2, 4, 6, 8].filter((v) => v !== a));
+      const r = rng.int(1, 9);
+      const kind = rng.int(0, 3);
+      const answer = [4, 3, 2, 1][kind] as number;
+      const set = [
+        `(${poly([1, "x"], [-a, ""])})(${poly([1, "y"], [-b, ""])}) \\ne 0`,
+        `(${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [-b, ""])}) \\ne 0`,
+        `x^{2} + y^{2} \\ne ${r * r}`,
+        `(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} \\ne 0`,
+      ][kind];
+      const whys: Pair[] = [
+        ["The removed set is two crossing lines, which leave four pieces.", "去掉的是两条相交直线，留下四块。"],
+        ["The removed set is two parallel lines, which leave three pieces.", "去掉的是两条平行直线，留下三块。"],
+        ["The removed set is a circle, which leaves the inside and the outside.", "去掉的是一个圆，留下内部和外部。"],
+        ["Only one point is removed, and the rest of the plane stays connected.", "只去掉一个点，平面的其余部分仍然连通。"],
+      ];
+      const why = whys[kind] as Pair;
+      return ask(
+        [`How many connected pieces does $\\{(x, y) : ${set}\\}$ have?`, `$\\{(x, y) : ${set}\\}$ 有多少个连通的块？`],
+        answer,
+        [1, 2, 3, 4],
+        [why[0], why[1]],
+      );
+    },
+  ),
+  figure: multivariableDrawings1["connected-and-simply-connected-regions#counting-connected-pieces"],
+};
 
 const roomInside = point(
   "how-much-room-an-interior-point-has",
@@ -331,31 +344,34 @@ const roomInside = point(
   },
 );
 
-const annulusBoundary = point(
-  "both-circles-belong-to-the-boundary",
-  ["Both circles belong to the boundary", "两个圆都属于边界"],
-  [
-    "The boundary of an annulus has two parts, an inner and an outer circle. Whether each circle belongs to the set does not change this: every point of each circle has points of the set and points outside the set arbitrarily close by.",
-    "圆环的边界有两部分，即内圆和外圆。各圆是否属于集合并不改变这一点：每个圆上的每一点附近都有集合内的点，也有集合外的点。",
-  ],
-  (rng) => {
-    const r1 = rng.int(1, 8);
-    const r2 = r1 + rng.int(1, 8);
-    const answer = 2 * (r1 + r2);
-    return ask(
-      [
-        `Find $\\frac{L}{\\pi}$, where $L$ is the total length of the boundary of $\\{(x, y) : ${r1 * r1} < x^{2} + y^{2} \\le ${r2 * r2}\\}$.`,
-        `求 $\\frac{L}{\\pi}$，其中 $L$ 是 $\\{(x, y) : ${r1 * r1} < x^{2} + y^{2} \\le ${r2 * r2}\\}$ 的边界总长度。`,
-      ],
-      answer,
-      [2 * r2, 2 * (r2 - r1), r1 + r2],
-      [
-        `The boundary consists of the circles of radius $${r1}$ and $${r2}$. Their lengths are $${2 * r1}\\pi$ and $${2 * r2}\\pi$, and the sum divided by $\\pi$ is $${answer}$.`,
-        `边界由半径为 $${r1}$ 和 $${r2}$ 的两个圆组成。长度分别是 $${2 * r1}\\pi$ 和 $${2 * r2}\\pi$，和除以 $\\pi$ 等于 $${answer}$。`,
-      ],
-    );
-  },
-);
+const annulusBoundary = {
+  ...point(
+    "both-circles-belong-to-the-boundary",
+    ["Both circles belong to the boundary", "两个圆都属于边界"],
+    [
+      "The boundary of an annulus has two parts, an inner and an outer circle. Whether each circle belongs to the set does not change this: every point of each circle has points of the set and points outside the set arbitrarily close by.",
+      "圆环的边界有两部分，即内圆和外圆。各圆是否属于集合并不改变这一点：每个圆上的每一点附近都有集合内的点，也有集合外的点。",
+    ],
+    (rng) => {
+      const r1 = rng.int(1, 8);
+      const r2 = r1 + rng.int(1, 8);
+      const answer = 2 * (r1 + r2);
+      return ask(
+        [
+          `Find $\\frac{L}{\\pi}$, where $L$ is the total length of the boundary of $\\{(x, y) : ${r1 * r1} < x^{2} + y^{2} \\le ${r2 * r2}\\}$.`,
+          `求 $\\frac{L}{\\pi}$，其中 $L$ 是 $\\{(x, y) : ${r1 * r1} < x^{2} + y^{2} \\le ${r2 * r2}\\}$ 的边界总长度。`,
+        ],
+        answer,
+        [2 * r2, 2 * (r2 - r1), r1 + r2],
+        [
+          `The boundary consists of the circles of radius $${r1}$ and $${r2}$. Their lengths are $${2 * r1}\\pi$ and $${2 * r2}\\pi$, and the sum divided by $\\pi$ is $${answer}$.`,
+          `边界由半径为 $${r1}$ 和 $${r2}$ 的两个圆组成。长度分别是 $${2 * r1}\\pi$ 和 $${2 * r2}\\pi$，和除以 $\\pi$ 等于 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings1["interiors-and-boundaries-of-sets#both-circles-belong-to-the-boundary"],
+};
 
 const complementKind = point(
   "the-complement-of-an-open-or-closed-set",
@@ -424,61 +440,67 @@ const levelToAxis = point(
   },
 );
 
-const cylinderSlice = point(
-  "an-oblique-slice-of-a-cylinder",
-  ["An oblique slice of a cylinder", "圆柱的斜截面"],
-  [
-    "A plane that cuts a circular cylinder at an angle gives an ellipse, not a circle. One semi-axis stays equal to the radius, while the other is longer by the factor $\\sqrt{1 + m^{2}}$, where $m$ is the slope of the plane.",
-    "斜着切割圆柱的平面得到的是椭圆，不是圆。一个半轴仍等于半径，另一个半轴长出因子 $\\sqrt{1 + m^{2}}$，其中 $m$ 是平面的斜率。",
-  ],
-  (rng) => {
-    const [p, q, h] = rng.pick(triples);
-    const k = rng.int(1, 5);
-    const R = q * k;
-    const m = Q.of(p, q);
-    const answer = h * k;
-    return ask(
-      [
-        `The plane $z = ${m.toLatex()}x$ cuts the cylinder $x^{2} + y^{2} = ${R * R}$ in an ellipse. Find the length of its semi-major axis.`,
-        `平面 $z = ${m.toLatex()}x$ 截圆柱 $x^{2} + y^{2} = ${R * R}$ 得到一个椭圆。求它的半长轴长度。`,
-      ],
-      answer,
-      [R, p * k, (p + q) * k],
-      [
-        `The point of the cut farthest from the center has $x = ${R}$ and $z = ${p * k}$. Its distance from the center is $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$.`,
-        `截线上离中心最远的点满足 $x = ${R}$，$z = ${p * k}$。它到中心的距离是 $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const cylinderSlice = {
+  ...point(
+    "an-oblique-slice-of-a-cylinder",
+    ["An oblique slice of a cylinder", "圆柱的斜截面"],
+    [
+      "A plane that cuts a circular cylinder at an angle gives an ellipse, not a circle. One semi-axis stays equal to the radius, while the other is longer by the factor $\\sqrt{1 + m^{2}}$, where $m$ is the slope of the plane.",
+      "斜着切割圆柱的平面得到的是椭圆，不是圆。一个半轴仍等于半径，另一个半轴长出因子 $\\sqrt{1 + m^{2}}$，其中 $m$ 是平面的斜率。",
+    ],
+    (rng) => {
+      const [p, q, h] = rng.pick(triples);
+      const k = rng.int(1, 5);
+      const R = q * k;
+      const m = Q.of(p, q);
+      const answer = h * k;
+      return ask(
+        [
+          `The plane $z = ${m.toLatex()}x$ cuts the cylinder $x^{2} + y^{2} = ${R * R}$ in an ellipse. Find the length of its semi-major axis.`,
+          `平面 $z = ${m.toLatex()}x$ 截圆柱 $x^{2} + y^{2} = ${R * R}$ 得到一个椭圆。求它的半长轴长度。`,
+        ],
+        answer,
+        [R, p * k, (p + q) * k],
+        [
+          `The point of the cut farthest from the center has $x = ${R}$ and $z = ${p * k}$. Its distance from the center is $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$.`,
+          `截线上离中心最远的点满足 $x = ${R}$，$z = ${p * k}$。它到中心的距离是 $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings2["cylinders#an-oblique-slice-of-a-cylinder"],
+};
 
-const planeMeetsParaboloid = point(
-  "a-plane-meets-a-paraboloid-over-a-circle",
-  ["A plane meets a paraboloid over a circle", "平面与抛物面的交线投影是圆"],
-  [
-    "Eliminating $z$ between a plane and the paraboloid $z = x^{2} + y^{2}$ leaves an equation in $x$ and $y$. Completing the square shows that the intersection lies over a circle in the $xy$-plane, whose center and radius come from the coefficients of the plane.",
-    "在平面和抛物面 $z = x^{2} + y^{2}$ 之间消去 $z$，得到关于 $x$ 和 $y$ 的方程。配方后可知，交线在 $xy$ 平面上的投影是一个圆，其圆心和半径由平面的系数决定。",
-  ],
-  (rng) => {
-    const a = nz(rng, 6);
-    const b = nz(rng, 6);
-    const c = rng.int(1, 20);
-    const answer = a * a + b * b + c;
-    const plane = poly([2 * a, "x"], [2 * b, "y"], [c, ""]);
-    return ask(
-      [
-        `The plane $z = ${plane}$ meets $z = x^{2} + y^{2}$ in a curve whose projection to the $xy$-plane is a circle of radius $r$. Find $r^{2}$.`,
-        `平面 $z = ${plane}$ 与 $z = x^{2} + y^{2}$ 相交，交线在 $xy$ 平面上的投影是半径为 $r$ 的圆。求 $r^{2}$。`,
-      ],
-      answer,
-      [c, a * a + b * b - c, a + b + c],
-      [
-        `Equating gives $x^{2} + y^{2} = ${plane}$, which becomes $(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${c} + ${a * a} + ${b * b}$. So $r^{2} = ${answer}$.`,
-        `令二者相等，得 $x^{2} + y^{2} = ${plane}$，即 $(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${c} + ${a * a} + ${b * b}$。所以 $r^{2} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const planeMeetsParaboloid = {
+  ...point(
+    "a-plane-meets-a-paraboloid-over-a-circle",
+    ["A plane meets a paraboloid over a circle", "平面与抛物面的交线投影是圆"],
+    [
+      "Eliminating $z$ between a plane and the paraboloid $z = x^{2} + y^{2}$ leaves an equation in $x$ and $y$. Completing the square shows that the intersection lies over a circle in the $xy$-plane, whose center and radius come from the coefficients of the plane.",
+      "在平面和抛物面 $z = x^{2} + y^{2}$ 之间消去 $z$，得到关于 $x$ 和 $y$ 的方程。配方后可知，交线在 $xy$ 平面上的投影是一个圆，其圆心和半径由平面的系数决定。",
+    ],
+    (rng) => {
+      const a = nz(rng, 6);
+      const b = nz(rng, 6);
+      const c = rng.int(1, 20);
+      const answer = a * a + b * b + c;
+      const plane = poly([2 * a, "x"], [2 * b, "y"], [c, ""]);
+      return ask(
+        [
+          `The plane $z = ${plane}$ meets $z = x^{2} + y^{2}$ in a curve whose projection to the $xy$-plane is a circle of radius $r$. Find $r^{2}$.`,
+          `平面 $z = ${plane}$ 与 $z = x^{2} + y^{2}$ 相交，交线在 $xy$ 平面上的投影是半径为 $r$ 的圆。求 $r^{2}$。`,
+        ],
+        answer,
+        [c, a * a + b * b - c, a + b + c],
+        [
+          `Equating gives $x^{2} + y^{2} = ${plane}$, which becomes $(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${c} + ${a * a} + ${b * b}$. So $r^{2} = ${answer}$.`,
+          `令二者相等，得 $x^{2} + y^{2} = ${plane}$，即 $(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${c} + ${a * a} + ${b * b}$。所以 $r^{2} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings2["intersections-of-lines-and-planes-with-surfaces#a-plane-meets-a-paraboloid-over-a-circle"],
+};
 
 const coefficientFromPartial = point(
   "a-coefficient-from-a-partial-derivative",
@@ -597,37 +619,40 @@ const pathLimit = point(
   },
 );
 
-const steepestDescent = point(
-  "the-most-negative-rate-of-change",
-  ["The most negative rate of change", "最小的变化率"],
-  [
-    "The directional derivative along a unit vector is $|\\nabla f|\\cos\\theta$, which ranges from $-|\\nabla f|$ to $|\\nabla f|$. So the most negative rate of change occurs opposite to the gradient and equals the negative of its length, and it is zero in perpendicular directions.",
-    "沿单位向量的方向导数是 $|\\nabla f|\\cos\\theta$，范围从 $-|\\nabla f|$ 到 $|\\nabla f|$。所以最小的变化率出现在梯度的反方向，等于其长度的相反数；在垂直方向上它为零。",
-  ],
-  (rng) => {
-    const [a, b, c] = rng.pick(triples);
-    const k = rng.int(1, 3);
-    const gx = a * k * rng.pick([-1, 1]);
-    const gy = b * k * rng.pick([-1, 1]);
-    const x0 = nz(rng, 4);
-    const y0 = nz(rng, 4);
-    const p = gx - y0;
-    const q = gy - x0;
-    const answer = -c * k;
-    return ask(
-      [
-        `Find the smallest directional derivative of $f(x, y) = ${poly([p, "x"], [q, "y"], [1, "xy"])}$ at $(${x0}, ${y0})$ over all unit vectors.`,
-        `求 $f(x, y) = ${poly([p, "x"], [q, "y"], [1, "xy"])}$ 在 $(${x0}, ${y0})$ 处，所有单位向量方向上最小的方向导数。`,
-      ],
-      answer,
-      [c * k, 0, -(a + b) * k],
-      [
-        `$\\nabla f = ${br(gx, gy)}$ at the point, with length $${c * k}$. The smallest rate is opposite to the gradient, so it is $${answer}$.`,
-        `在该点 $\\nabla f = ${br(gx, gy)}$，长度是 $${c * k}$。最小的变化率在梯度的反方向，所以是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const steepestDescent = {
+  ...point(
+    "the-most-negative-rate-of-change",
+    ["The most negative rate of change", "最小的变化率"],
+    [
+      "The directional derivative along a unit vector is $|\\nabla f|\\cos\\theta$, which ranges from $-|\\nabla f|$ to $|\\nabla f|$. So the most negative rate of change occurs opposite to the gradient and equals the negative of its length, and it is zero in perpendicular directions.",
+      "沿单位向量的方向导数是 $|\\nabla f|\\cos\\theta$，范围从 $-|\\nabla f|$ 到 $|\\nabla f|$。所以最小的变化率出现在梯度的反方向，等于其长度的相反数；在垂直方向上它为零。",
+    ],
+    (rng) => {
+      const [a, b, c] = rng.pick(triples);
+      const k = rng.int(1, 3);
+      const gx = a * k * rng.pick([-1, 1]);
+      const gy = b * k * rng.pick([-1, 1]);
+      const x0 = nz(rng, 4);
+      const y0 = nz(rng, 4);
+      const p = gx - y0;
+      const q = gy - x0;
+      const answer = -c * k;
+      return ask(
+        [
+          `Find the smallest directional derivative of $f(x, y) = ${poly([p, "x"], [q, "y"], [1, "xy"])}$ at $(${x0}, ${y0})$ over all unit vectors.`,
+          `求 $f(x, y) = ${poly([p, "x"], [q, "y"], [1, "xy"])}$ 在 $(${x0}, ${y0})$ 处，所有单位向量方向上最小的方向导数。`,
+        ],
+        answer,
+        [c * k, 0, -(a + b) * k],
+        [
+          `$\\nabla f = ${br(gx, gy)}$ at the point, with length $${c * k}$. The smallest rate is opposite to the gradient, so it is $${answer}$.`,
+          `在该点 $\\nabla f = ${br(gx, gy)}$，长度是 $${c * k}$。最小的变化率在梯度的反方向，所以是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings2["the-gradient-vector#the-most-negative-rate-of-change"],
+};
 
 /** quads are integer direction vectors with integer length, as the first three entries and the last. */
 const quads = [
@@ -640,32 +665,35 @@ const quads = [
   [4, 4, 7, 9],
 ] as const;
 
-const parallelTangentPlane = point(
-  "a-tangent-plane-parallel-to-a-given-plane",
-  ["A tangent plane parallel to a given plane", "与已知平面平行的切平面"],
-  [
-    "A tangent plane to a level surface has the gradient as its normal. So a tangent plane parallel to $ax + by + cz = d$ occurs where the gradient is a multiple of $\\langle a, b, c \\rangle$. On a sphere there are two such points, opposite each other.",
-    "等值面的切平面以梯度为法向量。所以与 $ax + by + cz = d$ 平行的切平面，出现在梯度是 $\\langle a, b, c \\rangle$ 的倍数的地方。球面上有两个这样的点，彼此相对。",
-  ],
-  (rng) => {
-    const [a, b, c, h] = rng.pick(quads);
-    const k = rng.int(1, 4);
-    const R = h * k;
-    const answer = R * h;
-    return ask(
-      [
-        `Two planes $${poly([a, "x"], [b, "y"], [c, "z"])} = d$ are tangent to the sphere $x^{2} + y^{2} + z^{2} = ${R * R}$. Find the larger value of $d$.`,
-        `两个平面 $${poly([a, "x"], [b, "y"], [c, "z"])} = d$ 与球面 $x^{2} + y^{2} + z^{2} = ${R * R}$ 相切。求较大的 $d$。`,
-      ],
-      answer,
-      [R, R * (a + b + c), R * R],
-      [
-        `The tangent point is a multiple of $${br(a, b, c)}$, whose length is $${h}$, so it is $(${a * k}, ${b * k}, ${c * k})$. Substituting gives $d = ${answer}$.`,
-        `切点是 $${br(a, b, c)}$ 的倍数，这个向量的长度是 $${h}$，所以切点是 $(${a * k}, ${b * k}, ${c * k})$。代入得 $d = ${answer}$。`,
-      ],
-    );
-  },
-);
+const parallelTangentPlane = {
+  ...point(
+    "a-tangent-plane-parallel-to-a-given-plane",
+    ["A tangent plane parallel to a given plane", "与已知平面平行的切平面"],
+    [
+      "A tangent plane to a level surface has the gradient as its normal. So a tangent plane parallel to $ax + by + cz = d$ occurs where the gradient is a multiple of $\\langle a, b, c \\rangle$. On a sphere there are two such points, opposite each other.",
+      "等值面的切平面以梯度为法向量。所以与 $ax + by + cz = d$ 平行的切平面，出现在梯度是 $\\langle a, b, c \\rangle$ 的倍数的地方。球面上有两个这样的点，彼此相对。",
+    ],
+    (rng) => {
+      const [a, b, c, h] = rng.pick(quads);
+      const k = rng.int(1, 4);
+      const R = h * k;
+      const answer = R * h;
+      return ask(
+        [
+          `Two planes $${poly([a, "x"], [b, "y"], [c, "z"])} = d$ are tangent to the sphere $x^{2} + y^{2} + z^{2} = ${R * R}$. Find the larger value of $d$.`,
+          `两个平面 $${poly([a, "x"], [b, "y"], [c, "z"])} = d$ 与球面 $x^{2} + y^{2} + z^{2} = ${R * R}$ 相切。求较大的 $d$。`,
+        ],
+        answer,
+        [R, R * (a + b + c), R * R],
+        [
+          `The tangent point is a multiple of $${br(a, b, c)}$, whose length is $${h}$, so it is $(${a * k}, ${b * k}, ${c * k})$. Substituting gives $d = ${answer}$.`,
+          `切点是 $${br(a, b, c)}$ 的倍数，这个向量的长度是 $${h}$，所以切点是 $(${a * k}, ${b * k}, ${c * k})$。代入得 $d = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings2["tangent-planes-to-level-surfaces#a-tangent-plane-parallel-to-a-given-plane"],
+};
 
 const mvtBound = point(
   "a-bound-from-the-mean-value-theorem",
@@ -725,32 +753,35 @@ const cartesianFromPolar = point(
   },
 );
 
-const movingAlongLevel = point(
-  "a-velocity-that-keeps-a-function-constant",
-  ["A velocity that keeps a function constant", "使函数保持不变的速度"],
-  [
-    "By the chain rule, $\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$. The function stays constant to first order exactly when this dot product is zero, that is, when the velocity is perpendicular to the gradient, or in other words tangent to the level curve.",
-    "由链式法则，$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$。当这个点积为零时，函数在一阶上保持不变，也就是速度垂直于梯度，或者说与等值线相切。",
-  ],
-  (rng) => {
-    const p = nz(rng, 9);
-    const q = nz(rng, 9);
-    const a = nz(rng, 9);
-    const answer = Q.of(-a * p, q);
-    return ask(
-      [
-        `At an instant, a particle has $\\nabla f = ${br(p, q)}$ and $\\mathbf{r}'(t) = ${br(a, "k")}$. Find $k$ so that $\\frac{df}{dt} = 0$ at that instant.`,
-        `在某一时刻，质点处 $\\nabla f = ${br(p, q)}$，$\\mathbf{r}'(t) = ${br(a, "k")}$。求 $k$，使该时刻 $\\frac{df}{dt} = 0$。`,
-      ],
-      answer,
-      [answer.neg(), Q.of(a * q, p), a],
-      [
-        `$\\frac{df}{dt} = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k$. Setting this to zero gives $k = ${answer.toLatex()}$.`,
-        `$\\frac{df}{dt} = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k$。令它为零，得 $k = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const movingAlongLevel = {
+  ...point(
+    "a-velocity-that-keeps-a-function-constant",
+    ["A velocity that keeps a function constant", "使函数保持不变的速度"],
+    [
+      "By the chain rule, $\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$. The function stays constant to first order exactly when this dot product is zero, that is, when the velocity is perpendicular to the gradient, or in other words tangent to the level curve.",
+      "由链式法则，$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$。当这个点积为零时，函数在一阶上保持不变，也就是速度垂直于梯度，或者说与等值线相切。",
+    ],
+    (rng) => {
+      const p = nz(rng, 9);
+      const q = nz(rng, 9);
+      const a = nz(rng, 9);
+      const answer = Q.of(-a * p, q);
+      return ask(
+        [
+          `At an instant, a particle has $\\nabla f = ${br(p, q)}$ and $\\mathbf{r}'(t) = ${br(a, "k")}$. Find $k$ so that $\\frac{df}{dt} = 0$ at that instant.`,
+          `在某一时刻，质点处 $\\nabla f = ${br(p, q)}$，$\\mathbf{r}'(t) = ${br(a, "k")}$。求 $k$，使该时刻 $\\frac{df}{dt} = 0$。`,
+        ],
+        answer,
+        [answer.neg(), Q.of(a * q, p), a],
+        [
+          `$\\frac{df}{dt} = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k$. Setting this to zero gives $k = ${answer.toLatex()}$.`,
+          `$\\frac{df}{dt} = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k$。令它为零，得 $k = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings2["the-multivariable-chain-rule-in-vector-form#a-velocity-that-keeps-a-function-constant"],
+};
 
 const worstError = point(
   "the-worst-case-error-of-a-product",
@@ -781,40 +812,43 @@ const worstError = point(
   },
 );
 
-const affinePreimage = point(
-  "the-point-that-an-affine-map-sends-to-a-target",
-  ["The point that an affine map sends to a target", "仿射变换映到目标点的原像"],
-  [
-    "An affine map with nonzero determinant is invertible, so each target has exactly one preimage. Subtract the translation first, and then solve the linear system. Doing this in the wrong order, or leaving out the translation, gives a different point.",
-    "行列式不为零的仿射变换可逆，所以每个目标点恰有一个原像。先减去平移部分，再解线性方程组。顺序错误或漏掉平移，都会得到不同的点。",
-  ],
-  (rng) => {
-    const a = nz(rng, 4);
-    const b = nz(rng, 4);
-    const c = nz(rng, 4);
-    const d0 = nz(rng, 4);
-    const d = a * d0 === b * c ? -d0 : d0;
-    const x = nz(rng, 6);
-    const y = nz(rng, 6);
-    const e = nz(rng, 9);
-    const f = nz(rng, 9);
-    const u = a * x + b * y + e;
-    const v = c * x + d * y + f;
-    const map = `(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [f, ""])})`;
-    return ask(
-      [
-        `$T(x, y) = ${map}$ sends a point $(x, y)$ to $(${u}, ${v})$. Find $x$.`,
-        `$T(x, y) = ${map}$ 把点 $(x, y)$ 映到 $(${u}, ${v})$。求 $x$。`,
-      ],
-      x,
-      [y, u, -x],
-      [
-        `Subtracting the translation gives $${poly([a, "x"], [b, "y"])} = ${u - e}$ and $${poly([c, "x"], [d, "y"])} = ${v - f}$. The determinant is $${a * d - b * c}$, and solving gives $x = ${x}$ and $y = ${y}$.`,
-        `减去平移部分，得 $${poly([a, "x"], [b, "y"])} = ${u - e}$，$${poly([c, "x"], [d, "y"])} = ${v - f}$。行列式是 $${a * d - b * c}$，解得 $x = ${x}$，$y = ${y}$。`,
-      ],
-    );
-  },
-);
+const affinePreimage = {
+  ...point(
+    "the-point-that-an-affine-map-sends-to-a-target",
+    ["The point that an affine map sends to a target", "仿射变换映到目标点的原像"],
+    [
+      "An affine map with nonzero determinant is invertible, so each target has exactly one preimage. Subtract the translation first, and then solve the linear system. Doing this in the wrong order, or leaving out the translation, gives a different point.",
+      "行列式不为零的仿射变换可逆，所以每个目标点恰有一个原像。先减去平移部分，再解线性方程组。顺序错误或漏掉平移，都会得到不同的点。",
+    ],
+    (rng) => {
+      const a = nz(rng, 4);
+      const b = nz(rng, 4);
+      const c = nz(rng, 4);
+      const d0 = nz(rng, 4);
+      const d = a * d0 === b * c ? -d0 : d0;
+      const x = nz(rng, 6);
+      const y = nz(rng, 6);
+      const e = nz(rng, 9);
+      const f = nz(rng, 9);
+      const u = a * x + b * y + e;
+      const v = c * x + d * y + f;
+      const map = `(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [f, ""])})`;
+      return ask(
+        [
+          `$T(x, y) = ${map}$ sends a point $(x, y)$ to $(${u}, ${v})$. Find $x$.`,
+          `$T(x, y) = ${map}$ 把点 $(x, y)$ 映到 $(${u}, ${v})$。求 $x$。`,
+        ],
+        x,
+        [y, u, -x],
+        [
+          `Subtracting the translation gives $${poly([a, "x"], [b, "y"])} = ${u - e}$ and $${poly([c, "x"], [d, "y"])} = ${v - f}$. The determinant is $${a * d - b * c}$, and solving gives $x = ${x}$ and $y = ${y}$.`,
+          `减去平移部分，得 $${poly([a, "x"], [b, "y"])} = ${u - e}$，$${poly([c, "x"], [d, "y"])} = ${v - f}$。行列式是 $${a * d - b * c}$，解得 $x = ${x}$，$y = ${y}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings3["the-image-of-an-affine-transformation#the-point-that-an-affine-map-sends-to-a-target"],
+};
 
 const squarePreimage = point(
   "undoing-the-squaring-map",
@@ -846,31 +880,34 @@ const squarePreimage = point(
   },
 );
 
-const areaBetweenHyperbolas = point(
-  "the-area-between-hyperbolas-and-rays",
-  ["The area between hyperbolas and rays", "双曲线和射线之间的面积"],
-  [
-    "With $u = xy$ and $v = \\frac{y}{x}$ a region between hyperbolas and rays becomes a rectangle. The area element is $\\frac{1}{2v}\\,du\\,dv$, the reciprocal of the Jacobian $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$, and this is what makes a logarithm appear.",
-    "用 $u = xy$，$v = \\frac{y}{x}$，双曲线和射线之间的区域变成矩形。面积元是 $\\frac{1}{2v}\\,du\\,dv$，它是雅可比行列式 $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$ 的倒数，对数正是由此出现的。",
-  ],
-  (rng) => {
-    const p = rng.int(2, 20);
-    const q = rng.int(2, 9);
-    const answer = Q.of(p - 1, 2);
-    return ask(
-      [
-        `In the first quadrant, the region $1 \\le xy \\le ${p}$, $1 \\le \\frac{y}{x} \\le ${q}$ has area $k\\ln ${q}$. Find $k$.`,
-        `在第一象限，区域 $1 \\le xy \\le ${p}$，$1 \\le \\frac{y}{x} \\le ${q}$ 的面积是 $k\\ln ${q}$。求 $k$。`,
-      ],
-      answer,
-      [p - 1, 2 * (p - 1), Q.of(p - 1, 2 * q)],
-      [
-        `The area is $\\int_{1}^{${q}} \\int_{1}^{${p}} \\frac{1}{2v} \\, du \\, dv$. The inner integral gives $${p - 1}$, and the outer gives $\\frac{1}{2}\\ln ${q}$, so $k = ${answer.toLatex()}$.`,
-        `面积是 $\\int_{1}^{${q}} \\int_{1}^{${p}} \\frac{1}{2v} \\, du \\, dv$。内层积分给出 $${p - 1}$，外层给出 $\\frac{1}{2}\\ln ${q}$，所以 $k = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const areaBetweenHyperbolas = {
+  ...point(
+    "the-area-between-hyperbolas-and-rays",
+    ["The area between hyperbolas and rays", "双曲线和射线之间的面积"],
+    [
+      "With $u = xy$ and $v = \\frac{y}{x}$ a region between hyperbolas and rays becomes a rectangle. The area element is $\\frac{1}{2v}\\,du\\,dv$, the reciprocal of the Jacobian $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$, and this is what makes a logarithm appear.",
+      "用 $u = xy$，$v = \\frac{y}{x}$，双曲线和射线之间的区域变成矩形。面积元是 $\\frac{1}{2v}\\,du\\,dv$，它是雅可比行列式 $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$ 的倒数，对数正是由此出现的。",
+    ],
+    (rng) => {
+      const p = rng.int(2, 20);
+      const q = rng.int(2, 9);
+      const answer = Q.of(p - 1, 2);
+      return ask(
+        [
+          `In the first quadrant, the region $1 \\le xy \\le ${p}$, $1 \\le \\frac{y}{x} \\le ${q}$ has area $k\\ln ${q}$. Find $k$.`,
+          `在第一象限，区域 $1 \\le xy \\le ${p}$，$1 \\le \\frac{y}{x} \\le ${q}$ 的面积是 $k\\ln ${q}$。求 $k$。`,
+        ],
+        answer,
+        [p - 1, 2 * (p - 1), Q.of(p - 1, 2 * q)],
+        [
+          `The area is $\\int_{1}^{${q}} \\int_{1}^{${p}} \\frac{1}{2v} \\, du \\, dv$. The inner integral gives $${p - 1}$, and the outer gives $\\frac{1}{2}\\ln ${q}$, so $k = ${answer.toLatex()}$.`,
+          `面积是 $\\int_{1}^{${q}} \\int_{1}^{${p}} \\frac{1}{2v} \\, du \\, dv$。内层积分给出 $${p - 1}$，外层给出 $\\frac{1}{2}\\ln ${q}$，所以 $k = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings3["transformations-of-regions-between-curves#the-area-between-hyperbolas-and-rays"],
+};
 
 const singularJacobian = point(
   "where-a-jacobian-vanishes",
@@ -1247,31 +1284,34 @@ const howFine = point(
   },
 );
 
-const moment = point(
-  "a-nonconstant-integrand-between-a-line-and-a-parabola",
-  ["A nonconstant integrand between a line and a parabola", "直线与抛物线之间的非常数被积函数"],
-  [
-    "Over the region between $y = x^{2}$ and $y = mx$, the $y$ integral gives the height $mx - x^{2}$, and the integrand $x$ then multiplies it. The limits for $x$ come from where the curves meet, which is $x = 0$ and $x = m$ here.",
-    "在 $y = x^{2}$ 和 $y = mx$ 之间的区域上，对 $y$ 积分得到高度 $mx - x^{2}$，再乘以被积函数 $x$。$x$ 的积分限来自两曲线的交点，这里是 $x = 0$ 和 $x = m$。",
-  ],
-  (rng) => {
-    const m = rng.int(1, 6);
-    const c = rng.int(1, 12);
-    const answer = Q.of(c * m ** 4, 12);
-    return ask(
-      [
-        `Evaluate $\\iint_{D} ${poly([c, "x"])}\\,dA$, where $D$ is the region between $y = x^{2}$ and $y = ${poly([m, "x"])}$.`,
-        `求 $\\iint_{D} ${poly([c, "x"])}\\,dA$，其中 $D$ 是 $y = x^{2}$ 和 $y = ${poly([m, "x"])}$ 之间的区域。`,
-      ],
-      answer,
-      [Q.of(c * m ** 3, 6), Q.of(c * m ** 4, 4), Q.of(c * m ** 4, 3)],
-      [
-        `The curves meet at $x = 0$ and $x = ${m}$. The integral is $\\int_{0}^{${m}} ${poly([c, "x"])}(${poly([m, "x"], [-1, "x^{2}"])}) \\, dx$, which equals $${answer.toLatex()}$.`,
-        `两曲线交于 $x = 0$ 和 $x = ${m}$。积分是 $\\int_{0}^{${m}} ${poly([c, "x"])}(${poly([m, "x"], [-1, "x^{2}"])}) \\, dx$，等于 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const moment = {
+  ...point(
+    "a-nonconstant-integrand-between-a-line-and-a-parabola",
+    ["A nonconstant integrand between a line and a parabola", "直线与抛物线之间的非常数被积函数"],
+    [
+      "Over the region between $y = x^{2}$ and $y = mx$, the $y$ integral gives the height $mx - x^{2}$, and the integrand $x$ then multiplies it. The limits for $x$ come from where the curves meet, which is $x = 0$ and $x = m$ here.",
+      "在 $y = x^{2}$ 和 $y = mx$ 之间的区域上，对 $y$ 积分得到高度 $mx - x^{2}$，再乘以被积函数 $x$。$x$ 的积分限来自两曲线的交点，这里是 $x = 0$ 和 $x = m$。",
+    ],
+    (rng) => {
+      const m = rng.int(1, 6);
+      const c = rng.int(1, 12);
+      const answer = Q.of(c * m ** 4, 12);
+      return ask(
+        [
+          `Evaluate $\\iint_{D} ${poly([c, "x"])}\\,dA$, where $D$ is the region between $y = x^{2}$ and $y = ${poly([m, "x"])}$.`,
+          `求 $\\iint_{D} ${poly([c, "x"])}\\,dA$，其中 $D$ 是 $y = x^{2}$ 和 $y = ${poly([m, "x"])}$ 之间的区域。`,
+        ],
+        answer,
+        [Q.of(c * m ** 3, 6), Q.of(c * m ** 4, 4), Q.of(c * m ** 4, 3)],
+        [
+          `The curves meet at $x = 0$ and $x = ${m}$. The integral is $\\int_{0}^{${m}} ${poly([c, "x"])}(${poly([m, "x"], [-1, "x^{2}"])}) \\, dx$, which equals $${answer.toLatex()}$.`,
+          `两曲线交于 $x = 0$ 和 $x = ${m}$。积分是 $\\int_{0}^{${m}} ${poly([c, "x"])}(${poly([m, "x"], [-1, "x^{2}"])}) \\, dx$，等于 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings4["double-integrals-over-non-rectangular-domains#a-nonconstant-integrand-between-a-line-and-a-parabola"],
+};
 
 const typeTwoY = point(
   "integrating-y-over-a-region-with-horizontal-strips",
@@ -1299,37 +1339,40 @@ const typeTwoY = point(
   },
 );
 
-const withHole = point(
-  "a-region-with-a-rectangular-hole",
-  ["A region with a rectangular hole", "带矩形空洞的区域"],
-  [
-    "Additivity also works by subtraction. An integral over a rectangle with a hole equals the integral over the whole rectangle minus the integral over the hole, which is usually faster than dividing the remaining region into four rectangles.",
-    "可加性也可以用减法。带空洞的矩形上的积分，等于整个矩形上的积分减去空洞上的积分，这通常比把剩余区域分成四个矩形更快。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 3);
-    const b = a + rng.int(1, 3);
-    const W = b + rng.int(1, 3);
-    const c = rng.int(1, 3);
-    const d = c + rng.int(1, 3);
-    const H = d + rng.int(1, 3);
-    const whole = Q.of(W * W * H, 2);
-    const hole = Q.of((b * b - a * a) * (d - c), 2);
-    const answer = whole.sub(hole);
-    return ask(
-      [
-        `Evaluate $\\iint_{R} x\\,dA$, where $R$ is $[0, ${W}] \\times [0, ${H}]$ with the open rectangle $(${a}, ${b}) \\times (${c}, ${d})$ removed.`,
-        `求 $\\iint_{R} x\\,dA$，其中 $R$ 是 $[0, ${W}] \\times [0, ${H}]$ 去掉开矩形 $(${a}, ${b}) \\times (${c}, ${d})$。`,
-      ],
-      answer,
-      [whole, hole, whole.add(hole)],
-      [
-        `Over the whole rectangle the integral is $${whole.toLatex()}$, and over the hole it is $${hole.toLatex()}$. Subtracting gives $${answer.toLatex()}$.`,
-        `整个矩形上的积分是 $${whole.toLatex()}$，空洞上的积分是 $${hole.toLatex()}$。相减得 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const withHole = {
+  ...point(
+    "a-region-with-a-rectangular-hole",
+    ["A region with a rectangular hole", "带矩形空洞的区域"],
+    [
+      "Additivity also works by subtraction. An integral over a rectangle with a hole equals the integral over the whole rectangle minus the integral over the hole, which is usually faster than dividing the remaining region into four rectangles.",
+      "可加性也可以用减法。带空洞的矩形上的积分，等于整个矩形上的积分减去空洞上的积分，这通常比把剩余区域分成四个矩形更快。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 3);
+      const b = a + rng.int(1, 3);
+      const W = b + rng.int(1, 3);
+      const c = rng.int(1, 3);
+      const d = c + rng.int(1, 3);
+      const H = d + rng.int(1, 3);
+      const whole = Q.of(W * W * H, 2);
+      const hole = Q.of((b * b - a * a) * (d - c), 2);
+      const answer = whole.sub(hole);
+      return ask(
+        [
+          `Evaluate $\\iint_{R} x\\,dA$, where $R$ is $[0, ${W}] \\times [0, ${H}]$ with the open rectangle $(${a}, ${b}) \\times (${c}, ${d})$ removed.`,
+          `求 $\\iint_{R} x\\,dA$，其中 $R$ 是 $[0, ${W}] \\times [0, ${H}]$ 去掉开矩形 $(${a}, ${b}) \\times (${c}, ${d})$。`,
+        ],
+        answer,
+        [whole, hole, whole.add(hole)],
+        [
+          `Over the whole rectangle the integral is $${whole.toLatex()}$, and over the hole it is $${hole.toLatex()}$. Subtracting gives $${answer.toLatex()}$.`,
+          `整个矩形上的积分是 $${whole.toLatex()}$，空洞上的积分是 $${hole.toLatex()}$。相减得 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: multivariableDrawings4["double-integrals-over-partitioned-regions#a-region-with-a-rectangular-hole"],
+};
 
 const sumLimit = point(
   "an-inner-limit-that-is-a-sum",

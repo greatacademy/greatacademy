@@ -1,6 +1,8 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, paren, plane, poly, Q } from "@ga/subject-math";
+import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
+import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
 
 /** Pythagorean triples for clean coordinates. */
@@ -42,6 +44,7 @@ export const simpleClosedAndOrientedCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "identifying-curve-topologies-and-orientations",
+      figure: multivariableDrawings5["simple-closed-and-oriented-curves#identifying-curve-topologies-and-orientations"],
       title: t("Identifying curve topologies and orientations", "识别曲线的拓扑特征与定向"),
       explanation: t(
         "Curve classification:\n- **Simple & closed**: Circle, ellipse, boundary of a polygon (no self-intersections, closed loop).\n- **Closed but not simple**: Figure-eight curve (crosses itself at the origin).\n- **Simple but not closed**: Line segment, open parabolic arc.",
@@ -161,6 +164,7 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-scalar-line-integrals-using-arc-length",
+      figure: multivariableDrawings5["line-integrals-of-scalar-functions#evaluating-scalar-line-integrals-using-arc-length"],
       title: t("Evaluating scalar line integrals using arc length", "利用弧长微元计算标量曲线积分"),
       explanation: t(
         "A scalar line integral adds up the function's values along the curve weighted by small lengths, so the integrand includes the speed of the parametrization. For a curve parameterized by $\\mathbf{r}(t)$ on $[a, b]$, the line integral is:\n\n$$\\int_C f(x, y)\\,ds = \\int_a^b f(\\mathbf{r}(t))\\,\\|\\mathbf{r}'(t)\\|\\,dt.$$",
@@ -206,6 +210,7 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
     },
     {
       id: "a-scalar-line-integral-of-xy-along-a-segment",
+      figure: multivariableDrawings5["line-integrals-of-scalar-functions#a-scalar-line-integral-of-xy-along-a-segment"],
       title: t("A scalar line integral of $cxy$ along a segment", "沿线段计算 $cxy$ 的标量线积分"),
       explanation: t(
         "A scalar line integral adds up the values of $f$ weighted by arc length, so the first step is always to express both $f$ and $ds$ in terms of one parameter. Parametrize the segment from $(0, 0)$ to $(x_1, y_1)$ by $\\mathbf{r}(t) = (x_1t, y_1t)$ for $0 \\le t \\le 1$. Then $ds = \\|\\mathbf{r}'(t)\\|\\,dt = L\\,dt$ with $L = \\sqrt{x_1^2 + y_1^2}$, and\n\n$$\\int_C c\\,xy\\,ds = \\int_0^1 c\\,x_1y_1t^2 \\cdot L\\,dt = \\frac{c\\,x_1y_1L}{3}.$$",
@@ -247,6 +252,7 @@ export const propertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "invariance-under-orientation-reversal",
+      figure: multivariableDrawings5["properties-of-line-integrals-of-scalar-functions#invariance-under-orientation-reversal"],
       title: t("Invariance under orientation reversal", "标量曲线积分对定向反转的对称性"),
       explanation: t(
         "Because arc length $ds = \\|\\mathbf{r}'(t)\\|\\,dt$ is always non-negative, reversing the direction of traversal does not change the sign of a scalar line integral:\n\n$$\\int_{-C} f\\,ds = \\int_C f\\,ds.$$",
@@ -324,6 +330,10 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfX: Top
   knowledgePoints: [
     {
       id: "line-integrals-along-explicit-curves-y-equals-g-of-x",
+      figure:
+        multivariableDrawings5[
+          "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-x#line-integrals-along-explicit-curves-y-equals-g-of-x"
+        ],
       title: t("Line integrals along explicit curves y = g(x)", "计算沿显式曲线 y = g(x) 的标量曲线积分"),
       explanation: t(
         "When the curve is a graph, use the horizontal variable as the parameter, and the arc length element includes the square root of one plus the square of the slope. For $y = mx$ with $0 \\le x \\le a$, the arc length differential is $ds = \\sqrt{1 + m^2}\\,dx$. Integrating $kx$ yields:\n\n$$\\int_C kx\\,ds = k\\sqrt{1 + m^2} \\int_0^a x\\,dx = k\\sqrt{1 + m^2}\\frac{a^2}{2}.$$",
@@ -368,6 +378,10 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfX: Top
     },
     {
       id: "integrating-x-squared-along-a-line-through-the-origin",
+      figure:
+        multivariableDrawings5[
+          "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-x#integrating-x-squared-along-a-line-through-the-origin"
+        ],
       title: t("Integrating $kx^2$ along a line $y = mx$", "沿直线 $y = mx$ 积分 $kx^2$"),
       explanation: t(
         "For a path $y = g(x)$, $a \\le x \\le b$, the arc length element is $ds = \\sqrt{1 + g'(x)^2}\\,dx$. On the line $y = \\frac{q}{p}x$ this is the constant $\\frac{L}{p}\\,dx$ with $L = \\sqrt{p^2 + q^2}$. So\n\n$$\\int_C k\\,x^2\\,ds = \\frac{kL}{p}\\int_0^p x^2\\,dx = \\frac{k\\,p^2L}{3}.$$",
@@ -455,6 +469,10 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfY: Top
     },
     {
       id: "integrating-y-squared-along-a-line-x-equals-my",
+      figure:
+        multivariableDrawings5[
+          "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-y#integrating-y-squared-along-a-line-x-equals-my"
+        ],
       title: t("Integrating $ky^2$ along a line $x = my$", "沿直线 $x = my$ 积分 $ky^2$"),
       explanation: t(
         "For a path $x = h(y)$, $c \\le y \\le d$, the arc length element is $ds = \\sqrt{1 + h'(y)^2}\\,dy$, and the integral is taken in $y$. On the line $x = \\frac{p}{q}y$ this is $\\frac{L}{q}\\,dy$ with $L = \\sqrt{p^2 + q^2}$, so\n\n$$\\int_C k\\,y^2\\,ds = \\frac{kL}{q}\\int_0^q y^2\\,dy = \\frac{k\\,q^2L}{3}.$$",
@@ -641,6 +659,7 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
     },
     {
       id: "integrating-a-quadratic-density-around-a-circle",
+      figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-circles#integrating-a-quadratic-density-around-a-circle"],
       title: t("Integrating $a + bx^2$ around a circle", "绕圆积分 $a + bx^2$"),
       explanation: t(
         "On a circle the arc length element is especially simple, because the speed of the standard parametrization is constant and equal to the radius. Parametrize the circle of radius $R$ by $(R\\cos t, R\\sin t)$, so $ds = R\\,dt$. A constant $a$ gives $a \\cdot 2\\pi R$. For $x^2$ use $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\pi$:\n\n$$\\int_C x^2\\,ds = \\int_0^{2\\pi} R^2\\cos^2 t \\cdot R\\,dt = \\pi R^3.$$\n\nSo $\\int_C (a + bx^2)\\,ds = \\pi(2aR + bR^3)$.",
@@ -737,6 +756,8 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
     },
     {
       id: "spotting-a-zero-line-integral-on-an-ellipse-by-symmetry",
+      figure:
+        multivariableDrawings5["line-integrals-of-scalar-functions-over-ellipses#spotting-a-zero-line-integral-on-an-ellipse-by-symmetry"],
       title: t("Spotting a zero integral on an ellipse by symmetry", "利用对称性识别椭圆上为零的积分"),
       explanation: t(
         "The arc length of an ellipse has no elementary formula, but symmetry can still decide some integrals. The ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is symmetric under $x \\mapsto -x$ and under $y \\mapsto -y$, and $ds$ is unchanged by these reflections. So $\\oint_C f\\,ds = 0$ whenever $f$ is odd in $x$ or odd in $y$, such as $x$, $xy^2$ or $y^3$, and also for a sum of such terms. Functions like $x^2$ or $x^2 + y^4$ are positive and give a positive integral.",
@@ -861,6 +882,7 @@ export const lineIntegralsOfScalarFunctionsOverPolarCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "arc-length-element-in-polar-coordinates",
+      figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-polar-curves#arc-length-element-in-polar-coordinates"],
       title: t("Arc length element in polar coordinates", "极坐标下的弧长微元计算"),
       explanation: t(
         "For a polar curve the arc length element combines the change in radius with the sideways motion, which is the radius times the change in angle. For a curve given by $r = g(\\theta)$ on $[\\alpha, \\beta]$, the line integral is:\n\n$$\\int_C f(r, \\theta)\\,ds = \\int_\\alpha^\\beta f(g(\\theta), \\theta)\\sqrt{[g(\\theta)]^2 + [g'(\\theta)]^2}\\,d\\theta.$$",
@@ -901,6 +923,7 @@ export const lineIntegralsOfScalarFunctionsOverPolarCurves: TopicDef = {
     },
     {
       id: "the-mass-of-a-cardioid-wire",
+      figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-polar-curves#the-mass-of-a-cardioid-wire"],
       title: t("The mass of a cardioid-shaped wire", "心形线导线的质量"),
       explanation: t(
         "For a polar curve $r = r(\\theta)$, $ds = \\sqrt{r^2 + (dr/d\\theta)^2}\\,d\\theta$. For the cardioid $r = a(1 + \\cos\\theta)$,\n\n$$r^2 + r'^2 = a^2(2 + 2\\cos\\theta) = 4a^2\\cos^2\\tfrac{\\theta}{2},$$\n\nso $ds = 2a\\left|\\cos\\tfrac{\\theta}{2}\\right|d\\theta$ and the whole curve has length $\\int_0^{2\\pi} 2a\\left|\\cos\\tfrac{\\theta}{2}\\right|d\\theta = 8a$. The same holds for $a(1 - \\cos\\theta)$ and $a(1 \\pm \\sin\\theta)$, which are rotations of it. A wire of constant density $k$ along it has mass $8ak$.",
@@ -984,6 +1007,7 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
     },
     {
       id: "x-dy-versus-y-dx-on-a-parametric-parabola",
+      figure: multivariableDrawings5["line-integrals-with-respect-to-x-and-y#x-dy-versus-y-dx-on-a-parametric-parabola"],
       title: t("$\\int x\\,dy$ versus $\\int y\\,dx$ on a parabola", "抛物线上的 $\\int x\\,dy$ 与 $\\int y\\,dx$"),
       explanation: t(
         "On a parametric curve $x = x(t)$, $y = y(t)$, replace $dx$ by $x'(t)\\,dt$ and $dy$ by $y'(t)\\,dt$. For $x = pt$, $y = qt^2$, $0 \\le t \\le 1$:\n\n$$\\int_C y\\,dx = \\int_0^1 qt^2 \\cdot p\\,dt = \\frac{pq}{3}, \\qquad \\int_C x\\,dy = \\int_0^1 pt \\cdot 2qt\\,dt = \\frac{2pq}{3}.$$\n\nThe two are different integrals; which differential appears matters.",
@@ -1032,6 +1056,8 @@ export const propertiesOfLineIntegralsWithRespectToXAndY: TopicDef = {
   knowledgePoints: [
     {
       id: "orientation-reversal-for-differential-integrals",
+      figure:
+        multivariableDrawings5["properties-of-line-integrals-with-respect-to-x-and-y#orientation-reversal-for-differential-integrals"],
       title: t("Orientation reversal for differential integrals", "坐标微分积分在定向反转下的变号法则"),
       explanation: t(
         "Unlike integrals with respect to arc length, these integrals depend on direction, so travelling the curve backwards changes the sign of the result. Reversing the curve's direction negates coordinate differentials $dx \\to -dx$ and $dy \\to -dy$, so:\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy).$$",
@@ -1251,6 +1277,7 @@ export const sumsOfLineIntegralsWithRespectToXAndY: TopicDef = {
     },
     {
       id: "p-dx-plus-q-dy-along-a-two-segment-path",
+      figure: multivariableDrawings5["sums-of-line-integrals-with-respect-to-x-and-y#p-dx-plus-q-dy-along-a-two-segment-path"],
       title: t("$P\\,dx + Q\\,dy$ along a two-segment path", "沿两段折线计算 $P\\,dx + Q\\,dy$"),
       explanation: t(
         "Split a polygonal path into segments. On a horizontal segment $dy = 0$, so only the $P\\,dx$ term survives, with $y$ held fixed. On a vertical segment $dx = 0$, so only $Q\\,dy$ survives, with $x$ held fixed. For $\\int_C p\\,y\\,dx + q\\,x\\,dy$ two paths between the same points can give different values, because the field $\\langle py, qx \\rangle$ is conservative only when $p = q$.",
@@ -1357,6 +1384,8 @@ export const lineIntegralsOfVectorValuedFunctionsOverParametricCurves: TopicDef 
     },
     {
       id: "a-rotational-field-along-a-circular-arc",
+      figure:
+        multivariableDrawings6["line-integrals-of-vector-valued-functions-over-parametric-curves#a-rotational-field-along-a-circular-arc"],
       title: t("A rotational field along a circular arc", "旋转场沿圆弧的线积分"),
       explanation: t(
         "To evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$, substitute the parametrization into the field, take the dot product with the velocity, and integrate in $t$. For $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$, $\\mathbf{r}'(t) = (-R\\sin t, R\\cos t)$. The field $\\mathbf{F} = \\langle -ay, ax \\rangle$ at $\\mathbf{r}(t)$ is $(-aR\\sin t, aR\\cos t)$, so\n\n$$\\mathbf{F} \\cdot \\mathbf{r}'(t) = aR^2(\\sin^2 t + \\cos^2 t) = aR^2,$$\n\na constant. Over $0 \\le t \\le \\theta$ the integral is $aR^2\\theta$.",
@@ -1449,6 +1478,10 @@ export const lineIntegralsOfVectorValuedFunctionsOverGeneralCurves: TopicDef = {
     },
     {
       id: "a-vector-line-integral-along-a-graph-y-equals-x-squared",
+      figure:
+        multivariableDrawings6[
+          "line-integrals-of-vector-valued-functions-over-general-curves#a-vector-line-integral-along-a-graph-y-equals-x-squared"
+        ],
       title: t("A vector line integral along $y = x^2$", "沿 $y = x^2$ 的向量线积分"),
       explanation: t(
         "A curve given as a graph needs no new parameter, and the whole integral becomes an ordinary integral in $x$. A graph $y = g(x)$ is parametrized by $x$ itself: $\\mathbf{r}(x) = (x, g(x))$, so $dx = dx$ and $dy = g'(x)\\,dx$. For $\\mathbf{F} = \\langle a\\,xy, b \\rangle$ along $y = x^2$ from $x = 0$ to $x = c$:\n\n$$\\int_C a\\,xy\\,dx + b\\,dy = \\int_0^c (a x^3 + 2b x)\\,dx = \\frac{ac^4}{4} + bc^2.$$",
@@ -1534,6 +1567,7 @@ export const interpretingLineIntegralsOfVectorValuedFunctions: TopicDef = {
     },
     {
       id: "the-sign-of-a-vector-line-integral",
+      figure: multivariableDrawings6["interpreting-line-integrals-of-vector-valued-functions#the-sign-of-a-vector-line-integral"],
       title: t("The sign of a vector line integral", "向量线积分的符号"),
       explanation: t(
         "$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds$ adds up the component of $\\mathbf{F}$ along the direction of motion. It is positive when the field mostly pushes along the path, negative when it mostly pushes against it, and zero when the field is perpendicular to the path everywhere. A radial field $\\langle x, y \\rangle$ is perpendicular to every circle centered at the origin, and a rotational field $\\langle -y, x \\rangle$ is perpendicular to every ray from the origin.",
@@ -2018,6 +2052,7 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
     },
     {
       id: "a-nonzero-circulation-rules-out-a-potential",
+      figure: multivariableDrawings6["conservative-vector-fields-and-closed-paths#a-nonzero-circulation-rules-out-a-potential"],
       title: t("A nonzero circulation rules out a potential", "非零环量说明不存在势函数"),
       explanation: t(
         "If $\\mathbf{F}$ is conservative, its circulation around every closed curve is $0$. So a single closed curve with nonzero circulation proves that $\\mathbf{F}$ has no potential. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ around the counterclockwise circle of radius $R$, with $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$,\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2.$$\n\nThis is nonzero unless $b = -a$, and $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ is indeed conservative.",
@@ -2343,6 +2378,7 @@ export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
   knowledgePoints: [
     {
       id: "outward-normals-on-a-circle",
+      figure: multivariableDrawings6["outward-pointing-unit-normal-vectors-in-2d#outward-normals-on-a-circle"],
       title: t("Outward normals on a circle", "圆上的外法向量"),
       explanation: t(
         "When a closed curve is traversed counterclockwise, the region it encloses is always on the left, so turning the tangent a quarter turn clockwise makes it point away from the region. Turning $\\langle x', y' \\rangle$ clockwise gives $\\langle y', -x' \\rangle$; dividing by its length makes it a unit vector. For the circle $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$, $\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$, so\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\nthe position vector divided by the radius.",
@@ -2384,6 +2420,7 @@ export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
     },
     {
       id: "outward-normals-on-a-polygon",
+      figure: multivariableDrawings6["outward-pointing-unit-normal-vectors-in-2d#outward-normals-on-a-polygon"],
       title: t("Outward normals on a polygon side", "多边形边上的外法向量"),
       explanation: t(
         "On a side of a polygon traversed counterclockwise, the tangent direction is the vector from the start of the side to its end. If that vector is $\\langle d_x, d_y \\rangle$, the outward unit normal is\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\nthe same along the whole side, because a straight side never changes direction.",
@@ -2442,6 +2479,7 @@ export const circulation: TopicDef = {
   knowledgePoints: [
     {
       id: "circulation-around-a-rectangle",
+      figure: multivariableDrawings6["circulation#circulation-around-a-rectangle"],
       title: t("Circulation around a rectangle", "沿矩形的环量"),
       explanation: t(
         "Circulation is the line integral of the tangential component of the field around a closed curve, so it measures how strongly the field pushes along the curve. Around a rectangle, add the four sides: on a horizontal side only $P\\,dx$ contributes, and on a vertical side only $Q\\,dy$, with $dx < 0$ along the top and $dy < 0$ along the left side when traversing counterclockwise.",
@@ -2479,6 +2517,7 @@ export const circulation: TopicDef = {
     },
     {
       id: "circulation-around-a-circle",
+      figure: multivariableDrawings6["circulation#circulation-around-a-circle"],
       title: t("Circulation around a circle", "沿圆的环量"),
       explanation: t(
         "For a rotating field $\\mathbf{F} = \\langle -ky, kx \\rangle$ on the circle of radius $R$, the field is tangent to the circle with constant length $kR$, so $\\mathbf{F} \\cdot \\mathbf{T} = kR$ everywhere. The circulation is that constant times the length of the circle:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2.$$",
@@ -2650,6 +2689,7 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
   knowledgePoints: [
     {
       id: "outward-flux-across-a-rectangle",
+      figure: multivariableDrawings6["calculating-flux-in-two-dimensional-vector-fields#outward-flux-across-a-rectangle"],
       title: t("Outward flux across a rectangle", "穿过矩形的外法向通量"),
       explanation: t(
         "Since $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$, the outward flux is $\\oint_C (P\\,dy - Q\\,dx)$. Around a rectangle, compute it side by side: the outward normal is $\\langle 1, 0 \\rangle$ on the right side, $\\langle -1, 0 \\rangle$ on the left, $\\langle 0, 1 \\rangle$ on top and $\\langle 0, -1 \\rangle$ on the bottom.",
@@ -2691,6 +2731,7 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
     },
     {
       id: "outward-flux-across-a-circle",
+      figure: multivariableDrawings6["calculating-flux-in-two-dimensional-vector-fields#outward-flux-across-a-circle"],
       title: t("Outward flux across a circle", "穿过圆的外法向通量"),
       explanation: t(
         "On a circle, parametrize with $x = R\\cos t$, $y = R\\sin t$ for $0 \\le t \\le 2\\pi$, substitute into $\\oint_C (P\\,dy - Q\\,dx)$, and integrate in $t$. The averages $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ and $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ do most of the work.",
@@ -2791,6 +2832,7 @@ export const sourceFreeVectorFields: TopicDef = {
     },
     {
       id: "balanced-flux-of-source-free-fields",
+      figure: multivariableDrawings6["source-free-vector-fields#balanced-flux-of-source-free-fields"],
       title: t("Balanced flux of a source-free field", "无源场的通量平衡"),
       explanation: t(
         "A source-free field creates and destroys nothing inside a region, so its net outward flux across a simple closed curve is zero, a fact Green's theorem will prove. If the boundary is made of several pieces, the outward fluxes across the pieces add up to zero, which lets you find a missing one.",
@@ -2881,6 +2923,7 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
     },
     {
       id: "circulation-around-a-rectangle-edge-by-edge",
+      figure: multivariableDrawings6["circulation-and-flux-across-simple-closed-plane-curves#circulation-around-a-rectangle-edge-by-edge"],
       title: t("Circulation around a rectangle edge by edge", "逐边计算绕矩形的环量"),
       explanation: t(
         "The counterclockwise circulation $\\oint_C P\\,dx + Q\\,dy$ around the rectangle $[0, w] \\times [0, h]$ is the sum over its four edges. For $\\mathbf{F} = \\langle ay, bx \\rangle$: the bottom edge has $y = 0$ and the left edge has $x = 0$, so both give $0$. The right edge, going up at $x = w$, gives $\\int_0^h bw\\,dy = bwh$. The top edge, going left at $y = h$, gives $\\int_w^0 ah\\,dx = -awh$. The circulation is $(b - a)wh$.",
@@ -2924,6 +2967,7 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
   knowledgePoints: [
     {
       id: "applying-greens-theorem-for-circulation",
+      figure: multivariableDrawings6["greens-theorem-in-circulation-curl-form#applying-greens-theorem-for-circulation"],
       title: t("Applying Green's theorem for circulation", "应用格林公式计算环量积分"),
       explanation: t(
         "Green's theorem trades the circulation around a closed curve for a double integral of the curl over the region inside it, which is often easier. By Green's theorem:\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$ For $P = 0, Q = kx$ over a rectangle of area $A$, $\\oint_C kx\\,dy = kA$.",
@@ -2962,6 +3006,7 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
     },
     {
       id: "circulation-around-a-circle-by-greens-theorem",
+      figure: multivariableDrawings6["greens-theorem-in-circulation-curl-form#circulation-around-a-circle-by-greens-theorem"],
       title: t("Circulation around a circle by Green's theorem", "用格林定理求绕圆的环量"),
       explanation: t(
         "Green's theorem turns a counterclockwise circulation into a double integral of the scalar curl:\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$\n\nTerms such as $x^2$ in $P$ or $y^3$ in $Q$ drop out of the curl. For $P = -ay + x^2$, $Q = bx + y^3$ the curl is the constant $a + b$, so the circulation around a circle of radius $R$ is $(a + b)\\pi R^2$.",
@@ -3006,6 +3051,7 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "greens-theorem-over-a-disk-in-polar-coordinates",
+      figure: multivariableDrawings6["greens-theorem-in-polar-coordinates#greens-theorem-over-a-disk-in-polar-coordinates"],
       title: t("Circulation around a circle", "沿圆周的环量"),
       explanation: t(
         "Once Green's theorem turns the circulation into a double integral, polar coordinates make the integral over the disk straightforward. For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ the curl integrand is $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$. Over the disk of radius $R$, remember the factor $r$ in $dA = r\\,dr\\,d\\theta$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}.$$",
@@ -3041,6 +3087,7 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
     },
     {
       id: "greens-theorem-over-an-annulus-in-polar-coordinates",
+      figure: multivariableDrawings6["greens-theorem-in-polar-coordinates#greens-theorem-over-an-annulus-in-polar-coordinates"],
       title: t("Circulation around the boundary of an annulus", "沿圆环边界的环量"),
       explanation: t(
         "The positively oriented boundary of the annulus $r_1 \\le r \\le r_2$ is the outer circle counterclockwise together with the inner circle clockwise. Green's theorem still applies, with $r$ running from $r_1$ to $r_2$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta.$$ For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ this is $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$.",
@@ -3132,6 +3179,7 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
     },
     {
       id: "the-area-of-a-triangle-from-a-boundary-integral",
+      figure: multivariableDrawings6["calculating-areas-using-greens-theorem#the-area-of-a-triangle-from-a-boundary-integral"],
       title: t("The area of a triangle from a boundary integral", "用边界积分求三角形面积"),
       explanation: t(
         "Green's theorem gives the area of a region as $A = \\frac12\\oint_C x\\,dy - y\\,dx$ around its counterclockwise boundary. Along a segment through the origin, $x\\,dy - y\\,dx = 0$, because the point moves straight away from or toward the origin. For the triangle with vertices $(0, 0)$, $(a, b)$, $(c, d)$ only the edge from $(a, b)$ to $(c, d)$ contributes, and it gives $ad - bc$. So\n\n$$A = \\tfrac12(ad - bc)$$\n\nwhen the vertices are in counterclockwise order.",
@@ -3179,6 +3227,7 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
   knowledgePoints: [
     {
       id: "two-dimensional-divergence-theorem",
+      figure: multivariableDrawings6["greens-theorem-in-flux-divergence-form#two-dimensional-divergence-theorem"],
       title: t("Two-dimensional divergence theorem", "应用二维散度定理计算通量"),
       explanation: t(
         "The flux form of Green's theorem says that the net flow out through the boundary equals the total divergence inside the region. Green's theorem in flux form states:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA.$$",
@@ -3308,6 +3357,7 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
     },
     {
       id: "an-outer-circulation-from-an-inner-one",
+      figure: multivariableDrawings6["greens-theorem-on-regions-with-holes#an-outer-circulation-from-an-inner-one"],
       title: t("Finding an outer circulation from an inner one", "由内边界环量求外边界环量"),
       explanation: t(
         "On an annulus $D$ between an inner circle $C_1$ and an outer circle $C_2$, both counterclockwise, Green's theorem reads\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\nbecause the inner circle must be traversed clockwise to keep $D$ on the left. Even if $\\mathbf{F}$ is not defined at the origin, knowing the inner circulation and the curl on $D$ determines the outer one. With constant curl $c$ the right side is $c\\pi(r_2^2 - r_1^2)$.",

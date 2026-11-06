@@ -4,6 +4,7 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -347,45 +348,48 @@ const orthogonalShift = point(
   },
 );
 
-const orthogonalInverse = point(
-  "the-inverse-of-an-orthogonal-matrix-is-its-transpose",
-  ["The inverse of an orthogonal matrix is its transpose", "正交矩阵的逆是它的转置"],
-  [
-    "An orthogonal transformation preserves dot products, so its matrix satisfies $Q^{T}Q = I$. Its inverse therefore needs no elimination: it is the transpose. An entry of the inverse is read from the reflected position, and it is not the reciprocal of the entry.",
-    "正交变换保持点积，所以它的矩阵满足 $Q^{T}Q = I$。因此求逆不需要消元：逆矩阵就是转置。逆矩阵的元素从关于对角线对称的位置读出，而不是原元素的倒数。",
-  ],
-  (rng) => {
-    const [p, q, c] = rng.pick(triples);
-    const sign = rng.bool() ? 1 : -1;
-    const reflect = rng.bool();
-    const rows = reflect
-      ? [
-          [p, sign * q],
-          [sign * q, -p],
-        ]
-      : [
-          [p, -sign * q],
-          [sign * q, p],
-        ];
-    const i = rng.int(0, 1);
-    const j = rng.int(0, 1);
-    const value = (rows[j] as number[])[i] as number;
-    const other = (rows[i] as number[])[j] as number;
-    const answer = Q.of(value, c);
-    return ask(
-      [
-        `$Q = \\frac{1}{${c}}${mat(rows)}$ is orthogonal. Find the $(${i + 1}, ${j + 1})$ entry of $Q^{-1}$.`,
-        `$Q = \\frac{1}{${c}}${mat(rows)}$ 是正交矩阵。求 $Q^{-1}$ 的 $(${i + 1}, ${j + 1})$ 元素。`,
-      ],
-      answer,
-      [Q.of(other, c), Q.of(c, value), answer.neg()],
-      [
-        `Since $Q^{-1} = Q^{T}$, this entry equals the $(${j + 1}, ${i + 1})$ entry of $Q$, which is $${answer.toLatex()}$.`,
-        `由于 $Q^{-1} = Q^{T}$，这个元素等于 $Q$ 的 $(${j + 1}, ${i + 1})$ 元素，即 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const orthogonalInverse = {
+  ...point(
+    "the-inverse-of-an-orthogonal-matrix-is-its-transpose",
+    ["The inverse of an orthogonal matrix is its transpose", "正交矩阵的逆是它的转置"],
+    [
+      "An orthogonal transformation preserves dot products, so its matrix satisfies $Q^{T}Q = I$. Its inverse therefore needs no elimination: it is the transpose. An entry of the inverse is read from the reflected position, and it is not the reciprocal of the entry.",
+      "正交变换保持点积，所以它的矩阵满足 $Q^{T}Q = I$。因此求逆不需要消元：逆矩阵就是转置。逆矩阵的元素从关于对角线对称的位置读出，而不是原元素的倒数。",
+    ],
+    (rng) => {
+      const [p, q, c] = rng.pick(triples);
+      const sign = rng.bool() ? 1 : -1;
+      const reflect = rng.bool();
+      const rows = reflect
+        ? [
+            [p, sign * q],
+            [sign * q, -p],
+          ]
+        : [
+            [p, -sign * q],
+            [sign * q, p],
+          ];
+      const i = rng.int(0, 1);
+      const j = rng.int(0, 1);
+      const value = (rows[j] as number[])[i] as number;
+      const other = (rows[i] as number[])[j] as number;
+      const answer = Q.of(value, c);
+      return ask(
+        [
+          `$Q = \\frac{1}{${c}}${mat(rows)}$ is orthogonal. Find the $(${i + 1}, ${j + 1})$ entry of $Q^{-1}$.`,
+          `$Q = \\frac{1}{${c}}${mat(rows)}$ 是正交矩阵。求 $Q^{-1}$ 的 $(${i + 1}, ${j + 1})$ 元素。`,
+        ],
+        answer,
+        [Q.of(other, c), Q.of(c, value), answer.neg()],
+        [
+          `Since $Q^{-1} = Q^{T}$, this entry equals the $(${j + 1}, ${i + 1})$ entry of $Q$, which is $${answer.toLatex()}$.`,
+          `由于 $Q^{-1} = Q^{T}$，这个元素等于 $Q$ 的 $(${j + 1}, ${i + 1})$ 元素，即 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["orthogonal-linear-transformations#the-inverse-of-an-orthogonal-matrix-is-its-transpose"],
+};
 
 const rowsFromNullities = point(
   "the-number-of-rows-from-the-two-null-spaces",
@@ -758,32 +762,35 @@ const singleSquare = point(
   },
 );
 
-const semiAxis = point(
-  "the-semi-major-axis-of-a-rotated-ellipse",
-  ["The semi-major axis of a rotated ellipse", "旋转椭圆的半长轴"],
-  [
-    "After an orthogonal change of variables, an ellipse is $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$, and its squared semi-axes are $\\frac{d}{\\lambda_{1}}$ and $\\frac{d}{\\lambda_{2}}$. The longer axis belongs to the smaller eigenvalue, which is the opposite of what one might first guess.",
-    "经过正交变量替换后，椭圆为 $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$，其半轴的平方是 $\\frac{d}{\\lambda_{1}}$ 和 $\\frac{d}{\\lambda_{2}}$。较长的轴对应较小的特征值，这与直觉相反。",
-  ],
-  (rng) => {
-    const a = rng.int(2, 9);
-    const b = rng.pick([...Array(2 * a - 1).keys()].map((i) => i - a + 1).filter((i) => i !== 0));
-    const d = rng.int(1, 20);
-    const small = a - Math.abs(b);
-    const big = a + Math.abs(b);
-    const answer = Q.of(d, small);
-    const curve = poly([a, "x^{2}"], [2 * b, "xy"], [a, "y^{2}"]);
-    return ask(
-      [`Find the square of the semi-major axis of the ellipse $${curve} = ${d}$.`, `求椭圆 $${curve} = ${d}$ 的半长轴的平方。`],
-      answer,
-      [Q.of(d, big), Q.of(d, a), d],
-      [
-        `The matrix has eigenvalues $${a} \\pm ${Math.abs(b)}$, that is $${small}$ and $${big}$. The longer axis belongs to the smaller eigenvalue, so its square is $${answer.toLatex()}$.`,
-        `矩阵的特征值是 $${a} \\pm ${Math.abs(b)}$，即 $${small}$ 和 $${big}$。较长的轴对应较小的特征值，所以它的平方是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const semiAxis = {
+  ...point(
+    "the-semi-major-axis-of-a-rotated-ellipse",
+    ["The semi-major axis of a rotated ellipse", "旋转椭圆的半长轴"],
+    [
+      "After an orthogonal change of variables, an ellipse is $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$, and its squared semi-axes are $\\frac{d}{\\lambda_{1}}$ and $\\frac{d}{\\lambda_{2}}$. The longer axis belongs to the smaller eigenvalue, which is the opposite of what one might first guess.",
+      "经过正交变量替换后，椭圆为 $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$，其半轴的平方是 $\\frac{d}{\\lambda_{1}}$ 和 $\\frac{d}{\\lambda_{2}}$。较长的轴对应较小的特征值，这与直觉相反。",
+    ],
+    (rng) => {
+      const a = rng.int(2, 9);
+      const b = rng.pick([...Array(2 * a - 1).keys()].map((i) => i - a + 1).filter((i) => i !== 0));
+      const d = rng.int(1, 20);
+      const small = a - Math.abs(b);
+      const big = a + Math.abs(b);
+      const answer = Q.of(d, small);
+      const curve = poly([a, "x^{2}"], [2 * b, "xy"], [a, "y^{2}"]);
+      return ask(
+        [`Find the square of the semi-major axis of the ellipse $${curve} = ${d}$.`, `求椭圆 $${curve} = ${d}$ 的半长轴的平方。`],
+        answer,
+        [Q.of(d, big), Q.of(d, a), d],
+        [
+          `The matrix has eigenvalues $${a} \\pm ${Math.abs(b)}$, that is $${small}$ and $${big}$. The longer axis belongs to the smaller eigenvalue, so its square is $${answer.toLatex()}$.`,
+          `矩阵的特征值是 $${a} \\pm ${Math.abs(b)}$，即 $${small}$ 和 $${big}$。较长的轴对应较小的特征值，所以它的平方是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["classifying-quadratic-curves#the-semi-major-axis-of-a-rotated-ellipse"],
+};
 
 const planeConstraint = point(
   "a-constraint-that-excludes-the-extreme-eigenvalue",
@@ -815,43 +822,49 @@ const planeConstraint = point(
   },
 );
 
-const howManyAttain = point(
-  "how-many-unit-vectors-attain-an-extreme-value",
-  ["How many unit vectors attain an extreme value", "有多少单位向量取到极值"],
-  [
-    "The extreme value of a quadratic form on the unit sphere is attained on the unit vectors of its eigenspace. A one-dimensional eigenspace gives two unit vectors, opposite each other, and an eigenspace of dimension at least two gives a whole circle or more of them.",
-    "二次型在单位球面上的极值在相应特征空间的单位向量处取到。一维特征空间给出两个互为相反的单位向量，维数至少为二的特征空间则给出一整个圆或更多的单位向量。",
-  ],
-  (rng) => {
-    const a = nz(rng, 9);
-    const c = rng.pick([-8, -6, -4, -2, 1, 3, 5, 7].filter((v) => v !== a));
-    const j = rng.int(0, 2);
-    const form = poly(...[0, 1, 2].map((i): [number, string] => [i === j ? c : a, `x_{${i + 1}}^{2}`]));
-    const max = rng.bool();
-    const single = max ? c > a : c < a;
-    const word: Pair = max ? ["maximum", "最大值"] : ["minimum", "最小值"];
-    const two: Pair = ["Exactly two", "恰好两个"];
-    const many: Pair = ["Infinitely many", "无穷多个"];
-    return choose(
-      rng,
-      [
-        `How many unit vectors in $\\mathbb{R}^{3}$ attain the ${word[0]} of $Q = ${form}$?`,
-        `$\\mathbb{R}^{3}$ 中有多少个单位向量取到 $Q = ${form}$ 的${word[1]}？`,
-      ],
-      single ? two : many,
-      [single ? many : two, ["Exactly one", "恰好一个"], ["Exactly three", "恰好三个"]],
-      single
-        ? [
-            `The extreme eigenvalue $${c}$ has a one-dimensional eigenspace, the $x_{${j + 1}}$ axis. It holds two unit vectors, which are opposite each other.`,
-            `极端特征值 $${c}$ 的特征空间是一维的，即 $x_{${j + 1}}$ 轴。其中有两个互为相反的单位向量。`,
-          ]
-        : [
-            `The extreme eigenvalue $${a}$ has a two-dimensional eigenspace, the plane $x_{${j + 1}} = 0$. Every point of the unit circle in this plane attains the value.`,
-            `极端特征值 $${a}$ 的特征空间是二维的，即平面 $x_{${j + 1}} = 0$。这个平面上单位圆的每一点都取到该值。`,
-          ],
-    );
-  },
-);
+const howManyAttain = {
+  ...point(
+    "how-many-unit-vectors-attain-an-extreme-value",
+    ["How many unit vectors attain an extreme value", "有多少单位向量取到极值"],
+    [
+      "The extreme value of a quadratic form on the unit sphere is attained on the unit vectors of its eigenspace. A one-dimensional eigenspace gives two unit vectors, opposite each other, and an eigenspace of dimension at least two gives a whole circle or more of them.",
+      "二次型在单位球面上的极值在相应特征空间的单位向量处取到。一维特征空间给出两个互为相反的单位向量，维数至少为二的特征空间则给出一整个圆或更多的单位向量。",
+    ],
+    (rng) => {
+      const a = nz(rng, 9);
+      const c = rng.pick([-8, -6, -4, -2, 1, 3, 5, 7].filter((v) => v !== a));
+      const j = rng.int(0, 2);
+      const form = poly(...[0, 1, 2].map((i): [number, string] => [i === j ? c : a, `x_{${i + 1}}^{2}`]));
+      const max = rng.bool();
+      const single = max ? c > a : c < a;
+      const word: Pair = max ? ["maximum", "最大值"] : ["minimum", "最小值"];
+      const two: Pair = ["Exactly two", "恰好两个"];
+      const many: Pair = ["Infinitely many", "无穷多个"];
+      return choose(
+        rng,
+        [
+          `How many unit vectors in $\\mathbb{R}^{3}$ attain the ${word[0]} of $Q = ${form}$?`,
+          `$\\mathbb{R}^{3}$ 中有多少个单位向量取到 $Q = ${form}$ 的${word[1]}？`,
+        ],
+        single ? two : many,
+        [single ? many : two, ["Exactly one", "恰好一个"], ["Exactly three", "恰好三个"]],
+        single
+          ? [
+              `The extreme eigenvalue $${c}$ has a one-dimensional eigenspace, the $x_{${j + 1}}$ axis. It holds two unit vectors, which are opposite each other.`,
+              `极端特征值 $${c}$ 的特征空间是一维的，即 $x_{${j + 1}}$ 轴。其中有两个互为相反的单位向量。`,
+            ]
+          : [
+              `The extreme eigenvalue $${a}$ has a two-dimensional eigenspace, the plane $x_{${j + 1}} = 0$. Every point of the unit circle in this plane attains the value.`,
+              `极端特征值 $${a}$ 的特征空间是二维的，即平面 $x_{${j + 1}} = 0$。这个平面上单位圆的每一点都取到该值。`,
+            ],
+      );
+    },
+  ),
+  figure:
+    linearAlgebraDrawings2[
+      "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained#how-many-unit-vectors-attain-an-extreme-value"
+    ],
+};
 
 const orthogonalColumns = point(
   "singular-values-from-orthogonal-columns",

@@ -6,6 +6,8 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, drawn, label } from "./figure-reading-more.ts";
@@ -142,75 +144,79 @@ const cramerFromDrawing = point(
   },
 );
 
-const singularFromLines = point(
-  "ranks-of-a-system-from-its-drawn-lines",
-  ["Ranks of a system from its drawn lines", "由所画直线判断方程组的秩"],
-  [
-    "Crossing lines have independent rows, so both ranks are $2$. Parallel lines have dependent coefficient rows but an inconsistent augmented matrix, so the ranks are $1$ and $2$. One line drawn twice has both ranks equal to $1$.",
-    "相交的直线行向量无关，两个秩都是 $2$。平行线的系数行相关而增广矩阵不相容，秩分别为 $1$ 和 $2$。同一条直线重合时两个秩都是 $1$。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["cross", "parallel", "same"] as const);
-    const d = rng.pick(directions);
-    const p: Point = [rng.int(-3, 3), rng.int(-3, 3)];
-    const shift = rng.int(1, 3) * (rng.bool() ? 1 : -1);
-    const q: Point = d[0] === 0 ? [p[0] + shift, p[1]] : [p[0], p[1] + shift];
-    const e = rng.pick(directions.filter((v) => cross(v, d) !== 0));
-    const marks: PlaneMark[] = [{ kind: "line", a: p, b: [p[0] + d[0], p[1] + d[1]], accent: true }];
-    if (kind === "cross") marks.push({ kind: "line", a: p, b: [p[0] + e[0], p[1] + e[1]] });
-    if (kind === "parallel") marks.push({ kind: "line", a: q, b: [q[0] + d[0], q[1] + d[1]] });
-    const options: Record<typeof kind, Pair> = {
-      cross: [
-        "$\\operatorname{rank} A = 2$ and $\\operatorname{rank} [A \\mid b] = 2$: one solution",
-        "$\\operatorname{rank} A = 2$，$\\operatorname{rank} [A \\mid b] = 2$：唯一解",
-      ],
-      parallel: [
-        "$\\operatorname{rank} A = 1$ and $\\operatorname{rank} [A \\mid b] = 2$: no solution",
-        "$\\operatorname{rank} A = 1$，$\\operatorname{rank} [A \\mid b] = 2$：无解",
-      ],
-      same: [
-        "$\\operatorname{rank} A = 1$ and $\\operatorname{rank} [A \\mid b] = 1$: infinitely many solutions",
-        "$\\operatorname{rank} A = 1$，$\\operatorname{rank} [A \\mid b] = 1$：无穷多解",
-      ],
-    };
-    const why: Record<typeof kind, Pair> = {
-      cross: ["The lines cross at one point, so the coefficient rows are independent.", "两直线交于一点，所以系数行线性无关。"],
-      parallel: [
-        "The lines are parallel and distinct, so the coefficient rows are dependent while the equations contradict each other.",
-        "两直线平行且不重合，所以系数行相关，而两个方程互相矛盾。",
-      ],
-      same: [
-        "Both equations describe the same line, so each row of the augmented matrix is a multiple of the other.",
-        "两个方程描述同一条直线，所以增广矩阵的每一行都是另一行的倍数。",
-      ],
-    };
-    return choose(
-      rng,
-      [
-        "The drawing shows the lines of the two equations of a system $Ax = b$; a single line means the two coincide. Which statement is true?",
-        "图中是方程组 $Ax = b$ 两个方程的直线；只有一条直线表示两者重合。哪个说法正确？",
-      ],
-      options[kind],
-      [
-        ...(["cross", "parallel", "same"] as const).filter((k) => k !== kind).map((k) => options[k]),
-        [
-          "$\\operatorname{rank} A = 2$ and $\\operatorname{rank} [A \\mid b] = 1$: no solution",
-          "$\\operatorname{rank} A = 2$，$\\operatorname{rank} [A \\mid b] = 1$：无解",
+const singularFromLines = {
+  ...point(
+    "ranks-of-a-system-from-its-drawn-lines",
+    ["Ranks of a system from its drawn lines", "由所画直线判断方程组的秩"],
+    [
+      "Crossing lines have independent rows, so both ranks are $2$. Parallel lines have dependent coefficient rows but an inconsistent augmented matrix, so the ranks are $1$ and $2$. One line drawn twice has both ranks equal to $1$.",
+      "相交的直线行向量无关，两个秩都是 $2$。平行线的系数行相关而增广矩阵不相容，秩分别为 $1$ 和 $2$。同一条直线重合时两个秩都是 $1$。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["cross", "parallel", "same"] as const);
+      const d = rng.pick(directions);
+      const p: Point = [rng.int(-3, 3), rng.int(-3, 3)];
+      const shift = rng.int(1, 3) * (rng.bool() ? 1 : -1);
+      const q: Point = d[0] === 0 ? [p[0] + shift, p[1]] : [p[0], p[1] + shift];
+      const e = rng.pick(directions.filter((v) => cross(v, d) !== 0));
+      const marks: PlaneMark[] = [{ kind: "line", a: p, b: [p[0] + d[0], p[1] + d[1]], accent: true }];
+      if (kind === "cross") marks.push({ kind: "line", a: p, b: [p[0] + e[0], p[1] + e[1]] });
+      if (kind === "parallel") marks.push({ kind: "line", a: q, b: [q[0] + d[0], q[1] + d[1]] });
+      const options: Record<typeof kind, Pair> = {
+        cross: [
+          "$\\operatorname{rank} A = 2$ and $\\operatorname{rank} [A \\mid b] = 2$: one solution",
+          "$\\operatorname{rank} A = 2$，$\\operatorname{rank} [A \\mid b] = 2$：唯一解",
         ],
-      ],
-      why[kind],
-      fig(
-        7,
-        marks,
-        kind === "cross"
-          ? ["Two lines that cross.", "两条相交的直线。"]
-          : kind === "parallel"
-            ? ["Two distinct parallel lines.", "两条不重合的平行线。"]
-            : ["A single line.", "一条直线。"],
-      ),
-    );
-  },
-);
+        parallel: [
+          "$\\operatorname{rank} A = 1$ and $\\operatorname{rank} [A \\mid b] = 2$: no solution",
+          "$\\operatorname{rank} A = 1$，$\\operatorname{rank} [A \\mid b] = 2$：无解",
+        ],
+        same: [
+          "$\\operatorname{rank} A = 1$ and $\\operatorname{rank} [A \\mid b] = 1$: infinitely many solutions",
+          "$\\operatorname{rank} A = 1$，$\\operatorname{rank} [A \\mid b] = 1$：无穷多解",
+        ],
+      };
+      const why: Record<typeof kind, Pair> = {
+        cross: ["The lines cross at one point, so the coefficient rows are independent.", "两直线交于一点，所以系数行线性无关。"],
+        parallel: [
+          "The lines are parallel and distinct, so the coefficient rows are dependent while the equations contradict each other.",
+          "两直线平行且不重合，所以系数行相关，而两个方程互相矛盾。",
+        ],
+        same: [
+          "Both equations describe the same line, so each row of the augmented matrix is a multiple of the other.",
+          "两个方程描述同一条直线，所以增广矩阵的每一行都是另一行的倍数。",
+        ],
+      };
+      return choose(
+        rng,
+        [
+          "The drawing shows the lines of the two equations of a system $Ax = b$; a single line means the two coincide. Which statement is true?",
+          "图中是方程组 $Ax = b$ 两个方程的直线；只有一条直线表示两者重合。哪个说法正确？",
+        ],
+        options[kind],
+        [
+          ...(["cross", "parallel", "same"] as const).filter((k) => k !== kind).map((k) => options[k]),
+          [
+            "$\\operatorname{rank} A = 2$ and $\\operatorname{rank} [A \\mid b] = 1$: no solution",
+            "$\\operatorname{rank} A = 2$，$\\operatorname{rank} [A \\mid b] = 1$：无解",
+          ],
+        ],
+        why[kind],
+        fig(
+          7,
+          marks,
+          kind === "cross"
+            ? ["Two lines that cross.", "两条相交的直线。"]
+            : kind === "parallel"
+              ? ["Two distinct parallel lines.", "两条不重合的平行线。"]
+              : ["A single line.", "一条直线。"],
+        ),
+      );
+    },
+  ),
+  figure:
+    linearAlgebraDrawings1["solving-2x2-singular-systems-of-equations-using-gaussian-elimination#ranks-of-a-system-from-its-drawn-lines"],
+};
 
 const elementaryShape = point(
   "the-row-operation-of-a-drawn-elementary-matrix",
@@ -757,93 +763,102 @@ function spin(rng: Rng): Point {
   return [a, b];
 }
 
-const complexEigen = point(
-  "complex-eigenvalues-from-a-drawn-rotation-scaling",
-  ["Complex eigenvalues from a drawn rotation-scaling", "由所画的旋转伸缩读复特征值"],
-  [
-    "A matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ sends $e_1$ to $(a, b)$ and $e_2$ to $(-b, a)$, which rotates and scales the plane, so it has no real eigenvector. Its eigenvalues are $a \\pm bi$.",
-    "矩阵 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 把 $e_1$ 映到 $(a, b)$，把 $e_2$ 映到 $(-b, a)$，这是对平面的旋转加缩放，所以没有实特征向量。它的特征值是 $a \\pm bi$。",
-  ],
-  (rng) => {
-    const [a, b] = spin(rng);
-    const size = (v: number) => (Math.abs(v) === 1 ? "" : Math.abs(v));
-    const answer = (x: number, y: number) => `${x} \\pm ${size(y)}i`;
-    return choose(
-      rng,
-      [
-        "The arrows show the images of $e_1$ and $e_2$ under a real matrix $A$ that rotates and scales the plane. What are the eigenvalues of $A$?",
-        "箭头表示 $e_1$ 和 $e_2$ 在实矩阵 $A$ 下的像，$A$ 对平面做旋转和伸缩。$A$ 的特征值是什么？",
-      ],
-      same(answer(a, b)),
-      [same(answer(b, a)), same(answer(-a, b)), same(answer(-b, a)), same(answer(a * a + b * b, 1))],
-      [
-        `The arrows give $A = ${mat(a, -b, b, a)}$, so $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$, whose roots are $${answer(a, b)}$.`,
-        `由箭头得 $A = ${mat(a, -b, b, a)}$，所以 $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$，根为 $${answer(a, b)}$。`,
-      ],
-      fig(
-        5,
-        [...arrow([a, b], "T(e1)"), ...arrow([-b, a], "T(e2)")],
+const complexEigen = {
+  ...point(
+    "complex-eigenvalues-from-a-drawn-rotation-scaling",
+    ["Complex eigenvalues from a drawn rotation-scaling", "由所画的旋转伸缩读复特征值"],
+    [
+      "A matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ sends $e_1$ to $(a, b)$ and $e_2$ to $(-b, a)$, which rotates and scales the plane, so it has no real eigenvector. Its eigenvalues are $a \\pm bi$.",
+      "矩阵 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 把 $e_1$ 映到 $(a, b)$，把 $e_2$ 映到 $(-b, a)$，这是对平面的旋转加缩放，所以没有实特征向量。它的特征值是 $a \\pm bi$。",
+    ],
+    (rng) => {
+      const [a, b] = spin(rng);
+      const size = (v: number) => (Math.abs(v) === 1 ? "" : Math.abs(v));
+      const answer = (x: number, y: number) => `${x} \\pm ${size(y)}i`;
+      return choose(
+        rng,
         [
-          `Arrows from the origin: T(e1) to ${at([a, b])} and T(e2) to ${at([-b, a])}.`,
-          `从原点出发的箭头：T(e1) 指向 ${at([a, b])}，T(e2) 指向 ${at([-b, a])}。`,
+          "The arrows show the images of $e_1$ and $e_2$ under a real matrix $A$ that rotates and scales the plane. What are the eigenvalues of $A$?",
+          "箭头表示 $e_1$ 和 $e_2$ 在实矩阵 $A$ 下的像，$A$ 对平面做旋转和伸缩。$A$ 的特征值是什么？",
         ],
-      ),
-    );
-  },
-);
+        same(answer(a, b)),
+        [same(answer(b, a)), same(answer(-a, b)), same(answer(-b, a)), same(answer(a * a + b * b, 1))],
+        [
+          `The arrows give $A = ${mat(a, -b, b, a)}$, so $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$, whose roots are $${answer(a, b)}$.`,
+          `由箭头得 $A = ${mat(a, -b, b, a)}$，所以 $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$，根为 $${answer(a, b)}$。`,
+        ],
+        fig(
+          5,
+          [...arrow([a, b], "T(e1)"), ...arrow([-b, a], "T(e2)")],
+          [
+            `Arrows from the origin: T(e1) to ${at([a, b])} and T(e2) to ${at([-b, a])}.`,
+            `从原点出发的箭头：T(e1) 指向 ${at([a, b])}，T(e2) 指向 ${at([-b, a])}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings1["finding-complex-eigenvalues-of-real-2x2-matrices#complex-eigenvalues-from-a-drawn-rotation-scaling"],
+};
 
-const rotationScale = point(
-  "the-rotation-scaling-form-from-a-drawn-image",
-  ["The rotation-scaling form from a drawn image", "由所画的像写旋转伸缩形式"],
-  [
-    "A rotation-scaling matrix is determined by the image of $e_1$: if that image is $(a, b)$, the first column is $(a, b)$ and the second is the same vector turned by a quarter turn counterclockwise, $(-b, a)$.",
-    "旋转伸缩矩阵由 $e_1$ 的像决定：如果这个像是 $(a, b)$，第一列就是 $(a, b)$，第二列是同一向量逆时针转四分之一圈，即 $(-b, a)$。",
-  ],
-  (rng) => {
-    const [a, b] = spin(rng);
-    return choose(
-      rng,
-      [
-        "A linear map rotates and scales the plane, without reflecting it, and the arrow shows the image of $e_1$. Which matrix is it?",
-        "一个线性映射对平面做旋转和伸缩，没有反射，箭头表示 $e_1$ 的像。它是哪个矩阵？",
-      ],
-      same(mat(a, -b, b, a)),
-      [same(mat(a, b, -b, a)), same(mat(a, b, b, a)), same(mat(a, b, b, -a)), same(mat(b, -a, a, b))],
-      [
-        `The first column is the arrow, $${at([a, b])}$. Turning it a quarter turn counterclockwise gives the second column, $(${-b}, ${a})$.`,
-        `第一列就是箭头 $${at([a, b])}$。把它逆时针转四分之一圈得第二列 $(${-b}, ${a})$。`,
-      ],
-      fig(5, arrow([a, b], "T(e1)"), [`An arrow from the origin to ${at([a, b])}.`, `从原点指向 ${at([a, b])} 的箭头。`]),
-    );
-  },
-);
+const rotationScale = {
+  ...point(
+    "the-rotation-scaling-form-from-a-drawn-image",
+    ["The rotation-scaling form from a drawn image", "由所画的像写旋转伸缩形式"],
+    [
+      "A rotation-scaling matrix is determined by the image of $e_1$: if that image is $(a, b)$, the first column is $(a, b)$ and the second is the same vector turned by a quarter turn counterclockwise, $(-b, a)$.",
+      "旋转伸缩矩阵由 $e_1$ 的像决定：如果这个像是 $(a, b)$，第一列就是 $(a, b)$，第二列是同一向量逆时针转四分之一圈，即 $(-b, a)$。",
+    ],
+    (rng) => {
+      const [a, b] = spin(rng);
+      return choose(
+        rng,
+        [
+          "A linear map rotates and scales the plane, without reflecting it, and the arrow shows the image of $e_1$. Which matrix is it?",
+          "一个线性映射对平面做旋转和伸缩，没有反射，箭头表示 $e_1$ 的像。它是哪个矩阵？",
+        ],
+        same(mat(a, -b, b, a)),
+        [same(mat(a, b, -b, a)), same(mat(a, b, b, a)), same(mat(a, b, b, -a)), same(mat(b, -a, a, b))],
+        [
+          `The first column is the arrow, $${at([a, b])}$. Turning it a quarter turn counterclockwise gives the second column, $(${-b}, ${a})$.`,
+          `第一列就是箭头 $${at([a, b])}$。把它逆时针转四分之一圈得第二列 $(${-b}, ${a})$。`,
+        ],
+        fig(5, arrow([a, b], "T(e1)"), [`An arrow from the origin to ${at([a, b])}.`, `从原点指向 ${at([a, b])} 的箭头。`]),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings1["reducing-real-2x2-matrices-to-rotation-scaling-form#the-rotation-scaling-form-from-a-drawn-image"],
+};
 
-const dotFromArrows = point(
-  "the-dot-product-of-two-drawn-arrows",
-  ["The dot product of two drawn arrows", "两个所画箭头的点积"],
-  [
-    "Read the coordinates of each arrow, multiply matching coordinates and add. The sign agrees with the angle: positive when it is acute, negative when it is obtuse, zero when it is right.",
-    "读出每个箭头的坐标，对应坐标相乘再相加。符号与夹角一致：锐角为正，钝角为负，直角为零。",
-  ],
-  (rng) => {
-    const [u, v] = independent(rng, 5);
-    const answer = dot(u, v);
-    return ask(
-      ["Find $u \\cdot v$ for the drawn vectors.", "求所画向量的点积 $u \\cdot v$。"],
-      answer,
-      [-answer, cross(u, v), u[0] * v[1] + u[1] * v[0], answer + 1],
-      [
-        `$u = ${at(u)}$ and $v = ${at(v)}$, so $u \\cdot v = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${answer}$.`,
-        `$u = ${at(u)}$，$v = ${at(v)}$，所以 $u \\cdot v = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${answer}$。`,
-      ],
-      fig(
-        6,
-        [...arrow(u, "u"), ...arrow(v, "v")],
-        [`Arrows from the origin: u to ${at(u)} and v to ${at(v)}.`, `从原点出发的箭头：u 指向 ${at(u)}，v 指向 ${at(v)}。`],
-      ),
-    );
-  },
-);
+const dotFromArrows = {
+  ...point(
+    "the-dot-product-of-two-drawn-arrows",
+    ["The dot product of two drawn arrows", "两个所画箭头的点积"],
+    [
+      "Read the coordinates of each arrow, multiply matching coordinates and add. The sign agrees with the angle: positive when it is acute, negative when it is obtuse, zero when it is right.",
+      "读出每个箭头的坐标，对应坐标相乘再相加。符号与夹角一致：锐角为正，钝角为负，直角为零。",
+    ],
+    (rng) => {
+      const [u, v] = independent(rng, 5);
+      const answer = dot(u, v);
+      return ask(
+        ["Find $u \\cdot v$ for the drawn vectors.", "求所画向量的点积 $u \\cdot v$。"],
+        answer,
+        [-answer, cross(u, v), u[0] * v[1] + u[1] * v[0], answer + 1],
+        [
+          `$u = ${at(u)}$ and $v = ${at(v)}$, so $u \\cdot v = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${answer}$.`,
+          `$u = ${at(u)}$，$v = ${at(v)}$，所以 $u \\cdot v = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${answer}$。`,
+        ],
+        fig(
+          6,
+          [...arrow(u, "u"), ...arrow(v, "v")],
+          [`Arrows from the origin: u to ${at(u)} and v to ${at(v)}.`, `从原点出发的箭头：u 指向 ${at(u)}，v 指向 ${at(v)}。`],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["dot-product-in-n-dimensional-euclidean-space#the-dot-product-of-two-drawn-arrows"],
+};
 
 const normOfDifference = point(
   "the-distance-between-the-tips-of-two-arrows",
@@ -936,82 +951,91 @@ const complementVector = point(
   },
 );
 
-const componentsOrthogonal = point(
-  "a-coordinate-relative-to-a-drawn-orthogonal-basis",
-  ["A coordinate relative to a drawn orthogonal basis", "相对于所画正交基的坐标"],
-  [
-    "When the basis vectors are perpendicular, the coordinate along $b_i$ is $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$, and no system has to be solved.",
-    "当基向量互相垂直时，沿 $b_i$ 的坐标是 $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$，无需解方程组。",
-  ],
-  (rng) => {
-    const b1 = rng.pick<Point>([...slanted, [2, 0], [0, 2], [1, 0], [0, 1]]);
-    const k = rng.pick([1, 2, -1]);
-    const b2: Point = [-k * b1[1], k * b1[0]];
-    const w = rng.pick(grid(4).filter((v) => cross(v, b1) !== 0 && cross(v, b2) !== 0));
-    const first = rng.bool();
-    const b = first ? b1 : b2;
-    const top = dot(w, b);
-    const bottom = dot(b, b);
-    const other = first ? b2 : b1;
-    return ask(
-      [
-        `The arrows show an orthogonal basis $(b_1, b_2)$ and a vector $w = c_1 b_1 + c_2 b_2$. Find $c_${first ? 1 : 2}$.`,
-        `箭头表示正交基 $(b_1, b_2)$ 和向量 $w = c_1 b_1 + c_2 b_2$。求 $c_${first ? 1 : 2}$。`,
-      ],
-      Q.of(top, bottom),
-      [top, Q.of(dot(w, other), dot(other, other)), Q.of(bottom, top === 0 ? 1 : top), Q.of(top, bottom + 1)],
-      [
-        `$w = ${at(w)}$ and $b_${first ? 1 : 2} = ${at(b)}$, so the coordinate is $\\frac{${top}}{${bottom}} = ${Q.of(top, bottom).toLatex()}$.`,
-        `$w = ${at(w)}$，$b_${first ? 1 : 2} = ${at(b)}$，所以坐标为 $\\frac{${top}}{${bottom}} = ${Q.of(top, bottom).toLatex()}$。`,
-      ],
-      fig(
-        7,
-        [...arrow(b1, "b1", false), ...arrow(b2, "b2", false), ...arrow(w, "w")],
+const componentsOrthogonal = {
+  ...point(
+    "a-coordinate-relative-to-a-drawn-orthogonal-basis",
+    ["A coordinate relative to a drawn orthogonal basis", "相对于所画正交基的坐标"],
+    [
+      "When the basis vectors are perpendicular, the coordinate along $b_i$ is $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$, and no system has to be solved.",
+      "当基向量互相垂直时，沿 $b_i$ 的坐标是 $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$，无需解方程组。",
+    ],
+    (rng) => {
+      const b1 = rng.pick<Point>([...slanted, [2, 0], [0, 2], [1, 0], [0, 1]]);
+      const k = rng.pick([1, 2, -1]);
+      const b2: Point = [-k * b1[1], k * b1[0]];
+      const w = rng.pick(grid(4).filter((v) => cross(v, b1) !== 0 && cross(v, b2) !== 0));
+      const first = rng.bool();
+      const b = first ? b1 : b2;
+      const top = dot(w, b);
+      const bottom = dot(b, b);
+      const other = first ? b2 : b1;
+      return ask(
         [
-          `Arrows from the origin: b1 to ${at(b1)}, b2 to ${at(b2)} and w to ${at(w)}.`,
-          `从原点出发的箭头：b1 指向 ${at(b1)}，b2 指向 ${at(b2)}，w 指向 ${at(w)}。`,
+          `The arrows show an orthogonal basis $(b_1, b_2)$ and a vector $w = c_1 b_1 + c_2 b_2$. Find $c_${first ? 1 : 2}$.`,
+          `箭头表示正交基 $(b_1, b_2)$ 和向量 $w = c_1 b_1 + c_2 b_2$。求 $c_${first ? 1 : 2}$。`,
         ],
-      ),
-    );
-  },
-);
+        Q.of(top, bottom),
+        [top, Q.of(dot(w, other), dot(other, other)), Q.of(bottom, top === 0 ? 1 : top), Q.of(top, bottom + 1)],
+        [
+          `$w = ${at(w)}$ and $b_${first ? 1 : 2} = ${at(b)}$, so the coordinate is $\\frac{${top}}{${bottom}} = ${Q.of(top, bottom).toLatex()}$.`,
+          `$w = ${at(w)}$，$b_${first ? 1 : 2} = ${at(b)}$，所以坐标为 $\\frac{${top}}{${bottom}} = ${Q.of(top, bottom).toLatex()}$。`,
+        ],
+        fig(
+          7,
+          [...arrow(b1, "b1", false), ...arrow(b2, "b2", false), ...arrow(w, "w")],
+          [
+            `Arrows from the origin: b1 to ${at(b1)}, b2 to ${at(b2)} and w to ${at(w)}.`,
+            `从原点出发的箭头：b1 指向 ${at(b1)}，b2 指向 ${at(b2)}，w 指向 ${at(w)}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure:
+    linearAlgebraDrawings2[
+      "components-of-a-vector-with-respect-to-an-orthogonal-or-orthonormal-basis#a-coordinate-relative-to-a-drawn-orthogonal-basis"
+    ],
+};
 
-const gramSchmidt = point(
-  "a-gram-schmidt-step-on-two-drawn-arrows",
-  ["A Gram-Schmidt step on two drawn arrows", "对两个所画箭头做格拉姆-施密特一步"],
-  [
-    "Gram-Schmidt keeps $u$ and replaces $v$ by $v - \\frac{v \\cdot u}{u \\cdot u} u$, which removes the part of $v$ along $u$. What remains is perpendicular to $u$, and that gives an orthogonal pair spanning the same plane.",
-    "格拉姆-施密特保留 $u$，把 $v$ 换成 $v - \\frac{v \\cdot u}{u \\cdot u} u$，也就是去掉 $v$ 沿 $u$ 的部分。剩下的部分垂直于 $u$，于是得到张成同一平面的一对正交向量。",
-  ],
-  (rng) => {
-    const u = rng.pick<Point>([...slanted, [2, 1], [1, 0], [0, 1], [2, 0]]);
-    const v = rng.pick(grid(4).filter((x) => cross(x, u) !== 0 && dot(x, u) !== 0));
-    const uu = dot(u, u);
-    const vu = dot(v, u);
-    const i = rng.int(0, 1);
-    const ui = u[i] as number;
-    const vi = v[i] as number;
-    const name: Pair = i === 0 ? ["first", "第一"] : ["second", "第二"];
-    const answer = Q.of(vi * uu - vu * ui, uu);
-    return ask(
-      [
-        `Apply one step of Gram-Schmidt to the drawn vectors, keeping $u$, and let $w = v - \\frac{v \\cdot u}{u \\cdot u} u$. Find the ${name[0]} coordinate of $w$.`,
-        `对所画向量做一步格拉姆-施密特，保留 $u$，令 $w = v - \\frac{v \\cdot u}{u \\cdot u} u$。求 $w$ 的${name[1]}个坐标。`,
-      ],
-      answer,
-      [Q.of(vu * ui, uu), vi - vu * ui, Q.of(vi * uu + vu * ui, uu), Q.of(vi * uu - vu * ui, vu)],
-      [
-        `$v \\cdot u = ${vu}$ and $u \\cdot u = ${uu}$, so that coordinate is $${vi} - \\frac{${vu}}{${uu}}(${ui}) = ${answer.toLatex()}$.`,
-        `$v \\cdot u = ${vu}$，$u \\cdot u = ${uu}$，所以该坐标为 $${vi} - \\frac{${vu}}{${uu}}(${ui}) = ${answer.toLatex()}$。`,
-      ],
-      fig(
-        6,
-        [...arrow(u, "u"), ...arrow(v, "v", false)],
-        [`Arrows from the origin: u to ${at(u)} and v to ${at(v)}.`, `从原点出发的箭头：u 指向 ${at(u)}，v 指向 ${at(v)}。`],
-      ),
-    );
-  },
-);
+const gramSchmidt = {
+  ...point(
+    "a-gram-schmidt-step-on-two-drawn-arrows",
+    ["A Gram-Schmidt step on two drawn arrows", "对两个所画箭头做格拉姆-施密特一步"],
+    [
+      "Gram-Schmidt keeps $u$ and replaces $v$ by $v - \\frac{v \\cdot u}{u \\cdot u} u$, which removes the part of $v$ along $u$. What remains is perpendicular to $u$, and that gives an orthogonal pair spanning the same plane.",
+      "格拉姆-施密特保留 $u$，把 $v$ 换成 $v - \\frac{v \\cdot u}{u \\cdot u} u$，也就是去掉 $v$ 沿 $u$ 的部分。剩下的部分垂直于 $u$，于是得到张成同一平面的一对正交向量。",
+    ],
+    (rng) => {
+      const u = rng.pick<Point>([...slanted, [2, 1], [1, 0], [0, 1], [2, 0]]);
+      const v = rng.pick(grid(4).filter((x) => cross(x, u) !== 0 && dot(x, u) !== 0));
+      const uu = dot(u, u);
+      const vu = dot(v, u);
+      const i = rng.int(0, 1);
+      const ui = u[i] as number;
+      const vi = v[i] as number;
+      const name: Pair = i === 0 ? ["first", "第一"] : ["second", "第二"];
+      const answer = Q.of(vi * uu - vu * ui, uu);
+      return ask(
+        [
+          `Apply one step of Gram-Schmidt to the drawn vectors, keeping $u$, and let $w = v - \\frac{v \\cdot u}{u \\cdot u} u$. Find the ${name[0]} coordinate of $w$.`,
+          `对所画向量做一步格拉姆-施密特，保留 $u$，令 $w = v - \\frac{v \\cdot u}{u \\cdot u} u$。求 $w$ 的${name[1]}个坐标。`,
+        ],
+        answer,
+        [Q.of(vu * ui, uu), vi - vu * ui, Q.of(vi * uu + vu * ui, uu), Q.of(vi * uu - vu * ui, vu)],
+        [
+          `$v \\cdot u = ${vu}$ and $u \\cdot u = ${uu}$, so that coordinate is $${vi} - \\frac{${vu}}{${uu}}(${ui}) = ${answer.toLatex()}$.`,
+          `$v \\cdot u = ${vu}$，$u \\cdot u = ${uu}$，所以该坐标为 $${vi} - \\frac{${vu}}{${uu}}(${ui}) = ${answer.toLatex()}$。`,
+        ],
+        fig(
+          6,
+          [...arrow(u, "u"), ...arrow(v, "v", false)],
+          [`Arrows from the origin: u to ${at(u)} and v to ${at(v)}.`, `从原点出发的箭头：u 指向 ${at(u)}，v 指向 ${at(v)}。`],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["gram-schmidt-process-for-two-vectors#a-gram-schmidt-step-on-two-drawn-arrows"],
+};
 
 const projectionEntry = point(
   "an-entry-of-the-projection-matrix-onto-a-drawn-line",
@@ -1102,161 +1126,170 @@ const columnSpaceMatrix = point(
 /** tilted returns the coordinates along axes turned by the angle whose cosine and sine are given. */
 const tilted = (c: number, s: number) => (x: number, y: number) => [c * x + s * y, -s * x + c * y] as const;
 
-const formClass = point(
-  "the-type-of-a-quadratic-form-from-a-level-curve",
-  ["The type of a quadratic form from a level curve", "由等值线判断二次型的类型"],
-  [
-    "In principal axes $Q = \\lambda_1 s^2 + \\lambda_2 t^2$. An ellipse at a positive level means both eigenvalues are positive, and at a negative level both are negative. A hyperbola means opposite signs. Two parallel lines mean one eigenvalue is zero.",
-    "在主轴下 $Q = \\lambda_1 s^2 + \\lambda_2 t^2$。正水平的椭圆表示两个特征值都为正，负水平的椭圆表示都为负。双曲线表示符号相反。两条平行线表示有一个特征值为零。",
-  ],
-  (rng) => {
-    const shape = rng.pick(["ellipse", "hyperbola", "lines"] as const);
-    const level = rng.bool() ? 1 : -1;
-    const p = rng.int(2, 5);
-    const q = rng.pick([2, 3, 4, 5].filter((v) => v !== p));
-    const root = Math.SQRT1_2;
-    const [c, s] = rng.pick<[number, number]>([
-      [1, 0],
-      [root, root],
-      [root, -root],
-    ]);
-    const turn = tilted(c, s);
-    const f = (x: number, y: number) => {
-      const [u, v] = turn(x, y);
-      if (shape === "ellipse") return (u * u) / (p * p) + (v * v) / (q * q);
-      if (shape === "hyperbola") return (u * u) / (p * p) - (v * v) / (q * q);
-      return (u * u) / (p * p);
-    };
-    const names: Record<"pos" | "neg" | "ind" | "psd" | "nsd", Pair> = {
-      pos: ["Positive definite", "正定"],
-      neg: ["Negative definite", "负定"],
-      ind: ["Indefinite", "不定"],
-      psd: ["Positive semidefinite, not definite", "半正定但非正定"],
-      nsd: ["Negative semidefinite, not definite", "半负定但非负定"],
-    };
-    const name = (kind: keyof typeof names): Pair => names[kind];
-    const kind = shape === "hyperbola" ? "ind" : shape === "ellipse" ? (level > 0 ? "pos" : "neg") : level > 0 ? "psd" : "nsd";
-    const all = ["pos", "neg", "ind", "psd", "nsd"] as const;
-    const curve: Pair =
-      shape === "ellipse"
-        ? ["An ellipse", "一个椭圆"]
-        : shape === "hyperbola"
-          ? ["A hyperbola", "一条双曲线"]
-          : ["Two parallel lines", "两条平行线"];
-    const why: Pair =
-      shape === "hyperbola"
-        ? [
-            "A hyperbola has axes along which the form takes opposite signs, whichever level is drawn.",
-            "双曲线有两个主轴，二次型在其上符号相反，与所画的水平无关。",
-          ]
-        : shape === "ellipse"
+const formClass = {
+  ...point(
+    "the-type-of-a-quadratic-form-from-a-level-curve",
+    ["The type of a quadratic form from a level curve", "由等值线判断二次型的类型"],
+    [
+      "In principal axes $Q = \\lambda_1 s^2 + \\lambda_2 t^2$. An ellipse at a positive level means both eigenvalues are positive, and at a negative level both are negative. A hyperbola means opposite signs. Two parallel lines mean one eigenvalue is zero.",
+      "在主轴下 $Q = \\lambda_1 s^2 + \\lambda_2 t^2$。正水平的椭圆表示两个特征值都为正，负水平的椭圆表示都为负。双曲线表示符号相反。两条平行线表示有一个特征值为零。",
+    ],
+    (rng) => {
+      const shape = rng.pick(["ellipse", "hyperbola", "lines"] as const);
+      const level = rng.bool() ? 1 : -1;
+      const p = rng.int(2, 5);
+      const q = rng.pick([2, 3, 4, 5].filter((v) => v !== p));
+      const root = Math.SQRT1_2;
+      const [c, s] = rng.pick<[number, number]>([
+        [1, 0],
+        [root, root],
+        [root, -root],
+      ]);
+      const turn = tilted(c, s);
+      const f = (x: number, y: number) => {
+        const [u, v] = turn(x, y);
+        if (shape === "ellipse") return (u * u) / (p * p) + (v * v) / (q * q);
+        if (shape === "hyperbola") return (u * u) / (p * p) - (v * v) / (q * q);
+        return (u * u) / (p * p);
+      };
+      const names: Record<"pos" | "neg" | "ind" | "psd" | "nsd", Pair> = {
+        pos: ["Positive definite", "正定"],
+        neg: ["Negative definite", "负定"],
+        ind: ["Indefinite", "不定"],
+        psd: ["Positive semidefinite, not definite", "半正定但非正定"],
+        nsd: ["Negative semidefinite, not definite", "半负定但非负定"],
+      };
+      const name = (kind: keyof typeof names): Pair => names[kind];
+      const kind = shape === "hyperbola" ? "ind" : shape === "ellipse" ? (level > 0 ? "pos" : "neg") : level > 0 ? "psd" : "nsd";
+      const all = ["pos", "neg", "ind", "psd", "nsd"] as const;
+      const curve: Pair =
+        shape === "ellipse"
+          ? ["An ellipse", "一个椭圆"]
+          : shape === "hyperbola"
+            ? ["A hyperbola", "一条双曲线"]
+            : ["Two parallel lines", "两条平行线"];
+      const why: Pair =
+        shape === "hyperbola"
           ? [
-              `An ellipse is bounded, so $Q$ keeps one sign away from the origin, and the level $${level}$ gives that sign.`,
-              `椭圆有界，所以 $Q$ 在原点外保持一个符号，水平 $${level}$ 给出这个符号。`,
+              "A hyperbola has axes along which the form takes opposite signs, whichever level is drawn.",
+              "双曲线有两个主轴，二次型在其上符号相反，与所画的水平无关。",
             ]
-          : [
-              `Parallel lines run along a direction on which $Q$ is zero, and the level $${level}$ gives the sign elsewhere.`,
-              `平行线所沿的方向上 $Q$ 为零，水平 $${level}$ 给出其他方向的符号。`,
-            ];
-    return choose(
-      rng,
-      [
-        `The drawn curve is the level set $Q(x, y) = ${level}$ of a quadratic form $Q$. What type of form is $Q$?`,
-        `所画的曲线是二次型 $Q$ 的等值线 $Q(x, y) = ${level}$。$Q$ 是什么类型？`,
-      ],
-      name(kind),
-      all.filter((k) => k !== kind).map(name),
-      why,
-      fig(7, [{ kind: "contour", f, level: 1, accent: true }], [`${curve[0]} centered at the origin.`, `${curve[1]}，中心在原点。`]),
-    );
-  },
-);
+          : shape === "ellipse"
+            ? [
+                `An ellipse is bounded, so $Q$ keeps one sign away from the origin, and the level $${level}$ gives that sign.`,
+                `椭圆有界，所以 $Q$ 在原点外保持一个符号，水平 $${level}$ 给出这个符号。`,
+              ]
+            : [
+                `Parallel lines run along a direction on which $Q$ is zero, and the level $${level}$ gives the sign elsewhere.`,
+                `平行线所沿的方向上 $Q$ 为零，水平 $${level}$ 给出其他方向的符号。`,
+              ];
+      return choose(
+        rng,
+        [
+          `The drawn curve is the level set $Q(x, y) = ${level}$ of a quadratic form $Q$. What type of form is $Q$?`,
+          `所画的曲线是二次型 $Q$ 的等值线 $Q(x, y) = ${level}$。$Q$ 是什么类型？`,
+        ],
+        name(kind),
+        all.filter((k) => k !== kind).map(name),
+        why,
+        fig(7, [{ kind: "contour", f, level: 1, accent: true }], [`${curve[0]} centered at the origin.`, `${curve[1]}，中心在原点。`]),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["positive-definite-and-negative-definite-quadratic-forms#the-type-of-a-quadratic-form-from-a-level-curve"],
+};
 
-const constrainedMax = point(
-  "an-extreme-value-on-the-unit-circle-from-a-level-curve",
-  ["An extreme value on the unit circle from a level curve", "由等值线求单位圆上的极值"],
-  [
-    "For $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$, the level curve $Q = 1$ is an ellipse with semi-axes $p$ and $q$. The eigenvalues are $\\frac{1}{p^2}$ and $\\frac{1}{q^2}$, and they are the extreme values of $Q$ on the unit circle.",
-    "对 $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$，等值线 $Q = 1$ 是半轴为 $p$ 和 $q$ 的椭圆。特征值是 $\\frac{1}{p^2}$ 和 $\\frac{1}{q^2}$，它们就是 $Q$ 在单位圆上的极值。",
-  ],
-  (rng) => {
-    const p = rng.int(1, 6);
-    const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
-    const f = (x: number, y: number) => (x * x) / (p * p) + (y * y) / (q * q);
-    const askMax = rng.bool();
-    const semi = askMax ? Math.min(p, q) : Math.max(p, q);
-    const answer = Q.of(1, semi * semi);
-    return ask(
-      [
-        `The drawn ellipse is the level curve $Q(x, y) = 1$ of a quadratic form $Q$ whose principal axes are the coordinate axes. Find the ${askMax ? "maximum" : "minimum"} of $Q$ on the unit circle $x^2 + y^2 = 1$.`,
-        `所画的椭圆是二次型 $Q$ 的等值线 $Q(x, y) = 1$，$Q$ 的主轴是坐标轴。求 $Q$ 在单位圆 $x^2 + y^2 = 1$ 上的${askMax ? "最大值" : "最小值"}。`,
-      ],
-      answer,
-      [Q.of(1, semi), Q.of(semi * semi, 1), Q.of(1, (p + q - semi) * (p + q - semi)), Q.of(1, 2 * semi)],
-      [
-        `The semi-axes are $${p}$ and $${q}$, so the eigenvalues are $${Q.of(1, p * p).toLatex()}$ and $${Q.of(1, q * q).toLatex()}$. The ${askMax ? "larger" : "smaller"} one is $${answer.toLatex()}$, from the ${askMax ? "shorter" : "longer"} axis.`,
-        `半轴为 $${p}$ 和 $${q}$，所以特征值为 $${Q.of(1, p * p).toLatex()}$ 和 $${Q.of(1, q * q).toLatex()}$。${askMax ? "较大" : "较小"}的是 $${answer.toLatex()}$，来自${askMax ? "较短" : "较长"}的轴。`,
-      ],
-      fig(
-        7,
-        [{ kind: "contour", f, level: 1, accent: true }],
+const constrainedMax = {
+  ...point(
+    "an-extreme-value-on-the-unit-circle-from-a-level-curve",
+    ["An extreme value on the unit circle from a level curve", "由等值线求单位圆上的极值"],
+    [
+      "For $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$, the level curve $Q = 1$ is an ellipse with semi-axes $p$ and $q$. The eigenvalues are $\\frac{1}{p^2}$ and $\\frac{1}{q^2}$, and they are the extreme values of $Q$ on the unit circle.",
+      "对 $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$，等值线 $Q = 1$ 是半轴为 $p$ 和 $q$ 的椭圆。特征值是 $\\frac{1}{p^2}$ 和 $\\frac{1}{q^2}$，它们就是 $Q$ 在单位圆上的极值。",
+    ],
+    (rng) => {
+      const p = rng.int(1, 6);
+      const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
+      const f = (x: number, y: number) => (x * x) / (p * p) + (y * y) / (q * q);
+      const askMax = rng.bool();
+      const semi = askMax ? Math.min(p, q) : Math.max(p, q);
+      const answer = Q.of(1, semi * semi);
+      return ask(
         [
-          `An ellipse centered at the origin that meets the x-axis at ±${p} and the y-axis at ±${q}.`,
-          `中心在原点的椭圆，与 x 轴交于 ±${p}，与 y 轴交于 ±${q}。`,
+          `The drawn ellipse is the level curve $Q(x, y) = 1$ of a quadratic form $Q$ whose principal axes are the coordinate axes. Find the ${askMax ? "maximum" : "minimum"} of $Q$ on the unit circle $x^2 + y^2 = 1$.`,
+          `所画的椭圆是二次型 $Q$ 的等值线 $Q(x, y) = 1$，$Q$ 的主轴是坐标轴。求 $Q$ 在单位圆 $x^2 + y^2 = 1$ 上的${askMax ? "最大值" : "最小值"}。`,
         ],
-      ),
-    );
-  },
-);
+        answer,
+        [Q.of(1, semi), Q.of(semi * semi, 1), Q.of(1, (p + q - semi) * (p + q - semi)), Q.of(1, 2 * semi)],
+        [
+          `The semi-axes are $${p}$ and $${q}$, so the eigenvalues are $${Q.of(1, p * p).toLatex()}$ and $${Q.of(1, q * q).toLatex()}$. The ${askMax ? "larger" : "smaller"} one is $${answer.toLatex()}$, from the ${askMax ? "shorter" : "longer"} axis.`,
+          `半轴为 $${p}$ 和 $${q}$，所以特征值为 $${Q.of(1, p * p).toLatex()}$ 和 $${Q.of(1, q * q).toLatex()}$。${askMax ? "较大" : "较小"}的是 $${answer.toLatex()}$，来自${askMax ? "较短" : "较长"}的轴。`,
+        ],
+        fig(
+          7,
+          [{ kind: "contour", f, level: 1, accent: true }],
+          [
+            `An ellipse centered at the origin that meets the x-axis at ±${p} and the y-axis at ±${q}.`,
+            `中心在原点的椭圆，与 x 轴交于 ±${p}，与 y 轴交于 ±${q}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["constrained-optimization-of-quadratic-forms#an-extreme-value-on-the-unit-circle-from-a-level-curve"],
+};
 
-const singularFromEllipse = point(
-  "singular-values-from-the-image-of-the-unit-circle",
-  ["Singular values from the image of the unit circle", "由单位圆的像读奇异值"],
-  [
-    "A $2 \\times 2$ invertible matrix sends the unit circle to an ellipse whose semi-axes are its singular values. Their product is $\\lvert \\det A \\rvert$, and their ratio is the condition number.",
-    "$2 \\times 2$ 可逆矩阵把单位圆映成椭圆，椭圆的半轴就是奇异值。它们的积是 $\\lvert \\det A \\rvert$，比值是条件数。",
-  ],
-  (rng) => {
-    const p = rng.int(1, 6);
-    const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
-    const [big, small] = [Math.max(p, q), Math.min(p, q)];
-    const f = (x: number, y: number) => (x * x) / (p * p) + (y * y) / (q * q);
-    const kind = rng.pick(["largest", "smallest", "det", "ratio"] as const);
-    const answer =
-      kind === "largest" ? Q.of(big, 1) : kind === "smallest" ? Q.of(small, 1) : kind === "det" ? Q.of(big * small, 1) : Q.of(big, small);
-    const asked: Pair =
-      kind === "largest"
-        ? ["the largest singular value of $A$", "$A$ 的最大奇异值"]
-        : kind === "smallest"
-          ? ["the smallest singular value of $A$", "$A$ 的最小奇异值"]
-          : kind === "det"
-            ? ["$\\lvert \\det A \\rvert$", "$\\lvert \\det A \\rvert$"]
-            : ["the condition number $\\frac{\\sigma_1}{\\sigma_2}$ of $A$", "$A$ 的条件数 $\\frac{\\sigma_1}{\\sigma_2}$"];
-    return ask(
-      [
-        `A matrix $A$ sends the dashed unit circle to the solid ellipse. Find ${asked[0]}.`,
-        `矩阵 $A$ 把虚线单位圆映成实线椭圆。求${asked[1]}。`,
-      ],
-      answer,
-      [Q.of(small, big), Q.of(big + small, 1), Q.of(big * big, 1), Q.of(small * small, 1), Q.of(2 * big, 1)],
-      [
-        `The semi-axes of the ellipse are the singular values, $\\sigma_1 = ${big}$ and $\\sigma_2 = ${small}$, which gives $${answer.toLatex()}$.`,
-        `椭圆的半轴就是奇异值，$\\sigma_1 = ${big}$，$\\sigma_2 = ${small}$，于是得 $${answer.toLatex()}$。`,
-      ],
-      fig(
-        7,
+const singularFromEllipse = {
+  ...point(
+    "singular-values-from-the-image-of-the-unit-circle",
+    ["Singular values from the image of the unit circle", "由单位圆的像读奇异值"],
+    [
+      "A $2 \\times 2$ invertible matrix sends the unit circle to an ellipse whose semi-axes are its singular values. Their product is $\\lvert \\det A \\rvert$, and their ratio is the condition number.",
+      "$2 \\times 2$ 可逆矩阵把单位圆映成椭圆，椭圆的半轴就是奇异值。它们的积是 $\\lvert \\det A \\rvert$，比值是条件数。",
+    ],
+    (rng) => {
+      const p = rng.int(1, 6);
+      const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
+      const [big, small] = [Math.max(p, q), Math.min(p, q)];
+      const f = (x: number, y: number) => (x * x) / (p * p) + (y * y) / (q * q);
+      const kind = rng.pick(["largest", "smallest", "det", "ratio"] as const);
+      const answer =
+        kind === "largest" ? Q.of(big, 1) : kind === "smallest" ? Q.of(small, 1) : kind === "det" ? Q.of(big * small, 1) : Q.of(big, small);
+      const asked: Pair =
+        kind === "largest"
+          ? ["the largest singular value of $A$", "$A$ 的最大奇异值"]
+          : kind === "smallest"
+            ? ["the smallest singular value of $A$", "$A$ 的最小奇异值"]
+            : kind === "det"
+              ? ["$\\lvert \\det A \\rvert$", "$\\lvert \\det A \\rvert$"]
+              : ["the condition number $\\frac{\\sigma_1}{\\sigma_2}$ of $A$", "$A$ 的条件数 $\\frac{\\sigma_1}{\\sigma_2}$"];
+      return ask(
         [
-          { kind: "circle", center: [0, 0], r: 1, dashed: true },
-          { kind: "contour", f, level: 1, accent: true },
+          `A matrix $A$ sends the dashed unit circle to the solid ellipse. Find ${asked[0]}.`,
+          `矩阵 $A$ 把虚线单位圆映成实线椭圆。求${asked[1]}。`,
         ],
+        answer,
+        [Q.of(small, big), Q.of(big + small, 1), Q.of(big * big, 1), Q.of(small * small, 1), Q.of(2 * big, 1)],
         [
-          `A dashed unit circle and a solid ellipse centered at the origin that meets the x-axis at ±${p} and the y-axis at ±${q}.`,
-          `虚线单位圆，以及中心在原点的实线椭圆，与 x 轴交于 ±${p}，与 y 轴交于 ±${q}。`,
+          `The semi-axes of the ellipse are the singular values, $\\sigma_1 = ${big}$ and $\\sigma_2 = ${small}$, which gives $${answer.toLatex()}$.`,
+          `椭圆的半轴就是奇异值，$\\sigma_1 = ${big}$，$\\sigma_2 = ${small}$，于是得 $${answer.toLatex()}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          7,
+          [
+            { kind: "circle", center: [0, 0], r: 1, dashed: true },
+            { kind: "contour", f, level: 1, accent: true },
+          ],
+          [
+            `A dashed unit circle and a solid ellipse centered at the origin that meets the x-axis at ±${p} and the y-axis at ±${q}.`,
+            `虚线单位圆，以及中心在原点的实线椭圆，与 x 轴交于 ±${p}，与 y 轴交于 ±${q}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearAlgebraDrawings2["singular-values-of-a-matrix#singular-values-from-the-image-of-the-unit-circle"],
+};
 
 const leastSquaresLine = point(
   "the-least-squares-line-of-three-drawn-points",

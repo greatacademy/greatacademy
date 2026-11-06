@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
@@ -80,43 +81,47 @@ function portrait(l1: number, l2: number, u: Point, w: Point, center: Point, r: 
   return marks;
 }
 
-const stableFromGraph = point(
-  "stability-from-the-graph-of-the-right-side",
-  ["Stability from the graph of the right side", "由右端函数的图判断稳定性"],
-  [
-    "For an autonomous equation $y' = f(y)$, equilibria are the zeros of $f$. Where the graph of $f$ crosses the axis going from positive to negative, solutions on both sides move toward the equilibrium, so it is stable. Where the graph crosses from negative to positive, solutions move away, so it is unstable.",
-    "对自治方程 $y' = f(y)$，平衡点是 $f$ 的零点。$f$ 的图从正到负穿过轴的地方，两侧的解都向平衡点移动，所以它稳定。图从负到正穿过轴的地方，解向外移动，所以它不稳定。",
-  ],
-  (rng) => {
-    const a = rng.int(-4, 1);
-    const b = a + rng.int(1, 4);
-    const up = rng.bool();
-    const shrink = rng.pick([1, 0.5]);
-    const f = (y: number) => (up ? 1 : -1) * shrink * (y - a) * (y - b);
-    const stable = up ? a : b;
-    const unstable = up ? b : a;
-    return ask(
-      [
-        "The graph shows $f(y)$ for the autonomous equation $y' = f(y)$. At which value of $y$ is there a stable equilibrium?",
-        "图中是自治方程 $y' = f(y)$ 的 $f(y)$。在 $y$ 的哪个值处有稳定平衡点？",
-      ],
-      stable,
-      [unstable, (a + b) % 2 === 0 ? (a + b) / 2 : stable + 5, Math.abs(stable)],
-      [
-        `The graph crosses the axis at $y = ${a}$ and $y = ${b}$. At $y = ${stable}$ it goes from positive to negative, so solutions on both sides move toward it and it is stable.`,
-        `图在 $y = ${a}$ 和 $y = ${b}$ 处穿过轴。在 $y = ${stable}$ 处它从正变负，两侧的解都向它移动，所以它稳定。`,
-      ],
-      fig(
-        { ...square(6), xName: "y", yName: "f(y)" },
-        [{ kind: "curve", f, accent: true }],
+const stableFromGraph = {
+  ...point(
+    "stability-from-the-graph-of-the-right-side",
+    ["Stability from the graph of the right side", "由右端函数的图判断稳定性"],
+    [
+      "For an autonomous equation $y' = f(y)$, equilibria are the zeros of $f$. Where the graph of $f$ crosses the axis going from positive to negative, solutions on both sides move toward the equilibrium, so it is stable. Where the graph crosses from negative to positive, solutions move away, so it is unstable.",
+      "对自治方程 $y' = f(y)$，平衡点是 $f$ 的零点。$f$ 的图从正到负穿过轴的地方，两侧的解都向平衡点移动，所以它稳定。图从负到正穿过轴的地方，解向外移动，所以它不稳定。",
+    ],
+    (rng) => {
+      const a = rng.int(-4, 1);
+      const b = a + rng.int(1, 4);
+      const up = rng.bool();
+      const shrink = rng.pick([1, 0.5]);
+      const f = (y: number) => (up ? 1 : -1) * shrink * (y - a) * (y - b);
+      const stable = up ? a : b;
+      const unstable = up ? b : a;
+      return ask(
         [
-          `A parabola opening ${up ? "up" : "down"} that crosses the horizontal axis at ${a} and ${b}.`,
-          `开口向${up ? "上" : "下"}的抛物线，与横轴交于 ${a} 和 ${b}。`,
+          "The graph shows $f(y)$ for the autonomous equation $y' = f(y)$. At which value of $y$ is there a stable equilibrium?",
+          "图中是自治方程 $y' = f(y)$ 的 $f(y)$。在 $y$ 的哪个值处有稳定平衡点？",
         ],
-      ),
-    );
-  },
-);
+        stable,
+        [unstable, (a + b) % 2 === 0 ? (a + b) / 2 : stable + 5, Math.abs(stable)],
+        [
+          `The graph crosses the axis at $y = ${a}$ and $y = ${b}$. At $y = ${stable}$ it goes from positive to negative, so solutions on both sides move toward it and it is stable.`,
+          `图在 $y = ${a}$ 和 $y = ${b}$ 处穿过轴。在 $y = ${stable}$ 处它从正变负，两侧的解都向它移动，所以它稳定。`,
+        ],
+        fig(
+          { ...square(6), xName: "y", yName: "f(y)" },
+          [{ kind: "curve", f, accent: true }],
+          [
+            `A parabola opening ${up ? "up" : "down"} that crosses the horizontal axis at ${a} and ${b}.`,
+            `开口向${up ? "上" : "下"}的抛物线，与横轴交于 ${a} 和 ${b}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure:
+    differentialEquationsDrawings1["classifying-equilibrium-solutions-of-first-order-odes#stability-from-the-graph-of-the-right-side"],
+};
 
 const limitFromPhaseLine = point(
   "the-long-run-value-from-a-phase-line",
@@ -752,49 +757,52 @@ function wave(kind: string, period: number, amp: number): PlaneMark[] {
   return marks;
 }
 
-const symmetryOfWave = point(
-  "which-fourier-terms-a-drawn-wave-needs",
-  ["Which Fourier terms a drawn wave needs", "图中的波需要哪些傅里叶项"],
-  [
-    "The symmetry of a graph decides which Fourier terms it needs. An odd function, with rotation symmetry about the origin, needs only sine terms. An even function, with mirror symmetry in the vertical axis, needs only cosine terms and perhaps a constant. A wave with neither symmetry needs both kinds of terms.",
-    "图的对称性决定需要哪些傅里叶项。奇函数关于原点旋转对称，只需要正弦项。偶函数关于纵轴镜像对称，只需要余弦项，可能还有常数。两种对称都没有的波，两类项都需要。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["oddSquare", "evenTriangle", "oddSaw", "neither"] as const);
-    const period = rng.pick([2, 4, 6]);
-    const amp = rng.int(1, 3);
-    const options: Record<string, Pair> = {
-      odd: ["sine terms only", "只有正弦项"],
-      even: ["cosine terms only, with no constant term", "只有余弦项，没有常数项"],
-      both: ["both sine and cosine terms", "正弦项和余弦项都有"],
-      none: ["a constant term only", "只有常数项"],
-    };
-    const right = kind === "oddSquare" || kind === "oddSaw" ? options.odd : kind === "evenTriangle" ? options.even : options.both;
-    const reason: Pair =
-      kind === "evenTriangle"
-        ? [
-            "The graph is a mirror image in the vertical axis, and it spends equal time above and below the axis",
-            "图关于纵轴镜像对称，并且在轴上方和下方的部分相等",
-          ]
-        : kind === "neither"
+const symmetryOfWave = {
+  ...point(
+    "which-fourier-terms-a-drawn-wave-needs",
+    ["Which Fourier terms a drawn wave needs", "图中的波需要哪些傅里叶项"],
+    [
+      "The symmetry of a graph decides which Fourier terms it needs. An odd function, with rotation symmetry about the origin, needs only sine terms. An even function, with mirror symmetry in the vertical axis, needs only cosine terms and perhaps a constant. A wave with neither symmetry needs both kinds of terms.",
+      "图的对称性决定需要哪些傅里叶项。奇函数关于原点旋转对称，只需要正弦项。偶函数关于纵轴镜像对称，只需要余弦项，可能还有常数。两种对称都没有的波，两类项都需要。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["oddSquare", "evenTriangle", "oddSaw", "neither"] as const);
+      const period = rng.pick([2, 4, 6]);
+      const amp = rng.int(1, 3);
+      const options: Record<string, Pair> = {
+        odd: ["sine terms only", "只有正弦项"],
+        even: ["cosine terms only, with no constant term", "只有余弦项，没有常数项"],
+        both: ["both sine and cosine terms", "正弦项和余弦项都有"],
+        none: ["a constant term only", "只有常数项"],
+      };
+      const right = kind === "oddSquare" || kind === "oddSaw" ? options.odd : kind === "evenTriangle" ? options.even : options.both;
+      const reason: Pair =
+        kind === "evenTriangle"
           ? [
-              "The graph is not a mirror image in the vertical axis and has no rotation symmetry about the origin",
-              "图既不关于纵轴镜像对称，也不关于原点旋转对称",
+              "The graph is a mirror image in the vertical axis, and it spends equal time above and below the axis",
+              "图关于纵轴镜像对称，并且在轴上方和下方的部分相等",
             ]
-          : ["The graph has rotation symmetry about the origin", "图关于原点旋转对称"];
-    return choose(
-      rng,
-      ["Which terms appear in the Fourier series of the periodic function drawn?", "图中周期函数的傅里叶级数含有哪些项？"],
-      right as Pair,
-      [options.odd as Pair, options.even as Pair, options.both as Pair, options.none as Pair],
-      [`${reason[0]}, so the series has ${(right as Pair)[0]}.`, `${reason[1]}，所以级数${(right as Pair)[1]}。`],
-      fig({ xMin: -8, xMax: 8, yMin: -4, yMax: 4 }, wave(kind, period, amp), [
-        `A periodic graph with period ${period} and height ${amp}. ${reason[0]}.`,
-        `周期为 ${period}、高度为 ${amp} 的周期函数图。${reason[1]}。`,
-      ]),
-    );
-  },
-);
+          : kind === "neither"
+            ? [
+                "The graph is not a mirror image in the vertical axis and has no rotation symmetry about the origin",
+                "图既不关于纵轴镜像对称，也不关于原点旋转对称",
+              ]
+            : ["The graph has rotation symmetry about the origin", "图关于原点旋转对称"];
+      return choose(
+        rng,
+        ["Which terms appear in the Fourier series of the periodic function drawn?", "图中周期函数的傅里叶级数含有哪些项？"],
+        right as Pair,
+        [options.odd as Pair, options.even as Pair, options.both as Pair, options.none as Pair],
+        [`${reason[0]}, so the series has ${(right as Pair)[0]}.`, `${reason[1]}，所以级数${(right as Pair)[1]}。`],
+        fig({ xMin: -8, xMax: 8, yMin: -4, yMax: 4 }, wave(kind, period, amp), [
+          `A periodic graph with period ${period} and height ${amp}. ${reason[0]}.`,
+          `周期为 ${period}、高度为 ${amp} 的周期函数图。${reason[1]}。`,
+        ]),
+      );
+    },
+  ),
+  figure: differentialEquationsDrawings1["properties-of-fourier-series#which-fourier-terms-a-drawn-wave-needs"],
+};
 
 /** deeperFiguresDifferentialEquationsPoints adds knowledge points of Differential Equations that are answered by reading a drawing. */
 export const deeperFiguresDifferentialEquationsPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

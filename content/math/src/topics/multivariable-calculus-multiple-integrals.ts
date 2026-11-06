@@ -1,6 +1,9 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
+import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
+import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
+import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 /** Pythagorean triples for clean coordinates. */
@@ -207,6 +210,7 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-subrectangles-in-grid-partitions",
+      figure: multivariableDrawings3["calculating-double-summations-over-partitions#area-of-subrectangles-in-grid-partitions"],
       title: t("Area of subrectangles in grid partitions", "网格分割中子矩形的面积"),
       explanation: t(
         "Each small rectangle has the width of one horizontal piece and the height of one vertical piece, so its area is their product. For $R = [a, b] \\times [c, d]$ partitioned by $m$ divisions in $x$ and $n$ divisions in $y$, each subrectangle has area:\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right).$$",
@@ -465,6 +469,7 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
   knowledgePoints: [
     {
       id: "lower-sum-with-unequal-subinterval-widths",
+      figure: multivariableDrawings3["lower-riemann-sums-over-general-rectangular-partitions#lower-sum-with-unequal-subinterval-widths"],
       title: t("Lower sum with unequal subinterval widths", "非等距子区间下的下黎曼和"),
       explanation: t(
         "A lower sum uses the smallest value of the function on each small rectangle, which for an increasing function is at the corner nearest the origin. For a partition with cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the lower sum of an increasing function $f(x, y) = ax + by$ is:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j.$$",
@@ -769,6 +774,7 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-iterated-integrals-over-rectangles",
+      figure: multivariableDrawings3["double-integrals-over-rectangular-domains#evaluating-iterated-integrals-over-rectangles"],
       title: t("Evaluating iterated integrals over rectangles", "计算矩形区域上的二次积分"),
       explanation: t(
         "Integrate with respect to one variable while treating the other as a constant, then integrate the result with respect to the remaining variable. For $R = [a, b] \\times [c, d]$, evaluate by integrating with respect to $y$ then $x$:\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}.$$",
@@ -813,6 +819,7 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
     },
     {
       id: "separable-double-integrals-of-monomials",
+      figure: multivariableDrawings3["double-integrals-over-rectangular-domains#separable-double-integrals-of-monomials"],
       title: t("Separable double integrals of monomials", "单项式的可分离二重积分"),
       explanation: t(
         "When the integrand is a product $g(x)h(y)$ and the region is a rectangle, Fubini's theorem lets the double integral split into a product of single integrals:\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}.$$\n\nThis only works on rectangles, where the limits of one variable do not depend on the other.",
@@ -860,6 +867,7 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
   knowledgePoints: [
     {
       id: "integrating-over-triangular-domains",
+      figure: multivariableDrawings3["double-integrals-over-non-rectangular-domains#integrating-over-triangular-domains"],
       title: t("Integrating over triangular domains", "在三角形区域上求二重积分"),
       explanation: t(
         "Over a triangle the inner limits depend on the outer variable, because the height of the region changes as you move across it. For a triangular region $T$ bounded by $x = 0$, $y = 0$, and $x + y = c$ ($c > 0$):\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}.$$",
@@ -899,6 +907,8 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
     },
     {
       id: "integrating-over-the-region-between-a-line-and-a-parabola",
+      figure:
+        multivariableDrawings4["double-integrals-over-non-rectangular-domains#integrating-over-the-region-between-a-line-and-a-parabola"],
       title: t("Integrating between a line and a parabola", "在直线与抛物线之间积分"),
       explanation: t(
         "To integrate over the region between $y = x^2$ and $y = kx$, first find where the curves meet: $x^2 = kx$ gives $x = 0$ and $x = k$. For $0 \\le x \\le k$ the line lies above the parabola, so\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}.$$",
@@ -975,6 +985,7 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
     },
     {
       id: "adding-a-constant-to-the-integrand",
+      figure: multivariableDrawings4["properties-of-double-integrals#adding-a-constant-to-the-integrand"],
       title: t("Adding a constant to the integrand", "被积函数加上常数"),
       explanation: t(
         "Linearity says $\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$. The integral of the constant $1$ is the area of $R$, so a constant $k$ adds $k \\cdot \\operatorname{Area}(R)$, not just $k$. On a rectangle $[a, b] \\times [c, d]$ the area is $(b - a)(d - c)$.",
@@ -1021,6 +1032,7 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
   knowledgePoints: [
     {
       id: "identifying-type-i-and-type-ii-regions",
+      figure: multivariableDrawings4["type-i-and-ii-regions-in-two-dimensional-space#identifying-type-i-and-type-ii-regions"],
       title: t("Identifying Type I and Type II regions", "识别 X-型与 Y-型区域"),
       explanation: t(
         "A region is described with vertical strips when its top and bottom are graphs of functions of the horizontal variable, and with horizontal strips in the opposite case. A region $D$ is **Type I** if $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$. It is **Type II** if $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$.",
@@ -1073,6 +1085,7 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
     },
     {
       id: "rewriting-a-type-i-triangle-as-type-ii",
+      figure: multivariableDrawings4["type-i-and-ii-regions-in-two-dimensional-space#rewriting-a-type-i-triangle-as-type-ii"],
       title: t("Rewriting a Type I triangle as Type II", "把 Type I 三角形改写为 Type II"),
       explanation: t(
         "The triangle $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ is Type I. To describe it as Type II, read off the full range of $y$, which is $0 \\le y \\le ma$, and then solve the slanted side for $x$: $y = mx$ gives $x = \\frac{y}{m}$. A horizontal line at height $y$ enters the triangle at $x = \\frac{y}{m}$ and leaves at $x = a$, so the region is $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$.",
@@ -1156,6 +1169,7 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
     },
     {
       id: "integrating-xy-over-a-type-i-triangle",
+      figure: multivariableDrawings4["double-integrals-over-type-i-regions#integrating-xy-over-a-type-i-triangle"],
       title: t("Integrating $cxy$ over a Type I triangle", "在 Type I 三角形上积分 $cxy$"),
       explanation: t(
         "For a Type I region the inner integral runs in $y$ between two functions of $x$, and the outer integral runs in $x$ between constants. Over the triangle $0 \\le x \\le a$, $0 \\le y \\le x$:\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}.$$\n\nThe inner result is a function of $x$ alone, which the outer integral then finishes.",
@@ -1274,6 +1288,7 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-double-integrals-by-domain-decomposition",
+      figure: multivariableDrawings4["double-integrals-over-partitioned-regions#evaluating-double-integrals-by-domain-decomposition"],
       title: t("Evaluating double integrals by domain decomposition", "通过区域分割计算二重积分"),
       explanation: t(
         "Splitting a region into simpler pieces lets you use convenient limits on each, and the integral over the whole is the sum of the pieces. If $R = R_1 \\cup R_2$ with disjoint interiors, then $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For two adjacent rectangles $R_1 = [0, c] \\times [0, h_1]$ and $R_2 = [c, d] \\times [0, h_2]$:\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right).$$",
@@ -1563,6 +1578,7 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
     },
     {
       id: "a-triple-integral-of-a-single-variable-over-a-box",
+      figure: multivariableDrawings4["triple-integrals-over-rectangular-domains#a-triple-integral-of-a-single-variable-over-a-box"],
       title: t("Integrating $cx^2$ over a box", "在长方体上积分 $cx^2$"),
       explanation: t(
         "If the integrand depends on only one variable, integrating the other two over a box simply multiplies by the lengths of their intervals:\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d.$$\n\nThe factor $bd$ is the area of the cross-section perpendicular to the $x$-axis.",
@@ -1677,6 +1693,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
     },
     {
       id: "the-projection-of-a-tetrahedron-for-each-region-type",
+      figure:
+        multivariableDrawings4["type-i-ii-and-iii-regions-in-three-dimensional-space#the-projection-of-a-tetrahedron-for-each-region-type"],
       title: t("The projection of a tetrahedron for each region type", "按区域类型取四面体的投影"),
       explanation: t(
         "The tetrahedron cut from the first octant by $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ is of all three types. Viewing it as Type I means projecting onto the $xy$-plane, Type II onto the $xz$-plane, and Type III onto the $yz$-plane. Each projection is a right triangle whose legs are the two intercepts in that plane, so its area is half their product, for example $\\frac{ab}{2}$ in the $xy$-plane.",
@@ -1721,6 +1739,7 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
   knowledgePoints: [
     {
       id: "integrating-under-a-surface-over-a-rectangle",
+      figure: multivariableDrawings4["triple-integrals-over-type-i-regions#integrating-under-a-surface-over-a-rectangle"],
       title: t("Integrating under a surface over a rectangle", "在矩形投影上计算曲顶柱体的体积积分"),
       explanation: t(
         "Integrating the constant one over a solid gives its volume, and the inner integral in the vertical direction gives the height of the solid above each point. For $E$ bounded by $0 \\le x \\le a$, $0 \\le y \\le b$, and $0 \\le z \\le cxy$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}.$$",
@@ -1958,6 +1977,7 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
   knowledgePoints: [
     {
       id: "volume-of-a-standard-simplex",
+      figure: multivariableDrawings4["calculating-volumes-of-solids-using-triple-integrals#volume-of-a-standard-simplex"],
       title: t("Volume of a standard simplex", "标准四面体的体积"),
       explanation: t(
         "A tetrahedron cut off by a plane from the corner of the first octant has one sixth of the volume of the box with the same intercepts. The tetrahedron bounded by the coordinate planes and $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ ($a, b, c > 0$) has volume:\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}.$$",
@@ -1997,6 +2017,7 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
     },
     {
       id: "the-volume-under-a-paraboloid-over-a-rectangle",
+      figure: multivariableDrawings4["calculating-volumes-of-solids-using-triple-integrals#the-volume-under-a-paraboloid-over-a-rectangle"],
       title: t("The volume under a paraboloid over a rectangle", "矩形上方抛物面下的体积"),
       explanation: t(
         "The volume of a solid $E$ is $\\iiint_E 1\\,dV$. For the solid above $[0, a] \\times [0, b]$ and below $z = x^2 + y^2$, the $z$-integral gives the height of the surface, leaving\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}.$$\n\nEach term comes from one square in the integrand, multiplied by the length of the other side.",
@@ -2042,6 +2063,10 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
   knowledgePoints: [
     {
       id: "reprojecting-triple-integrals-from-xy-to-xz-plane",
+      figure:
+        multivariableDrawings4[
+          "changing-the-order-of-integration-in-triple-integrals-changing-projection#reprojecting-triple-integrals-from-xy-to-xz-plane"
+        ],
       title: t("Reprojecting triple integrals from xy to xz plane", "将三重积分从 xy 投影转为 xz 投影"),
       explanation: t(
         "The same solid can be projected onto different coordinate planes, and choosing the plane that makes the boundaries simplest leads to easier limits. For a wedge $0 \\le x \\le a$, $0 \\le y \\le b$, $0 \\le z \\le 1 - x/a$, projecting onto the $xz$-plane gives region $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$. Then $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$.",
@@ -2078,6 +2103,10 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
     },
     {
       id: "the-volume-of-a-parabolic-cylinder-slab",
+      figure:
+        multivariableDrawings4[
+          "changing-the-order-of-integration-in-triple-integrals-changing-projection#the-volume-of-a-parabolic-cylinder-slab"
+        ],
       title: t("The volume of a parabolic cylinder slab", "抛物柱面板块的体积"),
       explanation: t(
         "Choosing the right projection can make a triple integral simple. The solid bounded by the parabolic cylinder $y = x^2$, the plane $y = a^2$, and the planes $z = 0$ and $z = h$ has a constant height $h$ over its projection onto the $xy$-plane. That projection is the region $x^2 \\le y \\le a^2$, whose area is $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$, so the volume is $\\frac{4a^3h}{3}$.",
@@ -2291,6 +2320,7 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "integrating-over-annular-polar-regions",
+      figure: multivariableDrawings4["double-integrals-between-polar-curves#integrating-over-annular-polar-regions"],
       title: t("Integrating over annular polar regions", "在圆环扇形区域上的极坐标二重积分"),
       explanation: t(
         "An annular sector is a rectangle in polar coordinates, with the radius between two values and the angle between two values. For an annular sector $r_1 \\le r \\le r_2$ and $0 \\le \\theta \\le \\frac{\\pi}{k}$, the area divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}.$$",
@@ -2333,6 +2363,7 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
     },
     {
       id: "areas-enclosed-by-classic-polar-curves",
+      figure: multivariableDrawings4["double-integrals-between-polar-curves#areas-enclosed-by-classic-polar-curves"],
       title: t("Areas enclosed by classic polar curves", "经典极坐标曲线围成的面积"),
       explanation: t(
         "The area enclosed by $r = f(\\theta)$ is $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$ over one full trace of the curve. Three standard results follow:\n\n- The circle $r = 2a\\cos\\theta$ (or $2a\\sin\\theta$) is traced once for $\\theta \\in [0, \\pi]$ and encloses $\\pi a^2$.\n- The cardioid $r = a(1 + \\cos\\theta)$ encloses $\\frac{3}{2}\\pi a^2$.\n- The rose $r = a\\cos(n\\theta)$ encloses $\\frac{\\pi a^2}{4}$ when $n$ is odd ($n$ petals) and $\\frac{\\pi a^2}{2}$ when $n$ is even ($2n$ petals).",
@@ -2435,6 +2466,8 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
     },
     {
       id: "the-area-of-a-parallelogram-from-a-linear-change-of-variables",
+      figure:
+        multivariableDrawings4["computing-areas-using-a-change-of-variables#the-area-of-a-parallelogram-from-a-linear-change-of-variables"],
       title: t("The area of a parallelogram by a change of variables", "用变量替换求平行四边形面积"),
       explanation: t(
         "A region $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ is a parallelogram. Substituting $u = px + qy$ and $v = rx + sy$ turns it into the rectangle $[0, U] \\times [0, V]$. Since $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$, the Jacobian of the inverse map is $\\frac{1}{|ps - qr|}$, and\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}.$$",
@@ -2486,6 +2519,10 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
   knowledgePoints: [
     {
       id: "integrating-over-parallelograms-via-linear-coordinates",
+      figure:
+        multivariableDrawings4[
+          "computing-double-integrals-using-a-change-of-variables#integrating-over-parallelograms-via-linear-coordinates"
+        ],
       title: t("Integrating over parallelograms via linear coordinates", "通过线性坐标代换在平行四边形上积分"),
       explanation: t(
         "New coordinates built from the boundary lines turn the parallelogram into a rectangle, and the Jacobian factor corrects for the change in area. For a region $R$ bounded by $0 \\le x + y \\le U$ and $0 \\le x - y \\le V$, set $u = x + y, v = x - y$. The Jacobian determinant is $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$. Thus $\\iint_R 1\\,dA = \\frac{UV}{2}$.",
@@ -2522,6 +2559,7 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
     },
     {
       id: "integrating-x-plus-y-over-a-rotated-square",
+      figure: multivariableDrawings4["computing-double-integrals-using-a-change-of-variables#integrating-x-plus-y-over-a-rotated-square"],
       title: t("Integrating $x + y$ with $u = x + y$, $v = x - y$", "用 $u = x + y$，$v = x - y$ 积分 $x + y$"),
       explanation: t(
         "With $u = x + y$ and $v = x - y$, we have $x = \\frac{u + v}{2}$ and $y = \\frac{u - v}{2}$, so $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$ and $dA = \\frac{1}{2}\\,du\\,dv$. The region $0 \\le x + y \\le U$, $0 \\le x - y \\le V$ becomes the rectangle $[0, U] \\times [0, V]$, and the integrand $x + y$ becomes $u$:\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}.$$",
@@ -2566,6 +2604,7 @@ export const cylindricalPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "converting-cartesian-points-to-cylindrical-coordinates",
+      figure: multivariableDrawings5["cylindrical-polar-coordinates#converting-cartesian-points-to-cylindrical-coordinates"],
       title: t("Converting Cartesian points to cylindrical coordinates", "将直角坐标转换为柱坐标"),
       explanation: t(
         "Cylindrical coordinates use polar coordinates in the horizontal plane and keep the height unchanged, so find the radius and angle from the first two coordinates. To convert $(x, y, z)$ to cylindrical coordinates $(r, \\theta, z)$, compute $r = \\sqrt{x^2 + y^2}$, $\\tan\\theta = \\frac{y}{x}$, and retain $z$.",
@@ -2605,6 +2644,7 @@ export const cylindricalPolarCoordinates: TopicDef = {
     },
     {
       id: "converting-cylindrical-coordinates-to-x",
+      figure: multivariableDrawings5["cylindrical-polar-coordinates#converting-cylindrical-coordinates-to-x"],
       title: t("Converting cylindrical coordinates to $x$", "由柱坐标求 $x$"),
       explanation: t(
         "A point with cylindrical coordinates $(r, \\theta, z)$ has Cartesian coordinates $x = r\\cos\\theta$, $y = r\\sin\\theta$ and the same $z$. The value of $\\cos\\theta$ for standard angles such as $\\frac{\\pi}{3}$ or $\\frac{2\\pi}{3}$ gives the $x$-coordinate directly, and its sign follows the quadrant of $\\theta$.",
@@ -2653,6 +2693,7 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "identifying-surfaces-given-in-cylindrical-coordinates",
+      figure: multivariableDrawings5["surfaces-in-cylindrical-polar-coordinates#identifying-surfaces-given-in-cylindrical-coordinates"],
       title: t("Identifying surfaces given in cylindrical coordinates", "识别柱坐标方程所表示的曲面"),
       explanation: t(
         "Common cylindrical surfaces:\n- $r = c$ ($c > 0$): Circular cylinder parallel to the $z$-axis.\n- $z = cr$: Circular cone with apex at the origin.\n- $z = cr^2$: Circular paraboloid opening along the $z$-axis.\n- $\\theta = c$: Vertical half-plane passing through the $z$-axis.",
@@ -2714,6 +2755,7 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
     },
     {
       id: "writing-cartesian-surfaces-in-cylindrical-coordinates",
+      figure: multivariableDrawings5["surfaces-in-cylindrical-polar-coordinates#writing-cartesian-surfaces-in-cylindrical-coordinates"],
       title: t("Writing Cartesian surfaces in cylindrical coordinates", "把直角坐标曲面写成柱坐标"),
       explanation: t(
         "To convert a surface to cylindrical coordinates, replace $x^2 + y^2$ by $r^2$ and leave $z$ unchanged. For example, the cylinder $x^2 + y^2 = a^2$ becomes $r = a$, the paraboloid $z = k(x^2 + y^2)$ becomes $z = kr^2$, and the sphere $x^2 + y^2 + z^2 = a^2$ becomes $r^2 + z^2 = a^2$. A cone $z = k\\sqrt{x^2 + y^2}$ becomes $z = kr$, since $r \\ge 0$.",
@@ -2760,6 +2802,7 @@ export const sphericalPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "converting-cartesian-points-to-spherical-coordinates",
+      figure: multivariableDrawings5["spherical-polar-coordinates#converting-cartesian-points-to-spherical-coordinates"],
       title: t("Converting Cartesian points to spherical coordinates", "将直角坐标转换为球面坐标"),
       explanation: t(
         "For a point $(x, y, z)$, the spherical radial distance is $\\rho = \\sqrt{x^2 + y^2 + z^2}$, the polar angle is $\\cos\\phi = \\frac{z}{\\rho}$, and the azimuthal angle is $\\tan\\theta = \\frac{y}{x}$.",
@@ -2806,6 +2849,7 @@ export const sphericalPolarCoordinates: TopicDef = {
     },
     {
       id: "finding-the-polar-angle-phi-of-a-point",
+      figure: multivariableDrawings5["spherical-polar-coordinates#finding-the-polar-angle-phi-of-a-point"],
       title: t("Finding the angle $\\varphi$ of a point", "求点的极角 $\\varphi$"),
       explanation: t(
         "In spherical coordinates $\\varphi$ is the angle from the positive $z$-axis, with $0 \\le \\varphi \\le \\pi$, and $\\cos\\varphi = \\frac{z}{\\rho}$. A useful shortcut compares $z$ with $r = \\sqrt{x^2 + y^2}$: if $z = r$ then $\\varphi = \\frac{\\pi}{4}$, if $z = 0$ then $\\varphi = \\frac{\\pi}{2}$, and if $z = -r$ then $\\varphi = \\frac{3\\pi}{4}$.",
@@ -2849,6 +2893,7 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "identifying-surfaces-given-in-spherical-coordinates",
+      figure: multivariableDrawings5["surfaces-in-spherical-polar-coordinates#identifying-surfaces-given-in-spherical-coordinates"],
       title: t("Identifying surfaces given in spherical coordinates", "识别球面坐标方程所表示的曲面"),
       explanation: t(
         "Standard spherical surfaces:\n- $\\rho = c$ ($c > 0$): Sphere of radius $c$ centered at the origin.\n- $\\phi = c$ ($0 < c < \\pi/2$): Circular cone with opening angle $c$ around the positive $z$-axis.\n- $\\theta = c$: Vertical half-plane.",
@@ -2902,6 +2947,7 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
     },
     {
       id: "spheres-through-the-origin-in-spherical-coordinates",
+      figure: multivariableDrawings5["surfaces-in-spherical-polar-coordinates#spheres-through-the-origin-in-spherical-coordinates"],
       title: t("Spheres through the origin in spherical coordinates", "球坐标中过原点的球面"),
       explanation: t(
         "Multiplying $\\rho = k\\cos\\varphi$ by $\\rho$ gives $\\rho^2 = k\\rho\\cos\\varphi$, that is $x^2 + y^2 + z^2 = kz$. Completing the square gives $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$, a sphere of radius $\\frac{k}{2}$ through the origin. In the same way $\\rho = k\\sin\\varphi\\cos\\theta$ is $x^2 + y^2 + z^2 = kx$ and $\\rho = k\\sin\\varphi\\sin\\theta$ is $x^2 + y^2 + z^2 = ky$, also spheres of radius $\\frac{k}{2}$.",
@@ -2949,6 +2995,7 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "volume-of-cylindrical-solid-via-triple-integral",
+      figure: multivariableDrawings5["triple-integrals-in-cylindrical-polar-coordinates#volume-of-cylindrical-solid-via-triple-integral"],
       title: t("Volume of cylindrical solid via triple integral", "利用柱坐标三重积分计算圆柱体体积"),
       explanation: t(
         "In cylindrical coordinates a cylinder has constant limits for all three variables, and the extra factor of the radius gives the familiar volume formula. For a cylinder bounded by $r \\le R$ and $0 \\le z \\le H$, the volume divided by $\\pi$ is:\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H.$$",
@@ -2987,6 +3034,8 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
     },
     {
       id: "integrating-x-squared-plus-y-squared-over-a-cylinder",
+      figure:
+        multivariableDrawings5["triple-integrals-in-cylindrical-polar-coordinates#integrating-x-squared-plus-y-squared-over-a-cylinder"],
       title: t("Integrating $x^2 + y^2$ over a cylinder", "在圆柱体上积分 $x^2 + y^2$"),
       explanation: t(
         "In cylindrical coordinates $x^2 + y^2 = r^2$ and $dV = r\\,dz\\,dr\\,d\\theta$. Over the solid cylinder $r \\le R$, $0 \\le z \\le H$:\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}.$$\n\nThis is the moment of inertia of the cylinder about its axis.",
@@ -3032,6 +3081,7 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "volume-of-spherical-ball-via-triple-integral",
+      figure: multivariableDrawings5["triple-integrals-in-spherical-polar-coordinates#volume-of-spherical-ball-via-triple-integral"],
       title: t("Volume of spherical ball via triple integral", "利用球面坐标三重积分计算球体体积"),
       explanation: t(
         "In spherical coordinates a ball has constant limits, and the volume element includes the square of the distance times the sine of the polar angle. For a sphere of radius $R$ ($\\rho \\le R$):\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3.$$",
@@ -3069,6 +3119,7 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
     },
     {
       id: "integrating-the-squared-distance-over-a-ball",
+      figure: multivariableDrawings5["triple-integrals-in-spherical-polar-coordinates#integrating-the-squared-distance-over-a-ball"],
       title: t("Integrating the squared distance over a ball", "在球体上积分距离的平方"),
       explanation: t(
         "In spherical coordinates $x^2 + y^2 + z^2 = \\rho^2$ and $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$. Over the ball $\\rho \\le R$ the angular integrals give $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$, so\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}.$$\n\nThe factor $4\\pi$ is the total solid angle around the origin, and the extra $\\rho^2$ from the volume element raises the power of $\\rho$ from $2$ to $4$.",
@@ -3158,6 +3209,10 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
     },
     {
       id: "the-volume-of-a-parallelepiped-by-a-linear-change-of-variables",
+      figure:
+        multivariableDrawings5[
+          "computing-triple-integrals-using-a-change-of-variables#the-volume-of-a-parallelepiped-by-a-linear-change-of-variables"
+        ],
       title: t("The volume of a parallelepiped by a change of variables", "用变量替换求平行六面体体积"),
       explanation: t(
         "A solid $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$, where $u, v, w$ are linear in $x, y, z$, is a parallelepiped. The substitution maps it to a box of volume $UVW$, and $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$. So the volume is $\\frac{UVW}{|J|}$, where $J$ is the determinant of the coefficient matrix. For a triangular coefficient matrix $J$ is the product of the diagonal entries.",

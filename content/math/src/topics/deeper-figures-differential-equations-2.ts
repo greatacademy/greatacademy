@@ -7,6 +7,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { chart, curvePath, intTicks, type Scale } from "./figure-charts.ts";
@@ -522,122 +523,128 @@ const repeatedRoot = point(
   },
 );
 
-const oscillatorFrequency = point(
-  "an-oscillator-from-its-drawn-graph",
-  ["An oscillator from its drawn graph", "由图读振子"],
-  [
-    "A simple harmonic oscillator $my'' + ky = 0$ moves as $y = R\\cos(\\omega t - \\phi)$ with $\\omega = \\sqrt{\\frac{k}{m}}$. The amplitude $R$ is half the distance from top to bottom, the period is $T = \\frac{2\\pi}{\\omega}$, and the largest speed is $R\\omega$.",
-    "简谐振子 $my'' + ky = 0$ 的运动为 $y = R\\cos(\\omega t - \\phi)$，$\\omega = \\sqrt{\\frac{k}{m}}$。振幅 $R$ 是从最高到最低距离的一半，周期 $T = \\frac{2\\pi}{\\omega}$，最大速率为 $R\\omega$。",
-  ],
-  (rng) => {
-    const R = rng.int(1, 5);
-    const T = rng.int(2, 8);
-    const f = (v: number) => R * Math.cos((2 * Math.PI * v) / T);
-    const span = 2 * T;
-    const svg = chart(
-      [0, span],
-      [-R - 1, R + 1],
-      intTicks(0, span, T > 4 ? 2 : 1),
-      intTicks(-R, R, R),
-      (x, y) => guide(x, y, [0, 0], [span, 0]) + curvePath(f, 0, span, x, y),
-    );
-    const kind = rng.pick(["omega", "amplitude"] as const);
-    const omega = (n: number, d: number) => {
-      const text = Q.of(n, d).toLatex();
-      return text === "1" ? "\\pi" : text.startsWith("\\frac{1}") ? `\\frac{\\pi}${text.slice(8)}` : `${text}\\pi`;
-    };
-    const figure = figureOf(svg, [`A cosine wave with amplitude ${R} and period ${T}.`, `振幅为 ${R}、周期为 ${T} 的余弦波。`]);
-    if (kind === "amplitude") {
-      const speed = Q.of(2 * R, T);
-      return ask(
+const oscillatorFrequency = {
+  ...point(
+    "an-oscillator-from-its-drawn-graph",
+    ["An oscillator from its drawn graph", "由图读振子"],
+    [
+      "A simple harmonic oscillator $my'' + ky = 0$ moves as $y = R\\cos(\\omega t - \\phi)$ with $\\omega = \\sqrt{\\frac{k}{m}}$. The amplitude $R$ is half the distance from top to bottom, the period is $T = \\frac{2\\pi}{\\omega}$, and the largest speed is $R\\omega$.",
+      "简谐振子 $my'' + ky = 0$ 的运动为 $y = R\\cos(\\omega t - \\phi)$，$\\omega = \\sqrt{\\frac{k}{m}}$。振幅 $R$ 是从最高到最低距离的一半，周期 $T = \\frac{2\\pi}{\\omega}$，最大速率为 $R\\omega$。",
+    ],
+    (rng) => {
+      const R = rng.int(1, 5);
+      const T = rng.int(2, 8);
+      const f = (v: number) => R * Math.cos((2 * Math.PI * v) / T);
+      const span = 2 * T;
+      const svg = chart(
+        [0, span],
+        [-R - 1, R + 1],
+        intTicks(0, span, T > 4 ? 2 : 1),
+        intTicks(-R, R, R),
+        (x, y) => guide(x, y, [0, 0], [span, 0]) + curvePath(f, 0, span, x, y),
+      );
+      const kind = rng.pick(["omega", "amplitude"] as const);
+      const omega = (n: number, d: number) => {
+        const text = Q.of(n, d).toLatex();
+        return text === "1" ? "\\pi" : text.startsWith("\\frac{1}") ? `\\frac{\\pi}${text.slice(8)}` : `${text}\\pi`;
+      };
+      const figure = figureOf(svg, [`A cosine wave with amplitude ${R} and period ${T}.`, `振幅为 ${R}、周期为 ${T} 的余弦波。`]);
+      if (kind === "amplitude") {
+        const speed = Q.of(2 * R, T);
+        return ask(
+          [
+            "The graph shows $y(t)$ for a simple harmonic oscillator. Find its largest speed divided by $\\pi$.",
+            "图中是简谐振子的 $y(t)$。求它的最大速率除以 $\\pi$。",
+          ],
+          speed,
+          [Q.of(R, T), Q.of(4 * R, T), Q.of(2 * R, 1), Q.of(2, T), Q.of(2 * T, R)],
+          [
+            `The amplitude is $${R}$ and the period is $${T}$, so $\\omega = \\frac{2\\pi}{${T}}$. The largest speed is $R\\omega = ${speed.toLatex()}\\pi$.`,
+            `振幅为 $${R}$，周期为 $${T}$，所以 $\\omega = \\frac{2\\pi}{${T}}$。最大速率为 $R\\omega = ${speed.toLatex()}\\pi$。`,
+          ],
+          figure,
+        );
+      }
+      return choose(
+        rng,
         [
-          "The graph shows $y(t)$ for a simple harmonic oscillator. Find its largest speed divided by $\\pi$.",
-          "图中是简谐振子的 $y(t)$。求它的最大速率除以 $\\pi$。",
+          "The graph shows $y(t)$ for a simple harmonic oscillator. What is its angular frequency $\\omega$?",
+          "图中是简谐振子的 $y(t)$。它的角频率 $\\omega$ 是多少？",
         ],
-        speed,
-        [Q.of(R, T), Q.of(4 * R, T), Q.of(2 * R, 1), Q.of(2, T), Q.of(2 * T, R)],
+        same(`\\omega = ${omega(2, T)}`),
+        [same(`\\omega = ${omega(1, T)}`), same(`\\omega = ${omega(T, 2)}`), same(`\\omega = ${omega(4, T)}`), same(`\\omega = ${T}`)],
         [
-          `The amplitude is $${R}$ and the period is $${T}$, so $\\omega = \\frac{2\\pi}{${T}}$. The largest speed is $R\\omega = ${speed.toLatex()}\\pi$.`,
-          `振幅为 $${R}$，周期为 $${T}$，所以 $\\omega = \\frac{2\\pi}{${T}}$。最大速率为 $R\\omega = ${speed.toLatex()}\\pi$。`,
+          `One full wave takes time $T = ${T}$, so $\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}$.`,
+          `一个完整波形用时 $T = ${T}$，所以 $\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}$。`,
         ],
         figure,
       );
-    }
-    return choose(
-      rng,
-      [
-        "The graph shows $y(t)$ for a simple harmonic oscillator. What is its angular frequency $\\omega$?",
-        "图中是简谐振子的 $y(t)$。它的角频率 $\\omega$ 是多少？",
-      ],
-      same(`\\omega = ${omega(2, T)}`),
-      [same(`\\omega = ${omega(1, T)}`), same(`\\omega = ${omega(T, 2)}`), same(`\\omega = ${omega(4, T)}`), same(`\\omega = ${T}`)],
-      [
-        `One full wave takes time $T = ${T}$, so $\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}$.`,
-        `一个完整波形用时 $T = ${T}$，所以 $\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}$。`,
-      ],
-      figure,
-    );
-  },
-);
+    },
+  ),
+  figure: differentialEquationsDrawings1["simple-harmonic-oscillators#an-oscillator-from-its-drawn-graph"],
+};
 
-const dampingKind = point(
-  "the-kind-of-damping-from-a-drawn-graph",
-  ["The kind of damping from a drawn graph", "由图判断阻尼类型"],
-  [
-    "For $my'' + cy' + ky = 0$, the discriminant $c^2 - 4mk$ decides the motion. Negative: oscillation with shrinking waves. Zero or positive: decay with at most one crossing of zero. No damping: waves of constant size.",
-    "对 $my'' + cy' + ky = 0$，判别式 $c^2 - 4mk$ 决定运动。为负：振幅递减的振荡。为零或正：衰减，至多穿过零一次。无阻尼：振幅不变的波。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["under", "over", "none", "negative"] as const);
-    const R = rng.int(2, 5);
-    const w = rng.pick([1.5, 2, 2.5, 3]);
-    const decay = rng.pick([0.2, 0.3, 0.4]);
-    const f = (v: number) => {
-      if (kind === "under") return R * Math.exp(-decay * v) * Math.cos(w * v);
-      if (kind === "none") return R * Math.cos(w * v);
-      if (kind === "negative") return ((R / 2) * Math.exp(0.6 * decay * v) * Math.cos(w * v)) as number;
-      return R * (1 + 0.8 * v) * Math.exp(-decay * 3 * v);
-    };
-    const top = kind === "negative" ? R * 3 : R + 1;
-    const clip = (v: number) => Math.max(-top, Math.min(top, f(v)));
-    const svg = chart(
-      [0, 10],
-      [-top, top],
-      intTicks(0, 10),
-      intTicks(-R, R, R),
-      (x, y) => guide(x, y, [0, 0], [10, 0]) + curvePath(clip, 0, 10, x, y),
-    );
-    const names: Record<typeof kind, Pair> = {
-      under: ["Underdamped: $0 < c^2 < 4mk$", "欠阻尼：$0 < c^2 < 4mk$"],
-      over: ["Critically damped or overdamped: $c^2 \\ge 4mk$", "临界阻尼或过阻尼：$c^2 \\ge 4mk$"],
-      none: ["Undamped: $c = 0$", "无阻尼：$c = 0$"],
-      negative: ["Energy is being added: $c < 0$", "能量在增加：$c < 0$"],
-    };
-    const why: Record<typeof kind, Pair> = {
-      under: ["The curve keeps crossing zero while its waves shrink.", "曲线不断穿过零，波幅不断缩小。"],
-      over: ["The curve decays to zero without oscillating.", "曲线衰减到零而不振荡。"],
-      none: ["The waves keep the same size.", "波幅保持不变。"],
-      negative: ["The waves grow over time, so energy is being added.", "波幅随时间不断增大，所以能量在增加。"],
-    };
-    const alts: Record<typeof kind, Pair> = {
-      under: ["A wave whose peaks shrink over time.", "峰值随时间缩小的波。"],
-      over: ["A curve that decays to zero without crossing it.", "衰减到零且不穿过零的曲线。"],
-      none: ["A wave whose peaks keep the same height.", "峰值高度不变的波。"],
-      negative: ["A wave whose peaks grow over time.", "峰值随时间增大的波。"],
-    };
-    return choose(
-      rng,
-      [
-        "The graph shows a solution of $my'' + cy' + ky = 0$ with $m, k > 0$. Which description fits it?",
-        "图中是 $my'' + cy' + ky = 0$（$m, k > 0$）的一个解。哪个描述符合它？",
-      ],
-      names[kind],
-      (["under", "over", "none", "negative"] as const).filter((x) => x !== kind).map((x) => names[x]),
-      why[kind],
-      figureOf(svg, alts[kind]),
-    );
-  },
-);
+const dampingKind = {
+  ...point(
+    "the-kind-of-damping-from-a-drawn-graph",
+    ["The kind of damping from a drawn graph", "由图判断阻尼类型"],
+    [
+      "For $my'' + cy' + ky = 0$, the discriminant $c^2 - 4mk$ decides the motion. Negative: oscillation with shrinking waves. Zero or positive: decay with at most one crossing of zero. No damping: waves of constant size.",
+      "对 $my'' + cy' + ky = 0$，判别式 $c^2 - 4mk$ 决定运动。为负：振幅递减的振荡。为零或正：衰减，至多穿过零一次。无阻尼：振幅不变的波。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["under", "over", "none", "negative"] as const);
+      const R = rng.int(2, 5);
+      const w = rng.pick([1.5, 2, 2.5, 3]);
+      const decay = rng.pick([0.2, 0.3, 0.4]);
+      const f = (v: number) => {
+        if (kind === "under") return R * Math.exp(-decay * v) * Math.cos(w * v);
+        if (kind === "none") return R * Math.cos(w * v);
+        if (kind === "negative") return ((R / 2) * Math.exp(0.6 * decay * v) * Math.cos(w * v)) as number;
+        return R * (1 + 0.8 * v) * Math.exp(-decay * 3 * v);
+      };
+      const top = kind === "negative" ? R * 3 : R + 1;
+      const clip = (v: number) => Math.max(-top, Math.min(top, f(v)));
+      const svg = chart(
+        [0, 10],
+        [-top, top],
+        intTicks(0, 10),
+        intTicks(-R, R, R),
+        (x, y) => guide(x, y, [0, 0], [10, 0]) + curvePath(clip, 0, 10, x, y),
+      );
+      const names: Record<typeof kind, Pair> = {
+        under: ["Underdamped: $0 < c^2 < 4mk$", "欠阻尼：$0 < c^2 < 4mk$"],
+        over: ["Critically damped or overdamped: $c^2 \\ge 4mk$", "临界阻尼或过阻尼：$c^2 \\ge 4mk$"],
+        none: ["Undamped: $c = 0$", "无阻尼：$c = 0$"],
+        negative: ["Energy is being added: $c < 0$", "能量在增加：$c < 0$"],
+      };
+      const why: Record<typeof kind, Pair> = {
+        under: ["The curve keeps crossing zero while its waves shrink.", "曲线不断穿过零，波幅不断缩小。"],
+        over: ["The curve decays to zero without oscillating.", "曲线衰减到零而不振荡。"],
+        none: ["The waves keep the same size.", "波幅保持不变。"],
+        negative: ["The waves grow over time, so energy is being added.", "波幅随时间不断增大，所以能量在增加。"],
+      };
+      const alts: Record<typeof kind, Pair> = {
+        under: ["A wave whose peaks shrink over time.", "峰值随时间缩小的波。"],
+        over: ["A curve that decays to zero without crossing it.", "衰减到零且不穿过零的曲线。"],
+        none: ["A wave whose peaks keep the same height.", "峰值高度不变的波。"],
+        negative: ["A wave whose peaks grow over time.", "峰值随时间增大的波。"],
+      };
+      return choose(
+        rng,
+        [
+          "The graph shows a solution of $my'' + cy' + ky = 0$ with $m, k > 0$. Which description fits it?",
+          "图中是 $my'' + cy' + ky = 0$（$m, k > 0$）的一个解。哪个描述符合它？",
+        ],
+        names[kind],
+        (["under", "over", "none", "negative"] as const).filter((x) => x !== kind).map((x) => names[x]),
+        why[kind],
+        figureOf(svg, alts[kind]),
+      );
+    },
+  ),
+  figure: differentialEquationsDrawings1["damped-oscillators#the-kind-of-damping-from-a-drawn-graph"],
+};
 
 const resonance = point(
   "the-forcing-that-causes-a-drawn-resonance",
@@ -869,68 +876,74 @@ const straightLine = point(
   },
 );
 
-const traceDeterminant = point(
-  "the-type-of-equilibrium-from-the-trace-determinant-plane",
-  ["The type of equilibrium from the trace-determinant plane", "由迹-行列式平面判断平衡点类型"],
-  [
-    "For $x' = Ax$ with trace $T$ and determinant $D$: $D < 0$ is a saddle. If $D > 0$, the sign of $T$ decides stable or unstable, and the parabola $D = \\frac{T^2}{4}$ separates nodes, below it, from spirals, above it. $T = 0$ with $D > 0$ is a center.",
-    "对迹为 $T$、行列式为 $D$ 的 $x' = Ax$：$D < 0$ 是鞍点。若 $D > 0$，$T$ 的符号决定稳定或不稳定，抛物线 $D = \\frac{T^2}{4}$ 把结点（下方）和螺旋点（上方）分开。$T = 0$ 且 $D > 0$ 是中心。",
-  ],
-  (rng) => {
-    const T0 = rng.int(-6, 6);
-    const D0 = rng.int(-4, 8);
-    const pick = (T: number, D: number) => {
-      if (D === 0) return null;
-      if (D < 0) return "saddle" as const;
-      if (T === 0) return "center" as const;
-      if (T * T === 4 * D) return null;
-      const spiral = T * T < 4 * D;
-      return (T < 0 ? (spiral ? "stable-spiral" : "stable-node") : spiral ? "unstable-spiral" : "unstable-node") as
-        | "stable-spiral"
-        | "stable-node"
-        | "unstable-spiral"
-        | "unstable-node";
-    };
-    const T = T0;
-    const D = pick(T0, D0) === null ? D0 + 1 : D0;
-    const kind = pick(T, D) ?? "saddle";
-    const names: Record<NonNullable<ReturnType<typeof pick>>, Pair> = {
-      saddle: ["Saddle", "鞍点"],
-      center: ["Center", "中心"],
-      "stable-spiral": ["Stable spiral", "稳定螺旋点"],
-      "stable-node": ["Stable node", "稳定结点"],
-      "unstable-spiral": ["Unstable spiral", "不稳定螺旋点"],
-      "unstable-node": ["Unstable node", "不稳定结点"],
-    };
-    const all = Object.keys(names) as (keyof typeof names)[];
-    const wrong = rng.sample(
-      all.filter((k) => k !== kind),
-      3,
-    );
-    const marks: PlaneMark[] = [
-      { kind: "curve", f: (v) => (v * v) / 4, dashed: true },
-      { kind: "point", at: [T, D], label: "A", dir: "ne", accent: true },
-    ];
-    return choose(
-      rng,
-      [
-        "In the plane of trace $T$ and determinant $D$, the point $A$ shows a matrix, and the dashed curve is $D = \\frac{T^2}{4}$. What type of equilibrium does $x' = Ax$ have at the origin?",
-        "在迹 $T$ 和行列式 $D$ 的平面上，点 $A$ 表示一个矩阵，虚线是 $D = \\frac{T^2}{4}$。$x' = Ax$ 在原点的平衡点是什么类型？",
-      ],
-      names[kind],
-      wrong.map((k) => names[k]),
-      [
-        `$A$ has $T = ${T}$ and $D = ${D}$. ${D < 0 ? "A negative determinant means a saddle." : T === 0 ? "Zero trace with a positive determinant means a center." : `The determinant is positive, $T$ is ${T < 0 ? "negative, so it is stable" : "positive, so it is unstable"}, and $A$ lies ${T * T < 4 * D ? "above the parabola, which means a spiral" : "below the parabola, which means a node"}.`}`,
-        `$A$ 的 $T = ${T}$，$D = ${D}$。${D < 0 ? "行列式为负表示鞍点。" : T === 0 ? "迹为零且行列式为正表示中心。" : `行列式为正，$T$ ${T < 0 ? "为负，所以稳定" : "为正，所以不稳定"}，$A$ 在抛物线${T * T < 4 * D ? "上方，表示螺旋点" : "下方，表示结点"}。`}`,
-      ],
-      drawn(
-        { xMin: -7, xMax: 7, yMin: -6, yMax: 10, xName: "T", yName: "D" },
-        marks,
-        t(`A dashed parabola D = T²/4 and the point A at T = ${T}, D = ${D}.`, `虚线抛物线 D = T²/4，点 A 位于 T = ${T}，D = ${D}。`),
-      ),
-    );
-  },
-);
+const traceDeterminant = {
+  ...point(
+    "the-type-of-equilibrium-from-the-trace-determinant-plane",
+    ["The type of equilibrium from the trace-determinant plane", "由迹-行列式平面判断平衡点类型"],
+    [
+      "For $x' = Ax$ with trace $T$ and determinant $D$: $D < 0$ is a saddle. If $D > 0$, the sign of $T$ decides stable or unstable, and the parabola $D = \\frac{T^2}{4}$ separates nodes, below it, from spirals, above it. $T = 0$ with $D > 0$ is a center.",
+      "对迹为 $T$、行列式为 $D$ 的 $x' = Ax$：$D < 0$ 是鞍点。若 $D > 0$，$T$ 的符号决定稳定或不稳定，抛物线 $D = \\frac{T^2}{4}$ 把结点（下方）和螺旋点（上方）分开。$T = 0$ 且 $D > 0$ 是中心。",
+    ],
+    (rng) => {
+      const T0 = rng.int(-6, 6);
+      const D0 = rng.int(-4, 8);
+      const pick = (T: number, D: number) => {
+        if (D === 0) return null;
+        if (D < 0) return "saddle" as const;
+        if (T === 0) return "center" as const;
+        if (T * T === 4 * D) return null;
+        const spiral = T * T < 4 * D;
+        return (T < 0 ? (spiral ? "stable-spiral" : "stable-node") : spiral ? "unstable-spiral" : "unstable-node") as
+          | "stable-spiral"
+          | "stable-node"
+          | "unstable-spiral"
+          | "unstable-node";
+      };
+      const T = T0;
+      const D = pick(T0, D0) === null ? D0 + 1 : D0;
+      const kind = pick(T, D) ?? "saddle";
+      const names: Record<NonNullable<ReturnType<typeof pick>>, Pair> = {
+        saddle: ["Saddle", "鞍点"],
+        center: ["Center", "中心"],
+        "stable-spiral": ["Stable spiral", "稳定螺旋点"],
+        "stable-node": ["Stable node", "稳定结点"],
+        "unstable-spiral": ["Unstable spiral", "不稳定螺旋点"],
+        "unstable-node": ["Unstable node", "不稳定结点"],
+      };
+      const all = Object.keys(names) as (keyof typeof names)[];
+      const wrong = rng.sample(
+        all.filter((k) => k !== kind),
+        3,
+      );
+      const marks: PlaneMark[] = [
+        { kind: "curve", f: (v) => (v * v) / 4, dashed: true },
+        { kind: "point", at: [T, D], label: "A", dir: "ne", accent: true },
+      ];
+      return choose(
+        rng,
+        [
+          "In the plane of trace $T$ and determinant $D$, the point $A$ shows a matrix, and the dashed curve is $D = \\frac{T^2}{4}$. What type of equilibrium does $x' = Ax$ have at the origin?",
+          "在迹 $T$ 和行列式 $D$ 的平面上，点 $A$ 表示一个矩阵，虚线是 $D = \\frac{T^2}{4}$。$x' = Ax$ 在原点的平衡点是什么类型？",
+        ],
+        names[kind],
+        wrong.map((k) => names[k]),
+        [
+          `$A$ has $T = ${T}$ and $D = ${D}$. ${D < 0 ? "A negative determinant means a saddle." : T === 0 ? "Zero trace with a positive determinant means a center." : `The determinant is positive, $T$ is ${T < 0 ? "negative, so it is stable" : "positive, so it is unstable"}, and $A$ lies ${T * T < 4 * D ? "above the parabola, which means a spiral" : "below the parabola, which means a node"}.`}`,
+          `$A$ 的 $T = ${T}$，$D = ${D}$。${D < 0 ? "行列式为负表示鞍点。" : T === 0 ? "迹为零且行列式为正表示中心。" : `行列式为正，$T$ ${T < 0 ? "为负，所以稳定" : "为正，所以不稳定"}，$A$ 在抛物线${T * T < 4 * D ? "上方，表示螺旋点" : "下方，表示结点"}。`}`,
+        ],
+        drawn(
+          { xMin: -7, xMax: 7, yMin: -6, yMax: 10, xName: "T", yName: "D" },
+          marks,
+          t(`A dashed parabola D = T²/4 and the point A at T = ${T}, D = ${D}.`, `虚线抛物线 D = T²/4，点 A 位于 T = ${T}，D = ${D}。`),
+        ),
+      );
+    },
+  ),
+  figure:
+    differentialEquationsDrawings1[
+      "equilibrium-points-and-stability-for-systems-of-odes#the-type-of-equilibrium-from-the-trace-determinant-plane"
+    ],
+};
 
 const orthogonalFamily = point(
   "orthogonal-trajectories-of-a-drawn-family",

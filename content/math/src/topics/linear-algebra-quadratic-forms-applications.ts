@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -1435,6 +1436,7 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
   knowledgePoints: [
     {
       id: "principal-axes-reduction",
+      figure: linearAlgebraDrawings2["reducing-a-quadratic-curve-to-its-principal-axes#principal-axes-reduction"],
       title: t("Principal Axes Equation of a Conic", "二次曲线的主轴方程"),
       explanation: t(
         "For a quadratic curve $a x_1^2 + 2b x_1 x_2 + c x_2^2 = d$, rotating coordinates via an orthogonal matrix $P$ to the principal axes eliminates the cross term, yielding $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$.",
@@ -1480,6 +1482,7 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
     },
     {
       id: "semi-axes-of-an-ellipse-from-its-principal-axes",
+      figure: linearAlgebraDrawings2["reducing-a-quadratic-curve-to-its-principal-axes#semi-axes-of-an-ellipse-from-its-principal-axes"],
       title: t("Semi-axes of an ellipse from its principal axes", "由主轴形式求椭圆的半轴"),
       explanation: t(
         "Rotating to principal axes turns $ax^2 + 2hxy + cy^2 = d$ into $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$. When both eigenvalues and $d$ are positive, this is an ellipse with semi-axes $\\sqrt{d/\\lambda_1}$ and $\\sqrt{d/\\lambda_2}$. The smaller eigenvalue gives the longer, major semi-axis.",
@@ -1536,6 +1539,7 @@ export const classifyingQuadraticCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "quadratic-curve-classification",
+      figure: linearAlgebraDrawings2["classifying-quadratic-curves#quadratic-curve-classification"],
       title: t("Classification of Conics by the Discriminant", "利用判别式对二次曲线分类"),
       explanation: t(
         "For a quadratic curve $a x^2 + 2b xy + c y^2 + d x + e y = f$, let $A = \\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$. The nature of the conic is determined by $\\det(A) = ac - b^2$:\n- $\\det(A) > 0$ (eigenvalues same sign): **Ellipse** (or circle/empty set/point);\n- $\\det(A) < 0$ (eigenvalues opposite signs): **Hyperbola**;\n- $\\det(A) = 0$ (one zero eigenvalue): **Parabola**.",
@@ -1627,6 +1631,7 @@ export const classifyingQuadraticCurves: TopicDef = {
     },
     {
       id: "classifying-a-conic-by-its-discriminant",
+      figure: linearAlgebraDrawings2["classifying-quadratic-curves#classifying-a-conic-by-its-discriminant"],
       title: t("Classifying a conic by its discriminant", "用判别式分类二次曲线"),
       explanation: t(
         "For a non-degenerate curve $ax^2 + bxy + cy^2 + dx + ey + f = 0$, only the quadratic part decides the type. Its matrix $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ has determinant $ac - \\frac{b^2}{4}$, so the sign of $b^2 - 4ac$ tells whether the eigenvalues have the same sign:\n- $b^2 - 4ac < 0$: an ellipse,\n- $b^2 - 4ac > 0$: a hyperbola,\n- $b^2 - 4ac = 0$: a parabola.\n\nThe linear terms only shift the curve.",
@@ -1707,6 +1712,7 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
   knowledgePoints: [
     {
       id: "constrained-extrema-unit-sphere",
+      figure: linearAlgebraDrawings2["constrained-optimization-of-quadratic-forms#constrained-extrema-unit-sphere"],
       title: t("Maximum and Minimum on the Unit Sphere", "单位球面上的最大值与最小值"),
       explanation: t(
         "By the Rayleigh quotient theorem, for any real symmetric matrix $A$, the maximum value of $x^T A x$ subject to $\\|x\\| = 1$ is $\\lambda_{\\max}(A)$, and the minimum value is $\\lambda_{\\min}(A)$.",
@@ -1747,6 +1753,7 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
     },
     {
       id: "extrema-of-a-quadratic-form-on-a-circle-of-radius-r",
+      figure: linearAlgebraDrawings2["constrained-optimization-of-quadratic-forms#extrema-of-a-quadratic-form-on-a-circle-of-radius-r"],
       title: t("Extrema of a quadratic form on a circle of radius $r$", "二次型在半径为 $r$ 的圆上的最值"),
       explanation: t(
         "On the unit circle the maximum and minimum of $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ are the largest and smallest eigenvalues of $A$. A quadratic form is homogeneous of degree 2, so $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$. On the circle $\\|\\mathbf{x}\\| = r$ the extremes are therefore $r^2\\lambda_{\\max}$ and $r^2\\lambda_{\\min}$.",
@@ -1791,6 +1798,10 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
   knowledgePoints: [
     {
       id: "where-extrema-are-attained",
+      figure:
+        linearAlgebraDrawings2[
+          "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained#where-extrema-are-attained"
+        ],
       title: t("Unit Vectors for Constrained Extrema", "取条件极值的单位向量"),
       explanation: t(
         "On the unit sphere the quadratic form is largest in the direction of the eigenvector for the largest eigenvalue and smallest for the smallest one. The maximum (minimum) of $x^T A x$ subject to $\\|x\\| = 1$ is attained at normalized eigenvectors corresponding to $\\lambda_{\\max}$ (respectively $\\lambda_{\\min}$).",
@@ -1854,6 +1865,10 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
     },
     {
       id: "where-a-diagonal-form-in-three-variables-is-extreme",
+      figure:
+        linearAlgebraDrawings2[
+          "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained#where-a-diagonal-form-in-three-variables-is-extreme"
+        ],
       title: t("Where a diagonal form in three variables is extreme", "三元对角二次型在何处取最值"),
       explanation: t(
         "For a diagonal form $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$ on the unit sphere, $Q$ is a weighted average of the $d_i$ with weights $x_i^2$ that sum to $1$. It is largest when all the weight sits on the largest coefficient, that is, at $\\pm\\mathbf{e}_i$ for that $i$, and smallest at $\\pm\\mathbf{e}_j$ for the smallest coefficient. Any vector that spreads the weight gives a value in between.",
@@ -2053,6 +2068,8 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
     },
     {
       id: "singular-values-of-a-scaled-rotation-and-a-rank-one-matrix",
+      figure:
+        linearAlgebraDrawings2["computing-the-singular-values-of-a-matrix#singular-values-of-a-scaled-rotation-and-a-rank-one-matrix"],
       title: t("Singular values through $A^TA$", "通过 $A^TA$ 计算奇异值"),
       explanation: t(
         "To compute singular values, form $A^TA$, find its eigenvalues and take square roots. For $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$, $A^TA = (a^2 + b^2)I$, so both singular values equal $\\sqrt{a^2 + b^2}$: the matrix rotates and scales uniformly. For a matrix whose second row is zero, $A^TA = \\mathbf{r}\\mathbf{r}^T$ for the first row $\\mathbf{r}$, which has eigenvalues $\\|\\mathbf{r}\\|^2$ and $0$.",
@@ -3402,6 +3419,7 @@ export const polynomialRegressionWithMatrices: TopicDef = {
     },
     {
       id: "a-quadratic-fit-through-three-points-interpolates",
+      figure: linearAlgebraDrawings2["polynomial-regression-with-matrices#a-quadratic-fit-through-three-points-interpolates"],
       title: t("A quadratic fit to three points", "三点的二次拟合"),
       explanation: t(
         "Fitting $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ to three points with distinct $x$-values gives a square, invertible design matrix. The least-squares solution then solves $X\\boldsymbol{\\beta} = \\mathbf{y}$ exactly, so the parabola passes through all three points. For $x = -h, 0, h$:\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}.$$",

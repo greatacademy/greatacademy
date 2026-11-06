@@ -1,6 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
+import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -616,6 +618,7 @@ export const imageOfALinearTransformationInTheCartesianPlane: TopicDef = {
     },
     {
       id: "testing-membership-in-a-line-image",
+      figure: linearAlgebraDrawings1["image-of-a-linear-transformation-in-the-cartesian-plane#testing-membership-in-a-line-image"],
       title: t("Testing membership in the image of a rank-one map", "判断向量是否在秩一映射的像中"),
       explanation: t(
         "When the standard matrix of $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ has rank $1$, both columns are multiples of one non-zero vector $\\mathbf{u}$, and the image is the line through the origin spanned by $\\mathbf{u}$. A vector $(p, q)$ lies on that line exactly when it is parallel to $\\mathbf{u} = (u_1, u_2)$, that is when $p\\,u_2 - q\\,u_1 = 0$.",
@@ -2917,6 +2920,7 @@ export const rotationScalingMatrices: TopicDef = {
   knowledgePoints: [
     {
       id: "rotation-scaling-scale-factor",
+      figure: linearAlgebraDrawings1["rotation-scaling-matrices#rotation-scaling-scale-factor"],
       title: t("Rotation-Scaling Scale Factor", "旋转缩放矩阵的缩放因子"),
       explanation: t(
         "A rotation scaling matrix multiplies lengths by a fixed factor while it rotates, and that factor is the modulus of the complex eigenvalue. Compute the square of the scaling factor, $r^2 = a^2 + b^2$, for a rotation-scaling matrix.",
@@ -2950,6 +2954,7 @@ export const rotationScalingMatrices: TopicDef = {
     },
     {
       id: "the-rotation-angle-of-a-rotation-scaling-matrix",
+      figure: linearAlgebraDrawings1["rotation-scaling-matrices#the-rotation-angle-of-a-rotation-scaling-matrix"],
       title: t("The rotation angle of a rotation-scaling matrix", "旋转伸缩矩阵的旋转角"),
       explanation: t(
         "A rotation-scaling matrix $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ equals $r\\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$ with $r = \\sqrt{a^2 + b^2}$. The angle $\\theta$ is the argument of the point $(a, b)$: find the quadrant from the signs of $a$ and $b$, then the reference angle from $\\tan\\theta = \\frac{b}{a}$.",
@@ -3025,6 +3030,7 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
   knowledgePoints: [
     {
       id: "constructing-rotation-scaling-basis",
+      figure: linearAlgebraDrawings1["reducing-real-2x2-matrices-to-rotation-scaling-form#constructing-rotation-scaling-basis"],
       title: t("Constructing the Rotation-Scaling Basis", "构造旋转缩放基"),
       explanation: t(
         "Using the real and imaginary parts of a complex eigenvector as a basis turns the matrix into a rotation scaling matrix with real entries. Assemble $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$ for an eigenvector $\\mathbf{v}$ of the eigenvalue $a - bi$.",
@@ -3066,6 +3072,10 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
     },
     {
       id: "the-scaling-factor-of-a-real-matrix-with-complex-eigenvalues",
+      figure:
+        linearAlgebraDrawings1[
+          "reducing-real-2x2-matrices-to-rotation-scaling-form#the-scaling-factor-of-a-real-matrix-with-complex-eigenvalues"
+        ],
       title: t("The scaling factor of a real matrix with complex eigenvalues", "具有复特征值的实矩阵的伸缩因子"),
       explanation: t(
         "A real $2 \\times 2$ matrix with eigenvalues $\\alpha \\pm \\beta i$ is similar to the rotation-scaling matrix $C = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$. Similar matrices have the same determinant, so the scaling factor of $C$ is\n\n$$r = \\sqrt{\\alpha^2 + \\beta^2} = \\sqrt{\\det A}.$$\n\nRepeated multiplication by $A$ stretches vectors by roughly $r$ each time.",
@@ -3115,6 +3125,7 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
   knowledgePoints: [
     {
       id: "real-canonical-block-structure",
+      figure: linearAlgebraDrawings2["block-diagonalization-of-nxn-matrices#real-canonical-block-structure"],
       title: t("Real Canonical Block Structure", "实标准型的分块结构"),
       explanation: t(
         "Each real eigenvalue gives a single diagonal entry, while each pair of complex conjugate eigenvalues gives a two by two rotation scaling block. Determine the block diagonal structure from real and complex conjugate pairs of eigenvalues.",

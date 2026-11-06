@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -443,6 +444,7 @@ export const theAverageValueOfAMultivariableFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "calculating-average-values-over-planar-domains",
+      figure: multivariableDrawings8["the-average-value-of-a-multivariable-function#calculating-average-values-over-planar-domains"],
       title: t("Calculating average values over planar domains", "计算平面区域上多元函数的平均值"),
       explanation: t(
         "The average value of a function over a region is its integral over the region divided by the area of the region. For $f(x, y) = ax + by$ on a rectangle $[0, W] \\times [0, H]$, the integral is $\\iint_D (ax + by)\\,dA = a \\frac{W^2}{2} H + b W \\frac{H^2}{2}$. Dividing by $\\text{Area}(D) = W H$ yields $f_{\\text{avg}} = a \\frac{W}{2} + b \\frac{H}{2}$.",
@@ -565,6 +567,7 @@ export const densityMassAndChargeOfPlaneLaminas: TopicDef = {
     },
     {
       id: "charge-on-a-triangular-plate",
+      figure: multivariableDrawings8["density-mass-and-charge-of-plane-laminas#charge-on-a-triangular-plate"],
       title: t("Charge on a triangular plate", "三角形板上的电荷"),
       explanation: t(
         "Total charge is the double integral of the charge density, $Q = \\iint_D \\sigma(x, y)\\,dA$, just as mass is the integral of mass density. For the triangle $0 \\le y \\le x \\le L$, integrate $y$ first from $0$ to $x$:\n\n$$\\iint_D \\sigma\\,dA = \\int_0^L \\int_0^x \\sigma(x, y)\\,dy\\,dx.$$\n\nWith $\\sigma = cx$ the inner integral is $cx^2$, and the total is $\\frac{cL^3}{3}$.",
@@ -785,6 +788,7 @@ export const momentsAndCentersOfMassOfPlaneLaminas: TopicDef = {
   knowledgePoints: [
     {
       id: "two-dimensional-center-of-mass-calculations",
+      figure: multivariableDrawings8["moments-and-centers-of-mass-of-plane-laminas#two-dimensional-center-of-mass-calculations"],
       title: t("Two-dimensional center of mass calculations", "二维平面薄片质心坐标的计算"),
       explanation: t(
         "When the density increases in one direction, the center of mass shifts toward the denser side, away from the geometric center. For a rectangle $[0, W] \\times [0, H]$ with density $\\rho(x, y) = c x$, the $x$-centroid coordinate is $\\bar{x} = \\frac{\\int_0^W x^2 dx}{\\int_0^W x dx} = \\frac{\\frac{1}{3}W^3}{\\frac{1}{2}W^2} = \\frac{2}{3}W$. When $W = 3w$, $\\bar{x} = 2w$.",
@@ -823,6 +827,7 @@ export const momentsAndCentersOfMassOfPlaneLaminas: TopicDef = {
     },
     {
       id: "centroid-of-the-region-under-a-parabola",
+      figure: multivariableDrawings8["moments-and-centers-of-mass-of-plane-laminas#centroid-of-the-region-under-a-parabola"],
       title: t("The centroid of the region under a parabola", "抛物线下区域的形心"),
       explanation: t(
         "For a uniform lamina under $y = f(x)$ on $[0, a]$, the area is $A = \\int_0^a f\\,dx$ and the moments come from integrating thin vertical strips:\n\n$$M_y = \\int_0^a x f(x)\\,dx, \\qquad M_x = \\int_0^a \\frac{f(x)^2}{2}\\,dx.$$\n\nThe factor $\\frac{1}{2}$ appears because each strip's own center sits at height $\\frac{f(x)}{2}$. Then $\\bar{x} = \\frac{M_y}{A}$ and $\\bar{y} = \\frac{M_x}{A}$.",
@@ -873,6 +878,7 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-moments-of-inertia-about-axes",
+      figure: multivariableDrawings8["moments-of-inertia-of-laminas-about-the-coordinate-axes#evaluating-moments-of-inertia-about-axes"],
       title: t("Evaluating moments of inertia about axes", "计算薄片对坐标轴的转动惯量"),
       explanation: t(
         "A moment of inertia weights each piece of mass by the square of its distance from the axis, measuring how hard the object is to rotate. For a uniform rectangular lamina $[0, W] \\times [0, H]$ with $\\rho = 1$, the moment of inertia about the $x$-axis is $I_x = \\int_0^W dx \\int_0^H y^2\\,dy = W \\frac{H^3}{3}$.",
@@ -912,6 +918,7 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
     },
     {
       id: "the-polar-moment-of-inertia",
+      figure: multivariableDrawings8["moments-of-inertia-of-laminas-about-the-coordinate-axes#the-polar-moment-of-inertia"],
       title: t("The polar moment of inertia", "极转动惯量"),
       explanation: t(
         "The moment of inertia about the origin, for rotation in the plane of the lamina, is $I_0 = \\iint_D (x^2 + y^2)\\rho\\,dA$. Since $x^2 + y^2$ splits into two pieces, it is the sum of the moments about the two axes:\n\n$$I_0 = I_x + I_y.$$\n\nFor a uniform rectangle $[0, W] \\times [0, H]$ of density $\\rho$, $I_x = \\frac{\\rho WH^3}{3}$ and $I_y = \\frac{\\rho W^3H}{3}$.",
@@ -961,6 +968,7 @@ export const momentsOfInertiaOfLaminasAboutOtherAxes: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-moments-of-inertia-about-shifted-axes",
+      figure: multivariableDrawings8["moments-of-inertia-of-laminas-about-other-axes#evaluating-moments-of-inertia-about-shifted-axes"],
       title: t("Evaluating moments of inertia about shifted axes", "计算对平移轴或端点轴的转动惯量"),
       explanation: t(
         "For a uniform thin rod of mass $M$ and length $L$, the moment of inertia about an axis through one end perpendicular to the rod is $I_{\\text{end}} = \\int_0^L \\frac{M}{L} x^2\\,dx = \\frac{1}{3} M L^2$. When $L = 6\\ell$, $\\frac{1}{3} M L^2 = 12 M \\ell^2$.",
@@ -998,6 +1006,7 @@ export const momentsOfInertiaOfLaminasAboutOtherAxes: TopicDef = {
     },
     {
       id: "moment-of-inertia-about-a-line-outside-the-lamina",
+      figure: multivariableDrawings8["moments-of-inertia-of-laminas-about-other-axes#moment-of-inertia-about-a-line-outside-the-lamina"],
       title: t("Moment of inertia about a line outside the lamina", "关于薄板外直线的转动惯量"),
       explanation: t(
         "The moment of inertia about any line integrates the squared distance to that line. For the horizontal line $y = -d$, a point at height $y$ is at distance $y + d$, so for a uniform rectangle $[0, W] \\times [0, H]$\n\n$$I = \\int_0^W \\int_0^H (y + d)^2\\,dy\\,dx = \\frac{W\\left[(H + d)^3 - d^3\\right]}{3}.$$\n\nThe substitution $u = y + d$ makes the inner integral immediate.",
@@ -1044,6 +1053,7 @@ export const calculatingTheRadiusOfGyrationOfAPlaneLamina: TopicDef = {
   knowledgePoints: [
     {
       id: "determining-the-squared-radius-of-gyration",
+      figure: multivariableDrawings8["calculating-the-radius-of-gyration-of-a-plane-lamina#determining-the-squared-radius-of-gyration"],
       title: t("Determining the squared radius of gyration", "确定回转半径的平方值"),
       explanation: t(
         "For a uniform rectangular lamina of height $H$ rotated about the base axis, $I_x = \\frac{1}{3} M H^2$, so the squared radius of gyration is $\\bar{k}_x^2 = \\frac{I_x}{M} = \\frac{H^2}{3}$. When $H = 3h$, $\\bar{k}_x^2 = 3h^2$.",
@@ -1128,6 +1138,7 @@ export const theParallelAxisTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "applying-the-parallel-axis-theorem",
+      figure: multivariableDrawings8["the-parallel-axis-theorem#applying-the-parallel-axis-theorem"],
       title: t("Applying the Parallel Axis Theorem", "应用平行轴定理计算转动惯量"),
       explanation: t(
         "The Parallel Axis Theorem states $I = I_{\\text{cm}} + M d^2$ where $I_{\\text{cm}}$ is the moment of inertia about an axis through the center of mass, $M$ is total mass, and $d$ is the distance between the two parallel axes.",
@@ -1165,6 +1176,7 @@ export const theParallelAxisTheorem: TopicDef = {
     },
     {
       id: "moving-between-two-parallel-axes",
+      figure: multivariableDrawings8["the-parallel-axis-theorem#moving-between-two-parallel-axes"],
       title: t("Moving between two axes that miss the center of mass", "在两条不过质心的平行轴之间换算"),
       explanation: t(
         "The parallel axis theorem $I = I_{\\text{cm}} + Md^2$ always goes through the center of mass. To move from one off-center axis at distance $d_1$ to another at distance $d_2$, first go back to the center of mass and then out again:\n\n$$I_2 = I_1 - Md_1^2 + Md_2^2.$$\n\nAdding $M(d_2 - d_1)^2$ directly is a common mistake; it is only right when $d_1 = 0$.",
@@ -1213,6 +1225,10 @@ export const probabilityDensityFunctionsOfContinuousRandomVariables: TopicDef = 
   knowledgePoints: [
     {
       id: "normalizing-multivariable-probability-density-functions",
+      figure:
+        multivariableDrawings8[
+          "probability-density-functions-of-continuous-random-variables#normalizing-multivariable-probability-density-functions"
+        ],
       title: t("Normalizing multivariable probability density functions", "多元概率密度函数的归一化条件与常数确定"),
       explanation: t(
         "A joint density must have total integral one over its support, so the constant is chosen to make the volume under the density equal to one. For a uniform joint density $f(x, y) = C$ supported on the rectangle $[0, a] \\times [0, b]$, normalization requires $\\iint_D C\\,dA = C(ab) = 1$, so $C = \\frac{1}{ab}$, or $1/C = ab$.",
@@ -1249,6 +1265,8 @@ export const probabilityDensityFunctionsOfContinuousRandomVariables: TopicDef = 
     },
     {
       id: "normalizing-a-non-uniform-joint-density",
+      figure:
+        multivariableDrawings8["probability-density-functions-of-continuous-random-variables#normalizing-a-non-uniform-joint-density"],
       title: t("Normalizing a non-uniform joint density", "非均匀联合密度的归一化"),
       explanation: t(
         "A joint density must be nonnegative and integrate to $1$ over its domain. When it is given up to a constant, $f(x, y) = C\\,g(x, y)$, compute $\\iint_D g\\,dA$ and set $C = \\frac{1}{\\iint_D g\\,dA}$. For a product such as $g = xy$ on a rectangle the double integral factors: $\\int_0^a\\int_0^b xy\\,dy\\,dx = \\frac{a^2}{2} \\cdot \\frac{b^2}{2}$.",
@@ -1336,6 +1354,7 @@ export const calculatingProbabilitiesWithContinuousRandomVariables: TopicDef = {
     },
     {
       id: "probability-that-a-sum-is-small",
+      figure: multivariableDrawings8["calculating-probabilities-with-continuous-random-variables#probability-that-a-sum-is-small"],
       title: t("The probability that $X + Y$ is small", "$X + Y$ 较小的概率"),
       explanation: t(
         "For a uniform distribution on a region, a probability is the area of the event divided by the total area. If $(X, Y)$ is uniform on the square $[0, L]^2$ and $0 \\le s \\le L$, the event $X + Y \\le s$ is the triangle with legs $s$, so\n\n$$P(X + Y \\le s) = \\frac{s^2/2}{L^2} = \\frac{s^2}{2L^2}.$$\n\nDrawing the line $x + y = s$ first shows which shape the event has; for $s > L$ the region is no longer a triangle.",

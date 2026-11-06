@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -103,6 +104,8 @@ export const tangentPlanesToParametricSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-normal-vectors-and-tangent-planes-for-parametric-surfaces",
+      figure:
+        multivariableDrawings7["tangent-planes-to-parametric-surfaces#finding-normal-vectors-and-tangent-planes-for-parametric-surfaces"],
       title: t("Finding normal vectors and tangent planes for parametric surfaces", "求参数曲面的法向量与切平面"),
       explanation: t(
         "The partial derivatives with respect to the two parameters are tangent to the surface, so their cross product is a normal vector. For $\\mathbf{r}(u, v) = \\langle u, v, a u^2 + b v^2 \\rangle$, the tangent vectors are $\\mathbf{r}_u = \\langle 1, 0, 2au \\rangle$ and $\\mathbf{r}_v = \\langle 0, 1, 2bv \\rangle$. The normal vector is $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -2au, -2bv, 1 \\rangle$.",
@@ -183,6 +186,7 @@ export const parametrizationsOfEllipsoidsAndCones: TopicDef = {
   knowledgePoints: [
     {
       id: "parameterizing-ellipsoidal-and-conical-surfaces",
+      figure: multivariableDrawings7["parametrizations-of-ellipsoids-and-cones#parameterizing-ellipsoidal-and-conical-surfaces"],
       title: t("Parameterizing ellipsoidal and conical surfaces", "椭球面与锥面的参数方程表示"),
       explanation: t(
         "Use polar style parameters for the horizontal position, then express the height from the equation of the surface. A cone $z^2 = k^2(x^2 + y^2)$ can be parameterized by $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, k u \\rangle$ where $u \\ge 0$ is the radial distance and $v \\in [0, 2\\pi)$ is the angle.",
@@ -323,6 +327,7 @@ export const parametrizationsOfParaboloidsAndHyperboloids: TopicDef = {
     },
     {
       id: "cross-sections-of-a-hyperboloid-of-one-sheet",
+      figure: multivariableDrawings7["parametrizations-of-paraboloids-and-hyperboloids#cross-sections-of-a-hyperboloid-of-one-sheet"],
       title: t("Cross-sections of a hyperboloid of one sheet", "单叶双曲面的截面"),
       explanation: t(
         "The hyperboloid of one sheet $\\frac{x^2 + y^2}{a^2} - \\frac{z^2}{c^2} = 1$ is parametrized by\n\n$$\\mathbf{r}(u, v) = \\left\\langle a\\sqrt{1 + u^2}\\cos v,\\ a\\sqrt{1 + u^2}\\sin v,\\ cu \\right\\rangle.$$\n\nFixing $u$ fixes the height $z = cu$, and the cross-section there is a circle of radius $a\\sqrt{1 + u^2}$. The narrowest circle, of radius $a$, is the waist at $z = 0$, and the circles widen in both directions.",
@@ -365,6 +370,7 @@ export const parametrizationsOfCylinders: TopicDef = {
   knowledgePoints: [
     {
       id: "parameterizing-cylindrical-surfaces",
+      figure: multivariableDrawings7["parametrizations-of-cylinders#parameterizing-cylindrical-surfaces"],
       title: t("Parameterizing cylindrical surfaces", "圆柱面的柱坐标参数化"),
       explanation: t(
         "A cylinder keeps a fixed distance from its axis, so one parameter is the angle around the axis and the other is the height along it. For $\\mathbf{r}(u, v) = \\langle R \\cos u, R \\sin u, v \\rangle$, the tangent vectors are $\\mathbf{r}_u = \\langle -R \\sin u, R \\cos u, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$. The normal vector is $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R \\cos u, R \\sin u, 0 \\rangle$ with magnitude $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = R$.",
@@ -401,6 +407,7 @@ export const parametrizationsOfCylinders: TopicDef = {
     },
     {
       id: "the-area-element-of-an-elliptic-cylinder",
+      figure: multivariableDrawings7["parametrizations-of-cylinders#the-area-element-of-an-elliptic-cylinder"],
       title: t("The area element of an elliptic cylinder", "椭圆柱面的面积元"),
       explanation: t(
         "The elliptic cylinder $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is parametrized by $\\mathbf{r}(u, v) = \\langle a\\cos u, b\\sin u, v \\rangle$. Then $\\mathbf{r}_u = \\langle -a\\sin u, b\\cos u, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$, so\n\n$$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = \\sqrt{a^2\\sin^2 u + b^2\\cos^2 u}.$$\n\nUnlike a circular cylinder, the area element changes around the cylinder: it equals $b$ where $u = 0$ and $a$ where $u = \\frac{\\pi}{2}$.",
@@ -492,6 +499,7 @@ export const areasOfParametricSurfaces: TopicDef = {
     },
     {
       id: "the-lateral-area-of-a-cone",
+      figure: multivariableDrawings7["areas-of-parametric-surfaces#the-lateral-area-of-a-cone"],
       title: t("The lateral area of a cone", "圆锥的侧面积"),
       explanation: t(
         "The cone $z = k\\sqrt{x^2 + y^2}$ is parametrized by $\\mathbf{r}(u, v) = \\langle u\\cos v, u\\sin v, ku \\rangle$. Then $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -ku\\cos v, -ku\\sin v, u \\rangle$, whose length is $u\\sqrt{1 + k^2}$. Over $0 \\le u \\le R$, $0 \\le v \\le 2\\pi$,\n\n$$A = \\int_0^{2\\pi}\\int_0^R u\\sqrt{1 + k^2}\\,du\\,dv = \\pi R^2\\sqrt{1 + k^2},$$\n\nwhich matches the familiar formula $\\pi R \\ell$ with slant height $\\ell = R\\sqrt{1 + k^2}$.",
@@ -538,6 +546,7 @@ export const surfacesOfRevolution: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-general-surfaces-of-revolution",
+      figure: multivariableDrawings7["surfaces-of-revolution#area-of-general-surfaces-of-revolution"],
       title: t("Area of general surfaces of revolution", "一般旋转曲面的面积计算"),
       explanation: t(
         "When the horizontal line segment $y = R$ ($0 \\le x \\le H$) is rotated about the $x$-axis, it forms a right circular cylinder of radius $R$ and height $H$. The lateral surface area is $2\\pi R H$. When divided by $\\pi$, the value is $2 R H$.",
@@ -576,6 +585,7 @@ export const surfacesOfRevolution: TopicDef = {
     },
     {
       id: "the-area-of-a-spherical-zone",
+      figure: multivariableDrawings7["surfaces-of-revolution#the-area-of-a-spherical-zone"],
       title: t("The area of a spherical zone", "球带的面积"),
       explanation: t(
         "Revolving $y = \\sqrt{R^2 - x^2}$ for $a \\le x \\le b$ about the $x$-axis gives a zone of a sphere. Here $y\\sqrt{1 + y'^2} = \\sqrt{R^2 - x^2} \\cdot \\frac{R}{\\sqrt{R^2 - x^2}} = R$, so\n\n$$S = 2\\pi\\int_a^b R\\,dx = 2\\pi R(b - a).$$\n\nRemarkably, the area depends only on the width $b - a$ of the slab, not on where the slab sits along the sphere.",
@@ -617,6 +627,7 @@ export const areasOfSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "computing-surface-area-for-graphs-z-equals-f-of-x-y",
+      figure: multivariableDrawings7["areas-of-surfaces#computing-surface-area-for-graphs-z-equals-f-of-x-y"],
       title: t("Computing surface area for graphs z = f(x, y)", "计算显式函数图像 z = f(x, y) 的曲面面积"),
       explanation: t(
         "For a plane $z = ax + by + c$, the partial derivatives are constant: $f_x = a$ and $f_y = b$. The area element is $dS = \\sqrt{1 + a^2 + b^2}\\,dA$. Over a rectangle $D = [0, W] \\times [0, H]$, the surface area is $W H \\sqrt{1 + a^2 + b^2}$. When $(a, b) = (2, 2)$, $\\sqrt{1 + 2^2 + 2^2} = \\sqrt{9} = 3$.",
@@ -664,6 +675,7 @@ export const areasOfSurfaces: TopicDef = {
     },
     {
       id: "area-of-a-curved-graph-over-a-rectangle",
+      figure: multivariableDrawings7["areas-of-surfaces#area-of-a-curved-graph-over-a-rectangle"],
       title: t("The area of a curved graph over a rectangle", "矩形上方曲面图形的面积"),
       explanation: t(
         "The area of the graph $z = f(x, y)$ over $D$ is $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$. For $f = \\frac{2}{3}x^{3/2}$, $f_x = x^{1/2}$ and $f_y = 0$, so the integrand is $\\sqrt{1 + x}$ and over $[0, a] \\times [0, b]$\n\n$$A = b\\int_0^a \\sqrt{1 + x}\\,dx = \\frac{2b}{3}\\left[(1 + a)^{3/2} - 1\\right].$$",
@@ -748,6 +760,7 @@ export const surfaceIntegralsOverParametricSurfaces: TopicDef = {
     },
     {
       id: "a-surface-integral-over-a-cylinder",
+      figure: multivariableDrawings7["surface-integrals-over-parametric-surfaces#a-surface-integral-over-a-cylinder"],
       title: t("A surface integral over a cylinder", "圆柱面上的曲面积分"),
       explanation: t(
         "On the cylinder $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$, $0 \\le u \\le 2\\pi$, $0 \\le v \\le H$, the area element is $dS = R\\,du\\,dv$. Write the integrand in terms of $u$ and $v$ and integrate over the parameter rectangle:\n\n$$\\iint_S (x^2 + y^2)\\,dS = \\int_0^H\\int_0^{2\\pi} R^2 \\cdot R\\,du\\,dv = 2\\pi R^3H, \\qquad \\iint_S z\\,dS = \\int_0^H\\int_0^{2\\pi} vR\\,du\\,dv = \\pi RH^2.$$",
@@ -795,6 +808,8 @@ export const surfaceIntegralsOverCartesianSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "integrating-scalar-functions-over-graphs-z-equals-g-of-x-y",
+      figure:
+        multivariableDrawings7["surface-integrals-over-cartesian-surfaces#integrating-scalar-functions-over-graphs-z-equals-g-of-x-y"],
       title: t("Integrating scalar functions over graphs z = g(x, y)", "在显式图像曲面上计算标量函数积分"),
       explanation: t(
         "For a graph, the area element is the area in the horizontal plane times the square root of one plus the squares of the two partial derivatives. When integrating $f(x, y, z) = c$ over a planar surface $z = 2x + 2y$ where $\\sqrt{1 + g_x^2 + g_y^2} = 3$, the integral is $\\iint_S c\\,dS = 3c \\times \\text{Area}(D)$.",
@@ -835,6 +850,7 @@ export const surfaceIntegralsOverCartesianSurfaces: TopicDef = {
     },
     {
       id: "integrating-a-nonconstant-function-over-a-plane",
+      figure: multivariableDrawings7["surface-integrals-over-cartesian-surfaces#integrating-a-nonconstant-function-over-a-plane"],
       title: t("Integrating a nonconstant function over a tilted plane", "在倾斜平面上积分非常数函数"),
       explanation: t(
         "For $S$ the graph of $z = px + qy$ over $D$, $dS = \\sqrt{1 + p^2 + q^2}\\,dA$ is a constant multiple of $dA$. So\n\n$$\\iint_S f\\,dS = \\sqrt{1 + p^2 + q^2}\\iint_D f(x, y, px + qy)\\,dA.$$\n\nFor $f = x$ over $[0, W] \\times [0, H]$ the remaining double integral is $\\frac{W^2H}{2}$.",
@@ -927,6 +943,7 @@ export const fluxInThreeDimensionalVectorFields: TopicDef = {
     },
     {
       id: "flux-of-a-position-field-through-a-horizontal-square",
+      figure: multivariableDrawings7["flux-in-three-dimensional-vector-fields#flux-of-a-position-field-through-a-horizontal-square"],
       title: t("Flux of a nonuniform field through a horizontal square", "非均匀场穿过水平正方形的通量"),
       explanation: t(
         "Flux adds up the normal component of the field over the surface: $\\iint_S \\mathbf{F} \\cdot \\mathbf{n}\\,dS$. On the horizontal rectangle at height $z = h$ with upward normal $\\mathbf{n} = \\mathbf{k}$, only the $z$-component counts. For $\\mathbf{F} = \\langle x, y, z \\rangle$ that component is the constant $h$, so the flux is $h$ times the area, even though the field itself varies across the rectangle.",
@@ -970,6 +987,7 @@ export const fluxThroughClosedSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "outward-orientation-and-net-flux-through-closed-surfaces",
+      figure: multivariableDrawings7["flux-through-closed-surfaces#outward-orientation-and-net-flux-through-closed-surfaces"],
       title: t("Outward orientation and net flux through closed surfaces", "闭合曲面的外向定向与净外法向通量"),
       explanation: t(
         "For any uniform (constant) vector field $\\mathbf{F} = \\mathbf{C}$ through any closed surface $S$ bounding a solid region $E$, whatever flows in through one side leaves through the opposite side. The net outward flux is identically zero: $\\oiint_S \\mathbf{C} \\cdot d\\mathbf{S} = 0$.",
@@ -1008,6 +1026,7 @@ export const fluxThroughClosedSurfaces: TopicDef = {
     },
     {
       id: "outward-flux-of-a-radial-field-through-a-sphere",
+      figure: multivariableDrawings7["flux-through-closed-surfaces#outward-flux-of-a-radial-field-through-a-sphere"],
       title: t("Outward flux of a radial field through a sphere", "径向场穿过球面的向外通量"),
       explanation: t(
         "On the sphere $x^2 + y^2 + z^2 = R^2$ the outward unit normal is $\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{R}$. For the radial field $\\mathbf{F} = k\\langle x, y, z \\rangle$, $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{k(x^2 + y^2 + z^2)}{R} = kR$ is constant on the sphere. So the net outward flux is $kR$ times the area $4\\pi R^2$, that is $4\\pi kR^3$.",
@@ -1093,6 +1112,7 @@ export const calculatingFluxThroughParametricSurfaces: TopicDef = {
     },
     {
       id: "outward-flux-through-a-cylinder",
+      figure: multivariableDrawings7["calculating-flux-through-parametric-surfaces#outward-flux-through-a-cylinder"],
       title: t("Outward flux through the side of a cylinder", "穿过圆柱侧面的向外通量"),
       explanation: t(
         "For the cylinder $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$, the cross product $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R\\cos u, R\\sin u, 0 \\rangle$ points outward. The flux is $\\iint_D \\mathbf{F}(\\mathbf{r}(u, v)) \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,du\\,dv$. For $\\mathbf{F} = \\langle kx, ky, g(z) \\rangle$ the dot product is $kR^2$, and the $z$-component never contributes because the side's normal is horizontal.",
@@ -1136,6 +1156,7 @@ export const calculatingFluxThroughCartesianSurfaces: TopicDef = {
   knowledgePoints: [
     {
       id: "flux-through-explicit-surfaces-z-equals-g-of-x-y",
+      figure: multivariableDrawings7["calculating-flux-through-cartesian-surfaces#flux-through-explicit-surfaces-z-equals-g-of-x-y"],
       title: t("Flux through explicit surfaces z = g(x, y)", "显式曲面 z = g(x, y) 上的通量计算公式"),
       explanation: t(
         "For an upward oriented graph, the normal vector comes from the partial derivatives, and the flux is the double integral of the field dotted with it. For $\\mathbf{F} = \\langle P, Q, R \\rangle$ and surface $z = g(x, y)$ oriented upward, the normal differential is $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA$. Thus $\\mathbf{F} \\cdot d\\mathbf{S} = (-P g_x - Q g_y + R)\\,dA$.",
@@ -1180,6 +1201,7 @@ export const calculatingFluxThroughCartesianSurfaces: TopicDef = {
     },
     {
       id: "upward-flux-through-a-paraboloid-over-a-rectangle",
+      figure: multivariableDrawings7["calculating-flux-through-cartesian-surfaces#upward-flux-through-a-paraboloid-over-a-rectangle"],
       title: t("Upward flux through a curved graph", "穿过曲面图形的向上通量"),
       explanation: t(
         "For the graph $z = g(x, y)$ with upward orientation, $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle\\,dA$, so\n\n$$\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iint_D \\left(-Pg_x - Qg_y + R\\right)dA,$$\n\nwith $P$, $Q$, $R$ evaluated at $z = g(x, y)$. For $\\mathbf{F} = \\langle x, y, z \\rangle$ and $g = x^2 + y^2$ the integrand is $-2x^2 - 2y^2 + (x^2 + y^2) = -(x^2 + y^2)$: the field points outward, mostly against the upward normal.",
@@ -1358,6 +1380,7 @@ export const theDivergenceTheorem: TopicDef = {
     },
     {
       id: "divergence-theorem-on-a-sphere-or-cylinder",
+      figure: multivariableDrawings7["the-divergence-theorem#divergence-theorem-on-a-sphere-or-cylinder"],
       title: t("The divergence theorem on a sphere or a cylinder", "球体或圆柱体上的散度定理"),
       explanation: t(
         "When the divergence is constant, the divergence theorem reduces the flux to divergence times volume: $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (\\nabla \\cdot \\mathbf{F})\\,V$. For $\\mathbf{F} = \\langle ax, by, cz \\rangle$, $\\nabla \\cdot \\mathbf{F} = a + b + c$. A ball of radius $R$ has volume $\\frac{4}{3}\\pi R^3$, and a solid cylinder of radius $R$ and height $H$ has volume $\\pi R^2H$, so no surface parametrization is needed at all.",
@@ -1454,6 +1477,7 @@ export const stokesTheorem: TopicDef = {
     },
     {
       id: "stokes-theorem-on-a-tilted-triangle",
+      figure: multivariableDrawings7["stokes-theorem#stokes-theorem-on-a-tilted-triangle"],
       title: t("Stokes' theorem on a tilted triangle", "倾斜三角形上的斯托克斯定理"),
       explanation: t(
         "Stokes' theorem replaces the circulation around $C$ by the flux of $\\nabla \\times \\mathbf{F}$ through any surface bounded by $C$. For $\\mathbf{F} = \\langle pz, qx, ry \\rangle$ the curl is the constant $\\langle r, p, q \\rangle$. Take the triangle with vertices $(a, 0, 0)$, $(0, a, 0)$, $(0, 0, a)$, oriented with normal pointing away from the origin. Its projections onto the three coordinate planes each have area $\\frac{a^2}{2}$, so the flux of a constant vector $\\langle A, B, C \\rangle$ through it is $(A + B + C)\\frac{a^2}{2}$.",

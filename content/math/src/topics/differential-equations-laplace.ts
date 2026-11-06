@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
 
 /** signed writes a number as a signed term: "+ 3" or "- 3". */
@@ -150,6 +151,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
       },
       {
         id: "recognizing-piecewise-continuous-functions",
+        figure: differentialEquationsDrawings1["piecewise-continuity-and-piecewise-smoothness#recognizing-piecewise-continuous-functions"],
         title: t("Recognizing piecewise continuous functions", "识别分段连续函数"),
         explanation: t(
           "A function is piecewise continuous on $[0, T]$ when it has only finitely many discontinuities there and each one is a finite jump: both one-sided limits exist and are finite. Steps, floor functions and continuous functions qualify. A vertical asymptote such as $\\frac{1}{t - 2}$ does not, because the one-sided limits are infinite; neither does $\\sin\\frac{1}{t}$ near $0$, whose limit does not exist.",
