@@ -54,7 +54,8 @@ function Shell({ children }: { children: ReactNode }) {
 function Root() {
   const locale = Route.useLoaderData();
   // The landing page runs edge to edge, and / lays out its own width since it may be the landing page.
-  const bare = useRouterState({ select: (s) => s.location.pathname === "/" || s.location.pathname === "/landing" });
+  // Matches, not the location: the location changes before the next page is ready, and would move the page still shown.
+  const bare = useRouterState({ select: (s) => s.matches.some((r) => r.routeId === "/" || r.routeId === "/landing") });
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 10_000, retry: shouldRetry, refetchOnWindowFocus: false } } }),
   );

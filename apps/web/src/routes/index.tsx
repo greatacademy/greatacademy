@@ -12,13 +12,15 @@ import { account, learning, timeZone } from "../lib/rpc.ts";
 import { hasSessionCookie } from "../lib/session-cookie.ts";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async () => ({ signedIn: await hasSessionCookie() }),
+  // The cookie decides the server's first render. Later the session is known in the browser, so moving here asks the server nothing.
+  loader: () => (typeof document === "undefined" ? hasSessionCookie() : true),
+  staleTime: Number.POSITIVE_INFINITY,
   component: Index,
 });
 
 /** Index is the landing page for a visitor and the learner's home after signing in. */
 function Index() {
-  const { signedIn } = Route.useRouteContext();
+  const signedIn = Route.useLoaderData();
   const { data: session, isPending } = useSession();
   const { m } = useI18n();
   if (session) return <Home />;

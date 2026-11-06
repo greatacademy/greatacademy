@@ -33,7 +33,7 @@ export function Card({ children, className = "" }: { children: ReactNode; classN
 
 export function Spinner({ label }: { label: string }) {
   return (
-    <div role="status" className="flex items-center justify-center gap-3 py-16 text-muted">
+    <div role="status" className="flex animate-delayed-in items-center justify-center gap-3 py-16 text-muted">
       <span className="size-5 animate-spin rounded-full border-2 border-line border-t-accent" />
       {label}
     </div>
