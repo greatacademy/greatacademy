@@ -1,11 +1,12 @@
+import { hexColors } from "@ga/design";
 import type { ReactNode } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { m } from "./i18n.ts";
 import type { RpcState } from "./useRpc.ts";
 
-// The palette of the web app's @theme tokens (apps/web/src/styles.css).
-export const colors = { ink: "#1c2333", muted: "#5f6b7d", line: "#e3e7ee", page: "#f6f7fa", surface: "#ffffff", accent: "#3b5bdb" };
+/** colors is the default light palette; the mobile app does not follow the appearance settings yet. */
+export const colors = hexColors("academy", "light");
 
 /** Loaded renders a call's result, or its spinner or error with a retry. */
 export function Loaded<T>({ rpc, children }: { rpc: RpcState<T>; children: (data: T) => ReactNode }) {
