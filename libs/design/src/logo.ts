@@ -6,8 +6,8 @@
 export const LOGO = {
   viewBox: "0 0 64 64",
   shield: "M9 6H55V33C55 47 45 55 32 60C19 55 9 47 9 33Z",
-  letter: "M49.25 15H17.5V33C17.5 41.5 24 47.5 32 51C40 47.5 46.5 41.5 46.5 33V28.5H32",
-  letterWidth: 6.5,
+  letter: "M46.5 17.5H20.5V33C20.5 40.5 25.5 45 32 47.8C38.5 45 43.5 40.5 43.5 33V30H32",
+  letterWidth: 6,
   shieldColor: "#8a1f3f",
   letterColor: "#ffffff",
 } as const;
