@@ -51,6 +51,7 @@ This document describes the system as built: technology choices, repository stru
 | UI | **Base UI**, **Tailwind CSS v4**, Phosphor icons | Design tokens from `libs/design` |
 | Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Packaged in `libs/math-ui`; reused by the mobile app through Expo DOM components |
 | Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the mobile app (bearer tokens) |
+| Email | **Resend**, called over HTTP from the Worker with the secrets `RESEND_API_KEY` and `EMAIL_FROM` | Password resets and address verification, in the learner's two languages; a Worker needs no SMTP client |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
 | Mobile | **Expo** (latest SDK), Expo Router, TanStack Query, **Uniwind** (Tailwind v4 for React Native) | Same contracts and tokens as the web app |
 | Object storage | **R2** | Images of content; generated figures are inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)) |

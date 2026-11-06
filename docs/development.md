@@ -74,7 +74,7 @@ cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173
 ```
 
-- `apps/web/cloudflare.config.ts` declares the Worker: the Hyperdrive binding `HYPERDRIVE`, whose `dev.connectionString` points at the container, and the secret `BETTER_AUTH_SECRET`, read from `.dev.vars` locally (git-ignored).
+- `apps/web/cloudflare.config.ts` declares the Worker: the Hyperdrive binding `HYPERDRIVE`, whose `dev.connectionString` points at the container, and the secrets `BETTER_AUTH_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM`, read from `.dev.vars` locally (git-ignored). With `RESEND_API_KEY` empty, password-reset and verification emails are written to the console instead of sent, so the links can be opened from the server's output.
 - `pnpm nx run web:typecheck` first runs `cf workers types`, which writes the `Env` declarations to `.cloudflare/types`.
 - `apps/web/vite.config.ts` runs the subject Workers alongside the web Worker in development, so `web:dev` needs nothing else. Run it through Nx, which generates the manifest first.
 - `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, and set the secret.

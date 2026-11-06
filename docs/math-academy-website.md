@@ -63,6 +63,7 @@
 ### 3.4 XP
 - **1 XP ≈ 1 minute** of focused effort; there is a daily XP goal.
 - XP is awarded for correct answers: **full XP** for a lesson if most answers are correct, **partial XP** if some are, **bonus XP for a perfect score**, and **negative XP** on the rare occasions the system detects rushing and guessing.
+- **Tiers beyond the website.** The [podcast](https://www.justinmath.com/math-academy-podcast-2/) and [The Math Academy Way](https://www.justinmath.com/files/the-math-academy-way.pdf) give: bonus for a perfect score, full for nearly perfect, most for passable, a little for nearly passable, zero for poor, negative for blowing a task off. Failing in itself is not penalized. The penalty grows with repeated offenses (stated tentatively: the first three capped at 0, the next three at -1, and so on), and penalties raised the pass rate of learners gaming the system from under 50% to over 90%. The exact detection rule is not published.
 - The site frames XP as rewarding good habits as well as correct answers: reading worked examples carefully, using pencil and paper, and comparing wrong answers with the full solution.
 
 ### 3.5 Quizzes
@@ -83,6 +84,7 @@
 - Weekly leagues are grouped by **how fast students earn XP**, with promotion and demotion each week.
 - Students never lose accumulated XP; each week is a fresh start.
 - Leagues are **optional**: families can opt out if they don't motivate the student.
+- **Observed in a real account:** 9 tiers, groups of 30, with ranks 21–30 in the demotion zone. The number promoted and the day of the weekly reset are not published.
 
 ## 4. Oversight and account features
 - An **oversight account** for a parent, teacher or tutor can:

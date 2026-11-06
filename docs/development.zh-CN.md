@@ -74,7 +74,7 @@ cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173
 ```
 
-- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`，本地从 `.dev.vars` 读取（已被 git 忽略）。
+- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`、`RESEND_API_KEY` 和 `EMAIL_FROM`，本地从 `.dev.vars` 读取（已被 git 忽略）。`RESEND_API_KEY` 留空时，密码重置和验证邮件不会发出，而是写到控制台，可以从服务器输出里打开其中的链接。
 - `pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
 - `apps/web/vite.config.ts` 在开发时让学科 Worker 与 Web Worker 一起运行，所以 `web:dev` 不需要额外步骤。请通过 Nx 运行，它会先生成 manifest。
 - `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。部署前需创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，并设置密钥。

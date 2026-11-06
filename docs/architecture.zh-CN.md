@@ -51,6 +51,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
 | 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 封装在 `libs/math-ui`；移动端通过 Expo DOM components 复用 |
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与移动端共享会话（bearer token） |
+| 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
 | 移动端 | **Expo**（最新 SDK）、Expo Router、TanStack Query、**Uniwind**（React Native 版 Tailwind v4） | 与 Web 共用契约和 token |
 | 对象存储 | **R2** | 内容中的图片；生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)） |
