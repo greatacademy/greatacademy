@@ -9,10 +9,22 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
   const { tx } = useI18n();
   // While a plot is being answered, its drawing is the input itself.
   const figure = answering && problem?.input?.kind.case === "plot" ? undefined : problem?.figure;
+  // While an order is being answered, its sentences are the input itself.
+  const input = problem?.input?.kind;
+  const items = !answering && input?.case === "order" ? input.value.items : [];
   return (
     <div className="space-y-4">
       <Markdown source={tx(problem?.prompt)} className="text-lg" />
       <FigureView figure={figure} />
+      {items.length > 0 && (
+        <ul className="list-disc space-y-1 pl-5">
+          {items.map((item) => (
+            <li key={tx(item)}>
+              <Markdown source={tx(item)} inline />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
