@@ -2,6 +2,7 @@
 
 import type { TopicDef } from "@ga/content";
 
+import { withExamDrawings } from "../explanation-drawings-exam.ts";
 import { finishTopics } from "../finish.ts";
 import { actFundamentalsAlgebraTopics } from "../topics/act-fundamentals-algebra.ts";
 import { actFundamentalsChanceConicsTopics } from "../topics/act-fundamentals-chance-conics.ts";
@@ -31,30 +32,32 @@ import { satPrepAlgebraTopics } from "../topics/sat-prep-algebra.ts";
 import { satPrepDataTopics } from "../topics/sat-prep-data.ts";
 
 /** examShardTopics are the finished topics of the `exam` shard. */
-export const examShardTopics: readonly TopicDef[] = finishTopics(
-  [
-    ...satFundamentalsAlgebraTopics,
-    ...satFundamentalsGeometryTopics,
-    ...satFundamentalsAdvancedTopics,
-    ...satFundamentalsDataTopics,
-    ...satPrepAlgebraTopics,
-    ...satPrepAdvancedTopics,
-    ...satPrepDataTopics,
-    ...actNumberAlgebraTopics,
-    ...actFundamentalsNumberTopics,
-    ...actFundamentalsAlgebraTopics,
-    ...actFundamentalsFunctionTopics,
-    ...actFundamentalsGeometryTopics,
-    ...actFundamentalsModelingTopics,
-    ...actFundamentalsChanceConicsTopics,
-    ...actFundamentalsFigureUnitTopics,
-    ...actFundamentalsReasoningAlgebraTopics,
-    ...actFundamentalsReasoningGeometryTopics,
-    ...actFundamentalsReasoningDataTopics,
-    ...outlineGapTopics,
-    ...actGeometryDataTopics,
-    ...satMathStrategyTopics,
-    ...examTopics,
-  ],
-  [deeperExamThirdPoints, deeperRemainingExamThirdPoints, deeperExamFundamentalsThirdPoints, deeperExamFundamentalsThird2Points],
+export const examShardTopics: readonly TopicDef[] = withExamDrawings(
+  finishTopics(
+    [
+      ...satFundamentalsAlgebraTopics,
+      ...satFundamentalsGeometryTopics,
+      ...satFundamentalsAdvancedTopics,
+      ...satFundamentalsDataTopics,
+      ...satPrepAlgebraTopics,
+      ...satPrepAdvancedTopics,
+      ...satPrepDataTopics,
+      ...actNumberAlgebraTopics,
+      ...actFundamentalsNumberTopics,
+      ...actFundamentalsAlgebraTopics,
+      ...actFundamentalsFunctionTopics,
+      ...actFundamentalsGeometryTopics,
+      ...actFundamentalsModelingTopics,
+      ...actFundamentalsChanceConicsTopics,
+      ...actFundamentalsFigureUnitTopics,
+      ...actFundamentalsReasoningAlgebraTopics,
+      ...actFundamentalsReasoningGeometryTopics,
+      ...actFundamentalsReasoningDataTopics,
+      ...outlineGapTopics,
+      ...actGeometryDataTopics,
+      ...satMathStrategyTopics,
+      ...examTopics,
+    ],
+    [deeperExamThirdPoints, deeperRemainingExamThirdPoints, deeperExamFundamentalsThirdPoints, deeperExamFundamentalsThird2Points],
+  ),
 );
