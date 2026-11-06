@@ -21,6 +21,9 @@ The pedagogical background is in [The Math Academy Way](the-math-academy-way.md)
 | Course | `CourseDef` | An ordered selection of topics in units and modules, plus a mastery floor |
 | Problem | `Problem` | One generated instance: prompt, answer specification, solution, canonical and wrong responses |
 | Checker | `Checker` | Judges a response against a problem's expected data |
+| Passage | `PassageDef` | A text to read with a short comprehension check; a graph node apart from the topics, whose id shares their namespace |
+| Reading unit | `ReadingUnitDef` | An ordered sequence of passages on one domain; a course lists the units it offers in `CourseDef.reading` |
+| Lexicon | `LexiconEntry` | The subject's known spellings of each word, each optionally tied to the topic that teaches it |
 
 ## 2. Texts and Locales
 
@@ -160,13 +163,18 @@ const prealgebra: CourseDef = {
 | Key prerequisites are ancestors of their topic | Error |
 | Knowledge point figures are well formed (§4) and have alt text in every locale | Error |
 | Course topics exist, are not repeated, follow their in-course prerequisites; floor topics are not in the course | Error |
+| Lexicon spellings are unique, and an entry's topic exists | Error |
+| Reading units and passages have unique ids that no topic uses; a passage has a body, positive `xp`, at least one question, and topics that exist | Error |
+| Every word of a passage is in the lexicon, or listed in its `names` or `glossed` | Error |
+| A course's reading units exist | Error |
 
 The compiled graph provides:
 
 - `order`: topics in topological order, stable with respect to definition order;
 - `dependents`: the inverse of the prerequisite edges;
 - `encompassedBy`: the inverse of the encompassing edges, with weights;
-- `ancestors`: the transitive prerequisites of each topic, nearest first.
+- `ancestors`: the transitive prerequisites of each topic, nearest first;
+- `passages`: the passages in reading order, each with its unit, the passage before it, its topics, its count of running words, and how many of those each topic teaches (`wordsByTopic`).
 
 ## 8. Generator Sampling
 
@@ -187,7 +195,7 @@ It warns when fewer than `minDistinct` distinct prompts appear; prompts with dif
 
 `generateProblem(subject, ref)` regenerates a problem from a `ProblemRef` (`{ topic, kp, seed }`, where `kp` is the knowledge point's index). The server sends the client only `viewOf(problem)`: the prompt, its figure and the input specification. The answer, the canonical response and the solution are revealed only after the learner responds, and the response is checked on the server.
 
-In production this runs in a Worker of its own. `SubjectManifest` is a subject without its code, plain JSON produced by `subjectManifest` at build time; `readManifest` rebuilds the graph and indexes from it. `SubjectSource` serves what only code can produce (`problems`, `lesson`, `judge`). `topicSource` implements it over topic definitions, and `routeSource` over shards that each hold some of the topics. A subject divides its topics into shards in `content/<id>/src/shards/`; each topic is in exactly one, and what crosses between Workers must survive a structured clone, which `content/math` tests. See [Architecture](architecture.md) §6.1.
+In production this runs in a Worker of its own. `SubjectManifest` is a subject without its code, plain JSON produced by `subjectManifest` at build time; `readManifest` rebuilds the graph and indexes from it. `SubjectSource` serves what only code can produce (`problems`, `lesson`, `judge`) and the text of a passage (`passage`), which stays out of the manifest. A comprehension question is a `ProblemRef` whose `topic` is the passage's id and whose `kp` is the question's index, so that `problems` and `judge` serve it as they do any problem. `topicSource` implements it over topic definitions, and `routeSource` over shards that each hold some of the topics. A subject divides its topics into shards in `content/<id>/src/shards/`; each topic is in exactly one, and what crosses between Workers must survive a structured clone, which `content/math` tests. See [Architecture](architecture.md) §6.1.
 
 ## 10. Mathematics
 

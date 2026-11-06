@@ -22,6 +22,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, whether it was blown off (§10) |
 | `review` | A review ends | Topic, correct answers, questions, whether it was blown off |
 | `quiz` | A quiz ends | One result per question, by topic, whether it was blown off |
+| `reading` | A passage's check ends | Passage, correct answers, questions, whether it was blown off |
 
 Because state is derived, a change of parameters or of a rule applies to every learner by replaying, and the event log is the audit trail of every decision.
 
@@ -78,7 +79,12 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 
 1. Until the learner is placed in the course, the **diagnostic**, alone (§9).
 2. A **quiz**, when one is due (§7).
-3. **Reviews** and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first. The reviews are the remedial reviews that failed lessons wait for (§3), then the compressed reviews of the other due topics.
+3. A **passage to read**, when reading is below its share of the XP (below).
+4. **Reviews** and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first. The reviews are the remedial reviews that failed lessons wait for (§3), then the compressed reviews of the other due topics.
+
+**Reading.** A course offers reading only if it lists reading units. The next passage is the first of the course that the learner has not read, whose predecessor in its unit has been read, whose topics are all known, and whose known running words reach `readingKnownShare`. A word counts as unknown only when a topic not yet known teaches it. A passage is offered while `readingXp` is below `readingXpShare` of all XP, so that a learner who always takes the first task reads too. A passage read once is never offered again, passed or not, because it no longer tests comprehension. Frontier, reviews and quizzes do not depend on reading.
+
+A check that shows understanding (at least half right) gives each topic of the passage implicit credit of `readingCredit × weight`, under the same condition as other implicit credit. A failed check neither credits nor penalizes, since the passage may simply be hard.
 
 **Lesson share.** When lessons are available, at least 25% of the offered tasks are lessons. Reviews never crowd out new learning; new learning is also the cheapest way to review, as the next point explains. The order matters too, since many learners take the first task: the state counts the reviews since the last lesson, and after four in a row a lesson comes first. Without this, a learner whose reviews keep failing and coming due could spend weeks on reviews alone.
 
@@ -133,6 +139,11 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `kpMaxQuestions` | 5 | Enough room for one or two slips; beyond that, a prerequisite is the likelier problem |
 | `reviewQuestions`, `reviewPass` | 3, 2 | A short review that tolerates one slip |
 | `quizEveryXp` | 150 | About every three to four days of 40 XP |
+| `readingKnownShare` | 0.98 | The starting target for known running words; to be tuned by the pilot |
+| `readingXpShare` | 0.2 | Volume matters, but must not crowd out the frontier; to be tuned by the pilot |
+| `readingCredit` | 0.25 | Reading practices its topics lightly, far less than a review |
+| `readingFailedXpShare` | 0.5 | The time was spent even when the check failed |
+| `readingRushWpm` | 600 | Faster than anyone reads with understanding |
 | `quizQuestions`, `quizMinTopics` | 8, 4 | Long enough to sample broadly, short enough for one sitting |
 | `quizCredit`, `quizXp` | 0.5, 15 | One question is half a review |
 | `minLessonShare` | 0.25 | At least one task in four is new learning |
@@ -182,7 +193,7 @@ Placed topics start at `placedRepNum`, so they come back for review soon and a l
 
 ## 10. XP
 
-XP approximates minutes of focused work and is computed from events. A task has a **full XP**: the topic's `xp` for a lesson, max(3, round(xp / 3)) for a review, 15 for a quiz. What it earns depends on how it went:
+XP approximates minutes of focused work and is computed from events. A task has a **full XP**: the topic's `xp` for a lesson, max(3, round(xp / 3)) for a review, 15 for a quiz, the passage's `xp` for reading. What it earns depends on how it went:
 
 | Task | XP |
 | :--- | :--- |
@@ -195,11 +206,15 @@ XP approximates minutes of focused work and is computed from events. A task has 
 | Passed review, some wrong | Full × fraction correct |
 | Failed review | 0 |
 | Quiz, some wrong | Full × fraction correct |
+| Reading, at least half right | Full |
+| Reading, under half right | Full × 0.5 |
 | Blown-off task | 0, or less after repeated ones (below) |
 
 So XP rewards results and still credits honest effort: a poor lesson earns nothing, and the time it costs shows in the calendar, as the struggling student's extra days in §8 do.
 
 **Blown-off tasks.** A task counts as blown off when it was not passed and at least two wrong answers, making up at least half of its wrong answers, arrived within six seconds of the question being served. The time is the server's, recorded per question, so the client cannot affect it. Failing slowly is never blowing off, nor is passing quickly, and the diagnostic is exempt. The event carries the verdict as `blownOff`, so a replay does not need the times.
+
+A reading task counts as blown off when its check failed and the passage's words went by faster than `readingRushWpm`, since a learner reads before answering and the answers alone say little about the time spent.
 
 The state counts recent blown-off tasks in `blowOffs`. The penalty for one is floor(blowOffs / 3) XP before counting it, capped at 10 and at the task's full XP: the first three cost nothing and serve as warnings, the next three cost 1 XP, and so on. Each passed task lowers the count by 0.2. A subject's XP total never falls below zero. A learner sees the warning on the result page, with what it means.
 

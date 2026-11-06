@@ -21,6 +21,9 @@
 | 课程 | `CourseDef` | 按单元和模块排列的一组有序知识点，以及掌握下限 |
 | 题目 | `Problem` | 一次生成的实例：题面、答案规格、解答、标准答案和错误答案 |
 | 判定器 | `Checker` | 根据题目的期望数据判断作答 |
+| 文章 | `PassageDef` | 一篇供阅读的文本，附简短的理解检查；是图谱中独立于知识点的节点，其 id 与知识点共用命名空间 |
+| 阅读单元 | `ReadingUnitDef` | 同一领域的一组有序文章；课程在 `CourseDef.reading` 中列出它提供的单元 |
+| 词表 | `LexiconEntry` | 学科中每个词的已知拼写，可关联到教授它的知识点 |
 
 ## 2. 文字与语言
 
@@ -160,13 +163,18 @@ const prealgebra: CourseDef = {
 | 关键先修是所属知识点的祖先 | 错误 |
 | Knowledge point 的图形合乎规定（§4），且 alt 文字在每种语言中非空 | 错误 |
 | 课程中的知识点存在、不重复、排在本课程内先修之后；下限中的知识点不在课程中 | 错误 |
+| 词表中的拼写不重复，词条关联的知识点存在 | 错误 |
+| 阅读单元和文章的 id 唯一，且不与知识点重复；文章有正文、`xp` 为正、至少一道题，其知识点存在 | 错误 |
+| 文章的每个词都在词表中，或列在它的 `names` 或 `glossed` 中 | 错误 |
+| 课程的阅读单元存在 | 错误 |
 
 编译后的图谱提供：
 
 - `order`：知识点的拓扑序，在定义顺序上保持稳定；
 - `dependents`：先修边的反向；
 - `encompassedBy`：包含边的反向，带权重；
-- `ancestors`：每个知识点的传递先修，近者在前。
+- `ancestors`：每个知识点的传递先修，近者在前；
+- `passages`：按阅读顺序排列的文章，每篇带所属单元、前一篇、它的知识点、总词数，以及其中各知识点教授的词数（`wordsByTopic`）。
 
 ## 8. 生成器抽样
 
@@ -187,7 +195,7 @@ const prealgebra: CourseDef = {
 
 `generateProblem(subject, ref)` 根据 `ProblemRef`（`{ topic, kp, seed }`，`kp` 是 knowledge point 的下标）重新生成题目。服务器只向客户端发送 `viewOf(problem)`：题面、图形和输入规格。答案、标准答案和解答只在学习者作答之后才公开，作答在服务器上判定。
 
-在生产环境中，这些工作运行在独立的 Worker 中。`SubjectManifest` 是不含代码的学科，是构建时由 `subjectManifest` 生成的纯 JSON；`readManifest` 从中重建图谱和索引。`SubjectSource` 提供只有代码才能产生的内容（`problems`、`lesson`、`judge`）。`topicSource` 基于 topic 定义实现它，`routeSource` 基于各持有部分 topic 的分片实现它。学科在 `content/<id>/src/shards/` 中把 topic 分到各分片；每个 topic 只属于一个分片，跨 Worker 传递的内容必须经得起结构化克隆，`content/math` 对此有测试。详见[架构](architecture.zh-CN.md) §6.1。
+在生产环境中，这些工作运行在独立的 Worker 中。`SubjectManifest` 是不含代码的学科，是构建时由 `subjectManifest` 生成的纯 JSON；`readManifest` 从中重建图谱和索引。`SubjectSource` 提供只有代码才能产生的内容（`problems`、`lesson`、`judge`）和文章的正文（`passage`），正文不放入清单。理解检查题是一个 `ProblemRef`，其 `topic` 是文章的 id，`kp` 是题目的下标，因此 `problems` 和 `judge` 像对待其他题目一样提供它。`topicSource` 基于 topic 定义实现它，`routeSource` 基于各持有部分 topic 的分片实现它。学科在 `content/<id>/src/shards/` 中把 topic 分到各分片；每个 topic 只属于一个分片，跨 Worker 传递的内容必须经得起结构化克隆，`content/math` 对此有测试。详见[架构](architecture.zh-CN.md) §6.1。
 
 ## 10. 数学
 

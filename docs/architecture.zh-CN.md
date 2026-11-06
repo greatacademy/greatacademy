@@ -124,7 +124,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 | League group（联赛小组） | 同一段位中一周内竞争的最多 30 名学习者 |
 | Enrollment（选课） | 某学习者在某课程中 |
 | Topic state（知识点状态） | 学习者在某知识点上的重复状态（派生数据） |
-| Task（任务） | 学习者任务面板上的课程、复习、测验或诊断 |
+| Task（任务） | 学习者任务面板上的课程、复习、阅读、测验或诊断 |
 | Event（事件） | 不可变记录：任务开始、提交答案、任务完成、诊断作答 |
 
 内容的完整模型见[内容](content.zh-CN.md)，派生的学习者状态定义见[学习引擎](learning-engine.zh-CN.md)。
