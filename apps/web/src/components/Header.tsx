@@ -1,7 +1,7 @@
 import { Menu } from "@base-ui/react/menu";
 import { Select } from "@base-ui/react/select";
 import { THEMES, type Theme } from "@ga/design";
-import { CaretDown, Check, GraduationCap, type Icon, Monitor, Moon, Sun, UserCircle } from "@phosphor-icons/react";
+import { CaretDown, Check, type Icon, Monitor, Moon, Sun, UserCircle } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 
@@ -10,6 +10,7 @@ import { authClient, useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { LOCALES, type Locale } from "../lib/locale.ts";
 import { account, learning, timeZone } from "../lib/rpc.ts";
+import { Logo } from "./Logo.tsx";
 import { buttonClass, menuItem, menuPopup } from "./ui.tsx";
 
 const localeNames: Record<Locale, string> = { en: "English", "zh-CN": "简体中文" };
@@ -105,7 +106,7 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <div className="flex min-w-0 items-center gap-1 sm:gap-4">
           <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight whitespace-nowrap" aria-label="Great Academy">
-            <GraduationCap size={26} weight="duotone" className="text-accent" />
+            <Logo size={26} />
             <span className={session ? "hidden md:inline" : ""}>Great Academy</span>
           </Link>
           {session && (

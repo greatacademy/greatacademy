@@ -1,14 +1,4 @@
-import {
-  ArrowRight,
-  BookOpenText,
-  CaretDown,
-  CheckCircle,
-  GraduationCap,
-  type Icon,
-  Student,
-  UsersThree,
-  XCircle,
-} from "@phosphor-icons/react";
+import { ArrowRight, BookOpenText, CaretDown, CheckCircle, type Icon, Student, UsersThree, XCircle } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
@@ -17,6 +7,7 @@ import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { catalog } from "../lib/rpc.ts";
 import { PlacementArt, QuizArt, ReviewArt, StepsArt } from "./LandingArt.tsx";
+import { Logo } from "./Logo.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { Button, buttonClass } from "./ui.tsx";
 
@@ -256,7 +247,7 @@ export function Landing() {
 
       <footer className={`${inner} flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted`}>
         <span className="flex items-center gap-2 font-medium text-ink">
-          <GraduationCap size={20} weight="duotone" className="text-accent" /> Great Academy
+          <Logo size={20} /> Great Academy
         </span>
         <span className="flex gap-4">
           <Link to="/courses">{m.courses}</Link>
