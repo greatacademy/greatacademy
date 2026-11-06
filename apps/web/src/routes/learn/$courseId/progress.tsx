@@ -6,7 +6,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { LoadError, NotFoundNote } from "../../../components/LoadError.tsx";
 import { Markdown } from "../../../components/Markdown.tsx";
 import { buttonClass, Card, Spinner } from "../../../components/ui.tsx";
-import { useRequireSession } from "../../../lib/hooks.ts";
+import { useEnrollFirst, useRequireSession } from "../../../lib/hooks.ts";
 import { useI18n } from "../../../lib/i18n.tsx";
 import { catalog, learning } from "../../../lib/rpc.ts";
 import { statusStyle } from "../../../lib/topic-status.ts";
@@ -25,7 +25,9 @@ function Progress() {
     staleTime: 0,
   });
 
-  if (!session || course.isPending || progress.isPending) return <Spinner label={m.loading} />;
+  const notEnrolled = useEnrollFirst(courseId, progress.error);
+
+  if (!session || course.isPending || progress.isPending || notEnrolled) return <Spinner label={m.loading} />;
   if (course.isError) return <LoadError error={course.error} onRetry={() => course.refetch()} />;
   if (progress.isError) return <LoadError error={progress.error} onRetry={() => progress.refetch()} />;
   if (!course.data.course) return <NotFoundNote />;

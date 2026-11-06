@@ -13,8 +13,11 @@ export const learning = createClient(LearningService, transport);
 /** isNotFound reports whether a call failed because what it asked for does not exist. */
 export const isNotFound = (error: unknown) => ConnectError.from(error).code === Code.NotFound;
 
-/** shouldRetry lets a query try once more, unless asking again cannot help because what it asked for does not exist. */
-export const shouldRetry = (failures: number, error: unknown) => failures < 1 && !isNotFound(error);
+/** isNotEnrolled reports whether a call failed because the learner has not enrolled in the course it names. */
+export const isNotEnrolled = (error: unknown) => ConnectError.from(error).code === Code.FailedPrecondition;
+
+/** shouldRetry lets a query try once more, unless asking again cannot help: what it asked for does not exist, or the learner has not enrolled. */
+export const shouldRetry = (failures: number, error: unknown) => failures < 1 && !isNotFound(error) && !isNotEnrolled(error);
 
 /** timeZone is the browser's IANA time zone, which decides what "today" means for XP. */
 export const timeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;

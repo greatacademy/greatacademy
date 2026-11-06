@@ -1,14 +1,12 @@
-import { Code, ConnectError } from "@connectrpc/connect";
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
 import { ChartBar, ClockCounterClockwise, Lightning, MapTrifold, Target } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
 
 import { LoadError } from "../../../components/LoadError.tsx";
 import { TaskCard } from "../../../components/TaskCard.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../../components/ui.tsx";
-import { useRequireSession } from "../../../lib/hooks.ts";
+import { useEnrollFirst, useRequireSession } from "../../../lib/hooks.ts";
 import { useI18n } from "../../../lib/i18n.tsx";
 import { catalog, learning, timeZone } from "../../../lib/rpc.ts";
 
@@ -37,10 +35,7 @@ function Dashboard() {
   });
 
   // Not enrolled: the course page has the enroll button.
-  const notEnrolled = dash.isError && ConnectError.from(dash.error).code === Code.FailedPrecondition;
-  useEffect(() => {
-    if (notEnrolled) void navigate({ to: "/courses/$courseId", params: { courseId } });
-  }, [notEnrolled, navigate, courseId]);
+  const notEnrolled = useEnrollFirst(courseId, dash.error);
 
   if (!session || dash.isPending || notEnrolled) return <Spinner label={m.loading} />;
   if (dash.isError) return <LoadError error={dash.error} onRetry={() => dash.refetch()} />;
