@@ -34,6 +34,7 @@ export interface CourseListing {
   readonly id: string;
   readonly title: Text;
   readonly description: Text;
+  readonly group?: Text;
   readonly topicCount: number;
   readonly xp: number;
 }
@@ -86,6 +87,7 @@ export function subjectListing(manifest: SubjectManifest): SubjectListing {
       id: c.def.id,
       title: c.def.title,
       description: c.def.description,
+      ...(c.def.group && { group: c.def.group }),
       topicCount: c.topics.length,
       xp: c.topics.reduce((sum, id) => sum + xp.get(id)!, 0),
     })),

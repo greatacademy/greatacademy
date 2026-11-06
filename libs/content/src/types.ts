@@ -137,6 +137,8 @@ export interface CourseDef {
   readonly id: string;
   readonly title: Text;
   readonly description: Text;
+  /** group names the shelf a list of courses shows this course on; courses of a group are listed together. */
+  readonly group?: Text;
   readonly units: readonly UnitDef[];
   /** masteryFloor are topics outside the course assumed known by every learner. */
   readonly masteryFloor?: readonly string[];

@@ -131,6 +131,7 @@ const prealgebra: CourseDef = {
   id: "prealgebra",
   title: t("Prealgebra", "代数预备"),
   description: t(…, …),
+  group: t("Grades 6–8", "初中"),
   masteryFloor: ["counting"],
   units: [
     { title: t("Integers", "整数"), modules: [{ title: t("Adding and Subtracting", "加法与减法"), topics: ["adding-integers", …] }] },
@@ -139,6 +140,7 @@ const prealgebra: CourseDef = {
 ```
 
 - A course lists its topics in teaching order, grouped into units and modules for display only.
+- `group` names the shelf that lists of courses show the course on, such as a stage of schooling. In mathematics, [course-shelves.ts](../content/math/src/course-shelves.ts) assigns it and orders the shelves; a course on no shelf is an error.
 - Every topic appears once, and after all of its prerequisites that are in the course.
 - **Mastery floor.** Topics that every learner of the course is assumed to know. They and their ancestors are never taught or reviewed by the course. A floor topic must not be in the course.
 - **Foundations** (computed). Ancestors of course topics that are neither in the course nor below the floor. The diagnostic places the learner on them, and a learner who lacks them is taught them first.

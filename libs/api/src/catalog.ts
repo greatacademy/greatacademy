@@ -17,6 +17,7 @@ function listed(
     subjectTitle: text(subject.title),
     title: text(c.title),
     description: text(c.description),
+    ...(c.group && { group: text(c.group) }),
     topicCount: c.topicCount,
     xp: c.xp,
     ...(outline && { units: outline }),

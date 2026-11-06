@@ -131,6 +131,7 @@ const prealgebra: CourseDef = {
   id: "prealgebra",
   title: t("Prealgebra", "代数预备"),
   description: t(…, …),
+  group: t("Grades 6–8", "初中"),
   masteryFloor: ["counting"],
   units: [
     { title: t("Integers", "整数"), modules: [{ title: t("Adding and Subtracting", "加法与减法"), topics: ["adding-integers", …] }] },
@@ -139,6 +140,7 @@ const prealgebra: CourseDef = {
 ```
 
 - 课程按教学顺序列出知识点，单元和模块只用于展示分组。
+- `group` 表示课程列表把这门课放在哪个分组，例如某个学段。数学学科由 [course-shelves.ts](../content/math/src/course-shelves.ts) 指定并排定分组顺序；没有分组的课程会报错。
 - 每个知识点只出现一次，并且排在它在本课程中的所有先修之后。
 - **掌握下限。** 假定该课程的每个学习者都已掌握的知识点。它们及其祖先永远不会被本课程讲授或复习。下限中的知识点不能出现在课程中。
 - **基础**（计算得出）。课程知识点的祖先中，既不在课程中、也不在下限之下的那些。诊断会测定学习者对它们的掌握情况，缺少这些基础的学习者会先学习它们。

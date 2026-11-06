@@ -122,6 +122,13 @@ export declare type Course = Message<"ga.catalog.v1.Course"> & {
    * @generated from field: repeated ga.catalog.v1.Unit units = 8;
    */
   units: Unit[];
+
+  /**
+   * group names the shelf a list of courses shows the course on; unset for none.
+   *
+   * @generated from field: ga.common.v1.Text group = 9;
+   */
+  group?: Text | undefined;
 };
 
 /**

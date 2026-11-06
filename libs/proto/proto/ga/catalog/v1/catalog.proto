@@ -40,6 +40,8 @@ message Course {
   int32 xp = 7;
   // units is the outline; empty in ListCourses.
   repeated Unit units = 8;
+  // group names the shelf a list of courses shows the course on; unset for none.
+  ga.common.v1.Text group = 9;
 }
 
 message Unit {

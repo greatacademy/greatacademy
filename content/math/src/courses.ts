@@ -1,6 +1,7 @@
 import type { CourseDef } from "@ga/content";
 import { t } from "@ga/content";
 
+import { onShelves } from "./course-shelves.ts";
 import { earlyGradesMoreUnits } from "./topics/early-grades-more.ts";
 
 /** algebraFoundations is the first course: integers, expressions, linear equations and inequalities. */
@@ -18817,7 +18818,7 @@ export const partialDifferentialEquations: CourseDef = {
 };
 
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [
+export const mathCourses: readonly CourseDef[] = onShelves([
   algebraFoundations,
   prealgebra,
   algebraI,
@@ -18864,4 +18865,4 @@ export const mathCourses: readonly CourseDef[] = [
   satMathPrep,
   actMathFundamentals,
   actMathPrep,
-];
+]);
