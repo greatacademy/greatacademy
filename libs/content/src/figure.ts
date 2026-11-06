@@ -22,8 +22,9 @@ export function plottedPoints(response: string): readonly (readonly [number, num
  * parts a client draws in color: "accent" the subject of the figure, "action"
  * what is done to it, such as the arc of a rotation, and "result" what comes
  * out, such as the image or the answer. Text inside the drawing is
- * language-neutral (numbers, letters, units); alt describes the figure in
- * every locale for screen readers.
+ * language-neutral (numbers, letters, units, mathematical symbols); alt
+ * describes the figure in every locale for screen readers, and is the caption
+ * of the figure of a knowledge point.
  */
 export interface Figure {
   readonly svg: string;

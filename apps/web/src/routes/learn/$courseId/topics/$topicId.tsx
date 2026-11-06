@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { Explanation, FigureView } from "../../../../components/Figure.tsx";
+import { CaptionedFigure, Explanation, FigureView } from "../../../../components/Figure.tsx";
 import { Markdown } from "../../../../components/Markdown.tsx";
 import { AnswerText, ProblemPrompt } from "../../../../components/Problem.tsx";
 import { Button, buttonClass, Card, ErrorNote, Spinner } from "../../../../components/ui.tsx";
@@ -26,7 +26,7 @@ function Step({ step }: { step: KnowledgePointIntro }) {
           <Markdown source={tx(step.title)} inline />
         </h2>
         <Explanation text={tx(step.explanation)} figures={step.figures} />
-        <FigureView figure={step.figure} />
+        <CaptionedFigure figure={step.figure} />
       </Card>
       {ex && (
         <Card className="space-y-4 border-accent/25 bg-accent-soft/40">
