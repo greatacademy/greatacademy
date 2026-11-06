@@ -286,7 +286,7 @@ const messages = {
     mathHint: "Type math with the keyboard: / for a fraction, ^ for a power.",
     navLearn: "Learn",
     navLearners: "Learners",
-    navAbout: "About",
+    navAbout: "Introduction",
     nextUp: "Next up",
     goalLeftToday: (n: number) => `${n} XP to today's goal`,
     goalMetToday: "Today's goal is met. Anything more is a bonus.",

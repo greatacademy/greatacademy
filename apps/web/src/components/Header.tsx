@@ -1,6 +1,7 @@
 import { Menu } from "@base-ui/react/menu";
+import { Select } from "@base-ui/react/select";
 import { THEMES, type Theme } from "@ga/design";
-import { CaretDown, GraduationCap, type Icon, Monitor, Moon, Sun, UserCircle } from "@phosphor-icons/react";
+import { CaretDown, Check, GraduationCap, type Icon, Monitor, Moon, Sun, UserCircle } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 
@@ -14,25 +15,35 @@ import { buttonClass, menuItem, menuPopup } from "./ui.tsx";
 const localeNames: Record<Locale, string> = { en: "English", "zh-CN": "简体中文" };
 const themeIcons: Record<Theme, Icon> = { system: Monitor, light: Sun, dark: Moon };
 
-/** The language, as a select box that names each language in that language. */
+/** The language, as a select box that names each language in that language and opens below itself. */
 function LanguageSelect() {
   const { m, locale, setLocale } = useI18n();
   return (
-    <span className="relative flex items-center">
-      <select
+    <Select.Root modal={false} items={localeNames} value={locale} onValueChange={(value) => setLocale(value as Locale)}>
+      <Select.Trigger
         aria-label={m.language}
-        value={locale}
-        onChange={(e) => setLocale(e.target.value as Locale)}
-        className="appearance-none rounded-lg border border-line bg-surface py-1 pr-7 pl-2.5 text-sm font-medium outline-none transition hover:border-accent/50 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/25"
+        className="inline-flex cursor-default items-center gap-1.5 rounded-lg border border-line bg-surface py-1 pr-2 pl-2.5 text-sm font-medium whitespace-nowrap outline-none transition select-none hover:border-accent/50 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/25"
       >
-        {LOCALES.map((l) => (
-          <option key={l} value={l} lang={l}>
-            {localeNames[l]}
-          </option>
-        ))}
-      </select>
-      <CaretDown size={12} weight="bold" className="pointer-events-none absolute right-2.5 text-muted" />
-    </span>
+        <Select.Value />
+        <Select.Icon className="flex text-muted">
+          <CaretDown size={12} weight="bold" />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Positioner alignItemWithTrigger={false} side="bottom" align="end" sideOffset={4}>
+          <Select.Popup className={`${menuPopup} !min-w-28`}>
+            {LOCALES.map((l) => (
+              <Select.Item key={l} value={l} lang={l} className={menuItem}>
+                <Select.ItemText>{localeNames[l]}</Select.ItemText>
+                <Select.ItemIndicator className="flex text-accent">
+                  <Check size={14} weight="bold" />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
+    </Select.Root>
   );
 }
 
@@ -124,11 +135,11 @@ export function Header() {
           <LanguageSelect />
           {session ? (
             <Menu.Root>
-              <Menu.Trigger className={buttonClass("ghost", "px-2")} aria-label={m.settings}>
+              <Menu.Trigger className={buttonClass("ghost", "!p-2")} aria-label={m.settings}>
                 <UserCircle size={20} />
               </Menu.Trigger>
               <Menu.Portal>
-                <Menu.Positioner sideOffset={6} align="end">
+                <Menu.Positioner sideOffset={4} align="end">
                   <Menu.Popup className={`${menuPopup} w-72 max-w-[calc(100vw-2rem)]`}>
                     <div className="mb-1 flex items-center justify-between gap-3 border-b border-line px-3 pt-1.5 pb-2.5">
                       <div className="min-w-0">
