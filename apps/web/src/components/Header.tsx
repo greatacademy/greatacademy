@@ -103,6 +103,9 @@ export function Header() {
                     <Menu.Item className={menuItem} onClick={() => navigate({ to: "/settings" })}>
                       {m.settings}
                     </Menu.Item>
+                    <Menu.Item className={menuItem} onClick={() => navigate({ to: "/settings/appearance" })}>
+                      {m.appearance}
+                    </Menu.Item>
                     <Menu.Item className={menuItem} onClick={() => navigate({ to: "/landing" })}>
                       {m.navAbout}
                     </Menu.Item>

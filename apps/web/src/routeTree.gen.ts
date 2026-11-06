@@ -14,7 +14,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as LeagueRouteImport } from './routes/league'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SettingsRouteRouteImport } from './routes/settings/route'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
@@ -23,6 +23,8 @@ import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as GuardianIndexRouteImport } from './routes/guardian/index'
 import { Route as GuardianLearnerIdRouteImport } from './routes/guardian/$learnerId'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
+import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
 import { Route as LearnCourseIdIndexRouteImport } from './routes/learn/$courseId/index'
 import { Route as LearnCourseIdHistoryRouteImport } from './routes/learn/$courseId/history'
 import { Route as LearnCourseIdProgressRouteImport } from './routes/learn/$courseId/progress'
@@ -53,7 +55,7 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsRoute = SettingsRouteImport.update({
+const SettingsRouteRoute = SettingsRouteRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => rootRouteImport,
@@ -98,6 +100,16 @@ const SessionSessionIdRoute = SessionSessionIdRouteImport.update({
   path: '/session/$sessionId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SettingsRouteRoute,
+} as any)
+const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
+  getParentRoute: () => SettingsRouteRoute,
+} as any)
 const LearnCourseIdIndexRoute = LearnCourseIdIndexRouteImport.update({
   id: '/learn/$courseId/',
   path: '/learn/$courseId/',
@@ -122,19 +134,21 @@ const LearnCourseIdTopicsTopicIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/settings': typeof SettingsRouteRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/settings/appearance': typeof SettingsAppearanceRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
+  '/settings/': typeof SettingsIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId/': typeof LearnCourseIdIndexRoute
@@ -146,15 +160,16 @@ export interface FileRoutesByTo {
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/settings/appearance': typeof SettingsAppearanceRoute
   '/courses': typeof CoursesIndexRoute
   '/guardian': typeof GuardianIndexRoute
+  '/settings': typeof SettingsIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId': typeof LearnCourseIdIndexRoute
@@ -163,19 +178,21 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/settings': typeof SettingsRouteRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/settings/appearance': typeof SettingsAppearanceRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
+  '/settings/': typeof SettingsIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId/': typeof LearnCourseIdIndexRoute
@@ -185,19 +202,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/settings'
     | '/forgot-password'
     | '/landing'
     | '/league'
     | '/reset-password'
-    | '/settings'
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/settings/appearance'
     | '/courses/'
     | '/guardian/'
+    | '/settings/'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId/'
@@ -209,15 +228,16 @@ export interface FileRouteTypes {
     | '/landing'
     | '/league'
     | '/reset-password'
-    | '/settings'
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/settings/appearance'
     | '/courses'
     | '/guardian'
+    | '/settings'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId'
@@ -225,19 +245,21 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/settings'
     | '/forgot-password'
     | '/landing'
     | '/league'
     | '/reset-password'
-    | '/settings'
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/settings/appearance'
     | '/courses/'
     | '/guardian/'
+    | '/settings/'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId/'
@@ -246,11 +268,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SettingsRouteRoute: typeof SettingsRouteRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LandingRoute: typeof LandingRoute
   LeagueRoute: typeof LeagueRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  SettingsRoute: typeof SettingsRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   ApiSplatRoute: typeof ApiSplatRoute
@@ -306,7 +328,7 @@ declare module '@tanstack/react-router' {
       id: '/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
+      preLoaderRoute: typeof SettingsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -365,6 +387,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SessionSessionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/': {
+      id: '/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
+      parentRoute: typeof SettingsRouteRoute
+    }
+    '/settings/appearance': {
+      id: '/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof SettingsAppearanceRouteImport
+      parentRoute: typeof SettingsRouteRoute
+    }
     '/learn/$courseId/': {
       id: '/learn/$courseId/'
       path: '/learn/$courseId'
@@ -396,13 +432,27 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SettingsRouteRouteChildren {
+  SettingsAppearanceRoute: typeof SettingsAppearanceRoute
+  SettingsIndexRoute: typeof SettingsIndexRoute
+}
+
+const SettingsRouteRouteChildren: SettingsRouteRouteChildren = {
+  SettingsAppearanceRoute: SettingsAppearanceRoute,
+  SettingsIndexRoute: SettingsIndexRoute,
+}
+
+const SettingsRouteRouteWithChildren = SettingsRouteRoute._addFileChildren(
+  SettingsRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SettingsRouteRoute: SettingsRouteRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LandingRoute: LandingRoute,
   LeagueRoute: LeagueRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  SettingsRoute: SettingsRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   ApiSplatRoute: ApiSplatRoute,

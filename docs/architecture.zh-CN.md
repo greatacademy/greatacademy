@@ -69,7 +69,7 @@ libs/content/         内容模型：知识点/课程定义、编译器与校验
 libs/subject-math/    数学学科：数学答案判定器、数学题目生成器的辅助函数
 libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
-libs/design/          设计 token、文案（en、zh-CN），以及为 Web 和移动端生成的形式
+libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和移动端生成的形式
 libs/math-ui/         React 组件：数学渲染与数学输入
 content/math/         编写的数学内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
@@ -85,6 +85,7 @@ docs/                 文档（英文 + 简体中文）
 apps/web ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
    │            │                                       ▲
    │            └──► libs/proto                         │
+   ├──► libs/design
    ├──► libs/math-ui ──► libs/design             libs/subject-math ◄── content/math
    └╌╌► apps/math-workers（仅开发时，用来一起运行）
 apps/math-workers ──► libs/subject-worker ──► libs/content
@@ -98,6 +99,7 @@ tools/pilot ──► libs/db, libs/engine, content/math
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。
 - `libs/engine` 只依赖 `libs/content` 的类型。它没有 I/O、没有时钟（时间作为参数传入），也没有随机性（种子作为参数传入）。
 - `libs/subject-math` 只依赖 `libs/content`。
+- `libs/design` 不依赖仓库内任何库，也没有 I/O，因此 Web 和移动端可以共用。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
 - `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
@@ -205,3 +207,27 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 - `SubmitAnswer` 携带所回答题目的序号，重复的请求会被拒绝，而不是被判两次。
 
 **迁移**由 drizzle-kit 从 `libs/db/src/schema` 生成到 `libs/db/drizzle` 并提交入库。测试把迁移应用到 PGlite；部署时用 `pnpm nx run db:migrate` 应用。
+
+## 8. 外观
+
+外观属于客户端而不是账户：每个浏览器或设备各存各的设置，不会发送到服务器，未登录时也能用。`libs/design` 存放所有客户端共用的部分，并且是纯代码，移动端可以直接使用。
+
+| 设置 | 可选值 | 默认值 |
+| :--- | :--- | :--- |
+| `theme` | `system`、`light`、`dark` | `system` |
+| `palette` | `academy`、`paper`、`lake`、`plum`；每套都有浅色和深色两版 | `academy` |
+| `text` | `small`、`default`、`large` | `default` |
+| `motion` | `system`、`reduced`、`full` | `system` |
+
+**颜色。** `colorTokens(palette, scheme)` 是颜色的唯一来源，按角色划分（`ink`、`surface`、`accent` 等）。配色改变中性色和强调色；`good`、`bad`、`warn` 在所有配色中都相同，因为对错的含义不能随配色变化。测试要求每种配色、每种明暗下的所有文字组合对比度至少为 4.5:1。新的颜色角色或配色都加在这里，不加在客户端。
+
+**存储。** `serializeAppearance` 和 `parseAppearance` 定义统一的格式，例如 `theme=dark&palette=paper`，保存在 `APPEARANCE_STORAGE_KEY` 下。默认值不写入，缺失或无效的内容都按默认值读取。
+
+**Web。**
+- `libs/design/theme.css` 用 `pnpm nx run design:generate` 从 token 生成并提交入库；文件过期时测试会失败。`apps/web` 导入它，组件只使用 `bg-surface` 这样的 Tailwind 类名。
+- 设置保存在 `localStorage` 中，并体现为 `<html>` 的属性：`data-theme`、`data-palette`、`data-text`、`data-motion`。默认值没有对应属性。
+- 没有 `data-theme` 时，CSS 通过 `prefers-color-scheme` 跟随设备，不需要脚本。
+- 服务器不知道这些设置，所以 `<head>` 中有一段由 `appearanceScript()` 生成的短脚本，在首次绘制前设置属性。测试会检查它与 `parseAppearance` 一致。
+- `data-theme` 和 `data-palette` 可用于任何元素，设置页的缩略图就是这样绘制的。
+
+**移动端。** 移动端将把同样的格式存到本地存储，用 `hexColors(palette, scheme)` 取颜色（React Native 无法解析 oklch），按 `TEXT_SCALE` 缩放文字，并用 `resolveColorScheme` 和 `resolveReducedMotion` 根据设备解析 `system`。目前它只使用默认的浅色配色。

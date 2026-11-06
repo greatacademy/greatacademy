@@ -3,16 +3,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { type FormEvent, type ReactNode, useState } from "react";
 
-import { field } from "../components/AuthForm.tsx";
-import { GoalsEditor } from "../components/GoalsEditor.tsx";
-import { LoadError } from "../components/LoadError.tsx";
-import { Button, Card, ErrorNote, Spinner } from "../components/ui.tsx";
-import { authClient } from "../lib/auth.ts";
-import { useRequireSession } from "../lib/hooks.ts";
-import { useI18n } from "../lib/i18n.tsx";
-import { account, failureCode } from "../lib/rpc.ts";
+import { field } from "../../components/AuthForm.tsx";
+import { GoalsEditor } from "../../components/GoalsEditor.tsx";
+import { LoadError } from "../../components/LoadError.tsx";
+import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
+import { authClient } from "../../lib/auth.ts";
+import { useRequireSession } from "../../lib/hooks.ts";
+import { useI18n } from "../../lib/i18n.tsx";
+import { account, failureCode } from "../../lib/rpc.ts";
 
-export const Route = createFileRoute("/settings")({ component: Settings });
+export const Route = createFileRoute("/settings/")({ component: Settings });
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -88,9 +88,7 @@ function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{m.settings}</h1>
-
+    <div className="space-y-6">
       <Section title={m.profile}>
         <form onSubmit={saveName} className="space-y-3">
           <label className="block space-y-1.5 text-sm font-medium">

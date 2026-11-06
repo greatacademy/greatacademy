@@ -30,7 +30,7 @@ libs/subject-math/   数学判定器和生成器辅助函数
 libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
 libs/db/             Drizzle schema、迁移、仓储
-libs/design/         设计 token 与文案
+libs/design/         颜色 token、配色和外观模型
 libs/math-ui/        数学渲染与输入组件
 content/math/        数学内容
 tools/simulate/      模拟学生
@@ -59,7 +59,7 @@ pnpm format                                # 用 Biome 格式化并修复
 - 库直接导出源码（`"exports": { ".": "./src/index.ts" }`），库没有构建步骤。
 - 依赖版本精确固定（`savePrefix: ''`）。
 - 每个导出的标识符都有以其名称开头的文档注释。
-- `libs/content`、`libs/engine`、`libs/subject-math` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
+- `libs/content`、`libs/engine`、`libs/subject-math`、`libs/design` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
 - 核心代码从不提及具体学科。学科专属逻辑放在 `libs/subject-<id>` 和 `content/<id>` 中。
 - 用 Biome（`biome.json`）格式化和 lint，不要引入 Prettier 或 ESLint。
 - 不要把函数命名为 `fit`、`fdescribe` 之类：Biome 的 `noFocusedTests` 会把对它的调用当作聚焦测试报错。

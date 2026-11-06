@@ -1,9 +1,11 @@
+import { appearanceScript } from "@ga/design";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRootRoute, HeadContent, Outlet, Scripts, useRouterState } from "@tanstack/react-router";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { Header } from "../components/Header.tsx";
 import { NotFoundNote } from "../components/LoadError.tsx";
+import { followOtherTabs } from "../lib/appearance.ts";
 import { I18nProvider } from "../lib/i18n.tsx";
 import { getLocale } from "../lib/locale.ts";
 import { shouldRetry } from "../lib/rpc.ts";
@@ -30,6 +32,7 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: css },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
     ],
+    scripts: [{ children: appearanceScript() }],
   }),
   shellComponent: Shell,
   component: Root,
@@ -39,7 +42,8 @@ export const Route = createRootRoute({
 function Shell({ children }: { children: ReactNode }) {
   const locale = Route.useLoaderData();
   return (
-    <html lang={locale}>
+    // The head script sets the appearance attributes before React hydrates.
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
@@ -59,6 +63,7 @@ function Root() {
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 10_000, retry: shouldRetry, refetchOnWindowFocus: false } } }),
   );
+  useEffect(followOtherTabs, []);
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider initial={locale}>

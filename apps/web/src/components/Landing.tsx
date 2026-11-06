@@ -242,11 +242,11 @@ export function Landing() {
         </div>
       </Section>
 
-      <section className="bg-accent py-16 text-white">
+      <section className="bg-accent py-16 text-on-accent">
         <div className={`${inner} flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between`}>
           <div className="max-w-xl space-y-2">
             <h2 className="text-3xl font-semibold tracking-tight text-balance">{l.endTitle}</h2>
-            <p className="text-white/85">{l.endBody}</p>
+            <p className="text-on-accent/85">{l.endBody}</p>
           </div>
           <Link to={session ? "/" : "/sign-up"} className={`${buttonClass("secondary", large)} shrink-0 border-transparent`}>
             {session ? l.goToLearning : m.signUp} <ArrowRight size={18} />
@@ -260,6 +260,7 @@ export function Landing() {
         </span>
         <span className="flex gap-4">
           <Link to="/courses">{m.courses}</Link>
+          <Link to="/settings/appearance">{m.appearance}</Link>
           {!session && <Link to="/sign-in">{m.signIn}</Link>}
         </span>
       </footer>
