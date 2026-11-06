@@ -85,8 +85,8 @@ export const reasoningFromDirectionAndDisplacement = topic(
       "straight-line-distance-from-legs",
       t("Straight-line distance from legs of a trip", "由各段行程求直线距离"),
       t(
-        "The straight-line distance from the start depends only on the net displacement, not on the path. Add the east legs and subtract the west legs to get the net east–west change, do the same with north and south, and then use the Pythagorean theorem. Walking $7$ km east, $2$ km north, $3$ km west and $5$ km north gives a net $4$ km east and $3$ km north, so the walker ends $\\sqrt{4^{2} + 3^{2}} = 5$ km from the start, although the path was $17$ km long.",
-        "离起点的直线距离只取决于总位移，与路径无关。把向东的各段相加、减去向西的各段，得到东西方向的净变化；南北方向同样处理；再用勾股定理。向东走 $7$ 千米、向北 $2$ 千米、向西 $3$ 千米、再向北 $5$ 千米，净位移是向东 $4$ 千米、向北 $3$ 千米，所以终点离起点 $\\sqrt{4^{2} + 3^{2}} = 5$ 千米，尽管走过的路程是 $17$ 千米。",
+        "The straight-line distance from the start depends only on the net displacement, not on the path. Add the east legs and subtract the west legs to get the net east–west change, do the same with north and south, and then use the Pythagorean theorem. Walking $7$ km east, $5$ km north, $3$ km west and $2$ km south gives a net $4$ km east and $3$ km north, so the walker ends $\\sqrt{4^{2} + 3^{2}} = 5$ km from the start, although the path was $17$ km long.",
+        "离起点的直线距离只取决于总位移，与路径无关。把向东的各段相加、减去向西的各段，得到东西方向的净变化；南北方向同样处理；再用勾股定理。向东走 $7$ 千米、向北 $5$ 千米、向西 $3$ 千米、再向南 $2$ 千米，净位移是向东 $4$ 千米、向北 $3$ 千米，所以终点离起点 $\\sqrt{4^{2} + 3^{2}} = 5$ 千米，尽管走过的路程是 $17$ 千米。",
       ),
       (rng) => {
         const [x, y] = rng.pick(triples);
