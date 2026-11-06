@@ -15,27 +15,21 @@ const sec = (x: number): number => 1 / cos(x);
 export const calculusDrawings2: Readonly<Record<string, Figure>> = {
   "continuity-and-differentiability-of-functions#differentiability-from-a-graph": drawing(
     [
-      ...shift(
-        pane(0, [-2, 2, 2], [-2, 2, 2], 5, 3.5).f(abs).dot(0, 0, undefined, "n", "result").say(0, -2.4, "corner", "s").marks(),
-        0,
-        6.5,
-      ),
+      ...shift(pane(0, [-2, 2, 2], [-2, 2, 2], 5, 3.5).f(abs).dot(0, 0, undefined, "n", "result").say(0, -2.4, "", "s").marks(), 0, 6.5),
       ...shift(
         pane(8, [-2, 2, 2], [-2, 2, 2], 5, 3.5)
           .f((x) => cbrt(x * x))
           .dot(0, 0, undefined, "n", "result")
-          .say(0, -2.4, "cusp", "s")
           .marks(),
         0,
         6.5,
       ),
-      ...pane(0, [-2, 2, 2], [-2, 2, 2], 5, 3.5).f(cbrt).dot(0, 0, undefined, "n", "result").say(0, -2.4, "vertical tangent", "s").marks(),
+      ...pane(0, [-2, 2, 2], [-2, 2, 2], 5, 3.5).f(cbrt).dot(0, 0, undefined, "n", "result").say(0, -2.4, "", "s").marks(),
       ...pane(8, [-2, 2, 2], [-2, 2, 2], 5, 3.5)
         .f((x) => x / 2 + 1, -2, -0.02)
         .f((x) => x / 2 - 1, 0, 2)
         .open(0, 1)
         .dot(0, -1, undefined, "e", "result")
-        .say(0, -2.4, "discontinuity", "s")
         .marks(),
     ],
     "For example, y = |x|, y = x^(2/3), y = x^(1/3) and a graph with a jump, all not differentiable at x = 0: a corner, a cusp, a vertical tangent and a discontinuity.",
@@ -71,8 +65,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       tangent([1, 1], 2, "action"),
       tangent([1, 1], -0.5, "result"),
       pt([1, 1], "(1, 1)", "se"),
-      tag([2.4, 3.8], "tangent: 2", "e"),
-      tag([3, 0], "normal: −1/2", "ne"),
+      tag([2.4, 3.8], "m = 2", "e"),
+      tag([3, 0], "m = −1/2", "ne"),
     ],
     "For example, on y = x² at (1, 1) the tangent has slope m = 2, so the perpendicular normal has slope −1/m = −1/2.",
     "例如，在 y = x² 上的点 (1, 1) 处，切线斜率 m = 2，所以与之垂直的法线斜率为 −1/m = −1/2。",
@@ -99,9 +93,9 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       bare([1, 0], "result"),
       bare([2, log(2)], "result"),
       bare([4, log(4)], "result"),
-      tag([3.4, 2.4], "slope 1", "w"),
-      tag([5.5, 2.5], "slope 1/2", "w"),
-      tag([5, 1.3], "slope 1/4", "s"),
+      tag([3.4, 2.4], "m = 1", "w"),
+      tag([5.5, 2.5], "m = 1/2", "w"),
+      tag([5, 1.3], "m = 1/4", "s"),
     ],
     "For example, the slope of ln x is 1/x: the tangents at x = 1, 2 and 4 have slopes 1, 1/2 and 1/4, so the graph flattens as x grows.",
     "例如，ln x 的斜率是 1/x：x = 1、2、4 处的切线斜率分别为 1、1/2、1/4，所以图象随 x 增大而变平。",
@@ -112,7 +106,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       curveOf((x) => 3 * sin(x) - 2 * cos(x)),
       tangent([pi, 2], -3, "action"),
       pt([pi, 2], "(π, 2)", "ne", "result"),
-      tag([2.25, 4], "slope −3", "w"),
+      tag([2.25, 4], "m = −3", "w"),
     ],
     "y = 3 sin x − 2 cos x passes through (π, 2), and its tangent there has slope 3 cos π + 2 sin π = −3.",
     "y = 3 sin x − 2 cos x 经过 (π, 2)，该处切线的斜率为 3 cos π + 2 sin π = −3。",
@@ -131,14 +125,14 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
           true,
         )
         .dot(0, 0)
-        .say(0, -2.5, "sinh, tanh: slope 1", "s")
+        .say(0, -2.5, "sinh, tanh: m = 1", "s")
         .marks(),
       ...pane(9, [-2, 2, 2], [0, 3, 1], 6, 5)
         .f(cosh)
         .f((x) => 1 / cosh(x), undefined, undefined, "result")
         .level(1, "action")
         .dot(0, 1)
-        .say(0, -0.5, "cosh, sech: slope 0", "s")
+        .say(0, -0.5, "cosh, sech: m = 0", "s")
         .marks(),
     ],
     "At x = 0, sinh and tanh both pass through (0, 0) with slope 1, so both touch the line y = x. cosh and sech both pass through (0, 1) with slope 0, so both have the horizontal tangent y = 1.",
@@ -155,7 +149,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         ],
         "result",
       )
-      .say(1, tan(1) ** 2 + 0.5, "gap 1", "e")
+      .say(1, tan(1) ** 2 + 0.5, "1", "e")
       .say(0.4, 2.3, "sec² x", "n")
       .say(-1.1, 0.6, "tan² x", "w")
       .marks(),
@@ -173,8 +167,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       pt([0, 1], "(0, 1)", "e"),
       pt([2, 5], "(2, 5)", "n"),
       pt([6, 3], "(6, 3)", "se"),
-      tag([1, 3], "slope 2", "se"),
-      tag([4.3, 4.1], "slope −1/2", "ne"),
+      tag([1, 3], "m = 2", "se"),
+      tag([4.3, 4.1], "m = −1/2", "ne"),
     ],
     "For example, the segment from (0, 1) to (2, 5) has slope 4/2 = 2, so f′(1) = 2. The segment from (2, 5) to (6, 3) has slope −2/4 = −1/2, so f′(4) = −1/2.",
     "例如，从 (0, 1) 到 (2, 5) 的线段斜率为 4/2 = 2，所以 f′(1) = 2。从 (2, 5) 到 (6, 3) 的线段斜率为 −2/4 = −1/2，所以 f′(4) = −1/2。",
@@ -203,7 +197,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         true,
       ),
       pt([2, 3], "f(2) = 3", "nw", "result"),
-      tag([2.6, 3.2], "slope f′(2) = 1", "e"),
+      tag([2.6, 3.2], "f′(2) = 1", "e"),
     ],
     "For example, the graph gives f(2) = 3 and f′(2) = 1. For h(x) = x²f(x) this gives h′(2) = 2(2)(3) + 2²(1) = 16.",
     "例如，由图象得 f(2) = 3，f′(2) = 1。对 h(x) = x²f(x)，得 h′(2) = 2(2)(3) + 2²(1) = 16。",
@@ -224,8 +218,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         "action",
         true,
       ),
-      pt([3, 3.5], "input 3", "ne", "result"),
-      tag([5, 2.5], "slope −1/2", "ne"),
+      pt([3, 3.5], "x = 3", "ne", "result"),
+      tag([5, 2.5], "m = −1/2", "ne"),
     ],
     "For example, h(x) = f(2x + 1) at a = 1: the input is 2(1) + 1 = 3, where the graph of f has slope −1/2, so h′(1) = 2(−1/2) = −1.",
     "例如，h(x) = f(2x + 1)，a = 1：输入为 2(1) + 1 = 3，f 的图象在此处斜率为 −1/2，所以 h′(1) = 2(−1/2) = −1。",
@@ -254,7 +248,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         true,
       ),
       pt([2, 3], "f(2) = 3", "nw", "result"),
-      tag([2.6, 3.2], "slope f′(2) = 1", "e"),
+      tag([2.6, 3.2], "f′(2) = 1", "e"),
     ],
     "For example, the graph gives f(2) = 3 and f′(2) = 1. So [f(x)]² has derivative 2(3)(1) = 6 at x = 2, and e^f(x) has derivative 1 · e³ = e³ there.",
     "例如，由图象得 f(2) = 3，f′(2) = 1。所以 [f(x)]² 在 x = 2 处的导数为 2(3)(1) = 6，e^f(x) 在该处的导数为 1 · e³ = e³。",
@@ -268,8 +262,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       tangent([0, 1], 2, "result", true),
       tangent([1, 0], 0.5, "result", true),
       bare([0, 1], "result"),
-      tag([-0.3, 1.6], "(0, 1), slope 2", "w"),
-      pt([1, 0], "(1, 0), slope 1/2", "se", "result"),
+      tag([-0.3, 1.6], "(0, 1), m = 2", "w"),
+      pt([1, 0], "(1, 0), m = 1/2", "se", "result"),
       tag([0.75, 4.5], "e²ˣ", "e"),
       tag([4, 0.5 * log(4)], "(1/2) ln x", "s"),
     ],
@@ -282,8 +276,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       curveOf((x) => x * x, undefined, 0, 2.6),
       curveOf(sqrt, "action", 0, 7),
       ln([0, 0], [1, 1], undefined, true),
-      pt([2, 4], "(2, 4), slope 4", "e", "result"),
-      pt([4, 2], "(4, 2), slope 1/4", "se", "result"),
+      pt([2, 4], "(2, 4), m = 4", "e", "result"),
+      pt([4, 2], "(4, 2), m = 1/4", "se", "result"),
     ],
     "For example, f(x) = x² on x ≥ 0 and f⁻¹(x) = √x are reflections in y = x. Since f(2) = 4 and f′(2) = 4, the inverse has slope 1/4 at the reflected point (4, 2).",
     "例如，x ≥ 0 上的 f(x) = x² 与 f⁻¹(x) = √x 关于 y = x 对称。由 f(2) = 4、f′(2) = 4，反函数在对称点 (4, 2) 处的斜率为 1/4。",
@@ -294,8 +288,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       curveOf(exp, undefined, -3, 1.75),
       curveOf(log, "action", 0.01, 6),
       ln([0, 0], [1, 1], undefined, true),
-      tag([1.7, 5], "eˣ: concave up", "e"),
-      tag([4, -0.7], "ln x: concave down", "s"),
+      tag([1.7, 5], "eˣ: ∪", "e"),
+      tag([4, -0.7], "ln x: ∩", "s"),
     ],
     "For example, the increasing function eˣ is concave up, and its reflection in y = x, ln x, is concave down: the sign in g″ = −f″/(f′)³ reverses the concavity.",
     "例如，增函数 eˣ 是下凸的，它关于 y = x 的对称图象 ln x 是上凸的：g″ = −f″/(f′)³ 中的负号使凹凸性反转。",
@@ -324,7 +318,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       note([1.25, 0], "r = 5", "n"),
       ...head([1.77, 1.77], [2.6, 2.6], "result"),
       note([2.6, 2.6], "dr/dt = 1/π cm/s", "e"),
-      note([0, -2.5], "air in at 100 cm³/s", "s"),
+      note([0, -2.5], "100 cm³/s", "s"),
     ],
     "Air enters a sphere at 100 cm³/s. When r = 5 cm, 100 = 4π(25) dr/dt, so the radius grows at dr/dt = 1/π cm/s.",
     "空气以 100 cm³/s 的速度进入球体。当 r = 5 cm 时，100 = 4π(25) dr/dt，所以半径以 dr/dt = 1/π cm/s 增长。",
@@ -352,8 +346,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       seg([0, 0], [0, 3]),
       seg([0, 3], [4, 0], "result"),
       square([0, 0], [1, 0], [0, 1]),
-      ...dotAt([0, 3], "pulley", "w"),
-      ...dotAt([4, 0], "boat", "se"),
+      ...dotAt([0, 3], "", "w"),
+      ...dotAt([4, 0], "", "se"),
       ...head([4, 0], [2.9, 0], "action"),
       note([0, 1.5], "h = 3", "w"),
       note([1.4, -0.05], "x = 4", "s"),
@@ -402,10 +396,9 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       seg([0, 0], [4.5, 2.5], "result"),
       square([4.5, 0], [0, 0], [4.5, 2.5]),
       angle([0, 0], [4.5, 0], [4.5, 2.5], "accent", "θ"),
-      ...dotAt([0, 0], "observer", "s"),
+      ...dotAt([0, 0], "", "s"),
       ...dotAt([4.5, 2.5]),
       ...head([4.5, 2.5], [3.3, 2.5], "action"),
-      note([3.3, 2.5], "plane", "n"),
       note([2.25, 0], "x", "s"),
       note([4.5, 1.25], "h", "e"),
     ],
@@ -419,8 +412,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       seg([0, 0], [3, 3], "result"),
       square([3, 0], [0, 0], [3, 3]),
       angle([0, 0], [3, 0], [3, 3], "accent", "π/4"),
-      ...dotAt([0, 0], "searchlight", "s"),
-      ...dotAt([3, 3], "spot", "e", "action"),
+      ...dotAt([0, 0], "", "s"),
+      ...dotAt([3, 3], "", "e", "action"),
       note([1.5, 0], "d", "s"),
       note([3, 1.5], "x = d tan θ = d", "e"),
     ],
@@ -431,8 +424,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
     pane(0, [0, 180, 90], [0, 4, 1], 8, 5, "θ°", "A")
       .f((x) => 3 * sin((x * pi) / 180))
       .dot(90, 3, "90°: A = 3", "n", "result")
-      .say(30, 2.2, "growing", "nw")
-      .say(150, 2.2, "shrinking", "ne")
+      .say(30, 2.2, "↗", "nw")
+      .say(150, 2.2, "↘", "ne")
       .marks(),
     "For example, sides a = 2 and b = 3 give A = (1/2)(2)(3) sin θ = 3 sin θ. The area grows until θ = 90°, where A = 3, and shrinks after it, though θ keeps growing.",
     "例如，边 a = 2、b = 3，得 A = (1/2)(2)(3) sin θ = 3 sin θ。面积增大到 θ = 90° 时的 A = 3，此后缩小，尽管 θ 仍在增大。",
@@ -462,9 +455,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       note([0, 1.5], "h", "e"),
       note([0.75, 3], "r = h/2", "n"),
       ...head([-0.9, 5.2], [-0.9, 3.4], "result"),
-      note([-0.9, 5.2], "inflow", "n"),
       ...head([0, -0.1], [0, -1.2], "result"),
-      note([0, -1.2], "leak", "e"),
     ],
     "For example, a cone whose surface radius is r = h/2. The rate dV/dt found from h and dh/dt is the net rate: the inflow minus the leak. So the inflow is dV/dt plus the leak.",
     "例如，水面半径 r = h/2 的圆锥。由 h 和 dh/dt 求出的 dV/dt 是净速率：流入减去泄漏。所以流入量是 dV/dt 加上泄漏。",
@@ -495,17 +486,14 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         .f((x) => x / 2 + 1.5, 2, 4)
         .open(2, 1.5)
         .dot(2, 2.5, undefined, "n", "result")
-        .say(2, -0.9, "jump: not continuous", "s")
         .marks(),
       ...pane(8, [0, 4, 2], [0, 4, 2], 5, 4)
         .f((x) => 3 - abs(x - 2))
         .dot(2, 3, undefined, "n", "result")
-        .say(2, -0.9, "corner", "s")
         .marks(),
       ...pane(16, [0, 4, 2], [0, 4, 2], 5, 4)
         .f((x) => 1 + cbrt((x - 2) ** 2))
         .dot(2, 1, undefined, "n", "result")
-        .say(2, -0.9, "cusp", "s")
         .marks(),
     ],
     "For example, on [0, 4] with a problem at x = 2: a jump breaks continuity on the closed interval, and a corner or a cusp breaks differentiability on the open interval. The theorem does not apply to any of these.",
@@ -543,8 +531,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       ]),
       bare([0, 1]),
       bare([6, 6]),
-      pt([0, 1], "global min 1", "e", "action"),
-      pt([6, 6], "global max 6", "w", "result"),
+      pt([0, 1], "min = 1", "e", "action"),
+      pt([6, 6], "max = 6", "w", "result"),
     ],
     "For example, on [0, 6] the largest value is 6, at the endpoint x = 6, and the smallest is 1, at the endpoint x = 0. The peak of height 4 at x = 2 is not the global maximum.",
     "例如，在 [0, 6] 上最大值是 6，在端点 x = 6；最小值是 1，在端点 x = 0。x = 2 处高度为 4 的峰不是全局最大值。",
@@ -558,8 +546,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         [4, 1],
         [6, 4],
       ]),
-      pt([2, 5], "local max", "n", "result"),
-      pt([4, 1], "local min", "s", "action"),
+      pt([2, 5], "", "n", "result"),
+      pt([4, 1], "", "s", "action"),
     ],
     "For example, the graph rises to x = 2 and falls after it, a local maximum, and falls to x = 4 and rises after it, a local minimum. Both are corners, where f′ does not exist.",
     "例如，图象上升到 x = 2 后下降，是局部最大值；下降到 x = 4 后上升，是局部最小值。两者都是角点，f′ 不存在。",
@@ -570,12 +558,12 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         .f((x) => 4 - (x - 2) ** 2, 0, 1.97)
         .f((x) => 4 - (x - 2) ** 2, 2.03, 4)
         .open(2, 4)
-        .say(2, -1, "no maximum", "s")
+        .say(2, -1, "∄ max", "s")
         .marks(),
       ...pane(9, [0, 4, 2], [0, 5, 1], 6, 5)
         .f((x) => 4 - (x - 2) ** 2)
         .dot(2, 4, undefined, "n", "result")
-        .say(2, -1, "maximum 4", "s")
+        .say(2, -1, "max = 4", "s")
         .marks(),
     ],
     "For example, on the left the top of the graph is an open circle at height 4, so the function comes arbitrarily close to 4 but never reaches it and has no maximum. On the right the top is on the graph, so the maximum 4 is attained.",
@@ -606,17 +594,16 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
           [4, 2],
           [6, 0],
         ])
-        .say(2, 0.6, "rising", "n")
-        .say(3, 2, "constant", "n")
-        .say(4, 0.6, "falling", "n")
+        .say(2, 0.6, "↗", "n")
+        .say(3, 2, "→", "n")
+        .say(4, 0.6, "↘", "n")
         .marks(),
       ...pane(9, [0, 6, 2], [0, 8, 2], 6, 5, "x", "f")
         .f((x) => (x * x) / 2, 0, 2)
         .f((x) => 2 + 2 * (x - 2), 2, 4, "action")
         .f((x) => 6 + 6 * (x - 4) - (x * x - 16) / 2, 4, 6)
-        .say(1, 2, "cup", "n")
-        .say(3, 4, "line", "se")
-        .say(5, 7.5, "cap", "w")
+        .say(1, 2, "∪", "n")
+        .say(5, 7.5, "∩", "w")
         .marks(),
     ],
     "For example, f′ rises on [0, 2], so f is concave up there. f′ is constant on [2, 4], so f is a line there. f′ falls on [4, 6], so f is concave down there.",
@@ -627,8 +614,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
     [
       curveOf((x) => x ** 3 - 3 * x * x + 2, undefined, -1, 3.1),
       pt([1, 0], "(1, 0)", "ne", "result"),
-      tag([-0.5, 3], "cap: x < 1", "w"),
-      tag([3.1, 0.3], "cup: x > 1", "e"),
+      tag([-0.5, 3], "∩: x < 1", "w"),
+      tag([3.1, 0.3], "∪: x > 1", "e"),
     ],
     "For example, y = x³ − 3x² + 2 has f″ = 6x − 6, which changes sign once, at x = −(−3)/(3 · 1) = 1. So the only inflection point is (1, 0): concave down before it and concave up after it.",
     "例如，y = x³ − 3x² + 2 的 f″ = 6x − 6 只变号一次，在 x = −(−3)/(3 · 1) = 1。所以唯一的拐点是 (1, 0)：之前上凸，之后下凸。",
@@ -710,9 +697,9 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         [2, 4],
         [5, 1],
       ]),
-      pt([2, 4], "corner: no f′(2)", "n", "result"),
-      tag([1, 2], "slope 2", "se"),
-      tag([3.5, 2.5], "slope −1", "ne"),
+      pt([2, 4], "∄ f′(2)", "n", "result"),
+      tag([1, 2], "m = 2", "se"),
+      tag([3.5, 2.5], "m = −1", "ne"),
     ],
     "For example, the slopes on the two sides of x = 2 are 2 and −1. They differ, so f′(2) does not exist, although f is continuous there.",
     "例如，x = 2 两侧的斜率为 2 和 −1。它们不同，所以 f′(2) 不存在，尽管 f 在该处连续。",
@@ -722,7 +709,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       .f((x) => -0.03 * (x + 3) * x * (x - 3) ** 2)
       .dot(-3, 0, "min", "n", "action")
       .dot(0, 0, "max", "ne", "result")
-      .dot(3, 0, "touch: none", "n")
+      .dot(3, 0, "∅", "n")
       .marks(),
     "For example, this graph of f′ crosses the axis from below to above at x = −3, so f has a local minimum there, and from above to below at x = 0, a local maximum. At x = 3 it only touches the axis, so f has no extremum there.",
     "例如，这个 f′ 的图象在 x = −3 处从下向上穿过坐标轴，所以 f 在此有局部最小值；在 x = 0 处从上向下穿过，是局部最大值。在 x = 3 处只是与坐标轴相切，所以 f 在此没有极值。",
@@ -730,9 +717,9 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
   "interpreting-the-graph-of-a-functions-derivative#monotonicity-from-the-graph-of-the-derivative": drawing(
     pane(0, [-4, 4, 2], [-3, 4, 1], 8, 5, "x", "f′")
       .f((x) => 0.5 * (x + 2) * (x - 2))
-      .say(-3.2, 0.3, "f rises", "n")
-      .say(-0.1, -0.3, "f falls", "se")
-      .say(3.2, 0.3, "f rises", "n")
+      .say(-3.2, 0.3, "f ↗", "n")
+      .say(-0.1, -0.3, "f ↘", "se")
+      .say(3.2, 0.3, "f ↗", "n")
       .marks(),
     "For example, this graph of f′ is above the axis for x < −2 and x > 2, where f increases, and below it for −2 < x < 2, where f decreases, even though f′ itself rises on part of that stretch.",
     "例如，这个 f′ 的图象在 x < −2 和 x > 2 时在坐标轴上方，f 增加；在 −2 < x < 2 时在下方，f 减少，尽管 f′ 本身在这一段的一部分上升。",
@@ -741,11 +728,11 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
     [
       ...pane(0, [-2, 4, 2], [-4, 4, 2], 6, 5, "x", "f′")
         .f((x) => 3 - (x - 1) ** 2)
-        .dot(1, 3, "peak", "n", "result")
+        .dot(1, 3, "max", "n", "result")
         .marks(),
       ...pane(9, [-2, 4, 2], [-2, 8, 2], 6, 5, "x", "f")
         .f((x) => 3 * x - (x - 1) ** 3 / 3)
-        .dot(1, 3, "inflection", "e", "result")
+        .dot(1, 3, "", "e", "result")
         .dot(1 + sqrt(3), 3 * (1 + sqrt(3)) - sqrt(3), "max", "n", "action")
         .marks(),
     ],
@@ -756,8 +743,8 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
     drawing(
       pane(0, [-2.5, 2.5, 1], [-3, 3, 1], 8, 5, "x", "f′")
         .f((x) => x ** 3 - 3 * x)
-        .dot(-1, 2, "inflection", "n", "result")
-        .dot(1, -2, "inflection", "s", "result")
+        .dot(-1, 2, "", "n", "result")
+        .dot(1, -2, "", "s", "result")
         .marks(),
       "For example, f′ = x³ − 3x has a peak at x = −1 and a valley at x = 1, so f has points of inflection at those two values, not at the zeros of f′, x = 0 and x = ±√3.",
       "例如，f′ = x³ − 3x 在 x = −1 处有峰，在 x = 1 处有谷，所以 f 的拐点在这两个值处，而不在 f′ 的零点 x = 0 和 x = ±√3 处。",
@@ -768,7 +755,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         .f(sin, 0, 2 * pi)
         .dot(pi / 2, 1, "π/2", "n", "result")
         .dot((3 * pi) / 2, -1, "3π/2", "s", "result")
-        .say(4.8, 1.2, "falling: concave down", "n")
+        .say(4.8, 1.2, "↘ ∩", "n")
         .marks(),
       "For example, f′ = sin x rises on (0, π/2) and (3π/2, 2π), where f is concave up, and falls on (π/2, 3π/2), where f is concave down. Whether f′ is above or below the axis does not matter.",
       "例如，f′ = sin x 在 (0, π/2) 和 (3π/2, 2π) 上上升，f 下凸；在 (π/2, 3π/2) 上下降，f 上凸。f′ 在坐标轴上方还是下方无关紧要。",
@@ -843,7 +830,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
       ])
       .dot(1, 1, "1", "nw")
       .dot(3, 3, "3", "ne")
-      .say(2, 0.8, "area 4", "n")
+      .say(2, 0.8, "A = 4", "n")
       .marks(),
     "For example, f′ goes from 1 at x = 1 to 3 at x = 3. The area beneath is a trapezoid, so f changes by (1 + 3)/2 · 2 = 4, not by 1 · 2 or 3 · 2.",
     "例如，f′ 从 x = 1 处的 1 变到 x = 3 处的 3。其下方面积是梯形，所以 f 的变化量为 (1 + 3)/2 · 2 = 4，而不是 1 · 2 或 3 · 2。",
@@ -890,13 +877,13 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
         .f((x) => x * x)
         .f((x) => 2 * x - 1, undefined, undefined, "action")
         .dot(1, 1, undefined, "n", "result")
-        .say(1.5, -2, "x²: underestimate", "s")
+        .say(1.5, -2, "x²: <", "s")
         .marks(),
       ...pane(9, [0, 3, 1], [0, 3, 1], 6, 5)
         .f(sqrt)
         .f((x) => x / 2 + 0.5, undefined, undefined, "action")
         .dot(1, 1, undefined, "n", "result")
-        .say(1.5, -0.5, "√x: overestimate", "s")
+        .say(1.5, -0.5, "√x: >", "s")
         .marks(),
     ],
     "For example, at x = 1: y = x² is concave up, so it lies above its tangent y = 2x − 1, and the linearization underestimates. y = √x is concave down, so it lies below its tangent y = x/2 + 1/2, and the linearization overestimates.",
@@ -931,13 +918,7 @@ export const calculusDrawings2: Readonly<Record<string, Figure>> = {
   ),
   "approximating-trigonometric-functions-using-local-linearity#whether-a-trigonometric-linearization-is-too-high-or-too-low": graphed(
     wide(-3, 3, -3, 3),
-    [
-      curveOf(sin),
-      tangent([0, 0], 1, "action"),
-      bare([0, 0], "result"),
-      tag([1.8, 2.4], "too high", "w"),
-      tag([-1.8, -2.4], "too low", "e"),
-    ],
+    [curveOf(sin), tangent([0, 0], 1, "action"), bare([0, 0], "result")],
     "The tangent to sin x at 0 is y = x. For x > 0 sine is concave down, so the line lies above the curve and is too high. For x < 0 sine is concave up, so the line lies below the curve and is too low.",
     "sin x 在 0 处的切线是 y = x。x > 0 时正弦上凸，直线在曲线上方，偏大。x < 0 时正弦下凸，直线在曲线下方，偏小。",
   ),

@@ -103,7 +103,7 @@ const heightPanel = (x: number, base: "BC" | "CA" | "AB"): Mark[] => {
       name(A, "A", "n"),
       name(B, "B", "sw"),
       name(C, "C", "se"),
-      text([2, 0], `onto ${base}`, "s"),
+      text([2, 0], `⊥ ${base}`, "s"),
     ],
     x,
   );
@@ -298,7 +298,7 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
     "例如，有 6 条对称轴的正多边形有 6 条边。",
   ),
   "faces-vertices-and-edges-of-polyhedrons#finding-the-base": drawing(
-    [...prismMarks(8, 2, 3), text([0, -1], "24 edges", "s"), ...shift([...pyramidOn(8, 2, 3), text([0, -1], "9 faces", "s")], 6)],
+    [...prismMarks(8, 2, 3), text([0, -1], "E = 24", "s"), ...shift([...pyramidOn(8, 2, 3), text([0, -1], "F = 9", "s")], 6)],
     "An octagonal prism, which has 3 · 8 = 24 edges, and an octagonal pyramid, which has 8 + 1 = 9 faces.",
     "八棱柱有 3 · 8 = 24 条棱，八棱锥有 8 + 1 = 9 个面。",
   ),
@@ -378,9 +378,9 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
       ...shift(stacks([2, 3, 4], 0, 9), 0, 6),
       text([9.5, 6.4], "2, 3, 4: MAD ⅔", "e"),
       ...shift(stacks([5, 6, 7], 0, 9), 0, 3),
-      text([9.5, 3.4], "add 3: MAD ⅔", "e"),
+      text([9.5, 3.4], "+ 3: MAD ⅔", "e"),
       ...stacks([4, 6, 8], 0, 9),
-      text([9.5, 0.4], "times 2: MAD 4⁄3", "e"),
+      text([9.5, 0.4], "× 2: MAD 4⁄3", "e"),
     ],
     "For example, the values 2, 3, 4 have MAD 2/3. Adding 3 gives 5, 6, 7 with the same MAD; multiplying by 2 gives 4, 6, 8 with MAD 4/3.",
     "例如，2、3、4 的 MAD 是 2/3。都加 3 得 5、6、7，MAD 不变；都乘 2 得 4、6、8，MAD 是 4/3。",
@@ -428,9 +428,9 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
     [
       ...stacks(skewed, 0, 8),
       seg([3, 0], [3, 3.2], "result"),
-      note([3, 3.2], "median 3", "nw"),
+      note([3, 3.2], "Q2 = 3", "nw"),
       seg([59 / 18, 0], [59 / 18, 2.6], "action"),
-      note([59 / 18, 2.6], "mean ≈ 3.3", "ne"),
+      note([59 / 18, 2.6], "x̄ ≈ 3.3", "ne"),
     ],
     "The dot plot with 2 dots at 1, 5 at 2, 4 at 3, 3 at 4, 2 at 5, 1 at 6 and 1 at 7. The median is 3, and the mean, about 3.3, lies to its right, toward the tail.",
     "1 处 2 个点、2 处 5 个、3 处 4 个、4 处 3 个、5 处 2 个、6 处 1 个、7 处 1 个的点图。中位数是 3，平均数约 3.3，在它右边，靠近尾部。",
@@ -458,7 +458,7 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
         note([1, 7.5 * k], "(1, 7.5)", "se"),
         { kind: "dot", at: [4, 30 * k] } as Mark,
         note([4, 30 * k], "(4, 30)", "w"),
-        text([6, 0], "tickets", "e"),
+        text([6, 0], "n", "e"),
         text([0, 6], "$", "n"),
       ];
     })(),
@@ -804,17 +804,7 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
       rect(0, 0, 2.5, 2),
       side([0, 0], [2.5, 0], "5 cm"),
       side([2.5, 0], [2.5, 2], "4 cm"),
-      note([1.25, 2], "drawing", "n"),
-      ...shift(
-        [
-          rect(0, 0, 7.5, 6),
-          side([0, 0], [7.5, 0], "15 m"),
-          side([7.5, 0], [7.5, 6], "12 m"),
-          note([3.75, 3], "180 m²", "n"),
-          note([3.75, 6], "room", "n"),
-        ],
-        5,
-      ),
+      ...shift([rect(0, 0, 7.5, 6), side([0, 0], [7.5, 0], "15 m"), side([7.5, 0], [7.5, 6], "12 m"), note([3.75, 3], "180 m²", "n")], 5),
     ],
     "A 5 cm by 4 cm drawing at 1 cm : 3 m, and the room it shows, 15 m by 12 m, three times as long each way, with area 180 m².",
     "比例尺 1 cm : 3 m 的 5 cm × 4 cm 图，以及它表示的 15 m × 12 m 的房间，每个方向都是 3 倍，面积 180 m²。",
@@ -913,9 +903,7 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
     [
       ...cylinderMarks(1.3, 3),
       ...ellipse([0, 1.5], 1.3, 0.39, false, "result"),
-      text([0, -0.5], "circle", "s"),
       ...cylinderCut(4),
-      text([4, -0.5], "rectangle", "s"),
       ...shift(
         [
           ...pyramidOn(4, 1.6, 3),
@@ -927,7 +915,6 @@ export const gradeDrawings4: Readonly<Record<string, Figure>> = {
             );
             return p.map((a, i) => seg(a, p[(i + 1) % 4] as Point, "result"));
           })(),
-          text([0, -0.9], "smaller square", "s"),
         ],
         8.3,
       ),

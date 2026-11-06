@@ -200,10 +200,10 @@ function symbolRows(rows: readonly (readonly [string, number])[]): Mark[] {
 }
 
 const quadRow: readonly Mark[][] = [
-  [poly([0, 0], [2.4, 0], [2.4, 2.4], [0, 2.4]), text([1.2, 0], "square", "s")],
-  [poly([0, 0], [3.4, 0], [3.4, 1.8], [0, 1.8]), text([1.7, 0], "rectangle", "s")],
-  [poly([1.2, 0], [2.4, 1.3], [1.2, 2.6], [0, 1.3]), text([1.2, 0], "rhombus", "s")],
-  [poly([0, 0], [3, 0], [3.8, 1.8], [0.8, 1.8]), text([1.8, 0], "parallelogram", "s")],
+  [poly([0, 0], [2.4, 0], [2.4, 2.4], [0, 2.4])],
+  [poly([0, 0], [3.4, 0], [3.4, 1.8], [0, 1.8])],
+  [poly([1.2, 0], [2.4, 1.3], [1.2, 2.6], [0, 1.3])],
+  [poly([0, 0], [3, 0], [3.8, 1.8], [0.8, 1.8])],
 ];
 
 const quadFamily = (zh: readonly number[]): Mark[] => {
@@ -258,9 +258,9 @@ export const gradeDrawings2: Readonly<Record<string, Figure>> = {
   "first-picture-graphs#reading-a-first-picture-graph": drawing(
     dotRows(
       [
-        ["Apple", 5],
-        ["Pear", 3],
-        ["Plum", 6],
+        ["A", 5],
+        ["B", 3],
+        ["C", 6],
       ],
       { 0: "result" },
     ),
@@ -270,8 +270,8 @@ export const gradeDrawings2: Readonly<Record<string, Figure>> = {
   "first-picture-graphs#comparing-on-a-picture-graph": drawing(
     [
       ...dotRows([
-        ["Cats", 7],
-        ["Dogs", 4],
+        ["A", 7],
+        ["B", 4],
       ]),
       {
         kind: "polygon",
@@ -290,9 +290,9 @@ export const gradeDrawings2: Readonly<Record<string, Figure>> = {
   "first-picture-graphs#votes-in-all-on-a-picture-graph": drawing(
     [
       ...dotRows([
-        ["Red", 4],
-        ["Blue", 6],
-        ["Green", 3],
+        ["A", 4],
+        ["B", 6],
+        ["C", 3],
       ]),
       text([3, -2.6], "4 + 6 + 3 = 13", "s"),
     ],
@@ -405,9 +405,9 @@ export const gradeDrawings2: Readonly<Record<string, Figure>> = {
   "how-many-in-all-on-a-graph#two-rows-of-a-picture-graph": drawing(
     dotRows(
       [
-        ["Ants", 4],
-        ["Bees", 6],
-        ["Flies", 3],
+        ["A", 4],
+        ["B", 6],
+        ["C", 3],
       ],
       { 0: "result", 1: "result" },
     ),
@@ -476,8 +476,8 @@ export const gradeDrawings2: Readonly<Record<string, Figure>> = {
   ),
   "picture-graphs-of-single-units#how-many-more-in-a-row": drawing(
     dotRows([
-      ["Tom", 8],
-      ["Ana", 5],
+      ["A", 8],
+      ["B", 5],
     ]),
     "Rows of 8 and 5 pictures: the pictures that line up cancel, leaving 3 more.",
     "8 个和 5 个图案的两行：对齐的相互抵消，多 3 个。",
@@ -556,7 +556,7 @@ export const gradeDrawings2: Readonly<Record<string, Figure>> = {
     "五边形：5 个角中的每一个都连接两条边，所以有 5 个角和 5 条边。",
   ),
   "rows-and-columns-of-squares#counting-squares-in-a-rectangle": drawing(
-    [...gridRect(5, 3), fill(0, 2, 5, 1), text([2.5, 0], "3 rows of 5", "s")],
+    [...gridRect(5, 3), fill(0, 2, 5, 1), text([2.5, 0], "3 × 5", "s")],
     "A rectangle cut into 3 rows of 5 squares, 15 in all, with one row picked out.",
     "分成 3 行、每行 5 个方格的长方形，一共 15 个，标出其中一行。",
   ),

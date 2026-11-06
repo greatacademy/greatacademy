@@ -52,15 +52,15 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
         .level(2, "action")
         .dot(-1.317, 2, undefined, "n", "result")
         .dot(1.317, 2, undefined, "n", "result")
-        .say(0, -2.4, "cosh: twice", "s")
+        .say(0, -2.4, "cosh: 2", "s")
         .marks(),
       ...pane(7.5, [-3, 3, 3], [-2, 4, 2], 5, 5)
         .f(sinh)
         .level(2, "action")
         .dot(1.444, 2, undefined, "n", "result")
-        .say(0, -2.4, "sinh: once", "s")
+        .say(0, -2.4, "sinh: 1", "s")
         .marks(),
-      ...pane(15, [-3, 3, 3], [-2, 4, 2], 5, 5).f(tanh).level(2, "action").say(0, -2.4, "tanh: never", "s").marks(),
+      ...pane(15, [-3, 3, 3], [-2, 4, 2], 5, 5).f(tanh).level(2, "action").say(0, -2.4, "tanh: 0", "s").marks(),
     ],
     "For example, the level y = 2 meets cosh x twice, at x ≈ ±1.32, meets sinh x once, at x ≈ 1.44, and never meets tanh x, which stays between −1 and 1.",
     "例如，水平线 y = 2 与 cosh x 相交两次（x ≈ ±1.32），与 sinh x 相交一次（x ≈ 1.44），与 tanh x 不相交，因为 tanh x 始终在 −1 和 1 之间。",
@@ -102,7 +102,7 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
         .say(-2.2, 0.5, "1/2", "n")
         .dot(-1.317, 0.5, undefined, "n", "result")
         .dot(1.317, 0.5, undefined, "n", "result")
-        .say(0, -3.3, "sech: twice", "s")
+        .say(0, -3.3, "sech: 2", "s")
         .marks(),
       ...pane(7.5, [-3, 3, 3], [-3, 3, 3], 5, 5)
         .f(csch, -3, -0.02)
@@ -110,14 +110,14 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
         .level(0.5, "action")
         .say(-2.2, 0.5, "1/2", "n")
         .dot(1.444, 0.5, undefined, "n", "result")
-        .say(0, -3.3, "csch: once", "s")
+        .say(0, -3.3, "csch: 1", "s")
         .marks(),
       ...pane(15, [-3, 3, 3], [-3, 3, 3], 5, 5)
         .f(coth, -3, -0.02)
         .f(coth, 0.02, 3)
         .level(0.5, "action")
         .say(-2.2, 0.5, "1/2", "n")
-        .say(0, -3.3, "coth: never", "s")
+        .say(0, -3.3, "coth: 0", "s")
         .marks(),
     ],
     "For example, the level y = 1/2 meets sech x twice, since 1/2 is in (0, 1], meets csch x once, and never meets coth x, whose values have absolute value above 1.",
@@ -134,9 +134,9 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
     [
       curveOf((x) => x + 1, undefined, -2, 2),
       curveOf((x) => 2 - x / 2, undefined, 2, 6),
-      openPt([2, 3], "left limit 3", "nw"),
+      openPt([2, 3], "x → a⁻: 3", "nw"),
       openPt([2, 1]),
-      tag([2.3, 1.2], "right limit 1", "e"),
+      tag([2.3, 1.2], "x → a⁺: 1", "e"),
       pt([2, 2], "f(2) = 2", "e", "action"),
     ],
     "For example, at x = 2 the left piece ends at height 3 and the right piece starts at height 1, so the left limit is 3 and the right limit is 1, whatever f(2) is; here f(2) = 2.",
@@ -148,14 +148,14 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
         .f((x) => x + 1, 0, 1.97)
         .f((x) => x + 1, 2.03, 4)
         .open(2, 3, "3", "nw")
-        .say(2, -1, "limit is 3", "s")
+        .say(2, -1, "lim = 3", "s")
         .marks(),
       ...pane(9, [0, 4, 2], [0, 5, 1], 6, 5)
         .f((x) => x + 1, 0, 1.97)
         .f((x) => x - 1, 2.03, 4)
         .open(2, 3, "3", "nw")
         .open(2, 1, "1", "se")
-        .say(2, -1, "no limit", "s")
+        .say(2, -1, "∄ lim", "s")
         .marks(),
     ],
     "For example, at x = 2: on the left graph both sides approach 3, so the limit is 3. On the right graph the left side approaches 3 and the right side 1, so the limit does not exist.",
@@ -178,12 +178,12 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
       ...pane(0, [-2, 4, 2], [-6, 6, 6], 6, 5)
         .f((x) => 1 / (x - 1))
         .wall(1)
-        .say(1, -7, "no two-sided limit", "s")
+        .say(1, -7, "∄ lim", "s")
         .marks(),
       ...pane(9, [-2, 4, 2], [-6, 6, 6], 6, 5)
         .f((x) => 1 / (x - 1) ** 2)
         .wall(1)
-        .say(1, -7, "two-sided limit ∞", "s")
+        .say(1, -7, "lim = ∞", "s")
         .marks(),
     ],
     "For example, at the asymptote x = 1: y = 1/(x − 1) falls on the left and rises on the right, so the two-sided limit does not exist. y = 1/(x − 1)² rises on both sides, so the two-sided limit is ∞.",
@@ -229,12 +229,12 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
       ...pane(0, [-2, 4, 2], [-6, 6, 6], 6, 5)
         .f((x) => 2 / (x - 1) ** 2)
         .wall(1)
-        .say(1, -7, "n = 2: both sides ∞", "s")
+        .say(1, -7, "n = 2: ∞, ∞", "s")
         .marks(),
       ...pane(9, [-2, 4, 2], [-6, 6, 6], 6, 5)
         .f((x) => 2 / (x - 1))
         .wall(1)
-        .say(1, -7, "n = 1: −∞ and ∞", "s")
+        .say(1, -7, "n = 1: −∞, ∞", "s")
         .marks(),
     ],
     "For example, k = 2 and h = 1: for even n = 2 both sides of x = 1 go to ∞, the sign of k. For odd n = 1 the left side goes to −∞ and the right side to ∞, so the two-sided limit does not exist.",
@@ -251,12 +251,12 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
       ...pane(0, [-2, 4, 2], [-6, 6, 6], 6, 5)
         .f((x) => 1 / (x - 1) ** 2)
         .wall(1)
-        .say(1, -7, "even power: limit ∞", "s")
+        .say(1, -7, "lim = ∞", "s")
         .marks(),
       ...pane(9, [-2, 4, 2], [-6, 6, 6], 6, 5)
         .f((x) => 1 / (x - 1) ** 3)
         .wall(1)
-        .say(1, -7, "odd power: no limit", "s")
+        .say(1, -7, "∄ lim", "s")
         .marks(),
     ],
     "For example, at x = 1: both sides of 1/(x − 1)² go up, so the two-sided limit is ∞. The sides of 1/(x − 1)³ go to −∞ and ∞, so the two-sided limit does not exist, even as an infinite limit.",
@@ -321,9 +321,9 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
       ...pane(0, [0, 3, 3], [-6, 6, 6], 6, 5)
         .f(tan, 0, 3)
         .wall(pi / 2)
-        .say(pi / 2, -7, "tan x at x = π/2", "s")
+        .say(pi / 2, -7, "tan x, x → π/2", "s")
         .marks(),
-      ...pane(9, [-12, 12, 12], [-2, 2, 2], 8, 5).f(sin).say(0, -2.3, "sin x keeps oscillating", "s").marks(),
+      ...pane(9, [-12, 12, 12], [-2, 2, 2], 8, 5).f(sin).say(0, -2.3, "sin x", "s").marks(),
     ],
     "Just left of π/2, tan x → ∞, and just right, tan x → −∞, so the limit at π/2 does not exist. As x → ±∞, sin x keeps oscillating between −1 and 1, so it has no limit.",
     "在 π/2 左侧附近 tan x → ∞，右侧附近 tan x → −∞，所以 π/2 处极限不存在。当 x → ±∞ 时，sin x 一直在 −1 和 1 之间振荡，所以没有极限。",
@@ -346,12 +346,12 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
       ...pane(0, [-3, 3, 3], [-6, 6, 6], 6, 5)
         .f((x) => 1 / sin(x))
         .wall(0)
-        .say(0, -7, "csc x at x = 0", "s")
+        .say(0, -7, "csc x, x → 0", "s")
         .marks(),
       ...pane(9, [0, 3, 3], [-6, 6, 6], 6, 5)
         .f((x) => 1 / cos(x), 0, 3)
         .wall(pi / 2)
-        .say(pi / 2, -7, "sec x at x = π/2", "s")
+        .say(pi / 2, -7, "sec x, x → π/2", "s")
         .marks(),
     ],
     "Just right of 0, csc x → ∞, and just left, csc x → −∞. Just left of π/2, sec x → ∞, and just right, sec x → −∞.",
@@ -447,21 +447,18 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
         .f((x) => x / 2 + 1, 0, 1.97)
         .f((x) => x / 2 + 1, 2.03, 4)
         .open(2, 2)
-        .say(2, -1, "a hole", "s")
         .marks(),
       ...pane(7.5, [0, 4, 2], [0, 5, 5], 5, 5)
         .f((x) => x / 2 + 1, 0, 1.97)
         .f((x) => x / 2 + 1, 2.03, 4)
         .open(2, 2)
         .dot(2, 4, undefined, "n", "result")
-        .say(2, -1, "a point away", "s")
         .marks(),
       ...pane(15, [0, 4, 2], [0, 5, 5], 5, 5)
         .f((x) => x / 2 + 1, 0, 1.97)
         .f((x) => x / 2 + 3, 2, 4)
         .open(2, 2)
         .dot(2, 4, undefined, "n", "result")
-        .say(2, -1, "a jump", "s")
         .marks(),
     ],
     "For example, three graphs not continuous at x = 2: one with a hole, one with a filled point at height 4 away from the curve, and one with a jump. Each must be drawn by lifting the pen.",
@@ -472,22 +469,17 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
     [
       ...broken((x) => x / 2 + 2, -2, -5, 1),
       curveOf((x) => x, undefined, 1, 5.5),
-      openPt([-2, 1], "hole", "nw"),
-      openPt([1, 2.5], "jump", "n"),
+      openPt([-2, 1], "", "nw"),
+      openPt([1, 2.5], "", "n"),
       bare([1, 1]),
-      pt([3, 3], "no break", "se", "result"),
+      pt([3, 3], "", "se", "result"),
     ],
     "For example, this graph is not continuous at x = −2, where it has a hole, or at x = 1, where it jumps from height 2.5 to height 1. It is continuous at x = 3, where the curve arrives at the same height from both sides.",
     "例如，这个图象在 x = −2 处有空心点，在 x = 1 处从高度 2.5 跳到高度 1，都不连续。在 x = 3 处曲线从两侧到达同一高度，是连续的。",
   ),
   "defining-continuity-at-a-point#the-value-that-repairs-a-hole": graphed(
     wide(-2, 6, -1, 6),
-    [
-      ...broken((x) => x + 1, 2, -2, 5),
-      openPt([2, 3], "hole at height 3", "e"),
-      pt([2, 1], "f(2) = 1", "e"),
-      toward([2, 1], [2, 2.85], "action"),
-    ],
+    [...broken((x) => x + 1, 2, -2, 5), openPt([2, 3], "y = 3", "e"), pt([2, 1], "f(2) = 1", "e"), toward([2, 1], [2, 2.85], "action")],
     "For example, the hole is at (2, 3) and the dot at (2, 1). The limit is 3, the height of the hole, so moving the value to f(2) = 3 repairs the discontinuity.",
     "例如，空心点在 (2, 3)，实心点在 (2, 1)。极限是空心点的高度 3，所以把函数值改为 f(2) = 3 就能修复间断。",
   ),
@@ -508,9 +500,9 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
       curveOf((x) => (x * x) / 2, undefined, -3.4, -2.001),
       curveOf((x) => (x * x) / 2, undefined, -1.999, 1.999),
       curveOf((x) => (x * x) / 2, undefined, 2.001, 3.4),
-      openPt([-2, 2], "missing", "w"),
+      openPt([-2, 2], "", "w"),
       openPt([2, 2], undefined),
-      pt([2, 4], "misplaced", "nw", "result"),
+      pt([2, 4], "", "nw", "result"),
     ],
     "For example, on y = x²/2 the limit at x = −2 and at x = 2 is 2. f(−2) is not defined, and f(2) = 4 is misplaced. Putting each point at height 2 would make f continuous.",
     "例如，在 y = x²/2 上，x = −2 和 x = 2 处的极限都是 2。f(−2) 没有定义，f(2) = 4 位置不对。把这两点都放到高度 2 就能使 f 连续。",
@@ -526,8 +518,8 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
     [
       curveOf((x) => x - 1, undefined, -1, 2),
       curveOf((x) => x + 2, undefined, 2, 5.5),
-      openPt([2, 1], "left limit 1", "e"),
-      pt([2, 4], "right limit 4", "e", "result"),
+      openPt([2, 1], "x → a⁻: 1", "e"),
+      pt([2, 4], "x → a⁺: 4", "e", "result"),
       toward([2, 1.2], [2, 3.8], "action"),
     ],
     "For example, the left limit is 1 and the right limit is 4, so the jump at x = 2 is 4 − 1 = 3, positive because the graph jumps up.",
@@ -553,19 +545,17 @@ export const calculusDrawings1: Readonly<Record<string, Figure>> = {
         .f((x) => x + 1, 0, 1.97)
         .f((x) => x + 1, 2.03, 4)
         .open(2, 3)
-        .say(2, -4.6, "point", "s")
         .marks(),
       ...pane(7.5, [0, 4, 2], [-4, 6, 10], 5, 5)
         .f((x) => x + 1, 0, 1.97)
         .f((x) => x - 1, 2.03, 4)
         .open(2, 3)
         .open(2, 1)
-        .say(2, -4.6, "jump", "s")
         .marks(),
       ...pane(15, [0, 4, 2], [-4, 6, 10], 5, 5)
         .f((x) => 1 / (x - 2))
         .wall(2)
-        .say(2, -4.6, "infinite", "s")
+        .say(2, -4.6, "∞", "s")
         .marks(),
     ],
     "For example, at x = 2: a point discontinuity, where the limit 3 exists and the value is missing; a jump, with one-sided limits 3 and 1; and an infinite discontinuity, at a vertical asymptote.",

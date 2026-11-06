@@ -48,7 +48,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       .under((t) => 6 * t, 0, 3)
       .f((t) => 6 * t)
       .dot(3, 18, "18", "w")
-      .say(2.2, 3, "area 27", "n")
+      .say(2.2, 3, "A = 27", "n")
       .marks(),
     "The acceleration a(t) = 6t on [0, 3] encloses a triangle with base 3 and height 18, of area 27. With v(0) = 2, this gives v(3) = 2 + 27 = 29 m/s.",
     "加速度 a(t) = 6t 在 [0, 3] 上围成底 3、高 18 的三角形，面积为 27。由 v(0) = 2 得 v(3) = 2 + 27 = 29 m/s。",
@@ -181,8 +181,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
         "action",
         true,
       ),
-      tag([2.5, 0.6], "area 12", "n"),
-      tag([6, 2], "average 2", "ne"),
+      tag([2.5, 0.6], "A = 12", "n"),
+      tag([6, 2], "ȳ = 2", "ne"),
     ],
     "For example, this velocity graph has area 12 on [0, 6], so the average is 12/6 = 2. The end heights are both 0, and their average, 0, is not the answer.",
     "例如，这个速度图象在 [0, 6] 上的面积为 12，所以平均值为 12/6 = 2。两端高度都是 0，它们的平均值 0 不是答案。",
@@ -201,8 +201,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       tangent([1, 1], 0.5),
       tangent([1, 1], -2, "result"),
       pt([1, 1], "(1, 1)", "e"),
-      tag([2.6, 2.6], "slope 1/2", "n"),
-      tag([0.1, 3], "slope −2", "e"),
+      tag([2.6, 2.6], "m = 1/2", "n"),
+      tag([0.1, 3], "m = −2", "e"),
     ],
     "For example, x = t², y = t at t = 1, the point (1, 1). Here dx/dt = 2 and dy/dt = 1, so the tangent has slope 1/2 and the normal has slope −2/1 = −2.",
     "例如，x = t²，y = t，t = 1 时在点 (1, 1)。此处 dx/dt = 2，dy/dt = 1，所以切线斜率为 1/2，法线斜率为 −2/1 = −2。",
@@ -390,7 +390,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
         "result",
       ),
       hoop([0, 0], 0.6, 2, "action"),
-      tag([1.5, 1.4], "t = 0 to π/2", "ne"),
+      tag([1.5, 1.4], "t ∈ [0, π/2]", "ne"),
     ],
     "For example, r = 2 and β = π/2: rotating the arc about the x-axis gives S = 2π · 4 · (1 − cos(π/2)) = 8π, a hemisphere. With β = π it is the whole sphere, 16π = 4πr².",
     "例如，r = 2，β = π/2：弧绕 x 轴旋转得 S = 2π · 4 · (1 − cos(π/2)) = 8π，是半球面。β = π 时是整个球面，16π = 4πr²。",
@@ -450,14 +450,14 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       ...head([0, 0], [1.5, 1.5], "result"),
       note([3, 0], "v", "e"),
       note([1.5, 1.5], "a", "n"),
-      note([1.5, -0.3], "v · a > 0: faster", "s"),
+      note([1.5, -0.3], "v · a > 0", "s"),
       ...shift(
         [
           ...head([0, 0], [3, 0], "action"),
           ...head([0, 0], [-1.5, 1.5], "result"),
           note([3, 0], "v", "e"),
           note([-1.5, 1.5], "a", "n"),
-          note([0.8, -0.3], "v · a < 0: slower", "s"),
+          note([0.8, -0.3], "v · a < 0", "s"),
         ],
         7.5,
       ),
@@ -467,7 +467,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
           ...head([0, 0], [0, 2], "result"),
           note([3, 0], "v", "e"),
           note([0, 2], "a", "n"),
-          note([1.3, -0.3], "v · a = 0: turning", "s"),
+          note([1.3, -0.3], "v · a = 0", "s"),
         ],
         14.5,
       ),
@@ -502,7 +502,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       joined(polarPts((t) => 2 + cos(t), 0, 2 * pi)),
       tangent([0, 2], 0.5),
       pt([0, 2], "(0, 2)", "nw", "result"),
-      tag([2.2, 3.1], "slope 1/2", "nw"),
+      tag([2.2, 3.1], "m = 1/2", "nw"),
     ],
     "For r = 2 + cos θ at θ = π/2, the point (0, 2): dy/dθ = −1 and dx/dθ = −2, so the tangent has slope 1/2. That is not dr/dθ, which is −1.",
     "r = 2 + cos θ 在 θ = π/2 处，即点 (0, 2)：dy/dθ = −1，dx/dθ = −2，所以切线斜率为 1/2。它不是 dr/dθ，后者为 −1。",
@@ -514,7 +514,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       tangent([3 * cos(pi / 4), 3 * sin(pi / 4)], -0.2),
       ray(pi / 4, 3),
       pt([3 * cos(pi / 4), 3 * sin(pi / 4)], "r = 3", "ne", "result"),
-      tag([-1.8, 3.6], "slope −1/5", "n"),
+      tag([-1.8, 3.6], "m = −1/5", "n"),
     ],
     "For r = 3 + cos 2θ at θ = π/4: r = 3 and r′ = −2, so dy/dx = (−2 + 3)/(−2 − 3) = −1/5 after the common factor cancels.",
     "r = 3 + cos 2θ 在 θ = π/4 处：r = 3，r′ = −2，约去公因子后 dy/dx = (−2 + 3)/(−2 − 3) = −1/5。",
@@ -525,7 +525,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       joined(polarPts((t) => 0.2 * exp(2 * t), -1.5, 1.7)),
       tangent([0, 0.2 * exp(pi)], -2),
       pt([0, 0.2 * exp(pi)], "θ = π/2", "ne", "result"),
-      tag([1.4, 1.8], "slope −2", "e"),
+      tag([1.4, 1.8], "m = −2", "e"),
     ],
     "For example, r = 0.2e^(2θ), so k = 2. At θ = π/2 the radius cancels and dy/dx = (2 · 1 + 0)/(2 · 0 − 1) = −2.",
     "例如，r = 0.2e^(2θ)，所以 k = 2。在 θ = π/2 处半径约去，dy/dx = (2 · 1 + 0)/(2 · 0 − 1) = −2。",
@@ -578,8 +578,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
     [
       ...polarPanel(() => 3, 0, pi / 2, 3.6),
       note([1.3, 1.1], "9π/4", "n"),
-      note([0, -3.6], "r = 3, 0 to π/2", "s"),
-      ...shift([...polarPanel((t) => t, 0, pi, 3.6), note([-1.1, 0.4], "π³/6", "n"), note([0, -3.6], "r = θ, 0 to π", "s")], 9),
+      note([0, -3.6], "r = 3, [0, π/2]", "s"),
+      ...shift([...polarPanel((t) => t, 0, pi, 3.6), note([-1.1, 0.4], "π³/6", "n"), note([0, -3.6], "r = θ, [0, π]", "s")], 9),
     ],
     "A sector of r = 3 from 0 to π/2 has area (9/2)(π/2) = 9π/4. The region of the spiral r = θ from 0 to π has area (1/2)∫₀^π θ² dθ = π³/6.",
     "r = 3 从 0 到 π/2 的扇形面积为 (9/2)(π/2) = 9π/4。螺线 r = θ 从 0 到 π 围成的区域面积为 (1/2)∫₀^π θ² dθ = π³/6。",
@@ -606,8 +606,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
   "the-total-area-bounded-by-a-single-polar-curve#the-equation-of-a-drawn-polar-curve": drawing(
     [
       ...polarPanel((t) => 2 * cos(3 * t), 0, pi, 2.5, false),
-      note([0, -2.5], "2cos 3θ: 3 petals", "s"),
-      ...shift([...polarPanel((t) => 2 * cos(2 * t), 0, 2 * pi, 2.5, false), note([0, -2.5], "2cos 2θ: 4 petals", "s")], 8.5),
+      note([0, -2.5], "2cos 3θ: 3", "s"),
+      ...shift([...polarPanel((t) => 2 * cos(2 * t), 0, 2 * pi, 2.5, false), note([0, -2.5], "2cos 2θ: 4", "s")], 8.5),
       ...shift([...polarPanel((t) => 1 + cos(t), 0, 2 * pi, 2.5, false), note([0, -2.5], "1 + cos θ", "s")], 17),
     ],
     "For example, r = 2cos 3θ, with the odd multiple 3 of the angle, has 3 petals, and r = 2cos 2θ, with the even multiple 2, has 2 · 2 = 4 petals. The cardioid r = 1 + cos θ has one dent at the origin and reaches farthest to the right, where its cosine term adds most.",
@@ -690,7 +690,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
         polarPts((t) => 1 + cos(t), 0, pi),
         "result",
       ),
-      tag([1.1, 1.1], "half: 4", "ne"),
+      tag([1.1, 1.1], "½: 4", "ne"),
     ],
     "The cardioid r = 1 + cos θ has integrand 2|cos(θ/2)|. The upper half, 0 to π, has length 4, so the whole cardioid has length 8.",
     "心形线 r = 1 + cos θ 的被积函数为 2|cos(θ/2)|。上半部分（0 到 π）长度为 4，所以整条心形线长度为 8。",
@@ -738,7 +738,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
   "the-integral-test#evaluating-the-comparison-integral": drawing(
     bars(pane(0, [0, 6, 1], [0, 1, 0.25], 9, 5), (x) => 3 / (x + 1) ** 2, 1, 6, 5, "left")
       .f((x) => 3 / (x + 1) ** 2, 0.8, 6)
-      .say(4.3, 0.4, "∫ from 1 to ∞ = 3/2", "n")
+      .say(4.3, 0.4, "∫[1, ∞) = 3/2", "n")
       .marks(),
     "For a_n = 3/(n + 1)², the rectangles of width 1 from x = 1 lie over the graph of 3/(x + 1)². The integral from 1 to ∞ is 3/2, which is finite, so the series converges, though its sum is not 3/2.",
     "a_n = 3/(n + 1)² 时，从 x = 1 起宽为 1 的矩形位于 3/(x + 1)² 的图象上方。从 1 到 ∞ 的积分为 3/2，是有限值，所以级数收敛，但其和不是 3/2。",
@@ -755,11 +755,11 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
     [
       ...bars(pane(0, [0, 6, 1], [0, 1, 1], 6, 5), (x) => 1 / (x * x), 1, 6, 5, "right")
         .f((x) => 1 / (x * x), 1, 6)
-        .say(3, -0.25, "under 1/x²: converges", "s")
+        .say(3, -0.25, "< 1/x²", "s")
         .marks(),
       ...bars(pane(9, [0, 6, 1], [0, 1, 1], 6, 5), (x) => 1 / x, 1, 6, 5, "left")
         .f((x) => 1 / x, 1, 6)
-        .say(3, -0.25, "over 1/x: diverges", "s")
+        .say(3, -0.25, "> 1/x", "s")
         .marks(),
     ],
     "For example, rectangles under 1/x², whose improper integral is finite, show that the series converges. Rectangles over 1/x, whose improper integral is infinite, show that it diverges. Rectangles over a finite integral or under an infinite one prove nothing.",
@@ -798,7 +798,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       curveOf((x) => 3 - (x - 2) ** 2, undefined, 0.2, 3.8),
       tangent([1, 2], 2, "action", true),
       pt([1, 2], "a = 1", "se", "result"),
-      tag([3, 2.3], "bends downward", "e"),
+      tag([3, 2.3], "∩", "e"),
     ],
     "For example, y = 3 − (x − 2)² at a = 1. The height is f(a) = 2, so it is positive. The graph rises through a, so f′(a) = 2 is positive. It bends downward, so f″(a) = −2 is negative.",
     "例如，y = 3 − (x − 2)² 在 a = 1 处。高度 f(a) = 2 为正。图象经过 a 时上升，所以 f′(a) = 2 为正。它向下弯，所以 f″(a) = −2 为负。",
@@ -808,7 +808,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       .under((x) => 1 + x, 0, 2)
       .f((x) => 1 + x)
       .dot(2, 3, "M = 3", "nw", "result")
-      .dot(5, 6, "6 does not count", "w")
+      .dot(5, 6, "6 ✗", "w")
       .marks(),
     "For example, n = 2, a = 0 and x = 2. Between 0 and 2 the graph of |f‴| reaches at most M = 3, so |R₂(2)| ≤ 3 · 2³/3! = 4. The bigger values farther right, up to 6, do not matter.",
     "例如，n = 2，a = 0，x = 2。在 0 与 2 之间 |f‴| 的图象最高为 M = 3，所以 |R₂(2)| ≤ 3 · 2³/3! = 4。右边更大的值（最大到 6）无关紧要。",
@@ -848,8 +848,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       curveOf((y) => -(y + 1) * (y - 2), undefined, -1.8, 2.8),
       toward([0.2, 0.2], [1.7, 0.2], "result"),
       toward([3.4, 0.2], [2.3, 0.2], "result"),
-      pt([2, 0], "stable", "ne", "result"),
-      pt([-1, 0], "unstable", "nw", "action"),
+      pt([2, 0], "→ • ←", "ne", "result"),
+      pt([-1, 0], "← • →", "nw", "action"),
     ],
     "For example, f(y) = −(y + 1)(y − 2). At y = 2 the graph crosses from positive to negative, so solutions on both sides move toward it: it is stable. At y = −1 it crosses from negative to positive, so it is not.",
     "例如，f(y) = −(y + 1)(y − 2)。在 y = 2 处图象由正变负，两侧的解都向它靠近：它是稳定的。在 y = −1 处图象由负变正，所以不稳定。",
@@ -887,7 +887,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       .dot(3, 40)
       .dot(6, 20)
       .dot(9, 10)
-      .say(4.5, 42, "half-life 3", "e")
+      .say(4.5, 42, "t½ = 3", "e")
       .marks(),
     "For example, a curve starting at 80 falls to 40 at t = 3, to 20 at t = 6 and to 10 at t = 9. Each step of 3 halves the height, wherever it starts, and the curve never reaches zero.",
     "例如，从 80 开始的曲线在 t = 3 时降到 40，t = 6 时降到 20，t = 9 时降到 10。每隔 3 高度减半，无论从哪里开始，曲线都不会到达零。",
@@ -903,7 +903,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
         "action",
         true,
       )
-      .dot(400, 2, "fastest at P = 400", "n", "result")
+      .dot(400, 2, "P = 400", "n", "result")
       .marks(),
     "dP/dt = kP − (k/K)P² is a downward parabola in P with zeros at 0 and K = 800, drawn for example with k = 0.01. It is largest halfway, at P = 400.",
     "dP/dt = kP − (k/K)P² 是关于 P 的开口向下的抛物线，零点为 0 和 K = 800，图中举例取 k = 0.01。它在正中间 P = 400 处最大。",
@@ -912,8 +912,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
     pane(0, [0, 12, 2], [0, 1000, 200], 9, 5, "t", "P")
       .level(800, "action")
       .f((t) => 800 / (1 + 7 * exp(-0.5 * t)))
-      .dot(Math.log(7) / 0.5, 400, "half of capacity", "se", "result")
-      .say(2.5, 800, "capacity 800", "n")
+      .dot(Math.log(7) / 0.5, 400, "K/2", "se", "result")
+      .say(2.5, 800, "K = 800", "n")
       .marks(),
     "For example, a logistic curve with capacity 800 rises slowly, then quickly, then levels off at 800. It is steepest at P = 400, half of the capacity, which is the inflection point.",
     "例如，容量为 800 的 logistic 曲线先慢后快地上升，然后趋于 800。它在 P = 400（容量的一半）处最陡，那里是拐点。",
@@ -928,7 +928,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
         0.5,
         (x) => (x === 0 ? "action" : undefined),
       ),
-      tag([0.2, 3.3], "flat at x = 0", "e"),
+      tag([0.2, 3.3], "x = 0", "e"),
     ],
     "For example, dy/dx = x. Every column of segments is parallel, because moving up or down does not change the slope. The slopes are 0 at x = 0 and positive on the right, negative on the left.",
     "例如，dy/dx = x。每一列线段都平行，因为上下移动不改变斜率。x = 0 处斜率为 0，右边为正，左边为负。",
@@ -989,7 +989,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
         0.6,
         (_, y) => (y === 2 ? "action" : undefined),
       ),
-      tag([5.8, 2], "slope −1", "e"),
+      tag([5.8, 2], "m = −1", "e"),
       tag([5.8, 3], "y = 3", "e"),
       tag([5.8, 1], "y = 1", "e"),
     ],
@@ -1086,7 +1086,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
           },
           pane(0, [-3, 3, 3], [-3, 3, 3], 6, 6),
         )
-        .say(0, -3.6, "columns: y′ = x", "s")
+        .say(0, -3.6, "y′ = x", "s")
         .marks(),
       ...count(-2, 2)
         .reduce(
@@ -1105,7 +1105,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
           },
           pane(9, [-3, 3, 3], [-3, 3, 3], 6, 6),
         )
-        .say(0, -3.6, "rows: y′ = y", "s")
+        .say(0, -3.6, "y′ = y", "s")
         .marks(),
     ],
     "For example, in the field of y′ = x each vertical column is parallel and the flat segments lie on x = 0. In the field of y′ = y each horizontal row is parallel and the flat segments lie on y = 0.",
@@ -1165,7 +1165,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       .dot(-1, 1, undefined, "n", "action")
       .dot(2, 4, undefined, "n", "action")
       .say(-2.5, 7.5, "f − g > 0", "e")
-      .say(2.8, 0.4, "between: f − g < 0", "n")
+      .say(2.8, 0.4, "f − g < 0", "n")
       .marks(),
     "For example, f = x² and g = x + 2. The difference f − g is 4 at x = −2, −2 at x = 0 and 4 at x = 3. Two sign changes guarantee at least 2 intersections, and here they are at x = −1 and x = 2.",
     "例如，f = x²，g = x + 2。差 f − g 在 x = −2 时为 4，x = 0 时为 −2，x = 3 时为 4。两次变号保证至少有 2 个交点，这里在 x = −1 和 x = 2。",
@@ -1186,7 +1186,6 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       .dot(-2, 0, "max", "ne", "result")
       .dot(1, 0, "min", "nw", "action")
       .dot(3, 0)
-      .say(3, -1.3, "neither", "s")
       .marks(),
     "For example, this f′ changes from positive to negative at x = −2, a local maximum of f, and from negative to positive at x = 1, a local minimum. At x = 3 it is zero without changing sign, so that point is neither.",
     "例如，这个 f′ 在 x = −2 处由正变负，是 f 的局部最大值；在 x = 1 处由负变正，是局部最小值。在 x = 3 处为零但不变号，所以该点两者都不是。",
@@ -1206,8 +1205,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       bare([0.5, 0.125], "action"),
       bare([1.5, 3.375], "action"),
       pt([1, 1], "a = 1", "se"),
-      tag([2, 2.4], "chord: slope 3.25", "e"),
-      tag([2.4, 4.2], "tangent: slope 3", "e"),
+      tag([2, 2.4], "m = 3.25", "e"),
+      tag([2.4, 4.2], "f′ = 3", "e"),
     ],
     "For example, f = x³ (k = 1), a = 1 and h = 0.5. The chord from x = 0.5 to x = 1.5 has slope 3.25 = 3 + 0.25, which differs from the exact derivative 3 by kh² = 0.25.",
     "例如，f = x³（k = 1），a = 1，h = 0.5。x = 0.5 到 x = 1.5 的弦斜率为 3.25 = 3 + 0.25，与精确导数 3 相差 kh² = 0.25。",
@@ -1261,8 +1260,8 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       curveOf((x) => x * (x - 2), undefined, -1, 3.2),
       bare([2, 0], "result"),
       bare([0, 0], "action"),
-      tag([3, -0.7], "minimum", "s"),
-      tag([-1.5, -0.7], "not a minimum", "s"),
+      tag([3, -0.7], "min", "s"),
+      tag([-1.5, -0.7], "✗", "s"),
     ],
     "For example, f′ = x(x − 2). At x = 2 the graph crosses from negative to positive, so f has a local minimum there. At x = 0 it crosses from positive to negative, which is a local maximum, not a minimum.",
     "例如，f′ = x(x − 2)。在 x = 2 处图象由负变正，f 在此有局部最小值。在 x = 0 处由正变负，是局部最大值而不是最小值。",
@@ -1273,7 +1272,7 @@ export const calculusDrawings5: Readonly<Record<string, Figure>> = {
       .under((x) => 1 / (x * x), 10, 14, "action")
       .f((x) => 1 / (x * x), 1, 14)
       .say(2.2, 0.35, "I(10) = 0.9", "e")
-      .say(11.5, 0.05, "tail 0.1", "n")
+      .say(11.5, 0.05, "0.1", "n")
       .marks(),
     "For example, f = 1/x² from a = 1. Stopping at B = 10 gives I(10) = 1 − 1/10 = 0.9. The truncation error is the tail, the integral from 10 to ∞, which equals 0.1.",
     "例如，f = 1/x²，a = 1。在 B = 10 处停止得 I(10) = 1 − 1/10 = 0.9。截断误差是尾部，即从 10 到 ∞ 的积分，等于 0.1。",

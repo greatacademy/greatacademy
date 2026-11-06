@@ -16,7 +16,6 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
   "solving-optimization-problems-using-derivatives#optimizing-fenced-areas": drawing(
     [
       seg([-1, 3], [7, 3], "action"),
-      note([3, 3], "wall", "n"),
       seg([0, 3], [0, 0]),
       seg([0, 0], [6, 0]),
       seg([6, 0], [6, 3]),
@@ -55,7 +54,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
       ...bend(0, (2 * 180) / pi, 3, [0, 0], "action"),
       note(on(0, 1.5), "r", "s"),
       note(on((2 * 180) / pi, 1.5), "r", "w"),
-      note(on(57, 3), "arc 2r", "ne"),
+      note(on(57, 3), "2r", "ne"),
       note(on(57, 0.5), "2 rad", "ne"),
     ],
     "The best sector for a given area A has radius r = √A and central angle 2 radians. Its arc is 2r, so its perimeter is r + r + 2r = 4r = 4√A.",
@@ -111,7 +110,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
     [
       curveOf((x) => sqrt(2 * x), undefined, 0, 4),
       pt([0.5, 0], "(1/2, 0)", "se", "action"),
-      pt([0, 0], "closest", "nw", "result"),
+      pt([0, 0], "", "nw", "result"),
       tag([1.6, 2.4], "y = √(2x)", "n"),
     ],
     "For example, y = √(2x) and the point (1/2, 0): D² = (x − 1/2)² + 2x has its vertex at x = −1/2, which is off the curve. So D² grows for all x ≥ 0 and the closest point is the endpoint (0, 0).",
@@ -160,7 +159,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
       },
       note([3, 0], "6", "s"),
       note([0, 2], "4", "w"),
-      note([1.5, 0.8], "3 by 2", "n"),
+      note([1.5, 0.8], "3 × 2", "n"),
       ring(3, [11, 2]),
       { kind: "shade", points: [on(45, 3, [11, 2]), on(135, 3, [11, 2]), on(225, 3, [11, 2]), on(315, 3, [11, 2])], tone: "result" },
       { kind: "polygon", points: [on(45, 3, [11, 2]), on(135, 3, [11, 2]), on(225, 3, [11, 2]), on(315, 3, [11, 2])], tone: "result" },
@@ -259,11 +258,11 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
     [
       ...bars(pane(0, [0, 4, 1], [0, 8, 2], 6, 5), half, 0, 4, 4, "left")
         .f(half)
-        .say(2, -1.2, "left sum: under", "s")
+        .say(2, -1.2, "L < A", "s")
         .marks(),
       ...bars(pane(9, [0, 4, 1], [0, 8, 2], 6, 5), half, 0, 4, 4, "right")
         .f(half)
-        .say(2, -1.2, "right sum: over", "s")
+        .say(2, -1.2, "R > A", "s")
         .marks(),
     ],
     "For example, y = x²/2 is increasing on [0, 4]. With 4 pieces, each left rectangle lies under the curve, an underestimate, and each right rectangle pokes above it, an overestimate.",
@@ -337,11 +336,11 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
     [
       ...bars(pane(0, [0, 4, 1], [0, 6, 2], 6, 5), hump, 0, 4, 4, "left")
         .f(hump)
-        .say(2, -1, "left: i = 0 to 3", "s")
+        .say(2, -1, "i = 0, …, 3", "s")
         .marks(),
       ...bars(pane(9, [0, 4, 1], [0, 6, 2], 6, 5), hump, 0, 4, 4, "right")
         .f(hump)
-        .say(2, -1, "right: i = 1 to 4", "s")
+        .say(2, -1, "i = 1, …, 4", "s")
         .marks(),
     ],
     "For example, y = 1 + x²/4 on [0, 4] with n = 4 and Δx = 1, so xᵢ = i. The left sum takes its heights at i = 0 to 3, and the right sum at i = 1 to 4.",
@@ -363,11 +362,11 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
     [
       ...bars(pane(0, [0, 3, 1], [0, 3, 1], 6, 5), (x) => sqrt(x + 1), 0, 3, 3, "right")
         .f((x) => sqrt(x + 1))
-        .say(1.5, -0.6, "right sum: over", "s")
+        .say(1.5, -0.6, "R > A", "s")
         .marks(),
       ...bars(pane(9, [0, 3, 1], [0, 3, 1], 6, 5), (x) => sqrt(x + 1), 0, 3, 3, "mid")
         .f((x) => sqrt(x + 1))
-        .say(1.5, -0.6, "midpoint sum: over", "s")
+        .say(1.5, -0.6, "M > A", "s")
         .marks(),
     ],
     "y = √(x + 1), here on [0, 3], is increasing and concave down. So the right sum overestimates, because of the increase, and the midpoint sum overestimates, because of the concavity.",
@@ -418,9 +417,9 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
       ...dotAt([5, 0], "c", "s"),
       ...dotAt([8, 0], "d", "s"),
       seg([0, 0.6], [5, 0.6], "action"),
-      note([2.5, 0.6], "∫ from a to c", "n"),
+      note([2.5, 0.6], "∫[a, c]", "n"),
       seg([3, -1.2], [8, -1.2], "result"),
-      note([5.5, -1.2], "∫ from b to d", "s"),
+      note([5.5, -1.2], "∫[b, d]", "s"),
       {
         kind: "shade",
         points: [
@@ -431,7 +430,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
         ],
         tone: "result",
       },
-      note([4, -0.6], "twice", "n"),
+      note([4, -0.6], "× 2", "n"),
     ],
     "With a < b < c < d, the intervals [a, c] and [b, d] overlap on [b, c], which is counted twice in their sum. So the integral from a to d is the two integrals added, minus the integral from b to c.",
     "当 a < b < c < d 时，区间 [a, c] 和 [b, d] 在 [b, c] 上重叠，相加时计了两次。所以从 a 到 d 的积分等于两个积分之和减去从 b 到 c 的积分。",
@@ -455,7 +454,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
         .f((x) => 3 - (x * x) / 2)
         .say(-1, 0.7, "P", "n")
         .say(1, 0.7, "P", "n")
-        .say(0, -2.7, "even: 2P", "s")
+        .say(0, -2.7, "2P", "s")
         .marks(),
       ...pane(9, [-2, 2, 2], [-3, 3, 3], 6, 5)
         .under((x) => 1.5 * x, 0, 2)
@@ -463,7 +462,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
         .f((x) => 1.5 * x)
         .say(1.3, 0.3, "P", "n")
         .say(-1.3, -0.4, "−P", "s")
-        .say(0, -3.7, "odd: 0", "s")
+        .say(0, -3.7, "0", "s")
         .marks(),
     ],
     "For example, an even graph and an odd graph, with area P to the right of 0. For the even graph the two sides are equal, so the integral over [−a, a] is 2P. For the odd graph the sides are P and −P, so it is 0.",
@@ -543,13 +542,12 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
       ...pane(0, [-2, 2, 2], [-1, 4, 1], 6, 5)
         .under((x) => 4 - x * x, -2, 2)
         .f((x) => 4 - x * x)
-        .say(0, -1.6, "even: sides equal", "s")
         .marks(),
       ...pane(9, [-2, 2, 2], [-4, 4, 4], 6, 5)
         .under((x) => x ** 3 / 2, 0, 2)
         .under((x) => x ** 3 / 2, -2, 0, "action")
         .f((x) => x ** 3 / 2)
-        .say(0, -4.8, "odd: integral 0", "s")
+        .say(0, -4.8, "∫ = 0", "s")
         .marks(),
     ],
     "For example, the even y = 4 − x² has equal areas with the same sign on the two sides of the y-axis. The odd y = x³/2 has equal areas with opposite signs, so its integral over [−2, 2] is 0.",
@@ -632,7 +630,7 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
           [6, 0],
         ])
         .say(0.7, 0.3, "+3", "n")
-        .say(4, -2.1, "area −4", "s")
+        .say(4, -2.1, "A = −4", "s")
         .marks(),
       ...pane(9, [0, 6, 2], [0, 5, 1], 6, 5, "x", "f")
         .f((x) => 1 + 3 * x - (3 * x * x) / 4, 0, 2)
@@ -727,7 +725,6 @@ export const calculusDrawings3: Readonly<Record<string, Figure>> = {
       .dot(-3, 0, "max", "ne", "result")
       .dot(0, 0, "min", "nw", "action")
       .dot(3, 0)
-      .say(3, -1.7, "neither", "s")
       .marks(),
     "For example, this f′ changes from positive to negative at x = −3, a local maximum of f, and from negative to positive at x = 0, a local minimum. At x = 3 it touches zero without changing sign, so that point is neither.",
     "例如，这个 f′ 在 x = −3 处由正变负，是 f 的局部最大值；在 x = 0 处由负变正，是局部最小值。在 x = 3 处与零相切而不变号，所以该点两者都不是。",

@@ -186,7 +186,7 @@ export const gradeDrawings3: Readonly<Record<string, Figure>> = {
         ],
         "5",
       ),
-      text([7, -0.2], "total 40", "e"),
+      text([7, -0.2], "Σ = 40", "e"),
     ],
     "A tape of 3 boxes and a tape of 5 boxes: 8 boxes make 40, so one box is 5 and B is 25.",
     "3 格和 5 格的两条带：8 格合计 40，所以一格是 5，B 是 25。",
@@ -570,7 +570,7 @@ export const gradeDrawings3: Readonly<Record<string, Figure>> = {
       ...realLine(-6, 6, 2, 0),
       ...ray(-6, 6, -1, true, -6.5, 0),
       ...ray(-6, 6, 2, false, 6.5, 0),
-      text([12.8, 0], "x ≤ −1 or x > 2", "e"),
+      text([12.8, 0], "x ≤ −1, x > 2", "e"),
     ],
     "A segment from an open circle at −3 to a closed dot at 4, and two rays from a closed dot at −1 and an open circle at 2.",
     "从 −3 空心圈到 4 实心点的线段；以及从 −1 实心点和 2 空心圈出发的两条射线。",
@@ -759,12 +759,7 @@ export const gradeDrawings3: Readonly<Record<string, Figure>> = {
         poly(...t),
         ...t.flatMap((p, k): Mark[] => (counts[k] ? [ticks(p, t[(k + 1) % 3] as Point, counts[k])] : [])),
       ];
-      return [
-        ...marks(e, [1, 1, 1]),
-        text([1.5, 0], "equilateral", "s"),
-        ...shift([...marks(i, [0, 1, 1]), text([1.5, 0], "isosceles", "s")], 5),
-        ...shift([...marks(s, [0, 0, 0]), text([2, 0], "scalene", "s")], 10),
-      ];
+      return [...marks(e, [1, 1, 1]), ...shift([...marks(i, [0, 1, 1])], 5), ...shift([...marks(s, [0, 0, 0])], 10)];
     })(),
     "An equilateral triangle with three matching tick marks, an isosceles one with two, and a scalene one with none.",
     "等边三角形有三个相同记号，等腰三角形有两个，不等边三角形没有。",
@@ -772,9 +767,8 @@ export const gradeDrawings3: Readonly<Record<string, Figure>> = {
   "classifying-triangles#classifying-by-angles": drawing(
     [
       (() => poly(...fromAngles(60, 70, 3)))(),
-      text([1.5, 0], "acute", "s"),
-      ...shift([poly([0, 0], [3, 0], [0, 2.4]), square([0, 0], [3, 0], [0, 2.4]), text([1.5, 0], "right", "s")], 5),
-      ...shift([poly(...fromAngles(25, 30, 4)), text([2, 0], "obtuse", "s")], 9.5),
+      ...shift([poly([0, 0], [3, 0], [0, 2.4]), square([0, 0], [3, 0], [0, 2.4])], 5),
+      ...shift([poly(...fromAngles(25, 30, 4))], 9.5),
     ],
     "An acute triangle, a right triangle and an obtuse triangle.",
     "锐角三角形、直角三角形和钝角三角形。",
@@ -1311,14 +1305,9 @@ export const gradeDrawings3: Readonly<Record<string, Figure>> = {
     [
       seg([0, 0], [9, 0]),
       seg([0, 0.25], [5, 0.25], "action"),
-      text([4.5, 0], "c = 4 is too short", "s"),
+      text([4.5, 0], "c = 4 ✗", "s"),
       ...shift(
-        [
-          seg([0, 0], [14, 0]),
-          seg([0, 0.25], [5, 0.25], "action"),
-          seg([5, 0.25], [14, 0.25], "result"),
-          text([7, 0], "c = 14 is too long", "s"),
-        ],
+        [seg([0, 0], [14, 0]), seg([0, 0.25], [5, 0.25], "action"), seg([5, 0.25], [14, 0.25], "result"), text([7, 0], "c = 14 ✗", "s")],
         0,
       ).map((m) => shiftY(m, -2)),
       ...shift([poly(...fromSides(9, 5, 8)), text([4.5, 0], "9", "s"), text([1, 2.5], "c", "w"), text([7, 1.8], "5", "e")], 11),
@@ -1359,12 +1348,7 @@ export const gradeDrawings3: Readonly<Record<string, Figure>> = {
     "有 80°、95°、110° 三个角的四边形：第四个角是 75°。",
   ),
   "regular-polygons#recognizing-regular-polygons": drawing(
-    [
-      poly([1.3, 0], [2.6, 1.8], [1.3, 3.6], [0, 1.8]),
-      text([1.3, 0], "rhombus", "s"),
-      ...shift([rect(0, 0.6, 3.8, 2), text([1.9, 0.6], "rectangle", "s")], 3.8),
-      ...shift([rect(0, 0.3, 2.8, 2.8), text([1.4, 0.3], "square", "s")], 9),
-    ],
+    [poly([1.3, 0], [2.6, 1.8], [1.3, 3.6], [0, 1.8]), ...shift([rect(0, 0.6, 3.8, 2)], 3.8), ...shift([rect(0, 0.3, 2.8, 2.8)], 9)],
     "A rhombus with equal sides only, a rectangle with equal angles only, and a square with both.",
     "菱形只有边相等，长方形只有角相等，正方形两者兼有。",
   ),

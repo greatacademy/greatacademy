@@ -131,17 +131,17 @@ export const algebraDrawings3: Readonly<Record<string, Figure>> = {
       ...mini(
         0,
         inMini((x) => 0.4 * x * (x * x + 1)),
-        "D < 0: one",
+        "D < 0: 1",
       ),
       ...mini(
         5.5,
         inMini((x) => 0.5 * (x + 1.4) * (x - 0.7) ** 2),
-        "D = 0: two",
+        "D = 0: 2",
       ),
       ...mini(
         11,
         inMini((x) => 0.45 * (x + 1.4) * x * (x - 1.4)),
-        "D > 0: three",
+        "D > 0: 3",
       ),
     ],
     "A negative discriminant of the quadratic leaves one x-intercept, a zero discriminant two (the curve touches at one), a positive one three.",
@@ -151,7 +151,7 @@ export const algebraDrawings3: Readonly<Record<string, Figure>> = {
     wide(-3, 5, -6, 6),
     [
       curveOf((x) => -((x + 1) ** 2) * (x - 1) * (x - 3)),
-      pt([-1, 0], "touches at −1", "nw", "action"),
+      pt([-1, 0], "x = −1", "nw", "action"),
       pt([1, 0], "1", "ne", "action"),
       pt([3, 0], "3", "ne", "action"),
       pt([0, -3], "(0, −3)", "w", "result"),
@@ -440,9 +440,9 @@ export const algebraDrawings3: Readonly<Record<string, Figure>> = {
       [
         ...c.marks,
         ...traced(c.at, Math.sqrt, 0, 20, 0, 5),
-        ...dotAt(c.at(16, 4), "(16, 4): on", "n", "result"),
-        ...dotAt(c.at(16, -4), "(16, −4): off", "s", "action"),
-        ...dotAt(c.at(4, 16), "(4, 16): off", "e", "action"),
+        ...dotAt(c.at(16, 4), "(16, 4) ✓", "n", "result"),
+        ...dotAt(c.at(16, -4), "(16, −4) ✗", "s", "action"),
+        ...dotAt(c.at(4, 16), "(4, 16) ✗", "e", "action"),
       ],
       "y = √x lies on and above the x-axis, to the right of the y-axis: (16, 4) is on it, but (16, −4) and (4, 16) are not.",
       "y = √x 位于 x 轴上及其上方、y 轴右侧：(16, 4) 在图象上，而 (16, −4) 和 (4, 16) 不在。",
@@ -485,9 +485,9 @@ export const algebraDrawings3: Readonly<Record<string, Figure>> = {
       [
         ...c.marks,
         ...traced(c.at, Math.cbrt, -30, 30, -4, 4),
-        ...dotAt(c.at(-27, -3), "(−27, −3): on", "s", "result"),
-        ...dotAt(c.at(-27, 3), "(−27, 3): off", "n", "action"),
-        ...dotAt(c.at(9, 3), "(9, 3): off", "n", "action"),
+        ...dotAt(c.at(-27, -3), "(−27, −3) ✓", "s", "result"),
+        ...dotAt(c.at(-27, 3), "(−27, 3) ✗", "n", "action"),
+        ...dotAt(c.at(9, 3), "(9, 3) ✗", "n", "action"),
       ],
       "y = ∛x runs from the lower left through the origin to the upper right: (−27, −3) is on it, but (−27, 3) and (9, 3) are not.",
       "y = ∛x 从左下方经过原点到右上方：(−27, −3) 在图象上，而 (−27, 3) 和 (9, 3) 不在。",
@@ -495,7 +495,7 @@ export const algebraDrawings3: Readonly<Record<string, Figure>> = {
   })(),
   "graphing-the-cube-root-function#transformed-cube-root-graphs": graphed(
     wide(-8, 6, -2, 8),
-    [curveOf((x) => -2 * Math.cbrt(x + 1) + 3), pt([-1, 3], "center (−1, 3)", "sw", "result"), pt([0, 1], "(0, 1)", "ne")],
+    [curveOf((x) => -2 * Math.cbrt(x + 1) + 3), pt([-1, 3], "C(−1, 3)", "sw", "result"), pt([0, 1], "(0, 1)", "ne")],
     "y = −2∛(x + 1) + 3 has its center at (−1, 3). One unit to the right the height is 3 − 2 = 1.",
     "y = −2∛(x + 1) + 3 的中心在 (−1, 3)。向右 1 个单位处，高度为 3 − 2 = 1。",
   ),
@@ -540,9 +540,9 @@ export const algebraDrawings3: Readonly<Record<string, Figure>> = {
         );
       };
       return [
-        ...panel(0, 1, 1, "y = x + 1: none", []),
-        ...panel(4.6, 1, -2, "y = x − 2: one", [[4, 2]]),
-        ...panel(9.2, 1, 0, "y = x: two", [
+        ...panel(0, 1, 1, "y = x + 1: 0", []),
+        ...panel(4.6, 1, -2, "y = x − 2: 1", [[4, 2]]),
+        ...panel(9.2, 1, 0, "y = x: 2", [
           [0, 0],
           [1, 1],
         ]),

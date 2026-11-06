@@ -51,7 +51,7 @@ export const trigDrawings: Readonly<Record<string, Figure>> = {
     "终边在 x 轴负半轴上方 35°，比 180° 少 35°：这个角是 145°。",
   ),
   "angles-in-the-coordinate-plane#coterminal-angles": drawing(
-    [...cross(R + 0.3), spoke(40, R, "result"), ...sweep(400), tip(40, "40° and 400°")],
+    [...cross(R + 0.3), spoke(40, R, "result"), ...sweep(400), tip(40, "40°, 400°")],
     "For example, 400° is one full turn and 40° more, so it ends on the same terminal side as 40°.",
     "例如，400° 是转一整圈再转 40°，所以它与 40° 的终边相同。",
   ),
@@ -66,17 +66,17 @@ export const trigDrawings: Readonly<Record<string, Figure>> = {
     "终边从 y 轴负半轴再顺时针转 40°，共转了 90° + 40°，所以这个角是 −130°。",
   ),
   "negative-angles-in-the-coordinate-plane#negative-and-positive-measures": drawing(
-    [...cross(R + 0.3), spoke(300, R, "result"), ...sweep(300, 1), ...sweep(-60, 0.6, "result", 0), tip(300, "300° and −60°")],
+    [...cross(R + 0.3), spoke(300, R, "result"), ...sweep(300, 1), ...sweep(-60, 0.6, "result", 0), tip(300, "300°, −60°")],
     "The same terminal side is reached by 300° counterclockwise and by 60° clockwise, so 300° and −60° end together.",
     "逆时针转 300° 和顺时针转 60° 到达同一条终边，所以 300° 和 −60° 的终边相同。",
   ),
   "coterminal-angles#coterminal-angles-in-degrees": drawing(
-    [...cross(R + 0.3), spoke(130, R, "result"), ...sweep(850, 0.6, "action", 0.45), tip(130, "850° and 130°")],
+    [...cross(R + 0.3), spoke(130, R, "result"), ...sweep(850, 0.6, "action", 0.45), tip(130, "850°, 130°")],
     "850° is 2 full turns, 720°, and 130° more, so it ends on the same terminal side as 130°.",
     "850° 是转 2 整圈（720°）再转 130°，所以它与 130° 的终边相同。",
   ),
   "coterminal-angles#coterminal-angles-in-radians": drawing(
-    [...cross(R + 0.3), spoke(150, R, "result"), ...sweep(510, 0.7, "action", 0.6), tip(150, "17π/6 and 5π/6")],
+    [...cross(R + 0.3), spoke(150, R, "result"), ...sweep(510, 0.7, "action", 0.6), tip(150, "17π/6, 5π/6")],
     "17π/6 is one full turn, 12π/6, and 5π/6 more, so it ends on the same terminal side as 5π/6.",
     "17π/6 是转一整圈（12π/6）再转 5π/6，所以它与 5π/6 的终边相同。",
   ),
@@ -86,7 +86,7 @@ export const trigDrawings: Readonly<Record<string, Figure>> = {
       spoke(110, R, "result"),
       ...sweep(830, 0.9, "action", 0.45),
       ...sweep(-250, 0.5, "result", 0.2),
-      tip(110, "−250° and 830°"),
+      tip(110, "−250°, 830°"),
     ],
     "−250° and 830° differ by 1080°, exactly 3 full turns, and both end on the terminal side of 110°.",
     "−250° 和 830° 相差 1080°，恰好是 3 整圈，两者的终边都与 110° 相同。",
@@ -350,7 +350,7 @@ export const trigDrawings: Readonly<Record<string, Figure>> = {
     return drawing(
       [
         ...labeled(t, { names: ["A", "B", "C"], sides: [undefined, "a ≈ 10.1", "b = 8"], angles: [undefined, undefined, "48°"] }),
-        note([(t[0][0] + t[1][0] + t[2][0]) / 3, (t[0][1] + t[1][1] + t[2][1]) / 3], "area 30", "s"),
+        note([(t[0][0] + t[1][0] + t[2][0]) / 3, (t[0][1] + t[1][1] + t[2][1]) / 3], "A = 30", "s"),
       ],
       "An area of 30 with b = 8 and included angle 48° gives a ≈ 10.1.",
       "面积为 30，b = 8，夹角 48°，得 a ≈ 10.1。",
@@ -361,7 +361,7 @@ export const trigDrawings: Readonly<Record<string, Figure>> = {
     return drawing(
       [
         ...labeled(t, { names: ["A", "B", "C"], sides: ["c = 12", "a = 7", "b = 9"], angles: [undefined, undefined, "≈ 96.4°"] }),
-        note([(t[0][0] + t[1][0] + t[2][0]) / 3, (t[0][1] + t[1][1] + t[2][1]) / 3], "area ≈ 31.3", "s"),
+        note([(t[0][0] + t[1][0] + t[2][0]) / 3, (t[0][1] + t[1][1] + t[2][1]) / 3], "A ≈ 31.3", "s"),
       ],
       "Sides 7, 9 and 12 give C ≈ 96.4° from the law of cosines, and then an area of about 31.3.",
       "三边 7、9、12 由余弦定理得 C ≈ 96.4°，进而得面积约为 31.3。",
@@ -420,7 +420,7 @@ export const trigDrawings: Readonly<Record<string, Figure>> = {
           dx,
         );
       };
-      return [...panel(0, 5, "a = 5: none"), ...panel(26, 9, "a = 9: two"), ...panel(52, 14, "a = 14: one")];
+      return [...panel(0, 5, "a = 5: 0"), ...panel(26, 9, "a = 9: 2"), ...panel(52, 14, "a = 14: 1")];
     })(),
     "For example, with A = 35° and b = 12 the height is about 6.88: a = 5 does not reach the line, a = 9 meets it twice, and a = 14 meets it on one side only.",
     "例如，A = 35°，b = 12 时，高约为 6.88：a = 5 够不到直线，a = 9 与直线有两个交点，a = 14 只在一侧与直线相交。",

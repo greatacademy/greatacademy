@@ -75,7 +75,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
       tag([-4, pi / 2], "π/2", "n"),
       tag([4, -pi / 2], "−π/2", "s"),
       bare([1, 0], "result"),
-      tag([2.3, -0.55], "center 1", "s"),
+      tag([2.3, -0.55], "C = 1", "s"),
     ],
     "For example, the center 1: arctan(x − 1) runs from the level −π/2 to the level π/2, a total change of π, the same as arctan x. Shifting the center moves the graph sideways but does not change this total.",
     "例如，中心为 1：arctan(x − 1) 从水平线 −π/2 升到水平线 π/2，总变化为 π，与 arctan x 相同。移动中心只是把图象左右平移，不改变这个总量。",
@@ -86,7 +86,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
       .f((t) => 2 * t + 3)
       .dot(0, 3, "3", "ne")
       .dot(4, 11, "11", "w")
-      .say(2.4, 2.5, "area 28", "n")
+      .say(2.4, 2.5, "A = 28", "n")
       .marks(),
     "The rate r(t) = 2t + 3 on [0, 4] encloses a trapezoid with heights 3 and 11 and width 4, so its area is 28. The tank goes from 10 liters to 10 + 28 = 38 liters.",
     "速率 r(t) = 2t + 3 在 [0, 4] 上围成高为 3 和 11、宽为 4 的梯形，面积为 28。水箱从 10 升变为 10 + 28 = 38 升。",
@@ -130,7 +130,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
         "action",
         true,
       )
-      .say(0.75, 3, "average 3", "n")
+      .say(0.75, 3, "ȳ = 3", "n")
       .marks(),
     "The average of x² on [0, 3]: the region under the curve has area 9, the same as the rectangle of width 3 and height 3. So the average is 3.",
     "x² 在 [0, 3] 上的平均值：曲线下方的面积为 9，与宽 3、高 3 的矩形面积相同。所以平均值是 3。",
@@ -158,7 +158,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
       tag([1, 1], "+4", "n"),
       tag([2.6, 0.05], "+2", "n"),
       tag([5.2, -0.3], "−2", "s"),
-      tag([6, 2 / 3], "average 2/3", "ne"),
+      tag([6, 2 / 3], "ȳ = 2/3", "ne"),
     ],
     "For example, this graph has signed areas +4, +2 and −2 on [0, 6], so its integral is 4. Dividing by the length 6 gives the average 2/3, the height of a rectangle with the same base and area.",
     "例如，这个图象在 [0, 6] 上的有向面积为 +4、+2、−2，所以积分为 4。除以长度 6 得平均值 2/3，即底相同、面积相同的矩形的高。",
@@ -253,9 +253,9 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
       ),
       bare([1, 1]),
       bare([4, 5]),
-      tag([2.5, 1], "run 3", "s"),
-      tag([4, 3], "rise 4", "e"),
-      tag([2.4, 3], "length 5", "nw"),
+      tag([2.5, 1], "Δx = 3", "s"),
+      tag([4, 3], "Δy = 4", "e"),
+      tag([2.4, 3], "5", "nw"),
     ],
     "For example, a segment from (1, 1) to (4, 5) has constant slope m = 4/3, so the integral is √(1 + 16/9) · 3 = (5/3) · 3 = 5.",
     "例如，从 (1, 1) 到 (4, 5) 的线段斜率恒为 m = 4/3，所以积分为 √(1 + 16/9) · 3 = (5/3) · 3 = 5。",
@@ -385,7 +385,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
         1,
       ),
       ...chain(count(-3, 3, 0.1).map((x) => p3(x, sqrt(Math.max(0, 9 - x * x)), sqrt(Math.max(0, 9 - x * x)), 1))),
-      note(p3(0, 0, 0, 1), "diameter", "s"),
+      note(p3(0, 0, 0, 1), "d", "s"),
     ],
     "For example, r = 3 and a plane at 45° through the diameter. The slice at x is a right triangle with both legs √(9 − x²), so its area is (9 − x²)/2 and the wedge has V = 18.",
     "例如，r = 3，平面过直径且倾斜 45°。x 处的截面是两条直角边都为 √(9 − x²) 的直角三角形，面积为 (9 − x²)/2，楔形体积 V = 18。",
@@ -668,7 +668,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
       toward([2, -1], [2, 1], "result"),
       tag([1, 0.5], "R = 3", "w"),
       tag([2, 0.2], "r = 2", "e"),
-      tag([3.5, -1], "axis y = −1", "s"),
+      tag([3.5, -1], "y = −1", "s"),
     ],
     "For example, the rectangle between y = 1 and y = 2 rotated about y = −1. The outer radius reaches the far edge, R = 3, and the inner radius reaches the near edge, r = 2, so a slice has area π(9 − 4) = 5π.",
     "例如，y = 1 与 y = 2 之间的矩形绕 y = −1 旋转。外半径到远边 R = 3，内半径到近边 r = 2，所以截面面积为 π(9 − 4) = 5π。",
@@ -704,7 +704,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
       ),
       toward([2.5, -1], [2.5, 1], "result"),
       tag([2.5, -0.5], "y + 1 = 2", "e"),
-      tag([3.2, 1], "length 3", "n"),
+      tag([3.2, 1], "3", "n"),
       tag([5.5, -1], "y = −1", "s"),
     ],
     "For example, the region between x = y², x = 4 and the x-axis, rotated about y = −1. The strip at height y = 1 has radius y + 1 = 2, not 1, while the height of the shell is the strip length 4 − 1 = 3, which does not change.",
@@ -805,7 +805,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
         true,
       ),
       hoop([0, 2], 2, 0.5, "action"),
-      tag([1, 2.45], "radius x = 2", "ne"),
+      tag([1, 2.45], "r = 2", "ne"),
       tag([2, 1], "2", "e"),
     ],
     "For example, the rectangle 1 ≤ x ≤ 3, 0 ≤ y ≤ 2 rotated about the y-axis. Each strip has height 2 and radius x, which grows across the region, so V = 2π∫₁³ 2x dx = 16π.",
@@ -928,7 +928,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
         )
         .dot(1, 2)
         .say(1, 1, "y = 2", "e")
-        .say(1.5, -0.8, "about the x-axis", "s")
+        .say(1.5, -0.8, "x", "s")
         .marks(),
       ...pane(8.5, [0, 3, 1], [0, 4, 1], 5, 5)
         .path(
@@ -947,7 +947,7 @@ export const calculusDrawings4: Readonly<Record<string, Figure>> = {
         )
         .dot(1, 2)
         .say(0.5, 2, "x = 1", "n")
-        .say(1.5, -0.8, "about the y-axis", "s")
+        .say(1.5, -0.8, "y", "s")
         .marks(),
     ],
     "For example, the segment y = x + 1 for 0 ≤ x ≤ 2 has ds = √2 dx both ways. At (1, 2), the radius is y = 2 around the x-axis, giving S = 8√2π in all, and x = 1 around the y-axis, giving S = 4√2π.",

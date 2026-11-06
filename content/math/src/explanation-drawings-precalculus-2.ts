@@ -154,7 +154,7 @@ export const precalculusDrawings2: Readonly<Record<string, Figure>> = {
       toward(O, [3, 4], "result"),
       tag([4, 0.8], "⟨5, 1⟩", "n"),
       tag([4, 2.5], "⟨−2, 3⟩", "e"),
-      tag([1.5, 2], "length 5", "e"),
+      tag([1.5, 2], "5", "e"),
     ],
     "For example, ⟨5, 1⟩ followed by ⟨−2, 3⟩ makes the net displacement ⟨3, 4⟩, at a straight-line distance of 5.",
     "例如，先 ⟨5, 1⟩ 再 ⟨−2, 3⟩，净位移是 ⟨3, 4⟩，直线距离为 5。",
@@ -263,7 +263,7 @@ export const precalculusDrawings2: Readonly<Record<string, Figure>> = {
       angle(O, [3, 1], [1, 2], "action"),
       note([3, 1], "u", "e"),
       note([1, 2], "v", "n"),
-      note([1.5, -0.4], "det = 5: counterclockwise", "s"),
+      note([1.5, -0.4], "det = 5 ↺", "s"),
       ...shift(
         [
           ...head(O, [1, 2], "result"),
@@ -271,7 +271,7 @@ export const precalculusDrawings2: Readonly<Record<string, Figure>> = {
           angle(O, [3, 1], [1, 2], "action"),
           note([1, 2], "u", "n"),
           note([3, 1], "v", "e"),
-          note([1.5, -0.4], "det = −5: clockwise", "s"),
+          note([1.5, -0.4], "det = −5 ↻", "s"),
         ],
         6.5,
       ),

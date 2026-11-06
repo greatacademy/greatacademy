@@ -52,7 +52,7 @@ export const waveDrawings: Readonly<Record<string, Figure>> = {
     piChart(-4, 4, 2, [-2, 2, 1]),
     (c) => [
       ...plot(c, sin, -2 * pi, 2 * pi, -2, 2),
-      ...span(c, 0, 2 * pi, 1.4, "period 2π"),
+      ...span(c, 0, 2 * pi, 1.4, "T = 2π"),
       ...spot(c, pi / 2, 1, undefined),
       ...spot(c, -pi / 2, -1, undefined),
       seg(c.at(-pi / 2, -1), c.at(pi / 2, 1), "result", true),
@@ -65,8 +65,8 @@ export const waveDrawings: Readonly<Record<string, Figure>> = {
     (c) => [
       ...plot(c, sin, -pi / 2, pi / 2, -2, 2, "result"),
       ...plot(c, sin, pi / 2, (3 * pi) / 2, -2, 2, "action"),
-      note(c.at(0.1, 1.1), "increasing", "w"),
-      note(c.at(pi - 0.1, 1.1), "decreasing", "e"),
+      note(c.at(0.1, 1.1), "↗", "w"),
+      note(c.at(pi - 0.1, 1.1), "↘", "e"),
     ],
     "y = sin x increases on (−π/2, π/2), from its minimum to its maximum, and decreases on (π/2, 3π/2).",
     "y = sin x 在 (−π/2, π/2) 上从最小值升到最大值，是增函数；在 (π/2, 3π/2) 上递减。",
@@ -75,7 +75,7 @@ export const waveDrawings: Readonly<Record<string, Figure>> = {
     piChart(-4, 4, 2, [-2, 2, 1]),
     (c) => [
       ...plot(c, cos, -2 * pi, 2 * pi, -2, 2),
-      ...span(c, 0, 2 * pi, 1.4, "period 2π"),
+      ...span(c, 0, 2 * pi, 1.4, "T = 2π"),
       ...spot(c, pi / 3, 0.5),
       ...spot(c, -pi / 3, 0.5),
       seg(c.at(-pi / 3, 0.5), c.at(pi / 3, 0.5), "result", true),
@@ -90,7 +90,7 @@ export const waveDrawings: Readonly<Record<string, Figure>> = {
       ...[-1.5, -0.5, 0.5, 1.5].map((k) => wall(c, k * pi, -3, 3, "action")),
       ...spot(c, -(3 * pi) / 4, 1),
       ...spot(c, pi / 4, 1),
-      ...span(c, -(3 * pi) / 4, pi / 4, 1, "period π"),
+      ...span(c, -(3 * pi) / 4, pi / 4, 1, "T = π"),
     ],
     "y = tan x repeats every π, half the period of sine and cosine: at −3π/4 and π/4 it has the same height, 1.",
     "y = tan x 每 π 重复一次，周期是正弦和余弦的一半：在 −3π/4 和 π/4 处高度相同，都是 1。",

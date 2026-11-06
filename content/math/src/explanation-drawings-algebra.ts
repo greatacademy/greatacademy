@@ -115,7 +115,7 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
   ),
   "further-modeling-with-two-variable-equations#when-two-models-are-equal": drawing(
     (() => {
-      const c = chart({ x: [0, 10, 2], y: [0, 100, 20], xName: "x", yName: "cost" });
+      const c = chart({ x: [0, 10, 2], y: [0, 100, 20], xName: "x", yName: "C" });
       return [
         ...c.marks,
         seg(c.at(0, 30), c.at(10, 70)),
@@ -136,9 +136,9 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
         seg(c.at(0, 0), c.at(1, 12), "result"),
         seg(c.at(1, 12), c.at(2.5, 12)),
         seg(c.at(2.5, 12), c.at(4, 0), "action"),
-        note(c.at(0.5, 6), "away", "e"),
-        note(c.at(1.75, 12), "stopped", "n"),
-        note(c.at(3.25, 6), "back", "e"),
+        note(c.at(0.5, 6), "v > 0", "e"),
+        note(c.at(1.75, 12), "v = 0", "n"),
+        note(c.at(3.25, 6), "v < 0", "e"),
       ];
     })(),
     "A trip going 12 km out, stopping, and coming 12 km back: it ends where it started, and the total distance is 24 km.",
@@ -169,9 +169,9 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
         seg(c.at(0, 0), c.at(3, 6), "result"),
         seg(c.at(3, 6), c.at(7, 6)),
         seg(c.at(7, 6), c.at(10, 0), "action"),
-        note(c.at(1.5, 3), "speeding up", "e"),
-        note(c.at(5, 6), "constant speed", "n"),
-        note(c.at(8.5, 3), "slowing down", "ne"),
+        note(c.at(1.5, 3), "a > 0", "e"),
+        note(c.at(5, 6), "a = 0", "n"),
+        note(c.at(8.5, 3), "a < 0", "ne"),
       ];
     })(),
     "For example, a graph going up, then horizontal, then down: speeding up, moving at a constant speed, and slowing down to a stop at speed 0.",
@@ -314,9 +314,9 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
   ),
   "consistency-and-dependency#classifying-systems": drawing(
     [
-      ...mini(0, [clipLine(1, 0), clipLine(-0.5, 0.5, "action")], "independent"),
-      ...mini(6, [clipLine(0.7, 0.2)], "dependent"),
-      ...mini(12, [clipLine(0.5, 0.8), clipLine(0.5, -0.8, "action")], "inconsistent"),
+      ...mini(0, [clipLine(1, 0), clipLine(-0.5, 0.5, "action")], "1"),
+      ...mini(6, [clipLine(0.7, 0.2)], "∞"),
+      ...mini(12, [clipLine(0.5, 0.8), clipLine(0.5, -0.8, "action")], "∅"),
     ],
     "Intersecting lines: one solution, consistent and independent. The same line: infinitely many solutions, consistent and dependent. Parallel lines: no solution, inconsistent.",
     "相交直线：一个解，相容且独立。同一条直线：无穷多解，相容且相关。平行直线：无解，不相容。",
@@ -462,15 +462,9 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
         ...dotAt(c.at(2, 1), "(2, 1)", "se"),
         openAt(c.at(2, 4)),
         note(c.at(2, 4), "(2, 4)", "ne"),
-        note(c.at(2, 5), "a function", "n"),
+        note(c.at(2, 5), "✓", "n"),
         ...shift(
-          [
-            ...c.marks,
-            ...pieces,
-            ...dotAt(c.at(2, 1), "(2, 1)", "se"),
-            ...dotAt(c.at(2, 4), "(2, 4)", "ne"),
-            note(c.at(2, 5), "not a function", "n"),
-          ],
+          [...c.marks, ...pieces, ...dotAt(c.at(2, 1), "(2, 1)", "se"), ...dotAt(c.at(2, 4), "(2, 4)", "ne"), note(c.at(2, 5), "✗", "n")],
           6.5,
         ),
       ];
@@ -739,11 +733,7 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
     "f(x) = 2|x + 1| − 3，−3 ≤ x ≤ 2：两端的值 1、3 和顶点的值 −3 给出值域 [−3, 3]。",
   ),
   "roots-of-absolute-value-functions#how-many-roots": drawing(
-    [
-      ...mini(0, curveInMini(vee(0, -1)), "two roots"),
-      ...mini(6, curveInMini(vee(0, 0)), "one root"),
-      ...mini(12, curveInMini(vee(0, 0.8)), "no roots"),
-    ],
+    [...mini(0, curveInMini(vee(0, -1)), "2"), ...mini(6, curveInMini(vee(0, 0)), "1"), ...mini(12, curveInMini(vee(0, 0.8)), "0")],
     "A V opening upward with its vertex below the x-axis has two roots, with its vertex on the axis one root, and with its vertex above no roots.",
     "开口向上的 V：顶点在 x 轴下方有两个根，在轴上有一个根，在上方没有根。",
   ),
@@ -874,9 +864,9 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
   ),
   "the-discriminant-of-a-quadratic-function#the-discriminant-from-a-graph": drawing(
     [
-      ...mini(0, curveInMini(bowl(0, -1, 0.8)), "two crossings"),
-      ...mini(6, curveInMini(bowl(0, 0, 0.8)), "on the axis"),
-      ...mini(12, curveInMini(bowl(0, 0.7, 0.8)), "no meeting"),
+      ...mini(0, curveInMini(bowl(0, -1, 0.8)), "2"),
+      ...mini(6, curveInMini(bowl(0, 0, 0.8)), "1"),
+      ...mini(12, curveInMini(bowl(0, 0.7, 0.8)), "0"),
     ],
     "Two crossings mean a positive discriminant, the vertex on the x-axis means 0, and no meeting point means a negative one.",
     "两个交点表示判别式为正，顶点在 x 轴上表示为 0，没有交点表示为负。",
@@ -1144,12 +1134,12 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
       ...mini(
         0,
         scatterOn((x) => 0.8 * x, 0.15),
-        "strong",
+        "r ≈ 1",
       ),
       ...mini(
         6,
         scatterOn((x) => 0.8 * x, 0.8),
-        "weak",
+        "r < 1",
       ),
     ],
     "Points hugging a line show a strong correlation. Points widely scattered around the same trend show a weak one.",
@@ -1160,17 +1150,17 @@ export const algebraDrawings: Readonly<Record<string, Figure>> = {
       ...mini(
         0,
         scatterOn((x) => 0.8 * x, 0.1),
-        "linear",
+        "y = mx + b",
       ),
       ...mini(
         6,
         scatterOn((x) => 0.25 * 2.4 ** (x + 0.4) - 1.6, 0.06),
-        "exponential",
+        "y = abˣ",
       ),
       ...mini(
         12,
         scatterOn((x) => 0.9 * x * x - 1.6, 0.06),
-        "quadratic",
+        "y = ax²",
       ),
     ],
     "Points along a straight line suggest a linear model, points curving faster and faster an exponential one, and points in a U shape a quadratic one.",

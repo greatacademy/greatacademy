@@ -144,7 +144,7 @@ const ownPoints: readonly Point[] = [
   [8, 6],
 ];
 
-const scoreChart = chart({ x: [0, 8, 2], y: [0, 10, 2], xName: "hours", yName: "score" });
+const scoreChart = chart({ x: [0, 8, 2], y: [0, 10, 2], xName: "h", yName: "y" });
 const motionQuad: Point[] = [
   [0, 0],
   [2, 0],
@@ -208,9 +208,9 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
   ),
   "identifying-the-number-of-solutions-to-a-system-by-inspection#comparing-coefficients": drawing(
     [
-      ...mini(0, [clipped(1, 0), clipped(-0.5, 0.5, "action"), ...dots([[1 / 3, 1 / 3]], "result")], "one solution"),
-      ...mini(6, [clipped(0.5, 0.8), clipped(0.5, -0.8, "action")], "no solution"),
-      ...mini(12, [clipped(0.7, 0.2, "accent")], "infinitely many"),
+      ...mini(0, [clipped(1, 0), clipped(-0.5, 0.5, "action"), ...dots([[1 / 3, 1 / 3]], "result")], "1"),
+      ...mini(6, [clipped(0.5, 0.8), clipped(0.5, -0.8, "action")], "∅"),
+      ...mini(12, [clipped(0.7, 0.2, "accent")], "∞"),
     ],
     "Lines with different slopes meet once, parallel lines never meet, and two equations of one line share every point.",
     "斜率不同的直线相交一次，平行线不相交，同一条直线的两个方程共有所有点。",
@@ -259,8 +259,8 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
       bare([-4, -2]),
       pt([1, 3], "(1, 3)", "n"),
       bare([5, -1]),
-      tag([-2.5, 0.5], "increasing", "nw"),
-      tag([3.5, 0.5], "decreasing", "ne"),
+      tag([-2.5, 0.5], "↗", "nw"),
+      tag([3.5, 0.5], "↘", "ne"),
     ],
     "A graph that rises from x = −4 to x = 1 and falls from x = 1 to x = 5: increasing on (−4, 1) and decreasing on (1, 5).",
     "从 x = −4 到 x = 1 上升、从 x = 1 到 x = 5 下降的图像：在 (−4, 1) 上递增，在 (1, 5) 上递减。",
@@ -310,8 +310,8 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
       edge([-2, 3], [0, -1]),
       edge([0, -1], [2, 5]),
       edge([2, 5], [4, -3]),
-      pt([2, 5], "maximum value 5", "e", "result"),
-      pt([4, -3], "minimum value −3", "s", "action"),
+      pt([2, 5], "max = 5", "e", "result"),
+      pt([4, -3], "min = −3", "s", "action"),
     ],
     "For example, the highest point is (2, 5), so the maximum value is 5, and the lowest is (4, −3), so the minimum value is −3.",
     "例如，最高点是 (2, 5)，最大值是 5；最低点是 (4, −3)，最小值是 −3。",
@@ -324,17 +324,17 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
   ),
   "describing-the-functional-relationship-between-two-quantities-from-a-graph#reading-the-intervals": drawing(
     (() => {
-      const c = chart({ x: [0, 10, 2], y: [0, 6, 2], xName: "time", yName: "amount" });
+      const c = chart({ x: [0, 10, 2], y: [0, 6, 2], xName: "t", yName: "y" });
       return [
         ...c.marks,
         seg(c.at(0, 0), c.at(2, 4), "result"),
         seg(c.at(2, 4), c.at(4, 4)),
         seg(c.at(4, 4), c.at(8, 6), "accent"),
         seg(c.at(8, 6), c.at(10, 0), "action"),
-        note(c.at(1, 2), "fast rise", "nw"),
-        note(c.at(3, 4), "same", "n"),
-        note(c.at(6, 5), "slow rise", "nw"),
-        note(c.at(9, 3), "fall", "e"),
+        note(c.at(1, 2), "↗", "nw"),
+        note(c.at(3, 4), "=", "n"),
+        note(c.at(6, 5), "↗", "nw"),
+        note(c.at(9, 3), "↘", "e"),
       ];
     })(),
     "For example, a steep rise, a flat piece, a gentle rise that ends higher, and a fall. The first rise is the faster, even though the second ends higher.",
@@ -342,30 +342,16 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
   ),
   "describing-the-functional-relationship-between-two-quantities-from-a-graph#describing-the-whole-graph": drawing(
     (() => {
-      const c = chart({ x: [0, 10, 2], y: [0, 6, 2], xName: "time", yName: "amount" });
-      return [
-        ...c.marks,
-        seg(c.at(0, 0), c.at(1, 5), "result"),
-        seg(c.at(1, 5), c.at(4, 5)),
-        seg(c.at(4, 5), c.at(9, 0), "action"),
-        note(c.at(0.5, 2.5), "quickly", "e"),
-        note(c.at(2.5, 5), "stays the same", "n"),
-        note(c.at(6.5, 2.5), "slowly", "ne"),
-      ];
+      const c = chart({ x: [0, 10, 2], y: [0, 6, 2], xName: "t", yName: "y" });
+      return [...c.marks, seg(c.at(0, 0), c.at(1, 5), "result"), seg(c.at(1, 5), c.at(4, 5)), seg(c.at(4, 5), c.at(9, 0), "action")];
     })(),
     "A graph that rises steeply, is horizontal, then falls gently: the quantity increases quickly, stays the same, then decreases slowly.",
     "陡升、水平、再缓降的图像：量先快速增加，再保持不变，然后缓慢减少。",
   ),
   "describing-the-functional-relationship-between-two-quantities-from-a-graph#the-fastest-part-of-a-trip": drawing(
     (() => {
-      const c = chart({ x: [0, 5, 1], y: [0, 8, 2], xName: "time", yName: "distance" });
-      return [
-        ...c.marks,
-        seg(c.at(0, 0), c.at(2, 2)),
-        seg(c.at(2, 2), c.at(3, 6), "result"),
-        seg(c.at(3, 6), c.at(5, 8)),
-        note(c.at(2.5, 4), "fastest", "w"),
-      ];
+      const c = chart({ x: [0, 5, 1], y: [0, 8, 2], xName: "t", yName: "d" });
+      return [...c.marks, seg(c.at(0, 0), c.at(2, 2)), seg(c.at(2, 2), c.at(3, 6), "result"), seg(c.at(3, 6), c.at(5, 8))];
     })(),
     "For example, a trip of distance 2 in the first 2 hours, 4 in the next hour and 2 in the last 2 hours: the steepest part, the third hour, is the fastest.",
     "例如，前 2 小时走 2，下一小时走 4，最后 2 小时走 2：最陡的部分，即第三小时，最快。",
@@ -542,7 +528,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
             5,
             2,
           ),
-          text([2.5, -1.3], "corresponding", "s"),
         ],
         0,
         6,
@@ -558,7 +543,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
             5,
             2,
           ),
-          text([2.5, -1.3], "alternate interior", "s"),
         ],
         7,
         6,
@@ -572,7 +556,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
         5,
         2,
       ),
-      text([2.5, -1.3], "alternate exterior", "s"),
       ...shift(
         [
           ...crossed(
@@ -584,7 +567,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
             5,
             2,
           ),
-          text([2.5, -1.3], "consecutive interior", "s"),
         ],
         7,
       ),
@@ -778,7 +760,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
           0,
           true,
         ),
-        text([1.4, -4.2], "translation", "s"),
         ...copy(motionQuad, 4.6),
         ...shift(
           [
@@ -787,7 +768,7 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
           ],
           4.6,
         ),
-        text([5.8, -4.2], "rotation of 90°", "s"),
+        text([5.8, -4.2], "90°", "s"),
         ...copy(motionQuad, 9.2),
         ...shift(
           [
@@ -797,7 +778,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
           ],
           9.2,
         ),
-        text([10.4, -4.2], "reflection", "s"),
       ];
     })(),
     "A translation keeps each segment parallel to its image. A rotation of 90° makes each segment perpendicular to its image. A reflection turns the counterclockwise order A, B, C, D into a clockwise one.",
@@ -839,7 +819,7 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
           [
             [2, ""],
             [-2, "(3, −2)"],
-            [2, "P(3, 2), start and end"],
+            [2, "P(3, 2)"],
           ],
           "accent",
         ),
@@ -914,9 +894,9 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
       edge([9, 0], [9, 6], "action"),
       edge([0, 0], [6, 0], "result"),
       edge([6, 0], [6, 4], "result"),
-      tag([3, 0], "run 6", "s"),
+      tag([3, 0], "Δx = 6", "s"),
       tag([6, 2], "4", "e"),
-      tag([7.5, 0], "run 9", "s"),
+      tag([7.5, 0], "Δx = 9", "s"),
       tag([9, 3], "r = 6", "e"),
     ],
     "Two slope triangles on one line: rise 4 over run 6, and with run 9 a rise of 6, the same ratio.",
@@ -1057,31 +1037,31 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
     "例如，九个点和直线 x = 5：3 个点严格在右边，所以 x > 5 有 3 个；x ≥ 5 还要算线上的 2 个，共 5 个。",
   ),
   "describing-patterns-of-association-in-scatter-plots#describing-an-association-in-context": drawing(
-    [...mini(0, dots(rising), "positive"), ...mini(6, dots(falling), "negative"), ...mini(12, dots(noTrend), "none")],
+    [...mini(0, dots(rising), "+"), ...mini(6, dots(falling), "−"), ...mini(12, dots(noTrend), "∅")],
     "Points that rise from left to right show a positive association, points that fall show a negative one, and points with no trend show none.",
     "从左到右上升的点表示正相关，下降的点表示负相关，没有趋势的点表示不相关。",
   ),
   "trend-lines#judging-a-trend-line": drawing(
     [
-      ...mini(0, [...dots(rising), clipped(0.85, -0.05, "result")], "good"),
-      ...mini(6, [...dots(rising), clipped(0.85, 1, "action")], "too high"),
-      ...mini(12, [...dots(rising), clipped(-0.85, 0, "action")], "wrong direction"),
+      ...mini(0, [...dots(rising), clipped(0.85, -0.05, "result")], "✓"),
+      ...mini(6, [...dots(rising), clipped(0.85, 1, "action")], ""),
+      ...mini(12, [...dots(rising), clipped(-0.85, 0, "action")], "✗"),
     ],
     "One set of rising points with three lines: a line through the middle follows them well, a line above all the points is too high, and a falling line goes the wrong way.",
     "同一组上升的点和三条直线：穿过中间的直线合适，在所有点上方的直线太高，下降的直线方向不对。",
   ),
   "informally-assessing-the-fit-of-a-trend-line-to-a-scatter-plot#does-a-line-fit-the-data": drawing(
     [
-      ...mini(0, [...dots(close), clipped(0.65, 0, "result")], "fits well"),
-      ...mini(6, [...dots(curved), clipped(0.1, -0.2, "action")], "a curve"),
-      ...mini(12, [...dots(noTrend), clipped(-0.15, 0.1, "action")], "scattered"),
+      ...mini(0, [...dots(close), clipped(0.65, 0, "result")], "✓"),
+      ...mini(6, [...dots(curved), clipped(0.1, -0.2, "action")], ""),
+      ...mini(12, [...dots(noTrend), clipped(-0.15, 0.1, "action")], "✗"),
     ],
     "Points close to the line on both sides fit it well. Points along a curve, or scattered with no pattern, do not fit any line.",
     "在直线两侧、靠近直线的点拟合得好。沿曲线的点，或无规律分散的点，都不适合用直线拟合。",
   ),
   "predictions-with-trend-lines#predicting-a-value": drawing(
     (() => {
-      const c = chart({ x: [0, 10, 2], y: [0, 80, 20], xName: "hours", yName: "score" });
+      const c = chart({ x: [0, 10, 2], y: [0, 80, 20], xName: "h", yName: "y" });
       return [
         ...c.marks,
         seg(c.at(0, 40), c.at(10, 65)),
@@ -1104,7 +1084,7 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
           seg([0, 0], on(80, 3)),
           angle([0, 0], on(0, 2), on(35, 2), "accent", "a"),
           angle([0, 0], on(35, 2), on(80, 2), "action", "b"),
-          text([1.5, -0.3], "addition", "s"),
+          text([1.5, -0.3], "+", "s"),
         ],
         0,
       ),
@@ -1114,7 +1094,7 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
           seg([0, 0], on(60, 2.4)),
           angle([0, 0], on(0, 1.5), on(60, 1.5), "accent", "60°"),
           angle([0, 0], on(60, 1.5), on(180, 1.5), "action", "120°"),
-          text([0, -0.3], "linear pair", "s"),
+          text([0, -0.3], "180°", "s"),
         ],
         6.5,
       ),
@@ -1129,7 +1109,6 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
             5,
             2,
           ),
-          text([2.5, -1.3], "corresponding", "s"),
         ],
         10,
       ),
@@ -1164,9 +1143,9 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
   ),
   "parallel-lines-in-the-coordinate-plane#parallel-same-or-intersecting": drawing(
     [
-      ...mini(0, [clipped(1, 0), clipped(-0.5, 0.5, "action"), ...dots([[1 / 3, 1 / 3]], "result")], "different slopes"),
-      ...mini(6, [clipped(1, 0.8), clipped(1, -0.8, "action")], "same slope"),
-      ...mini(12, [clipped(3, -1, "accent")], "the same line"),
+      ...mini(0, [clipped(1, 0), clipped(-0.5, 0.5, "action"), ...dots([[1 / 3, 1 / 3]], "result")], "m₁ ≠ m₂"),
+      ...mini(6, [clipped(1, 0.8), clipped(1, -0.8, "action")], "m₁ = m₂"),
+      ...mini(12, [clipped(3, -1, "accent")], "≡"),
     ],
     "Different slopes meet in one point. The same slope with different y-intercepts gives parallel lines. y = 3x − 1 and 6x − 2y = 2 are one line.",
     "斜率不同的直线交于一点。斜率相同、y 截距不同的直线平行。y = 3x − 1 和 6x − 2y = 2 是同一条直线。",
@@ -1213,11 +1192,7 @@ export const gradeDrawings5: Readonly<Record<string, Figure>> = {
     "y = −2x + 1 和 x − 2y = 6，斜率为 −2 和 ½，垂直相交。",
   ),
   "determining-circle-properties-by-completing-the-square#circle-point-or-nothing": drawing(
-    [
-      ...mini(0, [ring(1.2)], "c > 0: a circle"),
-      ...mini(6, dots([[0.8, 0.6]], "result"), "c = 0: a point"),
-      ...mini(12, [], "c < 0: no points"),
-    ],
+    [...mini(0, [ring(1.2)], "c > 0"), ...mini(6, dots([[0.8, 0.6]], "result"), "c = 0"), ...mini(12, [], "c < 0: ∅")],
     "Completing the square gives a circle when c is positive, a single point when c is 0, and no points when c is negative.",
     "配方后，c 为正时是圆，c 为 0 时是一个点，c 为负时没有点。",
   ),
