@@ -1,6 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { choiceProblem, functionProblem, numberProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -577,6 +578,7 @@ export const calculatingDerivativesFromGraphsUsingTheChainRule: TopicDef = {
   knowledgePoints: [
     {
       id: "inner-linear-functions-from-a-graph",
+      figure: calculusDrawings2["calculating-derivatives-from-graphs-using-the-chain-rule#inner-linear-functions-from-a-graph"],
       title: t("Inner linear functions from a graph", "由图像求内层为一次函数的导数"),
       explanation: t(
         "For $h(x) = f(kx + b)$, $h'(a) = k \\cdot f'(ka + b)$: find the input $ka + b$, read the slope of the graph of $f$ there, and multiply by $k$.",
@@ -610,6 +612,7 @@ export const calculatingDerivativesFromGraphsUsingTheChainRule: TopicDef = {
     },
     {
       id: "outer-functions-of-a-graphed-function",
+      figure: calculusDrawings2["calculating-derivatives-from-graphs-using-the-chain-rule#outer-functions-of-a-graphed-function"],
       title: t("Outer functions of a graphed function", "以图中函数为内层的导数"),
       explanation: t(
         "When the graphed function is inside another function, the chain rule needs both its height and its slope at the point, both of which you read from the graph. When the graphed function is the inner one, read both $f(a)$ and $f'(a)$. For $h(x) = [f(x)]^{2}$, $h'(a) = 2f(a)f'(a)$; for $h(x) = e^{f(x)}$, $h'(a) = f'(a)e^{f(a)}$.",

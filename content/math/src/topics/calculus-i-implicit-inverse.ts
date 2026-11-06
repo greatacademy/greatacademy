@@ -1,6 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { fracL, type Poly, pAt, par, pDer, pLatex, power, sumLatex, table } from "./calculus-common.ts";
@@ -403,6 +404,7 @@ export const differentiatingInverseFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-derivative-of-an-inverse-function",
+      figure: calculusDrawings2["differentiating-inverse-functions#the-derivative-of-an-inverse-function"],
       title: t("The derivative of an inverse function", "反函数的导数"),
       explanation: t(
         "The graph of an inverse is the reflection of the original graph, so its slope at a point is the reciprocal of the original slope at the reflected point. If $y = f^{-1}(x)$, then $f(y) = x$, so $f'(y)\\frac{dy}{dx} = 1$:\n\n$$\\left(f^{-1}\\right)'(x) = \\frac{1}{f'\\left(f^{-1}(x)\\right)}.$$\n\nFor $f(x) = e^{2x}$: $f^{-1}(x) = \\frac{1}{2}\\ln x$ and $f'(x) = 2e^{2x}$, so $\\left(f^{-1}\\right)'(x) = \\frac{1}{2e^{\\ln x}} = \\frac{1}{2x}$.",
@@ -478,6 +480,7 @@ export const differentiatingInverseFunctions: TopicDef = {
     },
     {
       id: "slopes-of-inverse-functions-are-reciprocals",
+      figure: calculusDrawings2["differentiating-inverse-functions#slopes-of-inverse-functions-are-reciprocals"],
       title: t("Slopes of inverse functions are reciprocals", "反函数的斜率互为倒数"),
       explanation: t(
         "The graph of $f^{-1}$ is the reflection of the graph of $f$ in the line $y = x$. If $f(a) = b$ and $f'(a) = m \\ne 0$, then $f^{-1}(b) = a$ and\n\n$$\\left(f^{-1}\\right)'(b) = \\frac{1}{m}.$$",

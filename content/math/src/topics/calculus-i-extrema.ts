@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { numberProblem, solutionsProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -191,6 +192,7 @@ export const theMeanValueTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-mean-value-theorem-values",
+      figure: calculusDrawings2["the-mean-value-theorem#finding-mean-value-theorem-values"],
       title: t("Finding mean value theorem values", "求中值定理中的点"),
       explanation: t(
         "If $f$ is continuous on $[a, b]$ and differentiable on $(a, b)$, there is at least one $c$ in $(a, b)$ with\n\n$$f'(c) = \\frac{f(b) - f(a)}{b - a}:$$\n\nsomewhere the tangent line is parallel to the secant line. To find $c$, compute the average slope, set $f'(c)$ equal to it, and keep the solutions inside $(a, b)$.",
@@ -265,6 +267,7 @@ export const theMeanValueTheorem: TopicDef = {
     },
     {
       id: "checking-the-hypotheses-of-the-mean-value-theorem",
+      figure: calculusDrawings2["the-mean-value-theorem#checking-the-hypotheses-of-the-mean-value-theorem"],
       title: t("Checking the hypotheses of the mean value theorem", "检查中值定理的条件"),
       explanation: t(
         "The theorem needs both hypotheses: continuity on the closed interval $[a, b]$ and differentiability on the open interval $(a, b)$. A jump, a hole or an asymptote breaks the first; a corner, a cusp or a vertical tangent breaks the second. Differentiability at the endpoints is not needed.",
@@ -306,6 +309,7 @@ export const globalVsLocalExtremaAndCriticalPoints: TopicDef = {
   knowledgePoints: [
     {
       id: "global-extrema-from-graphs",
+      figure: calculusDrawings2["global-vs-local-extrema-and-critical-points#global-extrema-from-graphs"],
       title: t("Global extrema from graphs", "由图像读出全局极值"),
       explanation: t(
         "The global (absolute) maximum of $f$ on an interval is its largest value there; the global minimum is its smallest. They may occur at endpoints. The value is the $y$-coordinate, not the $x$-coordinate where it occurs.",
@@ -335,6 +339,7 @@ export const globalVsLocalExtremaAndCriticalPoints: TopicDef = {
     },
     {
       id: "local-extrema-from-graphs",
+      figure: calculusDrawings2["global-vs-local-extrema-and-critical-points#local-extrema-from-graphs"],
       title: t("Local extrema from graphs", "由图像读出局部极值"),
       explanation: t(
         "$f$ has a local maximum at an interior point $c$ if $f(c) \\ge f(x)$ for all $x$ near $c$: the graph rises to $c$ and falls after it. Local minima are the reverse. Local extrema occur at critical points, where $f'(c) = 0$ or $f'(c)$ does not exist; on these graphs they are the corners where the graph turns.",
@@ -826,6 +831,7 @@ export const intervalsOfConcavity: TopicDef = {
   knowledgePoints: [
     {
       id: "concavity-from-the-graph-of-the-derivative",
+      figure: calculusDrawings2["intervals-of-concavity#concavity-from-the-graph-of-the-derivative"],
       title: t("Concavity from the graph of the derivative", "由导数的图像判断凹凸性"),
       explanation: t(
         "$f$ is concave up where $f'$ is increasing (the graph bends upward, like a cup) and concave down where $f'$ is decreasing (like a cap). Where $f'$ is constant, $f$ is a line and is neither.",
@@ -1013,6 +1019,7 @@ export const pointsOfInflection: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-points-of-inflection",
+      figure: calculusDrawings2["points-of-inflection#finding-points-of-inflection"],
       title: t("Finding points of inflection", "求拐点"),
       explanation: t(
         "A point of inflection is a point on the graph where the concavity changes. Candidates are where $f''(x) = 0$ or $f''$ does not exist; keep those where $f''$ changes sign. For a cubic $ax^{3} + bx^{2} + cx + d$, $f''(x) = 6ax + 2b$ changes sign once, at $x = -\\frac{b}{3a}$.",
@@ -1104,6 +1111,7 @@ export const theSecondDerivativeTest: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-with-the-second-derivative",
+      figure: calculusDrawings2["the-second-derivative-test#classifying-with-the-second-derivative"],
       title: t("Classifying with the second derivative", "用二阶导数判定"),
       explanation: t(
         "If $f'(c) = 0$ and $f''(c) < 0$, the graph is concave down at $c$, so $f$ has a local maximum there; if $f''(c) > 0$, a local minimum. If $f''(c) = 0$ the test is inconclusive, and the first derivative test must be used instead.",

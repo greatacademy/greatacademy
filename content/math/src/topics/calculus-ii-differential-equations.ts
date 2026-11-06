@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -1258,6 +1259,7 @@ export const qualitativeAnalysisOfTheLogisticGrowthEquation: TopicDef = {
     },
     {
       id: "fastest-logistic-growth",
+      figure: calculusDrawings5["qualitative-analysis-of-the-logistic-growth-equation#fastest-logistic-growth"],
       title: t("Where growth is fastest", "增长最快的位置"),
       explanation: t(
         "$\\frac{dP}{dt} = kP - \\frac{k}{K}P^{2}$ is a downward parabola in $P$ with zeros at $0$ and $K$, so it is largest at $P = \\frac{K}{2}$. There the graph of $P(t)$ changes from concave up to concave down: an inflection point. For $K = 800$, growth is fastest when $P = 400$.",
@@ -1481,6 +1483,7 @@ export const slopeFieldsForDirectlyIntegrableDifferentialEquations: TopicDef = {
     },
     {
       id: "matching-a-field-of-a-function-of-x",
+      figure: calculusDrawings5["slope-fields-for-directly-integrable-differential-equations#matching-a-field-of-a-function-of-x"],
       title: t("Matching the field", "匹配斜率场"),
       explanation: t(
         "When $\\frac{dy}{dx}$ depends only on $x$, every column of segments is parallel: moving up or down does not change the slope. Then compare the slopes in a few columns, for example where they are $0$ and where they are positive or negative.",
@@ -1523,6 +1526,7 @@ export const slopeFieldsForAutonomousDifferentialEquations: TopicDef = {
     },
     {
       id: "matching-a-field-of-a-function-of-y",
+      figure: calculusDrawings5["slope-fields-for-autonomous-differential-equations#matching-a-field-of-a-function-of-y"],
       title: t("Matching the field", "匹配斜率场"),
       explanation: t(
         "When every row of segments is parallel, the equation is autonomous. A row of horizontal segments at $y = c$ shows that $g(c) = 0$, so $y = c$ is an equilibrium solution.",
@@ -1627,6 +1631,7 @@ export const analyzingSlopeFieldsForDirectlyIntegrableDifferentialEquations: Top
     },
     {
       id: "vertical-translates-of-solutions",
+      figure: calculusDrawings5["analyzing-slope-fields-for-directly-integrable-differential-equations#vertical-translates-of-solutions"],
       title: t("Solutions are vertical translates", "解互为竖直平移"),
       explanation: t(
         "If $y_1$ and $y_2$ both solve $\\frac{dy}{dx} = f(x)$, then $(y_2 - y_1)' = 0$, so they differ by a constant: one curve is the other shifted up or down. If the solution through $(0, 0)$ passes through $(2, 5)$, the solution through $(0, 3)$ passes through $(2, 8)$.",
@@ -1759,6 +1764,7 @@ export const analyzingSlopeFieldsForNonautonomousDifferentialEquations: TopicDef
   knowledgePoints: [
     {
       id: "the-zero-slope-isocline",
+      figure: calculusDrawings5["analyzing-slope-fields-for-nonautonomous-differential-equations#the-zero-slope-isocline"],
       title: t("Where the slope is zero", "斜率为零的位置"),
       explanation: t(
         "An **isocline** is a curve along which $f(x, y)$ is constant, so all its segments are parallel. For $\\frac{dy}{dx} = 2x - y + 1$, the slope is $0$ along $y = 2x + 1$, where solutions have horizontal tangents.",

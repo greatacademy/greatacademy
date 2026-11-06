@@ -1,6 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { functionProblem, numberProblem, solutionsProblem, steps } from "../problems.ts";
 import { fac, type Poly, par, piLatex, pLatex, table } from "./calculus-common.ts";
@@ -197,6 +198,7 @@ export const evaluatingDefiniteIntegralsUsingSymmetry: TopicDef = {
     },
     {
       id: "using-symmetry-with-known-integrals",
+      figure: calculusDrawings3["evaluating-definite-integrals-using-symmetry#using-symmetry-with-known-integrals"],
       title: t("Using symmetry with known integrals", "结合已知积分利用对称性"),
       explanation: t(
         "An even function has a graph symmetric about the vertical axis, so both halves have equal area, while for an odd function the two halves cancel. If $\\int_{0}^{a} f(x) \\, dx = P$, then for even $f$, $\\int_{-a}^{0} f(x) \\, dx = P$ and $\\int_{-a}^{a} f(x) \\, dx = 2P$; for odd $f$, $\\int_{-a}^{0} f(x) \\, dx = -P$ and $\\int_{-a}^{a} f(x) \\, dx = 0$.",
@@ -418,6 +420,7 @@ export const calculatingTheDefiniteIntegralOfAFunctionGivenItsGraph: TopicDef = 
   knowledgePoints: [
     {
       id: "signed-areas-from-a-graph",
+      figure: calculusDrawings3["calculating-the-definite-integral-of-a-function-given-its-graph#signed-areas-from-a-graph"],
       title: t("Signed areas from a graph", "由图像求有向面积"),
       explanation: t(
         "The integral of $f$ is the area above the $x$-axis minus the area below it. For a graph made of line segments, split it into triangles and trapezoids. A trapezoid from $x_{1}$ to $x_{2}$ under a segment has signed area $\\frac{f(x_{1}) + f(x_{2})}{2}(x_{2} - x_{1})$, even when the segment crosses the axis.",
@@ -451,6 +454,7 @@ export const calculatingTheDefiniteIntegralOfAFunctionGivenItsGraph: TopicDef = 
     },
     {
       id: "integrals-of-combinations-from-a-graph",
+      figure: calculusDrawings3["calculating-the-definite-integral-of-a-function-given-its-graph#integrals-of-combinations-from-a-graph"],
       title: t("Integrals of combinations from a graph", "由图像求组合函数的积分"),
       explanation: t(
         "The integral is linear: constants factor out, and the integral of a constant $k$ over $[a, b]$ is the area of a rectangle, $k(b - a)$. So\n\n$$\\int_{a}^{b} \\big(c f(x) + k\\big) \\, dx = c \\int_{a}^{b} f(x) \\, dx + k(b - a).$$\n\nRead $\\int_{a}^{b} f(x) \\, dx$ off the graph as a signed area, then scale and add. If $\\int_{0}^{4} f(x) \\, dx = 6$, then $\\int_{0}^{4} \\big(3f(x) - 2\\big) \\, dx = 18 - 8 = 10$.",
@@ -499,6 +503,7 @@ export const calculatingTheDefiniteIntegralOfAFunctionsDerivativeGivenItsGraph: 
   knowledgePoints: [
     {
       id: "net-change-from-a-graph",
+      figure: calculusDrawings3["calculating-the-definite-integral-of-a-functions-derivative-given-its-graph#net-change-from-a-graph"],
       title: t("Net change from a graph", "由图像求净变化"),
       explanation: t(
         "$f$ is an antiderivative of $f'$, so by the fundamental theorem\n\n$$\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a).$$\n\nRead the two values of $f$ off its graph; no area is needed.",
@@ -650,6 +655,7 @@ export const theIntegralAsAnAccumulationFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "accumulation-functions-from-a-graph",
+      figure: calculusDrawings3["the-integral-as-an-accumulation-function#accumulation-functions-from-a-graph"],
       title: t("Accumulation functions from a graph", "由图像求累积函数的值"),
       explanation: t(
         "$g(x) = \\int_{a}^{x} f(t) \\, dt$ accumulates the signed area under $f$ from $a$ to $x$. So $g(a) = 0$, $g$ grows where $f > 0$ and shrinks where $f < 0$. For $x < a$, reverse the limits: $g(x) = -\\int_{x}^{a} f(t) \\, dt$.",
@@ -860,6 +866,12 @@ function extremumTopic(max: boolean): TopicDef {
     knowledgePoints: [
       {
         id: max ? "locating-the-absolute-maximum" : "locating-the-absolute-minimum",
+        figure:
+          calculusDrawings3[
+            max
+              ? "maximizing-a-function-using-the-graph-of-its-derivative#locating-the-absolute-maximum"
+              : "minimizing-a-function-using-the-graph-of-its-derivative#locating-the-absolute-minimum"
+          ],
         title: max ? t("Locating the absolute maximum", "确定最大值点") : t("Locating the absolute minimum", "确定最小值点"),
         explanation: t(
           `The absolute ${word} of $f$ on a closed interval is at an endpoint or where $f'$ changes from ${up}. To compare the candidates, compute $f$ at each one: $f(b) = f(a) + \\int_{a}^{b} f'(x) \\, dx$, the signed area under the graph of $f'$.`,
@@ -940,6 +952,7 @@ export const furtherOptimizingFunctionsUsingGraphsOfDerivatives: TopicDef = {
   knowledgePoints: [
     {
       id: "local-extrema-from-the-graph-of-the-derivative",
+      figure: calculusDrawings3["further-optimizing-functions-using-graphs-of-derivatives#local-extrema-from-the-graph-of-the-derivative"],
       title: t("Local extrema from the graph of the derivative", "由导数图像求局部极值"),
       explanation: t(
         "$f$ has a local maximum where $f'$ changes from positive to negative, and a local minimum where it changes from negative to positive. A point where $f'$ touches zero without changing sign is neither. Points where $f'$ itself is largest or smallest are inflection points of $f$, not extrema.",

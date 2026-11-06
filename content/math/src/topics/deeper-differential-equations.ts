@@ -4,6 +4,7 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { lowestTerms, numberProblem } from "../problems.ts";
 
@@ -1935,6 +1936,7 @@ const semistableLimit: KnowledgePointDef = {
 
 const isoclineOfSlope: KnowledgePointDef = {
   id: "the-isocline-of-a-given-slope",
+  figure: calculusDrawings5["analyzing-slope-fields-for-nonautonomous-differential-equations#the-isocline-of-a-given-slope"],
   title: t("The isocline of a given slope", "给定斜率的等斜线"),
   explanation: t(
     "An isocline is the set of points where the slope field has one fixed value. Setting the right side of $y' = f(x, y)$ equal to a constant $m$ describes it, so no solving of the differential equation is needed. For a linear right side, each isocline is a straight line, and these lines are all parallel. Drawing a few of them, with short segments of the matching slope, is a fast way to sketch a field.",

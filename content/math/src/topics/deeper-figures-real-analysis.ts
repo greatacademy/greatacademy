@@ -5,6 +5,9 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
+import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { ask, choose, observed, type Pair, point } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
@@ -135,47 +138,50 @@ const clusterCount = point(
   },
 );
 
-const holeValue = point(
-  "the-value-that-repairs-a-hole",
-  ["The value that repairs a hole", "补上空洞的值"],
-  [
-    "A function is continuous at a point when its limit there exists and equals its value. If the graph has a hole at $a$ and a separate dot, the limit is the height of the hole, whatever the dot does. To repair the discontinuity, the function value must be moved to the height of the hole.",
-    "函数在一点连续，是指它在该点的极限存在并等于函数值。如果图在 $a$ 处有空洞，另有一个单独的点，那么极限是空洞的高度，与那个点无关。要消除间断，函数值必须移到空洞的高度。",
-  ],
-  (rng) => {
-    const a = rng.int(-3, 3);
-    const hole = rng.int(-3, 4);
-    let dot = rng.int(-4, 5);
-    if (dot === hole) dot = hole + 2;
-    const slope = rng.pick([-1, -0.5, 0.5, 1]);
-    const bend = rng.pick([-0.2, 0, 0.15]);
-    const f = (x: number) => hole + slope * (x - a) + bend * (x - a) ** 2;
-    return ask(
-      [
-        "The graph of $f$ has one point of discontinuity. To what value must $f$ be changed at that point to make it continuous there?",
-        "$f$ 的图有一个间断点。要使它在那里连续，$f$ 在该点的值必须改成多少？",
-      ],
-      hole,
-      [dot, a === hole || a === dot ? hole + 1 : a, hole - 1],
-      [
-        `Approaching from both sides, the graph heads to the open circle at height $${hole}$, so that is the limit. The separate dot at height $${dot}$ is the current value, which must be moved to match.`,
-        `从两侧趋近时，图都趋向高度 $${hole}$ 的空心圆，所以这就是极限。高度 $${dot}$ 的单独的点是当前的函数值，必须移过去才能相等。`,
-      ],
-      fig(
-        { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+const holeValue = {
+  ...point(
+    "the-value-that-repairs-a-hole",
+    ["The value that repairs a hole", "补上空洞的值"],
+    [
+      "A function is continuous at a point when its limit there exists and equals its value. If the graph has a hole at $a$ and a separate dot, the limit is the height of the hole, whatever the dot does. To repair the discontinuity, the function value must be moved to the height of the hole.",
+      "函数在一点连续，是指它在该点的极限存在并等于函数值。如果图在 $a$ 处有空洞，另有一个单独的点，那么极限是空洞的高度，与那个点无关。要消除间断，函数值必须移到空洞的高度。",
+    ],
+    (rng) => {
+      const a = rng.int(-3, 3);
+      const hole = rng.int(-3, 4);
+      let dot = rng.int(-4, 5);
+      if (dot === hole) dot = hole + 2;
+      const slope = rng.pick([-1, -0.5, 0.5, 1]);
+      const bend = rng.pick([-0.2, 0, 0.15]);
+      const f = (x: number) => hole + slope * (x - a) + bend * (x - a) ** 2;
+      return ask(
         [
-          { kind: "curve", f, accent: true },
-          { kind: "point", at: [a, hole], open: true, accent: true },
-          { kind: "point", at: [a, dot], accent: true },
+          "The graph of $f$ has one point of discontinuity. To what value must $f$ be changed at that point to make it continuous there?",
+          "$f$ 的图有一个间断点。要使它在那里连续，$f$ 在该点的值必须改成多少？",
         ],
+        hole,
+        [dot, a === hole || a === dot ? hole + 1 : a, hole - 1],
         [
-          `A curve with an open circle at (${a}, ${hole}) and a separate dot at (${a}, ${dot}).`,
-          `一条曲线，在 (${a}, ${hole}) 处有空心圆，在 (${a}, ${dot}) 处有单独的点。`,
+          `Approaching from both sides, the graph heads to the open circle at height $${hole}$, so that is the limit. The separate dot at height $${dot}$ is the current value, which must be moved to match.`,
+          `从两侧趋近时，图都趋向高度 $${hole}$ 的空心圆，所以这就是极限。高度 $${dot}$ 的单独的点是当前的函数值，必须移过去才能相等。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+          [
+            { kind: "curve", f, accent: true },
+            { kind: "point", at: [a, hole], open: true, accent: true },
+            { kind: "point", at: [a, dot], accent: true },
+          ],
+          [
+            `A curve with an open circle at (${a}, ${hole}) and a separate dot at (${a}, ${dot}).`,
+            `一条曲线，在 (${a}, ${hole}) 处有空心圆，在 (${a}, ${dot}) 处有单独的点。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings1["defining-continuity-at-a-point#the-value-that-repairs-a-hole"],
+};
 
 const discontinuityKind = point(
   "the-kind-of-a-drawn-discontinuity",
@@ -338,128 +344,134 @@ const totalVariation = point(
   },
 );
 
-const crossings = point(
-  "intermediate-values-at-a-drawn-level",
-  ["Intermediate values at a drawn level", "图中水平线处的介值"],
-  [
-    "If a continuous function is below a level at one point and above it at another, the intermediate value theorem gives a solution between them. Each change of side forces a separate crossing. Counting the changes of side along a graph gives the number of solutions the theorem guarantees, and the drawn graph shows how the sides change.",
-    "如果连续函数在一点低于某水平，在另一点高于它，介值定理就保证它们之间有解。每换一次边都迫使出现一次单独的穿越。沿着图数换边的次数，就得到定理保证的解的个数，而图显示了换边的情况。",
-  ],
-  (rng) => {
-    const n = rng.int(5, 8);
-    const level = rng.int(-1, 2);
-    const h = Array.from({ length: n + 1 }, () => rng.int(-4, 5) + 0);
-    const adjusted = h.map((v) => (v === level ? v + 1 : v));
-    let count = 0;
-    for (let i = 0; i < n; i++) if (((adjusted[i] as number) - level) * ((adjusted[i + 1] as number) - level) < 0) count++;
-    return ask(
-      [
-        "The continuous function drawn is defined on the whole interval shown, and the dashed line is a level $k$. How many solutions does $f(x) = k$ have on the interval?",
-        "图中的连续函数定义在所示整个区间上，虚线是水平 $k$。$f(x) = k$ 在该区间上有多少个解？",
-      ],
-      count,
-      [count + 1, count === 0 ? 2 : count - 1, n],
-      [
-        `The graph is made of straight pieces, so each piece meets the level at most once, and it does so exactly when it changes side. There are $${count}$ such changes.`,
-        `图由直线段组成，所以每段至多与水平线相交一次，恰好在换边时相交。这样的换边有 $${count}$ 次。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 9, yMin: -5, yMax: 7 },
+const crossings = {
+  ...point(
+    "intermediate-values-at-a-drawn-level",
+    ["Intermediate values at a drawn level", "图中水平线处的介值"],
+    [
+      "If a continuous function is below a level at one point and above it at another, the intermediate value theorem gives a solution between them. Each change of side forces a separate crossing. Counting the changes of side along a graph gives the number of solutions the theorem guarantees, and the drawn graph shows how the sides change.",
+      "如果连续函数在一点低于某水平，在另一点高于它，介值定理就保证它们之间有解。每换一次边都迫使出现一次单独的穿越。沿着图数换边的次数，就得到定理保证的解的个数，而图显示了换边的情况。",
+    ],
+    (rng) => {
+      const n = rng.int(5, 8);
+      const level = rng.int(-1, 2);
+      const h = Array.from({ length: n + 1 }, () => rng.int(-4, 5) + 0);
+      const adjusted = h.map((v) => (v === level ? v + 1 : v));
+      let count = 0;
+      for (let i = 0; i < n; i++) if (((adjusted[i] as number) - level) * ((adjusted[i + 1] as number) - level) < 0) count++;
+      return ask(
         [
-          { kind: "path", points: adjusted.map((v, i): Point => [i, v]), accent: true },
-          { kind: "segment", a: [-1, level], b: [9, level], dashed: true },
+          "The continuous function drawn is defined on the whole interval shown, and the dashed line is a level $k$. How many solutions does $f(x) = k$ have on the interval?",
+          "图中的连续函数定义在所示整个区间上，虚线是水平 $k$。$f(x) = k$ 在该区间上有多少个解？",
         ],
+        count,
+        [count + 1, count === 0 ? 2 : count - 1, n],
         [
-          `Straight pieces through the heights ${adjusted.join(", ")}, with a dashed level at ${level}.`,
-          `经过高度 ${adjusted.join("，")} 的直线段，虚线水平为 ${level}。`,
+          `The graph is made of straight pieces, so each piece meets the level at most once, and it does so exactly when it changes side. There are $${count}$ such changes.`,
+          `图由直线段组成，所以每段至多与水平线相交一次，恰好在换边时相交。这样的换边有 $${count}$ 次。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -1, xMax: 9, yMin: -5, yMax: 7 },
+          [
+            { kind: "path", points: adjusted.map((v, i): Point => [i, v]), accent: true },
+            { kind: "segment", a: [-1, level], b: [9, level], dashed: true },
+          ],
+          [
+            `Straight pieces through the heights ${adjusted.join(", ")}, with a dashed level at ${level}.`,
+            `经过高度 ${adjusted.join("，")} 的直线段，虚线水平为 ${level}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings1["the-intermediate-value-theorem#intermediate-values-at-a-drawn-level"],
+};
 
-const extremeAttained = point(
-  "whether-a-drawn-maximum-is-attained",
-  ["Whether a drawn maximum is attained", "图中的最大值是否取到"],
-  [
-    "The extreme value theorem needs a continuous function on a closed bounded interval. If the top of a graph sits at an open circle, the function comes arbitrarily close to that height but never reaches it, so there is no maximum. If the top is on the graph itself, the maximum is attained there, whatever the hypotheses say.",
-    "极值定理要求函数在有界闭区间上连续。如果图的最高处是空心圆，函数能任意接近这个高度却永远达不到，所以没有最大值。如果最高处就在图上，最大值就在那里取到，不管定理的条件是否满足。",
-  ],
-  (rng) => {
-    const a = rng.int(-5, -2);
-    const b = a + rng.int(5, 8);
-    const top = rng.int(2, 5);
-    const kind = rng.pick(["closedPeak", "openEnd", "jumpTop", "openPeak"] as const);
-    const c = rng.int(a + 2, b - 2);
-    const left = (x: number) => top - 0.5 * ((x - c) * (x - c)) * 0.3;
-    const rise = (x: number) => top - (b - x) * 0.7;
-    let marks: PlaneMark[];
-    let attained = true;
-    let where = c;
-    let reason: Pair;
-    if (kind === "closedPeak") {
-      marks = [
-        { kind: "curve", f: left, from: a, to: b, accent: true },
-        { kind: "point", at: [a, left(a)], accent: true },
-        { kind: "point", at: [b, left(b)], accent: true },
-      ];
-      reason = [`The highest point of the graph is at $x = ${c}$, and it belongs to the graph`, `图的最高点在 $x = ${c}$，并且属于图`];
-    } else if (kind === "openPeak") {
-      marks = [
-        { kind: "curve", f: left, from: a, to: b, accent: true },
-        { kind: "point", at: [a, left(a)], open: true, accent: true },
-        { kind: "point", at: [b, left(b)], open: true, accent: true },
-      ];
-      reason = [
-        `The ends are open, but the highest point of the graph is at $x = ${c}$ and it belongs to the graph`,
-        `两端是空心的，但图的最高点在 $x = ${c}$，并且属于图`,
-      ];
-    } else if (kind === "openEnd") {
-      attained = false;
-      where = b;
-      marks = [
-        { kind: "curve", f: rise, from: a, to: b, accent: true },
-        { kind: "point", at: [a, rise(a)], accent: true },
-        { kind: "point", at: [b, rise(b)], open: true, accent: true },
-      ];
-      reason = [
-        `The graph climbs toward an open circle at $x = ${b}$, so it gets close to that height without reaching it`,
-        `图向 $x = ${b}$ 处的空心圆上升，所以接近这个高度却达不到`,
-      ];
-    } else {
-      attained = false;
-      where = c;
-      marks = [
-        { kind: "curve", f: (x) => top - (c - x) * 0.7, from: a, to: c, accent: true },
-        { kind: "curve", f: (x) => top - 3 - (x - c) * 0.3, from: c, to: b, accent: true },
-        { kind: "point", at: [c, top], open: true, accent: true },
-        { kind: "point", at: [c, top - 3], accent: true },
-        { kind: "point", at: [a, top - (c - a) * 0.7], accent: true },
-        { kind: "point", at: [b, top - 3 - (b - c) * 0.3], accent: true },
-      ];
-      reason = [
-        `The graph climbs toward an open circle at $x = ${c}$ and the function value there is lower, so that height is never reached`,
-        `图向 $x = ${c}$ 处的空心圆上升，而那里的函数值更低，所以永远达不到这个高度`,
-      ];
-    }
-    const at = (v: number): Pair => [`The maximum is attained at $x = ${v}$`, `最大值在 $x = ${v}$ 处取到`];
-    const none: Pair = ["There is no maximum", "没有最大值"];
-    return choose(
-      rng,
-      [
-        "Filled and open circles show which points belong to the function drawn. What can be said about its maximum on its domain?",
-        "实心圆和空心圆表示哪些点属于图中函数。关于它在定义域上的最大值，可以得出什么结论？",
-      ],
-      attained ? at(where) : none,
-      attained ? [none, at(b), at(a), at(c + 1)] : [at(where), at(a), at(where === b ? c : b)],
-      [`${reason[0]}.`, `${reason[1]}。`],
-      fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
-        `A graph from x = ${a} to x = ${b}. ${observed(reason)[0].replaceAll("$", "")}.`,
-        `从 x = ${a} 到 x = ${b} 的图。${observed(reason)[1].replaceAll("$", "")}。`,
-      ]),
-    );
-  },
-);
+const extremeAttained = {
+  ...point(
+    "whether-a-drawn-maximum-is-attained",
+    ["Whether a drawn maximum is attained", "图中的最大值是否取到"],
+    [
+      "The extreme value theorem needs a continuous function on a closed bounded interval. If the top of a graph sits at an open circle, the function comes arbitrarily close to that height but never reaches it, so there is no maximum. If the top is on the graph itself, the maximum is attained there, whatever the hypotheses say.",
+      "极值定理要求函数在有界闭区间上连续。如果图的最高处是空心圆，函数能任意接近这个高度却永远达不到，所以没有最大值。如果最高处就在图上，最大值就在那里取到，不管定理的条件是否满足。",
+    ],
+    (rng) => {
+      const a = rng.int(-5, -2);
+      const b = a + rng.int(5, 8);
+      const top = rng.int(2, 5);
+      const kind = rng.pick(["closedPeak", "openEnd", "jumpTop", "openPeak"] as const);
+      const c = rng.int(a + 2, b - 2);
+      const left = (x: number) => top - 0.5 * ((x - c) * (x - c)) * 0.3;
+      const rise = (x: number) => top - (b - x) * 0.7;
+      let marks: PlaneMark[];
+      let attained = true;
+      let where = c;
+      let reason: Pair;
+      if (kind === "closedPeak") {
+        marks = [
+          { kind: "curve", f: left, from: a, to: b, accent: true },
+          { kind: "point", at: [a, left(a)], accent: true },
+          { kind: "point", at: [b, left(b)], accent: true },
+        ];
+        reason = [`The highest point of the graph is at $x = ${c}$, and it belongs to the graph`, `图的最高点在 $x = ${c}$，并且属于图`];
+      } else if (kind === "openPeak") {
+        marks = [
+          { kind: "curve", f: left, from: a, to: b, accent: true },
+          { kind: "point", at: [a, left(a)], open: true, accent: true },
+          { kind: "point", at: [b, left(b)], open: true, accent: true },
+        ];
+        reason = [
+          `The ends are open, but the highest point of the graph is at $x = ${c}$ and it belongs to the graph`,
+          `两端是空心的，但图的最高点在 $x = ${c}$，并且属于图`,
+        ];
+      } else if (kind === "openEnd") {
+        attained = false;
+        where = b;
+        marks = [
+          { kind: "curve", f: rise, from: a, to: b, accent: true },
+          { kind: "point", at: [a, rise(a)], accent: true },
+          { kind: "point", at: [b, rise(b)], open: true, accent: true },
+        ];
+        reason = [
+          `The graph climbs toward an open circle at $x = ${b}$, so it gets close to that height without reaching it`,
+          `图向 $x = ${b}$ 处的空心圆上升，所以接近这个高度却达不到`,
+        ];
+      } else {
+        attained = false;
+        where = c;
+        marks = [
+          { kind: "curve", f: (x) => top - (c - x) * 0.7, from: a, to: c, accent: true },
+          { kind: "curve", f: (x) => top - 3 - (x - c) * 0.3, from: c, to: b, accent: true },
+          { kind: "point", at: [c, top], open: true, accent: true },
+          { kind: "point", at: [c, top - 3], accent: true },
+          { kind: "point", at: [a, top - (c - a) * 0.7], accent: true },
+          { kind: "point", at: [b, top - 3 - (b - c) * 0.3], accent: true },
+        ];
+        reason = [
+          `The graph climbs toward an open circle at $x = ${c}$ and the function value there is lower, so that height is never reached`,
+          `图向 $x = ${c}$ 处的空心圆上升，而那里的函数值更低，所以永远达不到这个高度`,
+        ];
+      }
+      const at = (v: number): Pair => [`The maximum is attained at $x = ${v}$`, `最大值在 $x = ${v}$ 处取到`];
+      const none: Pair = ["There is no maximum", "没有最大值"];
+      return choose(
+        rng,
+        [
+          "Filled and open circles show which points belong to the function drawn. What can be said about its maximum on its domain?",
+          "实心圆和空心圆表示哪些点属于图中函数。关于它在定义域上的最大值，可以得出什么结论？",
+        ],
+        attained ? at(where) : none,
+        attained ? [none, at(b), at(a), at(c + 1)] : [at(where), at(a), at(where === b ? c : b)],
+        [`${reason[0]}.`, `${reason[1]}。`],
+        fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
+          `A graph from x = ${a} to x = ${b}. ${observed(reason)[0].replaceAll("$", "")}.`,
+          `从 x = ${a} 到 x = ${b} 的图。${observed(reason)[1].replaceAll("$", "")}。`,
+        ]),
+      );
+    },
+  ),
+  figure: calculusDrawings2["the-extreme-value-theorem#whether-a-drawn-maximum-is-attained"],
+};
 
 const darboux = point(
   "a-darboux-sum-on-a-drawn-partition",
@@ -512,66 +524,69 @@ const darboux = point(
   },
 );
 
-const riemannRectangles = point(
-  "reading-a-riemann-sum-from-its-rectangles",
-  ["Reading a Riemann sum from its rectangles", "由矩形读黎曼和"],
-  [
-    "A Riemann sum picks one height for each piece of the interval. Rectangles touching the graph at their left corners make a left sum, and those touching it at their right corners make a right sum. The value is the total area of the rectangles, which is the sum of the heights times the common width.",
-    "黎曼和为区间的每一段选一个高度。在左上角碰到图的矩形构成左和，在右上角碰到图的构成右和。值是矩形的总面积，也就是各高度之和乘以相同的宽度。",
-  ],
-  (rng) => {
-    const width = rng.pick([1, 2]);
-    const count = width === 1 ? rng.int(4, 6) : 3;
-    const h = Array.from({ length: count + 1 }, () => rng.int(1, 6));
-    if (h[0] === h[count]) h[count] = (h[count] as number) + 1;
-    const leftSum = rng.bool();
-    let L = 0;
-    let R = 0;
-    for (let i = 0; i < count; i++) {
-      L += (h[i] as number) * width;
-      R += (h[i + 1] as number) * width;
-    }
-    const marks: PlaneMark[] = [];
-    for (let i = 0; i < count; i++) {
-      const v = (leftSum ? h[i] : h[i + 1]) as number;
-      const [p, q] = [i * width, (i + 1) * width];
-      marks.push({
-        kind: "polygon",
-        points: [
-          [p, 0],
-          [q, 0],
-          [q, v],
-          [p, v],
+const riemannRectangles = {
+  ...point(
+    "reading-a-riemann-sum-from-its-rectangles",
+    ["Reading a Riemann sum from its rectangles", "由矩形读黎曼和"],
+    [
+      "A Riemann sum picks one height for each piece of the interval. Rectangles touching the graph at their left corners make a left sum, and those touching it at their right corners make a right sum. The value is the total area of the rectangles, which is the sum of the heights times the common width.",
+      "黎曼和为区间的每一段选一个高度。在左上角碰到图的矩形构成左和，在右上角碰到图的构成右和。值是矩形的总面积，也就是各高度之和乘以相同的宽度。",
+    ],
+    (rng) => {
+      const width = rng.pick([1, 2]);
+      const count = width === 1 ? rng.int(4, 6) : 3;
+      const h = Array.from({ length: count + 1 }, () => rng.int(1, 6));
+      if (h[0] === h[count]) h[count] = (h[count] as number) + 1;
+      const leftSum = rng.bool();
+      let L = 0;
+      let R = 0;
+      for (let i = 0; i < count; i++) {
+        L += (h[i] as number) * width;
+        R += (h[i + 1] as number) * width;
+      }
+      const marks: PlaneMark[] = [];
+      for (let i = 0; i < count; i++) {
+        const v = (leftSum ? h[i] : h[i + 1]) as number;
+        const [p, q] = [i * width, (i + 1) * width];
+        marks.push({
+          kind: "polygon",
+          points: [
+            [p, 0],
+            [q, 0],
+            [q, v],
+            [p, v],
+          ],
+        });
+      }
+      marks.push({ kind: "path", points: h.map((v, i): Point => [i * width, v]), accent: true });
+      const option = (left: boolean, v: number): Pair => [
+        `A ${left ? "left" : "right"} sum, with value $${v}$`,
+        `${left ? "左" : "右"}和，值为 $${v}$`,
+      ];
+      const [v, other] = leftSum ? [L, R] : [R, L];
+      return choose(
+        rng,
+        ["The rectangles approximate the area under the graph. Which sum do they show?", "这些矩形近似图下方的面积。它们表示哪种和？"],
+        option(leftSum, v),
+        [
+          option(!leftSum, v),
+          option(leftSum, other === v ? v + width : other),
+          option(!leftSum, other === v ? v + 2 * width : other),
+          option(leftSum, v / width === v ? v + 1 : v / width),
         ],
-      });
-    }
-    marks.push({ kind: "path", points: h.map((v, i): Point => [i * width, v]), accent: true });
-    const option = (left: boolean, v: number): Pair => [
-      `A ${left ? "left" : "right"} sum, with value $${v}$`,
-      `${left ? "左" : "右"}和，值为 $${v}$`,
-    ];
-    const [v, other] = leftSum ? [L, R] : [R, L];
-    return choose(
-      rng,
-      ["The rectangles approximate the area under the graph. Which sum do they show?", "这些矩形近似图下方的面积。它们表示哪种和？"],
-      option(leftSum, v),
-      [
-        option(!leftSum, v),
-        option(leftSum, other === v ? v + width : other),
-        option(!leftSum, other === v ? v + 2 * width : other),
-        option(leftSum, v / width === v ? v + 1 : v / width),
-      ],
-      [
-        `Each rectangle reaches the graph at its ${leftSum ? "left" : "right"} corner, so this is a ${leftSum ? "left" : "right"} sum. The heights are ${(leftSum ? h.slice(0, -1) : h.slice(1)).join(", ")}, and multiplying their sum by the width $${width}$ gives $${v}$.`,
-        `每个矩形在${leftSum ? "左" : "右"}上角碰到图，所以这是${leftSum ? "左" : "右"}和。高度依次为 ${(leftSum ? h.slice(0, -1) : h.slice(1)).join("，")}，它们的和乘以宽度 $${width}$ 得 $${v}$。`,
-      ],
-      fig({ xMin: -1, xMax: 8, yMin: -1, yMax: 8 }, marks, [
-        `Rectangles of width ${width} and a path through the heights ${h.join(", ")}.`,
-        `宽度为 ${width} 的矩形和经过高度 ${h.join("，")} 的折线。`,
-      ]),
-    );
-  },
-);
+        [
+          `Each rectangle reaches the graph at its ${leftSum ? "left" : "right"} corner, so this is a ${leftSum ? "left" : "right"} sum. The heights are ${(leftSum ? h.slice(0, -1) : h.slice(1)).join(", ")}, and multiplying their sum by the width $${width}$ gives $${v}$.`,
+          `每个矩形在${leftSum ? "左" : "右"}上角碰到图，所以这是${leftSum ? "左" : "右"}和。高度依次为 ${(leftSum ? h.slice(0, -1) : h.slice(1)).join("，")}，它们的和乘以宽度 $${width}$ 得 $${v}$。`,
+        ],
+        fig({ xMin: -1, xMax: 8, yMin: -1, yMax: 8 }, marks, [
+          `Rectangles of width ${width} and a path through the heights ${h.join(", ")}.`,
+          `宽度为 ${width} 的矩形和经过高度 ${h.join("，")} 的折线。`,
+        ]),
+      );
+    },
+  ),
+  figure: calculusDrawings3["defining-definite-integrals-using-left-and-right-riemann-sums#reading-a-riemann-sum-from-its-rectangles"],
+};
 
 const simpleIntegral = point(
   "the-integral-of-a-drawn-simple-function",
@@ -613,47 +628,50 @@ const simpleIntegral = point(
   },
 );
 
-const meanValueSlope = point(
-  "the-mean-value-slope-from-a-graph",
-  ["The mean value slope from a graph", "由图读中值定理的斜率"],
-  [
-    "The mean value theorem says that a differentiable function has a point between $a$ and $b$ where the tangent is parallel to the chord. So the derivative at that point equals the slope of the chord, which depends only on the end points. The wiggles between them decide where the point is, but not the slope.",
-    "中值定理说，可导函数在 $a$ 和 $b$ 之间有一点，切线与弦平行。所以该点的导数等于弦的斜率，它只取决于两个端点。两点之间的起伏决定这一点在哪里，但不影响斜率。",
-  ],
-  (rng) => {
-    const a = rng.int(-5, -1);
-    const b = a + rng.int(2, 6);
-    const fa = rng.int(-4, 4);
-    let fb = rng.int(-4, 5);
-    if (fb === fa) fb = fa + 1;
-    const w = rng.pick([-1.5, -1, 1, 1.5]);
-    const f = (x: number) => fa + ((fb - fa) * (x - a)) / (b - a) + w * Math.sin((Math.PI * (x - a)) / (b - a));
-    const slope = Q.of(fb - fa, b - a);
-    const rise = fb - fa;
-    const run = b - a;
-    return ask(
-      [
-        "The function drawn is differentiable. By the mean value theorem, some $c$ between the marked points has what value of $f'(c)$?",
-        "图中函数可导。由中值定理，所标两点之间存在 $c$，使 $f'(c)$ 等于多少？",
-      ],
-      slope,
-      [Q.of(run, rise), Q.of(-rise, run), Q.of(rise, 1).eq(slope) ? Q.of(rise + 1, 1) : Q.of(rise, 1)],
-      [
-        `The points are $(${a}, ${fa})$ and $(${b}, ${fb})$. The chord between them rises $${rise}$ over a run of $${run}$, so its slope is $${slope.toLatex()}$, and the theorem gives a tangent with that slope.`,
-        `两点是 $(${a}, ${fa})$ 和 $(${b}, ${fb})$。它们之间的弦在水平距离 $${run}$ 上升高 $${rise}$，所以斜率是 $${slope.toLatex()}$，定理给出具有这一斜率的切线。`,
-      ],
-      fig(
-        { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+const meanValueSlope = {
+  ...point(
+    "the-mean-value-slope-from-a-graph",
+    ["The mean value slope from a graph", "由图读中值定理的斜率"],
+    [
+      "The mean value theorem says that a differentiable function has a point between $a$ and $b$ where the tangent is parallel to the chord. So the derivative at that point equals the slope of the chord, which depends only on the end points. The wiggles between them decide where the point is, but not the slope.",
+      "中值定理说，可导函数在 $a$ 和 $b$ 之间有一点，切线与弦平行。所以该点的导数等于弦的斜率，它只取决于两个端点。两点之间的起伏决定这一点在哪里，但不影响斜率。",
+    ],
+    (rng) => {
+      const a = rng.int(-5, -1);
+      const b = a + rng.int(2, 6);
+      const fa = rng.int(-4, 4);
+      let fb = rng.int(-4, 5);
+      if (fb === fa) fb = fa + 1;
+      const w = rng.pick([-1.5, -1, 1, 1.5]);
+      const f = (x: number) => fa + ((fb - fa) * (x - a)) / (b - a) + w * Math.sin((Math.PI * (x - a)) / (b - a));
+      const slope = Q.of(fb - fa, b - a);
+      const rise = fb - fa;
+      const run = b - a;
+      return ask(
         [
-          { kind: "curve", f, from: a, to: b, accent: true },
-          { kind: "point", at: [a, fa], label: "A", dir: "n" },
-          { kind: "point", at: [b, fb], label: "B", dir: "n" },
+          "The function drawn is differentiable. By the mean value theorem, some $c$ between the marked points has what value of $f'(c)$?",
+          "图中函数可导。由中值定理，所标两点之间存在 $c$，使 $f'(c)$ 等于多少？",
         ],
-        [`A wavy curve from A at (${a}, ${fa}) to B at (${b}, ${fb}).`, `从 A (${a}, ${fa}) 到 B (${b}, ${fb}) 的波浪曲线。`],
-      ),
-    );
-  },
-);
+        slope,
+        [Q.of(run, rise), Q.of(-rise, run), Q.of(rise, 1).eq(slope) ? Q.of(rise + 1, 1) : Q.of(rise, 1)],
+        [
+          `The points are $(${a}, ${fa})$ and $(${b}, ${fb})$. The chord between them rises $${rise}$ over a run of $${run}$, so its slope is $${slope.toLatex()}$, and the theorem gives a tangent with that slope.`,
+          `两点是 $(${a}, ${fa})$ 和 $(${b}, ${fb})$。它们之间的弦在水平距离 $${run}$ 上升高 $${rise}$，所以斜率是 $${slope.toLatex()}$，定理给出具有这一斜率的切线。`,
+        ],
+        fig(
+          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+          [
+            { kind: "curve", f, from: a, to: b, accent: true },
+            { kind: "point", at: [a, fa], label: "A", dir: "n" },
+            { kind: "point", at: [b, fb], label: "B", dir: "n" },
+          ],
+          [`A wavy curve from A at (${a}, ${fa}) to B at (${b}, ${fb}).`, `从 A (${a}, ${fa}) 到 B (${b}, ${fb}) 的波浪曲线。`],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings2["the-mean-value-theorem#the-mean-value-slope-from-a-graph"],
+};
 
 const uniformGap = point(
   "the-uniform-distance-from-a-graph",

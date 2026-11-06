@@ -1,6 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { numberProblem, pointProblem, vectorLatex } from "../problems.ts";
 import { type Poly, pAt, pDer, pLatex } from "./calculus-common.ts";
@@ -258,6 +259,7 @@ export const differentiatingVectorValuedFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "derivatives-of-polynomial-vector-functions",
+      figure: calculusDrawings5["differentiating-vector-valued-functions#derivatives-of-polynomial-vector-functions"],
       title: t("Derivatives of polynomial vector functions", "多项式向量函数的导数"),
       explanation: t(
         "The derivative is defined by the same limit as for ordinary functions, and it works out component by component:\n\n$$\\mathbf{r}'(t) = \\lim_{h \\to 0} \\frac{\\mathbf{r}(t + h) - \\mathbf{r}(t)}{h} = \\langle x'(t), y'(t) \\rangle.$$\n\nWhen it is not zero, $\\mathbf{r}'(t)$ is tangent to the curve and points in the direction of motion. For $\\mathbf{r}(t) = \\langle t^{3}, 2t \\rangle$, $\\mathbf{r}'(t) = \\langle 3t^{2}, 2 \\rangle$ and $\\mathbf{r}'(1) = \\langle 3, 2 \\rangle$.",
@@ -447,6 +449,7 @@ export const calculatingVelocityForPlaneMotionUsingDifferentiation: TopicDef = {
   knowledgePoints: [
     {
       id: "velocity-vectors-from-position",
+      figure: calculusDrawings5["calculating-velocity-for-plane-motion-using-differentiation#velocity-vectors-from-position"],
       title: t("Velocity vectors from position", "由位置求速度向量"),
       explanation: t(
         "For a particle with position vector $\\mathbf{r}(t) = \\langle x(t), y(t) \\rangle$, the **velocity** is\n\n$$\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle,$$\n\ntangent to the path in the direction of motion. For $\\mathbf{r}(t) = \\langle t^{2}, 4t \\rangle$, $\\mathbf{v}(3) = \\langle 6, 4 \\rangle$.",
@@ -534,6 +537,7 @@ export const calculatingAccelerationForPlaneMotionUsingDifferentiation: TopicDef
     },
     {
       id: "uniform-circular-motion",
+      figure: calculusDrawings5["calculating-acceleration-for-plane-motion-using-differentiation#uniform-circular-motion"],
       title: t("Uniform circular motion", "匀速圆周运动"),
       explanation: t(
         "A particle with $\\mathbf{r}(t) = \\langle R\\cos(\\omega t), R\\sin(\\omega t) \\rangle$ moves around a circle of radius $R$. Its speed is constant, $R\\omega$, yet it accelerates: $\\mathbf{a}(t) = -\\omega^{2}\\mathbf{r}(t)$ points toward the center with magnitude $R\\omega^{2}$.",
@@ -787,6 +791,7 @@ export const applyingNewtonsSecondLawInThePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "force-vectors-from-position",
+      figure: calculusDrawings5["applying-newtons-second-law-in-the-plane#force-vectors-from-position"],
       title: t("Force vectors from position", "由位置求力向量"),
       explanation: t(
         "**Newton's second law** in the plane is the vector equation $\\mathbf{F} = m\\mathbf{a}$: the net force points the same way as the acceleration. With mass in kilograms and acceleration in m/s², force is in newtons. For $m = 2$ and $\\mathbf{r}(t) = \\langle t^{3}, t^{2} \\rangle$: $\\mathbf{a}(1) = \\langle 6, 2 \\rangle$, so $\\mathbf{F} = \\langle 12, 4 \\rangle$ N.",

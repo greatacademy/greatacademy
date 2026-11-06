@@ -5,6 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
@@ -271,40 +272,43 @@ const integrableCases: readonly AutonomousCase[] = [-3, -2, -1, 0, 1, 2, 3].flat
   ];
 });
 
-const integrableField = point(
-  "the-equation-of-a-directly-integrable-field",
-  ["The equation of a directly integrable field", "可直接积分的斜率场的方程"],
-  [
-    "When $y' = f(x)$, the slope depends only on $x$, so every segment in a vertical column has the same slope, and solution curves are vertical translates of one another. Find the column where the segments are flat, which is where $f$ is zero, and then read whether $f$ changes sign there.",
-    "当 $y' = f(x)$ 时，斜率只取决于 $x$，所以同一竖直列上的线段斜率相同，解曲线彼此是竖直平移。先找线段水平的那一列，那里 $f$ 为零，再读 $f$ 在那里是否变号。",
-  ],
-  (rng) => {
-    const right = rng.pick(integrableCases);
-    return choose(
-      rng,
-      ["Which equation has the slope field drawn?", "哪个方程具有图中的斜率场？"],
-      same(`y' = ${right.tex}`),
-      rng
-        .sample(
-          integrableCases.filter((c) => c !== right),
-          3,
-        )
-        .map((c) => same(`y' = ${c.tex}`)),
-      [
-        `The segments are ${right.clue[0]}, and each column has one slope, which matches $y' = ${right.tex}$.`,
-        `线段${right.clue[1]}，每列只有一种斜率，与 $y' = ${right.tex}$ 相符。`,
-      ],
-      fig(
-        square(4),
-        slopes((x) => right.f(x)),
+const integrableField = {
+  ...point(
+    "the-equation-of-a-directly-integrable-field",
+    ["The equation of a directly integrable field", "可直接积分的斜率场的方程"],
+    [
+      "When $y' = f(x)$, the slope depends only on $x$, so every segment in a vertical column has the same slope, and solution curves are vertical translates of one another. Find the column where the segments are flat, which is where $f$ is zero, and then read whether $f$ changes sign there.",
+      "当 $y' = f(x)$ 时，斜率只取决于 $x$，所以同一竖直列上的线段斜率相同，解曲线彼此是竖直平移。先找线段水平的那一列，那里 $f$ 为零，再读 $f$ 在那里是否变号。",
+    ],
+    (rng) => {
+      const right = rng.pick(integrableCases);
+      return choose(
+        rng,
+        ["Which equation has the slope field drawn?", "哪个方程具有图中的斜率场？"],
+        same(`y' = ${right.tex}`),
+        rng
+          .sample(
+            integrableCases.filter((c) => c !== right),
+            3,
+          )
+          .map((c) => same(`y' = ${c.tex}`)),
         [
-          `A slope field whose segments are ${right.clue[0].replaceAll("$", "")}.`,
-          `一个斜率场，线段${right.clue[1].replaceAll("$", "")}。`,
+          `The segments are ${right.clue[0]}, and each column has one slope, which matches $y' = ${right.tex}$.`,
+          `线段${right.clue[1]}，每列只有一种斜率，与 $y' = ${right.tex}$ 相符。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          square(4),
+          slopes((x) => right.f(x)),
+          [
+            `A slope field whose segments are ${right.clue[0].replaceAll("$", "")}.`,
+            `一个斜率场，线段${right.clue[1].replaceAll("$", "")}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings5["slope-fields-for-directly-integrable-differential-equations#the-equation-of-a-directly-integrable-field"],
+};
 
 const limitFromField = point(
   "where-a-solution-goes-in-a-slope-field",
@@ -627,49 +631,52 @@ const rootsFromGraph = point(
   },
 );
 
-const halfLifeFromGraph = point(
-  "half-life-from-a-decay-curve",
-  ["Half-life from a decay curve", "由衰减曲线读半衰期"],
-  [
-    "Exponential decay halves the amount in equal steps of time, and that step is the half-life. On a graph, pick any point, read its height and find where the height has dropped to half. The same step works from any starting height, which is why the curve never reaches zero within a finite time.",
-    "指数衰减在相等的时间步内使数量减半，这个步长就是半衰期。在图上任取一点，读出高度，再找高度降到一半的地方。从任何高度出发，步长都相同，所以曲线在有限时间内永远到不了零。",
-  ],
-  (rng) => {
-    const A = rng.pick([4, 6, 8]);
-    const h = rng.int(1, 4);
-    const asksHalfLife = rng.bool();
-    const times = rng.int(2, 4);
-    const f = (x: number) => A * 2 ** (-x / h);
-    const after = Q.of(A, 2 ** times);
-    return ask(
-      asksHalfLife
-        ? [
-            "The curve shows an amount that decays exponentially with time. What is its half-life?",
-            "曲线表示随时间指数衰减的数量。它的半衰期是多少？",
-          ]
-        : [
-            `The curve shows an amount that decays exponentially with time. What is the amount at time $t = ${times * h}$?`,
-            `曲线表示随时间指数衰减的数量。在 $t = ${times * h}$ 时数量是多少？`,
-          ],
-      asksHalfLife ? h : after,
-      asksHalfLife ? [A, 2 * h, A / 2] : [Q.of(A, 2 * times), Q.of(A, 2 ** (times - 1)), Q.of(A, times)],
-      asksHalfLife
-        ? [
-            `The amount starts at $${A}$ and reaches $${A / 2}$ at time $${h}$, so the half-life is $${h}$.`,
-            `数量从 $${A}$ 开始，在时间 $${h}$ 降到 $${A / 2}$，所以半衰期是 $${h}$。`,
-          ]
-        : [
-            `The amount starts at $${A}$ and halves every $${h}$, as the graph shows. Time $${times * h}$ is $${times}$ halvings, which leaves $${after.toLatex()}$.`,
-            `数量从 $${A}$ 开始，由图可知每过 $${h}$ 减半。时间 $${times * h}$ 是减半 $${times}$ 次，剩下 $${after.toLatex()}$。`,
-          ],
-      fig(
-        { xMin: 0, xMax: 9, yMin: 0, yMax: 9, xName: "t" },
-        [{ kind: "curve", f, from: 0, to: 9, accent: true }],
-        [`A decay curve that starts at ${A} and halves every ${h} units of time.`, `从 ${A} 开始、每 ${h} 个时间单位减半的衰减曲线。`],
-      ),
-    );
-  },
-);
+const halfLifeFromGraph = {
+  ...point(
+    "half-life-from-a-decay-curve",
+    ["Half-life from a decay curve", "由衰减曲线读半衰期"],
+    [
+      "Exponential decay halves the amount in equal steps of time, and that step is the half-life. On a graph, pick any point, read its height and find where the height has dropped to half. The same step works from any starting height, which is why the curve never reaches zero within a finite time.",
+      "指数衰减在相等的时间步内使数量减半，这个步长就是半衰期。在图上任取一点，读出高度，再找高度降到一半的地方。从任何高度出发，步长都相同，所以曲线在有限时间内永远到不了零。",
+    ],
+    (rng) => {
+      const A = rng.pick([4, 6, 8]);
+      const h = rng.int(1, 4);
+      const asksHalfLife = rng.bool();
+      const times = rng.int(2, 4);
+      const f = (x: number) => A * 2 ** (-x / h);
+      const after = Q.of(A, 2 ** times);
+      return ask(
+        asksHalfLife
+          ? [
+              "The curve shows an amount that decays exponentially with time. What is its half-life?",
+              "曲线表示随时间指数衰减的数量。它的半衰期是多少？",
+            ]
+          : [
+              `The curve shows an amount that decays exponentially with time. What is the amount at time $t = ${times * h}$?`,
+              `曲线表示随时间指数衰减的数量。在 $t = ${times * h}$ 时数量是多少？`,
+            ],
+        asksHalfLife ? h : after,
+        asksHalfLife ? [A, 2 * h, A / 2] : [Q.of(A, 2 * times), Q.of(A, 2 ** (times - 1)), Q.of(A, times)],
+        asksHalfLife
+          ? [
+              `The amount starts at $${A}$ and reaches $${A / 2}$ at time $${h}$, so the half-life is $${h}$.`,
+              `数量从 $${A}$ 开始，在时间 $${h}$ 降到 $${A / 2}$，所以半衰期是 $${h}$。`,
+            ]
+          : [
+              `The amount starts at $${A}$ and halves every $${h}$, as the graph shows. Time $${times * h}$ is $${times}$ halvings, which leaves $${after.toLatex()}$.`,
+              `数量从 $${A}$ 开始，由图可知每过 $${h}$ 减半。时间 $${times * h}$ 是减半 $${times}$ 次，剩下 $${after.toLatex()}$。`,
+            ],
+        fig(
+          { xMin: 0, xMax: 9, yMin: 0, yMax: 9, xName: "t" },
+          [{ kind: "curve", f, from: 0, to: 9, accent: true }],
+          [`A decay curve that starts at ${A} and halves every ${h} units of time.`, `从 ${A} 开始、每 ${h} 个时间单位减半的衰减曲线。`],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings5["exponential-growth-and-decay-models-with-first-order-odes-half-life-problems#half-life-from-a-decay-curve"],
+};
 
 const pulseLaplace = point(
   "the-laplace-transform-of-a-drawn-pulse",

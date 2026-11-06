@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { oneOf, type Poly, pAt, pDer, pLatex } from "./calculus-common.ts";
@@ -142,6 +143,7 @@ export const calculatingVelocityUsingIntegration: TopicDef = {
   knowledgePoints: [
     {
       id: "velocity-at-a-given-time",
+      figure: calculusDrawings5["calculating-velocity-using-integration#velocity-at-a-given-time"],
       title: t("Velocity at a given time", "求某一时刻的速度"),
       explanation: t(
         "Acceleration is the rate of change of velocity, $a(t) = v'(t)$, so by the net change theorem\n\n$$v(T) = v(0) + \\int_{0}^{T} a(t) \\, dt.$$\n\nFor example, if $a(t) = 6t$ and $v(0) = 2$, then $v(3) = 2 + \\int_{0}^{3} 6t \\, dt = 2 + 27 = 29$ m/s.",

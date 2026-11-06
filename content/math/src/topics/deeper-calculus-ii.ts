@@ -4,6 +4,8 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { numberProblem, steps } from "../problems.ts";
 
@@ -249,6 +251,7 @@ const limitFromVolume: KnowledgePointDef = {
 
 const shellsAboutAnotherLine: KnowledgePointDef = {
   id: "shells-about-a-line-other-than-the-y-axis",
+  figure: calculusDrawings4["the-shell-method-rotation-about-the-y-axis#shells-about-a-line-other-than-the-y-axis"],
   title: t("Shells about a line other than the $y$-axis", "绕 $y$ 轴以外的直线的柱壳"),
   explanation: t(
     "The radius of a shell is the distance from the axis of rotation, which is not always $x$. For rotation about the line $x = -h$ of a region to its right, the radius is $x + h$, while the height of the shell stays the same. So the volume is $2\\pi\\int (x + h)f(x)\\,dx$.",
@@ -926,6 +929,7 @@ const inverseTrigDefinite: KnowledgePointDef = {
 
 const doubleAngleTwice: KnowledgePointDef = {
   id: "applying-a-double-angle-formula-twice",
+  figure: calculusDrawings4["integration-using-the-double-angle-formulas#applying-a-double-angle-formula-twice"],
   title: t("Applying a double angle formula twice", "两次使用二倍角公式"),
   explanation: t(
     "A fourth power of sine or cosine needs the double angle formula twice: square the half-angle form, then reduce the $\\cos^2 2x$ that appears. Over a whole period every oscillating cosine term vanishes, so only the constant term survives. A product $\\sin^2 x\\cos^2 x$ reduces the same way, by way of $\\frac{1}{4}\\sin^2 2x$.",
@@ -1152,6 +1156,10 @@ const massShare: KnowledgePointDef = {
 
 const pappusVolume: KnowledgePointDef = {
   id: "the-volume-of-a-torus-from-the-theorem-of-pappus",
+  figure:
+    calculusDrawings4[
+      "volumes-of-revolution-using-the-washer-method-rotation-about-other-axes#the-volume-of-a-torus-from-the-theorem-of-pappus"
+    ],
   title: t("The volume of a torus from the theorem of Pappus", "用帕普斯定理求环体的体积"),
   explanation: t(
     "The theorem of Pappus says that rotating a region about an outside axis gives a volume equal to the region's area times the distance travelled by its centroid. A disk's centroid is its centre, so a torus has volume $\\pi r^2 \\cdot 2\\pi R$. The washer integral gives the same answer, with considerably more work.",
@@ -1179,6 +1187,7 @@ const pappusVolume: KnowledgePointDef = {
 
 const distanceGap: KnowledgePointDef = {
   id: "the-gap-between-distance-and-displacement",
+  figure: calculusDrawings5["calculating-the-total-distance-traveled-by-a-particle#the-gap-between-distance-and-displacement"],
   title: t("The gap between distance and displacement", "路程与位移之差"),
   explanation: t(
     "Distance and the size of the displacement agree when a particle never turns around. When it reverses, the shorter of the two legs is walked back, and it counts for the distance but cancels in the displacement. The gap is therefore twice the shorter leg. Comparing the two areas between the velocity graph and the axis shows this.",
@@ -1266,6 +1275,7 @@ const astroidLength: KnowledgePointDef = {
 
 const astroidArea: KnowledgePointDef = {
   id: "the-area-inside-an-astroid",
+  figure: calculusDrawings5["calculating-areas-bounded-by-parametric-functions#the-area-inside-an-astroid"],
   title: t("The area inside an astroid", "星形线围成的面积"),
   explanation: t(
     "The area inside a closed parametric curve is the integral of $y\\,dx$ with suitable orientation. For the astroid this gives a constant times $\\int \\sin^4 t\\cos^2 t\\,dt$, which reduces by the double angle formulas. Using symmetry, take one quarter of the region, where the integrand has a single sign, and multiply by four.",
@@ -2018,6 +2028,8 @@ const xSquaredAsOneVariable: KnowledgePointDef = {
 
 const twoQuadraticsOverHalfLine: KnowledgePointDef = {
   id: "two-quadratic-factors-over-an-infinite-interval",
+  figure:
+    calculusDrawings4["integrating-rational-functions-with-irreducible-quadratic-factors#two-quadratic-factors-over-an-infinite-interval"],
   title: t("Two quadratic factors over an infinite interval", "无穷区间上的两个二次因式"),
   explanation: t(
     "A product of two quadratics splits into a difference of two simple fractions, each with a known arctangent antiderivative. Over an infinite interval, each arctangent reaches a right angle at the far end, so each fraction contributes a multiple of $\\pi$ that depends only on the constant in its quadratic. The fraction in front then scales the difference.",
@@ -2076,6 +2088,7 @@ const exponentialFractionImproper: KnowledgePointDef = {
 
 const realLineCompletedSquare: KnowledgePointDef = {
   id: "the-real-line-after-completing-the-square",
+  figure: calculusDrawings4["improper-integrals-involving-arctangent#the-real-line-after-completing-the-square"],
   title: t("The real line after completing the square", "配方后在整条实轴上积分"),
   explanation: t(
     "Over the whole real line, shifting the variable does not change the limits. So after completing the square, the center of the quadratic plays no part in the value, and only the constant under the square matters. The arctangent then runs from one horizontal asymptote to the other, a total change of $\\pi$, scaled by the coefficient in front.",
@@ -2135,6 +2148,7 @@ const absoluteValueUnderRoot: KnowledgePointDef = {
 
 const lengthOfCatenary: KnowledgePointDef = {
   id: "the-length-of-a-catenary",
+  figure: calculusDrawings4["the-arc-length-of-a-planar-curve#the-length-of-a-catenary"],
   title: t("The length of a catenary", "悬链线的长度"),
   explanation: t(
     "A hanging chain follows the curve $y = a\\cosh\\frac{x}{a}$, and its arc length has a simple form. The derivative is a hyperbolic sine, and the identity $1 + \\sinh^2 z = \\cosh^2 z$ removes the root in the length formula. The integrand is then a hyperbolic cosine, and a logarithm in the limit is evaluated through the exponential definition of $\\sinh$.",
@@ -2161,6 +2175,7 @@ const lengthOfCatenary: KnowledgePointDef = {
 
 const wedgeFromCylinder: KnowledgePointDef = {
   id: "the-wedge-cut-from-a-cylinder",
+  figure: calculusDrawings4["volumes-of-solids-with-triangular-cross-sections#the-wedge-cut-from-a-cylinder"],
   title: t("The wedge cut from a cylinder", "从圆柱上切下的楔形"),
   explanation: t(
     "A plane through a diameter of a cylinder's base cuts off a wedge. Sliced perpendicular to that diameter, the wedge shows right triangles whose legs are both proportional to the distance from the diameter to the circle. So the area of a slice is a multiple of $r^2 - x^2$, and the volume is the integral of this across the whole diameter.",
@@ -2188,6 +2203,7 @@ const wedgeFromCylinder: KnowledgePointDef = {
 
 const napkinRing: KnowledgePointDef = {
   id: "the-volume-of-a-napkin-ring",
+  figure: calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes#the-volume-of-a-napkin-ring"],
   title: t("The volume of a napkin ring", "餐巾环的体积"),
   explanation: t(
     "Drilling a cylindrical hole through the center of a sphere leaves a ring. With the hole along an axis, each slice perpendicular to it is a washer whose outer radius comes from the sphere and whose inner radius is the hole. The slices stop where the two radii meet, and in the difference of squares the radius of the sphere drops out, leaving only that height.",
@@ -2217,6 +2233,7 @@ const napkinRing: KnowledgePointDef = {
 
 const squaresOverEllipse: KnowledgePointDef = {
   id: "squares-over-an-elliptical-base",
+  figure: calculusDrawings4["volumes-of-solids-with-square-cross-sections#squares-over-an-elliptical-base"],
   title: t("Squares over an elliptical base", "椭圆底面上的正方形截面"),
   explanation: t(
     "On a base bounded by a closed curve, the side of a cross section is the full chord across the region, which is twice the height of the upper half when the base is symmetric. Solving the equation of the ellipse for $y^2$ gives the area of a square directly, with no root left to handle, as a quadratic in $x$ to integrate.",
@@ -2302,6 +2319,7 @@ const whenTwoPointsMeet: KnowledgePointDef = {
 
 const lengthOfLogarithmicSpiral: KnowledgePointDef = {
   id: "the-length-of-a-logarithmic-spiral",
+  figure: calculusDrawings5["the-arc-length-of-a-polar-curve#the-length-of-a-logarithmic-spiral"],
   title: t("The length of a logarithmic spiral", "对数螺线的长度"),
   explanation: t(
     "On the spiral $r = e^{k\\theta}$, the derivative of $r$ is $k$ times $r$, so $r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2$ has $r^2$ as a factor and the root in the length formula simplifies. Changing variable from $\\theta$ to $r$ then shows that length is proportional to the change in distance from the pole, so the angle never needs to be found.",

@@ -6,6 +6,8 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, type Scale, shadeUnder } from "./figure-charts.ts";
@@ -101,48 +103,51 @@ const improperSecond = point(
   },
 );
 
-const arcOfLine = point(
-  "arc-length-of-a-drawn-segment-by-the-integral",
-  ["Arc length of a drawn segment, by the integral", "用积分求所画线段的弧长"],
-  [
-    "The arc length of $y = f(x)$ is $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$. For a straight segment, $f'$ is the constant slope, so the integral is $\\sqrt{1 + m^2}$ times the horizontal run.",
-    "$y = f(x)$ 的弧长为 $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$。对直线段，$f'$ 是常数斜率，所以积分等于 $\\sqrt{1 + m^2}$ 乘水平长度。",
-  ],
-  (rng) => {
-    const k = rng.int(1, 2);
-    const [run, rise, hyp] = rng.pick<[number, number, number]>([
-      [3, 4, 5],
-      [4, 3, 5],
-    ]);
-    const dx = run * k;
-    const dy = rise * k * (rng.bool() ? 1 : -1);
-    const x0 = rng.int(0, 10 - dx);
-    const y0 = dy > 0 ? rng.int(0, 10 - dy) : rng.int(-dy, 10);
-    const m = Q.of(dy, dx);
-    const end: Point = [x0 + dx, y0 + dy];
-    return ask(
-      [
-        "The graph of $y = f(x)$ is the segment between the two marked points. Evaluate $\\int \\sqrt{1 + f'(x)^2}\\,dx$ over the interval it covers.",
-        "$y = f(x)$ 的图像是两个标记点之间的线段。在它覆盖的区间上计算 $\\int \\sqrt{1 + f'(x)^2}\\,dx$。",
-      ],
-      hyp * k,
-      [(run + rise) * k, dx, Math.abs(dy), hyp, hyp * k * k],
-      [
-        `The slope is $f' = ${m.toLatex()}$, so $\\sqrt{1 + f'^2} = \\frac{${hyp}}{${run}}$, and the run is $${dx}$. The integral is $\\frac{${hyp}}{${run}} \\cdot ${dx} = ${hyp * k}$.`,
-        `斜率为 $f' = ${m.toLatex()}$，所以 $\\sqrt{1 + f'^2} = \\frac{${hyp}}{${run}}$，水平长度为 $${dx}$。积分为 $\\frac{${hyp}}{${run}} \\cdot ${dx} = ${hyp * k}$。`,
-      ],
-      drawn(
-        { xMin: 0, xMax: 10, yMin: 0, yMax: 10 },
+const arcOfLine = {
+  ...point(
+    "arc-length-of-a-drawn-segment-by-the-integral",
+    ["Arc length of a drawn segment, by the integral", "用积分求所画线段的弧长"],
+    [
+      "The arc length of $y = f(x)$ is $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$. For a straight segment, $f'$ is the constant slope, so the integral is $\\sqrt{1 + m^2}$ times the horizontal run.",
+      "$y = f(x)$ 的弧长为 $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$。对直线段，$f'$ 是常数斜率，所以积分等于 $\\sqrt{1 + m^2}$ 乘水平长度。",
+    ],
+    (rng) => {
+      const k = rng.int(1, 2);
+      const [run, rise, hyp] = rng.pick<[number, number, number]>([
+        [3, 4, 5],
+        [4, 3, 5],
+      ]);
+      const dx = run * k;
+      const dy = rise * k * (rng.bool() ? 1 : -1);
+      const x0 = rng.int(0, 10 - dx);
+      const y0 = dy > 0 ? rng.int(0, 10 - dy) : rng.int(-dy, 10);
+      const m = Q.of(dy, dx);
+      const end: Point = [x0 + dx, y0 + dy];
+      return ask(
         [
-          { kind: "segment", a: [x0, y0], b: end, accent: true },
-          { kind: "point", at: [x0, y0] },
-          { kind: "point", at: end },
+          "The graph of $y = f(x)$ is the segment between the two marked points. Evaluate $\\int \\sqrt{1 + f'(x)^2}\\,dx$ over the interval it covers.",
+          "$y = f(x)$ 的图像是两个标记点之间的线段。在它覆盖的区间上计算 $\\int \\sqrt{1 + f'(x)^2}\\,dx$。",
         ],
-        t(`A segment from (${x0}, ${y0}) to (${end[0]}, ${end[1]}).`, `从 (${x0}, ${y0}) 到 (${end[0]}, ${end[1]}) 的线段。`),
-      ),
-    );
-  },
-);
+        hyp * k,
+        [(run + rise) * k, dx, Math.abs(dy), hyp, hyp * k * k],
+        [
+          `The slope is $f' = ${m.toLatex()}$, so $\\sqrt{1 + f'^2} = \\frac{${hyp}}{${run}}$, and the run is $${dx}$. The integral is $\\frac{${hyp}}{${run}} \\cdot ${dx} = ${hyp * k}$.`,
+          `斜率为 $f' = ${m.toLatex()}$，所以 $\\sqrt{1 + f'^2} = \\frac{${hyp}}{${run}}$，水平长度为 $${dx}$。积分为 $\\frac{${hyp}}{${run}} \\cdot ${dx} = ${hyp * k}$。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: 10, yMin: 0, yMax: 10 },
+          [
+            { kind: "segment", a: [x0, y0], b: end, accent: true },
+            { kind: "point", at: [x0, y0] },
+            { kind: "point", at: end },
+          ],
+          t(`A segment from (${x0}, ${y0}) to (${end[0]}, ${end[1]}).`, `从 (${x0}, ${y0}) 到 (${end[0]}, ${end[1]}) 的线段。`),
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings4["the-arc-length-of-a-planar-curve#arc-length-of-a-drawn-segment-by-the-integral"],
+};
 
 /** solidBase draws a right triangle in the plane, the base of a solid with cross sections perpendicular to the x-axis. */
 function solidBase(a: number, b: number) {
@@ -190,31 +195,34 @@ const squareSections = point(
   },
 );
 
-const triangleSections = point(
-  "triangular-cross-sections-over-a-drawn-base",
-  ["Triangular cross sections over a drawn base", "所画底面上的三角形截面"],
-  [
-    "If the cross section at $x$ is an isosceles right triangle with one leg in the base, its area is $\\frac{1}{2}s(x)^2$, where $s(x)$ is the width of the base at $x$. The volume is the integral of that area.",
-    "如果 $x$ 处的截面是一条直角边在底面上的等腰直角三角形，它的面积是 $\\frac{1}{2}s(x)^2$，其中 $s(x)$ 是底面在 $x$ 处的宽度。体积是该面积的积分。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 7);
-    const b = rng.int(1, 7);
-    return ask(
-      [
-        "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is an isosceles right triangle with one leg in the base. Find the volume.",
-        "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是一条直角边在底面上的等腰直角三角形。求体积。",
-      ],
-      Q.of(a * b * b, 6),
-      [Q.of(a * b * b, 3), Q.of(a * b * b, 2), Q.of(a * a * b, 6), Q.of(a * b, 4), Q.of(a * b * b, 12)],
-      [
-        `The width at $x$ is $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$. Then $\\int_0^{${a}} \\frac{1}{2}s(x)^2\\,dx = \\frac{1}{2} \\cdot \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 6).toLatex()}$.`,
-        `$x$ 处的宽度为 $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$。于是 $\\int_0^{${a}} \\frac{1}{2}s(x)^2\\,dx = \\frac{1}{2} \\cdot \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 6).toLatex()}$。`,
-      ],
-      solidBase(a, b),
-    );
-  },
-);
+const triangleSections = {
+  ...point(
+    "triangular-cross-sections-over-a-drawn-base",
+    ["Triangular cross sections over a drawn base", "所画底面上的三角形截面"],
+    [
+      "If the cross section at $x$ is an isosceles right triangle with one leg in the base, its area is $\\frac{1}{2}s(x)^2$, where $s(x)$ is the width of the base at $x$. The volume is the integral of that area.",
+      "如果 $x$ 处的截面是一条直角边在底面上的等腰直角三角形，它的面积是 $\\frac{1}{2}s(x)^2$，其中 $s(x)$ 是底面在 $x$ 处的宽度。体积是该面积的积分。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 7);
+      const b = rng.int(1, 7);
+      return ask(
+        [
+          "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is an isosceles right triangle with one leg in the base. Find the volume.",
+          "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是一条直角边在底面上的等腰直角三角形。求体积。",
+        ],
+        Q.of(a * b * b, 6),
+        [Q.of(a * b * b, 3), Q.of(a * b * b, 2), Q.of(a * a * b, 6), Q.of(a * b, 4), Q.of(a * b * b, 12)],
+        [
+          `The width at $x$ is $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$. Then $\\int_0^{${a}} \\frac{1}{2}s(x)^2\\,dx = \\frac{1}{2} \\cdot \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 6).toLatex()}$.`,
+          `$x$ 处的宽度为 $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$。于是 $\\int_0^{${a}} \\frac{1}{2}s(x)^2\\,dx = \\frac{1}{2} \\cdot \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 6).toLatex()}$。`,
+        ],
+        solidBase(a, b),
+      );
+    },
+  ),
+  figure: calculusDrawings4["volumes-of-solids-with-triangular-cross-sections#triangular-cross-sections-over-a-drawn-base"],
+};
 
 const circleSections = point(
   "circular-cross-sections-over-a-drawn-base",
@@ -274,111 +282,124 @@ function velocityGraph(rng: Rng) {
   return { values, signed, distance, pieces, figure };
 }
 
-const displacementDrawn = point(
-  "displacement-from-a-drawn-velocity-graph",
-  ["Displacement from a drawn velocity graph", "由所画速度图求位移"],
-  [
-    "Displacement is $\\int v\\,dt$, the area between the velocity graph and the $t$-axis, where area below the axis counts as negative.",
-    "位移是 $\\int v\\,dt$，即速度图与 $t$ 轴之间的面积，其中轴下方的面积记为负。",
-  ],
-  (rng) => {
-    const { values, signed, distance, figure } = velocityGraph(rng);
-    return ask(
-      [
-        "The graph shows the velocity of a particle. Find its displacement from $t = 0$ to $t = 6$.",
-        "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的位移。",
-      ],
-      signed,
-      [distance, signed.neg(), Q.of(values[3] as number, 1).sub(Q.of(values[0] as number, 1)), signed.add(Q.of(2, 1))],
-      [
-        `Each piece has width $2$, so its signed area is the sum of its end heights. The total is $${signed.toLatex()}$.`,
-        `每段宽度为 $2$，所以它的有向面积等于两端高度之和。总和为 $${signed.toLatex()}$。`,
-      ],
-      figure,
-    );
-  },
-);
+const displacementDrawn = {
+  ...point(
+    "displacement-from-a-drawn-velocity-graph",
+    ["Displacement from a drawn velocity graph", "由所画速度图求位移"],
+    [
+      "Displacement is $\\int v\\,dt$, the area between the velocity graph and the $t$-axis, where area below the axis counts as negative.",
+      "位移是 $\\int v\\,dt$，即速度图与 $t$ 轴之间的面积，其中轴下方的面积记为负。",
+    ],
+    (rng) => {
+      const { values, signed, distance, figure } = velocityGraph(rng);
+      return ask(
+        [
+          "The graph shows the velocity of a particle. Find its displacement from $t = 0$ to $t = 6$.",
+          "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的位移。",
+        ],
+        signed,
+        [distance, signed.neg(), Q.of(values[3] as number, 1).sub(Q.of(values[0] as number, 1)), signed.add(Q.of(2, 1))],
+        [
+          `Each piece has width $2$, so its signed area is the sum of its end heights. The total is $${signed.toLatex()}$.`,
+          `每段宽度为 $2$，所以它的有向面积等于两端高度之和。总和为 $${signed.toLatex()}$。`,
+        ],
+        figure,
+      );
+    },
+  ),
+  figure: calculusDrawings5["calculating-the-displacement-of-a-particle-using-integration#displacement-from-a-drawn-velocity-graph"],
+};
 
-const distanceDrawn = point(
-  "total-distance-from-a-drawn-velocity-graph",
-  ["Total distance from a drawn velocity graph", "由所画速度图求总路程"],
-  [
-    "Total distance is $\\int |v|\\,dt$: every area between the velocity graph and the $t$-axis counts as positive. A piece that crosses the axis splits into two triangles.",
-    "总路程是 $\\int |v|\\,dt$：速度图与 $t$ 轴之间的每块面积都记为正。穿过轴的一段要分成两个三角形。",
-  ],
-  (rng) => {
-    const { signed, distance, pieces, figure } = velocityGraph(rng);
-    return ask(
-      [
-        "The graph shows the velocity of a particle. Find the total distance it travels from $t = 0$ to $t = 6$.",
-        "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 走过的总路程。",
-      ],
-      distance,
-      [signed, signed.neg(), distance.mul(Q.of(2, 1)), distance.add(Q.of(1, 1))],
-      [
-        `The areas of the three pieces, all counted as positive, are $${pieces.join("$, $")}$. Their sum is $${distance.toLatex()}$.`,
-        `三段的面积（都记为正）为 $${pieces.join("$、$")}$。它们的和为 $${distance.toLatex()}$。`,
-      ],
-      figure,
-    );
-  },
-);
+const distanceDrawn = {
+  ...point(
+    "total-distance-from-a-drawn-velocity-graph",
+    ["Total distance from a drawn velocity graph", "由所画速度图求总路程"],
+    [
+      "Total distance is $\\int |v|\\,dt$: every area between the velocity graph and the $t$-axis counts as positive. A piece that crosses the axis splits into two triangles.",
+      "总路程是 $\\int |v|\\,dt$：速度图与 $t$ 轴之间的每块面积都记为正。穿过轴的一段要分成两个三角形。",
+    ],
+    (rng) => {
+      const { signed, distance, pieces, figure } = velocityGraph(rng);
+      return ask(
+        [
+          "The graph shows the velocity of a particle. Find the total distance it travels from $t = 0$ to $t = 6$.",
+          "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 走过的总路程。",
+        ],
+        distance,
+        [signed, signed.neg(), distance.mul(Q.of(2, 1)), distance.add(Q.of(1, 1))],
+        [
+          `The areas of the three pieces, all counted as positive, are $${pieces.join("$, $")}$. Their sum is $${distance.toLatex()}$.`,
+          `三段的面积（都记为正）为 $${pieces.join("$、$")}$。它们的和为 $${distance.toLatex()}$。`,
+        ],
+        figure,
+      );
+    },
+  ),
+  figure: calculusDrawings5["calculating-the-total-distance-traveled-by-a-particle#total-distance-from-a-drawn-velocity-graph"],
+};
 
-const positionDrawn = point(
-  "a-later-position-from-a-drawn-velocity-graph",
-  ["A later position from a drawn velocity graph", "由所画速度图求后来的位置"],
-  [
-    "Position at a later time is the starting position plus the signed area under the velocity graph up to that time: $s(T) = s(0) + \\int_0^T v\\,dt$.",
-    "后来某时刻的位置等于起始位置加上到该时刻为止速度图下的有向面积：$s(T) = s(0) + \\int_0^T v\\,dt$。",
-  ],
-  (rng) => {
-    const { values, figure } = velocityGraph(rng);
-    const s0 = rng.int(-6, 6);
-    const pieces = rng.int(1, 3);
-    const end = 2 * pieces;
-    const area = values.slice(1, pieces + 1).reduce((n, v, i) => n + v + (values[i] as number), 0);
-    const answer = s0 + area;
-    return ask(
-      [
-        `The graph shows the velocity of a particle with $s(0) = ${s0}$. Find $s(${end})$.`,
-        `图中是质点的速度，$s(0) = ${s0}$。求 $s(${end})$。`,
-      ],
-      answer,
-      [area, s0 - area, s0 + (values[pieces] as number), answer + 2, s0 + Math.abs(area) + 1],
-      [
-        `The signed area from $0$ to $${end}$ is $${area}$, so $s(${end}) = ${s0} + ${area < 0 ? `(${area})` : area} = ${answer}$.`,
-        `从 $0$ 到 $${end}$ 的有向面积为 $${area}$，所以 $s(${end}) = ${s0} + ${area < 0 ? `(${area})` : area} = ${answer}$。`,
-      ],
-      figure,
-    );
-  },
-);
+const positionDrawn = {
+  ...point(
+    "a-later-position-from-a-drawn-velocity-graph",
+    ["A later position from a drawn velocity graph", "由所画速度图求后来的位置"],
+    [
+      "Position at a later time is the starting position plus the signed area under the velocity graph up to that time: $s(T) = s(0) + \\int_0^T v\\,dt$.",
+      "后来某时刻的位置等于起始位置加上到该时刻为止速度图下的有向面积：$s(T) = s(0) + \\int_0^T v\\,dt$。",
+    ],
+    (rng) => {
+      const { values, figure } = velocityGraph(rng);
+      const s0 = rng.int(-6, 6);
+      const pieces = rng.int(1, 3);
+      const end = 2 * pieces;
+      const area = values.slice(1, pieces + 1).reduce((n, v, i) => n + v + (values[i] as number), 0);
+      const answer = s0 + area;
+      return ask(
+        [
+          `The graph shows the velocity of a particle with $s(0) = ${s0}$. Find $s(${end})$.`,
+          `图中是质点的速度，$s(0) = ${s0}$。求 $s(${end})$。`,
+        ],
+        answer,
+        [area, s0 - area, s0 + (values[pieces] as number), answer + 2, s0 + Math.abs(area) + 1],
+        [
+          `The signed area from $0$ to $${end}$ is $${area}$, so $s(${end}) = ${s0} + ${area < 0 ? `(${area})` : area} = ${answer}$.`,
+          `从 $0$ 到 $${end}$ 的有向面积为 $${area}$，所以 $s(${end}) = ${s0} + ${area < 0 ? `(${area})` : area} = ${answer}$。`,
+        ],
+        figure,
+      );
+    },
+  ),
+  figure:
+    calculusDrawings5["calculating-the-position-function-of-a-particle-using-integration#a-later-position-from-a-drawn-velocity-graph"],
+};
 
-const averageDrawn = point(
-  "average-velocity-from-a-drawn-velocity-graph",
-  ["Average velocity from a drawn velocity graph", "由所画速度图求平均速度"],
-  [
-    "The average value of $v$ on an interval is $\\frac{1}{b - a}\\int_a^b v\\,dt$: the signed area divided by the length of the interval. It is not the average of the end heights unless the graph is one straight piece.",
-    "$v$ 在区间上的平均值为 $\\frac{1}{b - a}\\int_a^b v\\,dt$：有向面积除以区间长度。除非图像是一条直线段，否则它不等于两端高度的平均。",
-  ],
-  (rng) => {
-    const { values, signed, distance, figure } = velocityGraph(rng);
-    const answer = signed.div(Q.of(6, 1));
-    return ask(
-      [
-        "The graph shows the velocity of a particle. Find its average velocity from $t = 0$ to $t = 6$.",
-        "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的平均速度。",
-      ],
-      answer,
-      [signed, distance.div(Q.of(6, 1)), Q.of((values[0] as number) + (values[3] as number), 2), signed.div(Q.of(3, 1))],
-      [
-        `The signed area is $${signed.toLatex()}$ and the interval has length $6$, so the average is $${answer.toLatex()}$.`,
-        `有向面积为 $${signed.toLatex()}$，区间长度为 $6$，所以平均值为 $${answer.toLatex()}$。`,
-      ],
-      figure,
-    );
-  },
-);
+const averageDrawn = {
+  ...point(
+    "average-velocity-from-a-drawn-velocity-graph",
+    ["Average velocity from a drawn velocity graph", "由所画速度图求平均速度"],
+    [
+      "The average value of $v$ on an interval is $\\frac{1}{b - a}\\int_a^b v\\,dt$: the signed area divided by the length of the interval. It is not the average of the end heights unless the graph is one straight piece.",
+      "$v$ 在区间上的平均值为 $\\frac{1}{b - a}\\int_a^b v\\,dt$：有向面积除以区间长度。除非图像是一条直线段，否则它不等于两端高度的平均。",
+    ],
+    (rng) => {
+      const { values, signed, distance, figure } = velocityGraph(rng);
+      const answer = signed.div(Q.of(6, 1));
+      return ask(
+        [
+          "The graph shows the velocity of a particle. Find its average velocity from $t = 0$ to $t = 6$.",
+          "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的平均速度。",
+        ],
+        answer,
+        [signed, distance.div(Q.of(6, 1)), Q.of((values[0] as number) + (values[3] as number), 2), signed.div(Q.of(3, 1))],
+        [
+          `The signed area is $${signed.toLatex()}$ and the interval has length $6$, so the average is $${answer.toLatex()}$.`,
+          `有向面积为 $${signed.toLatex()}$，区间长度为 $6$，所以平均值为 $${answer.toLatex()}$。`,
+        ],
+        figure,
+      );
+    },
+  ),
+  figure: calculusDrawings5["average-position-velocity-and-acceleration#average-velocity-from-a-drawn-velocity-graph"],
+};
 
 const ellipseView = { xMin: -11, xMax: 11, yMin: -11, yMax: 11, step: 1, labelEvery: 5 };
 
@@ -427,144 +448,153 @@ const parametricSlope = point(
   },
 );
 
-const parametricArea = point(
-  "the-area-inside-a-drawn-parametric-ellipse",
-  ["The area inside a drawn parametric ellipse", "所画参数椭圆内的面积"],
-  [
-    "The area inside a closed parametric curve is $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$ over one loop. For $x = a\\cos t$, $y = b\\sin t$, the integral is $ab\\int_0^{2\\pi}\\sin^2 t\\,dt = \\pi ab$. A circle is the special case $a = b$, which gives the familiar $\\pi r^2$.",
-    "闭合参数曲线内的面积是一圈上的 $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$。对 $x = a\\cos t$，$y = b\\sin t$，积分为 $ab\\int_0^{2\\pi}\\sin^2 t\\,dt = \\pi ab$。圆是 $a = b$ 的特例，得到熟悉的 $\\pi r^2$。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 7);
-    const b = rng.pick([1, 2, 3, 4, 5, 6, 7].filter((v) => v !== a));
-    return ask(
-      [
-        "The curve is traced once by $x = a\\cos t$, $y = b\\sin t$, for $0 \\le t \\le 2\\pi$, with positive $a$ and $b$. Find the area inside it divided by $\\pi$.",
-        "曲线由 $x = a\\cos t$，$y = b\\sin t$（$0 \\le t \\le 2\\pi$）描出一圈，$a$、$b$ 为正。求它内部的面积除以 $\\pi$。",
-      ],
-      a * b,
-      [a + b, 2 * a * b, 4 * a * b, a * a, b * b, Q.of(a * b, 2)],
-      [
-        `The curve meets the axes at $a = ${a}$ and $b = ${b}$. The area is $\\pi ab = ${a * b}\\pi$.`,
-        `曲线与坐标轴的交点给出 $a = ${a}$，$b = ${b}$。面积为 $\\pi ab = ${a * b}\\pi$。`,
-      ],
-      drawn(
-        { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
-        [{ kind: "path", points: arc(0, 0, 1, 0, 2 * Math.PI).map(([u, v]): Point => [a * u, b * v]), accent: true }],
-        t(`An ellipse with semi-axes ${a} and ${b}.`, `半轴为 ${a} 和 ${b} 的椭圆。`),
-      ),
-    );
-  },
-);
-
-const parametricLength = point(
-  "the-length-of-a-drawn-arc-traced-parametrically",
-  ["The length of a drawn arc traced parametrically", "参数曲线所画圆弧的长度"],
-  [
-    "For a curve $x(t)$, $y(t)$, the length is $\\int \\sqrt{x'(t)^2 + y'(t)^2}\\,dt$. On $x = R\\cos t$, $y = R\\sin t$, the integrand is the constant $R$, so the length is $R$ times the range of $t$.",
-    "对曲线 $x(t)$、$y(t)$，长度为 $\\int \\sqrt{x'(t)^2 + y'(t)^2}\\,dt$。在 $x = R\\cos t$，$y = R\\sin t$ 上，被积函数是常数 $R$，所以长度等于 $R$ 乘 $t$ 的范围。",
-  ],
-  (rng) => {
-    const R = rng.int(1, 6);
-    const start = rng.int(0, 3);
-    const quarters = rng.int(1, 3);
-    const span = Q.of(quarters, 2);
-    const answer = Q.of(R * quarters, 2);
-    const a0 = (start * Math.PI) / 2;
-    const a1 = a0 + (quarters * Math.PI) / 2;
-    return ask(
-      [
-        "The solid arc is the part traced counterclockwise by $x = R\\cos t$, $y = R\\sin t$ between the two marked points. Find its length divided by $\\pi$.",
-        "实线弧是 $x = R\\cos t$，$y = R\\sin t$ 在两个标记点之间逆时针描出的部分。求它的长度除以 $\\pi$。",
-      ],
-      answer,
-      [Q.of(R * quarters, 4), R * quarters, span, 2 * R, Q.of(R * R * quarters, 2)],
-      [
-        `The radius is $R = ${R}$, and the arc covers ${quarters} quarter${quarters > 1 ? "s" : ""} of a turn, so $t$ has range $${span.toLatex()}\\pi$. The length is $${R} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$.`,
-        `半径 $R = ${R}$，弧占 ${quarters} 个四分之一圈，所以 $t$ 的范围为 $${span.toLatex()}\\pi$。长度为 $${R} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$。`,
-      ],
-      drawn(
-        { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+const parametricArea = {
+  ...point(
+    "the-area-inside-a-drawn-parametric-ellipse",
+    ["The area inside a drawn parametric ellipse", "所画参数椭圆内的面积"],
+    [
+      "The area inside a closed parametric curve is $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$ over one loop. For $x = a\\cos t$, $y = b\\sin t$, the integral is $ab\\int_0^{2\\pi}\\sin^2 t\\,dt = \\pi ab$. A circle is the special case $a = b$, which gives the familiar $\\pi r^2$.",
+      "闭合参数曲线内的面积是一圈上的 $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$。对 $x = a\\cos t$，$y = b\\sin t$，积分为 $ab\\int_0^{2\\pi}\\sin^2 t\\,dt = \\pi ab$。圆是 $a = b$ 的特例，得到熟悉的 $\\pi r^2$。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 7);
+      const b = rng.pick([1, 2, 3, 4, 5, 6, 7].filter((v) => v !== a));
+      return ask(
         [
-          { kind: "circle", center: [0, 0], r: R, dashed: true },
-          { kind: "path", points: arc(0, 0, R, a0, a1), accent: true },
-          { kind: "point", at: [Math.round(R * Math.cos(a0)), Math.round(R * Math.sin(a0))] },
-          { kind: "point", at: [Math.round(R * Math.cos(a1)), Math.round(R * Math.sin(a1))] },
+          "The curve is traced once by $x = a\\cos t$, $y = b\\sin t$, for $0 \\le t \\le 2\\pi$, with positive $a$ and $b$. Find the area inside it divided by $\\pi$.",
+          "曲线由 $x = a\\cos t$，$y = b\\sin t$（$0 \\le t \\le 2\\pi$）描出一圈，$a$、$b$ 为正。求它内部的面积除以 $\\pi$。",
         ],
-        t(
-          `A circle of radius ${R} about the origin, with a solid arc of ${quarters} quarter turns.`,
-          `以原点为圆心、半径为 ${R} 的圆，实线弧占 ${quarters} 个四分之一圈。`,
+        a * b,
+        [a + b, 2 * a * b, 4 * a * b, a * a, b * b, Q.of(a * b, 2)],
+        [
+          `The curve meets the axes at $a = ${a}$ and $b = ${b}$. The area is $\\pi ab = ${a * b}\\pi$.`,
+          `曲线与坐标轴的交点给出 $a = ${a}$，$b = ${b}$。面积为 $\\pi ab = ${a * b}\\pi$。`,
+        ],
+        drawn(
+          { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+          [{ kind: "path", points: arc(0, 0, 1, 0, 2 * Math.PI).map(([u, v]): Point => [a * u, b * v]), accent: true }],
+          t(`An ellipse with semi-axes ${a} and ${b}.`, `半轴为 ${a} 和 ${b} 的椭圆。`),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: calculusDrawings5["calculating-areas-bounded-by-parametric-functions#the-area-inside-a-drawn-parametric-ellipse"],
+};
 
-const polarLength = point(
-  "the-length-of-a-drawn-polar-arc",
-  ["The length of a drawn polar arc", "所画极坐标弧的长度"],
-  [
-    "A polar curve has length $\\int \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\,d\\theta$. For $r = 2a\\cos\\theta$ or $r = 2a\\sin\\theta$, the integrand is the constant $2a$, so the length is $2a$ times the range of $\\theta$.",
-    "极坐标曲线的长度为 $\\int \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\,d\\theta$。对 $r = 2a\\cos\\theta$ 或 $r = 2a\\sin\\theta$，被积函数是常数 $2a$，所以长度等于 $2a$ 乘 $\\theta$ 的范围。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 6);
-    const cosine = rng.bool();
-    const [from, to] = rng.pick<[number, number]>(
-      cosine
-        ? [
-            [-2, 2],
-            [0, 2],
-            [1, 2],
-          ]
-        : [
-            [0, 4],
-            [0, 2],
-            [0, 1],
+const parametricLength = {
+  ...point(
+    "the-length-of-a-drawn-arc-traced-parametrically",
+    ["The length of a drawn arc traced parametrically", "参数曲线所画圆弧的长度"],
+    [
+      "For a curve $x(t)$, $y(t)$, the length is $\\int \\sqrt{x'(t)^2 + y'(t)^2}\\,dt$. On $x = R\\cos t$, $y = R\\sin t$, the integrand is the constant $R$, so the length is $R$ times the range of $t$.",
+      "对曲线 $x(t)$、$y(t)$，长度为 $\\int \\sqrt{x'(t)^2 + y'(t)^2}\\,dt$。在 $x = R\\cos t$，$y = R\\sin t$ 上，被积函数是常数 $R$，所以长度等于 $R$ 乘 $t$ 的范围。",
+    ],
+    (rng) => {
+      const R = rng.int(1, 6);
+      const start = rng.int(0, 3);
+      const quarters = rng.int(1, 3);
+      const span = Q.of(quarters, 2);
+      const answer = Q.of(R * quarters, 2);
+      const a0 = (start * Math.PI) / 2;
+      const a1 = a0 + (quarters * Math.PI) / 2;
+      return ask(
+        [
+          "The solid arc is the part traced counterclockwise by $x = R\\cos t$, $y = R\\sin t$ between the two marked points. Find its length divided by $\\pi$.",
+          "实线弧是 $x = R\\cos t$，$y = R\\sin t$ 在两个标记点之间逆时针描出的部分。求它的长度除以 $\\pi$。",
+        ],
+        answer,
+        [Q.of(R * quarters, 4), R * quarters, span, 2 * R, Q.of(R * R * quarters, 2)],
+        [
+          `The radius is $R = ${R}$, and the arc covers ${quarters} quarter${quarters > 1 ? "s" : ""} of a turn, so $t$ has range $${span.toLatex()}\\pi$. The length is $${R} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$.`,
+          `半径 $R = ${R}$，弧占 ${quarters} 个四分之一圈，所以 $t$ 的范围为 $${span.toLatex()}\\pi$。长度为 $${R} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$。`,
+        ],
+        drawn(
+          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+          [
+            { kind: "circle", center: [0, 0], r: R, dashed: true },
+            { kind: "path", points: arc(0, 0, R, a0, a1), accent: true },
+            { kind: "point", at: [Math.round(R * Math.cos(a0)), Math.round(R * Math.sin(a0))] },
+            { kind: "point", at: [Math.round(R * Math.cos(a1)), Math.round(R * Math.sin(a1))] },
           ],
-    );
-    const span = Q.of(to - from, 4);
-    const answer = Q.of(2 * a * (to - from), 4);
-    const angle = (q: number) =>
-      q === 0
-        ? "0"
-        : Q.of(q, 4)
-            .toLatex()
-            .replace(/^(-?)\\frac\{(\d+)\}\{(\d+)\}$/, "$1\\frac{$2\\pi}{$3}")
-            .replace("{1\\pi}", "{\\pi}")
-            .replace(/^1$/, "\\pi");
-    const range = `${angle(from)} \\le \\theta \\le ${angle(to)}`;
-    const trace = (th: number): Point => {
-      const r = 2 * a * (cosine ? Math.cos(th) : Math.sin(th));
-      return [r * Math.cos(th), r * Math.sin(th)];
-    };
-    const points = Array.from({ length: 61 }, (_, i) => trace(((from + ((to - from) * i) / 60) * Math.PI) / 4));
-    const name = cosine ? `r = ${2 * a}\\cos\\theta` : `r = ${2 * a}\\sin\\theta`;
-    return ask(
-      [
-        `The solid part of the drawn circle is $${name}$ for $${range}$. Find its length divided by $\\pi$.`,
-        `所画圆的实线部分是 $${name}$，$${range}$。求它的长度除以 $\\pi$。`,
-      ],
-      answer,
-      [span, 2 * a, Q.of(a * (to - from), 8), Q.of(4 * a * (to - from), 4), Q.of(4 * a * a * (to - from), 4)],
-      [
-        `The integrand is $\\sqrt{r^2 + r'^2} = ${2 * a}$, and $\\theta$ has range $${span.toLatex()}\\pi$. The length is $${2 * a} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$.`,
-        `被积函数为 $\\sqrt{r^2 + r'^2} = ${2 * a}$，$\\theta$ 的范围为 $${span.toLatex()}\\pi$。长度为 $${2 * a} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$。`,
-      ],
-      drawn(
-        { xMin: -13, xMax: 13, yMin: -13, yMax: 13, step: 1, labelEvery: 2 },
-        [
-          { kind: "circle", center: cosine ? [a, 0] : [0, a], r: a, dashed: true },
-          { kind: "path", points, accent: true },
-        ],
-        t(
-          `A circle through the origin with its center at (${cosine ? a : 0}, ${cosine ? 0 : a}), with a solid arc for the given range.`,
-          `过原点、圆心为 (${cosine ? a : 0}, ${cosine ? 0 : a}) 的圆，实线弧对应给定范围。`,
+          t(
+            `A circle of radius ${R} about the origin, with a solid arc of ${quarters} quarter turns.`,
+            `以原点为圆心、半径为 ${R} 的圆，实线弧占 ${quarters} 个四分之一圈。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-arc-length-of-a-parametric-curve#the-length-of-a-drawn-arc-traced-parametrically"],
+};
+
+const polarLength = {
+  ...point(
+    "the-length-of-a-drawn-polar-arc",
+    ["The length of a drawn polar arc", "所画极坐标弧的长度"],
+    [
+      "A polar curve has length $\\int \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\,d\\theta$. For $r = 2a\\cos\\theta$ or $r = 2a\\sin\\theta$, the integrand is the constant $2a$, so the length is $2a$ times the range of $\\theta$.",
+      "极坐标曲线的长度为 $\\int \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\,d\\theta$。对 $r = 2a\\cos\\theta$ 或 $r = 2a\\sin\\theta$，被积函数是常数 $2a$，所以长度等于 $2a$ 乘 $\\theta$ 的范围。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 6);
+      const cosine = rng.bool();
+      const [from, to] = rng.pick<[number, number]>(
+        cosine
+          ? [
+              [-2, 2],
+              [0, 2],
+              [1, 2],
+            ]
+          : [
+              [0, 4],
+              [0, 2],
+              [0, 1],
+            ],
+      );
+      const span = Q.of(to - from, 4);
+      const answer = Q.of(2 * a * (to - from), 4);
+      const angle = (q: number) =>
+        q === 0
+          ? "0"
+          : Q.of(q, 4)
+              .toLatex()
+              .replace(/^(-?)\\frac\{(\d+)\}\{(\d+)\}$/, "$1\\frac{$2\\pi}{$3}")
+              .replace("{1\\pi}", "{\\pi}")
+              .replace(/^1$/, "\\pi");
+      const range = `${angle(from)} \\le \\theta \\le ${angle(to)}`;
+      const trace = (th: number): Point => {
+        const r = 2 * a * (cosine ? Math.cos(th) : Math.sin(th));
+        return [r * Math.cos(th), r * Math.sin(th)];
+      };
+      const points = Array.from({ length: 61 }, (_, i) => trace(((from + ((to - from) * i) / 60) * Math.PI) / 4));
+      const name = cosine ? `r = ${2 * a}\\cos\\theta` : `r = ${2 * a}\\sin\\theta`;
+      return ask(
+        [
+          `The solid part of the drawn circle is $${name}$ for $${range}$. Find its length divided by $\\pi$.`,
+          `所画圆的实线部分是 $${name}$，$${range}$。求它的长度除以 $\\pi$。`,
+        ],
+        answer,
+        [span, 2 * a, Q.of(a * (to - from), 8), Q.of(4 * a * (to - from), 4), Q.of(4 * a * a * (to - from), 4)],
+        [
+          `The integrand is $\\sqrt{r^2 + r'^2} = ${2 * a}$, and $\\theta$ has range $${span.toLatex()}\\pi$. The length is $${2 * a} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$.`,
+          `被积函数为 $\\sqrt{r^2 + r'^2} = ${2 * a}$，$\\theta$ 的范围为 $${span.toLatex()}\\pi$。长度为 $${2 * a} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$。`,
+        ],
+        drawn(
+          { xMin: -13, xMax: 13, yMin: -13, yMax: 13, step: 1, labelEvery: 2 },
+          [
+            { kind: "circle", center: cosine ? [a, 0] : [0, a], r: a, dashed: true },
+            { kind: "path", points, accent: true },
+          ],
+          t(
+            `A circle through the origin with its center at (${cosine ? a : 0}, ${cosine ? 0 : a}), with a solid arc for the given range.`,
+            `过原点、圆心为 (${cosine ? a : 0}, ${cosine ? 0 : a}) 的圆，实线弧对应给定范围。`,
+          ),
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-arc-length-of-a-polar-curve#the-length-of-a-drawn-polar-arc"],
+};
 
 const roseArea = point(
   "the-area-of-a-drawn-rose",
@@ -791,150 +821,159 @@ const geometricBars = point(
   },
 );
 
-const integralComparison = point(
-  "what-a-drawing-of-the-integral-test-shows",
-  ["What a drawing of the integral test shows", "积分判别法的图说明了什么"],
-  [
-    "Rectangles of width one with heights $f(n)$ have total area equal to the series. If they sit under a curve whose improper integral is finite, the series converges. If they cover a curve whose improper integral is infinite, the series diverges. The other two arrangements prove nothing.",
-    "宽度为一、高度为 $f(n)$ 的矩形总面积等于级数。如果它们位于反常积分有限的曲线下方，级数收敛。如果它们盖住反常积分无穷的曲线，级数发散。另外两种情况什么也证明不了。",
-  ],
-  (rng) => {
-    const c = rng.int(1, 8);
-    const convergent = rng.bool();
-    const p = convergent ? rng.pick([2, 3]) : rng.pick([0.5, 1]);
-    const f = (v: number) => c / v ** p;
-    const start = convergent ? 2 : 1;
-    const cuts = [1, 2, 3, 4, 5, 6, 7, 8];
-    const values = cuts.slice(0, -1).map((_, i) => f(i + start));
-    const svg = chart(
-      [0, 8],
-      [0, c * 1.15],
-      intTicks(0, 8),
-      [[c, String(c)]],
-      (x, y) => bars(cuts, values, x, y) + curvePath(f, 1, 8, x, y, 'stroke="currentColor"'),
-    );
-    const base = p === 0.5 ? "\\sqrt{x}" : p === 1 ? "x" : `x^${p}`;
-    const down: Pair = ["It converges: its area is below a finite area", "收敛：它的面积小于一个有限面积"];
-    const up: Pair = ["It diverges: its area is above an infinite area", "发散：它的面积大于一个无穷面积"];
-    const down2: Pair = ["It diverges: its area is below an infinite area", "发散：它的面积小于一个无穷面积"];
-    const up2: Pair = ["It converges: its area is above a finite area", "收敛：它的面积大于一个有限面积"];
-    return choose(
-      rng,
-      [
-        `The curve is $y = \\frac{${c}}{${base}}$ for $x \\ge 1$, and the rectangles show the terms of a series with $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$, starting at $n = ${start}$. The rectangles continue to the right. What does the drawing show?`,
-        `曲线是 $y = \\frac{${c}}{${base}}$（$x \\ge 1$），矩形表示 $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$ 从 $n = ${start}$ 开始的级数的项。矩形向右延续。这幅图说明了什么？`,
-      ],
-      convergent ? down : up,
-      convergent ? [up, down2, up2] : [down, down2, up2],
-      convergent
-        ? [
-            `The rectangles lie under the curve, and $\\int_1^\\infty y\\,dx$ is finite since the power of $x$ is above $1$.`,
-            `矩形位于曲线下方，而 $x$ 的幂次大于 $1$，所以 $\\int_1^\\infty y\\,dx$ 有限。`,
-          ]
-        : [
-            `The rectangles cover the curve, and $\\int_1^\\infty y\\,dx$ is infinite since the power of $x$ is at most $1$.`,
-            `矩形盖住曲线，而 $x$ 的幂次不超过 $1$，所以 $\\int_1^\\infty y\\,dx$ 为无穷。`,
-          ],
-      figureOf(svg, [
+const integralComparison = {
+  ...point(
+    "what-a-drawing-of-the-integral-test-shows",
+    ["What a drawing of the integral test shows", "积分判别法的图说明了什么"],
+    [
+      "Rectangles of width one with heights $f(n)$ have total area equal to the series. If they sit under a curve whose improper integral is finite, the series converges. If they cover a curve whose improper integral is infinite, the series diverges. The other two arrangements prove nothing.",
+      "宽度为一、高度为 $f(n)$ 的矩形总面积等于级数。如果它们位于反常积分有限的曲线下方，级数收敛。如果它们盖住反常积分无穷的曲线，级数发散。另外两种情况什么也证明不了。",
+    ],
+    (rng) => {
+      const c = rng.int(1, 8);
+      const convergent = rng.bool();
+      const p = convergent ? rng.pick([2, 3]) : rng.pick([0.5, 1]);
+      const f = (v: number) => c / v ** p;
+      const start = convergent ? 2 : 1;
+      const cuts = [1, 2, 3, 4, 5, 6, 7, 8];
+      const values = cuts.slice(0, -1).map((_, i) => f(i + start));
+      const svg = chart(
+        [0, 8],
+        [0, c * 1.15],
+        intTicks(0, 8),
+        [[c, String(c)]],
+        (x, y) => bars(cuts, values, x, y) + curvePath(f, 1, 8, x, y, 'stroke="currentColor"'),
+      );
+      const base = p === 0.5 ? "\\sqrt{x}" : p === 1 ? "x" : `x^${p}`;
+      const down: Pair = ["It converges: its area is below a finite area", "收敛：它的面积小于一个有限面积"];
+      const up: Pair = ["It diverges: its area is above an infinite area", "发散：它的面积大于一个无穷面积"];
+      const down2: Pair = ["It diverges: its area is below an infinite area", "发散：它的面积小于一个无穷面积"];
+      const up2: Pair = ["It converges: its area is above a finite area", "收敛：它的面积大于一个有限面积"];
+      return choose(
+        rng,
+        [
+          `The curve is $y = \\frac{${c}}{${base}}$ for $x \\ge 1$, and the rectangles show the terms of a series with $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$, starting at $n = ${start}$. The rectangles continue to the right. What does the drawing show?`,
+          `曲线是 $y = \\frac{${c}}{${base}}$（$x \\ge 1$），矩形表示 $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$ 从 $n = ${start}$ 开始的级数的项。矩形向右延续。这幅图说明了什么？`,
+        ],
+        convergent ? down : up,
+        convergent ? [up, down2, up2] : [down, down2, up2],
         convergent
-          ? "A decreasing curve with unit-width rectangles that lie under it."
-          : "A decreasing curve with unit-width rectangles that rise above it.",
-        convergent ? "递减曲线，宽度为一的矩形位于它下方。" : "递减曲线，宽度为一的矩形高出曲线。",
-      ]),
-    );
-  },
-);
+          ? [
+              `The rectangles lie under the curve, and $\\int_1^\\infty y\\,dx$ is finite since the power of $x$ is above $1$.`,
+              `矩形位于曲线下方，而 $x$ 的幂次大于 $1$，所以 $\\int_1^\\infty y\\,dx$ 有限。`,
+            ]
+          : [
+              `The rectangles cover the curve, and $\\int_1^\\infty y\\,dx$ is infinite since the power of $x$ is at most $1$.`,
+              `矩形盖住曲线，而 $x$ 的幂次不超过 $1$，所以 $\\int_1^\\infty y\\,dx$ 为无穷。`,
+            ],
+        figureOf(svg, [
+          convergent
+            ? "A decreasing curve with unit-width rectangles that lie under it."
+            : "A decreasing curve with unit-width rectangles that rise above it.",
+          convergent ? "递减曲线，宽度为一的矩形位于它下方。" : "递减曲线，宽度为一的矩形高出曲线。",
+        ]),
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-integral-test#what-a-drawing-of-the-integral-test-shows"],
+};
 
-const remainderDrawn = point(
-  "a-remainder-bound-from-drawn-rectangles",
-  ["A remainder bound from drawn rectangles", "由所画矩形得到余项界"],
-  [
-    "The rectangles for the terms after $n = N$ lie under the curve from $x = N$ onward. So for a decreasing positive $f$, the remainder satisfies $R_N \\le \\int_N^\\infty f(x)\\,dx$.",
-    "$n = N$ 之后各项的矩形位于曲线从 $x = N$ 起的部分下方。所以对递减的正函数 $f$，余项满足 $R_N \\le \\int_N^\\infty f(x)\\,dx$。",
-  ],
-  (rng) => {
-    const c = rng.int(1, 12);
-    const N = rng.int(1, 5);
-    const f = (v: number) => c / (v * v);
-    const cuts = Array.from({ length: 9 - N }, (_, i) => N + i);
-    const values = cuts.slice(1).map((v) => f(v));
-    const top = f(Math.max(N, 1)) * 1.15;
-    const svg = chart(
-      [0, 9],
-      [0, top],
-      intTicks(0, 9),
-      [],
-      (x, y) => bars(cuts, values, x, y) + curvePath(f, N, 9, x, y, 'stroke="currentColor"') + mark(x, y, N, f(N)),
-    );
-    return ask(
-      [
-        `The curve is $y = \\frac{${c}}{x^2}$, and the rectangles show the terms $\\frac{${c}}{n^2}$ after the first $${N}$. They continue to the right without end. What upper bound does the drawing give for the sum of those terms?`,
-        `曲线是 $y = \\frac{${c}}{x^2}$，矩形表示前 $${N}$ 项之后的各项 $\\frac{${c}}{n^2}$。它们向右无限延续。这幅图给出这些项之和的什么上界？`,
-      ],
-      Q.of(c, N),
-      [Q.of(c, N + 1), Q.of(c, N * N), c * N, Q.of(2 * c, N), c],
-      [
-        `The rectangles lie under the curve from $x = ${N}$ onward, so the sum is at most $\\int_{${N}}^{\\infty} \\frac{${c}}{x^2}\\,dx = ${Q.of(c, N).toLatex()}$.`,
-        `矩形位于曲线从 $x = ${N}$ 起的部分下方，所以和不超过 $\\int_{${N}}^{\\infty} \\frac{${c}}{x^2}\\,dx = ${Q.of(c, N).toLatex()}$。`,
-      ],
-      figureOf(svg, [
-        `A decreasing curve starting from x = ${N}, with unit-width rectangles under it.`,
-        `从 x = ${N} 开始的递减曲线，宽度为一的矩形位于它下方。`,
-      ]),
-    );
-  },
-);
+const remainderDrawn = {
+  ...point(
+    "a-remainder-bound-from-drawn-rectangles",
+    ["A remainder bound from drawn rectangles", "由所画矩形得到余项界"],
+    [
+      "The rectangles for the terms after $n = N$ lie under the curve from $x = N$ onward. So for a decreasing positive $f$, the remainder satisfies $R_N \\le \\int_N^\\infty f(x)\\,dx$.",
+      "$n = N$ 之后各项的矩形位于曲线从 $x = N$ 起的部分下方。所以对递减的正函数 $f$，余项满足 $R_N \\le \\int_N^\\infty f(x)\\,dx$。",
+    ],
+    (rng) => {
+      const c = rng.int(1, 12);
+      const N = rng.int(1, 5);
+      const f = (v: number) => c / (v * v);
+      const cuts = Array.from({ length: 9 - N }, (_, i) => N + i);
+      const values = cuts.slice(1).map((v) => f(v));
+      const top = f(Math.max(N, 1)) * 1.15;
+      const svg = chart(
+        [0, 9],
+        [0, top],
+        intTicks(0, 9),
+        [],
+        (x, y) => bars(cuts, values, x, y) + curvePath(f, N, 9, x, y, 'stroke="currentColor"') + mark(x, y, N, f(N)),
+      );
+      return ask(
+        [
+          `The curve is $y = \\frac{${c}}{x^2}$, and the rectangles show the terms $\\frac{${c}}{n^2}$ after the first $${N}$. They continue to the right without end. What upper bound does the drawing give for the sum of those terms?`,
+          `曲线是 $y = \\frac{${c}}{x^2}$，矩形表示前 $${N}$ 项之后的各项 $\\frac{${c}}{n^2}$。它们向右无限延续。这幅图给出这些项之和的什么上界？`,
+        ],
+        Q.of(c, N),
+        [Q.of(c, N + 1), Q.of(c, N * N), c * N, Q.of(2 * c, N), c],
+        [
+          `The rectangles lie under the curve from $x = ${N}$ onward, so the sum is at most $\\int_{${N}}^{\\infty} \\frac{${c}}{x^2}\\,dx = ${Q.of(c, N).toLatex()}$.`,
+          `矩形位于曲线从 $x = ${N}$ 起的部分下方，所以和不超过 $\\int_{${N}}^{\\infty} \\frac{${c}}{x^2}\\,dx = ${Q.of(c, N).toLatex()}$。`,
+        ],
+        figureOf(svg, [
+          `A decreasing curve starting from x = ${N}, with unit-width rectangles under it.`,
+          `从 x = ${N} 开始的递减曲线，宽度为一的矩形位于它下方。`,
+        ]),
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-remainder-estimate-for-the-integral-test#a-remainder-bound-from-drawn-rectangles"],
+};
 
-const lagrangeDrawn = point(
-  "a-taylor-error-bound-from-a-drawn-derivative",
-  ["A Taylor error bound from a drawn derivative", "由所画导数求泰勒误差界"],
-  [
-    "The Lagrange bound is $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$, where $M$ is the largest size of $f^{(n+1)}$ between $a$ and $x$. Only that interval counts: bigger values elsewhere on the graph do not matter.",
-    "拉格朗日界为 $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$，其中 $M$ 是 $f^{(n+1)}$ 在 $a$ 与 $x$ 之间的最大绝对值。只有这个区间才算：图上其他地方更大的值无关紧要。",
-  ],
-  (rng) => {
-    const order = rng.pick([2, 3]);
-    const h = rng.int(1, 4);
-    const inner: number[] = Array.from({ length: h + 1 }, () => rng.int(-4, 4));
-    if (!inner.some(Boolean)) inner[0] = 2;
-    const M = Math.max(...inner.map(Math.abs));
-    const outer = Math.min(6, M + rng.int(1, 3));
-    const values = [...inner, ...(h < 6 ? [outer] : [])];
-    const fact = order === 2 ? 2 : 6;
-    const answer = Q.of(M * h ** order, fact);
-    const n = order - 1;
-    const name = order === 2 ? "f''" : "f'''";
-    const points = values.map((v, i): Point => [i, v]);
-    return ask(
-      [
-        `The graph shows $${name}$. Let $T_{${n}}$ be the degree $${n}$ Taylor polynomial of $f$ at $0$. Use the Lagrange bound to give an upper bound for $|f(${h}) - T_{${n}}(${h})|$, using the largest size of $${name}$ on $[0, ${h}]$.`,
-        `图中是 $${name}$。设 $T_{${n}}$ 是 $f$ 在 $0$ 处的 $${n}$ 次泰勒多项式。用 $${name}$ 在 $[0, ${h}]$ 上的最大绝对值，由拉格朗日界给出 $|f(${h}) - T_{${n}}(${h})|$ 的上界。`,
-      ],
-      answer,
-      [
-        Q.of(outer * h ** order, fact),
-        M * h ** order,
-        Q.of(M * h ** (order - 1), order - 1),
-        Q.of(M * h ** order, fact * 2),
-        Q.of(M * h, fact),
-      ],
-      [
-        `On $[0, ${h}]$ the largest size of $${name}$ is $M = ${M}$. The bound is $\\frac{${M} \\cdot ${h}^{${order}}}{${order}!} = ${answer.toLatex()}$.`,
-        `在 $[0, ${h}]$ 上 $${name}$ 的最大绝对值为 $M = ${M}$。上界为 $\\frac{${M} \\cdot ${h}^{${order}}}{${order}!} = ${answer.toLatex()}$。`,
-      ],
-      {
-        svg: chart([0, 6], [-5, 7], intTicks(0, 6), intTicks(-5, 7), (x, y) => {
-          const line = points.map(([u, v]) => `${x(u)},${y(v)}`).join(" ");
-          return `<line stroke="currentColor" stroke-dasharray="5 4" x1="${x(0)}" y1="${y(0)}" x2="${x(6)}" y2="${y(0)}"/><polyline class="accent" stroke="currentColor" fill="none" points="${line}"/>`;
-        }),
-        alt: t(
-          `A graph of straight pieces through ${points.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-          `由直线段组成的图像，过 ${points.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
-        ),
-      },
-    );
-  },
-);
+const lagrangeDrawn = {
+  ...point(
+    "a-taylor-error-bound-from-a-drawn-derivative",
+    ["A Taylor error bound from a drawn derivative", "由所画导数求泰勒误差界"],
+    [
+      "The Lagrange bound is $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$, where $M$ is the largest size of $f^{(n+1)}$ between $a$ and $x$. Only that interval counts: bigger values elsewhere on the graph do not matter.",
+      "拉格朗日界为 $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$，其中 $M$ 是 $f^{(n+1)}$ 在 $a$ 与 $x$ 之间的最大绝对值。只有这个区间才算：图上其他地方更大的值无关紧要。",
+    ],
+    (rng) => {
+      const order = rng.pick([2, 3]);
+      const h = rng.int(1, 4);
+      const inner: number[] = Array.from({ length: h + 1 }, () => rng.int(-4, 4));
+      if (!inner.some(Boolean)) inner[0] = 2;
+      const M = Math.max(...inner.map(Math.abs));
+      const outer = Math.min(6, M + rng.int(1, 3));
+      const values = [...inner, ...(h < 6 ? [outer] : [])];
+      const fact = order === 2 ? 2 : 6;
+      const answer = Q.of(M * h ** order, fact);
+      const n = order - 1;
+      const name = order === 2 ? "f''" : "f'''";
+      const points = values.map((v, i): Point => [i, v]);
+      return ask(
+        [
+          `The graph shows $${name}$. Let $T_{${n}}$ be the degree $${n}$ Taylor polynomial of $f$ at $0$. Use the Lagrange bound to give an upper bound for $|f(${h}) - T_{${n}}(${h})|$, using the largest size of $${name}$ on $[0, ${h}]$.`,
+          `图中是 $${name}$。设 $T_{${n}}$ 是 $f$ 在 $0$ 处的 $${n}$ 次泰勒多项式。用 $${name}$ 在 $[0, ${h}]$ 上的最大绝对值，由拉格朗日界给出 $|f(${h}) - T_{${n}}(${h})|$ 的上界。`,
+        ],
+        answer,
+        [
+          Q.of(outer * h ** order, fact),
+          M * h ** order,
+          Q.of(M * h ** (order - 1), order - 1),
+          Q.of(M * h ** order, fact * 2),
+          Q.of(M * h, fact),
+        ],
+        [
+          `On $[0, ${h}]$ the largest size of $${name}$ is $M = ${M}$. The bound is $\\frac{${M} \\cdot ${h}^{${order}}}{${order}!} = ${answer.toLatex()}$.`,
+          `在 $[0, ${h}]$ 上 $${name}$ 的最大绝对值为 $M = ${M}$。上界为 $\\frac{${M} \\cdot ${h}^{${order}}}{${order}!} = ${answer.toLatex()}$。`,
+        ],
+        {
+          svg: chart([0, 6], [-5, 7], intTicks(0, 6), intTicks(-5, 7), (x, y) => {
+            const line = points.map(([u, v]) => `${x(u)},${y(v)}`).join(" ");
+            return `<line stroke="currentColor" stroke-dasharray="5 4" x1="${x(0)}" y1="${y(0)}" x2="${x(6)}" y2="${y(0)}"/><polyline class="accent" stroke="currentColor" fill="none" points="${line}"/>`;
+          }),
+          alt: t(
+            `A graph of straight pieces through ${points.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+            `由直线段组成的图像，过 ${points.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-lagrange-error-bound#a-taylor-error-bound-from-a-drawn-derivative"],
+};
 
 const eulerField = point(
   "two-euler-steps-on-a-drawn-direction-field",
@@ -993,46 +1032,52 @@ const eulerField = point(
   },
 );
 
-const coneAboutLine = point(
-  "the-disc-method-about-a-drawn-horizontal-line",
-  ["The disc method about a drawn horizontal line", "绕所画水平线用圆盘法"],
-  [
-    "Rotating a region about the line $y = k$ makes discs whose radius is the distance to that line, not the height above the $x$-axis: $V = \\pi\\int (f(x) - k)^2\\,dx$.",
-    "把区域绕直线 $y = k$ 旋转，得到的圆盘半径是到这条直线的距离，而不是到 $x$ 轴的高度：$V = \\pi\\int (f(x) - k)^2\\,dx$。",
-  ],
-  (rng) => {
-    const k = rng.int(-3, 3);
-    const a = rng.int(1, 6);
-    const rise = rng.int(1, 4);
-    const answer = Q.of(rise * rise * a, 3);
-    const end: Point = [a, k + rise];
-    const trap = Q.of(a * ((k + rise) * (k + rise) + (k + rise) * k + k * k), 3);
-    return ask(
-      [
-        "The shaded triangle is rotated about the dashed line. Find the volume of the solid divided by $\\pi$.",
-        "阴影三角形绕虚线旋转。求所得立体的体积除以 $\\pi$。",
-      ],
-      answer,
-      [rise * rise * a, trap, Q.of(rise * a, 3), Q.of(rise * rise * a, 2), Q.of(rise * a * a, 3)],
-      [
-        `The radius at $x$ is the distance to the dashed line, $\\frac{${rise}x}{${a}}$. So $\\int_0^{${a}} \\left(\\frac{${rise}x}{${a}}\\right)^2 dx = \\frac{${rise}^2 \\cdot ${a}}{3} = ${answer.toLatex()}$.`,
-        `$x$ 处的半径是到虚线的距离 $\\frac{${rise}x}{${a}}$。所以 $\\int_0^{${a}} \\left(\\frac{${rise}x}{${a}}\\right)^2 dx = \\frac{${rise}^2 \\cdot ${a}}{3} = ${answer.toLatex()}$。`,
-      ],
-      drawn(
-        { xMin: -1, xMax: 7, yMin: -4, yMax: 8 },
+const coneAboutLine = {
+  ...point(
+    "the-disc-method-about-a-drawn-horizontal-line",
+    ["The disc method about a drawn horizontal line", "绕所画水平线用圆盘法"],
+    [
+      "Rotating a region about the line $y = k$ makes discs whose radius is the distance to that line, not the height above the $x$-axis: $V = \\pi\\int (f(x) - k)^2\\,dx$.",
+      "把区域绕直线 $y = k$ 旋转，得到的圆盘半径是到这条直线的距离，而不是到 $x$ 轴的高度：$V = \\pi\\int (f(x) - k)^2\\,dx$。",
+    ],
+    (rng) => {
+      const k = rng.int(-3, 3);
+      const a = rng.int(1, 6);
+      const rise = rng.int(1, 4);
+      const answer = Q.of(rise * rise * a, 3);
+      const end: Point = [a, k + rise];
+      const trap = Q.of(a * ((k + rise) * (k + rise) + (k + rise) * k + k * k), 3);
+      return ask(
         [
-          { kind: "polygon", points: [[0, k], [a, k], end] },
-          { kind: "line", a: [0, k], b: [1, k], dashed: true },
-          { kind: "point", at: end },
+          "The shaded triangle is rotated about the dashed line. Find the volume of the solid divided by $\\pi$.",
+          "阴影三角形绕虚线旋转。求所得立体的体积除以 $\\pi$。",
         ],
-        t(
-          `A triangle with vertices (0, ${k}), (${a}, ${k}) and (${a}, ${k + rise}), and the dashed line y = ${k} along its lower side.`,
-          `顶点为 (0, ${k})、(${a}, ${k}) 和 (${a}, ${k + rise}) 的三角形，虚线 y = ${k} 沿它的下边。`,
+        answer,
+        [rise * rise * a, trap, Q.of(rise * a, 3), Q.of(rise * rise * a, 2), Q.of(rise * a * a, 3)],
+        [
+          `The radius at $x$ is the distance to the dashed line, $\\frac{${rise}x}{${a}}$. So $\\int_0^{${a}} \\left(\\frac{${rise}x}{${a}}\\right)^2 dx = \\frac{${rise}^2 \\cdot ${a}}{3} = ${answer.toLatex()}$.`,
+          `$x$ 处的半径是到虚线的距离 $\\frac{${rise}x}{${a}}$。所以 $\\int_0^{${a}} \\left(\\frac{${rise}x}{${a}}\\right)^2 dx = \\frac{${rise}^2 \\cdot ${a}}{3} = ${answer.toLatex()}$。`,
+        ],
+        drawn(
+          { xMin: -1, xMax: 7, yMin: -4, yMax: 8 },
+          [
+            { kind: "polygon", points: [[0, k], [a, k], end] },
+            { kind: "line", a: [0, k], b: [1, k], dashed: true },
+            { kind: "point", at: end },
+          ],
+          t(
+            `A triangle with vertices (0, ${k}), (${a}, ${k}) and (${a}, ${k + rise}), and the dashed line y = ${k} along its lower side.`,
+            `顶点为 (0, ${k})、(${a}, ${k}) 和 (${a}, ${k + rise}) 的三角形，虚线 y = ${k} 沿它的下边。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure:
+    calculusDrawings4[
+      "volumes-of-revolution-using-the-disc-method-rotation-about-other-axes#the-disc-method-about-a-drawn-horizontal-line"
+    ],
+};
 
 /** deeperFiguresCalculusIi2Points adds more knowledge points of Calculus II that are answered by reading a drawing. */
 export const deeperFiguresCalculusIi2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

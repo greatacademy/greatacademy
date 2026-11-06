@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 
 import { functionProblem, numberProblem, steps } from "../problems.ts";
 import { fac, type Poly, pAt, pLatex } from "./calculus-common.ts";
@@ -83,6 +84,7 @@ export const integratingRatesOfChange: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-an-amount-from-its-rate",
+      figure: calculusDrawings4["integrating-rates-of-change#finding-an-amount-from-its-rate"],
       title: t("Finding an amount from its rate", "由变化率求总量"),
       explanation: t(
         "If $Q'(t) = r(t)$, the fundamental theorem gives the net change theorem:\n\n$$Q(T) = Q(0) + \\int_{0}^{T} r(t) \\, dt.$$\n\nFor example, if water flows in at $r(t) = 2t + 3$ liters per minute and the tank starts with $10$ liters, after $4$ minutes it holds $10 + \\int_{0}^{4} (2t + 3) \\, dt = 10 + 28 = 38$ liters.",
@@ -109,6 +111,7 @@ export const integratingRatesOfChange: TopicDef = {
     },
     {
       id: "net-change-with-inflow-and-outflow",
+      figure: calculusDrawings4["integrating-rates-of-change#net-change-with-inflow-and-outflow"],
       title: t("Net change with inflow and outflow", "有流入与流出时的净变化"),
       explanation: t(
         "When a quantity has an inflow rate $R(t)$ and an outflow rate $L(t)$, its rate of change is $R(t) - L(t)$, so the change from $t = a$ to $t = b$ is\n\n$$\\int_{a}^{b} \\left(R(t) - L(t)\\right) dt.$$\n\nA negative answer means the quantity decreased.",
@@ -234,6 +237,7 @@ export const theAverageValueOfAFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "average-values-of-polynomials",
+      figure: calculusDrawings4["the-average-value-of-a-function#average-values-of-polynomials"],
       title: t("Average values of polynomials", "多项式的平均值"),
       explanation: t(
         "The average value of $f$ on $[a, b]$ is\n\n$$f_{\\text{avg}} = \\frac{1}{b - a}\\int_{a}^{b} f(x) \\, dx.$$\n\nIt is the height of the rectangle on $[a, b]$ with the same area as the region under $f$. For example, the average of $x^{2}$ on $[0, 3]$ is $\\frac{1}{3} \\cdot 9 = 3$.",
@@ -452,6 +456,7 @@ export const theAreaBetweenCurvesExpressedAsFunctionsOfY: TopicDef = {
     },
     {
       id: "choosing-to-integrate-with-respect-to-y",
+      figure: calculusDrawings4["the-area-between-curves-expressed-as-functions-of-y#choosing-to-integrate-with-respect-to-y"],
       title: t("Choosing to integrate with respect to y", "选择对 y 积分"),
       explanation: t(
         "Some regions are much simpler to slice horizontally. The region bounded by the parabola $x = y^{2}$ and the line $x = 4$ would need two square-root curves $y = \\pm\\sqrt{x}$ in terms of $x$, but in terms of $y$ it runs from $y = -2$ to $y = 2$ between $x = y^{2}$ and $x = 4$:\n\n$$\\int_{-2}^{2} (4 - y^{2}) \\, dy = \\frac{32}{3}.$$",
@@ -624,6 +629,7 @@ export const theArcLengthOfAPlanarCurve: TopicDef = {
   knowledgePoints: [
     {
       id: "arc-length-with-a-substitution",
+      figure: calculusDrawings4["the-arc-length-of-a-planar-curve#arc-length-with-a-substitution"],
       title: t("Arc length with a substitution", "用换元法求弧长"),
       explanation: t(
         "A short piece of the curve is nearly a straight segment of length $\\sqrt{(\\Delta x)^{2} + (\\Delta y)^{2}} = \\sqrt{1 + \\left(\\frac{\\Delta y}{\\Delta x}\\right)^{2}}\\Delta x$. Adding the pieces,\n\n$$L = \\int_{a}^{b} \\sqrt{1 + \\left(f'(x)\\right)^{2}} \\, dx.$$\n\nFor $y = \\frac{2}{3}x^{3/2}$, $f'(x) = x^{1/2}$, so $L = \\int_{0}^{3} \\sqrt{1 + x} \\, dx = \\frac{2}{3}\\left[(1 + x)^{3/2}\\right]_{0}^{3} = \\frac{14}{3}$.",
@@ -832,6 +838,7 @@ export const volumesOfSolidsWithSquareCrossSections: TopicDef = {
   knowledgePoints: [
     {
       id: "square-cross-sections-under-a-curve",
+      figure: calculusDrawings4["volumes-of-solids-with-square-cross-sections#square-cross-sections-under-a-curve"],
       title: t("Square cross sections under a curve", "曲线下方区域上的正方形截面"),
       explanation: t(
         "If the cross section of a solid at $x$ has area $A(x)$, slicing gives $V = \\int_{a}^{b} A(x) \\, dx$. When the base is a region in the plane and the cross sections perpendicular to the $x$-axis are squares, each side is the width $s(x)$ of the base at $x$, so $A(x) = s(x)^{2}$. For the base under $y = 2 - x$ on $[0, 2]$: $V = \\int_{0}^{2} (2 - x)^{2} \\, dx = \\frac{8}{3}$.",
@@ -867,6 +874,7 @@ export const volumesOfSolidsWithRectangularCrossSections: TopicDef = {
   knowledgePoints: [
     {
       id: "rectangles-with-height-proportional-to-the-base",
+      figure: calculusDrawings4["volumes-of-solids-with-rectangular-cross-sections#rectangles-with-height-proportional-to-the-base"],
       title: t("Rectangles with height proportional to the base", "高与底成比例的矩形"),
       explanation: t(
         "If each rectangular cross section has its base $s(x)$ across the region and height $h$ times its base, its area is $s \\cdot hs = hs^{2}$, so $V = h\\int_{a}^{b} s(x)^{2} \\, dx$.",
@@ -885,6 +893,7 @@ export const volumesOfSolidsWithRectangularCrossSections: TopicDef = {
     },
     {
       id: "rectangles-with-constant-height",
+      figure: calculusDrawings4["volumes-of-solids-with-rectangular-cross-sections#rectangles-with-constant-height"],
       title: t("Rectangles with constant height", "高为常数的矩形"),
       explanation: t(
         "If every rectangle has the same height $H$, its area is $Hs(x)$, and the volume is $H$ times the area of the base: $V = H\\int_{a}^{b} s(x) \\, dx$. The solid is a slab of constant thickness.",
@@ -919,6 +928,7 @@ export const volumesOfSolidsWithTriangularCrossSections: TopicDef = {
   knowledgePoints: [
     {
       id: "equilateral-triangle-cross-sections",
+      figure: calculusDrawings4["volumes-of-solids-with-triangular-cross-sections#equilateral-triangle-cross-sections"],
       title: t("Equilateral triangle cross sections", "等边三角形截面"),
       explanation: t(
         "Slice the solid perpendicular to the axis; each slice is a thin triangle whose area depends on its side, and adding up the slices gives the volume. An equilateral triangle with side $s$ has area $\\frac{\\sqrt{3}}{4}s^{2}$, so $V = \\frac{\\sqrt{3}}{4}\\int_{a}^{b} s(x)^{2} \\, dx$.",
@@ -936,6 +946,7 @@ export const volumesOfSolidsWithTriangularCrossSections: TopicDef = {
     },
     {
       id: "right-isosceles-triangle-cross-sections",
+      figure: calculusDrawings4["volumes-of-solids-with-triangular-cross-sections#right-isosceles-triangle-cross-sections"],
       title: t("Right isosceles triangle cross sections", "等腰直角三角形截面"),
       explanation: t(
         "For an isosceles right triangle with a leg $s$ in the base, the area is $\\frac{1}{2}s^{2}$. If instead the hypotenuse $s$ lies in the base, each leg is $\\frac{s}{\\sqrt{2}}$ and the area is $\\frac{1}{4}s^{2}$.",
@@ -991,6 +1002,7 @@ export const volumesOfSolidsWithCircularCrossSections: TopicDef = {
     },
     {
       id: "circular-cross-sections",
+      figure: calculusDrawings4["volumes-of-solids-with-circular-cross-sections#circular-cross-sections"],
       title: t("Circular cross sections", "圆形截面"),
       explanation: t(
         "Each slice is a full circle whose diameter spans the base region, so its area is $\\frac{\\pi}{4}$ times the square of that length. A circle with diameter $s$ has area $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$, so $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$. Remember to halve the diameter before squaring.",

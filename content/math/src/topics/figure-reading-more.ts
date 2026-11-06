@@ -5,6 +5,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text } from "@ga/content"
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, plane, Q, svgDocument } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { numberProblem } from "../problems.ts";
@@ -270,6 +271,7 @@ const washerFromDrawing: KnowledgePointDef = {
 
 const taylorFromDrawing: KnowledgePointDef = {
   id: "a-taylor-polynomial-from-a-drawing",
+  figure: calculusDrawings5["second-degree-taylor-polynomials#a-taylor-polynomial-from-a-drawing"],
   title: t("A Taylor polynomial from a drawing", "由图选泰勒多项式"),
   explanation: t(
     "The first coefficients of a Taylor polynomial can be read off a graph at the center. The constant is the height, the coefficient of the linear term is the slope, and the coefficient of the square term has the sign of the concavity. So a curve that is rising and bending downward has a positive linear coefficient and a negative square coefficient.",
@@ -359,6 +361,7 @@ const sequenceFromPlot: KnowledgePointDef = {
 
 const petalLimits: KnowledgePointDef = {
   id: "the-limits-of-one-petal-from-a-drawing",
+  figure: calculusDrawings5["finding-the-limits-of-integration-for-a-given-polar-region#the-limits-of-one-petal-from-a-drawing"],
   title: t("The limits of one petal", "一片花瓣的积分限"),
   explanation: t(
     "A petal of a polar rose starts and ends where the radius is zero. For $r = a \\cos(k\\theta)$ this happens when $k\\theta$ is an odd multiple of a right angle, so the petal along the positive $x$-axis runs from $-\\frac{\\pi}{2k}$ to $\\frac{\\pi}{2k}$. Those values, and not a full turn, are the limits of the area integral for that single petal.",
@@ -947,6 +950,7 @@ const fieldChoices: readonly { tex: string; f: (x: number, y: number) => number;
 
 const matchingSlopeField: KnowledgePointDef = {
   id: "matching-a-slope-field-to-its-equation",
+  figure: calculusDrawings5["analyzing-slope-fields-for-nonautonomous-differential-equations#matching-a-slope-field-to-its-equation"],
   title: t("Matching a slope field to its equation", "把斜率场与方程对应"),
   explanation: t(
     "Look at a slope field in columns and rows. If the segments in each vertical column are parallel, the slope depends only on $x$. If those in each horizontal row are parallel, it depends only on $y$. Then find where the segments are flat, since those are the places where the right side is zero. These two checks usually settle which equation it is.",
@@ -1012,6 +1016,7 @@ const eulerFromField: KnowledgePointDef = {
 
 const logisticFromGraph: KnowledgePointDef = {
   id: "reading-a-logistic-curve",
+  figure: calculusDrawings5["qualitative-analysis-of-the-logistic-growth-equation#reading-a-logistic-curve"],
   title: t("Reading a logistic curve", "读 logistic 曲线"),
   explanation: t(
     "A logistic curve rises slowly, then quickly, then levels off at the carrying capacity. The growth rate is the product of the population and the room that is left, so it is largest at half of the capacity. This is the inflection point of the curve, where its bending changes direction, and it can be spotted on a graph as the steepest place.",

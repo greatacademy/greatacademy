@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { plane, poly, Q } from "@ga/subject-math";
-
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { functionProblem, numberProblem } from "../problems.ts";
 import { graphAltOf, oneOf, range, sqrtLatex } from "./calculus-common.ts";
 
@@ -346,6 +346,7 @@ export const graphsOfTheHyperbolicFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-hyperbolic-graphs",
+      figure: calculusDrawings1["graphs-of-the-hyperbolic-functions#recognizing-hyperbolic-graphs"],
       title: t("Recognizing the graphs", "识别图像"),
       explanation: t(
         "- $y = \\sinh x$ is odd and increasing, passes through the origin and grows without bound in both directions.\n- $y = \\cosh x$ is even, U-shaped (a *catenary*), with minimum $1$ at $x = 0$.\n- $y = \\tanh x$ is odd and increasing, with horizontal asymptotes $y = -1$ and $y = 1$.\n\n$y = -f(x) + k$ reflects the graph in the $x$-axis and shifts it $k$ up.",
@@ -357,6 +358,7 @@ export const graphsOfTheHyperbolicFunctions: TopicDef = {
     },
     {
       id: "extremes-and-asymptotes-of-hyperbolic-graphs",
+      figure: calculusDrawings1["graphs-of-the-hyperbolic-functions#extremes-and-asymptotes-of-hyperbolic-graphs"],
       title: t("Extreme values and asymptotes", "最值与渐近线"),
       explanation: t(
         "For $y = a\\cosh(x - h) + k$, the vertex is at $(h, a + k)$: a minimum when $a > 0$, a maximum when $a < 0$.\n\nFor $y = a\\tanh(x - h) + k$, the horizontal asymptotes are $y = k - |a|$ and $y = k + |a|$.\n\nSo $y = 3\\tanh(x + 1) - 2$ has asymptotes $y = -5$ and $y = 1$.",
@@ -418,6 +420,7 @@ export const graphsOfTheReciprocalHyperbolicFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-reciprocal-hyperbolic-graphs",
+      figure: calculusDrawings1["graphs-of-the-reciprocal-hyperbolic-functions#recognizing-reciprocal-hyperbolic-graphs"],
       title: t("Recognizing the graphs", "识别图像"),
       explanation: t(
         "- $y = \\operatorname{sech} x$ is an even bell shape with maximum $1$ at $x = 0$ and asymptote $y = 0$.\n- $y = \\operatorname{csch} x$ is odd, with a vertical asymptote $x = 0$ and horizontal asymptote $y = 0$.\n- $y = \\coth x$ is odd, with vertical asymptote $x = 0$ and horizontal asymptotes $y = \\pm 1$; its values satisfy $|y| > 1$.",
@@ -429,6 +432,7 @@ export const graphsOfTheReciprocalHyperbolicFunctions: TopicDef = {
     },
     {
       id: "asymptotes-of-reciprocal-hyperbolic-graphs",
+      figure: calculusDrawings1["graphs-of-the-reciprocal-hyperbolic-functions#asymptotes-of-reciprocal-hyperbolic-graphs"],
       title: t("Asymptotes of the graphs", "图像的渐近线"),
       explanation: t(
         "Transformations move the asymptotes: $y = a\\coth(x - h) + k$ has vertical asymptote $x = h$ and horizontal asymptotes $y = k \\pm a$; $y = a\\operatorname{csch}(x - h) + k$ has $x = h$ and $y = k$; $y = a\\operatorname{sech}(x - h) + k$ has only $y = k$, and its extreme value $a + k$ at $x = h$.",

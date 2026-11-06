@@ -5,6 +5,8 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q, svgDocument } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
@@ -163,154 +165,169 @@ const splitArea = point(
   },
 );
 
-const discIntegral = point(
-  "the-disc-integral-of-a-drawn-region",
-  ["The disc integral of a drawn region", "图中区域的圆盘积分"],
-  [
-    "Rotating a region under a graph about the $x$-axis makes a solid whose slices are discs. A slice at position $x$ has radius equal to the height of the graph there, so its area is $\\pi$ times the height squared. Adding the slices between the ends of the region gives the volume.",
-    "把图象下方的区域绕 $x$ 轴旋转，得到的立体的截面是圆盘。位置 $x$ 处截面的半径等于图象在该处的高度，所以面积是 $\\pi$ 乘以高度的平方。把区域两端之间的截面加起来就得到体积。",
-  ],
-  (rng) => {
-    const p = rng.int(0, 3);
-    const q = p + rng.int(1, 4);
-    const shape = rng.pick<(x: number) => number>([(x) => 1 + 0.5 * x, (x) => 0.2 * x * x + 1, (x) => 4 - 0.4 * x, (x) => 2 + Math.sin(x)]);
-    const samples = Array.from({ length: 33 }, (_, i) => p + ((q - p) * i) / 32);
-    const limits = `\\int_{${p}}^{${q}}`;
-    return choose(
-      rng,
-      [
-        "The shaded region under the graph of $f$ is rotated about the $x$-axis. Which integral gives the volume of the solid?",
-        "$f$ 图象下方的阴影区域绕 $x$ 轴旋转。哪个积分给出立体的体积？",
-      ],
-      same(`\\pi ${limits} f(x)^2\\,dx`),
-      [
-        same(`\\pi ${limits} f(x)\\,dx`),
-        same(`2\\pi ${limits} x f(x)\\,dx`),
-        same(`\\pi \\int_{0}^{${q}} f(x)^2\\,dx`),
-        same(`${limits} f(x)^2\\,dx`),
-      ],
-      [
-        `The region runs from $x = ${p}$ to $x = ${q}$, and a slice at $x$ is a disc of radius $f(x)$ with area $\\pi f(x)^2$. Adding these slices gives the volume.`,
-        `区域从 $x = ${p}$ 到 $x = ${q}$，$x$ 处的截面是半径为 $f(x)$ 的圆盘，面积为 $\\pi f(x)^2$。把这些截面加起来就得到体积。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
+const discIntegral = {
+  ...point(
+    "the-disc-integral-of-a-drawn-region",
+    ["The disc integral of a drawn region", "图中区域的圆盘积分"],
+    [
+      "Rotating a region under a graph about the $x$-axis makes a solid whose slices are discs. A slice at position $x$ has radius equal to the height of the graph there, so its area is $\\pi$ times the height squared. Adding the slices between the ends of the region gives the volume.",
+      "把图象下方的区域绕 $x$ 轴旋转，得到的立体的截面是圆盘。位置 $x$ 处截面的半径等于图象在该处的高度，所以面积是 $\\pi$ 乘以高度的平方。把区域两端之间的截面加起来就得到体积。",
+    ],
+    (rng) => {
+      const p = rng.int(0, 3);
+      const q = p + rng.int(1, 4);
+      const shape = rng.pick<(x: number) => number>([
+        (x) => 1 + 0.5 * x,
+        (x) => 0.2 * x * x + 1,
+        (x) => 4 - 0.4 * x,
+        (x) => 2 + Math.sin(x),
+      ]);
+      const samples = Array.from({ length: 33 }, (_, i) => p + ((q - p) * i) / 32);
+      const limits = `\\int_{${p}}^{${q}}`;
+      return choose(
+        rng,
         [
-          { kind: "polygon", points: [[p, 0], ...samples.map((x): Point => [x, shape(x)]), [q, 0]] },
-          { kind: "curve", f: shape, from: -0.5, to: 7.5, accent: true },
-          { kind: "label", at: [7, Math.min(shape(7), 7)], text: "f", dir: "n" },
+          "The shaded region under the graph of $f$ is rotated about the $x$-axis. Which integral gives the volume of the solid?",
+          "$f$ 图象下方的阴影区域绕 $x$ 轴旋转。哪个积分给出立体的体积？",
         ],
-        [`The region under the graph of f from x = ${p} to x = ${q}.`, `f 图象下方从 x = ${p} 到 x = ${q} 的区域。`],
-      ),
-    );
-  },
-);
+        same(`\\pi ${limits} f(x)^2\\,dx`),
+        [
+          same(`\\pi ${limits} f(x)\\,dx`),
+          same(`2\\pi ${limits} x f(x)\\,dx`),
+          same(`\\pi \\int_{0}^{${q}} f(x)^2\\,dx`),
+          same(`${limits} f(x)^2\\,dx`),
+        ],
+        [
+          `The region runs from $x = ${p}$ to $x = ${q}$, and a slice at $x$ is a disc of radius $f(x)$ with area $\\pi f(x)^2$. Adding these slices gives the volume.`,
+          `区域从 $x = ${p}$ 到 $x = ${q}$，$x$ 处的截面是半径为 $f(x)$ 的圆盘，面积为 $\\pi f(x)^2$。把这些截面加起来就得到体积。`,
+        ],
+        fig(
+          { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
+          [
+            { kind: "polygon", points: [[p, 0], ...samples.map((x): Point => [x, shape(x)]), [q, 0]] },
+            { kind: "curve", f: shape, from: -0.5, to: 7.5, accent: true },
+            { kind: "label", at: [7, Math.min(shape(7), 7)], text: "f", dir: "n" },
+          ],
+          [`The region under the graph of f from x = ${p} to x = ${q}.`, `f 图象下方从 x = ${p} 到 x = ${q} 的区域。`],
+        ),
+      );
+    },
+  ),
+  figure:
+    calculusDrawings4["volumes-of-revolution-using-the-disc-method-rotation-about-the-coordinate-axes#the-disc-integral-of-a-drawn-region"],
+};
 
-const shellVolume = point(
-  "shells-of-a-drawn-rectangle",
-  ["Shells of a drawn rectangle", "图中矩形的柱壳"],
-  [
-    "Rotating about the $y$-axis turns each vertical strip of a region into a thin cylindrical shell. A strip at $x$ has radius $x$ and height equal to the strip length, so the volume is the integral of $2\\pi x$ times height over the $x$-values of the region. The radius grows across the region, so the position matters.",
-    "绕 $y$ 轴旋转时，区域的每个竖直窄条变成薄圆柱壳。$x$ 处的窄条半径为 $x$，高度等于窄条长度，所以体积是 $2\\pi x$ 乘以高度在区域的 $x$ 范围上的积分。半径随位置增大，所以位置很重要。",
-  ],
-  (rng) => {
-    const p = rng.int(1, 3);
-    const q = p + rng.int(1, 3);
-    const lo = rng.int(0, 2);
-    const h = rng.int(1, 4);
-    const k = h * (q * q - p * p);
-    return ask(
-      [
-        "The shaded rectangle is rotated about the $y$-axis. The volume of the solid is $k\\pi$. What is $k$?",
-        "阴影矩形绕 $y$ 轴旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
-      ],
-      k,
-      [h * (q - p) * (q - p), h * q * q, 2 * k, h * (q - p) * (p + q + 1)],
-      [
-        `The rectangle has height $${h}$ and runs from $x = ${p}$ to $x = ${q}$. Shells give $\\int_{${p}}^{${q}} 2\\pi x \\cdot ${h}\\,dx = ${h}(${q * q} - ${p * p})\\pi$, so $k = ${k}$.`,
-        `矩形高度为 $${h}$，从 $x = ${p}$ 到 $x = ${q}$。柱壳法给出 $\\int_{${p}}^{${q}} 2\\pi x \\cdot ${h}\\,dx = ${h}(${q * q} - ${p * p})\\pi$，所以 $k = ${k}$。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 7, yMin: -1, yMax: 7 },
+const shellVolume = {
+  ...point(
+    "shells-of-a-drawn-rectangle",
+    ["Shells of a drawn rectangle", "图中矩形的柱壳"],
+    [
+      "Rotating about the $y$-axis turns each vertical strip of a region into a thin cylindrical shell. A strip at $x$ has radius $x$ and height equal to the strip length, so the volume is the integral of $2\\pi x$ times height over the $x$-values of the region. The radius grows across the region, so the position matters.",
+      "绕 $y$ 轴旋转时，区域的每个竖直窄条变成薄圆柱壳。$x$ 处的窄条半径为 $x$，高度等于窄条长度，所以体积是 $2\\pi x$ 乘以高度在区域的 $x$ 范围上的积分。半径随位置增大，所以位置很重要。",
+    ],
+    (rng) => {
+      const p = rng.int(1, 3);
+      const q = p + rng.int(1, 3);
+      const lo = rng.int(0, 2);
+      const h = rng.int(1, 4);
+      const k = h * (q * q - p * p);
+      return ask(
         [
-          {
-            kind: "polygon",
-            points: [
-              [p, lo],
-              [q, lo],
-              [q, lo + h],
-              [p, lo + h],
-            ],
-          },
-          { kind: "segment", a: [p, lo], b: [q, lo], accent: true },
-          { kind: "segment", a: [q, lo], b: [q, lo + h], accent: true },
-          { kind: "segment", a: [q, lo + h], b: [p, lo + h], accent: true },
-          { kind: "segment", a: [p, lo + h], b: [p, lo], accent: true },
+          "The shaded rectangle is rotated about the $y$-axis. The volume of the solid is $k\\pi$. What is $k$?",
+          "阴影矩形绕 $y$ 轴旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
         ],
+        k,
+        [h * (q - p) * (q - p), h * q * q, 2 * k, h * (q - p) * (p + q + 1)],
         [
-          `A rectangle from x = ${p} to x = ${q} and from y = ${lo} to y = ${lo + h}.`,
-          `从 x = ${p} 到 x = ${q}、从 y = ${lo} 到 y = ${lo + h} 的矩形。`,
+          `The rectangle has height $${h}$ and runs from $x = ${p}$ to $x = ${q}$. Shells give $\\int_{${p}}^{${q}} 2\\pi x \\cdot ${h}\\,dx = ${h}(${q * q} - ${p * p})\\pi$, so $k = ${k}$.`,
+          `矩形高度为 $${h}$，从 $x = ${p}$ 到 $x = ${q}$。柱壳法给出 $\\int_{${p}}^{${q}} 2\\pi x \\cdot ${h}\\,dx = ${h}(${q * q} - ${p * p})\\pi$，所以 $k = ${k}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -1, xMax: 7, yMin: -1, yMax: 7 },
+          [
+            {
+              kind: "polygon",
+              points: [
+                [p, lo],
+                [q, lo],
+                [q, lo + h],
+                [p, lo + h],
+              ],
+            },
+            { kind: "segment", a: [p, lo], b: [q, lo], accent: true },
+            { kind: "segment", a: [q, lo], b: [q, lo + h], accent: true },
+            { kind: "segment", a: [q, lo + h], b: [p, lo + h], accent: true },
+            { kind: "segment", a: [p, lo + h], b: [p, lo], accent: true },
+          ],
+          [
+            `A rectangle from x = ${p} to x = ${q} and from y = ${lo} to y = ${lo + h}.`,
+            `从 x = ${p} 到 x = ${q}、从 y = ${lo} 到 y = ${lo + h} 的矩形。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings4["the-shell-method-rotation-about-the-y-axis#shells-of-a-drawn-rectangle"],
+};
 
-const washerVolume = point(
-  "washers-about-a-drawn-axis",
-  ["Washers about a drawn axis", "绕图中轴旋转的垫圈"],
-  [
-    "When the axis of rotation is not a coordinate axis, measure both radii from the axis itself, never from the $x$-axis. The outer radius reaches the far edge of the region and the inner radius reaches the near edge. A slice then has area $\\pi$ times the outer radius squared minus the inner radius squared.",
-    "旋转轴不是坐标轴时，两个半径都要从旋转轴量起，而不是从 $x$ 轴量起。外半径到达区域的远边，内半径到达近边。截面面积就是 $\\pi$ 乘以外半径的平方减内半径的平方。",
-  ],
-  (rng) => {
-    const axis = rng.int(-2, 6);
-    const below = rng.bool();
-    const lo = below ? axis + rng.int(1, 2) : axis - rng.int(1, 2) - 2;
-    const h = rng.int(1, 2);
-    const [near, far] = below ? [lo - axis, lo + h - axis] : [axis - lo - h, axis - lo];
-    const p = rng.int(0, 2);
-    const length = rng.int(1, 4);
-    const k = length * (far * far - near * near);
-    const yMin = Math.min(axis, lo) - 2;
-    return ask(
-      [
-        "The shaded rectangle is rotated about the dashed horizontal line. The volume of the solid is $k\\pi$. What is $k$?",
-        "阴影矩形绕水平虚线旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
-      ],
-      k,
-      [
-        length * (lo + h) * (lo + h) - length * lo * lo === k ? k + length : length * (lo + h) * (lo + h) - length * lo * lo,
-        length * (far - near) * (far - near),
-        length * far * far,
-        2 * k,
-      ],
-      [
-        `Measured from the line, the near edge is $${near}$ away and the far edge is $${far}$ away, and the rectangle has length $${length}$. So $k = ${length}(${far}^2 - ${near}^2) = ${k}$.`,
-        `从这条线量起，近边距离 $${near}$，远边距离 $${far}$，矩形长度为 $${length}$。所以 $k = ${length}(${far}^2 - ${near}^2) = ${k}$。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 8, yMin, yMax: yMin + 9 },
+const washerVolume = {
+  ...point(
+    "washers-about-a-drawn-axis",
+    ["Washers about a drawn axis", "绕图中轴旋转的垫圈"],
+    [
+      "When the axis of rotation is not a coordinate axis, measure both radii from the axis itself, never from the $x$-axis. The outer radius reaches the far edge of the region and the inner radius reaches the near edge. A slice then has area $\\pi$ times the outer radius squared minus the inner radius squared.",
+      "旋转轴不是坐标轴时，两个半径都要从旋转轴量起，而不是从 $x$ 轴量起。外半径到达区域的远边，内半径到达近边。截面面积就是 $\\pi$ 乘以外半径的平方减内半径的平方。",
+    ],
+    (rng) => {
+      const axis = rng.int(-2, 6);
+      const below = rng.bool();
+      const lo = below ? axis + rng.int(1, 2) : axis - rng.int(1, 2) - 2;
+      const h = rng.int(1, 2);
+      const [near, far] = below ? [lo - axis, lo + h - axis] : [axis - lo - h, axis - lo];
+      const p = rng.int(0, 2);
+      const length = rng.int(1, 4);
+      const k = length * (far * far - near * near);
+      const yMin = Math.min(axis, lo) - 2;
+      return ask(
         [
-          {
-            kind: "polygon",
-            points: [
-              [p, lo],
-              [p + length, lo],
-              [p + length, lo + h],
-              [p, lo + h],
-            ],
-          },
-          { kind: "segment", a: [-1, axis], b: [8, axis], dashed: true, accent: true },
+          "The shaded rectangle is rotated about the dashed horizontal line. The volume of the solid is $k\\pi$. What is $k$?",
+          "阴影矩形绕水平虚线旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
+        ],
+        k,
+        [
+          length * (lo + h) * (lo + h) - length * lo * lo === k ? k + length : length * (lo + h) * (lo + h) - length * lo * lo,
+          length * (far - near) * (far - near),
+          length * far * far,
+          2 * k,
         ],
         [
-          `A rectangle from x = ${p} to x = ${p + length} and y = ${lo} to y = ${lo + h}, with a dashed axis at y = ${axis}.`,
-          `从 x = ${p} 到 x = ${p + length}、y = ${lo} 到 y = ${lo + h} 的矩形，虚线轴在 y = ${axis}。`,
+          `Measured from the line, the near edge is $${near}$ away and the far edge is $${far}$ away, and the rectangle has length $${length}$. So $k = ${length}(${far}^2 - ${near}^2) = ${k}$.`,
+          `从这条线量起，近边距离 $${near}$，远边距离 $${far}$，矩形长度为 $${length}$。所以 $k = ${length}(${far}^2 - ${near}^2) = ${k}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -1, xMax: 8, yMin, yMax: yMin + 9 },
+          [
+            {
+              kind: "polygon",
+              points: [
+                [p, lo],
+                [p + length, lo],
+                [p + length, lo + h],
+                [p, lo + h],
+              ],
+            },
+            { kind: "segment", a: [-1, axis], b: [8, axis], dashed: true, accent: true },
+          ],
+          [
+            `A rectangle from x = ${p} to x = ${p + length} and y = ${lo} to y = ${lo + h}, with a dashed axis at y = ${axis}.`,
+            `从 x = ${p} 到 x = ${p + length}、y = ${lo} 到 y = ${lo + h} 的矩形，虚线轴在 y = ${axis}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-other-axes#washers-about-a-drawn-axis"],
+};
 
 interface PolarCase {
   readonly tex: (a: number) => string;
@@ -370,133 +387,139 @@ const polarCases: readonly PolarCase[] = [
   },
 ];
 
-const polarEquation = point(
-  "the-equation-of-a-drawn-polar-curve",
-  ["The equation of a drawn polar curve", "图中极坐标曲线的方程"],
-  [
-    "Before computing a polar area, match the curve to its equation. A rose with an odd multiple $n$ of the angle has $n$ petals, and an even multiple $n$ has $2n$ petals. A cardioid has one dent at the origin and reaches farthest in the direction where its sine or cosine term adds most.",
-    "计算极坐标面积之前，先把曲线与方程对应起来。角度倍数 $n$ 为奇数的玫瑰线有 $n$ 个花瓣，倍数 $n$ 为偶数的有 $2n$ 个花瓣。心形线在原点有一个凹陷，在正弦或余弦项增加最多的方向上最远。",
-  ],
-  (rng) => {
-    const right = rng.pick(polarCases);
-    const a = rng.pick([2, 3, 4]);
-    const reach = right.tex(1).includes("(1") ? 2 * a : a;
-    const size = Math.ceil(reach) + 1;
-    const points = Array.from({ length: 241 }, (_, i): Point => {
-      const th = (right.span * Math.PI * i) / 240;
-      const r = right.r(a, th);
-      return [r * Math.cos(th), r * Math.sin(th)];
-    });
-    return choose(
-      rng,
-      ["Which equation describes the polar curve drawn?", "哪个方程描述图中的极坐标曲线？"],
-      same(right.tex(a)),
-      rng
-        .sample(
-          polarCases.filter((c) => c !== right),
-          4,
-        )
-        .map((c) => same(c.tex(a))),
-      [
-        `The drawing shows ${right.clue[0]}, and its farthest reach is $${reach}$, which matches $${right.tex(a)}$.`,
-        `图中是${right.clue[1]}，最远距离为 $${reach}$，与 $${right.tex(a)}$ 相符。`,
-      ],
-      fig(
-        { xMin: -size, xMax: size, yMin: -size, yMax: size },
-        [{ kind: "path", points, accent: true }],
-        [
-          `A polar curve: ${right.clue[0].replaceAll("$", "")}, reaching ${reach} from the origin.`,
-          `极坐标曲线：${right.clue[1].replaceAll("$", "")}，距原点最远 ${reach}。`,
-        ],
-      ),
-    );
-  },
-);
-
-const polarBetween = point(
-  "the-area-between-two-drawn-polar-circles",
-  ["The area between two drawn polar circles", "图中两个极坐标圆之间的面积"],
-  [
-    "To find the area inside one polar curve and outside another, integrate one half of the outer radius squared minus the inner radius squared. The limits are the angles of the rays through the intersection points. A drawing shows which curve is the outer one, and which angles bound the shaded part.",
-    "求在一条极坐标曲线内部、另一条外部的面积，就对外半径的平方减内半径的平方的一半积分。积分限是经过交点的射线的角度。图能显示哪条曲线在外，以及哪些角度围成阴影部分。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 3);
-    const [halfDen, square] = rng.pick<Point>([
-      [3, 1],
-      [4, 2],
-      [6, 3],
-    ]);
-    const dir = rng.pick([
-      { base: 0, f: "\\cos\\theta", g: (th: number) => Math.cos(th) },
-      { base: 1, f: "\\sin\\theta", g: (th: number) => Math.sin(th) },
-      { base: 2, f: "-\\cos\\theta", g: (th: number) => -Math.cos(th) },
-      { base: 3, f: "-\\sin\\theta", g: (th: number) => -Math.sin(th) },
-    ]);
-    const big = 2 * a;
-    const radius2 = a * a * square;
-    const b = Math.sqrt(radius2);
-    const center = (dir.base * Math.PI) / 2;
-    const alpha = Math.PI / halfDen;
-    const num = (extra: number, den: number) => piTimes(dir.base * den + extra * 2, 2 * den);
-    const lower = (d: number) => num(-1, d);
-    const upper = (d: number) => num(1, d);
-    const outer = dir.f.startsWith("-") ? `${-big}${dir.f.slice(1)}` : `${big}${dir.f}`;
-    const form = (half: boolean, lo: string, hi: string, swap: boolean) => {
-      const [u, v] = swap ? [`${radius2}`, `(${outer})^2`] : [`(${outer})^2`, `${radius2}`];
-      return same(`${half ? "\\frac{1}{2}" : ""}\\int_{${lo}}^{${hi}} \\left[ ${u} - ${v} \\right] d\\theta`);
-    };
-    const other = halfDen === 3 ? 6 : 3;
-    const samples = Array.from({ length: 41 }, (_, i) => center - alpha + (2 * alpha * i) / 40);
-    const polygon = [
-      ...samples.map((th): Point => {
-        const r = big * dir.g(th);
+const polarEquation = {
+  ...point(
+    "the-equation-of-a-drawn-polar-curve",
+    ["The equation of a drawn polar curve", "图中极坐标曲线的方程"],
+    [
+      "Before computing a polar area, match the curve to its equation. A rose with an odd multiple $n$ of the angle has $n$ petals, and an even multiple $n$ has $2n$ petals. A cardioid has one dent at the origin and reaches farthest in the direction where its sine or cosine term adds most.",
+      "计算极坐标面积之前，先把曲线与方程对应起来。角度倍数 $n$ 为奇数的玫瑰线有 $n$ 个花瓣，倍数 $n$ 为偶数的有 $2n$ 个花瓣。心形线在原点有一个凹陷，在正弦或余弦项增加最多的方向上最远。",
+    ],
+    (rng) => {
+      const right = rng.pick(polarCases);
+      const a = rng.pick([2, 3, 4]);
+      const reach = right.tex(1).includes("(1") ? 2 * a : a;
+      const size = Math.ceil(reach) + 1;
+      const points = Array.from({ length: 241 }, (_, i): Point => {
+        const th = (right.span * Math.PI * i) / 240;
+        const r = right.r(a, th);
         return [r * Math.cos(th), r * Math.sin(th)];
-      }),
-      ...[...samples].reverse().map((th): Point => [b * Math.cos(th), b * Math.sin(th)]),
-    ];
-    const c: Point = [a * Math.cos(center), a * Math.sin(center)];
-    const size = 2 * a + 1;
-    const ray = (th: number): PlaneMark => ({
-      kind: "segment",
-      a: [0, 0],
-      b: [big * dir.g(th) * Math.cos(th), big * dir.g(th) * Math.sin(th)],
-      dashed: true,
-    });
-    return choose(
-      rng,
-      [
-        `The shaded region lies inside the circle $r = ${outer}$ and outside a circle centered at the origin, and dashed rays pass through their intersections. Which integral gives its area?`,
-        `阴影区域在圆 $r = ${outer}$ 内、以原点为中心的圆外，虚线射线经过它们的交点。哪个积分给出它的面积？`,
-      ],
-      form(true, lower(halfDen), upper(halfDen), false),
-      [
-        form(false, lower(halfDen), upper(halfDen), false),
-        form(true, lower(halfDen), upper(halfDen), true),
-        form(true, lower(other), upper(other), false),
-        form(true, piTimes(dir.base, 2), upper(halfDen), false),
-      ],
-      [
-        `The circle about the origin has radius squared $${radius2}$, and the rays make angles $${lower(halfDen)}$ and $${upper(halfDen)}$. The other circle is the outer curve between them, and an area in polar form carries the factor one half.`,
-        `以原点为中心的圆的半径平方为 $${radius2}$，射线的角度是 $${lower(halfDen)}$ 和 $${upper(halfDen)}$。在它们之间另一个圆是外边界，极坐标面积带有二分之一的系数。`,
-      ],
-      fig(
-        { xMin: -size, xMax: size, yMin: -size, yMax: size },
+      });
+      return choose(
+        rng,
+        ["Which equation describes the polar curve drawn?", "哪个方程描述图中的极坐标曲线？"],
+        same(right.tex(a)),
+        rng
+          .sample(
+            polarCases.filter((c) => c !== right),
+            4,
+          )
+          .map((c) => same(c.tex(a))),
         [
-          { kind: "polygon", points: polygon },
-          { kind: "circle", center: [0, 0], r: b },
-          { kind: "circle", center: c, r: a, accent: true },
-          ray(center - alpha),
-          ray(center + alpha),
+          `The drawing shows ${right.clue[0]}, and its farthest reach is $${reach}$, which matches $${right.tex(a)}$.`,
+          `图中是${right.clue[1]}，最远距离为 $${reach}$，与 $${right.tex(a)}$ 相符。`,
+        ],
+        fig(
+          { xMin: -size, xMax: size, yMin: -size, yMax: size },
+          [{ kind: "path", points, accent: true }],
+          [
+            `A polar curve: ${right.clue[0].replaceAll("$", "")}, reaching ${reach} from the origin.`,
+            `极坐标曲线：${right.clue[1].replaceAll("$", "")}，距原点最远 ${reach}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-total-area-bounded-by-a-single-polar-curve#the-equation-of-a-drawn-polar-curve"],
+};
+
+const polarBetween = {
+  ...point(
+    "the-area-between-two-drawn-polar-circles",
+    ["The area between two drawn polar circles", "图中两个极坐标圆之间的面积"],
+    [
+      "To find the area inside one polar curve and outside another, integrate one half of the outer radius squared minus the inner radius squared. The limits are the angles of the rays through the intersection points. A drawing shows which curve is the outer one, and which angles bound the shaded part.",
+      "求在一条极坐标曲线内部、另一条外部的面积，就对外半径的平方减内半径的平方的一半积分。积分限是经过交点的射线的角度。图能显示哪条曲线在外，以及哪些角度围成阴影部分。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 3);
+      const [halfDen, square] = rng.pick<Point>([
+        [3, 1],
+        [4, 2],
+        [6, 3],
+      ]);
+      const dir = rng.pick([
+        { base: 0, f: "\\cos\\theta", g: (th: number) => Math.cos(th) },
+        { base: 1, f: "\\sin\\theta", g: (th: number) => Math.sin(th) },
+        { base: 2, f: "-\\cos\\theta", g: (th: number) => -Math.cos(th) },
+        { base: 3, f: "-\\sin\\theta", g: (th: number) => -Math.sin(th) },
+      ]);
+      const big = 2 * a;
+      const radius2 = a * a * square;
+      const b = Math.sqrt(radius2);
+      const center = (dir.base * Math.PI) / 2;
+      const alpha = Math.PI / halfDen;
+      const num = (extra: number, den: number) => piTimes(dir.base * den + extra * 2, 2 * den);
+      const lower = (d: number) => num(-1, d);
+      const upper = (d: number) => num(1, d);
+      const outer = dir.f.startsWith("-") ? `${-big}${dir.f.slice(1)}` : `${big}${dir.f}`;
+      const form = (half: boolean, lo: string, hi: string, swap: boolean) => {
+        const [u, v] = swap ? [`${radius2}`, `(${outer})^2`] : [`(${outer})^2`, `${radius2}`];
+        return same(`${half ? "\\frac{1}{2}" : ""}\\int_{${lo}}^{${hi}} \\left[ ${u} - ${v} \\right] d\\theta`);
+      };
+      const other = halfDen === 3 ? 6 : 3;
+      const samples = Array.from({ length: 41 }, (_, i) => center - alpha + (2 * alpha * i) / 40);
+      const polygon = [
+        ...samples.map((th): Point => {
+          const r = big * dir.g(th);
+          return [r * Math.cos(th), r * Math.sin(th)];
+        }),
+        ...[...samples].reverse().map((th): Point => [b * Math.cos(th), b * Math.sin(th)]),
+      ];
+      const c: Point = [a * Math.cos(center), a * Math.sin(center)];
+      const size = 2 * a + 1;
+      const ray = (th: number): PlaneMark => ({
+        kind: "segment",
+        a: [0, 0],
+        b: [big * dir.g(th) * Math.cos(th), big * dir.g(th) * Math.sin(th)],
+        dashed: true,
+      });
+      return choose(
+        rng,
+        [
+          `The shaded region lies inside the circle $r = ${outer}$ and outside a circle centered at the origin, and dashed rays pass through their intersections. Which integral gives its area?`,
+          `阴影区域在圆 $r = ${outer}$ 内、以原点为中心的圆外，虚线射线经过它们的交点。哪个积分给出它的面积？`,
+        ],
+        form(true, lower(halfDen), upper(halfDen), false),
+        [
+          form(false, lower(halfDen), upper(halfDen), false),
+          form(true, lower(halfDen), upper(halfDen), true),
+          form(true, lower(other), upper(other), false),
+          form(true, piTimes(dir.base, 2), upper(halfDen), false),
         ],
         [
-          `A circle of radius squared ${radius2} about the origin and a circle through the origin with center (${Math.round(c[0])}, ${Math.round(c[1])}); the part of the second outside the first is shaded.`,
-          `以原点为中心、半径平方为 ${radius2} 的圆，和过原点、圆心为 (${Math.round(c[0])}, ${Math.round(c[1])}) 的圆；第二个圆在第一个圆外的部分是阴影。`,
+          `The circle about the origin has radius squared $${radius2}$, and the rays make angles $${lower(halfDen)}$ and $${upper(halfDen)}$. The other circle is the outer curve between them, and an area in polar form carries the factor one half.`,
+          `以原点为中心的圆的半径平方为 $${radius2}$，射线的角度是 $${lower(halfDen)}$ 和 $${upper(halfDen)}$。在它们之间另一个圆是外边界，极坐标面积带有二分之一的系数。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -size, xMax: size, yMin: -size, yMax: size },
+          [
+            { kind: "polygon", points: polygon },
+            { kind: "circle", center: [0, 0], r: b },
+            { kind: "circle", center: c, r: a, accent: true },
+            ray(center - alpha),
+            ray(center + alpha),
+          ],
+          [
+            `A circle of radius squared ${radius2} about the origin and a circle through the origin with center (${Math.round(c[0])}, ${Math.round(c[1])}); the part of the second outside the first is shaded.`,
+            `以原点为中心、半径平方为 ${radius2} 的圆，和过原点、圆心为 (${Math.round(c[0])}, ${Math.round(c[1])}) 的圆；第二个圆在第一个圆外的部分是阴影。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-area-bounded-by-two-polar-curves#the-area-between-two-drawn-polar-circles"],
+};
 
 const termFromPartialSums = point(
   "a-term-from-a-plot-of-partial-sums",
@@ -675,132 +698,141 @@ const alternatingBound = point(
   },
 );
 
-const radiusFromInterval = point(
-  "radius-from-a-drawn-interval-of-convergence",
-  ["Radius from a drawn interval of convergence", "由图中收敛区间读半径"],
-  [
-    "A power series converges on an interval centered at its center $a$, with radius $R$ being half the length of the interval. The endpoints may or may not belong to the interval, and that does not change $R$. So open and filled circles at the ends matter for convergence at those points only, and not for the radius.",
-    "幂级数在以中心 $a$ 为中点的区间上收敛，半径 $R$ 是区间长度的一半。端点可能属于区间，也可能不属于，这不改变 $R$。所以两端的空心圆和实心圆只影响那两点的收敛性，不影响半径。",
-  ],
-  (rng) => {
-    const a = rng.int(-3, 3);
-    const R = rng.int(1, 4);
-    const [leftIn, rightIn] = [rng.bool(), rng.bool()];
-    const askCenter = rng.bool();
-    const scale = 20;
-    const x = (v: number) => 160 + v * scale;
-    let body = `<line x1="16" y1="50" x2="304" y2="50"/>`;
-    for (let v = -7; v <= 7; v++)
-      body += `<line x1="${x(v)}" y1="46" x2="${x(v)}" y2="54"/>${v % 2 === 0 ? label(x(v), 72, String(v).replace("-", "−")) : ""}`;
-    const end = (v: number, filled: boolean) =>
-      `<circle class="accent" cx="${x(v)}" cy="50" r="5" fill="${filled ? "currentColor" : "none"}" stroke="currentColor"/>`;
-    body += `<line class="accent" x1="${x(a - R)}" y1="50" x2="${x(a + R)}" y2="50" stroke-width="3" stroke="currentColor"/>${end(a - R, leftIn)}${end(a + R, rightIn)}`;
-    const name = (open: boolean): Pair => (open ? ["filled", "实心"] : ["open", "空心"]);
-    return ask(
-      askCenter
-        ? [
-            `The thick segment shows the interval of convergence of a power series. What is the center of the series?`,
-            `粗线段表示某幂级数的收敛区间。级数的中心是多少？`,
-          ]
-        : [
-            `The thick segment shows the interval of convergence of a power series. What is its radius of convergence?`,
-            `粗线段表示某幂级数的收敛区间。它的收敛半径是多少？`,
+const radiusFromInterval = {
+  ...point(
+    "radius-from-a-drawn-interval-of-convergence",
+    ["Radius from a drawn interval of convergence", "由图中收敛区间读半径"],
+    [
+      "A power series converges on an interval centered at its center $a$, with radius $R$ being half the length of the interval. The endpoints may or may not belong to the interval, and that does not change $R$. So open and filled circles at the ends matter for convergence at those points only, and not for the radius.",
+      "幂级数在以中心 $a$ 为中点的区间上收敛，半径 $R$ 是区间长度的一半。端点可能属于区间，也可能不属于，这不改变 $R$。所以两端的空心圆和实心圆只影响那两点的收敛性，不影响半径。",
+    ],
+    (rng) => {
+      const a = rng.int(-3, 3);
+      const R = rng.int(1, 4);
+      const [leftIn, rightIn] = [rng.bool(), rng.bool()];
+      const askCenter = rng.bool();
+      const scale = 20;
+      const x = (v: number) => 160 + v * scale;
+      let body = `<line x1="16" y1="50" x2="304" y2="50"/>`;
+      for (let v = -7; v <= 7; v++)
+        body += `<line x1="${x(v)}" y1="46" x2="${x(v)}" y2="54"/>${v % 2 === 0 ? label(x(v), 72, String(v).replace("-", "−")) : ""}`;
+      const end = (v: number, filled: boolean) =>
+        `<circle class="accent" cx="${x(v)}" cy="50" r="5" fill="${filled ? "currentColor" : "none"}" stroke="currentColor"/>`;
+      body += `<line class="accent" x1="${x(a - R)}" y1="50" x2="${x(a + R)}" y2="50" stroke-width="3" stroke="currentColor"/>${end(a - R, leftIn)}${end(a + R, rightIn)}`;
+      const name = (open: boolean): Pair => (open ? ["filled", "实心"] : ["open", "空心"]);
+      return ask(
+        askCenter
+          ? [
+              `The thick segment shows the interval of convergence of a power series. What is the center of the series?`,
+              `粗线段表示某幂级数的收敛区间。级数的中心是多少？`,
+            ]
+          : [
+              `The thick segment shows the interval of convergence of a power series. What is its radius of convergence?`,
+              `粗线段表示某幂级数的收敛区间。它的收敛半径是多少？`,
+            ],
+        askCenter ? a : R,
+        askCenter ? [a - R, a + R, R] : [2 * R, a, R + 1],
+        [
+          `The interval runs from $${a - R}$ to $${a + R}$, so its midpoint is $${a}$ and half its length is $${R}$. The ${name(leftIn)[0]} and ${name(rightIn)[0]} ends do not affect either number.`,
+          `区间从 $${a - R}$ 到 $${a + R}$，所以中点是 $${a}$，长度的一半是 $${R}$。左端${name(leftIn)[1]}和右端${name(rightIn)[1]}都不影响这两个数。`,
+        ],
+        {
+          svg: svgDocument(90, body),
+          alt: t(
+            `An interval on a number line from ${a - R} (${name(leftIn)[0]}) to ${a + R} (${name(rightIn)[0]}).`,
+            `数轴上从 ${a - R}（${name(leftIn)[1]}）到 ${a + R}（${name(rightIn)[1]}）的区间。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: calculusDrawings5["radius-of-convergence-of-power-series#radius-from-a-drawn-interval-of-convergence"],
+};
+
+const taylorSigns = {
+  ...point(
+    "signs-of-taylor-coefficients-from-a-graph",
+    ["Signs of Taylor coefficients from a graph", "由图读泰勒系数的符号"],
+    [
+      "The second-degree Taylor polynomial at $a$ uses $f(a)$, $f'(a)$ and $f''(a)$, and a graph shows the sign of each. The height at $a$ gives the first, the rise or fall through $a$ gives the second, and whether the graph bends upward or downward at $a$ gives the third.",
+      "在 $a$ 处的二阶泰勒多项式用到 $f(a)$、$f'(a)$ 和 $f''(a)$，图能显示每一个的符号。$a$ 处的高度给出第一个，经过 $a$ 时的上升或下降给出第二个，图在 $a$ 处向上弯还是向下弯给出第三个。",
+    ],
+    (rng) => {
+      const a = rng.int(-2, 2);
+      const [s0, s1, s2] = [rng.sign(), rng.sign(), rng.sign()];
+      const value = s0 * rng.int(1, 3);
+      const slope = s1 * rng.int(1, 2);
+      const bend = s2 * rng.pick([0.5, 1]);
+      const f = (x: number) => value + slope * (x - a) + 0.5 * bend * (x - a) ** 2;
+      const sign = (s: number) => (s > 0 ? ">" : "<");
+      const form = (x: number, y: number, z: number) => same(`f(a) ${sign(x)} 0,\\; f'(a) ${sign(y)} 0,\\; f''(a) ${sign(z)} 0`);
+      const word = (s: number): Pair => (s > 0 ? ["positive", "正"] : ["negative", "负"]);
+      return choose(
+        rng,
+        ["What are the signs at the marked point $x = a$ of the function drawn?", "图中函数在所标点 $x = a$ 处的符号是什么？"],
+        form(s0, s1, s2),
+        [form(s0, s1, -s2), form(s0, -s1, s2), form(-s0, s1, s2), form(-s0, -s1, s2), form(s0, -s1, -s2)],
+        [
+          `At $a$ the height is ${word(s0)[0]}, the graph is ${s1 > 0 ? "rising" : "falling"} so the slope is ${word(s1)[0]}, and the graph bends ${s2 > 0 ? "upward" : "downward"} so the second derivative is ${word(s2)[0]}.`,
+          `在 $a$ 处高度为${word(s0)[1]}，图象${s1 > 0 ? "上升" : "下降"}，所以斜率为${word(s1)[1]}；图象${s2 > 0 ? "向上" : "向下"}弯，所以二阶导数为${word(s2)[1]}。`,
+        ],
+        fig(
+          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+          [
+            { kind: "curve", f, accent: true },
+            { kind: "point", at: [a, value], label: "a", dir: "n" },
           ],
-      askCenter ? a : R,
-      askCenter ? [a - R, a + R, R] : [2 * R, a, R + 1],
-      [
-        `The interval runs from $${a - R}$ to $${a + R}$, so its midpoint is $${a}$ and half its length is $${R}$. The ${name(leftIn)[0]} and ${name(rightIn)[0]} ends do not affect either number.`,
-        `区间从 $${a - R}$ 到 $${a + R}$，所以中点是 $${a}$，长度的一半是 $${R}$。左端${name(leftIn)[1]}和右端${name(rightIn)[1]}都不影响这两个数。`,
-      ],
-      {
-        svg: svgDocument(90, body),
-        alt: t(
-          `An interval on a number line from ${a - R} (${name(leftIn)[0]}) to ${a + R} (${name(rightIn)[0]}).`,
-          `数轴上从 ${a - R}（${name(leftIn)[1]}）到 ${a + R}（${name(rightIn)[1]}）的区间。`,
+          [
+            `A parabola at height ${value} at x = ${a}, ${s1 > 0 ? "rising" : "falling"} there and bending ${s2 > 0 ? "upward" : "downward"}.`,
+            `一条抛物线，在 x = ${a} 处高度为 ${value}，在那里${s1 > 0 ? "上升" : "下降"}，并${s2 > 0 ? "向上" : "向下"}弯。`,
+          ],
         ),
-      },
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: calculusDrawings5["analyzing-second-degree-taylor-polynomials#signs-of-taylor-coefficients-from-a-graph"],
+};
 
-const taylorSigns = point(
-  "signs-of-taylor-coefficients-from-a-graph",
-  ["Signs of Taylor coefficients from a graph", "由图读泰勒系数的符号"],
-  [
-    "The second-degree Taylor polynomial at $a$ uses $f(a)$, $f'(a)$ and $f''(a)$, and a graph shows the sign of each. The height at $a$ gives the first, the rise or fall through $a$ gives the second, and whether the graph bends upward or downward at $a$ gives the third.",
-    "在 $a$ 处的二阶泰勒多项式用到 $f(a)$、$f'(a)$ 和 $f''(a)$，图能显示每一个的符号。$a$ 处的高度给出第一个，经过 $a$ 时的上升或下降给出第二个，图在 $a$ 处向上弯还是向下弯给出第三个。",
-  ],
-  (rng) => {
-    const a = rng.int(-2, 2);
-    const [s0, s1, s2] = [rng.sign(), rng.sign(), rng.sign()];
-    const value = s0 * rng.int(1, 3);
-    const slope = s1 * rng.int(1, 2);
-    const bend = s2 * rng.pick([0.5, 1]);
-    const f = (x: number) => value + slope * (x - a) + 0.5 * bend * (x - a) ** 2;
-    const sign = (s: number) => (s > 0 ? ">" : "<");
-    const form = (x: number, y: number, z: number) => same(`f(a) ${sign(x)} 0,\\; f'(a) ${sign(y)} 0,\\; f''(a) ${sign(z)} 0`);
-    const word = (s: number): Pair => (s > 0 ? ["positive", "正"] : ["negative", "负"]);
-    return choose(
-      rng,
-      ["What are the signs at the marked point $x = a$ of the function drawn?", "图中函数在所标点 $x = a$ 处的符号是什么？"],
-      form(s0, s1, s2),
-      [form(s0, s1, -s2), form(s0, -s1, s2), form(-s0, s1, s2), form(-s0, -s1, s2), form(s0, -s1, -s2)],
-      [
-        `At $a$ the height is ${word(s0)[0]}, the graph is ${s1 > 0 ? "rising" : "falling"} so the slope is ${word(s1)[0]}, and the graph bends ${s2 > 0 ? "upward" : "downward"} so the second derivative is ${word(s2)[0]}.`,
-        `在 $a$ 处高度为${word(s0)[1]}，图象${s1 > 0 ? "上升" : "下降"}，所以斜率为${word(s1)[1]}；图象${s2 > 0 ? "向上" : "向下"}弯，所以二阶导数为${word(s2)[1]}。`,
-      ],
-      fig(
-        { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+const averageValue = {
+  ...point(
+    "the-average-value-of-a-drawn-function",
+    ["The average value of a drawn function", "图中函数的平均值"],
+    [
+      "The average value of $f$ over an interval is its integral divided by the length of the interval. For a graph made of straight pieces, the integral is the signed area of trapezoids, with area below the axis counting as negative. The average is the height of a rectangle with the same base and area.",
+      "$f$ 在区间上的平均值等于积分除以区间长度。对于由直线段组成的图，积分是梯形的带符号面积，轴下方的面积算作负值。平均值就是底相同、面积也相同的矩形的高。",
+    ],
+    (rng) => {
+      const n = rng.pick([3, 4, 5, 6]);
+      const heights = Array.from({ length: n + 1 }, () => rng.int(-2, 5));
+      let doubled = 0;
+      for (let i = 0; i < n; i++) doubled += (heights[i] as number) + (heights[i + 1] as number);
+      const average = Q.of(doubled, 2 * n);
+      const marks: PlaneMark[] = [{ kind: "path", points: heights.map((h, i): Point => [i, h]), accent: true }];
+      return ask(
         [
-          { kind: "curve", f, accent: true },
-          { kind: "point", at: [a, value], label: "a", dir: "n" },
+          `What is the average value of the function drawn, over the whole interval it is drawn on?`,
+          `图中函数在所画的整个区间上的平均值是多少？`,
+        ],
+        average,
+        [
+          Q.of(doubled, 2),
+          Q.of(doubled, 2 * (n + 1)),
+          Q.of(heights.reduce((u, v) => u + v, 0) + 1, n + 1),
+          Q.of((heights[0] as number) + (heights[n] as number) + 1, 2),
         ],
         [
-          `A parabola at height ${value} at x = ${a}, ${s1 > 0 ? "rising" : "falling"} there and bending ${s2 > 0 ? "upward" : "downward"}.`,
-          `一条抛物线，在 x = ${a} 处高度为 ${value}，在那里${s1 > 0 ? "上升" : "下降"}，并${s2 > 0 ? "向上" : "向下"}弯。`,
+          `The signed area under the pieces is $${Q.of(doubled, 2).toLatex()}$, and the interval has length $${n}$. Dividing the area by the length gives $${average.toLatex()}$.`,
+          `各段下方的带符号面积是 $${Q.of(doubled, 2).toLatex()}$，区间长度是 $${n}$。面积除以长度得到 $${average.toLatex()}$。`,
         ],
-      ),
-    );
-  },
-);
-
-const averageValue = point(
-  "the-average-value-of-a-drawn-function",
-  ["The average value of a drawn function", "图中函数的平均值"],
-  [
-    "The average value of $f$ over an interval is its integral divided by the length of the interval. For a graph made of straight pieces, the integral is the signed area of trapezoids, with area below the axis counting as negative. The average is the height of a rectangle with the same base and area.",
-    "$f$ 在区间上的平均值等于积分除以区间长度。对于由直线段组成的图，积分是梯形的带符号面积，轴下方的面积算作负值。平均值就是底相同、面积也相同的矩形的高。",
-  ],
-  (rng) => {
-    const n = rng.pick([3, 4, 5, 6]);
-    const heights = Array.from({ length: n + 1 }, () => rng.int(-2, 5));
-    let doubled = 0;
-    for (let i = 0; i < n; i++) doubled += (heights[i] as number) + (heights[i + 1] as number);
-    const average = Q.of(doubled, 2 * n);
-    const marks: PlaneMark[] = [{ kind: "path", points: heights.map((h, i): Point => [i, h]), accent: true }];
-    return ask(
-      [
-        `What is the average value of the function drawn, over the whole interval it is drawn on?`,
-        `图中函数在所画的整个区间上的平均值是多少？`,
-      ],
-      average,
-      [
-        Q.of(doubled, 2),
-        Q.of(doubled, 2 * (n + 1)),
-        Q.of(heights.reduce((u, v) => u + v, 0) + 1, n + 1),
-        Q.of((heights[0] as number) + (heights[n] as number) + 1, 2),
-      ],
-      [
-        `The signed area under the pieces is $${Q.of(doubled, 2).toLatex()}$, and the interval has length $${n}$. Dividing the area by the length gives $${average.toLatex()}$.`,
-        `各段下方的带符号面积是 $${Q.of(doubled, 2).toLatex()}$，区间长度是 $${n}$。面积除以长度得到 $${average.toLatex()}$。`,
-      ],
-      fig({ xMin: -1, xMax: 7, yMin: -3, yMax: 6 }, marks, [
-        `Straight pieces through the heights ${heights.join(", ")} at x = 0, 1, 2 and so on.`,
-        `经过高度 ${heights.join("，")} 的直线段，横坐标依次为 0、1、2 等。`,
-      ]),
-    );
-  },
-);
+        fig({ xMin: -1, xMax: 7, yMin: -3, yMax: 6 }, marks, [
+          `Straight pieces through the heights ${heights.join(", ")} at x = 0, 1, 2 and so on.`,
+          `经过高度 ${heights.join("，")} 的直线段，横坐标依次为 0、1、2 等。`,
+        ]),
+      );
+    },
+  ),
+  figure: calculusDrawings4["the-average-value-of-a-function#the-average-value-of-a-drawn-function"],
+};
 
 /** deeperFiguresCalculusIiPoints adds knowledge points of Calculus II that are answered by reading a drawing. */
 export const deeperFiguresCalculusIiPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

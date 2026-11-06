@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 
 import { type Poly, pAt, pLatex } from "./calculus-common.ts";
 import { antiderivativeLatex } from "./calculus-i-riemann.ts";
@@ -117,6 +118,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutTheCoordinateAxes
   knowledgePoints: [
     {
       id: "discs-about-the-x-axis",
+      figure: calculusDrawings4["volumes-of-revolution-using-the-disc-method-rotation-about-the-coordinate-axes#discs-about-the-x-axis"],
       title: t("Discs about the x-axis", "绕 x 轴旋转的圆盘"),
       explanation: t(
         "When the region between $y = f(x)$ and the $x$-axis, for $a \\le x \\le b$, is rotated about the $x$-axis, each cross section perpendicular to the axis is a disc of radius $f(x)$ and area $\\pi f(x)^{2}$. Adding the discs,\n\n$$V = \\pi\\int_{a}^{b} f(x)^{2} \\, dx.$$\n\nFor example, rotating the region under $y = \\sqrt{x}$ for $0 \\le x \\le 4$ gives $V = \\pi\\int_{0}^{4} x \\, dx = 8\\pi$.",
@@ -126,6 +128,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutTheCoordinateAxes
     },
     {
       id: "discs-about-the-y-axis",
+      figure: calculusDrawings4["volumes-of-revolution-using-the-disc-method-rotation-about-the-coordinate-axes#discs-about-the-y-axis"],
       title: t("Discs about the y-axis", "绕 y 轴旋转的圆盘"),
       explanation: t(
         "When a region is rotated about the $y$-axis, the discs are horizontal, so integrate with respect to $y$: write the curve as $x = g(y)$, and\n\n$$V = \\pi\\int_{c}^{d} g(y)^{2} \\, dy.$$\n\nFor the region between $y = x^{2}$, the $y$-axis and $y = 4$, solve for $x^{2} = y$; then $V = \\pi\\int_{0}^{4} y \\, dy = 8\\pi$.",
@@ -202,6 +205,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutOtherAxes: TopicD
   knowledgePoints: [
     {
       id: "discs-about-a-horizontal-line",
+      figure: calculusDrawings4["volumes-of-revolution-using-the-disc-method-rotation-about-other-axes#discs-about-a-horizontal-line"],
       title: t("Discs about a horizontal line", "绕水平直线旋转的圆盘"),
       explanation: t(
         "Rotating the region between $y = f(x)$ and the line $y = k$ about that line gives discs of radius $|f(x) - k|$:\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x) - k\\right)^{2} \\, dx.$$\n\nFor the region between $y = x^{2} + 1$ and $y = 1$, $0 \\le x \\le 1$, rotated about $y = 1$: the radius is $x^{2}$, so $V = \\pi\\int_{0}^{1} x^{4} \\, dx = \\frac{\\pi}{5}$.",
@@ -350,6 +354,8 @@ export const volumesOfRevolutionUsingTheWasherMethodRotationAboutTheCoordinateAx
   knowledgePoints: [
     {
       id: "washers-about-the-x-axis",
+      figure:
+        calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes#washers-about-the-x-axis"],
       title: t("Washers about the x-axis", "绕 x 轴旋转的垫圈"),
       explanation: t(
         "If $f(x) \\ge g(x) \\ge 0$ on $[a, b]$, rotating the region between them about the $x$-axis gives cross sections that are washers: a disc of outer radius $R = f(x)$ with a hole of inner radius $r = g(x)$. Its area is $\\pi(R^{2} - r^{2})$, so\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x)^{2} - g(x)^{2}\\right) dx.$$\n\nNote that $R^{2} - r^{2}$ is not $(R - r)^{2}$. For $y = x$ and $y = x^{2}$, which meet at $x = 0$ and $x = 1$: $V = \\pi\\int_{0}^{1} (x^{2} - x^{4}) \\, dx = \\frac{2\\pi}{15}$.",
@@ -359,6 +365,8 @@ export const volumesOfRevolutionUsingTheWasherMethodRotationAboutTheCoordinateAx
     },
     {
       id: "washers-about-the-y-axis",
+      figure:
+        calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes#washers-about-the-y-axis"],
       title: t("Washers about the y-axis", "绕 y 轴旋转的垫圈"),
       explanation: t(
         "About the $y$-axis the washers are horizontal. Write both boundaries as functions of $y$; the outer radius $R(y)$ is the one farther from the axis:\n\n$$V = \\pi\\int_{c}^{d} \\left(R(y)^{2} - r(y)^{2}\\right) dy.$$\n\nFor $y = x$ and $y = x^{2}$, at height $y$ the parabola gives $x = \\sqrt{y}$ and the line gives $x = y$, so $V = \\pi\\int_{0}^{1} (y - y^{2}) \\, dy = \\frac{\\pi}{6}$.",
@@ -416,6 +424,7 @@ export const volumesOfRevolutionUsingTheWasherMethodRotationAboutOtherAxes: Topi
   knowledgePoints: [
     {
       id: "washers-about-a-horizontal-line",
+      figure: calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-other-axes#washers-about-a-horizontal-line"],
       title: t("Washers about a horizontal line", "绕水平直线旋转的垫圈"),
       explanation: t(
         "To rotate the region between $y = f(x)$ and $y = g(x)$, with $f \\ge g$, about a horizontal line $y = k$, measure both radii from the line.\n\n- If the line is below the region, $R = f(x) - k$ and $r = g(x) - k$.\n- If the line is above the region, $R = k - g(x)$ and $r = k - f(x)$: the lower curve is now the farther one.\n\nThen $V = \\pi\\int_{a}^{b} (R^{2} - r^{2}) \\, dx$.",
@@ -722,6 +731,7 @@ export const theShellMethodRotationAboutTheYAxis: TopicDef = {
   knowledgePoints: [
     {
       id: "shells-under-a-curve",
+      figure: calculusDrawings4["the-shell-method-rotation-about-the-y-axis#shells-under-a-curve"],
       title: t("Shells under a curve", "曲线下方区域的柱壳"),
       explanation: t(
         "Rotating the region under $y = f(x)$, for $0 \\le a \\le x \\le b$, about the $y$-axis: the vertical strip at $x$ has height $f(x)$ and sweeps out a shell of radius $x$, so\n\n$$V = 2\\pi\\int_{a}^{b} x f(x) \\, dx.$$\n\nThis avoids solving $y = f(x)$ for $x$. For $y = x^{2}$ on $[0, 2]$: $V = 2\\pi\\int_{0}^{2} x^{3} \\, dx = 8\\pi$.",
@@ -863,6 +873,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheXAxis: TopicDef = {
   knowledgePoints: [
     {
       id: "surfaces-from-line-segments",
+      figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-x-axis#surfaces-from-line-segments"],
       title: t("Surfaces from line segments", "由线段旋转得到的曲面"),
       explanation: t(
         "A short piece of the curve with arc length $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$, at distance $f(x)$ from the axis, sweeps out a thin band of area $2\\pi f(x) \\, ds$. So rotating $y = f(x) \\ge 0$, $a \\le x \\le b$, about the $x$-axis gives\n\n$$S = 2\\pi\\int_{a}^{b} f(x)\\sqrt{1 + f'(x)^{2}} \\, dx.$$\n\nFor a line the square root is a constant. Rotating $y = x$, $0 \\le x \\le 1$, gives $S = 2\\pi\\sqrt{2}\\int_{0}^{1} x \\, dx = \\sqrt{2}\\pi$, the lateral area of a cone with radius $1$ and slant height $\\sqrt{2}$.",
@@ -872,6 +883,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheXAxis: TopicDef = {
     },
     {
       id: "surfaces-from-curves",
+      figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-x-axis#surfaces-from-curves"],
       title: t("Surfaces from curves", "由曲线旋转得到的曲面"),
       explanation: t(
         "Simplify $f(x)\\sqrt{1 + f'(x)^{2}}$ before integrating. For the circle $y = \\sqrt{r^{2} - x^{2}}$, $f'(x) = -\\frac{x}{\\sqrt{r^{2} - x^{2}}}$, so $1 + f'(x)^{2} = \\frac{r^{2}}{r^{2} - x^{2}}$ and $f\\sqrt{1 + (f')^{2}} = r$. A zone of a sphere between $x = a$ and $x = b$ therefore has area $2\\pi r(b - a)$. For $y = \\sqrt{x}$, $f\\sqrt{1 + (f')^{2}} = \\sqrt{x + \\frac{1}{4}}$.",
@@ -914,6 +926,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheYAxis: TopicDef = {
   knowledgePoints: [
     {
       id: "rotating-y-as-a-function-of-x-about-the-y-axis",
+      figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-y-axis#rotating-y-as-a-function-of-x-about-the-y-axis"],
       title: t("Rotating y = f(x) about the y-axis", "y = f(x) 绕 y 轴旋转"),
       explanation: t(
         "When $y = f(x)$, $0 \\le a \\le x \\le b$, is rotated about the $y$-axis, a piece of the curve at $x$ is at distance $x$ from the axis, so\n\n$$S = 2\\pi\\int_{a}^{b} x\\sqrt{1 + f'(x)^{2}} \\, dx.$$\n\nFor $y = x^{2}$, $0 \\le x \\le 1$: $S = 2\\pi\\int_{0}^{1} x\\sqrt{1 + 4x^{2}} \\, dx$; substituting $w = 1 + 4x^{2}$ gives $\\frac{\\pi}{6}\\left(5\\sqrt{5} - 1\\right)$.",
@@ -923,6 +936,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheYAxis: TopicDef = {
     },
     {
       id: "rotating-x-as-a-function-of-y-about-the-y-axis",
+      figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-y-axis#rotating-x-as-a-function-of-y-about-the-y-axis"],
       title: t("Rotating x = g(y) about the y-axis", "x = g(y) 绕 y 轴旋转"),
       explanation: t(
         "If the curve is $x = g(y) \\ge 0$, $c \\le y \\le d$, swap the roles of $x$ and $y$ in the formula for rotation about the $x$-axis:\n\n$$S = 2\\pi\\int_{c}^{d} g(y)\\sqrt{1 + g'(y)^{2}} \\, dy.$$\n\nFor example, $x = \\sqrt{r^{2} - y^{2}}$ gives $g\\sqrt{1 + (g')^{2}} = r$, just as for the circle rotated about the $x$-axis.",

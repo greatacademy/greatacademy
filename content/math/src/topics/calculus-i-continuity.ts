@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Interval, type PlaneMark, plane, poly, Q, union } from "@ga/subject-math";
-
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { choiceProblem, intervalProblem, numberProblem, pointProblem, reasonChoice, solutionsProblem, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { bare, fac, graphAltOf, lim, oneOf, range, sqrtLatex, table } from "./calculus-common.ts";
@@ -139,6 +139,7 @@ export const determiningContinuityFromGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "continuity-at-a-point-from-a-graph",
+      figure: calculusDrawings1["determining-continuity-from-graphs#continuity-at-a-point-from-a-graph"],
       title: t("Continuity at a point from a graph", "由图像判断在一点处的连续性"),
       explanation: t(
         "A function is **continuous** at $x = a$ when its graph passes through $x = a$ without a break: it can be drawn there without lifting the pen.\n\nOn a graph, a hole, a filled point away from the curve, or a jump each mean that $f$ is **not** continuous at $a$.",
@@ -196,6 +197,7 @@ export const determiningContinuityFromGraphs: TopicDef = {
     },
     {
       id: "locating-discontinuities-on-a-graph",
+      figure: calculusDrawings1["determining-continuity-from-graphs#locating-discontinuities-on-a-graph"],
       title: t("Locating discontinuities on a graph", "在图像上找出间断点"),
       explanation: t(
         "To find where a function is not continuous, scan its graph for breaks. At each marked point ask: does the curve arrive at the same height from both sides, and is the filled point at that height?",
@@ -416,6 +418,7 @@ export const leftAndRightContinuity: TopicDef = {
   knowledgePoints: [
     {
       id: "one-sided-continuity-from-a-graph",
+      figure: calculusDrawings1["left-and-right-continuity#one-sided-continuity-from-a-graph"],
       title: t("One-sided continuity from a graph", "由图像判断单侧连续"),
       explanation: t(
         "$f$ is **continuous from the left** at $a$ when $\\lim_{x \\to a^{-}} f(x) = f(a)$, and **continuous from the right** when $\\lim_{x \\to a^{+}} f(x) = f(a)$.\n\nAt a jump, the filled point sits at the end of one piece: $f$ is continuous from that side only.",
@@ -599,6 +602,7 @@ export const pointDiscontinuities: TopicDef = {
   knowledgePoints: [
     {
       id: "point-discontinuities-from-a-graph",
+      figure: calculusDrawings1["point-discontinuities#point-discontinuities-from-a-graph"],
       title: t("Point discontinuities from a graph", "由图像认识可去间断点"),
       explanation: t(
         "A **point discontinuity** at $x = a$ is a single missing or misplaced point: $\\lim_{x \\to a} f(x)$ exists, but $f(a)$ is not defined or is different from it. Moving the point to the height of the hole would make $f$ continuous.",
@@ -625,6 +629,7 @@ export const pointDiscontinuities: TopicDef = {
     },
     {
       id: "the-hole-of-a-rational-function",
+      figure: calculusDrawings1["point-discontinuities#the-hole-of-a-rational-function"],
       title: t("The hole of a rational function", "有理函数图像上的空心点"),
       explanation: t(
         "When numerator and denominator share a factor $(x - a)$, the graph has a hole at $x = a$. Cancel the factor and substitute $a$ to find its height:\n\n$$f(x) = \\frac{x^{2} - x - 6}{x - 3} = \\frac{(x - 3)(x + 2)}{x - 3} = x + 2 \\; (x \\ne 3),$$\n\nso the hole is at $(3, 5)$.",
@@ -676,6 +681,7 @@ export const jumpDiscontinuities: TopicDef = {
   knowledgePoints: [
     {
       id: "the-size-of-a-jump",
+      figure: calculusDrawings1["jump-discontinuities#the-size-of-a-jump"],
       title: t("The size of a jump", "跳跃的大小"),
       explanation: t(
         "A **jump discontinuity** at $x = a$ has finite one-sided limits that differ. The jump is the change from the left to the right:\n\n$$\\lim_{x \\to a^{+}} f(x) - \\lim_{x \\to a^{-}} f(x),$$\n\npositive when the graph jumps up and negative when it jumps down.",
@@ -773,6 +779,7 @@ export const discontinuitiesDueToVerticalAsymptotes: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-discontinuities-from-graphs",
+      figure: calculusDrawings1["discontinuities-due-to-vertical-asymptotes#classifying-discontinuities-from-graphs"],
       title: t("Classifying discontinuities from graphs", "由图像判断间断点的类型"),
       explanation: t(
         "There are three kinds of discontinuity:\n\n- **point**: the limit exists, but the value is missing or elsewhere (a hole);\n- **jump**: both one-sided limits are finite but differ;\n- **infinite**: a one-sided limit is $\\infty$ or $-\\infty$, at a vertical asymptote.",
@@ -829,6 +836,7 @@ export const discontinuitiesDueToVerticalAsymptotes: TopicDef = {
     },
     {
       id: "classifying-discontinuities-of-rational-functions",
+      figure: calculusDrawings1["discontinuities-due-to-vertical-asymptotes#classifying-discontinuities-of-rational-functions"],
       title: t("Classifying discontinuities of rational functions", "判断有理函数间断点的类型"),
       explanation: t(
         "Factor numerator and denominator. At a zero $a$ of the denominator:\n\n- if $(x - a)$ cancels completely, $f$ has a **point** discontinuity (a hole);\n- otherwise the denominator still vanishes, and $f$ has an **infinite** discontinuity (a vertical asymptote).\n\nA rational function is continuous wherever its denominator is not $0$.",
@@ -1520,6 +1528,7 @@ export const removingDiscontinuitiesFromRationalFunctions: TopicDef = {
     },
     {
       id: "which-discontinuities-are-removable",
+      figure: calculusDrawings1["removing-discontinuities-from-rational-functions#which-discontinuities-are-removable"],
       title: t("Which discontinuities are removable", "哪些间断点可去"),
       explanation: t(
         "Factor numerator and denominator completely. Each zero of the denominator whose factor cancels is removable; each whose factor remains is a vertical asymptote and cannot be removed. There may be none, one or several removable ones.",

@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q, radical } from "@ga/subject-math";
+import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -191,6 +192,7 @@ export const approximatingAreasWithTheRightRiemannSum: TopicDef = {
     },
     {
       id: "overestimates-and-underestimates",
+      figure: calculusDrawings3["approximating-areas-with-the-right-riemann-sum#overestimates-and-underestimates"],
       title: t("Overestimates and underestimates", "高估与低估"),
       explanation: t(
         "If $f$ is increasing on $[a, b]$, each left rectangle lies under the curve and each right rectangle pokes above it: $L_{n}$ underestimates the area and $R_{n}$ overestimates it. If $f$ is decreasing, it is the other way round.",
@@ -298,6 +300,7 @@ export const approximatingAreasWithTheTrapezoidalRule: TopicDef = {
   knowledgePoints: [
     {
       id: "the-trapezoidal-rule-from-a-formula",
+      figure: calculusDrawings3["approximating-areas-with-the-trapezoidal-rule#the-trapezoidal-rule-from-a-formula"],
       title: t("The trapezoidal rule from a formula", "由公式用梯形法则"),
       explanation: t(
         "Joining the points of the graph above consecutive endpoints gives trapezoids of area $\\frac{\\Delta x}{2}\\left[f(x_{i - 1}) + f(x_{i})\\right]$. Adding them, the inner heights count twice:\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(x_{0}) + 2f(x_{1}) + \\cdots + 2f(x_{n - 1}) + f(x_{n})\\right] = \\frac{L_{n} + R_{n}}{2}.$$",
@@ -307,6 +310,7 @@ export const approximatingAreasWithTheTrapezoidalRule: TopicDef = {
     },
     {
       id: "the-trapezoidal-rule-from-a-table",
+      figure: calculusDrawings3["approximating-areas-with-the-trapezoidal-rule#the-trapezoidal-rule-from-a-table"],
       title: t("The trapezoidal rule from a table", "由表格用梯形法则"),
       explanation: t(
         "From a table, use every value: the two end values once and each inner value twice, then multiply by $\\frac{\\Delta x}{2}$. If $L_{n}$ and $R_{n}$ are already known, $T_{n}$ is their average.",
@@ -360,6 +364,7 @@ export const leftAndRightRiemannSumsInSigmaNotation: TopicDef = {
   knowledgePoints: [
     {
       id: "writing-left-and-right-sums",
+      figure: calculusDrawings3["left-and-right-riemann-sums-in-sigma-notation#writing-left-and-right-sums"],
       title: t("Writing left and right sums", "写出左、右黎曼和"),
       explanation: t(
         "Divide the interval into equal widths, then add up the areas of rectangles whose heights are taken at the left or right end of each piece. The endpoints are $x_{i} = a + i\\Delta x$. The left sum uses $i = 0$ to $n - 1$ and the right sum $i = 1$ to $n$:\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x.$$",
@@ -474,6 +479,7 @@ export const midpointAndTrapezoidalRulesInSigmaNotation: TopicDef = {
     },
     {
       id: "the-trapezoidal-rule-in-sigma-notation",
+      figure: calculusDrawings3["midpoint-and-trapezoidal-rules-in-sigma-notation#the-trapezoidal-rule-in-sigma-notation"],
       title: t("The trapezoidal rule in sigma notation", "用求和符号表示梯形法则"),
       explanation: t(
         "Each trapezoid averages the heights at its two ends, so every inner point is shared by two trapezoids and counted twice. The inner endpoints $x_{1}, \\ldots, x_{n - 1}$ count twice and the ends once:\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right].$$",
@@ -602,6 +608,7 @@ export const approximatingAreasUnderGraphsOfCompositeFunctions: TopicDef = {
     },
     {
       id: "overestimates-from-monotonicity-and-concavity",
+      figure: calculusDrawings3["approximating-areas-under-graphs-of-composite-functions#overestimates-from-monotonicity-and-concavity"],
       title: t("Overestimates from monotonicity and concavity", "由单调性和凹凸性判断高估或低估"),
       explanation: t(
         "Whether an approximation is too big or too small depends on the shape of the graph, not on the numbers:\n\n- **left and right sums** depend on monotonicity: for an increasing $f$, $L_{n}$ underestimates and $R_{n}$ overestimates; for a decreasing $f$ it is the other way round;\n- **the trapezoidal rule and the midpoint sum** depend on concavity: if $f$ is concave up, each chord lies above the curve, so the trapezoidal rule overestimates, and each midpoint rectangle trades a smaller piece of extra area for a larger missing one, so the midpoint sum underestimates; if $f$ is concave down, both reverse.\n\nSo find the signs of $f'$ and $f''$ on the interval first. For $\\sqrt{x + 1}$, $f' > 0$ and $f'' < 0$: the right sum and the midpoint sum overestimate.",
@@ -931,6 +938,10 @@ export const applyingTheFundamentalTheoremToExponentialAndTrigonometricFunctions
     },
     {
       id: "trigonometric-integrals",
+      figure:
+        calculusDrawings3[
+          "applying-the-fundamental-theorem-of-calculus-to-exponential-and-trigonometric-functions#trigonometric-integrals"
+        ],
       title: t("Trigonometric integrals", "三角函数的积分"),
       explanation: t(
         "After finding the antiderivative, the exact values of sine and cosine at the special angles give an exact answer instead of a decimal. Integrate, then use exact values at special angles: $\\int_{0}^{\\frac{\\pi}{3}} \\sin x \\, dx = \\Big[-\\cos x\\Big]_{0}^{\\frac{\\pi}{3}} = -\\frac{1}{2} - (-1) = \\frac{1}{2}$. Watch the minus sign in $\\int \\sin x \\, dx = -\\cos x + C$.",
@@ -1036,6 +1047,7 @@ export const theSumAndConstantMultipleRulesForDefiniteIntegrals: TopicDef = {
     },
     {
       id: "integrals-with-a-constant-term",
+      figure: calculusDrawings3["the-sum-and-constant-multiple-rules-for-definite-integrals#integrals-with-a-constant-term"],
       title: t("Integrals with a constant term", "含常数项的积分"),
       explanation: t(
         "A constant function gives a rectangle under its graph, whose area is the constant times the width of the interval. A constant integrates to the constant times the length of the interval: $\\int_{a}^{b} c \\, dx = c(b - a)$. So $\\int_{1}^{4} \\left[2f(x) + 5\\right] dx = 2\\int_{1}^{4} f(x) \\, dx + 15$.",

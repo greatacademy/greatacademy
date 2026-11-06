@@ -1,6 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Mark, type Point, poly, Q, sketch } from "@ga/subject-math";
+import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { article, numberProblem, solutionsProblem } from "../problems.ts";
 import { oneOf, type Poly, pAt, par, pDer, pLatex, rounded } from "./calculus-common.ts";
@@ -62,6 +63,7 @@ export const solvingOptimizationProblemsUsingDerivatives: TopicDef = {
     },
     {
       id: "optimizing-fenced-areas",
+      figure: calculusDrawings3["solving-optimization-problems-using-derivatives#optimizing-fenced-areas"],
       title: t("Optimizing fenced areas", "围栏面积的最优化"),
       explanation: t(
         "A rectangle fenced on three sides, against a wall, with $L$ m of fence: if the two sides perpendicular to the wall have length $x$, the third has length $L - 2x$ and $A(x) = x(L - 2x)$ for $0 < x < \\frac{L}{2}$. $A'(x) = L - 4x = 0$ at $x = \\frac{L}{4}$, giving $A = \\frac{L^{2}}{8}$.",
@@ -323,6 +325,7 @@ export const optimizationProblemsInvolvingCylinders: TopicDef = {
   knowledgePoints: [
     {
       id: "closed-cylinders",
+      figure: calculusDrawings3["optimization-problems-involving-cylinders#closed-cylinders"],
       title: t("Closed cylinders", "有盖圆柱"),
       explanation: t(
         "A closed can of volume $V$ has $h = \\frac{V}{\\pi r^{2}}$, so its surface area is $S(r) = 2\\pi r^{2} + 2\\pi r h = 2\\pi r^{2} + \\frac{2V}{r}$. $S'(r) = 4\\pi r - \\frac{2V}{r^{2}} = 0$ when $r^{3} = \\frac{V}{2\\pi}$; then $h = 2r$: the best can is as tall as it is wide.",
@@ -349,6 +352,7 @@ export const optimizationProblemsInvolvingCylinders: TopicDef = {
     },
     {
       id: "open-cylinders",
+      figure: calculusDrawings3["optimization-problems-involving-cylinders#open-cylinders"],
       title: t("Open cylinders", "无盖圆柱"),
       explanation: t(
         "Use the fixed volume to write the height in terms of the radius, so the surface area becomes a function of one variable that you can minimize. Without a lid, $S(r) = \\pi r^{2} + 2\\pi r h = \\pi r^{2} + \\frac{2V}{r}$. $S'(r) = 2\\pi r - \\frac{2V}{r^{2}} = 0$ when $r^{3} = \\frac{V}{\\pi}$, and then $h = r$.",
@@ -475,6 +479,7 @@ export const optimizingDistancesToCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "closest-points-on-parabolas",
+      figure: calculusDrawings3["optimizing-distances-to-curves#closest-points-on-parabolas"],
       title: t("Closest points on parabolas", "抛物线上的最近点"),
       explanation: t(
         "For the point $(x, x^{2})$ and the point $(0, b)$: $D^{2} = x^{2} + (x^{2} - b)^{2}$, with derivative $2x + 4x(x^{2} - b) = 2x(2x^{2} - 2b + 1)$. It is $0$ at $x = 0$ and at $x^{2} = b - \\frac{1}{2}$; when $b > \\frac{1}{2}$ the two symmetric points are closest, and $x = 0$ is a local maximum of $D^{2}$.",
@@ -563,6 +568,7 @@ export const optimizationProblemsWithInscribedShapes: TopicDef = {
   knowledgePoints: [
     {
       id: "rectangles-under-parabolas",
+      figure: calculusDrawings3["optimization-problems-with-inscribed-shapes#rectangles-under-parabolas"],
       title: t("Rectangles under parabolas", "抛物线下的矩形"),
       explanation: t(
         "A rectangle with its base on the $x$-axis and upper corners on $y = H - kx^{2}$ has corners at $(\\pm x, H - kx^{2})$, so $A(x) = 2x(H - kx^{2})$ for $0 < x < \\sqrt{\\frac{H}{k}}$. $A'(x) = 2H - 6kx^{2} = 0$ at $x = \\sqrt{\\frac{H}{3k}}$.",
@@ -591,6 +597,7 @@ export const optimizationProblemsWithInscribedShapes: TopicDef = {
     },
     {
       id: "rectangles-in-triangles-and-circles",
+      figure: calculusDrawings3["optimization-problems-with-inscribed-shapes#rectangles-in-triangles-and-circles"],
       title: t("Rectangles in triangles and circles", "三角形和圆中的矩形"),
       explanation: t(
         "In a right triangle with legs $a$ and $b$ along the axes, a rectangle with a corner at the right angle and the opposite corner on the hypotenuse has height $b\\left(1 - \\frac{x}{a}\\right)$, so $A(x) = bx - \\frac{b}{a}x^{2}$, greatest at $x = \\frac{a}{2}$: $A = \\frac{ab}{4}$. In a circle of radius $r$, the largest inscribed rectangle is a square, with area $2r^{2}$.",
@@ -1199,6 +1206,7 @@ export const newtonsSecondLaw: TopicDef = {
     },
     {
       id: "when-the-force-vanishes",
+      figure: calculusDrawings3["newtons-second-law#when-the-force-vanishes"],
       title: t("When the net force is zero", "合力何时为零"),
       explanation: t(
         "The net force is zero exactly when the acceleration is zero. At that moment the velocity is momentarily neither increasing nor decreasing.",

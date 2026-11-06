@@ -6,6 +6,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { chart, curvePath, intTicks, type Scale } from "./figure-charts.ts";
@@ -45,70 +46,76 @@ function rightSide(rng: Rng, count: number) {
   return { roots, f, figure };
 }
 
-const longRunFromRightSide = point(
-  "the-long-run-from-a-graph-of-the-right-side",
-  ["The long run from a graph of the right side", "由右端的图像判断长期行为"],
-  [
-    "For $y' = f(y)$, the solution rises where the graph of $f$ is above zero and falls where it is below. It moves until it meets the next root in that direction, or runs off without bound if there is none.",
-    "对 $y' = f(y)$，在 $f$ 的图像位于零线上方时解上升，位于下方时解下降。解一直运动到该方向的下一个根；如果没有根，就无限远离。",
-  ],
-  (rng) => {
-    const { roots, f, figure } = rightSide(rng, 3);
-    const starts: number[] = [];
-    for (let v = -7; v <= 7; v++) if (!roots.includes(v)) starts.push(v);
-    const y0 = rng.pick(starts);
-    const rising = f(y0) > 0;
-    const above = roots.filter((r) => r > y0);
-    const below = roots.filter((r) => r < y0);
-    const target = rising ? (above[0] ?? null) : (below[below.length - 1] ?? null);
-    const name = (r: number | null): Pair =>
-      r === null ? (rising ? same("y \\to \\infty") : same("y \\to -\\infty")) : same(`y \\to ${r}`);
-    const others = roots.filter((r) => r !== target).map((r) => same(`y \\to ${r}`));
-    return choose(
-      rng,
-      [
-        `The graph shows $f(y)$ for the equation $y' = f(y)$. What happens to the solution with $y(0) = ${y0}$ as $t$ grows?`,
-        `图中是方程 $y' = f(y)$ 的 $f(y)$。当 $t$ 增大时，满足 $y(0) = ${y0}$ 的解如何变化？`,
-      ],
-      name(target),
-      [...others, target === null ? same(`y \\to ${y0}`) : rising ? same("y \\to \\infty") : same("y \\to -\\infty")],
-      [
-        `At $y = ${y0}$ the graph is ${rising ? "above" : "below"} zero, so $y$ ${rising ? "rises" : "falls"}, and ${target === null ? "no root stops it" : `the first root it meets is $${target}$`}.`,
-        `在 $y = ${y0}$ 处图像在零线${rising ? "上方" : "下方"}，所以 $y$ ${rising ? "上升" : "下降"}，${target === null ? "没有根能阻止它" : `它遇到的第一个根是 $${target}$`}。`,
-      ],
-      figure,
-    );
-  },
-);
+const longRunFromRightSide = {
+  ...point(
+    "the-long-run-from-a-graph-of-the-right-side",
+    ["The long run from a graph of the right side", "由右端的图像判断长期行为"],
+    [
+      "For $y' = f(y)$, the solution rises where the graph of $f$ is above zero and falls where it is below. It moves until it meets the next root in that direction, or runs off without bound if there is none.",
+      "对 $y' = f(y)$，在 $f$ 的图像位于零线上方时解上升，位于下方时解下降。解一直运动到该方向的下一个根；如果没有根，就无限远离。",
+    ],
+    (rng) => {
+      const { roots, f, figure } = rightSide(rng, 3);
+      const starts: number[] = [];
+      for (let v = -7; v <= 7; v++) if (!roots.includes(v)) starts.push(v);
+      const y0 = rng.pick(starts);
+      const rising = f(y0) > 0;
+      const above = roots.filter((r) => r > y0);
+      const below = roots.filter((r) => r < y0);
+      const target = rising ? (above[0] ?? null) : (below[below.length - 1] ?? null);
+      const name = (r: number | null): Pair =>
+        r === null ? (rising ? same("y \\to \\infty") : same("y \\to -\\infty")) : same(`y \\to ${r}`);
+      const others = roots.filter((r) => r !== target).map((r) => same(`y \\to ${r}`));
+      return choose(
+        rng,
+        [
+          `The graph shows $f(y)$ for the equation $y' = f(y)$. What happens to the solution with $y(0) = ${y0}$ as $t$ grows?`,
+          `图中是方程 $y' = f(y)$ 的 $f(y)$。当 $t$ 增大时，满足 $y(0) = ${y0}$ 的解如何变化？`,
+        ],
+        name(target),
+        [...others, target === null ? same(`y \\to ${y0}`) : rising ? same("y \\to \\infty") : same("y \\to -\\infty")],
+        [
+          `At $y = ${y0}$ the graph is ${rising ? "above" : "below"} zero, so $y$ ${rising ? "rises" : "falls"}, and ${target === null ? "no root stops it" : `the first root it meets is $${target}$`}.`,
+          `在 $y = ${y0}$ 处图像在零线${rising ? "上方" : "下方"}，所以 $y$ ${rising ? "上升" : "下降"}，${target === null ? "没有根能阻止它" : `它遇到的第一个根是 $${target}$`}。`,
+        ],
+        figure,
+      );
+    },
+  ),
+  figure: calculusDrawings5["qualitative-analysis-of-first-order-odes#the-long-run-from-a-graph-of-the-right-side"],
+};
 
-const stableRoot = point(
-  "the-stable-equilibrium-from-a-graph-of-the-right-side",
-  ["The stable equilibrium from a graph of the right side", "由右端的图像找稳定平衡"],
-  [
-    "A root of $f$ is a stable equilibrium of $y' = f(y)$ when $f$ crosses from positive to negative there as $y$ increases, since solutions on both sides then move toward it.",
-    "当 $y$ 增大时 $f$ 在根处由正变负，这个根就是 $y' = f(y)$ 的稳定平衡，因为两侧的解都向它移动。",
-  ],
-  (rng) => {
-    const { roots, f, figure } = rightSide(rng, 2);
-    const [a, b] = roots as [number, number];
-    const stable = f((a + b) / 2) < 0 ? a : b;
-    const other = stable === a ? b : a;
-    return choose(
-      rng,
-      [
-        "The graph shows $f(y)$ for the equation $y' = f(y)$. Which equilibrium is stable?",
-        "图中是方程 $y' = f(y)$ 的 $f(y)$。哪个平衡是稳定的？",
-      ],
-      same(`y = ${stable}`),
-      [same(`y = ${other}`), ["Both of them", "两个都是"], ["Neither of them", "两个都不是"]],
-      [
-        `At $y = ${stable}$ the graph goes from above zero to below zero as $y$ increases, so nearby solutions move toward it. At $y = ${other}$ the signs are the other way round.`,
-        `在 $y = ${stable}$ 处，随 $y$ 增大图像由零线上方变到下方，所以附近的解向它移动。在 $y = ${other}$ 处符号相反。`,
-      ],
-      figure,
-    );
-  },
-);
+const stableRoot = {
+  ...point(
+    "the-stable-equilibrium-from-a-graph-of-the-right-side",
+    ["The stable equilibrium from a graph of the right side", "由右端的图像找稳定平衡"],
+    [
+      "A root of $f$ is a stable equilibrium of $y' = f(y)$ when $f$ crosses from positive to negative there as $y$ increases, since solutions on both sides then move toward it.",
+      "当 $y$ 增大时 $f$ 在根处由正变负，这个根就是 $y' = f(y)$ 的稳定平衡，因为两侧的解都向它移动。",
+    ],
+    (rng) => {
+      const { roots, f, figure } = rightSide(rng, 2);
+      const [a, b] = roots as [number, number];
+      const stable = f((a + b) / 2) < 0 ? a : b;
+      const other = stable === a ? b : a;
+      return choose(
+        rng,
+        [
+          "The graph shows $f(y)$ for the equation $y' = f(y)$. Which equilibrium is stable?",
+          "图中是方程 $y' = f(y)$ 的 $f(y)$。哪个平衡是稳定的？",
+        ],
+        same(`y = ${stable}`),
+        [same(`y = ${other}`), ["Both of them", "两个都是"], ["Neither of them", "两个都不是"]],
+        [
+          `At $y = ${stable}$ the graph goes from above zero to below zero as $y$ increases, so nearby solutions move toward it. At $y = ${other}$ the signs are the other way round.`,
+          `在 $y = ${stable}$ 处，随 $y$ 增大图像由零线上方变到下方，所以附近的解向它移动。在 $y = ${other}$ 处符号相反。`,
+        ],
+        figure,
+      );
+    },
+  ),
+  figure: calculusDrawings5["equilibrium-solutions-of-first-order-odes#the-stable-equilibrium-from-a-graph-of-the-right-side"],
+};
 
 const growthPoints = point(
   "a-later-value-from-a-drawn-doubling-curve",

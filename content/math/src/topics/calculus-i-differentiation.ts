@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { expressionProblem, functionProblem, numberProblem, reasonChoice, solutionsProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -324,6 +325,7 @@ export const continuityAndDifferentiabilityOfFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "differentiability-from-a-graph",
+      figure: calculusDrawings2["continuity-and-differentiability-of-functions#differentiability-from-a-graph"],
       title: t("Differentiability from a graph", "由图像判断可导性"),
       explanation: t(
         "$f$ is **differentiable** at $a$ when $f'(a)$ exists: the graph has a single, non-vertical tangent line there. A graph is not differentiable at\n\n- a **corner**, where the slopes from the two sides differ;\n- a **cusp**, where the slopes tend to $\\infty$ and $-\\infty$;\n- a **vertical tangent**;\n- a **discontinuity**.\n\nA differentiable function is continuous, but a continuous function need not be differentiable.",
@@ -900,6 +902,7 @@ export const calculatingTheEquationOfANormalLineUsingDifferentiation: TopicDef =
   knowledgePoints: [
     {
       id: "the-slope-of-a-normal-line",
+      figure: calculusDrawings2["calculating-the-equation-of-a-normal-line-using-differentiation#the-slope-of-a-normal-line"],
       title: t("The slope of a normal line", "法线的斜率"),
       explanation: t(
         "The **normal line** at a point is perpendicular to the tangent line there. When the tangent slope is $m \\ne 0$, the normal slope is the negative reciprocal $-\\frac{1}{m}$. (A horizontal tangent has a vertical normal.)",

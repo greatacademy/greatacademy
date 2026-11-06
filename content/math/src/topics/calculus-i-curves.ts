@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { functionProblem, numberProblem, solutionsProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -69,6 +70,7 @@ export const sketchingTheDerivativeOfAFunctionFromTheFunctionsGraph: TopicDef = 
   knowledgePoints: [
     {
       id: "derivatives-of-piecewise-linear-graphs",
+      figure: calculusDrawings2["sketching-the-derivative-of-a-function-from-the-functions-graph#derivatives-of-piecewise-linear-graphs"],
       title: t("Derivatives of piecewise linear graphs", "分段线性图像的导数"),
       explanation: t(
         "On a straight piece of a graph the derivative is constant and equal to the slope of the piece, $\\frac{\\Delta y}{\\Delta x}$. So the graph of $f'$ is a horizontal step on each piece, with a jump (and no derivative) at each corner.",
@@ -96,6 +98,7 @@ export const sketchingTheDerivativeOfAFunctionFromTheFunctionsGraph: TopicDef = 
     },
     {
       id: "the-sign-of-the-derivative-from-a-graph",
+      figure: calculusDrawings2["sketching-the-derivative-of-a-function-from-the-functions-graph#the-sign-of-the-derivative-from-a-graph"],
       title: t("The sign of the derivative from a graph", "由图像判断导数的符号"),
       explanation: t(
         "Where the graph of $f$ rises, $f' > 0$, so the graph of $f'$ lies above the $x$-axis; where it falls, $f' < 0$. At a smooth peak or valley the tangent is horizontal and $f' = 0$: the graph of $f'$ crosses the axis there.",
@@ -168,6 +171,7 @@ export const interpretingTheGraphOfAFunctionsDerivative: TopicDef = {
   knowledgePoints: [
     {
       id: "local-extrema-from-the-graph-of-the-derivative",
+      figure: calculusDrawings2["interpreting-the-graph-of-a-functions-derivative#local-extrema-from-the-graph-of-the-derivative"],
       title: t("Local extrema from the graph of the derivative", "由导数的图像求局部极值"),
       explanation: t(
         "Reading the graph of $f'$, not $f$: $f$ has a local maximum where $f'$ crosses the $x$-axis from above to below, and a local minimum where it crosses from below to above. Where $f'$ only touches the axis, $f'$ keeps its sign and $f$ has no extremum. The peaks and valleys of $f'$ are not extrema of $f$.",
@@ -207,6 +211,7 @@ export const interpretingTheGraphOfAFunctionsDerivative: TopicDef = {
     },
     {
       id: "monotonicity-from-the-graph-of-the-derivative",
+      figure: calculusDrawings2["interpreting-the-graph-of-a-functions-derivative#monotonicity-from-the-graph-of-the-derivative"],
       title: t("Monotonicity from the graph of the derivative", "由导数的图像判断单调性"),
       explanation: t(
         "$f$ is increasing where the graph of $f'$ lies above the $x$-axis and decreasing where it lies below. Whether $f'$ itself rises or falls does not matter here.",
@@ -278,6 +283,10 @@ export const interpretingTheGraphOfAFunctionsDerivativeConcavity: TopicDef = {
   knowledgePoints: [
     {
       id: "inflection-points-from-the-graph-of-the-derivative",
+      figure:
+        calculusDrawings2[
+          "interpreting-the-graph-of-a-functions-derivative-concavity-and-points-of-inflection#inflection-points-from-the-graph-of-the-derivative"
+        ],
       title: t("Inflection points from the graph of the derivative", "由导数的图像求拐点"),
       explanation: t(
         "$f$ is concave up where $f'$ is increasing and concave down where $f'$ is decreasing. So $f$ has a point of inflection where $f'$ changes from increasing to decreasing or back: at the peaks and valleys of the graph of $f'$, not at its zeros.",
@@ -309,6 +318,10 @@ export const interpretingTheGraphOfAFunctionsDerivativeConcavity: TopicDef = {
     },
     {
       id: "concavity-from-a-smooth-graph-of-the-derivative",
+      figure:
+        calculusDrawings2[
+          "interpreting-the-graph-of-a-functions-derivative-concavity-and-points-of-inflection#concavity-from-a-smooth-graph-of-the-derivative"
+        ],
       title: t("Concavity from a smooth graph of the derivative", "由光滑的导数图像判断凹凸性"),
       explanation: t(
         "Find where the graph of $f'$ rises: there $f'' > 0$ and $f$ is concave up. Where it falls, $f$ is concave down. The sign of $f'$, above or below the axis, is irrelevant.",
@@ -421,6 +434,7 @@ export const sketchingAFunctionFromTheGraphOfItsDerivative: TopicDef = {
     },
     {
       id: "global-extrema-from-the-graph-of-the-derivative",
+      figure: calculusDrawings2["sketching-a-function-from-the-graph-of-its-derivative#global-extrema-from-the-graph-of-the-derivative"],
       title: t("Global extrema from the graph of the derivative", "由导数的图像求全局最值"),
       explanation: t(
         "The candidates for global extrema on $[a, b]$ are the endpoints and the points where $f'$ changes sign. Track how $f$ rises and falls between them to compare the values.",
@@ -473,6 +487,7 @@ export const sketchingAFunctionGivenSomeDerivativeProperties: TopicDef = {
   knowledgePoints: [
     {
       id: "shapes-from-the-signs-of-the-derivatives",
+      figure: calculusDrawings2["sketching-a-function-given-some-derivative-properties#shapes-from-the-signs-of-the-derivatives"],
       title: t("Shapes from the signs of the derivatives", "由导数的符号判断形状"),
       explanation: t(
         "The sign of $f'$ says whether the graph rises or falls; the sign of $f''$ says whether it bends up or down. Together they give four shapes: rising and concave up (getting steeper), rising and concave down (levelling off), falling and concave up (levelling off), and falling and concave down (getting steeper).",
@@ -650,6 +665,7 @@ export const approximatingFunctionsUsingLocalLinearityAndLinearization: TopicDef
   knowledgePoints: [
     {
       id: "finding-a-linearization",
+      figure: calculusDrawings2["approximating-functions-using-local-linearity-and-linearization#finding-a-linearization"],
       title: t("Finding a linearization", "求线性化"),
       explanation: t(
         "Near $x = a$ the graph of a differentiable function looks like its tangent line. The linearization of $f$ at $a$ is that line:\n\n$$L(x) = f(a) + f'(a)(x - a).$$",
@@ -703,6 +719,7 @@ export const approximatingFunctionsUsingLocalLinearityAndLinearization: TopicDef
     },
     {
       id: "over-and-underestimates",
+      figure: calculusDrawings2["approximating-functions-using-local-linearity-and-linearization#over-and-underestimates"],
       title: t("Overestimates and underestimates", "估计偏大还是偏小"),
       explanation: t(
         "Where $f$ is concave up, the graph lies above its tangent lines, so a linearization underestimates $f$. Where $f$ is concave down, the graph lies below them and the linearization overestimates.",
@@ -874,6 +891,7 @@ export const approximatingTrigonometricFunctionsUsingLocalLinearity: TopicDef = 
   knowledgePoints: [
     {
       id: "small-angle-approximations",
+      figure: calculusDrawings2["approximating-trigonometric-functions-using-local-linearity#small-angle-approximations"],
       title: t("Small angle approximations", "小角近似"),
       explanation: t(
         "Near zero, the graphs of sine and tangent hug the line through the origin with slope one, while cosine stays close to its maximum of one. Linearizing at $0$ gives $\\sin x \\approx x$, $\\tan x \\approx x$ and $\\cos x \\approx 1$ for small $x$ in radians. Near $\\pi$, $\\sin(\\pi + h) \\approx -h$, since $\\sin \\pi = 0$ and $\\cos \\pi = -1$.",
@@ -909,6 +927,7 @@ export const approximatingTrigonometricFunctionsUsingLocalLinearity: TopicDef = 
     },
     {
       id: "approximations-near-special-angles",
+      figure: calculusDrawings2["approximating-trigonometric-functions-using-local-linearity#approximations-near-special-angles"],
       title: t("Approximations near special angles", "特殊角附近的近似"),
       explanation: t(
         "To estimate $\\sin 31^{\\circ}$, linearize $\\sin x$ at $30^{\\circ} = \\frac{\\pi}{6}$, and convert the step to radians: $1^{\\circ} = \\frac{\\pi}{180}$. Then $\\sin 31^{\\circ} \\approx \\sin \\frac{\\pi}{6} + \\cos \\frac{\\pi}{6} \\cdot \\frac{\\pi}{180} = \\frac{1}{2} + \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\pi}{180} \\approx 0.515$. The derivative formulas only hold in radians.",

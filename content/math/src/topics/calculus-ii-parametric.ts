@@ -1,6 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { type Poly, pAt, pDer, pLatex } from "./calculus-common.ts";
@@ -224,6 +225,7 @@ export const calculatingTangentAndNormalLinesWithParametricEquations: TopicDef =
     },
     {
       id: "normal-lines-to-parametric-curves",
+      figure: calculusDrawings5["calculating-tangent-and-normal-lines-with-parametric-equations#normal-lines-to-parametric-curves"],
       title: t("Normal lines to parametric curves", "参数曲线的法线"),
       explanation: t(
         "The normal line is perpendicular to the tangent, so its slope is $-\\frac{1}{m} = -\\frac{dx/dt}{dy/dt}$. It passes through the same point $(x(t_{0}), y(t_{0}))$.",
@@ -415,6 +417,7 @@ export const theArcLengthOfAParametricCurve: TopicDef = {
   knowledgePoints: [
     {
       id: "arc-length-with-a-perfect-square-speed",
+      figure: calculusDrawings5["the-arc-length-of-a-parametric-curve#arc-length-with-a-perfect-square-speed"],
       title: t("Arc length with a perfect-square speed", "速率为完全平方时的弧长"),
       explanation: t(
         "In a short time $dt$ the point moves $dx = x'(t) \\, dt$ across and $dy = y'(t) \\, dt$ up, a distance $\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$. So\n\n$$L = \\int_{a}^{b} \\sqrt{\\left(\\frac{dx}{dt}\\right)^{2} + \\left(\\frac{dy}{dt}\\right)^{2}} \\, dt,$$\n\nassuming the curve is traced once. For $x = \\frac{1}{3}t^{3} - t$, $y = t^{2}$, the sum under the root is $(t^{2} + 1)^{2}$, so $L = \\int_{0}^{3} (t^{2} + 1) \\, dt = 12$.",
@@ -424,6 +427,7 @@ export const theArcLengthOfAParametricCurve: TopicDef = {
     },
     {
       id: "exact-arc-lengths",
+      figure: calculusDrawings5["the-arc-length-of-a-parametric-curve#exact-arc-lengths"],
       title: t("Exact arc lengths", "弧长的精确值"),
       explanation: t(
         "For a circle $x = r\\cos t + h$, $y = r\\sin t + k$, the speed is the constant $r$, so the arc for $0 \\le t \\le \\theta$ has length $r\\theta$. Other curves may need a substitution: for $x = 3t^{2}$, $y = 2t^{3}$, the speed is $6t\\sqrt{1 + t^{2}}$, and $w = 1 + t^{2}$ finishes the integral.",
@@ -578,6 +582,7 @@ export const surfaceAreasOfRevolutionForParametricCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "surfaces-from-polynomial-parametric-curves",
+      figure: calculusDrawings5["surface-areas-of-revolution-for-parametric-curves#surfaces-from-polynomial-parametric-curves"],
       title: t("Surfaces from polynomial parametric curves", "多项式参数曲线旋转所得的曲面"),
       explanation: t(
         "The surface area of a rotated curve adds up thin bands whose width is the arc length element and whose radius is the distance from the axis. Replace $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ by the parametric arc length element $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$. Rotating about the $x$-axis, the radius is $y(t)$:\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt.$$",
@@ -587,6 +592,7 @@ export const surfaceAreasOfRevolutionForParametricCurves: TopicDef = {
     },
     {
       id: "zones-of-a-sphere",
+      figure: calculusDrawings5["surface-areas-of-revolution-for-parametric-curves#zones-of-a-sphere"],
       title: t("Zones of a sphere", "球带"),
       explanation: t(
         "For the circle $x = r\\cos t$, $y = r\\sin t$ the speed is $r$, so rotating the arc $0 \\le t \\le \\beta$ about the $x$-axis gives $S = 2\\pi r^{2}\\int_{0}^{\\beta} \\sin t \\, dt = 2\\pi r^{2}(1 - \\cos\\beta)$. With $\\beta = \\pi$ this is the whole sphere, $4\\pi r^{2}$.",

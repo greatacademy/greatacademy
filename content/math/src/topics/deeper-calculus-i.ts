@@ -4,6 +4,9 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
+import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -102,6 +105,8 @@ const conjugatesTopAndBottom: KnowledgePointDef = {
 
 const crossingTheAsymptote: KnowledgePointDef = {
   id: "where-a-graph-crosses-its-horizontal-asymptote",
+  figure:
+    calculusDrawings1["limits-at-infinity-and-horizontal-asymptotes-of-rational-functions#where-a-graph-crosses-its-horizontal-asymptote"],
   title: t("Where a graph crosses its horizontal asymptote", "图象与水平渐近线的交点"),
   explanation: t(
     "A horizontal asymptote describes the behaviour of a function far from the origin, so the graph may cross it elsewhere. To find where, set the function equal to the asymptote's value and clear the denominator. The highest powers cancel, which leaves a lower-degree equation.",
@@ -215,6 +220,7 @@ const tangentThroughOutsidePoint: KnowledgePointDef = {
 
 const normalMeetsAgain: KnowledgePointDef = {
   id: "where-a-normal-line-meets-the-curve-again",
+  figure: calculusDrawings2["calculating-the-equation-of-a-normal-line-using-differentiation#where-a-normal-line-meets-the-curve-again"],
   title: t("Where a normal line meets the curve again", "法线与曲线的另一交点"),
   explanation: t(
     "A normal line to a parabola usually crosses the parabola a second time. For $y = cx^2$, the line through points with $x$-values $a$ and $b$ has slope $c(a + b)$. Setting this equal to the normal's slope gives the second point directly, without solving a quadratic.",
@@ -381,6 +387,7 @@ const inverseInsideAChain: KnowledgePointDef = {
 
 const troughDepth: KnowledgePointDef = {
   id: "the-rising-depth-in-a-triangular-trough",
+  figure: calculusDrawings2["calculating-related-rates-using-similar-triangles#the-rising-depth-in-a-triangular-trough"],
   title: t("The rising depth in a triangular trough", "三角形水槽中上升的水深"),
   explanation: t(
     "Similar triangles relate the width of the water surface to its depth in a trough, so the volume can be written using the depth alone. Differentiating that formula with respect to time relates the inflow to the rate at which the depth rises. Substitute the current depth only after differentiating.",
@@ -410,6 +417,7 @@ const troughDepth: KnowledgePointDef = {
 
 const coneWithALeak: KnowledgePointDef = {
   id: "a-conical-tank-with-a-leak",
+  figure: calculusDrawings2["calculating-related-rates-with-cones#a-conical-tank-with-a-leak"],
   title: t("A conical tank with a leak", "有渗漏的圆锥形水箱"),
   explanation: t(
     "When water flows in and out at once, $\\frac{dV}{dt}$ is the inflow minus the outflow. The geometry of the cone gives $\\frac{dV}{dt}$ from the depth and its rate, because the surface radius is a fixed fraction of the depth. So the inflow is this net rate plus the leak.",
@@ -624,6 +632,7 @@ const linearizationError: KnowledgePointDef = {
 
 const priceForMostRevenue: KnowledgePointDef = {
   id: "the-price-that-maximizes-revenue",
+  figure: calculusDrawings3["optimization-problems-in-economics#the-price-that-maximizes-revenue"],
   title: t("The price that maximizes revenue", "使收入最大的价格"),
   explanation: t(
     "Raising a price brings in more per sale but loses sales. If a rise of $x$ takes the price to $p + x$ and the sales to $n - mx$, then the revenue is their product, a downward parabola in $x$. Its maximum lies halfway between its two roots.",
@@ -1198,6 +1207,7 @@ const differentiableJoin: KnowledgePointDef = {
 
 const leastSlopeOnCubic: KnowledgePointDef = {
   id: "the-extreme-slope-on-a-cubic",
+  figure: calculusDrawings2["calculating-the-slope-of-a-tangent-line-using-differentiation#the-extreme-slope-on-a-cubic"],
   title: t("The extreme slope on a cubic", "三次曲线上斜率的最值"),
   explanation: t(
     "The slope of a cubic at each point is given by its derivative, which is a quadratic in $x$. So the slope itself has an extreme value, at the vertex of that parabola: a least slope when the cubic's leading coefficient is positive and a greatest slope when it is negative. No tangent line on the curve can go beyond it.",
@@ -1401,6 +1411,7 @@ const squareFromDiagonal: KnowledgePointDef = {
 
 const triangleWithGrowingAngle: KnowledgePointDef = {
   id: "the-area-of-a-triangle-with-a-growing-angle",
+  figure: calculusDrawings2["calculating-related-rates-using-trigonometry#the-area-of-a-triangle-with-a-growing-angle"],
   title: t("The area of a triangle with a growing angle", "夹角增大时三角形的面积"),
   explanation: t(
     "With two sides fixed, the area of a triangle depends only on the angle between them, through one half the product of the sides times the sine of the angle. Differentiating brings in the cosine and the angle's rate. Past a right angle the cosine is negative, so the area shrinks even though the angle keeps growing.",
@@ -1503,6 +1514,10 @@ const criticalPointWhereDerivativeFails: KnowledgePointDef = {
 
 const increasingEverywhere: KnowledgePointDef = {
   id: "the-least-coefficient-that-makes-a-cubic-increasing",
+  figure:
+    calculusDrawings2[
+      "determining-intervals-on-which-a-function-is-increasing-or-decreasing#the-least-coefficient-that-makes-a-cubic-increasing"
+    ],
   title: t("The least coefficient that makes a cubic increasing", "使三次函数递增的最小系数"),
   explanation: t(
     "A cubic with positive leading coefficient rises on the whole real line exactly when its derivative is never negative. That derivative is an upward parabola, so the condition is that its discriminant is not positive. A single point where the derivative touches zero is allowed, because the function still increases through it, so the boundary value counts.",
@@ -1532,6 +1547,7 @@ const increasingEverywhere: KnowledgePointDef = {
 
 const cylinderInCone: KnowledgePointDef = {
   id: "the-largest-cylinder-in-a-cone",
+  figure: calculusDrawings3["optimization-problems-with-inscribed-shapes#the-largest-cylinder-in-a-cone"],
   title: t("The largest cylinder in a cone", "圆锥内最大的圆柱"),
   explanation: t(
     "An inscribed cylinder has a radius and a height, but they are not independent: similar triangles in a vertical slice of the cone tie them together along a straight line. Writing the height in terms of the radius leaves a cubic volume function of one variable, and setting its derivative to zero locates the best radius.",
@@ -1664,6 +1680,7 @@ const greatestSpeed: KnowledgePointDef = {
 
 const overlappingIntervals: KnowledgePointDef = {
   id: "integrals-on-overlapping-intervals",
+  figure: calculusDrawings3["properties-of-definite-integrals-involving-the-limits-of-integration#integrals-on-overlapping-intervals"],
   title: t("Integrals on overlapping intervals", "重叠区间上的积分"),
   explanation: t(
     "Additivity lets integrals on adjacent intervals be added. When two given intervals overlap, adding them counts the shared part twice. So the integral over the whole span is the sum of the two integrals minus the integral over the overlap. A number line sketch with the four endpoints in order makes the bookkeeping clear.",
@@ -2141,6 +2158,7 @@ const continuityOfRadicalQuotient: KnowledgePointDef = {
 
 const jumpsOfFloor: KnowledgePointDef = {
   id: "the-number-of-jumps-of-a-floor-function",
+  figure: calculusDrawings1["jump-discontinuities#the-number-of-jumps-of-a-floor-function"],
   title: t("The number of jumps of a floor function", "取整函数的跳跃次数"),
   explanation: t(
     "The floor function $\\lfloor u \\rfloor$ jumps by 1 whenever $u$ reaches an integer. So $\\lfloor kx \\rfloor$ jumps wherever $kx$ is an integer, which happens at each multiple of $\\frac{1}{k}$. Compressing the graph horizontally in this way makes the jumps more frequent, with $k$ of them for each unit of $x$. When counting over an interval, check whether the ends are included, since a jump at an end of the interval would not count as an interior one.",
@@ -2290,6 +2308,7 @@ const coshSlopeAtHeight: KnowledgePointDef = {
 
 const squaresOfSecantAndTangent: KnowledgePointDef = {
   id: "a-sum-of-squares-of-secant-and-tangent",
+  figure: calculusDrawings2["differentiating-reciprocal-trigonometric-functions#a-sum-of-squares-of-secant-and-tangent"],
   title: t("A sum of squares of secant and tangent", "正割与正切的平方之和"),
   explanation: t(
     "By the chain rule, the derivative of $\\sec^2 x$ is $2\\sec x \\cdot \\sec x\\tan x$, and the derivative of $\\tan^2 x$ is $2\\tan x \\cdot \\sec^2 x$. These are the same expression, $2\\sec^2 x\\tan x$, which reflects the identity $\\sec^2 x = 1 + \\tan^2 x$: the two functions differ only by a constant. So a combination of them has a derivative that depends only on the sum of the two coefficients.",
@@ -2381,6 +2400,7 @@ const chainRuleOfThree: KnowledgePointDef = {
 
 const secondDerivativeOfInverse: KnowledgePointDef = {
   id: "the-second-derivative-of-an-inverse-function",
+  figure: calculusDrawings2["differentiating-an-inverse-function-at-a-point#the-second-derivative-of-an-inverse-function"],
   title: t("The second derivative of an inverse function", "反函数的二阶导数"),
   explanation: t(
     "If $g$ is the inverse of $f$, then $g'(y) = \\frac{1}{f'(g(y))}$. Differentiating this once more by the chain rule gives $g''(y) = -\\frac{f''(g(y))g'(y)}{f'(g(y))^2}$, and replacing $g'$ gives $-\\frac{f''}{(f')^3}$, with $f'$ and $f''$ evaluated at $g(y)$. The cube in the denominator comes from the extra factor of $g'$. The sign shows that reflecting a graph in $y = x$ reverses its concavity when $f$ is increasing.",
@@ -2434,6 +2454,7 @@ const variablePowerAtOne: KnowledgePointDef = {
 
 const boatOnARope: KnowledgePointDef = {
   id: "a-boat-pulled-by-a-rope",
+  figure: calculusDrawings2["calculating-related-rates-using-the-pythagorean-theorem#a-boat-pulled-by-a-rope"],
   title: t("A boat pulled by a rope", "用绳子拉船"),
   explanation: t(
     "A boat pulled toward a dock by a rope through a raised pulley forms a right triangle with a fixed height, a shrinking base and a shrinking rope. Differentiating $x^2 + h^2 = s^2$ removes the constant height and gives $x\\frac{dx}{dt} = s\\frac{ds}{dt}$. Since the rope is longer than the base, the boat moves faster than the rope is pulled. The closer the boat comes to the dock, the larger this speed becomes.",
@@ -2546,6 +2567,7 @@ const reciprocalOfRoot: KnowledgePointDef = {
 
 const rectangleUnderParabola: KnowledgePointDef = {
   id: "the-largest-rectangle-under-a-parabola",
+  figure: calculusDrawings3["solving-optimization-problems-using-derivatives#the-largest-rectangle-under-a-parabola"],
   title: t("The largest rectangle under a parabola", "抛物线下的最大矩形"),
   explanation: t(
     "A rectangle with its base on the $x$-axis and its top corners on a symmetric parabola is fixed by one number: the $x$-coordinate of its right corner. Its width is twice this, and its height is the value of the function there. Writing the area in terms of $x$ turns a geometric question into a cubic to maximize. Only values of $x$ between 0 and the root of the parabola make sense as a rectangle.",
@@ -2604,6 +2626,7 @@ const distanceBetweenTurningPoints: KnowledgePointDef = {
 
 const powerFromForce: KnowledgePointDef = {
   id: "the-rate-of-work-of-the-net-force",
+  figure: calculusDrawings3["newtons-second-law#the-rate-of-work-of-the-net-force"],
   title: t("The rate of work of the net force", "合力做功的功率"),
   explanation: t(
     "Newton's second law gives the net force on an object as $F = ma$, and the rate at which that force does work is the power $P = Fv$. Both acceleration and velocity come from differentiating the position. With a quadratic position, the acceleration and the force are constant, yet the power still grows with time, because the object is moving faster. The unit of power is the watt, which is one newton metre per second.",
@@ -2751,6 +2774,7 @@ const scaledArctangent: KnowledgePointDef = {
 
 const areaCutOffByParabola: KnowledgePointDef = {
   id: "the-area-cut-off-by-a-parabola",
+  figure: calculusDrawings3["the-area-bounded-by-a-curve-and-the-x-axis#the-area-cut-off-by-a-parabola"],
   title: t("The area cut off by a parabola", "抛物线截出的面积"),
   explanation: t(
     "A downward parabola with two real roots encloses a region with the $x$-axis, and the roots are the limits of integration. They must be found first, since no limits are given. For the parabola $y = k(x - r)(s - x)$, this area comes to $\\frac{k(s - r)^3}{6}$, a formula due in essence to Archimedes. It depends only on the distance between the roots and the coefficient $k$, and not on where the parabola sits along the axis.",

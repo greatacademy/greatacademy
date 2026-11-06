@@ -5,6 +5,8 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, linear, paren, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
+import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { functionProblem } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
@@ -111,71 +113,77 @@ const coefficientFromInflection = point(
   },
 );
 
-const cornerOfSegments = point(
-  "the-derivative-at-a-corner",
-  ["The derivative at a corner", "折点处的导数"],
-  [
-    "On a piecewise-linear graph each segment has its own slope. At the point where two segments meet, the derivative exists only if the slopes agree; at a true corner the one-sided slopes differ and the derivative does not exist, even though $f$ is continuous there.",
-    "在折线图像上，每条线段有自己的斜率。在两条线段的交点处，只有斜率相同时导数才存在；在真正的折点处，两侧斜率不同，导数不存在，尽管 $f$ 在那里连续。",
-  ],
-  (rng) => {
-    const x1 = rng.int(-3, 3);
-    const w1 = rng.int(1, 3);
-    const w2 = rng.int(1, 3);
-    const m1 = nz(rng, 4);
-    const m2 = rng.bool(0.25) ? m1 : rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((x) => x !== m1));
-    const y1 = rng.int(-5, 5);
-    const path = `$(${x1 - w1}, ${y1 - m1 * w1})$, $(${x1}, ${y1})$, $(${x1 + w2}, ${y1 + m2 * w2})$`;
-    const none: Pair = [`It does not exist`, `不存在`];
-    const num = (v: Q | number): Pair => same2(v instanceof Q ? v.toLatex() : String(v));
-    const avg = Q.of(m1 + m2, 2);
-    return choose(
-      rng,
-      [
-        `The graph of $f$ is made of line segments joining ${path}, in that order. Find $f'(${x1})$.`,
-        `$f$ 的图像由依次连接 ${path} 的线段组成。求 $f'(${x1})$。`,
-      ],
-      m1 === m2 ? num(m1) : none,
-      m1 === m2 ? [none, num(m1 + 1), num(-m1)] : [num(m1), num(m2), num(avg)],
-      [
-        `The slope is $${m1}$ on the left and $${m2}$ on the right. ${m1 === m2 ? `They agree, so the two segments form one line and $f'(${x1}) = ${m1}$.` : "They differ, so the graph has a corner and the derivative does not exist."}`,
-        `左侧斜率是 $${m1}$，右侧斜率是 $${m2}$。${m1 === m2 ? `二者相同，所以两条线段构成一条直线，$f'(${x1}) = ${m1}$。` : "二者不同，所以图像有折点，导数不存在。"}`,
-      ],
-    );
-  },
-);
+const cornerOfSegments = {
+  ...point(
+    "the-derivative-at-a-corner",
+    ["The derivative at a corner", "折点处的导数"],
+    [
+      "On a piecewise-linear graph each segment has its own slope. At the point where two segments meet, the derivative exists only if the slopes agree; at a true corner the one-sided slopes differ and the derivative does not exist, even though $f$ is continuous there.",
+      "在折线图像上，每条线段有自己的斜率。在两条线段的交点处，只有斜率相同时导数才存在；在真正的折点处，两侧斜率不同，导数不存在，尽管 $f$ 在那里连续。",
+    ],
+    (rng) => {
+      const x1 = rng.int(-3, 3);
+      const w1 = rng.int(1, 3);
+      const w2 = rng.int(1, 3);
+      const m1 = nz(rng, 4);
+      const m2 = rng.bool(0.25) ? m1 : rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((x) => x !== m1));
+      const y1 = rng.int(-5, 5);
+      const path = `$(${x1 - w1}, ${y1 - m1 * w1})$, $(${x1}, ${y1})$, $(${x1 + w2}, ${y1 + m2 * w2})$`;
+      const none: Pair = [`It does not exist`, `不存在`];
+      const num = (v: Q | number): Pair => same2(v instanceof Q ? v.toLatex() : String(v));
+      const avg = Q.of(m1 + m2, 2);
+      return choose(
+        rng,
+        [
+          `The graph of $f$ is made of line segments joining ${path}, in that order. Find $f'(${x1})$.`,
+          `$f$ 的图像由依次连接 ${path} 的线段组成。求 $f'(${x1})$。`,
+        ],
+        m1 === m2 ? num(m1) : none,
+        m1 === m2 ? [none, num(m1 + 1), num(-m1)] : [num(m1), num(m2), num(avg)],
+        [
+          `The slope is $${m1}$ on the left and $${m2}$ on the right. ${m1 === m2 ? `They agree, so the two segments form one line and $f'(${x1}) = ${m1}$.` : "They differ, so the graph has a corner and the derivative does not exist."}`,
+          `左侧斜率是 $${m1}$，右侧斜率是 $${m2}$。${m1 === m2 ? `二者相同，所以两条线段构成一条直线，$f'(${x1}) = ${m1}$。` : "二者不同，所以图像有折点，导数不存在。"}`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings2["sketching-the-derivative-of-a-function-from-the-functions-graph#the-derivative-at-a-corner"],
+};
 
-const peakOfDerivative = point(
-  "a-peak-of-the-derivative-is-not-a-peak-of-the-function",
-  ["A peak of the derivative is not a peak of the function", "导数的峰值不是函数的峰值"],
-  [
-    "It is easy to read the graph of $f'$ as if it were $f$. The height of $f'$ gives the slope of $f$: its sign shows whether $f$ rises or falls. A local maximum or minimum of $f'$ is where the slope is most extreme, which is an inflection point of $f$, not an extremum.",
-    "很容易把 $f'$ 的图像误读成 $f$ 的图像。$f'$ 的高度给出 $f$ 的斜率：它的符号说明 $f$ 上升还是下降。$f'$ 的局部极大或极小值是斜率最极端的地方，那是 $f$ 的拐点，而不是极值点。",
-  ],
-  (rng) => {
-    const c = rng.int(-6, 6);
-    const v = nz(rng, 9);
-    const peak = rng.bool();
-    const dir: Pair = v > 0 ? ["increasing", "递增"] : ["decreasing", "递减"];
-    return choose(
-      rng,
-      [
-        `The graph of $f'$ has a local ${peak ? "maximum" : "minimum"} at $(${c}, ${v})$. Which is true of $f$ at $x = ${c}$?`,
-        `$f'$ 的图像在 $(${c}, ${v})$ 处有局部${peak ? "极大值" : "极小值"}。关于 $f$ 在 $x = ${c}$ 处，哪项正确？`,
-      ],
-      [`$f$ is ${dir[0]} and has a point of inflection`, `$f$ ${dir[1]}，并且有拐点`],
-      [
-        [`$f$ has a local ${peak ? "maximum" : "minimum"}`, `$f$ 有局部${peak ? "极大值" : "极小值"}`],
-        [`$f$ has the value $${v}$ and a horizontal tangent`, `$f$ 的值是 $${v}$，并且有水平切线`],
-        [`$f$ is ${v > 0 ? "decreasing" : "increasing"} and has a point of inflection`, `$f$ ${v > 0 ? "递减" : "递增"}，并且有拐点`],
-      ],
-      [
-        `Since $f'(${c}) = ${v} ${v > 0 ? "> 0" : "< 0"}$, $f$ is ${dir[0]} there, so it is not an extremum. And $f'$ switches between increasing and decreasing at $x = ${c}$, so $f$ changes concavity: a point of inflection.`,
-        `因为 $f'(${c}) = ${v} ${v > 0 ? "> 0" : "< 0"}$，所以 $f$ 在那里${dir[1]}，不是极值点。而 $f'$ 在 $x = ${c}$ 处从递增变为递减或相反，所以 $f$ 改变凹凸性：这是拐点。`,
-      ],
-    );
-  },
-);
+const peakOfDerivative = {
+  ...point(
+    "a-peak-of-the-derivative-is-not-a-peak-of-the-function",
+    ["A peak of the derivative is not a peak of the function", "导数的峰值不是函数的峰值"],
+    [
+      "It is easy to read the graph of $f'$ as if it were $f$. The height of $f'$ gives the slope of $f$: its sign shows whether $f$ rises or falls. A local maximum or minimum of $f'$ is where the slope is most extreme, which is an inflection point of $f$, not an extremum.",
+      "很容易把 $f'$ 的图像误读成 $f$ 的图像。$f'$ 的高度给出 $f$ 的斜率：它的符号说明 $f$ 上升还是下降。$f'$ 的局部极大或极小值是斜率最极端的地方，那是 $f$ 的拐点，而不是极值点。",
+    ],
+    (rng) => {
+      const c = rng.int(-6, 6);
+      const v = nz(rng, 9);
+      const peak = rng.bool();
+      const dir: Pair = v > 0 ? ["increasing", "递增"] : ["decreasing", "递减"];
+      return choose(
+        rng,
+        [
+          `The graph of $f'$ has a local ${peak ? "maximum" : "minimum"} at $(${c}, ${v})$. Which is true of $f$ at $x = ${c}$?`,
+          `$f'$ 的图像在 $(${c}, ${v})$ 处有局部${peak ? "极大值" : "极小值"}。关于 $f$ 在 $x = ${c}$ 处，哪项正确？`,
+        ],
+        [`$f$ is ${dir[0]} and has a point of inflection`, `$f$ ${dir[1]}，并且有拐点`],
+        [
+          [`$f$ has a local ${peak ? "maximum" : "minimum"}`, `$f$ 有局部${peak ? "极大值" : "极小值"}`],
+          [`$f$ has the value $${v}$ and a horizontal tangent`, `$f$ 的值是 $${v}$，并且有水平切线`],
+          [`$f$ is ${v > 0 ? "decreasing" : "increasing"} and has a point of inflection`, `$f$ ${v > 0 ? "递减" : "递增"}，并且有拐点`],
+        ],
+        [
+          `Since $f'(${c}) = ${v} ${v > 0 ? "> 0" : "< 0"}$, $f$ is ${dir[0]} there, so it is not an extremum. And $f'$ switches between increasing and decreasing at $x = ${c}$, so $f$ changes concavity: a point of inflection.`,
+          `因为 $f'(${c}) = ${v} ${v > 0 ? "> 0" : "< 0"}$，所以 $f$ 在那里${dir[1]}，不是极值点。而 $f'$ 在 $x = ${c}$ 处从递增变为递减或相反，所以 $f$ 改变凹凸性：这是拐点。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings2["interpreting-the-graph-of-a-functions-derivative#a-peak-of-the-derivative-is-not-a-peak-of-the-function"],
+};
 
 const shapeFromDerivativeValues = point(
   "the-shape-from-values-of-the-derivative",
@@ -217,36 +225,39 @@ const shapeFromDerivativeValues = point(
   },
 );
 
-const areaUnderSlopedDerivative = point(
-  "values-from-a-sloped-segment-of-the-derivative",
-  ["Values from a sloped segment of the derivative", "由导数的斜线段求函数值"],
-  [
-    "The change in $f$ over an interval is the signed area under the graph of $f'$. When $f'$ is a sloped segment that area is a trapezoid, so the change is the average of the two end values of $f'$ times the width. Using just one end value is the common mistake.",
-    "$f$ 在区间上的变化量等于 $f'$ 图像下的有向面积。当 $f'$ 是斜线段时，这个面积是梯形，所以变化量等于 $f'$ 两端值的平均数乘以宽度。只用一端的值是常见的错误。",
-  ],
-  (rng) => {
-    const a = rng.int(-6, 2);
-    const w = rng.int(2, 5);
-    const b = a + w;
-    const u = rng.int(-6, 6);
-    const v = rng.pick([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].filter((x) => x !== u));
-    const start = rng.int(-8, 8);
-    const change = Q.of((u + v) * w, 2);
-    const answer = change.add(Q.of(start));
-    return ask(
-      [
-        `The graph of $f'$ on $[${a}, ${b}]$ is the line segment from $(${a}, ${u})$ to $(${b}, ${v})$, and $f(${a}) = ${start}$. Find $f(${b})$.`,
-        `$f'$ 在 $[${a}, ${b}]$ 上的图像是从 $(${a}, ${u})$ 到 $(${b}, ${v})$ 的线段，且 $f(${a}) = ${start}$。求 $f(${b})$。`,
-      ],
-      answer,
-      [Q.of(start + v * w), Q.of(start + u * w), Q.of(start + v - u), change],
-      [
-        `The signed area is $\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$, so $f(${b}) = ${start} + ${change.sign() < 0 ? `(${change.toLatex()})` : change.toLatex()} = ${answer.toLatex()}$.`,
-        `有向面积是 $\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$，所以 $f(${b}) = ${start} + ${change.sign() < 0 ? `(${change.toLatex()})` : change.toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const areaUnderSlopedDerivative = {
+  ...point(
+    "values-from-a-sloped-segment-of-the-derivative",
+    ["Values from a sloped segment of the derivative", "由导数的斜线段求函数值"],
+    [
+      "The change in $f$ over an interval is the signed area under the graph of $f'$. When $f'$ is a sloped segment that area is a trapezoid, so the change is the average of the two end values of $f'$ times the width. Using just one end value is the common mistake.",
+      "$f$ 在区间上的变化量等于 $f'$ 图像下的有向面积。当 $f'$ 是斜线段时，这个面积是梯形，所以变化量等于 $f'$ 两端值的平均数乘以宽度。只用一端的值是常见的错误。",
+    ],
+    (rng) => {
+      const a = rng.int(-6, 2);
+      const w = rng.int(2, 5);
+      const b = a + w;
+      const u = rng.int(-6, 6);
+      const v = rng.pick([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].filter((x) => x !== u));
+      const start = rng.int(-8, 8);
+      const change = Q.of((u + v) * w, 2);
+      const answer = change.add(Q.of(start));
+      return ask(
+        [
+          `The graph of $f'$ on $[${a}, ${b}]$ is the line segment from $(${a}, ${u})$ to $(${b}, ${v})$, and $f(${a}) = ${start}$. Find $f(${b})$.`,
+          `$f'$ 在 $[${a}, ${b}]$ 上的图像是从 $(${a}, ${u})$ 到 $(${b}, ${v})$ 的线段，且 $f(${a}) = ${start}$。求 $f(${b})$。`,
+        ],
+        answer,
+        [Q.of(start + v * w), Q.of(start + u * w), Q.of(start + v - u), change],
+        [
+          `The signed area is $\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$, so $f(${b}) = ${start} + ${change.sign() < 0 ? `(${change.toLatex()})` : change.toLatex()} = ${answer.toLatex()}$.`,
+          `有向面积是 $\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$，所以 $f(${b}) = ${start} + ${change.sign() < 0 ? `(${change.toLatex()})` : change.toLatex()} = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings2["sketching-a-function-from-the-graph-of-its-derivative#values-from-a-sloped-segment-of-the-derivative"],
+};
 
 const secondTestSilent = point(
   "when-the-second-derivative-test-says-nothing",
@@ -287,70 +298,79 @@ const secondTestSilent = point(
   },
 );
 
-const overOrUnderTrig = point(
-  "whether-a-trigonometric-linearization-is-too-high-or-too-low",
-  ["Whether a linearization is too high or too low", "线性近似偏高还是偏低"],
-  [
-    "A tangent line lies above a concave-down graph and below a concave-up one. So the sign of $f''$ on the side of the point decides whether the linearization overestimates or underestimates. Sine and tangent change concavity at $0$, so the side matters.",
-    "切线位于下凹图像的上方、上凹图像的下方。所以该点那一侧 $f''$ 的符号决定线性近似是偏高还是偏低。正弦和正切在 $0$ 处改变凹凸性，所以哪一侧很重要。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["sin", "tan", "cos"] as const);
-    const k = nz(rng, 5);
-    const i = rng.pick([-1, 1]) * rng.int(2, 20);
-    const x = Q.of(i, 100);
-    const positive = i > 0;
-    const f2 = kind === "sin" ? (positive ? -k : k) : kind === "tan" ? (positive ? k : -k) : -k;
-    const under = f2 > 0;
-    const f = poly([k, `\\${kind} x`]);
-    const L = kind === "cos" ? `${k}` : poly([k, "x"]);
-    const over: Pair = ["An overestimate", "偏高"];
-    const low: Pair = ["An underestimate", "偏低"];
-    const exact: Pair = ["Exactly right, since $x$ is so small", "完全准确，因为 $x$ 很小"];
-    return choose(
-      rng,
-      [
-        `Near $0$, the linearization of $f(x) = ${f}$ is $L(x) = ${L}$. What is $L(${dec(x)})$ compared with $f(${dec(x)})$?`,
-        `在 $0$ 附近，$f(x) = ${f}$ 的线性近似是 $L(x) = ${L}$。$L(${dec(x)})$ 与 $f(${dec(x)})$ 相比如何？`,
-      ],
-      under ? low : over,
-      [under ? over : low, exact],
-      [
-        `Between $0$ and $${dec(x)}$, $f''$ is ${under ? "positive, so the graph is concave up and lies above its tangent" : "negative, so the graph is concave down and lies below its tangent"}. So the linearization is ${under ? "too low" : "too high"}.`,
-        `在 $0$ 与 $${dec(x)}$ 之间，$f''$ ${under ? "为正，所以图像上凹，位于切线上方" : "为负，所以图像下凹，位于切线下方"}。所以线性近似${under ? "偏低" : "偏高"}。`,
-      ],
-    );
-  },
-);
+const overOrUnderTrig = {
+  ...point(
+    "whether-a-trigonometric-linearization-is-too-high-or-too-low",
+    ["Whether a linearization is too high or too low", "线性近似偏高还是偏低"],
+    [
+      "A tangent line lies above a concave-down graph and below a concave-up one. So the sign of $f''$ on the side of the point decides whether the linearization overestimates or underestimates. Sine and tangent change concavity at $0$, so the side matters.",
+      "切线位于下凹图像的上方、上凹图像的下方。所以该点那一侧 $f''$ 的符号决定线性近似是偏高还是偏低。正弦和正切在 $0$ 处改变凹凸性，所以哪一侧很重要。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["sin", "tan", "cos"] as const);
+      const k = nz(rng, 5);
+      const i = rng.pick([-1, 1]) * rng.int(2, 20);
+      const x = Q.of(i, 100);
+      const positive = i > 0;
+      const f2 = kind === "sin" ? (positive ? -k : k) : kind === "tan" ? (positive ? k : -k) : -k;
+      const under = f2 > 0;
+      const f = poly([k, `\\${kind} x`]);
+      const L = kind === "cos" ? `${k}` : poly([k, "x"]);
+      const over: Pair = ["An overestimate", "偏高"];
+      const low: Pair = ["An underestimate", "偏低"];
+      const exact: Pair = ["Exactly right, since $x$ is so small", "完全准确，因为 $x$ 很小"];
+      return choose(
+        rng,
+        [
+          `Near $0$, the linearization of $f(x) = ${f}$ is $L(x) = ${L}$. What is $L(${dec(x)})$ compared with $f(${dec(x)})$?`,
+          `在 $0$ 附近，$f(x) = ${f}$ 的线性近似是 $L(x) = ${L}$。$L(${dec(x)})$ 与 $f(${dec(x)})$ 相比如何？`,
+        ],
+        under ? low : over,
+        [under ? over : low, exact],
+        [
+          `Between $0$ and $${dec(x)}$, $f''$ is ${under ? "positive, so the graph is concave up and lies above its tangent" : "negative, so the graph is concave down and lies below its tangent"}. So the linearization is ${under ? "too low" : "too high"}.`,
+          `在 $0$ 与 $${dec(x)}$ 之间，$f''$ ${under ? "为正，所以图像上凹，位于切线上方" : "为负，所以图像下凹，位于切线下方"}。所以线性近似${under ? "偏低" : "偏高"}。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    calculusDrawings2[
+      "approximating-trigonometric-functions-using-local-linearity#whether-a-trigonometric-linearization-is-too-high-or-too-low"
+    ],
+};
 
-const leastPerimeterSector = point(
-  "the-least-perimeter-for-a-given-area",
-  ["The least perimeter for a given area", "给定面积时的最小周长"],
-  [
-    "This is the reverse of the largest area for a given perimeter. With area $A$ and radius $r$, the arc is $\\frac{2A}{r}$, so the perimeter is $P = 2r + \\frac{2A}{r}$. Then $P'(r) = 0$ gives $r = \\sqrt{A}$ and $P = 4\\sqrt{A}$, and the central angle is $2$ radians, as before.",
-    "这是给定周长求最大面积的逆问题。面积为 $A$、半径为 $r$ 时，弧长是 $\\frac{2A}{r}$，所以周长 $P = 2r + \\frac{2A}{r}$。由 $P'(r) = 0$ 得 $r = \\sqrt{A}$，$P = 4\\sqrt{A}$，圆心角同样是 $2$ 弧度。",
-  ],
-  (rng) => {
-    const m = rng.int(2, 40);
-    const A = m * m;
-    const unit = rng.pick([
-      ["cm", "厘米"],
-      ["m", "米"],
-    ] as const);
-    return ask(
-      [
-        `A sector of a circle has area $${A}$ ${unit[0]}². Find the least possible perimeter, in ${unit[0]}, including both radii and the arc.`,
-        `一个扇形的面积是 $${A}$ 平方${unit[1]}。求它的最小周长（包括两条半径和弧），单位是${unit[1]}。`,
-      ],
-      4 * m,
-      [2 * m, m, 3 * m, A],
-      [
-        `$P(r) = 2r + \\frac{${2 * A}}{r}$, and $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ gives $r = ${m}$. Then the arc is $${2 * m}$ and $P = ${m} + ${m} + ${2 * m} = ${4 * m}$.`,
-        `$P(r) = 2r + \\frac{${2 * A}}{r}$，由 $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ 得 $r = ${m}$。此时弧长是 $${2 * m}$，$P = ${m} + ${m} + ${2 * m} = ${4 * m}$。`,
-      ],
-    );
-  },
-);
+const leastPerimeterSector = {
+  ...point(
+    "the-least-perimeter-for-a-given-area",
+    ["The least perimeter for a given area", "给定面积时的最小周长"],
+    [
+      "This is the reverse of the largest area for a given perimeter. With area $A$ and radius $r$, the arc is $\\frac{2A}{r}$, so the perimeter is $P = 2r + \\frac{2A}{r}$. Then $P'(r) = 0$ gives $r = \\sqrt{A}$ and $P = 4\\sqrt{A}$, and the central angle is $2$ radians, as before.",
+      "这是给定周长求最大面积的逆问题。面积为 $A$、半径为 $r$ 时，弧长是 $\\frac{2A}{r}$，所以周长 $P = 2r + \\frac{2A}{r}$。由 $P'(r) = 0$ 得 $r = \\sqrt{A}$，$P = 4\\sqrt{A}$，圆心角同样是 $2$ 弧度。",
+    ],
+    (rng) => {
+      const m = rng.int(2, 40);
+      const A = m * m;
+      const unit = rng.pick([
+        ["cm", "厘米"],
+        ["m", "米"],
+      ] as const);
+      return ask(
+        [
+          `A sector of a circle has area $${A}$ ${unit[0]}². Find the least possible perimeter, in ${unit[0]}, including both radii and the arc.`,
+          `一个扇形的面积是 $${A}$ 平方${unit[1]}。求它的最小周长（包括两条半径和弧），单位是${unit[1]}。`,
+        ],
+        4 * m,
+        [2 * m, m, 3 * m, A],
+        [
+          `$P(r) = 2r + \\frac{${2 * A}}{r}$, and $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ gives $r = ${m}$. Then the arc is $${2 * m}$ and $P = ${m} + ${m} + ${2 * m} = ${4 * m}$.`,
+          `$P(r) = 2r + \\frac{${2 * A}}{r}$，由 $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ 得 $r = ${m}$。此时弧长是 $${2 * m}$，$P = ${m} + ${m} + ${2 * m} = ${4 * m}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["optimization-problems-involving-sectors-of-circles#the-least-perimeter-for-a-given-area"],
+};
 
 /** sheets are rectangular sheets whose best tray has a rational height: the two sides and that height, for scale 1. */
 const sheets = [
@@ -400,67 +420,73 @@ const trayFromRectangle = point(
   },
 );
 
-const leastDistanceSquared = point(
-  "the-least-distance-and-an-endpoint-trap",
-  ["The least distance and an endpoint trap", "最短距离与端点陷阱"],
-  [
-    "To minimize distance, minimize its square. For $y = \\sqrt{kx}$ and the point $(a, 0)$, $D^{2} = (x - a)^{2} + kx$, a parabola in $x$ with vertex at $x = a - \\frac{k}{2}$. But the curve only has $x \\ge 0$: if the vertex is negative, the closest point is the endpoint $(0, 0)$.",
-    "要使距离最小，就使它的平方最小。对 $y = \\sqrt{kx}$ 和点 $(a, 0)$，$D^{2} = (x - a)^{2} + kx$ 是关于 $x$ 的抛物线，顶点在 $x = a - \\frac{k}{2}$。但曲线只有 $x \\ge 0$ 的部分：如果顶点为负，最近的点就是端点 $(0, 0)$。",
-  ],
-  (rng) => {
-    const k = rng.int(1, 8);
-    const a = rng.int(1, 9);
-    const vertex = Q.of(2 * a - k, 2);
-    const inside = vertex.sign() > 0;
-    const formula = Q.of(k * a).sub(Q.of(k * k, 4));
-    const answer = inside ? formula : Q.of(a * a);
-    const f = k === 1 ? "\\sqrt{x}" : `\\sqrt{${k}x}`;
-    return ask(
-      [
-        `Find the square of the least distance from the point $(${a}, 0)$ to the curve $y = ${f}$.`,
-        `求点 $(${a}, 0)$ 到曲线 $y = ${f}$ 的最短距离的平方。`,
-      ],
-      answer,
-      [inside ? Q.of(a * a) : formula, vertex, Q.of(k * a)],
-      [
-        `$D^{2} = (x - ${a})^{2} + ${k}x$ has its vertex at $x = ${vertex.toLatex()}$. ${inside ? `That is on the curve, and substituting gives $D^{2} = ${answer.toLatex()}$.` : `${vertex.isZero() ? "That is the endpoint" : "That is not on the curve, so the least value on $x \\ge 0$ is at the endpoint"} $x = 0$, which gives $D^{2} = ${answer.toLatex()}$.`}`,
-        `$D^{2} = (x - ${a})^{2} + ${k}x$ 的顶点在 $x = ${vertex.toLatex()}$。${inside ? `它在曲线上，代入得 $D^{2} = ${answer.toLatex()}$。` : `${vertex.isZero() ? "它就是端点" : "它不在曲线上，所以在 $x \\ge 0$ 上最小值在端点"} $x = 0$ 处取到，得 $D^{2} = ${answer.toLatex()}$。`}`,
-      ],
-    );
-  },
-);
+const leastDistanceSquared = {
+  ...point(
+    "the-least-distance-and-an-endpoint-trap",
+    ["The least distance and an endpoint trap", "最短距离与端点陷阱"],
+    [
+      "To minimize distance, minimize its square. For $y = \\sqrt{kx}$ and the point $(a, 0)$, $D^{2} = (x - a)^{2} + kx$, a parabola in $x$ with vertex at $x = a - \\frac{k}{2}$. But the curve only has $x \\ge 0$: if the vertex is negative, the closest point is the endpoint $(0, 0)$.",
+      "要使距离最小，就使它的平方最小。对 $y = \\sqrt{kx}$ 和点 $(a, 0)$，$D^{2} = (x - a)^{2} + kx$ 是关于 $x$ 的抛物线，顶点在 $x = a - \\frac{k}{2}$。但曲线只有 $x \\ge 0$ 的部分：如果顶点为负，最近的点就是端点 $(0, 0)$。",
+    ],
+    (rng) => {
+      const k = rng.int(1, 8);
+      const a = rng.int(1, 9);
+      const vertex = Q.of(2 * a - k, 2);
+      const inside = vertex.sign() > 0;
+      const formula = Q.of(k * a).sub(Q.of(k * k, 4));
+      const answer = inside ? formula : Q.of(a * a);
+      const f = k === 1 ? "\\sqrt{x}" : `\\sqrt{${k}x}`;
+      return ask(
+        [
+          `Find the square of the least distance from the point $(${a}, 0)$ to the curve $y = ${f}$.`,
+          `求点 $(${a}, 0)$ 到曲线 $y = ${f}$ 的最短距离的平方。`,
+        ],
+        answer,
+        [inside ? Q.of(a * a) : formula, vertex, Q.of(k * a)],
+        [
+          `$D^{2} = (x - ${a})^{2} + ${k}x$ has its vertex at $x = ${vertex.toLatex()}$. ${inside ? `That is on the curve, and substituting gives $D^{2} = ${answer.toLatex()}$.` : `${vertex.isZero() ? "That is the endpoint" : "That is not on the curve, so the least value on $x \\ge 0$ is at the endpoint"} $x = 0$, which gives $D^{2} = ${answer.toLatex()}$.`}`,
+          `$D^{2} = (x - ${a})^{2} + ${k}x$ 的顶点在 $x = ${vertex.toLatex()}$。${inside ? `它在曲线上，代入得 $D^{2} = ${answer.toLatex()}$。` : `${vertex.isZero() ? "它就是端点" : "它不在曲线上，所以在 $x \\ge 0$ 上最小值在端点"} $x = 0$ 处取到，得 $D^{2} = ${answer.toLatex()}$。`}`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["optimizing-distances-to-curves#the-least-distance-and-an-endpoint-trap"],
+};
 
-const newtonOnQuadratic = point(
-  "one-newton-step-on-a-quadratic",
-  ["One Newton step on a quadratic", "二次函数上的一步牛顿法"],
-  [
-    "For optimization, Newton's method uses $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$, which is not the root-finding step $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$. On a quadratic, $f'$ is linear, so one step lands exactly on the vertex from any start: a useful check.",
-    "用于最优化时，牛顿法的迭代是 $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$，而不是求根的迭代 $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$。对二次函数，$f'$ 是一次函数，所以从任何起点出发一步就恰好到达顶点：这是一个有用的检验。",
-  ],
-  (rng) => {
-    const a = nz(rng, 5);
-    const b = nz(rng, 9);
-    const c = rng.int(-9, 9);
-    const vertex = Q.of(-b, 2 * a);
-    const pick = rng.int(-6, 6);
-    const x0 = 2 * a * pick + b === 0 ? pick + 1 : pick;
-    const f0 = a * x0 * x0 + b * x0 + c;
-    const d0 = 2 * a * x0 + b;
-    const wrong = [Q.of(x0).sub(Q.of(f0, d0)), vertex.neg(), Q.of(x0).sub(Q.of(d0))];
-    return ask(
-      [
-        `Apply one step of Newton's method for optimization to $f(x) = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$, with $x_{0} = ${x0}$. Find $x_{1}$.`,
-        `对 $f(x) = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$ 用牛顿法做一步最优化迭代，取 $x_{0} = ${x0}$。求 $x_{1}$。`,
-      ],
-      vertex,
-      wrong,
-      [
-        `$f'(${x0}) = ${d0}$ and $f'' = ${2 * a}$, so $x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$, which is the vertex of the parabola.`,
-        `$f'(${x0}) = ${d0}$，$f'' = ${2 * a}$，所以 $x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$，这正是抛物线的顶点。`,
-      ],
-    );
-  },
-);
+const newtonOnQuadratic = {
+  ...point(
+    "one-newton-step-on-a-quadratic",
+    ["One Newton step on a quadratic", "二次函数上的一步牛顿法"],
+    [
+      "For optimization, Newton's method uses $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$, which is not the root-finding step $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$. On a quadratic, $f'$ is linear, so one step lands exactly on the vertex from any start: a useful check.",
+      "用于最优化时，牛顿法的迭代是 $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$，而不是求根的迭代 $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$。对二次函数，$f'$ 是一次函数，所以从任何起点出发一步就恰好到达顶点：这是一个有用的检验。",
+    ],
+    (rng) => {
+      const a = nz(rng, 5);
+      const b = nz(rng, 9);
+      const c = rng.int(-9, 9);
+      const vertex = Q.of(-b, 2 * a);
+      const pick = rng.int(-6, 6);
+      const x0 = 2 * a * pick + b === 0 ? pick + 1 : pick;
+      const f0 = a * x0 * x0 + b * x0 + c;
+      const d0 = 2 * a * x0 + b;
+      const wrong = [Q.of(x0).sub(Q.of(f0, d0)), vertex.neg(), Q.of(x0).sub(Q.of(d0))];
+      return ask(
+        [
+          `Apply one step of Newton's method for optimization to $f(x) = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$, with $x_{0} = ${x0}$. Find $x_{1}$.`,
+          `对 $f(x) = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$ 用牛顿法做一步最优化迭代，取 $x_{0} = ${x0}$。求 $x_{1}$。`,
+        ],
+        vertex,
+        wrong,
+        [
+          `$f'(${x0}) = ${d0}$ and $f'' = ${2 * a}$, so $x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$, which is the vertex of the parabola.`,
+          `$f'(${x0}) = ${d0}$，$f'' = ${2 * a}$，所以 $x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$，这正是抛物线的顶点。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["newtons-method-for-optimizing-single-variable-functions#one-newton-step-on-a-quadratic"],
+};
 
 const speedingUp = point(
   "speeding-up-or-slowing-down",
@@ -710,72 +736,78 @@ const rightFromLeft = point(
   },
 );
 
-const midpointOfLine = point(
-  "midpoint-sums-of-linear-functions-are-exact",
-  ["Midpoint sums of linear functions are exact", "一次函数的中点和是精确的"],
-  [
-    "On each subinterval, the midpoint rectangle of a line has the same area as the true trapezoid, since the errors on the two halves cancel. So for a linear function, the midpoint sum equals the exact area for any number of subintervals, and no long addition is needed.",
-    "在每个子区间上，直线的中点矩形与真实的梯形面积相同，因为两半的误差相互抵消。所以对一次函数，无论分成多少个子区间，中点和都等于精确面积，不需要长长的加法。",
-  ],
-  (rng) => {
-    const m = nz(rng, 6);
-    const c = rng.int(-9, 9);
-    const a = rng.int(-4, 4);
-    const b = a + rng.int(2, 8);
-    const n = rng.pick([50, 100, 200, 500]);
-    const exact = Q.of(m * (b * b - a * a), 2).add(Q.of(c * (b - a)));
-    const width = Q.of(b - a, n);
-    const left = exact.sub(
-      Q.of(m)
-        .mul(width)
-        .mul(Q.of(b - a))
-        .div(Q.of(2)),
-    );
-    const f = linear(m, c);
-    return ask(
-      [
-        `Find the midpoint Riemann sum of $f(x) = ${f}$ on $[${a}, ${b}]$ with $${n}$ subintervals of equal width.`,
-        `求 $f(x) = ${f}$ 在 $[${a}, ${b}]$ 上分成 $${n}$ 个等宽子区间的中点黎曼和。`,
-      ],
-      exact,
-      [left, Q.of(m * a + c).mul(Q.of(b - a)), Q.of(m * b + c).mul(Q.of(b - a))],
-      [
-        `$f$ is linear, so the midpoint sum equals $\\int_{${a}}^{${b}} (${f}) \\, dx$ for every $n$. Equivalently, the $x$-values average $${Q.of(a + b, 2).toLatex()}$, so the sum is $${b - a} \\cdot f\\left(${Q.of(a + b, 2).toLatex()}\\right) = ${exact.toLatex()}$.`,
-        `$f$ 是一次函数，所以对每个 $n$，中点和都等于 $\\int_{${a}}^{${b}} (${f}) \\, dx$。也可以这样看：各 $x$ 值的平均是 $${Q.of(a + b, 2).toLatex()}$，所以这个和是 $${b - a} \\cdot f\\left(${Q.of(a + b, 2).toLatex()}\\right) = ${exact.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const midpointOfLine = {
+  ...point(
+    "midpoint-sums-of-linear-functions-are-exact",
+    ["Midpoint sums of linear functions are exact", "一次函数的中点和是精确的"],
+    [
+      "On each subinterval, the midpoint rectangle of a line has the same area as the true trapezoid, since the errors on the two halves cancel. So for a linear function, the midpoint sum equals the exact area for any number of subintervals, and no long addition is needed.",
+      "在每个子区间上，直线的中点矩形与真实的梯形面积相同，因为两半的误差相互抵消。所以对一次函数，无论分成多少个子区间，中点和都等于精确面积，不需要长长的加法。",
+    ],
+    (rng) => {
+      const m = nz(rng, 6);
+      const c = rng.int(-9, 9);
+      const a = rng.int(-4, 4);
+      const b = a + rng.int(2, 8);
+      const n = rng.pick([50, 100, 200, 500]);
+      const exact = Q.of(m * (b * b - a * a), 2).add(Q.of(c * (b - a)));
+      const width = Q.of(b - a, n);
+      const left = exact.sub(
+        Q.of(m)
+          .mul(width)
+          .mul(Q.of(b - a))
+          .div(Q.of(2)),
+      );
+      const f = linear(m, c);
+      return ask(
+        [
+          `Find the midpoint Riemann sum of $f(x) = ${f}$ on $[${a}, ${b}]$ with $${n}$ subintervals of equal width.`,
+          `求 $f(x) = ${f}$ 在 $[${a}, ${b}]$ 上分成 $${n}$ 个等宽子区间的中点黎曼和。`,
+        ],
+        exact,
+        [left, Q.of(m * a + c).mul(Q.of(b - a)), Q.of(m * b + c).mul(Q.of(b - a))],
+        [
+          `$f$ is linear, so the midpoint sum equals $\\int_{${a}}^{${b}} (${f}) \\, dx$ for every $n$. Equivalently, the $x$-values average $${Q.of(a + b, 2).toLatex()}$, so the sum is $${b - a} \\cdot f\\left(${Q.of(a + b, 2).toLatex()}\\right) = ${exact.toLatex()}$.`,
+          `$f$ 是一次函数，所以对每个 $n$，中点和都等于 $\\int_{${a}}^{${b}} (${f}) \\, dx$。也可以这样看：各 $x$ 值的平均是 $${Q.of(a + b, 2).toLatex()}$，所以这个和是 $${b - a} \\cdot f\\left(${Q.of(a + b, 2).toLatex()}\\right) = ${exact.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["approximating-areas-with-the-midpoint-riemann-sum#midpoint-sums-of-linear-functions-are-exact"],
+};
 
-const trapezoidFromLeft = point(
-  "the-trapezoidal-rule-from-the-left-sum",
-  ["The trapezoidal rule from the left sum", "由左和求梯形法则的值"],
-  [
-    "The trapezoidal approximation is the average of the left and right sums, $T_{n} = \\frac{L_{n} + R_{n}}{2}$. Since $R_{n}$ differs from $L_{n}$ only at the ends, $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$.",
-    "梯形近似是左和与右和的平均：$T_{n} = \\frac{L_{n} + R_{n}}{2}$。因为 $R_{n}$ 与 $L_{n}$ 只在两端不同，所以 $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$。",
-  ],
-  (rng) => {
-    const w = gridWidth(rng);
-    const L = rng.int(10, 90);
-    const fa = rng.int(-9, 9);
-    const fb = rng.int(-9, 9);
-    const gap = Q.of(fb - fa);
-    const half = w.div(Q.of(2));
-    const answer = Q.of(L).add(half.mul(gap));
-    return ask(
-      [
-        `For a function $f$ and a partition with width $\\Delta x = ${w.toLatex()}$ on $[a, b]$, the left sum is $${L}$, $f(a) = ${fa}$ and $f(b) = ${fb}$. Find the trapezoidal approximation.`,
-        `对函数 $f$ 和 $[a, b]$ 上宽度 $\\Delta x = ${w.toLatex()}$ 的分割，左和是 $${L}$，$f(a) = ${fa}$，$f(b) = ${fb}$。求梯形近似值。`,
-      ],
-      answer,
-      [Q.of(L).add(w.mul(gap)), Q.of(L).add(gap.div(Q.of(2))), Q.of(L).sub(half.mul(gap))],
-      [
-        `$T = L + \\frac{\\Delta x}{2}(f(b) - f(a)) = ${L} + ${half.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$.`,
-        `$T = L + \\frac{\\Delta x}{2}(f(b) - f(a)) = ${L} + ${half.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const trapezoidFromLeft = {
+  ...point(
+    "the-trapezoidal-rule-from-the-left-sum",
+    ["The trapezoidal rule from the left sum", "由左和求梯形法则的值"],
+    [
+      "The trapezoidal approximation is the average of the left and right sums, $T_{n} = \\frac{L_{n} + R_{n}}{2}$. Since $R_{n}$ differs from $L_{n}$ only at the ends, $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$.",
+      "梯形近似是左和与右和的平均：$T_{n} = \\frac{L_{n} + R_{n}}{2}$。因为 $R_{n}$ 与 $L_{n}$ 只在两端不同，所以 $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$。",
+    ],
+    (rng) => {
+      const w = gridWidth(rng);
+      const L = rng.int(10, 90);
+      const fa = rng.int(-9, 9);
+      const fb = rng.int(-9, 9);
+      const gap = Q.of(fb - fa);
+      const half = w.div(Q.of(2));
+      const answer = Q.of(L).add(half.mul(gap));
+      return ask(
+        [
+          `For a function $f$ and a partition with width $\\Delta x = ${w.toLatex()}$ on $[a, b]$, the left sum is $${L}$, $f(a) = ${fa}$ and $f(b) = ${fb}$. Find the trapezoidal approximation.`,
+          `对函数 $f$ 和 $[a, b]$ 上宽度 $\\Delta x = ${w.toLatex()}$ 的分割，左和是 $${L}$，$f(a) = ${fa}$，$f(b) = ${fb}$。求梯形近似值。`,
+        ],
+        answer,
+        [Q.of(L).add(w.mul(gap)), Q.of(L).add(gap.div(Q.of(2))), Q.of(L).sub(half.mul(gap))],
+        [
+          `$T = L + \\frac{\\Delta x}{2}(f(b) - f(a)) = ${L} + ${half.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$.`,
+          `$T = L + \\frac{\\Delta x}{2}(f(b) - f(a)) = ${L} + ${half.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["approximating-areas-with-the-trapezoidal-rule#the-trapezoidal-rule-from-the-left-sum"],
+};
 
 const intervalOffSum = point(
   "reading-the-interval-off-a-sum",
@@ -847,36 +879,39 @@ const shapes = [
   { f: "6x - x^{2}", up: false },
 ] as const;
 
-const orderingEstimates = point(
-  "ordering-the-midpoint-and-trapezoidal-estimates",
-  ["Ordering the midpoint and trapezoidal estimates", "比较中点估计与梯形估计"],
-  [
-    "Concavity orders the two estimates around the exact area. On a concave-up graph, chords lie above the curve and tangents below, so $M_{n} < \\int f < T_{n}$. On a concave-down graph the order reverses. Monotonicity plays no part here.",
-    "凹凸性决定了两个估计值与精确面积的大小顺序。在上凹图像上，弦在曲线上方，切线在曲线下方，所以 $M_{n} < \\int f < T_{n}$。在下凹图像上顺序相反。这里单调性不起作用。",
-  ],
-  (rng) => {
-    const s = rng.pick(shapes);
-    const p = rng.int(0, 4);
-    const q = p + rng.int(1, 2);
-    const n = rng.pick([4, 6, 8, 10]);
-    const I = `\\int_{${p}}^{${q}} f`;
-    const a = `M_{${n}} < ${I} < T_{${n}}`;
-    const b = `T_{${n}} < ${I} < M_{${n}}`;
-    return choose(
-      rng,
-      [
-        `Let $f(x) = ${s.f}$ on $[${p}, ${q}]$, with midpoint and trapezoidal approximations $M_{${n}}$ and $T_{${n}}$. Which is true?`,
-        `设 $[${p}, ${q}]$ 上的 $f(x) = ${s.f}$，中点近似和梯形近似分别是 $M_{${n}}$ 和 $T_{${n}}$。哪项正确？`,
-      ],
-      same2(s.up ? a : b),
-      [same2(s.up ? b : a), same2(`${I} < M_{${n}} < T_{${n}}`), same2(`M_{${n}} < T_{${n}} < ${I}`)],
-      [
-        `$f''$ is ${s.up ? "positive" : "negative"} here, so $f$ is concave ${s.up ? "up" : "down"}. The trapezoids lie ${s.up ? "above" : "below"} the graph and the midpoint rectangles match its tangent lines, which lie ${s.up ? "below" : "above"}. So $${s.up ? a : b}$.`,
-        `这里 $f''$ ${s.up ? "为正" : "为负"}，所以 $f$ ${s.up ? "上凹" : "下凹"}。梯形在图像${s.up ? "上方" : "下方"}，中点矩形相当于切线，在图像${s.up ? "下方" : "上方"}。所以 $${s.up ? a : b}$。`,
-      ],
-    );
-  },
-);
+const orderingEstimates = {
+  ...point(
+    "ordering-the-midpoint-and-trapezoidal-estimates",
+    ["Ordering the midpoint and trapezoidal estimates", "比较中点估计与梯形估计"],
+    [
+      "Concavity orders the two estimates around the exact area. On a concave-up graph, chords lie above the curve and tangents below, so $M_{n} < \\int f < T_{n}$. On a concave-down graph the order reverses. Monotonicity plays no part here.",
+      "凹凸性决定了两个估计值与精确面积的大小顺序。在上凹图像上，弦在曲线上方，切线在曲线下方，所以 $M_{n} < \\int f < T_{n}$。在下凹图像上顺序相反。这里单调性不起作用。",
+    ],
+    (rng) => {
+      const s = rng.pick(shapes);
+      const p = rng.int(0, 4);
+      const q = p + rng.int(1, 2);
+      const n = rng.pick([4, 6, 8, 10]);
+      const I = `\\int_{${p}}^{${q}} f`;
+      const a = `M_{${n}} < ${I} < T_{${n}}`;
+      const b = `T_{${n}} < ${I} < M_{${n}}`;
+      return choose(
+        rng,
+        [
+          `Let $f(x) = ${s.f}$ on $[${p}, ${q}]$, with midpoint and trapezoidal approximations $M_{${n}}$ and $T_{${n}}$. Which is true?`,
+          `设 $[${p}, ${q}]$ 上的 $f(x) = ${s.f}$，中点近似和梯形近似分别是 $M_{${n}}$ 和 $T_{${n}}$。哪项正确？`,
+        ],
+        same2(s.up ? a : b),
+        [same2(s.up ? b : a), same2(`${I} < M_{${n}} < T_{${n}}`), same2(`M_{${n}} < T_{${n}} < ${I}`)],
+        [
+          `$f''$ is ${s.up ? "positive" : "negative"} here, so $f$ is concave ${s.up ? "up" : "down"}. The trapezoids lie ${s.up ? "above" : "below"} the graph and the midpoint rectangles match its tangent lines, which lie ${s.up ? "below" : "above"}. So $${s.up ? a : b}$.`,
+          `这里 $f''$ ${s.up ? "为正" : "为负"}，所以 $f$ ${s.up ? "上凹" : "下凹"}。梯形在图像${s.up ? "上方" : "下方"}，中点矩形相当于切线，在图像${s.up ? "下方" : "上方"}。所以 $${s.up ? a : b}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["approximating-areas-under-graphs-of-composite-functions#ordering-the-midpoint-and-trapezoidal-estimates"],
+};
 
 /** unitIntegrals are integrands and limits whose exact value is a whole number. */
 const unitIntegrals: readonly { f: string; lo: string; hi: string; value: number; anti: string; bad: number }[] = [
@@ -946,96 +981,108 @@ const unknownFromCombination = point(
   },
 );
 
-const whereSignedCancels = point(
-  "where-signed-areas-cancel",
-  ["Where signed areas cancel", "有向面积相互抵消之处"],
-  [
-    "A line crosses the $x$-axis at $r$, and the triangles on either side have opposite signs. The signed integral from $a$ to $c$ is zero when the two triangles are congruent, which happens when $r$ is the midpoint of $a$ and $c$. The total area is not zero there.",
-    "直线在 $r$ 处穿过 $x$ 轴，两侧的三角形符号相反。从 $a$ 到 $c$ 的有向积分为零，当且仅当两个三角形全等，也就是 $r$ 是 $a$ 和 $c$ 的中点。这时总面积并不为零。",
-  ],
-  (rng) => {
-    const m = nz(rng, 5);
-    const r = rng.int(-5, 5);
-    const a = r - rng.int(1, 7);
-    const c = 2 * r - a;
-    const f = linear(m, -m * r);
-    return ask(
-      [
-        `Find the value $c > ${a}$ for which $\\int_{${a}}^{c} (${f}) \\, dx = 0$.`,
-        `求满足 $\\int_{${a}}^{c} (${f}) \\, dx = 0$ 且 $c > ${a}$ 的 $c$。`,
-      ],
-      c,
-      [r, 2 * r + a, r - a],
-      [
-        `The line crosses the axis at $x = ${r}$. The signed areas cancel when $${r}$ is the midpoint of $${a}$ and $c$, so $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$.`,
-        `直线在 $x = ${r}$ 处穿过坐标轴。当 $${r}$ 是 $${a}$ 和 $c$ 的中点时有向面积抵消，所以 $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$。`,
-      ],
-    );
-  },
-);
+const whereSignedCancels = {
+  ...point(
+    "where-signed-areas-cancel",
+    ["Where signed areas cancel", "有向面积相互抵消之处"],
+    [
+      "A line crosses the $x$-axis at $r$, and the triangles on either side have opposite signs. The signed integral from $a$ to $c$ is zero when the two triangles are congruent, which happens when $r$ is the midpoint of $a$ and $c$. The total area is not zero there.",
+      "直线在 $r$ 处穿过 $x$ 轴，两侧的三角形符号相反。从 $a$ 到 $c$ 的有向积分为零，当且仅当两个三角形全等，也就是 $r$ 是 $a$ 和 $c$ 的中点。这时总面积并不为零。",
+    ],
+    (rng) => {
+      const m = nz(rng, 5);
+      const r = rng.int(-5, 5);
+      const a = r - rng.int(1, 7);
+      const c = 2 * r - a;
+      const f = linear(m, -m * r);
+      return ask(
+        [
+          `Find the value $c > ${a}$ for which $\\int_{${a}}^{c} (${f}) \\, dx = 0$.`,
+          `求满足 $\\int_{${a}}^{c} (${f}) \\, dx = 0$ 且 $c > ${a}$ 的 $c$。`,
+        ],
+        c,
+        [r, 2 * r + a, r - a],
+        [
+          `The line crosses the axis at $x = ${r}$. The signed areas cancel when $${r}$ is the midpoint of $${a}$ and $c$, so $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$.`,
+          `直线在 $x = ${r}$ 处穿过坐标轴。当 $${r}$ 是 $${a}$ 和 $c$ 的中点时有向面积抵消，所以 $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["finding-the-area-between-a-curve-and-the-x-axis-when-they-intersect#where-signed-areas-cancel"],
+};
 
-const symmetryIntegrals = point(
-  "definite-integrals-from-symmetry",
-  ["Definite integrals from symmetry", "由对称性求定积分"],
-  [
-    "Symmetry of the graph gives integrals without a formula. If $f$ is even, the areas on the two sides of the $y$-axis are equal with the same sign. If $f$ is odd, they are equal with opposite signs, so the integral over $[-a, a]$ is $0$.",
-    "图像的对称性不用公式就能给出积分。若 $f$ 是偶函数，$y$ 轴两侧的面积相等，符号相同。若 $f$ 是奇函数，两侧面积相等，符号相反，所以在 $[-a, a]$ 上的积分是 $0$。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 9);
-    const v = nz(rng, 12);
-    const even = rng.bool();
-    const whole = rng.bool();
-    const answer = whole ? (even ? 2 * v : 0) : even ? v : -v;
-    const upper = whole ? a : 0;
-    return ask(
-      [
-        `$f$ is ${even ? "even" : "odd"} and $\\int_{0}^{${a}} f(x) \\, dx = ${v}$. Find $\\int_{${-a}}^{${upper}} f(x) \\, dx$.`,
-        `$f$ 是${even ? "偶" : "奇"}函数，且 $\\int_{0}^{${a}} f(x) \\, dx = ${v}$。求 $\\int_{${-a}}^{${upper}} f(x) \\, dx$。`,
-      ],
-      answer,
-      [2 * v, 0, v, -v],
-      [
-        `The graph on $[${-a}, 0]$ is the ${even ? "mirror image" : "point reflection"} of the graph on $[0, ${a}]$, so $\\int_{${-a}}^{0} f = ${even ? v : -v}$. ${whole ? `Adding $\\int_{0}^{${a}} f = ${v}$ gives $${answer}$.` : `This is the value asked for.`}`,
-        `$[${-a}, 0]$ 上的图像是 $[0, ${a}]$ 上图像的${even ? "镜像" : "中心对称图形"}，所以 $\\int_{${-a}}^{0} f = ${even ? v : -v}$。${whole ? `加上 $\\int_{0}^{${a}} f = ${v}$ 得 $${answer}$。` : `这就是所求的值。`}`,
-      ],
-    );
-  },
-);
+const symmetryIntegrals = {
+  ...point(
+    "definite-integrals-from-symmetry",
+    ["Definite integrals from symmetry", "由对称性求定积分"],
+    [
+      "Symmetry of the graph gives integrals without a formula. If $f$ is even, the areas on the two sides of the $y$-axis are equal with the same sign. If $f$ is odd, they are equal with opposite signs, so the integral over $[-a, a]$ is $0$.",
+      "图像的对称性不用公式就能给出积分。若 $f$ 是偶函数，$y$ 轴两侧的面积相等，符号相同。若 $f$ 是奇函数，两侧面积相等，符号相反，所以在 $[-a, a]$ 上的积分是 $0$。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 9);
+      const v = nz(rng, 12);
+      const even = rng.bool();
+      const whole = rng.bool();
+      const answer = whole ? (even ? 2 * v : 0) : even ? v : -v;
+      const upper = whole ? a : 0;
+      return ask(
+        [
+          `$f$ is ${even ? "even" : "odd"} and $\\int_{0}^{${a}} f(x) \\, dx = ${v}$. Find $\\int_{${-a}}^{${upper}} f(x) \\, dx$.`,
+          `$f$ 是${even ? "偶" : "奇"}函数，且 $\\int_{0}^{${a}} f(x) \\, dx = ${v}$。求 $\\int_{${-a}}^{${upper}} f(x) \\, dx$。`,
+        ],
+        answer,
+        [2 * v, 0, v, -v],
+        [
+          `The graph on $[${-a}, 0]$ is the ${even ? "mirror image" : "point reflection"} of the graph on $[0, ${a}]$, so $\\int_{${-a}}^{0} f = ${even ? v : -v}$. ${whole ? `Adding $\\int_{0}^{${a}} f = ${v}$ gives $${answer}$.` : `This is the value asked for.`}`,
+          `$[${-a}, 0]$ 上的图像是 $[0, ${a}]$ 上图像的${even ? "镜像" : "中心对称图形"}，所以 $\\int_{${-a}}^{0} f = ${even ? v : -v}$。${whole ? `加上 $\\int_{0}^{${a}} f = ${v}$ 得 $${answer}$。` : `这就是所求的值。`}`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["calculating-the-definite-integral-of-a-function-given-its-graph#definite-integrals-from-symmetry"],
+};
 
-const valueFromNetChange = point(
-  "a-value-of-the-function-from-its-net-change",
-  ["A value of the function from its net change", "由净变化求函数值"],
-  [
-    "The fundamental theorem says $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$, so knowing the integral and one value gives the other. Keep the order of the limits in mind: when the known value is at the upper limit, the unknown one is found by subtracting.",
-    "微积分基本定理给出 $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$，所以知道积分和一个函数值，就能求出另一个。注意上下限的顺序：已知的值在上限时，未知的值要用减法求得。",
-  ],
-  (rng) => {
-    const a = rng.int(-6, 3);
-    const b = a + rng.int(1, 7);
-    const I = nz(rng, 15);
-    const known = rng.int(-12, 12);
-    const findLower = rng.bool();
-    const answer = findLower ? known - I : known + I;
-    return ask(
-      findLower
-        ? [
-            `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$ and $f(${b}) = ${known}$. Find $f(${a})$.`,
-            `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$，$f(${b}) = ${known}$。求 $f(${a})$。`,
-          ]
-        : [
-            `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$ and $f(${a}) = ${known}$. Find $f(${b})$.`,
-            `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$，$f(${a}) = ${known}$。求 $f(${b})$。`,
-          ],
-      answer,
-      [findLower ? known + I : known - I, I, I - known],
-      [
-        `$f(${b}) - f(${a}) = ${I}$, and $${findLower ? `f(${b})` : `f(${a})`} = ${known}$, so $${findLower ? `f(${a})` : `f(${b})`} = ${answer}$.`,
-        `$f(${b}) - f(${a}) = ${I}$，$${findLower ? `f(${b})` : `f(${a})`} = ${known}$，所以 $${findLower ? `f(${a})` : `f(${b})`} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const valueFromNetChange = {
+  ...point(
+    "a-value-of-the-function-from-its-net-change",
+    ["A value of the function from its net change", "由净变化求函数值"],
+    [
+      "The fundamental theorem says $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$, so knowing the integral and one value gives the other. Keep the order of the limits in mind: when the known value is at the upper limit, the unknown one is found by subtracting.",
+      "微积分基本定理给出 $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$，所以知道积分和一个函数值，就能求出另一个。注意上下限的顺序：已知的值在上限时，未知的值要用减法求得。",
+    ],
+    (rng) => {
+      const a = rng.int(-6, 3);
+      const b = a + rng.int(1, 7);
+      const I = nz(rng, 15);
+      const known = rng.int(-12, 12);
+      const findLower = rng.bool();
+      const answer = findLower ? known - I : known + I;
+      return ask(
+        findLower
+          ? [
+              `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$ and $f(${b}) = ${known}$. Find $f(${a})$.`,
+              `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$，$f(${b}) = ${known}$。求 $f(${a})$。`,
+            ]
+          : [
+              `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$ and $f(${a}) = ${known}$. Find $f(${b})$.`,
+              `$\\int_{${a}}^{${b}} f'(x) \\, dx = ${I}$，$f(${a}) = ${known}$。求 $f(${b})$。`,
+            ],
+        answer,
+        [findLower ? known + I : known - I, I, I - known],
+        [
+          `$f(${b}) - f(${a}) = ${I}$, and $${findLower ? `f(${b})` : `f(${a})`} = ${known}$, so $${findLower ? `f(${a})` : `f(${b})`} = ${answer}$.`,
+          `$f(${b}) - f(${a}) = ${I}$，$${findLower ? `f(${b})` : `f(${a})`} = ${known}$，所以 $${findLower ? `f(${a})` : `f(${b})`} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    calculusDrawings3[
+      "calculating-the-definite-integral-of-a-functions-derivative-given-its-graph#a-value-of-the-function-from-its-net-change"
+    ],
+};
 
 /** areaStory draws four increasing points and three different areas for a derivative that is positive, negative, then positive. */
 const areaStory = (rng: Rng) => {
@@ -1053,30 +1100,33 @@ const areaStory = (rng: Rng) => {
   return { x0, x1, x2, x3, A1, A2, A3, prose };
 };
 
-const maximumFromAreas = point(
-  "the-absolute-maximum-from-areas-under-the-derivative",
-  ["The absolute maximum from areas under the derivative", "由导数下的面积确定绝对最大值"],
-  [
-    "The absolute maximum is at a point where $f'$ changes from positive to negative or at an endpoint. Compare these candidates by net area: the right endpoint beats the interior peak only if the area gained after the dip is more than the area lost in it.",
-    "绝对最大值出现在 $f'$ 由正变负的点或端点处。用净面积比较这些候选点：只有低谷之后增加的面积大于低谷中失去的面积时，右端点才超过内部的峰值。",
-  ],
-  (rng) => {
-    const s = areaStory(rng);
-    const answer = s.A2 > s.A3 ? s.x1 : s.x3;
-    return ask(
-      [
-        `${s.prose[0]} At which $x$ does $f$ attain its absolute maximum on $[${s.x0}, ${s.x3}]$?`,
-        `${s.prose[1]}$f$ 在 $[${s.x0}, ${s.x3}]$ 上的绝对最大值在哪个 $x$ 处取到？`,
-      ],
-      answer,
-      [s.A2 > s.A3 ? s.x3 : s.x1, s.x2, s.x0],
-      [
-        `Relative to $f(${s.x0})$, the value at $x = ${s.x1}$ is $+${s.A1}$ and at $x = ${s.x3}$ it is $${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$. The larger is at $x = ${answer}$.`,
-        `相对于 $f(${s.x0})$，$x = ${s.x1}$ 处的值是 $+${s.A1}$，$x = ${s.x3}$ 处的值是 $${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$。较大的在 $x = ${answer}$ 处。`,
-      ],
-    );
-  },
-);
+const maximumFromAreas = {
+  ...point(
+    "the-absolute-maximum-from-areas-under-the-derivative",
+    ["The absolute maximum from areas under the derivative", "由导数下的面积确定绝对最大值"],
+    [
+      "The absolute maximum is at a point where $f'$ changes from positive to negative or at an endpoint. Compare these candidates by net area: the right endpoint beats the interior peak only if the area gained after the dip is more than the area lost in it.",
+      "绝对最大值出现在 $f'$ 由正变负的点或端点处。用净面积比较这些候选点：只有低谷之后增加的面积大于低谷中失去的面积时，右端点才超过内部的峰值。",
+    ],
+    (rng) => {
+      const s = areaStory(rng);
+      const answer = s.A2 > s.A3 ? s.x1 : s.x3;
+      return ask(
+        [
+          `${s.prose[0]} At which $x$ does $f$ attain its absolute maximum on $[${s.x0}, ${s.x3}]$?`,
+          `${s.prose[1]}$f$ 在 $[${s.x0}, ${s.x3}]$ 上的绝对最大值在哪个 $x$ 处取到？`,
+        ],
+        answer,
+        [s.A2 > s.A3 ? s.x3 : s.x1, s.x2, s.x0],
+        [
+          `Relative to $f(${s.x0})$, the value at $x = ${s.x1}$ is $+${s.A1}$ and at $x = ${s.x3}$ it is $${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$. The larger is at $x = ${answer}$.`,
+          `相对于 $f(${s.x0})$，$x = ${s.x1}$ 处的值是 $+${s.A1}$，$x = ${s.x3}$ 处的值是 $${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$。较大的在 $x = ${answer}$ 处。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings3["maximizing-a-function-using-the-graph-of-its-derivative#the-absolute-maximum-from-areas-under-the-derivative"],
+};
 
 const minimumFromAreas = point(
   "the-absolute-minimum-from-areas-under-the-derivative",

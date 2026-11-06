@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, numberProblem, pointProblem } from "../problems.ts";
 import { oneOf } from "./calculus-common.ts";
@@ -122,6 +123,7 @@ export const differentiatingCurvesGivenInPolarForm: TopicDef = {
     },
     {
       id: "slopes-of-polar-curves",
+      figure: calculusDrawings5["differentiating-curves-given-in-polar-form#slopes-of-polar-curves"],
       title: t("Slopes of polar curves", "极坐标曲线的斜率"),
       explanation: t(
         `A polar curve is a parametric curve with the angle as the parameter, so its slope is the derivative of the vertical coordinate over that of the horizontal one. As for any parametric curve,\n\n$$${polarSlopeFormula}.$$\n\nIt is not $\\frac{dr}{d\\theta}$. For $r = 2 + \\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$.`,
@@ -209,6 +211,7 @@ export const furtherDifferentiationOfCurvesGivenInPolarForm: TopicDef = {
   knowledgePoints: [
     {
       id: "slopes-at-odd-multiples-of-a-quarter-turn",
+      figure: calculusDrawings5["further-differentiation-of-curves-given-in-polar-form#slopes-at-odd-multiples-of-a-quarter-turn"],
       title: t("Slopes at odd multiples of π/4", "π/4 奇数倍处的斜率"),
       explanation: t(
         `At these angles sine and cosine have the same size, so a common factor cancels from the slope and the computation becomes much shorter. At $\\theta = \\frac{\\pi}{4}$, $\\cos\\theta = \\sin\\theta = \\frac{\\sqrt{2}}{2}$, and the common factor cancels in $${polarSlopeFormula}$. For $r = 3 + \\cos 2\\theta$ at $\\frac{\\pi}{4}$: $r = 3$ and $r' = -2\\sin 2\\theta = -2$, so $\\frac{dy}{dx} = \\frac{-2 + 3}{-2 - 3} = -\\frac{1}{5}$.`,
@@ -218,6 +221,7 @@ export const furtherDifferentiationOfCurvesGivenInPolarForm: TopicDef = {
     },
     {
       id: "slopes-of-logarithmic-spirals",
+      figure: calculusDrawings5["further-differentiation-of-curves-given-in-polar-form#slopes-of-logarithmic-spirals"],
       title: t("Slopes of logarithmic spirals", "对数螺线的斜率"),
       explanation: t(
         "The derivative of the radius is a constant multiple of the radius itself, so the radius cancels and the slope depends only on the angle. For the spiral $r = ae^{k\\theta}$, $r' = kr$, so $r$ cancels from the slope: $\\frac{dy}{dx} = \\frac{k\\sin\\theta + \\cos\\theta}{k\\cos\\theta - \\sin\\theta}$. For $k = 2$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{2}{-1} = -2$.",
@@ -331,6 +335,7 @@ export const horizontalAndVerticalTangentsToPolarCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "tangents-to-polar-circles",
+      figure: calculusDrawings5["horizontal-and-vertical-tangents-to-polar-curves#tangents-to-polar-circles"],
       title: t("Tangents to polar circles", "极坐标圆的切线"),
       explanation: t(
         "Write $x$ and $y$ in terms of $\\theta$ and set a derivative to zero. For $r = 4\\cos\\theta$: $y = 4\\cos\\theta\\sin\\theta = 2\\sin 2\\theta$, so $\\frac{dy}{d\\theta} = 4\\cos 2\\theta = 0$ at $\\theta = \\pm\\frac{\\pi}{4}$. There $r = 2\\sqrt{2}$, and the points are $(2, \\pm 2)$: the top and bottom of the circle of radius $2$ centered at $(2, 0)$.",
@@ -680,6 +685,7 @@ export const findingTheAreaOfAPolarRegion: TopicDef = {
   knowledgePoints: [
     {
       id: "areas-of-sectors-and-spirals",
+      figure: calculusDrawings5["finding-the-area-of-a-polar-region#areas-of-sectors-and-spirals"],
       title: t("Areas of sectors and spirals", "扇形与螺线的面积"),
       explanation: t(
         "A thin sector of radius $r$ and angle $d\\theta$ has area $\\frac{1}{2}r^{2} \\, d\\theta$. Adding them up, the region between $r = f(\\theta)$ and the rays $\\theta = \\alpha$, $\\theta = \\beta$ has area\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r^{2} \\, d\\theta.$$\n\nFor $r = 3$ from $0$ to $\\frac{\\pi}{2}$: $A = \\frac{9}{2} \\cdot \\frac{\\pi}{2} = \\frac{9\\pi}{4}$. For the spiral $r = \\theta$ from $0$ to $\\pi$: $A = \\frac{1}{2}\\int_{0}^{\\pi} \\theta^{2} \\, d\\theta = \\frac{\\pi^{3}}{6}$.",
@@ -689,6 +695,7 @@ export const findingTheAreaOfAPolarRegion: TopicDef = {
     },
     {
       id: "areas-bounded-by-limacons",
+      figure: calculusDrawings5["finding-the-area-of-a-polar-region#areas-bounded-by-limacons"],
       title: t("Areas bounded by limaçons", "蜗线围成的面积"),
       explanation: t(
         "Polar area adds up thin sectors, each with area half the square of the radius times the angle, so expand the square and lower the powers of cosine. Expand $r^{2}$ and use $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$ (or the same for $\\sin^{2}\\theta$). For $r = 2 + \\cos\\theta$ from $0$ to $\\frac{\\pi}{2}$:\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2.$$",
@@ -943,6 +950,7 @@ export const theAreaBoundedByTwoPolarCurves: TopicDef = {
   knowledgePoints: [
     {
       id: "areas-between-two-circles",
+      figure: calculusDrawings5["the-area-bounded-by-two-polar-curves#areas-between-two-circles"],
       title: t("Areas between two circles", "两圆之间的面积"),
       explanation: t(
         "Find the angles where the curves meet, then subtract the inner region from the outer:\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} \\left(r_{\\text{outer}}^{2} - r_{\\text{inner}}^{2}\\right) d\\theta.$$\n\nIt is not $\\frac{1}{2}\\int (r_{\\text{outer}} - r_{\\text{inner}})^{2} \\, d\\theta$. Inside $r = 2\\cos\\theta$ and outside $r = 1$: the circles meet at $\\theta = \\pm\\frac{\\pi}{3}$, and $A = \\frac{1}{2}\\int_{-\\pi/3}^{\\pi/3} (4\\cos^{2}\\theta - 1) \\, d\\theta = \\frac{\\pi}{3} + \\frac{\\sqrt{3}}{2}$.",
@@ -952,6 +960,7 @@ export const theAreaBoundedByTwoPolarCurves: TopicDef = {
     },
     {
       id: "areas-between-a-cardioid-and-a-circle",
+      figure: calculusDrawings5["the-area-bounded-by-two-polar-curves#areas-between-a-cardioid-and-a-circle"],
       title: t("Areas between a cardioid and a circle", "心形线与圆之间的面积"),
       explanation: t(
         "The cardioid $r = a(1 + \\cos\\theta)$ and the circle $r = a$ meet where $\\cos\\theta = 0$. The cardioid is outside the circle for $-\\frac{\\pi}{2} < \\theta < \\frac{\\pi}{2}$, so the area inside the cardioid and outside the circle is $\\frac{a^{2}}{2}\\int_{-\\pi/2}^{\\pi/2} (2\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = a^{2}\\left(2 + \\frac{\\pi}{4}\\right)$.",
@@ -1040,6 +1049,7 @@ export const theArcLengthOfAPolarCurve: TopicDef = {
   knowledgePoints: [
     {
       id: "arc-lengths-of-cardioids",
+      figure: calculusDrawings5["the-arc-length-of-a-polar-curve#arc-lengths-of-cardioids"],
       title: t("Arc lengths of cardioids", "心形线的弧长"),
       explanation: t(
         "With $x = r\\cos\\theta$ and $y = r\\sin\\theta$, $\\left(\\frac{dx}{d\\theta}\\right)^{2} + \\left(\\frac{dy}{d\\theta}\\right)^{2} = r^{2} + (r')^{2}$, so\n\n$$L = \\int_{\\alpha}^{\\beta} \\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}} \\, d\\theta.$$\n\nFor the cardioid $r = 1 + \\cos\\theta$ the integrand is $\\sqrt{2 + 2\\cos\\theta} = 2\\left|\\cos\\frac{\\theta}{2}\\right|$, and the whole cardioid has length $2\\int_{0}^{\\pi} 2\\cos\\frac{\\theta}{2} \\, d\\theta = 8$.",
@@ -1049,6 +1059,7 @@ export const theArcLengthOfAPolarCurve: TopicDef = {
     },
     {
       id: "arc-lengths-of-other-polar-curves",
+      figure: calculusDrawings5["the-arc-length-of-a-polar-curve#arc-lengths-of-other-polar-curves"],
       title: t("Arc lengths of other polar curves", "其他极坐标曲线的弧长"),
       explanation: t(
         "For the circle $r = 2a\\sin\\theta$, $r^{2} + (r')^{2} = 4a^{2}$, so the length is $2a$ times the change in $\\theta$. For $r = \\theta^{2}$, the integrand is $\\theta\\sqrt{\\theta^{2} + 4}$, which the substitution $u = \\theta^{2} + 4$ integrates.",

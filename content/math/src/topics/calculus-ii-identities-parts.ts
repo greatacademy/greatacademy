@@ -1,6 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { oneOf, power } from "./calculus-common.ts";
 import { coef, fracWith, integral, plusC, xPow } from "./calculus-ii-substitution.ts";
@@ -281,6 +282,7 @@ export const integrationUsingTheDoubleAngleFormulas: TopicDef = {
   knowledgePoints: [
     {
       id: "integrating-squares-of-sine-and-cosine",
+      figure: calculusDrawings4["integration-using-the-double-angle-formulas#integrating-squares-of-sine-and-cosine"],
       title: t("Integrating squares of sine and cosine", "正弦与余弦平方的积分"),
       explanation: t(
         "The power reduction formulas turn a square into a constant plus a cosine of the doubled angle, both of which are easy to integrate. Even powers do not yield to substitution. Lower the power with $\\sin^{2} \\theta = \\frac{1 - \\cos 2\\theta}{2}$ and $\\cos^{2} \\theta = \\frac{1 + \\cos 2\\theta}{2}$:\n\n$$\\int \\sin^{2}(ax) \\, dx = \\frac{x}{2} - \\frac{\\sin(2ax)}{4a} + C, \\qquad \\int \\cos^{2}(ax) \\, dx = \\frac{x}{2} + \\frac{\\sin(2ax)}{4a} + C.$$",

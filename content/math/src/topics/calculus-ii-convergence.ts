@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, poly, Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { choiceProblem, inequalityProblem, numberProblem } from "../problems.ts";
 import { oneOf } from "./calculus-common.ts";
@@ -238,6 +239,7 @@ export const theIntegralTest: TopicDef = {
   knowledgePoints: [
     {
       id: "evaluating-the-comparison-integral",
+      figure: calculusDrawings5["the-integral-test#evaluating-the-comparison-integral"],
       title: t("Evaluating the integral", "计算对应的积分"),
       explanation: t(
         "Let $a_n = f(n)$, where $f$ is positive, continuous and decreasing on $[1, \\infty)$. The terms are the heights of rectangles of width $1$ that lie under the graph from $n - 1$ to $n$ and over it from $n$ to $n + 1$, so\n\n$$\\int_{1}^{\\infty} f(x) \\, dx \\le \\sum_{n=1}^{\\infty} a_n \\le a_1 + \\int_{1}^{\\infty} f(x) \\, dx.$$\n\nHence the series and the integral **both converge or both diverge**. The integral is not the sum. For $\\sum \\frac{3}{(n + 1)^{2}}$: $\\int_{1}^{\\infty} \\frac{3}{(x + 1)^{2}} \\, dx = \\left[-\\frac{3}{x + 1}\\right]_{1}^{\\infty} = \\frac{3}{2}$, so the series converges.",
@@ -309,6 +311,7 @@ export const theRemainderEstimateForTheIntegralTest: TopicDef = {
   knowledgePoints: [
     {
       id: "bounding-the-remainder",
+      figure: calculusDrawings5["the-remainder-estimate-for-the-integral-test#bounding-the-remainder"],
       title: t("Bounding the remainder", "估计余项的上界"),
       explanation: t(
         "The remainder $R_N = S - S_N = a_{N+1} + a_{N+2} + \\cdots$ is a sum of rectangles lying under the graph of $f$ from $N$ on, so\n\n$$R_N \\le \\int_{N}^{\\infty} f(x) \\, dx.$$\n\nFor $\\sum \\frac{1}{n^{2}}$ and $N = 10$: $R_{10} \\le \\int_{10}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{10}$.",

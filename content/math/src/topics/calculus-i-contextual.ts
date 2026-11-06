@@ -1,6 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Mark, type Point, poly, Q, sketch } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { article, functionProblem, numberProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -587,6 +588,7 @@ export const relatedRatesWithImplicitFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "related-rates-on-circles",
+      figure: calculusDrawings2["related-rates-with-implicit-functions#related-rates-on-circles"],
       title: t("Related rates on circles", "圆上的相关变化率"),
       explanation: t(
         "For a point moving on a curve, differentiate the equation of the curve with respect to time, then substitute the position and the known rate. A point moves on $x^{2} + y^{2} = 25$. Differentiating with respect to $t$: $2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0$. At $(3, 4)$ with $\\frac{dx}{dt} = 2$: $2(3)(2) + 2(4)\\frac{dy}{dt} = 0$, so $\\frac{dy}{dt} = -\\frac{3}{2}$.",
@@ -783,6 +785,7 @@ export const calculatingRelatedRatesWithCirclesAndSpheres: TopicDef = {
     },
     {
       id: "finding-the-rate-of-change-of-a-radius",
+      figure: calculusDrawings2["calculating-related-rates-with-circles-and-spheres#finding-the-rate-of-change-of-a-radius"],
       title: t("Finding the rate of change of a radius", "求半径的变化率"),
       explanation: t(
         "When the rate of the area or volume is given, solve for $\\frac{dr}{dt}$. If air is pumped into a sphere at $100$ cm³/s, then at $r = 5$: $100 = 4\\pi(25)\\frac{dr}{dt}$, so $\\frac{dr}{dt} = \\frac{1}{\\pi}$ cm/s.",
@@ -1022,6 +1025,7 @@ export const calculatingRelatedRatesUsingThePythagoreanTheorem: TopicDef = {
     },
     {
       id: "distances-between-moving-objects",
+      figure: calculusDrawings2["calculating-related-rates-using-the-pythagorean-theorem#distances-between-moving-objects"],
       title: t("Distances between moving objects", "运动物体之间的距离"),
       explanation: t(
         "If two objects move along perpendicular roads, their distance $s$ satisfies $s^{2} = x^{2} + y^{2}$, so\n\n$$s\\frac{ds}{dt} = x\\frac{dx}{dt} + y\\frac{dy}{dt}.$$\n\nA distance that is shrinking has a negative rate.",
@@ -1196,6 +1200,7 @@ export const calculatingRelatedRatesUsingTrigonometry: TopicDef = {
   knowledgePoints: [
     {
       id: "rates-of-change-of-angles",
+      figure: calculusDrawings2["calculating-related-rates-using-trigonometry#rates-of-change-of-angles"],
       title: t("Rates of change of angles", "角的变化率"),
       explanation: t(
         "A plane flies at constant altitude $h$ toward an observer. With $x$ its horizontal distance and $\\theta$ its angle of elevation, $\\tan\\theta = \\frac{h}{x}$. Differentiating, $\\sec^{2}\\theta\\frac{d\\theta}{dt} = -\\frac{h}{x^{2}}\\frac{dx}{dt}$, and since $\\sec^{2}\\theta = \\frac{x^{2} + h^{2}}{x^{2}}$,\n\n$$\\frac{d\\theta}{dt} = -\\frac{h}{x^{2} + h^{2}}\\frac{dx}{dt}.$$",
@@ -1222,6 +1227,7 @@ export const calculatingRelatedRatesUsingTrigonometry: TopicDef = {
     },
     {
       id: "rates-of-change-of-lengths-from-angles",
+      figure: calculusDrawings2["calculating-related-rates-using-trigonometry#rates-of-change-of-lengths-from-angles"],
       title: t("Rates of change of lengths from angles", "由角求长度的变化率"),
       explanation: t(
         "A searchlight $d$ m from a wall rotates at $\\frac{d\\theta}{dt}$ radians per second. The spot is $x = d\\tan\\theta$ along the wall from the nearest point, so\n\n$$\\frac{dx}{dt} = d\\sec^{2}\\theta\\frac{d\\theta}{dt}.$$\n\nAt $\\theta = \\frac{\\pi}{4}$, $\\sec^{2}\\theta = 2$.",

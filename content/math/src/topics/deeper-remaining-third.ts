@@ -3,6 +3,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { trigDrawings } from "../explanation-drawings-trig.ts";
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
@@ -865,29 +866,32 @@ export const deeperRemainingCalculusThirdPoints: Readonly<Record<string, readonl
     ),
   ],
   "exploring-functions-using-technology": [
-    skill(
-      "a-minimum-from-the-graph-of-the-derivative",
-      ["A minimum from the graph of the derivative", "由导函数图象找极小值"],
-      [
-        "On a graph of $f'$, a local minimum of $f$ is where $f'$ crosses the axis from negative to positive. So only crossings in that direction count, not every zero.",
-        "在 $f'$ 的图象上，$f$ 的局部极小值出现在 $f'$ 由负变正穿过坐标轴的地方。所以只有这个方向的穿越才算，并非每个零点都算。",
-      ],
-      (rng) => {
-        const p = rng.int(-9, 4);
-        const q = p + rng.int(1, 9);
-        const a = rng.int(1, 5) * (rng.bool() ? 1 : -1);
-        const answer = a > 0 ? q : p;
-        return integer(
-          [
-            `You graph $Y_1 = f'(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}$. At what $x$ does $f$ have a local minimum?`,
-            `你画出 $Y_1 = f'(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}$。$f$ 在哪个 $x$ 处有局部极小值？`,
-          ],
-          answer,
-          [a > 0 ? p : q, (p + q) % 2 === 0 ? (p + q) / 2 : answer + 1, a],
-          [`$f'$ goes from negative to positive at $x = ${answer}$.`, `$f'$ 在 $x = ${answer}$ 处由负变正。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-minimum-from-the-graph-of-the-derivative",
+        ["A minimum from the graph of the derivative", "由导函数图象找极小值"],
+        [
+          "On a graph of $f'$, a local minimum of $f$ is where $f'$ crosses the axis from negative to positive. So only crossings in that direction count, not every zero.",
+          "在 $f'$ 的图象上，$f$ 的局部极小值出现在 $f'$ 由负变正穿过坐标轴的地方。所以只有这个方向的穿越才算，并非每个零点都算。",
+        ],
+        (rng) => {
+          const p = rng.int(-9, 4);
+          const q = p + rng.int(1, 9);
+          const a = rng.int(1, 5) * (rng.bool() ? 1 : -1);
+          const answer = a > 0 ? q : p;
+          return integer(
+            [
+              `You graph $Y_1 = f'(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}$. At what $x$ does $f$ have a local minimum?`,
+              `你画出 $Y_1 = f'(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}$。$f$ 在哪个 $x$ 处有局部极小值？`,
+            ],
+            answer,
+            [a > 0 ? p : q, (p + q) % 2 === 0 ? (p + q) / 2 : answer + 1, a],
+            [`$f'$ goes from negative to positive at $x = ${answer}$.`, `$f'$ 在 $x = ${answer}$ 处由负变正。`],
+          );
+        },
+      ),
+      figure: calculusDrawings5["exploring-functions-using-technology#a-minimum-from-the-graph-of-the-derivative"],
+    },
   ],
   "finding-definite-integrals-using-a-graphing-calculator": [
     skill(
@@ -971,32 +975,35 @@ export const deeperRemainingCalculusThirdPoints: Readonly<Record<string, readonl
     ),
   ],
   "finding-intersections-of-functions-using-a-graphing-calculator": [
-    skill(
-      "intersections-from-sign-changes",
-      ["Intersections from sign changes", "由符号变化找交点"],
-      [
-        "Two continuous graphs must cross wherever their difference changes sign. So a table of $f - g$ gives a lower bound on the number of intersections, by counting the sign changes.",
-        "两个连续函数的差变号的地方，图象一定相交。所以由 $f - g$ 的数值表数变号次数，可以得到交点个数的下界。",
-      ],
-      (rng) => {
-        const xs = [0, 1, 2, 3, 4, 5, 6];
-        const ys = xs.map(() => nz(rng, 9));
-        let changes = 0;
-        for (let i = 1; i < ys.length; i++) if ((ys[i] as number) * (ys[i - 1] as number) < 0) changes++;
-        return whole(
-          [
-            `$f$ and $g$ are continuous, and a table gives $x \\to f(x) - g(x)$ as $${tableText(xs, ys)}$. What is the least number of intersections on $[0, 6]$ that this table guarantees?`,
-            `$f$ 和 $g$ 连续，表格给出 $x \\to f(x) - g(x)$：$${tableText(xs, ys)}$。这张表保证 $[0, 6]$ 上至少有几个交点？`,
-          ],
-          changes,
-          [changes + 1, changes + 2, 7],
-          [
-            `The difference changes sign ${changes} times, and each change forces a crossing.`,
-            `差变号 ${changes} 次，每次变号都必有一个交点。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "intersections-from-sign-changes",
+        ["Intersections from sign changes", "由符号变化找交点"],
+        [
+          "Two continuous graphs must cross wherever their difference changes sign. So a table of $f - g$ gives a lower bound on the number of intersections, by counting the sign changes.",
+          "两个连续函数的差变号的地方，图象一定相交。所以由 $f - g$ 的数值表数变号次数，可以得到交点个数的下界。",
+        ],
+        (rng) => {
+          const xs = [0, 1, 2, 3, 4, 5, 6];
+          const ys = xs.map(() => nz(rng, 9));
+          let changes = 0;
+          for (let i = 1; i < ys.length; i++) if ((ys[i] as number) * (ys[i - 1] as number) < 0) changes++;
+          return whole(
+            [
+              `$f$ and $g$ are continuous, and a table gives $x \\to f(x) - g(x)$ as $${tableText(xs, ys)}$. What is the least number of intersections on $[0, 6]$ that this table guarantees?`,
+              `$f$ 和 $g$ 连续，表格给出 $x \\to f(x) - g(x)$：$${tableText(xs, ys)}$。这张表保证 $[0, 6]$ 上至少有几个交点？`,
+            ],
+            changes,
+            [changes + 1, changes + 2, 7],
+            [
+              `The difference changes sign ${changes} times, and each change forces a crossing.`,
+              `差变号 ${changes} 次，每次变号都必有一个交点。`,
+            ],
+          );
+        },
+      ),
+      figure: calculusDrawings5["finding-intersections-of-functions-using-a-graphing-calculator#intersections-from-sign-changes"],
+    },
   ],
   "finding-roots-of-functions-using-a-graphing-calculator": [
     skill(

@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q, radical } from "@ga/subject-math";
-
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { functionProblem, numberProblem } from "../problems.ts";
 import { bare, fac, infL, type LimitValue, lim, limitChoice, range } from "./calculus-common.ts";
 
@@ -458,6 +458,7 @@ export const calculatingLimitsUsingTrigonometricIdentities: TopicDef = {
     },
     {
       id: "trigonometric-limits-with-double-angle-formulas",
+      figure: calculusDrawings1["calculating-limits-using-trigonometric-identities#trigonometric-limits-with-double-angle-formulas"],
       title: t("Using the double-angle formulas", "利用二倍角公式"),
       explanation: t(
         "Expanding the double angle often produces a factor that matches the denominator, and cancelling it removes the zero over zero form. Rewrite $\\sin 2x = 2\\sin x\\cos x$ and $\\cos 2x = \\cos^{2} x - \\sin^{2} x = (\\cos x - \\sin x)(\\cos x + \\sin x)$, then cancel:\n\n$$\\lim_{x \\to \\pi/4} \\frac{\\cos 2x}{\\cos x - \\sin x} = \\lim_{x \\to \\pi/4} (\\cos x + \\sin x) = \\sqrt{2}.$$",
@@ -495,6 +496,10 @@ export const limitsAtInfinityAndHorizontalAsymptotesOfRationalFunctions: TopicDe
   knowledgePoints: [
     {
       id: "rational-limits-at-infinity-with-equal-degrees",
+      figure:
+        calculusDrawings1[
+          "limits-at-infinity-and-horizontal-asymptotes-of-rational-functions#rational-limits-at-infinity-with-equal-degrees"
+        ],
       title: t("Equal degrees", "次数相等"),
       explanation: t(
         "Divide every term by the highest power of $x$ in the denominator. Terms like $\\frac{5}{x}$ tend to $0$, so when the degrees are equal the limit is the ratio of the leading coefficients:\n\n$$\\lim_{x \\to \\infty} \\frac{6x^{2} - x}{3x^{2} + 4} = \\lim_{x \\to \\infty} \\frac{6 - \\frac{1}{x}}{3 + \\frac{4}{x^{2}}} = 2.$$\n\nThe line $y = 2$ is a horizontal asymptote.",
@@ -1019,6 +1024,7 @@ export const specialLimitsInvolvingCosine: TopicDef = {
   knowledgePoints: [
     {
       id: "limits-of-one-minus-cosine",
+      figure: calculusDrawings1["special-limits-involving-cosine#limits-of-one-minus-cosine"],
       title: t("Limits of 1 − cos ax", "1 − cos ax 的极限"),
       explanation: t(
         "One minus cosine shrinks like the square of a small angle, so divided by the angle itself it goes to zero, and divided by the square it goes to a half. Multiplying by $1 + \\cos x$ gives $\\frac{1 - \\cos x}{x} = \\frac{\\sin x}{x} \\cdot \\frac{\\sin x}{1 + \\cos x} \\to 1 \\cdot 0 = 0$, and\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{\\sin x}{x}\\right)^{2} \\frac{1}{1 + \\cos x} = \\frac{1}{2}.$$\n\nWith $ax$ in place of $x$: $\\frac{1 - \\cos ax}{bx^{2}} \\to \\frac{a^{2}}{2b}$.",

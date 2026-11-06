@@ -1,7 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, poly, Q } from "@ga/subject-math";
-
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { functionProblem, numberProblem, steps } from "../problems.ts";
 import {
   bare,
@@ -93,6 +93,7 @@ export const theFiniteLimitOfAFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-a-limit-from-a-graph",
+      figure: calculusDrawings1["the-finite-limit-of-a-function#reading-a-limit-from-a-graph"],
       title: t("Reading a limit from a graph", "从图像读出极限"),
       explanation: t(
         "$\\lim_{x \\to a} f(x) = L$ means that $f(x)$ gets as close to $L$ as we like when $x$ is close enough to $a$, but not equal to it.\n\nOn a graph, follow the curve towards $x = a$ from both sides and read the height it approaches. The point at $x = a$ itself does not matter: a hole, or a point somewhere else, does not change the limit.",
@@ -209,6 +210,7 @@ export const theLeftAndRightSidedLimitsOfAFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "one-sided-limits-from-a-graph",
+      figure: calculusDrawings1["the-left-and-right-sided-limits-of-a-function#one-sided-limits-from-a-graph"],
       title: t("One-sided limits from a graph", "从图像读出单侧极限"),
       explanation: t(
         "The **left-sided limit** $\\lim_{x \\to a^{-}} f(x)$ uses only $x < a$; the **right-sided limit** $\\lim_{x \\to a^{+}} f(x)$ uses only $x > a$.\n\nWhere a graph jumps at $x = a$, follow each piece to its end: the left piece ends at the left-sided limit and the right piece starts at the right-sided limit, whatever $f(a)$ is.",
@@ -286,6 +288,7 @@ export const findingTheExistenceOfALimitUsingOneSidedLimits: TopicDef = {
   knowledgePoints: [
     {
       id: "existence-of-a-limit-from-a-graph",
+      figure: calculusDrawings1["finding-the-existence-of-a-limit-using-one-sided-limits#existence-of-a-limit-from-a-graph"],
       title: t("Existence of a limit from a graph", "由图像判断极限是否存在"),
       explanation: t(
         "$\\lim_{x \\to a} f(x)$ exists exactly when both one-sided limits exist and are equal; then it is their common value.\n\nIf the graph jumps at $x = a$, the one-sided limits differ and the limit **does not exist**.",
@@ -368,6 +371,7 @@ export const limitsAtInfinityFromGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "limits-at-infinity-from-a-graph",
+      figure: calculusDrawings1["limits-at-infinity-from-graphs#limits-at-infinity-from-a-graph"],
       title: t("Limits at infinity from a graph", "从图像读出无穷远处的极限"),
       explanation: t(
         "$\\lim_{x \\to \\infty} f(x) = L$ means that $f(x)$ approaches $L$ as $x$ grows without bound; the graph levels off towards the horizontal line $y = L$, a **horizontal asymptote**. The limit as $x \\to -\\infty$ is read at the far left, and can be different.",
@@ -462,6 +466,7 @@ export const infiniteLimitsFromGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "infinite-limits-from-a-graph",
+      figure: calculusDrawings1["infinite-limits-from-graphs#infinite-limits-from-a-graph"],
       title: t("Infinite limits from a graph", "从图像读出无穷极限"),
       explanation: t(
         "If $f(x)$ grows without bound as $x \\to a^{+}$, we write $\\lim_{x \\to a^{+}} f(x) = \\infty$; if it falls without bound, $-\\infty$. The line $x = a$ is a **vertical asymptote**.\n\nThe two-sided limit is $\\infty$ (or $-\\infty$) only if both sides go the same way; if one side rises and the other falls, it does not exist.",
@@ -502,6 +507,7 @@ export const infiniteLimitsFromGraphs: TopicDef = {
     },
     {
       id: "graphs-with-two-vertical-asymptotes",
+      figure: calculusDrawings1["infinite-limits-from-graphs#graphs-with-two-vertical-asymptotes"],
       title: t("Graphs with two vertical asymptotes", "有两条竖直渐近线的图像"),
       explanation: t(
         "A graph can have several vertical asymptotes, and the behavior near each one is read separately. First find the dashed line at the point the limit approaches; then look only at the part of the graph next to it on the side the limit names:\n\n- the graph shooting up gives $\\infty$, shooting down gives $-\\infty$;\n- for a two-sided limit, both sides must go the same way, otherwise the limit does not exist.\n\nWhat the graph does near the other asymptote, or far away, has no bearing on the limit.",
@@ -967,6 +973,7 @@ export const limitsOfReciprocalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "reciprocal-limits-at-the-asymptote",
+      figure: calculusDrawings1["limits-of-reciprocal-functions#reciprocal-limits-at-the-asymptote"],
       title: t("Limits at the vertical asymptote", "竖直渐近线处的极限"),
       explanation: t(
         "Near $x = h$, $\\frac{k}{(x - h)^{n}}$ is a fixed number divided by a tiny one, so it is huge. Its sign depends on the sign of $k$ and of $(x - h)^{n}$:\n\n- for even $n$, $(x - h)^{n} > 0$ on both sides, so both one-sided limits have the sign of $k$;\n- for odd $n$, $(x - h)^{n}$ is negative on the left and positive on the right, so the sides differ and the two-sided limit does not exist.",
@@ -1002,6 +1009,7 @@ export const limitsOfReciprocalFunctions: TopicDef = {
     },
     {
       id: "reciprocal-limits-at-infinity",
+      figure: calculusDrawings1["limits-of-reciprocal-functions#reciprocal-limits-at-infinity"],
       title: t("Limits at infinity", "无穷远处的极限"),
       explanation: t(
         "When the denominator grows without bound, the fraction shrinks toward zero, so only the constant added to it remains in the limit. As $x \\to \\pm\\infty$, $(x - h)^{n}$ grows without bound, so $\\frac{k}{(x - h)^{n}} \\to 0$ and $\\frac{k}{(x - h)^{n}} + c \\to c$. The line $y = c$ is a horizontal asymptote.",
@@ -1042,6 +1050,7 @@ export const limitsOfExponentialFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "exponential-limits-at-infinity",
+      figure: calculusDrawings1["limits-of-exponential-functions#exponential-limits-at-infinity"],
       title: t("Limits at infinity", "无穷远处的极限"),
       explanation: t(
         "A base greater than one makes powers grow rapidly in one direction and shrink toward zero in the other, which gives the graph its horizontal asymptote. For $b > 1$: $b^{x} \\to \\infty$ as $x \\to \\infty$ and $b^{x} \\to 0$ as $x \\to -\\infty$. For $0 < b < 1$ it is the other way round. So\n\n$$\\lim_{x \\to -\\infty} (3 \\cdot 2^{x} + 5) = 5, \\qquad \\lim_{x \\to \\infty} (-e^{x} + 1) = -\\infty.$$",
@@ -1084,6 +1093,7 @@ export const limitsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "exponential-limits-at-a-point",
+      figure: calculusDrawings1["limits-of-exponential-functions#exponential-limits-at-a-point"],
       title: t("Limits at a point", "一点处的极限"),
       explanation: t(
         "Because there is no hole or jump in an exponential graph, the limit at any point is simply the value of the function there. Exponential functions have no breaks, so their limit at a point is their value: $\\lim_{x \\to 1} (2e^{3x} - 4) = 2e^{3} - 4$.",
@@ -1131,6 +1141,7 @@ export const limitsOfLogarithmicFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "logarithmic-limits-at-the-asymptote-and-infinity",
+      figure: calculusDrawings1["limits-of-logarithmic-functions#logarithmic-limits-at-the-asymptote-and-infinity"],
       title: t("Limits at the asymptote and at infinity", "渐近线处与无穷远处的极限"),
       explanation: t(
         "A logarithm drops without bound as its input approaches zero from the right, and grows without bound, though very slowly, as its input grows. For a base $b > 1$: $\\log_{b} x \\to -\\infty$ as $x \\to 0^{+}$ and $\\log_{b} x \\to \\infty$ as $x \\to \\infty$, slowly. Shifted, $\\ln(x - h) \\to -\\infty$ as $x \\to h^{+}$. A negative multiplier flips the sign: $\\lim_{x \\to 0^{+}} (-2\\ln x) = \\infty$.",
@@ -1313,6 +1324,7 @@ export const limitsOfTrigonometricFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "trigonometric-limits-at-special-angles",
+      figure: calculusDrawings1["limits-of-trigonometric-functions#trigonometric-limits-at-special-angles"],
       title: t("Limits at special angles", "特殊角处的极限"),
       explanation: t(
         "Sine and cosine have no breaks, and tangent has none where $\\cos x \\ne 0$, so their limits are their values:\n\n$$\\lim_{x \\to \\frac{\\pi}{3}} \\cos x = \\frac{1}{2}, \\qquad \\lim_{x \\to \\frac{3\\pi}{4}} \\tan x = -1.$$",
@@ -1340,6 +1352,7 @@ export const limitsOfTrigonometricFunctions: TopicDef = {
     },
     {
       id: "infinite-and-nonexistent-trigonometric-limits",
+      figure: calculusDrawings1["limits-of-trigonometric-functions#infinite-and-nonexistent-trigonometric-limits"],
       title: t("Infinite and nonexistent limits", "无穷极限与不存在的极限"),
       explanation: t(
         "$\\tan x = \\frac{\\sin x}{\\cos x}$ has vertical asymptotes where $\\cos x = 0$. Just left of $\\frac{\\pi}{2}$, $\\tan x \\to \\infty$; just right, $\\tan x \\to -\\infty$; so $\\lim_{x \\to \\pi/2} \\tan x$ does not exist.\n\nAs $x \\to \\pm\\infty$, $\\sin x$ and $\\cos x$ keep oscillating between $-1$ and $1$, so their limits do not exist.",
@@ -1406,6 +1419,7 @@ export const limitsOfReciprocalTrigonometricFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "reciprocal-trigonometric-limits-at-special-angles",
+      figure: calculusDrawings1["limits-of-reciprocal-trigonometric-functions#reciprocal-trigonometric-limits-at-special-angles"],
       title: t("Limits at special angles", "特殊角处的极限"),
       explanation: t(
         "Evaluate the sine or cosine at the special angle first, check that the denominator is not zero, and then take the reciprocal or quotient. Where the denominator is not zero, $\\sec x = \\frac{1}{\\cos x}$, $\\csc x = \\frac{1}{\\sin x}$ and $\\cot x = \\frac{\\cos x}{\\sin x}$ have no breaks, so substitute:\n\n$$\\lim_{x \\to \\frac{\\pi}{6}} \\sec x = \\frac{1}{\\sqrt{3}/2} = \\frac{2\\sqrt{3}}{3}.$$",
@@ -1435,6 +1449,7 @@ export const limitsOfReciprocalTrigonometricFunctions: TopicDef = {
     },
     {
       id: "reciprocal-trigonometric-limits-at-asymptotes",
+      figure: calculusDrawings1["limits-of-reciprocal-trigonometric-functions#reciprocal-trigonometric-limits-at-asymptotes"],
       title: t("Limits at the asymptotes", "渐近线处的极限"),
       explanation: t(
         "Where the denominator is $0$, the function has a vertical asymptote. Find the sign of the function just to each side:\n\n- just right of $0$, $\\sin x > 0$, so $\\csc x \\to \\infty$ and $\\cot x \\to \\infty$;\n- just left of $0$, both tend to $-\\infty$;\n- just left of $\\frac{\\pi}{2}$, $\\cos x > 0$, so $\\sec x \\to \\infty$; just right, $\\sec x \\to -\\infty$.",
@@ -1524,6 +1539,7 @@ export const limitsOfInverseTrigonometricFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "inverse-trigonometric-limits-at-a-point",
+      figure: calculusDrawings1["limits-of-inverse-trigonometric-functions#inverse-trigonometric-limits-at-a-point"],
       title: t("Limits at a point", "一点处的极限"),
       explanation: t(
         "Inside their domains the inverse trigonometric functions are continuous, so the limit is the angle whose sine, cosine or tangent is the given number. Inside their domains, $\\arcsin$, $\\arccos$ and $\\arctan$ have no breaks, so their limits are their values: $\\lim_{x \\to 1/2} \\arccos x = \\frac{\\pi}{3}$ and $\\lim_{x \\to -1} \\arctan x = -\\frac{\\pi}{4}$.",
@@ -1548,6 +1564,7 @@ export const limitsOfInverseTrigonometricFunctions: TopicDef = {
     },
     {
       id: "arctangent-limits-at-infinity",
+      figure: calculusDrawings1["limits-of-inverse-trigonometric-functions#arctangent-limits-at-infinity"],
       title: t("Arctangent at infinity", "无穷远处的反正切"),
       explanation: t(
         "$\\arctan x$ has horizontal asymptotes $y = \\pm\\frac{\\pi}{2}$:\n\n$$\\lim_{x \\to \\infty} \\arctan x = \\frac{\\pi}{2}, \\qquad \\lim_{x \\to -\\infty} \\arctan x = -\\frac{\\pi}{2}.$$\n\nA positive multiple inside, as in $\\arctan 3x$, does not change these; a negative one swaps them.",

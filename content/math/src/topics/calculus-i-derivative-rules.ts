@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { cdot, fracL, lim, oneOf, type Poly, pAt, par, pDer, pLatex, power, range, sumLatex, table } from "./calculus-common.ts";
@@ -137,6 +138,7 @@ export const differentiatingLogarithmicFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-derivative-of-ln-x",
+      figure: calculusDrawings2["differentiating-logarithmic-functions#the-derivative-of-ln-x"],
       title: t("The derivative of ln x", "ln x 的导数"),
       explanation: t(
         "The slope of the natural logarithm at any positive input is the reciprocal of that input, so the graph gets flatter as the input grows. For $x > 0$,\n\n$$\\frac{d}{dx} \\ln x = \\frac{1}{x}.$$\n\nSo $\\frac{d}{dx}\\left(3\\ln x + x^{2}\\right) = \\frac{3}{x} + 2x$.",
@@ -276,6 +278,7 @@ export const differentiatingTrigonometricFunctions: TopicDef = {
     },
     {
       id: "slopes-of-trigonometric-curves",
+      figure: calculusDrawings2["differentiating-trigonometric-functions#slopes-of-trigonometric-curves"],
       title: t("Slopes of trigonometric curves", "三角函数曲线的斜率"),
       explanation: t(
         "The slope of a curve at a point is the value of the derivative there, so find the derivative first and then substitute the exact values at the angle. Differentiate, then substitute the angle. For $y = 3\\sin x - 2\\cos x$ at $x = \\pi$: $y' = 3\\cos x + 2\\sin x$, so the slope is $3(-1) + 2(0) = -3$.",
@@ -1018,6 +1021,7 @@ export const calculatingDerivativesFromGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "derivatives-from-a-piecewise-linear-graph",
+      figure: calculusDrawings2["calculating-derivatives-from-graphs#derivatives-from-a-piecewise-linear-graph"],
       title: t("Derivatives from a piecewise linear graph", "由折线图求导数"),
       explanation: t(
         "On a straight segment of a graph the tangent line is the segment itself, so $f'(a)$ is the slope of the segment containing $a$: rise over run between its endpoints.",
@@ -1045,6 +1049,7 @@ export const calculatingDerivativesFromGraphs: TopicDef = {
     },
     {
       id: "derivatives-of-products-from-a-graph",
+      figure: calculusDrawings2["calculating-derivatives-from-graphs#derivatives-of-products-from-a-graph"],
       title: t("Derivatives of products from a graph", "由图像求乘积的导数"),
       explanation: t(
         "A graph gives the value of a function by its height and the derivative by the slope of the tangent, which is often read from a straight segment. Read $f(a)$ and $f'(a)$ from the graph, then apply the rules. For $h(x) = x^{2}f(x)$:\n\n$$h'(a) = 2af(a) + a^{2}f'(a).$$",

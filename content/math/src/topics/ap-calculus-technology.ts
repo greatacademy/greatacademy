@@ -1,6 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, linear, plane, poly, Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { numberProblem, pointProblem } from "../problems.ts";
 
@@ -139,6 +140,7 @@ export const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
   knowledgePoints: [
     {
       id: "bracketing-a-root-with-sign-changes",
+      figure: calculusDrawings5["finding-roots-of-functions-using-a-graphing-calculator#bracketing-a-root-with-sign-changes"],
       title: t("Bracketing Roots Using Sign Changes", "利用符号变化锁定根所在的区间"),
       explanation: t(
         "The graphing calculator's `zero` (or `root`) command requires a left bound $a$ and a right bound $b$ surrounding a single $x$-intercept. For a continuous function $f$, a sign change ($f(a)$ and $f(b)$ having opposite signs) guarantees by the Intermediate Value Theorem that at least one root lies in $(a, b)$.",
@@ -166,6 +168,7 @@ export const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
     },
     {
       id: "solving-equations-with-a-difference-function",
+      figure: calculusDrawings5["finding-roots-of-functions-using-a-graphing-calculator#solving-equations-with-a-difference-function"],
       title: t("Solving Equations by Finding Zeros of a Difference Function", "通过求差函数的零点解方程"),
       explanation: t(
         "Any equation $g(x) = c$ can be solved with a calculator's root finder by graphing the difference function $Y_1 = g(x) - c$ and locating its $x$-intercept. Zooming in with a table step of $\\Delta\\text{Tbl} = 0.001$ around the sign change of $Y_1(x)$ determines the root to three decimal places.",
@@ -219,6 +222,7 @@ export const findingIntersectionsOfFunctionsUsingAGraphingCalculator: TopicDef =
   knowledgePoints: [
     {
       id: "locating-intersection-coordinates",
+      figure: calculusDrawings5["finding-intersections-of-functions-using-a-graphing-calculator#locating-intersection-coordinates"],
       title: t("Locating Points of Intersection", "定位两函数图像的交点坐标"),
       explanation: t(
         "To solve $f(x) = g(x)$ graphically, graph $Y_1 = f(x)$ and $Y_2 = g(x)$ and use the `intersect` command (or inspect a table where $Y_1(x) = Y_2(x)$). In AP Calculus area and volume problems, always store the intersection coordinates $(x, y)$ in calculator variables to use as limits of integration.",
@@ -296,6 +300,7 @@ export const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-extrema-directly-from-the-graph",
+      figure: calculusDrawings5["finding-extrema-of-functions-using-a-graphing-calculator#finding-extrema-directly-from-the-graph"],
       title: t("Using the Minimum and Maximum Commands", "使用计算器的最小值与最大值功能"),
       explanation: t(
         "The graphing calculator's `minimum` and `maximum` commands report the coordinates $(x, y)$ of a local extremum within a user-specified interval $[a, b]$. Always distinguish between the location of the extremum (the $x$-coordinate) and the extreme value itself (the $y$-coordinate), and compare interior extrema with endpoint values when finding an absolute extremum on $[a, b]$.",
@@ -327,6 +332,7 @@ export const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
     },
     {
       id: "finding-extrema-via-zeros-of-the-derivative",
+      figure: calculusDrawings5["finding-extrema-of-functions-using-a-graphing-calculator#finding-extrema-via-zeros-of-the-derivative"],
       title: t("Finding Extrema by Graphing the Derivative", "通过绘制导函数图像求极值"),
       explanation: t(
         "On AP Calculus calculator-active problems, you are often given the derivative $f'(x)$ directly rather than $f(x)$. To find where $f$ has a local maximum or minimum, graph $Y_1 = f'(x)$ and use the `zero` command to find where $f'(x)$ changes sign (positive to negative for a local maximum; negative to positive for a local minimum; no sign change means neither).",
@@ -375,6 +381,7 @@ export const findingDerivativesUsingAGraphingCalculator: TopicDef = {
   knowledgePoints: [
     {
       id: "numerical-derivative-command-and-symmetric-difference",
+      figure: calculusDrawings5["finding-derivatives-using-a-graphing-calculator#numerical-derivative-command-and-symmetric-difference"],
       title: t("The Numerical Derivative Command (nDeriv)", "数值求导命令（nDeriv）与对称差商"),
       explanation: t(
         "Graphing calculators compute numerical derivatives (`nDeriv`) using the symmetric difference quotient $\\frac{f(a + h) - f(a - h)}{2h}$ with step size $h$. While this is exact for quadratic functions, for a cubic $f(x) = kx^3$ it gives $\\frac{k(a+h)^3 - k(a-h)^3}{2h} = 3ka^2 + kh^2$, which differs from the exact derivative $3ka^2$ by $kh^2$.",
@@ -447,6 +454,7 @@ export const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
   knowledgePoints: [
     {
       id: "numerical-integration-and-accumulation",
+      figure: calculusDrawings5["finding-definite-integrals-using-a-graphing-calculator#numerical-integration-and-accumulation"],
       title: t("Computing Definite Integrals and Net Change with fnInt", "用数值积分（fnInt）计算定积分与净变化量"),
       explanation: t(
         "The calculator's numerical integration command (`fnInt`) approximates $\\int_a^b f'(x)\\,dx$ even when $f'(x)$ has no elementary antiderivative (such as $f'(x) = \\sin(x^2)$). Combined with the Fundamental Theorem of Calculus, $f(b) = f(a) + \\int_a^b f'(x)\\,dx$, this determines $f(b)$ from an initial value and a calculator integral.",
@@ -477,6 +485,10 @@ export const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
     },
     {
       id: "total-distance-and-absolute-value-integrals-on-calculators",
+      figure:
+        calculusDrawings5[
+          "finding-definite-integrals-using-a-graphing-calculator#total-distance-and-absolute-value-integrals-on-calculators"
+        ],
       title: t("Integrating Absolute Value for Total Area and Distance", "对绝对值函数数值积分求总面积与总路程"),
       explanation: t(
         "On a graphing calculator, entering $\\int_a^b |v(t)|\\,dt$ using `abs(` computes total distance traveled without splitting the integral at zeros of $v(t)$. Comparing the signed displacement integral $\\int_a^b v(t)\\,dt$ with the total distance integral $\\int_a^b |v(t)|\\,dt$ reveals how far the particle moved in each direction.",
@@ -535,6 +547,10 @@ export const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
   knowledgePoints: [
     {
       id: "approximating-infinite-interval-integrals-with-large-bounds",
+      figure:
+        calculusDrawings5[
+          "finding-improper-integrals-using-a-graphing-calculator#approximating-infinite-interval-integrals-with-large-bounds"
+        ],
       title: t("Estimating Improper Integrals Over Infinite Intervals", "用大上限估计无穷区间上的反常积分"),
       explanation: t(
         "Standard graphing calculators require finite limits of integration in `fnInt`. To investigate $\\int_a^{\\infty} f(x)\\,dx$ numerically, evaluate $I(B) = \\int_a^B f(x)\\,dx$ for successively larger values of $B$ (such as $B = 10, 100, 1000$). The truncation error committed by stopping at $x = B$ is the tail integral $\\int_B^{\\infty} f(x)\\,dx$.",
@@ -574,6 +590,10 @@ export const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
     },
     {
       id: "improper-integrals-near-vertical-asymptotes-with-technology",
+      figure:
+        calculusDrawings5[
+          "finding-improper-integrals-using-a-graphing-calculator#improper-integrals-near-vertical-asymptotes-with-technology"
+        ],
       title: t("Investigating Vertical Asymptotes Numerically", "用数值方法研究垂直渐近线处的反常积分"),
       explanation: t(
         "For an improper integral $\\int_a^b f(x)\\,dx$ with a vertical asymptote at $x = a$, replace the lower bound with $a + \\varepsilon$ for a small positive number $\\varepsilon$ (such as $0.01$ or $0.0001$) and evaluate $J(\\varepsilon) = \\int_{a+\\varepsilon}^b f(x)\\,dx$ on the calculator.",
@@ -680,6 +700,7 @@ export const exploringFunctionsUsingTechnology: TopicDef = {
     },
     {
       id: "simultaneous-monotonicity-and-concavity-conditions",
+      figure: calculusDrawings5["exploring-functions-using-technology#simultaneous-monotonicity-and-concavity-conditions"],
       title: t("Finding Intervals Where Two Calculus Conditions Hold", "确定同时满足两个微积分性质的区间"),
       explanation: t(
         "By graphing $Y_1 = f'(x)$ and $Y_2 = f''(x)$ in the same viewing window, you can quickly identify intervals where both functions have prescribed signs—for example, where $f$ is both increasing ($f'(x) > 0$) and concave down ($f''(x) < 0$), or where a particle's speed is increasing ($v(t)$ and $a(t)$ have the same sign).",

@@ -5,6 +5,8 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, paren, poly, Q } from "@ga/subject-math";
+import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, steps } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
@@ -229,34 +231,37 @@ const areaLeftOfYAxis = point(
   },
 );
 
-const netAndTotal = point(
-  "total-area-from-the-net-integral",
-  ["Total area from the net integral", "由净积分求总面积"],
-  [
-    "When a curve crosses the axis, the integral over the whole interval is the net of the lobes, not the total area. If the lobes have areas $A$ above and $B$ below, the integral is $A - B$ and the total area is $A + B$.",
-    "当曲线穿过坐标轴时，整个区间上的积分是各部分的净值，而不是总面积。如果上方部分面积为 $A$，下方部分面积为 $B$，则积分是 $A - B$，总面积是 $A + B$。",
-  ],
-  (rng) => {
-    const p = rng.int(-9, -1);
-    const m = p + rng.int(1, 5);
-    const q = m + rng.int(1, 5);
-    const A = rng.int(2, 24);
-    const B = rng.int(1, 24);
-    const I = A - B;
-    return ask(
-      [
-        `$f > 0$ on $(${p}, ${m})$ and $f < 0$ on $(${m}, ${q})$, with $\\int_{${p}}^{${m}} f(x) \\, dx = ${A}$ and $\\int_{${p}}^{${q}} f(x) \\, dx = ${I}$. Find the total area between the graph of $f$ and the $x$-axis on $[${p}, ${q}]$.`,
-        `$f$ 在 $(${p}, ${m})$ 上为正，在 $(${m}, ${q})$ 上为负，且 $\\int_{${p}}^{${m}} f(x) \\, dx = ${A}$，$\\int_{${p}}^{${q}} f(x) \\, dx = ${I}$。求 $[${p}, ${q}]$ 上 $f$ 的图像与 $x$ 轴之间的总面积。`,
-      ],
-      A + B,
-      [Math.abs(I), A, B],
-      [
-        `$\\int_{${m}}^{${q}} f = ${I} - ${A} = ${-B}$, so the lower lobe has area $${B}$. The total is $${A} + ${B} = ${A + B}$.`,
-        `$\\int_{${m}}^{${q}} f = ${I} - ${A} = ${-B}$，所以下方部分面积是 $${B}$。总面积是 $${A} + ${B} = ${A + B}$。`,
-      ],
-    );
-  },
-);
+const netAndTotal = {
+  ...point(
+    "total-area-from-the-net-integral",
+    ["Total area from the net integral", "由净积分求总面积"],
+    [
+      "When a curve crosses the axis, the integral over the whole interval is the net of the lobes, not the total area. If the lobes have areas $A$ above and $B$ below, the integral is $A - B$ and the total area is $A + B$.",
+      "当曲线穿过坐标轴时，整个区间上的积分是各部分的净值，而不是总面积。如果上方部分面积为 $A$，下方部分面积为 $B$，则积分是 $A - B$，总面积是 $A + B$。",
+    ],
+    (rng) => {
+      const p = rng.int(-9, -1);
+      const m = p + rng.int(1, 5);
+      const q = m + rng.int(1, 5);
+      const A = rng.int(2, 24);
+      const B = rng.int(1, 24);
+      const I = A - B;
+      return ask(
+        [
+          `$f > 0$ on $(${p}, ${m})$ and $f < 0$ on $(${m}, ${q})$, with $\\int_{${p}}^{${m}} f(x) \\, dx = ${A}$ and $\\int_{${p}}^{${q}} f(x) \\, dx = ${I}$. Find the total area between the graph of $f$ and the $x$-axis on $[${p}, ${q}]$.`,
+          `$f$ 在 $(${p}, ${m})$ 上为正，在 $(${m}, ${q})$ 上为负，且 $\\int_{${p}}^{${m}} f(x) \\, dx = ${A}$，$\\int_{${p}}^{${q}} f(x) \\, dx = ${I}$。求 $[${p}, ${q}]$ 上 $f$ 的图像与 $x$ 轴之间的总面积。`,
+        ],
+        A + B,
+        [Math.abs(I), A, B],
+        [
+          `$\\int_{${m}}^{${q}} f = ${I} - ${A} = ${-B}$, so the lower lobe has area $${B}$. The total is $${A} + ${B} = ${A + B}$.`,
+          `$\\int_{${m}}^{${q}} f = ${I} - ${A} = ${-B}$，所以下方部分面积是 $${B}$。总面积是 $${A} + ${B} = ${A + B}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings4["finding-areas-between-curves-that-intersect-at-more-than-two-points#total-area-from-the-net-integral"],
+};
 
 const heightFromVolume = point(
   "a-constant-height-from-the-volume",
@@ -286,94 +291,104 @@ const heightFromVolume = point(
   },
 );
 
-const overCircularBase = point(
-  "cross-sections-over-a-circular-base",
-  ["Cross sections over a circular base", "圆形底面上的截面"],
-  [
-    "Over a disc of radius $r$, the chord at $x$ has length $2\\sqrt{r^{2} - x^{2}}$. The radius of the cross section is half the chord when the chord is a diameter. Semicircles on chords build a hemisphere and circles on chords build a sphere, which checks the integral.",
-    "在半径为 $r$ 的圆盘上，$x$ 处的弦长是 $2\\sqrt{r^{2} - x^{2}}$。弦作为直径时，截面半径是弦长的一半。以弦为直径的半圆构成半球，以弦为直径的圆构成球，这可以检验积分的结果。",
-  ],
-  (rng) => {
-    const r = rng.int(1, 18);
-    const semi = rng.bool();
-    const answer = semi ? Q.of(2 * r ** 3, 3) : Q.of(4 * r ** 3, 3);
-    const shape: Pair = semi ? ["semicircles", "半圆"] : ["circles", "圆"];
-    const [en, zh] = kpi(
-      `The base of a solid is the disc $x^{2} + y^{2} \\le ${r * r}$. Cross sections perpendicular to the $x$-axis are ${shape[0]} whose diameters are chords of the disc. Find the volume.`,
-      `一个立体的底面是圆盘 $x^{2} + y^{2} \\le ${r * r}$。垂直于 $x$ 轴的截面是以圆盘的弦为直径的${shape[1]}。求体积。`,
-    );
-    return ask(
-      [en, zh],
-      answer,
-      [answer.mul(Q.of(4)), answer.div(Q.of(2)), answer.mul(Q.of(2))],
-      [
-        `The radius of a section is $\\sqrt{${r * r} - x^{2}}$, so its area is $${semi ? "\\frac{\\pi}{2}" : "\\pi"}(${r * r} - x^{2})$. Integrating from $${-r}$ to $${r}$ gives $${answer.toLatex()}\\pi$, which is the volume of a ${semi ? "hemisphere" : "sphere"} of radius $${r}$.`,
-        `截面半径是 $\\sqrt{${r * r} - x^{2}}$，所以面积是 $${semi ? "\\frac{\\pi}{2}" : "\\pi"}(${r * r} - x^{2})$。从 $${-r}$ 到 $${r}$ 积分得 $${answer.toLatex()}\\pi$，这正是半径为 $${r}$ 的${semi ? "半球" : "球"}的体积。`,
-      ],
-    );
-  },
-);
+const overCircularBase = {
+  ...point(
+    "cross-sections-over-a-circular-base",
+    ["Cross sections over a circular base", "圆形底面上的截面"],
+    [
+      "Over a disc of radius $r$, the chord at $x$ has length $2\\sqrt{r^{2} - x^{2}}$. The radius of the cross section is half the chord when the chord is a diameter. Semicircles on chords build a hemisphere and circles on chords build a sphere, which checks the integral.",
+      "在半径为 $r$ 的圆盘上，$x$ 处的弦长是 $2\\sqrt{r^{2} - x^{2}}$。弦作为直径时，截面半径是弦长的一半。以弦为直径的半圆构成半球，以弦为直径的圆构成球，这可以检验积分的结果。",
+    ],
+    (rng) => {
+      const r = rng.int(1, 18);
+      const semi = rng.bool();
+      const answer = semi ? Q.of(2 * r ** 3, 3) : Q.of(4 * r ** 3, 3);
+      const shape: Pair = semi ? ["semicircles", "半圆"] : ["circles", "圆"];
+      const [en, zh] = kpi(
+        `The base of a solid is the disc $x^{2} + y^{2} \\le ${r * r}$. Cross sections perpendicular to the $x$-axis are ${shape[0]} whose diameters are chords of the disc. Find the volume.`,
+        `一个立体的底面是圆盘 $x^{2} + y^{2} \\le ${r * r}$。垂直于 $x$ 轴的截面是以圆盘的弦为直径的${shape[1]}。求体积。`,
+      );
+      return ask(
+        [en, zh],
+        answer,
+        [answer.mul(Q.of(4)), answer.div(Q.of(2)), answer.mul(Q.of(2))],
+        [
+          `The radius of a section is $\\sqrt{${r * r} - x^{2}}$, so its area is $${semi ? "\\frac{\\pi}{2}" : "\\pi"}(${r * r} - x^{2})$. Integrating from $${-r}$ to $${r}$ gives $${answer.toLatex()}\\pi$, which is the volume of a ${semi ? "hemisphere" : "sphere"} of radius $${r}$.`,
+          `截面半径是 $\\sqrt{${r * r} - x^{2}}$，所以面积是 $${semi ? "\\frac{\\pi}{2}" : "\\pi"}(${r * r} - x^{2})$。从 $${-r}$ 到 $${r}$ 积分得 $${answer.toLatex()}\\pi$，这正是半径为 $${r}$ 的${semi ? "半球" : "球"}的体积。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings4["volumes-of-solids-with-circular-cross-sections#cross-sections-over-a-circular-base"],
+};
 
-const washerAxisOutside = point(
-  "an-axis-outside-the-region-needs-washers",
-  ["An axis outside the region needs washers", "轴在区域外时要用垫圈"],
-  [
-    "If the axis of rotation does not touch the region, each slice has a hole, so use $\\pi(R^{2} - r^{2})$ with both radii measured from the axis. Note that this is not $\\pi(R - r)^{2}$, and that shifting the axis away makes the volume larger.",
-    "如果旋转轴不接触区域，每一片都有一个孔，所以用 $\\pi(R^{2} - r^{2})$，两个半径都从轴量起。注意这不是 $\\pi(R - r)^{2}$，而且把轴移远会使体积变大。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 5);
-    const c = rng.int(1, 6);
-    const answer = Q.of(8 * a ** 5, 5).add(Q.of(8 * a ** 3 * c, 3));
-    const [en, zh] = kpi(
-      `The region bounded by $y = x^{2}$ and $y = ${a * a}$ is rotated about the line $y = ${-c}$. Find the volume.`,
-      `由 $y = x^{2}$ 和 $y = ${a * a}$ 围成的区域绕直线 $y = ${-c}$ 旋转。求体积。`,
-    );
-    return ask(
-      [en, zh],
-      answer,
-      [Q.of(16 * a ** 5, 15), Q.of(8 * a ** 5, 5), Q.of(8 * a ** 5, 5).add(Q.of(4 * a ** 3 * c, 3))],
-      [
-        `The outer radius is $${a * a + c}$ and the inner radius is $x^{2} + ${c}$. So $V = \\pi\\int_{${-a}}^{${a}} \\left(${(a * a + c) ** 2} - (x^{2} + ${c})^{2}\\right) dx = ${answer.toLatex()}\\pi$.`,
-        `外半径是 $${a * a + c}$，内半径是 $x^{2} + ${c}$。所以 $V = \\pi\\int_{${-a}}^{${a}} \\left(${(a * a + c) ** 2} - (x^{2} + ${c})^{2}\\right) dx = ${answer.toLatex()}\\pi$。`,
-      ],
-    );
-  },
-);
+const washerAxisOutside = {
+  ...point(
+    "an-axis-outside-the-region-needs-washers",
+    ["An axis outside the region needs washers", "轴在区域外时要用垫圈"],
+    [
+      "If the axis of rotation does not touch the region, each slice has a hole, so use $\\pi(R^{2} - r^{2})$ with both radii measured from the axis. Note that this is not $\\pi(R - r)^{2}$, and that shifting the axis away makes the volume larger.",
+      "如果旋转轴不接触区域，每一片都有一个孔，所以用 $\\pi(R^{2} - r^{2})$，两个半径都从轴量起。注意这不是 $\\pi(R - r)^{2}$，而且把轴移远会使体积变大。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 5);
+      const c = rng.int(1, 6);
+      const answer = Q.of(8 * a ** 5, 5).add(Q.of(8 * a ** 3 * c, 3));
+      const [en, zh] = kpi(
+        `The region bounded by $y = x^{2}$ and $y = ${a * a}$ is rotated about the line $y = ${-c}$. Find the volume.`,
+        `由 $y = x^{2}$ 和 $y = ${a * a}$ 围成的区域绕直线 $y = ${-c}$ 旋转。求体积。`,
+      );
+      return ask(
+        [en, zh],
+        answer,
+        [Q.of(16 * a ** 5, 15), Q.of(8 * a ** 5, 5), Q.of(8 * a ** 5, 5).add(Q.of(4 * a ** 3 * c, 3))],
+        [
+          `The outer radius is $${a * a + c}$ and the inner radius is $x^{2} + ${c}$. So $V = \\pi\\int_{${-a}}^{${a}} \\left(${(a * a + c) ** 2} - (x^{2} + ${c})^{2}\\right) dx = ${answer.toLatex()}\\pi$.`,
+          `外半径是 $${a * a + c}$，内半径是 $x^{2} + ${c}$。所以 $V = \\pi\\int_{${-a}}^{${a}} \\left(${(a * a + c) ** 2} - (x^{2} + ${c})^{2}\\right) dx = ${answer.toLatex()}\\pi$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    calculusDrawings4["volumes-of-revolution-using-the-disc-method-rotation-about-other-axes#an-axis-outside-the-region-needs-washers"],
+};
 
-const shellShiftedAxis = point(
-  "shells-about-a-line-below-the-axis",
-  ["Shells about a line below the axis", "绕轴下方直线的柱壳"],
-  [
-    "The shell radius is the distance from the axis of rotation to the strip. For rotation about $y = -c$, a strip at height $y$ has radius $y + c$, not $y$. The height of the shell is the length of the strip, which does not change.",
-    "柱壳半径是旋转轴到条带的距离。绕 $y = -c$ 旋转时，高度为 $y$ 的条带半径是 $y + c$，而不是 $y$。柱壳的高是条带的长度，不会改变。",
-  ],
-  (rng) => {
-    const b = rng.int(1, 4);
-    const c = rng.int(1, 5);
-    const m = rng.int(1, 4);
-    const inner = (shift: number) =>
-      Q.of(b ** 4, 4)
-        .add(Q.of(shift * b ** 3, 3))
-        .add(Q.of(m * b * b, 2))
-        .add(Q.of(m * shift * b));
-    const answer = inner(c).mul(Q.of(2));
-    const g = poly([1, "y^{2}"], [m, ""]);
-    const [en, zh] = kpi(
-      `The region bounded by $x = ${g}$, the $y$-axis, $y = 0$ and $y = ${b}$ is rotated about the line $y = ${-c}$. Find the volume using shells.`,
-      `由 $x = ${g}$、$y$ 轴、$y = 0$ 和 $y = ${b}$ 围成的区域绕直线 $y = ${-c}$ 旋转。用柱壳法求体积。`,
-    );
-    return ask(
-      [en, zh],
-      answer,
-      [inner(0).mul(Q.of(2)), inner(c), inner(-c).mul(Q.of(2))],
-      [
-        `A shell at height $y$ has radius $y + ${c}$ and length $${g}$. Multiply out and integrate:${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
-        `高度 $y$ 处的柱壳半径是 $y + ${c}$，长度是 $${g}$。展开后积分：${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
-      ],
-    );
-  },
-);
+const shellShiftedAxis = {
+  ...point(
+    "shells-about-a-line-below-the-axis",
+    ["Shells about a line below the axis", "绕轴下方直线的柱壳"],
+    [
+      "The shell radius is the distance from the axis of rotation to the strip. For rotation about $y = -c$, a strip at height $y$ has radius $y + c$, not $y$. The height of the shell is the length of the strip, which does not change.",
+      "柱壳半径是旋转轴到条带的距离。绕 $y = -c$ 旋转时，高度为 $y$ 的条带半径是 $y + c$，而不是 $y$。柱壳的高是条带的长度，不会改变。",
+    ],
+    (rng) => {
+      const b = rng.int(1, 4);
+      const c = rng.int(1, 5);
+      const m = rng.int(1, 4);
+      const inner = (shift: number) =>
+        Q.of(b ** 4, 4)
+          .add(Q.of(shift * b ** 3, 3))
+          .add(Q.of(m * b * b, 2))
+          .add(Q.of(m * shift * b));
+      const answer = inner(c).mul(Q.of(2));
+      const g = poly([1, "y^{2}"], [m, ""]);
+      const [en, zh] = kpi(
+        `The region bounded by $x = ${g}$, the $y$-axis, $y = 0$ and $y = ${b}$ is rotated about the line $y = ${-c}$. Find the volume using shells.`,
+        `由 $x = ${g}$、$y$ 轴、$y = 0$ 和 $y = ${b}$ 围成的区域绕直线 $y = ${-c}$ 旋转。用柱壳法求体积。`,
+      );
+      return ask(
+        [en, zh],
+        answer,
+        [inner(0).mul(Q.of(2)), inner(c), inner(-c).mul(Q.of(2))],
+        [
+          `A shell at height $y$ has radius $y + ${c}$ and length $${g}$. Multiply out and integrate:${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
+          `高度 $y$ 处的柱壳半径是 $y + ${c}$，长度是 $${g}$。展开后积分：${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings4["the-shell-method-rotating-a-region-about-the-x-axis#shells-about-a-line-below-the-axis"],
+};
 
 const shellAxisAbove = point(
   "shells-between-curves-about-a-line-above",
@@ -404,61 +419,67 @@ const shellAxisAbove = point(
   },
 );
 
-const coneLength = point(
-  "the-length-of-a-segment-from-its-surface-area",
-  ["The length of a segment from its surface area", "由表面积求线段的范围"],
-  [
-    "Rotating $y = \\frac{p}{q}x$ about the $x$-axis gives a cone, so $S = 2\\pi\\int y\\sqrt{1 + y'^{2}} \\, dx$ can be checked against $\\pi r \\ell$. For the reverse question, write $S$ in terms of the upper limit and solve for it.",
-    "把 $y = \\frac{p}{q}x$ 绕 $x$ 轴旋转得到圆锥，所以 $S = 2\\pi\\int y\\sqrt{1 + y'^{2}} \\, dx$ 可以用 $\\pi r \\ell$ 检验。对于逆问题，把 $S$ 用上限表示，再解出上限。",
-  ],
-  (rng) => {
-    const [p, q, h] = rng.pick(triples);
-    const s = rng.int(1, 9);
-    const area = p * h * s * s;
-    const slope = Q.of(p, q).toLatex();
-    return ask(
-      [
-        `The curve $y = ${slope}x$, $0 \\le x \\le b$, is rotated about the $x$-axis, and the surface has area $${area}\\pi$. Find $b$.`,
-        `曲线 $y = ${slope}x$，$0 \\le x \\le b$，绕 $x$ 轴旋转，所得曲面的面积是 $${area}\\pi$。求 $b$。`,
-      ],
-      q * s,
-      [s, h * s, p * s],
-      [
-        `$\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$, so $S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = \\frac{${p * h}\\pi b^{2}}{${q * q}}$. Setting this to $${area}\\pi$ gives $b^{2} = ${(q * s) ** 2}$, so $b = ${q * s}$.`,
-        `$\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$，所以 $S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = \\frac{${p * h}\\pi b^{2}}{${q * q}}$。令它等于 $${area}\\pi$，得 $b^{2} = ${(q * s) ** 2}$，所以 $b = ${q * s}$。`,
-      ],
-    );
-  },
-);
+const coneLength = {
+  ...point(
+    "the-length-of-a-segment-from-its-surface-area",
+    ["The length of a segment from its surface area", "由表面积求线段的范围"],
+    [
+      "Rotating $y = \\frac{p}{q}x$ about the $x$-axis gives a cone, so $S = 2\\pi\\int y\\sqrt{1 + y'^{2}} \\, dx$ can be checked against $\\pi r \\ell$. For the reverse question, write $S$ in terms of the upper limit and solve for it.",
+      "把 $y = \\frac{p}{q}x$ 绕 $x$ 轴旋转得到圆锥，所以 $S = 2\\pi\\int y\\sqrt{1 + y'^{2}} \\, dx$ 可以用 $\\pi r \\ell$ 检验。对于逆问题，把 $S$ 用上限表示，再解出上限。",
+    ],
+    (rng) => {
+      const [p, q, h] = rng.pick(triples);
+      const s = rng.int(1, 9);
+      const area = p * h * s * s;
+      const slope = Q.of(p, q).toLatex();
+      return ask(
+        [
+          `The curve $y = ${slope}x$, $0 \\le x \\le b$, is rotated about the $x$-axis, and the surface has area $${area}\\pi$. Find $b$.`,
+          `曲线 $y = ${slope}x$，$0 \\le x \\le b$，绕 $x$ 轴旋转，所得曲面的面积是 $${area}\\pi$。求 $b$。`,
+        ],
+        q * s,
+        [s, h * s, p * s],
+        [
+          `$\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$, so $S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = \\frac{${p * h}\\pi b^{2}}{${q * q}}$. Setting this to $${area}\\pi$ gives $b^{2} = ${(q * s) ** 2}$, so $b = ${q * s}$.`,
+          `$\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$，所以 $S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = \\frac{${p * h}\\pi b^{2}}{${q * q}}$。令它等于 $${area}\\pi$，得 $b^{2} = ${(q * s) ** 2}$，所以 $b = ${q * s}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-x-axis#the-length-of-a-segment-from-its-surface-area"],
+};
 
-const bothAxes = point(
-  "the-same-curve-about-the-other-axis",
-  ["The same curve about the other axis", "同一曲线绕另一轴旋转"],
-  [
-    "The arc length element is the same for both rotations; only the radius changes. Around the $x$-axis the radius is $y$, and around the $y$-axis it is $x$. So the same segment gives a different surface area, and it is the wrong radius that causes most errors.",
-    "两种旋转的弧长元素相同，只有半径不同。绕 $x$ 轴时半径是 $y$，绕 $y$ 轴时半径是 $x$。所以同一线段得到不同的表面积，大多数错误都出在半径用错。",
-  ],
-  (rng) => {
-    const [p, q, h] = rng.pick(triples);
-    const s = rng.int(1, 9);
-    const xArea = p * h * s * s;
-    const answer = q * h * s * s;
-    const slope = Q.of(p, q).toLatex();
-    const [en, zh] = kpi(
-      `Rotating $y = ${slope}x$, $0 \\le x \\le ${q * s}$, about the $x$-axis gives a surface of area $${xArea}\\pi$. Find the area when the same segment is rotated about the $y$-axis.`,
-      `把 $y = ${slope}x$，$0 \\le x \\le ${q * s}$，绕 $x$ 轴旋转，得到面积为 $${xArea}\\pi$ 的曲面。求同一线段绕 $y$ 轴旋转所得的面积。`,
-    );
-    return ask(
-      [en, zh],
-      answer,
-      [xArea, h * h * s * s, p * q * s * s],
-      [
-        `The segment has length $${h * s}$. Around the $y$-axis the cone has base radius $${q * s}$, so the area is $\\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$.`,
-        `线段长 $${h * s}$。绕 $y$ 轴旋转时，圆锥底面半径是 $${q * s}$，所以面积是 $\\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$。`,
-      ],
-    );
-  },
-);
+const bothAxes = {
+  ...point(
+    "the-same-curve-about-the-other-axis",
+    ["The same curve about the other axis", "同一曲线绕另一轴旋转"],
+    [
+      "The arc length element is the same for both rotations; only the radius changes. Around the $x$-axis the radius is $y$, and around the $y$-axis it is $x$. So the same segment gives a different surface area, and it is the wrong radius that causes most errors.",
+      "两种旋转的弧长元素相同，只有半径不同。绕 $x$ 轴时半径是 $y$，绕 $y$ 轴时半径是 $x$。所以同一线段得到不同的表面积，大多数错误都出在半径用错。",
+    ],
+    (rng) => {
+      const [p, q, h] = rng.pick(triples);
+      const s = rng.int(1, 9);
+      const xArea = p * h * s * s;
+      const answer = q * h * s * s;
+      const slope = Q.of(p, q).toLatex();
+      const [en, zh] = kpi(
+        `Rotating $y = ${slope}x$, $0 \\le x \\le ${q * s}$, about the $x$-axis gives a surface of area $${xArea}\\pi$. Find the area when the same segment is rotated about the $y$-axis.`,
+        `把 $y = ${slope}x$，$0 \\le x \\le ${q * s}$，绕 $x$ 轴旋转，得到面积为 $${xArea}\\pi$ 的曲面。求同一线段绕 $y$ 轴旋转所得的面积。`,
+      );
+      return ask(
+        [en, zh],
+        answer,
+        [xArea, h * h * s * s, p * q * s * s],
+        [
+          `The segment has length $${h * s}$. Around the $y$-axis the cone has base radius $${q * s}$, so the area is $\\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$.`,
+          `线段长 $${h * s}$。绕 $y$ 轴旋转时，圆锥底面半径是 $${q * s}$，所以面积是 $\\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-y-axis#the-same-curve-about-the-other-axis"],
+};
 
 const totalDistance = point(
   "distance-travelled-when-the-particle-turns-back",
@@ -577,45 +598,48 @@ const netDisplacementVector = point(
   },
 );
 
-const speedFromDot = point(
-  "speed-changes-from-the-dot-product",
-  ["Speed changes from the dot product", "由点积判断速率变化"],
-  [
-    "The rate of change of speed has the sign of $\\mathbf{v} \\cdot \\mathbf{a}$. A positive dot product means speeding up, a negative one means slowing down, and at zero the acceleration is perpendicular to the velocity, so it only turns the particle at that moment.",
-    "速率变化率的符号与 $\\mathbf{v} \\cdot \\mathbf{a}$ 相同。点积为正表示加速，为负表示减速；点积为零时，加速度与速度垂直，此刻只使质点转向。",
-  ],
-  (rng) => {
-    const A = nz(rng, 4);
-    const B = nz(rng, 6);
-    const C = nz(rng, 4);
-    const D = nz(rng, 6);
-    const T = rng.int(1, 4);
-    const vx = 2 * A * T + B;
-    const vy = 2 * C * T + D;
-    const ax = 2 * A;
-    const ay = 2 * C;
-    const dot = vx * ax + vy * ay;
-    const r = `\\left\\langle ${poly([A, "t^{2}"], [B, "t"])}, ${poly([C, "t^{2}"], [D, "t"])} \\right\\rangle`;
-    const up: Pair = [`It is speeding up`, `它在加速`];
-    const down: Pair = [`It is slowing down`, `它在减速`];
-    const still: Pair = [`Its speed is momentarily not changing`, `它的速率此刻没有变化`];
-    const allOf = [up, down, still];
-    const correct = dot > 0 ? up : dot < 0 ? down : still;
-    return choose(
-      rng,
-      [
-        `A particle has position $\\mathbf{r}(t) = ${r}$. What is happening to its speed at $t = ${T}$?`,
-        `质点的位置是 $\\mathbf{r}(t) = ${r}$。在 $t = ${T}$ 时它的速率如何变化？`,
-      ],
-      correct,
-      allOf.filter((o) => o !== correct),
-      [
-        `$\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle$ and $\\mathbf{a} = \\left\\langle ${ax}, ${ay} \\right\\rangle$, so $\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$. ${dot > 0 ? "This is positive, so the speed is increasing." : dot < 0 ? "This is negative, so the speed is decreasing." : "This is zero, so the acceleration is perpendicular to the velocity and the speed is not changing at this moment."}`,
-        `$\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle$，$\\mathbf{a} = \\left\\langle ${ax}, ${ay} \\right\\rangle$，所以 $\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$。${dot > 0 ? "它是正的，所以速率在增大。" : dot < 0 ? "它是负的，所以速率在减小。" : "它是零，所以加速度与速度垂直，此刻速率没有变化。"}`,
-      ],
-    );
-  },
-);
+const speedFromDot = {
+  ...point(
+    "speed-changes-from-the-dot-product",
+    ["Speed changes from the dot product", "由点积判断速率变化"],
+    [
+      "The rate of change of speed has the sign of $\\mathbf{v} \\cdot \\mathbf{a}$. A positive dot product means speeding up, a negative one means slowing down, and at zero the acceleration is perpendicular to the velocity, so it only turns the particle at that moment.",
+      "速率变化率的符号与 $\\mathbf{v} \\cdot \\mathbf{a}$ 相同。点积为正表示加速，为负表示减速；点积为零时，加速度与速度垂直，此刻只使质点转向。",
+    ],
+    (rng) => {
+      const A = nz(rng, 4);
+      const B = nz(rng, 6);
+      const C = nz(rng, 4);
+      const D = nz(rng, 6);
+      const T = rng.int(1, 4);
+      const vx = 2 * A * T + B;
+      const vy = 2 * C * T + D;
+      const ax = 2 * A;
+      const ay = 2 * C;
+      const dot = vx * ax + vy * ay;
+      const r = `\\left\\langle ${poly([A, "t^{2}"], [B, "t"])}, ${poly([C, "t^{2}"], [D, "t"])} \\right\\rangle`;
+      const up: Pair = [`It is speeding up`, `它在加速`];
+      const down: Pair = [`It is slowing down`, `它在减速`];
+      const still: Pair = [`Its speed is momentarily not changing`, `它的速率此刻没有变化`];
+      const allOf = [up, down, still];
+      const correct = dot > 0 ? up : dot < 0 ? down : still;
+      return choose(
+        rng,
+        [
+          `A particle has position $\\mathbf{r}(t) = ${r}$. What is happening to its speed at $t = ${T}$?`,
+          `质点的位置是 $\\mathbf{r}(t) = ${r}$。在 $t = ${T}$ 时它的速率如何变化？`,
+        ],
+        correct,
+        allOf.filter((o) => o !== correct),
+        [
+          `$\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle$ and $\\mathbf{a} = \\left\\langle ${ax}, ${ay} \\right\\rangle$, so $\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$. ${dot > 0 ? "This is positive, so the speed is increasing." : dot < 0 ? "This is negative, so the speed is decreasing." : "This is zero, so the acceleration is perpendicular to the velocity and the speed is not changing at this moment."}`,
+          `$\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle$，$\\mathbf{a} = \\left\\langle ${ax}, ${ay} \\right\\rangle$，所以 $\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$。${dot > 0 ? "它是正的，所以速率在增大。" : dot < 0 ? "它是负的，所以速率在减小。" : "它是零，所以加速度与速度垂直，此刻速率没有变化。"}`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["calculating-acceleration-for-plane-motion-using-differentiation#speed-changes-from-the-dot-product"],
+};
 
 const slopeFromValues = point(
   "the-slope-from-values-of-r-and-its-derivative",
@@ -691,60 +715,69 @@ const zeroDerivativeTurns = [
   { at: "\\frac{3\\pi}{4}", kind: "slanted" },
 ] as const;
 
-const zeroRadialDerivative = point(
-  "dr-zero-does-not-mean-a-horizontal-tangent",
-  ["A zero of dr does not mean a horizontal tangent", "dr 为零并不意味着水平切线"],
-  [
-    "Where $r' = 0$ and $r \\ne 0$, the curve is momentarily at a constant distance from the pole, so the tangent is perpendicular to the radius. Its direction therefore depends on $\\theta$: vertical on the $x$-axis, horizontal on the $y$-axis, and slanted in between.",
-    "当 $r' = 0$ 且 $r \\ne 0$ 时，曲线此刻到极点的距离不变，所以切线垂直于半径。因此切线方向取决于 $\\theta$：在 $x$ 轴上是竖直的，在 $y$ 轴上是水平的，在其他方向是倾斜的。",
-  ],
-  (rng) => {
-    const turn = rng.pick(zeroDerivativeTurns);
-    const r = nz(rng, 12);
-    const horizontal: Pair = ["Horizontal", "水平"];
-    const vertical: Pair = ["Vertical", "竖直"];
-    const slanted: Pair = ["Neither horizontal nor vertical", "既不水平也不竖直"];
-    const none: Pair = ["There is no tangent, because $r'$ is zero", "没有切线，因为 $r'$ 为零"];
-    const correct = turn.kind === "horizontal" ? horizontal : turn.kind === "vertical" ? vertical : slanted;
-    return choose(
-      rng,
-      [
-        `A polar curve $r = f(\\theta)$ has $f\\left(${turn.at}\\right) = ${r}$ and $f'\\left(${turn.at}\\right) = 0$. What is the tangent line to the curve at $\\theta = ${turn.at}$ like?`,
-        `极坐标曲线 $r = f(\\theta)$ 满足 $f\\left(${turn.at}\\right) = ${r}$，$f'\\left(${turn.at}\\right) = 0$。曲线在 $\\theta = ${turn.at}$ 处的切线是怎样的？`,
-      ],
-      correct,
-      [horizontal, vertical, slanted, none].filter((o) => o !== correct),
-      [
-        `With $r' = 0$, $\\frac{dx}{d\\theta} = -r\\sin\\theta$ and $\\frac{dy}{d\\theta} = r\\cos\\theta$. At this angle, ${turn.kind === "horizontal" ? "$\\frac{dy}{d\\theta} = 0$ and $\\frac{dx}{d\\theta} \\ne 0$, so the tangent is horizontal" : turn.kind === "vertical" ? "$\\frac{dx}{d\\theta} = 0$ and $\\frac{dy}{d\\theta} \\ne 0$, so the tangent is vertical" : "neither is zero, so the tangent is slanted"}.`,
-        `当 $r' = 0$ 时，$\\frac{dx}{d\\theta} = -r\\sin\\theta$，$\\frac{dy}{d\\theta} = r\\cos\\theta$。在这个角度上，${turn.kind === "horizontal" ? "$\\frac{dy}{d\\theta} = 0$ 而 $\\frac{dx}{d\\theta} \\ne 0$，所以切线水平" : turn.kind === "vertical" ? "$\\frac{dx}{d\\theta} = 0$ 而 $\\frac{dy}{d\\theta} \\ne 0$，所以切线竖直" : "二者都不为零，所以切线是倾斜的"}。`,
-      ],
-    );
-  },
-);
+const zeroRadialDerivative = {
+  ...point(
+    "dr-zero-does-not-mean-a-horizontal-tangent",
+    ["A zero of dr does not mean a horizontal tangent", "dr 为零并不意味着水平切线"],
+    [
+      "Where $r' = 0$ and $r \\ne 0$, the curve is momentarily at a constant distance from the pole, so the tangent is perpendicular to the radius. Its direction therefore depends on $\\theta$: vertical on the $x$-axis, horizontal on the $y$-axis, and slanted in between.",
+      "当 $r' = 0$ 且 $r \\ne 0$ 时，曲线此刻到极点的距离不变，所以切线垂直于半径。因此切线方向取决于 $\\theta$：在 $x$ 轴上是竖直的，在 $y$ 轴上是水平的，在其他方向是倾斜的。",
+    ],
+    (rng) => {
+      const turn = rng.pick(zeroDerivativeTurns);
+      const r = nz(rng, 12);
+      const horizontal: Pair = ["Horizontal", "水平"];
+      const vertical: Pair = ["Vertical", "竖直"];
+      const slanted: Pair = ["Neither horizontal nor vertical", "既不水平也不竖直"];
+      const none: Pair = ["There is no tangent, because $r'$ is zero", "没有切线，因为 $r'$ 为零"];
+      const correct = turn.kind === "horizontal" ? horizontal : turn.kind === "vertical" ? vertical : slanted;
+      return choose(
+        rng,
+        [
+          `A polar curve $r = f(\\theta)$ has $f\\left(${turn.at}\\right) = ${r}$ and $f'\\left(${turn.at}\\right) = 0$. What is the tangent line to the curve at $\\theta = ${turn.at}$ like?`,
+          `极坐标曲线 $r = f(\\theta)$ 满足 $f\\left(${turn.at}\\right) = ${r}$，$f'\\left(${turn.at}\\right) = 0$。曲线在 $\\theta = ${turn.at}$ 处的切线是怎样的？`,
+        ],
+        correct,
+        [horizontal, vertical, slanted, none].filter((o) => o !== correct),
+        [
+          `With $r' = 0$, $\\frac{dx}{d\\theta} = -r\\sin\\theta$ and $\\frac{dy}{d\\theta} = r\\cos\\theta$. At this angle, ${turn.kind === "horizontal" ? "$\\frac{dy}{d\\theta} = 0$ and $\\frac{dx}{d\\theta} \\ne 0$, so the tangent is horizontal" : turn.kind === "vertical" ? "$\\frac{dx}{d\\theta} = 0$ and $\\frac{dy}{d\\theta} \\ne 0$, so the tangent is vertical" : "neither is zero, so the tangent is slanted"}.`,
+          `当 $r' = 0$ 时，$\\frac{dx}{d\\theta} = -r\\sin\\theta$，$\\frac{dy}{d\\theta} = r\\cos\\theta$。在这个角度上，${turn.kind === "horizontal" ? "$\\frac{dy}{d\\theta} = 0$ 而 $\\frac{dx}{d\\theta} \\ne 0$，所以切线水平" : turn.kind === "vertical" ? "$\\frac{dx}{d\\theta} = 0$ 而 $\\frac{dy}{d\\theta} \\ne 0$，所以切线竖直" : "二者都不为零，所以切线是倾斜的"}。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["horizontal-and-vertical-tangents-to-polar-curves#dr-zero-does-not-mean-a-horizontal-tangent"],
+};
 
-const roseTangentsAtPole = point(
-  "counting-the-tangent-lines-at-the-pole",
-  ["Counting the tangent lines at the pole", "数极点处的切线"],
-  [
-    "A polar curve passing through the pole at $\\theta = \\alpha$ has tangent line $\\theta = \\alpha$ there. A rose $r = a\\cos n\\theta$ or $r = a\\sin n\\theta$ has $n$ such angles in $[0, \\pi)$, and larger angles repeat the same lines, even when $n$ is even and there are $2n$ petals.",
-    "极坐标曲线在 $\\theta = \\alpha$ 处经过极点时，那里的切线是 $\\theta = \\alpha$。玫瑰线 $r = a\\cos n\\theta$ 或 $r = a\\sin n\\theta$ 在 $[0, \\pi)$ 中有 $n$ 个这样的角，更大的角只是重复相同的直线，即使 $n$ 为偶数、有 $2n$ 个花瓣也是如此。",
-  ],
-  (rng) => {
-    const n = rng.int(2, 9);
-    const a = rng.int(1, 9);
-    const fn = rng.pick(["\\cos", "\\sin"] as const);
-    const eq = `r = ${a === 1 ? "" : a}${fn} ${n}\\theta`;
-    return ask(
-      [`How many different lines are tangent to the rose $${eq}$ at the pole?`, `玫瑰线 $${eq}$ 在极点处有多少条不同的切线？`],
-      n,
-      [2 * n, n + 1, n - 1],
-      [
-        `$r = 0$ when $${fn} ${n}\\theta = 0$, which has $${n}$ solutions in $[0, \\pi)$, spaced $\\frac{\\pi}{${n}}$ apart. Angles that differ by $\\pi$ give the same line, so there are $${n}$ tangent lines.`,
-        `当 $${fn} ${n}\\theta = 0$ 时 $r = 0$，它在 $[0, \\pi)$ 中有 $${n}$ 个解，间隔 $\\frac{\\pi}{${n}}$。相差 $\\pi$ 的角给出同一条直线，所以有 $${n}$ 条切线。`,
-      ],
-    );
-  },
-);
+const roseTangentsAtPole = {
+  ...point(
+    "counting-the-tangent-lines-at-the-pole",
+    ["Counting the tangent lines at the pole", "数极点处的切线"],
+    [
+      "A polar curve passing through the pole at $\\theta = \\alpha$ has tangent line $\\theta = \\alpha$ there. A rose $r = a\\cos n\\theta$ or $r = a\\sin n\\theta$ has $n$ such angles in $[0, \\pi)$, and larger angles repeat the same lines, even when $n$ is even and there are $2n$ petals.",
+      "极坐标曲线在 $\\theta = \\alpha$ 处经过极点时，那里的切线是 $\\theta = \\alpha$。玫瑰线 $r = a\\cos n\\theta$ 或 $r = a\\sin n\\theta$ 在 $[0, \\pi)$ 中有 $n$ 个这样的角，更大的角只是重复相同的直线，即使 $n$ 为偶数、有 $2n$ 个花瓣也是如此。",
+    ],
+    (rng) => {
+      const n = rng.int(2, 9);
+      const a = rng.int(1, 9);
+      const fn = rng.pick(["\\cos", "\\sin"] as const);
+      const eq = `r = ${a === 1 ? "" : a}${fn} ${n}\\theta`;
+      return ask(
+        [`How many different lines are tangent to the rose $${eq}$ at the pole?`, `玫瑰线 $${eq}$ 在极点处有多少条不同的切线？`],
+        n,
+        [2 * n, n + 1, n - 1],
+        [
+          `$r = 0$ when $${fn} ${n}\\theta = 0$, which has $${n}$ solutions in $[0, \\pi)$, spaced $\\frac{\\pi}{${n}}$ apart. Angles that differ by $\\pi$ give the same line, so there are $${n}$ tangent lines.`,
+          `当 $${fn} ${n}\\theta = 0$ 时 $r = 0$，它在 $[0, \\pi)$ 中有 $${n}$ 个解，间隔 $\\frac{\\pi}{${n}}$。相差 $\\pi$ 的角给出同一条直线，所以有 $${n}$ 条切线。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    calculusDrawings5[
+      "horizontal-and-vertical-tangents-to-polar-curves-in-non-differentiable-cases#counting-the-tangent-lines-at-the-pole"
+    ],
+};
 
 const parameterFromTangentSlope = point(
   "a-parameter-from-a-tangent-or-normal-slope",
@@ -774,32 +807,39 @@ const parameterFromTangentSlope = point(
   },
 );
 
-const commonRegion = point(
-  "the-region-common-to-two-circles",
-  ["The region common to two circles", "两圆的公共区域"],
-  [
-    "For the region inside both curves, use whichever $r$ is smaller at each angle, so the integral splits at the intersection. Inside $r = 2a\\cos\\theta$ and $r = 2a\\sin\\theta$ the sine bounds $\\left[0, \\frac{\\pi}{4}\\right]$ and the cosine bounds $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$.",
-    "对于同时在两条曲线内部的区域，每个角度都取较小的 $r$，所以积分要在交点处分开。在 $r = 2a\\cos\\theta$ 和 $r = 2a\\sin\\theta$ 的内部，$\\left[0, \\frac{\\pi}{4}\\right]$ 上由正弦界定，$\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$ 上由余弦界定。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 30);
-    const s = a * a;
-    const c = s === 1 ? "" : `${s}`;
-    return choose(
-      rng,
-      [
-        `Find the area of the region inside both $r = ${2 * a}\\cos\\theta$ and $r = ${2 * a}\\sin\\theta$.`,
-        `求同时在 $r = ${2 * a}\\cos\\theta$ 和 $r = ${2 * a}\\sin\\theta$ 内部的区域的面积。`,
-      ],
-      same2(`${c}\\left(\\frac{\\pi}{2} - 1\\right)`),
-      [same2(`${c}\\left(\\pi - 2\\right)`), same2(`${c}\\left(\\frac{\\pi}{4} - \\frac{1}{2}\\right)`), same2(poly([Q.of(s, 2), "\\pi"]))],
-      [
-        `The curves meet at $\\theta = \\frac{\\pi}{4}$, and by symmetry the area is $2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} (${2 * a}\\sin\\theta)^{2} \\, d\\theta = ${c}\\left(\\frac{\\pi}{2} - 1\\right)$.`,
-        `两曲线交于 $\\theta = \\frac{\\pi}{4}$，由对称性，面积是 $2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} (${2 * a}\\sin\\theta)^{2} \\, d\\theta = ${c}\\left(\\frac{\\pi}{2} - 1\\right)$。`,
-      ],
-    );
-  },
-);
+const commonRegion = {
+  ...point(
+    "the-region-common-to-two-circles",
+    ["The region common to two circles", "两圆的公共区域"],
+    [
+      "For the region inside both curves, use whichever $r$ is smaller at each angle, so the integral splits at the intersection. Inside $r = 2a\\cos\\theta$ and $r = 2a\\sin\\theta$ the sine bounds $\\left[0, \\frac{\\pi}{4}\\right]$ and the cosine bounds $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$.",
+      "对于同时在两条曲线内部的区域，每个角度都取较小的 $r$，所以积分要在交点处分开。在 $r = 2a\\cos\\theta$ 和 $r = 2a\\sin\\theta$ 的内部，$\\left[0, \\frac{\\pi}{4}\\right]$ 上由正弦界定，$\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$ 上由余弦界定。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 30);
+      const s = a * a;
+      const c = s === 1 ? "" : `${s}`;
+      return choose(
+        rng,
+        [
+          `Find the area of the region inside both $r = ${2 * a}\\cos\\theta$ and $r = ${2 * a}\\sin\\theta$.`,
+          `求同时在 $r = ${2 * a}\\cos\\theta$ 和 $r = ${2 * a}\\sin\\theta$ 内部的区域的面积。`,
+        ],
+        same2(`${c}\\left(\\frac{\\pi}{2} - 1\\right)`),
+        [
+          same2(`${c}\\left(\\pi - 2\\right)`),
+          same2(`${c}\\left(\\frac{\\pi}{4} - \\frac{1}{2}\\right)`),
+          same2(poly([Q.of(s, 2), "\\pi"])),
+        ],
+        [
+          `The curves meet at $\\theta = \\frac{\\pi}{4}$, and by symmetry the area is $2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} (${2 * a}\\sin\\theta)^{2} \\, d\\theta = ${c}\\left(\\frac{\\pi}{2} - 1\\right)$.`,
+          `两曲线交于 $\\theta = \\frac{\\pi}{4}$，由对称性，面积是 $2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} (${2 * a}\\sin\\theta)^{2} \\, d\\theta = ${c}\\left(\\frac{\\pi}{2} - 1\\right)$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-area-bounded-by-two-polar-curves#the-region-common-to-two-circles"],
+};
 
 const recursiveLimit = point(
   "limits-of-sequences-defined-by-a-recurrence",

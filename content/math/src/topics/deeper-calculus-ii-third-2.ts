@@ -4,6 +4,7 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { dec, linear, poly, Q } from "@ga/subject-math";
+import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -175,32 +176,35 @@ const converseTrap = point(
   },
 );
 
-const integralTailBound = point(
-  "bounding-the-tail-with-an-integral",
-  ["Bounding the tail with an integral", "用积分估计余项"],
-  [
-    "The integral test also estimates the error. For positive decreasing $f$, the tail after $N$ terms satisfies $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$. The lower limit is $N$, the last term included in the partial sum, because the rectangles lie under the curve.",
-    "积分检验也能估计误差。对正的递减函数 $f$，前 $N$ 项之后的余项满足 $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$。下限是 $N$，即部分和所含的最后一项，因为这些矩形位于曲线下方。",
-  ],
-  (rng) => {
-    const p = rng.int(2, 4);
-    const c = rng.int(1, 20);
-    const N = rng.int(2, 15);
-    const answer = Q.of(c, (p - 1) * N ** (p - 1));
-    return ask(
-      [
-        `Use the integral $\\int_{${N}}^{\\infty}$ to find an upper bound for $\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}}$.`,
-        `用积分 $\\int_{${N}}^{\\infty}$ 求 $\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}}$ 的一个上界。`,
-      ],
-      answer,
-      [Q.of(c, N ** p), Q.of(c, N ** (p - 1)), Q.of(c, (p - 1) * (N + 1) ** (p - 1))],
-      [
-        `$\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = ${answer.toLatex()}$, and the sum of the rectangles to the right of $${N}$ is below this area.`,
-        `$\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = ${answer.toLatex()}$，而 $${N}$ 右侧各矩形面积之和小于这个面积。`,
-      ],
-    );
-  },
-);
+const integralTailBound = {
+  ...point(
+    "bounding-the-tail-with-an-integral",
+    ["Bounding the tail with an integral", "用积分估计余项"],
+    [
+      "The integral test also estimates the error. For positive decreasing $f$, the tail after $N$ terms satisfies $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$. The lower limit is $N$, the last term included in the partial sum, because the rectangles lie under the curve.",
+      "积分检验也能估计误差。对正的递减函数 $f$，前 $N$ 项之后的余项满足 $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$。下限是 $N$，即部分和所含的最后一项，因为这些矩形位于曲线下方。",
+    ],
+    (rng) => {
+      const p = rng.int(2, 4);
+      const c = rng.int(1, 20);
+      const N = rng.int(2, 15);
+      const answer = Q.of(c, (p - 1) * N ** (p - 1));
+      return ask(
+        [
+          `Use the integral $\\int_{${N}}^{\\infty}$ to find an upper bound for $\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}}$.`,
+          `用积分 $\\int_{${N}}^{\\infty}$ 求 $\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}}$ 的一个上界。`,
+        ],
+        answer,
+        [Q.of(c, N ** p), Q.of(c, N ** (p - 1)), Q.of(c, (p - 1) * (N + 1) ** (p - 1))],
+        [
+          `$\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = ${answer.toLatex()}$, and the sum of the rectangles to the right of $${N}$ is below this area.`,
+          `$\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = ${answer.toLatex()}$，而 $${N}$ 右侧各矩形面积之和小于这个面积。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["the-integral-test#bounding-the-tail-with-an-integral"],
+};
 
 const comparisonDirections = point(
   "comparisons-in-the-wrong-direction",
@@ -767,95 +771,104 @@ const halfLifeFromAmounts = point(
   },
 );
 
-const flatColumns = point(
-  "where-a-field-of-a-function-of-x-is-flat",
-  ["Where a field of a function of x is flat", "x 的函数的斜率场的水平处"],
-  [
-    "In the field of $\\frac{dy}{dx} = f(x)$, the slope depends on the column only, so all segments in a column are parallel. Horizontal segments therefore fill whole vertical lines at the zeros of $f$, not horizontal rows.",
-    "在 $\\frac{dy}{dx} = f(x)$ 的斜率场中，斜率只取决于所在的列，所以同一列的线段都平行。因此水平线段布满 $f$ 的零点处的整条竖直线，而不是水平的行。",
-  ],
-  (rng) => {
-    const a = rng.int(-6, 5);
-    const b = a + rng.int(1, 6);
-    const f = poly([1, "x^{2}"], [-(a + b), "x"], [a * b, ""]);
-    const factors = a === 0 ? `x(${linear(1, -b)})` : b === 0 ? `x(${linear(1, -a)})` : `(${linear(1, -a)})(${linear(1, -b)})`;
-    return choose(
-      rng,
-      [
-        `Where are the segments horizontal in the slope field of $\\frac{dy}{dx} = ${f}$?`,
-        `在 $\\frac{dy}{dx} = ${f}$ 的斜率场中，哪里的线段是水平的？`,
-      ],
-      [`On the vertical lines $x = ${a}$ and $x = ${b}$`, `在竖直线 $x = ${a}$ 和 $x = ${b}$ 上`],
-      [
-        [`On the horizontal lines $y = ${a}$ and $y = ${b}$`, `在水平线 $y = ${a}$ 和 $y = ${b}$ 上`],
-        [`Only at the point $(${a}, ${b})$`, `只在点 $(${a}, ${b})$ 处`],
-        [`On the vertical line $x = ${Q.of(a + b, 2).toLatex()}$`, `在竖直线 $x = ${Q.of(a + b, 2).toLatex()}$ 上`],
-      ],
-      [
-        `The slope is $${factors}$, whatever $y$ is. It is zero for $x = ${a}$ and $x = ${b}$, so every segment in those two columns is horizontal.`,
-        `斜率是 $${factors}$，与 $y$ 无关。当 $x = ${a}$ 和 $x = ${b}$ 时它为零，所以这两列的线段都是水平的。`,
-      ],
-    );
-  },
-);
+const flatColumns = {
+  ...point(
+    "where-a-field-of-a-function-of-x-is-flat",
+    ["Where a field of a function of x is flat", "x 的函数的斜率场的水平处"],
+    [
+      "In the field of $\\frac{dy}{dx} = f(x)$, the slope depends on the column only, so all segments in a column are parallel. Horizontal segments therefore fill whole vertical lines at the zeros of $f$, not horizontal rows.",
+      "在 $\\frac{dy}{dx} = f(x)$ 的斜率场中，斜率只取决于所在的列，所以同一列的线段都平行。因此水平线段布满 $f$ 的零点处的整条竖直线，而不是水平的行。",
+    ],
+    (rng) => {
+      const a = rng.int(-6, 5);
+      const b = a + rng.int(1, 6);
+      const f = poly([1, "x^{2}"], [-(a + b), "x"], [a * b, ""]);
+      const factors = a === 0 ? `x(${linear(1, -b)})` : b === 0 ? `x(${linear(1, -a)})` : `(${linear(1, -a)})(${linear(1, -b)})`;
+      return choose(
+        rng,
+        [
+          `Where are the segments horizontal in the slope field of $\\frac{dy}{dx} = ${f}$?`,
+          `在 $\\frac{dy}{dx} = ${f}$ 的斜率场中，哪里的线段是水平的？`,
+        ],
+        [`On the vertical lines $x = ${a}$ and $x = ${b}$`, `在竖直线 $x = ${a}$ 和 $x = ${b}$ 上`],
+        [
+          [`On the horizontal lines $y = ${a}$ and $y = ${b}$`, `在水平线 $y = ${a}$ 和 $y = ${b}$ 上`],
+          [`Only at the point $(${a}, ${b})$`, `只在点 $(${a}, ${b})$ 处`],
+          [`On the vertical line $x = ${Q.of(a + b, 2).toLatex()}$`, `在竖直线 $x = ${Q.of(a + b, 2).toLatex()}$ 上`],
+        ],
+        [
+          `The slope is $${factors}$, whatever $y$ is. It is zero for $x = ${a}$ and $x = ${b}$, so every segment in those two columns is horizontal.`,
+          `斜率是 $${factors}$，与 $y$ 无关。当 $x = ${a}$ 和 $x = ${b}$ 时它为零，所以这两列的线段都是水平的。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["slope-fields-for-directly-integrable-differential-equations#where-a-field-of-a-function-of-x-is-flat"],
+};
 
-const steepestRow = point(
-  "the-steepest-row-of-an-autonomous-field",
-  ["The steepest row of an autonomous field", "自治方程斜率场中最陡的行"],
-  [
-    "In an autonomous field the slope depends only on the row. For a quadratic in $y$ with positive leading coefficient, the slopes between the two equilibria are negative, and they are most negative on the row halfway between, where the parabola has its vertex.",
-    "在自治方程的斜率场中，斜率只取决于所在的行。对首项系数为正的 $y$ 的二次式，两个平衡解之间的斜率为负，在正中间的那一行最负，那里是抛物线的顶点。",
-  ],
-  (rng) => {
-    const k = rng.int(1, 4);
-    const a = rng.int(-6, 5);
-    const b = a + rng.int(1, 7);
-    const f = poly([k, "y^{2}"], [-k * (a + b), "y"], [k * a * b, ""]);
-    const answer = Q.of(a + b, 2);
-    return ask(
-      [
-        `In the slope field of $\\frac{dy}{dx} = ${f}$, on which row $y = c$ is the slope the most negative? Give $c$.`,
-        `在 $\\frac{dy}{dx} = ${f}$ 的斜率场中，哪一行 $y = c$ 上的斜率最负？求 $c$。`,
-      ],
-      answer,
-      [a, b, a + b],
-      [
-        `The slope is a parabola in $y$ that opens upward, with its vertex at $y = ${answer.toLatex()}$, halfway between the equilibria $${a}$ and $${b}$. The least value of the slope is there.`,
-        `斜率是关于 $y$ 的开口向上的抛物线，顶点在 $y = ${answer.toLatex()}$，位于平衡解 $${a}$ 和 $${b}$ 的正中间。斜率的最小值就在那里。`,
-      ],
-    );
-  },
-);
+const steepestRow = {
+  ...point(
+    "the-steepest-row-of-an-autonomous-field",
+    ["The steepest row of an autonomous field", "自治方程斜率场中最陡的行"],
+    [
+      "In an autonomous field the slope depends only on the row. For a quadratic in $y$ with positive leading coefficient, the slopes between the two equilibria are negative, and they are most negative on the row halfway between, where the parabola has its vertex.",
+      "在自治方程的斜率场中，斜率只取决于所在的行。对首项系数为正的 $y$ 的二次式，两个平衡解之间的斜率为负，在正中间的那一行最负，那里是抛物线的顶点。",
+    ],
+    (rng) => {
+      const k = rng.int(1, 4);
+      const a = rng.int(-6, 5);
+      const b = a + rng.int(1, 7);
+      const f = poly([k, "y^{2}"], [-k * (a + b), "y"], [k * a * b, ""]);
+      const answer = Q.of(a + b, 2);
+      return ask(
+        [
+          `In the slope field of $\\frac{dy}{dx} = ${f}$, on which row $y = c$ is the slope the most negative? Give $c$.`,
+          `在 $\\frac{dy}{dx} = ${f}$ 的斜率场中，哪一行 $y = c$ 上的斜率最负？求 $c$。`,
+        ],
+        answer,
+        [a, b, a + b],
+        [
+          `The slope is a parabola in $y$ that opens upward, with its vertex at $y = ${answer.toLatex()}$, halfway between the equilibria $${a}$ and $${b}$. The least value of the slope is there.`,
+          `斜率是关于 $y$ 的开口向上的抛物线，顶点在 $y = ${answer.toLatex()}$，位于平衡解 $${a}$ 和 $${b}$ 的正中间。斜率的最小值就在那里。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["slope-fields-for-autonomous-differential-equations#the-steepest-row-of-an-autonomous-field"],
+};
 
-const isoclineIntercept = point(
-  "the-line-of-equal-slopes",
-  ["The line of equal slopes", "等斜率的直线"],
-  [
-    "Setting $\\frac{dy}{dx}$ equal to a constant $s$ gives the isocline for that slope, where all segments are parallel. For a linear right side the isoclines are parallel lines, and each one can be found by solving for $y$.",
-    "令 $\\frac{dy}{dx}$ 等于常数 $s$，就得到这个斜率的等斜线，其上所有线段都平行。当右边是一次式时，等斜线是一组平行直线，解出 $y$ 就能得到每一条。",
-  ],
-  (rng) => {
-    const a = nz(rng, 6);
-    const b = rng.pick([-1, 1]);
-    const c = rng.int(-9, 9);
-    const s = rng.int(-6, 6);
-    const answer = (s - c) * b;
-    const eq = poly([a, "x"], [b, "y"], [c, ""]);
-    const line = poly([-a * b, "x"], [answer, ""]);
-    return ask(
-      [
-        `In the slope field of $\\frac{dy}{dx} = ${eq}$, all the segments with slope $${s}$ lie on one line. Find its $y$-intercept.`,
-        `在 $\\frac{dy}{dx} = ${eq}$ 的斜率场中，斜率为 $${s}$ 的线段都在同一条直线上。求它在 $y$ 轴上的截距。`,
-      ],
-      answer,
-      [-answer, s, c],
-      [
-        `Set $${eq} = ${s}$ and solve for $y$: this gives $y = ${line}$. Its $y$-intercept is $${answer}$.`,
-        `令 $${eq} = ${s}$，解出 $y$，得 $y = ${line}$。它在 $y$ 轴上的截距是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const isoclineIntercept = {
+  ...point(
+    "the-line-of-equal-slopes",
+    ["The line of equal slopes", "等斜率的直线"],
+    [
+      "Setting $\\frac{dy}{dx}$ equal to a constant $s$ gives the isocline for that slope, where all segments are parallel. For a linear right side the isoclines are parallel lines, and each one can be found by solving for $y$.",
+      "令 $\\frac{dy}{dx}$ 等于常数 $s$，就得到这个斜率的等斜线，其上所有线段都平行。当右边是一次式时，等斜线是一组平行直线，解出 $y$ 就能得到每一条。",
+    ],
+    (rng) => {
+      const a = nz(rng, 6);
+      const b = rng.pick([-1, 1]);
+      const c = rng.int(-9, 9);
+      const s = rng.int(-6, 6);
+      const answer = (s - c) * b;
+      const eq = poly([a, "x"], [b, "y"], [c, ""]);
+      const line = poly([-a * b, "x"], [answer, ""]);
+      return ask(
+        [
+          `In the slope field of $\\frac{dy}{dx} = ${eq}$, all the segments with slope $${s}$ lie on one line. Find its $y$-intercept.`,
+          `在 $\\frac{dy}{dx} = ${eq}$ 的斜率场中，斜率为 $${s}$ 的线段都在同一条直线上。求它在 $y$ 轴上的截距。`,
+        ],
+        answer,
+        [-answer, s, c],
+        [
+          `Set $${eq} = ${s}$ and solve for $y$: this gives $y = ${line}$. Its $y$-intercept is $${answer}$.`,
+          `令 $${eq} = ${s}$，解出 $y$，得 $y = ${line}$。它在 $y$ 轴上的截距是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings5["slope-fields-for-nonautonomous-differential-equations#the-line-of-equal-slopes"],
+};
 
 const solutionAtZeroOfF = point(
   "a-zero-of-f-need-not-be-an-extremum",

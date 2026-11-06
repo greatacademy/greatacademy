@@ -5,6 +5,8 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, paren, poly, Q, union } from "@ga/subject-math";
+import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
+import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
 import { functionProblem, intervalProblem, solutionsProblem, verdictChoice } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
@@ -35,95 +37,102 @@ const factors = (roots: readonly number[], powers: readonly number[]) => {
   return out === "" ? "1" : out;
 };
 
-const levelLineOfHyperbolicGraph = point(
-  "how-many-times-a-level-line-meets-a-hyperbolic-graph",
-  ["How many times a level line meets the graph", "水平直线与图像的交点个数"],
-  [
-    "The shape of the graph decides how many solutions an equation has. $\\cosh$ has a minimum value of $1$, so a level above it is met twice; $\\sinh$ takes every value exactly once; $\\tanh$ stays strictly between $-1$ and $1$. Undo the stretch and shift first, then compare with the range.",
-    "图像的形状决定方程有几个解。$\\cosh$ 的最小值是 $1$，所以高于它的水平线与图像交于两点；$\\sinh$ 每个值恰好取一次；$\\tanh$ 严格介于 $-1$ 和 $1$ 之间。先还原伸缩和平移，再与值域比较。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["cosh", "cosh", "sinh", "tanh", "tanh"] as const);
-    const a = nz(rng, 4);
-    const h = rng.int(-4, 4);
-    const k = rng.int(-6, 6);
-    const v = rng.int(-2, 3);
-    const m = k + a * v;
-    const answer = hyperbolicCount(kind, v);
-    const y = poly([a, `\\${kind}(${minus(h)})`], [k, ""]);
-    const why: Pair =
-      kind === "cosh"
-        ? [
-            "$\\cosh$ takes values above $1$ twice, the value $1$ once and nothing below $1$",
-            "$\\cosh$ 大于 $1$ 的值取两次，$1$ 取一次，小于 $1$ 的值取不到",
-          ]
-        : kind === "sinh"
-          ? ["$\\sinh$ is increasing and takes every real value exactly once", "$\\sinh$ 递增，每个实数值恰好取一次"]
-          : [
-              "$\\tanh$ takes each value strictly between $-1$ and $1$ exactly once and no other value",
-              "$\\tanh$ 严格介于 $-1$ 与 $1$ 之间的值各取一次，其他值取不到",
-            ];
-    return ask(
-      [
-        `How many points do the graph of $y = ${y}$ and the line $y = ${m}$ have in common?`,
-        `$y = ${y}$ 的图像与直线 $y = ${m}$ 有多少个公共点？`,
-      ],
-      answer,
-      [0, 1, 2],
-      [
-        `Solving for the function gives $\\${kind}(${minus(h)}) = ${v}$. ${why[0]}, so the number of common points is $${answer}$.`,
-        `解出函数值得 $\\${kind}(${minus(h)}) = ${v}$。${why[1]}，所以公共点的个数是 $${answer}$。`,
-      ],
-    );
-  },
-);
-
-const levelLineOfReciprocalGraph = point(
-  "how-many-times-a-level-line-meets-a-reciprocal-hyperbolic-graph",
-  ["How many times a level line meets a reciprocal graph", "水平直线与倒数双曲图像的交点个数"],
-  [
-    "The ranges tell the number of solutions. $\\operatorname{sech}$ takes values in $(0, 1]$, with the value $1$ only at its peak; $\\operatorname{csch}$ takes every value except $0$, each once; $\\coth$ takes each value with absolute value above $1$ once, and nothing between $-1$ and $1$.",
-    "值域决定解的个数。$\\operatorname{sech}$ 的值域是 $(0, 1]$，$1$ 只在峰顶取到；$\\operatorname{csch}$ 取除 $0$ 以外的所有值，各取一次；$\\coth$ 绝对值大于 $1$ 的值各取一次，$-1$ 与 $1$ 之间的值取不到。",
-  ],
-  (rng) => {
-    const kind = rng.pick(["sech", "csch", "coth"] as const);
-    const a = nz(rng, 4);
-    const h = rng.int(-4, 4);
-    const k = rng.int(-6, 6);
-    const v = rng.int(-2, 2);
-    const m = k + a * v;
-    const answer = reciprocalCount(kind, v);
-    const fn = kind === "coth" ? "\\coth" : `\\operatorname{${kind}}`;
-    const y = poly([a, `${fn}(${minus(h)})`], [k, ""]);
-    const why: Pair =
-      kind === "sech"
-        ? [
-            "$\\operatorname{sech}$ takes values only in $(0, 1]$, and it reaches $1$ only at its peak",
-            "$\\operatorname{sech}$ 的值只在 $(0, 1]$ 中，并且只在峰顶取到 $1$",
-          ]
-        : kind === "csch"
+const levelLineOfHyperbolicGraph = {
+  ...point(
+    "how-many-times-a-level-line-meets-a-hyperbolic-graph",
+    ["How many times a level line meets the graph", "水平直线与图像的交点个数"],
+    [
+      "The shape of the graph decides how many solutions an equation has. $\\cosh$ has a minimum value of $1$, so a level above it is met twice; $\\sinh$ takes every value exactly once; $\\tanh$ stays strictly between $-1$ and $1$. Undo the stretch and shift first, then compare with the range.",
+      "图像的形状决定方程有几个解。$\\cosh$ 的最小值是 $1$，所以高于它的水平线与图像交于两点；$\\sinh$ 每个值恰好取一次；$\\tanh$ 严格介于 $-1$ 和 $1$ 之间。先还原伸缩和平移，再与值域比较。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["cosh", "cosh", "sinh", "tanh", "tanh"] as const);
+      const a = nz(rng, 4);
+      const h = rng.int(-4, 4);
+      const k = rng.int(-6, 6);
+      const v = rng.int(-2, 3);
+      const m = k + a * v;
+      const answer = hyperbolicCount(kind, v);
+      const y = poly([a, `\\${kind}(${minus(h)})`], [k, ""]);
+      const why: Pair =
+        kind === "cosh"
           ? [
-              "$\\operatorname{csch}$ takes each nonzero value once and never takes $0$",
-              "$\\operatorname{csch}$ 每个非零值取一次，取不到 $0$",
+              "$\\cosh$ takes values above $1$ twice, the value $1$ once and nothing below $1$",
+              "$\\cosh$ 大于 $1$ 的值取两次，$1$ 取一次，小于 $1$ 的值取不到",
             ]
-          : [
-              "$\\coth$ takes each value with $|y| > 1$ once and misses the band $-1 \\le y \\le 1$",
-              "$\\coth$ 满足 $|y| > 1$ 的值各取一次，取不到 $-1 \\le y \\le 1$ 这一带",
-            ];
-    return ask(
-      [
-        `How many points do the graph of $y = ${y}$ and the line $y = ${m}$ have in common?`,
-        `$y = ${y}$ 的图像与直线 $y = ${m}$ 有多少个公共点？`,
-      ],
-      answer,
-      [0, 1, 2],
-      [
-        `Solving for the function gives $${fn}(${minus(h)}) = ${v}$. ${why[0]}, so the number of common points is $${answer}$.`,
-        `解出函数值得 $${fn}(${minus(h)}) = ${v}$。${why[1]}，所以公共点的个数是 $${answer}$。`,
-      ],
-    );
-  },
-);
+          : kind === "sinh"
+            ? ["$\\sinh$ is increasing and takes every real value exactly once", "$\\sinh$ 递增，每个实数值恰好取一次"]
+            : [
+                "$\\tanh$ takes each value strictly between $-1$ and $1$ exactly once and no other value",
+                "$\\tanh$ 严格介于 $-1$ 与 $1$ 之间的值各取一次，其他值取不到",
+              ];
+      return ask(
+        [
+          `How many points do the graph of $y = ${y}$ and the line $y = ${m}$ have in common?`,
+          `$y = ${y}$ 的图像与直线 $y = ${m}$ 有多少个公共点？`,
+        ],
+        answer,
+        [0, 1, 2],
+        [
+          `Solving for the function gives $\\${kind}(${minus(h)}) = ${v}$. ${why[0]}, so the number of common points is $${answer}$.`,
+          `解出函数值得 $\\${kind}(${minus(h)}) = ${v}$。${why[1]}，所以公共点的个数是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["graphs-of-the-hyperbolic-functions#how-many-times-a-level-line-meets-a-hyperbolic-graph"],
+};
+
+const levelLineOfReciprocalGraph = {
+  ...point(
+    "how-many-times-a-level-line-meets-a-reciprocal-hyperbolic-graph",
+    ["How many times a level line meets a reciprocal graph", "水平直线与倒数双曲图像的交点个数"],
+    [
+      "The ranges tell the number of solutions. $\\operatorname{sech}$ takes values in $(0, 1]$, with the value $1$ only at its peak; $\\operatorname{csch}$ takes every value except $0$, each once; $\\coth$ takes each value with absolute value above $1$ once, and nothing between $-1$ and $1$.",
+      "值域决定解的个数。$\\operatorname{sech}$ 的值域是 $(0, 1]$，$1$ 只在峰顶取到；$\\operatorname{csch}$ 取除 $0$ 以外的所有值，各取一次；$\\coth$ 绝对值大于 $1$ 的值各取一次，$-1$ 与 $1$ 之间的值取不到。",
+    ],
+    (rng) => {
+      const kind = rng.pick(["sech", "csch", "coth"] as const);
+      const a = nz(rng, 4);
+      const h = rng.int(-4, 4);
+      const k = rng.int(-6, 6);
+      const v = rng.int(-2, 2);
+      const m = k + a * v;
+      const answer = reciprocalCount(kind, v);
+      const fn = kind === "coth" ? "\\coth" : `\\operatorname{${kind}}`;
+      const y = poly([a, `${fn}(${minus(h)})`], [k, ""]);
+      const why: Pair =
+        kind === "sech"
+          ? [
+              "$\\operatorname{sech}$ takes values only in $(0, 1]$, and it reaches $1$ only at its peak",
+              "$\\operatorname{sech}$ 的值只在 $(0, 1]$ 中，并且只在峰顶取到 $1$",
+            ]
+          : kind === "csch"
+            ? [
+                "$\\operatorname{csch}$ takes each nonzero value once and never takes $0$",
+                "$\\operatorname{csch}$ 每个非零值取一次，取不到 $0$",
+              ]
+            : [
+                "$\\coth$ takes each value with $|y| > 1$ once and misses the band $-1 \\le y \\le 1$",
+                "$\\coth$ 满足 $|y| > 1$ 的值各取一次，取不到 $-1 \\le y \\le 1$ 这一带",
+              ];
+      return ask(
+        [
+          `How many points do the graph of $y = ${y}$ and the line $y = ${m}$ have in common?`,
+          `$y = ${y}$ 的图像与直线 $y = ${m}$ 有多少个公共点？`,
+        ],
+        answer,
+        [0, 1, 2],
+        [
+          `Solving for the function gives $${fn}(${minus(h)}) = ${v}$. ${why[0]}, so the number of common points is $${answer}$.`,
+          `解出函数值得 $${fn}(${minus(h)}) = ${v}$。${why[1]}，所以公共点的个数是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure:
+    calculusDrawings1["graphs-of-the-reciprocal-hyperbolic-functions#how-many-times-a-level-line-meets-a-reciprocal-hyperbolic-graph"],
+};
 
 const oneSidedAbsoluteValue = point(
   "one-sided-limits-of-an-absolute-value-quotient",
@@ -189,67 +198,73 @@ const limitAcrossTwoFormulas = point(
   },
 );
 
-const crossingAnAsymptote = point(
-  "a-graph-may-cross-its-horizontal-asymptote",
-  ["A graph may cross its horizontal asymptote", "图像可以穿过水平渐近线"],
-  [
-    "A horizontal asymptote only describes what happens far out: the values must get close to the line and stay close. The graph may cross the line, even infinitely often, as long as the swings around it shrink to zero.",
-    "水平渐近线只描述远处的情况：函数值必须接近这条直线并保持接近。图像可以穿过这条直线，甚至穿过无穷多次，只要围绕它的摆动趋于零。",
-  ],
-  (rng) => {
-    const L = rng.int(-9, 9);
-    const c = nz(rng, 7);
-    const f = poly([L, ""], [c, "\\frac{\\sin x}{x}"]);
-    return choose(
-      rng,
-      [
-        `The graph of $f(x) = ${f}$ crosses the line $y = ${L}$ at every multiple of $\\pi$. What is $\\lim_{x \\to \\infty} f(x)$?`,
-        `$f(x) = ${f}$ 的图像在 $\\pi$ 的每个倍数处都穿过直线 $y = ${L}$。$\\lim_{x \\to \\infty} f(x)$ 是多少？`,
-      ],
-      [`$${L}$, because the swings around $y = ${L}$ shrink to zero`, `$${L}$，因为围绕 $y = ${L}$ 的摆动趋于零`],
-      [
-        [`It does not exist, because the graph keeps crossing $y = ${L}$`, `不存在，因为图像不断穿过 $y = ${L}$`],
-        [`$${L + c}$, because $\\frac{\\sin x}{x}$ tends to $1$`, `$${L + c}$，因为 $\\frac{\\sin x}{x}$ 趋于 $1$`],
-        [`It does not exist, because $\\sin x$ has no limit`, `不存在，因为 $\\sin x$ 没有极限`],
-      ],
-      [
-        `Since $|\\sin x| \\le 1$, the term $${poly([c, "\\frac{\\sin x}{x}"])}$ has size at most $\\frac{${Math.abs(c)}}{|x|}$, which tends to $0$. So the limit is $${L}$, and $y = ${L}$ is a horizontal asymptote even though the graph crosses it.`,
-        `因为 $|\\sin x| \\le 1$，项 $${poly([c, "\\frac{\\sin x}{x}"])}$ 的绝对值不超过 $\\frac{${Math.abs(c)}}{|x|}$，它趋于 $0$。所以极限是 $${L}$，尽管图像穿过 $y = ${L}$，它仍是水平渐近线。`,
-      ],
-    );
-  },
-);
+const crossingAnAsymptote = {
+  ...point(
+    "a-graph-may-cross-its-horizontal-asymptote",
+    ["A graph may cross its horizontal asymptote", "图像可以穿过水平渐近线"],
+    [
+      "A horizontal asymptote only describes what happens far out: the values must get close to the line and stay close. The graph may cross the line, even infinitely often, as long as the swings around it shrink to zero.",
+      "水平渐近线只描述远处的情况：函数值必须接近这条直线并保持接近。图像可以穿过这条直线，甚至穿过无穷多次，只要围绕它的摆动趋于零。",
+    ],
+    (rng) => {
+      const L = rng.int(-9, 9);
+      const c = nz(rng, 7);
+      const f = poly([L, ""], [c, "\\frac{\\sin x}{x}"]);
+      return choose(
+        rng,
+        [
+          `The graph of $f(x) = ${f}$ crosses the line $y = ${L}$ at every multiple of $\\pi$. What is $\\lim_{x \\to \\infty} f(x)$?`,
+          `$f(x) = ${f}$ 的图像在 $\\pi$ 的每个倍数处都穿过直线 $y = ${L}$。$\\lim_{x \\to \\infty} f(x)$ 是多少？`,
+        ],
+        [`$${L}$, because the swings around $y = ${L}$ shrink to zero`, `$${L}$，因为围绕 $y = ${L}$ 的摆动趋于零`],
+        [
+          [`It does not exist, because the graph keeps crossing $y = ${L}$`, `不存在，因为图像不断穿过 $y = ${L}$`],
+          [`$${L + c}$, because $\\frac{\\sin x}{x}$ tends to $1$`, `$${L + c}$，因为 $\\frac{\\sin x}{x}$ 趋于 $1$`],
+          [`It does not exist, because $\\sin x$ has no limit`, `不存在，因为 $\\sin x$ 没有极限`],
+        ],
+        [
+          `Since $|\\sin x| \\le 1$, the term $${poly([c, "\\frac{\\sin x}{x}"])}$ has size at most $\\frac{${Math.abs(c)}}{|x|}$, which tends to $0$. So the limit is $${L}$, and $y = ${L}$ is a horizontal asymptote even though the graph crosses it.`,
+          `因为 $|\\sin x| \\le 1$，项 $${poly([c, "\\frac{\\sin x}{x}"])}$ 的绝对值不超过 $\\frac{${Math.abs(c)}}{|x|}$，它趋于 $0$。所以极限是 $${L}$，尽管图像穿过 $y = ${L}$，它仍是水平渐近线。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["limits-at-infinity-from-graphs#a-graph-may-cross-its-horizontal-asymptote"],
+};
 
-const formulaFromInfiniteLimits = point(
-  "the-formula-from-the-behavior-at-an-asymptote",
-  ["The formula from the behavior at an asymptote", "由渐近线处的行为确定表达式"],
-  [
-    "Near $x = a$, an odd power of $x - a$ in the denominator changes sign across $a$, so the two sides go to opposite infinities; an even power keeps its sign, so both sides go the same way. The sign of the numerator then decides which way.",
-    "在 $x = a$ 附近，分母中 $x - a$ 的奇次幂在 $a$ 两侧变号，所以两侧趋于相反的无穷；偶次幂不变号，所以两侧趋于同一方向。分子的符号再决定具体方向。",
-  ],
-  (rng) => {
-    const a = nz(rng, 6);
-    const c = rng.int(1, 9);
-    const even = rng.bool();
-    const sign = rng.pick([1, -1]);
-    const form = (s: number, e: boolean) => `\\frac{${s * c}}{${e ? `(${minus(a)})^{2}` : minus(a)}}`;
-    const left = even ? sign : -sign;
-    const inf = (s: number) => (s > 0 ? "\\infty" : "-\\infty");
-    return choose(
-      rng,
-      [
-        `Which function has $\\lim_{x \\to ${a}^{-}} f(x) = ${inf(left)}$ and $\\lim_{x \\to ${a}^{+}} f(x) = ${inf(sign)}$?`,
-        `哪个函数满足 $\\lim_{x \\to ${a}^{-}} f(x) = ${inf(left)}$ 且 $\\lim_{x \\to ${a}^{+}} f(x) = ${inf(sign)}$？`,
-      ],
-      same2(`f(x) = ${form(sign, even)}`),
-      [same2(`f(x) = ${form(-sign, even)}`), same2(`f(x) = ${form(sign, !even)}`), same2(`f(x) = ${form(-sign, !even)}`)],
-      [
-        `The two sides go ${even ? "the same way, so the power is even" : "opposite ways, so the power is odd"}. To the right of $${a}$ the denominator is positive, so the numerator has the sign of the right limit, and $f(x) = ${form(sign, even)}$.`,
-        `两侧趋于${even ? "同一方向，所以是偶次幂" : "相反方向，所以是奇次幂"}。在 $${a}$ 的右侧分母为正，所以分子的符号与右极限相同，$f(x) = ${form(sign, even)}$。`,
-      ],
-    );
-  },
-);
+const formulaFromInfiniteLimits = {
+  ...point(
+    "the-formula-from-the-behavior-at-an-asymptote",
+    ["The formula from the behavior at an asymptote", "由渐近线处的行为确定表达式"],
+    [
+      "Near $x = a$, an odd power of $x - a$ in the denominator changes sign across $a$, so the two sides go to opposite infinities; an even power keeps its sign, so both sides go the same way. The sign of the numerator then decides which way.",
+      "在 $x = a$ 附近，分母中 $x - a$ 的奇次幂在 $a$ 两侧变号，所以两侧趋于相反的无穷；偶次幂不变号，所以两侧趋于同一方向。分子的符号再决定具体方向。",
+    ],
+    (rng) => {
+      const a = nz(rng, 6);
+      const c = rng.int(1, 9);
+      const even = rng.bool();
+      const sign = rng.pick([1, -1]);
+      const form = (s: number, e: boolean) => `\\frac{${s * c}}{${e ? `(${minus(a)})^{2}` : minus(a)}}`;
+      const left = even ? sign : -sign;
+      const inf = (s: number) => (s > 0 ? "\\infty" : "-\\infty");
+      return choose(
+        rng,
+        [
+          `Which function has $\\lim_{x \\to ${a}^{-}} f(x) = ${inf(left)}$ and $\\lim_{x \\to ${a}^{+}} f(x) = ${inf(sign)}$?`,
+          `哪个函数满足 $\\lim_{x \\to ${a}^{-}} f(x) = ${inf(left)}$ 且 $\\lim_{x \\to ${a}^{+}} f(x) = ${inf(sign)}$？`,
+        ],
+        same2(`f(x) = ${form(sign, even)}`),
+        [same2(`f(x) = ${form(-sign, even)}`), same2(`f(x) = ${form(sign, !even)}`), same2(`f(x) = ${form(-sign, !even)}`)],
+        [
+          `The two sides go ${even ? "the same way, so the power is even" : "opposite ways, so the power is odd"}. To the right of $${a}$ the denominator is positive, so the numerator has the sign of the right limit, and $f(x) = ${form(sign, even)}$.`,
+          `两侧趋于${even ? "同一方向，所以是偶次幂" : "相反方向，所以是奇次幂"}。在 $${a}$ 的右侧分母为正，所以分子的符号与右极限相同，$f(x) = ${form(sign, even)}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["infinite-limits-from-graphs#the-formula-from-the-behavior-at-an-asymptote"],
+};
 
 const coefficientFromPowerLimit = point(
   "the-coefficient-from-the-value-of-a-limit",
@@ -278,41 +293,44 @@ const coefficientFromPowerLimit = point(
   },
 );
 
-const twoSidedReciprocal = point(
-  "two-sided-limits-at-an-asymptote",
-  ["Two-sided limits at an asymptote", "渐近线处的双侧极限"],
-  [
-    "A two-sided infinite limit needs both sides to go the same way. With an even power of $x - a$ in the denominator they do; with an odd power the sides go to opposite infinities, and the two-sided limit does not exist even as an infinite limit.",
-    "双侧无穷极限要求两侧趋于同一方向。分母中 $x - a$ 是偶次幂时确实如此；是奇次幂时两侧趋于相反的无穷，即使作为无穷极限，双侧极限也不存在。",
-  ],
-  (rng) => {
-    const a = rng.int(-6, 6);
-    const c = nz(rng, 7);
-    const n = rng.int(1, 4);
-    const b = rng.int(-4, 4);
-    const base = a === 0 ? "x" : `(${minus(a)})`;
-    const f = poly([1, `\\frac{${c}}{${n === 1 ? minus(a) : `${base}^{${n}}`}}`], [b, ""]);
-    const pos: Pair = ["$\\infty$", "$\\infty$"];
-    const neg: Pair = ["$-\\infty$", "$-\\infty$"];
-    const none: Pair = ["It does not exist, as the sides go to opposite infinities", "不存在，因为两侧趋于相反的无穷"];
-    const finite: Pair = [`$${b}$`, `$${b}$`];
-    const even = n % 2 === 0;
-    return choose(
-      rng,
-      [`Find $\\lim_{x \\to ${a}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${a}} \\left(${f}\\right)$。`],
-      even ? (c > 0 ? pos : neg) : none,
-      even ? [c > 0 ? neg : pos, none, finite] : [pos, neg, finite],
-      [
-        even
-          ? `The power $${n}$ is even, so the denominator is positive on both sides and the fraction has the sign of $${c}$ on both sides. The limit is $${c > 0 ? "\\infty" : "-\\infty"}$.`
-          : `The power $${n}$ is odd, so the denominator changes sign across $${a}$ and the fraction goes to opposite infinities. The limit does not exist.`,
-        even
-          ? `指数 $${n}$ 是偶数，所以分母在两侧都为正，分式在两侧都与 $${c}$ 同号。极限是 $${c > 0 ? "\\infty" : "-\\infty"}$。`
-          : `指数 $${n}$ 是奇数，所以分母在 $${a}$ 两侧变号，分式趋于相反的无穷。极限不存在。`,
-      ],
-    );
-  },
-);
+const twoSidedReciprocal = {
+  ...point(
+    "two-sided-limits-at-an-asymptote",
+    ["Two-sided limits at an asymptote", "渐近线处的双侧极限"],
+    [
+      "A two-sided infinite limit needs both sides to go the same way. With an even power of $x - a$ in the denominator they do; with an odd power the sides go to opposite infinities, and the two-sided limit does not exist even as an infinite limit.",
+      "双侧无穷极限要求两侧趋于同一方向。分母中 $x - a$ 是偶次幂时确实如此；是奇次幂时两侧趋于相反的无穷，即使作为无穷极限，双侧极限也不存在。",
+    ],
+    (rng) => {
+      const a = rng.int(-6, 6);
+      const c = nz(rng, 7);
+      const n = rng.int(1, 4);
+      const b = rng.int(-4, 4);
+      const base = a === 0 ? "x" : `(${minus(a)})`;
+      const f = poly([1, `\\frac{${c}}{${n === 1 ? minus(a) : `${base}^{${n}}`}}`], [b, ""]);
+      const pos: Pair = ["$\\infty$", "$\\infty$"];
+      const neg: Pair = ["$-\\infty$", "$-\\infty$"];
+      const none: Pair = ["It does not exist, as the sides go to opposite infinities", "不存在，因为两侧趋于相反的无穷"];
+      const finite: Pair = [`$${b}$`, `$${b}$`];
+      const even = n % 2 === 0;
+      return choose(
+        rng,
+        [`Find $\\lim_{x \\to ${a}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${a}} \\left(${f}\\right)$。`],
+        even ? (c > 0 ? pos : neg) : none,
+        even ? [c > 0 ? neg : pos, none, finite] : [pos, neg, finite],
+        [
+          even
+            ? `The power $${n}$ is even, so the denominator is positive on both sides and the fraction has the sign of $${c}$ on both sides. The limit is $${c > 0 ? "\\infty" : "-\\infty"}$.`
+            : `The power $${n}$ is odd, so the denominator changes sign across $${a}$ and the fraction goes to opposite infinities. The limit does not exist.`,
+          even
+            ? `指数 $${n}$ 是偶数，所以分母在两侧都为正，分式在两侧都与 $${c}$ 同号。极限是 $${c > 0 ? "\\infty" : "-\\infty"}$。`
+            : `指数 $${n}$ 是奇数，所以分母在 $${a}$ 两侧变号，分式趋于相反的无穷。极限不存在。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["limits-of-reciprocal-functions#two-sided-limits-at-an-asymptote"],
+};
 
 const trigAtMultiplesOfPi = point(
   "trigonometric-limits-at-any-multiple-of-pi",
@@ -341,39 +359,42 @@ const trigAtMultiplesOfPi = point(
   },
 );
 
-const reciprocalTrigFarOut = point(
-  "reciprocal-trigonometric-limits-away-from-the-first-period",
-  ["Reciprocal limits away from the first period", "第一个周期以外的倒数三角极限"],
-  [
-    "Away from its asymptotes a reciprocal trigonometric function is continuous, so its limit is its value, which comes from the sine or cosine it is built on: $\\sec k\\pi = (-1)^{k}$, $\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$, and $\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$.",
-    "在渐近线以外，倒数三角函数连续，所以极限就是函数值，它由相应的正弦或余弦决定：$\\sec k\\pi = (-1)^{k}$，$\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$，$\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$。",
-  ],
-  (rng) => {
-    const k = rng.pick([1, 2, 3, 4, 5, -1, -2, -3]);
-    const a = nz(rng, 9);
-    const c = rng.int(-6, 6);
-    const kind = rng.pick(["sec", "csc", "cot"] as const);
-    const sign = k % 2 === 0 ? 1 : -1;
-    const piText = k === 1 ? "\\pi" : k === -1 ? "-\\pi" : `${k}\\pi`;
-    const half = Math.abs(2 * k + 1);
-    const at = kind === "sec" ? piText : `${k < 0 ? "-" : ""}\\frac{${half}\\pi}{2}`;
-    const value = kind === "cot" ? 0 : sign;
-    const answer = a * value + c;
-    const where = kind === "sec" ? `\\cos\\left(${at}\\right)` : `\\sin\\left(${at}\\right)`;
-    const also = kind === "cot" ? `\\cos\\left(${at}\\right) = 0$ and $` : "";
-    const alsoZh = kind === "cot" ? `\\cos\\left(${at}\\right) = 0$，$` : "";
-    const f = poly([a, `\\${kind} x`], [c, ""]);
-    return ask(
-      [`Find $\\lim_{x \\to ${at}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${at}} \\left(${f}\\right)$。`],
-      answer,
-      [a + c, -a + c, c - a * value, a * sign * -1 + c, c],
-      [
-        `Here $${also}${where} = ${sign}$, so $\\${kind}\\left(${at}\\right) = ${value}$. The function is continuous there, and the limit is $${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$.`,
-        `这里 $${alsoZh}${where} = ${sign}$，所以 $\\${kind}\\left(${at}\\right) = ${value}$。函数在该点连续，极限是 $${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const reciprocalTrigFarOut = {
+  ...point(
+    "reciprocal-trigonometric-limits-away-from-the-first-period",
+    ["Reciprocal limits away from the first period", "第一个周期以外的倒数三角极限"],
+    [
+      "Away from its asymptotes a reciprocal trigonometric function is continuous, so its limit is its value, which comes from the sine or cosine it is built on: $\\sec k\\pi = (-1)^{k}$, $\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$, and $\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$.",
+      "在渐近线以外，倒数三角函数连续，所以极限就是函数值，它由相应的正弦或余弦决定：$\\sec k\\pi = (-1)^{k}$，$\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$，$\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$。",
+    ],
+    (rng) => {
+      const k = rng.pick([1, 2, 3, 4, 5, -1, -2, -3]);
+      const a = nz(rng, 9);
+      const c = rng.int(-6, 6);
+      const kind = rng.pick(["sec", "csc", "cot"] as const);
+      const sign = k % 2 === 0 ? 1 : -1;
+      const piText = k === 1 ? "\\pi" : k === -1 ? "-\\pi" : `${k}\\pi`;
+      const half = Math.abs(2 * k + 1);
+      const at = kind === "sec" ? piText : `${k < 0 ? "-" : ""}\\frac{${half}\\pi}{2}`;
+      const value = kind === "cot" ? 0 : sign;
+      const answer = a * value + c;
+      const where = kind === "sec" ? `\\cos\\left(${at}\\right)` : `\\sin\\left(${at}\\right)`;
+      const also = kind === "cot" ? `\\cos\\left(${at}\\right) = 0$ and $` : "";
+      const alsoZh = kind === "cot" ? `\\cos\\left(${at}\\right) = 0$，$` : "";
+      const f = poly([a, `\\${kind} x`], [c, ""]);
+      return ask(
+        [`Find $\\lim_{x \\to ${at}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${at}} \\left(${f}\\right)$。`],
+        answer,
+        [a + c, -a + c, c - a * value, a * sign * -1 + c, c],
+        [
+          `Here $${also}${where} = ${sign}$, so $\\${kind}\\left(${at}\\right) = ${value}$. The function is continuous there, and the limit is $${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$.`,
+          `这里 $${alsoZh}${where} = ${sign}$，所以 $\\${kind}\\left(${at}\\right) = ${value}$。函数在该点连续，极限是 $${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["limits-of-reciprocal-trigonometric-functions#reciprocal-trigonometric-limits-away-from-the-first-period"],
+};
 
 const sameBaseExponentials = point(
   "dominant-exponentials-with-the-same-base",
@@ -549,32 +570,35 @@ const constantFromHole = point(
   },
 );
 
-const countingAsymptotes = point(
-  "counting-vertical-asymptotes-after-cancelling",
-  ["Counting vertical asymptotes after cancelling", "约分后数垂直渐近线"],
-  [
-    "A zero of the denominator gives a vertical asymptote only if a factor of it survives cancelling. Compare the power of each factor on top and bottom: more on the bottom gives an asymptote, otherwise the point is a hole.",
-    "分母的零点只有在对应因式约分后仍然留在分母时，才给出垂直渐近线。比较每个因式在分子和分母中的次数：分母次数更高就是渐近线，否则那一点是洞。",
-  ],
-  (rng) => {
-    const roots = rng.sample([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6], 3);
-    const bottom = roots.map(() => rng.int(1, 2));
-    const top = roots.map(() => rng.int(0, 2));
-    const answer = rootsCount(top, bottom);
-    const f = `\\frac{${factors(roots, top)}}{${factors(roots, bottom)}}`;
-    const lines = roots.map((r, i) => `$x = ${r}$: ${top[i]} / ${bottom[i]}`).join("; ");
-    const linesZh = roots.map((r, i) => `$x = ${r}$：${top[i]} / ${bottom[i]}`).join("；");
-    return ask(
-      [`How many vertical asymptotes does the graph of $f(x) = ${f}$ have?`, `$f(x) = ${f}$ 的图像有多少条垂直渐近线？`],
-      answer,
-      [3, 0, 1, 2],
-      [
-        `Compare the powers, top over bottom: ${lines}. An asymptote occurs where the bottom power is larger, and the number of such points is $${answer}$.`,
-        `比较次数（分子次数 / 分母次数）：${linesZh}。分母次数更大的地方才有渐近线，这样的点有 $${answer}$ 个。`,
-      ],
-    );
-  },
-);
+const countingAsymptotes = {
+  ...point(
+    "counting-vertical-asymptotes-after-cancelling",
+    ["Counting vertical asymptotes after cancelling", "约分后数垂直渐近线"],
+    [
+      "A zero of the denominator gives a vertical asymptote only if a factor of it survives cancelling. Compare the power of each factor on top and bottom: more on the bottom gives an asymptote, otherwise the point is a hole.",
+      "分母的零点只有在对应因式约分后仍然留在分母时，才给出垂直渐近线。比较每个因式在分子和分母中的次数：分母次数更高就是渐近线，否则那一点是洞。",
+    ],
+    (rng) => {
+      const roots = rng.sample([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6], 3);
+      const bottom = roots.map(() => rng.int(1, 2));
+      const top = roots.map(() => rng.int(0, 2));
+      const answer = rootsCount(top, bottom);
+      const f = `\\frac{${factors(roots, top)}}{${factors(roots, bottom)}}`;
+      const lines = roots.map((r, i) => `$x = ${r}$: ${top[i]} / ${bottom[i]}`).join("; ");
+      const linesZh = roots.map((r, i) => `$x = ${r}$：${top[i]} / ${bottom[i]}`).join("；");
+      return ask(
+        [`How many vertical asymptotes does the graph of $f(x) = ${f}$ have?`, `$f(x) = ${f}$ 的图像有多少条垂直渐近线？`],
+        answer,
+        [3, 0, 1, 2],
+        [
+          `Compare the powers, top over bottom: ${lines}. An asymptote occurs where the bottom power is larger, and the number of such points is $${answer}$.`,
+          `比较次数（分子次数 / 分母次数）：${linesZh}。分母次数更大的地方才有渐近线，这样的点有 $${answer}$ 个。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["discontinuities-due-to-vertical-asymptotes#counting-vertical-asymptotes-after-cancelling"],
+};
 
 const continuityOfLogOverLinear = point(
   "continuity-of-a-quotient-with-a-logarithm-or-root",
@@ -612,46 +636,49 @@ const continuityOfLogOverLinear = point(
   },
 );
 
-const notEveryGapRemovable = point(
-  "not-every-gap-can-be-removed",
-  ["Not every gap can be removed", "并非每个缺口都可去"],
-  [
-    "A quotient undefined at $a$ can be repaired by a value of $f(a)$ only if its limit at $a$ exists. Check the numerator first: if it is zero at $a$, factor and cancel to find the limit; if it is not zero, the graph has a vertical asymptote and no value helps.",
-    "在 $a$ 处无定义的商，只有在 $a$ 处极限存在时才能通过规定 $f(a)$ 来修补。先检查分子：若分子在 $a$ 处为零，就因式分解并约分求极限；若不为零，图像有垂直渐近线，取什么值都没有用。",
-  ],
-  (rng) => {
-    const a = nz(rng, 6);
-    const e = rng.int(-6, 6);
-    const holds = rng.bool();
-    const b = e - a;
-    const c = holds ? -a * e : -a * e + nz(rng, 5);
-    const limit = a + e;
-    const f = `\\frac{${poly([1, "x^{2}"], [b, "x"], [c, ""])}}{${minus(a)}}`;
-    const at = a * a + b * a + c;
-    const no: Pair = [
-      `No value works, because the graph has a vertical asymptote at $x = ${a}$`,
-      `没有这样的值，因为图像在 $x = ${a}$ 处有垂直渐近线`,
-    ];
-    const set = (v: number): Pair => [`$f(${a}) = ${v}$`, `$f(${a}) = ${v}$`];
-    return choose(
-      rng,
-      [
-        `Let $f(x) = ${f}$ for $x \\ne ${a}$. What value of $f(${a})$ makes $f$ continuous at $x = ${a}$?`,
-        `对 $x \\ne ${a}$，设 $f(x) = ${f}$。$f(${a})$ 取什么值时 $f$ 在 $x = ${a}$ 处连续？`,
-      ],
-      holds ? set(limit) : no,
-      holds ? [no, set(e), set(0)] : [set(limit), set(e), set(0)],
-      [
-        holds
-          ? `The numerator is zero at $${a}$ and factors as $(${minus(a)})(${linear(1, e)})$. After cancelling, the limit is $${a} + ${paren(e)} = ${limit}$.`
-          : `At $x = ${a}$ the numerator is $${at}$, not zero, while the denominator tends to $0$. The quotient is unbounded near $${a}$, so no value repairs it.`,
-        holds
-          ? `分子在 $${a}$ 处为零，可分解为 $(${minus(a)})(${linear(1, e)})$。约分后极限是 $${a} + ${paren(e)} = ${limit}$。`
-          : `在 $x = ${a}$ 处分子是 $${at}$，不为零，而分母趋于 $0$。商在 $${a}$ 附近无界，所以取什么值都修补不了。`,
-      ],
-    );
-  },
-);
+const notEveryGapRemovable = {
+  ...point(
+    "not-every-gap-can-be-removed",
+    ["Not every gap can be removed", "并非每个缺口都可去"],
+    [
+      "A quotient undefined at $a$ can be repaired by a value of $f(a)$ only if its limit at $a$ exists. Check the numerator first: if it is zero at $a$, factor and cancel to find the limit; if it is not zero, the graph has a vertical asymptote and no value helps.",
+      "在 $a$ 处无定义的商，只有在 $a$ 处极限存在时才能通过规定 $f(a)$ 来修补。先检查分子：若分子在 $a$ 处为零，就因式分解并约分求极限；若不为零，图像有垂直渐近线，取什么值都没有用。",
+    ],
+    (rng) => {
+      const a = nz(rng, 6);
+      const e = rng.int(-6, 6);
+      const holds = rng.bool();
+      const b = e - a;
+      const c = holds ? -a * e : -a * e + nz(rng, 5);
+      const limit = a + e;
+      const f = `\\frac{${poly([1, "x^{2}"], [b, "x"], [c, ""])}}{${minus(a)}}`;
+      const at = a * a + b * a + c;
+      const no: Pair = [
+        `No value works, because the graph has a vertical asymptote at $x = ${a}$`,
+        `没有这样的值，因为图像在 $x = ${a}$ 处有垂直渐近线`,
+      ];
+      const set = (v: number): Pair => [`$f(${a}) = ${v}$`, `$f(${a}) = ${v}$`];
+      return choose(
+        rng,
+        [
+          `Let $f(x) = ${f}$ for $x \\ne ${a}$. What value of $f(${a})$ makes $f$ continuous at $x = ${a}$?`,
+          `对 $x \\ne ${a}$，设 $f(x) = ${f}$。$f(${a})$ 取什么值时 $f$ 在 $x = ${a}$ 处连续？`,
+        ],
+        holds ? set(limit) : no,
+        holds ? [no, set(e), set(0)] : [set(limit), set(e), set(0)],
+        [
+          holds
+            ? `The numerator is zero at $${a}$ and factors as $(${minus(a)})(${linear(1, e)})$. After cancelling, the limit is $${a} + ${paren(e)} = ${limit}$.`
+            : `At $x = ${a}$ the numerator is $${at}$, not zero, while the denominator tends to $0$. The quotient is unbounded near $${a}$, so no value repairs it.`,
+          holds
+            ? `分子在 $${a}$ 处为零，可分解为 $(${minus(a)})(${linear(1, e)})$。约分后极限是 $${a} + ${paren(e)} = ${limit}$。`
+            : `在 $x = ${a}$ 处分子是 $${at}$，不为零，而分母趋于 $0$。商在 $${a}$ 附近无界，所以取什么值都修补不了。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings1["removing-point-discontinuities#not-every-gap-can-be-removed"],
+};
 
 const jumpSize = point(
   "the-shift-that-closes-a-jump",
@@ -712,31 +739,34 @@ const coefficientMakingHole = point(
   },
 );
 
-const hyperbolicSlopeAtZero = point(
-  "the-slope-of-a-hyperbolic-combination-at-zero",
-  ["The slope of a hyperbolic combination at zero", "双曲函数组合在零处的斜率"],
-  [
-    "At $x = 0$, $\\sinh 0 = 0$, $\\cosh 0 = \\operatorname{sech} 0 = 1$ and $\\tanh 0 = 0$. So the derivatives there are $\\cosh 0 = 1$ for $\\sinh$, $\\operatorname{sech}^{2} 0 = 1$ for $\\tanh$, and $0$ for both $\\cosh$ and $\\operatorname{sech}$, whose graphs have a horizontal tangent at $0$.",
-    "在 $x = 0$ 处，$\\sinh 0 = 0$，$\\cosh 0 = \\operatorname{sech} 0 = 1$，$\\tanh 0 = 0$。所以此处 $\\sinh$ 的导数是 $\\cosh 0 = 1$，$\\tanh$ 的导数是 $\\operatorname{sech}^{2} 0 = 1$，而 $\\cosh$ 和 $\\operatorname{sech}$ 的导数都是 $0$，它们的图像在 $0$ 处有水平切线。",
-  ],
-  (rng) => {
-    const a = nz(rng, 9);
-    const b = nz(rng, 9);
-    const c = nz(rng, 9);
-    const d = nz(rng, 9);
-    const f = poly([a, "\\operatorname{sech} x"], [b, "\\tanh x"], [c, "\\sinh x"], [d, "\\cosh x"]);
-    const answer = b + c;
-    return ask(
-      [`Let $f(x) = ${f}$. Find $f'(0)$.`, `设 $f(x) = ${f}$。求 $f'(0)$。`],
-      answer,
-      [a + d, a + b + c + d, b + c - a, b - c],
-      [
-        `$f'(x) = ${poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"])}$. At $0$, the first and last terms vanish, which leaves $${paren(b)} + ${paren(c)} = ${answer}$.`,
-        `$f'(x) = ${poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"])}$。在 $0$ 处第一项和最后一项为零，剩下 $${paren(b)} + ${paren(c)} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const hyperbolicSlopeAtZero = {
+  ...point(
+    "the-slope-of-a-hyperbolic-combination-at-zero",
+    ["The slope of a hyperbolic combination at zero", "双曲函数组合在零处的斜率"],
+    [
+      "At $x = 0$, $\\sinh 0 = 0$, $\\cosh 0 = \\operatorname{sech} 0 = 1$ and $\\tanh 0 = 0$. So the derivatives there are $\\cosh 0 = 1$ for $\\sinh$, $\\operatorname{sech}^{2} 0 = 1$ for $\\tanh$, and $0$ for both $\\cosh$ and $\\operatorname{sech}$, whose graphs have a horizontal tangent at $0$.",
+      "在 $x = 0$ 处，$\\sinh 0 = 0$，$\\cosh 0 = \\operatorname{sech} 0 = 1$，$\\tanh 0 = 0$。所以此处 $\\sinh$ 的导数是 $\\cosh 0 = 1$，$\\tanh$ 的导数是 $\\operatorname{sech}^{2} 0 = 1$，而 $\\cosh$ 和 $\\operatorname{sech}$ 的导数都是 $0$，它们的图像在 $0$ 处有水平切线。",
+    ],
+    (rng) => {
+      const a = nz(rng, 9);
+      const b = nz(rng, 9);
+      const c = nz(rng, 9);
+      const d = nz(rng, 9);
+      const f = poly([a, "\\operatorname{sech} x"], [b, "\\tanh x"], [c, "\\sinh x"], [d, "\\cosh x"]);
+      const answer = b + c;
+      return ask(
+        [`Let $f(x) = ${f}$. Find $f'(0)$.`, `设 $f(x) = ${f}$。求 $f'(0)$。`],
+        answer,
+        [a + d, a + b + c + d, b + c - a, b - c],
+        [
+          `$f'(x) = ${poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"])}$. At $0$, the first and last terms vanish, which leaves $${paren(b)} + ${paren(c)} = ${answer}$.`,
+          `$f'(x) = ${poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"])}$。在 $0$ 处第一项和最后一项为零，剩下 $${paren(b)} + ${paren(c)} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: calculusDrawings2["differentiating-reciprocal-hyperbolic-functions#the-slope-of-a-hyperbolic-combination-at-zero"],
+};
 
 const quotientFromSegment = point(
   "derivatives-of-quotients-from-a-segment",
