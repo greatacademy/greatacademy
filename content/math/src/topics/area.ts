@@ -3,7 +3,7 @@ import { t } from "@ga/content";
 import { type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
-
+import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
 import { numberProblem, steps } from "../problems.ts";
 
 const units = ["cm", "m", "in", "ft"] as const;
@@ -519,6 +519,7 @@ export const areaOfTriangles: TopicDef = {
     {
       id: "missing-base-or-height-of-a-triangle",
       title: t("A missing base or height", "求底或高"),
+      figure: remainingDrawings4["area-of-triangles#missing-base-or-height-of-a-triangle"],
       explanation: t(
         "Since $A = \\tfrac{1}{2} b h$, doubling the area gives $b h$; then divide by the known length. A triangle with area $30\\text{ cm}^2$ and base $12$ cm has $12h = 60$, so its height is $5$ cm.",
         "由于 $A = \\tfrac{1}{2} b h$，把面积乘以 2 得 $b h$，再除以已知的长度。面积 $30\\text{ cm}^2$、底 $12$ 厘米的三角形满足 $12h = 60$，所以高是 $5$ 厘米。",

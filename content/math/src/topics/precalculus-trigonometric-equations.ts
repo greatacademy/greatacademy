@@ -3,6 +3,8 @@ import { t } from "@ga/content";
 import { gcd } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings5 } from "../explanation-drawings-remaining-5.ts";
+import { remainingDrawings6 } from "../explanation-drawings-remaining-6.ts";
 import { choiceProblem, numberProblem, solutionsProblem } from "../problems.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.13 to 4.15: elementary, transformed,
@@ -801,6 +803,7 @@ export const elementaryTrigonometricEquationsContainingCosecant: TopicDef = {
     {
       id: "solve-elementary-cosecant-equations-degrees",
       title: t("Solve csc(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解余割方程（角度制）"),
+      figure: remainingDrawings5["elementary-trigonometric-equations-containing-cosecant#solve-elementary-cosecant-equations-degrees"],
       explanation: t(
         "Take the reciprocal to get an equation in sine, then use the reference angle and the signs of sine in each quadrant to list the degree solutions. Use $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$:\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
         "取倒数得到正弦方程，再用参考角和正弦在各象限的符号写出所有度数解。利用 $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$：\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
@@ -1159,6 +1162,7 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
     {
       id: "particular-solutions-from-general-trig",
       title: t("Evaluate particular degree solutions from general formulas", "由通解公式求特定角度解"),
+      figure: remainingDrawings5["general-solutions-of-elementary-trigonometric-equations#particular-solutions-from-general-trig"],
       explanation: t(
         "A general solution is a family of angles indexed by an integer, and choosing a specific integer picks out one member of the family. Given a general solution $x = \\alpha + 360k$ or $x = \\alpha + 180k$ in degrees, substitute an integer $k$ to find a particular solution, and choose the integer that lands in the interval you need.",
         "通解是一族以整数为下标的角，选定一个具体的整数就得到这族角中的一个。给定角度制下的通解 $x = \\alpha + 360k$ 或 $x = \\alpha + 180k$，选取使结果落在给定区间内的整数 $k$ 并代入，即可求得对应的特解。",
@@ -1271,6 +1275,10 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
     {
       id: "period-and-spacing-of-transformed-trig-solutions",
       title: t("Particular degree solutions of transformed equations", "变换三角方程的特解计算"),
+      figure:
+        remainingDrawings6[
+          "general-solutions-of-trigonometric-equations-with-transformed-functions#period-and-spacing-of-transformed-trig-solutions"
+        ],
       explanation: t(
         "Multiplying the input by a constant squeezes the graph horizontally, so the solutions are spaced more closely, by the period divided by that constant. For $\\sin(Bx^{\\circ}) = c$, dividing the general solution $Bx = \\alpha + 360k$ by $B$ gives $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$.",
         "把自变量乘以一个常数会在水平方向压缩图像，所以解之间的间隔变小，等于周期除以这个常数。对于 $\\sin(Bx^{\\circ}) = c$，将 $Bx = \\alpha + 360k$ 两边除以 $B$ 可得 $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$。",
@@ -1387,6 +1395,7 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
     {
       id: "solve-transformed-sine-degrees",
       title: t("Solve transformed sine equations in degrees", "在角度制下求解变换正弦方程"),
+      figure: remainingDrawings6["trigonometric-equations-containing-transformed-sine-functions#solve-transformed-sine-degrees"],
       explanation: t(
         "Treat the shifted angle as a single unknown, find all its values with the given sine, and then add the shift back to each one. To solve $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
         "把平移后的角看作一个未知数，求出正弦为给定值的所有角，再给每个角加回平移量。在 $[0, 360)$ 上求解 $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出 $x - \\varphi$ 的解，再加上 $\\varphi$。",
@@ -1510,6 +1519,7 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
     {
       id: "solve-transformed-cosine-degrees",
       title: t("Solve transformed cosine equations in degrees", "在角度制下求解变换余弦方程"),
+      figure: remainingDrawings6["trigonometric-equations-containing-transformed-cosine-functions#solve-transformed-cosine-degrees"],
       explanation: t(
         "Treat the shifted angle as a single unknown, find all its values with the given cosine, and then add the shift back to each one. To solve $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
         "把平移后的角看作一个未知数，求出余弦为给定值的所有角，再给每个角加回平移量。在 $[0, 360)$ 上求解 $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求内层角的值，再解出 $x$。",
@@ -1638,6 +1648,7 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
     {
       id: "solve-transformed-tangent-degrees",
       title: t("Solve transformed tangent equations in degrees", "在角度制下求解变换正切方程"),
+      figure: remainingDrawings6["trigonometric-equations-containing-transformed-tangent-functions#solve-transformed-tangent-degrees"],
       explanation: t(
         "Treat the shifted angle as a single unknown, find its value with the given tangent, and then add the shift back, keeping the answers inside the interval. To solve $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 180)$, find the principal angle in $[0, 180)$ and shift by $\\varphi$.",
         "把平移后的角看作一个未知数，求出正切为给定值的角，再加回平移量，并使答案保持在区间内。在 $[0, 180)$ 上求解 $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出主值角并加上偏移量 $\\varphi$。",
@@ -2144,6 +2155,7 @@ export const quadraticTrigonometricEquationsContainingSineOrCosine: TopicDef = {
     {
       id: "solve-quadratic-sin-cos-degrees",
       title: t("Solve quadratic equations in sin or cos in degrees", "在角度制下求解正弦或余弦二次方程"),
+      figure: remainingDrawings6["quadratic-trigonometric-equations-containing-sine-or-cosine#solve-quadratic-sin-cos-degrees"],
       explanation: t(
         "Solve the quadratic for the function value first, then turn each valid value into angles using reference angles and the signs in each quadrant. Factor the quadratic in $\\sin(x^{\\circ})$ or $\\cos(x^{\\circ})$ and find all degree solutions in $[0, 360)$.",
         "先解二次方程求出函数值，再用参考角和各象限的符号把每个有效值化为角度。对关于 $\\sin(x^{\\circ})$ 或 $\\cos(x^{\\circ})$ 的二次方程分解因式，求出 $[0, 360)$ 内的全部角度解。",
@@ -2346,6 +2358,8 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
     {
       id: "solve-quadratic-tangent-cotangent-degrees",
       title: t("Solve quadratic equations in tangent or cotangent in degrees", "在角度制下求解正切或余切二次方程"),
+      figure:
+        remainingDrawings6["quadratic-trigonometric-equations-containing-tangent-or-cotangent#solve-quadratic-tangent-cotangent-degrees"],
       explanation: t(
         "Solve the quadratic for the value of the function, then use the period of $180^{\\circ}$ to list every angle in a full turn. Solve the quadratic equation for $\\tan(x^{\\circ})$ or $\\cot(x^{\\circ})$ and list all degree solutions in $[0, 360)$.",
         "先解二次方程求出函数值，再利用 180° 的周期写出一整周内的所有角。求出 $\\tan(x^{\\circ})$ 或 $\\cot(x^{\\circ})$ 的二次方程解，并列出 $[0, 360)$ 内的所有角度解。",

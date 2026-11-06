@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-1.ts";
-
+import { remainingDrawings9 } from "../explanation-drawings-remaining-9.ts";
 import { article, choiceProblem, numberProblem, verdictChoice, yesNo } from "../problems.ts";
 import {
   allPairs,
@@ -1373,6 +1373,7 @@ export const countingTrees: TopicDef = {
     {
       id: "trees-with-a-given-degree-sequence",
       title: t("Trees with given degrees", "给定度数的树"),
+      figure: remainingDrawings9["counting-trees#trees-with-a-given-degree-sequence"],
       explanation: t(
         "In the Prüfer sequence of a tree, each vertex appears one time fewer than its degree, so counting trees with given degrees means counting arrangements of that sequence. Trees on $\\{1, \\dots, 6\\}$ with degrees $3, 2, 2, 1, 1, 1$ have Prüfer sequences with $1$ twice, $2$ once and $3$ once: $\\frac{4!}{2!\\,1!\\,1!} = 12$ trees.",
         "在树的普吕弗序列中，每个顶点出现的次数比它的度数少一，所以数给定度数的树就是数这个序列的排列方式。顶点集为 $\\{1, \\dots, 6\\}$、度数依次为 $3, 2, 2, 1, 1, 1$ 的树，其 Prüfer 序列中 $1$ 出现两次，$2$、$3$ 各一次：共 $\\frac{4!}{2!\\,1!\\,1!} = 12$ 棵。",

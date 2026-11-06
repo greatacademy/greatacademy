@@ -319,3 +319,6 @@ export const ball = (r: number, text?: string): Mark[] => [
   { kind: "dot", at: [0, 0] },
   ...(text ? [note([r / 2, 0], text, "n")] : []),
 ];
+
+/** belowRim labels the radius of a solid drawn with coneMarks or cylinderMarks under the front of its base, off the base's curve. */
+export const belowRim = (r: number, text: string, y = 0): Mark => note([r / 2, y - 0.27 * r], text, "s");

@@ -16,6 +16,7 @@ import {
   simplifyRadical,
   union,
 } from "@ga/subject-math";
+import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
 import { trigDrawings } from "../explanation-drawings-trig.ts";
 import { waveDrawings } from "../explanation-drawings-waves.ts";
 import {
@@ -347,6 +348,7 @@ export const findingTrigonometricRatiosOfQuadrantalAngles: TopicDef = {
     {
       id: "tangent-and-reciprocal-ratios-of-quadrantal-angles",
       title: t("Tangent and the reciprocal ratios of quadrantal angles", "象限角的正切与倒数三角比"),
+      figure: remainingDrawings4["finding-trigonometric-ratios-of-quadrantal-angles#tangent-and-reciprocal-ratios-of-quadrantal-angles"],
       explanation: t(
         "The other ratios are quotients of the coordinates of the point $(x, y)$:\n\n$$\\tan \\theta = \\frac{y}{x}, \\quad \\cot \\theta = \\frac{x}{y}, \\quad \\sec \\theta = \\frac{1}{x}, \\quad \\csc \\theta = \\frac{1}{y}.$$\n\nAt a quadrantal angle one coordinate is $0$, and a ratio with $0$ in the denominator is **undefined**. For $90^\\circ$, the point is $(0, 1)$: $\\tan 90^\\circ = \\frac{1}{0}$ is undefined, $\\cot 90^\\circ = \\frac{0}{1} = 0$, $\\sec 90^\\circ$ is undefined and $\\csc 90^\\circ = \\frac{1}{1} = 1$.",
         "其他三角比是点 $(x, y)$ 坐标的商：\n\n$$\\tan \\theta = \\frac{y}{x}, \\quad \\cot \\theta = \\frac{x}{y}, \\quad \\sec \\theta = \\frac{1}{x}, \\quad \\csc \\theta = \\frac{1}{y}.$$\n\n象限角的交点有一个坐标为 $0$，分母为 $0$ 的比**无定义**。对 $90^\\circ$，交点为 $(0, 1)$：$\\tan 90^\\circ = \\frac{1}{0}$ 无定义，$\\cot 90^\\circ = \\frac{0}{1} = 0$，$\\sec 90^\\circ$ 无定义，$\\csc 90^\\circ = \\frac{1}{1} = 1$。",
@@ -356,6 +358,7 @@ export const findingTrigonometricRatiosOfQuadrantalAngles: TopicDef = {
     {
       id: "expressions-with-quadrantal-angles",
       title: t("Expressions with quadrantal angles", "含象限角的式子"),
+      figure: remainingDrawings4["finding-trigonometric-ratios-of-quadrantal-angles#expressions-with-quadrantal-angles"],
       explanation: t(
         "To evaluate an expression, replace each ratio by its value, then do the arithmetic. For example, with $\\sin 270^\\circ = -1$ and $\\cos 180^\\circ = -1$:\n\n$$3\\sin 270^\\circ - 2\\cos 180^\\circ = 3(-1) - 2(-1) = -1.$$",
         "求式子的值时，把每个三角比换成它的值，再计算。例如 $\\sin 270^\\circ = -1$，$\\cos 180^\\circ = -1$：\n\n$$3\\sin 270^\\circ - 2\\cos 180^\\circ = 3(-1) - 2(-1) = -1.$$",

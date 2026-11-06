@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings8 } from "../explanation-drawings-remaining-8.ts";
 import { article, choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
 
 // Precalculus Unit 6 Part 2: Matrix Inverses, Systems, and Linear Transformations in the Plane
@@ -1951,6 +1952,7 @@ export const rotationsAsLinearTransformations: TopicDef = {
     {
       id: "rotating-points-and-vectors-by-arbitrary-angles",
       title: t("Rotating points and vectors by special angles", "特殊角度下的点与向量旋转"),
+      figure: remainingDrawings8["rotations-as-linear-transformations#rotating-points-and-vectors-by-arbitrary-angles"],
       explanation: t(
         "Substitute the exact cosine and sine of the angle into the rotation matrix, then multiply it by the column vector of the point. To rotate a point $P(x, y)$ by $\\theta$, compute $R_\\theta \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} x\\cos\\theta - y\\sin\\theta \\\\ x\\sin\\theta + y\\cos\\theta \\end{pmatrix}$.",
         "把角的余弦和正弦的精确值代入旋转矩阵，再乘以该点的列向量。旋转点 $P(x, y)$ 角度 $\\theta$ 时，计算矩阵乘法 $R_\\theta \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} x\\cos\\theta - y\\sin\\theta \\\\ x\\sin\\theta + y\\cos\\theta \\end{pmatrix}$。",
@@ -2565,6 +2567,7 @@ export const invertingLinearTransformations: TopicDef = {
     {
       id: "matrix-of-inverse-linear-transformation",
       title: t("Standard matrix of an inverse linear transformation", "逆线性变换的标准矩阵"),
+      figure: remainingDrawings8["inverting-linear-transformations#matrix-of-inverse-linear-transformation"],
       explanation: t(
         "If a linear transformation $T$ has standard matrix $A$, its inverse transformation $T^{-1}$ reverses the action of $T$ and has standard matrix $A^{-1}$. For instance, the inverse of rotation $R_\\theta$ is $R_{-\\theta}$, and the inverse of reflection across a line is the reflection itself.",
         "若线性变换 $T$ 的标准矩阵为 $A$，则其逆变换 $T^{-1}$ 撤销 $T$ 的几何效果，且其标准矩阵为 $A^{-1}$。例如，旋转 $R_\\theta$ 的逆变换为反向旋转 $R_{-\\theta}$，反射变换的逆变换为其自身。",
@@ -2946,6 +2949,7 @@ export const areaScaleFactorsOfLinearTransformations: TopicDef = {
     {
       id: "orientation-and-sign-of-determinant",
       title: t("Orientation and sign of the determinant", "图形定向与行列式符号"),
+      figure: remainingDrawings8["area-scale-factors-of-linear-transformations#orientation-and-sign-of-determinant"],
       explanation: t(
         "The sign of $\\det(A)$ governs orientation:\n- If $\\det(A) > 0$, the transformation preserves orientation (counterclockwise loops remain counterclockwise).\n- If $\\det(A) < 0$, the transformation reverses orientation (counterclockwise loops become clockwise, as in a reflection).",
         "行列式 $\\det(A)$ 的符号决定图形的定向：\n- 若 $\\det(A) > 0$，变换保持定向不变（逆时针路径仍为逆时针）。\n- 若 $\\det(A) < 0$，变换反转定向（逆时针路径变为顺时针，如同镜像反射）。",

@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { gcd, linear, poly, Q, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings8 } from "../explanation-drawings-remaining-8.ts";
 import { choiceProblem, expressionProblem, numberProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -338,6 +339,7 @@ export const findingPowersOfComplexNumbersUsingDeMoivresTheorem: TopicDef = {
     {
       id: "polar-powers-in-rectangular-form",
       title: t("Write a power of a number in polar form as a + bi", "把三角形式复数的幂写成 a + bi"),
+      figure: remainingDrawings8["finding-powers-of-complex-numbers-using-de-moivres-theorem#polar-powers-in-rectangular-form"],
       explanation: t(
         "Apply De Moivre's theorem, then evaluate the cosine and sine of the new angle exactly:\n\n$$\\left[2\\left(\\cos\\frac{\\pi}{12} + i\\sin\\frac{\\pi}{12}\\right)\\right]^{4} = 16\\left(\\cos\\frac{\\pi}{3} + i\\sin\\frac{\\pi}{3}\\right) = 16\\left(\\frac{1}{2} + \\frac{\\sqrt{3}}{2}i\\right) = 8 + 8i\\sqrt{3}$$\n\nThe angle $\\frac{\\pi}{12}$ is not a special angle, but $4 \\cdot \\frac{\\pi}{12} = \\frac{\\pi}{3}$ is.",
         "先用棣莫弗定理，再精确求出新角的余弦与正弦：\n\n$$\\left[2\\left(\\cos\\frac{\\pi}{12} + i\\sin\\frac{\\pi}{12}\\right)\\right]^{4} = 16\\left(\\cos\\frac{\\pi}{3} + i\\sin\\frac{\\pi}{3}\\right) = 16\\left(\\frac{1}{2} + \\frac{\\sqrt{3}}{2}i\\right) = 8 + 8i\\sqrt{3}$$\n\n角 $\\frac{\\pi}{12}$ 不是特殊角，但 $4 \\cdot \\frac{\\pi}{12} = \\frac{\\pi}{3}$ 是特殊角。",

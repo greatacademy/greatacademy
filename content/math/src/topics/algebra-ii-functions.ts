@@ -16,6 +16,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
 import { annotate, at, guides, onAxis, setText as setAlt, stretchOf } from "../graph-figures.ts";
 import { choiceProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, verdictChoice, yesNo } from "../problems.ts";
 
@@ -509,6 +510,7 @@ export const oneToOneFunctions: TopicDef = {
     {
       id: "one-to-one-from-a-formula",
       title: t("One-to-one from a formula", "从解析式判断"),
+      figure: remainingDrawings4["one-to-one-functions#one-to-one-from-a-formula"],
       explanation: t(
         "Picture the graph. Lines that are not horizontal, cubes $a(x - h)^{3} + k$ and square roots $a\\sqrt{x - h} + k$ always rise or always fall, so they are one-to-one.\n\nParabolas $a(x - h)^{2} + k$ and V shapes $a|x - h| + k$ are symmetric about $x = h$, so $f(h - 1) = f(h + 1)$: they are not one-to-one, unless the domain is cut down to one side of $x = h$.",
         "想象图象。不水平的直线、立方函数 $a(x - h)^{3} + k$ 和平方根函数 $a\\sqrt{x - h} + k$ 始终上升或始终下降，所以是一一对应的。\n\n抛物线 $a(x - h)^{2} + k$ 和 V 形 $a|x - h| + k$ 关于 $x = h$ 对称，所以 $f(h - 1) = f(h + 1)$：它们不是一一对应的，除非把定义域限制在 $x = h$ 的一侧。",

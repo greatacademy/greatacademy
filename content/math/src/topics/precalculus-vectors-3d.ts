@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings7 } from "../explanation-drawings-remaining-7.ts";
 import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (Part 2: 3D Vectors, Dot Product, and Cross Product,
@@ -800,6 +801,7 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
     {
       id: "testing-orthogonality-using-the-dot-product",
       title: t("Testing orthogonality using the dot product", "利用数量积判定向量垂直"),
+      figure: remainingDrawings7["calculating-the-dot-product-using-components#testing-orthogonality-using-the-dot-product"],
       explanation: t(
         "Two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ are perpendicular (orthogonal) if and only if their dot product is zero:\n\n$$\\mathbf{u} \\perp \\mathbf{v} \\iff \\mathbf{u} \\cdot \\mathbf{v} = 0$$",
         "两个非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 垂直（正交）当且仅当它们的数量积为零：\n\n$$\\mathbf{u} \\perp \\mathbf{v} \\iff \\mathbf{u} \\cdot \\mathbf{v} = 0$$",
@@ -856,6 +858,7 @@ export const theAngleBetweenTwoVectors: TopicDef = {
     {
       id: "cosine-formula-for-angle-between-vectors",
       title: t("Cosine formula for angle between vectors", "两向量夹角的余弦公式"),
+      figure: remainingDrawings7["the-angle-between-two-vectors#cosine-formula-for-angle-between-vectors"],
       explanation: t(
         "The dot product equals the product of the lengths times the cosine of the angle, so dividing by the lengths isolates the cosine. The cosine of the angle $\\theta$ between two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ is given by:\n\n$$\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}$$",
         "点积等于两个长度的积乘以夹角的余弦，所以除以两个长度就能单独得到余弦。两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 夹角 $\\theta$ 的余弦值为：\n\n$$\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}$$",
@@ -1128,6 +1131,7 @@ export const theCrossProductOfTwoVectors: TopicDef = {
     {
       id: "geometric-definition-and-magnitude-of-cross-product",
       title: t("Geometric definition and magnitude of cross product", "叉积的几何定义与模长"),
+      figure: remainingDrawings7["the-cross-product-of-two-vectors#geometric-definition-and-magnitude-of-cross-product"],
       explanation: t(
         "Unlike the dot product, the cross product $\\mathbf{u} \\times \\mathbf{v}$ is a vector in $\\mathbb{R}^3$. Its magnitude is given by:\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\nwhere $\\theta \\in [0, \\pi]$ is the angle between the two vectors.",
         "与数量积不同，叉积（向量积）$\\mathbf{u} \\times \\mathbf{v}$ 的结果是三维空间中的一个向量。其模长公式为：\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\n其中 $\\theta \\in [0, \\pi]$ 是两向量的夹角。",
@@ -1164,6 +1168,7 @@ export const theCrossProductOfTwoVectors: TopicDef = {
     {
       id: "direction-of-cross-product-and-orthogonality",
       title: t("Direction of cross product and orthogonality", "叉积的方向与右手定则"),
+      figure: remainingDrawings7["the-cross-product-of-two-vectors#direction-of-cross-product-and-orthogonality"],
       explanation: t(
         "The direction of $\\mathbf{u} \\times \\mathbf{v}$ is perpendicular to both $\\mathbf{u}$ and $\\mathbf{v}$, following the right-hand rule. For the standard basis vectors:\n\n$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}, \\quad \\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$$\n\n$$\\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{k} \\times \\mathbf{j} = -\\mathbf{i}, \\quad \\mathbf{i} \\times \\mathbf{k} = -\\mathbf{j}$$",
         "叉积 $\\mathbf{u} \\times \\mathbf{v}$ 的方向同时垂直于 $\\mathbf{u}$ 和 $\\mathbf{v}$，满足右手定则。标准基向量的叉积关系为：\n\n$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}, \\quad \\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$$\n\n$$\\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{k} \\times \\mathbf{j} = -\\mathbf{i}, \\quad \\mathbf{i} \\times \\mathbf{k} = -\\mathbf{j}$$",
@@ -1227,6 +1232,7 @@ export const propertiesOfTheCrossProduct: TopicDef = {
     {
       id: "anti-commutativity-and-parallel-vectors",
       title: t("Anti-commutativity and parallel vectors", "反交换律与平行向量"),
+      figure: remainingDrawings7["properties-of-the-cross-product#anti-commutativity-and-parallel-vectors"],
       explanation: t(
         "Key properties of the cross product include:\n\n1. **Anti-commutativity**: $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$\n2. **Self-product**: $\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$\n3. **Collinearity / Parallel vectors**: Two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ are parallel if and only if $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$.",
         "向量叉积的关键代数性质包括：\n\n1. **反交换律**：$\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$\n2. **自身叉积**：$\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$\n3. **共线 / 平行判定**：两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 平行当且仅当 $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$。",
@@ -1390,6 +1396,7 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
     {
       id: "finding-a-vector-orthogonal-to-two-vectors",
       title: t("Finding a vector orthogonal to two vectors", "求与已知两向量均正交的向量"),
+      figure: remainingDrawings7["calculating-the-cross-product-using-determinants#finding-a-vector-orthogonal-to-two-vectors"],
       explanation: t(
         "A vector orthogonal (perpendicular) to both $\\mathbf{u}$ and $\\mathbf{v}$ can always be obtained by calculating their cross product $\\mathbf{u} \\times \\mathbf{v}$ (or any nonzero scalar multiple of it).",
         "求同时与 $\\mathbf{u}$ 和 $\\mathbf{v}$ 正交（垂直）的向量，可以通过计算它们的叉积 $\\mathbf{u} \\times \\mathbf{v}$（或其任意非零数乘倍数）得到。",
@@ -1446,6 +1453,7 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
     {
       id: "area-of-a-parallelogram-in-3d",
       title: t("Area of a parallelogram in 3D", "三维空间中平行四边形的面积"),
+      figure: remainingDrawings7["finding-areas-using-the-cross-product#area-of-a-parallelogram-in-3d"],
       explanation: t(
         "The area of the parallelogram spanned by adjacent vectors $\\mathbf{u}$ and $\\mathbf{v}$ equals the magnitude of their cross product:\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$",
         "以相邻向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 为邻边的平行四边形的面积等于两向量叉积的模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$",
@@ -1471,6 +1479,7 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
     {
       id: "area-of-a-triangle-in-3d",
       title: t("Area of a triangle in 3D", "三维空间中三角形的面积"),
+      figure: remainingDrawings7["finding-areas-using-the-cross-product#area-of-a-triangle-in-3d"],
       explanation: t(
         "A triangle with vertices $A, B, C$ has area equal to half the area of the parallelogram formed by $\\vec{AB}$ and $\\vec{AC}$:\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$",
         "以 $A, B, C$ 为顶点的三角形的面积等于由 $\\vec{AB}$ 和 $\\vec{AC}$ 构成的平行四边形面积的一半：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$",
@@ -1627,6 +1636,7 @@ export const volumesOfParallelepipeds: TopicDef = {
     {
       id: "volume-of-a-parallelepiped-from-coterminous-vectors",
       title: t("Volume of a parallelepiped from coterminous vectors", "共起点向量构成的平行六面体体积"),
+      figure: remainingDrawings7["volumes-of-parallelepipeds#volume-of-a-parallelepiped-from-coterminous-vectors"],
       explanation: t(
         "The volume of a parallelepiped determined by three coterminous vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is the absolute value of their scalar triple product:\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
         "由三个共起点向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的平行六面体的体积等于它们混合积的绝对值：\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
@@ -1656,6 +1666,7 @@ export const volumesOfParallelepipeds: TopicDef = {
     {
       id: "volume-of-a-parallelepiped-from-vertices",
       title: t("Volume of a parallelepiped from vertices", "由顶点坐标计算平行六面体体积"),
+      figure: remainingDrawings7["volumes-of-parallelepipeds#volume-of-a-parallelepiped-from-vertices"],
       explanation: t(
         "Subtract the coordinates of the shared vertex from the other three to get the edge vectors, then take the absolute value of their triple product. If a parallelepiped has a vertex $A$ with three adjacent vertices $B, C, D$, its volume is:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
         "用另外三个顶点的坐标减去公共顶点的坐标得到棱向量，再取它们三重积的绝对值。若平行六面体的一个顶点为 $A$，且与之相邻的三个顶点为 $B, C, D$，则其体积为：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
@@ -1708,6 +1719,7 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
     {
       id: "volume-of-a-tetrahedron",
       title: t("Volume of a tetrahedron", "四面体的体积"),
+      figure: remainingDrawings7["finding-volumes-of-tetrahedrons-and-pyramids-using-vector-products#volume-of-a-tetrahedron"],
       explanation: t(
         "A tetrahedron (triangular pyramid) spanned by three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ has volume equal to $\\frac{1}{6}$ of the volume of the corresponding parallelepiped:\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
         "由三个向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的四面体（三棱锥）的体积等于相应平行六面体体积的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
@@ -1741,6 +1753,10 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
     {
       id: "volume-of-a-pyramid-with-parallelogram-base",
       title: t("Volume of a pyramid with parallelogram base", "平行四边形底棱锥的体积"),
+      figure:
+        remainingDrawings7[
+          "finding-volumes-of-tetrahedrons-and-pyramids-using-vector-products#volume-of-a-pyramid-with-parallelogram-base"
+        ],
       explanation: t(
         "A pyramid whose base is a parallelogram spanned by $\\mathbf{u}$ and $\\mathbf{v}$, and whose apex is located by vector $\\mathbf{w}$ from the same corner, has volume:\n\n$$V = \\frac{1}{3}\\times \\text{Base Area} \\times \\text{Height} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$",
         "底面为由 $\\mathbf{u}$ 与 $\\mathbf{v}$ 张成的平行四边形，且从同一起点指向顶点的向量为 $\\mathbf{w}$ 的四棱锥，其体积为：\n\n$$V = \\frac{1}{3}\\times \\text{底面积} \\times \\text{高} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$",

@@ -22,6 +22,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
+import { remainingDrawings5 } from "../explanation-drawings-remaining-5.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -1326,6 +1327,7 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
     {
       id: "counting-vertical-asymptotes",
       title: t("Counting vertical asymptotes", "数竖直渐近线的条数"),
+      figure: remainingDrawings5["vertical-asymptotes-of-rational-functions#counting-vertical-asymptotes"],
       explanation: t(
         "To count the vertical asymptotes, factor the denominator and compare each factor with the numerator:\n\n- a factor $x^{2} + k$ with $k > 0$ is never $0$, so it gives no asymptote;\n- a repeated factor such as $(x - 2)^{2}$ gives only one asymptote, $x = 2$;\n- a factor $x - a$ that cancels completely with the numerator gives a hole, not an asymptote; but if $(x - a)^{2}$ is in the denominator and only $x - a$ in the numerator, one factor is left and $x = a$ is still an asymptote.\n\n$$\\frac{x - 1}{(x - 1)^{2}(x^{2} + 4)} = \\frac{1}{(x - 1)(x^{2} + 4)}$$\n\nhas exactly one vertical asymptote, $x = 1$.",
         "数竖直渐近线时，把分母因式分解，并把每个因式与分子比较：\n\n- $k > 0$ 时因式 $x^{2} + k$ 永不为 $0$，不产生渐近线；\n- 重复的因式如 $(x - 2)^{2}$ 只产生一条渐近线 $x = 2$；\n- 能与分子完全约去的因式 $x - a$ 产生空洞，而不是渐近线；但如果分母有 $(x - a)^{2}$ 而分子只有 $x - a$，约分后还剩一个因式，$x = a$ 仍是渐近线。\n\n$$\\frac{x - 1}{(x - 1)^{2}(x^{2} + 4)} = \\frac{1}{(x - 1)(x^{2} + 4)}$$\n\n恰有一条竖直渐近线 $x = 1$。",
@@ -2408,6 +2410,7 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
     {
       id: "matching-linear-over-linear-graphs",
       title: t("Matching by asymptotes and intercepts", "由渐近线和截距对应"),
+      figure: remainingDrawings5["identifying-the-graph-of-a-rational-function#matching-linear-over-linear-graphs"],
       explanation: t(
         "To match $f(x) = \\frac{a(x - r)}{x - p}$ with its graph, check in turn:\n\n1. the vertical asymptote $x = p$;\n2. the horizontal asymptote $y = a$;\n3. the $x$-intercept $(r, 0)$.\n\nGraphs that differ in only one of these can still be told apart by that one feature.",
         "要把 $f(x) = \\frac{a(x - r)}{x - p}$ 与它的图象对应，依次检查：\n\n1. 竖直渐近线 $x = p$；\n2. 水平渐近线 $y = a$；\n3. $x$ 轴截点 $(r, 0)$。\n\n只在其中一项上不同的图象，也能凭这一项区分。",

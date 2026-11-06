@@ -2,6 +2,7 @@ import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { num, paren } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
 import { choiceProblem, numberProblem, steps, why } from "../problems.ts";
 
 const abs = Math.abs;
@@ -167,6 +168,7 @@ export const addingIntegers: TopicDef = {
     {
       id: "same-signs",
       title: t("Adding integers with the same sign", "同号整数相加"),
+      figure: remainingDrawings4["adding-integers#same-signs"],
       explanation: t(
         "To add two integers with the **same sign**, add their absolute values and keep the common sign. For example, $(-6) + (-9)$: the absolute values add to $6 + 9 = 15$, and both numbers are negative, so the sum is $-15$.\n\nOn the number line: starting at $-6$ and moving $9$ more units to the left lands on $-15$.",
         "**同号**两数相加，把它们的绝对值相加，并保留共同的符号。例如 $(-6) + (-9)$：绝对值之和为 $6 + 9 = 15$，两个数都是负数，所以和为 $-15$。\n\n在数轴上看：从 $-6$ 出发再向左移动 $9$ 个单位，到达 $-15$。",
@@ -198,6 +200,7 @@ export const addingIntegers: TopicDef = {
     {
       id: "different-signs",
       title: t("Adding integers with different signs", "异号整数相加"),
+      figure: remainingDrawings4["adding-integers#different-signs"],
       explanation: t(
         "To add two integers with **different signs**, subtract the smaller absolute value from the larger one, and give the result the sign of the number with the larger absolute value. For example, $(-11) + 4$: $11 - 4 = 7$, and $-11$ has the larger absolute value, so the sum is $-7$.\n\nOn the number line: starting at $-11$ and moving $4$ units to the right lands on $-7$. A number plus its opposite is $0$.",
         "**异号**两数相加，用较大的绝对值减去较小的绝对值，结果取绝对值较大的那个数的符号。例如 $(-11) + 4$：$11 - 4 = 7$，$-11$ 的绝对值较大，所以和为 $-7$。\n\n在数轴上看：从 $-11$ 出发向右移动 $4$ 个单位，到达 $-7$。一个数与它的相反数相加得 $0$。",
@@ -249,6 +252,7 @@ export const subtractingIntegers: TopicDef = {
     {
       id: "subtracting-a-positive",
       title: t("Subtracting a positive integer", "减去正整数"),
+      figure: remainingDrawings4["subtracting-integers#subtracting-a-positive"],
       explanation: t(
         "On the number line, subtracting a positive number moves left. Rewriting the subtraction as adding the opposite lets you use the rules for adding integers.\n\nSubtracting a number is the same as adding its opposite: $a - b = a + (-b)$. For example, $3 - 8 = 3 + (-8) = -5$, and $-4 - 6 = -4 + (-6) = -10$.",
         "在数轴上，减去一个正数就是向左移动。把减法改写成加上相反数，就可以用整数加法的法则来计算。\n\n减去一个数，等于加上这个数的相反数：$a - b = a + (-b)$。例如 $3 - 8 = 3 + (-8) = -5$，$-4 - 6 = -4 + (-6) = -10$。",
@@ -279,6 +283,7 @@ export const subtractingIntegers: TopicDef = {
     {
       id: "subtracting-a-negative",
       title: t("Subtracting a negative integer", "减去负整数"),
+      figure: remainingDrawings4["subtracting-integers#subtracting-a-negative"],
       explanation: t(
         "Taking away a negative amount, such as removing a debt, makes the total larger. That is why subtracting a negative number moves right on the number line.\n\nTo subtract a negative number, add its opposite, which is positive: $a - (-b) = a + b$. For example, $-9 - (-4) = -9 + 4 = -5$.",
         "拿走一个负的量，比如免除一笔欠款，会使总量变大。所以减去一个负数在数轴上是向右移动。\n\n减去一个负数，等于加上它的相反数（一个正数）：$a - (-b) = a + b$。例如 $-9 - (-4) = -9 + 4 = -5$。",

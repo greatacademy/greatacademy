@@ -2,6 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type PlaneMark, type PlaneView, plane, poly, Q } from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
+import { remainingDrawings3 } from "../explanation-drawings-remaining-3.ts";
 import { annotate, at } from "../graph-figures.ts";
 import { numberProblem, pointLatex, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -290,6 +291,7 @@ export const approximatingSolutionsToSystemsOfNonlinearEquations: TopicDef = {
     {
       id: "locating-a-solution-in-a-table",
       title: t("Locating a solution in a table", "在数值表中确定解的位置"),
+      figure: remainingDrawings3["approximating-solutions-to-systems-of-nonlinear-equations#locating-a-solution-in-a-table"],
       explanation: t(
         "As with two lines, a table of values locates a crossing of a parabola and a line: where one function is below the other at an $x$-value and above it at the next, a solution lies in between. A parabola can cross a line twice, so look along the whole table for every switch.",
         "与两条直线的情形一样，数值表也能确定抛物线与直线交点的位置：如果在某个 $x$ 值处一个函数小于另一个，而在下一个 $x$ 值处大于它，那么两者之间有一个解。抛物线可能与直线相交两次，所以要沿整张表查找每一次大小关系的改变。",

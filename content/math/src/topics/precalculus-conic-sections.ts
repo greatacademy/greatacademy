@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings7 } from "../explanation-drawings-remaining-7.ts";
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -1107,6 +1108,7 @@ export const theAreaOfAnEllipse: TopicDef = {
     {
       id: "scaling-relation-and-missing-semi-axis",
       title: t("Scaling relation and finding a missing semi-axis", "面积伸缩关系与求未知半轴长"),
+      figure: remainingDrawings7["the-area-of-an-ellipse#scaling-relation-and-missing-semi-axis"],
       explanation: t(
         "Because an ellipse is obtained by scaling a unit circle horizontally by $a$ and vertically by $b$, its area is $\\pi \\cdot a \\cdot b$.\n\nIf the area $A$ and one semi-axis $a$ are known, the other semi-axis is $b = \\frac{A}{\\pi a}$.",
         "因为椭圆可以看作单位圆沿水平方向伸缩 $a$ 倍、竖直方向伸缩 $b$ 倍得到，所以其面积为 $\\pi \\cdot a \\cdot b$。\n\n已知面积 $A$ 和一个半轴长 $a$，可求得另一个半轴长 $b = \\frac{A}{\\pi a}$。",

@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type Coefficient, gcd, plane, Q } from "@ga/subject-math";
 import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings5 } from "../explanation-drawings-remaining-5.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -1422,6 +1423,7 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
     {
       id: "cofunction-identities-basic",
       title: t("Cofunction identities in radians", "弧度制下的余角恒等式"),
+      figure: remainingDrawings5["simplifying-trigonometric-expressions-using-cofunction-identities#cofunction-identities-basic"],
       explanation: t(
         "Two angles that add up to a right angle are complementary, and each trigonometric function of one equals the cofunction of the other. Complementary angles satisfy:\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$\n\nAdding $\\frac{\\pi}{2}$ instead follows from $\\sin\\left(\\frac{\\pi}{2} + \\theta\\right) = \\cos\\theta$ and $\\cos\\left(\\frac{\\pi}{2} + \\theta\\right) = -\\sin\\theta$, because a quarter turn moves the point $(\\cos\\theta, \\sin\\theta)$ to $(-\\sin\\theta, \\cos\\theta)$.",
         "和为直角的两个角互余，其中一个角的三角函数等于另一个角的余函数。互余的两个角满足：\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$\n\n如果是加上 $\\frac{\\pi}{2}$，则有 $\\sin\\left(\\frac{\\pi}{2} + \\theta\\right) = \\cos\\theta$，$\\cos\\left(\\frac{\\pi}{2} + \\theta\\right) = -\\sin\\theta$，因为转四分之一圈把点 $(\\cos\\theta, \\sin\\theta)$ 移到 $(-\\sin\\theta, \\cos\\theta)$。",
@@ -1453,6 +1455,8 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
     {
       id: "cofunction-identities-in-degree-expressions",
       title: t("Cofunction identities with numerical angles", "数字角度中的余角恒等式"),
+      figure:
+        remainingDrawings5["simplifying-trigonometric-expressions-using-cofunction-identities#cofunction-identities-in-degree-expressions"],
       explanation: t(
         "Look for pairs of angles that add up to $90^{\\circ}$, and rewrite one of them with its cofunction so the two terms can be combined. Since $\\sin(90^{\\circ} - x) = \\cos x$, ratios of complementary angles are equal: $\\sin(70^{\\circ}) = \\cos(20^{\\circ})$, so $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$.",
         "找出和为 $90^{\\circ}$ 的一对角，把其中一个用余函数改写，使两项可以合并。因为 $\\sin(90^{\\circ} - x) = \\cos x$，互余角的对应三角比相等：$\\sin(70^{\\circ}) = \\cos(20^{\\circ})$，因此 $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$。",
@@ -2243,6 +2247,7 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
     {
       id: "double-angle-formula-for-sine-statement",
       title: t("The double-angle formula for sine", "正弦二倍角公式的陈述"),
+      figure: remainingDrawings5["the-double-angle-formula-for-sine#double-angle-formula-for-sine-statement"],
       explanation: t(
         "The double-angle formula is a special case of the sum formula, so it does not need to be memorized separately. Note that $\\sin(2\\theta)$ is not $2\\sin\\theta$.\n\nApplying the addition formula with both angles equal gives:\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
         "二倍角公式是和角公式的特例，所以不必另外记忆。注意 $\\sin(2\\theta)$ 不等于 $2\\sin\\theta$。\n\n将和角公式中两个角取相同值，即得：\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
@@ -2571,6 +2576,7 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
     {
       id: "sin-double-angle-from-cos-only",
       title: t("Finding $\\sin 2\\theta$ from $\\cos\\theta$ in a given quadrant", "由 $\\cos\\theta$ 在给定象限求 $\\sin 2\\theta$"),
+      figure: remainingDrawings5["using-the-double-angle-formula-for-sine-with-the-pythagorean-theorem#sin-double-angle-from-cos-only"],
       explanation: t(
         "When only the cosine is given, find the sine from the Pythagorean identity, choosing its sign from the quadrant, before using the double-angle formula. If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
         "只给出余弦时，先用勾股恒等式求正弦，并根据所在象限确定符号，再用二倍角公式。若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",

@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { poly } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { remainingDrawings8 } from "../explanation-drawings-remaining-8.ts";
 import {
   choiceProblem,
   equationProblem,
@@ -1596,6 +1597,7 @@ export const theCisNotation: TopicDef = {
     {
       id: "cis-definition-and-evaluation",
       title: t("Definition and evaluation of cis notation", "cis 记号的定义与求值"),
+      figure: remainingDrawings8["the-cis-notation#cis-definition-and-evaluation"],
       explanation: t(
         "The cis notation is only a shorthand that saves writing, and evaluating it means finding the cosine and sine of the angle. The notation **$\\text{cis}(\\theta)$** is an abbreviation for:\n\n$$\\text{cis}(\\theta) = \\cos\\theta + i\\sin\\theta$$\n\nThus, $r\\,\\text{cis}(\\theta) = r(\\cos\\theta + i\\sin\\theta)$.\n\nFor example:\n- $\\text{cis}(0) = 1$\n- $\\text{cis}\\left(\\frac{\\pi}{2}\\right) = i$\n- $\\text{cis}(\\pi) = -1$\n- $\\text{cis}\\left(\\frac{3\\pi}{2}\\right) = -i$",
         "cis 记号只是一种节省书写的简写，求它的值就是求出角的余弦和正弦。简记符号 **$\\text{cis}(\\theta)$** 代表：\n\n$$\\text{cis}(\\theta) = \\cos\\theta + i\\sin\\theta$$\n\n因此，$r\\,\\text{cis}(\\theta) = r(\\cos\\theta + i\\sin\\theta)$。\n\n常见特殊值：\n- $\\text{cis}(0) = 1$\n- $\\text{cis}\\left(\\frac{\\pi}{2}\\right) = i$\n- $\\text{cis}(\\pi) = -1$\n- $\\text{cis}\\left(\\frac{3\\pi}{2}\\right) = -i$",
@@ -1619,6 +1621,7 @@ export const theCisNotation: TopicDef = {
     {
       id: "products-and-quotients-in-cis-notation",
       title: t("Multiplication and division in cis notation", "cis 记号下的乘法与除法运算"),
+      figure: remainingDrawings8["the-cis-notation#products-and-quotients-in-cis-notation"],
       explanation: t(
         "When multiplying, the moduli multiply and the angles add; when dividing, the moduli divide and the angles subtract. Using $\\text{cis}$ notation, the product and quotient rules are written compactly:\n\n- **Product**: $r_1\\,\\text{cis}(\\alpha) \\cdot r_2\\,\\text{cis}(\\beta) = (r_1 r_2)\\,\\text{cis}(\\alpha + \\beta)$\n- **Quotient**: $\\frac{r_1\\,\\text{cis}(\\alpha)}{r_2\\,\\text{cis}(\\beta)} = \\left(\\frac{r_1}{r_2}\\right)\\,\\text{cis}(\\alpha - \\beta)$",
         "相乘时模相乘、角相加；相除时模相除、角相减。使用 $\\text{cis}$ 记号，复数的乘法和除法法则表示更为简洁：\n\n- **乘积**：$r_1\\,\\text{cis}(\\alpha) \\cdot r_2\\,\\text{cis}(\\beta) = (r_1 r_2)\\,\\text{cis}(\\alpha + \\beta)$\n- **商**：$\\frac{r_1\\,\\text{cis}(\\alpha)}{r_2\\,\\text{cis}(\\beta)} = \\left(\\frac{r_1}{r_2}\\right)\\,\\text{cis}(\\alpha - \\beta)$",
