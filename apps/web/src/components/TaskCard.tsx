@@ -71,7 +71,7 @@ export function TaskCard({
   }
   return (
     <div
-      className={`flex flex-col gap-4 rounded-2xl border bg-surface p-5 sm:flex-row sm:items-center ${primary ? "border-accent/40 shadow-md shadow-accent/5" : "border-line"}`}
+      className={`flex flex-wrap items-center gap-x-3 gap-y-3 rounded-2xl border bg-surface p-4 sm:flex-nowrap sm:gap-x-4 sm:p-5 ${primary ? "border-accent/40 shadow-md shadow-accent/5" : "border-line"}`}
     >
       <div className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${tone[k.case]}`}>{icon}</div>
       <div className="min-w-0 flex-1 space-y-1">
@@ -83,7 +83,12 @@ export function TaskCard({
         {detail && <p className="text-sm text-muted">{detail}</p>}
         {extra}
       </div>
-      <Button variant={primary ? "primary" : "secondary"} onClick={onStart} disabled={busy} className="shrink-0">
+      <Button
+        variant={primary ? "primary" : "secondary"}
+        onClick={onStart}
+        disabled={busy}
+        className={`shrink-0 ${primary ? "max-sm:w-full" : ""}`}
+      >
         {action}
       </Button>
     </div>

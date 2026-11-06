@@ -140,6 +140,8 @@ tools/pilot ──► libs/db, libs/engine, content/math
 
 Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请求交给 `src/server/handler.ts`。页面在服务端渲染时不含学习者数据，在浏览器中通过 Connect 客户端和 TanStack Query 获取，因此页面在服务端从不需要会话。页面语言在服务端决定（`ga-locale` cookie，否则看 `Accept-Language`），所以首屏即为该语言。
 
+`/` 取决于访问者。未登录时是落地页，落地页也可通过 `/landing` 供所有人访问，并在服务端渲染。登录后，打开最近学习的课程的下一个任务；没有课程但有监护学习者的账号转到 `/guardian`，其他没有课程的账号会被问到谁来学习。服务端只凭会话 cookie 就能在两者之间选择，所以已登录的学习者不会看到落地页闪现。课程目录是单独的公开页面 `/courses`。
+
 ## 6. 部署
 
 - **生产：**

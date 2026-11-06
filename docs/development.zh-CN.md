@@ -80,7 +80,7 @@ pnpm nx run web:dev                   # http://localhost:5173
 - `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。部署前需创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，并设置密钥。
 - 先部署学科：`pnpm nx run math-workers:deploy` 构建数学的 Worker，先部署分片，再部署网关。之后再部署 Web Worker。
 
-试用方法：注册账号，打开「代数基础」，选修，然后参加诊断或跳过。学习主页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
+试用方法：注册账号，选择“我自己学”，打开「代数基础」，选修，然后参加诊断或跳过。首页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
 
 ## 6. 运行移动应用
 

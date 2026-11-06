@@ -8,6 +8,14 @@ const variants: Record<Variant, string> = {
   ghost: "text-muted hover:bg-accent-soft hover:text-ink disabled:opacity-50",
 };
 
+/** menuPopup styles the panel of a dropdown menu. */
+export const menuPopup =
+  "max-h-[70vh] min-w-40 overflow-y-auto rounded-xl border border-line bg-surface p-1 text-sm shadow-lg outline-none";
+
+/** menuItem styles an item of a dropdown menu. */
+export const menuItem =
+  "flex cursor-default items-center justify-between gap-4 rounded-lg px-3 py-2 outline-none select-none data-[highlighted]:bg-accent-soft";
+
 /** buttonClass styles a button or a link as a button. */
 export function buttonClass(variant: Variant = "primary", extra = "") {
   return `inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed ${variants[variant]} ${extra}`;

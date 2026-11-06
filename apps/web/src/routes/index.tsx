@@ -1,95 +1,56 @@
-import { ArrowRight, CheckCircle } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
-import { Markdown } from "../components/Markdown.tsx";
-import { Bar, buttonClass, Card, ErrorNote, Spinner } from "../components/ui.tsx";
+import { Landing } from "../components/Landing.tsx";
+import { LearnDashboard } from "../components/LearnDashboard.tsx";
+import { LoadError } from "../components/LoadError.tsx";
+import { Spinner } from "../components/ui.tsx";
+import { Welcome } from "../components/Welcome.tsx";
 import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
-import { catalog, learning, timeZone } from "../lib/rpc.ts";
+import { account, learning, timeZone } from "../lib/rpc.ts";
+import { hasSessionCookie } from "../lib/session-cookie.ts";
 
-export const Route = createFileRoute("/")({ component: Home });
+export const Route = createFileRoute("/")({
+  beforeLoad: async () => ({ signedIn: await hasSessionCookie() }),
+  component: Index,
+});
 
+/** Index is the landing page for a visitor and the learner's home after signing in. */
+function Index() {
+  const { signedIn } = Route.useRouteContext();
+  const { data: session, isPending } = useSession();
+  const { m } = useI18n();
+  if (session) return <Home />;
+  if (signedIn && isPending) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 pt-8">
+        <Spinner label={m.loading} />
+      </div>
+    );
+  }
+  return <Landing />;
+}
+
+/** Home opens on what the learner should do next: the most recent course, or a first step when there is none. */
 function Home() {
-  const { m, tx } = useI18n();
-  const { data: session } = useSession();
-  const courses = useQuery({ queryKey: ["courses"], queryFn: () => catalog.listCourses({}) });
-  const profile = useQuery({
-    queryKey: ["profile"],
-    queryFn: () => learning.getProfile({ timeZone: timeZone() }),
-    enabled: !!session,
-  });
-  const enrolled = new Map(profile.data?.enrollments.map((e) => [e.courseId, e.stats]));
-
+  const { m } = useI18n();
+  const profile = useQuery({ queryKey: ["profile"], queryFn: () => learning.getProfile({ timeZone: timeZone() }) });
+  const guarded = useQuery({ queryKey: ["guarded"], queryFn: () => account.listGuardedLearners({ timeZone: timeZone() }) });
+  const current = profile.data?.enrollments[0]?.courseId;
   return (
-    <div className="space-y-14">
-      <section className="grid gap-8 pt-6 md:grid-cols-[1.2fr_1fr] md:items-center">
-        <div className="space-y-5">
-          <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{m.tagline}</h1>
-          <p className="max-w-xl text-lg text-muted">{m.heroBody}</p>
-          {!session && (
-            <div className="flex gap-3">
-              <Link to="/sign-up" className={buttonClass("primary", "px-5 py-2.5 text-base")}>
-                {m.signUp} <ArrowRight size={18} />
-              </Link>
-              <Link to="/sign-in" className={buttonClass("secondary", "px-5 py-2.5 text-base")}>
-                {m.signIn}
-              </Link>
-            </div>
-          )}
-        </div>
-        <ul className="space-y-3">
-          {m.heroPoints.map((p) => (
-            <li key={p} className="flex items-start gap-3 rounded-xl border border-line bg-surface px-4 py-3">
-              <CheckCircle size={22} weight="fill" className="mt-0.5 shrink-0 text-good" />
-              <span>{p}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold">{m.courses}</h2>
-        {courses.isPending && <Spinner label={m.loading} />}
-        {courses.isError && <ErrorNote message={m.error} retry={m.retry} onRetry={() => courses.refetch()} />}
-        <div className="grid gap-4 md:grid-cols-2">
-          {courses.data?.courses.map((c) => {
-            const stats = enrolled.get(c.id);
-            return (
-              <Card key={c.id} className="flex flex-col gap-4">
-                <div className="space-y-1">
-                  <div className="text-xs font-medium tracking-wide text-accent uppercase">{tx(c.subjectTitle)}</div>
-                  <h3 className="text-lg font-semibold">{tx(c.title)}</h3>
-                  <Markdown source={tx(c.description)} className="text-sm text-muted" />
-                </div>
-                <div className="text-sm text-muted">
-                  {c.topicCount} {m.topics} · {c.xp} XP
-                </div>
-                {stats && (
-                  <div className="space-y-1.5">
-                    <Bar value={stats.total ? stats.learned / stats.total : 0} />
-                    <div className="text-xs text-muted">
-                      {m.learned} {stats.learned} / {stats.total}
-                      {stats.due > 0 && ` · ${m.due} ${stats.due}`}
-                    </div>
-                  </div>
-                )}
-                <div className="mt-auto flex gap-2">
-                  {stats ? (
-                    <Link to="/learn/$courseId" params={{ courseId: c.id }} className={buttonClass("primary")}>
-                      {m.continueLearning} <ArrowRight size={16} />
-                    </Link>
-                  ) : (
-                    <Link to="/courses/$courseId" params={{ courseId: c.id }} className={buttonClass("secondary")}>
-                      {m.viewCourse}
-                    </Link>
-                  )}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </section>
+    <div className="mx-auto max-w-5xl px-4 pt-8 pb-24">
+      {profile.isPending || (!current && guarded.isPending) ? (
+        <Spinner label={m.loading} />
+      ) : profile.isError ? (
+        <LoadError error={profile.error} onRetry={() => profile.refetch()} />
+      ) : current ? (
+        <LearnDashboard courseId={current} />
+      ) : (guarded.data?.learners.length ?? 0) > 0 ? (
+        <Navigate to="/guardian" replace />
+      ) : (
+        <Welcome />
+      )}
     </div>
   );
 }

@@ -80,7 +80,7 @@ pnpm nx run web:dev                   # http://localhost:5173
 - `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, and set the secret.
 - Deploy subjects first: `pnpm nx run math-workers:deploy` builds the Workers of mathematics and deploys the shards, then the gateway. Then deploy the web Worker.
 
-To try it: create an account, open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The dashboard offers the next tasks; the progress map shows every topic's status and estimated memory.
+To try it: create an account, choose "I'm learning myself", open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
 
 ## 6. Running the Mobile App
 

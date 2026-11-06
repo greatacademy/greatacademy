@@ -140,6 +140,8 @@ Problem instances are generated on the server from a seed and graded on the serv
 
 The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands requests to `src/server/handler.ts`. Pages are rendered on the server without learner data and fetch it in the browser with the Connect client and TanStack Query, so a page never needs the session on the server. The page language is decided on the server (the `ga-locale` cookie, else `Accept-Language`), so the first render is already in it.
 
+`/` depends on who is asking. Signed out, it is the landing page, also at `/landing` for everyone, and rendered on the server. Signed in, it opens on the next task of the course most recently worked on; an account with no course and a guarded learner goes to `/guardian`, and any other account with no course is asked who will be learning. A session cookie is enough to choose between the two on the server, so a signed-in learner never sees the landing page flash. The catalog is its own public page, `/courses`.
+
 ## 6. Deployment
 
 - **Production:**

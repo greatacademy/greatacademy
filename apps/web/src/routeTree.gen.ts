@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LandingRouteImport } from './routes/landing'
 import { Route as LeagueRouteImport } from './routes/league'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as GuardianIndexRouteImport } from './routes/guardian/index'
 import { Route as GuardianLearnerIdRouteImport } from './routes/guardian/$learnerId'
@@ -34,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingRoute = LandingRouteImport.update({
+  id: '/landing',
+  path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeagueRoute = LeagueRouteImport.update({
@@ -64,6 +71,11 @@ const SignUpRoute = SignUpRouteImport.update({
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesIndexRoute = CoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
@@ -111,6 +123,7 @@ const LearnCourseIdTopicsTopicIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
@@ -120,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
@@ -129,6 +143,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
@@ -138,6 +153,7 @@ export interface FileRoutesByTo {
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/courses': typeof CoursesIndexRoute
   '/guardian': typeof GuardianIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
@@ -148,6 +164,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
@@ -157,6 +174,7 @@ export interface FileRoutesById {
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
@@ -168,6 +186,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/forgot-password'
+    | '/landing'
     | '/league'
     | '/reset-password'
     | '/settings'
@@ -177,6 +196,7 @@ export interface FileRouteTypes {
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/courses/'
     | '/guardian/'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
@@ -186,6 +206,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/forgot-password'
+    | '/landing'
     | '/league'
     | '/reset-password'
     | '/settings'
@@ -195,6 +216,7 @@ export interface FileRouteTypes {
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/courses'
     | '/guardian'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
@@ -204,6 +226,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/forgot-password'
+    | '/landing'
     | '/league'
     | '/reset-password'
     | '/settings'
@@ -213,6 +236,7 @@ export interface FileRouteTypes {
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/courses/'
     | '/guardian/'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
@@ -223,6 +247,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LandingRoute: typeof LandingRoute
   LeagueRoute: typeof LeagueRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
@@ -232,6 +257,7 @@ export interface RootRouteChildren {
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   GuardianLearnerIdRoute: typeof GuardianLearnerIdRoute
   SessionSessionIdRoute: typeof SessionSessionIdRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
   GuardianIndexRoute: typeof GuardianIndexRoute
   LearnCourseIdHistoryRoute: typeof LearnCourseIdHistoryRoute
   LearnCourseIdProgressRoute: typeof LearnCourseIdProgressRoute
@@ -253,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/landing': {
+      id: '/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/league': {
@@ -295,6 +328,13 @@ declare module '@tanstack/react-router' {
       path: '/api/$'
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courses/': {
+      id: '/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$courseId': {
@@ -359,6 +399,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  LandingRoute: LandingRoute,
   LeagueRoute: LeagueRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
@@ -368,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   GuardianLearnerIdRoute: GuardianLearnerIdRoute,
   SessionSessionIdRoute: SessionSessionIdRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
   GuardianIndexRoute: GuardianIndexRoute,
   LearnCourseIdHistoryRoute: LearnCourseIdHistoryRoute,
   LearnCourseIdProgressRoute: LearnCourseIdProgressRoute,
