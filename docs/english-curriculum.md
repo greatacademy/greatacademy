@@ -2,7 +2,7 @@
 
 > English | [简体中文](english-curriculum.zh-CN.md)
 
-This document specifies the design of the English subject: its knowledge graph, its courses for native and foreign-language learners, and how it teaches and assesses reading, writing and speaking. It applies the method of [The Math Academy Way](the-math-academy-way.md) and runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md). Nothing here is implemented yet; §12 lists the order of work.
+This document specifies the design of the English subject: its knowledge graph, its courses for native and foreign-language learners, and how it teaches and assesses reading, writing and speaking. It applies the method of [The Math Academy Way](the-math-academy-way.md) and runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md). Nothing here is implemented yet; §12 lists the order of work, and [English Development Plan](english-development-plan.md) breaks it into milestones.
 
 ---
 
@@ -237,7 +237,7 @@ The slice is complete when it compiles, every generator passes sampling, simulat
 1. **First slice** (§11).
 2. **Reading and knowledge:** graded reading and knowledge units, then AI-judged paragraphs and essays.
 3. **Foreign-language courses:** A1 to B1, with listening and S1 to S4.
-4. **Both ends:** phonics below; college writing and exam courses above.
+4. **Conversation and both ends:** S5 and S6 on the voice service; phonics below; college writing and exam courses above.
 
 | Change | Scope |
 | :--- | :--- |

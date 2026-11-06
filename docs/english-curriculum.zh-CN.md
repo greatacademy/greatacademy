@@ -2,7 +2,7 @@
 
 > [English](english-curriculum.md) | 简体中文
 
-本文规定英语学科的设计：知识图谱，面向母语和外语学习者的课程，以及如何教授和评判阅读、写作和口语。它运用 [The Math Academy Way](the-math-academy-way.zh-CN.md) 的方法，运行在[内容](content.zh-CN.md)和[学习引擎](learning-engine.zh-CN.md)所述的核心之上。这里的内容尚未实现，工作顺序见 §12。
+本文规定英语学科的设计：知识图谱，面向母语和外语学习者的课程，以及如何教授和评判阅读、写作和口语。它运用 [The Math Academy Way](the-math-academy-way.zh-CN.md) 的方法，运行在[内容](content.zh-CN.md)和[学习引擎](learning-engine.zh-CN.md)所述的核心之上。这里的内容尚未实现，工作顺序见 §12，[英语开发计划](english-development-plan.zh-CN.md)把它拆分为里程碑。
 
 ---
 
@@ -237,7 +237,7 @@
 1. **首个切片**（§11）。
 2. **阅读与知识：** 分级阅读和知识单元，然后是 AI 判定的段落和文章。
 3. **外语课程：** A1 到 B1，以及听力和 S1 到 S4。
-4. **向两端扩展：** 向下是自然拼读，向上是大学写作和考试课程。
+4. **对话与两端：** 语音服务上的 S5 和 S6；向下是自然拼读，向上是大学写作和考试课程。
 
 | 改动 | 范围 |
 | :--- | :--- |
