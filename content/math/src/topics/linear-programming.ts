@@ -4,6 +4,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { plane, Q } from "@ga/subject-math";
+import { linearProgrammingDrawings1 } from "../explanation-drawings-linear-programming-1.ts";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 
@@ -88,80 +89,86 @@ const graphical = topic(
   ["formulating-linear-programs"],
   [],
   [
-    point(
-      "finding-a-corner-point",
-      ["Finding a corner point", "求顶点"],
-      [
-        "With two variables, the constraints cut out a polygon called the feasible region. Its corners are where two boundary lines meet, so each corner comes from solving two equations together. Corners matter because of the central fact of linear programming: when an optimum exists, some corner attains it. The interior never needs a separate search, since a linear objective keeps improving until the boundary stops it.",
-        "两个变量时，约束围成一个称为可行域的多边形。它的顶点是两条边界线的交点，所以每个顶点都来自联立两个方程。顶点重要，是因为线性规划的核心事实：最优解存在时，总有某个顶点能达到它。内部不必单独搜索，因为线性目标会一直改进，直到被边界挡住。",
-      ],
-      (rng) => {
-        const x = rng.int(2, 12);
-        const y = rng.int(2, 12);
-        const asksX = rng.bool();
-        const [A, B] = [x + 2 * y, 3 * x + y];
-        return ask(
-          [
-            `The boundary lines $x + 2y = ${A}$ and $3x + y = ${B}$ meet at a corner of a feasible region. What is its ${asksX ? "$x$" : "$y$"} coordinate?`,
-            `边界线 $x + 2y = ${A}$ 和 $3x + y = ${B}$ 相交于可行域的一个顶点。它的${asksX ? "$x$" : "$y$"}坐标是多少？`,
-          ],
-          asksX ? x : y,
-          [asksX ? y : x, x + y, asksX ? x + 1 : y + 1, asksX ? A : B],
-          [
-            `Subtracting the first equation from twice the second gives $5x = ${2 * B - A}$, so $x = ${x}$ and then $y = ${y}$.`,
-            `用第二个方程的两倍减去第一个方程，得 $5x = ${2 * B - A}$，所以 $x = ${x}$，进而 $y = ${y}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "the-best-corner",
-      ["The best corner", "最好的顶点"],
-      [
-        "To solve a two-variable program by hand, list the corners of the feasible region, evaluate the objective at each, and take the best. Parallel lines of equal objective value slide across the region, and the last point they touch is the optimum, which explains why a corner always suffices. If two neighbouring corners tie, every point on the edge between them is optimal too.",
-        "手工求解两个变量的规划时，列出可行域的顶点，在每个顶点计算目标值，再取最好的。目标值相等的平行线滑过可行域，最后碰到的点就是最优解，这解释了为什么只看顶点就够了。如果两个相邻顶点的值相等，它们之间那条边上的每个点也都是最优的。",
-      ],
-      (rng) => {
-        const a = rng.int(8, 16);
-        const b = rng.int(Math.ceil(a / 2) + 1, a - 2);
-        const c = rng.int(a - b + 1, a - 2);
-        const p = rng.int(1, 9);
-        const q = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== p));
-        const corners: readonly (readonly [number, number])[] = [
-          [b, 0],
-          [b, a - b],
-          [a - c, c],
-          [0, c],
-        ];
-        const values = corners.map(([x, y]) => p * x + q * y);
-        const answer = Math.max(...values);
-        const best = corners[values.indexOf(answer)] as readonly [number, number];
-        const objective = `${term(p, "x")} + ${term(q, "y")}`;
-        const svg = plane({ xMin: -1, xMax: a + 1, yMin: -1, yMax: a + 1, labelEvery: 2 }, [
-          { kind: "polygon", points: [[0, 0], ...corners] },
-        ]);
-        const figure = {
-          svg,
-          alt: t(
-            `The feasible region, a polygon with corners at the origin, (${b}, 0), (${b}, ${a - b}), (${a - c}, ${c}) and (0, ${c}).`,
-            `可行域是一个多边形，顶点是原点，(${b}, 0)，(${b}, ${a - b})，(${a - c}, ${c}) 和 (0, ${c})。`,
-          ),
-        };
-        return ask(
-          [
-            `Maximize $${objective}$ subject to $x + y \\le ${a}$, $x \\le ${b}$, $y \\le ${c}$, $x, y \\ge 0$. What is the maximum value?`,
-            `在 $x + y \\le ${a}$，$x \\le ${b}$，$y \\le ${c}$，$x, y \\ge 0$ 的条件下，使 $${objective}$ 最大。最大值是多少？`,
-          ],
-          answer,
-          [...values.filter((v) => v !== answer), p * b + q * c, answer + 1],
-          [
-            `The corners other than the origin are $(${b}, 0)$, $(${b}, ${a - b})$, $(${a - c}, ${c})$ and $(0, ${c})$. The largest value, ${answer}, occurs at $(${best[0]}, ${best[1]})$.`,
-            `除原点外，顶点是 $(${b}, 0)$，$(${b}, ${a - b})$，$(${a - c}, ${c})$ 和 $(0, ${c})$。最大值 ${answer} 在 $(${best[0]}, ${best[1]})$ 处取得。`,
-          ],
-          figure,
-        );
-      },
-    ),
+    {
+      ...point(
+        "finding-a-corner-point",
+        ["Finding a corner point", "求顶点"],
+        [
+          "With two variables, the constraints cut out a polygon called the feasible region. Its corners are where two boundary lines meet, so each corner comes from solving two equations together. Corners matter because of the central fact of linear programming: when an optimum exists, some corner attains it. The interior never needs a separate search, since a linear objective keeps improving until the boundary stops it.",
+          "两个变量时，约束围成一个称为可行域的多边形。它的顶点是两条边界线的交点，所以每个顶点都来自联立两个方程。顶点重要，是因为线性规划的核心事实：最优解存在时，总有某个顶点能达到它。内部不必单独搜索，因为线性目标会一直改进，直到被边界挡住。",
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const y = rng.int(2, 12);
+          const asksX = rng.bool();
+          const [A, B] = [x + 2 * y, 3 * x + y];
+          return ask(
+            [
+              `The boundary lines $x + 2y = ${A}$ and $3x + y = ${B}$ meet at a corner of a feasible region. What is its ${asksX ? "$x$" : "$y$"} coordinate?`,
+              `边界线 $x + 2y = ${A}$ 和 $3x + y = ${B}$ 相交于可行域的一个顶点。它的${asksX ? "$x$" : "$y$"}坐标是多少？`,
+            ],
+            asksX ? x : y,
+            [asksX ? y : x, x + y, asksX ? x + 1 : y + 1, asksX ? A : B],
+            [
+              `Subtracting the first equation from twice the second gives $5x = ${2 * B - A}$, so $x = ${x}$ and then $y = ${y}$.`,
+              `用第二个方程的两倍减去第一个方程，得 $5x = ${2 * B - A}$，所以 $x = ${x}$，进而 $y = ${y}$。`,
+            ],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["the-graphical-method-for-linear-programs#finding-a-corner-point"],
+    },
+    {
+      ...point(
+        "the-best-corner",
+        ["The best corner", "最好的顶点"],
+        [
+          "To solve a two-variable program by hand, list the corners of the feasible region, evaluate the objective at each, and take the best. Parallel lines of equal objective value slide across the region, and the last point they touch is the optimum, which explains why a corner always suffices. If two neighbouring corners tie, every point on the edge between them is optimal too.",
+          "手工求解两个变量的规划时，列出可行域的顶点，在每个顶点计算目标值，再取最好的。目标值相等的平行线滑过可行域，最后碰到的点就是最优解，这解释了为什么只看顶点就够了。如果两个相邻顶点的值相等，它们之间那条边上的每个点也都是最优的。",
+        ],
+        (rng) => {
+          const a = rng.int(8, 16);
+          const b = rng.int(Math.ceil(a / 2) + 1, a - 2);
+          const c = rng.int(a - b + 1, a - 2);
+          const p = rng.int(1, 9);
+          const q = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== p));
+          const corners: readonly (readonly [number, number])[] = [
+            [b, 0],
+            [b, a - b],
+            [a - c, c],
+            [0, c],
+          ];
+          const values = corners.map(([x, y]) => p * x + q * y);
+          const answer = Math.max(...values);
+          const best = corners[values.indexOf(answer)] as readonly [number, number];
+          const objective = `${term(p, "x")} + ${term(q, "y")}`;
+          const svg = plane({ xMin: -1, xMax: a + 1, yMin: -1, yMax: a + 1, labelEvery: 2 }, [
+            { kind: "polygon", points: [[0, 0], ...corners] },
+          ]);
+          const figure = {
+            svg,
+            alt: t(
+              `The feasible region, a polygon with corners at the origin, (${b}, 0), (${b}, ${a - b}), (${a - c}, ${c}) and (0, ${c}).`,
+              `可行域是一个多边形，顶点是原点，(${b}, 0)，(${b}, ${a - b})，(${a - c}, ${c}) 和 (0, ${c})。`,
+            ),
+          };
+          return ask(
+            [
+              `Maximize $${objective}$ subject to $x + y \\le ${a}$, $x \\le ${b}$, $y \\le ${c}$, $x, y \\ge 0$. What is the maximum value?`,
+              `在 $x + y \\le ${a}$，$x \\le ${b}$，$y \\le ${c}$，$x, y \\ge 0$ 的条件下，使 $${objective}$ 最大。最大值是多少？`,
+            ],
+            answer,
+            [...values.filter((v) => v !== answer), p * b + q * c, answer + 1],
+            [
+              `The corners other than the origin are $(${b}, 0)$, $(${b}, ${a - b})$, $(${a - c}, ${c})$ and $(0, ${c})$. The largest value, ${answer}, occurs at $(${best[0]}, ${best[1]})$.`,
+              `除原点外，顶点是 $(${b}, 0)$，$(${b}, ${a - b})$，$(${a - c}, ${c})$ 和 $(0, ${c})$。最大值 ${answer} 在 $(${best[0]}, ${best[1]})$ 处取得。`,
+            ],
+            figure,
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["the-graphical-method-for-linear-programs#the-best-corner"],
+    },
   ],
 );
 
@@ -263,34 +270,37 @@ const basicSolutions = topic(
         );
       },
     ),
-    point(
-      "computing-a-basic-solution",
-      ["Computing a basic solution", "计算基本解"],
-      [
-        "To find a basic solution, set the nonbasic variables to zero and solve what remains. If every basic variable comes out nonnegative, the solution is feasible and it is a corner. If some value is negative, it is still a basic solution, but it lies outside the feasible region, at a place where two boundary lines cross beyond the polygon. The sign is what tells these two cases apart.",
-        "求基本解时，把非基变量设为零，再解剩下的方程。如果每个基变量都非负，这个解就是可行的，它是一个顶点。如果某个值是负的，它仍然是基本解，但位于可行域外，是两条边界线在多边形外的交点。正负号正是区分这两种情况的依据。",
-      ],
-      (rng) => {
-        const b = rng.int(2, 6);
-        const c = rng.int(2, 7);
-        const d = rng.int(2, 6);
-        const A = rng.int(2, 12);
-        const B = rng.int(4, 60);
-        const answer = B - c * A;
-        return ask(
-          [
-            `Take the equations $x_1 + ${b}x_2 + s_1 = ${A}$ and $${c}x_1 + ${d}x_2 + s_2 = ${B}$. In the basic solution with $x_2 = s_1 = 0$, what is $s_2$?`,
-            `取方程 $x_1 + ${b}x_2 + s_1 = ${A}$ 和 $${c}x_1 + ${d}x_2 + s_2 = ${B}$。在 $x_2 = s_1 = 0$ 的基本解中，$s_2$ 是多少？`,
-          ],
-          answer,
-          [B, B - A, c * A - B, B - d * A],
-          [
-            `The first equation gives $x_1 = ${A}$, and then $s_2 = ${B} - ${c}(${A}) = ${answer}$.${answer < 0 ? " It is negative, so this basic solution is not feasible." : ""}`,
-            `第一个方程给出 $x_1 = ${A}$，于是 $s_2 = ${B} - ${c}(${A}) = ${answer}$。${answer < 0 ? "它是负数，所以这个基本解不可行。" : ""}`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "computing-a-basic-solution",
+        ["Computing a basic solution", "计算基本解"],
+        [
+          "To find a basic solution, set the nonbasic variables to zero and solve what remains. If every basic variable comes out nonnegative, the solution is feasible and it is a corner. If some value is negative, it is still a basic solution, but it lies outside the feasible region, at a place where two boundary lines cross beyond the polygon. The sign is what tells these two cases apart.",
+          "求基本解时，把非基变量设为零，再解剩下的方程。如果每个基变量都非负，这个解就是可行的，它是一个顶点。如果某个值是负的，它仍然是基本解，但位于可行域外，是两条边界线在多边形外的交点。正负号正是区分这两种情况的依据。",
+        ],
+        (rng) => {
+          const b = rng.int(2, 6);
+          const c = rng.int(2, 7);
+          const d = rng.int(2, 6);
+          const A = rng.int(2, 12);
+          const B = rng.int(4, 60);
+          const answer = B - c * A;
+          return ask(
+            [
+              `Take the equations $x_1 + ${b}x_2 + s_1 = ${A}$ and $${c}x_1 + ${d}x_2 + s_2 = ${B}$. In the basic solution with $x_2 = s_1 = 0$, what is $s_2$?`,
+              `取方程 $x_1 + ${b}x_2 + s_1 = ${A}$ 和 $${c}x_1 + ${d}x_2 + s_2 = ${B}$。在 $x_2 = s_1 = 0$ 的基本解中，$s_2$ 是多少？`,
+            ],
+            answer,
+            [B, B - A, c * A - B, B - d * A],
+            [
+              `The first equation gives $x_1 = ${A}$, and then $s_2 = ${B} - ${c}(${A}) = ${answer}$.${answer < 0 ? " It is negative, so this basic solution is not feasible." : ""}`,
+              `第一个方程给出 $x_1 = ${A}$，于是 $s_2 = ${B} - ${c}(${A}) = ${answer}$。${answer < 0 ? "它是负数，所以这个基本解不可行。" : ""}`,
+            ],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["basic-feasible-solutions#computing-a-basic-solution"],
+    },
   ],
 );
 

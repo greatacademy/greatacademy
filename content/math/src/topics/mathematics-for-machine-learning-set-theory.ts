@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { plane, poly, Q } from "@ga/subject-math";
+import { machineLearningDrawings1 } from "../explanation-drawings-mathematics-for-machine-learning-1.ts";
 import { numberProblem } from "../problems.ts";
 
 export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
@@ -265,6 +266,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
       },
       {
         id: "argmin-over-the-integers",
+        figure: machineLearningDrawings1["argmax-and-argmin-notation#argmin-over-the-integers"],
         title: t("Arg min over a restricted domain", "受限定义域上的 arg min"),
         explanation: t(
           "The domain written under $\\operatorname{argmin}$ matters: restricting it can move the minimizer. For a parabola that opens upward, the value grows with distance from the vertex in both directions, so over the integers the minimizer is the integer nearest the vertex.\n\nFor $g(x) = (3x - 7)^2$, the real minimizer is $x = \\frac{7}{3} \\approx 2.33$, but $\\operatorname{argmin}_{x \\in \\mathbb{Z}} g(x) = 2$, since $g(2) = 1 < g(3) = 4$. Rounding the vertex works here; simply taking the floor or ceiling does not always.",
@@ -370,6 +372,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
       },
       {
         id: "reading-argmax-argmin-from-graphs",
+        figure: machineLearningDrawings1["finding-argmax-and-argmin-from-tables-and-graphs#reading-argmax-argmin-from-graphs"],
         title: t("Reading argmax and argmin from graphs", "从图象中读出 argmax 与 argmin"),
         explanation: t(
           "On a graph of $L(x)$, the minimum value is the height of the lowest point, and $\\operatorname{argmin}_x L(x)$ is that point's $x$-coordinate: read across to the horizontal axis, not up to the vertical one. Likewise, $\\operatorname{argmax}$ is the $x$-coordinate of the highest point.",

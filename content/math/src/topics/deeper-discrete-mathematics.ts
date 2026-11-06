@@ -4,6 +4,8 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-1.ts";
+import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -566,6 +568,7 @@ const parameterForRepeatedRoot: KnowledgePointDef = {
 
 const periodicRecurrence: KnowledgePointDef = {
   id: "far-terms-of-a-periodic-recurrence",
+  figure: discreteDrawings1["second-order-homogeneous-recurrence-relations-with-complex-roots#far-terms-of-a-periodic-recurrence"],
   title: t("Far terms of a periodic recurrence", "周期递推的远项"),
   explanation: t(
     "When the characteristic roots are complex with modulus one, the powers of the roots just turn around the unit circle. If the angle is a simple fraction of a full turn, the sequence repeats exactly. So a term with a large index can be found by writing out one period and reducing the index by the length of the period.",
@@ -664,6 +667,7 @@ const seriesFromGeneratingFunction: KnowledgePointDef = {
 
 const facesOfARegularPlanarGraph: KnowledgePointDef = {
   id: "faces-of-a-regular-planar-graph",
+  figure: discreteDrawings1["planar-graphs#faces-of-a-regular-planar-graph"],
   title: t("Faces of a regular planar graph", "正则平面图的面数"),
   explanation: t(
     "Euler's formula $V - E + F = 2$ needs the number of edges, and for a regular graph the handshaking lemma supplies it: the degrees add up to twice the edges. Combining the two facts gives the number of faces from the number of vertices and the common degree alone, without ever drawing the graph.",
@@ -691,6 +695,7 @@ const facesOfARegularPlanarGraph: KnowledgePointDef = {
 
 const mostBipartiteEdges: KnowledgePointDef = {
   id: "the-most-edges-of-a-bipartite-graph",
+  figure: discreteDrawings1["complete-and-bipartite-graphs#the-most-edges-of-a-bipartite-graph"],
   title: t("The most edges of a bipartite graph", "二部图的最多边数"),
   explanation: t(
     "A bipartite graph with parts of sizes $a$ and $b$ has at most $ab$ edges, reached by the complete bipartite graph. For a fixed total $a + b = n$, the product is largest when the parts are as equal as possible. So a graph on $n$ vertices with no odd cycle has at most $\\lfloor \\frac{n^2}{4} \\rfloor$ edges.",
@@ -754,6 +759,7 @@ const treesWithAGivenVertexDegree: KnowledgePointDef = {
 
 const fourCycles: KnowledgePointDef = {
   id: "four-cycles-of-a-complete-bipartite-graph",
+  figure: discreteDrawings1["cycles-in-graphs#four-cycles-of-a-complete-bipartite-graph"],
   title: t("Four-cycles of a complete bipartite graph", "完全二部图的四圈"),
   explanation: t(
     "A cycle in a bipartite graph alternates between the two parts, so its length is even and the shortest possible cycles have length four. A four-cycle uses two vertices from each part. In a complete bipartite graph, any such choice of vertices can be joined into exactly one four-cycle, so counting them reduces to choosing pairs.",
@@ -1499,6 +1505,7 @@ const fewestVertices: KnowledgePointDef = {
 
 const complementOfRegular: KnowledgePointDef = {
   id: "the-edges-of-the-complement-of-a-regular-graph",
+  figure: discreteDrawings1["subgraphs-and-graph-complements#the-edges-of-the-complement-of-a-regular-graph"],
   title: t("The edges of the complement of a regular graph", "正则图补图的边数"),
   explanation: t(
     "In the complement of a simple graph, a vertex is joined to exactly the vertices it was not joined to, leaving out itself. So a vertex of degree $r$ on $n$ vertices has degree $n - 1 - r$ in the complement. The complement of a regular graph is therefore regular too, and the handshaking lemma gives its edges. The total with the original is always $\\binom{n}{2}$.",
@@ -1528,6 +1535,7 @@ const complementOfRegular: KnowledgePointDef = {
 
 const mostComponents: KnowledgePointDef = {
   id: "the-most-components-for-a-given-number-of-edges",
+  figure: discreteDrawings1["connected-graphs#the-most-components-for-a-given-number-of-edges"],
   title: t("The most components for a given number of edges", "给定边数时的最多连通分支数"),
   explanation: t(
     "To get as many connected components as possible, keep the edges from joining new vertices. That means packing all $m$ edges into the smallest possible group of $k$ vertices, the smallest $k$ with $\\binom{k}{2} \\ge m$, and leaving all the other vertices isolated. The group counts as one component, and each isolated vertex counts as another. Spreading the edges out would only lower the count.",
@@ -1556,6 +1564,7 @@ const mostComponents: KnowledgePointDef = {
 
 const treeCutVertices: KnowledgePointDef = {
   id: "the-cut-vertices-of-a-tree",
+  figure: discreteDrawings1["cut-vertices-and-cut-edges#the-cut-vertices-of-a-tree"],
   title: t("The cut vertices of a tree", "树的割点"),
   explanation: t(
     "In a tree, each pair of vertices is joined by exactly one path. Removing a vertex of degree at least 2 cuts the path between two of its neighbors, so every such vertex is a cut vertex. Removing a leaf cannot disconnect anything, since no path passes through a leaf. So on three or more vertices, the cut vertices are exactly the vertices that are not leaves.",
@@ -1583,6 +1592,7 @@ const treeCutVertices: KnowledgePointDef = {
 
 const fullTreeLeaves: KnowledgePointDef = {
   id: "the-leaves-of-a-full-tree",
+  figure: discreteDrawings1["trees-and-forests#the-leaves-of-a-full-tree"],
   title: t("The leaves of a full tree", "满树的叶子"),
   explanation: t(
     "In a full $m$-ary tree, each internal vertex has exactly $m$ children. Every vertex except the root is a child of exactly one internal vertex, so with $i$ internal vertices the tree has $mi + 1$ vertices. Subtracting the internal ones leaves $(m - 1)i + 1$ leaves. The depth and shape of the tree play no part, so very different trees give the same count.",
@@ -1610,6 +1620,7 @@ const fullTreeLeaves: KnowledgePointDef = {
 
 const traceOfCube: KnowledgePointDef = {
   id: "the-trace-of-the-cube-of-an-adjacency-matrix",
+  figure: discreteDrawings2["adjacency-matrices#the-trace-of-the-cube-of-an-adjacency-matrix"],
   title: t("The trace of the cube of an adjacency matrix", "邻接矩阵立方的迹"),
   explanation: t(
     "The diagonal entry $(A^3)_{ii}$ counts the walks of length 3 that start and end at vertex $i$. In a simple graph, such a walk must go around a triangle. Each triangle gives six of these walks across the whole diagonal, since it can start at any of three corners and go in either of two directions. So the trace is six times the number of triangles.",
@@ -1686,6 +1697,7 @@ const pathDistanceSum: KnowledgePointDef = {
 
 const dagMostEdges: KnowledgePointDef = {
   id: "the-most-edges-of-a-directed-acyclic-graph",
+  figure: discreteDrawings2["directed-acyclic-graphs#the-most-edges-of-a-directed-acyclic-graph"],
   title: t("The most edges of a directed acyclic graph", "有向无环图的最多边数"),
   explanation: t(
     "A directed acyclic graph can be placed in a topological order, with every edge pointing forward. So for each pair of vertices, only the forward edge is possible, and this gives at most one edge per pair. Adding every forward edge reaches that limit without creating a cycle. An edge in both directions between a pair of vertices would already be a cycle of length two.",
@@ -1712,6 +1724,7 @@ const dagMostEdges: KnowledgePointDef = {
 
 const twoChains: KnowledgePointDef = {
   id: "the-topological-orderings-of-two-separate-paths",
+  figure: discreteDrawings2["topological-ordering#the-topological-orderings-of-two-separate-paths"],
   title: t("The topological orderings of two separate paths", "两条独立路径的拓扑排序"),
   explanation: t(
     "A directed path allows only one order of its own vertices. If a graph consists of two separate paths, a topological ordering is any way of shuffling them together that keeps each path in order. Such a shuffle is decided by which positions go to the first path, and the vertices then fill those positions in their only possible order. So the count is one binomial coefficient.",
@@ -1739,6 +1752,7 @@ const twoChains: KnowledgePointDef = {
 
 const bfsDiscovered: KnowledgePointDef = {
   id: "the-vertices-a-breadth-first-search-finds-by-a-given-level",
+  figure: discreteDrawings2["breadth-first-search#the-vertices-a-breadth-first-search-finds-by-a-given-level"],
   title: t("The vertices a breadth-first search finds by a given level", "广度优先搜索到某层时找到的顶点"),
   explanation: t(
     "A breadth-first search finds vertices in order of their distance from the start, finishing each level before moving to the next. In a complete $m$-ary tree started at the root, level $j$ has $m^j$ vertices, because each vertex on one level has $m$ children on the next. The number found once level $d$ is finished is the geometric sum of all the levels up to $d$.",
@@ -1766,6 +1780,7 @@ const bfsDiscovered: KnowledgePointDef = {
 
 const primStar: KnowledgePointDef = {
   id: "the-spanning-tree-of-a-graph-with-sum-weights",
+  figure: discreteDrawings2["prims-algorithm#the-spanning-tree-of-a-graph-with-sum-weights"],
   title: t("The spanning tree of a graph with sum weights", "和权图的生成树"),
   explanation: t(
     "Prim's algorithm grows a tree by always adding the cheapest edge that leaves it. When vertices are numbered and an edge between $i$ and $j$ weighs $i + j$, the cheapest edge reaching any new vertex $j$ comes from the smallest vertex already in the tree. If the tree contains vertex 1, every new vertex is attached directly to vertex 1, so the tree is a star.",
@@ -1792,6 +1807,7 @@ const primStar: KnowledgePointDef = {
 
 const gridPaths: KnowledgePointDef = {
   id: "the-shortest-paths-across-a-grid-graph",
+  figure: discreteDrawings2["shortest-paths-in-unweighted-graphs#the-shortest-paths-across-a-grid-graph"],
   title: t("The shortest paths across a grid graph", "网格图中的最短路径"),
   explanation: t(
     "In a grid graph, moving from one corner to the opposite corner needs a fixed number of steps in each direction, and any shortest path uses no others. A shortest path is therefore a sequence of steps, in which we only choose the order of the two kinds. Choosing the positions of one kind decides the whole sequence, which gives a binomial coefficient instead of a search.",
@@ -3044,6 +3060,7 @@ const walksInACompleteGraph: KnowledgePointDef = {
 
 const traceOfDirectedSquare: KnowledgePointDef = {
   id: "the-trace-of-the-square-of-a-directed-adjacency-matrix",
+  figure: discreteDrawings2["adjacency-matrices-of-directed-graphs#the-trace-of-the-square-of-a-directed-adjacency-matrix"],
   title: t("The trace of the square of a directed adjacency matrix", "有向图邻接矩阵平方的迹"),
   explanation: t(
     "The diagonal of the square of an adjacency matrix counts closed walks of length two. In a directed graph without loops, such a walk leaves a vertex and returns at once, so it needs arcs in both directions between two vertices. This means the trace can be read from the matrix by looking for symmetric pairs of ones, without squaring.",
@@ -3085,6 +3102,7 @@ const traceOfDirectedSquare: KnowledgePointDef = {
 
 const whereKahnStops: KnowledgePointDef = {
   id: "where-kahns-algorithm-stops-on-a-graph-with-a-cycle",
+  figure: discreteDrawings2["kahns-algorithm#where-kahns-algorithm-stops-on-a-graph-with-a-cycle"],
   title: t("Where Kahn's algorithm stops on a graph with a cycle", "Kahn 算法在含环图上的停止位置"),
   explanation: t(
     "On a graph with a directed cycle, Kahn's algorithm cannot finish. Vertices on the cycle never reach in-degree zero, since each waits for the one before it, and anything that can be reached from the cycle waits too. The algorithm outputs everything else and then stops with vertices left over, and this is how it detects a cycle.",
@@ -3145,6 +3163,7 @@ const whereKahnStops: KnowledgePointDef = {
 
 const tentativeLabel: KnowledgePointDef = {
   id: "a-tentative-distance-during-dijkstras-algorithm",
+  figure: discreteDrawings2["dijkstras-algorithm#a-tentative-distance-during-dijkstras-algorithm"],
   title: t("A tentative distance during Dijkstra's algorithm", "Dijkstra 算法过程中的暂定距离"),
   explanation: t(
     "Dijkstra's algorithm keeps a tentative distance for every vertex and improves it as vertices are finalized. A tentative distance is the best route found so far that passes only through finalized vertices, so it may be larger than the true distance. Each time a vertex is finalized, compare the route through it with the current label and keep the smaller.",

@@ -4,6 +4,7 @@
 
 import { type KnowledgePointDef, type Problem, type Rng, t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
@@ -541,36 +542,39 @@ const poissonProbability = point(
   },
 );
 
-const rectangle = point(
-  "a-rectangle-probability-from-the-joint-cdf",
-  ["A rectangle probability from the joint CDF", "由联合分布函数求矩形概率"],
-  [
-    "The joint CDF gives the probability of a corner region. To isolate a rectangle, subtract the two regions on its left and below, and then add back the lower left corner, which has been subtracted twice. This is inclusion and exclusion applied to the CDF.",
-    "联合分布函数给出角形区域的概率。要分离出一个矩形，先减去它左边和下边的两个区域，再加回被减了两次的左下角。这就是容斥原理在分布函数上的应用。",
-  ],
-  (rng) => {
-    const a = rng.int(0, 3);
-    const b = a + rng.int(1, 3);
-    const c = rng.int(0, 3);
-    const d = c + rng.int(1, 3);
-    const A = rng.int(5, 30);
-    const r = rng.int(5, 20);
-    const s = rng.int(5, 20);
-    const q = rng.int(5, 20);
-    const x = (n: number) => dec(Q.of(n, 100));
-    const data = `F(${a}, ${c}) = ${x(A)},\\ F(${b}, ${c}) = ${x(A + r)},\\ F(${a}, ${d}) = ${x(A + s)},\\ F(${b}, ${d}) = ${x(A + r + s + q)}`;
-    const event = `${a} < X \\le ${b},\\ ${c} < Y \\le ${d}`;
-    return askDecimal(
-      [`A joint CDF has $${data}$. Find $P(${event})$.`, `联合分布函数满足 $${data}$。求 $P(${event})$。`],
-      Q.of(q, 100),
-      [Q.of(r + s + q, 100), Q.of(q + A, 100), Q.of(A + r + s + q, 100)],
-      [
-        `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$.`,
-        `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$。`,
-      ],
-    );
-  },
-);
+const rectangle = {
+  ...point(
+    "a-rectangle-probability-from-the-joint-cdf",
+    ["A rectangle probability from the joint CDF", "由联合分布函数求矩形概率"],
+    [
+      "The joint CDF gives the probability of a corner region. To isolate a rectangle, subtract the two regions on its left and below, and then add back the lower left corner, which has been subtracted twice. This is inclusion and exclusion applied to the CDF.",
+      "联合分布函数给出角形区域的概率。要分离出一个矩形，先减去它左边和下边的两个区域，再加回被减了两次的左下角。这就是容斥原理在分布函数上的应用。",
+    ],
+    (rng) => {
+      const a = rng.int(0, 3);
+      const b = a + rng.int(1, 3);
+      const c = rng.int(0, 3);
+      const d = c + rng.int(1, 3);
+      const A = rng.int(5, 30);
+      const r = rng.int(5, 20);
+      const s = rng.int(5, 20);
+      const q = rng.int(5, 20);
+      const x = (n: number) => dec(Q.of(n, 100));
+      const data = `F(${a}, ${c}) = ${x(A)},\\ F(${b}, ${c}) = ${x(A + r)},\\ F(${a}, ${d}) = ${x(A + s)},\\ F(${b}, ${d}) = ${x(A + r + s + q)}`;
+      const event = `${a} < X \\le ${b},\\ ${c} < Y \\le ${d}`;
+      return askDecimal(
+        [`A joint CDF has $${data}$. Find $P(${event})$.`, `联合分布函数满足 $${data}$。求 $P(${event})$。`],
+        Q.of(q, 100),
+        [Q.of(r + s + q, 100), Q.of(q + A, 100), Q.of(A + r + s + q, 100)],
+        [
+          `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$.`,
+          `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$。`,
+        ],
+      );
+    },
+  ),
+  figure: probabilityDrawings1["the-joint-cdf-of-two-discrete-random-variables#a-rectangle-probability-from-the-joint-cdf"],
+};
 
 const marginalMean = point(
   "a-mean-through-the-marginal-distribution",
@@ -606,116 +610,122 @@ const marginalMean = point(
   },
 );
 
-const triangleMarginal = point(
-  "marginals-of-a-non-constant-density-on-a-triangle",
-  ["Marginals of a non-constant density on a triangle", "三角形上非常数密度的边缘分布"],
-  [
-    "On a triangle, the limits of the integral for a marginal depend on the fixed variable. On $0 \\le y \\le x \\le 1$, integrating out $y$ runs from $0$ to $x$, while integrating out $x$ runs from $y$ to $1$, so the two marginals have different forms.",
-    "在三角形上，求边缘密度的积分限依赖于固定的变量。在 $0 \\le y \\le x \\le 1$ 上，对 $y$ 积分时从 $0$ 到 $x$，对 $x$ 积分时从 $y$ 到 $1$，所以两个边缘密度形式不同。",
-  ],
-  (rng) => {
-    const [p, q] = rng.pick([
-      [1, 2],
-      [1, 3],
-      [2, 3],
-      [1, 4],
-      [3, 4],
-      [1, 5],
-      [2, 5],
-      [3, 5],
-      [4, 5],
-      [1, 6],
-      [5, 6],
-      [1, 10],
-      [3, 10],
-      [7, 10],
-      [9, 10],
-    ] as const);
-    const v = Q.of(p, q);
-    const square = v.mul(v);
-    const forX = Q.of(4, 1).mul(square).mul(v);
-    const forY = Q.of(4, 1).mul(v).mul(Q.of(1, 1).sub(square));
-    const four = Q.of(4, 1).mul(v);
-    const density = "f(x, y) = 8xy";
-    const region = "0 \\le y \\le x \\le 1";
-    if (rng.bool()) {
+const triangleMarginal = {
+  ...point(
+    "marginals-of-a-non-constant-density-on-a-triangle",
+    ["Marginals of a non-constant density on a triangle", "三角形上非常数密度的边缘分布"],
+    [
+      "On a triangle, the limits of the integral for a marginal depend on the fixed variable. On $0 \\le y \\le x \\le 1$, integrating out $y$ runs from $0$ to $x$, while integrating out $x$ runs from $y$ to $1$, so the two marginals have different forms.",
+      "在三角形上，求边缘密度的积分限依赖于固定的变量。在 $0 \\le y \\le x \\le 1$ 上，对 $y$ 积分时从 $0$ 到 $x$，对 $x$ 积分时从 $y$ 到 $1$，所以两个边缘密度形式不同。",
+    ],
+    (rng) => {
+      const [p, q] = rng.pick([
+        [1, 2],
+        [1, 3],
+        [2, 3],
+        [1, 4],
+        [3, 4],
+        [1, 5],
+        [2, 5],
+        [3, 5],
+        [4, 5],
+        [1, 6],
+        [5, 6],
+        [1, 10],
+        [3, 10],
+        [7, 10],
+        [9, 10],
+      ] as const);
+      const v = Q.of(p, q);
+      const square = v.mul(v);
+      const forX = Q.of(4, 1).mul(square).mul(v);
+      const forY = Q.of(4, 1).mul(v).mul(Q.of(1, 1).sub(square));
+      const four = Q.of(4, 1).mul(v);
+      const density = "f(x, y) = 8xy";
+      const region = "0 \\le y \\le x \\le 1";
+      if (rng.bool()) {
+        return ask(
+          [
+            `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{X}(${v.toLatex()})$.`,
+            `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{X}(${v.toLatex()})$。`,
+          ],
+          forX,
+          [forY, four, Q.of(8, 1).mul(square)],
+          [
+            `$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x^{3}$, since $y$ runs from $0$ to $x$. At this point the value is $${forX.toLatex()}$.`,
+            `$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x^{3}$，因为 $y$ 从 $0$ 到 $x$。在这一点的值是 $${forX.toLatex()}$。`,
+          ],
+        );
+      }
       return ask(
         [
-          `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{X}(${v.toLatex()})$.`,
-          `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{X}(${v.toLatex()})$。`,
+          `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{Y}(${v.toLatex()})$.`,
+          `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{Y}(${v.toLatex()})$。`,
         ],
-        forX,
-        [forY, four, Q.of(8, 1).mul(square)],
+        forY,
+        [forX, four, Q.of(8, 1).mul(square)],
         [
-          `$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x^{3}$, since $y$ runs from $0$ to $x$. At this point the value is $${forX.toLatex()}$.`,
-          `$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x^{3}$，因为 $y$ 从 $0$ 到 $x$。在这一点的值是 $${forX.toLatex()}$。`,
+          `$f_{Y}(y) = \\int_{y}^{1} 8xy\\,dx = 4y(1 - y^{2})$, since $x$ runs from $y$ to $1$. At this point the value is $${forY.toLatex()}$.`,
+          `$f_{Y}(y) = \\int_{y}^{1} 8xy\\,dx = 4y(1 - y^{2})$，因为 $x$ 从 $y$ 到 $1$。在这一点的值是 $${forY.toLatex()}$。`,
         ],
       );
-    }
-    return ask(
-      [
-        `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{Y}(${v.toLatex()})$.`,
-        `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{Y}(${v.toLatex()})$。`,
-      ],
-      forY,
-      [forX, four, Q.of(8, 1).mul(square)],
-      [
-        `$f_{Y}(y) = \\int_{y}^{1} 8xy\\,dx = 4y(1 - y^{2})$, since $x$ runs from $y$ to $1$. At this point the value is $${forY.toLatex()}$.`,
-        `$f_{Y}(y) = \\int_{y}^{1} 8xy\\,dx = 4y(1 - y^{2})$，因为 $x$ 从 $y$ 到 $1$。在这一点的值是 $${forY.toLatex()}$。`,
-      ],
-    );
-  },
-);
+    },
+  ),
+  figure: probabilityDrawings1["marginal-distributions-for-continuous-random-variables#marginals-of-a-non-constant-density-on-a-triangle"],
+};
 
-const independenceTests = point(
-  "both-the-formula-and-the-support-must-factor",
-  ["Both the formula and the support must factor", "公式和支撑集都必须能分解"],
-  [
-    "Two continuous variables are independent only if the joint density factors into a function of $x$ times a function of $y$ and the support is a rectangle. A triangle fails even when the formula looks like a product, since the range of one variable depends on the other.",
-    "两个连续变量独立，要求联合密度能分解为 $x$ 的函数与 $y$ 的函数之积，且支撑集是矩形。三角形不满足这一条，即使公式看起来是乘积，因为一个变量的范围依赖于另一个变量。",
-  ],
-  (rng) => {
-    const m = rng.int(1, 5);
-    const n = rng.int(1, 5);
-    const a = rng.int(2, 6);
-    const kind = rng.int(0, 2);
-    const product = `${pow("x", m)}${pow("y", n)}`;
-    const density = [
-      `f(x, y) = ${(m + 1) * (n + 1)}${product}`,
-      `f(x, y) = ${(n + 1) * (m + n + 2)}${product}`,
-      `f(x, y) = \\frac{x + y}{${a ** 3}}`,
-    ][kind] as string;
-    const region = ["0 \\le x \\le 1,\\ 0 \\le y \\le 1", "0 \\le y \\le x \\le 1", `0 \\le x \\le ${a},\\ 0 \\le y \\le ${a}`][
-      kind
-    ] as string;
-    const yes: Pair = ["Independent: the density factors and the support is a rectangle", "独立：密度能分解且支撑集是矩形"];
-    const support: Pair = ["Not independent: the support is not a rectangle", "不独立：支撑集不是矩形"];
-    const formula: Pair = ["Not independent: the density does not factor", "不独立：密度不能分解"];
-    const option = [yes, support, formula][kind] as Pair;
-    const others = [yes, support, formula].filter((o) => o !== option);
-    const whys: Pair[] = [
-      [
-        "The formula is a function of $x$ times a function of $y$, and the region is a rectangle, so the density is the product of its marginals.",
-        "公式是 $x$ 的函数乘以 $y$ 的函数，区域是矩形，所以密度等于边缘密度之积。",
-      ],
-      [
-        "The formula looks like a product, but the range of $y$ depends on $x$, so knowing $X$ changes what $Y$ can be.",
-        "公式看起来是乘积，但 $y$ 的范围依赖于 $x$，所以知道 $X$ 会改变 $Y$ 的可能取值。",
-      ],
-      [
-        "The support is a rectangle, but a sum in $x$ and $y$ cannot be written as a function of $x$ times a function of $y$.",
-        "支撑集是矩形，但 $x$ 与 $y$ 的和不能写成 $x$ 的函数乘以 $y$ 的函数。",
-      ],
-    ];
-    return choose(
-      rng,
-      [`Are $X$ and $Y$ independent if $${density}$ on $${region}$?`, `如果在 $${region}$ 上 $${density}$，$X$ 与 $Y$ 是否独立？`],
-      option,
-      [...others, ["Independent: the density is nonnegative and integrates to one", "独立：密度非负且积分为一"]],
-      whys[kind] as Pair,
-    );
-  },
-);
+const independenceTests = {
+  ...point(
+    "both-the-formula-and-the-support-must-factor",
+    ["Both the formula and the support must factor", "公式和支撑集都必须能分解"],
+    [
+      "Two continuous variables are independent only if the joint density factors into a function of $x$ times a function of $y$ and the support is a rectangle. A triangle fails even when the formula looks like a product, since the range of one variable depends on the other.",
+      "两个连续变量独立，要求联合密度能分解为 $x$ 的函数与 $y$ 的函数之积，且支撑集是矩形。三角形不满足这一条，即使公式看起来是乘积，因为一个变量的范围依赖于另一个变量。",
+    ],
+    (rng) => {
+      const m = rng.int(1, 5);
+      const n = rng.int(1, 5);
+      const a = rng.int(2, 6);
+      const kind = rng.int(0, 2);
+      const product = `${pow("x", m)}${pow("y", n)}`;
+      const density = [
+        `f(x, y) = ${(m + 1) * (n + 1)}${product}`,
+        `f(x, y) = ${(n + 1) * (m + n + 2)}${product}`,
+        `f(x, y) = \\frac{x + y}{${a ** 3}}`,
+      ][kind] as string;
+      const region = ["0 \\le x \\le 1,\\ 0 \\le y \\le 1", "0 \\le y \\le x \\le 1", `0 \\le x \\le ${a},\\ 0 \\le y \\le ${a}`][
+        kind
+      ] as string;
+      const yes: Pair = ["Independent: the density factors and the support is a rectangle", "独立：密度能分解且支撑集是矩形"];
+      const support: Pair = ["Not independent: the support is not a rectangle", "不独立：支撑集不是矩形"];
+      const formula: Pair = ["Not independent: the density does not factor", "不独立：密度不能分解"];
+      const option = [yes, support, formula][kind] as Pair;
+      const others = [yes, support, formula].filter((o) => o !== option);
+      const whys: Pair[] = [
+        [
+          "The formula is a function of $x$ times a function of $y$, and the region is a rectangle, so the density is the product of its marginals.",
+          "公式是 $x$ 的函数乘以 $y$ 的函数，区域是矩形，所以密度等于边缘密度之积。",
+        ],
+        [
+          "The formula looks like a product, but the range of $y$ depends on $x$, so knowing $X$ changes what $Y$ can be.",
+          "公式看起来是乘积，但 $y$ 的范围依赖于 $x$，所以知道 $X$ 会改变 $Y$ 的可能取值。",
+        ],
+        [
+          "The support is a rectangle, but a sum in $x$ and $y$ cannot be written as a function of $x$ times a function of $y$.",
+          "支撑集是矩形，但 $x$ 与 $y$ 的和不能写成 $x$ 的函数乘以 $y$ 的函数。",
+        ],
+      ];
+      return choose(
+        rng,
+        [`Are $X$ and $Y$ independent if $${density}$ on $${region}$?`, `如果在 $${region}$ 上 $${density}$，$X$ 与 $Y$ 是否独立？`],
+        option,
+        [...others, ["Independent: the density is nonnegative and integrates to one", "独立：密度非负且积分为一"]],
+        whys[kind] as Pair,
+      );
+    },
+  ),
+  figure: probabilityDrawings1["independence-of-continuous-random-variables#both-the-formula-and-the-support-must-factor"],
+};
 
 const scaledComparison = point(
   "comparing-multiples-of-two-normal-variables",
@@ -856,44 +866,50 @@ const covarianceTable = point(
   },
 );
 
-const extremes = point(
-  "expected-maximum-minimum-and-distance-of-two-uniforms",
-  ["Expected maximum, minimum and distance of two uniforms", "两个均匀变量的最大值、最小值与距离的期望"],
-  [
-    "Applying the two-variable rule to $\\max(X, Y)$ or $|X - Y|$ means splitting the square along the diagonal and integrating on each triangle. The two independent uniform points on $[0, a]$ then cut the interval into three parts of equal expected length.",
-    "对 $\\max(X, Y)$ 或 $|X - Y|$ 应用二元法则，要沿对角线把正方形分开，在每个三角形上积分。于是 $[0, a]$ 上两个独立的均匀点把区间分成期望长度相等的三段。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 12);
-    const kind = rng.int(0, 2);
-    const item = ["\\max(X, Y)", "\\min(X, Y)", "|X - Y|"][kind] as string;
-    const third = Q.of(a, 3);
-    const answer = kind === 0 ? Q.of(2 * a, 3) : third;
-    const whys: Pair[] = [
-      [
-        `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the maximum lies past two of them.`,
-        `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，最大值位于其中两段之后。`,
-      ],
-      [
-        `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the minimum lies past the first one.`,
-        `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，最小值位于第一段之后。`,
-      ],
-      [
-        `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the distance between them is the middle part.`,
-        `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，两点之间的距离就是中间一段。`,
-      ],
-    ];
-    return ask(
-      [
-        `$X$ and $Y$ are independent and uniform on $[0, ${a}]$. Find $E[${item}]$.`,
-        `$X$ 与 $Y$ 独立，都在 $[0, ${a}]$ 上服从均匀分布。求 $E[${item}]$。`,
-      ],
-      answer,
-      [Q.of(a, 2), a, kind === 0 ? third : Q.of(2 * a, 3)],
-      whys[kind] as Pair,
-    );
-  },
-);
+const extremes = {
+  ...point(
+    "expected-maximum-minimum-and-distance-of-two-uniforms",
+    ["Expected maximum, minimum and distance of two uniforms", "两个均匀变量的最大值、最小值与距离的期望"],
+    [
+      "Applying the two-variable rule to $\\max(X, Y)$ or $|X - Y|$ means splitting the square along the diagonal and integrating on each triangle. The two independent uniform points on $[0, a]$ then cut the interval into three parts of equal expected length.",
+      "对 $\\max(X, Y)$ 或 $|X - Y|$ 应用二元法则，要沿对角线把正方形分开，在每个三角形上积分。于是 $[0, a]$ 上两个独立的均匀点把区间分成期望长度相等的三段。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 12);
+      const kind = rng.int(0, 2);
+      const item = ["\\max(X, Y)", "\\min(X, Y)", "|X - Y|"][kind] as string;
+      const third = Q.of(a, 3);
+      const answer = kind === 0 ? Q.of(2 * a, 3) : third;
+      const whys: Pair[] = [
+        [
+          `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the maximum lies past two of them.`,
+          `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，最大值位于其中两段之后。`,
+        ],
+        [
+          `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the minimum lies past the first one.`,
+          `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，最小值位于第一段之后。`,
+        ],
+        [
+          `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the distance between them is the middle part.`,
+          `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，两点之间的距离就是中间一段。`,
+        ],
+      ];
+      return ask(
+        [
+          `$X$ and $Y$ are independent and uniform on $[0, ${a}]$. Find $E[${item}]$.`,
+          `$X$ 与 $Y$ 独立，都在 $[0, ${a}]$ 上服从均匀分布。求 $E[${item}]$。`,
+        ],
+        answer,
+        [Q.of(a, 2), a, kind === 0 ? third : Q.of(2 * a, 3)],
+        whys[kind] as Pair,
+      );
+    },
+  ),
+  figure:
+    probabilityDrawings1[
+      "the-rule-of-the-lazy-statistician-for-two-random-variables#expected-maximum-minimum-and-distance-of-two-uniforms"
+    ],
+};
 
 /** deeperProbabilityAndStatisticsThirdPoints maps topics of Probability and Statistics, from random variables to joint distributions, to a third knowledge point. */
 export const deeperProbabilityAndStatisticsThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

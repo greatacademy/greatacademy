@@ -1,6 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Compass, type Mark, type Point, sketch } from "@ga/subject-math";
+import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts";
 
 import { article, numberProblem } from "../problems.ts";
 import { factProblem, gcd, lcm, mod, phi, texChoice, textChoice } from "./abstract-algebra-common.ts";
@@ -977,6 +978,7 @@ export const dihedralGroup: TopicDef = {
   knowledgePoints: [
     {
       id: "orders-of-elements-of-dihedral-groups",
+      figure: algebraDrawings1["dihedral-group#orders-of-elements-of-dihedral-groups"],
       title: t("Orders in $D_n$", "$D_n$ 中元素的阶"),
       explanation: t(
         "In $D_n$ the rotation $r^k$ has order $\\frac{n}{\\gcd(k, n)}$, and every reflection $r^ks$ has order $2$. In $D_{12}$, $r^8$ has order $\\frac{12}{4} = 3$ and $r^5s$ has order $2$.",
@@ -1005,6 +1007,7 @@ export const dihedralGroup: TopicDef = {
     },
     {
       id: "counting-elements-of-dihedral-groups",
+      figure: algebraDrawings1["dihedral-group#counting-elements-of-dihedral-groups"],
       title: t("Counting elements of $D_n$", "$D_n$ 中的计数"),
       explanation: t(
         "$D_n$ has $n$ reflections, each of order $2$. When $n$ is even, the half turn $r^{n/2}$ also has order $2$, so $D_n$ has $n + 1$ elements of order $2$; when $n$ is odd it has $n$.",
@@ -1067,6 +1070,7 @@ export const theSymmetryGroupOfATetrahedron: TopicDef = {
   knowledgePoints: [
     {
       id: "rotations-of-a-tetrahedron",
+      figure: algebraDrawings1["the-symmetry-group-of-a-tetrahedron#rotations-of-a-tetrahedron"],
       title: t("Rotations as permutations", "旋转作为置换"),
       explanation: t(
         "A rotation fixing vertex $1$ is a $3$-cycle of the other vertices: if it sends $2 \\mapsto 3$, it is $(2\\;3\\;4)$ and sends $4 \\mapsto 2$. A rotation swapping two vertices is a half turn, which also swaps the other two: $(1\\;2)(3\\;4)$.",
@@ -1104,6 +1108,7 @@ export const theSymmetryGroupOfATetrahedron: TopicDef = {
     },
     {
       id: "rotations-and-reflections-of-a-tetrahedron",
+      figure: algebraDrawings1["the-symmetry-group-of-a-tetrahedron#rotations-and-reflections-of-a-tetrahedron"],
       title: t("Rotation or not", "是否为旋转"),
       explanation: t(
         "A symmetry of the tetrahedron is a rotation exactly when it permutes the vertices evenly. The reflection in the plane through an edge and the midpoint of the opposite edge is a transposition, such as $(1\\;2)$, so it is not a rotation.",
@@ -1206,6 +1211,7 @@ export const theSymmetryGroupOfACubeRotationsAndReflections: TopicDef = {
   knowledgePoints: [
     {
       id: "rotations-or-reflections-of-a-cube",
+      figure: algebraDrawings1["the-symmetry-group-of-a-cube-rotations-and-reflections#rotations-or-reflections-of-a-cube"],
       title: t("Rotation or not", "是否为旋转"),
       explanation: t(
         "Write the symmetry as a matrix with one $\\pm 1$ in each row and column. Its determinant is the sign of the coordinate permutation times the product of the signs. $(x, y, z) \\mapsto (-y, x, z)$ swaps two coordinates (sign $-1$) and negates one ($-1$), so the determinant is $1$: a quarter turn about the $z$-axis.",
@@ -1226,6 +1232,7 @@ export const theSymmetryGroupOfACubeRotationsAndReflections: TopicDef = {
     },
     {
       id: "orders-of-symmetries-of-a-cube",
+      figure: algebraDrawings1["the-symmetry-group-of-a-cube-rotations-and-reflections#orders-of-symmetries-of-a-cube"],
       title: t("Orders of symmetries", "对称的阶"),
       explanation: t(
         "Apply the map repeatedly until every coordinate returns. $(x, y, z) \\mapsto (y, z, x)$ cycles the coordinates and has order $3$: it is a rotation about the diagonal through $(1, 1, 1)$. $(x, y, z) \\mapsto (-y, x, -z)$ has order $4$.",
@@ -1297,6 +1304,7 @@ export const theSymmetryGroupOfACubeCombiningRotationsAndReflections: TopicDef =
     },
     {
       id: "orders-of-composite-symmetries",
+      figure: algebraDrawings1["the-symmetry-group-of-a-cube-combining-rotations-and-reflections#orders-of-composite-symmetries"],
       title: t("Orders of composites", "复合的阶"),
       explanation: t(
         "Find the composite map first, then its order. With $\\rho: (x, y, z) \\mapsto (-y, x, z)$ and $\\mu: (x, y, z) \\mapsto (x, y, -z)$, $\\rho \\circ \\mu: (x, y, z) \\mapsto (-y, x, -z)$, which has order $4$ and is not a rotation.",

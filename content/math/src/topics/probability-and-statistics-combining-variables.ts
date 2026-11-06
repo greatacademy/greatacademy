@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 import { choiceProblem, isTerminating, lowestTerms, numberProblem, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -74,6 +75,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       },
       {
         id: "probabilities-of-regions-from-a-joint-table",
+        figure: probabilityDrawings1["the-joint-cdf-of-two-discrete-random-variables#probabilities-of-regions-from-a-joint-table"],
         title: t("Probabilities of regions from a joint table", "由联合分布表求区域概率"),
         explanation: t(
           "Any event about $(X, Y)$ is a set of cells in the joint table, and its probability is the sum of those cells. For $P(X + Y \\le c)$, mark every cell with $x + y \\le c$; for $P(X < Y)$, the cells above the diagonal.\n\nThe joint CDF is the special case of a lower-left rectangle, $F(x, y) = P(X \\le x, Y \\le y)$. Other regions, such as $X + Y \\le 2$, are not rectangles, so they cannot be read from a single CDF value.",
@@ -588,6 +590,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       },
       {
         id: "marginal-densities-on-non-rectangular-regions",
+        figure:
+          probabilityDrawings1["marginal-distributions-for-continuous-random-variables#marginal-densities-on-non-rectangular-regions"],
         title: t("Marginal densities on non-rectangular regions", "非矩形区域上的边缘密度"),
         explanation: t(
           "When the support is not a rectangle, the limits of integration depend on the fixed variable. For $f(x, y) = 2$ on the triangle $0 \\le y \\le x \\le 1$:\n\n$$f_X(x) = \\int_0^{x} 2\\,dy = 2x, \\qquad f_Y(y) = \\int_y^{1} 2\\,dx = 2(1 - y).$$\n\nOn a rectangle the limits are constants: for $f(x, y) = x + y$ on the unit square, $f_X(x) = \\int_0^1 (x + y)\\,dy = x + \\frac{1}{2}$.",
@@ -831,6 +835,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       },
       {
         id: "the-joint-cdf-of-a-non-uniform-density",
+        figure: probabilityDrawings1["the-joint-cdf-of-two-continuous-random-variables#the-joint-cdf-of-a-non-uniform-density"],
         title: t("The joint CDF of a non-uniform density", "非均匀密度的联合分布函数"),
         explanation: t(
           "For a density that is not constant, integrate it over the lower-left rectangle. For $f(x, y) = x + y$ on the unit square and $0 \\le a, b \\le 1$:\n\n$$F(a, b) = \\int_0^{a}\\int_0^{b} (u + v)\\,dv\\,du = \\frac{a^{2}b + ab^{2}}{2} = \\frac{ab(a + b)}{2}.$$\n\nCheck: $F(1, 1) = 1$, as every joint CDF must reach.",
@@ -928,6 +933,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       },
       {
         id: "a-rectangle-probability-from-cdf-values",
+        figure:
+          probabilityDrawings1["properties-of-the-joint-cdf-of-two-continuous-random-variables#a-rectangle-probability-from-cdf-values"],
         title: t("A rectangle probability from CDF values", "由分布函数值求矩形概率"),
         explanation: t(
           "Inclusion–exclusion on the four corners gives the probability of a rectangle:\n\n$$P(a < X \\le b, c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c).$$\n\nThe corner $F(a, c)$ is subtracted twice, once in each middle term, so it is added back once. The result can never be negative; a negative answer signals a sign error.",

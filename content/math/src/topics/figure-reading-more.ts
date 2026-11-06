@@ -5,14 +5,19 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text } from "@ga/content"
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, plane, Q, svgDocument } from "@ga/subject-math";
+import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
+import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-1.ts";
+import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 import { numberProblem } from "../problems.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
@@ -1428,6 +1433,7 @@ const empiricalFromCurve: KnowledgePointDef = {
 
 const correlationFromScatter: KnowledgePointDef = {
   id: "the-correlation-from-a-scatter-plot",
+  figure: probabilityDrawings1["the-correlation-coefficient-for-two-random-variables#the-correlation-from-a-scatter-plot"],
   title: t("The correlation from a scatter plot", "由散点图看相关系数"),
   explanation: t(
     "The correlation coefficient measures how closely points follow a straight line. Its sign tells whether the line rises or falls, and its size how tight the cloud is around the line: near one is tight and near zero is a shapeless cloud. It says nothing about how steep the line is, so a shallow tight cloud can have a larger correlation than a steep loose one.",
@@ -1840,6 +1846,7 @@ const relationCases = [
 
 const relationFromDigraph: KnowledgePointDef = {
   id: "properties-of-a-relation-from-its-digraph",
+  figure: proofDrawings1["symmetric-and-antisymmetric-relations#properties-of-a-relation-from-its-digraph"],
   title: t("Properties of a relation from its digraph", "由有向图判断关系的性质"),
   explanation: t(
     "A relation on a set can be drawn as a graph with an arrow from x to y whenever x is related to y. It is reflexive when every point has a loop. It is symmetric when every arrow has a partner going back, and antisymmetric when no two different points have arrows in both directions. A property fails as soon as one point or one arrow breaks it.",
@@ -2094,6 +2101,7 @@ const cayleyDiagramWalk: KnowledgePointDef = {
 
 const dihedralFromPolygon: KnowledgePointDef = {
   id: "following-a-symmetry-of-a-polygon",
+  figure: algebraDrawings1["dihedral-group#following-a-symmetry-of-a-polygon"],
   title: t("Following a symmetry of a polygon", "跟踪多边形的对称变换"),
   explanation: t(
     "The dihedral group is made of the rotations and reflections of a regular polygon. To follow one, track a single vertex: a rotation moves every vertex the same number of steps round the polygon, and a reflection in the axis through vertex 1 sends vertex $k$ to the vertex the same number of steps the other way round. Working with numbers modulo $n$ keeps this exact.",
@@ -2147,6 +2155,7 @@ const dihedralFromPolygon: KnowledgePointDef = {
 
 const rootOrderFromCircle: KnowledgePointDef = {
   id: "the-order-of-a-root-of-unity-from-a-drawing",
+  figure: algebraDrawings1["cyclic-subgroups-in-the-complex-plane#the-order-of-a-root-of-unity-from-a-drawing"],
   title: t("The order of a root of unity from a drawing", "由图读单位根的阶"),
   explanation: t(
     "The $n$-th roots of unity are evenly spaced on the unit circle, and they form a cyclic group under multiplication. Multiplying by a root turns the plane through its angle. So its order is the number of equal turns needed to come back to one, and this equals $n$ divided by the greatest common divisor of $n$ and the number of steps from one to the root.",
@@ -2242,6 +2251,7 @@ const permutationOrderFromArrows: KnowledgePointDef = {
 
 const adjacencyFromGraph: KnowledgePointDef = {
   id: "an-entry-of-the-adjacency-matrix-from-a-drawing",
+  figure: discreteDrawings2["adjacency-matrices#an-entry-of-the-adjacency-matrix-from-a-drawing"],
   title: t("Walk counts from a drawn graph", "由图数走法"),
   explanation: t(
     "The entry in row $i$ and column $j$ of the adjacency matrix counts the edges between those vertices, and the same entry of the matrix squared counts walks of length two. A walk of length two from $i$ to $j$ passes through some common neighbor, so counting those neighbors on a drawing gives the same number without any multiplication. This is why powers of the matrix count walks.",
@@ -2289,6 +2299,7 @@ const adjacencyFromGraph: KnowledgePointDef = {
 
 const edgesToTree: KnowledgePointDef = {
   id: "edges-to-remove-to-get-a-tree",
+  figure: discreteDrawings1["trees-and-forests#edges-to-remove-to-get-a-tree"],
   title: t("Edges to remove to get a tree", "要去掉几条边才成树"),
   explanation: t(
     "A tree on $n$ vertices has exactly $n - 1$ edges, whichever tree it is. So a connected graph with more edges has extra ones that close cycles, and removing each of these while staying connected leaves a spanning tree. The number that must go is the number of edges minus the number of vertices plus one, and it does not depend on which edges are chosen.",

@@ -1,5 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { numberProblem } from "../problems.ts";
 import { divisors, factProblem, gcd, lcm, mod, multiplicativeOrder, phi, texChoice, units } from "./abstract-algebra-common.ts";
@@ -362,6 +363,7 @@ export const theFirstIsomorphismTheorem: TopicDef = {
     },
     {
       id: "identifying-quotient-groups",
+      figure: algebraDrawings2["the-first-isomorphism-theorem#identifying-quotient-groups"],
       title: t("Identifying quotient groups", "识别商群"),
       explanation: t(
         "To identify a quotient, find a surjective homomorphism whose kernel is the subgroup; the quotient is then isomorphic to the target. $\\mathbb{R}/\\mathbb{Z} \\cong \\{z \\in \\mathbb{C} : |z| = 1\\}$: the map $x \\mapsto e^{2\\pi i x}$ is a homomorphism from $\\mathbb{R}$ onto the circle with kernel $\\mathbb{Z}$.",

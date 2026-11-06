@@ -3,6 +3,7 @@
 
 import type { Rng, TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { complexDrawings1 } from "../explanation-drawings-complex-analysis-1.ts";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 
@@ -215,36 +216,39 @@ const complexDerivative = topic(
         );
       },
     ),
-    point(
-      "the-conjugate-has-no-derivative",
-      ["The conjugate has no derivative", "共轭没有导数"],
-      [
-        "The conjugate function looks simple, and it is continuous everywhere, yet it has no derivative at any point. Along a real $h$ the difference quotient $\\frac{\\overline{h}}{h}$ is $1$, and along an imaginary $h$ it is $-1$. These differ, so the limit fails. Complex differentiability is thus far stronger than its real counterpart: the smooth real map that reflects the plane is not complex differentiable.",
-        "共轭函数看起来很简单，处处连续，却在任何一点都没有导数。沿实的 $h$，差商 $\\frac{\\overline{h}}{h}$ 是 $1$；沿虚的 $h$，差商是 $-1$。两者不同，所以极限不存在。因此复可导比实可导强得多：把平面反射的光滑实映射并不是复可导的。",
-      ],
-      (rng) => {
-        const c = rng.int(2, 19);
-        const real = rng.bool();
-        const answer = real ? c : -c;
-        const h = real ? "t" : "it";
-        return ask(
-          [
-            `Let $f(z) = ${c}\\bar{z}$. For real $t \\ne 0$, what is the difference quotient $\\frac{f(z + ${h}) - f(z)}{${h}}$?`,
-            `设 $f(z) = ${c}\\bar{z}$。对实数 $t \\ne 0$，差商 $\\frac{f(z + ${h}) - f(z)}{${h}}$ 是多少？`,
-          ],
-          answer,
-          [-answer, 0, 1, c + 1],
-          [
-            real
-              ? `The conjugate of $t$ is $t$, so the quotient is $\\frac{${c}t}{t} = ${c}$.`
-              : `The conjugate of $it$ is $-it$, so the quotient is $\\frac{-${c}it}{it} = -${c}$.`,
-            real
-              ? `$t$ 的共轭是 $t$，所以商是 $\\frac{${c}t}{t} = ${c}$。`
-              : `$it$ 的共轭是 $-it$，所以商是 $\\frac{-${c}it}{it} = -${c}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-conjugate-has-no-derivative",
+        ["The conjugate has no derivative", "共轭没有导数"],
+        [
+          "The conjugate function looks simple, and it is continuous everywhere, yet it has no derivative at any point. Along a real $h$ the difference quotient $\\frac{\\overline{h}}{h}$ is $1$, and along an imaginary $h$ it is $-1$. These differ, so the limit fails. Complex differentiability is thus far stronger than its real counterpart: the smooth real map that reflects the plane is not complex differentiable.",
+          "共轭函数看起来很简单，处处连续，却在任何一点都没有导数。沿实的 $h$，差商 $\\frac{\\overline{h}}{h}$ 是 $1$；沿虚的 $h$，差商是 $-1$。两者不同，所以极限不存在。因此复可导比实可导强得多：把平面反射的光滑实映射并不是复可导的。",
+        ],
+        (rng) => {
+          const c = rng.int(2, 19);
+          const real = rng.bool();
+          const answer = real ? c : -c;
+          const h = real ? "t" : "it";
+          return ask(
+            [
+              `Let $f(z) = ${c}\\bar{z}$. For real $t \\ne 0$, what is the difference quotient $\\frac{f(z + ${h}) - f(z)}{${h}}$?`,
+              `设 $f(z) = ${c}\\bar{z}$。对实数 $t \\ne 0$，差商 $\\frac{f(z + ${h}) - f(z)}{${h}}$ 是多少？`,
+            ],
+            answer,
+            [-answer, 0, 1, c + 1],
+            [
+              real
+                ? `The conjugate of $t$ is $t$, so the quotient is $\\frac{${c}t}{t} = ${c}$.`
+                : `The conjugate of $it$ is $-it$, so the quotient is $\\frac{-${c}it}{it} = -${c}$.`,
+              real
+                ? `$t$ 的共轭是 $t$，所以商是 $\\frac{${c}t}{t} = ${c}$。`
+                : `$it$ 的共轭是 $-it$，所以商是 $\\frac{-${c}it}{it} = -${c}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["the-complex-derivative#the-conjugate-has-no-derivative"],
+    },
   ],
 );
 
@@ -380,31 +384,34 @@ const complexExponential = topic(
   ["eulers-formula", "the-complex-derivative"],
   [["eulers-formula", 0.5]],
   [
-    point(
-      "evaluating-the-exponential",
-      ["Evaluating the exponential", "计算指数函数"],
-      [
-        "The exponential of $x + iy$ is $e^x(\\cos y + i\\sin y)$. Its modulus is $e^x$, set by the real part, and its argument is $y$, set by the imaginary part. So the exponential turns horizontal lines into rays and vertical lines into circles, and it is never zero, because its modulus is always positive.",
-        "$x + iy$ 的指数函数是 $e^x(\\cos y + i\\sin y)$。它的模是 $e^x$，由实部决定；它的辐角是 $y$，由虚部决定。所以指数函数把水平线变成射线，把竖直线变成圆，而且它从不为零，因为模总是正的。",
-      ],
-      (rng) => {
-        const r = rng.int(2, 15);
-        const half = rng.bool();
-        const multiple = half ? rng.pick([-5, -3, -1, 1, 3, 5]) : rng.pick([-6, -4, -2, 2, 4, 6]);
-        const size = Math.abs(multiple) === 1 ? "" : `${Math.abs(multiple)}`;
-        const exponent = `\\ln ${r} ${multiple < 0 ? "-" : "+"} ${size}\\pi i`;
-        const answer = half ? -r : r;
-        return ask(
-          [`What is the value of $e^{${exponent}}$?`, `$e^{${exponent}}$ 的值是多少？`],
-          answer,
-          [-answer, 1, r + 1, half ? r - 1 : -r - 1],
-          [
-            `The modulus is $e^{\\ln ${r}} = ${r}$, and the angle is an ${half ? "odd" : "even"} multiple of $\\pi$, so the value is $${answer}$.`,
-            `模是 $e^{\\ln ${r}} = ${r}$，角是 $\\pi$ 的${half ? "奇数" : "偶数"}倍，所以值是 $${answer}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "evaluating-the-exponential",
+        ["Evaluating the exponential", "计算指数函数"],
+        [
+          "The exponential of $x + iy$ is $e^x(\\cos y + i\\sin y)$. Its modulus is $e^x$, set by the real part, and its argument is $y$, set by the imaginary part. So the exponential turns horizontal lines into rays and vertical lines into circles, and it is never zero, because its modulus is always positive.",
+          "$x + iy$ 的指数函数是 $e^x(\\cos y + i\\sin y)$。它的模是 $e^x$，由实部决定；它的辐角是 $y$，由虚部决定。所以指数函数把水平线变成射线，把竖直线变成圆，而且它从不为零，因为模总是正的。",
+        ],
+        (rng) => {
+          const r = rng.int(2, 15);
+          const half = rng.bool();
+          const multiple = half ? rng.pick([-5, -3, -1, 1, 3, 5]) : rng.pick([-6, -4, -2, 2, 4, 6]);
+          const size = Math.abs(multiple) === 1 ? "" : `${Math.abs(multiple)}`;
+          const exponent = `\\ln ${r} ${multiple < 0 ? "-" : "+"} ${size}\\pi i`;
+          const answer = half ? -r : r;
+          return ask(
+            [`What is the value of $e^{${exponent}}$?`, `$e^{${exponent}}$ 的值是多少？`],
+            answer,
+            [-answer, 1, r + 1, half ? r - 1 : -r - 1],
+            [
+              `The modulus is $e^{\\ln ${r}} = ${r}$, and the angle is an ${half ? "odd" : "even"} multiple of $\\pi$, so the value is $${answer}$.`,
+              `模是 $e^{\\ln ${r}} = ${r}$，角是 $\\pi$ 的${half ? "奇数" : "偶数"}倍，所以值是 $${answer}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["the-complex-exponential-function#evaluating-the-exponential"],
+    },
     point(
       "the-period-of-the-exponential",
       ["The period of the exponential", "指数函数的周期"],
@@ -508,32 +515,35 @@ const contourIntegrals = topic(
   ["the-complex-derivative", "line-integrals-of-scalar-functions"],
   [],
   [
-    point(
-      "the-conjugate-around-a-circle",
-      ["The conjugate around a circle", "共轭沿圆周积分"],
-      [
-        "A contour integral is computed by parametrizing the path, so that $z$ and $dz$ are written in terms of a real variable, and then integrating over its range. Around a circle of radius $r$ centred at zero, $z = re^{it}$. For the conjugate $\\bar{z}$, the two exponentials cancel, leaving a constant integrand, and the result grows with the square of the radius.",
-        "围道积分通过把路径参数化来计算，把 $z$ 和 $dz$ 都用实变量表示，再在其范围内积分。沿以零为中心、半径为 $r$ 的圆周，$z = re^{it}$。对共轭 $\\bar{z}$，两个指数相消，被积函数成了常数，结果随半径的平方增长。",
-      ],
-      (rng) => {
-        const r = rng.int(2, 13);
-        const c = rng.int(2, 10);
-        const answer = 2 * c * r * r;
-        const integrand = c === 1 ? "\\bar{z}" : `${c}\\bar{z}`;
-        return ask(
-          [
-            `The integral of $${integrand}$ once counterclockwise around $|z| = ${r}$ is $k\\pi i$. What is $k$?`,
-            `$${integrand}$ 沿 $|z| = ${r}$ 逆时针积分一周的结果是 $k\\pi i$。$k$ 是多少？`,
-          ],
-          answer,
-          [2 * c * r, c * r * r, 0, answer + 2],
-          [
-            `With $z = ${r}e^{it}$ we get $\\bar{z}\\,dz = ${r * r}i\\,dt$. Integrating over a full turn and multiplying by ${c} gives $${answer}\\pi i$.`,
-            `取 $z = ${r}e^{it}$，得 $\\bar{z}\\,dz = ${r * r}i\\,dt$。在一整圈上积分并乘以 ${c}，得 $${answer}\\pi i$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-conjugate-around-a-circle",
+        ["The conjugate around a circle", "共轭沿圆周积分"],
+        [
+          "A contour integral is computed by parametrizing the path, so that $z$ and $dz$ are written in terms of a real variable, and then integrating over its range. Around a circle of radius $r$ centred at zero, $z = re^{it}$. For the conjugate $\\bar{z}$, the two exponentials cancel, leaving a constant integrand, and the result grows with the square of the radius.",
+          "围道积分通过把路径参数化来计算，把 $z$ 和 $dz$ 都用实变量表示，再在其范围内积分。沿以零为中心、半径为 $r$ 的圆周，$z = re^{it}$。对共轭 $\\bar{z}$，两个指数相消，被积函数成了常数，结果随半径的平方增长。",
+        ],
+        (rng) => {
+          const r = rng.int(2, 13);
+          const c = rng.int(2, 10);
+          const answer = 2 * c * r * r;
+          const integrand = c === 1 ? "\\bar{z}" : `${c}\\bar{z}`;
+          return ask(
+            [
+              `The integral of $${integrand}$ once counterclockwise around $|z| = ${r}$ is $k\\pi i$. What is $k$?`,
+              `$${integrand}$ 沿 $|z| = ${r}$ 逆时针积分一周的结果是 $k\\pi i$。$k$ 是多少？`,
+            ],
+            answer,
+            [2 * c * r, c * r * r, 0, answer + 2],
+            [
+              `With $z = ${r}e^{it}$ we get $\\bar{z}\\,dz = ${r * r}i\\,dt$. Integrating over a full turn and multiplying by ${c} gives $${answer}\\pi i$.`,
+              `取 $z = ${r}e^{it}$，得 $\\bar{z}\\,dz = ${r * r}i\\,dt$。在一整圈上积分并乘以 ${c}，得 $${answer}\\pi i$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["contour-integrals#the-conjugate-around-a-circle"],
+    },
     point(
       "integrating-along-a-segment",
       ["Integrating along a segment", "沿线段积分"],
@@ -572,37 +582,40 @@ const cauchyTheorem = topic(
   ["contour-integrals"],
   [["contour-integrals", 0.3]],
   [
-    point(
-      "whether-a-pole-is-enclosed",
-      ["Whether a pole is enclosed", "极点是否被包围"],
-      [
-        "Cauchy's theorem says that the integral of an analytic function around a closed path vanishes when the function is analytic on and inside the path. For $\\frac{c}{z - a}$ around a circle, everything depends on where $a$ lies. If $a$ is outside, the function is analytic inside and the integral is zero. If $a$ is inside, the integral is $2\\pi i c$.",
-        "柯西定理说，如果函数在闭路径上及其内部解析，那么它沿这条路径的积分为零。对 $\\frac{c}{z - a}$ 沿圆周的积分，一切取决于 $a$ 的位置。如果 $a$ 在外面，函数在内部解析，积分为零。如果 $a$ 在里面，积分是 $2\\pi i c$。",
-      ],
-      (rng) => {
-        const c = rng.int(1, 12);
-        const r = rng.int(2, 9);
-        const inside = rng.bool();
-        const a = inside ? rng.int(-(r - 1), r - 1) : rng.pick([r + rng.int(1, 5), -r - rng.int(1, 5)]);
-        const answer = inside ? 2 * c : 0;
-        return ask(
-          [
-            `The integral of $\\frac{${c}}{${minus("z", a)}}$ once counterclockwise around $|z| = ${r}$ is $k\\pi i$. What is $k$?`,
-            `$\\frac{${c}}{${minus("z", a)}}$ 沿 $|z| = ${r}$ 逆时针积分一周的结果是 $k\\pi i$。$k$ 是多少？`,
-          ],
-          answer,
-          [inside ? 0 : 2 * c, c === 0 ? 1 : c, 2 * r, 2 * c + 2],
-          [
-            inside
-              ? `$${a}$ is inside the circle, so the pole is enclosed and the integral is $2\\pi i \\times ${c}$.`
-              : `$${a}$ is outside the circle, so the function is analytic on and inside the path, and the integral is 0.`,
-            inside
-              ? `$${a}$ 在圆内，极点被包围，所以积分是 $2\\pi i \\times ${c}$。`
-              : `$${a}$ 在圆外，函数在路径上及其内部解析，所以积分是 0。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "whether-a-pole-is-enclosed",
+        ["Whether a pole is enclosed", "极点是否被包围"],
+        [
+          "Cauchy's theorem says that the integral of an analytic function around a closed path vanishes when the function is analytic on and inside the path. For $\\frac{c}{z - a}$ around a circle, everything depends on where $a$ lies. If $a$ is outside, the function is analytic inside and the integral is zero. If $a$ is inside, the integral is $2\\pi i c$.",
+          "柯西定理说，如果函数在闭路径上及其内部解析，那么它沿这条路径的积分为零。对 $\\frac{c}{z - a}$ 沿圆周的积分，一切取决于 $a$ 的位置。如果 $a$ 在外面，函数在内部解析，积分为零。如果 $a$ 在里面，积分是 $2\\pi i c$。",
+        ],
+        (rng) => {
+          const c = rng.int(1, 12);
+          const r = rng.int(2, 9);
+          const inside = rng.bool();
+          const a = inside ? rng.int(-(r - 1), r - 1) : rng.pick([r + rng.int(1, 5), -r - rng.int(1, 5)]);
+          const answer = inside ? 2 * c : 0;
+          return ask(
+            [
+              `The integral of $\\frac{${c}}{${minus("z", a)}}$ once counterclockwise around $|z| = ${r}$ is $k\\pi i$. What is $k$?`,
+              `$\\frac{${c}}{${minus("z", a)}}$ 沿 $|z| = ${r}$ 逆时针积分一周的结果是 $k\\pi i$。$k$ 是多少？`,
+            ],
+            answer,
+            [inside ? 0 : 2 * c, c === 0 ? 1 : c, 2 * r, 2 * c + 2],
+            [
+              inside
+                ? `$${a}$ is inside the circle, so the pole is enclosed and the integral is $2\\pi i \\times ${c}$.`
+                : `$${a}$ is outside the circle, so the function is analytic on and inside the path, and the integral is 0.`,
+              inside
+                ? `$${a}$ 在圆内，极点被包围，所以积分是 $2\\pi i \\times ${c}$。`
+                : `$${a}$ 在圆外，函数在路径上及其内部解析，所以积分是 0。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["cauchys-integral-theorem#whether-a-pole-is-enclosed"],
+    },
     point(
       "using-an-antiderivative",
       ["Using an antiderivative", "使用原函数"],
@@ -704,59 +717,65 @@ const estimates = topic(
   ["cauchys-integral-formula"],
   [],
   [
-    point(
-      "a-cauchy-estimate",
-      ["A Cauchy estimate", "柯西估计"],
-      [
-        "If an analytic function is bounded by $M$ on a circle of radius $r$ about a point, the $n$th derivative at that point is at most $\\frac{n!\\,M}{r^n}$. For an entire bounded function, $r$ may be taken as large as we like, so the first derivative vanishes everywhere and the function is constant. This is Liouville's theorem, and it quickly yields the fundamental theorem of algebra.",
-        "如果解析函数在以某点为中心、半径为 $r$ 的圆周上不超过 $M$，那么在这一点的 $n$ 阶导数至多是 $\\frac{n!\\,M}{r^n}$。对有界整函数，$r$ 可以任意大，所以一阶导数处处为零，函数是常数。这就是刘维尔定理，由它很快能得到代数基本定理。",
-      ],
-      (rng) => {
-        const M = rng.int(2, 30);
-        const r = rng.int(2, 6);
-        const n = rng.int(1, 3);
-        const fact = [1, 1, 2, 6][n] as number;
-        const power = n === 1 ? `${r}` : `${r}^{${n}}`;
-        const answer = Q.of(fact * M, r ** n);
-        return ask(
-          [
-            `Suppose $|f(z)| \\le ${M}$ on the circle of radius ${r} about $a$, with $f$ analytic on and inside it. What bound does Cauchy's estimate give for $|f${"'".repeat(n)}(a)|$?`,
-            `设在以 $a$ 为中心、半径为 ${r} 的圆周上 $|f(z)| \\le ${M}$，且 $f$ 在圆周上及其内部解析。柯西估计给出的 $|f${"'".repeat(n)}(a)|$ 的界是多少？`,
-          ],
-          answer,
-          [Q.of(M, r ** n), Q.of(fact * M, r), Q.of(fact * M * r), answer.add(Q.of(1))],
-          [
-            `The estimate is $\\frac{${n}! \\times ${M}}{${power}} = ${answer.toLatex()}$.`,
-            `估计式是 $\\frac{${n}! \\times ${M}}{${power}} = ${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "the-maximum-modulus",
-      ["The maximum modulus", "最大模"],
-      [
-        "The maximum modulus principle says that a nonconstant analytic function on a bounded region reaches its largest modulus only on the boundary. So finding the maximum means looking at the boundary circle. For $z^2$ plus a positive constant on a disc, the triangle inequality gives an upper bound, and a positive real point on the circle attains it, so this bound is exact.",
-        "最大模原理说，有界区域上非常数的解析函数只在边界上达到最大模。所以求最大值就是看边界圆周。对圆盘上的 $z^2$ 加正常数，三角不等式给出上界，而圆周上的正实数点可以达到它，所以这个界是准确的。",
-      ],
-      (rng) => {
-        const r = rng.int(2, 12);
-        const c = rng.int(1, 30);
-        const answer = r * r + c;
-        return ask(
-          [
-            `What is the maximum of $|z^2 + ${c}|$ on the disc $|z| \\le ${r}$?`,
-            `$|z^2 + ${c}|$ 在圆盘 $|z| \\le ${r}$ 上的最大值是多少？`,
-          ],
-          answer,
-          [r + c, r * r, Math.abs(r * r - c) === answer ? answer + 1 : Math.abs(r * r - c), answer + r],
-          [
-            `On the boundary, $|z^2 + ${c}| \\le ${r * r} + ${c}$, and $z = ${r}$ attains this, so the maximum is ${answer}.`,
-            `在边界上，$|z^2 + ${c}| \\le ${r * r} + ${c}$，$z = ${r}$ 能达到它，所以最大值是 ${answer}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-cauchy-estimate",
+        ["A Cauchy estimate", "柯西估计"],
+        [
+          "If an analytic function is bounded by $M$ on a circle of radius $r$ about a point, the $n$th derivative at that point is at most $\\frac{n!\\,M}{r^n}$. For an entire bounded function, $r$ may be taken as large as we like, so the first derivative vanishes everywhere and the function is constant. This is Liouville's theorem, and it quickly yields the fundamental theorem of algebra.",
+          "如果解析函数在以某点为中心、半径为 $r$ 的圆周上不超过 $M$，那么在这一点的 $n$ 阶导数至多是 $\\frac{n!\\,M}{r^n}$。对有界整函数，$r$ 可以任意大，所以一阶导数处处为零，函数是常数。这就是刘维尔定理，由它很快能得到代数基本定理。",
+        ],
+        (rng) => {
+          const M = rng.int(2, 30);
+          const r = rng.int(2, 6);
+          const n = rng.int(1, 3);
+          const fact = [1, 1, 2, 6][n] as number;
+          const power = n === 1 ? `${r}` : `${r}^{${n}}`;
+          const answer = Q.of(fact * M, r ** n);
+          return ask(
+            [
+              `Suppose $|f(z)| \\le ${M}$ on the circle of radius ${r} about $a$, with $f$ analytic on and inside it. What bound does Cauchy's estimate give for $|f${"'".repeat(n)}(a)|$?`,
+              `设在以 $a$ 为中心、半径为 ${r} 的圆周上 $|f(z)| \\le ${M}$，且 $f$ 在圆周上及其内部解析。柯西估计给出的 $|f${"'".repeat(n)}(a)|$ 的界是多少？`,
+            ],
+            answer,
+            [Q.of(M, r ** n), Q.of(fact * M, r), Q.of(fact * M * r), answer.add(Q.of(1))],
+            [
+              `The estimate is $\\frac{${n}! \\times ${M}}{${power}} = ${answer.toLatex()}$.`,
+              `估计式是 $\\frac{${n}! \\times ${M}}{${power}} = ${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["cauchys-estimates-and-liouvilles-theorem#a-cauchy-estimate"],
+    },
+    {
+      ...point(
+        "the-maximum-modulus",
+        ["The maximum modulus", "最大模"],
+        [
+          "The maximum modulus principle says that a nonconstant analytic function on a bounded region reaches its largest modulus only on the boundary. So finding the maximum means looking at the boundary circle. For $z^2$ plus a positive constant on a disc, the triangle inequality gives an upper bound, and a positive real point on the circle attains it, so this bound is exact.",
+          "最大模原理说，有界区域上非常数的解析函数只在边界上达到最大模。所以求最大值就是看边界圆周。对圆盘上的 $z^2$ 加正常数，三角不等式给出上界，而圆周上的正实数点可以达到它，所以这个界是准确的。",
+        ],
+        (rng) => {
+          const r = rng.int(2, 12);
+          const c = rng.int(1, 30);
+          const answer = r * r + c;
+          return ask(
+            [
+              `What is the maximum of $|z^2 + ${c}|$ on the disc $|z| \\le ${r}$?`,
+              `$|z^2 + ${c}|$ 在圆盘 $|z| \\le ${r}$ 上的最大值是多少？`,
+            ],
+            answer,
+            [r + c, r * r, Math.abs(r * r - c) === answer ? answer + 1 : Math.abs(r * r - c), answer + r],
+            [
+              `On the boundary, $|z^2 + ${c}| \\le ${r * r} + ${c}$, and $z = ${r}$ attains this, so the maximum is ${answer}.`,
+              `在边界上，$|z^2 + ${c}| \\le ${r * r} + ${c}$，$z = ${r}$ 能达到它，所以最大值是 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["cauchys-estimates-and-liouvilles-theorem#the-maximum-modulus"],
+    },
   ],
 );
 
@@ -1076,31 +1095,34 @@ const residueTheorem = topic(
         );
       },
     ),
-    point(
-      "a-real-integral-from-residues",
-      ["A real integral from residues", "由留数求实积分"],
-      [
-        "Real integrals over the whole line can often be found by closing the interval with a large semicircle in the upper half plane. The contribution of the arc vanishes when the integrand falls quickly enough, so the real integral equals $2\\pi i$ times the residues in the upper half plane. This produces in a few lines integrals that have no elementary antiderivative, or a very awkward one.",
-        "整条实轴上的积分，常常可以用上半平面的大半圆把区间封闭起来求得。被积函数下降得足够快时，圆弧的贡献趋于零，所以实积分等于 $2\\pi i$ 乘上半平面内的留数。这样几行就能算出没有初等原函数或原函数很麻烦的积分。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 9);
-        const b = rng.pick(Array.from({ length: 9 }, (_, i) => i + 1).filter((v) => v !== a));
-        const answer = Q.of(1, a * b * (a + b));
-        return ask(
-          [
-            `The integral $\\int_{-\\infty}^{\\infty} \\frac{dx}{(x^2 + ${a * a})(x^2 + ${b * b})}$ equals $k\\pi$. What is $k$?`,
-            `积分 $\\int_{-\\infty}^{\\infty} \\frac{dx}{(x^2 + ${a * a})(x^2 + ${b * b})}$ 等于 $k\\pi$。$k$ 是多少？`,
-          ],
-          answer,
-          [Q.of(1, a * b), Q.of(1, a + b), Q.of(2, a * b * (a + b)), Q.of(1, a * a + b * b)],
-          [
-            `The poles in the upper half plane are ${a === 1 ? "" : a}i and ${b === 1 ? "" : b}i. Adding their residues and multiplying by $2\\pi i$ gives $\\frac{\\pi}{${a} \\cdot ${b} \\cdot (${a} + ${b})}$, which is $${answer.toLatex()}\\pi$.`,
-            `上半平面的极点是 ${a === 1 ? "" : a}i 和 ${b === 1 ? "" : b}i。把它们的留数相加再乘以 $2\\pi i$，得 $\\frac{\\pi}{${a} \\cdot ${b} \\cdot (${a} + ${b})}$，即 $${answer.toLatex()}\\pi$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-real-integral-from-residues",
+        ["A real integral from residues", "由留数求实积分"],
+        [
+          "Real integrals over the whole line can often be found by closing the interval with a large semicircle in the upper half plane. The contribution of the arc vanishes when the integrand falls quickly enough, so the real integral equals $2\\pi i$ times the residues in the upper half plane. This produces in a few lines integrals that have no elementary antiderivative, or a very awkward one.",
+          "整条实轴上的积分，常常可以用上半平面的大半圆把区间封闭起来求得。被积函数下降得足够快时，圆弧的贡献趋于零，所以实积分等于 $2\\pi i$ 乘上半平面内的留数。这样几行就能算出没有初等原函数或原函数很麻烦的积分。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 9);
+          const b = rng.pick(Array.from({ length: 9 }, (_, i) => i + 1).filter((v) => v !== a));
+          const answer = Q.of(1, a * b * (a + b));
+          return ask(
+            [
+              `The integral $\\int_{-\\infty}^{\\infty} \\frac{dx}{(x^2 + ${a * a})(x^2 + ${b * b})}$ equals $k\\pi$. What is $k$?`,
+              `积分 $\\int_{-\\infty}^{\\infty} \\frac{dx}{(x^2 + ${a * a})(x^2 + ${b * b})}$ 等于 $k\\pi$。$k$ 是多少？`,
+            ],
+            answer,
+            [Q.of(1, a * b), Q.of(1, a + b), Q.of(2, a * b * (a + b)), Q.of(1, a * a + b * b)],
+            [
+              `The poles in the upper half plane are ${a === 1 ? "" : a}i and ${b === 1 ? "" : b}i. Adding their residues and multiplying by $2\\pi i$ gives $\\frac{\\pi}{${a} \\cdot ${b} \\cdot (${a} + ${b})}$, which is $${answer.toLatex()}\\pi$.`,
+              `上半平面的极点是 ${a === 1 ? "" : a}i 和 ${b === 1 ? "" : b}i。把它们的留数相加再乘以 $2\\pi i$，得 $\\frac{\\pi}{${a} \\cdot ${b} \\cdot (${a} + ${b})}$，即 $${answer.toLatex()}\\pi$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["the-residue-theorem#a-real-integral-from-residues"],
+    },
   ],
 );
 
@@ -1186,57 +1208,63 @@ const conformal = topic(
   ["mobius-transformations"],
   [],
   [
-    point(
-      "the-local-scale-factor",
-      ["The local scale factor", "局部伸缩倍数"],
-      [
-        "Near a point where the derivative is not zero, an analytic map acts like multiplication by that derivative: a rotation by its argument together with a scaling by its modulus. All directions turn and stretch by the same amounts, so angles are preserved, which is what conformal means. The local scale factor is thus the modulus of the derivative at that point.",
-        "在导数不为零的点附近，解析映射的作用就像乘以这个导数：旋转它的辐角并按它的模伸缩。所有方向都旋转和伸缩相同的量，所以角度保持不变，这就是共形的含义。因此局部伸缩倍数就是这一点的导数的模。",
-      ],
-      (rng) => {
-        const k = rng.int(1, 4);
-        const { a, b, r } = signedTriple(rng);
-        const answer = 2 * k * r;
-        const f = k === 1 ? "z^2" : `${k}z^2`;
-        return ask(
-          [
-            `By what factor does $f(z) = ${f}$ scale small lengths near $z = ${complex(a, b)}$?`,
-            `$f(z) = ${f}$ 在 $z = ${complex(a, b)}$ 附近把小长度放大多少倍？`,
-          ],
-          answer,
-          [k * r * r, r, 2 * k * (Math.abs(a) + Math.abs(b)), answer + 1],
-          [
-            `$|f'(z)| = ${2 * k}|z|$, and $|${complex(a, b)}| = ${r}$, so the factor is ${answer}.`,
-            `$|f'(z)| = ${2 * k}|z|$，而 $|${complex(a, b)}| = ${r}$，所以倍数是 ${answer}。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "where-conformality-fails",
-      ["Where conformality fails", "共形性在哪里失效"],
-      [
-        "A map fails to be conformal at a critical point, where the derivative vanishes. There, the map behaves like a higher power and multiplies angles rather than keeping them: $z^2$ doubles angles at zero. For a quadratic, there is one critical point, found by setting the derivative to zero, and at any other point of the plane the map preserves angles.",
-        "在导数为零的临界点，映射不再共形。在那里，映射的行为像更高次的幂，把角度成倍放大而不是保持不变：$z^2$ 在零处把角度加倍。对二次函数，只有一个临界点，令导数为零即可求出，在平面上其他任何点，映射都保持角度。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 5);
-        const b = rng.pick([-18, -14, -12, -10, -8, -6, -4, -2, 2, 4, 6, 8, 10, 12, 14, 18]);
-        const c = rng.int(-9, 9);
-        const answer = Q.of(-b, 2 * a);
-        const addend = c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`;
-        const f = `${coefficient(a, "z^2")} ${b > 0 ? "+" : "-"} ${Math.abs(b)}z${addend}`;
-        return ask(
-          [`At which point is $f(z) = ${f}$ not conformal?`, `$f(z) = ${f}$ 在哪一点不共形？`],
-          answer,
-          [Q.of(b, 2 * a), Q.of(-b, a), Q.of(-c === 0 ? 1 : -c, a), answer.add(Q.of(1))],
-          [
-            `$f'(z) = ${2 * a}z ${b > 0 ? "+" : "-"} ${Math.abs(b)}$ vanishes at $z = ${answer.toLatex()}$.`,
-            `$f'(z) = ${2 * a}z ${b > 0 ? "+" : "-"} ${Math.abs(b)}$ 在 $z = ${answer.toLatex()}$ 处为零。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-local-scale-factor",
+        ["The local scale factor", "局部伸缩倍数"],
+        [
+          "Near a point where the derivative is not zero, an analytic map acts like multiplication by that derivative: a rotation by its argument together with a scaling by its modulus. All directions turn and stretch by the same amounts, so angles are preserved, which is what conformal means. The local scale factor is thus the modulus of the derivative at that point.",
+          "在导数不为零的点附近，解析映射的作用就像乘以这个导数：旋转它的辐角并按它的模伸缩。所有方向都旋转和伸缩相同的量，所以角度保持不变，这就是共形的含义。因此局部伸缩倍数就是这一点的导数的模。",
+        ],
+        (rng) => {
+          const k = rng.int(1, 4);
+          const { a, b, r } = signedTriple(rng);
+          const answer = 2 * k * r;
+          const f = k === 1 ? "z^2" : `${k}z^2`;
+          return ask(
+            [
+              `By what factor does $f(z) = ${f}$ scale small lengths near $z = ${complex(a, b)}$?`,
+              `$f(z) = ${f}$ 在 $z = ${complex(a, b)}$ 附近把小长度放大多少倍？`,
+            ],
+            answer,
+            [k * r * r, r, 2 * k * (Math.abs(a) + Math.abs(b)), answer + 1],
+            [
+              `$|f'(z)| = ${2 * k}|z|$, and $|${complex(a, b)}| = ${r}$, so the factor is ${answer}.`,
+              `$|f'(z)| = ${2 * k}|z|$，而 $|${complex(a, b)}| = ${r}$，所以倍数是 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["conformal-maps#the-local-scale-factor"],
+    },
+    {
+      ...point(
+        "where-conformality-fails",
+        ["Where conformality fails", "共形性在哪里失效"],
+        [
+          "A map fails to be conformal at a critical point, where the derivative vanishes. There, the map behaves like a higher power and multiplies angles rather than keeping them: $z^2$ doubles angles at zero. For a quadratic, there is one critical point, found by setting the derivative to zero, and at any other point of the plane the map preserves angles.",
+          "在导数为零的临界点，映射不再共形。在那里，映射的行为像更高次的幂，把角度成倍放大而不是保持不变：$z^2$ 在零处把角度加倍。对二次函数，只有一个临界点，令导数为零即可求出，在平面上其他任何点，映射都保持角度。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 5);
+          const b = rng.pick([-18, -14, -12, -10, -8, -6, -4, -2, 2, 4, 6, 8, 10, 12, 14, 18]);
+          const c = rng.int(-9, 9);
+          const answer = Q.of(-b, 2 * a);
+          const addend = c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`;
+          const f = `${coefficient(a, "z^2")} ${b > 0 ? "+" : "-"} ${Math.abs(b)}z${addend}`;
+          return ask(
+            [`At which point is $f(z) = ${f}$ not conformal?`, `$f(z) = ${f}$ 在哪一点不共形？`],
+            answer,
+            [Q.of(b, 2 * a), Q.of(-b, a), Q.of(-c === 0 ? 1 : -c, a), answer.add(Q.of(1))],
+            [
+              `$f'(z) = ${2 * a}z ${b > 0 ? "+" : "-"} ${Math.abs(b)}$ vanishes at $z = ${answer.toLatex()}$.`,
+              `$f'(z) = ${2 * a}z ${b > 0 ? "+" : "-"} ${Math.abs(b)}$ 在 $z = ${answer.toLatex()}$ 处为零。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["conformal-maps#where-conformality-fails"],
+    },
   ],
 );
 

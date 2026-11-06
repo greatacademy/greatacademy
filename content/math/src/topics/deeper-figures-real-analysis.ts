@@ -8,6 +8,7 @@ import { Q, svgDocument } from "@ga/subject-math";
 import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
+import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
 import { ask, choose, observed, type Pair, point } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
@@ -183,166 +184,175 @@ const holeValue = {
   figure: calculusDrawings1["defining-continuity-at-a-point#the-value-that-repairs-a-hole"],
 };
 
-const discontinuityKind = point(
-  "the-kind-of-a-drawn-discontinuity",
-  ["The kind of a drawn discontinuity", "图中间断的类型"],
-  [
-    "Discontinuities are classified by one-sided limits. If both exist and agree, the discontinuity is removable. If both exist and differ, it is a jump. If a side grows without bound, it is an infinite discontinuity. A graph shows at a glance which case holds, by what happens as it approaches the point from each side.",
-    "间断按单侧极限分类。两侧极限都存在且相等，是可去间断。都存在但不相等，是跳跃间断。若有一侧无界增大，是无穷间断。看图趋近该点时两侧发生什么，就能立刻判断属于哪种情况。",
-  ],
-  (rng) => {
-    const a = rng.int(-3, 3);
-    const kind = rng.pick(["removable", "jump", "infinite"] as const);
-    const m = rng.pick([-1, -0.5, 0.5, 1]);
-    const h = rng.int(-2, 2);
-    const gap = rng.nonZero(-3, 3);
-    const names: Record<string, Pair> = {
-      removable: ["A removable discontinuity", "可去间断"],
-      jump: ["A jump discontinuity", "跳跃间断"],
-      infinite: ["An infinite discontinuity", "无穷间断"],
-      none: ["No discontinuity, because the graph is continuous there", "没有间断，图在那里连续"],
-    };
-    const marks: PlaneMark[] =
-      kind === "removable"
-        ? [
-            { kind: "curve", f: (x) => h + m * (x - a), accent: true },
-            { kind: "point", at: [a, h], open: true, accent: true },
-            { kind: "point", at: [a, h + gap], accent: true },
-          ]
-        : kind === "jump"
+const discontinuityKind = {
+  ...point(
+    "the-kind-of-a-drawn-discontinuity",
+    ["The kind of a drawn discontinuity", "图中间断的类型"],
+    [
+      "Discontinuities are classified by one-sided limits. If both exist and agree, the discontinuity is removable. If both exist and differ, it is a jump. If a side grows without bound, it is an infinite discontinuity. A graph shows at a glance which case holds, by what happens as it approaches the point from each side.",
+      "间断按单侧极限分类。两侧极限都存在且相等，是可去间断。都存在但不相等，是跳跃间断。若有一侧无界增大，是无穷间断。看图趋近该点时两侧发生什么，就能立刻判断属于哪种情况。",
+    ],
+    (rng) => {
+      const a = rng.int(-3, 3);
+      const kind = rng.pick(["removable", "jump", "infinite"] as const);
+      const m = rng.pick([-1, -0.5, 0.5, 1]);
+      const h = rng.int(-2, 2);
+      const gap = rng.nonZero(-3, 3);
+      const names: Record<string, Pair> = {
+        removable: ["A removable discontinuity", "可去间断"],
+        jump: ["A jump discontinuity", "跳跃间断"],
+        infinite: ["An infinite discontinuity", "无穷间断"],
+        none: ["No discontinuity, because the graph is continuous there", "没有间断，图在那里连续"],
+      };
+      const marks: PlaneMark[] =
+        kind === "removable"
           ? [
-              { kind: "curve", f: (x) => h + m * (x - a), to: a, accent: true },
-              { kind: "curve", f: (x) => h + gap + m * (x - a), from: a, accent: true },
-              { kind: "point", at: [a, h], accent: true },
-              { kind: "point", at: [a, h + gap], open: true, accent: true },
+              { kind: "curve", f: (x) => h + m * (x - a), accent: true },
+              { kind: "point", at: [a, h], open: true, accent: true },
+              { kind: "point", at: [a, h + gap], accent: true },
             ]
-          : [
-              { kind: "curve", f: (x) => h + (gap > 0 ? 1 : -1) / (x - a), from: -7, to: a - 0.14, accent: true },
-              { kind: "curve", f: (x) => h + (gap > 0 ? 1 : -1) / (x - a), from: a + 0.14, to: 7, accent: true },
-              { kind: "segment", a: [a, -7], b: [a, 7], dashed: true },
-            ];
-    const seen: Pair =
-      kind === "removable"
-        ? [
-            "Both sides approach the open circle, so the two one-sided limits agree and only the value at the point is off",
-            "两侧都趋向空心圆，所以两个单侧极限相等，只是该点的值不对",
-          ]
-        : kind === "jump"
+          : kind === "jump"
+            ? [
+                { kind: "curve", f: (x) => h + m * (x - a), to: a, accent: true },
+                { kind: "curve", f: (x) => h + gap + m * (x - a), from: a, accent: true },
+                { kind: "point", at: [a, h], accent: true },
+                { kind: "point", at: [a, h + gap], open: true, accent: true },
+              ]
+            : [
+                { kind: "curve", f: (x) => h + (gap > 0 ? 1 : -1) / (x - a), from: -7, to: a - 0.14, accent: true },
+                { kind: "curve", f: (x) => h + (gap > 0 ? 1 : -1) / (x - a), from: a + 0.14, to: 7, accent: true },
+                { kind: "segment", a: [a, -7], b: [a, 7], dashed: true },
+              ];
+      const seen: Pair =
+        kind === "removable"
           ? [
-              "The two sides approach different finite heights, so both one-sided limits exist and they differ",
-              "两侧趋向不同的有限高度，所以两个单侧极限都存在但不相等",
+              "Both sides approach the open circle, so the two one-sided limits agree and only the value at the point is off",
+              "两侧都趋向空心圆，所以两个单侧极限相等，只是该点的值不对",
             ]
-          : [
-              "The graph rises or falls without bound next to the dashed line, so the one-sided limits are not finite",
-              "图在虚线旁无界地上升或下降，所以单侧极限不是有限值",
-            ];
-    return choose(
-      rng,
-      [`What kind of discontinuity does the function drawn have at $x = ${a}$?`, `图中函数在 $x = ${a}$ 处是哪种间断？`],
-      names[kind] as Pair,
-      Object.keys(names)
-        .filter((n) => n !== kind)
-        .map((n) => names[n] as Pair),
-      [
-        `${seen[0]}. That is the meaning of ${(names[kind] as Pair)[0].toLowerCase()}.`,
-        `${seen[1]}。这就是${(names[kind] as Pair)[1]}的含义。`,
-      ],
-      fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
-        `A graph near x = ${a}. ${observed(seen)[0]}.`,
-        `x = ${a} 附近的图。${observed(seen)[1]}。`,
-      ]),
-    );
-  },
-);
-
-const jumpsOfStep = point(
-  "the-jumps-of-a-monotone-step-graph",
-  ["The jumps of a monotone step graph", "单调阶梯图的跃变"],
-  [
-    "A monotone function has one-sided limits at every point, so its only discontinuities are jumps. The size of a jump is the right limit minus the left limit. For an increasing function, the jumps add up to at most the total rise, and for a step function they add up to exactly that rise.",
-    "单调函数在每一点都有单侧极限，所以它的间断只能是跳跃。跃变的大小等于右极限减左极限。对于增函数，跃变之和不超过总上升量，而对于阶梯函数，跃变之和恰好等于总上升量。",
-  ],
-  (rng) => {
-    const count = rng.int(3, 5);
-    const cuts = [0];
-    for (let i = 0; i < count; i++) cuts.push((cuts[i] as number) + rng.int(1, 2));
-    const values = [rng.int(-3, 0)];
-    for (let i = 1; i < count; i++) values.push((values[i - 1] as number) + rng.int(1, 3));
-    const index = rng.int(1, count - 1);
-    const at = cuts[index] as number;
-    const jump = (values[index] as number) - (values[index - 1] as number);
-    const total = (values[count - 1] as number) - (values[0] as number);
-    const whole = rng.bool();
-    return ask(
-      whole
-        ? [
-            "The graph shows an increasing step function. What is the sum of the sizes of all of its jumps?",
-            "图中是一个递增的阶梯函数。它所有跃变大小之和是多少？",
-          ]
-        : [
-            `The graph shows an increasing step function. What is the size of its jump at $x = ${at}$?`,
-            `图中是一个递增的阶梯函数。它在 $x = ${at}$ 处的跃变大小是多少？`,
-          ],
-      whole ? total : jump,
-      whole ? [count - 1, values[count - 1] as number, total + 1] : [values[index] as number, values[index - 1] as number, jump + 1],
-      whole
-        ? [
-            `The function rises from $${values[0]}$ on the left to $${values[count - 1]}$ on the right only by jumping, so its jumps add up to the total rise, $${total}$.`,
-            `函数从左边的 $${values[0]}$ 升到右边的 $${values[count - 1]}$，全靠跃变，所以跃变之和等于总上升量 $${total}$。`,
-          ]
-        : [
-            `Just left of $x = ${at}$ the height is $${values[index - 1]}$, and from $x = ${at}$ on it is $${values[index]}$. The jump is the difference, $${jump}$.`,
-            `$x = ${at}$ 左侧的高度是 $${values[index - 1]}$，从 $x = ${at}$ 起是 $${values[index]}$。跃变是二者之差 $${jump}$。`,
-          ],
-      fig({ xMin: -1, xMax: 11, yMin: -4, yMax: 10 }, steps(cuts, values), [
-        `Steps at heights ${values.join(", ")}, changing at x = ${cuts.slice(1, -1).join(", ")}.`,
-        `高度依次为 ${values.join("，")} 的阶梯，在 x = ${cuts.slice(1, -1).join("，")} 处变化。`,
-      ]),
-    );
-  },
-);
-
-const totalVariation = point(
-  "the-total-variation-of-a-drawn-path",
-  ["The total variation of a drawn path", "图中折线的全变差"],
-  [
-    "The total variation of a function adds up every rise and every fall, as positive amounts. For a graph of straight pieces, it is the sum of the absolute changes in height on the pieces. It differs from the net change, where falls cancel rises, and from the range, which ignores repeated travel over the same heights.",
-    "函数的全变差把每次上升和下降都按正数加起来。对于由直线段组成的图，它是各段高度变化绝对值之和。它不同于净变化，后者中下降抵消上升；也不同于值域长度，后者忽略在相同高度上的重复往返。",
-  ],
-  (rng) => {
-    const n = rng.int(4, 7);
-    const h = [rng.int(-2, 2)];
-    for (let i = 1; i <= n; i++) {
-      let next = rng.int(-4, 5);
-      if (next === h[i - 1]) next = (h[i - 1] as number) + 1;
-      h.push(next);
-    }
-    let tv = 0;
-    for (let i = 0; i < n; i++) tv += Math.abs((h[i + 1] as number) - (h[i] as number));
-    const net = (h[n] as number) - (h[0] as number);
-    const range = Math.max(...h) - Math.min(...h);
-    return ask(
-      [
-        "What is the total variation of the function drawn, over the whole interval on which it is drawn?",
-        "图中函数在所画的整个区间上的全变差是多少？",
-      ],
-      tv,
-      [Math.abs(net) === tv ? tv + 1 : Math.abs(net), range === tv ? tv + 2 : range, tv + 1],
-      [
-        `The heights in turn are $${h.join(", ")}$. Adding the absolute change on each piece gives $${tv}$, and every fall counts as a positive amount.`,
-        `高度依次为 $${h.join(", ")}$。把每段高度变化的绝对值相加得 $${tv}$，每次下降都算作正数。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 8, yMin: -5, yMax: 6 },
-        [{ kind: "path", points: h.map((v, i): Point => [i, v]), accent: true }],
+          : kind === "jump"
+            ? [
+                "The two sides approach different finite heights, so both one-sided limits exist and they differ",
+                "两侧趋向不同的有限高度，所以两个单侧极限都存在但不相等",
+              ]
+            : [
+                "The graph rises or falls without bound next to the dashed line, so the one-sided limits are not finite",
+                "图在虚线旁无界地上升或下降，所以单侧极限不是有限值",
+              ];
+      return choose(
+        rng,
+        [`What kind of discontinuity does the function drawn have at $x = ${a}$?`, `图中函数在 $x = ${a}$ 处是哪种间断？`],
+        names[kind] as Pair,
+        Object.keys(names)
+          .filter((n) => n !== kind)
+          .map((n) => names[n] as Pair),
         [
-          `Straight pieces through the heights ${h.join(", ")} at x = 0, 1, 2 and so on.`,
-          `经过高度 ${h.join("，")} 的直线段，横坐标依次为 0、1、2 等。`,
+          `${seen[0]}. That is the meaning of ${(names[kind] as Pair)[0].toLowerCase()}.`,
+          `${seen[1]}。这就是${(names[kind] as Pair)[1]}的含义。`,
         ],
-      ),
-    );
-  },
-);
+        fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
+          `A graph near x = ${a}. ${observed(seen)[0]}.`,
+          `x = ${a} 附近的图。${observed(seen)[1]}。`,
+        ]),
+      );
+    },
+  ),
+  figure: analysisDrawings1["kinds-of-discontinuities#the-kind-of-a-drawn-discontinuity"],
+};
+
+const jumpsOfStep = {
+  ...point(
+    "the-jumps-of-a-monotone-step-graph",
+    ["The jumps of a monotone step graph", "单调阶梯图的跃变"],
+    [
+      "A monotone function has one-sided limits at every point, so its only discontinuities are jumps. The size of a jump is the right limit minus the left limit. For an increasing function, the jumps add up to at most the total rise, and for a step function they add up to exactly that rise.",
+      "单调函数在每一点都有单侧极限，所以它的间断只能是跳跃。跃变的大小等于右极限减左极限。对于增函数，跃变之和不超过总上升量，而对于阶梯函数，跃变之和恰好等于总上升量。",
+    ],
+    (rng) => {
+      const count = rng.int(3, 5);
+      const cuts = [0];
+      for (let i = 0; i < count; i++) cuts.push((cuts[i] as number) + rng.int(1, 2));
+      const values = [rng.int(-3, 0)];
+      for (let i = 1; i < count; i++) values.push((values[i - 1] as number) + rng.int(1, 3));
+      const index = rng.int(1, count - 1);
+      const at = cuts[index] as number;
+      const jump = (values[index] as number) - (values[index - 1] as number);
+      const total = (values[count - 1] as number) - (values[0] as number);
+      const whole = rng.bool();
+      return ask(
+        whole
+          ? [
+              "The graph shows an increasing step function. What is the sum of the sizes of all of its jumps?",
+              "图中是一个递增的阶梯函数。它所有跃变大小之和是多少？",
+            ]
+          : [
+              `The graph shows an increasing step function. What is the size of its jump at $x = ${at}$?`,
+              `图中是一个递增的阶梯函数。它在 $x = ${at}$ 处的跃变大小是多少？`,
+            ],
+        whole ? total : jump,
+        whole ? [count - 1, values[count - 1] as number, total + 1] : [values[index] as number, values[index - 1] as number, jump + 1],
+        whole
+          ? [
+              `The function rises from $${values[0]}$ on the left to $${values[count - 1]}$ on the right only by jumping, so its jumps add up to the total rise, $${total}$.`,
+              `函数从左边的 $${values[0]}$ 升到右边的 $${values[count - 1]}$，全靠跃变，所以跃变之和等于总上升量 $${total}$。`,
+            ]
+          : [
+              `Just left of $x = ${at}$ the height is $${values[index - 1]}$, and from $x = ${at}$ on it is $${values[index]}$. The jump is the difference, $${jump}$.`,
+              `$x = ${at}$ 左侧的高度是 $${values[index - 1]}$，从 $x = ${at}$ 起是 $${values[index]}$。跃变是二者之差 $${jump}$。`,
+            ],
+        fig({ xMin: -1, xMax: 11, yMin: -4, yMax: 10 }, steps(cuts, values), [
+          `Steps at heights ${values.join(", ")}, changing at x = ${cuts.slice(1, -1).join(", ")}.`,
+          `高度依次为 ${values.join("，")} 的阶梯，在 x = ${cuts.slice(1, -1).join("，")} 处变化。`,
+        ]),
+      );
+    },
+  ),
+  figure: analysisDrawings1["monotone-functions-and-their-jumps#the-jumps-of-a-monotone-step-graph"],
+};
+
+const totalVariation = {
+  ...point(
+    "the-total-variation-of-a-drawn-path",
+    ["The total variation of a drawn path", "图中折线的全变差"],
+    [
+      "The total variation of a function adds up every rise and every fall, as positive amounts. For a graph of straight pieces, it is the sum of the absolute changes in height on the pieces. It differs from the net change, where falls cancel rises, and from the range, which ignores repeated travel over the same heights.",
+      "函数的全变差把每次上升和下降都按正数加起来。对于由直线段组成的图，它是各段高度变化绝对值之和。它不同于净变化，后者中下降抵消上升；也不同于值域长度，后者忽略在相同高度上的重复往返。",
+    ],
+    (rng) => {
+      const n = rng.int(4, 7);
+      const h = [rng.int(-2, 2)];
+      for (let i = 1; i <= n; i++) {
+        let next = rng.int(-4, 5);
+        if (next === h[i - 1]) next = (h[i - 1] as number) + 1;
+        h.push(next);
+      }
+      let tv = 0;
+      for (let i = 0; i < n; i++) tv += Math.abs((h[i + 1] as number) - (h[i] as number));
+      const net = (h[n] as number) - (h[0] as number);
+      const range = Math.max(...h) - Math.min(...h);
+      return ask(
+        [
+          "What is the total variation of the function drawn, over the whole interval on which it is drawn?",
+          "图中函数在所画的整个区间上的全变差是多少？",
+        ],
+        tv,
+        [Math.abs(net) === tv ? tv + 1 : Math.abs(net), range === tv ? tv + 2 : range, tv + 1],
+        [
+          `The heights in turn are $${h.join(", ")}$. Adding the absolute change on each piece gives $${tv}$, and every fall counts as a positive amount.`,
+          `高度依次为 $${h.join(", ")}$。把每段高度变化的绝对值相加得 $${tv}$，每次下降都算作正数。`,
+        ],
+        fig(
+          { xMin: -1, xMax: 8, yMin: -5, yMax: 6 },
+          [{ kind: "path", points: h.map((v, i): Point => [i, v]), accent: true }],
+          [
+            `Straight pieces through the heights ${h.join(", ")} at x = 0, 1, 2 and so on.`,
+            `经过高度 ${h.join("，")} 的直线段，横坐标依次为 0、1、2 等。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: analysisDrawings1["functions-of-bounded-variation#the-total-variation-of-a-drawn-path"],
+};
 
 const crossings = {
   ...point(
@@ -588,45 +598,48 @@ const riemannRectangles = {
   figure: calculusDrawings3["defining-definite-integrals-using-left-and-right-riemann-sums#reading-a-riemann-sum-from-its-rectangles"],
 };
 
-const simpleIntegral = point(
-  "the-integral-of-a-drawn-simple-function",
-  ["The integral of a drawn simple function", "图中简单函数的积分"],
-  [
-    "A simple function takes finitely many values, each on a set of some measure. Its Lebesgue integral is the sum of each value times the measure of the set where it is taken. A part of the graph below the axis has a negative value, so it subtracts from the total rather than adding to it.",
-    "简单函数只取有限多个值，每个值在一个有测度的集合上取到。它的勒贝格积分是每个值乘以取到该值的集合的测度之和。图在轴下方的部分取负值，所以从总数中减去，而不是加上。",
-  ],
-  (rng) => {
-    const count = rng.int(3, 5);
-    const cuts = [0];
-    for (let i = 0; i < count; i++) cuts.push((cuts[i] as number) + rng.int(1, 3));
-    const values = Array.from({ length: count }, () => rng.nonZero(-3, 4));
-    let total = 0;
-    let absolute = 0;
-    for (let i = 0; i < count; i++) {
-      const length = (cuts[i + 1] as number) - (cuts[i] as number);
-      total += (values[i] as number) * length;
-      absolute += Math.abs(values[i] as number) * length;
-    }
-    const heights = values.reduce((a, b) => a + b, 0);
-    const end = cuts[count] as number;
-    return ask(
-      [
-        "The graph shows a simple function that is zero outside the part drawn. What is its Lebesgue integral?",
-        "图中是一个简单函数，它在所画部分之外为零。它的勒贝格积分是多少？",
-      ],
-      total,
-      [absolute === total ? total + 1 : absolute, heights === total ? total + 2 : heights, -total === total ? total - 1 : -total],
-      [
-        `Each piece contributes its value times its length, with the parts below the axis counting as negative. The total of these contributions is $${total}$.`,
-        `每段贡献其值乘以长度，轴下方的部分算作负值。这些贡献的总和是 $${total}$。`,
-      ],
-      fig({ xMin: -1, xMax: Math.max(end + 1, 9), yMin: -4, yMax: 5 }, steps(cuts, values), [
-        `Values ${values.join(", ")} on pieces with end points ${cuts.join(", ")}.`,
-        `各段的值依次为 ${values.join("，")}，端点为 ${cuts.join("，")}。`,
-      ]),
-    );
-  },
-);
+const simpleIntegral = {
+  ...point(
+    "the-integral-of-a-drawn-simple-function",
+    ["The integral of a drawn simple function", "图中简单函数的积分"],
+    [
+      "A simple function takes finitely many values, each on a set of some measure. Its Lebesgue integral is the sum of each value times the measure of the set where it is taken. A part of the graph below the axis has a negative value, so it subtracts from the total rather than adding to it.",
+      "简单函数只取有限多个值，每个值在一个有测度的集合上取到。它的勒贝格积分是每个值乘以取到该值的集合的测度之和。图在轴下方的部分取负值，所以从总数中减去，而不是加上。",
+    ],
+    (rng) => {
+      const count = rng.int(3, 5);
+      const cuts = [0];
+      for (let i = 0; i < count; i++) cuts.push((cuts[i] as number) + rng.int(1, 3));
+      const values = Array.from({ length: count }, () => rng.nonZero(-3, 4));
+      let total = 0;
+      let absolute = 0;
+      for (let i = 0; i < count; i++) {
+        const length = (cuts[i + 1] as number) - (cuts[i] as number);
+        total += (values[i] as number) * length;
+        absolute += Math.abs(values[i] as number) * length;
+      }
+      const heights = values.reduce((a, b) => a + b, 0);
+      const end = cuts[count] as number;
+      return ask(
+        [
+          "The graph shows a simple function that is zero outside the part drawn. What is its Lebesgue integral?",
+          "图中是一个简单函数，它在所画部分之外为零。它的勒贝格积分是多少？",
+        ],
+        total,
+        [absolute === total ? total + 1 : absolute, heights === total ? total + 2 : heights, -total === total ? total - 1 : -total],
+        [
+          `Each piece contributes its value times its length, with the parts below the axis counting as negative. The total of these contributions is $${total}$.`,
+          `每段贡献其值乘以长度，轴下方的部分算作负值。这些贡献的总和是 $${total}$。`,
+        ],
+        fig({ xMin: -1, xMax: Math.max(end + 1, 9), yMin: -4, yMax: 5 }, steps(cuts, values), [
+          `Values ${values.join(", ")} on pieces with end points ${cuts.join(", ")}.`,
+          `各段的值依次为 ${values.join("，")}，端点为 ${cuts.join("，")}。`,
+        ]),
+      );
+    },
+  ),
+  figure: analysisDrawings1["the-lebesgue-integral-of-simple-functions#the-integral-of-a-drawn-simple-function"],
+};
 
 const meanValueSlope = {
   ...point(
@@ -673,94 +686,100 @@ const meanValueSlope = {
   figure: calculusDrawings2["the-mean-value-theorem#the-mean-value-slope-from-a-graph"],
 };
 
-const uniformGap = point(
-  "the-uniform-distance-from-a-graph",
-  ["The uniform distance from a graph", "由图读一致距离"],
-  [
-    "Uniform convergence measures the largest vertical distance between $f_n$ and $f$ over the whole interval, and this distance must tend to zero. A moving bump is the standard warning: at each fixed point the functions eventually settle, yet the height of the bump stays the same, and so the convergence is not uniform.",
-    "一致收敛度量的是 $f_n$ 与 $f$ 在整个区间上的最大竖直距离，这个距离必须趋于零。移动的凸起是典型的警示：在每个固定点上函数最终都会稳定，但凸起的高度不变，所以收敛不一致。",
-  ],
-  (rng) => {
-    const k = rng.int(-2, 2);
-    const h = rng.int(1, 4);
-    const c = rng.int(-3, 3);
-    const w = rng.int(1, 2);
-    const sign = rng.sign();
-    const tent = (x: number) => k + sign * h * Math.max(0, 1 - Math.abs(x - c) / w);
-    const tip = k + sign * h;
-    return ask(
-      [
-        "The solid graph is $f_n$ and the dashed line is $f$. What is $\\sup_x |f_n(x) - f(x)|$ on the interval shown?",
-        "实线是 $f_n$，虚线是 $f$。在所示区间上 $\\sup_x |f_n(x) - f(x)|$ 是多少？",
-      ],
-      h,
-      [Math.abs(tip) === h ? h + 1 : Math.abs(tip), 2 * h, w === h ? h + 2 : w],
-      [
-        `The two graphs agree outside the bump. The largest gap is at the tip of the bump, at height $${tip}$, and that is $${h}$ away from the line at height $${k}$.`,
-        `两个图在凸起之外重合。最大距离在凸起的顶端，高度为 $${tip}$，与高度 $${k}$ 的直线相距 $${h}$。`,
-      ],
-      fig(
-        { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+const uniformGap = {
+  ...point(
+    "the-uniform-distance-from-a-graph",
+    ["The uniform distance from a graph", "由图读一致距离"],
+    [
+      "Uniform convergence measures the largest vertical distance between $f_n$ and $f$ over the whole interval, and this distance must tend to zero. A moving bump is the standard warning: at each fixed point the functions eventually settle, yet the height of the bump stays the same, and so the convergence is not uniform.",
+      "一致收敛度量的是 $f_n$ 与 $f$ 在整个区间上的最大竖直距离，这个距离必须趋于零。移动的凸起是典型的警示：在每个固定点上函数最终都会稳定，但凸起的高度不变，所以收敛不一致。",
+    ],
+    (rng) => {
+      const k = rng.int(-2, 2);
+      const h = rng.int(1, 4);
+      const c = rng.int(-3, 3);
+      const w = rng.int(1, 2);
+      const sign = rng.sign();
+      const tent = (x: number) => k + sign * h * Math.max(0, 1 - Math.abs(x - c) / w);
+      const tip = k + sign * h;
+      return ask(
         [
-          { kind: "curve", f: tent, from: -7, to: 7, accent: true },
-          { kind: "segment", a: [-7, k], b: [7, k], dashed: true },
+          "The solid graph is $f_n$ and the dashed line is $f$. What is $\\sup_x |f_n(x) - f(x)|$ on the interval shown?",
+          "实线是 $f_n$，虚线是 $f$。在所示区间上 $\\sup_x |f_n(x) - f(x)|$ 是多少？",
         ],
+        h,
+        [Math.abs(tip) === h ? h + 1 : Math.abs(tip), 2 * h, w === h ? h + 2 : w],
         [
-          `A horizontal dashed line at height ${k} and a graph with one bump reaching height ${tip} at x = ${c}.`,
-          `高度 ${k} 处的水平虚线，和一个在 x = ${c} 处有一个凸起、高度达到 ${tip} 的图。`,
+          `The two graphs agree outside the bump. The largest gap is at the tip of the bump, at height $${tip}$, and that is $${h}$ away from the line at height $${k}$.`,
+          `两个图在凸起之外重合。最大距离在凸起的顶端，高度为 $${tip}$，与高度 $${k}$ 的直线相距 $${h}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+          [
+            { kind: "curve", f: tent, from: -7, to: 7, accent: true },
+            { kind: "segment", a: [-7, k], b: [7, k], dashed: true },
+          ],
+          [
+            `A horizontal dashed line at height ${k} and a graph with one bump reaching height ${tip} at x = ${c}.`,
+            `高度 ${k} 处的水平虚线，和一个在 x = ${c} 处有一个凸起、高度达到 ${tip} 的图。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: analysisDrawings1["pointwise-and-uniform-convergence#the-uniform-distance-from-a-graph"],
+};
 
-const cobweb = point(
-  "the-fixed-point-of-a-drawn-cobweb",
-  ["The fixed point of a drawn cobweb", "图中蛛网的不动点"],
-  [
-    "Iterating a contraction from any start converges to its unique fixed point, which is where the graph meets the line $y = x$. A cobweb draws the iteration by bouncing between the graph and that line. It tightens around the fixed point, so the limit can be read from the drawing without following any of the steps.",
-    "从任意起点迭代压缩映射，都收敛到唯一的不动点，也就是图与直线 $y = x$ 的交点。蛛网图通过在图和这条直线之间来回反弹表示迭代。它在不动点周围收紧，所以不必跟踪每一步，就能从图中读出极限。",
-  ],
-  (rng) => {
-    const p = rng.int(-3, 3);
-    const m = rng.pick([0.5, -0.5, 0.4, -0.6]);
-    const x0 = p + rng.pick([-4, -3, 3, 4]);
-    const f = (x: number) => p + m * (x - p);
-    const path: Point[] = [[x0, x0]];
-    let x = x0;
-    for (let i = 0; i < 6; i++) {
-      const y = f(x);
-      path.push([x, y], [y, y]);
-      x = y;
-    }
-    const first = f(x0);
-    const round = Math.round(first);
-    return ask(
-      [
-        "The solid straight line is the graph of a contraction $f$, and the thin line is $y = x$. The cobweb shows the iteration $x_{k+1} = f(x_k)$. What does the iteration converge to?",
-        "粗直线是压缩映射 $f$ 的图，细线是 $y = x$。蛛网图表示迭代 $x_{k+1} = f(x_k)$。迭代收敛到什么值？",
-      ],
-      p,
-      [x0, round === p ? p + 1 : round, p + (p === 0 ? 2 : -2 * Math.sign(p))],
-      [
-        `The cobweb closes in on the point where the graph meets $y = x$, which is at $x = ${p}$. There $f(x) = x$, so it is the fixed point and the limit.`,
-        `蛛网收紧到图与 $y = x$ 的交点，即 $x = ${p}$。那里 $f(x) = x$，所以它是不动点，也是极限。`,
-      ],
-      fig(
-        { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+const cobweb = {
+  ...point(
+    "the-fixed-point-of-a-drawn-cobweb",
+    ["The fixed point of a drawn cobweb", "图中蛛网的不动点"],
+    [
+      "Iterating a contraction from any start converges to its unique fixed point, which is where the graph meets the line $y = x$. A cobweb draws the iteration by bouncing between the graph and that line. It tightens around the fixed point, so the limit can be read from the drawing without following any of the steps.",
+      "从任意起点迭代压缩映射，都收敛到唯一的不动点，也就是图与直线 $y = x$ 的交点。蛛网图通过在图和这条直线之间来回反弹表示迭代。它在不动点周围收紧，所以不必跟踪每一步，就能从图中读出极限。",
+    ],
+    (rng) => {
+      const p = rng.int(-3, 3);
+      const m = rng.pick([0.5, -0.5, 0.4, -0.6]);
+      const x0 = p + rng.pick([-4, -3, 3, 4]);
+      const f = (x: number) => p + m * (x - p);
+      const path: Point[] = [[x0, x0]];
+      let x = x0;
+      for (let i = 0; i < 6; i++) {
+        const y = f(x);
+        path.push([x, y], [y, y]);
+        x = y;
+      }
+      const first = f(x0);
+      const round = Math.round(first);
+      return ask(
         [
-          { kind: "curve", f, accent: true },
-          { kind: "line", a: [0, 0], b: [1, 1] },
-          { kind: "path", points: path },
+          "The solid straight line is the graph of a contraction $f$, and the thin line is $y = x$. The cobweb shows the iteration $x_{k+1} = f(x_k)$. What does the iteration converge to?",
+          "粗直线是压缩映射 $f$ 的图，细线是 $y = x$。蛛网图表示迭代 $x_{k+1} = f(x_k)$。迭代收敛到什么值？",
         ],
+        p,
+        [x0, round === p ? p + 1 : round, p + (p === 0 ? 2 : -2 * Math.sign(p))],
         [
-          `A sloping line and the line y = x, with a cobweb path starting from x = ${x0}.`,
-          `一条斜线和直线 y = x，蛛网路径从 x = ${x0} 出发。`,
+          `The cobweb closes in on the point where the graph meets $y = x$, which is at $x = ${p}$. There $f(x) = x$, so it is the fixed point and the limit.`,
+          `蛛网收紧到图与 $y = x$ 的交点，即 $x = ${p}$。那里 $f(x) = x$，所以它是不动点，也是极限。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+          [
+            { kind: "curve", f, accent: true },
+            { kind: "line", a: [0, 0], b: [1, 1] },
+            { kind: "path", points: path },
+          ],
+          [
+            `A sloping line and the line y = x, with a cobweb path starting from x = ${x0}.`,
+            `一条斜线和直线 y = x，蛛网路径从 x = ${x0} 出发。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: analysisDrawings1["the-contraction-mapping-principle#the-fixed-point-of-a-drawn-cobweb"],
+};
 
 const openClosed = point(
   "open-or-closed-on-a-drawn-line",

@@ -5,6 +5,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd } from "@ga/subject-math";
+import { complexDrawings1 } from "../explanation-drawings-complex-analysis-1.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -246,78 +247,81 @@ const rootsFromPicture = {
   figure: precalculusDrawings3["higher-roots-of-complex-numbers#the-equation-from-its-roots-on-a-circle"],
 };
 
-const windingFromLoop = point(
-  "the-winding-number-of-a-drawn-loop",
-  ["The winding number of a drawn loop", "读图中回路的环绕数"],
-  [
-    "The winding number of a loop about a point counts its net counterclockwise turns around that point. To read it, draw a ray from the point to infinity and add one for each crossing where the loop passes counterclockwise and subtract one for each crossing where it passes clockwise. A point outside the loop has winding number zero.",
-    "回路关于一点的环绕数计算它绕该点逆时针转过的净圈数。读取时，从该点向无穷远画一条射线，回路每逆时针穿过一次加一，每顺时针穿过一次减一。回路外的点环绕数为零。",
-  ],
-  (rng) => {
-    const quarter = rng.int(0, 3);
-    const s = rng.pick([1.25, 1.5]);
-    const counterclockwise = rng.bool();
-    const turn = ([x, y]: Point): Point => {
-      const c = [1, 0, -1, 0][quarter] as number;
-      const d = [0, 1, 0, -1][quarter] as number;
-      return [s * (c * x - d * y), s * (d * x + c * y)];
-    };
-    const curve = (a: number): Point => {
-      const r = 1 + 2 * Math.cos(a);
-      return turn([r * Math.cos(a), r * Math.sin(a)]);
-    };
-    const [spot, base] = rng.pick([
-      ["inner", 2],
-      ["outer", 1],
-      ["outside", 0],
-    ] as const);
-    const answer = counterclockwise ? base : base === 0 ? 0 : -base;
-    const at = turn(spot === "inner" ? [0.5, 0] : spot === "outer" ? [2, 0] : [-1.5, 0]);
-    const arrow = (a: number): PlaneMark => {
-      const [p, q] = [curve(a - 0.12), curve(a + 0.12)];
-      return { kind: "arrow", from: counterclockwise ? p : q, to: counterclockwise ? q : p, accent: true };
-    };
-    const body: Pair =
-      base === 2
-        ? ["A ray from $P$ crosses the loop twice, both times in the same direction", "从 $P$ 出发的射线穿过回路两次，方向相同"]
-        : base === 1
-          ? ["A ray from $P$ away from the small inner loop crosses the outer curve once", "从 $P$ 出发、避开内圈的射线穿过外圈一次"]
-          : ["A ray from $P$ pointing away from the loop never crosses it", "从 $P$ 出发、背离回路的射线不穿过回路"];
-    return ask(
-      [
-        "The loop is traced once in the direction of its arrows. What is its winding number about $P$?",
-        "回路按箭头方向走一遍。它关于 $P$ 的环绕数是多少？",
-      ],
-      answer,
-      [1, 2, -1, -2, 0],
-      [
-        `${body[0]}, and the arrows run ${counterclockwise ? "counterclockwise" : "clockwise"}. So the winding number is $${answer}$.`,
-        `${body[1]}，箭头方向是${counterclockwise ? "逆时针" : "顺时针"}。所以环绕数是 $${answer}$。`,
-      ],
-      fig(
-        { ...argand(5), labelEvery: 1 },
+const windingFromLoop = {
+  ...point(
+    "the-winding-number-of-a-drawn-loop",
+    ["The winding number of a drawn loop", "读图中回路的环绕数"],
+    [
+      "The winding number of a loop about a point counts its net counterclockwise turns around that point. To read it, draw a ray from the point to infinity and add one for each crossing where the loop passes counterclockwise and subtract one for each crossing where it passes clockwise. A point outside the loop has winding number zero.",
+      "回路关于一点的环绕数计算它绕该点逆时针转过的净圈数。读取时，从该点向无穷远画一条射线，回路每逆时针穿过一次加一，每顺时针穿过一次减一。回路外的点环绕数为零。",
+    ],
+    (rng) => {
+      const quarter = rng.int(0, 3);
+      const s = rng.pick([1.25, 1.5]);
+      const counterclockwise = rng.bool();
+      const turn = ([x, y]: Point): Point => {
+        const c = [1, 0, -1, 0][quarter] as number;
+        const d = [0, 1, 0, -1][quarter] as number;
+        return [s * (c * x - d * y), s * (d * x + c * y)];
+      };
+      const curve = (a: number): Point => {
+        const r = 1 + 2 * Math.cos(a);
+        return turn([r * Math.cos(a), r * Math.sin(a)]);
+      };
+      const [spot, base] = rng.pick([
+        ["inner", 2],
+        ["outer", 1],
+        ["outside", 0],
+      ] as const);
+      const answer = counterclockwise ? base : base === 0 ? 0 : -base;
+      const at = turn(spot === "inner" ? [0.5, 0] : spot === "outer" ? [2, 0] : [-1.5, 0]);
+      const arrow = (a: number): PlaneMark => {
+        const [p, q] = [curve(a - 0.12), curve(a + 0.12)];
+        return { kind: "arrow", from: counterclockwise ? p : q, to: counterclockwise ? q : p, accent: true };
+      };
+      const body: Pair =
+        base === 2
+          ? ["A ray from $P$ crosses the loop twice, both times in the same direction", "从 $P$ 出发的射线穿过回路两次，方向相同"]
+          : base === 1
+            ? ["A ray from $P$ away from the small inner loop crosses the outer curve once", "从 $P$ 出发、避开内圈的射线穿过外圈一次"]
+            : ["A ray from $P$ pointing away from the loop never crosses it", "从 $P$ 出发、背离回路的射线不穿过回路"];
+      return ask(
         [
-          { kind: "path", points: Array.from({ length: 181 }, (_, i) => curve((2 * Math.PI * i) / 180)), accent: true },
-          arrow(0),
-          arrow(Math.PI / 2),
-          arrow((3 * Math.PI) / 2),
-          // The inner loop is too small to hold a label, so a thin arrow leads to the point from the space outside the loop.
-          ...(spot === "inner"
-            ? ([
-                { kind: "point", at },
-                { kind: "label", at: turn([0.5, 1.15]), text: "P", dir: "n" },
-                { kind: "arrow", from: turn([0.5, 0.95]), to: turn([0.5, 0.12]), thin: true },
-              ] as PlaneMark[])
-            : ([{ kind: "point", at, label: "P", dir: "n" }] as PlaneMark[])),
+          "The loop is traced once in the direction of its arrows. What is its winding number about $P$?",
+          "回路按箭头方向走一遍。它关于 $P$ 的环绕数是多少？",
         ],
+        answer,
+        [1, 2, -1, -2, 0],
         [
-          `A closed curve with a small inner loop, traced ${counterclockwise ? "counterclockwise" : "clockwise"}, and a point P.`,
-          `一条带小内圈的闭曲线，按${counterclockwise ? "逆时针" : "顺时针"}方向走，以及点 P。`,
+          `${body[0]}, and the arrows run ${counterclockwise ? "counterclockwise" : "clockwise"}. So the winding number is $${answer}$.`,
+          `${body[1]}，箭头方向是${counterclockwise ? "逆时针" : "顺时针"}。所以环绕数是 $${answer}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { ...argand(5), labelEvery: 1 },
+          [
+            { kind: "path", points: Array.from({ length: 181 }, (_, i) => curve((2 * Math.PI * i) / 180)), accent: true },
+            arrow(0),
+            arrow(Math.PI / 2),
+            arrow((3 * Math.PI) / 2),
+            // The inner loop is too small to hold a label, so a thin arrow leads to the point from the space outside the loop.
+            ...(spot === "inner"
+              ? ([
+                  { kind: "point", at },
+                  { kind: "label", at: turn([0.5, 1.15]), text: "P", dir: "n" },
+                  { kind: "arrow", from: turn([0.5, 0.95]), to: turn([0.5, 0.12]), thin: true },
+                ] as PlaneMark[])
+              : ([{ kind: "point", at, label: "P", dir: "n" }] as PlaneMark[])),
+          ],
+          [
+            `A closed curve with a small inner loop, traced ${counterclockwise ? "counterclockwise" : "clockwise"}, and a point P.`,
+            `一条带小内圈的闭曲线，按${counterclockwise ? "逆时针" : "顺时针"}方向走，以及点 P。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: complexDrawings1["winding-numbers#the-winding-number-of-a-drawn-loop"],
+};
 
 const residueSum = point(
   "the-residue-theorem-from-a-drawing",
@@ -372,50 +376,53 @@ const residueSum = point(
   },
 );
 
-const cauchyFormulaFromDrawing = point(
-  "cauchys-formula-inside-or-outside",
-  ["Cauchy's formula: inside or outside", "柯西公式：在内还是在外"],
-  [
-    "For $g$ analytic everywhere, the integral $\\frac{1}{2\\pi i}\\oint \\frac{g(z)}{z - a}\\,dz$ around a counterclockwise circle equals $g(a)$ when the point $a$ lies inside the circle and zero when it lies outside. The same formula therefore has two different values, and the drawing is what tells them apart.",
-    "若 $g$ 处处解析，沿逆时针圆的积分 $\\frac{1}{2\\pi i}\\oint \\frac{g(z)}{z - a}\\,dz$ 在点 $a$ 位于圆内时等于 $g(a)$，在圆外时等于零。同一个公式有两种不同的值，要靠图来区分。",
-  ],
-  (rng) => {
-    const [h, k] = [rng.int(-1, 1), rng.int(-1, 1)];
-    const r = rng.int(2, 3);
-    const inside = rng.bool();
-    const a = rng.pick(
-      [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].filter((x) => (inside ? Math.hypot(x - h, k) <= r - 0.5 : Math.hypot(x - h, k) >= r + 0.5)),
-    );
-    const c = rng.int(1, 9);
-    const value = a * a + c;
-    const power = a < 0 ? `(${a})` : `${a}`;
-    return ask(
-      [
-        `The contour $C$ is traced once along its arrows and the point $a$ is marked on the real axis. What is $\\frac{1}{2\\pi i}\\oint_C \\frac{z^2 + ${c}}{z - a}\\,dz$?`,
-        `围线 $C$ 沿箭头方向走一遍，实轴上标出了点 $a$。$\\frac{1}{2\\pi i}\\oint_C \\frac{z^2 + ${c}}{z - a}\\,dz$ 是多少？`,
-      ],
-      inside ? value : 0,
-      [inside ? 0 : value, a * a, a + c, -value],
-      inside
-        ? [
-            `The point $a = ${a}$ lies inside the contour, so Cauchy's formula gives the numerator at $a$: $${power}^2 + ${c} = ${value}$.`,
-            `点 $a = ${a}$ 在围线内部，所以柯西公式给出分子在 $a$ 处的值：$${power}^2 + ${c} = ${value}$。`,
-          ]
-        : [
-            `The point $a = ${a}$ lies outside the contour, so the integrand is analytic on and inside it, and Cauchy's theorem gives $0$.`,
-            `点 $a = ${a}$ 在围线外部，所以被积函数在围线上及其内部解析，由柯西定理得 $0$。`,
-          ],
-      fig(
-        argand(6),
-        [...contour(h, k, r, true), { kind: "point", at: [a, 0], label: "a", dir: "n" }],
+const cauchyFormulaFromDrawing = {
+  ...point(
+    "cauchys-formula-inside-or-outside",
+    ["Cauchy's formula: inside or outside", "柯西公式：在内还是在外"],
+    [
+      "For $g$ analytic everywhere, the integral $\\frac{1}{2\\pi i}\\oint \\frac{g(z)}{z - a}\\,dz$ around a counterclockwise circle equals $g(a)$ when the point $a$ lies inside the circle and zero when it lies outside. The same formula therefore has two different values, and the drawing is what tells them apart.",
+      "若 $g$ 处处解析，沿逆时针圆的积分 $\\frac{1}{2\\pi i}\\oint \\frac{g(z)}{z - a}\\,dz$ 在点 $a$ 位于圆内时等于 $g(a)$，在圆外时等于零。同一个公式有两种不同的值，要靠图来区分。",
+    ],
+    (rng) => {
+      const [h, k] = [rng.int(-1, 1), rng.int(-1, 1)];
+      const r = rng.int(2, 3);
+      const inside = rng.bool();
+      const a = rng.pick(
+        [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].filter((x) => (inside ? Math.hypot(x - h, k) <= r - 0.5 : Math.hypot(x - h, k) >= r + 0.5)),
+      );
+      const c = rng.int(1, 9);
+      const value = a * a + c;
+      const power = a < 0 ? `(${a})` : `${a}`;
+      return ask(
         [
-          `A counterclockwise circle of radius ${r} about (${h}, ${k}) and the point a at ${a} on the real axis.`,
-          `以 (${h}, ${k}) 为圆心、半径为 ${r} 的逆时针圆，以及实轴上位于 ${a} 的点 a。`,
+          `The contour $C$ is traced once along its arrows and the point $a$ is marked on the real axis. What is $\\frac{1}{2\\pi i}\\oint_C \\frac{z^2 + ${c}}{z - a}\\,dz$?`,
+          `围线 $C$ 沿箭头方向走一遍，实轴上标出了点 $a$。$\\frac{1}{2\\pi i}\\oint_C \\frac{z^2 + ${c}}{z - a}\\,dz$ 是多少？`,
         ],
-      ),
-    );
-  },
-);
+        inside ? value : 0,
+        [inside ? 0 : value, a * a, a + c, -value],
+        inside
+          ? [
+              `The point $a = ${a}$ lies inside the contour, so Cauchy's formula gives the numerator at $a$: $${power}^2 + ${c} = ${value}$.`,
+              `点 $a = ${a}$ 在围线内部，所以柯西公式给出分子在 $a$ 处的值：$${power}^2 + ${c} = ${value}$。`,
+            ]
+          : [
+              `The point $a = ${a}$ lies outside the contour, so the integrand is analytic on and inside it, and Cauchy's theorem gives $0$.`,
+              `点 $a = ${a}$ 在围线外部，所以被积函数在围线上及其内部解析，由柯西定理得 $0$。`,
+            ],
+        fig(
+          argand(6),
+          [...contour(h, k, r, true), { kind: "point", at: [a, 0], label: "a", dir: "n" }],
+          [
+            `A counterclockwise circle of radius ${r} about (${h}, ${k}) and the point a at ${a} on the real axis.`,
+            `以 (${h}, ${k}) 为圆心、半径为 ${r} 的逆时针圆，以及实轴上位于 ${a} 的点 a。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: complexDrawings1["cauchys-integral-formula#cauchys-formula-inside-or-outside"],
+};
 
 const pathIndependence = point(
   "an-integral-along-a-drawn-path",
@@ -512,54 +519,57 @@ const mlFromDrawing = point(
   },
 );
 
-const wedgeImage = point(
-  "the-image-of-a-drawn-wedge",
-  ["The image of a drawn wedge", "图中楔形的像"],
-  [
-    "The map $w = z^k$ multiplies every argument by $k$ and raises every modulus to the power $k$. So a wedge with its tip at the origin goes to a wedge with its tip at the origin, and its opening angle is multiplied by $k$. Conformality fails at the origin, which is why angles there are not preserved.",
-    "映射 $w = z^k$ 把每个辐角乘以 $k$，把每个模变成 $k$ 次方。所以顶点在原点的楔形映成顶点在原点的楔形，张角乘以 $k$。映射在原点不保角，所以那里的角不被保持。",
-  ],
-  (rng) => {
-    const k = rng.int(2, 3);
-    const steps = rng.pick([1, 2]);
-    const first = rng.int(0, 7);
-    const dir = (q: number): Point => [Math.cos((q * Math.PI) / 4), Math.sin((q * Math.PI) / 4)];
-    const [u, v] = [dir(first), dir(first + steps)];
-    const scale = (p: Point): Point => [4 * p[0] * Math.SQRT2, 4 * p[1] * Math.SQRT2];
-    const answer = piTimes(k * steps, 4);
-    return choose(
-      rng,
-      [
-        `The map $w = z^{${k}}$ is applied to the shaded wedge. What is the opening angle of its image?`,
-        `映射 $w = z^{${k}}$ 作用于阴影楔形。它的像的张角是多少？`,
-      ],
-      same(answer),
-      [same(piTimes(steps, 4)), same(piTimes(steps, 4 * k)), same(piTimes(k + steps, 4)), same(piTimes(2 * k * steps, 4))],
-      [
-        `The drawn wedge opens through $${piTimes(steps, 4)}$, and $w = z^{${k}}$ multiplies arguments by $${k}$, so the image opens through $${answer}$.`,
-        `图中楔形的张角是 $${piTimes(steps, 4)}$，$w = z^{${k}}$ 把辐角乘以 $${k}$，所以像的张角是 $${answer}$。`,
-      ],
-      fig(
-        argand(4),
+const wedgeImage = {
+  ...point(
+    "the-image-of-a-drawn-wedge",
+    ["The image of a drawn wedge", "图中楔形的像"],
+    [
+      "The map $w = z^k$ multiplies every argument by $k$ and raises every modulus to the power $k$. So a wedge with its tip at the origin goes to a wedge with its tip at the origin, and its opening angle is multiplied by $k$. Conformality fails at the origin, which is why angles there are not preserved.",
+      "映射 $w = z^k$ 把每个辐角乘以 $k$，把每个模变成 $k$ 次方。所以顶点在原点的楔形映成顶点在原点的楔形，张角乘以 $k$。映射在原点不保角，所以那里的角不被保持。",
+    ],
+    (rng) => {
+      const k = rng.int(2, 3);
+      const steps = rng.pick([1, 2]);
+      const first = rng.int(0, 7);
+      const dir = (q: number): Point => [Math.cos((q * Math.PI) / 4), Math.sin((q * Math.PI) / 4)];
+      const [u, v] = [dir(first), dir(first + steps)];
+      const scale = (p: Point): Point => [4 * p[0] * Math.SQRT2, 4 * p[1] * Math.SQRT2];
+      const answer = piTimes(k * steps, 4);
+      return choose(
+        rng,
         [
-          {
-            kind: "region",
-            halfPlanes: [
-              [-u[1], u[0], 0],
-              [v[1], -v[0], 0],
-            ],
-          },
-          { kind: "segment", a: [0, 0], b: scale(u), accent: true },
-          { kind: "segment", a: [0, 0], b: scale(v), accent: true },
+          `The map $w = z^{${k}}$ is applied to the shaded wedge. What is the opening angle of its image?`,
+          `映射 $w = z^{${k}}$ 作用于阴影楔形。它的像的张角是多少？`,
         ],
+        same(answer),
+        [same(piTimes(steps, 4)), same(piTimes(steps, 4 * k)), same(piTimes(k + steps, 4)), same(piTimes(2 * k * steps, 4))],
         [
-          `A shaded wedge with its tip at the origin, between the rays at ${first * 45} degrees and ${((first + steps) * 45) % 360} degrees.`,
-          `顶点在原点的阴影楔形，位于 ${first * 45} 度和 ${((first + steps) * 45) % 360} 度的两条射线之间。`,
+          `The drawn wedge opens through $${piTimes(steps, 4)}$, and $w = z^{${k}}$ multiplies arguments by $${k}$, so the image opens through $${answer}$.`,
+          `图中楔形的张角是 $${piTimes(steps, 4)}$，$w = z^{${k}}$ 把辐角乘以 $${k}$，所以像的张角是 $${answer}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          argand(4),
+          [
+            {
+              kind: "region",
+              halfPlanes: [
+                [-u[1], u[0], 0],
+                [v[1], -v[0], 0],
+              ],
+            },
+            { kind: "segment", a: [0, 0], b: scale(u), accent: true },
+            { kind: "segment", a: [0, 0], b: scale(v), accent: true },
+          ],
+          [
+            `A shaded wedge with its tip at the origin, between the rays at ${first * 45} degrees and ${((first + steps) * 45) % 360} degrees.`,
+            `顶点在原点的阴影楔形，位于 ${first * 45} 度和 ${((first + steps) * 45) % 360} 度的两条射线之间。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: complexDrawings1["conformal-maps#the-image-of-a-drawn-wedge"],
+};
 
 const diskImage = point(
   "the-image-of-a-drawn-disk",
@@ -706,64 +716,67 @@ const radiusFromSingularities = point(
   },
 );
 
-const annuliCount = point(
-  "counting-laurent-expansions-from-a-drawing",
-  ["Counting Laurent expansions from a drawing", "由图数洛朗展开"],
-  [
-    "A function has one Laurent expansion about the origin on each region between consecutive circles through its singularities: an inner disk, the annuli and an outer region. Only the different distances from the origin matter, so two singularities at the same distance add just one circle. A singularity at the origin would change the disk into a punctured disk.",
-    "函数在原点处的洛朗展开，在穿过各奇点的相邻圆之间的每个区域上各有一个：内部圆盘、各圆环和外部区域。只有到原点的不同距离才有关，所以距离相同的两个奇点只增加一个圆。原点处的奇点只会把圆盘变成去心圆盘。",
-  ],
-  (rng) => {
-    const moduli = rng.sample([1, 2, 3, 4, 5], rng.int(2, 3));
-    const axis = (m: number): Point =>
-      rng.pick<Point>([
-        [m, 0],
-        [-m, 0],
-        [0, m],
-        [0, -m],
-      ]);
-    const dots: Point[] = [];
-    for (const m of moduli) {
-      dots.push(
-        m === 5 && rng.bool()
-          ? rng.pick<Point>([
-              [3, 4],
-              [-3, 4],
-              [4, -3],
-              [-4, -3],
-            ])
-          : axis(m),
+const annuliCount = {
+  ...point(
+    "counting-laurent-expansions-from-a-drawing",
+    ["Counting Laurent expansions from a drawing", "由图数洛朗展开"],
+    [
+      "A function has one Laurent expansion about the origin on each region between consecutive circles through its singularities: an inner disk, the annuli and an outer region. Only the different distances from the origin matter, so two singularities at the same distance add just one circle. A singularity at the origin would change the disk into a punctured disk.",
+      "函数在原点处的洛朗展开，在穿过各奇点的相邻圆之间的每个区域上各有一个：内部圆盘、各圆环和外部区域。只有到原点的不同距离才有关，所以距离相同的两个奇点只增加一个圆。原点处的奇点只会把圆盘变成去心圆盘。",
+    ],
+    (rng) => {
+      const moduli = rng.sample([1, 2, 3, 4, 5], rng.int(2, 3));
+      const axis = (m: number): Point =>
+        rng.pick<Point>([
+          [m, 0],
+          [-m, 0],
+          [0, m],
+          [0, -m],
+        ]);
+      const dots: Point[] = [];
+      for (const m of moduli) {
+        dots.push(
+          m === 5 && rng.bool()
+            ? rng.pick<Point>([
+                [3, 4],
+                [-3, 4],
+                [4, -3],
+                [-4, -3],
+              ])
+            : axis(m),
+        );
+        const second: Point =
+          m === 5
+            ? rng.pick<Point>([
+                [-4, 3],
+                [3, -4],
+                [-3, -4],
+              ])
+            : axis(m);
+        if (rng.bool() && !dots.some((p) => p[0] === second[0] && p[1] === second[1])) dots.push(second);
+      }
+      const answer = moduli.length + 1;
+      return ask(
+        [
+          "The dots are all the singularities of $f$. On how many different regions does $f$ have a Laurent expansion about the origin?",
+          "图中的点是 $f$ 的全部奇点。$f$ 在原点处的洛朗展开有多少个不同的区域？",
+        ],
+        answer,
+        [moduli.length, dots.length + 1, dots.length, answer + 1],
+        [
+          `The dots lie at $${moduli.length}$ different distances from the origin, namely $${[...moduli].sort((a, b) => a - b).join(", ")}$. These circles cut the plane into $${answer}$ regions: an inner disk, the annuli and an outer region.`,
+          `这些点到原点有 $${moduli.length}$ 种不同的距离，分别是 $${[...moduli].sort((a, b) => a - b).join(", ")}$。这些圆把平面分成 $${answer}$ 个区域：内部圆盘、各圆环和外部区域。`,
+        ],
+        fig(
+          argand(6),
+          dots.map((at): PlaneMark => ({ kind: "point", at, accent: true })),
+          [`${dots.length} singularities marked in the plane, none at the origin.`, `平面上标出了 ${dots.length} 个奇点，原点处没有。`],
+        ),
       );
-      const second: Point =
-        m === 5
-          ? rng.pick<Point>([
-              [-4, 3],
-              [3, -4],
-              [-3, -4],
-            ])
-          : axis(m);
-      if (rng.bool() && !dots.some((p) => p[0] === second[0] && p[1] === second[1])) dots.push(second);
-    }
-    const answer = moduli.length + 1;
-    return ask(
-      [
-        "The dots are all the singularities of $f$. On how many different regions does $f$ have a Laurent expansion about the origin?",
-        "图中的点是 $f$ 的全部奇点。$f$ 在原点处的洛朗展开有多少个不同的区域？",
-      ],
-      answer,
-      [moduli.length, dots.length + 1, dots.length, answer + 1],
-      [
-        `The dots lie at $${moduli.length}$ different distances from the origin, namely $${[...moduli].sort((a, b) => a - b).join(", ")}$. These circles cut the plane into $${answer}$ regions: an inner disk, the annuli and an outer region.`,
-        `这些点到原点有 $${moduli.length}$ 种不同的距离，分别是 $${[...moduli].sort((a, b) => a - b).join(", ")}$。这些圆把平面分成 $${answer}$ 个区域：内部圆盘、各圆环和外部区域。`,
-      ],
-      fig(
-        argand(6),
-        dots.map((at): PlaneMark => ({ kind: "point", at, accent: true })),
-        [`${dots.length} singularities marked in the plane, none at the origin.`, `平面上标出了 ${dots.length} 个奇点，原点处没有。`],
-      ),
-    );
-  },
-);
+    },
+  ),
+  figure: complexDrawings1["laurent-series-on-annuli#counting-laurent-expansions-from-a-drawing"],
+};
 
 const argumentPrincipleFromDrawing = point(
   "the-argument-principle-from-a-drawing",

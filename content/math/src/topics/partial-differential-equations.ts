@@ -3,6 +3,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { gcd, Q } from "@ga/subject-math";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 
@@ -581,38 +582,41 @@ const nonhomogeneous = topic(
         );
       },
     ),
-    point(
-      "a-steady-state-with-a-source",
-      ["A steady state with a source", "有热源的稳态"],
-      [
-        "A heat source adds a constant to the right side of the equation. In the steady state the time derivative is zero, so the second $x$ derivative equals minus the source divided by the diffusivity, and the temperature is a parabola rather than a line. With both ends at zero, it is $\\frac{qx(L - x)}{2c}$, and the rod is hottest in the middle.",
-        "热源在方程右端加了一个常数。在稳态下时间导数为零，所以对 $x$ 的二阶导数等于负的热源除以扩散系数，温度是抛物线而不是直线。两端为零时，它等于 $\\frac{qx(L - x)}{2c}$，杆的中间最热。",
-      ],
-      (rng) => {
-        const L = rng.int(2, 12);
-        const x = rng.int(1, L - 1);
-        const c = rng.int(1, 6);
-        const q = rng.int(1, 12);
-        const answer = Q.of(q * x * (L - x), 2 * c);
-        return ask(
-          [
-            `Find the steady state of $u_t = ${times(c, "u_{xx}")} + ${q}$ on $[0, ${L}]$ with zero ends. What is its value at $x = ${x}$?`,
-            `求 $[0, ${L}]$ 上 $u_t = ${times(c, "u_{xx}")} + ${q}$ 的稳态，两端为零。它在 $x = ${x}$ 处的值是多少？`,
-          ],
-          answer,
-          [
-            Q.of(q * x * (L - x), c),
-            Q.of(q * x * x, 2 * c),
-            Q.of(q * L * L, 8 * c).eq(answer) ? answer.add(Q.of(1)) : Q.of(q * L * L, 8 * c),
-            answer.add(Q.of(1, 2)),
-          ],
-          [
-            `$u = \\frac{${q}x(${L} - x)}{${2 * c}}$, which at $x = ${x}$ equals $${answer.toLatex()}$.`,
-            `$u = \\frac{${q}x(${L} - x)}{${2 * c}}$，在 $x = ${x}$ 处等于 $${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-steady-state-with-a-source",
+        ["A steady state with a source", "有热源的稳态"],
+        [
+          "A heat source adds a constant to the right side of the equation. In the steady state the time derivative is zero, so the second $x$ derivative equals minus the source divided by the diffusivity, and the temperature is a parabola rather than a line. With both ends at zero, it is $\\frac{qx(L - x)}{2c}$, and the rod is hottest in the middle.",
+          "热源在方程右端加了一个常数。在稳态下时间导数为零，所以对 $x$ 的二阶导数等于负的热源除以扩散系数，温度是抛物线而不是直线。两端为零时，它等于 $\\frac{qx(L - x)}{2c}$，杆的中间最热。",
+        ],
+        (rng) => {
+          const L = rng.int(2, 12);
+          const x = rng.int(1, L - 1);
+          const c = rng.int(1, 6);
+          const q = rng.int(1, 12);
+          const answer = Q.of(q * x * (L - x), 2 * c);
+          return ask(
+            [
+              `Find the steady state of $u_t = ${times(c, "u_{xx}")} + ${q}$ on $[0, ${L}]$ with zero ends. What is its value at $x = ${x}$?`,
+              `求 $[0, ${L}]$ 上 $u_t = ${times(c, "u_{xx}")} + ${q}$ 的稳态，两端为零。它在 $x = ${x}$ 处的值是多少？`,
+            ],
+            answer,
+            [
+              Q.of(q * x * (L - x), c),
+              Q.of(q * x * x, 2 * c),
+              Q.of(q * L * L, 8 * c).eq(answer) ? answer.add(Q.of(1)) : Q.of(q * L * L, 8 * c),
+              answer.add(Q.of(1, 2)),
+            ],
+            [
+              `$u = \\frac{${q}x(${L} - x)}{${2 * c}}$, which at $x = ${x}$ equals $${answer.toLatex()}$.`,
+              `$u = \\frac{${q}x(${L} - x)}{${2 * c}}$，在 $x = ${x}$ 处等于 $${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["nonhomogeneous-heat-problems#a-steady-state-with-a-source"],
+    },
   ],
 );
 
@@ -844,32 +848,35 @@ const laplaceEquation = topic(
         );
       },
     ),
-    point(
-      "the-mean-value-property",
-      ["The mean value property", "平均值性质"],
-      [
-        "A harmonic function has the mean value property: its value at the centre of any circle inside its domain equals the average of its values around that circle. So a steady temperature balances its surroundings, and one consequence is the maximum principle. To find such an average, there is no need to integrate at all, since evaluating the function at the centre gives it immediately.",
-        "调和函数有平均值性质：它在定义域内任何圆的圆心的值，等于它在圆周上的平均值。所以稳态温度与周围保持平衡，极大值原理是它的一个结论。求这样的平均值根本不需要积分，因为计算函数在圆心的值就能立刻得到。",
-      ],
-      (rng) => {
-        const [p, q] = [rng.int(-5, 6), rng.int(-5, 6)];
-        const r = rng.int(1, 9);
-        const [a, b] = [rng.int(2, 7), rng.int(2, 7)];
-        const answer = p * p - q * q + a * p + b * q;
-        return ask(
-          [
-            `The function $u = x^2 - y^2 + ${a}x + ${b}y$ is harmonic. What is its average value around the circle of radius ${r} about $(${p}, ${q})$?`,
-            `函数 $u = x^2 - y^2 + ${a}x + ${b}y$ 是调和函数。它在以 $(${p}, ${q})$ 为圆心、半径为 ${r} 的圆周上的平均值是多少？`,
-          ],
-          answer,
-          [answer + r * r, answer + r, a * p + b * q, p * p + q * q + a * p + b * q],
-          [
-            `The average equals the value at the centre: $${p * p} - ${q * q} + ${a}(${p}) + ${b}(${q}) = ${answer}$.`,
-            `平均值等于圆心的值：$${p * p} - ${q * q} + ${a}(${p}) + ${b}(${q}) = ${answer}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-mean-value-property",
+        ["The mean value property", "平均值性质"],
+        [
+          "A harmonic function has the mean value property: its value at the centre of any circle inside its domain equals the average of its values around that circle. So a steady temperature balances its surroundings, and one consequence is the maximum principle. To find such an average, there is no need to integrate at all, since evaluating the function at the centre gives it immediately.",
+          "调和函数有平均值性质：它在定义域内任何圆的圆心的值，等于它在圆周上的平均值。所以稳态温度与周围保持平衡，极大值原理是它的一个结论。求这样的平均值根本不需要积分，因为计算函数在圆心的值就能立刻得到。",
+        ],
+        (rng) => {
+          const [p, q] = [rng.int(-5, 6), rng.int(-5, 6)];
+          const r = rng.int(1, 9);
+          const [a, b] = [rng.int(2, 7), rng.int(2, 7)];
+          const answer = p * p - q * q + a * p + b * q;
+          return ask(
+            [
+              `The function $u = x^2 - y^2 + ${a}x + ${b}y$ is harmonic. What is its average value around the circle of radius ${r} about $(${p}, ${q})$?`,
+              `函数 $u = x^2 - y^2 + ${a}x + ${b}y$ 是调和函数。它在以 $(${p}, ${q})$ 为圆心、半径为 ${r} 的圆周上的平均值是多少？`,
+            ],
+            answer,
+            [answer + r * r, answer + r, a * p + b * q, p * p + q * q + a * p + b * q],
+            [
+              `The average equals the value at the centre: $${p * p} - ${q * q} + ${a}(${p}) + ${b}(${q}) = ${answer}$.`,
+              `平均值等于圆心的值：$${p * p} - ${q * q} + ${a}(${p}) + ${b}(${q}) = ${answer}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["laplaces-equation#the-mean-value-property"],
+    },
   ],
 );
 
@@ -880,35 +887,38 @@ const laplaceRegions = topic(
   ["laplaces-equation"],
   [["laplaces-equation", 0.4]],
   [
-    point(
-      "a-boundary-value-on-a-disc",
-      ["A boundary value on a disc", "圆盘上的边界值"],
-      [
-        "In polar coordinates, separation on a disc gives the harmonic functions $r^n \\cos n\\theta$ or $r^n \\sin n\\theta$. Bounded solutions avoid negative powers of $r$, since these blow up at the centre. So if the boundary value on the circle of radius $R$ is $a\\cos n\\theta$, then the solution inside is $a\\left(\\frac{r}{R}\\right)^n$ times that cosine.",
-        "在极坐标中，圆盘上的分离变量给出调和函数：$r^n \\cos n\\theta$ 或 $r^n \\sin n\\theta$。有界的解不含 $r$ 的负幂，因为它们在圆心处爆破。所以如果半径为 $R$ 的圆周上的边界值是 $a\\cos n\\theta$，那么内部的解是 $a\\left(\\frac{r}{R}\\right)^n$ 再乘这个余弦。",
-      ],
-      (rng) => {
-        const R = rng.int(2, 6);
-        const r = rng.int(1, R - 1);
-        const n = rng.int(2, 4);
-        const a = rng.int(2, 15);
-        const b = rng.int(-5, 9);
-        const answer = Q.of(a * r ** n, R ** n).add(Q.of(b));
-        const boundary = shifted(`${a}\\cos(${n}\\theta)`, b);
-        return ask(
-          [
-            `A function is harmonic in the disc $r \\le ${R}$ and equals $${boundary}$ on its edge. What is its value at $r = ${r}$, $\\theta = 0$?`,
-            `一个函数在圆盘 $r \\le ${R}$ 内调和，在边界上等于 $${boundary}$。它在 $r = ${r}$，$\\theta = 0$ 处的值是多少？`,
-          ],
-          answer,
-          [Q.of(a + b), Q.of(a * r, R).add(Q.of(b)), Q.of(a * r ** n, R ** n), Q.of(b)],
-          [
-            `Inside, the solution is $${shifted(`${a}\\left(\\frac{r}{${R}}\\right)^{${n}}\\cos(${n}\\theta)`, b)}$, which here equals $${answer.toLatex()}$.`,
-            `内部的解是 $${shifted(`${a}\\left(\\frac{r}{${R}}\\right)^{${n}}\\cos(${n}\\theta)`, b)}$，这里等于 $${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-boundary-value-on-a-disc",
+        ["A boundary value on a disc", "圆盘上的边界值"],
+        [
+          "In polar coordinates, separation on a disc gives the harmonic functions $r^n \\cos n\\theta$ or $r^n \\sin n\\theta$. Bounded solutions avoid negative powers of $r$, since these blow up at the centre. So if the boundary value on the circle of radius $R$ is $a\\cos n\\theta$, then the solution inside is $a\\left(\\frac{r}{R}\\right)^n$ times that cosine.",
+          "在极坐标中，圆盘上的分离变量给出调和函数：$r^n \\cos n\\theta$ 或 $r^n \\sin n\\theta$。有界的解不含 $r$ 的负幂，因为它们在圆心处爆破。所以如果半径为 $R$ 的圆周上的边界值是 $a\\cos n\\theta$，那么内部的解是 $a\\left(\\frac{r}{R}\\right)^n$ 再乘这个余弦。",
+        ],
+        (rng) => {
+          const R = rng.int(2, 6);
+          const r = rng.int(1, R - 1);
+          const n = rng.int(2, 4);
+          const a = rng.int(2, 15);
+          const b = rng.int(-5, 9);
+          const answer = Q.of(a * r ** n, R ** n).add(Q.of(b));
+          const boundary = shifted(`${a}\\cos(${n}\\theta)`, b);
+          return ask(
+            [
+              `A function is harmonic in the disc $r \\le ${R}$ and equals $${boundary}$ on its edge. What is its value at $r = ${r}$, $\\theta = 0$?`,
+              `一个函数在圆盘 $r \\le ${R}$ 内调和，在边界上等于 $${boundary}$。它在 $r = ${r}$，$\\theta = 0$ 处的值是多少？`,
+            ],
+            answer,
+            [Q.of(a + b), Q.of(a * r, R).add(Q.of(b)), Q.of(a * r ** n, R ** n), Q.of(b)],
+            [
+              `Inside, the solution is $${shifted(`${a}\\left(\\frac{r}{${R}}\\right)^{${n}}\\cos(${n}\\theta)`, b)}$, which here equals $${answer.toLatex()}$.`,
+              `内部的解是 $${shifted(`${a}\\left(\\frac{r}{${R}}\\right)^{${n}}\\cos(${n}\\theta)`, b)}$，这里等于 $${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["laplaces-equation-in-a-rectangle-and-a-disc#a-boundary-value-on-a-disc"],
+    },
     point(
       "the-maximum-principle",
       ["The maximum principle", "极大值原理"],

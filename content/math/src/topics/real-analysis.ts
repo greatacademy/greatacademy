@@ -3,6 +3,7 @@
 
 import type { Rng, TopicDef } from "@ga/content";
 import { gcd, Q } from "@ga/subject-math";
+import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 
@@ -615,50 +616,53 @@ const metricSpaces = topic(
   ["suprema-of-sets-of-reals"],
   [],
   [
-    point(
-      "three-distances-in-the-plane",
-      ["Three distances in the plane", "平面上的三种距离"],
-      [
-        "A metric is any distance function that is positive apart from equal points, symmetric, and satisfies the triangle inequality. The plane has several natural ones: the Euclidean distance, the taxicab distance that adds the coordinate differences, and the maximum distance that takes the larger of them. They disagree on values, but they agree on which sequences converge, so they describe the same open sets.",
-        "度量是这样的距离函数：不同点之间的距离为正，具有对称性，并满足三角不等式。平面上有几种自然的度量：欧几里得距离，把坐标差相加的出租车距离，以及取其中较大者的最大值距离。它们的值不同，但在哪些序列收敛上是一致的，所以描述的是相同的开集。",
-      ],
-      (rng) => {
-        const s = rng.int(1, 6);
-        const [u, v] = rng.pick([
-          [3, 4],
-          [4, 3],
-          [5, 12],
-          [12, 5],
-          [8, 15],
-          [15, 8],
-        ]) as [number, number];
-        const x = rng.int(-6, 6);
-        const y = rng.int(-6, 6);
-        const [dx, dy] = [s * u, s * v];
-        const kind = rng.int(0, 2);
-        const euclid = s * Math.round(Math.hypot(u, v));
-        const answer = [euclid, dx + dy, Math.max(dx, dy)][kind] as number;
-        const names: Pair[] = [
-          ["Euclidean", "欧几里得"],
-          ["taxicab", "出租车"],
-          ["maximum", "最大值"],
-        ];
-        const name = names[kind] as Pair;
-        const point2 = `(${x + dx}, ${y + dy})`;
-        return ask(
-          [
-            `What is the ${name[0]} distance between $(${x}, ${y})$ and $${point2}$?`,
-            `$(${x}, ${y})$ 和 $${point2}$ 之间的${name[1]}距离是多少？`,
-          ],
-          answer,
-          [euclid, dx + dy, Math.max(dx, dy), Math.min(dx, dy)],
-          [
-            `The coordinate differences are ${dx} and ${dy}. The Euclidean distance is ${euclid}, the taxicab distance is ${dx + dy}, and the maximum distance is ${Math.max(dx, dy)}.`,
-            `坐标差是 ${dx} 和 ${dy}。欧几里得距离是 ${euclid}，出租车距离是 ${dx + dy}，最大值距离是 ${Math.max(dx, dy)}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "three-distances-in-the-plane",
+        ["Three distances in the plane", "平面上的三种距离"],
+        [
+          "A metric is any distance function that is positive apart from equal points, symmetric, and satisfies the triangle inequality. The plane has several natural ones: the Euclidean distance, the taxicab distance that adds the coordinate differences, and the maximum distance that takes the larger of them. They disagree on values, but they agree on which sequences converge, so they describe the same open sets.",
+          "度量是这样的距离函数：不同点之间的距离为正，具有对称性，并满足三角不等式。平面上有几种自然的度量：欧几里得距离，把坐标差相加的出租车距离，以及取其中较大者的最大值距离。它们的值不同，但在哪些序列收敛上是一致的，所以描述的是相同的开集。",
+        ],
+        (rng) => {
+          const s = rng.int(1, 6);
+          const [u, v] = rng.pick([
+            [3, 4],
+            [4, 3],
+            [5, 12],
+            [12, 5],
+            [8, 15],
+            [15, 8],
+          ]) as [number, number];
+          const x = rng.int(-6, 6);
+          const y = rng.int(-6, 6);
+          const [dx, dy] = [s * u, s * v];
+          const kind = rng.int(0, 2);
+          const euclid = s * Math.round(Math.hypot(u, v));
+          const answer = [euclid, dx + dy, Math.max(dx, dy)][kind] as number;
+          const names: Pair[] = [
+            ["Euclidean", "欧几里得"],
+            ["taxicab", "出租车"],
+            ["maximum", "最大值"],
+          ];
+          const name = names[kind] as Pair;
+          const point2 = `(${x + dx}, ${y + dy})`;
+          return ask(
+            [
+              `What is the ${name[0]} distance between $(${x}, ${y})$ and $${point2}$?`,
+              `$(${x}, ${y})$ 和 $${point2}$ 之间的${name[1]}距离是多少？`,
+            ],
+            answer,
+            [euclid, dx + dy, Math.max(dx, dy), Math.min(dx, dy)],
+            [
+              `The coordinate differences are ${dx} and ${dy}. The Euclidean distance is ${euclid}, the taxicab distance is ${dx + dy}, and the maximum distance is ${Math.max(dx, dy)}.`,
+              `坐标差是 ${dx} 和 ${dy}。欧几里得距离是 ${euclid}，出租车距离是 ${dx + dy}，最大值距离是 ${Math.max(dx, dy)}。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["distances-in-metric-spaces#three-distances-in-the-plane"],
+    },
     point(
       "membership-of-a-taxicab-ball",
       ["Membership of a taxicab ball", "出租车度量下的球"],
@@ -810,38 +814,41 @@ const compactness = topic(
         );
       },
     ),
-    point(
-      "extreme-values-on-a-compact-interval",
-      ["Extreme values on a compact interval", "紧区间上的最值"],
-      [
-        "A continuous function on a compact set attains a maximum and a minimum. This can fail on a set that is not compact, as with $\\frac{1}{x}$ on an open interval near zero. For a quadratic on a closed interval, the extreme values lie at the vertex, when it is inside the interval, or at the endpoints, so comparing those few values finds both of them.",
-        "紧集上的连续函数能取到最大值和最小值。在非紧集上这可能不成立，比如 $\\frac{1}{x}$ 在靠近零的开区间上。对闭区间上的二次函数，最值在顶点（当它在区间内时）或端点取到，所以比较这几个值就能找到它们。",
-      ],
-      (rng) => {
-        const c = rng.int(-5, 6);
-        const d = rng.int(-6, 6);
-        const a = rng.int(-7, 5);
-        const b = a + rng.int(2, 9);
-        const f = (x: number) => (x - c) * (x - c) + d;
-        const max = rng.bool();
-        const low = c >= a && c <= b ? d : Math.min(f(a), f(b));
-        const high = Math.max(f(a), f(b));
-        const answer = max ? high : low;
-        const shift = c === 0 ? "x^2" : `(x ${c > 0 ? "-" : "+"} ${Math.abs(c)})^2`;
-        return ask(
-          [
-            `What is the ${max ? "maximum" : "minimum"} of $f(x) = ${shift}${signed(d)}$ on $[${a}, ${b}]$?`,
-            `$f(x) = ${shift}${signed(d)}$ 在 $[${a}, ${b}]$ 上的${max ? "最大值" : "最小值"}是多少？`,
-          ],
-          answer,
-          [max ? low : high, f(a) === answer ? f(b) : f(a), d === answer ? d + 1 : d, answer + 1],
-          [
-            `The endpoints give ${f(a)} and ${f(b)}${c >= a && c <= b ? `, and the vertex at ${c} gives ${d}` : `, and the vertex at ${c} is outside the interval`}. So the ${max ? "maximum" : "minimum"} is ${answer}.`,
-            `端点给出 ${f(a)} 和 ${f(b)}${c >= a && c <= b ? `，顶点 ${c} 处给出 ${d}` : `，顶点 ${c} 在区间外`}。所以${max ? "最大值" : "最小值"}是 ${answer}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "extreme-values-on-a-compact-interval",
+        ["Extreme values on a compact interval", "紧区间上的最值"],
+        [
+          "A continuous function on a compact set attains a maximum and a minimum. This can fail on a set that is not compact, as with $\\frac{1}{x}$ on an open interval near zero. For a quadratic on a closed interval, the extreme values lie at the vertex, when it is inside the interval, or at the endpoints, so comparing those few values finds both of them.",
+          "紧集上的连续函数能取到最大值和最小值。在非紧集上这可能不成立，比如 $\\frac{1}{x}$ 在靠近零的开区间上。对闭区间上的二次函数，最值在顶点（当它在区间内时）或端点取到，所以比较这几个值就能找到它们。",
+        ],
+        (rng) => {
+          const c = rng.int(-5, 6);
+          const d = rng.int(-6, 6);
+          const a = rng.int(-7, 5);
+          const b = a + rng.int(2, 9);
+          const f = (x: number) => (x - c) * (x - c) + d;
+          const max = rng.bool();
+          const low = c >= a && c <= b ? d : Math.min(f(a), f(b));
+          const high = Math.max(f(a), f(b));
+          const answer = max ? high : low;
+          const shift = c === 0 ? "x^2" : `(x ${c > 0 ? "-" : "+"} ${Math.abs(c)})^2`;
+          return ask(
+            [
+              `What is the ${max ? "maximum" : "minimum"} of $f(x) = ${shift}${signed(d)}$ on $[${a}, ${b}]$?`,
+              `$f(x) = ${shift}${signed(d)}$ 在 $[${a}, ${b}]$ 上的${max ? "最大值" : "最小值"}是多少？`,
+            ],
+            answer,
+            [max ? low : high, f(a) === answer ? f(b) : f(a), d === answer ? d + 1 : d, answer + 1],
+            [
+              `The endpoints give ${f(a)} and ${f(b)}${c >= a && c <= b ? `, and the vertex at ${c} gives ${d}` : `, and the vertex at ${c} is outside the interval`}. So the ${max ? "maximum" : "minimum"} is ${answer}.`,
+              `端点给出 ${f(a)} 和 ${f(b)}${c >= a && c <= b ? `，顶点 ${c} 处给出 ${d}` : `，顶点 ${c} 在区间外`}。所以${max ? "最大值" : "最小值"}是 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["compactness-on-the-real-line#extreme-values-on-a-compact-interval"],
+    },
   ],
 );
 
@@ -942,34 +949,37 @@ const differentiability = topic(
         );
       },
     ),
-    point(
-      "gluing-two-pieces",
-      ["Gluing two pieces", "拼接两段"],
-      [
-        "A piecewise function is differentiable at the joint when two conditions hold: the pieces meet, and they have the same slope there. The first gives continuity, which is necessary, and the second makes the one-sided derivatives agree. Matching only the slopes leaves a jump. For a line attached to a parabola, the conditions fix the line completely, as the tangent line to the parabola at the joint.",
-        "分段函数在接点处可导，需要两个条件：两段相接，并且在那里斜率相同。前者给出连续性，这是必要的；后者使单侧导数一致。只让斜率相等会留下跳跃。对接在抛物线上的直线，这两个条件完全确定了这条直线，它就是抛物线在接点处的切线。",
-      ],
-      (rng) => {
-        const a = rng.int(-6, 9);
-        const b = rng.int(-5, 6);
-        const asksSlope = rng.bool();
-        const m = 2 * a + b;
-        const c = -a * a;
-        const parabola = `x^2${b === 0 ? "" : ` ${b > 0 ? "+" : "-"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`}`;
-        return ask(
-          [
-            `Let $f(x) = ${parabola}$ for $x \\le ${a}$ and $f(x) = mx + c$ for $x > ${a}$. If $f$ is differentiable at ${a}, what is $${asksSlope ? "m" : "c"}$?`,
-            `设 $x \\le ${a}$ 时 $f(x) = ${parabola}$，$x > ${a}$ 时 $f(x) = mx + c$。如果 $f$ 在 ${a} 处可导，$${asksSlope ? "m" : "c"}$ 是多少？`,
-          ],
-          asksSlope ? m : c,
-          asksSlope ? [a + b, 2 * a, a * a + b * a, m + 1] : [a * a, m, a * a + b * a, c - 1],
-          [
-            `The slopes must match, so $m = 2(${a}) ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${m}$. The values must match too, so $c = ${a * a + b * a} - ${m < 0 ? `(${m})` : m} \\cdot ${a < 0 ? `(${a})` : a} = ${c}$.`,
-            `斜率必须相等，所以 $m = 2(${a}) ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${m}$。值也必须相等，所以 $c = ${a * a + b * a} - ${m < 0 ? `(${m})` : m} \\cdot ${a < 0 ? `(${a})` : a} = ${c}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "gluing-two-pieces",
+        ["Gluing two pieces", "拼接两段"],
+        [
+          "A piecewise function is differentiable at the joint when two conditions hold: the pieces meet, and they have the same slope there. The first gives continuity, which is necessary, and the second makes the one-sided derivatives agree. Matching only the slopes leaves a jump. For a line attached to a parabola, the conditions fix the line completely, as the tangent line to the parabola at the joint.",
+          "分段函数在接点处可导，需要两个条件：两段相接，并且在那里斜率相同。前者给出连续性，这是必要的；后者使单侧导数一致。只让斜率相等会留下跳跃。对接在抛物线上的直线，这两个条件完全确定了这条直线，它就是抛物线在接点处的切线。",
+        ],
+        (rng) => {
+          const a = rng.int(-6, 9);
+          const b = rng.int(-5, 6);
+          const asksSlope = rng.bool();
+          const m = 2 * a + b;
+          const c = -a * a;
+          const parabola = `x^2${b === 0 ? "" : ` ${b > 0 ? "+" : "-"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`}`;
+          return ask(
+            [
+              `Let $f(x) = ${parabola}$ for $x \\le ${a}$ and $f(x) = mx + c$ for $x > ${a}$. If $f$ is differentiable at ${a}, what is $${asksSlope ? "m" : "c"}$?`,
+              `设 $x \\le ${a}$ 时 $f(x) = ${parabola}$，$x > ${a}$ 时 $f(x) = mx + c$。如果 $f$ 在 ${a} 处可导，$${asksSlope ? "m" : "c"}$ 是多少？`,
+            ],
+            asksSlope ? m : c,
+            asksSlope ? [a + b, 2 * a, a * a + b * a, m + 1] : [a * a, m, a * a + b * a, c - 1],
+            [
+              `The slopes must match, so $m = 2(${a}) ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${m}$. The values must match too, so $c = ${a * a + b * a} - ${m < 0 ? `(${m})` : m} \\cdot ${a < 0 ? `(${a})` : a} = ${c}$.`,
+              `斜率必须相等，所以 $m = 2(${a}) ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${m}$。值也必须相等，所以 $c = ${a * a + b * a} - ${m < 0 ? `(${m})` : m} \\cdot ${a < 0 ? `(${a})` : a} = ${c}$。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["differentiability-in-analysis#gluing-two-pieces"],
+    },
   ],
 );
 

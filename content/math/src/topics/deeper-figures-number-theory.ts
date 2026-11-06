@@ -5,6 +5,8 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, svgDocument } from "@ga/subject-math";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
@@ -66,42 +68,45 @@ const lineThroughLatticePoints = point(
   },
 );
 
-const circleThroughLatticePoint = point(
-  "the-sum-of-two-squares-on-a-circle",
-  ["The sum of two squares on a circle", "圆上的两平方和"],
-  [
-    "Writing $n = a^2 + b^2$ means that the circle of radius $\\sqrt{n}$ around the origin passes through the lattice point $(a, b)$. So a lattice point on such a circle shows at once which number the circle stands for. Signs and the order of the coordinates do not change the sum, which is why these points come in symmetric groups.",
-    "写成 $n = a^2 + b^2$ 意味着以原点为中心、半径为 $\\sqrt{n}$ 的圆经过格点 $(a, b)$。所以这样的圆上的一个格点立即说明这个圆代表哪个数。符号和坐标的顺序不改变和，所以这些点成对称的组出现。",
-  ],
-  (rng) => {
-    const [a, b] = [rng.int(1, 6), rng.int(1, 6)];
-    const [sx, sy] = [rng.sign(), rng.sign()];
-    const n = a * a + b * b;
-    return ask(
-      [
-        "The circle around the origin passes through the marked lattice point. For which whole number $n$ is it the circle $x^2 + y^2 = n$?",
-        "以原点为中心的圆经过标记的格点。它是哪个整数 $n$ 对应的圆 $x^2 + y^2 = n$？",
-      ],
-      n,
-      [a + b, (a + b) * (a + b), n + 1, Math.max(a, b) * Math.max(a, b)],
-      [
-        `The marked point has coordinates $(${sx * a}, ${sy * b})$, and the point lies on the circle, so $n = ${a}^2 + ${b}^2 = ${n}$.`,
-        `标记点的坐标是 $(${sx * a}, ${sy * b})$，它在圆上，所以 $n = ${a}^2 + ${b}^2 = ${n}$。`,
-      ],
-      fig(
-        { xMin: -9, xMax: 9, yMin: -9, yMax: 9, xName: "x", yName: "y" },
+const circleThroughLatticePoint = {
+  ...point(
+    "the-sum-of-two-squares-on-a-circle",
+    ["The sum of two squares on a circle", "圆上的两平方和"],
+    [
+      "Writing $n = a^2 + b^2$ means that the circle of radius $\\sqrt{n}$ around the origin passes through the lattice point $(a, b)$. So a lattice point on such a circle shows at once which number the circle stands for. Signs and the order of the coordinates do not change the sum, which is why these points come in symmetric groups.",
+      "写成 $n = a^2 + b^2$ 意味着以原点为中心、半径为 $\\sqrt{n}$ 的圆经过格点 $(a, b)$。所以这样的圆上的一个格点立即说明这个圆代表哪个数。符号和坐标的顺序不改变和，所以这些点成对称的组出现。",
+    ],
+    (rng) => {
+      const [a, b] = [rng.int(1, 6), rng.int(1, 6)];
+      const [sx, sy] = [rng.sign(), rng.sign()];
+      const n = a * a + b * b;
+      return ask(
         [
-          { kind: "circle", center: [0, 0], r: Math.sqrt(n) },
-          { kind: "point", at: [sx * a, sy * b], accent: true },
+          "The circle around the origin passes through the marked lattice point. For which whole number $n$ is it the circle $x^2 + y^2 = n$?",
+          "以原点为中心的圆经过标记的格点。它是哪个整数 $n$ 对应的圆 $x^2 + y^2 = n$？",
         ],
+        n,
+        [a + b, (a + b) * (a + b), n + 1, Math.max(a, b) * Math.max(a, b)],
         [
-          `A circle around the origin through the lattice point (${sx * a}, ${sy * b}).`,
-          `以原点为中心、过格点 (${sx * a}, ${sy * b}) 的圆。`,
+          `The marked point has coordinates $(${sx * a}, ${sy * b})$, and the point lies on the circle, so $n = ${a}^2 + ${b}^2 = ${n}$.`,
+          `标记点的坐标是 $(${sx * a}, ${sy * b})$，它在圆上，所以 $n = ${a}^2 + ${b}^2 = ${n}$。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -9, xMax: 9, yMin: -9, yMax: 9, xName: "x", yName: "y" },
+          [
+            { kind: "circle", center: [0, 0], r: Math.sqrt(n) },
+            { kind: "point", at: [sx * a, sy * b], accent: true },
+          ],
+          [
+            `A circle around the origin through the lattice point (${sx * a}, ${sy * b}).`,
+            `以原点为中心、过格点 (${sx * a}, ${sy * b}) 的圆。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: numberTheoryDrawings1["sums-of-two-squares#the-sum-of-two-squares-on-a-circle"],
+};
 
 /** gaussian writes the Gaussian integer $x + yi$. */
 function gaussian(x: number, y: number): string {
@@ -253,71 +258,74 @@ function squareTiling(w: number, h: number): { x: number; y: number; side: numbe
   return out;
 }
 
-const euclidInSquares = point(
-  "the-euclidean-algorithm-as-a-tiling-by-squares",
-  ["The Euclidean algorithm as a tiling by squares", "用正方形铺满表示欧几里得算法"],
-  [
-    "The Euclidean algorithm can be drawn on a rectangle. Cut off as many squares as fit along the long side, and then repeat with the leftover rectangle. The number of squares at each stage is a quotient of the algorithm. The final squares fill the last leftover exactly, and their side is the greatest common divisor of the two sides.",
-    "欧几里得算法可以画在矩形上。沿长边切下尽可能多的正方形，再对剩下的矩形重复。每一阶段正方形的个数是算法的一个商。最后的正方形恰好填满最后剩下的部分，它们的边长是两条边的最大公因数。",
-  ],
-  (rng) => {
-    const [p, q] = rng.pick<Point>([
-      [5, 2],
-      [5, 3],
-      [7, 2],
-      [7, 3],
-      [7, 4],
-      [7, 5],
-      [8, 3],
-      [8, 5],
-      [9, 2],
-      [9, 4],
-      [9, 5],
-      [9, 7],
-      [11, 3],
-      [11, 4],
-    ]);
-    const g = rng.int(2, 6);
-    const [w, h] = [p * g, q * g];
-    const scale = 270 / w;
-    const asksGcd = rng.bool();
-    let body = label(30 + 135, 16, String(w)) + label(16, 24 + (h * scale) / 2 + 4, String(h));
-    for (const { x, y, side } of squareTiling(w, h)) {
-      const accent = side === g ? 'class="accent" fill="currentColor" fill-opacity="0.25" stroke="currentColor"' : 'fill="none"';
-      body += `<rect ${accent} x="${30 + x * scale}" y="${24 + y * scale}" width="${side * scale}" height="${side * scale}"/>`;
-    }
-    const quotient = Math.floor(w / h);
-    return ask(
-      asksGcd
-        ? [
-            "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the greatest common divisor of the two sides?",
-            "矩形按欧几里得算法切成正方形，边长已标出。两条边的最大公因数是多少？",
-          ]
-        : [
-            "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the first quotient of the algorithm on the two sides?",
-            "矩形按欧几里得算法切成正方形，边长已标出。对这两条边做算法时，第一个商是多少？",
-          ],
-      asksGcd ? g : quotient,
-      asksGcd ? [h, w - h, 2 * g, g + 1] : [quotient + 1, q, p, h],
-      asksGcd
-        ? [
-            `The shaded squares are the last ones cut, and they fill the leftover exactly. There are $${w / g}$ of their sides along the top, which has length $${w}$, so their side is $${g}$.`,
-            `阴影正方形是最后切下的，它们恰好填满剩下的部分。上边长度为 $${w}$，相当于 $${w / g}$ 个边长，所以边长是 $${g}$。`,
-          ]
-        : [
-            `The largest squares have side $${h}$, and $${quotient}$ of them fit along the side of length $${w}$. So the first division is $${w} = ${quotient} \\cdot ${h} + ${w - quotient * h}$.`,
-            `最大的正方形边长为 $${h}$，长度为 $${w}$ 的边上能放 $${quotient}$ 个。所以第一步除法是 $${w} = ${quotient} \\cdot ${h} + ${w - quotient * h}$。`,
-          ],
-      {
-        svg: svgDocument(Math.ceil(h * scale) + 36, body),
-        alt: t(
-          `A rectangle with sides ${w} and ${h} cut into squares; the smallest squares, of side ${g}, are shaded.`,
-          `边长为 ${w} 和 ${h} 的矩形切成正方形；最小的正方形边长为 ${g}，有阴影。`,
-        ),
-      },
-    );
-  },
-);
+const euclidInSquares = {
+  ...point(
+    "the-euclidean-algorithm-as-a-tiling-by-squares",
+    ["The Euclidean algorithm as a tiling by squares", "用正方形铺满表示欧几里得算法"],
+    [
+      "The Euclidean algorithm can be drawn on a rectangle. Cut off as many squares as fit along the long side, and then repeat with the leftover rectangle. The number of squares at each stage is a quotient of the algorithm. The final squares fill the last leftover exactly, and their side is the greatest common divisor of the two sides.",
+      "欧几里得算法可以画在矩形上。沿长边切下尽可能多的正方形，再对剩下的矩形重复。每一阶段正方形的个数是算法的一个商。最后的正方形恰好填满最后剩下的部分，它们的边长是两条边的最大公因数。",
+    ],
+    (rng) => {
+      const [p, q] = rng.pick<Point>([
+        [5, 2],
+        [5, 3],
+        [7, 2],
+        [7, 3],
+        [7, 4],
+        [7, 5],
+        [8, 3],
+        [8, 5],
+        [9, 2],
+        [9, 4],
+        [9, 5],
+        [9, 7],
+        [11, 3],
+        [11, 4],
+      ]);
+      const g = rng.int(2, 6);
+      const [w, h] = [p * g, q * g];
+      const scale = 270 / w;
+      const asksGcd = rng.bool();
+      let body = label(30 + 135, 16, String(w)) + label(16, 24 + (h * scale) / 2 + 4, String(h));
+      for (const { x, y, side } of squareTiling(w, h)) {
+        const accent = side === g ? 'class="accent" fill="currentColor" fill-opacity="0.25" stroke="currentColor"' : 'fill="none"';
+        body += `<rect ${accent} x="${30 + x * scale}" y="${24 + y * scale}" width="${side * scale}" height="${side * scale}"/>`;
+      }
+      const quotient = Math.floor(w / h);
+      return ask(
+        asksGcd
+          ? [
+              "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the greatest common divisor of the two sides?",
+              "矩形按欧几里得算法切成正方形，边长已标出。两条边的最大公因数是多少？",
+            ]
+          : [
+              "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the first quotient of the algorithm on the two sides?",
+              "矩形按欧几里得算法切成正方形，边长已标出。对这两条边做算法时，第一个商是多少？",
+            ],
+        asksGcd ? g : quotient,
+        asksGcd ? [h, w - h, 2 * g, g + 1] : [quotient + 1, q, p, h],
+        asksGcd
+          ? [
+              `The shaded squares are the last ones cut, and they fill the leftover exactly. There are $${w / g}$ of their sides along the top, which has length $${w}$, so their side is $${g}$.`,
+              `阴影正方形是最后切下的，它们恰好填满剩下的部分。上边长度为 $${w}$，相当于 $${w / g}$ 个边长，所以边长是 $${g}$。`,
+            ]
+          : [
+              `The largest squares have side $${h}$, and $${quotient}$ of them fit along the side of length $${w}$. So the first division is $${w} = ${quotient} \\cdot ${h} + ${w - quotient * h}$.`,
+              `最大的正方形边长为 $${h}$，长度为 $${w}$ 的边上能放 $${quotient}$ 个。所以第一步除法是 $${w} = ${quotient} \\cdot ${h} + ${w - quotient * h}$。`,
+            ],
+        {
+          svg: svgDocument(Math.ceil(h * scale) + 36, body),
+          alt: t(
+            `A rectangle with sides ${w} and ${h} cut into squares; the smallest squares, of side ${g}, are shaded.`,
+            `边长为 ${w} 和 ${h} 的矩形切成正方形；最小的正方形边长为 ${g}，有阴影。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: proofDrawings1["the-euclidean-algorithm#the-euclidean-algorithm-as-a-tiling-by-squares"],
+};
 
 const congruenceInRows = point(
   "a-congruence-read-from-rows-of-integers",

@@ -7,6 +7,7 @@ import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
@@ -652,120 +653,127 @@ const geometricBars = point(
   },
 );
 
-const cdfDifference = point(
-  "an-interval-probability-from-a-drawn-cdf",
-  ["An interval probability from a drawn CDF", "由图中分布函数读区间概率"],
-  [
-    "The cumulative distribution function $F$ gives the probability of being at most $x$. So the probability of landing between $a$ and $b$ is $F(b) - F(a)$, a difference of two heights on the graph. A common slip is to read just $F(b)$, which counts everything up to $b$, including what lies below $a$.",
-    "累积分布函数 $F$ 给出不超过 $x$ 的概率。所以落在 $a$ 与 $b$ 之间的概率是 $F(b) - F(a)$，即图上两个高度之差。常见错误是只读 $F(b)$，它把 $b$ 以下的全部都算进去，包括 $a$ 下面的部分。",
-  ],
-  (rng) => {
-    const n = rng.int(4, 6);
-    const w = tenths(rng, n);
-    const F = [0];
-    for (let i = 0; i < n; i++) F.push((F[i] as number) + (w[i] as number));
-    const c = rng.int(0, n - 1);
-    const d = rng.int(c + 1, n);
-    const [low, high] = [F[c] as number, F[d] as number];
-    const P = Q.of(high - low, 10);
-    const svg = chart(
-      [0, 7],
-      [0, 1.05],
-      intTicks(0, 7),
-      tenthTicks(0, 10),
-      (x, y) =>
-        F.map((v, i) => `<circle cx="${x(i)}" cy="${y(v / 10)}" r="3" fill="currentColor"/>`).join("") +
-        curvePath(
-          (v) =>
-            F[Math.floor(v)] === undefined
-              ? 1
-              : ((F[Math.floor(v)] as number) + ((F[Math.floor(v) + 1] ?? 10) - (F[Math.floor(v)] as number)) * (v - Math.floor(v))) / 10,
-          0,
-          n,
-          x,
-          y,
-        ) +
-        `<line class="accent" stroke="currentColor" x1="${x(n)}" y1="${y(1)}" x2="${x(7)}" y2="${y(1)}"/>`,
-    );
-    return ask(
-      [
-        `The graph shows a distribution function $F$. What is $P(${c} < X \\leq ${d})$?`,
-        `图中是分布函数 $F$。$P(${c} < X \\leq ${d})$ 是多少？`,
-      ],
-      P,
-      [
-        Q.of(high, 10).eq(P) ? P.add(Q.of(1, 10)) : Q.of(high, 10),
-        Q.of(10 - high + low === high - low ? 10 - high + low + 1 : 10 - high + low, 10),
-        Q.of(high + low, 10).eq(P) ? Q.of(1, 20) : Q.of(high + low, 10),
-      ],
-      [
-        `The graph has height $${Q.of(high, 10).toLatex()}$ at $x = ${d}$ and height $${Q.of(low, 10).toLatex()}$ at $x = ${c}$. The probability of the interval is the difference, $${P.toLatex()}$.`,
-        `图在 $x = ${d}$ 处的高度是 $${Q.of(high, 10).toLatex()}$，在 $x = ${c}$ 处是 $${Q.of(low, 10).toLatex()}$。区间的概率是它们之差 $${P.toLatex()}$。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A distribution function through the heights ${F.map((v) => v / 10).join(", ")} at x = 0, 1, 2 and so on.`,
-          `经过高度 ${F.map((v) => v / 10).join("，")} 的分布函数，横坐标依次为 0、1、2 等。`,
-        ),
-      },
-    );
-  },
-);
+const cdfDifference = {
+  ...point(
+    "an-interval-probability-from-a-drawn-cdf",
+    ["An interval probability from a drawn CDF", "由图中分布函数读区间概率"],
+    [
+      "The cumulative distribution function $F$ gives the probability of being at most $x$. So the probability of landing between $a$ and $b$ is $F(b) - F(a)$, a difference of two heights on the graph. A common slip is to read just $F(b)$, which counts everything up to $b$, including what lies below $a$.",
+      "累积分布函数 $F$ 给出不超过 $x$ 的概率。所以落在 $a$ 与 $b$ 之间的概率是 $F(b) - F(a)$，即图上两个高度之差。常见错误是只读 $F(b)$，它把 $b$ 以下的全部都算进去，包括 $a$ 下面的部分。",
+    ],
+    (rng) => {
+      const n = rng.int(4, 6);
+      const w = tenths(rng, n);
+      const F = [0];
+      for (let i = 0; i < n; i++) F.push((F[i] as number) + (w[i] as number));
+      const c = rng.int(0, n - 1);
+      const d = rng.int(c + 1, n);
+      const [low, high] = [F[c] as number, F[d] as number];
+      const P = Q.of(high - low, 10);
+      const svg = chart(
+        [0, 7],
+        [0, 1.05],
+        intTicks(0, 7),
+        tenthTicks(0, 10),
+        (x, y) =>
+          F.map((v, i) => `<circle cx="${x(i)}" cy="${y(v / 10)}" r="3" fill="currentColor"/>`).join("") +
+          curvePath(
+            (v) =>
+              F[Math.floor(v)] === undefined
+                ? 1
+                : ((F[Math.floor(v)] as number) + ((F[Math.floor(v) + 1] ?? 10) - (F[Math.floor(v)] as number)) * (v - Math.floor(v))) / 10,
+            0,
+            n,
+            x,
+            y,
+          ) +
+          `<line class="accent" stroke="currentColor" x1="${x(n)}" y1="${y(1)}" x2="${x(7)}" y2="${y(1)}"/>`,
+      );
+      return ask(
+        [
+          `The graph shows a distribution function $F$. What is $P(${c} < X \\leq ${d})$?`,
+          `图中是分布函数 $F$。$P(${c} < X \\leq ${d})$ 是多少？`,
+        ],
+        P,
+        [
+          Q.of(high, 10).eq(P) ? P.add(Q.of(1, 10)) : Q.of(high, 10),
+          Q.of(10 - high + low === high - low ? 10 - high + low + 1 : 10 - high + low, 10),
+          Q.of(high + low, 10).eq(P) ? Q.of(1, 20) : Q.of(high + low, 10),
+        ],
+        [
+          `The graph has height $${Q.of(high, 10).toLatex()}$ at $x = ${d}$ and height $${Q.of(low, 10).toLatex()}$ at $x = ${c}$. The probability of the interval is the difference, $${P.toLatex()}$.`,
+          `图在 $x = ${d}$ 处的高度是 $${Q.of(high, 10).toLatex()}$，在 $x = ${c}$ 处是 $${Q.of(low, 10).toLatex()}$。区间的概率是它们之差 $${P.toLatex()}$。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A distribution function through the heights ${F.map((v) => v / 10).join(", ")} at x = 0, 1, 2 and so on.`,
+            `经过高度 ${F.map((v) => v / 10).join("，")} 的分布函数，横坐标依次为 0、1、2 等。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure:
+    probabilityDrawings1["cumulative-distribution-functions-for-continuous-random-variables#an-interval-probability-from-a-drawn-cdf"],
+};
 
-const quantileFromCdf = point(
-  "a-quartile-from-a-drawn-cdf",
-  ["A quartile from a drawn CDF", "由图中分布函数读四分位数"],
-  [
-    "A percentile reverses the reading of a distribution function. Rather than going up from a value of $x$, start at a height on the vertical axis, go across to the graph and then down to the horizontal axis. The median corresponds to a height of one half, and the quartiles correspond to heights of one quarter and three quarters.",
-    "百分位数把分布函数的读法反过来。不是从 $x$ 的值向上读，而是从纵轴上的高度出发，横向到图，再向下到横轴。中位数对应高度二分之一，四分位数对应高度四分之一和四分之三。",
-  ],
-  (rng) => {
-    const x0 = rng.int(0, 2);
-    const stepsX = [rng.int(1, 3), rng.int(1, 2), rng.int(1, 2), rng.int(1, 3)];
-    const xs = [x0];
-    for (let i = 0; i < 4; i++) xs.push((xs[i] as number) + (stepsX[i] as number));
-    const heights = [0, 0.25, 0.5, 0.75, 1];
-    const which = rng.int(1, 3);
-    const answer = xs[which] as number;
-    const q: Pair =
-      which === 1 ? ["the lower quartile", "下四分位数"] : which === 2 ? ["the median", "中位数"] : ["the upper quartile", "上四分位数"];
-    const end = Math.max(xs[4] as number, 9);
-    const svg = chart(
-      [0, end + 1],
-      [0, 1.05],
-      intTicks(0, end + 1),
-      [
-        [0, "0"],
-        [0.25, "0.25"],
-        [0.5, "0.5"],
-        [0.75, "0.75"],
-        [1, "1"],
-      ],
-      (x, y) =>
-        `<polyline class="accent" stroke="currentColor" fill="none" points="${x(0)},${y(0)} ${xs.map((v, i) => `${x(v)},${y(heights[i] as number)}`).join(" ")} ${x(end + 1)},${y(1)}"/>`,
-    );
-    return ask(
-      [
-        `The graph shows the distribution function of a continuous random variable. What is ${q[0]}?`,
-        `图中是某连续随机变量的分布函数。${q[1]}是多少？`,
-      ],
-      answer,
-      [xs[which === 1 ? 2 : 1] as number, xs[which === 3 ? 2 : 3] as number, xs[4] as number, answer + 1],
-      [
-        `The value reaches the height $${heights[which]}$ at $x = ${answer}$, and that height defines ${q[0]}.`,
-        `函数值在 $x = ${answer}$ 处达到高度 $${heights[which]}$，这个高度对应${q[1]}。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A distribution function with heights 0, 0.25, 0.5, 0.75 and 1 at x = ${xs.join(", ")}.`,
-          `分布函数在 x = ${xs.join("，")} 处的高度分别为 0、0.25、0.5、0.75 和 1。`,
-        ),
-      },
-    );
-  },
-);
+const quantileFromCdf = {
+  ...point(
+    "a-quartile-from-a-drawn-cdf",
+    ["A quartile from a drawn CDF", "由图中分布函数读四分位数"],
+    [
+      "A percentile reverses the reading of a distribution function. Rather than going up from a value of $x$, start at a height on the vertical axis, go across to the graph and then down to the horizontal axis. The median corresponds to a height of one half, and the quartiles correspond to heights of one quarter and three quarters.",
+      "百分位数把分布函数的读法反过来。不是从 $x$ 的值向上读，而是从纵轴上的高度出发，横向到图，再向下到横轴。中位数对应高度二分之一，四分位数对应高度四分之一和四分之三。",
+    ],
+    (rng) => {
+      const x0 = rng.int(0, 2);
+      const stepsX = [rng.int(1, 3), rng.int(1, 2), rng.int(1, 2), rng.int(1, 3)];
+      const xs = [x0];
+      for (let i = 0; i < 4; i++) xs.push((xs[i] as number) + (stepsX[i] as number));
+      const heights = [0, 0.25, 0.5, 0.75, 1];
+      const which = rng.int(1, 3);
+      const answer = xs[which] as number;
+      const q: Pair =
+        which === 1 ? ["the lower quartile", "下四分位数"] : which === 2 ? ["the median", "中位数"] : ["the upper quartile", "上四分位数"];
+      const end = Math.max(xs[4] as number, 9);
+      const svg = chart(
+        [0, end + 1],
+        [0, 1.05],
+        intTicks(0, end + 1),
+        [
+          [0, "0"],
+          [0.25, "0.25"],
+          [0.5, "0.5"],
+          [0.75, "0.75"],
+          [1, "1"],
+        ],
+        (x, y) =>
+          `<polyline class="accent" stroke="currentColor" fill="none" points="${x(0)},${y(0)} ${xs.map((v, i) => `${x(v)},${y(heights[i] as number)}`).join(" ")} ${x(end + 1)},${y(1)}"/>`,
+      );
+      return ask(
+        [
+          `The graph shows the distribution function of a continuous random variable. What is ${q[0]}?`,
+          `图中是某连续随机变量的分布函数。${q[1]}是多少？`,
+        ],
+        answer,
+        [xs[which === 1 ? 2 : 1] as number, xs[which === 3 ? 2 : 3] as number, xs[4] as number, answer + 1],
+        [
+          `The value reaches the height $${heights[which]}$ at $x = ${answer}$, and that height defines ${q[0]}.`,
+          `函数值在 $x = ${answer}$ 处达到高度 $${heights[which]}$，这个高度对应${q[1]}。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A distribution function with heights 0, 0.25, 0.5, 0.75 and 1 at x = ${xs.join(", ")}.`,
+            `分布函数在 x = ${xs.join("，")} 处的高度分别为 0、0.25、0.5、0.75 和 1。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["median-quartiles-and-percentiles-of-continuous-random-variables#a-quartile-from-a-drawn-cdf"],
+};
 
 const exponentialCurve = point(
   "reading-the-rate-of-an-exponential-density",

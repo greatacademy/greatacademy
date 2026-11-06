@@ -3,36 +3,40 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
-const supOfImage = point(
-  "the-supremum-after-a-reflection",
-  ["The supremum after a reflection", "反射之后的上确界"],
-  [
-    "Multiplying a set by a negative number turns it upside down: upper bounds become lower bounds. So the supremum of $\\{c - kx : x \\in A\\}$ with $k > 0$ comes from the infimum of $A$, and using the supremum of $A$ here is a common mistake.",
-    "把集合乘以负数会使它上下颠倒：上界变成下界。所以当 $k > 0$ 时，$\\{c - kx : x \\in A\\}$ 的上确界来自 $A$ 的下确界，这里使用 $A$ 的上确界是常见的错误。",
-  ],
-  (rng) => {
-    const i = rng.int(-9, 5);
-    const s = i + rng.int(1, 9);
-    const k = rng.int(2, 6);
-    const c = rng.int(-9, 9);
-    const answer = c - k * i;
-    return ask(
-      [
-        `A bounded set $A$ has $\\inf A = ${i}$ and $\\sup A = ${s}$. What is the supremum of $\\{${c} - ${k}x : x \\in A\\}$?`,
-        `有界集 $A$ 满足 $\\inf A = ${i}$，$\\sup A = ${s}$。$\\{${c} - ${k}x : x \\in A\\}$ 的上确界是多少？`,
-      ],
-      answer,
-      [c - k * s, c + k * i, k * s],
-      [
-        `The expression is largest when $x$ is smallest, so the supremum uses $\\inf A$: it is $${c} - ${k} \\cdot (${i}) = ${answer}$.`,
-        `$x$ 越小，这个式子越大，所以上确界用 $\\inf A$：它等于 $${c} - ${k} \\cdot (${i}) = ${answer}$。`,
-      ],
-    );
-  },
-);
+const supOfImage = {
+  ...point(
+    "the-supremum-after-a-reflection",
+    ["The supremum after a reflection", "反射之后的上确界"],
+    [
+      "Multiplying a set by a negative number turns it upside down: upper bounds become lower bounds. So the supremum of $\\{c - kx : x \\in A\\}$ with $k > 0$ comes from the infimum of $A$, and using the supremum of $A$ here is a common mistake.",
+      "把集合乘以负数会使它上下颠倒：上界变成下界。所以当 $k > 0$ 时，$\\{c - kx : x \\in A\\}$ 的上确界来自 $A$ 的下确界，这里使用 $A$ 的上确界是常见的错误。",
+    ],
+    (rng) => {
+      const i = rng.int(-9, 5);
+      const s = i + rng.int(1, 9);
+      const k = rng.int(2, 6);
+      const c = rng.int(-9, 9);
+      const answer = c - k * i;
+      return ask(
+        [
+          `A bounded set $A$ has $\\inf A = ${i}$ and $\\sup A = ${s}$. What is the supremum of $\\{${c} - ${k}x : x \\in A\\}$?`,
+          `有界集 $A$ 满足 $\\inf A = ${i}$，$\\sup A = ${s}$。$\\{${c} - ${k}x : x \\in A\\}$ 的上确界是多少？`,
+        ],
+        answer,
+        [c - k * s, c + k * i, k * s],
+        [
+          `The expression is largest when $x$ is smallest, so the supremum uses $\\inf A$: it is $${c} - ${k} \\cdot (${i}) = ${answer}$.`,
+          `$x$ 越小，这个式子越大，所以上确界用 $\\inf A$：它等于 $${c} - ${k} \\cdot (${i}) = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: analysisDrawings1["suprema-of-sets-of-reals#the-supremum-after-a-reflection"],
+};
 
 const whichFixedPoint = point(
   "which-fixed-point-a-recursion-reaches",
@@ -424,43 +428,46 @@ const uniformSqrt = point(
   },
 );
 
-const exactCubicZeros = point(
-  "counting-the-exact-zeros-of-a-cubic",
-  ["Counting the exact zeros of a cubic", "精确计算三次函数的零点"],
-  [
-    "Rolle's theorem gives an upper bound on the number of zeros, since zeros of $f$ are separated by zeros of $f'$. To find the exact count, evaluate $f$ at the critical points as well: the signs of these values show how many times the graph actually crosses the axis.",
-    "罗尔定理给出零点个数的上界，因为 $f$ 的零点被 $f'$ 的零点分隔。要求出准确的个数，还要计算 $f$ 在临界点的值：这些值的符号说明图像实际穿过坐标轴多少次。",
-  ],
-  (rng) => {
-    const a = rng.int(1, 4);
-    const edge = 2 * a ** 3;
-    const mode = rng.int(0, 2);
-    const c =
-      mode === 0 ? rng.int(-edge + 1, edge - 1) : mode === 1 ? rng.pick([-edge, edge]) : rng.pick([-1, 1]) * (edge + rng.int(1, 20));
-    const low = c - edge;
-    const high = c + edge;
-    const answer = low < 0 && high > 0 ? 3 : low === 0 || high === 0 ? 2 : 1;
-    const f = poly([1, "x^{3}"], [-3 * a * a, "x"], [c, ""]);
-    const why: Pair =
-      answer === 3
-        ? ["They have opposite signs, so the graph crosses the axis three times.", "它们符号相反，所以图像穿过坐标轴三次。"]
-        : answer === 2
-          ? [
-              "One of them is zero, so the graph touches the axis there and crosses it once elsewhere.",
-              "其中一个为零，所以图像在该处与坐标轴相切，并在别处穿过一次。",
-            ]
-          : ["They have the same sign, so the graph crosses the axis only once.", "它们符号相同，所以图像只穿过坐标轴一次。"];
-    return ask(
-      [`How many distinct real zeros does $${f}$ have?`, `$${f}$ 有多少个不同的实零点？`],
-      answer,
-      [0, 1, 2, 3].filter((v) => v !== answer),
-      [
-        `The critical points are $x = ${a}$ and $x = ${-a}$, where the values are $${low}$ and $${high}$. ${why[0]}`,
-        `临界点是 $x = ${a}$ 和 $x = ${-a}$，函数值分别是 $${low}$ 和 $${high}$。${why[1]}`,
-      ],
-    );
-  },
-);
+const exactCubicZeros = {
+  ...point(
+    "counting-the-exact-zeros-of-a-cubic",
+    ["Counting the exact zeros of a cubic", "精确计算三次函数的零点"],
+    [
+      "Rolle's theorem gives an upper bound on the number of zeros, since zeros of $f$ are separated by zeros of $f'$. To find the exact count, evaluate $f$ at the critical points as well: the signs of these values show how many times the graph actually crosses the axis.",
+      "罗尔定理给出零点个数的上界，因为 $f$ 的零点被 $f'$ 的零点分隔。要求出准确的个数，还要计算 $f$ 在临界点的值：这些值的符号说明图像实际穿过坐标轴多少次。",
+    ],
+    (rng) => {
+      const a = rng.int(1, 4);
+      const edge = 2 * a ** 3;
+      const mode = rng.int(0, 2);
+      const c =
+        mode === 0 ? rng.int(-edge + 1, edge - 1) : mode === 1 ? rng.pick([-edge, edge]) : rng.pick([-1, 1]) * (edge + rng.int(1, 20));
+      const low = c - edge;
+      const high = c + edge;
+      const answer = low < 0 && high > 0 ? 3 : low === 0 || high === 0 ? 2 : 1;
+      const f = poly([1, "x^{3}"], [-3 * a * a, "x"], [c, ""]);
+      const why: Pair =
+        answer === 3
+          ? ["They have opposite signs, so the graph crosses the axis three times.", "它们符号相反，所以图像穿过坐标轴三次。"]
+          : answer === 2
+            ? [
+                "One of them is zero, so the graph touches the axis there and crosses it once elsewhere.",
+                "其中一个为零，所以图像在该处与坐标轴相切，并在别处穿过一次。",
+              ]
+            : ["They have the same sign, so the graph crosses the axis only once.", "它们符号相同，所以图像只穿过坐标轴一次。"];
+      return ask(
+        [`How many distinct real zeros does $${f}$ have?`, `$${f}$ 有多少个不同的实零点？`],
+        answer,
+        [0, 1, 2, 3].filter((v) => v !== answer),
+        [
+          `The critical points are $x = ${a}$ and $x = ${-a}$, where the values are $${low}$ and $${high}$. ${why[0]}`,
+          `临界点是 $x = ${a}$ 和 $x = ${-a}$，函数值分别是 $${low}$ 和 $${high}$。${why[1]}`,
+        ],
+      );
+    },
+  ),
+  figure: analysisDrawings1["rolles-theorem-and-counting-zeros#counting-the-exact-zeros-of-a-cubic"],
+};
 
 const darbouxCount = point(
   "the-zeros-forced-by-sign-changes",

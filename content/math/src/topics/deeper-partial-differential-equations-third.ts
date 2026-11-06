@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, point } from "../university-kit.ts";
 
@@ -233,40 +234,43 @@ const slowestDecay = point(
   },
 );
 
-const rectangularDrum = point(
-  "a-frequency-of-a-rectangular-drum",
-  ["A frequency of a rectangular drum", "矩形鼓的频率"],
-  [
-    "On a rectangle with sides $a$ and $b$, the mode $(m, n)$ has frequency $\\omega = c\\pi\\sqrt{\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}}$. Each mode number is divided by its own side, so the two directions no longer play the same role as they do on a square.",
-    "在边长为 $a$ 和 $b$ 的矩形上，模态 $(m, n)$ 的频率是 $\\omega = c\\pi\\sqrt{\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}}$。每个模态数除以各自的边长，所以两个方向不再像正方形上那样地位相同。",
-  ],
-  (rng) => {
-    const [a, b] = rng.sample([2, 3, 4, 5, 6], 2) as [number, number];
-    const c = rng.int(1, 5);
-    const m = rng.int(1, 4);
-    const n = rng.int(1, 4);
-    const inner = Q.of(m * m, a * a).add(Q.of(n * n, b * b));
-    const answer = inner.mul(Q.of(c * c));
-    return ask(
-      [
-        `A rectangular membrane has sides $${a}$ and $${b}$ and wave speed $${c}$. Its mode $(m, n) = (${m}, ${n})$ has frequency $\\omega$, with $m$ belonging to the side $${a}$. What is $\\frac{\\omega^{2}}{\\pi^{2}}$?`,
-        `矩形膜的边长为 $${a}$ 和 $${b}$，波速为 $${c}$。它的模态 $(m, n) = (${m}, ${n})$ 的频率为 $\\omega$，其中 $m$ 对应边长 $${a}$。$\\frac{\\omega^{2}}{\\pi^{2}}$ 是多少？`,
-      ],
-      answer,
-      [
-        inner.mul(Q.of(c)).eq(answer) ? answer.add(Q.of(1)) : inner.mul(Q.of(c)),
-        Q.of(m * m, b * b)
-          .add(Q.of(n * n, a * a))
-          .mul(Q.of(c * c)),
-        Q.of(c * c * (m * m + n * n), a * b),
-      ],
-      [
-        `The frequency formula gives $\\frac{\\omega^{2}}{\\pi^{2}} = ${c}^{2}\\left(\\frac{${m * m}}{${a * a}} + \\frac{${n * n}}{${b * b}}\\right) = ${answer.toLatex()}$.`,
-        `频率公式给出 $\\frac{\\omega^{2}}{\\pi^{2}} = ${c}^{2}\\left(\\frac{${m * m}}{${a * a}} + \\frac{${n * n}}{${b * b}}\\right) = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const rectangularDrum = {
+  ...point(
+    "a-frequency-of-a-rectangular-drum",
+    ["A frequency of a rectangular drum", "矩形鼓的频率"],
+    [
+      "On a rectangle with sides $a$ and $b$, the mode $(m, n)$ has frequency $\\omega = c\\pi\\sqrt{\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}}$. Each mode number is divided by its own side, so the two directions no longer play the same role as they do on a square.",
+      "在边长为 $a$ 和 $b$ 的矩形上，模态 $(m, n)$ 的频率是 $\\omega = c\\pi\\sqrt{\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}}$。每个模态数除以各自的边长，所以两个方向不再像正方形上那样地位相同。",
+    ],
+    (rng) => {
+      const [a, b] = rng.sample([2, 3, 4, 5, 6], 2) as [number, number];
+      const c = rng.int(1, 5);
+      const m = rng.int(1, 4);
+      const n = rng.int(1, 4);
+      const inner = Q.of(m * m, a * a).add(Q.of(n * n, b * b));
+      const answer = inner.mul(Q.of(c * c));
+      return ask(
+        [
+          `A rectangular membrane has sides $${a}$ and $${b}$ and wave speed $${c}$. Its mode $(m, n) = (${m}, ${n})$ has frequency $\\omega$, with $m$ belonging to the side $${a}$. What is $\\frac{\\omega^{2}}{\\pi^{2}}$?`,
+          `矩形膜的边长为 $${a}$ 和 $${b}$，波速为 $${c}$。它的模态 $(m, n) = (${m}, ${n})$ 的频率为 $\\omega$，其中 $m$ 对应边长 $${a}$。$\\frac{\\omega^{2}}{\\pi^{2}}$ 是多少？`,
+        ],
+        answer,
+        [
+          inner.mul(Q.of(c)).eq(answer) ? answer.add(Q.of(1)) : inner.mul(Q.of(c)),
+          Q.of(m * m, b * b)
+            .add(Q.of(n * n, a * a))
+            .mul(Q.of(c * c)),
+          Q.of(c * c * (m * m + n * n), a * b),
+        ],
+        [
+          `The frequency formula gives $\\frac{\\omega^{2}}{\\pi^{2}} = ${c}^{2}\\left(\\frac{${m * m}}{${a * a}} + \\frac{${n * n}}{${b * b}}\\right) = ${answer.toLatex()}$.`,
+          `频率公式给出 $\\frac{\\omega^{2}}{\\pi^{2}} = ${c}^{2}\\left(\\frac{${m * m}}{${a * a}} + \\frac{${n * n}}{${b * b}}\\right) = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: pdeDrawings1["the-vibrating-membrane#a-frequency-of-a-rectangular-drum"],
+};
 
 const stepCount = point(
   "the-work-of-a-stable-wave-computation",

@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { linearProgrammingDrawings1 } from "../explanation-drawings-linear-programming-1.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -41,30 +42,33 @@ const largestBatch = point(
   },
 );
 
-const objectiveSlope = point(
-  "the-slope-of-the-objective-line",
-  ["The slope of the objective line", "目标线的斜率"],
-  [
-    "All plans with the same value of $c_1 x + c_2 y$ lie on one line, with slope $-\\frac{c_1}{c_2}$. Increasing the value slides this line parallel to itself. Comparing its slope with the edges of the region shows which corner it leaves last, which is the optimal corner.",
-    "所有使 $c_1 x + c_2 y$ 取同一值的计划都在一条直线上，斜率是 $-\\frac{c_1}{c_2}$。增大这个值就把直线平行移动。比较它的斜率和可行域的边，就能看出它最后离开哪个顶点，那就是最优顶点。",
-  ],
-  (rng) => {
-    const [a, b] = [rng.int(1, 9), rng.int(2, 9)];
-    const answer = frac(-a, b);
-    return ask(
-      [
-        `What is the slope of the lines of constant value for the objective $${term(a, "x")} + ${term(b, "y")}$?`,
-        `目标 $${term(a, "x")} + ${term(b, "y")}$ 的等值线的斜率是多少？`,
-      ],
-      answer,
-      [frac(a, b), frac(-b, a), frac(b, a), Q.of(-a, 1)],
-      [
-        `Solving for $y$ gives $y = -\\frac{${a}}{${b}} x + \\text{constant}$, so the slope is $${answer.toLatex()}$.`,
-        `解出 $y$ 得 $y = -\\frac{${a}}{${b}} x + \\text{常数}$，所以斜率是 $${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const objectiveSlope = {
+  ...point(
+    "the-slope-of-the-objective-line",
+    ["The slope of the objective line", "目标线的斜率"],
+    [
+      "All plans with the same value of $c_1 x + c_2 y$ lie on one line, with slope $-\\frac{c_1}{c_2}$. Increasing the value slides this line parallel to itself. Comparing its slope with the edges of the region shows which corner it leaves last, which is the optimal corner.",
+      "所有使 $c_1 x + c_2 y$ 取同一值的计划都在一条直线上，斜率是 $-\\frac{c_1}{c_2}$。增大这个值就把直线平行移动。比较它的斜率和可行域的边，就能看出它最后离开哪个顶点，那就是最优顶点。",
+    ],
+    (rng) => {
+      const [a, b] = [rng.int(1, 9), rng.int(2, 9)];
+      const answer = frac(-a, b);
+      return ask(
+        [
+          `What is the slope of the lines of constant value for the objective $${term(a, "x")} + ${term(b, "y")}$?`,
+          `目标 $${term(a, "x")} + ${term(b, "y")}$ 的等值线的斜率是多少？`,
+        ],
+        answer,
+        [frac(a, b), frac(-b, a), frac(b, a), Q.of(-a, 1)],
+        [
+          `Solving for $y$ gives $y = -\\frac{${a}}{${b}} x + \\text{constant}$, so the slope is $${answer.toLatex()}$.`,
+          `解出 $y$ 得 $y = -\\frac{${a}}{${b}} x + \\text{常数}$，所以斜率是 $${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: linearProgrammingDrawings1["the-graphical-method-for-linear-programs#the-slope-of-the-objective-line"],
+};
 
 const freeVariables = point(
   "splitting-a-free-variable",

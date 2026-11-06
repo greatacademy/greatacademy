@@ -5,6 +5,8 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { Point } from "@ga/subject-math";
 import { gcd, svgDocument } from "@ga/subject-math";
+import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts";
+import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { ask, choose, divisors, observed, type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, node, ring } from "./figure-reading-more.ts";
@@ -120,75 +122,81 @@ const permAlt = (perm: readonly number[]) => perm.map((v, i) => `${i + 1} to ${v
 /** permAltZh describes a permutation in Chinese for the description of a figure. */
 const permAltZh = (perm: readonly number[]) => perm.map((v, i) => `${i + 1} 到 ${v + 1}`).join("，");
 
-const orderFromArrows = point(
-  "the-order-of-an-element-from-its-arrows",
-  ["The order of an element from its arrows", "由箭头读元素的阶"],
-  [
-    "In the Cayley graph of the integers modulo $n$, each arrow adds the same element $g$. The order of $g$ is the number of steps along arrows needed to get back to the start. Follow the arrows from $0$ and count them. The result always divides $n$, and it equals $n$ divided by the greatest common divisor of $n$ and $g$.",
-    "在模 $n$ 整数的凯莱图中，每个箭头都加上同一个元素 $g$。$g$ 的阶是沿箭头回到起点所需的步数。从 $0$ 出发沿箭头走并计数。结果总是整除 $n$，并且等于 $n$ 除以 $n$ 与 $g$ 的最大公约数。",
-  ],
-  (rng) => {
-    const n = rng.pick([5, 6, 7, 8, 9, 10, 12]);
-    const g = rng.int(1, n - 1);
-    const order = n / gcd(n, g);
-    return ask(
-      [
-        `The drawing shows the integers modulo $${n}$, and each arrow adds the same element $g$. What is the order of $g$?`,
-        `图中是模 $${n}$ 的整数，每个箭头都加上同一个元素 $g$。$g$ 的阶是多少？`,
-      ],
-      order,
-      [g, n, gcd(n, g) === order ? n - 1 : gcd(n, g)],
-      [
-        `The arrow out of $0$ points to $${g}$, so $g = ${g}$. Following the arrows from $0$ returns to $0$ after $${order}$ steps, so that is the order.`,
-        `从 $0$ 出发的箭头指向 $${g}$，所以 $g = ${g}$。从 $0$ 沿箭头走 $${order}$ 步回到 $0$，所以阶就是这个数。`,
-      ],
-      {
-        svg: additionGraph(n, g),
-        alt: t(
-          `The integers modulo ${n} in a ring, with an arrow from each x to x + ${g}.`,
-          `模 ${n} 的整数排成一圈，每个 x 都有箭头指向 x + ${g}。`,
-        ),
-      },
-    );
-  },
-);
+const orderFromArrows = {
+  ...point(
+    "the-order-of-an-element-from-its-arrows",
+    ["The order of an element from its arrows", "由箭头读元素的阶"],
+    [
+      "In the Cayley graph of the integers modulo $n$, each arrow adds the same element $g$. The order of $g$ is the number of steps along arrows needed to get back to the start. Follow the arrows from $0$ and count them. The result always divides $n$, and it equals $n$ divided by the greatest common divisor of $n$ and $g$.",
+      "在模 $n$ 整数的凯莱图中，每个箭头都加上同一个元素 $g$。$g$ 的阶是沿箭头回到起点所需的步数。从 $0$ 出发沿箭头走并计数。结果总是整除 $n$，并且等于 $n$ 除以 $n$ 与 $g$ 的最大公约数。",
+    ],
+    (rng) => {
+      const n = rng.pick([5, 6, 7, 8, 9, 10, 12]);
+      const g = rng.int(1, n - 1);
+      const order = n / gcd(n, g);
+      return ask(
+        [
+          `The drawing shows the integers modulo $${n}$, and each arrow adds the same element $g$. What is the order of $g$?`,
+          `图中是模 $${n}$ 的整数，每个箭头都加上同一个元素 $g$。$g$ 的阶是多少？`,
+        ],
+        order,
+        [g, n, gcd(n, g) === order ? n - 1 : gcd(n, g)],
+        [
+          `The arrow out of $0$ points to $${g}$, so $g = ${g}$. Following the arrows from $0$ returns to $0$ after $${order}$ steps, so that is the order.`,
+          `从 $0$ 出发的箭头指向 $${g}$，所以 $g = ${g}$。从 $0$ 沿箭头走 $${order}$ 步回到 $0$，所以阶就是这个数。`,
+        ],
+        {
+          svg: additionGraph(n, g),
+          alt: t(
+            `The integers modulo ${n} in a ring, with an arrow from each x to x + ${g}.`,
+            `模 ${n} 的整数排成一圈，每个 x 都有箭头指向 x + ${g}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: algebraDrawings1["cyclic-subgroups#the-order-of-an-element-from-its-arrows"],
+};
 
-const cyclesOfArrows = point(
-  "the-separate-cycles-of-an-addition-graph",
-  ["The separate cycles of an addition graph", "加法图中的分离圈"],
-  [
-    "An element generates the whole group of integers modulo $n$ exactly when its arrows form a single cycle through every point. If the arrows split into several separate cycles, the element generates only a proper subgroup, whose cosets are those cycles. The number of cycles is the greatest common divisor of $n$ and the element.",
-    "一个元素生成模 $n$ 整数的整个群，当且仅当它的箭头构成经过每一点的单个圈。如果箭头分成几个分离的圈，这个元素只生成真子群，这些圈就是它的陪集。圈的个数是 $n$ 与该元素的最大公约数。",
-  ],
-  (rng) => {
-    const n = rng.pick([6, 8, 9, 10, 12]);
-    const g = rng.int(1, n - 1);
-    const d = gcd(n, g);
-    return ask(
-      [
-        "Each arrow adds the same element $g$ to a point. Into how many separate cycles do the arrows split the points?",
-        "每个箭头都给一个点加上同一个元素 $g$。箭头把这些点分成多少个分离的圈？",
-      ],
-      d,
-      [n / d === d ? d + 1 : n / d, d + 1, g === d ? d + 2 : g],
-      [
-        d === 1
-          ? `Starting from $0$ and following the arrows reaches every point before returning, so there is a single cycle and $g = ${g}$ generates the group.`
-          : `Starting from $0$, the arrows reach only the multiples of $${d}$, and the other points form parallel cycles, so there are $${d}$ cycles and $g = ${g}$ does not generate the group.`,
-        d === 1
-          ? `从 $0$ 出发沿箭头走，回来之前到达每一点，所以只有一个圈，$g = ${g}$ 生成这个群。`
-          : `从 $0$ 出发，箭头只到达 $${d}$ 的倍数，其余的点构成平行的圈，所以有 $${d}$ 个圈，$g = ${g}$ 不生成这个群。`,
-      ],
-      {
-        svg: additionGraph(n, g),
-        alt: t(
-          `The integers modulo ${n} in a ring, with an arrow from each x to x + ${g}.`,
-          `模 ${n} 的整数排成一圈，每个 x 都有箭头指向 x + ${g}。`,
-        ),
-      },
-    );
-  },
-);
+const cyclesOfArrows = {
+  ...point(
+    "the-separate-cycles-of-an-addition-graph",
+    ["The separate cycles of an addition graph", "加法图中的分离圈"],
+    [
+      "An element generates the whole group of integers modulo $n$ exactly when its arrows form a single cycle through every point. If the arrows split into several separate cycles, the element generates only a proper subgroup, whose cosets are those cycles. The number of cycles is the greatest common divisor of $n$ and the element.",
+      "一个元素生成模 $n$ 整数的整个群，当且仅当它的箭头构成经过每一点的单个圈。如果箭头分成几个分离的圈，这个元素只生成真子群，这些圈就是它的陪集。圈的个数是 $n$ 与该元素的最大公约数。",
+    ],
+    (rng) => {
+      const n = rng.pick([6, 8, 9, 10, 12]);
+      const g = rng.int(1, n - 1);
+      const d = gcd(n, g);
+      return ask(
+        [
+          "Each arrow adds the same element $g$ to a point. Into how many separate cycles do the arrows split the points?",
+          "每个箭头都给一个点加上同一个元素 $g$。箭头把这些点分成多少个分离的圈？",
+        ],
+        d,
+        [n / d === d ? d + 1 : n / d, d + 1, g === d ? d + 2 : g],
+        [
+          d === 1
+            ? `Starting from $0$ and following the arrows reaches every point before returning, so there is a single cycle and $g = ${g}$ generates the group.`
+            : `Starting from $0$, the arrows reach only the multiples of $${d}$, and the other points form parallel cycles, so there are $${d}$ cycles and $g = ${g}$ does not generate the group.`,
+          d === 1
+            ? `从 $0$ 出发沿箭头走，回来之前到达每一点，所以只有一个圈，$g = ${g}$ 生成这个群。`
+            : `从 $0$ 出发，箭头只到达 $${d}$ 的倍数，其余的点构成平行的圈，所以有 $${d}$ 个圈，$g = ${g}$ 不生成这个群。`,
+        ],
+        {
+          svg: additionGraph(n, g),
+          alt: t(
+            `The integers modulo ${n} in a ring, with an arrow from each x to x + ${g}.`,
+            `模 ${n} 的整数排成一圈，每个 x 都有箭头指向 x + ${g}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: algebraDrawings1["generators-of-cyclic-groups#the-separate-cycles-of-an-addition-graph"],
+};
 
 const cosetOnRing = point(
   "a-coset-on-a-drawn-ring",
@@ -359,62 +367,65 @@ const aboveInLattice = point(
   },
 );
 
-const dihedralWalk = point(
-  "a-walk-on-a-dihedral-cayley-graph",
-  ["A walk on a dihedral Cayley graph", "二面体群凯莱图上的行走"],
-  [
-    "A Cayley graph for the generating set of a rotation $r$ and a reflection $s$ has one kind of edge for each generator. A word in the generators is a walk: each letter says which kind of edge to follow from the current point. In the dihedral group, the rotation arrows run in opposite directions on the two rings.",
-    "由旋转 $r$ 和反射 $s$ 组成的生成集的凯莱图，每个生成元对应一种边。生成元组成的字就是一次行走：每个字母说明从当前点沿哪种边走。在二面体群中，两个环上的旋转箭头方向相反。",
-  ],
-  (rng) => {
-    const n = rng.pick([3, 4, 5, 6]);
-    const outer = ring(n, 88);
-    const inner = ring(n, 44);
-    const names = rng.shuffle("ABCDEFGHJKLM".split("").slice(0, 2 * n));
-    const outerName = (i: number) => names[i] as string;
-    const innerName = (i: number) => names[n + i] as string;
-    let body = "";
-    for (let i = 0; i < n; i++) {
-      body += arrowLine(outer[i] as Point, outer[(i + 1) % n] as Point, 14, true);
-      body += arrowLine(inner[(i + 1) % n] as Point, inner[i] as Point, 14, true);
-      body += edgeBetween(outer[i] as Point, inner[i] as Point, 'stroke-dasharray="4 3"');
-    }
-    for (let i = 0; i < n; i++) body += node(outer[i] as Point, outerName(i)) + node(inner[i] as Point, innerName(i));
-    const length = rng.int(3, 5);
-    const word = Array.from({ length }, () => rng.bool());
-    if (!word.some((w) => w)) word[0] = true;
-    if (word.every((w) => w)) word[length - 1] = false;
-    let [index, onOuter] = [rng.int(0, n - 1), true];
-    const startName = outerName(index);
-    for (const useR of word) {
-      if (useR) index = onOuter ? (index + 1) % n : (index + n - 1) % n;
-      else onOuter = !onOuter;
-    }
-    const finish = onOuter ? outerName(index) : innerName(index);
-    const steps: Pair = [word.map((w) => (w ? "solid" : "dashed")).join(", "), word.map((w) => (w ? "实线" : "虚线")).join("，")];
-    const others = names.filter((v) => v !== finish);
-    return choose(
-      rng,
-      [
-        `Solid arrows apply the rotation and dashed lines apply the reflection. Starting at $${startName}$, follow these edges in order: ${steps[0]}. Where does the walk end?`,
-        `实线箭头表示旋转，虚线表示反射。从 $${startName}$ 出发，依次沿这些边走：${steps[1]}。行走在哪里结束？`,
-      ],
-      same(finish),
-      rng.sample(others, 3).map((v) => same(v)),
-      [
-        `Following the edges in the given order from $${startName}$, on each ring in the direction of its arrows, and crossing between rings on each dashed line, the walk ends at $${finish}$.`,
-        `从 $${startName}$ 出发按给定顺序走，在每个环上沿箭头方向，遇到虚线就换环，行走在 $${finish}$ 结束。`,
-      ],
-      {
-        svg: svgDocument(220, body),
-        alt: t(
-          `A dihedral Cayley graph with two rings of ${n} points each, joined by dashed lines; the rings have arrows in opposite directions.`,
-          `二面体群的凯莱图，两个环各有 ${n} 个点，由虚线连接；两个环的箭头方向相反。`,
-        ),
-      },
-    );
-  },
-);
+const dihedralWalk = {
+  ...point(
+    "a-walk-on-a-dihedral-cayley-graph",
+    ["A walk on a dihedral Cayley graph", "二面体群凯莱图上的行走"],
+    [
+      "A Cayley graph for the generating set of a rotation $r$ and a reflection $s$ has one kind of edge for each generator. A word in the generators is a walk: each letter says which kind of edge to follow from the current point. In the dihedral group, the rotation arrows run in opposite directions on the two rings.",
+      "由旋转 $r$ 和反射 $s$ 组成的生成集的凯莱图，每个生成元对应一种边。生成元组成的字就是一次行走：每个字母说明从当前点沿哪种边走。在二面体群中，两个环上的旋转箭头方向相反。",
+    ],
+    (rng) => {
+      const n = rng.pick([3, 4, 5, 6]);
+      const outer = ring(n, 88);
+      const inner = ring(n, 44);
+      const names = rng.shuffle("ABCDEFGHJKLM".split("").slice(0, 2 * n));
+      const outerName = (i: number) => names[i] as string;
+      const innerName = (i: number) => names[n + i] as string;
+      let body = "";
+      for (let i = 0; i < n; i++) {
+        body += arrowLine(outer[i] as Point, outer[(i + 1) % n] as Point, 14, true);
+        body += arrowLine(inner[(i + 1) % n] as Point, inner[i] as Point, 14, true);
+        body += edgeBetween(outer[i] as Point, inner[i] as Point, 'stroke-dasharray="4 3"');
+      }
+      for (let i = 0; i < n; i++) body += node(outer[i] as Point, outerName(i)) + node(inner[i] as Point, innerName(i));
+      const length = rng.int(3, 5);
+      const word = Array.from({ length }, () => rng.bool());
+      if (!word.some((w) => w)) word[0] = true;
+      if (word.every((w) => w)) word[length - 1] = false;
+      let [index, onOuter] = [rng.int(0, n - 1), true];
+      const startName = outerName(index);
+      for (const useR of word) {
+        if (useR) index = onOuter ? (index + 1) % n : (index + n - 1) % n;
+        else onOuter = !onOuter;
+      }
+      const finish = onOuter ? outerName(index) : innerName(index);
+      const steps: Pair = [word.map((w) => (w ? "solid" : "dashed")).join(", "), word.map((w) => (w ? "实线" : "虚线")).join("，")];
+      const others = names.filter((v) => v !== finish);
+      return choose(
+        rng,
+        [
+          `Solid arrows apply the rotation and dashed lines apply the reflection. Starting at $${startName}$, follow these edges in order: ${steps[0]}. Where does the walk end?`,
+          `实线箭头表示旋转，虚线表示反射。从 $${startName}$ 出发，依次沿这些边走：${steps[1]}。行走在哪里结束？`,
+        ],
+        same(finish),
+        rng.sample(others, 3).map((v) => same(v)),
+        [
+          `Following the edges in the given order from $${startName}$, on each ring in the direction of its arrows, and crossing between rings on each dashed line, the walk ends at $${finish}$.`,
+          `从 $${startName}$ 出发按给定顺序走，在每个环上沿箭头方向，遇到虚线就换环，行走在 $${finish}$ 结束。`,
+        ],
+        {
+          svg: svgDocument(220, body),
+          alt: t(
+            `A dihedral Cayley graph with two rings of ${n} points each, joined by dashed lines; the rings have arrows in opposite directions.`,
+            `二面体群的凯莱图，两个环各有 ${n} 个点，由虚线连接；两个环的箭头方向相反。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: algebraDrawings1["generating-sets#a-walk-on-a-dihedral-cayley-graph"],
+};
 
 const cycleFromArrows = point(
   "cycle-notation-from-an-arrow-diagram",
@@ -514,205 +525,217 @@ const transpositionCount = point(
   },
 );
 
-const orbitStabilizer = point(
-  "the-stabilizer-of-a-marked-point-of-a-polygon",
-  ["The stabilizer of a marked point of a polygon", "多边形上所标点的稳定子"],
-  [
-    "The orbit-stabilizer theorem says that the size of a group equals the size of an orbit times the size of a stabilizer. The symmetry group of a regular polygon with $n$ sides has $2n$ elements. A point on no mirror line has a stabilizer of size one, a point on one mirror line has size two, and the center is fixed by all.",
-    "轨道-稳定子定理说，群的大小等于轨道大小乘以稳定子大小。正 $n$ 边形的对称群有 $2n$ 个元素。不在任何镜像线上的点，稳定子大小为一；在一条镜像线上的点，大小为二；中心被所有元素固定。",
-  ],
-  (rng) => {
-    const n = rng.int(3, 8);
-    const at = ring(n, 88);
-    const kind = rng.pick(["vertex", "midpoint", "center", "generic"] as const);
-    const i = rng.int(0, n - 1);
-    const [a, b] = [at[i] as Point, at[(i + 1) % n] as Point];
-    const spot: Point =
-      kind === "vertex"
-        ? a
-        : kind === "midpoint"
-          ? [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]
-          : kind === "center"
-            ? [160, 110]
-            : [Math.round(160 + 0.5 * (a[0] - 160) + 0.2 * (b[0] - 160)), Math.round(110 + 0.5 * (a[1] - 110) + 0.2 * (b[1] - 110))];
-    const stabilizer = kind === "center" ? 2 * n : kind === "generic" ? 1 : 2;
-    const orbit = (2 * n) / stabilizer;
-    const seen: Pair =
-      kind === "center"
-        ? ["The point is the center, which every symmetry fixes", "这个点是中心，每个对称都固定它"]
-        : kind === "generic"
-          ? ["The point lies on no mirror line, so only the identity fixes it", "这个点不在任何镜像线上，所以只有恒等变换固定它"]
-          : [
-              "The point lies on exactly one mirror line, so the identity and that one reflection fix it",
-              "这个点恰好在一条镜像线上，所以恒等变换和这个反射固定它",
-            ];
-    const body = `<polygon points="${at.map((p) => p.join(",")).join(" ")}" fill="none"/><circle class="accent" cx="${spot[0]}" cy="${spot[1]}" r="6" fill="currentColor" stroke="none"/>`;
-    return ask(
-      [
-        "The symmetry group of the regular polygon acts on its points. How many symmetries fix the marked point?",
-        "正多边形的对称群作用在它的点上。有多少个对称固定所标的点？",
-      ],
-      stabilizer,
-      [orbit, 2 * n === stabilizer ? 1 : 2 * n, n === stabilizer ? n + 1 : n],
-      [
-        `${seen[0]}, so the stabilizer has size $${stabilizer}$. The orbit then has size $${orbit}$, and the product is the group size $${2 * n}$, as the theorem requires.`,
-        `${seen[1]}，所以稳定子大小为 $${stabilizer}$。于是轨道大小为 $${orbit}$，二者之积是群的大小 $${2 * n}$，符合定理。`,
-      ],
-      {
-        svg: svgDocument(220, body),
-        alt: t(`A regular polygon with ${n} sides. ${observed(seen)[0]}.`, `正 ${n} 边形。${observed(seen)[1]}。`),
-      },
-    );
-  },
-);
+const orbitStabilizer = {
+  ...point(
+    "the-stabilizer-of-a-marked-point-of-a-polygon",
+    ["The stabilizer of a marked point of a polygon", "多边形上所标点的稳定子"],
+    [
+      "The orbit-stabilizer theorem says that the size of a group equals the size of an orbit times the size of a stabilizer. The symmetry group of a regular polygon with $n$ sides has $2n$ elements. A point on no mirror line has a stabilizer of size one, a point on one mirror line has size two, and the center is fixed by all.",
+      "轨道-稳定子定理说，群的大小等于轨道大小乘以稳定子大小。正 $n$ 边形的对称群有 $2n$ 个元素。不在任何镜像线上的点，稳定子大小为一；在一条镜像线上的点，大小为二；中心被所有元素固定。",
+    ],
+    (rng) => {
+      const n = rng.int(3, 8);
+      const at = ring(n, 88);
+      const kind = rng.pick(["vertex", "midpoint", "center", "generic"] as const);
+      const i = rng.int(0, n - 1);
+      const [a, b] = [at[i] as Point, at[(i + 1) % n] as Point];
+      const spot: Point =
+        kind === "vertex"
+          ? a
+          : kind === "midpoint"
+            ? [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]
+            : kind === "center"
+              ? [160, 110]
+              : [Math.round(160 + 0.5 * (a[0] - 160) + 0.2 * (b[0] - 160)), Math.round(110 + 0.5 * (a[1] - 110) + 0.2 * (b[1] - 110))];
+      const stabilizer = kind === "center" ? 2 * n : kind === "generic" ? 1 : 2;
+      const orbit = (2 * n) / stabilizer;
+      const seen: Pair =
+        kind === "center"
+          ? ["The point is the center, which every symmetry fixes", "这个点是中心，每个对称都固定它"]
+          : kind === "generic"
+            ? ["The point lies on no mirror line, so only the identity fixes it", "这个点不在任何镜像线上，所以只有恒等变换固定它"]
+            : [
+                "The point lies on exactly one mirror line, so the identity and that one reflection fix it",
+                "这个点恰好在一条镜像线上，所以恒等变换和这个反射固定它",
+              ];
+      const body = `<polygon points="${at.map((p) => p.join(",")).join(" ")}" fill="none"/><circle class="accent" cx="${spot[0]}" cy="${spot[1]}" r="6" fill="currentColor" stroke="none"/>`;
+      return ask(
+        [
+          "The symmetry group of the regular polygon acts on its points. How many symmetries fix the marked point?",
+          "正多边形的对称群作用在它的点上。有多少个对称固定所标的点？",
+        ],
+        stabilizer,
+        [orbit, 2 * n === stabilizer ? 1 : 2 * n, n === stabilizer ? n + 1 : n],
+        [
+          `${seen[0]}, so the stabilizer has size $${stabilizer}$. The orbit then has size $${orbit}$, and the product is the group size $${2 * n}$, as the theorem requires.`,
+          `${seen[1]}，所以稳定子大小为 $${stabilizer}$。于是轨道大小为 $${orbit}$，二者之积是群的大小 $${2 * n}$，符合定理。`,
+        ],
+        {
+          svg: svgDocument(220, body),
+          alt: t(`A regular polygon with ${n} sides. ${observed(seen)[0]}.`, `正 ${n} 边形。${observed(seen)[1]}。`),
+        },
+      );
+    },
+  ),
+  figure: algebraDrawings2["the-orbit-stabilizer-theorem#the-stabilizer-of-a-marked-point-of-a-polygon"],
+};
 
-const symmetryCount = point(
-  "counting-the-symmetries-of-a-drawn-figure",
-  ["Counting the symmetries of a drawn figure", "数图形的对称"],
-  [
-    "The symmetry group of a plane figure holds all the rotations and reflections that map it onto itself, including the identity. Count the rotations first and then the mirror lines. A regular polygon has both kinds in equal number. A pinwheel has rotations and no mirror lines, because its blades lean one way around the center.",
-    "平面图形的对称群包含把它映到自身的所有旋转和反射，包括恒等变换。先数旋转，再数镜像线。正多边形两种一样多。风车有旋转但没有镜像线，因为叶片朝一个方向绕中心倾斜。",
-  ],
-  (rng) => {
-    const scale = rng.pick([0.7, 0.85, 1]);
-    const c: Point = [160, 110];
-    const rot = (pts: readonly Point[]) => pts.map(([x, y]): Point => [Math.round(c[0] + scale * x), Math.round(c[1] + scale * y)]);
-    const poly = (pts: readonly Point[]) =>
-      `<polygon class="accent" stroke="currentColor" fill="none" points="${rot(pts)
-        .map((p) => p.join(","))
-        .join(" ")}"/>`;
-    const regular = (n: number): { body: string; count: number; clue: Pair } => ({
-      body: poly(ring(n, 90, 0, 0)),
-      count: 2 * n,
-      clue: [
-        `a regular polygon with ${n} sides, with ${n} rotations and ${n} mirror lines`,
-        `正 ${n} 边形，有 ${n} 个旋转和 ${n} 条镜像线`,
-      ],
-    });
-    const pinwheel = (n: number): { body: string; count: number; clue: Pair } => {
-      let body = "";
-      for (let i = 0; i < n; i++) {
-        const a = (2 * Math.PI * i) / n - Math.PI / 2;
-        const pts: Point[] = [
-          [0, 0],
-          [90 * Math.cos(a), 90 * Math.sin(a)],
-          [55 * Math.cos(a + 0.5), 55 * Math.sin(a + 0.5)],
-        ];
-        body += poly(pts);
-      }
-      return {
-        body,
-        count: n,
-        clue: [`a pinwheel with ${n} blades, with ${n} rotations and no mirror lines`, `有 ${n} 个叶片的风车，有 ${n} 个旋转，没有镜像线`],
+const symmetryCount = {
+  ...point(
+    "counting-the-symmetries-of-a-drawn-figure",
+    ["Counting the symmetries of a drawn figure", "数图形的对称"],
+    [
+      "The symmetry group of a plane figure holds all the rotations and reflections that map it onto itself, including the identity. Count the rotations first and then the mirror lines. A regular polygon has both kinds in equal number. A pinwheel has rotations and no mirror lines, because its blades lean one way around the center.",
+      "平面图形的对称群包含把它映到自身的所有旋转和反射，包括恒等变换。先数旋转，再数镜像线。正多边形两种一样多。风车有旋转但没有镜像线，因为叶片朝一个方向绕中心倾斜。",
+    ],
+    (rng) => {
+      const scale = rng.pick([0.7, 0.85, 1]);
+      const c: Point = [160, 110];
+      const rot = (pts: readonly Point[]) => pts.map(([x, y]): Point => [Math.round(c[0] + scale * x), Math.round(c[1] + scale * y)]);
+      const poly = (pts: readonly Point[]) =>
+        `<polygon class="accent" stroke="currentColor" fill="none" points="${rot(pts)
+          .map((p) => p.join(","))
+          .join(" ")}"/>`;
+      const regular = (n: number): { body: string; count: number; clue: Pair } => ({
+        body: poly(ring(n, 90, 0, 0)),
+        count: 2 * n,
+        clue: [
+          `a regular polygon with ${n} sides, with ${n} rotations and ${n} mirror lines`,
+          `正 ${n} 边形，有 ${n} 个旋转和 ${n} 条镜像线`,
+        ],
+      });
+      const pinwheel = (n: number): { body: string; count: number; clue: Pair } => {
+        let body = "";
+        for (let i = 0; i < n; i++) {
+          const a = (2 * Math.PI * i) / n - Math.PI / 2;
+          const pts: Point[] = [
+            [0, 0],
+            [90 * Math.cos(a), 90 * Math.sin(a)],
+            [55 * Math.cos(a + 0.5), 55 * Math.sin(a + 0.5)],
+          ];
+          body += poly(pts);
+        }
+        return {
+          body,
+          count: n,
+          clue: [
+            `a pinwheel with ${n} blades, with ${n} rotations and no mirror lines`,
+            `有 ${n} 个叶片的风车，有 ${n} 个旋转，没有镜像线`,
+          ],
+        };
       };
-    };
-    const shapes: { body: string; count: number; clue: Pair }[] = [
-      ...[3, 4, 5, 6, 8].map(regular),
-      ...[3, 4, 5, 6].map(pinwheel),
-      {
-        body: poly([
-          [-110, -55],
-          [110, -55],
-          [110, 55],
-          [-110, 55],
-        ]),
-        count: 4,
-        clue: ["a rectangle, with two rotations and two mirror lines", "矩形，有两个旋转和两条镜像线"],
-      },
-      {
-        body: poly([
-          [-110, 50],
-          [50, 50],
-          [110, -50],
-          [-50, -50],
-        ]),
-        count: 2,
-        clue: ["a parallelogram, with two rotations and no mirror lines", "平行四边形，有两个旋转，没有镜像线"],
-      },
-      {
-        body: poly([
-          [0, -90],
-          [60, 0],
-          [0, 90],
-          [-60, 0],
-        ]),
-        count: 4,
-        clue: ["a rhombus, with two rotations and two mirror lines", "菱形，有两个旋转和两条镜像线"],
-      },
-      {
-        body: poly([
-          [0, -90],
-          [55, 80],
-          [-55, 80],
-        ]),
-        count: 2,
-        clue: ["an isosceles triangle, with only the identity rotation and one mirror line", "等腰三角形，只有恒等旋转和一条镜像线"],
-      },
-    ];
-    const shape = rng.pick(shapes);
-    return ask(
-      [
-        "How many symmetries, counting rotations, reflections and the identity, does the figure have?",
-        "这个图形有多少个对称？旋转、反射和恒等变换都要算。",
-      ],
-      shape.count,
-      [shape.count - 1, 2 * shape.count, shape.count + 1],
-      [
-        `The figure is ${shape.clue[0]}. Adding these together, and remembering that the identity is one of the rotations, gives $${shape.count}$.`,
-        `这个图形是${shape.clue[1]}。把它们加起来，并注意恒等变换是一个旋转，得到 $${shape.count}$。`,
-      ],
-      {
-        svg: svgDocument(220, shape.body),
-        alt: t(`A figure: ${shape.clue[0].split(",")[0]}.`, `一个图形：${shape.clue[1].split("，")[0]}。`),
-      },
-    );
-  },
-);
+      const shapes: { body: string; count: number; clue: Pair }[] = [
+        ...[3, 4, 5, 6, 8].map(regular),
+        ...[3, 4, 5, 6].map(pinwheel),
+        {
+          body: poly([
+            [-110, -55],
+            [110, -55],
+            [110, 55],
+            [-110, 55],
+          ]),
+          count: 4,
+          clue: ["a rectangle, with two rotations and two mirror lines", "矩形，有两个旋转和两条镜像线"],
+        },
+        {
+          body: poly([
+            [-110, 50],
+            [50, 50],
+            [110, -50],
+            [-50, -50],
+          ]),
+          count: 2,
+          clue: ["a parallelogram, with two rotations and no mirror lines", "平行四边形，有两个旋转，没有镜像线"],
+        },
+        {
+          body: poly([
+            [0, -90],
+            [60, 0],
+            [0, 90],
+            [-60, 0],
+          ]),
+          count: 4,
+          clue: ["a rhombus, with two rotations and two mirror lines", "菱形，有两个旋转和两条镜像线"],
+        },
+        {
+          body: poly([
+            [0, -90],
+            [55, 80],
+            [-55, 80],
+          ]),
+          count: 2,
+          clue: ["an isosceles triangle, with only the identity rotation and one mirror line", "等腰三角形，只有恒等旋转和一条镜像线"],
+        },
+      ];
+      const shape = rng.pick(shapes);
+      return ask(
+        [
+          "How many symmetries, counting rotations, reflections and the identity, does the figure have?",
+          "这个图形有多少个对称？旋转、反射和恒等变换都要算。",
+        ],
+        shape.count,
+        [shape.count - 1, 2 * shape.count, shape.count + 1],
+        [
+          `The figure is ${shape.clue[0]}. Adding these together, and remembering that the identity is one of the rotations, gives $${shape.count}$.`,
+          `这个图形是${shape.clue[1]}。把它们加起来，并注意恒等变换是一个旋转，得到 $${shape.count}$。`,
+        ],
+        {
+          svg: svgDocument(220, shape.body),
+          alt: t(`A figure: ${shape.clue[0].split(",")[0]}.`, `一个图形：${shape.clue[1].split("，")[0]}。`),
+        },
+      );
+    },
+  ),
+  figure: algebraDrawings1["the-symmetry-group-of-a-figure#counting-the-symmetries-of-a-drawn-figure"],
+};
 
-const necklace = point(
-  "rotations-that-fix-a-drawn-necklace",
-  ["Rotations that fix a drawn necklace", "固定图中项链的旋转"],
-  [
-    "The stabilizer of a colored necklace in the rotation group is the set of rotations that leave the colors in place. If the color pattern repeats every $p$ beads, then only rotations by multiples of $p$ steps fix it. So the stabilizer has size $n / p$, and the orbit of the necklace has size $p$.",
-    "在旋转群中，彩色项链的稳定子是使颜色不变的旋转组成的集合。如果颜色模式每 $p$ 颗珠子重复一次，那么只有转动 $p$ 的倍数步才能固定它。所以稳定子大小为 $n / p$，项链的轨道大小为 $p$。",
-  ],
-  (rng) => {
-    const n = rng.pick([6, 8, 9, 10, 12]);
-    const p = rng.pick(divisors(n).filter((d) => d > 1));
-    const base = Array.from({ length: p }, () => rng.bool());
-    base[0] = true;
-    base[p - 1] = false;
-    // A shorter period would change the answer, so it is computed from the beads themselves.
-    const beads = Array.from({ length: n }, (_, i) => base[i % p] as boolean);
-    const period = divisors(n).find((d) => beads.every((b, i) => b === beads[(i + d) % n])) as number;
-    const stabilizer = n / period;
-    const at = ring(n, 85);
-    const body = `${at.map((q, i) => `<circle class="accent" cx="${q[0]}" cy="${q[1]}" r="11" stroke="currentColor" fill="${beads[i] ? "currentColor" : "none"}"/>`).join("")}`;
-    return ask(
-      [
-        "The necklace has beads of two colors, and the group of rotations of the ring acts on it. How many rotations, counting the identity, leave the colors in place?",
-        "项链上有两种颜色的珠子，圆环的旋转群作用在它上面。有多少个旋转使颜色不变？恒等变换也要算。",
-      ],
-      stabilizer,
-      [
-        period === stabilizer ? stabilizer + 1 : period,
-        n,
-        beads.filter((b) => b).length === stabilizer ? stabilizer + 2 : beads.filter((b) => b).length,
-      ],
-      [
-        `The color pattern repeats every $${period}$ beads and no sooner, so only rotations by multiples of $${period}$ steps preserve it. Among the $${n}$ rotations, that makes $${stabilizer}$.`,
-        `颜色模式每 $${period}$ 颗珠子重复一次，且没有更短的周期，所以只有转动 $${period}$ 的倍数步才能保持它。在 $${n}$ 个旋转中，这样的有 $${stabilizer}$ 个。`,
-      ],
-      {
-        svg: svgDocument(220, body),
-        alt: t(
-          `A ring of ${n} beads, going around: ${beads.map((b) => (b ? "filled" : "hollow")).join(", ")}.`,
-          `${n} 颗珠子组成的环，依次为：${beads.map((b) => (b ? "实心" : "空心")).join("、")}。`,
-        ),
-      },
-    );
-  },
-);
+const necklace = {
+  ...point(
+    "rotations-that-fix-a-drawn-necklace",
+    ["Rotations that fix a drawn necklace", "固定图中项链的旋转"],
+    [
+      "The stabilizer of a colored necklace in the rotation group is the set of rotations that leave the colors in place. If the color pattern repeats every $p$ beads, then only rotations by multiples of $p$ steps fix it. So the stabilizer has size $n / p$, and the orbit of the necklace has size $p$.",
+      "在旋转群中，彩色项链的稳定子是使颜色不变的旋转组成的集合。如果颜色模式每 $p$ 颗珠子重复一次，那么只有转动 $p$ 的倍数步才能固定它。所以稳定子大小为 $n / p$，项链的轨道大小为 $p$。",
+    ],
+    (rng) => {
+      const n = rng.pick([6, 8, 9, 10, 12]);
+      const p = rng.pick(divisors(n).filter((d) => d > 1));
+      const base = Array.from({ length: p }, () => rng.bool());
+      base[0] = true;
+      base[p - 1] = false;
+      // A shorter period would change the answer, so it is computed from the beads themselves.
+      const beads = Array.from({ length: n }, (_, i) => base[i % p] as boolean);
+      const period = divisors(n).find((d) => beads.every((b, i) => b === beads[(i + d) % n])) as number;
+      const stabilizer = n / period;
+      const at = ring(n, 85);
+      const body = `${at.map((q, i) => `<circle class="accent" cx="${q[0]}" cy="${q[1]}" r="11" stroke="currentColor" fill="${beads[i] ? "currentColor" : "none"}"/>`).join("")}`;
+      return ask(
+        [
+          "The necklace has beads of two colors, and the group of rotations of the ring acts on it. How many rotations, counting the identity, leave the colors in place?",
+          "项链上有两种颜色的珠子，圆环的旋转群作用在它上面。有多少个旋转使颜色不变？恒等变换也要算。",
+        ],
+        stabilizer,
+        [
+          period === stabilizer ? stabilizer + 1 : period,
+          n,
+          beads.filter((b) => b).length === stabilizer ? stabilizer + 2 : beads.filter((b) => b).length,
+        ],
+        [
+          `The color pattern repeats every $${period}$ beads and no sooner, so only rotations by multiples of $${period}$ steps preserve it. Among the $${n}$ rotations, that makes $${stabilizer}$.`,
+          `颜色模式每 $${period}$ 颗珠子重复一次，且没有更短的周期，所以只有转动 $${period}$ 的倍数步才能保持它。在 $${n}$ 个旋转中，这样的有 $${stabilizer}$ 个。`,
+        ],
+        {
+          svg: svgDocument(220, body),
+          alt: t(
+            `A ring of ${n} beads, going around: ${beads.map((b) => (b ? "filled" : "hollow")).join(", ")}.`,
+            `${n} 颗珠子组成的环，依次为：${beads.map((b) => (b ? "实心" : "空心")).join("、")}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: algebraDrawings2["stabilizers#rotations-that-fix-a-drawn-necklace"],
+};
 
 const kernelArrows = point(
   "the-kernel-from-an-arrow-diagram",

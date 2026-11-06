@@ -4,6 +4,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { poly } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { ask, choose, divisors, factorize, type Pair, point, powMod, totient } from "../university-kit.ts";
 import { factorial } from "./deeper-abstract-algebra-third.ts";
@@ -86,33 +87,36 @@ const orbitsFromStabilizers = point(
   },
 );
 
-const dihedralClasses = point(
-  "the-conjugacy-classes-of-a-dihedral-group",
-  ["The conjugacy classes of a dihedral group", "二面体群的共轭类"],
-  [
-    "The class equation sorts a group by conjugacy. In $D_{n}$, each rotation is conjugate to its inverse, and the reflections form one class for odd $n$ and two for even $n$. So the number of classes depends on the parity of $n$.",
-    "类方程按共轭关系对群进行分类。在 $D_{n}$ 中，每个旋转都与它的逆共轭，反射当 $n$ 为奇数时构成一个类，当 $n$ 为偶数时构成两个类。所以类的个数取决于 $n$ 的奇偶性。",
-  ],
-  (rng) => {
-    const n = rng.int(3, 40);
-    const even = n % 2 === 0;
-    const rotationClasses = even ? n / 2 + 1 : (n + 1) / 2;
-    const reflectionClasses = even ? 2 : 1;
-    const answer = rotationClasses + reflectionClasses;
-    return ask(
-      [
-        `How many conjugacy classes does the dihedral group $D_{${n}}$ of order $${2 * n}$ have?`,
-        `阶为 $${2 * n}$ 的二面体群 $D_{${n}}$ 有多少个共轭类？`,
-      ],
-      answer,
-      [n, 2 * n, rotationClasses + (even ? 1 : 2)],
-      [
-        `The rotations form $${rotationClasses}$ classes, by pairing each with its inverse. The reflections form $${reflectionClasses}$ ${reflectionClasses === 1 ? "class" : "classes"}, since $${n}$ is ${even ? "even" : "odd"}. The total is $${answer}$.`,
-        `把每个旋转与它的逆配对，旋转构成 $${rotationClasses}$ 个类。由于 $${n}$ 是${even ? "偶数" : "奇数"}，反射构成 $${reflectionClasses}$ 个类。总数是 $${answer}$。`,
-      ],
-    );
-  },
-);
+const dihedralClasses = {
+  ...point(
+    "the-conjugacy-classes-of-a-dihedral-group",
+    ["The conjugacy classes of a dihedral group", "二面体群的共轭类"],
+    [
+      "The class equation sorts a group by conjugacy. In $D_{n}$, each rotation is conjugate to its inverse, and the reflections form one class for odd $n$ and two for even $n$. So the number of classes depends on the parity of $n$.",
+      "类方程按共轭关系对群进行分类。在 $D_{n}$ 中，每个旋转都与它的逆共轭，反射当 $n$ 为奇数时构成一个类，当 $n$ 为偶数时构成两个类。所以类的个数取决于 $n$ 的奇偶性。",
+    ],
+    (rng) => {
+      const n = rng.int(3, 40);
+      const even = n % 2 === 0;
+      const rotationClasses = even ? n / 2 + 1 : (n + 1) / 2;
+      const reflectionClasses = even ? 2 : 1;
+      const answer = rotationClasses + reflectionClasses;
+      return ask(
+        [
+          `How many conjugacy classes does the dihedral group $D_{${n}}$ of order $${2 * n}$ have?`,
+          `阶为 $${2 * n}$ 的二面体群 $D_{${n}}$ 有多少个共轭类？`,
+        ],
+        answer,
+        [n, 2 * n, rotationClasses + (even ? 1 : 2)],
+        [
+          `The rotations form $${rotationClasses}$ classes, by pairing each with its inverse. The reflections form $${reflectionClasses}$ ${reflectionClasses === 1 ? "class" : "classes"}, since $${n}$ is ${even ? "even" : "odd"}. The total is $${answer}$.`,
+          `把每个旋转与它的逆配对，旋转构成 $${rotationClasses}$ 个类。由于 $${n}$ 是${even ? "偶数" : "奇数"}，反射构成 $${reflectionClasses}$ 个类。总数是 $${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: algebraDrawings2["the-class-equation-of-a-group-action#the-conjugacy-classes-of-a-dihedral-group"],
+};
 
 const cycleConjugates = point(
   "the-number-of-conjugates-of-a-cycle",
@@ -138,33 +142,36 @@ const cycleConjugates = point(
   },
 );
 
-const rotationsWithCycles = point(
-  "how-many-rotations-have-a-given-cycle-type",
-  ["How many rotations have a given cycle type", "具有给定循环类型的旋转个数"],
-  [
-    "The rotation $r^{j}$ of a regular $n$-gon splits the vertices into $\\gcd(j, n)$ cycles. So the number of rotations with exactly $d$ cycles is the number of $j$ with $\\gcd(j, n) = d$, and this count equals $\\varphi\\left(\\frac{n}{d}\\right)$.",
-    "正 $n$ 边形的旋转 $r^{j}$ 把顶点分成 $\\gcd(j, n)$ 个循环。所以恰好有 $d$ 个循环的旋转个数，就是满足 $\\gcd(j, n) = d$ 的 $j$ 的个数，它等于 $\\varphi\\left(\\frac{n}{d}\\right)$。",
-  ],
-  (rng) => {
-    let n = rng.int(6, 60);
-    while (divisors(n).length < 4) n++;
-    const d = rng.pick(divisors(n).filter((x) => x < n));
-    const quotient = n / d;
-    const answer = totient(quotient);
-    return ask(
-      [
-        `How many of the $${n}$ rotations of a regular ${n}-gon split the vertices into exactly $${d}$ ${d === 1 ? "cycle" : "cycles"}?`,
-        `正 ${n} 边形的 $${n}$ 个旋转中，有多少个恰好把顶点分成 $${d}$ 个循环？`,
-      ],
-      answer,
-      [d, quotient, totient(n)],
-      [
-        `We count $j$ with $\\gcd(j, ${n}) = ${d}$. Writing $j = ${d}t$, we need $\\gcd(t, ${quotient}) = 1$, which gives $\\varphi(${quotient}) = ${answer}$ rotations.`,
-        `要计算满足 $\\gcd(j, ${n}) = ${d}$ 的 $j$。写成 $j = ${d}t$，需要 $\\gcd(t, ${quotient}) = 1$，所以有 $\\varphi(${quotient}) = ${answer}$ 个旋转。`,
-      ],
-    );
-  },
-);
+const rotationsWithCycles = {
+  ...point(
+    "how-many-rotations-have-a-given-cycle-type",
+    ["How many rotations have a given cycle type", "具有给定循环类型的旋转个数"],
+    [
+      "The rotation $r^{j}$ of a regular $n$-gon splits the vertices into $\\gcd(j, n)$ cycles. So the number of rotations with exactly $d$ cycles is the number of $j$ with $\\gcd(j, n) = d$, and this count equals $\\varphi\\left(\\frac{n}{d}\\right)$.",
+      "正 $n$ 边形的旋转 $r^{j}$ 把顶点分成 $\\gcd(j, n)$ 个循环。所以恰好有 $d$ 个循环的旋转个数，就是满足 $\\gcd(j, n) = d$ 的 $j$ 的个数，它等于 $\\varphi\\left(\\frac{n}{d}\\right)$。",
+    ],
+    (rng) => {
+      let n = rng.int(6, 60);
+      while (divisors(n).length < 4) n++;
+      const d = rng.pick(divisors(n).filter((x) => x < n));
+      const quotient = n / d;
+      const answer = totient(quotient);
+      return ask(
+        [
+          `How many of the $${n}$ rotations of a regular ${n}-gon split the vertices into exactly $${d}$ ${d === 1 ? "cycle" : "cycles"}?`,
+          `正 ${n} 边形的 $${n}$ 个旋转中，有多少个恰好把顶点分成 $${d}$ 个循环？`,
+        ],
+        answer,
+        [d, quotient, totient(n)],
+        [
+          `We count $j$ with $\\gcd(j, ${n}) = ${d}$. Writing $j = ${d}t$, we need $\\gcd(t, ${quotient}) = 1$, which gives $\\varphi(${quotient}) = ${answer}$ rotations.`,
+          `要计算满足 $\\gcd(j, ${n}) = ${d}$ 的 $j$。写成 $j = ${d}t$，需要 $\\gcd(t, ${quotient}) = 1$，所以有 $\\varphi(${quotient}) = ${answer}$ 个旋转。`,
+        ],
+      );
+    },
+  ),
+  figure: algebraDrawings2["cycle-types-of-permutations-of-some-groups#how-many-rotations-have-a-given-cycle-type"],
+};
 
 const wordOrbits = point(
   "the-number-of-orbits-on-words",
@@ -192,33 +199,36 @@ const wordOrbits = point(
   },
 );
 
-const rotationFixedColorings = point(
-  "the-colorings-a-rotation-fixes",
-  ["The colorings a rotation fixes", "旋转固定的着色"],
-  [
-    "A necklace coloring is fixed by a rotation exactly when each cycle of the rotation has a single color. A rotation by $j$ places has $\\gcd(j, n)$ cycles, so it fixes $k^{\\gcd(j, n)}$ colorings, and these are the numbers that enter Burnside's lemma.",
-    "一种项链着色被旋转固定，当且仅当旋转的每个循环都只有一种颜色。旋转 $j$ 个位置有 $\\gcd(j, n)$ 个循环，所以固定 $k^{\\gcd(j, n)}$ 种着色，这些数就是代入伯恩赛德引理的数。",
-  ],
-  (rng) => {
-    const n = rng.int(4, 12);
-    const j = rng.int(1, n - 1);
-    const k = rng.int(2, 4);
-    const g = gcd(j, n);
-    const answer = k ** g;
-    return ask(
-      [
-        `A necklace has $${n}$ beads, each with one of $${k}$ colors. How many colorings are unchanged by the rotation through $${j}$ ${j === 1 ? "place" : "places"}?`,
-        `项链有 $${n}$ 颗珠子，每颗取 $${k}$ 种颜色之一。旋转 $${j}$ 个位置后，有多少种着色保持不变？`,
-      ],
-      answer,
-      [k ** (n / g) === answer ? answer * k : k ** (n / g), k ** n === answer ? answer + 1 : k ** n, k * g],
-      [
-        `The rotation has $\\gcd(${j}, ${n}) = ${g}$ ${g === 1 ? "cycle" : "cycles"} of beads, and each cycle has one color. So the count is $${k}^{${g}} = ${answer}$.`,
-        `这个旋转把珠子分成 $\\gcd(${j}, ${n}) = ${g}$ 个循环，每个循环一种颜色。所以个数是 $${k}^{${g}} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const rotationFixedColorings = {
+  ...point(
+    "the-colorings-a-rotation-fixes",
+    ["The colorings a rotation fixes", "旋转固定的着色"],
+    [
+      "A necklace coloring is fixed by a rotation exactly when each cycle of the rotation has a single color. A rotation by $j$ places has $\\gcd(j, n)$ cycles, so it fixes $k^{\\gcd(j, n)}$ colorings, and these are the numbers that enter Burnside's lemma.",
+      "一种项链着色被旋转固定，当且仅当旋转的每个循环都只有一种颜色。旋转 $j$ 个位置有 $\\gcd(j, n)$ 个循环，所以固定 $k^{\\gcd(j, n)}$ 种着色，这些数就是代入伯恩赛德引理的数。",
+    ],
+    (rng) => {
+      const n = rng.int(4, 12);
+      const j = rng.int(1, n - 1);
+      const k = rng.int(2, 4);
+      const g = gcd(j, n);
+      const answer = k ** g;
+      return ask(
+        [
+          `A necklace has $${n}$ beads, each with one of $${k}$ colors. How many colorings are unchanged by the rotation through $${j}$ ${j === 1 ? "place" : "places"}?`,
+          `项链有 $${n}$ 颗珠子，每颗取 $${k}$ 种颜色之一。旋转 $${j}$ 个位置后，有多少种着色保持不变？`,
+        ],
+        answer,
+        [k ** (n / g) === answer ? answer * k : k ** (n / g), k ** n === answer ? answer + 1 : k ** n, k * g],
+        [
+          `The rotation has $\\gcd(${j}, ${n}) = ${g}$ ${g === 1 ? "cycle" : "cycles"} of beads, and each cycle has one color. So the count is $${k}^{${g}} = ${answer}$.`,
+          `这个旋转把珠子分成 $\\gcd(${j}, ${n}) = ${g}$ 个循环，每个循环一种颜色。所以个数是 $${k}^{${g}} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: algebraDrawings2["colorings-of-necklaces#the-colorings-a-rotation-fixes"],
+};
 
 const normInRing = point(
   "the-norm-in-a-quadratic-integer-ring",

@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 
@@ -208,60 +209,66 @@ const stringSpeed = point(
   },
 );
 
-const meanValue = point(
-  "the-mean-value-property",
-  ["The mean value property", "平均值性质"],
-  [
-    "A harmonic function equals the average of its values on any circle centered at a point, as long as the closed disc lies in its domain. So the average over a circle can be found with no integration, by evaluating at the center. The maximum principle follows from this property.",
-    "调和函数等于它在以某点为心的任何圆上的平均值，只要闭圆盘在定义域内。所以圆上的平均值不用积分，只需在圆心求值就能得到。最大值原理正是由这个性质得出的。",
-  ],
-  (rng) => {
-    const [a, b, c] = [rng.int(1, 5), rng.int(1, 5), rng.int(-9, 9)];
-    const [p, q] = [rng.int(-4, 4), rng.int(-4, 4)];
-    const r = rng.int(1, 9);
-    const answer = a * (p * p - q * q) + b * p * q + c;
-    const f = `${coef(a, "(x^2 - y^2)")} + ${coef(b, "x y")} ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
-    return ask(
-      [
-        `What is the average of the harmonic function $${f}$ on the circle of radius ${r} centered at $(${p}, ${q})$?`,
-        `调和函数 $${f}$ 在以 $(${p}, ${q})$ 为心、半径为 ${r} 的圆上的平均值是多少？`,
-      ],
-      answer,
-      [answer + r, answer + r * r, a * (p * p + q * q) + b * p * q + c, c].filter((v) => v !== answer),
-      [
-        `By the mean value property, the average is the value at the center, which is ${answer}.`,
-        `由平均值性质，平均值就是圆心处的值，即 ${answer}。`,
-      ],
-    );
-  },
-);
+const meanValue = {
+  ...point(
+    "the-mean-value-property",
+    ["The mean value property", "平均值性质"],
+    [
+      "A harmonic function equals the average of its values on any circle centered at a point, as long as the closed disc lies in its domain. So the average over a circle can be found with no integration, by evaluating at the center. The maximum principle follows from this property.",
+      "调和函数等于它在以某点为心的任何圆上的平均值，只要闭圆盘在定义域内。所以圆上的平均值不用积分，只需在圆心求值就能得到。最大值原理正是由这个性质得出的。",
+    ],
+    (rng) => {
+      const [a, b, c] = [rng.int(1, 5), rng.int(1, 5), rng.int(-9, 9)];
+      const [p, q] = [rng.int(-4, 4), rng.int(-4, 4)];
+      const r = rng.int(1, 9);
+      const answer = a * (p * p - q * q) + b * p * q + c;
+      const f = `${coef(a, "(x^2 - y^2)")} + ${coef(b, "x y")} ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
+      return ask(
+        [
+          `What is the average of the harmonic function $${f}$ on the circle of radius ${r} centered at $(${p}, ${q})$?`,
+          `调和函数 $${f}$ 在以 $(${p}, ${q})$ 为心、半径为 ${r} 的圆上的平均值是多少？`,
+        ],
+        answer,
+        [answer + r, answer + r * r, a * (p * p + q * q) + b * p * q + c, c].filter((v) => v !== answer),
+        [
+          `By the mean value property, the average is the value at the center, which is ${answer}.`,
+          `由平均值性质，平均值就是圆心处的值，即 ${answer}。`,
+        ],
+      );
+    },
+  ),
+  figure: pdeDrawings1["laplaces-equation-in-a-rectangle-and-a-disc#the-mean-value-property"],
+};
 
-const radialPoisson = point(
-  "a-radial-solution-of-poissons-equation",
-  ["A radial solution of Poisson's equation", "泊松方程的径向解"],
-  [
-    "On the disc of radius $R$, the problem $\\Delta u = -f$ with constant $f$ and $u = 0$ on the circle has the solution $u = \\frac{f}{4} (R^2 - r^2)$. Check it directly: $x^2 + y^2$ has laplacian 4. It describes a loaded membrane, deepest at the center and level with the rim at the boundary.",
-    "在半径为 $R$ 的圆盘上，常数 $f$ 的问题 $\\Delta u = -f$，圆周上 $u = 0$，其解是 $u = \\frac{f}{4} (R^2 - r^2)$。可以直接验证：$x^2 + y^2$ 的拉普拉斯值是 4。它描述受载的薄膜，中心最深，边界与圆周齐平。",
-  ],
-  (rng) => {
-    const R = rng.int(2, 9);
-    const r = rng.int(1, R - 1);
-    const f = rng.int(1, 9);
-    const answer = Q.of(f * (R * R - r * r), 4);
-    return ask(
-      [
-        `On the disc of radius ${R}, $\\Delta u = -${f}$ with $u = 0$ on the circle. What is $u$ at distance ${r} from the center?`,
-        `在半径为 ${R} 的圆盘上，$\\Delta u = -${f}$，圆周上 $u = 0$。距圆心 ${r} 处的 $u$ 是多少？`,
-      ],
-      answer,
-      [Q.of(f * R * R, 4), Q.of(f * (R * R - r * r), 2), Q.of(f * (R - r), 4), Q.of(R * R - r * r, 4)],
-      [
-        `$u = \\frac{${f}}{4} (${R * R} - ${r * r}) = ${answer.toLatex()}$.`,
-        `$u = \\frac{${f}}{4} (${R * R} - ${r * r}) = ${answer.toLatex()}$。`,
-      ],
-    );
-  },
-);
+const radialPoisson = {
+  ...point(
+    "a-radial-solution-of-poissons-equation",
+    ["A radial solution of Poisson's equation", "泊松方程的径向解"],
+    [
+      "On the disc of radius $R$, the problem $\\Delta u = -f$ with constant $f$ and $u = 0$ on the circle has the solution $u = \\frac{f}{4} (R^2 - r^2)$. Check it directly: $x^2 + y^2$ has laplacian 4. It describes a loaded membrane, deepest at the center and level with the rim at the boundary.",
+      "在半径为 $R$ 的圆盘上，常数 $f$ 的问题 $\\Delta u = -f$，圆周上 $u = 0$，其解是 $u = \\frac{f}{4} (R^2 - r^2)$。可以直接验证：$x^2 + y^2$ 的拉普拉斯值是 4。它描述受载的薄膜，中心最深，边界与圆周齐平。",
+    ],
+    (rng) => {
+      const R = rng.int(2, 9);
+      const r = rng.int(1, R - 1);
+      const f = rng.int(1, 9);
+      const answer = Q.of(f * (R * R - r * r), 4);
+      return ask(
+        [
+          `On the disc of radius ${R}, $\\Delta u = -${f}$ with $u = 0$ on the circle. What is $u$ at distance ${r} from the center?`,
+          `在半径为 ${R} 的圆盘上，$\\Delta u = -${f}$，圆周上 $u = 0$。距圆心 ${r} 处的 $u$ 是多少？`,
+        ],
+        answer,
+        [Q.of(f * R * R, 4), Q.of(f * (R * R - r * r), 2), Q.of(f * (R - r), 4), Q.of(R * R - r * r, 4)],
+        [
+          `$u = \\frac{${f}}{4} (${R * R} - ${r * r}) = ${answer.toLatex()}$.`,
+          `$u = \\frac{${f}}{4} (${R * R} - ${r * r}) = ${answer.toLatex()}$。`,
+        ],
+      );
+    },
+  ),
+  figure: pdeDrawings1["poissons-equation#a-radial-solution-of-poissons-equation"],
+};
 
 /** deeperPartialDifferentialEquationsPoints maps topics of Partial Differential Equations to their further knowledge points. */
 export const deeperPartialDifferentialEquationsPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

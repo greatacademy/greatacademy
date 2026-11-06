@@ -4,6 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { gcd, Q } from "@ga/subject-math";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
 import {
   ask,
@@ -288,28 +289,31 @@ const countingPrimes = topic(
   ["the-sieve-of-eratosthenes"],
   [["the-sieve-of-eratosthenes", 0.3]],
   [
-    point(
-      "the-prime-counting-function",
-      ["The prime counting function", "质数计数函数"],
-      [
-        "The function $\\pi(x)$ counts the primes up to $x$, and it has nothing to do with the circle constant. The value does not change between one prime and the next, so it is a staircase that rises by one at each prime. Note that two counts as prime, and that one does not, which is the commonest source of an off-by-one error.",
-        "函数 $\\pi(x)$ 数不超过 $x$ 的质数个数，它和圆周率没有关系。在相邻两个质数之间，它的值不变，所以它是一段段台阶，每遇到一个质数就升高 1。注意 2 是质数，1 不是，这是差一错误最常见的来源。",
-      ],
-      (rng) => {
-        const x = rng.int(12, 120);
-        const list = primesUpTo(x);
-        const answer = list.length;
-        return ask(
-          [`What is $\\pi(${x})$, the number of primes up to $${x}$?`, `$\\pi(${x})$，即不超过 $${x}$ 的质数个数，是多少？`],
-          answer,
-          [answer + 1, answer - 1, list.at(-1) as number, Math.round(x / 2)],
-          [
-            `The primes up to ${x} are ${list.join(", ")}, and there are ${answer} of them.`,
-            `不超过 ${x} 的质数是 ${list.join("、")}，一共 ${answer} 个。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-prime-counting-function",
+        ["The prime counting function", "质数计数函数"],
+        [
+          "The function $\\pi(x)$ counts the primes up to $x$, and it has nothing to do with the circle constant. The value does not change between one prime and the next, so it is a staircase that rises by one at each prime. Note that two counts as prime, and that one does not, which is the commonest source of an off-by-one error.",
+          "函数 $\\pi(x)$ 数不超过 $x$ 的质数个数，它和圆周率没有关系。在相邻两个质数之间，它的值不变，所以它是一段段台阶，每遇到一个质数就升高 1。注意 2 是质数，1 不是，这是差一错误最常见的来源。",
+        ],
+        (rng) => {
+          const x = rng.int(12, 120);
+          const list = primesUpTo(x);
+          const answer = list.length;
+          return ask(
+            [`What is $\\pi(${x})$, the number of primes up to $${x}$?`, `$\\pi(${x})$，即不超过 $${x}$ 的质数个数，是多少？`],
+            answer,
+            [answer + 1, answer - 1, list.at(-1) as number, Math.round(x / 2)],
+            [
+              `The primes up to ${x} are ${list.join(", ")}, and there are ${answer} of them.`,
+              `不超过 ${x} 的质数是 ${list.join("、")}，一共 ${answer} 个。`,
+            ],
+          );
+        },
+      ),
+      figure: numberTheoryDrawings1["the-distribution-of-primes#the-prime-counting-function"],
+    },
     point(
       "estimating-with-the-prime-number-theorem",
       ["Estimating with the prime number theorem", "用素数定理估计"],

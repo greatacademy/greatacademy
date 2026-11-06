@@ -1,5 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
 import { numberProblem, verdictChoice } from "../problems.ts";
 import {
@@ -109,6 +110,7 @@ export const incidenceMatrices: TopicDef = {
     },
     {
       id: "edges-between-vertices-from-an-incidence-matrix",
+      figure: discreteDrawings2["incidence-matrices#edges-between-vertices-from-an-incidence-matrix"],
       title: t("Edges joining two vertices", "连接两个顶点的边"),
       explanation: t(
         "An edge joins $A$ and $B$ exactly when its column has $1$s in rows $A$ and $B$. In a multigraph several columns can do so: those are parallel edges.",
@@ -166,6 +168,7 @@ export const adjacencyMatrices: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-an-adjacency-matrix",
+      figure: discreteDrawings2["adjacency-matrices#reading-an-adjacency-matrix"],
       title: t("Reading an adjacency matrix", "读邻接矩阵"),
       explanation: t(
         "Each edge contributes two $1$s, at $(i, j)$ and $(j, i)$. So an adjacency matrix with ten $1$s describes a graph with $5$ edges, and the number of $1$s in row $i$ is the degree of vertex $i$.",
@@ -288,6 +291,7 @@ export const adjacencyMatricesOfDirectedGraphs: TopicDef = {
     },
     {
       id: "counting-directed-walks-with-matrix-powers",
+      figure: discreteDrawings2["adjacency-matrices-of-directed-graphs#counting-directed-walks-with-matrix-powers"],
       title: t("Counting directed walks", "数有向途径"),
       explanation: t(
         "If $A$ is the adjacency matrix of a directed graph, the $(i, j)$ entry of $A^3$ is the number of directed walks $i \\to \\cdot \\to \\cdot \\to j$ of length $3$.",
@@ -378,6 +382,7 @@ export const distanceMatrices: TopicDef = {
     },
     {
       id: "edges-from-a-distance-matrix",
+      figure: discreteDrawings2["distance-matrices#edges-from-a-distance-matrix"],
       title: t("Edges from a distance matrix", "由距离矩阵求边"),
       explanation: t(
         "Two vertices are adjacent exactly when their distance is $1$. So the number of edges is half the number of entries equal to $1$, and the whole graph can be rebuilt from its distance matrix.",
@@ -434,6 +439,7 @@ export const directedAcyclicGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "recognizing-directed-acyclic-graphs",
+      figure: discreteDrawings2["directed-acyclic-graphs#recognizing-directed-acyclic-graphs"],
       title: t("Recognizing DAGs", "判断有向无环图"),
       explanation: t(
         "Repeatedly delete a vertex with no incoming arcs. If you can delete every vertex, the graph is acyclic; if you get stuck, the remaining vertices all have incoming arcs and contain a directed cycle.",
@@ -537,6 +543,7 @@ export const topologicalOrdering: TopicDef = {
   knowledgePoints: [
     {
       id: "checking-a-topological-ordering",
+      figure: discreteDrawings2["topological-ordering#checking-a-topological-ordering"],
       title: t("Checking an ordering", "检验排序"),
       explanation: t(
         "An ordering is topological when every arc goes from an earlier vertex to a later one, so check that no arc points backward. With arcs $(A, C), (B, C), (C, D)$, the order $B, A, C, D$ is topological, but $A, C, B, D$ is not, because the arc $(B, C)$ points backward.",
@@ -661,6 +668,7 @@ export const kahnsAlgorithm: TopicDef = {
     },
     {
       id: "in-degrees-during-kahns-algorithm",
+      figure: discreteDrawings2["kahns-algorithm#in-degrees-during-kahns-algorithm"],
       title: t("Updating in-degrees", "更新入度"),
       explanation: t(
         "After a vertex is output, its outgoing arcs are deleted and each target's in-degree drops by $1$. The vertices available next are those whose in-degree has reached $0$.",
@@ -711,6 +719,7 @@ export const breadthFirstSearch: TopicDef = {
   knowledgePoints: [
     {
       id: "the-order-of-a-breadth-first-search",
+      figure: discreteDrawings2["breadth-first-search#the-order-of-a-breadth-first-search"],
       title: t("The visiting order", "访问顺序"),
       explanation: t(
         "From $A$ with neighbors taken alphabetically: visit $A$, queue its neighbors $B, D$; visit $B$ and queue its new neighbors, then $D$ and its new neighbors, and so on. Each vertex is visited when it leaves the queue.",
@@ -900,6 +909,7 @@ export const primsAlgorithm: TopicDef = {
     },
     {
       id: "the-order-prims-algorithm-adds-vertices",
+      figure: discreteDrawings2["prims-algorithm#the-order-prims-algorithm-adds-vertices"],
       title: t("The order of the vertices", "顶点的加入顺序"),
       explanation: t(
         "Prim's algorithm adds one new vertex at each step. Track the tree's vertices and, at each step, the lightest edge from them to the rest.",
@@ -961,6 +971,7 @@ export const applyingPrimsAlgorithmToADistanceMatrix: TopicDef = {
   knowledgePoints: [
     {
       id: "minimum-spanning-trees-from-a-matrix",
+      figure: discreteDrawings2["applying-prims-algorithm-to-a-distance-matrix#minimum-spanning-trees-from-a-matrix"],
       title: t("The minimum weight", "最小权"),
       explanation: t(
         "Start with column $A$. Pick its smallest entry in a row not yet in the tree, say row $C$; add $C$ and include column $C$. Repeat with the columns of all tree vertices until every vertex is in the tree, then add the chosen entries.",
@@ -989,6 +1000,7 @@ export const applyingPrimsAlgorithmToADistanceMatrix: TopicDef = {
     },
     {
       id: "steps-of-prims-algorithm-on-a-matrix",
+      figure: discreteDrawings2["applying-prims-algorithm-to-a-distance-matrix#steps-of-prims-algorithm-on-a-matrix"],
       title: t("The steps", "步骤"),
       explanation: t(
         "At each step only the columns of the vertices already in the tree are searched, and only in rows of vertices outside it. The entry chosen gives both the edge's weight and the vertex added.",
@@ -1047,6 +1059,7 @@ export const shortestPathsInUnweightedGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-shortest-paths",
+      figure: discreteDrawings2["shortest-paths-in-unweighted-graphs#counting-shortest-paths"],
       title: t("Counting shortest paths", "数最短路径"),
       explanation: t(
         "Label $s$ with $1$. Going layer by layer, label each vertex with the sum of the labels of its neighbors in the previous layer. In a $4$-cycle $A, B, C, D$, vertex $C$ gets $1 + 1 = 2$: the shortest paths $A, B, C$ and $A, D, C$.",
@@ -1088,6 +1101,7 @@ export const shortestPathsInUnweightedGraphs: TopicDef = {
     },
     {
       id: "the-diameter-of-a-graph",
+      figure: discreteDrawings2["shortest-paths-in-unweighted-graphs#the-diameter-of-a-graph"],
       title: t("The diameter", "直径"),
       explanation: t(
         "The diameter is $\\max_{u, v} d(u, v)$. Run a breadth-first search from every vertex and take the largest distance found. A path on $n$ vertices has diameter $n - 1$; a complete graph has diameter $1$.",
@@ -1133,6 +1147,7 @@ export const dijkstrasAlgorithm: TopicDef = {
   knowledgePoints: [
     {
       id: "shortest-weighted-distances",
+      figure: discreteDrawings2["dijkstras-algorithm#shortest-weighted-distances"],
       title: t("Shortest distances", "最短距离"),
       explanation: t(
         "Dijkstra's algorithm repeatedly finalizes the closest unfinished vertex and updates its neighbors, which works because weights are never negative. With $AB\\colon 4$, $AC\\colon 1$, $CB\\colon 2$: start $d(A) = 0$; finalize $A$, so $d(B) = 4$, $d(C) = 1$; finalize $C$, and $d(B) = \\min(4, 1 + 2) = 3$. The direct edge is not always shortest.",

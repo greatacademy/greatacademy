@@ -1,6 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { article, numberProblem } from "../problems.ts";
 import { range } from "./methods-of-proof-common.ts";
@@ -198,6 +199,10 @@ export const manyToOneTransformationsOfDiscreteRandomVariables: TopicDef = {
     },
     {
       id: "cumulative-probabilities-of-many-to-one-transformations",
+      figure:
+        probabilityDrawings1[
+          "many-to-one-transformations-of-discrete-random-variables#cumulative-probabilities-of-many-to-one-transformations"
+        ],
       title: t("Events for many-to-one transformations", "多对一变换的事件"),
       explanation: t(
         "Translate the event into the set of original values that satisfy it, which for a square is an interval centered at zero, and add their probabilities. With $Y = X^2$: $Y \\le 4$ means $-2 \\le X \\le 2$, so add the probabilities of all $x$ in that range.",

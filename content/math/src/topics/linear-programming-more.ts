@@ -5,6 +5,7 @@
 import type { Figure, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q, svgDocument } from "@ga/subject-math";
+import { linearProgrammingDrawings1 } from "../explanation-drawings-linear-programming-1.ts";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 import { label, node } from "./figure-reading-more.ts";
@@ -120,40 +121,43 @@ const alternativeOptima = topic(
   ["the-simplex-tableau", "convex-sets-and-convex-combinations"],
   [],
   [
-    point(
-      "an-objective-parallel-to-an-edge",
-      ["An objective parallel to an edge", "目标平行于一条边"],
-      [
-        "The level lines of $cx + dy$ are parallel to the edge $ax + by = h$ exactly when $(c, d)$ is a multiple of $(a, b)$. If that edge is the last one the level lines reach, every point on the edge is optimal, not only its two corners.",
-        "当 $(c, d)$ 是 $(a, b)$ 的倍数时，$cx + dy$ 的等值线平行于边 $ax + by = h$。如果等值线最后碰到的就是这条边，那么边上每一点都是最优解，不只是两个角点。",
-      ],
-      (rng) => {
-        const [a, b] = rng.pick([
-          [1, 2],
-          [2, 1],
-          [2, 3],
-          [3, 2],
-          [1, 3],
-          [3, 1],
-          [3, 4],
-          [4, 3],
-        ] as const);
-        const m = rng.int(2, 6);
-        const h = rng.int(6, 30);
-        return ask(
-          [
-            `The edge of a feasible region lies on $${a}x + ${b}y = ${h}$. For what value of $c$ is the objective $z = cx + ${m * b}y$ parallel to that edge?`,
-            `可行域的一条边在 $${a}x + ${b}y = ${h}$ 上。$c$ 取何值时，目标 $z = cx + ${m * b}y$ 平行于这条边？`,
-          ],
-          m * a,
-          [a, m * b, m, h],
-          [
-            `The coefficient of $y$ is ${m} times ${b}, so the coefficient of $x$ must be ${m} times ${a}, which is ${m * a}.`,
-            `$y$ 的系数是 ${b} 的 ${m} 倍，所以 $x$ 的系数也必须是 ${a} 的 ${m} 倍，即 ${m * a}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "an-objective-parallel-to-an-edge",
+        ["An objective parallel to an edge", "目标平行于一条边"],
+        [
+          "The level lines of $cx + dy$ are parallel to the edge $ax + by = h$ exactly when $(c, d)$ is a multiple of $(a, b)$. If that edge is the last one the level lines reach, every point on the edge is optimal, not only its two corners.",
+          "当 $(c, d)$ 是 $(a, b)$ 的倍数时，$cx + dy$ 的等值线平行于边 $ax + by = h$。如果等值线最后碰到的就是这条边，那么边上每一点都是最优解，不只是两个角点。",
+        ],
+        (rng) => {
+          const [a, b] = rng.pick([
+            [1, 2],
+            [2, 1],
+            [2, 3],
+            [3, 2],
+            [1, 3],
+            [3, 1],
+            [3, 4],
+            [4, 3],
+          ] as const);
+          const m = rng.int(2, 6);
+          const h = rng.int(6, 30);
+          return ask(
+            [
+              `The edge of a feasible region lies on $${a}x + ${b}y = ${h}$. For what value of $c$ is the objective $z = cx + ${m * b}y$ parallel to that edge?`,
+              `可行域的一条边在 $${a}x + ${b}y = ${h}$ 上。$c$ 取何值时，目标 $z = cx + ${m * b}y$ 平行于这条边？`,
+            ],
+            m * a,
+            [a, m * b, m, h],
+            [
+              `The coefficient of $y$ is ${m} times ${b}, so the coefficient of $x$ must be ${m} times ${a}, which is ${m * a}.`,
+              `$y$ 的系数是 ${b} 的 ${m} 倍，所以 $x$ 的系数也必须是 ${a} 的 ${m} 倍，即 ${m * a}。`,
+            ],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["alternative-optimal-solutions#an-objective-parallel-to-an-edge"],
+    },
     point(
       "the-value-along-an-optimal-edge",
       ["The value along an optimal edge", "最优边上的值"],
@@ -970,31 +974,34 @@ const shortestPaths = topic(
         );
       },
     ),
-    point(
-      "the-potential-of-a-node",
-      ["The potential of a node", "结点的势"],
-      [
-        "The dual of a shortest path program assigns a potential $d_v$ to each node, with $d_v \\le d_u + w$ for each arc from $u$ to $v$ of length $w$. Maximizing the potential at the sink gives its true distance from the source, because the tightest of these limits is what holds it down.",
-        "最短路径规划的对偶给每个结点一个势 $d_v$，对每条从 $u$ 到 $v$、长度为 $w$ 的弧有 $d_v \\le d_u + w$。使汇点的势最大，就得到它到源点的真实距离，因为最紧的那个限制把它压住了。",
-      ],
-      (rng) => {
-        const [da, db] = [rng.int(1, 12), rng.int(1, 12)];
-        const [wa, wb] = [rng.int(1, 12), rng.int(1, 12)];
-        const answer = Math.min(da + wa, db + wb);
-        return ask(
-          [
-            `Node $T$ has incoming arcs from $A$ of length ${wa} and from $B$ of length ${wb}. The potentials are $d_A = ${da}$ and $d_B = ${db}$. What is the largest value allowed for $d_T$?`,
-            `结点 $T$ 有来自 $A$ 的长度为 ${wa} 的弧，以及来自 $B$ 的长度为 ${wb} 的弧。势是 $d_A = ${da}$，$d_B = ${db}$。$d_T$ 最大可以取多少？`,
-          ],
-          answer,
-          [Math.max(da + wa, db + wb), da + wa + db + wb, Math.min(wa, wb), Math.min(da, db)],
-          [
-            `The two arcs require $d_T \\le ${da + wa}$ and $d_T \\le ${db + wb}$. Both must hold, so the largest allowed value is ${answer}.`,
-            `两条弧要求 $d_T \\le ${da + wa}$ 和 $d_T \\le ${db + wb}$。两者都要成立，所以最大只能取 ${answer}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-potential-of-a-node",
+        ["The potential of a node", "结点的势"],
+        [
+          "The dual of a shortest path program assigns a potential $d_v$ to each node, with $d_v \\le d_u + w$ for each arc from $u$ to $v$ of length $w$. Maximizing the potential at the sink gives its true distance from the source, because the tightest of these limits is what holds it down.",
+          "最短路径规划的对偶给每个结点一个势 $d_v$，对每条从 $u$ 到 $v$、长度为 $w$ 的弧有 $d_v \\le d_u + w$。使汇点的势最大，就得到它到源点的真实距离，因为最紧的那个限制把它压住了。",
+        ],
+        (rng) => {
+          const [da, db] = [rng.int(1, 12), rng.int(1, 12)];
+          const [wa, wb] = [rng.int(1, 12), rng.int(1, 12)];
+          const answer = Math.min(da + wa, db + wb);
+          return ask(
+            [
+              `Node $T$ has incoming arcs from $A$ of length ${wa} and from $B$ of length ${wb}. The potentials are $d_A = ${da}$ and $d_B = ${db}$. What is the largest value allowed for $d_T$?`,
+              `结点 $T$ 有来自 $A$ 的长度为 ${wa} 的弧，以及来自 $B$ 的长度为 ${wb} 的弧。势是 $d_A = ${da}$，$d_B = ${db}$。$d_T$ 最大可以取多少？`,
+            ],
+            answer,
+            [Math.max(da + wa, db + wb), da + wa + db + wb, Math.min(wa, wb), Math.min(da, db)],
+            [
+              `The two arcs require $d_T \\le ${da + wa}$ and $d_T \\le ${db + wb}$. Both must hold, so the largest allowed value is ${answer}.`,
+              `两条弧要求 $d_T \\le ${da + wa}$ 和 $d_T \\le ${db + wb}$。两者都要成立，所以最大只能取 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["shortest-paths-as-linear-programs#the-potential-of-a-node"],
+    },
   ],
 );
 
@@ -1031,41 +1038,44 @@ const minCostFlow = topic(
         );
       },
     ),
-    point(
-      "the-cost-of-a-flow",
-      ["The cost of a flow", "一个流的费用"],
-      [
-        "The objective of a minimum cost flow program adds, over all arcs, the flow on the arc times its cost per unit. Arcs that carry no flow cost nothing, however expensive they are, so reading a plan means multiplying only along the arcs that are actually in use.",
-        "最小费用流规划的目标是对所有弧求和：弧上的流量乘单位费用。不载流的弧不产生费用，不管它有多贵，所以读一个方案时只需沿实际使用的弧相乘。",
-      ],
-      (rng) => {
-        const arcs = [
-          [rng.int(1, 9), rng.int(1, 6)],
-          [rng.int(1, 9), rng.int(1, 6)],
-          [rng.int(1, 9), rng.int(1, 6)],
-        ] as const;
-        const unused = rng.int(4, 9);
-        const cost = arcs.reduce((s, [f, c]) => s + f * c, 0);
-        const flows = arcs.map(([f]) => f).join(", ");
-        const costs = arcs.map(([, c]) => c).join(", ");
-        return ask(
-          [
-            `A plan sends flows ${flows} on three arcs with unit costs ${costs}. A fourth arc with unit cost ${unused} carries nothing. What is the total cost?`,
-            `一个方案在三条单位费用为 ${costs} 的弧上分别送 ${flows} 的流量。第四条弧单位费用为 ${unused}，不载流。总费用是多少？`,
-          ],
-          cost,
-          [
-            cost + unused,
-            arcs.reduce((s, [f]) => s + f, 0) * arcs.reduce((s, [, c]) => s + c, 0),
-            arcs.reduce((s, [f, c]) => s + f + c, 0),
-          ],
-          [
-            `Multiply along the arcs in use: ${arcs.map(([f, c]) => `$${f} \\cdot ${c}$`).join(" + ")} $= ${cost}$. The empty arc adds nothing.`,
-            `沿使用的弧相乘：${arcs.map(([f, c]) => `$${f} \\cdot ${c}$`).join(" + ")} $= ${cost}$。空弧不增加费用。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-cost-of-a-flow",
+        ["The cost of a flow", "一个流的费用"],
+        [
+          "The objective of a minimum cost flow program adds, over all arcs, the flow on the arc times its cost per unit. Arcs that carry no flow cost nothing, however expensive they are, so reading a plan means multiplying only along the arcs that are actually in use.",
+          "最小费用流规划的目标是对所有弧求和：弧上的流量乘单位费用。不载流的弧不产生费用，不管它有多贵，所以读一个方案时只需沿实际使用的弧相乘。",
+        ],
+        (rng) => {
+          const arcs = [
+            [rng.int(1, 9), rng.int(1, 6)],
+            [rng.int(1, 9), rng.int(1, 6)],
+            [rng.int(1, 9), rng.int(1, 6)],
+          ] as const;
+          const unused = rng.int(4, 9);
+          const cost = arcs.reduce((s, [f, c]) => s + f * c, 0);
+          const flows = arcs.map(([f]) => f).join(", ");
+          const costs = arcs.map(([, c]) => c).join(", ");
+          return ask(
+            [
+              `A plan sends flows ${flows} on three arcs with unit costs ${costs}. A fourth arc with unit cost ${unused} carries nothing. What is the total cost?`,
+              `一个方案在三条单位费用为 ${costs} 的弧上分别送 ${flows} 的流量。第四条弧单位费用为 ${unused}，不载流。总费用是多少？`,
+            ],
+            cost,
+            [
+              cost + unused,
+              arcs.reduce((s, [f]) => s + f, 0) * arcs.reduce((s, [, c]) => s + c, 0),
+              arcs.reduce((s, [f, c]) => s + f + c, 0),
+            ],
+            [
+              `Multiply along the arcs in use: ${arcs.map(([f, c]) => `$${f} \\cdot ${c}$`).join(" + ")} $= ${cost}$. The empty arc adds nothing.`,
+              `沿使用的弧相乘：${arcs.map(([f, c]) => `$${f} \\cdot ${c}$`).join(" + ")} $= ${cost}$。空弧不增加费用。`,
+            ],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["minimum-cost-flow#the-cost-of-a-flow"],
+    },
     point(
       "pushing-flow-around-a-cycle",
       ["Pushing flow around a cycle", "沿圈推送流量"],

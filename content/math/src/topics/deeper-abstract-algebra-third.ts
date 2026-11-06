@@ -4,6 +4,8 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts";
+import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { ask, choose, factorize, type Pair, point, totient } from "../university-kit.ts";
 import { gcd, lcm } from "./deeper-methods-of-proof-third.ts";
@@ -231,38 +233,41 @@ const tetrahedronGeometry = point(
   },
 );
 
-const cubeFixedVertices = point(
-  "the-vertices-a-cube-symmetry-fixes",
-  ["The vertices a cube symmetry fixes", "立方体对称固定的顶点"],
-  [
-    "A vertex of the cube $[-1, 1]^{3}$ is a point with coordinates $\\pm 1$. A symmetry written as a map of coordinates fixes such a vertex when the resulting equations hold, and the equations may have several solutions, one solution or none.",
-    "立方体 $[-1, 1]^{3}$ 的顶点是坐标为 $\\pm 1$ 的点。写成坐标映射的对称，在所得方程成立时固定这样的顶点，方程可能有多个解、一个解或无解。",
-  ],
-  (rng) => {
-    const f = randomSigned(rng);
-    const vertices: number[][] = [];
-    for (const x of [1, -1]) for (const y of [1, -1]) for (const z of [1, -1]) vertices.push([x, y, z]);
-    const fixed = vertices.filter((v) => applySigned(f, v).every((c, i) => c === v[i]));
-    const answer = fixed.length;
-    return ask(
-      [
-        `The cube $[-1, 1]^{3}$ has the symmetry $${signedText(f)}$. How many of its $8$ vertices does this symmetry fix?`,
-        `立方体 $[-1, 1]^{3}$ 有对称 $${signedText(f)}$。这个对称固定 $8$ 个顶点中的多少个？`,
-      ],
-      answer,
-      [8 - answer, answer === 2 ? 4 : 2, answer === 1 ? 0 : 1],
-      answer === 0
-        ? [
-            `Setting each image coordinate equal to the original gives equations with no solution among the points with coordinates $\\pm 1$, so no vertex is fixed.`,
-            `令每个像坐标等于原坐标，得到的方程在坐标为 $\\pm 1$ 的点中无解，所以没有固定的顶点。`,
-          ]
-        : [
-            `Setting each image coordinate equal to the original gives exactly these fixed vertices: $${fixed.map(tuple).join(", ")}$.`,
-            `令每个像坐标等于原坐标，恰好得到这些固定顶点：$${fixed.map(tuple).join(", ")}$。`,
-          ],
-    );
-  },
-);
+const cubeFixedVertices = {
+  ...point(
+    "the-vertices-a-cube-symmetry-fixes",
+    ["The vertices a cube symmetry fixes", "立方体对称固定的顶点"],
+    [
+      "A vertex of the cube $[-1, 1]^{3}$ is a point with coordinates $\\pm 1$. A symmetry written as a map of coordinates fixes such a vertex when the resulting equations hold, and the equations may have several solutions, one solution or none.",
+      "立方体 $[-1, 1]^{3}$ 的顶点是坐标为 $\\pm 1$ 的点。写成坐标映射的对称，在所得方程成立时固定这样的顶点，方程可能有多个解、一个解或无解。",
+    ],
+    (rng) => {
+      const f = randomSigned(rng);
+      const vertices: number[][] = [];
+      for (const x of [1, -1]) for (const y of [1, -1]) for (const z of [1, -1]) vertices.push([x, y, z]);
+      const fixed = vertices.filter((v) => applySigned(f, v).every((c, i) => c === v[i]));
+      const answer = fixed.length;
+      return ask(
+        [
+          `The cube $[-1, 1]^{3}$ has the symmetry $${signedText(f)}$. How many of its $8$ vertices does this symmetry fix?`,
+          `立方体 $[-1, 1]^{3}$ 有对称 $${signedText(f)}$。这个对称固定 $8$ 个顶点中的多少个？`,
+        ],
+        answer,
+        [8 - answer, answer === 2 ? 4 : 2, answer === 1 ? 0 : 1],
+        answer === 0
+          ? [
+              `Setting each image coordinate equal to the original gives equations with no solution among the points with coordinates $\\pm 1$, so no vertex is fixed.`,
+              `令每个像坐标等于原坐标，得到的方程在坐标为 $\\pm 1$ 的点中无解，所以没有固定的顶点。`,
+            ]
+          : [
+              `Setting each image coordinate equal to the original gives exactly these fixed vertices: $${fixed.map(tuple).join(", ")}$.`,
+              `令每个像坐标等于原坐标，恰好得到这些固定顶点：$${fixed.map(tuple).join(", ")}$。`,
+            ],
+      );
+    },
+  ),
+  figure: algebraDrawings1["the-symmetry-group-of-a-cube-rotations-and-reflections#the-vertices-a-cube-symmetry-fixes"],
+};
 
 const cubeConjugate = point(
   "a-conjugate-of-a-cube-symmetry",
@@ -521,63 +526,66 @@ const normalizerOfCycle = point(
   },
 );
 
-const centralizerByType = point(
-  "the-centralizer-from-the-cycle-type",
-  ["The centralizer from the cycle type", "由循环类型求中心化子"],
-  [
-    "An element commutes with a permutation when it maps cycles to cycles of the same length, keeping the order. For $c$ cycles of length $m$, there are $c!$ ways to match the cycles and $m^{c}$ rotations, and fixed points count as cycles of length one.",
-    "一个元素与置换可交换，是指它把循环映成长度相同的循环且保持次序。对于 $c$ 个长度为 $m$ 的循环，有 $c!$ 种配对方式和 $m^{c}$ 种旋转方式，不动点算作长度为一的循环。",
-  ],
-  (rng) => {
-    const lengths = rng.pick([
-      [2, 2],
-      [2, 2, 2],
-      [3, 3],
-      [2, 3],
-      [2, 2, 3],
-      [4, 4],
-      [2, 4],
-      [3, 3, 2],
-      [2, 2, 2, 2],
-      [3, 4],
-    ] as const);
-    const used = lengths.reduce<number>((a, b) => a + b, 0);
-    const n = rng.int(Math.max(used, 5), 9);
-    const fixed = n - used;
-    const labels = rng.shuffle(oneTo(n));
-    let at = 0;
-    const cycles = lengths.map((l) => {
-      const c = labels.slice(at, at + l);
-      at += l;
-      return c;
-    });
-    const counts = new Map<number, number>();
-    for (const l of lengths) counts.set(l, (counts.get(l) ?? 0) + 1);
-    let rotations = 1;
-    let matchings = 1;
-    const factors: string[] = [];
-    for (const [m, c] of [...counts].sort((x, y) => x[0] - y[0])) {
-      rotations *= m ** c;
-      matchings *= factorial(c);
-      factors.push(`${m}^{${c}} \\cdot ${c}!`);
-    }
-    if (fixed > 1) factors.push(`${fixed}!`);
-    const answer = rotations * matchings * factorial(fixed);
-    const product = factors.join(" \\cdot ");
-    return ask(
-      [
-        `How many elements does the centralizer of $${cycles.map(cycleText).join("")}$ in $S_{${n}}$ have?`,
-        `$${cycles.map(cycleText).join("")}$ 在 $S_{${n}}$ 中的中心化子有多少个元素？`,
-      ],
-      answer,
-      [rotations * factorial(fixed), rotations * matchings, lengths.reduce<number>(lcm, 1)],
-      [
-        `Counting rotations and matchings of equal-length cycles${fixed === 0 ? "" : `, with the $${fixed}$ fixed ${fixed === 1 ? "point" : "points"}`}, gives $${product} = ${answer}$.`,
-        `计算等长循环的旋转与配对${fixed === 0 ? "" : `，并考虑 $${fixed}$ 个不动点`}，得 $${product} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const centralizerByType = {
+  ...point(
+    "the-centralizer-from-the-cycle-type",
+    ["The centralizer from the cycle type", "由循环类型求中心化子"],
+    [
+      "An element commutes with a permutation when it maps cycles to cycles of the same length, keeping the order. For $c$ cycles of length $m$, there are $c!$ ways to match the cycles and $m^{c}$ rotations, and fixed points count as cycles of length one.",
+      "一个元素与置换可交换，是指它把循环映成长度相同的循环且保持次序。对于 $c$ 个长度为 $m$ 的循环，有 $c!$ 种配对方式和 $m^{c}$ 种旋转方式，不动点算作长度为一的循环。",
+    ],
+    (rng) => {
+      const lengths = rng.pick([
+        [2, 2],
+        [2, 2, 2],
+        [3, 3],
+        [2, 3],
+        [2, 2, 3],
+        [4, 4],
+        [2, 4],
+        [3, 3, 2],
+        [2, 2, 2, 2],
+        [3, 4],
+      ] as const);
+      const used = lengths.reduce<number>((a, b) => a + b, 0);
+      const n = rng.int(Math.max(used, 5), 9);
+      const fixed = n - used;
+      const labels = rng.shuffle(oneTo(n));
+      let at = 0;
+      const cycles = lengths.map((l) => {
+        const c = labels.slice(at, at + l);
+        at += l;
+        return c;
+      });
+      const counts = new Map<number, number>();
+      for (const l of lengths) counts.set(l, (counts.get(l) ?? 0) + 1);
+      let rotations = 1;
+      let matchings = 1;
+      const factors: string[] = [];
+      for (const [m, c] of [...counts].sort((x, y) => x[0] - y[0])) {
+        rotations *= m ** c;
+        matchings *= factorial(c);
+        factors.push(`${m}^{${c}} \\cdot ${c}!`);
+      }
+      if (fixed > 1) factors.push(`${fixed}!`);
+      const answer = rotations * matchings * factorial(fixed);
+      const product = factors.join(" \\cdot ");
+      return ask(
+        [
+          `How many elements does the centralizer of $${cycles.map(cycleText).join("")}$ in $S_{${n}}$ have?`,
+          `$${cycles.map(cycleText).join("")}$ 在 $S_{${n}}$ 中的中心化子有多少个元素？`,
+        ],
+        answer,
+        [rotations * factorial(fixed), rotations * matchings, lengths.reduce<number>(lcm, 1)],
+        [
+          `Counting rotations and matchings of equal-length cycles${fixed === 0 ? "" : `, with the $${fixed}$ fixed ${fixed === 1 ? "point" : "points"}`}, gives $${product} = ${answer}$.`,
+          `计算等长循环的旋转与配对${fixed === 0 ? "" : `，并考虑 $${fixed}$ 个不动点`}，得 $${product} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: algebraDrawings2["the-centralizer-of-a-subgroup#the-centralizer-from-the-cycle-type"],
+};
 
 const compositionLength = point(
   "the-length-of-a-composition-series",
@@ -746,38 +754,41 @@ const thirdChain = point(
   },
 );
 
-const reflectionFixedVertices = point(
-  "the-vertices-a-reflection-fixes",
-  ["The vertices a reflection fixes", "反射固定的顶点"],
-  [
-    "The reflection $r^{a}s$ sends the vertex $v$ to $a - v$ modulo $n$, so a fixed vertex must satisfy $2v \\equiv a \\pmod{n}$. For odd $n$ there is one solution. For even $n$ there are two when $a$ is even and none when $a$ is odd.",
-    "反射 $r^{a}s$ 把顶点 $v$ 映到模 $n$ 的 $a - v$，所以不动顶点必须满足 $2v \\equiv a \\pmod{n}$。当 $n$ 为奇数时有一个解。当 $n$ 为偶数时，$a$ 为偶数有两个解，$a$ 为奇数没有解。",
-  ],
-  (rng) => {
-    const n = rng.int(5, 24);
-    const a = rng.int(1, n - 1);
-    const fixed: number[] = [];
-    for (let v = 0; v < n; v++) if ((2 * v - a) % n === 0) fixed.push(v);
-    const answer = fixed.length;
-    return ask(
-      [
-        `$D_{${n}}$ acts on the vertices $0, 1, \\dots, ${n - 1}$ of a regular ${n}-gon, with $r \\cdot v = v + 1$ and $s \\cdot v = -v \\pmod{${n}}$. How many vertices does $r^{${a}}s$ fix?`,
-        `$D_{${n}}$ 作用在正 ${n} 边形的顶点 $0, 1, \\dots, ${n - 1}$ 上，其中 $r \\cdot v = v + 1$，$s \\cdot v = -v \\pmod{${n}}$。$r^{${a}}s$ 固定多少个顶点？`,
-      ],
-      answer,
-      [0, 1, 2, n].filter((v) => v !== answer),
-      answer === 0
-        ? [
-            `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. The left side is even and $${n}$ is even, but $${a}$ is odd, so there are none.`,
-            `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。左边是偶数，$${n}$ 是偶数，而 $${a}$ 是奇数，所以没有。`,
-          ]
-        : [
-            `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. ${answer === 1 ? `The only solution is $${fixed[0]}$` : `The solutions are $${fixed.join(", ")}$`}, so the count is $${answer}$.`,
-            `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。${answer === 1 ? `唯一的解是 $${fixed[0]}$` : `解是 $${fixed.join(", ")}$`}，所以个数是 $${answer}$。`,
-          ],
-    );
-  },
-);
+const reflectionFixedVertices = {
+  ...point(
+    "the-vertices-a-reflection-fixes",
+    ["The vertices a reflection fixes", "反射固定的顶点"],
+    [
+      "The reflection $r^{a}s$ sends the vertex $v$ to $a - v$ modulo $n$, so a fixed vertex must satisfy $2v \\equiv a \\pmod{n}$. For odd $n$ there is one solution. For even $n$ there are two when $a$ is even and none when $a$ is odd.",
+      "反射 $r^{a}s$ 把顶点 $v$ 映到模 $n$ 的 $a - v$，所以不动顶点必须满足 $2v \\equiv a \\pmod{n}$。当 $n$ 为奇数时有一个解。当 $n$ 为偶数时，$a$ 为偶数有两个解，$a$ 为奇数没有解。",
+    ],
+    (rng) => {
+      const n = rng.int(5, 24);
+      const a = rng.int(1, n - 1);
+      const fixed: number[] = [];
+      for (let v = 0; v < n; v++) if ((2 * v - a) % n === 0) fixed.push(v);
+      const answer = fixed.length;
+      return ask(
+        [
+          `$D_{${n}}$ acts on the vertices $0, 1, \\dots, ${n - 1}$ of a regular ${n}-gon, with $r \\cdot v = v + 1$ and $s \\cdot v = -v \\pmod{${n}}$. How many vertices does $r^{${a}}s$ fix?`,
+          `$D_{${n}}$ 作用在正 ${n} 边形的顶点 $0, 1, \\dots, ${n - 1}$ 上，其中 $r \\cdot v = v + 1$，$s \\cdot v = -v \\pmod{${n}}$。$r^{${a}}s$ 固定多少个顶点？`,
+        ],
+        answer,
+        [0, 1, 2, n].filter((v) => v !== answer),
+        answer === 0
+          ? [
+              `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. The left side is even and $${n}$ is even, but $${a}$ is odd, so there are none.`,
+              `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。左边是偶数，$${n}$ 是偶数，而 $${a}$ 是奇数，所以没有。`,
+            ]
+          : [
+              `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. ${answer === 1 ? `The only solution is $${fixed[0]}$` : `The solutions are $${fixed.join(", ")}$`}, so the count is $${answer}$.`,
+              `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。${answer === 1 ? `唯一的解是 $${fixed[0]}$` : `解是 $${fixed.join(", ")}$`}，所以个数是 $${answer}$。`,
+            ],
+      );
+    },
+  ),
+  figure: algebraDrawings2["natural-actions-of-symmetric-and-dihedral-groups#the-vertices-a-reflection-fixes"],
+};
 
 /** deeperAbstractAlgebraThirdPoints maps topics of Abstract Algebra, on permutations, symmetries, cosets and the isomorphism theorems, to a third knowledge point. */
 export const deeperAbstractAlgebraThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

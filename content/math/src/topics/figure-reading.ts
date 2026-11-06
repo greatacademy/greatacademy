@@ -11,6 +11,7 @@ import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2
 import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { numberProblem } from "../problems.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
@@ -1662,6 +1663,7 @@ function polarDrawing(r: (theta: number) => number, alt: Text): Figure {
 /** uniformFromDensity asks for a probability read from the density of a uniform distribution. */
 const uniformFromDensity: KnowledgePointDef = {
   id: "a-uniform-probability-from-its-density",
+  figure: probabilityDrawings1["the-continuous-uniform-distribution#a-uniform-probability-from-its-density"],
   title: t("A uniform probability from its density", "由密度图求均匀分布的概率"),
   explanation: t(
     "The density of a uniform distribution on $[a, b]$ is a flat rectangle of height $\\frac{1}{b - a}$, whose total area is $1$. A probability is the area over an interval, here width times height. The drawing gives all that is needed: the ends of the rectangle fix the height, and the shaded part gives the width.",
@@ -1786,6 +1788,10 @@ const exponentialTail: KnowledgePointDef = {
 /** cdfFromGraph asks for an interval probability read from the graph of a distribution function. */
 const cdfFromGraph: KnowledgePointDef = {
   id: "a-probability-from-the-graph-of-a-distribution-function",
+  figure:
+    probabilityDrawings1[
+      "cumulative-distribution-functions-for-continuous-random-variables#a-probability-from-the-graph-of-a-distribution-function"
+    ],
   title: t("A probability from the graph of a distribution function", "由分布函数图求概率"),
   explanation: t(
     "The graph of a distribution function $F(x) = P(X \\le x)$ rises from $0$ to $1$ and never falls. The probability of an interval is a difference of heights, not a height: $P(a < X \\le b) = F(b) - F(a)$. Where the graph is steep, the probability is concentrated, and where it is flat, $X$ almost never falls.",

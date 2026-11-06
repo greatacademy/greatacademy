@@ -5,6 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label, node } from "./figure-reading-more.ts";
@@ -172,143 +173,152 @@ const burgersPicture = point(
   },
 );
 
-const dAlembertValue = point(
-  "dalembert-from-a-drawn-initial-shape",
-  ["d'Alembert from a drawn initial shape", "由图中初始形状用达朗贝尔公式"],
-  [
-    "With zero initial velocity, d'Alembert's formula splits the initial shape into two halves, moving left and right at speed $c$: $u(x, t) = \\frac{1}{2}[f(x - ct) + f(x + ct)]$. To evaluate it from a graph, read the heights of $f$ at the two points $x - ct$ and $x + ct$, and average them.",
-    "初速度为零时，达朗贝尔公式把初始形状分成两半，以速度 $c$ 分别向左和向右移动：$u(x, t) = \\frac{1}{2}[f(x - ct) + f(x + ct)]$。要从图上求值，就读出 $f$ 在 $x - ct$ 和 $x + ct$ 两点的高度，再取平均。",
-  ],
-  (rng) => {
-    const breaks = rng.sample([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], 4).sort((a, b) => a - b);
-    const top = breaks.map(() => rng.int(1, 5));
-    const points: Point[] = [[-6, 0], ...breaks.map((b, i): Point => [b, top[i] as number]), [6, 0]];
-    const f = (x: number) => {
-      for (let i = 0; i + 1 < points.length; i++) {
-        const [p, q] = [points[i] as Point, points[i + 1] as Point];
-        if (x >= p[0] && x <= q[0]) return p[1] + ((q[1] - p[1]) * (x - p[0])) / (q[0] - p[0]);
-      }
-      return 0;
-    };
-    const [i, j] = rng.sample(breaks, 2).sort((a, b) => a - b) as [number, number];
-    const x0Doubled = i + j;
-    const ct = (j - i) / 2;
-    const c = ct % 1 === 0 ? ct : 2 * ct;
-    const time = ct % 1 === 0 ? 1 : Q.of(1, 2);
-    const timeTex = typeof time === "number" ? "1" : time.toLatex();
-    const fl = f(i);
-    const fr = f(j);
-    const answer = Q.of(fl + fr, 2);
-    const x0 = Q.of(x0Doubled, 2);
-    return ask(
-      [
-        `The graph shows the initial shape $f$ of a string, released from rest, with wave speed $c = ${c}$. What is $u(${x0.toLatex()}, ${timeTex})$?`,
-        `图中是从静止释放的弦的初始形状 $f$，波速 $c = ${c}$。$u(${x0.toLatex()}, ${timeTex})$ 是多少？`,
-      ],
-      answer,
-      [
-        Q.of(fl + fr, 1),
-        Q.of(fl, 1).eq(answer) ? Q.of(fl + 1, 1) : Q.of(fl, 1),
-        Q.of(fr, 1).eq(answer) ? Q.of(fr + 2, 1) : Q.of(fr, 1),
-        Q.of(Math.round(f(x0.toNumber())) + 1, 1),
-      ],
-      [
-        `Here $ct = ${ct === Math.floor(ct) ? ct : Q.of(2 * ct, 2).toLatex()}$, so the two points to read are $x = ${i}$ and $x = ${j}$. The graph has heights $${fl}$ and $${fr}$ there, and their average is $${answer.toLatex()}$.`,
-        `这里 $ct = ${ct === Math.floor(ct) ? ct : Q.of(2 * ct, 2).toLatex()}$，所以要读的两点是 $x = ${i}$ 和 $x = ${j}$。图在那里的高度是 $${fl}$ 和 $${fr}$，平均值是 $${answer.toLatex()}$。`,
-      ],
-      fig(
-        { xMin: -7, xMax: 7, yMin: -1, yMax: 6, xName: "x", yName: "f" },
-        [{ kind: "path", points, accent: true }],
+const dAlembertValue = {
+  ...point(
+    "dalembert-from-a-drawn-initial-shape",
+    ["d'Alembert from a drawn initial shape", "由图中初始形状用达朗贝尔公式"],
+    [
+      "With zero initial velocity, d'Alembert's formula splits the initial shape into two halves, moving left and right at speed $c$: $u(x, t) = \\frac{1}{2}[f(x - ct) + f(x + ct)]$. To evaluate it from a graph, read the heights of $f$ at the two points $x - ct$ and $x + ct$, and average them.",
+      "初速度为零时，达朗贝尔公式把初始形状分成两半，以速度 $c$ 分别向左和向右移动：$u(x, t) = \\frac{1}{2}[f(x - ct) + f(x + ct)]$。要从图上求值，就读出 $f$ 在 $x - ct$ 和 $x + ct$ 两点的高度，再取平均。",
+    ],
+    (rng) => {
+      const breaks = rng.sample([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], 4).sort((a, b) => a - b);
+      const top = breaks.map(() => rng.int(1, 5));
+      const points: Point[] = [[-6, 0], ...breaks.map((b, i): Point => [b, top[i] as number]), [6, 0]];
+      const f = (x: number) => {
+        for (let i = 0; i + 1 < points.length; i++) {
+          const [p, q] = [points[i] as Point, points[i + 1] as Point];
+          if (x >= p[0] && x <= q[0]) return p[1] + ((q[1] - p[1]) * (x - p[0])) / (q[0] - p[0]);
+        }
+        return 0;
+      };
+      const [i, j] = rng.sample(breaks, 2).sort((a, b) => a - b) as [number, number];
+      const x0Doubled = i + j;
+      const ct = (j - i) / 2;
+      const c = ct % 1 === 0 ? ct : 2 * ct;
+      const time = ct % 1 === 0 ? 1 : Q.of(1, 2);
+      const timeTex = typeof time === "number" ? "1" : time.toLatex();
+      const fl = f(i);
+      const fr = f(j);
+      const answer = Q.of(fl + fr, 2);
+      const x0 = Q.of(x0Doubled, 2);
+      return ask(
         [
-          `Straight pieces through ${points.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-          `经过 ${points.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的直线段。`,
+          `The graph shows the initial shape $f$ of a string, released from rest, with wave speed $c = ${c}$. What is $u(${x0.toLatex()}, ${timeTex})$?`,
+          `图中是从静止释放的弦的初始形状 $f$，波速 $c = ${c}$。$u(${x0.toLatex()}, ${timeTex})$ 是多少？`,
         ],
-      ),
-    );
-  },
-);
+        answer,
+        [
+          Q.of(fl + fr, 1),
+          Q.of(fl, 1).eq(answer) ? Q.of(fl + 1, 1) : Q.of(fl, 1),
+          Q.of(fr, 1).eq(answer) ? Q.of(fr + 2, 1) : Q.of(fr, 1),
+          Q.of(Math.round(f(x0.toNumber())) + 1, 1),
+        ],
+        [
+          `Here $ct = ${ct === Math.floor(ct) ? ct : Q.of(2 * ct, 2).toLatex()}$, so the two points to read are $x = ${i}$ and $x = ${j}$. The graph has heights $${fl}$ and $${fr}$ there, and their average is $${answer.toLatex()}$.`,
+          `这里 $ct = ${ct === Math.floor(ct) ? ct : Q.of(2 * ct, 2).toLatex()}$，所以要读的两点是 $x = ${i}$ 和 $x = ${j}$。图在那里的高度是 $${fl}$ 和 $${fr}$，平均值是 $${answer.toLatex()}$。`,
+        ],
+        fig(
+          { xMin: -7, xMax: 7, yMin: -1, yMax: 6, xName: "x", yName: "f" },
+          [{ kind: "path", points, accent: true }],
+          [
+            `Straight pieces through ${points.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+            `经过 ${points.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的直线段。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: pdeDrawings1["dalemberts-formula#dalembert-from-a-drawn-initial-shape"],
+};
 
-const domainFromPoint = point(
-  "the-domain-of-dependence-of-a-marked-point",
-  ["The domain of dependence of a marked point", "所标点的依赖域"],
-  [
-    "The value of a wave at a point $(x_0, t_0)$ depends only on the initial data on the interval from $x_0 - c t_0$ to $x_0 + c t_0$. In the $xt$-plane this is the base of a triangle with its top at the point, whose sides have slopes matching the wave speed. Data outside this interval has not had time to arrive.",
-    "波在点 $(x_0, t_0)$ 处的值只取决于从 $x_0 - c t_0$ 到 $x_0 + c t_0$ 区间上的初始数据。在 $xt$ 平面中，这是以该点为顶点的三角形的底，它的边的斜率与波速相符。这个区间之外的数据还来不及到达。",
-  ],
-  (rng) => {
-    const c = rng.int(1, 3);
-    const x0 = rng.int(-3, 3);
-    const t0 = rng.int(1, 3);
-    const [lo, hi] = [x0 - c * t0, x0 + c * t0];
-    const iv = (u: number, v: number) => same(`[${u}, ${v}]`);
-    return choose(
-      rng,
-      [
-        `For the wave equation with speed $c = ${c}$, on what interval of initial data does the value at the marked point $P$ depend?`,
-        `对波速 $c = ${c}$ 的波动方程，所标点 $P$ 处的值依赖于哪个区间上的初始数据？`,
-      ],
-      iv(lo, hi),
-      [iv(x0 - t0, x0 + t0), iv(x0 - 2 * c * t0, x0 + 2 * c * t0), iv(x0, hi), iv(lo, x0), iv(x0 - c, x0 + c)],
-      [
-        `The point is $(${x0}, ${t0})$. Going back along the two lines with speed $${c}$ for time $${t0}$ moves $${c * t0}$ each way, which reaches $${lo}$ and $${hi}$.`,
-        `这个点是 $(${x0}, ${t0})$。沿速度为 $${c}$ 的两条线倒退时间 $${t0}$，各走 $${c * t0}$，到达 $${lo}$ 和 $${hi}$。`,
-      ],
-      fig(
-        { xMin: -13, xMax: 13, yMin: -1, yMax: 5, labelEvery: 2, xName: "x", yName: "t" },
-        [{ kind: "point", at: [x0, t0], label: "P", dir: "ne" }],
-        [`The point P at (${x0}, ${t0}) in the xt-plane.`, `xt 平面上的点 P，坐标为 (${x0}, ${t0})。`],
-      ),
-    );
-  },
-);
+const domainFromPoint = {
+  ...point(
+    "the-domain-of-dependence-of-a-marked-point",
+    ["The domain of dependence of a marked point", "所标点的依赖域"],
+    [
+      "The value of a wave at a point $(x_0, t_0)$ depends only on the initial data on the interval from $x_0 - c t_0$ to $x_0 + c t_0$. In the $xt$-plane this is the base of a triangle with its top at the point, whose sides have slopes matching the wave speed. Data outside this interval has not had time to arrive.",
+      "波在点 $(x_0, t_0)$ 处的值只取决于从 $x_0 - c t_0$ 到 $x_0 + c t_0$ 区间上的初始数据。在 $xt$ 平面中，这是以该点为顶点的三角形的底，它的边的斜率与波速相符。这个区间之外的数据还来不及到达。",
+    ],
+    (rng) => {
+      const c = rng.int(1, 3);
+      const x0 = rng.int(-3, 3);
+      const t0 = rng.int(1, 3);
+      const [lo, hi] = [x0 - c * t0, x0 + c * t0];
+      const iv = (u: number, v: number) => same(`[${u}, ${v}]`);
+      return choose(
+        rng,
+        [
+          `For the wave equation with speed $c = ${c}$, on what interval of initial data does the value at the marked point $P$ depend?`,
+          `对波速 $c = ${c}$ 的波动方程，所标点 $P$ 处的值依赖于哪个区间上的初始数据？`,
+        ],
+        iv(lo, hi),
+        [iv(x0 - t0, x0 + t0), iv(x0 - 2 * c * t0, x0 + 2 * c * t0), iv(x0, hi), iv(lo, x0), iv(x0 - c, x0 + c)],
+        [
+          `The point is $(${x0}, ${t0})$. Going back along the two lines with speed $${c}$ for time $${t0}$ moves $${c * t0}$ each way, which reaches $${lo}$ and $${hi}$.`,
+          `这个点是 $(${x0}, ${t0})$。沿速度为 $${c}$ 的两条线倒退时间 $${t0}$，各走 $${c * t0}$，到达 $${lo}$ 和 $${hi}$。`,
+        ],
+        fig(
+          { xMin: -13, xMax: 13, yMin: -1, yMax: 5, labelEvery: 2, xName: "x", yName: "t" },
+          [{ kind: "point", at: [x0, t0], label: "P", dir: "ne" }],
+          [`The point P at (${x0}, ${t0}) in the xt-plane.`, `xt 平面上的点 P，坐标为 (${x0}, ${t0})。`],
+        ),
+      );
+    },
+  ),
+  figure: pdeDrawings1["domains-of-dependence#the-domain-of-dependence-of-a-marked-point"],
+};
 
-const reflectedPulse = point(
-  "a-pulse-after-a-drawn-reflection",
-  ["A pulse after a drawn reflection", "图中脉冲反射之后"],
-  [
-    "A pulse travelling toward the end of a string reflects there. At a fixed end, the reflected pulse is upside down, and at a free end, it stays upright. In both cases it moves away at the same speed. Its position after a given time comes from the total distance travelled, including the part back from the end.",
-    "向弦的端点传播的脉冲在那里反射。在固定端，反射脉冲倒过来；在自由端，它保持正立。两种情况下它都以相同的速度离开。一段时间后的位置由走过的总路程决定，包括从端点返回的部分。",
-  ],
-  (rng) => {
-    const start = rng.int(2, 6);
-    const c = rng.int(1, 2);
-    const after = rng.int(1, 4);
-    const time = (start + after) / c;
-    const timeText = Number.isInteger(time) ? String(time) : Q.of(start + after, c).toLatex();
-    const fixed = rng.bool();
-    const h = rng.int(1, 3);
-    const end: Pair = fixed ? ["fixed", "固定"] : ["free", "自由"];
-    const option = (at: number, up: boolean): Pair => [
-      `At $x = ${at}$, ${up ? "upright" : "upside down"}`,
-      `在 $x = ${at}$，${up ? "正立" : "倒立"}`,
-    ];
-    return choose(
-      rng,
-      [
-        `The pulse moves left at speed $c = ${c}$ along a string with a ${end[0]} end at $x = 0$. Where is the tip of the pulse at time $t = ${timeText}$, and which way up is it?`,
-        `脉冲沿弦以速度 $c = ${c}$ 向左移动，弦在 $x = 0$ 处是${end[1]}端。在 $t = ${timeText}$ 时脉冲的尖端在哪里，方向如何？`,
-      ],
-      option(after, !fixed),
-      [option(after, fixed), option(start + after, !fixed), option(after + 1, !fixed), option(start, !fixed)],
-      [
-        `The tip starts at $x = ${start}$ and travels $${start + after}$ in that time. It reaches the end after $${start}$ and comes back $${after}$. A ${end[0]} end leaves it ${fixed ? "upside down" : "upright"}.`,
-        `尖端从 $x = ${start}$ 出发，在这段时间内走 $${start + after}$。走 $${start}$ 到达端点，再返回 $${after}$。${end[1]}端使它${fixed ? "倒立" : "正立"}。`,
-      ],
-      fig(
-        { xMin: -1, xMax: 9, yMin: -4, yMax: 4, xName: "x" },
+const reflectedPulse = {
+  ...point(
+    "a-pulse-after-a-drawn-reflection",
+    ["A pulse after a drawn reflection", "图中脉冲反射之后"],
+    [
+      "A pulse travelling toward the end of a string reflects there. At a fixed end, the reflected pulse is upside down, and at a free end, it stays upright. In both cases it moves away at the same speed. Its position after a given time comes from the total distance travelled, including the part back from the end.",
+      "向弦的端点传播的脉冲在那里反射。在固定端，反射脉冲倒过来；在自由端，它保持正立。两种情况下它都以相同的速度离开。一段时间后的位置由走过的总路程决定，包括从端点返回的部分。",
+    ],
+    (rng) => {
+      const start = rng.int(2, 6);
+      const c = rng.int(1, 2);
+      const after = rng.int(1, 4);
+      const time = (start + after) / c;
+      const timeText = Number.isInteger(time) ? String(time) : Q.of(start + after, c).toLatex();
+      const fixed = rng.bool();
+      const h = rng.int(1, 3);
+      const end: Pair = fixed ? ["fixed", "固定"] : ["free", "自由"];
+      const option = (at: number, up: boolean): Pair => [
+        `At $x = ${at}$, ${up ? "upright" : "upside down"}`,
+        `在 $x = ${at}$，${up ? "正立" : "倒立"}`,
+      ];
+      return choose(
+        rng,
         [
-          { kind: "curve", f: tent(start, 1, h), from: 0, to: 9, accent: true },
-          { kind: "segment", a: [0, -4], b: [0, 4] },
-          { kind: "arrow", from: [start, h + 0.5], to: [start - 1.5, h + 0.5], accent: true },
+          `The pulse moves left at speed $c = ${c}$ along a string with a ${end[0]} end at $x = 0$. Where is the tip of the pulse at time $t = ${timeText}$, and which way up is it?`,
+          `脉冲沿弦以速度 $c = ${c}$ 向左移动，弦在 $x = 0$ 处是${end[1]}端。在 $t = ${timeText}$ 时脉冲的尖端在哪里，方向如何？`,
         ],
+        option(after, !fixed),
+        [option(after, fixed), option(start + after, !fixed), option(after + 1, !fixed), option(start, !fixed)],
         [
-          `A pulse of height ${h} with its tip at x = ${start}, moving left toward the end of the string at x = 0.`,
-          `高度为 ${h} 的脉冲，尖端在 x = ${start}，向左朝 x = 0 处的弦端移动。`,
+          `The tip starts at $x = ${start}$ and travels $${start + after}$ in that time. It reaches the end after $${start}$ and comes back $${after}$. A ${end[0]} end leaves it ${fixed ? "upside down" : "upright"}.`,
+          `尖端从 $x = ${start}$ 出发，在这段时间内走 $${start + after}$。走 $${start}$ 到达端点，再返回 $${after}$。${end[1]}端使它${fixed ? "倒立" : "正立"}。`,
         ],
-      ),
-    );
-  },
-);
+        fig(
+          { xMin: -1, xMax: 9, yMin: -4, yMax: 4, xName: "x" },
+          [
+            { kind: "curve", f: tent(start, 1, h), from: 0, to: 9, accent: true },
+            { kind: "segment", a: [0, -4], b: [0, 4] },
+            { kind: "arrow", from: [start, h + 0.5], to: [start - 1.5, h + 0.5], accent: true },
+          ],
+          [
+            `A pulse of height ${h} with its tip at x = ${start}, moving left toward the end of the string at x = 0.`,
+            `高度为 ${h} 的脉冲，尖端在 x = ${start}，向左朝 x = 0 处的弦端移动。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: pdeDrawings1["reflection-at-a-boundary#a-pulse-after-a-drawn-reflection"],
+};
 
 const modeFrequency = point(
   "the-frequency-of-a-drawn-mode",
@@ -352,52 +362,55 @@ const modeFrequency = point(
   },
 );
 
-const heatCurves = point(
-  "times-from-drawn-heat-kernels",
-  ["Times from drawn heat kernels", "由图中热核读时间"],
-  [
-    "The heat kernel spreads a unit of heat over time. Its graph stays a bell shape with the same total area, so as time grows the peak gets lower and the curve gets wider. Comparing curves of the same mass therefore orders them by time: the tallest and narrowest is the earliest, and the lowest and widest is the latest.",
-    "热核使一单位热量随时间扩散。它的图保持钟形，总面积不变，所以随时间增大，峰变低、曲线变宽。因此比较质量相同的曲线，就能按时间排序：最高最窄的最早，最低最宽的最晚。",
-  ],
-  (rng) => {
-    const times = rng.pick([
-      [0.15, 0.6, 2],
-      [0.2, 0.8, 2.5],
-      [0.1, 0.5, 1.5],
-      [0.25, 1, 3],
-    ]) as readonly [number, number, number];
-    const center = rng.int(-3, 3);
-    const names = rng.shuffle(["A", "B", "C"]);
-    const latest = rng.bool();
-    const curve = (s: number) => (x: number) => (5 * Math.exp(-((x - center) ** 2) / (4 * s))) / Math.sqrt(4 * Math.PI * s);
-    const marks: PlaneMark[] = times.map((s, i): PlaneMark => ({ kind: "curve", f: curve(s), accent: i === 1, dashed: i === 2 }));
-    times.forEach((s, i) => {
-      const x = center + Math.sqrt(2 * s);
-      marks.push({ kind: "label", at: [x, curve(s)(x)], text: names[i] as string, dir: "ne" });
-    });
-    const answer = (latest ? names[2] : names[0]) as string;
-    return choose(
-      rng,
-      [
-        `The curves show the same heat kernel at three times. Which curve is the ${latest ? "latest" : "earliest"}?`,
-        `这些曲线表示同一个热核在三个时刻的图。哪条曲线是${latest ? "最晚" : "最早"}的？`,
-      ],
-      same(answer),
-      names
-        .filter((n) => n !== answer)
-        .map((n): Pair => same(n))
-        .concat([["They are all at the same time", "它们在同一时刻"]]),
-      [
-        `Heat spreads as time passes, so the peak falls and the curve widens. The curve $${answer}$ is the ${latest ? "lowest and widest" : "tallest and narrowest"}, which makes it the ${latest ? "latest" : "earliest"}.`,
-        `热量随时间扩散，所以峰下降、曲线变宽。曲线 $${answer}$ 是${latest ? "最低最宽" : "最高最窄"}的，所以它是${latest ? "最晚" : "最早"}的。`,
-      ],
-      fig({ xMin: -7, xMax: 7, yMin: -1, yMax: 6 }, marks, [
-        `Three bell curves centered at x = ${center}, labelled ${[...names].sort().join(", ")}.`,
-        `以 x = ${center} 为中心的三条钟形曲线，标为 ${[...names].sort().join("，")}。`,
-      ]),
-    );
-  },
-);
+const heatCurves = {
+  ...point(
+    "times-from-drawn-heat-kernels",
+    ["Times from drawn heat kernels", "由图中热核读时间"],
+    [
+      "The heat kernel spreads a unit of heat over time. Its graph stays a bell shape with the same total area, so as time grows the peak gets lower and the curve gets wider. Comparing curves of the same mass therefore orders them by time: the tallest and narrowest is the earliest, and the lowest and widest is the latest.",
+      "热核使一单位热量随时间扩散。它的图保持钟形，总面积不变，所以随时间增大，峰变低、曲线变宽。因此比较质量相同的曲线，就能按时间排序：最高最窄的最早，最低最宽的最晚。",
+    ],
+    (rng) => {
+      const times = rng.pick([
+        [0.15, 0.6, 2],
+        [0.2, 0.8, 2.5],
+        [0.1, 0.5, 1.5],
+        [0.25, 1, 3],
+      ]) as readonly [number, number, number];
+      const center = rng.int(-3, 3);
+      const names = rng.shuffle(["A", "B", "C"]);
+      const latest = rng.bool();
+      const curve = (s: number) => (x: number) => (5 * Math.exp(-((x - center) ** 2) / (4 * s))) / Math.sqrt(4 * Math.PI * s);
+      const marks: PlaneMark[] = times.map((s, i): PlaneMark => ({ kind: "curve", f: curve(s), accent: i === 1, dashed: i === 2 }));
+      times.forEach((s, i) => {
+        const x = center + Math.sqrt(2 * s);
+        marks.push({ kind: "label", at: [x, curve(s)(x)], text: names[i] as string, dir: "ne" });
+      });
+      const answer = (latest ? names[2] : names[0]) as string;
+      return choose(
+        rng,
+        [
+          `The curves show the same heat kernel at three times. Which curve is the ${latest ? "latest" : "earliest"}?`,
+          `这些曲线表示同一个热核在三个时刻的图。哪条曲线是${latest ? "最晚" : "最早"}的？`,
+        ],
+        same(answer),
+        names
+          .filter((n) => n !== answer)
+          .map((n): Pair => same(n))
+          .concat([["They are all at the same time", "它们在同一时刻"]]),
+        [
+          `Heat spreads as time passes, so the peak falls and the curve widens. The curve $${answer}$ is the ${latest ? "lowest and widest" : "tallest and narrowest"}, which makes it the ${latest ? "latest" : "earliest"}.`,
+          `热量随时间扩散，所以峰下降、曲线变宽。曲线 $${answer}$ 是${latest ? "最低最宽" : "最高最窄"}的，所以它是${latest ? "最晚" : "最早"}的。`,
+        ],
+        fig({ xMin: -7, xMax: 7, yMin: -1, yMax: 6 }, marks, [
+          `Three bell curves centered at x = ${center}, labelled ${[...names].sort().join(", ")}.`,
+          `以 x = ${center} 为中心的三条钟形曲线，标为 ${[...names].sort().join("，")}。`,
+        ]),
+      );
+    },
+  ),
+  figure: pdeDrawings1["the-heat-kernel#times-from-drawn-heat-kernels"],
+};
 
 const heatMaximum = point(
   "a-heat-bound-from-the-initial-profile",

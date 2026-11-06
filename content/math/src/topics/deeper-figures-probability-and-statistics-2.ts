@@ -5,6 +5,7 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { ask, choose, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
@@ -288,41 +289,44 @@ const triangleDensity = (a: number, c: number, b: number) => {
   return (v: number) => (v <= a || v >= b ? 0 : v <= c ? (h * (v - a)) / (c - a || 1) : (h * (b - v)) / (b - c || 1));
 };
 
-const triangleMean = point(
-  "the-mean-of-a-triangular-density",
-  ["The mean of a triangular density", "三角形密度的均值"],
-  [
-    "The mean of a density is the balance point of the region under it. For a triangle, the balance point lies above the average of the three corners' positions, so a triangular density on $[a, b]$ with its peak at $c$ has mean $\\frac{a + b + c}{3}$. A symmetric triangle balances at its peak, and a lopsided one has its mean on the side of the long tail.",
-    "密度的均值是其下方区域的平衡点。三角形的平衡点在三个顶点横坐标的平均值处，所以 $[a, b]$ 上峰值在 $c$ 的三角形密度，均值为 $\\frac{a + b + c}{3}$。对称三角形在峰值处平衡；不对称时，均值偏向长尾一侧。",
-  ],
-  (rng) => {
-    const a = rng.int(0, 2);
-    const b = a + rng.pick([6, 7, 8]);
-    const c = rng.int(a + 1, b - 1);
-    const f = triangleDensity(a, c, b);
-    const svg = chart(
-      [0, 11],
-      [0, (2 / (b - a)) * 1.2],
-      intTicks(0, 11),
-      [],
-      (x, y) => curvePath(f, a, b, x, y) + shadeUnder(f, a, b, x, y),
-    );
-    const answer = Q.of(a + b + c, 3);
-    return ask(
-      ["The graph shows a triangular density of $X$. Find $E(X)$.", "图中是 $X$ 的三角形密度。求 $E(X)$。"],
-      answer,
-      [Q.of(c, 1), Q.of(a + b, 2), Q.of(a + b + c, 2)],
-      [
-        `The corners are at $${a}$, $${b}$ and the peak $${c}$, so the mean is $\\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$.`,
-        `三个顶点的横坐标是 $${a}$、$${b}$ 和峰值 $${c}$，所以均值为 $\\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$。`,
-      ],
-      {
-        svg,
-        alt: t(`A triangular density from ${a} to ${b} with its peak at ${c}.`, `从 ${a} 到 ${b} 的三角形密度，峰值在 ${c}。`),
-      },
-    );
-  },
-);
+const triangleMean = {
+  ...point(
+    "the-mean-of-a-triangular-density",
+    ["The mean of a triangular density", "三角形密度的均值"],
+    [
+      "The mean of a density is the balance point of the region under it. For a triangle, the balance point lies above the average of the three corners' positions, so a triangular density on $[a, b]$ with its peak at $c$ has mean $\\frac{a + b + c}{3}$. A symmetric triangle balances at its peak, and a lopsided one has its mean on the side of the long tail.",
+      "密度的均值是其下方区域的平衡点。三角形的平衡点在三个顶点横坐标的平均值处，所以 $[a, b]$ 上峰值在 $c$ 的三角形密度，均值为 $\\frac{a + b + c}{3}$。对称三角形在峰值处平衡；不对称时，均值偏向长尾一侧。",
+    ],
+    (rng) => {
+      const a = rng.int(0, 2);
+      const b = a + rng.pick([6, 7, 8]);
+      const c = rng.int(a + 1, b - 1);
+      const f = triangleDensity(a, c, b);
+      const svg = chart(
+        [0, 11],
+        [0, (2 / (b - a)) * 1.2],
+        intTicks(0, 11),
+        [],
+        (x, y) => curvePath(f, a, b, x, y) + shadeUnder(f, a, b, x, y),
+      );
+      const answer = Q.of(a + b + c, 3);
+      return ask(
+        ["The graph shows a triangular density of $X$. Find $E(X)$.", "图中是 $X$ 的三角形密度。求 $E(X)$。"],
+        answer,
+        [Q.of(c, 1), Q.of(a + b, 2), Q.of(a + b + c, 2)],
+        [
+          `The corners are at $${a}$, $${b}$ and the peak $${c}$, so the mean is $\\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$.`,
+          `三个顶点的横坐标是 $${a}$、$${b}$ 和峰值 $${c}$，所以均值为 $\\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$。`,
+        ],
+        {
+          svg,
+          alt: t(`A triangular density from ${a} to ${b} with its peak at ${c}.`, `从 ${a} 到 ${b} 的三角形密度，峰值在 ${c}。`),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["expected-values-of-continuous-random-variables#the-mean-of-a-triangular-density"],
+};
 
 const modeVersusMean = point(
   "where-the-mode-median-and-mean-fall",
@@ -368,39 +372,42 @@ const modeVersusMean = point(
   },
 );
 
-const uniformVariance = point(
-  "mean-and-variance-from-a-rectangular-density",
-  ["Mean and variance from a rectangular density", "由矩形密度求均值和方差"],
-  [
-    "A continuous uniform density on $[a, b]$ is a rectangle of height $\\frac{1}{b - a}$. Its mean is the midpoint $\\frac{a + b}{2}$, and its variance is $\\frac{(b - a)^{2}}{12}$, which depends only on the width of the rectangle.",
-    "$[a, b]$ 上的连续均匀密度是高为 $\\frac{1}{b - a}$ 的矩形。均值是中点 $\\frac{a + b}{2}$，方差为 $\\frac{(b - a)^{2}}{12}$，只取决于矩形的宽度。",
-  ],
-  (rng) => {
-    const a = rng.int(0, 4);
-    const w = rng.pick([2, 3, 4, 5, 6]);
-    const b = a + w;
-    const wantMean = rng.bool();
-    const svg = chart([0, 11], [0, (1 / w) * 1.3], intTicks(0, 11), [[1 / w, `1/${w}`]], (x, y) => bars([a, b], [1 / w], x, y));
-    const mean = Q.of(a + b, 2);
-    const variance = Q.of(w * w, 12);
-    return ask(
-      [
-        `The graph shows the density of $X$. Find ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}.`,
-        `图中是 $X$ 的密度。求 ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}。`,
-      ],
-      wantMean ? mean : variance,
-      wantMean ? [Q.of(w, 2), Q.of(a + b, 1), Q.of(b, 1)] : [Q.of(w, 12), Q.of(w * w, 2), Q.of(b * b, 12)],
-      [
-        `The rectangle runs from $${a}$ to $${b}$, a width of $${w}$. ${wantMean ? `The mean is its midpoint, $${mean.toLatex()}$.` : `So the variance is $\\frac{${w}^{2}}{12} = ${variance.toLatex()}$.`}`,
-        `矩形从 $${a}$ 到 $${b}$，宽度为 $${w}$。${wantMean ? `均值是它的中点 $${mean.toLatex()}$。` : `所以方差为 $\\frac{${w}^{2}}{12} = ${variance.toLatex()}$。`}`,
-      ],
-      {
-        svg,
-        alt: t(`A rectangular density from ${a} to ${b} with height 1/${w}.`, `从 ${a} 到 ${b} 的矩形密度，高度为 1/${w}。`),
-      },
-    );
-  },
-);
+const uniformVariance = {
+  ...point(
+    "mean-and-variance-from-a-rectangular-density",
+    ["Mean and variance from a rectangular density", "由矩形密度求均值和方差"],
+    [
+      "A continuous uniform density on $[a, b]$ is a rectangle of height $\\frac{1}{b - a}$. Its mean is the midpoint $\\frac{a + b}{2}$, and its variance is $\\frac{(b - a)^{2}}{12}$, which depends only on the width of the rectangle.",
+      "$[a, b]$ 上的连续均匀密度是高为 $\\frac{1}{b - a}$ 的矩形。均值是中点 $\\frac{a + b}{2}$，方差为 $\\frac{(b - a)^{2}}{12}$，只取决于矩形的宽度。",
+    ],
+    (rng) => {
+      const a = rng.int(0, 4);
+      const w = rng.pick([2, 3, 4, 5, 6]);
+      const b = a + w;
+      const wantMean = rng.bool();
+      const svg = chart([0, 11], [0, (1 / w) * 1.3], intTicks(0, 11), [[1 / w, `1/${w}`]], (x, y) => bars([a, b], [1 / w], x, y));
+      const mean = Q.of(a + b, 2);
+      const variance = Q.of(w * w, 12);
+      return ask(
+        [
+          `The graph shows the density of $X$. Find ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}.`,
+          `图中是 $X$ 的密度。求 ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}。`,
+        ],
+        wantMean ? mean : variance,
+        wantMean ? [Q.of(w, 2), Q.of(a + b, 1), Q.of(b, 1)] : [Q.of(w, 12), Q.of(w * w, 2), Q.of(b * b, 12)],
+        [
+          `The rectangle runs from $${a}$ to $${b}$, a width of $${w}$. ${wantMean ? `The mean is its midpoint, $${mean.toLatex()}$.` : `So the variance is $\\frac{${w}^{2}}{12} = ${variance.toLatex()}$.`}`,
+          `矩形从 $${a}$ 到 $${b}$，宽度为 $${w}$。${wantMean ? `均值是它的中点 $${mean.toLatex()}$。` : `所以方差为 $\\frac{${w}^{2}}{12} = ${variance.toLatex()}$。`}`,
+        ],
+        {
+          svg,
+          alt: t(`A rectangular density from ${a} to ${b} with height 1/${w}.`, `从 ${a} 到 ${b} 的矩形密度，高度为 1/${w}。`),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["mean-and-variance-of-the-continuous-uniform-distribution#mean-and-variance-from-a-rectangular-density"],
+};
 
 const exponentialMean = point(
   "the-mean-from-the-height-of-an-exponential-curve",
@@ -724,154 +731,163 @@ const support = (size: number, corners: readonly (readonly [number, number])[]) 
       `<polygon class="accent" fill="currentColor" fill-opacity="0.25" stroke="currentColor" points="${corners.map(([u, v]) => `${x(u)},${y(v)}`).join(" ")}"/>`,
   );
 
-const triangleMarginal = point(
-  "a-marginal-density-on-a-triangle",
-  ["A marginal density on a triangle", "三角形上的边缘密度"],
-  [
-    "A uniform joint density on a region has height one over the area. The marginal density at $x$ is that height times the length of the vertical slice through the region at $x$, so on a triangle the marginal changes linearly, even though the joint density is constant.",
-    "区域上的均匀联合密度，高度是面积的倒数。$x$ 处的边缘密度等于这个高度乘以区域在 $x$ 处竖直截线的长度，所以在三角形上，尽管联合密度是常数，边缘密度却线性变化。",
-  ],
-  (rng) => {
-    const a = rng.int(2, 7);
-    const c = rng.int(1, a - 1);
-    const area = Q.of(a * a, 2);
-    const useX = rng.bool();
-    const length = useX ? c : a - c;
-    const answer = Q.of(2 * length, a * a);
-    return ask(
-      [
-        `$(X, Y)$ is uniformly distributed on the shaded triangle. Find the marginal density $f_${useX ? "X" : "Y"}(${c})$.`,
-        `$(X, Y)$ 在阴影三角形上均匀分布。求边缘密度 $f_${useX ? "X" : "Y"}(${c})$。`,
-      ],
-      answer,
-      [Q.of(2, a * a), Q.of(c, a), Q.of(2 * (a - length), a * a), Q.of(length, a * a)],
-      useX
-        ? [
-            `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$. The vertical slice at $x = ${c}$ runs from $y = 0$ to $y = ${c}$, of length $${c}$, which gives $${answer.toLatex()}$.`,
-            `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。$x = ${c}$ 处的竖直截线从 $y = 0$ 到 $y = ${c}$，长度为 $${c}$，于是得 $${answer.toLatex()}$。`,
-          ]
-        : [
-            `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$. The horizontal slice at $y = ${c}$ runs from $x = ${c}$ to $x = ${a}$, of length $${a - c}$, which gives $${answer.toLatex()}$.`,
-            `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。$y = ${c}$ 处的水平截线从 $x = ${c}$ 到 $x = ${a}$，长度为 $${a - c}$，于是得 $${answer.toLatex()}$。`,
-          ],
-      {
-        svg: support(a, [
-          [0, 0],
-          [a, 0],
-          [a, a],
-        ]),
-        alt: t(
-          `A shaded triangle with corners (0, 0), (${a}, 0) and (${a}, ${a}).`,
-          `阴影三角形，顶点为 (0, 0)、(${a}, 0) 和 (${a}, ${a})。`,
-        ),
-      },
-    );
-  },
-);
-
-const supportIndependence = point(
-  "independence-from-the-shape-of-the-support",
-  ["Independence from the shape of the support", "由支撑集的形状判断独立性"],
-  [
-    "If $X$ and $Y$ are independent, then the set where the joint density is positive is a product: every $x$ the variable $X$ can take pairs with every $y$ the variable $Y$ can take. So independent variables have a rectangular support with sides along the axes, and a triangle or a tilted shape rules independence out at a glance.",
-    "若 $X$ 和 $Y$ 独立，则联合密度为正的集合是一个乘积：$X$ 能取的每个 $x$ 都能与 $Y$ 能取的每个 $y$ 配对。所以独立变量的支撑集是边与坐标轴平行的矩形；三角形或倾斜的形状一眼就能排除独立性。",
-  ],
-  (rng) => {
-    const a = rng.int(2, 5);
-    const b = rng.int(2, 5);
-    const shape = rng.pick(["rectangle", "triangle", "diamond"] as const);
-    const corners: (readonly [number, number])[] =
-      shape === "rectangle"
-        ? [
+const triangleMarginal = {
+  ...point(
+    "a-marginal-density-on-a-triangle",
+    ["A marginal density on a triangle", "三角形上的边缘密度"],
+    [
+      "A uniform joint density on a region has height one over the area. The marginal density at $x$ is that height times the length of the vertical slice through the region at $x$, so on a triangle the marginal changes linearly, even though the joint density is constant.",
+      "区域上的均匀联合密度，高度是面积的倒数。$x$ 处的边缘密度等于这个高度乘以区域在 $x$ 处竖直截线的长度，所以在三角形上，尽管联合密度是常数，边缘密度却线性变化。",
+    ],
+    (rng) => {
+      const a = rng.int(2, 7);
+      const c = rng.int(1, a - 1);
+      const area = Q.of(a * a, 2);
+      const useX = rng.bool();
+      const length = useX ? c : a - c;
+      const answer = Q.of(2 * length, a * a);
+      return ask(
+        [
+          `$(X, Y)$ is uniformly distributed on the shaded triangle. Find the marginal density $f_${useX ? "X" : "Y"}(${c})$.`,
+          `$(X, Y)$ 在阴影三角形上均匀分布。求边缘密度 $f_${useX ? "X" : "Y"}(${c})$。`,
+        ],
+        answer,
+        [Q.of(2, a * a), Q.of(c, a), Q.of(2 * (a - length), a * a), Q.of(length, a * a)],
+        useX
+          ? [
+              `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$. The vertical slice at $x = ${c}$ runs from $y = 0$ to $y = ${c}$, of length $${c}$, which gives $${answer.toLatex()}$.`,
+              `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。$x = ${c}$ 处的竖直截线从 $y = 0$ 到 $y = ${c}$，长度为 $${c}$，于是得 $${answer.toLatex()}$。`,
+            ]
+          : [
+              `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$. The horizontal slice at $y = ${c}$ runs from $x = ${c}$ to $x = ${a}$, of length $${a - c}$, which gives $${answer.toLatex()}$.`,
+              `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。$y = ${c}$ 处的水平截线从 $x = ${c}$ 到 $x = ${a}$，长度为 $${a - c}$，于是得 $${answer.toLatex()}$。`,
+            ],
+        {
+          svg: support(a, [
             [0, 0],
             [a, 0],
-            [a, b],
-            [0, b],
-          ]
-        : shape === "triangle"
+            [a, a],
+          ]),
+          alt: t(
+            `A shaded triangle with corners (0, 0), (${a}, 0) and (${a}, ${a}).`,
+            `阴影三角形，顶点为 (0, 0)、(${a}, 0) 和 (${a}, ${a})。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["marginal-distributions-for-continuous-random-variables#a-marginal-density-on-a-triangle"],
+};
+
+const supportIndependence = {
+  ...point(
+    "independence-from-the-shape-of-the-support",
+    ["Independence from the shape of the support", "由支撑集的形状判断独立性"],
+    [
+      "If $X$ and $Y$ are independent, then the set where the joint density is positive is a product: every $x$ the variable $X$ can take pairs with every $y$ the variable $Y$ can take. So independent variables have a rectangular support with sides along the axes, and a triangle or a tilted shape rules independence out at a glance.",
+      "若 $X$ 和 $Y$ 独立，则联合密度为正的集合是一个乘积：$X$ 能取的每个 $x$ 都能与 $Y$ 能取的每个 $y$ 配对。所以独立变量的支撑集是边与坐标轴平行的矩形；三角形或倾斜的形状一眼就能排除独立性。",
+    ],
+    (rng) => {
+      const a = rng.int(2, 5);
+      const b = rng.int(2, 5);
+      const shape = rng.pick(["rectangle", "triangle", "diamond"] as const);
+      const corners: (readonly [number, number])[] =
+        shape === "rectangle"
           ? [
               [0, 0],
               [a, 0],
+              [a, b],
               [0, b],
             ]
-          : [
-              [a / 2, 0],
-              [a, b / 2],
-              [a / 2, b],
-              [0, b / 2],
-            ];
-    const can = shape === "rectangle";
-    const yes: [string, string] = [
-      "Possibly independent: the support is a rectangle along the axes.",
-      "可能独立：支撑集是沿坐标轴的矩形。",
-    ];
-    const no: [string, string] = ["Not independent: the possible $y$ values change with $x$.", "不独立：$y$ 的可能取值随 $x$ 变化。"];
-    return choose(
-      rng,
-      [
-        "A joint density of $X$ and $Y$ is positive exactly on the shaded region. What does the shape say about independence?",
-        "$X$ 和 $Y$ 的联合密度恰好在阴影区域上为正。这个形状说明独立性如何？",
-      ],
-      can ? yes : no,
-      [can ? no : yes, ["Always independent: any region can be a product.", "一定独立：任何区域都可以是乘积。"]],
-      [
-        can
-          ? "Each $x$ pairs with the same range of $y$, so the shape does not rule independence out, though the density itself must also factor."
-          : "At some $x$ the slice of possible $y$ values differs from its slice at another $x$, so learning $X$ tells you something about $Y$.",
-        can
-          ? "每个 $x$ 都对应相同范围的 $y$，所以形状不能排除独立性，不过密度本身还必须能分解。"
-          : "不同 $x$ 处 $y$ 的可能取值范围不同，知道 $X$ 就能得到关于 $Y$ 的信息。",
-      ],
-      {
-        svg: support(5, corners),
-        alt: t(
-          `A shaded ${shape === "rectangle" ? "rectangle with sides along the axes" : shape === "triangle" ? "triangle" : "tilted square"} in the plane.`,
-          `平面上的阴影${shape === "rectangle" ? "矩形，边与坐标轴平行" : shape === "triangle" ? "三角形" : "倾斜四边形"}。`,
-        ),
-      },
-    );
-  },
-);
+          : shape === "triangle"
+            ? [
+                [0, 0],
+                [a, 0],
+                [0, b],
+              ]
+            : [
+                [a / 2, 0],
+                [a, b / 2],
+                [a / 2, b],
+                [0, b / 2],
+              ];
+      const can = shape === "rectangle";
+      const yes: [string, string] = [
+        "Possibly independent: the support is a rectangle along the axes.",
+        "可能独立：支撑集是沿坐标轴的矩形。",
+      ];
+      const no: [string, string] = ["Not independent: the possible $y$ values change with $x$.", "不独立：$y$ 的可能取值随 $x$ 变化。"];
+      return choose(
+        rng,
+        [
+          "A joint density of $X$ and $Y$ is positive exactly on the shaded region. What does the shape say about independence?",
+          "$X$ 和 $Y$ 的联合密度恰好在阴影区域上为正。这个形状说明独立性如何？",
+        ],
+        can ? yes : no,
+        [can ? no : yes, ["Always independent: any region can be a product.", "一定独立：任何区域都可以是乘积。"]],
+        [
+          can
+            ? "Each $x$ pairs with the same range of $y$, so the shape does not rule independence out, though the density itself must also factor."
+            : "At some $x$ the slice of possible $y$ values differs from its slice at another $x$, so learning $X$ tells you something about $Y$.",
+          can
+            ? "每个 $x$ 都对应相同范围的 $y$，所以形状不能排除独立性，不过密度本身还必须能分解。"
+            : "不同 $x$ 处 $y$ 的可能取值范围不同，知道 $X$ 就能得到关于 $Y$ 的信息。",
+        ],
+        {
+          svg: support(5, corners),
+          alt: t(
+            `A shaded ${shape === "rectangle" ? "rectangle with sides along the axes" : shape === "triangle" ? "triangle" : "tilted square"} in the plane.`,
+            `平面上的阴影${shape === "rectangle" ? "矩形，边与坐标轴平行" : shape === "triangle" ? "三角形" : "倾斜四边形"}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["independence-of-continuous-random-variables#independence-from-the-shape-of-the-support"],
+};
 
-const jointCdfArea = point(
-  "a-joint-cdf-as-a-fraction-of-a-rectangle",
-  ["A joint CDF as a fraction of a rectangle", "联合分布函数作为矩形的一部分"],
-  [
-    "The joint CDF $F(x, y) = P(X \\le x, Y \\le y)$ collects the probability to the lower left of the point $(x, y)$. For a uniform density on a rectangle, it is the fraction of the rectangle's area lying in that corner.",
-    "联合分布函数 $F(x, y) = P(X \\le x, Y \\le y)$ 收集点 $(x, y)$ 左下方的概率。对矩形上的均匀密度，它等于这个角落占矩形面积的比例。",
-  ],
-  (rng) => {
-    const a = rng.int(3, 6);
-    const b = rng.int(3, 6);
-    const u = rng.int(1, a - 1);
-    const v = rng.int(1, b - 1);
-    const svg = chart([0, 7], [0, 7], intTicks(0, 7), intTicks(0, 7), (x, y) => {
-      const rect = (w: number, h: number, extra: string) =>
-        `<rect x="${x(0)}" y="${y(h)}" width="${x(w) - x(0)}" height="${y(0) - y(h)}" ${extra}/>`;
-      return `${rect(a, b, 'stroke="currentColor"')}${rect(u, v, 'class="accent" fill="currentColor" fill-opacity="0.3" stroke="currentColor"')}`;
-    });
-    const answer = Q.of(u * v, a * b);
-    return ask(
-      [
-        `$(X, Y)$ is uniform on the large rectangle. Find $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$, the shaded part.`,
-        `$(X, Y)$ 在大矩形上均匀分布。求阴影部分对应的 $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$。`,
-      ],
-      answer,
-      [Q.of(u + v, a + b), Q.of(u * v, 49), Q.of(u, a)],
-      [
-        `The shaded corner has area $${u} \\cdot ${v} = ${u * v}$ and the rectangle has area $${a} \\cdot ${b} = ${a * b}$, so the probability is $${answer.toLatex()}$.`,
-        `阴影角落的面积为 $${u} \\cdot ${v} = ${u * v}$，矩形面积为 $${a} \\cdot ${b} = ${a * b}$，所以概率为 $${answer.toLatex()}$。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A rectangle from (0, 0) to (${a}, ${b}), with the corner from (0, 0) to (${u}, ${v}) shaded.`,
-          `从 (0, 0) 到 (${a}, ${b}) 的矩形，其中从 (0, 0) 到 (${u}, ${v}) 的角落为阴影。`,
-        ),
-      },
-    );
-  },
-);
+const jointCdfArea = {
+  ...point(
+    "a-joint-cdf-as-a-fraction-of-a-rectangle",
+    ["A joint CDF as a fraction of a rectangle", "联合分布函数作为矩形的一部分"],
+    [
+      "The joint CDF $F(x, y) = P(X \\le x, Y \\le y)$ collects the probability to the lower left of the point $(x, y)$. For a uniform density on a rectangle, it is the fraction of the rectangle's area lying in that corner.",
+      "联合分布函数 $F(x, y) = P(X \\le x, Y \\le y)$ 收集点 $(x, y)$ 左下方的概率。对矩形上的均匀密度，它等于这个角落占矩形面积的比例。",
+    ],
+    (rng) => {
+      const a = rng.int(3, 6);
+      const b = rng.int(3, 6);
+      const u = rng.int(1, a - 1);
+      const v = rng.int(1, b - 1);
+      const svg = chart([0, 7], [0, 7], intTicks(0, 7), intTicks(0, 7), (x, y) => {
+        const rect = (w: number, h: number, extra: string) =>
+          `<rect x="${x(0)}" y="${y(h)}" width="${x(w) - x(0)}" height="${y(0) - y(h)}" ${extra}/>`;
+        return `${rect(a, b, 'stroke="currentColor"')}${rect(u, v, 'class="accent" fill="currentColor" fill-opacity="0.3" stroke="currentColor"')}`;
+      });
+      const answer = Q.of(u * v, a * b);
+      return ask(
+        [
+          `$(X, Y)$ is uniform on the large rectangle. Find $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$, the shaded part.`,
+          `$(X, Y)$ 在大矩形上均匀分布。求阴影部分对应的 $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$。`,
+        ],
+        answer,
+        [Q.of(u + v, a + b), Q.of(u * v, 49), Q.of(u, a)],
+        [
+          `The shaded corner has area $${u} \\cdot ${v} = ${u * v}$ and the rectangle has area $${a} \\cdot ${b} = ${a * b}$, so the probability is $${answer.toLatex()}$.`,
+          `阴影角落的面积为 $${u} \\cdot ${v} = ${u * v}$，矩形面积为 $${a} \\cdot ${b} = ${a * b}$，所以概率为 $${answer.toLatex()}$。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A rectangle from (0, 0) to (${a}, ${b}), with the corner from (0, 0) to (${u}, ${v}) shaded.`,
+            `从 (0, 0) 到 (${a}, ${b}) 的矩形，其中从 (0, 0) 到 (${u}, ${v}) 的角落为阴影。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["the-joint-cdf-of-two-continuous-random-variables#a-joint-cdf-as-a-fraction-of-a-rectangle"],
+};
 
 /** intervalLine draws an interval above a number line. */
 const intervalLine = (from: number, to: number, low: number, high: number) =>
@@ -1063,41 +1079,44 @@ const twoTailDecision = point(
   },
 );
 
-const likelihoodPeak = point(
-  "successes-from-the-peak-of-a-likelihood",
-  ["Successes from the peak of a likelihood", "由似然函数的峰值求成功次数"],
-  [
-    "For $k$ successes in $n$ Bernoulli trials, the likelihood $L(p) = p^{k}(1 - p)^{n - k}$ peaks at the maximum likelihood estimate $\\hat{p} = \\frac{k}{n}$. So a graph of $L$ reveals the data: the position of the peak times $n$ is the number of successes.",
-    "$n$ 次伯努利试验中成功 $k$ 次时，似然函数 $L(p) = p^{k}(1 - p)^{n - k}$ 在最大似然估计 $\\hat{p} = \\frac{k}{n}$ 处达到峰值。所以 $L$ 的图能反映数据：峰值位置乘以 $n$ 就是成功次数。",
-  ],
-  (rng) => {
-    const n = rng.pick([10, 20, 30]);
-    const tenths = rng.int(1, 9);
-    const k = (tenths * n) / 10;
-    const f = (p: number) => Math.exp(k * Math.log(p || 1e-12) + (n - k) * Math.log(1 - p || 1e-12));
-    const top = f(tenths / 10);
-    const svg = chart([0, 1], [0, top * 1.2], tenthTicks(0, 10), [], (x, y) => curvePath(f, 0.001, 0.999, x, y));
-    return ask(
-      [
-        `The graph shows the likelihood $L(p)$ from $${n}$ independent trials. How many successes were observed?`,
-        `图中是 $${n}$ 次独立试验的似然函数 $L(p)$。观测到了多少次成功？`,
-      ],
-      k,
-      [n - k, k + 1, tenths],
-      [
-        `The peak is at $\\hat{p} = ${tenths / 10}$, and $\\hat{p} = \\frac{k}{${n}}$, so $k = ${k}$.`,
-        `峰值在 $\\hat{p} = ${tenths / 10}$，而 $\\hat{p} = \\frac{k}{${n}}$，所以 $k = ${k}$。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A single-peaked likelihood curve on p from 0 to 1 with its peak at ${tenths / 10}.`,
-          `p 从 0 到 1 的单峰似然曲线，峰值在 ${tenths / 10}。`,
-        ),
-      },
-    );
-  },
-);
+const likelihoodPeak = {
+  ...point(
+    "successes-from-the-peak-of-a-likelihood",
+    ["Successes from the peak of a likelihood", "由似然函数的峰值求成功次数"],
+    [
+      "For $k$ successes in $n$ Bernoulli trials, the likelihood $L(p) = p^{k}(1 - p)^{n - k}$ peaks at the maximum likelihood estimate $\\hat{p} = \\frac{k}{n}$. So a graph of $L$ reveals the data: the position of the peak times $n$ is the number of successes.",
+      "$n$ 次伯努利试验中成功 $k$ 次时，似然函数 $L(p) = p^{k}(1 - p)^{n - k}$ 在最大似然估计 $\\hat{p} = \\frac{k}{n}$ 处达到峰值。所以 $L$ 的图能反映数据：峰值位置乘以 $n$ 就是成功次数。",
+    ],
+    (rng) => {
+      const n = rng.pick([10, 20, 30]);
+      const tenths = rng.int(1, 9);
+      const k = (tenths * n) / 10;
+      const f = (p: number) => Math.exp(k * Math.log(p || 1e-12) + (n - k) * Math.log(1 - p || 1e-12));
+      const top = f(tenths / 10);
+      const svg = chart([0, 1], [0, top * 1.2], tenthTicks(0, 10), [], (x, y) => curvePath(f, 0.001, 0.999, x, y));
+      return ask(
+        [
+          `The graph shows the likelihood $L(p)$ from $${n}$ independent trials. How many successes were observed?`,
+          `图中是 $${n}$ 次独立试验的似然函数 $L(p)$。观测到了多少次成功？`,
+        ],
+        k,
+        [n - k, k + 1, tenths],
+        [
+          `The peak is at $\\hat{p} = ${tenths / 10}$, and $\\hat{p} = \\frac{k}{${n}}$, so $k = ${k}$.`,
+          `峰值在 $\\hat{p} = ${tenths / 10}$，而 $\\hat{p} = \\frac{k}{${n}}$，所以 $k = ${k}$。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A single-peaked likelihood curve on p from 0 to 1 with its peak at ${tenths / 10}.`,
+            `p 从 0 到 1 的单峰似然曲线，峰值在 ${tenths / 10}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: probabilityDrawings1["maximum-likelihood-estimation#successes-from-the-peak-of-a-likelihood"],
+};
 
 const continuityCorrection = point(
   "the-cut-of-a-continuity-correction",

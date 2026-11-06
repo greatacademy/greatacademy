@@ -4,6 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { complexDrawings2 } from "../explanation-drawings-complex-analysis-2.ts";
 import { steps } from "../problems.ts";
 import { ask, choose, point, same, topic } from "../university-kit.ts";
 
@@ -51,97 +52,106 @@ const riemannSphere = topic(
   ["the-complex-plane"],
   [],
   [
-    point(
-      "the-height-of-a-projected-point",
-      ["The height of a projected point", "投影点的高度"],
-      [
-        "Stereographic projection joins a plane point to the north pole of the unit sphere. The line meets the sphere at height $\\frac{|z|^{2} - 1}{|z|^{2} + 1}$, so the height depends only on the distance from the origin.",
-        "球极投影把平面上的点与单位球的北极相连。这条线与球面交于高度 $\\frac{|z|^{2} - 1}{|z|^{2} + 1}$ 处，所以高度只取决于到原点的距离。",
-      ],
-      (rng) => {
-        const a = rng.int(-9, 9);
-        const b = rng.int(1, 9);
-        const m = a * a + b * b;
-        return ask(
-          [
-            `At what height does $z = ${gauss(a, b)}$ land on the unit Riemann sphere?`,
-            `$z = ${gauss(a, b)}$ 落在单位黎曼球面的什么高度？`,
-          ],
-          Q.of(m - 1, m + 1),
-          [Q.of(m + 1, m - 1 === 0 ? 3 : m - 1), Q.of(2, m + 1), Q.of(m, m + 1)],
-          [
-            `Here $|z|^{2} = ${m}$, and the height is $\\frac{|z|^{2} - 1}{|z|^{2} + 1} = \\frac{${m - 1}}{${m + 1}}$.`,
-            `这里 $|z|^{2} = ${m}$，高度是 $\\frac{|z|^{2} - 1}{|z|^{2} + 1} = \\frac{${m - 1}}{${m + 1}}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "from-the-sphere-back-to-the-plane",
-      ["From the sphere back to the plane", "从球面回到平面"],
-      [
-        "The inverse map sends a sphere point $(X, Y, Z)$ to $\\frac{X + iY}{1 - Z}$. Points near the north pole have a small denominator, so they land far out, which is why the pole stands for infinity.",
-        "逆映射把球面上的点 $(X, Y, Z)$ 映到 $\\frac{X + iY}{1 - Z}$。北极附近的点分母很小，所以落得很远，这就是北极代表无穷的原因。",
-      ],
-      (rng) => {
-        const a = rng.int(-9, 9);
-        const b = rng.int(1, 9);
-        const m = a * a + b * b + 1;
-        const x = Q.of(2 * a, m);
-        const y = Q.of(2 * b, m);
-        const z = Q.of(m - 2, m);
-        return ask(
-          [
-            `The sphere point $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$ projects to $u + vi$ in the plane. What is $v$?`,
-            `球面上的点 $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$ 投影到平面上的 $u + vi$。$v$ 是多少？`,
-          ],
-          b,
-          [a === b ? b + 1 : a, Q.of(2 * b, m), 2 * b],
-          [
-            `Here $1 - Z = \\frac{2}{${m}}$, so $v = Y \\div (1 - Z) = ${b}$.`,
-            `这里 $1 - Z = \\frac{2}{${m}}$，所以 $v = Y \\div (1 - Z) = ${b}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "which-hemisphere",
-      ["Which hemisphere", "哪个半球"],
-      [
-        "The unit circle lands on the equator, because height zero means $|z| = 1$. Points inside the circle land on the lower hemisphere, and points outside it land on the upper hemisphere near the pole.",
-        "单位圆落在赤道上，因为高度为零意味着 $|z| = 1$。圆内的点落在下半球，圆外的点落在靠近北极的上半球。",
-      ],
-      (rng) => {
-        const n = rng.int(2, 30);
-        const a = rng.int(1, 30);
-        const b = rng.int(1, 30);
-        const kind = rng.int(0, 2);
-        const lower: [string, string] = ["The lower hemisphere", "下半球"];
-        const upper: [string, string] = ["The upper hemisphere", "上半球"];
-        const equator: [string, string] = ["The equator", "赤道"];
-        const pole: [string, string] = ["The north pole", "北极"];
-        const z =
-          kind === 0
-            ? `\\frac{${a} + ${b}i}{${a + b + n}}`
-            : kind === 1
-              ? `${a} + ${b}i`
-              : `\\frac{${n * n - 1} + ${2 * n}i}{${n * n + 1}}`;
-        const right = kind === 0 ? lower : kind === 1 ? upper : equator;
-        const others = [lower, upper, equator, pole].filter((o) => o !== right);
-        return choose(rng, [`Where on the Riemann sphere does $z = ${z}$ land?`, `$z = ${z}$ 落在黎曼球面的什么位置？`], right, others, [
-          kind === 0
-            ? `Here $|z| < 1$, because $|${a} + ${b}i| \\le ${a + b} < ${a + b + n}$. Points inside the unit circle land on the lower hemisphere.`
-            : kind === 1
-              ? `Here $|z|^{2} = ${a * a + b * b} > 1$. Points outside the unit circle land on the upper hemisphere.`
-              : `Here $|z| = 1$, because $${n * n - 1}^{2} + ${2 * n}^{2} = ${n * n + 1}^{2}$. The unit circle lands on the equator.`,
-          kind === 0
-            ? `这里 $|z| < 1$，因为 $|${a} + ${b}i| \\le ${a + b} < ${a + b + n}$。单位圆内的点落在下半球。`
-            : kind === 1
-              ? `这里 $|z|^{2} = ${a * a + b * b} > 1$。单位圆外的点落在上半球。`
-              : `这里 $|z| = 1$，因为 $${n * n - 1}^{2} + ${2 * n}^{2} = ${n * n + 1}^{2}$。单位圆落在赤道上。`,
-        ]);
-      },
-    ),
+    {
+      ...point(
+        "the-height-of-a-projected-point",
+        ["The height of a projected point", "投影点的高度"],
+        [
+          "Stereographic projection joins a plane point to the north pole of the unit sphere. The line meets the sphere at height $\\frac{|z|^{2} - 1}{|z|^{2} + 1}$, so the height depends only on the distance from the origin.",
+          "球极投影把平面上的点与单位球的北极相连。这条线与球面交于高度 $\\frac{|z|^{2} - 1}{|z|^{2} + 1}$ 处，所以高度只取决于到原点的距离。",
+        ],
+        (rng) => {
+          const a = rng.int(-9, 9);
+          const b = rng.int(1, 9);
+          const m = a * a + b * b;
+          return ask(
+            [
+              `At what height does $z = ${gauss(a, b)}$ land on the unit Riemann sphere?`,
+              `$z = ${gauss(a, b)}$ 落在单位黎曼球面的什么高度？`,
+            ],
+            Q.of(m - 1, m + 1),
+            [Q.of(m + 1, m - 1 === 0 ? 3 : m - 1), Q.of(2, m + 1), Q.of(m, m + 1)],
+            [
+              `Here $|z|^{2} = ${m}$, and the height is $\\frac{|z|^{2} - 1}{|z|^{2} + 1} = \\frac{${m - 1}}{${m + 1}}$.`,
+              `这里 $|z|^{2} = ${m}$，高度是 $\\frac{|z|^{2} - 1}{|z|^{2} + 1} = \\frac{${m - 1}}{${m + 1}}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-riemann-sphere#the-height-of-a-projected-point"],
+    },
+    {
+      ...point(
+        "from-the-sphere-back-to-the-plane",
+        ["From the sphere back to the plane", "从球面回到平面"],
+        [
+          "The inverse map sends a sphere point $(X, Y, Z)$ to $\\frac{X + iY}{1 - Z}$. Points near the north pole have a small denominator, so they land far out, which is why the pole stands for infinity.",
+          "逆映射把球面上的点 $(X, Y, Z)$ 映到 $\\frac{X + iY}{1 - Z}$。北极附近的点分母很小，所以落得很远，这就是北极代表无穷的原因。",
+        ],
+        (rng) => {
+          const a = rng.int(-9, 9);
+          const b = rng.int(1, 9);
+          const m = a * a + b * b + 1;
+          const x = Q.of(2 * a, m);
+          const y = Q.of(2 * b, m);
+          const z = Q.of(m - 2, m);
+          return ask(
+            [
+              `The sphere point $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$ projects to $u + vi$ in the plane. What is $v$?`,
+              `球面上的点 $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$ 投影到平面上的 $u + vi$。$v$ 是多少？`,
+            ],
+            b,
+            [a === b ? b + 1 : a, Q.of(2 * b, m), 2 * b],
+            [
+              `Here $1 - Z = \\frac{2}{${m}}$, so $v = Y \\div (1 - Z) = ${b}$.`,
+              `这里 $1 - Z = \\frac{2}{${m}}$，所以 $v = Y \\div (1 - Z) = ${b}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-riemann-sphere#from-the-sphere-back-to-the-plane"],
+    },
+    {
+      ...point(
+        "which-hemisphere",
+        ["Which hemisphere", "哪个半球"],
+        [
+          "The unit circle lands on the equator, because height zero means $|z| = 1$. Points inside the circle land on the lower hemisphere, and points outside it land on the upper hemisphere near the pole.",
+          "单位圆落在赤道上，因为高度为零意味着 $|z| = 1$。圆内的点落在下半球，圆外的点落在靠近北极的上半球。",
+        ],
+        (rng) => {
+          const n = rng.int(2, 30);
+          const a = rng.int(1, 30);
+          const b = rng.int(1, 30);
+          const kind = rng.int(0, 2);
+          const lower: [string, string] = ["The lower hemisphere", "下半球"];
+          const upper: [string, string] = ["The upper hemisphere", "上半球"];
+          const equator: [string, string] = ["The equator", "赤道"];
+          const pole: [string, string] = ["The north pole", "北极"];
+          const z =
+            kind === 0
+              ? `\\frac{${a} + ${b}i}{${a + b + n}}`
+              : kind === 1
+                ? `${a} + ${b}i`
+                : `\\frac{${n * n - 1} + ${2 * n}i}{${n * n + 1}}`;
+          const right = kind === 0 ? lower : kind === 1 ? upper : equator;
+          const others = [lower, upper, equator, pole].filter((o) => o !== right);
+          return choose(rng, [`Where on the Riemann sphere does $z = ${z}$ land?`, `$z = ${z}$ 落在黎曼球面的什么位置？`], right, others, [
+            kind === 0
+              ? `Here $|z| < 1$, because $|${a} + ${b}i| \\le ${a + b} < ${a + b + n}$. Points inside the unit circle land on the lower hemisphere.`
+              : kind === 1
+                ? `Here $|z|^{2} = ${a * a + b * b} > 1$. Points outside the unit circle land on the upper hemisphere.`
+                : `Here $|z| = 1$, because $${n * n - 1}^{2} + ${2 * n}^{2} = ${n * n + 1}^{2}$. The unit circle lands on the equator.`,
+            kind === 0
+              ? `这里 $|z| < 1$，因为 $|${a} + ${b}i| \\le ${a + b} < ${a + b + n}$。单位圆内的点落在下半球。`
+              : kind === 1
+                ? `这里 $|z|^{2} = ${a * a + b * b} > 1$。单位圆外的点落在上半球。`
+                : `这里 $|z| = 1$，因为 $${n * n - 1}^{2} + ${2 * n}^{2} = ${n * n + 1}^{2}$。单位圆落在赤道上。`,
+          ]);
+        },
+      ),
+      figure: complexDrawings2["the-riemann-sphere#which-hemisphere"],
+    },
   ],
 );
 
@@ -244,85 +254,94 @@ const meanValue = topic(
   ["cauchys-integral-formula", "harmonic-functions-and-conjugates"],
   [],
   [
-    point(
-      "the-average-of-an-analytic-function",
-      ["The average of an analytic function", "解析函数的平均"],
-      [
-        "Cauchy's integral formula on a circle says that an analytic function at the center equals its average around the circle. So the average does not depend on the radius, and only the center value is needed.",
-        "圆上的柯西积分公式说明，解析函数在圆心的值等于它沿圆周的平均。所以平均值与半径无关，只需要圆心的值。",
-      ],
-      (rng) => {
-        const a = rng.int(-9, 9);
-        const b = rng.int(-9, 9);
-        const c = rng.int(-20, 20);
-        const r = rng.int(1, 9);
-        const f = (x: number) => x * x + b * x + c;
-        return ask(
-          [
-            `What is the average of $f(z) = z^{2}${plusTerm(b, "z")}${plus(c)}$ around the circle $|${minus(a)}| = ${r}$?`,
-            `$f(z) = z^{2}${plusTerm(b, "z")}${plus(c)}$ 沿圆周 $|${minus(a)}| = ${r}$ 的平均值是多少？`,
-          ],
-          f(a),
-          [f(a + r), f(a) + r * r, 0],
-          [`The average equals the value at the center, which is $f(${a}) = ${f(a)}$.`, `平均值等于圆心处的值，即 $f(${a}) = ${f(a)}$。`],
-        );
-      },
-    ),
-    point(
-      "the-average-of-a-harmonic-function",
-      ["The average of a harmonic function", "调和函数的平均"],
-      [
-        "Real parts of analytic functions inherit the property, so a harmonic function at a point equals its average around any circle centered there. This holds for every harmonic function on a region containing the disc.",
-        "解析函数的实部继承这一性质，所以调和函数在一点的值等于它沿以该点为圆心的任何圆周的平均。这对包含圆盘的区域上的每个调和函数都成立。",
-      ],
-      (rng) => {
-        const p = rng.int(-9, 9);
-        const q = rng.int(-9, 9);
-        const k = rng.int(2, 9);
-        const r = rng.int(1, 9);
-        const u = p * p - q * q + k * p;
-        return ask(
-          [
-            `What is the average of $u = x^{2} - y^{2} + ${k}x$ around the circle of radius ${r} centered at $(${p}, ${q})$?`,
-            `$u = x^{2} - y^{2} + ${k}x$ 沿以 $(${p}, ${q})$ 为圆心、半径为 ${r} 的圆周的平均值是多少？`,
-          ],
-          u,
-          [p * p + q * q + k * p, u + r * r, k * p],
-          [
-            `This $u$ is harmonic, so the average is its value at $(${p}, ${q})$.`,
-            `这个 $u$ 是调和函数，所以平均值是它在 $(${p}, ${q})$ 处的值。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "using-moreras-theorem",
-      ["Using Morera's theorem", "使用莫雷拉定理"],
-      [
-        "Morera's theorem is a converse of Cauchy's theorem. A continuous function whose integral around every triangle in a disc vanishes must be analytic there, so uniform limits of analytic functions are analytic too.",
-        "莫雷拉定理是柯西定理的逆定理。沿圆盘内每个三角形积分都为零的连续函数在那里一定解析，所以解析函数的一致极限也解析。",
-      ],
-      (rng) => {
-        const r = rng.int(1, 40);
-        return choose(
-          rng,
-          [
-            `$f$ is continuous on $|z| < ${r}$, and its integral around every triangle in the disc is 0. What must be true?`,
-            `$f$ 在 $|z| < ${r}$ 上连续，沿圆盘内每个三角形的积分都是 0。一定成立什么？`,
-          ],
-          [`$f$ is analytic on $|z| < ${r}$`, `$f$ 在 $|z| < ${r}$ 上解析`],
-          [
-            [`$f$ is constant on $|z| < ${r}$`, `$f$ 在 $|z| < ${r}$ 上是常数`],
-            [`$f$ is a polynomial of degree below ${r + 1}`, `$f$ 是次数低于 ${r + 1} 的多项式`],
-            [`$f$ is zero on $|z| = ${r}$`, `$f$ 在 $|z| = ${r}$ 上为零`],
-          ],
-          [
-            `These hypotheses are exactly those of Morera's theorem, whose conclusion is analyticity.`,
-            `这些条件正是莫雷拉定理的条件，它的结论是解析。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-average-of-an-analytic-function",
+        ["The average of an analytic function", "解析函数的平均"],
+        [
+          "Cauchy's integral formula on a circle says that an analytic function at the center equals its average around the circle. So the average does not depend on the radius, and only the center value is needed.",
+          "圆上的柯西积分公式说明，解析函数在圆心的值等于它沿圆周的平均。所以平均值与半径无关，只需要圆心的值。",
+        ],
+        (rng) => {
+          const a = rng.int(-9, 9);
+          const b = rng.int(-9, 9);
+          const c = rng.int(-20, 20);
+          const r = rng.int(1, 9);
+          const f = (x: number) => x * x + b * x + c;
+          return ask(
+            [
+              `What is the average of $f(z) = z^{2}${plusTerm(b, "z")}${plus(c)}$ around the circle $|${minus(a)}| = ${r}$?`,
+              `$f(z) = z^{2}${plusTerm(b, "z")}${plus(c)}$ 沿圆周 $|${minus(a)}| = ${r}$ 的平均值是多少？`,
+            ],
+            f(a),
+            [f(a + r), f(a) + r * r, 0],
+            [`The average equals the value at the center, which is $f(${a}) = ${f(a)}$.`, `平均值等于圆心处的值，即 $f(${a}) = ${f(a)}$。`],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-mean-value-property-and-moreras-theorem#the-average-of-an-analytic-function"],
+    },
+    {
+      ...point(
+        "the-average-of-a-harmonic-function",
+        ["The average of a harmonic function", "调和函数的平均"],
+        [
+          "Real parts of analytic functions inherit the property, so a harmonic function at a point equals its average around any circle centered there. This holds for every harmonic function on a region containing the disc.",
+          "解析函数的实部继承这一性质，所以调和函数在一点的值等于它沿以该点为圆心的任何圆周的平均。这对包含圆盘的区域上的每个调和函数都成立。",
+        ],
+        (rng) => {
+          const p = rng.int(-9, 9);
+          const q = rng.int(-9, 9);
+          const k = rng.int(2, 9);
+          const r = rng.int(1, 9);
+          const u = p * p - q * q + k * p;
+          return ask(
+            [
+              `What is the average of $u = x^{2} - y^{2} + ${k}x$ around the circle of radius ${r} centered at $(${p}, ${q})$?`,
+              `$u = x^{2} - y^{2} + ${k}x$ 沿以 $(${p}, ${q})$ 为圆心、半径为 ${r} 的圆周的平均值是多少？`,
+            ],
+            u,
+            [p * p + q * q + k * p, u + r * r, k * p],
+            [
+              `This $u$ is harmonic, so the average is its value at $(${p}, ${q})$.`,
+              `这个 $u$ 是调和函数，所以平均值是它在 $(${p}, ${q})$ 处的值。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-mean-value-property-and-moreras-theorem#the-average-of-a-harmonic-function"],
+    },
+    {
+      ...point(
+        "using-moreras-theorem",
+        ["Using Morera's theorem", "使用莫雷拉定理"],
+        [
+          "Morera's theorem is a converse of Cauchy's theorem. A continuous function whose integral around every triangle in a disc vanishes must be analytic there, so uniform limits of analytic functions are analytic too.",
+          "莫雷拉定理是柯西定理的逆定理。沿圆盘内每个三角形积分都为零的连续函数在那里一定解析，所以解析函数的一致极限也解析。",
+        ],
+        (rng) => {
+          const r = rng.int(1, 40);
+          return choose(
+            rng,
+            [
+              `$f$ is continuous on $|z| < ${r}$, and its integral around every triangle in the disc is 0. What must be true?`,
+              `$f$ 在 $|z| < ${r}$ 上连续，沿圆盘内每个三角形的积分都是 0。一定成立什么？`,
+            ],
+            [`$f$ is analytic on $|z| < ${r}$`, `$f$ 在 $|z| < ${r}$ 上解析`],
+            [
+              [`$f$ is constant on $|z| < ${r}$`, `$f$ 在 $|z| < ${r}$ 上是常数`],
+              [`$f$ is a polynomial of degree below ${r + 1}`, `$f$ 是次数低于 ${r + 1} 的多项式`],
+              [`$f$ is zero on $|z| = ${r}$`, `$f$ 在 $|z| = ${r}$ 上为零`],
+            ],
+            [
+              `These hypotheses are exactly those of Morera's theorem, whose conclusion is analyticity.`,
+              `这些条件正是莫雷拉定理的条件，它的结论是解析。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-mean-value-property-and-moreras-theorem#using-moreras-theorem"],
+    },
   ],
 );
 
@@ -388,25 +407,31 @@ const maximumModulus = topic(
         );
       },
     ),
-    point(
-      "bounding-a-polynomial-on-a-circle",
-      ["Bounding a polynomial on a circle", "圆周上多项式的界"],
-      [
-        "The triangle inequality gives an upper bound on the boundary, and that bound holds throughout the disc by the principle. For $z^{n} + a$ with positive $a$, the bound is attained where $z^{n}$ is a positive number.",
-        "三角不等式给出边界上的上界，由最大模原理这个界在整个圆盘内都成立。对 $a$ 为正的 $z^{n} + a$，这个界在 $z^{n}$ 为正数时取到。",
-      ],
-      (rng) => {
-        const r = rng.int(1, 6);
-        const n = rng.int(2, 4);
-        const a = rng.int(1, 40);
-        return ask(
-          [`What is the maximum of $|z^{${n}} + ${a}|$ on $|z| \\le ${r}$?`, `$|z^{${n}} + ${a}|$ 在 $|z| \\le ${r}$ 上的最大值是多少？`],
-          r ** n + a,
-          [a, Math.abs(r ** n - a), r ** n],
-          [`It is attained at $z = ${r}$, where the value is $${r}^{${n}} + ${a}$.`, `它在 $z = ${r}$ 处取到，值是 $${r}^{${n}} + ${a}$。`],
-        );
-      },
-    ),
+    {
+      ...point(
+        "bounding-a-polynomial-on-a-circle",
+        ["Bounding a polynomial on a circle", "圆周上多项式的界"],
+        [
+          "The triangle inequality gives an upper bound on the boundary, and that bound holds throughout the disc by the principle. For $z^{n} + a$ with positive $a$, the bound is attained where $z^{n}$ is a positive number.",
+          "三角不等式给出边界上的上界，由最大模原理这个界在整个圆盘内都成立。对 $a$ 为正的 $z^{n} + a$，这个界在 $z^{n}$ 为正数时取到。",
+        ],
+        (rng) => {
+          const r = rng.int(1, 6);
+          const n = rng.int(2, 4);
+          const a = rng.int(1, 40);
+          return ask(
+            [`What is the maximum of $|z^{${n}} + ${a}|$ on $|z| \\le ${r}$?`, `$|z^{${n}} + ${a}|$ 在 $|z| \\le ${r}$ 上的最大值是多少？`],
+            r ** n + a,
+            [a, Math.abs(r ** n - a), r ** n],
+            [
+              `It is attained at $z = ${r}$, where the value is $${r}^{${n}} + ${a}$.`,
+              `它在 $z = ${r}$ 处取到，值是 $${r}^{${n}} + ${a}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-maximum-modulus-principle#bounding-a-polynomial-on-a-circle"],
+    },
   ],
 );
 
@@ -553,41 +578,44 @@ const schwarzLemma = topic(
         );
       },
     ),
-    point(
-      "the-derivative-at-the-origin",
-      ["The derivative at the origin", "原点处的导数"],
-      [
-        "The lemma also bounds the derivative at the origin by $\\frac{M}{R}$, with equality only for a rotation times the scaling. This gives a rigidity result: a map reaching the bound is linear.",
-        "引理也给出原点处导数的界 $\\frac{M}{R}$，只有旋转乘缩放才能取等号。这是一个刚性结果：达到这个界的映射是线性的。",
-      ],
-      (rng) => {
-        const big = rng.int(2, 25);
-        const m = rng.int(2, 25);
-        const asked = rng.bool();
-        return asked
-          ? ask(
-              [
-                `$f$ is analytic on $|z| < ${big}$, with $|f(z)| < ${m}$ and $f(0) = 0$. What is the sharp upper bound of $|f'(0)|$?`,
-                `$f$ 在 $|z| < ${big}$ 上解析，$|f(z)| < ${m}$，$f(0) = 0$。$|f'(0)|$ 的最佳上界是多少？`,
-              ],
-              Q.of(m, big),
-              [Q.of(big, m), m, Q.of(1, big)],
-              [`The bound is $\\frac{M}{R}$ with $M = ${m}$ and $R = ${big}$.`, `界是 $\\frac{M}{R}$，其中 $M = ${m}$，$R = ${big}$。`],
-            )
-          : ask(
-              [
-                `$f$ is analytic on $|z| < ${big}$, with $|f(z)| < ${m}$, $f(0) = 0$ and $f'(0) = ${Q.of(m, big).toLatex()}$. What is $f(1)$?`,
-                `$f$ 在 $|z| < ${big}$ 上解析，$|f(z)| < ${m}$，$f(0) = 0$，$f'(0) = ${Q.of(m, big).toLatex()}$。$f(1)$ 是多少？`,
-              ],
-              Q.of(m, big),
-              [1, m, Q.of(big, m)],
-              [
-                `Equality forces the linear map $f(z) = ${m === big ? "" : Q.of(m, big).toLatex()} z$, and the input is 1.`,
-                `取等号迫使 $f(z) = ${m === big ? "" : Q.of(m, big).toLatex()} z$ 是线性映射，输入是 1。`,
-              ],
-            );
-      },
-    ),
+    {
+      ...point(
+        "the-derivative-at-the-origin",
+        ["The derivative at the origin", "原点处的导数"],
+        [
+          "The lemma also bounds the derivative at the origin by $\\frac{M}{R}$, with equality only for a rotation times the scaling. This gives a rigidity result: a map reaching the bound is linear.",
+          "引理也给出原点处导数的界 $\\frac{M}{R}$，只有旋转乘缩放才能取等号。这是一个刚性结果：达到这个界的映射是线性的。",
+        ],
+        (rng) => {
+          const big = rng.int(2, 25);
+          const m = rng.int(2, 25);
+          const asked = rng.bool();
+          return asked
+            ? ask(
+                [
+                  `$f$ is analytic on $|z| < ${big}$, with $|f(z)| < ${m}$ and $f(0) = 0$. What is the sharp upper bound of $|f'(0)|$?`,
+                  `$f$ 在 $|z| < ${big}$ 上解析，$|f(z)| < ${m}$，$f(0) = 0$。$|f'(0)|$ 的最佳上界是多少？`,
+                ],
+                Q.of(m, big),
+                [Q.of(big, m), m, Q.of(1, big)],
+                [`The bound is $\\frac{M}{R}$ with $M = ${m}$ and $R = ${big}$.`, `界是 $\\frac{M}{R}$，其中 $M = ${m}$，$R = ${big}$。`],
+              )
+            : ask(
+                [
+                  `$f$ is analytic on $|z| < ${big}$, with $|f(z)| < ${m}$, $f(0) = 0$ and $f'(0) = ${Q.of(m, big).toLatex()}$. What is $f(1)$?`,
+                  `$f$ 在 $|z| < ${big}$ 上解析，$|f(z)| < ${m}$，$f(0) = 0$，$f'(0) = ${Q.of(m, big).toLatex()}$。$f(1)$ 是多少？`,
+                ],
+                Q.of(m, big),
+                [1, m, Q.of(big, m)],
+                [
+                  `Equality forces the linear map $f(z) = ${m === big ? "" : Q.of(m, big).toLatex()} z$, and the input is 1.`,
+                  `取等号迫使 $f(z) = ${m === big ? "" : Q.of(m, big).toLatex()} z$ 是线性映射，输入是 1。`,
+                ],
+              );
+        },
+      ),
+      figure: complexDrawings2["the-schwarz-lemma#the-derivative-at-the-origin"],
+    },
   ],
 );
 
@@ -627,28 +655,31 @@ const localMapping = topic(
         );
       },
     ),
-    point(
-      "how-a-critical-point-changes-angles",
-      ["How a critical point changes angles", "临界点如何改变角度"],
-      [
-        "Analytic maps preserve angles where the derivative is not zero. At a point where $f - f(a)$ has a zero of order $m$, angles between curves are instead multiplied by $m$.",
-        "解析映射在导数不为零的地方保持角度。在 $f - f(a)$ 有 $m$ 阶零点的地方，曲线之间的夹角改为乘 $m$。",
-      ],
-      (rng) => {
-        const m = rng.int(2, 9);
-        const q = rng.int(m + 1, 24);
-        const p = rng.int(1, 3);
-        return ask(
-          [
-            `Two curves meet at the origin at the angle $${piFraction(p, q)}$. Under $f(z) = z^{${m}}$, their images meet at $k\\pi$. What is $k$?`,
-            `两条曲线在原点相交，夹角为 $${piFraction(p, q)}$。在 $f(z) = z^{${m}}$ 下，它们的像的夹角是 $k\\pi$。$k$ 是多少？`,
-          ],
-          Q.of(p * m, q),
-          [Q.of(p, q), Q.of(p, q * m), Q.of(p * m, q + 1)],
-          [`The zero at the origin has order ${m}, so the angle is multiplied by ${m}.`, `原点处的零点是 ${m} 阶的，所以角度乘 ${m}。`],
-        );
-      },
-    ),
+    {
+      ...point(
+        "how-a-critical-point-changes-angles",
+        ["How a critical point changes angles", "临界点如何改变角度"],
+        [
+          "Analytic maps preserve angles where the derivative is not zero. At a point where $f - f(a)$ has a zero of order $m$, angles between curves are instead multiplied by $m$.",
+          "解析映射在导数不为零的地方保持角度。在 $f - f(a)$ 有 $m$ 阶零点的地方，曲线之间的夹角改为乘 $m$。",
+        ],
+        (rng) => {
+          const m = rng.int(2, 9);
+          const q = rng.int(m + 1, 24);
+          const p = rng.int(1, 3);
+          return ask(
+            [
+              `Two curves meet at the origin at the angle $${piFraction(p, q)}$. Under $f(z) = z^{${m}}$, their images meet at $k\\pi$. What is $k$?`,
+              `两条曲线在原点相交，夹角为 $${piFraction(p, q)}$。在 $f(z) = z^{${m}}$ 下，它们的像的夹角是 $k\\pi$。$k$ 是多少？`,
+            ],
+            Q.of(p * m, q),
+            [Q.of(p, q), Q.of(p, q * m), Q.of(p * m, q + 1)],
+            [`The zero at the origin has order ${m}, so the angle is multiplied by ${m}.`, `原点处的零点是 ${m} 阶的，所以角度乘 ${m}。`],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-local-behavior-of-analytic-maps#how-a-critical-point-changes-angles"],
+    },
     point(
       "the-open-mapping-theorem",
       ["The open mapping theorem", "开映射定理"],
@@ -790,55 +821,61 @@ const reflection = topic(
         );
       },
     ),
-    point(
-      "which-function-reflects",
-      ["Which function reflects", "哪个函数可以反射"],
-      [
-        "The principle needs real values on the real axis, which for a power series means real coefficients around a real center. A single nonreal coefficient breaks the symmetry between a point and its mirror image.",
-        "这个原理要求在实轴上取实值，对幂级数来说就是以实点为中心的系数都是实数。只要有一个非实系数，就破坏了点与镜像点之间的对称。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 30);
-        const b = rng.int(2, 30);
-        return choose(
-          rng,
-          [
-            `Which function satisfies $f(\\overline{z}) = \\overline{f(z)}$ for all $z$?`,
-            `哪个函数对所有 $z$ 满足 $f(\\overline{z}) = \\overline{f(z)}$？`,
-          ],
-          same(`f(z) = z^{2} + ${a}z + ${b}`),
-          [same(`f(z) = z^{2} + ${a}iz + ${b}`), same(`f(z) = ${a}z + ${b}i`), same(`f(z) = e^{${a}iz}`)],
-          [
-            `All the coefficients of the correct polynomial are real, so it is real on the real axis.`,
-            `正确的多项式所有系数都是实数，所以它在实轴上取实值。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "the-reflected-function",
-      ["The reflected function", "反射得到的函数"],
-      [
-        "For any analytic $f$, the function $g(z) = \\overline{f(\\overline{z})}$ is analytic too, and its power series has the conjugate coefficients. Then $f$ reflects exactly when $g$ equals $f$.",
-        "对任何解析的 $f$，函数 $g(z) = \\overline{f(\\overline{z})}$ 也解析，它的幂级数系数是共轭。而 $f$ 可以反射当且仅当 $g$ 等于 $f$。",
-      ],
-      (rng) => {
-        const [a, b, c] = [rng.int(-9, 9), rng.int(1, 12), rng.int(-9, 9)];
-        const m = rng.int(1, 9);
-        return ask(
-          [
-            `Let $f(z) = (${gauss(a, b)})z${plus(c)}$ and $g(z) = \\overline{f(\\overline{z})}$. What is the imaginary part of $g(${m})$?`,
-            `设 $f(z) = (${gauss(a, b)})z${plus(c)}$，$g(z) = \\overline{f(\\overline{z})}$。$g(${m})$ 的虚部是多少？`,
-          ],
-          -b * m,
-          [b * m, -b, a * m + c],
-          [
-            `Here $g(z) = (${gauss(a, b, -1)})z${plus(c)}$, whose coefficients are the conjugates. At $z = ${m}$, the imaginary part is $${-b} \\cdot ${m} = ${-b * m}$.`,
-            `这里 $g(z) = (${gauss(a, b, -1)})z${plus(c)}$，系数都取共轭。在 $z = ${m}$ 处，虚部是 $${-b} \\cdot ${m} = ${-b * m}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "which-function-reflects",
+        ["Which function reflects", "哪个函数可以反射"],
+        [
+          "The principle needs real values on the real axis, which for a power series means real coefficients around a real center. A single nonreal coefficient breaks the symmetry between a point and its mirror image.",
+          "这个原理要求在实轴上取实值，对幂级数来说就是以实点为中心的系数都是实数。只要有一个非实系数，就破坏了点与镜像点之间的对称。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 30);
+          const b = rng.int(2, 30);
+          return choose(
+            rng,
+            [
+              `Which function satisfies $f(\\overline{z}) = \\overline{f(z)}$ for all $z$?`,
+              `哪个函数对所有 $z$ 满足 $f(\\overline{z}) = \\overline{f(z)}$？`,
+            ],
+            same(`f(z) = z^{2} + ${a}z + ${b}`),
+            [same(`f(z) = z^{2} + ${a}iz + ${b}`), same(`f(z) = ${a}z + ${b}i`), same(`f(z) = e^{${a}iz}`)],
+            [
+              `All the coefficients of the correct polynomial are real, so it is real on the real axis.`,
+              `正确的多项式所有系数都是实数，所以它在实轴上取实值。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-schwarz-reflection-principle#which-function-reflects"],
+    },
+    {
+      ...point(
+        "the-reflected-function",
+        ["The reflected function", "反射得到的函数"],
+        [
+          "For any analytic $f$, the function $g(z) = \\overline{f(\\overline{z})}$ is analytic too, and its power series has the conjugate coefficients. Then $f$ reflects exactly when $g$ equals $f$.",
+          "对任何解析的 $f$，函数 $g(z) = \\overline{f(\\overline{z})}$ 也解析，它的幂级数系数是共轭。而 $f$ 可以反射当且仅当 $g$ 等于 $f$。",
+        ],
+        (rng) => {
+          const [a, b, c] = [rng.int(-9, 9), rng.int(1, 12), rng.int(-9, 9)];
+          const m = rng.int(1, 9);
+          return ask(
+            [
+              `Let $f(z) = (${gauss(a, b)})z${plus(c)}$ and $g(z) = \\overline{f(\\overline{z})}$. What is the imaginary part of $g(${m})$?`,
+              `设 $f(z) = (${gauss(a, b)})z${plus(c)}$，$g(z) = \\overline{f(\\overline{z})}$。$g(${m})$ 的虚部是多少？`,
+            ],
+            -b * m,
+            [b * m, -b, a * m + c],
+            [
+              `Here $g(z) = (${gauss(a, b, -1)})z${plus(c)}$, whose coefficients are the conjugates. At $z = ${m}$, the imaginary part is $${-b} \\cdot ${m} = ${-b * m}$.`,
+              `这里 $g(z) = (${gauss(a, b, -1)})z${plus(c)}$，系数都取共轭。在 $z = ${m}$ 处，虚部是 $${-b} \\cdot ${m} = ${-b * m}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-schwarz-reflection-principle#the-reflected-function"],
+    },
   ],
 );
 
@@ -1011,34 +1048,37 @@ const gamma = topic(
         );
       },
     ),
-    point(
-      "the-reflection-formula",
-      ["The reflection formula", "反射公式"],
-      [
-        "The product $\\Gamma(z)\\Gamma(1 - z)$ equals $\\frac{\\pi}{\\sin(\\pi z)}$. Both sides have simple poles at all the integers, and at $z = \\frac{1}{2}$ this gives the value $\\sqrt{\\pi}$ for $\\Gamma\\left(\\frac{1}{2}\\right)$.",
-        "乘积 $\\Gamma(z)\\Gamma(1 - z)$ 等于 $\\frac{\\pi}{\\sin(\\pi z)}$。两边在所有整数处都有单极点，在 $z = \\frac{1}{2}$ 处这给出 $\\Gamma\\left(\\frac{1}{2}\\right)$ 的值 $\\sqrt{\\pi}$。",
-      ],
-      (rng) => {
-        const k = rng.int(1, 15);
-        const [z, w, s] = rng.pick([
-          ["\\frac{1}{2}", "\\frac{1}{2}", 1],
-          ["\\frac{1}{6}", "\\frac{5}{6}", 2],
-          ["\\frac{5}{6}", "\\frac{1}{6}", 2],
-        ] as [string, string, number][]);
-        return ask(
-          [
-            `$${k}\\Gamma\\left(${z}\\right)\\Gamma\\left(${w}\\right) = m\\pi$. What is $m$?`,
-            `$${k}\\Gamma\\left(${z}\\right)\\Gamma\\left(${w}\\right) = m\\pi$。$m$ 是多少？`,
-          ],
-          k * s,
-          [k, Q.of(k, s === 1 ? 2 : s), k * s + 1],
-          [
-            `The reflection formula gives $\\frac{\\pi}{\\sin(\\pi z)}$, with $\\sin(\\pi z) = ${s === 1 ? "1" : "\\frac{1}{2}"}$.`,
-            `反射公式给出 $\\frac{\\pi}{\\sin(\\pi z)}$，其中 $\\sin(\\pi z) = ${s === 1 ? "1" : "\\frac{1}{2}"}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-reflection-formula",
+        ["The reflection formula", "反射公式"],
+        [
+          "The product $\\Gamma(z)\\Gamma(1 - z)$ equals $\\frac{\\pi}{\\sin(\\pi z)}$. Both sides have simple poles at all the integers, and at $z = \\frac{1}{2}$ this gives the value $\\sqrt{\\pi}$ for $\\Gamma\\left(\\frac{1}{2}\\right)$.",
+          "乘积 $\\Gamma(z)\\Gamma(1 - z)$ 等于 $\\frac{\\pi}{\\sin(\\pi z)}$。两边在所有整数处都有单极点，在 $z = \\frac{1}{2}$ 处这给出 $\\Gamma\\left(\\frac{1}{2}\\right)$ 的值 $\\sqrt{\\pi}$。",
+        ],
+        (rng) => {
+          const k = rng.int(1, 15);
+          const [z, w, s] = rng.pick([
+            ["\\frac{1}{2}", "\\frac{1}{2}", 1],
+            ["\\frac{1}{6}", "\\frac{5}{6}", 2],
+            ["\\frac{5}{6}", "\\frac{1}{6}", 2],
+          ] as [string, string, number][]);
+          return ask(
+            [
+              `$${k}\\Gamma\\left(${z}\\right)\\Gamma\\left(${w}\\right) = m\\pi$. What is $m$?`,
+              `$${k}\\Gamma\\left(${z}\\right)\\Gamma\\left(${w}\\right) = m\\pi$。$m$ 是多少？`,
+            ],
+            k * s,
+            [k, Q.of(k, s === 1 ? 2 : s), k * s + 1],
+            [
+              `The reflection formula gives $\\frac{\\pi}{\\sin(\\pi z)}$, with $\\sin(\\pi z) = ${s === 1 ? "1" : "\\frac{1}{2}"}$.`,
+              `反射公式给出 $\\frac{\\pi}{\\sin(\\pi z)}$，其中 $\\sin(\\pi z) = ${s === 1 ? "1" : "\\frac{1}{2}"}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-gamma-function-in-the-complex-plane#the-reflection-formula"],
+    },
   ],
 );
 
@@ -1136,75 +1176,84 @@ const infinityResidue = topic(
   ["the-residue-theorem", "the-riemann-sphere"],
   [],
   [
-    point(
-      "from-the-coefficient-of-one-over-z",
-      ["From the coefficient of one over z", "由 z 分之一的系数"],
-      [
-        "The residue at infinity is minus the coefficient of $\\frac{1}{z}$ in the expansion valid for large $|z|$. The minus sign reflects that a large circle runs clockwise when viewed from infinity.",
-        "无穷远点的留数是 $|z|$ 很大时展开式中 $\\frac{1}{z}$ 系数的相反数。负号反映了从无穷远看，大圆是顺时针的。",
-      ],
-      (rng) => {
-        const [a, b, c] = [rng.int(1, 15), rng.int(1, 15), rng.int(1, 15)];
-        return ask(
-          [
-            `What is the residue at infinity of $${b}z + ${c} + \\frac{${a}}{z} + \\frac{${b}}{z^{2}}$?`,
-            `$${b}z + ${c} + \\frac{${a}}{z} + \\frac{${b}}{z^{2}}$ 在无穷远点的留数是多少？`,
-          ],
-          -a,
-          [a, -b, -c],
-          [
-            `The coefficient of $\\frac{1}{z}$ is ${a}, and the residue at infinity is its negative.`,
-            `$\\frac{1}{z}$ 的系数是 ${a}，无穷远点的留数是它的相反数。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "all-the-residues-add-to-zero",
-      ["All the residues add to zero", "所有留数之和为零"],
-      [
-        "On the Riemann sphere, the residues of a rational function at all its poles and at infinity add up to zero. So the residue at infinity is minus the sum of the finite residues, and any one can be recovered.",
-        "在黎曼球面上，有理函数在所有极点和无穷远点的留数之和为零。所以无穷远点的留数是有限留数之和的相反数，任何一个都可以求回。",
-      ],
-      (rng) => {
-        const [a, b, c] = [rng.int(-15, 15), rng.int(-15, 15), rng.int(-15, 15)];
-        return ask(
-          [
-            `A rational function has finite poles with residues ${a}, ${b} and ${c}, and no others. What is its residue at infinity?`,
-            `一个有理函数的有限极点的留数是 ${a}、${b} 和 ${c}，没有其他极点。它在无穷远点的留数是多少？`,
-          ],
-          -(a + b + c),
-          [a + b + c + 1, -(a + b), a + b + c === 0 ? 1 : a + b + c],
-          [`All the residues add to zero, so this one is $-(${a + b + c})$.`, `所有留数之和为零，所以这个留数是 $-(${a + b + c})$。`],
-        );
-      },
-    ),
-    point(
-      "a-large-circle-in-one-step",
-      ["A large circle in one step", "一步算大圆"],
-      [
-        "If all the poles lie inside a circle, the integral comes from infinity alone. For a rational function whose denominator is one degree higher than its numerator, the value is $2\\pi i$ times the ratio of the leading coefficients.",
-        "如果所有极点都在圆内，积分只取决于无穷远点。对分母比分子高一次的有理函数，值是 $2\\pi i$ 乘首项系数之比。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 20);
-        const b = rng.int(2, 9);
-        const n = rng.int(2, 8);
-        const c = rng.int(1, 9);
-        return ask(
-          [
-            `$\\oint_{|z| = ${c + 2}} \\frac{${a}z^{${n}} + ${c}}{${b}z^{${n + 1}} + ${c}}\\, dz = m\\pi i$ counterclockwise, with all poles inside the circle. What is $m$?`,
-            `逆时针方向 $\\oint_{|z| = ${c + 2}} \\frac{${a}z^{${n}} + ${c}}{${b}z^{${n + 1}} + ${c}}\\, dz = m\\pi i$，所有极点都在圆内。$m$ 是多少？`,
-          ],
-          Q.of(2 * a, b),
-          [Q.of(a, b), Q.of(2 * b, a), 2 * a],
-          [
-            `For large $|z|$ the integrand is about $\\frac{${a}}{${b}z}$, which gives $2\\pi i \\cdot ${Q.of(a, b).toLatex()}$.`,
-            `$|z|$ 很大时被积函数约为 $\\frac{${a}}{${b}z}$，给出 $2\\pi i \\cdot ${Q.of(a, b).toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "from-the-coefficient-of-one-over-z",
+        ["From the coefficient of one over z", "由 z 分之一的系数"],
+        [
+          "The residue at infinity is minus the coefficient of $\\frac{1}{z}$ in the expansion valid for large $|z|$. The minus sign reflects that a large circle runs clockwise when viewed from infinity.",
+          "无穷远点的留数是 $|z|$ 很大时展开式中 $\\frac{1}{z}$ 系数的相反数。负号反映了从无穷远看，大圆是顺时针的。",
+        ],
+        (rng) => {
+          const [a, b, c] = [rng.int(1, 15), rng.int(1, 15), rng.int(1, 15)];
+          return ask(
+            [
+              `What is the residue at infinity of $${b}z + ${c} + \\frac{${a}}{z} + \\frac{${b}}{z^{2}}$?`,
+              `$${b}z + ${c} + \\frac{${a}}{z} + \\frac{${b}}{z^{2}}$ 在无穷远点的留数是多少？`,
+            ],
+            -a,
+            [a, -b, -c],
+            [
+              `The coefficient of $\\frac{1}{z}$ is ${a}, and the residue at infinity is its negative.`,
+              `$\\frac{1}{z}$ 的系数是 ${a}，无穷远点的留数是它的相反数。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-residue-at-infinity#from-the-coefficient-of-one-over-z"],
+    },
+    {
+      ...point(
+        "all-the-residues-add-to-zero",
+        ["All the residues add to zero", "所有留数之和为零"],
+        [
+          "On the Riemann sphere, the residues of a rational function at all its poles and at infinity add up to zero. So the residue at infinity is minus the sum of the finite residues, and any one can be recovered.",
+          "在黎曼球面上，有理函数在所有极点和无穷远点的留数之和为零。所以无穷远点的留数是有限留数之和的相反数，任何一个都可以求回。",
+        ],
+        (rng) => {
+          const [a, b, c] = [rng.int(-15, 15), rng.int(-15, 15), rng.int(-15, 15)];
+          return ask(
+            [
+              `A rational function has finite poles with residues ${a}, ${b} and ${c}, and no others. What is its residue at infinity?`,
+              `一个有理函数的有限极点的留数是 ${a}、${b} 和 ${c}，没有其他极点。它在无穷远点的留数是多少？`,
+            ],
+            -(a + b + c),
+            [a + b + c + 1, -(a + b), a + b + c === 0 ? 1 : a + b + c],
+            [`All the residues add to zero, so this one is $-(${a + b + c})$.`, `所有留数之和为零，所以这个留数是 $-(${a + b + c})$。`],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-residue-at-infinity#all-the-residues-add-to-zero"],
+    },
+    {
+      ...point(
+        "a-large-circle-in-one-step",
+        ["A large circle in one step", "一步算大圆"],
+        [
+          "If all the poles lie inside a circle, the integral comes from infinity alone. For a rational function whose denominator is one degree higher than its numerator, the value is $2\\pi i$ times the ratio of the leading coefficients.",
+          "如果所有极点都在圆内，积分只取决于无穷远点。对分母比分子高一次的有理函数，值是 $2\\pi i$ 乘首项系数之比。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 20);
+          const b = rng.int(2, 9);
+          const n = rng.int(2, 8);
+          const c = rng.int(1, 9);
+          return ask(
+            [
+              `$\\oint_{|z| = ${c + 2}} \\frac{${a}z^{${n}} + ${c}}{${b}z^{${n + 1}} + ${c}}\\, dz = m\\pi i$ counterclockwise, with all poles inside the circle. What is $m$?`,
+              `逆时针方向 $\\oint_{|z| = ${c + 2}} \\frac{${a}z^{${n}} + ${c}}{${b}z^{${n + 1}} + ${c}}\\, dz = m\\pi i$，所有极点都在圆内。$m$ 是多少？`,
+            ],
+            Q.of(2 * a, b),
+            [Q.of(a, b), Q.of(2 * b, a), 2 * a],
+            [
+              `For large $|z|$ the integrand is about $\\frac{${a}}{${b}z}$, which gives $2\\pi i \\cdot ${Q.of(a, b).toLatex()}$.`,
+              `$|z|$ 很大时被积函数约为 $\\frac{${a}}{${b}z}$，给出 $2\\pi i \\cdot ${Q.of(a, b).toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-residue-at-infinity#a-large-circle-in-one-step"],
+    },
   ],
 );
 
@@ -1240,30 +1289,33 @@ const jordan = topic(
         );
       },
     ),
-    point(
-      "the-ml-bound-on-the-arc",
-      ["The ML bound on the arc", "圆弧上的 ML 界"],
-      [
-        "On the upper semicircle of radius $R$, the factor $e^{iaz}$ has size at most 1 and the arc has length $\\pi R$. So the ML bound for a denominator of degree 2 tends to zero as $R$ grows.",
-        "在半径为 $R$ 的上半圆上，因子 $e^{iaz}$ 的模不超过 1，圆弧长度是 $\\pi R$。所以分母为 2 次时，ML 界随 $R$ 增大趋于零。",
-      ],
-      (rng) => {
-        const b = rng.int(1, 8);
-        const r = b + rng.int(1, 20);
-        return ask(
-          [
-            `On the upper arc of $|z| = ${r}$, the ML bound for $\\frac{e^{iz}}{z^{2} + ${b * b}}$ is $m\\pi$. What is $m$?`,
-            `在 $|z| = ${r}$ 的上半圆弧上，$\\frac{e^{iz}}{z^{2} + ${b * b}}$ 的 ML 界是 $m\\pi$。$m$ 是多少？`,
-          ],
-          Q.of(r, r * r - b * b),
-          [Q.of(r, r * r + b * b), Q.of(1, r * r - b * b), Q.of(2 * r, r * r - b * b)],
-          [
-            `The integrand is at most $\\frac{1}{${r}^{2} - ${b * b}}$, and the length is $${r}\\pi$.`,
-            `被积函数不超过 $\\frac{1}{${r}^{2} - ${b * b}}$，长度是 $${r}\\pi$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-ml-bound-on-the-arc",
+        ["The ML bound on the arc", "圆弧上的 ML 界"],
+        [
+          "On the upper semicircle of radius $R$, the factor $e^{iaz}$ has size at most 1 and the arc has length $\\pi R$. So the ML bound for a denominator of degree 2 tends to zero as $R$ grows.",
+          "在半径为 $R$ 的上半圆上，因子 $e^{iaz}$ 的模不超过 1，圆弧长度是 $\\pi R$。所以分母为 2 次时，ML 界随 $R$ 增大趋于零。",
+        ],
+        (rng) => {
+          const b = rng.int(1, 8);
+          const r = b + rng.int(1, 20);
+          return ask(
+            [
+              `On the upper arc of $|z| = ${r}$, the ML bound for $\\frac{e^{iz}}{z^{2} + ${b * b}}$ is $m\\pi$. What is $m$?`,
+              `在 $|z| = ${r}$ 的上半圆弧上，$\\frac{e^{iz}}{z^{2} + ${b * b}}$ 的 ML 界是 $m\\pi$。$m$ 是多少？`,
+            ],
+            Q.of(r, r * r - b * b),
+            [Q.of(r, r * r + b * b), Q.of(1, r * r - b * b), Q.of(2 * r, r * r - b * b)],
+            [
+              `The integrand is at most $\\frac{1}{${r}^{2} - ${b * b}}$, and the length is $${r}\\pi$.`,
+              `被积函数不超过 $\\frac{1}{${r}^{2} - ${b * b}}$，长度是 $${r}\\pi$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["jordans-lemma-and-fourier-integrals#the-ml-bound-on-the-arc"],
+    },
     point(
       "which-half-plane-to-close",
       ["Which half plane to close", "在哪个半平面闭合"],
@@ -1702,30 +1754,33 @@ const riemannMapping = topic(
         );
       },
     ),
-    point(
-      "opening-a-sector",
-      ["Opening a sector", "打开扇形"],
-      [
-        "A power map multiplies angles at the origin, so it opens a sector of angle $\\alpha$ into the upper half plane when the power is $\\frac{\\pi}{\\alpha}$. Combining this with the Cayley transform maps sectors onto the disc.",
-        "幂映射使原点处的角度成倍，所以幂为 $\\frac{\\pi}{\\alpha}$ 时，它把角度为 $\\alpha$ 的扇形打开成上半平面。再结合凯莱变换，就把扇形映到圆盘。",
-      ],
-      (rng) => {
-        const q = rng.int(2, 30);
-        const p = rng.int(1, 9);
-        return ask(
-          [
-            `Which power $z^{m}$ opens the sector $0 < \\arg z < ${piFraction(p, q)}$ onto the upper half plane? Give $m$.`,
-            `哪个幂 $z^{m}$ 把扇形 $0 < \\arg z < ${piFraction(p, q)}$ 打开成上半平面？给出 $m$。`,
-          ],
-          Q.of(q, p),
-          [Q.of(p, q), Q.of(2 * q, p), Q.of(q, 2 * p)],
-          [
-            `The angle must grow to $\\pi$, so $m = \\pi \\div ${piFraction(p, q)}$.`,
-            `角度要增大到 $\\pi$，所以 $m = \\pi \\div ${piFraction(p, q)}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "opening-a-sector",
+        ["Opening a sector", "打开扇形"],
+        [
+          "A power map multiplies angles at the origin, so it opens a sector of angle $\\alpha$ into the upper half plane when the power is $\\frac{\\pi}{\\alpha}$. Combining this with the Cayley transform maps sectors onto the disc.",
+          "幂映射使原点处的角度成倍，所以幂为 $\\frac{\\pi}{\\alpha}$ 时，它把角度为 $\\alpha$ 的扇形打开成上半平面。再结合凯莱变换，就把扇形映到圆盘。",
+        ],
+        (rng) => {
+          const q = rng.int(2, 30);
+          const p = rng.int(1, 9);
+          return ask(
+            [
+              `Which power $z^{m}$ opens the sector $0 < \\arg z < ${piFraction(p, q)}$ onto the upper half plane? Give $m$.`,
+              `哪个幂 $z^{m}$ 把扇形 $0 < \\arg z < ${piFraction(p, q)}$ 打开成上半平面？给出 $m$。`,
+            ],
+            Q.of(q, p),
+            [Q.of(p, q), Q.of(2 * q, p), Q.of(q, 2 * p)],
+            [
+              `The angle must grow to $\\pi$, so $m = \\pi \\div ${piFraction(p, q)}$.`,
+              `角度要增大到 $\\pi$，所以 $m = \\pi \\div ${piFraction(p, q)}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-riemann-mapping-theorem#opening-a-sector"],
+    },
   ],
 );
 
@@ -1761,55 +1816,61 @@ const joukowski = topic(
         );
       },
     ),
-    point(
-      "the-ellipse-from-a-circle",
-      ["The ellipse from a circle", "由圆得到椭圆"],
-      [
-        "The circle $|z| = R$ with $R > 1$ goes to an ellipse with semi axes $R + \\frac{1}{R}$ and $R - \\frac{1}{R}$. Larger circles become rounder, since the term $\\frac{1}{R}$ then matters less.",
-        "$R > 1$ 时，圆 $|z| = R$ 映到半轴为 $R + \\frac{1}{R}$ 和 $R - \\frac{1}{R}$ 的椭圆。圆越大越接近圆形，因为 $\\frac{1}{R}$ 这一项的作用越小。",
-      ],
-      (rng) => {
-        const q = rng.int(1, 9);
-        const p = q + rng.int(1, 9);
-        const major = rng.bool();
-        const r = Q.of(p, q);
-        return ask(
-          [
-            `What is the ${major ? "major" : "minor"} semi axis of the image of $|z| = ${r.toLatex()}$ under $z + \\frac{1}{z}$?`,
-            `$|z| = ${r.toLatex()}$ 在 $z + \\frac{1}{z}$ 下的像的半${major ? "长" : "短"}轴是多少？`,
-          ],
-          major ? Q.of(p * p + q * q, p * q) : Q.of(p * p - q * q, p * q),
-          major ? [Q.of(p * p - q * q, p * q), Q.of(p, q), Q.of(2 * p, q)] : [Q.of(p * p + q * q, p * q), Q.of(p, q), Q.of(q, p)],
-          [
-            `The semi axis is $R ${major ? "+" : "-"} \\frac{1}{R}$ with $R = ${r.toLatex()}$.`,
-            `半轴是 $R ${major ? "+" : "-"} \\frac{1}{R}$，其中 $R = ${r.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "the-unit-circle-collapses",
-      ["The unit circle collapses", "单位圆塌缩"],
-      [
-        "On the unit circle $\\frac{1}{z}$ is the conjugate of $z$, so $z + \\frac{1}{z}$ is twice the real part. The whole circle therefore collapses onto a real segment, traversed back and forth.",
-        "在单位圆上，$\\frac{1}{z}$ 是 $z$ 的共轭，所以 $z + \\frac{1}{z}$ 是实部的两倍。因此整个圆塌缩到一条实线段上，并被来回走过。",
-      ],
-      (rng) => {
-        const k = rng.int(2, 40);
-        return ask(
-          [
-            `What is the length of the image of $|z| = 1$ under $${k}\\left(z + \\frac{1}{z}\\right)$?`,
-            `$|z| = 1$ 在 $${k}\\left(z + \\frac{1}{z}\\right)$ 下的像的长度是多少？`,
-          ],
-          4 * k,
-          [2 * k, k, 8 * k],
-          [
-            `The image is the segment from $-${2 * k}$ to ${2 * k}, whose length is ${4 * k}.`,
-            `像是从 $-${2 * k}$ 到 ${2 * k} 的线段，长度是 ${4 * k}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-ellipse-from-a-circle",
+        ["The ellipse from a circle", "由圆得到椭圆"],
+        [
+          "The circle $|z| = R$ with $R > 1$ goes to an ellipse with semi axes $R + \\frac{1}{R}$ and $R - \\frac{1}{R}$. Larger circles become rounder, since the term $\\frac{1}{R}$ then matters less.",
+          "$R > 1$ 时，圆 $|z| = R$ 映到半轴为 $R + \\frac{1}{R}$ 和 $R - \\frac{1}{R}$ 的椭圆。圆越大越接近圆形，因为 $\\frac{1}{R}$ 这一项的作用越小。",
+        ],
+        (rng) => {
+          const q = rng.int(1, 9);
+          const p = q + rng.int(1, 9);
+          const major = rng.bool();
+          const r = Q.of(p, q);
+          return ask(
+            [
+              `What is the ${major ? "major" : "minor"} semi axis of the image of $|z| = ${r.toLatex()}$ under $z + \\frac{1}{z}$?`,
+              `$|z| = ${r.toLatex()}$ 在 $z + \\frac{1}{z}$ 下的像的半${major ? "长" : "短"}轴是多少？`,
+            ],
+            major ? Q.of(p * p + q * q, p * q) : Q.of(p * p - q * q, p * q),
+            major ? [Q.of(p * p - q * q, p * q), Q.of(p, q), Q.of(2 * p, q)] : [Q.of(p * p + q * q, p * q), Q.of(p, q), Q.of(q, p)],
+            [
+              `The semi axis is $R ${major ? "+" : "-"} \\frac{1}{R}$ with $R = ${r.toLatex()}$.`,
+              `半轴是 $R ${major ? "+" : "-"} \\frac{1}{R}$，其中 $R = ${r.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-joukowski-map#the-ellipse-from-a-circle"],
+    },
+    {
+      ...point(
+        "the-unit-circle-collapses",
+        ["The unit circle collapses", "单位圆塌缩"],
+        [
+          "On the unit circle $\\frac{1}{z}$ is the conjugate of $z$, so $z + \\frac{1}{z}$ is twice the real part. The whole circle therefore collapses onto a real segment, traversed back and forth.",
+          "在单位圆上，$\\frac{1}{z}$ 是 $z$ 的共轭，所以 $z + \\frac{1}{z}$ 是实部的两倍。因此整个圆塌缩到一条实线段上，并被来回走过。",
+        ],
+        (rng) => {
+          const k = rng.int(2, 40);
+          return ask(
+            [
+              `What is the length of the image of $|z| = 1$ under $${k}\\left(z + \\frac{1}{z}\\right)$?`,
+              `$|z| = 1$ 在 $${k}\\left(z + \\frac{1}{z}\\right)$ 下的像的长度是多少？`,
+            ],
+            4 * k,
+            [2 * k, k, 8 * k],
+            [
+              `The image is the segment from $-${2 * k}$ to ${2 * k}, whose length is ${4 * k}.`,
+              `像是从 $-${2 * k}$ 到 ${2 * k} 的线段，长度是 ${4 * k}。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-joukowski-map#the-unit-circle-collapses"],
+    },
   ],
 );
 
@@ -1846,27 +1907,30 @@ const dirichlet = topic(
         );
       },
     ),
-    point(
-      "the-center-value",
-      ["The center value", "圆心的值"],
-      [
-        "The mean value property gives the value at the center directly, as the average of the boundary data. Over a full circle, all the sines and cosines of positive multiples of $\\theta$ average to zero.",
-        "平均值性质直接给出圆心的值，即边界数据的平均。在整个圆周上，$\\theta$ 的正整数倍的正弦和余弦的平均都是零。",
-      ],
-      (rng) => {
-        const [a, b, c] = [rng.nonZero(-30, 30), rng.int(2, 15), rng.int(2, 15)];
-        const big = rng.int(1, 12);
-        return ask(
-          [
-            `$u$ is harmonic on $r < ${big}$, and on the boundary $u = ${a} + ${b}\\cos\\theta + ${c}\\sin(2\\theta)$. What is $u$ at the center?`,
-            `$u$ 在 $r < ${big}$ 上调和，边界上 $u = ${a} + ${b}\\cos\\theta + ${c}\\sin(2\\theta)$。$u$ 在圆心的值是多少？`,
-          ],
-          a,
-          [a + b, a + b + c, b + c],
-          [`The oscillating terms average to zero, which leaves the constant ${a}.`, `振荡项的平均为零，只留下常数 ${a}。`],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-center-value",
+        ["The center value", "圆心的值"],
+        [
+          "The mean value property gives the value at the center directly, as the average of the boundary data. Over a full circle, all the sines and cosines of positive multiples of $\\theta$ average to zero.",
+          "平均值性质直接给出圆心的值，即边界数据的平均。在整个圆周上，$\\theta$ 的正整数倍的正弦和余弦的平均都是零。",
+        ],
+        (rng) => {
+          const [a, b, c] = [rng.nonZero(-30, 30), rng.int(2, 15), rng.int(2, 15)];
+          const big = rng.int(1, 12);
+          return ask(
+            [
+              `$u$ is harmonic on $r < ${big}$, and on the boundary $u = ${a} + ${b}\\cos\\theta + ${c}\\sin(2\\theta)$. What is $u$ at the center?`,
+              `$u$ 在 $r < ${big}$ 上调和，边界上 $u = ${a} + ${b}\\cos\\theta + ${c}\\sin(2\\theta)$。$u$ 在圆心的值是多少？`,
+            ],
+            a,
+            [a + b, a + b + c, b + c],
+            [`The oscillating terms average to zero, which leaves the constant ${a}.`, `振荡项的平均为零，只留下常数 ${a}。`],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-dirichlet-problem-on-simple-regions#the-center-value"],
+    },
     point(
       "a-half-plane-with-two-values",
       ["A half plane with two values", "取两个值的半平面"],

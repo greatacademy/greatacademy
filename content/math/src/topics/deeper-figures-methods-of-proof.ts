@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { svgDocument } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
@@ -55,54 +56,59 @@ const expressions: readonly SetExpression[] = [
   { tex: (a, b, c) => `${a} \\setminus (${b} \\cup ${c})`, member: (a, b, c) => a && !b && !c },
 ];
 
-const setOfVenn = point(
-  "the-set-marked-on-a-three-circle-diagram",
-  ["The set marked on a three-circle diagram", "三圆图上标出的集合"],
-  [
-    "The distributive laws say that $A \\cap (B \\cup C)$ and $(A \\cap B) \\cup (A \\cap C)$ mark the same regions of a Venn diagram. To name a marked set, test each region: is it in the first set, in the second and in the third? An expression matches only if it agrees with the drawing on all eight regions.",
-    "分配律说 $A \\cap (B \\cup C)$ 与 $(A \\cap B) \\cup (A \\cap C)$ 在文氏图上标出相同的区域。要说出标记的集合，就检查每个区域：它是否在第一个集合里、第二个里和第三个里？只有在全部八个区域上都与图一致的表达式才匹配。",
-  ],
-  (rng) => {
-    const names = rng.shuffle(["A", "B", "C"]) as [string, string, string];
-    const right = rng.pick(expressions);
-    const texOf = (e: SetExpression) => e.tex("A", "B", "C");
-    const member = (a: boolean, b: boolean, c: boolean) => {
-      // The circles drawn in the places of names[i] are read through their labels.
-      const value: Record<string, boolean> = { [names[0]]: a, [names[1]]: b, [names[2]]: c };
-      return right.member(value.A as boolean, value.B as boolean, value.C as boolean);
-    };
-    const inside = regionPoints.filter(([a, b, c]) => member(a, b, c)).map(([a, b, c]) => names.filter((_, i) => [a, b, c][i]));
-    const regionsEn = inside.map((n) =>
-      n.length === 0 ? "outside all three circles" : n.length === 3 ? "inside all three circles" : `inside only ${n.join(" and ")}`,
-    );
-    const regionsZh = inside.map((n) => (n.length === 0 ? "三个圆之外" : n.length === 3 ? "三个圆的公共部分" : `只在 ${n.join("、")} 内`));
-    return choose(
-      rng,
-      [
-        "A dot marks each region of the diagram that belongs to a set. Which expression names that set?",
-        "图中的点标出属于某集合的每个区域。哪个表达式表示这个集合？",
-      ],
-      same(texOf(right)),
-      rng
-        .sample(
-          expressions.filter((e) => e !== right),
-          3,
-        )
-        .map((e) => same(texOf(e))),
-      [
-        `Testing each of the eight regions against $${texOf(right)}$ gives exactly the regions with dots, and every other choice differs from the drawing on at least one region.`,
-        `对八个区域逐一检验 $${texOf(right)}$，恰好得到有点的区域，其他选项都至少在一个区域上与图不同。`,
-      ],
-      {
-        svg: vennFigure(names, member),
-        alt: t(
-          `Three overlapping circles labeled ${names.join(", ")}, with a dot in each of these regions: ${regionsEn.join("; ")}.`,
-          `标有 ${names.join("、")} 的三个相交的圆，以下每个区域各有一个点：${regionsZh.join("；")}。`,
-        ),
-      },
-    );
-  },
-);
+const setOfVenn = {
+  ...point(
+    "the-set-marked-on-a-three-circle-diagram",
+    ["The set marked on a three-circle diagram", "三圆图上标出的集合"],
+    [
+      "The distributive laws say that $A \\cap (B \\cup C)$ and $(A \\cap B) \\cup (A \\cap C)$ mark the same regions of a Venn diagram. To name a marked set, test each region: is it in the first set, in the second and in the third? An expression matches only if it agrees with the drawing on all eight regions.",
+      "分配律说 $A \\cap (B \\cup C)$ 与 $(A \\cap B) \\cup (A \\cap C)$ 在文氏图上标出相同的区域。要说出标记的集合，就检查每个区域：它是否在第一个集合里、第二个里和第三个里？只有在全部八个区域上都与图一致的表达式才匹配。",
+    ],
+    (rng) => {
+      const names = rng.shuffle(["A", "B", "C"]) as [string, string, string];
+      const right = rng.pick(expressions);
+      const texOf = (e: SetExpression) => e.tex("A", "B", "C");
+      const member = (a: boolean, b: boolean, c: boolean) => {
+        // The circles drawn in the places of names[i] are read through their labels.
+        const value: Record<string, boolean> = { [names[0]]: a, [names[1]]: b, [names[2]]: c };
+        return right.member(value.A as boolean, value.B as boolean, value.C as boolean);
+      };
+      const inside = regionPoints.filter(([a, b, c]) => member(a, b, c)).map(([a, b, c]) => names.filter((_, i) => [a, b, c][i]));
+      const regionsEn = inside.map((n) =>
+        n.length === 0 ? "outside all three circles" : n.length === 3 ? "inside all three circles" : `inside only ${n.join(" and ")}`,
+      );
+      const regionsZh = inside.map((n) =>
+        n.length === 0 ? "三个圆之外" : n.length === 3 ? "三个圆的公共部分" : `只在 ${n.join("、")} 内`,
+      );
+      return choose(
+        rng,
+        [
+          "A dot marks each region of the diagram that belongs to a set. Which expression names that set?",
+          "图中的点标出属于某集合的每个区域。哪个表达式表示这个集合？",
+        ],
+        same(texOf(right)),
+        rng
+          .sample(
+            expressions.filter((e) => e !== right),
+            3,
+          )
+          .map((e) => same(texOf(e))),
+        [
+          `Testing each of the eight regions against $${texOf(right)}$ gives exactly the regions with dots, and every other choice differs from the drawing on at least one region.`,
+          `对八个区域逐一检验 $${texOf(right)}$，恰好得到有点的区域，其他选项都至少在一个区域上与图不同。`,
+        ],
+        {
+          svg: vennFigure(names, member),
+          alt: t(
+            `Three overlapping circles labeled ${names.join(", ")}, with a dot in each of these regions: ${regionsEn.join("; ")}.`,
+            `标有 ${names.join("、")} 的三个相交的圆，以下每个区域各有一个点：${regionsZh.join("；")}。`,
+          ),
+        },
+      );
+    },
+  ),
+  figure: proofDrawings1["distributive-properties-of-set-operations#the-set-marked-on-a-three-circle-diagram"],
+};
 
 const countsOnVenn = {
   ...point(
@@ -770,48 +776,51 @@ const partitionCheck = point(
   },
 );
 
-const indicatorGraph = point(
-  "the-set-of-a-drawn-indicator-function",
-  ["The set of a drawn indicator function", "图中示性函数的集合"],
-  [
-    "The indicator function of a set equals one on the set and zero off it. So its graph shows the set directly as the part at height one. A filled circle at an end at height one means that the end belongs to the set, and an open circle there means it does not, which decides the type of bracket.",
-    "集合的示性函数在集合上等于一，在集合外等于零。所以它的图以高度一的部分直接显示这个集合。高度一处端点的实心圆表示端点属于集合，空心圆表示不属于，这决定了括号的类型。",
-  ],
-  (rng) => {
-    const a = rng.int(-5, 1);
-    const b = a + rng.int(2, 5);
-    const [leftIn, rightIn] = [rng.bool(), rng.bool()];
-    const interval = (l: boolean, r: boolean) => `${l ? "[" : "("}${a}, ${b}${r ? "]" : ")"}`;
-    const marks: PlaneMark[] = [
-      { kind: "segment", a: [-7, 0], b: [a, 0], accent: true },
-      { kind: "segment", a: [a, 1], b: [b, 1], accent: true },
-      { kind: "segment", a: [b, 0], b: [7, 0], accent: true },
-      { kind: "point", at: [a, 1], open: !leftIn, accent: true },
-      { kind: "point", at: [a, 0], open: leftIn, accent: true },
-      { kind: "point", at: [b, 1], open: !rightIn, accent: true },
-      { kind: "point", at: [b, 0], open: rightIn, accent: true },
-    ];
-    const word = (b1: boolean): Pair => (b1 ? ["belongs to the set", "属于集合"] : ["does not belong to the set", "不属于集合"]);
-    return choose(
-      rng,
-      ["The graph shows the indicator function of a set. Which set is it?", "图中是某集合的示性函数。它是哪个集合？"],
-      same(interval(leftIn, rightIn)),
-      [same(interval(!leftIn, rightIn)), same(interval(leftIn, !rightIn)), same(interval(!leftIn, !rightIn))],
-      [
-        `The graph has height one from $${a}$ to $${b}$. The value at $${a}$ is ${leftIn ? "one" : "zero"}, so it ${word(leftIn)[0]}, and the value at $${b}$ is ${rightIn ? "one" : "zero"}, so it ${word(rightIn)[0]}.`,
-        `图在 $${a}$ 到 $${b}$ 之间高度为一。在 $${a}$ 处的值是${leftIn ? "一" : "零"}，所以它${word(leftIn)[1]}；在 $${b}$ 处的值是${rightIn ? "一" : "零"}，所以它${word(rightIn)[1]}。`,
-      ],
-      drawn(
-        { xMin: -7, xMax: 7, yMin: -2, yMax: 3 },
-        marks,
-        t(
-          `Height one from ${a} (${leftIn ? "filled" : "open"} there) to ${b} (${rightIn ? "filled" : "open"} there), and zero elsewhere.`,
-          `从 ${a}（那里${leftIn ? "实心" : "空心"}）到 ${b}（那里${rightIn ? "实心" : "空心"}）高度为一，其他地方为零。`,
+const indicatorGraph = {
+  ...point(
+    "the-set-of-a-drawn-indicator-function",
+    ["The set of a drawn indicator function", "图中示性函数的集合"],
+    [
+      "The indicator function of a set equals one on the set and zero off it. So its graph shows the set directly as the part at height one. A filled circle at an end at height one means that the end belongs to the set, and an open circle there means it does not, which decides the type of bracket.",
+      "集合的示性函数在集合上等于一，在集合外等于零。所以它的图以高度一的部分直接显示这个集合。高度一处端点的实心圆表示端点属于集合，空心圆表示不属于，这决定了括号的类型。",
+    ],
+    (rng) => {
+      const a = rng.int(-5, 1);
+      const b = a + rng.int(2, 5);
+      const [leftIn, rightIn] = [rng.bool(), rng.bool()];
+      const interval = (l: boolean, r: boolean) => `${l ? "[" : "("}${a}, ${b}${r ? "]" : ")"}`;
+      const marks: PlaneMark[] = [
+        { kind: "segment", a: [-7, 0], b: [a, 0], accent: true },
+        { kind: "segment", a: [a, 1], b: [b, 1], accent: true },
+        { kind: "segment", a: [b, 0], b: [7, 0], accent: true },
+        { kind: "point", at: [a, 1], open: !leftIn, accent: true },
+        { kind: "point", at: [a, 0], open: leftIn, accent: true },
+        { kind: "point", at: [b, 1], open: !rightIn, accent: true },
+        { kind: "point", at: [b, 0], open: rightIn, accent: true },
+      ];
+      const word = (b1: boolean): Pair => (b1 ? ["belongs to the set", "属于集合"] : ["does not belong to the set", "不属于集合"]);
+      return choose(
+        rng,
+        ["The graph shows the indicator function of a set. Which set is it?", "图中是某集合的示性函数。它是哪个集合？"],
+        same(interval(leftIn, rightIn)),
+        [same(interval(!leftIn, rightIn)), same(interval(leftIn, !rightIn)), same(interval(!leftIn, !rightIn))],
+        [
+          `The graph has height one from $${a}$ to $${b}$. The value at $${a}$ is ${leftIn ? "one" : "zero"}, so it ${word(leftIn)[0]}, and the value at $${b}$ is ${rightIn ? "one" : "zero"}, so it ${word(rightIn)[0]}.`,
+          `图在 $${a}$ 到 $${b}$ 之间高度为一。在 $${a}$ 处的值是${leftIn ? "一" : "零"}，所以它${word(leftIn)[1]}；在 $${b}$ 处的值是${rightIn ? "一" : "零"}，所以它${word(rightIn)[1]}。`,
+        ],
+        drawn(
+          { xMin: -7, xMax: 7, yMin: -2, yMax: 3 },
+          marks,
+          t(
+            `Height one from ${a} (${leftIn ? "filled" : "open"} there) to ${b} (${rightIn ? "filled" : "open"} there), and zero elsewhere.`,
+            `从 ${a}（那里${leftIn ? "实心" : "空心"}）到 ${b}（那里${rightIn ? "实心" : "空心"}）高度为一，其他地方为零。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: proofDrawings1["indicator-functions#the-set-of-a-drawn-indicator-function"],
+};
 
 /** deeperFiguresMethodsOfProofPoints adds knowledge points of Methods of Proof that are answered by reading a drawing. */
 export const deeperFiguresMethodsOfProofPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

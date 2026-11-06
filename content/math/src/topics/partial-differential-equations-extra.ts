@@ -3,6 +3,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 import { steps } from "../problems.ts";
 import { ask, choose, point, same, topic } from "../university-kit.ts";
 
@@ -312,32 +313,35 @@ const eigenvalues2d = topic(
   ["sturm-liouville-problems", "the-vibrating-membrane"],
   [],
   [
-    point(
-      "an-eigenvalue-on-a-rectangle",
-      ["An eigenvalue on a rectangle", "矩形上的特征值"],
-      [
-        "On a rectangle with fixed edges, separation gives $\\sin\\frac{m\\pi x}{a}\\sin\\frac{n\\pi y}{b}$. Its eigenvalue is $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$, the sum of the two one-dimensional eigenvalues.",
-        "在边固定的矩形上，分离变量给出 $\\sin\\frac{m\\pi x}{a}\\sin\\frac{n\\pi y}{b}$。它的特征值是 $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$，是两个一维特征值之和。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 6);
-        const b = rng.int(1, 6);
-        const m = rng.int(1, 5);
-        const n = rng.int(1, 5);
-        return ask(
-          [
-            `On the rectangle $[0, ${a}] \\times [0, ${b}]$ with fixed edges, the mode $(m, n) = (${m}, ${n})$ has eigenvalue $k\\pi^{2}$. What is $k$?`,
-            `在边固定的矩形 $[0, ${a}] \\times [0, ${b}]$ 上，模式 $(m, n) = (${m}, ${n})$ 的特征值是 $k\\pi^{2}$。$k$ 是多少？`,
-          ],
-          Q.of(m * m * b * b + n * n * a * a, a * a * b * b),
-          [Q.of(m * b + n * a, a * b), Q.of(m * m + n * n, a * a + b * b), Q.of(n * n * b * b + m * m * a * a + 1, a * a * b * b)],
-          [
-            `The eigenvalue of mode $(m, n)$ is $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$, so $k = \\frac{${m}^{2}}{${a}^{2}} + \\frac{${n}^{2}}{${b}^{2}} = ${Q.of(m * m * b * b + n * n * a * a, a * a * b * b).toLatex()}$.`,
-            `模式 $(m, n)$ 的特征值是 $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$，所以 $k = \\frac{${m}^{2}}{${a}^{2}} + \\frac{${n}^{2}}{${b}^{2}} = ${Q.of(m * m * b * b + n * n * a * a, a * a * b * b).toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "an-eigenvalue-on-a-rectangle",
+        ["An eigenvalue on a rectangle", "矩形上的特征值"],
+        [
+          "On a rectangle with fixed edges, separation gives $\\sin\\frac{m\\pi x}{a}\\sin\\frac{n\\pi y}{b}$. Its eigenvalue is $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$, the sum of the two one-dimensional eigenvalues.",
+          "在边固定的矩形上，分离变量给出 $\\sin\\frac{m\\pi x}{a}\\sin\\frac{n\\pi y}{b}$。它的特征值是 $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$，是两个一维特征值之和。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 6);
+          const b = rng.int(1, 6);
+          const m = rng.int(1, 5);
+          const n = rng.int(1, 5);
+          return ask(
+            [
+              `On the rectangle $[0, ${a}] \\times [0, ${b}]$ with fixed edges, the mode $(m, n) = (${m}, ${n})$ has eigenvalue $k\\pi^{2}$. What is $k$?`,
+              `在边固定的矩形 $[0, ${a}] \\times [0, ${b}]$ 上，模式 $(m, n) = (${m}, ${n})$ 的特征值是 $k\\pi^{2}$。$k$ 是多少？`,
+            ],
+            Q.of(m * m * b * b + n * n * a * a, a * a * b * b),
+            [Q.of(m * b + n * a, a * b), Q.of(m * m + n * n, a * a + b * b), Q.of(n * n * b * b + m * m * a * a + 1, a * a * b * b)],
+            [
+              `The eigenvalue of mode $(m, n)$ is $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$, so $k = \\frac{${m}^{2}}{${a}^{2}} + \\frac{${n}^{2}}{${b}^{2}} = ${Q.of(m * m * b * b + n * n * a * a, a * a * b * b).toLatex()}$.`,
+              `模式 $(m, n)$ 的特征值是 $\\pi^{2}\\left(\\frac{m^{2}}{a^{2}} + \\frac{n^{2}}{b^{2}}\\right)$，所以 $k = \\frac{${m}^{2}}{${a}^{2}} + \\frac{${n}^{2}}{${b}^{2}} = ${Q.of(m * m * b * b + n * n * a * a, a * a * b * b).toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["eigenvalues-in-two-dimensions#an-eigenvalue-on-a-rectangle"],
+    },
     point(
       "modes-that-share-a-frequency",
       ["Modes that share a frequency", "共享频率的模式"],
@@ -786,31 +790,34 @@ const greens1d = topic(
         );
       },
     ),
-    point(
-      "integrating-against-the-kernel",
-      ["Integrating against the kernel", "对核积分"],
-      [
-        "For a distributed source, integrating $G$ against $f$ gives the solution. With a constant source $f$, this integral equals the parabola $\\frac{f}{2}x(L - x)$, which agrees with solving the equation directly.",
-        "对分布源，把 $G$ 对 $f$ 积分就得到解。源为常数 $f$ 时，这个积分等于抛物线 $\\frac{f}{2}x(L - x)$，与直接解方程一致。",
-      ],
-      (rng) => {
-        const big = rng.int(2, 20);
-        const x = rng.int(1, big - 1);
-        const f = rng.int(1, 15);
-        return ask(
-          [
-            `Solve $-u'' = ${f}$ on $[0, ${big}]$ with fixed ends, and give $u(${x})$.`,
-            `解 $[0, ${big}]$ 上两端固定的 $-u'' = ${f}$，给出 $u(${x})$。`,
-          ],
-          Q.of(f * x * (big - x), 2),
-          [f * x * (big - x), Q.of(f * x * x, 2), Q.of(x * (big - x), 2)],
-          [
-            `Integrating the constant source against the Green's function gives $u(x) = \\frac{f}{2}x(L - x)$, which indeed has $-u'' = f$ and vanishes at both ends:${steps(`u(${x}) = \\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x}) = ${Q.of(f * x * (big - x), 2).toLatex()}`)}`,
-            `常数源项对格林函数积分，得 $u(x) = \\frac{f}{2}x(L - x)$；它确实满足 $-u'' = f$，且在两端为零：${steps(`u(${x}) = \\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x}) = ${Q.of(f * x * (big - x), 2).toLatex()}`)}`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "integrating-against-the-kernel",
+        ["Integrating against the kernel", "对核积分"],
+        [
+          "For a distributed source, integrating $G$ against $f$ gives the solution. With a constant source $f$, this integral equals the parabola $\\frac{f}{2}x(L - x)$, which agrees with solving the equation directly.",
+          "对分布源，把 $G$ 对 $f$ 积分就得到解。源为常数 $f$ 时，这个积分等于抛物线 $\\frac{f}{2}x(L - x)$，与直接解方程一致。",
+        ],
+        (rng) => {
+          const big = rng.int(2, 20);
+          const x = rng.int(1, big - 1);
+          const f = rng.int(1, 15);
+          return ask(
+            [
+              `Solve $-u'' = ${f}$ on $[0, ${big}]$ with fixed ends, and give $u(${x})$.`,
+              `解 $[0, ${big}]$ 上两端固定的 $-u'' = ${f}$，给出 $u(${x})$。`,
+            ],
+            Q.of(f * x * (big - x), 2),
+            [f * x * (big - x), Q.of(f * x * x, 2), Q.of(x * (big - x), 2)],
+            [
+              `Integrating the constant source against the Green's function gives $u(x) = \\frac{f}{2}x(L - x)$, which indeed has $-u'' = f$ and vanishes at both ends:${steps(`u(${x}) = \\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x}) = ${Q.of(f * x * (big - x), 2).toLatex()}`)}`,
+              `常数源项对格林函数积分，得 $u(x) = \\frac{f}{2}x(L - x)$；它确实满足 $-u'' = f$，且在两端为零：${steps(`u(${x}) = \\frac{${f}}{2} \\cdot ${x} \\cdot (${big} - ${x}) = ${Q.of(f * x * (big - x), 2).toLatex()}`)}`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["greens-functions-on-an-interval#integrating-against-the-kernel"],
+    },
   ],
 );
 
@@ -842,58 +849,64 @@ const images = topic(
         );
       },
     ),
-    point(
-      "odd-or-even-reflection",
-      ["Odd or even reflection", "奇反射还是偶反射"],
-      [
-        "A fixed end needs zero value, so the image has the opposite sign and the extension is odd. An insulated end needs zero slope, so the image has the same sign and the extension is even.",
-        "固定端需要值为零，所以镜像符号相反，延拓是奇的。绝热端需要斜率为零，所以镜像符号相同，延拓是偶的。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 30);
-        const x = rng.int(1, 30);
-        const fixed = rng.bool();
-        return ask(
-          [
-            `Data on $x > 0$ has $f(${x}) = ${a}$. The boundary at 0 is ${fixed ? "fixed at zero" : "insulated"}. What is the extended data at $x = -${x}$?`,
-            `$x > 0$ 上的数据有 $f(${x}) = ${a}$。0 处的边界${fixed ? "固定为零" : "绝热"}。延拓后的数据在 $x = -${x}$ 处是多少？`,
-          ],
-          fixed ? -a : a,
-          [fixed ? a : -a, 0, x],
-          [
-            `${fixed ? "A fixed" : "An insulated"} end calls for ${fixed ? "an odd" : "an even"} extension, so the value at $-${x}$ is $${fixed ? -a : a}$.`,
-            `${fixed ? "固定" : "绝热"}端需要${fixed ? "奇" : "偶"}延拓，所以 $-${x}$ 处的值是 $${fixed ? -a : a}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "a-wave-reflected-from-a-fixed-end",
-      ["A wave reflected from a fixed end", "从固定端反射的波"],
-      [
-        "With d'Alembert's formula on a half line, a pulse moves toward the fixed end, and the odd image moves in from the other side. The image emerges as the reflection, flipped upside down, after the original passes the end.",
-        "在半直线上用达朗贝尔公式时，脉冲向固定端运动，奇镜像从另一侧进来。原波经过端点后，镜像就作为反射出现，并且上下翻转。",
-      ],
-      (rng) => {
-        const c = rng.int(1, 9);
-        const x0 = c * rng.int(1, 9);
-        const h = rng.int(2, 30);
-        const extra = rng.int(1, 9);
-        const t = x0 / c + extra;
-        return ask(
-          [
-            `A pulse of height ${h} starts at $x = ${x0}$ moving left at speed ${c} toward a fixed end at 0. At $t = ${t}$, where is its center?`,
-            `高度为 ${h} 的脉冲从 $x = ${x0}$ 出发，以速度 ${c} 向左朝 0 处的固定端运动。在 $t = ${t}$ 时它的中心在哪里？`,
-          ],
-          c * extra,
-          [-c * extra, x0 - c * extra, c * t],
-          [
-            `It reaches the end at $t = ${x0 / c}$, and then moves right for ${extra} more time units.`,
-            `它在 $t = ${x0 / c}$ 时到达端点，再向右运动 ${extra} 个时间单位。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "odd-or-even-reflection",
+        ["Odd or even reflection", "奇反射还是偶反射"],
+        [
+          "A fixed end needs zero value, so the image has the opposite sign and the extension is odd. An insulated end needs zero slope, so the image has the same sign and the extension is even.",
+          "固定端需要值为零，所以镜像符号相反，延拓是奇的。绝热端需要斜率为零，所以镜像符号相同，延拓是偶的。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 30);
+          const x = rng.int(1, 30);
+          const fixed = rng.bool();
+          return ask(
+            [
+              `Data on $x > 0$ has $f(${x}) = ${a}$. The boundary at 0 is ${fixed ? "fixed at zero" : "insulated"}. What is the extended data at $x = -${x}$?`,
+              `$x > 0$ 上的数据有 $f(${x}) = ${a}$。0 处的边界${fixed ? "固定为零" : "绝热"}。延拓后的数据在 $x = -${x}$ 处是多少？`,
+            ],
+            fixed ? -a : a,
+            [fixed ? a : -a, 0, x],
+            [
+              `${fixed ? "A fixed" : "An insulated"} end calls for ${fixed ? "an odd" : "an even"} extension, so the value at $-${x}$ is $${fixed ? -a : a}$.`,
+              `${fixed ? "固定" : "绝热"}端需要${fixed ? "奇" : "偶"}延拓，所以 $-${x}$ 处的值是 $${fixed ? -a : a}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["the-method-of-images#odd-or-even-reflection"],
+    },
+    {
+      ...point(
+        "a-wave-reflected-from-a-fixed-end",
+        ["A wave reflected from a fixed end", "从固定端反射的波"],
+        [
+          "With d'Alembert's formula on a half line, a pulse moves toward the fixed end, and the odd image moves in from the other side. The image emerges as the reflection, flipped upside down, after the original passes the end.",
+          "在半直线上用达朗贝尔公式时，脉冲向固定端运动，奇镜像从另一侧进来。原波经过端点后，镜像就作为反射出现，并且上下翻转。",
+        ],
+        (rng) => {
+          const c = rng.int(1, 9);
+          const x0 = c * rng.int(1, 9);
+          const h = rng.int(2, 30);
+          const extra = rng.int(1, 9);
+          const t = x0 / c + extra;
+          return ask(
+            [
+              `A pulse of height ${h} starts at $x = ${x0}$ moving left at speed ${c} toward a fixed end at 0. At $t = ${t}$, where is its center?`,
+              `高度为 ${h} 的脉冲从 $x = ${x0}$ 出发，以速度 ${c} 向左朝 0 处的固定端运动。在 $t = ${t}$ 时它的中心在哪里？`,
+            ],
+            c * extra,
+            [-c * extra, x0 - c * extra, c * t],
+            [
+              `It reaches the end at $t = ${x0 / c}$, and then moves right for ${extra} more time units.`,
+              `它在 $t = ${x0 / c}$ 时到达端点，再向右运动 ${extra} 个时间单位。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["the-method-of-images#a-wave-reflected-from-a-fixed-end"],
+    },
   ],
 );
 
@@ -1011,32 +1024,35 @@ const wave3d = topic(
         );
       },
     ),
-    point(
-      "when-a-signal-is-heard",
-      ["When a signal is heard", "何时听到信号"],
-      [
-        "Kirchhoff's formula takes averages over a sphere of radius $ct$. So in 3D a brief signal starting in a ball reaches a listener only while the sphere of radius $ct$ crosses that ball, and this is Huygens' principle.",
-        "基尔霍夫公式取半径为 $ct$ 的球面上的平均。所以在三维中，从一个球内发出的短暂信号，只在半径为 $ct$ 的球面穿过那个球时才到达听者，这就是惠更斯原理。",
-      ],
-      (rng) => {
-        const c = rng.int(1, 9);
-        const big = rng.int(1, 9);
-        const r = big + rng.int(1, 30);
-        const last = rng.bool();
-        return ask(
-          [
-            `A signal starts at $t = 0$ inside a ball of radius ${big}, with speed $c = ${c}$. A listener is at distance ${r} from the center. At what time does the listener hear it ${last ? "for the last time" : "first"}?`,
-            `信号在 $t = 0$ 时从半径为 ${big} 的球内发出，速度 $c = ${c}$。听者距球心 ${r}。听者${last ? "最后一次" : "第一次"}听到它是在什么时间？`,
-          ],
-          Q.of(last ? r + big : r - big, c),
-          [Q.of(last ? r - big : r + big, c), Q.of(r, c), Q.of(big, c)],
-          [
-            `The sphere of radius $ct$ around the listener ${last ? "last touches" : "first touches"} the ball at $ct = ${r} ${last ? "+" : "-"} ${big}$.`,
-            `以听者为中心、半径为 $ct$ 的球面在 $ct = ${r} ${last ? "+" : "-"} ${big}$ 时${last ? "最后" : "第一次"}接触这个球。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "when-a-signal-is-heard",
+        ["When a signal is heard", "何时听到信号"],
+        [
+          "Kirchhoff's formula takes averages over a sphere of radius $ct$. So in 3D a brief signal starting in a ball reaches a listener only while the sphere of radius $ct$ crosses that ball, and this is Huygens' principle.",
+          "基尔霍夫公式取半径为 $ct$ 的球面上的平均。所以在三维中，从一个球内发出的短暂信号，只在半径为 $ct$ 的球面穿过那个球时才到达听者，这就是惠更斯原理。",
+        ],
+        (rng) => {
+          const c = rng.int(1, 9);
+          const big = rng.int(1, 9);
+          const r = big + rng.int(1, 30);
+          const last = rng.bool();
+          return ask(
+            [
+              `A signal starts at $t = 0$ inside a ball of radius ${big}, with speed $c = ${c}$. A listener is at distance ${r} from the center. At what time does the listener hear it ${last ? "for the last time" : "first"}?`,
+              `信号在 $t = 0$ 时从半径为 ${big} 的球内发出，速度 $c = ${c}$。听者距球心 ${r}。听者${last ? "最后一次" : "第一次"}听到它是在什么时间？`,
+            ],
+            Q.of(last ? r + big : r - big, c),
+            [Q.of(last ? r - big : r + big, c), Q.of(r, c), Q.of(big, c)],
+            [
+              `The sphere of radius $ct$ around the listener ${last ? "last touches" : "first touches"} the ball at $ct = ${r} ${last ? "+" : "-"} ${big}$.`,
+              `以听者为中心、半径为 $ct$ 的球面在 $ct = ${r} ${last ? "+" : "-"} ${big}$ 时${last ? "最后" : "第一次"}接触这个球。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["waves-in-three-dimensions#when-a-signal-is-heard"],
+    },
     point(
       "sharp-signals-in-odd-dimensions",
       ["Sharp signals in odd dimensions", "奇数维的清晰信号"],
@@ -1253,29 +1269,32 @@ const wedge = topic(
   ["laplaces-equation-in-a-rectangle-and-a-disc"],
   [],
   [
-    point(
-      "the-power-on-a-wedge",
-      ["The power on a wedge", "楔形上的幂"],
-      [
-        "On a wedge of angle $\\beta$ with zero on both edges, the harmonic solutions are $r^{\\nu}\\sin(\\nu\\theta)$ with $\\nu = \\frac{n\\pi}{\\beta}$. So the geometry of the corner fixes which power of $r$ is allowed.",
-        "在角度为 $\\beta$、两边为零的楔形上，调和解是 $r^{\\nu}\\sin(\\nu\\theta)$，其中 $\\nu = \\frac{n\\pi}{\\beta}$。所以角的几何决定允许 $r$ 的哪个幂。",
-      ],
-      (rng) => {
-        const q0 = rng.int(2, 12);
-        const p = rng.int(1, 3);
-        const q = p === q0 || q0 % p === 0 ? q0 * p + 1 : q0;
-        const n = rng.int(1, 6);
-        return ask(
-          [
-            `On a wedge of angle $\\frac{${p === 1 ? "" : p}\\pi}{${q}}$ with zero on both edges, what is the power $\\nu$ for the mode $n = ${n}$?`,
-            `在角度为 $\\frac{${p === 1 ? "" : p}\\pi}{${q}}$、两边为零的楔形上，模式 $n = ${n}$ 的幂 $\\nu$ 是多少？`,
-          ],
-          Q.of(n * q, p),
-          [Q.of(n * p, q), Q.of(q, p), Q.of(n * q, p + 1)],
-          [`Use $\\nu = n\\pi \\div \\beta$ with $n = ${n}$.`, `用 $\\nu = n\\pi \\div \\beta$，取 $n = ${n}$。`],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-power-on-a-wedge",
+        ["The power on a wedge", "楔形上的幂"],
+        [
+          "On a wedge of angle $\\beta$ with zero on both edges, the harmonic solutions are $r^{\\nu}\\sin(\\nu\\theta)$ with $\\nu = \\frac{n\\pi}{\\beta}$. So the geometry of the corner fixes which power of $r$ is allowed.",
+          "在角度为 $\\beta$、两边为零的楔形上，调和解是 $r^{\\nu}\\sin(\\nu\\theta)$，其中 $\\nu = \\frac{n\\pi}{\\beta}$。所以角的几何决定允许 $r$ 的哪个幂。",
+        ],
+        (rng) => {
+          const q0 = rng.int(2, 12);
+          const p = rng.int(1, 3);
+          const q = p === q0 || q0 % p === 0 ? q0 * p + 1 : q0;
+          const n = rng.int(1, 6);
+          return ask(
+            [
+              `On a wedge of angle $\\frac{${p === 1 ? "" : p}\\pi}{${q}}$ with zero on both edges, what is the power $\\nu$ for the mode $n = ${n}$?`,
+              `在角度为 $\\frac{${p === 1 ? "" : p}\\pi}{${q}}$、两边为零的楔形上，模式 $n = ${n}$ 的幂 $\\nu$ 是多少？`,
+            ],
+            Q.of(n * q, p),
+            [Q.of(n * p, q), Q.of(q, p), Q.of(n * q, p + 1)],
+            [`Use $\\nu = n\\pi \\div \\beta$ with $n = ${n}$.`, `用 $\\nu = n\\pi \\div \\beta$，取 $n = ${n}$。`],
+          );
+        },
+      ),
+      figure: pdeDrawings1["laplaces-equation-on-wedges-and-annuli#the-power-on-a-wedge"],
+    },
     point(
       "a-solution-outside-a-disc",
       ["A solution outside a disc", "圆盘外的解"],
@@ -1363,31 +1382,34 @@ const harmonicMax = topic(
         );
       },
     ),
-    point(
-      "extremes-on-the-boundary",
-      ["Extremes on the boundary", "边界上的最值"],
-      [
-        "The maximum and minimum of a harmonic function on a closed bounded region occur on the boundary. So on a disc, write the function in polar form, and read the largest value from the boundary circle.",
-        "调和函数在闭有界区域上的最大值和最小值都在边界上。所以在圆盘上，把函数写成极坐标形式，再从边界圆上读出最大值。",
-      ],
-      (rng) => {
-        const r = rng.int(1, 15);
-        const a = rng.int(1, 9);
-        const c = rng.int(-20, 20);
-        return ask(
-          [
-            `What is the maximum of $u = ${a}(x^{2} - y^{2})${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}$ on the disc $x^{2} + y^{2} \\le ${r * r}$?`,
-            `$u = ${a}(x^{2} - y^{2})${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}$ 在圆盘 $x^{2} + y^{2} \\le ${r * r}$ 上的最大值是多少？`,
-          ],
-          a * r * r + c,
-          [c, a * r + c, 2 * a * r * r + c],
-          [
-            `By the maximum principle, the maximum lies on the boundary circle. There $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$, whose largest value is ${r * r}, so the maximum of $u$ is $${a * r * r + c}$.`,
-            `由极值原理，最大值在边界圆周上取到。在圆周上 $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$，它的最大值是 ${r * r}，所以 $u$ 的最大值是 $${a * r * r + c}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "extremes-on-the-boundary",
+        ["Extremes on the boundary", "边界上的最值"],
+        [
+          "The maximum and minimum of a harmonic function on a closed bounded region occur on the boundary. So on a disc, write the function in polar form, and read the largest value from the boundary circle.",
+          "调和函数在闭有界区域上的最大值和最小值都在边界上。所以在圆盘上，把函数写成极坐标形式，再从边界圆上读出最大值。",
+        ],
+        (rng) => {
+          const r = rng.int(1, 15);
+          const a = rng.int(1, 9);
+          const c = rng.int(-20, 20);
+          return ask(
+            [
+              `What is the maximum of $u = ${a}(x^{2} - y^{2})${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}$ on the disc $x^{2} + y^{2} \\le ${r * r}$?`,
+              `$u = ${a}(x^{2} - y^{2})${c === 0 ? "" : c > 0 ? ` + ${c}` : ` - ${-c}`}$ 在圆盘 $x^{2} + y^{2} \\le ${r * r}$ 上的最大值是多少？`,
+            ],
+            a * r * r + c,
+            [c, a * r + c, 2 * a * r * r + c],
+            [
+              `By the maximum principle, the maximum lies on the boundary circle. There $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$, whose largest value is ${r * r}, so the maximum of $u$ is $${a * r * r + c}$.`,
+              `由极值原理，最大值在边界圆周上取到。在圆周上 $x^{2} - y^{2} = ${r * r}\\cos(2\\theta)$，它的最大值是 ${r * r}，所以 $u$ 的最大值是 $${a * r * r + c}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["the-maximum-principle-for-harmonic-functions#extremes-on-the-boundary"],
+    },
     point(
       "the-neumann-compatibility-condition",
       ["The Neumann compatibility condition", "诺伊曼相容条件"],

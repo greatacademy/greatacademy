@@ -4,6 +4,7 @@
 import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { linearProgrammingDrawings1 } from "../explanation-drawings-linear-programming-1.ts";
 import { steps } from "../problems.ts";
 import { ask, choose, point, topic } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -275,31 +276,34 @@ const boundedVariables = topic(
         );
       },
     ),
-    point(
-      "reflecting-an-upper-bound",
-      ["Reflecting an upper bound", "反射上界"],
-      [
-        "A variable at its upper bound $u$ can be replaced by $x = u - x'$, so that $x' \\ge 0$ measures the distance below the bound. In the new row, the coefficient of the variable changes sign and the right side shifts.",
-        "处于上界 $u$ 的变量可以换成 $x = u - x'$，于是 $x' \\ge 0$ 表示距上界的距离。在新的行中，这个变量的系数变号，右端也平移。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        const u = rng.int(2, 20);
-        const b = rng.int(1, 200);
-        return ask(
-          [
-            `In $${a}x + y = ${b}$ with $x \\le ${u}$, substitute $x = ${u} - x'$. In the form $-${a}x' + y = R$, what is $R$?`,
-            `在 $${a}x + y = ${b}$ 中，$x \\le ${u}$，代入 $x = ${u} - x'$。写成 $-${a}x' + y = R$，$R$ 是多少？`,
-          ],
-          b - a * u,
-          [b + a * u, b - u, a * u - b],
-          [
-            `The constant $${a} \\cdot ${u}$ moves to the right side and is subtracted from ${b}.`,
-            `常数 $${a} \\cdot ${u}$ 移到右端，从 ${b} 中减去。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "reflecting-an-upper-bound",
+        ["Reflecting an upper bound", "反射上界"],
+        [
+          "A variable at its upper bound $u$ can be replaced by $x = u - x'$, so that $x' \\ge 0$ measures the distance below the bound. In the new row, the coefficient of the variable changes sign and the right side shifts.",
+          "处于上界 $u$ 的变量可以换成 $x = u - x'$，于是 $x' \\ge 0$ 表示距上界的距离。在新的行中，这个变量的系数变号，右端也平移。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          const u = rng.int(2, 20);
+          const b = rng.int(1, 200);
+          return ask(
+            [
+              `In $${a}x + y = ${b}$ with $x \\le ${u}$, substitute $x = ${u} - x'$. In the form $-${a}x' + y = R$, what is $R$?`,
+              `在 $${a}x + y = ${b}$ 中，$x \\le ${u}$，代入 $x = ${u} - x'$。写成 $-${a}x' + y = R$，$R$ 是多少？`,
+            ],
+            b - a * u,
+            [b + a * u, b - u, a * u - b],
+            [
+              `The constant $${a} \\cdot ${u}$ moves to the right side and is subtracted from ${b}.`,
+              `常数 $${a} \\cdot ${u}$ 移到右端，从 ${b} 中减去。`,
+            ],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["the-simplex-method-with-bounded-variables#reflecting-an-upper-bound"],
+    },
     point(
       "the-bound-in-the-ratio-test",
       ["The bound in the ratio test", "比值检验中的界"],
@@ -1252,68 +1256,74 @@ const networkSimplex = topic(
         );
       },
     ),
-    point(
-      "potentials-and-reduced-costs",
-      ["Potentials and reduced costs", "势和检验数"],
-      [
-        "Node potentials play the role of dual values, with $\\pi_j = \\pi_i + c_{ij}$ along each tree arc. A nontree arc has reduced cost $c_{ij} + \\pi_i - \\pi_j$, and a negative value means it can improve the plan.",
-        "结点势起对偶值的作用，沿每条树弧 $\\pi_j = \\pi_i + c_{ij}$。非树弧的检验数是 $c_{ij} + \\pi_i - \\pi_j$，负值表示它可以改善方案。",
-      ],
-      (rng) => {
-        const [sa, at, sb] = [rng.int(1, 20), rng.int(1, 20), rng.int(1, 20)];
-        const bt = rng.int(1, 40);
-        const value = bt + sb - sa - at;
-        return ask(
-          [
-            `In the network drawn, the tree arcs are $S \\to A$, $A \\to T$ and $S \\to B$, with $\\pi_S = 0$. What is the reduced cost of the nontree arc $B \\to T$?`,
-            `在图示网络中，树弧是 $S \\to A$，$A \\to T$ 和 $S \\to B$，$\\pi_S = 0$。非树弧 $B \\to T$ 的检验数是多少？`,
-          ],
-          value,
-          [bt - sb + sa + at, sa + at - bt - sb, bt - sa - at],
-          [
-            `The tree gives $\\pi_B = ${sb}$ and $\\pi_T = ${sa + at}$, so the value is $${bt} + ${sb} - ${sa + at}$.`,
-            `树给出 $\\pi_B = ${sb}$ 和 $\\pi_T = ${sa + at}$，所以值是 $${bt} + ${sb} - ${sa + at}$。`,
-          ],
-          arcsFigure(
+    {
+      ...point(
+        "potentials-and-reduced-costs",
+        ["Potentials and reduced costs", "势和检验数"],
+        [
+          "Node potentials play the role of dual values, with $\\pi_j = \\pi_i + c_{ij}$ along each tree arc. A nontree arc has reduced cost $c_{ij} + \\pi_i - \\pi_j$, and a negative value means it can improve the plan.",
+          "结点势起对偶值的作用，沿每条树弧 $\\pi_j = \\pi_i + c_{ij}$。非树弧的检验数是 $c_{ij} + \\pi_i - \\pi_j$，负值表示它可以改善方案。",
+        ],
+        (rng) => {
+          const [sa, at, sb] = [rng.int(1, 20), rng.int(1, 20), rng.int(1, 20)];
+          const bt = rng.int(1, 40);
+          const value = bt + sb - sa - at;
+          return ask(
             [
-              ["S", "A", sa],
-              ["A", "T", at],
-              ["S", "B", sb],
-              ["B", "T", bt],
+              `In the network drawn, the tree arcs are $S \\to A$, $A \\to T$ and $S \\to B$, with $\\pi_S = 0$. What is the reduced cost of the nontree arc $B \\to T$?`,
+              `在图示网络中，树弧是 $S \\to A$，$A \\to T$ 和 $S \\to B$，$\\pi_S = 0$。非树弧 $B \\to T$ 的检验数是多少？`,
             ],
+            value,
+            [bt - sb + sa + at, sa + at - bt - sb, bt - sa - at],
             [
-              `A network with arcs S to A cost ${sa}, A to T cost ${at}, S to B cost ${sb} and B to T cost ${bt}.`,
-              `网络的弧是 S 到 A 费用 ${sa}，A 到 T 费用 ${at}，S 到 B 费用 ${sb}，B 到 T 费用 ${bt}。`,
+              `The tree gives $\\pi_B = ${sb}$ and $\\pi_T = ${sa + at}$, so the value is $${bt} + ${sb} - ${sa + at}$.`,
+              `树给出 $\\pi_B = ${sb}$ 和 $\\pi_T = ${sa + at}$，所以值是 $${bt} + ${sb} - ${sa + at}$。`,
             ],
-          ),
-        );
-      },
-    ),
-    point(
-      "pushing-around-a-cycle",
-      ["Pushing around a cycle", "沿圈推流"],
-      [
-        "An entering arc closes one cycle with the tree. Flow increases on forward arcs and decreases on backward arcs, so the push is limited by the smallest flow on a backward arc, and that arc leaves the tree.",
-        "进基弧与树形成一个圈。流在前向弧上增加，在后向弧上减少，所以推流量受后向弧上最小流的限制，那条弧离开树。",
-      ],
-      (rng) => {
-        const back = rng.sample(
-          Array.from({ length: 50 }, (_, i) => i + 1),
-          3,
-        );
-        const forward = rng.int(1, 40);
-        const m = Math.min(...back);
-        return ask(
-          [
-            `A cycle has backward arcs with the flows $${back.join(", ")}$, and a forward arc with the flow ${forward}. How much flow can be pushed?`,
-            `一个圈有流为 $${back.join(", ")}$ 的后向弧和流为 ${forward} 的前向弧。能推多少流？`,
-          ],
-          m,
-          [Math.max(...back), forward === m ? m + 1 : forward, m + forward],
-          [`Only backward arcs lose flow, so the limit is the smallest of them, ${m}.`, `只有后向弧减少流，所以限制是其中最小的 ${m}。`],
-        );
-      },
-    ),
+            arcsFigure(
+              [
+                ["S", "A", sa],
+                ["A", "T", at],
+                ["S", "B", sb],
+                ["B", "T", bt],
+              ],
+              [
+                `A network with arcs S to A cost ${sa}, A to T cost ${at}, S to B cost ${sb} and B to T cost ${bt}.`,
+                `网络的弧是 S 到 A 费用 ${sa}，A 到 T 费用 ${at}，S 到 B 费用 ${sb}，B 到 T 费用 ${bt}。`,
+              ],
+            ),
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["the-network-simplex-method#potentials-and-reduced-costs"],
+    },
+    {
+      ...point(
+        "pushing-around-a-cycle",
+        ["Pushing around a cycle", "沿圈推流"],
+        [
+          "An entering arc closes one cycle with the tree. Flow increases on forward arcs and decreases on backward arcs, so the push is limited by the smallest flow on a backward arc, and that arc leaves the tree.",
+          "进基弧与树形成一个圈。流在前向弧上增加，在后向弧上减少，所以推流量受后向弧上最小流的限制，那条弧离开树。",
+        ],
+        (rng) => {
+          const back = rng.sample(
+            Array.from({ length: 50 }, (_, i) => i + 1),
+            3,
+          );
+          const forward = rng.int(1, 40);
+          const m = Math.min(...back);
+          return ask(
+            [
+              `A cycle has backward arcs with the flows $${back.join(", ")}$, and a forward arc with the flow ${forward}. How much flow can be pushed?`,
+              `一个圈有流为 $${back.join(", ")}$ 的后向弧和流为 ${forward} 的前向弧。能推多少流？`,
+            ],
+            m,
+            [Math.max(...back), forward === m ? m + 1 : forward, m + forward],
+            [`Only backward arcs lose flow, so the limit is the smallest of them, ${m}.`, `只有后向弧减少流，所以限制是其中最小的 ${m}。`],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["the-network-simplex-method#pushing-around-a-cycle"],
+    },
   ],
 );
 
@@ -1583,42 +1593,45 @@ const unimodular = topic(
         );
       },
     ),
-    point(
-      "recognizing-network-matrices",
-      ["Recognizing network matrices", "识别网络矩阵"],
-      [
-        "Node-arc incidence matrices of directed graphs are totally unimodular, and so are bipartite incidence matrices. That is why transportation, assignment and flow problems give whole number answers from plain linear programs.",
-        "有向图的结点-弧关联矩阵是全单模的，二部图的关联矩阵也是。这就是运输、指派和流问题用普通线性规划就给出整数解的原因。",
-      ],
-      (rng) => {
-        const n = rng.int(3, 40);
-        const family = rng.int(0, 2);
-        const name: [string, string] =
-          family === 0
-            ? [`a transportation problem with ${n} sources`, `有 ${n} 个产地的运输问题`]
-            : family === 1
-              ? [`an assignment problem with ${n} workers`, `有 ${n} 名工人的指派问题`]
-              : [`a maximum flow problem with ${n} nodes`, `有 ${n} 个结点的最大流问题`];
-        const right: [string, string] = [
-          "Its corners are whole numbers, so the plain relaxation is enough",
-          "它的角点是整数，所以普通松弛就够了",
-        ];
-        return choose(
-          rng,
-          [
-            `With whole number data, what do we know about solving ${name[0]} as a linear program?`,
-            `数据是整数时，关于把${name[1]}当作线性规划求解，我们知道什么？`,
-          ],
-          right,
-          [
-            ["Its corners are fractional, so branching is required", "它的角点是分数，所以需要分支"],
-            ["It has no optimal corner at all", "它根本没有最优角点"],
-            ["Its dual always fails to exist", "它的对偶总是不存在"],
-          ],
-          [`Its constraint matrix is a network matrix, which is totally unimodular.`, `它的约束矩阵是网络矩阵，是全单模的。`],
-        );
-      },
-    ),
+    {
+      ...point(
+        "recognizing-network-matrices",
+        ["Recognizing network matrices", "识别网络矩阵"],
+        [
+          "Node-arc incidence matrices of directed graphs are totally unimodular, and so are bipartite incidence matrices. That is why transportation, assignment and flow problems give whole number answers from plain linear programs.",
+          "有向图的结点-弧关联矩阵是全单模的，二部图的关联矩阵也是。这就是运输、指派和流问题用普通线性规划就给出整数解的原因。",
+        ],
+        (rng) => {
+          const n = rng.int(3, 40);
+          const family = rng.int(0, 2);
+          const name: [string, string] =
+            family === 0
+              ? [`a transportation problem with ${n} sources`, `有 ${n} 个产地的运输问题`]
+              : family === 1
+                ? [`an assignment problem with ${n} workers`, `有 ${n} 名工人的指派问题`]
+                : [`a maximum flow problem with ${n} nodes`, `有 ${n} 个结点的最大流问题`];
+          const right: [string, string] = [
+            "Its corners are whole numbers, so the plain relaxation is enough",
+            "它的角点是整数，所以普通松弛就够了",
+          ];
+          return choose(
+            rng,
+            [
+              `With whole number data, what do we know about solving ${name[0]} as a linear program?`,
+              `数据是整数时，关于把${name[1]}当作线性规划求解，我们知道什么？`,
+            ],
+            right,
+            [
+              ["Its corners are fractional, so branching is required", "它的角点是分数，所以需要分支"],
+              ["It has no optimal corner at all", "它根本没有最优角点"],
+              ["Its dual always fails to exist", "它的对偶总是不存在"],
+            ],
+            [`Its constraint matrix is a network matrix, which is totally unimodular.`, `它的约束矩阵是网络矩阵，是全单模的。`],
+          );
+        },
+      ),
+      figure: linearProgrammingDrawings1["total-unimodularity#recognizing-network-matrices"],
+    },
   ],
 );
 

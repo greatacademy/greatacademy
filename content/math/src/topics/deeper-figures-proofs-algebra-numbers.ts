@@ -6,6 +6,9 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
+import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { chart, intTicks } from "./figure-charts.ts";
@@ -262,52 +265,55 @@ const relationDots = point(
   },
 );
 
-const divisionLine = point(
-  "the-division-algorithm-on-a-number-line",
-  ["The division algorithm on a number line", "数轴上的带余除法"],
-  [
-    "Writing $a = qd + r$ with $0 \\le r < d$ means stepping back from $a$ to the nearest multiple of $d$ at or to its left. This holds for negative $a$ too, so $q$ is often more negative than you might first guess.",
-    "写成 $a = qd + r$（$0 \\le r < d$）就是从 $a$ 退回到它左边（或恰好在它上面）最近的 $d$ 的倍数。对负的 $a$ 也是如此，所以 $q$ 往往比第一感觉更负。",
-  ],
-  (rng) => {
-    const d = rng.int(3, 7);
-    const q = rng.int(-4, 3);
-    const r = rng.int(1, d - 1);
-    const a = q * d + r;
-    const low = Math.min(q, 0) - 1;
-    const high = Math.max(q, 0) + 2;
-    const askQ = rng.bool();
-    const dots = Array.from({ length: high - low + 1 }, (_, i) => (low + i) * d);
-    const x0 = low * d;
-    const x1 = high * d;
-    const px = (v: number) => Math.round((20 + ((v - x0) * 280) / (x1 - x0)) * 10) / 10;
-    let body = `<line x1="14" y1="60" x2="306" y2="60"/>`;
-    for (const v of dots) body += `<line x1="${px(v)}" y1="54" x2="${px(v)}" y2="66"/>${label(px(v), 84, String(v).replace("-", "−"))}`;
-    body += `<circle class="accent" cx="${px(a)}" cy="60" r="5" fill="currentColor" stroke="none"/>${label(px(a), 42, "a")}`;
-    const svg = svgDocument(100, body);
-    return ask(
-      askQ
-        ? [
-            `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $q$.`,
-            `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $q$。`,
-          ]
-        : [
-            `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $r$.`,
-            `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $r$。`,
-          ],
-      askQ ? q : r,
-      askQ ? [q + 1, q - 1, r, a] : [d - r, -(d - r), q, r + 1, a],
-      [
-        `The nearest multiple of $${d}$ at or to the left of $${a}$ is $${q * d} = ${d}(${q})$. So $q = ${q}$ and $r = ${a} - (${q * d}) = ${r}$.`,
-        `$${a}$ 左边最近的 $${d}$ 的倍数是 $${q * d} = ${d}(${q})$。所以 $q = ${q}$，$r = ${a} - (${q * d}) = ${r}$。`,
-      ],
-      figureOf(svg, [
-        `A number line with ticks at ${dots.join(", ")}, and a dot at ${a}.`,
-        `数轴上的刻度位于 ${dots.join("、")}，点位于 ${a}。`,
-      ]),
-    );
-  },
-);
+const divisionLine = {
+  ...point(
+    "the-division-algorithm-on-a-number-line",
+    ["The division algorithm on a number line", "数轴上的带余除法"],
+    [
+      "Writing $a = qd + r$ with $0 \\le r < d$ means stepping back from $a$ to the nearest multiple of $d$ at or to its left. This holds for negative $a$ too, so $q$ is often more negative than you might first guess.",
+      "写成 $a = qd + r$（$0 \\le r < d$）就是从 $a$ 退回到它左边（或恰好在它上面）最近的 $d$ 的倍数。对负的 $a$ 也是如此，所以 $q$ 往往比第一感觉更负。",
+    ],
+    (rng) => {
+      const d = rng.int(3, 7);
+      const q = rng.int(-4, 3);
+      const r = rng.int(1, d - 1);
+      const a = q * d + r;
+      const low = Math.min(q, 0) - 1;
+      const high = Math.max(q, 0) + 2;
+      const askQ = rng.bool();
+      const dots = Array.from({ length: high - low + 1 }, (_, i) => (low + i) * d);
+      const x0 = low * d;
+      const x1 = high * d;
+      const px = (v: number) => Math.round((20 + ((v - x0) * 280) / (x1 - x0)) * 10) / 10;
+      let body = `<line x1="14" y1="60" x2="306" y2="60"/>`;
+      for (const v of dots) body += `<line x1="${px(v)}" y1="54" x2="${px(v)}" y2="66"/>${label(px(v), 84, String(v).replace("-", "−"))}`;
+      body += `<circle class="accent" cx="${px(a)}" cy="60" r="5" fill="currentColor" stroke="none"/>${label(px(a), 42, "a")}`;
+      const svg = svgDocument(100, body);
+      return ask(
+        askQ
+          ? [
+              `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $q$.`,
+              `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $q$。`,
+            ]
+          : [
+              `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $r$.`,
+              `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $r$。`,
+            ],
+        askQ ? q : r,
+        askQ ? [q + 1, q - 1, r, a] : [d - r, -(d - r), q, r + 1, a],
+        [
+          `The nearest multiple of $${d}$ at or to the left of $${a}$ is $${q * d} = ${d}(${q})$. So $q = ${q}$ and $r = ${a} - (${q * d}) = ${r}$.`,
+          `$${a}$ 左边最近的 $${d}$ 的倍数是 $${q * d} = ${d}(${q})$。所以 $q = ${q}$，$r = ${a} - (${q * d}) = ${r}$。`,
+        ],
+        figureOf(svg, [
+          `A number line with ticks at ${dots.join(", ")}, and a dot at ${a}.`,
+          `数轴上的刻度位于 ${dots.join("、")}，点位于 ${a}。`,
+        ]),
+      );
+    },
+  ),
+  figure: proofDrawings1["the-division-algorithm#the-division-algorithm-on-a-number-line"],
+};
 
 /** clock draws the residues modulo n around a circle, with some of them filled. */
 function clock(n: number, filled: readonly number[] = [], arrows = ""): string {
@@ -323,36 +329,39 @@ function clock(n: number, filled: readonly number[] = [], arrows = ""): string {
   return svgDocument(220, body + arrows);
 }
 
-const clockWalk = point(
-  "walking-on-a-residue-clock",
-  ["Walking on a residue clock", "在剩余类时钟上行走"],
-  [
-    "In $\\mathbb{Z}_n$, adding $k$ means moving $k$ steps clockwise around the circle of residues, wrapping past $0$. Every full turn of $n$ steps changes nothing, so only $k \\bmod n$ matters.",
-    "在 $\\mathbb{Z}_n$ 中，加 $k$ 就是在剩余类的圆上顺时针走 $k$ 步，经过 $0$ 时绕回。每走满 $n$ 步一圈等于没动，所以只有 $k \\bmod n$ 起作用。",
-  ],
-  (rng) => {
-    const n = rng.int(5, 12);
-    const start = rng.int(0, n - 1);
-    const k = rng.int(n + 1, 4 * n);
-    const answer = mod(start + k, n);
-    return ask(
-      [
-        `The clock shows $\\mathbb{Z}_{${n}}$, with the shaded residue as the start. Where do you land after moving $${k}$ steps clockwise?`,
-        `时钟表示 $\\mathbb{Z}_{${n}}$，有阴影的剩余类是起点。顺时针走 $${k}$ 步后到达哪里？`,
-      ],
-      answer,
-      [mod(start - k, n), mod(k, n), start + k, mod(answer + 1, n)],
-      [
-        `The clock has $${n}$ residues, and $${k} \\equiv ${mod(k, n)} \\pmod{${n}}$. So you land on $${start} + ${mod(k, n)} \\equiv ${answer}$.`,
-        `时钟有 $${n}$ 个剩余类，$${k} \\equiv ${mod(k, n)} \\pmod{${n}}$。所以到达 $${start} + ${mod(k, n)} \\equiv ${answer}$。`,
-      ],
-      figureOf(clock(n, [start]), [
-        `A clock of the residues 0 to ${n - 1}, with ${start} shaded.`,
-        `0 到 ${n - 1} 的剩余类时钟，${start} 有阴影。`,
-      ]),
-    );
-  },
-);
+const clockWalk = {
+  ...point(
+    "walking-on-a-residue-clock",
+    ["Walking on a residue clock", "在剩余类时钟上行走"],
+    [
+      "In $\\mathbb{Z}_n$, adding $k$ means moving $k$ steps clockwise around the circle of residues, wrapping past $0$. Every full turn of $n$ steps changes nothing, so only $k \\bmod n$ matters.",
+      "在 $\\mathbb{Z}_n$ 中，加 $k$ 就是在剩余类的圆上顺时针走 $k$ 步，经过 $0$ 时绕回。每走满 $n$ 步一圈等于没动，所以只有 $k \\bmod n$ 起作用。",
+    ],
+    (rng) => {
+      const n = rng.int(5, 12);
+      const start = rng.int(0, n - 1);
+      const k = rng.int(n + 1, 4 * n);
+      const answer = mod(start + k, n);
+      return ask(
+        [
+          `The clock shows $\\mathbb{Z}_{${n}}$, with the shaded residue as the start. Where do you land after moving $${k}$ steps clockwise?`,
+          `时钟表示 $\\mathbb{Z}_{${n}}$，有阴影的剩余类是起点。顺时针走 $${k}$ 步后到达哪里？`,
+        ],
+        answer,
+        [mod(start - k, n), mod(k, n), start + k, mod(answer + 1, n)],
+        [
+          `The clock has $${n}$ residues, and $${k} \\equiv ${mod(k, n)} \\pmod{${n}}$. So you land on $${start} + ${mod(k, n)} \\equiv ${answer}$.`,
+          `时钟有 $${n}$ 个剩余类，$${k} \\equiv ${mod(k, n)} \\pmod{${n}}$。所以到达 $${start} + ${mod(k, n)} \\equiv ${answer}$。`,
+        ],
+        figureOf(clock(n, [start]), [
+          `A clock of the residues 0 to ${n - 1}, with ${start} shaded.`,
+          `0 到 ${n - 1} 的剩余类时钟，${start} 有阴影。`,
+        ]),
+      );
+    },
+  ),
+  figure: proofDrawings1["the-integers-modulo-n#walking-on-a-residue-clock"],
+};
 
 const clockNegative = point(
   "a-negative-number-on-a-residue-clock",
@@ -519,67 +528,73 @@ const truthSetLine = point(
   },
 );
 
-const injectiveGraph = point(
-  "injectivity-from-a-drawn-graph",
-  ["Injectivity from a drawn graph", "由图判断单射"],
-  [
-    "A function is injective when different inputs always give different outputs. On a graph, that fails exactly when some horizontal line meets the graph more than once, and two such crossings are a counterexample.",
-    "当不同的输入总给出不同的输出时，函数是单射。在图上，它不成立当且仅当某条水平线与图像相交不止一次，这样的两个交点就是反例。",
-  ],
-  (rng) => {
-    const shape = rng.pick(["line", "cubic", "parabola", "vee", "wave"] as const);
-    const h = rng.int(-2, 2);
-    const k = rng.int(-3, 3);
-    const s = rng.pick([0.5, 1, 1.5]) * rng.sign();
-    const f = {
-      line: (x: number) => k + s * (x - h),
-      cubic: (x: number) => k + (s / 4) * (x - h) ** 3,
-      parabola: (x: number) => k + (s / 2) * (x - h) ** 2,
-      vee: (x: number) => k + s * Math.abs(x - h),
-      wave: (x: number) => k + 2 * s * Math.sin(x - h),
-    }[shape];
-    const injective = shape === "line" || shape === "cubic";
-    const yes: Pair = ["Injective: every horizontal line meets the graph at most once", "单射：每条水平线与图像至多相交一次"];
-    const no: Pair = ["Not injective: some horizontal line meets the graph twice", "不是单射：某条水平线与图像相交两次"];
-    const yes2: Pair = ["Injective: every vertical line meets the graph at most once", "单射：每条竖直线与图像至多相交一次"];
-    const no2: Pair = ["Not injective: some vertical line meets the graph twice", "不是单射：某条竖直线与图像相交两次"];
-    return choose(
-      rng,
-      [
-        "The curve is the graph of a function on the whole real line, and it continues in the same way past the drawing. Which statement is true?",
-        "曲线是定义在整个实数轴上的函数的图像，并按同样的方式延伸到图外。哪个说法正确？",
-      ],
-      injective ? yes : no,
-      [injective ? no : yes, yes2, no2],
-      injective
-        ? ["The graph always moves in one direction, so no height is reached twice.", "图像始终朝一个方向走，所以没有哪个高度被达到两次。"]
-        : [
-            "The graph turns back, so a horizontal line near the turn crosses it on both sides.",
-            "图像会折返，所以折返点附近的水平线在两侧都与它相交。",
-          ],
-      drawn(
-        { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
-        [{ kind: "curve", f, accent: true }],
-        t(
-          {
-            line: "A straight line that is not horizontal.",
-            cubic: "A cubic curve that always moves in one direction.",
-            parabola: "A parabola.",
-            vee: "A V-shaped graph.",
-            wave: "A wave that goes up and down.",
-          }[shape],
-          {
-            line: "一条不水平的直线。",
-            cubic: "始终朝一个方向走的三次曲线。",
-            parabola: "一条抛物线。",
-            vee: "V 形的图像。",
-            wave: "上下起伏的波。",
-          }[shape],
+const injectiveGraph = {
+  ...point(
+    "injectivity-from-a-drawn-graph",
+    ["Injectivity from a drawn graph", "由图判断单射"],
+    [
+      "A function is injective when different inputs always give different outputs. On a graph, that fails exactly when some horizontal line meets the graph more than once, and two such crossings are a counterexample.",
+      "当不同的输入总给出不同的输出时，函数是单射。在图上，它不成立当且仅当某条水平线与图像相交不止一次，这样的两个交点就是反例。",
+    ],
+    (rng) => {
+      const shape = rng.pick(["line", "cubic", "parabola", "vee", "wave"] as const);
+      const h = rng.int(-2, 2);
+      const k = rng.int(-3, 3);
+      const s = rng.pick([0.5, 1, 1.5]) * rng.sign();
+      const f = {
+        line: (x: number) => k + s * (x - h),
+        cubic: (x: number) => k + (s / 4) * (x - h) ** 3,
+        parabola: (x: number) => k + (s / 2) * (x - h) ** 2,
+        vee: (x: number) => k + s * Math.abs(x - h),
+        wave: (x: number) => k + 2 * s * Math.sin(x - h),
+      }[shape];
+      const injective = shape === "line" || shape === "cubic";
+      const yes: Pair = ["Injective: every horizontal line meets the graph at most once", "单射：每条水平线与图像至多相交一次"];
+      const no: Pair = ["Not injective: some horizontal line meets the graph twice", "不是单射：某条水平线与图像相交两次"];
+      const yes2: Pair = ["Injective: every vertical line meets the graph at most once", "单射：每条竖直线与图像至多相交一次"];
+      const no2: Pair = ["Not injective: some vertical line meets the graph twice", "不是单射：某条竖直线与图像相交两次"];
+      return choose(
+        rng,
+        [
+          "The curve is the graph of a function on the whole real line, and it continues in the same way past the drawing. Which statement is true?",
+          "曲线是定义在整个实数轴上的函数的图像，并按同样的方式延伸到图外。哪个说法正确？",
+        ],
+        injective ? yes : no,
+        [injective ? no : yes, yes2, no2],
+        injective
+          ? [
+              "The graph always moves in one direction, so no height is reached twice.",
+              "图像始终朝一个方向走，所以没有哪个高度被达到两次。",
+            ]
+          : [
+              "The graph turns back, so a horizontal line near the turn crosses it on both sides.",
+              "图像会折返，所以折返点附近的水平线在两侧都与它相交。",
+            ],
+        drawn(
+          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+          [{ kind: "curve", f, accent: true }],
+          t(
+            {
+              line: "A straight line that is not horizontal.",
+              cubic: "A cubic curve that always moves in one direction.",
+              parabola: "A parabola.",
+              vee: "A V-shaped graph.",
+              wave: "A wave that goes up and down.",
+            }[shape],
+            {
+              line: "一条不水平的直线。",
+              cubic: "始终朝一个方向走的三次曲线。",
+              parabola: "一条抛物线。",
+              vee: "V 形的图像。",
+              wave: "上下起伏的波。",
+            }[shape],
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: proofDrawings1["injections#injectivity-from-a-drawn-graph"],
+};
 
 // Abstract algebra.
 
@@ -971,56 +986,62 @@ const beadAlt = (pattern: readonly number[]): Pair => [
   `${pattern.length} 颗珠子的项链。从顶部顺时针：${pattern.map((v) => (v ? "黑" : "白")).join("、")}。`,
 ];
 
-const necklaceOrbit = point(
-  "the-orbit-of-a-drawn-necklace",
-  ["The orbit of a drawn necklace", "所画项链的轨道"],
-  [
-    "Rotations of a necklace with $n$ beads form a group of size $n$. The orbit of a coloring is the set of colorings you can reach by rotating. If the pattern first repeats after $p$ beads, the orbit has size $p$.",
-    "$n$ 颗珠子的项链的旋转构成大小为 $n$ 的群。一种着色的轨道是旋转能得到的所有着色。如果图案在 $p$ 颗珠子后第一次重复，轨道的大小就是 $p$。",
-  ],
-  (rng) => {
-    const { n, p, pattern } = periodicPattern(rng);
-    return ask(
-      [
-        "The rotations of the necklace act on its colorings, with the beads in fixed positions. How many different colorings are in the orbit of the one shown?",
-        "项链的旋转作用在它的着色上，珠子的位置固定。所示着色的轨道中有多少种不同的着色？",
-      ],
-      p,
-      [n, n / p, pattern.reduce((a, b) => a + b, 0), 2 * n, n - p + 1],
-      [
-        `The pattern first repeats after $${p}$ beads, so exactly $${p}$ of the $${n}$ rotations give different colorings.`,
-        `图案在 $${p}$ 颗珠子后第一次重复，所以 $${n}$ 个旋转中恰有 $${p}$ 个给出不同的着色。`,
-      ],
-      figureOf(necklace(pattern), beadAlt(pattern)),
-    );
-  },
-);
+const necklaceOrbit = {
+  ...point(
+    "the-orbit-of-a-drawn-necklace",
+    ["The orbit of a drawn necklace", "所画项链的轨道"],
+    [
+      "Rotations of a necklace with $n$ beads form a group of size $n$. The orbit of a coloring is the set of colorings you can reach by rotating. If the pattern first repeats after $p$ beads, the orbit has size $p$.",
+      "$n$ 颗珠子的项链的旋转构成大小为 $n$ 的群。一种着色的轨道是旋转能得到的所有着色。如果图案在 $p$ 颗珠子后第一次重复，轨道的大小就是 $p$。",
+    ],
+    (rng) => {
+      const { n, p, pattern } = periodicPattern(rng);
+      return ask(
+        [
+          "The rotations of the necklace act on its colorings, with the beads in fixed positions. How many different colorings are in the orbit of the one shown?",
+          "项链的旋转作用在它的着色上，珠子的位置固定。所示着色的轨道中有多少种不同的着色？",
+        ],
+        p,
+        [n, n / p, pattern.reduce((a, b) => a + b, 0), 2 * n, n - p + 1],
+        [
+          `The pattern first repeats after $${p}$ beads, so exactly $${p}$ of the $${n}$ rotations give different colorings.`,
+          `图案在 $${p}$ 颗珠子后第一次重复，所以 $${n}$ 个旋转中恰有 $${p}$ 个给出不同的着色。`,
+        ],
+        figureOf(necklace(pattern), beadAlt(pattern)),
+      );
+    },
+  ),
+  figure: algebraDrawings2["orbits#the-orbit-of-a-drawn-necklace"],
+};
 
-const necklaceFixed = point(
-  "the-rotations-that-fix-a-drawn-necklace",
-  ["The rotations that fix a drawn necklace", "保持所画项链不变的旋转"],
-  [
-    "A rotation fixes a coloring when every bead lands on a bead of the same color. If the pattern first repeats after $p$ beads, the rotations that fix it are the multiples of $p$ steps, and there are $\\frac{n}{p}$ of them, counting the identity.",
-    "当每颗珠子都落到同色珠子上时，旋转保持着色不变。如果图案在 $p$ 颗珠子后第一次重复，保持它不变的旋转就是 $p$ 步的倍数，共 $\\frac{n}{p}$ 个（含恒等旋转）。",
-  ],
-  (rng) => {
-    const { n, p, pattern } = periodicPattern(rng);
-    const answer = n / p;
-    return ask(
-      [
-        "How many rotations of this necklace, counting the identity, leave the coloring unchanged?",
-        "这条项链有多少个旋转（含恒等旋转）保持着色不变？",
-      ],
-      answer,
-      [p, n, answer + 1, 2 * answer + 1],
-      [
-        `The pattern first repeats after $${p}$ beads, so the rotations by multiples of $${p}$ steps fix it. There are $\\frac{${n}}{${p}} = ${answer}$ of them.`,
-        `图案在 $${p}$ 颗珠子后第一次重复，所以旋转 $${p}$ 步的倍数保持它不变，共 $\\frac{${n}}{${p}} = ${answer}$ 个。`,
-      ],
-      figureOf(necklace(pattern), beadAlt(pattern)),
-    );
-  },
-);
+const necklaceFixed = {
+  ...point(
+    "the-rotations-that-fix-a-drawn-necklace",
+    ["The rotations that fix a drawn necklace", "保持所画项链不变的旋转"],
+    [
+      "A rotation fixes a coloring when every bead lands on a bead of the same color. If the pattern first repeats after $p$ beads, the rotations that fix it are the multiples of $p$ steps, and there are $\\frac{n}{p}$ of them, counting the identity.",
+      "当每颗珠子都落到同色珠子上时，旋转保持着色不变。如果图案在 $p$ 颗珠子后第一次重复，保持它不变的旋转就是 $p$ 步的倍数，共 $\\frac{n}{p}$ 个（含恒等旋转）。",
+    ],
+    (rng) => {
+      const { n, p, pattern } = periodicPattern(rng);
+      const answer = n / p;
+      return ask(
+        [
+          "How many rotations of this necklace, counting the identity, leave the coloring unchanged?",
+          "这条项链有多少个旋转（含恒等旋转）保持着色不变？",
+        ],
+        answer,
+        [p, n, answer + 1, 2 * answer + 1],
+        [
+          `The pattern first repeats after $${p}$ beads, so the rotations by multiples of $${p}$ steps fix it. There are $\\frac{${n}}{${p}} = ${answer}$ of them.`,
+          `图案在 $${p}$ 颗珠子后第一次重复，所以旋转 $${p}$ 步的倍数保持它不变，共 $\\frac{${n}}{${p}} = ${answer}$ 个。`,
+        ],
+        figureOf(necklace(pattern), beadAlt(pattern)),
+      );
+    },
+  ),
+  figure: algebraDrawings2["colorings-of-necklaces#the-rotations-that-fix-a-drawn-necklace"],
+};
 
 // Number theory.
 
@@ -1234,137 +1255,146 @@ const SLOPES: readonly (readonly [number, number])[] = [
   [7, 8],
 ];
 
-const tripleCircle = point(
-  "a-pythagorean-triple-from-a-line-through-the-circle",
-  ["A Pythagorean triple from a line through the circle", "由过单位圆的直线得到勾股数"],
-  [
-    "A line through $(-1, 0)$ with rational slope $t = \\frac{p}{q}$ meets the unit circle again at $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$. Clearing denominators gives the Pythagorean triple $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$.",
-    "过 $(-1, 0)$、有理斜率 $t = \\frac{p}{q}$ 的直线与单位圆的另一个交点是 $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$。消去分母就得到勾股数 $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$。",
-  ],
-  (rng) => {
-    const [p, q] = rng.pick(SLOPES);
-    const X = Q.of(q * q - p * p, q * q + p * p);
-    const Y = Q.of(2 * p * q, q * q + p * p);
-    const askX = rng.bool();
-    const slope = Q.of(p, q);
-    const px = X.toNumber();
-    const py = Y.toNumber();
-    return ask(
-      askX
-        ? [
-            `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $x$-coordinate of $A$.`,
-            `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $x$ 坐标。`,
-          ]
-        : [
-            `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $y$-coordinate of $A$.`,
-            `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $y$ 坐标。`,
-          ],
-      askX ? X : Y,
-      askX
-        ? [Y, Q.of(q * q + p * p, q * q - p * p), Q.of(q * q - p * p, q * q), slope]
-        : [X, slope, Q.of(p * q, q * q + p * p), Q.of(2 * p * q, q * q)],
-      [
-        `The slope is $t = ${slope.toLatex()}$, so $p = ${p}$ and $q = ${q}$. Then $A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2(${p})(${q})}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$.`,
-        `斜率为 $t = ${slope.toLatex()}$，所以 $p = ${p}$，$q = ${q}$。于是 $A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2(${p})(${q})}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$。`,
-      ],
-      drawn(
-        { xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 0.5, labelEvery: 2 },
+const tripleCircle = {
+  ...point(
+    "a-pythagorean-triple-from-a-line-through-the-circle",
+    ["A Pythagorean triple from a line through the circle", "由过单位圆的直线得到勾股数"],
+    [
+      "A line through $(-1, 0)$ with rational slope $t = \\frac{p}{q}$ meets the unit circle again at $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$. Clearing denominators gives the Pythagorean triple $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$.",
+      "过 $(-1, 0)$、有理斜率 $t = \\frac{p}{q}$ 的直线与单位圆的另一个交点是 $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$。消去分母就得到勾股数 $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$。",
+    ],
+    (rng) => {
+      const [p, q] = rng.pick(SLOPES);
+      const X = Q.of(q * q - p * p, q * q + p * p);
+      const Y = Q.of(2 * p * q, q * q + p * p);
+      const askX = rng.bool();
+      const slope = Q.of(p, q);
+      const px = X.toNumber();
+      const py = Y.toNumber();
+      return ask(
+        askX
+          ? [
+              `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $x$-coordinate of $A$.`,
+              `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $x$ 坐标。`,
+            ]
+          : [
+              `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $y$-coordinate of $A$.`,
+              `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $y$ 坐标。`,
+            ],
+        askX ? X : Y,
+        askX
+          ? [Y, Q.of(q * q + p * p, q * q - p * p), Q.of(q * q - p * p, q * q), slope]
+          : [X, slope, Q.of(p * q, q * q + p * p), Q.of(2 * p * q, q * q)],
         [
-          { kind: "circle", center: [0, 0], r: 1 },
-          { kind: "line", a: [-1, 0], b: [0, p / q], accent: true },
-          { kind: "point", at: [-1, 0] },
-          { kind: "point", at: [0, p / q] },
-          { kind: "point", at: [px, py], label: "A", dir: "ne" },
+          `The slope is $t = ${slope.toLatex()}$, so $p = ${p}$ and $q = ${q}$. Then $A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2(${p})(${q})}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$.`,
+          `斜率为 $t = ${slope.toLatex()}$，所以 $p = ${p}$，$q = ${q}$。于是 $A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2(${p})(${q})}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$。`,
         ],
-        t(
-          `The unit circle and a line through (−1, 0) with slope ${p}/${q}, meeting the circle again at A.`,
-          `单位圆和过 (−1, 0)、斜率为 ${p}/${q} 的直线，直线与圆再次相交于 A。`,
+        drawn(
+          { xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 0.5, labelEvery: 2 },
+          [
+            { kind: "circle", center: [0, 0], r: 1 },
+            { kind: "line", a: [-1, 0], b: [0, p / q], accent: true },
+            { kind: "point", at: [-1, 0] },
+            { kind: "point", at: [0, p / q] },
+            { kind: "point", at: [px, py], label: "A", dir: "ne" },
+          ],
+          t(
+            `The unit circle and a line through (−1, 0) with slope ${p}/${q}, meeting the circle again at A.`,
+            `单位圆和过 (−1, 0)、斜率为 ${p}/${q} 的直线，直线与圆再次相交于 A。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: numberTheoryDrawings1["pythagorean-triples#a-pythagorean-triple-from-a-line-through-the-circle"],
+};
 
 const PRIMES_TO_60 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59];
 
 /** primeCount counts the primes up to x, for x at most 60. */
 const primeCount = (x: number) => PRIMES_TO_60.filter((p) => p <= x).length;
 
-const primeSteps = point(
-  "primes-in-a-range-from-the-graph-of-the-counting-function",
-  ["Primes in a range, from the graph of the counting function", "由计数函数的图求区间内的素数"],
-  [
-    "The function $\\pi(x)$ counts the primes up to $x$, so its graph climbs one step at each prime. The number of primes $p$ with $a < p \\le b$ is $\\pi(b) - \\pi(a)$, a difference of two heights.",
-    "函数 $\\pi(x)$ 统计不超过 $x$ 的素数个数，所以它的图像在每个素数处上升一级。满足 $a < p \\le b$ 的素数 $p$ 的个数是 $\\pi(b) - \\pi(a)$，即两个高度之差。",
-  ],
-  (rng) => {
-    const a = rng.int(2, 40);
-    const b = rng.int(a + 5, 60);
-    const answer = primeCount(b) - primeCount(a);
-    const svg = chart([0, 60], [0, 18], intTicks(0, 60, 10), intTicks(0, 18, 2), (x, y) => {
-      let at = 0;
-      let line = `${x(0)},${y(0)}`;
-      for (const p of PRIMES_TO_60) {
-        line += ` ${x(p)},${y(at)} ${x(p)},${y(at + 1)}`;
-        at += 1;
-      }
-      line += ` ${x(60)},${y(at)}`;
-      return `<polyline class="accent" stroke="currentColor" fill="none" points="${line}"/>`;
-    });
-    return ask(
-      [
-        `The graph shows the prime-counting function $\\pi(x)$. How many primes $p$ satisfy $${a} < p \\le ${b}$?`,
-        `图中是素数计数函数 $\\pi(x)$。有多少个素数 $p$ 满足 $${a} < p \\le ${b}$？`,
-      ],
-      answer,
-      [primeCount(b), answer + 1, answer === 0 ? 2 : answer - 1, primeCount(b) + primeCount(a)],
-      [
-        `The heights are $\\pi(${b}) = ${primeCount(b)}$ and $\\pi(${a}) = ${primeCount(a)}$. Their difference is $${answer}$.`,
-        `高度为 $\\pi(${b}) = ${primeCount(b)}$，$\\pi(${a}) = ${primeCount(a)}$。它们的差为 $${answer}$。`,
-      ],
-      figureOf(svg, ["A staircase graph that climbs one step at each prime up to 60.", "阶梯状的图像，到 60 为止在每个素数处上升一级。"]),
-    );
-  },
-);
+const primeSteps = {
+  ...point(
+    "primes-in-a-range-from-the-graph-of-the-counting-function",
+    ["Primes in a range, from the graph of the counting function", "由计数函数的图求区间内的素数"],
+    [
+      "The function $\\pi(x)$ counts the primes up to $x$, so its graph climbs one step at each prime. The number of primes $p$ with $a < p \\le b$ is $\\pi(b) - \\pi(a)$, a difference of two heights.",
+      "函数 $\\pi(x)$ 统计不超过 $x$ 的素数个数，所以它的图像在每个素数处上升一级。满足 $a < p \\le b$ 的素数 $p$ 的个数是 $\\pi(b) - \\pi(a)$，即两个高度之差。",
+    ],
+    (rng) => {
+      const a = rng.int(2, 40);
+      const b = rng.int(a + 5, 60);
+      const answer = primeCount(b) - primeCount(a);
+      const svg = chart([0, 60], [0, 18], intTicks(0, 60, 10), intTicks(0, 18, 2), (x, y) => {
+        let at = 0;
+        let line = `${x(0)},${y(0)}`;
+        for (const p of PRIMES_TO_60) {
+          line += ` ${x(p)},${y(at)} ${x(p)},${y(at + 1)}`;
+          at += 1;
+        }
+        line += ` ${x(60)},${y(at)}`;
+        return `<polyline class="accent" stroke="currentColor" fill="none" points="${line}"/>`;
+      });
+      return ask(
+        [
+          `The graph shows the prime-counting function $\\pi(x)$. How many primes $p$ satisfy $${a} < p \\le ${b}$?`,
+          `图中是素数计数函数 $\\pi(x)$。有多少个素数 $p$ 满足 $${a} < p \\le ${b}$？`,
+        ],
+        answer,
+        [primeCount(b), answer + 1, answer === 0 ? 2 : answer - 1, primeCount(b) + primeCount(a)],
+        [
+          `The heights are $\\pi(${b}) = ${primeCount(b)}$ and $\\pi(${a}) = ${primeCount(a)}$. Their difference is $${answer}$.`,
+          `高度为 $\\pi(${b}) = ${primeCount(b)}$，$\\pi(${a}) = ${primeCount(a)}$。它们的差为 $${answer}$。`,
+        ],
+        figureOf(svg, ["A staircase graph that climbs one step at each prime up to 60.", "阶梯状的图像，到 60 为止在每个素数处上升一级。"]),
+      );
+    },
+  ),
+  figure: numberTheoryDrawings1["the-distribution-of-primes#primes-in-a-range-from-the-graph-of-the-counting-function"],
+};
 
 const SUMS_OF_TWO_SQUARES = [1, 2, 4, 5, 8, 9, 10, 13, 16, 17, 18, 20, 25, 26, 29, 32, 34, 36, 37, 40, 41, 45, 49, 50, 52, 53, 58];
 
-const latticeCircle = point(
-  "lattice-points-on-a-drawn-circle",
-  ["Lattice points on a drawn circle", "所画圆上的格点"],
-  [
-    "The sum-of-squares function $r_2(n)$ counts the integer solutions of $x^2 + y^2 = n$, including signs and order. These are the lattice points on the circle of radius $\\sqrt{n}$, and the symmetry of the circle means they usually come in groups of eight or four.",
-    "平方和函数 $r_2(n)$ 统计 $x^2 + y^2 = n$ 的整数解，符号和顺序不同算不同解。这些解就是半径为 $\\sqrt{n}$ 的圆上的格点，由于圆的对称性，它们通常八个或四个一组。",
-  ],
-  (rng) => {
-    const n = rng.pick(SUMS_OF_TWO_SQUARES);
-    const R = Math.sqrt(n);
-    const solutions: Point[] = [];
-    for (let x = -8; x <= 8; x++) for (let y = -8; y <= 8; y++) if (x * x + y * y === n) solutions.push([x, y]);
-    const answer = solutions.length;
-    const first = solutions.filter(([x, y]) => x >= 0 && y >= 0 && x >= y)[0] as Point;
-    return ask(
-      [
-        `The drawing shows the circle $x^2 + y^2 = ${n}$ on a grid. Find $r_2(${n})$, the number of lattice points on the circle.`,
-        `图中是网格上的圆 $x^2 + y^2 = ${n}$。求 $r_2(${n})$，即圆上格点的个数。`,
-      ],
-      answer,
-      [answer / 2, answer + 4, answer === 4 ? 8 : 4, 2 * answer],
-      [
-        `One solution is $(${first[0]}, ${first[1]})$. All the sign changes and swaps of its coordinates give the $${answer}$ lattice points on the circle.`,
-        `一个解是 $(${first[0]}, ${first[1]})$。改变坐标的符号和交换坐标，得到圆上全部 $${answer}$ 个格点。`,
-      ],
-      drawn(
-        { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
-        [{ kind: "circle", center: [0, 0], r: R }],
-        t(
-          `A circle about the origin with radius squared ${n}. It passes through the grid points ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-          `以原点为圆心、半径平方为 ${n} 的圆。它经过格点 ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+const latticeCircle = {
+  ...point(
+    "lattice-points-on-a-drawn-circle",
+    ["Lattice points on a drawn circle", "所画圆上的格点"],
+    [
+      "The sum-of-squares function $r_2(n)$ counts the integer solutions of $x^2 + y^2 = n$, including signs and order. These are the lattice points on the circle of radius $\\sqrt{n}$, and the symmetry of the circle means they usually come in groups of eight or four.",
+      "平方和函数 $r_2(n)$ 统计 $x^2 + y^2 = n$ 的整数解，符号和顺序不同算不同解。这些解就是半径为 $\\sqrt{n}$ 的圆上的格点，由于圆的对称性，它们通常八个或四个一组。",
+    ],
+    (rng) => {
+      const n = rng.pick(SUMS_OF_TWO_SQUARES);
+      const R = Math.sqrt(n);
+      const solutions: Point[] = [];
+      for (let x = -8; x <= 8; x++) for (let y = -8; y <= 8; y++) if (x * x + y * y === n) solutions.push([x, y]);
+      const answer = solutions.length;
+      const first = solutions.filter(([x, y]) => x >= 0 && y >= 0 && x >= y)[0] as Point;
+      return ask(
+        [
+          `The drawing shows the circle $x^2 + y^2 = ${n}$ on a grid. Find $r_2(${n})$, the number of lattice points on the circle.`,
+          `图中是网格上的圆 $x^2 + y^2 = ${n}$。求 $r_2(${n})$，即圆上格点的个数。`,
+        ],
+        answer,
+        [answer / 2, answer + 4, answer === 4 ? 8 : 4, 2 * answer],
+        [
+          `One solution is $(${first[0]}, ${first[1]})$. All the sign changes and swaps of its coordinates give the $${answer}$ lattice points on the circle.`,
+          `一个解是 $(${first[0]}, ${first[1]})$。改变坐标的符号和交换坐标，得到圆上全部 $${answer}$ 个格点。`,
+        ],
+        drawn(
+          { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+          [{ kind: "circle", center: [0, 0], r: R }],
+          t(
+            `A circle about the origin with radius squared ${n}. It passes through the grid points ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+            `以原点为圆心、半径平方为 ${n} 的圆。它经过格点 ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+          ),
         ),
-      ),
-    );
-  },
-);
+      );
+    },
+  ),
+  figure: numberTheoryDrawings1["the-sum-of-squares-function#lattice-points-on-a-drawn-circle"],
+};
 
 /** fareyNeighbours lists the adjacent pairs of the Farey sequence of order n. */
 function fareyNeighbours(n: number): [number, number, number, number][] {

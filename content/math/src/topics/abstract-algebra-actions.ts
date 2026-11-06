@@ -1,5 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { numberProblem } from "../problems.ts";
 import { divisors, type Fact, factProblem, gcd, mod, phi, texChoice, units } from "./abstract-algebra-common.ts";
@@ -85,6 +86,7 @@ export const naturalActionsOfSymmetricAndDihedralGroups: TopicDef = {
     },
     {
       id: "dihedral-groups-acting-on-vertices",
+      figure: algebraDrawings2["natural-actions-of-symmetric-and-dihedral-groups#dihedral-groups-acting-on-vertices"],
       title: t("Dihedral groups on vertices", "二面体群作用于顶点"),
       explanation: t(
         "Rotations shift the vertex labels and reflections reverse them, so a product acts by applying its factors one after another from the right. In $D_8$ with vertices $0, \\dots, 7$: $r^3s \\cdot 5 = r^3 \\cdot (s \\cdot 5) = r^3 \\cdot 3 = 6$, which agrees with $3 - 5 \\equiv 6 \\pmod 8$.",
@@ -129,6 +131,7 @@ export const groupActions: TopicDef = {
   knowledgePoints: [
     {
       id: "translation-actions-of-cyclic-groups",
+      figure: algebraDrawings2["group-actions#translation-actions-of-cyclic-groups"],
       title: t("Translation actions", "平移作用"),
       explanation: t(
         "$k \\cdot x = x + 4k$ defines an action of $\\mathbb{Z}_6$ on $\\mathbb{Z}_{12}$ only if it is well defined: $k$ and $k + 6$ must act the same, so $4 \\cdot 6 = 24 \\equiv 0 \\pmod{12}$ is needed, and it holds.",
@@ -360,6 +363,7 @@ export const stabilizers: TopicDef = {
   knowledgePoints: [
     {
       id: "stabilizers-of-vertices-in-dihedral-groups",
+      figure: algebraDrawings2["stabilizers#stabilizers-of-vertices-in-dihedral-groups"],
       title: t("Stabilizers of vertices", "顶点的稳定子"),
       explanation: t(
         "The stabilizer of a vertex contains the group elements that fix it, which are the identity and the reflection through that vertex. With $r^ks \\cdot v = k - v$, the reflection $r^ks$ fixes $v$ when $k \\equiv 2v \\pmod n$. In $D_8$, vertex $3$ is fixed by $r^6s$, so its stabilizer is $\\{e, r^6s\\}$.",
@@ -457,6 +461,7 @@ export const theOrbitStabilizerTheorem: TopicDef = {
   knowledgePoints: [
     {
       id: "orbit-stabilizer-for-rotations-of-solids",
+      figure: algebraDrawings2["the-orbit-stabilizer-theorem#orbit-stabilizer-for-rotations-of-solids"],
       title: t("Rotations of solids", "多面体的旋转"),
       explanation: t(
         "The rotation group of a regular dodecahedron has $60$ elements and can carry any face to any of the $12$ faces, so the stabilizer of a face has $\\frac{60}{12} = 5$ rotations, the rotations about the axis through its center.",
@@ -624,6 +629,7 @@ export const burnsidesLemma: TopicDef = {
     },
     {
       id: "counting-colorings-up-to-symmetry",
+      figure: algebraDrawings2["burnsides-lemma#counting-colorings-up-to-symmetry"],
       title: t("Counting colorings", "计数着色"),
       explanation: t(
         "Color the vertices of a square with $k$ colors up to rotation. The identity fixes $k^4$ colorings, the half-turn $k^2$, and each quarter-turn $k$, so there are $\\frac{k^4 + k^2 + 2k}{4}$; for $k = 2$, that is $6$.",
@@ -782,6 +788,7 @@ export const conjugationAndConjugacyClasses: TopicDef = {
     },
     {
       id: "counting-conjugacy-classes-of-dihedral-groups",
+      figure: algebraDrawings2["conjugation-and-conjugacy-classes#counting-conjugacy-classes-of-dihedral-groups"],
       title: t("Number of classes of $D_n$", "$D_n$ 的共轭类个数"),
       explanation: t(
         "Rotations pair up with their inverses, and the reflections form one class or two depending on whether the number of sides is odd or even. $D_5$: $\\{e\\}$, $\\{r, r^4\\}$, $\\{r^2, r^3\\}$ and the $5$ reflections: $4$ classes. $D_6$: $\\{e\\}$, $\\{r^3\\}$, $\\{r, r^5\\}$, $\\{r^2, r^4\\}$ and two classes of reflections: $6$ classes.",
@@ -1031,6 +1038,7 @@ export const cycleTypesOfPermutationsOfSomeGroups: TopicDef = {
   knowledgePoints: [
     {
       id: "cycles-of-rotations-of-polygons",
+      figure: algebraDrawings2["cycle-types-of-permutations-of-some-groups#cycles-of-rotations-of-polygons"],
       title: t("Rotations of polygons", "多边形的旋转"),
       explanation: t(
         "In $D_{12}$, $r^8$ moves each vertex $8$ steps around, so it has order $3$ and splits the $12$ vertices into $\\gcd(8, 12) = 4$ cycles of length $3$.",
@@ -1066,6 +1074,7 @@ export const cycleTypesOfPermutationsOfSomeGroups: TopicDef = {
     },
     {
       id: "cycles-of-reflections-of-polygons",
+      figure: algebraDrawings2["cycle-types-of-permutations-of-some-groups#cycles-of-reflections-of-polygons"],
       title: t("Reflections of polygons", "多边形的反射"),
       explanation: t(
         "With $r^ks \\cdot v = k - v$ on the vertices $0, \\dots, 7$ of an octagon, $r^3s$ fixes no vertex ($2v \\equiv 3$ has no solution), so it is a product of $4$ transpositions; $r^2s$ fixes $1$ and $5$ and is a product of $3$ transpositions.",
@@ -1200,6 +1209,7 @@ export const coloringsOfNecklaces: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-necklaces-up-to-rotation",
+      figure: algebraDrawings2["colorings-of-necklaces#counting-necklaces-up-to-rotation"],
       title: t("Necklaces up to rotation", "旋转意义下的项链"),
       explanation: t(
         "Burnside's lemma counts the orbits by averaging, over all rotations, the number of colorings that each rotation leaves unchanged. With $6$ beads and $2$ colors: $\\frac{1}{6}(2^6 + 2^3 + 2 \\cdot 2^2 + 2 \\cdot 2^1) = \\frac{64 + 8 + 8 + 4}{6} = 14$ necklaces.",
@@ -1223,6 +1233,7 @@ export const coloringsOfNecklaces: TopicDef = {
     },
     {
       id: "counting-bracelets",
+      figure: algebraDrawings2["colorings-of-necklaces#counting-bracelets"],
       title: t("Necklaces that can be turned over", "可翻转的项链"),
       explanation: t(
         "With $5$ beads and $2$ colors: there are $8$ necklaces up to rotation, and each of the $5$ reflections fixes $2^3 = 8$ colorings, so there are $\\frac{40 + 5 \\cdot 8}{10} = 8$ up to rotation and reflection.",

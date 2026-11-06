@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -199,6 +200,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
     knowledgePoints: [
       {
         id: "continuous-uniform-pdf-value",
+        figure: probabilityDrawings1["the-continuous-uniform-distribution#continuous-uniform-pdf-value"],
         title: t("Evaluating the density of a continuous uniform distribution", "计算连续均匀分布的概率密度值"),
         explanation: t(
           "A uniform density is constant over its interval, and its height is set so that the rectangle under it has area one. For $X \\sim U(a, b)$, the probability density function is $f(x) = \\dfrac{1}{b - a}$ for $a \\le x \\le b$ and $0$ elsewhere.",

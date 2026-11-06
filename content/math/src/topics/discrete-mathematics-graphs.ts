@@ -1,5 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-1.ts";
 
 import { article, choiceProblem, numberProblem, verdictChoice, yesNo } from "../problems.ts";
 import {
@@ -134,6 +135,7 @@ export const introductionToGraphs: TopicDef = {
     },
     {
       id: "the-maximum-number-of-edges",
+      figure: discreteDrawings1["introduction-to-graphs#the-maximum-number-of-edges"],
       title: t("The maximum number of edges", "边数的最大值"),
       explanation: t(
         "In a simple graph on $n$ vertices each pair of vertices is joined at most once, so there are at most $\\binom{n}{2} = \\frac{n(n - 1)}{2}$ edges. For $n = 10$ that is $45$.",
@@ -192,6 +194,7 @@ export const walksTrailsPathsAndDistances: TopicDef = {
   knowledgePoints: [
     {
       id: "classifying-walks",
+      figure: discreteDrawings1["walks-trails-paths-and-distances#classifying-walks"],
       title: t("Walks, trails and paths", "途径、迹与路径"),
       explanation: t(
         "In a triangle $ABC$ with a pendant edge $CD$: $A, B, C, D$ is a path; $A, B, C, A$ repeats a vertex but no edge, so it is a trail; $C, D, C$ uses $CD$ twice, so it is only a walk; $A, D$ is not a walk because $AD$ is not an edge.",
@@ -318,6 +321,7 @@ export const walksPathsAndDistancesInDirectedGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "directed-distances",
+      figure: discreteDrawings1["walks-paths-and-distances-in-directed-graphs#directed-distances"],
       title: t("Directed distances", "有向距离"),
       explanation: t(
         "In a directed graph you may only travel along arcs in their direction, so the distance from one vertex to another can differ from the reverse distance. With arcs $(A, B), (B, C), (C, A)$: $d(A, C) = 2$ via $A \\to B \\to C$, but $d(C, A) = 1$. Distances in directed graphs need not be symmetric.",
@@ -414,6 +418,7 @@ export const theDegreeOfAVertex: TopicDef = {
   knowledgePoints: [
     {
       id: "degrees-in-simple-graphs",
+      figure: discreteDrawings1["the-degree-of-a-vertex#degrees-in-simple-graphs"],
       title: t("Degrees in simple graphs", "简单图中的度"),
       explanation: t(
         "The degree of a vertex is the number of edges that meet it, which in a simple graph equals the number of its neighbors. If $E = \\{AB, AC, BC, CD\\}$, then $C$ lies on $AC$, $BC$ and $CD$, so $\\deg(C) = 3$.",
@@ -445,6 +450,7 @@ export const theDegreeOfAVertex: TopicDef = {
     },
     {
       id: "degrees-with-loops-and-multiple-edges",
+      figure: discreteDrawings1["the-degree-of-a-vertex#degrees-with-loops-and-multiple-edges"],
       title: t("Loops and multiple edges", "环与重边"),
       explanation: t(
         "In the multigraph with edges $AA, AB, AB, BC$, vertex $A$ meets the loop twice and each copy of $AB$ once: $\\deg(A) = 2 + 2 = 4$.",
@@ -507,6 +513,7 @@ export const theHandshakingLemma: TopicDef = {
   knowledgePoints: [
     {
       id: "edges-from-a-degree-sequence",
+      figure: discreteDrawings1["the-handshaking-lemma#edges-from-a-degree-sequence"],
       title: t("Edges from degrees", "由度数求边数"),
       explanation: t(
         "Every edge has two ends and adds one to the degree of each, so the degrees sum to twice the number of edges. A graph with degrees $3, 3, 2, 2, 2$ has $\\frac{3 + 3 + 2 + 2 + 2}{2} = 6$ edges.",
@@ -530,6 +537,7 @@ export const theHandshakingLemma: TopicDef = {
     },
     {
       id: "counting-vertices-with-the-handshaking-lemma",
+      figure: discreteDrawings1["the-handshaking-lemma#counting-vertices-with-the-handshaking-lemma"],
       title: t("Counting vertices", "求顶点数"),
       explanation: t(
         "A graph with $10$ edges has $4$ vertices of degree $3$ and the rest of degree $2$. Then $4 \\cdot 3 + 2k = 20$, so $k = 4$ vertices have degree $2$.",
@@ -579,6 +587,7 @@ export const subgraphsAndGraphComplements: TopicDef = {
   knowledgePoints: [
     {
       id: "edges-and-degrees-in-the-complement",
+      figure: discreteDrawings1["subgraphs-and-graph-complements#edges-and-degrees-in-the-complement"],
       title: t("The complement", "补图"),
       explanation: t(
         "If $G$ has $6$ vertices and $7$ edges, its complement $\\overline{G}$ has $\\binom{6}{2} - 7 = 8$ edges, and a vertex of degree $2$ in $G$ has degree $5 - 2 = 3$ in $\\overline{G}$.",
@@ -693,6 +702,7 @@ export const completeAndBipartiteGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "edges-of-complete-and-complete-bipartite-graphs",
+      figure: discreteDrawings1["complete-and-bipartite-graphs#edges-of-complete-and-complete-bipartite-graphs"],
       title: t("Counting edges", "数边"),
       explanation: t(
         "A complete graph joins every pair of vertices, while a complete bipartite graph joins every vertex on one side to every vertex on the other. $K_7$ has $\\binom{7}{2} = 21$ edges and $K_{3,5}$ has $3 \\cdot 5 = 15$ edges.",
@@ -726,6 +736,7 @@ export const completeAndBipartiteGraphs: TopicDef = {
     },
     {
       id: "recognizing-bipartite-graphs",
+      figure: discreteDrawings1["complete-and-bipartite-graphs#recognizing-bipartite-graphs"],
       title: t("Recognizing bipartite graphs", "判断二部图"),
       explanation: t(
         "Color a vertex red, its neighbors blue, their neighbors red, and so on. If two adjacent vertices get the same color, the graph has an odd cycle and is not bipartite; otherwise the colors give the two parts.",
@@ -832,6 +843,7 @@ export const regularGraphs: TopicDef = {
     },
     {
       id: "existence-of-regular-graphs",
+      figure: discreteDrawings1["regular-graphs#existence-of-regular-graphs"],
       title: t("Which regular graphs exist", "哪些正则图存在"),
       explanation: t(
         "There is no $3$-regular graph on $7$ vertices, because $7 \\cdot 3 = 21$ is odd. There is a $3$-regular simple graph on $8$ vertices, but no $8$-regular simple graph on $8$ vertices, since a vertex has only $7$ possible neighbors.",
@@ -931,6 +943,7 @@ export const planarGraphs: TopicDef = {
     },
     {
       id: "edge-bounds-for-planar-graphs",
+      figure: discreteDrawings1["planar-graphs#edge-bounds-for-planar-graphs"],
       title: t("Edge bounds", "边数上界"),
       explanation: t(
         "A simple planar graph on $10$ vertices has at most $3 \\cdot 10 - 6 = 24$ edges, or $2 \\cdot 10 - 4 = 16$ if it has no triangles. So $K_5$, with $10 > 3 \\cdot 5 - 6$ edges, is not planar.",
@@ -1002,6 +1015,7 @@ export const cyclesInGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "shortest-cycles",
+      figure: discreteDrawings1["cycles-in-graphs#shortest-cycles"],
       title: t("Shortest cycles", "最短圈"),
       explanation: t(
         "If $E = \\{AB, BC, CD, DA, AE, EC\\}$, the shortest cycles have length $4$: $A, B, C, D, A$ and $A, B, C, E, A$ among others. There is no triangle, since no two neighbors of a vertex are adjacent.",
@@ -1030,6 +1044,7 @@ export const cyclesInGraphs: TopicDef = {
     },
     {
       id: "counting-cycles-in-complete-graphs",
+      figure: discreteDrawings1["cycles-in-graphs#counting-cycles-in-complete-graphs"],
       title: t("Cycles in complete graphs", "完全图中的圈"),
       explanation: t(
         "In $K_5$, an ordered choice of $4$ vertices gives $5 \\cdot 4 \\cdot 3 \\cdot 2 = 120$ sequences, and each $4$-cycle arises from $4$ starting points and $2$ directions: $\\frac{120}{8} = 15$ cycles.",
@@ -1083,6 +1098,7 @@ export const connectedGraphs: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-connected-components",
+      figure: discreteDrawings1["connected-graphs#counting-connected-components"],
       title: t("Connected components", "连通分支"),
       explanation: t(
         "If $V = \\{A, B, C, D, E, F\\}$ and $E = \\{AB, BC, DE\\}$, the components are $\\{A, B, C\\}$, $\\{D, E\\}$ and $\\{F\\}$: three components. An isolated vertex is a component on its own.",
@@ -1112,6 +1128,7 @@ export const connectedGraphs: TopicDef = {
     },
     {
       id: "edge-bounds-for-connectivity",
+      figure: discreteDrawings1["connected-graphs#edge-bounds-for-connectivity"],
       title: t("Edge bounds", "边数界"),
       explanation: t(
         "A connected graph on $10$ vertices needs at least $9$ edges. A simple graph on $10$ vertices with more than $\\binom{9}{2} = 36$ edges must be connected: the most edges a disconnected one can have is when one vertex is isolated and the other $9$ form $K_9$.",
@@ -1164,6 +1181,7 @@ export const cutVerticesAndCutEdges: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-cut-vertices",
+      figure: discreteDrawings1["cut-vertices-and-cut-edges#counting-cut-vertices"],
       title: t("Cut vertices", "割点"),
       explanation: t(
         "In the path $A, B, C$ with a triangle $CDE$ attached at $C$, removing $B$ or $C$ disconnects the graph, so there are $2$ cut vertices; removing $A$, $D$ or $E$ does not.",
@@ -1194,6 +1212,7 @@ export const cutVerticesAndCutEdges: TopicDef = {
     },
     {
       id: "counting-cut-edges",
+      figure: discreteDrawings1["cut-vertices-and-cut-edges#counting-cut-edges"],
       title: t("Cut edges", "割边"),
       explanation: t(
         "In a triangle $ABC$ with a pendant edge $CD$, the edge $CD$ is a cut edge; $AB$, $BC$ and $CA$ lie on the triangle, so removing one of them leaves the graph connected.",

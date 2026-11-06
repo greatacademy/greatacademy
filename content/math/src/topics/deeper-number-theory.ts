@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
 import { ask, divisors, factorize, point, powMod, primesUpTo, totient } from "../university-kit.ts";
 
@@ -270,31 +271,34 @@ const threeModFourRoot = point(
   },
 );
 
-const tripleArea = point(
-  "the-area-of-a-pythagorean-triangle",
-  ["The area of a Pythagorean triangle", "毕达哥拉斯三角形的面积"],
-  [
-    "With $a = m^2 - n^2$, $b = 2 m n$ and $c = m^2 + n^2$, the area of the right triangle is $\\frac{1}{2} a b = m n (m^2 - n^2)$. This is always a multiple of 6. So the area can be found without first computing the sides, and Fermat proved it is never a perfect square.",
-    "设 $a = m^2 - n^2$，$b = 2 m n$，$c = m^2 + n^2$，直角三角形的面积是 $\\frac{1}{2} a b = m n (m^2 - n^2)$。它总是 6 的倍数。所以不必先算出边就能求面积，费马还证明了它从来不是完全平方数。",
-  ],
-  (rng) => {
-    const m = rng.int(2, 9);
-    const n = rng.int(1, m - 1);
-    const answer = m * n * (m * m - n * n);
-    return ask(
-      [
-        `What is the area of the right triangle from Euclid's formula with $m = ${m}$ and $n = ${n}$?`,
-        `欧几里得公式中 $m = ${m}$，$n = ${n}$ 的直角三角形面积是多少？`,
-      ],
-      answer,
-      [2 * answer, m * m - n * n, 2 * m * n, m * n * (m * m + n * n)].filter((v) => v !== answer),
-      [
-        `The area is $${m} \\cdot ${n} \\cdot (${m * m} - ${n * n}) = ${answer}$.`,
-        `面积是 $${m} \\cdot ${n} \\cdot (${m * m} - ${n * n}) = ${answer}$。`,
-      ],
-    );
-  },
-);
+const tripleArea = {
+  ...point(
+    "the-area-of-a-pythagorean-triangle",
+    ["The area of a Pythagorean triangle", "毕达哥拉斯三角形的面积"],
+    [
+      "With $a = m^2 - n^2$, $b = 2 m n$ and $c = m^2 + n^2$, the area of the right triangle is $\\frac{1}{2} a b = m n (m^2 - n^2)$. This is always a multiple of 6. So the area can be found without first computing the sides, and Fermat proved it is never a perfect square.",
+      "设 $a = m^2 - n^2$，$b = 2 m n$，$c = m^2 + n^2$，直角三角形的面积是 $\\frac{1}{2} a b = m n (m^2 - n^2)$。它总是 6 的倍数。所以不必先算出边就能求面积，费马还证明了它从来不是完全平方数。",
+    ],
+    (rng) => {
+      const m = rng.int(2, 9);
+      const n = rng.int(1, m - 1);
+      const answer = m * n * (m * m - n * n);
+      return ask(
+        [
+          `What is the area of the right triangle from Euclid's formula with $m = ${m}$ and $n = ${n}$?`,
+          `欧几里得公式中 $m = ${m}$，$n = ${n}$ 的直角三角形面积是多少？`,
+        ],
+        answer,
+        [2 * answer, m * m - n * n, 2 * m * n, m * n * (m * m + n * n)].filter((v) => v !== answer),
+        [
+          `The area is $${m} \\cdot ${n} \\cdot (${m * m} - ${n * n}) = ${answer}$.`,
+          `面积是 $${m} \\cdot ${n} \\cdot (${m * m} - ${n * n}) = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: numberTheoryDrawings1["pythagorean-triples#the-area-of-a-pythagorean-triangle"],
+};
 
 /** deeperNumberTheoryPoints maps topics of Number Theory to their further knowledge points. */
 export const deeperNumberTheoryPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

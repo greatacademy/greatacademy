@@ -3,6 +3,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, topic } from "../university-kit.ts";
 
@@ -189,37 +190,40 @@ const reflection = topic(
   ["the-wave-equation-on-a-finite-string"],
   [],
   [
-    point(
-      "fixed-and-free-ends",
-      ["Fixed and free ends", "固定端和自由端"],
-      [
-        "A fixed end keeps $u = 0$, which is achieved by an upside-down image of the pulse beyond the end, so a reflected pulse comes back inverted. A free end keeps $u_x = 0$, which is achieved by an upright image, so the pulse comes back the same way up with the same height.",
-        "固定端保持 $u = 0$，相当于端点外有一个倒置的镜像脉冲，所以反射脉冲是倒过来的。自由端保持 $u_x = 0$，相当于有一个正立的镜像，所以脉冲反射后方向不变，高度也不变。",
-      ],
-      (rng) => {
-        const height = rng.int(1, 9);
-        const bounces = rng.int(1, 6);
-        const fixed = rng.bool();
-        const answer = fixed && bounces % 2 === 1 ? -height : height;
-        const lead: Pair = fixed ? ["fixed", "固定"] : ["free", "自由"];
-        return ask(
-          [
-            `A pulse of height ${height} travels on a string with ${lead[0]} ends. What is its height after ${bounces === 1 ? "1 reflection" : `${bounces} reflections`}?`,
-            `高度为 ${height} 的脉冲在两端${lead[1]}的弦上传播。反射 ${bounces} 次后它的高度是多少？`,
-          ],
-          answer,
-          [-answer, 0, height + bounces, height * bounces],
-          [
-            fixed
-              ? `Each fixed end turns the pulse upside down without changing its size, and ${bounces} ${bounces % 2 === 1 ? "is odd" : "is even"}, so the height is ${answer}.`
-              : "A free end sends the pulse back the same way up, so the height does not change.",
-            fixed
-              ? `每次固定端反射都把脉冲倒过来，大小不变，而 ${bounces} 是${bounces % 2 === 1 ? "奇数" : "偶数"}，所以高度是 ${answer}。`
-              : "自由端把脉冲按原方向反射回来，所以高度不变。",
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "fixed-and-free-ends",
+        ["Fixed and free ends", "固定端和自由端"],
+        [
+          "A fixed end keeps $u = 0$, which is achieved by an upside-down image of the pulse beyond the end, so a reflected pulse comes back inverted. A free end keeps $u_x = 0$, which is achieved by an upright image, so the pulse comes back the same way up with the same height.",
+          "固定端保持 $u = 0$，相当于端点外有一个倒置的镜像脉冲，所以反射脉冲是倒过来的。自由端保持 $u_x = 0$，相当于有一个正立的镜像，所以脉冲反射后方向不变，高度也不变。",
+        ],
+        (rng) => {
+          const height = rng.int(1, 9);
+          const bounces = rng.int(1, 6);
+          const fixed = rng.bool();
+          const answer = fixed && bounces % 2 === 1 ? -height : height;
+          const lead: Pair = fixed ? ["fixed", "固定"] : ["free", "自由"];
+          return ask(
+            [
+              `A pulse of height ${height} travels on a string with ${lead[0]} ends. What is its height after ${bounces === 1 ? "1 reflection" : `${bounces} reflections`}?`,
+              `高度为 ${height} 的脉冲在两端${lead[1]}的弦上传播。反射 ${bounces} 次后它的高度是多少？`,
+            ],
+            answer,
+            [-answer, 0, height + bounces, height * bounces],
+            [
+              fixed
+                ? `Each fixed end turns the pulse upside down without changing its size, and ${bounces} ${bounces % 2 === 1 ? "is odd" : "is even"}, so the height is ${answer}.`
+                : "A free end sends the pulse back the same way up, so the height does not change.",
+              fixed
+                ? `每次固定端反射都把脉冲倒过来，大小不变，而 ${bounces} 是${bounces % 2 === 1 ? "奇数" : "偶数"}，所以高度是 ${answer}。`
+                : "自由端把脉冲按原方向反射回来，所以高度不变。",
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["reflection-at-a-boundary#fixed-and-free-ends"],
+    },
     point(
       "where-a-pulse-is-later",
       ["Where a pulse is later", "脉冲之后的位置"],
@@ -409,38 +413,41 @@ const heatMaximum = topic(
   ["solving-the-heat-equation-on-an-interval"],
   [],
   [
-    point(
-      "bounding-a-temperature",
-      ["Bounding a temperature", "估计温度的范围"],
-      [
-        "A solution of the heat equation on a rod over a time interval reaches its maximum and minimum on the bottom or the two sides of the space-time rectangle: at the initial time or at an end. So a rod with no sources never gets hotter than its hottest initial or end value.",
-        "杆上热方程的解在时空矩形的底边或两条侧边上取到最大值和最小值，也就是在初始时刻或端点。所以没有热源的杆，温度不会超过初始值和端点值中的最高者。",
-      ],
-      (rng) => {
-        const hot = rng.bool();
-        const [initial, left, right] = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3) as [number, number, number];
-        const answer = hot ? Math.max(initial, left, right) : Math.min(initial, left, right);
-        const word: Pair = hot ? ["at most", "不超过"] : ["at least", "不低于"];
-        const initialWord: Pair = hot ? ["at most", "最高"] : ["at least", "最低"];
-        return ask(
-          [
-            `A rod has initial temperature ${initialWord[0]} ${initial} everywhere, with left end held at ${left} and right end held at ${right}. What is the sharpest number $B$ the maximum principle gives such that $u$ is always ${word[0]} $B$?`,
-            `一根杆的初始温度处处${initialWord[1]}为 ${initial}，左端保持 ${left}，右端保持 ${right}。最大值原理给出的最精确的数 $B$ 是多少，使 $u$ 总是${word[1]} $B$？`,
-          ],
-          answer,
-          [
-            hot ? Math.min(initial, left, right) : Math.max(initial, left, right),
-            initial,
-            Q.of(left + right, 2),
-            initial + left + right,
-          ].filter((v) => v !== answer),
-          [
-            `The extreme value lies among the initial bound and the two end values: ${initial}, ${left} and ${right}. The ${hot ? "largest" : "smallest"} of these is ${answer}.`,
-            `极值出现在初始界和两个端点值之中：${initial}、${left} 和 ${right}。其中${hot ? "最大" : "最小"}的是 ${answer}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "bounding-a-temperature",
+        ["Bounding a temperature", "估计温度的范围"],
+        [
+          "A solution of the heat equation on a rod over a time interval reaches its maximum and minimum on the bottom or the two sides of the space-time rectangle: at the initial time or at an end. So a rod with no sources never gets hotter than its hottest initial or end value.",
+          "杆上热方程的解在时空矩形的底边或两条侧边上取到最大值和最小值，也就是在初始时刻或端点。所以没有热源的杆，温度不会超过初始值和端点值中的最高者。",
+        ],
+        (rng) => {
+          const hot = rng.bool();
+          const [initial, left, right] = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3) as [number, number, number];
+          const answer = hot ? Math.max(initial, left, right) : Math.min(initial, left, right);
+          const word: Pair = hot ? ["at most", "不超过"] : ["at least", "不低于"];
+          const initialWord: Pair = hot ? ["at most", "最高"] : ["at least", "最低"];
+          return ask(
+            [
+              `A rod has initial temperature ${initialWord[0]} ${initial} everywhere, with left end held at ${left} and right end held at ${right}. What is the sharpest number $B$ the maximum principle gives such that $u$ is always ${word[0]} $B$?`,
+              `一根杆的初始温度处处${initialWord[1]}为 ${initial}，左端保持 ${left}，右端保持 ${right}。最大值原理给出的最精确的数 $B$ 是多少，使 $u$ 总是${word[1]} $B$？`,
+            ],
+            answer,
+            [
+              hot ? Math.min(initial, left, right) : Math.max(initial, left, right),
+              initial,
+              Q.of(left + right, 2),
+              initial + left + right,
+            ].filter((v) => v !== answer),
+            [
+              `The extreme value lies among the initial bound and the two end values: ${initial}, ${left} and ${right}. The ${hot ? "largest" : "smallest"} of these is ${answer}.`,
+              `极值出现在初始界和两个端点值之中：${initial}、${left} 和 ${right}。其中${hot ? "最大" : "最小"}的是 ${answer}。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["the-maximum-principle-for-heat#bounding-a-temperature"],
+    },
     point(
       "two-nearby-solutions-stay-close",
       ["Two nearby solutions stay close", "相近的解保持相近"],
@@ -576,31 +583,34 @@ const poisson = topic(
   ["laplaces-equation"],
   [],
   [
-    point(
-      "a-value-at-the-center-of-a-disc",
-      ["A value at the center of a disc", "圆心处的值"],
-      [
-        "Poisson's equation is $\\Delta u = f$. For a constant $f$ on a disc of radius $R$ with $u = 0$ on the circle, try the radial function $u = \\frac{f}{4} (x^2 + y^2 - R^2)$. It vanishes on the circle, and its Laplacian is $\\frac{f}{4} \\cdot 4 = f$, so it is the solution.",
-        "泊松方程是 $\\Delta u = f$。对半径为 $R$ 的圆盘，$f$ 为常数，圆周上 $u = 0$，试取径向函数 $u = \\frac{f}{4} (x^2 + y^2 - R^2)$。它在圆周上为零，拉普拉斯算子作用后是 $\\frac{f}{4} \\cdot 4 = f$，所以它就是解。",
-      ],
-      (rng) => {
-        const f = rng.int(1, 9);
-        const R = rng.int(1, 6);
-        const answer = Q.of(-f * R * R, 4);
-        return ask(
-          [
-            `Let $\\Delta u = ${f}$ on the disc $x^2 + y^2 < ${R * R}$, with $u = 0$ on the boundary. What is $u$ at the center?`,
-            `设在圆盘 $x^2 + y^2 < ${R * R}$ 上 $\\Delta u = ${f}$，边界上 $u = 0$。圆心处 $u$ 是多少？`,
-          ],
-          answer,
-          [Q.of(f * R * R, 4), Q.of(-f * R * R, 2), Q.of(-f * R, 4), -f],
-          [
-            `$u = \\frac{${f}}{4} (x^2 + y^2 - ${R * R})$, and at the center this is $\\frac{${f}}{4} \\cdot (-${R * R}) = ${answer.toLatex()}$.`,
-            `$u = \\frac{${f}}{4} (x^2 + y^2 - ${R * R})$，在圆心处等于 $\\frac{${f}}{4} \\cdot (-${R * R}) = ${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-value-at-the-center-of-a-disc",
+        ["A value at the center of a disc", "圆心处的值"],
+        [
+          "Poisson's equation is $\\Delta u = f$. For a constant $f$ on a disc of radius $R$ with $u = 0$ on the circle, try the radial function $u = \\frac{f}{4} (x^2 + y^2 - R^2)$. It vanishes on the circle, and its Laplacian is $\\frac{f}{4} \\cdot 4 = f$, so it is the solution.",
+          "泊松方程是 $\\Delta u = f$。对半径为 $R$ 的圆盘，$f$ 为常数，圆周上 $u = 0$，试取径向函数 $u = \\frac{f}{4} (x^2 + y^2 - R^2)$。它在圆周上为零，拉普拉斯算子作用后是 $\\frac{f}{4} \\cdot 4 = f$，所以它就是解。",
+        ],
+        (rng) => {
+          const f = rng.int(1, 9);
+          const R = rng.int(1, 6);
+          const answer = Q.of(-f * R * R, 4);
+          return ask(
+            [
+              `Let $\\Delta u = ${f}$ on the disc $x^2 + y^2 < ${R * R}$, with $u = 0$ on the boundary. What is $u$ at the center?`,
+              `设在圆盘 $x^2 + y^2 < ${R * R}$ 上 $\\Delta u = ${f}$，边界上 $u = 0$。圆心处 $u$ 是多少？`,
+            ],
+            answer,
+            [Q.of(f * R * R, 4), Q.of(-f * R * R, 2), Q.of(-f * R, 4), -f],
+            [
+              `$u = \\frac{${f}}{4} (x^2 + y^2 - ${R * R})$, and at the center this is $\\frac{${f}}{4} \\cdot (-${R * R}) = ${answer.toLatex()}$.`,
+              `$u = \\frac{${f}}{4} (x^2 + y^2 - ${R * R})$，在圆心处等于 $\\frac{${f}}{4} \\cdot (-${R * R}) = ${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["poissons-equation#a-value-at-the-center-of-a-disc"],
+    },
     point(
       "when-an-insulated-problem-has-a-solution",
       ["When an insulated problem has a solution", "绝热问题何时有解"],

@@ -6,6 +6,8 @@ import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { Point } from "@ga/subject-math";
 import { plane, Q } from "@ga/subject-math";
+import { complexDrawings1 } from "../explanation-drawings-complex-analysis-1.ts";
+import { complexDrawings2 } from "../explanation-drawings-complex-analysis-2.ts";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 
@@ -70,45 +72,48 @@ const powerSeriesDiscs = topic(
         );
       },
     ),
-    point(
-      "a-point-against-the-disc",
-      ["A point against the disc", "判断点与圆盘的关系"],
-      [
-        "To decide whether a series with center $a$ and radius $R$ converges at a point, compare the distance from the point to $a$ with $R$. A smaller distance means convergence and a larger one means divergence. On the circle itself the radius alone decides nothing, and each point needs its own test.",
-        "要判断圆心为 $a$、半径为 $R$ 的级数在某点是否收敛，就比较这一点到 $a$ 的距离和 $R$。距离较小则收敛，较大则发散。在圆周上，只看半径无法判断，每个点要单独检验。",
-      ],
-      (rng) => {
-        const [dx, dy, d] = rng.pick([
-          [3, 4, 5],
-          [6, 8, 10],
-          [5, 12, 13],
-          [8, 6, 10],
-          [4, 3, 5],
-        ] as const);
-        const [ax, ay] = [rng.int(-4, 4), rng.int(-4, 4)];
-        const r = d + rng.pick([-2, -1, 0, 1, 2]);
-        const [x, y] = [ax + dx, ay + dy];
-        const inside: Pair = ["It converges there", "在那里收敛"];
-        const outside: Pair = ["It diverges there", "在那里发散"];
-        const edge: Pair = ["The radius alone does not decide", "只看半径无法判断"];
-        const correct = d < r ? inside : d > r ? outside : edge;
-        const name = complexName(ax, ay);
-        const target = complexName(x, y);
-        return choose(
-          rng,
-          [
-            `A power series has center $${name}$ and radius of convergence ${r}. What can be said at $z = ${target}$?`,
-            `一个幂级数的圆心是 $${name}$，收敛半径是 ${r}。在 $z = ${target}$ 处可以得出什么结论？`,
-          ],
-          correct,
-          [inside, outside, edge, ["It converges everywhere", "处处收敛"]],
-          [
-            `The distance from the center is $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$, and the radius is ${r}. ${d < r ? "The point is inside the disc, so the series converges there." : d > r ? "The point is outside the disc, so the series diverges there." : "The point is on the boundary circle, where a series may converge or diverge."}`,
-            `到圆心的距离是 $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$，半径是 ${r}。${d < r ? "这个点在圆盘内，所以级数在那里收敛。" : d > r ? "这个点在圆盘外，所以级数在那里发散。" : "这个点在边界圆上，级数在那里可能收敛也可能发散。"}`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-point-against-the-disc",
+        ["A point against the disc", "判断点与圆盘的关系"],
+        [
+          "To decide whether a series with center $a$ and radius $R$ converges at a point, compare the distance from the point to $a$ with $R$. A smaller distance means convergence and a larger one means divergence. On the circle itself the radius alone decides nothing, and each point needs its own test.",
+          "要判断圆心为 $a$、半径为 $R$ 的级数在某点是否收敛，就比较这一点到 $a$ 的距离和 $R$。距离较小则收敛，较大则发散。在圆周上，只看半径无法判断，每个点要单独检验。",
+        ],
+        (rng) => {
+          const [dx, dy, d] = rng.pick([
+            [3, 4, 5],
+            [6, 8, 10],
+            [5, 12, 13],
+            [8, 6, 10],
+            [4, 3, 5],
+          ] as const);
+          const [ax, ay] = [rng.int(-4, 4), rng.int(-4, 4)];
+          const r = d + rng.pick([-2, -1, 0, 1, 2]);
+          const [x, y] = [ax + dx, ay + dy];
+          const inside: Pair = ["It converges there", "在那里收敛"];
+          const outside: Pair = ["It diverges there", "在那里发散"];
+          const edge: Pair = ["The radius alone does not decide", "只看半径无法判断"];
+          const correct = d < r ? inside : d > r ? outside : edge;
+          const name = complexName(ax, ay);
+          const target = complexName(x, y);
+          return choose(
+            rng,
+            [
+              `A power series has center $${name}$ and radius of convergence ${r}. What can be said at $z = ${target}$?`,
+              `一个幂级数的圆心是 $${name}$，收敛半径是 ${r}。在 $z = ${target}$ 处可以得出什么结论？`,
+            ],
+            correct,
+            [inside, outside, edge, ["It converges everywhere", "处处收敛"]],
+            [
+              `The distance from the center is $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$, and the radius is ${r}. ${d < r ? "The point is inside the disc, so the series converges there." : d > r ? "The point is outside the disc, so the series diverges there." : "The point is on the boundary circle, where a series may converge or diverge."}`,
+              `到圆心的距离是 $\\sqrt{${dx}^2 + ${dy}^2} = ${d}$，半径是 ${r}。${d < r ? "这个点在圆盘内，所以级数在那里收敛。" : d > r ? "这个点在圆盘外，所以级数在那里发散。" : "这个点在边界圆上，级数在那里可能收敛也可能发散。"}`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["power-series-on-discs#a-point-against-the-disc"],
+    },
   ],
 );
 
@@ -382,30 +387,33 @@ const windingNumbers = topic(
   ["cauchys-integral-theorem"],
   [],
   [
-    point(
-      "reading-a-winding-number",
-      ["Reading a winding number", "读环绕数"],
-      [
-        "The winding number of a closed path about a point counts its net turns around that point, positive for counterclockwise and negative for clockwise. To read it, draw a ray from the point to far away and add one for each crossing going counterclockwise, and subtract one for each going clockwise. It is zero far from the curve.",
-        "闭路径绕一点的环绕数是它绕该点的净圈数，逆时针为正，顺时针为负。读法是：从这一点向远处画一条射线，每次逆时针穿过加一，顺时针穿过减一。远离曲线的点环绕数为零。",
-      ],
-      (rng) => {
-        const { winding, figure } = windingCase(rng);
-        return ask(
-          [
-            "What is the winding number of the curve about the point $P$, in the direction shown?",
-            "按图中方向，曲线绕点 $P$ 的环绕数是多少？",
-          ],
-          winding,
-          [-winding, winding + 1, winding - 1, 3],
-          [
-            `A ray from $P$ crosses the curve with net count $${winding}$: the inner loop is wound twice, the outer region once, and the outside not at all, with the sign set by the arrow.`,
-            `从 $P$ 出发的射线穿过曲线的净次数是 $${winding}$：内环区域绕两圈，外环区域绕一圈，外部不绕，符号由箭头决定。`,
-          ],
-          figure,
-        );
-      },
-    ),
+    {
+      ...point(
+        "reading-a-winding-number",
+        ["Reading a winding number", "读环绕数"],
+        [
+          "The winding number of a closed path about a point counts its net turns around that point, positive for counterclockwise and negative for clockwise. To read it, draw a ray from the point to far away and add one for each crossing going counterclockwise, and subtract one for each going clockwise. It is zero far from the curve.",
+          "闭路径绕一点的环绕数是它绕该点的净圈数，逆时针为正，顺时针为负。读法是：从这一点向远处画一条射线，每次逆时针穿过加一，顺时针穿过减一。远离曲线的点环绕数为零。",
+        ],
+        (rng) => {
+          const { winding, figure } = windingCase(rng);
+          return ask(
+            [
+              "What is the winding number of the curve about the point $P$, in the direction shown?",
+              "按图中方向，曲线绕点 $P$ 的环绕数是多少？",
+            ],
+            winding,
+            [-winding, winding + 1, winding - 1, 3],
+            [
+              `A ray from $P$ crosses the curve with net count $${winding}$: the inner loop is wound twice, the outer region once, and the outside not at all, with the sign set by the arrow.`,
+              `从 $P$ 出发的射线穿过曲线的净次数是 $${winding}$：内环区域绕两圈，外环区域绕一圈，外部不绕，符号由箭头决定。`,
+            ],
+            figure,
+          );
+        },
+      ),
+      figure: complexDrawings1["winding-numbers#reading-a-winding-number"],
+    },
     point(
       "the-integral-of-a-simple-pole",
       ["The integral of a simple pole", "单极点的积分"],
@@ -504,34 +512,37 @@ const annuli = topic(
   ["laurent-series"],
   [],
   [
-    point(
-      "counting-the-regions-of-expansion",
-      ["Counting the regions of expansion", "数展开的区域"],
-      [
-        "A rational function has a different Laurent series about a center on each annulus bounded by its poles. If the poles lie at several distinct distances from the center, these circles split the plane into one disc, some annuli, and one outer region. The same function has one expansion on each.",
-        "有理函数在以极点为界的每个圆环上，都有一个不同的洛朗级数。如果极点到中心有若干个不同的距离，这些圆周就把平面分成一个圆盘、一些圆环和一个外部区域。同一个函数在每个区域上各有一个展开式。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 3);
-        const b = a + rng.int(1, 3);
-        const c = b + rng.int(1, 3);
-        const three = rng.bool();
-        const body = three ? `(z - ${a})(z + ${b})(z - ${c})` : `(z - ${a})(z + ${b})`;
-        const count = three ? 4 : 3;
-        return ask(
-          [
-            `How many different Laurent series about $z = 0$ does $\\frac{1}{${body}}$ have, one for each region of convergence?`,
-            `$\\frac{1}{${body}}$ 在 $z = 0$ 处有多少个不同的洛朗级数（每个收敛区域一个）？`,
-          ],
-          count,
-          [count - 1, count + 1, 2],
-          [
-            `The poles lie at ${three ? `${count - 1} different distances` : "two different distances"} from 0. Those circles split the plane into ${count} regions, each with its own series.`,
-            `极点到 0 有 ${count - 1} 个不同的距离。这些圆周把平面分成 ${count} 个区域，每个区域有自己的级数。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "counting-the-regions-of-expansion",
+        ["Counting the regions of expansion", "数展开的区域"],
+        [
+          "A rational function has a different Laurent series about a center on each annulus bounded by its poles. If the poles lie at several distinct distances from the center, these circles split the plane into one disc, some annuli, and one outer region. The same function has one expansion on each.",
+          "有理函数在以极点为界的每个圆环上，都有一个不同的洛朗级数。如果极点到中心有若干个不同的距离，这些圆周就把平面分成一个圆盘、一些圆环和一个外部区域。同一个函数在每个区域上各有一个展开式。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 3);
+          const b = a + rng.int(1, 3);
+          const c = b + rng.int(1, 3);
+          const three = rng.bool();
+          const body = three ? `(z - ${a})(z + ${b})(z - ${c})` : `(z - ${a})(z + ${b})`;
+          const count = three ? 4 : 3;
+          return ask(
+            [
+              `How many different Laurent series about $z = 0$ does $\\frac{1}{${body}}$ have, one for each region of convergence?`,
+              `$\\frac{1}{${body}}$ 在 $z = 0$ 处有多少个不同的洛朗级数（每个收敛区域一个）？`,
+            ],
+            count,
+            [count - 1, count + 1, 2],
+            [
+              `The poles lie at ${three ? `${count - 1} different distances` : "two different distances"} from 0. Those circles split the plane into ${count} regions, each with its own series.`,
+              `极点到 0 有 ${count - 1} 个不同的距离。这些圆周把平面分成 ${count} 个区域，每个区域有自己的级数。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["laurent-series-on-annuli#counting-the-regions-of-expansion"],
+    },
     point(
       "a-coefficient-outside-the-pole",
       ["A coefficient outside the pole", "极点外部的系数"],
@@ -599,43 +610,46 @@ const argumentPrinciple = topic(
         );
       },
     ),
-    point(
-      "counting-with-rouches-theorem",
-      ["Counting with Rouché's theorem", "用儒歇定理计数"],
-      [
-        "Rouché's theorem says that if $|g| < |f|$ everywhere on a contour, then $f$ and $f + g$ have the same number of zeros inside. To use it, pick the term of a polynomial that dominates on the circle and count the zeros of that term alone, which is usually very easy.",
-        "儒歇定理说：如果在围道上处处有 $|g| < |f|$，那么 $f$ 和 $f + g$ 在围道内的零点数相同。使用时，选出多项式中在圆周上占优的那一项，只数它的零点，这通常很容易。",
-      ],
-      (rng) => {
-        const low = rng.pick([1, 2, 3]);
-        const high = low + rng.int(2, 5);
-        const big = rng.bool();
-        const a = rng.int(1, 2);
-        const coefficient = 3 * rng.int(5, 9);
-        const r = big ? 2 : 1;
-        const dominant = big ? high : low;
-        const lowTerm = power("z", low);
-        const highTerm = power("z", high);
-        const poly = big ? `${highTerm} + ${a === 1 ? "" : `${a} `}${lowTerm} + 1` : `${highTerm} + ${coefficient} ${lowTerm} + 1`;
-        const others = a === 1 ? `2^{${low}} + 1` : `2 \\cdot 2^{${low}} + 1`;
-        return ask(
-          [
-            `How many zeros, counted with multiplicity, does $${poly}$ have in the disc $|z| < ${r}$?`,
-            `$${poly}$ 在圆盘 $|z| < ${r}$ 内有多少个零点（按重数计）？`,
-          ],
-          dominant,
-          [high, low, 0, high + low].filter((v) => v !== dominant),
-          [
-            big
-              ? `On $|z| = 2$, the term $${highTerm}$ has size $2^{${high}}$, which exceeds $${others}$, the most the other terms can reach. So there are as many zeros as $${highTerm}$ has inside: ${high}.`
-              : `On $|z| = 1$, the term $${coefficient} ${lowTerm}$ has size ${coefficient}, which exceeds 2, the most the other terms can reach. So there are as many zeros as $${lowTerm}$ has inside: ${low}.`,
-            big
-              ? `在 $|z| = 2$ 上，$${highTerm}$ 的模是 $2^{${high}}$，大于其他项模之和的最大值 $${others}$。所以零点个数与 $${highTerm}$ 在圆内的零点数相同，是 ${high}。`
-              : `在 $|z| = 1$ 上，$${coefficient} ${lowTerm}$ 的模是 ${coefficient}，大于其他项模之和的最大值 2。所以零点个数与 $${lowTerm}$ 在圆内的零点数相同，是 ${low}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "counting-with-rouches-theorem",
+        ["Counting with Rouché's theorem", "用儒歇定理计数"],
+        [
+          "Rouché's theorem says that if $|g| < |f|$ everywhere on a contour, then $f$ and $f + g$ have the same number of zeros inside. To use it, pick the term of a polynomial that dominates on the circle and count the zeros of that term alone, which is usually very easy.",
+          "儒歇定理说：如果在围道上处处有 $|g| < |f|$，那么 $f$ 和 $f + g$ 在围道内的零点数相同。使用时，选出多项式中在圆周上占优的那一项，只数它的零点，这通常很容易。",
+        ],
+        (rng) => {
+          const low = rng.pick([1, 2, 3]);
+          const high = low + rng.int(2, 5);
+          const big = rng.bool();
+          const a = rng.int(1, 2);
+          const coefficient = 3 * rng.int(5, 9);
+          const r = big ? 2 : 1;
+          const dominant = big ? high : low;
+          const lowTerm = power("z", low);
+          const highTerm = power("z", high);
+          const poly = big ? `${highTerm} + ${a === 1 ? "" : `${a} `}${lowTerm} + 1` : `${highTerm} + ${coefficient} ${lowTerm} + 1`;
+          const others = a === 1 ? `2^{${low}} + 1` : `2 \\cdot 2^{${low}} + 1`;
+          return ask(
+            [
+              `How many zeros, counted with multiplicity, does $${poly}$ have in the disc $|z| < ${r}$?`,
+              `$${poly}$ 在圆盘 $|z| < ${r}$ 内有多少个零点（按重数计）？`,
+            ],
+            dominant,
+            [high, low, 0, high + low].filter((v) => v !== dominant),
+            [
+              big
+                ? `On $|z| = 2$, the term $${highTerm}$ has size $2^{${high}}$, which exceeds $${others}$, the most the other terms can reach. So there are as many zeros as $${highTerm}$ has inside: ${high}.`
+                : `On $|z| = 1$, the term $${coefficient} ${lowTerm}$ has size ${coefficient}, which exceeds 2, the most the other terms can reach. So there are as many zeros as $${lowTerm}$ has inside: ${low}.`,
+              big
+                ? `在 $|z| = 2$ 上，$${highTerm}$ 的模是 $2^{${high}}$，大于其他项模之和的最大值 $${others}$。所以零点个数与 $${highTerm}$ 在圆内的零点数相同，是 ${high}。`
+                : `在 $|z| = 1$ 上，$${coefficient} ${lowTerm}$ 的模是 ${coefficient}，大于其他项模之和的最大值 2。所以零点个数与 $${lowTerm}$ 在圆内的零点数相同，是 ${low}。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["the-argument-principle-and-rouches-theorem#counting-with-rouches-theorem"],
+    },
   ],
 );
 
@@ -646,70 +660,76 @@ const trigIntegrals = topic(
   ["the-residue-theorem"],
   [],
   [
-    point(
-      "substituting-on-the-unit-circle",
-      ["Substituting on the unit circle", "在单位圆上代换"],
-      [
-        "Put $z = e^{i \\theta}$. Then $d\\theta = \\frac{dz}{iz}$, $\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$ and $\\sin \\theta = \\frac{1}{2i} (z - \\frac{1}{z})$, and an integral from 0 to $2 \\pi$ becomes an integral around $|z| = 1$. A rational function of cosine and sine thus becomes a rational function of $z$.",
-        "令 $z = e^{i \\theta}$。于是 $d\\theta = \\frac{dz}{iz}$，$\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$，$\\sin \\theta = \\frac{1}{2i} (z - \\frac{1}{z})$，从 0 到 $2 \\pi$ 的积分就变成沿 $|z| = 1$ 的积分。余弦和正弦的有理函数于是变成 $z$ 的有理函数。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        const b = rng.int(1, 9) * 2;
-        const half = b / 2;
-        const bHalf = half === 1 ? "" : `${half} `;
-        return choose(
-          rng,
-          [
-            `With $z = e^{i \\theta}$, what does $${a} + ${b} \\cos \\theta$ become?`,
-            `令 $z = e^{i \\theta}$，$${a} + ${b} \\cos \\theta$ 变成什么？`,
-          ],
-          same(`${a} + ${bHalf}z + \\frac{${half}}{z}`),
-          [same(`${a} + ${b} z + \\frac{${b}}{z}`), same(`${a} + ${bHalf}z - \\frac{${half}}{z}`), same(`${a} + ${b} z`)],
-          [
-            `Since $\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$, the term $${b} \\cos \\theta$ becomes $${half === 1 ? "" : `${half} `}\\left( z + \\frac{1}{z} \\right)$.`,
-            `因为 $\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$，所以 $${b} \\cos \\theta$ 变成 $${half === 1 ? "" : `${half} `}\\left( z + \\frac{1}{z} \\right)$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "the-classic-period-integral",
-      ["The classic period integral", "经典的周期积分"],
-      [
-        "For $a > |b|$, the substitution and one residue give $\\int_0^{2\\pi} \\frac{d\\theta}{a + b \\cos \\theta} = \\frac{2\\pi}{\\sqrt{a^2 - b^2}}$. Only the pole inside the unit circle counts. The result has a simple check: when $b = 0$ the integrand is the constant $1 / a$, and the formula gives $2 \\pi / a$.",
-        "当 $a > |b|$ 时，代换加一个留数给出 $\\int_0^{2\\pi} \\frac{d\\theta}{a + b \\cos \\theta} = \\frac{2\\pi}{\\sqrt{a^2 - b^2}}$。只有单位圆内的极点起作用。结果可以简单检验：$b = 0$ 时被积函数是常数 $1 / a$，公式给出 $2 \\pi / a$。",
-      ],
-      (rng) => {
-        const [p, q, r] = rng.pick([
-          [5, 3, 4],
-          [5, 4, 3],
-          [13, 5, 12],
-          [13, 12, 5],
-          [17, 8, 15],
-          [17, 15, 8],
-          [10, 6, 8],
-          [10, 8, 6],
-          [25, 7, 24],
-          [25, 24, 7],
-        ] as const);
-        const m = rng.int(1, 9);
-        const answer = Q.of(2 * m, r);
-        const top = m === 1 ? "d\\theta" : `${m} \\, d\\theta`;
-        return ask(
-          [
-            `The integral $\\int_0^{2\\pi} \\frac{${top}}{${p} + ${q} \\cos \\theta}$ equals $k \\pi$. What is $k$?`,
-            `积分 $\\int_0^{2\\pi} \\frac{${top}}{${p} + ${q} \\cos \\theta}$ 等于 $k \\pi$。$k$ 是多少？`,
-          ],
-          answer,
-          [Q.of(m, r), Q.of(2 * m, p), Q.of(2 * m, p + q), Q.of(4 * m, r)],
-          [
-            `Here $\\sqrt{${p}^2 - ${q}^2} = ${r}$, so the integral is $${m === 1 ? "" : `${m} \\cdot `}\\frac{2 \\pi}{${r}}$, and $k = ${answer.toLatex()}$.`,
-            `这里 $\\sqrt{${p}^2 - ${q}^2} = ${r}$，所以积分是 $${m === 1 ? "" : `${m} \\cdot `}\\frac{2 \\pi}{${r}}$，$k = ${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "substituting-on-the-unit-circle",
+        ["Substituting on the unit circle", "在单位圆上代换"],
+        [
+          "Put $z = e^{i \\theta}$. Then $d\\theta = \\frac{dz}{iz}$, $\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$ and $\\sin \\theta = \\frac{1}{2i} (z - \\frac{1}{z})$, and an integral from 0 to $2 \\pi$ becomes an integral around $|z| = 1$. A rational function of cosine and sine thus becomes a rational function of $z$.",
+          "令 $z = e^{i \\theta}$。于是 $d\\theta = \\frac{dz}{iz}$，$\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$，$\\sin \\theta = \\frac{1}{2i} (z - \\frac{1}{z})$，从 0 到 $2 \\pi$ 的积分就变成沿 $|z| = 1$ 的积分。余弦和正弦的有理函数于是变成 $z$ 的有理函数。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          const b = rng.int(1, 9) * 2;
+          const half = b / 2;
+          const bHalf = half === 1 ? "" : `${half} `;
+          return choose(
+            rng,
+            [
+              `With $z = e^{i \\theta}$, what does $${a} + ${b} \\cos \\theta$ become?`,
+              `令 $z = e^{i \\theta}$，$${a} + ${b} \\cos \\theta$ 变成什么？`,
+            ],
+            same(`${a} + ${bHalf}z + \\frac{${half}}{z}`),
+            [same(`${a} + ${b} z + \\frac{${b}}{z}`), same(`${a} + ${bHalf}z - \\frac{${half}}{z}`), same(`${a} + ${b} z`)],
+            [
+              `Since $\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$, the term $${b} \\cos \\theta$ becomes $${half === 1 ? "" : `${half} `}\\left( z + \\frac{1}{z} \\right)$.`,
+              `因为 $\\cos \\theta = \\frac{1}{2} (z + \\frac{1}{z})$，所以 $${b} \\cos \\theta$ 变成 $${half === 1 ? "" : `${half} `}\\left( z + \\frac{1}{z} \\right)$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["trigonometric-integrals-by-residues#substituting-on-the-unit-circle"],
+    },
+    {
+      ...point(
+        "the-classic-period-integral",
+        ["The classic period integral", "经典的周期积分"],
+        [
+          "For $a > |b|$, the substitution and one residue give $\\int_0^{2\\pi} \\frac{d\\theta}{a + b \\cos \\theta} = \\frac{2\\pi}{\\sqrt{a^2 - b^2}}$. Only the pole inside the unit circle counts. The result has a simple check: when $b = 0$ the integrand is the constant $1 / a$, and the formula gives $2 \\pi / a$.",
+          "当 $a > |b|$ 时，代换加一个留数给出 $\\int_0^{2\\pi} \\frac{d\\theta}{a + b \\cos \\theta} = \\frac{2\\pi}{\\sqrt{a^2 - b^2}}$。只有单位圆内的极点起作用。结果可以简单检验：$b = 0$ 时被积函数是常数 $1 / a$，公式给出 $2 \\pi / a$。",
+        ],
+        (rng) => {
+          const [p, q, r] = rng.pick([
+            [5, 3, 4],
+            [5, 4, 3],
+            [13, 5, 12],
+            [13, 12, 5],
+            [17, 8, 15],
+            [17, 15, 8],
+            [10, 6, 8],
+            [10, 8, 6],
+            [25, 7, 24],
+            [25, 24, 7],
+          ] as const);
+          const m = rng.int(1, 9);
+          const answer = Q.of(2 * m, r);
+          const top = m === 1 ? "d\\theta" : `${m} \\, d\\theta`;
+          return ask(
+            [
+              `The integral $\\int_0^{2\\pi} \\frac{${top}}{${p} + ${q} \\cos \\theta}$ equals $k \\pi$. What is $k$?`,
+              `积分 $\\int_0^{2\\pi} \\frac{${top}}{${p} + ${q} \\cos \\theta}$ 等于 $k \\pi$。$k$ 是多少？`,
+            ],
+            answer,
+            [Q.of(m, r), Q.of(2 * m, p), Q.of(2 * m, p + q), Q.of(4 * m, r)],
+            [
+              `Here $\\sqrt{${p}^2 - ${q}^2} = ${r}$, so the integral is $${m === 1 ? "" : `${m} \\cdot `}\\frac{2 \\pi}{${r}}$, and $k = ${answer.toLatex()}$.`,
+              `这里 $\\sqrt{${p}^2 - ${q}^2} = ${r}$，所以积分是 $${m === 1 ? "" : `${m} \\cdot `}\\frac{2 \\pi}{${r}}$，$k = ${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings1["trigonometric-integrals-by-residues#the-classic-period-integral"],
+    },
   ],
 );
 
@@ -720,65 +740,71 @@ const improper = topic(
   ["the-residue-theorem", "the-ml-inequality"],
   [],
   [
-    point(
-      "poles-in-the-upper-half-plane",
-      ["Poles in the upper half-plane", "上半平面的极点"],
-      [
-        "To integrate a rational function over the real line, close the path with a large semicircle above the axis. The arc contributes nothing when the denominator has degree at least two more than the numerator, and so the integral is $2 \\pi i$ times the residues at the poles in the upper half-plane only.",
-        "要在实轴上积分有理函数，就用上方的大半圆闭合路径。分母次数比分子至少高二时，圆弧的贡献为零，所以积分等于 $2 \\pi i$ 乘上半平面内极点的留数之和，只算这些极点。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 9);
-        const m = rng.int(1, 9);
-        const answer = Q.of(m, a);
-        return ask(
-          [
-            `The integral $\\int_{-\\infty}^{\\infty} \\frac{${m}}{x^2 + ${a * a}} \\, dx$ equals $k \\pi$. What is $k$?`,
-            `积分 $\\int_{-\\infty}^{\\infty} \\frac{${m}}{x^2 + ${a * a}} \\, dx$ 等于 $k \\pi$。$k$ 是多少？`,
-          ],
-          answer,
-          [Q.of(2 * m, a), Q.of(m, a * a), Q.of(m, 2 * a), m],
-          [
-            `The only pole above the axis is $${imaginaryName(a)}$, with residue $\\frac{${m}}{${2 * a}i}$. Multiplying by $2 \\pi i$ gives $${piTimes(answer)}$, so $k = ${answer.toLatex()}$.`,
-            `实轴上方唯一的极点是 $${imaginaryName(a)}$，留数是 $\\frac{${m}}{${2 * a}i}$。乘 $2 \\pi i$ 得 $${piTimes(answer)}$，所以 $k = ${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "an-integral-with-a-cosine",
-      ["An integral with a cosine", "含余弦的积分"],
-      [
-        "For an integrand with $\\cos kx$, use $e^{ikz}$ instead and take the real part at the end, because cosine itself grows off the real axis. With $k > 0$, $e^{ikz}$ decays in the upper half-plane, so by Jordan's lemma the arc vanishes and the upper half-plane is the right place to close.",
-        "被积函数含 $\\cos kx$ 时，要改用 $e^{ikz}$，最后取实部，因为余弦本身离开实轴后会增长。当 $k > 0$ 时，$e^{ikz}$ 在上半平面衰减，由若尔当引理圆弧的贡献为零，所以应在上半平面闭合。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 6);
-        const k = rng.int(1, 6);
-        const decay = power("e", -k * a);
-        const correct = `${piOver(a)} ${decay}`;
-        const frequency = k === 1 ? "x" : `${k}x`;
-        const pole = imaginaryName(a);
-        return choose(
-          rng,
-          [
-            `What is $\\int_{-\\infty}^{\\infty} \\frac{\\cos ${frequency}}{x^2 + ${a * a}} \\, dx$?`,
-            `$\\int_{-\\infty}^{\\infty} \\frac{\\cos ${frequency}}{x^2 + ${a * a}} \\, dx$ 是多少？`,
-          ],
-          same(correct),
-          [
-            same(`${piOver(a)} ${power("e", k * a)}`),
-            same(piOver(a)),
-            same(`${a === 1 ? "2 \\pi" : `\\frac{2 \\pi}{${a}}`} ${decay}`),
-            same(`\\frac{\\pi}{${2 * a}} ${decay}`),
-          ],
-          [
-            `At the pole $${pole}$, the function $\\frac{e^{${frequency === "x" ? "i" : `${k}i`} z}}{z^2 + ${a * a}}$ has residue $\\frac{${decay}}{${2 * a}i}$. Multiplying by $2 \\pi i$ gives $${correct}$. This is real, so it is the value of the cosine integral.`,
-            `在极点 $${pole}$ 处，函数 $\\frac{e^{${frequency === "x" ? "i" : `${k}i`} z}}{z^2 + ${a * a}}$ 的留数是 $\\frac{${decay}}{${2 * a}i}$。乘 $2 \\pi i$ 得 $${correct}$。它是实数，所以就是余弦积分的值。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "poles-in-the-upper-half-plane",
+        ["Poles in the upper half-plane", "上半平面的极点"],
+        [
+          "To integrate a rational function over the real line, close the path with a large semicircle above the axis. The arc contributes nothing when the denominator has degree at least two more than the numerator, and so the integral is $2 \\pi i$ times the residues at the poles in the upper half-plane only.",
+          "要在实轴上积分有理函数，就用上方的大半圆闭合路径。分母次数比分子至少高二时，圆弧的贡献为零，所以积分等于 $2 \\pi i$ 乘上半平面内极点的留数之和，只算这些极点。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 9);
+          const m = rng.int(1, 9);
+          const answer = Q.of(m, a);
+          return ask(
+            [
+              `The integral $\\int_{-\\infty}^{\\infty} \\frac{${m}}{x^2 + ${a * a}} \\, dx$ equals $k \\pi$. What is $k$?`,
+              `积分 $\\int_{-\\infty}^{\\infty} \\frac{${m}}{x^2 + ${a * a}} \\, dx$ 等于 $k \\pi$。$k$ 是多少？`,
+            ],
+            answer,
+            [Q.of(2 * m, a), Q.of(m, a * a), Q.of(m, 2 * a), m],
+            [
+              `The only pole above the axis is $${imaginaryName(a)}$, with residue $\\frac{${m}}{${2 * a}i}$. Multiplying by $2 \\pi i$ gives $${piTimes(answer)}$, so $k = ${answer.toLatex()}$.`,
+              `实轴上方唯一的极点是 $${imaginaryName(a)}$，留数是 $\\frac{${m}}{${2 * a}i}$。乘 $2 \\pi i$ 得 $${piTimes(answer)}$，所以 $k = ${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["improper-integrals-by-residues#poles-in-the-upper-half-plane"],
+    },
+    {
+      ...point(
+        "an-integral-with-a-cosine",
+        ["An integral with a cosine", "含余弦的积分"],
+        [
+          "For an integrand with $\\cos kx$, use $e^{ikz}$ instead and take the real part at the end, because cosine itself grows off the real axis. With $k > 0$, $e^{ikz}$ decays in the upper half-plane, so by Jordan's lemma the arc vanishes and the upper half-plane is the right place to close.",
+          "被积函数含 $\\cos kx$ 时，要改用 $e^{ikz}$，最后取实部，因为余弦本身离开实轴后会增长。当 $k > 0$ 时，$e^{ikz}$ 在上半平面衰减，由若尔当引理圆弧的贡献为零，所以应在上半平面闭合。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 6);
+          const k = rng.int(1, 6);
+          const decay = power("e", -k * a);
+          const correct = `${piOver(a)} ${decay}`;
+          const frequency = k === 1 ? "x" : `${k}x`;
+          const pole = imaginaryName(a);
+          return choose(
+            rng,
+            [
+              `What is $\\int_{-\\infty}^{\\infty} \\frac{\\cos ${frequency}}{x^2 + ${a * a}} \\, dx$?`,
+              `$\\int_{-\\infty}^{\\infty} \\frac{\\cos ${frequency}}{x^2 + ${a * a}} \\, dx$ 是多少？`,
+            ],
+            same(correct),
+            [
+              same(`${piOver(a)} ${power("e", k * a)}`),
+              same(piOver(a)),
+              same(`${a === 1 ? "2 \\pi" : `\\frac{2 \\pi}{${a}}`} ${decay}`),
+              same(`\\frac{\\pi}{${2 * a}} ${decay}`),
+            ],
+            [
+              `At the pole $${pole}$, the function $\\frac{e^{${frequency === "x" ? "i" : `${k}i`} z}}{z^2 + ${a * a}}$ has residue $\\frac{${decay}}{${2 * a}i}$. Multiplying by $2 \\pi i$ gives $${correct}$. This is real, so it is the value of the cosine integral.`,
+              `在极点 $${pole}$ 处，函数 $\\frac{e^{${frequency === "x" ? "i" : `${k}i`} z}}{z^2 + ${a * a}}$ 的留数是 $\\frac{${decay}}{${2 * a}i}$。乘 $2 \\pi i$ 得 $${correct}$。它是实数，所以就是余弦积分的值。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["improper-integrals-by-residues#an-integral-with-a-cosine"],
+    },
   ],
 );
 
@@ -811,38 +837,41 @@ const crossRatio = topic(
         );
       },
     ),
-    point(
-      "what-a-mobius-map-does-to-circles",
-      ["What a Möbius map does to circles", "默比乌斯变换如何作用于圆"],
-      [
-        "A Möbius transformation sends every line or circle to a line or circle. The image is a line exactly when the original passes through the pole of the transformation, because that point goes to infinity. For $w = 1 / z$, circles through the origin become lines and all other circles stay circles.",
-        "默比乌斯变换把直线或圆映成直线或圆。当原来的直线或圆经过变换的极点时，像才是直线，因为那一点被映到无穷远。对 $w = 1 / z$，经过原点的圆变成直线，其他圆仍是圆。",
-      ],
-      (rng) => {
-        const r = rng.int(1, 9);
-        const through = rng.bool();
-        const center = through ? r : r + rng.int(1, 5);
-        const line: Pair = ["A line", "一条直线"];
-        const circle: Pair = ["A circle", "一个圆"];
-        return choose(
-          rng,
-          [
-            `Under $w = \\frac{1}{z}$, what is the image of the circle $|z - ${center}| = ${r}$?`,
-            `在 $w = \\frac{1}{z}$ 下，圆 $|z - ${center}| = ${r}$ 的像是什么？`,
-          ],
-          through ? line : circle,
-          [through ? circle : line, ["A pair of lines", "两条直线"], ["A parabola", "一条抛物线"]],
-          [
-            through
-              ? `The circle passes through 0, since $|0 - ${center}| = ${r}$. That point goes to infinity, so the image is a line.`
-              : `The distance from 0 to the center is ${center}, which is not the radius ${r}. So the circle misses 0, and its image is a circle.`,
-            through
-              ? `因为 $|0 - ${center}| = ${r}$，圆经过 0。这一点被映到无穷远，所以像是直线。`
-              : `0 到圆心的距离是 ${center}，不等于半径 ${r}。所以圆不经过 0，像是圆。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "what-a-mobius-map-does-to-circles",
+        ["What a Möbius map does to circles", "默比乌斯变换如何作用于圆"],
+        [
+          "A Möbius transformation sends every line or circle to a line or circle. The image is a line exactly when the original passes through the pole of the transformation, because that point goes to infinity. For $w = 1 / z$, circles through the origin become lines and all other circles stay circles.",
+          "默比乌斯变换把直线或圆映成直线或圆。当原来的直线或圆经过变换的极点时，像才是直线，因为那一点被映到无穷远。对 $w = 1 / z$，经过原点的圆变成直线，其他圆仍是圆。",
+        ],
+        (rng) => {
+          const r = rng.int(1, 9);
+          const through = rng.bool();
+          const center = through ? r : r + rng.int(1, 5);
+          const line: Pair = ["A line", "一条直线"];
+          const circle: Pair = ["A circle", "一个圆"];
+          return choose(
+            rng,
+            [
+              `Under $w = \\frac{1}{z}$, what is the image of the circle $|z - ${center}| = ${r}$?`,
+              `在 $w = \\frac{1}{z}$ 下，圆 $|z - ${center}| = ${r}$ 的像是什么？`,
+            ],
+            through ? line : circle,
+            [through ? circle : line, ["A pair of lines", "两条直线"], ["A parabola", "一条抛物线"]],
+            [
+              through
+                ? `The circle passes through 0, since $|0 - ${center}| = ${r}$. That point goes to infinity, so the image is a line.`
+                : `The distance from 0 to the center is ${center}, which is not the radius ${r}. So the circle misses 0, and its image is a circle.`,
+              through
+                ? `因为 $|0 - ${center}| = ${r}$，圆经过 0。这一点被映到无穷远，所以像是直线。`
+                : `0 到圆心的距离是 ${center}，不等于半径 ${r}。所以圆不经过 0，像是圆。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-cross-ratio#what-a-mobius-map-does-to-circles"],
+    },
   ],
 );
 
@@ -853,67 +882,73 @@ const regionMaps = topic(
   ["conformal-maps", "the-complex-exponential-function"],
   [],
   [
-    point(
-      "opening-a-wedge",
-      ["Opening a wedge", "展开楔形"],
-      [
-        "The map $w = z^k$ multiplies every argument by $k$, so it opens a wedge with angle $\\theta$ at the origin into a wedge with angle $k \\theta$. To send a wedge onto the upper half-plane, whose angle is $\\pi$, choose $k = \\pi / \\theta$. Conformality fails only at the corner, where the derivative vanishes.",
-        "映射 $w = z^k$ 把每个辐角乘 $k$，所以它把顶点在原点、角度为 $\\theta$ 的楔形展开成角度为 $k \\theta$ 的楔形。要把楔形映到角度为 $\\pi$ 的上半平面，取 $k = \\pi / \\theta$。共形性只在角点失效，那里导数为零。",
-      ],
-      (rng) => {
-        const denominator = rng.int(2, 12);
-        const numerator = rng.pick(
-          Array.from({ length: denominator - 1 }, (_, i) => i + 1).filter(
-            (v) => Q.of(v, denominator).toLatex() === `\\frac{${v}}{${denominator}}`,
-          ),
-        );
-        const answer = Q.of(denominator, numerator);
-        const theta = numerator === 1 ? `\\frac{\\pi}{${denominator}}` : `\\frac{${numerator} \\pi}{${denominator}}`;
-        return ask(
-          [
-            `The map $w = z^k$ sends the wedge $0 < \\arg z < ${theta}$ onto the upper half-plane. What is $k$?`,
-            `映射 $w = z^k$ 把楔形 $0 < \\arg z < ${theta}$ 映到上半平面。$k$ 是多少？`,
-          ],
-          answer,
-          [Q.of(numerator, denominator), 2 * denominator, denominator, Q.of(2 * denominator, numerator)],
-          [
-            `The angle must grow from $${theta}$ to $\\pi$, and the map multiplies angles by $k$. So $k = \\pi \\div ${theta} = ${answer.toLatex()}$.`,
-            `角度要从 $${theta}$ 增大到 $\\pi$，而映射把角度乘 $k$。所以 $k = \\pi \\div ${theta} = ${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "opening-a-strip",
-      ["Opening a strip", "展开带形"],
-      [
-        "The map $w = e^z$ sends the horizontal line at height $y$ to the ray at angle $y$. So a horizontal strip of height $\\pi$ goes onto a half-plane, and a taller or shorter strip goes onto a wedge. Rescaling first by $w = e^{cz}$ lets you match a strip of any height.",
-        "映射 $w = e^z$ 把高度为 $y$ 的水平线映成角度为 $y$ 的射线。所以高度为 $\\pi$ 的水平带被映到半平面，更高或更矮的带被映到楔形。先用 $w = e^{cz}$ 缩放，就能匹配任意高度的带形。",
-      ],
-      (rng) => {
-        const h = rng.int(2, 9);
-        const [q, enRegion, zhRegion] = rng.pick([
-          [1, "the upper half-plane", "上半平面"],
-          [2, "the first quadrant $0 < \\arg w < \\frac{\\pi}{2}$", "第一象限 $0 < \\arg w < \\frac{\\pi}{2}$"],
-          [3, "the wedge $0 < \\arg w < \\frac{\\pi}{3}$", "楔形 $0 < \\arg w < \\frac{\\pi}{3}$"],
-          [4, "the wedge $0 < \\arg w < \\frac{\\pi}{4}$", "楔形 $0 < \\arg w < \\frac{\\pi}{4}$"],
-        ] as const);
-        const answer = Q.of(1, h * q);
-        const angle = piOver(q);
-        return ask(
-          [
-            `The map $w = e^{cz}$, with $c > 0$, sends the strip $0 < \\operatorname{Im} z < ${h} \\pi$ onto ${enRegion}. What is $c$?`,
-            `映射 $w = e^{cz}$（$c > 0$）把带形 $0 < \\operatorname{Im} z < ${h} \\pi$ 映到${zhRegion}。$c$ 是多少？`,
-          ],
-          answer,
-          [h, Q.of(2, h * q), Q.of(1, 2 * h * q), Q.of(q, h), 1],
-          [
-            `The top of the strip must map to the ray at angle $${angle}$, so $c \\cdot ${h} \\pi = ${angle}$, and $c = ${answer.toLatex()}$.`,
-            `带的上边界必须映到角度为 $${angle}$ 的射线，所以 $c \\cdot ${h} \\pi = ${angle}$，$c = ${answer.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "opening-a-wedge",
+        ["Opening a wedge", "展开楔形"],
+        [
+          "The map $w = z^k$ multiplies every argument by $k$, so it opens a wedge with angle $\\theta$ at the origin into a wedge with angle $k \\theta$. To send a wedge onto the upper half-plane, whose angle is $\\pi$, choose $k = \\pi / \\theta$. Conformality fails only at the corner, where the derivative vanishes.",
+          "映射 $w = z^k$ 把每个辐角乘 $k$，所以它把顶点在原点、角度为 $\\theta$ 的楔形展开成角度为 $k \\theta$ 的楔形。要把楔形映到角度为 $\\pi$ 的上半平面，取 $k = \\pi / \\theta$。共形性只在角点失效，那里导数为零。",
+        ],
+        (rng) => {
+          const denominator = rng.int(2, 12);
+          const numerator = rng.pick(
+            Array.from({ length: denominator - 1 }, (_, i) => i + 1).filter(
+              (v) => Q.of(v, denominator).toLatex() === `\\frac{${v}}{${denominator}}`,
+            ),
+          );
+          const answer = Q.of(denominator, numerator);
+          const theta = numerator === 1 ? `\\frac{\\pi}{${denominator}}` : `\\frac{${numerator} \\pi}{${denominator}}`;
+          return ask(
+            [
+              `The map $w = z^k$ sends the wedge $0 < \\arg z < ${theta}$ onto the upper half-plane. What is $k$?`,
+              `映射 $w = z^k$ 把楔形 $0 < \\arg z < ${theta}$ 映到上半平面。$k$ 是多少？`,
+            ],
+            answer,
+            [Q.of(numerator, denominator), 2 * denominator, denominator, Q.of(2 * denominator, numerator)],
+            [
+              `The angle must grow from $${theta}$ to $\\pi$, and the map multiplies angles by $k$. So $k = \\pi \\div ${theta} = ${answer.toLatex()}$.`,
+              `角度要从 $${theta}$ 增大到 $\\pi$，而映射把角度乘 $k$。所以 $k = \\pi \\div ${theta} = ${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["conformal-maps-of-regions#opening-a-wedge"],
+    },
+    {
+      ...point(
+        "opening-a-strip",
+        ["Opening a strip", "展开带形"],
+        [
+          "The map $w = e^z$ sends the horizontal line at height $y$ to the ray at angle $y$. So a horizontal strip of height $\\pi$ goes onto a half-plane, and a taller or shorter strip goes onto a wedge. Rescaling first by $w = e^{cz}$ lets you match a strip of any height.",
+          "映射 $w = e^z$ 把高度为 $y$ 的水平线映成角度为 $y$ 的射线。所以高度为 $\\pi$ 的水平带被映到半平面，更高或更矮的带被映到楔形。先用 $w = e^{cz}$ 缩放，就能匹配任意高度的带形。",
+        ],
+        (rng) => {
+          const h = rng.int(2, 9);
+          const [q, enRegion, zhRegion] = rng.pick([
+            [1, "the upper half-plane", "上半平面"],
+            [2, "the first quadrant $0 < \\arg w < \\frac{\\pi}{2}$", "第一象限 $0 < \\arg w < \\frac{\\pi}{2}$"],
+            [3, "the wedge $0 < \\arg w < \\frac{\\pi}{3}$", "楔形 $0 < \\arg w < \\frac{\\pi}{3}$"],
+            [4, "the wedge $0 < \\arg w < \\frac{\\pi}{4}$", "楔形 $0 < \\arg w < \\frac{\\pi}{4}$"],
+          ] as const);
+          const answer = Q.of(1, h * q);
+          const angle = piOver(q);
+          return ask(
+            [
+              `The map $w = e^{cz}$, with $c > 0$, sends the strip $0 < \\operatorname{Im} z < ${h} \\pi$ onto ${enRegion}. What is $c$?`,
+              `映射 $w = e^{cz}$（$c > 0$）把带形 $0 < \\operatorname{Im} z < ${h} \\pi$ 映到${zhRegion}。$c$ 是多少？`,
+            ],
+            answer,
+            [h, Q.of(2, h * q), Q.of(1, 2 * h * q), Q.of(q, h), 1],
+            [
+              `The top of the strip must map to the ray at angle $${angle}$, so $c \\cdot ${h} \\pi = ${angle}$, and $c = ${answer.toLatex()}$.`,
+              `带的上边界必须映到角度为 $${angle}$ 的射线，所以 $c \\cdot ${h} \\pi = ${angle}$，$c = ${answer.toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["conformal-maps-of-regions#opening-a-strip"],
+    },
   ],
 );
 

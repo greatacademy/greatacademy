@@ -5,6 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -1176,6 +1177,7 @@ const countingAnIndexedFamily: KnowledgePointDef = {
 
 const rowsWithKTrue: KnowledgePointDef = {
   id: "rows-with-a-given-number-of-true-variables",
+  figure: proofDrawings1["truth-tables#rows-with-a-given-number-of-true-variables"],
   title: t("Rows with a given number of true variables", "恰有给定个数变量为真的行"),
   explanation: t(
     "A row of a truth table is one choice of true or false for every variable, so it is the same thing as the subset of variables that are true. Rows with a fixed number of true variables therefore match subsets of a fixed size. This is why the entries of Pascal's triangle add up to the total number of rows.",

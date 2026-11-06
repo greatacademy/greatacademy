@@ -5,6 +5,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q, svgDocument } from "@ga/subject-math";
+import { linearProgrammingDrawings1 } from "../explanation-drawings-linear-programming-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, drawn, label, node } from "./figure-reading-more.ts";
@@ -98,42 +99,45 @@ function bestCorner(points: readonly Point[], a: number, b: number) {
   return { top, values, index: values.indexOf(top), unique: values.filter((v) => v === top).length === 1 };
 }
 
-const maxAtCorner = point(
-  "the-maximum-on-a-drawn-polygon",
-  ["The maximum on a drawn polygon", "图中多边形上的最大值"],
-  [
-    "A linear objective on a bounded feasible polygon reaches its maximum at a corner. So the graphical method reads the coordinates of each corner, substitutes them into the objective and takes the largest value. The drawing supplies the corners, which saves solving for the intersections of the constraint lines one pair at a time.",
-    "线性目标函数在有界可行多边形上的最大值在顶点取到。所以图解法读出每个顶点的坐标，代入目标函数，取最大的值。图提供了这些顶点，省去了逐对求约束线交点的麻烦。",
-  ],
-  (rng) => {
-    const pts = rng.pick(feasiblePolygons);
-    let [a, b] = [rng.int(1, 5), rng.int(1, 5)];
-    if (rng.bool(0.3)) b = -b;
-    let best = bestCorner(pts, a, b);
-    if (!best.unique) {
-      a += 1;
-      best = bestCorner(pts, a, b);
-    }
-    const sorted = [...new Set(best.values)].sort((u, v) => v - u);
-    const at = pts[best.index] as Point;
-    return ask(
-      [
-        `What is the maximum of $${objective(a, b)}$ over the shaded feasible region?`,
-        `$${objective(a, b)}$ 在阴影可行域上的最大值是多少？`,
-      ],
-      best.top,
-      [sorted[1] ?? best.top + 1, sorted[sorted.length - 1] ?? best.top + 2, at[0] + at[1] === best.top ? best.top + 3 : at[0] + at[1]],
-      [
-        `Checking the corners, the largest value is at $(${at[0]}, ${at[1]})$, where the objective equals $${best.top}$. A linear objective always has its maximum at a corner of a bounded polygon.`,
-        `检验各顶点，最大值在 $(${at[0]}, ${at[1]})$ 处，目标函数等于 $${best.top}$。线性目标函数在有界多边形上的最大值总在顶点取到。`,
-      ],
-      fig(quadrant, region(pts), [
-        `A polygon with corners ${pts.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-        `顶点为 ${pts.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的多边形。`,
-      ]),
-    );
-  },
-);
+const maxAtCorner = {
+  ...point(
+    "the-maximum-on-a-drawn-polygon",
+    ["The maximum on a drawn polygon", "图中多边形上的最大值"],
+    [
+      "A linear objective on a bounded feasible polygon reaches its maximum at a corner. So the graphical method reads the coordinates of each corner, substitutes them into the objective and takes the largest value. The drawing supplies the corners, which saves solving for the intersections of the constraint lines one pair at a time.",
+      "线性目标函数在有界可行多边形上的最大值在顶点取到。所以图解法读出每个顶点的坐标，代入目标函数，取最大的值。图提供了这些顶点，省去了逐对求约束线交点的麻烦。",
+    ],
+    (rng) => {
+      const pts = rng.pick(feasiblePolygons);
+      let [a, b] = [rng.int(1, 5), rng.int(1, 5)];
+      if (rng.bool(0.3)) b = -b;
+      let best = bestCorner(pts, a, b);
+      if (!best.unique) {
+        a += 1;
+        best = bestCorner(pts, a, b);
+      }
+      const sorted = [...new Set(best.values)].sort((u, v) => v - u);
+      const at = pts[best.index] as Point;
+      return ask(
+        [
+          `What is the maximum of $${objective(a, b)}$ over the shaded feasible region?`,
+          `$${objective(a, b)}$ 在阴影可行域上的最大值是多少？`,
+        ],
+        best.top,
+        [sorted[1] ?? best.top + 1, sorted[sorted.length - 1] ?? best.top + 2, at[0] + at[1] === best.top ? best.top + 3 : at[0] + at[1]],
+        [
+          `Checking the corners, the largest value is at $(${at[0]}, ${at[1]})$, where the objective equals $${best.top}$. A linear objective always has its maximum at a corner of a bounded polygon.`,
+          `检验各顶点，最大值在 $(${at[0]}, ${at[1]})$ 处，目标函数等于 $${best.top}$。线性目标函数在有界多边形上的最大值总在顶点取到。`,
+        ],
+        fig(quadrant, region(pts), [
+          `A polygon with corners ${pts.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+          `顶点为 ${pts.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的多边形。`,
+        ]),
+      );
+    },
+  ),
+  figure: linearProgrammingDrawings1["the-graphical-method-for-linear-programs#the-maximum-on-a-drawn-polygon"],
+};
 
 const constraintOfEdge = point(
   "the-constraint-of-a-drawn-edge",
@@ -181,117 +185,123 @@ const constraintOfEdge = point(
   },
 );
 
-const extremeCount = point(
-  "counting-extreme-points-in-a-drawing",
-  ["Counting extreme points in a drawing", "数图中的极点"],
-  [
-    "An extreme point of a polyhedron is a point that does not lie in the middle of any segment within the set. For a polygon, these are the corners where the boundary really turns. A marked point on the middle of an edge is not extreme, even when a constraint line passes through it, because it lies between two corners.",
-    "多面体的极点是不位于集合内任何线段中间的点。对多边形来说，这些就是边界真正转弯的顶点。标在边中间的点不是极点，即使有约束线经过它，因为它位于两个顶点之间。",
-  ],
-  (rng) => {
-    const pts = rng.pick(feasiblePolygons);
-    const n = pts.length;
-    const extras = rng.int(0, 3);
-    const edges = rng.sample(
-      Array.from({ length: n }, (_, i) => i),
-      extras,
-    );
-    const onEdges = edges.map((i): Point => {
-      const [p, q] = [pts[i] as Point, pts[(i + 1) % n] as Point];
-      return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
-    });
-    const all = [...pts, ...onEdges];
-    return ask(
-      [
-        "Several points on the boundary of the shaded feasible region are marked. How many of the marked points are extreme points of the region?",
-        "阴影可行域的边界上标出了若干点。标出的点中有多少是该区域的极点？",
-      ],
-      n,
-      [all.length === n ? n + 1 : all.length, n - 1, n + 2],
-      [
-        extras === 0
-          ? `Each marked point is a corner where the boundary turns, so all $${n}$ are extreme.`
-          : `The boundary turns at $${n}$ of the marked points. The other $${extras}$ lie in the middle of edges, so they are between two points of the region and are not extreme.`,
-        extras === 0
-          ? `标出的每个点都是边界转弯的顶点，所以 $${n}$ 个都是极点。`
-          : `边界在标出的 $${n}$ 个点处转弯。另外 $${extras}$ 个点在边的中间，位于区域内两点之间，所以不是极点。`,
-      ],
-      fig(
-        quadrant,
-        [...region(pts), ...all.map((p): PlaneMark => ({ kind: "point", at: p }))],
+const extremeCount = {
+  ...point(
+    "counting-extreme-points-in-a-drawing",
+    ["Counting extreme points in a drawing", "数图中的极点"],
+    [
+      "An extreme point of a polyhedron is a point that does not lie in the middle of any segment within the set. For a polygon, these are the corners where the boundary really turns. A marked point on the middle of an edge is not extreme, even when a constraint line passes through it, because it lies between two corners.",
+      "多面体的极点是不位于集合内任何线段中间的点。对多边形来说，这些就是边界真正转弯的顶点。标在边中间的点不是极点，即使有约束线经过它，因为它位于两个顶点之间。",
+    ],
+    (rng) => {
+      const pts = rng.pick(feasiblePolygons);
+      const n = pts.length;
+      const extras = rng.int(0, 3);
+      const edges = rng.sample(
+        Array.from({ length: n }, (_, i) => i),
+        extras,
+      );
+      const onEdges = edges.map((i): Point => {
+        const [p, q] = [pts[i] as Point, pts[(i + 1) % n] as Point];
+        return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+      });
+      const all = [...pts, ...onEdges];
+      return ask(
         [
-          `A polygon with ${all.length} points marked on its boundary, at ${all.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-          `一个多边形，边界上标出了 ${all.length} 个点，分别在 ${all.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+          "Several points on the boundary of the shaded feasible region are marked. How many of the marked points are extreme points of the region?",
+          "阴影可行域的边界上标出了若干点。标出的点中有多少是该区域的极点？",
         ],
-      ),
-    );
-  },
-);
+        n,
+        [all.length === n ? n + 1 : all.length, n - 1, n + 2],
+        [
+          extras === 0
+            ? `Each marked point is a corner where the boundary turns, so all $${n}$ are extreme.`
+            : `The boundary turns at $${n}$ of the marked points. The other $${extras}$ lie in the middle of edges, so they are between two points of the region and are not extreme.`,
+          extras === 0
+            ? `标出的每个点都是边界转弯的顶点，所以 $${n}$ 个都是极点。`
+            : `边界在标出的 $${n}$ 个点处转弯。另外 $${extras}$ 个点在边的中间，位于区域内两点之间，所以不是极点。`,
+        ],
+        fig(
+          quadrant,
+          [...region(pts), ...all.map((p): PlaneMark => ({ kind: "point", at: p }))],
+          [
+            `A polygon with ${all.length} points marked on its boundary, at ${all.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+            `一个多边形，边界上标出了 ${all.length} 个点，分别在 ${all.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearProgrammingDrawings1["polyhedra-and-extreme-points#counting-extreme-points-in-a-drawing"],
+};
 
-const alternativeOptima = point(
-  "the-objective-with-many-optimal-points",
-  ["The objective with many optimal points", "有多个最优点的目标函数"],
-  [
-    "A linear program has many optimal solutions when the level lines of the objective are parallel to an edge, and that edge is the last part of the region reached. Then every point of the edge has the same value. So the coefficient ratio of the objective must match the direction of an edge that faces the direction of improvement.",
-    "当目标函数的等值线与一条边平行，并且这条边是区域最后到达的部分时，线性规划有多个最优解。此时边上每一点的值都相同。所以目标系数的比必须与朝向改进方向的那条边的方向相符。",
-  ],
-  (rng) => {
-    const [a, b] = rng.pick<Point>([
-      [1, 1],
-      [1, 2],
-      [2, 1],
-      [2, 3],
-      [3, 2],
-      [1, 3],
-      [3, 1],
-      [3, 4],
-      [4, 3],
-    ]);
-    const most = Math.floor(9 / Math.max(a, b));
-    const k = rng.int(3, Math.max(3, most));
-    const [dx, dy] = [rng.int(0, 1), rng.int(0, 1)];
-    const level = k * a * b + a * dx + b * dy;
-    const [xCut, yCut] = [k * b, k * a];
-    const polygon = (
-      [
-        [0, 0],
-        [xCut - b, 0],
-        [xCut - b, a],
-        [b, yCut - a],
-        [0, yCut - a],
-      ] as const
-    ).map(([x, y]): Point => [x + dx, y + dy]);
-    const asPair = (u: number, v: number): Pair => [`$${objective(u, v)}$`, `$${objective(u, v)}$`];
-    const wrongPairs = (
-      [
-        [b, a],
-        [a + 1, b],
-        [a, b + 1],
-        [a + 2, b + 1],
-        [a + 1, b + 3],
-      ] as const
-    )
-      .filter(([u, v]) => u * b !== v * a)
-      .map(([u, v]) => asPair(u, v));
-    return choose(
-      rng,
-      [
-        "For which objective, when maximized over the shaded region, is every point of the slanted edge optimal?",
-        "在阴影区域上最大化哪个目标函数时，斜边上的每一点都是最优的？",
-      ],
-      asPair(a, b),
-      wrongPairs,
-      [
-        `The slanted edge has slope $${Q.of(-a, b).toLatex()}$, and it lies on a line $${objective(a, b)} = ${level}$, so that objective is constant along the edge and largest there.`,
-        `斜边的斜率是 $${Q.of(-a, b).toLatex()}$，它在直线 $${objective(a, b)} = ${level}$ 上，所以这个目标函数沿边不变，并且在那里最大。`,
-      ],
-      fig({ xMin: -1, xMax: Math.max(xCut, yCut) + 2, yMin: -1, yMax: Math.max(xCut, yCut) + 2 }, region(polygon), [
-        `A polygon with corners ${polygon.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-        `顶点为 ${polygon.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的多边形。`,
-      ]),
-    );
-  },
-);
+const alternativeOptima = {
+  ...point(
+    "the-objective-with-many-optimal-points",
+    ["The objective with many optimal points", "有多个最优点的目标函数"],
+    [
+      "A linear program has many optimal solutions when the level lines of the objective are parallel to an edge, and that edge is the last part of the region reached. Then every point of the edge has the same value. So the coefficient ratio of the objective must match the direction of an edge that faces the direction of improvement.",
+      "当目标函数的等值线与一条边平行，并且这条边是区域最后到达的部分时，线性规划有多个最优解。此时边上每一点的值都相同。所以目标系数的比必须与朝向改进方向的那条边的方向相符。",
+    ],
+    (rng) => {
+      const [a, b] = rng.pick<Point>([
+        [1, 1],
+        [1, 2],
+        [2, 1],
+        [2, 3],
+        [3, 2],
+        [1, 3],
+        [3, 1],
+        [3, 4],
+        [4, 3],
+      ]);
+      const most = Math.floor(9 / Math.max(a, b));
+      const k = rng.int(3, Math.max(3, most));
+      const [dx, dy] = [rng.int(0, 1), rng.int(0, 1)];
+      const level = k * a * b + a * dx + b * dy;
+      const [xCut, yCut] = [k * b, k * a];
+      const polygon = (
+        [
+          [0, 0],
+          [xCut - b, 0],
+          [xCut - b, a],
+          [b, yCut - a],
+          [0, yCut - a],
+        ] as const
+      ).map(([x, y]): Point => [x + dx, y + dy]);
+      const asPair = (u: number, v: number): Pair => [`$${objective(u, v)}$`, `$${objective(u, v)}$`];
+      const wrongPairs = (
+        [
+          [b, a],
+          [a + 1, b],
+          [a, b + 1],
+          [a + 2, b + 1],
+          [a + 1, b + 3],
+        ] as const
+      )
+        .filter(([u, v]) => u * b !== v * a)
+        .map(([u, v]) => asPair(u, v));
+      return choose(
+        rng,
+        [
+          "For which objective, when maximized over the shaded region, is every point of the slanted edge optimal?",
+          "在阴影区域上最大化哪个目标函数时，斜边上的每一点都是最优的？",
+        ],
+        asPair(a, b),
+        wrongPairs,
+        [
+          `The slanted edge has slope $${Q.of(-a, b).toLatex()}$, and it lies on a line $${objective(a, b)} = ${level}$, so that objective is constant along the edge and largest there.`,
+          `斜边的斜率是 $${Q.of(-a, b).toLatex()}$，它在直线 $${objective(a, b)} = ${level}$ 上，所以这个目标函数沿边不变，并且在那里最大。`,
+        ],
+        fig({ xMin: -1, xMax: Math.max(xCut, yCut) + 2, yMin: -1, yMax: Math.max(xCut, yCut) + 2 }, region(polygon), [
+          `A polygon with corners ${polygon.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+          `顶点为 ${polygon.map((p) => `(${p[0]}, ${p[1]})`).join("，")} 的多边形。`,
+        ]),
+      );
+    },
+  ),
+  figure: linearProgrammingDrawings1["alternative-optimal-solutions#the-objective-with-many-optimal-points"],
+};
 
 const unboundedObjective = point(
   "whether-a-drawn-unbounded-region-has-a-maximum",
@@ -365,68 +375,71 @@ const unboundedObjective = point(
   },
 );
 
-const infeasibleHalfPlanes = point(
-  "half-planes-that-cannot-all-hold",
-  ["Half-planes that cannot all hold", "不能同时成立的半平面"],
-  [
-    "A linear program is infeasible when its constraints have no common point. In a drawing, each constraint is a half-plane, and the feasible set is the part shaded by all of them. Parallel boundaries with shading facing away from each other show the simplest case, and such a pair also yields a Farkas certificate of infeasibility.",
-    "当约束没有公共点时，线性规划不可行。在图中，每个约束是一个半平面，可行集是被所有约束覆盖的部分。边界平行且阴影方向彼此背离是最简单的情况，这样的一对约束也给出法卡斯不可行证书。",
-  ],
-  (rng) => {
-    const vertical = rng.bool();
-    const lo = rng.int(1, 3);
-    const gap = rng.int(1, 3);
-    const hi = lo + gap;
-    const empty = rng.bool();
-    const v = vertical ? "x" : "y";
-    const line = (c: number): PlaneMark =>
-      vertical ? { kind: "segment", a: [c, -1], b: [c, 9], accent: true } : { kind: "segment", a: [-1, c], b: [9, c], accent: true };
-    // Short arrows show which side each constraint keeps.
-    const arrowsAt = (c: number, dir: number): PlaneMark[] =>
-      [1, 4, 7].map(
-        (t0): PlaneMark =>
-          vertical
-            ? { kind: "arrow", from: [c, t0], to: [c + dir * 0.9, t0], accent: true }
-            : { kind: "arrow", from: [t0, c], to: [t0, c + dir * 0.9], accent: true },
-      );
-    const [dirLow, dirHigh] = empty ? [-1, 1] : [1, -1];
-    const right: Pair = empty
-      ? ["The program is infeasible", "这个规划不可行"]
-      : [`The feasible set is the strip with $${lo} \\leq ${v} \\leq ${hi}$`, `可行集是满足 $${lo} \\leq ${v} \\leq ${hi}$ 的带形区域`];
-    const others: Pair[] = [
-      ["The program is infeasible", "这个规划不可行"],
-      [`The feasible set is the strip with $${lo} \\leq ${v} \\leq ${hi}$`, `可行集是满足 $${lo} \\leq ${v} \\leq ${hi}$ 的带形区域`],
-      [`The feasible set is the half-plane $${v} \\geq ${hi}$`, `可行集是半平面 $${v} \\geq ${hi}$`],
-      [`The feasible set is the half-plane $${v} \\leq ${lo}$`, `可行集是半平面 $${v} \\leq ${lo}$`],
-    ];
-    return choose(
-      rng,
-      [
-        "Each thick line is the boundary of a constraint, and its arrows point to the side that the constraint keeps. What is the feasible set of the two constraints together?",
-        "每条粗线是一个约束的边界，箭头指向约束保留的一侧。两个约束合起来的可行集是什么？",
-      ],
-      right,
-      others.filter((o) => o[0] !== right[0]),
-      empty
-        ? [
-            `The arrows point away from each other, so a point would have to be on the far side of both lines at once. No point does that, so there is nothing feasible.`,
-            `箭头方向彼此背离，一个点必须同时在两条线的外侧。没有这样的点，所以没有可行点。`,
-          ]
-        : [
-            `The arrows point toward each other, so a point must be between the lines at $${lo}$ and $${hi}$, which form a strip.`,
-            `箭头方向彼此相向，所以点必须在 $${lo}$ 和 $${hi}$ 处的两条线之间，构成带形区域。`,
-          ],
-      fig(
-        quadrant,
-        [line(lo), line(hi), ...arrowsAt(lo, dirLow), ...arrowsAt(hi, dirHigh)],
+const infeasibleHalfPlanes = {
+  ...point(
+    "half-planes-that-cannot-all-hold",
+    ["Half-planes that cannot all hold", "不能同时成立的半平面"],
+    [
+      "A linear program is infeasible when its constraints have no common point. In a drawing, each constraint is a half-plane, and the feasible set is the part shaded by all of them. Parallel boundaries with shading facing away from each other show the simplest case, and such a pair also yields a Farkas certificate of infeasibility.",
+      "当约束没有公共点时，线性规划不可行。在图中，每个约束是一个半平面，可行集是被所有约束覆盖的部分。边界平行且阴影方向彼此背离是最简单的情况，这样的一对约束也给出法卡斯不可行证书。",
+    ],
+    (rng) => {
+      const vertical = rng.bool();
+      const lo = rng.int(1, 3);
+      const gap = rng.int(1, 3);
+      const hi = lo + gap;
+      const empty = rng.bool();
+      const v = vertical ? "x" : "y";
+      const line = (c: number): PlaneMark =>
+        vertical ? { kind: "segment", a: [c, -1], b: [c, 9], accent: true } : { kind: "segment", a: [-1, c], b: [9, c], accent: true };
+      // Short arrows show which side each constraint keeps.
+      const arrowsAt = (c: number, dir: number): PlaneMark[] =>
+        [1, 4, 7].map(
+          (t0): PlaneMark =>
+            vertical
+              ? { kind: "arrow", from: [c, t0], to: [c + dir * 0.9, t0], accent: true }
+              : { kind: "arrow", from: [t0, c], to: [t0, c + dir * 0.9], accent: true },
+        );
+      const [dirLow, dirHigh] = empty ? [-1, 1] : [1, -1];
+      const right: Pair = empty
+        ? ["The program is infeasible", "这个规划不可行"]
+        : [`The feasible set is the strip with $${lo} \\leq ${v} \\leq ${hi}$`, `可行集是满足 $${lo} \\leq ${v} \\leq ${hi}$ 的带形区域`];
+      const others: Pair[] = [
+        ["The program is infeasible", "这个规划不可行"],
+        [`The feasible set is the strip with $${lo} \\leq ${v} \\leq ${hi}$`, `可行集是满足 $${lo} \\leq ${v} \\leq ${hi}$ 的带形区域`],
+        [`The feasible set is the half-plane $${v} \\geq ${hi}$`, `可行集是半平面 $${v} \\geq ${hi}$`],
+        [`The feasible set is the half-plane $${v} \\leq ${lo}$`, `可行集是半平面 $${v} \\leq ${lo}$`],
+      ];
+      return choose(
+        rng,
         [
-          `Boundaries at ${v} = ${lo} and ${v} = ${hi}, with arrows pointing ${empty ? "away from each other" : "toward each other"}.`,
-          `边界在 ${v} = ${lo} 和 ${v} = ${hi}，箭头方向${empty ? "彼此背离" : "彼此相向"}。`,
+          "Each thick line is the boundary of a constraint, and its arrows point to the side that the constraint keeps. What is the feasible set of the two constraints together?",
+          "每条粗线是一个约束的边界，箭头指向约束保留的一侧。两个约束合起来的可行集是什么？",
         ],
-      ),
-    );
-  },
-);
+        right,
+        others.filter((o) => o[0] !== right[0]),
+        empty
+          ? [
+              `The arrows point away from each other, so a point would have to be on the far side of both lines at once. No point does that, so there is nothing feasible.`,
+              `箭头方向彼此背离，一个点必须同时在两条线的外侧。没有这样的点，所以没有可行点。`,
+            ]
+          : [
+              `The arrows point toward each other, so a point must be between the lines at $${lo}$ and $${hi}$, which form a strip.`,
+              `箭头方向彼此相向，所以点必须在 $${lo}$ 和 $${hi}$ 处的两条线之间，构成带形区域。`,
+            ],
+        fig(
+          quadrant,
+          [line(lo), line(hi), ...arrowsAt(lo, dirLow), ...arrowsAt(hi, dirHigh)],
+          [
+            `Boundaries at ${v} = ${lo} and ${v} = ${hi}, with arrows pointing ${empty ? "away from each other" : "toward each other"}.`,
+            `边界在 ${v} = ${lo} 和 ${v} = ${hi}，箭头方向${empty ? "彼此背离" : "彼此相向"}。`,
+          ],
+        ),
+      );
+    },
+  ),
+  figure: linearProgrammingDrawings1["infeasible-programs-and-farkas-lemma#half-planes-that-cannot-all-hold"],
+};
 
 const rangingCoefficient = point(
   "how-far-an-objective-can-tilt",

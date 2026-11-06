@@ -4,6 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
 import {
   ask,
@@ -1342,27 +1343,30 @@ const lucas = topic(
         );
       },
     ),
-    point(
-      "odd-entries-of-a-row",
-      ["Odd entries of a row", "一行中的奇数项"],
-      [
-        "With $p = 2$, the coefficient $\\binom{n}{k}$ is odd exactly when every binary digit of $k$ is at most the matching digit of $n$. So row $n$ of Pascal's triangle has $2^{s}$ odd entries, where $s$ counts the ones in $n$.",
-        "取 $p = 2$，系数 $\\binom{n}{k}$ 是奇数，当且仅当 $k$ 的每个二进制位都不超过 $n$ 的对应位。所以帕斯卡三角形第 $n$ 行有 $2^{s}$ 个奇数项，其中 $s$ 是 $n$ 中 1 的个数。",
-      ],
-      (rng) => {
-        const n = rng.int(5, 2000);
-        const s = n.toString(2).replace(/0/g, "").length;
-        return ask(
-          [`How many entries in row ${n} of Pascal's triangle are odd?`, `帕斯卡三角形第 ${n} 行有多少个奇数项？`],
-          2 ** s,
-          [s, 2 ** (s + 1), n + 1 === 2 ** s ? 2 ** s + 2 : n + 1],
-          [
-            `In binary, ${n} is ${n.toString(2)}, with ${s} ones, so the count is $2^{${s}}$.`,
-            `${n} 的二进制是 ${n.toString(2)}，有 ${s} 个 1，所以个数是 $2^{${s}}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "odd-entries-of-a-row",
+        ["Odd entries of a row", "一行中的奇数项"],
+        [
+          "With $p = 2$, the coefficient $\\binom{n}{k}$ is odd exactly when every binary digit of $k$ is at most the matching digit of $n$. So row $n$ of Pascal's triangle has $2^{s}$ odd entries, where $s$ counts the ones in $n$.",
+          "取 $p = 2$，系数 $\\binom{n}{k}$ 是奇数，当且仅当 $k$ 的每个二进制位都不超过 $n$ 的对应位。所以帕斯卡三角形第 $n$ 行有 $2^{s}$ 个奇数项，其中 $s$ 是 $n$ 中 1 的个数。",
+        ],
+        (rng) => {
+          const n = rng.int(5, 2000);
+          const s = n.toString(2).replace(/0/g, "").length;
+          return ask(
+            [`How many entries in row ${n} of Pascal's triangle are odd?`, `帕斯卡三角形第 ${n} 行有多少个奇数项？`],
+            2 ** s,
+            [s, 2 ** (s + 1), n + 1 === 2 ** s ? 2 ** s + 2 : n + 1],
+            [
+              `In binary, ${n} is ${n.toString(2)}, with ${s} ones, so the count is $2^{${s}}$.`,
+              `${n} 的二进制是 ${n.toString(2)}，有 ${s} 个 1，所以个数是 $2^{${s}}$。`,
+            ],
+          );
+        },
+      ),
+      figure: numberTheoryDrawings1["lucas-theorem#odd-entries-of-a-row"],
+    },
     point(
       "a-row-not-divisible-by-p",
       ["Entries not divisible by p", "不被 p 整除的项"],

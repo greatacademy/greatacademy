@@ -1,5 +1,6 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 
 import { numberProblem, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -648,6 +649,7 @@ export const provingInjectivity: TopicDef = {
     },
     {
       id: "injectivity-on-a-restricted-domain",
+      figure: proofDrawings1["proving-injectivity#injectivity-on-a-restricted-domain"],
       title: t("Injectivity on a restricted domain", "限制定义域后的单射性"),
       explanation: t(
         "$f(x) = x^2 - 6x$ is not injective on $\\mathbb{R}$: $f(0) = f(6)$. On $[3, \\infty)$, to the right of the vertex, it is injective. In general a quadratic is injective on an interval exactly when the interval does not contain points on both sides of the vertex.",

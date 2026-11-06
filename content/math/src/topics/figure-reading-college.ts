@@ -5,6 +5,9 @@ import type { Figure, KnowledgePointDef, Text } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
+import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
+import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
 import { arrowLine, drawn, label, node, numeric, pickChoice, ring } from "./figure-reading-more.ts";
 
@@ -107,6 +110,7 @@ const sieveLeftover: KnowledgePointDef = {
 
 const residueClock: KnowledgePointDef = {
   id: "walking-around-a-residue-clock",
+  figure: proofDrawings1["modular-congruence#walking-around-a-residue-clock"],
   title: t("Walking around a residue clock", "在余数钟面上走"),
   explanation: t(
     "The residues modulo $n$ sit on a circle, because adding $n$ brings you back to where you started. Each full turn of $n$ steps changes nothing, so only the remainder of the step count matters. Moving backward works the same way: the walk simply runs the other way around the clock.",
@@ -344,6 +348,7 @@ function quotients(a: number, b: number): number[] {
 
 const gcdFromSquares: KnowledgePointDef = {
   id: "the-gcd-from-cutting-squares",
+  figure: proofDrawings1["the-euclidean-algorithm#the-gcd-from-cutting-squares"],
   title: t("The GCD from cutting squares", "切正方形求最大公因数"),
   explanation: t(
     "Cut the largest possible squares from a rectangle, then repeat on the piece left over. Each round is one division in the Euclidean algorithm, since the squares removed are the quotient and the leftover side is the remainder. The last and smallest square has side equal to the greatest common divisor, and it fits evenly into both sides.",
@@ -376,6 +381,7 @@ const gcdFromSquares: KnowledgePointDef = {
 
 const fractionFromSquares: KnowledgePointDef = {
   id: "a-continued-fraction-from-squares",
+  figure: numberTheoryDrawings1["continued-fractions#a-continued-fraction-from-squares"],
   title: t("A continued fraction from squares", "由正方形读连分数"),
   explanation: t(
     "Cutting a rectangle into the largest possible squares reads off a continued fraction. The number of squares of the largest size is the first entry, the number of the next size is the second entry, and so on. In the notation $[q_0; q_1, q_2]$ the first entry is the whole part of the ratio of the sides.",
@@ -639,6 +645,7 @@ const deltaFromLine: KnowledgePointDef = {
 
 const secantSlope: KnowledgePointDef = {
   id: "the-slope-guaranteed-by-a-graph",
+  figure: analysisDrawings1["bounds-from-the-mean-value-theorem#the-slope-guaranteed-by-a-graph"],
   title: t("The slope the theorem guarantees", "定理保证的斜率"),
   explanation: t(
     "The Mean Value Theorem promises a point between $a$ and $b$ where the tangent is parallel to the chord joining the endpoints. So the guaranteed derivative is the chord's slope: rise over run between the two endpoints only. What the curve does in between does not change this value, though it may change how many such points there are.",
@@ -806,6 +813,7 @@ const stepGap: KnowledgePointDef = {
 
 const convergenceFromGraphs: KnowledgePointDef = {
   id: "the-kind-of-convergence-from-graphs",
+  figure: analysisDrawings1["pointwise-and-uniform-convergence#the-kind-of-convergence-from-graphs"],
   title: t("The kind of convergence from graphs", "由图判断收敛类型"),
   explanation: t(
     "Pointwise convergence fixes one $x$ and watches the values $f_n(x)$. Uniform convergence asks that the largest distance from the limit, over all $x$ at once, go to zero. A hump of fixed height that slides away passes every fixed point in the end, so it converges pointwise, but its height never shrinks, so the convergence is not uniform.",

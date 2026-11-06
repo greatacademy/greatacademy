@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
+import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, integer, signed, skill } from "./third-kit.ts";
@@ -28,36 +29,39 @@ const term = (c: number, v: string) => `${c === 1 ? "" : c === -1 ? "-" : c}${v}
 /** deeperRemainingCollegeThirdPoints holds these third knowledge points, by topic. */
 export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "applying-prims-algorithm-to-a-distance-matrix": [
-    skill(
-      "the-first-edge-from-a-given-start",
-      ["The first edge from a given start", "从给定起点出发的第一条边"],
-      [
-        "Prim's algorithm grows a single tree from its starting vertex. So the first edge is the smallest entry in the row of that vertex, even when a smaller edge exists elsewhere in the matrix.",
-        "普里姆算法从起点开始长成一棵树。所以第一条边是这个顶点所在行中最小的元素，即使矩阵别处有更小的边。",
-      ],
-      (rng) => {
-        const w = rng.sample([3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 23], 6);
-        const [ab, ac, ad, bc, bd, cd] = w as [number, number, number, number, number, number];
-        const rows = [
-          ["-", ab, ac, ad],
-          [ab, "-", bc, bd],
-          [ac, bc, "-", cd],
-          [ad, bd, cd, "-"],
-        ];
-        const start = rng.int(0, 3);
-        const name = ["A", "B", "C", "D"][start] as string;
-        const row = (rows[start] as (number | string)[]).filter((x): x is number => typeof x === "number");
-        return whole(
-          [
-            `The edge weights of a complete graph on $A, B, C, D$ are given by $${mat(rows)}$. Prim's algorithm starts at $${name}$. What is the weight of the first edge it adds?`,
-            `完全图（顶点 $A, B, C, D$）的边权由 $${mat(rows)}$ 给出。普里姆算法从 $${name}$ 开始。它加入的第一条边的权是多少？`,
-          ],
-          Math.min(...row),
-          [Math.max(...row), Math.min(...w), (row[1] as number) + 1],
-          [`The smallest entry in the row of $${name}$ is ${Math.min(...row)}.`, `$${name}$ 所在行中最小的元素是 ${Math.min(...row)}。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-first-edge-from-a-given-start",
+        ["The first edge from a given start", "从给定起点出发的第一条边"],
+        [
+          "Prim's algorithm grows a single tree from its starting vertex. So the first edge is the smallest entry in the row of that vertex, even when a smaller edge exists elsewhere in the matrix.",
+          "普里姆算法从起点开始长成一棵树。所以第一条边是这个顶点所在行中最小的元素，即使矩阵别处有更小的边。",
+        ],
+        (rng) => {
+          const w = rng.sample([3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 23], 6);
+          const [ab, ac, ad, bc, bd, cd] = w as [number, number, number, number, number, number];
+          const rows = [
+            ["-", ab, ac, ad],
+            [ab, "-", bc, bd],
+            [ac, bc, "-", cd],
+            [ad, bd, cd, "-"],
+          ];
+          const start = rng.int(0, 3);
+          const name = ["A", "B", "C", "D"][start] as string;
+          const row = (rows[start] as (number | string)[]).filter((x): x is number => typeof x === "number");
+          return whole(
+            [
+              `The edge weights of a complete graph on $A, B, C, D$ are given by $${mat(rows)}$. Prim's algorithm starts at $${name}$. What is the weight of the first edge it adds?`,
+              `完全图（顶点 $A, B, C, D$）的边权由 $${mat(rows)}$ 给出。普里姆算法从 $${name}$ 开始。它加入的第一条边的权是多少？`,
+            ],
+            Math.min(...row),
+            [Math.max(...row), Math.min(...w), (row[1] as number) + 1],
+            [`The smallest entry in the row of $${name}$ is ${Math.min(...row)}.`, `$${name}$ 所在行中最小的元素是 ${Math.min(...row)}。`],
+          );
+        },
+      ),
+      figure: discreteDrawings2["applying-prims-algorithm-to-a-distance-matrix#the-first-edge-from-a-given-start"],
+    },
   ],
   "argmax-and-argmin-notation": [
     skill(
@@ -522,28 +526,31 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
     ),
   ],
   "incidence-matrices": [
-    skill(
-      "the-ones-in-an-incidence-matrix",
-      ["The ones in an incidence matrix", "关联矩阵中 1 的个数"],
-      [
-        "Each column of the incidence matrix of a simple graph has exactly two ones, one for each end of the edge. So the total number of ones is twice the number of edges, whatever the vertex count.",
-        "简单图的关联矩阵每一列恰有两个 1，对应边的两个端点。所以 1 的总数是边数的两倍，与顶点数无关。",
-      ],
-      (rng) => {
-        const v = rng.int(4, 20);
-        const e = rng.int(3, 40);
-        const usable = Math.min(e, (v * (v - 1)) / 2);
-        return whole(
-          [
-            `A simple graph has ${v} vertices and ${usable} edges. How many entries of its incidence matrix equal 1?`,
-            `简单图有 ${v} 个顶点、${usable} 条边。它的关联矩阵中有多少个元素等于 1？`,
-          ],
-          2 * usable,
-          [usable, v * usable, 2 * v],
-          [`Each of the ${usable} columns holds two ones.`, `${usable} 列中每列有两个 1。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-ones-in-an-incidence-matrix",
+        ["The ones in an incidence matrix", "关联矩阵中 1 的个数"],
+        [
+          "Each column of the incidence matrix of a simple graph has exactly two ones, one for each end of the edge. So the total number of ones is twice the number of edges, whatever the vertex count.",
+          "简单图的关联矩阵每一列恰有两个 1，对应边的两个端点。所以 1 的总数是边数的两倍，与顶点数无关。",
+        ],
+        (rng) => {
+          const v = rng.int(4, 20);
+          const e = rng.int(3, 40);
+          const usable = Math.min(e, (v * (v - 1)) / 2);
+          return whole(
+            [
+              `A simple graph has ${v} vertices and ${usable} edges. How many entries of its incidence matrix equal 1?`,
+              `简单图有 ${v} 个顶点、${usable} 条边。它的关联矩阵中有多少个元素等于 1？`,
+            ],
+            2 * usable,
+            [usable, v * usable, 2 * v],
+            [`Each of the ${usable} columns holds two ones.`, `${usable} 列中每列有两个 1。`],
+          );
+        },
+      ),
+      figure: discreteDrawings2["incidence-matrices#the-ones-in-an-incidence-matrix"],
+    },
   ],
   "indicator-functions-for-predicates": [
     skill(

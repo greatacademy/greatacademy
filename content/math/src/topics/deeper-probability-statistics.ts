@@ -4,6 +4,7 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
+import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { numberProblem } from "../problems.ts";
 
@@ -1719,6 +1720,7 @@ const momentOfPowerDensity: KnowledgePointDef = {
 
 const varianceOfTriangularDensity: KnowledgePointDef = {
   id: "the-variance-of-a-right-triangular-density",
+  figure: probabilityDrawings1["variance-of-continuous-random-variables#the-variance-of-a-right-triangular-density"],
   title: t("The variance of a right triangular density", "直角三角形密度的方差"),
   explanation: t(
     "A density that rises in a straight line from zero has the shape of a right triangle. Its first two moments come from single integrals, with mean $\\frac{2c}{3}$ and second moment $\\frac{c^2}{2}$. Subtracting the square of the mean gives the variance $\\frac{c^2}{18}$. This is smaller than the uniform value $\\frac{c^2}{12}$ on the same interval, because the mass is concentrated towards one end instead of being spread evenly.",
@@ -2076,6 +2078,7 @@ const conditionalMeanFromJoint: KnowledgePointDef = {
 
 const conditionalVarianceOnTriangle: KnowledgePointDef = {
   id: "a-conditional-variance-on-a-uniform-triangle",
+  figure: probabilityDrawings1["conditional-distributions-for-continuous-random-variables#a-conditional-variance-on-a-uniform-triangle"],
   title: t("A conditional variance on a uniform triangle", "均匀三角形上的条件方差"),
   explanation: t(
     "When a point is uniform on a region, fixing one coordinate leaves the other uniform along the corresponding slice of the region. On the triangle $0 < y < x < c$, the slice at $X = x$ is the interval from $0$ to $x$. So the conditional distribution depends on $x$ but not on the size $c$ of the triangle. The formula for the variance of a uniform variable then applies at once, with no integration needed.",
@@ -2102,6 +2105,7 @@ const conditionalVarianceOnTriangle: KnowledgePointDef = {
 
 const rectangleFromJointCdf: KnowledgePointDef = {
   id: "a-rectangle-probability-from-a-joint-cdf",
+  figure: probabilityDrawings1["the-joint-cdf-of-two-continuous-random-variables#a-rectangle-probability-from-a-joint-cdf"],
   title: t("A rectangle probability from a joint CDF", "由联合分布函数求矩形的概率"),
   explanation: t(
     "A joint CDF gives the probability of a quarter-plane, and a rectangle can be built from four of these. The probability that $a < X \\le b$ and $c < Y \\le d$ is $F(b, d) - F(a, d) - F(b, c) + F(a, c)$. The last term is added back because the corner below and to the left of the rectangle was subtracted twice. Leaving out either of the middle terms would count regions that lie outside the rectangle.",

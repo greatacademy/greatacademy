@@ -6,6 +6,9 @@
 
 import type { Rng, TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { complexDrawings2 } from "../explanation-drawings-complex-analysis-2.ts";
+import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
+import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, powMod, primesUpTo, same, topic } from "../university-kit.ts";
 
@@ -252,37 +255,40 @@ const curveAddition = topic(
         );
       },
     ),
-    point(
-      "adding-two-different-points",
-      ["Adding two different points", "两个不同点相加"],
-      [
-        "With slope $m$ through $P$ and $Q$, the sum has first coordinate $x_{3} = m^{2} - x_{1} - x_{2}$. The line meets the curve at a third point, and reflecting that point gives the sum, so $y_{3} = m(x_{1} - x_{3}) - y_{1}$.",
-        "设过 $P$ 和 $Q$ 的斜率为 $m$，和的第一个坐标是 $x_{3} = m^{2} - x_{1} - x_{2}$。直线与曲线交于第三点，把它反射就得到和，所以 $y_{3} = m(x_{1} - x_{3}) - y_{1}$。",
-      ],
-      (rng) => {
-        for (;;) {
-          const { p, a, b, points } = pickCurve(rng, 2);
-          const [x1, y1] = rng.pick(points);
-          const others = points.filter(([x]) => x !== x1);
-          if (others.length === 0) continue;
-          const [x2, y2] = rng.pick(others);
-          const m = mod((y2 - y1) * inverse(x2 - x1, p), p);
-          const x3 = mod(m * m - x1 - x2, p);
-          return ask(
-            [
-              `On $${curveLatex(a, b)}$ modulo ${p}, what is the first coordinate of $(${x1}, ${y1}) + (${x2}, ${y2})$?`,
-              `在模 ${p} 的 $${curveLatex(a, b)}$ 上，$(${x1}, ${y1}) + (${x2}, ${y2})$ 的第一个坐标是多少？`,
-            ],
-            x3,
-            [mod(x1 + x2, p), mod(m * m, p), mod(m - x1 - x2, p)],
-            [
-              `The slope is ${m}, so $x_{3} = ${m}^{2} - ${x1} - ${x2}$, which is ${x3} modulo ${p}.`,
-              `斜率是 ${m}，所以 $x_{3} = ${m}^{2} - ${x1} - ${x2}$，模 ${p} 等于 ${x3}。`,
-            ],
-          );
-        }
-      },
-    ),
+    {
+      ...point(
+        "adding-two-different-points",
+        ["Adding two different points", "两个不同点相加"],
+        [
+          "With slope $m$ through $P$ and $Q$, the sum has first coordinate $x_{3} = m^{2} - x_{1} - x_{2}$. The line meets the curve at a third point, and reflecting that point gives the sum, so $y_{3} = m(x_{1} - x_{3}) - y_{1}$.",
+          "设过 $P$ 和 $Q$ 的斜率为 $m$，和的第一个坐标是 $x_{3} = m^{2} - x_{1} - x_{2}$。直线与曲线交于第三点，把它反射就得到和，所以 $y_{3} = m(x_{1} - x_{3}) - y_{1}$。",
+        ],
+        (rng) => {
+          for (;;) {
+            const { p, a, b, points } = pickCurve(rng, 2);
+            const [x1, y1] = rng.pick(points);
+            const others = points.filter(([x]) => x !== x1);
+            if (others.length === 0) continue;
+            const [x2, y2] = rng.pick(others);
+            const m = mod((y2 - y1) * inverse(x2 - x1, p), p);
+            const x3 = mod(m * m - x1 - x2, p);
+            return ask(
+              [
+                `On $${curveLatex(a, b)}$ modulo ${p}, what is the first coordinate of $(${x1}, ${y1}) + (${x2}, ${y2})$?`,
+                `在模 ${p} 的 $${curveLatex(a, b)}$ 上，$(${x1}, ${y1}) + (${x2}, ${y2})$ 的第一个坐标是多少？`,
+              ],
+              x3,
+              [mod(x1 + x2, p), mod(m * m, p), mod(m - x1 - x2, p)],
+              [
+                `The slope is ${m}, so $x_{3} = ${m}^{2} - ${x1} - ${x2}$, which is ${x3} modulo ${p}.`,
+                `斜率是 ${m}，所以 $x_{3} = ${m}^{2} - ${x1} - ${x2}$，模 ${p} 等于 ${x3}。`,
+              ],
+            );
+          }
+        },
+      ),
+      figure: numberTheoryDrawings1["adding-points-on-an-elliptic-curve#adding-two-different-points"],
+    },
     point(
       "doubling-a-point",
       ["Doubling a point", "点的倍乘"],
@@ -762,80 +768,89 @@ const schwarzChristoffel = topic(
   ["conformal-maps-of-regions"],
   [],
   [
-    point(
-      "the-exponent-at-a-vertex",
-      ["The exponent at a vertex", "顶点处的指数"],
-      [
-        "A map of the upper half plane onto a polygon has $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$, where the polygon's interior angle at the image of $x_{k}$ is $\\alpha_{k}\\pi$. Each factor bends the boundary by the right amount.",
-        "把上半平面映到多边形的映射满足 $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$，其中多边形在 $x_{k}$ 的像处的内角是 $\\alpha_{k}\\pi$。每个因子让边界转过恰当的角度。",
-      ],
-      (rng) => {
-        const q = rng.int(2, 12);
-        const start = rng.int(1, 2 * q - 2);
-        const p = start === q ? 2 * q - 1 : start;
-        const alpha = Q.of(p, q);
-        return ask(
-          [
-            `A polygon has interior angle $${alpha.toLatex()}\\pi$ at a vertex. What is the exponent of the matching factor of $f'(z)$?`,
-            `多边形在一个顶点的内角是 $${alpha.toLatex()}\\pi$。$f'(z)$ 中相应因子的指数是多少？`,
-          ],
-          alpha.sub(Q.of(1, 1)),
-          [alpha, Q.of(1, 1).sub(alpha), alpha.add(Q.of(1, 1))],
-          [
-            `An interior angle $\\alpha\\pi$ matches the factor $(z - x_k)^{\\alpha - 1}$, so the exponent is $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$.`,
-            `内角 $\\alpha\\pi$ 对应因子 $(z - x_k)^{\\alpha - 1}$，所以指数是 $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "exponents-add-to-minus-two",
-      ["Exponents add to minus two", "指数和为负二"],
-      [
-        "The exterior angles of a polygon add to $2\\pi$, and the exterior angle at a vertex is $(1 - \\alpha_{k})\\pi$. So the exponents $\\alpha_{k} - 1$ always add to $-2$.",
-        "多边形的外角和是 $2\\pi$，一个顶点的外角是 $(1 - \\alpha_{k})\\pi$。所以指数 $\\alpha_{k} - 1$ 的和总是 $-2$。",
-      ],
-      (rng) => {
-        const n = rng.pick([6, 8, 9, 10, 12, 15]);
-        const a = rng.int(1, n - 2);
-        const b = rng.int(1, n - a - 1);
-        const e1 = Q.of(a, n).sub(Q.of(1, 1));
-        const e2 = Q.of(b, n).sub(Q.of(1, 1));
-        const e3 = Q.of(-2, 1).sub(e1).sub(e2);
-        return ask(
-          [
-            `A triangle's map has exponents $${e1.toLatex()}$ and $${e2.toLatex()}$ at two vertices. What is the exponent at the third?`,
-            `三角形的映射在两个顶点的指数是 $${e1.toLatex()}$ 和 $${e2.toLatex()}$。第三个顶点的指数是多少？`,
-          ],
-          e3,
-          [e3.add(Q.of(1, 1)), e3.sub(Q.of(1, 1)), e1.add(e2)],
-          [
-            `The three exponents add to $-2$, so the third is $-2 - (${e1.toLatex()}) - (${e2.toLatex()})$.`,
-            `三个指数的和是 $-2$，所以第三个是 $-2 - (${e1.toLatex()}) - (${e2.toLatex()})$。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "a-regular-polygon",
-      ["A regular polygon", "正多边形"],
-      [
-        "The interior angle of a regular $n$-gon is $\\frac{n - 2}{n}\\pi$, so each factor has exponent $-\\frac{2}{n}$. The disc maps onto the polygon by $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$, with vertices at the $n$th roots of unity.",
-        "正 $n$ 边形的内角是 $\\frac{n - 2}{n}\\pi$，所以每个因子的指数是 $-\\frac{2}{n}$。圆盘到多边形的映射满足 $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$，顶点对应 $n$ 次单位根。",
-      ],
-      (rng) => {
-        const n = rng.int(3, 60);
-        return ask(
-          [`What is the exponent of each factor in the formula for a regular ${n}-gon?`, `正 ${n} 边形的公式中，每个因子的指数是多少？`],
-          Q.of(-2, n),
-          [Q.of(2, n), Q.of(-1, n), Q.of(n - 2, n)],
-          [
-            `The interior angle is $\\frac{${n - 2}}{${n}}\\pi$, and $\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}$.`,
-            `内角是 $\\frac{${n - 2}}{${n}}\\pi$，而 $\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-exponent-at-a-vertex",
+        ["The exponent at a vertex", "顶点处的指数"],
+        [
+          "A map of the upper half plane onto a polygon has $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$, where the polygon's interior angle at the image of $x_{k}$ is $\\alpha_{k}\\pi$. Each factor bends the boundary by the right amount.",
+          "把上半平面映到多边形的映射满足 $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$，其中多边形在 $x_{k}$ 的像处的内角是 $\\alpha_{k}\\pi$。每个因子让边界转过恰当的角度。",
+        ],
+        (rng) => {
+          const q = rng.int(2, 12);
+          const start = rng.int(1, 2 * q - 2);
+          const p = start === q ? 2 * q - 1 : start;
+          const alpha = Q.of(p, q);
+          return ask(
+            [
+              `A polygon has interior angle $${alpha.toLatex()}\\pi$ at a vertex. What is the exponent of the matching factor of $f'(z)$?`,
+              `多边形在一个顶点的内角是 $${alpha.toLatex()}\\pi$。$f'(z)$ 中相应因子的指数是多少？`,
+            ],
+            alpha.sub(Q.of(1, 1)),
+            [alpha, Q.of(1, 1).sub(alpha), alpha.add(Q.of(1, 1))],
+            [
+              `An interior angle $\\alpha\\pi$ matches the factor $(z - x_k)^{\\alpha - 1}$, so the exponent is $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$.`,
+              `内角 $\\alpha\\pi$ 对应因子 $(z - x_k)^{\\alpha - 1}$，所以指数是 $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-schwarz-christoffel-formula#the-exponent-at-a-vertex"],
+    },
+    {
+      ...point(
+        "exponents-add-to-minus-two",
+        ["Exponents add to minus two", "指数和为负二"],
+        [
+          "The exterior angles of a polygon add to $2\\pi$, and the exterior angle at a vertex is $(1 - \\alpha_{k})\\pi$. So the exponents $\\alpha_{k} - 1$ always add to $-2$.",
+          "多边形的外角和是 $2\\pi$，一个顶点的外角是 $(1 - \\alpha_{k})\\pi$。所以指数 $\\alpha_{k} - 1$ 的和总是 $-2$。",
+        ],
+        (rng) => {
+          const n = rng.pick([6, 8, 9, 10, 12, 15]);
+          const a = rng.int(1, n - 2);
+          const b = rng.int(1, n - a - 1);
+          const e1 = Q.of(a, n).sub(Q.of(1, 1));
+          const e2 = Q.of(b, n).sub(Q.of(1, 1));
+          const e3 = Q.of(-2, 1).sub(e1).sub(e2);
+          return ask(
+            [
+              `A triangle's map has exponents $${e1.toLatex()}$ and $${e2.toLatex()}$ at two vertices. What is the exponent at the third?`,
+              `三角形的映射在两个顶点的指数是 $${e1.toLatex()}$ 和 $${e2.toLatex()}$。第三个顶点的指数是多少？`,
+            ],
+            e3,
+            [e3.add(Q.of(1, 1)), e3.sub(Q.of(1, 1)), e1.add(e2)],
+            [
+              `The three exponents add to $-2$, so the third is $-2 - (${e1.toLatex()}) - (${e2.toLatex()})$.`,
+              `三个指数的和是 $-2$，所以第三个是 $-2 - (${e1.toLatex()}) - (${e2.toLatex()})$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-schwarz-christoffel-formula#exponents-add-to-minus-two"],
+    },
+    {
+      ...point(
+        "a-regular-polygon",
+        ["A regular polygon", "正多边形"],
+        [
+          "The interior angle of a regular $n$-gon is $\\frac{n - 2}{n}\\pi$, so each factor has exponent $-\\frac{2}{n}$. The disc maps onto the polygon by $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$, with vertices at the $n$th roots of unity.",
+          "正 $n$ 边形的内角是 $\\frac{n - 2}{n}\\pi$，所以每个因子的指数是 $-\\frac{2}{n}$。圆盘到多边形的映射满足 $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$，顶点对应 $n$ 次单位根。",
+        ],
+        (rng) => {
+          const n = rng.int(3, 60);
+          return ask(
+            [`What is the exponent of each factor in the formula for a regular ${n}-gon?`, `正 ${n} 边形的公式中，每个因子的指数是多少？`],
+            Q.of(-2, n),
+            [Q.of(2, n), Q.of(-1, n), Q.of(n - 2, n)],
+            [
+              `The interior angle is $\\frac{${n - 2}}{${n}}\\pi$, and $\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}$.`,
+              `内角是 $\\frac{${n - 2}}{${n}}\\pi$，而 $\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}$。`,
+            ],
+          );
+        },
+      ),
+      figure: complexDrawings2["the-schwarz-christoffel-formula#a-regular-polygon"],
+    },
   ],
 );
 
@@ -1122,36 +1137,39 @@ const fundamentalSolutions = topic(
   ["greens-functions-on-an-interval"],
   [],
   [
-    point(
-      "the-formula-in-each-dimension",
-      ["The formula in each dimension", "各维度的公式"],
-      [
-        "The solution of $-\\Delta u = \\delta$ that depends only on the distance $r$ is $-\\frac{1}{2\\pi}\\ln r$ in the plane and $\\frac{1}{4\\pi r}$ in space. The constant makes the flux through a small circle or sphere equal to $1$.",
-        "$-\\Delta u = \\delta$ 只依赖距离 $r$ 的解，在平面上是 $-\\frac{1}{2\\pi}\\ln r$，在空间中是 $\\frac{1}{4\\pi r}$。常数使穿过小圆或小球面的通量等于 $1$。",
-      ],
-      (rng) => {
-        const plane = rng.bool();
-        const q = rng.int(2, 60);
-        const a = `-\\frac{${q}}{2\\pi}\\ln r`;
-        const b = `\\frac{${q}}{4\\pi r}`;
-        return choose(
-          rng,
-          plane
-            ? [`Which function solves $-\\Delta u = ${q}\\delta$ in the plane?`, `哪个函数在平面上满足 $-\\Delta u = ${q}\\delta$？`]
-            : [`Which function solves $-\\Delta u = ${q}\\delta$ in space?`, `哪个函数在空间中满足 $-\\Delta u = ${q}\\delta$？`],
-          same(plane ? a : b),
-          [
-            same(plane ? b : a),
-            same(plane ? `\\frac{${q}}{2\\pi}\\ln r` : `-\\frac{${q}}{4\\pi r}`),
-            same(plane ? `\\frac{${q}}{2\\pi r}` : `\\frac{${q}}{4\\pi r^{2}}`),
-          ],
-          [
-            `The flux outward through a circle or sphere of radius $r$ must equal ${q}, which fixes the sign and the constant.`,
-            `向外穿过半径为 $r$ 的圆或球面的通量必须等于 ${q}，这决定了符号和常数。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-formula-in-each-dimension",
+        ["The formula in each dimension", "各维度的公式"],
+        [
+          "The solution of $-\\Delta u = \\delta$ that depends only on the distance $r$ is $-\\frac{1}{2\\pi}\\ln r$ in the plane and $\\frac{1}{4\\pi r}$ in space. The constant makes the flux through a small circle or sphere equal to $1$.",
+          "$-\\Delta u = \\delta$ 只依赖距离 $r$ 的解，在平面上是 $-\\frac{1}{2\\pi}\\ln r$，在空间中是 $\\frac{1}{4\\pi r}$。常数使穿过小圆或小球面的通量等于 $1$。",
+        ],
+        (rng) => {
+          const plane = rng.bool();
+          const q = rng.int(2, 60);
+          const a = `-\\frac{${q}}{2\\pi}\\ln r`;
+          const b = `\\frac{${q}}{4\\pi r}`;
+          return choose(
+            rng,
+            plane
+              ? [`Which function solves $-\\Delta u = ${q}\\delta$ in the plane?`, `哪个函数在平面上满足 $-\\Delta u = ${q}\\delta$？`]
+              : [`Which function solves $-\\Delta u = ${q}\\delta$ in space?`, `哪个函数在空间中满足 $-\\Delta u = ${q}\\delta$？`],
+            same(plane ? a : b),
+            [
+              same(plane ? b : a),
+              same(plane ? `\\frac{${q}}{2\\pi}\\ln r` : `-\\frac{${q}}{4\\pi r}`),
+              same(plane ? `\\frac{${q}}{2\\pi r}` : `\\frac{${q}}{4\\pi r^{2}}`),
+            ],
+            [
+              `The flux outward through a circle or sphere of radius $r$ must equal ${q}, which fixes the sign and the constant.`,
+              `向外穿过半径为 $r$ 的圆或球面的通量必须等于 ${q}，这决定了符号和常数。`,
+            ],
+          );
+        },
+      ),
+      figure: pdeDrawings1["fundamental-solutions-of-laplaces-equation#the-formula-in-each-dimension"],
+    },
     point(
       "comparing-potentials-in-space",
       ["Comparing potentials in space", "比较空间中的势"],

@@ -3,6 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { complexDrawings1 } from "../explanation-drawings-complex-analysis-1.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 
 import { ask, point } from "../university-kit.ts";
@@ -64,30 +65,33 @@ const addingArguments = {
   figure: precalculusDrawings4["the-polar-form-of-a-complex-number#arguments-of-products-and-quotients"],
 };
 
-const imageOfACircle = point(
-  "the-image-of-a-circle-under-a-power",
-  ["The image of a circle under a power", "圆在幂函数下的像"],
-  [
-    "A function of a complex variable moves points of one plane to another, so it helps to follow simple curves. Under $f(z) = c z^k$, every point with $|z| = r$ goes to a point with modulus $c r^k$. So the circle around the origin maps onto a circle around the origin, traversed $k$ times.",
-    "复变函数把一个平面上的点移到另一个平面，所以跟踪简单曲线很有帮助。在 $f(z) = c z^k$ 下，每个满足 $|z| = r$ 的点都变为模为 $c r^k$ 的点。所以以原点为心的圆映到以原点为心的圆上，并绕行 $k$ 次。",
-  ],
-  (rng) => {
-    const [c, k, r] = [rng.int(1, 3), rng.int(2, 4), rng.int(2, 6)];
-    const answer = c * r ** k;
-    return ask(
-      [
-        `The circle $|z| = ${r}$ maps onto a circle under $f(z) = ${coef(c, `z^{${k}}`)}$. What is its radius?`,
-        `圆 $|z| = ${r}$ 在 $f(z) = ${coef(c, `z^{${k}}`)}$ 下映到一个圆上。这个圆的半径是多少？`,
-      ],
-      answer,
-      [c * r * k, r ** k + c, (c * r) ** k, answer + r].filter((v) => v !== answer),
-      [
-        `The modulus of $f(z)$ is $${c === 1 ? "" : `${c} \\cdot `}${r}^{${k}} = ${answer}$.`,
-        `$f(z)$ 的模是 $${c === 1 ? "" : `${c} \\cdot `}${r}^{${k}} = ${answer}$。`,
-      ],
-    );
-  },
-);
+const imageOfACircle = {
+  ...point(
+    "the-image-of-a-circle-under-a-power",
+    ["The image of a circle under a power", "圆在幂函数下的像"],
+    [
+      "A function of a complex variable moves points of one plane to another, so it helps to follow simple curves. Under $f(z) = c z^k$, every point with $|z| = r$ goes to a point with modulus $c r^k$. So the circle around the origin maps onto a circle around the origin, traversed $k$ times.",
+      "复变函数把一个平面上的点移到另一个平面，所以跟踪简单曲线很有帮助。在 $f(z) = c z^k$ 下，每个满足 $|z| = r$ 的点都变为模为 $c r^k$ 的点。所以以原点为心的圆映到以原点为心的圆上，并绕行 $k$ 次。",
+    ],
+    (rng) => {
+      const [c, k, r] = [rng.int(1, 3), rng.int(2, 4), rng.int(2, 6)];
+      const answer = c * r ** k;
+      return ask(
+        [
+          `The circle $|z| = ${r}$ maps onto a circle under $f(z) = ${coef(c, `z^{${k}}`)}$. What is its radius?`,
+          `圆 $|z| = ${r}$ 在 $f(z) = ${coef(c, `z^{${k}}`)}$ 下映到一个圆上。这个圆的半径是多少？`,
+        ],
+        answer,
+        [c * r * k, r ** k + c, (c * r) ** k, answer + r].filter((v) => v !== answer),
+        [
+          `The modulus of $f(z)$ is $${c === 1 ? "" : `${c} \\cdot `}${r}^{${k}} = ${answer}$.`,
+          `$f(z)$ 的模是 $${c === 1 ? "" : `${c} \\cdot `}${r}^{${k}} = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["functions-of-a-complex-variable#the-image-of-a-circle-under-a-power"],
+};
 
 const limitByCancelling = point(
   "a-limit-by-cancelling-a-factor",
@@ -190,27 +194,30 @@ const laplacianValue = point(
   },
 );
 
-const exponentialModulus = point(
-  "the-modulus-of-the-exponential",
-  ["The modulus of the exponential", "指数函数的模"],
-  [
-    "Since $e^{x + iy} = e^x (\\cos y + i \\sin y)$, the modulus is $e^x$ and the imaginary part of the exponent only rotates. So the logarithm of the modulus simply recovers the real part $x$. In particular, the exponential function is never zero.",
-    "因为 $e^{x + iy} = e^x (\\cos y + i \\sin y)$，模是 $e^x$，指数的虚部只产生旋转。所以模的对数恰好还原实部 $x$。特别地，指数函数从不为零。",
-  ],
-  (rng) => {
-    const a = rng.pick([-9, -7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7, 9]);
-    const b = rng.int(1, 9);
-    return ask(
-      [`What is $\\ln | e^{${cx(a, b)}} |$?`, `$\\ln | e^{${cx(a, b)}} |$ 是多少？`],
-      a,
-      [b, a + b, a * a + b * b, -a],
-      [
-        `The modulus is $e^{${a}}$, because the imaginary part only rotates. Its logarithm is ${a}.`,
-        `模是 $e^{${a}}$，因为虚部只产生旋转。它的对数是 ${a}。`,
-      ],
-    );
-  },
-);
+const exponentialModulus = {
+  ...point(
+    "the-modulus-of-the-exponential",
+    ["The modulus of the exponential", "指数函数的模"],
+    [
+      "Since $e^{x + iy} = e^x (\\cos y + i \\sin y)$, the modulus is $e^x$ and the imaginary part of the exponent only rotates. So the logarithm of the modulus simply recovers the real part $x$. In particular, the exponential function is never zero.",
+      "因为 $e^{x + iy} = e^x (\\cos y + i \\sin y)$，模是 $e^x$，指数的虚部只产生旋转。所以模的对数恰好还原实部 $x$。特别地，指数函数从不为零。",
+    ],
+    (rng) => {
+      const a = rng.pick([-9, -7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7, 9]);
+      const b = rng.int(1, 9);
+      return ask(
+        [`What is $\\ln | e^{${cx(a, b)}} |$?`, `$\\ln | e^{${cx(a, b)}} |$ 是多少？`],
+        a,
+        [b, a + b, a * a + b * b, -a],
+        [
+          `The modulus is $e^{${a}}$, because the imaginary part only rotates. Its logarithm is ${a}.`,
+          `模是 $e^{${a}}$，因为虚部只产生旋转。它的对数是 ${a}。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["the-complex-exponential-function#the-modulus-of-the-exponential"],
+};
 
 const logOfProduct = point(
   "the-principal-argument-of-a-product",
@@ -270,83 +277,92 @@ const iToAComplexPower = point(
   },
 );
 
-const closedPower = point(
-  "integrating-powers-around-a-circle",
-  ["Integrating powers around a circle", "沿圆周积分幂函数"],
-  [
-    "Around a circle centered at the origin, $\\oint z^n \\, dz$ is 0 for every integer $n$ other than $-1$, because those powers have antiderivatives. The single exception gives $\\oint \\frac{dz}{z} = 2 \\pi i$. So only the term in $\\frac{1}{z}$ of a sum survives the integration.",
-    "沿以原点为心的圆，对除 $-1$ 以外的每个整数 $n$，$\\oint z^n \\, dz$ 都是 0，因为这些幂函数有原函数。唯一的例外给出 $\\oint \\frac{dz}{z} = 2 \\pi i$。所以和式中只有 $\\frac{1}{z}$ 项在积分后留下来。",
-  ],
-  (rng) => {
-    const [a, b, n, r] = [rng.int(1, 9), rng.int(2, 9), rng.int(2, 6), rng.int(1, 5)];
-    const answer = 2 * a;
-    return ask(
-      [
-        `Around $|z| = ${r}$ counterclockwise, $\\oint \\left( \\frac{${a}}{z} + ${b} z^{${n}} \\right) dz = k \\pi i$. What is $k$?`,
-        `沿 $|z| = ${r}$ 逆时针，$\\oint \\left( \\frac{${a}}{z} + ${b} z^{${n}} \\right) dz = k \\pi i$。$k$ 是多少？`,
-      ],
-      answer,
-      [a, 2 * b, 2 * (a + b), 0],
-      [
-        `The power $z^{${n}}$ has an antiderivative and contributes 0, while the first term gives $${a} \\cdot 2 \\pi i$.`,
-        `幂 $z^{${n}}$ 有原函数，贡献为 0，第一项给出 $${a} \\cdot 2 \\pi i$。`,
-      ],
-    );
-  },
-);
+const closedPower = {
+  ...point(
+    "integrating-powers-around-a-circle",
+    ["Integrating powers around a circle", "沿圆周积分幂函数"],
+    [
+      "Around a circle centered at the origin, $\\oint z^n \\, dz$ is 0 for every integer $n$ other than $-1$, because those powers have antiderivatives. The single exception gives $\\oint \\frac{dz}{z} = 2 \\pi i$. So only the term in $\\frac{1}{z}$ of a sum survives the integration.",
+      "沿以原点为心的圆，对除 $-1$ 以外的每个整数 $n$，$\\oint z^n \\, dz$ 都是 0，因为这些幂函数有原函数。唯一的例外给出 $\\oint \\frac{dz}{z} = 2 \\pi i$。所以和式中只有 $\\frac{1}{z}$ 项在积分后留下来。",
+    ],
+    (rng) => {
+      const [a, b, n, r] = [rng.int(1, 9), rng.int(2, 9), rng.int(2, 6), rng.int(1, 5)];
+      const answer = 2 * a;
+      return ask(
+        [
+          `Around $|z| = ${r}$ counterclockwise, $\\oint \\left( \\frac{${a}}{z} + ${b} z^{${n}} \\right) dz = k \\pi i$. What is $k$?`,
+          `沿 $|z| = ${r}$ 逆时针，$\\oint \\left( \\frac{${a}}{z} + ${b} z^{${n}} \\right) dz = k \\pi i$。$k$ 是多少？`,
+        ],
+        answer,
+        [a, 2 * b, 2 * (a + b), 0],
+        [
+          `The power $z^{${n}}$ has an antiderivative and contributes 0, while the first term gives $${a} \\cdot 2 \\pi i$.`,
+          `幂 $z^{${n}}$ 有原函数，贡献为 0，第一项给出 $${a} \\cdot 2 \\pi i$。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["contour-integrals#integrating-powers-around-a-circle"],
+};
 
-const mlShrinking = point(
-  "a-bound-on-a-large-arc",
-  ["A bound on a large arc", "大圆弧上的估计"],
-  [
-    "On $|z| = R$ with $R > 1$, the triangle inequality gives $|z^2 + 1| \\ge R^2 - 1$. Together with the length $\\pi R$ of a semicircle, this bounds the integral by a quantity that shrinks like $\\frac{1}{R}$. That shrinking is why the large arc disappears when real integrals are computed by residues.",
-    "在 $|z| = R$（$R > 1$）上，三角不等式给出 $|z^2 + 1| \\ge R^2 - 1$。再结合半圆的长度 $\\pi R$，积分的界就像 $\\frac{1}{R}$ 那样缩小。正因如此，用留数计算实积分时大圆弧的贡献才会消失。",
-  ],
-  (rng) => {
-    const [c, R] = [rng.int(1, 6), rng.int(2, 8)];
-    const answer = frac(c * R, R * R - 1);
-    return ask(
-      [
-        `Apply the $ML$ inequality to $\\frac{${c}}{z^2 + 1}$ on the semicircle of radius ${R}, using $|z^2 + 1| \\ge ${R * R - 1}$. The bound is what multiple of $\\pi$?`,
-        `对半径为 ${R} 的半圆上的 $\\frac{${c}}{z^2 + 1}$ 应用 $ML$ 不等式，利用 $|z^2 + 1| \\ge ${R * R - 1}$。这个界是 $\\pi$ 的多少倍？`,
-      ],
-      answer,
-      [frac(c, R * R - 1), frac(2 * c * R, R * R - 1), frac(c * R, R * R + 1), frac(R, R * R - 1)],
-      [
-        `$M = \\frac{${c}}{${R * R - 1}}$ and $L = ${R} \\pi$, so the bound is $${answer.toLatex()} \\pi$.`,
-        `$M = \\frac{${c}}{${R * R - 1}}$，$L = ${R} \\pi$，所以界是 $${answer.toLatex()} \\pi$。`,
-      ],
-    );
-  },
-);
+const mlShrinking = {
+  ...point(
+    "a-bound-on-a-large-arc",
+    ["A bound on a large arc", "大圆弧上的估计"],
+    [
+      "On $|z| = R$ with $R > 1$, the triangle inequality gives $|z^2 + 1| \\ge R^2 - 1$. Together with the length $\\pi R$ of a semicircle, this bounds the integral by a quantity that shrinks like $\\frac{1}{R}$. That shrinking is why the large arc disappears when real integrals are computed by residues.",
+      "在 $|z| = R$（$R > 1$）上，三角不等式给出 $|z^2 + 1| \\ge R^2 - 1$。再结合半圆的长度 $\\pi R$，积分的界就像 $\\frac{1}{R}$ 那样缩小。正因如此，用留数计算实积分时大圆弧的贡献才会消失。",
+    ],
+    (rng) => {
+      const [c, R] = [rng.int(1, 6), rng.int(2, 8)];
+      const answer = frac(c * R, R * R - 1);
+      return ask(
+        [
+          `Apply the $ML$ inequality to $\\frac{${c}}{z^2 + 1}$ on the semicircle of radius ${R}, using $|z^2 + 1| \\ge ${R * R - 1}$. The bound is what multiple of $\\pi$?`,
+          `对半径为 ${R} 的半圆上的 $\\frac{${c}}{z^2 + 1}$ 应用 $ML$ 不等式，利用 $|z^2 + 1| \\ge ${R * R - 1}$。这个界是 $\\pi$ 的多少倍？`,
+        ],
+        answer,
+        [frac(c, R * R - 1), frac(2 * c * R, R * R - 1), frac(c * R, R * R + 1), frac(R, R * R - 1)],
+        [
+          `$M = \\frac{${c}}{${R * R - 1}}$ and $L = ${R} \\pi$, so the bound is $${answer.toLatex()} \\pi$.`,
+          `$M = \\frac{${c}}{${R * R - 1}}$，$L = ${R} \\pi$，所以界是 $${answer.toLatex()} \\pi$。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["the-ml-inequality#a-bound-on-a-large-arc"],
+};
 
-const windingRepeated = point(
-  "the-winding-number-of-a-repeated-circle",
-  ["The winding number of a repeated circle", "重复绕行圆的环绕数"],
-  [
-    "The path $z(t) = c + r e^{i k t}$ for $t$ from 0 to $2 \\pi$ goes around the same circle $|k|$ times, clockwise when $k$ is negative. A point inside the circle has winding number $k$. A point outside has winding number 0, because the path never encircles it.",
-    "路径 $z(t) = c + r e^{i k t}$（$t$ 从 0 到 $2 \\pi$）沿同一个圆绕行 $|k|$ 次，$k$ 为负时顺时针。圆内的点环绕数是 $k$。圆外的点环绕数是 0，因为路径没有围住它。",
-  ],
-  (rng) => {
-    const k = rng.pick([-4, -3, -2, -1, 2, 3, 4, 5]);
-    const [c, r] = [rng.int(1, 6), rng.int(3, 6)];
-    const inside = rng.bool();
-    const w = inside ? c + rng.int(1 - r, r - 1) : c + r + rng.int(1, 4);
-    const answer = inside ? k : 0;
-    return ask(
-      [
-        `For $t$ from 0 to $2 \\pi$, what is the winding number of $z(t) = ${c} + ${r} e^{${coef(k, "i")} t}$ around the point ${w}?`,
-        `$t$ 从 0 到 $2 \\pi$，$z(t) = ${c} + ${r} e^{${coef(k, "i")} t}$ 绕点 ${w} 的环绕数是多少？`,
-      ],
-      answer,
-      [-k, Math.abs(k), 1, 0].filter((v) => v !== answer),
-      [
-        `The distance from ${w} to the center ${c} is ${Math.abs(w - c)}, which is ${inside ? "less" : "more"} than the radius ${r}, so the point is ${inside ? `inside and the winding number is ${k}` : "outside and the winding number is 0"}.`,
-        `${w} 到圆心 ${c} 的距离是 ${Math.abs(w - c)}，${inside ? "小于" : "大于"}半径 ${r}，所以这个点在圆${inside ? `内，环绕数是 ${k}` : "外，环绕数是 0"}。`,
-      ],
-    );
-  },
-);
+const windingRepeated = {
+  ...point(
+    "the-winding-number-of-a-repeated-circle",
+    ["The winding number of a repeated circle", "重复绕行圆的环绕数"],
+    [
+      "The path $z(t) = c + r e^{i k t}$ for $t$ from 0 to $2 \\pi$ goes around the same circle $|k|$ times, clockwise when $k$ is negative. A point inside the circle has winding number $k$. A point outside has winding number 0, because the path never encircles it.",
+      "路径 $z(t) = c + r e^{i k t}$（$t$ 从 0 到 $2 \\pi$）沿同一个圆绕行 $|k|$ 次，$k$ 为负时顺时针。圆内的点环绕数是 $k$。圆外的点环绕数是 0，因为路径没有围住它。",
+    ],
+    (rng) => {
+      const k = rng.pick([-4, -3, -2, -1, 2, 3, 4, 5]);
+      const [c, r] = [rng.int(1, 6), rng.int(3, 6)];
+      const inside = rng.bool();
+      const w = inside ? c + rng.int(1 - r, r - 1) : c + r + rng.int(1, 4);
+      const answer = inside ? k : 0;
+      return ask(
+        [
+          `For $t$ from 0 to $2 \\pi$, what is the winding number of $z(t) = ${c} + ${r} e^{${coef(k, "i")} t}$ around the point ${w}?`,
+          `$t$ 从 0 到 $2 \\pi$，$z(t) = ${c} + ${r} e^{${coef(k, "i")} t}$ 绕点 ${w} 的环绕数是多少？`,
+        ],
+        answer,
+        [-k, Math.abs(k), 1, 0].filter((v) => v !== answer),
+        [
+          `The distance from ${w} to the center ${c} is ${Math.abs(w - c)}, which is ${inside ? "less" : "more"} than the radius ${r}, so the point is ${inside ? `inside and the winding number is ${k}` : "outside and the winding number is 0"}.`,
+          `${w} 到圆心 ${c} 的距离是 ${Math.abs(w - c)}，${inside ? "小于" : "大于"}半径 ${r}，所以这个点在圆${inside ? `内，环绕数是 ${k}` : "外，环绕数是 0"}。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["winding-numbers#the-winding-number-of-a-repeated-circle"],
+};
 
 const twoPoles = point(
   "a-contour-around-one-or-both-poles",
@@ -558,55 +574,61 @@ const residueFromLaurent = point(
   },
 );
 
-const residuesSum = point(
-  "residues-of-a-rational-function-sum-to-zero",
-  ["Residues of a rational function sum to zero", "有理函数的留数和为零"],
-  [
-    "If the degree of the denominator exceeds that of the numerator by at least 2, a large circle encloses every pole and the integral around it tends to 0 by the $ML$ inequality. The residue theorem then says that all the residues add up to 0. So one residue follows from the others.",
-    "如果分母的次数比分子至少高 2，大圆围住所有极点，由 $ML$ 不等式，沿它的积分趋于 0。留数定理于是说明所有留数之和为 0。所以一个留数可以由其他留数得出。",
-  ],
-  (rng) => {
-    const [x, y] = [rng.pick([-7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]), rng.pick([-6, -4, -3, -2, -1, 1, 2, 3, 5, 7, 8])];
-    const answer = -x - y;
-    return ask(
-      [
-        `A rational function has exactly three poles, and its denominator has degree at least 2 more than its numerator. Two residues are ${x} and ${y}. What is the third?`,
-        `一个有理函数恰有三个极点，分母次数比分子至少高 2。两个留数是 ${x} 和 ${y}。第三个是多少？`,
-      ],
-      answer,
-      [x + y, x - y, y - x, answer + 1].filter((v) => v !== answer),
-      [
-        `All three add up to 0, so the third is $-(${x} ${y < 0 ? `- ${-y}` : `+ ${y}`}) = ${answer}$.`,
-        `三个留数之和为 0，所以第三个是 $-(${x} ${y < 0 ? `- ${-y}` : `+ ${y}`}) = ${answer}$。`,
-      ],
-    );
-  },
-);
+const residuesSum = {
+  ...point(
+    "residues-of-a-rational-function-sum-to-zero",
+    ["Residues of a rational function sum to zero", "有理函数的留数和为零"],
+    [
+      "If the degree of the denominator exceeds that of the numerator by at least 2, a large circle encloses every pole and the integral around it tends to 0 by the $ML$ inequality. The residue theorem then says that all the residues add up to 0. So one residue follows from the others.",
+      "如果分母的次数比分子至少高 2，大圆围住所有极点，由 $ML$ 不等式，沿它的积分趋于 0。留数定理于是说明所有留数之和为 0。所以一个留数可以由其他留数得出。",
+    ],
+    (rng) => {
+      const [x, y] = [rng.pick([-7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]), rng.pick([-6, -4, -3, -2, -1, 1, 2, 3, 5, 7, 8])];
+      const answer = -x - y;
+      return ask(
+        [
+          `A rational function has exactly three poles, and its denominator has degree at least 2 more than its numerator. Two residues are ${x} and ${y}. What is the third?`,
+          `一个有理函数恰有三个极点，分母次数比分子至少高 2。两个留数是 ${x} 和 ${y}。第三个是多少？`,
+        ],
+        answer,
+        [x + y, x - y, y - x, answer + 1].filter((v) => v !== answer),
+        [
+          `All three add up to 0, so the third is $-(${x} ${y < 0 ? `- ${-y}` : `+ ${y}`}) = ${answer}$.`,
+          `三个留数之和为 0，所以第三个是 $-(${x} ${y < 0 ? `- ${-y}` : `+ ${y}`}) = ${answer}$。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["the-residue-theorem#residues-of-a-rational-function-sum-to-zero"],
+};
 
-const squaredCosine = point(
-  "the-integral-of-a-squared-trigonometric-sum",
-  ["The integral of a squared trigonometric sum", "三角和平方的积分"],
-  [
-    "With $z = e^{i \\theta}$ on the unit circle, $\\cos \\theta = \\frac{z + z^{-1}}{2}$, so a power of the cosine becomes a Laurent polynomial. Only its constant term survives the integral over a full period. In particular, $\\int_0^{2 \\pi} \\cos^2 \\theta \\, d\\theta = \\pi$, and the mixed term integrates to 0.",
-    "在单位圆上取 $z = e^{i \\theta}$，有 $\\cos \\theta = \\frac{z + z^{-1}}{2}$，所以余弦的幂变成洛朗多项式。在整个周期上积分时只有常数项留下。特别地，$\\int_0^{2 \\pi} \\cos^2 \\theta \\, d\\theta = \\pi$，交叉项的积分是 0。",
-  ],
-  (rng) => {
-    const [a, b] = [rng.int(1, 9), rng.int(1, 9)];
-    const answer = 2 * a * a + b * b;
-    return ask(
-      [
-        `$\\int_0^{2 \\pi} (${a} + ${coef(b, "\\cos \\theta")})^2 \\, d\\theta = k \\pi$. What is $k$?`,
-        `$\\int_0^{2 \\pi} (${a} + ${coef(b, "\\cos \\theta")})^2 \\, d\\theta = k \\pi$。$k$ 是多少？`,
-      ],
-      answer,
-      [a * a + b * b, 2 * a * a + 2 * b * b, 2 * (a + b) * (a + b), answer + 2 * a * b].filter((v) => v !== answer),
-      [
-        `Expanding gives $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$. Over a full period, $\\int \\cos \\theta \\, d\\theta = 0$ and $\\int \\cos^2 \\theta \\, d\\theta = \\pi$, so the integral is $${a * a}(2\\pi) + ${b * b}\\pi = ${answer}\\pi$.`,
-        `展开得 $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$。在一个完整周期上，$\\int \\cos \\theta \\, d\\theta = 0$，$\\int \\cos^2 \\theta \\, d\\theta = \\pi$，所以积分为 $${a * a}(2\\pi) + ${b * b}\\pi = ${answer}\\pi$。`,
-      ],
-    );
-  },
-);
+const squaredCosine = {
+  ...point(
+    "the-integral-of-a-squared-trigonometric-sum",
+    ["The integral of a squared trigonometric sum", "三角和平方的积分"],
+    [
+      "With $z = e^{i \\theta}$ on the unit circle, $\\cos \\theta = \\frac{z + z^{-1}}{2}$, so a power of the cosine becomes a Laurent polynomial. Only its constant term survives the integral over a full period. In particular, $\\int_0^{2 \\pi} \\cos^2 \\theta \\, d\\theta = \\pi$, and the mixed term integrates to 0.",
+      "在单位圆上取 $z = e^{i \\theta}$，有 $\\cos \\theta = \\frac{z + z^{-1}}{2}$，所以余弦的幂变成洛朗多项式。在整个周期上积分时只有常数项留下。特别地，$\\int_0^{2 \\pi} \\cos^2 \\theta \\, d\\theta = \\pi$，交叉项的积分是 0。",
+    ],
+    (rng) => {
+      const [a, b] = [rng.int(1, 9), rng.int(1, 9)];
+      const answer = 2 * a * a + b * b;
+      return ask(
+        [
+          `$\\int_0^{2 \\pi} (${a} + ${coef(b, "\\cos \\theta")})^2 \\, d\\theta = k \\pi$. What is $k$?`,
+          `$\\int_0^{2 \\pi} (${a} + ${coef(b, "\\cos \\theta")})^2 \\, d\\theta = k \\pi$。$k$ 是多少？`,
+        ],
+        answer,
+        [a * a + b * b, 2 * a * a + 2 * b * b, 2 * (a + b) * (a + b), answer + 2 * a * b].filter((v) => v !== answer),
+        [
+          `Expanding gives $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$. Over a full period, $\\int \\cos \\theta \\, d\\theta = 0$ and $\\int \\cos^2 \\theta \\, d\\theta = \\pi$, so the integral is $${a * a}(2\\pi) + ${b * b}\\pi = ${answer}\\pi$.`,
+          `展开得 $${a * a} + ${2 * a * b} \\cos \\theta + ${b * b} \\cos^2 \\theta$。在一个完整周期上，$\\int \\cos \\theta \\, d\\theta = 0$，$\\int \\cos^2 \\theta \\, d\\theta = \\pi$，所以积分为 $${a * a}(2\\pi) + ${b * b}\\pi = ${answer}\\pi$。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["trigonometric-integrals-by-residues#the-integral-of-a-squared-trigonometric-sum"],
+};
 
 const twoSquares = point(
   "an-integral-with-two-pairs-of-poles",
@@ -663,32 +685,35 @@ const mobiusInverse = point(
   },
 );
 
-const rotationAngle = point(
-  "the-local-rotation-angle",
-  ["The local rotation angle", "局部旋转角"],
-  [
-    "An analytic map with nonzero derivative rotates small shapes by the argument of $f'(z)$ and scales them by its modulus. This is why angles between curves are preserved. For $f(z) = z^n$, the derivative is $n z^{n-1}$, so the rotation at a point with argument $\\theta$ is $(n - 1) \\theta$.",
-    "导数不为零的解析映射把小图形旋转 $f'(z)$ 的辐角，并按它的模伸缩。这就是曲线间夹角保持不变的原因。对 $f(z) = z^n$，导数是 $n z^{n-1}$，所以在辐角为 $\\theta$ 的点，旋转角是 $(n - 1) \\theta$。",
-  ],
-  (rng) => {
-    const n = rng.int(2, 5);
-    const theta = 15 * rng.int(1, 11);
-    const r = rng.int(1, 4);
-    const answer = ((n - 1) * theta) % 360;
-    return ask(
-      [
-        `By how many degrees, from 0 up to 360, does $f(z) = z^{${n}}$ rotate small shapes at the point with modulus ${r} and argument $${theta}^\\circ$?`,
-        `$f(z) = z^{${n}}$ 在模为 ${r}、辐角为 $${theta}^\\circ$ 的点，把小图形旋转多少度（从 0 到 360）？`,
-      ],
-      answer,
-      [(n * theta) % 360, theta, (answer + 180) % 360, (answer + 90) % 360].filter((v) => v !== answer),
-      [
-        `The argument of $${n} z^{${n - 1}}$ is $${n - 1} \\cdot ${theta}$ degrees, which reduces to ${answer}.`,
-        `$${n} z^{${n - 1}}$ 的辐角是 $${n - 1} \\cdot ${theta}$ 度，化简后是 ${answer}。`,
-      ],
-    );
-  },
-);
+const rotationAngle = {
+  ...point(
+    "the-local-rotation-angle",
+    ["The local rotation angle", "局部旋转角"],
+    [
+      "An analytic map with nonzero derivative rotates small shapes by the argument of $f'(z)$ and scales them by its modulus. This is why angles between curves are preserved. For $f(z) = z^n$, the derivative is $n z^{n-1}$, so the rotation at a point with argument $\\theta$ is $(n - 1) \\theta$.",
+      "导数不为零的解析映射把小图形旋转 $f'(z)$ 的辐角，并按它的模伸缩。这就是曲线间夹角保持不变的原因。对 $f(z) = z^n$，导数是 $n z^{n-1}$，所以在辐角为 $\\theta$ 的点，旋转角是 $(n - 1) \\theta$。",
+    ],
+    (rng) => {
+      const n = rng.int(2, 5);
+      const theta = 15 * rng.int(1, 11);
+      const r = rng.int(1, 4);
+      const answer = ((n - 1) * theta) % 360;
+      return ask(
+        [
+          `By how many degrees, from 0 up to 360, does $f(z) = z^{${n}}$ rotate small shapes at the point with modulus ${r} and argument $${theta}^\\circ$?`,
+          `$f(z) = z^{${n}}$ 在模为 ${r}、辐角为 $${theta}^\\circ$ 的点，把小图形旋转多少度（从 0 到 360）？`,
+        ],
+        answer,
+        [(n * theta) % 360, theta, (answer + 180) % 360, (answer + 90) % 360].filter((v) => v !== answer),
+        [
+          `The argument of $${n} z^{${n - 1}}$ is $${n - 1} \\cdot ${theta}$ degrees, which reduces to ${answer}.`,
+          `$${n} z^{${n - 1}}$ 的辐角是 $${n - 1} \\cdot ${theta}$ 度，化简后是 ${answer}。`,
+        ],
+      );
+    },
+  ),
+  figure: complexDrawings1["conformal-maps#the-local-rotation-angle"],
+};
 
 const cayley = point(
   "the-cayley-map",

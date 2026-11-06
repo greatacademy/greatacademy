@@ -4,6 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 import { steps } from "../problems.ts";
 import { ask, choose, point, same, topic } from "../university-kit.ts";
 
@@ -52,30 +53,33 @@ const orderedField = topic(
         );
       },
     ),
-    point(
-      "the-reverse-triangle-inequality",
-      ["The reverse triangle inequality", "反向三角不等式"],
-      [
-        "The triangle inequality also gives a lower bound: $|x| \\ge |a| - |x - a|$. Analysis uses this to keep a quantity away from zero.",
-        "三角不等式也给出下界：$|x| \\ge |a| - |x - a|$。分析中用它使某个量远离零。",
-      ],
-      (rng) => {
-        const d = rng.int(1, 12);
-        const a = (d + rng.int(1, 25)) * (rng.bool() ? 1 : -1);
-        return ask(
-          [
-            `If $|x - (${a})| < ${d}$, what is the greatest number that is sure to be a lower bound of $|x|$?`,
-            `若 $|x - (${a})| < ${d}$，一定是 $|x|$ 的下界的最大数是多少？`,
-          ],
-          Math.abs(a) - d,
-          [Math.abs(a) + d, d, Math.abs(a)],
-          [
-            `$|x| \\ge |${a}| - |x - (${a})|$, which is more than $${Math.abs(a)} - ${d}$.`,
-            `$|x| \\ge |${a}| - |x - (${a})|$，它大于 $${Math.abs(a)} - ${d}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "the-reverse-triangle-inequality",
+        ["The reverse triangle inequality", "反向三角不等式"],
+        [
+          "The triangle inequality also gives a lower bound: $|x| \\ge |a| - |x - a|$. Analysis uses this to keep a quantity away from zero.",
+          "三角不等式也给出下界：$|x| \\ge |a| - |x - a|$。分析中用它使某个量远离零。",
+        ],
+        (rng) => {
+          const d = rng.int(1, 12);
+          const a = (d + rng.int(1, 25)) * (rng.bool() ? 1 : -1);
+          return ask(
+            [
+              `If $|x - (${a})| < ${d}$, what is the greatest number that is sure to be a lower bound of $|x|$?`,
+              `若 $|x - (${a})| < ${d}$，一定是 $|x|$ 的下界的最大数是多少？`,
+            ],
+            Math.abs(a) - d,
+            [Math.abs(a) + d, d, Math.abs(a)],
+            [
+              `$|x| \\ge |${a}| - |x - (${a})|$, which is more than $${Math.abs(a)} - ${d}$.`,
+              `$|x| \\ge |${a}| - |x - (${a})|$，它大于 $${Math.abs(a)} - ${d}$。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["the-real-numbers-as-an-ordered-field#the-reverse-triangle-inequality"],
+    },
     point(
       "a-bound-for-a-reciprocal",
       ["A bound for a reciprocal", "倒数的界"],
@@ -506,37 +510,40 @@ const compactImages = topic(
         );
       },
     ),
-    point(
-      "where-the-maximum-is-attained",
-      ["Where the maximum is attained", "最大值在哪里取到"],
-      [
-        "The maximum of a continuous function on a closed interval is attained, either at a critical point inside or at an end point. A parabola opening down peaks at its vertex only if the vertex lies in the interval.",
-        "闭区间上连续函数的最大值能够取到，要么在内部的临界点，要么在端点。开口向下的抛物线只有在顶点属于区间时才在顶点达到峰值。",
-      ],
-      (rng) => {
-        const h = rng.int(-10, 10);
-        const k = rng.nonZero(-20, 20);
-        const square = h === 0 ? "x^{2}" : `(x${plus(-h)})^{2}`;
-        const a = rng.int(-12, 8);
-        const b = a + rng.int(1, 8);
-        const at = (x: number) => k - (x - h) * (x - h);
-        const best = h >= a && h <= b ? k : Math.max(at(a), at(b));
-        return ask(
-          [
-            `What is the maximum value of $f(x) = ${k} - ${square}$ on $[${a}, ${b}]$?`,
-            `$f(x) = ${k} - ${square}$ 在 $[${a}, ${b}]$ 上的最大值是多少？`,
-          ],
-          best,
-          [k === best ? k + 1 : k, Math.min(at(a), at(b)), at(a) + at(b)],
-          [
-            h >= a && h <= b
-              ? `The vertex at $x = ${h}$ lies in the interval.`
-              : `The vertex at $x = ${h}$ is outside, so the nearer end gives the maximum.`,
-            h >= a && h <= b ? `$x = ${h}$ 处的顶点在区间内。` : `$x = ${h}$ 处的顶点在区间外，所以较近的端点给出最大值。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "where-the-maximum-is-attained",
+        ["Where the maximum is attained", "最大值在哪里取到"],
+        [
+          "The maximum of a continuous function on a closed interval is attained, either at a critical point inside or at an end point. A parabola opening down peaks at its vertex only if the vertex lies in the interval.",
+          "闭区间上连续函数的最大值能够取到，要么在内部的临界点，要么在端点。开口向下的抛物线只有在顶点属于区间时才在顶点达到峰值。",
+        ],
+        (rng) => {
+          const h = rng.int(-10, 10);
+          const k = rng.nonZero(-20, 20);
+          const square = h === 0 ? "x^{2}" : `(x${plus(-h)})^{2}`;
+          const a = rng.int(-12, 8);
+          const b = a + rng.int(1, 8);
+          const at = (x: number) => k - (x - h) * (x - h);
+          const best = h >= a && h <= b ? k : Math.max(at(a), at(b));
+          return ask(
+            [
+              `What is the maximum value of $f(x) = ${k} - ${square}$ on $[${a}, ${b}]$?`,
+              `$f(x) = ${k} - ${square}$ 在 $[${a}, ${b}]$ 上的最大值是多少？`,
+            ],
+            best,
+            [k === best ? k + 1 : k, Math.min(at(a), at(b)), at(a) + at(b)],
+            [
+              h >= a && h <= b
+                ? `The vertex at $x = ${h}$ lies in the interval.`
+                : `The vertex at $x = ${h}$ is outside, so the nearer end gives the maximum.`,
+              h >= a && h <= b ? `$x = ${h}$ 处的顶点在区间内。` : `$x = ${h}$ 处的顶点在区间外，所以较近的端点给出最大值。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["continuous-images-of-compact-sets#where-the-maximum-is-attained"],
+    },
     point(
       "when-the-conclusion-fails",
       ["When the conclusion fails", "结论何时不成立"],
@@ -681,24 +688,27 @@ const boundedVariation = topic(
         );
       },
     ),
-    point(
-      "total-variation-of-a-piecewise-monotone-function",
-      ["Total variation of a piecewise monotone function", "分段单调函数的全变差"],
-      [
-        "On a piece where a function is monotone, the variation is just the size of the net change. So split the interval at each turning point, and add the sizes of the changes over the pieces.",
-        "在函数单调的一段上，变差就是净变化的绝对值。所以在每个转折点分割区间，再把各段变化的绝对值相加。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 12);
-        const b = rng.int(1, 12);
-        return ask(
-          [`What is the total variation of $f(x) = x^{2}$ on $[-${a}, ${b}]$?`, `$f(x) = x^{2}$ 在 $[-${a}, ${b}]$ 上的全变差是多少？`],
-          a * a + b * b,
-          [Math.abs(b * b - a * a) + 1, (a + b) ** 2, a + b],
-          [`It falls by ${a * a} to 0, and then rises by ${b * b}.`, `它先下降 ${a * a} 到 0，再上升 ${b * b}。`],
-        );
-      },
-    ),
+    {
+      ...point(
+        "total-variation-of-a-piecewise-monotone-function",
+        ["Total variation of a piecewise monotone function", "分段单调函数的全变差"],
+        [
+          "On a piece where a function is monotone, the variation is just the size of the net change. So split the interval at each turning point, and add the sizes of the changes over the pieces.",
+          "在函数单调的一段上，变差就是净变化的绝对值。所以在每个转折点分割区间，再把各段变化的绝对值相加。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 12);
+          const b = rng.int(1, 12);
+          return ask(
+            [`What is the total variation of $f(x) = x^{2}$ on $[-${a}, ${b}]$?`, `$f(x) = x^{2}$ 在 $[-${a}, ${b}]$ 上的全变差是多少？`],
+            a * a + b * b,
+            [Math.abs(b * b - a * a) + 1, (a + b) ** 2, a + b],
+            [`It falls by ${a * a} to 0, and then rises by ${b * b}.`, `它先下降 ${a * a} 到 0，再上升 ${b * b}。`],
+          );
+        },
+      ),
+      figure: analysisDrawings1["functions-of-bounded-variation#total-variation-of-a-piecewise-monotone-function"],
+    },
     point(
       "variation-of-an-oscillating-function",
       ["Variation of an oscillating function", "振荡函数的变差"],
@@ -1502,56 +1512,62 @@ const metricCompactness = topic(
   ["complete-metric-spaces", "open-covers"],
   [],
   [
-    point(
-      "a-net-for-an-interval",
-      ["A net for an interval", "区间的网"],
-      [
-        "A set is totally bounded when finitely many balls of any given radius cover it. On a line, a ball of radius $\\varepsilon$ is an interval of length $2\\varepsilon$, so the count is the length divided by that, rounded up.",
-        "集合完全有界，是指对任意给定半径，有限个球就能覆盖它。在直线上，半径为 $\\varepsilon$ 的球是长度为 $2\\varepsilon$ 的区间，所以个数是长度除以它再向上取整。",
-      ],
-      (rng) => {
-        const l = rng.int(3, 60);
-        const m = rng.int(2, 9);
-        const n = Math.ceil((l * m) / 2);
-        return ask(
-          [
-            `What is the fewest closed balls of radius $\\frac{1}{${m}}$ needed to cover $[0, ${l}]$?`,
-            `覆盖 $[0, ${l}]$ 至少需要多少个半径为 $\\frac{1}{${m}}$ 的闭球？`,
-          ],
-          n,
-          [l * m, n + 1, Math.max(1, n - 1)],
-          [
-            `Each ball covers length $\\frac{2}{${m}}$, and $${l} \\div \\frac{2}{${m}}$ rounds up to ${n}.`,
-            `每个球覆盖长度 $\\frac{2}{${m}}$，$${l} \\div \\frac{2}{${m}}$ 向上取整是 ${n}。`,
-          ],
-        );
-      },
-    ),
-    point(
-      "a-net-for-a-square",
-      ["A net for a square", "正方形的网"],
-      [
-        "With the maximum metric on the plane, balls are squares. So a square region is covered by a grid of balls, whose count is the square of the number needed along one side.",
-        "在平面的最大值度量下，球是正方形。所以正方形区域可以用球的网格覆盖，个数是一条边上所需个数的平方。",
-      ],
-      (rng) => {
-        const m = rng.int(2, 7);
-        const l = rng.int(2, 20);
-        const side = Math.ceil((l * m) / 2);
-        return ask(
-          [
-            `With the metric $d = \\max(|x_1 - x_2|, |y_1 - y_2|)$, how many closed balls of radius $\\frac{1}{${m}}$ does a grid use to cover $[0, ${l}]^{2}$ with as few as possible?`,
-            `在度量 $d = \\max(|x_1 - x_2|, |y_1 - y_2|)$ 下，用网格覆盖 $[0, ${l}]^{2}$，半径为 $\\frac{1}{${m}}$ 的闭球最少用多少个？`,
-          ],
-          side * side,
-          [2 * side, side, (l * m) ** 2],
-          [
-            `Each side needs ${side} balls, so the grid has $${side}^{2}$ of them.`,
-            `每条边需要 ${side} 个球，所以网格有 $${side}^{2}$ 个。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...point(
+        "a-net-for-an-interval",
+        ["A net for an interval", "区间的网"],
+        [
+          "A set is totally bounded when finitely many balls of any given radius cover it. On a line, a ball of radius $\\varepsilon$ is an interval of length $2\\varepsilon$, so the count is the length divided by that, rounded up.",
+          "集合完全有界，是指对任意给定半径，有限个球就能覆盖它。在直线上，半径为 $\\varepsilon$ 的球是长度为 $2\\varepsilon$ 的区间，所以个数是长度除以它再向上取整。",
+        ],
+        (rng) => {
+          const l = rng.int(3, 60);
+          const m = rng.int(2, 9);
+          const n = Math.ceil((l * m) / 2);
+          return ask(
+            [
+              `What is the fewest closed balls of radius $\\frac{1}{${m}}$ needed to cover $[0, ${l}]$?`,
+              `覆盖 $[0, ${l}]$ 至少需要多少个半径为 $\\frac{1}{${m}}$ 的闭球？`,
+            ],
+            n,
+            [l * m, n + 1, Math.max(1, n - 1)],
+            [
+              `Each ball covers length $\\frac{2}{${m}}$, and $${l} \\div \\frac{2}{${m}}$ rounds up to ${n}.`,
+              `每个球覆盖长度 $\\frac{2}{${m}}$，$${l} \\div \\frac{2}{${m}}$ 向上取整是 ${n}。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["compactness-in-metric-spaces#a-net-for-an-interval"],
+    },
+    {
+      ...point(
+        "a-net-for-a-square",
+        ["A net for a square", "正方形的网"],
+        [
+          "With the maximum metric on the plane, balls are squares. So a square region is covered by a grid of balls, whose count is the square of the number needed along one side.",
+          "在平面的最大值度量下，球是正方形。所以正方形区域可以用球的网格覆盖，个数是一条边上所需个数的平方。",
+        ],
+        (rng) => {
+          const m = rng.int(2, 7);
+          const l = rng.int(2, 20);
+          const side = Math.ceil((l * m) / 2);
+          return ask(
+            [
+              `With the metric $d = \\max(|x_1 - x_2|, |y_1 - y_2|)$, how many closed balls of radius $\\frac{1}{${m}}$ does a grid use to cover $[0, ${l}]^{2}$ with as few as possible?`,
+              `在度量 $d = \\max(|x_1 - x_2|, |y_1 - y_2|)$ 下，用网格覆盖 $[0, ${l}]^{2}$，半径为 $\\frac{1}{${m}}$ 的闭球最少用多少个？`,
+            ],
+            side * side,
+            [2 * side, side, (l * m) ** 2],
+            [
+              `Each side needs ${side} balls, so the grid has $${side}^{2}$ of them.`,
+              `每条边需要 ${side} 个球，所以网格有 $${side}^{2}$ 个。`,
+            ],
+          );
+        },
+      ),
+      figure: analysisDrawings1["compactness-in-metric-spaces#a-net-for-a-square"],
+    },
     point(
       "closed-and-bounded-is-not-enough",
       ["Closed and bounded is not enough", "闭且有界不够"],
