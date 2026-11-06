@@ -165,5 +165,6 @@ describe("sessions", () => {
     // Another learner cannot read it.
     await createUser(db, "u2");
     expect(await getSession(db, await learnerFor(db, "u2"), s.id)).toBeUndefined();
+    expect(await getSession(db, l, "not-a-uuid")).toBeUndefined();
   });
 });

@@ -166,8 +166,12 @@ export async function createSession(db: Db, s: NewSession): Promise<SessionRow> 
   return row!;
 }
 
+const uuidShape = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /** getSession reads a learner's session; `lock` locks it until the transaction ends. */
 export async function getSession(db: Db, learnerId: string, id: string, lock = false): Promise<SessionRow | undefined> {
+  // Ids come from addresses and are stored as uuids: anything else names no session, and PostgreSQL would reject it.
+  if (!uuidShape.test(id)) return undefined;
   const q = db
     .select()
     .from(taskSession)
