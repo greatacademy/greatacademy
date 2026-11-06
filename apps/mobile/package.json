@@ -19,6 +19,7 @@
     "@connectrpc/connect": "2.3.0",
     "@connectrpc/connect-web": "2.3.0",
     "@expo/metro-runtime": "~58.0.15",
+    "@ga/design": "workspace:*",
     "@ga/proto": "workspace:*",
     "expo": "58.0.21",
     "expo-constants": "~58.0.14",

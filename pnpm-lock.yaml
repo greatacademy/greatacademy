@@ -221,6 +221,9 @@ importers:
       '@expo/metro-runtime':
         specifier: ~58.0.15
         version: 58.0.15(@expo/log-box@58.0.13)(expo@58.0.21)(react-dom@19.3.1(react@19.3.0))(react-native@0.88.1(@babel/core@7.29.7(supports-color@7.2.0))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@7.2.0))(supports-color@7.2.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@7.2.0))(react@19.3.0)
+      '@ga/design':
+        specifier: workspace:*
+        version: link:../../libs/design
       '@ga/proto':
         specifier: workspace:*
         version: link:../../libs/proto
@@ -282,6 +285,9 @@ importers:
       '@ga/db':
         specifier: workspace:*
         version: link:../../libs/db
+      '@ga/design':
+        specifier: workspace:*
+        version: link:../../libs/design
       '@ga/proto':
         specifier: workspace:*
         version: link:../../libs/proto
@@ -445,6 +451,18 @@ importers:
       drizzle-kit:
         specifier: 0.31.11
         version: 0.31.11
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))
+
+  libs/design:
+    devDependencies:
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
       typescript:
         specifier: 7.0.2
         version: 7.0.2
