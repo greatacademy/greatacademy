@@ -215,11 +215,11 @@ Appearance belongs to the client, not the account: each browser or device keeps 
 | Setting | Choices | Default |
 | :--- | :--- | :--- |
 | `theme` | `system`, `light`, `dark` | `system` |
-| `palette` | `academy`, `paper`, `lake`, `plum`; each has a light and a dark form | `academy` |
+| `palette` | `academy`, `iris`, `plum`, `rose`, `walnut`, `paper`, `sepia`, `pine`, `lake`, `sky`, `midnight`, `slate`; each has a light and a dark form | `academy` |
 | `text` | `small`, `default`, `large` | `default` |
 | `motion` | `system`, `reduced`, `full` | `system` |
 
-**Colors.** `colorTokens(palette, scheme)` is the only source of colors, by role (`ink`, `surface`, `accent`, …). A palette changes the neutrals and the accent; `good`, `bad` and `warn` are the same in every palette because a verdict must read the same. Tests hold every text pair to a contrast of at least 4.5:1 in every palette and scheme. A new color role or palette is added here, never in a client.
+**Colors.** `colorTokens(palette, scheme)` is the only source of colors, by role (`ink`, `surface`, `accent`, …). A palette changes the neutrals and the accent; `good`, `bad` and `warn` are the same in every palette because a verdict must read the same. Tests hold every text pair to a contrast of at least 4.5:1 in every palette and scheme, and keep any saturated accent at least 30 degrees of hue from the verdict colors. A new color role or palette is added here, never in a client.
 
 **Storage.** `serializeAppearance` and `parseAppearance` define one format, for example `theme=dark&palette=paper`, stored under `APPEARANCE_STORAGE_KEY`. Defaults are left out, and whatever is missing or invalid reads as the default.
 

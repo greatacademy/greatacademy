@@ -215,11 +215,11 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | 设置 | 可选值 | 默认值 |
 | :--- | :--- | :--- |
 | `theme` | `system`、`light`、`dark` | `system` |
-| `palette` | `academy`、`paper`、`lake`、`plum`；每套都有浅色和深色两版 | `academy` |
+| `palette` | `academy`、`iris`、`plum`、`rose`、`walnut`、`paper`、`sepia`、`pine`、`lake`、`sky`、`midnight`、`slate`；每套都有浅色和深色两版 | `academy` |
 | `text` | `small`、`default`、`large` | `default` |
 | `motion` | `system`、`reduced`、`full` | `system` |
 
-**颜色。** `colorTokens(palette, scheme)` 是颜色的唯一来源，按角色划分（`ink`、`surface`、`accent` 等）。配色改变中性色和强调色；`good`、`bad`、`warn` 在所有配色中都相同，因为对错的含义不能随配色变化。测试要求每种配色、每种明暗下的所有文字组合对比度至少为 4.5:1。新的颜色角色或配色都加在这里，不加在客户端。
+**颜色。** `colorTokens(palette, scheme)` 是颜色的唯一来源，按角色划分（`ink`、`surface`、`accent` 等）。配色改变中性色和强调色；`good`、`bad`、`warn` 在所有配色中都相同，因为对错的含义不能随配色变化。测试要求每种配色、每种明暗下的所有文字组合对比度至少为 4.5:1，并要求饱和的强调色与对错颜色的色相至少相差 30 度。新的颜色角色或配色都加在这里，不加在客户端。
 
 **存储。** `serializeAppearance` 和 `parseAppearance` 定义统一的格式，例如 `theme=dark&palette=paper`，保存在 `APPEARANCE_STORAGE_KEY` 下。默认值不写入，缺失或无效的内容都按默认值读取。
 

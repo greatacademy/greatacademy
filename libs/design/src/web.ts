@@ -3,7 +3,11 @@ import { COLOR_TOKENS, type ColorScheme, colorTokens, PALETTES, type Palette } f
 
 const declarations = (palette: Palette, scheme: ColorScheme, indent: string) => {
   const tokens = colorTokens(palette, scheme);
-  return COLOR_TOKENS.map((token) => `${indent}--color-${token}: oklch(${tokens[token].join(" ")});`).join("\n");
+  const base = colorTokens(DEFAULT_APPEARANCE.palette, scheme);
+  // Other palettes only state what differs: the rules of the default palette always apply underneath.
+  return COLOR_TOKENS.filter((token) => palette === DEFAULT_APPEARANCE.palette || tokens[token].join() !== base[token].join())
+    .map((token) => `${indent}--color-${token}: oklch(${tokens[token].join(" ")});`)
+    .join("\n");
 };
 
 const block = (selectors: string[], palette: Palette, scheme: ColorScheme, indent = "") =>

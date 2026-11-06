@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { type ColorToken, hexColors, oklchToHex, PALETTES } from "./tokens.ts";
+import { accentOf, type ColorToken, hexColors, oklchToHex, PALETTES } from "./tokens.ts";
 
 const luminance = (hex: string) => {
   const [r = 0, g = 0, b = 0] = [1, 3, 5].map((i) => {
@@ -46,6 +46,15 @@ describe("palettes", () => {
     const colors = hexColors(palette, scheme);
     for (const [text, background] of TEXT_PAIRS) {
       expect(contrast(colors[text], colors[background]), `${text} on ${background}`).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it.each(PALETTES)("%s has an accent that cannot be taken for a verdict", (palette) => {
+    const { hue, chroma } = accentOf(palette);
+    if (chroma < 0.1) return; // Too muted to read as a signal.
+    for (const verdict of [155, 25, 75]) {
+      const distance = Math.abs(((hue - verdict + 540) % 360) - 180);
+      expect(distance).toBeGreaterThanOrEqual(30);
     }
   });
 });

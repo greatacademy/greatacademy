@@ -92,9 +92,22 @@ function ThemePicker() {
 function PalettePicker() {
   const { m } = useI18n();
   const { palette } = useAppearance();
-  const names: Record<Palette, string> = { academy: m.paletteAcademy, paper: m.palettePaper, lake: m.paletteLake, plum: m.palettePlum };
+  const names: Record<Palette, string> = {
+    academy: m.paletteAcademy,
+    iris: m.paletteIris,
+    plum: m.palettePlum,
+    rose: m.paletteRose,
+    walnut: m.paletteWalnut,
+    paper: m.palettePaper,
+    sepia: m.paletteSepia,
+    pine: m.palettePine,
+    lake: m.paletteLake,
+    sky: m.paletteSky,
+    midnight: m.paletteMidnight,
+    slate: m.paletteSlate,
+  };
   return (
-    <fieldset className="grid grid-cols-4 gap-3 max-sm:grid-cols-2">
+    <fieldset className="grid grid-cols-4 gap-3 max-sm:grid-cols-3">
       <legend className="sr-only">{m.palette}</legend>
       {PALETTES.map((p) => (
         <PreviewChoice key={p} group="palette" name={names[p]} checked={palette === p} onChange={() => setAppearance({ palette: p })}>

@@ -5,7 +5,20 @@ export type ColorScheme = "light" | "dark";
 export type Oklch = readonly [lightness: number, chroma: number, hue: number];
 
 /** PALETTES lists the built-in color palettes; the first is the default. Each has a light and a dark form. */
-export const PALETTES = ["academy", "paper", "lake", "plum"] as const;
+export const PALETTES = [
+  "academy",
+  "iris",
+  "plum",
+  "rose",
+  "walnut",
+  "paper",
+  "sepia",
+  "pine",
+  "lake",
+  "sky",
+  "midnight",
+  "slate",
+] as const;
 
 /** Palette is one of PALETTES. */
 export type Palette = (typeof PALETTES)[number];
@@ -58,47 +71,67 @@ interface PaletteShape {
   neutral: readonly [hue: number, tint: number];
   /** The hue of the accent and its chroma in each scheme, within what sRGB can show at that lightness. */
   accent: readonly [hue: number, light: number, dark: number];
+  /** The lightness of the page and the surfaces on it, where they differ from the usual. */
+  light?: readonly [page: number, surface: number];
+  dark?: readonly [page: number, surface: number];
 }
 
+// An accent with real chroma stays at least 30 degrees from the verdict hues, so that it never reads as one; the tests enforce it.
 const SHAPES: Record<Palette, PaletteShape> = {
   academy: { neutral: [265, 1], accent: [268, 0.19, 0.12] },
-  paper: { neutral: [75, 2.2], accent: [245, 0.12, 0.09] },
-  lake: { neutral: [225, 1.4], accent: [222, 0.1, 0.1] },
+  iris: { neutral: [290, 1], accent: [292, 0.2, 0.12] },
   plum: { neutral: [320, 1], accent: [320, 0.17, 0.12] },
+  rose: { neutral: [350, 1], accent: [355, 0.17, 0.12] },
+  walnut: { neutral: [60, 1.6], accent: [50, 0.09, 0.08] },
+  paper: { neutral: [75, 2.2], accent: [245, 0.12, 0.09] },
+  sepia: { neutral: [80, 3], accent: [200, 0.08, 0.09], light: [0.955, 0.98], dark: [0.2, 0.25] },
+  pine: { neutral: [185, 1.2], accent: [185, 0.08, 0.11] },
+  lake: { neutral: [225, 1.4], accent: [222, 0.09, 0.1] },
+  sky: { neutral: [245, 1.2], accent: [250, 0.135, 0.115] },
+  midnight: { neutral: [255, 3], accent: [280, 0.16, 0.11], dark: [0.19, 0.24] },
+  slate: { neutral: [255, 1.5], accent: [255, 0.05, 0.04] },
 };
 
 const round = (x: number) => Math.round(x * 1000) / 1000;
 
 /** colorTokens gives every color of a palette in a scheme. Text pairs keep a contrast of at least 4.5:1, which the tests enforce. */
 export function colorTokens(palette: Palette, scheme: ColorScheme): Tokens {
-  const {
-    neutral: [nh, tint],
-    accent: [ah, lightChroma, darkChroma],
-  } = SHAPES[palette];
-  const n = (l: number, c: number): Oklch => [l, round(c * tint), nh];
-  return scheme === "light"
-    ? {
-        ink: n(0.24, 0.02),
-        muted: n(0.5, 0.02),
-        line: n(0.9, 0.01),
-        page: n(0.985, 0.004),
-        surface: [1, 0, 0],
-        accent: [0.5, lightChroma, ah],
-        "on-accent": [1, 0, 0],
-        "accent-soft": [0.95, 0.035, ah],
-        ...VERDICTS.light,
-      }
-    : {
-        ink: n(0.93, 0.008),
-        muted: n(0.72, 0.015),
-        line: n(0.32, 0.015),
-        page: n(0.17, 0.012),
-        surface: n(0.215, 0.014),
-        accent: [0.76, darkChroma, ah],
-        "on-accent": [0.2, 0.04, ah],
-        "accent-soft": [0.3, 0.06, ah],
-        ...VERDICTS.dark,
-      };
+  const shape = SHAPES[palette];
+  const [neutralHue, tint] = shape.neutral;
+  const [accentHue, lightChroma, darkChroma] = shape.accent;
+  const n = (l: number, c: number): Oklch => [round(l), round(c * tint), neutralHue];
+  if (scheme === "light") {
+    const [page, surface] = shape.light ?? [0.985, 1];
+    return {
+      ink: n(0.24, 0.02),
+      muted: n(page - 0.485, 0.02),
+      line: n(page - 0.085, 0.01),
+      page: n(page, 0.004),
+      surface: surface === 1 ? [1, 0, 0] : n(surface, 0.003),
+      accent: [0.5, lightChroma, accentHue],
+      "on-accent": [1, 0, 0],
+      "accent-soft": [0.95, round(Math.min(0.035, lightChroma * 0.4)), accentHue],
+      ...VERDICTS.light,
+    };
+  }
+  const [page, surface] = shape.dark ?? [0.17, 0.215];
+  return {
+    ink: n(0.93, 0.008),
+    muted: n(0.72, 0.015),
+    line: n(surface + 0.105, 0.015),
+    page: n(page, 0.012),
+    surface: n(surface, 0.014),
+    accent: [0.76, darkChroma, accentHue],
+    "on-accent": [0.2, 0.04, accentHue],
+    "accent-soft": [0.3, round(Math.min(0.06, darkChroma * 0.5)), accentHue],
+    ...VERDICTS.dark,
+  };
+}
+
+/** accentOf gives the hue and light chroma of a palette's accent. */
+export function accentOf(palette: Palette): { hue: number; chroma: number } {
+  const [hue, chroma] = SHAPES[palette].accent;
+  return { hue, chroma };
 }
 
 const toGamma = (x: number) => {
