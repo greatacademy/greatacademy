@@ -215,7 +215,7 @@ Appearance belongs to the client, not the account: each browser or device keeps 
 | Setting | Choices | Default |
 | :--- | :--- | :--- |
 | `theme` | `system`, `light`, `dark` | `system` |
-| `light` | The palette in light: `academy`, `iris`, `plum`, `rose`, `linen`, `terracotta`, `walnut`, `honey`, `olive`, `paper`, `sepia`, `pine`, `lake`, `sky`, `midnight`, `slate`, or `custom` | `academy` |
+| `light` | The palette in light: `academy`, `iris`, `plum`, `rose`, `linen`, `terracotta`, `walnut`, `honey`, `olive`, `paper`, `sepia`, `pine`, `lake`, `sky`, `midnight`, `slate`, or a custom palette | `academy` |
 | `dark` | The palette in dark, with the same choices | `academy` |
 | `contrast` | `standard`, `high` | `standard` |
 | `text` | `small`, `default`, `large` | `default` |
@@ -223,11 +223,11 @@ Appearance belongs to the client, not the account: each browser or device keeps 
 
 **Colors.** `colorTokens(palette, scheme, contrast)` is the only source of built-in colors, by role (`ink`, `surface`, `accent`, …). A palette changes the neutrals and the accent; `good`, `bad` and `warn` are the same in every palette because a verdict must read the same. Half of the built-in palettes are warm and half cool. Tests hold every text pair to the target of the contrast level in every palette and scheme, 4.5:1 for `standard` and 7:1 for `high`, which also strengthens `line`; they keep any saturated accent at least 20 degrees of hue from the verdict colors. A new color role or palette is added here, never in a client.
 
-**Custom palettes.** A custom palette is three colors (`accent`, `page`, `ink`), one set each for light and dark; `customTokens` derives the rest. The page stays as light or dark as its scheme requires and text moves in lightness as far as needed, so tests hold any three colors to the same contrast targets. Starting one takes the colors of the palette in use, and it stays stored while another palette is chosen.
+**Custom palettes.** Each scheme keeps its own list of up to `MAX_CUSTOM_PALETTES` named palettes, with ids such as `custom-3`. A custom palette is three colors (`accent`, `page`, `ink`); `customTokens` derives the rest. The page stays as light or dark as its scheme requires and text moves in lightness as far as needed, so tests hold any three colors to the same contrast targets. A new palette starts from the colors of the one in use. Built-in palettes never change: editing one makes a draft, shown only in the preview, that can be saved as a new custom palette. Deleting a palette that is showing returns the scheme to the default.
 
-**Sharing.** `sharePalette` writes a custom or built-in palette as text, `great-academy-palette-v1:{"scheme","accent","page","ink"}`, and `parseSharedPalette` reads it strictly. A palette is imported only into the scheme it was made for, because its colors only work there.
+**Sharing.** `sharePalette` writes a custom or built-in palette as text, `great-academy-palette-v1:{"scheme","name","accent","page","ink"}`, and `parseSharedPalette` reads it strictly. Importing adds a new custom palette, only to the scheme it was made for, because its colors only work there.
 
-**Storage.** `serializeAppearance` and `parseAppearance` define one format, for example `theme=dark&light=paper&custom-dark=rrggbb.rrggbb.rrggbb`, stored under `APPEARANCE_STORAGE_KEY`. Defaults are left out, and whatever is missing or invalid reads as the default.
+**Storage.** `serializeAppearance` and `parseAppearance` define one format, for example `theme=dark&dark=custom-1&custom-dark=1.rrggbb.rrggbb.rrggbb.name`, with one `custom-light` or `custom-dark` entry per palette and the name percent-encoded, stored under `APPEARANCE_STORAGE_KEY`. Defaults are left out, and whatever is missing or invalid reads as the default.
 
 **Web.**
 - `libs/design/theme.css` is generated from the tokens with `pnpm nx run design:generate` and committed; a test fails if it is stale. `apps/web` imports it, so components only use Tailwind classes such as `bg-surface`.

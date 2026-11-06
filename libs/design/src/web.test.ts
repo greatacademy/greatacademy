@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-import { APPEARANCE_STORAGE_KEY, type Appearance, DEFAULT_APPEARANCE } from "./appearance.ts";
+import { APPEARANCE_STORAGE_KEY, type Appearance, addCustomPalette, DEFAULT_APPEARANCE } from "./appearance.ts";
 import {
   appearanceAttributes,
   appearanceScript,
@@ -49,10 +49,15 @@ describe("customPaletteCss", () => {
   });
 
   it("covers only the schemes that have one, at both contrasts", () => {
-    const css = customPaletteCss({ ...DEFAULT_APPEARANCE, customLight: seeds });
-    expect(css).toContain('[data-theme="light"][data-light="custom"]');
-    expect(css).toContain('[data-theme="light"][data-contrast="high"][data-light="custom"]');
+    const css = customPaletteCss(addCustomPalette(addCustomPalette(DEFAULT_APPEARANCE, "light", "One", seeds), "light", "Two", seeds));
+    expect(css).toContain('[data-theme="light"][data-light="custom-1"]');
+    expect(css).toContain('[data-theme="light"][data-contrast="high"][data-light="custom-2"]');
     expect(css).not.toContain("@layer ga-dark {");
+  });
+
+  it("never puts a name in the stylesheet", () => {
+    const css = customPaletteCss(addCustomPalette(DEFAULT_APPEARANCE, "dark", "}body{display:none", seeds));
+    expect(css).not.toContain("display:none");
   });
 });
 
@@ -74,13 +79,18 @@ describe("appearanceScript", () => {
   it("sets nothing for defaults, an empty store or invalid values", () => {
     expect(runScript(null).attributes).toEqual({});
     expect(runScript("theme=system").attributes).toEqual({});
-    expect(runScript("theme=neon&color=red&custom-light=aa3311.fff8ee.221100").attributes).toEqual({});
+    expect(runScript("theme=neon&color=red&custom-light=1.aa3311.fff8ee.221100.x").attributes).toEqual({});
+  });
+
+  it("shows a custom palette, and nothing else that looks like one", () => {
+    expect(runScript("dark=custom-12&custom-dark=12.aa3311.fff8ee.221100.x").attributes).toEqual({ "data-dark": "custom-12" });
+    expect(runScript('dark=custom-1"x&light=custom&theme=custom-1').attributes).toEqual({});
   });
 
   it("adds the stylesheet of custom palettes", () => {
-    const { styles } = runScript("light=custom", "a{}");
+    const { styles } = runScript("light=custom-1", "a{}");
     expect(styles).toEqual([{ id: CUSTOM_PALETTE_STYLE_ID, textContent: "a{}" }]);
-    expect(runScript("light=custom").styles).toEqual([]);
+    expect(runScript("light=custom-1").styles).toEqual([]);
   });
 
   it("survives storage that throws", () => {

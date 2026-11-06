@@ -1,22 +1,29 @@
 import {
+  addCustomPalette,
   CONTRASTS,
   type ColorScheme,
   type ColorSeeds,
+  choiceSeeds,
+  customHexColors,
+  isCustomChoice,
   isHexColor,
+  MAX_CUSTOM_PALETTES,
+  MAX_PALETTE_NAME,
   MOTIONS,
-  PALETTE_CHOICES,
+  PALETTES,
   type Palette,
   type PaletteChoice,
   parseSharedPalette,
-  seedsOf,
+  removeCustomPalette,
   sharePalette,
   TEXT_SIZES,
   THEMES,
   type Theme,
+  updateCustomPalette,
 } from "@ga/design";
-import { Check, Palette as PaletteIcon } from "@phosphor-icons/react";
+import { Check, Plus } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { type ReactNode, useEffect, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
@@ -88,9 +95,9 @@ function PreviewChoice({
       <span className="block aspect-[4/3] overflow-hidden rounded-xl border-2 border-line transition group-hover:border-accent/50 peer-checked:border-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
         {children}
       </span>
-      <span className={`inline-flex items-center gap-1 ${checked ? "font-medium text-ink" : "text-muted"}`}>
+      <span className={`flex items-center justify-center gap-1 ${checked ? "font-medium text-ink" : "text-muted"}`} title={name}>
         {checked && <Check size={14} weight="bold" className="shrink-0 text-accent" />}
-        {name}
+        <span className="truncate">{name}</span>
       </span>
     </label>
   );
@@ -121,23 +128,10 @@ function ThemePicker({ onPick }: { onPick: (scheme: ColorScheme) => void }) {
   );
 }
 
-/** The seeds a scheme has in the appearance, or what it shows now, as a palette to share or to start customizing from. */
-function useCurrentSeeds(scheme: ColorScheme): ColorSeeds {
-  const appearance = useAppearance();
-  const choice = appearance[scheme];
-  const custom = scheme === "light" ? appearance.customLight : appearance.customDark;
-  return choice === "custom" && custom ? custom : seedsOf(choice === "custom" ? "academy" : (choice as Palette), scheme);
-}
-
-const setCustom = (scheme: ColorScheme, seeds: ColorSeeds) =>
-  setAppearance(scheme === "light" ? { light: "custom", customLight: seeds } : { dark: "custom", customDark: seeds });
-
-function PaletteGrid({ scheme }: { scheme: ColorScheme }) {
+/** The names of the built-in palettes. */
+function usePaletteNames(): Record<Palette, string> {
   const { m } = useI18n();
-  const appearance = useAppearance();
-  const seeds = useCurrentSeeds(scheme);
-  const hasCustom = !!(scheme === "light" ? appearance.customLight : appearance.customDark);
-  const names: Record<PaletteChoice, string> = {
+  return {
     academy: m.paletteAcademy,
     iris: m.paletteIris,
     plum: m.palettePlum,
@@ -154,32 +148,60 @@ function PaletteGrid({ scheme }: { scheme: ColorScheme }) {
     sky: m.paletteSky,
     midnight: m.paletteMidnight,
     slate: m.paletteSlate,
-    custom: m.paletteCustom,
+  };
+}
+
+/** A name not yet taken in a scheme: the wanted one, or the wanted one with a number. */
+function freeName(wanted: string, taken: readonly { name: string }[]) {
+  const names = new Set(taken.map((p) => p.name));
+  if (!names.has(wanted)) return wanted;
+  let n = 2;
+  while (names.has(`${wanted} ${n}`)) n++;
+  return `${wanted} ${n}`;
+}
+
+function PaletteGrid({ scheme }: { scheme: ColorScheme }) {
+  const { m } = useI18n();
+  const appearance = useAppearance();
+  const names = usePaletteNames();
+  const custom = appearance.custom[scheme];
+  const pick = (choice: PaletteChoice) => setAppearance({ [scheme]: choice });
+  const add = () => {
+    let n = 1;
+    while (custom.some((p) => p.name === m.paletteNewName(n))) n++;
+    setAppearance(addCustomPalette(appearance, scheme, m.paletteNewName(n), choiceSeeds(appearance, scheme)));
   };
   return (
     <fieldset className="grid grid-cols-4 gap-x-2.5 gap-y-3 sm:grid-cols-6">
       <legend className="sr-only">{m.palette}</legend>
-      {PALETTE_CHOICES.map((p) => (
-        <PreviewChoice
-          key={p}
-          group={`palette-${scheme}`}
-          name={names[p]}
-          checked={appearance[scheme] === p}
-          onChange={() => {
-            if (p !== "custom") setAppearance({ [scheme]: p });
-            else if (hasCustom) setAppearance({ [scheme]: "custom" });
-            else setCustom(scheme, seeds);
-          }}
-        >
-          {p === "custom" && !hasCustom ? (
-            <span className="flex h-full items-center justify-center text-muted">
-              <PaletteIcon size={22} />
-            </span>
-          ) : (
-            <Miniature scheme={scheme} choice={p} />
-          )}
+      {PALETTES.map((p) => (
+        <PreviewChoice key={p} group={`palette-${scheme}`} name={names[p]} checked={appearance[scheme] === p} onChange={() => pick(p)}>
+          <Miniature scheme={scheme} choice={p} />
         </PreviewChoice>
       ))}
+      {custom.map((p) => (
+        <PreviewChoice
+          key={p.id}
+          group={`palette-${scheme}`}
+          name={p.name}
+          checked={appearance[scheme] === p.id}
+          onChange={() => pick(p.id)}
+        >
+          <Miniature scheme={scheme} choice={p.id} />
+        </PreviewChoice>
+      ))}
+      {custom.length < MAX_CUSTOM_PALETTES && (
+        <button
+          type="button"
+          onClick={add}
+          className="group min-w-0 cursor-pointer space-y-1.5 text-center text-sm text-muted hover:text-ink"
+        >
+          <span className="flex aspect-[4/3] items-center justify-center rounded-xl border-2 border-dashed border-line transition group-hover:border-accent/50">
+            <Plus size={20} />
+          </span>
+          <span className="block truncate">{m.paletteNew}</span>
+        </button>
+      )}
     </fieldset>
   );
 }
@@ -216,58 +238,176 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
   );
 }
 
-function CustomEditor({ scheme }: { scheme: ColorScheme }) {
+function CopyButton({ scheme, name, seeds }: { scheme: ColorScheme; name: string; seeds: ColorSeeds }) {
   const { m } = useI18n();
-  const seeds = useCurrentSeeds(scheme);
-  return (
-    <div className="space-y-2">
-      <div className="divide-y divide-line rounded-xl border border-line bg-surface">
-        <ColorField label={m.customAccent} value={seeds.accent} onChange={(accent) => setCustom(scheme, { ...seeds, accent })} />
-        <ColorField label={m.customPage} value={seeds.page} onChange={(page) => setCustom(scheme, { ...seeds, page })} />
-        <ColorField label={m.customInk} value={seeds.ink} onChange={(ink) => setCustom(scheme, { ...seeds, ink })} />
-      </div>
-      <p className="text-xs text-muted">{m.customHint}</p>
-    </div>
-  );
-}
-
-function CopyImport({ scheme }: { scheme: ColorScheme }) {
-  const { m } = useI18n();
-  const seeds = useCurrentSeeds(scheme);
   const [copied, setCopied] = useState(false);
-  const [importing, setImporting] = useState(false);
-  const [text, setText] = useState("");
-  const [failed, setFailed] = useState(false);
-
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 1500);
     return () => clearTimeout(timer);
   }, [copied]);
+  return (
+    <button
+      type="button"
+      className={buttonClass("ghost", "px-2.5 py-1")}
+      onClick={async () => {
+        await navigator.clipboard.writeText(sharePalette(scheme, name, seeds));
+        setCopied(true);
+      }}
+    >
+      {copied ? m.paletteCopied : m.paletteCopy}
+    </button>
+  );
+}
+
+/** Deleting takes a second click, because nothing brings a palette back. */
+function DeleteButton({ onDelete }: { onDelete: () => void }) {
+  const { m } = useI18n();
+  const [asked, setAsked] = useState(false);
+  return (
+    <button
+      type="button"
+      className={buttonClass("ghost", "px-2.5 py-1 text-bad hover:text-bad")}
+      onBlur={() => setAsked(false)}
+      onClick={() => (asked ? onDelete() : setAsked(true))}
+    >
+      {asked ? m.paletteDeleteConfirm : m.paletteDelete}
+    </button>
+  );
+}
+
+/** A name that may not end up blank: it stays as typed, and an empty field shows the old name again on leaving. */
+function NameField({ value, onChange }: { value: string; onChange: (name: string) => void }) {
+  const { m } = useI18n();
+  const [text, setText] = useState(value);
+  return (
+    <input
+      type="text"
+      aria-label={m.paletteName}
+      maxLength={MAX_PALETTE_NAME}
+      value={text}
+      onChange={(e) => {
+        setText(e.target.value);
+        if (e.target.value.trim()) onChange(e.target.value);
+      }}
+      onBlur={() => setText(value)}
+      className={`${field} min-w-0 flex-1 py-1 text-sm font-medium`}
+    />
+  );
+}
+
+/**
+ * The colors of the chosen palette. A person's own palette changes as it is
+ * edited; a built-in one never does, so edits to it stay a draft until saved as
+ * a new palette.
+ */
+function PaletteDetails({
+  scheme,
+  draft,
+  onDraft,
+}: {
+  scheme: ColorScheme;
+  draft: ColorSeeds | null;
+  onDraft: (draft: ColorSeeds | null) => void;
+}) {
+  const { m } = useI18n();
+  const appearance = useAppearance();
+  const names = usePaletteNames();
+  const choice = appearance[scheme];
+  const list = appearance.custom[scheme];
+  const custom = list.find((p) => p.id === choice);
+  const name = custom?.name ?? (isCustomChoice(choice) ? "" : names[choice]);
+  const saved = choiceSeeds(appearance, scheme);
+  const seeds = draft ?? saved;
+  const full = list.length >= MAX_CUSTOM_PALETTES;
+  const [copyName, setCopyName] = useState("");
+  const suggested = freeName(m.paletteCopyName(name), list);
+
+  const change = (part: Partial<ColorSeeds>) => {
+    if (custom) {
+      setAppearance(updateCustomPalette(appearance, scheme, custom.id, part));
+      return;
+    }
+    const next = { ...seeds, ...part };
+    onDraft(next.accent === saved.accent && next.page === saved.page && next.ink === saved.ink ? null : next);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="divide-y divide-line rounded-xl border border-line bg-surface">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5">
+          {custom ? (
+            <NameField
+              value={custom.name}
+              onChange={(next) => setAppearance(updateCustomPalette(appearance, scheme, custom.id, { name: next }))}
+            />
+          ) : (
+            <span className="flex items-baseline gap-2 text-sm font-medium">
+              {name}
+              <span className="text-xs font-normal text-muted">{m.paletteBuiltIn}</span>
+            </span>
+          )}
+          <span className="flex items-center gap-1">
+            <CopyButton scheme={scheme} name={name} seeds={seeds} />
+            {custom && <DeleteButton onDelete={() => setAppearance(removeCustomPalette(appearance, scheme, custom.id))} />}
+          </span>
+        </div>
+        <ColorField label={m.customAccent} value={seeds.accent} onChange={(accent) => change({ accent })} />
+        <ColorField label={m.customPage} value={seeds.page} onChange={(page) => change({ page })} />
+        <ColorField label={m.customInk} value={seeds.ink} onChange={(ink) => change({ ink })} />
+        {draft && (
+          <form
+            className="flex flex-wrap items-center gap-2 px-4 py-2.5"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setAppearance(addCustomPalette(appearance, scheme, copyName.trim() || suggested, draft));
+              onDraft(null);
+            }}
+          >
+            <input
+              type="text"
+              aria-label={m.paletteName}
+              maxLength={MAX_PALETTE_NAME}
+              placeholder={suggested}
+              value={copyName}
+              onChange={(e) => setCopyName(e.target.value)}
+              className={`${field} min-w-40 flex-1 py-1 text-sm`}
+            />
+            <Button type="submit" variant="secondary" disabled={full}>
+              {m.paletteSaveCustom}
+            </Button>
+            <button type="button" className={buttonClass("ghost", "px-2.5 py-1")} onClick={() => onDraft(null)}>
+              {m.paletteRevert}
+            </button>
+            {full && <p className="w-full text-sm text-bad">{m.paletteLimit(MAX_CUSTOM_PALETTES)}</p>}
+          </form>
+        )}
+      </div>
+      {!custom && <p className="text-xs text-muted">{m.builtInHint}</p>}
+      <p className="text-xs text-muted">{m.customHint}</p>
+    </div>
+  );
+}
+
+function ImportPalette({ scheme }: { scheme: ColorScheme }) {
+  const { m } = useI18n();
+  const appearance = useAppearance();
+  const [importing, setImporting] = useState(false);
+  const [text, setText] = useState("");
+  const [error, setError] = useState("");
+  const list = appearance.custom[scheme];
 
   const close = () => {
     setImporting(false);
     setText("");
-    setFailed(false);
+    setError("");
   };
 
   return (
     <>
-      <span className="flex items-center gap-1">
-        <button type="button" className={buttonClass("ghost", "px-2.5 py-1")} onClick={() => (importing ? close() : setImporting(true))}>
-          {m.paletteImport}
-        </button>
-        <button
-          type="button"
-          className={buttonClass("ghost", "px-2.5 py-1")}
-          onClick={async () => {
-            await navigator.clipboard.writeText(sharePalette(scheme, seeds));
-            setCopied(true);
-          }}
-        >
-          {copied ? m.paletteCopied : m.paletteCopy}
-        </button>
-      </span>
+      <button type="button" className={buttonClass("ghost", "px-2.5 py-1")} onClick={() => (importing ? close() : setImporting(true))}>
+        {m.paletteImport}
+      </button>
       {importing && (
         <form
           className="w-full space-y-2"
@@ -275,10 +415,14 @@ function CopyImport({ scheme }: { scheme: ColorScheme }) {
             e.preventDefault();
             const shared = parseSharedPalette(text);
             if (!shared || shared.scheme !== scheme) {
-              setFailed(true);
+              setError(m.paletteImportFailed(scheme === "light" ? m.themeLight : m.themeDark));
               return;
             }
-            setCustom(scheme, shared.seeds);
+            if (list.length >= MAX_CUSTOM_PALETTES) {
+              setError(m.paletteLimit(MAX_CUSTOM_PALETTES));
+              return;
+            }
+            setAppearance(addCustomPalette(appearance, scheme, freeName(shared.name, list), shared.seeds));
             close();
           }}
         >
@@ -290,11 +434,11 @@ function CopyImport({ scheme }: { scheme: ColorScheme }) {
             value={text}
             onChange={(e) => {
               setText(e.target.value);
-              setFailed(false);
+              setError("");
             }}
             className={`${field} font-mono text-xs`}
           />
-          {failed && <p className="text-sm text-bad">{m.paletteImportFailed(scheme === "light" ? m.themeLight : m.themeDark)}</p>}
+          {error && <p className="text-sm text-bad">{error}</p>}
           <Button type="submit" variant="secondary" disabled={!text.trim()}>
             {m.paletteImport}
           </Button>
@@ -305,11 +449,18 @@ function CopyImport({ scheme }: { scheme: ColorScheme }) {
 }
 
 /** A real question in a scheme's colors: the type, math, a figure and the states of an answer. */
-function Preview({ scheme }: { scheme: ColorScheme }) {
+function Preview({ scheme, draft }: { scheme: ColorScheme; draft: ColorSeeds | null }) {
   const { m } = useI18n();
   const attributes = useSchemeAttributes(scheme);
+  const { contrast } = useAppearance();
+  // A draft has no rules in any stylesheet yet, so it sets the colors right here.
+  const style =
+    draft &&
+    (Object.fromEntries(
+      Object.entries(customHexColors(draft, scheme, contrast)).map(([token, hex]) => [`--color-${token}`, hex]),
+    ) as CSSProperties);
   return (
-    <div {...attributes} className="rounded-2xl bg-page p-3 text-ink">
+    <div {...attributes} style={style ?? undefined} className="rounded-2xl bg-page p-3 text-ink">
       <Card className="space-y-4">
         <Markdown source={m.previewPrompt} className="font-medium" />
         <div className="figure-ga">
@@ -384,6 +535,10 @@ function AppearanceSettings() {
   useEffect(() => {
     setScheme(theme === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : theme);
   }, [theme]);
+  // Unsaved changes to a built-in palette, kept until another palette is edited.
+  const [draft, setDraft] = useState<{ of: string; seeds: ColorSeeds } | null>(null);
+  const draftOf = `${scheme}:${appearance[scheme]}`;
+  const currentDraft = draft?.of === draftOf ? draft.seeds : null;
   const contrastNames = { standard: m.contrastStandard, high: m.contrastHigh };
   const textNames = { small: m.textSmall, default: m.textDefault, large: m.textLarge };
   const motionNames = { system: m.motionSystem, reduced: m.motionReduced, full: m.motionFull };
@@ -409,14 +564,14 @@ function AppearanceSettings() {
             value={scheme}
             onChange={setScheme}
           />
-          <CopyImport key={scheme} scheme={scheme} />
+          <ImportPalette key={scheme} scheme={scheme} />
         </div>
         <PaletteGrid scheme={scheme} />
-        {appearance[scheme] === "custom" && <CustomEditor scheme={scheme} />}
+        <PaletteDetails key={draftOf} scheme={scheme} draft={currentDraft} onDraft={(seeds) => setDraft(seeds && { of: draftOf, seeds })} />
       </section>
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">{m.appearancePreview}</h2>
-        <Preview scheme={scheme} />
+        <Preview scheme={scheme} draft={currentDraft} />
       </section>
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">{m.preferences}</h2>

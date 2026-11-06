@@ -215,7 +215,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | 设置 | 可选值 | 默认值 |
 | :--- | :--- | :--- |
 | `theme` | `system`、`light`、`dark` | `system` |
-| `light` | 浅色下的配色：`academy`、`iris`、`plum`、`rose`、`linen`、`terracotta`、`walnut`、`honey`、`olive`、`paper`、`sepia`、`pine`、`lake`、`sky`、`midnight`、`slate` 或 `custom` | `academy` |
+| `light` | 浅色下的配色：`academy`、`iris`、`plum`、`rose`、`linen`、`terracotta`、`walnut`、`honey`、`olive`、`paper`、`sepia`、`pine`、`lake`、`sky`、`midnight`、`slate` 或某套自定义配色 | `academy` |
 | `dark` | 深色下的配色，可选值相同 | `academy` |
 | `contrast` | `standard`、`high` | `standard` |
 | `text` | `small`、`default`、`large` | `default` |
@@ -223,11 +223,11 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 
 **颜色。** `colorTokens(palette, scheme, contrast)` 是内置颜色的唯一来源，按角色划分（`ink`、`surface`、`accent` 等）。配色改变中性色和强调色；`good`、`bad`、`warn` 在所有配色中都相同，因为对错的含义不能随配色变化。内置配色一半偏暖、一半偏冷。测试要求每种配色、每种明暗下的所有文字组合达到对比度等级的目标：`standard` 为 4.5:1，`high` 为 7:1（`high` 还会加强 `line`）；并要求饱和的强调色与对错颜色的色相至少相差 20 度。新的颜色角色或配色都加在这里，不加在客户端。
 
-**自定义配色。** 自定义配色由三种颜色（`accent`、`page`、`ink`）构成，浅色和深色各有一组；其余颜色由 `customTokens` 推导。背景保持其明暗方案要求的亮度范围，文字按需调整亮度，所以测试要求任意三种颜色都达到相同的对比度目标。开始自定义时取当前配色的颜色；选择其他配色后，自定义配色仍会保留。
+**自定义配色。** 每种明暗方案各有一个列表，最多保存 `MAX_CUSTOM_PALETTES` 套带名称的配色，id 形如 `custom-3`。自定义配色由三种颜色（`accent`、`page`、`ink`）构成，其余颜色由 `customTokens` 推导。背景保持其明暗方案要求的亮度范围，文字按需调整亮度，所以测试要求任意三种颜色都达到相同的对比度目标。新建配色时取当前配色的颜色。内置配色本身不会改变：修改它只产生一份草稿，仅在预览中显示，可以保存为新的自定义配色。删除正在显示的配色后，该方案回到默认配色。
 
-**分享。** `sharePalette` 把自定义或内置配色写成文本 `great-academy-palette-v1:{"scheme","accent","page","ink"}`，`parseSharedPalette` 严格读取。配色只能导入到它所属的明暗方案，因为它的颜色只适用于该方案。
+**分享。** `sharePalette` 把自定义或内置配色写成文本 `great-academy-palette-v1:{"scheme","name","accent","page","ink"}`，`parseSharedPalette` 严格读取。导入会新增一套自定义配色，且只能导入到它所属的明暗方案，因为它的颜色只适用于该方案。
 
-**存储。** `serializeAppearance` 和 `parseAppearance` 定义统一的格式，例如 `theme=dark&light=paper&custom-dark=rrggbb.rrggbb.rrggbb`，保存在 `APPEARANCE_STORAGE_KEY` 下。默认值不写入，缺失或无效的内容都按默认值读取。
+**存储。** `serializeAppearance` 和 `parseAppearance` 定义统一的格式，例如 `theme=dark&dark=custom-1&custom-dark=1.rrggbb.rrggbb.rrggbb.name`，每套配色一条 `custom-light` 或 `custom-dark`，名称经过百分号编码，保存在 `APPEARANCE_STORAGE_KEY` 下。默认值不写入，缺失或无效的内容都按默认值读取。
 
 **Web。**
 - `libs/design/theme.css` 用 `pnpm nx run design:generate` 从 token 生成并提交入库；文件过期时测试会失败。`apps/web` 导入它，组件只使用 `bg-surface` 这样的 Tailwind 类名。

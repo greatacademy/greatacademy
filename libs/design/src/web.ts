@@ -117,19 +117,19 @@ ${STILL("  ")}
 `;
 }
 
-/** customPaletteCss is the stylesheet of an appearance's custom palettes, empty if it has none. Its colors are always validated hex. */
+/** customPaletteCss is the stylesheet of an appearance's custom palettes, empty if it has none. Ids and colors are validated before they get here, and names never do. */
 export function customPaletteCss(appearance: Appearance): string {
   const printHex: Print = oklchToHex;
   const layers: string[] = [];
   for (const scheme of ["light", "dark"] as const) {
-    const seeds = scheme === "light" ? appearance.customLight : appearance.customDark;
-    if (!seeds) continue;
-    const rules = CONTRASTS.map((contrast) =>
-      schemeRules("custom", scheme, contrast, (indent) =>
-        declarations(customTokens(seeds, scheme, contrast), COLOR_TOKENS, printHex, indent),
+    const rules = appearance.custom[scheme].flatMap((palette) =>
+      CONTRASTS.map((contrast) =>
+        schemeRules(palette.id, scheme, contrast, (indent) =>
+          declarations(customTokens(palette, scheme, contrast), COLOR_TOKENS, printHex, indent),
+        ),
       ),
     );
-    layers.push(inLayer(scheme, rules));
+    if (rules.length > 0) layers.push(inLayer(scheme, rules));
   }
   // The order of the layers holds even if this style loads before the theme.
   return layers.length > 0 ? ["@layer ga-light, ga-dark;", ...layers].join("\n") : "";
@@ -150,5 +150,5 @@ export function appearanceAttributes(appearance: Appearance): Record<string, str
  * in the wrong theme; bundled code would run too late.
  */
 export function appearanceScript(): string {
-  return `(function(){try{var c=${JSON.stringify(APPEARANCE_CHOICES)},d=document,s=localStorage.getItem(${JSON.stringify(APPEARANCE_STORAGE_KEY)}),x=localStorage.getItem(${JSON.stringify(CUSTOM_PALETTE_CSS_KEY)});if(s)s.split("&").forEach(function(p){var e=p.split("="),v=c[e[0]];if(v&&v.indexOf(e[1])>0)d.documentElement.setAttribute("data-"+e[0],e[1])});if(x){var t=d.createElement("style");t.id=${JSON.stringify(CUSTOM_PALETTE_STYLE_ID)};t.textContent=x;d.head.appendChild(t)}}catch(e){}})()`;
+  return `(function(){try{var c=${JSON.stringify(APPEARANCE_CHOICES)},d=document,s=localStorage.getItem(${JSON.stringify(APPEARANCE_STORAGE_KEY)}),x=localStorage.getItem(${JSON.stringify(CUSTOM_PALETTE_CSS_KEY)});if(s)s.split("&").forEach(function(p){var e=p.split("="),v=c[e[0]];if(v&&(v.indexOf(e[1])>0||/^(light|dark)$/.test(e[0])&&/^custom-[0-9]{1,4}$/.test(e[1])))d.documentElement.setAttribute("data-"+e[0],e[1])});if(x){var t=d.createElement("style");t.id=${JSON.stringify(CUSTOM_PALETTE_STYLE_ID)};t.textContent=x;d.head.appendChild(t)}}catch(e){}})()`;
 }
