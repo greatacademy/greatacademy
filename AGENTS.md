@@ -12,12 +12,12 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/development.md](docs/development.md) | Toolchain, commands, local database, running the apps |
 | [docs/roadmap.md](docs/roadmap.md) | Phases, completion criteria, status, risks |
 | [docs/math-curriculum.md](docs/math-curriculum.md) | Reference catalog of a complete mathematics curriculum (37 courses), the plan for content |
-| [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking |
+| [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking, technology and deployment |
 | [docs/the-math-academy-way.md](docs/the-math-academy-way.md), [docs/math-academy-website.md](docs/math-academy-website.md) | Research notes the design is based on |
 
 ## Project Overview
 
-Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, an Expo mobile app, and pure libraries for content and the learning engine.
+Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, an Expo mobile app, and pure libraries for content and the learning engine. The one planned exception is the Python voice service of English ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
 
 ## Directory Structure
 

@@ -32,7 +32,7 @@ This document describes the system as built: technology choices, repository stru
    - The student model (repetition state, ability, XP) is derived state that can be rebuilt by replaying the log through the engine.
    - Changing a parameter of the engine is therefore a replay, not a data migration.
 5. **One language, shared everywhere.**
-   - All code is TypeScript.
+   - All code is TypeScript. The one planned exception is the Python voice service of English ([English Curriculum §13.3](english-curriculum.md#133-the-voice-service)).
    - The engine and the content runtime are pure functions with no I/O. The same code runs in the Worker, the browser, the mobile app, tests and offline simulations.
 6. **Content is code.**
    - Topics, knowledge points and problem generators are TypeScript modules reviewed through git.
@@ -156,6 +156,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).
 - **Mobile:** Expo builds (EAS). The app talks to the same API.
+- **Planned for English:** further Cloudflare services, AI models through pi-ai, and a voice service on Kubernetes ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
 
 ### 6.1 Subjects as Workers
 

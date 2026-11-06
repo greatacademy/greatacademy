@@ -12,12 +12,12 @@
 | [docs/development.zh-CN.md](docs/development.zh-CN.md) | 工具链、命令、本地数据库、运行应用 |
 | [docs/roadmap.zh-CN.md](docs/roadmap.zh-CN.md) | 阶段、完成标准、状态、风险 |
 | [docs/math-curriculum.zh-CN.md](docs/math-curriculum.zh-CN.md) | 完整数学课程体系的参考目录（37 门课），即内容规划依据 |
-| [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语 |
+| [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语、技术与部署 |
 | [docs/the-math-academy-way.zh-CN.md](docs/the-math-academy-way.zh-CN.md)、[docs/math-academy-website.zh-CN.md](docs/math-academy-website.zh-CN.md) | 设计所依据的研究笔记 |
 
 ## 项目概述
 
-Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、Expo 移动应用，以及内容和学习引擎的纯函数库。
+Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、Expo 移动应用，以及内容和学习引擎的纯函数库。唯一计划中的例外是英语的 Python 语音服务（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
 
 ## 目录结构
 

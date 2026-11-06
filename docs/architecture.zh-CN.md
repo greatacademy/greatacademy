@@ -32,7 +32,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
    - 学生模型（重复状态、能力、XP）是派生状态，可以用引擎重放日志来重建。
    - 因此修改引擎参数只需重放，不需要数据迁移。
 5. **一种语言，处处共享。**
-   - 全部代码使用 TypeScript。
+   - 全部代码使用 TypeScript。唯一计划中的例外是英语的 Python 语音服务（[英语课程体系 §13.3](english-curriculum.zh-CN.md#133-语音服务)）。
    - 引擎和内容运行时都是没有 I/O 的纯函数，同一份代码运行在 Worker、浏览器、移动端、测试和离线模拟中。
 6. **内容即代码。**
    - 知识点、knowledge point 和题目生成器都是 TypeScript 模块，通过 git 评审。
@@ -156,6 +156,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
 - **移动端：** 用 Expo 构建（EAS），调用同一套 API。
+- **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用 AI 模型，以及 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 
 ### 6.1 学科作为 Worker
 
