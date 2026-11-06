@@ -1,14 +1,14 @@
-// Writes what the gateway holds: the manifest of the subject and the topics of each shard.
+// Writes what the gateway holds: the manifest of the subject and the topics and passages of each shard.
 
 import { mkdirSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 
-import { subjectManifest, type TopicDef } from "@ga/content";
+import { passagesOf, type ReadingUnitDef, subjectManifest, type TopicDef } from "@ga/content";
 import { compileEnglish } from "@ga/content-english";
-import { coreShardTopics } from "@ga/content-english/shards/core";
+import { coreShardReading, coreShardTopics } from "@ga/content-english/shards/core";
 
-const held: Record<string, readonly TopicDef[]> = {
-  SHARD_CORE: coreShardTopics,
+const held: Record<string, { topics: readonly TopicDef[]; reading: readonly ReadingUnitDef[] }> = {
+  SHARD_CORE: { topics: coreShardTopics, reading: coreShardReading },
 };
 
 const dir = new URL("../gen/", import.meta.url);
@@ -16,5 +16,9 @@ mkdirSync(dir, { recursive: true });
 writeFileSync(new URL("manifest.json", dir), JSON.stringify(subjectManifest(compileEnglish())));
 writeFileSync(
   new URL("shards.json", dir),
-  JSON.stringify(Object.fromEntries(Object.entries(held).map(([binding, topics]) => [binding, topics.map((t) => t.id)]))),
+  JSON.stringify(
+    Object.fromEntries(
+      Object.entries(held).map(([binding, { topics, reading }]) => [binding, [...topics, ...passagesOf(reading)].map((t) => t.id)]),
+    ),
+  ),
 );
