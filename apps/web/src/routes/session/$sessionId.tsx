@@ -288,47 +288,49 @@ function AnswerInput({
   switch (input?.case) {
     case "choice":
       return (
-        <div role="radiogroup" className={`grid gap-2 ${input.value.figures.length > 0 ? "sm:grid-cols-2" : ""}`}>
-          {input.value.options.map((o, i) => {
-            const selected = value === String(i);
-            const verdict =
-              feedback && selected ? (feedback.correct ? "good" : "bad") : feedback && feedback.answer === String(i) ? "good" : undefined;
-            const tone =
-              verdict === "good"
-                ? "border-good bg-good-soft"
-                : verdict === "bad"
-                  ? "border-bad bg-bad-soft"
-                  : selected
-                    ? "border-accent bg-accent-soft"
-                    : "border-line hover:border-accent/50";
-            return (
-              // biome-ignore lint/a11y/useSemanticElements: a styled option card with radio semantics; the keyboard handler above selects
-              <button
-                // biome-ignore lint/suspicious/noArrayIndexKey: options are positional
-                key={i}
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                disabled={disabled}
-                onClick={() => onChange(String(i))}
-                onDoubleClick={() => {
-                  onChange(String(i));
-                  onSubmit();
-                }}
-                className={`flex gap-3 rounded-xl border-2 px-4 py-3 text-left transition disabled:cursor-default ${input.value.figures[i] ? "items-start" : "items-center"} ${tone}`}
-              >
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-sm font-medium">
-                  {String.fromCharCode(65 + i)}
-                </span>
-                {input.value.figures[i] ? (
-                  <FigureView figure={input.value.figures[i]} className="min-w-0 flex-1" />
-                ) : (
-                  <Markdown source={tx(o)} inline />
-                )}
-              </button>
-            );
-          })}
-          {!disabled && <p className="text-xs text-muted sm:col-span-2">{m.choiceHint}</p>}
+        <div className="space-y-2">
+          <div role="radiogroup" className={`grid gap-2 ${input.value.figures.length > 0 ? "sm:grid-cols-2" : ""}`}>
+            {input.value.options.map((o, i) => {
+              const selected = value === String(i);
+              const verdict =
+                feedback && selected ? (feedback.correct ? "good" : "bad") : feedback && feedback.answer === String(i) ? "good" : undefined;
+              const tone =
+                verdict === "good"
+                  ? "border-good bg-good-soft"
+                  : verdict === "bad"
+                    ? "border-bad bg-bad-soft"
+                    : selected
+                      ? "border-accent bg-accent-soft"
+                      : "border-line hover:border-accent/50";
+              return (
+                // biome-ignore lint/a11y/useSemanticElements: a styled option card with radio semantics; the keyboard handler above selects
+                <button
+                  // biome-ignore lint/suspicious/noArrayIndexKey: options are positional
+                  key={i}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  disabled={disabled}
+                  onClick={() => onChange(String(i))}
+                  onDoubleClick={() => {
+                    onChange(String(i));
+                    onSubmit();
+                  }}
+                  className={`flex gap-3 rounded-xl border-2 px-4 py-3 text-left transition disabled:cursor-default ${input.value.figures[i] ? "items-start" : "items-center"} ${tone}`}
+                >
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-sm font-medium">
+                    {String.fromCharCode(65 + i)}
+                  </span>
+                  {input.value.figures[i] ? (
+                    <FigureView figure={input.value.figures[i]} className="min-w-0 flex-1" />
+                  ) : (
+                    <Markdown source={tx(o)} inline />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          {!disabled && <p className="text-xs text-muted">{m.choiceHint}</p>}
         </div>
       );
     case "plot":
