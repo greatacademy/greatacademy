@@ -89,6 +89,18 @@ describe("learners and enrollments", () => {
     expect(await isEnrolled(db, l, "c1")).toBe(true);
     expect(await isEnrolled(db, l, "c2")).toBe(false);
   });
+
+  it("lists first the course most recently worked on", async () => {
+    const l = await learnerFor(db, "u1");
+    await enroll(db, l, "test", "c1");
+    await enroll(db, l, "test", "c2");
+    const work = (courseId: string, days: number) =>
+      createSession(db, { learnerId: l, subjectId: "test", courseId, kind: "quiz", state: {}, at: new Date(Date.UTC(2100, 0, days)) });
+    await work("c2", 1);
+    expect((await enrollments(db, l)).map((e) => e.courseId)).toEqual(["c2", "c1"]);
+    await work("c1", 2);
+    expect((await enrollments(db, l)).map((e) => e.courseId)).toEqual(["c1", "c2"]);
+  });
 });
 
 describe("event log", () => {

@@ -18,13 +18,21 @@ export async function enroll(db: Db, learnerId: string, subjectId: string, cours
   await db.insert(enrollment).values({ learnerId, subjectId, courseId }).onConflictDoNothing();
 }
 
-/** enrollments lists a learner's enrollments, oldest first. */
+/** enrollments lists a learner's enrollments, the one most recently enrolled in or worked on first. */
 export async function enrollments(db: Db, learnerId: string): Promise<{ subjectId: string; courseId: string }[]> {
   return db
     .select({ subjectId: enrollment.subjectId, courseId: enrollment.courseId })
     .from(enrollment)
     .where(eq(enrollment.learnerId, learnerId))
-    .orderBy(asc(enrollment.createdAt), asc(enrollment.courseId));
+    .orderBy(
+      desc(
+        sql`greatest(${enrollment.createdAt}, (
+          select max(${taskSession.startedAt}) from ${taskSession}
+          where ${taskSession.learnerId} = ${enrollment.learnerId} and ${taskSession.courseId} = ${enrollment.courseId}
+        ))`,
+      ),
+      asc(enrollment.courseId),
+    );
 }
 
 /** isEnrolled tells whether a learner is enrolled in a course. */
