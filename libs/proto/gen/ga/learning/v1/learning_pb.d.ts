@@ -1519,6 +1519,13 @@ export declare type Result = Message<"ga.learning.v1.Result"> & {
    * @generated from field: bool blown_off = 8;
    */
   blownOff: boolean;
+
+  /**
+   * passage is the text a reading task asked about, so that its answers can be read against it.
+   *
+   * @generated from field: optional ga.learning.v1.Passage passage = 9;
+   */
+  passage?: Passage | undefined;
 };
 
 /**

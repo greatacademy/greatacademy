@@ -123,7 +123,15 @@ function RecentWork({ courseId }: { courseId: string }) {
         {recent.map((s) => {
           const task = s.task?.kind;
           const label =
-            task?.case === "lesson" ? m.lesson : task?.case === "review" ? m.review : task?.case === "quiz" ? m.quiz : m.diagnostic;
+            task?.case === "lesson"
+              ? m.lesson
+              : task?.case === "review"
+                ? m.review
+                : task?.case === "quiz"
+                  ? m.quiz
+                  : task?.case === "reading"
+                    ? m.reading
+                    : m.diagnostic;
           return (
             <li key={s.id}>
               <Link
@@ -137,7 +145,11 @@ function RecentWork({ courseId }: { courseId: string }) {
                   <XCircle size={20} weight="fill" className="shrink-0 text-bad" />
                 )}
                 <span className="min-w-0 flex-1 truncate">
-                  {task?.case === "lesson" || task?.case === "review" ? <Markdown source={tx(task.value.title)} inline /> : label}
+                  {task?.case === "lesson" || task?.case === "review" || task?.case === "reading" ? (
+                    <Markdown source={tx(task.value.title)} inline />
+                  ) : (
+                    label
+                  )}
                 </span>
                 {task?.case !== "diagnostic" && <span className={`shrink-0 ${s.xp < 0 ? "text-bad" : "text-muted"}`}>{s.xp} XP</span>}
               </Link>

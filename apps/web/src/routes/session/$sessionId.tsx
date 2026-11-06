@@ -81,6 +81,8 @@ function taskTitle(
       return { label: m.lesson, title: <Markdown source={tx(k.value.title)} inline /> };
     case "review":
       return { label: m.review, title: <Markdown source={tx(k.value.title)} inline /> };
+    case "reading":
+      return { label: m.reading, title: <Markdown source={tx(k.value.title)} inline /> };
     case "quiz":
       return { label: m.quiz, title: m.quiz };
     default:
@@ -176,6 +178,7 @@ function QuestionFlow({
   }
   return (
     <div className="space-y-4">
+      {question.passage && <PassageCard body={question.passage.body} />}
       <Card className="space-y-6">
         {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
         <ProblemPrompt problem={question.problem} answering />
@@ -247,6 +250,19 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
         </Button>
       </div>
     </div>
+  );
+}
+
+/** PassageCard shows a text to read; it stays in view while its questions are answered. */
+function PassageCard({ body }: { body: string }) {
+  return (
+    <Card className="space-y-4">
+      {body.split(/\n\s*\n/).map((paragraph) => (
+        <p key={paragraph} className="text-lg leading-relaxed">
+          {paragraph}
+        </p>
+      ))}
+    </Card>
   );
 }
 
@@ -491,6 +507,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
           </Link>
         </div>
       </Card>
+      {result.passage && <PassageCard body={result.passage.body} />}
       {result.items.map((item, i) => (
         <Card
           // biome-ignore lint/suspicious/noArrayIndexKey: items are positional
@@ -500,13 +517,17 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
           <div className="flex items-center justify-between gap-3">
             <div className="text-sm font-medium text-muted">
               {i + 1}.{" "}
-              <Link
-                to="/learn/$courseId/topics/$topicId"
-                params={{ courseId: session.courseId, topicId: item.topicId }}
-                className="hover:underline"
-              >
+              {kind === "reading" ? (
                 <Markdown source={tx(item.title)} inline />
-              </Link>
+              ) : (
+                <Link
+                  to="/learn/$courseId/topics/$topicId"
+                  params={{ courseId: session.courseId, topicId: item.topicId }}
+                  className="hover:underline"
+                >
+                  <Markdown source={tx(item.title)} inline />
+                </Link>
+              )}
             </div>
             {item.correct ? (
               <CheckCircle size={22} weight="fill" className="text-good" />

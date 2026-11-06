@@ -40,7 +40,15 @@ function History() {
         {history.data.sessions.map((s) => {
           const task = s.task?.kind;
           const label =
-            task?.case === "lesson" ? m.lesson : task?.case === "review" ? m.review : task?.case === "quiz" ? m.quiz : m.diagnostic;
+            task?.case === "lesson"
+              ? m.lesson
+              : task?.case === "review"
+                ? m.review
+                : task?.case === "quiz"
+                  ? m.quiz
+                  : task?.case === "reading"
+                    ? m.reading
+                    : m.diagnostic;
           return (
             <Link key={s.id} to="/session/$sessionId" params={{ sessionId: s.id }} className="block min-w-0">
               <Card className="flex items-center gap-3 p-4 transition hover:border-accent/50">
@@ -51,7 +59,11 @@ function History() {
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-medium">
-                    {task?.case === "lesson" || task?.case === "review" ? <Markdown source={tx(task.value.title)} inline /> : label}
+                    {task?.case === "lesson" || task?.case === "review" || task?.case === "reading" ? (
+                      <Markdown source={tx(task.value.title)} inline />
+                    ) : (
+                      label
+                    )}
                   </div>
                   <div className="text-xs text-muted">
                     {label} · {when.format(new Date(Number(s.completedAt)))}

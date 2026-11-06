@@ -433,6 +433,8 @@ message Result {
   int32 full_xp = 7;
   // blown_off tells that the task was rushed through, which earns no XP and, when repeated, costs some.
   bool blown_off = 8;
+  // passage is the text a reading task asked about, so that its answers can be read against it.
+  optional Passage passage = 9;
 }
 
 message ResultItem {

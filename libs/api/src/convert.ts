@@ -149,6 +149,7 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
         };
       })
     : [];
+  const passage = run.kind === "reading" ? await c.source.passage(run.passage) : undefined;
   return {
     passed: r.passed,
     correct: r.correct,
@@ -158,6 +159,7 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
     blownOff: r.blownOff ?? false,
     placed: r.placed,
     items,
+    ...(passage && { passage: { title: text(passage.title), body: passage.body } }),
   };
 }
 

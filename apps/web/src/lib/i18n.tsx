@@ -39,6 +39,9 @@ const messages = {
     skipDiagnostic: "Skip and start from the beginning",
     lesson: "Lesson",
     review: "Review",
+    reading: "Reading",
+    readingBody: (words: number, questions: number) =>
+      `${words} words, then ${questions} question${questions === 1 ? "" : "s"} on what you read.`,
     quiz: "Quiz",
     quizBody: (n: number) => `${n} questions on recent and older topics, with no hints until the end.`,
     reviewCovers: (n: number) => `Also refreshes ${n} related topic${n === 1 ? "" : "s"}`,
@@ -441,6 +444,8 @@ const messages = {
     skipDiagnostic: "跳过，从头开始",
     lesson: "课程",
     review: "复习",
+    reading: "阅读",
+    readingBody: (words: number, questions: number) => `${words} 个词的文章，读后回答 ${questions} 道题。`,
     quiz: "测验",
     quizBody: (n: number) => `${n} 道题，涵盖近期和较早的知识点，结束前没有提示。`,
     reviewCovers: (n: number) => `同时巩固 ${n} 个相关知识点`,

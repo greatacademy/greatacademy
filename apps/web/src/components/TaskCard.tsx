@@ -1,5 +1,5 @@
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowsClockwise, BookOpen, Compass, Exam } from "@phosphor-icons/react";
+import { ArrowsClockwise, Article, BookOpen, Compass, Exam } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
@@ -10,6 +10,7 @@ const tone = {
   diagnostic: "bg-accent-soft text-accent",
   lesson: "bg-accent-soft text-accent",
   review: "bg-warn-soft text-warn",
+  reading: "bg-accent-soft text-accent",
   quiz: "bg-good-soft text-good",
 } as const;
 
@@ -59,6 +60,13 @@ export function TaskCard({
         k.value.covers.filter((c) => c !== k.value.topicId).length > 0
           ? m.reviewCovers(k.value.covers.filter((c) => c !== k.value.topicId).length)
           : "";
+      xp = k.value.xp;
+      break;
+    case "reading":
+      icon = <Article size={22} weight="duotone" />;
+      label = m.reading;
+      title = <Markdown source={tx(k.value.title)} inline />;
+      detail = m.readingBody(k.value.words, k.value.questions);
       xp = k.value.xp;
       break;
     case "quiz":
