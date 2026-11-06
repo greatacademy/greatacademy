@@ -44,6 +44,8 @@ export interface KpStats {
   readonly skipRate: number;
   /** wrong lists the most common wrong responses and how many learners gave each. */
   readonly wrong: readonly { readonly response: string; readonly learners: number }[];
+  /** rejectedSentences lists every different wrong response of several words, since one of them may be a valid sentence that a checker does not accept. */
+  readonly rejectedSentences: readonly string[];
 }
 
 /** TopicStats sums up the lessons of one topic. */
@@ -105,6 +107,11 @@ export function normalizeResponse(response: string): string {
   return response.replace(/\s+/g, "").toLowerCase();
 }
 
+/** isSentence tells a typed sentence from a chosen option or a single word. */
+function isSentence(response: string): boolean {
+  return /[A-Za-z]+\s+[A-Za-z]+/.test(response);
+}
+
 /**
  * summarize computes a report. The answers must be in the order they were
  * given, since the first answer of each learner counts on its own: it says
@@ -131,6 +138,9 @@ export function summarize(data: PilotData, options: ReportOptions = defaultRepor
         correctRate: share(rows.filter((r) => r.correct).length, rows.length),
         skipRate: share(rows.filter((r) => r.skipped).length, rows.length),
         wrong,
+        rejectedSentences: [
+          ...new Map(wrongRows.filter((r) => isSentence(r.response)).map((r) => [normalizeResponse(r.response), r.response])).values(),
+        ],
       };
     })
     .sort((a, b) => a.firstTryRate - b.firstTryRate || b.learners - a.learners || a.topicId.localeCompare(b.topicId) || a.kp - b.kp);
@@ -255,6 +265,16 @@ export function renderPilotReport(course: string, report: PilotReport, names: Pi
       .map(
         ({ k, w }) => `| ${cell(names.topic(k.topicId))} | ${cell(names.kp(k.topicId, k.kp))} | \`${cell(w.response)}\` | ${w.learners} |`,
       ),
+    "",
+    "## Rejected sentences to read",
+    "",
+    "A person reads these: a valid sentence among them is a defect of the item, and its pattern must accept it.",
+    "",
+    "| Topic | Knowledge point | Response |",
+    "| :--- | :--- | :--- |",
+    ...report.kps.flatMap((k) =>
+      k.rejectedSentences.map((response) => `| ${cell(names.topic(k.topicId))} | ${cell(names.kp(k.topicId, k.kp))} | ${cell(response)} |`),
+    ),
     "",
   ];
   return lines.join("\n");

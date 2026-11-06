@@ -108,6 +108,19 @@ const runonKindBank: readonly ChoiceItem[] = [
   kind("It snowed all night, the school closed.", 2),
 ];
 
+const firstSentenceBank: readonly ChoiceItem[] = [
+  ["The sun set we drove home.", "set", ["sun", "drove"]],
+  ["My dog is friendly he loves visitors.", "friendly", ["dog", "loves"]],
+  ["The test was hard I finished it anyway.", "hard", ["test", "finished"]],
+  ["It snowed all night the school closed.", "night", ["snowed", "school"]],
+  ["We missed the train we took a bus.", "train", ["missed", "took"]],
+  ["Mina reads every day she likes mysteries.", "day", ["reads", "likes"]],
+  ["The river is low the boats cannot pass.", "low", ["river", "boats"]],
+  ["Leo washed the plates Ana dried them.", "plates", ["washed", "dried"]],
+  ["The cake looks great it took all day.", "great", ["looks", "took"]],
+  ["I called her she did not answer.", "her", ["called", "answer"]],
+];
+
 const subordinatorBank: readonly ChoiceItem[] = [
   ["We stayed home because it was snowing.", "because", ["stayed", "home", "snowing"]],
   ["Although the hill was steep, she kept running.", "Although", ["steep", "kept", "running"]],
@@ -507,6 +520,23 @@ export const clauseTopics: readonly TopicDef[] = [
             `**${right}**. Find where the first complete sentence ends, then look at what comes between it and the next: ${shown}`,
             `答案是 **${right}**。找到第一个完整句子结束的地方，再看它与下一句之间有什么：${shown}`,
           ),
+        ),
+      ),
+      point(
+        "finding-the-break",
+        t("Finding the Break", "找到断开的地方"),
+        t(
+          "To find where a run-on breaks, read from the start until you have a subject and a verb that could stand alone. The next subject begins a new sentence: in *The sun set we drove home*, *The sun set* is complete, and *we* starts the next sentence.",
+          "要找到连写句断开的地方，就从头读，直到出现一个能独立成句的主语和动词。下一个主语开始新的句子：在 *The sun set we drove home* 中，*The sun set* 已经完整，*we* 开始下一句。",
+        ),
+        choiceGenerator(
+          t("This is a run-on. Which word ends the first complete sentence?", "这是一个连写句。哪个词结束了第一个完整句子？"),
+          firstSentenceBank,
+          (right, shown) =>
+            t(
+              `The first sentence ends at **${right}**, and a new subject follows it: ${shown}`,
+              `第一句在 **${right}** 处结束，后面跟着新的主语：${shown}`,
+            ),
         ),
       ),
     ],

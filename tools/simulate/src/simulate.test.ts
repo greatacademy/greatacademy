@@ -1,3 +1,4 @@
+import { compileEnglish } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 import { describe, expect, it } from "vitest";
 
@@ -7,6 +8,22 @@ const subject = compileMath();
 const runs = (ability: number, xpPerDay: number) =>
   Array.from({ length: 10 }, (_, i) => simulate(subject, "algebra-foundations", { ability, xpPerDay }, i + 1));
 const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+
+describe("simulated students of English", () => {
+  const english = compileEnglish();
+  const course = (ability: number, xpPerDay: number) =>
+    Array.from({ length: 5 }, (_, i) => simulate(english, "english-grammar-writing", { ability, xpPerDay }, i + 1));
+
+  it("finish the broad course with fewer explicit reviews than a math course of its breadth", { timeout: 120_000 }, () => {
+    const typical = course(0.85, 30);
+    expect(typical.every((r) => r.finished)).toBe(true);
+    expect(mean(typical.map((r) => r.reviewsPerTopic))).toBeLessThan(3);
+  });
+
+  it("let struggling students finish", { timeout: 120_000 }, () => {
+    expect(course(0.7, 20).every((r) => r.finished)).toBe(true);
+  });
+});
 
 describe("simulated students", () => {
   it("are deterministic for a seed", () => {

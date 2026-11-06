@@ -1,6 +1,7 @@
 import { writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 
+import { compileEnglish } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 import { connect } from "@ga/db";
 
@@ -21,7 +22,8 @@ if (!values.course || !url) {
   process.exit(1);
 }
 
-const subject = compileMath();
+const english = compileEnglish();
+const subject = english.courses.has(values.course) ? english : compileMath();
 const { db, close } = connect(url);
 try {
   const data = await loadPilotData(db, values.course, values.since ? new Date(values.since) : undefined);

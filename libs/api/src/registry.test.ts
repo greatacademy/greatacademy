@@ -51,7 +51,10 @@ describe("Registry", () => {
         lesson: async () => ({ title: t("A", "甲"), explanation: t("B", "乙") }) as never,
       },
     ]);
-    await expect((await registry.course("a-course"))?.source.lesson("x", 0)).resolves.toEqual({ title: t("A", "A"), explanation: t("B", "B") });
+    await expect((await registry.course("a-course"))?.source.lesson("x", 0)).resolves.toEqual({
+      title: t("A", "A"),
+      explanation: t("B", "B"),
+    });
   });
 
   it("lists courses without loading any subject", async () => {

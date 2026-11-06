@@ -1,10 +1,13 @@
+import { compileEnglish } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 
 import { simulate } from "./simulate.ts";
 
 // The course to simulate is the first argument: `pnpm nx run simulate:simulate -- prealgebra`.
 const courseId = process.argv[2] ?? "algebra-foundations";
-const subject = compileMath();
+// English compiles in a moment and mathematics takes seconds, so English is tried first.
+const english = compileEnglish();
+const subject = english.courses.has(courseId) ? english : compileMath();
 const students = [
   { name: "strong", ability: 0.95, xpPerDay: 40 },
   { name: "typical", ability: 0.85, xpPerDay: 30 },

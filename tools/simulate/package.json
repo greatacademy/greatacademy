@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@ga/content": "workspace:*",
+    "@ga/content-english": "workspace:*",
     "@ga/content-math": "workspace:*",
     "@ga/engine": "workspace:*"
   },

@@ -478,6 +478,57 @@ const appositiveCombineBank: readonly TypedItem[] = [
   ),
 ];
 
+const appositiveEndBank: readonly TypedItem[] = [
+  appositiveCombine(
+    "We thanked Ana. She is the bus driver.",
+    "We thanked Ana, the bus driver.",
+    "We thanked Ana the bus driver.",
+    "We thanked Ana, she is the bus driver.",
+  ),
+  appositiveCombine(
+    "I read Holes. It is a novel about a camp.",
+    "I read Holes, a novel about a camp.",
+    "I read Holes a novel about a camp.",
+    "I read Holes, it is a novel about a camp.",
+  ),
+  appositiveCombine(
+    "We visited Dr. Lin. She is our family doctor.",
+    "We visited Dr. Lin, our family doctor.",
+    "We visited Dr. Lin our family doctor.",
+    "We visited Dr. Lin, she is our family doctor.",
+  ),
+  appositiveCombine(
+    "My class studied Mars. It is the red planet.",
+    "My class studied Mars, the red planet.",
+    "My class studied Mars the red planet.",
+    "My class studied Mars, it is the red planet.",
+  ),
+  appositiveCombine(
+    "They live in Lima. It is the capital of Peru.",
+    "They live in Lima, the capital of Peru.",
+    "They live in Lima the capital of Peru.",
+    "They live in Lima, it is the capital of Peru.",
+  ),
+  appositiveCombine(
+    "I called Leo. He is my best friend.",
+    "I called Leo, my best friend.",
+    "I called Leo my best friend.",
+    "I called Leo, he is my best friend.",
+  ),
+  appositiveCombine(
+    "She adopted Rex. He is a small terrier.",
+    "She adopted Rex, a small terrier.",
+    "She adopted Rex a small terrier.",
+    "She adopted Rex, he is a small terrier.",
+  ),
+  appositiveCombine(
+    "We met Mr. Cole. He is our new coach.",
+    "We met Mr. Cole, our new coach.",
+    "We met Mr. Cole our new coach.",
+    "We met Mr. Cole, he is our new coach.",
+  ),
+];
+
 const openingPhraseBank: readonly TypedItem[] = [
   typed(
     "We went home after the movie.",
@@ -909,6 +960,21 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The phrase renames the noun, with a comma on each side.`,
               `**${right}** 短语为名词换了个说法，两边各有一个逗号。`,
             ),
+        ),
+      ),
+      point(
+        "appositive-at-the-end",
+        t("At the End of a Sentence", "放在句末"),
+        t(
+          "When the noun being renamed ends the sentence, the appositive follows it with a single comma: *We thanked Ana, the bus driver.* There is nothing after it, so no second comma is needed.",
+          "被换说法的名词位于句末时，同位语跟在它后面，只用一个逗号：*We thanked Ana, the bus driver.* 后面没有内容，所以不需要第二个逗号。",
+        ),
+        typedGenerator(
+          "sentence",
+          t("Join the two sentences into one with an appositive.", "用同位语把两个句子合并成一句。"),
+          appositiveEndBank,
+          (right) =>
+            t(`**${right}** One comma sets off an appositive that ends the sentence.`, `**${right}** 位于句末的同位语只用一个逗号隔开。`),
         ),
       ),
     ],

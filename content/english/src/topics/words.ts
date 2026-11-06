@@ -384,7 +384,7 @@ export const wordTopics: readonly TopicDef[] = [
           "构词时把各部分连起来：*re* + *build* 构成 *rebuild*。前缀的字母要全部保留，即使出现双写：*mis* + *spell* 构成 *misspell*。",
         ),
         typedGenerator("word-form", t("Type the word these parts make.", "输入这些部分构成的词。"), buildBank, (right) =>
-          t(`The word is **${right}**.`, `这个词是 **${right}**。`),
+          t(`The word is **${right}**. Its parts join without losing any letters.`, `这个词是 **${right}**。各部分相连时没有丢失字母。`),
         ),
       ),
     ],
@@ -405,7 +405,10 @@ export const wordTopics: readonly TopicDef[] = [
           "少数几个前缀出现在大量词中。*un-*、*dis-*、*non-* 表示“不”或相反。*re-* 表示“再”。*pre-* 表示“之前”。*mis-* 表示“错误地”。*over-* 表示“过多”，*under-* 表示“过少”。",
         ),
         choiceGenerator(t("What does this prefix mean?", "这个前缀是什么意思？"), prefixMeaningBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -416,7 +419,10 @@ export const wordTopics: readonly TopicDef[] = [
           "把前缀的含义和基础词合起来：*misread* 就是 *read* + “错误地”。这样往往能弄懂从未见过的词。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), prefixWordBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -427,7 +433,10 @@ export const wordTopics: readonly TopicDef[] = [
           "根据想表达的意思选择前缀，再加到基础词上。每个基础词通常只搭配特定前缀：我们说 *unfair* 和 *dishonest*，而不说 *disfair* 和 *unhonest*。",
         ),
         typedGenerator("word-form", t("Type one word that means this.", "输入一个表示这个意思的词。"), prefixTypedBank, (right) =>
-          t(`The word is **${right}**.`, `这个词是 **${right}**。`),
+          t(
+            `The word is **${right}**. This base word takes this prefix to give that meaning.`,
+            `这个词是 **${right}**。这个基础词要用这个前缀才能表达该意思。`,
+          ),
         ),
       ),
     ],
@@ -448,7 +457,10 @@ export const wordTopics: readonly TopicDef[] = [
           "*-ful* 表示“充满”，*-less* 表示“没有”。*-er* 表示做某事的人。*-ness* 表示“状态”。*-able* 表示“能够被”。*-ly* 表示“以某种方式”，*-est* 表示“最”，*-ish* 表示“有点像”。",
         ),
         choiceGenerator(t("What does this suffix mean?", "这个后缀是什么意思？"), suffixMeaningBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -459,7 +471,10 @@ export const wordTopics: readonly TopicDef[] = [
           "和前缀一样，把两部分合起来：*fearless* 是 *fear* + “没有”，所以意思是“无所畏惧”。注意 *-ful* 和 *-less* 的意思相反：*painful* 和 *painless* 是反义词。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), suffixWordBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -534,7 +549,10 @@ export const wordTopics: readonly TopicDef[] = [
           "有些前缀表示数量：*uni-* 是一，*bi-* 是二，*tri-* 是三，*semi-* 是一半，*multi-* 是多。另一些表示位置：*sub-* 是在下，*super-* 是在上，*inter-* 是在之间，*trans-* 是穿过，*post-* 是在之后。",
         ),
         choiceGenerator(t("What does this prefix mean?", "这个前缀是什么意思？"), positionMeaningBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -545,7 +563,10 @@ export const wordTopics: readonly TopicDef[] = [
           "前缀提供了大部分含义：*bicycle* 有两个轮子，*submarine* 在海面下航行，*international* 比赛在国家之间进行。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), positionWordBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
     ],
@@ -569,7 +590,10 @@ export const wordTopics: readonly TopicDef[] = [
           "**词根**（root）承载词的核心含义，但和基础词不同，通常不能独立成词。*port* 表示携带，*dict* 表示说，*rupt* 表示破裂，*scrib* 或 *script* 表示写，*struct* 表示建造，*tract* 表示拉，*vis* 或 *vid* 表示看见，*spect* 表示看。",
         ),
         choiceGenerator(t("What does this root mean?", "这个词根是什么意思？"), latin1RootBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -580,7 +604,10 @@ export const wordTopics: readonly TopicDef[] = [
           "把词根和前缀或后缀合起来：*trans*（穿过）+ *port*（携带）表示“运送过去”，*pre*（之前）+ *dict*（说）表示“预言”。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), latin1WordBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
     ],
@@ -601,7 +628,10 @@ export const wordTopics: readonly TopicDef[] = [
           "*ject* 表示扔，*mit* 或 *miss* 表示送，*duc* 或 *duct* 表示引导，*cred* 表示相信，*aud* 表示听，*fer* 表示携带，*pel* 或 *puls* 表示推，*voc* 或 *vok* 表示呼喊。",
         ),
         choiceGenerator(t("What does this root mean?", "这个词根是什么意思？"), latin2RootBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -612,7 +642,10 @@ export const wordTopics: readonly TopicDef[] = [
           "这些词根的用法和第一组一样：*re*（回）+ *ject*（扔）表示“扔回”，*in*（不）+ *cred*（相信）+ *ible*（能够）表示“难以置信”。词义可能有所引申，所以把词根当作有力的线索，再结合句子验证。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), latin2WordBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
     ],
@@ -636,7 +669,10 @@ export const wordTopics: readonly TopicDef[] = [
           "许多科学词汇来自希腊语。*tele* 表示远，*graph* 表示写或画，*phon* 表示声音，*photo* 表示光，*bio* 表示生命，*geo* 表示地球，*therm* 表示热，*micro* 表示小，*auto* 表示自己，*scope* 表示观看。",
         ),
         choiceGenerator(t("What does this root mean?", "这个词根是什么意思？"), greekRootBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -647,7 +683,10 @@ export const wordTopics: readonly TopicDef[] = [
           "希腊词根常常直接相连：*tele* + *scope* 是看远处事物的工具，*bio* + *graph* 是记述一生的文字。词尾 *-logy* 表示“研究”。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), greekWordBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
     ],
@@ -714,7 +753,10 @@ export const wordTopics: readonly TopicDef[] = [
           "有些词几乎出现在每个学科中，却很少用于日常口语。**analyze** 是研究事物的各个部分，**evidence** 是证明某事为真的事实，**conclude** 是根据事实作出判断。这里还有 **significant, predict, compare, sequence, relevant, estimate, source**。",
         ),
         choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), academicMeaningBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+          ),
         ),
       ),
       point(
@@ -745,8 +787,11 @@ export const wordTopics: readonly TopicDef[] = [
           "Words with similar meanings can carry different feelings, called their **connotation**. *Thrifty* and *stingy* both describe someone who spends little, but *thrifty* is praise and *stingy* is criticism.",
           "意思相近的词可能带有不同的感情，这叫作**感情色彩**（connotation）。*thrifty* 和 *stingy* 都形容花钱少的人，但 *thrifty* 是褒义，*stingy* 是贬义。",
         ),
-        choiceGenerator(t("Answer the question.", "回答问题。"), connotationBank, (right) =>
-          t(`**${right}** carries the more favorable feeling.`, `**${right}** 带有更正面的感情色彩。`),
+        choiceGenerator(t("Choose the word that answers the question.", "选择能回答问题的词。"), connotationBank, (right) =>
+          t(
+            `**${right}** carries the more favorable feeling, though the two words mean nearly the same.`,
+            `**${right}** 带有更正面的感情色彩，尽管两个词的意思几乎相同。`,
+          ),
         ),
       ),
       point(

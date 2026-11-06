@@ -36,6 +36,17 @@ describe("summarize", () => {
     expect(report.tooFew).toBe(1);
   });
 
+  it("lists every different rejected sentence, and no chosen options", () => {
+    const answers = [
+      row("x", false, "We left, because it rained."),
+      row("y", false, "we left, because it  rained."),
+      row("x", false, "2"),
+      row("y", true),
+    ];
+    const report = summarize({ answers, sessions: [], lessons: [] }, options);
+    expect(report.kps[0]?.rejectedSentences).toEqual(["we left, because it  rained."]);
+  });
+
   it("groups wrong responses by learner, ignoring spacing and skipped answers", () => {
     const answers = [
       row("x", false, "x = 3"),

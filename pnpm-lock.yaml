@@ -599,6 +599,9 @@ importers:
       '@ga/content':
         specifier: workspace:*
         version: link:../../libs/content
+      '@ga/content-english':
+        specifier: workspace:*
+        version: link:../../content/english
       '@ga/content-math':
         specifier: workspace:*
         version: link:../../content/math
@@ -615,6 +618,9 @@ importers:
 
   tools/pilot:
     dependencies:
+      '@ga/content-english':
+        specifier: workspace:*
+        version: link:../../content/english
       '@ga/content-math':
         specifier: workspace:*
         version: link:../../content/math
@@ -643,6 +649,9 @@ importers:
       '@ga/content':
         specifier: workspace:*
         version: link:../../libs/content
+      '@ga/content-english':
+        specifier: workspace:*
+        version: link:../../content/english
       '@ga/content-math':
         specifier: workspace:*
         version: link:../../content/math
