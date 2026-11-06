@@ -14,7 +14,7 @@ export type ChoiceItem = readonly [shown: string, right: string, wrong: readonly
  */
 export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why: Why): Generator {
   return (rng: Rng): Problem => {
-    const [shown, right, wrong] = rng.pick(bank);
+    const [shown, right, wrong] = rng.cycle(bank);
     const options = rng.shuffle([right, ...wrong]);
     const answer = options.indexOf(right);
     return {
@@ -47,7 +47,7 @@ export function typedGenerator(
   why: Why,
 ): Generator {
   return (rng: Rng): Problem => {
-    const item = rng.pick(bank);
+    const item = rng.cycle(bank);
     const canonical = item.canonical ?? item.accepted[0] ?? "";
     return {
       prompt: joinText([question, ...(item.instruction ? [item.instruction] : []), sameText(quote(item.shown))]),
@@ -69,7 +69,7 @@ export interface OrderItem {
 /** orderGenerator picks an item of a bank by seed and shuffles its sentences, never showing them already in a right order. */
 export function orderGenerator(question: Text, bank: readonly OrderItem[], why: Why): Generator {
   return (rng: Rng): Problem => {
-    const { sentences, alsoRight = [] } = rng.pick(bank);
+    const { sentences, alsoRight = [] } = rng.cycle(bank);
     const rightOrders = [sentences.map((_, i) => i), ...alsoRight];
     const isRight = (order: readonly number[]) => rightOrders.some((o) => o.join() === order.join());
     let shuffled = rng.shuffle(sentences.map((_, i) => i));

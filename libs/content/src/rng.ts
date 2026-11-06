@@ -16,6 +16,8 @@ export interface Rng {
   bool(p?: number): boolean;
   /** pick returns one element of items. */
   pick<T>(items: readonly T[]): T;
+  /** cycle returns the element the seed itself selects, so that consecutive seeds walk through items without repeating. */
+  cycle<T>(items: readonly T[]): T;
   /** shuffle returns a shuffled copy of items. */
   shuffle<T>(items: readonly T[]): T[];
   /** sample returns n distinct elements of items in random order. */
@@ -35,6 +37,7 @@ export function hashSeed(s: string): number {
 /** createRng returns an Rng (sfc32 seeded by splitmix32) for a numeric or string seed. */
 export function createRng(seed: number | string): Rng {
   let s = typeof seed === "string" ? hashSeed(seed) : seed >>> 0;
+  const start = s;
   const splitmix = () => {
     s = (s + 0x9e3779b9) >>> 0;
     let z = s;
@@ -76,6 +79,10 @@ export function createRng(seed: number | string): Rng {
     pick(items) {
       if (items.length === 0) throw new RangeError("pick from an empty list");
       return items[int(0, items.length - 1)]!;
+    },
+    cycle(items) {
+      if (items.length === 0) throw new RangeError("cycle through an empty list");
+      return items[start % items.length]!;
     },
     shuffle(items) {
       const out = [...items];

@@ -14,6 +14,15 @@ describe("createRng", () => {
     expect(createRng("seed").int(0, 1000)).toBe(createRng("seed").int(0, 1000));
   });
 
+  it("walks a list with consecutive seeds, without drawing from the generator", () => {
+    const items = ["a", "b", "c"];
+    expect([9, 10, 11, 12].map((seed) => createRng(seed).cycle(items))).toEqual(["a", "b", "c", "a"]);
+    const drawn = createRng(5);
+    drawn.cycle(items);
+    expect(drawn.next()).toBe(createRng(5).next());
+    expect(() => createRng(1).cycle([])).toThrow(RangeError);
+  });
+
   it("covers int ranges uniformly", () => {
     const rng = createRng(7);
     const counts = new Map<number, number>();

@@ -74,7 +74,11 @@ export type RunState =
   | (RunBase & { readonly kind: "quiz"; readonly topics: readonly string[] })
   | (RunBase & { readonly kind: "diagnostic"; readonly diagnostic: DiagnosticProgress });
 
-/** newSeed draws a seed for a problem instance. */
+/**
+ * newSeed draws a seed for a problem instance. Further questions of the same
+ * run take the seeds after it, which is how a generator that cycles through a
+ * bank of items avoids repeating one.
+ */
 export function newSeed(rng: Rng): number {
   return rng.int(0, 0x7fffffff);
 }
@@ -91,16 +95,18 @@ function diagnosticRef(c: CourseEntry, topic: string, rng: Rng): ProblemRef {
 export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: number, rng: Rng): RunState {
   const served = { asked: [], servedAt: now };
   switch (task.kind) {
-    case "lesson":
+    case "lesson": {
+      const example = newSeed(rng);
       return {
         kind: "lesson",
         topic: task.topic,
         lesson: startLesson(task.topic, kpCount(c, task.topic)),
-        example: newSeed(rng),
+        example,
         ...(c.subject.topics.get(task.topic)?.practiceOnly && state.topics[task.topic]?.failedAt === undefined && { practice: true }),
         ...served,
-        current: { topic: task.topic, kp: 0, seed: newSeed(rng) },
+        current: { topic: task.topic, kp: 0, seed: example + 1 },
       };
+    }
     case "review": {
       const plan = reviewPlan(c.ctx.params, kpCount(c, task.topic), rng);
       return {
@@ -183,13 +189,14 @@ export async function answerRun(
         const passed = lesson.outcome === "passed";
         return finish(next, { type: "lesson", at: now, topic: run.topic, passed, asked: lesson.asked, correct: lesson.correct }, passed);
       }
-      const newKp = lesson.kp !== run.lesson.kp;
+      const example = lesson.kp !== run.lesson.kp ? newSeed(rng) : run.example;
       return {
         run: {
           ...next,
           servedAt: now,
-          example: newKp ? newSeed(rng) : run.example,
-          current: { topic: run.topic, kp: lesson.kp, seed: newSeed(rng) },
+          example,
+          // The worked example takes the seed before the first question of a knowledge point.
+          current: { topic: run.topic, kp: lesson.kp, seed: example === run.example ? run.current.seed + 1 : example + 1 },
         },
         problem,
         verdict,
@@ -203,7 +210,7 @@ export async function answerRun(
         return finish(next, event, reviewResult(c.ctx.params, correct, asked.length) > 0);
       }
       return {
-        run: { ...next, servedAt: now, current: { topic: run.topic, kp: run.plan[asked.length]!, seed: newSeed(rng) } },
+        run: { ...next, servedAt: now, current: { topic: run.topic, kp: run.plan[asked.length]!, seed: run.current.seed + 1 } },
         problem,
         verdict,
         skipped,

@@ -19,6 +19,17 @@ describe("english content", () => {
     }
   });
 
+  it("never repeats an item between consecutive seeds", () => {
+    const subject = compileEnglish();
+    for (const topic of subject.topics.values()) {
+      topic.knowledgePoints.forEach((kp, index) => {
+        const prompts = [1, 2, 3, 4].map((seed) => kp.generate(createRng(seed + index)));
+        const distinct = new Set(prompts.map((p) => JSON.stringify([p.prompt, p.canonical, p.answer.input])));
+        expect(distinct.size, `${topic.id} ${index}`).toBe(4);
+      });
+    }
+  });
+
   it("passes the generator samples", () => {
     const issues = sampleGenerators(compileEnglish(), {
       samples: 60,
