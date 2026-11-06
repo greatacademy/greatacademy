@@ -29,5 +29,6 @@ android/
 .vscode/*
 !.vscode/extensions.json
 
-# Generated at build time (apps/math-workers)
+# Generated at build time (the subject Workers)
 apps/math-workers/gen/
+apps/english-workers/gen/

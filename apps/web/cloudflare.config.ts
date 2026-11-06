@@ -15,6 +15,7 @@ export default defineConfig({
       }),
       // The gateway Worker of each subject, from apps/<subject>-workers; see docs/architecture.md.
       SUBJECT_MATH: bindings.worker({ worker: "ga-math" }),
+      SUBJECT_ENGLISH: bindings.worker({ worker: "ga-english" }),
       // Signs better-auth sessions; locally from .dev.vars.
       BETTER_AUTH_SECRET: bindings.secret(),
       // Sends password resets and address verification through Resend; locally, empty logs the links instead.

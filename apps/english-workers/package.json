@@ -1,0 +1,52 @@
+{
+  "name": "@ga/english-workers",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./workers": "./workers.ts"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.ts",
+    "build": "cf build",
+    "deploy": "cf build && cf deploy --prebuilt --worker ga-english-core && cf deploy --prebuilt",
+    "typecheck": "cf workers types && tsc -p tsconfig.json",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "english-workers",
+    "targets": {
+      "generate": {
+        "outputs": [
+          "{projectRoot}/gen"
+        ]
+      },
+      "typecheck": {
+        "dependsOn": [
+          "generate",
+          "^generate"
+        ]
+      },
+      "build": {
+        "dependsOn": [
+          "generate",
+          "^build"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "@ga/content": "workspace:*",
+    "@ga/content-english": "workspace:*",
+    "@ga/subject-english": "workspace:*",
+    "@ga/subject-worker": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "2.0.0-beta.v.7",
+    "@types/node": "26.6.3",
+    "cf": "1.0.0-beta.25",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}

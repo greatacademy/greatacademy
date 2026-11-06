@@ -48,9 +48,10 @@ export interface SampleOptions {
   readonly maxPositionShare?: number;
 }
 
-/** optionsOf lists the options of a choice problem in a fixed order, so that shuffling them does not make a new problem. */
+/** optionsOf lists the options of a choice or order problem in a fixed order, so that shuffling them does not make a new problem. */
 function optionsOf(problem: Problem): readonly string[] {
   const { input } = problem.answer;
+  if (input.kind === "order") return input.items.map((item) => item.en).sort();
   if (input.kind !== "choice") return [];
   return (input.figures?.map((f) => f.svg) ?? input.options.map((o) => o.en)).sort();
 }

@@ -1,5 +1,6 @@
 import { cloudflare } from "@cloudflare/vite-plugin";
-import { gatewayWorker, shardWorkers } from "@ga/math-workers/workers";
+import { gatewayWorker as englishGateway, shardWorkers as englishShards } from "@ga/english-workers/workers";
+import { gatewayWorker as mathGateway, shardWorkers as mathShards } from "@ga/math-workers/workers";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
@@ -11,7 +12,7 @@ export default defineConfig({
     cloudflare({
       viteEnvironment: { name: "ssr" },
       // In development the subject Workers run alongside the web Worker; in production they are deployed on their own.
-      auxiliaryWorkers: [gatewayWorker, ...shardWorkers].map((config) => ({ config, devOnly: true })),
+      auxiliaryWorkers: [mathGateway, ...mathShards, englishGateway, ...englishShards].map((config) => ({ config, devOnly: true })),
     }),
     tailwindcss(),
     tanstackStart(),

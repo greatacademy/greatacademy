@@ -15,7 +15,10 @@ import { emailSender } from "./email.ts";
 export const RPC_PREFIX = "/api/rpc";
 
 /** subjectGateways are the Workers serving each subject; a new subject adds its binding here. */
-const subjectGateways = (): readonly SubjectGateway[] => [env.SUBJECT_MATH as unknown as SubjectGateway];
+const subjectGateways = (): readonly SubjectGateway[] => [
+  env.SUBJECT_MATH as unknown as SubjectGateway,
+  env.SUBJECT_ENGLISH as unknown as SubjectGateway,
+];
 
 let loaded: ReadonlyMap<string, UniversalHandler> | undefined;
 
