@@ -38,10 +38,10 @@ export interface RunResult {
   readonly asked: number;
   /** xp is the XP the run changed the learner's total by. */
   readonly xp: number;
-  /** full is the XP the task is worth when done well, before any bonus. */
-  readonly full: number;
+  /** full is the XP the task is worth when done well, before any bonus; missing in runs stored before it existed. */
+  readonly full?: number;
   /** blownOff tells that the task was rushed through and so earned no XP. */
-  readonly blownOff: boolean;
+  readonly blownOff?: boolean;
   /** placed counts the topics the diagnostic placed as known. */
   readonly placed: number;
 }

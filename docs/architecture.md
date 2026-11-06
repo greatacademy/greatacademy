@@ -113,7 +113,9 @@ tools/pilot ──► libs/db, libs/engine, content/math
 | Key prerequisite | KP → topic: the earlier skill a KP depends on most; drives remediation |
 | Encompassing edge | Topic → simpler topic, weight 0–1: how much of the simpler topic the advanced one practices; drives FIRe |
 | Course | Ordered topics grouped into units and modules, with a mastery floor |
-| Learner | A person who studies (a user account, later also managed child profiles) |
+| Learner | A person who studies, with one user account |
+| Guardian | A user who follows a learner, and can set their goals, by the learner's invitation |
+| League group | Up to 30 learners in a tier competing for a week |
 | Enrollment | A learner in a course |
 | Topic state | A learner's repetition state on a topic (derived) |
 | Task | A lesson, review, quiz or diagnostic offered on a learner's dashboard |
@@ -183,12 +185,14 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | Table | Contents |
 | :--- | :--- |
 | `user`, `session`, `account`, `verification` | better-auth's core schema |
-| `learner` | A person who studies; one per user today |
+| `learner` | A person who studies, one per user: public username, league choice, weekday goals |
 | `enrollment` | A learner in a course |
 | `event` | The engine's event log per learner and subject, numbered by `seq` without gaps; `xp` kept for reporting |
 | `learner_state` | Snapshot of the fold of the log up to `seq`; rebuildable by replay |
 | `task_session` | Sessions and their runner state; at most one active per learner and course |
 | `answer` | Every judged response: problem reference, response, verdict |
+| `league_group`, `league_member` | A week's groups by tier and who is in them; weekly XP and outcomes are computed from `event` |
+| `guardian`, `guardian_invite` | Who follows which learner; single-use invitation codes that expire after 7 days |
 
 **Consistency.**
 - Completing a session appends the event, replaces the snapshot and closes the session in one transaction.

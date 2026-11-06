@@ -1,4 +1,3 @@
-import type { MessageInitShape } from "@bufbuild/protobuf";
 import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@connectrpc/connect";
 import { createRng, type Rng } from "@ga/content";
 import {
@@ -15,14 +14,11 @@ import {
   loadState,
   recordAnswer,
   type SessionRow,
-  totalXp,
   updateSession,
-  xpByDay,
 } from "@ga/db";
 import {
   applyEvent,
   courseProgress,
-  DAY,
   diagnosticDue,
   type EngineEvent,
   frontier,
@@ -31,14 +27,17 @@ import {
   type LearnerState,
   memory,
   nextTasks,
+  remainingXp,
   type Task,
 } from "@ga/engine";
-import { type LearningService, type Task as TaskMessage, TopicStatus, type XpSummarySchema } from "@ga/proto/learning/v1/learning_pb";
+import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
+import { joinLeague } from "./league.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, type RunState, runTask, startRun } from "./runner.ts";
+import { xpSummary } from "./summary.ts";
 
 /** historyLength bounds the finished sessions a learner's history lists. */
 const historyLength = 100;
@@ -69,17 +68,6 @@ function auth(ctx: HandlerContext): { db: Db; userId: string } {
   return { db, userId };
 }
 
-/** checkTimeZone returns a valid IANA time zone, UTC when none is given. */
-export function checkTimeZone(timeZone: string): string {
-  const tz = timeZone || "UTC";
-  try {
-    new Intl.DateTimeFormat("en-CA", { timeZone: tz });
-  } catch {
-    throw new ConnectError(`unknown time zone ${tz}`, Code.InvalidArgument);
-  }
-  return tz;
-}
-
 /** sameTask tells whether a requested task is the engine task. */
 function sameTask(req: TaskMessage | undefined, task: Task): boolean {
   const k = req?.kind;
@@ -108,14 +96,6 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
 
   const state = async (db: Db, learnerId: string, c: CourseEntry, lock = false) =>
     loadState(db, learnerId, c.subject.def.id, initialState, lock);
-
-  const xp = async (db: Db, learnerId: string, now: number, timeZone: string): Promise<MessageInitShape<typeof XpSummarySchema>> => {
-    const tz = checkTimeZone(timeZone);
-    const day = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" });
-    const byDay = await xpByDay(db, learnerId, new Date(now - 15 * DAY), tz);
-    const days = Array.from({ length: 14 }, (_, i) => byDay.get(day.format(new Date(now - (13 - i) * DAY))) ?? 0);
-    return { total: await totalXp(db, learnerId), today: days[13]!, days };
-  };
 
   /** append folds an event into the learner's state and appends it, in the caller's transaction. */
   const append = async (db: Db, learnerId: string, c: CourseEntry, e: EngineEvent, sessionId?: string) => {
@@ -155,7 +135,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const p = courseProgress(c.planner, s, now);
         list.push({ courseId: c.id, stats: { learned: p.learned, total: p.total, due: p.due } });
       }
-      return { enrollments: list, xp: await xp(db, learnerId, now, req.timeZone) };
+      return { enrollments: list, xp: await xpSummary(db, learnerId, now, req.timeZone) };
     },
 
     async enroll(req, ctx) {
@@ -172,14 +152,17 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const active = await activeSession(db, learnerId, c.id);
       const p = courseProgress(c.planner, s, now);
       const run = active?.state as RunState | undefined;
+      const xp = await xpSummary(db, learnerId, now, req.timeZone);
       return {
         courseId: c.id,
         diagnosed: !diagnosticDue(c.planner, s),
         tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
         stats: { learned: p.learned, total: p.total, due: p.due },
-        xp: await xp(db, learnerId, now, req.timeZone),
+        xp,
         xpToQuiz: Math.max(0, c.ctx.params.quizEveryXp - (s.xp - s.xpAtLastQuiz)),
+        remainingXp: remainingXp(c.planner, s),
+        pace: (xp.days ?? []).reduce((a, b) => a + b, 0) / 14,
       };
     },
 
@@ -251,6 +234,8 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
               correct: r.correct,
               asked: r.asked,
               xp: r.xp,
+              fullXp: r.full ?? r.xp,
+              blownOff: r.blownOff ?? false,
             },
           ];
         }),
@@ -327,7 +312,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           correct: answered.verdict.correct,
           at: new Date(now),
         });
-        if (answered.event) await append(tx, learnerId, c, answered.event, row.id);
+        if (answered.event) {
+          await append(tx, learnerId, c, answered.event, row.id);
+          await joinLeague(tx, learnerId, now);
+        }
         await updateSession(tx, row.id, answered.run, answered.event ? "completed" : "active", new Date(now));
         return { row: { ...row, state: answered.run }, answered };
       });

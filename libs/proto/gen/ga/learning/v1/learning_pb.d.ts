@@ -120,6 +120,25 @@ export declare type XpSummary = Message<"ga.learning.v1.XpSummary"> & {
    * @generated from field: repeated int32 days = 3;
    */
   days: number[];
+
+  /**
+   * goal_today and goal_week are the goals in XP; 0 means none.
+   *
+   * @generated from field: int32 goal_today = 4;
+   */
+  goalToday: number;
+
+  /**
+   * @generated from field: int32 goal_week = 5;
+   */
+  goalWeek: number;
+
+  /**
+   * week is the XP since Monday, in the learner's time zone.
+   *
+   * @generated from field: int32 week = 6;
+   */
+  week: number;
 };
 
 /**
@@ -221,6 +240,20 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
    * @generated from field: int32 xp_to_quiz = 7;
    */
   xpToQuiz: number;
+
+  /**
+   * remaining_xp estimates the XP the course still takes.
+   *
+   * @generated from field: int32 remaining_xp = 8;
+   */
+  remainingXp: number;
+
+  /**
+   * pace is the learner's average XP per day over the last 14 days.
+   *
+   * @generated from field: double pace = 9;
+   */
+  pace: number;
 };
 
 /**
@@ -1291,6 +1324,20 @@ export declare type FinishedSession = Message<"ga.learning.v1.FinishedSession"> 
    * @generated from field: int32 xp = 7;
    */
   xp: number;
+
+  /**
+   * full_xp is what the task is worth when done well, before any bonus.
+   *
+   * @generated from field: int32 full_xp = 8;
+   */
+  fullXp: number;
+
+  /**
+   * blown_off tells that the task was rushed through.
+   *
+   * @generated from field: bool blown_off = 9;
+   */
+  blownOff: boolean;
 };
 
 /**
@@ -1338,6 +1385,20 @@ export declare type Result = Message<"ga.learning.v1.Result"> & {
    * @generated from field: int32 placed = 6;
    */
   placed: number;
+
+  /**
+   * full_xp is what the task is worth when done well, before any bonus.
+   *
+   * @generated from field: int32 full_xp = 7;
+   */
+  fullXp: number;
+
+  /**
+   * blown_off tells that the task was rushed through, which earns no XP and, when repeated, costs some.
+   *
+   * @generated from field: bool blown_off = 8;
+   */
+  blownOff: boolean;
 };
 
 /**

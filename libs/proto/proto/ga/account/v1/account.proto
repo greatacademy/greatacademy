@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package ga.account.v1;
+
+import "ga/learning/v1/learning.proto";
+
+// AccountService holds what belongs to a learner rather than to a course:
+// goals, the public username, leagues and guardians.
+service AccountService {
+  // GetSettings returns the learner's settings and guardians.
+  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
+  // SetUsername chooses the public username, which must be free.
+  rpc SetUsername(SetUsernameRequest) returns (SetUsernameResponse);
+  // SetLeagues joins or leaves the leagues; joining needs a username.
+  rpc SetLeagues(SetLeaguesRequest) returns (SetLeaguesResponse);
+  // SetGoals sets the XP goal of each weekday.
+  rpc SetGoals(SetGoalsRequest) returns (SetGoalsResponse);
+  // GetLeague returns the standings of the learner's group this week.
+  rpc GetLeague(GetLeagueRequest) returns (GetLeagueResponse);
+  // CreateGuardianInvite makes a code that lets someone follow this learner.
+  rpc CreateGuardianInvite(CreateGuardianInviteRequest) returns (CreateGuardianInviteResponse);
+  // AcceptGuardianInvite makes the caller a guardian of the learner who made the code.
+  rpc AcceptGuardianInvite(AcceptGuardianInviteRequest) returns (AcceptGuardianInviteResponse);
+  // RemoveGuardian ends a guardian's access to the calling learner.
+  rpc RemoveGuardian(RemoveGuardianRequest) returns (RemoveGuardianResponse);
+  // ListGuardedLearners lists the learners the caller is a guardian of.
+  rpc ListGuardedLearners(ListGuardedLearnersRequest) returns (ListGuardedLearnersResponse);
+  // GetGuardedLearner returns how a guarded learner is doing.
+  rpc GetGuardedLearner(GetGuardedLearnerRequest) returns (GetGuardedLearnerResponse);
+  // SetGuardedGoals sets the goals of a guarded learner.
+  rpc SetGuardedGoals(SetGuardedGoalsRequest) returns (SetGuardedGoalsResponse);
+  // RemoveGuardedLearner ends the caller's access to a learner.
+  rpc RemoveGuardedLearner(RemoveGuardedLearnerRequest) returns (RemoveGuardedLearnerResponse);
+}
+
+// Goals are the XP goals of a week.
+message Goals {
+  // weekdays holds seven values, Monday first; it is empty until goals are set.
+  repeated int32 weekdays = 1;
+  bool paused = 2;
+}
+
+// Guardian is someone who follows the learner.
+message Guardian {
+  string user_id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message GetSettingsRequest {}
+
+message GetSettingsResponse {
+  string username = 1;
+  bool leagues = 2;
+  Goals goals = 3;
+  repeated Guardian guardians = 4;
+}
+
+message SetUsernameRequest {
+  string username = 1;
+}
+
+message SetUsernameResponse {}
+
+message SetLeaguesRequest {
+  bool enabled = 1;
+}
+
+message SetLeaguesResponse {}
+
+message SetGoalsRequest {
+  Goals goals = 1;
+}
+
+message SetGoalsResponse {}
+
+message GetLeagueRequest {}
+
+// LeagueRow is one member of a group, identified by username only.
+message LeagueRow {
+  int32 rank = 1;
+  string username = 2;
+  int32 xp = 3;
+  bool me = 4;
+}
+
+// LeagueOutcome is what the end of a week did to a member.
+enum LeagueOutcome {
+  LEAGUE_OUTCOME_UNSPECIFIED = 0;
+  LEAGUE_OUTCOME_PROMOTED = 1;
+  LEAGUE_OUTCOME_STAYED = 2;
+  LEAGUE_OUTCOME_DEMOTED = 3;
+}
+
+// LastWeek is how the learner's last week in a league ended.
+message LastWeek {
+  int32 rank = 1;
+  int32 tier = 2;
+  LeagueOutcome outcome = 3;
+  // missed_weeks counts the whole weeks missed since then.
+  int32 missed_weeks = 4;
+}
+
+message GetLeagueResponse {
+  bool enabled = 1;
+  // tier is the learner's tier this week, 0 being the lowest.
+  int32 tier = 2;
+  // ends_at is when the week ends, in milliseconds since the epoch.
+  int64 ends_at = 3;
+  // rows are empty until the learner earns XP this week.
+  repeated LeagueRow rows = 4;
+  // promote and demote count the ranks at the top and bottom that change tier.
+  int32 promote = 5;
+  int32 demote = 6;
+  optional LastWeek last = 7;
+}
+
+message CreateGuardianInviteRequest {}
+
+message CreateGuardianInviteResponse {
+  string code = 1;
+  // expires_at is in milliseconds since the epoch.
+  int64 expires_at = 2;
+}
+
+message AcceptGuardianInviteRequest {
+  string code = 1;
+}
+
+message AcceptGuardianInviteResponse {
+  string learner_id = 1;
+}
+
+message RemoveGuardianRequest {
+  string user_id = 1;
+}
+
+message RemoveGuardianResponse {}
+
+message ListGuardedLearnersRequest {
+  string time_zone = 1;
+}
+
+// GuardedLearner sums up a learner for their guardian.
+message GuardedLearner {
+  string learner_id = 1;
+  string name = 2;
+  ga.learning.v1.XpSummary xp = 3;
+}
+
+message ListGuardedLearnersResponse {
+  repeated GuardedLearner learners = 1;
+}
+
+message GetGuardedLearnerRequest {
+  string learner_id = 1;
+  string time_zone = 2;
+}
+
+// RecentWork counts what happened over the last 14 days, the signs a guardian watches for.
+message RecentWork {
+  int32 lessons = 1;
+  int32 failed_lessons = 2;
+  int32 blown_off = 3;
+}
+
+message GetGuardedLearnerResponse {
+  GuardedLearner learner = 1;
+  Goals goals = 2;
+  repeated ga.learning.v1.Enrollment enrollments = 3;
+  RecentWork recent = 4;
+}
+
+message SetGuardedGoalsRequest {
+  string learner_id = 1;
+  Goals goals = 2;
+}
+
+message SetGuardedGoalsResponse {}
+
+message RemoveGuardedLearnerRequest {
+  string learner_id = 1;
+}
+
+message RemoveGuardedLearnerResponse {}

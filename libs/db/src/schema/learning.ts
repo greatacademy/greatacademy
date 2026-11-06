@@ -6,18 +6,26 @@ import { user } from "./auth.ts";
 
 const at = (name: string) => timestamp(name, { withTimezone: true, mode: "date" });
 
-/**
- * learner is a person who studies. Today each user has exactly one learner;
- * managed profiles (a parent's children) will add more learners per user.
- */
-export const learner = pgTable("learner", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id")
-    .notNull()
-    .unique()
-    .references(() => user.id, { onDelete: "cascade" }),
-  createdAt: at("created_at").notNull().defaultNow(),
-});
+/** learner is a person who studies; each user has exactly one, and guardians follow learners through guardian. */
+export const learner = pgTable(
+  "learner",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .unique()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: at("created_at").notNull().defaultNow(),
+    /** username is the public name in leagues, unique ignoring case; the account's own name is never shown to others. */
+    username: text("username"),
+    /** leagues tells whether the learner takes part in leagues. */
+    leagues: boolean("leagues").notNull().default(false),
+    /** goals holds the XP goal of each weekday, Monday first; null until set. */
+    goals: integer("goals").array(),
+    goalsPaused: boolean("goals_paused").notNull().default(false),
+  },
+  (t) => [uniqueIndex("learner_username").on(sql`lower(${t.username})`)],
+);
 
 /** enrollment is a learner in a course. */
 export const enrollment = pgTable(
@@ -123,3 +131,55 @@ export const answer = pgTable(
   },
   (t) => [uniqueIndex("answer_session_index").on(t.sessionId, t.index)],
 );
+
+/** leagueGroup is a group of learners competing in a tier for a week, which starts at week. */
+export const leagueGroup = pgTable(
+  "league_group",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    week: at("week").notNull(),
+    tier: integer("tier").notNull(),
+    band: integer("band").notNull(),
+  },
+  (t) => [index("league_group_week_tier").on(t.week, t.tier)],
+);
+
+/** leagueMember is a learner in a group; a learner is in one group per week. */
+export const leagueMember = pgTable(
+  "league_member",
+  {
+    learnerId: uuid("learner_id")
+      .notNull()
+      .references(() => learner.id, { onDelete: "cascade" }),
+    week: at("week").notNull(),
+    groupId: uuid("group_id")
+      .notNull()
+      .references(() => leagueGroup.id, { onDelete: "cascade" }),
+    joinedAt: at("joined_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.learnerId, t.week] }), index("league_member_group").on(t.groupId)],
+);
+
+/** guardian lets a user follow a learner and set the learner's goals. */
+export const guardian = pgTable(
+  "guardian",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    learnerId: uuid("learner_id")
+      .notNull()
+      .references(() => learner.id, { onDelete: "cascade" }),
+    createdAt: at("created_at").notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.learnerId] }), index("guardian_learner").on(t.learnerId)],
+);
+
+/** guardianInvite is a code a learner gives to someone to make them a guardian; it works once. */
+export const guardianInvite = pgTable("guardian_invite", {
+  code: text("code").primaryKey(),
+  learnerId: uuid("learner_id")
+    .notNull()
+    .references(() => learner.id, { onDelete: "cascade" }),
+  expiresAt: at("expires_at").notNull(),
+});

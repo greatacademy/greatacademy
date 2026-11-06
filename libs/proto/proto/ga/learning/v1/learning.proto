@@ -59,6 +59,11 @@ message XpSummary {
   int32 today = 2;
   // days is the XP of each of the last 14 days, oldest first, today last.
   repeated int32 days = 3;
+  // goal_today and goal_week are the goals in XP; 0 means none.
+  int32 goal_today = 4;
+  int32 goal_week = 5;
+  // week is the XP since Monday, in the learner's time zone.
+  int32 week = 6;
 }
 
 message EnrollRequest {
@@ -83,6 +88,10 @@ message GetDashboardResponse {
   XpSummary xp = 6;
   // xp_to_quiz is the XP still to earn before the next quiz.
   int32 xp_to_quiz = 7;
+  // remaining_xp estimates the XP the course still takes.
+  int32 remaining_xp = 8;
+  // pace is the learner's average XP per day over the last 14 days.
+  double pace = 9;
 }
 
 // Task is a unit of work offered on the dashboard.
@@ -373,6 +382,10 @@ message FinishedSession {
   int32 correct = 5;
   int32 asked = 6;
   int32 xp = 7;
+  // full_xp is what the task is worth when done well, before any bonus.
+  int32 full_xp = 8;
+  // blown_off tells that the task was rushed through.
+  bool blown_off = 9;
 }
 
 // Result ends a session.
@@ -385,6 +398,10 @@ message Result {
   repeated ResultItem items = 5;
   // placed counts the topics the diagnostic placed as known.
   int32 placed = 6;
+  // full_xp is what the task is worth when done well, before any bonus.
+  int32 full_xp = 7;
+  // blown_off tells that the task was rushed through, which earns no XP and, when repeated, costs some.
+  bool blown_off = 8;
 }
 
 message ResultItem {

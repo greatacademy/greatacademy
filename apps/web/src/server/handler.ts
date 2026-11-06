@@ -1,9 +1,10 @@
 import { env, waitUntil } from "cloudflare:workers";
 import { createConnectRouter, createContextValues } from "@connectrpc/connect";
 import { type UniversalHandler, universalServerRequestFromFetch, universalServerResponseToFetch } from "@connectrpc/connect/protocol";
-import { catalogService, dbKey, learningService, Registry, userIdKey } from "@ga/api";
+import { accountService, catalogService, dbKey, learningService, Registry, userIdKey } from "@ga/api";
 import type { SubjectGateway } from "@ga/content";
 import { connect } from "@ga/db";
+import { AccountService } from "@ga/proto/account/v1/account_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 
@@ -28,6 +29,7 @@ async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
   if (loaded) return loaded;
   const router = createConnectRouter();
   router.service(CatalogService, catalogService(registry));
+  router.service(AccountService, accountService({ registry, now: Date.now }));
   router.service(LearningService, learningService({ registry, now: Date.now, seed: () => Math.floor(Math.random() * 0x7fffffff) }));
   loaded = new Map(router.handlers.map((h) => [h.requestPath, h]));
   return loaded;

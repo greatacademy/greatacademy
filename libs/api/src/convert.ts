@@ -134,7 +134,16 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
         };
       })
     : [];
-  return { passed: r.passed, correct: r.correct, asked: r.asked, xp: r.xp, placed: r.placed, items };
+  return {
+    passed: r.passed,
+    correct: r.correct,
+    asked: r.asked,
+    xp: r.xp,
+    fullXp: r.full ?? r.xp,
+    blownOff: r.blownOff ?? false,
+    placed: r.placed,
+    items,
+  };
 }
 
 /** sessionMessage describes a session: its task and its current question or result. */
