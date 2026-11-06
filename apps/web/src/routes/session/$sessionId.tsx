@@ -8,6 +8,7 @@ import { CaptionedFigure, Explanation, FigureView } from "../../components/Figur
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
+import { OrderField } from "../../components/OrderField.tsx";
 import { PlotField } from "../../components/PlotField.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
@@ -332,6 +333,10 @@ function AnswerInput({
           </div>
           {!disabled && <p className="text-xs text-muted">{m.choiceHint}</p>}
         </div>
+      );
+    case "order":
+      return (
+        <OrderField key={tx(problem?.prompt)} items={input.value.items.map((item) => tx(item))} onChange={onChange} disabled={disabled} />
       );
     case "plot":
       return (

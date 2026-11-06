@@ -1,10 +1,13 @@
 import {
   type CompiledCourse,
   type CompiledSubject,
+  inLocale,
+  type Locale,
   readManifest,
   type SubjectCatalog,
   type SubjectGateway,
   type SubjectListing,
+  type SubjectSource,
   subjectListing,
   subjectManifest,
   topicSource,
@@ -21,6 +24,15 @@ export function localGateway(subject: CompiledSubject): SubjectGateway {
   };
 }
 
+/** sourceInLocale serves a source's lessons and problems in one locale, for a course that teaches in that language. */
+function sourceInLocale(source: SubjectSource, locale: Locale): SubjectSource {
+  return {
+    problems: async (refs) => inLocale(await source.problems(refs), locale),
+    lesson: async (topic, kp) => inLocale(await source.lesson(topic, kp), locale),
+    judge: async (ref, response) => inLocale(await source.judge(ref, response), locale),
+  };
+}
+
 /** SubjectEntry is a subject's catalog with its source, engine graph and courses. */
 export interface SubjectEntry {
   readonly subject: SubjectCatalog;
@@ -34,7 +46,7 @@ export interface CourseEntry {
   readonly id: string;
   readonly course: CompiledCourse;
   readonly subject: SubjectCatalog;
-  readonly source: SubjectGateway;
+  readonly source: SubjectSource;
   readonly ctx: EngineContext;
   readonly planner: Planner;
 }
@@ -110,11 +122,12 @@ export class Registry {
     for (const [id, course] of subject.courses) {
       // A course's scope is computed when first used: most isolates serve few courses.
       let planner: Planner | undefined;
+      const { explanationLocale } = course.def;
       courses.set(id, {
         id,
         course,
         subject,
-        source,
+        source: explanationLocale ? sourceInLocale(source, explanationLocale) : source,
         ctx,
         get planner() {
           planner ??= { params, graph, scope: courseScope(graph, course) };

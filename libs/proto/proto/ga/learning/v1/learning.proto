@@ -279,6 +279,7 @@ message Input {
     MathInput math = 2;
     TextInput text = 3;
     PlotInput plot = 4;
+    OrderInput order = 5;
   }
 }
 
@@ -297,6 +298,11 @@ message MathInput {
 }
 
 message TextInput {}
+
+// OrderInput: a list to put in order. The response lists the indexes of the items in the chosen order, such as "2,0,1".
+message OrderInput {
+  repeated ga.common.v1.Text items = 1;
+}
 
 // PlotInput: points are marked on the problem's figure. The response lists them as "(x, y)", joined by "; ".
 message PlotInput {

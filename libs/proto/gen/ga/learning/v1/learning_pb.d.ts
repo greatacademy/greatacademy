@@ -919,6 +919,12 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
      */
     value: PlotInput;
     case: "plot";
+  } | {
+    /**
+     * @generated from field: ga.learning.v1.OrderInput order = 5;
+     */
+    value: OrderInput;
+    case: "order";
   } | { case: undefined; value?: undefined };
 };
 
@@ -989,6 +995,24 @@ export declare type TextInput = Message<"ga.learning.v1.TextInput"> & {
  * Use `create(TextInputSchema)` to create a new message.
  */
 export declare const TextInputSchema: GenMessage<TextInput>;
+
+/**
+ * OrderInput: a list to put in order. The response lists the indexes of the items in the chosen order, such as "2,0,1".
+ *
+ * @generated from message ga.learning.v1.OrderInput
+ */
+export declare type OrderInput = Message<"ga.learning.v1.OrderInput"> & {
+  /**
+   * @generated from field: repeated ga.common.v1.Text items = 1;
+   */
+  items: Text[];
+};
+
+/**
+ * Describes the message ga.learning.v1.OrderInput.
+ * Use `create(OrderInputSchema)` to create a new message.
+ */
+export declare const OrderInputSchema: GenMessage<OrderInput>;
 
 /**
  * PlotInput: points are marked on the problem's figure. The response lists them as "(x, y)", joined by "; ".

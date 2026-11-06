@@ -24,8 +24,25 @@ export const textChecker: Checker = {
   },
 };
 
+/** orderIndexes reads a response to an order input: the indexes, separated by commas. */
+export function orderIndexes(response: string): readonly number[] {
+  return response.split(",").map((s) => (/^\s*\d+\s*$/.test(s) ? Number(s) : Number.NaN));
+}
+
+/** orderChecker accepts one of the listed orders; expected is an array of them, each an array of item indexes. */
+export const orderChecker: Checker = {
+  id: "order",
+  check(expected, response) {
+    const given = orderIndexes(response).join();
+    return { correct: Array.isArray(expected) && expected.some((o: Json) => Array.isArray(o) && o.join() === given) };
+  },
+  same(_expected, response, mistake) {
+    return orderIndexes(response).join() === orderIndexes(mistake).join();
+  },
+};
+
 /** coreCheckers are the checkers every subject has. */
-export const coreCheckers: readonly Checker[] = [choiceChecker, textChecker];
+export const coreCheckers: readonly Checker[] = [choiceChecker, textChecker, orderChecker];
 
 /** CheckerRegistry finds checkers by id. */
 export class CheckerRegistry {

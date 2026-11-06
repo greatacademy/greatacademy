@@ -1,6 +1,6 @@
 import type { Figure } from "./figure.ts";
 import type { Rng } from "./rng.ts";
-import type { Text } from "./text.ts";
+import type { Locale, Text } from "./text.ts";
 
 /** Json is a JSON-serializable value. */
 export type Json = null | boolean | number | string | readonly Json[] | { readonly [key: string]: Json };
@@ -13,6 +13,8 @@ export type InputSpec =
   | { readonly kind: "math"; readonly prefix?: string; readonly suffix?: string }
   /** A plain text field. */
   | { readonly kind: "text" }
+  /** A list to put in order; the response is the indexes of the items in the chosen order, such as "2,0,1". */
+  | { readonly kind: "order"; readonly items: readonly Text[] }
   /**
    * Points marked on the problem's figure; the response lists them as "(x, y)", joined by "; " when there are several, once
    * all of them are marked.
@@ -139,6 +141,8 @@ export interface CourseDef {
   readonly description: Text;
   /** group names the shelf a list of courses shows this course on; courses of a group are listed together. */
   readonly group?: Text;
+  /** explanationLocale is the locale of the course's lessons and problems whatever the interface's, for a course that teaches in that language. */
+  readonly explanationLocale?: Locale;
   readonly units: readonly UnitDef[];
   /** masteryFloor are topics outside the course assumed known by every learner. */
   readonly masteryFloor?: readonly string[];

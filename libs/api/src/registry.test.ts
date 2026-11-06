@@ -39,6 +39,21 @@ function subject(id: string, loads: string[]): SubjectGateway {
 }
 
 describe("Registry", () => {
+  it("serves a course that teaches in one language in that language", async () => {
+    const gateway = subject("a", []);
+    const manifest = await gateway.manifest();
+    const course = manifest.courses[0]!;
+    const taught = { ...course, def: { ...course.def, explanationLocale: "en" } } as never;
+    const registry = await Registry.open([
+      {
+        ...gateway,
+        manifest: async () => ({ ...manifest, courses: [taught] }),
+        lesson: async () => ({ title: t("A", "甲"), explanation: t("B", "乙") }) as never,
+      },
+    ]);
+    await expect((await registry.course("a-course"))?.source.lesson("x", 0)).resolves.toEqual({ title: t("A", "A"), explanation: t("B", "B") });
+  });
+
   it("lists courses without loading any subject", async () => {
     const loads: string[] = [];
     const registry = await Registry.open([subject("a", loads), subject("b", loads)]);

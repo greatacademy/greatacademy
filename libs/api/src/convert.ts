@@ -34,6 +34,8 @@ function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
       return { kind: { case: "math", value: { prefix: spec.prefix ?? "", suffix: spec.suffix ?? "" } } };
     case "text":
       return { kind: { case: "text", value: {} } };
+    case "order":
+      return { kind: { case: "order", value: { items: spec.items.map(text) } } };
     case "plot":
       return { kind: { case: "plot", value: { ...spec.grid, points: spec.points } } };
   }

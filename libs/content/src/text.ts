@@ -25,6 +25,14 @@ export function joinText(parts: readonly Text[], separator = "\n\n"): Text {
   return { en: parts.map((p) => p.en).join(separator), "zh-CN": parts.map((p) => p["zh-CN"]).join(separator) };
 }
 
+/** inLocale copies a value with every Text in it reading as its form in locale, for a course that teaches in that language. */
+export function inLocale<T>(value: T, locale: Locale): T {
+  if (Array.isArray(value)) return value.map((v) => inLocale(v, locale)) as T;
+  if (typeof value !== "object" || value === null) return value;
+  if (isText(value)) return Object.fromEntries(locales.map((l) => [l, (value as Text)[locale]])) as T;
+  return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, inLocale(v, locale)])) as T;
+}
+
 /** isText tells whether value is a Text with a non-empty string in every locale. */
 export function isText(value: unknown): value is Text {
   if (typeof value !== "object" || value === null) return false;

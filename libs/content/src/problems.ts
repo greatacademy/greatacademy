@@ -1,3 +1,4 @@
+import { orderIndexes } from "./checkers.ts";
 import type { CompiledSubject, Issue } from "./compile.ts";
 import { type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { createRng } from "./rng.ts";
@@ -134,6 +135,7 @@ function checkSample(
       a.prompt,
       a.solution,
       ...(a.answer.input.kind === "choice" ? a.answer.input.options : []),
+      ...(a.answer.input.kind === "order" ? a.answer.input.items : []),
       ...(a.mistakes ?? []).map((m) => m.feedback),
     ];
     for (const locale of locales) {
@@ -163,6 +165,14 @@ function checkSample(
     }
     if (typeof answer.expected !== "number" || answer.expected < 0 || answer.expected >= options.length)
       return "expected must be an option index";
+  }
+  if (answer.input.kind === "order") {
+    const { items } = answer.input;
+    if (items.length < 2) return "an order needs at least two items";
+    if (!items.every(isText)) return "every item must be non-empty in every locale";
+    const listed = orderIndexes(a.canonical);
+    if ([...listed].sort((x, y) => x - y).join() !== items.map((_, i) => i).join())
+      return "the canonical response must list every item once";
   }
   if (answer.input.kind === "plot") {
     if (!a.figure) return "a plot needs a figure to mark";

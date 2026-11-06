@@ -30,6 +30,17 @@ export function AnswerText({ problem, answer }: { problem?: ProblemView; answer:
       <Markdown source={tx(input.value.options[Number(answer)])} inline />
     );
   }
+  if (input?.case === "order") {
+    return (
+      <ol className="mt-1 list-decimal space-y-1 pl-5">
+        {answer.split(",").map((i) => (
+          <li key={i}>
+            <Markdown source={tx(input.value.items[Number(i)])} inline />
+          </li>
+        ))}
+      </ol>
+    );
+  }
   if (input?.case === "math") return <Tex tex={[input.value.prefix, answer, input.value.suffix].filter(Boolean).join(" ")} />;
   if (input?.case === "plot") return <Tex tex={answer.replaceAll(";", ";\\;")} />;
   return <span>{answer}</span>;
