@@ -311,7 +311,7 @@ const messages = {
     welcomeChooseTitle: "Choose a course to start",
     welcomeChooseBody:
       "Not sure which? Choose the course you most want to finish. The diagnostic checks what you already know and fills in the gaps it finds.",
-    createToLearn: "Create an account to enroll and start learning.",
+    signInToLearn: "Sign in to enroll and start learning.",
     landing: {
       eyebrow: "Adaptive mathematics, from first grade to university",
       title: "Learn what you are ready for. Keep what you learn.",
@@ -707,7 +707,7 @@ const messages = {
     welcomeGuardianBody: "用孩子或学生提供的邀请码，查看他们的进度并设置目标。",
     welcomeChooseTitle: "选一门课开始",
     welcomeChooseBody: "拿不准选哪门？就选你最想学完的那门。诊断会检查你已经会什么，并补上它发现的缺口。",
-    createToLearn: "创建账号后即可选修并开始学习。",
+    signInToLearn: "登录后即可选修并开始学习。",
     landing: {
       eyebrow: "自适应数学课程，从小学到大学",
       title: "学你正好能学的，记住你学过的。",

@@ -49,13 +49,10 @@ function CoursePage() {
         <div className="pt-2">
           {!session ? (
             <div className="flex items-center gap-3">
-              <Link to="/sign-up" search={{ next: `/courses/${courseId}` }} className={buttonClass("primary")}>
-                {m.signUp}
-              </Link>
-              <Link to="/sign-in" search={{ next: `/courses/${courseId}` }} className={buttonClass("secondary")}>
+              <Link to="/sign-in" search={{ next: `/courses/${courseId}` }} className={buttonClass("primary")}>
                 {m.signIn}
               </Link>
-              <span className="text-sm text-muted">{m.createToLearn}</span>
+              <span className="text-sm text-muted">{m.signInToLearn}</span>
             </div>
           ) : enrolled ? (
             <Link to="/learn/$courseId" params={{ courseId }} className={buttonClass("primary")}>
