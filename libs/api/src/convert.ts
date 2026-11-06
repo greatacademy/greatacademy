@@ -62,6 +62,15 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
       const t = topic(task.topic);
       return { kind: { case: "review", value: { topicId: t.id, title: text(t.title), xp: reviewXp(t.xp), covers: [...task.covers] } } };
     }
+    case "reading": {
+      const passage = c.subject.passages.get(task.passage)!;
+      return {
+        kind: {
+          case: "reading",
+          value: { passageId: passage.id, title: text(passage.title), xp: passage.xp, questions: passage.questions, words: passage.words },
+        },
+      };
+    }
     case "quiz": {
       const learned = c.planner.scope.topics.filter((id) => state.topics[id]?.learned).length;
       const p = c.ctx.params;
@@ -101,10 +110,14 @@ async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape
   const q: MessageInitShape<typeof QuestionSchema> = {
     index: run.asked.length,
     problem: problemView(problem!),
-    feedback: run.kind === "lesson" || run.kind === "review",
+    feedback: run.kind === "lesson" || run.kind === "review" || run.kind === "reading",
     canSkip: canSkip(run),
-    total: run.kind === "review" ? run.plan.length : run.kind === "quiz" ? run.topics.length : 0,
+    total: run.kind === "review" ? run.plan.length : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
   };
+  if (run.kind === "reading") {
+    const passage = await c.source.passage(run.passage);
+    return { ...q, passage: { title: text(passage.title), body: passage.body } };
+  }
   if (run.kind !== "lesson") return q;
   const l = run.lesson;
   const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: l.streak, needed: c.ctx.params.kpStreak };
@@ -126,7 +139,7 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
         const p = problems[i]!;
         return {
           topicId: a.topic,
-          title: text(c.subject.topics.get(a.topic)!.title),
+          title: text((c.subject.topics.get(a.topic) ?? c.subject.passages.get(a.topic)!).title),
           correct: a.correct,
           problem: problemView(p),
           solution: text(p.solution),

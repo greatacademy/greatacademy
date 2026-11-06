@@ -20,6 +20,8 @@ export function fullXp(ctx: EngineContext, e: EngineEvent): number {
       return reviewXp(topicXp(e.topic));
     case "quiz":
       return ctx.params.quizXp;
+    case "reading":
+      return ctx.graph.graph.passages.get(e.passage)?.xp ?? 0;
   }
 }
 
@@ -45,6 +47,8 @@ function earnedXp(ctx: EngineContext, e: EngineEvent): number {
     case "review":
       if (reviewResult(p, e.correct, e.total) <= 0) return 0;
       return e.correct === e.total ? full + p.xpPerfectBonus : Math.round((full * e.correct) / e.total);
+    case "reading":
+      return readingPassed(e) ? full : Math.round(full * p.readingFailedXpShare);
     case "quiz": {
       const n = e.results.length;
       const correct = e.results.filter((r) => r.correct).length;
@@ -52,6 +56,11 @@ function earnedXp(ctx: EngineContext, e: EngineEvent): number {
       return correct === n ? full + p.xpPerfectBonus : Math.round((full * correct) / n);
     }
   }
+}
+
+/** readingPassed tells whether a passage's check shows it was understood: at least half of the answers right. */
+export function readingPassed(e: { readonly correct: number; readonly total: number }): boolean {
+  return e.correct * 2 >= e.total;
 }
 
 /** blowOffPenalty is the XP a blown-off task costs after count earlier ones: nothing for the first few, more as they continue, never more than the task is worth. */
@@ -80,6 +89,8 @@ function taskPassed(p: Params, e: Exclude<EngineEvent, { type: "placed" }>): boo
       return reviewResult(p, e.correct, e.total) > 0;
     case "quiz":
       return e.results.filter((r) => r.correct).length * 2 >= e.results.length;
+    case "reading":
+      return readingPassed(e);
   }
 }
 
@@ -100,4 +111,13 @@ export function isBlownOff(p: Params, passed: boolean, answers: readonly TimedAn
   const wrong = answers.filter((a) => !a.correct);
   const rushed = wrong.filter((a) => a.elapsedMs < p.rushSeconds * 1000).length;
   return rushed >= p.rushMinAnswers && rushed * 2 >= wrong.length;
+}
+
+/**
+ * isReadingBlownOff tells whether a passage looks blown off: its check failed,
+ * after less time than reading it at readingRushWpm takes. A fast reader who
+ * understood is never blowing off.
+ */
+export function isReadingBlownOff(p: Params, passed: boolean, words: number, elapsedMs: number): boolean {
+  return !passed && elapsedMs < (words / p.readingRushWpm) * 60_000;
 }

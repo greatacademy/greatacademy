@@ -41,6 +41,9 @@ export interface Report {
   readonly failedLessons: number;
   readonly reviews: number;
   readonly quizzes: number;
+  /** passages counts the passages read; readingXp is the XP they earned. */
+  readonly passages: number;
+  readonly readingXp: number;
   readonly taughtTopics: number;
   readonly reviewsPerTopic: number;
   readonly xp: number;
@@ -105,6 +108,11 @@ export function simulate(
         const correct = kps.filter(() => rng.bool(chance(task.topic, now))).length;
         reviews++;
         record({ type: "review", at: now, topic: task.topic, correct, total: kps.length });
+      } else if (task.kind === "reading") {
+        // Reading comprehension follows ability; the student has met the words, so memory does not lower it.
+        const total = graph.graph.passages.get(task.passage)!.questions;
+        const correct = Array.from({ length: total }, () => rng.bool(student.ability)).filter(Boolean).length;
+        record({ type: "reading", at: now, passage: task.passage, correct, total });
       } else {
         const topics = quizPlan(pl, state, rng);
         record({ type: "quiz", at: now, results: topics.map((topic) => ({ topic, correct: rng.bool(chance(topic, now)) })) });
@@ -125,6 +133,8 @@ export function simulate(
       failedLessons,
       reviews,
       quizzes: state.quizzes,
+      passages: state.read?.length ?? 0,
+      readingXp: state.readingXp ?? 0,
       taughtTopics: taught,
       reviewsPerTopic: taught === 0 ? 0 : reviews / taught,
       xp: state.xp,

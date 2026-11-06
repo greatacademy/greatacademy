@@ -9,10 +9,12 @@ import {
   finishDiagnostic,
   fullXp,
   isBlownOff,
+  isReadingBlownOff,
   type LearnerState,
   type LessonProgress,
   nextDiagnosticTopic,
   quizPlan,
+  readingPassed,
   reviewPlan,
   reviewResult,
   startDiagnostic,
@@ -72,6 +74,7 @@ export type RunState =
     })
   | (RunBase & { readonly kind: "review"; readonly topic: string; readonly covers: readonly string[]; readonly plan: readonly number[] })
   | (RunBase & { readonly kind: "quiz"; readonly topics: readonly string[] })
+  | (RunBase & { readonly kind: "reading"; readonly passage: string; readonly questions: number })
   | (RunBase & { readonly kind: "diagnostic"; readonly diagnostic: DiagnosticProgress });
 
 /**
@@ -122,6 +125,10 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
       const topics = quizPlan(c.planner, state, rng);
       return { kind: "quiz", topics, ...served, current: diagnosticRef(c, topics[0]!, rng) };
     }
+    case "reading": {
+      const questions = c.ctx.graph.graph.passages.get(task.passage)!.questions;
+      return { kind: "reading", passage: task.passage, questions, ...served, current: { topic: task.passage, kp: 0, seed: newSeed(rng) } };
+    }
     case "diagnostic": {
       const diagnostic = startDiagnostic(diagnosticCandidates(c.planner, state));
       const first = nextDiagnosticTopic(c.ctx.graph, diagnostic);
@@ -166,7 +173,15 @@ export async function answerRun(
   const asked = [...run.asked, { ...ref, response: skipped ? "" : response, correct: verdict.correct, skipped, elapsedMs }];
   const correct = asked.filter((a) => a.correct).length;
   const finish = (next: RunState, finished: EngineEvent, passed: boolean, placed = 0): Answered => {
-    const blownOff = finished.type !== "placed" && isBlownOff(c.ctx.params, passed, asked);
+    const blownOff =
+      finished.type === "reading"
+        ? isReadingBlownOff(
+            c.ctx.params,
+            passed,
+            c.ctx.graph.graph.passages.get(finished.passage)!.words,
+            asked.reduce((total, a) => total + a.elapsedMs, 0),
+          )
+        : finished.type !== "placed" && isBlownOff(c.ctx.params, passed, asked);
     const event = blownOff ? { ...finished, blownOff } : finished;
     const result: RunResult = {
       passed,
@@ -224,6 +239,19 @@ export async function answerRun(
       }
       return { run: { ...next, servedAt: now, current: diagnosticRef(c, run.topics[asked.length]!, rng) }, problem, verdict, skipped };
     }
+    case "reading": {
+      const next = { ...run, asked };
+      if (asked.length >= run.questions) {
+        const event: EngineEvent = { type: "reading", at: now, passage: run.passage, correct, total: asked.length };
+        return finish(next, event, readingPassed(event));
+      }
+      return {
+        run: { ...next, servedAt: now, current: { topic: run.passage, kp: asked.length, seed: run.current!.seed + 1 } },
+        problem,
+        verdict,
+        skipped,
+      };
+    }
     case "diagnostic": {
       const diagnostic = answerDiagnostic(c.ctx.graph, run.diagnostic, ref.topic, verdict.correct);
       const next = { ...run, diagnostic, asked };
@@ -246,6 +274,8 @@ export function runTask(run: RunState): Task {
       return { kind: "review", topic: run.topic, covers: run.covers };
     case "quiz":
       return { kind: "quiz" };
+    case "reading":
+      return { kind: "reading", passage: run.passage };
     case "diagnostic":
       return { kind: "diagnostic" };
   }

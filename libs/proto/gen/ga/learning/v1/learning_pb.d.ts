@@ -302,6 +302,12 @@ export declare type Task = Message<"ga.learning.v1.Task"> & {
      */
     value: QuizTask;
     case: "quiz";
+  } | {
+    /**
+     * @generated from field: ga.learning.v1.ReadingTask reading = 5;
+     */
+    value: ReadingTask;
+    case: "reading";
   } | { case: undefined; value?: undefined };
 };
 
@@ -413,6 +419,44 @@ export declare type QuizTask = Message<"ga.learning.v1.QuizTask"> & {
  * Use `create(QuizTaskSchema)` to create a new message.
  */
 export declare const QuizTaskSchema: GenMessage<QuizTask>;
+
+/**
+ * @generated from message ga.learning.v1.ReadingTask
+ */
+export declare type ReadingTask = Message<"ga.learning.v1.ReadingTask"> & {
+  /**
+   * @generated from field: string passage_id = 1;
+   */
+  passageId: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: int32 xp = 3;
+   */
+  xp: number;
+
+  /**
+   * @generated from field: int32 questions = 4;
+   */
+  questions: number;
+
+  /**
+   * words counts the running words of the passage.
+   *
+   * @generated from field: int32 words = 5;
+   */
+  words: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.ReadingTask.
+ * Use `create(ReadingTaskSchema)` to create a new message.
+ */
+export declare const ReadingTaskSchema: GenMessage<ReadingTask>;
 
 /**
  * @generated from message ga.learning.v1.SessionSummary
@@ -698,7 +742,7 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
 
   /**
    * feedback is true when each answer is judged at once (lessons, reviews);
-   * false when results come at the end (quizzes, the diagnostic).
+   * false when results come at the end (quizzes, the diagnostic). Reading is judged at once.
    *
    * @generated from field: bool feedback = 4;
    */
@@ -719,12 +763,19 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
   lesson?: LessonProgress | undefined;
 
   /**
-   * total is the number of questions, when known in advance (reviews, quizzes);
-   * 0 otherwise.
+   * total is the number of questions, when known in advance (reviews, quizzes,
+   * reading); 0 otherwise.
    *
    * @generated from field: int32 total = 7;
    */
   total: number;
+
+  /**
+   * passage is the text the questions are about, for reading only.
+   *
+   * @generated from field: optional ga.learning.v1.Passage passage = 8;
+   */
+  passage?: Passage | undefined;
 };
 
 /**
@@ -732,6 +783,30 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
  * Use `create(QuestionSchema)` to create a new message.
  */
 export declare const QuestionSchema: GenMessage<Question>;
+
+/**
+ * Passage is a text to read. Its body is in the language being read, with
+ * paragraphs separated by blank lines.
+ *
+ * @generated from message ga.learning.v1.Passage
+ */
+export declare type Passage = Message<"ga.learning.v1.Passage"> & {
+  /**
+   * @generated from field: ga.common.v1.Text title = 1;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: string body = 2;
+   */
+  body: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.Passage.
+ * Use `create(PassageSchema)` to create a new message.
+ */
+export declare const PassageSchema: GenMessage<Passage>;
 
 /**
  * @generated from message ga.learning.v1.KnowledgePointIntro

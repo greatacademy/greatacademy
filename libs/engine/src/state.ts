@@ -33,6 +33,10 @@ export interface LearnerState {
   readonly reviewsSinceLesson: number;
   /** blowOffs is the recent count of blown-off tasks, which sets the next penalty; it decays as tasks are passed. */
   readonly blowOffs: number;
+  /** read lists the passages read, in order; absent until the first. A passage read before no longer tests comprehension. */
+  readonly read?: readonly string[];
+  /** readingXp is the XP earned by reading; absent until the first passage. */
+  readonly readingXp?: number;
 }
 
 /** initialState is the state of a new learner. */

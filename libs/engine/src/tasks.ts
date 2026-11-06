@@ -1,4 +1,4 @@
-import type { Rng } from "@ga/content";
+import type { GraphPassage, Rng } from "@ga/content";
 
 import type { CourseScope, EngineGraph } from "./graph.ts";
 import type { Params } from "./params.ts";
@@ -10,7 +10,8 @@ export type Task =
   | { readonly kind: "lesson"; readonly topic: string }
   /** covers are the due topics this review is expected to repair, itself included when due. */
   | { readonly kind: "review"; readonly topic: string; readonly covers: readonly string[] }
-  | { readonly kind: "quiz" };
+  | { readonly kind: "quiz" }
+  | { readonly kind: "reading"; readonly passage: string };
 
 /** Planner bundles what task selection needs. */
 export interface Planner {
@@ -135,14 +136,43 @@ export function diagnosticDue(pl: Planner, state: LearnerState): boolean {
   return !state.diagnosed.includes(pl.scope.course) && diagnosticCandidates(pl, state).length > 0;
 }
 
+/** knownWordShare is the share of a passage's running words a learner knows: all but those taught by topics not yet known. */
+export function knownWordShare(pl: Planner, state: LearnerState, passage: GraphPassage): number {
+  if (passage.words === 0) return 1;
+  let unknown = 0;
+  for (const [topic, count] of Object.entries(passage.wordsByTopic)) if (!isKnown(pl, state, topic)) unknown += count;
+  return 1 - unknown / passage.words;
+}
+
+/**
+ * nextPassage is the first passage of the course the learner can read: not read
+ * yet, after the passage before it in its unit, with its topics known and enough
+ * of its words known. A passage read before is never offered again.
+ */
+export function nextPassage(pl: Planner, state: LearnerState): string | undefined {
+  const read = new Set(state.read ?? []);
+  return pl.scope.passages.find((id) => {
+    const passage = pl.graph.graph.passages.get(id)!;
+    if (read.has(id) || (passage.previous !== undefined && !read.has(passage.previous))) return false;
+    return passage.topics.every((e) => isKnown(pl, state, e.topic)) && knownWordShare(pl, state, passage) >= pl.params.readingKnownShare;
+  });
+}
+
+/** readingDue tells whether reading is below its share of the learner's XP. */
+export function readingDue(pl: Planner, state: LearnerState): boolean {
+  return (state.readingXp ?? 0) < state.xp * pl.params.readingXpShare;
+}
+
 /**
  * nextTasks offers the learner's next tasks, at most `limit`:
  * 1. the diagnostic, alone, until the learner is placed in the course;
  * 2. a quiz when one is due;
- * 3. remedial reviews of the key prerequisites that failed lessons wait
+ * 3. a passage to read when reading is below its share of the XP, so that a
+ *    learner who always takes the first task reads too;
+ * 4. remedial reviews of the key prerequisites that failed lessons wait
  *    for, then reviews of the other due topics, compressed, after removing
  *    the due topics the offered lessons and remedial reviews will repair;
- * 4. lessons from the frontier, at least minLessonShare of the tasks when
+ * 5. lessons from the frontier, at least minLessonShare of the tasks when
  *    any are available, so that reviews never crowd out new learning.
  * Reviews and lessons alternate, reviews first, unless the learner has
  * taken maxReviewStreak reviews since the last lesson: then a lesson comes
@@ -153,6 +183,8 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
   if (diagnosticDue(pl, state)) return [{ kind: "diagnostic" }];
   const tasks: Task[] = [];
   if (quizDue(pl, state)) tasks.push({ kind: "quiz" });
+  const passage = readingDue(pl, state) ? nextPassage(pl, state) : undefined;
+  if (passage) tasks.push({ kind: "reading", passage });
   const room = limit - tasks.length;
   const due = dueTopics(pl, state, now);
   const lessonsAvailable = frontier(pl, state);

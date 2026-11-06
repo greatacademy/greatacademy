@@ -1,10 +1,10 @@
-import { applyRepetition } from "./fire.ts";
+import { applyRepetition, credited } from "./fire.ts";
 import type { EngineGraph } from "./graph.ts";
 import { lessonSpeed } from "./lesson.ts";
 import type { Params } from "./params.ts";
 import { reviewResult } from "./review.ts";
 import { clampSpeed, type LearnerState, newTopicState, type TopicState } from "./state.ts";
-import { eventXp, nextBlowOffs } from "./xp.ts";
+import { eventXp, nextBlowOffs, readingPassed } from "./xp.ts";
 
 /**
  * EngineEvent is a completed task, as recorded in the event log. Learner
@@ -39,6 +39,16 @@ export type EngineEvent =
       readonly correct: number;
       readonly total: number;
       /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
+      readonly blownOff?: boolean;
+    }
+  /** reading ends a passage: how many of its comprehension questions were answered correctly. */
+  | {
+      readonly type: "reading";
+      readonly at: number;
+      readonly passage: string;
+      readonly correct: number;
+      readonly total: number;
+      /** blownOff marks a task rushed through rather than attempted; see isReadingBlownOff. */
       readonly blownOff?: boolean;
     }
   /** quiz ends a quiz: one result per question, by topic. */
@@ -103,6 +113,20 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: EngineEvent): Lea
       const speed = clampSpeed(p, 0.8 * s.speed + 0.2 * (0.5 + e.correct / e.total));
       const reviewsSinceLesson = state.reviewsSinceLesson + 1;
       return { ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }), xp, reviewsSinceLesson };
+    }
+    case "reading": {
+      const read = state.read?.includes(e.passage) ? state.read : [...(state.read ?? []), e.passage];
+      const readingXp = (state.readingXp ?? 0) + Math.max(0, xp - state.xp);
+      const passage = g.graph.passages.get(e.passage);
+      const topics: Record<string, TopicState> = { ...state.topics };
+      // Understanding a passage is partial practice of what it depends on. A failed check says too little to penalize: the passage may just be hard.
+      if (passage && readingPassed(e) && !e.blownOff) {
+        for (const { topic, weight } of passage.topics) {
+          const s = topics[topic];
+          if (s?.learned && s.speed >= 1) topics[topic] = credited(p, s, p.readingCredit * weight, e.at);
+        }
+      }
+      return { ...state, topics, xp, read, readingXp };
     }
     case "quiz": {
       let next = state;

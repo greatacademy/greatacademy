@@ -66,6 +66,16 @@ export interface Params {
   readonly blowOffMaxPenalty: number;
   /** blowOffDecay is how much each passed task reduces the count of recent blown-off tasks. */
   readonly blowOffDecay: number;
+  /** readingKnownShare is the share of a passage's running words a learner must know for it to be offered; contested in the literature, so to calibrate. */
+  readonly readingKnownShare: number;
+  /** readingXpShare is the most of a learner's XP that reading tasks are offered up to, so that reading never crowds out lessons. */
+  readonly readingXpShare: number;
+  /** readingCredit is the repetition a passage understood gives a topic it practices with weight 1. */
+  readonly readingCredit: number;
+  /** readingFailedXpShare is the share of a passage's XP earned when its check is failed: the time was spent reading all the same. */
+  readonly readingFailedXpShare: number;
+  /** readingRushWpm is the speed in words per minute above which a passage with a failed check counts as blown off. */
+  readonly readingRushWpm: number;
   /** forecastOverhead is the XP of reviews and quizzes per XP of lessons, for estimating what a course still takes. */
   readonly forecastOverhead: number;
 }
@@ -104,5 +114,10 @@ export const defaultParams: Params = {
   blowOffStep: 3,
   blowOffMaxPenalty: 10,
   blowOffDecay: 0.2,
+  readingKnownShare: 0.98,
+  readingXpShare: 0.2,
+  readingCredit: 0.25,
+  readingFailedXpShare: 0.5,
+  readingRushWpm: 600,
   forecastOverhead: 1,
 };

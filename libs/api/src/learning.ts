@@ -73,6 +73,7 @@ function auth(ctx: HandlerContext): { db: Db; userId: string } {
 function sameTask(req: TaskMessage | undefined, task: Task): boolean {
   const k = req?.kind;
   if (!k?.case || k.case !== task.kind) return false;
+  if (k.case === "reading") return task.kind === "reading" && k.value.passageId === task.passage;
   return k.case === "diagnostic" || k.case === "quiz" || ("topic" in task && k.value.topicId === task.topic);
 }
 
@@ -322,7 +323,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         return { row: { ...row, state: answered.run }, answered };
       });
       const run = row.state as RunState;
-      const feedback = run.kind === "lesson" || run.kind === "review";
+      const feedback = run.kind === "lesson" || run.kind === "review" || run.kind === "reading";
       const v = answered.verdict;
       return {
         ...(feedback && {

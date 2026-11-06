@@ -57,6 +57,8 @@ export interface CourseScope {
   readonly inCourse: ReadonlySet<string>;
   /** assumed are the mastery floor and its ancestors: known by assumption, never taught or reviewed. */
   readonly assumed: ReadonlySet<string>;
+  /** passages are the passages of the course's reading units, in reading order. */
+  readonly passages: readonly string[];
 }
 
 /** courseScope derives the scope of a compiled course. */
@@ -66,5 +68,8 @@ export function courseScope(g: EngineGraph, course: CompiledCourse): CourseScope
     assumed.add(f);
     for (const a of g.graph.ancestors.get(f) ?? []) assumed.add(a);
   }
-  return { course: course.def.id, topics: [...course.foundations, ...course.topics], inCourse: new Set(course.topics), assumed };
+  const passages = (course.def.reading ?? []).flatMap((unit) =>
+    [...g.graph.passages.values()].filter((p) => p.unit === unit).map((p) => p.id),
+  );
+  return { course: course.def.id, topics: [...course.foundations, ...course.topics], inCourse: new Set(course.topics), assumed, passages };
 }

@@ -103,6 +103,7 @@ message Task {
     LessonTask lesson = 2;
     ReviewTask review = 3;
     QuizTask quiz = 4;
+    ReadingTask reading = 5;
   }
 }
 
@@ -129,6 +130,15 @@ message ReviewTask {
 message QuizTask {
   int32 questions = 1;
   int32 xp = 2;
+}
+
+message ReadingTask {
+  string passage_id = 1;
+  ga.common.v1.Text title = 2;
+  int32 xp = 3;
+  int32 questions = 4;
+  // words counts the running words of the passage.
+  int32 words = 5;
 }
 
 message SessionSummary {
@@ -221,15 +231,24 @@ message Question {
   optional KnowledgePointIntro intro = 2;
   ProblemView problem = 3;
   // feedback is true when each answer is judged at once (lessons, reviews);
-  // false when results come at the end (quizzes, the diagnostic).
+  // false when results come at the end (quizzes, the diagnostic). Reading is judged at once.
   bool feedback = 4;
   // can_skip is true where "I don't know" is allowed (the diagnostic only).
   bool can_skip = 5;
   // lesson is the lesson's progress, for lessons only.
   optional LessonProgress lesson = 6;
-  // total is the number of questions, when known in advance (reviews, quizzes);
-  // 0 otherwise.
+  // total is the number of questions, when known in advance (reviews, quizzes,
+  // reading); 0 otherwise.
   int32 total = 7;
+  // passage is the text the questions are about, for reading only.
+  optional Passage passage = 8;
+}
+
+// Passage is a text to read. Its body is in the language being read, with
+// paragraphs separated by blank lines.
+message Passage {
+  ga.common.v1.Text title = 1;
+  string body = 2;
 }
 
 message KnowledgePointIntro {
