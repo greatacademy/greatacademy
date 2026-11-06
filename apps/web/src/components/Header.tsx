@@ -30,7 +30,7 @@ function LanguageSelect() {
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
-        <Select.Positioner alignItemWithTrigger={false} side="bottom" align="end" sideOffset={4}>
+        <Select.Positioner alignItemWithTrigger={false} side="bottom" align="end" sideOffset={4} className="z-30">
           <Select.Popup className={`${menuPopup} !min-w-28`}>
             {LOCALES.map((l) => (
               <Select.Item key={l} value={l} lang={l} className={menuItem}>
@@ -139,7 +139,7 @@ export function Header() {
                 <UserCircle size={20} />
               </Menu.Trigger>
               <Menu.Portal>
-                <Menu.Positioner sideOffset={4} align="end">
+                <Menu.Positioner sideOffset={4} align="end" className="z-30">
                   <Menu.Popup className={`${menuPopup} w-72 max-w-[calc(100vw-2rem)]`}>
                     <div className="mb-1 flex items-center justify-between gap-3 border-b border-line px-3 pt-1.5 pb-2.5">
                       <div className="min-w-0">
