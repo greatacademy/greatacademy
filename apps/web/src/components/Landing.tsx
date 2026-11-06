@@ -14,7 +14,7 @@ import { Button, buttonClass } from "./ui.tsx";
 const inner = "mx-auto max-w-5xl px-4";
 const large = "px-5 py-2.5 text-base";
 
-/** StartLink is the main action of the page: creating an account, or going back to learning once signed in. */
+/** StartLink is the main action of the page: signing in, or going back to learning once signed in. */
 function StartLink({ className = "" }: { className?: string }) {
   const { m } = useI18n();
   const { data: session } = useSession();
@@ -23,8 +23,8 @@ function StartLink({ className = "" }: { className?: string }) {
       {m.landing.goToLearning} <ArrowRight size={18} />
     </Link>
   ) : (
-    <Link to="/sign-up" className={buttonClass("primary", `${large} ${className}`)}>
-      {m.signUp} <ArrowRight size={18} />
+    <Link to="/sign-in" className={buttonClass("primary", `${large} ${className}`)}>
+      {m.signIn} <ArrowRight size={18} />
     </Link>
   );
 }
@@ -239,8 +239,8 @@ export function Landing() {
             <h2 className="text-3xl font-semibold tracking-tight text-balance">{l.endTitle}</h2>
             <p className="text-on-accent/85">{l.endBody}</p>
           </div>
-          <Link to={session ? "/" : "/sign-up"} className={`${buttonClass("secondary", large)} shrink-0 border-transparent`}>
-            {session ? l.goToLearning : m.signUp} <ArrowRight size={18} />
+          <Link to={session ? "/" : "/sign-in"} className={`${buttonClass("secondary", large)} shrink-0 border-transparent`}>
+            {session ? l.goToLearning : m.signIn} <ArrowRight size={18} />
           </Link>
         </div>
       </section>

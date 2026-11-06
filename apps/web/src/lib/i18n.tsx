@@ -406,7 +406,7 @@ const messages = {
         },
       ],
       endTitle: "Find out where you stand",
-      endBody: "Create an account, choose a course, and the diagnostic will show you where to begin.",
+      endBody: "Sign in, choose a course, and the diagnostic will show you where to begin.",
     },
   },
   "zh-CN": {
@@ -801,7 +801,7 @@ const messages = {
         },
       ],
       endTitle: "看看你现在的水平",
-      endBody: "创建账号，选一门课，诊断会告诉你从哪里开始。",
+      endBody: "登录，选一门课，诊断会告诉你从哪里开始。",
     },
   },
 } satisfies Record<Locale, unknown>;
