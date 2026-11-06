@@ -10,6 +10,7 @@ import {
   enrollments,
   getSession,
   isEnrolled,
+  isGuardian,
   learnerFor,
   loadState,
   recordAnswer,
@@ -85,11 +86,12 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     return c;
   };
 
-  /** enrolled resolves the learner and checks the enrollment. */
-  const enrolled = async (ctx: HandlerContext, courseId: string) => {
+  /** enrolled resolves the learner and checks the enrollment; a guardian can name a learner they follow. */
+  const enrolled = async (ctx: HandlerContext, courseId: string, guardedId = "") => {
     const { db, userId } = auth(ctx);
     const c = await course(courseId);
-    const learnerId = await learnerFor(db, userId);
+    if (guardedId && !(await isGuardian(db, userId, guardedId))) throw new ConnectError("no such learner", Code.NotFound);
+    const learnerId = guardedId || (await learnerFor(db, userId));
     if (!(await isEnrolled(db, learnerId, courseId))) throw new ConnectError(`not enrolled in ${courseId}`, Code.FailedPrecondition);
     return { db, c, learnerId };
   };
@@ -146,7 +148,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async getDashboard(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { db, c, learnerId } = await enrolled(ctx, req.courseId, req.learnerId);
       const now = deps.now();
       const { state: s } = await state(db, learnerId, c);
       const active = await activeSession(db, learnerId, c.id);
@@ -167,7 +169,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async getCourseProgress(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { db, c, learnerId } = await enrolled(ctx, req.courseId, req.learnerId);
       const now = deps.now();
       const { state: s } = await state(db, learnerId, c);
       const p = c.ctx.params;
@@ -217,7 +219,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async listSessions(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { db, c, learnerId } = await enrolled(ctx, req.courseId, req.learnerId);
       const { state: s } = await state(db, learnerId, c);
       const rows = await completedSessions(db, learnerId, c.id, historyLength);
       return {

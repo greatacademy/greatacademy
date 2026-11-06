@@ -274,12 +274,39 @@ describe("guardians", () => {
     const { learnerId } = await account("u2").acceptGuardianInvite({ code: invite });
     const seen = await account("u2").getGuardedLearner({ learnerId, timeZone: "UTC" });
     expect(seen.enrollments.map((e) => e.courseId)).toEqual([COURSE]);
-    expect(seen.recent).toMatchObject({ lessons: 0, failedLessons: 0, blownOff: 0 });
+    expect(seen.learner).toMatchObject({ courseId: COURSE, lastActiveAt: 0n, studying: false });
+    expect(seen.learner?.recent).toMatchObject({ lessons: 0, failedLessons: 0, blownOff: 0 });
     await account("u2").setGuardedGoals({ learnerId, goals: { weekdays: [5, 5, 5, 5, 5, 5, 5], paused: false } });
     expect((await account("u1").getSettings({})).goals?.weekdays).toHaveLength(7);
     expect(await code(account("u3").getGuardedLearner({ learnerId, timeZone: "UTC" }))).toBe(Code.NotFound);
     expect(await code(account("u3").setGuardedGoals({ learnerId, goals: { weekdays: [], paused: false } }))).toBe(Code.NotFound);
     expect(await code(account("u3").getGuardedLearner({ learnerId: "not-a-uuid", timeZone: "UTC" }))).toBe(Code.NotFound);
+  });
+
+  it("read the learner's course, but no one else's, and only while they follow", async () => {
+    await learning("u1").enroll({ courseId: COURSE });
+    const { tasks } = await learning("u1").getDashboard({ courseId: COURSE, timeZone: "UTC" });
+    await learning("u1").startTask({ courseId: COURSE, task: tasks[0] });
+    const { code: invite } = await account("u1").createGuardianInvite({});
+    const { learnerId } = await account("u2").acceptGuardianInvite({ code: invite });
+
+    const [seen] = (await account("u2").listGuardedLearners({ timeZone: "UTC" })).learners;
+    expect(seen).toMatchObject({ courseId: COURSE, studying: true });
+    expect(Number(seen?.lastActiveAt)).toBe(now);
+
+    const read = (user: string, id: string) =>
+      Promise.all([
+        learning(user).getDashboard({ courseId: COURSE, timeZone: "UTC", learnerId: id }),
+        learning(user).getCourseProgress({ courseId: COURSE, learnerId: id }),
+        learning(user).listSessions({ courseId: COURSE, learnerId: id }),
+      ]);
+    const [dashboard] = await read("u2", learnerId);
+    expect(dashboard.active?.task).toBeDefined();
+    expect(await code(read("u3", learnerId))).toBe(Code.NotFound);
+    expect(await code(read("u2", "not-a-uuid"))).toBe(Code.NotFound);
+
+    await account("u2").removeGuardedLearner({ learnerId });
+    expect(await code(read("u2", learnerId))).toBe(Code.NotFound);
   });
 
   it("can be removed by either side", async () => {

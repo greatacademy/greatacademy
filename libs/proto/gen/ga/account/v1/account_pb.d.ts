@@ -4,7 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { Enrollment, XpSummary } from "../../learning/v1/learning_pb.js";
+import type { CourseStats, Enrollment, XpSummary } from "../../learning/v1/learning_pb.js";
 
 /**
  * Describes the file ga/account/v1/account.proto.
@@ -456,6 +456,37 @@ export declare type GuardedLearner = Message<"ga.account.v1.GuardedLearner"> & {
    * @generated from field: ga.learning.v1.XpSummary xp = 3;
    */
   xp?: XpSummary | undefined;
+
+  /**
+   * course_id is the course most recently worked on; empty before the first enrollment.
+   *
+   * @generated from field: string course_id = 4;
+   */
+  courseId: string;
+
+  /**
+   * @generated from field: ga.learning.v1.CourseStats course_stats = 5;
+   */
+  courseStats?: CourseStats | undefined;
+
+  /**
+   * last_active_at is in milliseconds since the epoch; 0 before the first task.
+   *
+   * @generated from field: int64 last_active_at = 6;
+   */
+  lastActiveAt: bigint;
+
+  /**
+   * studying tells that a task is open and was touched in the last few minutes.
+   *
+   * @generated from field: bool studying = 7;
+   */
+  studying: boolean;
+
+  /**
+   * @generated from field: ga.account.v1.RecentWork recent = 8;
+   */
+  recent?: RecentWork | undefined;
 };
 
 /**
@@ -547,11 +578,6 @@ export declare type GetGuardedLearnerResponse = Message<"ga.account.v1.GetGuarde
    * @generated from field: repeated ga.learning.v1.Enrollment enrollments = 3;
    */
   enrollments: Enrollment[];
-
-  /**
-   * @generated from field: ga.account.v1.RecentWork recent = 4;
-   */
-  recent?: RecentWork | undefined;
 };
 
 /**

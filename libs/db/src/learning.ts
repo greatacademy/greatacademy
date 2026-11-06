@@ -135,6 +135,17 @@ export async function activeSession(db: Db, learnerId: string, courseId: string)
   return row;
 }
 
+/** lastSession returns the session a learner touched last, if any. */
+export async function lastSession(db: Db, learnerId: string): Promise<Pick<SessionRow, "status" | "updatedAt"> | undefined> {
+  const [row] = await db
+    .select({ status: taskSession.status, updatedAt: taskSession.updatedAt })
+    .from(taskSession)
+    .where(eq(taskSession.learnerId, learnerId))
+    .orderBy(desc(taskSession.updatedAt))
+    .limit(1);
+  return row;
+}
+
 /** completedSessions returns a learner's finished sessions in a course, newest first. */
 export async function completedSessions(db: Db, learnerId: string, courseId: string, limit: number): Promise<SessionRow[]> {
   return db

@@ -6,7 +6,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { authClient, useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { LOCALES, type Locale } from "../lib/locale.ts";
-import { account, timeZone } from "../lib/rpc.ts";
+import { account, learning, timeZone } from "../lib/rpc.ts";
 import { buttonClass, menuItem, menuPopup } from "./ui.tsx";
 
 const localeNames: Record<Locale, string> = { en: "English", "zh-CN": "简体中文" };
@@ -22,9 +22,17 @@ export function Header() {
     queryFn: () => account.listGuardedLearners({ timeZone: timeZone() }),
     enabled: !!session,
   });
+  const profile = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => learning.getProfile({ timeZone: timeZone() }),
+    enabled: !!session,
+  });
+  const guards = (guarded.data?.learners.length ?? 0) > 0;
+  // An account that only follows others has nothing of its own to learn yet.
+  const learns = !guards || (profile.data?.enrollments.length ?? 0) > 0;
   const navLink = (active: boolean) =>
     `rounded-lg px-2.5 py-1.5 text-sm font-medium transition ${active ? "bg-accent-soft text-accent" : "text-muted hover:text-ink"}`;
-  const learning = pathname === "/" || pathname.startsWith("/learn") || pathname.startsWith("/session");
+  const onLearning = pathname === "/" || pathname.startsWith("/learn") || pathname.startsWith("/session");
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-page/85 backdrop-blur">
@@ -36,13 +44,15 @@ export function Header() {
           </Link>
           {session && (
             <nav className="flex items-center gap-0.5">
-              <Link to="/" className={navLink(learning)}>
-                {m.navLearn}
-              </Link>
+              {learns && (
+                <Link to="/" className={navLink(onLearning)}>
+                  {m.navLearn}
+                </Link>
+              )}
               <Link to="/courses" className={navLink(pathname.startsWith("/courses"))}>
                 {m.courses}
               </Link>
-              {(guarded.data?.learners.length ?? 0) > 0 && (
+              {guards && (
                 <Link to="/guardian" className={navLink(pathname.startsWith("/guardian"))}>
                   {m.navLearners}
                 </Link>

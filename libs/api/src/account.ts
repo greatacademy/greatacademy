@@ -9,6 +9,7 @@ import {
   guardedLearners,
   guardiansOf,
   isGuardian,
+  lastSession,
   learnerFor,
   learnerSettings,
   leaveWeek,
@@ -73,6 +74,9 @@ const outcomes: Record<Outcome, LeagueOutcome> = {
   demoted: LeagueOutcome.DEMOTED,
 };
 
+/** studyingWindow is how long after its last answer an open task still counts as being worked on. */
+const studyingWindow = 10 * 60_000;
+
 /** inviteCode draws a code that cannot be guessed, without letters and digits that look alike. */
 function inviteCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -88,9 +92,22 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
   /** guarded checks that the caller is a guardian of a learner. */
   const guarded = async (ctx: HandlerContext, learnerId: string) => {
     const { db, userId } = auth(ctx);
-    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(learnerId);
-    if (!uuid || !(await isGuardian(db, userId, learnerId))) throw new ConnectError("no such learner", Code.NotFound);
+    if (!(await isGuardian(db, userId, learnerId))) throw new ConnectError("no such learner", Code.NotFound);
     return db;
+  };
+
+  /** courses lists a learner's courses that still exist, most recently worked on first, with their standing. */
+  const courses = async (db: Db, learnerId: string) => {
+    const now = deps.now();
+    const list = [];
+    for (const e of await enrollments(db, learnerId)) {
+      const c = await registry.course(e.courseId);
+      if (!c) continue;
+      const { state } = await loadState(db, learnerId, c.subject.def.id, initialState);
+      const p = courseProgress(c.planner, state, now);
+      list.push({ courseId: c.id, stats: { learned: p.learned, total: p.total, due: p.due } });
+    }
+    return list;
   };
 
   const summary = async (
@@ -98,11 +115,21 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
     learnerId: string,
     name: string,
     timeZone: string,
-  ): Promise<MessageInitShape<typeof GuardedLearnerSchema>> => ({
-    learnerId,
-    name,
-    xp: await xpSummary(db, learnerId, deps.now(), timeZone),
-  });
+    list: Awaited<ReturnType<typeof courses>>,
+  ): Promise<MessageInitShape<typeof GuardedLearnerSchema>> => {
+    const now = deps.now();
+    const last = await lastSession(db, learnerId);
+    const first = list[0];
+    return {
+      learnerId,
+      name,
+      xp: await xpSummary(db, learnerId, now, timeZone),
+      ...(first && { courseId: first.courseId, courseStats: first.stats }),
+      lastActiveAt: BigInt(last?.updatedAt.getTime() ?? 0),
+      studying: last?.status === "active" && now - last.updatedAt.getTime() < studyingWindow,
+      recent: await recentEvents(db, learnerId, new Date(now - 14 * DAY)),
+    };
+  };
 
   return {
     async getSettings(_req, ctx) {
@@ -186,27 +213,20 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
     async listGuardedLearners(req, ctx) {
       const { db, userId } = auth(ctx);
       const rows = await guardedLearners(db, userId);
-      return { learners: await Promise.all(rows.map((r) => summary(db, r.learnerId, r.name, req.timeZone))) };
+      return {
+        learners: await Promise.all(rows.map(async (r) => summary(db, r.learnerId, r.name, req.timeZone, await courses(db, r.learnerId)))),
+      };
     },
 
     async getGuardedLearner(req, ctx) {
       const db = await guarded(ctx, req.learnerId);
       const { userId } = auth(ctx);
-      const now = deps.now();
       const row = (await guardedLearners(db, userId)).find((r) => r.learnerId === req.learnerId)!;
-      const list = [];
-      for (const e of await enrollments(db, req.learnerId)) {
-        const c = await registry.course(e.courseId);
-        if (!c) continue;
-        const { state } = await loadState(db, req.learnerId, c.subject.def.id, initialState);
-        const p = courseProgress(c.planner, state, now);
-        list.push({ courseId: c.id, stats: { learned: p.learned, total: p.total, due: p.due } });
-      }
+      const list = await courses(db, req.learnerId);
       return {
-        learner: await summary(db, req.learnerId, row.name, req.timeZone),
+        learner: await summary(db, req.learnerId, row.name, req.timeZone, list),
         goals: goalsMessage(await learnerSettings(db, req.learnerId)),
         enrollments: list,
-        recent: await recentEvents(db, req.learnerId, new Date(now - 14 * DAY)),
       };
     },
 

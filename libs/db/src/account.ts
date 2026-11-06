@@ -134,6 +134,7 @@ export async function removeGuardian(db: Db, userId: string, learnerId: string):
 
 /** isGuardian tells whether a user is a guardian of a learner. */
 export async function isGuardian(db: Db, userId: string, learnerId: string): Promise<boolean> {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(learnerId)) return false;
   const rows = await db
     .select({ id: guardian.userId })
     .from(guardian)

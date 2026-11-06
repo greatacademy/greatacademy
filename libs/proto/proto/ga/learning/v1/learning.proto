@@ -75,6 +75,8 @@ message EnrollResponse {}
 message GetDashboardRequest {
   string course_id = 1;
   string time_zone = 2;
+  // learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+  string learner_id = 3;
 }
 
 message GetDashboardResponse {
@@ -136,6 +138,8 @@ message SessionSummary {
 
 message GetCourseProgressRequest {
   string course_id = 1;
+  // learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+  string learner_id = 2;
 }
 
 message GetCourseProgressResponse {
@@ -366,6 +370,8 @@ message TopicLink {
 
 message ListSessionsRequest {
   string course_id = 1;
+  // learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+  string learner_id = 2;
 }
 
 message ListSessionsResponse {

@@ -142,6 +142,8 @@ The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands re
 
 `/` depends on who is asking. Signed out, it is the landing page, also at `/landing` for everyone, and rendered on the server. Signed in, it opens on the next task of the course most recently worked on; an account with no course and a guarded learner goes to `/guardian`, and any other account with no course is asked who will be learning. A session cookie is enough to choose between the two on the server, so a signed-in learner never sees the landing page flash. The catalog is its own public page, `/courses`.
 
+A guardian reads a learner through the same read-only calls a learner uses: `GetDashboard`, `GetCourseProgress` and `ListSessions` take an optional `learner_id`, which is honored only for a learner the caller follows. Calls that change anything take no `learner_id`, and a guardian cannot open a session, so a learner's answers stay their own.
+
 ## 6. Deployment
 
 - **Production:**

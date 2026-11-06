@@ -146,6 +146,14 @@ message GuardedLearner {
   string learner_id = 1;
   string name = 2;
   ga.learning.v1.XpSummary xp = 3;
+  // course_id is the course most recently worked on; empty before the first enrollment.
+  string course_id = 4;
+  ga.learning.v1.CourseStats course_stats = 5;
+  // last_active_at is in milliseconds since the epoch; 0 before the first task.
+  int64 last_active_at = 6;
+  // studying tells that a task is open and was touched in the last few minutes.
+  bool studying = 7;
+  RecentWork recent = 8;
 }
 
 message ListGuardedLearnersResponse {
@@ -168,7 +176,7 @@ message GetGuardedLearnerResponse {
   GuardedLearner learner = 1;
   Goals goals = 2;
   repeated ga.learning.v1.Enrollment enrollments = 3;
-  RecentWork recent = 4;
+  reserved 4;
 }
 
 message SetGuardedGoalsRequest {

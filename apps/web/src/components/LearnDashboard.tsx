@@ -22,23 +22,9 @@ import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, menuItem, menuPopup, Spinner } from "./ui.tsx";
+import { XpOverview } from "./XpOverview.tsx";
 
 const DAY = 86_400_000;
-
-function GoalBar({ label, value, goal, done }: { label: string; value: number; goal: number; done: string }) {
-  const met = goal > 0 && value >= goal;
-  return (
-    <div className="space-y-1">
-      <div className="flex justify-between gap-2 text-sm">
-        <span>{label}</span>
-        <span className={met ? "font-medium text-good" : "text-muted"}>
-          {value} / {goal} XP{met ? ` · ${done}` : ""}
-        </span>
-      </div>
-      <Bar value={goal > 0 ? value / goal : 0} className={met ? "bg-good" : "bg-accent"} />
-    </div>
-  );
-}
 
 /** CourseSwitcher names the current course and moves to another, or to the catalog to add one. */
 function CourseSwitcher({ courseId, title }: { courseId: string; title: string }) {
@@ -168,7 +154,7 @@ function RecentWork({ courseId }: { courseId: string }) {
  * it is what the learner came for; goals, the forecast and the league sit beside it.
  */
 export function LearnDashboard({ courseId }: { courseId: string }) {
-  const { m, tx, locale } = useI18n();
+  const { m, tx } = useI18n();
   const session = useRequireSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -197,13 +183,6 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
   const stats = d.stats!;
   const xp = d.xp!;
   const share = stats.total ? stats.learned / stats.total : 0;
-  const maxDay = Math.max(1, ...xp.days);
-  const today = new Date();
-  const dayLabel = (i: number) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() - (xp.days.length - 1 - i));
-    return date.toLocaleDateString(locale, { month: "numeric", day: "numeric" });
-  };
   const goalNote = xp.goalToday <= 0 ? "" : xp.today >= xp.goalToday ? m.goalMetToday : m.goalLeftToday(xp.goalToday - xp.today);
 
   return (
@@ -279,33 +258,7 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
                 {m.setGoals}
               </Link>
             </div>
-            {xp.goalWeek > 0 ? (
-              <div className="space-y-3">
-                <GoalBar label={m.goalToday} value={xp.today} goal={xp.goalToday} done={m.goalDone} />
-                <GoalBar label={m.goalWeek} value={xp.week} goal={xp.goalWeek} done={m.goalDone} />
-              </div>
-            ) : (
-              <p className="text-sm text-muted">{m.goalNone}</p>
-            )}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-xs text-muted">
-                <span>{m.last14}</span>
-                <span>
-                  {m.total} {xp.total} XP
-                </span>
-              </div>
-              <div className="flex h-12 items-end gap-1" role="img" aria-label={m.last14}>
-                {xp.days.map((v, i) => (
-                  <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: fixed 14-day window
-                    key={i}
-                    title={`${dayLabel(i)}: ${v} XP`}
-                    className={`flex-1 rounded-sm ${v < 0 ? "bg-bad" : i === xp.days.length - 1 ? "bg-accent" : "bg-accent/35"}`}
-                    style={{ height: `${Math.max(4, (Math.abs(v) / maxDay) * 100)}%` }}
-                  />
-                ))}
-              </div>
-            </div>
+            <XpOverview xp={xp} />
             {stats.due > 0 && (
               <div className="text-xs text-warn">
                 {m.due}: {stats.due}

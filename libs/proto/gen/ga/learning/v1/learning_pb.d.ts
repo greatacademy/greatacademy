@@ -188,6 +188,13 @@ export declare type GetDashboardRequest = Message<"ga.learning.v1.GetDashboardRe
    * @generated from field: string time_zone = 2;
    */
   timeZone: string;
+
+  /**
+   * learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+   *
+   * @generated from field: string learner_id = 3;
+   */
+  learnerId: string;
 };
 
 /**
@@ -436,6 +443,13 @@ export declare type GetCourseProgressRequest = Message<"ga.learning.v1.GetCourse
    * @generated from field: string course_id = 1;
    */
   courseId: string;
+
+  /**
+   * learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
 };
 
 /**
@@ -1258,6 +1272,13 @@ export declare type ListSessionsRequest = Message<"ga.learning.v1.ListSessionsRe
    * @generated from field: string course_id = 1;
    */
   courseId: string;
+
+  /**
+   * learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
 };
 
 /**
