@@ -180,14 +180,9 @@ export function Header() {
               </Menu.Portal>
             </Menu.Root>
           ) : (
-            <>
-              <Link to="/sign-in" className={buttonClass("ghost")}>
-                {m.signIn}
-              </Link>
-              <Link to="/sign-up" className={buttonClass("primary", "max-sm:hidden")}>
-                {m.signUp}
-              </Link>
-            </>
+            <Link to="/sign-in" className={buttonClass("ghost")}>
+              {m.signIn}
+            </Link>
           )}
         </nav>
       </div>
