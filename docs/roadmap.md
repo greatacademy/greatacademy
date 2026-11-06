@@ -49,6 +49,8 @@ DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i --since 2026-12-
 | A wrong response that several learners give | Add it as a listed mistake with feedback of its own, or address it in the explanation |
 | A topic with many failed lessons | Check that its prerequisites are really prerequisites, and whether a knowledge point in between is missing |
 | Sessions started but abandoned | Ask the learners why: length, difficulty and display are different fixes |
+| XP per day studied and reviews per learned topic far from `tools/simulate` | Find out whether learners study less than planned or need more repetition: only the second is a reason to look at the course |
+| Rejected sentences that a person judges correct | Accept them in the item's patterns. Their share of all responses is the number that [English Development Plan](english-development-plan.md) gates on |
 
 A rate needs at least 5 learners to be listed, and even then it is a lead to read, not a verdict.
 

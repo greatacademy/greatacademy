@@ -25,11 +25,31 @@ export interface LessonRow {
   readonly passed: boolean;
 }
 
+/** ActivityRow is one logged event of a course's learners, for pace. */
+export interface ActivityRow {
+  readonly learnerId: string;
+  readonly type: string;
+  readonly xp: number;
+  /** day is the calendar day of the event, "YYYY-MM-DD" in UTC. */
+  readonly day: string;
+}
+
 /** PilotData is what a report is computed from. */
 export interface PilotData {
   readonly answers: readonly AnswerRow[];
   readonly sessions: readonly SessionRow[];
   readonly lessons: readonly LessonRow[];
+  readonly activity: readonly ActivityRow[];
+}
+
+/** PaceStats compares how learners work with the simulated students of tools/simulate. */
+export interface PaceStats {
+  /** xpPerActiveDay is the median across learners of their XP per day they studied. */
+  readonly xpPerActiveDay: number;
+  /** activeDays is the median across learners of the days they studied. */
+  readonly activeDays: number;
+  /** reviewsPerLearnedTopic is the reviews ended per lesson passed, over all learners. */
+  readonly reviewsPerLearnedTopic: number;
 }
 
 /** KpStats sums up the answers to one knowledge point. */
@@ -70,6 +90,11 @@ export interface PilotReport {
   readonly sessions: readonly SessionStats[];
   readonly lessonsEnded: number;
   readonly lessonsPassed: number;
+  readonly pace: PaceStats;
+  /** responses counts every answer given, skipped ones excluded. */
+  readonly responses: number;
+  /** rejected counts the wrong answers of several words, which a person reads for valid sentences. */
+  readonly rejected: number;
   /** kps are the knowledge points with enough learners, hardest first. */
   readonly kps: readonly KpStats[];
   /** topics are the topics with enough learners, most failed first. */
@@ -170,9 +195,31 @@ export function summarize(data: PilotData, options: ReportOptions = defaultRepor
     sessions,
     lessonsEnded: data.lessons.length,
     lessonsPassed: data.lessons.filter((l) => l.passed).length,
+    pace: paceOf(data),
+    responses: data.answers.filter((a) => !a.skipped).length,
+    rejected: data.answers.filter((a) => !a.correct && !a.skipped && isSentence(a.response)).length,
     kps,
     topics,
     tooFew: allKps.length - kps.length,
+  };
+}
+
+function median(values: readonly number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = sorted.length / 2;
+  if (sorted.length === 0) return 0;
+  return Number.isInteger(middle) ? (sorted[middle - 1]! + sorted[middle]!) / 2 : sorted[Math.floor(middle)]!;
+}
+
+function paceOf(data: PilotData): PaceStats {
+  const learners = groupBy(data.activity, (a) => a.learnerId).map((rows) => ({
+    xp: rows.reduce((total, r) => total + r.xp, 0),
+    days: new Set(rows.map((r) => r.day)).size,
+  }));
+  return {
+    xpPerActiveDay: median(learners.map((l) => l.xp / l.days)),
+    activeDays: median(learners.map((l) => l.days)),
+    reviewsPerLearnedTopic: share(data.activity.filter((a) => a.type === "review").length, data.lessons.filter((l) => l.passed).length),
   };
 }
 
@@ -204,7 +251,12 @@ export async function loadPilotData(db: Db, courseId: string, since: Date = new 
   const lessons = ended.flatMap(({ learnerId, data }) =>
     data.type === "lesson" ? [{ learnerId, topicId: data.topic, passed: data.passed }] : [],
   );
-  return { answers, sessions, lessons };
+  const logged = await db
+    .select({ learnerId: event.learnerId, type: event.type, xp: event.xp, at: event.at })
+    .from(event)
+    .where(and(eq(event.courseId, courseId), gte(event.at, since)));
+  const activity = logged.map(({ at, ...e }) => ({ ...e, day: at.toISOString().slice(0, 10) }));
+  return { answers, sessions, lessons, activity };
 }
 
 const percent = (rate: number) => `${Math.round(rate * 100)}%`;
@@ -224,6 +276,9 @@ export function renderPilotReport(course: string, report: PilotReport, names: Pi
     `- Learners: ${report.learners}`,
     `- Lessons ended: ${report.lessonsEnded}, passed: ${report.lessonsPassed} (${percent(share(report.lessonsPassed, report.lessonsEnded))})`,
     `- Knowledge points left out for too few learners: ${report.tooFew}`,
+    `- Responses: ${report.responses}, rejected sentences to read: ${report.rejected}`,
+    `- Pace, median per learner: ${report.pace.xpPerActiveDay.toFixed(1)} XP on each of ${report.pace.activeDays} days studied`,
+    `- Reviews per learned topic: ${report.pace.reviewsPerLearnedTopic.toFixed(2)}`,
     "",
     "## Sessions",
     "",

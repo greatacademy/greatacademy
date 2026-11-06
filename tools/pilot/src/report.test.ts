@@ -17,7 +17,10 @@ const options = { minLearners: 2, wrongPerKp: 2 };
 
 describe("summarize", () => {
   it("counts the first answer of each learner on its own", () => {
-    const report = summarize({ answers: [row("x", false, "2"), row("x", true), row("y", true)], sessions: [], lessons: [] }, options);
+    const report = summarize(
+      { answers: [row("x", false, "2"), row("x", true), row("y", true)], sessions: [], lessons: [], activity: [] },
+      options,
+    );
     expect(report.kps).toHaveLength(1);
     expect(report.kps[0]).toMatchObject({ answers: 3, learners: 2, firstTryRate: 0.5 });
     expect(report.kps[0]?.correctRate).toBeCloseTo(2 / 3);
@@ -31,7 +34,7 @@ describe("summarize", () => {
       row("y", true, "1", 1),
       row("x", false, "2", 2),
     ];
-    const report = summarize({ answers, sessions: [], lessons: [] }, options);
+    const report = summarize({ answers, sessions: [], lessons: [], activity: [] }, options);
     expect(report.kps.map((k) => k.kp)).toEqual([1, 0]);
     expect(report.tooFew).toBe(1);
   });
@@ -43,7 +46,7 @@ describe("summarize", () => {
       row("x", false, "2"),
       row("y", true),
     ];
-    const report = summarize({ answers, sessions: [], lessons: [] }, options);
+    const report = summarize({ answers, sessions: [], lessons: [], activity: [] }, options);
     expect(report.kps[0]?.rejectedSentences).toEqual(["we left, because it  rained."]);
   });
 
@@ -55,12 +58,35 @@ describe("summarize", () => {
       row("z", false, "5"),
       { ...row("z", false, ""), skipped: true },
     ];
-    const report = summarize({ answers, sessions: [], lessons: [] }, options);
+    const report = summarize({ answers, sessions: [], lessons: [], activity: [] }, options);
     expect(report.kps[0]?.wrong).toEqual([
       { response: "x = 3", learners: 2 },
       { response: "5", learners: 1 },
     ]);
     expect(report.kps[0]?.skipRate).toBeCloseTo(0.2);
+  });
+
+  it("reports pace per learner and the share of rejected sentences to read", () => {
+    const report = summarize(
+      {
+        answers: [
+          row("x", false, "We left because rain."),
+          row("x", false, "2"),
+          row("y", true),
+          { ...row("y", false, ""), skipped: true },
+        ],
+        sessions: [],
+        lessons: [{ learnerId: "x", topicId: "a", passed: true }],
+        activity: [
+          { learnerId: "x", type: "lesson", xp: 10, day: "2026-12-01" },
+          { learnerId: "x", type: "review", xp: 20, day: "2026-12-02" },
+          { learnerId: "y", type: "lesson", xp: 50, day: "2026-12-01" },
+        ],
+      },
+      options,
+    );
+    expect(report.pace).toEqual({ xpPerActiveDay: 32.5, activeDays: 1.5, reviewsPerLearnedTopic: 1 });
+    expect(report).toMatchObject({ responses: 3, rejected: 1 });
   });
 
   it("sums up lessons and sessions", () => {
@@ -77,6 +103,7 @@ describe("summarize", () => {
           { learnerId: "y", topicId: "a", passed: false },
           { learnerId: "y", topicId: "b", passed: true },
         ],
+        activity: [],
       },
       options,
     );
@@ -91,7 +118,7 @@ describe("summarize", () => {
   });
 
   it("has no rate to divide by zero on no data", () => {
-    const report = summarize({ answers: [], sessions: [], lessons: [] }, options);
+    const report = summarize({ answers: [], sessions: [], lessons: [], activity: [] }, options);
     expect(report).toMatchObject({ learners: 0, lessonsEnded: 0, kps: [], topics: [], tooFew: 0 });
   });
 });
@@ -104,7 +131,10 @@ describe("normalizeResponse", () => {
 
 describe("renderPilotReport", () => {
   it("names topics and knowledge points and escapes table cells", () => {
-    const report = summarize({ answers: [row("x", false, "|x|"), row("y", false, "|x|")], sessions: [], lessons: [] }, options);
+    const report = summarize(
+      { answers: [row("x", false, "|x|"), row("y", false, "|x|")], sessions: [], lessons: [], activity: [] },
+      options,
+    );
     const text = renderPilotReport("course", report, { topic: () => "Topic A", kp: () => "Point 1" });
     expect(text).toContain("| Topic A | Point 1 | 2 | 0% | 0% | 0% |");
     expect(text).toContain("`\\|x\\|`");
