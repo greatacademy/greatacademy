@@ -2,8 +2,9 @@ import { ArrowLeft, CheckCircle, XCircle } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { LoadError } from "../../../components/LoadError.tsx";
 import { Markdown } from "../../../components/Markdown.tsx";
-import { buttonClass, Card, ErrorNote, Spinner } from "../../../components/ui.tsx";
+import { buttonClass, Card, Spinner } from "../../../components/ui.tsx";
 import { useRequireSession } from "../../../lib/hooks.ts";
 import { useI18n } from "../../../lib/i18n.tsx";
 import { learning } from "../../../lib/rpc.ts";
@@ -22,7 +23,7 @@ function History() {
   });
 
   if (!session || history.isPending) return <Spinner label={m.loading} />;
-  if (history.isError) return <ErrorNote message={m.error} />;
+  if (history.isError) return <LoadError error={history.error} onRetry={() => history.refetch()} />;
   const when = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
   return (
     <div className="space-y-6">

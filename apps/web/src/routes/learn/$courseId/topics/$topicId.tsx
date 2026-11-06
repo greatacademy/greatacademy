@@ -5,9 +5,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { CaptionedFigure, Explanation, FigureView } from "../../../../components/Figure.tsx";
+import { LoadError } from "../../../../components/LoadError.tsx";
 import { Markdown } from "../../../../components/Markdown.tsx";
 import { AnswerText, ProblemPrompt } from "../../../../components/Problem.tsx";
-import { Button, buttonClass, Card, ErrorNote, Spinner } from "../../../../components/ui.tsx";
+import { Button, buttonClass, Card, Spinner } from "../../../../components/ui.tsx";
 import { useRequireSession } from "../../../../lib/hooks.ts";
 import { useI18n } from "../../../../lib/i18n.tsx";
 import { learning } from "../../../../lib/rpc.ts";
@@ -95,7 +96,7 @@ function Topic() {
   });
 
   if (!session || topic.isPending) return <Spinner label={m.loading} />;
-  if (topic.isError) return <ErrorNote message={m.error} />;
+  if (topic.isError) return <LoadError error={topic.error} onRetry={() => topic.refetch()} />;
   const s = statusStyle[topic.data.status];
   return (
     <div className="space-y-6">

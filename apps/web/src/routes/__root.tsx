@@ -3,8 +3,10 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { type ReactNode, useState } from "react";
 
 import { Header } from "../components/Header.tsx";
+import { NotFoundNote } from "../components/LoadError.tsx";
 import { I18nProvider } from "../lib/i18n.tsx";
 import { getLocale } from "../lib/locale.ts";
+import { shouldRetry } from "../lib/rpc.ts";
 import css from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -17,10 +19,14 @@ export const Route = createRootRoute({
       { title: "Great Academy" },
       { name: "description", content: "Adaptive mathematics courses with spaced review." },
     ],
-    links: [{ rel: "stylesheet", href: css }],
+    links: [
+      { rel: "stylesheet", href: css },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+    ],
   }),
   shellComponent: Shell,
   component: Root,
+  notFoundComponent: NotFoundNote,
 });
 
 function Shell({ children }: { children: ReactNode }) {
@@ -41,7 +47,7 @@ function Shell({ children }: { children: ReactNode }) {
 function Root() {
   const locale = Route.useLoaderData();
   const [queryClient] = useState(
-    () => new QueryClient({ defaultOptions: { queries: { staleTime: 10_000, retry: 1, refetchOnWindowFocus: false } } }),
+    () => new QueryClient({ defaultOptions: { queries: { staleTime: 10_000, retry: shouldRetry, refetchOnWindowFocus: false } } }),
   );
   return (
     <QueryClientProvider client={queryClient}>

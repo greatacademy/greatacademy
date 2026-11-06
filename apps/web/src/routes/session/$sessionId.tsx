@@ -5,6 +5,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { CaptionedFigure, Explanation, FigureView } from "../../components/Figure.tsx";
+import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
 import { PlotField } from "../../components/PlotField.tsx";
@@ -40,11 +41,7 @@ function Player() {
   }, [loaded.data, session]);
 
   if (!auth || loaded.isPending || !session) {
-    return loaded.isError ? (
-      <ErrorNote message={m.error} retry={m.retry} onRetry={() => loaded.refetch()} />
-    ) : (
-      <Spinner label={m.loading} />
-    );
+    return loaded.isError ? <LoadError error={loaded.error} onRetry={() => loaded.refetch()} /> : <Spinner label={m.loading} />;
   }
   return (
     <div className="mx-auto max-w-3xl space-y-6">

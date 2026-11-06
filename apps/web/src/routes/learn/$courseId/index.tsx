@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { LoadError } from "../../../components/LoadError.tsx";
 import { TaskCard } from "../../../components/TaskCard.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../../components/ui.tsx";
 import { useRequireSession } from "../../../lib/hooks.ts";
@@ -42,9 +43,7 @@ function Dashboard() {
   }, [notEnrolled, navigate, courseId]);
 
   if (!session || dash.isPending || notEnrolled) return <Spinner label={m.loading} />;
-  if (dash.isError) {
-    return <ErrorNote message={m.error} retry={m.retry} onRetry={() => dash.refetch()} />;
-  }
+  if (dash.isError) return <LoadError error={dash.error} onRetry={() => dash.refetch()} />;
   const d = dash.data;
   const stats = d.stats!;
   const xp = d.xp!;

@@ -2,6 +2,7 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
+import { LoadError, NotFoundNote } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useSession } from "../../lib/auth.ts";
@@ -32,7 +33,8 @@ function CoursePage() {
   });
 
   if (course.isPending) return <Spinner label={m.loading} />;
-  if (course.isError || !course.data.course) return <ErrorNote message={m.error} />;
+  if (course.isError) return <LoadError error={course.error} onRetry={() => course.refetch()} />;
+  if (!course.data.course) return <NotFoundNote />;
   const c = course.data.course;
 
   return (
