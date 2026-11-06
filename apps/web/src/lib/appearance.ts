@@ -2,6 +2,9 @@ import {
   APPEARANCE_STORAGE_KEY,
   type Appearance,
   appearanceAttributes,
+  CUSTOM_PALETTE_CSS_KEY,
+  CUSTOM_PALETTE_STYLE_ID,
+  customPaletteCss,
   DEFAULT_APPEARANCE,
   parseAppearance,
   serializeAppearance,
@@ -24,30 +27,52 @@ function getAppearance(): Appearance {
   return current;
 }
 
+function showCustomPalettes(css: string) {
+  let style = document.getElementById(CUSTOM_PALETTE_STYLE_ID);
+  if (!style && css) {
+    style = document.createElement("style");
+    style.id = CUSTOM_PALETTE_STYLE_ID;
+    document.head.appendChild(style);
+  }
+  if (style) style.textContent = css;
+}
+
 function show(appearance: Appearance) {
   current = appearance;
   for (const [name, value] of Object.entries(appearanceAttributes(appearance))) {
     if (value === null) document.documentElement.removeAttribute(name);
     else document.documentElement.setAttribute(name, value);
   }
+  showCustomPalettes(customPaletteCss(appearance));
   for (const listener of listeners) listener();
+}
+
+function store(key: string, value: string) {
+  try {
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
+  } catch {
+    // See stored().
+  }
 }
 
 /** setAppearance changes settings of this browser, and shows and stores the result at once. */
 export function setAppearance(change: Partial<Appearance>) {
   const next = { ...getAppearance(), ...change };
   show(next);
-  try {
-    const value = serializeAppearance(next);
-    if (value) localStorage.setItem(APPEARANCE_STORAGE_KEY, value);
-    else localStorage.removeItem(APPEARANCE_STORAGE_KEY);
-  } catch {
-    // See stored().
-  }
+  store(APPEARANCE_STORAGE_KEY, serializeAppearance(next));
+  store(CUSTOM_PALETTE_CSS_KEY, customPaletteCss(next));
 }
 
-/** followOtherTabs shows a change made in another tab of this browser; it returns how to stop. */
-export function followOtherTabs() {
+/**
+ * keepAppearanceCurrent shows a change made in another tab of this browser, and
+ * rebuilds the stored stylesheet, which an older version of the app may have
+ * written. It returns how to stop.
+ */
+export function keepAppearanceCurrent() {
+  const appearance = getAppearance();
+  showCustomPalettes(customPaletteCss(appearance));
+  store(CUSTOM_PALETTE_CSS_KEY, customPaletteCss(appearance));
   const onStorage = (e: StorageEvent) => {
     if (e.key === APPEARANCE_STORAGE_KEY || e.key === null) show(parseAppearance(e.newValue));
   };

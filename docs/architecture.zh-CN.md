@@ -215,19 +215,27 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | 设置 | 可选值 | 默认值 |
 | :--- | :--- | :--- |
 | `theme` | `system`、`light`、`dark` | `system` |
-| `palette` | `academy`、`iris`、`plum`、`rose`、`walnut`、`paper`、`sepia`、`pine`、`lake`、`sky`、`midnight`、`slate`；每套都有浅色和深色两版 | `academy` |
+| `light` | 浅色下的配色：`academy`、`iris`、`plum`、`rose`、`linen`、`terracotta`、`walnut`、`honey`、`olive`、`paper`、`sepia`、`pine`、`lake`、`sky`、`midnight`、`slate` 或 `custom` | `academy` |
+| `dark` | 深色下的配色，可选值相同 | `academy` |
+| `contrast` | `standard`、`high` | `standard` |
 | `text` | `small`、`default`、`large` | `default` |
 | `motion` | `system`、`reduced`、`full` | `system` |
 
-**颜色。** `colorTokens(palette, scheme)` 是颜色的唯一来源，按角色划分（`ink`、`surface`、`accent` 等）。配色改变中性色和强调色；`good`、`bad`、`warn` 在所有配色中都相同，因为对错的含义不能随配色变化。测试要求每种配色、每种明暗下的所有文字组合对比度至少为 4.5:1，并要求饱和的强调色与对错颜色的色相至少相差 30 度。新的颜色角色或配色都加在这里，不加在客户端。
+**颜色。** `colorTokens(palette, scheme, contrast)` 是内置颜色的唯一来源，按角色划分（`ink`、`surface`、`accent` 等）。配色改变中性色和强调色；`good`、`bad`、`warn` 在所有配色中都相同，因为对错的含义不能随配色变化。内置配色一半偏暖、一半偏冷。测试要求每种配色、每种明暗下的所有文字组合达到对比度等级的目标：`standard` 为 4.5:1，`high` 为 7:1（`high` 还会加强 `line`）；并要求饱和的强调色与对错颜色的色相至少相差 20 度。新的颜色角色或配色都加在这里，不加在客户端。
 
-**存储。** `serializeAppearance` 和 `parseAppearance` 定义统一的格式，例如 `theme=dark&palette=paper`，保存在 `APPEARANCE_STORAGE_KEY` 下。默认值不写入，缺失或无效的内容都按默认值读取。
+**自定义配色。** 自定义配色由三种颜色（`accent`、`page`、`ink`）构成，浅色和深色各有一组；其余颜色由 `customTokens` 推导。背景保持其明暗方案要求的亮度范围，文字按需调整亮度，所以测试要求任意三种颜色都达到相同的对比度目标。开始自定义时取当前配色的颜色；选择其他配色后，自定义配色仍会保留。
+
+**分享。** `sharePalette` 把自定义或内置配色写成文本 `great-academy-palette-v1:{"scheme","accent","page","ink"}`，`parseSharedPalette` 严格读取。配色只能导入到它所属的明暗方案，因为它的颜色只适用于该方案。
+
+**存储。** `serializeAppearance` 和 `parseAppearance` 定义统一的格式，例如 `theme=dark&light=paper&custom-dark=rrggbb.rrggbb.rrggbb`，保存在 `APPEARANCE_STORAGE_KEY` 下。默认值不写入，缺失或无效的内容都按默认值读取。
 
 **Web。**
 - `libs/design/theme.css` 用 `pnpm nx run design:generate` 从 token 生成并提交入库；文件过期时测试会失败。`apps/web` 导入它，组件只使用 `bg-surface` 这样的 Tailwind 类名。
-- 设置保存在 `localStorage` 中，并体现为 `<html>` 的属性：`data-theme`、`data-palette`、`data-text`、`data-motion`。默认值没有对应属性。
+- 设置保存在 `localStorage` 中，并体现为 `<html>` 的属性：`data-theme`、`data-light`、`data-dark`、`data-contrast`、`data-text`、`data-motion`。默认值没有对应属性。
+- 两种明暗方案的规则放在有序的级联层 `ga-light` 和 `ga-dark` 中，所以无论特异性如何，深色规则总是优先于浅色规则。
+- 自定义配色无法放进静态文件：`customPaletteCss` 生成它们的样式表，保存在 `CUSTOM_PALETTE_CSS_KEY` 下，并通过 `CUSTOM_PALETTE_STYLE_ID` 元素加入 `<head>`。
 - 没有 `data-theme` 时，CSS 通过 `prefers-color-scheme` 跟随设备，不需要脚本。
-- 服务器不知道这些设置，所以 `<head>` 中有一段由 `appearanceScript()` 生成的短脚本，在首次绘制前设置属性。测试会检查它与 `parseAppearance` 一致。
-- `data-theme` 和 `data-palette` 可用于任何元素，设置页的缩略图就是这样绘制的。
+- 服务器不知道这些设置，所以 `<head>` 中有一段由 `appearanceScript()` 生成的短脚本，在首次绘制前设置属性并加入已保存的样式表。测试会检查它与 `parseAppearance` 一致。
+- 这些属性可用于任何元素，设置页的缩略图和预览就是这样绘制的。
 
-**移动端。** 移动端将把同样的格式存到本地存储，用 `hexColors(palette, scheme)` 取颜色（React Native 无法解析 oklch），按 `TEXT_SCALE` 缩放文字，并用 `resolveColorScheme` 和 `resolveReducedMotion` 根据设备解析 `system`。目前它只使用默认的浅色配色。
+**移动端。** 移动端将把同样的格式存到本地存储，用 `resolveColors(appearance, device)` 取十六进制颜色（React Native 无法解析 oklch），按 `TEXT_SCALE` 缩放文字，并用 `resolveColorScheme` 和 `resolveReducedMotion` 根据设备解析 `system`。目前它只使用默认的浅色配色。

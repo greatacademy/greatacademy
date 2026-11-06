@@ -215,19 +215,27 @@ Appearance belongs to the client, not the account: each browser or device keeps 
 | Setting | Choices | Default |
 | :--- | :--- | :--- |
 | `theme` | `system`, `light`, `dark` | `system` |
-| `palette` | `academy`, `iris`, `plum`, `rose`, `walnut`, `paper`, `sepia`, `pine`, `lake`, `sky`, `midnight`, `slate`; each has a light and a dark form | `academy` |
+| `light` | The palette in light: `academy`, `iris`, `plum`, `rose`, `linen`, `terracotta`, `walnut`, `honey`, `olive`, `paper`, `sepia`, `pine`, `lake`, `sky`, `midnight`, `slate`, or `custom` | `academy` |
+| `dark` | The palette in dark, with the same choices | `academy` |
+| `contrast` | `standard`, `high` | `standard` |
 | `text` | `small`, `default`, `large` | `default` |
 | `motion` | `system`, `reduced`, `full` | `system` |
 
-**Colors.** `colorTokens(palette, scheme)` is the only source of colors, by role (`ink`, `surface`, `accent`, …). A palette changes the neutrals and the accent; `good`, `bad` and `warn` are the same in every palette because a verdict must read the same. Tests hold every text pair to a contrast of at least 4.5:1 in every palette and scheme, and keep any saturated accent at least 30 degrees of hue from the verdict colors. A new color role or palette is added here, never in a client.
+**Colors.** `colorTokens(palette, scheme, contrast)` is the only source of built-in colors, by role (`ink`, `surface`, `accent`, …). A palette changes the neutrals and the accent; `good`, `bad` and `warn` are the same in every palette because a verdict must read the same. Half of the built-in palettes are warm and half cool. Tests hold every text pair to the target of the contrast level in every palette and scheme, 4.5:1 for `standard` and 7:1 for `high`, which also strengthens `line`; they keep any saturated accent at least 20 degrees of hue from the verdict colors. A new color role or palette is added here, never in a client.
 
-**Storage.** `serializeAppearance` and `parseAppearance` define one format, for example `theme=dark&palette=paper`, stored under `APPEARANCE_STORAGE_KEY`. Defaults are left out, and whatever is missing or invalid reads as the default.
+**Custom palettes.** A custom palette is three colors (`accent`, `page`, `ink`), one set each for light and dark; `customTokens` derives the rest. The page stays as light or dark as its scheme requires and text moves in lightness as far as needed, so tests hold any three colors to the same contrast targets. Starting one takes the colors of the palette in use, and it stays stored while another palette is chosen.
+
+**Sharing.** `sharePalette` writes a custom or built-in palette as text, `great-academy-palette-v1:{"scheme","accent","page","ink"}`, and `parseSharedPalette` reads it strictly. A palette is imported only into the scheme it was made for, because its colors only work there.
+
+**Storage.** `serializeAppearance` and `parseAppearance` define one format, for example `theme=dark&light=paper&custom-dark=rrggbb.rrggbb.rrggbb`, stored under `APPEARANCE_STORAGE_KEY`. Defaults are left out, and whatever is missing or invalid reads as the default.
 
 **Web.**
 - `libs/design/theme.css` is generated from the tokens with `pnpm nx run design:generate` and committed; a test fails if it is stale. `apps/web` imports it, so components only use Tailwind classes such as `bg-surface`.
-- Settings live in `localStorage` and show as attributes of `<html>`: `data-theme`, `data-palette`, `data-text`, `data-motion`. A default has no attribute.
+- Settings live in `localStorage` and show as attributes of `<html>`: `data-theme`, `data-light`, `data-dark`, `data-contrast`, `data-text`, `data-motion`. A default has no attribute.
+- Rules of the two schemes sit in the ordered cascade layers `ga-light` and `ga-dark`, so a dark rule beats a light one whatever its specificity.
+- Custom palettes cannot be in a static file: `customPaletteCss` builds their stylesheet, stored under `CUSTOM_PALETTE_CSS_KEY` and added to the head in the element `CUSTOM_PALETTE_STYLE_ID`.
 - With no `data-theme`, CSS follows the device through `prefers-color-scheme`, without any script.
-- The server never knows the settings, so a short script from `appearanceScript()` runs in the head and sets the attributes before the first paint. A test checks that it agrees with `parseAppearance`.
-- `data-theme` and `data-palette` work on any element, which is how the settings page draws its miniatures.
+- The server never knows the settings, so a short script from `appearanceScript()` runs in the head and sets the attributes and adds the stored stylesheet before the first paint. A test checks that it agrees with `parseAppearance`.
+- These attributes work on any element, which is how the settings page draws its miniatures and preview.
 
-**Mobile.** The mobile app will store the same format in its local storage, get colors from `hexColors(palette, scheme)` (React Native cannot parse oklch), scale text by `TEXT_SCALE`, and resolve `system` against the device with `resolveColorScheme` and `resolveReducedMotion`. Today it only uses the default light colors.
+**Mobile.** The mobile app will store the same format in its local storage, get colors from `resolveColors(appearance, device)` in hex (React Native cannot parse oklch), scale text by `TEXT_SCALE`, and resolve `system` against the device with `resolveColorScheme` and `resolveReducedMotion`. Today it only uses the default light colors.

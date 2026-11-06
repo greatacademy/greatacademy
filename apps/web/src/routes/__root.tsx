@@ -5,7 +5,7 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import { Header } from "../components/Header.tsx";
 import { NotFoundNote } from "../components/LoadError.tsx";
-import { followOtherTabs } from "../lib/appearance.ts";
+import { keepAppearanceCurrent } from "../lib/appearance.ts";
 import { I18nProvider } from "../lib/i18n.tsx";
 import { getLocale } from "../lib/locale.ts";
 import { shouldRetry } from "../lib/rpc.ts";
@@ -63,7 +63,7 @@ function Root() {
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 10_000, retry: shouldRetry, refetchOnWindowFocus: false } } }),
   );
-  useEffect(followOtherTabs, []);
+  useEffect(keepAppearanceCurrent, []);
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider initial={locale}>

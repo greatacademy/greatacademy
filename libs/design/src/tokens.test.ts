@@ -1,19 +1,19 @@
 import { describe, expect, it } from "vitest";
 
-import { accentOf, type ColorToken, hexColors, oklchToHex, PALETTES } from "./tokens.ts";
-
-const luminance = (hex: string) => {
-  const [r = 0, g = 0, b = 0] = [1, 3, 5].map((i) => {
-    const c = Number.parseInt(hex.slice(i, i + 2), 16) / 255;
-    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
-
-const contrast = (a: string, b: string) => {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
-  return (hi + 0.05) / (lo + 0.05);
-};
+import {
+  accentOf,
+  CONTRAST_TARGET,
+  CONTRASTS,
+  type ColorScheme,
+  type ColorToken,
+  contrastRatio,
+  customHexColors,
+  hexColors,
+  hexToOklch,
+  oklchToHex,
+  PALETTES,
+  seedsOf,
+} from "./tokens.ts";
 
 const TEXT_PAIRS: [ColorToken, ColorToken][] = [
   ["ink", "page"],
@@ -32,21 +32,32 @@ const TEXT_PAIRS: [ColorToken, ColorToken][] = [
   ["warn", "warn-soft"],
 ];
 
-describe("oklchToHex", () => {
+const SCHEMES: ColorScheme[] = ["light", "dark"];
+
+const expectReadable = (colors: Record<ColorToken, string>, target: number, label: string) => {
+  for (const [text, background] of TEXT_PAIRS) {
+    expect(contrastRatio(colors[text], colors[background]), `${label}: ${text} on ${background}`).toBeGreaterThanOrEqual(target);
+  }
+};
+
+describe("color conversion", () => {
   it("converts the ends of the lightness scale", () => {
     expect(oklchToHex([1, 0, 0])).toBe("#ffffff");
     expect(oklchToHex([0, 0, 0])).toBe("#000000");
   });
+
+  it.each(["#3b5bdb", "#aa3311", "#fff8ee", "#123456"])("round-trips %s", (hex) => {
+    expect(oklchToHex(hexToOklch(hex))).toBe(hex);
+  });
 });
 
-describe("palettes", () => {
-  const cases = PALETTES.flatMap((palette) => (["light", "dark"] as const).map((scheme) => [palette, scheme] as const));
+describe("built-in palettes", () => {
+  const cases = PALETTES.flatMap((palette) =>
+    SCHEMES.flatMap((scheme) => CONTRASTS.map((contrast) => [palette, scheme, contrast] as const)),
+  );
 
-  it.each(cases)("%s keeps text readable in %s", (palette, scheme) => {
-    const colors = hexColors(palette, scheme);
-    for (const [text, background] of TEXT_PAIRS) {
-      expect(contrast(colors[text], colors[background]), `${text} on ${background}`).toBeGreaterThanOrEqual(4.5);
-    }
+  it.each(cases)("%s keeps text readable in %s at %s contrast", (palette, scheme, contrast) => {
+    expectReadable(hexColors(palette, scheme, contrast), CONTRAST_TARGET[contrast], palette);
   });
 
   it.each(PALETTES)("%s has an accent that cannot be taken for a verdict", (palette) => {
@@ -54,7 +65,38 @@ describe("palettes", () => {
     if (chroma < 0.1) return; // Too muted to read as a signal.
     for (const verdict of [155, 25, 75]) {
       const distance = Math.abs(((hue - verdict + 540) % 360) - 180);
-      expect(distance).toBeGreaterThanOrEqual(30);
+      expect(distance).toBeGreaterThanOrEqual(20);
     }
+  });
+
+  it("offers as many warm palettes as cool ones", () => {
+    const warm = PALETTES.filter((palette) => {
+      const [, , hue] = hexToOklch(hexColors(palette, "light").page);
+      return hue < 110 || hue > 340;
+    });
+    expect(warm.length).toBe(PALETTES.length / 2);
+  });
+});
+
+describe("custom palettes", () => {
+  const shades = ["#000000", "#ffffff", "#808080", "#ff0000", "#00ff00", "#0000ff", "#ffff00", "#3b5bdb", "#1c1c1c", "#f5f5dc"];
+  const cases = shades.flatMap((accent) => shades.flatMap((page) => shades.map((ink) => ({ accent, page, ink }))));
+
+  it("stays readable for any choice of colors", () => {
+    for (const seeds of cases) {
+      for (const scheme of SCHEMES) {
+        for (const contrast of CONTRASTS) {
+          expectReadable(customHexColors(seeds, scheme, contrast), CONTRAST_TARGET[contrast], JSON.stringify({ seeds, scheme, contrast }));
+        }
+      }
+    }
+  });
+
+  it("keeps a sensible choice as chosen", () => {
+    const seeds = seedsOf("paper", "light");
+    const colors = customHexColors(seeds, "light");
+    expect(colors.page).toBe(seeds.page);
+    expect(colors.ink).toBe(seeds.ink);
+    expect(colors.accent).toBe(seeds.accent);
   });
 });

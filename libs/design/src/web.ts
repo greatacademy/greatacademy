@@ -1,48 +1,103 @@
-import { APPEARANCE_CHOICES, APPEARANCE_STORAGE_KEY, type Appearance, DEFAULT_APPEARANCE, TEXT_SCALE, TEXT_SIZES } from "./appearance.ts";
-import { COLOR_TOKENS, type ColorScheme, colorTokens, PALETTES, type Palette } from "./tokens.ts";
+import {
+  APPEARANCE_CHOICES,
+  APPEARANCE_STORAGE_KEY,
+  type Appearance,
+  type ChoiceKey,
+  DEFAULT_APPEARANCE,
+  TEXT_SCALE,
+  TEXT_SIZES,
+} from "./appearance.ts";
+import {
+  COLOR_TOKENS,
+  CONTRASTS,
+  type ColorScheme,
+  type ColorToken,
+  type Contrast,
+  colorTokens,
+  customTokens,
+  type Oklch,
+  oklchToHex,
+  PALETTES,
+  type Palette,
+} from "./tokens.ts";
 
-const declarations = (palette: Palette, scheme: ColorScheme, indent: string) => {
-  const tokens = colorTokens(palette, scheme);
-  const base = colorTokens(DEFAULT_APPEARANCE.palette, scheme);
-  // Other palettes only state what differs: the rules of the default palette always apply underneath.
-  return COLOR_TOKENS.filter((token) => palette === DEFAULT_APPEARANCE.palette || tokens[token].join() !== base[token].join())
-    .map((token) => `${indent}--color-${token}: oklch(${tokens[token].join(" ")});`)
-    .join("\n");
-};
+/** CUSTOM_PALETTE_CSS_KEY is the key under which the web client stores the stylesheet of its custom palettes. */
+export const CUSTOM_PALETTE_CSS_KEY = "ga-appearance-css";
 
-const block = (selectors: string[], palette: Palette, scheme: ColorScheme, indent = "") =>
-  `${selectors.map((s) => indent + s).join(",\n")} {\n${indent}  color-scheme: ${scheme};\n${declarations(palette, scheme, `${indent}  `)}\n${indent}}`;
+/** CUSTOM_PALETTE_STYLE_ID is the id of the style element that holds that stylesheet. */
+export const CUSTOM_PALETTE_STYLE_ID = "ga-custom-palette";
 
-const paletteRules = (palette: Palette) => {
-  const attr = palette === DEFAULT_APPEARANCE.palette ? "" : `[data-palette="${palette}"]`;
-  return [
-    block([`:root${attr}`, `[data-theme="light"]${attr}`], palette, "light"),
-    `@media (prefers-color-scheme: dark) {\n${block([`:root${attr}:not([data-theme="light"])`], palette, "dark", "  ")}\n}`,
-    block([`[data-theme="dark"]${attr}`], palette, "dark"),
-  ].join("\n\n");
-};
+type Print = (color: Oklch) => string;
+const printOklch: Print = (color) => `oklch(${color.join(" ")})`;
 
-const STILL = `  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  scroll-behavior: auto !important;
-  transition-duration: 0.01ms !important;`;
+const declarations = (tokens: Record<ColorToken, Oklch>, only: readonly ColorToken[], print: Print, indent: string) =>
+  only.map((token) => `${indent}--color-${token}: ${print(tokens[token])};`).join("\n");
+
+const block = (selectors: string[], scheme: ColorScheme, body: string, indent = "") =>
+  `${selectors.map((s) => indent + s).join(",\n")} {\n${indent}  color-scheme: ${scheme};\n${body}\n${indent}}`;
 
 /**
- * themeCss is the stylesheet of the web client. data-theme and data-palette work
- * on any element, so a part of a page can show another scheme or palette, with
- * both set on that element; with no data-theme on the root the device decides,
- * without any script.
+ * The rules of one palette in one scheme and contrast. Light rules go in an
+ * earlier layer than dark ones, so a dark rule that applies always wins whatever
+ * attributes the root also has.
+ */
+function schemeRules(id: string, scheme: ColorScheme, contrast: Contrast, body: (indent: string) => string) {
+  const attr = id === DEFAULT_APPEARANCE[scheme] ? "" : `[data-${scheme}="${id}"]`;
+  const level = contrast === "standard" ? "" : `[data-contrast="${contrast}"]`;
+  const on = `${level}${attr}`;
+  if (scheme === "light") return block([`:root${on}`, `[data-theme="light"]${on}`], "light", body("    "), "  ");
+  return [
+    `  @media (prefers-color-scheme: dark) {\n${block([`:root${on}:not([data-theme="light"])`], "dark", body("      "), "    ")}\n  }`,
+    block([`[data-theme="dark"]${on}`], "dark", body("    "), "  "),
+  ].join("\n\n");
+}
+
+const inLayer = (scheme: ColorScheme, rules: string[]) => `@layer ga-${scheme} {\n${rules.join("\n\n")}\n}`;
+
+function builtInRules(scheme: ColorScheme) {
+  const rules: string[] = [];
+  for (const contrast of CONTRASTS) {
+    for (const palette of PALETTES) {
+      const tokens = colorTokens(palette, scheme, contrast);
+      const base = colorTokens(DEFAULT_APPEARANCE[scheme] as Palette, scheme, contrast);
+      // At standard contrast a palette only states what differs, as the default's rules apply underneath. At high contrast
+      // those rules compete with the palette's standard ones, so it states everything.
+      const only =
+        contrast === "standard" && palette !== DEFAULT_APPEARANCE[scheme]
+          ? COLOR_TOKENS.filter((token) => tokens[token].join() !== base[token].join())
+          : COLOR_TOKENS;
+      rules.push(schemeRules(palette, scheme, contrast, (indent) => declarations(tokens, only, printOklch, indent)));
+    }
+  }
+  return rules;
+}
+
+const STILL = (indent: string) =>
+  ["animation-duration: 0.01ms", "animation-iteration-count: 1", "scroll-behavior: auto", "transition-duration: 0.01ms"]
+    .map((rule) => `${indent}${rule} !important;`)
+    .join("\n");
+
+/**
+ * themeCss is the stylesheet of the web client. data-theme, data-light, data-dark
+ * and data-contrast work on any element, so a part of a page can show another
+ * palette with them set on that element; with no data-theme on the root the
+ * device decides, without any script.
  */
 export function themeCss(): string {
   const sizes = TEXT_SIZES.filter((size) => size !== DEFAULT_APPEARANCE.text).map(
     (size) => `:root[data-text="${size}"] {\n  font-size: ${TEXT_SCALE[size] * 100}%;\n}`,
   );
+  const defaults = colorTokens(DEFAULT_APPEARANCE.light as Palette, "light");
   return `/* Generated from libs/design/src by \`pnpm nx run design:generate\`. Do not edit. */
 @theme {
-${declarations(DEFAULT_APPEARANCE.palette, "light", "  ")}
+${declarations(defaults, COLOR_TOKENS, printOklch, "  ")}
 }
 
-${PALETTES.map(paletteRules).join("\n\n")}
+@layer ga-light, ga-dark;
+
+${inLayer("light", builtInRules("light"))}
+
+${inLayer("dark", builtInRules("dark"))}
 
 ${sizes.join("\n\n")}
 
@@ -50,22 +105,40 @@ ${sizes.join("\n\n")}
   :root:not([data-motion="full"]) *,
   :root:not([data-motion="full"]) *::before,
   :root:not([data-motion="full"]) *::after {
-${STILL.replaceAll("  ", "    ")}
+${STILL("    ")}
   }
 }
 
 :root[data-motion="reduced"] *,
 :root[data-motion="reduced"] *::before,
 :root[data-motion="reduced"] *::after {
-${STILL}
+${STILL("  ")}
 }
 `;
+}
+
+/** customPaletteCss is the stylesheet of an appearance's custom palettes, empty if it has none. Its colors are always validated hex. */
+export function customPaletteCss(appearance: Appearance): string {
+  const printHex: Print = oklchToHex;
+  const layers: string[] = [];
+  for (const scheme of ["light", "dark"] as const) {
+    const seeds = scheme === "light" ? appearance.customLight : appearance.customDark;
+    if (!seeds) continue;
+    const rules = CONTRASTS.map((contrast) =>
+      schemeRules("custom", scheme, contrast, (indent) =>
+        declarations(customTokens(seeds, scheme, contrast), COLOR_TOKENS, printHex, indent),
+      ),
+    );
+    layers.push(inLayer(scheme, rules));
+  }
+  // The order of the layers holds even if this style loads before the theme.
+  return layers.length > 0 ? ["@layer ga-light, ga-dark;", ...layers].join("\n") : "";
 }
 
 /** appearanceAttributes gives the attributes of the root element for an appearance; a default has none. */
 export function appearanceAttributes(appearance: Appearance): Record<string, string | null> {
   const attributes: Record<string, string | null> = {};
-  for (const key of Object.keys(APPEARANCE_CHOICES) as (keyof Appearance)[]) {
+  for (const key of Object.keys(APPEARANCE_CHOICES) as ChoiceKey[]) {
     attributes[`data-${key}`] = appearance[key] === DEFAULT_APPEARANCE[key] ? null : appearance[key];
   }
   return attributes;
@@ -77,5 +150,5 @@ export function appearanceAttributes(appearance: Appearance): Record<string, str
  * in the wrong theme; bundled code would run too late.
  */
 export function appearanceScript(): string {
-  return `(function(){try{var c=${JSON.stringify(APPEARANCE_CHOICES)},s=localStorage.getItem(${JSON.stringify(APPEARANCE_STORAGE_KEY)});if(!s)return;s.split("&").forEach(function(p){var e=p.split("="),v=c[e[0]];if(v&&v.indexOf(e[1])>0)document.documentElement.setAttribute("data-"+e[0],e[1])})}catch(e){}})()`;
+  return `(function(){try{var c=${JSON.stringify(APPEARANCE_CHOICES)},d=document,s=localStorage.getItem(${JSON.stringify(APPEARANCE_STORAGE_KEY)}),x=localStorage.getItem(${JSON.stringify(CUSTOM_PALETTE_CSS_KEY)});if(s)s.split("&").forEach(function(p){var e=p.split("="),v=c[e[0]];if(v&&v.indexOf(e[1])>0)d.documentElement.setAttribute("data-"+e[0],e[1])});if(x){var t=d.createElement("style");t.id=${JSON.stringify(CUSTOM_PALETTE_STYLE_ID)};t.textContent=x;d.head.appendChild(t)}}catch(e){}})()`;
 }
