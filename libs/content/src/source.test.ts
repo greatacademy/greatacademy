@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { type Problem, type ProblemRef, routeSource, type SubjectSource, t } from "./index.ts";
+import { type Problem, type ProblemRef, routeSource, type SubjectSource, t, topicSource } from "./index.ts";
 
 const problemOf = (shard: string, ref: ProblemRef): Problem =>
   ({ prompt: t(`${shard} ${ref.seed}`, `${shard} ${ref.seed}`) }) as unknown as Problem;
@@ -13,6 +13,7 @@ const shardNamed = (name: string, calls: string[]): SubjectSource => ({
   },
   lesson: async () => ({ title: t(name, name), explanation: t(name, name) }),
   judge: async (ref) => ({ problem: problemOf(name, ref), verdict: { correct: true } }),
+  passage: async () => ({ title: t(name, name), body: name }),
 });
 
 describe("routeSource", () => {
@@ -39,5 +40,28 @@ describe("routeSource", () => {
 
   it("rejects a topic no shard holds", () => {
     expect(() => route([]).lesson("z", 0)).toThrow("unknown topic z");
+  });
+});
+
+describe("topicSource", () => {
+  const passage = {
+    id: "p",
+    title: t("Bees", "蜜蜂"),
+    body: "Bees make honey.",
+    topics: [],
+    xp: 3,
+    questions: [
+      { prompt: t("Who?", "谁？"), right: t("Bees", "蜜蜂"), wrong: [t("Ants", "蚂蚁")], solution: t("It says bees.", "文中说蜜蜂。") },
+    ],
+  };
+  const source = topicSource([], [], [{ id: "u", title: t("U", "单元"), passages: [passage] }]);
+
+  it("serves a passage and judges its questions by seed", async () => {
+    await expect(source.passage("p")).resolves.toEqual({ title: passage.title, body: passage.body });
+    const [problem] = await source.problems([{ topic: "p", kp: 0, seed: 7 }]);
+    const judged = await source.judge({ topic: "p", kp: 0, seed: 7 }, problem!.canonical);
+    expect(judged.verdict.correct).toBe(true);
+    const wrong = await source.judge({ topic: "p", kp: 0, seed: 7 }, problem!.wrong![0]!);
+    expect(wrong.verdict.correct).toBe(false);
   });
 });

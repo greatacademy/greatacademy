@@ -10,6 +10,7 @@ function subject(id: string, loads: string[]): SubjectGateway {
     id,
     title: t(id, id),
     topics: [],
+    passages: [],
     courses: [
       {
         def: { id: `${id}-course`, subject: id, title: t(id, id), description: t(id, id), units: [], prerequisites: [] } as never,
@@ -26,6 +27,7 @@ function subject(id: string, loads: string[]): SubjectGateway {
     problems: none,
     lesson: none,
     judge: none,
+    passage: none,
     listing: async () => ({
       id,
       title: manifest.title,

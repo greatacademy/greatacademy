@@ -1,5 +1,6 @@
 import { CheckerRegistry } from "./checkers.ts";
 import { explanationParts, figureIssue } from "./figure.ts";
+import { bodyWords, lexiconIndex } from "./passages.ts";
 import type { Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
 import type { CourseDef, KnowledgePointDef, SubjectDef, TopicDef } from "./types.ts";
@@ -35,6 +36,23 @@ export interface GraphTopic {
   readonly diagnosticKp: number;
 }
 
+/** GraphPassage is what the engine needs of a passage. */
+export interface GraphPassage {
+  readonly id: string;
+  /** unit is the id of its reading unit. */
+  readonly unit: string;
+  /** previous is the passage before it in the unit, which is read first. */
+  readonly previous?: string;
+  /** topics are the topics a reader must know, with how much the passage practices each. */
+  readonly topics: readonly WeightedEdge[];
+  /** words counts its running words. */
+  readonly words: number;
+  /** wordsByTopic counts the running words each topic teaches; the other words are assumed or explained by the passage. */
+  readonly wordsByTopic: Readonly<Record<string, number>>;
+  readonly xp: number;
+  readonly questions: number;
+}
+
 /** Graph is a subject's compiled knowledge graph: plain data, no functions. */
 export interface Graph {
   readonly subject: string;
@@ -47,6 +65,8 @@ export interface Graph {
   readonly encompassedBy: ReadonlyMap<string, readonly WeightedEdge[]>;
   /** ancestors are every topic reachable through prerequisites, excluding the topic itself. */
   readonly ancestors: ReadonlyMap<string, ReadonlySet<string>>;
+  /** passages are the subject's passages, in reading order. */
+  readonly passages: ReadonlyMap<string, GraphPassage>;
 }
 
 /** CompiledCourse is a course with its derived sets. */
@@ -204,6 +224,73 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
   const encompassingOrder = topologicalOrder(def.topics, topics, (t) => t.encompasses.map((e) => e.topic));
   if (!encompassingOrder.ok) error(`subject ${def.id}`, `encompassing cycle: ${encompassingOrder.cycle.join(" → ")}`);
 
+  // The lexicon and the passages.
+  const lexicon = lexiconIndex(def.lexicon ?? []);
+  const spellings = new Set<string>();
+  for (const entry of def.lexicon ?? []) {
+    const path = `lexicon ${entry.word}`;
+    if (entry.topic !== undefined && !topics.has(entry.topic)) error(path, `topic ${entry.topic} does not exist`);
+    for (const form of [entry.word, ...(entry.forms ?? [])]) {
+      const spelling = form.toLowerCase();
+      if (spellings.has(spelling)) error(path, `the spelling ${spelling} appears twice in the lexicon`);
+      spellings.add(spelling);
+    }
+  }
+  const units = new Set<string>();
+  const graphPassages = new Map<string, GraphPassage>();
+  for (const unit of def.reading ?? []) {
+    const unitPath = `reading unit ${unit.id}`;
+    if (!idPattern.test(unit.id)) error(unitPath, "id must be kebab case");
+    if (units.has(unit.id)) error(unitPath, "duplicate reading unit id");
+    units.add(unit.id);
+    text(`${unitPath} › title`, unit.title);
+    if (unit.passages.length === 0) error(unitPath, "a reading unit needs at least one passage");
+    unit.passages.forEach((passage, position) => {
+      const path = `passage ${passage.id}`;
+      if (!idPattern.test(passage.id)) error(path, "id must be kebab case");
+      if (topics.has(passage.id) || graphPassages.has(passage.id)) error(path, "the id is already used by a topic or a passage");
+      text(`${path} › title`, passage.title);
+      if (!(Number.isFinite(passage.xp) && passage.xp > 0)) error(path, `xp must be positive, got ${passage.xp}`);
+      const words = bodyWords(passage.body);
+      if (words.length === 0) error(path, "a passage needs a body");
+      const outside = new Set([...(passage.names ?? []), ...(passage.glossed ?? [])].map((w) => w.toLowerCase()));
+      const wordsByTopic: Record<string, number> = {};
+      const unlisted = new Set<string>();
+      for (const word of words) {
+        if (outside.has(word)) continue;
+        const entry = lexicon.get(word);
+        if (!entry) unlisted.add(word);
+        else if (entry.topic !== undefined) wordsByTopic[entry.topic] = (wordsByTopic[entry.topic] ?? 0) + 1;
+      }
+      if (unlisted.size > 0) error(path, `words outside the lexicon: ${[...unlisted].join(", ")}`);
+      for (const e of passage.topics) {
+        if (!topics.has(e.topic)) error(path, `topic ${e.topic} does not exist`);
+        if (!(Number.isFinite(e.weight) && e.weight > 0 && e.weight <= 1))
+          error(path, `weight of ${e.topic} must be in (0, 1], got ${e.weight}`);
+      }
+      if (passage.questions.length === 0) error(path, "a passage needs at least one question");
+      passage.questions.forEach((q, i) => {
+        const qPath = `${path} › question ${i + 1}`;
+        text(`${qPath} › prompt`, q.prompt);
+        text(`${qPath} › right`, q.right);
+        text(`${qPath} › solution`, q.solution);
+        if (q.wrong.length === 0) error(qPath, "a question needs at least one wrong option");
+        for (const wrong of q.wrong) text(`${qPath} › wrong`, wrong);
+      });
+      const previous = unit.passages[position - 1]?.id;
+      graphPassages.set(passage.id, {
+        id: passage.id,
+        unit: unit.id,
+        ...(previous !== undefined && { previous }),
+        topics: passage.topics.map((e) => ({ topic: e.topic, weight: e.weight })),
+        words: words.length,
+        wordsByTopic,
+        xp: passage.xp,
+        questions: passage.questions.length,
+      });
+    });
+  }
+
   // Courses.
   const courses = new Map<string, CompiledCourse>();
   for (const course of def.courses) {
@@ -230,6 +317,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
         }
       });
     });
+    for (const unit of course.reading ?? []) if (!units.has(unit)) error(path, `reading unit ${unit} does not exist`);
     const floor = new Set(course.masteryFloor ?? []);
     for (const f of floor) {
       if (!topics.has(f)) error(path, `mastery floor topic ${f} does not exist`);
@@ -279,7 +367,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
 
   return {
     def,
-    graph: { subject: def.id, topics: graphTopics, order: order.order, dependents, encompassedBy, ancestors },
+    graph: { subject: def.id, topics: graphTopics, order: order.order, dependents, encompassedBy, ancestors, passages: graphPassages },
     topics,
     courses,
     checkers: checkers!,

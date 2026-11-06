@@ -18,7 +18,7 @@ import { courseScope, defaultParams, type EngineContext, type EngineGraph, engin
 export function localGateway(subject: CompiledSubject): SubjectGateway {
   const manifest = subjectManifest(subject);
   return {
-    ...topicSource(subject.topics.values(), subject.def.checkers),
+    ...topicSource(subject.topics.values(), subject.def.checkers, subject.def.reading),
     listing: async () => subjectListing(manifest),
     manifest: async () => manifest,
   };
@@ -30,6 +30,7 @@ function sourceInLocale(source: SubjectSource, locale: Locale): SubjectSource {
     problems: async (refs) => inLocale(await source.problems(refs), locale),
     lesson: async (topic, kp) => inLocale(await source.lesson(topic, kp), locale),
     judge: async (ref, response) => inLocale(await source.judge(ref, response), locale),
+    passage: async (id) => inLocale(await source.passage(id), locale),
   };
 }
 

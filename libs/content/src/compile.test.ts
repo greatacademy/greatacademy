@@ -318,3 +318,61 @@ describe("figureIssue", () => {
     expect(figureIssue({ svg: '<svg viewBox="0 0 1 1"></svg>', alt: { en: "x", "zh-CN": "" } })).toContain("alt");
   });
 });
+
+describe("passages", () => {
+  const question = {
+    prompt: t("Who?", "谁？"),
+    right: t("Bees", "蜜蜂"),
+    wrong: [t("Ants", "蚂蚁")],
+    solution: t("It says bees.", "文中说蜜蜂。"),
+  };
+  const passage = {
+    id: "bees",
+    title: t("Bees", "蜜蜂"),
+    body: "Bees make honey. Ana's bees make honey.",
+    topics: [{ topic: "a", weight: 0.5 }],
+    names: ["Ana's"],
+    xp: 3,
+    questions: [question],
+  };
+  const subject = (extra: Partial<SubjectDef> = {}): SubjectDef => ({
+    id: "s",
+    title: t("S", "学科"),
+    topics: [topic("a"), topic("b")],
+    courses: [course(["a", "b"], { reading: ["u"] })],
+    checkers: [],
+    reading: [{ id: "u", title: t("U", "单元"), passages: [passage, { ...passage, id: "bees-2" }] }],
+    lexicon: [{ word: "bee", forms: ["bees"] }, { word: "make", forms: ["makes"], topic: "b" }, { word: "honey" }],
+    ...extra,
+  });
+  const errors = (def: SubjectDef) => {
+    try {
+      compileSubject(def);
+      return [];
+    } catch (e) {
+      return (e as CompileError).issues.map((i) => i.message);
+    }
+  };
+
+  it("counts running words by the topic that teaches them, and links a unit in order", () => {
+    const { graph } = compileSubject(subject());
+    expect(graph.passages.get("bees")).toMatchObject({ unit: "u", words: 7, wordsByTopic: { b: 2 }, questions: 1, xp: 3 });
+    expect(graph.passages.get("bees")?.previous).toBeUndefined();
+    expect(graph.passages.get("bees-2")?.previous).toBe("bees");
+  });
+
+  it("rejects a word outside the lexicon unless it is a name or glossed", () => {
+    expect(errors(subject({ lexicon: [{ word: "bee", forms: ["bees"] }, { word: "make" }] }))).toEqual(
+      expect.arrayContaining([expect.stringContaining("outside the lexicon: honey")]),
+    );
+  });
+
+  it("rejects ids that collide, missing references and questions without wrong options", () => {
+    const unit = (p: object) => [{ id: "u", title: t("U", "单元"), passages: [{ ...passage, ...p }] }];
+    expect(errors(subject({ reading: unit({ id: "a" }) })).join()).toContain("already used");
+    expect(errors(subject({ reading: unit({ topics: [{ topic: "x", weight: 1 }] }) })).join()).toContain("topic x does not exist");
+    expect(errors(subject({ reading: unit({ questions: [{ ...question, wrong: [] }] }) })).join()).toContain("wrong option");
+    expect(errors(subject({ courses: [course(["a", "b"], { reading: ["none"] })] })).join()).toContain("reading unit none");
+    expect(errors(subject({ lexicon: [{ word: "bee" }, { word: "bee" }] })).join()).toContain("appears twice");
+  });
+});

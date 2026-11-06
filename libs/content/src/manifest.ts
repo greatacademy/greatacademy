@@ -1,4 +1,4 @@
-import type { CompiledCourse, CompiledSubject, Graph, GraphTopic, WeightedEdge } from "./compile.ts";
+import type { CompiledCourse, CompiledSubject, Graph, GraphPassage, GraphTopic, WeightedEdge } from "./compile.ts";
 import type { Text } from "./text.ts";
 import type { CourseDef } from "./types.ts";
 
@@ -7,6 +7,11 @@ export interface ManifestTopic extends GraphTopic {
   readonly title: Text;
   readonly summary: Text;
   readonly practiceOnly?: boolean;
+}
+
+/** ManifestPassage is what serving a subject needs of a passage without its text. */
+export interface ManifestPassage extends GraphPassage {
+  readonly title: Text;
 }
 
 /** ManifestCourse is a compiled course as plain JSON. */
@@ -26,6 +31,8 @@ export interface SubjectManifest {
   readonly id: string;
   readonly title: Text;
   readonly topics: readonly ManifestTopic[];
+  /** passages are in reading order. */
+  readonly passages: readonly ManifestPassage[];
   readonly courses: readonly ManifestCourse[];
 }
 
@@ -51,6 +58,7 @@ export interface SubjectCatalog {
   readonly def: { readonly id: string; readonly title: Text };
   readonly graph: Graph;
   readonly topics: ReadonlyMap<string, ManifestTopic>;
+  readonly passages: ReadonlyMap<string, ManifestPassage>;
   readonly courses: ReadonlyMap<string, CompiledCourse>;
 }
 
@@ -68,6 +76,9 @@ export function subjectManifest(subject: CompiledSubject): SubjectManifest {
         ...(topic.practiceOnly && { practiceOnly: true }),
       };
     }),
+    passages: (subject.def.reading ?? []).flatMap((unit) =>
+      unit.passages.map((p) => ({ ...subject.graph.passages.get(p.id)!, title: p.title })),
+    ),
     courses: [...subject.courses.values()].map((c) => ({
       def: c.def,
       topics: c.topics,
@@ -111,10 +122,12 @@ export function readManifest(manifest: SubjectManifest): SubjectCatalog {
     for (const e of topic.encompasses) encompassedBy.get(e.topic)!.push({ topic: topic.id, weight: e.weight });
   }
   const topics = new Map(manifest.topics.map((t) => [t.id, t]));
+  const passages = new Map(manifest.passages.map((p) => [p.id, p]));
   return {
     def: { id: manifest.id, title: manifest.title },
-    graph: { subject: manifest.id, topics, order, dependents, encompassedBy, ancestors },
+    graph: { subject: manifest.id, topics, order, dependents, encompassedBy, ancestors, passages },
     topics,
+    passages,
     courses: new Map(manifest.courses.map((c) => [c.def.id, { ...c, masteryFloor: new Set(c.masteryFloor) }])),
   };
 }

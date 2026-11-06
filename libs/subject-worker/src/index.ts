@@ -2,6 +2,7 @@ import { WorkerEntrypoint } from "cloudflare:workers";
 import {
   type Checker,
   type ProblemRef,
+  type ReadingUnitDef,
   routeSource,
   type SubjectGateway,
   type SubjectListing,
@@ -17,11 +18,11 @@ import {
  * for the topics it holds. A subject is split into shards because a single
  * Worker cannot hold the generators of a large subject.
  */
-export function shardWorker(topics: readonly TopicDef[], checkers: readonly Checker[]) {
+export function shardWorker(topics: readonly TopicDef[], checkers: readonly Checker[], reading: readonly ReadingUnitDef[] = []) {
   // Built on the first call, so that the topics do not count against the Worker's startup time.
   let source: SubjectSource | undefined;
   const held = () => {
-    source ??= topicSource(topics, checkers);
+    source ??= topicSource(topics, checkers, reading);
     return source;
   };
   return class extends WorkerEntrypoint {
@@ -34,13 +35,16 @@ export function shardWorker(topics: readonly TopicDef[], checkers: readonly Chec
     judge(ref: ProblemRef, response: string) {
       return held().judge(ref, response);
     }
+    passage(id: string) {
+      return held().passage(id);
+    }
   };
 }
 
 /**
  * gatewayWorker is the Worker entrypoint of a subject, the only one the web
  * Worker binds: it holds the manifest and routes to the shards. shards maps the
- * name of each shard's service binding to the ids of the topics it holds.
+ * name of each shard's service binding to the ids of the topics and passages it holds.
  */
 export function gatewayWorker(manifest: SubjectManifest, shards: Readonly<Record<string, readonly string[]>>) {
   const listing: SubjectListing = subjectListing(manifest);
@@ -64,6 +68,9 @@ export function gatewayWorker(manifest: SubjectManifest, shards: Readonly<Record
     }
     judge(ref: ProblemRef, response: string) {
       return this.#source.judge(ref, response);
+    }
+    passage(id: string) {
+      return this.#source.passage(id);
     }
   };
 }

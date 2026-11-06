@@ -1,10 +1,11 @@
 import { CheckerRegistry } from "./checkers.ts";
 import type { Figure } from "./figure.ts";
 import type { SubjectListing, SubjectManifest } from "./manifest.ts";
+import { type PassageView, passageProblem, passagesOf } from "./passages.ts";
 import type { ProblemRef } from "./problems.ts";
 import { createRng } from "./rng.ts";
 import type { Text } from "./text.ts";
-import type { Checker, Problem, TopicDef, Verdict } from "./types.ts";
+import type { Checker, Problem, ReadingUnitDef, TopicDef, Verdict } from "./types.ts";
 
 /** KnowledgePointLesson is what a lesson shows to introduce a knowledge point. */
 export interface KnowledgePointLesson {
@@ -26,12 +27,14 @@ export interface Judged {
  * for a subject satisfies this interface.
  */
 export interface SubjectSource {
-  /** problems generates the problems of refs, in order. */
+  /** problems generates the problems of refs, in order. A question of a passage is the ref with the passage as its topic and the question as its knowledge point. */
   problems(refs: readonly ProblemRef[]): Promise<readonly Problem[]>;
   /** lesson gives the introduction of a knowledge point. */
   lesson(topic: string, kp: number): Promise<KnowledgePointLesson>;
   /** judge generates the problem of ref and checks a response to it. */
   judge(ref: ProblemRef, response: string): Promise<Judged>;
+  /** passage gives the text of a passage. */
+  passage(id: string): Promise<PassageView>;
 }
 
 /** SubjectGateway is the service of a subject: its manifest and its source. */
@@ -77,11 +80,16 @@ export function routeSource(shards: Readonly<Record<string, readonly string[]>>,
     },
     lesson: (topic, kp) => shard(of(topic)).lesson(topic, kp),
     judge: (ref, response) => shard(of(ref.topic)).judge(ref, response),
+    passage: (id) => shard(of(id)).passage(id),
   };
 }
 
-/** topicSource serves a source from topic definitions held in this process. */
-export function topicSource(definitions: Iterable<TopicDef>, checkerList: readonly Checker[]): SubjectSource {
+/** topicSource serves a source from topic and passage definitions held in this process. */
+export function topicSource(
+  definitions: Iterable<TopicDef>,
+  checkerList: readonly Checker[],
+  reading: readonly ReadingUnitDef[] = [],
+): SubjectSource {
   const topics = new Map<string, TopicDef>();
   for (const topic of definitions) topics.set(topic.id, topic);
   const checkers = new CheckerRegistry(checkerList);
@@ -92,7 +100,11 @@ export function topicSource(definitions: Iterable<TopicDef>, checkerList: readon
     if (!found) throw new Error(`topic ${topic} has no knowledge point ${kp}`);
     return found;
   };
-  const generate = (ref: ProblemRef) => point(ref.topic, ref.kp).generate(createRng(ref.seed));
+  const passages = new Map(passagesOf(reading).map((p) => [p.id, p]));
+  const generate = (ref: ProblemRef) => {
+    const passage = passages.get(ref.topic);
+    return passage ? passageProblem(passage, ref.kp, createRng(ref.seed)) : point(ref.topic, ref.kp).generate(createRng(ref.seed));
+  };
   return {
     problems: async (refs) => refs.map(generate),
     lesson: async (topic, kp) => {
@@ -102,6 +114,11 @@ export function topicSource(definitions: Iterable<TopicDef>, checkerList: readon
     judge: async (ref, response) => {
       const problem = generate(ref);
       return { problem, verdict: checkers.judge(problem, response) };
+    },
+    passage: async (id) => {
+      const passage = passages.get(id);
+      if (!passage) throw new Error(`unknown passage ${id}`);
+      return { title: passage.title, body: passage.body };
     },
   };
 }

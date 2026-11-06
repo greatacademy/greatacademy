@@ -143,6 +143,8 @@ E2 and E3 are independent and can run at once. First, a short spike settles what
 
 **Done when** simulated students get reading tasks in a sensible share of their time, replay reproduces state, and a pilot group reads without being flooded by unknown words. The pilot also tests the 98% parameter.
 
+**Built ahead of G1.** The project owner chose to build E2.1 to E2.5 before the pilot of Stage 1. They are code with no passages, so a course without reading units behaves as before. E2.6 and E2's pilot still wait for G1: if learners do not improve there, no passages are written.
+
 ### E3. AI Judgment of Writing (L)
 
 | Id | Work | Files |

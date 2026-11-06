@@ -146,6 +146,53 @@ export interface CourseDef {
   readonly units: readonly UnitDef[];
   /** masteryFloor are topics outside the course assumed known by every learner. */
   readonly masteryFloor?: readonly string[];
+  /** reading lists the reading units the course offers, in order. */
+  readonly reading?: readonly string[];
+}
+
+/** PassageQuestionDef is one comprehension question of a passage. */
+export interface PassageQuestionDef {
+  readonly prompt: Text;
+  /** right is the correct option; it is shuffled among the wrong ones by seed. */
+  readonly right: Text;
+  /** wrong are plausible wrong options, each a misreading of the passage. */
+  readonly wrong: readonly Text[];
+  /** solution says where the passage gives the answer. */
+  readonly solution: Text;
+}
+
+/** PassageDef is a graded text to read, with a short comprehension check. */
+export interface PassageDef {
+  /** id is unique among the subject's topics and passages, in kebab case, and never changes once published. */
+  readonly id: string;
+  readonly title: Text;
+  /** body is the text in the language being read, so it has no translation; paragraphs are separated by blank lines. */
+  readonly body: string;
+  /** topics are the topics a reader must know, credited in part by reading; weight in (0, 1] is how much the passage practices each. */
+  readonly topics: readonly { readonly topic: string; readonly weight: number }[];
+  /** names are the proper names of the body, which are outside the lexicon. */
+  readonly names?: readonly string[];
+  /** glossed are the domain terms the passage itself explains, which are outside the lexicon. */
+  readonly glossed?: readonly string[];
+  /** xp is the expected minutes of reading and answering for a serious learner. */
+  readonly xp: number;
+  readonly questions: readonly PassageQuestionDef[];
+}
+
+/** ReadingUnitDef is a sequence of passages on one domain: each is offered after the one before it, which makes it easier to read. */
+export interface ReadingUnitDef {
+  readonly id: string;
+  readonly title: Text;
+  readonly passages: readonly PassageDef[];
+}
+
+/** LexiconEntry is a word of the language a subject teaches. */
+export interface LexiconEntry {
+  readonly word: string;
+  /** forms are its other spellings, such as inflections. */
+  readonly forms?: readonly string[];
+  /** topic teaches the word; without one, a reader of the subject's passages is assumed to know it. */
+  readonly topic?: string;
 }
 
 /** Verdict is a checker's judgment of a response. */
@@ -171,4 +218,8 @@ export interface SubjectDef {
   readonly topics: readonly TopicDef[];
   readonly courses: readonly CourseDef[];
   readonly checkers: readonly Checker[];
+  /** reading are the subject's reading units. */
+  readonly reading?: readonly ReadingUnitDef[];
+  /** lexicon lists the words its passages may use; a subject with passages needs one. */
+  readonly lexicon?: readonly LexiconEntry[];
 }
