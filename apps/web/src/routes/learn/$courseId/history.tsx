@@ -55,9 +55,15 @@ function History() {
                   </div>
                   <div className="text-xs text-muted">
                     {label} · {when.format(new Date(Number(s.completedAt)))}
+                    {s.blownOff && <span className="text-warn"> · {m.blownOffShort}</span>}
                   </div>
                 </div>
-                {task?.case !== "diagnostic" && <div className="shrink-0 text-sm text-muted">{m.score(s.correct, s.asked)}</div>}
+                {task?.case !== "diagnostic" && (
+                  <div className="shrink-0 text-right text-sm text-muted">
+                    <div>{m.score(s.correct, s.asked)}</div>
+                    <div className={s.xp < 0 ? "text-bad" : ""}>{m.earnedOf(s.xp, s.fullXp)}</div>
+                  </div>
+                )}
               </Card>
             </Link>
           );

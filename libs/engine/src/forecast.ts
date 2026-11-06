@@ -9,8 +9,3 @@ export function remainingXp(pl: Planner, state: LearnerState): number {
   }
   return Math.round(lessons * (1 + pl.params.forecastOverhead));
 }
-
-/** daysAtPace is how many days an amount of XP takes at some XP per day; undefined when the pace is not positive. */
-export function daysAtPace(xp: number, xpPerDay: number): number | undefined {
-  return xpPerDay > 0 ? Math.ceil(xp / xpPerDay) : undefined;
-}

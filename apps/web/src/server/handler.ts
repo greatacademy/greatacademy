@@ -9,6 +9,7 @@ import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 
 import { createAuth } from "./auth.ts";
+import { emailSender } from "./email.ts";
 
 /** RPC_PREFIX is where the Connect services are mounted. */
 export const RPC_PREFIX = "/api/rpc";
@@ -44,7 +45,7 @@ export async function handleApi(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
-    const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin);
+    const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin, emailSender(env.RESEND_API_KEY, env.EMAIL_FROM));
     if (url.pathname.startsWith("/api/auth/")) return await auth.handler(request);
     if (!url.pathname.startsWith(`${RPC_PREFIX}/`)) return new Response("Not Found", { status: 404 });
     const handler = (await routes()).get(url.pathname.slice(RPC_PREFIX.length));

@@ -461,9 +461,23 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
         </div>
         <h2 className="text-xl font-semibold">{headline}</h2>
         {kind !== "diagnostic" && <p className="text-muted">{m.score(result.correct, result.asked)}</p>}
-        {result.xp > 0 && <p className="text-2xl font-semibold text-accent">{m.earned(result.xp)}</p>}
-        {kind === "lesson" && !result.passed && <p className="mx-auto max-w-lg text-sm text-muted">{m.lessonFailed}</p>}
-        {kind === "review" && !result.passed && <p className="mx-auto max-w-lg text-sm text-muted">{m.reviewFailed}</p>}
+        {result.xp > 0 && (
+          <div>
+            <p className="text-2xl font-semibold text-accent">{m.earned(result.xp)}</p>
+            {result.fullXp > 0 && (
+              <p className="text-sm text-muted">{result.xp > result.fullXp ? m.perfectBonus : m.earnedOf(result.xp, result.fullXp)}</p>
+            )}
+          </div>
+        )}
+        {result.xp < 0 && <p className="text-2xl font-semibold text-bad">{m.lostXp(result.xp)}</p>}
+        {result.blownOff && (
+          <div role="alert" className="mx-auto max-w-lg rounded-xl border border-warn/40 bg-warn-soft px-4 py-3 text-left text-sm">
+            <p className="font-medium">{m.blownOffTitle}</p>
+            <p className="mt-1 text-muted">{result.xp < 0 ? m.blownOffLost : m.blownOffWarn}</p>
+          </div>
+        )}
+        {kind === "lesson" && !result.passed && !result.blownOff && <p className="mx-auto max-w-lg text-sm text-muted">{m.lessonFailed}</p>}
+        {kind === "review" && !result.passed && !result.blownOff && <p className="mx-auto max-w-lg text-sm text-muted">{m.reviewFailed}</p>}
         <div className="pt-2">
           <Link to="/learn/$courseId" params={{ courseId: session.courseId }} className={buttonClass("primary", "px-6")}>
             {m.backToDashboard} <ArrowRight size={16} />

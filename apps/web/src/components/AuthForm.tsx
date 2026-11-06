@@ -5,7 +5,8 @@ import { authClient } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { Button, Card, ErrorNote } from "./ui.tsx";
 
-const field =
+/** field styles a form input. */
+export const field =
   "w-full rounded-lg border border-line bg-surface px-3 py-2 outline-none focus:border-accent focus:ring-2 focus:ring-accent/25";
 
 /** AuthForm signs in or signs up with email and password, then goes to next. */
@@ -61,6 +62,11 @@ export function AuthForm({ mode, next }: { mode: "sign-in" | "sign-up"; next?: s
           />
           {mode === "sign-up" && <span className="text-xs font-normal text-muted">{m.passwordHint}</span>}
         </label>
+        {mode === "sign-in" && (
+          <Link to="/forgot-password" className="block text-sm text-accent">
+            {m.forgotPassword}
+          </Link>
+        )}
         {error && <ErrorNote message={error} />}
         <Button type="submit" disabled={busy} className="w-full py-2.5">
           {title}

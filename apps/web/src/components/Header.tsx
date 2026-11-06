@@ -54,6 +54,15 @@ export function Header() {
                 <Menu.Positioner sideOffset={6} align="end">
                   <Menu.Popup className={menuPopup}>
                     <div className="px-3 py-2 text-xs text-muted">{session.user.email}</div>
+                    <Menu.Item className={menuItem} onClick={() => navigate({ to: "/league" })}>
+                      {m.league}
+                    </Menu.Item>
+                    <Menu.Item className={menuItem} onClick={() => navigate({ to: "/guardian" })}>
+                      {m.guardedTitle}
+                    </Menu.Item>
+                    <Menu.Item className={menuItem} onClick={() => navigate({ to: "/settings" })}>
+                      {m.settings}
+                    </Menu.Item>
                     <Menu.Item
                       className={menuItem}
                       onClick={async () => {

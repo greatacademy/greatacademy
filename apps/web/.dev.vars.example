@@ -1,2 +1,5 @@
 # Local secrets for cf dev. Copy to .dev.vars; never commit .dev.vars.
 BETTER_AUTH_SECRET="dev-only-secret-change-me-0123456789abcdef"
+# Leave empty to log password-reset and verification links to the console.
+RESEND_API_KEY=""
+EMAIL_FROM=""

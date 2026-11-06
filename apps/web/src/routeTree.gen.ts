@@ -10,10 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LeagueRouteImport } from './routes/league'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
+import { Route as GuardianIndexRouteImport } from './routes/guardian/index'
+import { Route as GuardianLearnerIdRouteImport } from './routes/guardian/$learnerId'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
 import { Route as LearnCourseIdIndexRouteImport } from './routes/learn/$courseId/index'
 import { Route as LearnCourseIdHistoryRouteImport } from './routes/learn/$courseId/history'
@@ -23,6 +29,26 @@ import { Route as LearnCourseIdTopicsTopicIdRouteImport } from './routes/learn/$
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeagueRoute = LeagueRouteImport.update({
+  id: '/league',
+  path: '/league',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
@@ -43,6 +69,16 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
 const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
   id: '/courses/$courseId',
   path: '/courses/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardianIndexRoute = GuardianIndexRouteImport.update({
+  id: '/guardian/',
+  path: '/guardian/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardianLearnerIdRoute = GuardianLearnerIdRouteImport.update({
+  id: '/guardian/$learnerId',
+  path: '/guardian/$learnerId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SessionSessionIdRoute = SessionSessionIdRouteImport.update({
@@ -74,11 +110,17 @@ const LearnCourseIdTopicsTopicIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/league': typeof LeagueRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/guardian/': typeof GuardianIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId/': typeof LearnCourseIdIndexRoute
@@ -86,11 +128,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/league': typeof LeagueRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/guardian': typeof GuardianIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId': typeof LearnCourseIdIndexRoute
@@ -99,11 +147,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/league': typeof LeagueRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
+  '/guardian/': typeof GuardianIndexRoute
   '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
   '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
   '/learn/$courseId/': typeof LearnCourseIdIndexRoute
@@ -113,11 +167,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password'
+    | '/league'
+    | '/reset-password'
+    | '/settings'
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
     | '/courses/$courseId'
+    | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/guardian/'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId/'
@@ -125,11 +185,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
+    | '/league'
+    | '/reset-password'
+    | '/settings'
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
     | '/courses/$courseId'
+    | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/guardian'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId'
@@ -137,11 +203,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/forgot-password'
+    | '/league'
+    | '/reset-password'
+    | '/settings'
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
     | '/courses/$courseId'
+    | '/guardian/$learnerId'
     | '/session/$sessionId'
+    | '/guardian/'
     | '/learn/$courseId/history'
     | '/learn/$courseId/progress'
     | '/learn/$courseId/'
@@ -150,11 +222,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LeagueRoute: typeof LeagueRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SettingsRoute: typeof SettingsRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   ApiSplatRoute: typeof ApiSplatRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
+  GuardianLearnerIdRoute: typeof GuardianLearnerIdRoute
   SessionSessionIdRoute: typeof SessionSessionIdRoute
+  GuardianIndexRoute: typeof GuardianIndexRoute
   LearnCourseIdHistoryRoute: typeof LearnCourseIdHistoryRoute
   LearnCourseIdProgressRoute: typeof LearnCourseIdProgressRoute
   LearnCourseIdIndexRoute: typeof LearnCourseIdIndexRoute
@@ -168,6 +246,34 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/league': {
+      id: '/league'
+      path: '/league'
+      fullPath: '/league'
+      preLoaderRoute: typeof LeagueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -196,6 +302,20 @@ declare module '@tanstack/react-router' {
       path: '/courses/$courseId'
       fullPath: '/courses/$courseId'
       preLoaderRoute: typeof CoursesCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guardian/': {
+      id: '/guardian/'
+      path: '/guardian'
+      fullPath: '/guardian/'
+      preLoaderRoute: typeof GuardianIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guardian/$learnerId': {
+      id: '/guardian/$learnerId'
+      path: '/guardian/$learnerId'
+      fullPath: '/guardian/$learnerId'
+      preLoaderRoute: typeof GuardianLearnerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/session/$sessionId': {
@@ -238,11 +358,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  LeagueRoute: LeagueRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SettingsRoute: SettingsRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   ApiSplatRoute: ApiSplatRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
+  GuardianLearnerIdRoute: GuardianLearnerIdRoute,
   SessionSessionIdRoute: SessionSessionIdRoute,
+  GuardianIndexRoute: GuardianIndexRoute,
   LearnCourseIdHistoryRoute: LearnCourseIdHistoryRoute,
   LearnCourseIdProgressRoute: LearnCourseIdProgressRoute,
   LearnCourseIdIndexRoute: LearnCourseIdIndexRoute,

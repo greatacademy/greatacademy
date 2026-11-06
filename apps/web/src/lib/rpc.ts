@@ -1,5 +1,6 @@
 import { Code, ConnectError, createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
+import { AccountService } from "@ga/proto/account/v1/account_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 
@@ -7,6 +8,7 @@ import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 // are made from the browser only: pages fetch their data after hydration.
 const transport = createConnectTransport({ baseUrl: "/api/rpc" });
 
+export const account = createClient(AccountService, transport);
 export const catalog = createClient(CatalogService, transport);
 export const learning = createClient(LearningService, transport);
 
@@ -21,3 +23,6 @@ export const shouldRetry = (failures: number, error: unknown) => failures < 1 &&
 
 /** timeZone is the browser's IANA time zone, which decides what "today" means for XP. */
 export const timeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+/** failureCode is the code of a failed call. */
+export const failureCode = (error: unknown) => ConnectError.from(error).code;

@@ -17,6 +17,9 @@ export default defineConfig({
       SUBJECT_MATH: bindings.worker({ worker: "ga-math" }),
       // Signs better-auth sessions; locally from .dev.vars.
       BETTER_AUTH_SECRET: bindings.secret(),
+      // Sends password resets and address verification through Resend; locally, empty logs the links instead.
+      RESEND_API_KEY: bindings.secret(),
+      EMAIL_FROM: bindings.secret(),
     },
   },
 });
