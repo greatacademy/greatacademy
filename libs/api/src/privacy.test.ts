@@ -39,6 +39,7 @@ const registry = await Registry.open([localGateway(compileMath())]);
 const COURSE = "algebra-foundations";
 const NOW = Date.UTC(2026, 10, 6, 12);
 const SECRET = "test-secret";
+const PDF = new Uint8Array([0x25, 0x50, 0x44, 0x46, 1]);
 
 let db: Db & { close(): Promise<void> };
 let now: number;
@@ -102,7 +103,7 @@ async function openMarket(country: string) {
 
 /** verified gives a guardian an approved signed form. */
 async function verified(user: string) {
-  await privacy(user).submitVerification({ form: new Uint8Array([1, 2, 3]), contentType: "application/pdf" });
+  await privacy(user).submitVerification({ form: PDF, contentType: "application/pdf" });
   const { verifications } = await admin("root").listVerifications({});
   await admin("root").decideVerification({ id: verifications[0]!.id, approve: true });
 }
@@ -208,10 +209,10 @@ describe("guardians", () => {
     expect(
       await code(privacy("parent").addChild({ username: "kid01", password: "long-enough", country: "US", birthYear: 2016, birthMonth: 5 })),
     ).toBe(Code.FailedPrecondition);
-    await privacy("parent").submitVerification({ form: new Uint8Array([1]), contentType: "application/pdf" });
+    await privacy("parent").submitVerification({ form: PDF, contentType: "application/pdf" });
     expect(forms.size).toBe(1);
     const { verifications } = await admin("root").listVerifications({});
-    expect((await admin("root").getVerificationForm({ id: verifications[0]!.id })).form).toEqual(new Uint8Array([1]));
+    expect((await admin("root").getVerificationForm({ id: verifications[0]!.id })).form).toEqual(PDF);
     expect(await code(admin("root").decideVerification({ id: verifications[0]!.id, approve: false }))).toBe(Code.InvalidArgument);
     await admin("root").decideVerification({ id: verifications[0]!.id, approve: false, reason: "unreadable" });
     expect(forms.size).toBe(0);
@@ -228,14 +229,13 @@ describe("guardians", () => {
     expect(await code(privacy("parent").submitVerification({ form: new Uint8Array([1]), contentType: "text/html" }))).toBe(
       Code.InvalidArgument,
     );
-    expect(await code(privacy("parent").submitVerification({ form: new Uint8Array(5 * 1024 * 1024 + 1), contentType: "image/png" }))).toBe(
-      Code.InvalidArgument,
-    );
+    expect(await code(privacy("parent").submitVerification({ form: PDF, contentType: "image/png" }))).toBe(Code.InvalidArgument);
+    expect(
+      await code(privacy("parent").submitVerification({ form: new Uint8Array(5 * 1024 * 1024 + 1), contentType: "application/pdf" })),
+    ).toBe(Code.InvalidArgument);
     await newUser("teen");
     await privacy("teen").setAge({ country: "US", birthYear: 2010, birthMonth: 1 });
-    expect(await code(privacy("teen").submitVerification({ form: new Uint8Array([1]), contentType: "image/png" }))).toBe(
-      Code.PermissionDenied,
-    );
+    expect(await code(privacy("teen").submitVerification({ form: PDF, contentType: "application/pdf" }))).toBe(Code.PermissionDenied);
   });
 
   it("add a child who studies only after consent", async () => {
@@ -587,6 +587,40 @@ describe("the admin console", () => {
     await privacy("teen").withdrawConsent({ scope: "writing" });
     expect(await code(privacy("teen").grantConsent({ scope: "writing" }))).toBe(Code.FailedPrecondition);
     expect(await route()).toBeUndefined();
+  });
+
+  it("offers an AI scope only with a live route", async () => {
+    await openMarket("US");
+    const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", kind: "model", api: "x", enabled: true } });
+    await admin("root").saveRegisterEntry({
+      entry: {
+        providerId: id,
+        country: "US",
+        servesMarket: true,
+        minorsAllowed: true,
+        noTraining: true,
+        shortRetention: true,
+        processingAgreement: true,
+        transferMechanism: true,
+      },
+    });
+    await admin("root").publishNotice({ version: "2026-12", vendors: [id] });
+    const offered = async () => (await admin("root").listMarkets({})).markets.find((m) => m.country === "US")?.aiScopes;
+    expect(await offered()).toEqual([]);
+    await recordCalibration(db, {
+      criterion: "w1",
+      providerId: id,
+      model: "m1",
+      promptVersion: "p1",
+      kappa: 0.8,
+      humanKappa: 0.82,
+      passed: true,
+      at: new Date(now),
+    });
+    await admin("root").saveRoute({
+      route: { criterion: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
+    });
+    expect(await offered()).toEqual(["writing"]);
   });
 
   it("keeps Hong Kong without AI even with a vendor registered", async () => {

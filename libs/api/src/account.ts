@@ -251,6 +251,8 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
 
     async removeGuardedLearner(req, ctx) {
       const db = await guarded(ctx, req.learnerId);
+      if ((await learnerAge(db, req.learnerId)).managed)
+        throw new ConnectError("delete a child's account instead", Code.FailedPrecondition);
       await removeGuardian(db, auth(ctx).userId, req.learnerId);
       return {};
     },

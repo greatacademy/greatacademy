@@ -83,16 +83,17 @@ export async function currentNotice(db: Db): Promise<{ version: string; vendors:
 /** kindForScope is the kind of vendor a scope needs. */
 const kindForScope = (scope: ConsentScope) => (scope === "speech" ? "speech" : "model");
 
-/** scopeOffered tells whether a market can offer a scope now: its rule allows it and the current notice names a vendor of that kind with a valid check there. */
+/** scopeOffered tells whether a market can offer a scope now: its rule allows it, and the current notice names a vendor of that kind with a live route and a valid check there. */
 export async function scopeOffered(db: Db, country: string, scope: ConsentScope, at: number): Promise<boolean> {
   if (scope === "basic") return true;
   if (!AI_SCOPES.includes(scope) || marketOf(country)?.status !== "open") return false;
-  const [notice, list, checks] = await Promise.all([currentNotice(db), providers(db), vendorChecks(db)]);
+  const [notice, list, checks, all] = await Promise.all([currentNotice(db), providers(db), vendorChecks(db), routes(db)]);
   return list.some(
     (p) =>
       p.enabled &&
       p.kind === kindForScope(scope) &&
       notice.vendors.includes(p.id) &&
+      all.some((r) => r.providerId === p.id && r.live) &&
       checks.some((c) => c.providerId === p.id && c.country === country && checkValid(c, at)),
   );
 }

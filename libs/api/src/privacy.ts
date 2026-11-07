@@ -73,6 +73,14 @@ const statusMessage: Record<Access["status"], AccessStatus> = {
   "needs-guardian": AccessStatus.NEEDS_GUARDIAN,
 };
 
+/** looksLike checks a file's first bytes against its declared type, since an administrator will open it. */
+function looksLike(form: Uint8Array, contentType: string): boolean {
+  const start = (...bytes: number[]) => bytes.every((b, i) => form[i] === b);
+  if (contentType === "application/pdf") return start(0x25, 0x50, 0x44, 0x46);
+  if (contentType === "image/png") return start(0x89, 0x50, 0x4e, 0x47);
+  return start(0xff, 0xd8, 0xff);
+}
+
 function database(ctx: HandlerContext): Db {
   const db = ctx.values.get(dbKey);
   if (!db) throw new ConnectError("no database", Code.Internal);
@@ -226,6 +234,9 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
       const access = await accessOf(db, learnerId, now);
       const current = (s: ConsentScope) => rows.filter((c) => c.scope === s && !c.withdrawnAt && c.expiresAt.getTime() > now);
       return {
+        band: bandMessage(access.age.band),
+        managed: access.age.managed,
+        dailyMinutes: access.age.dailyMinutes ?? 0,
         consents: rows.map((c) => ({
           id: c.id,
           scope: c.scope,
@@ -296,6 +307,7 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
       if (!formTypes.includes(req.contentType)) throw new ConnectError("send a PDF, PNG or JPEG", Code.InvalidArgument);
       if (req.form.length === 0 || req.form.length > MAX_FORM_BYTES)
         throw new ConnectError("the form must be under 5 MB", Code.InvalidArgument);
+      if (!looksLike(req.form, req.contentType)) throw new ConnectError("send a PDF, PNG or JPEG", Code.InvalidArgument);
       const latest = await latestVerification(db, userId);
       if (latest && latest.status !== "refused") throw new ConnectError("a verification already exists", Code.FailedPrecondition);
       const formKey = `guardian-forms/${crypto.randomUUID()}`;
