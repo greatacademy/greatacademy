@@ -1,0 +1,298 @@
+syntax = "proto3";
+
+package ga.admin.v1;
+
+// AdminService runs the admin console; every call checks the role on the
+// server and answers not found to anyone else.
+service AdminService {
+  // GetOverview returns what needs attention.
+  rpc GetOverview(GetOverviewRequest) returns (GetOverviewResponse);
+  // ListVerifications lists the guardian forms waiting, oldest first.
+  rpc ListVerifications(ListVerificationsRequest) returns (ListVerificationsResponse);
+  // GetVerificationForm returns a waiting form.
+  rpc GetVerificationForm(GetVerificationFormRequest) returns (GetVerificationFormResponse);
+  // DecideVerification approves or refuses, and deletes the form.
+  rpc DecideVerification(DecideVerificationRequest) returns (DecideVerificationResponse);
+  // ListMarkets lists every market with its rules and launch state.
+  rpc ListMarkets(ListMarketsRequest) returns (ListMarketsResponse);
+  // SetMarketOpen opens or closes a market to minors.
+  rpc SetMarketOpen(SetMarketOpenRequest) returns (SetMarketOpenResponse);
+  // ListProviders lists the AI vendors, never their keys.
+  rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse);
+  // SaveProvider adds or changes a vendor.
+  rpc SaveProvider(SaveProviderRequest) returns (SaveProviderResponse);
+  // DeleteProvider removes a vendor that has no routes.
+  rpc DeleteProvider(DeleteProviderRequest) returns (DeleteProviderResponse);
+  // ListRoutes lists the routes with whether each qualifies.
+  rpc ListRoutes(ListRoutesRequest) returns (ListRoutesResponse);
+  // SaveRoute writes a route; going live needs a passing calibration.
+  rpc SaveRoute(SaveRouteRequest) returns (SaveRouteResponse);
+  // DeleteRoute removes a route.
+  rpc DeleteRoute(DeleteRouteRequest) returns (DeleteRouteResponse);
+  // ListRegister lists the vendor register.
+  rpc ListRegister(ListRegisterRequest) returns (ListRegisterResponse);
+  // SaveRegisterEntry writes what a person checked of a vendor for a market.
+  rpc SaveRegisterEntry(SaveRegisterEntryRequest) returns (SaveRegisterEntryResponse);
+  // ListNotices lists the notice versions.
+  rpc ListNotices(ListNoticesRequest) returns (ListNoticesResponse);
+  // PublishNotice adds a notice version naming vendors.
+  rpc PublishNotice(PublishNoticeRequest) returns (PublishNoticeResponse);
+  // ListAdmins lists who holds the role.
+  rpc ListAdmins(ListAdminsRequest) returns (ListAdminsResponse);
+  // AddAdmin gives the role to an existing adult account.
+  rpc AddAdmin(AddAdminRequest) returns (AddAdminResponse);
+  // RemoveAdmin takes the role from someone else.
+  rpc RemoveAdmin(RemoveAdminRequest) returns (RemoveAdminResponse);
+  // ListLog lists the change log, newest first.
+  rpc ListLog(ListLogRequest) returns (ListLogResponse);
+}
+
+message GetOverviewRequest {}
+
+// BandCount is how many learners a band has; an empty band has not answered.
+message BandCount {
+  string band = 1;
+  int32 count = 2;
+}
+
+message GetOverviewResponse {
+  int32 waiting_forms = 1;
+  // stale_checks counts register entries past or within 30 days of their limit.
+  int32 stale_checks = 2;
+  // broken_routes lists the live routes that stopped qualifying, as "criterion/position".
+  repeated string broken_routes = 3;
+  // last_retention_at is 0 if the job has never run.
+  int64 last_retention_at = 4;
+  string last_retention_detail = 5;
+  repeated BandCount bands = 6;
+}
+
+message ListVerificationsRequest {}
+
+// Verification is a guardian's form waiting for a decision.
+message Verification {
+  string id = 1;
+  string email = 2;
+  string method = 3;
+  int64 submitted_at = 4;
+}
+
+message ListVerificationsResponse {
+  repeated Verification verifications = 1;
+}
+
+message GetVerificationFormRequest {
+  string id = 1;
+}
+
+message GetVerificationFormResponse {
+  bytes form = 1;
+  string content_type = 2;
+}
+
+message DecideVerificationRequest {
+  string id = 1;
+  bool approve = 2;
+  string reason = 3;
+}
+
+message DecideVerificationResponse {}
+
+message ListMarketsRequest {}
+
+// Market is a market's rules from the code and its launch state.
+message Market {
+  string country = 1;
+  // status is the rule: "open", "open-no-ai" or "closed".
+  string status = 2;
+  int32 guardian_below = 3;
+  repeated string languages = 4;
+  repeated string missing_languages = 5;
+  bool minors_open = 6;
+  string signed_off_by = 7;
+  string signed_off_on = 8;
+  bool language_gap_accepted = 9;
+  // ai_scopes are the AI scopes a current register entry can serve now.
+  repeated string ai_scopes = 10;
+}
+
+message ListMarketsResponse {
+  repeated Market markets = 1;
+}
+
+message SetMarketOpenRequest {
+  string country = 1;
+  bool open = 2;
+  string signed_off_by = 3;
+  string signed_off_on = 4;
+  bool language_gap_accepted = 5;
+}
+
+message SetMarketOpenResponse {}
+
+message ListProvidersRequest {}
+
+// Provider is an AI vendor, without its key.
+message Provider {
+  string id = 1;
+  string name = 2;
+  // kind is "model", "speech" or "other".
+  string kind = 3;
+  string api = 4;
+  string base_url = 5;
+  string region = 6;
+  // key_hint is the last four characters of the key, empty when none is set.
+  string key_hint = 7;
+  bool enabled = 8;
+}
+
+message ListProvidersResponse {
+  repeated Provider providers = 1;
+}
+
+message SaveProviderRequest {
+  // provider has an empty id for a new vendor.
+  Provider provider = 1;
+  // api_key replaces the key; empty keeps the old one.
+  string api_key = 2;
+}
+
+message SaveProviderResponse {
+  string id = 1;
+}
+
+message DeleteProviderRequest {
+  string id = 1;
+}
+
+message DeleteProviderResponse {}
+
+message ListRoutesRequest {}
+
+// Route is what serves a criterion.
+message Route {
+  string criterion = 1;
+  // position is "primary" or "backup".
+  string position = 2;
+  string provider_id = 3;
+  string model = 4;
+  string prompt_version = 5;
+  bool live = 6;
+  // calibrated says whether a passing calibration exists; it is read-only.
+  bool calibrated = 7;
+  // qualifies says whether the route can serve now.
+  bool qualifies = 8;
+}
+
+message ListRoutesResponse {
+  repeated Route routes = 1;
+}
+
+message SaveRouteRequest {
+  Route route = 1;
+}
+
+message SaveRouteResponse {
+  // live is false when a change returned the route to draft.
+  bool live = 1;
+}
+
+message DeleteRouteRequest {
+  string criterion = 1;
+  string position = 2;
+}
+
+message DeleteRouteResponse {}
+
+message ListRegisterRequest {}
+
+// RegisterEntry is what a person verified of a vendor for a market.
+message RegisterEntry {
+  string provider_id = 1;
+  string country = 2;
+  bool serves_market = 3;
+  bool minors_allowed = 4;
+  bool no_training = 5;
+  bool short_retention = 6;
+  bool processing_agreement = 7;
+  bool transfer_mechanism = 8;
+  string region = 9;
+  string notes = 10;
+  // checked_at and valid are set by the server.
+  int64 checked_at = 11;
+  bool valid = 12;
+}
+
+message ListRegisterResponse {
+  repeated RegisterEntry entries = 1;
+}
+
+message SaveRegisterEntryRequest {
+  RegisterEntry entry = 1;
+}
+
+message SaveRegisterEntryResponse {}
+
+message ListNoticesRequest {}
+
+// Notice is a notice version and the vendors it names.
+message Notice {
+  string version = 1;
+  repeated string vendors = 2;
+  int64 published_at = 3;
+}
+
+message ListNoticesResponse {
+  repeated Notice notices = 1;
+}
+
+message PublishNoticeRequest {
+  string version = 1;
+  repeated string vendors = 2;
+}
+
+message PublishNoticeResponse {}
+
+message ListAdminsRequest {}
+
+// Admin is someone who holds the role.
+message Admin {
+  string user_id = 1;
+  string email = 2;
+  int64 granted_at = 3;
+  bool me = 4;
+}
+
+message ListAdminsResponse {
+  repeated Admin admins = 1;
+}
+
+message AddAdminRequest {
+  string email = 1;
+}
+
+message AddAdminResponse {}
+
+message RemoveAdminRequest {
+  string user_id = 1;
+}
+
+message RemoveAdminResponse {}
+
+message ListLogRequest {
+  // kind filters by the start of the action, such as "market" or "ai".
+  string kind = 1;
+}
+
+// LogEntry is one recorded change.
+message LogEntry {
+  string actor = 1;
+  string action = 2;
+  string target = 3;
+  string detail = 4;
+  int64 at = 5;
+}
+
+message ListLogResponse {
+  repeated LogEntry entries = 1;
+}

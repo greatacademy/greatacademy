@@ -1,0 +1,239 @@
+syntax = "proto3";
+
+package ga.privacy.v1;
+
+// PrivacyService holds age bands, guardians' verification, consent, and what
+// guardians and learners can see and delete.
+service PrivacyService {
+  // ListCountries lists the markets a person can answer with.
+  rpc ListCountries(ListCountriesRequest) returns (ListCountriesResponse);
+  // CheckAge answers the age question and stores nothing; it needs no account.
+  rpc CheckAge(CheckAgeRequest) returns (CheckAgeResponse);
+  // GetAccess says what the caller may do now.
+  rpc GetAccess(GetAccessRequest) returns (GetAccessResponse);
+  // SetAge stores the band the age question gives; it can be set only once.
+  rpc SetAge(SetAgeRequest) returns (SetAgeResponse);
+  // SetCountry records a move; a minor takes the stricter of the two rows.
+  rpc SetCountry(SetCountryRequest) returns (SetCountryResponse);
+  // ConfirmBand moves a learner whose band has ended to the next one.
+  rpc ConfirmBand(ConfirmBandRequest) returns (ConfirmBandResponse);
+  // ListConsents lists a learner's consents and which scopes can be granted.
+  rpc ListConsents(ListConsentsRequest) returns (ListConsentsResponse);
+  // GrantConsent records a grant by a verified guardian or by a teen.
+  rpc GrantConsent(GrantConsentRequest) returns (GrantConsentResponse);
+  // AssentConsent records that a child agrees to what a guardian granted.
+  rpc AssentConsent(AssentConsentRequest) returns (AssentConsentResponse);
+  // WithdrawConsent ends a scope and deletes what it produced.
+  rpc WithdrawConsent(WithdrawConsentRequest) returns (WithdrawConsentResponse);
+  // SubmitVerification uploads a guardian's signed form.
+  rpc SubmitVerification(SubmitVerificationRequest) returns (SubmitVerificationResponse);
+  // GetVerification returns the caller's newest verification.
+  rpc GetVerification(GetVerificationRequest) returns (GetVerificationResponse);
+  // AddChild creates a child's account under a verified guardian.
+  rpc AddChild(AddChildRequest) returns (AddChildResponse);
+  // ResetChildPassword sets a new password on a child's account.
+  rpc ResetChildPassword(ResetChildPasswordRequest) returns (ResetChildPasswordResponse);
+  // SetTimeLimit sets or clears a guarded learner's daily study limit.
+  rpc SetTimeLimit(SetTimeLimitRequest) returns (SetTimeLimitResponse);
+  // ExportData returns a learner's data as JSON.
+  rpc ExportData(ExportDataRequest) returns (ExportDataResponse);
+  // DeleteResponses empties a learner's free text and keeps whether each answer was right.
+  rpc DeleteResponses(DeleteResponsesRequest) returns (DeleteResponsesResponse);
+  // DeleteChild deletes a child's whole account.
+  rpc DeleteChild(DeleteChildRequest) returns (DeleteChildResponse);
+}
+
+// Band is an age band.
+enum Band {
+  BAND_UNSPECIFIED = 0;
+  BAND_CHILD = 1;
+  BAND_TEEN = 2;
+  BAND_ADULT = 3;
+}
+
+// AccessStatus is what stands between a learner and study.
+enum AccessStatus {
+  ACCESS_STATUS_UNSPECIFIED = 0;
+  // ACCESS_STATUS_OK means the learner can study.
+  ACCESS_STATUS_OK = 1;
+  // ACCESS_STATUS_NEEDS_AGE means the age question has not been answered.
+  ACCESS_STATUS_NEEDS_AGE = 2;
+  // ACCESS_STATUS_MARKET_CLOSED means the learner's market is not open to minors.
+  ACCESS_STATUS_MARKET_CLOSED = 3;
+  // ACCESS_STATUS_NEEDS_GUARDIAN means a child has no current consent from a verified guardian.
+  ACCESS_STATUS_NEEDS_GUARDIAN = 4;
+}
+
+message ListCountriesRequest {}
+
+message ListCountriesResponse {
+  // countries holds ISO 3166 codes; "other" is added by the client.
+  repeated string countries = 1;
+}
+
+message CheckAgeRequest {
+  string country = 1;
+  int32 birth_year = 2;
+  int32 birth_month = 3;
+}
+
+message CheckAgeResponse {
+  Band band = 1;
+  // closed means a minor cannot use the service in this market.
+  bool closed = 2;
+}
+
+message GetAccessRequest {}
+
+message GetAccessResponse {
+  AccessStatus status = 1;
+  Band band = 2;
+  // band_ends_at is in milliseconds since the epoch, 0 for adults.
+  int64 band_ends_at = 3;
+  string country = 4;
+  // next_band is set once the band has ended and the learner can confirm.
+  Band next_band = 5;
+  // scopes are those in force now.
+  repeated string scopes = 6;
+  // managed marks a child's account made by a guardian.
+  bool managed = 7;
+  int32 daily_minutes = 8;
+  // admin marks a platform administrator.
+  bool admin = 9;
+}
+
+message SetAgeRequest {
+  string country = 1;
+  int32 birth_year = 2;
+  int32 birth_month = 3;
+}
+
+message SetAgeResponse {
+  Band band = 1;
+}
+
+message SetCountryRequest {
+  string country = 1;
+}
+
+message SetCountryResponse {}
+
+message ConfirmBandRequest {}
+
+message ConfirmBandResponse {}
+
+// Consent is one grant.
+message Consent {
+  string id = 1;
+  string scope = 2;
+  // role is "guardian" or "self".
+  string role = 3;
+  string notice_version = 4;
+  int64 granted_at = 5;
+  int64 expires_at = 6;
+  int64 withdrawn_at = 7;
+  int64 assent_at = 8;
+}
+
+// ScopeState says whether a scope can be granted to a learner now.
+message ScopeState {
+  string scope = 1;
+  bool in_force = 2;
+  bool can_grant = 3;
+  // needs_assent means a guardian granted it and the child has not agreed yet.
+  bool needs_assent = 4;
+}
+
+message ListConsentsRequest {
+  // learner_id names a guarded learner; empty means the caller.
+  string learner_id = 1;
+}
+
+message ListConsentsResponse {
+  repeated Consent consents = 1;
+  repeated ScopeState scopes = 2;
+}
+
+message GrantConsentRequest {
+  string learner_id = 1;
+  string scope = 2;
+}
+
+message GrantConsentResponse {}
+
+message AssentConsentRequest {
+  string scope = 1;
+}
+
+message AssentConsentResponse {}
+
+message WithdrawConsentRequest {
+  string learner_id = 1;
+  string scope = 2;
+}
+
+message WithdrawConsentResponse {}
+
+message SubmitVerificationRequest {
+  bytes form = 1;
+  string content_type = 2;
+}
+
+message SubmitVerificationResponse {}
+
+message GetVerificationRequest {}
+
+message GetVerificationResponse {
+  // status is "none", "pending", "approved" or "refused".
+  string status = 1;
+  string reason = 2;
+}
+
+message AddChildRequest {
+  string username = 1;
+  string password = 2;
+  string country = 3;
+  int32 birth_year = 4;
+  int32 birth_month = 5;
+}
+
+message AddChildResponse {
+  string learner_id = 1;
+}
+
+message ResetChildPasswordRequest {
+  string learner_id = 1;
+  string password = 2;
+}
+
+message ResetChildPasswordResponse {}
+
+message SetTimeLimitRequest {
+  string learner_id = 1;
+  // minutes is 0 for no limit.
+  int32 minutes = 2;
+}
+
+message SetTimeLimitResponse {}
+
+message ExportDataRequest {
+  string learner_id = 1;
+}
+
+message ExportDataResponse {
+  string json = 1;
+}
+
+message DeleteResponsesRequest {
+  string learner_id = 1;
+}
+
+message DeleteResponsesResponse {
+  int32 deleted = 1;
+}
+
+message DeleteChildRequest {
+  string learner_id = 1;
+}
+
+message DeleteChildResponse {}

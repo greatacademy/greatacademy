@@ -11,6 +11,7 @@
   "scripts": {
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
+    "grant-admin": "mise exec -- node src/grant-admin.ts",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "lint": "biome check ."

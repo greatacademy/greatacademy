@@ -17,7 +17,8 @@ export async function createTestDb(): Promise<Db & { close(): Promise<void> }> {
   return Object.assign(db as unknown as Db, { close: () => client.close() });
 }
 
-/** createUser inserts an account holder, as better-auth would on sign-up. */
+/** createUser inserts an account holder as better-auth would on sign-up, who has answered the age question as an adult. */
 export async function createUser(db: Db, id: string, name = id): Promise<void> {
   await db.insert(schema.user).values({ id, name, email: `${id}@example.com` });
+  await db.insert(schema.learner).values({ userId: id, band: "adult", country: "US" });
 }

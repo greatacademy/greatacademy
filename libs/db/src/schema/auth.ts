@@ -17,6 +17,9 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
+  /** username signs in a child's account, which has no real email address; better-auth's username plugin keeps it lowercase. */
+  username: text("username").unique(),
+  displayUsername: text("display_username"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

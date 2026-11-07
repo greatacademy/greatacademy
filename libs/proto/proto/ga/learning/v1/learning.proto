@@ -188,6 +188,8 @@ message StartTaskRequest {
   string course_id = 1;
   // task must be one of the tasks the dashboard offers now.
   Task task = 2;
+  // time_zone is the IANA zone whose day a guardian's time limit counts; empty means UTC.
+  string time_zone = 3;
 }
 
 message StartTaskResponse {
