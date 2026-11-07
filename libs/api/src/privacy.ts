@@ -4,10 +4,12 @@ import {
   addGuardian,
   approvedVerification,
   assentConsent,
+  assignPlan,
   type ConsentScope,
   clearResponses,
   consentsOf,
   contactsOf,
+  coveringScopes,
   type Db,
   deleteUserData,
   exportLearner,
@@ -22,6 +24,7 @@ import {
   setManaged,
   submitVerification,
   userOfLearner,
+  waitingPlan,
   withdrawConsent,
 } from "@ga/db";
 import { AccessStatus, Band as BandMessage, type PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
@@ -49,6 +52,8 @@ export interface PrivacyDeps {
   now(): number;
   readonly forms: FormStore;
   readonly notify: Notify;
+  /** billing makes studying need a plan, and a child need a plan bought for them (docs/billing.md §2). */
+  readonly billing?: boolean;
 }
 
 /** MAX_FORM_BYTES bounds an uploaded signed form. */
@@ -177,6 +182,8 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
         managed: age.managed,
         dailyMinutes: age.dailyMinutes ?? 0,
         admin: await isPlatformAdmin(db, userId),
+        billing: deps.billing ?? false,
+        covered: await coveringScopes(db, learnerId, new Date(now)),
       };
     },
 
@@ -336,11 +343,14 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
       if (band.band !== "child") throw new ConnectError("at this age a learner has their own account", Code.FailedPrecondition);
       if (!(await marketOpenToMinors(db, req.country)))
         throw new ConnectError("this market is not open to minors", Code.FailedPrecondition);
+      const plan = deps.billing ? await waitingPlan(db, userId, new Date(now)) : undefined;
+      if (deps.billing && !plan) throw new ConnectError("buy a plan for this child first", Code.FailedPrecondition);
       const childUser = await accounts.create(username, req.password);
       const learnerId = await learnerFor(db, childUser);
       await setLearnerAge(db, learnerId, { band: "child", bandEndsAt: new Date(band.endsAt ?? now), country: req.country });
       await setManaged(db, learnerId);
       await addGuardian(db, userId, learnerId);
+      if (plan) await assignPlan(db, plan.id, learnerId);
       return { learnerId };
     },
 

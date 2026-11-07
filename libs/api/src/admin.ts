@@ -1,5 +1,6 @@
 import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@connectrpc/connect";
 import {
+  addPlan,
   bandCounts,
   calibrationPassed,
   changeLog,
@@ -11,6 +12,7 @@ import {
   grantAdmin,
   isPlatformAdmin,
   lastLogged,
+  learnerFor,
   logChange,
   marketLaunches,
   notices,
@@ -393,6 +395,26 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         throw new ConnectError("only an account in the adult band can be an administrator", Code.FailedPrecondition);
       await grantAdmin(db, found.id, userId, at);
       await logChange(db, { actor: userId, action: "admin.grant", target: found.id, at });
+      return {};
+    },
+
+    async grantPlan(req, ctx) {
+      const { db, userId, at } = await admin(ctx);
+      need(/^[a-z0-9-]+$/.test(req.scope), "name a subject id or all");
+      need(Number.isInteger(req.days) && req.days >= 1 && req.days <= 366, "give between 1 and 366 days");
+      const found = await userByEmail(db, req.email);
+      if (!found) throw new ConnectError("no account with that email", Code.NotFound);
+      const learnerId = await learnerFor(db, found.id);
+      await addPlan(db, {
+        payerId: found.id,
+        learnerId,
+        scope: req.scope,
+        interval: "month",
+        account: "grant",
+        paidUntil: new Date(at.getTime() + req.days * 86_400_000),
+        at,
+      });
+      await logChange(db, { actor: userId, action: "plan.grant", target: found.id, detail: `${req.scope} ${req.days}d`, at });
       return {};
     },
 

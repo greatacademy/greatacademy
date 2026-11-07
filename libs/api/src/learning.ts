@@ -33,6 +33,7 @@ import {
 } from "@ga/engine";
 import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
+import { requirePlan } from "./billing.ts";
 import { requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
@@ -60,6 +61,8 @@ export interface LearningDeps {
   now(): number;
   /** seed draws a fresh 32-bit seed; problem instances and plans derive from it. */
   seed(): number;
+  /** billing makes studying a subject need a plan that covers it (docs/billing.md §6). */
+  readonly billing?: boolean;
 }
 
 function auth(ctx: HandlerContext): { db: Db; userId: string } {
@@ -94,7 +97,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     const c = await course(courseId);
     if (guardedId && !(await isGuardian(db, userId, guardedId))) throw new ConnectError("no such learner", Code.NotFound);
     const learnerId = guardedId || (await learnerFor(db, userId));
-    if (!guardedId) await requireStudy(db, learnerId, deps.now());
+    if (!guardedId) {
+      await requireStudy(db, learnerId, deps.now());
+      if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
+    }
     if (!(await isEnrolled(db, learnerId, courseId))) throw new ConnectError(`not enrolled in ${courseId}`, Code.FailedPrecondition);
     return { db, c, learnerId };
   };
@@ -148,6 +154,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const c = await course(req.courseId);
       const learnerId = await learnerFor(db, userId);
       await requireStudy(db, learnerId, deps.now());
+      if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
       await enroll(db, learnerId, c.subject.def.id, c.id);
       return {};
     },
