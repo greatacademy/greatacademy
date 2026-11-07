@@ -13,7 +13,7 @@ export interface LegalPage {
 }
 
 /** LEGAL_PAGES are the pages under /legal, by name. They go through review because they are in the code; counsel has not reviewed this version. */
-export const LEGAL_PAGES = ["privacy", "children", "retention", "guardian-form"] as const;
+export const LEGAL_PAGES = ["terms", "privacy", "children", "retention", "guardian-form"] as const;
 
 /** LegalPageName names a page under /legal. */
 export type LegalPageName = (typeof LEGAL_PAGES)[number];
@@ -23,6 +23,44 @@ const draftEn =
 const draftZh = "草稿，版本 2026-11。本文尚未经过各市场法律顾问审阅，在这些市场向未成年人开放之前还会修改。";
 
 const en: Record<LegalPageName, LegalPage> = {
+  terms: {
+    title: "Terms of Service",
+    intro: draftEn,
+    sections: [
+      {
+        heading: "Who may pay",
+        paragraphs: [
+          "Only an adult may buy a plan, for themselves, for a child they add, or for a teen who follows them. A plan is for one learner.",
+        ],
+      },
+      {
+        heading: "Plans and renewal",
+        items: [
+          "A plan covers one subject, or every subject including new ones, for a month or a year.",
+          "A plan paid by card renews at the end of each period and the card is charged, until you cancel.",
+          "A plan paid by Alipay or WeChat Pay buys one period and never renews; paying again adds another period.",
+          "We email you seven days before a plan renews or ends.",
+        ],
+      },
+      {
+        heading: "Cancelling",
+        paragraphs: [
+          "You can cancel a card plan online under Settings at any time. It then stops renewing and lasts until the end of the period already paid for.",
+        ],
+      },
+      {
+        heading: "Refunds",
+        items: [
+          "A plan's first payment can be refunded in full from Settings within 30 days of that payment. The plan then ends at once.",
+          "Renewals and later payments are not refunded, in full or in part.",
+        ],
+      },
+      {
+        heading: "Deleting your account",
+        paragraphs: ["Deleting your account ends the card plans you pay for at once, without a refund beyond the one above."],
+      },
+    ],
+  },
   privacy: {
     title: "Privacy notice",
     intro: draftEn,
@@ -142,6 +180,40 @@ const en: Record<LegalPageName, LegalPage> = {
 };
 
 const zh: Record<LegalPageName, LegalPage> = {
+  terms: {
+    title: "服务条款",
+    intro: draftZh,
+    sections: [
+      {
+        heading: "谁可以付款",
+        paragraphs: ["只有成年人可以购买方案：为自己、为自己添加的孩子，或为关注自己的青少年。一个方案只供一位学习者使用。"],
+      },
+      {
+        heading: "方案与续费",
+        items: [
+          "一个方案覆盖一个学科，或覆盖包括以后新增在内的所有学科，期限为一个月或一年。",
+          "用银行卡支付的方案在每期结束时自动续费并从银行卡扣款，直到你取消。",
+          "用支付宝或微信支付的方案只购买一期，不会续费；再次付款可以再延长一期。",
+          "方案续费或到期前七天，我们会发邮件通知你。",
+        ],
+      },
+      {
+        heading: "取消",
+        paragraphs: ["你随时可以在“设置”中在线取消银行卡方案。取消后不再续费，方案持续到已付期限结束。"],
+      },
+      {
+        heading: "退款",
+        items: [
+          "一个方案的首次付款，在付款后 30 天内可以在“设置”中申请全额退款，方案随即结束。",
+          "续费和之后的付款不退款，也不按比例退款。",
+        ],
+      },
+      {
+        heading: "删除账号",
+        paragraphs: ["删除账号会立即结束你付费的银行卡方案；除上述退款外不另行退款。"],
+      },
+    ],
+  },
   privacy: {
     title: "隐私声明",
     intro: draftZh,

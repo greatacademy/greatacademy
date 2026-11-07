@@ -8,7 +8,7 @@ export default defineConfig({
     entrypoint: "./src/server.ts",
     observability: { enabled: true },
     domains: ["greatacademy.dev"],
-    // The retention run of docs/minors-data.md §10, once a day.
+    // The retention run of docs/minors-data.md §10 and the plan reminders of docs/billing.md §3, once a day.
     triggers: [triggers.scheduled({ schedule: "0 3 * * *" })],
     env: {
       // Postgres through Hyperdrive; locally, the OrbStack database of compose.yaml.
@@ -28,6 +28,14 @@ export default defineConfig({
       GUARDIAN_FORMS: bindings.r2({ name: "ga-guardian-forms" }),
       // Encrypts AI vendors' API keys; the database never sees it. Locally from .dev.vars.
       AI_KEYS_SECRET: bindings.secret(),
+      // The main Stripe account, for cards; without its key billing is off and anyone can study (docs/billing.md §3, §6).
+      STRIPE_SECRET_KEY: bindings.secret(),
+      STRIPE_WEBHOOK_SECRET: bindings.secret(),
+      // The second Stripe account, for Alipay and WeChat Pay only; optional.
+      STRIPE_WALLET_SECRET_KEY: bindings.secret(),
+      STRIPE_WALLET_WEBHOOK_SECRET: bindings.secret(),
+      // "on" turns on Stripe Tax for card plans.
+      STRIPE_TAX: bindings.secret(),
     },
   },
 });

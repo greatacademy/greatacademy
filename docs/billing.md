@@ -76,3 +76,17 @@ The apps sell nothing and show no prices or links to pay. A learner without a pl
 | `payment` | One row per charge: plan, account, Stripe payment intent, amount, currency, time, whether it was the plan's first, refund time |
 
 We store no card details. Stripe's events reach two webhooks, one per account, whose signatures are checked before anything is read.
+
+## 10. Setting Up
+
+The Worker reads five secrets (`apps/web/cloudflare.config.ts`):
+
+| Secret | What it is |
+| :--- | :--- |
+| `STRIPE_SECRET_KEY` | The main account's secret key. Billing is on only when it and its webhook secret are set |
+| `STRIPE_WEBHOOK_SECRET` | The signing secret of the main account's endpoint `https://greatacademy.dev/api/stripe/main` |
+| `STRIPE_WALLET_SECRET_KEY` | The wallet account's secret key; without it the plans page offers cards only |
+| `STRIPE_WALLET_WEBHOOK_SECRET` | The signing secret of the wallet account's endpoint `https://greatacademy.dev/api/stripe/wallet` |
+| `STRIPE_TAX` | `on` turns on Stripe Tax for card plans |
+
+The main endpoint listens for `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated` and `customer.subscription.deleted`; the wallet endpoint for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. The main account's customer portal allows updating the card and viewing invoices; cancelling and refunds go through Settings, which keeps the 30-day rule. In the wallet account, turn on Alipay and WeChat Pay. The Terms of Service are at `/legal/terms`. Deleting an account ends the card plans it pays for at once.

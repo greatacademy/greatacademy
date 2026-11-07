@@ -16,6 +16,7 @@ import { Route as AgeRouteImport } from './routes/age'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as LeagueRouteImport } from './routes/league'
+import { Route as PlansRouteImport } from './routes/plans'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteRouteImport } from './routes/settings/route'
 import { Route as SignInRouteImport } from './routes/sign-in'
@@ -75,6 +76,11 @@ const LandingRoute = LandingRouteImport.update({
 const LeagueRoute = LeagueRouteImport.update({
   id: '/league',
   path: '/league',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlansRoute = PlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
+  '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
+  '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
@@ -280,6 +288,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
+  '/plans': typeof PlansRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
@@ -316,6 +325,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/landing'
     | '/league'
+    | '/plans'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
@@ -348,6 +358,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/landing'
     | '/league'
+    | '/plans'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
@@ -382,6 +393,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/landing'
     | '/league'
+    | '/plans'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
@@ -417,6 +429,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LandingRoute: typeof LandingRoute
   LeagueRoute: typeof LeagueRoute
+  PlansRoute: typeof PlansRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
@@ -482,6 +495,13 @@ declare module '@tanstack/react-router' {
       path: '/league'
       fullPath: '/league'
       preLoaderRoute: typeof LeagueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plans': {
+      id: '/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof PlansRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -711,6 +731,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LandingRoute: LandingRoute,
   LeagueRoute: LeagueRoute,
+  PlansRoute: PlansRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,

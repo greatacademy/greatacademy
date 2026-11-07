@@ -261,6 +261,19 @@ const serverErrorsZh: Record<string, string> = {
   "you cannot remove yourself": "你不能移除自己",
   "only an adult can be a guardian": "只有成年人可以成为监护人",
   "delete a child's account instead": "请改为删除孩子的账号",
+  "buy a plan for this child first": "请先为这个孩子购买方案",
+  "tick every statement first": "请先勾选每一项声明",
+  "only an adult can pay": "只有成年人可以付款",
+  "no such plan": "没有这个方案",
+  "no such learner": "没有这位学习者",
+  "choose monthly or yearly": "请选择按月或按年",
+  "choose how to pay": "请选择付款方式",
+  "Alipay and WeChat Pay are not set up": "尚未开通支付宝和微信支付",
+  "this payment can no longer be refunded": "这笔付款已无法退款",
+  "this plan does not renew": "这个方案不会续费",
+  "this plan has ended": "这个方案已结束",
+  "no card plan": "没有银行卡方案",
+  "billing is off": "未开启计费",
 };
 
 /** errorText words a failed call for the person who made it. */

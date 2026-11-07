@@ -5,13 +5,18 @@ import {
   accountService,
   accountsKey,
   adminService,
+  applyBillingEvent,
+  billingService,
   catalogService,
   dbKey,
+  endPlansOf,
   type FormStore,
   learningService,
   type Notify,
+  type Payments,
   privacyService,
   Registry,
+  runBillingReminders,
   runRetention,
   userIdKey,
 } from "@ga/api";
@@ -19,12 +24,14 @@ import type { SubjectGateway } from "@ga/content";
 import { connect } from "@ga/db";
 import { AccountService } from "@ga/proto/account/v1/account_pb";
 import { AdminService } from "@ga/proto/admin/v1/admin_pb";
+import { BillingService } from "@ga/proto/billing/v1/billing_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
 import { childAccounts, createAuth } from "./auth.ts";
-import { emailSender, privacyEmail } from "./email.ts";
+import { billingEmail, emailSender, privacyEmail } from "./email.ts";
+import { readWebhook, type StripeAccount, type StripeKeys, stripePayments, WebhookError } from "./stripe.ts";
 
 /** RPC_PREFIX is where the Connect services are mounted. */
 export const RPC_PREFIX = "/api/rpc";
@@ -58,6 +65,32 @@ const notify: Notify = async (to, kind) => {
   }
 };
 
+/** stripeKeys are the Stripe accounts' secrets, or undefined while billing is off. */
+const stripeKeys = (): StripeKeys | undefined =>
+  env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET
+    ? {
+        main: env.STRIPE_SECRET_KEY,
+        mainWebhook: env.STRIPE_WEBHOOK_SECRET,
+        ...(env.STRIPE_WALLET_SECRET_KEY &&
+          env.STRIPE_WALLET_WEBHOOK_SECRET && { wallet: env.STRIPE_WALLET_SECRET_KEY, walletWebhook: env.STRIPE_WALLET_WEBHOOK_SECRET }),
+        tax: env.STRIPE_TAX === "on",
+      }
+    : undefined;
+
+let payments: Payments | null | undefined;
+
+/** stripe returns the link to Stripe once per isolate, or undefined while billing is off. */
+const stripe = (): Payments | undefined => {
+  if (payments === undefined) {
+    const keys = stripeKeys();
+    payments = keys ? stripePayments(keys) : null;
+  }
+  return payments ?? undefined;
+};
+
+/** WEBHOOKS are where each Stripe account sends its events. */
+const WEBHOOKS: Record<string, StripeAccount> = { "/api/stripe/main": "main", "/api/stripe/wallet": "wallet" };
+
 let loaded: ReadonlyMap<string, UniversalHandler> | undefined;
 
 /**
@@ -72,8 +105,14 @@ async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
   const router = createConnectRouter();
   router.service(CatalogService, catalogService(registry));
   router.service(AccountService, accountService({ registry, now: Date.now }));
-  router.service(LearningService, learningService({ registry, now: Date.now, seed: () => Math.floor(Math.random() * 0x7fffffff) }));
-  router.service(PrivacyService, privacyService({ now: Date.now, forms: forms(), notify }));
+  const pay = stripe();
+  const billing = pay !== undefined;
+  router.service(
+    LearningService,
+    learningService({ registry, now: Date.now, seed: () => Math.floor(Math.random() * 0x7fffffff), billing }),
+  );
+  router.service(PrivacyService, privacyService({ now: Date.now, forms: forms(), notify, billing }));
+  router.service(BillingService, billingService({ registry, now: Date.now, ...(pay && { payments: pay }) }));
   router.service(AdminService, adminService({ now: Date.now, forms: forms(), notify, aiKeysSecret: env.AI_KEYS_SECRET }));
   loaded = new Map(router.handlers.map((h) => [h.requestPath, h]));
   return loaded;
@@ -88,7 +127,13 @@ export async function handleApi(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
-    const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin, emailSender(env.RESEND_API_KEY, env.EMAIL_FROM));
+    const pay = stripe();
+    const account = WEBHOOKS[url.pathname];
+    if (account) return await webhook(conn.db, account, request);
+    const endPlans = async (userId: string) => {
+      if (pay) await endPlansOf(conn.db, pay, userId, Date.now());
+    };
+    const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin, emailSender(env.RESEND_API_KEY, env.EMAIL_FROM), endPlans);
     if (url.pathname.startsWith("/api/auth/")) return await auth.handler(request);
     if (!url.pathname.startsWith(`${RPC_PREFIX}/`)) return new Response("Not Found", { status: 404 });
     const handler = (await routes()).get(url.pathname.slice(RPC_PREFIX.length));
@@ -105,12 +150,36 @@ export async function handleApi(request: Request): Promise<Response> {
   }
 }
 
-/** runScheduled runs the daily retention rules. */
+/** webhook records a Stripe account's event; a failure answers 500 so that Stripe sends it again. */
+async function webhook(db: Parameters<typeof applyBillingEvent>[0], account: StripeAccount, request: Request): Promise<Response> {
+  const keys = stripeKeys();
+  if (request.method !== "POST" || !keys) return new Response("Not Found", { status: 404 });
+  try {
+    for (const e of await readWebhook(keys, account, request)) await applyBillingEvent(db, e, Date.now());
+    return new Response("ok");
+  } catch (e) {
+    if (e instanceof WebhookError) return new Response("Bad Request", { status: 400 });
+    console.error(`stripe ${account} webhook failed`, e instanceof Error ? e.message : "");
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
+
+/** remind sends a plan reminder by email; a failure is logged, and the next period tries again. */
+const remind = async (to: string, kind: Parameters<typeof billingEmail>[1]) => {
+  try {
+    await emailSender(env.RESEND_API_KEY, env.EMAIL_FROM)(billingEmail(to, kind));
+  } catch (e) {
+    console.error(`billing reminder ${kind} failed`, e instanceof Error ? e.message : "");
+  }
+};
+
+/** runScheduled runs the daily retention rules and plan reminders. */
 export async function runScheduled(at: number): Promise<void> {
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
     const result = await runRetention(conn.db, at, { forms: forms(), notify });
     console.log("retention run", JSON.stringify(result));
+    if (stripe()) console.log("billing reminders", await runBillingReminders(conn.db, at, remind));
   } finally {
     await conn.close();
   }

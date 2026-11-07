@@ -65,10 +65,13 @@ function AccessGate() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const study = pathname === "/" || ["/learn", "/session", "/league"].some((p) => pathname.startsWith(p));
   const status = access?.status;
+  // With billing on, a learner with no plan at all is sent to choose one (docs/billing.md §6).
+  const unpaid = access?.billing === true && access.covered.length === 0;
   useEffect(() => {
-    if (!study || status === undefined || status === AccessStatus.OK) return;
-    void navigate({ to: status === AccessStatus.NEEDS_AGE ? "/age" : "/access", replace: true });
-  }, [study, status, navigate]);
+    if (!study || status === undefined) return;
+    if (status !== AccessStatus.OK) void navigate({ to: status === AccessStatus.NEEDS_AGE ? "/age" : "/access", replace: true });
+    else if (unpaid) void navigate({ to: "/plans", replace: true });
+  }, [study, status, unpaid, navigate]);
   return null;
 }
 

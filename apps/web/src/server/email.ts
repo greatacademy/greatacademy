@@ -1,4 +1,4 @@
-import type { NoticeKind } from "@ga/api";
+import type { BillingReminder, NoticeKind } from "@ga/api";
 
 /** Email is a message to one address. */
 export interface Email {
@@ -75,4 +75,20 @@ const privacyNotices: Record<NoticeKind, { subject: string; text: string }> = {
 /** privacyEmail is the message for a privacy notice, in both languages; it never names a learner or quotes their text. */
 export function privacyEmail(to: string, kind: NoticeKind): Email {
   return { to, ...privacyNotices[kind] };
+}
+
+const billingReminders: Record<BillingReminder, { subject: string; text: string }> = {
+  "renews-soon": {
+    subject: "Your Great Academy plan renews soon / 你的 Great Academy 方案即将续费",
+    text: "A plan you pay for renews within 7 days and your card will be charged. To stop it, cancel under Settings before then.\n你付费的一个方案将在 7 天内续费，并从你的银行卡扣款。如不想续费，请在此之前到“设置”中取消。",
+  },
+  "ends-soon": {
+    subject: "Your Great Academy plan ends soon / 你的 Great Academy 方案即将到期",
+    text: "A plan you pay for ends within 7 days. It does not renew by itself; pay for another period under Plans to keep studying.\n你付费的一个方案将在 7 天内到期，它不会自动续费；如需继续学习，请在“方案”中再购买一期。",
+  },
+};
+
+/** billingEmail is the reminder before a plan renews or ends, in both languages. */
+export function billingEmail(to: string, kind: BillingReminder): Email {
+  return { to, ...billingReminders[kind] };
 }

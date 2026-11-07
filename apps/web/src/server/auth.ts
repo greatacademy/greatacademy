@@ -15,9 +15,16 @@ import { resetPasswordEmail, type SendEmail, verifyEmail } from "./email.ts";
  * makes and which has no real address; sessions are cookies on the web and signed bearer tokens in the native apps. A
  * learner can study before verifying the email address, which only recovery
  * depends on. A child cannot delete their whole account, and a guardian's
- * deletion takes the accounts of the children only they guard.
+ * deletion takes the accounts of the children only they guard. endPlans stops
+ * what the person pays for from renewing before their plans' rows go.
  */
-export function createAuth(db: Db, secret: string, baseURL: string, sendEmail: SendEmail) {
+export function createAuth(
+  db: Db,
+  secret: string,
+  baseURL: string,
+  sendEmail: SendEmail,
+  endPlans: (userId: string) => Promise<void> = async () => {},
+) {
   return betterAuth({
     baseURL,
     basePath: "/api/auth",
@@ -41,6 +48,7 @@ export function createAuth(db: Db, secret: string, baseURL: string, sendEmail: S
         enabled: true,
         beforeDelete: async ({ id }) => {
           if (await isManagedUser(db, id)) throw new APIError("FORBIDDEN", { message: "a guardian deletes a child's account" });
+          await endPlans(id);
           for (const child of await soleManagedChildren(db, id)) await db.delete(schema.user).where(eq(schema.user.id, child));
         },
       },

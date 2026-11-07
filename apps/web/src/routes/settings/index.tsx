@@ -8,6 +8,7 @@ import { field, NewPassword, PasswordField } from "../../components/AuthForm.tsx
 import { GoalsEditor } from "../../components/GoalsEditor.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { PrivacySettings } from "../../components/PrivacySettings.tsx";
+import { Subscriptions } from "../../components/Subscriptions.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { hasInbox, useAccess } from "../../lib/access.ts";
 import { authClient } from "../../lib/auth.ts";
@@ -143,6 +144,8 @@ function Settings() {
           <p className="text-sm">{session.user.name}</p>
         )}
       </Section>
+
+      <Subscriptions />
 
       <PrivacySettings />
 

@@ -31,7 +31,7 @@ A platform administrator is a row in `platform_admin`. It is separate from guard
 | `/admin/ai` | AI services | Providers and routes |
 | `/admin/register` | Vendor register | For each vendor and market, what was checked and when |
 | `/admin/notices` | Notices | Notice versions and the vendors each one names |
-| `/admin/admins` | Administrators | Who holds the role |
+| `/admin/admins` | Administrators | Who holds the role; granting a plan without payment for a number of days, for testers, reviewers and the pilot ([Billing](billing.md) §6) |
 | `/admin/log` | Change log | Every change, newest first, filterable by kind |
 
 The console follows the product's design tokens and locales, and works at phone width: a form waiting on a guardian should not need a desk.

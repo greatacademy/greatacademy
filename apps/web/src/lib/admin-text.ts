@@ -118,6 +118,12 @@ const en = {
   email: "Email of an existing adult account",
   add: "Add",
   you: "You",
+  // Plans
+  grantPlan: "Grant a plan",
+  grantNote: "For testers, reviewers and the pilot: the account's own learner studies without paying until the plan ends.",
+  grantScope: "Subject",
+  grantDays: "Days",
+  granted: "Granted.",
   // Log
   allKinds: "All",
   logKinds: {
@@ -128,6 +134,7 @@ const en = {
     admin: "Administrators",
     verification: "Verifications",
     retention: "Retention",
+    plan: "Plans",
   } as Record<string, string>,
   noLog: "Nothing yet.",
 };
@@ -243,8 +250,22 @@ const zh: typeof en = {
   email: "已有成年人账号的邮箱",
   add: "添加",
   you: "你",
+  grantPlan: "赠送方案",
+  grantNote: "用于测试人员、审核人员和试点：该账号自己的学习者无需付款即可学习，直到方案到期。",
+  grantScope: "学科",
+  grantDays: "天数",
+  granted: "已赠送。",
   allKinds: "全部",
-  logKinds: { market: "市场", ai: "AI", register: "登记表", notice: "通知", admin: "管理员", verification: "验证", retention: "保存期限" },
+  logKinds: {
+    market: "市场",
+    ai: "AI",
+    register: "登记表",
+    notice: "通知",
+    admin: "管理员",
+    verification: "验证",
+    retention: "保存期限",
+    plan: "方案",
+  },
   noLog: "暂无记录。",
 };
 

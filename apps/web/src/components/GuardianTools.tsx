@@ -4,14 +4,33 @@ import { Link } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 
 import { useAccess } from "../lib/access.ts";
+import { useBillingText } from "../lib/billing-text.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { errorText, usePrivacyText } from "../lib/privacy-text.ts";
-import { privacy } from "../lib/rpc.ts";
+import { billing, privacy } from "../lib/rpc.ts";
 import { type AgeAnswer, CountrySelect, MonthField } from "./AgeQuestion.tsx";
 import { field, NewPassword } from "./AuthForm.tsx";
-import { Button, Card, ErrorNote } from "./ui.tsx";
+import { Button, buttonClass, Card, ErrorNote } from "./ui.tsx";
 
-/** GuardianTools lets an adult verify as a guardian, then add a child's account. */
+/** BuyForChild sends a guardian to buy the plan a new child needs; a card payment verifies them too. */
+function BuyForChild({ alternative }: { alternative?: boolean }) {
+  const t = useBillingText();
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted">{t.buyForChildBody}</p>
+      <Link to="/plans" search={{ child: true }} className={buttonClass()}>
+        {t.buyForChild}
+      </Link>
+      {alternative && <p className="pt-2 text-sm text-muted">{t.orForm}</p>}
+    </div>
+  );
+}
+
+/**
+ * GuardianTools lets an adult verify as a guardian, then add a child's
+ * account. With billing on, each child needs a plan bought first, and a
+ * card payment verifies the guardian (docs/billing.md §2, §7).
+ */
 export function GuardianTools() {
   const { m, locale } = useI18n();
   const t = usePrivacyText();
@@ -19,6 +38,13 @@ export function GuardianTools() {
   const access = useAccess();
   const adult = access?.band === Band.ADULT;
   const verification = useQuery({ queryKey: ["verification"], queryFn: () => privacy.getVerification({}), enabled: adult, staleTime: 0 });
+  const billingOn = access?.billing === true;
+  const subs = useQuery({
+    queryKey: ["subscriptions"],
+    queryFn: () => billing.listSubscriptions({}),
+    enabled: adult && billingOn,
+    staleTime: 0,
+  });
   const upload = useMutation({
     mutationFn: async (file: File) =>
       privacy.submitVerification({ form: new Uint8Array(await file.arrayBuffer()), contentType: file.type }),
@@ -29,11 +55,13 @@ export function GuardianTools() {
     mutationFn: (a: AgeAnswer & { username: string; password: string }) => privacy.addChild(a),
     onSuccess: async () => {
       setAdded(true);
-      await qc.invalidateQueries({ queryKey: ["guarded"] });
+      await Promise.all([qc.invalidateQueries({ queryKey: ["guarded"] }), qc.invalidateQueries({ queryKey: ["subscriptions"] })]);
     },
   });
-  if (!adult || !verification.data) return null;
+  if (!adult || !verification.data || (billingOn && !subs.data)) return null;
   const { status, reason } = verification.data;
+  const now = BigInt(Date.now());
+  const waiting = subs.data?.subscriptions.some((p) => p.payer && p.learnerId === "" && !p.refunded && p.paidUntil > now) ?? false;
 
   function submitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -68,6 +96,7 @@ export function GuardianTools() {
           </p>
         ) : (
           <form onSubmit={submitForm} className="space-y-3">
+            {billingOn && <BuyForChild alternative />}
             {status === "refused" && <p className="text-sm text-warn">{t.verifyRefused(reason)}</p>}
             <p className="text-sm text-muted">{t.verifyBody}</p>
             <Link to="/legal/$page" params={{ page: "guardian-form" }} className="block text-sm font-medium text-accent">
@@ -83,6 +112,15 @@ export function GuardianTools() {
             </Button>
           </form>
         )}
+      </Card>
+    );
+
+  if (billingOn && !waiting && !added)
+    return (
+      <Card className="space-y-3 p-5">
+        <h2 className="font-semibold">{t.addChildTitle}</h2>
+        <p className="text-sm text-good">{t.verifyApproved}</p>
+        <BuyForChild />
       </Card>
     );
 

@@ -13,6 +13,8 @@ import { Markdown } from "../../components/Markdown.tsx";
 import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Bar, Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { XpOverview } from "../../components/XpOverview.tsx";
+import { useAccess } from "../../lib/access.ts";
+import { useBillingText } from "../../lib/billing-text.ts";
 import { signsOf, stuckLessons } from "../../lib/guardian.ts";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -179,6 +181,8 @@ function CourseForecast({ learnerId, courseId }: { learnerId: string; courseId: 
 function GuardedLearner() {
   const { learnerId } = Route.useParams();
   const { m, tx } = useI18n();
+  const access = useAccess();
+  const bt = useBillingText();
   const session = useRequireSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -202,6 +206,7 @@ function GuardedLearner() {
   });
 
   if (!session || detail.isPending) return <Spinner label={m.loading} />;
+  const billingOn = access?.billing === true;
   if (detail.isError) return <LoadError error={detail.error} onRetry={() => detail.refetch()} />;
   const d = detail.data;
   const learner = d.learner!;
@@ -224,6 +229,11 @@ function GuardedLearner() {
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight">{learner.name}</h1>
         <ActiveLine learner={learner} />
+        {billingOn && (
+          <Link to="/plans" search={{ learner: learner.learnerId }} className="inline-block text-sm font-medium text-accent">
+            {bt.buyFor(learner.name)}
+          </Link>
+        )}
       </div>
 
       {signs.length > 0 && (

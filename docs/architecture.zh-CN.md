@@ -52,6 +52,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用由应用自身渲染，再显示在 Native Shell 的 `WebView` 中，样式表、字体和 MathLive 从 Worker 的 `/embed` 加载 |
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
 | 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
+| 支付 | **Stripe**，美国公司的两个账户，在 Worker 中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
 | 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，从 main 分支构建），应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
 | 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
@@ -147,14 +148,14 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 
 `/` 取决于访问者。未登录时是落地页，落地页也可通过 `/landing` 供所有人访问，并在服务端渲染。登录后，打开最近学习的课程的下一个任务；没有课程但有监护学习者的账号转到 `/guardian`，其他没有课程的账号会被问到谁来学习。服务端只凭会话 cookie 就能在两者之间选择，所以已登录的学习者不会看到落地页闪现。课程目录是单独的公开页面 `/courses`。
 
-`src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。
+`src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选课或开始学习。Stripe 的事件到达 `/api/stripe/main` 和 `/api/stripe/wallet`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/web/src/server/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。
 
 监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
 
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日 Cron Trigger 和加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`。
+  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
   - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
 - **开发：**

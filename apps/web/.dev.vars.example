@@ -5,3 +5,9 @@ RESEND_API_KEY=""
 EMAIL_FROM=""
 # Encrypts AI vendors' API keys in the database.
 AI_KEYS_SECRET="dev-only-ai-keys-secret-change-me-0123456789"
+# Stripe test keys; leave the main key empty to keep billing off (docs/billing.md §10).
+STRIPE_SECRET_KEY=""
+STRIPE_WEBHOOK_SECRET=""
+STRIPE_WALLET_SECRET_KEY=""
+STRIPE_WALLET_WEBHOOK_SECRET=""
+STRIPE_TAX=""

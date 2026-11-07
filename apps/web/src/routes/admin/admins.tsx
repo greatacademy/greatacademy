@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import type { FormEvent } from "react";
+import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
@@ -8,7 +8,7 @@ import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { errorText } from "../../lib/privacy-text.ts";
-import { admin } from "../../lib/rpc.ts";
+import { admin, billing } from "../../lib/rpc.ts";
 
 export const Route = createFileRoute("/admin/admins")({ component: Admins });
 
@@ -59,6 +59,66 @@ function Admins() {
           </Button>
         </form>
       </Card>
+      <GrantPlan />
     </div>
+  );
+}
+
+/** GrantPlan gives an account a plan without payment, for testers, reviewers and the pilot (docs/billing.md §6). */
+function GrantPlan() {
+  const { m, locale, tx } = useI18n();
+  const t = useAdminText();
+  const plans = useQuery({ queryKey: ["plans"], queryFn: () => billing.listPlans({}) });
+  const [granted, setGranted] = useState(false);
+  const grant = useMutation({
+    mutationFn: (r: { email: string; scope: string; days: number }) => admin.grantPlan(r),
+    onSuccess: () => setGranted(true),
+  });
+
+  function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setGranted(false);
+    grant.mutate(
+      { email: String(data.get("email")), scope: String(data.get("scope")), days: Number(data.get("days")) },
+      { onSuccess: () => form.reset() },
+    );
+  }
+
+  return (
+    <Card className="p-5">
+      <form onSubmit={submit} className="space-y-3">
+        <h2 className="font-semibold">{t.grantPlan}</h2>
+        <p className="text-sm text-muted">{t.grantNote}</p>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>{t.email}</span>
+          <input name="email" type="email" required autoComplete="off" className={field} />
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>{t.grantScope}</span>
+          <select name="scope" required className={field}>
+            {plans.data?.plans.map((p) => (
+              <option key={p.scope} value={p.scope}>
+                {p.title ? tx(p.title) : p.scope}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>{t.grantDays}</span>
+          <input name="days" type="number" required min={1} max={366} defaultValue={30} className={field} />
+        </label>
+        {grant.isError && <ErrorNote message={errorText(grant.error, locale, m.error)} />}
+        {granted && (
+          <p role="status" className="text-sm text-good">
+            {t.granted}
+          </p>
+        )}
+        <Button type="submit" disabled={grant.isPending}>
+          {t.grantPlan}
+        </Button>
+      </form>
+    </Card>
   );
 }

@@ -76,3 +76,17 @@ Stripe Checkout 不能为支付宝或微信支付自动续费，所以钱包账�
 | `payment` | 每笔扣款一行：方案、账户、Stripe payment intent、金额、币种、时间、是否为该方案的首次付款、退款时间 |
 
 我们不保存任何银行卡信息。Stripe 的事件到达两个 webhook，每个账户一个，读取任何内容前都先校验签名。
+
+## 10. 配置
+
+Worker 读取五个密钥（`apps/web/cloudflare.config.ts`）：
+
+| 密钥 | 内容 |
+| :--- | :--- |
+| `STRIPE_SECRET_KEY` | 主账户的密钥。只有它和对应的 webhook 密钥都设置后计费才开启 |
+| `STRIPE_WEBHOOK_SECRET` | 主账户端点 `https://greatacademy.dev/api/stripe/main` 的签名密钥 |
+| `STRIPE_WALLET_SECRET_KEY` | 钱包账户的密钥；没有它时方案页面只提供银行卡 |
+| `STRIPE_WALLET_WEBHOOK_SECRET` | 钱包账户端点 `https://greatacademy.dev/api/stripe/wallet` 的签名密钥 |
+| `STRIPE_TAX` | 为 `on` 时为银行卡方案开启 Stripe Tax |
+
+主账户端点监听 `checkout.session.completed`、`invoice.paid`、`customer.subscription.updated` 和 `customer.subscription.deleted`；钱包账户端点监听 `checkout.session.completed` 和 `checkout.session.async_payment_succeeded`。主账户的客户门户允许更换银行卡和查看发票；取消和退款通过“设置”进行，以保证 30 天规则。在钱包账户中开通支付宝和微信支付。服务条款在 `/legal/terms`。删除账号会立即结束其付费的银行卡方案。
