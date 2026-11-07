@@ -51,7 +51,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `subject-worker` | `libs/subject-worker` | 任何学科的网关和分片所用的 Worker 入口 |
 | `math-workers` | `apps/math-workers` | 数学的网关和分片 Worker（[架构](architecture.zh-CN.md) §6.1）；`pnpm nx run math-workers:generate` 把 manifest 写入 `gen/`，需要它的 target 会先运行这一步 |
 | `english-workers` | `apps/english-workers` | 英语的网关和分片 Worker，构建方式相同 |
-| `nsh` | `apps/nsh` | Native Shell 应用，开发中：课程列表和课程大纲、登录、注册和年龄问题，连接 Web 应用的 API（§6） |
+| `nsh` | `apps/nsh` | Native Shell 应用，开发中：课程列表和课程大纲、登录、注册和年龄问题、学习主页和任务播放器，连接 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误 |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
@@ -109,6 +109,8 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 
 - `apps/nsh/lib/rpc.ts` 中的 `API_URL` 是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
-- 应用用 bearer token 登录，并把它保存在 `Storage` 中。同意、监护人工具和学习功能还不在应用里。
+- 应用用 bearer token 登录，并把它保存在 `Storage` 中。同意、监护人工具、进度地图和历史记录还不在应用里。
+- 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
+- `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。在 `--target web` 下，Web 视图中的页面运行在沙箱里，拿不到 KaTeX 样式表，所以要在原生目标上检查公式。
 - `nsh package apps/nsh --target <target>` 构建安装包。发布前需要生产环境的 `API_URL`，目前还没有设置。
 - 应用目前是骨架（路线图 P6）：登录、学习主页和学习播放器暂时只在 Web 应用中提供。

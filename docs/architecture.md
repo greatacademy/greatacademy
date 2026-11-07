@@ -49,7 +49,7 @@ This document describes the system as built: technology choices, repository stru
 | Contracts / RPC | **Protobuf + buf + Connect** (`protobuf-es` v2, `connect-es` v2), `protovalidate` | One contract for the web and native clients; JSON on the wire for native |
 | Web app | **TanStack Start** (Router, Query, Form) on **Cloudflare Workers**; **React 19** | Built, run and deployed with Cloudflare's **`cf`** command line, not wrangler |
 | UI | **Base UI**, **Tailwind CSS v4**, Phosphor icons | Design tokens from `libs/design` |
-| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; planned for the native apps through Native Shell's `WebView` |
+| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; in the native apps, rendered by the app and shown in Native Shell's `WebView`, which loads the stylesheet, fonts and MathLive from the Worker under `/embed` |
 | Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the native apps (bearer tokens) |
 | Email | **Resend**, called over HTTP from the Worker with the secrets `RESEND_API_KEY` and `EMAIL_FROM` | Password resets and address verification, in the learner's two languages; a Worker needs no SMTP client |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |

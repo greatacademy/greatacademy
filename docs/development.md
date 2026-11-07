@@ -51,7 +51,7 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `subject-worker` | `libs/subject-worker` | Worker entrypoints for any subject's gateway and shards |
 | `math-workers` | `apps/math-workers` | The gateway and shard Workers of mathematics ([Architecture](architecture.md) §6.1); `pnpm nx run math-workers:generate` writes the manifest to `gen/`, which targets that need it do first |
 | `english-workers` | `apps/english-workers` | The gateway and shard Workers of English, built in the same way |
-| `nsh` | `apps/nsh` | The Native Shell app, in progress: the course list and outlines, sign-in, sign-up and the age question, against the web app's API (§6) |
+| `nsh` | `apps/nsh` | The Native Shell app, in progress: the course list and outlines, sign-in, sign-up and the age question, the dashboard and the task player, against the web app's API (§6) |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
 | `pilot` | `tools/pilot` | Pilot report for a course from a database: `DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i` ([Roadmap §3](roadmap.md#3-pilot)) |
@@ -109,6 +109,8 @@ pnpm nx run nsh:android               # An emulator or device; needs the Android
 
 - `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`.
 - Screens live in `apps/nsh/screens`. `nsh:test` runs the app headless, with no simulator, and `nsh:typecheck` runs `nsh check`, which also generates `.nsh/types`.
-- The app signs in with a bearer token and keeps it in `Storage`. Consent, guardian tools and studying are not in the app yet.
+- The app signs in with a bearer token and keeps it in `Storage`. Consent, guardian tools, the progress map and the history are not in the app yet.
+- Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
+- `nsh test` does not run web views, so plots and the math field have no headless test. On `--target web` a page in a web view is sandboxed and does not get the KaTeX stylesheet, so check math on a native target.
 - `nsh package apps/nsh --target <target>` builds an installable app. Shipping needs a production `API_URL`, which is not set yet.
 - The app is a skeleton (roadmap P6): signing in, the dashboard and the session player remain on the web app for now.

@@ -49,7 +49,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 契约 / RPC | **Protobuf + buf + Connect**（`protobuf-es` v2、`connect-es` v2）、`protovalidate` | Web 与原生应用共用一份契约；原生应用走 JSON 传输 |
 | Web 应用 | **TanStack Start**（Router、Query、Form），运行于 **Cloudflare Workers**；**React 19** | 用 Cloudflare 的 **`cf`** 命令行构建、运行和部署，不用 wrangler |
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
-| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用计划通过 Native Shell 的 `WebView` 复用 |
+| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用由应用自身渲染，再显示在 Native Shell 的 `WebView` 中，样式表、字体和 MathLive 从 Worker 的 `/embed` 加载 |
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
 | 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
