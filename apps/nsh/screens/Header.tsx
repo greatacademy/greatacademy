@@ -1,4 +1,6 @@
-import { type JSX, Text, View } from "nsh";
+import { Image, type JSX, Text, View } from "nsh";
+
+import back from "../assets/caret-left.svg";
 
 import { m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
@@ -20,9 +22,16 @@ export function Header(props: { title: string; right?: JSX.Element }) {
       }}
     >
       <If when={nav.routes().length > 1}>
-        <Text role="button" onPress={() => nav.pop()} style={{ color: colors().accent }}>
-          {m().back}
-        </Text>
+        <View
+          role="button"
+          accessibilityLabel={m().back}
+          tooltip={m().back}
+          onPress={() => nav.pop()}
+          hoverStyle={{ backgroundColor: colors()["accent-soft"] }}
+          style={{ alignItems: "center", borderRadius: 8, height: 32, justifyContent: "center", marginLeft: -6, width: 32 }}
+        >
+          <Image src={back} style={{ height: 18, tintColor: colors().accent, width: 18 }} />
+        </View>
       </If>
       <Text style={{ flex: 1, color: colors().ink, fontSize: 17, fontWeight: "600" }}>{props.title}</Text>
       {props.right}
