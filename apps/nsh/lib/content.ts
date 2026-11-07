@@ -63,7 +63,8 @@ export interface Palette {
 
 /**
  * pageHtml wraps content in a page for a web view, styled like the app. The page
- * reports its height, since the web view takes the height of what it shows. KaTeX
+ * reports where its body ends, since the web view takes the height of what it
+ * shows; the body's own height leaves out a first child's margin. KaTeX
  * writes each formula twice, as HTML that needs its stylesheet and as MathML that
  * the stylesheet hides, so a page that cannot load the stylesheet keeps the MathML.
  */
@@ -81,7 +82,7 @@ figure{margin:.75em 0 0}figcaption{margin-top:.5em;color:${palette.muted};font-s
 .figure-ga .accent{color:${palette.accent}}.figure-ga .action{color:${palette.warn}}.figure-ga .result{color:${palette.good}}
 </style>${options.head ?? ""}</head><body>${body}<script>
 function post(m){if(window.nsh)window.nsh.postMessage(JSON.stringify(m))}
-function report(){post({height:Math.ceil(document.body.getBoundingClientRect().height)})}
+function report(){post({height:Math.ceil(document.body.getBoundingClientRect().bottom)})}
 addEventListener("load",report);
 if(window.ResizeObserver)new ResizeObserver(report).observe(document.body);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(report);
