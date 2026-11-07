@@ -1,14 +1,32 @@
+import { cpSync, mkdirSync } from "node:fs";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { gatewayWorker as englishGateway, shardWorkers as englishShards } from "@ga/english-workers/workers";
 import { gatewayWorker as mathGateway, shardWorkers as mathShards } from "@ga/math-workers/workers";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
+
+/**
+ * embedAssets copies what the native apps' web views load (KaTeX's stylesheet
+ * and fonts, and MathLive) into public/embed, so that the Worker serves them.
+ */
+function embedAssets(): Plugin {
+  return {
+    name: "embed-assets",
+    buildStart() {
+      mkdirSync("public/embed", { recursive: true });
+      cpSync("node_modules/katex/dist/katex.min.css", "public/embed/katex.min.css");
+      cpSync("node_modules/katex/dist/fonts", "public/embed/fonts", { recursive: true });
+      cpSync("node_modules/mathlive/mathlive.min.js", "public/embed/mathlive.min.js");
+    },
+  };
+}
 
 export default defineConfig({
   server: { port: 5173 },
   plugins: [
+    embedAssets(),
     cloudflare({
       viteEnvironment: { name: "ssr" },
       // In development the subject Workers run alongside the web Worker; in production they are deployed on their own.
