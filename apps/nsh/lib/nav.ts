@@ -16,6 +16,9 @@ export type Route =
   | { name: "sign-up" }
   | { name: "forgot-password" }
   | { name: "delete-account" }
+  | { name: "privacy" }
+  | { name: "learners" }
+  | { name: "learner"; learnerId: string }
   | { name: "age" }
   | { name: "access" };
 

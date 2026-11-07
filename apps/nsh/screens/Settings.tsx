@@ -1,13 +1,15 @@
 import { type Appearance, CONTRASTS, type ColorScheme, PALETTES, type Palette, resolveColors, THEMES } from "@ga/design";
-import { colorScheme, openUrl, resource, Scroll, Text, View } from "nsh";
+import { Band } from "@ga/proto/privacy/v1/privacy_pb";
+import { Clipboard, colorScheme, openUrl, resource, Scroll, signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
 
 import { access, signOut } from "../lib/auth.ts";
-import { m } from "../lib/i18n.ts";
+import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, languageChoice } from "../lib/prefs.ts";
+import { dateOf, p } from "../lib/privacy-text.ts";
 import { API_URL, account } from "../lib/rpc.ts";
-import { barSpace, colors, Muted, Row, Section, Segmented } from "../lib/ui.tsx";
+import { barSpace, colors, ErrorNote, Muted, Quiet, Row, Section, Segmented } from "../lib/ui.tsx";
 
 function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean; onPress: () => void }) {
   const look = () => resolveColors({ ...appearance(), theme: props.scheme, [props.scheme]: props.palette } as Appearance, props.scheme);
@@ -40,6 +42,55 @@ function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean;
   );
 }
 
+/** InviteGuardian makes a code that lets a parent or teacher follow this learner, and shows it. */
+export function InviteGuardian() {
+  const made = signal<{ code: string; expiresAt: bigint }>();
+  const copied = signal(false);
+  const busy = signal(false);
+  const error = signal("");
+  const invite = async () => {
+    busy.set(true);
+    error.set("");
+    try {
+      made.set(await account.createGuardianInvite({}));
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  };
+  return (
+    <View style={{ gap: 8 }}>
+      <If when={made()} else={<Quiet label={p().inviteGuardian} disabled={busy()} onPress={() => void invite()} />}>
+        {(invite) => (
+          <View style={{ backgroundColor: colors()["accent-soft"], borderRadius: 12, gap: 4, padding: 12 }}>
+            <Text style={{ color: colors().ink, fontSize: 14 }}>{p().inviteCode(dateOf(invite().expiresAt))}</Text>
+            <Text
+              style={{
+                color: colors().ink,
+                fontFamily: "monospace",
+                fontSize: 22,
+                fontWeight: "700",
+                letterSpacing: 2,
+                userSelect: "text",
+              }}
+            >
+              {invite().code}
+            </Text>
+            <Quiet
+              label={copied() ? m().copied : m().copy}
+              onPress={() => void Clipboard.writeText(invite().code).then(() => copied.set(true))}
+            />
+          </View>
+        )}
+      </If>
+      <If when={error()}>
+        <ErrorNote message={error()} />
+      </If>
+    </View>
+  );
+}
+
 /** Me is the Me tab: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
 export function Me() {
   const settings = resource(({ signal }) => account.getSettings({}, { signal }));
@@ -58,6 +109,7 @@ export function Me() {
     <Scroll style={{ backgroundColor: colors().page, flex: 1 }}>
       <SettingsBody
         username={settings()?.username}
+        guardians={settings()?.guardians.map((guardian) => guardian.name)}
         managed={!!access()?.managed}
         scheme={colorScheme()}
         onAppearance={set}
@@ -70,6 +122,7 @@ export function Me() {
 /** SettingsBody is the content of the settings page, also shown as the Me tab. */
 export function SettingsBody(props: {
   username?: string;
+  guardians?: string[];
   managed: boolean;
   scheme: ColorScheme;
   onAppearance: (change: Partial<Appearance>) => void;
@@ -120,8 +173,18 @@ export function SettingsBody(props: {
         />
       </Section>
       <Section title={m().more}>
-        <Row title={m().privacy} detail={m().privacyDetail} onPress={() => void openWeb("/settings")} />
+        <Row title={m().privacy} detail={m().privacyDetail} onPress={() => nav.push({ name: "privacy" })} />
         <Row title={m().settingsOnWeb} detail={m().settingsOnWebDetail} onPress={() => void openWeb("/settings")} />
+      </Section>
+      <Section title={p().guardian}>
+        <Muted>{p().guardiansBody}</Muted>
+        <If when={(props.guardians ?? []).length > 0} else={<Muted>{p().noGuardians}</Muted>}>
+          <Each of={props.guardians ?? []}>{(name) => <Text style={{ color: colors().ink, fontSize: 15 }}>{name()}</Text>}</Each>
+        </If>
+        <InviteGuardian />
+        <If when={access()?.band === Band.ADULT}>
+          <Row title={p().guardedTitle} onPress={() => nav.push({ name: "learners" })} />
+        </If>
       </Section>
       <Section title={m().account}>
         <Row title={m().signOut} onPress={props.onSignOut} />

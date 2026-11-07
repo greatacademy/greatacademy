@@ -340,8 +340,8 @@ test("takes math as plain text and skips in the diagnostic without feedback", as
       }),
       [`POST ${learningUrl}/StartTask`]: json({ session: { ...session, question: question(0) } }),
       [`POST ${learningUrl}/GetSession`]: json({ session: { ...session, question: question(0) } }),
-      [`POST ${learningUrl}/SubmitAnswer`]: (request: { body: string }) => {
-        const body = JSON.parse(request.body) as { index?: number };
+      [`POST ${learningUrl}/SubmitAnswer`]: (request: { body?: string | null }) => {
+        const body = JSON.parse(request.body ?? "{}") as { index?: number };
         answers.push(body);
         return (body.index ?? 0) === 0
           ? json({ session: { ...session, answered: 1, question: question(1) } })
@@ -494,4 +494,93 @@ test("lists the learner's courses first, then the others by shelf", async () => 
   expect(shown.indexOf("My courses")).toBeLessThan(shown.indexOf("School"));
   expect(shown.indexOf("Geometry")).toBeLessThan(shown.indexOf("Other courses"));
   expect(shown.filter((t) => t === "Algebra")).toHaveLength(1);
+});
+
+test("turns a purpose on and, after asking, off on the privacy page", async () => {
+  const granted: string[] = [];
+  let on = false;
+  const app = await open("./App.tsx", {
+    storage: { "ga.session": "tok.sig" },
+    platform: "macos",
+    network: {
+      ...settingsNetwork,
+      [`POST ${privacyUrl}/ListConsents`]: () =>
+        json({
+          band: "BAND_TEEN",
+          scopes: [
+            { scope: "basic", inForce: true },
+            { scope: "writing", inForce: on, canGrant: !on },
+          ],
+        }),
+      [`POST ${privacyUrl}/GrantConsent`]: (request: { body?: string | null }) => {
+        granted.push((JSON.parse(request.body ?? "{}") as { scope: string }).scope);
+        on = true;
+        return json({});
+      },
+      [`POST ${privacyUrl}/WithdrawConsent`]: () => {
+        on = false;
+        return json({});
+      },
+    },
+  });
+  await app.press("text:Me");
+  await app.scroll("text:Contrast", 600);
+  await app.press("text:Privacy and your data");
+  await app.waitFor("text:AI-judged writing");
+  expect(app.texts()).toContain("Under 18");
+  await app.press("text:Turn on");
+  await app.waitUntil(() => granted.includes("writing"));
+  const asked: string[] = [];
+  app.onDialog((dialog) => {
+    asked.push(dialog.title ?? "");
+    return "Turn off";
+  });
+  await app.press("text:Turn off >> nth=1");
+  expect(asked).toEqual(["Turn this off?"]);
+  await app.waitFor("text:Turn on");
+});
+
+test("makes an invitation code while a guardian has to agree", async () => {
+  const app = await open("./App.tsx", {
+    storage: { "ga.session": "tok.sig" },
+    network: {
+      ...network,
+      ...accessIs("ACCESS_STATUS_NEEDS_GUARDIAN"),
+      [`POST ${accountUrl}/CreateGuardianInvite`]: json({ code: "ABCD1234", expiresAt: "1767225600000" }),
+    },
+  });
+  await app.waitFor("text:A guardian needs to agree first");
+  await app.press("text:Invite a guardian");
+  await app.waitFor("text:ABCD1234");
+});
+
+test("follows a learner with a code and sets their daily limit", async () => {
+  const limits: number[] = [];
+  const app = await open("./App.tsx", {
+    storage: { "ga.session": "tok.sig" },
+    platform: "macos",
+    network: {
+      ...settingsNetwork,
+      [`POST ${privacyUrl}/GetAccess`]: json({ status: "ACCESS_STATUS_OK", band: "BAND_ADULT" }),
+      [`POST ${accountUrl}/ListGuardedLearners`]: json({ learners: [] }),
+      [`POST ${accountUrl}/AcceptGuardianInvite`]: json({ learnerId: "kid1" }),
+      [`POST ${accountUrl}/GetGuardedLearner`]: json({ learner: { learnerId: "kid1", name: "kid", xp: { today: 5 } }, enrollments: [] }),
+      [`POST ${privacyUrl}/ListConsents`]: json({ band: "BAND_CHILD", managed: true, scopes: [{ scope: "basic", inForce: true }] }),
+      [`POST ${privacyUrl}/SetTimeLimit`]: (request: { body?: string | null }) => {
+        limits.push((JSON.parse(request.body ?? "{}") as { minutes: number }).minutes);
+        return json({});
+      },
+    },
+  });
+  await app.press("text:Me");
+  await app.scroll("text:Contrast", 1500);
+  await app.press("text:Learners you follow");
+  await app.waitFor("text:You are not following anyone yet.");
+  await app.type("label:Invitation code", "ABCD1234");
+  await app.press("role:button[Follow]");
+  await app.waitFor("text:Child account");
+  await app.scroll("text:Child account", 600);
+  await app.press("text:30");
+  await app.waitFor("text:Saved.");
+  expect(limits).toEqual([30]);
 });

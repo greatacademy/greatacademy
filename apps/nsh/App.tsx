@@ -19,7 +19,10 @@ import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { History } from "./screens/History.tsx";
 import { Home, PhoneTabs, Sidebar } from "./screens/Home.tsx";
 import { Learn } from "./screens/Learn.tsx";
+import { Learner } from "./screens/Learner.tsx";
+import { Learners } from "./screens/Learners.tsx";
 import { Player } from "./screens/Player.tsx";
+import { Privacy } from "./screens/Privacy.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
@@ -102,6 +105,12 @@ function App() {
               return <ForgotPassword />;
             case "delete-account":
               return <DeleteAccount />;
+            case "privacy":
+              return <Privacy />;
+            case "learners":
+              return <Learners />;
+            case "learner":
+              return <Learner learnerId={route.learnerId} />;
             case "age":
               return <Age />;
             case "access":

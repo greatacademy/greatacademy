@@ -235,6 +235,8 @@ const messages = {
     rushed: "Rushed",
     myCoursesNote: "Your courses, then every course by shelf",
     otherCourses: "Other courses",
+    copy: "Copy",
+    copied: "Copied",
   },
   "zh-CN": {
     account: "账号",
@@ -446,6 +448,8 @@ const messages = {
     rushed: "答得太快",
     myCoursesNote: "先是你的课程，然后按类别列出所有课程",
     otherCourses: "其他课程",
+    copy: "复制",
+    copied: "已复制",
   },
 } as const;
 
