@@ -77,13 +77,19 @@ cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173
 ```
 
-- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`、`RESEND_API_KEY` 和 `EMAIL_FROM`，本地从 `.dev.vars` 读取（已被 git 忽略）。`RESEND_API_KEY` 留空时，密码重置和验证邮件不会发出，而是写到控制台，可以从服务器输出里打开其中的链接。
+- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`、`RESEND_API_KEY`、`EMAIL_FROM` 和 `AI_KEYS_SECRET`，本地从 `.dev.vars` 读取（已被 git 忽略）；R2 存储桶 `GUARDIAN_FORMS`，开发时在本地；以及每日 Cron Trigger。`RESEND_API_KEY` 留空时，密码重置和验证邮件不会发出，而是写到控制台，可以从服务器输出里打开其中的链接。
 - `pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
 - `apps/web/vite.config.ts` 在开发时让学科 Worker 与 Web Worker 一起运行，所以 `web:dev` 不需要额外步骤。请通过 Nx 运行，它会先生成 manifest。
-- `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。部署前需创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，并设置密钥。
+- `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。部署前需创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，创建 R2 存储桶 `ga-guardian-forms`，并设置密钥。
 - 先部署学科：`pnpm nx run math-workers:deploy` 构建数学的 Worker，先部署分片，再部署网关；`pnpm nx run english-workers:deploy` 对英语做同样的事。之后再部署 Web Worker。
 
-试用方法：注册账号，选择“我自己学”，打开「代数基础」，选修，然后参加诊断或跳过。首页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
+管理后台位于 `/admin`。先在账号上以成年人身份回答年龄问题，再用 `pnpm nx run db:grant-admin -- <email>` 授予角色。每个市场一开始都不向未成年人开放，所以试用儿童账号之前要先在后台开放一个市场。在 `web:dev` 运行时，可以这样运行一次保存期限规则：
+
+```bash
+curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http://localhost:5173/cdn-cgi/local/explorer/api/local/scheduled?worker=ga-web'
+```
+
+试用方法：注册账号，回答年龄问题，选择“我自己学”，打开「代数基础」，选修，然后参加诊断或跳过。首页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
 
 ## 6. 运行移动应用
 

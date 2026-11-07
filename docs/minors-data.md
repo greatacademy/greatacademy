@@ -4,7 +4,7 @@
 
 This document specifies how Great Academy handles what minors write and say in its first markets: the United States, Canada, Australia, Singapore, Japan, South Korea, Taiwan, Hong Kong, Brazil and mainland China. It says who may use which feature, whose consent it takes, what is kept and for how long, and who receives it. Laws were read in November 2026.
 
-**Status.** None of this is built, and no lawyer has reviewed it. It is the engineering position that [E0.3](english-development-plan.md#2-stage-0-preparation) takes to counsel in each market. It is not legal advice. The numbers marked *starting* are ours, not the law's.
+**Status.** The age question, consent, guardian verification, deletion and retention are built for `basic`, and every market stays closed to minors until an administrator opens it ([Admin Console](admin.md)). No lawyer has reviewed any of this, and §13 lists what is still missing. It is the engineering position that [E0.3](english-development-plan.md#2-stage-0-preparation) takes to counsel in each market. It is not legal advice. The numbers marked *starting* are ours, not the law's.
 
 **Two markets differ from the rest.** Mainland China is closed to minors, by the owner's decision, because of legal and structural blocks (§5). Hong Kong opens without AI until a vendor that serves it is registered (§12).
 
@@ -138,8 +138,8 @@ Hosting abroad and serving minors anyway is not an option: it leaves the rules a
 
 | Method | Works for | Note |
 | :--- | :--- | :--- |
-| **Card or wallet transaction that notifies the holder** | US, Korea listed; "reasonable" elsewhere | The default. A payment processor handles the card; we store only the result |
-| **Signed form, scanned or mailed** | US, Korea listed; "reasonable" elsewhere | The fallback, and the method for the pilot |
+| **Card or wallet transaction that notifies the holder** | US, Korea listed; "reasonable" elsewhere | The intended default, once a payment processor is chosen. It handles the card; we store only the result |
+| **Signed form, scanned or mailed** | US, Korea listed; "reasonable" elsewhere | The fallback, the method for the pilot, and the only method built so far. A person reviews the upload, which is deleted once decided |
 | **Mobile identity check** | Korea | Added only if Korean guardians need it |
 
 Email plus is not used: it fails in the US once anything is disclosed, and two flows cost more than one. Whether one verification can cover scopes added later by the same signed-in guardian is a question for counsel.
@@ -280,17 +280,18 @@ These are candidates we have read about, not choices:
 
 - **`learner`** gains band, band end and country. A new append-only **`consent`** table holds §6.
 - **`markets`**, a pure data table in `libs/api`, gives each country its status, guardian age, allowed scopes and required notice languages. An unlisted country is closed to minors. Vendors are not in it: they are in the register of §12, which administrators maintain.
-- **One gate.** `StartTask` and every call that accepts text or audio ask `libs/api` for the learner's capabilities and refuse otherwise. `nextTasks` receives the allowed task kinds as data, so that the engine stays pure and subject-agnostic.
+- **One gate.** `StartTask` and every call that accepts text or audio ask `libs/api` for the learner's capabilities and refuse otherwise. A market's status is a rule in the code; whether it is open to minors is a switch in the [admin console](admin.md#4-markets). `nextTasks` receives the allowed task kinds as data, so that the engine stays pure and subject-agnostic, from E3 on: until then every task kind needs only `basic`.
 - **Retention and consent expiry** run from a daily Cron Trigger and are testable with an explicit time.
 - **Logs** hold ids, never responses or transcripts. A test feeds marked text through a task and asserts that it appears in no log or event.
 - **Staff access** to minors' text goes through an audited tool, not direct SQL in production.
+- **Withdrawing `basic`** stops study and empties the text of past answers. Progress stays until the account is deleted, or until the inactivity rule of §10 deletes it.
 
-**Gaps today.** Sign-up has no age question and needs a real name and email. There is no privacy notice or terms page. `answer.response` is kept forever, as plain text. Guardians are invited by the learner, and cannot delete. Locales are only English and Simplified Chinese. Account deletion does cascade to learner data, which is a good base.
+**Gaps today.** Card verification is not built, and the mobile app has neither the age question nor the consent screens, so a mobile account must answer on the web before it can study. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route, and no code calls a vendor yet: pi-ai and `tools/calibrate` arrive with E3.
 
 | Before | Needed | Size |
 | :--- | :--- | :--- |
 | **English pilot (E1.6)** | In one open market, not China: signed guardian forms stating purpose, access and deletion date; accounts made by the team, with pseudonyms; the notice in the market's language; reports read only by named people; data deleted at the stated date. No new code beyond the deletion | S |
-| **Public sign-up (any subject)** | §4 and §6 for `basic`, guardian verification, view, export and delete, retention for existing data, published pages, the impact assessment, leagues rules, translated legal text per market, representatives | XL |
+| **Public sign-up to minors (any subject)** | Counsel's review of the pages and rows, the impact assessment, translated legal text per market, representatives, card verification where wanted, the mobile age flow; then each market's switch | L |
 | **AI writing (E3)** | `writing` consent, §8, §9, vendor register, per-market check | M |
 | **Recording (E4)** | `speech` consent, §9, deletion test across R2 and transcripts, `research` form for E4.6 | M |
 | **Conversation (E5)** | `conversation` consent, safety review path, end-to-end test of no retention | M |

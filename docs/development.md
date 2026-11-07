@@ -77,13 +77,19 @@ cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173
 ```
 
-- `apps/web/cloudflare.config.ts` declares the Worker: the Hyperdrive binding `HYPERDRIVE`, whose `dev.connectionString` points at the container, and the secrets `BETTER_AUTH_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM`, read from `.dev.vars` locally (git-ignored). With `RESEND_API_KEY` empty, password-reset and verification emails are written to the console instead of sent, so the links can be opened from the server's output.
+- `apps/web/cloudflare.config.ts` declares the Worker: the Hyperdrive binding `HYPERDRIVE`, whose `dev.connectionString` points at the container, the secrets `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM` and `AI_KEYS_SECRET`, read from `.dev.vars` locally (git-ignored), the R2 bucket `GUARDIAN_FORMS`, which is local in development, and a daily Cron Trigger. With `RESEND_API_KEY` empty, password-reset and verification emails are written to the console instead of sent, so the links can be opened from the server's output.
 - `pnpm nx run web:typecheck` first runs `cf workers types`, which writes the `Env` declarations to `.cloudflare/types`.
 - `apps/web/vite.config.ts` runs the subject Workers alongside the web Worker in development, so `web:dev` needs nothing else. Run it through Nx, which generates the manifest first.
-- `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, and set the secret.
+- `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, create the R2 bucket `ga-guardian-forms`, and set the secrets.
 - Deploy subjects first: `pnpm nx run math-workers:deploy` builds the Workers of mathematics and deploys the shards, then the gateway, and `pnpm nx run english-workers:deploy` does the same for English. Then deploy the web Worker.
 
-To try it: create an account, choose "I'm learning myself", open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
+The admin console is at `/admin`. Answer the age question as an adult on an account, then grant it the role with `pnpm nx run db:grant-admin -- <email>`. Every market starts closed to minors, so open one there before trying a child's account. To run the retention rules once while `web:dev` is up:
+
+```bash
+curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http://localhost:5173/cdn-cgi/local/explorer/api/local/scheduled?worker=ga-web'
+```
+
+To try it: create an account, answer the age question, choose "I'm learning myself", open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
 
 ## 6. Running the Mobile App
 

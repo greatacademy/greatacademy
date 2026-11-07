@@ -54,7 +54,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
 | 移动端 | **Expo**（最新 SDK）、Expo Router、TanStack Query、**Uniwind**（React Native 版 Tailwind v4） | 与 Web 共用契约和 token |
-| 对象存储 | **R2** | 内容中的图片；生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)） |
+| 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
 
 ## 3. 仓库结构
 
@@ -147,12 +147,14 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 
 `/` 取决于访问者。未登录时是落地页，落地页也可通过 `/landing` 供所有人访问，并在服务端渲染。登录后，打开最近学习的课程的下一个任务；没有课程但有监护学习者的账号转到 `/guardian`，其他没有课程的账号会被问到谁来学习。服务端只凭会话 cookie 就能在两者之间选择，所以已登录的学习者不会看到落地页闪现。课程目录是单独的公开页面 `/courses`。
 
+`src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。
+
 监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
 
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`），用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体，并通过服务绑定连接每个学科的网关 Worker。
+  - Web Worker（`apps/web`），用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日 Cron Trigger 和加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`。
   - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
 - **开发：**
@@ -196,7 +198,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | 表 | 内容 |
 | :--- | :--- |
 | `user`、`session`、`account`、`verification` | better-auth 的核心 schema |
-| `learner` | 学习的人，每个用户一个：公开用户名、是否参加联赛、每周各天的目标 |
+| `learner` | 学习的人，每个用户一个：公开用户名、是否参加联赛、每周各天的目标、年龄段及其结束日期、国家或地区、账号是否由监护人管理、每日上限 |
 | `enrollment` | 学习者选修某课程 |
 | `event` | 每位学习者每个学科的引擎事件日志，用 `seq` 连续编号；保留 `xp` 用于报表 |
 | `learner_state` | 日志折叠到 `seq` 为止的快照；可通过重放重建 |
@@ -204,6 +206,9 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | `answer` | 每个判定过的作答：题目引用、作答、判定 |
 | `league_group`、`league_member` | 一周内按段位划分的小组及其成员；每周 XP 和结果都由 `event` 计算 |
 | `guardian`、`guardian_invite` | 谁在关注哪位学习者；一次性且 7 天后过期的邀请码 |
+| `consent`、`guardian_verification` | 按学习者和范围只追加的同意记录；谁证明了自己是监护人，表格的键只在等待决定时保留 |
+| `platform_admin`、`market_launch`、`admin_log` | 后台角色、各市场的开关及签字人、只追加的修改日志 |
+| `ai_provider`、`ai_route`、`calibration`、`vendor_check`、`notice` | 带加密密钥的 AI 供应商、各标准的路由、通过的校准、供应商登记表和通知版本 |
 
 **一致性。**
 - 完成一个会话时，追加事件、替换快照、关闭会话在同一个事务中完成。

@@ -63,6 +63,8 @@ A route that stops qualifying fails closed: judgment waits or moves to the calib
 
 **Notices.** A notice version names the vendors that may receive minors' data under consents to it. Publishing a version naming a new vendor does not reach anyone until they consent again. The text of notices lives in the code, with the pages at `/legal`, so that it goes through review.
 
+A market offers an AI scope once its rule allows AI and the current notice names a vendor of that kind with a live route and a valid entry there. Until then nobody is asked to consent to it.
+
 A minor's data reaches a vendor only if all of these hold:
 
 1. The learner's market is open to minors.

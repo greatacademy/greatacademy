@@ -54,7 +54,7 @@ This document describes the system as built: technology choices, repository stru
 | Email | **Resend**, called over HTTP from the Worker with the secrets `RESEND_API_KEY` and `EMAIL_FROM` | Password resets and address verification, in the learner's two languages; a Worker needs no SMTP client |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
 | Mobile | **Expo** (latest SDK), Expo Router, TanStack Query, **Uniwind** (Tailwind v4 for React Native) | Same contracts and tokens as the web app |
-| Object storage | **R2** | Images of content; generated figures are inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)) |
+| Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
 
 ## 3. Repository Structure
 
@@ -147,12 +147,14 @@ The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands re
 
 `/` depends on who is asking. Signed out, it is the landing page, also at `/landing` for everyone, and rendered on the server. Signed in, it opens on the next task of the course most recently worked on; an account with no course and a guarded learner goes to `/guardian`, and any other account with no course is asked who will be learning. A session cookie is enough to choose between the two on the server, so a signed-in learner never sees the landing page flash. The catalog is its own public page, `/courses`.
 
+`src/server.ts` is the Worker's entry: TanStack Start serves requests, and a daily Cron Trigger runs the retention rules of `libs/api/src/retention.ts`. `PrivacyService` carries the age question, consent, verification and deletion ([Minors' Data](minors-data.md)), and `requireStudy` in `libs/api/src/capabilities.ts` is the gate in front of `StartTask`. `AdminService` serves the console at `/admin` ([Admin Console](admin.md)) and refuses anyone without the role.
+
 A guardian reads a learner through the same read-only calls a learner uses: `GetDashboard`, `GetCourseProgress` and `ListSessions` take an optional `learner_id`, which is honored only for a learner the caller follows. Calls that change anything take no `learner_id`, and a guardian cannot open a session, so a learner's answers stay their own.
 
 ## 6. Deployment
 
 - **Production:**
-  - The web Worker (`apps/web`), deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL, an R2 binding for media, and a service binding to each subject's gateway Worker.
+  - The web Worker (`apps/web`), deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger, and the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys.
   - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
   - Migrations are applied with drizzle-kit before a deployment.
 - **Development:**
@@ -196,7 +198,7 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | Table | Contents |
 | :--- | :--- |
 | `user`, `session`, `account`, `verification` | better-auth's core schema |
-| `learner` | A person who studies, one per user: public username, league choice, weekday goals |
+| `learner` | A person who studies, one per user: public username, league choice, weekday goals, age band and its end, country, whether a guardian runs the account, daily limit |
 | `enrollment` | A learner in a course |
 | `event` | The engine's event log per learner and subject, numbered by `seq` without gaps; `xp` kept for reporting |
 | `learner_state` | Snapshot of the fold of the log up to `seq`; rebuildable by replay |
@@ -204,6 +206,9 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | `answer` | Every judged response: problem reference, response, verdict |
 | `league_group`, `league_member` | A week's groups by tier and who is in them; weekly XP and outcomes are computed from `event` |
 | `guardian`, `guardian_invite` | Who follows which learner; single-use invitation codes that expire after 7 days |
+| `consent`, `guardian_verification` | Append-only consents per learner and scope; who proved they are a guardian, with the form's key only while it awaits a decision |
+| `platform_admin`, `market_launch`, `admin_log` | The console's role, each market's switch with who signed off, and the append-only log of changes |
+| `ai_provider`, `ai_route`, `calibration`, `vendor_check`, `notice` | AI vendors with encrypted keys, routes per criterion, passing calibrations, the vendor register, and notice versions |
 
 **Consistency.**
 - Completing a session appends the event, replaces the snapshot and closes the session in one transaction.
