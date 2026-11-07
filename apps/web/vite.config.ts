@@ -31,7 +31,8 @@ function embedAssets(): Plugin {
 }
 
 export default defineConfig({
-  server: { port: 5173 },
+  // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server.
+  server: { port: 5173, host: process.env.DEV_HOST },
   plugins: [
     embedAssets(),
     cloudflare({

@@ -107,7 +107,7 @@ pnpm nx run nsh:ios                   # The iOS simulator; needs Xcode
 pnpm nx run nsh:android               # An emulator or device; needs the Android SDK and a JDK
 ```
 
-- `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173` under `nsh run`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`.
+- `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173` under `nsh run`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`. For an app packaged to a phone, start the web app with `DEV_HOST=0.0.0.0` and pass `--api-url http://<this machine's address>:5173`.
 - Screens live in `apps/nsh/screens`. `nsh:test` runs the app headless, with no simulator, and `nsh:typecheck` runs `nsh check`, which also generates `.nsh/types`.
 - The app signs in with a bearer token and keeps it in `Storage`. Consent, guardian tools, the progress map and the history are not in the app yet.
 - Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
