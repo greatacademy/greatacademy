@@ -8,7 +8,20 @@ import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { account } from "../lib/rpc.ts";
-import { Action, colors, ErrorNote, Field, FormPage, headerStyle, Muted, Saved, Skeleton, Title, Toggle } from "../lib/ui.tsx";
+import {
+  Action,
+  ConfirmField,
+  colors,
+  ErrorNote,
+  Field,
+  FormPage,
+  headerStyle,
+  Muted,
+  Saved,
+  Skeleton,
+  Title,
+  Toggle,
+} from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 /** SUGGESTED_GOALS is the week a learner without goals starts from: 30 XP on weekdays, the weekend free. */
@@ -313,6 +326,7 @@ export function League() {
 export function Password() {
   const current = signal("");
   const next = signal("");
+  const confirm = signal("");
   const busy = signal(false);
   const error = signal("");
   const saved = signal(false);
@@ -324,6 +338,7 @@ export function Password() {
       await changePassword(current(), next());
       current.set("");
       next.set("");
+      confirm.set("");
       saved.set(true);
     } catch (e) {
       error.set(errorText(e));
@@ -343,10 +358,11 @@ export function Password() {
         hint={m().passwordHint}
         autoComplete="new-password"
       />
+      <ConfirmField value={confirm()} password={next()} onChange={(v) => confirm.set(v)} />
       <If when={error()}>
         <ErrorNote message={error()} />
       </If>
-      <Action label={m().changePassword} disabled={busy() || !current() || !next()} onPress={() => void save()} />
+      <Action label={m().changePassword} disabled={busy() || !current() || !next() || confirm() !== next()} onPress={() => void save()} />
       <If when={saved()}>
         <Saved />
       </If>

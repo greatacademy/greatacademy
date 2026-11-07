@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { type FormEvent, type ReactNode, useState } from "react";
 
-import { field } from "../../components/AuthForm.tsx";
+import { field, NewPassword, PasswordField } from "../../components/AuthForm.tsx";
 import { GoalsEditor } from "../../components/GoalsEditor.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { PrivacySettings } from "../../components/PrivacySettings.tsx";
@@ -215,15 +215,8 @@ function Settings() {
 
       <Section title={m.changePassword}>
         <form onSubmit={savePassword} className="space-y-3">
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.currentPassword}</span>
-            <input name="current" type="password" required autoComplete="current-password" className={field} />
-          </label>
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.newPassword}</span>
-            <input name="next" type="password" required minLength={8} autoComplete="new-password" className={field} />
-            <span className="text-xs font-normal text-muted">{m.passwordHint}</span>
-          </label>
+          <PasswordField label={m.currentPassword} name="current" required autoComplete="current-password" />
+          <NewPassword label={m.newPassword} name="next" />
           {passwordState === "failed" && <ErrorNote message={m.error} />}
           <div className="flex items-center gap-3">
             <Button type="submit" variant="secondary">
@@ -240,10 +233,7 @@ function Settings() {
         ) : (
           <form onSubmit={deleteAccount} className="space-y-3">
             <p className="text-sm text-muted">{m.deleteBody}</p>
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{m.password}</span>
-              <input name="password" type="password" required autoComplete="current-password" className={field} />
-            </label>
+            <PasswordField label={m.password} name="password" required autoComplete="current-password" />
             {deleteError && <ErrorNote message={m.error} />}
             <button type="submit" className="rounded-lg border border-bad/40 px-4 py-2 text-sm font-medium text-bad hover:bg-bad-soft">
               {m.deleteAccount}

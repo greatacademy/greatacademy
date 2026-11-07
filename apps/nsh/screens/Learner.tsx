@@ -6,6 +6,7 @@ import { query } from "../lib/query.ts";
 import { account, catalog, privacy, timeZone } from "../lib/rpc.ts";
 import {
   Card,
+  ConfirmField,
   colors,
   ErrorNote,
   Field,
@@ -40,6 +41,7 @@ export function Learner(props: { learnerId: string }) {
   const note = signal("");
   const error = signal("");
   const password = signal("");
+  const again = signal("");
   const act = async (run: () => Promise<unknown>, done?: string) => {
     busy.set(true);
     error.set("");
@@ -158,13 +160,15 @@ export function Learner(props: { learnerId: string }) {
                         masked
                         autoComplete="new-password"
                       />
+                      <ConfirmField value={again()} password={password()} onChange={(v) => again.set(v)} />
                       <Quiet
                         label={p().save}
-                        disabled={busy() || password().length < 8}
+                        disabled={busy() || password().length < 8 || again() !== password()}
                         onPress={() =>
                           void act(async () => {
                             await privacy.resetChildPassword({ learnerId: props.learnerId, password: password() });
                             password.set("");
+                            again.set("");
                           }, p().saved)
                         }
                       />

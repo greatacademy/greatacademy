@@ -8,7 +8,7 @@ import { useI18n } from "../lib/i18n.tsx";
 import { errorText, usePrivacyText } from "../lib/privacy-text.ts";
 import { privacy } from "../lib/rpc.ts";
 import { type AgeAnswer, CountrySelect, MonthField } from "./AgeQuestion.tsx";
-import { field } from "./AuthForm.tsx";
+import { field, NewPassword } from "./AuthForm.tsx";
 import { Button, Card, ErrorNote } from "./ui.tsx";
 
 /** GuardianTools lets an adult verify as a guardian, then add a child's account. */
@@ -97,10 +97,7 @@ export function GuardianTools() {
           <input name="username" required minLength={3} maxLength={20} pattern="[a-z0-9_\-]+" autoComplete="off" className={field} />
           <span className="block text-xs font-normal text-muted">{t.childUsernameHint}</span>
         </label>
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.childPassword}</span>
-          <input name="password" type="password" required minLength={8} autoComplete="new-password" className={field} />
-        </label>
+        <NewPassword label={t.childPassword} />
         <CountrySelect label={t.country} name="country" />
         <MonthField />
         {add.isError && <ErrorNote message={errorText(add.error, locale, m.error)} />}

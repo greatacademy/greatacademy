@@ -10,7 +10,7 @@ import { type AgeAnswer, signUp } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { afterSignUp, nav } from "../lib/nav.ts";
 import { API_URL, privacy } from "../lib/rpc.ts";
-import { Action, colors, ErrorNote, Field, FormPage, headerStyle, Muted, Quiet, Title } from "../lib/ui.tsx";
+import { Action, ConfirmField, colors, ErrorNote, Field, FormPage, headerStyle, Muted, Quiet, Title } from "../lib/ui.tsx";
 import { AgeForm } from "./AgeForm.tsx";
 import { Header } from "./Header.tsx";
 
@@ -116,9 +116,11 @@ function AccountForm(props: { age: AgeAnswer; teen: boolean; parent: boolean; on
   const name = signal("");
   const email = signal("");
   const password = signal("");
+  const confirm = signal("");
   const busy = signal(false);
   const error = signal("");
-  const complete = () => (props.teen || name().trim() !== "") && email().includes("@") && password().length >= 8;
+  const complete = () =>
+    (props.teen || name().trim() !== "") && email().includes("@") && password().length >= 8 && confirm() === password();
 
   async function submit() {
     error.set("");
@@ -151,6 +153,7 @@ function AccountForm(props: { age: AgeAnswer; teen: boolean; parent: boolean; on
         autoComplete="new-password"
         hint={m().passwordHint}
       />
+      <ConfirmField value={confirm()} password={password()} onChange={(v) => confirm.set(v)} />
       <If when={error()}>
         <ErrorNote message={error()} />
       </If>

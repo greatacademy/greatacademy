@@ -5,7 +5,7 @@ import { type FormEvent, useState } from "react";
 import { useI18n } from "../lib/i18n.tsx";
 import { errorText, usePrivacyText } from "../lib/privacy-text.ts";
 import { privacy } from "../lib/rpc.ts";
-import { field } from "./AuthForm.tsx";
+import { field, NewPassword } from "./AuthForm.tsx";
 import { downloadJson } from "./PrivacySettings.tsx";
 import { ScopeRow } from "./ScopeRow.tsx";
 import { Button, Card, ErrorNote } from "./ui.tsx";
@@ -109,10 +109,7 @@ export function LearnerPrivacy({ learnerId, name }: { learnerId: string; name: s
       {managed && (
         <>
           <form onSubmit={savePassword} className="space-y-2 border-t border-line pt-4">
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{t.resetPassword}</span>
-              <input name="password" type="password" required minLength={8} autoComplete="new-password" className={field} />
-            </label>
+            <NewPassword label={t.resetPassword} hint={false} />
             <Button type="submit" variant="secondary" disabled={password.isPending}>
               {m.save}
             </Button>

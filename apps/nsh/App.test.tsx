@@ -263,8 +263,25 @@ test("takes a parent who signs up on to their learners", async () => {
   await app.type("label:Name", "Parent");
   await app.type("label:Email", "p@example.test");
   await app.type("label:Password", "correct horse");
+  await app.type("label:Confirm password", "correct horse");
   await app.press("role:button[Create account]");
   await app.waitFor("text:Learners you follow");
+});
+
+test("asks for the password twice and shows it on request", async () => {
+  const app = await open("./App.tsx", {
+    network: { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_ADULT" }) },
+  });
+  await app.press("text:Get started");
+  await app.press("label:Me");
+  await answerAge(app, "1990");
+  await app.type("label:Name", "Test");
+  await app.type("label:Email", "a@example.test");
+  await app.type("label:Password", "correct horse");
+  await app.type("label:Confirm password", "correct hose");
+  await app.waitFor("text:The two passwords are not the same.");
+  await app.press("label:Show password >> nth=0");
+  await app.waitFor("label:Hide password");
 });
 
 test("asks a teen for no real name", async () => {
@@ -304,6 +321,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
   await app.type("label:Name", "Test");
   await app.type("label:Email", "a@example.test");
   await app.type("label:Password", "correct horse");
+  await app.type("label:Confirm password", "correct horse");
   await app.press("role:button[Create account]");
   await app.waitFor("text:Learn");
   expect(app.shows("Before you start")).toBe(false);

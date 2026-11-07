@@ -28,6 +28,8 @@ import { Button, Input, Popover, Select, Sheet, Switch } from "nsh/base";
 
 import caretDown from "../assets/caret-down.svg";
 import check from "../assets/check.svg";
+import eye from "../assets/eye.svg";
+import eyeSlash from "../assets/eye-slash.svg";
 import logo from "../assets/logo.svg";
 import { language, m } from "./i18n.ts";
 import { nav, WELCOME } from "./nav.ts";
@@ -236,7 +238,7 @@ export const fieldStyle = () => ({
   paddingVertical: 10,
 });
 
-/** Field is a labelled text input; props beyond these pass to the native field. */
+/** Field is a labelled text input; a masked one has a button at its end that shows or hides what was typed. */
 export function Field(props: {
   label: string;
   value: string;
@@ -246,22 +248,58 @@ export function Field(props: {
   keyboardType?: "default" | "email-address" | "number-pad";
   autoComplete?: "email" | "username" | "name" | "current-password" | "new-password" | "off";
 }) {
+  const shown = signal(false);
   return (
     <View style={{ gap: 6 }}>
       <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>{props.label}</Text>
-      <Input
-        accessibilityLabel={props.label}
-        value={props.value}
-        onChange={({ value }) => props.onChange(value)}
-        masked={props.masked}
-        keyboardType={props.keyboardType}
-        autoComplete={props.autoComplete}
-        autoCapitalize={props.autoComplete === "name" ? "words" : "none"}
-        autoCorrect={false}
-        style={fieldStyle()}
-      />
+      <View>
+        <Input
+          accessibilityLabel={props.label}
+          value={props.value}
+          onChange={({ value }) => props.onChange(value)}
+          masked={props.masked && !shown()}
+          keyboardType={props.keyboardType}
+          autoComplete={props.autoComplete}
+          autoCapitalize={props.autoComplete === "name" ? "words" : "none"}
+          autoCorrect={false}
+          style={{ ...fieldStyle(), paddingRight: props.masked ? 44 : 12 }}
+        />
+        <If when={props.masked}>
+          <View
+            role="button"
+            accessibilityLabel={shown() ? m().hidePassword : m().showPassword}
+            tooltip={shown() ? m().hidePassword : m().showPassword}
+            onPress={() => shown.set(!shown())}
+            hoverStyle={{ backgroundColor: colors()["accent-soft"] }}
+            style={{
+              alignItems: "center",
+              borderRadius: 6,
+              bottom: 5,
+              justifyContent: "center",
+              position: "absolute",
+              right: 6,
+              top: 5,
+              width: 32,
+            }}
+          >
+            <Image src={shown() ? eyeSlash : eye} style={{ height: 20, tintColor: colors().muted, width: 20 }} />
+          </View>
+        </If>
+      </View>
       <If when={props.hint}>
         <Muted>{props.hint}</Muted>
+      </If>
+    </View>
+  );
+}
+
+/** ConfirmField asks for a new password again and says so while it differs from the first. */
+export function ConfirmField(props: { value: string; password: string; onChange: (value: string) => void }) {
+  return (
+    <View style={{ gap: 6 }}>
+      <Field label={m().confirmPassword} value={props.value} onChange={props.onChange} masked autoComplete="new-password" />
+      <If when={props.value !== "" && props.value !== props.password}>
+        <Text style={{ color: colors().bad, fontSize: 14 }}>{m().passwordsDiffer}</Text>
       </If>
     </View>
   );

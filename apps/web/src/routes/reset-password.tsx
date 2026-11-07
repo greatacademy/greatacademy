@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 
-import { field } from "../components/AuthForm.tsx";
+import { NewPassword } from "../components/AuthForm.tsx";
 import { Button, Card, ErrorNote } from "../components/ui.tsx";
 import { authClient } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
@@ -31,11 +31,7 @@ function ResetPassword() {
       {state === "invalid" && <ErrorNote message={m.resetInvalid} />}
       {(state === "idle" || state === "busy") && (
         <form onSubmit={submit} className="space-y-4">
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.newPassword}</span>
-            <input name="password" type="password" required minLength={8} autoComplete="new-password" className={field} />
-            <span className="text-xs font-normal text-muted">{m.passwordHint}</span>
-          </label>
+          <NewPassword label={m.newPassword} />
           <Button type="submit" disabled={state === "busy"} className="w-full py-2.5">
             {m.saveNewPassword}
           </Button>
