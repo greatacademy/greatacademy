@@ -24,7 +24,7 @@ import {
   View,
   type ViewStyle,
 } from "nsh";
-import { Button, Input, Select, Sheet, Switch } from "nsh/base";
+import { Button, Input, Popover, Select, Sheet, Switch } from "nsh/base";
 
 import caretDown from "../assets/caret-down.svg";
 import check from "../assets/check.svg";
@@ -344,14 +344,16 @@ function PickCell(props: { title: string; label?: string; chosen: boolean; onPre
       role="button"
       accessibilityLabel={props.label ?? props.title}
       onPress={props.onPress}
+      hoverStyle={props.chosen ? undefined : { backgroundColor: colors()["accent-soft"] }}
+      activeStyle={props.chosen ? undefined : { backgroundColor: colors()["accent-soft"] }}
       style={{
-        backgroundColor: props.chosen ? colors().accent : colors()["accent-soft"],
+        backgroundColor: props.chosen ? colors().accent : "transparent",
         borderRadius: 8,
         color: props.chosen ? "#ffffff" : colors().ink,
         flexBasis: "22%",
         flexGrow: 1,
-        fontSize: 16,
-        paddingVertical: 12,
+        fontSize: platform.desktop ? 14 : 16,
+        paddingVertical: platform.desktop ? 8 : 12,
         textAlign: "center",
       }}
     >
@@ -360,13 +362,18 @@ function PickCell(props: { title: string; label?: string; chosen: boolean; onPre
   );
 }
 
+/** MONTH_POPUP_WIDTH is the least width of the month picker's popup on the desktops, as the web's. */
+const MONTH_POPUP_WIDTH = 256;
+
 /**
- * MonthField picks a month of a year, and no day: a field that opens a sheet of the years, newest first, then of
- * the months of the year picked. It starts empty and suggests nothing.
+ * MonthField picks a month of a year, and no day: a field that opens the years, newest first, then the months of the
+ * year picked, in a popup below the field on the desktops and a sheet on phones and tablets. It starts empty and
+ * suggests nothing.
  */
 export function MonthField(props: { label: string; value: MonthOfYear | null; onChange: (value: MonthOfYear) => void }) {
   const open = signal(false);
   const year = signal<number | null>(null);
+  const width = signal(MONTH_POPUP_WIDTH);
   const thisYear = new Date().getFullYear();
   const years = Array.from({ length: YEARS_BACK + 1 }, (_, i) => thisYear - i);
   const locale = () => (language() === "zh-CN" ? "zh-CN" : "en");
@@ -378,81 +385,118 @@ export function MonthField(props: { label: string; value: MonthOfYear | null; on
           Date.UTC(props.value.year, props.value.month - 1, 1),
         )
       : undefined;
-  const show = () => {
-    year.set(null);
-    open.set(true);
+  const setOpen = (next: boolean) => {
+    if (next) year.set(null);
+    open.set(next);
   };
+  const field = (onPress?: () => void) => (
+    <View
+      role="button"
+      accessibilityLabel={props.label}
+      accessibilityValue={{ text: title() ?? m().choose }}
+      onPress={onPress}
+      onLayout={({ bounds }) => width.set(Math.max(MONTH_POPUP_WIDTH, bounds.size.width))}
+      style={pickerStyle()}
+    >
+      <Text style={{ color: title() ? colors().ink : colors().muted, flexShrink: 1, fontSize: 16 }}>{title() ?? m().choose}</Text>
+      <Chevron />
+    </View>
+  );
+  const picker = () => (
+    <>
+      <View style={{ alignItems: "center", flexDirection: "row", gap: 12, minHeight: platform.desktop ? 24 : 32 }}>
+        <If when={year()}>
+          {(picked) => (
+            <Text role="button" onPress={() => year.set(null)} style={{ color: colors().accent, fontSize: platform.desktop ? 14 : 16 }}>
+              {`‹ ${picked()}`}
+            </Text>
+          )}
+        </If>
+        <Text style={{ color: colors().ink, flex: 1, fontSize: platform.desktop ? 14 : 17, fontWeight: "600" }}>
+          {year() === null ? m().pickYear : m().pickMonth}
+        </Text>
+      </View>
+      <If
+        when={year()}
+        else={
+          <Scroll style={{ flexShrink: 1, maxHeight: platform.desktop ? 256 : undefined }}>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+              <Each of={years}>
+                {(each) => <PickCell title={String(each())} chosen={props.value?.year === each()} onPress={() => year.set(each())} />}
+              </Each>
+            </View>
+          </Scroll>
+        }
+      >
+        {(picked) => (
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+            <Each of={Array.from({ length: 12 }, (_, i) => i + 1)}>
+              {(month) => (
+                <PickCell
+                  title={monthName(month(), "short")}
+                  label={monthName(month(), "long")}
+                  chosen={props.value?.year === picked() && props.value?.month === month()}
+                  onPress={() => {
+                    props.onChange({ year: picked(), month: month() });
+                    open.set(false);
+                  }}
+                />
+              )}
+            </Each>
+          </View>
+        )}
+      </If>
+    </>
+  );
   return (
     <View style={{ gap: 6 }}>
       <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>{props.label}</Text>
-      <View
-        role="button"
-        accessibilityLabel={props.label}
-        accessibilityValue={{ text: title() ?? m().choose }}
-        onPress={show}
-        style={pickerStyle()}
+      <If
+        when={platform.desktop}
+        else={
+          <>
+            {field(() => setOpen(true))}
+            <Sheet
+              open={open()}
+              onOpenChange={({ open: next }) => open.set(next)}
+              closeOnSwipe
+              popupStyle={{
+                backgroundColor: colors().page,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                gap: 12,
+                maxHeight: "70%",
+                padding: 16,
+                paddingBottom: 16 + insets().bottom,
+              }}
+              backdropStyle={{ backgroundColor: "#00000066" }}
+            >
+              {picker()}
+            </Sheet>
+          </>
+        }
       >
-        <Text style={{ color: title() ? colors().ink : colors().muted, flexShrink: 1, fontSize: 16 }}>{title() ?? m().choose}</Text>
-        <Chevron />
-      </View>
-      <Sheet
-        open={open()}
-        onOpenChange={({ open: next }) => open.set(next)}
-        closeOnSwipe
-        popupStyle={{
-          backgroundColor: colors().page,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-          gap: 12,
-          maxHeight: "70%",
-          padding: 16,
-          paddingBottom: 16 + insets().bottom,
-        }}
-        backdropStyle={{ backgroundColor: "#00000066" }}
-      >
-        <View style={{ alignItems: "center", flexDirection: "row", gap: 12, minHeight: 32 }}>
-          <If when={year()}>
-            {(picked) => (
-              <Text role="button" onPress={() => year.set(null)} style={{ color: colors().accent, fontSize: 16 }}>
-                {`‹ ${picked()}`}
-              </Text>
-            )}
-          </If>
-          <Text style={{ color: colors().ink, flex: 1, fontSize: 17, fontWeight: "600" }}>
-            {year() === null ? m().pickYear : m().pickMonth}
-          </Text>
-        </View>
-        <If
-          when={year()}
-          else={
-            <Scroll style={{ flexShrink: 1 }}>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-                <Each of={years}>
-                  {(each) => <PickCell title={String(each())} chosen={props.value?.year === each()} onPress={() => year.set(each())} />}
-                </Each>
-              </View>
-            </Scroll>
-          }
+        <Popover
+          open={open()}
+          onOpenChange={({ open: next }) => setOpen(next)}
+          placement="bottom"
+          align="start"
+          offset={4}
+          margin={8}
+          popupStyle={{
+            backgroundColor: colors().surface,
+            borderColor: colors().line,
+            borderRadius: 12,
+            borderWidth: 1,
+            gap: 12,
+            padding: 12,
+            width: width(),
+          }}
+          trigger={field()}
         >
-          {(picked) => (
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-              <Each of={Array.from({ length: 12 }, (_, i) => i + 1)}>
-                {(month) => (
-                  <PickCell
-                    title={monthName(month(), "short")}
-                    label={monthName(month(), "long")}
-                    chosen={props.value?.year === picked() && props.value?.month === month()}
-                    onPress={() => {
-                      props.onChange({ year: picked(), month: month() });
-                      open.set(false);
-                    }}
-                  />
-                )}
-              </Each>
-            </View>
-          )}
-        </If>
-      </Sheet>
+          {picker()}
+        </Popover>
+      </If>
     </View>
   );
 }
