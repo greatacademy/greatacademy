@@ -33,6 +33,7 @@ import {
 } from "@ga/engine";
 import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
+import { requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
 import { joinLeague } from "./league.ts";
@@ -93,6 +94,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     const c = await course(courseId);
     if (guardedId && !(await isGuardian(db, userId, guardedId))) throw new ConnectError("no such learner", Code.NotFound);
     const learnerId = guardedId || (await learnerFor(db, userId));
+    if (!guardedId) await requireStudy(db, learnerId, deps.now());
     if (!(await isEnrolled(db, learnerId, courseId))) throw new ConnectError(`not enrolled in ${courseId}`, Code.FailedPrecondition);
     return { db, c, learnerId };
   };
@@ -144,7 +146,9 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     async enroll(req, ctx) {
       const { db, userId } = auth(ctx);
       const c = await course(req.courseId);
-      await enroll(db, await learnerFor(db, userId), c.subject.def.id, c.id);
+      const learnerId = await learnerFor(db, userId);
+      await requireStudy(db, learnerId, deps.now());
+      await enroll(db, learnerId, c.subject.def.id, c.id);
       return {};
     },
 
@@ -248,9 +252,13 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     async startTask(req, ctx) {
       const { db, c, learnerId } = await enrolled(ctx, req.courseId);
       const now = deps.now();
+      const { age } = await requireStudy(db, learnerId, now);
+      const timeLimit = age.dailyMinutes;
       const row = await db.transaction(async (tx) => {
         const active = await activeSession(tx, learnerId, c.id);
         if (active) return active;
+        if (timeLimit !== null && (await studiedToday(tx, learnerId, now, req.timeZone)) >= timeLimit * 60_000)
+          throw new ConnectError("today's study time is used up", Code.ResourceExhausted);
         const { state: s } = await state(tx, learnerId, c, true);
         const task = nextTasks(c.planner, s, now).find((t) => sameTask(req.task, t));
         if (!task) throw new ConnectError("that task is not offered now", Code.FailedPrecondition);
@@ -284,6 +292,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     async getSession(req, ctx) {
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
+      await requireStudy(db, learnerId, deps.now());
       const row = await getSession(db, learnerId, req.id);
       if (!row) throw new ConnectError("no such session", Code.NotFound);
       return { session: await view(db, learnerId, row) };
@@ -293,6 +302,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
       const now = deps.now();
+      await requireStudy(db, learnerId, now);
       const { row, answered } = await db.transaction(async (tx) => {
         const row = await getSession(tx, learnerId, req.sessionId, true);
         if (!row) throw new ConnectError("no such session", Code.NotFound);

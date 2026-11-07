@@ -461,6 +461,9 @@ importers:
       '@types/node':
         specifier: 26.6.3
         version: 26.6.3
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@electric-sql/pglite@0.5.13)(kysely@0.29.7)(postgres@3.4.9)
       typescript:
         specifier: 7.0.2
         version: 7.0.2

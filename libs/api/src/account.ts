@@ -10,6 +10,7 @@ import {
   guardiansOf,
   isGuardian,
   lastSession,
+  learnerAge,
   learnerFor,
   learnerSettings,
   leaveWeek,
@@ -54,6 +55,12 @@ function auth(ctx: HandlerContext): { db: Db; userId: string } {
   const userId = ctx.values.get(userIdKey);
   if (!userId) throw new ConnectError("sign in first", Code.Unauthenticated);
   return { db, userId };
+}
+
+/** refuseChild stops what a child's account may not do: public names, leagues, and dropping a guardian. */
+async function refuseChild(db: Db, learnerId: string): Promise<void> {
+  if ((await learnerAge(db, learnerId)).band === "child")
+    throw new ConnectError("not available on a child's account", Code.PermissionDenied);
 }
 
 function checkGoals(goals: { weekdays: readonly number[]; paused: boolean } | undefined): { goals: number[] | null; goalsPaused: boolean } {
@@ -142,6 +149,7 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
     async setUsername(req, ctx) {
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
+      await refuseChild(db, learnerId);
       const username = normalUsername(req.username);
       if (await usernameTaken(db, learnerId, username)) throw new ConnectError("that username is taken", Code.AlreadyExists);
       await updateLearnerSettings(db, learnerId, { username });
@@ -152,6 +160,7 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
       const now = deps.now();
+      if (req.enabled) await refuseChild(db, learnerId);
       const { username } = await learnerSettings(db, learnerId);
       if (req.enabled && !username) throw new ConnectError("choose a username first", Code.FailedPrecondition);
       await updateLearnerSettings(db, learnerId, { leagues: req.enabled });
@@ -199,14 +208,18 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const { db, userId } = auth(ctx);
       const learnerId = await takeGuardianInvite(db, req.code.trim().toUpperCase(), new Date(deps.now()));
       if (!learnerId) throw new ConnectError("that code is not valid", Code.NotFound);
-      if (learnerId === (await learnerFor(db, userId))) throw new ConnectError("you cannot be your own guardian", Code.InvalidArgument);
+      const own = await learnerFor(db, userId);
+      if (learnerId === own) throw new ConnectError("you cannot be your own guardian", Code.InvalidArgument);
+      if ((await learnerAge(db, own)).band !== "adult") throw new ConnectError("only an adult can be a guardian", Code.PermissionDenied);
       await addGuardian(db, userId, learnerId);
       return { learnerId };
     },
 
     async removeGuardian(req, ctx) {
       const { db, userId } = auth(ctx);
-      await removeGuardian(db, req.userId, await learnerFor(db, userId));
+      const learnerId = await learnerFor(db, userId);
+      await refuseChild(db, learnerId);
+      await removeGuardian(db, req.userId, learnerId);
       return {};
     },
 
