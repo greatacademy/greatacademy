@@ -59,7 +59,7 @@ export function Progress(props: { visible: () => boolean }) {
                   return (
                     <View
                       role="button"
-                      onPress={() => nav.push({ name: "learn", courseId: enrollment().courseId })}
+                      onPress={() => nav.push({ name: "map", courseId: enrollment().courseId })}
                       style={{
                         backgroundColor: colors().surface,
                         borderColor: colors().line,

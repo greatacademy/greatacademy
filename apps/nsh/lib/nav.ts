@@ -9,6 +9,8 @@ export type Route =
   | { name: "courses" }
   | { name: "course"; courseId: string }
   | { name: "learn"; courseId: string }
+  | { name: "map"; courseId: string }
+  | { name: "history"; courseId: string }
   | { name: "session"; sessionId: string }
   | { name: "sign-in" }
   | { name: "sign-up" }

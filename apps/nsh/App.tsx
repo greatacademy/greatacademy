@@ -11,10 +11,12 @@ import { barSpace, colors, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Age } from "./screens/Age.tsx";
+import { CourseMap } from "./screens/CourseMap.tsx";
 import { CourseOutline } from "./screens/CourseOutline.tsx";
 import { Courses } from "./screens/Courses.tsx";
 import { DeleteAccount } from "./screens/DeleteAccount.tsx";
 import { ForgotPassword } from "./screens/ForgotPassword.tsx";
+import { History } from "./screens/History.tsx";
 import { Home, PhoneTabs, Sidebar } from "./screens/Home.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Player } from "./screens/Player.tsx";
@@ -86,6 +88,10 @@ function App() {
               return <CourseOutline courseId={route.courseId} />;
             case "learn":
               return <Learn courseId={route.courseId} />;
+            case "map":
+              return <CourseMap courseId={route.courseId} />;
+            case "history":
+              return <History courseId={route.courseId} />;
             case "session":
               return <Player sessionId={route.sessionId} />;
             case "sign-in":

@@ -5,7 +5,7 @@ import { NavPage } from "nsh/base";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
-import { colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
+import { colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll, Row, Section } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 
@@ -96,6 +96,18 @@ export function Learn(props: { courseId: string }) {
                     </If>
                   )}
                 </If>
+                <Section title={m().tabProgress}>
+                  <Row
+                    title={m().progressMap}
+                    detail={m().progressMapDetail}
+                    onPress={() => nav.push({ name: "map", courseId: props.courseId })}
+                  />
+                  <Row
+                    title={m().history}
+                    detail={m().historyDetail}
+                    onPress={() => nav.push({ name: "history", courseId: props.courseId })}
+                  />
+                </Section>
               </View>
             </PullScroll>
           )}

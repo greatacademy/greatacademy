@@ -439,5 +439,59 @@ test("switches tabs from the sidebar and its shortcuts on a desktop", async () =
   await app.keyboard.press("mod+2");
   await app.waitFor("text:The last 14 days");
   await app.press("text:Courses");
-  await app.waitFor("text:Solve equations");
+  await app.waitFor("text:1 / 2 topics");
+});
+
+test("shows the progress map and the history of a course", async () => {
+  const app = await open(
+    "./App.tsx",
+    signedIn({
+      [`POST ${learningUrl}/GetDashboard`]: json({
+        courseId: "algebra",
+        diagnosed: true,
+        tasks: [],
+        stats: { learned: 1, total: 2 },
+        xp: {},
+      }),
+      [`POST ${learningUrl}/GetCourseProgress`]: json({ topics: [{ topicId: "linear", status: "TOPIC_STATUS_LEARNED", memory: 0.8 }] }),
+      [`POST ${learningUrl}/ListSessions`]: json({
+        sessions: [{ id: "s1", task: lessonTask, completedAt: "1767225600000", passed: true, correct: 3, asked: 3, xp: 10, fullXp: 10 }],
+      }),
+    }),
+  );
+  await app.press("text:Open the course");
+  await app.press("text:Progress map");
+  await app.waitFor("text:Memory 80%");
+  expect(app.texts()).toContain("Linear equations");
+  expect(app.texts()).toContain("Learned 1");
+  await app.back();
+  await app.press("text:History");
+  await app.waitFor("text:+10 XP");
+  expect(app.texts()).toContain("3 of 3 correct");
+});
+
+test("lists the learner's courses first, then the others by shelf", async () => {
+  const course = (id: string, title: string, group?: string) => ({
+    id,
+    title: text(title, title),
+    description: text("About it", "简介"),
+    subjectTitle: text("Mathematics", "数学"),
+    topicCount: 3,
+    ...(group ? { group: text(group, group) } : {}),
+  });
+  const app = await open("./App.tsx", {
+    ...signedIn({
+      [`POST ${url}/ListCourses`]: json({
+        courses: [course("algebra", "Algebra", "School"), course("geometry", "Geometry", "School"), course("logic", "Logic")],
+      }),
+      [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }),
+    }),
+    platform: "macos",
+  });
+  await app.press("text:Courses");
+  await app.waitFor("text:My courses");
+  const shown = app.texts();
+  expect(shown.indexOf("My courses")).toBeLessThan(shown.indexOf("School"));
+  expect(shown.indexOf("Geometry")).toBeLessThan(shown.indexOf("Other courses"));
+  expect(shown.filter((t) => t === "Algebra")).toHaveLength(1);
 });
