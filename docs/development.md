@@ -113,4 +113,5 @@ pnpm nx run nsh:android               # An emulator or device; needs the Android
 - Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
 - `nsh test` does not run web views, so plots and the math field have no headless test.
 - A page in a web view that cannot load the KaTeX stylesheet shows each formula's MathML instead. On `--target web` the page is a sandboxed frame without an origin, so `/embed` allows any origin. Some embedded browsers, such as the Claude desktop app's browser pane, refuse every request from a sandboxed frame, so check math in a regular browser or on a native target.
+- A desktop window does not stay under 420 by 600 points (`lib/window.ts`): Native Shell has no minimum size for a TSX app, so the window moves back once a drag passes the limit.
 - `nsh package apps/nsh --target <target>` builds an installable app. Shipping needs a production `API_URL`, which is not set yet.

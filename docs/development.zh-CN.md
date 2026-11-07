@@ -113,4 +113,5 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
 - `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
+- 桌面窗口不会一直小于 420×600 点（`lib/window.ts`）：Native Shell 没有为 TSX 应用提供最小窗口尺寸，所以拖动超过下限后窗口会弹回。
 - `nsh package apps/nsh --target <target>` 构建安装包。发布前需要生产环境的 `API_URL`，目前还没有设置。

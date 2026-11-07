@@ -5,6 +5,7 @@ import { NavStack } from "nsh/base";
 import { access } from "./lib/auth.ts";
 import { ACCESS, AGE, COURSES, nav } from "./lib/nav.ts";
 import { restoreToken, token } from "./lib/session.ts";
+import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Account } from "./screens/Account.tsx";
 import { Age } from "./screens/Age.tsx";
@@ -16,6 +17,7 @@ import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
 
 void restoreToken();
+keepWindowLarge();
 
 // Keeps the stack on what the account may see: the age question and the access page have no way past them.
 effect(() => {
