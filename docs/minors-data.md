@@ -6,7 +6,7 @@ This document specifies how Great Academy handles what minors write and say in i
 
 **Status.** None of this is built, and no lawyer has reviewed it. It is the engineering position that [E0.3](english-development-plan.md#2-stage-0-preparation) takes to counsel in each market. It is not legal advice. The numbers marked *starting* are ours, not the law's.
 
-**Two markets cannot launch on this design alone.** Mainland China has legal and structural blocks to serving minors (§5). In Hong Kong, the AI vendors we know do not serve users (§12).
+**Two markets differ from the rest.** Mainland China is closed to minors, by the owner's decision, because of legal and structural blocks (§5). Hong Kong opens without AI until a vendor that serves it is registered (§12).
 
 ## 1. Principles
 
@@ -106,7 +106,7 @@ A market not listed is closed to minors. The European Union and the United Kingd
 
 ## 5. Mainland China
 
-**Finding: the current product and company cannot lawfully serve minors there. This is the conclusion from what we could read and needs Chinese counsel, but privacy mechanisms do not fix it.**
+**Decision: not open to minors.** The owner chose this on November 6, 2026. On what we could read, the current product and company cannot lawfully serve minors there. That needs Chinese counsel to confirm, but privacy mechanisms do not fix it.
 
 | Block | What we read |
 | :--- | :--- |
@@ -118,11 +118,11 @@ A market not listed is closed to minors. The European Union and the United Kingd
 | Data | All data of [an under-14 is sensitive and needs guardian consent](https://www.mofo.com/pdf/resources/insights/210908-chinas-personal-information-protection-law). [Sending sensitive data abroad](https://www.hankunlaw.com/portal/article/index/cid/8/id/14064.html) needs a standard contract or certification, and a security assessment from 10,000 people. The [Minors' Online Protection Regulations](https://www.gov.cn/zhengce/content/202310/content_6911288.htm) add Arts. 32, 34 to 38: no refusing basics over optional consent; access, copy, correct, delete; breach reports; approved and logged staff access; a yearly audit reported to regulators; police report if private information suggests harm |
 | AI conversation | The [2026 measures on human-like AI](https://www.lw.com/en/insights/china-introduces-rules-for-ai-companion-and-emotional-interaction-services) exclude education with no ongoing emotional interaction, so S6 must not have a companion persona; they ban virtual-intimate services for minors. A [further draft](https://www.caixinglobal.com/2026-09-21/china-seeks-to-protect-minors-with-proposed-ai-rules-102487250.html) was published in September 2026 |
 
-**The real options, none of them a setting:**
+**Option A is in force. B and C record what reopening the question would take; none of them is a setting:**
 
 | Option | What it takes | Reach |
 | :--- | :--- | :--- |
-| **A. Do not open to minors** (adopted until the owner decides otherwise) | No listing in Chinese app stores, no Chinese payment, no marketing there; country "China" closes sign-up for under-18s | Chinese speakers elsewhere are served normally |
+| **A. Do not open to minors** (adopted) | No listing in Chinese app stores, no Chinese payment, no marketing there; country "China" closes sign-up for under-18s | Chinese speakers elsewhere are served normally |
 | **B. Adults only** | A Chinese entity or partner, ICP, generative AI filings, a separate deployment and vendors. Under-18s stay blocked by a real age check | Adults in China |
 | **C. Licensed partner for minors** | A Chinese non-profit-qualified institution operates its own service with our content, if counsel finds a lawful form. Data stays there; we receive none | Minors, at most in non-subject content, or in provinces that approve |
 
@@ -294,7 +294,7 @@ These are candidates we have read about, not choices:
 | **AI writing (E3)** | `writing` consent, §8, §9, vendor register, per-market check | M |
 | **Recording (E4)** | `speech` consent, §9, deletion test across R2 and transcripts, `research` form for E4.6 | M |
 | **Conversation (E5)** | `conversation` consent, safety review path, end-to-end test of no retention | M |
-| **Any China option** | §5 decided by the owner with Chinese counsel | Separate project |
+| **Reopening mainland China** | A new decision by the owner on §5, with Chinese counsel | Separate project |
 
 Markets need not open together. The baseline is shared, so each opens when its row is met: its notices translated and counsel's sign-off given.
 
