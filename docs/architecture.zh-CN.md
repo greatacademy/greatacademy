@@ -33,7 +33,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
    - 因此修改引擎参数只需重放，不需要数据迁移。
 5. **一种语言，处处共享。**
    - 全部代码使用 TypeScript。唯一计划中的例外是英语的 Python 语音服务（[英语课程体系 §13.3](english-curriculum.zh-CN.md#133-语音服务)）。
-   - 引擎和内容运行时都是没有 I/O 的纯函数，同一份代码运行在 Worker、浏览器、移动端、测试和离线模拟中。
+   - 引擎和内容运行时都是没有 I/O 的纯函数，同一份代码运行在 Worker、浏览器、原生应用、测试和离线模拟中。
 6. **内容即代码。**
    - 知识点、knowledge point 和题目生成器都是 TypeScript 模块，通过 git 评审。
    - 发布前由编译器校验图谱。
@@ -46,14 +46,14 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | Monorepo | **pnpm workspaces + Nx**（推断目标、本地缓存） | 工具版本由 **mise** 固定 |
 | Lint / 格式化 | **Biome** | 一个工具，根目录一份配置 |
 | 测试 | **Vitest** | 每个库都有单元测试；集成测试使用 PGlite |
-| 契约 / RPC | **Protobuf + buf + Connect**（`protobuf-es` v2、`connect-es` v2）、`protovalidate` | Web 与移动端共用一份契约；移动端走 JSON 传输 |
+| 契约 / RPC | **Protobuf + buf + Connect**（`protobuf-es` v2、`connect-es` v2）、`protovalidate` | Web 与原生应用共用一份契约；原生应用走 JSON 传输 |
 | Web 应用 | **TanStack Start**（Router、Query、Form），运行于 **Cloudflare Workers**；**React 19** | 用 Cloudflare 的 **`cf`** 命令行构建、运行和部署，不用 wrangler |
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
-| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；移动端计划通过 Expo DOM components 复用 |
-| 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与移动端共享会话（bearer token） |
+| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用计划通过 Native Shell 的 `WebView` 复用 |
+| 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
 | 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
-| 移动端 | **Expo**（最新 SDK）、Expo Router、TanStack Query、**Uniwind**（React Native 版 Tailwind v4） | 与 Web 共用契约和 token |
+| 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，版本固定在 `mise.toml`），应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
 | 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
 
 ## 3. 仓库结构
@@ -62,7 +62,8 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
 apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
 apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
-apps/mobile/          Expo 应用（iOS、Android）
+apps/nsh/             Native Shell 的 TSX 应用（iOS、Android、macOS、Windows、Linux）
+apps/mobile/          原 Expo 骨架，已由 apps/nsh 取代
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
 libs/api/             Connect 服务实现与会话执行器；与传输方式和宿主无关
 libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择、诊断、XP、测验（纯函数）
@@ -71,7 +72,7 @@ libs/subject-math/    数学学科：数学答案判定器、数学题目生成�
 libs/subject-english/ 英语学科：句子和单词判定器、题库工具
 libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
-libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和移动端生成的形式
+libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和原生应用生成的形式
 content/math/         编写的数学内容：知识点、课程
 content/english/      编写的英语内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
@@ -93,7 +94,7 @@ apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
 apps/english-workers ──► libs/subject-worker ──► libs/content
    └──► content/english, libs/subject-english
-apps/mobile ──► libs/proto, libs/design
+apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
@@ -102,7 +103,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。
 - `libs/engine` 只依赖 `libs/content` 的类型。它没有 I/O、没有时钟（时间作为参数传入），也没有随机性（种子作为参数传入）。
 - `libs/subject-math` 和 `libs/subject-english` 只依赖 `libs/content`。
-- `libs/design` 不依赖仓库内任何库，也没有 I/O，因此 Web 和移动端可以共用。
+- `libs/design` 不依赖仓库内任何库，也没有 I/O，因此 Web 和原生应用可以共用。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
 - `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
@@ -131,7 +132,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 
 ## 5. 请求流程
 
-1. 客户端调用 `/api/rpc/ga.<domain>.v1.*` 下的 Connect 服务。Web 端携带会话 cookie，移动端携带 bearer token。better-auth 本身位于 `/api/auth/*`。
+1. 客户端调用 `/api/rpc/ga.<domain>.v1.*` 下的 Connect 服务。Web 端携带会话 cookie，原生应用携带 bearer token。better-auth 本身位于 `/api/auth/*`。
 2. Worker 用 better-auth 完成认证，再通过 Hyperdrive 从 PostgreSQL 读取学习者状态。每个请求使用独立的数据库客户端。
 3. 服务调用引擎，传入：
    - 学科图谱（从学科的 manifest 读取，并按 isolate 缓存）；
@@ -160,7 +161,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 - **开发：**
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
-- **移动端：** 用 Expo 构建（EAS），调用同一套 API。
+- **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一套 API。
 - **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 
 ### 6.1 学科作为 Worker
@@ -219,7 +220,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 
 ## 8. 外观
 
-外观属于客户端而不是账户：每个浏览器或设备各存各的设置，不会发送到服务器，未登录时也能用。`libs/design` 存放所有客户端共用的部分，并且是纯代码，移动端可以直接使用。
+外观属于客户端而不是账户：每个浏览器或设备各存各的设置，不会发送到服务器，未登录时也能用。`libs/design` 存放所有客户端共用的部分，并且是纯代码，原生应用可以直接使用。
 
 | 设置 | 可选值 | 默认值 |
 | :--- | :--- | :--- |
@@ -249,4 +250,4 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 - 服务器不知道这些设置，所以 `<head>` 中有一段由 `appearanceScript()` 生成的短脚本，在首次绘制前设置属性并加入已保存的样式表。测试会检查它与 `parseAppearance` 一致。
 - 这些属性可用于任何元素，设置页的缩略图和预览就是这样绘制的。
 
-**移动端。** 移动端将把同样的格式存到本地存储，用 `resolveColors(appearance, device)` 取十六进制颜色（React Native 无法解析 oklch），按 `TEXT_SCALE` 缩放文字，并用 `resolveColorScheme` 和 `resolveReducedMotion` 根据设备解析 `system`。目前它只使用默认的浅色配色。
+**原生应用。** 原生应用用 `resolveColors(appearance, device)` 取十六进制颜色。之后会把同样的格式存到 `Storage`，按 `TEXT_SCALE` 缩放文字，并用 `resolveColorScheme` 和 `resolveReducedMotion` 解析 `system`。目前它们使用默认外观，并跟随设备的配色方案。

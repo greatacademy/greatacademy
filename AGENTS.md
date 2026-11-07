@@ -20,7 +20,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 
 ## Project Overview
 
-Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, an Expo mobile app, and pure libraries for content and the learning engine. The one planned exception is the Python voice service of English ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
+Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, native apps in TSX on Native Shell, and pure libraries for content and the learning engine. The one planned exception is the Python voice service of English ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
 
 ## Directory Structure
 
@@ -28,7 +28,8 @@ Great Academy is an adaptive learning platform for many subjects, starting with 
 apps/web/            TanStack Start on Cloudflare Workers: pages, Connect API, better-auth
 apps/math-workers/   The gateway and shard Workers of mathematics
 apps/english-workers/ The gateway and shard Workers of English
-apps/mobile/         Expo app
+apps/nsh/            Native Shell app in TSX: iOS, Android, macOS, Windows, Linux
+apps/mobile/         Former Expo skeleton, replaced by apps/nsh
 libs/content/        Content model, compiler, problem runtime, checkers (subject-agnostic)
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers

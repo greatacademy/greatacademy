@@ -20,7 +20,7 @@
 
 ## 项目概述
 
-Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、Expo 移动应用，以及内容和学习引擎的纯函数库。唯一计划中的例外是英语的 Python 语音服务（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
+Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、基于 Native Shell 的 TSX 原生应用，以及内容和学习引擎的纯函数库。唯一计划中的例外是英语的 Python 语音服务（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
 
 ## 目录结构
 
@@ -28,7 +28,8 @@ Great Academy 是面向多学科的自适应学习平台，从数学开始。全
 apps/web/            TanStack Start on Cloudflare Workers：页面、Connect API、better-auth
 apps/math-workers/   数学的网关和分片 Worker
 apps/english-workers/ 英语的网关和分片 Worker
-apps/mobile/         Expo 应用
+apps/nsh/            Native Shell 的 TSX 应用：iOS、Android、macOS、Windows、Linux
+apps/mobile/         原 Expo 骨架，已由 apps/nsh 取代
 libs/content/        内容模型、编译器、题目运行时、判定器（与学科无关）
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数

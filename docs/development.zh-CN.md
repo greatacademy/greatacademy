@@ -51,7 +51,8 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `subject-worker` | `libs/subject-worker` | 任何学科的网关和分片所用的 Worker 入口 |
 | `math-workers` | `apps/math-workers` | 数学的网关和分片 Worker（[架构](architecture.zh-CN.md) §6.1）；`pnpm nx run math-workers:generate` 把 manifest 写入 `gen/`，需要它的 target 会先运行这一步 |
 | `english-workers` | `apps/english-workers` | 英语的网关和分片 Worker，构建方式相同 |
-| `mobile` | `apps/mobile` | Expo 应用，目前是骨架：课程列表和课程大纲，数据来自 Web 应用的 API（§6） |
+| `nsh` | `apps/nsh` | Native Shell 应用，目前是骨架：课程列表和课程大纲，数据来自 Web 应用的 API（§6） |
+| `mobile` | `apps/mobile` | 原 Expo 骨架，已由 `nsh` 取代 |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误 |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
@@ -91,14 +92,23 @@ curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http
 
 试用方法：注册账号，回答年龄问题，选择“我自己学”，打开「代数基础」，选修，然后参加诊断或跳过。首页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
 
-## 6. 运行移动应用
+## 6. 运行原生应用
 
-Expo 应用调用与 Web 应用相同的 Connect 服务，因此先启动 Web 应用（§5）。
+Native Shell 应用调用与 Web 应用相同的 Connect 服务，因此先启动 Web 应用（§5）。`mise install` 会提供 `nsh`。
 
 ```bash
-pnpm nx run mobile:dev                # Metro；按 i 打开 iOS 模拟器
+pnpm nx run nsh:dev                   # 在本机打开窗口
 ```
 
-- API 地址默认为 `http://localhost:5173`，iOS 模拟器可以直接访问。在真机或 Android 模拟器上，把 `EXPO_PUBLIC_API_URL` 设为设备能访问的地址，例如 `http://192.168.1.10:5173`。
-- 应用使用 Expo Router，页面位于 `apps/mobile/src/app`。在 `apps/mobile` 中运行 `npx expo export --platform ios` 可以不启动模拟器而打包应用，用来检查 Metro 能否解析工作区中的包。
+```bash
+pnpm nx run nsh:ios                   # iOS 模拟器；需要 Xcode
+```
+
+```bash
+pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 和 JDK
+```
+
+- `apps/nsh/lib/rpc.ts` 中的 `API_URL` 是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。
+- 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
+- `nsh package apps/nsh --target <target>` 构建安装包。发布前需要生产环境的 `API_URL`，目前还没有设置。
 - 应用目前是骨架（路线图 P6）：登录、学习主页和学习播放器暂时只在 Web 应用中提供。

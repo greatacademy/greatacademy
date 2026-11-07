@@ -286,12 +286,12 @@ These are candidates we have read about, not choices:
 - **Staff access** to minors' text goes through an audited tool, not direct SQL in production.
 - **Withdrawing `basic`** stops study and empties the text of past answers. Progress stays until the account is deleted, or until the inactivity rule of §10 deletes it.
 
-**Gaps today.** Card verification is not built, and the mobile app has neither the age question nor the consent screens, so a mobile account must answer on the web before it can study. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route, and no code calls a vendor yet: pi-ai and `tools/calibrate` arrive with E3.
+**Gaps today.** Card verification is not built, and the native app (`apps/nsh`) has neither the age question nor the consent screens, so its accounts must answer on the web before they can study. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route, and no code calls a vendor yet: pi-ai and `tools/calibrate` arrive with E3.
 
 | Before | Needed | Size |
 | :--- | :--- | :--- |
 | **English pilot (E1.6)** | In one open market, not China: signed guardian forms stating purpose, access and deletion date; accounts made by the team, with pseudonyms; the notice in the market's language; reports read only by named people; data deleted at the stated date. No new code beyond the deletion | S |
-| **Public sign-up to minors (any subject)** | Counsel's review of the pages and rows, the impact assessment, translated legal text per market, representatives, card verification where wanted, the mobile age flow; then each market's switch | L |
+| **Public sign-up to minors (any subject)** | Counsel's review of the pages and rows, the impact assessment, translated legal text per market, representatives, card verification where wanted, the age flow in the native app; then each market's switch | L |
 | **AI writing (E3)** | `writing` consent, §8, §9, vendor register, per-market check | M |
 | **Recording (E4)** | `speech` consent, §9, deletion test across R2 and transcripts, `research` form for E4.6 | M |
 | **Conversation (E5)** | `conversation` consent, safety review path, end-to-end test of no retention | M |

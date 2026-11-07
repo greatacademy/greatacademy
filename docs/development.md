@@ -51,7 +51,8 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `subject-worker` | `libs/subject-worker` | Worker entrypoints for any subject's gateway and shards |
 | `math-workers` | `apps/math-workers` | The gateway and shard Workers of mathematics ([Architecture](architecture.md) §6.1); `pnpm nx run math-workers:generate` writes the manifest to `gen/`, which targets that need it do first |
 | `english-workers` | `apps/english-workers` | The gateway and shard Workers of English, built in the same way |
-| `mobile` | `apps/mobile` | The Expo app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
+| `nsh` | `apps/nsh` | The Native Shell app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
+| `mobile` | `apps/mobile` | The former Expo skeleton, replaced by `nsh` |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
 | `pilot` | `tools/pilot` | Pilot report for a course from a database: `DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i` ([Roadmap §3](roadmap.md#3-pilot)) |
@@ -91,14 +92,23 @@ curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http
 
 To try it: create an account, answer the age question, choose "I'm learning myself", open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
 
-## 6. Running the Mobile App
+## 6. Running the Native App
 
-The Expo app calls the same Connect services as the web app, so start the web app first (§5).
+The Native Shell app calls the same Connect services as the web app, so start the web app first (§5). `mise install` provides `nsh`.
 
 ```bash
-pnpm nx run mobile:dev                # Metro; press i for the iOS simulator
+pnpm nx run nsh:dev                   # A window on this machine
 ```
 
-- The API address is `http://localhost:5173` by default, which the iOS simulator reaches directly. On a device or the Android emulator, set `EXPO_PUBLIC_API_URL` to an address the device can reach, for example `http://192.168.1.10:5173`.
-- The app uses Expo Router; screens live in `apps/mobile/src/app`. `npx expo export --platform ios` in `apps/mobile` bundles the app without a simulator, which checks that Metro resolves the workspace packages.
+```bash
+pnpm nx run nsh:ios                   # The iOS simulator; needs Xcode
+```
+
+```bash
+pnpm nx run nsh:android               # An emulator or device; needs the Android SDK and a JDK
+```
+
+- `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`.
+- Screens live in `apps/nsh/screens`. `nsh:test` runs the app headless, with no simulator, and `nsh:typecheck` runs `nsh check`, which also generates `.nsh/types`.
+- `nsh package apps/nsh --target <target>` builds an installable app. Shipping needs a production `API_URL`, which is not set yet.
 - The app is a skeleton (roadmap P6): signing in, the dashboard and the session player remain on the web app for now.

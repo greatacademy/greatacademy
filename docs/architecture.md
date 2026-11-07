@@ -33,7 +33,7 @@ This document describes the system as built: technology choices, repository stru
    - Changing a parameter of the engine is therefore a replay, not a data migration.
 5. **One language, shared everywhere.**
    - All code is TypeScript. The one planned exception is the Python voice service of English ([English Curriculum §13.3](english-curriculum.md#133-the-voice-service)).
-   - The engine and the content runtime are pure functions with no I/O. The same code runs in the Worker, the browser, the mobile app, tests and offline simulations.
+   - The engine and the content runtime are pure functions with no I/O. The same code runs in the Worker, the browser, the native apps, tests and offline simulations.
 6. **Content is code.**
    - Topics, knowledge points and problem generators are TypeScript modules reviewed through git.
    - A compiler validates the graph before anything is published.
@@ -46,14 +46,14 @@ This document describes the system as built: technology choices, repository stru
 | Monorepo | **pnpm workspaces + Nx** (inferred targets, local cache) | Tool versions pinned by **mise** |
 | Lint / format | **Biome** | One tool, one config at the root |
 | Tests | **Vitest** | Unit tests in every library; integration tests against PGlite |
-| Contracts / RPC | **Protobuf + buf + Connect** (`protobuf-es` v2, `connect-es` v2), `protovalidate` | One contract for the web and mobile clients; JSON on the wire for mobile |
+| Contracts / RPC | **Protobuf + buf + Connect** (`protobuf-es` v2, `connect-es` v2), `protovalidate` | One contract for the web and native clients; JSON on the wire for native |
 | Web app | **TanStack Start** (Router, Query, Form) on **Cloudflare Workers**; **React 19** | Built, run and deployed with Cloudflare's **`cf`** command line, not wrangler |
 | UI | **Base UI**, **Tailwind CSS v4**, Phosphor icons | Design tokens from `libs/design` |
-| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; planned for the mobile app through Expo DOM components |
-| Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the mobile app (bearer tokens) |
+| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; planned for the native apps through Native Shell's `WebView` |
+| Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the native apps (bearer tokens) |
 | Email | **Resend**, called over HTTP from the Worker with the secrets `RESEND_API_KEY` and `EMAIL_FROM` | Password resets and address verification, in the learner's two languages; a Worker needs no SMTP client |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
-| Mobile | **Expo** (latest SDK), Expo Router, TanStack Query, **Uniwind** (Tailwind v4 for React Native) | Same contracts and tokens as the web app |
+| Mobile and desktop | **[Native Shell](https://nsh.dev)** (`nsh`, pinned in `mise.toml`), with the app in TSX on its QuickJS runtime | One app with each platform's own views on iOS, Android, macOS, Windows and Linux; same contracts and tokens as the web app |
 | Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
 
 ## 3. Repository Structure
@@ -62,7 +62,8 @@ This document describes the system as built: technology choices, repository stru
 apps/web/             TanStack Start on Workers: pages, better-auth, and libs/api mounted under /api
 apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
 apps/english-workers/ The Workers serving English: a gateway and its shard
-apps/mobile/          Expo app (iOS, Android)
+apps/nsh/             Native Shell app in TSX (iOS, Android, macOS, Windows, Linux)
+apps/mobile/          Former Expo skeleton, replaced by apps/nsh
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
 libs/api/             Connect service implementations and the session runner; transport- and host-agnostic
 libs/engine/          Learning engine: graph, frontier, FIRe, task selection, diagnostic, XP, quizzes (pure)
@@ -71,7 +72,7 @@ libs/subject-math/    The mathematics subject: math answer checkers and helpers 
 libs/subject-english/ The English subject: sentence and word checkers and the kit for item banks
 libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
-libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and mobile
+libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and native
 content/math/         Authored mathematics content: topics, courses
 content/english/      Authored English content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
@@ -93,7 +94,7 @@ apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
 apps/english-workers ──► libs/subject-worker ──► libs/content
    └──► content/english, libs/subject-english
-apps/mobile ──► libs/proto, libs/design
+apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
@@ -102,7 +103,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.
 - `libs/engine` depends only on `libs/content`'s types. It has no I/O, no clock (time is a parameter) and no randomness (seeds are parameters).
 - `libs/subject-math` and `libs/subject-english` depend only on `libs/content`.
-- `libs/design` depends on nothing in the repository and has no I/O, so web and mobile share it.
+- `libs/design` depends on nothing in the repository and has no I/O, so web and native share it.
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
 - `libs/subject-worker` is the one library that imports the Workers runtime; it knows no subject.
@@ -131,7 +132,7 @@ The full model of content is in [Content](content.md). The derived learner state
 
 ## 5. Request Flow
 
-1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a bearer token on mobile. better-auth itself is served under `/api/auth/*`.
+1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a bearer token in the native apps. better-auth itself is served under `/api/auth/*`.
 2. The Worker authenticates with better-auth and loads the learner's state from PostgreSQL through Hyperdrive. Each request gets its own database client.
 3. The service calls the engine with:
    - the subject graph, read from the subject's manifest and cached per isolate;
@@ -160,7 +161,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
 - **Development:**
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).
-- **Mobile:** Expo builds (EAS). The app talks to the same API.
+- **Mobile and desktop:** `nsh package` builds each platform's installable app. The app talks to the same API.
 - **Planned for English:** further Cloudflare services, AI models through pi-ai with providers configured by platform administrators, and a voice service on Kubernetes ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
 
 ### 6.1 Subjects as Workers
@@ -219,7 +220,7 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 
 ## 8. Appearance
 
-Appearance belongs to the client, not the account: each browser or device keeps its own settings, nothing reaches the server, and they work signed out. `libs/design` holds what all clients share and is pure, so mobile can use it unchanged.
+Appearance belongs to the client, not the account: each browser or device keeps its own settings, nothing reaches the server, and they work signed out. `libs/design` holds what all clients share and is pure, so the native apps can use it unchanged.
 
 | Setting | Choices | Default |
 | :--- | :--- | :--- |
@@ -249,4 +250,4 @@ Appearance belongs to the client, not the account: each browser or device keeps 
 - The server never knows the settings, so a short script from `appearanceScript()` runs in the head and sets the attributes and adds the stored stylesheet before the first paint. A test checks that it agrees with `parseAppearance`.
 - These attributes work on any element, which is how the settings page draws its miniatures and preview.
 
-**Mobile.** The mobile app will store the same format in its local storage, get colors from `resolveColors(appearance, device)` in hex (React Native cannot parse oklch), scale text by `TEXT_SCALE`, and resolve `system` against the device with `resolveColorScheme` and `resolveReducedMotion`. Today it only uses the default light colors.
+**Native.** The native apps get colors from `resolveColors(appearance, device)` in hex. They will store the same format in `Storage`, scale text by `TEXT_SCALE`, and resolve `system` with `resolveColorScheme` and `resolveReducedMotion`. Today they use the default appearance and follow the device's color scheme.
