@@ -25,7 +25,13 @@ window.mathVirtualKeyboard.addEventListener("geometrychange",function(){
  * MathField asks for math as LaTeX through MathLive, in a web view that grows to
  * hold MathLive's keyboard. A learner can also type plain text, such as 3/4.
  */
-export function MathField(props: { value: string; onChange: (latex: string) => void; onSubmit: () => void; disabled: boolean }) {
+export function MathField(props: {
+  value: string;
+  onChange: (latex: string) => void;
+  onSubmit: () => void;
+  onKeyboard?: (height: number) => void;
+  disabled: boolean;
+}) {
   const asText = signal(false);
   const field = signal(60);
   const keyboard = signal(0);
@@ -61,7 +67,10 @@ export function MathField(props: { value: string; onChange: (latex: string) => v
               if (message.height) field.set(message.height);
               if (message.value !== undefined) props.onChange(message.value);
               if (message.submit) props.onSubmit();
-              if (message.keyboard !== undefined) keyboard.set(message.keyboard);
+              if (message.keyboard !== undefined) {
+                keyboard.set(message.keyboard);
+                props.onKeyboard?.(message.keyboard);
+              }
             }}
           />
         }
@@ -73,6 +82,8 @@ export function MathField(props: { value: string; onChange: (latex: string) => v
           autoCapitalize="none"
           autoCorrect={false}
           onChange={({ value }) => props.onChange(value)}
+          onSubmit={props.onSubmit}
+          returnKeyType="done"
           style={fieldStyle()}
         />
       </If>

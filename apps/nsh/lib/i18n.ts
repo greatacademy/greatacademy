@@ -133,6 +133,12 @@ const messages = {
     serverBody: "The server could not answer just now. Try again in a moment.",
     serverTitle: "Something went wrong",
     signInAgain: "Sign in again",
+    close: "Close",
+    keepGoing: "Keep going",
+    leave: "Leave",
+    leaveBody: "Your answers so far are saved. You can pick this up again from Today.",
+    leaveTitle: "Leave this task?",
+    nextTask: "Next task",
   },
   "zh-CN": {
     account: "账号",
@@ -249,6 +255,12 @@ const messages = {
     serverBody: "服务器暂时无法响应，请稍后再试。",
     serverTitle: "出错了",
     signInAgain: "重新登录",
+    close: "关闭",
+    keepGoing: "继续做题",
+    leave: "离开",
+    leaveBody: "已作答的内容都已保存，之后可以在「今天」里继续。",
+    leaveTitle: "离开这个任务？",
+    nextTask: "开始下一个任务",
   },
 } as const;
 

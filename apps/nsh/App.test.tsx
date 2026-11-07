@@ -307,8 +307,17 @@ test("studies a lesson from the course list to its result", async () => {
   await app.waitFor("text:Four splits in two.");
   await app.press("text:Start practicing");
   await app.press("text:Four");
-  await app.press("role:button[Check]");
+  await app.keyboard.press("Enter");
   await app.waitFor("text:Correct!");
+  // Leaving asks first; staying keeps the answer where it was.
+  const asked: string[] = [];
+  app.onDialog((dialog) => {
+    asked.push(dialog.title ?? "");
+    return "Keep going";
+  });
+  await app.press("label:Close");
+  expect(asked).toEqual(["Leave this task?"]);
+  expect(app.shows("Correct!")).toBe(true);
   await app.press("role:button[Continue]");
   await app.waitFor("text:Lesson complete");
   await app.waitFor("text:+10 XP");

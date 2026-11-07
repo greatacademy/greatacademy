@@ -161,6 +161,7 @@ export function AnswerInput(props: {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  onKeyboard?: (height: number) => void;
   disabled: boolean;
   feedback?: Feedback;
 }) {
@@ -193,7 +194,13 @@ export function AnswerInput(props: {
       return (
         <View style={{ gap: 6 }}>
           <If when={input.value.prefix}>{(tex) => <Tex tex={tex()} fontSize={20} />}</If>
-          <MathField value={props.value} onChange={props.onChange} onSubmit={props.onSubmit} disabled={props.disabled} />
+          <MathField
+            value={props.value}
+            onChange={props.onChange}
+            onSubmit={props.onSubmit}
+            onKeyboard={props.onKeyboard}
+            disabled={props.disabled}
+          />
           <If when={input.value.suffix}>{(tex) => <Tex tex={tex()} fontSize={20} />}</If>
         </View>
       );
@@ -206,6 +213,7 @@ export function AnswerInput(props: {
           autoCorrect={false}
           onChange={({ value }) => props.onChange(value)}
           onSubmit={props.onSubmit}
+          returnKeyType="done"
           style={fieldStyle()}
         />
       );
