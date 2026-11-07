@@ -2,17 +2,21 @@
 
 > English | [简体中文](minors-data.zh-CN.md)
 
-This document specifies how Great Academy handles what minors write and say: who may use which feature, whose consent it takes, what is kept and for how long, and who receives it. It is based on what Duolingo publishes and on the laws read in November 2026.
+This document specifies how Great Academy handles what minors write and say in its first markets: the United States, Canada, Australia, Singapore, Japan, South Korea, Taiwan, Hong Kong, Brazil and mainland China. It says who may use which feature, whose consent it takes, what is kept and for how long, and who receives it. Laws were read in November 2026.
 
-**Status.** None of this is built, and no lawyer has reviewed it. It is the engineering position that [E0.3](english-development-plan.md#2-stage-0-preparation) takes to counsel. It is not legal advice. The numbers marked *starting* are ours, not the law's.
+**Status.** None of this is built, and no lawyer has reviewed it. It is the engineering position that [E0.3](english-development-plan.md#2-stage-0-preparation) takes to counsel in each market. It is not legal advice. The numbers marked *starting* are ours, not the law's.
+
+**Two markets cannot launch on this design alone.** Mainland China has legal and structural blocks to serving minors (§5). In Hong Kong, the AI vendors we know do not serve users (§12).
 
 ## 1. Principles
 
 1. **Do not collect what the lesson does not need.** Data never collected needs no consent, retention rule or deletion.
 2. **Consent before collection, from the guardian, per purpose.** Declining an optional feature never costs the basic course.
-3. **Deny by default on the server.** A feature runs only with a consent on record for this learner, in this market.
-4. **Every kind of data has a deletion date,** including derived data: transcripts, feedback that quotes a learner, and copies at vendors.
-5. **Minors' data teaches that minor and nothing else.** It trains no model, ours or a vendor's, and it is never used for advertising.
+3. **Deny by default on the server.** A feature runs only with a current consent on record for this learner, in a market where it is allowed.
+4. **One baseline everywhere, the law's differences as data.** Ten markets cannot mean ten products. The baseline takes the strictest common rule wherever that costs little, and market rows change only ages, methods, languages and availability.
+5. **Every kind of data has a deletion date,** including transcripts, feedback that quotes a learner, and copies at vendors.
+6. **Minors' data teaches that minor and nothing else.** It trains no model and is never used for advertising.
+7. **The child can always do less.** A child can turn off a feature, withdraw or ask for deletion alone. Only a guardian can turn on more.
 
 ## 2. What Duolingo Does
 
@@ -38,67 +42,130 @@ Read from [its privacy policy](https://www.duolingo.com/privacy), last revised M
 **What we do not take:**
 
 - **A notice after the fact.** Duolingo's account works because it claims to collect almost nothing. We cannot claim that: writing and pronunciation go to vendors and build a record of the learner, so consent comes first.
-- **Retention until account deletion.** It is hard to square with the COPPA retention rule and the two FTC cases in §3.
+- **Retention until account deletion.** It is hard to square with the COPPA retention rule and the FTC cases in §3.
 - **Training on learners' speech,** even with an opt-out.
 - **Asking learners not to submit personal information** as the safeguard. A child will write a name anyway, so the system filters it.
 
-Common Sense rates Duolingo "Warning", on [an undated evaluation](https://privacy.commonsense.org/evaluation/duolingo). We could not read a school's impact assessment that search results cite, and we did not confirm whether children can use Video Call.
+Common Sense rates Duolingo "Warning", on [an undated evaluation](https://privacy.commonsense.org/evaluation/duolingo). We did not confirm whether children can use Video Call.
 
-## 3. What the Law Requires
+## 3. What Each Market's Law Requires
 
-| Regime | What matters to us |
-| :--- | :--- |
-| **COPPA** (US, under 13), amended rule in force since April 22, 2026 | Verifiable parental consent before collecting. [Voiceprints are personal information](https://www.law.cornell.edu/cfr/text/16/312.2). A child-directed service with a mixed audience must ask age neutrally, with no default, before collecting anything. [Separate consent for non-integral disclosure](https://www.law.cornell.edu/cfr/text/16/312.5), and email or text "plus" only when nothing is disclosed. [A written retention policy, published, with deletion timeframes; no indefinite retention](https://www.law.cornell.edu/cfr/text/16/312.10). The FTC [says](https://www.dataprotectionreport.com/2025/06/ftcs-coppa-rule-changes-include-ai-training-consent-requirement/) that disclosure to train AI is not integral |
-| **FTC voice policy** (2017) | [No enforcement](https://www.ftc.gov/news-events/news/press-releases/2017/10/ftc-provides-additional-guidance-coppa-voice-recordings) for audio used only to replace written words, held briefly and for no other use. Scoring pronunciation or fluency is another use, so we do not rely on it (our reading; for counsel) |
-| **FTC v. Amazon (Alexa, 2023)** | [Alleged](https://www.ftc.gov/news-events/news/press-releases/2023/05/ftc-doj-charge-amazon-violating-childrens-privacy-law-keeping-kids-alexa-voice-recordings-forever): recordings kept indefinitely and used to train speech recognition; deletion requests that left transcripts behind. Proposed penalty of $25 million |
-| **FTC v. Edmodo (2023)** | [An edtech order](https://www.insideprivacy.com/childrens-privacy/ftc-announces-coppa-settlement-against-ed-tech-provider-including-strict-data-minimization-and-data-retention-requirements/): a retention schedule with a one-year maximum, after two years of inactivity was found unjustified. [Schools could not consent](https://thejournal.com/articles/2023/06/15/ftc-fines-edmodo-for-illegal-use-of-student-data-and-outsourcing-compliance-to-schools.aspx) for advertising or machine learning |
-| **US states** | [Many now protect all under-18s](https://www.onetrust.com/blog/us-childrens-data-laws-and-consent-what-businesses-need-to-know-in-2026), with [assessments for minors' data](https://www.insideprivacy.com/childrens-privacy/state-and-federal-developments-in-minors-privacy-in-2026/) in places such as Virginia. Not checked state by state; Illinois' biometric law was not checked at all |
-| **GDPR** | Consent age [between 13 and 16 by country](https://sota.io/blog/gdpr-art-8-childrens-consent-age-verification-parental-authorization-digital-services-developer-guide-2026), which we did not confirm from a complete official table. A voiceprint is special-category data [when used to identify someone](https://www.pearlcohen.com/edpb-issues-draft-guidance-on-virtual-voice-assistants/) (draft guidance); we never identify anyone by voice. An impact assessment and an EU representative are expected (from memory; for counsel) |
-| **UK Children's Code** | [15 standards for all under-18s](https://www.taylorwessing.com/en/insights-and-events/insights/2020/02/ico-publishes-age-appropriate-design-code-of-practice) on services likely to be accessed by them, with high-privacy defaults. Read through secondary sources from 2020 and 2021; the ICO's page could not be fetched, so check for later changes |
-| **EU AI Act** | [Annex III](https://artificialintelligenceact.eu/annex/3/) lists AI that evaluates learning outcomes, including when results steer learning, as high-risk. So AI verdicts that gate mastery probably are. [Reported](https://pasqualepillitteri.it/en/news/5190/digital-omnibus-ai-act-eu-parliament) to apply from December 2027; final adoption not confirmed. Inferring emotions in education is prohibited (from memory; for counsel) |
-| **China** | PIPL: [all data of an under-14 is sensitive, and needs guardian consent and dedicated rules](https://www.mofo.com/pdf/resources/insights/210908-chinas-personal-information-protection-law). [Regulations on Minors' Online Protection](https://www.gov.cn/zhengce/content/202310/content_6911288.htm), under 18: no refusing basic functions over optional consent (Art. 32), guardian access and deletion (Art. 34), breach reporting (Art. 35), approved and logged staff access (Art. 36), a yearly compliance audit (Art. 37). Mainland China is not a target market, but these apply if we offer the service there |
+"Primary" means we read the law, regulation or regulator's text. "Secondary" means law-firm or press summaries, which counsel must check.
 
-Not researched yet: Hong Kong, Taiwan, Singapore, Canada, Australia, Japan, Korea and Brazil. Several matter because many of our learners speak Chinese. Learners are governed by where they live, not by their language.
+| Market | What matters to us | Read from |
+| :--- | :--- | :--- |
+| **United States, federal** | COPPA, under 13, amended rule fully in force since April 22, 2026. Parental consent before collecting. [Voiceprints are personal information; a mixed-audience service must ask age neutrally before collecting](https://www.law.cornell.edu/cfr/text/16/312.2). [Separate consent for non-integral disclosure; email or text "plus" only when nothing is disclosed](https://www.law.cornell.edu/cfr/text/16/312.5). [A published retention policy; no indefinite retention](https://www.law.cornell.edu/cfr/text/16/312.10). The [audio exception](https://www.law.cornell.edu/cfr/text/16/312.5) needs no other personal information and deletion immediately after responding, which a logged-in pronunciation task does not meet, so we do not rely on it. [Disclosure to train AI is not integral](https://www.dataprotectionreport.com/2025/06/ftcs-coppa-rule-changes-include-ai-training-consent-requirement/) | Primary |
+| **FTC cases** | [Amazon (Alexa)](https://www.ftc.gov/news-events/news/press-releases/2023/05/ftc-doj-charge-amazon-violating-childrens-privacy-law-keeping-kids-alexa-voice-recordings-forever): recordings kept indefinitely, and deletion that left transcripts. [Edmodo](https://www.insideprivacy.com/childrens-privacy/ftc-announces-coppa-settlement-against-ed-tech-provider-including-strict-data-minimization-and-data-retention-requirements/): a retention schedule capped at one year, and [schools cannot consent](https://thejournal.com/articles/2023/06/15/ftc-fines-edmodo-for-illegal-use-of-student-data-and-outsourcing-compliance-to-schools.aspx) for advertising or machine learning | Primary, secondary |
+| **United States, states** | [New York](https://ag.ny.gov/sites/default/files/2025-05/nycdpa-guidance.pdf), under 18, since June 20, 2025: for ages 13 to 17, processing needs informed consent unless strictly necessary for the requested service, and the consent screen must say the user can decline and keep the service. [Many other states](https://www.onetrust.com/blog/us-childrens-data-laws-and-consent-what-businesses-need-to-know-in-2026) protect under-18s. [Texas](https://www.ashurstperkinscoie.com/en/insights/supreme-court-green-lights-the-texas-age-verification-law-for-app-stores/) requires app stores to verify age and developers to use the signal; [Utah and California](https://www.recordinglaw.com/us-laws/age-verification-laws/app-store-age-verification-laws/) follow in 2027. Illinois: [a 2026 court](https://www.courthousenews.com/wp-content/uploads/2026/06/delgado-v-meta-unsealed-summary-judgment-order.pdf) left open where a recording becomes a voiceprint and rejected any need for an enrollment step | New York primary; others secondary |
+| **Canada** | Quebec: [parents consent under 14](https://www.dialoginsight.com/en/blog/law-25-en/impact-of-law-25-on-consents). Federal: the [Children's Privacy Code](https://www.bennettjones.com/Insights/Blogs/2026/11/The-New-Canadian-Childrens-Privacy-Code) of October 20, 2026 is guidance, open for comment until January 20, 2027: parents consent under 13, capacity assessed from 13 to 18, opt-in for non-essential uses, protective defaults, no inferring emotions. [British Columbia](https://www.osler.com/en/insights/updates/insights-into-canadas-development-of-childrens-privacy-framework/?pdf=1) says the usual age is 12 | Secondary; the OPC's page could not be read |
+| **Australia** | [Exposure draft](https://www.oaic.gov.au/__data/assets/pdf_file/0020/262631/Exposure-Draft-Childrens-Online-Privacy-Code.pdf) of the Children's Online Privacy Code, under 18, [due by December 10, 2026](https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code), not yet registered, no education exemption. Ascertain age before collecting, or apply the code to everyone (s 8). Only what is strictly necessary by default (s 9). Best interests (ss 10, 11). Parents consent under 15 and the child gets a notice (s 13); no bundled consent (s 14); consent has a stated period and expires (s 16); child assent for sensitive information (s 20). Deletion at the request of the child or parent (s 32). Tell the child about parental monitoring (s 33). Mandatory impact assessment (s 38). [AI that can generate restricted material must check age](https://www.esafety.gov.au/sites/default/files/2026-03/Age-Restricted-Material-Codes-fact-sheet-March2026.pdf) | Primary for the draft |
+| **Singapore** | [PDPC guidelines](https://www.nortonrosefulbright.com/en/knowledge/publications/9a61f19c/the-protection-of-childrens-personal-data-in-the-digital-environment), under 18: parents consent under 13; from 13 a child can consent if they understand. Accounts not public by default; no national IDs for age assurance; impact assessment encouraged; a breach is notified to the child and, where known, the parent. [Not binding, but the PDPC is likely to read the law this way](https://www.zwillgen.com/privacy/singapore-issues-childrens-privacy-guidelines/) | Secondary; the PDF could not be read |
+| **Japan** | The [amended privacy act](https://japancyberwatch.com/articles/japan-appi-amendment-2026) was promulgated on July 17, 2026, with these rules by July 2028: under 16, consent and notices go to the legal representative; deletion or stopping without showing a violation; the child's best interests come first. Current [guidance](https://childreninthedigitalworld.twobirds.com/home/japan) treats ages of about 12 to 15 as generally needing the representative. Its new biometric rules are described in terms of face data; voice is not confirmed | Secondary |
+| **South Korea** | Privacy act [Art. 22-2](https://prighter.com/resources/laws/korean-pipa/main/articles/article-22-2): under 14, the legal representative consents and the operator confirms it; plain notices. [Decree Art. 17-2](https://prighter.com/resources/laws/korean-pipa/enforcement-decree/articles/article-17-2) lists the methods: a site request with a text message, card, mobile identity check, signed document, email, phone. The [AI Basic Act](https://securiti.ai/south-korea-basic-act-on-development-of-ai/), since January 22, 2026, lists student evaluation as high-impact, and [requires explanation, human oversight and notice of AI use](https://www.cooley.com/news/insight/2026/2026-01-27-south-koreas-ai-basic-act-overview-and-key-takeaways), with a one-year grace on fines. Its local-agent duty starts at thresholds far above ours; the privacy act's is unconfirmed | Secondary, from search excerpts of the articles |
+| **Taiwan** | The [privacy act](https://law.moj.gov.tw/ENG/LawClass/LawAll.aspx?pcode=I0050021), amended November 11, 2025, does not address minors; breach notice and reporting (Art. 12); it reaches agencies abroad handling nationals' data (Art. 51). The [Civil Code](https://law.moj.gov.tw/ENG/LawClass/LawAll.aspx?pcode=B0000001): adult at 18; ages 7 to 17 generally need approval for legal acts (Arts. 12, 13, 77). Whether a child can consent [is contested](https://lawreview.law.nycu.edu.tw/en/legal-study-on-childrens-data-protection-legislation-under-digital-environment-from-the-perspective-of-us-childrens-online-privacy-protection-act/). [Children's welfare amendments](https://www.taipeitimes.com/News/taiwan/archives/2026/03/26/2003854497) are pending | Primary for the acts |
+| **Hong Kong** | [No statute on children's consent](https://childreninthedigitalworld.twobirds.com/home/hong-kong). Where the ordinance needs consent, a person under 18 cannot give it; a parent does. Children can exercise rights and complain on their own. Regulator guidance recommends parental approval and child-friendly notices | Secondary |
+| **Brazil** | The [Digital ECA](https://www.unicef.org/brazil/estatuto-digital-da-crianca-e-do-adolescente-eca-digital), since March 2026, applies to services likely to be accessed by minors, wherever operated. Most protective defaults (Art. 7); take age signals from stores and keep own mechanisms (Art. 14); impact report (Art. 16); parental tools, a visible notice while supervision is on, time limits (Art. 17); settings and usage visible to parents, in Portuguese (Art. 18); no profiling for ads or emotion analysis for that purpose (Arts. 22, 26); under-16 linking for social networks (Art. 24); a legal representative in Brazil (Art. 40). The self-declaration ban covers improper content (Art. 9), which we do not have. [Fines to BRL 50 million](https://digitalpolicyalert.org/event/34356-national-data-protection-authority-outlined-regulatory-and-supervisory-measures-for-implementing-law-no-152112025). The [LGPD's Art. 14](https://confidata.com.br/blog/lgpd-comentada-10-criancas-adolescentes): best interests; under 12, specific parental consent with reasonable efforts to confirm it; no access conditioned on data beyond what is strictly necessary | UNICEF Brazil's copy of the text; the official site blocked us |
+| **Mainland China** | See §5 | Primary in part |
 
-**Our service counts as directed to children.** It has courses from the early grades, and English's first slice is for grades 3 to 8. An age question alone does not take it outside COPPA.
+Not checked: other US states one by one, Quebec's rules beyond consent age, each market's breach deadlines and cross-border transfer rules in detail, and whether Korea's age of majority or Canadian provinces' differ from the 18 used here.
 
-## 4. Age Bands
+**Our service counts as directed to children.** It has courses from the early grades, and English's first slice is for grades 3 to 8. An age question alone does not take it outside these laws.
+
+## 4. Market Rows
+
+`guardian below` is the age under which a guardian must consent. We take the highest age that a market's law or regulator's text may require, because the error costs little: a guardian's click. Where we go above the law, the row says so.
+
+| Market | Status | Guardian below | Why this age | Needed before launch, beyond the baseline |
+| :--- | :--- | :--- | :--- | :--- |
+| United States | Open | 13 | COPPA | Illinois treated as if biometric law applies (§9); New York wording for teens' consent; store age signals |
+| Canada | Open | 14 | Quebec; federal 13. We do not ask for the province | French for notices in Quebec (to confirm) |
+| Australia | Open | 15 | Draft s 13 | Registered code checked against this document; child's assent and notice |
+| Singapore | Open | 13 | PDPC guidelines; from 13 only if the notice is understood | None known |
+| Japan | Open | 16 | Amended act; today's guidance is lower | Japanese notices |
+| South Korea | Open | 14 | Art. 22-2 | Korean notices; a Decree Art. 17-2 method; AI explanation and human review (§8) |
+| Taiwan | Open | 18 | Civil Code and contested capacity; our cautious reading | Traditional Chinese notices |
+| Hong Kong | Open without AI | 18 | Bird & Bird's reading of the ordinance | Traditional Chinese notices; `writing`, `speech` with AI, `conversation` wait for a vendor (§12) |
+| Brazil | Open | 16 | Parents consent under 12 by law. 16 matches the Digital ECA's linking age and is above the law | Portuguese notices and guardian pages; a legal representative |
+| Mainland China | **Not open to minors** | 14; all under-18s protected | PIPL | §5 |
+| Anywhere else | Closed for minors | Not applicable | Not researched | A row, after research |
+
+A market not listed is closed to minors. The European Union and the United Kingdom need rows of their own before opening. Age bands are:
 
 | Band | Who | Account |
 | :--- | :--- | :--- |
-| **Child** | Below the market's consent age (`markets` table): 13 in the US and UK, up to 16 in the EU, 14 in China | Created by a guardian; no email or real name |
-| **Teen** | From that age to 17 | Own account, with protective defaults (§6) |
+| **Child** | Below `guardian below` | Created by a guardian; no email or real name |
+| **Teen** | From that age to 17 | Own account, with the protective defaults of §7 |
 | **Adult** | 18 or older | As today |
 
-- **Asking.** Sign-up first asks for month and year of birth, with no default and no hint of why, and for the country, preset from the connection. A learner below consent age is sent to the guardian flow, and a retry from that browser does not change the answer.
-- **Storing.** We keep the band, the date it ends and the country, not the birth date.
-- **Unknown country:** consent age 16.
-- **Turning older.** A band that ends never widens anything by itself. The learner gets a notice and chooses again.
-- **No verification by documents.** Collecting IDs from children would create the risk we are avoiding. Guardians prove who they are; children do not.
+- **Asking.** Sign-up asks for the country and for month and year of birth, with no default and no hint of why. Below the age, sign-up stops and shows a page to hand to an adult. We take no email or other contact from the child, which is simpler than the exceptions some laws allow. A retry from that browser does not change the answer.
+- **Other signals.** Age signals from app stores and operating systems, where the law provides them, are also inputs; the younger answer wins. A guardian's statement or a teacher's report can move a learner to a younger band, never older.
+- **Storing.** We keep the band, the date it ends and the country, not the birth date, and we delete store signals after use.
+- **Turning older.** A band that ends widens nothing by itself. The learner gets a notice and chooses again.
+- **Moving.** A learner who moves country takes the stricter of the two rows until the next consent.
+- **No documents from children.** Collecting IDs from children would create the risk we are avoiding, and Singapore advises against it. Guardians prove who they are; children do not.
 
-## 5. Accounts and Consent
+## 5. Mainland China
 
-**The guardian comes first.** An adult creates their own account and adds a child's profile with a username and password. The child never gives an email or a name. This reverses today's guardian link, where a learner invites a guardian, which remains for teens.
+**Finding: the current product and company cannot lawfully serve minors there. This is the conclusion from what we could read and needs Chinese counsel, but privacy mechanisms do not fix it.**
+
+| Block | What we read |
+| :--- | :--- |
+| Subject tutoring | The [2021 "double reduction" opinion](https://www.gov.cn/zhengce/2021-07/24/content_5627132.htm): no new subject-tutoring institutions for grades 1 to 9, existing ones are non-profit; online ones need approval; no new ones for senior high; no online training for preschool children; online lessons at most 30 minutes, ending by 21:00. [Mathematics and foreign languages count as subjects](https://www.chinanews.com.cn/gn/2021/11-21/9613283.shtml). A [2024 draft regulation](https://edu.sh.gov.cn/mbjy_xwzx/20240218/88f7bf4c154142a6ae45ea0c466bc3c3.html) is still all we found, so the opinion stands |
+| Foreign capital | The same opinion bars foreign capital from controlling or holding shares in these institutions, including through VIE structures. [Compulsory education is closed to foreign investment](https://www.kingandwood.com/cn/en/insights/latest-thinking/china-tightens-regulation-for-online-education.html) (2019 article) |
+| Apps | [Beijing's filing rules](https://www.jiemian.com/article/7443536.html) stop preschool training apps; a draft required subject-tutoring app providers to be non-profit. Whether an adaptive self-study app is "training" is the open question for counsel |
+| Licence | A commercial ICP licence normally needs a [Chinese partner, with foreign ownership capped at 50%](https://www.china-briefing.com/news/china-internet-business-licenses-foreign-companies/). [Cloudflare's China Network needs an ICP number per domain and runs through JD Cloud](https://developers.cloudflare.com/china-network/concepts/icp/index.md); whether Workers run there is unconfirmed |
+| Vendors | [OpenAI](https://developers.openai.com/api/docs/supported-countries) and [Anthropic](https://www.anthropic.com/supported-countries) do not serve China. Generative AI there needs domestic models, and filings we did not confirm for 2026. [Azure operated by 21Vianet lists pronunciation assessment](https://docs.azure.cn/en-us/ai-services/speech-service/regions) |
+| Data | All data of [an under-14 is sensitive and needs guardian consent](https://www.mofo.com/pdf/resources/insights/210908-chinas-personal-information-protection-law). [Sending sensitive data abroad](https://www.hankunlaw.com/portal/article/index/cid/8/id/14064.html) needs a standard contract or certification, and a security assessment from 10,000 people. The [Minors' Online Protection Regulations](https://www.gov.cn/zhengce/content/202310/content_6911288.htm) add Arts. 32, 34 to 38: no refusing basics over optional consent; access, copy, correct, delete; breach reports; approved and logged staff access; a yearly audit reported to regulators; police report if private information suggests harm |
+| AI conversation | The [2026 measures on human-like AI](https://www.lw.com/en/insights/china-introduces-rules-for-ai-companion-and-emotional-interaction-services) exclude education with no ongoing emotional interaction, so S6 must not have a companion persona; they ban virtual-intimate services for minors. A [further draft](https://www.caixinglobal.com/2026-09-21/china-seeks-to-protect-minors-with-proposed-ai-rules-102487250.html) was published in September 2026 |
+
+**The real options, none of them a setting:**
+
+| Option | What it takes | Reach |
+| :--- | :--- | :--- |
+| **A. Do not open to minors** (adopted until the owner decides otherwise) | No listing in Chinese app stores, no Chinese payment, no marketing there; country "China" closes sign-up for under-18s | Chinese speakers elsewhere are served normally |
+| **B. Adults only** | A Chinese entity or partner, ICP, generative AI filings, a separate deployment and vendors. Under-18s stay blocked by a real age check | Adults in China |
+| **C. Licensed partner for minors** | A Chinese non-profit-qualified institution operates its own service with our content, if counsel finds a lawful form. Data stays there; we receive none | Minors, at most in non-subject content, or in provinces that approve |
+
+Hosting abroad and serving minors anyway is not an option: it leaves the rules above in place and adds cross-border transfer of sensitive data, and [regulators' reach over Chinese consumers remains](https://www.kingandwood.com/cn/en/insights/latest-thinking/china-tightens-regulation-for-online-education.html). A separate Chinese deployment would also duplicate the stack, since `markets` cannot carry a different vendor set, region, regulator reporting and retention law across the same database.
+
+**Company ownership.** Anthropic [may refuse entities majority-owned from unsupported regions](https://anthropic.com/supported-countries). Any structure with a Chinese parent must be checked against this before it is adopted.
+
+## 6. Accounts and Consent
+
+**The guardian comes first.** An adult creates their own account, proves they are an adult who can consent, and adds a child's profile with a username and password. The child never gives an email or a name. This reverses today's guardian link, where a learner invites a guardian, which remains as an optional view for teens.
+
+**Proving it once.** One method is accepted in every open market, so that we build one flow:
+
+| Method | Works for | Note |
+| :--- | :--- | :--- |
+| **Card or wallet transaction that notifies the holder** | US, Korea listed; "reasonable" elsewhere | The default. A payment processor handles the card; we store only the result |
+| **Signed form, scanned or mailed** | US, Korea listed; "reasonable" elsewhere | The fallback, and the method for the pilot |
+| **Mobile identity check** | Korea | Added only if Korean guardians need it |
+
+Email plus is not used: it fails in the US once anything is disclosed, and two flows cost more than one. Whether one verification can cover scopes added later by the same signed-in guardian is a question for counsel.
 
 **Each purpose has its own consent:**
 
-| Scope | Enables | Goes to vendors | Method |
+| Scope | Enables | Goes to vendors | Default for a child |
 | :--- | :--- | :--- | :--- |
-| `basic` | Lessons and rule-judged answers | No, beyond hosting and email | Email plus; a signed form in the pilot |
-| `writing` | AI-judged writing (E3) | AI model | Signed form or a payment-card transaction |
-| `speech` | Recording, S2 to S5 (E4, E5.1) | Speech services, AI model | The same |
-| `conversation` | S6 (E5) | Speech services, AI model | The same; off for children unless counsel agrees |
-| `research` | Calibration sets rated by people | Raters | Signed form, per collection |
+| `basic` | Lessons and rule-judged answers | Hosting and email only | Off until consent |
+| `writing` | AI-judged writing (E3) | AI model | Off |
+| `speech` | Recording, S2 to S5 (E4, E5.1) | Speech services, AI model | Off |
+| `conversation` | S6 (E5) | Speech services, AI model | Off, and not offered until counsel agrees |
+| `research` | Calibration sets rated by people | Raters | Off; signed form per collection |
 
-- Consent records are append-only: learner, scope, guardian, method, notice version, country, granted and withdrawn times.
-- A guardian may refuse or withdraw any scope but `basic` and keep the course. A task that needs a missing scope is not offered, and the learner continues around it, as [the design](english-curriculum.md) already requires for speech.
-- Withdrawing also deletes what that scope produced.
-- A new vendor or purpose means a new notice version and new consent.
-- Teens consent for themselves, and `speech` and `conversation` stay off until they turn them on. Where a market needs a guardian for a teen, its row says so.
+- **The record.** Consent is append-only: learner, scope, guardian, method, notice version, country, granted, expires and withdrawn times.
+- **Separate choices.** Every scope is its own screen, never bundled, and says what happens if refused. Refusing any scope but `basic` keeps the course: a task that needs a missing scope is not offered, and the learner continues around it, as [the design](english-curriculum.md) already requires for speech.
+- **Expiry.** A consent states its period: 12 months *starting*, with a reminder, then the feature stops and its data is deleted. This follows Australia's draft s 16, and also catches guardians who forget.
+- **Withdrawal** is as easy as granting, by the guardian or the child, and deletes what that scope produced.
+- **New vendor or purpose:** a new notice version and new consent.
+- **The child's own notice.** An age-appropriate notice tells the child what is on, why, for how long and how to turn it off, and that a guardian can see their progress. Before `speech`, `writing` or `research` starts, the child is asked too, since Australia's draft s 20 requires assent and it is right everywhere. If the child says no, the feature stays off.
+- **Teens** consent for themselves, on a screen that says the service continues if they decline, as New York requires. `speech` and `conversation` stay off until they turn them on. They get an optional guardian view only if they invite one, and see when it is on.
+- **Schools** cannot consent beyond their educational purpose, and we have no agreements with them. Classes and teacher roles are not offered to minors until counsel has reviewed each market.
 
-**Schools.** A school cannot consent to anything beyond its educational purpose, and we have no agreements with schools. Classes and teacher roles are not offered to minors until counsel has reviewed them.
+**Languages.** Notices, consent screens and guardian pages must be understood by the people reading them: Traditional Chinese, Japanese, Korean and Portuguese at least, and French to confirm. The product's locales are English and Simplified Chinese, so this is new work. Human-translated legal text ships ahead of any course translation. Whether the course itself must be offered in those languages depends on who it is sold to, and a child who cannot read the notice cannot assent.
 
-## 6. Features by Band
+## 7. Features by Band
 
 | Feature | Child | Teen |
 | :--- | :--- | :--- |
@@ -107,31 +174,49 @@ Not researched yet: Hong Kong, Taiwan, Singapore, Canada, Australia, Japan, Kore
 | Recorded speech | With `speech` | Off until turned on |
 | Conversation | Off | Off until turned on |
 | Leagues | Off; if opened later, a random name and no profile | Off until turned on, username only |
+| Streak reminders and other nudges | Off | Off until turned on; never at night |
+| Guardian time limit | Available | With a guardian view |
 | Free text between users | Never | Never |
 | Advertising, third-party trackers, session replay | Never | Never |
 | Training any model, voiceprints, voice cloning, emotion or personality inference | Never | Never |
 
-We tell learners in their own words when an AI is judging or talking to them.
+The learning engine profiles a learner, but in the learner's interest: choosing what to study is the service they asked for. Using it to keep them in the app longer is not, as Canada's code says, so engagement features start off for minors. Brazil's Art. 17 requires the time limit. No random rewards are sold.
 
-## 7. Text
+We tell learners in their own words when an AI is judging or talking to them, which Korea requires as well.
+
+## 8. AI Verdicts
+
+Korea lists student evaluation as high-impact. The same logic is why AI that scores a learner must stay reviewable everywhere:
+
+- An AI verdict that changes mastery is logged with its model, rubric version and score.
+- The learner can see the reasons in words and ask for a person to review. A person's decision overrides.
+- Consistent bias is checked before launch by language background, as the English plan already requires.
+- A summary of the training data of the models we use, and their purposes, is available on request, to the extent the vendor gives it.
+- Children's mastery is not gated by AI alone until counsel has answered question 5 in §13. Rule-judged items can establish it, and AI verdicts add to it.
+
+## 9. Text and Speech
+
+**Text.**
 
 - **Prompts avoid personal topics.** Items ask about the given text or a made-up situation, not "describe your family".
-- **Filter first.** Before text leaves the platform, or reaches a person, emails, phone numbers, addresses, handles and likely names are replaced with placeholders. The filter is checked on samples before each launch, and a miss must not be treated as harmless, since it does not catch everything.
-- **Model calls.** Only vendors of §10, no gateway logging of the text, no caching. The prompt holds the filtered text and no account data.
+- **Filter first.** Before text leaves the platform or reaches a person, emails, phone numbers, addresses, handles and likely names are replaced with placeholders. The filter is checked on samples in each language before launch. It will miss some, so a miss is not treated as harmless.
+- **Model calls.** Only vendors of §12, no gateway logging of the text, no caching. The prompt holds the filtered text and no account data.
 - **Events hold no text.** Replay needs scores, so the event log stores ids and scores. The response lives in `answer`, or a writing table, where it can expire without touching the learner's state.
 - **People who read text.** Pilot reports aggregate responses with no learner identity. Staff access is approved and logged.
-- **Signs of harm** in writing or speech go to a defined review path. Who is told, and when, depends on the market, and is a question for counsel (§12).
 
-## 8. Speech
+**Speech.**
 
 1. **Local first.** Where the device can recognize speech itself, audio does not leave it, as in Duolingo ABC.
 2. **Otherwise streamed, not stored.** Prefer real-time services that keep nothing. [Microsoft states](https://learn.microsoft.com/legal/cognitive-services/speech-service/speech-to-text/data-privacy-security) that real-time recognition and pronunciation assessment retain no customer data.
 3. **When a file is needed,** it goes to R2 by a short-lived URL, is deleted as soon as it is judged, and a lifecycle rule removes anything left within a day. The voice service keeps no audio, as designed.
 4. **Before recording:** the learner sees a recording indicator and can skip without penalty. Nothing records in the background, and prompts do not ask for names.
-5. **Never:** a voice stored as a profile, recognition of who is speaking, or inference of emotion, health or age.
-6. **Calibration.** Clips of children (E4.6) are collected only under `research`, with a separate form saying who rates them and when they are destroyed, and are never mixed with learners' recordings.
+5. **Never:** a voice stored as a profile, recognition of who is speaking, speaker embeddings kept by us or a vendor, or inference of emotion, health or age. A vendor's contract must say this.
+6. **As if biometric.** The Illinois question is open and penalties there are private suits, so in every market the `speech` consent is written, names the vendor, and links the published retention schedule. This costs almost nothing.
+7. **Calibration.** Clips of children (E4.6) are collected only under `research`, with a separate form saying who rates them and when they are destroyed, and are never mixed with learners' recordings.
 
-## 9. Retention and Deletion
+**Signs of harm** in writing or speech go to a review path. It must exist before E3. Duties differ: China's Art. 38 requires reporting to police in some cases, and others are unknown (§13).
+
+## 10. Retention and Deletion
 
 | Data | Child | Teen | After that |
 | :--- | :--- | :--- | :--- |
@@ -142,61 +227,78 @@ We tell learners in their own words when an AI is judging or talking to them.
 | Essays and feedback quoting them | 1 year *starting* | 1 year *starting* | Deleted; scores remain |
 | Progress: events, state, whether answers were right | While active | While active | Deleted with the account |
 | IP addresses in logs | 30 days | 30 days | Deleted |
-| Consent records | Account's life, plus a period counsel sets | The same | Deleted |
+| Consent records | Account's life, plus a period counsel sets per market | The same | Deleted |
 | Inactive account | 12 months *starting*, then a notice, then 30 days | The same | Deleted |
 
 - **Deleting means everywhere.** One function covers database tables, transcripts, feedback, R2 and vendor copies, and a test checks that nothing of a deleted learner remains. Backups age out within a stated window. The Alexa case is why transcripts are named here.
-- **Guardians can act themselves.** They can see, export and delete by kind of data, and delete the whole profile, with no email needed. A refusal is written, with reasons.
+- **Who can act, without email.** A guardian can see, export and delete by kind of data, and delete the whole profile. A child can delete their own account's optional data, as Australia's draft, Japan's amendment and Hong Kong's rights allow, and the guardian is told. Self-service takes effect at once; a written reply, with reasons if refused, within 30 days.
+- **After 18.** Data gathered while a minor keeps these limits unless the adult consents anew, as New York requires.
 - **Anonymized does not mean exempt.** Text and voice are hard to anonymize, so neither is kept as "anonymous data". Only aggregate counts are.
 - A published retention policy states purposes, business need and these timeframes, as COPPA requires.
 
-## 10. Vendors
+## 11. Duties Regardless of Features
+
+- **Impact assessment** before launch and before each new scope. One document covers Australia's s 38, Brazil's Art. 16, US state assessments and Canada's expectation, with market annexes, and a register of assessments.
+- **Breach playbook.** Named owner, a table of each market's regulator and shortest deadline, and notice to child and guardian in their language. The deadlines must be collected first; only Taiwan's and Singapore's duties were read.
+- **Staff access.** Least privilege, approval and logs, as China's Art. 36 requires and which we apply everywhere. An annual internal audit.
+- **Representatives.** Brazil requires one. Korea's privacy act and others are to be confirmed. Each is a contract, not code.
+- **Published pages.** Privacy notice, children's notice, retention policy, vendor list with countries, and a contact, in each market's languages. A child-friendly way to ask and complain, as Australia's draft requires.
+- **The legal entity.** Which company contracts with learners decides the vendor terms, the transfer rules and who is responsible. This is undecided.
+
+## 12. Vendors
 
 A vendor receives minors' data only if its contract and settings give all of these, recorded in a register with the date checked:
 
+- It serves the market where the learner is.
 - Its terms allow minors' data, and we meet its conditions.
 - Zero retention, or a stated short period, with no training.
-- A data processing agreement and a lawful transfer mechanism.
+- A data processing agreement and a lawful transfer mechanism for that market.
 - A named region.
 
-| Vendor type | What we know | To check |
+`markets` lists the vendors allowed per market, so that a route cannot silently change them.
+
+| Vendor | What we know | To check |
 | :--- | :--- | :--- |
-| OpenAI API | [Requires zero data retention](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance) for under-13s or the consent age, and age-appropriate safeguards | Contract |
-| Anthropic API | [Allows organizations to serve minors](https://support.claude.com/en/articles/9307344) with age assurance, moderation, monitoring, AI disclosure and a public statement of compliance | Whether zero retention is available to us |
-| Azure AI Speech | See §8 | Contract, region |
-| Other speech and AI vendors, pi-ai routes, AI Gateway | Not checked | Each one, before use; a route may change the vendor, so routes are pinned for minors |
-| Cloudflare, PostgreSQL host, Resend | Not checked | Agreements, regions |
+| OpenAI API | [Serves all open markets but Hong Kong](https://developers.openai.com/api/docs/supported-countries). [Requires zero data retention](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance) for under-13s or the consent age | Contract |
+| Anthropic API | [Serves all open markets but Hong Kong](https://www.anthropic.com/supported-countries), policy effective November 12, 2026. [Allows organizations to serve minors](https://support.claude.com/en/articles/9307344) with age assurance, moderation, monitoring, AI disclosure and a public statement of compliance | Whether zero retention is available to us |
+| Azure AI Speech | See §9 | Contract, regions per market |
+| Azure OpenAI in Hong Kong | [Microsoft said it served eligible customers there](https://sg.finance.yahoo.com/news/microsoft-maintains-ai-services-hong-093000823.html); undated, and terms not read | Whether it still does, and for minors |
+| Other speech and AI vendors, pi-ai routes, AI Gateway | Not checked | Each one, before use |
+| Cloudflare, PostgreSQL host, Resend, payment processor | Not checked | Agreements, regions |
 
-## 11. Enforcement in Code
+**Hong Kong.** A vendor's region policy looks at where the user is. Routing a Hong Kong learner through our servers elsewhere would break it, so we do not. Hong Kong opens with `basic` and rule-judged work; AI scopes open when a vendor that serves Hong Kong and accepts minors' data is confirmed.
 
-- **`learner`** gains band, band end and country. A new append-only **`consent`** table holds §5.
-- **`markets`**, a pure data table in `libs/api`, gives each country its consent age, which features are allowed, and whether it is served. An unlisted country takes the strictest row.
+## 13. Enforcement in Code, and What Comes When
+
+- **`learner`** gains band, band end and country. A new append-only **`consent`** table holds §6.
+- **`markets`**, a pure data table in `libs/api`, gives each country its status, guardian age, allowed scopes, allowed vendors and required notice languages. An unlisted country is closed to minors.
 - **One gate.** `StartTask` and every call that accepts text or audio ask `libs/api` for the learner's capabilities and refuse otherwise. `nextTasks` receives the allowed task kinds as data, so that the engine stays pure and subject-agnostic.
-- **Retention** runs from a daily Cron Trigger and is testable with an explicit time.
+- **Retention and consent expiry** run from a daily Cron Trigger and are testable with an explicit time.
 - **Logs** hold ids, never responses or transcripts. A test feeds marked text through a task and asserts that it appears in no log or event.
 - **Staff access** to minors' text goes through an audited tool, not direct SQL in production.
 
-**Gaps today.** Sign-up has no age question and needs a real name and email. There is no privacy notice or terms page. `answer.response` is kept forever, as plain text. Guardians are invited by the learner, and cannot delete. Account deletion does cascade to learner data, which is a good base.
-
-## 12. What Must Exist, and When
+**Gaps today.** Sign-up has no age question and needs a real name and email. There is no privacy notice or terms page. `answer.response` is kept forever, as plain text. Guardians are invited by the learner, and cannot delete. Locales are only English and Simplified Chinese. Account deletion does cascade to learner data, which is a good base.
 
 | Before | Needed | Size |
 | :--- | :--- | :--- |
-| **English pilot (E1.6)** | Signed guardian forms stating purpose, access and deletion date; accounts made by the team, with pseudonyms; the notice in both languages; reports read only by named people; data deleted at the stated date. No new code beyond the deletion | S |
-| **Public sign-up (any subject)** | §4, §5 for `basic`, guardian view, export and delete, §9 for existing data, published notice and retention policy, the impact assessment, leagues rules | L |
-| **AI writing (E3)** | `writing` consent, §7, vendor register, the EU AI Act decision | M |
-| **Recording (E4)** | `speech` consent, §8, deletion test across R2 and transcripts, `research` form for E4.6 | M |
+| **English pilot (E1.6)** | In one open market, not China: signed guardian forms stating purpose, access and deletion date; accounts made by the team, with pseudonyms; the notice in the market's language; reports read only by named people; data deleted at the stated date. No new code beyond the deletion | S |
+| **Public sign-up (any subject)** | §4 and §6 for `basic`, guardian verification, view, export and delete, retention for existing data, published pages, the impact assessment, leagues rules, translated legal text per market, representatives | XL |
+| **AI writing (E3)** | `writing` consent, §8, §9, vendor register, per-market check | M |
+| **Recording (E4)** | `speech` consent, §9, deletion test across R2 and transcripts, `research` form for E4.6 | M |
 | **Conversation (E5)** | `conversation` consent, safety review path, end-to-end test of no retention | M |
+| **Any China option** | §5 decided by the owner with Chinese counsel | Separate project |
 
-**Questions for counsel:**
+Markets need not open together. The baseline is shared, so each opens when its row is met: its notices translated and counsel's sign-off given.
 
-1. Which markets come first, and what is each market's row? This decides the size of the rest.
-2. Is the design's use of speech and AI vendors "integral" under COPPA, and which consent method does it then need?
-3. Does the 2017 voice policy still stand, and does any of our speech fall under it?
-4. Are recordings without any voiceprint biometric data in each market, including Illinois?
-5. Are the retention periods in §9 defensible?
-6. In which markets must a teen's guardian consent?
-7. Are AI verdicts that gate mastery high-risk in the EU, and do we limit them there?
-8. What must we do when a child's text shows possible harm?
-9. Do we exclude mainland China, and how, or comply with its rules?
-10. What do schools need before they can be offered?
+**Questions for counsel, in each market:**
+
+1. Is our row correct, including the age of majority? Korea and some Canadian provinces may differ from 18.
+2. Is using speech and AI vendors "integral" under COPPA, and is card or signed form sufficient everywhere? Does one verification cover scopes added later?
+3. Are recordings with no voiceprint biometric data, including in Illinois and under Japan's new category?
+4. Are the retention periods in §10 defensible? How long must consent records be kept?
+5. Does AI judging make us high-impact in Korea, and what does it take there? Do similar rules apply elsewhere?
+6. What must we do when a child's text shows possible harm?
+7. Must the course itself, and not only the notices, be in the local language?
+8. What do schools need before they can be offered?
+9. Which representatives, registrations and breach deadlines apply to a company of our size, from where the legal entity is?
+10. **China:** is a self-study adaptive app "subject training"? Is any option in §5 lawful, for which ages and subjects? How do we show we are not offering services there under option A?
