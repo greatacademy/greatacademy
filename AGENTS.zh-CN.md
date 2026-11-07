@@ -29,7 +29,6 @@ apps/web/            TanStack Start on Cloudflare Workers：页面、Connect API
 apps/math-workers/   数学的网关和分片 Worker
 apps/english-workers/ 英语的网关和分片 Worker
 apps/nsh/            Native Shell 的 TSX 应用：iOS、Android、macOS、Windows、Linux
-apps/mobile/         原 Expo 骨架，已由 apps/nsh 取代
 libs/content/        内容模型、编译器、题目运行时、判定器（与学科无关）
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数

@@ -29,7 +29,6 @@ apps/web/            TanStack Start on Cloudflare Workers: pages, Connect API, b
 apps/math-workers/   The gateway and shard Workers of mathematics
 apps/english-workers/ The gateway and shard Workers of English
 apps/nsh/            Native Shell app in TSX: iOS, Android, macOS, Windows, Linux
-apps/mobile/         Former Expo skeleton, replaced by apps/nsh
 libs/content/        Content model, compiler, problem runtime, checkers (subject-agnostic)
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers

@@ -18,11 +18,6 @@ coverage/
 .wrangler/
 .tanstack/
 
-# Expo (apps/mobile)
-.expo/
-ios/
-android/
-
 # OS / editors
 .DS_Store
 .idea/

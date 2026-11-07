@@ -52,7 +52,6 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `math-workers` | `apps/math-workers` | The gateway and shard Workers of mathematics ([Architecture](architecture.md) §6.1); `pnpm nx run math-workers:generate` writes the manifest to `gen/`, which targets that need it do first |
 | `english-workers` | `apps/english-workers` | The gateway and shard Workers of English, built in the same way |
 | `nsh` | `apps/nsh` | The Native Shell app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
-| `mobile` | `apps/mobile` | The former Expo skeleton, replaced by `nsh` |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
 | `pilot` | `tools/pilot` | Pilot report for a course from a database: `DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i` ([Roadmap §3](roadmap.md#3-pilot)) |

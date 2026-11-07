@@ -63,7 +63,6 @@ apps/web/             TanStack Start on Workers：页面、better-auth，并把 
 apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
 apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
 apps/nsh/             Native Shell 的 TSX 应用（iOS、Android、macOS、Windows、Linux）
-apps/mobile/          原 Expo 骨架，已由 apps/nsh 取代
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
 libs/api/             Connect 服务实现与会话执行器；与传输方式和宿主无关
 libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择、诊断、XP、测验（纯函数）

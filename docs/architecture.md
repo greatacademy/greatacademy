@@ -63,7 +63,6 @@ apps/web/             TanStack Start on Workers: pages, better-auth, and libs/ap
 apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
 apps/english-workers/ The Workers serving English: a gateway and its shard
 apps/nsh/             Native Shell app in TSX (iOS, Android, macOS, Windows, Linux)
-apps/mobile/          Former Expo skeleton, replaced by apps/nsh
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
 libs/api/             Connect service implementations and the session runner; transport- and host-agnostic
 libs/engine/          Learning engine: graph, frontier, FIRe, task selection, diagnostic, XP, quizzes (pure)
