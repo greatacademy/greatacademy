@@ -431,6 +431,8 @@ describe("the retention run", () => {
     const b = await child("parent", "kid02");
     await newUser("grown");
     await privacy("grown").setAge({ country: "US", birthYear: 1990, birthMonth: 1 });
+    // The rows' creation time defaults to the wall clock; the test's clock decides instead.
+    await db.update(learner).set({ createdAt: new Date(now) });
     sent = [];
     const t0 = now + RETENTION.inactive + DAY;
     expect((await runRetention(db, t0, deps())).notices).toBe(2);
