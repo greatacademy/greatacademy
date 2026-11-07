@@ -1,0 +1,78 @@
+# Billing
+
+> English | [简体中文](billing.zh-CN.md)
+
+Great Academy is paid only: a learner studies a subject while a subscription covers it. There is no free tier and no trial; the first payment of every subscription can be refunded in full for 30 days instead. Billing is phase P9 of the [roadmap](roadmap.md). It also proves that a guardian is an adult, as [Minors' Data](minors-data.md) §6 requires.
+
+## 1. Plans and Prices
+
+Prices are per learner, in US dollars:
+
+| Plan | Covers | Monthly | Yearly |
+| :--- | :--- | :--- | :--- |
+| One subject | One subject, such as mathematics | $19 | $199 |
+| All subjects | Every subject, including those added later | $49 | $499 |
+
+- The yearly price is about 15% below twelve months.
+- The bundle costs more than two subjects; it is meant for a catalog of three or more, which comes before launch. When it rises, subscribers keep the price they started with.
+- A learner may hold several plans; any plan that covers a subject lets them study it.
+- Changing a plan in place, and discounts for several children, come later. A learner who moves to the bundle buys it and cancels the old plan.
+
+## 2. Who Pays
+
+- **Only adults pay.** An adult pays for themselves, for children they add, and for teens who follow them.
+- **Children.** A guardian buys a plan for a child before adding the child; the plan waits unassigned and goes to the next child they add.
+- **Teens.** A teen signs up alone, as before, and cannot pay. Their account shows a code that invites a guardian ([Minors' Data](minors-data.md) §6). The guardian follows the teen with it and buys a plan for them.
+- The payer manages the plan: cancels it, asks for the refund, sees receipts. The learner sees only whether they are covered.
+
+## 3. Accounts and Methods
+
+Both Stripe accounts belong to the US company.
+
+| Stripe account | Methods | Renewal |
+| :--- | :--- | :--- |
+| **Main** | Cards and the wallets Stripe offers with them | Automatic, at the end of each month or year, until cancelled |
+| **Wallet** | Alipay and WeChat Pay only | None: the payment buys one month or one year, and paying again before it ends adds another |
+
+Stripe's Checkout cannot renew Alipay or WeChat Pay, so the wallet account sells periods. Seven days before a period ends, the payer gets an email: for a card, that it will renew and how to cancel; for a wallet, that access ends unless they pay again.
+
+Prices are sent to Checkout as amounts, not as Stripe price ids, so the table above is the only source. Sales tax is computed by Stripe Tax where the company is registered; turning it on is a deployment setting.
+
+## 4. Signing Up
+
+Sign-up asks who will learn ([Minors' Data](minors-data.md) §6), then the age, then the account. Then it shows the plans, with a switch between monthly and yearly and a choice between card and Alipay or WeChat Pay. Paying needs three boxes ticked, each a separate statement in our own words:
+
+1. I am an adult and agree to the Terms of Service.
+2. I authorize Great Academy to renew the plan and charge my card until I cancel, which I can do online at any time. A wallet payment shows instead that it does not renew.
+3. I understand that a refund is given only within 30 days of the first payment.
+
+The button stays off until all three are ticked. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
+
+## 5. Cancelling and Refunds
+
+- **Cancel.** A card plan stops renewing and lasts to the end of the period that was paid. A wallet plan has nothing to cancel.
+- **Refund.** The first payment of a plan is refunded in full on request within 30 days of it, from the account's settings; access ends at once. Renewals and later wallet payments are not refunded, and nothing is prorated.
+- Payment details and card changes go through Stripe's customer portal on the main account.
+
+## 6. Access
+
+A learner may study a subject while a plan covering it is paid until a time after now. Every request that studies checks this beside the age and consent rules of `accessOf`; a guardian viewing a child's progress needs no plan. Billing applies only once the main account's secret key is set: locally, without it, everyone may study as before.
+
+Administrators can grant a plan for a set time without payment, for testers, reviewers and the English pilot ([Admin Console](admin.md)).
+
+## 7. Guardian Verification
+
+The card transaction is the method [Minors' Data](minors-data.md) §6 prefers: the issuer notifies the holder of each charge. A guardian's first paid card payment approves their verification, unless the card is prepaid, which a child could hold. A wallet payment, a prepaid card or a grant does not verify; such a guardian sends the signed form, which stays the fallback. A later refund does not undo the verification, since the charge was made and notified; counsel is asked to confirm this.
+
+## 8. Mobile Apps
+
+The apps sell nothing and show no prices or links to pay. A learner without a plan sees that the account has no plan for the subject. The stores' rules for apps that let people use what they bought elsewhere may require in-app purchase; that is decided before the apps are released.
+
+## 9. Data
+
+| Table | Holds |
+| :--- | :--- |
+| `subscription` | One row per plan: payer, learner (empty while waiting for a child), scope (a subject id or `all`), interval, account, Stripe subscription id, paid-until time, cancellation, refund, last reminder |
+| `payment` | One row per charge: plan, account, Stripe payment intent, amount, currency, time, whether it was the plan's first, refund time |
+
+We store no card details. Stripe's events reach two webhooks, one per account, whose signatures are checked before anything is read.
