@@ -15,6 +15,15 @@ export interface AgeAnswer {
   readonly birthMonth: number;
 }
 
+/** Chevron is the arrow at the right of a field that opens a list, the same on every such field. */
+function Chevron() {
+  return (
+    <span aria-hidden className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-muted">
+      ▾
+    </span>
+  );
+}
+
 /** CountrySelect picks a market or "other", with no default. */
 export function CountrySelect({ id, name, defaultValue = "" }: { id: string; name: string; defaultValue?: string }) {
   const { locale } = useI18n();
@@ -24,17 +33,27 @@ export function CountrySelect({ id, name, defaultValue = "" }: { id: string; nam
     .map((code) => ({ code, label: regionName(code, locale) }))
     .sort((a, b) => a.label.localeCompare(b.label, locale));
   return (
-    <select key={names.length} id={id} name={name} required defaultValue={defaultValue} className={field}>
-      <option value="" disabled>
-        {t.choose}
-      </option>
-      {names.map((n) => (
-        <option key={n.code} value={n.code}>
-          {n.label}
+    <div className="relative">
+      <select
+        key={names.length}
+        id={id}
+        name={name}
+        required
+        defaultValue={defaultValue}
+        className={`${field} appearance-none pr-8 font-normal invalid:text-muted`}
+      >
+        <option value="" disabled>
+          {t.choose}
         </option>
-      ))}
-      <option value="other">{t.otherCountry}</option>
-    </select>
+        {names.map((n) => (
+          <option key={n.code} value={n.code}>
+            {n.label}
+          </option>
+        ))}
+        <option value="other">{t.otherCountry}</option>
+      </select>
+      <Chevron />
+    </div>
   );
 }
 
@@ -74,11 +93,9 @@ export function MonthField() {
             if (next) setYear(null);
           }}
         >
-          <Popover.Trigger aria-labelledby={labelId} className={`${field} flex items-center justify-between text-left font-normal`}>
+          <Popover.Trigger aria-labelledby={labelId} className={`${field} relative pr-8 text-left font-normal`}>
             <span className={title ? "" : "text-muted"}>{title ?? t.choose}</span>
-            <span aria-hidden className="text-muted">
-              ▾
-            </span>
+            <Chevron />
           </Popover.Trigger>
           <Popover.Portal>
             <Popover.Positioner side="bottom" align="start" sideOffset={4} className="z-30">
