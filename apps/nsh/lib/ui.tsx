@@ -11,6 +11,7 @@ import {
   Scroll,
   type ScrollEvent,
   safeAreaInsets,
+  setTheme,
   signal,
   Text,
   untracked,
@@ -27,6 +28,25 @@ import { setToken } from "./session.ts";
 
 /** colors gives the design tokens as hex for the scheme shown and the appearance chosen on this device. */
 export const colors = computed(() => resolveColors(appearance(), colorScheme()));
+
+/**
+ * followPalette makes the chosen palette's accent nsh's `primary` in both appearances, which the system's own
+ * controls take: the tab bar's selected tab, Android's dialog buttons. It replaces `nsh.json`'s theme, which only sets
+ * `primary`.
+ */
+export function followPalette(): void {
+  effect(() => {
+    const chosen = { ...appearance(), theme: "system" as const };
+    const light = resolveColors(chosen, "light");
+    const dark = resolveColors(chosen, "dark");
+    setTheme({
+      cssVars: {
+        light: { primary: light.accent, "primary-foreground": light["on-accent"] },
+        dark: { primary: dark.accent, "primary-foreground": dark["on-accent"] },
+      },
+    });
+  });
+}
 
 /** headerStyle colors the system header on iOS and Android, which on Android would otherwise stay light in the dark. */
 export const headerStyle = computed(() => ({
