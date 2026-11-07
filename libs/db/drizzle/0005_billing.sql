@@ -19,6 +19,7 @@ CREATE TABLE "subscription" (
 	"interval" text NOT NULL,
 	"account" text NOT NULL,
 	"stripe_subscription" text,
+	"customer" text,
 	"checkout" text,
 	"paid_until" timestamp with time zone NOT NULL,
 	"created_at" timestamp with time zone NOT NULL,

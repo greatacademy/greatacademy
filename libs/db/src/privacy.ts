@@ -328,3 +328,12 @@ export async function isManagedUser(db: Db, userId: string): Promise<boolean> {
   const [row] = await db.select({ managed: learner.managed }).from(learner).where(eq(learner.userId, userId));
   return row?.managed ?? false;
 }
+
+/** approveByPayment records a guardian verified by a card payment, unless they are verified already. */
+export async function approveByPayment(db: Db, userId: string, at: Date): Promise<boolean> {
+  if (await approvedVerification(db, userId)) return false;
+  await db
+    .insert(guardianVerification)
+    .values({ userId, method: "card", status: "approved", submittedAt: at, decidedAt: at, decidedBy: "payment" });
+  return true;
+}

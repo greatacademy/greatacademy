@@ -1,6 +1,7 @@
 import { and, asc, eq, gt, gte, isNull, lt, or, sql } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
+import { user } from "./schema/auth.ts";
 import { type PaymentAccount, type PlanInterval, type PlanScope, payment, subscription } from "./schema/billing.ts";
 
 /** PlanRow is a stored plan. */
@@ -18,6 +19,7 @@ export interface NewPlan {
   readonly account: PaymentAccount;
   readonly stripeSubscription?: string;
   readonly checkout?: string;
+  readonly customer?: string;
   readonly paidUntil: Date;
   readonly at: Date;
 }
@@ -34,6 +36,7 @@ export async function addPlan(db: Db, p: NewPlan): Promise<PlanRow> {
       account: p.account,
       stripeSubscription: p.stripeSubscription ?? null,
       checkout: p.checkout ?? null,
+      customer: p.customer ?? null,
       paidUntil: p.paidUntil,
       createdAt: p.at,
     })
@@ -226,4 +229,20 @@ export async function markPlanReminded(db: Db, id: string): Promise<void> {
     .update(subscription)
     .set({ remindedFor: sql`${subscription.paidUntil}` })
     .where(eq(subscription.id, id));
+}
+
+/** customerOf returns the Stripe customer of a person's newest main-account plan. */
+export async function customerOf(db: Db, payerId: string): Promise<string | undefined> {
+  const rows = await db
+    .select({ customer: subscription.customer })
+    .from(subscription)
+    .where(and(eq(subscription.payerId, payerId), eq(subscription.account, "main"), sql`${subscription.customer} is not null`))
+    .orderBy(sql`${subscription.createdAt} desc`)
+    .limit(1);
+  return rows[0]?.customer ?? undefined;
+}
+
+/** emailOf returns a person's email address. */
+export async function emailOf(db: Db, userId: string): Promise<string | undefined> {
+  return (await db.select({ email: user.email }).from(user).where(eq(user.id, userId)))[0]?.email;
 }

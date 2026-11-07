@@ -32,6 +32,8 @@ export const subscription = pgTable(
     account: text("account").notNull().$type<PaymentAccount>(),
     /** stripeSubscription is the main account's subscription id; empty for wallet periods and grants. */
     stripeSubscription: text("stripe_subscription").unique(),
+    /** customer is the Stripe customer that pays a main-account plan, for its portal. */
+    customer: text("customer"),
     /** checkout is the Checkout session that bought the plan, so a repeated event changes nothing. */
     checkout: text("checkout").unique(),
     paidUntil: at("paid_until").notNull(),

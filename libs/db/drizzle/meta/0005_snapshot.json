@@ -1,5 +1,5 @@
 {
-  "id": "ff11957a-6f11-4b00-8446-d1a84afe1c60",
+  "id": "e9946ef8-5989-46ad-ab10-9d7236dfa3c9",
   "prevId": "be9955b7-218e-4c9b-8c12-f46fa35ddfd6",
   "version": "7",
   "dialect": "postgresql",
@@ -482,6 +482,12 @@
         },
         "stripe_subscription": {
           "name": "stripe_subscription",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "customer": {
+          "name": "customer",
           "type": "text",
           "primaryKey": false,
           "notNull": false
