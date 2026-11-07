@@ -192,12 +192,79 @@ test("stops a child at sign-up, keeps no answer, and stays stopped", async () =>
   const child = { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_CHILD" }) };
   const app = await open("./App.tsx", { network: child });
   await app.press("text:Get started");
+  await app.press("label:Me");
   await answerAge(app, "2018");
   await app.waitFor("text:Please ask an adult");
   expect(Object.keys(app.storage())).toEqual(["ga.sign-up-stopped"]);
   const again = await open("./App.tsx", { network: child, storage: app.storage() });
   await again.press("text:Get started");
+  await again.press("label:Me");
   await again.waitFor("text:Please ask an adult");
+});
+
+test("lets a parent or guardian sign up from the stop page", async () => {
+  const app = await open("./App.tsx", {
+    network: { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_CHILD" }) },
+    storage: { "ga.sign-up-stopped": String(Date.now()) },
+  });
+  await app.press("text:Get started");
+  await app.press("label:Me");
+  await app.waitFor("text:Please ask an adult");
+  await app.press("text:A parent or guardian signs up here");
+  await app.waitFor("text:About you");
+});
+
+test("forgets a stop after a day", async () => {
+  const app = await open("./App.tsx", {
+    network: { ...network, ...countries },
+    storage: { "ga.sign-up-stopped": String(Date.now() - 25 * 60 * 60 * 1000) },
+  });
+  await app.press("text:Get started");
+  await app.press("label:Me");
+  await app.waitFor("text:Before you start");
+});
+
+test("stops a parent path that is not answered by an adult", async () => {
+  const app = await open("./App.tsx", {
+    network: { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_TEEN" }) },
+  });
+  await app.press("text:Get started");
+  await app.press("label:My children");
+  await answerAge(app, "2011");
+  await app.waitFor("text:Please ask an adult");
+});
+
+test("takes a parent who signs up on to their learners", async () => {
+  let answered = false;
+  const app = await open("./App.tsx", {
+    network: {
+      ...network,
+      ...countries,
+      [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_ADULT" }),
+      [`POST ${privacyUrl}/GetAccess`]: () => json({ status: answered ? "ACCESS_STATUS_OK" : "ACCESS_STATUS_NEEDS_AGE" }),
+      [`POST ${privacyUrl}/SetAge`]: () => {
+        answered = true;
+        return json({ band: "BAND_ADULT" });
+      },
+      [`POST ${authUrl}/sign-up/email`]: {
+        status: 200,
+        headers: { "content-type": "application/json", "set-auth-token": "tok.sig" },
+        body: JSON.stringify({ token: "tok" }),
+      },
+      [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [], xp: {} }),
+      [`POST ${accountUrl}/GetSettings`]: json({}),
+      [`POST ${accountUrl}/ListGuardedLearners`]: json({ learners: [] }),
+    },
+  });
+  await app.press("text:Get started");
+  await app.press("label:My children");
+  await app.waitFor("text:About you");
+  await answerAge(app, "1985");
+  await app.type("label:Name", "Parent");
+  await app.type("label:Email", "p@example.test");
+  await app.type("label:Password", "correct horse");
+  await app.press("role:button[Create account]");
+  await app.waitFor("text:Learners you follow");
 });
 
 test("asks a teen for no real name", async () => {
@@ -205,6 +272,7 @@ test("asks a teen for no real name", async () => {
     network: { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_TEEN" }) },
   });
   await app.press("text:Get started");
+  await app.press("label:Me");
   await answerAge(app, "2011");
   await app.waitFor("label:Email");
   expect(app.texts()).not.toContain("Name");
@@ -230,6 +298,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
     },
   });
   await app.press("text:Get started");
+  await app.press("label:Me");
   await answerAge(app, "1990");
   await app.waitFor("label:Name");
   await app.type("label:Name", "Test");

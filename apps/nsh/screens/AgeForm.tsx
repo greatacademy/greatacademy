@@ -6,7 +6,7 @@ import { privacy } from "../lib/rpc.ts";
 import { Action, Choice, ErrorNote, MonthField, type MonthOfYear, Muted, Title } from "../lib/ui.tsx";
 
 /** AgeForm asks for the country and month and year of birth, with no default and no hint of why. */
-export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void> }) {
+export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void>; title?: string; body?: string }) {
   const countries = query(["countries"], ({ signal }) => privacy.listCountries({}, { signal }));
   const country = signal<string | null>(null);
   const born = signal<MonthOfYear | null>(null);
@@ -35,8 +35,8 @@ export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void> 
 
   return (
     <View style={{ gap: 16 }}>
-      <Title>{m().ageTitle}</Title>
-      <Muted>{m().ageBody}</Muted>
+      <Title>{props.title ?? m().ageTitle}</Title>
+      <Muted>{props.body ?? m().ageBody}</Muted>
       <Choice label={m().country} items={countryItems()} value={country()} onChange={(value) => country.set(value)} />
       <MonthField label={m().birthMonth} value={born()} onChange={(value) => born.set(value)} />
       <If when={error()}>

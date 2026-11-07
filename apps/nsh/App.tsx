@@ -1,9 +1,9 @@
 import { AccessStatus } from "@ga/proto/privacy/v1/privacy_pb";
-import { computed, effect, mount, platform, View } from "nsh";
+import { computed, effect, mount, platform, untracked, View } from "nsh";
 import { NavPage, NavStack } from "nsh/base";
 
 import { access } from "./lib/auth.ts";
-import { ACCESS, AGE, ENTRY, HOME, nav, OPEN, tab, WELCOME } from "./lib/nav.ts";
+import { ACCESS, AGE, afterSignUp, ENTRY, HOME, nav, OPEN, tab, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
 import { watchQueries } from "./lib/query.ts";
@@ -60,7 +60,9 @@ effect(() => {
   } else if (status === AccessStatus.MARKET_CLOSED || status === AccessStatus.NEEDS_GUARDIAN) {
     if (top !== "access") nav.setRoutes([ACCESS]);
   } else if (status === AccessStatus.OK && ENTRY.has(top)) {
-    nav.setRoutes([HOME]);
+    const then = untracked(afterSignUp);
+    afterSignUp.set(null);
+    nav.setRoutes(then ? [HOME, then] : [HOME]);
   }
 });
 

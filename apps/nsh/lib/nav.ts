@@ -58,6 +58,9 @@ export const OPEN: ReadonlySet<Route["name"]> = new Set([
 /** ENTRY lists the pages that lead to an account, which a signed-in account leaves for its first page. */
 export const ENTRY: ReadonlySet<Route["name"]> = new Set(["launch", "welcome", "sign-in", "sign-up", "forgot-password", "age", "access"]);
 
+/** afterSignUp is a page to open over the first page once a new account may study: a guardian's learners. */
+export const afterSignUp = signal<Route | null>(null);
+
 /** nav is the app's navigation stack. */
 export const nav = createNavStack<Route>([LAUNCH]);
 
