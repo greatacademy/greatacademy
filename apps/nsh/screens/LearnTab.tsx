@@ -1,5 +1,5 @@
 import type { GetDashboardResponse, Task, XpSummary } from "@ga/proto/learning/v1/learning_pb";
-import { computed, effect, signal, Text, View } from "nsh";
+import { computed, effect, signal, Text, View, windowSize } from "nsh";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
@@ -7,6 +7,10 @@ import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { firstPageReady } from "./Launch.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
+
+/** ASIDE_FROM is the window width, in points, from which the goals sit in a column of ASIDE_WIDTH beside the tasks. */
+const ASIDE_FROM = 1024;
+const ASIDE_WIDTH = 320;
 
 /** LearnData is what the Learn tab shows: the learner's XP and each enrolled course's dashboard, with its title. */
 interface LearnData {
@@ -173,6 +177,8 @@ export function LearnTab(props: { visible: () => boolean }) {
       busy.set(false);
     }
   };
+  // A wide window keeps the goals in a column beside the tasks, as the web's learn page does.
+  const wide = () => windowSize().width >= ASIDE_FROM;
   const active = (data: LearnData) => data.courses.filter((course) => course.dash.active);
 
   return (
@@ -180,59 +186,70 @@ export function LearnTab(props: { visible: () => boolean }) {
       <Loaded rpc={learn} skeleton={<Skeleton rows={3} />}>
         {(data) => (
           <PullScroll onRefresh={learn.refetch} refreshing={learn.state() === "refreshing"} underBar>
-            <View style={{ gap: 12 }}>
-              <If when={error()}>
-                <ErrorNote message={error()} />
-              </If>
-              <If when={active(data()).length > 0}>
-                <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().pickUp}</Text>
-                <Each of={active(data())} key={(course) => course.courseId}>
-                  {(course) => (
-                    <If when={course().dash.active?.task}>
-                      {(task) => (
-                        <View style={{ gap: 4 }}>
-                          <Muted>{course().title}</Muted>
-                          <TaskCard
-                            task={task()}
-                            action={m().resume}
-                            onStart={() => nav.push({ name: "session", sessionId: course().dash.active?.id ?? "" })}
-                          />
-                        </View>
-                      )}
-                    </If>
-                  )}
-                </Each>
-              </If>
-              <WeeklyGoals xp={data().xp} paused={data().paused} />
-              <If
-                when={data().courses.length > 0}
-                else={
-                  <Card>
-                    <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{m().startLearning}</Text>
-                    <Muted>{m().startLearningBody}</Muted>
-                    <Action label={m().browseCourses} onPress={() => openTab("courses")} />
-                  </Card>
-                }
-              >
-                <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", marginTop: 4 }}>{m().nextUp}</Text>
-                <Grid>
-                  <Each of={data().courses.filter((course) => !course.dash.active)} key={(course) => course.courseId}>
+            <View
+              style={{ alignItems: wide() ? "flex-start" : "stretch", flexDirection: wide() ? "row" : "column", gap: wide() ? 24 : 12 }}
+            >
+              <View style={{ flexBasis: wide() ? 0 : "auto", flexGrow: 1, flexShrink: 1, gap: 12, minWidth: 0 }}>
+                <If when={error()}>
+                  <ErrorNote message={error()} />
+                </If>
+                <If when={active(data()).length > 0}>
+                  <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().pickUp}</Text>
+                  <Each of={active(data())} key={(course) => course.courseId}>
                     {(course) => (
-                      <Cell>
-                        <CourseDay
-                          courseId={course().courseId}
-                          title={course().title}
-                          dash={course().dash}
-                          busy={busy()}
-                          onStart={(task) => void start(course().courseId, task)}
-                        />
-                      </Cell>
+                      <If when={course().dash.active?.task}>
+                        {(task) => (
+                          <View style={{ gap: 4 }}>
+                            <Muted>{course().title}</Muted>
+                            <TaskCard
+                              task={task()}
+                              action={m().resume}
+                              onStart={() => nav.push({ name: "session", sessionId: course().dash.active?.id ?? "" })}
+                            />
+                          </View>
+                        )}
+                      </If>
                     )}
                   </Each>
-                </Grid>
-                <If when={data().courses.length > 0}>
-                  <Quiet label={m().browseCourses} onPress={() => openTab("courses")} />
                 </If>
+                <If when={!wide()}>
+                  <WeeklyGoals xp={data().xp} paused={data().paused} />
+                </If>
+                <If
+                  when={data().courses.length > 0}
+                  else={
+                    <Card>
+                      <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{m().startLearning}</Text>
+                      <Muted>{m().startLearningBody}</Muted>
+                      <Action label={m().browseCourses} onPress={() => openTab("courses")} />
+                    </Card>
+                  }
+                >
+                  <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", marginTop: 4 }}>{m().nextUp}</Text>
+                  <Grid>
+                    <Each of={data().courses.filter((course) => !course.dash.active)} key={(course) => course.courseId}>
+                      {(course) => (
+                        <Cell>
+                          <CourseDay
+                            courseId={course().courseId}
+                            title={course().title}
+                            dash={course().dash}
+                            busy={busy()}
+                            onStart={(task) => void start(course().courseId, task)}
+                          />
+                        </Cell>
+                      )}
+                    </Each>
+                  </Grid>
+                  <If when={data().courses.length > 0}>
+                    <Quiet label={m().browseCourses} onPress={() => openTab("courses")} />
+                  </If>
+                </If>
+              </View>
+              <If when={wide()}>
+                <View style={{ gap: 12, width: ASIDE_WIDTH }}>
+                  <WeeklyGoals xp={data().xp} paused={data().paused} />
+                </View>
               </If>
             </View>
           </PullScroll>
