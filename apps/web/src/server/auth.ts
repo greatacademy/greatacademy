@@ -4,7 +4,7 @@ import { type Db, isManagedUser, schema, soleManagedChildren } from "@ga/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
-import { username } from "better-auth/plugins";
+import { bearer, username } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 
 import { resetPasswordEmail, type SendEmail, verifyEmail } from "./email.ts";
@@ -12,7 +12,7 @@ import { resetPasswordEmail, type SendEmail, verifyEmail } from "./email.ts";
 /**
  * createAuth configures better-auth on a request's database. Accounts are
  * email and password, or a username for a child's account, which a guardian
- * makes and which has no real address; sessions are cookies on the web. A
+ * makes and which has no real address; sessions are cookies on the web and signed bearer tokens in the native apps. A
  * learner can study before verifying the email address, which only recovery
  * depends on. A child cannot delete their whole account, and a guardian's
  * deletion takes the accounts of the children only they guard.
@@ -35,7 +35,7 @@ export function createAuth(db: Db, secret: string, baseURL: string, sendEmail: S
       autoSignInAfterVerification: true,
       sendVerificationEmail: ({ user, url }) => sendEmail(verifyEmail(user.email, url)),
     },
-    plugins: [username()],
+    plugins: [username(), bearer({ requireSignature: true })],
     user: {
       deleteUser: {
         enabled: true,
