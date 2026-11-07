@@ -15,6 +15,9 @@ export type Route =
 /** COURSES is the first page. */
 export const COURSES: Route = { name: "courses" };
 
+/** WELCOME is the first page of someone signed out. */
+export const WELCOME: Route = COURSES;
+
 /** AGE is the page of the age question. */
 export const AGE: Route = { name: "age" };
 

@@ -1,11 +1,11 @@
-import { computed, resource, Scroll, Text, View } from "nsh";
+import { computed, resource, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 
 import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { colors, headerStyle, Loaded, Muted } from "../lib/ui.tsx";
+import { colors, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 function AccountButton() {
@@ -37,8 +37,8 @@ export function Courses() {
       <View style={{ flex: 1, backgroundColor: colors().page }}>
         <Loaded rpc={rpc}>
           {(data) => (
-            <Scroll style={{ flex: 1 }}>
-              <View style={{ padding: 16, gap: 12 }}>
+            <PullScroll onRefresh={rpc.refetch} refreshing={rpc.state() === "refreshing"}>
+              <View style={{ gap: 12 }}>
                 <If when={token() && mine().length > 0}>
                   <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().myCourses}</Text>
                   <Each of={mine()} key={(enrollment) => enrollment.courseId}>
@@ -85,7 +85,7 @@ export function Courses() {
                   )}
                 </Each>
               </View>
-            </Scroll>
+            </PullScroll>
           )}
         </Loaded>
       </View>

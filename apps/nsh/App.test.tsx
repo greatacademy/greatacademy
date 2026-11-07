@@ -46,7 +46,21 @@ test("follows a Chinese device", async () => {
 
 test("offers a retry when the call fails", async () => {
   const app = await open("./App.tsx", { network: { [`POST ${url}/ListCourses`]: { status: 503, body: "{}" } } });
+  await app.waitFor("text:The server could not answer just now. Try again in a moment.");
   await app.waitFor("text:Retry");
+});
+
+test("says when there is no connection, and loads once it is back", async () => {
+  let down = true;
+  const app = await open("./App.tsx", {
+    network: { ...network, [`POST ${url}/ListCourses`]: () => (down ? { error: "offline" } : network[`POST ${url}/ListCourses`]) },
+  });
+  await app.waitFor("text:No connection");
+  await app.waitFor("text:Offline. Trying again when the connection is back.");
+  down = false;
+  await app.press("text:Retry");
+  await app.waitFor("text:2 topics");
+  expect(app.texts()).not.toContain("Offline. Trying again when the connection is back.");
 });
 
 const privacyUrl = "http://localhost:5173/api/rpc/ga.privacy.v1.PrivacyService";

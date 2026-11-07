@@ -3,6 +3,7 @@ import type { Text } from "@ga/proto/common/v1/text_pb";
 import { locale } from "nsh";
 
 import { AuthError } from "./auth.ts";
+import { failureOf } from "./net.ts";
 
 const language = (): "en" | "zh-CN" => (locale().startsWith("zh") ? "zh-CN" : "en");
 
@@ -124,6 +125,14 @@ const messages = {
     xpToday: (xp: number) => `${xp} XP today`,
     xpToQuiz: (xp: number) => `${xp} XP to the next quiz`,
     weakPassword: "The password needs at least 8 characters.",
+    authBody: "Your session has ended. Sign in again to carry on where you left off.",
+    authTitle: "Signed out",
+    offlineBody: "Check your connection. Nothing you did is lost: it is kept on the server.",
+    offlineNote: "Offline. Trying again when the connection is back.",
+    offlineTitle: "No connection",
+    serverBody: "The server could not answer just now. Try again in a moment.",
+    serverTitle: "Something went wrong",
+    signInAgain: "Sign in again",
   },
   "zh-CN": {
     account: "账号",
@@ -232,6 +241,14 @@ const messages = {
     xpToday: (xp: number) => `今天 ${xp} XP`,
     xpToQuiz: (xp: number) => `距离下次测验还差 ${xp} XP`,
     weakPassword: "密码至少需要 8 个字符。",
+    authBody: "登录已失效。重新登录即可从上次的地方继续。",
+    authTitle: "已退出登录",
+    offlineBody: "请检查网络连接。你做过的内容不会丢失，都保存在服务器上。",
+    offlineNote: "离线中，网络恢复后会自动重试。",
+    offlineTitle: "没有网络连接",
+    serverBody: "服务器暂时无法响应，请稍后再试。",
+    serverTitle: "出错了",
+    signInAgain: "重新登录",
   },
 } as const;
 
@@ -271,5 +288,6 @@ export function errorText(error: unknown): string {
     const key = authMessages[error.code as keyof typeof authMessages];
     return key ? m()[key] : m().error;
   }
+  if (failureOf(error) === "offline") return m().offlineBody;
   return ConnectError.from(error).rawMessage === "that date is not valid" ? m().invalidDate : m().error;
 }

@@ -1,11 +1,11 @@
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { computed, resource, Scroll, signal, Text, View } from "nsh";
+import { computed, resource, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
-import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet } from "../lib/ui.tsx";
+import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll, Quiet } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 import { Rich } from "./Rich.tsx";
 
@@ -86,8 +86,8 @@ export function Learn(props: { courseId: string }) {
       <View style={{ flex: 1, backgroundColor: colors().page }}>
         <Loaded rpc={dash}>
           {(data) => (
-            <Scroll style={{ flex: 1 }}>
-              <View style={{ gap: 12, padding: 16 }}>
+            <PullScroll onRefresh={dash.refetch} refreshing={dash.state() === "refreshing"}>
+              <View style={{ gap: 12 }}>
                 <Muted>{m().topicsLearned(data().stats?.learned ?? 0, data().stats?.total ?? 0)}</Muted>
                 <Muted>{m().xpToday(data().xp?.today ?? 0)}</Muted>
                 <If when={(data().stats?.due ?? 0) > 0}>
@@ -135,7 +135,7 @@ export function Learn(props: { courseId: string }) {
                   )}
                 </If>
               </View>
-            </Scroll>
+            </PullScroll>
           )}
         </Loaded>
       </View>

@@ -1,10 +1,12 @@
 import { AccessStatus } from "@ga/proto/privacy/v1/privacy_pb";
-import { effect, mount } from "nsh";
+import { effect, mount, View } from "nsh";
 import { NavStack } from "nsh/base";
 
 import { access } from "./lib/auth.ts";
 import { ACCESS, AGE, COURSES, nav } from "./lib/nav.ts";
+import { comeBack, watchForeground } from "./lib/net.ts";
 import { restoreToken, token } from "./lib/session.ts";
+import { OfflineNote } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Account } from "./screens/Account.tsx";
@@ -18,6 +20,12 @@ import { SignUp } from "./screens/SignUp.tsx";
 
 void restoreToken();
 keepWindowLarge();
+watchForeground();
+
+// What the account may do can change while the app is away, as when a guardian agrees.
+effect(() => {
+  if (comeBack() > 0) access.refetch();
+});
 
 // Keeps the stack on what the account may see: the age question and the access page have no way past them.
 effect(() => {
@@ -39,30 +47,33 @@ effect(() => {
 
 function App() {
   return (
-    <NavStack state={nav} style={{ flex: 1 }}>
-      {(route) => {
-        switch (route.name) {
-          case "courses":
-            return <Courses />;
-          case "course":
-            return <CourseOutline courseId={route.courseId} />;
-          case "learn":
-            return <Learn courseId={route.courseId} />;
-          case "session":
-            return <Player sessionId={route.sessionId} />;
-          case "sign-in":
-            return <SignIn />;
-          case "sign-up":
-            return <SignUp />;
-          case "account":
-            return <Account />;
-          case "age":
-            return <Age />;
-          case "access":
-            return <Access />;
-        }
-      }}
-    </NavStack>
+    <View style={{ flex: 1 }}>
+      <NavStack state={nav} style={{ flex: 1 }}>
+        {(route) => {
+          switch (route.name) {
+            case "courses":
+              return <Courses />;
+            case "course":
+              return <CourseOutline courseId={route.courseId} />;
+            case "learn":
+              return <Learn courseId={route.courseId} />;
+            case "session":
+              return <Player sessionId={route.sessionId} />;
+            case "sign-in":
+              return <SignIn />;
+            case "sign-up":
+              return <SignUp />;
+            case "account":
+              return <Account />;
+            case "age":
+              return <Age />;
+            case "access":
+              return <Access />;
+          }
+        }}
+      </NavStack>
+      <OfflineNote bottom={24} />
+    </View>
   );
 }
 

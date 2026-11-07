@@ -4,6 +4,7 @@ import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
+import { netFetch } from "./net.ts";
 import { token } from "./session.ts";
 
 /**
@@ -20,7 +21,7 @@ const withToken: Interceptor = (next) => (request) => {
   return next(request);
 };
 
-const transport = createConnectTransport({ baseUrl: `${API_URL}/api/rpc`, interceptors: [withToken] });
+const transport = createConnectTransport({ baseUrl: `${API_URL}/api/rpc`, fetch: netFetch, interceptors: [withToken] });
 
 /** catalog is the client of the course catalog, which needs no account. */
 export const catalog: Client<typeof CatalogService> = createClient(CatalogService, transport);

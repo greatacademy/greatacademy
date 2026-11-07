@@ -1,8 +1,11 @@
 import { DEFAULT_APPEARANCE, resolveColors } from "@ga/design";
-import { colorScheme, computed, type JSX, type Resource, Scroll, Text, View } from "nsh";
+import { colorScheme, computed, effect, type JSX, type Resource, Scroll, signal, Text, untracked, View } from "nsh";
 import { Button, Input, Select } from "nsh/base";
 
 import { m } from "./i18n.ts";
+import { nav, WELCOME } from "./nav.ts";
+import { comeBack, failureOf, online } from "./net.ts";
+import { setToken } from "./session.ts";
 
 /** colors gives the design tokens as hex for the device's color scheme and the default appearance. */
 export const colors = computed(() => resolveColors(DEFAULT_APPEARANCE, colorScheme()));
@@ -164,21 +167,140 @@ export function FormPage(props: { children: JSX.Element }) {
   );
 }
 
-/** Loaded shows a call's result once it has one, and until then its progress or its error with a retry. */
-export function Loaded<T extends object>(props: { rpc: Resource<T>; children: (data: () => T) => JSX.Element }) {
+/** Skeleton stands in for content while it loads: blocks the size of what is coming, so the page does not jump. */
+export function Skeleton(props: { rows?: number }) {
+  return (
+    <View accessibilityLabel={m().loading} style={{ gap: 12, padding: 16 }}>
+      <View style={{ backgroundColor: colors().line, borderRadius: 6, height: 20, opacity: 0.6, width: "40%" }} />
+      <Each of={Array.from({ length: props.rows ?? 3 }, (_, i) => i)}>
+        {() => (
+          <View
+            style={{
+              backgroundColor: colors().surface,
+              borderColor: colors().line,
+              borderRadius: 12,
+              borderWidth: 1,
+              gap: 10,
+              padding: 16,
+            }}
+          >
+            <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 12, opacity: 0.6, width: "30%" }} />
+            <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 16, opacity: 0.6, width: "70%" }} />
+            <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 12, opacity: 0.6, width: "50%" }} />
+          </View>
+        )}
+      </Each>
+    </View>
+  );
+}
+
+/** Problem says why a page could not load and offers the way out that fits: try again, or sign in again. */
+export function Problem(props: { error: unknown; onRetry: () => void }) {
+  const kind = () => failureOf(props.error);
+  const text = () =>
+    kind() === "offline"
+      ? { glyph: "↯", title: m().offlineTitle, body: m().offlineBody }
+      : kind() === "auth"
+        ? { glyph: "→", title: m().authTitle, body: m().authBody }
+        : { glyph: "!", title: m().serverTitle, body: m().serverBody };
+  const signInAgain = () => {
+    setToken(null);
+    nav.setRoutes([WELCOME, { name: "sign-in" }]);
+  };
+  return (
+    <View role="alert" style={{ alignItems: "center", flex: 1, gap: 12, justifyContent: "center", padding: 24 }}>
+      <View
+        style={{
+          alignItems: "center",
+          backgroundColor: kind() === "offline" ? colors().line : colors()["bad-soft"],
+          borderRadius: 28,
+          height: 56,
+          justifyContent: "center",
+          width: 56,
+        }}
+      >
+        <Text style={{ color: kind() === "offline" ? colors().ink : colors().bad, fontSize: 26, fontWeight: "700" }}>{text().glyph}</Text>
+      </View>
+      <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", textAlign: "center" }}>{text().title}</Text>
+      <Text style={{ color: colors().muted, fontSize: 15, maxWidth: 360, textAlign: "center" }}>{text().body}</Text>
+      <If when={kind() === "auth"} else={<Action label={m().retry} onPress={props.onRetry} />}>
+        <Action label={m().signInAgain} onPress={signInAgain} />
+      </If>
+    </View>
+  );
+}
+
+/** Loaded shows a call's result once it has one, a skeleton until then, or why it failed; it reads again when the app or the connection comes back. */
+export function Loaded<T extends object>(props: { rpc: Resource<T>; skeleton?: JSX.Element; children: (data: () => T) => JSX.Element }) {
+  let first = true;
+  effect(() => {
+    comeBack();
+    const back = online();
+    if (first) {
+      first = false;
+      return;
+    }
+    untracked(() => {
+      if (back && props.rpc.state() !== "pending") props.rpc.refetch();
+    });
+  });
   return (
     <If
       when={props.rpc()}
       else={
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: 12, padding: 24 }}>
-          <Muted>{props.rpc.error() ? m().error : m().loading}</Muted>
-          <If when={props.rpc.error()}>
-            <Action label={m().retry} onPress={() => props.rpc.refetch()} />
-          </If>
-        </View>
+        <If when={props.rpc.error()} else={props.skeleton ?? <Skeleton />}>
+          {(error) => <Problem error={error()} onRetry={() => props.rpc.refetch()} />}
+        </If>
       }
     >
       {(data) => props.children(data)}
+    </If>
+  );
+}
+
+/** PullScroll is a page's scrolling content that a pull from the top reads again. */
+export function PullScroll(props: { onRefresh: () => void; refreshing: boolean; children: JSX.Element; bottom?: number }) {
+  const pulled = signal(false);
+  effect(() => {
+    if (!props.refreshing) pulled.set(false);
+  });
+  return (
+    <Scroll
+      style={{ flex: 1 }}
+      refreshing={pulled() && props.refreshing}
+      onRefresh={() => {
+        pulled.set(true);
+        props.onRefresh();
+      }}
+    >
+      <View style={{ alignSelf: "center", gap: 12, maxWidth: 960, padding: 16, paddingBottom: props.bottom ?? 16, width: "100%" }}>
+        {props.children}
+      </View>
+    </Scroll>
+  );
+}
+
+/** OfflineNote floats over the page while the server cannot be reached. */
+export function OfflineNote(props: { bottom: number }) {
+  return (
+    <If when={!online()}>
+      <View
+        android={{ accessibilityLiveRegion: "polite" }}
+        style={{
+          alignItems: "center",
+          alignSelf: "center",
+          backgroundColor: colors().ink,
+          borderRadius: 20,
+          bottom: props.bottom,
+          flexDirection: "row",
+          gap: 8,
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+          position: "absolute",
+        }}
+      >
+        <Text style={{ color: colors().page, fontSize: 14 }}>{m().offlineNote}</Text>
+      </View>
     </If>
   );
 }

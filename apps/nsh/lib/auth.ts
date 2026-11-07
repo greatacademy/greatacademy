@@ -1,6 +1,7 @@
 import { Code, ConnectError } from "@connectrpc/connect";
 import { resource, signal } from "nsh";
 
+import { netFetch } from "./net.ts";
 import { API_URL, privacy } from "./rpc.ts";
 import { setToken, token } from "./session.ts";
 
@@ -26,7 +27,7 @@ async function post(path: string, body: unknown): Promise<Response> {
   const headers: Record<string, string> = { "Content-Type": "application/json", Origin: API_URL };
   const current = token();
   if (current) headers.Authorization = `Bearer ${current}`;
-  return fetch(`${API_URL}/api/auth${path}`, { method: "POST", headers, body: JSON.stringify(body) });
+  return netFetch(`${API_URL}/api/auth${path}`, { method: "POST", headers, body: JSON.stringify(body) });
 }
 
 async function startSession(path: string, body: unknown): Promise<void> {
