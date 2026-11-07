@@ -98,3 +98,52 @@ export const access = resource(
     }
   },
 );
+
+/** SessionUser is what the account service says about the signed-in person. */
+export interface SessionUser {
+  readonly name: string;
+  readonly email: string;
+  readonly emailVerified: boolean;
+}
+
+/** sessionUser is the signed-in person's name and email address, as the account service has them. */
+export const sessionUser = resource(
+  () => token(),
+  async (current, { signal }): Promise<SessionUser | null> => {
+    const response = await netFetch(`${API_URL}/api/auth/get-session`, {
+      headers: { Authorization: `Bearer ${current}`, Origin: API_URL },
+      signal,
+    });
+    if (!response.ok) throw new AuthError("", `get-session ${response.status}`);
+    const data = (await response.json().catch(() => null)) as { user?: SessionUser } | null;
+    return data?.user ?? null;
+  },
+);
+
+async function call(path: string, body: unknown): Promise<Response> {
+  const response = await post(path, body);
+  if (!response.ok) {
+    const data = (await response.json().catch(() => ({}))) as { code?: string; message?: string };
+    throw new AuthError(data.code ?? "", data.message ?? "");
+  }
+  return response;
+}
+
+/** changeName changes the signed-in person's name. */
+export async function changeName(name: string): Promise<void> {
+  await call("/update-user", { name: name.trim() });
+  sessionUser.refetch();
+}
+
+/** changePassword changes the password once the current one is confirmed, and signs out the account's other devices. */
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  const response = await call("/change-password", { currentPassword, newPassword, revokeOtherSessions: true });
+  // Revoking the other sessions starts a new one for this device.
+  const issued = response.headers.get("set-auth-token");
+  if (issued) setToken(issued);
+}
+
+/** sendVerification sends the email that verifies the signed-in person's address again. */
+export async function sendVerification(email: string): Promise<void> {
+  await call("/send-verification-email", { email, callbackURL: `${API_URL}/settings` });
+}

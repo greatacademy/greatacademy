@@ -1,15 +1,16 @@
 import { type Appearance, CONTRASTS, type ColorScheme, PALETTES, type Palette, resolveColors, THEMES } from "@ga/design";
+import type { Guardian } from "@ga/proto/account/v1/account_pb";
 import { Band } from "@ga/proto/privacy/v1/privacy_pb";
 import { Clipboard, colorScheme, openUrl, Scroll, signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
-import { access, signOut } from "../lib/auth.ts";
+import { access, sessionUser, signOut } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, languageChoice } from "../lib/prefs.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
-import { query } from "../lib/query.ts";
 import { API_URL, account } from "../lib/rpc.ts";
 import { barSpace, colors, ErrorNote, followScroll, Muted, Quiet, Row, Section, Segmented, topSpace } from "../lib/ui.tsx";
+import { openAccountPage, settingsQuery } from "./Account.tsx";
 
 function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean; onPress: () => void }) {
   const look = () => resolveColors({ ...appearance(), theme: props.scheme, [props.scheme]: props.palette } as Appearance, props.scheme);
@@ -93,7 +94,7 @@ export function InviteGuardian() {
 
 /** Me is the Me tab: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
 export function Me() {
-  const settings = query(["settings"], ({ signal }) => account.getSettings({}, { signal }));
+  const settings = settingsQuery();
   const set = (change: Partial<Appearance>) => chooseAppearance({ ...appearance(), ...change });
   const confirmSignOut = async () => {
     const { action } = await AlertDialog.show({
@@ -105,6 +106,30 @@ export function Me() {
     });
     if (action === "out") await signOut();
   };
+  const removeError = signal("");
+  const confirmRemove = async (guardian: Guardian) => {
+    const { action } = await AlertDialog.show({
+      title: m().removeGuardianTitle(guardian.name),
+      actions: [
+        { id: "cancel", label: m().cancel, role: "cancel" },
+        { id: "remove", label: m().remove, role: "destructive" },
+      ],
+    });
+    if (action !== "remove") return;
+    removeError.set("");
+    try {
+      await account.removeGuardian({ userId: guardian.userId });
+      settings.refetch();
+    } catch (e) {
+      removeError.set(errorText(e));
+    }
+  };
+  const goals = () => {
+    const s = settings();
+    if (!s) return undefined;
+    const total = s.goals?.weekdays.reduce((sum, xp) => sum + xp, 0) ?? 0;
+    return s.goals?.paused ? m().goalsPausedNote : total > 0 ? m().goalsWeekTotal(total) : m().goalNone;
+  };
   return (
     <Scroll
       style={{ backgroundColor: colors().page, flex: 1 }}
@@ -113,11 +138,15 @@ export function Me() {
       scrollEventThrottle={16}
     >
       <SettingsBody
-        username={settings()?.username}
-        guardians={settings()?.guardians.map((guardian) => guardian.name)}
+        profile={sessionUser()?.name}
+        goals={goals()}
+        league={settings() ? (settings()?.leagues ? m().leagueOn : m().leagueOff) : undefined}
+        guardians={settings()?.guardians}
+        removeError={removeError()}
         managed={!!access()?.managed}
         scheme={colorScheme()}
         onAppearance={set}
+        onRemoveGuardian={(guardian) => void confirmRemove(guardian)}
         onSignOut={() => void confirmSignOut()}
       />
     </Scroll>
@@ -126,13 +155,18 @@ export function Me() {
 
 /** SettingsBody is the content of the settings page, also shown as the Me tab. */
 export function SettingsBody(props: {
-  username?: string;
-  guardians?: string[];
+  profile?: string;
+  goals?: string;
+  league?: string;
+  guardians?: readonly Guardian[];
+  removeError?: string;
   managed: boolean;
   scheme: ColorScheme;
   onAppearance: (change: Partial<Appearance>) => void;
+  onRemoveGuardian: (guardian: Guardian) => void;
   onSignOut: () => void;
 }) {
+  const child = () => access()?.band === Band.CHILD;
   const themes = THEMES.map((value) => ({ value, title: m().themes[value] }));
   const contrasts = CONTRASTS.map((value) => ({ value, title: m().contrasts[value] }));
   const languages: { value: LanguageChoice; title: string }[] = [
@@ -142,11 +176,13 @@ export function SettingsBody(props: {
   ];
   return (
     <View style={{ alignSelf: "center", gap: 24, maxWidth: 640, padding: 16, paddingBottom: 16 + barSpace(), width: "100%" }}>
-      <If when={props.username}>
-        <Section title={m().profile}>
-          <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{props.username}</Text>
-        </Section>
-      </If>
+      <Section title={m().account}>
+        <Row title={m().profile} detail={props.profile} onPress={() => openAccountPage("profile")} />
+        <Row title={m().goals} detail={props.goals} onPress={() => openAccountPage("goals")} />
+        <If when={!child()}>
+          <Row title={m().league} detail={props.league} onPress={() => openAccountPage("league")} />
+        </If>
+      </Section>
       <Section title={m().language}>
         <Segmented label={m().language} items={languages} value={languageChoice()} onChange={chooseLanguage} />
       </Section>
@@ -179,19 +215,42 @@ export function SettingsBody(props: {
       </Section>
       <Section title={m().more}>
         <Row title={m().privacy} detail={m().privacyDetail} onPress={() => nav.push({ name: "privacy" })} />
-        <Row title={m().settingsOnWeb} detail={m().settingsOnWebDetail} onPress={() => void openWeb("/settings")} />
       </Section>
       <Section title={p().guardian}>
         <Muted>{p().guardiansBody}</Muted>
         <If when={(props.guardians ?? []).length > 0} else={<Muted>{p().noGuardians}</Muted>}>
-          <Each of={props.guardians ?? []}>{(name) => <Text style={{ color: colors().ink, fontSize: 15 }}>{name()}</Text>}</Each>
+          <Each of={[...(props.guardians ?? [])]} key={(guardian) => guardian.userId}>
+            {(guardian) => (
+              <View style={{ alignItems: "center", flexDirection: "row", gap: 12, minHeight: 44 }}>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <Text style={{ color: colors().ink, fontSize: 15 }}>{guardian().name}</Text>
+                  <If when={guardian().email && !guardian().email.endsWith(".invalid")}>
+                    <Muted>{guardian().email}</Muted>
+                  </If>
+                </View>
+                <If when={!child()}>
+                  <Text
+                    role="button"
+                    onPress={() => props.onRemoveGuardian(guardian())}
+                    style={{ color: colors().bad, fontSize: 15, paddingVertical: 8 }}
+                  >
+                    {m().remove}
+                  </Text>
+                </If>
+              </View>
+            )}
+          </Each>
+        </If>
+        <If when={props.removeError}>
+          <ErrorNote message={props.removeError ?? ""} />
         </If>
         <InviteGuardian />
         <If when={access()?.band === Band.ADULT}>
           <Row title={p().guardedTitle} onPress={() => nav.push({ name: "learners" })} />
         </If>
       </Section>
-      <Section title={m().account}>
+      <Section title={m().security}>
+        <Row title={m().changePassword} detail={m().changePasswordDetail} onPress={() => openAccountPage("password")} />
         <Row title={m().signOut} onPress={props.onSignOut} />
         <If when={!props.managed} else={<Muted>{m().childDelete}</Muted>}>
           <Row title={m().deleteAccount} tone="bad" onPress={() => nav.push({ name: "delete-account" })} />

@@ -117,7 +117,7 @@ test("signs in, keeps the token and sends it", async () => {
   await app.type("label:Email or username", "a@example.test");
   await app.type("label:Password", "correct horse");
   await app.press("role:button[Sign in]");
-  await app.waitFor("text:Today");
+  await app.waitFor("text:Learn");
   expect(app.storage()["ga.session"]).toBe("tok.sig");
   const call = app.requests().find((r) => r.url.endsWith("/GetAccess"));
   expect(call?.headers.authorization ?? call?.headers.Authorization).toBe("Bearer tok.sig");
@@ -158,7 +158,7 @@ test("holds an unanswered account on the age question until it answers", async (
   });
   await app.waitFor("text:Before you start");
   await answerAge(app, "1990");
-  await app.waitFor("text:Today");
+  await app.waitFor("text:Learn");
 });
 
 test("explains a market that is closed and can sign out", async () => {
@@ -236,7 +236,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
   await app.type("label:Email", "a@example.test");
   await app.type("label:Password", "correct horse");
   await app.press("role:button[Create account]");
-  await app.waitFor("text:Today");
+  await app.waitFor("text:Learn");
   expect(app.shows("Before you start")).toBe(false);
 });
 
@@ -253,6 +253,7 @@ function signedIn(extra: Record<string, unknown>) {
       ...network,
       [`POST ${privacyUrl}/GetAccess`]: json({ status: "ACCESS_STATUS_OK" }),
       [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [{ courseId: "algebra", stats: { learned: 1, total: 2 } }], xp: {} }),
+      [`POST ${accountUrl}/GetSettings`]: json({ username: "learner" }),
       ...extra,
     },
     storage: { "ga.session": "tok.sig" },
@@ -428,13 +429,13 @@ test("deletes the account after its password and a confirmation", async () => {
   expect(app.storage()["ga.session"]).toBeUndefined();
 });
 
-test("puts the task in progress first on Today, with the daily goal", async () => {
+test("puts the task in progress first on Learn, with the weekly goals", async () => {
   const app = await open(
     "./App.tsx",
     signedIn({
       [`POST ${learningUrl}/GetProfile`]: json({
         enrollments: [{ courseId: "algebra", stats: { learned: 1, total: 2 } }],
-        xp: { today: 20, goalToday: 30, week: 50, total: 200, days: [10, 20] },
+        xp: { today: 20, goalToday: 30, week: 50, goalWeek: 150, total: 200, days: [10, 20] },
       }),
       [`POST ${learningUrl}/GetDashboard`]: json({
         courseId: "algebra",
@@ -447,9 +448,29 @@ test("puts the task in progress first on Today, with the daily goal", async () =
     }),
   );
   await app.waitFor("text:Pick up where you left off");
-  expect(app.texts().indexOf("Pick up where you left off")).toBeLessThan(app.texts().indexOf("Daily goal"));
-  expect(app.texts()).toContain("10 XP to go today");
+  expect(app.texts().indexOf("Pick up where you left off")).toBeLessThan(app.texts().indexOf("Weekly goals"));
+  expect(app.texts()).toContain("20 / 30 XP");
+  expect(app.texts()).toContain("50 / 150 XP");
+  expect(app.texts()).toContain("10 XP to today's goal");
   expect(app.texts()).toContain("Resume");
+});
+
+test("sets the weekly goals from Learn", async () => {
+  const app = await open("./App.tsx", {
+    ...signedIn({
+      [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }),
+      [`POST ${accountUrl}/SetGoals`]: json({}),
+    }),
+    platform: "macos",
+  });
+  await app.waitFor("text:No goal yet");
+  await app.press("text:Set goals");
+  await app.waitFor("text:150 XP a week");
+  await app.press("label:More on Mon");
+  await app.press("text:Save");
+  await app.waitFor("text:Saved");
+  const call = app.requests().find((r) => r.url.endsWith("/SetGoals"));
+  expect(JSON.parse(call?.body ?? "{}").goals.weekdays).toEqual([35, 30, 30, 30, 30, 0, 0]);
 });
 
 test("switches tabs from the sidebar and its shortcuts on a desktop", async () => {
@@ -457,7 +478,7 @@ test("switches tabs from the sidebar and its shortcuts on a desktop", async () =
     ...signedIn({ [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }) }),
     platform: "macos",
   });
-  await app.waitFor("text:Daily goal");
+  await app.waitFor("text:Weekly goals");
   await app.keyboard.press("mod+2");
   await app.waitFor("text:The last 14 days");
   await app.press("text:Courses");

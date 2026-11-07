@@ -24,7 +24,7 @@ import {
   View,
   type ViewStyle,
 } from "nsh";
-import { Button, Input, Select } from "nsh/base";
+import { Button, Input, Select, Switch } from "nsh/base";
 
 import logo from "../assets/logo.svg";
 import { m } from "./i18n.ts";
@@ -335,6 +335,47 @@ export function Segmented<T extends string>(props: {
   );
 }
 
+/** Toggle is a setting that is on or off, with its label before the switch; it takes effect at once. */
+export function Toggle(props: { label: string; checked: boolean; disabled?: boolean; onChange: (checked: boolean) => void }) {
+  return (
+    <View style={{ alignItems: "center", flexDirection: "row", gap: 12, minHeight: 44 }}>
+      <Text style={{ color: colors().ink, flex: 1, fontSize: 16, opacity: props.disabled ? 0.5 : 1 }}>{props.label}</Text>
+      <Switch
+        accessibilityLabel={props.label}
+        checked={props.checked}
+        disabled={props.disabled}
+        onChange={({ checked }) => props.onChange(checked)}
+        style={{ opacity: props.disabled ? 0.5 : 1 }}
+        trackStyle={{
+          backgroundColor: props.checked ? colors().accent : colors().line,
+          borderRadius: 16,
+          height: 31,
+          justifyContent: "center",
+          paddingHorizontal: 2,
+          transitionDuration: 150,
+          transitionProperty: "backgroundColor",
+          width: 51,
+        }}
+        thumbStyle={{
+          backgroundColor: "#ffffff",
+          borderRadius: 13.5,
+          boxShadow: [{ x: 0, y: 1, blur: 3, color: "#00000040" }],
+          height: 27,
+          transitionDuration: 150,
+          transitionProperty: "translate",
+          translate: [props.checked ? 20 : 0, 0],
+          width: 27,
+        }}
+      />
+    </View>
+  );
+}
+
+/** Saved says a form's change was saved, in the color of success. */
+export function Saved() {
+  return <Text style={{ color: colors().good, fontSize: 14 }}>{m().saved}</Text>;
+}
+
 /** Row is a line in a settings list that leads somewhere or does something. */
 export function Row(props: { title: string; detail?: string; tone?: "bad"; onPress: () => void }) {
   return (
@@ -372,7 +413,9 @@ export function Section(props: { title: string; children: JSX.Element }) {
 export function FormPage(props: { children: JSX.Element }) {
   return (
     <Scroll style={{ flex: 1, backgroundColor: colors().page }} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled">
-      <View style={{ alignSelf: "center", gap: 16, maxWidth: 420, padding: 24, width: "100%" }}>{props.children}</View>
+      <View style={{ alignSelf: "center", gap: 16, maxWidth: 420, padding: 24, paddingBottom: 24 + barSpace(), width: "100%" }}>
+        {props.children}
+      </View>
     </Scroll>
   );
 }
@@ -709,22 +752,22 @@ export function PullScroll(props: {
 export function OfflineNote(props: { bottom: number }) {
   return (
     <If when={!online()}>
-      <View
-        android={{ accessibilityLiveRegion: "polite" }}
-        style={{
-          alignItems: "center",
-          alignSelf: "center",
-          backgroundColor: colors().ink,
-          borderRadius: 20,
-          bottom: props.bottom,
-          flexDirection: "row",
-          gap: 8,
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-          position: "absolute",
-        }}
-      >
-        <Text style={{ color: colors().page, fontSize: 14 }}>{m().offlineNote}</Text>
+      {/* A full-width row centers the note: the page lays its children out in a row, so alignSelf would center it vertically. */}
+      <View style={{ alignItems: "center", bottom: props.bottom, pointerEvents: "box-none", left: 0, position: "absolute", right: 0 }}>
+        <View
+          android={{ accessibilityLiveRegion: "polite" }}
+          style={{
+            alignItems: "center",
+            backgroundColor: colors().ink,
+            borderRadius: 20,
+            flexDirection: "row",
+            gap: 8,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+          }}
+        >
+          <Text style={{ color: colors().page, fontSize: 14 }}>{m().offlineNote}</Text>
+        </View>
       </View>
     </If>
   );

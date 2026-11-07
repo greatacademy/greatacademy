@@ -4,26 +4,26 @@ import { TabBar } from "nsh/mobile";
 
 import logo from "../assets/logo.svg";
 import courses from "../assets/tabs/courses.svg";
+import learn from "../assets/tabs/learn.svg";
 import me from "../assets/tabs/me.svg";
 import progress from "../assets/tabs/progress.svg";
-import today from "../assets/tabs/today.svg";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
 import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
 import { Header } from "./Header.tsx";
+import { LearnTab } from "./LearnTab.tsx";
 import { Progress } from "./Progress.tsx";
 import { Me } from "./Settings.tsx";
-import { Today } from "./Today.tsx";
 
 /** tabTitle is a tab's name in the app's language. */
 export function tabTitle(id: TabId): string {
-  const titles = { today: m().tabToday, progress: m().tabProgress, courses: m().tabCourses, me: m().tabMe };
+  const titles = { learn: m().tabLearn, progress: m().tabProgress, courses: m().tabCourses, me: m().tabMe };
   return titles[id];
 }
 
 const icons: Record<TabId, { ios: string; android: string }> = {
-  today: { ios: "sun.max", android: "android:ic_menu_today" },
+  learn: { ios: "graduationcap", android: "android:ic_menu_edit" },
   progress: { ios: "chart.bar", android: "android:ic_menu_sort_by_size" },
   courses: { ios: "books.vertical", android: "android:ic_menu_agenda" },
   me: { ios: "person.crop.circle", android: "android:ic_menu_myplaces" },
@@ -41,8 +41,8 @@ export function Home() {
       statusBar={{ foreground: isDark() ? "light" : "dark" }}
     >
       <View style={{ backgroundColor: colors().page, flex: 1 }}>
-        <If when={tab() === "today"}>
-          <Today visible={shown("today")} />
+        <If when={tab() === "learn"}>
+          <LearnTab visible={shown("learn")} />
         </If>
         <If when={tab() === "progress"}>
           <Progress visible={shown("progress")} />
@@ -63,7 +63,7 @@ export function Home() {
 }
 
 /** drawn are the icons of the tab bar the app draws itself. */
-const drawn: Record<TabId, typeof today> = { today, progress, courses, me };
+const drawn: Record<TabId, typeof learn> = { learn, progress, courses, me };
 
 /**
  * PhoneTabs is the tab bar of a phone: on iOS the system's (Liquid Glass from iOS 26); on Android a pill of glass the

@@ -6,7 +6,7 @@ import { m } from "./i18n.ts";
 import { openTab, TABS, type TabId } from "./nav.ts";
 
 function tabTitle(id: TabId): string {
-  const by: Record<TabId, string> = { today: m().tabToday, progress: m().tabProgress, courses: m().tabCourses, me: m().tabMe };
+  const by: Record<TabId, string> = { learn: m().tabLearn, progress: m().tabProgress, courses: m().tabCourses, me: m().tabMe };
   return by[id];
 }
 

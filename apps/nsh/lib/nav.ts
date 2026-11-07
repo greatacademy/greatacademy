@@ -16,6 +16,10 @@ export type Route =
   | { name: "sign-up" }
   | { name: "forgot-password" }
   | { name: "delete-account" }
+  | { name: "goals" }
+  | { name: "profile" }
+  | { name: "league" }
+  | { name: "password" }
   | { name: "privacy" }
   | { name: "learners" }
   | { name: "learner"; learnerId: string }
@@ -58,13 +62,13 @@ export const ENTRY: ReadonlySet<Route["name"]> = new Set(["launch", "welcome", "
 export const nav = createNavStack<Route>([LAUNCH]);
 
 /** TabId names a tab of the signed-in app. */
-export type TabId = "today" | "progress" | "courses" | "me";
+export type TabId = "learn" | "progress" | "courses" | "me";
 
 /** TABS lists the tabs in their order. */
-export const TABS: readonly TabId[] = ["today", "progress", "courses", "me"];
+export const TABS: readonly TabId[] = ["learn", "progress", "courses", "me"];
 
 /** tab is the tab shown on the home page. */
-export const tab = signal<TabId>("today");
+export const tab = signal<TabId>("learn");
 
 /** openTab shows a tab, going back to the home page from wherever the stack is. */
 export function openTab(id: TabId): void {

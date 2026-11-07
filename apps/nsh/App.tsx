@@ -12,6 +12,7 @@ import { showTray } from "./lib/tray.ts";
 import { barSpace, barsAway, colors, followPalette, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
+import { Goals, League, Password, Profile } from "./screens/Account.tsx";
 import { Age } from "./screens/Age.tsx";
 import { CourseMap } from "./screens/CourseMap.tsx";
 import { CourseOutline } from "./screens/CourseOutline.tsx";
@@ -116,6 +117,14 @@ function App() {
               return <ForgotPassword />;
             case "delete-account":
               return <DeleteAccount />;
+            case "goals":
+              return <Goals />;
+            case "profile":
+              return <Profile />;
+            case "league":
+              return <League />;
+            case "password":
+              return <Password />;
             case "privacy":
               return <Privacy />;
             case "learners":

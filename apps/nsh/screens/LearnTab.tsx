@@ -3,20 +3,22 @@ import { computed, signal, Text, View } from "nsh";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
-import { catalog, learning, timeZone } from "../lib/rpc.ts";
-import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Ring, Skeleton } from "../lib/ui.tsx";
+import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
+import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
 
-/** TodayData is what the Today tab shows: the learner's XP and each enrolled course's dashboard, with its title. */
-interface TodayData {
+/** LearnData is what the Learn tab shows: the learner's XP and each enrolled course's dashboard, with its title. */
+interface LearnData {
   xp: XpSummary | undefined;
+  paused: boolean;
   courses: { courseId: string; title: string; dash: GetDashboardResponse }[];
 }
 
-async function loadToday(abort: AbortSignal): Promise<TodayData> {
-  const [profile, list] = await Promise.all([
+async function loadLearn(abort: AbortSignal): Promise<LearnData> {
+  const [profile, list, settings] = await Promise.all([
     learning.getProfile({ timeZone: timeZone() }, { signal: abort }),
     catalog.listCourses({}, { signal: abort }),
+    account.getSettings({}, { signal: abort }),
   ]);
   const courses = await Promise.all(
     profile.enrollments.map(async (enrollment) => ({
@@ -25,33 +27,65 @@ async function loadToday(abort: AbortSignal): Promise<TodayData> {
       dash: await learning.getDashboard({ courseId: enrollment.courseId, timeZone: timeZone() }, { signal: abort }),
     })),
   );
-  return { xp: profile.xp, courses };
+  return { xp: profile.xp, paused: settings.goals?.paused ?? false, courses };
 }
 
-/** Goal shows today's XP against the daily goal as a ring, with the week beside it. */
-function Goal(props: { xp: XpSummary | undefined }) {
+/** GoalBar is one goal's progress: what was earned against the goal, as a bar that turns green once it is met. */
+function GoalBar(props: { label: string; xp: number; goal: number }) {
+  const met = () => props.xp >= props.goal;
+  return (
+    <View style={{ gap: 6 }}>
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <Text style={{ color: colors().ink, flex: 1, fontSize: 15, fontWeight: "500" }}>{props.label}</Text>
+        <Text style={{ color: met() ? colors().good : colors().muted, fontSize: 14, fontVariant: ["tabular-nums"] }}>
+          {met() ? `${m().goalDone} · ${m().goalOf(props.xp, props.goal)}` : m().goalOf(props.xp, props.goal)}
+        </Text>
+      </View>
+      <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 8, overflow: "hidden" }}>
+        <View
+          style={{
+            backgroundColor: met() ? colors().good : colors().accent,
+            borderRadius: 4,
+            height: 8,
+            width: `${Math.min(100, (props.xp / props.goal) * 100)}%`,
+          }}
+        />
+      </View>
+    </View>
+  );
+}
+
+/** WeeklyGoals shows today's XP and the week's against the learner's goals, with a way to set them. */
+function WeeklyGoals(props: { xp: XpSummary | undefined; paused: boolean }) {
   const today = () => props.xp?.today ?? 0;
-  const goal = () => props.xp?.goalToday ?? 0;
+  const goalToday = () => props.xp?.goalToday ?? 0;
+  const goalWeek = () => props.xp?.goalWeek ?? 0;
   return (
     <Card>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 16 }}>
-        <Ring share={goal() > 0 ? today() / goal() : 0} size={72} color={today() >= goal() && goal() > 0 ? colors().good : colors().accent}>
-          <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "700" }}>{today()}</Text>
-        </Ring>
-        <View style={{ flex: 1, gap: 4 }}>
-          <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{m().goalToday}</Text>
-          <If when={goal() > 0} else={<Muted>{m().noGoal}</Muted>}>
-            <Text style={{ color: colors().ink, fontSize: 15 }}>{m().goalOf(today(), goal())}</Text>
-            <Muted>{today() >= goal() ? m().goalMet : m().goalLeft(goal() - today())}</Muted>
-          </If>
-          <Muted>{m().xpWeek(props.xp?.week ?? 0)}</Muted>
-        </View>
+      <View style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
+        <Text style={{ color: colors().ink, flex: 1, fontSize: 17, fontWeight: "600" }}>{m().goals}</Text>
+        <Text role="button" onPress={() => nav.push({ name: "goals" })} style={{ color: colors().accent, fontSize: 15 }}>
+          {m().setGoals}
+        </Text>
       </View>
+      <If when={!props.paused && goalWeek() > 0} else={<Muted>{props.paused ? m().goalsPausedNote : m().goalNone}</Muted>}>
+        <If when={goalToday() > 0}>
+          <GoalBar label={m().goalToday} xp={today()} goal={goalToday()} />
+        </If>
+        <GoalBar label={m().goalWeek} xp={props.xp?.week ?? 0} goal={goalWeek()} />
+        <Muted>
+          {goalToday() === 0
+            ? m().xpWeek(props.xp?.week ?? 0)
+            : today() >= goalToday()
+              ? m().goalMetToday
+              : m().goalLeftToday(goalToday() - today())}
+        </Muted>
+      </If>
     </Card>
   );
 }
 
-/** CourseDay is one course on the Today tab: how far the learner is, what is due, and the next task. */
+/** CourseDay is one course on the Learn tab: how far the learner is, what is due, and the next task. */
 function CourseDay(props: { courseId: string; title: string; dash: GetDashboardResponse; busy: boolean; onStart: (task: Task) => void }) {
   const stats = () => props.dash.stats;
   const next = () => props.dash.tasks[0];
@@ -111,14 +145,14 @@ function CourseDay(props: { courseId: string; title: string; dash: GetDashboardR
   );
 }
 
-/** Today is the first tab: what is in progress, today's goal, and the next task of each enrolled course. */
-export function Today(props: { visible: () => boolean }) {
+/** LearnTab is the first tab: what is in progress, the weekly goals, and the next task of each enrolled course. */
+export function LearnTab(props: { visible: () => boolean }) {
   // Read again whenever the learner comes back to the tab, as from a task.
   const shown = computed(() => props.visible() || undefined);
-  const today = query(
+  const learn = query(
     shown,
-    () => ["today"],
-    (_, { signal: abort }) => loadToday(abort),
+    () => ["learn"],
+    (_, { signal: abort }) => loadLearn(abort),
   );
   const busy = signal(false);
   const error = signal("");
@@ -134,13 +168,13 @@ export function Today(props: { visible: () => boolean }) {
       busy.set(false);
     }
   };
-  const active = (data: TodayData) => data.courses.filter((course) => course.dash.active);
+  const active = (data: LearnData) => data.courses.filter((course) => course.dash.active);
 
   return (
     <View style={{ backgroundColor: colors().page, flex: 1 }}>
-      <Loaded rpc={today} skeleton={<Skeleton rows={3} />}>
+      <Loaded rpc={learn} skeleton={<Skeleton rows={3} />}>
         {(data) => (
-          <PullScroll onRefresh={today.refetch} refreshing={today.state() === "refreshing"} underBar>
+          <PullScroll onRefresh={learn.refetch} refreshing={learn.state() === "refreshing"} underBar>
             <View style={{ gap: 12 }}>
               <If when={error()}>
                 <ErrorNote message={error()} />
@@ -164,7 +198,7 @@ export function Today(props: { visible: () => boolean }) {
                   )}
                 </Each>
               </If>
-              <Goal xp={data().xp} />
+              <WeeklyGoals xp={data().xp} paused={data().paused} />
               <If
                 when={data().courses.length > 0}
                 else={

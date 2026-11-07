@@ -51,7 +51,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `subject-worker` | `libs/subject-worker` | 任何学科的网关和分片所用的 Worker 入口 |
 | `math-workers` | `apps/math-workers` | 数学的网关和分片 Worker（[架构](architecture.zh-CN.md) §6.1）；`pnpm nx run math-workers:generate` 把 manifest 写入 `gen/`，需要它的 target 会先运行这一步 |
 | `english-workers` | `apps/english-workers` | 英语的网关和分片 Worker，构建方式相同 |
-| `nsh` | `apps/nsh` | Native Shell 应用：欢迎页、登录、注册和年龄问题；今天、进度、课程、我的四个标签页；课程大纲、进度地图、历史记录和任务播放器；隐私、同意和监护人页面；连接 Web 应用的 API（§6） |
+| `nsh` | `apps/nsh` | Native Shell 应用：欢迎页、登录、注册和年龄问题；学习、进度、课程、我的四个标签页；账号设置（个人资料、每周目标、联赛、密码、监护人）；课程大纲、进度地图、历史记录和任务播放器；隐私、同意和监护人页面；连接 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误 |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
@@ -116,7 +116,7 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--api-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。
-- 登录后的账号看到四个标签页：今天、进度、课程和我的（`screens/Home.tsx`）。手机上它们在标签栏里，标签栏只在标签页显示时出现：iOS 上是系统标签栏（iOS 26 及以后是 Liquid Glass），Android 上是应用自己绘制的玻璃胶囊（`screens/Home.tsx` 的 `GlassTabs`）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
+- 登录后的账号看到四个标签页：学习、进度、课程和我的（`screens/Home.tsx`）。「学习」像网页的学习页一样显示每周目标；「我的」打开账号自己的页面（`screens/Account.tsx`：个人资料和邮箱验证、每周目标、联赛用户名和是否参加、修改密码），列出监护人并可移除，也能删除账号，不需要网页。手机上它们在标签栏里，标签栏只在标签页显示时出现：iOS 上是系统标签栏（iOS 26 及以后是 Liquid Glass），Android 上是应用自己绘制的玻璃胶囊（`screens/Home.tsx` 的 `GlassTabs`）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
 - 设备上选择的配色也会成为 nsh 的 `primary`（`lib/ui.tsx` 的 `followPalette`，通过 `setTheme`），因此系统自带的控件，即 iOS 的标签栏和 Android 对话框的按钮，也会用它的强调色。
 - 在手机上，页面向下滚动时标签栏滑出屏幕，向上滚动、回到顶部或打开新页面时重新出现（`lib/ui.tsx` 的 `followScroll` 和 `barStyle`）。
 - 在手机上，标签页没有系统标题栏，而是用自己的顶栏（`lib/ui.tsx` 的 `TopBar`），带标志和标签页名称，向上延伸到状态栏下方；页面从它下面滚过，透过一层玻璃（`glass`）：iOS 上是系统的 Liquid Glass，与标签栏一样；Android 上是轻微模糊加一层淡淡的页面底色，顶栏下方有一条细线。Android 的标签栏也是同样的玻璃，不带阴影，因为 Android 会把阴影透过玻璃画出来。顶栏下方底色渐隐，与 iOS 26 的滚动边缘效果一样。从标签页打开的页面保留系统标题栏。
