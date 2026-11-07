@@ -5,7 +5,7 @@ import { TabBar } from "nsh/mobile";
 import logo from "../assets/logo.svg";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
-import { barStyle, colors, headerStyle } from "../lib/ui.tsx";
+import { barStyle, colors, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
 import { Header } from "./Header.tsx";
 import { Progress } from "./Progress.tsx";
@@ -29,7 +29,13 @@ const icons: Record<TabId, { ios: string; android: string }> = {
 export function Home() {
   const shown = (id: TabId) => () => tab() === id && nav.routes().at(-1)?.name === "home";
   return (
-    <NavPage headerStyle={headerStyle()} title={tabTitle(tab())} header={<Header title={tabTitle(tab())} />}>
+    <NavPage
+      headerStyle={headerStyle()}
+      title={tabTitle(tab())}
+      header={<Header title={tabTitle(tab())} />}
+      headerVisible={platform.desktop}
+      statusBar={{ foreground: isDark() ? "light" : "dark" }}
+    >
       <View style={{ backgroundColor: colors().page, flex: 1 }}>
         <If when={tab() === "today"}>
           <Today visible={shown("today")} />
@@ -42,6 +48,10 @@ export function Home() {
         </If>
         <If when={tab() === "me"}>
           <Me />
+        </If>
+        {/* The phones draw their own head, which the pages scroll under. */}
+        <If when={!platform.desktop}>
+          <TopBar title={tabTitle(tab())} />
         </If>
       </View>
     </NavPage>

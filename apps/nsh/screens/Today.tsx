@@ -140,7 +140,7 @@ export function Today(props: { visible: () => boolean }) {
     <View style={{ backgroundColor: colors().page, flex: 1 }}>
       <Loaded rpc={today} skeleton={<Skeleton rows={3} />}>
         {(data) => (
-          <PullScroll onRefresh={today.refetch} refreshing={today.state() === "refreshing"}>
+          <PullScroll onRefresh={today.refetch} refreshing={today.state() === "refreshing"} underBar>
             <View style={{ gap: 12 }}>
               <If when={error()}>
                 <ErrorNote message={error()} />

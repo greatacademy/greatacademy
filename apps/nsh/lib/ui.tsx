@@ -1,9 +1,15 @@
 import { resolveColors } from "@ga/design";
 import {
+  Animated,
+  type AnimatedNode,
   Canvas,
+  cleanup,
   colorScheme,
   computed,
+  createAnimatedValue,
+  Easing,
   effect,
+  Image,
   type JSX,
   platform,
   type Resource,
@@ -20,6 +26,7 @@ import {
 } from "nsh";
 import { Button, Input, Select } from "nsh/base";
 
+import logo from "../assets/logo.svg";
 import { m } from "./i18n.ts";
 import { nav, WELCOME } from "./nav.ts";
 import { comeBack, failureOf, online } from "./net.ts";
@@ -77,6 +84,7 @@ export function followScroll(): (event: ScrollEvent) => void {
   let from = 0;
   return ({ offset, contentSize, size }) => {
     const y = offset.y;
+    topScrolled.set(y > 2);
     if (y <= BAR_STEP) {
       barsAway.set(false);
       from = y;
@@ -461,29 +469,178 @@ export function Loaded<T extends object>(props: { rpc: Resource<T>; skeleton?: J
   );
 }
 
-/** PullScroll is a page's scrolling content that a pull from the top reads again. */
-export function PullScroll(props: { onRefresh: () => void; refreshing: boolean; children: JSX.Element; bottom?: number }) {
-  const pulled = signal(false);
-  effect(() => {
-    if (!props.refreshing) pulled.set(false);
-  });
+/** TOP_BAR is the height of the phones' top bar under the status bar. */
+export const TOP_BAR = 52;
+
+/** topSpace is how much of a tab's page the top bar covers, the status bar with it: none on the desktops, which show the page's `header`. */
+export const topSpace = computed(() => (platform.desktop ? 0 : insets().top + TOP_BAR));
+
+/** topScrolled is true while a tab's page has scrolled under the top bar, which then blurs it and draws its edge. */
+export const topScrolled = signal(false);
+
+/** isDark tells whether the page's color is dark, for the status bar's content over it. */
+export const isDark = computed(() => {
+  const hex = colors().page.slice(1, 7);
+  const [r, g, b] = [0, 2, 4].map((at) => Number.parseInt(hex.slice(at, at + 2), 16) / 255);
+  return 0.2126 * (r ?? 1) + 0.7152 * (g ?? 1) + 0.0722 * (b ?? 1) < 0.5;
+});
+
+/**
+ * TopBar is the head of a tab on a phone, in place of the system header: it reaches up under the status bar, and the
+ * page scrolls under it, which it then blurs as the system's bars do, with a hairline below.
+ */
+export function TopBar(props: { title: string }) {
   return (
-    <Scroll
-      style={{ flex: 1 }}
-      onScroll={followScroll()}
-      scrollEventThrottle={16}
-      refreshing={pulled() && props.refreshing}
-      onRefresh={() => {
-        pulled.set(true);
-        props.onRefresh();
+    <View
+      ios={{ backdropMaterial: "thick" }}
+      style={{
+        alignItems: "center",
+        backdropFilter: topScrolled() ? "blur(24px)" : undefined,
+        backgroundColor: topScrolled() ? `${colors().page.slice(0, 7)}d9` : colors().page,
+        borderBottomWidth: 1,
+        borderColor: topScrolled() ? colors().line : "transparent",
+        flexDirection: "row",
+        gap: 10,
+        height: topSpace(),
+        left: 0,
+        paddingHorizontal: 16,
+        paddingTop: insets().top,
+        position: "absolute",
+        right: 0,
+        top: 0,
+      }}
+    >
+      <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
+      {/* biome-ignore lint/a11y/useValidAriaRole: nsh's roles are the platforms', where a heading is "header". */}
+      <Text role="header" style={{ color: colors().ink, flex: 1, fontSize: 24, fontWeight: "700" }}>
+        {props.title}
+      </Text>
+    </View>
+  );
+}
+
+/** PULL is how far a page is pulled before it reads again, and the room its indicator keeps while it reads. */
+const PULL = 60;
+
+/** SHOWN_FOR is how long the indicator spins at least, so a quick read is still seen to happen. */
+const SHOWN_FOR = 600;
+
+/** PullIndicator is the indicator of a pull, in the palette's accent: a chip that comes in with the pull and spins while the page reads again. */
+function PullIndicator(props: { pull: AnimatedNode; refreshing: boolean; top: number }) {
+  const turn = createAnimatedValue(0);
+  const spin = Animated.loop(Animated.timing(turn, { toValue: 1, duration: 800, easing: Easing.linear }));
+  effect(() => {
+    if (props.refreshing && !reduceMotion()) {
+      turn.set(0);
+      spin.start();
+    } else {
+      spin.stop();
+    }
+  });
+  cleanup(() => spin.stop());
+  return (
+    <View
+      style={{
+        alignItems: "center",
+        height: PULL,
+        justifyContent: "center",
+        left: 0,
+        pointerEvents: "none",
+        position: "absolute",
+        right: 0,
+        top: props.top,
       }}
     >
       <View
-        style={{ alignSelf: "center", gap: 12, maxWidth: 960, padding: 16, paddingBottom: props.bottom ?? 16 + barSpace(), width: "100%" }}
+        style={{
+          alignItems: "center",
+          backgroundColor: colors().surface,
+          borderColor: colors().line,
+          borderRadius: 18,
+          borderWidth: 1,
+          height: 36,
+          justifyContent: "center",
+          opacity: props.refreshing ? 1 : props.pull.interpolate({ inputRange: [0, 20], outputRange: [0, 1] }),
+          transform: [
+            { translateY: props.refreshing ? 0 : props.pull.interpolate({ inputRange: [0, PULL], outputRange: [-24, 0] }) },
+            { scale: props.refreshing ? 1 : props.pull.interpolate({ inputRange: [0, PULL], outputRange: [0.6, 1] }) },
+          ],
+          width: 36,
+        }}
       >
-        {props.children}
+        <View
+          style={{
+            borderColor: colors().line,
+            borderRadius: 9,
+            borderTopColor: colors().accent,
+            borderWidth: 2.5,
+            height: 18,
+            transform: [
+              {
+                rotate: props.refreshing
+                  ? turn.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "360deg"] })
+                  : props.pull.interpolate({ inputRange: [0, PULL], outputRange: ["0deg", "270deg"] }),
+              },
+            ],
+            width: 18,
+          }}
+        />
       </View>
-    </Scroll>
+    </View>
+  );
+}
+
+/**
+ * PullScroll is a page's scrolling content that a pull from the top reads again. The indicator spins from the pull
+ * until the read ends and at least SHOWN_FOR, so the system always hears the refresh start and end. `underBar` is
+ * for a tab's page, which starts below the top bar and scrolls under it.
+ */
+export function PullScroll(props: {
+  onRefresh: () => void;
+  refreshing: boolean;
+  children: JSX.Element;
+  bottom?: number;
+  underBar?: boolean;
+}) {
+  const pull = createAnimatedValue(0);
+  const spinning = signal(false);
+  const held = signal(false);
+  effect(() => {
+    if (spinning() && !held() && !props.refreshing) spinning.set(false);
+  });
+  const top = () => (props.underBar ? topSpace() : 0);
+  return (
+    <View style={{ flex: 1 }}>
+      <Scroll
+        style={{ flex: 1 }}
+        onScroll={followScroll()}
+        scrollEventThrottle={16}
+        pullValue={pull}
+        refreshIndicator={{ height: PULL }}
+        refreshing={spinning()}
+        onRefresh={() => {
+          spinning.set(true);
+          held.set(true);
+          setTimeout(() => held.set(false), SHOWN_FOR);
+          props.onRefresh();
+        }}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            gap: 12,
+            maxWidth: 960,
+            padding: 16,
+            paddingBottom: props.bottom ?? 16 + barSpace(),
+            paddingTop: 16 + top(),
+            width: "100%",
+          }}
+        >
+          {props.children}
+        </View>
+      </Scroll>
+      <PullIndicator pull={pull} refreshing={spinning()} top={top()} />
+    </View>
   );
 }
 

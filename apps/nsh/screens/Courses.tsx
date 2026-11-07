@@ -78,7 +78,7 @@ export function CourseList(props: { visible: () => boolean }) {
     <View style={{ flex: 1, backgroundColor: colors().page }}>
       <Loaded rpc={rpc}>
         {(data) => (
-          <PullScroll onRefresh={rpc.refetch} refreshing={rpc.state() === "refreshing"}>
+          <PullScroll onRefresh={rpc.refetch} refreshing={rpc.state() === "refreshing"} underBar>
             <View style={{ gap: 12 }}>
               <If when={mine().length > 0}>
                 <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().myCourses}</Text>

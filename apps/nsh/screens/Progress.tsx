@@ -53,7 +53,7 @@ export function Progress(props: { visible: () => boolean }) {
     <View style={{ backgroundColor: colors().page, flex: 1 }}>
       <Loaded rpc={data} skeleton={<Skeleton rows={3} />}>
         {(loaded) => (
-          <PullScroll onRefresh={data.refetch} refreshing={data.state() === "refreshing"}>
+          <PullScroll onRefresh={data.refetch} refreshing={data.state() === "refreshing"} underBar>
             <View style={{ gap: 12 }}>
               <Days xp={loaded().profile.xp} />
               <Grid>
