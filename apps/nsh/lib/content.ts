@@ -39,7 +39,7 @@ export function contentHtml(source: string, figures: readonly Figure[] = [], inl
 
 /** texHtml renders a LaTeX string that may come from a learner: KaTeX escapes what it cannot typeset. */
 export function texHtml(tex: string): string {
-  return katex.renderToString(tex, { throwOnError: false, output: "html" });
+  return katex.renderToString(tex, { throwOnError: false });
 }
 
 /** escapeHtml makes a text safe to place in HTML. */
@@ -63,12 +63,15 @@ export interface Palette {
 
 /**
  * pageHtml wraps content in a page for a web view, styled like the app. The page
- * reports its height, since the web view takes the height of what it shows.
+ * reports its height, since the web view takes the height of what it shows. KaTeX
+ * writes each formula twice, as HTML that needs its stylesheet and as MathML that
+ * the stylesheet hides, so a page that cannot load the stylesheet keeps the MathML.
  */
 export function pageHtml(body: string, palette: Palette, options: { fontSize?: number; script?: string; head?: string } = {}): string {
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="${API_URL}/embed/katex.min.css">
+<link rel="stylesheet" href="${API_URL}/embed/katex.min.css" onerror="document.documentElement.className='no-katex'">
 <style>
+.no-katex .katex-html{display:none}
 html,body{margin:0;padding:0;background:transparent;color:${palette.ink};font:${options.fontSize ?? 16}px/1.6 -apple-system,system-ui,Roboto,"Segoe UI","Noto Sans SC",sans-serif;overflow-wrap:anywhere}
 p{margin:0}*+p,ul,ol{margin-top:.75em}ul,ol{margin-bottom:0;padding-left:1.25em}strong{font-weight:600}
 .katex-display{margin:.75em 0;overflow-x:auto;overflow-y:hidden}.katex{white-space:normal}
