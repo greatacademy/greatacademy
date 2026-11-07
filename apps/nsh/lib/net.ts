@@ -25,7 +25,7 @@ export async function netFetch(input: string | URL | Request, init?: RequestInit
 }
 
 /** Failure is what kind of trouble a call ran into, which decides what the learner is offered. */
-export type Failure = "offline" | "auth" | "server";
+export type Failure = "offline" | "auth" | "plan" | "server";
 
 function causes(error: unknown): unknown[] {
   const found: unknown[] = [];
@@ -33,10 +33,12 @@ function causes(error: unknown): unknown[] {
   return found;
 }
 
-/** failureOf sorts an error: no connection, a session the server no longer accepts, or anything else the server said. */
+/** failureOf sorts an error: no connection, a session the server no longer accepts, no plan covering the subject, or anything else the server said. */
 export function failureOf(error: unknown): Failure {
   if (causes(error).some((cause) => cause instanceof OfflineError)) return "offline";
   if (error instanceof ConnectError && error.code === Code.Unauthenticated) return "auth";
+  // The app sells nothing and links to no purchase (docs/billing.md §8); it only says so.
+  if (error instanceof ConnectError && error.code === Code.PermissionDenied && error.rawMessage.startsWith("no plan covers")) return "plan";
   return "server";
 }
 

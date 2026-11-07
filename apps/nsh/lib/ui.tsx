@@ -699,7 +699,9 @@ export function Problem(props: { error: unknown; onRetry: () => void }) {
       ? { glyph: "↯", title: m().offlineTitle, body: m().offlineBody }
       : kind() === "auth"
         ? { glyph: "→", title: m().authTitle, body: m().authBody }
-        : { glyph: "!", title: m().serverTitle, body: m().serverBody };
+        : kind() === "plan"
+          ? { glyph: "!", title: m().noPlanTitle, body: m().noPlanBody }
+          : { glyph: "!", title: m().serverTitle, body: m().serverBody };
   const signInAgain = () => {
     setToken(null);
     nav.setRoutes([WELCOME, { name: "sign-in" }]);

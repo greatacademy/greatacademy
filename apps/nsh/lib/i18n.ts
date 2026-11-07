@@ -154,6 +154,8 @@ const messages = {
     offlineTitle: "No connection",
     serverBody: "The server could not answer just now. Try again in a moment.",
     serverTitle: "Something went wrong",
+    noPlanTitle: "No plan for this subject",
+    noPlanBody: "No plan of this account covers this subject.",
     signInAgain: "Sign in again",
     appearance: "Appearance",
     backToSignIn: "Back to sign in",
@@ -419,6 +421,8 @@ const messages = {
     offlineTitle: "没有网络连接",
     serverBody: "服务器暂时无法响应，请稍后再试。",
     serverTitle: "出错了",
+    noPlanTitle: "没有这个学科的方案",
+    noPlanBody: "这个账号的方案不包含这个学科。",
     signInAgain: "重新登录",
     appearance: "外观",
     backToSignIn: "返回登录",
@@ -592,5 +596,6 @@ export function errorText(error: unknown): string {
     return key ? m()[key] : m().error;
   }
   if (failureOf(error) === "offline") return m().offlineBody;
+  if (failureOf(error) === "plan") return m().noPlanBody;
   return ConnectError.from(error).rawMessage === "that date is not valid" ? m().invalidDate : m().error;
 }

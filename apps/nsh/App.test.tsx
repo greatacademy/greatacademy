@@ -73,6 +73,18 @@ test("offers a retry when the call fails", async () => {
   await app.waitFor("text:Retry");
 });
 
+test("says when no plan covers a subject, without prices or a way to pay", async () => {
+  const denied = {
+    status: 403,
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ code: "permission_denied", message: "no plan covers math" }),
+  };
+  const app = await open("./App.tsx", { network: { [`POST ${url}/ListCourses`]: denied } });
+  await app.press("text:Browse the courses");
+  await app.waitFor("text:No plan of this account covers this subject.");
+  expect(app.texts().join(" ")).not.toMatch(/\$|Buy|Plans/);
+});
+
 test("says when there is no connection, and loads once it is back", async () => {
   let down = true;
   const app = await open("./App.tsx", {
