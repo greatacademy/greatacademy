@@ -482,22 +482,31 @@ export const isDark = computed(() => {
 });
 
 /**
- * GLASS_TINT is how much of the page's color Android's glass keeps, where Native Shell's backdrop blur does not draw
- * yet: the page shows through it, dimmed.
+ * GLASS_TINT is how much of the page's color Android's glass keeps over the page, so the page shows through it,
+ * lightly blurred where Native Shell's backdrop blur draws (the tab bar's pill) and dimmed where it does not yet.
  */
-const GLASS_TINT = "b3";
+const GLASS_TINT = "66";
+
+/** ANDROID_BLUR is the blur of Android's glass, light enough that the page under it stays recognizable. */
+const ANDROID_BLUR = "blur(6px)";
 
 /**
  * glass is the look of a bar of glass over the page: on iOS the system's Liquid Glass, as its tab bar's (a blur
- * before iOS 26); on Android the page through a tint of its color.
+ * before iOS 26); on Android the page lightly blurred through a tint of its color.
  */
 export function glass(): ViewStyle {
   if (platform.os === "ios") return { backdropFilter: "blur(20px)", glassEffect: "regular" };
-  return { backdropFilter: "blur(20px)", backgroundColor: `${colors().page.slice(0, 7)}${GLASS_TINT}` };
+  return { backdropFilter: ANDROID_BLUR, backgroundColor: `${colors().page.slice(0, 7)}${GLASS_TINT}` };
 }
 
+/**
+ * TOP_TINT is how much of the page's color Android's top bar keeps: more than the tab bar's glass, since Native
+ * Shell's backdrop blur does not draw under the top bar yet and the bar would otherwise all but vanish.
+ */
+const TOP_TINT = "b3";
+
 /** FADE_TINT is how much of the page's color the fade below the top bar starts with. */
-const FADE_TINT = platform.os === "ios" ? "66" : GLASS_TINT;
+const FADE_TINT = platform.os === "ios" ? "66" : TOP_TINT;
 
 /** TOP_FADE is how far below the top bar its tint fades out, as iOS 26's scroll edge effect does. */
 const TOP_FADE = 20;
@@ -511,6 +520,9 @@ export function TopBar(props: { title: string }) {
     <View
       style={{
         ...glass(),
+        ...(platform.os === "android"
+          ? { backgroundColor: `${colors().page.slice(0, 7)}${TOP_TINT}`, borderBottomColor: colors().line, borderBottomWidth: 0.5 }
+          : {}),
         alignItems: "center",
         flexDirection: "row",
         gap: 10,

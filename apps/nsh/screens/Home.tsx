@@ -100,7 +100,7 @@ function GlassTabs() {
           borderColor: `${colors().line.slice(0, 7)}99`,
           borderRadius: 32,
           borderWidth: 1,
-          boxShadow: [{ x: 0, y: 8, blur: 24, color: "#00000033" }],
+          // No shadow: Android draws it as an elevation's, which shows through the glass and hides the page under it.
           flexDirection: "row",
           height: 64,
           padding: 4,
