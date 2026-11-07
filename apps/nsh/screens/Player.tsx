@@ -475,6 +475,7 @@ export function Player(props: { sessionId: string }) {
     });
     if (action === "leave") nav.pop();
   };
+  keymap.bind("escape", () => void leave());
   return (
     <NavPage
       headerStyle={headerStyle()}

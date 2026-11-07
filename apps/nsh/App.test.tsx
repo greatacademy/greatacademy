@@ -299,7 +299,8 @@ test("studies a lesson from the course list to its result", async () => {
   await app.press("text:Show solution");
   await app.waitFor("text:Four splits in two.");
   await app.press("text:Start practicing");
-  await app.press("text:Four");
+  // B picks the second option on a keyboard, and Return checks it.
+  await app.keyboard.press("b");
   await app.keyboard.press("Enter");
   await app.waitFor("text:Correct!");
   // Leaving asks first; staying keeps the answer where it was.
@@ -309,7 +310,8 @@ test("studies a lesson from the course list to its result", async () => {
     return "Keep going";
   });
   await app.press("label:Close");
-  expect(asked).toEqual(["Leave this task?"]);
+  await app.keyboard.press("escape");
+  expect(asked).toEqual(["Leave this task?", "Leave this task?"]);
   expect(app.shows("Correct!")).toBe(true);
   await app.press("role:button[Continue]");
   await app.waitFor("text:Lesson complete");

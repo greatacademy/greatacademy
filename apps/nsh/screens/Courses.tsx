@@ -6,7 +6,7 @@ import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { colors, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
+import { cellStyle, colors, Grid, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 function SignInButton() {
@@ -67,27 +67,29 @@ export function CourseList(props: { visible: () => boolean }) {
             <View style={{ gap: 12 }}>
               <If when={mine().length > 0}>
                 <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().myCourses}</Text>
-                <Each of={mine()} key={(enrollment) => enrollment.courseId}>
-                  {(enrollment) => {
-                    const stats = () => enrollment().stats;
-                    const share = () => ((stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)) * 100;
-                    return (
-                      <View
-                        role="button"
-                        onPress={() => nav.push({ name: "learn", courseId: enrollment().courseId })}
-                        style={{ ...cardStyle(), borderColor: colors().accent }}
-                      >
-                        <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>
-                          {tx(data().courses.find((course) => course.id === enrollment().courseId)?.title) || enrollment().courseId}
-                        </Text>
-                        <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 6, overflow: "hidden" }}>
-                          <View style={{ backgroundColor: colors().good, height: 6, width: `${share()}%` }} />
+                <Grid>
+                  <Each of={mine()} key={(enrollment) => enrollment.courseId}>
+                    {(enrollment) => {
+                      const stats = () => enrollment().stats;
+                      const share = () => ((stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)) * 100;
+                      return (
+                        <View
+                          role="button"
+                          onPress={() => nav.push({ name: "learn", courseId: enrollment().courseId })}
+                          style={{ ...cardStyle(), ...cellStyle, borderColor: colors().accent }}
+                        >
+                          <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>
+                            {tx(data().courses.find((course) => course.id === enrollment().courseId)?.title) || enrollment().courseId}
+                          </Text>
+                          <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 6, overflow: "hidden" }}>
+                            <View style={{ backgroundColor: colors().good, height: 6, width: `${share()}%` }} />
+                          </View>
+                          <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
                         </View>
-                        <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
-                      </View>
-                    );
-                  }}
-                </Each>
+                      );
+                    }}
+                  </Each>
+                </Grid>
               </If>
               <Each of={shelves(data().courses.filter((course) => !enrolled().has(course.id)))} key={(shelf) => shelf.title}>
                 {(shelf) => (
@@ -95,16 +97,22 @@ export function CourseList(props: { visible: () => boolean }) {
                     <If when={shelf().title}>
                       <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{shelf().title}</Text>
                     </If>
-                    <Each of={shelf().courses} key={(course) => course.id}>
-                      {(course) => (
-                        <View role="button" onPress={() => nav.push({ name: "course", courseId: course().id })} style={cardStyle()}>
-                          <Muted>{tx(course().subjectTitle)}</Muted>
-                          <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(course().title)}</Text>
-                          <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(course().description)}</Text>
-                          <Muted>{m().topics(course().topicCount)}</Muted>
-                        </View>
-                      )}
-                    </Each>
+                    <Grid>
+                      <Each of={shelf().courses} key={(course) => course.id}>
+                        {(course) => (
+                          <View
+                            role="button"
+                            onPress={() => nav.push({ name: "course", courseId: course().id })}
+                            style={{ ...cardStyle(), ...cellStyle }}
+                          >
+                            <Muted>{tx(course().subjectTitle)}</Muted>
+                            <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(course().title)}</Text>
+                            <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(course().description)}</Text>
+                            <Muted>{m().topics(course().topicCount)}</Muted>
+                          </View>
+                        )}
+                      </Each>
+                    </Grid>
                   </View>
                 )}
               </Each>

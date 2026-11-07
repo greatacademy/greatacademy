@@ -4,7 +4,7 @@ import { computed, resource, signal, Text, View } from "nsh";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
-import { Action, Card, colors, ErrorNote, Loaded, Muted, PullScroll, Quiet, Ring, Skeleton } from "../lib/ui.tsx";
+import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Ring, Skeleton } from "../lib/ui.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
 
 /** TodayData is what the Today tab shows: the learner's XP and each enrolled course's dashboard, with its title. */
@@ -172,17 +172,21 @@ export function Today(props: { visible: () => boolean }) {
                 }
               >
                 <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", marginTop: 4 }}>{m().nextUp}</Text>
-                <Each of={data().courses.filter((course) => !course.dash.active)} key={(course) => course.courseId}>
-                  {(course) => (
-                    <CourseDay
-                      courseId={course().courseId}
-                      title={course().title}
-                      dash={course().dash}
-                      busy={busy()}
-                      onStart={(task) => void start(course().courseId, task)}
-                    />
-                  )}
-                </Each>
+                <Grid>
+                  <Each of={data().courses.filter((course) => !course.dash.active)} key={(course) => course.courseId}>
+                    {(course) => (
+                      <Cell>
+                        <CourseDay
+                          courseId={course().courseId}
+                          title={course().title}
+                          dash={course().dash}
+                          busy={busy()}
+                          onStart={(task) => void start(course().courseId, task)}
+                        />
+                      </Cell>
+                    )}
+                  </Each>
+                </Grid>
                 <If when={data().courses.length > 0}>
                   <Quiet label={m().browseCourses} onPress={() => openTab("courses")} />
                 </If>

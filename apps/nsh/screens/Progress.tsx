@@ -4,7 +4,7 @@ import { computed, resource, Text, View } from "nsh";
 import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
-import { Card, colors, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
+import { Card, cellStyle, colors, Grid, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
 
 /** Days draws the XP of the last 14 days as bars, today last. */
 function Days(props: { xp: XpSummary | undefined }) {
@@ -52,37 +52,40 @@ export function Progress(props: { visible: () => boolean }) {
           <PullScroll onRefresh={data.refetch} refreshing={data.state() === "refreshing"}>
             <View style={{ gap: 12 }}>
               <Days xp={loaded().profile.xp} />
-              <Each of={loaded().profile.enrollments} key={(enrollment) => enrollment.courseId}>
-                {(enrollment) => {
-                  const stats = () => enrollment().stats;
-                  const share = () => ((stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)) * 100;
-                  return (
-                    <View
-                      role="button"
-                      onPress={() => nav.push({ name: "map", courseId: enrollment().courseId })}
-                      style={{
-                        backgroundColor: colors().surface,
-                        borderColor: colors().line,
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        gap: 8,
-                        padding: 16,
-                      }}
-                    >
-                      <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>
-                        {tx(loaded().list.courses.find((course) => course.id === enrollment().courseId)?.title) || enrollment().courseId}
-                      </Text>
-                      <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 8, overflow: "hidden" }}>
-                        <View style={{ backgroundColor: colors().good, height: 8, width: `${share()}%` }} />
+              <Grid>
+                <Each of={loaded().profile.enrollments} key={(enrollment) => enrollment.courseId}>
+                  {(enrollment) => {
+                    const stats = () => enrollment().stats;
+                    const share = () => ((stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)) * 100;
+                    return (
+                      <View
+                        role="button"
+                        onPress={() => nav.push({ name: "map", courseId: enrollment().courseId })}
+                        style={{
+                          ...cellStyle,
+                          backgroundColor: colors().surface,
+                          borderColor: colors().line,
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          gap: 8,
+                          padding: 16,
+                        }}
+                      >
+                        <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>
+                          {tx(loaded().list.courses.find((course) => course.id === enrollment().courseId)?.title) || enrollment().courseId}
+                        </Text>
+                        <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 8, overflow: "hidden" }}>
+                          <View style={{ backgroundColor: colors().good, height: 8, width: `${share()}%` }} />
+                        </View>
+                        <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
+                        <If when={(stats()?.due ?? 0) > 0}>
+                          <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(stats()?.due ?? 0)}</Text>
+                        </If>
                       </View>
-                      <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
-                      <If when={(stats()?.due ?? 0) > 0}>
-                        <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(stats()?.due ?? 0)}</Text>
-                      </If>
-                    </View>
-                  );
-                }}
-              </Each>
+                    );
+                  }}
+                </Each>
+              </Grid>
             </View>
           </PullScroll>
         )}

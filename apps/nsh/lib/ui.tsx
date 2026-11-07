@@ -73,6 +73,19 @@ export function Ring(props: { share: number; size: number; color: string; childr
   );
 }
 
+/** Grid lays its `Cell`s out in as many columns as fit: one on a phone, two in a wide window. */
+export function Grid(props: { children: JSX.Element }) {
+  return <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>{props.children}</View>;
+}
+
+/** cellStyle sizes a view as one item of a `Grid`. */
+export const cellStyle = { flexBasis: 320, flexGrow: 1, flexShrink: 1, minWidth: 0 } as const;
+
+/** Cell is one item of a `Grid`, at least 320 points wide. */
+export function Cell(props: { children: JSX.Element }) {
+  return <View style={cellStyle}>{props.children}</View>;
+}
+
 /** Muted is secondary text. */
 export function Muted(props: { children: JSX.Element }) {
   return <Text style={{ color: colors().muted, fontSize: 14 }}>{props.children}</Text>;

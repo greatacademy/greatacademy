@@ -1,5 +1,5 @@
 import type { Feedback, ProblemView } from "@ga/proto/learning/v1/learning_pb";
-import { effect, signal, Text, View } from "nsh";
+import { effect, keymap, signal, Text, View } from "nsh";
 import { Input } from "nsh/base";
 
 import { m, tx } from "../lib/i18n.ts";
@@ -113,6 +113,14 @@ function ChoiceField(props: {
 }) {
   const input = props.problem.input?.kind;
   const options = input?.case === "choice" ? input.value : undefined;
+  // On a keyboard, 1 to 9 or A to I pick an option, as the letters beside them say.
+  for (let i = 0; i < Math.min(options?.options.length ?? 0, 9); i++) {
+    const pick = () => {
+      if (!props.disabled) props.onChange(String(i));
+    };
+    keymap.bind(String(i + 1), pick, { when: "notEditing" });
+    keymap.bind(String.fromCharCode(97 + i), pick, { when: "notEditing" });
+  }
   const border = (i: number) => {
     const selected = props.value === String(i);
     if (props.feedback && (props.feedback.answer === String(i) || (selected && props.feedback.correct))) return colors().good;
@@ -130,6 +138,7 @@ function ChoiceField(props: {
           return (
             <View
               role="radio"
+              accessibilityState={{ checked: props.value === String(i()) }}
               onPress={press}
               style={{
                 alignItems: "center",
