@@ -118,9 +118,12 @@ function androidManifest(cleartext: boolean): string {
   return `<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="${peek("--id") ?? config.id}">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application android:label="${name}" android:icon="@mipmap/ic_launcher"${cleartext ? ' android:usesCleartextTraffic="true"' : ""}
         android:extractNativeLibs="false" android:enableOnBackInvokedCallback="true" android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <provider android:name="com.longbridge.nsh.FilesProvider" android:exported="false"
+            android:authorities="${peek("--id") ?? config.id}.files" android:grantUriPermissions="true" />
         <activity android:name="com.longbridge.nsh.AppActivity" android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density|fontScale|locale|layoutDirection">
