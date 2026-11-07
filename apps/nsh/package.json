@@ -1,0 +1,25 @@
+{
+  "name": "@ga/nsh",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "nsh run .",
+    "ios": "nsh run . --target ios",
+    "android": "nsh run . --target android",
+    "typecheck": "nsh check .",
+    "test": "nsh test .",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "nsh"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "@connectrpc/connect": "2.3.0",
+    "@connectrpc/connect-web": "2.3.0",
+    "@ga/design": "workspace:*",
+    "@ga/proto": "workspace:*"
+  }
+}

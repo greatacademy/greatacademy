@@ -293,6 +293,24 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
 
+  apps/nsh:
+    dependencies:
+      '@bufbuild/protobuf':
+        specifier: 2.16.0
+        version: 2.16.0
+      '@connectrpc/connect':
+        specifier: 2.3.0
+        version: 2.3.0(@bufbuild/protobuf@2.16.0)
+      '@connectrpc/connect-web':
+        specifier: 2.3.0
+        version: 2.3.0(@bufbuild/protobuf@2.16.0)(@connectrpc/connect@2.3.0(@bufbuild/protobuf@2.16.0))
+      '@ga/design':
+        specifier: workspace:*
+        version: link:../../libs/design
+      '@ga/proto':
+        specifier: workspace:*
+        version: link:../../libs/proto
+
   apps/web:
     dependencies:
       '@base-ui/react':
