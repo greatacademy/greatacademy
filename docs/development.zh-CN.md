@@ -107,7 +107,7 @@ pnpm nx run nsh:ios                   # iOS 模拟器；需要 Xcode
 pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 和 JDK
 ```
 
-- `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给手机打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。
+- `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。为 Android 打包的应用不能使用明文 HTTP，因为 Native Shell 只在开发构建中允许它，所以需要 HTTPS 服务器；要连开发服务器，请用 `nsh:android`。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。同意、监护人工具、进度地图和历史记录还不在应用里。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
