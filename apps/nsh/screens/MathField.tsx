@@ -37,7 +37,7 @@ export function MathField(props: { value: string; onChange: (latex: string) => v
       `<math-field id="f" aria-label="${m().yourAnswer}" math-virtual-keyboard-policy="auto" smart-fence="on" style="display:block;box-sizing:border-box;width:100%;min-height:48px;padding:8px 12px;font-size:20px;border:1px solid ${palette.ink}33;border-radius:8px;background:transparent;color:inherit"></math-field>`,
       palette,
       {
-        head: `<script src="${API_URL}/embed/mathlive.min.js"></script>`,
+        head: `<style>math-field{--caret-color:${palette.accent};--primary-color:${palette.accent}}math-field:focus,math-field:focus-visible{outline:none}math-field::part(menu-toggle){display:none}math-field::part(virtual-keyboard-toggle){min-width:44px;min-height:44px}</style><script src="${API_URL}/embed/mathlive.min.js"></script>`,
         script: script(
           untracked(() => props.value),
           disabled,
@@ -54,7 +54,7 @@ export function MathField(props: { value: string; onChange: (latex: string) => v
             html={html()}
             baseUrl={`${API_URL}/`}
             scrollable={false}
-            style={{ backgroundColor: "transparent", height: field() + keyboard() }}
+            style={{ backgroundColor: "transparent", height: field() + (props.disabled ? 0 : keyboard()) }}
             onError={() => asText.set(true)}
             onMessage={({ data }) => {
               const message = JSON.parse(data) as { height?: number; value?: string; submit?: boolean; keyboard?: number };
