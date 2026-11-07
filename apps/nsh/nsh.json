@@ -1,6 +1,7 @@
 {
   "name": "Great Academy",
-  "id": "com.greatacademy.app",
+  "id": "dev.greatacademy.app",
   "version": "1.0.0",
-  "build": 1
+  "build": 1,
+  "icon": "assets/icon.png"
 }

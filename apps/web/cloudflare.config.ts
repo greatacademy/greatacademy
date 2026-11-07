@@ -7,6 +7,7 @@ export default defineConfig({
     compatibilityFlags: ["nodejs_compat"],
     entrypoint: "./src/server.ts",
     observability: { enabled: true },
+    domains: ["greatacademy.dev"],
     // The retention run of docs/minors-data.md §10, once a day.
     triggers: [triggers.scheduled({ schedule: "0 3 * * *" })],
     env: {

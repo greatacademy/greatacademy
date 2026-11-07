@@ -154,7 +154,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`），用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日 Cron Trigger 和加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`。
+  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日 Cron Trigger 和加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`。
   - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
 - **开发：**

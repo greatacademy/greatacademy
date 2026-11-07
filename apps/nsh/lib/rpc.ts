@@ -9,7 +9,8 @@ import { token } from "./session.ts";
 /**
  * API_URL is the web app's Worker, which serves the API. In development that is
  * the Vite dev server: the desktops and the iOS simulator reach it at localhost,
- * and Android after `adb reverse tcp:5173 tcp:5173`.
+ * and Android after `adb reverse tcp:5173 tcp:5173`. `scripts/package.ts` replaces
+ * this line while it packages the app.
  */
 export const API_URL = "http://localhost:5173";
 

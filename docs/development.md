@@ -80,7 +80,7 @@ pnpm nx run web:dev                   # http://localhost:5173
 - `apps/web/cloudflare.config.ts` declares the Worker: the Hyperdrive binding `HYPERDRIVE`, whose `dev.connectionString` points at the container, the secrets `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM` and `AI_KEYS_SECRET`, read from `.dev.vars` locally (git-ignored), the R2 bucket `GUARDIAN_FORMS`, which is local in development, and a daily Cron Trigger. With `RESEND_API_KEY` empty, password-reset and verification emails are written to the console instead of sent, so the links can be opened from the server's output.
 - `pnpm nx run web:typecheck` first runs `cf workers types`, which writes the `Env` declarations to `.cloudflare/types`.
 - `apps/web/vite.config.ts` runs the subject Workers alongside the web Worker in development, so `web:dev` needs nothing else. Run it through Nx, which generates the manifest first.
-- `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. Before deploying, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, create the R2 bucket `ga-guardian-forms`, and set the secrets.
+- `pnpm nx run web:build` builds the Worker into `.cloudflare/output`; `cf deploy` deploys it. The Worker serves `greatacademy.dev`, declared in the same file. Before deploying, add that domain to the Cloudflare account as a zone, create the Hyperdrive configuration, put its id in `cloudflare.config.ts`, create the R2 bucket `ga-guardian-forms`, and set the secrets, with `EMAIL_FROM` an address on the domain that Resend has verified.
 - Deploy subjects first: `pnpm nx run math-workers:deploy` builds the Workers of mathematics and deploys the shards, then the gateway, and `pnpm nx run english-workers:deploy` does the same for English. Then deploy the web Worker.
 
 The admin console is at `/admin`. Answer the age question as an adult on an account, then grant it the role with `pnpm nx run db:grant-admin -- <email>`. Every market starts closed to minors, so open one there before trying a child's account. To run the retention rules once while `web:dev` is up:
@@ -107,11 +107,11 @@ pnpm nx run nsh:ios                   # The iOS simulator; needs Xcode
 pnpm nx run nsh:android               # An emulator or device; needs the Android SDK and a JDK
 ```
 
-- `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`.
+- `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173` under `nsh run`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`.
 - Screens live in `apps/nsh/screens`. `nsh:test` runs the app headless, with no simulator, and `nsh:typecheck` runs `nsh check`, which also generates `.nsh/types`.
 - The app signs in with a bearer token and keeps it in `Storage`. Consent, guardian tools, the progress map and the history are not in the app yet.
 - Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
 - `nsh test` does not run web views, so plots and the math field have no headless test.
 - A page in a web view that cannot load the KaTeX stylesheet shows each formula's MathML instead. On `--target web` the page is a sandboxed frame without an origin, so `/embed` allows any origin. Some embedded browsers, such as the Claude desktop app's browser pane, refuse every request from a sandboxed frame, so check math in a regular browser or on a native target.
 - A desktop window does not stay under 420 by 600 points (`lib/window.ts`): Native Shell has no minimum size for a TSX app, so the window moves back once a drag passes the limit.
-- `nsh package apps/nsh --target <target>` builds an installable app. Shipping needs a production `API_URL`, which is not set yet.
+- `pnpm nx run nsh:package -- --target <target>` builds an installable app, whose identifier is `dev.greatacademy.app`, with its icon from `assets/`. It uses `https://greatacademy.dev` unless `--api-url` names another server, and passes other flags, such as `--sign` and `--profile`, on to `nsh package`.

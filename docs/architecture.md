@@ -154,7 +154,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
 ## 6. Deployment
 
 - **Production:**
-  - The web Worker (`apps/web`), deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger, and the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys.
+  - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger, and the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys.
   - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
   - Migrations are applied with drizzle-kit before a deployment.
 - **Development:**

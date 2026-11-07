@@ -264,6 +264,13 @@ importers:
       marked-katex-extension:
         specifier: 5.1.13
         version: 5.1.13(katex@0.16.47)(marked@18.1.2)
+    devDependencies:
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
 
   apps/web:
     dependencies:
