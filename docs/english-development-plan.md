@@ -37,7 +37,7 @@ G0 ─► E1 first slice ─► G1 ─┬─► E2 reading ───────
 | :--- | :--- | :--- | :--- |
 | E0.1 | Deploy the web and mathematics Workers to Cloudflare, which has not been done yet | M | A test account completes a lesson in production, and startup, memory and latency between Workers are measured ([Roadmap §2](roadmap.md#2-risks-and-open-items)) |
 | E0.2 | Find an English teacher of grades 3 to 8 to review content, and a Chinese-speaking reviewer of explanations | S | Named people have agreed |
-| E0.3 | Get legal advice on minors' text and recordings in the first markets | S | Written advice on consent, retention and vendors; speech and AI stages depend on it |
+| E0.3 | Get legal advice on minors' text and recordings in the first markets | S | Written advice on consent, retention and vendors, answering the questions in [Minors' Data](minors-data.md#12-what-must-exist-and-when); speech and AI stages depend on it |
 | E0.4 | Fix the first course's id and name. Course ids are unique across subjects and never change | S | The id, proposed as `english-grammar-writing`, is in this document |
 | E0.5 | Choose word and frequency sources whose licenses allow use, and record them | S | `content/english/SOURCES.md` lists each source and its license |
 
@@ -110,7 +110,7 @@ Each topic has 2 to 4 knowledge points, an item bank large enough to pass sampli
 | :--- | :--- |
 | A paper test written without the platform's items, in two equivalent forms | Reviewer |
 | Report rejected responses that a person judges correct, as well as what it reports today | `tools/pilot` |
-| Recruit 20 to 30 learners of grades 3 to 8 with guardians' consent; run four weeks | The project owner |
+| Recruit 20 to 30 learners of grades 3 to 8 with guardians' signed consent, as [Minors' Data](minors-data.md#12-what-must-exist-and-when) requires; run four weeks | The project owner |
 | Weekly report, fixes and observed sessions, as in [Roadmap §3](roadmap.md#3-pilot) | Team |
 
 **Gate G1.** Stage 2 begins when:
@@ -190,9 +190,9 @@ W6 belongs to E7.
 | E4.1 | `audience` on knowledge points; `explanationLocale: "zh-CN"` courses | `libs/content`, `apps/web` | An adult beginner and a child see different examples in a test course |
 | E4.2 | Audio on problems and explanations: an offline synthesis script with a reviewed voice, files in R2 named by content hash, a compiler check that each file exists | `libs/content`, new `tools/audio`, `apps/web` | Audio is cached and plays on slow networks |
 | E4.3 | S1 listening, shipped first because it needs no microphone | `content/english` | Sound-discrimination topics pass sampling, with reviewers' checks of each audio file |
-| E4.4 | Recording on the web and upload to R2 by a short-lived URL, with a lifecycle rule deleting files, a consent screen for minors and a microphone check; learners can skip | `apps/web`, `libs/api` | Recordings disappear on schedule, and learners without a microphone never get stuck |
+| E4.4 | Recording on the web and upload to R2 by a short-lived URL, with a lifecycle rule deleting files, the `speech` consent of [Minors' Data](minors-data.md#8-speech) and a microphone check; learners can skip | `apps/web`, `libs/api` | Recordings disappear on schedule, and learners without a microphone never get stuck |
 | E4.5 | Speech interface behind `libs/judge`; a test of each speech-to-text service with 200 recordings of grammatical errors, for silent correction | `libs/judge`, `tools/calibrate` | The S4 service is chosen, or S4 is cut if none preserves errors |
-| E4.6 | Pronunciation comparison of [§13.2 of the design](english-curriculum.md#132-recorded-speech): 200 to 300 clips (*starting*) rated by people, including Chinese first-language speakers, other accents and children | `tools/calibrate` | A vendor is chosen, or target-word recognition replaces it for S2 |
+| E4.6 | Pronunciation comparison of [§13.2 of the design](english-curriculum.md#132-recorded-speech): 200 to 300 clips (*starting*) rated by people, including Chinese first-language speakers, other accents and children, whose clips need the separate `research` consent of [Minors' Data](minors-data.md#8-speech) | `tools/calibrate` | A vendor is chosen, or target-word recognition replaces it for S2 |
 | E4.7 | S2, S3 and S4 with low-confidence retries, on the web, then on mobile once P6 task players exist, using native recording | `apps/web`, `apps/mobile` | Low confidence asks for another recording and counts no failure, tested for each level |
 | E4.8 | Courses in order A1, A2, B1, with the topics for speakers of Chinese (articles, tense, plurals, th, r and l) and practice balanced across the four strands | `content/english` | Each course compiles, is reviewed, and has time balanced across strands in simulation |
 | E4.9 | Pilot of A1 and A2 with Chinese-speaking adults and other first languages, using an outside listening and speaking test | Team | Gate G3 |

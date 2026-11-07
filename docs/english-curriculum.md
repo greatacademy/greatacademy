@@ -165,7 +165,7 @@ Foreign-language courses start early and concentrate on S1 to S4, which build au
 - **Intelligibility, not accent.** No dialect or foreign accent loses marks. Sounds are corrected in order of how much they harm understanding, following the intelligibility principle (Levis, 2005).
 - **Low confidence is never a failure.** Speech systems can be inaccurate for children and for less common accents. When confidence is low, the learner is asked to record again and no failure is counted.
 - **Technology never blocks learning.** A learner without a microphone or in a noisy place can skip speaking. Reading and writing topics have no prerequisites in speaking.
-- **Privacy.** Learners include minors. By default only the transcript and scores are kept, not the recording. This requires legal review before launch.
+- **Privacy.** Learners include minors. By default only the transcript and scores are kept, not the recording. This requires legal review before launch; the mechanism is in [Minors' Data](minors-data.md).
 - **AI conversation is application, not instruction.** It motivates, but progress in it is hard to measure, so it does not replace S1 to S5.
 
 ## 10. Diagnostic and Pilot
@@ -340,7 +340,7 @@ Local tests use **containers only, not Kubernetes**.
 - **The method is less proven here.** Comprehension in particular may not transfer from practice. The outside test decides.
 - **Content cost.** Passages and item banks need human review, and this is the largest cost. The total has not been estimated.
 - **AI judgment.** Accuracy, cost and dependence on a provider are all risks; the levels in §8 and §9 keep AI use small.
-- **Children's data.** Recordings and writing by minors need legal review in each market.
+- **Children's data.** Recordings and writing by minors need legal review in each market, starting from [Minors' Data](minors-data.md).
 
 ## 15. References
 
