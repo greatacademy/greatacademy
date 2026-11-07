@@ -4,7 +4,7 @@ import { THEMES, type Theme } from "@ga/design";
 import { CaretDown, Check, type Icon, Monitor, Moon, Sun, UserCircle } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-
+import { hasInbox, useAccess } from "../lib/access.ts";
 import { setAppearance, useAppearance } from "../lib/appearance.ts";
 import { authClient, useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
@@ -94,6 +94,7 @@ export function Header() {
     queryFn: () => learning.getProfile({ timeZone: timeZone() }),
     enabled: !!session,
   });
+  const access = useAccess();
   const guards = (guarded.data?.learners.length ?? 0) > 0;
   // An account that only follows others has nothing of its own to learn yet.
   const learns = !guards || (profile.data?.enrollments.length ?? 0) > 0;
@@ -147,9 +148,11 @@ export function Header() {
                         <div className="truncate font-medium" title={session.user.name}>
                           {session.user.name}
                         </div>
-                        <div className="truncate text-xs text-muted" title={session.user.email}>
-                          {session.user.email}
-                        </div>
+                        {hasInbox(session.user.email) && (
+                          <div className="truncate text-xs text-muted" title={session.user.email}>
+                            {session.user.email}
+                          </div>
+                        )}
                       </div>
                       <ThemeButtons />
                     </div>
@@ -162,6 +165,11 @@ export function Header() {
                     <Menu.Item className={menuItem} onClick={() => navigate({ to: "/settings" })}>
                       {m.settings}
                     </Menu.Item>
+                    {access?.admin && (
+                      <Menu.Item className={menuItem} onClick={() => navigate({ to: "/admin" })}>
+                        {m.navAdmin}
+                      </Menu.Item>
+                    )}
                     <Menu.Item className={menuItem} onClick={() => navigate({ to: "/landing" })}>
                       {m.navAbout}
                     </Menu.Item>

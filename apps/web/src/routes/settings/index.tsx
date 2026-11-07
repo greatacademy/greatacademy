@@ -1,4 +1,5 @@
 import { Code } from "@connectrpc/connect";
+import { Band } from "@ga/proto/privacy/v1/privacy_pb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { type FormEvent, type ReactNode, useState } from "react";
@@ -6,10 +7,13 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { field } from "../../components/AuthForm.tsx";
 import { GoalsEditor } from "../../components/GoalsEditor.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
+import { PrivacySettings } from "../../components/PrivacySettings.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
+import { hasInbox, useAccess } from "../../lib/access.ts";
 import { authClient } from "../../lib/auth.ts";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
+import { usePrivacyText } from "../../lib/privacy-text.ts";
 import { account, failureCode } from "../../lib/rpc.ts";
 
 export const Route = createFileRoute("/settings/")({ component: Settings });
@@ -25,9 +29,13 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function Settings() {
   const { m, locale } = useI18n();
+  const t = usePrivacyText();
   const session = useRequireSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const access = useAccess();
+  const child = access?.band === Band.CHILD;
+  const adult = access?.band === Band.ADULT;
   const settings = useQuery({ queryKey: ["settings"], queryFn: () => account.getSettings({}), enabled: !!session, staleTime: 0 });
   const refresh = () => qc.invalidateQueries({ queryKey: ["settings"] });
 
@@ -90,45 +98,53 @@ function Settings() {
   return (
     <div className="space-y-6">
       <Section title={m.profile}>
-        <form onSubmit={saveName} className="space-y-3">
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.name}</span>
-            <input name="name" required defaultValue={session.user.name} autoComplete="name" className={field} />
-          </label>
-          {nameState === "failed" && <ErrorNote message={m.error} />}
-          <div className="flex items-center gap-3">
-            <Button type="submit" variant="secondary">
-              {m.save}
-            </Button>
-            {nameState === "saved" && <span className="text-sm text-good">{m.saved}</span>}
+        {adult && (
+          <form onSubmit={saveName} className="space-y-3">
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{m.name}</span>
+              <input name="name" required defaultValue={session.user.name} autoComplete="name" className={field} />
+            </label>
+            {nameState === "failed" && <ErrorNote message={m.error} />}
+            <div className="flex items-center gap-3">
+              <Button type="submit" variant="secondary">
+                {m.save}
+              </Button>
+              {nameState === "saved" && <span className="text-sm text-good">{m.saved}</span>}
+            </div>
+          </form>
+        )}
+        {hasInbox(session.user.email) ? (
+          <div className="space-y-1 text-sm">
+            <div className="font-medium">{m.email}</div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span>{session.user.email}</span>
+              {session.user.emailVerified ? (
+                <span className="text-good">{m.emailVerified}</span>
+              ) : verification ? (
+                <span className="text-muted">{m.verificationSent}</span>
+              ) : (
+                <>
+                  <span className="text-warn">{m.emailNotVerified}</span>
+                  <button
+                    type="button"
+                    className="font-medium text-accent"
+                    onClick={async () => {
+                      const res = await authClient.sendVerificationEmail({ email: session.user.email, callbackURL: "/settings" });
+                      if (!res.error) setVerification(true);
+                    }}
+                  >
+                    {m.resendVerification}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </form>
-        <div className="space-y-1 text-sm">
-          <div className="font-medium">{m.email}</div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span>{session.user.email}</span>
-            {session.user.emailVerified ? (
-              <span className="text-good">{m.emailVerified}</span>
-            ) : verification ? (
-              <span className="text-muted">{m.verificationSent}</span>
-            ) : (
-              <>
-                <span className="text-warn">{m.emailNotVerified}</span>
-                <button
-                  type="button"
-                  className="font-medium text-accent"
-                  onClick={async () => {
-                    const res = await authClient.sendVerificationEmail({ email: session.user.email, callbackURL: "/settings" });
-                    if (!res.error) setVerification(true);
-                  }}
-                >
-                  {m.resendVerification}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+        ) : (
+          <p className="text-sm">{session.user.name}</p>
+        )}
       </Section>
+
+      <PrivacySettings />
 
       <Section title={m.goals}>
         <p className="text-sm text-muted">{m.goalsBody}</p>
@@ -141,31 +157,33 @@ function Settings() {
         />
       </Section>
 
-      <Section title={m.league}>
-        <p className="text-sm text-muted">{m.leagueIntro}</p>
-        <form onSubmit={saveUsername} className="space-y-2">
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.username}</span>
-            <input name="username" required minLength={3} maxLength={20} defaultValue={s.username} autoComplete="off" className={field} />
-            <span className="block text-xs font-normal text-muted">{m.usernameHint}</span>
+      {!child && (
+        <Section title={m.league}>
+          <p className="text-sm text-muted">{m.leagueIntro}</p>
+          <form onSubmit={saveUsername} className="space-y-2">
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{m.username}</span>
+              <input name="username" required minLength={3} maxLength={20} defaultValue={s.username} autoComplete="off" className={field} />
+              <span className="block text-xs font-normal text-muted">{m.usernameHint}</span>
+            </label>
+            {usernameError && <ErrorNote message={usernameError} />}
+            <Button type="submit" variant="secondary">
+              {m.save}
+            </Button>
+          </form>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={s.leagues}
+              disabled={leagues.isPending || !s.username}
+              onChange={(e) => leagues.mutate(e.target.checked)}
+            />
+            {m.leagueJoin}
           </label>
-          {usernameError && <ErrorNote message={usernameError} />}
-          <Button type="submit" variant="secondary">
-            {m.save}
-          </Button>
-        </form>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={s.leagues}
-            disabled={leagues.isPending || !s.username}
-            onChange={(e) => leagues.mutate(e.target.checked)}
-          />
-          {m.leagueJoin}
-        </label>
-        {!s.username && <p className="text-xs text-muted">{m.usernameFirst}</p>}
-        {leagues.isError && <ErrorNote message={m.error} />}
-      </Section>
+          {!s.username && <p className="text-xs text-muted">{m.usernameFirst}</p>}
+          {leagues.isError && <ErrorNote message={m.error} />}
+        </Section>
+      )}
 
       <Section title={m.guardian}>
         <p className="text-sm text-muted">{m.guardiansBody}</p>
@@ -176,9 +194,11 @@ function Settings() {
               <div className="truncate font-medium">{g.name}</div>
               <div className="truncate text-muted">{g.email}</div>
             </div>
-            <Button variant="secondary" onClick={() => removeGuardian.mutate(g.userId)} disabled={removeGuardian.isPending}>
-              {m.remove}
-            </Button>
+            {!child && (
+              <Button variant="secondary" onClick={() => removeGuardian.mutate(g.userId)} disabled={removeGuardian.isPending}>
+                {m.remove}
+              </Button>
+            )}
           </div>
         ))}
         {invite.data ? (
@@ -215,17 +235,21 @@ function Settings() {
       </Section>
 
       <Section title={m.dangerZone}>
-        <form onSubmit={deleteAccount} className="space-y-3">
-          <p className="text-sm text-muted">{m.deleteBody}</p>
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.password}</span>
-            <input name="password" type="password" required autoComplete="current-password" className={field} />
-          </label>
-          {deleteError && <ErrorNote message={m.error} />}
-          <button type="submit" className="rounded-lg border border-bad/40 px-4 py-2 text-sm font-medium text-bad hover:bg-bad-soft">
-            {m.deleteAccount}
-          </button>
-        </form>
+        {access?.managed ? (
+          <p className="text-sm text-muted">{t.childDelete}</p>
+        ) : (
+          <form onSubmit={deleteAccount} className="space-y-3">
+            <p className="text-sm text-muted">{m.deleteBody}</p>
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{m.password}</span>
+              <input name="password" type="password" required autoComplete="current-password" className={field} />
+            </label>
+            {deleteError && <ErrorNote message={m.error} />}
+            <button type="submit" className="rounded-lg border border-bad/40 px-4 py-2 text-sm font-medium text-bad hover:bg-bad-soft">
+              {m.deleteAccount}
+            </button>
+          </form>
+        )}
       </Section>
     </div>
   );

@@ -178,7 +178,7 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
     staleTime: 0,
   });
   const start = useMutation({
-    mutationFn: (task: Task) => learning.startTask({ courseId, task }),
+    mutationFn: (task: Task) => learning.startTask({ courseId, task, timeZone: timeZone() }),
     onSuccess: (res) => navigate({ to: "/session/$sessionId", params: { sessionId: res.session!.id } }),
   });
   const skip = useMutation({

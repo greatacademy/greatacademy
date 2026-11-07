@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccessRouteImport } from './routes/access'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as AgeRouteImport } from './routes/age'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as LeagueRouteImport } from './routes/league'
@@ -17,11 +20,20 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteRouteImport } from './routes/settings/route'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminAdminsRouteImport } from './routes/admin/admins'
+import { Route as AdminAiRouteImport } from './routes/admin/ai'
+import { Route as AdminLogRouteImport } from './routes/admin/log'
+import { Route as AdminMarketsRouteImport } from './routes/admin/markets'
+import { Route as AdminNoticesRouteImport } from './routes/admin/notices'
+import { Route as AdminRegisterRouteImport } from './routes/admin/register'
+import { Route as AdminVerificationsRouteImport } from './routes/admin/verifications'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as GuardianIndexRouteImport } from './routes/guardian/index'
 import { Route as GuardianLearnerIdRouteImport } from './routes/guardian/$learnerId'
+import { Route as LegalPageRouteImport } from './routes/legal/$page'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
@@ -33,6 +45,21 @@ import { Route as LearnCourseIdTopicsTopicIdRouteImport } from './routes/learn/$
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessRoute = AccessRouteImport.update({
+  id: '/access',
+  path: '/access',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgeRoute = AgeRouteImport.update({
+  id: '/age',
+  path: '/age',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -70,6 +97,46 @@ const SignUpRoute = SignUpRouteImport.update({
   path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminsRoute = AdminAdminsRouteImport.update({
+  id: '/admins',
+  path: '/admins',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAiRoute = AdminAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLogRoute = AdminLogRouteImport.update({
+  id: '/log',
+  path: '/log',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMarketsRoute = AdminMarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminNoticesRoute = AdminNoticesRouteImport.update({
+  id: '/notices',
+  path: '/notices',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminRegisterRoute = AdminRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminVerificationsRoute = AdminVerificationsRouteImport.update({
+  id: '/verifications',
+  path: '/verifications',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
@@ -93,6 +160,11 @@ const GuardianIndexRoute = GuardianIndexRouteImport.update({
 const GuardianLearnerIdRoute = GuardianLearnerIdRouteImport.update({
   id: '/guardian/$learnerId',
   path: '/guardian/$learnerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPageRoute = LegalPageRouteImport.update({
+  id: '/legal/$page',
+  path: '/legal/$page',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SessionSessionIdRoute = SessionSessionIdRouteImport.update({
@@ -134,18 +206,30 @@ const LearnCourseIdTopicsTopicIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/settings': typeof SettingsRouteRouteWithChildren
+  '/access': typeof AccessRoute
+  '/age': typeof AgeRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/admin/admins': typeof AdminAdminsRoute
+  '/admin/ai': typeof AdminAiRoute
+  '/admin/log': typeof AdminLogRoute
+  '/admin/markets': typeof AdminMarketsRoute
+  '/admin/notices': typeof AdminNoticesRoute
+  '/admin/register': typeof AdminRegisterRoute
+  '/admin/verifications': typeof AdminVerificationsRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
+  '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/settings/': typeof SettingsIndexRoute
@@ -156,17 +240,28 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/access': typeof AccessRoute
+  '/age': typeof AgeRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/admin/admins': typeof AdminAdminsRoute
+  '/admin/ai': typeof AdminAiRoute
+  '/admin/log': typeof AdminLogRoute
+  '/admin/markets': typeof AdminMarketsRoute
+  '/admin/notices': typeof AdminNoticesRoute
+  '/admin/register': typeof AdminRegisterRoute
+  '/admin/verifications': typeof AdminVerificationsRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
+  '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/admin': typeof AdminIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/guardian': typeof GuardianIndexRoute
   '/settings': typeof SettingsIndexRoute
@@ -178,18 +273,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/settings': typeof SettingsRouteRouteWithChildren
+  '/access': typeof AccessRoute
+  '/age': typeof AgeRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/landing': typeof LandingRoute
   '/league': typeof LeagueRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/admin/admins': typeof AdminAdminsRoute
+  '/admin/ai': typeof AdminAiRoute
+  '/admin/log': typeof AdminLogRoute
+  '/admin/markets': typeof AdminMarketsRoute
+  '/admin/notices': typeof AdminNoticesRoute
+  '/admin/register': typeof AdminRegisterRoute
+  '/admin/verifications': typeof AdminVerificationsRoute
   '/api/$': typeof ApiSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
+  '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/settings/': typeof SettingsIndexRoute
@@ -202,18 +309,30 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/settings'
+    | '/access'
+    | '/age'
     | '/forgot-password'
     | '/landing'
     | '/league'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/admins'
+    | '/admin/ai'
+    | '/admin/log'
+    | '/admin/markets'
+    | '/admin/notices'
+    | '/admin/register'
+    | '/admin/verifications'
     | '/api/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
+    | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/admin/'
     | '/courses/'
     | '/guardian/'
     | '/settings/'
@@ -224,17 +343,28 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/access'
+    | '/age'
     | '/forgot-password'
     | '/landing'
     | '/league'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/admins'
+    | '/admin/ai'
+    | '/admin/log'
+    | '/admin/markets'
+    | '/admin/notices'
+    | '/admin/register'
+    | '/admin/verifications'
     | '/api/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
+    | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/admin'
     | '/courses'
     | '/guardian'
     | '/settings'
@@ -245,18 +375,30 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/settings'
+    | '/access'
+    | '/age'
     | '/forgot-password'
     | '/landing'
     | '/league'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/admins'
+    | '/admin/ai'
+    | '/admin/log'
+    | '/admin/markets'
+    | '/admin/notices'
+    | '/admin/register'
+    | '/admin/verifications'
     | '/api/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
+    | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/admin/'
     | '/courses/'
     | '/guardian/'
     | '/settings/'
@@ -268,7 +410,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   SettingsRouteRoute: typeof SettingsRouteRouteWithChildren
+  AccessRoute: typeof AccessRoute
+  AgeRoute: typeof AgeRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LandingRoute: typeof LandingRoute
   LeagueRoute: typeof LeagueRoute
@@ -278,6 +423,7 @@ export interface RootRouteChildren {
   ApiSplatRoute: typeof ApiSplatRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   GuardianLearnerIdRoute: typeof GuardianLearnerIdRoute
+  LegalPageRoute: typeof LegalPageRoute
   SessionSessionIdRoute: typeof SessionSessionIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   GuardianIndexRoute: typeof GuardianIndexRoute
@@ -294,6 +440,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/access': {
+      id: '/access'
+      path: '/access'
+      fullPath: '/access'
+      preLoaderRoute: typeof AccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/age': {
+      id: '/age'
+      path: '/age'
+      fullPath: '/age'
+      preLoaderRoute: typeof AgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -345,6 +512,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/admins': {
+      id: '/admin/admins'
+      path: '/admins'
+      fullPath: '/admin/admins'
+      preLoaderRoute: typeof AdminAdminsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/ai': {
+      id: '/admin/ai'
+      path: '/ai'
+      fullPath: '/admin/ai'
+      preLoaderRoute: typeof AdminAiRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/log': {
+      id: '/admin/log'
+      path: '/log'
+      fullPath: '/admin/log'
+      preLoaderRoute: typeof AdminLogRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/markets': {
+      id: '/admin/markets'
+      path: '/markets'
+      fullPath: '/admin/markets'
+      preLoaderRoute: typeof AdminMarketsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/notices': {
+      id: '/admin/notices'
+      path: '/notices'
+      fullPath: '/admin/notices'
+      preLoaderRoute: typeof AdminNoticesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/register': {
+      id: '/admin/register'
+      path: '/register'
+      fullPath: '/admin/register'
+      preLoaderRoute: typeof AdminRegisterRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/verifications': {
+      id: '/admin/verifications'
+      path: '/verifications'
+      fullPath: '/admin/verifications'
+      preLoaderRoute: typeof AdminVerificationsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/api/$': {
       id: '/api/$'
       path: '/api/$'
@@ -378,6 +601,13 @@ declare module '@tanstack/react-router' {
       path: '/guardian/$learnerId'
       fullPath: '/guardian/$learnerId'
       preLoaderRoute: typeof GuardianLearnerIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/$page': {
+      id: '/legal/$page'
+      path: '/legal/$page'
+      fullPath: '/legal/$page'
+      preLoaderRoute: typeof LegalPageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/session/$sessionId': {
@@ -432,6 +662,32 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteRouteChildren {
+  AdminAdminsRoute: typeof AdminAdminsRoute
+  AdminAiRoute: typeof AdminAiRoute
+  AdminLogRoute: typeof AdminLogRoute
+  AdminMarketsRoute: typeof AdminMarketsRoute
+  AdminNoticesRoute: typeof AdminNoticesRoute
+  AdminRegisterRoute: typeof AdminRegisterRoute
+  AdminVerificationsRoute: typeof AdminVerificationsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminAdminsRoute: AdminAdminsRoute,
+  AdminAiRoute: AdminAiRoute,
+  AdminLogRoute: AdminLogRoute,
+  AdminMarketsRoute: AdminMarketsRoute,
+  AdminNoticesRoute: AdminNoticesRoute,
+  AdminRegisterRoute: AdminRegisterRoute,
+  AdminVerificationsRoute: AdminVerificationsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 interface SettingsRouteRouteChildren {
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
@@ -448,7 +704,10 @@ const SettingsRouteRouteWithChildren = SettingsRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   SettingsRouteRoute: SettingsRouteRouteWithChildren,
+  AccessRoute: AccessRoute,
+  AgeRoute: AgeRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LandingRoute: LandingRoute,
   LeagueRoute: LeagueRoute,
@@ -458,6 +717,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSplatRoute: ApiSplatRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   GuardianLearnerIdRoute: GuardianLearnerIdRoute,
+  LegalPageRoute: LegalPageRoute,
   SessionSessionIdRoute: SessionSessionIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   GuardianIndexRoute: GuardianIndexRoute,

@@ -5,6 +5,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
+import { GuardianTools } from "../../components/GuardianTools.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Bar, Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
@@ -105,6 +106,7 @@ function Guardian() {
         {learners.data.learners.map((l) => (
           <LearnerCard key={l.learnerId} learner={l} />
         ))}
+        <GuardianTools />
         <Card className="p-5">
           <form onSubmit={submit} className="space-y-3">
             <h2 className="font-semibold">{m.addLearner}</h2>

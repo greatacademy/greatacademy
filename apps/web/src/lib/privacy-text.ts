@@ -1,0 +1,246 @@
+import { ConnectError } from "@connectrpc/connect";
+
+import { useI18n } from "./i18n.tsx";
+
+const en = {
+  // The age question
+  ageTitle: "Before you start",
+  ageBody: "We ask everyone these two things.",
+  country: "Country or region",
+  choose: "Choose…",
+  otherCountry: "Somewhere else",
+  birthMonth: "Month of birth",
+  birthYear: "Year of birth",
+  continue: "Continue",
+  stopTitle: "Please ask an adult",
+  stopBody:
+    "Great Academy can't create this account. Show this page to a parent or guardian: they can make their own account and set you up from there, where we offer that.",
+  stopClosed: "Accounts for learners your age aren't available in your country or region yet.",
+  stopNote: "We didn't keep anything you entered.",
+  noticeLink: "How we handle data",
+  signUpNotice: "By signing up you confirm you've read",
+  // The access page
+  closedTitle: "Not available yet",
+  closedBody: "Great Academy isn't open to learners your age in your country or region yet. Your account and progress are kept.",
+  guardianTitle: "A guardian needs to agree first",
+  guardianBody:
+    "Before you can study, a parent or guardian has to verify and agree. Make a code under Settings and give it to them, or ask them to check Learners if they already follow you.",
+  toSettings: "Go to settings",
+  // Sign-in
+  emailOrUsername: "Email or username",
+  // Settings
+  privacyTitle: "Privacy and your data",
+  bandChild: "Child account",
+  bandTeen: "Under 18",
+  bandAdult: "Adult",
+  ageBand: "Age group",
+  countrySaved: "Your country or region was saved.",
+  movedNote: "If you moved, the stricter rules of the two places apply to anyone under 18.",
+  bandEnded: "Your age group has changed. Nothing changes until you confirm.",
+  confirmBand: "Confirm",
+  timeLimit: "Daily study limit",
+  minutes: (n: number) => `${n} minutes`,
+  aiJudged: "When a feature is judged or run by an AI, we always say so.",
+  scopes: {
+    basic: {
+      name: "Lessons and answers",
+      body: "Lessons, reviews and quizzes, with answers checked by rules. Nothing goes to any AI company.",
+    },
+    writing: { name: "AI-judged writing", body: "An AI model reads what you write and gives feedback. You can keep studying without it." },
+    speech: {
+      name: "Recorded speech",
+      body: "Recordings go to speech services and an AI model, and are deleted within a day. You can keep studying without it.",
+    },
+    conversation: { name: "Conversation", body: "Not offered to anyone under 18 yet." },
+    research: { name: "Research", body: "Not offered through this page." },
+  } as Record<string, { name: string; body: string }>,
+  on: "On",
+  off: "Off",
+  notAvailable: "Not available yet",
+  turnOn: "Turn on",
+  turnOff: "Turn off",
+  agree: "I agree",
+  assentNote: "Your guardian said yes to this. It stays off unless you agree too.",
+  expires: (d: string) => `Until ${d}`,
+  yourData: "Your data",
+  export: "Download a copy",
+  deleteText: "Delete what I typed",
+  deleteTextBody: "Empties the text of past answers. Whether each was right stays, because your course depends on it.",
+  deleted: (n: number) => `Emptied ${n} answers.`,
+  childNote: "Your guardian can see your progress and can change these. If you turn something off or delete something, they're told.",
+  childDelete: "Only your guardian can delete this account.",
+  legalPrivacy: "Privacy notice",
+  legalChildren: "For children and guardians",
+  legalRetention: "How long we keep things",
+  // Guardians
+  verifyTitle: "Verify that you're a guardian",
+  verifyBody:
+    "To add a child or agree for one, print and sign the form, then upload a photo or scan. A person checks it, and it's deleted once they've decided.",
+  verifyForm: "Open the form",
+  verifyFile: "Signed form (PDF, PNG or JPEG, up to 5 MB)",
+  upload: "Upload",
+  verifyPending: "Your form is waiting for a person to check it.",
+  verifyApproved: "You're verified as a guardian.",
+  verifyRefused: (reason: string) => `Your form wasn't accepted: ${reason} You can send another.`,
+  addChildTitle: "Add a child",
+  addChildBody: "The child signs in with a username and password. We ask for no email and no real name.",
+  childUsername: "Username",
+  childUsernameHint: "3 to 20 lowercase letters, digits, underscores or hyphens. Not their real name.",
+  childPassword: "Password",
+  addChild: "Add child",
+  childAdded: "Added. Open the child's card to agree to lessons.",
+  guardianControls: "Permissions and data",
+  needVerification: "Verify as a guardian on the Learners page to change these.",
+  limitBody: "Starting a new task stops once this much time is used today. A task already open can finish.",
+  noLimit: "No limit",
+  saveLimit: "Save limit",
+  saved: "Saved.",
+  resetPassword: "Set a new password",
+  deleteChild: "Delete this child's account",
+  deleteChildBody: "Deletes the account and everything under it, at once, and it can't be undone. Type the username to confirm.",
+  confirmName: "Username",
+  guardianDeleteText: "Delete typed answers",
+};
+
+const zh: typeof en = {
+  ageTitle: "开始之前",
+  ageBody: "我们会问每个人这两个问题。",
+  country: "国家或地区",
+  choose: "请选择…",
+  otherCountry: "其他地方",
+  birthMonth: "出生月份",
+  birthYear: "出生年份",
+  continue: "继续",
+  stopTitle: "请找一位成年人",
+  stopBody: "Great Academy 无法创建这个账号。请把这个页面给父母或监护人看：在我们提供此服务的地方，他们可以创建自己的账号，再为你设置。",
+  stopClosed: "你所在的国家或地区暂时不提供你这个年龄的账号。",
+  stopNote: "你输入的内容我们没有保存。",
+  noticeLink: "我们如何处理数据",
+  signUpNotice: "注册即表示你已阅读",
+  closedTitle: "暂未开放",
+  closedBody: "Great Academy 暂未在你所在的国家或地区向你这个年龄的学习者开放。你的账号和进度会保留。",
+  guardianTitle: "需要监护人先同意",
+  guardianBody:
+    "开始学习之前，需要父母或监护人完成验证并同意。请在“设置”中生成一个邀请码交给他们；如果他们已经关注你，请让他们查看“学习者”页面。",
+  toSettings: "前往设置",
+  emailOrUsername: "邮箱或用户名",
+  privacyTitle: "隐私和你的数据",
+  bandChild: "儿童账号",
+  bandTeen: "未满 18 岁",
+  bandAdult: "成年人",
+  ageBand: "年龄段",
+  countrySaved: "国家或地区已保存。",
+  movedNote: "如果你搬家了，未满 18 岁的人适用两地中更严格的规则。",
+  bandEnded: "你的年龄段已经变化。在你确认之前，一切保持不变。",
+  confirmBand: "确认",
+  timeLimit: "每日学习上限",
+  minutes: (n) => `${n} 分钟`,
+  aiJudged: "凡是由 AI 评判或运行的功能，我们都会明确告诉你。",
+  scopes: {
+    basic: { name: "课程和答题", body: "课程、复习和测验，答案由规则判定。不会发送给任何 AI 公司。" },
+    writing: { name: "AI 评判写作", body: "AI 模型会阅读你写的内容并给出反馈。不开启也可以继续学习。" },
+    speech: { name: "录音口语", body: "录音会发送给语音服务和 AI 模型，并在一天内删除。不开启也可以继续学习。" },
+    conversation: { name: "对话", body: "暂不向未满 18 岁的人提供。" },
+    research: { name: "研究", body: "不通过此页面提供。" },
+  },
+  on: "已开启",
+  off: "已关闭",
+  notAvailable: "暂不可用",
+  turnOn: "开启",
+  turnOff: "关闭",
+  agree: "我同意",
+  assentNote: "你的监护人已经同意。只有你也同意，它才会开启。",
+  expires: (d) => `有效期至 ${d}`,
+  yourData: "你的数据",
+  export: "下载副本",
+  deleteText: "删除我输入的内容",
+  deleteTextBody: "清空过往答案的文本。每题是否正确会保留，因为你的课程依赖它。",
+  deleted: (n) => `已清空 ${n} 条答案。`,
+  childNote: "你的监护人可以看到你的进度，也可以修改这些设置。如果你关闭或删除了什么，他们会收到通知。",
+  childDelete: "只有你的监护人可以删除这个账号。",
+  legalPrivacy: "隐私声明",
+  legalChildren: "写给儿童和监护人",
+  legalRetention: "数据保存多久",
+  verifyTitle: "验证你的监护人身份",
+  verifyBody: "要添加孩子或代孩子同意，请打印并签署表格，然后上传照片或扫描件。会有人工审核，决定后表格即被删除。",
+  verifyForm: "打开表格",
+  verifyFile: "已签字的表格（PDF、PNG 或 JPEG，不超过 5 MB）",
+  upload: "上传",
+  verifyPending: "你的表格正在等待人工审核。",
+  verifyApproved: "你已通过监护人验证。",
+  verifyRefused: (reason) => `你的表格未通过：${reason} 你可以重新提交。`,
+  addChildTitle: "添加孩子",
+  addChildBody: "孩子用用户名和密码登录。我们不要求邮箱，也不要求真实姓名。",
+  childUsername: "用户名",
+  childUsernameHint: "3 到 20 个小写字母、数字、下划线或连字符。不要使用真实姓名。",
+  childPassword: "密码",
+  addChild: "添加孩子",
+  childAdded: "已添加。请打开孩子的卡片，同意其学习课程。",
+  guardianControls: "权限和数据",
+  needVerification: "请先在“学习者”页面完成监护人验证，才能修改这些设置。",
+  limitBody: "当天用满这个时长后，就不能开始新任务。已经打开的任务可以完成。",
+  noLimit: "不限制",
+  saveLimit: "保存上限",
+  saved: "已保存。",
+  resetPassword: "设置新密码",
+  deleteChild: "删除这个孩子的账号",
+  deleteChildBody: "立即删除该账号及其所有数据，且无法撤销。请输入用户名以确认。",
+  confirmName: "用户名",
+  guardianDeleteText: "删除输入的答案",
+};
+
+/** PrivacyText is the wording of the age, consent and guardian pages. */
+export type PrivacyText = typeof en;
+
+/** usePrivacyText returns that wording in the current locale. */
+export function usePrivacyText(): PrivacyText {
+  return useI18n().locale === "zh-CN" ? zh : en;
+}
+
+const regionNames: Record<string, Record<string, string>> = {
+  en: { CN: "Mainland China", HK: "Hong Kong", TW: "Taiwan", KR: "South Korea" },
+  "zh-CN": { CN: "中国大陆", HK: "香港", TW: "台湾", KR: "韩国" },
+};
+
+/** regionName names a market in a locale. */
+export function regionName(code: string, locale: string): string {
+  return regionNames[locale]?.[code] ?? new Intl.DisplayNames(locale, { type: "region" }).of(code) ?? code;
+}
+
+const serverErrorsZh: Record<string, string> = {
+  "that username is taken": "这个用户名已被使用",
+  "that username is not valid": "这个用户名不符合要求",
+  "the password needs 8 to 128 characters": "密码需要 8 到 128 个字符",
+  "that date is not valid": "这个日期无效",
+  "at this age a learner has their own account": "这个年龄的学习者应使用自己的账号",
+  "this market is not open to minors": "这个市场尚未向未成年人开放",
+  "verify as a guardian first": "请先完成监护人验证",
+  "send a PDF, PNG or JPEG": "请上传 PDF、PNG 或 JPEG 文件",
+  "the form must be under 5 MB": "表格不能超过 5 MB",
+  "a verification already exists": "已有一份验证记录",
+  "that consent cannot be given now": "目前无法给予这项同意",
+  "no guardian has granted that": "监护人尚未同意这一项",
+  "a refusal needs a reason": "拒绝时必须填写理由",
+  "this market is closed by a rule in the code": "这个市场由代码规则关闭",
+  "opening needs who signed off, and when": "开放需要填写签字人和日期",
+  "required notice languages are missing": "缺少必需的通知语言",
+  "a provider needs a name, a kind and an API": "供应商需要名称、类型和 API",
+  "the base URL must use https": "基础 URL 必须使用 https",
+  "this vendor still has routes": "这家供应商还有路由",
+  "a route needs a criterion, a model and a prompt version": "路由需要标准、模型和提示词版本",
+  "no passing calibration for this exact route": "这条路由没有通过的校准",
+  "that version is not valid": "这个版本号无效",
+  "that version exists": "这个版本已存在",
+  "no account with that email": "没有使用这个邮箱的账号",
+  "only an account in the adult band can be an administrator": "只有成年人账号才能成为管理员",
+  "you cannot remove yourself": "你不能移除自己",
+  "only an adult can be a guardian": "只有成年人可以成为监护人",
+  "delete a child's account instead": "请改为删除孩子的账号",
+};
+
+/** errorText words a failed call for the person who made it. */
+export function errorText(error: unknown, locale: string, fallback: string): string {
+  const raw = ConnectError.from(error).rawMessage;
+  if (locale === "zh-CN") return serverErrorsZh[raw] ?? fallback;
+  return raw && raw in serverErrorsZh ? raw : fallback;
+}

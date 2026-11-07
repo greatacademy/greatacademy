@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { Forecast } from "../../components/Forecast.tsx";
 import { GoalsEditor } from "../../components/GoalsEditor.tsx";
+import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
@@ -15,7 +16,7 @@ import { XpOverview } from "../../components/XpOverview.tsx";
 import { signsOf, stuckLessons } from "../../lib/guardian.ts";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
-import { account, catalog, learning, timeZone } from "../../lib/rpc.ts";
+import { account, catalog, learning, privacy, timeZone } from "../../lib/rpc.ts";
 
 export const Route = createFileRoute("/guardian/$learnerId")({ component: GuardedLearner });
 
@@ -181,6 +182,7 @@ function GuardedLearner() {
   const session = useRequireSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const consents = useQuery({ queryKey: ["consents", learnerId], queryFn: () => privacy.listConsents({ learnerId }), enabled: !!session });
   const [chosen, setChosen] = useState<string>();
   const [tab, setTab] = useState<"activity" | "progress">("activity");
   const [confirming, setConfirming] = useState(false);
@@ -319,7 +321,8 @@ function GuardedLearner() {
               </div>
             </details>
           </Card>
-          {confirming ? (
+          <LearnerPrivacy learnerId={learnerId} name={learner.name} />
+          {consents.data?.managed ? null : confirming ? (
             <Card className="space-y-3 p-5 text-sm">
               <p>{m.stopFollowingConfirm(learner.name)}</p>
               <div className="flex flex-wrap gap-2">

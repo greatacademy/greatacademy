@@ -3,6 +3,7 @@ import { type FormEvent, useState } from "react";
 
 import { authClient } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
+import { usePrivacyText } from "../lib/privacy-text.ts";
 import { Button, Card, ErrorNote } from "./ui.tsx";
 
 /** field styles a form input. */
@@ -10,8 +11,21 @@ export const field =
   "w-full rounded-lg border border-line bg-surface px-3 py-2 outline-none focus:border-accent focus:ring-2 focus:ring-accent/25";
 
 /** AuthForm signs in or signs up with email and password, then goes to next. */
-export function AuthForm({ mode, next }: { mode: "sign-in" | "sign-up"; next?: string }) {
+export function AuthForm({
+  mode,
+  next,
+  askName = true,
+  afterSignUp,
+}: {
+  mode: "sign-in" | "sign-up";
+  next?: string;
+  /** askName is off for minors, who give no real name. */
+  askName?: boolean;
+  /** afterSignUp stores the age answer; if it fails, the account answers again at /age. */
+  afterSignUp?: () => Promise<void>;
+}) {
   const { m } = useI18n();
+  const t = usePrivacyText();
   const navigate = useNavigate();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
@@ -25,13 +39,17 @@ export function AuthForm({ mode, next }: { mode: "sign-in" | "sign-up"; next?: s
     setError(undefined);
     const res =
       mode === "sign-up"
-        ? await authClient.signUp.email({ email, password, name: String(form.get("name")) })
-        : await authClient.signIn.email({ email, password });
-    setBusy(false);
+        ? await authClient.signUp.email({ email, password, name: askName ? String(form.get("name")) : "Learner" })
+        : email.includes("@")
+          ? await authClient.signIn.email({ email, password })
+          : await authClient.signIn.username({ username: email.trim().toLowerCase(), password });
     if (res.error) {
+      setBusy(false);
       setError(res.error.message ?? m.error);
       return;
     }
+    if (mode === "sign-up") await afterSignUp?.().catch(() => undefined);
+    setBusy(false);
     await navigate({ to: next?.startsWith("/") ? next : "/" });
   }
 
@@ -40,15 +58,21 @@ export function AuthForm({ mode, next }: { mode: "sign-in" | "sign-up"; next?: s
     <Card className="mx-auto mt-6 max-w-sm">
       <h1 className="mb-6 text-2xl font-semibold">{title}</h1>
       <form onSubmit={submit} className="space-y-4">
-        {mode === "sign-up" && (
+        {mode === "sign-up" && askName && (
           <label className="block space-y-1.5 text-sm font-medium">
             <span>{m.name}</span>
             <input name="name" required autoComplete="name" className={field} />
           </label>
         )}
         <label className="block space-y-1.5 text-sm font-medium">
-          <span>{m.email}</span>
-          <input name="email" type="email" required autoComplete="email" className={field} />
+          <span>{mode === "sign-in" ? t.emailOrUsername : m.email}</span>
+          <input
+            name="email"
+            type={mode === "sign-in" ? "text" : "email"}
+            required
+            autoComplete={mode === "sign-in" ? "username" : "email"}
+            className={field}
+          />
         </label>
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{m.password}</span>

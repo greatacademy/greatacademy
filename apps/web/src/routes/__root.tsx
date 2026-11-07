@@ -1,10 +1,12 @@
 import { appearanceScript } from "@ga/design";
+import { AccessStatus } from "@ga/proto/privacy/v1/privacy_pb";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createRootRoute, HeadContent, Outlet, Scripts, useRouterState } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts, useNavigate, useRouterState } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { Header } from "../components/Header.tsx";
 import { NotFoundNote } from "../components/LoadError.tsx";
+import { useAccess } from "../lib/access.ts";
 import { keepAppearanceCurrent } from "../lib/appearance.ts";
 import { I18nProvider } from "../lib/i18n.tsx";
 import { getLocale } from "../lib/locale.ts";
@@ -56,6 +58,20 @@ function Shell({ children }: { children: ReactNode }) {
   );
 }
 
+/** AccessGate sends an account that cannot study away from the study pages. The server refuses anyway; this only explains why. */
+function AccessGate() {
+  const access = useAccess();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const study = pathname === "/" || ["/learn", "/session", "/league"].some((p) => pathname.startsWith(p));
+  const status = access?.status;
+  useEffect(() => {
+    if (!study || status === undefined || status === AccessStatus.OK) return;
+    void navigate({ to: status === AccessStatus.NEEDS_AGE ? "/age" : "/access", replace: true });
+  }, [study, status, navigate]);
+  return null;
+}
+
 function Root() {
   const locale = Route.useLoaderData();
   // The landing page runs edge to edge, and / lays out its own width since it may be the landing page.
@@ -68,6 +84,7 @@ function Root() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider initial={locale}>
+        <AccessGate />
         <Header />
         <main className={bare ? "" : "mx-auto max-w-5xl px-4 pt-8 pb-24"}>
           <Outlet />

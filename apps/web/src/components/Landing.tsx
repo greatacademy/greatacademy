@@ -155,7 +155,7 @@ function Shelves() {
 
 /** Landing introduces Great Academy to someone who has not used it, and lets them try it before signing up. */
 export function Landing() {
-  const { m } = useI18n();
+  const { m, locale } = useI18n();
   const { data: session } = useSession();
   const l = m.landing;
   const art = [PlacementArt, StepsArt, ReviewArt, QuizArt];
@@ -252,6 +252,9 @@ export function Landing() {
         <span className="flex gap-4">
           <Link to="/courses">{m.courses}</Link>
           <Link to="/settings/appearance">{m.appearance}</Link>
+          <Link to="/legal/$page" params={{ page: "privacy" }}>
+            {locale === "zh-CN" ? "隐私" : "Privacy"}
+          </Link>
           {!session && <Link to="/sign-in">{m.signIn}</Link>}
         </span>
       </footer>
