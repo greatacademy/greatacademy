@@ -159,7 +159,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).
 - **Mobile:** Expo builds (EAS). The app talks to the same API.
-- **Planned for English:** further Cloudflare services, AI models through pi-ai, and a voice service on Kubernetes ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
+- **Planned for English:** further Cloudflare services, AI models through pi-ai with providers configured by platform administrators, and a voice service on Kubernetes ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
 
 ### 6.1 Subjects as Workers
 

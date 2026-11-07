@@ -247,6 +247,8 @@ Korea lists student evaluation as high-impact. The same logic is why AI that sco
 
 ## 12. Vendors
 
+**No vendor is chosen.** Model calls go through pi-ai, and a platform administrator configures providers and routes in an [admin console](english-curriculum.md#131-ai-models). Configuration chooses among vendors; it does not relax these rules.
+
 A vendor receives minors' data only if its contract and settings give all of these, recorded in a register with the date checked:
 
 - It serves the market where the learner is.
@@ -255,9 +257,15 @@ A vendor receives minors' data only if its contract and settings give all of the
 - A data processing agreement and a lawful transfer mechanism for that market.
 - A named region.
 
-`markets` lists the vendors allowed per market, so that a route cannot silently change them.
+The server enforces the register whenever it uses a route, including a backup:
 
-| Vendor | What we know | To check |
+- **Unregistered or stale.** A vendor with no entry for the learner's market, or whose check has expired (12 months *starting*), gets no minor's data. The feature is off for that learner, and the course continues.
+- **Consent names the vendor.** A minor's data goes only to vendors named in the notice version that the consent covers, so a backup must be named as well. Configuring a new vendor does not reach minors until the notice changes and consent is given again (§6).
+- **Logged.** Every change to the register is logged, with who made it.
+
+These are candidates we have read about, not choices:
+
+| Candidate | What we know | To check |
 | :--- | :--- | :--- |
 | OpenAI API | [Serves all open markets but Hong Kong](https://developers.openai.com/api/docs/supported-countries). [Requires zero data retention](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance) for under-13s or the consent age | Contract |
 | Anthropic API | [Serves all open markets but Hong Kong](https://www.anthropic.com/supported-countries), policy effective November 12, 2026. [Allows organizations to serve minors](https://support.claude.com/en/articles/9307344) with age assurance, moderation, monitoring, AI disclosure and a public statement of compliance | Whether zero retention is available to us |
@@ -266,12 +274,12 @@ A vendor receives minors' data only if its contract and settings give all of the
 | Other speech and AI vendors, pi-ai routes, AI Gateway | Not checked | Each one, before use |
 | Cloudflare, PostgreSQL host, Resend, payment processor | Not checked | Agreements, regions |
 
-**Hong Kong.** A vendor's region policy looks at where the user is. Routing a Hong Kong learner through our servers elsewhere would break it, so we do not. Hong Kong opens with `basic` and rule-judged work; AI scopes open when a vendor that serves Hong Kong and accepts minors' data is confirmed.
+**Hong Kong.** A vendor's region policy looks at where the user is. Routing a Hong Kong learner through our servers elsewhere would break it, so we do not. Hong Kong opens with `basic` and rule-judged work; AI scopes open when a vendor that serves Hong Kong and accepts minors' data is in the register.
 
 ## 13. Enforcement in Code, and What Comes When
 
 - **`learner`** gains band, band end and country. A new append-only **`consent`** table holds §6.
-- **`markets`**, a pure data table in `libs/api`, gives each country its status, guardian age, allowed scopes, allowed vendors and required notice languages. An unlisted country is closed to minors.
+- **`markets`**, a pure data table in `libs/api`, gives each country its status, guardian age, allowed scopes and required notice languages. An unlisted country is closed to minors. Vendors are not in it: they are in the register of §12, which administrators maintain.
 - **One gate.** `StartTask` and every call that accepts text or audio ask `libs/api` for the learner's capabilities and refuse otherwise. `nextTasks` receives the allowed task kinds as data, so that the engine stays pure and subject-agnostic.
 - **Retention and consent expiry** run from a daily Cron Trigger and are testable with an explicit time.
 - **Logs** hold ids, never responses or transcripts. A test feeds marked text through a task and asserts that it appears in no log or event.

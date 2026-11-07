@@ -254,17 +254,30 @@ This section is the plan for the parts mathematics does not have. Each part is b
 
 Every model call goes through **pi-ai** (`@earendil-works/pi-ai`), with `@earendil-works/pi-schema` for the shape of answers and `@earendil-works/pi-telemetry` for the time and cost of each call. Versions are pinned exactly, as everywhere; 1.5.0 is the current one. The code sits outside the pure libraries, and tests use pi-ai's `faux` provider, so no test needs a network.
 
-A model answers by calling a `respond` tool whose schema holds the criteria and the quotations. Each use starts on its own model:
+A model answers by calling a `respond` tool whose schema holds the criteria and the quotations.
 
-| Use | Starting model |
+**No provider or model is fixed in the design or the code.** A platform administrator configures them in an admin console, and pi-ai's custom providers and explicit keys mean that a new provider needs no code unless its API is new. Each use asks for something different:
+
+| Use | What it asks of a model |
 | :--- | :--- |
-| Meaning checks in W2, many and simple | `claude-haiku-5-5` |
-| Yes-or-no criteria for paragraphs in W4 | `claude-sonnet-5-5` |
-| Essays and long works in W5 and W6, and the baseline for calibration | `claude-opus-5-5` |
-| Conversation in S6 | A model with low latency, chosen by measurement |
-| Drafting and reviewing content, offline | `claude-opus-5-5` or a stronger model |
+| Meaning checks in W2, many and simple | Low cost |
+| Yes-or-no criteria for paragraphs in W4 | A balance of cost and accuracy |
+| Essays and long works in W5 and W6, and the baseline for calibration | The highest accuracy |
+| Conversation in S6 | Low latency, chosen by measurement |
+| Drafting and reviewing content, offline | High accuracy; never receives learners' data |
 
-A cheaper or another provider's model replaces one of these when it passes the same calibration.
+**What the administrator sets:**
+
+- **Providers:** the pi-ai provider or a compatible endpoint, base URL, API key and region. Keys are encrypted with a key held in Worker secrets and can be replaced but never read back.
+- **Routes:** for each criterion, and for S6, the model, the prompt version and a backup.
+- **The vendor register** of [Minors' Data](minors-data.md#12-vendors): for each provider, the markets it serves, its terms for minors, its retention, and the date checked.
+
+Only platform administrators can reach the console, and every change is logged with who made it and when.
+
+**What the administrator cannot override.** The server checks these whenever a route is saved and whenever it is used:
+
+- A route is live only if a passing calibration exists for that exact criterion, model and prompt version.
+- A minor's data reaches a provider only under the conditions of [Minors' Data](minors-data.md#12-vendors). If no route qualifies, the feature is off for that learner, and the course continues without it.
 
 **Changing the model changes the judge.** Each combination of criterion, model and prompt version is calibrated by itself (§8.3) and recorded in the event. When a provider fails, a judgment retries later or moves to a backup model calibrated for that criterion, never to any other.
 

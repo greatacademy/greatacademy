@@ -159,7 +159,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
 - **移动端：** 用 Expo 构建（EAS），调用同一套 API。
-- **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用 AI 模型，以及 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
+- **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 
 ### 6.1 学科作为 Worker
 

@@ -159,6 +159,7 @@ E2 and E3 are independent and can run at once. First, a short spike settles what
 | E3.8 | `tools/calibrate`: runs a route on a scored set, reports agreement per criterion and writes the allowed routes | New `tools/calibrate` |
 | E3.9 | Limits per learner, AI Gateway logs with no learner text, a cost alarm; learner text kept in clearly delimited data, with prompt injection tests | `apps/judge`, Cloudflare |
 | E3.10 | Sampled human checks of live verdicts, tracking drift per route | `tools/calibrate` |
+| E3.11 | Tables and checks for providers, routes and the [vendor register](minors-data.md#12-vendors), with no provider in the code. `tools/calibrate` writes them at first; then a platform administrator role and an [admin console](english-curriculum.md#131-ai-models) with write-only keys and a change log | `libs/db`, `libs/api`, `apps/web` |
 
 **Failure behavior.** A failed judgment is never a failed answer. The learner sees that judging is delayed and can go on to other courses. Only one session per course can be active, so a learner cannot proceed in this course until the verdict arrives. A judgment that is still failing after its time limit lets the learner rewrite or skip with no result.
 
