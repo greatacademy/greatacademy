@@ -107,7 +107,7 @@ pnpm nx run nsh:ios                   # iOS 模拟器；需要 Xcode
 pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 和 JDK
 ```
 
-- `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。为 Android 打包的应用不能使用明文 HTTP，因为 Native Shell 只在开发构建中允许它，所以需要 HTTPS 服务器；要连开发服务器，请用 `nsh:android`。
+- `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--api-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。同意、监护人工具、进度地图和历史记录还不在应用里。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
@@ -115,3 +115,4 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
 - 桌面窗口不会一直小于 420×600 点（`lib/window.ts`）：Native Shell 没有为 TSX 应用提供最小窗口尺寸，所以拖动超过下限后窗口会弹回。
 - `pnpm nx run nsh:package -- --target <target>` 构建安装包，应用标识符是 `dev.greatacademy.app`，图标来自 `assets/`。它默认使用 `https://greatacademy.dev`，可用 `--api-url` 指定其他服务器；其他参数（如 `--sign` 和 `--profile`）会传给 `nsh package`。Nx 通过 shell 传递参数，所以当参数值含有括号时（签名身份就是这样），请在 `apps/nsh` 下通过 `mise exec` 用同样的参数运行 `node scripts/package.ts`。
+- 图标跟随系统的浅色或深色外观：背景是白色或深色的 surface 令牌。`nsh package` 只接受一个图标，所以脚本随后用 `actool` 为 iOS 和 macOS 编译 `assets/AppIcon.icon`（macOS 保留 `.icns` 给旧系统），把 `assets/icon-dark.png` 作为 Android 夜间模式的启动器图标，然后重新签名。Windows 和 Linux 仍用浅色图标。
