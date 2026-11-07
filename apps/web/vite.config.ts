@@ -20,6 +20,13 @@ function embedAssets(): Plugin {
       cpSync("node_modules/katex/dist/fonts", "public/embed/fonts", { recursive: true });
       cpSync("node_modules/mathlive/mathlive.min.js", "public/embed/mathlive.min.js");
     },
+    // public/_headers does this in production: a sandboxed web view has no origin, and fonts need CORS.
+    configureServer(server) {
+      server.middlewares.use("/embed", (_req, res, next) => {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        next();
+      });
+    },
   };
 }
 
