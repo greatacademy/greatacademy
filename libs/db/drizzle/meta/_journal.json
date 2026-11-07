@@ -36,6 +36,13 @@
       "when": 1794020819371,
       "tag": "0004_minors-and-admin",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794066751334,
+      "tag": "0005_billing",
+      "breakpoints": true
     }
   ]
 }
