@@ -482,19 +482,22 @@ export const isDark = computed(() => {
 });
 
 /**
- * GLASS_TINT is how much of the page's color glass keeps: on iOS as much of the page shows through as through its
- * Liquid Glass bars; on Android, where Native Shell's backdrop blur does not draw yet, enough that the page shows
- * through only faintly, as through frosted glass.
+ * GLASS_TINT is how much of the page's color Android's glass keeps, where Native Shell's backdrop blur does not draw
+ * yet: the page shows through it, dimmed.
  */
-const GLASS_TINT = platform.os === "android" ? "e0" : "8c";
+const GLASS_TINT = "b3";
 
-/** glass is the look of a bar of glass over the page: the page blurred under a thin tint of its color. */
+/**
+ * glass is the look of a bar of glass over the page: on iOS the system's Liquid Glass, as its tab bar's (a blur
+ * before iOS 26); on Android the page through a tint of its color.
+ */
 export function glass(): ViewStyle {
-  return {
-    backdropFilter: "blur(20px)",
-    backgroundColor: `${colors().page.slice(0, 7)}${GLASS_TINT}`,
-  };
+  if (platform.os === "ios") return { backdropFilter: "blur(20px)", glassEffect: "regular" };
+  return { backdropFilter: "blur(20px)", backgroundColor: `${colors().page.slice(0, 7)}${GLASS_TINT}` };
 }
+
+/** FADE_TINT is how much of the page's color the fade below the top bar starts with. */
+const FADE_TINT = platform.os === "ios" ? "66" : GLASS_TINT;
 
 /** TOP_FADE is how far below the top bar its tint fades out, as iOS 26's scroll edge effect does. */
 const TOP_FADE = 20;
@@ -506,7 +509,6 @@ const TOP_FADE = 20;
 export function TopBar(props: { title: string }) {
   return (
     <View
-      ios={{ backdropMaterial: "regular" }}
       style={{
         ...glass(),
         alignItems: "center",
@@ -528,7 +530,7 @@ export function TopBar(props: { title: string }) {
       </Text>
       <View
         style={{
-          backgroundImage: `linear-gradient(to bottom, ${colors().page.slice(0, 7)}${GLASS_TINT}, ${colors().page.slice(0, 7)}00)`,
+          backgroundImage: `linear-gradient(to bottom, ${colors().page.slice(0, 7)}${FADE_TINT}, ${colors().page.slice(0, 7)}00)`,
           height: TOP_FADE,
           left: 0,
           pointerEvents: "none",
@@ -561,7 +563,7 @@ function ring(): ViewStyle {
 }
 
 /** PullIndicator is the indicator of a pull, in the palette's accent: a chip that comes in with the pull and spins while the page reads again. */
-function PullIndicator(props: { pull: AnimatedNode; refreshing: boolean; top: number }) {
+function PullIndicator(props: { pull: AnimatedNode; refreshing: boolean; shown: boolean; top: number }) {
   const turn = createAnimatedValue(0);
   const spin = Animated.loop(Animated.timing(turn, { toValue: 1, duration: 800, easing: Easing.linear }));
   effect(() => {
@@ -580,10 +582,13 @@ function PullIndicator(props: { pull: AnimatedNode; refreshing: boolean; top: nu
         height: PULL,
         justifyContent: "center",
         left: 0,
+        opacity: props.shown ? 1 : 0,
         pointerEvents: "none",
         position: "absolute",
         right: 0,
         top: props.top,
+        transitionDuration: 150,
+        transitionProperty: "opacity",
       }}
     >
       <View
@@ -639,6 +644,9 @@ export function PullScroll(props: {
   const pull = createAnimatedValue(0);
   const spinning = signal(false);
   const held = signal(false);
+  // A pull starts with the page at its top: a scroll that runs past the top, still dragged or flung, is not one, so the
+  // indicator shows only while a drag that began at the top lasts, or while the page reads.
+  const dragging = signal(false);
   effect(() => {
     if (spinning() && !held() && !props.refreshing) spinning.set(false);
   });
@@ -648,13 +656,16 @@ export function PullScroll(props: {
       <Scroll
         style={{ flex: 1 }}
         onScroll={followScroll()}
+        onScrollDragStart={(e) => dragging.set(e.offset.y <= 1)}
+        onScrollDragEnd={() => dragging.set(false)}
         scrollEventThrottle={16}
         pullValue={pull}
         refreshIndicator={{ height: PULL }}
         refreshing={spinning()}
         onRefresh={() => {
-          spinning.set(true);
+          // Held first: the effect above would end a refresh that is spinning but not yet held.
           held.set(true);
+          spinning.set(true);
           setTimeout(() => held.set(false), SHOWN_FOR);
           props.onRefresh();
         }}
@@ -673,7 +684,7 @@ export function PullScroll(props: {
           {props.children}
         </View>
       </Scroll>
-      <PullIndicator pull={pull} refreshing={spinning()} top={top()} />
+      <PullIndicator pull={pull} refreshing={spinning()} shown={dragging() || spinning()} top={top()} />
     </View>
   );
 }
