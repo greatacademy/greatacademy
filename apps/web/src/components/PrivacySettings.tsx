@@ -91,10 +91,7 @@ export function PrivacySettings() {
         </div>
       )}
       <form onSubmit={saveCountry} className="space-y-2">
-        <label htmlFor="my-country" className="block space-y-1.5 text-sm font-medium">
-          <span>{t.country}</span>
-          <CountrySelect id="my-country" name="country" defaultValue={access.country} />
-        </label>
+        <CountrySelect label={t.country} name="country" defaultValue={access.country} />
         <p className="text-xs text-muted">{t.movedNote}</p>
         <div className="flex items-center gap-3">
           <Button type="submit" variant="secondary" disabled={move.isPending}>

@@ -4,6 +4,7 @@ import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
+import { SelectField } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { type AdminText, useAdminText } from "../../lib/admin-text.ts";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -88,32 +89,20 @@ function Register() {
         <Card className="p-5">
           <form onSubmit={submit} className="space-y-3">
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block space-y-1.5 text-sm font-medium">
-                <span>{t.provider}</span>
-                <select name="provider" required defaultValue="" className={field}>
-                  <option value="" disabled>
-                    {t.chooseProvider}
-                  </option>
-                  {providers.data.providers.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="block space-y-1.5 text-sm font-medium">
-                <span>{t.country}</span>
-                <select name="country" required defaultValue="" className={field}>
-                  <option value="" disabled>
-                    {t.chooseProvider}
-                  </option>
-                  {markets.data.markets.map((x) => (
-                    <option key={x.country} value={x.country}>
-                      {regionName(x.country, locale)}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <SelectField
+                label={t.provider}
+                name="provider"
+                required
+                placeholder={t.chooseProvider}
+                options={providers.data.providers.map((p) => ({ value: p.id, label: p.name }))}
+              />
+              <SelectField
+                label={t.country}
+                name="country"
+                required
+                placeholder={t.chooseProvider}
+                options={markets.data.markets.map((x) => ({ value: x.country, label: regionName(x.country, locale) }))}
+              />
             </div>
             {conditions.map((c) => (
               <label key={c} className="flex items-center gap-2 text-sm">

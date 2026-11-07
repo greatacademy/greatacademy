@@ -101,10 +101,7 @@ export function GuardianTools() {
           <span>{t.childPassword}</span>
           <input name="password" type="password" required minLength={8} autoComplete="new-password" className={field} />
         </label>
-        <label htmlFor="child-country" className="block space-y-1.5 text-sm font-medium">
-          <span>{t.country}</span>
-          <CountrySelect id="child-country" name="country" />
-        </label>
+        <CountrySelect label={t.country} name="country" />
         <MonthField />
         {add.isError && <ErrorNote message={errorText(add.error, locale, m.error)} />}
         {added && (

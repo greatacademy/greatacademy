@@ -26,6 +26,8 @@ import {
 } from "nsh";
 import { Button, Input, Select, Sheet, Switch } from "nsh/base";
 
+import caretDown from "../assets/caret-down.svg";
+import check from "../assets/check.svg";
 import logo from "../assets/logo.svg";
 import { language, m } from "./i18n.ts";
 import { nav, WELCOME } from "./nav.ts";
@@ -265,7 +267,21 @@ export function Field(props: {
   );
 }
 
-/** Choice picks one value from a list, with no default. */
+/** Chevron is the arrow at the end of a field that opens a list, the same on every such field and on the web. */
+function Chevron() {
+  return <Image src={caretDown} style={{ height: 12, tintColor: colors().muted, width: 12 }} />;
+}
+
+/** pickerStyle is the field that opens a list: the words, then the arrow at the end. */
+const pickerStyle = (): ViewStyle => ({
+  ...fieldStyle(),
+  alignItems: "center",
+  flexDirection: "row",
+  gap: 8,
+  justifyContent: "space-between",
+});
+
+/** Choice picks one value from a list, with no default; the list marks the chosen value as the web's does. */
 export function Choice(props: {
   label: string;
   items: { value: string; title: string }[];
@@ -282,12 +298,30 @@ export function Choice(props: {
         onChange={({ value }) => props.onChange(value)}
         accessibilityLabel={props.label}
         offset={4}
-        popupStyle={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 8, borderWidth: 1, padding: 4 }}
-        itemStyle={{ borderRadius: 6, color: colors().ink, paddingHorizontal: 8, paddingVertical: 8 }}
+        popupStyle={{
+          backgroundColor: colors().surface,
+          borderColor: colors().line,
+          borderRadius: 12,
+          borderWidth: 1,
+          maxHeight: 360,
+          padding: 4,
+          paddingBottom: 4 + insets().bottom,
+        }}
+        backdropStyle={{ backgroundColor: "#00000066" }}
+        itemClass={`focus:bg-[${colors()["accent-soft"].slice(0, 7)}]`}
+        itemStyle={{ borderRadius: 8, color: colors().ink, fontSize: 15, paddingHorizontal: 12, paddingVertical: 10 }}
+        renderItem={(item) => (
+          <View style={{ alignItems: "center", flexDirection: "row", gap: 16, justifyContent: "space-between" }}>
+            <Text style={{ color: colors().ink, flexShrink: 1, fontSize: 15 }}>{item.title}</Text>
+            <If when={item.value === props.value}>
+              <Image src={check} style={{ height: 14, tintColor: colors().accent, width: 14 }} />
+            </If>
+          </View>
+        )}
         trigger={
-          <View style={{ ...fieldStyle(), flexDirection: "row", justifyContent: "space-between" }}>
-            <Text style={{ color: title() ? colors().ink : colors().muted, fontSize: 16 }}>{title() ?? m().choose}</Text>
-            <Text style={{ color: colors().muted }}>▾</Text>
+          <View style={pickerStyle()}>
+            <Text style={{ color: title() ? colors().ink : colors().muted, flexShrink: 1, fontSize: 16 }}>{title() ?? m().choose}</Text>
+            <Chevron />
           </View>
         }
       />
@@ -356,10 +390,10 @@ export function MonthField(props: { label: string; value: MonthOfYear | null; on
         accessibilityLabel={props.label}
         accessibilityValue={{ text: title() ?? m().choose }}
         onPress={show}
-        style={{ ...fieldStyle(), flexDirection: "row", justifyContent: "space-between" }}
+        style={pickerStyle()}
       >
-        <Text style={{ color: title() ? colors().ink : colors().muted, fontSize: 16 }}>{title() ?? m().choose}</Text>
-        <Text style={{ color: colors().muted }}>▾</Text>
+        <Text style={{ color: title() ? colors().ink : colors().muted, flexShrink: 1, fontSize: 16 }}>{title() ?? m().choose}</Text>
+        <Chevron />
       </View>
       <Sheet
         open={open()}

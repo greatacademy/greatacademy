@@ -5,6 +5,7 @@ import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
+import { SelectField } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -46,16 +47,13 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
         <span>{t.name}</span>
         <input name="name" required defaultValue={provider?.name} className={field} />
       </label>
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.kind}</span>
-        <select name="kind" required defaultValue={provider?.kind ?? "model"} className={field}>
-          {Object.entries(t.kinds).map(([k, label]) => (
-            <option key={k} value={k}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+      <SelectField
+        label={t.kind}
+        name="kind"
+        required
+        defaultValue={provider?.kind ?? "model"}
+        options={Object.entries(t.kinds).map(([value, label]) => ({ value, label }))}
+      />
       <label className="block space-y-1.5 text-sm font-medium">
         <span>{t.api}</span>
         <input name="api" required defaultValue={provider?.api} autoComplete="off" className={field} />
@@ -176,31 +174,25 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
             className={field}
           />
         </label>
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.position}</span>
-          <select name="position" defaultValue={route?.position ?? "primary"} disabled={!!route} className={field}>
-            {Object.entries(t.positions).map(([k, label]) => (
-              <option key={k} value={k}>
-                {label}
-              </option>
-            ))}
-          </select>
+        <div>
+          <SelectField
+            label={t.position}
+            name="position"
+            defaultValue={route?.position ?? "primary"}
+            disabled={!!route}
+            options={Object.entries(t.positions).map(([value, label]) => ({ value, label }))}
+          />
           {route && <input type="hidden" name="position" value={route.position} />}
-        </label>
+        </div>
       </div>
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.provider}</span>
-        <select name="provider" required defaultValue={route?.providerId ?? ""} className={field}>
-          <option value="" disabled>
-            {t.chooseProvider}
-          </option>
-          {providers.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <SelectField
+        label={t.provider}
+        name="provider"
+        required
+        placeholder={t.chooseProvider}
+        defaultValue={route?.providerId}
+        options={providers.map((p) => ({ value: p.id, label: p.name }))}
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.model}</span>
