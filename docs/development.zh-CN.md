@@ -116,10 +116,10 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--api-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。
-- 登录后的账号看到四个标签页：今天、进度、课程和我的（`screens/Home.tsx`）。手机上它们在系统标签栏里，标签栏只在标签页显示时出现（iOS 26 及以后是 Liquid Glass，Android 上是 Material）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
-- 设备上选择的配色也会成为 nsh 的 `primary`（`lib/ui.tsx` 的 `followPalette`，通过 `setTheme`），因此系统自带的控件，即标签栏的选中项和 Android 对话框的按钮，也会用它的强调色。
+- 登录后的账号看到四个标签页：今天、进度、课程和我的（`screens/Home.tsx`）。手机上它们在标签栏里，标签栏只在标签页显示时出现：iOS 上是系统标签栏（iOS 26 及以后是 Liquid Glass），Android 上是应用自己绘制的玻璃胶囊（`screens/Home.tsx` 的 `GlassTabs`）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
+- 设备上选择的配色也会成为 nsh 的 `primary`（`lib/ui.tsx` 的 `followPalette`，通过 `setTheme`），因此系统自带的控件，即 iOS 的标签栏和 Android 对话框的按钮，也会用它的强调色。
 - 在手机上，页面向下滚动时标签栏滑出屏幕，向上滚动、回到顶部或打开新页面时重新出现（`lib/ui.tsx` 的 `followScroll` 和 `barStyle`）。
-- 在手机上，标签页没有系统标题栏，而是用自己的顶栏（`lib/ui.tsx` 的 `TopBar`），带标志和标签页名称，向上延伸到状态栏下方；页面从它下面滚过，滚动后顶栏模糊页面并在底部画一条细线。从标签页打开的页面保留系统标题栏。
+- 在手机上，标签页没有系统标题栏，而是用自己的顶栏（`lib/ui.tsx` 的 `TopBar`），带标志和标签页名称，向上延伸到状态栏下方；页面从它下面滚过，透过一层玻璃（`glass`）：iOS 上页面被模糊并蒙上一层淡淡的页面底色，透明度与它的 Liquid Glass 栏一致；Android 上 Native Shell 的背景模糊还画不出来，于是用更浓的底色，像隔着磨砂玻璃。Android 的标签栏也是同样的玻璃。顶栏下方底色渐隐，与 iOS 26 的滚动边缘效果一样。从标签页打开的页面保留系统标题栏。
 - 从页面顶部下拉会重新读取（`PullScroll`）：一个配色强调色的指示器随下拉出现，转动到读取结束，至少 0.6 秒，这样系统总能收到刷新的开始和结束。
 - 页面通过 `query`（`lib/query.ts`）读取服务器，它像网页版一样把回答保存在 TanStack Query 的 `query-core` 里：再次打开的页面立即显示之前读到的内容，超过 30 秒后在后台重新读取。改变数据的调用会把所有回答标为过期，学习者离开任务后，栈上的页面会重新读取；登录或退出时全部清空。长页面（课程列表、课程大纲和进度图）把各行放在滚动视图里的 `List`（`viewport="parent"`）中，它只绑定可见的行，其余的在随后几帧绑定，因此在 Android 上打开页面不会卡顿。
 - 桌面上应用会在系统托盘放一个图标（`lib/tray.ts`、`assets/tray.svg`），它的菜单可以打开窗口或某个标签页，也可以退出。

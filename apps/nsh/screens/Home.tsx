@@ -1,11 +1,15 @@
-import { Image, keymap, platform, Text, View, windowSize } from "nsh";
+import { Image, keymap, platform, safeAreaInsets, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
 import logo from "../assets/logo.svg";
+import courses from "../assets/tabs/courses.svg";
+import me from "../assets/tabs/me.svg";
+import progress from "../assets/tabs/progress.svg";
+import today from "../assets/tabs/today.svg";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
-import { barStyle, colors, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
+import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
 import { Header } from "./Header.tsx";
 import { Progress } from "./Progress.tsx";
@@ -58,18 +62,79 @@ export function Home() {
   );
 }
 
-/** PhoneTabs is the system tab bar along the bottom of a phone: Material on Android, and on iOS the bar of the SDK the host links against (Liquid Glass from iOS 26). */
+/** drawn are the icons of the tab bar the app draws itself. */
+const drawn: Record<TabId, typeof today> = { today, progress, courses, me };
+
+/**
+ * PhoneTabs is the tab bar of a phone: on iOS the system's (Liquid Glass from iOS 26); on Android a pill of glass the
+ * app draws, floating over the page, which Material's bar cannot be.
+ */
 export function PhoneTabs() {
   return (
     <View style={barStyle()}>
-      <TabBar
-        items={TABS.map((id) => ({ title: tabTitle(id), icon: platform.select(icons[id]) ?? null }))}
-        selectedIndex={TABS.indexOf(tab())}
-        onChange={({ index }) => {
-          const id = TABS[index];
-          if (id) openTab(id);
+      {platform.os === "android" ? (
+        <GlassTabs />
+      ) : (
+        <TabBar
+          items={TABS.map((id) => ({ title: tabTitle(id), icon: platform.select(icons[id]) ?? null }))}
+          selectedIndex={TABS.indexOf(tab())}
+          onChange={({ index }) => {
+            const id = TABS[index];
+            if (id) openTab(id);
+          }}
+        />
+      )}
+    </View>
+  );
+}
+
+/** GlassTabs is the tabs in a pill of glass over the bottom of the page, the chosen one on a lens of the accent. */
+function GlassTabs() {
+  const insets = safeAreaInsets();
+  return (
+    <View style={{ paddingBottom: insets().bottom + 8, paddingHorizontal: 16 }}>
+      <View
+        role="tablist"
+        style={{
+          ...glass(),
+          borderColor: `${colors().line.slice(0, 7)}99`,
+          borderRadius: 32,
+          borderWidth: 1,
+          boxShadow: [{ x: 0, y: 8, blur: 24, color: "#00000033" }],
+          flexDirection: "row",
+          height: 64,
+          padding: 4,
         }}
-      />
+      >
+        <Each of={[...TABS]}>
+          {(id) => {
+            const chosen = () => tab() === id();
+            return (
+              <View
+                role="tab"
+                accessibilityLabel={tabTitle(id())}
+                accessibilityState={{ selected: chosen() }}
+                android={{ ripple: { borderless: false, color: `${colors().accent.slice(0, 7)}33` } }}
+                onPress={() => openTab(id())}
+                style={{
+                  alignItems: "center",
+                  backgroundColor: chosen() ? `${colors()["accent-soft"].slice(0, 7)}cc` : "transparent",
+                  borderRadius: 28,
+                  flex: 1,
+                  gap: 2,
+                  justifyContent: "center",
+                  overflow: "hidden",
+                }}
+              >
+                <Image src={drawn[id()]} style={{ height: 24, tintColor: chosen() ? colors().accent : colors().muted, width: 24 }} />
+                <Text style={{ color: chosen() ? colors().accent : colors().muted, fontSize: 11, fontWeight: chosen() ? "600" : "500" }}>
+                  {tabTitle(id())}
+                </Text>
+              </View>
+            );
+          }}
+        </Each>
+      </View>
     </View>
   );
 }

@@ -84,7 +84,6 @@ export function followScroll(): (event: ScrollEvent) => void {
   let from = 0;
   return ({ offset, contentSize, size }) => {
     const y = offset.y;
-    topScrolled.set(y > 2);
     if (y <= BAR_STEP) {
       barsAway.set(false);
       from = y;
@@ -475,9 +474,6 @@ export const TOP_BAR = 52;
 /** topSpace is how much of a tab's page the top bar covers, the status bar with it: none on the desktops, which show the page's `header`. */
 export const topSpace = computed(() => (platform.desktop ? 0 : insets().top + TOP_BAR));
 
-/** topScrolled is true while a tab's page has scrolled under the top bar, which then blurs it and draws its edge. */
-export const topScrolled = signal(false);
-
 /** isDark tells whether the page's color is dark, for the status bar's content over it. */
 export const isDark = computed(() => {
   const hex = colors().page.slice(1, 7);
@@ -486,19 +482,34 @@ export const isDark = computed(() => {
 });
 
 /**
+ * GLASS_TINT is how much of the page's color glass keeps: on iOS as much of the page shows through as through its
+ * Liquid Glass bars; on Android, where Native Shell's backdrop blur does not draw yet, enough that the page shows
+ * through only faintly, as through frosted glass.
+ */
+const GLASS_TINT = platform.os === "android" ? "e0" : "8c";
+
+/** glass is the look of a bar of glass over the page: the page blurred under a thin tint of its color. */
+export function glass(): ViewStyle {
+  return {
+    backdropFilter: "blur(20px)",
+    backgroundColor: `${colors().page.slice(0, 7)}${GLASS_TINT}`,
+  };
+}
+
+/** TOP_FADE is how far below the top bar its tint fades out, as iOS 26's scroll edge effect does. */
+const TOP_FADE = 20;
+
+/**
  * TopBar is the head of a tab on a phone, in place of the system header: it reaches up under the status bar, and the
- * page scrolls under it, which it then blurs as the system's bars do, with a hairline below.
+ * page scrolls under it, blurred as iOS 26 blurs a page under its bars, with a fade below the bar rather than a line.
  */
 export function TopBar(props: { title: string }) {
   return (
     <View
-      ios={{ backdropMaterial: "thick" }}
+      ios={{ backdropMaterial: "regular" }}
       style={{
+        ...glass(),
         alignItems: "center",
-        backdropFilter: topScrolled() ? "blur(24px)" : undefined,
-        backgroundColor: topScrolled() ? `${colors().page.slice(0, 7)}d9` : colors().page,
-        borderBottomWidth: 1,
-        borderColor: topScrolled() ? colors().line : "transparent",
         flexDirection: "row",
         gap: 10,
         height: topSpace(),
@@ -515,6 +526,17 @@ export function TopBar(props: { title: string }) {
       <Text role="header" style={{ color: colors().ink, flex: 1, fontSize: 24, fontWeight: "700" }}>
         {props.title}
       </Text>
+      <View
+        style={{
+          backgroundImage: `linear-gradient(to bottom, ${colors().page.slice(0, 7)}${GLASS_TINT}, ${colors().page.slice(0, 7)}00)`,
+          height: TOP_FADE,
+          left: 0,
+          pointerEvents: "none",
+          position: "absolute",
+          right: 0,
+          top: topSpace(),
+        }}
+      />
     </View>
   );
 }
@@ -524,6 +546,19 @@ const PULL = 60;
 
 /** SHOWN_FOR is how long the indicator spins at least, so a quick read is still seen to happen. */
 const SHOWN_FOR = 600;
+
+/** ring is the indicator's ring, the accent its turning part. */
+function ring(): ViewStyle {
+  return {
+    borderColor: colors().line,
+    borderRadius: 9,
+    borderTopColor: colors().accent,
+    borderWidth: 2.5,
+    height: 18,
+    position: "absolute",
+    width: 18,
+  };
+}
 
 /** PullIndicator is the indicator of a pull, in the palette's accent: a chip that comes in with the pull and spins while the page reads again. */
 function PullIndicator(props: { pull: AnimatedNode; refreshing: boolean; top: number }) {
@@ -560,29 +595,28 @@ function PullIndicator(props: { pull: AnimatedNode; refreshing: boolean; top: nu
           borderWidth: 1,
           height: 36,
           justifyContent: "center",
-          opacity: props.refreshing ? 1 : props.pull.interpolate({ inputRange: [0, 20], outputRange: [0, 1] }),
+          // The room kept while it reads is a pull too, so the pull alone places the chip.
+          opacity: props.pull.interpolate({ inputRange: [0, 20], outputRange: [0, 1], extrapolate: "clamp" }),
           transform: [
-            { translateY: props.refreshing ? 0 : props.pull.interpolate({ inputRange: [0, PULL], outputRange: [-24, 0] }) },
-            { scale: props.refreshing ? 1 : props.pull.interpolate({ inputRange: [0, PULL], outputRange: [0.6, 1] }) },
+            { translateY: props.pull.interpolate({ inputRange: [0, PULL], outputRange: [-24, 0], extrapolate: "clamp" }) },
+            { scale: props.pull.interpolate({ inputRange: [0, PULL], outputRange: [0.6, 1], extrapolate: "clamp" }) },
           ],
           width: 36,
         }}
       >
+        {/* The ring turns with the pull, and once released spins while the page reads. */}
         <View
           style={{
-            borderColor: colors().line,
-            borderRadius: 9,
-            borderTopColor: colors().accent,
-            borderWidth: 2.5,
-            height: 18,
-            transform: [
-              {
-                rotate: props.refreshing
-                  ? turn.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "360deg"] })
-                  : props.pull.interpolate({ inputRange: [0, PULL], outputRange: ["0deg", "270deg"] }),
-              },
-            ],
-            width: 18,
+            ...ring(),
+            opacity: props.refreshing ? 0 : 1,
+            transform: [{ rotate: props.pull.interpolate({ inputRange: [0, PULL], outputRange: ["0deg", "270deg"] }) }],
+          }}
+        />
+        <View
+          style={{
+            ...ring(),
+            opacity: props.refreshing ? 1 : 0,
+            transform: [{ rotate: turn.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "360deg"] }) }],
           }}
         />
       </View>

@@ -9,7 +9,7 @@ import { restorePrefs } from "./lib/prefs.ts";
 import { watchQueries } from "./lib/query.ts";
 import { restoreToken, token } from "./lib/session.ts";
 import { showTray } from "./lib/tray.ts";
-import { barSpace, barsAway, colors, followPalette, OfflineNote, tabsShown, topScrolled } from "./lib/ui.tsx";
+import { barSpace, barsAway, colors, followPalette, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Age } from "./screens/Age.tsx";
@@ -74,7 +74,6 @@ effect(() => {
   nav.routes();
   tab();
   barsAway.set(false);
-  topScrolled.set(false);
 });
 
 function App() {
