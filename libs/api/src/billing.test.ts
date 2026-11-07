@@ -15,6 +15,7 @@ import {
   type BillingEvent,
   billingService,
   type CheckoutRequest,
+  endPlansOf,
   type Payments,
   type PlanMeta,
   REFUND_WINDOW,
@@ -40,6 +41,7 @@ let opened: { account: string; req: CheckoutRequest }[];
 let billing: boolean;
 
 const payments: Payments = {
+  wallet: true,
   async checkout(account, req) {
     opened.push({ account, req });
     return { id: `cs_${opened.length}`, url: `https://checkout.stripe.com/${opened.length}` };
@@ -338,6 +340,18 @@ describe("plans", () => {
     expect(await code(add("kid02"))).toBe(Code.FailedPrecondition);
     const subs = (await bill("parent").listSubscriptions({})).subscriptions;
     expect(subs[0]?.learnerName).toBe("kid01");
+  });
+});
+
+describe("deleting an account", () => {
+  it("ends the card plans that still run", async () => {
+    await cardBought(meta(), "sub_live");
+    await cardBought(meta(), "sub_gone");
+    await applyBillingEvent(db, { kind: "subscription-ended", stripeSubscription: "sub_gone" }, now);
+    now += DAY;
+    await endPlansOf(db, payments, "parent", now);
+    expect(calls).toEqual(["end sub_live"]);
+    expect((await planByStripe(db, "sub_live"))?.paidUntil.getTime()).toBe(now);
   });
 });
 

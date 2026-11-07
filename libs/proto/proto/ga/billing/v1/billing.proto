@@ -56,6 +56,8 @@ message ListPlansResponse {
   repeated Plan plans = 1;
   // required is false while billing is off, as in local development.
   bool required = 2;
+  // wallet is true when Alipay and WeChat Pay are set up.
+  bool wallet = 3;
 }
 
 message StartCheckoutRequest {

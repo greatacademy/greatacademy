@@ -104,6 +104,8 @@ export interface CheckoutRequest {
 
 /** Payments is the host's link to Stripe, one account for cards and one for Alipay and WeChat Pay. */
 export interface Payments {
+  /** wallet tells whether the account for Alipay and WeChat Pay is set up. */
+  readonly wallet: boolean;
   /** checkout opens a Checkout session: a subscription on the main account, a single payment on the wallet account. */
   checkout(account: "main" | "wallet", req: CheckoutRequest): Promise<{ id: string; url: string }>;
   /** setRenewal sets whether a main-account subscription renews at the end of its period. */
@@ -255,6 +257,15 @@ export async function refundableUntil(db: Db, plan: PlanRow, now: number): Promi
   return until > now ? until : 0;
 }
 
+/** endPlansOf ends at once every card plan a person pays for that still runs, as before their account is deleted. */
+export async function endPlansOf(db: Db, payments: Payments, payerId: string, now: number): Promise<void> {
+  for (const plan of await plansOfPayer(db, payerId)) {
+    if (plan.account !== "main" || !plan.stripeSubscription || plan.refundedAt || plan.paidUntil.getTime() <= now) continue;
+    await payments.endNow(plan.stripeSubscription);
+    await endPlan(db, plan.id, new Date(now));
+  }
+}
+
 /** BillingReminder is a message to a payer about a plan that ends soon. */
 export type BillingReminder = "renews-soon" | "ends-soon";
 
@@ -283,8 +294,8 @@ export interface BillingDeps {
   now(): number;
   /** payments is absent while billing is off; then nothing is sold and nobody needs a plan. */
   readonly payments?: Payments;
-  /** origin is the site's own origin, the only one Checkout may return to. */
-  readonly origin: string;
+  /** origin is the only origin Checkout may return to; without it, the one the request came to. */
+  readonly origin?: string;
 }
 
 const INTERVALS: Record<number, PlanInterval | undefined> = { [Interval.MONTH]: "month", [Interval.YEAR]: "year" };
@@ -305,14 +316,15 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
     return deps.payments;
   };
 
-  const ownUrl = (url: string): URL => {
+  const ownUrl = (url: string, ctx: HandlerContext): URL => {
     let parsed: URL;
     try {
       parsed = new URL(url);
     } catch {
       throw new ConnectError("that address is not valid", Code.InvalidArgument);
     }
-    if (parsed.origin !== deps.origin) throw new ConnectError("that address is not this site", Code.InvalidArgument);
+    if (parsed.origin !== (deps.origin ?? new URL(ctx.url).origin))
+      throw new ConnectError("that address is not this site", Code.InvalidArgument);
     return parsed;
   };
 
@@ -328,6 +340,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
     listPlans() {
       return {
         required: deps.payments !== undefined,
+        wallet: deps.payments?.wallet ?? false,
         plans: [
           ...deps.registry.listings.map((s) => ({
             scope: s.id,
@@ -353,6 +366,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       if (!scopes().includes(req.scope)) throw new ConnectError("no such plan", Code.InvalidArgument);
       const account = req.account === Account.CARD ? "main" : req.account === Account.WALLET ? "wallet" : undefined;
       if (!account) throw new ConnectError("choose how to pay", Code.InvalidArgument);
+      if (account === "wallet" && !pay.wallet) throw new ConnectError("Alipay and WeChat Pay are not set up", Code.FailedPrecondition);
       if (!req.agreedTerms || !req.agreedRefund || (account === "main" && !req.agreedRenewal))
         throw new ConnectError("tick every statement first", Code.FailedPrecondition);
       const payer = await learnerFor(db, userId);
@@ -364,7 +378,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
         if (!(await isGuardian(db, userId, req.learnerId))) throw new ConnectError("no such learner", Code.NotFound);
         learner = req.learnerId;
       }
-      const back = ownUrl(req.returnUrl);
+      const back = ownUrl(req.returnUrl, ctx);
       const success = new URL(back);
       success.searchParams.set("checkout", "{CHECKOUT_SESSION_ID}");
       const email = await emailOf(db, userId);
@@ -452,7 +466,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       const pay = payments();
       const customer = await customerOf(db, userId);
       if (!customer) throw new ConnectError("no card plan", Code.FailedPrecondition);
-      return { url: await pay.portal(customer, ownUrl(req.returnUrl).toString()) };
+      return { url: await pay.portal(customer, ownUrl(req.returnUrl, ctx).toString()) };
     },
   };
 }

@@ -73,6 +73,13 @@ export declare type ListPlansResponse = Message<"ga.billing.v1.ListPlansResponse
    * @generated from field: bool required = 2;
    */
   required: boolean;
+
+  /**
+   * wallet is true when Alipay and WeChat Pay are set up.
+   *
+   * @generated from field: bool wallet = 3;
+   */
+  wallet: boolean;
 };
 
 /**
