@@ -114,4 +114,4 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
 - 桌面窗口不会一直小于 420×600 点（`lib/window.ts`）：Native Shell 没有为 TSX 应用提供最小窗口尺寸，所以拖动超过下限后窗口会弹回。
-- `pnpm nx run nsh:package -- --target <target>` 构建安装包，应用标识符是 `dev.greatacademy.app`，图标来自 `assets/`。它默认使用 `https://greatacademy.dev`，可用 `--api-url` 指定其他服务器；其他参数（如 `--sign` 和 `--profile`）会传给 `nsh package`。
+- `pnpm nx run nsh:package -- --target <target>` 构建安装包，应用标识符是 `dev.greatacademy.app`，图标来自 `assets/`。它默认使用 `https://greatacademy.dev`，可用 `--api-url` 指定其他服务器；其他参数（如 `--sign` 和 `--profile`）会传给 `nsh package`。Nx 通过 shell 传递参数，所以当参数值含有括号时（签名身份就是这样），请在 `apps/nsh` 下通过 `mise exec` 用同样的参数运行 `node scripts/package.ts`。
