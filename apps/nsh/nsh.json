@@ -3,5 +3,15 @@
   "id": "dev.greatacademy.app",
   "version": "1.0.0",
   "build": 1,
-  "icon": "assets/icon.png"
+  "icon": "assets/icon.png",
+  "theme": {
+    "cssVars": {
+      "light": {
+        "primary": "#3655cd"
+      },
+      "dark": {
+        "primary": "#90aefe"
+      }
+    }
+  }
 }

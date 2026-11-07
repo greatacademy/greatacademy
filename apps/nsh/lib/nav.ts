@@ -1,9 +1,11 @@
+import { signal } from "nsh";
 import { createNavStack } from "nsh/base";
 
 /** Route is a page of the app. */
 export type Route =
   | { name: "launch" }
   | { name: "welcome" }
+  | { name: "home" }
   | { name: "courses" }
   | { name: "course"; courseId: string }
   | { name: "learn"; courseId: string }
@@ -11,7 +13,6 @@ export type Route =
   | { name: "sign-in" }
   | { name: "sign-up" }
   | { name: "forgot-password" }
-  | { name: "account" }
   | { name: "delete-account" }
   | { name: "age" }
   | { name: "access" };
@@ -22,7 +23,10 @@ export const LAUNCH: Route = { name: "launch" };
 /** WELCOME is the first page of someone signed out. */
 export const WELCOME: Route = { name: "welcome" };
 
-/** COURSES is the first page of someone signed in. */
+/** HOME is the first page of someone signed in: the tabs. */
+export const HOME: Route = { name: "home" };
+
+/** COURSES is the course list of someone signed out. */
 export const COURSES: Route = { name: "courses" };
 
 /** AGE is the page of the age question. */
@@ -47,3 +51,18 @@ export const ENTRY: ReadonlySet<Route["name"]> = new Set(["launch", "welcome", "
 
 /** nav is the app's navigation stack. */
 export const nav = createNavStack<Route>([LAUNCH]);
+
+/** TabId names a tab of the signed-in app. */
+export type TabId = "today" | "progress" | "courses" | "me";
+
+/** TABS lists the tabs in their order. */
+export const TABS: readonly TabId[] = ["today", "progress", "courses", "me"];
+
+/** tab is the tab shown on the home page. */
+export const tab = signal<TabId>("today");
+
+/** openTab shows a tab, going back to the home page from wherever the stack is. */
+export function openTab(id: TabId): void {
+  tab.set(id);
+  if (nav.routes().length !== 1 || nav.routes()[0]?.name !== "home") nav.setRoutes([HOME]);
+}

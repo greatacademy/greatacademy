@@ -97,7 +97,7 @@ test("signs in, keeps the token and sends it", async () => {
   await app.type("label:Email or username", "a@example.test");
   await app.type("label:Password", "correct horse");
   await app.press("role:button[Sign in]");
-  await app.waitFor("text:Account");
+  await app.waitFor("text:Today");
   expect(app.storage()["ga.session"]).toBe("tok.sig");
   const call = app.requests().find((r) => r.url.endsWith("/GetAccess"));
   expect(call?.headers.authorization ?? call?.headers.Authorization).toBe("Bearer tok.sig");
@@ -138,7 +138,7 @@ test("holds an unanswered account on the age question until it answers", async (
   });
   await app.waitFor("text:Before you start");
   await answerAge(app, "1990");
-  await app.waitFor("text:2 topics");
+  await app.waitFor("text:Today");
 });
 
 test("explains a market that is closed and can sign out", async () => {
@@ -216,7 +216,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
   await app.type("label:Email", "a@example.test");
   await app.type("label:Password", "correct horse");
   await app.press("role:button[Create account]");
-  await app.waitFor("text:Account >> nth=0");
+  await app.waitFor("text:Today");
   expect(app.shows("Before you start")).toBe(false);
 });
 
@@ -292,8 +292,7 @@ test("studies a lesson from the course list to its result", async () => {
       },
     }),
   );
-  await app.waitFor("text:My courses");
-  await app.press("text:1 / 2 topics");
+  await app.press("text:Open the course");
   await app.waitFor("text:Next up");
   await app.press("role:button[Start]");
   await app.waitFor("text:Even numbers split in two.");
@@ -350,7 +349,7 @@ test("takes math as plain text and skips in the diagnostic without feedback", as
       },
     }),
   );
-  await app.press("text:1 / 2 topics");
+  await app.press("text:Open the course");
   await app.press("role:button[Start]");
   await app.waitFor("text:Add 1");
   await app.press("text:Type it as plain text");
@@ -386,23 +385,59 @@ const settingsNetwork = {
 };
 
 test("keeps the language chosen in the settings", async () => {
-  const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork });
-  await app.press("text:Account >> nth=0");
+  const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork, platform: "macos" });
+  await app.press("text:Me");
   await app.press("text:简体中文");
   await app.waitFor("text:语言");
   expect(app.storage()["ga.language"]).toBe("zh-CN");
-  const again = await open("./App.tsx", { storage: app.storage(), network: settingsNetwork });
-  await again.waitFor("text:2 个知识点");
+  const again = await open("./App.tsx", { storage: app.storage(), network: settingsNetwork, platform: "macos" });
+  await again.waitFor("text:我的");
 });
 
 test("deletes the account after its password and a confirmation", async () => {
-  const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork });
+  const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork, platform: "macos" });
   app.onDialog(() => "Delete my account");
-  await app.press("text:Account >> nth=0");
+  await app.press("text:Me");
   await app.scroll("text:Contrast", 1500);
   await app.press("text:Delete my account");
   await app.type("label:Password", "correct horse");
   await app.press("role:button[Delete my account]");
   await app.waitFor("text:Get started");
   expect(app.storage()["ga.session"]).toBeUndefined();
+});
+
+test("puts the task in progress first on Today, with the daily goal", async () => {
+  const app = await open(
+    "./App.tsx",
+    signedIn({
+      [`POST ${learningUrl}/GetProfile`]: json({
+        enrollments: [{ courseId: "algebra", stats: { learned: 1, total: 2 } }],
+        xp: { today: 20, goalToday: 30, week: 50, total: 200, days: [10, 20] },
+      }),
+      [`POST ${learningUrl}/GetDashboard`]: json({
+        courseId: "algebra",
+        diagnosed: true,
+        tasks: [lessonTask],
+        active: { id: "s9", task: lessonTask },
+        stats: { learned: 1, total: 2 },
+        xp: {},
+      }),
+    }),
+  );
+  await app.waitFor("text:Pick up where you left off");
+  expect(app.texts().indexOf("Pick up where you left off")).toBeLessThan(app.texts().indexOf("Daily goal"));
+  expect(app.texts()).toContain("10 XP to go today");
+  expect(app.texts()).toContain("Resume");
+});
+
+test("switches tabs from the sidebar and its shortcuts on a desktop", async () => {
+  const app = await open("./App.tsx", {
+    ...signedIn({ [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }) }),
+    platform: "macos",
+  });
+  await app.waitFor("text:Daily goal");
+  await app.keyboard.press("mod+2");
+  await app.waitFor("text:The last 14 days");
+  await app.press("text:Courses");
+  await app.waitFor("text:Solve equations");
 });

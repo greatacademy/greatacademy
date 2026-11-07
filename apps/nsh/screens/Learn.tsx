@@ -5,47 +5,9 @@ import { NavPage } from "nsh/base";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
-import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll, Quiet } from "../lib/ui.tsx";
+import { colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
-import { Rich } from "./Rich.tsx";
-
-function describe(task: Task): { label: string; title: string; detail: string; xp: number } | undefined {
-  const k = task.kind;
-  switch (k.case) {
-    case "diagnostic":
-      return { label: m().diagnostic, title: m().diagnostic, detail: m().diagnosticBody(k.value.maxQuestions), xp: 0 };
-    case "lesson":
-      return { label: m().lesson, title: tx(k.value.title), detail: m().kps(k.value.knowledgePoints), xp: k.value.xp };
-    case "review": {
-      const others = k.value.covers.filter((c) => c !== k.value.topicId).length;
-      return { label: m().review, title: tx(k.value.title), detail: others > 0 ? m().reviewCovers(others) : "", xp: k.value.xp };
-    }
-    case "reading":
-      return { label: m().reading, title: tx(k.value.title), detail: m().readingBody(k.value.words, k.value.questions), xp: k.value.xp };
-    case "quiz":
-      return { label: m().quiz, title: m().quiz, detail: m().quizBody(k.value.questions), xp: k.value.xp };
-    default:
-      return undefined;
-  }
-}
-
-function TaskCard(props: { task: Task; action: string; busy?: boolean; onStart: () => void; extra?: () => void }) {
-  const about = describe(props.task);
-  if (!about) return null;
-  return (
-    <Card>
-      <Muted>{about.xp > 0 ? `${about.label} · ${about.xp} XP` : about.label}</Muted>
-      <Rich source={about.title} inline bold fontSize={17} />
-      <If when={about.detail}>
-        <Muted>{about.detail}</Muted>
-      </If>
-      <Action label={props.action} disabled={props.busy} onPress={props.onStart} />
-      <If when={props.extra}>
-        <Quiet label={m().skipDiagnostic} disabled={props.busy} onPress={() => props.extra?.()} />
-      </If>
-    </Card>
-  );
-}
+import { TaskCard } from "./TaskCard.tsx";
 
 /** Learn is the learner's home in a course: the next task comes first, since it is what the learner came for. */
 export function Learn(props: { courseId: string }) {

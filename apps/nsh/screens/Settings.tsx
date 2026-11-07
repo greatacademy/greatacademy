@@ -1,14 +1,13 @@
 import { type Appearance, CONTRASTS, type ColorScheme, PALETTES, type Palette, resolveColors, THEMES } from "@ga/design";
 import { colorScheme, openUrl, resource, Scroll, Text, View } from "nsh";
-import { AlertDialog, NavPage } from "nsh/base";
+import { AlertDialog } from "nsh/base";
 
 import { access, signOut } from "../lib/auth.ts";
 import { m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, languageChoice } from "../lib/prefs.ts";
 import { API_URL, account } from "../lib/rpc.ts";
-import { colors, headerStyle, Muted, Row, Section, Segmented } from "../lib/ui.tsx";
-import { Header } from "./Header.tsx";
+import { barSpace, colors, Muted, Row, Section, Segmented } from "../lib/ui.tsx";
 
 function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean; onPress: () => void }) {
   const look = () => resolveColors({ ...appearance(), theme: props.scheme, [props.scheme]: props.palette } as Appearance, props.scheme);
@@ -41,10 +40,9 @@ function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean;
   );
 }
 
-/** Settings is the account's page: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
-export function Settings() {
+/** Me is the Me tab: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
+export function Me() {
   const settings = resource(({ signal }) => account.getSettings({}, { signal }));
-  const scheme = () => colorScheme();
   const set = (change: Partial<Appearance>) => chooseAppearance({ ...appearance(), ...change });
   const confirmSignOut = async () => {
     const { action } = await AlertDialog.show({
@@ -57,17 +55,15 @@ export function Settings() {
     if (action === "out") await signOut();
   };
   return (
-    <NavPage headerStyle={headerStyle()} title={m().account} header={<Header title={m().account} />}>
-      <Scroll style={{ backgroundColor: colors().page, flex: 1 }}>
-        <SettingsBody
-          username={settings()?.username}
-          managed={!!access()?.managed}
-          scheme={scheme()}
-          onAppearance={set}
-          onSignOut={() => void confirmSignOut()}
-        />
-      </Scroll>
-    </NavPage>
+    <Scroll style={{ backgroundColor: colors().page, flex: 1 }}>
+      <SettingsBody
+        username={settings()?.username}
+        managed={!!access()?.managed}
+        scheme={colorScheme()}
+        onAppearance={set}
+        onSignOut={() => void confirmSignOut()}
+      />
+    </Scroll>
   );
 }
 
@@ -87,7 +83,7 @@ export function SettingsBody(props: {
     { value: "zh-CN", title: "简体中文" },
   ];
   return (
-    <View style={{ alignSelf: "center", gap: 24, maxWidth: 640, padding: 16, width: "100%" }}>
+    <View style={{ alignSelf: "center", gap: 24, maxWidth: 640, padding: 16, paddingBottom: 16 + barSpace(), width: "100%" }}>
       <If when={props.username}>
         <Section title={m().profile}>
           <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{props.username}</Text>

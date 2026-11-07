@@ -1,13 +1,13 @@
 import { AccessStatus } from "@ga/proto/privacy/v1/privacy_pb";
-import { effect, mount, View } from "nsh";
+import { computed, effect, mount, platform, View } from "nsh";
 import { NavPage, NavStack } from "nsh/base";
 
 import { access } from "./lib/auth.ts";
-import { ACCESS, AGE, COURSES, ENTRY, nav, OPEN, WELCOME } from "./lib/nav.ts";
+import { ACCESS, AGE, ENTRY, HOME, nav, OPEN, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
 import { restoreToken, token } from "./lib/session.ts";
-import { colors, OfflineNote } from "./lib/ui.tsx";
+import { barSpace, colors, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Age } from "./screens/Age.tsx";
@@ -15,9 +15,9 @@ import { CourseOutline } from "./screens/CourseOutline.tsx";
 import { Courses } from "./screens/Courses.tsx";
 import { DeleteAccount } from "./screens/DeleteAccount.tsx";
 import { ForgotPassword } from "./screens/ForgotPassword.tsx";
+import { Home, PhoneTabs, Sidebar } from "./screens/Home.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Player } from "./screens/Player.tsx";
-import { Settings } from "./screens/Settings.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
@@ -49,13 +49,24 @@ effect(() => {
   } else if (status === AccessStatus.MARKET_CLOSED || status === AccessStatus.NEEDS_GUARDIAN) {
     if (top !== "access") nav.setRoutes([ACCESS]);
   } else if (status === AccessStatus.OK && ENTRY.has(top)) {
-    nav.setRoutes([COURSES]);
+    nav.setRoutes([HOME]);
   }
 });
 
+// The tabs show for an account that may study, everywhere but the pages that lead to an account.
+const inTabs = computed(() => {
+  const top = nav.routes().at(-1)?.name ?? "launch";
+  return !!token() && access()?.status === AccessStatus.OK && !ENTRY.has(top);
+});
+effect(() => tabsShown.set(!platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session"));
+
 function App() {
+  const sidebar = () => platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session";
   return (
-    <View style={{ backgroundColor: colors().page, flex: 1 }}>
+    <View style={{ backgroundColor: colors().page, flex: 1, flexDirection: "row" }}>
+      <If when={sidebar()}>
+        <Sidebar />
+      </If>
       <NavStack state={nav} style={{ flex: 1 }}>
         {(route) => {
           switch (route.name) {
@@ -67,6 +78,8 @@ function App() {
               );
             case "welcome":
               return <Welcome />;
+            case "home":
+              return <Home />;
             case "courses":
               return <Courses />;
             case "course":
@@ -81,8 +94,6 @@ function App() {
               return <SignUp />;
             case "forgot-password":
               return <ForgotPassword />;
-            case "account":
-              return <Settings />;
             case "delete-account":
               return <DeleteAccount />;
             case "age":
@@ -92,7 +103,10 @@ function App() {
           }
         }}
       </NavStack>
-      <OfflineNote bottom={24} />
+      <If when={!platform.desktop}>
+        <PhoneTabs hidden={!inTabs()} />
+      </If>
+      <OfflineNote bottom={24 + barSpace()} />
     </View>
   );
 }

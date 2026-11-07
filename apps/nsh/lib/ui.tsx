@@ -1,5 +1,19 @@
 import { resolveColors } from "@ga/design";
-import { colorScheme, computed, effect, type JSX, type Resource, Scroll, signal, Text, untracked, View } from "nsh";
+import {
+  Canvas,
+  colorScheme,
+  computed,
+  effect,
+  type JSX,
+  platform,
+  type Resource,
+  Scroll,
+  safeAreaInsets,
+  signal,
+  Text,
+  untracked,
+  View,
+} from "nsh";
 import { Button, Input, Select } from "nsh/base";
 
 import { m } from "./i18n.ts";
@@ -17,6 +31,47 @@ export const headerStyle = computed(() => ({
   color: colors().ink,
   tintColor: colors().accent,
 }));
+
+/** tabsShown is true while the system tab bar is on screen, which pages leave room for at their bottom. */
+export const tabsShown = signal(false);
+
+const insets = safeAreaInsets();
+
+/** barSpace is the room the system tab bar takes at the bottom of a page, with the safe area under it: none on the desktops. */
+export const barSpace = computed(() => {
+  if (platform.desktop || !tabsShown()) return 0;
+  return (platform.os === "ios" ? 64 : 80) + insets().bottom;
+});
+
+/** Ring draws a share (0 to 1) as an arc on a track, around its children. */
+export function Ring(props: { share: number; size: number; color: string; children?: JSX.Element }) {
+  const width = () => Math.max(6, props.size / 10);
+  return (
+    <View style={{ alignItems: "center", height: props.size, justifyContent: "center", width: props.size }}>
+      <Canvas
+        style={{ height: props.size, left: 0, position: "absolute", top: 0, width: props.size }}
+        draw={(cx, size) => {
+          const r = Math.min(size.width, size.height) / 2 - width() / 2;
+          const x = size.width / 2;
+          const y = size.height / 2;
+          cx.lineWidth = width();
+          cx.lineCap = "round";
+          cx.strokeStyle = colors().line;
+          cx.beginPath();
+          cx.arc(x, y, r, 0, Math.PI * 2);
+          cx.stroke();
+          const share = Math.min(1, Math.max(0, props.share));
+          if (share <= 0) return;
+          cx.strokeStyle = props.color;
+          cx.beginPath();
+          cx.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + share * Math.PI * 2);
+          cx.stroke();
+        }}
+      />
+      {props.children}
+    </View>
+  );
+}
 
 /** Muted is secondary text. */
 export function Muted(props: { children: JSX.Element }) {
@@ -347,7 +402,9 @@ export function PullScroll(props: { onRefresh: () => void; refreshing: boolean; 
         props.onRefresh();
       }}
     >
-      <View style={{ alignSelf: "center", gap: 12, maxWidth: 960, padding: 16, paddingBottom: props.bottom ?? 16, width: "100%" }}>
+      <View
+        style={{ alignSelf: "center", gap: 12, maxWidth: 960, padding: 16, paddingBottom: props.bottom ?? 16 + barSpace(), width: "100%" }}
+      >
         {props.children}
       </View>
     </Scroll>
