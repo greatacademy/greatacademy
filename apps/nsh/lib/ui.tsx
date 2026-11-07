@@ -164,7 +164,7 @@ export function Loaded<T extends object>(props: { rpc: Resource<T>; children: (d
       when={props.rpc()}
       else={
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: 12, padding: 24 }}>
-          <Muted>{props.rpc.error() ? String(props.rpc.error()) : m().loading}</Muted>
+          <Muted>{props.rpc.error() ? m().error : m().loading}</Muted>
           <If when={props.rpc.error()}>
             <Action label={m().retry} onPress={() => props.rpc.refetch()} />
           </If>
