@@ -51,7 +51,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `subject-worker` | `libs/subject-worker` | 任何学科的网关和分片所用的 Worker 入口 |
 | `math-workers` | `apps/math-workers` | 数学的网关和分片 Worker（[架构](architecture.zh-CN.md) §6.1）；`pnpm nx run math-workers:generate` 把 manifest 写入 `gen/`，需要它的 target 会先运行这一步 |
 | `english-workers` | `apps/english-workers` | 英语的网关和分片 Worker，构建方式相同 |
-| `nsh` | `apps/nsh` | Native Shell 应用，开发中：课程列表和课程大纲、登录、注册和年龄问题、学习主页和任务播放器，连接 Web 应用的 API（§6） |
+| `nsh` | `apps/nsh` | Native Shell 应用：欢迎页、登录、注册和年龄问题；今天、进度、课程、我的四个标签页；课程大纲、进度地图、历史记录和任务播放器；隐私、同意和监护人页面；连接 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误 |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
@@ -109,7 +109,10 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 
 - `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--api-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
-- 应用用 bearer token 登录，并把它保存在 `Storage` 中。同意、监护人工具、进度地图和历史记录还不在应用里。
+- 应用用 bearer token 登录，并把它保存在 `Storage` 中。
+- 登录后的账号看到四个标签页：今天、进度、课程和我的（`screens/Home.tsx`）。手机上它们在系统标签栏里，标签栏只在标签页显示时出现（Android 上是 Material；iOS 上的样式取决于 Native Shell 宿主链接的 SDK，0.4.0 链接的是 iOS 18.5，所以要等宿主用 iOS 26 SDK 构建后才会是 Liquid Glass）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
+- 桌面上应用会在系统托盘放一个图标（`lib/tray.ts`、`assets/tray.svg`），它的菜单可以打开窗口或某个标签页，也可以退出。Native Shell 在 0.4.0 之后才加入 `Tray`，所以应用会先查找它；在 `mise.toml` 升级到带有它的版本之前，不显示图标。
+- `nsh test` 在无界面模式下按 iOS 运行，系统标签栏在那里不接受点按，所以切换标签页的测试用 `platform: "macos"` 打开应用，并使用侧边栏。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
 - `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
