@@ -382,6 +382,21 @@ export declare type ListConsentsResponse = Message<"ga.privacy.v1.ListConsentsRe
    * @generated from field: repeated ga.privacy.v1.ScopeState scopes = 2;
    */
   scopes: ScopeState[];
+
+  /**
+   * @generated from field: ga.privacy.v1.Band band = 3;
+   */
+  band: Band;
+
+  /**
+   * @generated from field: bool managed = 4;
+   */
+  managed: boolean;
+
+  /**
+   * @generated from field: int32 daily_minutes = 5;
+   */
+  dailyMinutes: number;
 };
 
 /**

@@ -152,6 +152,9 @@ message ListConsentsRequest {
 message ListConsentsResponse {
   repeated Consent consents = 1;
   repeated ScopeState scopes = 2;
+  Band band = 3;
+  bool managed = 4;
+  int32 daily_minutes = 5;
 }
 
 message GrantConsentRequest {
