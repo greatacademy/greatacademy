@@ -5,7 +5,7 @@ import { signIn } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { API_URL } from "../lib/rpc.ts";
-import { Action, colors, ErrorNote, Field, FormPage, Muted } from "../lib/ui.tsx";
+import { Action, colors, ErrorNote, Field, FormPage, headerStyle, Muted } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 /** SignIn starts a session with an email address, or a username for a child's account. */
@@ -28,7 +28,7 @@ export function SignIn() {
   }
 
   return (
-    <NavPage title={m().signIn} header={<Header title={m().signIn} />}>
+    <NavPage headerStyle={headerStyle()} title={m().signIn} header={<Header title={m().signIn} />}>
       <FormPage>
         <Field
           label={m().emailOrUsername}

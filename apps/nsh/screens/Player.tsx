@@ -5,7 +5,7 @@ import { NavPage } from "nsh/base";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { learning } from "../lib/rpc.ts";
-import { Action, Card, colors, ErrorNote, Loaded, Muted, Quiet } from "../lib/ui.tsx";
+import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet } from "../lib/ui.tsx";
 import { AnswerInput, AnswerText, Prompt } from "./Answer.tsx";
 import { Header } from "./Header.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
@@ -276,7 +276,7 @@ export function Player(props: { sessionId: string }) {
     return current?.step.case === "question" ? [current] : [];
   });
   return (
-    <NavPage title={title()} header={<Header title={title()} />}>
+    <NavPage headerStyle={headerStyle()} title={title()} header={<Header title={title()} />}>
       <View style={{ flex: 1, backgroundColor: colors().page }}>
         <Loaded rpc={loaded}>
           {() => (

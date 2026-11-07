@@ -7,6 +7,13 @@ import { m } from "./i18n.ts";
 /** colors gives the design tokens as hex for the device's color scheme and the default appearance. */
 export const colors = computed(() => resolveColors(DEFAULT_APPEARANCE, colorScheme()));
 
+/** headerStyle colors the system header on iOS and Android, which on Android would otherwise stay light in the dark. */
+export const headerStyle = computed(() => ({
+  backgroundColor: colors().surface,
+  color: colors().ink,
+  tintColor: colors().accent,
+}));
+
 /** Muted is secondary text. */
 export function Muted(props: { children: JSX.Element }) {
   return <Text style={{ color: colors().muted, fontSize: 14 }}>{props.children}</Text>;

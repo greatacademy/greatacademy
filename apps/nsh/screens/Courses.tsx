@@ -5,7 +5,7 @@ import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { colors, Loaded, Muted } from "../lib/ui.tsx";
+import { colors, headerStyle, Loaded, Muted } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 function AccountButton() {
@@ -28,7 +28,12 @@ export function Courses() {
   const profile = resource(visible, (_, { signal }) => learning.getProfile({ timeZone: timeZone() }, { signal }));
   const mine = computed(() => profile()?.enrollments ?? []);
   return (
-    <NavPage title={m().courses} header={<Header title={m().courses} right={<AccountButton />} />} headerRight={<AccountButton />}>
+    <NavPage
+      headerStyle={headerStyle()}
+      title={m().courses}
+      header={<Header title={m().courses} right={<AccountButton />} />}
+      headerRight={<AccountButton />}
+    >
       <View style={{ flex: 1, backgroundColor: colors().page }}>
         <Loaded rpc={rpc}>
           {(data) => (

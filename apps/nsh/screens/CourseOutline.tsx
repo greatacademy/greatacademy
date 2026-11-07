@@ -5,7 +5,7 @@ import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { catalog, learning } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { Action, colors, ErrorNote, Loaded } from "../lib/ui.tsx";
+import { Action, colors, ErrorNote, headerStyle, Loaded } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 /** CourseOutline is a course's outline, and the way into studying it. */
@@ -34,7 +34,7 @@ export function CourseOutline(props: { courseId: string }) {
   }
 
   return (
-    <NavPage title={title()} header={<Header title={title()} />}>
+    <NavPage headerStyle={headerStyle()} title={title()} header={<Header title={title()} />}>
       <View style={{ flex: 1, backgroundColor: colors().page }}>
         <Loaded rpc={rpc}>
           {(data) => (

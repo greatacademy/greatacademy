@@ -6,7 +6,7 @@ import { type AgeAnswer, signUp } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { API_URL, privacy } from "../lib/rpc.ts";
-import { Action, colors, ErrorNote, Field, FormPage, Muted, Title } from "../lib/ui.tsx";
+import { Action, colors, ErrorNote, Field, FormPage, headerStyle, Muted, Title } from "../lib/ui.tsx";
 import { AgeForm } from "./AgeForm.tsx";
 import { Header } from "./Header.tsx";
 
@@ -90,7 +90,7 @@ export function SignUp() {
   }
 
   return (
-    <NavPage title={m().signUp} header={<Header title={m().signUp} />}>
+    <NavPage headerStyle={headerStyle()} title={m().signUp} header={<Header title={m().signUp} />}>
       <If when={stoppedBefore()}>
         {(before) => (
           <If when={!before().stopped && !stopped()} else={<Stop />}>
