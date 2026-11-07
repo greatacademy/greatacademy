@@ -41,6 +41,8 @@ service AdminService {
   rpc ListAdmins(ListAdminsRequest) returns (ListAdminsResponse);
   // AddAdmin gives the role to an existing adult account.
   rpc AddAdmin(AddAdminRequest) returns (AddAdminResponse);
+  // GrantPlan gives a person a plan for a number of days without payment, as for testers and the pilot.
+  rpc GrantPlan(GrantPlanRequest) returns (GrantPlanResponse);
   // RemoveAdmin takes the role from someone else.
   rpc RemoveAdmin(RemoveAdminRequest) returns (RemoveAdminResponse);
   // ListLog lists the change log, newest first.
@@ -266,6 +268,15 @@ message Admin {
 message ListAdminsResponse {
   repeated Admin admins = 1;
 }
+
+message GrantPlanRequest {
+  string email = 1;
+  // scope is a subject id, or "all".
+  string scope = 2;
+  int32 days = 3;
+}
+
+message GrantPlanResponse {}
 
 message AddAdminRequest {
   string email = 1;

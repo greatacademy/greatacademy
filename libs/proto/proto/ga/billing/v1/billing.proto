@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package ga.billing.v1;
+
+import "ga/common/v1/text.proto";
+
+// BillingService sells plans, a subject or all of them by the month or the
+// year, and lets the adult who pays cancel or refund them; see docs/billing.md.
+service BillingService {
+  // ListPlans lists what can be bought, with prices.
+  rpc ListPlans(ListPlansRequest) returns (ListPlansResponse);
+  // StartCheckout opens a Stripe Checkout page for a plan, once the payer has ticked the three statements.
+  rpc StartCheckout(StartCheckoutRequest) returns (StartCheckoutResponse);
+  // GetCheckout tells whether a Checkout session has been paid and recorded.
+  rpc GetCheckout(GetCheckoutRequest) returns (GetCheckoutResponse);
+  // ListSubscriptions lists the plans the caller pays for and those that cover the caller.
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+  // CancelSubscription stops a card plan from renewing, or lets it renew again.
+  rpc CancelSubscription(CancelSubscriptionRequest) returns (CancelSubscriptionResponse);
+  // RefundSubscription refunds a plan's first payment within 30 days and ends the plan.
+  rpc RefundSubscription(RefundSubscriptionRequest) returns (RefundSubscriptionResponse);
+  // OpenPortal opens Stripe's customer portal, where the payer changes the card and sees receipts.
+  rpc OpenPortal(OpenPortalRequest) returns (OpenPortalResponse);
+}
+
+// Interval is how long one payment lasts.
+enum Interval {
+  INTERVAL_UNSPECIFIED = 0;
+  INTERVAL_MONTH = 1;
+  INTERVAL_YEAR = 2;
+}
+
+// Account is how a plan is paid.
+enum Account {
+  ACCOUNT_UNSPECIFIED = 0;
+  // ACCOUNT_CARD is the main Stripe account: cards, renewed until cancelled.
+  ACCOUNT_CARD = 1;
+  // ACCOUNT_WALLET is the second Stripe account: Alipay and WeChat Pay, by the period.
+  ACCOUNT_WALLET = 2;
+  // ACCOUNT_GRANT is a plan an administrator gave without payment.
+  ACCOUNT_GRANT = 3;
+}
+
+message ListPlansRequest {}
+
+// Plan is something that can be bought; prices are in US cents.
+message Plan {
+  // scope is a subject id, or "all".
+  string scope = 1;
+  ga.common.v1.Text title = 2;
+  int32 month_cents = 3;
+  int32 year_cents = 4;
+}
+
+message ListPlansResponse {
+  repeated Plan plans = 1;
+  // required is false while billing is off, as in local development.
+  bool required = 2;
+}
+
+message StartCheckoutRequest {
+  string scope = 1;
+  Interval interval = 2;
+  Account account = 3;
+  // learner_id is a learner the caller guards; empty buys for the caller, unless for_new_child.
+  string learner_id = 4;
+  // for_new_child buys a plan that waits for the next child the caller adds.
+  bool for_new_child = 5;
+  // The three statements of docs/billing.md §4; agreed_renewal is needed only for a card.
+  bool agreed_terms = 6;
+  bool agreed_renewal = 7;
+  bool agreed_refund = 8;
+  // return_url is the page Stripe returns to; its origin must be the site's.
+  string return_url = 9;
+  // locale is the language of the Checkout page.
+  string locale = 10;
+}
+
+message StartCheckoutResponse {
+  string url = 1;
+}
+
+message GetCheckoutRequest {
+  string checkout_id = 1;
+}
+
+message GetCheckoutResponse {
+  // done is true once the payment has arrived and the plan is recorded.
+  bool done = 1;
+}
+
+message ListSubscriptionsRequest {}
+
+// Subscription is a plan as its payer or learner sees it.
+message Subscription {
+  string id = 1;
+  string scope = 2;
+  Interval interval = 3;
+  Account account = 4;
+  // learner_id is empty while the plan waits for a child.
+  string learner_id = 5;
+  string learner_name = 6;
+  // paid_until is in milliseconds since the epoch.
+  int64 paid_until = 7;
+  bool cancelled = 8;
+  bool refunded = 9;
+  // refundable_until is the end of the refund window in milliseconds, 0 when it cannot be refunded.
+  int64 refundable_until = 10;
+  // payer is true when the caller pays for it.
+  bool payer = 11;
+}
+
+message ListSubscriptionsResponse {
+  repeated Subscription subscriptions = 1;
+}
+
+message CancelSubscriptionRequest {
+  string id = 1;
+  // resume lets a cancelled card plan renew again.
+  bool resume = 2;
+}
+
+message CancelSubscriptionResponse {}
+
+message RefundSubscriptionRequest {
+  string id = 1;
+}
+
+message RefundSubscriptionResponse {}
+
+message OpenPortalRequest {
+  string return_url = 1;
+}
+
+message OpenPortalResponse {
+  string url = 1;
+}

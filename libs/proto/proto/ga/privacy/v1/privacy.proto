@@ -100,6 +100,10 @@ message GetAccessResponse {
   int32 daily_minutes = 8;
   // admin marks a platform administrator.
   bool admin = 9;
+  // billing is true when studying needs a plan.
+  bool billing = 10;
+  // covered lists what the learner's plans cover now: subject ids, or "all".
+  repeated string covered = 11;
 }
 
 message SetAgeRequest {

@@ -159,6 +159,20 @@ export declare type GetAccessResponse = Message<"ga.privacy.v1.GetAccessResponse
    * @generated from field: bool admin = 9;
    */
   admin: boolean;
+
+  /**
+   * billing is true when studying needs a plan.
+   *
+   * @generated from field: bool billing = 10;
+   */
+  billing: boolean;
+
+  /**
+   * covered lists what the learner's plans cover now: subject ids, or "all".
+   *
+   * @generated from field: repeated string covered = 11;
+   */
+  covered: string[];
 };
 
 /**

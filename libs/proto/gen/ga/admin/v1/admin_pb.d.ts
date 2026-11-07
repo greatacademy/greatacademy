@@ -961,6 +961,46 @@ export declare type ListAdminsResponse = Message<"ga.admin.v1.ListAdminsResponse
 export declare const ListAdminsResponseSchema: GenMessage<ListAdminsResponse>;
 
 /**
+ * @generated from message ga.admin.v1.GrantPlanRequest
+ */
+export declare type GrantPlanRequest = Message<"ga.admin.v1.GrantPlanRequest"> & {
+  /**
+   * @generated from field: string email = 1;
+   */
+  email: string;
+
+  /**
+   * scope is a subject id, or "all".
+   *
+   * @generated from field: string scope = 2;
+   */
+  scope: string;
+
+  /**
+   * @generated from field: int32 days = 3;
+   */
+  days: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.GrantPlanRequest.
+ * Use `create(GrantPlanRequestSchema)` to create a new message.
+ */
+export declare const GrantPlanRequestSchema: GenMessage<GrantPlanRequest>;
+
+/**
+ * @generated from message ga.admin.v1.GrantPlanResponse
+ */
+export declare type GrantPlanResponse = Message<"ga.admin.v1.GrantPlanResponse"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.GrantPlanResponse.
+ * Use `create(GrantPlanResponseSchema)` to create a new message.
+ */
+export declare const GrantPlanResponseSchema: GenMessage<GrantPlanResponse>;
+
+/**
  * @generated from message ga.admin.v1.AddAdminRequest
  */
 export declare type AddAdminRequest = Message<"ga.admin.v1.AddAdminRequest"> & {
@@ -1274,6 +1314,16 @@ export declare const AdminService: GenService<{
     methodKind: "unary";
     input: typeof AddAdminRequestSchema;
     output: typeof AddAdminResponseSchema;
+  },
+  /**
+   * GrantPlan gives a person a plan for a number of days without payment, as for testers and the pilot.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.GrantPlan
+   */
+  grantPlan: {
+    methodKind: "unary";
+    input: typeof GrantPlanRequestSchema;
+    output: typeof GrantPlanResponseSchema;
   },
   /**
    * RemoveAdmin takes the role from someone else.
