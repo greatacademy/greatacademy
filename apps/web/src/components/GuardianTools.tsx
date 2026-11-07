@@ -7,7 +7,7 @@ import { useAccess } from "../lib/access.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { errorText, usePrivacyText } from "../lib/privacy-text.ts";
 import { privacy } from "../lib/rpc.ts";
-import { type AgeAnswer, CountrySelect } from "./AgeQuestion.tsx";
+import { type AgeAnswer, CountrySelect, MonthField } from "./AgeQuestion.tsx";
 import { field } from "./AuthForm.tsx";
 import { Button, Card, ErrorNote } from "./ui.tsx";
 
@@ -86,9 +86,6 @@ export function GuardianTools() {
       </Card>
     );
 
-  const months = Array.from({ length: 12 }, (_, i) =>
-    new Intl.DateTimeFormat(locale, { month: "long", timeZone: "UTC" }).format(Date.UTC(2000, i, 1)),
-  );
   return (
     <Card className="p-5">
       <form onSubmit={submitChild} className="space-y-3">
@@ -108,25 +105,7 @@ export function GuardianTools() {
           <span>{t.country}</span>
           <CountrySelect id="child-country" name="country" />
         </label>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{t.birthMonth}</span>
-            <select name="month" required defaultValue="" className={field}>
-              <option value="" disabled>
-                {t.choose}
-              </option>
-              {months.map((label, i) => (
-                <option key={label} value={i + 1}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{t.birthYear}</span>
-            <input name="year" type="number" required min={1900} max={2100} autoComplete="off" className={field} />
-          </label>
-        </div>
+        <MonthField />
         {add.isError && <ErrorNote message={errorText(add.error, locale, m.error)} />}
         {added && (
           <p role="status" className="text-sm text-good">

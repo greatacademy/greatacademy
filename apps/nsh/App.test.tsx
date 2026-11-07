@@ -95,9 +95,9 @@ const accessIs = (status: string) => ({ [`POST ${privacyUrl}/GetAccess`]: json({
 async function answerAge(app: Awaited<ReturnType<typeof open>>, year: string) {
   await app.press("label:Country or region");
   await app.press("text:United States");
-  await app.press("label:Month of birth");
-  await app.press("text:March");
-  await app.type("label:Year of birth", year);
+  await app.press("label:Month and year of birth");
+  await app.press(`text:${year}`);
+  await app.press("label:March");
   await app.press("text:Continue");
 }
 

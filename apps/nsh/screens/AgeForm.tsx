@@ -3,14 +3,13 @@ import type { AgeAnswer } from "../lib/auth.ts";
 import { errorText, m, regionName } from "../lib/i18n.ts";
 import { query } from "../lib/query.ts";
 import { privacy } from "../lib/rpc.ts";
-import { Action, Choice, ErrorNote, Field, Muted, Title } from "../lib/ui.tsx";
+import { Action, Choice, ErrorNote, MonthField, type MonthOfYear, Muted, Title } from "../lib/ui.tsx";
 
 /** AgeForm asks for the country and month and year of birth, with no default and no hint of why. */
 export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void> }) {
   const countries = query(["countries"], ({ signal }) => privacy.listCountries({}, { signal }));
   const country = signal<string | null>(null);
-  const month = signal<string | null>(null);
-  const year = signal("");
+  const born = signal<MonthOfYear | null>(null);
   const busy = signal(false);
   const error = signal("");
 
@@ -20,17 +19,13 @@ export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void> 
       .sort((a, b) => a.title.localeCompare(b.title)),
     { value: "other", title: m().otherCountry },
   ]);
-  const monthItems = Array.from({ length: 12 }, (_, i) => ({
-    value: String(i + 1),
-    title: new Intl.DateTimeFormat(undefined, { month: "long", timeZone: "UTC" }).format(Date.UTC(2000, i, 1)),
-  }));
-  const complete = () => country() !== null && month() !== null && /^\d{4}$/.test(year());
+  const complete = () => country() !== null && born() !== null;
 
   async function submit() {
     error.set("");
     busy.set(true);
     try {
-      await props.onAnswer({ country: country() ?? "", birthYear: Number(year()), birthMonth: Number(month()) });
+      await props.onAnswer({ country: country() ?? "", birthYear: born()?.year ?? 0, birthMonth: born()?.month ?? 0 });
     } catch (e) {
       error.set(errorText(e));
     } finally {
@@ -43,8 +38,7 @@ export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void> 
       <Title>{m().ageTitle}</Title>
       <Muted>{m().ageBody}</Muted>
       <Choice label={m().country} items={countryItems()} value={country()} onChange={(value) => country.set(value)} />
-      <Choice label={m().birthMonth} items={monthItems} value={month()} onChange={(value) => month.set(value)} />
-      <Field label={m().birthYear} value={year()} onChange={(value) => year.set(value)} keyboardType="number-pad" autoComplete="off" />
+      <MonthField label={m().birthMonth} value={born()} onChange={(value) => born.set(value)} />
       <If when={error()}>
         <ErrorNote message={error()} />
       </If>
