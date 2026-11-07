@@ -1,14 +1,15 @@
-import { DEFAULT_APPEARANCE, resolveColors } from "@ga/design";
+import { resolveColors } from "@ga/design";
 import { colorScheme, computed, effect, type JSX, type Resource, Scroll, signal, Text, untracked, View } from "nsh";
 import { Button, Input, Select } from "nsh/base";
 
 import { m } from "./i18n.ts";
 import { nav, WELCOME } from "./nav.ts";
 import { comeBack, failureOf, online } from "./net.ts";
+import { appearance } from "./prefs.ts";
 import { setToken } from "./session.ts";
 
-/** colors gives the design tokens as hex for the device's color scheme and the default appearance. */
-export const colors = computed(() => resolveColors(DEFAULT_APPEARANCE, colorScheme()));
+/** colors gives the design tokens as hex for the scheme shown and the appearance chosen on this device. */
+export const colors = computed(() => resolveColors(appearance(), colorScheme()));
 
 /** headerStyle colors the system header on iOS and Android, which on Android would otherwise stay light in the dark. */
 export const headerStyle = computed(() => ({
@@ -154,6 +155,79 @@ export function Choice(props: {
           </View>
         }
       />
+    </View>
+  );
+}
+
+/** Segmented picks one of a few values, all in view. */
+export function Segmented<T extends string>(props: {
+  label: string;
+  items: { value: T; title: string }[];
+  value: T;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <View style={{ gap: 6 }}>
+      <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>{props.label}</Text>
+      <View
+        role="radiogroup"
+        accessibilityLabel={props.label}
+        style={{ backgroundColor: colors().line, borderRadius: 10, flexDirection: "row", gap: 2, padding: 2 }}
+      >
+        <Each of={props.items}>
+          {(item) => (
+            <View
+              role="radio"
+              accessibilityState={{ checked: item().value === props.value }}
+              onPress={() => props.onChange(item().value)}
+              style={{
+                alignItems: "center",
+                backgroundColor: item().value === props.value ? colors().surface : "transparent",
+                borderRadius: 8,
+                flex: 1,
+                paddingVertical: 8,
+              }}
+            >
+              <Text style={{ color: colors().ink, fontSize: 14, fontWeight: item().value === props.value ? "600" : "400" }}>
+                {item().title}
+              </Text>
+            </View>
+          )}
+        </Each>
+      </View>
+    </View>
+  );
+}
+
+/** Row is a line in a settings list that leads somewhere or does something. */
+export function Row(props: { title: string; detail?: string; tone?: "bad"; onPress: () => void }) {
+  return (
+    <View
+      role="button"
+      onPress={props.onPress}
+      style={{ alignItems: "center", flexDirection: "row", gap: 12, minHeight: 44, paddingVertical: 10 }}
+    >
+      <View style={{ flex: 1, gap: 2 }}>
+        <Text style={{ color: props.tone === "bad" ? colors().bad : colors().ink, fontSize: 16 }}>{props.title}</Text>
+        <If when={props.detail}>
+          <Muted>{props.detail}</Muted>
+        </If>
+      </View>
+      <Text style={{ color: colors().muted, fontSize: 18 }}>›</Text>
+    </View>
+  );
+}
+
+/** Section is a titled group of a settings page. */
+export function Section(props: { title: string; children: JSX.Element }) {
+  return (
+    <View style={{ gap: 8 }}>
+      <Text style={{ color: colors().muted, fontSize: 13, fontWeight: "600" }}>{props.title}</Text>
+      <View
+        style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 12, padding: 16 }}
+      >
+        {props.children}
+      </View>
     </View>
   );
 }

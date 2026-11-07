@@ -61,6 +61,25 @@ export async function signUp(name: string, email: string, password: string, age:
   }
 }
 
+/** requestPasswordReset asks for an email with a link to choose a new password, which opens on the web. */
+export async function requestPasswordReset(email: string): Promise<void> {
+  const response = await post("/request-password-reset", { email: email.trim(), redirectTo: `${API_URL}/reset-password` });
+  if (!response.ok) {
+    const data = (await response.json().catch(() => ({}))) as { code?: string; message?: string };
+    throw new AuthError(data.code ?? "", data.message ?? "");
+  }
+}
+
+/** deleteAccount deletes the signed-in account for good, once its password is confirmed, and signs out on the device. */
+export async function deleteAccount(password: string): Promise<void> {
+  const response = await post("/delete-user", { password });
+  if (!response.ok) {
+    const data = (await response.json().catch(() => ({}))) as { code?: string; message?: string };
+    throw new AuthError(data.code ?? "", data.message ?? "");
+  }
+  setToken(null);
+}
+
 /** signOut ends the session on the server when it can, and always on the device. */
 export async function signOut(): Promise<void> {
   await post("/sign-out", {}).catch(() => undefined);

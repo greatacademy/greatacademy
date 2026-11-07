@@ -32,6 +32,7 @@ const network = {
 
 test("opens a course from the list", async () => {
   const app = await open("./App.tsx", { network });
+  await app.press("text:Browse the courses");
   await app.waitFor("text:2 topics");
   await app.press("text:Solve equations");
   await app.waitFor("text:· Linear equations");
@@ -40,12 +41,14 @@ test("opens a course from the list", async () => {
 
 test("follows a Chinese device", async () => {
   const app = await open("./App.tsx", { network, locale: "zh-Hans-CN" });
+  await app.press("text:先看看课程");
   await app.waitFor("text:2 个知识点");
   expect(app.texts()).toContain("代数");
 });
 
 test("offers a retry when the call fails", async () => {
   const app = await open("./App.tsx", { network: { [`POST ${url}/ListCourses`]: { status: 503, body: "{}" } } });
+  await app.press("text:Browse the courses");
   await app.waitFor("text:The server could not answer just now. Try again in a moment.");
   await app.waitFor("text:Retry");
 });
@@ -55,6 +58,7 @@ test("says when there is no connection, and loads once it is back", async () => 
   const app = await open("./App.tsx", {
     network: { ...network, [`POST ${url}/ListCourses`]: () => (down ? { error: "offline" } : network[`POST ${url}/ListCourses`]) },
   });
+  await app.press("text:Browse the courses");
   await app.waitFor("text:No connection");
   await app.waitFor("text:Offline. Trying again when the connection is back.");
   down = false;
@@ -89,8 +93,7 @@ test("signs in, keeps the token and sends it", async () => {
       },
     },
   });
-  await app.waitFor("text:2 topics");
-  await app.press("text:Sign in >> nth=0");
+  await app.press("text:I have an account");
   await app.type("label:Email or username", "a@example.test");
   await app.type("label:Password", "correct horse");
   await app.press("role:button[Sign in]");
@@ -111,8 +114,7 @@ test("words a wrong password", async () => {
       },
     },
   });
-  await app.waitFor("text:2 topics");
-  await app.press("text:Sign in >> nth=0");
+  await app.press("text:I have an account");
   await app.type("label:Email or username", "kid");
   await app.type("label:Password", "wrong-password");
   await app.press("role:button[Sign in]");
@@ -146,7 +148,7 @@ test("explains a market that is closed and can sign out", async () => {
   });
   await app.waitFor("text:Not available yet");
   await app.press("text:Sign out");
-  await app.waitFor("text:2 topics");
+  await app.waitFor("text:Get started");
   expect(app.storage()["ga.session"]).toBeUndefined();
 });
 
@@ -162,23 +164,19 @@ test("drops a session the server no longer accepts", async () => {
       },
     },
   });
-  await app.waitFor("text:Sign in");
+  await app.waitFor("text:Get started");
   await app.waitUntil(() => app.storage()["ga.session"] === undefined);
 });
 
 test("stops a child at sign-up, keeps no answer, and stays stopped", async () => {
   const child = { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_CHILD" }) };
   const app = await open("./App.tsx", { network: child });
-  await app.waitFor("text:2 topics");
-  await app.press("text:Sign in >> nth=0");
-  await app.press("text:Create account");
+  await app.press("text:Get started");
   await answerAge(app, "2018");
   await app.waitFor("text:Please ask an adult");
   expect(Object.keys(app.storage())).toEqual(["ga.sign-up-stopped"]);
   const again = await open("./App.tsx", { network: child, storage: app.storage() });
-  await again.waitFor("text:2 topics");
-  await again.press("text:Sign in >> nth=0");
-  await again.press("text:Create account");
+  await again.press("text:Get started");
   await again.waitFor("text:Please ask an adult");
 });
 
@@ -186,9 +184,7 @@ test("asks a teen for no real name", async () => {
   const app = await open("./App.tsx", {
     network: { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_TEEN" }) },
   });
-  await app.waitFor("text:2 topics");
-  await app.press("text:Sign in >> nth=0");
-  await app.press("text:Create account");
+  await app.press("text:Get started");
   await answerAge(app, "2011");
   await app.waitFor("label:Email");
   expect(app.texts()).not.toContain("Name");
@@ -213,9 +209,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
       },
     },
   });
-  await app.waitFor("text:2 topics");
-  await app.press("text:Sign in >> nth=0");
-  await app.press("text:Create account");
+  await app.press("text:Get started");
   await answerAge(app, "1990");
   await app.waitFor("label:Name");
   await app.type("label:Name", "Test");
@@ -370,4 +364,45 @@ test("takes math as plain text and skips in the diagnostic without feedback", as
     { sessionId: "s2", response: "3/4" },
     { sessionId: "s2", index: 1, skip: true },
   ]);
+});
+
+test("sends a link to reset a forgotten password", async () => {
+  const app = await open("./App.tsx", { network: { ...network, [`POST ${authUrl}/request-password-reset`]: json({ status: true }) } });
+  await app.press("text:I have an account");
+  await app.press("text:Forgot your password?");
+  await app.type("label:Email", "a@example.test");
+  await app.press("text:Send the link");
+  await app.waitFor("text:Check your email");
+  const call = app.requests().find((r) => r.url.endsWith("/request-password-reset"));
+  expect(JSON.parse(call?.body ?? "{}").email).toBe("a@example.test");
+});
+
+const accountUrl = "http://localhost:5173/api/rpc/ga.account.v1.AccountService";
+const settingsNetwork = {
+  ...network,
+  ...accessIs("ACCESS_STATUS_OK"),
+  [`POST ${accountUrl}/GetSettings`]: json({ username: "learner" }),
+  [`POST ${authUrl}/delete-user`]: json({ success: true }),
+};
+
+test("keeps the language chosen in the settings", async () => {
+  const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork });
+  await app.press("text:Account >> nth=0");
+  await app.press("text:简体中文");
+  await app.waitFor("text:语言");
+  expect(app.storage()["ga.language"]).toBe("zh-CN");
+  const again = await open("./App.tsx", { storage: app.storage(), network: settingsNetwork });
+  await again.waitFor("text:2 个知识点");
+});
+
+test("deletes the account after its password and a confirmation", async () => {
+  const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork });
+  app.onDialog(() => "Delete my account");
+  await app.press("text:Account >> nth=0");
+  await app.scroll("text:Contrast", 1500);
+  await app.press("text:Delete my account");
+  await app.type("label:Password", "correct horse");
+  await app.press("role:button[Delete my account]");
+  await app.waitFor("text:Get started");
+  expect(app.storage()["ga.session"]).toBeUndefined();
 });

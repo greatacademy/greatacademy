@@ -1,23 +1,28 @@
 import { AccessStatus } from "@ga/proto/privacy/v1/privacy_pb";
 import { effect, mount, View } from "nsh";
-import { NavStack } from "nsh/base";
+import { NavPage, NavStack } from "nsh/base";
 
 import { access } from "./lib/auth.ts";
-import { ACCESS, AGE, COURSES, nav } from "./lib/nav.ts";
+import { ACCESS, AGE, COURSES, ENTRY, nav, OPEN, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
+import { restorePrefs } from "./lib/prefs.ts";
 import { restoreToken, token } from "./lib/session.ts";
-import { OfflineNote } from "./lib/ui.tsx";
+import { colors, OfflineNote } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
-import { Account } from "./screens/Account.tsx";
 import { Age } from "./screens/Age.tsx";
 import { CourseOutline } from "./screens/CourseOutline.tsx";
 import { Courses } from "./screens/Courses.tsx";
+import { DeleteAccount } from "./screens/DeleteAccount.tsx";
+import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Player } from "./screens/Player.tsx";
+import { Settings } from "./screens/Settings.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
+import { Welcome } from "./screens/Welcome.tsx";
 
+void restorePrefs();
 void restoreToken();
 keepWindowLarge();
 watchForeground();
@@ -27,30 +32,41 @@ effect(() => {
   if (comeBack() > 0) access.refetch();
 });
 
-// Keeps the stack on what the account may see: the age question and the access page have no way past them.
+// Keeps the stack on what the account may see: someone signed out starts at the welcome page, someone signed in at
+// their learning, and the age question and the access page have no way past them.
 effect(() => {
-  const top = nav.routes().at(-1)?.name;
-  if (token() === null) {
-    if (top === "age" || top === "access" || top === "account" || top === "learn" || top === "session") nav.setRoutes([COURSES]);
+  const top = nav.routes().at(-1)?.name ?? "launch";
+  const signedIn = token();
+  if (signedIn === undefined) return;
+  if (signedIn === null) {
+    if (top === "launch" || !OPEN.has(top)) nav.setRoutes([WELCOME]);
     return;
   }
-  if (access.loading()) return;
+  if (access.loading() && !access()) return;
   const status = access()?.status;
   if (status === AccessStatus.NEEDS_AGE) {
     if (top !== "age") nav.setRoutes([AGE]);
   } else if (status === AccessStatus.MARKET_CLOSED || status === AccessStatus.NEEDS_GUARDIAN) {
     if (top !== "access") nav.setRoutes([ACCESS]);
-  } else if (status === AccessStatus.OK && (top === "age" || top === "access" || top === "sign-in" || top === "sign-up")) {
+  } else if (status === AccessStatus.OK && ENTRY.has(top)) {
     nav.setRoutes([COURSES]);
   }
 });
 
 function App() {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ backgroundColor: colors().page, flex: 1 }}>
       <NavStack state={nav} style={{ flex: 1 }}>
         {(route) => {
           switch (route.name) {
+            case "launch":
+              return (
+                <NavPage headerVisible={false}>
+                  <View style={{ backgroundColor: colors().page, flex: 1 }} />
+                </NavPage>
+              );
+            case "welcome":
+              return <Welcome />;
             case "courses":
               return <Courses />;
             case "course":
@@ -63,8 +79,12 @@ function App() {
               return <SignIn />;
             case "sign-up":
               return <SignUp />;
+            case "forgot-password":
+              return <ForgotPassword />;
             case "account":
-              return <Account />;
+              return <Settings />;
+            case "delete-account":
+              return <DeleteAccount />;
             case "age":
               return <Age />;
             case "access":

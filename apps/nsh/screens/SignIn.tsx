@@ -1,10 +1,9 @@
 import { signal, Text, View } from "nsh";
-import { Link, NavPage } from "nsh/base";
+import { NavPage } from "nsh/base";
 
 import { signIn } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
-import { API_URL } from "../lib/rpc.ts";
 import { Action, colors, ErrorNote, Field, FormPage, headerStyle, Muted } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
@@ -38,9 +37,9 @@ export function SignIn() {
           autoComplete="username"
         />
         <Field label={m().password} value={password()} onChange={(v) => password.set(v)} masked autoComplete="current-password" />
-        <Link href={`${API_URL}/forgot-password`}>
-          <Text style={{ color: colors().accent, fontSize: 14 }}>{m().forgotPassword}</Text>
-        </Link>
+        <Text role="button" onPress={() => nav.push({ name: "forgot-password" })} style={{ color: colors().accent, fontSize: 14 }}>
+          {m().forgotPassword}
+        </Text>
         <If when={error()}>
           <ErrorNote message={error()} />
         </If>
