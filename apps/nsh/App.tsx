@@ -3,13 +3,13 @@ import { computed, effect, mount, platform, View } from "nsh";
 import { NavPage, NavStack } from "nsh/base";
 
 import { access } from "./lib/auth.ts";
-import { ACCESS, AGE, ENTRY, HOME, nav, OPEN, WELCOME } from "./lib/nav.ts";
+import { ACCESS, AGE, ENTRY, HOME, nav, OPEN, tab, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
 import { watchQueries } from "./lib/query.ts";
 import { restoreToken, token } from "./lib/session.ts";
 import { showTray } from "./lib/tray.ts";
-import { barSpace, colors, OfflineNote, tabsShown } from "./lib/ui.tsx";
+import { barSpace, barsAway, colors, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Age } from "./screens/Age.tsx";
@@ -68,6 +68,12 @@ const inTabs = computed(() => {
 });
 effect(() => tabsShown.set(!platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session"));
 effect(() => showTray(inTabs()));
+// A page or tab the learner opens starts with the tab bar in sight.
+effect(() => {
+  nav.routes();
+  tab();
+  barsAway.set(false);
+});
 
 function App() {
   const sidebar = () => platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session";

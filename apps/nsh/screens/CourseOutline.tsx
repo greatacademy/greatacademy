@@ -5,7 +5,7 @@ import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { Action, colors, ErrorNote, headerStyle, Loaded } from "../lib/ui.tsx";
+import { Action, colors, ErrorNote, followScroll, headerStyle, Loaded } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 /** CourseOutline is a course's outline, and the way into studying it. */
@@ -38,7 +38,7 @@ export function CourseOutline(props: { courseId: string }) {
       <View style={{ flex: 1, backgroundColor: colors().page }}>
         <Loaded rpc={rpc}>
           {(data) => (
-            <Scroll style={{ flex: 1 }}>
+            <Scroll style={{ flex: 1 }} onScroll={followScroll()} scrollEventThrottle={16}>
               <View style={{ padding: 16, gap: 12 }}>
                 <Action label={m().enroll} disabled={busy()} onPress={() => void study()} />
                 <If when={error()}>

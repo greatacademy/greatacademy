@@ -5,7 +5,7 @@ import { TabBar } from "nsh/mobile";
 import logo from "../assets/logo.svg";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
-import { colors, headerStyle } from "../lib/ui.tsx";
+import { barStyle, colors, headerStyle } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
 import { Header } from "./Header.tsx";
 import { Progress } from "./Progress.tsx";
@@ -51,15 +51,16 @@ export function Home() {
 /** PhoneTabs is the system tab bar along the bottom of a phone: Material on Android, and on iOS the bar of the SDK the host links against (Liquid Glass from iOS 26). */
 export function PhoneTabs() {
   return (
-    <TabBar
-      items={TABS.map((id) => ({ title: tabTitle(id), icon: platform.select(icons[id]) ?? null }))}
-      selectedIndex={TABS.indexOf(tab())}
-      onChange={({ index }) => {
-        const id = TABS[index];
-        if (id) openTab(id);
-      }}
-      style={{ bottom: 0, left: 0, position: "absolute", right: 0 }}
-    />
+    <View style={barStyle()}>
+      <TabBar
+        items={TABS.map((id) => ({ title: tabTitle(id), icon: platform.select(icons[id]) ?? null }))}
+        selectedIndex={TABS.indexOf(tab())}
+        onChange={({ index }) => {
+          const id = TABS[index];
+          if (id) openTab(id);
+        }}
+      />
+    </View>
   );
 }
 

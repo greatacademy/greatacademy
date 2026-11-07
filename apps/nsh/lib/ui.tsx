@@ -7,12 +7,15 @@ import {
   type JSX,
   platform,
   type Resource,
+  reduceMotion,
   Scroll,
+  type ScrollEvent,
   safeAreaInsets,
   signal,
   Text,
   untracked,
   View,
+  type ViewStyle,
 } from "nsh";
 import { Button, Input, Select } from "nsh/base";
 
@@ -42,6 +45,44 @@ export const barSpace = computed(() => {
   if (platform.desktop || !tabsShown()) return 0;
   return (platform.os === "ios" ? 64 : 80) + insets().bottom;
 });
+
+/** barsAway is true while the learner scrolls down a page, which slides the tab bar out of sight; scrolling up, reaching the top or leaving the page brings it back. */
+export const barsAway = signal(false);
+
+/** BAR_STEP is how far a page scrolls one way before the tab bar follows, so a finger's wobble moves nothing. */
+const BAR_STEP = 12;
+
+/** followScroll makes a scroll view's `onScroll` hide the tab bar while its page scrolls down and show it as it scrolls up. Pages that fit on the screen keep it. */
+export function followScroll(): (event: ScrollEvent) => void {
+  let from = 0;
+  return ({ offset, contentSize, size }) => {
+    const y = offset.y;
+    if (y <= BAR_STEP) {
+      barsAway.set(false);
+      from = y;
+      return;
+    }
+    // Past the end the page bounces back: that is not the learner scrolling up.
+    if (y > contentSize.height - size.height) return;
+    if (Math.abs(y - from) < BAR_STEP) return;
+    barsAway.set(y > from);
+    from = y;
+  };
+}
+
+/** barStyle places the tab bar at the bottom, sliding it out of sight while `barsAway`, at once when the system asks for less motion. */
+export function barStyle(): ViewStyle {
+  return {
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+    right: 0,
+    transitionDuration: reduceMotion() ? 0 : 250,
+    transitionProperty: "translate",
+    transitionTimingFunction: "ease-out",
+    translate: [0, barsAway() ? barSpace() : 0],
+  };
+}
 
 /** Ring draws a share (0 to 1) as an arc on a track, around its children. */
 export function Ring(props: { share: number; size: number; color: string; children?: JSX.Element }) {
@@ -409,6 +450,8 @@ export function PullScroll(props: { onRefresh: () => void; refreshing: boolean; 
   return (
     <Scroll
       style={{ flex: 1 }}
+      onScroll={followScroll()}
+      scrollEventThrottle={16}
       refreshing={pulled() && props.refreshing}
       onRefresh={() => {
         pulled.set(true);

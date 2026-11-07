@@ -9,7 +9,7 @@ import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, lang
 import { dateOf, p } from "../lib/privacy-text.ts";
 import { query } from "../lib/query.ts";
 import { API_URL, account } from "../lib/rpc.ts";
-import { barSpace, colors, ErrorNote, Muted, Quiet, Row, Section, Segmented } from "../lib/ui.tsx";
+import { barSpace, colors, ErrorNote, followScroll, Muted, Quiet, Row, Section, Segmented } from "../lib/ui.tsx";
 
 function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean; onPress: () => void }) {
   const look = () => resolveColors({ ...appearance(), theme: props.scheme, [props.scheme]: props.palette } as Appearance, props.scheme);
@@ -106,7 +106,7 @@ export function Me() {
     if (action === "out") await signOut();
   };
   return (
-    <Scroll style={{ backgroundColor: colors().page, flex: 1 }}>
+    <Scroll style={{ backgroundColor: colors().page, flex: 1 }} onScroll={followScroll()} scrollEventThrottle={16}>
       <SettingsBody
         username={settings()?.username}
         guardians={settings()?.guardians.map((guardian) => guardian.name)}
