@@ -15,6 +15,7 @@
 | [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语、技术与部署 |
 | [docs/english-development-plan.zh-CN.md](docs/english-development-plan.zh-CN.md) | 构建英语的里程碑、文件、验收标准和关卡 |
 | [docs/minors-data.zh-CN.md](docs/minors-data.zh-CN.md) | 如何处理未成年人的文本和录音：首批市场、年龄段、同意、保存期限、供应商；等待法律审阅 |
+| [docs/admin.zh-CN.md](docs/admin.zh-CN.md) | `/admin` 管理后台：谁能进入、各页面、市场、AI 服务、供应商登记表和通知 |
 | [docs/the-math-academy-way.zh-CN.md](docs/the-math-academy-way.zh-CN.md)、[docs/math-academy-website.zh-CN.md](docs/math-academy-website.zh-CN.md) | 设计所依据的研究笔记 |
 
 ## 项目概述
