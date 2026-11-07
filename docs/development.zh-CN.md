@@ -116,6 +116,7 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - `apps/nsh/lib/rpc.ts` 中的 `API_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--api-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--api-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。
+- 应用启动时显示标志（`screens/Launch.tsx`），直到第一页能完整画出（已登录时是「学习」标签页的第一次应答），最多两秒，然后标志放大并淡出到页面；系统标签栏在它离开时出现。
 - 登录后的账号看到四个标签页：学习、进度、课程和我的（`screens/Home.tsx`）。「学习」像网页的学习页一样显示每周目标；「我的」打开账号自己的页面（`screens/Account.tsx`：个人资料和邮箱验证、每周目标、联赛用户名和是否参加、修改密码），列出监护人并可移除，也能删除账号，不需要网页。手机上它们在标签栏里，标签栏只在标签页显示时出现：iOS 上是系统标签栏（iOS 26 及以后是 Liquid Glass），Android 上是应用自己绘制的玻璃胶囊（`screens/Home.tsx` 的 `GlassTabs`）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
 - 设备上选择的配色也会成为 nsh 的 `primary`（`lib/ui.tsx` 的 `followPalette`，通过 `setTheme`），因此系统自带的控件，即 iOS 的标签栏和 Android 对话框的按钮，也会用它的强调色。
 - 在手机上，页面向下滚动时标签栏滑出屏幕，向上滚动、回到顶部或打开新页面时重新出现（`lib/ui.tsx` 的 `followScroll` 和 `barStyle`）。

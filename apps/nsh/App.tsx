@@ -21,6 +21,7 @@ import { DeleteAccount } from "./screens/DeleteAccount.tsx";
 import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { History } from "./screens/History.tsx";
 import { Home, PhoneTabs, Sidebar } from "./screens/Home.tsx";
+import { Launch, launchLeaving } from "./screens/Launch.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Learner } from "./screens/Learner.tsx";
 import { Learners } from "./screens/Learners.tsx";
@@ -68,7 +69,8 @@ const inTabs = computed(() => {
   const top = nav.routes().at(-1)?.name ?? "launch";
   return !!token() && access()?.status === AccessStatus.OK && !ENTRY.has(top);
 });
-effect(() => tabsShown.set(!platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session"));
+// The system tab bar would sit over the mark of the launch, so it comes as the mark leaves.
+effect(() => tabsShown.set(!platform.desktop && launchLeaving() && inTabs() && nav.routes().at(-1)?.name !== "session"));
 effect(() => showTray(inTabs()));
 // A page or tab the learner opens starts with the tab bar in sight.
 effect(() => {
@@ -143,6 +145,7 @@ function App() {
         <PhoneTabs />
       </If>
       <OfflineNote bottom={24 + barSpace()} />
+      <Launch />
     </View>
   );
 }

@@ -1,10 +1,11 @@
 import type { GetDashboardResponse, Task, XpSummary } from "@ga/proto/learning/v1/learning_pb";
-import { computed, signal, Text, View } from "nsh";
+import { computed, effect, signal, Text, View } from "nsh";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
 import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
+import { firstPageReady } from "./Launch.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
 
 /** LearnData is what the Learn tab shows: the learner's XP and each enrolled course's dashboard, with its title. */
@@ -154,6 +155,10 @@ export function LearnTab(props: { visible: () => boolean }) {
     () => ["learn"],
     (_, { signal: abort }) => loadLearn(abort),
   );
+  // The launch's mark leaves once this first page has its answer, or its error.
+  effect(() => {
+    if (learn() !== undefined || learn.error() !== undefined) firstPageReady.set(true);
+  });
   const busy = signal(false);
   const error = signal("");
   const start = async (courseId: string, task: Task) => {
