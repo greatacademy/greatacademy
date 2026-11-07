@@ -575,6 +575,13 @@ export declare type StartTaskRequest = Message<"ga.learning.v1.StartTaskRequest"
    * @generated from field: ga.learning.v1.Task task = 2;
    */
   task?: Task | undefined;
+
+  /**
+   * time_zone is the IANA zone whose day a guardian's time limit counts; empty means UTC.
+   *
+   * @generated from field: string time_zone = 3;
+   */
+  timeZone: string;
 };
 
 /**
