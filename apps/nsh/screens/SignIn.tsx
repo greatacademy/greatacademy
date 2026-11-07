@@ -1,0 +1,57 @@
+import { signal, Text, View } from "nsh";
+import { Link, NavPage } from "nsh/base";
+
+import { signIn } from "../lib/auth.ts";
+import { errorText, m } from "../lib/i18n.ts";
+import { nav } from "../lib/nav.ts";
+import { API_URL } from "../lib/rpc.ts";
+import { Action, colors, ErrorNote, Field, FormPage, Muted } from "../lib/ui.tsx";
+import { Header } from "./Header.tsx";
+
+/** SignIn starts a session with an email address, or a username for a child's account. */
+export function SignIn() {
+  const login = signal("");
+  const password = signal("");
+  const busy = signal(false);
+  const error = signal("");
+
+  async function submit() {
+    error.set("");
+    busy.set(true);
+    try {
+      await signIn(login(), password());
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  }
+
+  return (
+    <NavPage title={m().signIn} header={<Header title={m().signIn} />}>
+      <FormPage>
+        <Field
+          label={m().emailOrUsername}
+          value={login()}
+          onChange={(v) => login.set(v)}
+          keyboardType="email-address"
+          autoComplete="username"
+        />
+        <Field label={m().password} value={password()} onChange={(v) => password.set(v)} masked autoComplete="current-password" />
+        <Link href={`${API_URL}/forgot-password`}>
+          <Text style={{ color: colors().accent, fontSize: 14 }}>{m().forgotPassword}</Text>
+        </Link>
+        <If when={error()}>
+          <ErrorNote message={error()} />
+        </If>
+        <Action label={m().signIn} disabled={busy() || !login().trim() || !password()} onPress={submit} />
+        <View style={{ alignItems: "center", flexDirection: "row", gap: 6, justifyContent: "center" }}>
+          <Muted>{m().noAccount}</Muted>
+          <Text role="button" onPress={() => nav.replace({ name: "sign-up" })} style={{ color: colors().accent, fontSize: 14 }}>
+            {m().signUp}
+          </Text>
+        </View>
+      </FormPage>
+    </NavPage>
+  );
+}
