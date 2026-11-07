@@ -546,6 +546,9 @@ export function TopBar(props: { title: string }) {
 /** PULL is how far a page is pulled before it reads again, and the room its indicator keeps while it reads. */
 const PULL = 60;
 
+/** SETTLED is how long, in milliseconds, a fling must have stopped before a drag at the top counts as a pull: a swipe that stops a fling ends it the moment it starts. */
+const SETTLED = 150;
+
 /** SHOWN_FOR is how long the indicator spins at least, so a quick read is still seen to happen. */
 const SHOWN_FOR = 600;
 
@@ -644,9 +647,11 @@ export function PullScroll(props: {
   const pull = createAnimatedValue(0);
   const spinning = signal(false);
   const held = signal(false);
-  // A pull starts with the page at its top: a scroll that runs past the top, still dragged or flung, is not one, so the
-  // indicator shows only while a drag that began at the top lasts, or while the page reads.
+  // A pull starts with the page at rest at its top: a scroll that runs past the top, and a swipe that catches the page
+  // still moving or bouncing from a fling, are not one. The indicator shows only while a pull lasts or the page reads.
   const dragging = signal(false);
+  let moving = false;
+  let stoppedAt = 0;
   effect(() => {
     if (spinning() && !held() && !props.refreshing) spinning.set(false);
   });
@@ -656,8 +661,18 @@ export function PullScroll(props: {
       <Scroll
         style={{ flex: 1 }}
         onScroll={followScroll()}
-        onScrollDragStart={(e) => dragging.set(e.offset.y <= 1)}
+        onScrollDragStart={(e) => {
+          const y = e.offset.y;
+          dragging.set(!moving && Date.now() - stoppedAt > SETTLED && y >= -0.5 && y <= 1);
+        }}
         onScrollDragEnd={() => dragging.set(false)}
+        onMomentumStart={() => {
+          moving = true;
+        }}
+        onMomentumEnd={() => {
+          moving = false;
+          stoppedAt = Date.now();
+        }}
         scrollEventThrottle={16}
         pullValue={pull}
         refreshIndicator={{ height: PULL }}
