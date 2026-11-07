@@ -1,8 +1,8 @@
 import type { XpSummary } from "@ga/proto/learning/v1/learning_pb";
-import { computed, resource, Text, View } from "nsh";
-
+import { computed, Text, View } from "nsh";
 import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
+import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Card, cellStyle, colors, Grid, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
 
@@ -38,13 +38,17 @@ function Days(props: { xp: XpSummary | undefined }) {
 /** Progress is the Progress tab: XP over the last days and how far each enrolled course is. */
 export function Progress(props: { visible: () => boolean }) {
   const shown = computed(() => props.visible() || undefined);
-  const data = resource(shown, async (_, { signal }) => {
-    const [profile, list] = await Promise.all([
-      learning.getProfile({ timeZone: timeZone() }, { signal }),
-      catalog.listCourses({}, { signal }),
-    ]);
-    return { profile, list };
-  });
+  const data = query(
+    shown,
+    () => ["progress"],
+    async (_, { signal }) => {
+      const [profile, list] = await Promise.all([
+        learning.getProfile({ timeZone: timeZone() }, { signal }),
+        catalog.listCourses({}, { signal }),
+      ]);
+      return { profile, list };
+    },
+  );
   return (
     <View style={{ backgroundColor: colors().page, flex: 1 }}>
       <Loaded rpc={data} skeleton={<Skeleton rows={3} />}>

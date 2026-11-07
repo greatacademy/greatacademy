@@ -1,10 +1,10 @@
 import { Band, type Consent, type ScopeState } from "@ga/proto/privacy/v1/privacy_pb";
-import { resource, signal, Text, View } from "nsh";
+import { signal, Text, View } from "nsh";
 import { AlertDialog, NavPage } from "nsh/base";
-
 import { access } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
+import { query } from "../lib/query.ts";
 import { privacy } from "../lib/rpc.ts";
 import { Card, colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll, Quiet, Row, Section, Skeleton } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
@@ -75,7 +75,7 @@ export function ScopeRow(props: {
 
 /** Privacy is the learner's own privacy page: the age group, each purpose with its consent, and their data. */
 export function Privacy() {
-  const consents = resource(({ signal: abort }) => privacy.listConsents({}, { signal: abort }));
+  const consents = query(["consents"], ({ signal: abort }) => privacy.listConsents({}, { signal: abort }));
   const busy = signal(false);
   const note = signal("");
   const error = signal("");

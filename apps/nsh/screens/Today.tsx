@@ -1,8 +1,8 @@
 import type { GetDashboardResponse, Task, XpSummary } from "@ga/proto/learning/v1/learning_pb";
-import { computed, resource, signal, Text, View } from "nsh";
-
+import { computed, signal, Text, View } from "nsh";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
+import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Ring, Skeleton } from "../lib/ui.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
@@ -115,7 +115,11 @@ function CourseDay(props: { courseId: string; title: string; dash: GetDashboardR
 export function Today(props: { visible: () => boolean }) {
   // Read again whenever the learner comes back to the tab, as from a task.
   const shown = computed(() => props.visible() || undefined);
-  const today = resource(shown, (_, { signal: abort }) => loadToday(abort));
+  const today = query(
+    shown,
+    () => ["today"],
+    (_, { signal: abort }) => loadToday(abort),
+  );
   const busy = signal(false);
   const error = signal("");
   const start = async (courseId: string, task: Task) => {

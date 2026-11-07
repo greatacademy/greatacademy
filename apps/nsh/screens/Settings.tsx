@@ -1,13 +1,13 @@
 import { type Appearance, CONTRASTS, type ColorScheme, PALETTES, type Palette, resolveColors, THEMES } from "@ga/design";
 import { Band } from "@ga/proto/privacy/v1/privacy_pb";
-import { Clipboard, colorScheme, openUrl, resource, Scroll, signal, Text, View } from "nsh";
+import { Clipboard, colorScheme, openUrl, Scroll, signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
-
 import { access, signOut } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, languageChoice } from "../lib/prefs.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
+import { query } from "../lib/query.ts";
 import { API_URL, account } from "../lib/rpc.ts";
 import { barSpace, colors, ErrorNote, Muted, Quiet, Row, Section, Segmented } from "../lib/ui.tsx";
 
@@ -93,7 +93,7 @@ export function InviteGuardian() {
 
 /** Me is the Me tab: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
 export function Me() {
-  const settings = resource(({ signal }) => account.getSettings({}, { signal }));
+  const settings = query(["settings"], ({ signal }) => account.getSettings({}, { signal }));
   const set = (change: Partial<Appearance>) => chooseAppearance({ ...appearance(), ...change });
   const confirmSignOut = async () => {
     const { action } = await AlertDialog.show({

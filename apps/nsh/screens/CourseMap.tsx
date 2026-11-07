@@ -1,8 +1,8 @@
 import { TopicStatus } from "@ga/proto/learning/v1/learning_pb";
-import { computed, resource, Text, View } from "nsh";
+import { computed, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { m, tx } from "../lib/i18n.ts";
+import { query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
 import { Card, colors, headerStyle, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
@@ -49,7 +49,7 @@ function Dot(props: { status: StatusKey }) {
 
 /** CourseMap shows every topic of a course with the learner's status on it and the memory the engine estimates. */
 export function CourseMap(props: { courseId: string }) {
-  const data = resource(async ({ signal }) => {
+  const data = query(["map", props.courseId], async ({ signal }) => {
     const [course, progress] = await Promise.all([
       catalog.getCourse({ courseId: props.courseId }, { signal }),
       learning.getCourseProgress({ courseId: props.courseId }, { signal }),

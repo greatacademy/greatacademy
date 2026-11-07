@@ -6,6 +6,7 @@ import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
 import { netFetch } from "./net.ts";
+import { markChanged } from "./query.ts";
 import { token } from "./session.ts";
 
 /**
@@ -22,7 +23,19 @@ const withToken: Interceptor = (next) => (request) => {
   return next(request);
 };
 
-const transport = createConnectTransport({ baseUrl: `${API_URL}/api/rpc`, fetch: netFetch, interceptors: [withToken] });
+// A call that is not a read may change what pages showed, so their answers are read again when shown.
+const READS = /^(Get|List|Check)/;
+const marksChanges: Interceptor = (next) => async (request) => {
+  const response = await next(request);
+  if (!READS.test(request.method.name)) markChanged();
+  return response;
+};
+
+const transport = createConnectTransport({
+  baseUrl: `${API_URL}/api/rpc`,
+  fetch: netFetch,
+  interceptors: [withToken, marksChanges],
+});
 
 /** catalog is the client of the course catalog, which needs no account. */
 export const catalog: Client<typeof CatalogService> = createClient(CatalogService, transport);

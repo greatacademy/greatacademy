@@ -1,9 +1,9 @@
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
-import { computed, resource, Text, View } from "nsh";
+import { computed, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
+import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
 import { cellStyle, colors, Grid, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
@@ -54,9 +54,13 @@ const cardStyle = () => ({
 
 /** CourseList lists the courses: the learner's own first with how far they are, then the rest by shelf. `visible` says when the page shows, to read the learner's courses again. */
 export function CourseList(props: { visible: () => boolean }) {
-  const rpc = resource(({ signal }) => catalog.listCourses({}, { signal }));
+  const rpc = query(["courses"], ({ signal }) => catalog.listCourses({}, { signal }));
   const visible = computed(() => props.visible() && token());
-  const profile = resource(visible, (_, { signal }) => learning.getProfile({ timeZone: timeZone() }, { signal }));
+  const profile = query(
+    visible,
+    () => ["profile"],
+    (_, { signal }) => learning.getProfile({ timeZone: timeZone() }, { signal }),
+  );
   const mine = computed(() => (token() ? (profile()?.enrollments ?? []) : []));
   const enrolled = computed(() => new Set(mine().map((enrollment) => enrollment.courseId)));
   return (

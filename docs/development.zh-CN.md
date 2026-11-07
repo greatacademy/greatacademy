@@ -117,6 +117,7 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。
 - 登录后的账号看到四个标签页：今天、进度、课程和我的（`screens/Home.tsx`）。手机上它们在系统标签栏里，标签栏只在标签页显示时出现（iOS 26 及以后是 Liquid Glass，Android 上是 Material）；桌面上它们在侧边栏里，用 ⌘1 到 ⌘4（其他系统用 Ctrl）切换。做任务时，1 到 9 或 a 到 i 选择选项，Enter 提交，Escape 离开。
+- 页面通过 `query`（`lib/query.ts`）读取服务器，它像网页版一样把回答保存在 TanStack Query 的 `query-core` 里：再次打开的页面立即显示之前读到的内容，超过 30 秒后在后台重新读取。改变数据的调用会把所有回答标为过期，学习者离开任务后，栈上的页面会重新读取；登录或退出时全部清空。
 - 桌面上应用会在系统托盘放一个图标（`lib/tray.ts`、`assets/tray.svg`），它的菜单可以打开窗口或某个标签页，也可以退出。
 - `nsh test` 在无界面模式下按 iOS 运行，系统标签栏在那里不接受点按，所以切换标签页的测试用 `platform: "macos"` 打开应用，并使用侧边栏。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。

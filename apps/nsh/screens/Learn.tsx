@@ -1,9 +1,9 @@
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { computed, resource, signal, Text, View } from "nsh";
+import { computed, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
+import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll, Row, Section } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
@@ -11,11 +11,15 @@ import { TaskCard } from "./TaskCard.tsx";
 
 /** Learn is the learner's home in a course: the next task comes first, since it is what the learner came for. */
 export function Learn(props: { courseId: string }) {
-  const course = resource(({ signal: abort }) => catalog.getCourse({ courseId: props.courseId }, { signal: abort }));
+  const course = query(["course", props.courseId], ({ signal: abort }) =>
+    catalog.getCourse({ courseId: props.courseId }, { signal: abort }),
+  );
   // Read again whenever the learner comes back to this page from a task.
   const visible = computed(() => nav.routes().at(-1)?.name === "learn" && props.courseId);
-  const dash = resource(visible, (courseId, { signal: abort }) =>
-    learning.getDashboard({ courseId, timeZone: timeZone() }, { signal: abort }),
+  const dash = query(
+    visible,
+    (courseId) => ["dashboard", courseId],
+    (courseId, { signal: abort }) => learning.getDashboard({ courseId, timeZone: timeZone() }, { signal: abort }),
   );
   const busy = signal(false);
   const error = signal("");

@@ -1,13 +1,13 @@
-import { computed, resource, signal, View } from "nsh";
-
+import { computed, signal, View } from "nsh";
 import type { AgeAnswer } from "../lib/auth.ts";
 import { errorText, m, regionName } from "../lib/i18n.ts";
+import { query } from "../lib/query.ts";
 import { privacy } from "../lib/rpc.ts";
 import { Action, Choice, ErrorNote, Field, Muted, Title } from "../lib/ui.tsx";
 
 /** AgeForm asks for the country and month and year of birth, with no default and no hint of why. */
 export function AgeForm(props: { onAnswer: (answer: AgeAnswer) => Promise<void> }) {
-  const countries = resource(({ signal }) => privacy.listCountries({}, { signal }));
+  const countries = query(["countries"], ({ signal }) => privacy.listCountries({}, { signal }));
   const country = signal<string | null>(null);
   const month = signal<string | null>(null);
   const year = signal("");

@@ -1,8 +1,8 @@
-import { computed, resource, Scroll, signal, Text, View } from "nsh";
+import { computed, Scroll, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
+import { query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
 import { Action, colors, ErrorNote, headerStyle, Loaded } from "../lib/ui.tsx";
@@ -10,7 +10,7 @@ import { Header } from "./Header.tsx";
 
 /** CourseOutline is a course's outline, and the way into studying it. */
 export function CourseOutline(props: { courseId: string }) {
-  const rpc = resource(({ signal }) => catalog.getCourse({ courseId: props.courseId }, { signal }));
+  const rpc = query(["course", props.courseId], ({ signal }) => catalog.getCourse({ courseId: props.courseId }, { signal }));
   const title = computed(() => tx(rpc()?.course?.title));
   const busy = signal(false);
   const error = signal("");

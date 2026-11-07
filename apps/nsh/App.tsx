@@ -6,6 +6,7 @@ import { access } from "./lib/auth.ts";
 import { ACCESS, AGE, ENTRY, HOME, nav, OPEN, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
+import { watchQueries } from "./lib/query.ts";
 import { restoreToken, token } from "./lib/session.ts";
 import { showTray } from "./lib/tray.ts";
 import { barSpace, colors, OfflineNote, tabsShown } from "./lib/ui.tsx";
@@ -32,6 +33,7 @@ void restorePrefs();
 void restoreToken();
 keepWindowLarge();
 watchForeground();
+watchQueries();
 
 // What the account may do can change while the app is away, as when a guardian agrees.
 effect(() => {

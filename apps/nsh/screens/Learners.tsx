@@ -1,10 +1,10 @@
 import { Code, ConnectError } from "@connectrpc/connect";
-import { resource, signal, Text, View } from "nsh";
+import { signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
+import { query } from "../lib/query.ts";
 import { account, timeZone } from "../lib/rpc.ts";
 import { Action, Card, colors, ErrorNote, Field, headerStyle, Loaded, Muted, PullScroll, Row, Skeleton } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
@@ -12,7 +12,7 @@ import { openWeb } from "./Settings.tsx";
 
 /** Learners lists the learners the account follows as a guardian, and follows another with an invitation code. */
 export function Learners() {
-  const rpc = resource(({ signal: abort }) => account.listGuardedLearners({ timeZone: timeZone() }, { signal: abort }));
+  const rpc = query(["learners"], ({ signal: abort }) => account.listGuardedLearners({ timeZone: timeZone() }, { signal: abort }));
   const code = signal("");
   const busy = signal(false);
   const error = signal("");

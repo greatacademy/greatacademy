@@ -255,6 +255,9 @@ importers:
       '@ga/proto':
         specifier: workspace:*
         version: link:../../libs/proto
+      '@tanstack/query-core':
+        specifier: 5.105.0
+        version: 5.105.0
       katex:
         specifier: 0.16.47
         version: 0.16.47

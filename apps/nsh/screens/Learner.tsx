@@ -1,8 +1,8 @@
-import { computed, resource, signal, Text, View } from "nsh";
+import { computed, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
+import { query } from "../lib/query.ts";
 import { account, catalog, privacy, timeZone } from "../lib/rpc.ts";
 import {
   Card,
@@ -27,7 +27,7 @@ const LIMITS = ["0", "15", "30", "45", "60", "90"] as const;
 
 /** Learner is how a followed learner is doing, with what their guardian may agree to, limit and delete. */
 export function Learner(props: { learnerId: string }) {
-  const data = resource(async ({ signal: abort }) => {
+  const data = query(["learner", props.learnerId], async ({ signal: abort }) => {
     const [learner, consents, list] = await Promise.all([
       account.getGuardedLearner({ learnerId: props.learnerId, timeZone: timeZone() }, { signal: abort }),
       privacy.listConsents({ learnerId: props.learnerId }, { signal: abort }),

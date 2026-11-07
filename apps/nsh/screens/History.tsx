@@ -1,9 +1,9 @@
 import type { FinishedSession } from "@ga/proto/learning/v1/learning_pb";
-import { resource, Text, View } from "nsh";
+import { Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-
 import { m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
+import { query } from "../lib/query.ts";
 import { learning } from "../lib/rpc.ts";
 import { Card, colors, headerStyle, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
@@ -45,7 +45,7 @@ function Line(props: { session: FinishedSession }) {
 
 /** History lists the tasks a learner finished in a course, newest first; each opens its result. */
 export function History(props: { courseId: string }) {
-  const rpc = resource(({ signal }) => learning.listSessions({ courseId: props.courseId }, { signal }));
+  const rpc = query(["sessions", props.courseId], ({ signal }) => learning.listSessions({ courseId: props.courseId }, { signal }));
   return (
     <NavPage headerStyle={headerStyle()} title={m().history} header={<Header title={m().history} />}>
       <View style={{ backgroundColor: colors().page, flex: 1 }}>

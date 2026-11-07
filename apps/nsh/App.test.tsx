@@ -39,6 +39,26 @@ test("opens a course from the list", async () => {
   expect(app.texts()).toContain("Unit one");
 });
 
+test("shows a course opened again from what it read before, without asking the server", async () => {
+  let reads = 0;
+  const app = await open("./App.tsx", {
+    network: {
+      ...network,
+      [`POST ${url}/GetCourse`]: () => {
+        reads += 1;
+        return network[`POST ${url}/GetCourse`];
+      },
+    },
+  });
+  await app.press("text:Browse the courses");
+  await app.press("text:Solve equations");
+  await app.waitFor("text:· Linear equations");
+  await app.back();
+  await app.press("text:Solve equations");
+  expect(app.texts()).toContain("Unit one");
+  expect(reads).toBe(1);
+});
+
 test("follows a Chinese device", async () => {
   const app = await open("./App.tsx", { network, locale: "zh-Hans-CN" });
   await app.press("text:先看看课程");
