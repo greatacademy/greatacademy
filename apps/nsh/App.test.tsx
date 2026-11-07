@@ -211,3 +211,140 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
   await app.waitFor("text:Account >> nth=0");
   expect(app.shows("Before you start")).toBe(false);
 });
+
+const learningUrl = "http://localhost:5173/api/rpc/ga.learning.v1.LearningService";
+const lessonTask = { lesson: { topicId: "linear", title: text("Linear equations", "一次方程"), xp: 10, knowledgePoints: 1 } };
+const choiceProblem = {
+  prompt: text("Pick the even number", "选出偶数"),
+  input: { choice: { options: [text("Three", "三"), text("Four", "四")] } },
+};
+
+function signedIn(extra: Record<string, unknown>) {
+  return {
+    network: {
+      ...network,
+      [`POST ${privacyUrl}/GetAccess`]: json({ status: "ACCESS_STATUS_OK" }),
+      [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [{ courseId: "algebra", stats: { learned: 1, total: 2 } }], xp: {} }),
+      ...extra,
+    },
+    storage: { "ga.session": "tok.sig" },
+  };
+}
+
+test("studies a lesson from the course list to its result", async () => {
+  let done = false;
+  const session = { id: "s1", courseId: "algebra", task: lessonTask };
+  const app = await open(
+    "./App.tsx",
+    signedIn({
+      [`POST ${learningUrl}/GetDashboard`]: () =>
+        json({ courseId: "algebra", diagnosed: true, tasks: done ? [] : [lessonTask], stats: { learned: done ? 2 : 1, total: 2 }, xp: {} }),
+      [`POST ${learningUrl}/StartTask`]: json({
+        session: {
+          ...session,
+          question: {
+            index: 0,
+            intro: {
+              index: 0,
+              count: 1,
+              title: text("Even numbers", "偶数"),
+              explanation: text("Even numbers split in two.", "偶数能对半分。"),
+              example: { problem: choiceProblem, solution: text("Four splits in two.", "四能对半分。"), answer: "1" },
+            },
+            problem: choiceProblem,
+            feedback: true,
+            lesson: { knowledgePoint: 0, knowledgePoints: 1, streak: 0, needed: 1 },
+          },
+        },
+      }),
+      [`POST ${learningUrl}/GetSession`]: json({
+        session: {
+          ...session,
+          question: {
+            index: 0,
+            intro: {
+              index: 0,
+              count: 1,
+              title: text("Even numbers", "偶数"),
+              explanation: text("Even numbers split in two.", "偶数能对半分。"),
+              example: { problem: choiceProblem, solution: text("Four splits in two.", "四能对半分。"), answer: "1" },
+            },
+            problem: choiceProblem,
+            feedback: true,
+            lesson: { knowledgePoint: 0, knowledgePoints: 1, streak: 0, needed: 1 },
+          },
+        },
+      }),
+      [`POST ${learningUrl}/SubmitAnswer`]: () => {
+        done = true;
+        return json({
+          feedback: { correct: true, solution: text("Four splits in two.", "四能对半分。"), answer: "1" },
+          session: { ...session, answered: 1, result: { passed: true, correct: 1, asked: 1, xp: 10, fullXp: 10 } },
+        });
+      },
+    }),
+  );
+  await app.waitFor("text:My courses");
+  await app.press("text:1 / 2 topics");
+  await app.waitFor("text:Next up");
+  await app.press("role:button[Start]");
+  await app.waitFor("text:Even numbers split in two.");
+  await app.press("text:Show solution");
+  await app.waitFor("text:Four splits in two.");
+  await app.press("text:Start practicing");
+  await app.press("text:Four");
+  await app.press("role:button[Check]");
+  await app.waitFor("text:Correct!");
+  await app.press("role:button[Continue]");
+  await app.waitFor("text:Lesson complete");
+  await app.waitFor("text:+10 XP");
+  await app.press("text:Back to dashboard");
+  await app.waitFor("text:2 / 2 topics");
+  expect(app.shows("Nothing to do right now: every topic is learned and no review is due. Come back tomorrow.")).toBe(true);
+});
+
+test("takes math as plain text and skips in the diagnostic without feedback", async () => {
+  const diagnostic = { diagnostic: { maxQuestions: 5 } };
+  const session = { id: "s2", courseId: "algebra", task: diagnostic };
+  const answers: unknown[] = [];
+  const question = (index: number) => ({
+    index,
+    canSkip: true,
+    problem: { prompt: text(`Add ${index + 1}`, `加 ${index + 1}`), input: { math: {} } },
+  });
+  const app = await open(
+    "./App.tsx",
+    signedIn({
+      [`POST ${learningUrl}/GetDashboard`]: json({
+        courseId: "algebra",
+        diagnosed: false,
+        tasks: [diagnostic],
+        stats: { learned: 0, total: 2 },
+        xp: {},
+      }),
+      [`POST ${learningUrl}/StartTask`]: json({ session: { ...session, question: question(0) } }),
+      [`POST ${learningUrl}/GetSession`]: json({ session: { ...session, question: question(0) } }),
+      [`POST ${learningUrl}/SubmitAnswer`]: (request: { body: string }) => {
+        const body = JSON.parse(request.body) as { index?: number };
+        answers.push(body);
+        return (body.index ?? 0) === 0
+          ? json({ session: { ...session, answered: 1, question: question(1) } })
+          : json({ session: { ...session, answered: 2, result: { placed: 1, asked: 2 } } });
+      },
+    }),
+  );
+  await app.press("text:1 / 2 topics");
+  await app.press("role:button[Start]");
+  await app.waitFor("text:Add 1");
+  await app.press("text:Type it as plain text");
+  await app.type("label:Your answer", "3/4");
+  await app.press("role:button[Check]");
+  await app.waitFor("text:Add 2");
+  expect(app.shows("Correct!")).toBe(false);
+  await app.press("role:button[I don't know]");
+  await app.waitFor("text:Placement done: 1 topic marked as known.");
+  expect(answers).toEqual([
+    { sessionId: "s2", response: "3/4" },
+    { sessionId: "s2", index: 1, skip: true },
+  ]);
+});

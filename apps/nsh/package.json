@@ -20,6 +20,9 @@
     "@connectrpc/connect": "2.3.0",
     "@connectrpc/connect-web": "2.3.0",
     "@ga/design": "workspace:*",
-    "@ga/proto": "workspace:*"
+    "@ga/proto": "workspace:*",
+    "katex": "0.16.47",
+    "marked": "18.1.2",
+    "marked-katex-extension": "5.1.13"
   }
 }

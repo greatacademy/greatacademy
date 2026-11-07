@@ -4,6 +4,8 @@ import { createNavStack } from "nsh/base";
 export type Route =
   | { name: "courses" }
   | { name: "course"; courseId: string }
+  | { name: "learn"; courseId: string }
+  | { name: "session"; sessionId: string }
   | { name: "sign-in" }
   | { name: "sign-up" }
   | { name: "account" }

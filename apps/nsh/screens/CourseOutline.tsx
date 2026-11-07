@@ -1,15 +1,38 @@
-import { computed, resource, Scroll, Text, View } from "nsh";
+import { computed, resource, Scroll, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 
-import { m, tx } from "../lib/i18n.ts";
-import { catalog } from "../lib/rpc.ts";
-import { colors, Loaded, Muted } from "../lib/ui.tsx";
+import { errorText, m, tx } from "../lib/i18n.ts";
+import { nav } from "../lib/nav.ts";
+import { catalog, learning } from "../lib/rpc.ts";
+import { token } from "../lib/session.ts";
+import { Action, colors, ErrorNote, Loaded } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
-/** CourseOutline is a course's outline. Enrolling and learning stay on the web app for now. */
+/** CourseOutline is a course's outline, and the way into studying it. */
 export function CourseOutline(props: { courseId: string }) {
   const rpc = resource(({ signal }) => catalog.getCourse({ courseId: props.courseId }, { signal }));
   const title = computed(() => tx(rpc()?.course?.title));
+  const busy = signal(false);
+  const error = signal("");
+
+  // Enrolling twice is harmless, so a learner already in the course just goes on to it.
+  async function study() {
+    if (!token()) {
+      nav.push({ name: "sign-in" });
+      return;
+    }
+    busy.set(true);
+    error.set("");
+    try {
+      await learning.enroll({ courseId: props.courseId });
+      nav.push({ name: "learn", courseId: props.courseId });
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  }
+
   return (
     <NavPage title={title()} header={<Header title={title()} />}>
       <View style={{ flex: 1, backgroundColor: colors().page }}>
@@ -17,7 +40,10 @@ export function CourseOutline(props: { courseId: string }) {
           {(data) => (
             <Scroll style={{ flex: 1 }}>
               <View style={{ padding: 16, gap: 12 }}>
-                <Muted>{m().soon}</Muted>
+                <Action label={m().enroll} disabled={busy()} onPress={() => void study()} />
+                <If when={error()}>
+                  <ErrorNote message={error()} />
+                </If>
                 <Each of={data().course?.units ?? []}>
                   {(unit) => (
                     <View

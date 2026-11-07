@@ -37,6 +37,35 @@ export function Action(props: { label: string; disabled?: boolean; onPress: () =
   );
 }
 
+/** Quiet is a secondary action. */
+export function Quiet(props: { label: string; disabled?: boolean; onPress: () => void }) {
+  return (
+    <Button
+      disabled={props.disabled}
+      onPress={props.onPress}
+      style={{
+        alignItems: "center",
+        borderColor: colors().line,
+        borderRadius: 8,
+        borderWidth: 1,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      }}
+    >
+      <Text style={{ color: colors().ink, fontWeight: "500" }}>{props.label}</Text>
+    </Button>
+  );
+}
+
+/** Card is a raised group of content. */
+export function Card(props: { children: JSX.Element }) {
+  return (
+    <View style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 10, padding: 16 }}>
+      {props.children}
+    </View>
+  );
+}
+
 /** ErrorNote says what went wrong with a form. */
 export function ErrorNote(props: { message: string }) {
   return (
@@ -46,7 +75,8 @@ export function ErrorNote(props: { message: string }) {
   );
 }
 
-const fieldStyle = () => ({
+/** fieldStyle is the look of a text input. */
+export const fieldStyle = () => ({
   backgroundColor: colors().surface,
   borderColor: colors().line,
   borderRadius: 8,

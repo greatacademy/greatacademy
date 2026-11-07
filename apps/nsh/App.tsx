@@ -10,6 +10,8 @@ import { Account } from "./screens/Account.tsx";
 import { Age } from "./screens/Age.tsx";
 import { CourseOutline } from "./screens/CourseOutline.tsx";
 import { Courses } from "./screens/Courses.tsx";
+import { Learn } from "./screens/Learn.tsx";
+import { Player } from "./screens/Player.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
 
@@ -19,7 +21,7 @@ void restoreToken();
 effect(() => {
   const top = nav.routes().at(-1)?.name;
   if (token() === null) {
-    if (top === "age" || top === "access" || top === "account") nav.setRoutes([COURSES]);
+    if (top === "age" || top === "access" || top === "account" || top === "learn" || top === "session") nav.setRoutes([COURSES]);
     return;
   }
   if (access.loading()) return;
@@ -42,6 +44,10 @@ function App() {
             return <Courses />;
           case "course":
             return <CourseOutline courseId={route.courseId} />;
+          case "learn":
+            return <Learn courseId={route.courseId} />;
+          case "session":
+            return <Player sessionId={route.sessionId} />;
           case "sign-in":
             return <SignIn />;
           case "sign-up":
