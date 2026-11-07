@@ -7,6 +7,7 @@ import { ACCESS, AGE, ENTRY, HOME, nav, OPEN, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
 import { restoreToken, token } from "./lib/session.ts";
+import { showTray } from "./lib/tray.ts";
 import { barSpace, colors, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
@@ -64,6 +65,7 @@ const inTabs = computed(() => {
   return !!token() && access()?.status === AccessStatus.OK && !ENTRY.has(top);
 });
 effect(() => tabsShown.set(!platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session"));
+effect(() => showTray(inTabs()));
 
 function App() {
   const sidebar = () => platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session";
