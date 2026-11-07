@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { copyFileSync, cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -64,7 +64,25 @@ function compileAppleIcon(platform: string, devices: string[], minimum: string):
   return work;
 }
 
-/** finishIos puts the icon into a signed iOS app, signs it again and rebuilds the `.ipa`. */
+/** IOS_DESIGN_SDK is the SDK the iOS app reports linking against: UIKit draws Liquid Glass, as the tab bar's, only for apps that report iOS 26 or later. */
+const IOS_DESIGN_SDK = "26.0";
+
+/**
+ * reportNewSdk makes the app's executable report IOS_DESIGN_SDK when its host was linked against an older SDK, as
+ * Native Shell's 0.4.0 release was (iOS 18.5), since UIKit would otherwise keep the bars of iOS 18 on every newer
+ * system. A host built here with a current Xcode needs nothing. The app is signed again after this.
+ */
+function reportNewSdk(app: string): void {
+  const executable = join(app, run("plutil", "-extract", "CFBundleExecutable", "raw", join(app, "Info.plist")).trim());
+  const sdk = /\bsdk (\d+)/.exec(run("xcrun", "vtool", "-show-build", executable))?.[1];
+  console.log(`iOS host linked against SDK ${sdk ?? "unknown"}`);
+  if (Number(sdk) >= Number.parseInt(IOS_DESIGN_SDK, 10)) return;
+  const minimum = run("plutil", "-extract", "MinimumOSVersion", "raw", join(app, "Info.plist")).trim();
+  run("xcrun", "vtool", "-set-build-version", "ios", minimum, IOS_DESIGN_SDK, "-replace", "-output", `${executable}.sdk`, executable);
+  renameSync(`${executable}.sdk`, executable);
+}
+
+/** finishIos puts the icon into a signed iOS app, has it report the new SDK, signs it again and rebuilds the `.ipa`. */
 function finishIos(): void {
   const identity = peek("--sign");
   if (!identity) return;
@@ -73,6 +91,7 @@ function finishIos(): void {
   for (const file of ["Assets.car", "AppIcon60x60@2x.png", "AppIcon76x76@2x~ipad.png"]) {
     copyFileSync(join(icon, file), join(app, file));
   }
+  reportNewSdk(app);
   const entitlements = readdirSync(out).find((file) => file.endsWith(".entitlements"));
   if (!entitlements) throw new Error("nsh package left no entitlements to sign with");
   run("codesign", "--force", "--sign", identity, "--entitlements", join(out, entitlements), app);

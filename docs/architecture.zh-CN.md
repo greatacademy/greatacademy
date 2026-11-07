@@ -53,7 +53,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
 | 邮件 | **Resend**，Worker 通过 HTTP 调用，使用密钥 `RESEND_API_KEY` 和 `EMAIL_FROM` | 密码重置和邮箱验证，含两种语言；Worker 不需要 SMTP 客户端 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
-| 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，版本固定在 `mise.toml`），应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
+| 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，从 main 分支构建），应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
 | 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
 
 ## 3. 仓库结构

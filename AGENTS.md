@@ -47,7 +47,7 @@ tools/pilot/         Pilot report from real answers
 
 ## Commands
 
-Tool versions are pinned in `mise.toml`; `pnpm nx` runs Nx under `mise exec`.
+Tool versions are pinned in `mise.toml`; `pnpm nx` runs Nx under `mise exec`. Native Shell comes from its main branch instead ([docs/development.md](docs/development.md) §6).
 
 ```bash
 mise install

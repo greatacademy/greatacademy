@@ -29,7 +29,7 @@ Phases, their completion criteria and the current status. Mathematics is the fir
 - **Worker size and startup.** Subjects run in Workers of their own, each well under the 64 MiB limit, the 1 second startup limit and the 128 MB memory limit as far as local measurements show ([Architecture](architecture.md) §6.1). This runs in workerd locally; it has not yet been deployed to Cloudflare, so startup time, the latency of calls between Workers and memory there are unmeasured.
 - **Math in the native apps** goes through Native Shell's `WebView`, one for each text with math. This needs to be checked on low-end Android devices.
 - **The session token in the native apps** sits in Native Shell's `Storage`, a plain file with no keychain. This needs an answer before release.
-- **Native Shell is young.** Its releases are not signed yet and it is at 0.x, so `mise.toml` pins the version and upgrades are deliberate.
+- **Native Shell is young.** It is at 0.x and the app needs features that are only on its main branch, such as the tray and window sizes, so the app builds it from source; it moves under the app whenever it is updated, and a release with those features should be pinned in `mise.toml` once one exists.
 
 ## 3. Pilot
 

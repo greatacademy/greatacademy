@@ -53,7 +53,7 @@ This document describes the system as built: technology choices, repository stru
 | Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the native apps (bearer tokens) |
 | Email | **Resend**, called over HTTP from the Worker with the secrets `RESEND_API_KEY` and `EMAIL_FROM` | Password resets and address verification, in the learner's two languages; a Worker needs no SMTP client |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
-| Mobile and desktop | **[Native Shell](https://nsh.dev)** (`nsh`, pinned in `mise.toml`), with the app in TSX on its QuickJS runtime | One app with each platform's own views on iOS, Android, macOS, Windows and Linux; same contracts and tokens as the web app |
+| Mobile and desktop | **[Native Shell](https://nsh.dev)** (`nsh`, built from its main branch), with the app in TSX on its QuickJS runtime | One app with each platform's own views on iOS, Android, macOS, Windows and Linux; same contracts and tokens as the web app |
 | Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
 
 ## 3. Repository Structure

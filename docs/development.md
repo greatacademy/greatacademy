@@ -8,7 +8,7 @@ This document explains how to set up the repository, run the checks, and run the
 
 ## 1. Toolchain
 
-Tool versions are pinned in `mise.toml` (Node.js, pnpm, buf). Install [mise](https://mise.jdx.dev), then:
+Tool versions are pinned in `mise.toml` (Node.js, pnpm, buf). Install [mise](https://mise.jdx.dev), then the commands below. The native app needs Native Shell from its main branch, which mise does not provide (§6).
 
 ```bash
 mise install
@@ -93,7 +93,13 @@ To try it: create an account, answer the age question, choose "I'm learning myse
 
 ## 6. Running the Native App
 
-The Native Shell app calls the same Connect services as the web app, so start the web app first (§5). `mise install` provides `nsh`.
+The Native Shell app calls the same Connect services as the web app, so start the web app first (§5). It uses Native Shell built from its main branch, which needs Git, Rust and Xcode:
+
+```bash
+curl -fsSL https://nsh.dev/install.sh | sh -s -- --source   # Again to update
+```
+
+This installs `nsh` into `~/.local/bin`. A source build ships no prebuilt hosts, so the first run or package for each platform compiles that host, which takes several minutes; later ones reuse it. Build one platform at a time, since the builds share one directory and wait for each other.
 
 ```bash
 pnpm nx run nsh:dev                   # A window on this machine
@@ -110,12 +116,12 @@ pnpm nx run nsh:android               # An emulator or device; needs the Android
 - `API_URL` in `apps/nsh/lib/rpc.ts` is `http://localhost:5173` under `nsh run`, which the desktops and the iOS simulator reach directly. Android reaches it after `adb reverse tcp:5173 tcp:5173`. For an app packaged to an iPhone, start the web app with `DEV_HOST=0.0.0.0` and pass `--api-url http://<this machine's address>:5173`. The same works for Android: Native Shell allows plain HTTP only in development builds, so the packaging script allows it when `--api-url` starts with `http://`.
 - Screens live in `apps/nsh/screens`. `nsh:test` runs the app headless, with no simulator, and `nsh:typecheck` runs `nsh check`, which also generates `.nsh/types`.
 - The app signs in with a bearer token and keeps it in `Storage`.
-- A signed-in account sees four tabs, Today, Progress, Courses and Me (`screens/Home.tsx`): in the system tab bar on phones, which shows only while the tabs do (Material on Android; on iOS the bar of the SDK Native Shell's host links against, which for 0.4.0 is iOS 18.5, so Liquid Glass waits for a host built with the iOS 26 SDK), and in a sidebar on desktops, where ⌘1 to ⌘4 (Ctrl elsewhere) switch them. In a task, 1 to 9 or a to i pick a choice, Enter submits and Escape leaves.
-- On desktops the app puts an icon in the system tray (`lib/tray.ts`, `assets/tray.svg`) whose menu opens the window or a tab and quits. Native Shell added `Tray` after 0.4.0, so the app looks it up and shows no icon until `mise.toml` moves to a release that has it.
+- A signed-in account sees four tabs, Today, Progress, Courses and Me (`screens/Home.tsx`): in the system tab bar on phones, which shows only while the tabs do (Liquid Glass on iOS 26 and later, Material on Android), and in a sidebar on desktops, where ⌘1 to ⌘4 (Ctrl elsewhere) switch them. In a task, 1 to 9 or a to i pick a choice, Enter submits and Escape leaves.
+- On desktops the app puts an icon in the system tray (`lib/tray.ts`, `assets/tray.svg`) whose menu opens the window or a tab and quits.
 - `nsh test` runs headless as iOS, where the system tab bar takes no presses, so tests that switch tabs open the app with `platform: "macos"` and use the sidebar.
 - Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
 - `nsh test` does not run web views, so plots and the math field have no headless test.
 - A page in a web view that cannot load the KaTeX stylesheet shows each formula's MathML instead. On `--target web` the page is a sandboxed frame without an origin, so `/embed` allows any origin. Some embedded browsers, such as the Claude desktop app's browser pane, refuse every request from a sandboxed frame, so check math in a regular browser or on a native target.
-- A desktop window does not stay under 420 by 600 points (`lib/window.ts`): Native Shell has no minimum size for a TSX app, so the window moves back once a drag passes the limit.
+- A desktop window cannot be made smaller than 420 by 600 points (`lib/window.ts`).
 - `pnpm nx run nsh:package -- --target <target>` builds an installable app, whose identifier is `dev.greatacademy.app`, with its icon from `assets/`. It uses `https://greatacademy.dev` unless `--api-url` names another server, and passes other flags, such as `--sign` and `--profile`, on to `nsh package`. Nx runs its arguments through a shell, so when a value holds parentheses, as a signing identity does, run `node scripts/package.ts` with the same flags from `apps/nsh` under `mise exec`.
-- The icon follows the system's light or dark appearance: the background is white or the dark surface token. `nsh package` takes one icon, so the script then compiles `assets/AppIcon.icon` with `actool` for iOS and macOS (macOS keeps the `.icns` for older systems), adds `assets/icon-dark.png` as Android's night launcher icon, and signs the app again. Windows and Linux keep the light icon.
+- The icon follows the system's light or dark appearance: the background is white or the dark surface token. `nsh package` takes one icon, so the script then compiles `assets/AppIcon.icon` with `actool` for iOS and macOS (macOS keeps the `.icns` for older systems), adds `assets/icon-dark.png` as Android's night launcher icon, and signs the app again. Windows and Linux keep the light icon. An iOS host linked against an SDK older than iOS 26, as Native Shell's 0.4.0 release was, is made to report iOS 26 before signing, since UIKit draws Liquid Glass only for apps that do.
