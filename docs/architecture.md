@@ -131,7 +131,7 @@ The full model of content is in [Content](content.md). The derived learner state
 
 ## 5. Request Flow
 
-1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a bearer token in the native apps. better-auth itself is served under `/api/auth/*`.
+1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a signed bearer token in the native apps, which better-auth's `bearer` plugin issues in the `set-auth-token` header at sign-in. better-auth itself is served under `/api/auth/*`.
 2. The Worker authenticates with better-auth and loads the learner's state from PostgreSQL through Hyperdrive. Each request gets its own database client.
 3. The service calls the engine with:
    - the subject graph, read from the subject's manifest and cached per isolate;

@@ -131,7 +131,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 
 ## 5. 请求流程
 
-1. 客户端调用 `/api/rpc/ga.<domain>.v1.*` 下的 Connect 服务。Web 端携带会话 cookie，原生应用携带 bearer token。better-auth 本身位于 `/api/auth/*`。
+1. 客户端调用 `/api/rpc/ga.<domain>.v1.*` 下的 Connect 服务。Web 端携带会话 cookie，原生应用携带签名的 bearer token，由 better-auth 的 `bearer` 插件在登录时通过 `set-auth-token` 响应头签发。better-auth 本身位于 `/api/auth/*`。
 2. Worker 用 better-auth 完成认证，再通过 Hyperdrive 从 PostgreSQL 读取学习者状态。每个请求使用独立的数据库客户端。
 3. 服务调用引擎，传入：
    - 学科图谱（从学科的 manifest 读取，并按 isolate 缓存）；

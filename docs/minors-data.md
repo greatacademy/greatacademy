@@ -286,7 +286,7 @@ These are candidates we have read about, not choices:
 - **Staff access** to minors' text goes through an audited tool, not direct SQL in production.
 - **Withdrawing `basic`** stops study and empties the text of past answers. Progress stays until the account is deleted, or until the inactivity rule of §10 deletes it.
 
-**Gaps today.** Card verification is not built, and the native app (`apps/nsh`) has neither the age question nor the consent screens, so its accounts must answer on the web before they can study. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route, and no code calls a vendor yet: pi-ai and `tools/calibrate` arrive with E3.
+**Gaps today.** Card verification is not built, and the native app (`apps/nsh`) asks the age question and stops where the rules stop, but has no consent screens or settings, so those still happen on the web; it also keeps the session token in a plain file, which must change before release. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route, and no code calls a vendor yet: pi-ai and `tools/calibrate` arrive with E3.
 
 | Before | Needed | Size |
 | :--- | :--- | :--- |
