@@ -1,4 +1,4 @@
-import { computed, Scroll, signal, Text, View } from "nsh";
+import { computed, List, Scroll, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
@@ -44,7 +44,8 @@ export function CourseOutline(props: { courseId: string }) {
                 <If when={error()}>
                   <ErrorNote message={error()} />
                 </If>
-                <Each of={data().course?.units ?? []}>
+                {/* A list binds the units that show and the rest over the next frames, so the page opens without a pause. */}
+                <List viewport="parent" each={data().course?.units ?? []} estimatedItemSize={360} contentStyle={{ gap: 12 }}>
                   {(unit) => (
                     <View
                       style={{
@@ -69,7 +70,7 @@ export function CourseOutline(props: { courseId: string }) {
                       </Each>
                     </View>
                   )}
-                </Each>
+                </List>
               </View>
             </Scroll>
           )}

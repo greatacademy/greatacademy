@@ -1,5 +1,5 @@
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
-import { computed, Text, View } from "nsh";
+import { computed, List, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
@@ -41,6 +41,17 @@ function shelves(courses: readonly Course[]): { title: string; courses: Course[]
   const named = [...found].filter(([title]) => title).map(([title, list]) => ({ title, courses: list }));
   const rest = found.get("") ?? [];
   return rest.length > 0 ? [...named, { title: named.length > 0 ? m().otherCourses : "", courses: rest }] : named;
+}
+
+/** ShelfRow is one row of the course list: a shelf's title, or up to two of its courses, side by side in a wide window. */
+type ShelfRow = { title: string } | { courses: Course[] };
+
+/** shelfRows lays the shelves out as rows, so a list binds only the rows that show. */
+function shelfRows(courses: readonly Course[]): ShelfRow[] {
+  return shelves(courses).flatMap(({ title, courses: list }) => [
+    ...(title ? [{ title }] : []),
+    ...Array.from({ length: Math.ceil(list.length / 2) }, (_, at) => ({ courses: list.slice(at * 2, at * 2 + 2) })),
+  ]);
 }
 
 const cardStyle = () => ({
@@ -95,31 +106,39 @@ export function CourseList(props: { visible: () => boolean }) {
                   </Each>
                 </Grid>
               </If>
-              <Each of={shelves(data().courses.filter((course) => !enrolled().has(course.id)))} key={(shelf) => shelf.title}>
-                {(shelf) => (
-                  <View style={{ gap: 12, marginTop: 8 }}>
-                    <If when={shelf().title}>
-                      <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{shelf().title}</Text>
-                    </If>
-                    <Grid>
-                      <Each of={shelf().courses} key={(course) => course.id}>
-                        {(course) => (
-                          <View
-                            role="button"
-                            onPress={() => nav.push({ name: "course", courseId: course().id })}
-                            style={{ ...cardStyle(), ...cellStyle }}
-                          >
-                            <Muted>{tx(course().subjectTitle)}</Muted>
-                            <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(course().title)}</Text>
-                            <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(course().description)}</Text>
-                            <Muted>{m().topics(course().topicCount)}</Muted>
-                          </View>
-                        )}
-                      </Each>
-                    </Grid>
-                  </View>
+              <List
+                viewport="parent"
+                each={shelfRows(data().courses.filter((course) => !enrolled().has(course.id)))}
+                keyExtractor={(row) => ("title" in row ? `shelf:${row.title}` : row.courses.map((course) => course.id).join(","))}
+                estimatedItemSize={170}
+                contentStyle={{ gap: 12 }}
+              >
+                {(row) => (
+                  <If
+                    when={"title" in row() ? (row() as { title: string }).title : ""}
+                    else={
+                      <Grid>
+                        <Each of={"courses" in row() ? (row() as { courses: Course[] }).courses : []} key={(course) => course.id}>
+                          {(course) => (
+                            <View
+                              role="button"
+                              onPress={() => nav.push({ name: "course", courseId: course().id })}
+                              style={{ ...cardStyle(), ...cellStyle }}
+                            >
+                              <Muted>{tx(course().subjectTitle)}</Muted>
+                              <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(course().title)}</Text>
+                              <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(course().description)}</Text>
+                              <Muted>{m().topics(course().topicCount)}</Muted>
+                            </View>
+                          )}
+                        </Each>
+                      </Grid>
+                    }
+                  >
+                    {(title) => <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", marginTop: 8 }}>{title()}</Text>}
+                  </If>
                 )}
-              </Each>
+              </List>
             </View>
           </PullScroll>
         )}

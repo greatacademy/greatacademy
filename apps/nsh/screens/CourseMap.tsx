@@ -1,5 +1,5 @@
 import { TopicStatus } from "@ga/proto/learning/v1/learning_pb";
-import { computed, Text, View } from "nsh";
+import { computed, List, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
 import { query } from "../lib/query.ts";
@@ -89,7 +89,7 @@ export function CourseMap(props: { courseId: string }) {
                     </Each>
                   </View>
                 </Card>
-                <Each of={loaded().course.course?.units ?? []}>
+                <List viewport="parent" each={loaded().course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
                   {(unit) => (
                     <Card>
                       <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(unit().title)}</Text>
@@ -141,7 +141,7 @@ export function CourseMap(props: { courseId: string }) {
                       </Each>
                     </Card>
                   )}
-                </Each>
+                </List>
               </View>
             </PullScroll>
           )}
