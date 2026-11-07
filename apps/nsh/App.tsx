@@ -118,8 +118,9 @@ function App() {
           }
         }}
       </NavStack>
-      <If when={!platform.desktop}>
-        <PhoneTabs hidden={!inTabs()} />
+      {/* Android's tab bar stays on screen while hidden, so it is only there while the tabs show. */}
+      <If when={tabsShown()}>
+        <PhoneTabs />
       </If>
       <OfflineNote bottom={24 + barSpace()} />
     </View>

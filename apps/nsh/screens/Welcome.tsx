@@ -19,11 +19,15 @@ export function Welcome() {
           paddingTop: "calc(env(safe-area-inset-top) + 24)",
         }}
       >
-        <View style={{ alignSelf: "center", flex: 1, gap: 16, justifyContent: "center", maxWidth: 460, width: "100%" }}>
-          <Image src={logo} accessibilityLabel="Great Academy" style={{ height: 72, width: 72 }} />
-          <Text style={{ color: colors().muted, fontSize: 15 }}>{m().welcomeEyebrow}</Text>
-          <Text style={{ color: colors().ink, fontSize: 30, fontWeight: "700", lineHeight: 38 }}>{m().welcomeTitle}</Text>
-          <Text style={{ color: colors().ink, fontSize: 17, lineHeight: 25 }}>{m().welcomeBody}</Text>
+        <View
+          style={{ alignItems: "center", alignSelf: "center", flex: 1, gap: 16, justifyContent: "center", maxWidth: 460, width: "100%" }}
+        >
+          <Image src={logo} accessibilityLabel="Great Academy" style={{ height: 120, marginBottom: 8, width: 120 }} />
+          <Text style={{ color: colors().muted, fontSize: 15, textAlign: "center" }}>{m().welcomeEyebrow}</Text>
+          <Text style={{ color: colors().ink, fontSize: 30, fontWeight: "700", lineHeight: 38, textAlign: "center" }}>
+            {m().welcomeTitle}
+          </Text>
+          <Text style={{ color: colors().ink, fontSize: 17, lineHeight: 25, textAlign: "center" }}>{m().welcomeBody}</Text>
         </View>
         <View style={{ alignSelf: "center", gap: 12, maxWidth: 460, width: "100%" }}>
           <Action label={m().getStarted} onPress={() => nav.push({ name: "sign-up" })} />

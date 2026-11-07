@@ -48,11 +48,10 @@ export function Home() {
   );
 }
 
-/** PhoneTabs is the system tab bar along the bottom of a phone: Liquid Glass on iOS 26, Material on Android. */
-export function PhoneTabs(props: { hidden: boolean }) {
+/** PhoneTabs is the system tab bar along the bottom of a phone: Material on Android, and on iOS the bar of the SDK the host links against (Liquid Glass from iOS 26). */
+export function PhoneTabs() {
   return (
     <TabBar
-      hidden={props.hidden}
       items={TABS.map((id) => ({ title: tabTitle(id), icon: platform.select(icons[id]) ?? null }))}
       selectedIndex={TABS.indexOf(tab())}
       onChange={({ index }) => {
