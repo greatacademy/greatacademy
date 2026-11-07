@@ -111,6 +111,6 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。同意、监护人工具、进度地图和历史记录还不在应用里。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
-- `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。在 `--target web` 下，Web 视图中的页面运行在沙箱里，拿不到 KaTeX 样式表，所以要在原生目标上检查公式。
+- `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
+- Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
 - `nsh package apps/nsh --target <target>` 构建安装包。发布前需要生产环境的 `API_URL`，目前还没有设置。
-- 应用目前是骨架（路线图 P6）：登录、学习主页和学习播放器暂时只在 Web 应用中提供。

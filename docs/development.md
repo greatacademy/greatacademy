@@ -111,6 +111,6 @@ pnpm nx run nsh:android               # An emulator or device; needs the Android
 - Screens live in `apps/nsh/screens`. `nsh:test` runs the app headless, with no simulator, and `nsh:typecheck` runs `nsh check`, which also generates `.nsh/types`.
 - The app signs in with a bearer token and keeps it in `Storage`. Consent, guardian tools, the progress map and the history are not in the app yet.
 - Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
-- `nsh test` does not run web views, so plots and the math field have no headless test. On `--target web` a page in a web view is sandboxed and does not get the KaTeX stylesheet, so check math on a native target.
+- `nsh test` does not run web views, so plots and the math field have no headless test.
+- A page in a web view that cannot load the KaTeX stylesheet shows each formula's MathML instead. On `--target web` the page is a sandboxed frame without an origin, so `/embed` allows any origin. Some embedded browsers, such as the Claude desktop app's browser pane, refuse every request from a sandboxed frame, so check math in a regular browser or on a native target.
 - `nsh package apps/nsh --target <target>` builds an installable app. Shipping needs a production `API_URL`, which is not set yet.
-- The app is a skeleton (roadmap P6): signing in, the dashboard and the session player remain on the web app for now.
