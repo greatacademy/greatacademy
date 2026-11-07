@@ -1,4 +1,6 @@
 import { Popover } from "@base-ui/react/popover";
+import { Select } from "@base-ui/react/select";
+import { CaretDown, Check } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { type FormEvent, useId, useState } from "react";
 
@@ -6,7 +8,7 @@ import { useI18n } from "../lib/i18n.tsx";
 import { regionName, usePrivacyText } from "../lib/privacy-text.ts";
 import { privacy } from "../lib/rpc.ts";
 import { field } from "./AuthForm.tsx";
-import { Button, ErrorNote } from "./ui.tsx";
+import { Button, ErrorNote, menuItem, menuPopup } from "./ui.tsx";
 
 /** AgeAnswer is what the age question collects; it is sent to the server, which keeps only the band. */
 export interface AgeAnswer {
@@ -18,42 +20,44 @@ export interface AgeAnswer {
 /** Chevron is the arrow at the right of a field that opens a list, the same on every such field. */
 function Chevron() {
   return (
-    <span aria-hidden className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-muted">
-      ▾
+    <span aria-hidden className="pointer-events-none absolute top-1/2 right-3 flex -translate-y-1/2 text-muted">
+      <CaretDown size={12} weight="bold" />
     </span>
   );
 }
 
-/** CountrySelect picks a market or "other", with no default. */
-export function CountrySelect({ id, name, defaultValue = "" }: { id: string; name: string; defaultValue?: string }) {
+/** CountrySelect picks a market or "other", with no default, in a list like the language's that opens below it. */
+export function CountrySelect({ id, name, defaultValue }: { id: string; name: string; defaultValue?: string }) {
   const { locale } = useI18n();
   const t = usePrivacyText();
   const countries = useQuery({ queryKey: ["countries"], queryFn: () => privacy.listCountries({}), staleTime: Number.POSITIVE_INFINITY });
-  const names = (countries.data?.countries ?? [])
-    .map((code) => ({ code, label: regionName(code, locale) }))
-    .sort((a, b) => a.label.localeCompare(b.label, locale));
+  const names = [
+    ...(countries.data?.countries ?? [])
+      .map((code) => ({ value: code, label: regionName(code, locale) }))
+      .sort((a, b) => a.label.localeCompare(b.label, locale)),
+    { value: "other", label: t.otherCountry },
+  ];
   return (
-    <div className="relative">
-      <select
-        key={names.length}
-        id={id}
-        name={name}
-        required
-        defaultValue={defaultValue}
-        className={`${field} appearance-none pr-8 font-normal invalid:text-muted`}
-      >
-        <option value="" disabled>
-          {t.choose}
-        </option>
-        {names.map((n) => (
-          <option key={n.code} value={n.code}>
-            {n.label}
-          </option>
-        ))}
-        <option value="other">{t.otherCountry}</option>
-      </select>
-      <Chevron />
-    </div>
+    <Select.Root modal={false} id={id} name={name} required items={names} defaultValue={defaultValue ?? null}>
+      <Select.Trigger className={`${field} relative cursor-default pr-8 text-left font-normal`}>
+        <Select.Value placeholder={t.choose} className={(state) => (state.placeholder ? "text-muted" : "")} />
+        <Chevron />
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Positioner alignItemWithTrigger={false} side="bottom" align="start" sideOffset={4} className="z-30">
+          <Select.Popup className={`${menuPopup} !max-h-72 w-[var(--anchor-width)]`}>
+            {names.map((n) => (
+              <Select.Item key={n.value} value={n.value} className={menuItem}>
+                <Select.ItemText>{n.label}</Select.ItemText>
+                <Select.ItemIndicator className="flex text-accent">
+                  <Check size={14} weight="bold" />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
+    </Select.Root>
   );
 }
 
