@@ -4,6 +4,9 @@ import type { Db } from "./db.ts";
 import { user } from "./schema/auth.ts";
 import { type PaymentAccount, type PlanInterval, type PlanScope, payment, subscription } from "./schema/billing.ts";
 
+// A Date inside a sql template reaches postgres.js unconverted, which refuses it (PGlite does not); pass an ISO string and cast.
+const timestamp = (d: Date) => sql`${d.toISOString()}::timestamptz`;
+
 /** PlanRow is a stored plan. */
 export type PlanRow = typeof subscription.$inferSelect;
 
@@ -113,7 +116,7 @@ export async function assignPlan(db: Db, id: string, learnerId: string): Promise
 export async function extendPlan(db: Db, id: string, paidUntil: Date): Promise<void> {
   await db
     .update(subscription)
-    .set({ paidUntil: sql`greatest(${subscription.paidUntil}, ${paidUntil})` })
+    .set({ paidUntil: sql`greatest(${subscription.paidUntil}, ${timestamp(paidUntil)})` })
     .where(eq(subscription.id, id));
 }
 
@@ -150,7 +153,10 @@ export async function setCancelled(db: Db, id: string, at: Date | null): Promise
 export async function endPlan(db: Db, id: string, at: Date): Promise<void> {
   await db
     .update(subscription)
-    .set({ paidUntil: sql`least(${subscription.paidUntil}, ${at})`, cancelledAt: sql`coalesce(${subscription.cancelledAt}, ${at})` })
+    .set({
+      paidUntil: sql`least(${subscription.paidUntil}, ${timestamp(at)})`,
+      cancelledAt: sql`coalesce(${subscription.cancelledAt}, ${timestamp(at)})`,
+    })
     .where(eq(subscription.id, id));
 }
 
@@ -201,8 +207,8 @@ export async function markRefunded(db: Db, subscriptionId: string, paymentIntent
     .update(subscription)
     .set({
       refundedAt: at,
-      paidUntil: sql`least(${subscription.paidUntil}, ${at})`,
-      cancelledAt: sql`coalesce(${subscription.cancelledAt}, ${at})`,
+      paidUntil: sql`least(${subscription.paidUntil}, ${timestamp(at)})`,
+      cancelledAt: sql`coalesce(${subscription.cancelledAt}, ${timestamp(at)})`,
     })
     .where(eq(subscription.id, subscriptionId));
 }
