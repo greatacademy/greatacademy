@@ -2,7 +2,7 @@ import { and, asc, eq, gt, gte, isNull, lt, or, sql } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { user } from "./schema/auth.ts";
-import { type PaymentAccount, type PlanInterval, type PlanScope, payment, subscription } from "./schema/billing.ts";
+import { appleAccount, type PaymentAccount, type PlanInterval, type PlanScope, payment, subscription } from "./schema/billing.ts";
 
 // A Date inside a sql template reaches postgres.js unconverted, which refuses it (PGlite does not); pass an ISO string and cast.
 const timestamp = (d: Date) => sql`${d.toISOString()}::timestamptz`;
@@ -23,6 +23,7 @@ export interface NewPlan {
   readonly stripeSubscription?: string;
   readonly checkout?: string;
   readonly customer?: string;
+  readonly apple?: string;
   readonly paidUntil: Date;
   readonly at: Date;
 }
@@ -40,6 +41,7 @@ export async function addPlan(db: Db, p: NewPlan): Promise<PlanRow> {
       stripeSubscription: p.stripeSubscription ?? null,
       checkout: p.checkout ?? null,
       customer: p.customer ?? null,
+      apple: p.apple ?? null,
       paidUntil: p.paidUntil,
       createdAt: p.at,
     })
@@ -47,7 +49,9 @@ export async function addPlan(db: Db, p: NewPlan): Promise<PlanRow> {
     .returning();
   if (row) return row;
   const found =
-    (p.stripeSubscription && (await planByStripe(db, p.stripeSubscription))) || (p.checkout && (await planByCheckout(db, p.checkout)));
+    (p.stripeSubscription && (await planByStripe(db, p.stripeSubscription))) ||
+    (p.checkout && (await planByCheckout(db, p.checkout))) ||
+    (p.apple && (await planByApple(db, p.apple)));
   if (!found) throw new Error("a plan conflicted with none");
   return found;
 }
@@ -65,6 +69,41 @@ export async function planByStripe(db: Db, stripeSubscription: string): Promise<
 /** planByCheckout returns the plan a Checkout session bought. */
 export async function planByCheckout(db: Db, checkout: string): Promise<PlanRow | undefined> {
   return (await db.select().from(subscription).where(eq(subscription.checkout, checkout)))[0];
+}
+
+/** planByApple returns the plan of an App Store subscription's product, by "<original transaction>/<product>". */
+export async function planByApple(db: Db, apple: string): Promise<PlanRow | undefined> {
+  return (await db.select().from(subscription).where(eq(subscription.apple, apple)))[0];
+}
+
+/** applePlansOf returns the plans of an App Store subscription, one per product it moved through. */
+export async function applePlansOf(db: Db, originalTransaction: string): Promise<PlanRow[]> {
+  return db
+    .select()
+    .from(subscription)
+    .where(sql`${subscription.apple} like ${`${originalTransaction}/%`}`);
+}
+
+/**
+ * appleTokenOf returns a person's App Store account token, making it on first use, and keeps whom the purchase
+ * they start is for: a learner, or null for the next child they add.
+ */
+export async function appleTokenOf(db: Db, userId: string, learnerId: string | null): Promise<string> {
+  await db.insert(appleAccount).values({ userId, learnerId }).onConflictDoUpdate({ target: appleAccount.userId, set: { learnerId } });
+  const [row] = await db.select({ token: appleAccount.token }).from(appleAccount).where(eq(appleAccount.userId, userId));
+  if (!row) throw new Error("no App Store token");
+  return row.token;
+}
+
+/** userOfAppleToken returns the person an App Store account token names, and whom their last purchase was for. */
+export async function userOfAppleToken(db: Db, token: string): Promise<{ userId: string; learnerId: string | null } | undefined> {
+  if (!/^[0-9a-f-]{36}$/i.test(token)) return undefined;
+  return (
+    await db
+      .select({ userId: appleAccount.userId, learnerId: appleAccount.learnerId })
+      .from(appleAccount)
+      .where(eq(appleAccount.token, token.toLowerCase()))
+  )[0];
 }
 
 /** coveringScopes returns the scopes of a learner's plans paid past a time and not refunded. */
