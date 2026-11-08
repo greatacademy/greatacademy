@@ -25,16 +25,16 @@ Prices are per learner, in US dollars:
 - **Teens.** A teen signs up alone, as before, and cannot pay. Their account shows a code that invites a guardian ([Minors' Data](minors-data.md) §6). The guardian follows the teen with it and buys a plan for them.
 - The payer manages the plan: cancels it, asks for the refund, sees receipts. The learner sees only whether they are covered.
 
-## 3. Accounts and Methods
+## 3. Account and Methods
 
-Both Stripe accounts belong to the US company.
+Payments go through one Stripe account, named Great Academy, in the Stripe organization of the US company. Its own name gives payers the right name on Checkout, receipts and statements, and keeps its payments apart from the company's other products.
 
-| Stripe account | Methods | Renewal |
-| :--- | :--- | :--- |
-| **Main** | Cards and the wallets Stripe offers with them | Automatic, at the end of each month or year, until cancelled |
-| **Wallet** | Alipay and WeChat Pay only | None: the payment buys one month or one year, and paying again before it ends adds another |
+| Method | Renewal |
+| :--- | :--- |
+| **Card**, including the wallets Stripe offers with cards | Automatic, at the end of each month or year, until cancelled |
+| **Alipay or WeChat Pay** | None: the payment buys one month or one year, and paying again before it ends adds another |
 
-Stripe's Checkout cannot renew Alipay or WeChat Pay, so the wallet account sells periods. Seven days before a period ends, the payer gets an email: for a card, that it will renew and how to cancel; for a wallet, that access ends unless they pay again.
+Stripe's Checkout cannot renew Alipay or WeChat Pay, so they buy periods. Seven days before a period ends, the payer gets an email: for a card, that it will renew and how to cancel; for a wallet, that access ends unless they pay again.
 
 Prices are sent to Checkout as amounts, not as Stripe price ids, so the table above is the only source. Sales tax is computed by Stripe Tax where the company is registered; turning it on is a deployment setting.
 
@@ -52,11 +52,11 @@ The button stays off until all three are ticked. Checkout runs on Stripe's page 
 
 - **Cancel.** A card plan stops renewing and lasts to the end of the period that was paid. A wallet plan has nothing to cancel.
 - **Refund.** The first payment of a plan is refunded in full on request within 30 days of it, from the account's settings; access ends at once. Renewals and later wallet payments are not refunded, and nothing is prorated.
-- Payment details and card changes go through Stripe's customer portal on the main account.
+- Payment details and card changes go through Stripe's customer portal.
 
 ## 6. Access
 
-A learner may study a subject while a plan covering it is paid until a time after now. Every request that studies checks this beside the age and consent rules of `accessOf`; a guardian viewing a child's progress needs no plan. Billing applies only once the main account's secret key is set: locally, without it, everyone may study as before.
+A learner may study a subject while a plan covering it is paid until a time after now. Every request that studies checks this beside the age and consent rules of `accessOf`; a guardian viewing a child's progress needs no plan. Billing applies only once the account's secret key is set: locally, without it, everyone may study as before.
 
 Administrators can grant a plan for a set time without payment, for testers, reviewers and the English pilot ([Admin Console](admin.md)).
 
@@ -72,21 +72,20 @@ The apps sell nothing and show no prices or links to pay. A learner without a pl
 
 | Table | Holds |
 | :--- | :--- |
-| `subscription` | One row per plan: payer, learner (empty while waiting for a child), scope (a subject id or `all`), interval, account, Stripe subscription id, paid-until time, cancellation, refund, last reminder |
-| `payment` | One row per charge: plan, account, Stripe payment intent, amount, currency, time, whether it was the plan's first, refund time |
+| `subscription` | One row per plan: payer, learner (empty while waiting for a child), scope (a subject id or `all`), interval, how it is paid (card, wallet or grant), Stripe subscription id, paid-until time, cancellation, refund, last reminder |
+| `payment` | One row per charge: plan, how it was paid, Stripe payment intent, amount, currency, time, whether it was the plan's first, refund time |
 
-We store no card details. Stripe's events reach two webhooks, one per account, whose signatures are checked before anything is read.
+We store no card details. Stripe's events reach one webhook, whose signatures are checked before anything is read.
 
 ## 10. Setting Up
 
-The Worker reads five secrets (`apps/web/cloudflare.config.ts`):
+The Worker reads four secrets (`apps/web/cloudflare.config.ts`):
 
 | Secret | What it is |
 | :--- | :--- |
-| `STRIPE_SECRET_KEY` | The main account's secret key. Billing is on only when it and its webhook secret are set |
-| `STRIPE_WEBHOOK_SECRET` | The signing secret of the main account's endpoint `https://greatacademy.dev/api/stripe/main` |
-| `STRIPE_WALLET_SECRET_KEY` | The wallet account's secret key; without it the plans page offers cards only |
-| `STRIPE_WALLET_WEBHOOK_SECRET` | The signing secret of the wallet account's endpoint `https://greatacademy.dev/api/stripe/wallet` |
+| `STRIPE_SECRET_KEY` | The account's secret key. Billing is on only when it and the webhook secret are set |
+| `STRIPE_WEBHOOK_SECRET` | The signing secret of the endpoint `https://greatacademy.dev/api/stripe` |
+| `STRIPE_WALLET` | `on` once Alipay and WeChat Pay are turned on in the account; until then the plans page offers cards only |
 | `STRIPE_TAX` | `on` turns on Stripe Tax for card plans |
 
-The main endpoint listens for `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated` and `customer.subscription.deleted`; the wallet endpoint for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. The main account's customer portal allows updating the card and viewing invoices; cancelling and refunds go through Settings, which keeps the 30-day rule. In the wallet account, turn on Alipay and WeChat Pay. The Terms of Service are at `/legal/terms`. Deleting an account ends the card plans it pays for at once.
+The endpoint listens for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `invoice.paid`, `customer.subscription.updated` and `customer.subscription.deleted`. The customer portal allows updating the card and viewing invoices; cancelling and refunds go through Settings, which keeps the 30-day rule. Turn on Alipay and WeChat Pay in the account's payment methods before setting `STRIPE_WALLET`. The Terms of Service are at `/legal/terms`. Deleting an account ends the card plans it pays for at once.

@@ -11,8 +11,8 @@ export type PlanScope = string;
 /** PlanInterval is how long one payment lasts. */
 export type PlanInterval = "month" | "year";
 
-/** PaymentAccount is the Stripe account a plan is paid through: cards that renew, or Alipay and WeChat Pay by the period. */
-export type PaymentAccount = "main" | "wallet" | "grant";
+/** PaymentAccount is how a plan is paid: by card, which renews; by Alipay or WeChat Pay, one period at a time; or granted by an administrator. */
+export type PaymentAccount = "card" | "wallet" | "grant";
 
 /**
  * subscription is one plan for one learner, paid by an adult; see docs/billing.md §9.
@@ -30,9 +30,9 @@ export const subscription = pgTable(
     scope: text("scope").notNull().$type<PlanScope>(),
     interval: text("interval").notNull().$type<PlanInterval>(),
     account: text("account").notNull().$type<PaymentAccount>(),
-    /** stripeSubscription is the main account's subscription id; empty for wallet periods and grants. */
+    /** stripeSubscription is the card plan's Stripe subscription id; empty for wallet periods and grants. */
     stripeSubscription: text("stripe_subscription").unique(),
-    /** customer is the Stripe customer that pays a main-account plan, for its portal. */
+    /** customer is the Stripe customer that pays a card plan, for its portal. */
     customer: text("customer"),
     /** checkout is the Checkout session that bought the plan, so a repeated event changes nothing. */
     checkout: text("checkout").unique(),

@@ -52,8 +52,8 @@ const payments: Payments = {
   async endNow(sub) {
     calls.push(`end ${sub}`);
   },
-  async refund(account, pi) {
-    calls.push(`refund ${account} ${pi}`);
+  async refund(pi) {
+    calls.push(`refund ${pi}`);
   },
   async portal(customer, back) {
     return `https://billing.stripe.com/${customer}?back=${back}`;
@@ -160,7 +160,7 @@ describe("checkout", () => {
     const { url } = await bill("parent").startCheckout(base);
     expect(url).toBe("https://checkout.stripe.com/1");
     const [o] = opened;
-    expect(o?.account).toBe("main");
+    expect(o?.account).toBe("card");
     expect(o?.req.amount).toBe(49900);
     expect(o?.req.meta).toEqual({ payer: "parent", learner: await learnerOf("parent"), scope: "all", interval: "year" });
     expect(o?.req.successUrl).toBe(`${ORIGIN}/plans?checkout={CHECKOUT_SESSION_ID}`);
@@ -283,7 +283,7 @@ describe("plans", () => {
     expect(await code(bill("root").refundSubscription({ id: s!.id }))).toBe(Code.NotFound);
     now += 10 * DAY;
     await bill("parent").refundSubscription({ id: s!.id });
-    expect(calls.slice(2)).toEqual(["refund main pi_sub_1", "end sub_1"]);
+    expect(calls.slice(2)).toEqual(["refund pi_sub_1", "end sub_1"]);
     const [after] = (await bill("parent").listSubscriptions({})).subscriptions;
     expect(after).toMatchObject({ refunded: true, refundableUntil: 0n });
     expect(after?.paidUntil).toBe(BigInt(now));

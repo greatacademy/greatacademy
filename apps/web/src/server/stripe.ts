@@ -2,18 +2,15 @@ import { Code, ConnectError } from "@connectrpc/connect";
 import type { BillingEvent, CheckoutRequest, Payments, PlanMeta } from "@ga/api";
 import Stripe from "stripe";
 
-/** StripeKeys are the two Stripe accounts' secrets (docs/billing.md §3); the wallet account's are optional. */
+/** StripeKeys are the Stripe account's secrets and settings (docs/billing.md §3, §10). */
 export interface StripeKeys {
-  readonly main: string;
-  readonly mainWebhook: string;
-  readonly wallet?: string;
-  readonly walletWebhook?: string;
+  readonly secret: string;
+  readonly webhook: string;
+  /** wallet says Alipay and WeChat Pay are turned on in the account. */
+  readonly wallet: boolean;
   /** tax turns on Stripe Tax for card plans, once the company is registered somewhere. */
   readonly tax: boolean;
 }
-
-/** StripeAccount names one of the two Stripe accounts. */
-export type StripeAccount = "main" | "wallet";
 
 const client = (key: string) => new Stripe(key, { httpClient: Stripe.createFetchHttpClient() });
 const crypto = Stripe.createSubtleCryptoProvider();
@@ -28,20 +25,14 @@ function planMeta(md: Record<string, string> | null | undefined): PlanMeta | und
 
 const id = (x: string | { id: string } | null | undefined): string | undefined => (typeof x === "string" ? x : x?.id);
 
-/** stripePayments implements Payments with a card account that renews and a wallet account that sells periods. */
+/** stripePayments implements Payments with one Stripe account: cards renew, Alipay and WeChat Pay buy one period. */
 export function stripePayments(keys: StripeKeys): Payments {
-  const main = client(keys.main);
-  const wallet = keys.wallet ? client(keys.wallet) : undefined;
-  const of = (account: StripeAccount): Stripe => {
-    if (account === "main") return main;
-    if (!wallet) throw new ConnectError("Alipay and WeChat Pay are not set up", Code.FailedPrecondition);
-    return wallet;
-  };
+  const stripe = client(keys.secret);
 
   return {
-    wallet: wallet !== undefined,
+    wallet: keys.wallet,
 
-    async checkout(account, req: CheckoutRequest) {
+    async checkout(method, req: CheckoutRequest) {
       const md = metadata(req.meta);
       const common = {
         success_url: req.successUrl,
@@ -50,12 +41,15 @@ export function stripePayments(keys: StripeKeys): Payments {
         metadata: md,
         client_reference_id: req.meta.payer,
       };
+      if (method === "wallet" && !keys.wallet) throw new ConnectError("Alipay and WeChat Pay are not set up", Code.FailedPrecondition);
       const product = { name: req.productName };
       const session =
-        account === "main"
-          ? await main.checkout.sessions.create({
+        method === "card"
+          ? await stripe.checkout.sessions.create({
               ...common,
               mode: "subscription",
+              // Only a card renews, and its funding is what verifies a guardian (docs/billing.md §7).
+              allowed_payment_method_types: ["card"],
               line_items: [
                 {
                   quantity: 1,
@@ -74,7 +68,7 @@ export function stripePayments(keys: StripeKeys): Payments {
                 ...(req.customer && { customer_update: { address: "auto" as const } }),
               }),
             })
-          : await of("wallet").checkout.sessions.create({
+          : await stripe.checkout.sessions.create({
               ...common,
               mode: "payment",
               customer_email: req.email,
@@ -88,19 +82,19 @@ export function stripePayments(keys: StripeKeys): Payments {
     },
 
     async setRenewal(subscription, renew) {
-      await main.subscriptions.update(subscription, { cancel_at_period_end: !renew });
+      await stripe.subscriptions.update(subscription, { cancel_at_period_end: !renew });
     },
 
     async endNow(subscription) {
-      await main.subscriptions.cancel(subscription);
+      await stripe.subscriptions.cancel(subscription);
     },
 
-    async refund(account, paymentIntent) {
-      await of(account).refunds.create({ payment_intent: paymentIntent });
+    async refund(paymentIntent) {
+      await stripe.refunds.create({ payment_intent: paymentIntent });
     },
 
     async portal(customer, returnUrl) {
-      return (await main.billingPortal.sessions.create({ customer, return_url: returnUrl })).url;
+      return (await stripe.billingPortal.sessions.create({ customer, return_url: returnUrl })).url;
     },
   };
 }
@@ -113,25 +107,26 @@ export class WebhookError extends Error {}
  * into the billing events it means, asking Stripe for what the event leaves
  * out. Events that are not about our plans become none.
  */
-export async function readWebhook(keys: StripeKeys, account: StripeAccount, request: Request): Promise<BillingEvent[]> {
-  const key = account === "main" ? keys.main : keys.wallet;
-  const secret = account === "main" ? keys.mainWebhook : keys.walletWebhook;
+export async function readWebhook(keys: StripeKeys, request: Request): Promise<BillingEvent[]> {
   const signature = request.headers.get("stripe-signature");
-  if (!key || !secret || !signature) throw new WebhookError("not set up or not signed");
-  const stripe = client(key);
+  if (!signature) throw new WebhookError("not signed");
+  const stripe = client(keys.secret);
   let event: Stripe.Event;
   try {
-    event = await stripe.webhooks.constructEventAsync(await request.text(), signature, secret, undefined, crypto);
+    event = await stripe.webhooks.constructEventAsync(await request.text(), signature, keys.webhook, undefined, crypto);
   } catch {
     throw new WebhookError("bad signature");
   }
-  return account === "main" ? mainEvents(stripe, event) : walletEvents(event);
+  return events(stripe, event);
 }
 
-async function mainEvents(stripe: Stripe, event: Stripe.Event): Promise<BillingEvent[]> {
+async function events(stripe: Stripe, event: Stripe.Event): Promise<BillingEvent[]> {
   switch (event.type) {
-    case "checkout.session.completed": {
+    case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded": {
       const session = event.data.object;
+      if (session.mode === "payment") return walletPaid(session);
+      if (event.type !== "checkout.session.completed") return [];
       const meta = planMeta(session.metadata);
       const subscription = id(session.subscription);
       const customer = id(session.customer);
@@ -187,13 +182,11 @@ async function mainEvents(stripe: Stripe, event: Stripe.Event): Promise<BillingE
   }
 }
 
-function walletEvents(event: Stripe.Event): BillingEvent[] {
-  if (event.type !== "checkout.session.completed" && event.type !== "checkout.session.async_payment_succeeded") return [];
-  const session = event.data.object;
+function walletPaid(session: Stripe.Checkout.Session): BillingEvent[] {
   const meta = planMeta(session.metadata);
   const paymentIntent = id(session.payment_intent);
   // Alipay and WeChat Pay can finish later; the session completes unpaid, then succeeds.
-  if (session.mode !== "payment" || session.payment_status !== "paid" || !meta || !paymentIntent) return [];
+  if (session.payment_status !== "paid" || !meta || !paymentIntent) return [];
   return [
     {
       kind: "wallet-paid",

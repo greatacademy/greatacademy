@@ -27,14 +27,14 @@ Great Academy 只提供付费服务：只有订阅覆盖了某个学科，学习
 
 ## 3. 账户与支付方式
 
-两个 Stripe 账户都属于美国公司。
+付款通过一个 Stripe 账户进行，名为 Great Academy，属于美国公司的 Stripe 组织。独立的账户名让付款人在 Checkout、收据和账单上看到正确的名称，也让它的付款与公司的其他产品分开。
 
-| Stripe 账户 | 支付方式 | 续费 |
-| :--- | :--- | :--- |
-| **主账户** | 银行卡，以及 Stripe 随卡提供的钱包 | 自动续费，每月或每年到期时续费，直到取消 |
-| **钱包账户** | 只有支付宝和微信支付 | 不续费：一次付款购买一个月或一年，到期前再付一次就再延长一期 |
+| 支付方式 | 续费 |
+| :--- | :--- |
+| **银行卡**，包括 Stripe 随卡提供的钱包 | 自动续费，每月或每年到期时续费，直到取消 |
+| **支付宝或微信支付** | 不续费：一次付款购买一个月或一年，到期前再付一次就再延长一期 |
 
-Stripe Checkout 不能为支付宝或微信支付自动续费，所以钱包账户按期销售。到期前七天，付款人会收到邮件：银行卡方案说明将会续费以及如何取消；钱包方案说明除非再次付款，否则访问将结束。
+Stripe Checkout 不能为支付宝或微信支付自动续费，所以它们按期购买。到期前七天，付款人会收到邮件：银行卡方案说明将会续费以及如何取消；钱包方案说明除非再次付款，否则访问将结束。
 
 价格以金额而不是 Stripe 价格 id 传给 Checkout，所以上表是唯一的来源。销售税由 Stripe Tax 在公司已登记的地方计算；开启它是部署设置。
 
@@ -52,11 +52,11 @@ Stripe Checkout 不能为支付宝或微信支付自动续费，所以钱包账�
 
 - **取消。**银行卡方案停止续费，并持续到已付期限结束。钱包方案没有需要取消的东西。
 - **退款。**一个方案的首次付款，在付款后 30 天内可以从账号设置中申请全额退款；访问立即结束。续费和之后的钱包付款不退款，也不按比例退款。
-- 付款信息和换卡通过主账户的 Stripe 客户门户处理。
+- 付款信息和换卡通过 Stripe 客户门户处理。
 
 ## 6. 访问
 
-只要有覆盖某学科的方案已付至当前时间之后，学习者就可以学习该学科。每个学习请求都会在 `accessOf` 的年龄和同意规则之外检查这一点；监护人查看孩子的进度不需要方案。只有设置了主账户的密钥后计费才生效：在本地没有它时，所有人都可以像以前一样学习。
+只要有覆盖某学科的方案已付至当前时间之后，学习者就可以学习该学科。每个学习请求都会在 `accessOf` 的年龄和同意规则之外检查这一点；监护人查看孩子的进度不需要方案。只有设置了账户的密钥后计费才生效：在本地没有它时，所有人都可以像以前一样学习。
 
 管理员可以不经付款授予一段时间的方案，用于测试人员、审核人员和英语试点（[管理后台](admin.zh-CN.md)）。
 
@@ -72,21 +72,20 @@ Stripe Checkout 不能为支付宝或微信支付自动续费，所以钱包账�
 
 | 表 | 保存内容 |
 | :--- | :--- |
-| `subscription` | 每个方案一行：付款人、学习者（等待孩子时为空）、范围（学科 id 或 `all`）、周期、账户、Stripe 订阅 id、已付至时间、取消、退款、上次提醒 |
-| `payment` | 每笔扣款一行：方案、账户、Stripe payment intent、金额、币种、时间、是否为该方案的首次付款、退款时间 |
+| `subscription` | 每个方案一行：付款人、学习者（等待孩子时为空）、范围（学科 id 或 `all`）、周期、付款方式（银行卡、钱包或赠送）、Stripe 订阅 id、已付至时间、取消、退款、上次提醒 |
+| `payment` | 每笔扣款一行：方案、付款方式、Stripe payment intent、金额、币种、时间、是否为该方案的首次付款、退款时间 |
 
-我们不保存任何银行卡信息。Stripe 的事件到达两个 webhook，每个账户一个，读取任何内容前都先校验签名。
+我们不保存任何银行卡信息。Stripe 的事件到达一个 webhook，读取任何内容前都先校验签名。
 
 ## 10. 配置
 
-Worker 读取五个密钥（`apps/web/cloudflare.config.ts`）：
+Worker 读取四个密钥（`apps/web/cloudflare.config.ts`）：
 
 | 密钥 | 内容 |
 | :--- | :--- |
-| `STRIPE_SECRET_KEY` | 主账户的密钥。只有它和对应的 webhook 密钥都设置后计费才开启 |
-| `STRIPE_WEBHOOK_SECRET` | 主账户端点 `https://greatacademy.dev/api/stripe/main` 的签名密钥 |
-| `STRIPE_WALLET_SECRET_KEY` | 钱包账户的密钥；没有它时方案页面只提供银行卡 |
-| `STRIPE_WALLET_WEBHOOK_SECRET` | 钱包账户端点 `https://greatacademy.dev/api/stripe/wallet` 的签名密钥 |
+| `STRIPE_SECRET_KEY` | 账户的密钥。只有它和 webhook 密钥都设置后计费才开启 |
+| `STRIPE_WEBHOOK_SECRET` | 端点 `https://greatacademy.dev/api/stripe` 的签名密钥 |
+| `STRIPE_WALLET` | 账户开通支付宝和微信支付后设为 `on`；在此之前方案页面只提供银行卡 |
 | `STRIPE_TAX` | 为 `on` 时为银行卡方案开启 Stripe Tax |
 
-主账户端点监听 `checkout.session.completed`、`invoice.paid`、`customer.subscription.updated` 和 `customer.subscription.deleted`；钱包账户端点监听 `checkout.session.completed` 和 `checkout.session.async_payment_succeeded`。主账户的客户门户允许更换银行卡和查看发票；取消和退款通过“设置”进行，以保证 30 天规则。在钱包账户中开通支付宝和微信支付。服务条款在 `/legal/terms`。删除账号会立即结束其付费的银行卡方案。
+端点监听 `checkout.session.completed`、`checkout.session.async_payment_succeeded`、`invoice.paid`、`customer.subscription.updated` 和 `customer.subscription.deleted`。客户门户允许更换银行卡和查看发票；取消和退款通过“设置”进行，以保证 30 天规则。设置 `STRIPE_WALLET` 之前，先在账户的支付方式中开通支付宝和微信支付。服务条款在 `/legal/terms`。删除账号会立即结束其付费的银行卡方案。

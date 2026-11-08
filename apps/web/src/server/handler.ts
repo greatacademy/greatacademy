@@ -31,7 +31,7 @@ import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
 import { childAccounts, createAuth } from "./auth.ts";
 import { billingEmail, emailSender, privacyEmail } from "./email.ts";
-import { readWebhook, type StripeAccount, type StripeKeys, stripePayments, WebhookError } from "./stripe.ts";
+import { readWebhook, type StripeKeys, stripePayments, WebhookError } from "./stripe.ts";
 
 /** RPC_PREFIX is where the Connect services are mounted. */
 export const RPC_PREFIX = "/api/rpc";
@@ -65,14 +65,13 @@ const notify: Notify = async (to, kind) => {
   }
 };
 
-/** stripeKeys are the Stripe accounts' secrets, or undefined while billing is off. */
+/** stripeKeys are the Stripe account's secrets and settings, or undefined while billing is off. */
 const stripeKeys = (): StripeKeys | undefined =>
   env.STRIPE_SECRET_KEY && env.STRIPE_WEBHOOK_SECRET
     ? {
-        main: env.STRIPE_SECRET_KEY,
-        mainWebhook: env.STRIPE_WEBHOOK_SECRET,
-        ...(env.STRIPE_WALLET_SECRET_KEY &&
-          env.STRIPE_WALLET_WEBHOOK_SECRET && { wallet: env.STRIPE_WALLET_SECRET_KEY, walletWebhook: env.STRIPE_WALLET_WEBHOOK_SECRET }),
+        secret: env.STRIPE_SECRET_KEY,
+        webhook: env.STRIPE_WEBHOOK_SECRET,
+        wallet: env.STRIPE_WALLET === "on",
         tax: env.STRIPE_TAX === "on",
       }
     : undefined;
@@ -88,8 +87,8 @@ const stripe = (): Payments | undefined => {
   return payments ?? undefined;
 };
 
-/** WEBHOOKS are where each Stripe account sends its events. */
-const WEBHOOKS: Record<string, StripeAccount> = { "/api/stripe/main": "main", "/api/stripe/wallet": "wallet" };
+/** WEBHOOK is where the Stripe account sends its events. */
+const WEBHOOK = "/api/stripe";
 
 let loaded: ReadonlyMap<string, UniversalHandler> | undefined;
 
@@ -128,8 +127,7 @@ export async function handleApi(request: Request): Promise<Response> {
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
     const pay = stripe();
-    const account = WEBHOOKS[url.pathname];
-    if (account) return await webhook(conn.db, account, request);
+    if (url.pathname === WEBHOOK) return await webhook(conn.db, request);
     const endPlans = async (userId: string) => {
       if (pay) await endPlansOf(conn.db, pay, userId, Date.now());
     };
@@ -150,16 +148,16 @@ export async function handleApi(request: Request): Promise<Response> {
   }
 }
 
-/** webhook records a Stripe account's event; a failure answers 500 so that Stripe sends it again. */
-async function webhook(db: Parameters<typeof applyBillingEvent>[0], account: StripeAccount, request: Request): Promise<Response> {
+/** webhook records a Stripe event; a failure answers 500 so that Stripe sends it again. */
+async function webhook(db: Parameters<typeof applyBillingEvent>[0], request: Request): Promise<Response> {
   const keys = stripeKeys();
   if (request.method !== "POST" || !keys) return new Response("Not Found", { status: 404 });
   try {
-    for (const e of await readWebhook(keys, account, request)) await applyBillingEvent(db, e, Date.now());
+    for (const e of await readWebhook(keys, request)) await applyBillingEvent(db, e, Date.now());
     return new Response("ok");
   } catch (e) {
     if (e instanceof WebhookError) return new Response("Bad Request", { status: 400 });
-    console.error(`stripe ${account} webhook failed`, e instanceof Error ? e.message : "");
+    console.error("stripe webhook failed", e instanceof Error ? e.message : "");
     return new Response("Internal Server Error", { status: 500 });
   }
 }

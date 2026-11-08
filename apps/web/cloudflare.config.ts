@@ -28,12 +28,11 @@ export default defineConfig({
       GUARDIAN_FORMS: bindings.r2({ name: "ga-guardian-forms" }),
       // Encrypts AI vendors' API keys; the database never sees it. Locally from .dev.vars.
       AI_KEYS_SECRET: bindings.secret(),
-      // The main Stripe account, for cards; without its key billing is off and anyone can study (docs/billing.md §3, §6).
+      // The Stripe account; without its key billing is off and anyone can study (docs/billing.md §3, §6).
       STRIPE_SECRET_KEY: bindings.secret(),
       STRIPE_WEBHOOK_SECRET: bindings.secret(),
-      // The second Stripe account, for Alipay and WeChat Pay only; optional.
-      STRIPE_WALLET_SECRET_KEY: bindings.secret(),
-      STRIPE_WALLET_WEBHOOK_SECRET: bindings.secret(),
+      // "on" once Alipay and WeChat Pay are turned on in the account.
+      STRIPE_WALLET: bindings.secret(),
       // "on" turns on Stripe Tax for card plans.
       STRIPE_TAX: bindings.secret(),
     },

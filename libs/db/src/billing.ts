@@ -54,7 +54,7 @@ export async function planById(db: Db, id: string): Promise<PlanRow | undefined>
   return (await db.select().from(subscription).where(eq(subscription.id, id)))[0];
 }
 
-/** planByStripe returns the plan of a main-account Stripe subscription. */
+/** planByStripe returns the plan of a card plan's Stripe subscription. */
 export async function planByStripe(db: Db, stripeSubscription: string): Promise<PlanRow | undefined> {
   return (await db.select().from(subscription).where(eq(subscription.stripeSubscription, stripeSubscription)))[0];
 }
@@ -217,7 +217,7 @@ export async function plansToRemind(db: Db, from: Date, to: Date): Promise<PlanR
         gte(subscription.paidUntil, from),
         lt(subscription.paidUntil, to),
         isNull(subscription.refundedAt),
-        or(eq(subscription.account, "main"), eq(subscription.account, "wallet")),
+        or(eq(subscription.account, "card"), eq(subscription.account, "wallet")),
         or(isNull(subscription.remindedFor), sql`${subscription.remindedFor} <> ${subscription.paidUntil}`),
       ),
     );
@@ -231,12 +231,12 @@ export async function markPlanReminded(db: Db, id: string): Promise<void> {
     .where(eq(subscription.id, id));
 }
 
-/** customerOf returns the Stripe customer of a person's newest main-account plan. */
+/** customerOf returns the Stripe customer of a person's newest card plan. */
 export async function customerOf(db: Db, payerId: string): Promise<string | undefined> {
   const rows = await db
     .select({ customer: subscription.customer })
     .from(subscription)
-    .where(and(eq(subscription.payerId, payerId), eq(subscription.account, "main"), sql`${subscription.customer} is not null`))
+    .where(and(eq(subscription.payerId, payerId), eq(subscription.account, "card"), sql`${subscription.customer} is not null`))
     .orderBy(sql`${subscription.createdAt} desc`)
     .limit(1);
   return rows[0]?.customer ?? undefined;

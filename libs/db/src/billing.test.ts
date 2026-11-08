@@ -38,7 +38,7 @@ describe("billing", () => {
       learnerId: learner,
       scope: "math",
       interval: "month",
-      account: "main",
+      account: "card",
       stripeSubscription: "sub_1",
       paidUntil: new Date(T + 30 * DAY),
       at: new Date(T),
@@ -62,7 +62,7 @@ describe("billing", () => {
     const a = await plan();
     const charge = {
       subscriptionId: a.id,
-      account: "main" as const,
+      account: "card" as const,
       paymentIntent: "pi_1",
       amount: 1900,
       currency: "usd",

@@ -272,7 +272,7 @@ Common Sense 给多邻国的评级是"Warning"，出自[一份未注明日期的
 | Azure AI Speech | 见第 9 节 | 合同、各市场的区域 |
 | 香港的 Azure OpenAI | [微软称向当地符合条件的客户提供服务](https://sg.finance.yahoo.com/news/microsoft-maintains-ai-services-hong-093000823.html)；未注明日期，也未读条款 | 是否仍然提供，是否接受未成年人 |
 | 其他语音和 AI 供应商、pi-ai 路由、AI Gateway | 未核查 | 使用前逐一核查 |
-| Cloudflare、PostgreSQL 托管、Resend、Stripe（两个账户） | 未核查 | 协议、区域 |
+| Cloudflare、PostgreSQL 托管、Resend、Stripe | 未核查 | 协议、区域 |
 
 **香港。** 供应商的地区政策看的是用户所在地。把香港学习者的请求经我们在其他地方的服务器转发，就违反了政策，所以我们不这样做。香港先开放 `basic` 和规则判定的内容；登记表中有服务香港并接受未成年人数据的供应商后，再开放 AI 范围。
 

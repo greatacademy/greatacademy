@@ -93,7 +93,7 @@ export interface PlanMeta {
 export interface CheckoutRequest {
   readonly meta: PlanMeta;
   readonly email: string;
-  /** customer is the payer's Stripe customer on the main account, when they have one. */
+  /** customer is the payer's Stripe customer, when they have one. */
   readonly customer?: string;
   readonly amount: number;
   readonly productName: string;
@@ -102,26 +102,26 @@ export interface CheckoutRequest {
   readonly locale: string;
 }
 
-/** Payments is the host's link to Stripe, one account for cards and one for Alipay and WeChat Pay. */
+/** Payments is the host's link to its Stripe account. */
 export interface Payments {
-  /** wallet tells whether the account for Alipay and WeChat Pay is set up. */
+  /** wallet tells whether Alipay and WeChat Pay are turned on in the account. */
   readonly wallet: boolean;
-  /** checkout opens a Checkout session: a subscription on the main account, a single payment on the wallet account. */
-  checkout(account: "main" | "wallet", req: CheckoutRequest): Promise<{ id: string; url: string }>;
-  /** setRenewal sets whether a main-account subscription renews at the end of its period. */
+  /** checkout opens a Checkout session: a subscription for a card, a single payment for Alipay or WeChat Pay. */
+  checkout(method: "card" | "wallet", req: CheckoutRequest): Promise<{ id: string; url: string }>;
+  /** setRenewal sets whether a card subscription renews at the end of its period. */
   setRenewal(stripeSubscription: string, renew: boolean): Promise<void>;
-  /** endNow ends a main-account subscription at once. */
+  /** endNow ends a card subscription at once. */
   endNow(stripeSubscription: string): Promise<void>;
   /** refund refunds a charge in full. */
-  refund(account: "main" | "wallet", paymentIntent: string): Promise<void>;
-  /** portal opens the main account's customer portal. */
+  refund(paymentIntent: string): Promise<void>;
+  /** portal opens Stripe's customer portal. */
   portal(customer: string, returnUrl: string): Promise<string>;
 }
 
 /** BillingEvent is a Stripe event as the host's webhook reads it, after checking its signature. */
 export type BillingEvent =
   | {
-      /** checkout: a main-account Checkout session finished; prepaid says whether the card was prepaid. */
+      /** checkout: a card Checkout session finished; prepaid says whether the card was prepaid. */
       readonly kind: "card-checkout";
       readonly checkout: string;
       readonly meta: PlanMeta;
@@ -131,7 +131,7 @@ export type BillingEvent =
       readonly prepaid: boolean;
     }
   | {
-      /** invoice-paid: a main-account subscription was charged for a period ending at periodEnd. */
+      /** invoice-paid: a card subscription was charged for a period ending at periodEnd. */
       readonly kind: "invoice-paid";
       readonly meta: PlanMeta;
       readonly stripeSubscription: string;
@@ -145,7 +145,7 @@ export type BillingEvent =
   | { readonly kind: "renewal-changed"; readonly stripeSubscription: string; readonly renews: boolean }
   | { readonly kind: "subscription-ended"; readonly stripeSubscription: string }
   | {
-      /** wallet-paid: a wallet-account Checkout session was paid. */
+      /** wallet-paid: a Checkout session paid by Alipay or WeChat Pay. */
       readonly kind: "wallet-paid";
       readonly checkout: string;
       readonly meta: PlanMeta;
@@ -166,7 +166,7 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
         learnerId: learnerOf(e.meta),
         scope: e.meta.scope,
         interval: e.meta.interval,
-        account: "main",
+        account: "card",
         stripeSubscription: e.stripeSubscription,
         customer: e.customer,
         paidUntil: at,
@@ -182,7 +182,7 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
         learnerId: learnerOf(e.meta),
         scope: e.meta.scope,
         interval: e.meta.interval,
-        account: "main",
+        account: "card",
         stripeSubscription: e.stripeSubscription,
         customer: e.customer,
         paidUntil: at,
@@ -190,7 +190,7 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
       });
       await recordPayment(db, {
         subscriptionId: plan.id,
-        account: "main",
+        account: "card",
         paymentIntent: e.paymentIntent,
         amount: e.amount,
         currency: e.currency,
@@ -260,7 +260,7 @@ export async function refundableUntil(db: Db, plan: PlanRow, now: number): Promi
 /** endPlansOf ends at once every card plan a person pays for that still runs, as before their account is deleted. */
 export async function endPlansOf(db: Db, payments: Payments, payerId: string, now: number): Promise<void> {
   for (const plan of await plansOfPayer(db, payerId)) {
-    if (plan.account !== "main" || !plan.stripeSubscription || plan.refundedAt || plan.paidUntil.getTime() <= now) continue;
+    if (plan.account !== "card" || !plan.stripeSubscription || plan.refundedAt || plan.paidUntil.getTime() <= now) continue;
     await payments.endNow(plan.stripeSubscription);
     await endPlan(db, plan.id, new Date(now));
   }
@@ -279,7 +279,7 @@ export async function runBillingReminders(
   for (const plan of await plansToRemind(db, new Date(now), new Date(now + REMIND_BEFORE))) {
     const to = await emailOf(db, plan.payerId);
     if (to) {
-      await remind(to, plan.account === "main" && !plan.cancelledAt ? "renews-soon" : "ends-soon");
+      await remind(to, plan.account === "card" && !plan.cancelledAt ? "renews-soon" : "ends-soon");
       sent++;
     }
     await markPlanReminded(db, plan.id);
@@ -299,7 +299,7 @@ export interface BillingDeps {
 }
 
 const INTERVALS: Record<number, PlanInterval | undefined> = { [Interval.MONTH]: "month", [Interval.YEAR]: "year" };
-const ACCOUNTS: Record<PaymentAccount, Account> = { main: Account.CARD, wallet: Account.WALLET, grant: Account.GRANT };
+const ACCOUNTS: Record<PaymentAccount, Account> = { card: Account.CARD, wallet: Account.WALLET, grant: Account.GRANT };
 
 /** billingService implements BillingService. */
 export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingService> {
@@ -364,10 +364,10 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       const interval = INTERVALS[req.interval];
       if (!interval) throw new ConnectError("choose monthly or yearly", Code.InvalidArgument);
       if (!scopes().includes(req.scope)) throw new ConnectError("no such plan", Code.InvalidArgument);
-      const account = req.account === Account.CARD ? "main" : req.account === Account.WALLET ? "wallet" : undefined;
-      if (!account) throw new ConnectError("choose how to pay", Code.InvalidArgument);
-      if (account === "wallet" && !pay.wallet) throw new ConnectError("Alipay and WeChat Pay are not set up", Code.FailedPrecondition);
-      if (!req.agreedTerms || !req.agreedRefund || (account === "main" && !req.agreedRenewal))
+      const method = req.account === Account.CARD ? "card" : req.account === Account.WALLET ? "wallet" : undefined;
+      if (!method) throw new ConnectError("choose how to pay", Code.InvalidArgument);
+      if (method === "wallet" && !pay.wallet) throw new ConnectError("Alipay and WeChat Pay are not set up", Code.FailedPrecondition);
+      if (!req.agreedTerms || !req.agreedRefund || (method === "card" && !req.agreedRenewal))
         throw new ConnectError("tick every statement first", Code.FailedPrecondition);
       const payer = await learnerFor(db, userId);
       if ((await learnerAge(db, payer)).band !== "adult") throw new ConnectError("only an adult can pay", Code.PermissionDenied);
@@ -385,8 +385,8 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       if (!email) throw new ConnectError("no email", Code.FailedPrecondition);
       const listing = deps.registry.listings.find((s) => s.id === req.scope);
       const name = listing ? `Great Academy: ${listing.title.en}` : "Great Academy: All subjects";
-      const customer = account === "main" ? await customerOf(db, userId) : undefined;
-      const session = await pay.checkout(account, {
+      const customer = method === "card" ? await customerOf(db, userId) : undefined;
+      const session = await pay.checkout(method, {
         meta: { payer: userId, learner, scope: req.scope, interval },
         email,
         ...(customer && { customer }),
@@ -405,7 +405,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       const byCheckout = await planByCheckout(db, req.checkoutId);
       if (byCheckout) return { done: byCheckout.payerId === userId };
       // A card plan is found by its Stripe subscription once its first invoice arrives; the newest paid plan will do.
-      const recent = (await plansOfPayer(db, userId)).find((p) => p.account === "main" && p.paidUntil.getTime() > deps.now());
+      const recent = (await plansOfPayer(db, userId)).find((p) => p.account === "card" && p.paidUntil.getTime() > deps.now());
       return { done: recent !== undefined && (await hasPaid(db, recent.id)) };
     },
 
@@ -439,7 +439,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
     async cancelSubscription(req, ctx) {
       const { db, userId } = auth(ctx);
       const plan = await payersPlan(db, userId, req.id);
-      if (plan.account !== "main" || !plan.stripeSubscription) throw new ConnectError("this plan does not renew", Code.FailedPrecondition);
+      if (plan.account !== "card" || !plan.stripeSubscription) throw new ConnectError("this plan does not renew", Code.FailedPrecondition);
       if (plan.refundedAt) throw new ConnectError("this plan has ended", Code.FailedPrecondition);
       await payments().setRenewal(plan.stripeSubscription, req.resume);
       await setCancelled(db, plan.id, req.resume ? null : new Date(deps.now()));
@@ -455,7 +455,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
         throw new ConnectError("this payment can no longer be refunded", Code.FailedPrecondition);
       const first = await firstPayment(db, plan.id);
       if (!first || plan.account === "grant") throw new ConnectError("nothing to refund", Code.FailedPrecondition);
-      await pay.refund(plan.account, first.paymentIntent);
+      await pay.refund(first.paymentIntent);
       if (plan.stripeSubscription) await pay.endNow(plan.stripeSubscription);
       await markRefunded(db, plan.id, first.paymentIntent, new Date(now));
       return {};

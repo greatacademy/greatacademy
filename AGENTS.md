@@ -15,7 +15,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking, technology and deployment |
 | [docs/english-development-plan.md](docs/english-development-plan.md) | Milestones, files, acceptance criteria and gates for building English |
 | [docs/minors-data.md](docs/minors-data.md) | How minors' text and recordings are handled: first markets, age bands, consent, retention, vendors; awaiting legal review |
-| [docs/billing.md](docs/billing.md) | Plans and prices, who pays, the two Stripe accounts, refunds, access and guardian verification by payment |
+| [docs/billing.md](docs/billing.md) | Plans and prices, who pays, the Stripe account, refunds, access and guardian verification by payment |
 | [docs/admin.md](docs/admin.md) | The admin console at `/admin`: who gets in, its pages, markets, AI services, the vendor register and notices |
 | [docs/the-math-academy-way.md](docs/the-math-academy-way.md), [docs/math-academy-website.md](docs/math-academy-website.md) | Research notes the design is based on |
 
