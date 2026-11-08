@@ -35,6 +35,11 @@ export default defineConfig({
       STRIPE_WALLET: bindings.secret(),
       // "on" turns on Stripe Tax for card plans.
       STRIPE_TAX: bindings.secret(),
+      // The App Store Server API's in-app purchase key; without it the iOS app sells nothing (docs/billing.md §8).
+      APPLE_IAP_KEY_ID: bindings.secret(),
+      APPLE_IAP_ISSUER_ID: bindings.secret(),
+      // The key's .p8 file, PEM.
+      APPLE_IAP_KEY: bindings.secret(),
     },
   },
 });

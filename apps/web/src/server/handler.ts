@@ -2,6 +2,7 @@ import { env, waitUntil } from "cloudflare:workers";
 import { createConnectRouter, createContextValues } from "@connectrpc/connect";
 import { type UniversalHandler, universalServerRequestFromFetch, universalServerResponseToFetch } from "@connectrpc/connect/protocol";
 import {
+  type AppStore,
   accountService,
   accountsKey,
   adminService,
@@ -16,6 +17,7 @@ import {
   type Payments,
   privacyService,
   Registry,
+  recordApple,
   runBillingReminders,
   runRetention,
   userIdKey,
@@ -28,7 +30,7 @@ import { BillingService } from "@ga/proto/billing/v1/billing_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
-
+import { appStore, notifiedTransaction } from "./apple.ts";
 import { childAccounts, createAuth } from "./auth.ts";
 import { billingEmail, emailSender, privacyEmail } from "./email.ts";
 import { readWebhook, type StripeKeys, stripePayments, WebhookError } from "./stripe.ts";
@@ -90,6 +92,21 @@ const stripe = (): Payments | undefined => {
 /** WEBHOOK is where the Stripe account sends its events. */
 const WEBHOOK = "/api/stripe";
 
+let store: AppStore | null | undefined;
+
+/** apple returns the link to the App Store Server API once per isolate, or undefined until its key is set. */
+const apple = (): AppStore | undefined => {
+  if (store === undefined)
+    store =
+      env.APPLE_IAP_KEY_ID && env.APPLE_IAP_ISSUER_ID && env.APPLE_IAP_KEY
+        ? appStore({ keyId: env.APPLE_IAP_KEY_ID, issuerId: env.APPLE_IAP_ISSUER_ID, privateKey: env.APPLE_IAP_KEY })
+        : null;
+  return store ?? undefined;
+};
+
+/** APPLE_NOTIFICATIONS is where App Store Server Notifications V2 arrive. */
+const APPLE_NOTIFICATIONS = "/api/apple";
+
 let loaded: ReadonlyMap<string, UniversalHandler> | undefined;
 
 /**
@@ -111,7 +128,11 @@ async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
     learningService({ registry, now: Date.now, seed: () => Math.floor(Math.random() * 0x7fffffff), billing }),
   );
   router.service(PrivacyService, privacyService({ now: Date.now, forms: forms(), notify, billing }));
-  router.service(BillingService, billingService({ registry, now: Date.now, ...(pay && { payments: pay }) }));
+  const appleStore = apple();
+  router.service(
+    BillingService,
+    billingService({ registry, now: Date.now, ...(pay && { payments: pay }), ...(appleStore && { appStore: appleStore }) }),
+  );
   router.service(AdminService, adminService({ now: Date.now, forms: forms(), notify, aiKeysSecret: env.AI_KEYS_SECRET }));
   loaded = new Map(router.handlers.map((h) => [h.requestPath, h]));
   return loaded;
@@ -128,6 +149,7 @@ export async function handleApi(request: Request): Promise<Response> {
   try {
     const pay = stripe();
     if (url.pathname === WEBHOOK) return await webhook(conn.db, request);
+    if (url.pathname === APPLE_NOTIFICATIONS) return await appleNotification(conn.db, request);
     const endPlans = async (userId: string) => {
       if (pay) await endPlansOf(conn.db, pay, userId, Date.now());
     };
@@ -158,6 +180,22 @@ async function webhook(db: Parameters<typeof applyBillingEvent>[0], request: Req
   } catch (e) {
     if (e instanceof WebhookError) return new Response("Bad Request", { status: 400 });
     console.error("stripe webhook failed", e instanceof Error ? e.message : "");
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
+
+/** appleNotification records the transaction an App Store notification is about; a failure answers 500 so that Apple sends it again. */
+async function appleNotification(db: Parameters<typeof applyBillingEvent>[0], request: Request): Promise<Response> {
+  const store = apple();
+  if (request.method !== "POST" || !store) return new Response("Not Found", { status: 404 });
+  const id = notifiedTransaction(await request.json().catch(() => undefined));
+  // A notification without a transaction, as Apple's test, needs nothing.
+  if (!id || !/^\d{1,32}$/.test(id)) return new Response("ok");
+  try {
+    await recordApple(db, store, id, Date.now(), stripe());
+    return new Response("ok");
+  } catch (e) {
+    console.error("App Store notification failed", e instanceof Error ? e.message : "");
     return new Response("Internal Server Error", { status: 500 });
   }
 }

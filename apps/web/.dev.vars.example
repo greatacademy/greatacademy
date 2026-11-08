@@ -11,3 +11,7 @@ STRIPE_WEBHOOK_SECRET=""
 # "on" once Alipay and WeChat Pay are turned on in the Stripe account.
 STRIPE_WALLET=""
 STRIPE_TAX=""
+# The App Store Connect in-app purchase key: its id, the issuer id and the .p8 file's text.
+APPLE_IAP_KEY_ID=""
+APPLE_IAP_ISSUER_ID=""
+APPLE_IAP_KEY=""

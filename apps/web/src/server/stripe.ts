@@ -119,8 +119,12 @@ export function stripePayments(keys: StripeKeys): Payments {
       await stripe.subscriptions.cancel(subscription);
     },
 
-    async refund(paymentIntent) {
-      await stripe.refunds.create({ payment_intent: paymentIntent });
+    async refund(paymentIntent, amount) {
+      // The key makes the same refund asked twice, as by a repeated event, one refund.
+      await stripe.refunds.create(
+        { payment_intent: paymentIntent, ...(amount !== undefined && { amount }) },
+        { idempotencyKey: `refund-${paymentIntent}-${amount ?? "all"}` },
+      );
     },
 
     async portal(customer, returnUrl) {
