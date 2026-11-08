@@ -72,6 +72,8 @@ const en = {
   keep: "Keep it",
   portal: "Cards and receipts",
   grant: "Granted",
+  appStore: "App Store",
+  appleManage: "Bought in the iPhone app: change or turn it off, and ask for refunds, through your Apple account.",
   // Guardians
   buyForChild: "Buy a plan for your child",
   buyForChildBody: "Each child needs a plan before you add them. A payment by card also verifies you as a guardian.",
@@ -147,6 +149,8 @@ const zh: typeof en = {
   keep: "保留",
   portal: "银行卡和收据",
   grant: "赠送",
+  appStore: "App Store",
+  appleManage: "在 iPhone 应用中购买：更改、关闭和申请退款请通过你的 Apple 账号。",
   buyForChild: "为孩子购买方案",
   buyForChildBody: "添加每个孩子之前都需要先为其购买方案。用银行卡付款同时会验证你的监护人身份。",
   orForm: "也可以改用签字表格验证：",

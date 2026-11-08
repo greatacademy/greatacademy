@@ -24,11 +24,12 @@ function Row({ s, title, upgrade }: { s: Subscription; title: string; upgrade: b
   const now = BigInt(Date.now());
   const running = s.paidUntil > now && !s.refunded;
   const card = s.account === Account.CARD;
+  const apple = s.account === Account.APPLE;
   const when = !running
     ? s.refunded
       ? t.refunded
       : t.endedOn(date(s.paidUntil))
-    : card && !s.cancelled
+    : (card || apple) && !s.cancelled
       ? t.renewsOn(date(s.paidUntil))
       : t.endsOn(date(s.paidUntil));
   const whose = !s.payer ? t.coveredBy : s.learnerId === "" ? t.waitingChild : s.learnerName || "";
@@ -38,14 +39,21 @@ function Row({ s, title, upgrade }: { s: Subscription; title: string; upgrade: b
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <span className="font-medium">
           {title} · {s.interval === Interval.YEAR ? t.yearly : t.monthly}
-          {s.account === Account.GRANT ? ` · ${t.grant}` : s.account === Account.WALLET ? ` · ${t.wallet}` : ""}
+          {s.account === Account.GRANT
+            ? ` · ${t.grant}`
+            : s.account === Account.WALLET
+              ? ` · ${t.wallet}`
+              : apple
+                ? ` · ${t.appStore}`
+                : ""}
         </span>
         <span className="text-sm text-muted">
           {when}
-          {s.payer && running && s.account !== Account.GRANT && s.refundableUntil === 0n && ` · ${t.noRefund}`}
+          {s.payer && running && s.account !== Account.GRANT && !apple && s.refundableUntil === 0n && ` · ${t.noRefund}`}
         </span>
       </div>
       {whose && <p className="text-sm text-muted">{whose}</p>}
+      {s.payer && running && apple && <p className="text-sm text-muted">{t.appleManage}</p>}
       {s.payer && running && (
         <div className="flex flex-wrap items-center gap-2">
           {card && (
@@ -115,6 +123,7 @@ export function Subscriptions() {
     running(s) &&
     s.scope !== "all" &&
     s.account !== Account.GRANT &&
+    s.account !== Account.APPLE &&
     s.learnerId !== "" &&
     !list.some((o) => o.scope === "all" && o.learnerId === s.learnerId && running(o));
   return (
