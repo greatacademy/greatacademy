@@ -14,10 +14,11 @@ import { useI18n } from "../lib/i18n.tsx";
 import { errorText } from "../lib/privacy-text.ts";
 import { account, billing, timeZone } from "../lib/rpc.ts";
 
-/** PlansSearch says whom a plan is for, and which Checkout session just came back. */
+/** PlansSearch says whom a plan is for, which plan to start on, and which Checkout session just came back. */
 interface PlansSearch {
   readonly child?: boolean;
   readonly learner?: string;
+  readonly scope?: string;
   readonly checkout?: string;
 }
 
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/plans")({
   validateSearch: (s: Record<string, unknown>): PlansSearch => ({
     ...(s.child === true || s.child === "1" || s.child === 1 ? { child: true } : {}),
     ...(typeof s.learner === "string" && s.learner ? { learner: s.learner } : {}),
+    ...(typeof s.scope === "string" && s.scope ? { scope: s.scope } : {}),
     ...(typeof s.checkout === "string" && s.checkout ? { checkout: s.checkout } : {}),
   }),
   component: Plans,
@@ -90,6 +92,7 @@ function Returned({ checkout, child, t }: { checkout: string; child: boolean; t:
     if (done) {
       void qc.invalidateQueries({ queryKey: ["access"] });
       void qc.invalidateQueries({ queryKey: ["subscriptions"] });
+      void qc.invalidateQueries({ queryKey: ["plans"] });
       return;
     }
     if (!q.isFetched || tries >= 30) return;
@@ -126,8 +129,12 @@ function Plans() {
   const t = useBillingText();
   const session = useRequireSession();
   const access = useAccess();
-  const { child = false, learner, checkout } = Route.useSearch();
-  const plans = useQuery({ queryKey: ["plans"], queryFn: () => billing.listPlans({}), enabled: !!session });
+  const { child = false, learner, scope: initial, checkout } = Route.useSearch();
+  const plans = useQuery({
+    queryKey: ["plans", learner ?? "", child],
+    queryFn: () => billing.listPlans({ ...(learner && { learnerId: learner }), forNewChild: child }),
+    enabled: !!session,
+  });
   const guarded = useQuery({
     queryKey: ["guarded"],
     queryFn: () => account.listGuardedLearners({ timeZone: timeZone() }),
@@ -135,7 +142,7 @@ function Plans() {
   });
   const [interval, setPeriod] = useState<"month" | "year">("month");
   const [pay, setPay] = useState<"card" | "wallet">("card");
-  const [scope, setScope] = useState<string>();
+  const [scope, setScope] = useState<string | undefined>(initial);
   const [terms, setTerms] = useState(false);
   const [renewal, setRenewal] = useState(false);
   const [refund, setRefund] = useState(false);
@@ -183,10 +190,17 @@ function Plans() {
   const name = learner && guarded.data?.learners.find((l) => l.learnerId === learner)?.name;
   const wallet = pay === "wallet";
   const price = (p: Plan) => (interval === "year" ? p.yearCents : p.monthCents);
-  const ready = scope !== undefined && terms && renewal && refund;
   // What the learner has now is known only when buying for oneself (docs/billing.md §5).
   const covered = !child && !learner ? access.covered : [];
   const owns = (s: string) => covered.includes("all") || covered.includes(s);
+  // Buying all subjects beside the payer's subject plans is an upgrade: their unused time comes off.
+  const credit = plans.data.upgradeCreditCents;
+  const allPlan = plans.data.plans.find((p) => p.scope === "all");
+  const upgrading = scope === "all" && credit > 0 && allPlan !== undefined;
+  const net = allPlan ? price(allPlan) - credit : 0;
+  const tooMuch = upgrading && net < 50;
+  const others = covered.filter((s) => s !== "all" && !plans.data.upgradeScopes.includes(s));
+  const ready = scope !== undefined && !owns(scope) && !tooMuch && terms && renewal && refund;
   const refundable = plans.data.firstRefund && interval === "month";
   const titleOf = (s: string) => {
     const p = plans.data.plans.find((x) => x.scope === s);
@@ -261,7 +275,38 @@ function Plans() {
       </fieldset>
       {wallet && <p className="text-sm text-muted">{t.walletNote}</p>}
       {plans.data.firstRefund && interval === "year" && <p className="text-sm text-muted">{t.yearNoRefund}</p>}
-      {scope === "all" && covered.length > 0 && <p className="text-sm text-muted">{t.alsoAll(covered.map(titleOf))}</p>}
+      {upgrading && allPlan && (
+        <Card className="space-y-2 p-5 text-sm">
+          <p className="font-semibold">{t.upgradeFrom(plans.data.upgradeScopes.map(titleOf))}</p>
+          {tooMuch ? (
+            <p>{interval === "month" ? t.upgradeTooMuchMonth : t.upgradeTooMuchYear}</p>
+          ) : (
+            <>
+              <dl className="space-y-1">
+                <div className="flex justify-between gap-4">
+                  <dt className="text-muted">{titleOf("all")}</dt>
+                  <dd>{dollars(price(allPlan))}</dd>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-muted">{t.upgradeCredit}</dt>
+                  <dd>−{dollars(credit)}</dd>
+                </div>
+                <div className="flex justify-between gap-4 border-t border-line pt-1 font-semibold">
+                  <dt>{t.upgradeToday}</dt>
+                  <dd>{dollars(net)}</dd>
+                </div>
+              </dl>
+              {!wallet && (
+                <p className="text-muted">{t.upgradeThen(dollars(price(allPlan)), interval === "year" ? t.perYear : t.perMonth)}</p>
+              )}
+              <p className="text-muted">
+                {t.upgradeEnds(plans.data.upgradeScopes.map(titleOf))} {plans.data.upgradeEndsRefund && t.upgradeEndsRefund}
+              </p>
+            </>
+          )}
+        </Card>
+      )}
+      {scope === "all" && others.length > 0 && <p className="text-sm text-muted">{t.alsoAll(others.map(titleOf))}</p>}
       <Card className="space-y-3 p-5">
         <Statement checked={terms} onChange={setTerms}>
           {t.agreeTerms}{" "}

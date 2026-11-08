@@ -153,7 +153,7 @@ async function webhook(db: Parameters<typeof applyBillingEvent>[0], request: Req
   const keys = stripeKeys();
   if (request.method !== "POST" || !keys) return new Response("Not Found", { status: 404 });
   try {
-    for (const e of await readWebhook(keys, request)) await applyBillingEvent(db, e, Date.now());
+    for (const e of await readWebhook(keys, request)) await applyBillingEvent(db, e, Date.now(), stripe());
     return new Response("ok");
   } catch (e) {
     if (e instanceof WebhookError) return new Response("Bad Request", { status: 400 });

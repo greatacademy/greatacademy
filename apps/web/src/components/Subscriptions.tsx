@@ -11,7 +11,7 @@ import { errorText } from "../lib/privacy-text.ts";
 import { billing } from "../lib/rpc.ts";
 import { Button, buttonClass, Card, ErrorNote } from "./ui.tsx";
 
-function Row({ s, title }: { s: Subscription; title: string }) {
+function Row({ s, title, upgrade }: { s: Subscription; title: string; upgrade: boolean }) {
   const { m, locale } = useI18n();
   const t = useBillingText();
   const qc = useQueryClient();
@@ -52,6 +52,15 @@ function Row({ s, title }: { s: Subscription; title: string }) {
             <Button variant="secondary" disabled={cancel.isPending} onClick={() => cancel.mutate(s.cancelled)}>
               {s.cancelled ? t.resume : t.cancel}
             </Button>
+          )}
+          {upgrade && (
+            <Link
+              to="/plans"
+              search={{ scope: "all", ...(s.learnerName && { learner: s.learnerId }) }}
+              className={buttonClass("secondary")}
+            >
+              {t.upgrade}
+            </Link>
           )}
           {s.refundableUntil > 0n &&
             (asking ? (
@@ -98,6 +107,16 @@ export function Subscriptions() {
   if (!adult && list.length === 0) return null;
   const titles = new Map(plans.data.plans.map((p) => [p.scope, p.title ? tx(p.title) : p.scope]));
   const hasCard = list.some((s) => s.payer && s.account === Account.CARD);
+  const now = BigInt(Date.now());
+  const running = (s: Subscription) => s.paidUntil > now && !s.refunded;
+  // A running subject plan the person paid for can move to all subjects, unless its learner already has them.
+  const upgradable = (s: Subscription) =>
+    s.payer &&
+    running(s) &&
+    s.scope !== "all" &&
+    s.account !== Account.GRANT &&
+    s.learnerId !== "" &&
+    !list.some((o) => o.scope === "all" && o.learnerId === s.learnerId && running(o));
   return (
     <Card className="space-y-4">
       <h2 className="text-lg font-semibold">{t.subscriptions}</h2>
@@ -106,7 +125,7 @@ export function Subscriptions() {
       ) : (
         <div className="space-y-3">
           {list.map((s) => (
-            <Row key={s.id} s={s} title={titles.get(s.scope) ?? s.scope} />
+            <Row key={s.id} s={s} title={titles.get(s.scope) ?? s.scope} upgrade={adult && upgradable(s)} />
           ))}
         </div>
       )}

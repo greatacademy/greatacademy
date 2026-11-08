@@ -15,12 +15,18 @@ export interface StripeKeys {
 const client = (key: string) => new Stripe(key, { httpClient: Stripe.createFetchHttpClient() });
 const crypto = Stripe.createSubtleCryptoProvider();
 
+// What a plan is for; replaces goes only on the Checkout session, so that renewals never carry it.
 const metadata = (m: PlanMeta): Record<string, string> => ({ payer: m.payer, learner: m.learner, scope: m.scope, interval: m.interval });
+const sessionMetadata = (m: PlanMeta): Record<string, string> => ({
+  ...metadata(m),
+  ...(m.replaces?.length && { replaces: m.replaces.join(",") }),
+});
 
 /** planMeta reads what a plan is for back out of Stripe's metadata; anything else is not ours. */
 function planMeta(md: Record<string, string> | null | undefined): PlanMeta | undefined {
   if (!md?.payer || !md.scope || (md.interval !== "month" && md.interval !== "year")) return undefined;
-  return { payer: md.payer, learner: md.learner ?? "", scope: md.scope, interval: md.interval };
+  const replaces = md.replaces?.split(",").filter(Boolean);
+  return { payer: md.payer, learner: md.learner ?? "", scope: md.scope, interval: md.interval, ...(replaces?.length && { replaces }) };
 }
 
 const id = (x: string | { id: string } | null | undefined): string | undefined => (typeof x === "string" ? x : x?.id);
@@ -38,11 +44,22 @@ export function stripePayments(keys: StripeKeys): Payments {
         success_url: req.successUrl,
         cancel_url: req.cancelUrl,
         locale: req.locale === "zh" ? ("zh" as const) : ("en" as const),
-        metadata: md,
+        metadata: sessionMetadata(req.meta),
         client_reference_id: req.meta.payer,
       };
       if (method === "wallet" && !keys.wallet) throw new ConnectError("Alipay and WeChat Pay are not set up", Code.FailedPrecondition);
       const product = { name: req.productName };
+      // An upgrade's credit comes off the first card invoice as a one-off coupon, and straight off a wallet payment.
+      const coupon =
+        method === "card" && req.credit > 0
+          ? await stripe.coupons.create({
+              amount_off: req.credit,
+              currency: "usd",
+              duration: "once",
+              max_redemptions: 1,
+              name: req.creditName,
+            })
+          : undefined;
       const session =
         method === "card"
           ? await stripe.checkout.sessions.create({
@@ -62,6 +79,7 @@ export function stripePayments(keys: StripeKeys): Payments {
                 },
               ],
               subscription_data: { metadata: md },
+              ...(coupon && { discounts: [{ coupon: coupon.id }] }),
               ...(req.customer ? { customer: req.customer } : { customer_email: req.email }),
               ...(keys.tax && {
                 automatic_tax: { enabled: true },
@@ -74,7 +92,17 @@ export function stripePayments(keys: StripeKeys): Payments {
               customer_email: req.email,
               allowed_payment_method_types: ["alipay", "wechat_pay"],
               payment_method_options: { wechat_pay: { client: "web" } },
-              line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: req.amount, product_data: product } }],
+              line_items: [
+                {
+                  quantity: 1,
+                  price_data: {
+                    currency: "usd",
+                    unit_amount: req.amount - req.credit,
+                    product_data:
+                      req.credit > 0 ? { ...product, description: `${req.creditName}: -$${(req.credit / 100).toFixed(2)}` } : product,
+                  },
+                },
+              ],
               payment_intent_data: { metadata: md },
             });
       if (!session.url) throw new ConnectError("Stripe gave no Checkout page", Code.Unavailable);
@@ -86,6 +114,8 @@ export function stripePayments(keys: StripeKeys): Payments {
     },
 
     async endNow(subscription) {
+      // An event can arrive twice; a subscription that already ended stays as it is.
+      if ((await stripe.subscriptions.retrieve(subscription)).status === "canceled") return;
       await stripe.subscriptions.cancel(subscription);
     },
 

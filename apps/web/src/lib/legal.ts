@@ -49,10 +49,16 @@ const en: Record<LegalPageName, LegalPage> = {
         ],
       },
       {
+        heading: "Upgrading",
+        paragraphs: [
+          "When you buy all subjects for a learner who has single-subject plans you pay for, the unused time of those plans is worth its share of their last payment, and that value comes off the first payment for all subjects. The single-subject plans end when that payment arrives and are not charged again. The credit is the only value given for them; it is not paid out.",
+        ],
+      },
+      {
         heading: "Refunds",
         items: [
           "Each account gets one refund: the first payment it ever makes, if that payment buys a month, can be refunded in full from Settings within 30 days of that payment. The plan then ends at once.",
-          "Yearly payments, renewals and every later payment are not refunded, in full or in part.",
+          "Yearly payments, renewals and every later payment are not refunded, in full or in part, except as credit toward an upgrade.",
           "A plan starts as soon as it is paid, at your request. Where the law gives you a period to withdraw from a purchase, you agree when you pay that it ends once the plan starts. This does not limit any right the law of your country gives you and does not allow you to waive.",
         ],
       },
@@ -203,10 +209,16 @@ const zh: Record<LegalPageName, LegalPage> = {
         paragraphs: ["你随时可以在“设置”中在线取消银行卡方案。取消后不再续费，方案持续到已付期限结束。"],
       },
       {
+        heading: "升级",
+        paragraphs: [
+          "为已有你付费的单学科方案的学习者购买全部学科时，这些方案剩余时间的价值按其最后一笔付款的相应比例计算，并从全部学科的第一笔付款中扣除。付款到账后，单学科方案随即结束，不再扣款。抵扣是对它们的唯一补偿，不以现金支付。",
+        ],
+      },
+      {
         heading: "退款",
         items: [
           "每个账号有一次退款机会：账号的第一笔付款如果购买的是一个月，可以在付款后 30 天内从“设置”中申请全额退款，方案随即结束。",
-          "年付、续费以及之后的任何付款都不退款，也不按比例退款。",
+          "年付、续费以及之后的任何付款都不退款，也不按比例退款；升级时的抵扣除外。",
           "方案应你的要求在付款后立即开始。若法律给予你撤回购买的期限，你在付款时同意该期限在方案开始时结束。这不限制你所在国家法律赋予且不允许放弃的任何权利。",
         ],
       },
