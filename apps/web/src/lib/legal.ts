@@ -55,6 +55,13 @@ const en: Record<LegalPageName, LegalPage> = {
         ],
       },
       {
+        heading: "Plans bought in the App Store",
+        paragraphs: [
+          "A plan bought in the iPhone app is an App Store subscription, sold and charged by Apple at the App Store's price. It renews until you turn it off in your Apple account's subscriptions, and Apple's terms govern its billing, cancelling and refunds; the one refund below does not apply to it.",
+          "An Apple account holds one such subscription, for the learner chosen when it is bought. Buying all subjects in the app for a learner whose single-subject plans you pay for here ends those plans and refunds their unused value, worked out as for an upgrade, to the card or wallet that paid.",
+        ],
+      },
+      {
         heading: "Refunds",
         items: [
           "Each account gets one refund: the first payment it ever makes, if that payment buys a month, can be refunded in full from Settings within 30 days of that payment. The plan then ends at once.",
@@ -64,7 +71,9 @@ const en: Record<LegalPageName, LegalPage> = {
       },
       {
         heading: "Deleting your account",
-        paragraphs: ["Deleting your account ends the card plans you pay for at once, without a refund beyond the one above."],
+        paragraphs: [
+          "Deleting your account ends the card plans you pay for at once, without a refund beyond the one above. Apple keeps charging for a plan bought in the App Store until you turn it off there.",
+        ],
       },
     ],
   },
@@ -215,6 +224,13 @@ const zh: Record<LegalPageName, LegalPage> = {
         ],
       },
       {
+        heading: "在 App Store 购买的方案",
+        paragraphs: [
+          "在 iPhone 应用中购买的方案是 App Store 订阅，由 Apple 按 App Store 的价格出售并扣款。它会续订，直到你在 Apple 账号的订阅中关闭；其扣款、取消和退款适用 Apple 的条款，下面的一次退款不适用于它。",
+          "一个 Apple 账号只持有一份这样的订阅，归属于购买时选择的学习者。在应用中为已有你在这里付费的单学科方案的学习者购买全部学科，会结束这些方案，并把按升级方式计算的剩余价值退回付款的银行卡或钱包。",
+        ],
+      },
+      {
         heading: "退款",
         items: [
           "每个账号有一次退款机会：账号的第一笔付款如果购买的是一个月，可以在付款后 30 天内从“设置”中申请全额退款，方案随即结束。",
@@ -224,7 +240,9 @@ const zh: Record<LegalPageName, LegalPage> = {
       },
       {
         heading: "删除账号",
-        paragraphs: ["删除账号会立即结束你付费的银行卡方案；除上述退款外不另行退款。"],
+        paragraphs: [
+          "删除账号会立即结束你付费的银行卡方案；除上述退款外不另行退款。在 App Store 购买的方案，Apple 会继续扣款，直到你在那里关闭。",
+        ],
       },
     ],
   },
