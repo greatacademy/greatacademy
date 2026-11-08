@@ -1,6 +1,7 @@
 import { type Client, createClient, type Interceptor } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { AccountService } from "@ga/proto/account/v1/account_pb";
+import { BillingService } from "@ga/proto/billing/v1/billing_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
@@ -48,6 +49,9 @@ export const learning: Client<typeof LearningService> = createClient(LearningSer
 
 /** account is the client of the signed-in person's settings and guardians. */
 export const account: Client<typeof AccountService> = createClient(AccountService, transport);
+
+/** billing is the client of plans and their payments. */
+export const billing: Client<typeof BillingService> = createClient(BillingService, transport);
 
 /** timeZone is the device's IANA time zone, or empty where the runtime does not know it, which the server counts as UTC. */
 export function timeZone(): string {

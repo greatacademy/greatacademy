@@ -8,6 +8,7 @@ import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
 import { watchQueries } from "./lib/query.ts";
 import { restoreToken, token } from "./lib/session.ts";
+import { settleUnfinished } from "./lib/store.ts";
 import { showTray } from "./lib/tray.ts";
 import { barSpace, barsAway, colors, followPalette, OfflineNote, tabsShown } from "./lib/ui.tsx";
 import { keepWindowLarge } from "./lib/window.ts";
@@ -25,6 +26,7 @@ import { Launch, launchLeaving } from "./screens/Launch.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Learner } from "./screens/Learner.tsx";
 import { Learners } from "./screens/Learners.tsx";
+import { Plans } from "./screens/Plans.tsx";
 import { Player } from "./screens/Player.tsx";
 import { Privacy } from "./screens/Privacy.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
@@ -64,6 +66,13 @@ effect(() => {
     afterSignUp.set(null);
     nav.setRoutes(then ? [HOME, then] : [HOME]);
   }
+});
+
+// App Store purchases StoreKit still holds, as renewals, go to the server once someone is signed in and when the app
+// comes back.
+effect(() => {
+  comeBack();
+  if (token()) void settleUnfinished();
 });
 
 // The tabs show for an account that may study, everywhere but the pages that lead to an account.
@@ -133,6 +142,8 @@ function App() {
               return <Privacy />;
             case "learners":
               return <Learners />;
+            case "plans":
+              return <Plans />;
             case "learner":
               return <Learner learnerId={route.learnerId} />;
             case "age":

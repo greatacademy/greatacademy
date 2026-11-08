@@ -31,11 +31,13 @@ import check from "../assets/check.svg";
 import eye from "../assets/eye.svg";
 import eyeSlash from "../assets/eye-slash.svg";
 import logo from "../assets/logo.svg";
+import { b } from "./billing-text.ts";
 import { language, m } from "./i18n.ts";
 import { nav, WELCOME } from "./nav.ts";
 import { comeBack, failureOf, online } from "./net.ts";
 import { appearance } from "./prefs.ts";
 import { setToken } from "./session.ts";
+import { canBuy } from "./store.ts";
 
 /** colors gives the design tokens as hex for the scheme shown and the appearance chosen on this device. */
 export const colors = computed(() => resolveColors(appearance(), colorScheme()));
@@ -724,6 +726,9 @@ export function Problem(props: { error: unknown; onRetry: () => void }) {
       <Text style={{ color: colors().muted, fontSize: 15, maxWidth: 360, textAlign: "center" }}>{text().body}</Text>
       <If when={kind() === "auth"} else={<Action label={m().retry} onPress={props.onRetry} />}>
         <Action label={m().signInAgain} onPress={signInAgain} />
+      </If>
+      <If when={kind() === "plan" && canBuy()}>
+        <Quiet label={b().seePlans} onPress={() => nav.push({ name: "plans" })} />
       </If>
     </View>
   );

@@ -22,6 +22,7 @@ export type Route =
   | { name: "password" }
   | { name: "privacy" }
   | { name: "learners" }
+  | { name: "plans" }
   | { name: "learner"; learnerId: string }
   | { name: "age" }
   | { name: "access" };

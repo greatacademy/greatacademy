@@ -1,0 +1,22 @@
+[package]
+name = "ga-store"
+description = "In-app purchases for the Great Academy app: StoreKit on iOS (docs/billing.md §8)."
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+# The commit of Native Shell the app builds with: the greatacademy branch of
+# its fork, which is upstream's main and the app's own fixes.
+[dependencies]
+nsh-core = { git = "https://github.com/greatacademy/nsh", rev = "50d4d1e142285f2eac98df48dbbdd4f225336264" }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+dispatch2 = "0.3.1"
+libc = "0.2"
+objc2 = "0.6.5"
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSString"] }
+tokio = { version = "1", default-features = false, features = ["sync"] }
