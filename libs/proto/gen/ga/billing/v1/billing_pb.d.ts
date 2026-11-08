@@ -63,6 +63,18 @@ export declare type Plan = Message<"ga.billing.v1.Plan"> & {
    * @generated from field: int32 year_cents = 4;
    */
   yearCents: number;
+
+  /**
+   * apple_month and apple_year are the App Store products of the plan; the iOS app shows their prices from the App Store.
+   *
+   * @generated from field: string apple_month = 5;
+   */
+  appleMonth: string;
+
+  /**
+   * @generated from field: string apple_year = 6;
+   */
+  appleYear: string;
 };
 
 /**
@@ -452,6 +464,115 @@ export declare type OpenPortalResponse = Message<"ga.billing.v1.OpenPortalRespon
 export declare const OpenPortalResponseSchema: GenMessage<OpenPortalResponse>;
 
 /**
+ * @generated from message ga.billing.v1.StartApplePurchaseRequest
+ */
+export declare type StartApplePurchaseRequest = Message<"ga.billing.v1.StartApplePurchaseRequest"> & {
+  /**
+   * @generated from field: string scope = 1;
+   */
+  scope: string;
+
+  /**
+   * @generated from field: ga.billing.v1.Interval interval = 2;
+   */
+  interval: Interval;
+
+  /**
+   * The three statements of docs/billing.md §4, as on the web; refunds are Apple's.
+   *
+   * @generated from field: bool agreed_terms = 3;
+   */
+  agreedTerms: boolean;
+
+  /**
+   * @generated from field: bool agreed_renewal = 4;
+   */
+  agreedRenewal: boolean;
+
+  /**
+   * @generated from field: bool agreed_refund = 5;
+   */
+  agreedRefund: boolean;
+
+  /**
+   * learner_id is a learner the caller guards; empty buys for the caller, unless for_new_child.
+   *
+   * @generated from field: string learner_id = 6;
+   */
+  learnerId: string;
+
+  /**
+   * for_new_child buys a plan that waits for the next child the caller adds.
+   *
+   * @generated from field: bool for_new_child = 7;
+   */
+  forNewChild: boolean;
+};
+
+/**
+ * Describes the message ga.billing.v1.StartApplePurchaseRequest.
+ * Use `create(StartApplePurchaseRequestSchema)` to create a new message.
+ */
+export declare const StartApplePurchaseRequestSchema: GenMessage<StartApplePurchaseRequest>;
+
+/**
+ * @generated from message ga.billing.v1.StartApplePurchaseResponse
+ */
+export declare type StartApplePurchaseResponse = Message<"ga.billing.v1.StartApplePurchaseResponse"> & {
+  /**
+   * @generated from field: string product_id = 1;
+   */
+  productId: string;
+
+  /**
+   * account_token is the caller's App Store account token, a UUID the purchase carries back.
+   *
+   * @generated from field: string account_token = 2;
+   */
+  accountToken: string;
+};
+
+/**
+ * Describes the message ga.billing.v1.StartApplePurchaseResponse.
+ * Use `create(StartApplePurchaseResponseSchema)` to create a new message.
+ */
+export declare const StartApplePurchaseResponseSchema: GenMessage<StartApplePurchaseResponse>;
+
+/**
+ * @generated from message ga.billing.v1.ConfirmApplePurchaseRequest
+ */
+export declare type ConfirmApplePurchaseRequest = Message<"ga.billing.v1.ConfirmApplePurchaseRequest"> & {
+  /**
+   * @generated from field: string transaction_id = 1;
+   */
+  transactionId: string;
+};
+
+/**
+ * Describes the message ga.billing.v1.ConfirmApplePurchaseRequest.
+ * Use `create(ConfirmApplePurchaseRequestSchema)` to create a new message.
+ */
+export declare const ConfirmApplePurchaseRequestSchema: GenMessage<ConfirmApplePurchaseRequest>;
+
+/**
+ * @generated from message ga.billing.v1.ConfirmApplePurchaseResponse
+ */
+export declare type ConfirmApplePurchaseResponse = Message<"ga.billing.v1.ConfirmApplePurchaseResponse"> & {
+  /**
+   * done is true once the transaction is recorded for the caller; false when it belongs to another account.
+   *
+   * @generated from field: bool done = 1;
+   */
+  done: boolean;
+};
+
+/**
+ * Describes the message ga.billing.v1.ConfirmApplePurchaseResponse.
+ * Use `create(ConfirmApplePurchaseResponseSchema)` to create a new message.
+ */
+export declare const ConfirmApplePurchaseResponseSchema: GenMessage<ConfirmApplePurchaseResponse>;
+
+/**
  * Interval is how long one payment lasts.
  *
  * @generated from enum ga.billing.v1.Interval
@@ -509,6 +630,13 @@ export enum Account {
    * @generated from enum value: ACCOUNT_GRANT = 3;
    */
   GRANT = 3,
+
+  /**
+   * ACCOUNT_APPLE is an App Store subscription bought in the iOS app, renewed until cancelled with Apple.
+   *
+   * @generated from enum value: ACCOUNT_APPLE = 4;
+   */
+  APPLE = 4,
 }
 
 /**
@@ -592,6 +720,27 @@ export declare const BillingService: GenService<{
     methodKind: "unary";
     input: typeof OpenPortalRequestSchema;
     output: typeof OpenPortalResponseSchema;
+  },
+  /**
+   * StartApplePurchase checks that the caller may buy a plan in the iOS app for one learner, names the
+   * App Store product and the token that ties the purchase to the caller, and keeps whom it is for.
+   *
+   * @generated from rpc ga.billing.v1.BillingService.StartApplePurchase
+   */
+  startApplePurchase: {
+    methodKind: "unary";
+    input: typeof StartApplePurchaseRequestSchema;
+    output: typeof StartApplePurchaseResponseSchema;
+  },
+  /**
+   * ConfirmApplePurchase records an App Store transaction, after asking Apple about it.
+   *
+   * @generated from rpc ga.billing.v1.BillingService.ConfirmApplePurchase
+   */
+  confirmApplePurchase: {
+    methodKind: "unary";
+    input: typeof ConfirmApplePurchaseRequestSchema;
+    output: typeof ConfirmApplePurchaseResponseSchema;
   },
 }>;
 

@@ -21,6 +21,11 @@ service BillingService {
   rpc RefundSubscription(RefundSubscriptionRequest) returns (RefundSubscriptionResponse);
   // OpenPortal opens Stripe's customer portal, where the payer changes the card and sees receipts.
   rpc OpenPortal(OpenPortalRequest) returns (OpenPortalResponse);
+  // StartApplePurchase checks that the caller may buy a plan in the iOS app for one learner, names the
+  // App Store product and the token that ties the purchase to the caller, and keeps whom it is for.
+  rpc StartApplePurchase(StartApplePurchaseRequest) returns (StartApplePurchaseResponse);
+  // ConfirmApplePurchase records an App Store transaction, after asking Apple about it.
+  rpc ConfirmApplePurchase(ConfirmApplePurchaseRequest) returns (ConfirmApplePurchaseResponse);
 }
 
 // Interval is how long one payment lasts.
@@ -39,6 +44,8 @@ enum Account {
   ACCOUNT_WALLET = 2;
   // ACCOUNT_GRANT is a plan an administrator gave without payment.
   ACCOUNT_GRANT = 3;
+  // ACCOUNT_APPLE is an App Store subscription bought in the iOS app, renewed until cancelled with Apple.
+  ACCOUNT_APPLE = 4;
 }
 
 message ListPlansRequest {
@@ -55,6 +62,9 @@ message Plan {
   ga.common.v1.Text title = 2;
   int32 month_cents = 3;
   int32 year_cents = 4;
+  // apple_month and apple_year are the App Store products of the plan; the iOS app shows their prices from the App Store.
+  string apple_month = 5;
+  string apple_year = 6;
 }
 
 message ListPlansResponse {
@@ -151,4 +161,32 @@ message OpenPortalRequest {
 
 message OpenPortalResponse {
   string url = 1;
+}
+
+message StartApplePurchaseRequest {
+  string scope = 1;
+  Interval interval = 2;
+  // The three statements of docs/billing.md §4, as on the web; refunds are Apple's.
+  bool agreed_terms = 3;
+  bool agreed_renewal = 4;
+  bool agreed_refund = 5;
+  // learner_id is a learner the caller guards; empty buys for the caller, unless for_new_child.
+  string learner_id = 6;
+  // for_new_child buys a plan that waits for the next child the caller adds.
+  bool for_new_child = 7;
+}
+
+message StartApplePurchaseResponse {
+  string product_id = 1;
+  // account_token is the caller's App Store account token, a UUID the purchase carries back.
+  string account_token = 2;
+}
+
+message ConfirmApplePurchaseRequest {
+  string transaction_id = 1;
+}
+
+message ConfirmApplePurchaseResponse {
+  // done is true once the transaction is recorded for the caller; false when it belongs to another account.
+  bool done = 1;
 }

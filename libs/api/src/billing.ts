@@ -2,6 +2,7 @@ import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@conn
 import { t } from "@ga/content";
 import {
   addPlan,
+  appleTokenOf,
   approveByPayment,
   coveringScopes,
   customerOf,
@@ -33,6 +34,7 @@ import {
 } from "@ga/db";
 import { Account, type BillingService, Interval } from "@ga/proto/billing/v1/billing_pb";
 
+import { type AppStore, appleProduct, recordApple } from "./apple.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { text } from "./convert.ts";
 import type { Registry } from "./registry.ts";
@@ -82,7 +84,8 @@ export const MIN_CHARGE = 50;
  */
 export function unusedValue(plan: Pick<PlanRow, "account" | "scope" | "interval" | "paidUntil" | "refundedAt">, now: number): number {
   const end = plan.paidUntil.getTime();
-  if (plan.account === "grant" || plan.refundedAt || end <= now) return 0;
+  // An App Store plan is Apple's to end, so nothing on the web replaces it.
+  if (plan.account === "grant" || plan.account === "apple" || plan.refundedAt || end <= now) return 0;
   const length = end - shiftMonths(end, plan.interval === "year" ? -12 : -1);
   return Math.floor((priceOf(plan.scope, plan.interval) * (end - now)) / length);
 }
@@ -150,8 +153,8 @@ export interface Payments {
   setRenewal(stripeSubscription: string, renew: boolean): Promise<void>;
   /** endNow ends a card subscription at once. */
   endNow(stripeSubscription: string): Promise<void>;
-  /** refund refunds a charge in full. */
-  refund(paymentIntent: string): Promise<void>;
+  /** refund refunds a charge, in full or by amount cents; the same refund asked twice is made once. */
+  refund(paymentIntent: string, amount?: number): Promise<void>;
   /** portal opens Stripe's customer portal. */
   portal(customer: string, returnUrl: string): Promise<string>;
 }
@@ -314,7 +317,15 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number, pa
  */
 export async function refundableUntil(db: Db, plan: PlanRow, now: number): Promise<number> {
   // A plan that ended, as one an upgrade replaced, has nothing left to refund.
-  if (plan.refundedAt || plan.account === "grant" || plan.interval !== "month" || plan.paidUntil.getTime() <= now) return 0;
+  // Apple decides refunds of App Store plans.
+  if (
+    plan.refundedAt ||
+    plan.account === "grant" ||
+    plan.account === "apple" ||
+    plan.interval !== "month" ||
+    plan.paidUntil.getTime() <= now
+  )
+    return 0;
   const first = await firstPayment(db, plan.id);
   if (!first || first.refundedAt) return 0;
   if ((await firstPaymentOfPayer(db, plan.payerId))?.id !== first.id) return 0;
@@ -361,10 +372,17 @@ export interface BillingDeps {
   readonly payments?: Payments;
   /** origin is the only origin Checkout may return to; without it, the one the request came to. */
   readonly origin?: string;
+  /** appStore is absent until the App Store Server API is set up; then the iOS app sells nothing. */
+  readonly appStore?: AppStore;
 }
 
 const INTERVALS: Record<number, PlanInterval | undefined> = { [Interval.MONTH]: "month", [Interval.YEAR]: "year" };
-const ACCOUNTS: Record<PaymentAccount, Account> = { card: Account.CARD, wallet: Account.WALLET, grant: Account.GRANT };
+const ACCOUNTS: Record<PaymentAccount, Account> = {
+  card: Account.CARD,
+  wallet: Account.WALLET,
+  apple: Account.APPLE,
+  grant: Account.GRANT,
+};
 
 /** billingService implements BillingService. */
 export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingService> {
@@ -427,12 +445,16 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
             title: text(s.title),
             monthCents: PRICES.subject.month,
             yearCents: PRICES.subject.year,
+            appleMonth: appleProduct(s.id, "month"),
+            appleYear: appleProduct(s.id, "year"),
           })),
           {
             scope: ALL_SUBJECTS,
             title: text(t("All subjects", "全部学科")),
             monthCents: PRICES.all.month,
             yearCents: PRICES.all.year,
+            appleMonth: appleProduct(ALL_SUBJECTS, "month"),
+            appleYear: appleProduct(ALL_SUBJECTS, "year"),
           },
         ],
       };
@@ -537,6 +559,7 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
     async cancelSubscription(req, ctx) {
       const { db, userId } = auth(ctx);
       const plan = await payersPlan(db, userId, req.id);
+      if (plan.account === "apple") throw new ConnectError("cancel it in the App Store", Code.FailedPrecondition);
       if (plan.account !== "card" || !plan.stripeSubscription) throw new ConnectError("this plan does not renew", Code.FailedPrecondition);
       if (plan.refundedAt) throw new ConnectError("this plan has ended", Code.FailedPrecondition);
       await payments().setRenewal(plan.stripeSubscription, req.resume);
@@ -557,6 +580,46 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       if (plan.stripeSubscription) await pay.endNow(plan.stripeSubscription);
       await markRefunded(db, plan.id, first.paymentIntent, new Date(now));
       return {};
+    },
+
+    async startApplePurchase(req, ctx) {
+      const { db, userId } = auth(ctx);
+      if (!deps.appStore) throw new ConnectError("App Store purchases are not set up", Code.FailedPrecondition);
+      const interval = INTERVALS[req.interval];
+      if (!interval) throw new ConnectError("choose monthly or yearly", Code.InvalidArgument);
+      if (!scopes().includes(req.scope)) throw new ConnectError("no such plan", Code.InvalidArgument);
+      if (!req.agreedTerms || !req.agreedRenewal || !req.agreedRefund)
+        throw new ConnectError("tick every statement first", Code.FailedPrecondition);
+      const self = await learnerFor(db, userId);
+      if ((await learnerAge(db, self)).band !== "adult") throw new ConnectError("only an adult can pay", Code.PermissionDenied);
+      // Whom it is for, as on the web: the payer, a learner they guard, or the next child they add.
+      let learner: string | null = self;
+      if (req.forNewChild) learner = null;
+      else if (req.learnerId) {
+        if (!(await isGuardian(db, userId, req.learnerId))) throw new ConnectError("no such learner", Code.NotFound);
+        learner = req.learnerId;
+      }
+      const now = deps.now();
+      if (learner) {
+        const covered = await coveringScopes(db, learner, new Date(now));
+        if (covered.includes(ALL_SUBJECTS) || covered.includes(req.scope))
+          throw new ConnectError("this learner already has a plan for that", Code.AlreadyExists);
+      }
+      // An Apple account holds one subscription of ours at a time: it stays with its learner and only moves up to all subjects.
+      const apple = (await plansOfPayer(db, userId)).find((p) => p.account === "apple" && !p.refundedAt && p.paidUntil.getTime() > now);
+      if (apple && (apple.learnerId !== learner || learner === null))
+        throw new ConnectError("an Apple account holds one App Store subscription", Code.FailedPrecondition);
+      if (apple && req.scope !== ALL_SUBJECTS)
+        throw new ConnectError("an App Store subject plan can only move to all subjects", Code.FailedPrecondition);
+      return { productId: appleProduct(req.scope, interval), accountToken: await appleTokenOf(db, userId, learner) };
+    },
+
+    async confirmApplePurchase(req, ctx) {
+      const { db, userId } = auth(ctx);
+      if (!deps.appStore) throw new ConnectError("App Store purchases are not set up", Code.FailedPrecondition);
+      if (!/^\d{1,32}$/.test(req.transactionId)) throw new ConnectError("no such transaction", Code.InvalidArgument);
+      const payer = await recordApple(db, deps.appStore, req.transactionId, deps.now(), deps.payments);
+      return { done: payer === userId };
     },
 
     async openPortal(req, ctx) {
