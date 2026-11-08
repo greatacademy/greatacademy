@@ -93,13 +93,17 @@ curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http
 
 ## 6. 运行原生应用
 
-Native Shell 应用调用与 Web 应用相同的 Connect 服务，因此先启动 Web 应用（§5）。它使用从 main 分支构建的 Native Shell，需要 Git、Rust 和 Xcode：
+Native Shell 应用调用与 Web 应用相同的 Connect 服务，因此先启动 Web 应用（§5）。它使用项目 fork [greatacademy/nsh](https://github.com/greatacademy/nsh) 的 `greatacademy` 分支上的 Native Shell：上游的 main 加上应用自己的修复。应用的 Rust crate `apps/nsh/native/store`（内购用的 StoreKit，以 `ga/store` 导入）固定了这个分支的一个提交，`nsh` 用它构建各平台的宿主，需要 Git、Rust 和 Xcode。用同一个提交构建 `nsh` 命令：
 
 ```bash
-curl -fsSL https://nsh.dev/install.sh | sh -s -- --source   # 再次运行即可更新
+git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/.nsh/source
 ```
 
-这会把 `nsh` 安装到 `~/.local/bin`。源码构建不带预编译的宿主，所以每个平台第一次运行或打包时都要编译宿主，需要几分钟；之后会复用。一次只构建一个平台，因为这些构建共用一个目录，会互相等待。
+```bash
+cd ~/.nsh/source && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/.nsh/source/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
+```
+
+更新时在那里拉取分支、重新构建，并把 `apps/nsh/native/store/Cargo.toml` 中的 `rev` 改为同一个提交。每个平台第一次运行或打包时都要连同应用的 crate 编译宿主，需要几分钟；之后会复用。一次只构建一个平台，因为这些构建共用一个目录，会互相等待。
 
 ```bash
 pnpm nx run nsh:dev                   # 在本机打开窗口

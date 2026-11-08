@@ -48,7 +48,7 @@ tools/pilot/         根据真实作答生成试点报告
 
 ## 命令
 
-工具版本由 `mise.toml` 固定；`pnpm nx` 在 `mise exec` 下运行 Nx。Native Shell 则使用它的 main 分支（[docs/development.zh-CN.md](docs/development.zh-CN.md) §6）。
+工具版本由 `mise.toml` 固定；`pnpm nx` 在 `mise exec` 下运行 Nx。Native Shell 则使用项目 fork 的 `greatacademy` 分支（[docs/development.zh-CN.md](docs/development.zh-CN.md) §6）。
 
 ```bash
 mise install
