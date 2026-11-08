@@ -184,6 +184,14 @@ function Plans() {
   const wallet = pay === "wallet";
   const price = (p: Plan) => (interval === "year" ? p.yearCents : p.monthCents);
   const ready = scope !== undefined && terms && renewal && refund;
+  // What the learner has now is known only when buying for oneself (docs/billing.md §5).
+  const covered = !child && !learner ? access.covered : [];
+  const owns = (s: string) => covered.includes("all") || covered.includes(s);
+  const refundable = plans.data.firstRefund && interval === "month";
+  const titleOf = (s: string) => {
+    const p = plans.data.plans.find((x) => x.scope === s);
+    return p?.title ? tx(p.title) : s;
+  };
   const sorted = [...plans.data.plans].sort((a, b) => Number(a.scope === "all") - Number(b.scope === "all"));
 
   return (
@@ -191,14 +199,19 @@ function Plans() {
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold">{t.plansTitle}</h1>
         <p className="text-sm font-medium text-accent">{child ? t.forChild : name ? t.forLearner(name) : t.forSelf}</p>
-        <p className="text-sm text-muted">{t.plansBody}</p>
+        <p className="text-sm text-muted">
+          {t.plansBody} {plans.data.firstRefund ? t.refundFirst : t.refundUsed}
+        </p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Toggle
           label={t.yearly}
           name="interval"
           value={interval}
-          onChange={setPeriod}
+          onChange={(v) => {
+            setPeriod(v);
+            setRefund(false);
+          }}
           options={[
             { value: "month", label: t.monthly },
             { value: "year", label: `${t.yearly} · ${t.yearlySaving}` },
@@ -225,10 +238,20 @@ function Plans() {
         {sorted.map((p) => (
           <label
             key={p.scope}
-            className={`relative cursor-pointer rounded-2xl border bg-surface p-5 transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent ${scope === p.scope ? "border-accent ring-2 ring-accent/30" : "border-line hover:border-accent/50"}`}
+            className={`relative rounded-2xl border bg-surface p-5 transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent ${owns(p.scope) ? "cursor-not-allowed border-line opacity-60" : scope === p.scope ? "cursor-pointer border-accent ring-2 ring-accent/30" : "cursor-pointer border-line hover:border-accent/50"}`}
           >
-            <input type="radio" name="plan" className="sr-only" checked={scope === p.scope} onChange={() => setScope(p.scope)} />
-            <span className="block font-semibold">{p.title ? tx(p.title) : p.scope}</span>
+            <input
+              type="radio"
+              name="plan"
+              className="sr-only"
+              disabled={owns(p.scope)}
+              checked={scope === p.scope}
+              onChange={() => setScope(p.scope)}
+            />
+            <span className="flex items-baseline justify-between gap-2">
+              <span className="font-semibold">{p.title ? tx(p.title) : p.scope}</span>
+              {owns(p.scope) && <span className="text-xs font-medium text-good">{t.owned}</span>}
+            </span>
             <span className="block text-sm text-muted">{p.scope === "all" ? t.allSubjects : t.oneSubject}</span>
             <span className="mt-3 block text-2xl font-semibold">
               {dollars(price(p))} <span className="text-sm font-normal text-muted">{interval === "year" ? t.perYear : t.perMonth}</span>
@@ -237,6 +260,8 @@ function Plans() {
         ))}
       </fieldset>
       {wallet && <p className="text-sm text-muted">{t.walletNote}</p>}
+      {plans.data.firstRefund && interval === "year" && <p className="text-sm text-muted">{t.yearNoRefund}</p>}
+      {scope === "all" && covered.length > 0 && <p className="text-sm text-muted">{t.alsoAll(covered.map(titleOf))}</p>}
       <Card className="space-y-3 p-5">
         <Statement checked={terms} onChange={setTerms}>
           {t.agreeTerms}{" "}
@@ -248,7 +273,7 @@ function Plans() {
           {wallet ? t.agreeNoRenewal : t.agreeRenewal}
         </Statement>
         <Statement checked={refund} onChange={setRefund}>
-          {t.agreeRefund}
+          {refundable ? t.agreeRefund : t.agreeNoRefund}
         </Statement>
         {start.isError && <ErrorNote message={errorText(start.error, locale, m.error)} />}
         <Button disabled={!ready || start.isPending} onClick={() => scope && start.mutate(scope)}>

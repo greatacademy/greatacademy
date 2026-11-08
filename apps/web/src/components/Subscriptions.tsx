@@ -40,7 +40,10 @@ function Row({ s, title }: { s: Subscription; title: string }) {
           {title} · {s.interval === Interval.YEAR ? t.yearly : t.monthly}
           {s.account === Account.GRANT ? ` · ${t.grant}` : s.account === Account.WALLET ? ` · ${t.wallet}` : ""}
         </span>
-        <span className="text-sm text-muted">{when}</span>
+        <span className="text-sm text-muted">
+          {when}
+          {s.payer && running && s.account !== Account.GRANT && s.refundableUntil === 0n && ` · ${t.noRefund}`}
+        </span>
       </div>
       {whose && <p className="text-sm text-muted">{whose}</p>}
       {s.payer && running && (

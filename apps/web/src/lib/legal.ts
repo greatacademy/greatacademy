@@ -51,8 +51,9 @@ const en: Record<LegalPageName, LegalPage> = {
       {
         heading: "Refunds",
         items: [
-          "A plan's first payment can be refunded in full from Settings within 30 days of that payment. The plan then ends at once.",
-          "Renewals and later payments are not refunded, in full or in part.",
+          "Each account gets one refund: the first payment it ever makes, if that payment buys a month, can be refunded in full from Settings within 30 days of that payment. The plan then ends at once.",
+          "Yearly payments, renewals and every later payment are not refunded, in full or in part.",
+          "A plan starts as soon as it is paid, at your request. Where the law gives you a period to withdraw from a purchase, you agree when you pay that it ends once the plan starts. This does not limit any right the law of your country gives you and does not allow you to waive.",
         ],
       },
       {
@@ -204,8 +205,9 @@ const zh: Record<LegalPageName, LegalPage> = {
       {
         heading: "退款",
         items: [
-          "一个方案的首次付款，在付款后 30 天内可以在“设置”中申请全额退款，方案随即结束。",
-          "续费和之后的付款不退款，也不按比例退款。",
+          "每个账号有一次退款机会：账号的第一笔付款如果购买的是一个月，可以在付款后 30 天内从“设置”中申请全额退款，方案随即结束。",
+          "年付、续费以及之后的任何付款都不退款，也不按比例退款。",
+          "方案应你的要求在付款后立即开始。若法律给予你撤回购买的期限，你在付款时同意该期限在方案开始时结束。这不限制你所在国家法律赋予且不允许放弃的任何权利。",
         ],
       },
       {

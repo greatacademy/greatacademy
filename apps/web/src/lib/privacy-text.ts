@@ -263,6 +263,7 @@ const serverErrorsZh: Record<string, string> = {
   "delete a child's account instead": "请改为删除孩子的账号",
   "buy a plan for this child first": "请先为这个孩子购买方案",
   "tick every statement first": "请先勾选每一项声明",
+  "this learner already has a plan for that": "这位学习者已经有包含这个学科的方案",
   "only an adult can pay": "只有成年人可以付款",
   "no such plan": "没有这个方案",
   "no such learner": "没有这位学习者",
