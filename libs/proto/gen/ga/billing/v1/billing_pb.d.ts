@@ -15,6 +15,19 @@ export declare const file_ga_billing_v1_billing: GenFile;
  * @generated from message ga.billing.v1.ListPlansRequest
  */
 export declare type ListPlansRequest = Message<"ga.billing.v1.ListPlansRequest"> & {
+  /**
+   * learner_id is a learner the caller guards; empty lists for the caller, unless for_new_child.
+   *
+   * @generated from field: string learner_id = 1;
+   */
+  learnerId: string;
+
+  /**
+   * for_new_child lists for a child not yet added, who has no plans to upgrade.
+   *
+   * @generated from field: bool for_new_child = 2;
+   */
+  forNewChild: boolean;
 };
 
 /**
@@ -88,6 +101,28 @@ export declare type ListPlansResponse = Message<"ga.billing.v1.ListPlansResponse
    * @generated from field: bool first_refund = 4;
    */
   firstRefund: boolean;
+
+  /**
+   * upgrade_credit_cents is the unused value of the learner's subject plans that the
+   * caller pays for; buying all subjects takes it off and ends them (docs/billing.md §5).
+   *
+   * @generated from field: int32 upgrade_credit_cents = 5;
+   */
+  upgradeCreditCents: number;
+
+  /**
+   * upgrade_scopes are the subjects of the plans an upgrade would end.
+   *
+   * @generated from field: repeated string upgrade_scopes = 6;
+   */
+  upgradeScopes: string[];
+
+  /**
+   * upgrade_ends_refund is true when a plan an upgrade would end can still be refunded.
+   *
+   * @generated from field: bool upgrade_ends_refund = 7;
+   */
+  upgradeEndsRefund: boolean;
 };
 
 /**

@@ -16,7 +16,7 @@ Prices are per learner, in US dollars:
 - The yearly price is about 15% below twelve months.
 - The bundle costs more than two subjects; it is meant for a catalog of three or more, which comes before launch. When it rises, subscribers keep the price they started with.
 - A learner may hold several plans; any plan that covers a subject lets them study it.
-- Changing a plan in place, and discounts for several children, come later. A learner who moves to the bundle buys it and cancels the old plan.
+- A learner with subject plans moves to the bundle by upgrading (§5). Moving down, and discounts for several children, come later.
 
 ## 2. Who Pays
 
@@ -46,12 +46,13 @@ Sign-up asks who will learn ([Minors' Data](minors-data.md) §6), then the age, 
 2. I authorize Great Academy to renew the plan and charge my card until I cancel, which I can do online at any time. A wallet payment shows instead that it does not renew.
 3. I ask for the plan to start now and understand that I lose any legal right to withdraw once it starts; only my first payment, if monthly, can be refunded within 30 days. When the payment cannot be refunded, the statement says so instead.
 
-The button stays off until all three are ticked. Above the plans the page says whether this account still has its refund; with yearly chosen, that yearly plans cannot be refunded and that a first month can be. A subject the learner already has, alone or in all subjects, shows as already theirs and cannot be chosen; choosing all subjects beside a subject plan says that the two are billed separately. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
+The button stays off until all three are ticked. Above the plans the page says whether this account still has its refund; with yearly chosen, that yearly plans cannot be refunded and that a first month can be. A subject the learner already has, alone or in all subjects, shows as already theirs and cannot be chosen; choosing all subjects beside subject plans the payer pays for shows the upgrade: the price, the credit for their unused time, what is paid today, and that they end (§5). Settings offers the upgrade on each running subject plan. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
 
 ## 5. Cancelling and Refunds
 
 - **Cancel.** A card plan stops renewing and lasts to the end of the period that was paid. A wallet plan has nothing to cancel.
 - **Refund.** Each account gets one refund: the first payment it ever makes, if it buys a month (one subject or all of them, by card or wallet), is refunded in full on request within 30 days of it, from the account's settings; access ends at once. Yearly payments, renewals and every later payment are not refunded, and nothing is prorated. One refund per payer caps what a refund can cost, the fees Stripe keeps and a month of use, and leaves no way to study free by buying and refunding again.
+- **Upgrade.** Buying all subjects for a learner with running subject plans the same payer pays for (not grants, not refunded) is an upgrade. Each such plan is worth the price of its last period times the share of that period still to come; the sum comes off the first payment, as a one-off Stripe coupon on a card subscription or straight off the amount of a wallet payment, and renewals cost the full price. When the payment arrives the old plans end: card subscriptions are cancelled at Stripe without proration, wallet plans end at once. An ended plan can no longer be refunded, so the preview says when an upgrade gives up the account's refund. When the credit leaves less than Stripe's least charge of $0.50, as with a yearly subject plan moving to a monthly bundle, the server refuses and the page asks for yearly. The credit is the only value given for the old plans.
 - **Withdrawal.** The plan starts at the payer's request as soon as it is paid, and the third statement records that any legal period to withdraw ends then. The Terms keep every right that the payer's law does not allow them to give up; counsel reviews the wording per market before launch.
 - **Duplicates.** The server refuses a plan for a subject the learner already has, by itself or in all subjects.
 - Payment details and card changes go through Stripe's customer portal.

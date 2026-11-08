@@ -41,7 +41,12 @@ enum Account {
   ACCOUNT_GRANT = 3;
 }
 
-message ListPlansRequest {}
+message ListPlansRequest {
+  // learner_id is a learner the caller guards; empty lists for the caller, unless for_new_child.
+  string learner_id = 1;
+  // for_new_child lists for a child not yet added, who has no plans to upgrade.
+  bool for_new_child = 2;
+}
 
 // Plan is something that can be bought; prices are in US cents.
 message Plan {
@@ -61,6 +66,13 @@ message ListPlansResponse {
   // first_refund is true while the caller has never paid: their first payment,
   // if it is monthly, can be refunded within 30 days (docs/billing.md §5).
   bool first_refund = 4;
+  // upgrade_credit_cents is the unused value of the learner's subject plans that the
+  // caller pays for; buying all subjects takes it off and ends them (docs/billing.md §5).
+  int32 upgrade_credit_cents = 5;
+  // upgrade_scopes are the subjects of the plans an upgrade would end.
+  repeated string upgrade_scopes = 6;
+  // upgrade_ends_refund is true when a plan an upgrade would end can still be refunded.
+  bool upgrade_ends_refund = 7;
 }
 
 message StartCheckoutRequest {

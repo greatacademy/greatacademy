@@ -20,6 +20,7 @@ import {
   type PlanMeta,
   REFUND_WINDOW,
   runBillingReminders,
+  unusedValue,
 } from "./billing.ts";
 import { accountsKey, type ChildAccounts, dbKey, userIdKey } from "./context.ts";
 import { learningService } from "./learning.ts";
@@ -279,6 +280,115 @@ describe("events", () => {
     const rows = await db.select().from(payment);
     expect(rows.map((r) => r.first)).toEqual([true, false, false]);
     expect(await db.select().from(guardianVerification)).toHaveLength(0);
+  });
+});
+
+describe("upgrade", () => {
+  const all = {
+    scope: "all",
+    interval: Interval.MONTH,
+    account: Account.CARD,
+    agreedTerms: true,
+    agreedRenewal: true,
+    agreedRefund: true,
+    returnUrl: `${ORIGIN}/plans`,
+    locale: "en",
+  };
+
+  it("values the unused share of a plan's last period", () => {
+    const plan = {
+      account: "card",
+      scope: SUBJECT,
+      interval: "month",
+      paidUntil: new Date(Date.UTC(2026, 11, 6, 12)),
+      refundedAt: null,
+    } as const;
+    expect(unusedValue(plan, NOW)).toBe(1900);
+    expect(unusedValue(plan, NOW + 10 * DAY)).toBe(1266);
+    expect(unusedValue(plan, Date.UTC(2026, 11, 6, 12))).toBe(0);
+    expect(unusedValue({ ...plan, account: "grant" }, NOW)).toBe(0);
+    expect(unusedValue({ ...plan, refundedAt: new Date(NOW) }, NOW)).toBe(0);
+    expect(unusedValue({ ...plan, interval: "year", paidUntil: new Date(Date.UTC(2027, 10, 6, 12)) }, NOW)).toBe(19900);
+  });
+
+  it("takes a card plan's unused time off all subjects and ends it once paid", async () => {
+    const learner = await learnerOf("parent");
+    await cardBought(meta({ learner }));
+    const [old] = await db.select().from(subscription);
+    now += 10 * DAY;
+    const listed = await bill("parent").listPlans({});
+    expect(listed).toMatchObject({ upgradeCreditCents: 1266, upgradeScopes: [SUBJECT], upgradeEndsRefund: true });
+    await bill("parent").startCheckout(all);
+    const req = opened[0]!.req;
+    expect(req).toMatchObject({ amount: 4900, credit: 1266, creditName: "Credit for unused time" });
+    expect(req.meta.replaces).toEqual([old!.id]);
+    // Only the paid checkout ends the old plan; its unused time is not refunded at Stripe.
+    const checkout = (paid: boolean): BillingEvent => ({
+      kind: "card-checkout",
+      checkout: "cs_up",
+      meta: req.meta,
+      stripeSubscription: "sub_all",
+      customer: "cus_1",
+      paid,
+      prepaid: false,
+    });
+    await applyBillingEvent(db, checkout(false), now, payments);
+    expect(calls).toEqual([]);
+    await applyBillingEvent(db, checkout(true), now, payments);
+    await applyBillingEvent(db, checkout(true), now, payments);
+    expect(calls).toEqual(["end sub_1"]);
+    const subs = (await bill("parent").listSubscriptions({})).subscriptions;
+    const ended = subs.find((x) => x.id === old!.id);
+    expect(ended).toMatchObject({ paidUntil: BigInt(now), refundableUntil: 0n });
+    expect(await code(bill("parent").refundSubscription({ id: old!.id }))).toBe(Code.FailedPrecondition);
+    expect((await bill("parent").listPlans({})).upgradeCreditCents).toBe(0);
+  });
+
+  it("ends a wallet plan without Stripe, and never another payer's", async () => {
+    const learner = await learnerOf("parent");
+    await applyBillingEvent(
+      db,
+      { kind: "wallet-paid", checkout: "cs_w", meta: meta({ learner }), paymentIntent: "pi_w", amount: 1900, currency: "usd" },
+      now,
+    );
+    await createUser(db, "other");
+    await cardBought(meta({ payer: "other", learner }), "sub_other");
+    const rows = await db.select().from(subscription);
+    const mine = rows.find((r) => r.payerId === "parent")!;
+    const theirs = rows.find((r) => r.payerId === "other")!;
+    expect((await bill("parent").listPlans({})).upgradeScopes).toEqual([SUBJECT]);
+    await applyBillingEvent(
+      db,
+      {
+        kind: "wallet-paid",
+        checkout: "cs_all",
+        meta: meta({ learner, scope: "all", replaces: [mine.id, theirs.id] }),
+        paymentIntent: "pi_all",
+        amount: 3000,
+        currency: "usd",
+      },
+      now,
+      payments,
+    );
+    expect(calls).toEqual([]);
+    const after = await db.select().from(subscription);
+    expect(after.find((r) => r.id === mine.id)?.paidUntil.getTime()).toBe(now);
+    expect(after.find((r) => r.id === theirs.id)?.paidUntil.getTime()).toBeGreaterThan(now);
+  });
+
+  it("asks for yearly when the unused time is worth more than a month", async () => {
+    await cardBought(meta({ learner: await learnerOf("parent"), interval: "year" }));
+    expect(await code(bill("parent").startCheckout(all))).toBe(Code.FailedPrecondition);
+    await bill("parent").startCheckout({ ...all, interval: Interval.YEAR });
+    expect(opened[0]?.req).toMatchObject({ amount: 49900, credit: 19900 });
+  });
+
+  it("credits nothing for a child not yet added", async () => {
+    await cardBought(meta({ learner: await learnerOf("parent") }));
+    expect((await bill("parent").listPlans({ forNewChild: true })).upgradeCreditCents).toBe(0);
+    await bill("parent").startCheckout({ ...all, forNewChild: true });
+    expect(opened[0]?.req).toMatchObject({ credit: 0 });
+    expect(opened[0]?.req.meta.replaces).toBeUndefined();
   });
 });
 

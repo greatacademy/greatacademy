@@ -61,13 +61,44 @@ export function priceOf(scope: string, interval: PlanInterval): number {
 
 /** addInterval adds a calendar month or year to a time, in UTC; a day past the new month's end falls back to its last day. */
 export function addInterval(ms: number, interval: PlanInterval): number {
+  return shiftMonths(ms, interval === "year" ? 12 : 1);
+}
+
+function shiftMonths(ms: number, months: number): number {
   const d = new Date(ms);
-  const months = interval === "year" ? 12 : 1;
   const target = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + months, 1));
   const last = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
   target.setUTCDate(Math.min(d.getUTCDate(), last));
   target.setUTCHours(d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
   return target.getTime();
+}
+
+/** MIN_CHARGE is the least Stripe charges, in cents; an upgrade must cost at least this. */
+export const MIN_CHARGE = 50;
+
+/**
+ * unusedValue returns what is left of a plan, in cents: the price of its last period times the share
+ * of paid time still to come. Grants, refunded plans and plans that ended have none (docs/billing.md §5).
+ */
+export function unusedValue(plan: Pick<PlanRow, "account" | "scope" | "interval" | "paidUntil" | "refundedAt">, now: number): number {
+  const end = plan.paidUntil.getTime();
+  if (plan.account === "grant" || plan.refundedAt || end <= now) return 0;
+  const length = end - shiftMonths(end, plan.interval === "year" ? -12 : -1);
+  return Math.floor((priceOf(plan.scope, plan.interval) * (end - now)) / length);
+}
+
+/** Upgrade is what moving a learner to all subjects replaces: the payer's running single-subject plans, and their unused value. */
+export interface Upgrade {
+  readonly plans: readonly PlanRow[];
+  readonly credit: number;
+}
+
+/** upgradeOf returns the plans of a learner that a payer's upgrade to all subjects would replace. */
+export async function upgradeOf(db: Db, payerId: string, learnerId: string, now: number): Promise<Upgrade> {
+  const plans = (await plansOfLearner(db, learnerId)).filter(
+    (p) => p.payerId === payerId && p.scope !== ALL_SUBJECTS && unusedValue(p, now) > 0,
+  );
+  return { plans, credit: plans.reduce((sum, p) => sum + unusedValue(p, now), 0) };
 }
 
 /** covers tells whether a set of scopes lets a learner study a subject. */
@@ -88,6 +119,8 @@ export interface PlanMeta {
   readonly learner: string;
   readonly scope: string;
   readonly interval: PlanInterval;
+  /** replaces lists the plans an upgrade to all subjects ends once it is paid. */
+  readonly replaces?: readonly string[];
 }
 
 /** CheckoutRequest is what Payments needs to open a Checkout page. */
@@ -97,6 +130,10 @@ export interface CheckoutRequest {
   /** customer is the payer's Stripe customer, when they have one. */
   readonly customer?: string;
   readonly amount: number;
+  /** credit comes off the first payment: the unused value of the plans an upgrade replaces. */
+  readonly credit: number;
+  /** creditName says what the credit is, in the payer's language. */
+  readonly creditName: string;
   readonly productName: string;
   readonly successUrl: string;
   readonly cancelUrl: string;
@@ -157,8 +194,27 @@ export type BillingEvent =
 
 const learnerOf = (meta: PlanMeta) => meta.learner || null;
 
-/** applyBillingEvent records what a Stripe event says; every event can arrive twice or out of order. */
-export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): Promise<void> {
+/**
+ * replacePlans ends the plans an upgrade replaced, once it is paid. Card subscriptions end at Stripe
+ * without proration, since their unused time came off the upgrade's price.
+ */
+async function replacePlans(db: Db, meta: PlanMeta, at: Date, payments: Payments | undefined): Promise<void> {
+  for (const id of meta.replaces ?? []) {
+    const plan = await planById(db, id).catch(() => undefined);
+    if (!plan || plan.payerId !== meta.payer || plan.refundedAt || plan.paidUntil <= at) continue;
+    if (plan.account === "card" && plan.stripeSubscription) {
+      if (!payments) throw new Error("billing is off");
+      await payments.endNow(plan.stripeSubscription);
+    }
+    await endPlan(db, plan.id, at);
+  }
+}
+
+/**
+ * applyBillingEvent records what a Stripe event says; every event can arrive twice or out of order.
+ * payments ends the card subscriptions an upgrade replaces.
+ */
+export async function applyBillingEvent(db: Db, e: BillingEvent, now: number, payments?: Payments): Promise<void> {
   const at = new Date(now);
   switch (e.kind) {
     case "card-checkout": {
@@ -175,6 +231,7 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
       });
       // A paid card that is not prepaid proves an adult (docs/billing.md §7).
       if (e.paid && !e.prepaid) await approveByPayment(db, e.meta.payer, at);
+      if (e.paid) await replacePlans(db, e.meta, at, payments);
       return;
     }
     case "invoice-paid": {
@@ -240,10 +297,12 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
         paidAt: at,
         first: !existing && !(await hasPaid(db, plan.id)),
       });
-      if (!recorded) return;
-      // A payment before the period ends adds to it; after, it starts now.
-      const from = Math.max(now, plan.paidUntil.getTime());
-      await extendPlan(db, plan.id, new Date(addInterval(from, e.meta.interval)));
+      if (recorded) {
+        // A payment before the period ends adds to it; after, it starts now.
+        const from = Math.max(now, plan.paidUntil.getTime());
+        await extendPlan(db, plan.id, new Date(addInterval(from, e.meta.interval)));
+      }
+      await replacePlans(db, e.meta, at, payments);
       return;
     }
   }
@@ -254,7 +313,8 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
  * Only a payer's first payment ever is refundable, and only if it bought a month (docs/billing.md §5).
  */
 export async function refundableUntil(db: Db, plan: PlanRow, now: number): Promise<number> {
-  if (plan.refundedAt || plan.account === "grant" || plan.interval !== "month") return 0;
+  // A plan that ended, as one an upgrade replaced, has nothing left to refund.
+  if (plan.refundedAt || plan.account === "grant" || plan.interval !== "month" || plan.paidUntil.getTime() <= now) return 0;
   const first = await firstPayment(db, plan.id);
   if (!first || first.refundedAt) return 0;
   if ((await firstPaymentOfPayer(db, plan.payerId))?.id !== first.id) return 0;
@@ -342,13 +402,25 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
   };
 
   return {
-    async listPlans(_req, ctx) {
+    async listPlans(req, ctx) {
       const db = ctx.values.get(dbKey);
       const userId = ctx.values.get(userIdKey);
+      // What an upgrade to all subjects would replace, for the learner the plan is for.
+      let upgrade: Upgrade = { plans: [], credit: 0 };
+      let endsRefund = false;
+      if (db && userId && !req.forNewChild) {
+        const learner = req.learnerId && (await isGuardian(db, userId, req.learnerId)) ? req.learnerId : await learnerFor(db, userId);
+        const now = deps.now();
+        upgrade = await upgradeOf(db, userId, learner, now);
+        for (const p of upgrade.plans) if (await refundableUntil(db, p, now)) endsRefund = true;
+      }
       return {
         required: deps.payments !== undefined,
         wallet: deps.payments?.wallet ?? false,
         firstRefund: !db || !userId || !(await firstPaymentOfPayer(db, userId)),
+        upgradeCreditCents: upgrade.credit,
+        upgradeScopes: upgrade.plans.map((p) => p.scope),
+        upgradeEndsRefund: endsRefund,
         plans: [
           ...deps.registry.listings.map((s) => ({
             scope: s.id,
@@ -399,11 +471,24 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       const listing = deps.registry.listings.find((s) => s.id === req.scope);
       const name = listing ? `Great Academy: ${listing.title.en}` : "Great Academy: All subjects";
       const customer = method === "card" ? await customerOf(db, userId) : undefined;
+      const amount = priceOf(req.scope, interval);
+      // Buying all subjects for a learner with subject plans is an upgrade: their unused value comes off (docs/billing.md §5).
+      const upgrade = learner && req.scope === ALL_SUBJECTS ? await upgradeOf(db, userId, learner, deps.now()) : { plans: [], credit: 0 };
+      if (amount - upgrade.credit < MIN_CHARGE)
+        throw new ConnectError("the unused time of the current plans is worth more than this plan", Code.FailedPrecondition);
       const session = await pay.checkout(method, {
-        meta: { payer: userId, learner, scope: req.scope, interval },
+        meta: {
+          payer: userId,
+          learner,
+          scope: req.scope,
+          interval,
+          ...(upgrade.plans.length > 0 && { replaces: upgrade.plans.map((p) => p.id) }),
+        },
         email,
         ...(customer && { customer }),
-        amount: priceOf(req.scope, interval),
+        amount,
+        credit: upgrade.credit,
+        creditName: req.locale === "zh-CN" ? "未用时间抵扣" : "Credit for unused time",
         productName: `${name} (${interval === "year" ? "yearly" : "monthly"})`,
         // Stripe fills in the session id; the braces must reach it unescaped.
         successUrl: success.toString().replace("%7BCHECKOUT_SESSION_ID%7D", "{CHECKOUT_SESSION_ID}"),
