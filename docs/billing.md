@@ -2,7 +2,7 @@
 
 > English | [简体中文](billing.zh-CN.md)
 
-Great Academy is paid only: a learner studies a subject while a subscription covers it. There is no free tier and no trial; the first payment of every subscription can be refunded in full for 30 days instead. Billing is phase P9 of the [roadmap](roadmap.md). It also proves that a guardian is an adult, as [Minors' Data](minors-data.md) §6 requires.
+Great Academy is paid only: a learner studies a subject while a subscription covers it. There is no free tier and no trial; instead, each account's first payment, if monthly, can be refunded in full for 30 days. Billing is phase P9 of the [roadmap](roadmap.md). It also proves that a guardian is an adult, as [Minors' Data](minors-data.md) §6 requires.
 
 ## 1. Plans and Prices
 
@@ -44,14 +44,16 @@ Sign-up asks who will learn ([Minors' Data](minors-data.md) §6), then the age, 
 
 1. I am an adult and agree to the Terms of Service.
 2. I authorize Great Academy to renew the plan and charge my card until I cancel, which I can do online at any time. A wallet payment shows instead that it does not renew.
-3. I understand that a refund is given only within 30 days of the first payment.
+3. I ask for the plan to start now and understand that I lose any legal right to withdraw once it starts; only my first payment, if monthly, can be refunded within 30 days. When the payment cannot be refunded, the statement says so instead.
 
-The button stays off until all three are ticked. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
+The button stays off until all three are ticked. Above the plans the page says whether this account still has its refund; with yearly chosen, that yearly plans cannot be refunded and that a first month can be. A subject the learner already has, alone or in all subjects, shows as already theirs and cannot be chosen; choosing all subjects beside a subject plan says that the two are billed separately. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
 
 ## 5. Cancelling and Refunds
 
 - **Cancel.** A card plan stops renewing and lasts to the end of the period that was paid. A wallet plan has nothing to cancel.
-- **Refund.** The first payment of a plan is refunded in full on request within 30 days of it, from the account's settings; access ends at once. Renewals and later wallet payments are not refunded, and nothing is prorated.
+- **Refund.** Each account gets one refund: the first payment it ever makes, if it buys a month (one subject or all of them, by card or wallet), is refunded in full on request within 30 days of it, from the account's settings; access ends at once. Yearly payments, renewals and every later payment are not refunded, and nothing is prorated. One refund per payer caps what a refund can cost, the fees Stripe keeps and a month of use, and leaves no way to study free by buying and refunding again.
+- **Withdrawal.** The plan starts at the payer's request as soon as it is paid, and the third statement records that any legal period to withdraw ends then. The Terms keep every right that the payer's law does not allow them to give up; counsel reviews the wording per market before launch.
+- **Duplicates.** The server refuses a plan for a subject the learner already has, by itself or in all subjects.
 - Payment details and card changes go through Stripe's customer portal.
 
 ## 6. Access

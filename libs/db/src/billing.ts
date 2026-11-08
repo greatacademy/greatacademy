@@ -187,6 +187,18 @@ export async function firstPayment(db: Db, subscriptionId: string): Promise<Paym
   return rows[0];
 }
 
+/** firstPaymentOfPayer returns the first charge a person ever paid, for any plan; refunds do not change which one it is. */
+export async function firstPaymentOfPayer(db: Db, payerId: string): Promise<PaymentRow | undefined> {
+  const rows = await db
+    .select({ payment })
+    .from(payment)
+    .innerJoin(subscription, eq(payment.subscriptionId, subscription.id))
+    .where(eq(subscription.payerId, payerId))
+    .orderBy(asc(payment.paidAt), asc(payment.id))
+    .limit(1);
+  return rows[0]?.payment;
+}
+
 /** paymentsOf returns a plan's charges, oldest first. */
 export async function paymentsOf(db: Db, subscriptionId: string): Promise<PaymentRow[]> {
   return db.select().from(payment).where(eq(payment.subscriptionId, subscriptionId)).orderBy(asc(payment.paidAt));

@@ -10,6 +10,7 @@ import {
   endPlan,
   extendPlan,
   firstPayment,
+  firstPaymentOfPayer,
   guardedLearners,
   hasPaid,
   isGuardian,
@@ -248,11 +249,15 @@ export async function applyBillingEvent(db: Db, e: BillingEvent, now: number): P
   }
 }
 
-/** refundableUntil returns when a plan's first payment stops being refundable, or 0 when it cannot be refunded. */
+/**
+ * refundableUntil returns when a plan's first payment stops being refundable, or 0 when it cannot be refunded.
+ * Only a payer's first payment ever is refundable, and only if it bought a month (docs/billing.md §5).
+ */
 export async function refundableUntil(db: Db, plan: PlanRow, now: number): Promise<number> {
-  if (plan.refundedAt || plan.account === "grant") return 0;
+  if (plan.refundedAt || plan.account === "grant" || plan.interval !== "month") return 0;
   const first = await firstPayment(db, plan.id);
   if (!first || first.refundedAt) return 0;
+  if ((await firstPaymentOfPayer(db, plan.payerId))?.id !== first.id) return 0;
   const until = first.paidAt.getTime() + REFUND_WINDOW;
   return until > now ? until : 0;
 }
@@ -337,10 +342,13 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
   };
 
   return {
-    listPlans() {
+    async listPlans(_req, ctx) {
+      const db = ctx.values.get(dbKey);
+      const userId = ctx.values.get(userIdKey);
       return {
         required: deps.payments !== undefined,
         wallet: deps.payments?.wallet ?? false,
+        firstRefund: !db || !userId || !(await firstPaymentOfPayer(db, userId)),
         plans: [
           ...deps.registry.listings.map((s) => ({
             scope: s.id,
@@ -377,6 +385,11 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
       else if (req.learnerId) {
         if (!(await isGuardian(db, userId, req.learnerId))) throw new ConnectError("no such learner", Code.NotFound);
         learner = req.learnerId;
+      }
+      if (learner) {
+        const covered = await coveringScopes(db, learner, new Date(deps.now()));
+        if (covered.includes(ALL_SUBJECTS) || covered.includes(req.scope))
+          throw new ConnectError("this learner already has a plan for that", Code.AlreadyExists);
       }
       const back = ownUrl(req.returnUrl, ctx);
       const success = new URL(back);

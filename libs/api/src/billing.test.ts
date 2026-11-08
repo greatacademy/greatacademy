@@ -168,6 +168,17 @@ describe("checkout", () => {
     expect(o?.req.email).toBe("parent@example.com");
   });
 
+  it("refuses a subject the learner already has, by itself or in all subjects", async () => {
+    const learner = await learnerOf("parent");
+    await cardBought(meta({ learner }));
+    expect(await code(bill("parent").startCheckout({ ...base, scope: SUBJECT }))).toBe(Code.AlreadyExists);
+    await bill("parent").startCheckout(base);
+    await cardBought(meta({ learner, scope: "all" }), "sub_all");
+    expect(await code(bill("parent").startCheckout(base))).toBe(Code.AlreadyExists);
+    // A plan for a child yet to be added names nobody, so nothing covers it.
+    await bill("parent").startCheckout({ ...base, scope: SUBJECT, forNewChild: true });
+  });
+
   it("asks for every statement, renewal only for cards", async () => {
     expect(await code(bill("parent").startCheckout({ ...base, agreedRenewal: false }))).toBe(Code.FailedPrecondition);
     expect(await code(bill("parent").startCheckout({ ...base, agreedRefund: false }))).toBe(Code.FailedPrecondition);
@@ -288,6 +299,31 @@ describe("plans", () => {
     expect(after).toMatchObject({ refunded: true, refundableUntil: 0n });
     expect(after?.paidUntil).toBe(BigInt(now));
     expect(await code(bill("parent").refundSubscription({ id: s!.id }))).toBe(Code.FailedPrecondition);
+  });
+
+  it("refunds only the payer's first payment, and only a month", async () => {
+    expect((await bill("parent").listPlans({})).firstRefund).toBe(true);
+    const learner = await learnerOf("parent");
+    await cardBought(meta({ learner, interval: "year" }), "sub_y");
+    expect((await bill("parent").listPlans({})).firstRefund).toBe(false);
+    now += DAY;
+    await cardBought(meta({ learner, scope: "all" }), "sub_m");
+    const subs = (await bill("parent").listSubscriptions({})).subscriptions;
+    expect(subs.map((s) => s.refundableUntil)).toEqual([0n, 0n]);
+    expect(await code(bill("parent").refundSubscription({ id: subs[0]!.id }))).toBe(Code.FailedPrecondition);
+    expect(calls).toEqual([]);
+  });
+
+  it("keeps the one refund used up once it is spent", async () => {
+    const learner = await learnerOf("parent");
+    await cardBought(meta({ learner, scope: "all" }), "sub_1");
+    const [s] = (await bill("parent").listSubscriptions({})).subscriptions;
+    expect(s?.refundableUntil).toBe(BigInt(NOW + REFUND_WINDOW));
+    await bill("parent").refundSubscription({ id: s!.id });
+    now += DAY;
+    await cardBought(meta({ learner }), "sub_2");
+    const again = (await bill("parent").listSubscriptions({})).subscriptions.find((x) => !x.refunded);
+    expect(again?.refundableUntil).toBe(0n);
   });
 
   it("refund nothing after 30 days", async () => {

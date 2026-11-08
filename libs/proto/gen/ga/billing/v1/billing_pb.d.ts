@@ -80,6 +80,14 @@ export declare type ListPlansResponse = Message<"ga.billing.v1.ListPlansResponse
    * @generated from field: bool wallet = 3;
    */
   wallet: boolean;
+
+  /**
+   * first_refund is true while the caller has never paid: their first payment,
+   * if it is monthly, can be refunded within 30 days (docs/billing.md §5).
+   *
+   * @generated from field: bool first_refund = 4;
+   */
+  firstRefund: boolean;
 };
 
 /**
@@ -447,14 +455,14 @@ export enum Account {
   UNSPECIFIED = 0,
 
   /**
-   * ACCOUNT_CARD is the main Stripe account: cards, renewed until cancelled.
+   * ACCOUNT_CARD is a card, renewed until cancelled.
    *
    * @generated from enum value: ACCOUNT_CARD = 1;
    */
   CARD = 1,
 
   /**
-   * ACCOUNT_WALLET is the second Stripe account: Alipay and WeChat Pay, by the period.
+   * ACCOUNT_WALLET is Alipay or WeChat Pay, one period at a time.
    *
    * @generated from enum value: ACCOUNT_WALLET = 2;
    */
@@ -531,7 +539,7 @@ export declare const BillingService: GenService<{
     output: typeof CancelSubscriptionResponseSchema;
   },
   /**
-   * RefundSubscription refunds a plan's first payment within 30 days and ends the plan.
+   * RefundSubscription refunds the payer's first payment, if monthly, within 30 days and ends the plan.
    *
    * @generated from rpc ga.billing.v1.BillingService.RefundSubscription
    */

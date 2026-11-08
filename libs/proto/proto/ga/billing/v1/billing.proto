@@ -17,7 +17,7 @@ service BillingService {
   rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
   // CancelSubscription stops a card plan from renewing, or lets it renew again.
   rpc CancelSubscription(CancelSubscriptionRequest) returns (CancelSubscriptionResponse);
-  // RefundSubscription refunds a plan's first payment within 30 days and ends the plan.
+  // RefundSubscription refunds the payer's first payment, if monthly, within 30 days and ends the plan.
   rpc RefundSubscription(RefundSubscriptionRequest) returns (RefundSubscriptionResponse);
   // OpenPortal opens Stripe's customer portal, where the payer changes the card and sees receipts.
   rpc OpenPortal(OpenPortalRequest) returns (OpenPortalResponse);
@@ -33,9 +33,9 @@ enum Interval {
 // Account is how a plan is paid.
 enum Account {
   ACCOUNT_UNSPECIFIED = 0;
-  // ACCOUNT_CARD is the main Stripe account: cards, renewed until cancelled.
+  // ACCOUNT_CARD is a card, renewed until cancelled.
   ACCOUNT_CARD = 1;
-  // ACCOUNT_WALLET is the second Stripe account: Alipay and WeChat Pay, by the period.
+  // ACCOUNT_WALLET is Alipay or WeChat Pay, one period at a time.
   ACCOUNT_WALLET = 2;
   // ACCOUNT_GRANT is a plan an administrator gave without payment.
   ACCOUNT_GRANT = 3;
@@ -58,6 +58,9 @@ message ListPlansResponse {
   bool required = 2;
   // wallet is true when Alipay and WeChat Pay are set up.
   bool wallet = 3;
+  // first_refund is true while the caller has never paid: their first payment,
+  // if it is monthly, can be refunded within 30 days (docs/billing.md §5).
+  bool first_refund = 4;
 }
 
 message StartCheckoutRequest {
