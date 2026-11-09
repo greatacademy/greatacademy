@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 
 import { Landing } from "../components/Landing.tsx";
-import { LearnDashboard } from "../components/LearnDashboard.tsx";
 import { LoadError } from "../components/LoadError.tsx";
 import { Spinner } from "../components/ui.tsx";
 import { Welcome } from "../components/Welcome.tsx";
 import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
-import { account, learning, timeZone } from "../lib/rpc.ts";
+import { account, timeZone } from "../lib/rpc.ts";
 import { hasSessionCookie } from "../lib/session-cookie.ts";
+import { rememberedSubject, useProfile } from "../lib/subject.tsx";
 
 export const Route = createFileRoute("/")({
   // The cookie decides the server's first render. Later the session is known in the browser, so moving here asks the server nothing.
@@ -34,20 +34,22 @@ function Index() {
   return <Landing />;
 }
 
-/** Home opens on what the learner should do next: the most recent course, or a first step when there is none. */
+/** Home opens the subject last opened in this browser, else the one most recently worked in, or a first step when there is none. */
 function Home() {
   const { m } = useI18n();
-  const profile = useQuery({ queryKey: ["profile"], queryFn: () => learning.getProfile({ timeZone: timeZone() }) });
+  const profile = useProfile();
   const guarded = useQuery({ queryKey: ["guarded"], queryFn: () => account.listGuardedLearners({ timeZone: timeZone() }) });
-  const current = profile.data?.enrollments[0]?.courseId;
+  const enrolled = profile.data?.enrollments ?? [];
+  const remembered = rememberedSubject();
+  const subject = enrolled.some((e) => e.subjectId === remembered) ? remembered : enrolled[0]?.subjectId;
   return (
     <div className="mx-auto max-w-5xl px-4 pt-8 pb-24">
-      {profile.isPending || (!current && guarded.isPending) ? (
+      {profile.isPending || (!subject && guarded.isPending) ? (
         <Spinner label={m.loading} />
       ) : profile.isError ? (
         <LoadError error={profile.error} onRetry={() => profile.refetch()} />
-      ) : current ? (
-        <LearnDashboard courseId={current} />
+      ) : subject ? (
+        <Navigate to="/$subject" params={{ subject }} replace />
       ) : (guarded.data?.learners.length ?? 0) > 0 ? (
         <Navigate to="/guardian" replace />
       ) : (

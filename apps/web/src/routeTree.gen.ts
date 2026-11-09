@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SubjectRouteRouteImport } from './routes/$subject/route'
 import { Route as AccessRouteImport } from './routes/access'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AgeRouteImport } from './routes/age'
@@ -21,6 +22,10 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteRouteImport } from './routes/settings/route'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
+import { Route as SubjectIndexRouteImport } from './routes/$subject/index'
+import { Route as SubjectCourseRouteImport } from './routes/$subject/course'
+import { Route as SubjectHistoryRouteImport } from './routes/$subject/history'
+import { Route as SubjectProgressRouteImport } from './routes/$subject/progress'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAdminsRouteImport } from './routes/admin/admins'
 import { Route as AdminAiRouteImport } from './routes/admin/ai'
@@ -38,15 +43,16 @@ import { Route as LegalPageRouteImport } from './routes/legal/$page'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
-import { Route as SettingsCoursesRouteImport } from './routes/settings/courses'
-import { Route as LearnCourseIdIndexRouteImport } from './routes/learn/$courseId/index'
-import { Route as LearnCourseIdHistoryRouteImport } from './routes/learn/$courseId/history'
-import { Route as LearnCourseIdProgressRouteImport } from './routes/learn/$courseId/progress'
-import { Route as LearnCourseIdTopicsTopicIdRouteImport } from './routes/learn/$courseId/topics/$topicId'
+import { Route as SubjectTopicsTopicIdRouteImport } from './routes/$subject/topics/$topicId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubjectRouteRoute = SubjectRouteRouteImport.update({
+  id: '/$subject',
+  path: '/$subject',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccessRoute = AccessRouteImport.update({
@@ -103,6 +109,26 @@ const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SubjectIndexRoute = SubjectIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SubjectRouteRoute,
+} as any)
+const SubjectCourseRoute = SubjectCourseRouteImport.update({
+  id: '/course',
+  path: '/course',
+  getParentRoute: () => SubjectRouteRoute,
+} as any)
+const SubjectHistoryRoute = SubjectHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => SubjectRouteRoute,
+} as any)
+const SubjectProgressRoute = SubjectProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => SubjectRouteRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -189,35 +215,15 @@ const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
   path: '/appearance',
   getParentRoute: () => SettingsRouteRoute,
 } as any)
-const SettingsCoursesRoute = SettingsCoursesRouteImport.update({
-  id: '/courses',
-  path: '/courses',
-  getParentRoute: () => SettingsRouteRoute,
+const SubjectTopicsTopicIdRoute = SubjectTopicsTopicIdRouteImport.update({
+  id: '/topics/$topicId',
+  path: '/topics/$topicId',
+  getParentRoute: () => SubjectRouteRoute,
 } as any)
-const LearnCourseIdIndexRoute = LearnCourseIdIndexRouteImport.update({
-  id: '/learn/$courseId/',
-  path: '/learn/$courseId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnCourseIdHistoryRoute = LearnCourseIdHistoryRouteImport.update({
-  id: '/learn/$courseId/history',
-  path: '/learn/$courseId/history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnCourseIdProgressRoute = LearnCourseIdProgressRouteImport.update({
-  id: '/learn/$courseId/progress',
-  path: '/learn/$courseId/progress',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnCourseIdTopicsTopicIdRoute =
-  LearnCourseIdTopicsTopicIdRouteImport.update({
-    id: '/learn/$courseId/topics/$topicId',
-    path: '/learn/$courseId/topics/$topicId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$subject': typeof SubjectRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/settings': typeof SettingsRouteRouteWithChildren
   '/access': typeof AccessRoute
@@ -229,6 +235,9 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/$subject/course': typeof SubjectCourseRoute
+  '/$subject/history': typeof SubjectHistoryRoute
+  '/$subject/progress': typeof SubjectProgressRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/ai': typeof AdminAiRoute
   '/admin/log': typeof AdminLogRoute
@@ -242,15 +251,12 @@ export interface FileRoutesByFullPath {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
-  '/settings/courses': typeof SettingsCoursesRoute
+  '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/settings/': typeof SettingsIndexRoute
-  '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
-  '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
-  '/learn/$courseId/': typeof LearnCourseIdIndexRoute
-  '/learn/$courseId/topics/$topicId': typeof LearnCourseIdTopicsTopicIdRoute
+  '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -263,6 +269,9 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/$subject/course': typeof SubjectCourseRoute
+  '/$subject/history': typeof SubjectHistoryRoute
+  '/$subject/progress': typeof SubjectProgressRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/ai': typeof AdminAiRoute
   '/admin/log': typeof AdminLogRoute
@@ -276,19 +285,17 @@ export interface FileRoutesByTo {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
-  '/settings/courses': typeof SettingsCoursesRoute
+  '/$subject': typeof SubjectIndexRoute
   '/admin': typeof AdminIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/guardian': typeof GuardianIndexRoute
   '/settings': typeof SettingsIndexRoute
-  '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
-  '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
-  '/learn/$courseId': typeof LearnCourseIdIndexRoute
-  '/learn/$courseId/topics/$topicId': typeof LearnCourseIdTopicsTopicIdRoute
+  '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$subject': typeof SubjectRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/settings': typeof SettingsRouteRouteWithChildren
   '/access': typeof AccessRoute
@@ -300,6 +307,9 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/$subject/course': typeof SubjectCourseRoute
+  '/$subject/history': typeof SubjectHistoryRoute
+  '/$subject/progress': typeof SubjectProgressRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/ai': typeof AdminAiRoute
   '/admin/log': typeof AdminLogRoute
@@ -313,20 +323,18 @@ export interface FileRoutesById {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
-  '/settings/courses': typeof SettingsCoursesRoute
+  '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/settings/': typeof SettingsIndexRoute
-  '/learn/$courseId/history': typeof LearnCourseIdHistoryRoute
-  '/learn/$courseId/progress': typeof LearnCourseIdProgressRoute
-  '/learn/$courseId/': typeof LearnCourseIdIndexRoute
-  '/learn/$courseId/topics/$topicId': typeof LearnCourseIdTopicsTopicIdRoute
+  '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$subject'
     | '/admin'
     | '/settings'
     | '/access'
@@ -338,6 +346,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/$subject/course'
+    | '/$subject/history'
+    | '/$subject/progress'
     | '/admin/admins'
     | '/admin/ai'
     | '/admin/log'
@@ -351,15 +362,12 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
-    | '/settings/courses'
+    | '/$subject/'
     | '/admin/'
     | '/courses/'
     | '/guardian/'
     | '/settings/'
-    | '/learn/$courseId/history'
-    | '/learn/$courseId/progress'
-    | '/learn/$courseId/'
-    | '/learn/$courseId/topics/$topicId'
+    | '/$subject/topics/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -372,6 +380,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/$subject/course'
+    | '/$subject/history'
+    | '/$subject/progress'
     | '/admin/admins'
     | '/admin/ai'
     | '/admin/log'
@@ -385,18 +396,16 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
-    | '/settings/courses'
+    | '/$subject'
     | '/admin'
     | '/courses'
     | '/guardian'
     | '/settings'
-    | '/learn/$courseId/history'
-    | '/learn/$courseId/progress'
-    | '/learn/$courseId'
-    | '/learn/$courseId/topics/$topicId'
+    | '/$subject/topics/$topicId'
   id:
     | '__root__'
     | '/'
+    | '/$subject'
     | '/admin'
     | '/settings'
     | '/access'
@@ -408,6 +417,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/$subject/course'
+    | '/$subject/history'
+    | '/$subject/progress'
     | '/admin/admins'
     | '/admin/ai'
     | '/admin/log'
@@ -421,19 +433,17 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
-    | '/settings/courses'
+    | '/$subject/'
     | '/admin/'
     | '/courses/'
     | '/guardian/'
     | '/settings/'
-    | '/learn/$courseId/history'
-    | '/learn/$courseId/progress'
-    | '/learn/$courseId/'
-    | '/learn/$courseId/topics/$topicId'
+    | '/$subject/topics/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SubjectRouteRoute: typeof SubjectRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   SettingsRouteRoute: typeof SettingsRouteRouteWithChildren
   AccessRoute: typeof AccessRoute
@@ -452,10 +462,6 @@ export interface RootRouteChildren {
   SessionSessionIdRoute: typeof SessionSessionIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   GuardianIndexRoute: typeof GuardianIndexRoute
-  LearnCourseIdHistoryRoute: typeof LearnCourseIdHistoryRoute
-  LearnCourseIdProgressRoute: typeof LearnCourseIdProgressRoute
-  LearnCourseIdIndexRoute: typeof LearnCourseIdIndexRoute
-  LearnCourseIdTopicsTopicIdRoute: typeof LearnCourseIdTopicsTopicIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -465,6 +471,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$subject': {
+      id: '/$subject'
+      path: '/$subject'
+      fullPath: '/$subject'
+      preLoaderRoute: typeof SubjectRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/access': {
@@ -543,6 +556,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/sign-up'
       preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$subject/': {
+      id: '/$subject/'
+      path: '/'
+      fullPath: '/$subject/'
+      preLoaderRoute: typeof SubjectIndexRouteImport
+      parentRoute: typeof SubjectRouteRoute
+    }
+    '/$subject/course': {
+      id: '/$subject/course'
+      path: '/course'
+      fullPath: '/$subject/course'
+      preLoaderRoute: typeof SubjectCourseRouteImport
+      parentRoute: typeof SubjectRouteRoute
+    }
+    '/$subject/history': {
+      id: '/$subject/history'
+      path: '/history'
+      fullPath: '/$subject/history'
+      preLoaderRoute: typeof SubjectHistoryRouteImport
+      parentRoute: typeof SubjectRouteRoute
+    }
+    '/$subject/progress': {
+      id: '/$subject/progress'
+      path: '/progress'
+      fullPath: '/$subject/progress'
+      preLoaderRoute: typeof SubjectProgressRouteImport
+      parentRoute: typeof SubjectRouteRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -663,43 +704,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsAppearanceRouteImport
       parentRoute: typeof SettingsRouteRoute
     }
-    '/settings/courses': {
-      id: '/settings/courses'
-      path: '/courses'
-      fullPath: '/settings/courses'
-      preLoaderRoute: typeof SettingsCoursesRouteImport
-      parentRoute: typeof SettingsRouteRoute
-    }
-    '/learn/$courseId/': {
-      id: '/learn/$courseId/'
-      path: '/learn/$courseId'
-      fullPath: '/learn/$courseId/'
-      preLoaderRoute: typeof LearnCourseIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/$courseId/history': {
-      id: '/learn/$courseId/history'
-      path: '/learn/$courseId/history'
-      fullPath: '/learn/$courseId/history'
-      preLoaderRoute: typeof LearnCourseIdHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/$courseId/progress': {
-      id: '/learn/$courseId/progress'
-      path: '/learn/$courseId/progress'
-      fullPath: '/learn/$courseId/progress'
-      preLoaderRoute: typeof LearnCourseIdProgressRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/$courseId/topics/$topicId': {
-      id: '/learn/$courseId/topics/$topicId'
-      path: '/learn/$courseId/topics/$topicId'
-      fullPath: '/learn/$courseId/topics/$topicId'
-      preLoaderRoute: typeof LearnCourseIdTopicsTopicIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/$subject/topics/$topicId': {
+      id: '/$subject/topics/$topicId'
+      path: '/topics/$topicId'
+      fullPath: '/$subject/topics/$topicId'
+      preLoaderRoute: typeof SubjectTopicsTopicIdRouteImport
+      parentRoute: typeof SubjectRouteRoute
     }
   }
 }
+
+interface SubjectRouteRouteChildren {
+  SubjectCourseRoute: typeof SubjectCourseRoute
+  SubjectHistoryRoute: typeof SubjectHistoryRoute
+  SubjectProgressRoute: typeof SubjectProgressRoute
+  SubjectIndexRoute: typeof SubjectIndexRoute
+  SubjectTopicsTopicIdRoute: typeof SubjectTopicsTopicIdRoute
+}
+
+const SubjectRouteRouteChildren: SubjectRouteRouteChildren = {
+  SubjectCourseRoute: SubjectCourseRoute,
+  SubjectHistoryRoute: SubjectHistoryRoute,
+  SubjectProgressRoute: SubjectProgressRoute,
+  SubjectIndexRoute: SubjectIndexRoute,
+  SubjectTopicsTopicIdRoute: SubjectTopicsTopicIdRoute,
+}
+
+const SubjectRouteRouteWithChildren = SubjectRouteRoute._addFileChildren(
+  SubjectRouteRouteChildren,
+)
 
 interface AdminRouteRouteChildren {
   AdminAdminsRoute: typeof AdminAdminsRoute
@@ -729,13 +762,11 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 
 interface SettingsRouteRouteChildren {
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
-  SettingsCoursesRoute: typeof SettingsCoursesRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
 }
 
 const SettingsRouteRouteChildren: SettingsRouteRouteChildren = {
   SettingsAppearanceRoute: SettingsAppearanceRoute,
-  SettingsCoursesRoute: SettingsCoursesRoute,
   SettingsIndexRoute: SettingsIndexRoute,
 }
 
@@ -745,6 +776,7 @@ const SettingsRouteRouteWithChildren = SettingsRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SubjectRouteRoute: SubjectRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   SettingsRouteRoute: SettingsRouteRouteWithChildren,
   AccessRoute: AccessRoute,
@@ -763,10 +795,6 @@ const rootRouteChildren: RootRouteChildren = {
   SessionSessionIdRoute: SessionSessionIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   GuardianIndexRoute: GuardianIndexRoute,
-  LearnCourseIdHistoryRoute: LearnCourseIdHistoryRoute,
-  LearnCourseIdProgressRoute: LearnCourseIdProgressRoute,
-  LearnCourseIdIndexRoute: LearnCourseIdIndexRoute,
-  LearnCourseIdTopicsTopicIdRoute: LearnCourseIdTopicsTopicIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

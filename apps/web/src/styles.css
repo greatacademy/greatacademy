@@ -18,6 +18,14 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 
+/* A subject's colors, which hold inside an element marked with data-subject (lib/subject.tsx). */
+@theme inline {
+  --color-subject: var(--subject-strong, var(--color-accent));
+  --color-on-subject: var(--subject-on-strong, var(--color-on-accent));
+  --color-subject-soft: var(--subject-soft, var(--color-accent-soft));
+  --color-on-subject-soft: var(--subject-on-soft, var(--color-accent));
+}
+
 @layer base {
   html {
     background: var(--color-page);

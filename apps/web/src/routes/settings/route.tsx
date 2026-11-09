@@ -26,14 +26,6 @@ function SettingsLayout() {
             {m.settingsAccount}
           </Link>
           <Link
-            to="/settings/courses"
-            className={`${tab} -mb-px`}
-            activeProps={{ className: "border-accent text-ink" }}
-            inactiveProps={{ className: "border-transparent text-muted hover:text-ink" }}
-          >
-            {m.courses}
-          </Link>
-          <Link
             to="/settings/appearance"
             className={`${tab} -mb-px`}
             activeProps={{ className: "border-accent text-ink" }}

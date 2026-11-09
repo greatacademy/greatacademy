@@ -1,3 +1,4 @@
+import type { Subject } from "@ga/proto/catalog/v1/catalog_pb";
 import type { Feedback, ProblemView, Question, Result, Session } from "@ga/proto/learning/v1/learning_pb";
 import { ArrowLeft, ArrowRight, CheckCircle, Lightbulb, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -15,6 +16,7 @@ import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../compon
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { learning } from "../../lib/rpc.ts";
+import { SubjectChip, useShowSubject, useSubjectOfCourse } from "../../lib/subject.tsx";
 
 export const Route = createFileRoute("/session/$sessionId")({ component: Player });
 
@@ -40,13 +42,15 @@ function Player() {
   useEffect(() => {
     if (loaded.data?.session && !session) setSession(loaded.data.session);
   }, [loaded.data, session]);
+  const subject = useSubjectOfCourse(session?.courseId);
+  useShowSubject(subject?.id);
 
-  if (!auth || loaded.isPending || !session) {
+  if (!auth || loaded.isPending || !session || !subject) {
     return loaded.isError ? <LoadError error={loaded.error} onRetry={() => loaded.refetch()} /> : <Spinner label={m.loading} />;
   }
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <PlayerHeader session={session} />
+    <div data-subject={subject.id} className="mx-auto max-w-3xl space-y-6">
+      <PlayerHeader session={session} subject={subject} />
       {session.step.case === "result" ? (
         <ResultView session={session} result={session.step.value} />
       ) : session.step.case === "question" ? (
@@ -90,19 +94,19 @@ function taskTitle(
   }
 }
 
-function PlayerHeader({ session }: { session: Session }) {
+function PlayerHeader({ session, subject }: { session: Session; subject: Subject }) {
   const { m, tx } = useI18n();
   const { label, title } = taskTitle(session, m, tx);
   const q = session.step.case === "question" ? session.step.value : undefined;
   const lesson = q?.lesson;
   return (
     <div className="space-y-3">
-      <Link to="/learn/$courseId" params={{ courseId: session.courseId }} className={buttonClass("ghost", "-ml-4")}>
-        <ArrowLeft size={16} /> {m.dashboard}
+      <Link to="/$subject" params={{ subject: subject.id }} className={buttonClass("ghost", "-ml-4")}>
+        <ArrowLeft size={16} /> <SubjectChip subject={subject} size={22} />
       </Link>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="text-xs font-medium tracking-wide text-accent uppercase">{label}</div>
+          <div className="text-xs font-medium tracking-wide text-on-subject-soft uppercase">{label}</div>
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         </div>
         {q && !lesson && (
@@ -408,6 +412,7 @@ function FeedbackView({
   onContinue(): void;
 }) {
   const { m, tx } = useI18n();
+  const subjectId = useSubjectOfCourse(session.courseId)?.id ?? "";
   const task = session.task?.kind;
   const topicId = task?.case === "lesson" || task?.case === "review" ? task.value.topicId : undefined;
   useEffect(() => {
@@ -445,8 +450,8 @@ function FeedbackView({
       <div className={`flex items-center gap-3 ${topicId && !feedback.correct ? "justify-between" : "justify-end"}`}>
         {topicId && !feedback.correct && (
           <Link
-            to="/learn/$courseId/topics/$topicId"
-            params={{ courseId: session.courseId, topicId }}
+            to="/$subject/topics/$topicId"
+            params={{ subject: subjectId, topicId }}
             target="_blank"
             className="text-sm font-medium text-accent hover:underline"
           >
@@ -463,6 +468,7 @@ function FeedbackView({
 
 function ResultView({ session, result }: { session: Session; result: Result }) {
   const { m, tx } = useI18n();
+  const subjectId = useSubjectOfCourse(session.courseId)?.id ?? "";
   const kind = session.task?.kind.case;
   const headline =
     kind === "diagnostic"
@@ -502,7 +508,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
         {kind === "lesson" && !result.passed && !result.blownOff && <p className="mx-auto max-w-lg text-sm text-muted">{m.lessonFailed}</p>}
         {kind === "review" && !result.passed && !result.blownOff && <p className="mx-auto max-w-lg text-sm text-muted">{m.reviewFailed}</p>}
         <div className="pt-2">
-          <Link to="/learn/$courseId" params={{ courseId: session.courseId }} className={buttonClass("primary", "px-6")}>
+          <Link to="/$subject" params={{ subject: subjectId }} className={buttonClass("primary", "px-6")}>
             {m.backToDashboard} <ArrowRight size={16} />
           </Link>
         </div>
@@ -520,11 +526,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
               {kind === "reading" ? (
                 <Markdown source={tx(item.title)} inline />
               ) : (
-                <Link
-                  to="/learn/$courseId/topics/$topicId"
-                  params={{ courseId: session.courseId, topicId: item.topicId }}
-                  className="hover:underline"
-                >
+                <Link to="/$subject/topics/$topicId" params={{ subject: subjectId, topicId: item.topicId }} className="hover:underline">
                   <Markdown source={tx(item.title)} inline />
                 </Link>
               )}

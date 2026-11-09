@@ -1,26 +1,25 @@
 import type { FinishedSession, Task } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowLeft, CalendarCheck, CheckCircle, Flag, Warning, XCircle } from "@phosphor-icons/react";
+import { ArrowLeft, CheckCircle, Warning, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChooseCourse } from "../../components/ChooseCourse.tsx";
-import { Forecast } from "../../components/Forecast.tsx";
-import { GoalsEditor } from "../../components/GoalsEditor.tsx";
 import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { CourseDone, PlacementReport } from "../../components/PlacementReport.tsx";
+import { ForecastCard, GoalsCard } from "../../components/SubjectDecisions.tsx";
 import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Bar, Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
-import { XpOverview } from "../../components/XpOverview.tsx";
 import { useAccess } from "../../lib/access.ts";
 import { useBillingText } from "../../lib/billing-text.ts";
 import { signsOf, stuckLessons } from "../../lib/guardian.ts";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { account, catalog, learning, privacy, timeZone } from "../../lib/rpc.ts";
+import { SubjectMark, useCatalog } from "../../lib/subject.tsx";
 
 export const Route = createFileRoute("/guardian/$learnerId")({ component: GuardedLearner });
 
@@ -162,31 +161,18 @@ function CourseProgress({ learnerId, courseId }: { learnerId: string; courseId: 
   );
 }
 
-function CourseForecast({ learnerId, courseId }: { learnerId: string; courseId: string }) {
-  const { m } = useI18n();
-  const dash = useQuery({
+/** useGuardedDashboard reads the learner's dashboard of a course, which carries the subject's decisions. */
+function useGuardedDashboard(learnerId: string, courseId: string) {
+  return useQuery({
     queryKey: ["guarded", learnerId, "dashboard", courseId],
     queryFn: () => learning.getDashboard({ courseId, timeZone: timeZone(), learnerId }),
     staleTime: 0,
   });
-  if (!dash.data) return null;
-  return (
-    <Card className="space-y-2 p-5">
-      <div className="flex items-center gap-2 text-sm text-muted">
-        <CalendarCheck size={18} /> {m.forecastTheirTitle}
-      </div>
-      <Forecast remaining={dash.data.remainingXp} pace={dash.data.pace} goalPace={(dash.data.xp?.goalWeek ?? 0) / 7} guardian />
-    </Card>
-  );
 }
 
 /** GuardedReport shows the learner's diagnostic report or finished course, for the guardian to answer. */
 function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: string }) {
-  const dash = useQuery({
-    queryKey: ["guarded", learnerId, "dashboard", courseId],
-    queryFn: () => learning.getDashboard({ courseId, timeZone: timeZone(), learnerId }),
-    staleTime: 0,
-  });
+  const dash = useGuardedDashboard(learnerId, courseId);
   if (!dash.data) return null;
   return (
     <>
@@ -196,24 +182,15 @@ function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: s
   );
 }
 
-/** GuardedGoals edits the weekly goals of the learner's subject that the course belongs to. */
-function GuardedGoals({ learnerId, courseId, subjectId }: { learnerId: string; courseId: string; subjectId: string }) {
-  const dash = useQuery({
-    queryKey: ["guarded", learnerId, "dashboard", courseId],
-    queryFn: () => learning.getDashboard({ courseId, timeZone: timeZone(), learnerId }),
-    staleTime: 0,
-  });
+/** GuardedDecisions are the subject's goals and end date, which the guardian decides (docs/experience.md §5). */
+function GuardedDecisions({ learnerId, courseId }: { learnerId: string; courseId: string }) {
+  const dash = useGuardedDashboard(learnerId, courseId);
   if (!dash.data) return null;
-  const goals = dash.data.goals;
   return (
-    <GoalsEditor
-      key={subjectId}
-      initial={{ weekdays: goals?.weekdays ?? [], paused: goals?.paused ?? false }}
-      onSave={async (next) => {
-        await learning.setGoals({ learnerId, subjectId, goals: { weekdays: [...next.weekdays], paused: next.paused } });
-        await dash.refetch();
-      }}
-    />
+    <>
+      <GoalsCard d={dash.data} learnerId={learnerId} />
+      <ForecastCard d={dash.data} learnerId={learnerId} />
+    </>
   );
 }
 
@@ -226,7 +203,7 @@ function GuardedLearner() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const consents = useQuery({ queryKey: ["consents", learnerId], queryFn: () => privacy.listConsents({ learnerId }), enabled: !!session });
-  const [chosen, setChosen] = useState<string>();
+  const [picked, setPicked] = useState<string>();
   const [tab, setTab] = useState<"activity" | "progress">("activity");
   const [confirming, setConfirming] = useState(false);
   const [changing, setChanging] = useState(false);
@@ -236,7 +213,7 @@ function GuardedLearner() {
     enabled: !!session,
     staleTime: 0,
   });
-  const courses = useQuery({ queryKey: ["courses"], queryFn: () => catalog.listCourses({}) });
+  const list = useCatalog();
   const remove = useMutation({
     mutationFn: () => account.removeGuardedLearner({ learnerId }),
     onSuccess: async () => {
@@ -245,21 +222,22 @@ function GuardedLearner() {
     },
   });
 
-  if (!session || detail.isPending) return <Spinner label={m.loading} />;
+  if (!session || detail.isPending || list.isPending) return <Spinner label={m.loading} />;
   const billingOn = access?.billing === true;
   if (detail.isError) return <LoadError error={detail.error} onRetry={() => detail.refetch()} />;
-  const d = detail.data;
-  const learner = d.learner!;
-  const current = learner.enrollments.find((e) => e.courseId === chosen) ?? learner.enrollments[0];
+  if (list.isError) return <LoadError error={list.error} onRetry={() => list.refetch()} />;
+  const learner = detail.data.learner!;
+  const subjects = list.data.subjects;
+  // The page opens on the subject most recently worked in (docs/experience.md §6).
+  const subject = subjects.find((s) => s.id === (picked ?? learner.enrollments[0]?.subjectId)) ?? subjects[0];
+  const current = learner.enrollments.find((e) => e.subjectId === subject?.id);
   const courseId = current?.courseId;
-  const titleOf = (id: string) => {
-    const title = courses.data?.courses.find((c) => c.id === id)?.title;
-    return title ? tx(title) : "";
-  };
+  const titleOf = (id: string) => tx(list.data.courses.find((c) => c.id === id)?.title);
   const share = current?.stats?.total ? current.stats.learned / current.stats.total : 0;
   const signs = signsOf(learner, Date.now());
   const segment = (active: boolean) =>
-    `rounded-lg px-3 py-1.5 text-sm font-medium transition ${active ? "bg-accent-soft text-accent" : "text-muted hover:text-ink"}`;
+    `rounded-lg px-3 py-1.5 text-sm font-medium transition ${active ? "bg-subject-soft text-on-subject-soft" : "text-muted hover:text-ink"}`;
+  const subjectTab = "-mb-px flex items-center gap-2 border-b-2 px-1 pb-2.5 text-sm font-medium transition";
 
   return (
     <div className="space-y-6">
@@ -287,27 +265,41 @@ function GuardedLearner() {
         </Card>
       )}
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      {subjects.length > 1 && (
+        <nav className="flex gap-6 overflow-x-auto border-b border-line [scrollbar-width:none]" aria-label={m.subjects}>
+          {subjects.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              data-subject={s.id}
+              aria-pressed={s.id === subject?.id}
+              onClick={() => {
+                setPicked(s.id);
+                setChanging(false);
+              }}
+              className={`${subjectTab} ${s.id === subject?.id ? "border-subject text-ink" : "border-transparent text-muted hover:text-ink"}`}
+            >
+              <SubjectMark subject={s} size={22} />
+              {tx(s.title)}
+            </button>
+          ))}
+        </nav>
+      )}
+
+      <div data-subject={subject?.id} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-4">
           {(!courseId || changing) && (
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold">{m.chooseForChild(learner.name)}</h2>
+                <h2 className="text-lg font-semibold">{courseId ? m.changeCourse : m.chooseForChild(learner.name)}</h2>
                 {changing && (
                   <Button variant="ghost" onClick={() => setChanging(false)}>
                     {m.cancel}
                   </Button>
                 )}
               </div>
-              <p className="text-sm text-muted">{courseId ? m.changeCourseBody : m.chooseForChildBody}</p>
-              <ChooseCourse
-                learnerId={learnerId}
-                current={courseId}
-                onChosen={(id) => {
-                  setChosen(id);
-                  setChanging(false);
-                }}
-              />
+              <p className="text-sm text-muted">{courseId ? m.changeCourseWhen : m.chooseForChildBody}</p>
+              <ChooseCourse learnerId={learnerId} subject={subject?.id} current={courseId} onChosen={() => setChanging(false)} />
             </div>
           )}
           {courseId && !changing && (
@@ -343,35 +335,20 @@ function GuardedLearner() {
         <aside className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
           {current && (
             <Card className="space-y-3 p-5">
-              {learner.enrollments.map((e) => {
-                const selected = e.courseId === courseId;
-                const part = e.stats?.total ? e.stats.learned / e.stats.total : 0;
-                return (
-                  <button
-                    key={e.courseId}
-                    type="button"
-                    aria-pressed={selected}
-                    disabled={learner.enrollments.length === 1}
-                    onClick={() => setChosen(e.courseId)}
-                    className={`block w-full space-y-1 text-left text-sm ${selected || learner.enrollments.length === 1 ? "font-medium" : "text-muted hover:text-ink"}`}
-                  >
-                    <span className="flex justify-between gap-3">
-                      <span className="min-w-0 truncate">{titleOf(e.courseId)}</span>
-                      <span className="shrink-0">{Math.round(part * 100)}%</span>
-                    </span>
-                    <Bar value={part} />
-                    <span className="block text-xs font-normal text-muted">
-                      {e.stats?.learned ?? 0} / {e.stats?.total ?? 0} {m.topics}
-                    </span>
-                  </button>
-                );
-              })}
+              <div className="text-sm text-muted">{m.currentCourse}</div>
+              <div className="flex justify-between gap-3 font-medium">
+                <span className="min-w-0">{titleOf(current.courseId)}</span>
+                <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
+              </div>
+              <Bar value={share} className="bg-subject" />
+              <div className="text-xs text-muted">
+                {current.stats?.learned ?? 0} / {current.stats?.total ?? 0} {m.topics}
+              </div>
               {current.stats?.due ? (
                 <div className="text-xs text-warn">
                   {m.due}: {current.stats.due}
                 </div>
               ) : null}
-              {share >= 1 && <p className="text-sm text-good">{m.forecastDone}</p>}
               {!changing && (
                 <Button variant="ghost" className="-ml-4" onClick={() => setChanging(true)}>
                   {m.changeCourse}
@@ -379,18 +356,7 @@ function GuardedLearner() {
               )}
             </Card>
           )}
-          {courseId && <CourseForecast learnerId={learnerId} courseId={courseId} />}
-          <Card className="space-y-4 p-5">
-            {learner.xp && <XpOverview xp={learner.xp} />}
-            <details>
-              <summary className="flex cursor-pointer items-center gap-2 text-sm text-accent">
-                <Flag size={18} /> {m.setGoals}
-              </summary>
-              <div className="mt-3">
-                {courseId && current && <GuardedGoals learnerId={learnerId} courseId={courseId} subjectId={current.subjectId} />}
-              </div>
-            </details>
-          </Card>
+          {courseId && <GuardedDecisions learnerId={learnerId} courseId={courseId} />}
           <LearnerPrivacy learnerId={learnerId} name={learner.name} />
           {consents.data?.managed ? null : confirming ? (
             <Card className="space-y-3 p-5 text-sm">

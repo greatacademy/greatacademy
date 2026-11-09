@@ -8,10 +8,11 @@ import { buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { useSession } from "../../lib/auth.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { catalog, learning, timeZone } from "../../lib/rpc.ts";
+import { SubjectChip, useSubjectOfCourse } from "../../lib/subject.tsx";
 
 export const Route = createFileRoute("/courses/$courseId")({ component: CoursePage });
 
-/** CoursePage introduces a course. A course is chosen at sign-up and changed in settings, not here. */
+/** CoursePage introduces a course and names its subject. A course is chosen on its subject's Course page, not here. */
 function CoursePage() {
   const { courseId } = Route.useParams();
   const { m, tx } = useI18n();
@@ -23,6 +24,7 @@ function CoursePage() {
     enabled: !!session,
   });
   const current = profile.data?.enrollments.some((e) => e.courseId === courseId);
+  const subject = useSubjectOfCourse(courseId);
 
   if (course.isPending) return <Spinner label={m.loading} />;
   if (course.isError) return <LoadError error={course.error} onRetry={() => course.refetch()} />;
@@ -32,7 +34,13 @@ function CoursePage() {
   return (
     <div className="space-y-8">
       <div className="space-y-3">
-        <div className="text-xs font-medium tracking-wide text-accent uppercase">{tx(c.subjectTitle)}</div>
+        {subject ? (
+          <Link to="/courses" search={{ subject: subject.id }} className="inline-flex">
+            <SubjectChip subject={subject} size={24} className="text-sm" />
+          </Link>
+        ) : (
+          <div className="text-sm font-medium text-muted">{tx(c.subjectTitle)}</div>
+        )}
         <h1 className="text-3xl font-semibold tracking-tight">{tx(c.title)}</h1>
         <Markdown source={tx(c.description)} className="max-w-2xl text-muted" />
         <div className="text-sm text-muted">
@@ -47,11 +55,11 @@ function CoursePage() {
               <span className="text-sm text-muted">{m.signInToLearn}</span>
             </div>
           ) : current ? (
-            <Link to="/learn/$courseId" params={{ courseId }} className={buttonClass("primary")}>
+            <Link to="/$subject" params={{ subject: c.subjectId }} className={buttonClass("primary")}>
               {m.continueLearning} <ArrowRight size={16} />
             </Link>
           ) : (
-            <Link to="/settings/courses" className="text-sm text-accent">
+            <Link to="/$subject/course" params={{ subject: c.subjectId }} className="text-sm text-accent">
               {m.changeCourse}
             </Link>
           )}

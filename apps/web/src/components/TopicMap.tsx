@@ -25,8 +25,8 @@ export function TopicLegend() {
   );
 }
 
-/** TopicMap shows every topic of a course with its status and estimated memory; with courseId, topics link to their pages. */
-export function TopicMap({ course, topics, courseId }: { course: Course; topics: TopicProgress[]; courseId?: string }) {
+/** TopicMap shows every topic of a course with its status and estimated memory; with subject, topics link to their pages in it. */
+export function TopicMap({ course, topics, subject }: { course: Course; topics: TopicProgress[]; subject?: string }) {
   const { m, tx } = useI18n();
   const byTopic = new Map(topics.map((t) => [t.topicId, t]));
   return course.units.map((u) => (
@@ -63,11 +63,11 @@ export function TopicMap({ course, topics, courseId }: { course: Course; topics:
                 </>
               );
               const box = "flex min-w-0 items-center gap-3 rounded-xl border border-line px-3 py-2.5";
-              return courseId ? (
+              return subject ? (
                 <Link
                   key={t.id}
-                  to="/learn/$courseId/topics/$topicId"
-                  params={{ courseId, topicId: t.id }}
+                  to="/$subject/topics/$topicId"
+                  params={{ subject, topicId: t.id }}
                   className={`${box} transition hover:border-accent/50`}
                 >
                   {row}

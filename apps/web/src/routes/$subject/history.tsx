@@ -2,36 +2,34 @@ import { ArrowLeft, CheckCircle, XCircle } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { LoadError } from "../../../components/LoadError.tsx";
-import { Markdown } from "../../../components/Markdown.tsx";
-import { buttonClass, Card, Spinner } from "../../../components/ui.tsx";
-import { useCurrentCourseFirst, useRequireSession } from "../../../lib/hooks.ts";
-import { useI18n } from "../../../lib/i18n.tsx";
-import { learning } from "../../../lib/rpc.ts";
+import { LoadError } from "../../components/LoadError.tsx";
+import { Markdown } from "../../components/Markdown.tsx";
+import { buttonClass, Card, Spinner } from "../../components/ui.tsx";
+import { useI18n } from "../../lib/i18n.tsx";
+import { learning } from "../../lib/rpc.ts";
+import { useSubjectPlace } from "../../lib/subject.tsx";
 
-export const Route = createFileRoute("/learn/$courseId/history")({ component: History });
+export const Route = createFileRoute("/$subject/history")({ component: History });
 
 function History() {
-  const { courseId } = Route.useParams();
+  const { subject } = Route.useParams();
+  const courseId = useSubjectPlace()?.enrollment?.courseId ?? "";
   const { m, tx, locale } = useI18n();
-  const session = useRequireSession();
   const history = useQuery({
     queryKey: ["history", courseId],
     queryFn: () => learning.listSessions({ courseId }),
-    enabled: !!session,
+    enabled: !!courseId,
     staleTime: 0,
   });
 
-  const notCurrent = useCurrentCourseFirst(history.error);
-
-  if (!session || history.isPending || notCurrent) return <Spinner label={m.loading} />;
+  if (history.isPending) return <Spinner label={m.loading} />;
   if (history.isError) return <LoadError error={history.error} onRetry={() => history.refetch()} />;
   const when = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Link to="/learn/$courseId" params={{ courseId }} className={buttonClass("ghost", "-ml-4")}>
-          <ArrowLeft size={16} /> {m.dashboard}
+        <Link to="/$subject/progress" params={{ subject }} className={buttonClass("ghost", "-ml-4")}>
+          <ArrowLeft size={16} /> {m.navProgress}
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight">{m.history}</h1>
       </div>

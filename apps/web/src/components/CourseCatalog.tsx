@@ -12,15 +12,17 @@ import { Markdown } from "./Markdown.tsx";
 import { Bar, Button, ErrorNote, Spinner } from "./ui.tsx";
 
 /**
- * CourseCatalog lists every course by shelf, with a search and the learner's
+ * CourseCatalog lists the courses of a subject (or of every subject) by shelf, with a search and the learner's
  * progress in their current courses. Given onChoose, it is the list a course is
  * chosen from, with the current course marked.
  */
 export function CourseCatalog({
+  subject,
   onChoose,
   current,
   busy,
 }: {
+  subject?: string;
   onChoose?: (courseId: string) => void;
   current?: string;
   busy?: boolean;
@@ -40,11 +42,12 @@ export function CourseCatalog({
   const shelves = useMemo(() => {
     const byTitle = new Map<string, Course[]>();
     for (const c of courses.data?.courses ?? []) {
+      if (subject && c.subjectId !== subject) continue;
       const title = tx(c.group) || m.otherCourses;
       byTitle.set(title, [...(byTitle.get(title) ?? []), c]);
     }
     return [...byTitle];
-  }, [courses.data, tx, m.otherCourses]);
+  }, [courses.data, subject, tx, m.otherCourses]);
 
   if (courses.isPending) return <Spinner label={m.loading} />;
   if (courses.isError) return <ErrorNote message={m.error} retry={m.retry} onRetry={() => courses.refetch()} />;
@@ -108,7 +111,7 @@ export function CourseCatalog({
                         <span className="text-sm font-medium text-accent">{m.currentCourse}</span>
                       ) : (
                         <Button onClick={() => onChoose(c.id)} disabled={busy}>
-                          {m.chooseThis}
+                          {current ? m.switchToThis : m.chooseThis}
                         </Button>
                       )}
                       <Link to="/courses/$courseId" params={{ courseId: c.id }} target="_blank" className="text-sm text-accent">
@@ -121,8 +124,9 @@ export function CourseCatalog({
               return (
                 <Link
                   key={c.id}
-                  to={stats ? "/learn/$courseId" : "/courses/$courseId"}
-                  params={{ courseId: c.id }}
+                  {...(stats
+                    ? { to: "/$subject", params: { subject: c.subjectId } }
+                    : { to: "/courses/$courseId", params: { courseId: c.id } })}
                   className="group flex min-w-0 flex-col gap-2 rounded-2xl border border-line bg-surface p-5 transition hover:border-accent/50"
                 >
                   <div className="flex items-start justify-between gap-3">

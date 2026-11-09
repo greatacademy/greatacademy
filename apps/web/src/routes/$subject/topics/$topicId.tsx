@@ -4,17 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { CaptionedFigure, Explanation, FigureView } from "../../../../components/Figure.tsx";
-import { LoadError } from "../../../../components/LoadError.tsx";
-import { Markdown } from "../../../../components/Markdown.tsx";
-import { AnswerText, ProblemPrompt } from "../../../../components/Problem.tsx";
-import { Button, buttonClass, Card, Spinner } from "../../../../components/ui.tsx";
-import { useCurrentCourseFirst, useRequireSession } from "../../../../lib/hooks.ts";
-import { useI18n } from "../../../../lib/i18n.tsx";
-import { learning } from "../../../../lib/rpc.ts";
-import { statusStyle } from "../../../../lib/topic-status.ts";
+import { CaptionedFigure, Explanation, FigureView } from "../../../components/Figure.tsx";
+import { LoadError } from "../../../components/LoadError.tsx";
+import { Markdown } from "../../../components/Markdown.tsx";
+import { AnswerText, ProblemPrompt } from "../../../components/Problem.tsx";
+import { Button, buttonClass, Card, Spinner } from "../../../components/ui.tsx";
+import { useI18n } from "../../../lib/i18n.tsx";
+import { learning } from "../../../lib/rpc.ts";
+import { useSubjectPlace } from "../../../lib/subject.tsx";
+import { statusStyle } from "../../../lib/topic-status.ts";
 
-export const Route = createFileRoute("/learn/$courseId/topics/$topicId")({ component: Topic });
+export const Route = createFileRoute("/$subject/topics/$topicId")({ component: Topic });
 
 function Step({ step }: { step: KnowledgePointIntro }) {
   const { m, tx } = useI18n();
@@ -55,7 +55,7 @@ function Step({ step }: { step: KnowledgePointIntro }) {
   );
 }
 
-function Links({ title, courseId, topics }: { title: string; courseId: string; topics: readonly TopicLink[] }) {
+function Links({ title, subject, topics }: { title: string; subject: string; topics: readonly TopicLink[] }) {
   const { m, tx } = useI18n();
   if (topics.length === 0) return null;
   return (
@@ -67,8 +67,8 @@ function Links({ title, courseId, topics }: { title: string; courseId: string; t
           return (
             <Link
               key={t.topicId}
-              to="/learn/$courseId/topics/$topicId"
-              params={{ courseId, topicId: t.topicId }}
+              to="/$subject/topics/$topicId"
+              params={{ subject, topicId: t.topicId }}
               className="flex min-w-0 items-center gap-3 rounded-xl border border-line px-3 py-2.5 transition hover:border-accent/50"
             >
               <span className={`size-2.5 shrink-0 rounded-full ${s.dot}`} />
@@ -85,26 +85,24 @@ function Links({ title, courseId, topics }: { title: string; courseId: string; t
 }
 
 function Topic() {
-  const { courseId, topicId } = Route.useParams();
+  const { subject, topicId } = Route.useParams();
+  const courseId = useSubjectPlace()?.enrollment?.courseId ?? "";
   const { m, tx } = useI18n();
-  const session = useRequireSession();
   const [exampleSeed, setExampleSeed] = useState(0);
   const topic = useQuery({
     queryKey: ["topic", courseId, topicId, exampleSeed],
     queryFn: () => learning.getTopic({ courseId, topicId, exampleSeed }),
-    enabled: !!session,
+    enabled: !!courseId,
   });
 
-  const notCurrent = useCurrentCourseFirst(topic.error);
-
-  if (!session || topic.isPending || notCurrent) return <Spinner label={m.loading} />;
+  if (topic.isPending) return <Spinner label={m.loading} />;
   if (topic.isError) return <LoadError error={topic.error} onRetry={() => topic.refetch()} />;
   const s = statusStyle[topic.data.status];
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Link to="/learn/$courseId/progress" params={{ courseId }} className={buttonClass("ghost", "-ml-4")}>
-          <ArrowLeft size={16} /> {m.progress}
+        <Link to="/$subject/progress" params={{ subject }} className={buttonClass("ghost", "-ml-4")}>
+          <ArrowLeft size={16} /> {m.navProgress}
         </Link>
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-2xl font-semibold tracking-tight">
@@ -114,7 +112,7 @@ function Topic() {
         </div>
         <Markdown source={tx(topic.data.summary)} className="text-muted" />
       </div>
-      <Links title={m.buildsOn} courseId={courseId} topics={topic.data.prerequisites} />
+      <Links title={m.buildsOn} subject={subject} topics={topic.data.prerequisites} />
       {topic.data.knowledgePoints.map((step) => (
         <Step key={`${exampleSeed}-${step.index}`} step={step} />
       ))}
@@ -123,7 +121,7 @@ function Topic() {
           {m.otherExamples}
         </Button>
       </div>
-      <Links title={m.leadsTo} courseId={courseId} topics={topic.data.dependents} />
+      <Links title={m.leadsTo} subject={subject} topics={topic.data.dependents} />
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { signsOf } from "../../lib/guardian.ts";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { account, catalog, timeZone } from "../../lib/rpc.ts";
+import { SubjectMark } from "../../lib/subject.tsx";
 
 export const Route = createFileRoute("/guardian/")({ component: Guardian });
 
@@ -31,14 +32,19 @@ function LearnerCard({ learner }: { learner: GuardedLearner }) {
         {learner.enrollments.length > 0 ? (
           learner.enrollments.map((e) => {
             const title = courses.data?.courses.find((c) => c.id === e.courseId)?.title;
+            const subject = courses.data?.subjects.find((s) => s.id === e.subjectId);
             const share = e.stats?.total ? e.stats.learned / e.stats.total : 0;
             return (
-              <div key={e.subjectId} className="space-y-1 text-sm">
-                <div className="flex justify-between gap-3">
-                  <span className="min-w-0 truncate">{title ? tx(title) : ""}</span>
-                  <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
+              <div key={e.subjectId} data-subject={e.subjectId} className="flex gap-3 text-sm">
+                {subject && <SubjectMark subject={subject} size={28} />}
+                <div className="min-w-0 flex-1 space-y-1">
+                  <div className="flex justify-between gap-3">
+                    <span className="min-w-0 truncate font-medium">{title ? tx(title) : ""}</span>
+                    <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
+                  </div>
+                  <Bar value={share} className="bg-subject" />
+                  <div className="text-xs text-muted">{m.subjectToday(e.xp?.today ?? 0, e.xp?.goalToday ?? 0)}</div>
                 </div>
-                <Bar value={share} />
               </div>
             );
           })

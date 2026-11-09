@@ -1,69 +1,19 @@
-import { Menu } from "@base-ui/react/menu";
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import {
-  CalendarCheck,
-  CaretDown,
-  CheckCircle,
-  ClockCounterClockwise,
-  Flag,
-  MapTrifold,
-  Plus,
-  Trophy,
-  XCircle,
-} from "@phosphor-icons/react";
+import { CheckCircle, Flag, Trophy, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
-import { useCurrentCourseFirst, useRequireSession } from "../lib/hooks.ts";
+import { useRequireSession } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
-import { Forecast } from "./Forecast.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { TaskCard } from "./TaskCard.tsx";
-import { Bar, Button, buttonClass, Card, ErrorNote, menuItem, menuPopup, Spinner } from "./ui.tsx";
+import { Bar, Button, Card, ErrorNote, Spinner } from "./ui.tsx";
 import { XpOverview } from "./XpOverview.tsx";
 
 const DAY = 86_400_000;
-
-/** CourseSwitcher names the course and moves to the current course of another subject, or to settings to change course. */
-function CourseSwitcher({ courseId, title }: { courseId: string; title: string }) {
-  const { m, tx } = useI18n();
-  const navigate = useNavigate();
-  const profile = useQuery({ queryKey: ["profile"], queryFn: () => learning.getProfile({ timeZone: timeZone() }) });
-  const courses = useQuery({ queryKey: ["courses"], queryFn: () => catalog.listCourses({}) });
-  const titleOf = (id: string) => tx(courses.data?.courses.find((c) => c.id === id)?.title);
-  return (
-    <Menu.Root>
-      <Menu.Trigger className="-ml-2 flex max-w-full items-center gap-2 rounded-lg px-2 py-1 text-left text-2xl font-semibold tracking-tight hover:bg-accent-soft">
-        <span className="min-w-0">{title}</span>
-        <CaretDown size={18} className="shrink-0 text-muted" />
-      </Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Positioner sideOffset={6} align="start" className="z-30">
-          <Menu.Popup className={menuPopup}>
-            {profile.data?.enrollments.map((e) => (
-              <Menu.Item
-                key={e.courseId}
-                className={menuItem}
-                onClick={() => navigate({ to: "/learn/$courseId", params: { courseId: e.courseId } })}
-              >
-                <span>{titleOf(e.courseId) || e.courseId}</span>
-                {e.courseId === courseId && <span className="text-accent">●</span>}
-              </Menu.Item>
-            ))}
-            <Menu.Item className={menuItem} onClick={() => navigate({ to: "/settings/courses" })}>
-              <span className="flex items-center gap-2 text-accent">
-                <Plus size={14} /> {m.changeCourse}
-              </span>
-            </Menu.Item>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>
-  );
-}
 
 /** LeagueSummary shows the learner's place in this week's league and the two learners next to them. */
 function LeagueSummary() {
@@ -107,7 +57,7 @@ function LeagueSummary() {
 }
 
 /** RecentWork lists the learner's last tasks in the course and links to the whole history. */
-function RecentWork({ courseId }: { courseId: string }) {
+function RecentWork({ courseId, subject }: { courseId: string; subject: string }) {
   const { m, tx } = useI18n();
   const history = useQuery({ queryKey: ["history", courseId], queryFn: () => learning.listSessions({ courseId }), staleTime: 0 });
   const recent = history.data?.sessions.slice(0, 3) ?? [];
@@ -116,7 +66,7 @@ function RecentWork({ courseId }: { courseId: string }) {
     <section className="space-y-3">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-sm font-medium text-muted">{m.recentTasks}</h2>
-        <Link to="/learn/$courseId/history" params={{ courseId }} className="text-sm text-accent">
+        <Link to="/$subject/history" params={{ subject }} className="text-sm text-accent">
           {m.seeAll}
         </Link>
       </div>
@@ -163,10 +113,10 @@ function RecentWork({ courseId }: { courseId: string }) {
 }
 
 /**
- * LearnDashboard is the learner's home in a course. The next task comes first, since
- * it is what the learner came for; goals, the forecast and the league sit beside it.
+ * LearnDashboard is a subject's Learn page (docs/experience.md §3). The next task comes first, since it is what the
+ * learner came for; the subject's goals and the league sit beside it.
  */
-export function LearnDashboard({ courseId }: { courseId: string }) {
+export function LearnDashboard({ courseId, subjectId }: { courseId: string; subjectId: string }) {
   const { m, tx } = useI18n();
   const session = useRequireSession();
   const navigate = useNavigate();
@@ -187,10 +137,7 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", courseId] }),
   });
 
-  // Not the current course: home opens the current one.
-  const notCurrent = useCurrentCourseFirst(dash.error);
-
-  if (!session || dash.isPending || notCurrent) return <Spinner label={m.loading} />;
+  if (!session || dash.isPending) return <Spinner label={m.loading} />;
   if (dash.isError) return <LoadError error={dash.error} onRetry={() => dash.refetch()} />;
   const d = dash.data;
   const stats = d.stats!;
@@ -200,23 +147,19 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <div className="min-w-0 flex-1 basis-72 space-y-2">
-          <CourseSwitcher courseId={courseId} title={tx(course.data?.course?.title)} />
-          <div className="flex max-w-md items-center gap-3 text-sm text-muted">
-            <Bar value={share} />
-            <span className="shrink-0">
-              {stats.learned} / {stats.total} {m.topics}
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-1">
-          <Link to="/learn/$courseId/progress" params={{ courseId }} className={buttonClass("ghost")}>
-            <MapTrifold size={18} /> {m.progress}
-          </Link>
-          <Link to="/learn/$courseId/history" params={{ courseId }} className={buttonClass("ghost")}>
-            <ClockCounterClockwise size={18} /> {m.history}
-          </Link>
+      <div className="max-w-xl space-y-2">
+        <Link
+          to="/$subject/course"
+          params={{ subject: subjectId }}
+          className="block text-2xl font-semibold tracking-tight hover:text-accent"
+        >
+          {tx(course.data?.course?.title)}
+        </Link>
+        <div className="flex items-center gap-3 text-sm text-muted">
+          <Bar value={share} className="bg-subject" />
+          <span className="shrink-0">
+            {stats.learned} / {stats.total} {m.topics}
+          </span>
         </div>
       </div>
 
@@ -260,7 +203,7 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
             {!d.active && d.tasks.length > 1 && <p className="text-sm text-muted">{m.tasksHint}</p>}
             {!d.active && d.tasks.length === 0 && <Card className="text-muted">{m.nothingToDo}</Card>}
           </section>
-          <RecentWork courseId={courseId} />
+          <RecentWork courseId={courseId} subject={subjectId} />
         </div>
 
         <aside className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
@@ -269,8 +212,8 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
               <span className="flex items-center gap-2">
                 <Flag size={18} /> {m.goals}
               </span>
-              <Link to="/settings" className="text-accent">
-                {m.setGoals}
+              <Link to="/$subject/progress" params={{ subject: subjectId }} className="text-accent">
+                {d.canDecide ? m.setGoals : m.navProgress}
               </Link>
             </div>
             <XpOverview xp={xp} />
@@ -279,12 +222,6 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
                 {m.due}: {stats.due}
               </div>
             )}
-          </Card>
-          <Card className="space-y-2 p-5">
-            <div className="flex items-center gap-2 text-sm text-muted">
-              <CalendarCheck size={18} /> {m.forecast}
-            </div>
-            <Forecast remaining={d.remainingXp} pace={d.pace} goalPace={xp.goalWeek / 7} />
           </Card>
           <LeagueSummary />
         </aside>

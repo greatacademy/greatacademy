@@ -11,6 +11,7 @@ import { keepAppearanceCurrent } from "../lib/appearance.ts";
 import { I18nProvider } from "../lib/i18n.tsx";
 import { getLocale } from "../lib/locale.ts";
 import { shouldRetry } from "../lib/rpc.ts";
+import { SubjectStyles } from "../lib/subject.tsx";
 import css from "../styles.css?url";
 
 const descriptions = {
@@ -62,8 +63,10 @@ function Shell({ children }: { children: ReactNode }) {
 function AccessGate() {
   const access = useAccess();
   const navigate = useNavigate();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const study = pathname === "/" || ["/learn", "/session", "/league"].some((p) => pathname.startsWith(p));
+  // The study pages: home, every page of a subject, a task and the league.
+  const study = useRouterState({
+    select: (s) => s.matches.some((r) => ["/", "/$subject", "/session/$sessionId", "/league"].includes(r.routeId)),
+  });
   const status = access?.status;
   // With billing on, a learner with no plan at all is sent to choose one (docs/billing.md §6).
   const unpaid = access?.billing === true && access.covered.length === 0;
@@ -88,6 +91,7 @@ function Root() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider initial={locale}>
         <AccessGate />
+        <SubjectStyles />
         <Header />
         <main className={bare ? "" : "mx-auto max-w-5xl px-4 pt-8 pb-24"}>
           <Outlet />
