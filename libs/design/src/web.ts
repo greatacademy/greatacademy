@@ -19,6 +19,7 @@ import {
   oklchToHex,
   PALETTES,
   type Palette,
+  subjectColors,
 } from "./tokens.ts";
 
 /** CUSTOM_PALETTE_CSS_KEY is the key under which the web client stores the stylesheet of its custom palettes. */
@@ -151,4 +152,44 @@ export function appearanceAttributes(appearance: Appearance): Record<string, str
  */
 export function appearanceScript(): string {
   return `(function(){try{var c=${JSON.stringify(APPEARANCE_CHOICES)},d=document,s=localStorage.getItem(${JSON.stringify(APPEARANCE_STORAGE_KEY)}),x=localStorage.getItem(${JSON.stringify(CUSTOM_PALETTE_CSS_KEY)});if(s)s.split("&").forEach(function(p){var e=p.split("="),v=c[e[0]];if(v&&(v.indexOf(e[1])>0||/^(light|dark)$/.test(e[0])&&/^custom-[0-9]{1,4}$/.test(e[1])))d.documentElement.setAttribute("data-"+e[0],e[1])});if(x){var t=d.createElement("style");t.id=${JSON.stringify(CUSTOM_PALETTE_STYLE_ID)};t.textContent=x;d.head.appendChild(t)}}catch(e){}})()`;
+}
+
+/** SubjectHue is a subject's id and hue, as the catalog lists them. */
+export interface SubjectHue {
+  id: string;
+  hue: number;
+}
+
+const SUBJECT_ID = /^[a-z0-9-]+$/;
+
+/**
+ * subjectCss is the stylesheet that gives an element with `data-subject="<id>"` its subject's colors, as the custom
+ * properties --subject-strong, --subject-on-strong, --subject-soft and --subject-on-soft, in the root's scheme and
+ * contrast. A rule for dark or high contrast is more specific than the one it replaces, so the order of the
+ * attributes never matters. Ids that are not kebab case are left out.
+ */
+export function subjectCss(subjects: readonly SubjectHue[]): string {
+  const rules: string[] = [];
+  for (const { id, hue } of subjects) {
+    if (!SUBJECT_ID.test(id)) continue;
+    const on = `[data-subject="${id}"]`;
+    const body = (scheme: ColorScheme, contrast: Contrast, indent: string) => {
+      const c = subjectColors(hue, scheme, contrast);
+      return [
+        `${indent}--subject-strong: ${c.strong};`,
+        `${indent}--subject-on-strong: ${c.onStrong};`,
+        `${indent}--subject-soft: ${c.soft};`,
+        `${indent}--subject-on-soft: ${c.onSoft};`,
+      ].join("\n");
+    };
+    for (const contrast of CONTRASTS) {
+      const level = contrast === "standard" ? "" : `[data-contrast="${contrast}"]`;
+      rules.push(`:root${level} ${on} {\n${body("light", contrast, "  ")}\n}`);
+      rules.push(
+        `@media (prefers-color-scheme: dark) {\n  :root${level}:not([data-theme="light"]) ${on} {\n${body("dark", contrast, "    ")}\n  }\n}`,
+      );
+      rules.push(`:root${level}[data-theme="dark"] ${on} {\n${body("dark", contrast, "  ")}\n}`);
+    }
+  }
+  return rules.join("\n\n");
 }

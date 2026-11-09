@@ -2,12 +2,14 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { APPEARANCE_STORAGE_KEY, type Appearance, addCustomPalette, DEFAULT_APPEARANCE } from "./appearance.ts";
+import { subjectColors } from "./tokens.ts";
 import {
   appearanceAttributes,
   appearanceScript,
   CUSTOM_PALETTE_CSS_KEY,
   CUSTOM_PALETTE_STYLE_ID,
   customPaletteCss,
+  subjectCss,
   themeCss,
 } from "./web.ts";
 
@@ -113,5 +115,18 @@ describe("appearanceAttributes", () => {
       "data-text": "small",
       "data-motion": null,
     });
+  });
+});
+
+describe("subjectCss", () => {
+  it("colors each subject in both schemes and contrasts, and leaves out ids that could break the stylesheet", () => {
+    const css = subjectCss([
+      { id: "math", hue: 235 },
+      { id: 'x"]{}', hue: 10 },
+    ]);
+    expect(css).toContain(`:root [data-subject="math"] {\n  --subject-strong: ${subjectColors(235, "light").strong};`);
+    expect(css).toContain(`:root[data-contrast="high"][data-theme="dark"] [data-subject="math"]`);
+    expect(css).toContain(`--subject-on-soft: ${subjectColors(235, "dark", "high").onSoft};`);
+    expect(css).not.toContain('x"');
   });
 });
