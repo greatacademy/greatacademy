@@ -1,5 +1,5 @@
 import type { EngineEvent, LearnerState } from "@ga/engine";
-import { and, asc, desc, eq, gte, sql, sum } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNull, ne, sql, sum } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { answer, enrollment, event, learner, learnerState, type SessionStatus, taskSession } from "./schema/learning.ts";
@@ -13,35 +13,82 @@ export async function learnerFor(db: Db, userId: string): Promise<string> {
   return found.id;
 }
 
-/** enroll enrolls a learner in a course; enrolling twice is harmless. */
-export async function enroll(db: Db, learnerId: string, subjectId: string, courseId: string): Promise<void> {
-  await db.insert(enrollment).values({ learnerId, subjectId, courseId }).onConflictDoNothing();
+/**
+ * chooseCourse makes a course the learner's current course of its subject at
+ * `at`: the one it replaces ends, and a course taken before becomes current
+ * again with its history. Choosing the current course changes nothing.
+ */
+export async function chooseCourse(db: Db, learnerId: string, subjectId: string, courseId: string, at: Date): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx
+      .update(enrollment)
+      .set({ endedAt: at })
+      .where(
+        and(
+          eq(enrollment.learnerId, learnerId),
+          eq(enrollment.subjectId, subjectId),
+          isNull(enrollment.endedAt),
+          ne(enrollment.courseId, courseId),
+        ),
+      );
+    await tx
+      .insert(enrollment)
+      .values({ learnerId, subjectId, courseId, createdAt: at, chosenAt: at })
+      .onConflictDoUpdate({
+        target: [enrollment.learnerId, enrollment.courseId],
+        set: { chosenAt: sql`case when ${enrollment.endedAt} is null then ${enrollment.chosenAt} else excluded.chosen_at end`, endedAt: null },
+      });
+  });
 }
 
-/** enrollments lists a learner's enrollments, the one most recently enrolled in or worked on first. */
-export async function enrollments(db: Db, learnerId: string): Promise<{ subjectId: string; courseId: string }[]> {
-  return db
-    .select({ subjectId: enrollment.subjectId, courseId: enrollment.courseId })
+/** CurrentCourse is a learner's current course of a subject. */
+export interface CurrentCourse {
+  readonly subjectId: string;
+  readonly courseId: string;
+  /** decided tells that its diagnostic report was answered: the course kept or another taken. */
+  readonly decided: boolean;
+}
+
+/** currentCourses lists a learner's current courses, one per subject, the one most recently chosen or worked on first. */
+export async function currentCourses(db: Db, learnerId: string): Promise<CurrentCourse[]> {
+  const rows = await db
+    .select({ subjectId: enrollment.subjectId, courseId: enrollment.courseId, decidedAt: enrollment.decidedAt })
     .from(enrollment)
-    .where(eq(enrollment.learnerId, learnerId))
+    .where(and(eq(enrollment.learnerId, learnerId), isNull(enrollment.endedAt)))
     .orderBy(
       desc(
-        sql`greatest(${enrollment.createdAt}, (
+        sql`greatest(${enrollment.chosenAt}, (
           select max(${taskSession.startedAt}) from ${taskSession}
           where ${taskSession.learnerId} = ${enrollment.learnerId} and ${taskSession.courseId} = ${enrollment.courseId}
         ))`,
       ),
       asc(enrollment.courseId),
     );
+  return rows.map((r) => ({ subjectId: r.subjectId, courseId: r.courseId, decided: r.decidedAt !== null }));
 }
 
-/** isEnrolled tells whether a learner is enrolled in a course. */
-export async function isEnrolled(db: Db, learnerId: string, courseId: string): Promise<boolean> {
-  const rows = await db
-    .select({ c: enrollment.courseId })
-    .from(enrollment)
-    .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.courseId, courseId)));
-  return rows.length > 0;
+/** currentCourse gives a learner's current course if it is `courseId`. */
+export async function currentCourse(db: Db, learnerId: string, courseId: string): Promise<CurrentCourse | undefined> {
+  return (await currentCourses(db, learnerId)).find((c) => c.courseId === courseId);
+}
+
+/** decidePlacement records that the diagnostic report of a learner's course was answered. */
+export async function decidePlacement(db: Db, learnerId: string, courseId: string, at: Date): Promise<void> {
+  await db
+    .update(enrollment)
+    .set({ decidedAt: at })
+    .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.courseId, courseId), isNull(enrollment.decidedAt)));
+}
+
+/** placedEvent gives the event that ended a course's diagnostic for a learner, if it ended. */
+export async function placedEvent(db: Db, learnerId: string, subjectId: string, courseId: string): Promise<Extract<EngineEvent, { type: "placed" }> | undefined> {
+  const [row] = await db
+    .select({ data: event.data })
+    .from(event)
+    .where(and(eq(event.learnerId, learnerId), eq(event.subjectId, subjectId), eq(event.type, "placed"), eq(event.courseId, courseId)))
+    .orderBy(desc(event.seq))
+    .limit(1);
+  return row?.data.type === "placed" ? row.data : undefined;
 }
 
 /** StoredState is a learner's state in a subject and the seq of the last event folded into it (0 for none). */

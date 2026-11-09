@@ -7,11 +7,12 @@ import {
   activeSession,
   appendEvent,
   createSession,
-  enroll,
-  enrollments,
+  chooseCourse,
+  currentCourse,
+  currentCourses,
+  decidePlacement,
   events,
   getSession,
-  isEnrolled,
   learnerFor,
   loadState,
   recordAnswer,
@@ -81,25 +82,35 @@ describe("learners and enrollments", () => {
     expect(await learnerFor(db, "u1")).toBe(a);
   });
 
-  it("enrolls idempotently", async () => {
+  it("keeps one current course per subject and the others as history", async () => {
     const l = await learnerFor(db, "u1");
-    await enroll(db, l, "test", "c1");
-    await enroll(db, l, "test", "c1");
-    expect(await enrollments(db, l)).toEqual([{ subjectId: "test", courseId: "c1" }]);
-    expect(await isEnrolled(db, l, "c1")).toBe(true);
-    expect(await isEnrolled(db, l, "c2")).toBe(false);
+    const at = (days: number) => new Date(Date.UTC(2100, 0, days));
+    await chooseCourse(db, l, "test", "c1", at(1));
+    await chooseCourse(db, l, "test", "c1", at(2));
+    expect(await currentCourses(db, l)).toEqual([{ subjectId: "test", courseId: "c1", decided: false }]);
+    await decidePlacement(db, l, "c1", at(3));
+    await chooseCourse(db, l, "test", "c2", at(4));
+    await chooseCourse(db, l, "other", "o1", at(5));
+    expect(await currentCourses(db, l)).toEqual([
+      { subjectId: "other", courseId: "o1", decided: false },
+      { subjectId: "test", courseId: "c2", decided: false },
+    ]);
+    expect(await currentCourse(db, l, "c1")).toBeUndefined();
+    await chooseCourse(db, l, "test", "c1", at(6));
+    expect(await currentCourse(db, l, "c1")).toEqual({ subjectId: "test", courseId: "c1", decided: true });
+    expect(await currentCourse(db, l, "c2")).toBeUndefined();
   });
 
   it("lists first the course most recently worked on", async () => {
     const l = await learnerFor(db, "u1");
-    await enroll(db, l, "test", "c1");
-    await enroll(db, l, "test", "c2");
-    const work = (courseId: string, days: number) =>
-      createSession(db, { learnerId: l, subjectId: "test", courseId, kind: "quiz", state: {}, at: new Date(Date.UTC(2100, 0, days)) });
-    await work("c2", 1);
-    expect((await enrollments(db, l)).map((e) => e.courseId)).toEqual(["c2", "c1"]);
-    await work("c1", 2);
-    expect((await enrollments(db, l)).map((e) => e.courseId)).toEqual(["c1", "c2"]);
+    await chooseCourse(db, l, "test", "c1", new Date(Date.UTC(2000, 0, 1)));
+    await chooseCourse(db, l, "other", "c2", new Date(Date.UTC(2000, 0, 1)));
+    const work = (courseId: string, subjectId: string, days: number) =>
+      createSession(db, { learnerId: l, subjectId, courseId, kind: "quiz", state: {}, at: new Date(Date.UTC(2100, 0, days)) });
+    await work("c2", "other", 1);
+    expect((await currentCourses(db, l)).map((e) => e.courseId)).toEqual(["c2", "c1"]);
+    await work("c1", "test", 2);
+    expect((await currentCourses(db, l)).map((e) => e.courseId)).toEqual(["c1", "c2"]);
   });
 });
 

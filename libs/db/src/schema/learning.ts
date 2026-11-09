@@ -42,7 +42,11 @@ export const learner = pgTable(
   (t) => [uniqueIndex("learner_username").on(sql`lower(${t.username})`)],
 );
 
-/** enrollment is a learner in a course. */
+/**
+ * enrollment is a course a learner was given. A learner has one current
+ * course per subject, the one not ended; the others are the courses taken
+ * before, kept as history.
+ */
 export const enrollment = pgTable(
   "enrollment",
   {
@@ -52,8 +56,17 @@ export const enrollment = pgTable(
     courseId: text("course_id").notNull(),
     subjectId: text("subject_id").notNull(),
     createdAt: at("created_at").notNull().defaultNow(),
+    /** chosenAt is when the course last became the current one. */
+    chosenAt: at("chosen_at").notNull().defaultNow(),
+    /** endedAt is when another course of the subject replaced it; null while current. */
+    endedAt: at("ended_at"),
+    /** decidedAt is when whoever chooses the course kept it or took another after its diagnostic report; null before. */
+    decidedAt: at("decided_at"),
   },
-  (t) => [primaryKey({ columns: [t.learnerId, t.courseId] })],
+  (t) => [
+    primaryKey({ columns: [t.learnerId, t.courseId] }),
+    uniqueIndex("enrollment_current").on(t.learnerId, t.subjectId).where(sql`${t.endedAt} is null`),
+  ],
 );
 
 /**
