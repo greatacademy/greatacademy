@@ -1,7 +1,9 @@
 // The topics of the `core` shard: for now, all of English. See docs/architecture.md on why content is split.
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
-
+import { lifeOnTheNile } from "../reading/nile.ts";
+import { howPlantsLive } from "../reading/plants.ts";
+import { waterOnEarth } from "../reading/water.ts";
 import { clauseTopics } from "../topics/grammar-clauses.ts";
 import { sentenceTopics } from "../topics/grammar-sentences.ts";
 import { wordTopics } from "../topics/words.ts";
@@ -17,5 +19,5 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...wordTopics,
 ];
 
-/** coreShardReading are the reading units held by the `core` shard: none until the course's passages are written. */
-export const coreShardReading: readonly ReadingUnitDef[] = [];
+/** coreShardReading are the reading units held by the `core` shard. */
+export const coreShardReading: readonly ReadingUnitDef[] = [waterOnEarth, howPlantsLive, lifeOnTheNile];

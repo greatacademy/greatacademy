@@ -44,6 +44,31 @@ describe("english content", () => {
     expect(new Set(coreShardTopics.map((topic) => topic.id)).size).toBe(english.topics.length);
   });
 
+  it("offers its passages in the course, each needing the topics whose words it uses", () => {
+    const subject = compileEnglish();
+    const course = english.courses[0];
+    expect(subject.graph.passages.size).toBe(30);
+    for (const passage of subject.graph.passages.values()) {
+      expect(course?.reading, passage.id).toContain(passage.unit);
+      const needs = new Set(passage.topics.map((edge) => edge.topic));
+      for (const topic of Object.keys(passage.wordsByTopic)) expect(needs, `${passage.id} uses ${topic}`).toContain(topic);
+      expect(passage.words, passage.id).toBeGreaterThanOrEqual(140);
+      expect(passage.words, passage.id).toBeLessThanOrEqual(260);
+    }
+  });
+
+  it("writes every passage question for Chinese readers in Chinese", () => {
+    for (const unit of english.reading ?? []) {
+      for (const passage of unit.passages) {
+        for (const q of passage.questions) {
+          for (const text of [passage.title, q.prompt, q.right, ...q.wrong, q.solution]) {
+            expect(text["zh-CN"], `${passage.id}: ${text.en}`).toMatch(/[一-鿿]/u);
+          }
+        }
+      }
+    }
+  });
+
   it("writes every question for Chinese readers in Chinese", () => {
     for (const topic of english.topics) {
       for (const kp of topic.knowledgePoints) {
