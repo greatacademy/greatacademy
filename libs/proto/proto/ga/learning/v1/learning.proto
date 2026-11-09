@@ -33,6 +33,14 @@ service LearningService {
   rpc StartTask(StartTaskRequest) returns (StartTaskResponse);
   // SkipDiagnostic places the learner at the beginning of the course.
   rpc SkipDiagnostic(SkipDiagnosticRequest) returns (SkipDiagnosticResponse);
+  // RetakeDiagnostic starts a course's diagnostic over: the topics it placed
+  // are asked again, while topics taught in lessons, XP and history stay.
+  // Only the learner's supervisor retakes it.
+  rpc RetakeDiagnostic(RetakeDiagnosticRequest) returns (RetakeDiagnosticResponse);
+  // ResetKnowledge forgets every topic the learner knows in a subject, so its
+  // current course starts with the diagnostic again; XP and history stay.
+  // Only the learner's supervisor resets it.
+  rpc ResetKnowledge(ResetKnowledgeRequest) returns (ResetKnowledgeResponse);
   // GetSession returns a session as it stands.
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
   // SubmitAnswer answers the current question of a session.
@@ -289,6 +297,22 @@ message SkipDiagnosticRequest {
 }
 
 message SkipDiagnosticResponse {}
+
+message RetakeDiagnosticRequest {
+  string course_id = 1;
+  // learner_id, when set, retakes for a learner the caller is a guardian of.
+  string learner_id = 2;
+}
+
+message RetakeDiagnosticResponse {}
+
+message ResetKnowledgeRequest {
+  string subject_id = 1;
+  // learner_id, when set, resets a learner the caller is a guardian of.
+  string learner_id = 2;
+}
+
+message ResetKnowledgeResponse {}
 
 message GetSessionRequest {
   string id = 1;

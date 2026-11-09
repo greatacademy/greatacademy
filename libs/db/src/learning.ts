@@ -83,6 +83,14 @@ export async function decidePlacement(db: Db, learnerId: string, courseId: strin
     .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.courseId, courseId), isNull(enrollment.decidedAt)));
 }
 
+/** reopenPlacement makes a course's diagnostic report wait for an answer again, as after the diagnostic is started over. */
+export async function reopenPlacement(db: Db, learnerId: string, courseId: string): Promise<void> {
+  await db
+    .update(enrollment)
+    .set({ decidedAt: null })
+    .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.courseId, courseId)));
+}
+
 /** placedEvent gives the event that ended a course's diagnostic for a learner, if it ended. */
 export async function placedEvent(
   db: Db,

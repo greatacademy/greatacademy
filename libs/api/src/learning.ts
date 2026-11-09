@@ -17,6 +17,7 @@ import {
   loadState,
   placedEvent,
   recordAnswer,
+  reopenPlacement,
   type SessionRow,
   subjectSettings,
   updateSession,
@@ -37,6 +38,7 @@ import {
   nextTasks,
   placementAdvice,
   remainingXp,
+  retakeEvent,
   type Task,
 } from "@ga/engine";
 import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
@@ -418,6 +420,39 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const active = await activeSession(tx, learnerId, c.id);
         if (active) await updateSession(tx, active.id, active.state, "abandoned", new Date(now));
         await append(tx, learnerId, c, { type: "placed", at: now, course: c.id, known: [], tested: [] });
+      });
+      return {};
+    },
+
+    async retakeDiagnostic(req, ctx) {
+      const { db, learnerId } = await decider(ctx, req.learnerId);
+      const c = await course(req.courseId);
+      if (!(await currentCourse(db, learnerId, c.id))) throw new ConnectError(`${c.id} is not the current course`, Code.FailedPrecondition);
+      const now = deps.now();
+      await db.transaction(async (tx) => {
+        const { state: s } = await state(tx, learnerId, c, true);
+        // A diagnostic still to be taken has nothing to start over.
+        if (diagnosticDue(c.planner, s)) return;
+        const active = await activeSession(tx, learnerId, c.id);
+        if (active) await updateSession(tx, active.id, active.state, "abandoned", new Date(now));
+        await append(tx, learnerId, c, retakeEvent(c.planner, s, now));
+        await reopenPlacement(tx, learnerId, c.id);
+      });
+      return {};
+    },
+
+    async resetKnowledge(req, ctx) {
+      const { db, learnerId } = await decider(ctx, req.learnerId);
+      const subjectId = subject(req.subjectId);
+      const enrolled = (await currentCourses(db, learnerId)).find((e) => e.subjectId === subjectId);
+      if (!enrolled) throw new ConnectError(`no course in ${subjectId}`, Code.FailedPrecondition);
+      const c = await course(enrolled.courseId);
+      const now = deps.now();
+      await db.transaction(async (tx) => {
+        const active = await activeSession(tx, learnerId, c.id);
+        if (active) await updateSession(tx, active.id, active.state, "abandoned", new Date(now));
+        await append(tx, learnerId, c, { type: "reset", at: now });
+        await reopenPlacement(tx, learnerId, c.id);
       });
       return {};
     },

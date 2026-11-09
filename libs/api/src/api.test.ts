@@ -207,6 +207,42 @@ describe("LearningService", () => {
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
   });
 
+  it("retakes a diagnostic and resets a subject, keeping lessons' topics, XP and history as each says", async () => {
+    await skipToLessons();
+    const dash = await learning.getDashboard({ courseId: COURSE });
+    const { session } = await learning.startTask({ courseId: COURSE, task: dash.tasks.find((t) => t.kind.case === "lesson")! });
+    await finish(session!);
+    const taught = await learning.getDashboard({ courseId: COURSE });
+    expect(taught.stats?.learned).toBe(1);
+    const xp = taught.xp?.total ?? 0;
+    expect(xp).toBeGreaterThan(0);
+
+    await learning.retakeDiagnostic({ courseId: COURSE });
+    const retaken = await learning.getDashboard({ courseId: COURSE });
+    expect(retaken.diagnosed).toBe(false);
+    expect(retaken.tasks.map((t) => t.kind.case)).toEqual(["diagnostic"]);
+    // Knowing everything, the learner is placed in the rest; retaking again forgets only what was placed.
+    const diagnostic = await learning.startTask({ courseId: COURSE, task: retaken.tasks[0] });
+    await finish(diagnostic.session!);
+    const placed = await learning.getDashboard({ courseId: COURSE });
+    expect(placed.stats?.learned).toBe(placed.stats?.total);
+    expect(placed.report).toBeDefined();
+    await learning.keepCourse({ courseId: COURSE });
+    await learning.retakeDiagnostic({ courseId: COURSE });
+    const again = await learning.getDashboard({ courseId: COURSE });
+    expect(again.stats?.learned).toBe(1);
+    expect(again.xp?.total).toBe(xp);
+    expect(again.report).toBeUndefined();
+
+    await learning.resetKnowledge({ subjectId: "math" });
+    const reset = await learning.getDashboard({ courseId: COURSE });
+    expect(reset.stats?.learned).toBe(0);
+    expect(reset.tasks.map((t) => t.kind.case)).toEqual(["diagnostic"]);
+    expect(reset.xp?.total).toBe(xp);
+    expect((await learning.listSessions({ courseId: COURSE })).sessions.length).toBeGreaterThan(0);
+    await expectCode(learning.resetKnowledge({ subjectId: "english" }), Code.NotFound);
+  });
+
   it("starts a practice-only lesson with practice, unless the learner failed it", async () => {
     const c = (await registry.course("sat-math-prep"))!;
     const topic = c.course.topics.find((t) => t.includes("-exam-"))!;

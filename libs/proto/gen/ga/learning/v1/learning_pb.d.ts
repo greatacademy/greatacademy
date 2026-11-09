@@ -919,6 +919,76 @@ export declare type SkipDiagnosticResponse = Message<"ga.learning.v1.SkipDiagnos
 export declare const SkipDiagnosticResponseSchema: GenMessage<SkipDiagnosticResponse>;
 
 /**
+ * @generated from message ga.learning.v1.RetakeDiagnosticRequest
+ */
+export declare type RetakeDiagnosticRequest = Message<"ga.learning.v1.RetakeDiagnosticRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * learner_id, when set, retakes for a learner the caller is a guardian of.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.RetakeDiagnosticRequest.
+ * Use `create(RetakeDiagnosticRequestSchema)` to create a new message.
+ */
+export declare const RetakeDiagnosticRequestSchema: GenMessage<RetakeDiagnosticRequest>;
+
+/**
+ * @generated from message ga.learning.v1.RetakeDiagnosticResponse
+ */
+export declare type RetakeDiagnosticResponse = Message<"ga.learning.v1.RetakeDiagnosticResponse"> & {
+};
+
+/**
+ * Describes the message ga.learning.v1.RetakeDiagnosticResponse.
+ * Use `create(RetakeDiagnosticResponseSchema)` to create a new message.
+ */
+export declare const RetakeDiagnosticResponseSchema: GenMessage<RetakeDiagnosticResponse>;
+
+/**
+ * @generated from message ga.learning.v1.ResetKnowledgeRequest
+ */
+export declare type ResetKnowledgeRequest = Message<"ga.learning.v1.ResetKnowledgeRequest"> & {
+  /**
+   * @generated from field: string subject_id = 1;
+   */
+  subjectId: string;
+
+  /**
+   * learner_id, when set, resets a learner the caller is a guardian of.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.ResetKnowledgeRequest.
+ * Use `create(ResetKnowledgeRequestSchema)` to create a new message.
+ */
+export declare const ResetKnowledgeRequestSchema: GenMessage<ResetKnowledgeRequest>;
+
+/**
+ * @generated from message ga.learning.v1.ResetKnowledgeResponse
+ */
+export declare type ResetKnowledgeResponse = Message<"ga.learning.v1.ResetKnowledgeResponse"> & {
+};
+
+/**
+ * Describes the message ga.learning.v1.ResetKnowledgeResponse.
+ * Use `create(ResetKnowledgeResponseSchema)` to create a new message.
+ */
+export declare const ResetKnowledgeResponseSchema: GenMessage<ResetKnowledgeResponse>;
+
+/**
  * @generated from message ga.learning.v1.GetSessionRequest
  */
 export declare type GetSessionRequest = Message<"ga.learning.v1.GetSessionRequest"> & {
@@ -2040,6 +2110,30 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof SkipDiagnosticRequestSchema;
     output: typeof SkipDiagnosticResponseSchema;
+  },
+  /**
+   * RetakeDiagnostic starts a course's diagnostic over: the topics it placed
+   * are asked again, while topics taught in lessons, XP and history stay.
+   * Only the learner's supervisor retakes it.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.RetakeDiagnostic
+   */
+  retakeDiagnostic: {
+    methodKind: "unary";
+    input: typeof RetakeDiagnosticRequestSchema;
+    output: typeof RetakeDiagnosticResponseSchema;
+  },
+  /**
+   * ResetKnowledge forgets every topic the learner knows in a subject, so its
+   * current course starts with the diagnostic again; XP and history stay.
+   * Only the learner's supervisor resets it.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.ResetKnowledge
+   */
+  resetKnowledge: {
+    methodKind: "unary";
+    input: typeof ResetKnowledgeRequestSchema;
+    output: typeof ResetKnowledgeResponseSchema;
   },
   /**
    * GetSession returns a session as it stands.
