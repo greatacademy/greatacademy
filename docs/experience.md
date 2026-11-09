@@ -36,7 +36,7 @@ XP is earned in a subject and counted there. The account's total is the sum, whi
 
 Each subject has three pages, the same on the web and in the apps:
 
-- **Learn** — what to do now: the course and how far it is, the task in progress or the next tasks, the diagnostic or its report, and the last few finished tasks; beside them the subject's total XP with today's, the weekly goals with the last 14 days, and the forecast.
+- **Learn** — what to do now: the course and how far it is, the task in progress or the next tasks, the diagnostic or its report, and the last few finished tasks; beside them the subject's total XP with today's, the weekly goals with the last 14 days, the forecast with other paces to compare, and the week's league.
 - **Progress** — how far the learner is: the course's topic map, and beside it the same goals and forecast cards as Learn; the history of finished tasks opens from its head.
 - **Course** — what is being learned: the current course and its outline, the other courses of the subject, and the decisions about them: changing course, retaking the diagnostic and resetting the knowledge profile.
 
@@ -67,7 +67,7 @@ The header holds the logo, the subject chip with the switcher, the subject's thr
 
 **Apps.** On a desktop the sidebar starts with the subject chip, which opens the switcher, then the subject's three pages; the account opens from the sidebar's foot. On a phone the top bar's title is the subject chip, the tab bar holds Learn, Progress, Course and Me, and Me holds the account.
 
-**Catalog.** The catalog shows one subject at a time, chosen by tabs at its top; its shelves (grades, exams, university) are the subject's own. A course page names its subject with the chip.
+**Catalog.** The catalog shows one subject at a time, chosen by tabs at its top; its shelves (grades, exams, university) are the subject's own. Every course in it opens its course page, the learner's current ones too. A course page names its subject with the chip.
 
 ## 5. Supervision
 
