@@ -16,6 +16,7 @@ const ASIDE_WIDTH = 320;
 interface LearnData {
   xp: XpSummary | undefined;
   paused: boolean;
+  canChoose: boolean;
   courses: { courseId: string; title: string; dash: GetDashboardResponse }[];
 }
 
@@ -32,7 +33,7 @@ async function loadLearn(abort: AbortSignal): Promise<LearnData> {
       dash: await learning.getDashboard({ courseId: enrollment.courseId, timeZone: timeZone() }, { signal: abort }),
     })),
   );
-  return { xp: profile.xp, paused: settings.goals?.paused ?? false, courses };
+  return { xp: profile.xp, paused: settings.goals?.paused ?? false, canChoose: profile.canChoose, courses };
 }
 
 /** GoalBar is one goal's progress: what was earned against the goal, as a bar that turns green once it is met. */
@@ -107,6 +108,15 @@ function CourseDay(props: { courseId: string; title: string; dash: GetDashboardR
         </Text>
       </View>
       <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
+      <If when={props.dash.report}>
+        <Text
+          role="button"
+          onPress={() => nav.push({ name: "learn", courseId: props.courseId })}
+          style={{ color: colors().accent, fontSize: 15 }}
+        >
+          {m().reportReady}
+        </Text>
+      </If>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         <If when={(stats()?.due ?? 0) > 0}>
           <Text
@@ -220,8 +230,10 @@ export function LearnTab(props: { visible: () => boolean }) {
                   else={
                     <Card>
                       <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{m().startLearning}</Text>
-                      <Muted>{m().startLearningBody}</Muted>
-                      <Action label={m().browseCourses} onPress={() => openTab("courses")} />
+                      <Muted>{data().canChoose ? m().chooseBody : m().guardianChooses}</Muted>
+                      <If when={data().canChoose}>
+                        <Action label={m().chooseCourse} onPress={() => nav.push({ name: "choose" })} />
+                      </If>
                     </Card>
                   }
                 >

@@ -7,6 +7,7 @@ import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { colors, ErrorNote, headerStyle, Loaded, Muted, PullScroll, Row, Section } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
+import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 
 /** Learn is the learner's home in a course: the next task comes first, since it is what the learner came for. */
@@ -41,6 +42,15 @@ export function Learn(props: { courseId: string }) {
       const { session } = await learning.startTask({ courseId: props.courseId, task, timeZone: timeZone() });
       if (session) nav.push({ name: "session", sessionId: session.id });
     });
+  // Keeping the course reads it again; taking another opens that one.
+  const answered = () => {
+    const current = nav.routes().at(-1);
+    void learning.getProfile({ timeZone: timeZone() }).then((profile) => {
+      const now = profile.enrollments.find((e) => e.subjectId === course()?.course?.subjectId)?.courseId;
+      if (now && now !== props.courseId && nav.routes().at(-1) === current) nav.replace({ name: "learn", courseId: now });
+      else dash.refetch();
+    });
+  };
   const skip = () =>
     act(async () => {
       await learning.skipDiagnostic({ courseId: props.courseId });
@@ -64,6 +74,8 @@ export function Learn(props: { courseId: string }) {
                 <If when={data().diagnosed && data().xpToQuiz > 0}>
                   <Muted>{m().xpToQuiz(data().xpToQuiz)}</Muted>
                 </If>
+                <PlacementReport dash={data()} onAnswered={answered} />
+                <CourseDone dash={data()} onChosen={answered} />
                 <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", marginTop: 8 }}>{m().nextUp}</Text>
                 <If when={error()}>
                   <ErrorNote message={error()} />

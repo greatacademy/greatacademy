@@ -25,13 +25,19 @@ export function describeTask(task: Task): { label: string; title: string; detail
   }
 }
 
-/** TaskCard offers a task: what it is, its XP, and a button to start it (and, for the diagnostic, to skip it). */
+/** from names the earlier course a foundation task comes from, as Math Academy labels such tasks. */
+function from(task: Task): string {
+  const k = task.kind;
+  return k.case === "lesson" || k.case === "review" ? tx(k.value.fromCourse) : "";
+}
+
+/** TaskCard offers a task: what it is, its course if a foundation, its XP, and a button to start it (and, for the diagnostic, to skip it). */
 export function TaskCard(props: { task: Task; action: string; busy?: boolean; onStart: () => void; extra?: () => void }) {
   const about = describeTask(props.task);
   if (!about) return null;
   return (
     <Card>
-      <Muted>{about.xp > 0 ? `${about.label} · ${about.xp} XP` : about.label}</Muted>
+      <Muted>{[about.label, from(props.task), about.xp > 0 ? `${about.xp} XP` : ""].filter(Boolean).join(" · ")}</Muted>
       <Rich source={about.title} inline bold fontSize={17} />
       <If when={about.detail}>
         <Muted>{about.detail}</Muted>

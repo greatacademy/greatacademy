@@ -1,12 +1,12 @@
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
-import { computed, List, Text, View } from "nsh";
+import { computed, List, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-import { m, tx } from "../lib/i18n.ts";
+import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { cellStyle, colors, Grid, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
+import { Action, cellStyle, colors, ErrorNote, Grid, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 function SignInButton() {
@@ -63,8 +63,20 @@ const cardStyle = () => ({
   padding: 16,
 });
 
-/** CourseList lists the courses: the learner's own first with how far they are, then the rest by shelf. `visible` says when the page shows, to read the learner's courses again. */
-export function CourseList(props: { visible: () => boolean }) {
+/** Choosing is what a course list chooses for: the caller's course, or that of a learner they are a guardian of. */
+export interface Choosing {
+  readonly learnerId?: string;
+  /** current is the course now current, which is marked instead of offered. */
+  readonly current?: string;
+  readonly onChosen: (courseId: string) => void;
+}
+
+/**
+ * CourseList lists the courses: the learner's own first with how far they are,
+ * then the rest by shelf. `visible` says when the page shows, to read the
+ * learner's courses again. Given `choose`, it is the list a course is chosen from.
+ */
+export function CourseList(props: { visible: () => boolean; choose?: Choosing; intro?: string }) {
   const rpc = query(["courses"], ({ signal }) => catalog.listCourses({}, { signal }));
   const visible = computed(() => props.visible() && token());
   const profile = query(
@@ -72,14 +84,34 @@ export function CourseList(props: { visible: () => boolean }) {
     () => ["profile"],
     (_, { signal }) => learning.getProfile({ timeZone: timeZone() }, { signal }),
   );
-  const mine = computed(() => (token() ? (profile()?.enrollments ?? []) : []));
+  const mine = computed(() => (token() && !props.choose ? (profile()?.enrollments ?? []) : []));
   const enrolled = computed(() => new Set(mine().map((enrollment) => enrollment.courseId)));
+  const busy = signal(false);
+  const error = signal("");
+  const choose = async (choosing: Choosing, courseId: string) => {
+    busy.set(true);
+    error.set("");
+    try {
+      await learning.chooseCourse({ courseId, learnerId: choosing.learnerId ?? "" });
+      choosing.onChosen(courseId);
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  };
   return (
     <View style={{ flex: 1, backgroundColor: colors().page }}>
       <Loaded rpc={rpc}>
         {(data) => (
           <PullScroll onRefresh={rpc.refetch} refreshing={rpc.state() === "refreshing"} underBar>
             <View style={{ gap: 12 }}>
+              <If when={props.intro}>
+                <Text style={{ color: colors().ink, fontSize: 15, lineHeight: 22 }}>{props.intro}</Text>
+              </If>
+              <If when={error()}>
+                <ErrorNote message={error()} />
+              </If>
               <If when={mine().length > 0}>
                 <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().myCourses}</Text>
                 <Grid>
@@ -129,6 +161,18 @@ export function CourseList(props: { visible: () => boolean }) {
                               <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(course().title)}</Text>
                               <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(course().description)}</Text>
                               <Muted>{m().topics(course().topicCount)}</Muted>
+                              <If when={props.choose}>
+                                {(choosing) => (
+                                  <If
+                                    when={choosing().current !== course().id}
+                                    else={
+                                      <Text style={{ color: colors().accent, fontSize: 15, fontWeight: "600" }}>{m().currentCourse}</Text>
+                                    }
+                                  >
+                                    <Action label={m().chooseThis} disabled={busy()} onPress={() => void choose(choosing(), course().id)} />
+                                  </If>
+                                )}
+                              </If>
                             </View>
                           )}
                         </Each>

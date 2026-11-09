@@ -1,37 +1,17 @@
-import { computed, List, Scroll, signal, Text, View } from "nsh";
+import { computed, List, Scroll, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
-import { errorText, m, tx } from "../lib/i18n.ts";
+import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
-import { catalog, learning } from "../lib/rpc.ts";
+import { catalog } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { Action, colors, ErrorNote, followScroll, headerStyle, Loaded } from "../lib/ui.tsx";
+import { Action, colors, followScroll, headerStyle, Loaded } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
-/** CourseOutline is a course's outline, and the way into studying it. */
+/** CourseOutline introduces a course. A course is chosen at sign-up and changed in settings, not here. */
 export function CourseOutline(props: { courseId: string }) {
   const rpc = query(["course", props.courseId], ({ signal }) => catalog.getCourse({ courseId: props.courseId }, { signal }));
   const title = computed(() => tx(rpc()?.course?.title));
-  const busy = signal(false);
-  const error = signal("");
-
-  // Enrolling twice is harmless, so a learner already in the course just goes on to it.
-  async function study() {
-    if (!token()) {
-      nav.push({ name: "sign-in" });
-      return;
-    }
-    busy.set(true);
-    error.set("");
-    try {
-      await learning.enroll({ courseId: props.courseId });
-      nav.push({ name: "learn", courseId: props.courseId });
-    } catch (e) {
-      error.set(errorText(e));
-    } finally {
-      busy.set(false);
-    }
-  }
 
   return (
     <NavPage headerStyle={headerStyle()} title={title()} header={<Header title={title()} />}>
@@ -40,10 +20,10 @@ export function CourseOutline(props: { courseId: string }) {
           {(data) => (
             <Scroll style={{ flex: 1 }} onScroll={followScroll()} scrollEventThrottle={16}>
               <View style={{ padding: 16, gap: 12 }}>
-                <Action label={m().enroll} disabled={busy()} onPress={() => void study()} />
-                <If when={error()}>
-                  <ErrorNote message={error()} />
+                <If when={!token()}>
+                  <Action label={m().signIn} onPress={() => nav.push({ name: "sign-in" })} />
                 </If>
+                <Text style={{ color: colors().ink, fontSize: 15, lineHeight: 22 }}>{tx(data().course?.description)}</Text>
                 {/* A list binds the units that show and the rest over the next frames, so the page opens without a pause. */}
                 <List viewport="parent" each={data().course?.units ?? []} estimatedItemSize={360} contentStyle={{ gap: 12 }}>
                   {(unit) => (

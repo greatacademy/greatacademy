@@ -15,6 +15,7 @@ import { keepWindowLarge } from "./lib/window.ts";
 import { Access } from "./screens/Access.tsx";
 import { Goals, League, Password, Profile } from "./screens/Account.tsx";
 import { Age } from "./screens/Age.tsx";
+import { ChooseCourse } from "./screens/ChooseCourse.tsx";
 import { CourseMap } from "./screens/CourseMap.tsx";
 import { CourseOutline } from "./screens/CourseOutline.tsx";
 import { Courses } from "./screens/Courses.tsx";
@@ -114,6 +115,8 @@ function App() {
               return <Courses />;
             case "course":
               return <CourseOutline courseId={route.courseId} />;
+            case "choose":
+              return <ChooseCourse learnerId={route.learnerId} learnerName={route.learnerName} current={route.current} />;
             case "learn":
               return <Learn courseId={route.courseId} />;
             case "map":

@@ -503,6 +503,7 @@ const settingsNetwork = {
   ...network,
   ...accessIs("ACCESS_STATUS_OK"),
   [`POST ${accountUrl}/GetSettings`]: json({ username: "learner" }),
+  [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [], xp: {}, canChoose: true }),
   [`POST ${authUrl}/delete-user`]: json({ success: true }),
 };
 
@@ -552,6 +553,48 @@ test("puts the task in progress first on Learn, with the weekly goals", async ()
   expect(app.texts()).toContain("50 / 150 XP");
   expect(app.texts()).toContain("10 XP to today's goal");
   expect(app.texts()).toContain("Resume");
+});
+
+test("chooses a first course from Learn, then answers the diagnostic's report", async () => {
+  let chosen = false;
+  let kept = false;
+  const app = await open(
+    "./App.tsx",
+    signedIn({
+      [`POST ${learningUrl}/GetProfile`]: () =>
+        json({
+          enrollments: chosen ? [{ courseId: "algebra", subjectId: "math", stats: { learned: 1, total: 2 } }] : [],
+          xp: {},
+          canChoose: true,
+        }),
+      [`POST ${learningUrl}/ChooseCourse`]: () => {
+        chosen = true;
+        return json({});
+      },
+      [`POST ${learningUrl}/KeepCourse`]: () => {
+        kept = true;
+        return json({});
+      },
+      [`POST ${learningUrl}/GetDashboard`]: () =>
+        json({
+          courseId: "algebra",
+          diagnosed: true,
+          tasks: [lessonTask],
+          stats: { learned: 1, total: 2 },
+          xp: {},
+          remainingXp: 30,
+          canChoose: true,
+          ...(!kept && { report: { placed: 1, total: 2 } }),
+        }),
+    }),
+  );
+  await app.press("role:button[Choose a course]");
+  await app.press("role:button[Start this course]");
+  await app.waitFor("text:What the diagnostic found");
+  expect(app.texts()).toContain("This course is the right place to start.");
+  await app.press("role:button[Start learning]");
+  await app.waitFor("role:button[Start]");
+  expect(kept).toBe(true);
 });
 
 test("sets the weekly goals from Learn", async () => {

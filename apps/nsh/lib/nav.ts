@@ -8,6 +8,7 @@ export type Route =
   | { name: "home" }
   | { name: "courses" }
   | { name: "course"; courseId: string }
+  | { name: "choose"; learnerId?: string; learnerName?: string; current?: string }
   | { name: "learn"; courseId: string }
   | { name: "map"; courseId: string }
   | { name: "history"; courseId: string }

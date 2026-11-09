@@ -1,9 +1,10 @@
 import { computed, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import { errorText, m, tx } from "../lib/i18n.ts";
+import { nav } from "../lib/nav.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
 import { query } from "../lib/query.ts";
-import { account, catalog, privacy, timeZone } from "../lib/rpc.ts";
+import { account, catalog, learning, privacy, timeZone } from "../lib/rpc.ts";
 import {
   Card,
   ConfirmField,
@@ -21,6 +22,7 @@ import {
   Skeleton,
 } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
+import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { bandName, confirm, ScopeRow } from "./Privacy.tsx";
 import { openWeb } from "./Settings.tsx";
 
@@ -34,7 +36,13 @@ export function Learner(props: { learnerId: string }) {
       privacy.listConsents({ learnerId: props.learnerId }, { signal: abort }),
       catalog.listCourses({}, { signal: abort }),
     ]);
-    return { learner, consents, list };
+    // Each course's dashboard carries its diagnostic report, for the guardian to answer.
+    const dashboards = await Promise.all(
+      learner.enrollments.map((e) =>
+        learning.getDashboard({ courseId: e.courseId, timeZone: timeZone(), learnerId: props.learnerId }, { signal: abort }),
+      ),
+    );
+    return { learner, consents, list, dashboards };
   });
   const name = computed(() => data()?.learner.learner?.name ?? "");
   const busy = signal(false);
@@ -121,6 +129,25 @@ export function Learner(props: { learnerId: string }) {
                         )}
                       </Each>
                     </If>
+                    <Each of={loaded().dashboards} key={(dash) => dash.courseId}>
+                      {(dash) => (
+                        <>
+                          <PlacementReport dash={dash()} learnerId={props.learnerId} onAnswered={() => data.refetch()} />
+                          <CourseDone dash={dash()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
+                        </>
+                      )}
+                    </Each>
+                    <Row
+                      title={loaded().learner.enrollments.length > 0 ? m().changeCourse : m().chooseForChild(name())}
+                      onPress={() =>
+                        nav.push({
+                          name: "choose",
+                          learnerId: props.learnerId,
+                          learnerName: name(),
+                          ...(loaded().learner.enrollments[0] && { current: loaded().learner.enrollments[0]!.courseId }),
+                        })
+                      }
+                    />
                   </Section>
                   <Card>
                     <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{p().guardianControls}</Text>
