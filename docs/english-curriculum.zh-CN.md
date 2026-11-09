@@ -232,6 +232,8 @@
 
 完成标准：切片能够编译，所有生成器通过采样，模拟学生能够完成，真实学习者在不使用平台题目的外部测试上有进步。
 
+此后 `english-grammar-writing` 又增加了八个用规则判分的主题，共 49 个：`comparatives-and-superlatives`（`adjectives-and-adverbs`）、`apostrophes-and-possessives` 和 `commonly-confused-words`（`nouns-and-pronouns`）、`verb-tense-consistency`（`simple-verb-tenses`）、`commas-after-introductions`（`capitals-and-end-punctuation`、`prepositional-phrases`）、`punctuating-dialogue`（`capitals-and-end-punctuation`），以及 `academic-words-2` 和 `academic-words-3`，各自排在前一批之后。
+
 ## 12. 工作顺序
 
 1. **首个切片**（§11）。

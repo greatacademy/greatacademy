@@ -232,6 +232,8 @@ Examples of encompassing edges, with starting weights to calibrate: `combining-w
 
 The slice is complete when it compiles, every generator passes sampling, simulated students finish it, and real learners improve on an outside test written without the platform's questions.
 
+The course `english-grammar-writing` has since added eight topics judged by rules, with 49 in all: `comparatives-and-superlatives` (`adjectives-and-adverbs`), `apostrophes-and-possessives` and `commonly-confused-words` (`nouns-and-pronouns`), `verb-tense-consistency` (`simple-verb-tenses`), `commas-after-introductions` (`capitals-and-end-punctuation`, `prepositional-phrases`), `punctuating-dialogue` (`capitals-and-end-punctuation`), and `academic-words-2` and `academic-words-3`, each after the batch before it.
+
 ## 12. Order of Work
 
 1. **First slice** (§11).

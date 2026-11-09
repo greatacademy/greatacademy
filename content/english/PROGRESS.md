@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live` and `life-on-the-nile`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live` and `life-on-the-nile`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
@@ -33,3 +33,9 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `latin-roots-2` | `latin-roots-1` | 0.2 | The method repeats, not the roots |
 | `academic-words-1` | `context-clues` | 0.3 | Sentence items rely on reading for clues |
 | `connotation-and-precise-words` | `academic-words-1` | 0.2 | Only the attention to exact meaning carries over |
+| `comparatives-and-superlatives` | `adjectives-and-adverbs` | 0.2 | Every item uses an adjective, but the forms are the point |
+| `apostrophes-and-possessives` | `nouns-and-pronouns` | 0.2 | Possessives are formed on nouns, and *its* is a pronoun |
+| `verb-tense-consistency` | `simple-verb-tenses` | 0.3 | Fixing a shift writes an irregular past form |
+| `commas-after-introductions` | `capitals-and-end-punctuation`, `prepositional-phrases` | 0.2 each | Items rewrite whole sentences, and many openings are prepositional phrases |
+| `punctuating-dialogue` | `capitals-and-end-punctuation` | 0.3 | Each quotation needs its capital and its end mark |
+| `academic-words-2`, `academic-words-3` | the batch before | 0.2 | Only the method of reading a sentence for meaning carries over |

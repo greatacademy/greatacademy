@@ -1,0 +1,511 @@
+// Usage: the forms of words that standard written English expects, and the words that sound alike.
+
+import { type TopicDef, t } from "@ga/content";
+import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-english";
+
+const form = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => ({
+  shown,
+  accepted: [right],
+  canonical: right,
+  wrong,
+});
+
+const fixed = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => typed(shown, right, wrong);
+
+const erEstBank: readonly TypedItem[] = [
+  form("tall: comparing two trees", "taller", "tallest", "more tall"),
+  form("big: comparing two dogs", "bigger", "biger", "more big"),
+  form("happy: comparing two children", "happier", "happyer", "more happy"),
+  form("fast: the quickest of all the runners", "fastest", "faster", "most fast"),
+  form("hot: the warmest day of the year", "hottest", "hotest", "hotter"),
+  form("easy: comparing two tests", "easier", "easyer", "more easy"),
+  form("large: the greatest in size of all the rooms", "largest", "larger", "largeest"),
+  form("small: comparing two boxes", "smaller", "smallest", "more small"),
+  form("funny: the most amusing of all the jokes", "funniest", "funnyest", "funnier"),
+  form("wet: comparing two towels", "wetter", "weter", "more wet"),
+];
+
+const moreMostBank: readonly ChoiceItem[] = [
+  ["This puzzle is ___ than the last one.", "more difficult", ["difficulter", "most difficult"]],
+  ["She is the ___ singer in the choir.", "most careful", ["carefullest", "more careful"]],
+  ["Of the two paintings, this one is ___.", "more colorful", ["colorfuller", "most colorful"]],
+  ["That was the ___ movie I have ever seen.", "most exciting", ["excitingest", "more exciting"]],
+  ["The new park is ___ than the old one.", "more beautiful", ["beautifuler", "most beautiful"]],
+  ["He gave the ___ answer in the whole class.", "most interesting", ["interestinger", "more interesting"]],
+  ["Today the river is ___ than it was yesterday.", "more dangerous", ["dangerouser", "most dangerous"]],
+  ["Of all the plans, this one is the ___.", "most useful", ["usefuller", "more useful"]],
+  ["My sister is ___ than I am about her homework.", "more patient", ["patienter", "most patient"]],
+];
+
+const irregularBank: readonly ChoiceItem[] = [
+  ["My cold is ___ today than it was yesterday.", "worse", ["badder", "worst"]],
+  ["This is the ___ pizza in town.", "best", ["goodest", "better"]],
+  ["Her second drawing was ___ than her first.", "better", ["gooder", "more good"]],
+  ["That was the ___ storm in fifty years.", "worst", ["baddest", "worse"]],
+  ["Which of the two roads is ___ from here?", "farther", ["farrer", "farthest"]],
+  ["I have ___ homework than my brother.", "less", ["littler", "least"]],
+  ["He ate the ___ of all, just one bite.", "least", ["littlest", "less"]],
+  ["She has ___ books than anyone in her class.", "more", ["mucher", "most"]],
+  ["This team played ___ than the other one.", "better", ["more well", "best"]],
+  ["Of the three songs, I like this one ___.", "best", ["better", "most good"]],
+];
+
+const doubleBank: readonly ChoiceItem[] = [
+  [
+    "Which sentence is correct?",
+    "This box is heavier than that one.",
+    ["This box is more heavier than that one.", "This box is most heavy than that one."],
+  ],
+  [
+    "Which sentence is correct?",
+    "She is the kindest person I know.",
+    ["She is the most kindest person I know.", "She is the kinder person I know."],
+  ],
+  [
+    "Which sentence is correct?",
+    "Our team is stronger this year.",
+    ["Our team is more stronger this year.", "Our team is strongest this year than last."],
+  ],
+  [
+    "Which sentence is correct?",
+    "That was the scariest part of the book.",
+    ["That was the most scariest part of the book.", "That was the scarier part of the whole book."],
+  ],
+  [
+    "Which sentence is correct?",
+    "Of the two twins, Sam is taller.",
+    ["Of the two twins, Sam is tallest.", "Of the two twins, Sam is more taller."],
+  ],
+  [
+    "Which sentence is correct?",
+    "The lake is deeper than the pond.",
+    ["The lake is more deeper than the pond.", "The lake is deepest than the pond."],
+  ],
+  [
+    "Which sentence is correct?",
+    "This is the oldest tree in the park.",
+    ["This is the most oldest tree in the park.", "This is the older tree in the whole park."],
+  ],
+  [
+    "Which sentence is correct?",
+    "My new shoes are more comfortable.",
+    ["My new shoes are more comfortabler.", "My new shoes are comfortabler."],
+  ],
+];
+
+const singularPossessiveBank: readonly TypedItem[] = [
+  form("the bone that belongs to the dog", "dog's", "dogs", "dogs'"),
+  form("the book that belongs to Maria", "Maria's", "Marias", "Marias'"),
+  form("the car that belongs to my uncle", "uncle's", "uncles", "uncles'"),
+  form("the nest that belongs to the bird", "bird's", "birds", "birds'"),
+  form("the hat that belongs to James", "James's", "Jameses", "Jame's"),
+  form("the tail that belongs to the cat", "cat's", "cats", "cats'"),
+  form("the desk that belongs to the teacher", "teacher's", "teachers", "teachers'"),
+  form("the bike that belongs to Chris", "Chris's", "Chrises", "Chri's"),
+  form("the roof that belongs to the house", "house's", "houses", "houses'"),
+  form("the toy that belongs to the baby", "baby's", "babies", "babys"),
+];
+
+const pluralPossessiveBank: readonly TypedItem[] = [
+  form("the coats that belong to the girls", "girls'", "girl's", "girls's"),
+  form("the toys that belong to the children", "children's", "childrens'", "childrens"),
+  form("the nests that belong to the birds", "birds'", "bird's", "birds's"),
+  form("the books that belong to the students", "students'", "student's", "students's"),
+  form("the tools that belong to the men", "men's", "mens'", "mans'"),
+  form("the classroom that belongs to the teachers", "teachers'", "teacher's", "teachers's"),
+  form("the barn that belongs to the horses", "horses'", "horse's", "horses's"),
+  form("the shoes that belong to the women", "women's", "womens'", "womans'"),
+  form("the den that belongs to the foxes", "foxes'", "fox's", "foxes's"),
+  form("the tails that belong to the mice", "mice's", "mices'", "mouses'"),
+];
+
+const itsBank: readonly ChoiceItem[] = [
+  ["The dog wagged ___ tail.", "its", ["it's", "its'"]],
+  ["___ raining again this morning.", "It's", ["Its", "Its'"]],
+  ["The tree lost all of ___ leaves.", "its", ["it's", "its'"]],
+  ["I think ___ time to go home.", "it's", ["its", "its'"]],
+  ["The company changed ___ name.", "its", ["it's", "its'"]],
+  ["___ been a long week.", "It's", ["Its", "Its'"]],
+  ["The bird built ___ nest in the barn.", "its", ["it's", "its'"]],
+  ["Do you know if ___ true?", "it's", ["its", "its'"]],
+  ["The team won ___ first game.", "its", ["it's", "its'"]],
+  ["___ too cold to swim today.", "It's", ["Its", "Its'"]],
+];
+
+const theirBank: readonly ChoiceItem[] = [
+  ["The students left ___ bags by the door.", "their", ["there", "they're"]],
+  ["Put the boxes over ___.", "there", ["their", "they're"]],
+  ["___ going to the park after lunch.", "They're", ["Their", "There"]],
+  ["___ are three apples in the bowl.", "There", ["Their", "They're"]],
+  ["My neighbors painted ___ fence green.", "their", ["there", "they're"]],
+  ["I hope ___ not late for the bus.", "they're", ["their", "there"]],
+  ["Is ___ any milk left?", "there", ["their", "they're"]],
+  ["The birds flew back to ___ nests.", "their", ["there", "they're"]],
+  ["___ the best players on the team.", "They're", ["Their", "There"]],
+  ["We waited ___ for an hour.", "there", ["their", "they're"]],
+];
+
+const yourToBank: readonly ChoiceItem[] = [
+  ["Is this ___ jacket?", "your", ["you're", "yore"]],
+  ["___ going to love this book.", "You're", ["Your", "Youre"]],
+  ["We walked ___ the store.", "to", ["too", "two"]],
+  ["This soup is ___ hot to eat.", "too", ["to", "two"]],
+  ["I have ___ brothers and a sister.", "two", ["to", "too"]],
+  ["Can I come ___?", "too", ["to", "two"]],
+  ["Please wash ___ hands before dinner.", "your", ["you're", "yore"]],
+  ["Tell me when ___ ready.", "you're", ["your", "youre"]],
+  ["She gave the letter ___ her friend.", "to", ["too", "two"]],
+  ["The movie lasted ___ hours.", "two", ["to", "too"]],
+];
+
+const thenThanBank: readonly ChoiceItem[] = [
+  ["My brother is older ___ me.", "than", ["then", "that"]],
+  ["We ate dinner, and ___ we watched a movie.", "then", ["than", "that"]],
+  ["I would rather walk ___ ride the bus.", "than", ["then", "that"]],
+  ["Mix the flour, and ___ add the eggs.", "then", ["than", "that"]],
+  ["This bag is lighter ___ that one.", "than", ["then", "that"]],
+  ["Back ___, there were no phones.", "then", ["than", "that"]],
+  ["The noise made the baby cry, and the loss of sleep had a bad ___ on all of us.", "effect", ["affect", "effort"]],
+  ["Does the weather ___ your mood?", "affect", ["effect", "afford"]],
+  ["The new rule will ___ every student.", "affect", ["effect", "afford"]],
+  ["What ___ did the medicine have?", "effect", ["affect", "effort"]],
+];
+
+const thenThanWhy = new Map([
+  ["than", t("It compares.", "它用于比较。")],
+  ["then", t("It tells when.", "它表示时间。")],
+  ["affect", t("It is the verb.", "这里需要动词。")],
+  ["effect", t("It is the noun.", "这里需要名词。")],
+]);
+
+const shiftBank: readonly ChoiceItem[] = [
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "She opened the door and saw a cat.",
+    ["She opened the door and sees a cat.", "She opens the door and saw a cat."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "Every morning he wakes up and brushes his teeth.",
+    ["Every morning he wakes up and brushed his teeth.", "Every morning he woke up and brushes his teeth."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "We ran to the bus, but it left without us.",
+    ["We ran to the bus, but it leaves without us.", "We run to the bus, but it left without us."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "The puppy jumps up and licks my face.",
+    ["The puppy jumps up and licked my face.", "The puppy jumped up and licks my face."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "Yesterday I baked bread and gave some to my friend.",
+    ["Yesterday I baked bread and give some to my friend.", "Yesterday I bake bread and gave some to my friend."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "The bell rings, and the students walk to class.",
+    ["The bell rings, and the students walked to class.", "The bell rang, and the students walk to class."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "Last summer we camped by a lake and swam every day.",
+    ["Last summer we camped by a lake and swim every day.", "Last summer we camp by a lake and swam every day."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "He reads the note and smiles.",
+    ["He reads the note and smiled.", "He read the note and smiles."],
+  ],
+  [
+    "Which sentence keeps its verbs in the same time?",
+    "The storm knocked out the power, and the room went dark.",
+    ["The storm knocked out the power, and the room goes dark.", "The storm knocks out the power, and the room went dark."],
+  ],
+];
+
+const shiftFixBank: readonly TypedItem[] = [
+  fixed(
+    "Yesterday we went to the zoo and see a lion.",
+    "Yesterday we went to the zoo and saw a lion.",
+    "Yesterday we went to the zoo and see a lion.",
+    "Yesterday we go to the zoo and saw a lion.",
+  ),
+  fixed(
+    "Last night the wind blew and the windows shake.",
+    "Last night the wind blew and the windows shook.",
+    "Last night the wind blew and the windows shake.",
+    "Last night the wind blew and the windows shaked.",
+  ),
+  fixed(
+    "Last week Tom found a wallet and gives it to the police.",
+    "Last week Tom found a wallet and gave it to the police.",
+    "Last week Tom found a wallet and gives it to the police.",
+    "Last week Tom found a wallet and gived it to the police.",
+  ),
+  fixed(
+    "This morning I ate breakfast and catch the bus.",
+    "This morning I ate breakfast and caught the bus.",
+    "This morning I ate breakfast and catch the bus.",
+    "This morning I ate breakfast and catched the bus.",
+  ),
+  fixed(
+    "On Monday she wrote a story and reads it to the class.",
+    "On Monday she wrote a story and read it to the class.",
+    "On Monday she wrote a story and reads it to the class.",
+    "On Monday she wrote a story and readed it to the class.",
+  ),
+  fixed(
+    "Last spring the farmer planted corn and grows beans.",
+    "Last spring the farmer planted corn and grew beans.",
+    "Last spring the farmer planted corn and grows beans.",
+    "Last spring the farmer planted corn and growed beans.",
+  ),
+  fixed(
+    "Two days ago the cat climbed the tree and gets stuck.",
+    "Two days ago the cat climbed the tree and got stuck.",
+    "Two days ago the cat climbed the tree and gets stuck.",
+    "Two days ago the cat climbed the tree and getted stuck.",
+  ),
+  fixed(
+    "Last year we moved to a new town and make new friends.",
+    "Last year we moved to a new town and made new friends.",
+    "Last year we moved to a new town and make new friends.",
+    "Last year we moved to a new town and maked new friends.",
+  ),
+  fixed(
+    "After school yesterday, I fed the fish and drink some juice.",
+    "After school yesterday, I fed the fish and drank some juice.",
+    "After school yesterday, I fed the fish and drink some juice.",
+    "After school yesterday, I fed the fish and drinked some juice.",
+  ),
+];
+
+/** usageTopics are the topics of usage: comparing, possessives, words that sound alike, and keeping tense. */
+export const usageTopics: readonly TopicDef[] = [
+  {
+    id: "comparatives-and-superlatives",
+    title: t("Comparatives and Superlatives", "比较级和最高级"),
+    summary: t(
+      "Compare two things with -er or more, and three or more with -est or most.",
+      "用 -er 或 more 比较两者，用 -est 或 most 比较三者及以上。",
+    ),
+    prerequisites: ["adjectives-and-adverbs"],
+    encompasses: [{ topic: "adjectives-and-adverbs", weight: 0.2 }],
+    xp: 10,
+    knowledgePoints: [
+      point(
+        "er-and-est",
+        t("Adding -er and -est", "加 -er 和 -est"),
+        t(
+          "To compare **two** things, add *-er* to a short adjective: *tall, taller*. To compare **three or more**, add *-est*: *tallest*.\n\nSpelling changes: a final *e* is dropped (*large, larger*); a final *y* after a consonant becomes *i* (*happy, happier*); a short word ending in one vowel and one consonant doubles the consonant (*big, bigger*; *hot, hottest*).",
+          "比较**两个**事物时，在短形容词后加 *-er*：*tall, taller*。比较**三个或更多**时，加 *-est*：*tallest*。\n\n拼写变化：词尾的 *e* 去掉（*large, larger*）；辅音后的 *y* 变成 *i*（*happy, happier*）；以“一个元音加一个辅音”结尾的短词要双写辅音（*big, bigger*；*hot, hottest*）。",
+        ),
+        typedGenerator(
+          "word-form",
+          t("Write the form of the adjective that fits.", "写出符合要求的形容词形式。"),
+          erEstBank,
+          (right, shown) =>
+            t(
+              `**${right}**. ${shown.includes("comparing two") ? "Two things are compared, so the word takes the -er form, with any spelling change." : "One stands out from a whole group, so the word takes the -est form, with any spelling change."}`,
+              `**${right}**。${shown.includes("comparing two") ? "比较的是两个事物，所以用 -er 形式，并注意拼写变化。" : "从一组中突出一个，所以用 -est 形式，并注意拼写变化。"}`,
+            ),
+        ),
+      ),
+      point(
+        "more-and-most",
+        t("More and Most", "more 和 most"),
+        t(
+          "Most adjectives of three or more syllables, and many of two, do not take *-er* or *-est*. Use *more* for two things and *most* for three or more: *more difficult*, *the most careful*.\n\nNever use both: *more heavier* and *most kindest* are wrong.",
+          "大多数三个或更多音节的形容词，以及许多两个音节的形容词，不加 *-er* 或 *-est*。比较两者用 *more*，三者及以上用 *most*：*more difficult*、*the most careful*。\n\n两者不能同时使用：*more heavier* 和 *most kindest* 都是错的。",
+        ),
+        choiceGenerator(t("Which words complete the sentence?", "哪个选项能补全句子？"), moreMostBank, (right, shown) =>
+          t(
+            `${shown.replace("___", `**${right}**`)}`,
+            `${shown.replace("___", `**${right}**`)} 长形容词用 more 或 most，不加 -er 或 -est。`,
+          ),
+        ),
+      ),
+      point(
+        "irregular-and-double",
+        t("Irregular Forms and Doubled Comparisons", "不规则形式和重复比较"),
+        t(
+          "A few common words change completely: *good, better, best*; *bad, worse, worst*; *far, farther, farthest*; *little, less, least*; *much* or *many, more, most*. The adverb *well* also becomes *better* and *best*.\n\nUse one way of comparing, not two: *heavier*, not *more heavier*.",
+          "少数常用词的形式完全改变：*good, better, best*；*bad, worse, worst*；*far, farther, farthest*；*little, less, least*；*much* 或 *many, more, most*。副词 *well* 也变成 *better* 和 *best*。\n\n只用一种比较方式，不能重复：*heavier*，而不是 *more heavier*。",
+        ),
+        choiceGenerator(t("Choose the correct form.", "选择正确的形式。"), [...irregularBank, ...doubleBank], (right, shown) =>
+          shown.includes("___")
+            ? t(
+                `${shown.replace("___", `**${right}**`)} This word has an irregular form.`,
+                `${shown.replace("___", `**${right}**`)} 这个词的比较形式是不规则的。`,
+              )
+            : t(
+                `**${right}** It compares in one way only, with the right form for the number of things.`,
+                `**${right}** 只用一种比较方式，并且形式符合比较对象的数量。`,
+              ),
+        ),
+      ),
+    ],
+  },
+  {
+    id: "apostrophes-and-possessives",
+    title: t("Apostrophes and Possessives", "撇号和所有格"),
+    summary: t("Show who owns something with an apostrophe, and tell its from it's.", "用撇号表示所属，并区分 its 和 it's。"),
+    prerequisites: ["nouns-and-pronouns"],
+    encompasses: [{ topic: "nouns-and-pronouns", weight: 0.2 }],
+    xp: 10,
+    knowledgePoints: [
+      point(
+        "singular-possessive",
+        t("One Owner", "一个所有者"),
+        t(
+          "To show that something belongs to one person or thing, add **'s**: *the dog's bone*, *Maria's book*. Add *'s* even when the name ends in *s*: *James's hat*.\n\nA plain *s* with no apostrophe makes a plural, not a possessive: *two dogs*.",
+          "表示某物属于一个人或一个事物时，加 **'s**：*the dog's bone*、*Maria's book*。即使名字以 *s* 结尾，也加 *'s*：*James's hat*。\n\n只加 *s* 不加撇号是复数，不是所有格：*two dogs*。",
+        ),
+        typedGenerator(
+          "word-form",
+          t("Write the possessive word, such as dog's.", "写出所有格形式，例如 dog's。"),
+          singularPossessiveBank,
+          (right) =>
+            t(
+              `**${right}**. There is one owner, so the word takes an apostrophe and then *s*, even after a final *s*.`,
+              `**${right}**。所有者只有一个，所以加撇号再加 *s*，即使词尾已经是 *s* 也一样。`,
+            ),
+        ),
+      ),
+      point(
+        "plural-possessive",
+        t("Several Owners", "多个所有者"),
+        t(
+          "When the owners are a plural that ends in *s*, add only an apostrophe after it: *the girls' coats*, *the foxes' den*.\n\nWhen the plural does not end in *s*, add **'s** as for one owner: *the children's toys*, *the women's shoes*.",
+          "所有者是以 *s* 结尾的复数时，只在后面加撇号：*the girls' coats*、*the foxes' den*。\n\n复数不以 *s* 结尾时，像单个所有者一样加 **'s**：*the children's toys*、*the women's shoes*。",
+        ),
+        typedGenerator(
+          "word-form",
+          t("Write the possessive word, such as girls'.", "写出所有格形式，例如 girls'。"),
+          pluralPossessiveBank,
+          (right) =>
+            t(
+              right.endsWith("s'")
+                ? `**${right}**. The plural already ends in *s*, so only an apostrophe follows.`
+                : `**${right}**. The plural does not end in *s*, so it takes *'s*.`,
+              right.endsWith("s'") ? `**${right}**。复数已经以 *s* 结尾，所以只加撇号。` : `**${right}**。复数不以 *s* 结尾，所以加 *'s*。`,
+            ),
+        ),
+      ),
+      point(
+        "its-and-its",
+        t("Its and It's", "its 和 it's"),
+        t(
+          "*It's* is short for *it is* or *it has*: *It's raining.* *Its* shows ownership, like *his* and *her*, and has no apostrophe: *The dog wagged its tail.*\n\nTest it: if *it is* or *it has* fits, write *it's*.",
+          "*It's* 是 *it is* 或 *it has* 的缩写：*It's raining.* *Its* 表示所属，就像 *his* 和 *her* 一样，没有撇号：*The dog wagged its tail.*\n\n检验方法：如果换成 *it is* 或 *it has* 讲得通，就写 *it's*。",
+        ),
+        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), itsBank, (right, shown) =>
+          t(
+            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "*It is* or *it has* fits here." : "The word shows ownership, so it has no apostrophe."}`,
+            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "这里可以换成 *it is* 或 *it has*。" : "这个词表示所属，所以没有撇号。"}`,
+          ),
+        ),
+      ),
+    ],
+  },
+  {
+    id: "commonly-confused-words",
+    title: t("Commonly Confused Words", "常见易混词"),
+    summary: t(
+      "Words that sound alike: there, their and they're; your and you're; to, too and two; then and than.",
+      "发音相近的词：there、their 和 they're；your 和 you're；to、too 和 two；then 和 than。",
+    ),
+    prerequisites: ["nouns-and-pronouns"],
+    encompasses: [],
+    xp: 10,
+    knowledgePoints: [
+      point(
+        "there-their-theyre",
+        t("There, Their and They're", "there、their 和 they're"),
+        t(
+          "*Their* shows ownership: *their bags*. *There* names a place or begins a sentence such as *There are three apples*. *They're* is short for *they are*.\n\nTest it: if *they are* fits, write *they're*; if the word owns a noun after it, write *their*.",
+          "*Their* 表示所属：*their bags*。*There* 表示地点，或用于 *There are three apples* 这样的句子开头。*They're* 是 *they are* 的缩写。\n\n检验方法：如果换成 *they are* 讲得通，就写 *they're*；如果这个词后面跟着它所拥有的名词，就写 *their*。",
+        ),
+        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), theirBank, (right, shown) =>
+          t(
+            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}`,
+            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "它表示所属。" : right.toLowerCase() === "there" ? "它表示地点或用于句首。" : "它的意思是 *they are*。"}`,
+          ),
+        ),
+      ),
+      point(
+        "your-to-too-two",
+        t("Your, You're, To, Too and Two", "your、you're、to、too 和 two"),
+        t(
+          "*Your* shows ownership: *your jacket*. *You're* is short for *you are*.\n\n*Two* is the number 2. *Too* means *also* or *more than enough*: *too hot*. *To* is used everywhere else: *to the store*, *to eat*.",
+          "*Your* 表示所属：*your jacket*。*You're* 是 *you are* 的缩写。\n\n*Two* 是数字 2。*Too* 的意思是“也”或“太”：*too hot*。其他情况都用 *to*：*to the store*、*to eat*。",
+        ),
+        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), yourToBank, (right, shown) =>
+          t(
+            `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}`,
+            `${shown.replace("___", `**${right}**`)} ${{ your: "它表示所属。", "you're": "它的意思是 *you are*。", two: "它是数字 2。", too: "它的意思是“也”或“太”。", to: "它既不是数字，也不表示“也”。" }[right.toLowerCase()] ?? ""}`,
+          ),
+        ),
+      ),
+      point(
+        "then-than-affect-effect",
+        t("Then and Than, Affect and Effect", "then 和 than，affect 和 effect"),
+        t(
+          "*Than* compares: *older than me*. *Then* tells when: *and then we left*.\n\n*Affect* is usually a verb, to change something: *Does the weather affect you?* *Effect* is usually a noun, the result: *The medicine had an effect.* If *a*, *an* or *the* can come before it, it is the noun *effect*.",
+          "*Than* 用于比较：*older than me*。*Then* 表示时间：*and then we left*。\n\n*Affect* 通常是动词，意思是影响某事物：*Does the weather affect you?* *Effect* 通常是名词，意思是结果：*The medicine had an effect.* 如果前面能加 *a*、*an* 或 *the*，就是名词 *effect*。",
+        ),
+        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), thenThanBank, (right, shown) =>
+          t(
+            `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}`,
+            `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.["zh-CN"] ?? ""}`,
+          ),
+        ),
+      ),
+    ],
+  },
+  {
+    id: "verb-tense-consistency",
+    title: t("Keeping Verb Tense Consistent", "保持动词时态一致"),
+    summary: t(
+      "Keep the verbs of a sentence in the same time unless the time really changes.",
+      "除非时间真的改变，句子中的动词要保持同一时态。",
+    ),
+    prerequisites: ["simple-verb-tenses"],
+    encompasses: [{ topic: "simple-verb-tenses", weight: 0.3 }],
+    xp: 10,
+    knowledgePoints: [
+      point(
+        "spotting-shifts",
+        t("Spotting a Shift", "找出时态的转换"),
+        t(
+          "When the actions of a sentence happen at the same time, their verbs stay in the same tense. *She opened the door and sees a cat* jumps from past to present for no reason.\n\nA change is right only when the time really changes: *I lived here before, but now I live in town.*",
+          "句子中的动作发生在同一时间时，动词要保持同一时态。*She opened the door and sees a cat* 无缘无故地从过去时跳到了现在时。\n\n只有时间真的改变时，时态才可以改变：*I lived here before, but now I live in town.*",
+        ),
+        choiceGenerator(t("Choose the sentence.", "选择句子。"), shiftBank, (right) =>
+          t(
+            `**${right}** Both actions happen at the same time, so their verbs share a tense.`,
+            `**${right}** 两个动作发生在同一时间，所以动词时态相同。`,
+          ),
+        ),
+      ),
+      point(
+        "fixing-shifts",
+        t("Fixing a Shift", "改正时态的转换"),
+        t(
+          "Find the words that tell the time, such as *yesterday* or *last week*. Then change the verb that does not match so that every verb agrees with that time. Many common verbs have irregular past forms: *see, saw*; *catch, caught*; *give, gave*.",
+          "找出表示时间的词，例如 *yesterday* 或 *last week*。然后改动不一致的动词，使每个动词都符合那个时间。许多常用动词的过去式是不规则的：*see, saw*；*catch, caught*；*give, gave*。",
+        ),
+        typedGenerator(
+          "sentence",
+          t("Rewrite the sentence so its verbs agree in tense.", "改写句子，使动词时态一致。"),
+          shiftFixBank,
+          (right) =>
+            t(`**${right}** The time is past, so the second verb is past as well.`, `**${right}** 时间是过去，所以第二个动词也用过去时。`),
+        ),
+      ),
+    ],
+  },
+];

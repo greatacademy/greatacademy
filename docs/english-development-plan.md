@@ -102,7 +102,7 @@ Each topic has 2 to 4 knowledge points, an item bank large enough to pass sampli
 
 ### E1.5 Simulation (S)
 
-`tools/simulate` runs simulated students through the course. It checks that they finish, with fewer explicit reviews per topic than a mathematics course of the same breadth, and that no topic is unreachable or starves its dependents. English has a sparser graph in places, so unusual results lead to looking at the edges first. A typical student needs 2.45 explicit reviews per topic, against 3.84 on 3rd Grade Math, whose breadth is similar; most fall on word topics that no later topic practices yet. Weights are not raised to improve this number.
+`tools/simulate` runs simulated students through the course. It checks that they finish, with fewer explicit reviews per topic than a mathematics course of the same breadth, and that no topic is unreachable or starves its dependents. English has a sparser graph in places, so unusual results lead to looking at the edges first. With the 49 topics and the reading units, a typical student needs 2.78 explicit reviews per topic, against 3.84 on 3rd Grade Math, whose breadth is similar; most fall on word topics that no later topic practices yet. Weights are not raised to improve this number.
 
 ### E1.6 Outside Test and Pilot (M, mostly waiting)
 

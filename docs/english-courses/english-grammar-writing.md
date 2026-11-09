@@ -5,7 +5,7 @@
 - **Level:** Grades 3 to 8
 - **Prerequisite(s):** Speaking English and reading simple sentences
 - **Language of explanation:** English
-- **Size:** 3 units · 10 modules · 41 topics
+- **Size:** 3 units · 11 modules · 49 topics
 
 ## Description
 
@@ -13,7 +13,7 @@ How English sentences work, how to join and improve them, and how words are buil
 
 ## Units
 
-### 1. Grammar (17 topics)
+### 1. Grammar (21 topics)
 
 #### 1.1. Parts of a Sentence
 
@@ -30,23 +30,32 @@ How English sentences work, how to join and improve them, and how words are buil
 1.2.3. Pronoun-Antecedent Agreement  
 1.2.4. Active and Passive Voice
 
-#### 1.3. Clauses and Phrases
+#### 1.3. Usage
 
-1.3.1. Coordinating Conjunctions  
-1.3.2. Run-ons and Comma Splices  
-1.3.3. Subordinating Conjunctions  
-1.3.4. Relative Clauses  
-1.3.5. Appositives  
-1.3.6. Participial Phrases  
-1.3.7. Misplaced Modifiers  
-1.3.8. Parallel Structure
+1.3.1. Comparatives and Superlatives  
+1.3.2. Apostrophes and Possessives  
+1.3.3. Commonly Confused Words  
+1.3.4. Keeping Verb Tense Consistent
 
-### 2. Sentence Writing (13 topics)
+#### 1.4. Clauses and Phrases
+
+1.4.1. Coordinating Conjunctions  
+1.4.2. Run-ons and Comma Splices  
+1.4.3. Subordinating Conjunctions  
+1.4.4. Relative Clauses  
+1.4.5. Appositives  
+1.4.6. Participial Phrases  
+1.4.7. Misplaced Modifiers  
+1.4.8. Parallel Structure
+
+### 2. Sentence Writing (15 topics)
 
 #### 2.1. Punctuating Sentences
 
 2.1.1. Capitals and End Punctuation  
-2.1.2. Commas in a Series
+2.1.2. Commas in a Series  
+2.1.3. Commas After Introductions and Names  
+2.1.4. Punctuating Dialogue
 
 #### 2.2. Joining Sentences
 
@@ -68,7 +77,7 @@ How English sentences work, how to join and improve them, and how words are buil
 2.4.3. Choosing Transitions  
 2.4.4. Removing Off-Topic Sentences
 
-### 3. Words (11 topics)
+### 3. Words (13 topics)
 
 #### 3.1. Word Parts
 
@@ -88,4 +97,6 @@ How English sentences work, how to join and improve them, and how words are buil
 
 3.3.1. Context Clues  
 3.3.2. Academic Words 1  
-3.3.3. Connotation and Precise Words
+3.3.3. Academic Words 2  
+3.3.4. Academic Words 3  
+3.3.5. Connotation and Precise Words

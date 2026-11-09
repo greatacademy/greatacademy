@@ -30,6 +30,10 @@ export const grammarWriting: CourseDef = {
           topics: ["simple-verb-tenses", "subject-verb-agreement", "pronoun-antecedent-agreement", "active-and-passive-voice"],
         },
         {
+          title: t("Usage", "用法"),
+          topics: ["comparatives-and-superlatives", "apostrophes-and-possessives", "commonly-confused-words", "verb-tense-consistency"],
+        },
+        {
           title: t("Clauses and Phrases", "从句和短语"),
           topics: [
             "coordinating-conjunctions",
@@ -47,7 +51,10 @@ export const grammarWriting: CourseDef = {
     {
       title: t("Sentence Writing", "句子写作"),
       modules: [
-        { title: t("Punctuating Sentences", "句子的标点"), topics: ["capitals-and-end-punctuation", "commas-in-a-series"] },
+        {
+          title: t("Punctuating Sentences", "句子的标点"),
+          topics: ["capitals-and-end-punctuation", "commas-in-a-series", "commas-after-introductions", "punctuating-dialogue"],
+        },
         {
           title: t("Joining Sentences", "合并句子"),
           topics: [
@@ -84,7 +91,10 @@ export const grammarWriting: CourseDef = {
           ],
         },
         { title: t("Roots", "词根"), topics: ["latin-roots-1", "latin-roots-2", "greek-roots-1"] },
-        { title: t("Meaning in Context", "语境中的词义"), topics: ["context-clues", "academic-words-1", "connotation-and-precise-words"] },
+        {
+          title: t("Meaning in Context", "语境中的词义"),
+          topics: ["context-clues", "academic-words-1", "academic-words-2", "academic-words-3", "connotation-and-precise-words"],
+        },
       ],
     },
   ],
