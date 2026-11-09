@@ -1,5 +1,5 @@
 import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { CheckCircle, Flag, Trophy, XCircle } from "@phosphor-icons/react";
+import { CheckCircle, Lightning, Trophy, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
@@ -9,11 +9,25 @@ import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
+import { ForecastCard, GoalsCard } from "./SubjectDecisions.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 import { Bar, Button, Card, ErrorNote, Spinner } from "./ui.tsx";
-import { XpOverview } from "./XpOverview.tsx";
 
 const DAY = 86_400_000;
+
+/** EarnedCard shows all the XP earned in the subject, and today's. */
+function EarnedCard({ total, today }: { total: number; today: number }) {
+  const { m } = useI18n();
+  return (
+    <Card className="space-y-1 p-5">
+      <div className="flex items-center gap-2 text-sm text-muted">
+        <Lightning size={18} /> {m.totalEarned}
+      </div>
+      <div className="text-3xl font-semibold tabular-nums tracking-tight">{total.toLocaleString()} XP</div>
+      <div className="text-sm text-muted">{m.xpToday(today)}</div>
+    </Card>
+  );
+}
 
 /** LeagueSummary shows the learner's place in this week's league and the two learners next to them. */
 function LeagueSummary() {
@@ -114,7 +128,8 @@ function RecentWork({ courseId, subject }: { courseId: string; subject: string }
 
 /**
  * LearnDashboard is a subject's Learn page (docs/experience.md §3). The next task comes first, since it is what the
- * learner came for; the subject's goals and the league sit beside it.
+ * learner came for; the subject's XP, goals, forecast and the league sit beside it, the goals and the forecast as on the
+ * Progress page.
  */
 export function LearnDashboard({ courseId, subjectId }: { courseId: string; subjectId: string }) {
   const { m, tx } = useI18n();
@@ -161,6 +176,11 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
             {stats.learned} / {stats.total} {m.topics}
           </span>
         </div>
+        {stats.due > 0 && (
+          <div className="text-sm text-warn">
+            {m.due}: {stats.due}
+          </div>
+        )}
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
@@ -206,23 +226,10 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
           <RecentWork courseId={courseId} subject={subjectId} />
         </div>
 
-        <aside className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-          <Card className="space-y-4 p-5">
-            <div className="flex items-center justify-between gap-2 text-sm text-muted">
-              <span className="flex items-center gap-2">
-                <Flag size={18} /> {m.goals}
-              </span>
-              <Link to="/$subject/progress" params={{ subject: subjectId }} className="text-accent">
-                {d.canDecide ? m.setGoals : m.navProgress}
-              </Link>
-            </div>
-            <XpOverview xp={xp} />
-            {stats.due > 0 && (
-              <div className="text-xs text-warn">
-                {m.due}: {stats.due}
-              </div>
-            )}
-          </Card>
+        <aside className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <EarnedCard total={xp.total} today={xp.today} />
+          <GoalsCard d={d} />
+          <ForecastCard d={d} />
           <LeagueSummary />
         </aside>
       </div>

@@ -9,7 +9,7 @@ export interface Localized {
 
 const messages = {
   en: {
-    courses: "Courses",
+    courses: "Course catalog",
     topics: "topics",
     signIn: "Sign in",
     signUp: "Create account",
@@ -196,6 +196,8 @@ const messages = {
     deleteAccount: "Delete my account",
     // Goals.
     goals: "Weekly goals",
+    totalEarned: "Total earned",
+    xpToday: (xp: number) => `${xp} XP today`,
     goalsBody: "Set how much XP to earn on each day. About 20 to 40 XP on 3 to 5 days a week is a good place to start.",
     weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     goalsPaused: "Pause my goals",
@@ -480,7 +482,7 @@ const messages = {
     welcomeSubjectBody: "Each subject has its own course, progress and goals. You can add another subject at any time.",
   },
   "zh-CN": {
-    courses: "课程",
+    courses: "课程目录",
     topics: "个知识点",
     signIn: "登录",
     signUp: "注册",
@@ -664,6 +666,8 @@ const messages = {
     deleteAccount: "删除我的账号",
     // 目标。
     goals: "每周目标",
+    totalEarned: "累计获得",
+    xpToday: (xp: number) => `今天 ${xp} XP`,
     goalsBody: "设定每天要得多少 XP。一周 3 到 5 天、每天 20 到 40 XP 是不错的起点。",
     weekdays: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
     goalsPaused: "暂停目标",
