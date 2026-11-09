@@ -181,7 +181,7 @@ function Plans() {
       <Card className="mx-auto mt-6 max-w-md space-y-4">
         <h1 className="text-2xl font-semibold">{t.teenTitle}</h1>
         <p className="text-muted">{t.teenBody}</p>
-        <Link to="/settings" className={buttonClass("secondary")}>
+        <Link to="/settings" hash="guardian" className={buttonClass("secondary")}>
           {t.toInvite}
         </Link>
       </Card>

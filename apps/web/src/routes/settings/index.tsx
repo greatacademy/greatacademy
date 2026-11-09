@@ -1,8 +1,8 @@
 import { Code } from "@connectrpc/connect";
 import { Band } from "@ga/proto/privacy/v1/privacy_pb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { createFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
+import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 
 import { field, NewPassword, PasswordField } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
@@ -18,9 +18,12 @@ import { account, failureCode } from "../../lib/rpc.ts";
 
 export const Route = createFileRoute("/settings/")({ component: Settings });
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+/** SettingsSection names the sections of the settings page, each reachable by its anchor, as `/settings#league`. */
+export type SettingsSection = "profile" | "plan" | "privacy" | "league" | "guardian" | "password" | "account";
+
+function Section({ id, title, children }: { id: SettingsSection; title: string; children: ReactNode }) {
   return (
-    <Card className="space-y-4">
+    <Card id={id} className="space-y-4">
       <h2 className="text-lg font-semibold">{title}</h2>
       {children}
     </Card>
@@ -37,6 +40,12 @@ function Settings() {
   const child = access?.band === Band.CHILD;
   const adult = access?.band === Band.ADULT;
   const settings = useQuery({ queryKey: ["settings"], queryFn: () => account.getSettings({}), enabled: !!session, staleTime: 0 });
+  // A link to a section (`/settings#league`) lands on it once the page has its data.
+  const hash = useLocation({ select: (l) => l.hash });
+  const loaded = settings.data !== undefined;
+  useEffect(() => {
+    if (loaded && hash) document.getElementById(hash)?.scrollIntoView({ block: "start" });
+  }, [loaded, hash]);
   const refresh = () => qc.invalidateQueries({ queryKey: ["settings"] });
 
   const [nameState, setNameState] = useState<"idle" | "saved" | "failed">("idle");
@@ -97,7 +106,7 @@ function Settings() {
 
   return (
     <div className="space-y-6">
-      <Section title={m.profile}>
+      <Section id="profile" title={m.profile}>
         {adult && (
           <form onSubmit={saveName} className="space-y-3">
             <label className="block space-y-1.5 text-sm font-medium">
@@ -149,7 +158,7 @@ function Settings() {
       <PrivacySettings />
 
       {!child && (
-        <Section title={m.league}>
+        <Section id="league" title={m.league}>
           <p className="text-sm text-muted">{m.leagueIntro}</p>
           <form onSubmit={saveUsername} className="space-y-2">
             <label className="block space-y-1.5 text-sm font-medium">
@@ -176,7 +185,7 @@ function Settings() {
         </Section>
       )}
 
-      <Section title={m.guardian}>
+      <Section id="guardian" title={m.guardian}>
         <p className="text-sm text-muted">{m.guardiansBody}</p>
         {s.guardians.length === 0 && <p className="text-sm">{m.noGuardians}</p>}
         {s.guardians.map((g) => (
@@ -204,7 +213,7 @@ function Settings() {
         {invite.isError && <ErrorNote message={m.error} />}
       </Section>
 
-      <Section title={m.changePassword}>
+      <Section id="password" title={m.changePassword}>
         <form onSubmit={savePassword} className="space-y-3">
           <PasswordField label={m.currentPassword} name="current" required autoComplete="current-password" />
           <NewPassword label={m.newPassword} name="next" />
@@ -218,7 +227,7 @@ function Settings() {
         </form>
       </Section>
 
-      <Section title={m.dangerZone}>
+      <Section id="account" title={m.dangerZone}>
         {access?.managed ? (
           <p className="text-sm text-muted">{t.childDelete}</p>
         ) : (

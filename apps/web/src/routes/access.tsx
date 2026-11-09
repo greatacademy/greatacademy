@@ -21,7 +21,7 @@ function Access() {
     <Card className="mx-auto mt-6 max-w-md space-y-4">
       <h1 className="text-2xl font-semibold">{closed ? t.closedTitle : t.guardianTitle}</h1>
       <p className="text-muted">{closed ? t.closedBody : t.guardianBody}</p>
-      <Link to="/settings" className={buttonClass("secondary")}>
+      <Link to="/settings" hash={closed ? "privacy" : "guardian"} className={buttonClass("secondary")}>
         {t.toSettings}
       </Link>
     </Card>

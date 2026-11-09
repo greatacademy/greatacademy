@@ -25,9 +25,11 @@ export function Button({ variant = "primary", className = "", ...props }: Button
   return <button type="button" className={buttonClass(variant, className)} {...props} />;
 }
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Card({ children, className = "", id }: { children: ReactNode; className?: string; id?: string }) {
   return (
-    <div className={`rounded-2xl border border-line bg-surface p-6 shadow-[0_1px_2px_oklch(0_0_0/0.04)] ${className}`}>{children}</div>
+    <div id={id} className={`scroll-mt-20 rounded-2xl border border-line bg-surface p-6 shadow-[0_1px_2px_oklch(0_0_0/0.04)] ${className}`}>
+      {children}
+    </div>
   );
 }
 

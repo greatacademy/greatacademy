@@ -46,7 +46,7 @@ function League() {
         <Card className="space-y-3">
           <p>{m.leagueIntro}</p>
           <p className="text-sm text-muted">{m.leagueOff}</p>
-          <Link to="/settings" className={buttonClass("primary")}>
+          <Link to="/settings" hash="league" className={buttonClass("primary")}>
             {m.leagueGoToSettings}
           </Link>
         </Card>

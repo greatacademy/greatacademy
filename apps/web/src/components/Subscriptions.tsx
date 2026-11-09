@@ -106,7 +106,7 @@ export function Subscriptions() {
     staleTime: 0,
   });
   const portal = useMutation({
-    mutationFn: () => billing.openPortal({ returnUrl: `${window.location.origin}/settings` }),
+    mutationFn: () => billing.openPortal({ returnUrl: `${window.location.origin}/settings#plan` }),
     onSuccess: ({ url }) => window.location.assign(url),
   });
   if (!access || !plans.data?.required || !subs.data) return null;
@@ -127,7 +127,7 @@ export function Subscriptions() {
     s.learnerId !== "" &&
     !list.some((o) => o.scope === "all" && o.learnerId === s.learnerId && running(o));
   return (
-    <Card className="space-y-4">
+    <Card id="plan" className="space-y-4">
       <h2 className="text-lg font-semibold">{t.subscriptions}</h2>
       {list.length === 0 ? (
         <p className="text-sm text-muted">{t.noSubscriptions}</p>

@@ -64,7 +64,7 @@ export function PrivacySettings() {
   }
 
   return (
-    <Card className="space-y-5">
+    <Card id="privacy" className="space-y-5">
       <h2 className="text-lg font-semibold">{t.privacyTitle}</h2>
       <dl className="grid gap-2 text-sm sm:grid-cols-2">
         <div>
