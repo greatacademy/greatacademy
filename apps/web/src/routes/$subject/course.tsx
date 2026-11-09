@@ -1,4 +1,4 @@
-import { ArrowSquareOut } from "@phosphor-icons/react";
+import { ArrowSquareOut, Swap } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -58,8 +58,10 @@ function CoursePage() {
         </Link>
       </Card>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">{m.changeCourse}</h2>
+      <Card className="space-y-3">
+        <div className="flex items-center gap-2 text-sm text-muted">
+          <Swap size={18} /> {m.changeCourse}
+        </div>
         <p className="max-w-2xl text-sm text-muted">{m.changeCourseWhen}</p>
         {!canDecide ? (
           <DecidedBy />
@@ -82,13 +84,9 @@ function CoursePage() {
             {m.changeCourse}
           </Button>
         )}
-      </section>
+      </Card>
 
-      {!changing && dash.data && (
-        <div className="max-w-2xl">
-          <StartOverCard d={dash.data} />
-        </div>
-      )}
+      {!changing && dash.data && <StartOverCard d={dash.data} />}
     </div>
   );
 }
