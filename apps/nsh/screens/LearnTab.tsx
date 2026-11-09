@@ -6,7 +6,7 @@ import { query } from "../lib/query.ts";
 import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { firstPageReady } from "./Launch.tsx";
-import { describeTask, TaskCard } from "./TaskCard.tsx";
+import { describeTask, fromCourse, TaskCard } from "./TaskCard.tsx";
 
 /** ASIDE_FROM is the window width, in points, from which the goals sit in a column of ASIDE_WIDTH beside the tasks. */
 const ASIDE_FROM = 1024;
@@ -150,7 +150,7 @@ function CourseDay(props: { courseId: string; title: string; dash: GetDashboardR
       <If when={next()} else={<Muted>{m().nothingToDo}</Muted>}>
         {(task) => (
           <View style={{ gap: 4 }}>
-            <Muted>{describeTask(task())?.label ?? ""}</Muted>
+            <Muted>{[describeTask(task())?.label, fromCourse(task())].filter(Boolean).join(" · ")}</Muted>
             <Text style={{ color: colors().ink, fontSize: 15 }}>{describeTask(task())?.title ?? ""}</Text>
             <Action label={m().start} disabled={props.busy} onPress={() => props.onStart(task())} />
           </View>

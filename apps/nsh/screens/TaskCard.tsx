@@ -25,8 +25,8 @@ export function describeTask(task: Task): { label: string; title: string; detail
   }
 }
 
-/** from names the earlier course a foundation task comes from, as Math Academy labels such tasks. */
-function from(task: Task): string {
+/** fromCourse names the earlier course a foundation task comes from, as Math Academy labels such tasks. */
+export function fromCourse(task: Task): string {
   const k = task.kind;
   return k.case === "lesson" || k.case === "review" ? tx(k.value.fromCourse) : "";
 }
@@ -37,7 +37,7 @@ export function TaskCard(props: { task: Task; action: string; busy?: boolean; on
   if (!about) return null;
   return (
     <Card>
-      <Muted>{[about.label, from(props.task), about.xp > 0 ? `${about.xp} XP` : ""].filter(Boolean).join(" · ")}</Muted>
+      <Muted>{[about.label, fromCourse(props.task), about.xp > 0 ? `${about.xp} XP` : ""].filter(Boolean).join(" · ")}</Muted>
       <Rich source={about.title} inline bold fontSize={17} />
       <If when={about.detail}>
         <Muted>{about.detail}</Muted>
