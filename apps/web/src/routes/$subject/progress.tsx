@@ -41,18 +41,14 @@ function Progress() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">{m.navProgress}</h1>
-          <p className="text-muted">{tx(course.data.course.title)}</p>
-        </div>
+        <h1 className="text-2xl font-semibold tracking-tight">{tx(course.data.course.title)}</h1>
         <Link to="/$subject/history" params={{ subject }} className={buttonClass("ghost")}>
           <ClockCounterClockwise size={18} /> {m.history}
         </Link>
       </div>
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section className="min-w-0 space-y-3">
-          <h2 className="text-lg font-semibold">{m.progress}</h2>
-          <TopicLegend />
+          <TopicLegend topics={progress.data.topics} />
           <TopicMap course={course.data.course} topics={progress.data.topics} subject={subject} />
         </section>
         <aside className="grid gap-4 max-lg:order-first sm:grid-cols-2 lg:grid-cols-1">

@@ -124,9 +124,8 @@ export function CourseCatalog({
               return (
                 <Link
                   key={c.id}
-                  {...(stats
-                    ? { to: "/$subject", params: { subject: c.subjectId } }
-                    : { to: "/courses/$courseId", params: { courseId: c.id } })}
+                  to="/courses/$courseId"
+                  params={{ courseId: c.id }}
                   className="group flex min-w-0 flex-col gap-2 rounded-2xl border border-line bg-surface p-5 transition hover:border-accent/50"
                 >
                   <div className="flex items-start justify-between gap-3">

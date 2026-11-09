@@ -8,19 +8,24 @@ import { statusStyle } from "../lib/topic-status.ts";
 import { Markdown } from "./Markdown.tsx";
 import { Card } from "./ui.tsx";
 
-const legend = [TopicStatus.LEARNED, TopicStatus.DUE, TopicStatus.AVAILABLE, TopicStatus.FAILED, TopicStatus.LOCKED];
+const legend = [TopicStatus.LEARNED, TopicStatus.DUE, TopicStatus.AVAILABLE, TopicStatus.FAILED, TopicStatus.ASSUMED, TopicStatus.LOCKED];
 
-/** TopicLegend names the colors of TopicMap. */
-export function TopicLegend() {
+/** TopicLegend names the colors of TopicMap with how many of the course's own topics have each. */
+export function TopicLegend({ topics }: { topics: TopicProgress[] }) {
   const { m } = useI18n();
+  const counts = new Map<TopicStatus, number>();
+  for (const t of topics) if (!t.foundation) counts.set(t.status, (counts.get(t.status) ?? 0) + 1);
   return (
-    <div className="flex flex-wrap gap-3 text-xs">
-      {legend.map((s) => (
-        <span key={s} className="flex items-center gap-1.5 text-muted">
-          <span className={`size-2.5 rounded-full ${statusStyle[s].dot}`} />
-          {m.status[statusStyle[s].key]}
-        </span>
-      ))}
+    <div className="flex flex-wrap gap-x-4 gap-y-2 rounded-2xl border border-line bg-surface px-4 py-3 text-sm">
+      {legend
+        .filter((s) => (counts.get(s) ?? 0) > 0)
+        .map((s) => (
+          <span key={s} className="flex items-center gap-1.5">
+            <span className={`size-2.5 rounded-full ${statusStyle[s].dot}`} />
+            {m.status[statusStyle[s].key]}
+            <span className="tabular-nums text-muted">{counts.get(s)}</span>
+          </span>
+        ))}
     </div>
   );
 }

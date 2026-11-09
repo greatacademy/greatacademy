@@ -1,4 +1,4 @@
-import { ArrowSquareOut, Swap } from "@phosphor-icons/react";
+import { BookOpen, ListBullets, Swap } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -40,11 +40,12 @@ function CoursePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{m.navCourse}</h1>
       <Card className="space-y-4">
         <div className="space-y-1">
-          <div className="text-sm text-muted">{m.currentCourse}</div>
-          <h2 className="text-xl font-semibold">{tx(course.title)}</h2>
+          <div className="flex items-center gap-2 text-sm text-muted">
+            <BookOpen size={18} /> {m.currentCourse}
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight">{tx(course.title)}</h1>
         </div>
         <Markdown source={tx(course.description)} className="text-sm text-muted" />
         <div className="flex max-w-md items-center gap-3 text-sm text-muted">
@@ -54,7 +55,7 @@ function CoursePage() {
           </span>
         </div>
         <Link to="/courses/$courseId" params={{ courseId: course.id }} className="inline-flex items-center gap-1.5 text-sm text-accent">
-          {m.courseOutline} <ArrowSquareOut size={14} />
+          <ListBullets size={16} /> {m.courseOutline}
         </Link>
       </Card>
 

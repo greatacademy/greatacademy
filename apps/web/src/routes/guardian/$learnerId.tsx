@@ -155,7 +155,7 @@ function CourseProgress({ learnerId, courseId }: { learnerId: string; courseId: 
   if (!course.data.course) return null;
   return (
     <div className="space-y-4">
-      <TopicLegend />
+      <TopicLegend topics={progress.data.topics} />
       <TopicMap course={course.data.course} topics={progress.data.topics} />
     </div>
   );
