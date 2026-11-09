@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
@@ -39,3 +39,8 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `commas-after-introductions` | `capitals-and-end-punctuation`, `prepositional-phrases` | 0.2 each | Items rewrite whole sentences, and many openings are prepositional phrases |
 | `punctuating-dialogue` | `capitals-and-end-punctuation` | 0.3 | Each quotation needs its capital and its end mark |
 | `academic-words-2`, `academic-words-3` | the batch before | 0.2 | Only the method of reading a sentence for meaning carries over |
+| `supporting-details` | `main-idea` | 0.3 | Each item first needs the main idea that a detail or summary serves |
+| `text-structures` | `sequence-in-texts`, `cause-and-effect-in-texts`, `compare-and-contrast-in-texts` | 0.2 each | Naming a structure relies on the signal words of each, which are not practiced directly |
+| `authors-purpose` | `fact-and-opinion` | 0.2 | Persuasion is told by its opinions, but only some items turn on them |
+| `characters` | `making-inferences` | 0.3 | Every trait and feeling is inferred from actions |
+| `lesson-of-a-story` | `characters` | 0.2 | Only reading what a character's choice shows carries over |

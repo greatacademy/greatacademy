@@ -101,5 +101,37 @@ export const grammarWriting: CourseDef = {
   reading: ["water-on-earth", "how-plants-live", "life-on-the-nile", "weather-and-climate", "the-human-body", "our-changing-earth"],
 };
 
+/** readingComprehension is the course of English on reading for meaning, for those who already speak it. */
+export const readingComprehension: CourseDef = {
+  id: "english-reading-comprehension",
+  title: t("Reading for Meaning", "阅读理解"),
+  description: t(
+    "How to find what a text says, how texts are organized, and how to read between the lines. For learners who already speak English, in English.",
+    "怎样找出文本所说的内容、文本怎样组织，以及怎样读出言外之意。面向已经会说英语的学习者，用英语讲解。",
+  ),
+  group: t("English", "英语"),
+  explanationLocale: "en",
+  units: [
+    {
+      title: t("Informational Texts", "说明性文本"),
+      modules: [
+        { title: t("Main Ideas", "主旨"), topics: ["main-idea", "supporting-details", "text-features"] },
+        {
+          title: t("How Texts Are Organized", "文本的组织"),
+          topics: ["sequence-in-texts", "cause-and-effect-in-texts", "compare-and-contrast-in-texts", "text-structures"],
+        },
+      ],
+    },
+    {
+      title: t("Thinking About Texts", "思考文本"),
+      modules: [
+        { title: t("Reading Between the Lines", "读出言外之意"), topics: ["making-inferences", "fact-and-opinion", "authors-purpose"] },
+        { title: t("Stories", "故事"), topics: ["point-of-view", "characters", "lesson-of-a-story"] },
+        { title: t("Figurative Language", "修辞语言"), topics: ["similes-and-metaphors", "idioms"] },
+      ],
+    },
+  ],
+};
+
 /** englishCourses lists the courses of English. */
-export const englishCourses: readonly CourseDef[] = [grammarWriting];
+export const englishCourses: readonly CourseDef[] = [grammarWriting, readingComprehension];

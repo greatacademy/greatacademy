@@ -234,6 +234,8 @@ The slice is complete when it compiles, every generator passes sampling, simulat
 
 The course `english-grammar-writing` has since added eight topics judged by rules, with 49 in all: `comparatives-and-superlatives` (`adjectives-and-adverbs`), `apostrophes-and-possessives` and `commonly-confused-words` (`nouns-and-pronouns`), `verb-tense-consistency` (`simple-verb-tenses`), `commas-after-introductions` (`capitals-and-end-punctuation`, `prepositional-phrases`), `punctuating-dialogue` (`capitals-and-end-punctuation`), and `academic-words-2` and `academic-words-3`, each after the batch before it.
 
+A second course, `english-reading-comprehension` (Reading for Meaning, grades 3 to 5), teaches the reading strand of §3 with 15 topics judged by rules, each item a short original text with a choice: main ideas, summaries and text features; sequence, cause and effect, compare and contrast and text structures; inferences, fact and opinion and the author's purpose; point of view, characters and the lesson of a story; similes, metaphors and idioms. Its outline is [docs/english-courses/english-reading-comprehension.md](english-courses/english-reading-comprehension.md). Only `point-of-view` reaches into the first course, through `nouns-and-pronouns`.
+
 ## 12. Order of Work
 
 1. **First slice** (§11).

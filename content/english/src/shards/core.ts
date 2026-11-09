@@ -10,6 +10,8 @@ import { weatherAndClimate } from "../reading/weather.ts";
 import { clauseTopics } from "../topics/grammar-clauses.ts";
 import { sentenceTopics } from "../topics/grammar-sentences.ts";
 import { mechanicsTopics } from "../topics/mechanics.ts";
+import { informationalReadingTopics } from "../topics/reading-informational.ts";
+import { thinkingReadingTopics } from "../topics/reading-thinking.ts";
 import { usageTopics } from "../topics/usage.ts";
 import { wordTopics } from "../topics/words.ts";
 import { academicWordTopics } from "../topics/words-academic.ts";
@@ -26,6 +28,8 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...usageTopics,
   ...mechanicsTopics,
   ...academicWordTopics,
+  ...informationalReadingTopics,
+  ...thinkingReadingTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */

@@ -234,6 +234,8 @@
 
 此后 `english-grammar-writing` 又增加了八个用规则判分的主题，共 49 个：`comparatives-and-superlatives`（`adjectives-and-adverbs`）、`apostrophes-and-possessives` 和 `commonly-confused-words`（`nouns-and-pronouns`）、`verb-tense-consistency`（`simple-verb-tenses`）、`commas-after-introductions`（`capitals-and-end-punctuation`、`prepositional-phrases`）、`punctuating-dialogue`（`capitals-and-end-punctuation`），以及 `academic-words-2` 和 `academic-words-3`，各自排在前一批之后。
 
+第二门课程 `english-reading-comprehension`（阅读理解，三至五年级）用 15 个规则判分的主题讲授 §3 的阅读分支，每道题是一段原创短文加选择：主旨、概括和文本特征；顺序、因果、比较与对比以及文本结构；推断、事实与观点以及作者的目的；叙述视角、人物和故事的寓意；明喻、暗喻和习语。大纲见 [docs/english-courses/english-reading-comprehension.zh-CN.md](english-courses/english-reading-comprehension.zh-CN.md)。只有 `point-of-view` 通过 `nouns-and-pronouns` 依赖第一门课程。
+
 ## 12. 工作顺序
 
 1. **首个切片**（§11）。
