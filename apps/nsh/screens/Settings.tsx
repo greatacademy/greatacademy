@@ -180,7 +180,7 @@ export function SettingsBody(props: {
         <Section title={m().learning}>
           <Row title={m().courses} onPress={() => nav.push({ name: "courses" })} />
           <If when={!child()}>
-            <Row title={m().standings} onPress={() => nav.push({ name: "standings" })} />
+            <Row title={m().league} onPress={() => nav.push({ name: "standings" })} />
           </If>
         </Section>
       </If>

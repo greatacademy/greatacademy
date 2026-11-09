@@ -312,7 +312,18 @@ function AccountMenu(props: { name: string; width: number }) {
           role="button"
           accessibilityLabel={m().accountMenu(props.name)}
           hoverStyle={{ backgroundColor: colors().line }}
-          style={{ alignItems: "center", borderRadius: 8, flexDirection: "row", gap: 8, marginLeft: -4, padding: 4, width: props.width }}
+          style={{
+            alignItems: "center",
+            alignSelf: "flex-start",
+            borderRadius: 10,
+            flexDirection: "row",
+            gap: 8,
+            marginLeft: -6,
+            maxWidth: props.width,
+            paddingLeft: 6,
+            paddingRight: 10,
+            paddingVertical: 6,
+          }}
         >
           <View
             style={{
@@ -326,7 +337,7 @@ function AccountMenu(props: { name: string; width: number }) {
           >
             <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...props.name][0]?.toUpperCase() ?? ""}</Text>
           </View>
-          <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.name}</Text>
+          <Text style={{ color: colors().ink, flexShrink: 1, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.name}</Text>
           <Image src={caretDown} style={{ height: 12, tintColor: colors().muted, width: 12 }} />
         </View>
       }
@@ -349,7 +360,7 @@ function AccountMenu(props: { name: string; width: number }) {
       </View>
       <MenuItem label={m().courses} onPress={go(() => nav.push({ name: "courses" }))} />
       <If when={access()?.band !== Band.CHILD}>
-        <MenuItem label={m().standings} onPress={go(() => nav.push({ name: "standings" }))} />
+        <MenuItem label={m().league} onPress={go(() => nav.push({ name: "standings" }))} />
       </If>
       <If when={access()?.band === Band.ADULT}>
         <MenuItem label={p().guardedTitle} onPress={go(() => nav.push({ name: "learners" }))} />

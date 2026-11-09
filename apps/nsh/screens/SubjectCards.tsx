@@ -335,7 +335,7 @@ export function LeagueCard(props: { visible: () => boolean }) {
             </If>
             <Text
               role="button"
-              onPress={() => nav.push({ name: l().enabled ? "standings" : "league" })}
+              onPress={() => nav.push({ name: "standings" })}
               style={{ color: colors().accent, fontSize: 14 }}
             >
               {l().enabled ? m().leagueSeeAll : m().leagueLearnMore}
