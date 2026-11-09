@@ -2,6 +2,7 @@ import { APPEARANCE_STORAGE_KEY, type Appearance, DEFAULT_APPEARANCE, parseAppea
 import { Storage, setColorScheme, signal } from "nsh";
 
 const LANGUAGE_KEY = "ga.language";
+const SIDEBAR_KEY = "ga.sidebar";
 
 /** LanguageChoice is the app's language: the device's, or one the learner chose. */
 export type LanguageChoice = "system" | "en" | "zh-CN";
@@ -12,10 +13,18 @@ export const languageChoice = signal<LanguageChoice>("system");
 /** appearance is how this device shows the app: the theme, the palettes and the contrast, kept on the device only. */
 export const appearance = signal<Appearance>(DEFAULT_APPEARANCE);
 
+/** sidebarCollapsed tells whether a desktop's sidebar shows only its icons, as the learner left it on this device. */
+export const sidebarCollapsed = signal(false);
+
 /** restorePrefs reads the choices kept on the device, when the app starts. */
 export async function restorePrefs(): Promise<void> {
-  const [language, stored] = await Promise.all([Storage.getItem(LANGUAGE_KEY), Storage.getItem(APPEARANCE_STORAGE_KEY)]);
+  const [language, stored, sidebar] = await Promise.all([
+    Storage.getItem(LANGUAGE_KEY),
+    Storage.getItem(APPEARANCE_STORAGE_KEY),
+    Storage.getItem(SIDEBAR_KEY),
+  ]);
   if (language === "en" || language === "zh-CN") languageChoice.set(language);
+  sidebarCollapsed.set(sidebar === "collapsed");
   const restored = parseAppearance(stored);
   appearance.set(restored);
   setColorScheme(restored.theme);
@@ -32,4 +41,10 @@ export function chooseAppearance(next: Appearance): void {
   appearance.set(next);
   setColorScheme(next.theme);
   void Storage.setItem(APPEARANCE_STORAGE_KEY, serializeAppearance(next));
+}
+
+/** collapseSidebar shows a desktop's sidebar with only its icons, or in full again, and keeps the choice. */
+export function collapseSidebar(collapsed: boolean): void {
+  sidebarCollapsed.set(collapsed);
+  void (collapsed ? Storage.setItem(SIDEBAR_KEY, "collapsed") : Storage.removeItem(SIDEBAR_KEY));
 }

@@ -1,8 +1,9 @@
-import { Image, keymap, platform, safeAreaInsets, Text, View, windowSize } from "nsh";
+import { Image, keymap, platform, safeAreaInsets, signal, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
 import logo from "../assets/logo.svg";
+import panel from "../assets/sidebar.svg";
 import courses from "../assets/tabs/courses.svg";
 import learn from "../assets/tabs/learn.svg";
 import me from "../assets/tabs/me.svg";
@@ -11,6 +12,7 @@ import gear from "../assets/tabs/settings.svg";
 import { sessionUser } from "../lib/auth.ts";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
+import { collapseSidebar, sidebarCollapsed } from "../lib/prefs.ts";
 import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
 import { LearnTab } from "./LearnTab.tsx";
@@ -148,23 +150,69 @@ function GlassTabs() {
 /** SIDEBAR are the tabs in a desktop's sidebar; the settings (the Me tab) open from its foot instead. */
 const SIDEBAR: readonly TabId[] = TABS.filter((id) => id !== "me");
 
-/** shortcut names a key with the platform's modifier: ⌘ on macOS, Ctrl elsewhere. */
-function shortcut(key: string): string {
-  return platform.os === "macos" ? `⌘${key}` : `Ctrl+${key}`;
+/**
+ * commandHeld tells whether the platform's command key (⌘ on macOS, Ctrl elsewhere) is held while the mouse is over
+ * the window: the sidebar then shows every tab's key. The window hears it from the mouse's events, which carry the
+ * modifiers and come when one changes, so it is false while the mouse is elsewhere.
+ */
+export const commandHeld = signal(false);
+
+/** heldCommand reads whether the platform's command key is down from a mouse event's modifiers. */
+export function heldCommand(modifiers: { platform: boolean; control: boolean }): boolean {
+  return platform.os === "macos" ? modifiers.platform : modifiers.control;
+}
+
+/** Hint is a tab's key in the sidebar: in full (⌘1) while the mouse is over the tab, the key alone (1) while ⌘ is held. */
+function Hint(props: { index: number; hovered: boolean }) {
+  const key = String(props.index + 1);
+  return (
+    <If when={commandHeld() || props.hovered}>
+      <Text style={{ color: colors().muted, fontSize: 12 }}>{commandHeld() ? key : keymap.label(`mod+${key}`)}</Text>
+    </If>
+  );
+}
+
+/** SidebarButton is a small square button in the sidebar with an icon: the collapse and settings buttons. */
+function SidebarButton(props: { icon: typeof logo; label: string; tooltip?: string; chosen?: boolean; onPress: () => void }) {
+  return (
+    <View
+      role="button"
+      accessibilityLabel={props.label}
+      accessibilityState={props.chosen === undefined ? undefined : { selected: props.chosen }}
+      tooltip={props.tooltip ?? props.label}
+      onPress={props.onPress}
+      hoverStyle={{ backgroundColor: props.chosen ? colors()["accent-soft"] : colors().line }}
+      style={{
+        alignItems: "center",
+        backgroundColor: props.chosen ? colors()["accent-soft"] : "transparent",
+        borderRadius: 8,
+        height: 32,
+        justifyContent: "center",
+        width: 32,
+      }}
+    >
+      <Image src={props.icon} style={{ height: 20, tintColor: props.chosen ? colors().accent : colors().muted, width: 20 }} />
+    </View>
+  );
 }
 
 /**
  * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
- * Windows and Linux) switch them. Its foot shows who is signed in and the settings button, which ⌘, opens too.
+ * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. At its head are
+ * the logo and a button that collapses it to its icons (as a narrow window does); at its foot who is signed in and
+ * the settings button, which ⌘, opens too.
  */
 export function Sidebar() {
   SIDEBAR.forEach((id, index) => {
     keymap.bind(`mod+${index + 1}`, () => openTab(id));
   });
   keymap.bind("mod+,", () => openTab("me"));
-  const wide = () => windowSize().width >= 760;
+  const roomy = () => windowSize().width >= 760;
+  const wide = () => roomy() && !sidebarCollapsed();
   const home = () => nav.routes().length === 1;
   const name = () => sessionUser()?.name ?? "";
+  const hovered = signal<TabId | null>(null);
+  const settings = () => tab() === "me" && home();
   return (
     <View
       role="navigation"
@@ -175,22 +223,26 @@ export function Sidebar() {
         gap: 4,
         paddingHorizontal: wide() ? 12 : 6,
         paddingVertical: 16,
-        width: wide() ? 208 : 84,
+        width: wide() ? 208 : 64,
       }}
     >
       <View
         style={{
           alignItems: "center",
-          flexDirection: "row",
+          flexDirection: wide() ? "row" : "column",
           gap: 8,
-          justifyContent: wide() ? "flex-start" : "center",
+          justifyContent: "space-between",
           marginBottom: 12,
-          paddingHorizontal: 8,
+          paddingHorizontal: wide() ? 6 : 0,
         }}
       >
         <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
-        <If when={wide()}>
-          <Text style={{ color: colors().ink, fontSize: 16, fontWeight: "700" }}>Great Academy</Text>
+        <If when={roomy()}>
+          <SidebarButton
+            icon={panel}
+            label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar}
+            onPress={() => collapseSidebar(!sidebarCollapsed())}
+          />
         </If>
       </View>
       <Each of={[...SIDEBAR]}>
@@ -201,8 +253,10 @@ export function Sidebar() {
               role="tab"
               accessibilityLabel={tabTitle(id())}
               accessibilityState={{ selected: chosen() }}
-              tooltip={wide() ? undefined : `${tabTitle(id())} ${shortcut(String(index() + 1))}`}
+              tooltip={wide() ? undefined : `${tabTitle(id())} ${keymap.label(`mod+${index() + 1}`)}`}
               onPress={() => openTab(id())}
+              onMouseEnter={() => hovered.set(id())}
+              onMouseLeave={() => hovered.set(null)}
               hoverStyle={{ backgroundColor: chosen() && home() ? colors()["accent-soft"] : colors().line }}
               style={{
                 alignItems: "center",
@@ -210,9 +264,9 @@ export function Sidebar() {
                 borderRadius: 8,
                 flexDirection: "row",
                 gap: 10,
+                height: 36,
                 justifyContent: wide() ? "flex-start" : "center",
                 paddingHorizontal: 10,
-                paddingVertical: 8,
               }}
             >
               <Image src={drawn[id()]} style={{ height: 20, tintColor: chosen() ? colors().accent : colors().muted, width: 20 }} />
@@ -222,7 +276,7 @@ export function Sidebar() {
                 >
                   {tabTitle(id())}
                 </Text>
-                <Text style={{ color: colors().muted, fontSize: 12 }}>{shortcut(String(index() + 1))}</Text>
+                <Hint index={index()} hovered={hovered() === id()} />
               </If>
             </View>
           );
@@ -242,6 +296,7 @@ export function Sidebar() {
       >
         <View
           accessibilityLabel={name()}
+          tooltip={wide() ? undefined : name()}
           style={{
             alignItems: "center",
             backgroundColor: colors()["accent-soft"],
@@ -256,24 +311,13 @@ export function Sidebar() {
         <If when={wide()}>
           <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500" }}>{name()}</Text>
         </If>
-        <View
-          role="button"
-          accessibilityLabel={m().settingsTab}
-          accessibilityState={{ selected: tab() === "me" && home() }}
-          tooltip={`${m().settingsTab} ${shortcut(",")}`}
+        <SidebarButton
+          icon={gear}
+          label={m().settingsTab}
+          tooltip={`${m().settingsTab} ${keymap.label("mod+,")}`}
+          chosen={settings()}
           onPress={() => openTab("me")}
-          hoverStyle={{ backgroundColor: tab() === "me" && home() ? colors()["accent-soft"] : colors().line }}
-          style={{
-            alignItems: "center",
-            backgroundColor: tab() === "me" && home() ? colors()["accent-soft"] : "transparent",
-            borderRadius: 8,
-            height: 32,
-            justifyContent: "center",
-            width: 32,
-          }}
-        >
-          <Image src={gear} style={{ height: 20, tintColor: tab() === "me" ? colors().accent : colors().muted, width: 20 }} />
-        </View>
+        />
       </View>
     </View>
   );

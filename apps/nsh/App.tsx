@@ -22,7 +22,7 @@ import { Courses } from "./screens/Courses.tsx";
 import { DeleteAccount } from "./screens/DeleteAccount.tsx";
 import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { History } from "./screens/History.tsx";
-import { Home, PhoneTabs, Sidebar } from "./screens/Home.tsx";
+import { commandHeld, Home, heldCommand, PhoneTabs, Sidebar } from "./screens/Home.tsx";
 import { Launch, launchLeaving } from "./screens/Launch.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Learner } from "./screens/Learner.tsx";
@@ -94,7 +94,11 @@ effect(() => {
 function App() {
   const sidebar = () => platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session";
   return (
-    <View style={{ backgroundColor: colors().page, flex: 1, flexDirection: "row" }}>
+    <View
+      style={{ backgroundColor: colors().page, flex: 1, flexDirection: "row" }}
+      onMouseMove={(e) => commandHeld.set(heldCommand(e.modifiers))}
+      onMouseLeave={() => commandHeld.set(false)}
+    >
       <If when={sidebar()}>
         <Sidebar />
       </If>

@@ -630,6 +630,24 @@ test("switches tabs and opens the settings from the sidebar and its shortcuts on
   expect(app.texts()).toContain("Language");
 });
 
+test("shows a tab's key on hover and collapses the sidebar to its icons on a desktop", async () => {
+  const app = await open("./App.tsx", {
+    ...signedIn({ [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }) }),
+    platform: "macos",
+    width: 1200,
+    height: 800,
+  });
+  await app.waitFor("text:Weekly goals");
+  expect(app.texts()).not.toContain("⌘2");
+  await app.hover("label:Progress");
+  await app.waitFor("text:⌘2");
+  expect(app.texts()).not.toContain("⌘1");
+  await app.press("label:Collapse the sidebar");
+  await app.waitFor("label:Expand the sidebar");
+  expect(app.texts()).not.toContain("Progress");
+  expect(app.storage()["ga.sidebar"]).toBe("collapsed");
+});
+
 test("shows the progress map and the history of a course", async () => {
   const app = await open(
     "./App.tsx",
