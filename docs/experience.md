@@ -36,13 +36,13 @@ XP is earned in a subject and counted there. The account's total is the sum, whi
 
 Each subject has three pages, the same on the web and in the apps:
 
-- **Learn** — what to do now: the task in progress, the next tasks, the diagnostic or its report, and today's XP against the subject's goal.
-- **Progress** — how far the learner is: the course's topic map, the last 14 days of XP with the weekly goals, the forecast and end date, and the history of finished tasks.
+- **Learn** — what to do now: the course and how far it is, the task in progress or the next tasks, the diagnostic or its report, and the last few finished tasks; beside them the subject's total XP with today's, the weekly goals with the last 14 days, and the forecast.
+- **Progress** — how far the learner is: the course's topic map, and beside it the same goals and forecast cards as Learn; the history of finished tasks opens from its head.
 - **Course** — what is being learned: the current course and its outline, the other courses of the subject, and the decisions about them: changing course, retaking the diagnostic and resetting the knowledge profile.
 
 A topic's page and a session belong to the subject of their course and show its chip.
 
-**The subject switcher** opens from the chip in the header. It lists the learner's subjects, each with its current course and today's XP against its goal, and offers the subjects not yet started, which lead to their catalog.
+**The subject switcher** opens from the chip in the header. It lists the learner's subjects, each with its current course and today's XP against its goal, and offers the subjects not yet started, which lead to their catalog. Its last entry is the **Course catalog**, so named to tell it apart from a subject's Course page.
 
 ## 4. Arrangement
 
@@ -84,8 +84,8 @@ The header holds the logo, the subject chip with the switcher, the subject's thr
 | Change course | Course | The course is too easy or too hard, or a new goal (a grade, an exam). Progress is kept; the confirmation shows which of the new course's topics are already known and the forecast. |
 | Retake the diagnostic | Course | After a break of more than ten weeks, or learning outside Great Academy. The topics the diagnostic placed are asked again; topics taught in lessons stay, and their reviews correct them. It asks again before it acts. |
 | Reset the knowledge profile | Course | When the record cannot be trusted: work done with outside help or tools, or a profile far from what the learner knows. Inference starts again from the reset; the history and XP stay. It asks again before it acts. |
-| Weekly goals | Progress | The XP to earn on each weekday in this subject. |
-| End date | Progress | When the course should be finished; the forecast then says whether the pace is enough and what daily XP would be. |
+| Weekly goals | Learn, Progress | The XP to earn on each weekday in this subject. |
+| End date | Learn, Progress | When the course should be finished; the forecast then says whether the pace is enough and what daily XP would be. |
 
 A guardian makes these decisions on the learner's page, which has the same subject switcher and shows the learner's Learn, Progress and Course pages read-only, with the decisions enabled. A learner who is not their own supervisor sees each decision's current value and the words "Your guardian decides", without a control.
 
