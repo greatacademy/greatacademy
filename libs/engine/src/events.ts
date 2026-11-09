@@ -19,6 +19,8 @@ export type EngineEvent =
       readonly course: string;
       readonly known: readonly string[];
       readonly tested: readonly string[];
+      /** missed are the topics answered wrongly; absent when none were. */
+      readonly missed?: readonly string[];
     }
   /** lesson ends a lesson, passed or failed. */
   | {

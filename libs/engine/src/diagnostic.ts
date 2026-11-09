@@ -72,10 +72,14 @@ export function answerDiagnostic(g: EngineGraph, d: DiagnosticProgress, topic: s
   return { ...d, asked, unknown: d.candidates.filter((t) => unknown.has(t)) };
 }
 
-/** Placement is the result of a diagnostic: the topics placed as known, and which of them were tested directly. */
+/**
+ * Placement is the result of a diagnostic: the topics placed as known, which
+ * of them were tested directly, and the topics answered wrongly.
+ */
 export interface Placement {
   readonly known: readonly string[];
   readonly tested: readonly string[];
+  readonly missed: readonly string[];
 }
 
 /**
@@ -95,5 +99,6 @@ export function finishDiagnostic(pl: Planner, d: DiagnosticProgress): Placement 
   const known = new Set(d.known);
   const unknown = new Set(d.unknown);
   const placed = d.candidates.filter((t) => known.has(t) || (inferred && !inCourse.has(t) && !unknown.has(t)));
-  return { known: placed, tested: d.known.filter((t) => correct.has(t)) };
+  const missed = d.asked.filter((a) => !a.correct).map((a) => a.topic);
+  return { known: placed, tested: d.known.filter((t) => correct.has(t)), missed: [...new Set(missed)] };
 }

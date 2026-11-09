@@ -29,6 +29,12 @@ export interface Params {
   readonly inferFoundationsMinAnswers: number;
   /** inferFoundationsRate is the fraction of those answers that must be correct for it to place them as known. */
   readonly inferFoundationsRate: number;
+  /** adviceMinTopics is the fewest topics of an earlier course a diagnostic must have resolved before it may point the learner to that course. */
+  readonly adviceMinTopics: number;
+  /** adviceWeakShare is the share of that XP the answers showed unknown that makes an earlier course the better start. */
+  readonly adviceWeakShare: number;
+  /** adviceAheadShare is the share of a course's XP placed as known that makes the course after it the better start. */
+  readonly adviceAheadShare: number;
   /** kpStreak is the number of consecutive correct answers that passes a knowledge point. */
   readonly kpStreak: number;
   /** kpMaxQuestions is the number of questions after which an unpassed knowledge point fails the lesson. */
@@ -94,6 +100,9 @@ export const defaultParams: Params = {
   placedRepNum: 1,
   inferFoundationsMinAnswers: 8,
   inferFoundationsRate: 0.85,
+  adviceMinTopics: 5,
+  adviceWeakShare: 0.3,
+  adviceAheadShare: 0.8,
   kpStreak: 2,
   kpMaxQuestions: 5,
   reviewQuestions: 3,

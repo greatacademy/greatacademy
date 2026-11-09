@@ -1,3 +1,4 @@
+export * from "./courses.ts";
 export * from "./diagnostic.ts";
 export * from "./events.ts";
 export * from "./fire.ts";
