@@ -10,6 +10,7 @@ import {
   Easing,
   effect,
   Image,
+  type ImageAsset,
   type JSX,
   platform,
   type Resource,
@@ -158,6 +159,18 @@ export const cellStyle = { flexBasis: 320, flexGrow: 1, flexShrink: 1, minWidth:
 /** Cell is one item of a `Grid`, at least 320 points wide. */
 export function Cell(props: { children: JSX.Element }) {
   return <View style={cellStyle}>{props.children}</View>;
+}
+
+/** Icon is one of the app's monochrome icons, drawn in a color at a size in points. */
+export function Icon(props: { src: ImageAsset; size?: number; color?: string }) {
+  const size = () => props.size ?? 18;
+  return (
+    <Image
+      accessibilityElementsHidden
+      src={props.src}
+      style={{ flexShrink: 0, height: size(), tintColor: props.color ?? colors().muted, width: size() }}
+    />
+  );
 }
 
 /** Muted is secondary text. */

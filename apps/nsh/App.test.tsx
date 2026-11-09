@@ -678,7 +678,7 @@ test("shows the progress map and the history of a course from Progress", async (
     platform: "macos",
   });
   await app.press("label:Progress");
-  await app.waitFor("text:Memory 80%");
+  await app.waitFor("text:80%");
   expect(app.texts()).toContain("Progress map");
   expect(app.texts()).toContain("Linear equations");
   expect(app.texts()).toContain("Learned 1");

@@ -1,17 +1,18 @@
-import type { GetDashboardResponse, Task } from "@ga/proto/learning/v1/learning_pb";
+import type { FinishedSession, GetDashboardResponse, Task } from "@ga/proto/learning/v1/learning_pb";
 import { computed, effect, type Resource, signal, Text, View, windowSize } from "nsh";
+import checkCircle from "../assets/icons/check-circle.svg";
+import xCircle from "../assets/icons/x-circle.svg";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { learning, timeZone } from "../lib/rpc.ts";
 import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
-import { Card, colors, ErrorNote, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
+import { colors, ErrorNote, Icon, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
 import { SubjectStart } from "./CourseTab.tsx";
-import { HistoryLine } from "./History.tsx";
 import { firstPageReady } from "./Launch.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
-import { Bar, EarnedCard, ForecastCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
-import { TaskCard } from "./TaskCard.tsx";
+import { Bar, EarnedCard, ForecastCard, LeagueCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
+import { describeTask, TaskCard } from "./TaskCard.tsx";
 
 /** ASIDE_FROM is the window width, in points, from which the cards sit in a column of ASIDE_WIDTH beside the tasks. */
 const ASIDE_FROM = 1024;
@@ -33,6 +34,34 @@ function CourseHead(props: { place: Place; dash: GetDashboardResponse }) {
       </View>
       <If when={(stats()?.due ?? 0) > 0}>
         <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(stats()?.due ?? 0)}</Text>
+      </If>
+    </View>
+  );
+}
+
+/** RecentLine is one recent task as on the web: passed or not, what it was and its XP; it opens the task's result. */
+function RecentLine(props: { session: FinishedSession; first: boolean }) {
+  const about = () => (props.session.task ? describeTask(props.session.task) : undefined);
+  const diagnostic = () => props.session.task?.kind.case === "diagnostic";
+  return (
+    <View
+      role="button"
+      onPress={() => nav.push({ name: "session", sessionId: props.session.id })}
+      hoverStyle={{ backgroundColor: colors().page }}
+      style={{
+        alignItems: "center",
+        borderColor: colors().line,
+        borderTopWidth: props.first ? 0 : 1,
+        flexDirection: "row",
+        gap: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      }}
+    >
+      <Icon src={props.session.passed ? checkCircle : xCircle} size={20} color={props.session.passed ? colors().good : colors().bad} />
+      <Text style={{ color: colors().ink, flex: 1, fontSize: 14, numberOfLines: 1 }}>{about()?.title ?? ""}</Text>
+      <If when={!diagnostic()}>
+        <Text style={{ color: props.session.xp < 0 ? colors().bad : colors().muted, fontSize: 14 }}>{`${props.session.xp} XP`}</Text>
       </If>
     </View>
   );
@@ -60,23 +89,24 @@ function RecentWork(props: { courseId: string; visible: () => boolean }) {
             {m().seeAll}
           </Text>
         </View>
-        <Card>
+        <View style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 12, borderWidth: 1 }}>
           <Each of={recent()} key={(session) => session.id}>
-            {(session) => <HistoryLine session={session()} />}
+            {(session, index) => <RecentLine session={session()} first={index() === 0} />}
           </Each>
-        </Card>
+        </View>
       </View>
     </If>
   );
 }
 
-/** Aside is the column of cards beside the tasks, as on the web: the subject's XP, its goals and the forecast. */
-function Aside(props: { place: Place; dash: GetDashboardResponse; onChanged: () => void }) {
+/** Aside is the column of cards beside the tasks, as on the web: the subject's XP, its goals, the forecast and the league. */
+function Aside(props: { place: Place; dash: GetDashboardResponse; visible: () => boolean; onChanged: () => void }) {
   return (
     <>
       <EarnedCard xp={props.dash.xp} />
       <WeeklyGoals dash={props.dash} place={props.place} />
       <ForecastCard place={props.place} dash={props.dash} onChanged={props.onChanged} />
+      <LeagueCard visible={props.visible} />
     </>
   );
 }
@@ -169,12 +199,12 @@ function Today(props: {
               </If>
               <RecentWork courseId={d().courseId} visible={props.visible} />
               <If when={!wide()}>
-                <Aside place={props.place} dash={d()} onChanged={props.onChanged} />
+                <Aside place={props.place} dash={d()} visible={props.visible} onChanged={props.onChanged} />
               </If>
             </View>
             <If when={wide()}>
               <View style={{ gap: 12, width: ASIDE_WIDTH }}>
-                <Aside place={props.place} dash={d()} onChanged={props.onChanged} />
+                <Aside place={props.place} dash={d()} visible={props.visible} onChanged={props.onChanged} />
               </View>
             </If>
           </View>

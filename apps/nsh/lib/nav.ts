@@ -19,6 +19,7 @@ export type Route =
   | { name: "goals"; subjectId: string; learnerId?: string }
   | { name: "profile" }
   | { name: "league" }
+  | { name: "standings" }
   | { name: "password" }
   | { name: "privacy" }
   | { name: "learners" }

@@ -32,6 +32,7 @@ import { Player } from "./screens/Player.tsx";
 import { Privacy } from "./screens/Privacy.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
+import { Standings } from "./screens/Standings.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
 
 void restorePrefs();
@@ -149,6 +150,8 @@ function App() {
               return <Profile />;
             case "league":
               return <League />;
+            case "standings":
+              return <Standings />;
             case "password":
               return <Password />;
             case "privacy":

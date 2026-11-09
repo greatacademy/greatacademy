@@ -1,11 +1,17 @@
 import type { GetDashboardResponse, XpSummary } from "@ga/proto/learning/v1/learning_pb";
-import { computed, type Resource, signal, Text, View } from "nsh";
+import { computed, type ImageAsset, type Resource, signal, Text, View } from "nsh";
+import calendarCheck from "../assets/icons/calendar-check.svg";
+import caretDown from "../assets/icons/caret-down.svg";
+import caretRight from "../assets/icons/caret-right.svg";
+import flag from "../assets/icons/flag.svg";
+import lightning from "../assets/icons/lightning.svg";
+import trophy from "../assets/icons/trophy.svg";
 import { errorText, language, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
-import { learning, timeZone } from "../lib/rpc.ts";
+import { account, learning, timeZone } from "../lib/rpc.ts";
 import { type Place, tint } from "../lib/subject.tsx";
-import { Card, colors, ErrorNote, MonthField, Muted, Quiet } from "../lib/ui.tsx";
+import { Card, colors, ErrorNote, Icon, MonthField, Muted, Quiet } from "../lib/ui.tsx";
 
 const DAY = 86_400_000;
 
@@ -36,11 +42,15 @@ export function Bar(props: { share: number; color: string; height?: number }) {
   );
 }
 
-/** CardTitle is the small heading of a card, with an optional action at its right, as on the web. */
-function CardTitle(props: { title: string; action?: string; onAction?: () => void }) {
+/** CardTitle is the small heading of a card with its icon, and an optional note or action at its right, as on the web. */
+export function CardTitle(props: { icon: ImageAsset; title: string; note?: string; action?: string; onAction?: () => void }) {
   return (
     <View style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
+      <Icon src={props.icon} />
       <Text style={{ color: colors().muted, flex: 1, fontSize: 14 }}>{props.title}</Text>
+      <If when={props.note}>
+        <Text style={{ color: colors().muted, fontSize: 12 }}>{props.note ?? ""}</Text>
+      </If>
       <If when={props.action && props.onAction}>
         <Text role="button" onPress={() => props.onAction?.()} style={{ color: colors().accent, fontSize: 14 }}>
           {props.action ?? ""}
@@ -54,7 +64,7 @@ function CardTitle(props: { title: string; action?: string; onAction?: () => voi
 export function EarnedCard(props: { xp: XpSummary | undefined }) {
   return (
     <Card>
-      <CardTitle title={m().totalEarned} />
+      <CardTitle icon={lightning} title={m().totalEarned} />
       <Text style={{ color: colors().ink, fontSize: 30, fontVariant: ["tabular-nums"], fontWeight: "700" }}>
         {`${(props.xp?.total ?? 0).toLocaleString(language())} XP`}
       </Text>
@@ -64,7 +74,7 @@ export function EarnedCard(props: { xp: XpSummary | undefined }) {
 }
 
 /** GoalBar is one goal's progress: what was earned against the goal, as a bar that turns green once it is met. */
-function GoalBar(props: { label: string; xp: number; goal: number; color: string }) {
+function GoalBar(props: { label: string; xp: number; goal: number }) {
   const met = () => props.xp >= props.goal;
   return (
     <View style={{ gap: 6 }}>
@@ -74,13 +84,13 @@ function GoalBar(props: { label: string; xp: number; goal: number; color: string
           {met() ? `${m().goalOf(props.xp, props.goal)} · ${m().goalDone}` : m().goalOf(props.xp, props.goal)}
         </Text>
       </View>
-      <Bar share={props.xp / props.goal} color={met() ? colors().good : props.color} />
+      <Bar share={props.xp / props.goal} color={met() ? colors().good : colors().accent} />
     </View>
   );
 }
 
 /** Days draws the XP of the last 14 days as bars, today last and strongest. */
-function Days(props: { xp: XpSummary | undefined; strong: string; soft: string }) {
+function Days(props: { xp: XpSummary | undefined }) {
   const days = () => props.xp?.days ?? [];
   const most = () => Math.max(1, ...days().map(Math.abs));
   return (
@@ -94,7 +104,7 @@ function Days(props: { xp: XpSummary | undefined; strong: string; soft: string }
           {(xp, index) => (
             <View
               style={{
-                backgroundColor: xp() < 0 ? colors().bad : index() === days().length - 1 ? props.strong : props.soft,
+                backgroundColor: xp() < 0 ? colors().bad : index() === days().length - 1 ? colors().accent : colors()["accent-soft"],
                 borderRadius: 2,
                 flex: 1,
                 height: Math.max(2, (Math.abs(xp()) / most()) * 48),
@@ -113,23 +123,23 @@ function Days(props: { xp: XpSummary | undefined; strong: string; soft: string }
  */
 export function WeeklyGoals(props: { dash: GetDashboardResponse; place: Place }) {
   const xp = (): XpSummary | undefined => props.dash.xp;
-  const color = () => tint(props.place.subject);
   const paused = () => props.dash.goals?.paused ?? false;
   const goalWeek = () => xp()?.goalWeek ?? 0;
   return (
     <Card>
       <CardTitle
+        icon={flag}
         title={m().goals}
         action={m().setGoals}
         onAction={props.dash.canDecide ? () => nav.push({ name: "goals", subjectId: props.dash.subjectId }) : undefined}
       />
       <If when={!paused() && goalWeek() > 0} else={<Muted>{paused() ? m().goalsPausedNote : m().goalNone}</Muted>}>
         <If when={(xp()?.goalToday ?? 0) > 0}>
-          <GoalBar label={m().goalToday} xp={xp()?.today ?? 0} goal={xp()?.goalToday ?? 0} color={color().strong} />
+          <GoalBar label={m().goalToday} xp={xp()?.today ?? 0} goal={xp()?.goalToday ?? 0} />
         </If>
-        <GoalBar label={m().goalWeek} xp={xp()?.week ?? 0} goal={goalWeek()} color={color().strong} />
+        <GoalBar label={m().goalWeek} xp={xp()?.week ?? 0} goal={goalWeek()} />
       </If>
-      <Days xp={xp()} strong={color().strong} soft={color().soft} />
+      <Days xp={xp()} />
       <If when={!props.dash.canDecide}>
         <Muted>{m().guardianDecides}</Muted>
       </If>
@@ -140,6 +150,45 @@ export function WeeklyGoals(props: { dash: GetDashboardResponse; place: Place })
 /** dateText writes a day in the app's language. */
 function dateText(at: Date): string {
   return at.toLocaleDateString(language(), { year: "numeric", month: "short", day: "numeric" });
+}
+
+/** finishAt is the day `remaining` XP is done at `xpPerDay`, from today, in the app's language. */
+function finishAt(remaining: number, xpPerDay: number): string {
+  return dateText(new Date(Date.now() + Math.ceil(remaining / xpPerDay) * DAY));
+}
+
+/** COMPARE_PACES are the XP per day a learner can compare, from gentle to intense, as on the web. */
+const COMPARE_PACES = [15, 30, 50, 70, 100];
+
+/** ComparePaces opens, under the forecast, when the course would be finished at the learner's goal and at other paces. */
+function ComparePaces(props: { remaining: number; goalPace: number }) {
+  const open = signal(false);
+  const goal = () => Math.round(props.goalPace);
+  const row = (label: string, date: string, strong: boolean) => (
+    <View style={{ flexDirection: "row", gap: 8 }}>
+      <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: strong ? "500" : "400" }}>{label}</Text>
+      <Text style={{ color: strong ? colors().ink : colors().muted, fontSize: 14, fontWeight: strong ? "500" : "400" }}>{date}</Text>
+    </View>
+  );
+  return (
+    <View style={{ gap: 6 }}>
+      <View
+        role="button"
+        accessibilityState={{ expanded: open() }}
+        onPress={() => open.set(!open())}
+        style={{ alignItems: "center", alignSelf: "flex-start", flexDirection: "row", gap: 4 }}
+      >
+        <Icon src={open() ? caretDown : caretRight} size={12} color={colors().accent} />
+        <Text style={{ color: colors().accent, fontSize: 14 }}>{m().forecastCompare}</Text>
+      </View>
+      <If when={open()}>
+        <View style={{ gap: 4 }}>
+          <If when={goal() > 0}>{row(m().forecastGoal(goal()), finishAt(props.remaining, props.goalPace), true)}</If>
+          <Each of={COMPARE_PACES}>{(pace) => row(m().forecastRow(pace()), finishAt(props.remaining, pace()), false)}</Each>
+        </View>
+      </If>
+    </View>
+  );
 }
 
 /** endOf is the last day of a month as "YYYY-MM-DD", the month counted from 1. */
@@ -190,6 +239,7 @@ export function ForecastCard(props: { place: Place; dash: GetDashboardResponse; 
   return (
     <Card>
       <CardTitle
+        icon={calendarCheck}
         title={m().forecast}
         action={d().endDate ? m().endDateChange : m().endDateSet}
         onAction={d().canDecide && !d().finished && !editing() ? () => editing.set(true) : undefined}
@@ -205,12 +255,11 @@ export function ForecastCard(props: { place: Place; dash: GetDashboardResponse; 
             </Text>
           </View>
         </If>
-        <Text style={{ color: colors().ink, fontSize: 15 }}>
-          {pace() > 0
-            ? m().forecastAtPace(pace(), dateText(new Date(Date.now() + Math.ceil(d().remainingXp / d().pace) * DAY)))
-            : m().forecastNoPace}
+        <Text style={{ color: colors().ink, fontSize: 15, fontWeight: "500" }}>
+          {pace() > 0 ? m().forecastAtPace(pace(), finishAt(d().remainingXp, d().pace)) : m().forecastNoPace}
         </Text>
         <Muted>{m().forecastRemaining(d().remainingXp)}</Muted>
+        <ComparePaces remaining={d().remainingXp} goalPace={(d().xp?.goalWeek ?? 0) / 7} />
         <If when={editing()}>
           <View style={{ borderColor: colors().line, borderTopWidth: 1, gap: 8, paddingTop: 12 }}>
             <Muted>{m().endDateBody}</Muted>
@@ -231,5 +280,69 @@ export function ForecastCard(props: { place: Place; dash: GetDashboardResponse; 
         <ErrorNote message={error()} />
       </If>
     </Card>
+  );
+}
+
+/**
+ * LeagueCard shows the learner's place in this week's league and the learners next to them, as on the web's Learn
+ * page; it opens the whole league, or, for a learner not taking part, the league's settings.
+ */
+export function LeagueCard(props: { visible: () => boolean }) {
+  const shown = computed(() => props.visible() || undefined);
+  const league = query(
+    shown,
+    () => ["league"],
+    (_, { signal: abort }) => account.getLeague({}, { signal: abort }),
+  );
+  return (
+    <If when={league()}>
+      {(l) => {
+        const mine = () => l().rows.findIndex((r) => r.me);
+        const near = () => (mine() < 0 ? [] : l().rows.slice(Math.max(0, mine() - 1), mine() + 2));
+        const days = () => Math.max(1, Math.ceil((Number(l().endsAt) - Date.now()) / DAY));
+        return (
+          <Card>
+            <CardTitle
+              icon={trophy}
+              title={l().enabled ? (m().tiers[l().tier] ?? m().league) : m().league}
+              note={l().enabled ? m().daysLeft(days()) : undefined}
+            />
+            <If when={l().enabled} else={<Muted>{m().leagueInvite}</Muted>}>
+              <If when={near().length > 0} else={<Muted>{m().leagueNoXp}</Muted>}>
+                <View style={{ gap: 2 }}>
+                  <Each of={near()} key={(r) => r.username}>
+                    {(r) => (
+                      <View
+                        style={{
+                          backgroundColor: r().me ? colors()["accent-soft"] : "transparent",
+                          borderRadius: 8,
+                          flexDirection: "row",
+                          gap: 8,
+                          paddingHorizontal: 8,
+                          paddingVertical: 4,
+                        }}
+                      >
+                        <Text style={{ color: colors().muted, fontSize: 14, width: 20 }}>{String(r().rank)}</Text>
+                        <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: r().me ? "600" : "400", numberOfLines: 1 }}>
+                          {r().username}
+                        </Text>
+                        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: r().me ? "600" : "400" }}>{`${r().xp} XP`}</Text>
+                      </View>
+                    )}
+                  </Each>
+                </View>
+              </If>
+            </If>
+            <Text
+              role="button"
+              onPress={() => nav.push({ name: l().enabled ? "standings" : "league" })}
+              style={{ color: colors().accent, fontSize: 14 }}
+            >
+              {l().enabled ? m().leagueSeeAll : m().leagueLearnMore}
+            </Text>
+          </Card>
+        );
+      }}
+    </If>
   );
 }

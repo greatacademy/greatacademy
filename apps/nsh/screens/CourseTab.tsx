@@ -1,13 +1,17 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
 import { signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
+import arrowCounterClockwise from "../assets/icons/arrow-counter-clockwise.svg";
+import bookOpen from "../assets/icons/book-open.svg";
+import listBullets from "../assets/icons/list-bullets.svg";
+import swap from "../assets/icons/swap.svg";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged } from "../lib/query.ts";
 import { learning } from "../lib/rpc.ts";
 import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
-import { Action, Card, colors, ErrorNote, Loaded, Muted, PullScroll, Quiet, Row, Section, Skeleton } from "../lib/ui.tsx";
-import { Bar, useDashboard } from "./SubjectCards.tsx";
+import { Action, Card, colors, ErrorNote, Icon, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
+import { Bar, CardTitle, useDashboard } from "./SubjectCards.tsx";
 
 /**
  * SubjectStart is a subject the learner has no course in yet: the way to choose one, or, for the learner of a
@@ -28,20 +32,49 @@ export function SubjectStart(props: { place: Place; onRefresh: () => void; refre
   );
 }
 
-/** CurrentCourse is the course the learner is on in the subject, with how far they are and its outline. */
+/** CurrentCourse is the course the learner is on in the subject, with how far they are and the way to its outline. */
 function CurrentCourse(props: { place: Place; courseId: string }) {
   const course = () => props.place.data.list.courses.find((c) => c.id === props.courseId);
   const stats = () => props.place.enrollment?.stats;
   return (
     <Card>
-      <Muted>{m().currentCourse}</Muted>
-      <Text style={{ color: colors().ink, fontSize: 20, fontWeight: "700" }}>{courseTitle(props.place.data.list, props.courseId)}</Text>
+      <CardTitle icon={bookOpen} title={m().currentCourse} />
+      <Text style={{ color: colors().ink, fontSize: 24, fontWeight: "700" }}>{courseTitle(props.place.data.list, props.courseId)}</Text>
       <If when={tx(course()?.description)}>
-        <Text style={{ color: colors().ink, fontSize: 15, lineHeight: 21 }}>{tx(course()?.description)}</Text>
+        <Text style={{ color: colors().muted, fontSize: 14, lineHeight: 20 }}>{tx(course()?.description)}</Text>
       </If>
-      <Bar share={(stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)} color={tint(props.place.subject).strong} />
-      <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
-      <Quiet label={m().courseOutline} onPress={() => nav.push({ name: "course", courseId: props.courseId })} />
+      <View style={{ alignItems: "center", flexDirection: "row", gap: 12, maxWidth: 448 }}>
+        <View style={{ flex: 1 }}>
+          <Bar share={(stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)} color={tint(props.place.subject).strong} />
+        </View>
+        <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
+      </View>
+      <View
+        role="button"
+        onPress={() => nav.push({ name: "course", courseId: props.courseId })}
+        style={{ alignItems: "center", alignSelf: "flex-start", flexDirection: "row", gap: 6 }}
+      >
+        <Icon src={listBullets} size={16} color={colors().accent} />
+        <Text style={{ color: colors().accent, fontSize: 14 }}>{m().courseOutline}</Text>
+      </View>
+    </Card>
+  );
+}
+
+/** ChangeCourse says when to change course and, for whoever decides for the learner, opens the courses to choose from. */
+function ChangeCourse(props: { place: Place; courseId: string }) {
+  return (
+    <Card>
+      <CardTitle icon={swap} title={m().changeCourse} />
+      <Muted>{m().changeCourseWhen}</Muted>
+      <If when={props.place.canDecide} else={<Muted>{m().guardianDecides}</Muted>}>
+        <View style={{ alignSelf: "flex-start" }}>
+          <Quiet
+            label={m().changeCourse}
+            onPress={() => nav.push({ name: "choose", subjectId: props.place.subject?.id ?? "", current: props.courseId })}
+          />
+        </View>
+      </If>
     </Card>
   );
 }
@@ -76,15 +109,22 @@ function StartOver(props: { dash: GetDashboardResponse; onDone: () => void }) {
     }
   };
   return (
-    <Section title={m().startOver}>
+    <Card>
+      <CardTitle icon={arrowCounterClockwise} title={m().startOver} />
       <If when={error()}>
         <ErrorNote message={error()} />
       </If>
       <If when={props.dash.diagnosed}>
-        <Row title={m().retakeDiagnostic} detail={m().retakeBody} onPress={() => !busy() && void run("retake")} />
+        <View style={{ alignItems: "flex-start", gap: 8 }}>
+          <Muted>{m().retakeBody}</Muted>
+          <Quiet label={m().retakeDiagnostic} disabled={busy()} onPress={() => void run("retake")} />
+        </View>
       </If>
-      <Row title={m().resetKnowledge} detail={m().resetBody} onPress={() => !busy() && void run("reset")} />
-    </Section>
+      <View style={{ alignItems: "flex-start", gap: 8, marginTop: 4 }}>
+        <Muted>{m().resetBody}</Muted>
+        <Quiet label={m().resetKnowledge} disabled={busy()} onPress={() => void run("reset")} />
+      </View>
+    </Card>
   );
 }
 
@@ -114,17 +154,7 @@ export function CourseTab(props: { visible: () => boolean }) {
                   <PullScroll onRefresh={rpc.refetch} refreshing={rpc.state() === "refreshing"} underBar>
                     <View style={{ gap: 16 }}>
                       <CurrentCourse place={here()} courseId={enrollment().courseId} />
-                      <Section title={m().changeCourse}>
-                        <Muted>{m().changeCourseWhen}</Muted>
-                        <If when={here().canDecide} else={<Muted>{m().guardianDecides}</Muted>}>
-                          <Row
-                            title={m().changeCourse}
-                            onPress={() =>
-                              nav.push({ name: "choose", subjectId: here().subject?.id ?? "", current: enrollment().courseId })
-                            }
-                          />
-                        </If>
-                      </Section>
+                      <ChangeCourse place={here()} courseId={enrollment().courseId} />
                       <If when={here().canDecide}>
                         <If when={dash()}>{(d) => <StartOver dash={d()} onDone={startedOver} />}</If>
                       </If>

@@ -1,6 +1,6 @@
 import type { GetCourseResponse } from "@ga/proto/catalog/v1/catalog_pb";
-import { type GetCourseProgressResponse, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
-import { computed, List, Text, View } from "nsh";
+import { type GetCourseProgressResponse, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import { computed, List, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
 import { query } from "../lib/query.ts";
@@ -28,9 +28,69 @@ function statusColor(key: StatusKey): string {
     failed: c.bad,
     learned: c.good,
     due: c.warn,
-    assumed: c["good-soft"],
+    assumed: c.muted,
   };
   return by[key];
+}
+
+/** chipColors are the background and text of a status's chip, as on the web. */
+function chipColors(key: StatusKey): { bg: string; fg: string } {
+  const c = colors();
+  const by: Record<StatusKey, { bg: string; fg: string }> = {
+    locked: { bg: c.page, fg: c.muted },
+    available: { bg: c["accent-soft"], fg: c.accent },
+    failed: { bg: c["bad-soft"], fg: c.bad },
+    learned: { bg: c["good-soft"], fg: c.good },
+    due: { bg: c["warn-soft"], fg: c.warn },
+    assumed: { bg: c.page, fg: c.muted },
+  };
+  return by[key];
+}
+
+/** TopicBox is one topic of the map, as on the web: its status dot, its title, the memory of a learned topic and a chip. */
+function TopicBox(props: { title: string; progress: TopicProgress | undefined; width: "49%" | "100%" }) {
+  const key = (): StatusKey => statusKeys[props.progress?.status ?? TopicStatus.LOCKED] ?? "locked";
+  const learned = () => key() === "learned" || key() === "due";
+  const memory = () => Math.round((props.progress?.memory ?? 0) * 100);
+  return (
+    <View
+      accessibilityLabel={`${props.title}, ${m().statuses[key()]}`}
+      style={{
+        alignItems: "center",
+        borderColor: colors().line,
+        borderRadius: 12,
+        borderWidth: 1,
+        flexDirection: "row",
+        gap: 12,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        width: props.width,
+      }}
+    >
+      <Dot status={key()} />
+      <View style={{ flex: 1, gap: 4, minWidth: 0 }}>
+        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.title}</Text>
+        <If when={learned()}>
+          <View accessibilityLabel={m().memoryOf(memory())} style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
+            <View style={{ backgroundColor: colors().line, borderRadius: 2, flex: 1, height: 4, overflow: "hidden" }}>
+              <View
+                style={{
+                  backgroundColor: key() === "due" ? colors().warn : colors().good,
+                  borderRadius: 2,
+                  height: 4,
+                  width: `${memory()}%`,
+                }}
+              />
+            </View>
+            <Text style={{ color: colors().muted, fontSize: 10, textAlign: "right", width: 32 }}>{`${memory()}%`}</Text>
+          </View>
+        </If>
+      </View>
+      <View style={{ backgroundColor: chipColors(key()).bg, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 }}>
+        <Text style={{ color: chipColors(key()).fg, fontSize: 11, fontWeight: "500" }}>{m().statuses[key()]}</Text>
+      </View>
+    </View>
+  );
 }
 
 function Dot(props: { status: StatusKey }) {
@@ -38,11 +98,10 @@ function Dot(props: { status: StatusKey }) {
     <View
       style={{
         backgroundColor: statusColor(props.status),
-        borderColor: colors().line,
-        borderRadius: 6,
-        borderWidth: props.status === "assumed" ? 1 : 0,
-        height: 12,
-        width: 12,
+        borderRadius: 5,
+        flexShrink: 0,
+        height: 10,
+        width: 10,
       }}
     />
   );
@@ -79,6 +138,12 @@ export function MapBody(props: { map: MapData }) {
     return found;
   });
   const legend: StatusKey[] = ["learned", "due", "available", "failed", "assumed", "locked"];
+  // Topics sit two to a row where the map is wide enough, as on the web: a tablet's window, or a desktop's once the
+  // cards beside the map leave it room.
+  const columns = () => {
+    const width = windowSize().width;
+    return width >= 1200 || (width >= 700 && width < 1024) ? 2 : 1;
+  };
   return (
     <View style={{ gap: 12 }}>
       <Card>
@@ -101,43 +166,13 @@ export function MapBody(props: { map: MapData }) {
               {(module) => (
                 <View style={{ gap: 8, marginTop: 8 }}>
                   <Muted>{tx(module().title)}</Muted>
-                  <Each of={module().topics} key={(topic) => topic.id}>
-                    {(topic) => {
-                      const progress = () => byTopic().get(topic().id);
-                      const key = (): StatusKey => statusKeys[progress()?.status ?? TopicStatus.LOCKED] ?? "locked";
-                      const memory = () => Math.round((progress()?.memory ?? 0) * 100);
-                      return (
-                        <View
-                          accessibilityLabel={`${tx(topic().title)}, ${m().statuses[key()]}`}
-                          style={{ alignItems: "center", flexDirection: "row", gap: 10 }}
-                        >
-                          <Dot status={key()} />
-                          <View style={{ flex: 1, gap: 2 }}>
-                            <Text style={{ color: key() === "locked" ? colors().muted : colors().ink, fontSize: 15 }}>
-                              {tx(topic().title)}
-                            </Text>
-                            <Muted>{[m().statuses[key()], progress()?.placed ? m().placed : ""].filter(Boolean).join(" · ")}</Muted>
-                          </View>
-                          <If when={memory() > 0}>
-                            <View style={{ alignItems: "flex-end", gap: 2, width: 72 }}>
-                              <View
-                                style={{
-                                  backgroundColor: colors().line,
-                                  borderRadius: 3,
-                                  height: 6,
-                                  overflow: "hidden",
-                                  width: 72,
-                                }}
-                              >
-                                <View style={{ backgroundColor: statusColor(key()), height: 6, width: `${memory()}%` }} />
-                              </View>
-                              <Text style={{ color: colors().muted, fontSize: 12 }}>{m().memoryOf(memory())}</Text>
-                            </View>
-                          </If>
-                        </View>
-                      );
-                    }}
-                  </Each>
+                  <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                    <Each of={module().topics} key={(topic) => topic.id}>
+                      {(topic) => (
+                        <TopicBox title={tx(topic().title)} progress={byTopic().get(topic().id)} width={columns() === 2 ? "49%" : "100%"} />
+                      )}
+                    </Each>
+                  </View>
                 </View>
               )}
             </Each>
