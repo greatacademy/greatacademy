@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 
 import { useSession } from "../../lib/auth.ts";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -10,6 +10,8 @@ const tab = "border-b-2 px-1 pb-2.5 text-sm font-medium transition";
 function SettingsLayout() {
   const { m } = useI18n();
   const { data: session } = useSession();
+  // The Account tab stays chosen on the pages its Account security opens.
+  const appearance = useLocation({ select: (l) => l.pathname.startsWith("/settings/appearance") });
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <h1 className="text-2xl font-semibold tracking-tight">{m.settings}</h1>
@@ -18,10 +20,7 @@ function SettingsLayout() {
         <nav className="flex gap-5 border-b border-line">
           <Link
             to="/settings"
-            activeOptions={{ exact: true }}
-            className={`${tab} -mb-px`}
-            activeProps={{ className: "border-accent text-ink" }}
-            inactiveProps={{ className: "border-transparent text-muted hover:text-ink" }}
+            className={`${tab} -mb-px ${appearance ? "border-transparent text-muted hover:text-ink" : "border-accent text-ink"}`}
           >
             {m.settingsAccount}
           </Link>

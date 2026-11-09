@@ -191,7 +191,8 @@ const messages = {
     resendVerification: "Send the verification email",
     verificationSent: "Sent. Check your inbox.",
     changePassword: "Change password",
-    dangerZone: "Delete account",
+    security: "Account security",
+    changePasswordDetail: "Signs out your other devices",
     deleteBody: "This permanently deletes your account, your progress and your XP. It cannot be undone. Enter your password to confirm.",
     deleteAccount: "Delete my account",
     // Goals.
@@ -661,7 +662,8 @@ const messages = {
     resendVerification: "发送验证邮件",
     verificationSent: "已发送，请查收。",
     changePassword: "修改密码",
-    dangerZone: "删除账号",
+    security: "账号安全",
+    changePasswordDetail: "会让你的其他设备退出登录",
     deleteBody: "这会永久删除你的账号、学习进度和 XP，无法恢复。请输入密码确认。",
     deleteAccount: "删除我的账号",
     // 目标。

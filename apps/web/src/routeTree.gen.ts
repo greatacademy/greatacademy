@@ -43,6 +43,8 @@ import { Route as LegalPageRouteImport } from './routes/legal/$page'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
+import { Route as SettingsDeleteRouteImport } from './routes/settings/delete'
+import { Route as SettingsPasswordRouteImport } from './routes/settings/password'
 import { Route as SubjectTopicsTopicIdRouteImport } from './routes/$subject/topics/$topicId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -215,6 +217,16 @@ const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
   path: '/appearance',
   getParentRoute: () => SettingsRouteRoute,
 } as any)
+const SettingsDeleteRoute = SettingsDeleteRouteImport.update({
+  id: '/delete',
+  path: '/delete',
+  getParentRoute: () => SettingsRouteRoute,
+} as any)
+const SettingsPasswordRoute = SettingsPasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
+  getParentRoute: () => SettingsRouteRoute,
+} as any)
 const SubjectTopicsTopicIdRoute = SubjectTopicsTopicIdRouteImport.update({
   id: '/topics/$topicId',
   path: '/topics/$topicId',
@@ -251,6 +263,8 @@ export interface FileRoutesByFullPath {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/settings/delete': typeof SettingsDeleteRoute
+  '/settings/password': typeof SettingsPasswordRoute
   '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
@@ -285,6 +299,8 @@ export interface FileRoutesByTo {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/settings/delete': typeof SettingsDeleteRoute
+  '/settings/password': typeof SettingsPasswordRoute
   '/$subject': typeof SubjectIndexRoute
   '/admin': typeof AdminIndexRoute
   '/courses': typeof CoursesIndexRoute
@@ -323,6 +339,8 @@ export interface FileRoutesById {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/settings/delete': typeof SettingsDeleteRoute
+  '/settings/password': typeof SettingsPasswordRoute
   '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
@@ -362,6 +380,8 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/settings/delete'
+    | '/settings/password'
     | '/$subject/'
     | '/admin/'
     | '/courses/'
@@ -396,6 +416,8 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/settings/delete'
+    | '/settings/password'
     | '/$subject'
     | '/admin'
     | '/courses'
@@ -433,6 +455,8 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/settings/delete'
+    | '/settings/password'
     | '/$subject/'
     | '/admin/'
     | '/courses/'
@@ -704,6 +728,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsAppearanceRouteImport
       parentRoute: typeof SettingsRouteRoute
     }
+    '/settings/delete': {
+      id: '/settings/delete'
+      path: '/delete'
+      fullPath: '/settings/delete'
+      preLoaderRoute: typeof SettingsDeleteRouteImport
+      parentRoute: typeof SettingsRouteRoute
+    }
+    '/settings/password': {
+      id: '/settings/password'
+      path: '/password'
+      fullPath: '/settings/password'
+      preLoaderRoute: typeof SettingsPasswordRouteImport
+      parentRoute: typeof SettingsRouteRoute
+    }
     '/$subject/topics/$topicId': {
       id: '/$subject/topics/$topicId'
       path: '/topics/$topicId'
@@ -762,11 +800,15 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 
 interface SettingsRouteRouteChildren {
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
+  SettingsDeleteRoute: typeof SettingsDeleteRoute
+  SettingsPasswordRoute: typeof SettingsPasswordRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
 }
 
 const SettingsRouteRouteChildren: SettingsRouteRouteChildren = {
   SettingsAppearanceRoute: SettingsAppearanceRoute,
+  SettingsDeleteRoute: SettingsDeleteRoute,
+  SettingsPasswordRoute: SettingsPasswordRoute,
   SettingsIndexRoute: SettingsIndexRoute,
 }
 

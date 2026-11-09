@@ -1,10 +1,11 @@
 import { Code } from "@connectrpc/connect";
 import { Band } from "@ga/proto/privacy/v1/privacy_pb";
+import { CaretRight } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 
-import { field, NewPassword, PasswordField } from "../../components/AuthForm.tsx";
+import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { PrivacySettings } from "../../components/PrivacySettings.tsx";
 import { Subscriptions } from "../../components/Subscriptions.tsx";
@@ -19,7 +20,7 @@ import { account, failureCode } from "../../lib/rpc.ts";
 export const Route = createFileRoute("/settings/")({ component: Settings });
 
 /** SettingsSection names the sections of the settings page, each reachable by its anchor, as `/settings#league`. */
-export type SettingsSection = "profile" | "plan" | "privacy" | "league" | "guardian" | "password" | "account";
+export type SettingsSection = "profile" | "plan" | "privacy" | "league" | "guardian" | "security";
 
 function Section({ id, title, children }: { id: SettingsSection; title: string; children: ReactNode }) {
   return (
@@ -27,6 +28,41 @@ function Section({ id, title, children }: { id: SettingsSection; title: string; 
       <h2 className="text-lg font-semibold">{title}</h2>
       {children}
     </Card>
+  );
+}
+
+/** SecurityRow is a line of the Account security section, as in the apps: an action, or the page it opens. */
+function SecurityRow({
+  title,
+  detail,
+  tone,
+  to,
+  onPress,
+}: {
+  title: string;
+  detail?: string;
+  tone?: "bad";
+  to?: "/settings/password" | "/settings/delete";
+  onPress?: () => void;
+}) {
+  const body = (
+    <>
+      <span className="min-w-0 flex-1">
+        <span className={`block ${tone === "bad" ? "text-bad" : ""}`}>{title}</span>
+        {detail && <span className="block text-sm text-muted">{detail}</span>}
+      </span>
+      {to && <CaretRight size={16} className="shrink-0 text-muted" />}
+    </>
+  );
+  const row = "flex w-full items-center gap-3 py-3 text-left first:pt-0 last:pb-0 hover:text-accent";
+  return to ? (
+    <Link to={to} className={row}>
+      {body}
+    </Link>
+  ) : (
+    <button type="button" onClick={onPress} className={row}>
+      {body}
+    </button>
   );
 }
 
@@ -51,8 +87,6 @@ function Settings() {
   const [nameState, setNameState] = useState<"idle" | "saved" | "failed">("idle");
   const [usernameError, setUsernameError] = useState<string>();
   const [verification, setVerification] = useState(false);
-  const [passwordState, setPasswordState] = useState<"idle" | "saved" | "failed">("idle");
-  const [deleteError, setDeleteError] = useState(false);
 
   const leagues = useMutation({ mutationFn: (enabled: boolean) => account.setLeagues({ enabled }), onSuccess: refresh });
   const invite = useMutation({ mutationFn: () => account.createGuardianInvite({}) });
@@ -80,26 +114,8 @@ function Settings() {
     }
   }
 
-  async function savePassword(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const res = await authClient.changePassword({
-      currentPassword: String(data.get("current")),
-      newPassword: String(data.get("next")),
-      revokeOtherSessions: true,
-    });
-    setPasswordState(res.error ? "failed" : "saved");
-    if (!res.error) form.reset();
-  }
-
-  async function deleteAccount(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const res = await authClient.deleteUser({ password: String(new FormData(e.currentTarget).get("password")) });
-    if (res.error) {
-      setDeleteError(true);
-      return;
-    }
+  async function signOut() {
+    await authClient.signOut();
     qc.clear();
     await navigate({ to: "/" });
   }
@@ -213,33 +229,16 @@ function Settings() {
         {invite.isError && <ErrorNote message={m.error} />}
       </Section>
 
-      <Section id="password" title={m.changePassword}>
-        <form onSubmit={savePassword} className="space-y-3">
-          <PasswordField label={m.currentPassword} name="current" required autoComplete="current-password" />
-          <NewPassword label={m.newPassword} name="next" />
-          {passwordState === "failed" && <ErrorNote message={m.error} />}
-          <div className="flex items-center gap-3">
-            <Button type="submit" variant="secondary">
-              {m.changePassword}
-            </Button>
-            {passwordState === "saved" && <span className="text-sm text-good">{m.saved}</span>}
-          </div>
-        </form>
-      </Section>
-
-      <Section id="account" title={m.dangerZone}>
-        {access?.managed ? (
-          <p className="text-sm text-muted">{t.childDelete}</p>
-        ) : (
-          <form onSubmit={deleteAccount} className="space-y-3">
-            <p className="text-sm text-muted">{m.deleteBody}</p>
-            <PasswordField label={m.password} name="password" required autoComplete="current-password" />
-            {deleteError && <ErrorNote message={m.error} />}
-            <button type="submit" className="rounded-lg border border-bad/40 px-4 py-2 text-sm font-medium text-bad hover:bg-bad-soft">
-              {m.deleteAccount}
-            </button>
-          </form>
-        )}
+      <Section id="security" title={m.security}>
+        <div className="divide-y divide-line">
+          <SecurityRow title={m.changePassword} detail={m.changePasswordDetail} to="/settings/password" />
+          <SecurityRow title={m.signOut} onPress={() => void signOut()} />
+          {access?.managed ? (
+            <p className="py-3 text-sm text-muted">{t.childDelete}</p>
+          ) : (
+            <SecurityRow title={m.deleteAccount} tone="bad" to="/settings/delete" />
+          )}
+        </div>
       </Section>
     </div>
   );
