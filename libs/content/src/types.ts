@@ -148,6 +148,13 @@ export interface CourseDef {
   readonly masteryFloor?: readonly string[];
   /** reading lists the reading units the course offers, in order. */
   readonly reading?: readonly string[];
+  /**
+   * buildsOn lists the courses of the subject this course follows on from,
+   * nearest first: what a learner takes before it. A learner placed with many
+   * gaps is pointed to one of them, and one who finishes a course to the
+   * courses that build on it.
+   */
+  readonly buildsOn?: readonly string[];
 }
 
 /** PassageQuestionDef is one comprehension question of a passage. */

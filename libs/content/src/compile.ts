@@ -335,6 +335,10 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
         if (!position.has(a) && !floor.has(a) && ![...floor].some((f) => ancestors.get(f)?.has(a))) foundations.add(a);
       }
     }
+    for (const before of course.buildsOn ?? []) {
+      if (before === course.id) error(path, "a course cannot build on itself");
+      else if (!def.courses.some((c) => c.id === before)) error(path, `builds on unknown course ${before}`);
+    }
     courses.set(course.id, {
       def: course,
       topics: list,
@@ -342,6 +346,9 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       foundations: order.order.filter((id) => foundations.has(id)),
     });
   }
+
+  const cycle = courseCycle(def.courses);
+  if (cycle) error(`subject ${def.id}`, `courses build on each other: ${cycle.join(" → ")}`);
 
   if (issues.some((i) => i.severity === "error")) throw new CompileError(issues);
 
@@ -373,6 +380,32 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     checkers: checkers!,
     warnings: issues.filter((i) => i.severity === "warning"),
   };
+}
+
+/** courseCycle finds courses that build on each other in a circle, through buildsOn. */
+function courseCycle(courses: readonly CourseDef[]): string[] | undefined {
+  const byId = new Map(courses.map((c) => [c.id, c]));
+  const state = new Map<string, "visiting" | "done">();
+  const stack: string[] = [];
+  const visit = (id: string): string[] | undefined => {
+    if (state.get(id) === "done") return undefined;
+    if (state.get(id) === "visiting") return [...stack.slice(stack.indexOf(id)), id];
+    state.set(id, "visiting");
+    stack.push(id);
+    for (const before of byId.get(id)?.buildsOn ?? []) {
+      if (before === id || !byId.has(before)) continue;
+      const cycle = visit(before);
+      if (cycle) return cycle;
+    }
+    stack.pop();
+    state.set(id, "done");
+    return undefined;
+  };
+  for (const c of courses) {
+    const cycle = visit(c.id);
+    if (cycle) return cycle;
+  }
+  return undefined;
 }
 
 type OrderResult = { ok: true; order: string[] } | { ok: false; cycle: string[] };

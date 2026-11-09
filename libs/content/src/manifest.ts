@@ -42,6 +42,8 @@ export interface CourseListing {
   readonly title: Text;
   readonly description: Text;
   readonly group?: Text;
+  /** buildsOn lists the courses this one follows on from, nearest first. */
+  readonly buildsOn: readonly string[];
   readonly topicCount: number;
   readonly xp: number;
 }
@@ -99,6 +101,7 @@ export function subjectListing(manifest: SubjectManifest): SubjectListing {
       title: c.def.title,
       description: c.def.description,
       ...(c.def.group && { group: c.def.group }),
+      buildsOn: c.def.buildsOn ?? [],
       topicCount: c.topics.length,
       xp: c.topics.reduce((sum, id) => sum + xp.get(id)!, 0),
     })),

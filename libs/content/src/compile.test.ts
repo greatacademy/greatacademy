@@ -113,6 +113,13 @@ describe("compileSubject", () => {
       "comes before its prerequisite a",
     ],
     ["floor topics inside the course", subject([topic("a")], [course(["a"], { masteryFloor: ["a"] })]), "is in the course"],
+    ["courses built on unknown courses", subject([topic("a")], [course(["a"], { buildsOn: ["z"] })]), "builds on unknown course z"],
+    ["courses built on themselves", subject([topic("a")], [course(["a"], { buildsOn: ["c"] })]), "cannot build on itself"],
+    [
+      "courses built on each other",
+      subject([topic("a")], [course(["a"], { buildsOn: ["d"] }), course(["a"], { id: "d", buildsOn: ["c"] })]),
+      "courses build on each other",
+    ],
   ])("rejects %s", (_, def, message) => {
     expect(errors(def).join("\n")).toContain(message);
   });
