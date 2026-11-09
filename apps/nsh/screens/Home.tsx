@@ -217,6 +217,40 @@ export function SidebarToggle() {
   );
 }
 
+/** CORNER is the radius of the pages' top left corner beside the sidebar, in points. */
+const CORNER = 10;
+
+/**
+ * ContentCorner rounds the pages' top left corner, where the sidebar's edge meets the header's line under the title
+ * bar's row: it stands over that corner, taking no presses, and moves with the sidebar.
+ */
+export function ContentCorner() {
+  return (
+    <View
+      style={{
+        backgroundColor: colors().surface,
+        height: CORNER + 1,
+        left: sidebarWidth() - 1,
+        pointerEvents: "none",
+        position: "absolute",
+        top: HEADER_HEIGHT - 1,
+        width: CORNER + 1,
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: colors().page,
+          borderColor: colors().line,
+          borderLeftWidth: 1,
+          borderTopLeftRadius: CORNER,
+          borderTopWidth: 1,
+          flex: 1,
+        }}
+      />
+    </View>
+  );
+}
+
 /**
  * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
  * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. Its top row is

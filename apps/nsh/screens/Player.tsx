@@ -1,7 +1,21 @@
 import type { Feedback, Question, Result, ResultItem, Session } from "@ga/proto/learning/v1/learning_pb";
-import { computed, type JSX, keyboardFrame, keymap, resource, Scroll, type ScrollRef, safeAreaInsets, signal, Text, View } from "nsh";
+import {
+  computed,
+  type JSX,
+  keyboardFrame,
+  keymap,
+  platform,
+  resource,
+  Scroll,
+  type ScrollRef,
+  safeAreaInsets,
+  signal,
+  Text,
+  View,
+} from "nsh";
 import { AlertDialog, NavPage } from "nsh/base";
 
+import { HEADER_HEIGHT, headerInset } from "../lib/chrome.ts";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { learning, timeZone } from "../lib/rpc.ts";
@@ -44,18 +58,23 @@ function progressOf(session: Session, question: Question): { label: string; shar
   return { label, share: Math.max(0, Math.min(1, share)) };
 }
 
-/** FocusBar is the player's only chrome: a way out, and how far the task has come. */
+/**
+ * FocusBar is the player's only chrome: a way out, and how far the task has come. On a desktop it is the window's
+ * title bar's row too, as a page's header is: as tall, dragging the window, and clear of macOS's traffic lights.
+ */
 function FocusBar(props: { share: number; label: string; onClose: () => void }) {
   return (
     <View
+      desktop={{ windowDrag: true }}
       style={{
         alignItems: "center",
         backgroundColor: colors().page,
         flexDirection: "row",
         gap: 12,
-        paddingBottom: 8,
         paddingHorizontal: 12,
-        paddingTop: "calc(env(safe-area-inset-top) + 8)",
+        ...(platform.desktop
+          ? { height: HEADER_HEIGHT, paddingLeft: 12 + headerInset() }
+          : { paddingBottom: 8, paddingTop: "calc(env(safe-area-inset-top) + 8)" }),
       }}
     >
       <View

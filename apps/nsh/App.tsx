@@ -23,7 +23,7 @@ import { Courses } from "./screens/Courses.tsx";
 import { DeleteAccount } from "./screens/DeleteAccount.tsx";
 import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { History } from "./screens/History.tsx";
-import { commandHeld, Home, heldCommand, PhoneTabs, Sidebar, SidebarToggle } from "./screens/Home.tsx";
+import { ContentCorner, commandHeld, Home, heldCommand, PhoneTabs, Sidebar, SidebarToggle } from "./screens/Home.tsx";
 import { Launch, launchLeaving } from "./screens/Launch.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Learner } from "./screens/Learner.tsx";
@@ -162,6 +162,9 @@ function App() {
           }
         }}
       </NavStack>
+      <If when={sidebar()}>
+        <ContentCorner />
+      </If>
       <If when={sidebar() && sidebarRoomy()}>
         <SidebarToggle />
       </If>
