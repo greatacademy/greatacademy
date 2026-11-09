@@ -222,6 +222,10 @@ export interface SubjectDef {
   /** id is the subject's id, such as "math". */
   readonly id: string;
   readonly title: Text;
+  /** mark is the one or two characters that stand for the subject on its chip, such as "∑". */
+  readonly mark: string;
+  /** hue is the subject's hue, 0 to 360, from which clients derive its colors. */
+  readonly hue: number;
   readonly topics: readonly TopicDef[];
   readonly courses: readonly CourseDef[];
   readonly checkers: readonly Checker[];

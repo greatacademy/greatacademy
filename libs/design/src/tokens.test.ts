@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   accentOf,
+  awayFromVerdicts,
   CONTRAST_TARGET,
   CONTRASTS,
   type ColorScheme,
@@ -13,6 +14,7 @@ import {
   oklchToHex,
   PALETTES,
   seedsOf,
+  subjectColors,
 } from "./tokens.ts";
 
 const TEXT_PAIRS: [ColorToken, ColorToken][] = [
@@ -98,5 +100,25 @@ describe("custom palettes", () => {
     expect(colors.page).toBe(seeds.page);
     expect(colors.ink).toBe(seeds.ink);
     expect(colors.accent).toBe(seeds.accent);
+  });
+});
+
+describe("subjectColors", () => {
+  const hues = Array.from({ length: 36 }, (_, i) => i * 10);
+  it.each(CONTRASTS)("keeps text on a subject's colors readable at %s contrast", (contrast) => {
+    for (const scheme of ["light", "dark"] as const) {
+      for (const hue of hues) {
+        const c = subjectColors(hue, scheme, contrast);
+        expect(contrastRatio(c.onStrong, c.strong)).toBeGreaterThanOrEqual(CONTRAST_TARGET[contrast]);
+        expect(contrastRatio(c.onSoft, c.soft)).toBeGreaterThanOrEqual(CONTRAST_TARGET[contrast]);
+      }
+    }
+  });
+  it("keeps a subject's hue away from the verdicts", () => {
+    expect(awayFromVerdicts(150)).toBe(135);
+    expect(awayFromVerdicts(160)).toBe(175);
+    expect(awayFromVerdicts(235)).toBe(235);
+    expect(awayFromVerdicts(-10)).toBe(350);
+    expect(awayFromVerdicts(30)).toBe(45);
   });
 });

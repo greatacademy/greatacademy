@@ -30,6 +30,8 @@ export interface ManifestCourse {
 export interface SubjectManifest {
   readonly id: string;
   readonly title: Text;
+  readonly mark: string;
+  readonly hue: number;
   readonly topics: readonly ManifestTopic[];
   /** passages are in reading order. */
   readonly passages: readonly ManifestPassage[];
@@ -52,12 +54,14 @@ export interface CourseListing {
 export interface SubjectListing {
   readonly id: string;
   readonly title: Text;
+  readonly mark: string;
+  readonly hue: number;
   readonly courses: readonly CourseListing[];
 }
 
 /** SubjectCatalog is a manifest read into the indexes the services and the engine use. */
 export interface SubjectCatalog {
-  readonly def: { readonly id: string; readonly title: Text };
+  readonly def: { readonly id: string; readonly title: Text; readonly mark: string; readonly hue: number };
   readonly graph: Graph;
   readonly topics: ReadonlyMap<string, ManifestTopic>;
   readonly passages: ReadonlyMap<string, ManifestPassage>;
@@ -69,6 +73,8 @@ export function subjectManifest(subject: CompiledSubject): SubjectManifest {
   return {
     id: subject.def.id,
     title: subject.def.title,
+    mark: subject.def.mark,
+    hue: subject.def.hue,
     topics: subject.graph.order.map((id) => {
       const topic = subject.topics.get(id)!;
       return {
@@ -96,6 +102,8 @@ export function subjectListing(manifest: SubjectManifest): SubjectListing {
   return {
     id: manifest.id,
     title: manifest.title,
+    mark: manifest.mark,
+    hue: manifest.hue,
     courses: manifest.courses.map((c) => ({
       id: c.def.id,
       title: c.def.title,
@@ -127,7 +135,7 @@ export function readManifest(manifest: SubjectManifest): SubjectCatalog {
   const topics = new Map(manifest.topics.map((t) => [t.id, t]));
   const passages = new Map(manifest.passages.map((p) => [p.id, p]));
   return {
-    def: { id: manifest.id, title: manifest.title },
+    def: { id: manifest.id, title: manifest.title, mark: manifest.mark, hue: manifest.hue },
     graph: { subject: manifest.id, topics, order, dependents, encompassedBy, ancestors, passages },
     topics,
     passages,

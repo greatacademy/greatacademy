@@ -7,7 +7,7 @@ import "ga/common/v1/text.proto";
 // CatalogService describes the subjects and courses on offer. It needs no
 // account.
 service CatalogService {
-  // ListCourses lists every course of every subject, without its outline.
+  // ListCourses lists the subjects, and every course of every subject without its outline.
   rpc ListCourses(ListCoursesRequest) returns (ListCoursesResponse);
   // GetCourse returns one course with its outline.
   rpc GetCourse(GetCourseRequest) returns (GetCourseResponse);
@@ -17,6 +17,17 @@ message ListCoursesRequest {}
 
 message ListCoursesResponse {
   repeated Course courses = 1;
+  // subjects are the subjects on offer, in the order they are shown.
+  repeated Subject subjects = 2;
+}
+
+// Subject is a subject on offer and how clients mark it: its mark is one or
+// two characters for its chip, and its hue, 0 to 360, gives its colors.
+message Subject {
+  string id = 1;
+  ga.common.v1.Text title = 2;
+  string mark = 3;
+  int32 hue = 4;
 }
 
 message GetCourseRequest {

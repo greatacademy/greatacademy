@@ -54,6 +54,8 @@ const subject = compileSubject({
   title: same("Test"),
   topics: [...chain("p", 10), ...chain("q", 10, "p10"), ...chain("r", 5, "q10")],
   courses: [course("low", ids("p", 1, 10)), course("mid", ids("q", 1, 10), ["low"]), course("top", ids("r", 1, 5), ["mid"])],
+  mark: "T",
+  hue: 200,
   checkers: [],
 });
 const graph = engineGraph(subject.graph);

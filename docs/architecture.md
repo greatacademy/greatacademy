@@ -235,6 +235,8 @@ Appearance belongs to the client, not the account: each browser or device keeps 
 
 **Logo.** `LOGO` holds the mark, a white G that follows the outline of a burgundy shield. Its colors are fixed and never follow a palette, and the app icons sit on a fixed light tile.
 
+**Subjects.** `subjectColors(hue, scheme, contrast)` gives the colors that mark a subject ([Experience §2](experience.md#2-subjects)) from the hue the subject declares: `strong` with `onStrong` on it, and `soft` with `onSoft`, which also reads on the page and surfaces. `awayFromVerdicts` first moves the hue at least 20 degrees from the verdict hues. Tests hold both pairs to the contrast target at every hue, in both schemes and both contrast levels.
+
 **Custom palettes.** Each scheme keeps its own list of up to `MAX_CUSTOM_PALETTES` named palettes, with ids such as `custom-3`. A custom palette is three colors (`accent`, `page`, `ink`); `customTokens` derives the rest. The page stays as light or dark as its scheme requires and text moves in lightness as far as needed, so tests hold any three colors to the same contrast targets. A new palette starts from the colors of the one in use. Built-in palettes never change: editing one makes a draft, shown only in the preview, that can be saved as a new custom palette. Deleting a palette that is showing returns the scheme to the default.
 
 **Sharing.** `sharePalette` writes a custom or built-in palette as text, `great-academy-palette-v1:{"scheme","name","accent","page","ink"}`, and `parseSharedPalette` reads it strictly. Importing adds a new custom palette, only to the scheme it was made for, because its colors only work there.

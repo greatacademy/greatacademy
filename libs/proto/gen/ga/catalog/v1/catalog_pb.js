@@ -9,7 +9,7 @@ import { file_ga_common_v1_text } from "../../common/v1/text_pb.js";
  * Describes the file ga/catalog/v1/catalog.proto.
  */
 export const file_ga_catalog_v1_catalog = /*@__PURE__*/
-  fileDesc("ChtnYS9jYXRhbG9nL3YxL2NhdGFsb2cucHJvdG8SDWdhLmNhdGFsb2cudjEiFAoSTGlzdENvdXJzZXNSZXF1ZXN0Ij0KE0xpc3RDb3Vyc2VzUmVzcG9uc2USJgoHY291cnNlcxgBIAMoCzIVLmdhLmNhdGFsb2cudjEuQ291cnNlIiUKEEdldENvdXJzZVJlcXVlc3QSEQoJY291cnNlX2lkGAEgASgJIjoKEUdldENvdXJzZVJlc3BvbnNlEiUKBmNvdXJzZRgBIAEoCzIVLmdhLmNhdGFsb2cudjEuQ291cnNlIpoCCgZDb3Vyc2USCgoCaWQYASABKAkSEgoKc3ViamVjdF9pZBgCIAEoCRIpCg1zdWJqZWN0X3RpdGxlGAMgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSIQoFdGl0bGUYBCABKAsyEi5nYS5jb21tb24udjEuVGV4dBInCgtkZXNjcmlwdGlvbhgFIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EhMKC3RvcGljX2NvdW50GAYgASgFEgoKAnhwGAcgASgFEiIKBXVuaXRzGAggAygLMhMuZ2EuY2F0YWxvZy52MS5Vbml0EiEKBWdyb3VwGAkgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSEQoJYnVpbGRzX29uGAogAygJIlEKBFVuaXQSIQoFdGl0bGUYASABKAsyEi5nYS5jb21tb24udjEuVGV4dBImCgdtb2R1bGVzGAIgAygLMhUuZ2EuY2F0YWxvZy52MS5Nb2R1bGUiUQoGTW9kdWxlEiEKBXRpdGxlGAEgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSJAoGdG9waWNzGAIgAygLMhQuZ2EuY2F0YWxvZy52MS5Ub3BpYyKBAQoFVG9waWMSCgoCaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIjCgdzdW1tYXJ5GAMgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSCgoCeHAYBCABKAUSGAoQa25vd2xlZGdlX3BvaW50cxgFIAEoBTK2AQoOQ2F0YWxvZ1NlcnZpY2USVAoLTGlzdENvdXJzZXMSIS5nYS5jYXRhbG9nLnYxLkxpc3RDb3Vyc2VzUmVxdWVzdBoiLmdhLmNhdGFsb2cudjEuTGlzdENvdXJzZXNSZXNwb25zZRJOCglHZXRDb3Vyc2USHy5nYS5jYXRhbG9nLnYxLkdldENvdXJzZVJlcXVlc3QaIC5nYS5jYXRhbG9nLnYxLkdldENvdXJzZVJlc3BvbnNlYgZwcm90bzM", [file_ga_common_v1_text]);
+  fileDesc("ChtnYS9jYXRhbG9nL3YxL2NhdGFsb2cucHJvdG8SDWdhLmNhdGFsb2cudjEiFAoSTGlzdENvdXJzZXNSZXF1ZXN0ImcKE0xpc3RDb3Vyc2VzUmVzcG9uc2USJgoHY291cnNlcxgBIAMoCzIVLmdhLmNhdGFsb2cudjEuQ291cnNlEigKCHN1YmplY3RzGAIgAygLMhYuZ2EuY2F0YWxvZy52MS5TdWJqZWN0IlMKB1N1YmplY3QSCgoCaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIMCgRtYXJrGAMgASgJEgsKA2h1ZRgEIAEoBSIlChBHZXRDb3Vyc2VSZXF1ZXN0EhEKCWNvdXJzZV9pZBgBIAEoCSI6ChFHZXRDb3Vyc2VSZXNwb25zZRIlCgZjb3Vyc2UYASABKAsyFS5nYS5jYXRhbG9nLnYxLkNvdXJzZSKaAgoGQ291cnNlEgoKAmlkGAEgASgJEhIKCnN1YmplY3RfaWQYAiABKAkSKQoNc3ViamVjdF90aXRsZRgDIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EiEKBXRpdGxlGAQgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSJwoLZGVzY3JpcHRpb24YBSABKAsyEi5nYS5jb21tb24udjEuVGV4dBITCgt0b3BpY19jb3VudBgGIAEoBRIKCgJ4cBgHIAEoBRIiCgV1bml0cxgIIAMoCzITLmdhLmNhdGFsb2cudjEuVW5pdBIhCgVncm91cBgJIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EhEKCWJ1aWxkc19vbhgKIAMoCSJRCgRVbml0EiEKBXRpdGxlGAEgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSJgoHbW9kdWxlcxgCIAMoCzIVLmdhLmNhdGFsb2cudjEuTW9kdWxlIlEKBk1vZHVsZRIhCgV0aXRsZRgBIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EiQKBnRvcGljcxgCIAMoCzIULmdhLmNhdGFsb2cudjEuVG9waWMigQEKBVRvcGljEgoKAmlkGAEgASgJEiEKBXRpdGxlGAIgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSIwoHc3VtbWFyeRgDIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EgoKAnhwGAQgASgFEhgKEGtub3dsZWRnZV9wb2ludHMYBSABKAUytgEKDkNhdGFsb2dTZXJ2aWNlElQKC0xpc3RDb3Vyc2VzEiEuZ2EuY2F0YWxvZy52MS5MaXN0Q291cnNlc1JlcXVlc3QaIi5nYS5jYXRhbG9nLnYxLkxpc3RDb3Vyc2VzUmVzcG9uc2USTgoJR2V0Q291cnNlEh8uZ2EuY2F0YWxvZy52MS5HZXRDb3Vyc2VSZXF1ZXN0GiAuZ2EuY2F0YWxvZy52MS5HZXRDb3Vyc2VSZXNwb25zZWIGcHJvdG8z", [file_ga_common_v1_text]);
 
 /**
  * Describes the message ga.catalog.v1.ListCoursesRequest.
@@ -26,46 +26,53 @@ export const ListCoursesResponseSchema = /*@__PURE__*/
   messageDesc(file_ga_catalog_v1_catalog, 1);
 
 /**
+ * Describes the message ga.catalog.v1.Subject.
+ * Use `create(SubjectSchema)` to create a new message.
+ */
+export const SubjectSchema = /*@__PURE__*/
+  messageDesc(file_ga_catalog_v1_catalog, 2);
+
+/**
  * Describes the message ga.catalog.v1.GetCourseRequest.
  * Use `create(GetCourseRequestSchema)` to create a new message.
  */
 export const GetCourseRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_catalog_v1_catalog, 2);
+  messageDesc(file_ga_catalog_v1_catalog, 3);
 
 /**
  * Describes the message ga.catalog.v1.GetCourseResponse.
  * Use `create(GetCourseResponseSchema)` to create a new message.
  */
 export const GetCourseResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_catalog_v1_catalog, 3);
+  messageDesc(file_ga_catalog_v1_catalog, 4);
 
 /**
  * Describes the message ga.catalog.v1.Course.
  * Use `create(CourseSchema)` to create a new message.
  */
 export const CourseSchema = /*@__PURE__*/
-  messageDesc(file_ga_catalog_v1_catalog, 4);
+  messageDesc(file_ga_catalog_v1_catalog, 5);
 
 /**
  * Describes the message ga.catalog.v1.Unit.
  * Use `create(UnitSchema)` to create a new message.
  */
 export const UnitSchema = /*@__PURE__*/
-  messageDesc(file_ga_catalog_v1_catalog, 5);
+  messageDesc(file_ga_catalog_v1_catalog, 6);
 
 /**
  * Describes the message ga.catalog.v1.Module.
  * Use `create(ModuleSchema)` to create a new message.
  */
 export const ModuleSchema = /*@__PURE__*/
-  messageDesc(file_ga_catalog_v1_catalog, 6);
+  messageDesc(file_ga_catalog_v1_catalog, 7);
 
 /**
  * Describes the message ga.catalog.v1.Topic.
  * Use `create(TopicSchema)` to create a new message.
  */
 export const TopicSchema = /*@__PURE__*/
-  messageDesc(file_ga_catalog_v1_catalog, 7);
+  messageDesc(file_ga_catalog_v1_catalog, 8);
 
 /**
  * CatalogService describes the subjects and courses on offer. It needs no

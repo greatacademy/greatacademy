@@ -121,6 +121,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
 
   if (!idPattern.test(def.id)) error(`subject ${def.id}`, "id must be kebab case");
   text(`subject ${def.id} › title`, def.title);
+  if ([...def.mark].length < 1 || [...def.mark].length > 2) error(`subject ${def.id} › mark`, "mark must be one or two characters");
+  if (!(def.hue >= 0 && def.hue < 360)) error(`subject ${def.id} › hue`, "hue must be at least 0 and below 360");
 
   let checkers: CheckerRegistry | undefined;
   try {

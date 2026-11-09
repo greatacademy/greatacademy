@@ -6,8 +6,8 @@ import type { Db } from "./db.ts";
 import {
   activeSession,
   appendEvent,
-  createSession,
   chooseCourse,
+  createSession,
   currentCourse,
   currentCourses,
   decidePlacement,
@@ -47,6 +47,8 @@ const subject = compileSubject({
     ],
   })),
   courses: [],
+  mark: "T",
+  hue: 200,
   checkers: [],
 });
 const ctx = { params: defaultParams, graph: engineGraph(subject.graph) };

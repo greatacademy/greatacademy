@@ -19,6 +19,8 @@ function withEncompassings(topic: TopicDef): TopicDef {
 export const math: SubjectDef = {
   id: "math",
   title: t("Mathematics", "数学"),
+  mark: "∑",
+  hue: 235,
   topics: [...schoolShardTopics, ...collegeShardTopics, ...algebraShardTopics, ...calculusShardTopics, ...examShardTopics].map(
     withEncompassings,
   ),

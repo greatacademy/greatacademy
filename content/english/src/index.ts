@@ -9,6 +9,8 @@ import { coreShardReading, coreShardTopics } from "./shards/core.ts";
 export const english: SubjectDef = {
   id: "english",
   title: t("English", "英语"),
+  mark: "Aa",
+  hue: 335,
   topics: coreShardTopics,
   courses: englishCourses,
   checkers: englishCheckers,

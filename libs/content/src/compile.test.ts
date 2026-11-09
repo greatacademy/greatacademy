@@ -40,7 +40,7 @@ function course(topics: string[], extra: Partial<CourseDef> = {}): CourseDef {
 }
 
 function subject(topics: TopicDef[], courses: CourseDef[] = []): SubjectDef {
-  return { id: "test", title: t("Test", "测试"), topics, courses, checkers: [] };
+  return { id: "test", title: t("Test", "测试"), mark: "T", hue: 200, topics, courses, checkers: [] };
 }
 
 function errors(def: SubjectDef): string[] {
@@ -54,6 +54,13 @@ function errors(def: SubjectDef): string[] {
 }
 
 describe("compileSubject", () => {
+  it("needs a mark of one or two characters and a hue below 360", () => {
+    expect(errors({ ...subject([topic("a")]), mark: "Abc", hue: 360 })).toEqual([
+      "subject test › mark: mark must be one or two characters",
+      "subject test › hue: hue must be at least 0 and below 360",
+    ]);
+    expect(errors({ ...subject([topic("a")]), mark: "∑", hue: 0 })).toEqual([]);
+  });
   it("builds the graph of a valid subject", () => {
     const s = compileSubject(
       subject(
@@ -347,6 +354,8 @@ describe("passages", () => {
     title: t("S", "学科"),
     topics: [topic("a"), topic("b")],
     courses: [course(["a", "b"], { reading: ["u"] })],
+    mark: "T",
+    hue: 200,
     checkers: [],
     reading: [{ id: "u", title: t("U", "单元"), passages: [passage, { ...passage, id: "bees-2" }] }],
     lexicon: [{ word: "bee", forms: ["bees"] }, { word: "make", forms: ["makes"], topic: "b" }, { word: "honey" }],

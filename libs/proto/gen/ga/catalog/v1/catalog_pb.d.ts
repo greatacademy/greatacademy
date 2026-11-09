@@ -31,6 +31,13 @@ export declare type ListCoursesResponse = Message<"ga.catalog.v1.ListCoursesResp
    * @generated from field: repeated ga.catalog.v1.Course courses = 1;
    */
   courses: Course[];
+
+  /**
+   * subjects are the subjects on offer, in the order they are shown.
+   *
+   * @generated from field: repeated ga.catalog.v1.Subject subjects = 2;
+   */
+  subjects: Subject[];
 };
 
 /**
@@ -38,6 +45,40 @@ export declare type ListCoursesResponse = Message<"ga.catalog.v1.ListCoursesResp
  * Use `create(ListCoursesResponseSchema)` to create a new message.
  */
 export declare const ListCoursesResponseSchema: GenMessage<ListCoursesResponse>;
+
+/**
+ * Subject is a subject on offer and how clients mark it: its mark is one or
+ * two characters for its chip, and its hue, 0 to 360, gives its colors.
+ *
+ * @generated from message ga.catalog.v1.Subject
+ */
+export declare type Subject = Message<"ga.catalog.v1.Subject"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: string mark = 3;
+   */
+  mark: string;
+
+  /**
+   * @generated from field: int32 hue = 4;
+   */
+  hue: number;
+};
+
+/**
+ * Describes the message ga.catalog.v1.Subject.
+ * Use `create(SubjectSchema)` to create a new message.
+ */
+export declare const SubjectSchema: GenMessage<Subject>;
 
 /**
  * @generated from message ga.catalog.v1.GetCourseRequest
@@ -230,7 +271,7 @@ export declare const TopicSchema: GenMessage<Topic>;
  */
 export declare const CatalogService: GenService<{
   /**
-   * ListCourses lists every course of every subject, without its outline.
+   * ListCourses lists the subjects, and every course of every subject without its outline.
    *
    * @generated from rpc ga.catalog.v1.CatalogService.ListCourses
    */

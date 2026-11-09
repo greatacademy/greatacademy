@@ -316,3 +316,43 @@ export function accentOf(palette: Palette): { hue: number; chroma: number } {
   const [hue, chroma] = SHAPES[palette].accent;
   return { hue, chroma };
 }
+
+/**
+ * SubjectColors mark a subject wherever it shows: `strong` fills its mark and progress bars, with `onStrong` on it;
+ * `soft` tints its chip and headers, with `onSoft` for text on the tint and on the page.
+ */
+export interface SubjectColors {
+  strong: string;
+  onStrong: string;
+  soft: string;
+  onSoft: string;
+}
+
+const VERDICT_HUES = [155, 25, 75];
+
+/** awayFromVerdicts moves a hue to at least 20 degrees from every verdict hue, so that a subject never reads as a verdict. */
+export function awayFromVerdicts(hue: number): number {
+  let h = ((hue % 360) + 360) % 360;
+  for (const verdict of VERDICT_HUES) {
+    const offset = ((h - verdict + 540) % 360) - 180;
+    if (Math.abs(offset) < 20) h = (verdict + (offset < 0 ? -20 : 20) + 360) % 360;
+  }
+  return h;
+}
+
+/**
+ * subjectColors derives a subject's colors from its hue in a scheme, holding text on them to the contrast target:
+ * `onStrong` on `strong`, and `onSoft` on `soft` and on the palette's page and surface, which lie between the
+ * extremes this checks against.
+ */
+export function subjectColors(hue: number, scheme: ColorScheme, contrast: Contrast = "standard"): SubjectColors {
+  const h = awayFromVerdicts(hue);
+  const target = CONTRAST_TARGET[contrast];
+  const light = scheme === "light";
+  const onStrong: Oklch = light ? [1, 0, 0] : [0.18, 0.02, h];
+  const strong = readable(light ? [0.55, 0.15, h] : [0.74, 0.13, h], [onStrong], target, light ? -0.005 : 0.005);
+  const soft: Oklch = light ? [0.95, 0.04, h] : [0.3, 0.06, h];
+  const grounds: Oklch[] = light ? [soft, [1, 0, 0], [0.955, 0.004, h]] : [soft, [0.13, 0, 0], [0.3, 0.01, h]];
+  const onSoft = readable(light ? [0.45, 0.13, h] : [0.85, 0.08, h], grounds, target, light ? -0.005 : 0.005);
+  return { strong: oklchToHex(strong), onStrong: oklchToHex(onStrong), soft: oklchToHex(soft), onSoft: oklchToHex(onSoft) };
+}

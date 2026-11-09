@@ -12,7 +12,7 @@ The pedagogical background is in [The Math Academy Way](the-math-academy-way.md)
 
 | Concept | Type | Meaning |
 | :--- | :--- | :--- |
-| Subject | `SubjectDef` | A discipline such as mathematics: one knowledge graph, its courses, its checkers |
+| Subject | `SubjectDef` | A discipline such as mathematics: one knowledge graph, its courses, its checkers, and how clients mark it: a `mark` of one or two characters and a `hue` from 0 to 360 ([Experience §2](experience.md#2-subjects)) |
 | Topic | `TopicDef` | One teachable idea; a node of the knowledge graph and one lesson |
 | Knowledge point | `KnowledgePointDef` | One step of a topic: an explanation, a worked example, practice problems |
 | Prerequisite edge | `TopicDef.prerequisites` | The topic cannot be learned before these |
@@ -157,6 +157,7 @@ const prealgebra: CourseDef = {
 
 | Checks | Severity |
 | :--- | :--- |
+| A subject's mark has one or two characters and its hue is at least 0 and below 360 | Error |
 | Ids are kebab case and unique; texts are non-empty in every locale; `xp > 0`; at least one knowledge point; the diagnostic knowledge point exists | Error |
 | Prerequisites exist, are not the topic itself, are not repeated, and form no cycle | Error |
 | A prerequisite implied by another prerequisite | Warning |

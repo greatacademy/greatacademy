@@ -42,7 +42,10 @@ function units(c: CourseEntry): MessageInitShape<typeof CourseSchema>["units"] {
 export function catalogService(registry: Registry): ServiceImpl<typeof CatalogService> {
   return {
     listCourses() {
-      return { courses: registry.listings.flatMap((s) => s.courses.map((c) => listed(s, c))) };
+      return {
+        courses: registry.listings.flatMap((s) => s.courses.map((c) => listed(s, c))),
+        subjects: registry.listings.map((s) => ({ id: s.id, title: text(s.title), mark: s.mark, hue: s.hue })),
+      };
     },
     async getCourse(req) {
       const c = await registry.course(req.courseId);

@@ -13,7 +13,7 @@ This document describes how Great Academy presents itself to learners and guardi
 
 ## 2. Subjects
 
-**Identity.** A subject declares a `mark`, one or two characters (`∑` for mathematics, `Aa` for English), and a `hue` from 0 to 360 ([Content §2](content.md)). `subjectColors(hue, scheme, contrast)` in `libs/design` turns the hue into the colors of the subject's chip, tint and progress bars, held to the same contrast targets as the palettes and kept at least 20 degrees from the verdict colors. The subject's color marks where a learner is; the palette's accent stays the color of actions.
+**Identity.** A subject declares a `mark`, one or two characters (`∑` for mathematics, `Aa` for English), and a `hue` from 0 to 360 ([Content §1](content.md#1-concepts)). `subjectColors(hue, scheme, contrast)` in `libs/design` turns the hue into the colors of the subject's chip, tint and progress bars, held to the same contrast targets as the palettes and kept at least 20 degrees from the verdict colors. The subject's color marks where a learner is; the palette's accent stays the color of actions.
 
 **The subject chip** is the mark on a tinted square beside the subject's name. It stands at the start of every subject page's header, on a session's bar, in the subject switcher, and before any course or topic shown outside its subject.
 

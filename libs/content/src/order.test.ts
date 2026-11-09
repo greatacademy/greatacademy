@@ -27,6 +27,8 @@ describe("order problems", () => {
   const subject = (items: readonly string[]): SubjectDef => ({
     id: "s",
     title: t("S", "甲"),
+    mark: "T",
+    hue: 200,
     checkers: [],
     courses: [
       {

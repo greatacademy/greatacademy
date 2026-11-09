@@ -54,6 +54,8 @@ const subject = compileSubject({
       reading: ["unit"],
     },
   ],
+  mark: "T",
+  hue: 200,
   checkers: [],
   reading: [
     {

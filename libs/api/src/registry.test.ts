@@ -9,6 +9,8 @@ function subject(id: string, loads: string[]): SubjectGateway {
   const manifest: SubjectManifest = {
     id,
     title: t(id, id),
+    mark: "T",
+    hue: 200,
     topics: [],
     passages: [],
     courses: [
@@ -31,6 +33,8 @@ function subject(id: string, loads: string[]): SubjectGateway {
     listing: async () => ({
       id,
       title: manifest.title,
+      mark: "T",
+      hue: 200,
       courses: [{ id: `${id}-course`, title: manifest.title, description: manifest.title, buildsOn: [], topicCount: 0, xp: 0 }],
     }),
     manifest: async () => {

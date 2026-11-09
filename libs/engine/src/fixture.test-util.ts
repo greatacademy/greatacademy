@@ -56,6 +56,8 @@ export const subject = compileSubject({
       units: [{ title: same("U"), modules: [{ title: same("M"), topics: ["a", "b", "c", "d", "e", "f", "g", "s"] }] }],
     },
   ],
+  mark: "T",
+  hue: 200,
   checkers: [],
 });
 

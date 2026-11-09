@@ -12,7 +12,7 @@
 
 | 概念 | 类型 | 含义 |
 | :--- | :--- | :--- |
-| 学科 | `SubjectDef` | 例如数学：一张知识图谱、它的课程、它的判定器 |
+| 学科 | `SubjectDef` | 例如数学：一张知识图谱、它的课程、它的判定器，以及客户端如何标识它：一两个字符的 `mark` 和 0 到 360 的 `hue`（[体验 §2](experience.zh-CN.md#2-学科)） |
 | 知识点（topic） | `TopicDef` | 一个可教授的概念；知识图谱中的一个节点，也是一节课 |
 | 知识步骤（knowledge point） | `KnowledgePointDef` | 知识点中的一步：讲解、例题、练习题 |
 | 先修边 | `TopicDef.prerequisites` | 必须先学会这些知识点 |
@@ -157,6 +157,7 @@ const prealgebra: CourseDef = {
 
 | 检查 | 级别 |
 | :--- | :--- |
+| 学科的标记为一两个字符，色相不小于 0 且小于 360 | 错误 |
 | Id 为 kebab case 且唯一；文字在每种语言中非空；`xp > 0`；至少一个 knowledge point；诊断 knowledge point 存在 | 错误 |
 | 先修存在、不是自身、不重复、不成环 | 错误 |
 | 先修被另一个先修蕴含 | 警告 |
