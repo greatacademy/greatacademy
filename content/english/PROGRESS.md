@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
@@ -44,3 +44,10 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `authors-purpose` | `fact-and-opinion` | 0.2 | Persuasion is told by its opinions, but only some items turn on them |
 | `characters` | `making-inferences` | 0.3 | Every trait and feeling is inferred from actions |
 | `lesson-of-a-story` | `characters` | 0.2 | Only reading what a character's choice shows carries over |
+| `personification-and-hyperbole` | `similes-and-metaphors` | 0.2 | Reading any figure of speech past its words carries over |
+| `plot-and-conflict` | `characters` | 0.2 | Conflicts are told through what characters want and fear |
+| `theme` | `lesson-of-a-story` | 0.3 | A theme is a lesson that is not stated |
+| `claims` | `fact-and-opinion` | 0.3 | Each item separates a position from facts |
+| `evidence` | `claims` | 0.3 | Each item first needs the claim the evidence serves |
+| `reasoning` | `evidence` | 0.3 | Each item links evidence to its claim |
+| `counterclaims-and-rebuttals` | `reasoning` | 0.2 | A rebuttal gives reasons, but the point is the opposing view |

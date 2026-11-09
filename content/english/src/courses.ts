@@ -133,5 +133,33 @@ export const readingComprehension: CourseDef = {
   ],
 };
 
+/** literatureArgument is the course of English on reading literature and arguments in grades 6 to 8. */
+export const literatureArgument: CourseDef = {
+  id: "english-literature-argument",
+  title: t("Literature and Argument", "文学与论证"),
+  description: t(
+    "How stories and poems make meaning, and how arguments are built from claims, evidence and reasoning. For learners who already speak English, in English.",
+    "故事和诗歌怎样表达意义，以及论证怎样由论点、论据和推理构成。面向已经会说英语的学习者，用英语讲解。",
+  ),
+  group: t("English", "英语"),
+  explanationLocale: "en",
+  units: [
+    {
+      title: t("Literature", "文学"),
+      modules: [
+        { title: t("Language of Literature", "文学语言"), topics: ["personification-and-hyperbole", "sound-devices"] },
+        { title: t("Story and Meaning", "故事与意义"), topics: ["plot-and-conflict", "theme", "tone-and-mood"] },
+      ],
+    },
+    {
+      title: t("Argument", "论证"),
+      modules: [
+        { title: t("Building an Argument", "构建论证"), topics: ["claims", "evidence", "reasoning", "counterclaims-and-rebuttals"] },
+      ],
+    },
+  ],
+  buildsOn: ["english-reading-comprehension"],
+};
+
 /** englishCourses lists the courses of English. */
-export const englishCourses: readonly CourseDef[] = [grammarWriting, readingComprehension];
+export const englishCourses: readonly CourseDef[] = [grammarWriting, readingComprehension, literatureArgument];

@@ -7,8 +7,10 @@ import { lifeOnTheNile } from "../reading/nile.ts";
 import { howPlantsLive } from "../reading/plants.ts";
 import { waterOnEarth } from "../reading/water.ts";
 import { weatherAndClimate } from "../reading/weather.ts";
+import { argumentTopics } from "../topics/argument.ts";
 import { clauseTopics } from "../topics/grammar-clauses.ts";
 import { sentenceTopics } from "../topics/grammar-sentences.ts";
+import { literatureTopics } from "../topics/literature.ts";
 import { mechanicsTopics } from "../topics/mechanics.ts";
 import { informationalReadingTopics } from "../topics/reading-informational.ts";
 import { thinkingReadingTopics } from "../topics/reading-thinking.ts";
@@ -30,6 +32,8 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...academicWordTopics,
   ...informationalReadingTopics,
   ...thinkingReadingTopics,
+  ...literatureTopics,
+  ...argumentTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */
