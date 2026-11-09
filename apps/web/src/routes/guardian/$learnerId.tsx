@@ -10,7 +10,7 @@ import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { CourseDone, PlacementReport } from "../../components/PlacementReport.tsx";
-import { ForecastCard, GoalsCard } from "../../components/SubjectDecisions.tsx";
+import { ForecastCard, GoalsCard, StartOverCard } from "../../components/SubjectDecisions.tsx";
 import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Bar, Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { useAccess } from "../../lib/access.ts";
@@ -182,7 +182,7 @@ function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: s
   );
 }
 
-/** GuardedDecisions are the subject's goals and end date, which the guardian decides (docs/experience.md §5). */
+/** GuardedDecisions are the subject's goals, end date and starting over, which the guardian decides (docs/experience.md §5). */
 function GuardedDecisions({ learnerId, courseId }: { learnerId: string; courseId: string }) {
   const dash = useGuardedDashboard(learnerId, courseId);
   if (!dash.data) return null;
@@ -190,6 +190,7 @@ function GuardedDecisions({ learnerId, courseId }: { learnerId: string; courseId
     <>
       <GoalsCard d={dash.data} learnerId={learnerId} />
       <ForecastCard d={dash.data} learnerId={learnerId} />
+      <StartOverCard d={dash.data} learnerId={learnerId} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
-import { CalendarCheck, Flag } from "@phosphor-icons/react";
-import { useQueryClient } from "@tanstack/react-query";
+import { ArrowCounterClockwise, CalendarCheck, Flag } from "@phosphor-icons/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
@@ -149,6 +149,67 @@ export function ForecastCard({ d, learnerId }: { d: GetDashboardResponse; learne
         </form>
       )}
       {!d.canDecide && !d.finished && <DecidedBy />}
+    </Card>
+  );
+}
+
+/**
+ * StartOverCard lets the supervisor start a subject over (docs/experience.md §3): retake the course's diagnostic,
+ * which asks again what it placed, or reset the subject's knowledge profile, which forgets every topic. Each asks
+ * first; XP and history stay either way.
+ */
+export function StartOverCard({ d, learnerId }: { d: GetDashboardResponse; learnerId?: string }) {
+  const { m } = useI18n();
+  const qc = useQueryClient();
+  const [asked, setAsked] = useState<"retake" | "reset">();
+  const run = useMutation({
+    mutationFn: async (what: "retake" | "reset") => {
+      if (what === "retake") await learning.retakeDiagnostic({ courseId: d.courseId, learnerId: learnerId ?? "" });
+      else await learning.resetKnowledge({ subjectId: d.subjectId, learnerId: learnerId ?? "" });
+    },
+    onSuccess: async () => {
+      setAsked(undefined);
+      await qc.invalidateQueries();
+    },
+  });
+  if (!d.canDecide) return null;
+  return (
+    <Card className="space-y-4 p-5">
+      <div className="flex items-center gap-2 text-sm text-muted">
+        <ArrowCounterClockwise size={18} /> {m.startOver}
+      </div>
+      {run.isError && <ErrorNote message={m.error} />}
+      {asked ? (
+        <div className="space-y-3">
+          <h3 className="font-semibold">{asked === "retake" ? m.retakeConfirmTitle : m.resetConfirmTitle}</h3>
+          <p className="text-sm text-muted">{asked === "retake" ? m.retakeConfirmBody : m.resetConfirmBody}</p>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => run.mutate(asked)} disabled={run.isPending}>
+              {asked === "retake" ? m.retakeDiagnostic : m.resetKnowledge}
+            </Button>
+            <Button variant="ghost" onClick={() => setAsked(undefined)}>
+              {m.cancel}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {d.diagnosed && (
+            <div className="space-y-2">
+              <p className="text-sm text-muted">{m.retakeBody}</p>
+              <Button variant="secondary" onClick={() => setAsked("retake")}>
+                {m.retakeDiagnostic}
+              </Button>
+            </div>
+          )}
+          <div className="space-y-2">
+            <p className="text-sm text-muted">{m.resetBody}</p>
+            <Button variant="secondary" onClick={() => setAsked("reset")}>
+              {m.resetKnowledge}
+            </Button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }

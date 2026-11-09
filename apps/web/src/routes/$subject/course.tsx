@@ -1,17 +1,22 @@
 import { ArrowSquareOut } from "@phosphor-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChooseCourse } from "../../components/ChooseCourse.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
-import { DecidedBy } from "../../components/SubjectDecisions.tsx";
+import { DecidedBy, StartOverCard } from "../../components/SubjectDecisions.tsx";
 import { Bar, Button, Card } from "../../components/ui.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
+import { learning, timeZone } from "../../lib/rpc.ts";
 import { useCatalog, useProfile, useSubjectPlace } from "../../lib/subject.tsx";
 
 export const Route = createFileRoute("/$subject/course")({ component: CoursePage });
 
-/** CoursePage is what is being learned in the subject: the current course, and the decision to change it. */
+/**
+ * CoursePage is what is being learned in the subject: the current course, and the decisions to change it or to start
+ * the subject over.
+ */
 function CoursePage() {
   const { subject } = Route.useParams();
   const place = useSubjectPlace();
@@ -21,6 +26,12 @@ function CoursePage() {
   const profile = useProfile();
   const [changing, setChanging] = useState(false);
   const enrollment = place?.enrollment;
+  const dash = useQuery({
+    queryKey: ["dashboard", enrollment?.courseId],
+    queryFn: () => learning.getDashboard({ courseId: enrollment?.courseId ?? "", timeZone: timeZone() }),
+    enabled: !!enrollment,
+    staleTime: 0,
+  });
   const course = list.data?.courses.find((c) => c.id === enrollment?.courseId);
   const canDecide = profile.data?.canDecide ?? false;
   const stats = enrollment?.stats;
@@ -72,6 +83,12 @@ function CoursePage() {
           </Button>
         )}
       </section>
+
+      {!changing && dash.data && (
+        <div className="max-w-2xl">
+          <StartOverCard d={dash.data} />
+        </div>
+      )}
     </div>
   );
 }
