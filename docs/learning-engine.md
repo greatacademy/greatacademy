@@ -10,7 +10,7 @@ The pedagogy it implements is described in [The Math Academy Way](the-math-acade
 
 ## 1. State and Events
 
-The engine is **event-sourced**. The database stores completed tasks as events; the learner state is a fold over them:
+The engine is **event-sourced**. The database stores completed tasks, and the supervisor's decisions to start over, as events; the learner state is a fold over them:
 
 ```ts
 state = replay(ctx, events, initialState);   // applyEvent, one event at a time
@@ -23,6 +23,8 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | `review` | A review ends | Topic, correct answers, questions, whether it was blown off |
 | `quiz` | A quiz ends | One result per question, by topic, whether it was blown off |
 | `reading` | A passage's check ends | Passage, correct answers, questions, whether it was blown off |
+| `retake` | The supervisor retakes a course's diagnostic (§9) | The course; the topics forgotten |
+| `reset` | The supervisor resets the subject's knowledge profile (§9) | — |
 
 Because state is derived, a change of parameters or of a rule applies to every learner by replaying, and the event log is the audit trail of every decision.
 
@@ -193,6 +195,13 @@ The next question is the unresolved topic that maximizes min(topics resolved if 
 Course topics left unresolved count as **not known**: placement errs on the side of teaching, since a lesson on something already known costs minutes, while a gap costs much more later. Foundations are different: a broad course has hundreds, and no affordable number of questions resolves them, so a learner who knows them all would sit through hundreds of lessons they do not need. Foundations left unresolved are therefore placed as known when the answers on foundations show the learner has them: at least `inferFoundationsMinAnswers` answers, of which at least `inferFoundationsRate` are correct. Otherwise they count as not known, and a foundation an answer showed is not known is never placed.
 
 Placed topics start at `placedRepNum`, so they come back for review soon and a lucky placement is corrected by the first review.
+
+**Starting over.** The supervisor can start a subject over in two ways ([Experience §5](experience.md#5-supervision)), each recorded as an event so that replaying gives the same state:
+
+- **Retake the diagnostic** (`retake`) forgets the topics of the course's scope that a diagnostic placed and removes the course from the diagnosed list, so the next task is the course's diagnostic again. Topics taught in lessons stay: they were shown, not inferred, and their reviews correct them. The event names the topics it forgets (`retakeEvent`), so a later change of the course's scope does not change what was forgotten. The report waits for an answer again once the new diagnostic ends.
+- **Reset the knowledge profile** (`reset`) forgets every topic of the subject and every diagnostic, and clears the count of blown-off tasks and reviews since a lesson, as for a new learner.
+
+Both keep the XP, the quizzes taken and the passages read: they change what the engine believes is known, not the record of work. A task in progress in the course is abandoned.
 
 **Current course.** As in Math Academy, a learner has one current course per subject. It is chosen and changed only by the learner's supervisor ([Experience §5](experience.md#5-supervision)): an adult or a teen no guardian follows for themselves, else a guardian. It changes only by a deliberate choice, on the subject's Course page or in answer to the report below. Course pages introduce a course and do not enroll. Progress belongs to the subject, so a topic learned in one course counts in every course that has it, and changing course loses nothing. Past courses are kept as history.
 

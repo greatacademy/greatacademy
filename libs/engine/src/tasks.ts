@@ -1,5 +1,6 @@
 import type { GraphPassage, Rng } from "@ga/content";
 
+import type { EngineEvent } from "./events.ts";
 import type { CourseScope, EngineGraph } from "./graph.ts";
 import type { Params } from "./params.ts";
 import { isDue, type LearnerState, memory } from "./state.ts";
@@ -134,6 +135,15 @@ export function diagnosticCandidates(pl: Planner, state: LearnerState): string[]
 /** diagnosticDue tells whether the course's diagnostic is still to be offered: not yet taken or skipped, with topics left to place. */
 export function diagnosticDue(pl: Planner, state: LearnerState): boolean {
   return !state.diagnosed.includes(pl.scope.course) && diagnosticCandidates(pl, state).length > 0;
+}
+
+/**
+ * retakeEvent is the event that starts a course's diagnostic over at time at: it forgets the course's topics that a
+ * diagnostic placed, so they are asked again, and keeps those taught in lessons.
+ */
+export function retakeEvent(pl: Planner, state: LearnerState, at: number): Extract<EngineEvent, { type: "retake" }> {
+  const forgotten = pl.scope.topics.filter((t) => state.topics[t]?.placed === true);
+  return { type: "retake", at, course: pl.scope.course, forgotten };
 }
 
 /** knownWordShare is the share of a passage's running words a learner knows: all but those taught by topics not yet known. */

@@ -1,4 +1,4 @@
-import type { EngineContext, EngineEvent } from "./events.ts";
+import type { EngineContext, EngineEvent, TaskEvent } from "./events.ts";
 import type { Params } from "./params.ts";
 import { reviewResult } from "./review.ts";
 import type { LearnerState } from "./state.ts";
@@ -9,7 +9,7 @@ export function reviewXp(topicXp: number): number {
 }
 
 /** fullXp is the XP an event's task is worth when done well, before any bonus. */
-export function fullXp(ctx: EngineContext, e: EngineEvent): number {
+export function fullXp(ctx: EngineContext, e: TaskEvent): number {
   const topicXp = (id: string) => ctx.graph.graph.topics.get(id)?.xp ?? 0;
   switch (e.type) {
     case "placed":
@@ -36,7 +36,7 @@ function lessonXp(p: Params, full: number, passed: boolean, asked: number, corre
 }
 
 /** earnedXp is the XP a task done in good faith earns; it is what a blown-off task forgoes. */
-function earnedXp(ctx: EngineContext, e: EngineEvent): number {
+function earnedXp(ctx: EngineContext, e: TaskEvent): number {
   const { params: p } = ctx;
   const full = fullXp(ctx, e);
   switch (e.type) {
@@ -70,18 +70,20 @@ export function blowOffPenalty(p: Params, count: number, full: number): number {
 
 /** eventXp is the XP an event changes the state's total by; a blown-off task can lose XP, but the total never falls below zero. */
 export function eventXp(ctx: EngineContext, state: LearnerState, e: EngineEvent): number {
+  if (e.type === "retake" || e.type === "reset") return 0;
   if (e.type !== "placed" && e.blownOff) return 0 - Math.min(state.xp, blowOffPenalty(ctx.params, state.blowOffs, fullXp(ctx, e)));
   return earnedXp(ctx, e);
 }
 
 /** nextBlowOffs is the count of recent blown-off tasks after an event: one more after a blown-off task, a little less after a passed one. */
 export function nextBlowOffs(p: Params, state: LearnerState, e: EngineEvent): number {
-  if (e.type === "placed") return state.blowOffs;
+  if (e.type === "reset") return 0;
+  if (e.type === "placed" || e.type === "retake") return state.blowOffs;
   if (e.blownOff) return state.blowOffs + 1;
   return taskPassed(p, e) ? Math.max(0, state.blowOffs - p.blowOffDecay) : state.blowOffs;
 }
 
-function taskPassed(p: Params, e: Exclude<EngineEvent, { type: "placed" }>): boolean {
+function taskPassed(p: Params, e: Exclude<TaskEvent, { type: "placed" }>): boolean {
   switch (e.type) {
     case "lesson":
       return e.passed;

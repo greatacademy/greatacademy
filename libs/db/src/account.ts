@@ -219,6 +219,6 @@ export async function recentEvents(db: Db, learnerId: string, since: Date): Prom
   return {
     lessons: lessons.length,
     failedLessons: lessons.filter((e) => !e.passed).length,
-    blownOff: tasks.filter((e) => e.type !== "placed" && e.blownOff).length,
+    blownOff: tasks.filter((e) => "blownOff" in e && e.blownOff).length,
   };
 }

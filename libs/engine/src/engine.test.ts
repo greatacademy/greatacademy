@@ -19,6 +19,7 @@ import {
   quizDue,
   quizPlan,
   remedialTopics,
+  retakeEvent,
 } from "./tasks.ts";
 
 const T0 = Date.UTC(2026, 0, 1);
@@ -246,6 +247,42 @@ describe("events", () => {
     expect(replay(ctx, events, initialState)).toEqual(s);
     expect(s.quizzes).toBe(1);
     expect(s.xpAtLastQuiz).toBe(s.xp);
+  });
+});
+
+describe("starting over", () => {
+  const placed = applyEvent(ctx, initialState, { type: "placed", at: T0, course: "course", known: ["a", "b"], tested: ["b"] });
+  const worked = [
+    { type: "lesson", at: T0 + DAY, topic: "c", passed: true, asked: 4, correct: 4 },
+    { type: "quiz", at: T0 + 2 * DAY, results: [{ topic: "a", correct: true }] },
+    { type: "reading", at: T0 + 2 * DAY, passage: "p", correct: 1, total: 1 },
+  ] as const satisfies readonly EngineEvent[];
+  const before = replay(ctx, worked, placed);
+
+  it("retakes a diagnostic by forgetting only what it placed", () => {
+    const e = retakeEvent(planner, before, T0 + 3 * DAY);
+    expect(e).toEqual({ type: "retake", at: T0 + 3 * DAY, course: "course", forgotten: ["a", "b"] });
+    const s = applyEvent(ctx, before, e);
+    expect(Object.keys(s.topics)).toEqual(["c"]);
+    expect(s.diagnosed).toEqual([]);
+    expect(diagnosticDue(planner, s)).toBe(true);
+    expect(nextTasks(planner, s, T0 + 3 * DAY)).toEqual([{ kind: "diagnostic" }]);
+    expect([s.xp, s.xpAtLastQuiz, s.quizzes, s.read]).toEqual([before.xp, before.xpAtLastQuiz, before.quizzes, before.read]);
+  });
+  it("resets the subject's knowledge and keeps the record of work", () => {
+    const s = applyEvent(ctx, { ...before, blowOffs: 2 }, { type: "reset", at: T0 + 3 * DAY });
+    expect(s.topics).toEqual({});
+    expect(s.diagnosed).toEqual([]);
+    expect(s.blowOffs).toBe(0);
+    expect(s.reviewsSinceLesson).toBe(0);
+    expect([s.xp, s.xpAtLastQuiz, s.quizzes, s.read, s.readingXp]).toEqual([
+      before.xp,
+      before.xpAtLastQuiz,
+      before.quizzes,
+      before.read,
+      before.readingXp,
+    ]);
+    expect(nextTasks(planner, s, T0 + 3 * DAY)).toEqual([{ kind: "diagnostic" }]);
   });
 });
 

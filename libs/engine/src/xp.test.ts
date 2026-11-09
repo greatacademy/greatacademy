@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { applyEvent, type EngineEvent } from "./events.ts";
+import { applyEvent, type EngineEvent, type TaskEvent } from "./events.ts";
 import { ctx, graph } from "./fixture.test-util.ts";
 import { defaultParams as p } from "./params.ts";
 import { initialState, type LearnerState, newTopicState } from "./state.ts";
@@ -9,7 +9,7 @@ import { blowOffPenalty, eventXp, fullXp, isBlownOff, nextBlowOffs, reviewXp } f
 const T0 = Date.UTC(2026, 0, 1);
 const topic = [...graph.graph.topics.keys()][0]!;
 const full = graph.graph.topics.get(topic)!.xp;
-const lesson = (passed: boolean, asked: number, correct: number, blownOff = false): EngineEvent => ({
+const lesson = (passed: boolean, asked: number, correct: number, blownOff = false): TaskEvent => ({
   type: "lesson",
   at: T0,
   topic,

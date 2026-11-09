@@ -4,7 +4,6 @@ import {
   answerLesson,
   type DiagnosticProgress,
   diagnosticCandidates,
-  type EngineEvent,
   eventXp,
   finishDiagnostic,
   fullXp,
@@ -20,6 +19,7 @@ import {
   startDiagnostic,
   startLesson,
   type Task,
+  type TaskEvent,
 } from "@ga/engine";
 
 import type { CourseEntry } from "./registry.ts";
@@ -145,7 +145,7 @@ export interface Answered {
   readonly verdict: Verdict;
   readonly skipped: boolean;
   /** event is set when the answer ends the run: the event to append to the log. */
-  readonly event?: EngineEvent;
+  readonly event?: TaskEvent;
 }
 
 /** canSkip tells whether a run allows "I don't know": only the diagnostic does. */
@@ -172,7 +172,7 @@ export async function answerRun(
   const elapsedMs = now - (run.servedAt ?? 0);
   const asked = [...run.asked, { ...ref, response: skipped ? "" : response, correct: verdict.correct, skipped, elapsedMs }];
   const correct = asked.filter((a) => a.correct).length;
-  const finish = (next: RunState, finished: EngineEvent, passed: boolean, placed = 0): Answered => {
+  const finish = (next: RunState, finished: TaskEvent, passed: boolean, placed = 0): Answered => {
     const blownOff =
       finished.type === "reading"
         ? isReadingBlownOff(
@@ -221,7 +221,7 @@ export async function answerRun(
     case "review": {
       const next = { ...run, asked };
       if (asked.length >= run.plan.length) {
-        const event: EngineEvent = { type: "review", at: now, topic: run.topic, correct, total: asked.length };
+        const event: TaskEvent = { type: "review", at: now, topic: run.topic, correct, total: asked.length };
         return finish(next, event, reviewResult(c.ctx.params, correct, asked.length) > 0);
       }
       return {
@@ -234,7 +234,7 @@ export async function answerRun(
     case "quiz": {
       const next = { ...run, asked };
       if (asked.length >= run.topics.length) {
-        const event: EngineEvent = { type: "quiz", at: now, results: asked.map((a) => ({ topic: a.topic, correct: a.correct })) };
+        const event: TaskEvent = { type: "quiz", at: now, results: asked.map((a) => ({ topic: a.topic, correct: a.correct })) };
         return finish(next, event, correct * 2 >= asked.length);
       }
       return { run: { ...next, servedAt: now, current: diagnosticRef(c, run.topics[asked.length]!, rng) }, problem, verdict, skipped };
@@ -242,7 +242,7 @@ export async function answerRun(
     case "reading": {
       const next = { ...run, asked };
       if (asked.length >= run.questions) {
-        const event: EngineEvent = { type: "reading", at: now, passage: run.passage, correct, total: asked.length };
+        const event: TaskEvent = { type: "reading", at: now, passage: run.passage, correct, total: asked.length };
         return finish(next, event, readingPassed(event));
       }
       return {

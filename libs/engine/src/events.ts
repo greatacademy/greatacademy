@@ -6,12 +6,8 @@ import { reviewResult } from "./review.ts";
 import { clampSpeed, type LearnerState, newTopicState, type TopicState } from "./state.ts";
 import { eventXp, nextBlowOffs, readingPassed } from "./xp.ts";
 
-/**
- * EngineEvent is a completed task, as recorded in the event log. Learner
- * state is the fold of applyEvent over these events, so changing a parameter
- * of the engine only requires a replay.
- */
-export type EngineEvent =
+/** TaskEvent is a completed task, as recorded in the event log. */
+export type TaskEvent =
   /** placed ends the diagnostic of a course; skipping it places nothing. */
   | {
       readonly type: "placed";
@@ -62,6 +58,25 @@ export type EngineEvent =
       readonly blownOff?: boolean;
     };
 
+/**
+ * StartOverEvent is a decision to start part of a subject over, made by whoever decides for the learner. Both keep the
+ * XP earned, the quizzes taken and the passages read: they change what the engine believes is known, not the record.
+ */
+export type StartOverEvent =
+  /**
+   * retake forgets the topics of a course that only a diagnostic placed, so the course's diagnostic is offered again;
+   * topics taught in lessons stay. See retakeEvent.
+   */
+  | { readonly type: "retake"; readonly at: number; readonly course: string; readonly forgotten: readonly string[] }
+  /** reset forgets every topic of the subject and every diagnostic, as if the learner had just started. */
+  | { readonly type: "reset"; readonly at: number };
+
+/**
+ * EngineEvent is an entry of the event log: a completed task or a decision to start over. Learner state is the fold of
+ * applyEvent over these events, so changing a parameter of the engine only requires a replay.
+ */
+export type EngineEvent = TaskEvent | StartOverEvent;
+
 /** EngineContext is what applying events needs besides the state. */
 export interface EngineContext {
   readonly params: Params;
@@ -74,10 +89,22 @@ function setTopic(state: LearnerState, id: string, s: TopicState): LearnerState 
 
 /** applyEvent folds one event into the learner state. */
 export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEvent): LearnerState {
+  if (e.type === "retake" || e.type === "reset") return startOver(state, e);
   return { ...applyTask(ctx, state, e), blowOffs: nextBlowOffs(ctx.params, state, e) };
 }
 
-function applyTask(ctx: EngineContext, state: LearnerState, e: EngineEvent): LearnerState {
+/**
+ * startOver applies a retake or a reset. A retake forgets the topics of the course that only the diagnostic placed; a
+ * reset forgets every topic. Either way the next task of the course is its diagnostic again.
+ */
+function startOver(state: LearnerState, e: StartOverEvent): LearnerState {
+  if (e.type === "reset") return { ...state, topics: {}, diagnosed: [], reviewsSinceLesson: 0, blowOffs: 0 };
+  const forgotten = new Set(e.forgotten);
+  const topics = Object.fromEntries(Object.entries(state.topics).filter(([id]) => !forgotten.has(id)));
+  return { ...state, topics, diagnosed: state.diagnosed.filter((c) => c !== e.course) };
+}
+
+function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): LearnerState {
   const { params: p, graph: g } = ctx;
   const xp = state.xp + eventXp(ctx, state, e);
   switch (e.type) {
