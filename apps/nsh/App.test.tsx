@@ -759,6 +759,40 @@ test("switches subject, keeps the choice, and asks before changing course", asyn
   expect(app.requests().some((r) => r.url.endsWith("/ChooseCourse"))).toBe(false);
 });
 
+test("starts a subject over from the Course tab, after asking", async () => {
+  const app = await open("./App.tsx", {
+    ...signedIn({
+      [`POST ${learningUrl}/GetDashboard`]: json({
+        courseId: "algebra",
+        subjectId: "math",
+        diagnosed: true,
+        stats: {},
+        xp: {},
+        canDecide: true,
+      }),
+      [`POST ${learningUrl}/RetakeDiagnostic`]: json({}),
+      [`POST ${learningUrl}/ResetKnowledge`]: json({}),
+    }),
+    platform: "macos",
+  });
+  await app.keyboard.press("mod+3");
+  await app.waitFor("text:Start over");
+  const answers = ["Cancel", "Retake the diagnostic", "Reset the knowledge profile"];
+  const asked: string[] = [];
+  app.onDialog((dialog) => {
+    asked.push(dialog.title ?? "");
+    return answers.shift() ?? "Cancel";
+  });
+  const sent = (rpc: string) => app.requests().filter((r) => r.url.endsWith(`/${rpc}`)).length;
+  await app.press("text:Retake the diagnostic");
+  expect(sent("RetakeDiagnostic")).toBe(0);
+  await app.press("text:Retake the diagnostic");
+  await app.waitUntil(() => sent("RetakeDiagnostic") === 1);
+  await app.press("text:Reset the knowledge profile");
+  await app.waitUntil(() => sent("ResetKnowledge") === 1);
+  expect(asked).toEqual(["Retake the diagnostic?", "Retake the diagnostic?", "Reset the knowledge profile?"]);
+});
+
 test("turns a purpose on and, after asking, off on the privacy page", async () => {
   const granted: string[] = [];
   let on = false;

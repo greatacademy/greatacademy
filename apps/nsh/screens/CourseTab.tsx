@@ -1,9 +1,13 @@
-import { Text, View } from "nsh";
-import { m, tx } from "../lib/i18n.ts";
+import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
+import { signal, Text, View } from "nsh";
+import { AlertDialog } from "nsh/base";
+import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
+import { markChanged } from "../lib/query.ts";
+import { learning } from "../lib/rpc.ts";
 import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
-import { Action, Card, colors, Loaded, Muted, PullScroll, Quiet, Row, Section, Skeleton } from "../lib/ui.tsx";
-import { Bar } from "./LearnTab.tsx";
+import { Action, Card, colors, ErrorNote, Loaded, Muted, PullScroll, Quiet, Row, Section, Skeleton } from "../lib/ui.tsx";
+import { Bar, useDashboard } from "./LearnTab.tsx";
 
 /**
  * SubjectStart is a subject the learner has no course in yet: the way to choose one, or, for the learner of a
@@ -43,11 +47,59 @@ function CurrentCourse(props: { place: Place; courseId: string }) {
 }
 
 /**
- * CourseTab is the Course page of the subject shown (docs/experience.md §3): the current course and the decision to
- * change it, which only whoever decides for the learner makes.
+ * StartOver lets whoever decides for the learner start the subject over (docs/experience.md §3): retake the course's
+ * diagnostic, or reset the subject's knowledge profile. Each asks first; XP and history stay.
+ */
+function StartOver(props: { dash: GetDashboardResponse; onDone: () => void }) {
+  const busy = signal(false);
+  const error = signal("");
+  const run = async (what: "retake" | "reset") => {
+    const { action } = await AlertDialog.show({
+      title: what === "retake" ? m().retakeConfirmTitle : m().resetConfirmTitle,
+      description: what === "retake" ? m().retakeConfirmBody : m().resetConfirmBody,
+      actions: [
+        { id: "cancel", label: m().cancel, role: "cancel" },
+        { id: "go", label: what === "retake" ? m().retakeDiagnostic : m().resetKnowledge },
+      ],
+    });
+    if (action !== "go") return;
+    busy.set(true);
+    error.set("");
+    try {
+      if (what === "retake") await learning.retakeDiagnostic({ courseId: props.dash.courseId, learnerId: "" });
+      else await learning.resetKnowledge({ subjectId: props.dash.subjectId, learnerId: "" });
+      props.onDone();
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  };
+  return (
+    <Section title={m().startOver}>
+      <If when={error()}>
+        <ErrorNote message={error()} />
+      </If>
+      <If when={props.dash.diagnosed}>
+        <Row title={m().retakeDiagnostic} detail={m().retakeBody} onPress={() => !busy() && void run("retake")} />
+      </If>
+      <Row title={m().resetKnowledge} detail={m().resetBody} onPress={() => !busy() && void run("reset")} />
+    </Section>
+  );
+}
+
+/**
+ * CourseTab is the Course page of the subject shown (docs/experience.md §3): the current course and the decisions to
+ * change it or start the subject over, which only whoever decides for the learner makes.
  */
 export function CourseTab(props: { visible: () => boolean }) {
   const { rpc, place } = usePlace(props.visible);
+  const dash = useDashboard(props.visible, place);
+  const startedOver = () => {
+    markChanged();
+    rpc.refetch();
+    dash.refetch();
+  };
   return (
     <View style={{ backgroundColor: colors().page, flex: 1 }}>
       <Loaded rpc={rpc} skeleton={<Skeleton rows={2} />}>
@@ -73,6 +125,9 @@ export function CourseTab(props: { visible: () => boolean }) {
                           />
                         </If>
                       </Section>
+                      <If when={here().canDecide}>
+                        <If when={dash()}>{(d) => <StartOver dash={d()} onDone={startedOver} />}</If>
+                      </If>
                     </View>
                   </PullScroll>
                 )}
