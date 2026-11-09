@@ -642,9 +642,11 @@ test("shows a tab's key on hover and collapses the sidebar to its icons on a des
   await app.hover("label:Progress");
   await app.waitFor("text:⌘2");
   expect(app.texts()).not.toContain("⌘1");
+  const logos = app.count("label:Great Academy");
   await app.press("label:Collapse the sidebar");
   await app.waitFor("label:Expand the sidebar");
   expect(app.texts()).not.toContain("Progress");
+  expect(app.count("label:Great Academy")).toBe(logos - 1);
   expect(app.storage()["ga.sidebar"]).toBe("collapsed");
 });
 

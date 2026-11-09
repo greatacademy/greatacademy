@@ -1,4 +1,4 @@
-import { Image, keymap, platform, safeAreaInsets, signal, Text, View, windowSize } from "nsh";
+import { Image, keymap, LayoutAnimation, platform, reduceMotion, safeAreaInsets, signal, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
@@ -199,8 +199,8 @@ function SidebarButton(props: { icon: typeof logo; label: string; tooltip?: stri
 /**
  * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
  * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. At its head are
- * the logo and a button that collapses it to its icons (as a narrow window does); at its foot who is signed in and
- * the settings button, which ⌘, opens too.
+ * the logo and a button that collapses it to its icons (as a narrow window does), animated, leaving out the logo; at
+ * its foot who is signed in and the settings button, which ⌘, opens too.
  */
 export function Sidebar() {
   SIDEBAR.forEach((id, index) => {
@@ -213,6 +213,10 @@ export function Sidebar() {
   const name = () => sessionUser()?.name ?? "";
   const hovered = signal<TabId | null>(null);
   const settings = () => tab() === "me" && home();
+  const toggle = () => {
+    if (!reduceMotion()) LayoutAnimation.configureNext(LayoutAnimation.create(200, "easeInEaseOut", "opacity"));
+    collapseSidebar(!sidebarCollapsed());
+  };
   return (
     <View
       role="navigation"
@@ -236,13 +240,11 @@ export function Sidebar() {
           paddingHorizontal: wide() ? 6 : 0,
         }}
       >
-        <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
+        <If when={!(roomy() && sidebarCollapsed())}>
+          <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
+        </If>
         <If when={roomy()}>
-          <SidebarButton
-            icon={panel}
-            label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar}
-            onPress={() => collapseSidebar(!sidebarCollapsed())}
-          />
+          <SidebarButton icon={panel} label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar} onPress={toggle} />
         </If>
       </View>
       <Each of={[...SIDEBAR]}>
