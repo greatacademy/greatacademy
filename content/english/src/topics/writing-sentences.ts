@@ -1034,7 +1034,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "许多冗长的短语和一个短词意思相同。*due to the fact that* 就是 *because*，*at this point in time* 就是 *now*。除非长的表达确有所增，否则用短词。",
         ),
         choiceGenerator(t("Which word can replace this phrase?", "哪个词可以替换这个短语？"), fillerBank, (right, shown) =>
-          t(`*${shown}* means **${right}**.`, `*${shown}* 的意思是 **${right}**。`),
+          t(
+            `*${shown}* means **${right}**. One word that says the same thing makes the sentence shorter and clearer.`,
+            `*${shown}* 的意思是 **${right}**。用一个意思相同的词，句子更短也更清楚。`,
+          ),
         ),
       ),
       point(

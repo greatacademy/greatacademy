@@ -397,7 +397,10 @@ export const clauseTopics: readonly TopicDef[] = [
           "**形容词**（adjective）修饰名词，回答“什么样的”“哪一个”“多少个”：a *tall* tree、*that* house、*three* bikes。它通常紧靠名词之前，或在 *is* 这类动词之后：*The tree is tall.*",
         ),
         choiceGenerator(t("Which word is an adjective?", "哪个词是形容词？"), modifierKindBank, (right) =>
-          t(`**${right}** describes a noun, so it is an adjective.`, `**${right}** 修饰名词，所以是形容词。`),
+          t(
+            `**${right}** describes a noun, so it is an adjective. An adverb would describe a verb, an adjective or another adverb instead.`,
+            `**${right}** 修饰名词，所以是形容词。副词修饰的则是动词、形容词或其他副词。`,
+          ),
         ),
       ),
       point(
@@ -457,7 +460,10 @@ export const clauseTopics: readonly TopicDef[] = [
           "介词短语的作用类似形容词或副词。在 *The dog in the yard barked* 中，短语说明是哪只狗，所以修饰名词 *dog*。在 *We waited at the corner* 中，它说明在哪里等，所以修饰动词 *waited*。",
         ),
         choiceGenerator(t("Which word does the phrase in bold describe?", "粗体短语修饰哪个词？"), phraseJobBank, (right) =>
-          t(`The phrase tells more about **${right}**.`, `这个短语进一步说明 **${right}**。`),
+          t(
+            `The phrase tells more about **${right}**. Ask which word the phrase answers a question about, such as which one, where or when.`,
+            `这个短语进一步说明 **${right}**。问问这个短语回答的是关于哪个词的问题，比如哪一个、在哪里或什么时候。`,
+          ),
         ),
       ),
     ],
@@ -557,7 +563,10 @@ export const clauseTopics: readonly TopicDef[] = [
           "**从属连词**（subordinating conjunction）引导不能独立成句的从句。常见的有 *because, although, when, while, if, unless, since, before, after, until*。\n\n在 *We left because it rained* 中，*because it rained* 依赖主句 *We left*。",
         ),
         choiceGenerator(t("Which word is the subordinating conjunction?", "哪个词是从属连词？"), subordinatorBank, (right) =>
-          t(`**${right}** begins the clause that cannot stand alone.`, `**${right}** 引导不能独立成句的从句。`),
+          t(
+            `**${right}** begins the clause that cannot stand alone. Cover the clause it starts, and the rest of the sentence still makes sense on its own.`,
+            `**${right}** 引导不能独立成句的从句。遮住它引导的从句，句子其余部分仍然能独立成立。`,
+          ),
         ),
       ),
       point(
@@ -638,7 +647,10 @@ export const clauseTopics: readonly TopicDef[] = [
           "**同位语**（appositive）是紧挨名词、为它换个说法的名词短语：*Mars, the red planet, has two moons.* 这里 *the red planet* 是火星的另一种说法。\n\n它就像去掉 *who is* 或 *which is* 的关系从句，用更少的词补充细节。",
         ),
         choiceGenerator(t("Which words form the appositive?", "哪些词构成同位语？"), appositiveBank, (right) =>
-          t(`**${right}** renames the noun beside it.`, `**${right}** 为它旁边的名词换了个说法。`),
+          t(
+            `**${right}** renames the noun beside it. You could put it in place of that noun, and the sentence would still be about the same thing.`,
+            `**${right}** 为它旁边的名词换了个说法。用它替换那个名词，句子说的仍是同一样东西。`,
+          ),
         ),
       ),
       point(
@@ -791,7 +803,11 @@ export const clauseTopics: readonly TopicDef[] = [
         choiceGenerator(
           t("Which words should replace the last item in the list?", "应该用哪些词替换列表中的最后一项？"),
           parallelFixBank,
-          (right) => t(`**${right}** matches the form of the other items.`, `**${right}** 与其他项的形式一致。`),
+          (right) =>
+            t(
+              `**${right}** matches the form of the other items. Items joined in a list or by *and* should all be the same kind of word or phrase.`,
+              `**${right}** 与其他项的形式一致。列举的或用 *and* 连接的各项，应该是同一类词或短语。`,
+            ),
         ),
       ),
     ],

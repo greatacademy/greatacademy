@@ -510,7 +510,10 @@ export const wordTopics: readonly TopicDef[] = [
           "后缀常能告诉你词性。*-tion, -ment, -ness* 构成名词。*-ize, -ify, -en* 构成动词。*-ous, -al, -ive* 构成形容词。",
         ),
         choiceGenerator(t("What class of word is this?", "这个词是什么词性？"), classBank, (right, shown) =>
-          t(`*${shown}* is a **${right.toLowerCase()}**, as its ending shows.`, `*${shown}* 是 **${right}**，词尾说明了这一点。`),
+          t(
+            `*${shown}* is a **${right.toLowerCase()}**, as its ending shows. A suffix often tells the class of a word, so look at the last letters first.`,
+            `*${shown}* 是 **${right}**，词尾说明了这一点。后缀往往表明词性，所以先看最后几个字母。`,
+          ),
         ),
       ),
       point(

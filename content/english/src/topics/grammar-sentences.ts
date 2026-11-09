@@ -323,7 +323,10 @@ export const sentenceTopics: readonly TopicDef[] = [
           "**代词**（pronoun）代替名词，免得重复。常见代词有 *I, you, he, she, it, we, they, me, him, her, us, them, his, its, their*。\n\n在 *Ana lost her hat, but she found it* 中，*her* 和 *she* 指 Ana，*it* 指帽子。",
         ),
         choiceGenerator(t("Which word in this sentence is a pronoun?", "这句话中哪个词是代词？"), pronounBank, (right) =>
-          t(`**${right}** stands in for a noun, so it is a pronoun.`, `**${right}** 代替名词，所以是代词。`),
+          t(
+            `**${right}** stands in for a noun, so it is a pronoun. The other words name, describe or show action, but none of them takes the place of a noun.`,
+            `**${right}** 代替名词，所以是代词。其他词或命名、或描述、或表示动作，但都不能代替名词。`,
+          ),
         ),
       ),
       point(
