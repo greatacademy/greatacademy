@@ -98,7 +98,7 @@ export const grammarWriting: CourseDef = {
       ],
     },
   ],
-  reading: ["water-on-earth", "how-plants-live", "life-on-the-nile"],
+  reading: ["water-on-earth", "how-plants-live", "life-on-the-nile", "weather-and-climate", "the-human-body"],
 };
 
 /** englishCourses lists the courses of English. */

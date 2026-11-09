@@ -143,7 +143,7 @@ E2 and E3 are independent and can run at once. First, a short spike settles what
 
 **Done when** simulated students get reading tasks in a sensible share of their time, replay reproduces state, and a pilot group reads without being flooded by unknown words. The pilot also tests the 98% parameter.
 
-**Built ahead of G1.** The project owner chose to build E2.1 to E2.6 before the pilot of Stage 1. E2.6 has its first three knowledge units, Water on Earth, How Plants Live and Life on the Nile, of 10 passages each; simulated students read all 30 and still finish the course. E2's pilot still waits for G1.
+**Built ahead of G1.** The project owner chose to build E2.1 to E2.6 before the pilot of Stage 1. E2.6 has its first five knowledge units, Water on Earth, How Plants Live, Life on the Nile, Weather and Climate and The Human Body, of 10 passages each; simulated students read nearly all 50 and still finish the course. E2's pilot still waits for G1.
 
 ### E3. AI Judgment of Writing (L)
 
