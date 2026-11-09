@@ -1,7 +1,7 @@
 import { type Appearance, CONTRASTS, type ColorScheme, PALETTES, type Palette, resolveColors, THEMES } from "@ga/design";
 import type { Guardian } from "@ga/proto/account/v1/account_pb";
 import { Band } from "@ga/proto/privacy/v1/privacy_pb";
-import { Clipboard, colorScheme, openUrl, platform, Scroll, signal, Text, View } from "nsh";
+import { Clipboard, colorScheme, openUrl, Scroll, signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
 import { access, sessionUser, signOut } from "../lib/auth.ts";
 import { b } from "../lib/billing-text.ts";
@@ -176,14 +176,6 @@ export function SettingsBody(props: {
           <Row title={b().plans} detail={b().plansDetail} onPress={() => nav.push({ name: "plans" })} />
         </If>
       </Section>
-      <If when={!platform.desktop}>
-        <Section title={m().learning}>
-          <Row title={m().courses} onPress={() => nav.push({ name: "courses" })} />
-          <If when={!child()}>
-            <Row title={m().league} onPress={() => nav.push({ name: "standings" })} />
-          </If>
-        </Section>
-      </If>
       <If when={!child()}>
         <Section title={m().league}>
           <LeagueSettings />

@@ -22,7 +22,6 @@ const messages = {
   en: {
     account: "Account",
     accountMenu: (name: string) => `${name}, account menu`,
-    learning: "Learning",
     leagueOff: "You are not taking part in leagues. You can turn them on in the settings.",
     leagueGoToSettings: "Go to settings",
     security: "Account security",
@@ -391,7 +390,6 @@ const messages = {
   "zh-CN": {
     account: "账号",
     accountMenu: (name: string) => `${name}，账号菜单`,
-    learning: "学习",
     leagueOff: "你没有参加联赛，可以在设置中开启。",
     leagueGoToSettings: "前往设置",
     security: "账号安全",
