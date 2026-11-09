@@ -646,6 +646,8 @@ test("shows a tab's key on hover and collapses the sidebar to its icons on a des
   await app.waitFor("label:Expand the sidebar");
   // The labels and the logo go once the sidebar has narrowed to its icons (the launch screen's logo has gone by then).
   await app.waitUntil(() => !app.texts().includes("Progress") && app.count("label:Great Academy") === 0);
+  // The header names the tab beside the collapse button.
+  expect(app.texts()).toContain("Learn");
   expect(app.shows("label:Settings")).toBe(true);
   expect(app.storage()["ga.sidebar"]).toBe("collapsed");
 });

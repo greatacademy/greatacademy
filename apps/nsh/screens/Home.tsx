@@ -1,8 +1,7 @@
-import { effect, Image, type JSX, keymap, platform, reduceMotion, safeAreaInsets, signal, Text, untracked, View, windowSize } from "nsh";
+import { Image, type JSX, keymap, platform, safeAreaInsets, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
-import logo from "../assets/logo.svg";
 import panel from "../assets/sidebar.svg";
 import courses from "../assets/tabs/courses.svg";
 import learn from "../assets/tabs/learn.svg";
@@ -10,11 +9,13 @@ import me from "../assets/tabs/me.svg";
 import progress from "../assets/tabs/progress.svg";
 import gear from "../assets/tabs/settings.svg";
 import { sessionUser } from "../lib/auth.ts";
+import { HEADER_HEIGHT, SIDEBAR_NARROW, SIDEBAR_WIDE, sidebarToggleLeft, sidebarWide, sidebarWidth } from "../lib/chrome.ts";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
 import { collapseSidebar, sidebarCollapsed } from "../lib/prefs.ts";
 import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
+import { Header } from "./Header.tsx";
 import { LearnTab } from "./LearnTab.tsx";
 import { Progress } from "./Progress.tsx";
 import { Me } from "./Settings.tsx";
@@ -44,8 +45,9 @@ export function Home() {
     <NavPage
       headerStyle={headerStyle()}
       title={tabTitle(tab())}
-      // A desktop's sidebar already names the tab, so the page has no header repeating it.
-      headerVisible={false}
+      // The phones draw their own head (`TopBar`); a desktop's header is the window's title bar, naming the tab.
+      headerVisible={platform.desktop}
+      header={<Header title={tabTitle(tab())} />}
       statusBar={{ foreground: isDark() ? "light" : "dark" }}
     >
       <View style={{ backgroundColor: colors().page, flex: 1 }}>
@@ -173,7 +175,7 @@ function Hint(props: { index: number; hovered: boolean }) {
 }
 
 /** SidebarButton is a small square button in the sidebar with an icon: the collapse and settings buttons. */
-function SidebarButton(props: { icon: typeof logo; label: string; tooltip?: string; chosen?: boolean; onPress: () => void }) {
+function SidebarButton(props: { icon: typeof gear; label: string; tooltip?: string; chosen?: boolean; onPress: () => void }) {
   return (
     <View
       role="button"
@@ -196,56 +198,41 @@ function SidebarButton(props: { icon: typeof logo; label: string; tooltip?: stri
   );
 }
 
-/** SIDEBAR_WIDE and SIDEBAR_NARROW are the sidebar's widths in full and with only its icons, in points. */
-const SIDEBAR_WIDE = 208;
-const SIDEBAR_NARROW = 64;
-
 /** SIDEBAR_ROW is the width of a row's content in full, which a narrower sidebar clips rather than lays out again. */
 const SIDEBAR_ROW = SIDEBAR_WIDE - 24;
 
 /**
- * sidebarWidth follows the width the sidebar should have, moving to a new one over 200 ms a frame at a time (at once
- * the first time and while the system asks for less motion). Each frame lays the window out again, so the pages
- * beside the sidebar move with it in step.
+ * SidebarToggle collapses the sidebar to its icons and expands it again. It stands over the window's top row, which
+ * on macOS is the title bar: at the sidebar's right end in full, and right of the traffic lights when collapsed.
  */
-function sidebarWidth(target: () => number) {
-  const width = signal(untracked(target));
-  effect(() => {
-    const to = target();
-    const from = untracked(width);
-    if (from === to || untracked(reduceMotion)) {
-      width.set(to);
-      return;
-    }
-    let start: number | undefined;
-    let frame = requestAnimationFrame(function step(time) {
-      start ??= time;
-      const t = Math.min(1, (time - start) / 200);
-      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-      width.set(Math.round(from + (to - from) * eased));
-      if (t < 1) frame = requestAnimationFrame(step);
-    });
-    return () => cancelAnimationFrame(frame);
-  });
-  return width;
+export function SidebarToggle() {
+  return (
+    <View style={{ left: sidebarToggleLeft(), position: "absolute", top: (HEADER_HEIGHT - 32) / 2 }}>
+      <SidebarButton
+        icon={panel}
+        label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar}
+        onPress={() => collapseSidebar(!sidebarCollapsed())}
+      />
+    </View>
+  );
 }
 
 /**
  * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
- * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. At its head are
- * the logo and a button that collapses it to its icons (as a narrow window does), leaving out the logo; at its foot who
- * is signed in and the settings button, which ⌘, opens too, and only the settings button while collapsed. Collapsing
- * and expanding move its width, the rows keeping their places and the sidebar's edge clipping them.
+ * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. Its top row is
+ * the window's title bar, with the window controls and `SidebarToggle` over it, which collapses it to its icons (as a
+ * narrow window does); at its foot who is signed in and the settings button, which ⌘, opens too, and only the settings
+ * button while collapsed. Collapsing and expanding move its width, the rows keeping their places and the sidebar's
+ * edge clipping them.
  */
 export function Sidebar() {
   SIDEBAR.forEach((id, index) => {
     keymap.bind(`mod+${index + 1}`, () => openTab(id));
   });
   keymap.bind("mod+,", () => openTab("me"));
-  const roomy = () => windowSize().width >= 760;
-  const wide = () => roomy() && !sidebarCollapsed();
-  const width = sidebarWidth(() => (wide() ? SIDEBAR_WIDE : SIDEBAR_NARROW));
-  // The labels, the logo and the name are there while the sidebar is wider than its icons, the edge clipping them.
+  const wide = sidebarWide;
+  const width = sidebarWidth;
+  // The labels and the name are there while the sidebar is wider than its icons, the edge clipping them.
   const open = () => width() > SIDEBAR_NARROW;
   const home = () => nav.routes().length === 1;
   const name = () => sessionUser()?.name ?? "";
@@ -266,25 +253,13 @@ export function Sidebar() {
         borderRightWidth: 1,
         gap: 4,
         overflow: "hidden",
+        paddingBottom: 16,
         paddingHorizontal: 12,
-        paddingVertical: 16,
         width: width(),
       }}
     >
-      <View style={{ alignItems: "center", flexDirection: "row", height: 32, marginBottom: 12, paddingHorizontal: 4 }}>
-        <If when={roomy()} else={<Image src={logo} style={{ height: 28, marginLeft: 2, width: 28 }} accessibilityLabel="Great Academy" />}>
-          <Clip width={SIDEBAR_ROW - 8 - 32}>
-            <If when={open()}>
-              <Image src={logo} style={{ height: 28, marginLeft: 2, width: 28 }} accessibilityLabel="Great Academy" />
-            </If>
-          </Clip>
-          <SidebarButton
-            icon={panel}
-            label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar}
-            onPress={() => collapseSidebar(!sidebarCollapsed())}
-          />
-        </If>
-      </View>
+      {/* The title bar's row: it drags the window, under the window controls and the collapse button. */}
+      <View desktop={{ windowDrag: true }} style={{ height: HEADER_HEIGHT + 8, marginHorizontal: -12 }} />
       <Each of={[...SIDEBAR]}>
         {(id, index) => {
           const chosen = () => tab() === id();

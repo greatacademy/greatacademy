@@ -3,6 +3,7 @@ import { computed, effect, mount, platform, untracked, View } from "nsh";
 import { NavPage, NavStack } from "nsh/base";
 
 import { access } from "./lib/auth.ts";
+import { sidebarRoomy, sidebarShown } from "./lib/chrome.ts";
 import { ACCESS, AGE, afterSignUp, ENTRY, HOME, nav, OPEN, tab, WELCOME } from "./lib/nav.ts";
 import { comeBack, watchForeground } from "./lib/net.ts";
 import { restorePrefs } from "./lib/prefs.ts";
@@ -22,7 +23,7 @@ import { Courses } from "./screens/Courses.tsx";
 import { DeleteAccount } from "./screens/DeleteAccount.tsx";
 import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { History } from "./screens/History.tsx";
-import { commandHeld, Home, heldCommand, PhoneTabs, Sidebar } from "./screens/Home.tsx";
+import { commandHeld, Home, heldCommand, PhoneTabs, Sidebar, SidebarToggle } from "./screens/Home.tsx";
 import { Launch, launchLeaving } from "./screens/Launch.tsx";
 import { Learn } from "./screens/Learn.tsx";
 import { Learner } from "./screens/Learner.tsx";
@@ -93,6 +94,7 @@ effect(() => {
 
 function App() {
   const sidebar = () => platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session";
+  effect(() => sidebarShown.set(sidebar()));
   return (
     <View
       style={{ backgroundColor: colors().page, flex: 1, flexDirection: "row" }}
@@ -160,6 +162,9 @@ function App() {
           }
         }}
       </NavStack>
+      <If when={sidebar() && sidebarRoomy()}>
+        <SidebarToggle />
+      </If>
       {/* Android's tab bar stays on screen while hidden, so it is only there while the tabs show. */}
       <If when={tabsShown()}>
         <PhoneTabs />
