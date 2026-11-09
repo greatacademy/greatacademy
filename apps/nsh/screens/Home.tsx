@@ -249,8 +249,6 @@ export function Sidebar() {
       role="navigation"
       style={{
         backgroundColor: colors().surface,
-        borderColor: colors().line,
-        borderRightWidth: 1,
         gap: 4,
         overflow: "hidden",
         paddingBottom: 16,
@@ -258,6 +256,8 @@ export function Sidebar() {
         width: width(),
       }}
     >
+      {/* The edge beside the pages, below the title bar's row, which runs on into the header without a line. */}
+      <View style={{ backgroundColor: colors().line, bottom: 0, position: "absolute", right: 0, top: HEADER_HEIGHT, width: 1 }} />
       {/* The title bar's row: it drags the window, under the window controls and the collapse button. */}
       <View desktop={{ windowDrag: true }} style={{ height: HEADER_HEIGHT + 8, marginHorizontal: -12 }} />
       <Each of={[...SIDEBAR]}>
