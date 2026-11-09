@@ -63,6 +63,8 @@ function progressOf(session: Session, question: Question): { label: string; shar
  * title bar's row too, as a page's header is: as tall, dragging the window, and clear of macOS's traffic lights.
  */
 function FocusBar(props: { share: number; label: string; onClose: () => void }) {
+  // A pointer needs less than a finger: on a desktop the button is as large as the sidebar's.
+  const close = platform.desktop ? 36 : 44;
   return (
     <View
       desktop={{ windowDrag: true }}
@@ -81,7 +83,8 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
         role="button"
         accessibilityLabel={m().close}
         onPress={props.onClose}
-        style={{ alignItems: "center", height: 44, justifyContent: "center", width: 44 }}
+        hoverStyle={{ backgroundColor: colors().line }}
+        style={{ alignItems: "center", borderRadius: 8, height: close, justifyContent: "center", width: close }}
       >
         <Text style={{ color: colors().muted, fontSize: 22 }}>✕</Text>
       </View>
@@ -96,7 +99,7 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
         </View>
         <Text style={{ color: colors().muted, fontSize: 12 }}>{props.label}</Text>
       </View>
-      <View style={{ width: 44 }} />
+      <View style={{ width: close }} />
     </View>
   );
 }
