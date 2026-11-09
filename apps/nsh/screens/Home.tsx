@@ -7,18 +7,24 @@ import courses from "../assets/tabs/courses.svg";
 import learn from "../assets/tabs/learn.svg";
 import me from "../assets/tabs/me.svg";
 import progress from "../assets/tabs/progress.svg";
+import gear from "../assets/tabs/settings.svg";
+import { sessionUser } from "../lib/auth.ts";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
 import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseList } from "./Courses.tsx";
-import { Header } from "./Header.tsx";
 import { LearnTab } from "./LearnTab.tsx";
 import { Progress } from "./Progress.tsx";
 import { Me } from "./Settings.tsx";
 
-/** tabTitle is a tab's name in the app's language. */
+/** tabTitle is a tab's name in the app's language; on a desktop the Me tab is the settings, opened from the sidebar's foot. */
 export function tabTitle(id: TabId): string {
-  const titles = { learn: m().tabLearn, progress: m().tabProgress, courses: m().tabCourses, me: m().tabMe };
+  const titles = {
+    learn: m().tabLearn,
+    progress: m().tabProgress,
+    courses: m().tabCourses,
+    me: platform.desktop ? m().settingsTab : m().tabMe,
+  };
   return titles[id];
 }
 
@@ -36,8 +42,8 @@ export function Home() {
     <NavPage
       headerStyle={headerStyle()}
       title={tabTitle(tab())}
-      header={<Header title={tabTitle(tab())} />}
-      headerVisible={platform.desktop}
+      // A desktop's sidebar already names the tab, so the page has no header repeating it.
+      headerVisible={false}
       statusBar={{ foreground: isDark() ? "light" : "dark" }}
     >
       <View style={{ backgroundColor: colors().page, flex: 1 }}>
@@ -139,12 +145,26 @@ function GlassTabs() {
   );
 }
 
-/** Sidebar holds the tabs on a desktop, where a bottom bar does not belong; ⌘1 to ⌘4 (Ctrl on Windows and Linux) switch them. */
+/** SIDEBAR are the tabs in a desktop's sidebar; the settings (the Me tab) open from its foot instead. */
+const SIDEBAR: readonly TabId[] = TABS.filter((id) => id !== "me");
+
+/** shortcut names a key with the platform's modifier: ⌘ on macOS, Ctrl elsewhere. */
+function shortcut(key: string): string {
+  return platform.os === "macos" ? `⌘${key}` : `Ctrl+${key}`;
+}
+
+/**
+ * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
+ * Windows and Linux) switch them. Its foot shows who is signed in and the settings button, which ⌘, opens too.
+ */
 export function Sidebar() {
-  TABS.forEach((id, index) => {
+  SIDEBAR.forEach((id, index) => {
     keymap.bind(`mod+${index + 1}`, () => openTab(id));
   });
+  keymap.bind("mod+,", () => openTab("me"));
   const wide = () => windowSize().width >= 760;
+  const home = () => nav.routes().length === 1;
+  const name = () => sessionUser()?.name ?? "";
   return (
     <View
       role="navigation"
@@ -173,39 +193,88 @@ export function Sidebar() {
           <Text style={{ color: colors().ink, fontSize: 16, fontWeight: "700" }}>Great Academy</Text>
         </If>
       </View>
-      <Each of={[...TABS]}>
-        {(id, index) => (
-          <View
-            role="tab"
-            accessibilityState={{ selected: tab() === id() }}
-            onPress={() => openTab(id())}
-            style={{
-              alignItems: wide() ? "flex-start" : "center",
-              backgroundColor: tab() === id() && nav.routes().length === 1 ? colors()["accent-soft"] : "transparent",
-              borderRadius: 8,
-              flexDirection: "row",
-              gap: 8,
-              justifyContent: wide() ? "flex-start" : "center",
-              paddingHorizontal: 10,
-              paddingVertical: 8,
-            }}
-          >
-            <Text
+      <Each of={[...SIDEBAR]}>
+        {(id, index) => {
+          const chosen = () => tab() === id();
+          return (
+            <View
+              role="tab"
+              accessibilityLabel={tabTitle(id())}
+              accessibilityState={{ selected: chosen() }}
+              tooltip={wide() ? undefined : `${tabTitle(id())} ${shortcut(String(index() + 1))}`}
+              onPress={() => openTab(id())}
+              hoverStyle={{ backgroundColor: chosen() && home() ? colors()["accent-soft"] : colors().line }}
               style={{
-                color: tab() === id() ? colors().accent : colors().ink,
-                flex: wide() ? 1 : undefined,
-                fontSize: wide() ? 15 : 13,
-                fontWeight: tab() === id() ? "600" : "400",
+                alignItems: "center",
+                backgroundColor: chosen() && home() ? colors()["accent-soft"] : "transparent",
+                borderRadius: 8,
+                flexDirection: "row",
+                gap: 10,
+                justifyContent: wide() ? "flex-start" : "center",
+                paddingHorizontal: 10,
+                paddingVertical: 8,
               }}
             >
-              {tabTitle(id())}
-            </Text>
-            <If when={wide()}>
-              <Text style={{ color: colors().muted, fontSize: 12 }}>{`${platform.os === "macos" ? "⌘" : "Ctrl+"}${index() + 1}`}</Text>
-            </If>
-          </View>
-        )}
+              <Image src={drawn[id()]} style={{ height: 20, tintColor: chosen() ? colors().accent : colors().muted, width: 20 }} />
+              <If when={wide()}>
+                <Text
+                  style={{ color: chosen() ? colors().accent : colors().ink, flex: 1, fontSize: 15, fontWeight: chosen() ? "600" : "400" }}
+                >
+                  {tabTitle(id())}
+                </Text>
+                <Text style={{ color: colors().muted, fontSize: 12 }}>{shortcut(String(index() + 1))}</Text>
+              </If>
+            </View>
+          );
+        }}
       </Each>
+      <View style={{ flex: 1 }} />
+      <View
+        style={{
+          alignItems: "center",
+          borderColor: colors().line,
+          borderTopWidth: 1,
+          flexDirection: wide() ? "row" : "column",
+          gap: 8,
+          paddingHorizontal: wide() ? 4 : 0,
+          paddingTop: 12,
+        }}
+      >
+        <View
+          accessibilityLabel={name()}
+          style={{
+            alignItems: "center",
+            backgroundColor: colors()["accent-soft"],
+            borderRadius: 16,
+            height: 32,
+            justifyContent: "center",
+            width: 32,
+          }}
+        >
+          <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...name()][0]?.toUpperCase() ?? ""}</Text>
+        </View>
+        <If when={wide()}>
+          <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500" }}>{name()}</Text>
+        </If>
+        <View
+          role="button"
+          accessibilityLabel={m().settingsTab}
+          accessibilityState={{ selected: tab() === "me" && home() }}
+          tooltip={`${m().settingsTab} ${shortcut(",")}`}
+          onPress={() => openTab("me")}
+          hoverStyle={{ backgroundColor: tab() === "me" && home() ? colors()["accent-soft"] : colors().line }}
+          style={{
+            alignItems: "center",
+            backgroundColor: tab() === "me" && home() ? colors()["accent-soft"] : "transparent",
+            borderRadius: 8,
+            height: 32,
+            justifyContent: "center",
+            width: 32,
+          }}
+        >
+          <Image src={gear} style={{ height: 20, tintColor: tab() === "me" ? colors().accent : colors().muted, width: 20 }} />
+        </View>
+      </View>
     </View>
   );
 }

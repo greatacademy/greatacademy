@@ -509,18 +509,18 @@ const settingsNetwork = {
 
 test("keeps the language chosen in the settings", async () => {
   const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork, platform: "macos" });
-  await app.press("text:Me");
+  await app.press("label:Settings");
   await app.press("text:简体中文");
   await app.waitFor("text:语言");
   expect(app.storage()["ga.language"]).toBe("zh-CN");
   const again = await open("./App.tsx", { storage: app.storage(), network: settingsNetwork, platform: "macos" });
-  await again.waitFor("text:我的");
+  await again.waitFor("label:设置");
 });
 
 test("deletes the account after its password and a confirmation", async () => {
   const app = await open("./App.tsx", { storage: { "ga.session": "tok.sig" }, network: settingsNetwork, platform: "macos" });
   app.onDialog(() => "Delete my account");
-  await app.press("text:Me");
+  await app.press("label:Settings");
   await app.scroll("text:Contrast", 1500);
   await app.press("text:Delete my account");
   await app.type("label:Password", "correct horse");
@@ -615,7 +615,7 @@ test("sets the weekly goals from Learn", async () => {
   expect(JSON.parse(call?.body ?? "{}").goals.weekdays).toEqual([35, 30, 30, 30, 30, 0, 0]);
 });
 
-test("switches tabs from the sidebar and its shortcuts on a desktop", async () => {
+test("switches tabs and opens the settings from the sidebar and its shortcuts on a desktop", async () => {
   const app = await open("./App.tsx", {
     ...signedIn({ [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }) }),
     platform: "macos",
@@ -623,8 +623,11 @@ test("switches tabs from the sidebar and its shortcuts on a desktop", async () =
   await app.waitFor("text:Weekly goals");
   await app.keyboard.press("mod+2");
   await app.waitFor("text:The last 14 days");
-  await app.press("text:Courses");
+  await app.press("label:Courses");
   await app.waitFor("text:1 / 2 topics");
+  await app.keyboard.press("mod+,");
+  await app.waitFor("text:Weekly goals");
+  expect(app.texts()).toContain("Language");
 });
 
 test("shows the progress map and the history of a course", async () => {
@@ -673,7 +676,7 @@ test("lists the learner's courses first, then the others by shelf", async () => 
     }),
     platform: "macos",
   });
-  await app.press("text:Courses");
+  await app.press("label:Courses");
   await app.waitFor("text:My courses");
   const shown = app.texts();
   expect(shown.indexOf("My courses")).toBeLessThan(shown.indexOf("School"));
@@ -708,7 +711,7 @@ test("turns a purpose on and, after asking, off on the privacy page", async () =
       },
     },
   });
-  await app.press("text:Me");
+  await app.press("label:Settings");
   await app.scroll("text:Contrast", 600);
   await app.press("text:Privacy and your data");
   await app.waitFor("text:AI-judged writing");
@@ -757,7 +760,7 @@ test("follows a learner with a code and sets their daily limit", async () => {
       },
     },
   });
-  await app.press("text:Me");
+  await app.press("label:Settings");
   await app.scroll("text:Contrast", 1500);
   await app.press("text:Learners you follow");
   await app.waitFor("text:You are not following anyone yet.");
