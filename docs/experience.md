@@ -82,7 +82,7 @@ The header holds the logo, the subject chip with the switcher, the subject's thr
 | Decision | Where | When it helps |
 | :--- | :--- | :--- |
 | Change course | Course | The course is too easy or too hard, or a new goal (a grade, an exam). Progress is kept; the confirmation shows which of the new course's topics are already known and the forecast. |
-| Retake the diagnostic | Course | After a break of more than ten weeks, or learning outside Great Academy. The new answers place topics again, as known or as not known. |
+| Retake the diagnostic | Course | After a break of more than ten weeks, or learning outside Great Academy. The topics the diagnostic placed are asked again; topics taught in lessons stay, and their reviews correct them. It asks again before it acts. |
 | Reset the knowledge profile | Course | When the record cannot be trusted: work done with outside help or tools, or a profile far from what the learner knows. Inference starts again from the reset; the history and XP stay. It asks again before it acts. |
 | Weekly goals | Progress | The XP to earn on each weekday in this subject. |
 | End date | Progress | When the course should be finished; the forecast then says whether the pace is enough and what daily XP would be. |
