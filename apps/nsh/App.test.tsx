@@ -275,6 +275,7 @@ test("takes a parent who signs up on to their learners", async () => {
   await app.waitFor("text:About you");
   await answerAge(app, "1985");
   await app.type("label:Name", "Parent");
+  await app.type("label:Username", "parent-1");
   await app.type("label:Email", "p@example.test");
   await app.type("label:Password", "correct horse");
   await app.type("label:Confirm password", "correct horse");
@@ -298,7 +299,7 @@ test("asks for the password twice and shows it on request", async () => {
   await app.waitFor("label:Hide password");
 });
 
-test("asks a teen for no real name", async () => {
+test("asks a teen for a name and a username too", async () => {
   const app = await open("./App.tsx", {
     network: { ...network, ...countries, [`POST ${privacyUrl}/CheckAge`]: json({ band: "BAND_TEEN" }) },
   });
@@ -306,7 +307,8 @@ test("asks a teen for no real name", async () => {
   await app.press("label:Me");
   await answerAge(app, "2011");
   await app.waitFor("label:Email");
-  expect(app.texts()).not.toContain("Name");
+  await app.waitFor("label:Name");
+  await app.waitFor("label:Username");
 });
 
 test("signs up and goes straight to the courses once the answer is stored", async () => {
@@ -333,6 +335,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
   await answerAge(app, "1990");
   await app.waitFor("label:Name");
   await app.type("label:Name", "Test");
+  await app.type("label:Username", "tester");
   await app.type("label:Email", "a@example.test");
   await app.type("label:Password", "correct horse");
   await app.type("label:Confirm password", "correct horse");

@@ -3,7 +3,7 @@ import type { Db } from "./db.ts";
 import { user } from "./schema/auth.ts";
 import { event, guardian, guardianInvite, leagueGroup, leagueMember, learner, learnerSubject } from "./schema/learning.ts";
 
-/** LearnerSettings are a learner's league choices. */
+/** LearnerSettings are the learner's username, as its owner wrote it, and whether they take part in leagues. */
 export interface LearnerSettings {
   readonly username: string | null;
   readonly leagues: boolean;
@@ -11,14 +11,24 @@ export interface LearnerSettings {
 
 /** learnerSettings reads a learner's settings. */
 export async function learnerSettings(db: Db, learnerId: string): Promise<LearnerSettings> {
-  const [row] = await db.select({ username: learner.username, leagues: learner.leagues }).from(learner).where(eq(learner.id, learnerId));
+  const [row] = await db
+    .select({ username: sql<string | null>`coalesce(${user.displayUsername}, ${user.username})`, leagues: learner.leagues })
+    .from(learner)
+    .innerJoin(user, eq(user.id, learner.userId))
+    .where(eq(learner.id, learnerId));
   if (!row) throw new Error(`no learner ${learnerId}`);
   return row;
 }
 
-/** updateLearnerSettings changes some of a learner's settings. */
-export async function updateLearnerSettings(db: Db, learnerId: string, changes: Partial<LearnerSettings>): Promise<void> {
-  await db.update(learner).set(changes).where(eq(learner.id, learnerId));
+/** setLeagues records whether a learner takes part in leagues. */
+export async function setLeagues(db: Db, learnerId: string, leagues: boolean): Promise<void> {
+  await db.update(learner).set({ leagues }).where(eq(learner.id, learnerId));
+}
+
+/** setUsername changes the username of a learner's account; display is as written, and the sign-in form is lowercase. */
+export async function setUsername(db: Db, learnerId: string, display: string): Promise<void> {
+  const owner = db.select({ id: learner.userId }).from(learner).where(eq(learner.id, learnerId));
+  await db.update(user).set({ username: display.toLowerCase(), displayUsername: display }).where(sql`${user.id} = (${owner})`);
 }
 
 /** SubjectSettings are a learner's decisions about a subject besides its course. */
@@ -70,9 +80,13 @@ export async function updateSubjectSettings(
     .onConflictDoUpdate({ target: [learnerSubject.learnerId, learnerSubject.subjectId], set });
 }
 
-/** usernameTaken tells whether another learner has a username, ignoring case. */
+/** usernameTaken tells whether another account has a username, ignoring case. */
 export async function usernameTaken(db: Db, learnerId: string, username: string): Promise<boolean> {
-  const rows = await db.select({ id: learner.id }).from(learner).where(sql`lower(${learner.username}) = lower(${username})`);
+  const rows = await db
+    .select({ id: learner.id })
+    .from(user)
+    .leftJoin(learner, eq(learner.userId, user.id))
+    .where(eq(user.username, username.toLowerCase()));
   return rows.some((r) => r.id !== learnerId);
 }
 
@@ -117,12 +131,13 @@ export async function groupMembers(db: Db, groupId: string, from: Date, to: Date
   const rows = await db
     .select({
       id: leagueMember.learnerId,
-      username: learner.username,
+      username: sql<string | null>`coalesce(${user.displayUsername}, ${user.username})`,
       joinedAt: leagueMember.joinedAt,
       xp: sql<string>`coalesce((select sum(${event.xp}) from ${event} where ${event.learnerId} = ${leagueMember.learnerId} and ${event.at} >= ${from.toISOString()} and ${event.at} < ${to.toISOString()}), 0)`,
     })
     .from(leagueMember)
     .innerJoin(learner, eq(learner.id, leagueMember.learnerId))
+    .innerJoin(user, eq(user.id, learner.userId))
     .where(eq(leagueMember.groupId, groupId));
   return rows.map((r) => ({ id: r.id, username: r.username, joinedAt: r.joinedAt.getTime(), xp: Number(r.xp) }));
 }

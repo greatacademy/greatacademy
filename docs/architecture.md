@@ -198,8 +198,8 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 
 | Table | Contents |
 | :--- | :--- |
-| `user`, `session`, `account`, `verification` | better-auth's core schema |
-| `learner` | A person who studies, one per user: public username, league choice, age band and its end, country, whether a guardian runs the account, daily limit |
+| `user`, `session`, `account`, `verification` | better-auth's core schema; `user` holds the name, private to the person and their guardians, and the username, which signs in and is the learner's name in leagues |
+| `learner` | A person who studies, one per user: league choice, age band and its end, country, whether a guardian runs the account, daily limit |
 | `learner_subject` | A learner's decisions about a subject besides its course: weekday goals, whether they are paused, and the end date of the current course |
 | `enrollment` | A learner's courses: at most one current per subject (`ended_at` empty), when it was chosen, and when its diagnostic's report was answered |
 | `event` | The engine's event log per learner and subject, numbered by `seq` without gaps; `xp` kept for reporting |

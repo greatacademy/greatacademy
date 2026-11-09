@@ -7,7 +7,7 @@ import { nav } from "../lib/nav.ts";
 import { Action, colors, ErrorNote, Field, FormPage, headerStyle, Muted } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
-/** SignIn starts a session with an email address, or a username for a child's account. */
+/** SignIn starts a session with an email address or a username. */
 export function SignIn() {
   const login = signal("");
   const password = signal("");

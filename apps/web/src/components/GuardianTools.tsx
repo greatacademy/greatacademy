@@ -52,7 +52,7 @@ export function GuardianTools() {
   });
   const [added, setAdded] = useState(false);
   const add = useMutation({
-    mutationFn: (a: AgeAnswer & { username: string; password: string }) => privacy.addChild(a),
+    mutationFn: (a: AgeAnswer & { name: string; username: string; password: string }) => privacy.addChild(a),
     onSuccess: async () => {
       setAdded(true);
       await Promise.all([qc.invalidateQueries({ queryKey: ["guarded"] }), qc.invalidateQueries({ queryKey: ["subscriptions"] })]);
@@ -76,7 +76,8 @@ export function GuardianTools() {
     setAdded(false);
     add.mutate(
       {
-        username: String(data.get("username")),
+        name: String(data.get("name")).trim(),
+        username: String(data.get("username")).trim(),
         password: String(data.get("password")),
         country: String(data.get("country")),
         birthYear: Number(data.get("year")),
@@ -131,8 +132,13 @@ export function GuardianTools() {
         <p className="text-sm text-good">{t.verifyApproved}</p>
         <p className="text-sm text-muted">{t.addChildBody}</p>
         <label className="block space-y-1.5 text-sm font-medium">
+          <span>{t.childName}</span>
+          <input name="name" required maxLength={100} autoComplete="off" className={field} />
+          <span className="block text-xs font-normal text-muted">{t.childNameHint}</span>
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.childUsername}</span>
-          <input name="username" required minLength={3} maxLength={20} pattern="[a-z0-9_\-]+" autoComplete="off" className={field} />
+          <input name="username" required minLength={3} maxLength={20} autoComplete="off" className={field} />
           <span className="block text-xs font-normal text-muted">{t.childUsernameHint}</span>
         </label>
         <NewPassword label={t.childPassword} />

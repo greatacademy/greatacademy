@@ -586,6 +586,15 @@ export declare const GetVerificationResponseSchema: GenMessage<GetVerificationRe
  */
 export declare type AddChildRequest = Message<"ga.privacy.v1.AddChildRequest"> & {
   /**
+   * name is the child's name, seen only by the child and their guardians.
+   *
+   * @generated from field: string name = 6;
+   */
+  name: string;
+
+  /**
+   * username signs the child in and names them in leagues.
+   *
    * @generated from field: string username = 1;
    */
   username: string;

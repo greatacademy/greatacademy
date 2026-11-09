@@ -9,8 +9,11 @@ export const dbKey = createContextKey<Db | undefined>(undefined, { description: 
 
 /** ChildAccounts creates and changes the sign-in of children's accounts, which only the host's auth library can do. */
 export interface ChildAccounts {
-  /** create makes an account signing in with a username, and returns its user id; a taken username throws AlreadyExists. */
-  create(username: string, password: string): Promise<string>;
+  /**
+   * create makes an account with a name and signing in with a username, and returns its user id; a taken username throws
+   * AlreadyExists.
+   */
+  create(name: string, username: string, password: string): Promise<string>;
   /** setPassword replaces an account's password and ends its sessions. */
   setPassword(userId: string, password: string): Promise<void>;
 }

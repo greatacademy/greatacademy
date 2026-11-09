@@ -93,7 +93,7 @@ A market not listed is closed to minors. The European Union and the United Kingd
 
 | Band | Who | Account |
 | :--- | :--- | :--- |
-| **Child** | Below `guardian below` | Created by a guardian; no email or real name |
+| **Child** | Below `guardian below` | Created by a guardian, with a name only the child and their guardians see and a username to sign in with; no email |
 | **Teen** | From that age to 17 | Own account, with the protective defaults of §7 |
 | **Adult** | 18 or older | As today |
 
@@ -132,7 +132,7 @@ Hosting abroad and serving minors anyway is not an option: it leaves the rules a
 
 ## 6. Accounts and Consent
 
-**The guardian comes first.** An adult creates their own account, proves they are an adult who can consent, and adds a child's profile with a username and password. The child never gives an email or a name. This reverses today's guardian link, where a learner invites a guardian, which remains as an optional view for teens.
+**The guardian comes first.** An adult creates their own account, proves they are an adult who can consent, and adds a child's profile with the child's name, a username and a password. The child never gives an email; the name is seen only by the child and their guardians. This reverses today's guardian link, where a learner invites a guardian, which remains as an optional view for teens.
 
 **Proving it once.** One method is accepted in every open market, so that we build one flow:
 
@@ -173,7 +173,7 @@ Email plus is not used: it fails in the US once anything is disclosed, and two f
 | AI-judged writing | With `writing`, topics that do not ask about oneself | On, after a notice |
 | Recorded speech | With `speech` | Off until turned on |
 | Conversation | Off | Off until turned on |
-| Leagues | Off; if opened later, a random name and no profile | Off until turned on, username only |
+| Leagues | Off until turned on, username only | Off until turned on, username only |
 | Streak reminders and other nudges | Off | Off until turned on; never at night |
 | Guardian time limit | Available | With a guardian view |
 | Free text between users | Never | Never |

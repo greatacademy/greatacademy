@@ -10,34 +10,28 @@ const at = (name: string) => timestamp(name, { withTimezone: true, mode: "date" 
 export type AgeBand = "child" | "teen" | "adult";
 
 /** learner is a person who studies; each user has exactly one, and guardians follow learners through guardian. */
-export const learner = pgTable(
-  "learner",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: text("user_id")
-      .notNull()
-      .unique()
-      .references(() => user.id, { onDelete: "cascade" }),
-    createdAt: at("created_at").notNull().defaultNow(),
-    /** username is the public name in leagues, unique ignoring case; the account's own name is never shown to others. */
-    username: text("username"),
-    /** leagues tells whether the learner takes part in leagues. */
-    leagues: boolean("leagues").notNull().default(false),
-    /** band is the age band, null until the learner has answered the age question; the birth date is never stored. */
-    band: text("band").$type<AgeBand>(),
-    /** bandEndsAt is when the band ends; null for adults. */
-    bandEndsAt: at("band_ends_at"),
-    /** country is the market the learner answered with, an ISO 3166 code or "other". */
-    country: text("country"),
-    /** managed marks a child's account, created by a guardian, with no real email address. */
-    managed: boolean("managed").notNull().default(false),
-    /** dailyMinutes is the study limit a guardian set; null for none. */
-    dailyMinutes: integer("daily_minutes"),
-    /** inactiveNoticeAt is when the notice of coming deletion for inactivity was sent. */
-    inactiveNoticeAt: at("inactive_notice_at"),
-  },
-  (t) => [uniqueIndex("learner_username").on(sql`lower(${t.username})`)],
-);
+export const learner = pgTable("learner", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: at("created_at").notNull().defaultNow(),
+  /** leagues tells whether the learner takes part in leagues. */
+  leagues: boolean("leagues").notNull().default(false),
+  /** band is the age band, null until the learner has answered the age question; the birth date is never stored. */
+  band: text("band").$type<AgeBand>(),
+  /** bandEndsAt is when the band ends; null for adults. */
+  bandEndsAt: at("band_ends_at"),
+  /** country is the market the learner answered with, an ISO 3166 code or "other". */
+  country: text("country"),
+  /** managed marks a child's account, created by a guardian, with no real email address. */
+  managed: boolean("managed").notNull().default(false),
+  /** dailyMinutes is the study limit a guardian set; null for none. */
+  dailyMinutes: integer("daily_minutes"),
+  /** inactiveNoticeAt is when the notice of coming deletion for inactivity was sent. */
+  inactiveNoticeAt: at("inactive_notice_at"),
+});
 
 /**
  * learnerSubject holds a learner's decisions about a subject that are not its course: the weekly goals and the date

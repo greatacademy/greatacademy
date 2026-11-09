@@ -100,17 +100,25 @@ export function NewPassword({ label, name = "password", hint = true }: { label: 
   );
 }
 
-/** AuthForm signs in or signs up with email and password, then goes to next. */
+/** usernameErrors are better-auth's username error codes and what they mean to the person signing up. */
+const usernameErrors: Record<string, "usernameTaken" | "usernameInvalid"> = {
+  USERNAME_IS_ALREADY_TAKEN: "usernameTaken",
+  INVALID_USERNAME: "usernameInvalid",
+  USERNAME_TOO_SHORT: "usernameInvalid",
+  USERNAME_TOO_LONG: "usernameInvalid",
+};
+
+/**
+ * AuthForm signs in, with an email address or a username, or signs up with a name, a username, an email address and a
+ * password, then goes to next.
+ */
 export function AuthForm({
   mode,
   next,
-  askName = true,
   afterSignUp,
 }: {
   mode: "sign-in" | "sign-up";
   next?: string;
-  /** askName is off for minors, who give no real name. */
-  askName?: boolean;
   /** afterSignUp stores the age answer; if it fails, the account answers again at /age. */
   afterSignUp?: () => Promise<void>;
 }) {
@@ -127,15 +135,17 @@ export function AuthForm({
     const password = String(form.get("password"));
     setBusy(true);
     setError(undefined);
+    const username = String(form.get("username") ?? "").trim();
     const res =
       mode === "sign-up"
-        ? await authClient.signUp.email({ email, password, name: askName ? String(form.get("name")) : "Learner" })
+        ? await authClient.signUp.email({ email, password, name: String(form.get("name")).trim(), username, displayUsername: username })
         : email.includes("@")
           ? await authClient.signIn.email({ email, password })
-          : await authClient.signIn.username({ username: email.trim().toLowerCase(), password });
+          : await authClient.signIn.username({ username: email.trim(), password });
     if (res.error) {
       setBusy(false);
-      setError(res.error.message ?? m.error);
+      const known = usernameErrors[res.error.code ?? ""];
+      setError(known ? m[known] : (res.error.message ?? m.error));
       return;
     }
     if (mode === "sign-up") await afterSignUp?.().catch(() => undefined);
@@ -148,11 +158,19 @@ export function AuthForm({
     <Card className="mx-auto mt-6 max-w-sm">
       <h1 className="mb-6 text-2xl font-semibold">{title}</h1>
       <form onSubmit={submit} className="space-y-4">
-        {mode === "sign-up" && askName && (
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{m.name}</span>
-            <input name="name" required autoComplete="name" className={field} />
-          </label>
+        {mode === "sign-up" && (
+          <>
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{m.name}</span>
+              <input name="name" required maxLength={100} autoComplete="name" className={field} />
+              <span className="block text-xs font-normal text-muted">{m.nameHint}</span>
+            </label>
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{m.username}</span>
+              <input name="username" required minLength={3} maxLength={20} autoComplete="username" className={field} />
+              <span className="block text-xs font-normal text-muted">{m.usernameHint}</span>
+            </label>
+          </>
         )}
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{mode === "sign-in" ? t.emailOrUsername : m.email}</span>

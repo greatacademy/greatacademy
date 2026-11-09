@@ -578,7 +578,7 @@ export declare const LeagueOutcomeSchema: GenEnum<LeagueOutcome>;
 
 /**
  * AccountService holds what belongs to a learner rather than to a course:
- * goals, the public username, leagues and guardians.
+ * the username, leagues and guardians.
  *
  * @generated from service ga.account.v1.AccountService
  */
@@ -594,7 +594,8 @@ export declare const AccountService: GenService<{
     output: typeof GetSettingsResponseSchema;
   },
   /**
-   * SetUsername chooses the public username, which must be free.
+   * SetUsername changes the account's username, which signs in and names the
+   * learner in leagues; it must be free.
    *
    * @generated from rpc ga.account.v1.AccountService.SetUsername
    */
@@ -604,7 +605,7 @@ export declare const AccountService: GenService<{
     output: typeof SetUsernameResponseSchema;
   },
   /**
-   * SetLeagues joins or leaves the leagues; joining needs a username.
+   * SetLeagues joins or leaves the leagues.
    *
    * @generated from rpc ga.account.v1.AccountService.SetLeagues
    */

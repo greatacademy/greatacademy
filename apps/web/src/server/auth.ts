@@ -1,5 +1,5 @@
 import { Code, ConnectError } from "@connectrpc/connect";
-import type { ChildAccounts } from "@ga/api";
+import { type ChildAccounts, usernamePattern } from "@ga/api";
 import { type Db, isManagedUser, schema, soleManagedChildren } from "@ga/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -9,10 +9,15 @@ import { eq } from "drizzle-orm";
 
 import { resetPasswordEmail, type SendEmail, verifyEmail } from "./email.ts";
 
+/** usernameForm is the form a username is stored and looked up in: Unicode NFC, lowercase. */
+const usernameForm = (name: string) => name.trim().normalize("NFC").toLowerCase();
+
 /**
- * createAuth configures better-auth on a request's database. Accounts are
- * email and password, or a username for a child's account, which a guardian
- * makes and which has no real address; sessions are cookies on the web and signed bearer tokens in the native apps. A
+ * createAuth configures better-auth on a request's database. Every account has
+ * a name, seen only by the person and their guardians, and a username, which
+ * signs in as the email address does and is the learner's name in leagues. A
+ * child's account, which a guardian makes, has no real address and signs in
+ * with its username only; sessions are cookies on the web and signed bearer tokens in the native apps. A
  * learner can study before verifying the email address, which only recovery
  * depends on. A child cannot delete their whole account, and a guardian's
  * deletion takes the accounts of the children only they guard. endPlans stops
@@ -42,7 +47,36 @@ export function createAuth(
       autoSignInAfterVerification: true,
       sendVerificationEmail: ({ user, url }) => sendEmail(verifyEmail(user.email, url)),
     },
-    plugins: [username(), bearer({ requireSignature: true })],
+    plugins: [
+      username({
+        minUsernameLength: 3,
+        maxUsernameLength: 20,
+        usernameValidator: (name) => usernamePattern.test(name),
+        usernameNormalization: usernameForm,
+        validationOrder: { username: "post-normalization" },
+      }),
+      bearer({ requireSignature: true }),
+    ],
+    databaseHooks: {
+      user: {
+        create: {
+          before: async (user) => {
+            const name = typeof user.name === "string" ? user.name.trim() : "";
+            if (!name) throw new APIError("BAD_REQUEST", { message: "enter your name" });
+            if (typeof user.username !== "string" || !user.username) throw new APIError("BAD_REQUEST", { message: "choose a username" });
+            return { data: { ...user, name } };
+          },
+        },
+        update: {
+          before: async (user) => {
+            if (user.name === undefined) return;
+            const name = typeof user.name === "string" ? user.name.trim() : "";
+            if (!name) throw new APIError("BAD_REQUEST", { message: "enter your name" });
+            return { data: { ...user, name } };
+          },
+        },
+      },
+    },
     user: {
       deleteUser: {
         enabled: true,
@@ -60,8 +94,9 @@ export function createAuth(
 /** childAccounts gives libs/api the account operations that only better-auth can do. */
 export function childAccounts(auth: ReturnType<typeof createAuth>, db: Db): ChildAccounts {
   return {
-    async create(name, password) {
-      const taken = await db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.username, name));
+    async create(name, display, password) {
+      const username = usernameForm(display);
+      const taken = await db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.username, username));
       if (taken.length > 0) throw new ConnectError("that username is taken", Code.AlreadyExists);
       const ctx = await auth.$context;
       const user = await ctx.internalAdapter.createUser(
@@ -69,8 +104,8 @@ export function childAccounts(auth: ReturnType<typeof createAuth>, db: Db): Chil
           name,
           email: `${crypto.randomUUID()}@child.invalid`,
           emailVerified: true,
-          username: name,
-          displayUsername: name,
+          username,
+          displayUsername: display,
         },
         { method: "guardian" },
       );

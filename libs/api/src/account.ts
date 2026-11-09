@@ -17,8 +17,9 @@ import {
   loadState,
   recentEvents,
   removeGuardian,
+  setLeagues,
+  setUsername,
   takeGuardianInvite,
-  updateLearnerSettings,
   usernameTaken,
 } from "@ga/db";
 import { courseProgress, DAY, initialState, leagueZones, type LeagueOutcome as Outcome, rankMembers, WEEK, weekStart } from "@ga/engine";
@@ -39,10 +40,13 @@ export interface AccountDeps {
   now(): number;
 }
 
-/** normalUsername checks a username: 3 to 20 letters, digits, underscores or hyphens, of any script. */
+/** usernamePattern is what a username may be: 3 to 20 letters, digits, underscores or hyphens, of any script. */
+export const usernamePattern = /^[\p{L}\p{N}_-]{3,20}$/u;
+
+/** normalUsername checks a username and returns it as stored for display, trimmed and in Unicode NFC. */
 export function normalUsername(username: string): string {
   const name = username.trim().normalize("NFC");
-  if (!/^[\p{L}\p{N}_-]{3,20}$/u.test(name)) throw new ConnectError("that username is not valid", Code.InvalidArgument);
+  if (!usernamePattern.test(name)) throw new ConnectError("that username is not valid", Code.InvalidArgument);
   return name;
 }
 
@@ -54,7 +58,7 @@ function auth(ctx: HandlerContext): { db: Db; userId: string } {
   return { db, userId };
 }
 
-/** refuseChild stops what a child's account may not do: public names, leagues, and dropping a guardian. */
+/** refuseChild stops what a child's account may not do: dropping a guardian. */
 async function refuseChild(db: Db, learnerId: string): Promise<void> {
   if ((await learnerAge(db, learnerId)).band === "child")
     throw new ConnectError("not available on a child's account", Code.PermissionDenied);
@@ -137,10 +141,9 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
     async setUsername(req, ctx) {
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
-      await refuseChild(db, learnerId);
       const username = normalUsername(req.username);
       if (await usernameTaken(db, learnerId, username)) throw new ConnectError("that username is taken", Code.AlreadyExists);
-      await updateLearnerSettings(db, learnerId, { username });
+      await setUsername(db, learnerId, username);
       return {};
     },
 
@@ -148,10 +151,9 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
       const now = deps.now();
-      if (req.enabled) await refuseChild(db, learnerId);
       const { username } = await learnerSettings(db, learnerId);
       if (req.enabled && !username) throw new ConnectError("choose a username first", Code.FailedPrecondition);
-      await updateLearnerSettings(db, learnerId, { leagues: req.enabled });
+      await setLeagues(db, learnerId, req.enabled);
       if (req.enabled) await joinLeague(db, learnerId, now);
       else await leaveWeek(db, learnerId, new Date(weekStart(now)));
       return {};

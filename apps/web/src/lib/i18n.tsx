@@ -15,6 +15,7 @@ const messages = {
     signUp: "Create account",
     signOut: "Sign out",
     name: "Name",
+    nameHint: "Private: other learners never see it.",
     email: "Email",
     password: "Password",
     passwordHint: "At least 8 characters",
@@ -250,10 +251,10 @@ const messages = {
     leagueMissed: (n: number) => `You also missed ${n} week${n === 1 ? "" : "s"}, which lowers your tier.`,
     tiers: ["Iron", "Bronze", "Silver", "Gold", "Platinum", "Sapphire", "Ruby", "Emerald", "Diamond"],
     username: "Username",
-    usernameHint: "3 to 20 letters, digits, _ or -. Shown to others in leagues; use something other than your real name.",
+    usernameHint:
+      "3 to 20 letters, digits, _ or -. You can sign in with it, and leagues show it to others; use something other than your real name.",
     usernameTaken: "That username is taken.",
     usernameInvalid: "That username is not valid.",
-    usernameFirst: "Choose a username first.",
     // Guardians.
     guardian: "Guardians",
     guardiansBody:
@@ -489,6 +490,7 @@ const messages = {
     signUp: "注册",
     signOut: "退出登录",
     name: "名字",
+    nameHint: "不公开，其他学习者看不到。",
     email: "邮箱",
     password: "密码",
     passwordHint: "至少 8 个字符",
@@ -719,10 +721,9 @@ const messages = {
     leagueMissed: (n: number) => `你还缺席了 ${n} 周，段位因此降低。`,
     tiers: ["黑铁", "青铜", "白银", "黄金", "铂金", "蓝宝石", "红宝石", "翡翠", "钻石"],
     username: "用户名",
-    usernameHint: "3 到 20 个字母、数字、_ 或 -。在联赛中对他人可见，请不要用真实姓名。",
+    usernameHint: "3 到 20 个字母、数字、_ 或 -。可以用来登录，联赛中对他人可见，请不要用真实姓名。",
     usernameTaken: "这个用户名已被占用。",
     usernameInvalid: "这个用户名不符合要求。",
-    usernameFirst: "请先选择用户名。",
     // 监护人。
     guardian: "监护人",
     guardiansBody:

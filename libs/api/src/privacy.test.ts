@@ -55,9 +55,11 @@ const store: FormStore = {
 const notify = async (to: string, kind: string) => void sent.push({ to, kind });
 
 const accounts: ChildAccounts = {
-  async create(username) {
+  async create(name, username) {
     const id = `child-${username}`;
-    await db.insert(schema.user).values({ id, name: username, email: `${id}@child.invalid`, username });
+    await db
+      .insert(schema.user)
+      .values({ id, name, email: `${id}@child.invalid`, username: username.toLowerCase(), displayUsername: username });
     return id;
   },
   async setPassword() {},
@@ -111,6 +113,7 @@ async function verified(user: string) {
 /** child makes a verified guardian's child in an open market, with basic consent. */
 async function child(guardianUser: string, username = "kid01") {
   const { learnerId } = await privacy(guardianUser).addChild({
+    name: "Kid",
     username,
     password: "long-enough",
     country: "US",
@@ -225,7 +228,16 @@ describe("guardians", () => {
 
   it("verify with a form that is deleted on either decision", async () => {
     expect(
-      await code(privacy("parent").addChild({ username: "kid01", password: "long-enough", country: "US", birthYear: 2016, birthMonth: 5 })),
+      await code(
+        privacy("parent").addChild({
+          name: "Kid",
+          username: "kid01",
+          password: "long-enough",
+          country: "US",
+          birthYear: 2016,
+          birthMonth: 5,
+        }),
+      ),
     ).toBe(Code.FailedPrecondition);
     await privacy("parent").submitVerification({ form: PDF, contentType: "application/pdf" });
     expect(forms.size).toBe(1);
@@ -259,6 +271,7 @@ describe("guardians", () => {
   it("add a child who studies only after consent", async () => {
     await verified("parent");
     const { learnerId } = await privacy("parent").addChild({
+      name: "Kid",
       username: "kid01",
       password: "long-enough",
       country: "US",
@@ -277,20 +290,43 @@ describe("guardians", () => {
     await learning("parent").chooseCourse({ courseId: COURSE, learnerId });
     expect((await learning(kid).getDashboard({ courseId: COURSE, timeZone: "UTC" })).canDecide).toBe(false);
     const account = createClient(AccountService, transport(kid));
-    expect(await code(account.setLeagues({ enabled: true }))).toBe(Code.PermissionDenied);
-    expect(await code(account.setUsername({ username: "public" }))).toBe(Code.PermissionDenied);
+    // A child's name stays private; their username is what a league shows, and they may join one.
+    expect(await account.getSettings({})).toMatchObject({ username: "kid01", leagues: false });
+    await account.setUsername({ username: "Kid-One" });
+    await account.setLeagues({ enabled: true });
+    expect(await account.getSettings({})).toMatchObject({ username: "Kid-One", leagues: true });
   });
 
   it("cannot add a teen as a child, or a child in a closed market", async () => {
     await verified("parent");
     expect(
-      await code(privacy("parent").addChild({ username: "kid02", password: "long-enough", country: "US", birthYear: 2010, birthMonth: 5 })),
+      await code(
+        privacy("parent").addChild({
+          name: "Kid",
+          username: "kid02",
+          password: "long-enough",
+          country: "US",
+          birthYear: 2010,
+          birthMonth: 5,
+        }),
+      ),
     ).toBe(Code.FailedPrecondition);
     expect(
-      await code(privacy("parent").addChild({ username: "kid02", password: "long-enough", country: "BR", birthYear: 2016, birthMonth: 5 })),
+      await code(
+        privacy("parent").addChild({
+          name: "Kid",
+          username: "kid02",
+          password: "long-enough",
+          country: "BR",
+          birthYear: 2016,
+          birthMonth: 5,
+        }),
+      ),
     ).toBe(Code.FailedPrecondition);
     expect(
-      await code(privacy("parent").addChild({ username: "kid02", password: "short", country: "US", birthYear: 2016, birthMonth: 5 })),
+      await code(
+        privacy("parent").addChild({ name: "Kid", username: "kid02", password: "short", country: "US", birthYear: 2016, birthMonth: 5 }),
+      ),
     ).toBe(Code.InvalidArgument);
   });
 

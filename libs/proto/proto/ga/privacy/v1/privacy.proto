@@ -197,6 +197,9 @@ message GetVerificationResponse {
 }
 
 message AddChildRequest {
+  // name is the child's name, seen only by the child and their guardians.
+  string name = 6;
+  // username signs the child in and names them in leagues.
   string username = 1;
   string password = 2;
   string country = 3;

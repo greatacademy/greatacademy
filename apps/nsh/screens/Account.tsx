@@ -1,9 +1,8 @@
 import { Code, ConnectError } from "@connectrpc/connect";
-import { Band } from "@ga/proto/privacy/v1/privacy_pb";
 import { type JSX, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 
-import { access, changeName, changePassword, sendVerification, sessionUser } from "../lib/auth.ts";
+import { changeName, changePassword, type SessionUser, sendVerification, sessionUser } from "../lib/auth.ts";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
@@ -18,7 +17,6 @@ import {
   FormPage,
   headerStyle,
   Muted,
-  Quiet,
   Saved,
   Skeleton,
   Title,
@@ -185,22 +183,39 @@ export function Goals(props: { subjectId: string; learnerId?: string }) {
   );
 }
 
-/** Profile changes an adult's name and shows the email address, with a way to verify it. */
+/**
+ * Profile changes the name, which only the learner and their guardians see, and the username, which signs in and
+ * names the learner in leagues, and shows the email address, with a way to verify it.
+ */
 export function Profile() {
+  const settings = settingsQuery();
   const name = signal<string | undefined>(undefined);
+  const username = signal<string | undefined>(undefined);
   const busy = signal(false);
   const error = signal("");
   const saved = signal(false);
   const sent = signal(false);
   const user = () => sessionUser();
-  const save = async () => {
+  const edit = (field: typeof name) => (value: string) => {
+    field.set(value);
+    saved.set(false);
+  };
+  const save = async (person: SessionUser, current: string) => {
     busy.set(true);
     error.set("");
     try {
-      await changeName(name() ?? "");
+      const nextName = (name() ?? person.name).trim();
+      const nextUsername = (username() ?? current).trim();
+      if (nextName !== person.name) await changeName(nextName);
+      if (nextUsername !== current) {
+        await account.setUsername({ username: nextUsername });
+        settings.refetch();
+        markChanged();
+      }
       saved.set(true);
     } catch (e) {
-      error.set(errorText(e));
+      const code = ConnectError.from(e).code;
+      error.set(code === Code.AlreadyExists ? m().usernameTaken : code === Code.InvalidArgument ? m().usernameInvalid : errorText(e));
     } finally {
       busy.set(false);
     }
@@ -219,28 +234,27 @@ export function Profile() {
       <If when={user()} else={<Skeleton rows={1} />}>
         {(person) => (
           <View style={{ gap: 16 }}>
-            <If
-              when={access()?.band === Band.ADULT}
-              else={
-                <View style={{ gap: 4 }}>
-                  <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>{m().name}</Text>
-                  <Text style={{ color: colors().ink, fontSize: 16 }}>{person().name}</Text>
+            <If when={settings()} else={<Skeleton rows={2} />}>
+              {(s) => (
+                <View style={{ alignItems: "stretch", gap: 16 }}>
+                  <Field label={m().name} value={name() ?? person().name} onChange={edit(name)} hint={m().nameHint} autoComplete="name" />
+                  <Field
+                    label={m().username}
+                    value={username() ?? s().username}
+                    onChange={edit(username)}
+                    hint={m().usernameHint}
+                    autoComplete="username"
+                  />
+                  <Action
+                    label={m().save}
+                    disabled={busy() || !(name() ?? person().name).trim() || (username() ?? s().username).trim().length < 3}
+                    onPress={() => void save(person(), s().username)}
+                  />
+                  <If when={saved()}>
+                    <Saved />
+                  </If>
                 </View>
-              }
-            >
-              <Field
-                label={m().name}
-                value={name() ?? person().name}
-                onChange={(value) => {
-                  name.set(value);
-                  saved.set(false);
-                }}
-                autoComplete="name"
-              />
-              <Action label={m().save} disabled={busy() || !(name() ?? "").trim()} onPress={() => void save()} />
-              <If when={saved()}>
-                <Saved />
-              </If>
+              )}
             </If>
             <If when={hasInbox(person().email)}>
               <View style={{ gap: 4 }}>
@@ -285,29 +299,13 @@ export function League() {
 }
 
 /**
- * LeagueSettings chooses the username others see in leagues, and whether the learner takes part; it is a section of
- * the settings, as on the web.
+ * LeagueSettings is whether the learner takes part in leagues, which show others only their username; it is a section
+ * of the settings, as on the web.
  */
 export function LeagueSettings() {
   const settings = settingsQuery();
-  const username = signal<string | undefined>(undefined);
   const busy = signal(false);
   const error = signal("");
-  const saved = signal(false);
-  const saveUsername = async () => {
-    busy.set(true);
-    error.set("");
-    try {
-      await account.setUsername({ username: (username() ?? "").trim() });
-      settings.refetch();
-      saved.set(true);
-    } catch (e) {
-      const code = ConnectError.from(e).code;
-      error.set(code === Code.AlreadyExists ? m().usernameTaken : code === Code.InvalidArgument ? m().usernameInvalid : errorText(e));
-    } finally {
-      busy.set(false);
-    }
-  };
   const join = async (enabled: boolean) => {
     busy.set(true);
     error.set("");
@@ -325,37 +323,10 @@ export function LeagueSettings() {
     <View style={{ gap: 16 }}>
       <Muted>{m().leagueIntro}</Muted>
       <If when={settings()} else={<Skeleton rows={1} />}>
-        {(s) => (
-          <View style={{ alignItems: "stretch", gap: 16 }}>
-            <Field
-              label={m().username}
-              value={username() ?? s().username}
-              onChange={(value) => {
-                username.set(value);
-                saved.set(false);
-              }}
-              hint={m().usernameHint}
-              autoComplete="off"
-            />
-            <View style={{ alignSelf: "flex-start" }}>
-              <Quiet
-                label={m().save}
-                disabled={busy() || (username() ?? s().username).trim().length < 3}
-                onPress={() => void saveUsername()}
-              />
-            </View>
-            <If when={saved()}>
-              <Saved />
-            </If>
-            <Toggle label={m().leagueJoin} checked={s().leagues} disabled={busy() || !s().username} onChange={(on) => void join(on)} />
-            <If when={!s().username}>
-              <Muted>{m().usernameFirst}</Muted>
-            </If>
-            <If when={error()}>
-              <ErrorNote message={error()} />
-            </If>
-          </View>
-        )}
+        {(s) => <Toggle label={m().leagueJoin} checked={s().leagues} disabled={busy()} onChange={(on) => void join(on)} />}
+      </If>
+      <If when={error()}>
+        <ErrorNote message={error()} />
       </If>
     </View>
   );

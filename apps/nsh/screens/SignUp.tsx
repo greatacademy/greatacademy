@@ -112,15 +112,16 @@ function Stop(props: { onParent: () => void }) {
   );
 }
 
-function AccountForm(props: { age: AgeAnswer; teen: boolean; parent: boolean; onBack: () => void }) {
+function AccountForm(props: { age: AgeAnswer; parent: boolean; onBack: () => void }) {
   const name = signal("");
+  const username = signal("");
   const email = signal("");
   const password = signal("");
   const confirm = signal("");
   const busy = signal(false);
   const error = signal("");
   const complete = () =>
-    (props.teen || name().trim() !== "") && email().includes("@") && password().length >= 8 && confirm() === password();
+    name().trim() !== "" && username().trim().length >= 3 && email().includes("@") && password().length >= 8 && confirm() === password();
 
   async function submit() {
     error.set("");
@@ -128,8 +129,7 @@ function AccountForm(props: { age: AgeAnswer; teen: boolean; parent: boolean; on
     try {
       // A parent or guardian goes on to their learners once the account may study.
       if (props.parent) afterSignUp.set({ name: "learners" });
-      // A minor gives no real name.
-      await signUp(props.teen ? "Learner" : name().trim(), email(), password(), props.age);
+      await signUp(name().trim(), username().trim(), email(), password(), props.age);
     } catch (e) {
       afterSignUp.set(null);
       error.set(errorText(e));
@@ -141,9 +141,8 @@ function AccountForm(props: { age: AgeAnswer; teen: boolean; parent: boolean; on
   return (
     <FormPage>
       <BackLink onPress={props.onBack} />
-      <If when={!props.teen}>
-        <Field label={m().name} value={name()} onChange={(v) => name.set(v)} autoComplete="name" />
-      </If>
+      <Field label={m().name} value={name()} onChange={(v) => name.set(v)} hint={m().nameHint} autoComplete="name" />
+      <Field label={m().username} value={username()} onChange={(v) => username.set(v)} hint={m().usernameHint} autoComplete="username" />
       <Field label={m().email} value={email()} onChange={(v) => email.set(v)} keyboardType="email-address" autoComplete="email" />
       <Field
         label={m().password}
@@ -177,7 +176,7 @@ export function SignUp() {
   const stopStored = resource(async () => ({ stored: await Storage.getItem(STOP_KEY) }));
   const who = signal<Who | null>(null);
   const stopped = signal(false);
-  const answer = signal<{ age: AgeAnswer; teen: boolean } | null>(null);
+  const answer = signal<{ age: AgeAnswer } | null>(null);
   const parent = () => who() === "children" || who() === "both";
   const stoppedNow = () => stopped() || (who() === "self" && stopActive(stopStored()?.stored ?? null, Date.now()));
 
@@ -198,7 +197,7 @@ export function SignUp() {
       stopped.set(true);
       return;
     }
-    answer.set({ age, teen: result.band === Band.TEEN });
+    answer.set({ age });
   }
 
   return (
@@ -219,7 +218,7 @@ export function SignUp() {
                 </FormPage>
               }
             >
-              {(chosen) => <AccountForm age={chosen().age} teen={chosen().teen} parent={parent()} onBack={() => answer.set(null)} />}
+              {(chosen) => <AccountForm age={chosen().age} parent={parent()} onBack={() => answer.set(null)} />}
             </If>
           </If>
         </If>

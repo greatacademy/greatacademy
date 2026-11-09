@@ -176,11 +176,9 @@ export function SettingsBody(props: {
           <Row title={b().plans} detail={b().plansDetail} onPress={() => nav.push({ name: "plans" })} />
         </If>
       </Section>
-      <If when={!child()}>
-        <Section title={m().league}>
-          <LeagueSettings />
-        </Section>
-      </If>
+      <Section title={m().league}>
+        <LeagueSettings />
+      </Section>
       <Section title={m().language}>
         <Segmented label={m().language} items={languages} value={languageChoice()} onChange={chooseLanguage} />
       </Section>

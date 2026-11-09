@@ -29,6 +29,7 @@ import {
 } from "@ga/db";
 import { AccessStatus, Band as BandMessage, type PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
+import { normalUsername } from "./account.ts";
 import { type Access, accessOf, currentNotice, marketOpenToMinors, scopeOffered } from "./capabilities.ts";
 import { accountsKey, dbKey, userIdKey } from "./context.ts";
 import { AI_SCOPES, ASSENT_SCOPES, ageBand, consentExpiry, isKnownCountry, MARKETS, movedBand, nextBand } from "./markets.ts";
@@ -334,8 +335,9 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
       if (!(await guardianMethod(db, userId))) throw new ConnectError("verify as a guardian first", Code.FailedPrecondition);
       const accounts = ctx.values.get(accountsKey);
       if (!accounts) throw new ConnectError("no accounts", Code.Internal);
-      const username = req.username.trim().toLowerCase();
-      if (!/^[a-z0-9_-]{3,20}$/.test(username)) throw new ConnectError("that username is not valid", Code.InvalidArgument);
+      const name = req.name.trim();
+      if (!name || name.length > 100) throw new ConnectError("enter the child's name", Code.InvalidArgument);
+      const username = normalUsername(req.username);
       checkPassword(req.password);
       const now = deps.now();
       const band = ageBand(checkCountry(req.country), req.birthYear, req.birthMonth, now);
@@ -345,7 +347,7 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
         throw new ConnectError("this market is not open to minors", Code.FailedPrecondition);
       const plan = deps.billing ? await waitingPlan(db, userId, new Date(now)) : undefined;
       if (deps.billing && !plan) throw new ConnectError("buy a plan for this child first", Code.FailedPrecondition);
-      const childUser = await accounts.create(username, req.password);
+      const childUser = await accounts.create(name, username, req.password);
       const learnerId = await learnerFor(db, childUser);
       await setLearnerAge(db, learnerId, { band: "child", bandEndsAt: new Date(band.endsAt ?? now), country: req.country });
       await setManaged(db, learnerId);

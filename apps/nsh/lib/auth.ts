@@ -39,22 +39,25 @@ async function startSession(path: string, body: unknown): Promise<void> {
   setToken(issued);
 }
 
-/** signIn starts a session with an email address, or with the username of a child's account. */
+/** signIn starts a session with an email address or a username. */
 export function signIn(login: string, password: string): Promise<void> {
   const name = login.trim();
   return name.includes("@")
     ? startSession("/sign-in/email", { email: name, password })
-    : startSession("/sign-in/username", { username: name.toLowerCase(), password });
+    : startSession("/sign-in/username", { username: name, password });
 }
 
 // While sign-up stores the age answer, the new account's access waits, since it would still say to answer.
 const settingUp = signal(false);
 
-/** signUp creates an account, starts its session and stores the age answer; if that fails, the account answers again on the age page. */
-export async function signUp(name: string, email: string, password: string, age: AgeAnswer): Promise<void> {
+/**
+ * signUp creates an account with a name and a username, starts its session and stores the age answer; if that fails,
+ * the account answers again on the age page.
+ */
+export async function signUp(name: string, username: string, email: string, password: string, age: AgeAnswer): Promise<void> {
   settingUp.set(true);
   try {
-    await startSession("/sign-up/email", { name, email: email.trim(), password });
+    await startSession("/sign-up/email", { name, username, displayUsername: username, email: email.trim(), password });
     await privacy.setAge(age).catch(() => undefined);
   } finally {
     settingUp.set(false);

@@ -114,12 +114,7 @@ function SignUp() {
     return (
       <div className="mx-auto mt-6 max-w-sm">
         <BackButton onPress={() => setAnswer(undefined)} />
-        <AuthForm
-          mode="sign-up"
-          next={parent ? "/guardian" : next}
-          askName={!answer.teen}
-          afterSignUp={() => privacy.setAge(answer.age).then(() => undefined)}
-        />
+        <AuthForm mode="sign-up" next={parent ? "/guardian" : next} afterSignUp={() => privacy.setAge(answer.age).then(() => undefined)} />
         <p className="mx-auto mt-4 max-w-sm text-center text-xs text-muted">
           {t.signUpNotice}{" "}
           <Link to="/legal/$page" params={{ page: "privacy" }} className="text-accent">

@@ -74,7 +74,6 @@ function Settings() {
   const qc = useQueryClient();
   const access = useAccess();
   const child = access?.band === Band.CHILD;
-  const adult = access?.band === Band.ADULT;
   const settings = useQuery({ queryKey: ["settings"], queryFn: () => account.getSettings({}), enabled: !!session, staleTime: 0 });
   // A link to a section (`/settings#league`) lands on it once the page has its data.
   const hash = useLocation({ select: (l) => l.hash });
@@ -84,8 +83,8 @@ function Settings() {
   }, [loaded, hash]);
   const refresh = () => qc.invalidateQueries({ queryKey: ["settings"] });
 
-  const [nameState, setNameState] = useState<"idle" | "saved" | "failed">("idle");
-  const [usernameError, setUsernameError] = useState<string>();
+  const [profileError, setProfileError] = useState<string>();
+  const [profileSaved, setProfileSaved] = useState(false);
   const [verification, setVerification] = useState(false);
 
   const leagues = useMutation({ mutationFn: (enabled: boolean) => account.setLeagues({ enabled }), onSuccess: refresh });
@@ -96,22 +95,30 @@ function Settings() {
   if (settings.isError) return <LoadError error={settings.error} onRetry={() => settings.refetch()} />;
   const s = settings.data;
 
-  async function saveName(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const res = await authClient.updateUser({ name: String(new FormData(e.currentTarget).get("name")) });
-    setNameState(res.error ? "failed" : "saved");
-  }
+  const currentName = session.user.name;
 
-  async function saveUsername(e: FormEvent<HTMLFormElement>) {
+  /** saveProfile saves the name and the username, each when it changed. */
+  async function saveProfile(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setUsernameError(undefined);
-    try {
-      await account.setUsername({ username: String(new FormData(e.currentTarget).get("username")) });
-      await refresh();
-    } catch (err) {
-      const code = failureCode(err);
-      setUsernameError(code === Code.AlreadyExists ? m.usernameTaken : code === Code.InvalidArgument ? m.usernameInvalid : m.error);
+    const form = new FormData(e.currentTarget);
+    setProfileError(undefined);
+    setProfileSaved(false);
+    const name = String(form.get("name")).trim();
+    const username = String(form.get("username")).trim();
+    if (name !== currentName) {
+      const res = await authClient.updateUser({ name });
+      if (res.error) return setProfileError(m.error);
     }
+    if (username !== s.username) {
+      try {
+        await account.setUsername({ username });
+      } catch (err) {
+        const code = failureCode(err);
+        return setProfileError(code === Code.AlreadyExists ? m.usernameTaken : code === Code.InvalidArgument ? m.usernameInvalid : m.error);
+      }
+    }
+    await refresh();
+    setProfileSaved(true);
   }
 
   async function signOut() {
@@ -123,21 +130,33 @@ function Settings() {
   return (
     <div className="space-y-6">
       <Section id="profile" title={m.profile}>
-        {adult && (
-          <form onSubmit={saveName} className="space-y-3">
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{m.name}</span>
-              <input name="name" required defaultValue={session.user.name} autoComplete="name" className={field} />
-            </label>
-            {nameState === "failed" && <ErrorNote message={m.error} />}
-            <div className="flex items-center gap-3">
-              <Button type="submit" variant="secondary">
-                {m.save}
-              </Button>
-              {nameState === "saved" && <span className="text-sm text-good">{m.saved}</span>}
-            </div>
-          </form>
-        )}
+        <form onSubmit={saveProfile} className="space-y-3">
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{m.name}</span>
+            <input name="name" required maxLength={100} defaultValue={session.user.name} autoComplete="name" className={field} />
+            <span className="block text-xs font-normal text-muted">{m.nameHint}</span>
+          </label>
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{m.username}</span>
+            <input
+              name="username"
+              required
+              minLength={3}
+              maxLength={20}
+              defaultValue={s.username}
+              autoComplete="username"
+              className={field}
+            />
+            <span className="block text-xs font-normal text-muted">{m.usernameHint}</span>
+          </label>
+          {profileError && <ErrorNote message={profileError} />}
+          <div className="flex items-center gap-3">
+            <Button type="submit" variant="secondary">
+              {m.save}
+            </Button>
+            {profileSaved && <span className="text-sm text-good">{m.saved}</span>}
+          </div>
+        </form>
         {hasInbox(session.user.email) ? (
           <div className="space-y-1 text-sm">
             <div className="font-medium">{m.email}</div>
@@ -164,42 +183,21 @@ function Settings() {
               )}
             </div>
           </div>
-        ) : (
-          <p className="text-sm">{session.user.name}</p>
-        )}
+        ) : null}
       </Section>
 
       <Subscriptions />
 
       <PrivacySettings />
 
-      {!child && (
-        <Section id="league" title={m.league}>
-          <p className="text-sm text-muted">{m.leagueIntro}</p>
-          <form onSubmit={saveUsername} className="space-y-2">
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{m.username}</span>
-              <input name="username" required minLength={3} maxLength={20} defaultValue={s.username} autoComplete="off" className={field} />
-              <span className="block text-xs font-normal text-muted">{m.usernameHint}</span>
-            </label>
-            {usernameError && <ErrorNote message={usernameError} />}
-            <Button type="submit" variant="secondary">
-              {m.save}
-            </Button>
-          </form>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={s.leagues}
-              disabled={leagues.isPending || !s.username}
-              onChange={(e) => leagues.mutate(e.target.checked)}
-            />
-            {m.leagueJoin}
-          </label>
-          {!s.username && <p className="text-xs text-muted">{m.usernameFirst}</p>}
-          {leagues.isError && <ErrorNote message={m.error} />}
-        </Section>
-      )}
+      <Section id="league" title={m.league}>
+        <p className="text-sm text-muted">{m.leagueIntro}</p>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={s.leagues} disabled={leagues.isPending} onChange={(e) => leagues.mutate(e.target.checked)} />
+          {m.leagueJoin}
+        </label>
+        {leagues.isError && <ErrorNote message={m.error} />}
+      </Section>
 
       <Section id="guardian" title={m.guardian}>
         <p className="text-sm text-muted">{m.guardiansBody}</p>

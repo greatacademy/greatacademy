@@ -358,9 +358,7 @@ function AccountMenu(props: { name: string; width: number }) {
         </If>
       </View>
       <MenuItem label={m().courses} onPress={go(() => nav.push({ name: "courses" }))} />
-      <If when={access()?.band !== Band.CHILD}>
-        <MenuItem label={m().league} onPress={go(() => nav.push({ name: "standings" }))} />
-      </If>
+      <MenuItem label={m().league} onPress={go(() => nav.push({ name: "standings" }))} />
       <If when={access()?.band === Band.ADULT}>
         <MenuItem label={p().guardedTitle} onPress={go(() => nav.push({ name: "learners" }))} />
       </If>

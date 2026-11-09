@@ -250,7 +250,7 @@ The forecast of a course is the lessons' XP not yet learned × (1 + `forecastOve
 
 ## 12. Leagues
 
-Leagues are optional. A learner joins by choosing a public username and turning them on; only the username and weekly XP are shown to others.
+Leagues are optional, for every age band. A learner joins by turning them on; others see only the account's username and the weekly XP, never the name.
 
 - **Week.** A league week starts on Monday 00:00 UTC, so it is one week for everyone. Total XP is unaffected; each week's standings start at zero.
 - **Tiers.** Nine tiers: Iron, Bronze, Silver, Gold, Platinum, Sapphire, Ruby, Emerald, Diamond. A new member starts in Iron.

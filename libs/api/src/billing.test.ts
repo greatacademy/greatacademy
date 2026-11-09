@@ -63,9 +63,11 @@ const payments: Payments = {
 
 const store: FormStore = { put: async () => {}, get: async () => undefined, delete: async () => {} };
 const accounts: ChildAccounts = {
-  async create(username) {
+  async create(name, username) {
     const id = `child-${username}`;
-    await db.insert(schema.user).values({ id, name: username, email: `${id}@child.invalid`, username });
+    await db
+      .insert(schema.user)
+      .values({ id, name, email: `${id}@child.invalid`, username: username.toLowerCase(), displayUsername: username });
     return id;
   },
   async setPassword() {},
@@ -472,7 +474,7 @@ describe("plans", () => {
     await cardBought(meta());
     const privacy = client(PrivacyService, "parent");
     const add = (username: string) =>
-      privacy.addChild({ username, password: "long-enough", country: "US", birthYear: 2016, birthMonth: 5 });
+      privacy.addChild({ name: "Kid", username, password: "long-enough", country: "US", birthYear: 2016, birthMonth: 5 });
     await client(AdminService, "root").setMarketOpen({
       country: "US",
       open: true,
@@ -485,7 +487,7 @@ describe("plans", () => {
     expect(plan?.learnerId).toBe(learnerId);
     expect(await code(add("kid02"))).toBe(Code.FailedPrecondition);
     const subs = (await bill("parent").listSubscriptions({})).subscriptions;
-    expect(subs[0]?.learnerName).toBe("kid01");
+    expect(subs[0]?.learnerName).toBe("Kid");
   });
 });
 

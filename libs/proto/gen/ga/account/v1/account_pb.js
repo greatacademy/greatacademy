@@ -202,7 +202,7 @@ export const LeagueOutcome = /*@__PURE__*/
 
 /**
  * AccountService holds what belongs to a learner rather than to a course:
- * goals, the public username, leagues and guardians.
+ * the username, leagues and guardians.
  *
  * @generated from service ga.account.v1.AccountService
  */

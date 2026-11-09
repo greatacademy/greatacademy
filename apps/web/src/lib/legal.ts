@@ -84,7 +84,7 @@ const en: Record<LegalPageName, LegalPage> = {
       {
         heading: "What we keep",
         items: [
-          "Your account: email and name, or for a child's account only a username.",
+          "Your account: name, username and email address; a child's account has no email address.",
           "Your age group, the date it ends and your country. We don't keep your date of birth.",
           "What you study: which questions you saw, whether each answer was right, and the XP you earned.",
           "The text of your answers, for a limited time (see how long we keep things).",
@@ -253,7 +253,7 @@ const zh: Record<LegalPageName, LegalPage> = {
       {
         heading: "我们保存什么",
         items: [
-          "你的账号：邮箱和姓名；儿童账号只有用户名。",
+          "你的账号：名字、用户名和邮箱；儿童账号没有邮箱。",
           "你的年龄段、其结束日期和国家或地区。我们不保存你的出生日期。",
           "你的学习情况：看过哪些题、每题是否正确、获得的 XP。",
           "你答案的文本，保存有限的时间（见“数据保存多久”）。",

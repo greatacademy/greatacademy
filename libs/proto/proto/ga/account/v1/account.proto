@@ -5,13 +5,14 @@ package ga.account.v1;
 import "ga/learning/v1/learning.proto";
 
 // AccountService holds what belongs to a learner rather than to a course:
-// goals, the public username, leagues and guardians.
+// the username, leagues and guardians.
 service AccountService {
   // GetSettings returns the learner's settings and guardians.
   rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
-  // SetUsername chooses the public username, which must be free.
+  // SetUsername changes the account's username, which signs in and names the
+  // learner in leagues; it must be free.
   rpc SetUsername(SetUsernameRequest) returns (SetUsernameResponse);
-  // SetLeagues joins or leaves the leagues; joining needs a username.
+  // SetLeagues joins or leaves the leagues.
   rpc SetLeagues(SetLeaguesRequest) returns (SetLeaguesResponse);
   // GetLeague returns the standings of the learner's group this week.
   rpc GetLeague(GetLeagueRequest) returns (GetLeagueResponse);
