@@ -18,6 +18,7 @@ import {
   FormPage,
   headerStyle,
   Muted,
+  Quiet,
   Saved,
   Skeleton,
   Title,
@@ -274,8 +275,20 @@ export function Profile() {
   );
 }
 
-/** League chooses the username others see in leagues, and whether the learner takes part. */
+/** League is the league's page, as the league card's "Learn more" opens it: the same as the league's settings. */
 export function League() {
+  return (
+    <Page title={m().league}>
+      <LeagueSettings />
+    </Page>
+  );
+}
+
+/**
+ * LeagueSettings chooses the username others see in leagues, and whether the learner takes part; it is a section of
+ * the settings, as on the web.
+ */
+export function LeagueSettings() {
   const settings = settingsQuery();
   const username = signal<string | undefined>(undefined);
   const busy = signal(false);
@@ -309,11 +322,11 @@ export function League() {
     }
   };
   return (
-    <Page title={m().league}>
+    <View style={{ gap: 16 }}>
       <Muted>{m().leagueIntro}</Muted>
       <If when={settings()} else={<Skeleton rows={1} />}>
         {(s) => (
-          <View style={{ gap: 16 }}>
+          <View style={{ alignItems: "stretch", gap: 16 }}>
             <Field
               label={m().username}
               value={username() ?? s().username}
@@ -324,11 +337,13 @@ export function League() {
               hint={m().usernameHint}
               autoComplete="off"
             />
-            <Action
-              label={m().save}
-              disabled={busy() || (username() ?? s().username).trim().length < 3}
-              onPress={() => void saveUsername()}
-            />
+            <View style={{ alignSelf: "flex-start" }}>
+              <Quiet
+                label={m().save}
+                disabled={busy() || (username() ?? s().username).trim().length < 3}
+                onPress={() => void saveUsername()}
+              />
+            </View>
             <If when={saved()}>
               <Saved />
             </If>
@@ -342,7 +357,7 @@ export function League() {
           </View>
         )}
       </If>
-    </Page>
+    </View>
   );
 }
 

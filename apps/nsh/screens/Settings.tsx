@@ -1,7 +1,7 @@
 import { type Appearance, CONTRASTS, type ColorScheme, PALETTES, type Palette, resolveColors, THEMES } from "@ga/design";
 import type { Guardian } from "@ga/proto/account/v1/account_pb";
 import { Band } from "@ga/proto/privacy/v1/privacy_pb";
-import { Clipboard, colorScheme, openUrl, Scroll, signal, Text, View } from "nsh";
+import { Clipboard, colorScheme, openUrl, platform, Scroll, signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
 import { access, sessionUser, signOut } from "../lib/auth.ts";
 import { b } from "../lib/billing-text.ts";
@@ -12,7 +12,7 @@ import { dateOf, p } from "../lib/privacy-text.ts";
 import { API_URL, account } from "../lib/rpc.ts";
 import { canBuy } from "../lib/store.ts";
 import { barSpace, colors, ErrorNote, followScroll, Muted, Quiet, Row, Section, Segmented, topSpace } from "../lib/ui.tsx";
-import { openAccountPage, settingsQuery } from "./Account.tsx";
+import { LeagueSettings, openAccountPage, settingsQuery } from "./Account.tsx";
 
 function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean; onPress: () => void }) {
   const look = () => resolveColors({ ...appearance(), theme: props.scheme, [props.scheme]: props.palette } as Appearance, props.scheme);
@@ -94,20 +94,22 @@ export function InviteGuardian() {
   );
 }
 
+/** confirmSignOut asks before signing out, then signs out. */
+export async function confirmSignOut(): Promise<void> {
+  const { action } = await AlertDialog.show({
+    title: m().signOutTitle,
+    actions: [
+      { id: "cancel", label: m().cancel, role: "cancel" },
+      { id: "out", label: m().signOut, role: "destructive" },
+    ],
+  });
+  if (action === "out") await signOut();
+}
+
 /** Me is the Me tab: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
 export function Me() {
   const settings = settingsQuery();
   const set = (change: Partial<Appearance>) => chooseAppearance({ ...appearance(), ...change });
-  const confirmSignOut = async () => {
-    const { action } = await AlertDialog.show({
-      title: m().signOutTitle,
-      actions: [
-        { id: "cancel", label: m().cancel, role: "cancel" },
-        { id: "out", label: m().signOut, role: "destructive" },
-      ],
-    });
-    if (action === "out") await signOut();
-  };
   const removeError = signal("");
   const confirmRemove = async (guardian: Guardian) => {
     const { action } = await AlertDialog.show({
@@ -135,7 +137,6 @@ export function Me() {
     >
       <SettingsBody
         profile={sessionUser()?.name}
-        league={settings() ? (settings()?.leagues ? m().leagueOn : m().leagueOff) : undefined}
         guardians={settings()?.guardians}
         removeError={removeError()}
         managed={!!access()?.managed}
@@ -151,7 +152,6 @@ export function Me() {
 /** SettingsBody is the content of the settings page, also shown as the Me tab. */
 export function SettingsBody(props: {
   profile?: string;
-  league?: string;
   guardians?: readonly Guardian[];
   removeError?: string;
   managed: boolean;
@@ -172,13 +172,23 @@ export function SettingsBody(props: {
     <View style={{ alignSelf: "center", gap: 24, maxWidth: 640, padding: 16, paddingBottom: 16 + barSpace(), width: "100%" }}>
       <Section title={m().account}>
         <Row title={m().profile} detail={props.profile} onPress={() => openAccountPage("profile")} />
-        <If when={!child()}>
-          <Row title={m().league} detail={props.league} onPress={() => openAccountPage("league")} />
-        </If>
         <If when={access()?.band === Band.ADULT && canBuy()}>
           <Row title={b().plans} detail={b().plansDetail} onPress={() => nav.push({ name: "plans" })} />
         </If>
       </Section>
+      <If when={!platform.desktop}>
+        <Section title={m().learning}>
+          <Row title={m().courses} onPress={() => nav.push({ name: "courses" })} />
+          <If when={!child()}>
+            <Row title={m().standings} onPress={() => nav.push({ name: "standings" })} />
+          </If>
+        </Section>
+      </If>
+      <If when={!child()}>
+        <Section title={m().league}>
+          <LeagueSettings />
+        </Section>
+      </If>
       <Section title={m().language}>
         <Segmented label={m().language} items={languages} value={languageChoice()} onChange={chooseLanguage} />
       </Section>

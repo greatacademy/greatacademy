@@ -1,25 +1,28 @@
+import { Band } from "@ga/proto/privacy/v1/privacy_pb";
 import { Image, type JSX, keymap, platform, safeAreaInsets, signal, Text, View } from "nsh";
-import { NavPage } from "nsh/base";
+import { NavPage, Popover } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
+import caretUp from "../assets/icons/caret-up.svg";
 import panel from "../assets/sidebar.svg";
 import course from "../assets/tabs/courses.svg";
 import learn from "../assets/tabs/learn.svg";
 import me from "../assets/tabs/me.svg";
 import progress from "../assets/tabs/progress.svg";
 import gear from "../assets/tabs/settings.svg";
-import { sessionUser } from "../lib/auth.ts";
+import { access, sessionUser } from "../lib/auth.ts";
 import { HEADER_HEIGHT, SIDEBAR_NARROW, SIDEBAR_WIDE, sidebarToggleLeft, sidebarWide, sidebarWidth } from "../lib/chrome.ts";
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
 import { collapseSidebar, sidebarCollapsed } from "../lib/prefs.ts";
+import { p } from "../lib/privacy-text.ts";
 import { SubjectSwitcher, usePlace } from "../lib/subject.tsx";
 import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
 import { CourseTab } from "./CourseTab.tsx";
 import { Header } from "./Header.tsx";
 import { LearnTab } from "./LearnTab.tsx";
 import { Progress } from "./Progress.tsx";
-import { Me } from "./Settings.tsx";
+import { confirmSignOut, Me } from "./Settings.tsx";
 
 /** tabTitle is a tab's name in the app's language; on a desktop the Me tab is the settings, opened from the sidebar's foot. */
 export function tabTitle(id: TabId): string {
@@ -256,6 +259,108 @@ export function ContentCorner() {
   );
 }
 
+/** MenuItem is one line of the account menu; choosing it closes the menu first. */
+function MenuItem(props: { label: string; tone?: "bad"; onPress: () => void }) {
+  return (
+    <Text
+      role="menuitem"
+      onPress={props.onPress}
+      hoverStyle={{ backgroundColor: colors().line }}
+      style={{
+        borderRadius: 8,
+        color: props.tone === "bad" ? colors().bad : colors().ink,
+        fontSize: 14,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+      }}
+    >
+      {props.label}
+    </Text>
+  );
+}
+
+/**
+ * AccountMenu is who is signed in at the sidebar's foot, which opens a menu above it as the web's account menu does:
+ * the name and email, then the course catalog, the league, the learners followed, the settings and signing out.
+ */
+function AccountMenu(props: { name: string }) {
+  const shown = signal(false);
+  const email = () => sessionUser()?.email ?? "";
+  const go = (run: () => void) => () => {
+    shown.set(false);
+    run();
+  };
+  return (
+    <Popover
+      open={shown()}
+      onOpenChange={({ open }) => shown.set(open)}
+      placement="top"
+      align="start"
+      offset={6}
+      margin={8}
+      popupStyle={{
+        backgroundColor: colors().surface,
+        borderColor: colors().line,
+        borderRadius: 12,
+        borderWidth: 1,
+        gap: 2,
+        padding: 6,
+        width: 260,
+      }}
+      trigger={
+        <View
+          role="button"
+          accessibilityLabel={m().accountMenu(props.name)}
+          hoverStyle={{ backgroundColor: colors().line }}
+          style={{ alignItems: "center", borderRadius: 8, flex: 1, flexDirection: "row", gap: 8, marginLeft: -4, padding: 4 }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: colors()["accent-soft"],
+              borderRadius: 16,
+              height: 32,
+              justifyContent: "center",
+              width: 32,
+            }}
+          >
+            <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...props.name][0]?.toUpperCase() ?? ""}</Text>
+          </View>
+          <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.name}</Text>
+          <Image src={caretUp} style={{ height: 12, tintColor: colors().muted, width: 12 }} />
+        </View>
+      }
+    >
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderColor: colors().line,
+          gap: 2,
+          marginBottom: 4,
+          paddingBottom: 8,
+          paddingHorizontal: 10,
+          paddingTop: 4,
+        }}
+      >
+        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "600", numberOfLines: 1 }}>{props.name}</Text>
+        <If when={email() && !email().endsWith(".invalid")}>
+          <Text style={{ color: colors().muted, fontSize: 12, numberOfLines: 1 }}>{email()}</Text>
+        </If>
+      </View>
+      <MenuItem label={m().courses} onPress={go(() => nav.push({ name: "courses" }))} />
+      <If when={access()?.band !== Band.CHILD}>
+        <MenuItem label={m().standings} onPress={go(() => nav.push({ name: "standings" }))} />
+      </If>
+      <If when={access()?.band === Band.ADULT}>
+        <MenuItem label={p().guardedTitle} onPress={go(() => nav.push({ name: "learners" }))} />
+      </If>
+      <MenuItem label={m().settingsTab} onPress={go(() => openTab("me"))} />
+      <View style={{ backgroundColor: colors().line, height: 1, marginVertical: 4 }} />
+      <MenuItem label={m().signOut} onPress={go(() => void confirmSignOut())} />
+    </Popover>
+  );
+}
+
 /**
  * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: first the subject shown, which opens the
  * switch to another, then the subject's tabs, each with its icon, ⌘1 to ⌘3 (Ctrl on
@@ -365,22 +470,7 @@ export function Sidebar() {
         }}
       >
         <Clip width={SIDEBAR_ROW - 8 - 32}>
-          <If when={open()}>
-            <View
-              accessibilityLabel={name()}
-              style={{
-                alignItems: "center",
-                backgroundColor: colors()["accent-soft"],
-                borderRadius: 16,
-                height: 32,
-                justifyContent: "center",
-                width: 32,
-              }}
-            >
-              <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...name()][0]?.toUpperCase() ?? ""}</Text>
-            </View>
-            <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500" }}>{name()}</Text>
-          </If>
+          <AccountMenu name={name()} />
         </Clip>
         <SidebarButton
           icon={gear}

@@ -21,7 +21,10 @@ export function tx(text: Text | undefined): string {
 const messages = {
   en: {
     account: "Account",
-    security: "Sign-in and account",
+    accountMenu: (name: string) => `${name}, account menu`,
+    learning: "Learning",
+    standings: "League standings",
+    security: "Account security",
     ageBody: "We ask everyone these two things.",
     ageTitle: "Before you start",
     back: "Back",
@@ -282,8 +285,6 @@ const messages = {
     leagueIntro:
       "Each week you compete with up to 30 learners in your tier by the XP you earn. The top third moves up, the bottom third moves down. Others see only your username and weekly XP.",
     leagueJoin: "Take part in leagues",
-    leagueOn: "Taking part",
-    leagueOff: "Not taking part",
     username: "Username",
     usernameHint: "3 to 20 letters, digits, _ or -. Shown to others in leagues; use something other than your real name.",
     usernameTaken: "That username is taken.",
@@ -388,7 +389,10 @@ const messages = {
   },
   "zh-CN": {
     account: "账号",
-    security: "登录与账号",
+    accountMenu: (name: string) => `${name}，账号菜单`,
+    learning: "学习",
+    standings: "联赛排名",
+    security: "账号安全",
     ageBody: "我们会问每个人这两个问题。",
     ageTitle: "开始之前",
     back: "返回",
@@ -642,8 +646,6 @@ const messages = {
     league: "联赛",
     leagueIntro: "每周你和同段位最多 30 名学习者比赛得到的 XP。前三分之一升段，后三分之一降段。别人只能看到你的用户名和本周 XP。",
     leagueJoin: "参加联赛",
-    leagueOn: "已参加",
-    leagueOff: "未参加",
     username: "用户名",
     usernameHint: "3 到 20 个字母、数字、_ 或 -。在联赛中对他人可见，请不要用真实姓名。",
     usernameTaken: "这个用户名已被占用。",
