@@ -7,7 +7,7 @@ import { access, changeName, changePassword, sendVerification, sessionUser } fro
 import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
-import { account } from "../lib/rpc.ts";
+import { account, learning, timeZone } from "../lib/rpc.ts";
 import {
   Action,
   ConfirmField,
@@ -78,7 +78,14 @@ function Step(props: { glyph: string; label: string; disabled: boolean; onPress:
 
 /** Goals sets how much XP to earn on each weekday, and pauses the goals. */
 export function Goals() {
-  const settings = settingsQuery();
+  // The goals are those of the subject most recently worked in.
+  const settings = query(["goals"], async ({ signal: abort }) => {
+    const profile = await learning.getProfile({ timeZone: timeZone() }, { signal: abort });
+    const enrollment = profile.enrollments[0];
+    if (!enrollment) return { subjectId: "", goals: undefined };
+    const dash = await learning.getDashboard({ courseId: enrollment.courseId, timeZone: timeZone() }, { signal: abort });
+    return { subjectId: enrollment.subjectId, goals: dash.goals };
+  });
   const days = signal<number[] | undefined>(undefined);
   const paused = signal<boolean | undefined>(undefined);
   const busy = signal(false);
@@ -99,7 +106,7 @@ export function Goals() {
     busy.set(true);
     error.set("");
     try {
-      await account.setGoals({ goals: { weekdays: week(), paused: isPaused() } });
+      await learning.setGoals({ subjectId: settings()?.subjectId ?? "", goals: { weekdays: week(), paused: isPaused() } });
       settings.refetch();
       markChanged();
       saved.set(true);

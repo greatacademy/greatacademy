@@ -22,7 +22,7 @@ import {
   usernameTaken,
 } from "@ga/db";
 import { courseProgress, DAY, initialState, leagueZones, type LeagueOutcome as Outcome, rankMembers, WEEK, weekStart } from "@ga/engine";
-import { type AccountService, type GoalsSchema, type GuardedLearnerSchema, LeagueOutcome } from "@ga/proto/account/v1/account_pb";
+import { type AccountService, type GuardedLearnerSchema, LeagueOutcome } from "@ga/proto/account/v1/account_pb";
 
 import { dbKey, userIdKey } from "./context.ts";
 import { joinLeague, leaguePlace } from "./league.ts";
@@ -31,9 +31,6 @@ import { xpSummary } from "./summary.ts";
 
 /** inviteDays is how long a guardian invitation stays valid. */
 const inviteDays = 7;
-
-/** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
-const maxDailyGoal = 1000;
 
 /** AccountDeps are the account service's dependencies besides the request context. */
 export interface AccountDeps {
@@ -61,18 +58,6 @@ function auth(ctx: HandlerContext): { db: Db; userId: string } {
 async function refuseChild(db: Db, learnerId: string): Promise<void> {
   if ((await learnerAge(db, learnerId)).band === "child")
     throw new ConnectError("not available on a child's account", Code.PermissionDenied);
-}
-
-function checkGoals(goals: { weekdays: readonly number[]; paused: boolean } | undefined): { goals: number[] | null; goalsPaused: boolean } {
-  const days = goals?.weekdays ?? [];
-  if (days.length !== 0 && days.length !== 7) throw new ConnectError("goals need seven weekdays", Code.InvalidArgument);
-  if (days.some((d) => !Number.isInteger(d) || d < 0 || d > maxDailyGoal))
-    throw new ConnectError("goal out of range", Code.InvalidArgument);
-  return { goals: days.length === 0 ? null : [...days], goalsPaused: goals?.paused ?? false };
-}
-
-function goalsMessage(s: { goals: readonly number[] | null; goalsPaused: boolean }): MessageInitShape<typeof GoalsSchema> {
-  return { weekdays: [...(s.goals ?? [])], paused: s.goalsPaused };
 }
 
 const outcomes: Record<Outcome, LeagueOutcome> = {
@@ -117,6 +102,10 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
     return list;
   };
 
+  /** withXp adds to each course the learner's XP in its subject, against the subject's goals. */
+  const withXp = (db: Db, learnerId: string, timeZone: string, list: Awaited<ReturnType<typeof courses>>) =>
+    Promise.all(list.map(async (e) => ({ ...e, xp: await xpSummary(db, learnerId, deps.now(), timeZone, e.subjectId) })));
+
   const summary = async (
     db: Db,
     learnerId: string,
@@ -126,12 +115,11 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
   ): Promise<MessageInitShape<typeof GuardedLearnerSchema>> => {
     const now = deps.now();
     const last = await lastSession(db, learnerId);
-    const first = list[0];
     return {
       learnerId,
       name,
       xp: await xpSummary(db, learnerId, now, timeZone),
-      ...(first && { courseId: first.courseId, courseStats: first.stats }),
+      enrollments: await withXp(db, learnerId, timeZone, list),
       lastActiveAt: BigInt(last?.updatedAt.getTime() ?? 0),
       studying: last?.status === "active" && now - last.updatedAt.getTime() < studyingWindow,
       recent: await recentEvents(db, learnerId, new Date(now - 14 * DAY)),
@@ -143,7 +131,7 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);
       const s = await learnerSettings(db, learnerId);
-      return { username: s.username ?? "", leagues: s.leagues, goals: goalsMessage(s), guardians: await guardiansOf(db, learnerId) };
+      return { username: s.username ?? "", leagues: s.leagues, guardians: await guardiansOf(db, learnerId) };
     },
 
     async setUsername(req, ctx) {
@@ -166,12 +154,6 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       await updateLearnerSettings(db, learnerId, { leagues: req.enabled });
       if (req.enabled) await joinLeague(db, learnerId, now);
       else await leaveWeek(db, learnerId, new Date(weekStart(now)));
-      return {};
-    },
-
-    async setGoals(req, ctx) {
-      const { db, userId } = auth(ctx);
-      await updateLearnerSettings(db, await learnerFor(db, userId), checkGoals(req.goals));
       return {};
     },
 
@@ -238,15 +220,7 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const list = await courses(db, req.learnerId);
       return {
         learner: await summary(db, req.learnerId, row.name, req.timeZone, list),
-        goals: goalsMessage(await learnerSettings(db, req.learnerId)),
-        enrollments: list,
       };
-    },
-
-    async setGuardedGoals(req, ctx) {
-      const db = await guarded(ctx, req.learnerId);
-      await updateLearnerSettings(db, req.learnerId, checkGoals(req.goals));
-      return {};
     },
 
     async removeGuardedLearner(req, ctx) {

@@ -503,7 +503,7 @@ const settingsNetwork = {
   ...network,
   ...accessIs("ACCESS_STATUS_OK"),
   [`POST ${accountUrl}/GetSettings`]: json({ username: "learner" }),
-  [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [], xp: {}, canChoose: true }),
+  [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [], xp: {}, canDecide: true }),
   [`POST ${authUrl}/delete-user`]: json({ success: true }),
 };
 
@@ -565,7 +565,7 @@ test("chooses a first course from Learn, then answers the diagnostic's report", 
         json({
           enrollments: chosen ? [{ courseId: "algebra", subjectId: "math", stats: { learned: 1, total: 2 } }] : [],
           xp: {},
-          canChoose: true,
+          canDecide: true,
         }),
       [`POST ${learningUrl}/ChooseCourse`]: () => {
         chosen = true;
@@ -583,7 +583,7 @@ test("chooses a first course from Learn, then answers the diagnostic's report", 
           stats: { learned: 1, total: 2 },
           xp: {},
           remainingXp: 30,
-          canChoose: true,
+          canDecide: true,
           ...(!kept && { report: { placed: 1, total: 2 } }),
         }),
     }),
@@ -601,7 +601,7 @@ test("sets the weekly goals from Learn", async () => {
   const app = await open("./App.tsx", {
     ...signedIn({
       [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }),
-      [`POST ${accountUrl}/SetGoals`]: json({}),
+      [`POST ${learningUrl}/SetGoals`]: json({}),
     }),
     platform: "macos",
   });

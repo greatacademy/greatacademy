@@ -196,6 +196,27 @@ function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: s
   );
 }
 
+/** GuardedGoals edits the weekly goals of the learner's subject that the course belongs to. */
+function GuardedGoals({ learnerId, courseId, subjectId }: { learnerId: string; courseId: string; subjectId: string }) {
+  const dash = useQuery({
+    queryKey: ["guarded", learnerId, "dashboard", courseId],
+    queryFn: () => learning.getDashboard({ courseId, timeZone: timeZone(), learnerId }),
+    staleTime: 0,
+  });
+  if (!dash.data) return null;
+  const goals = dash.data.goals;
+  return (
+    <GoalsEditor
+      key={subjectId}
+      initial={{ weekdays: goals?.weekdays ?? [], paused: goals?.paused ?? false }}
+      onSave={async (next) => {
+        await learning.setGoals({ learnerId, subjectId, goals: { weekdays: [...next.weekdays], paused: next.paused } });
+        await dash.refetch();
+      }}
+    />
+  );
+}
+
 function GuardedLearner() {
   const { learnerId } = Route.useParams();
   const { m, tx } = useI18n();
@@ -229,7 +250,7 @@ function GuardedLearner() {
   if (detail.isError) return <LoadError error={detail.error} onRetry={() => detail.refetch()} />;
   const d = detail.data;
   const learner = d.learner!;
-  const current = d.enrollments.find((e) => e.courseId === chosen) ?? d.enrollments[0];
+  const current = learner.enrollments.find((e) => e.courseId === chosen) ?? learner.enrollments[0];
   const courseId = current?.courseId;
   const titleOf = (id: string) => {
     const title = courses.data?.courses.find((c) => c.id === id)?.title;
@@ -322,7 +343,7 @@ function GuardedLearner() {
         <aside className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
           {current && (
             <Card className="space-y-3 p-5">
-              {d.enrollments.map((e) => {
+              {learner.enrollments.map((e) => {
                 const selected = e.courseId === courseId;
                 const part = e.stats?.total ? e.stats.learned / e.stats.total : 0;
                 return (
@@ -330,9 +351,9 @@ function GuardedLearner() {
                     key={e.courseId}
                     type="button"
                     aria-pressed={selected}
-                    disabled={d.enrollments.length === 1}
+                    disabled={learner.enrollments.length === 1}
                     onClick={() => setChosen(e.courseId)}
-                    className={`block w-full space-y-1 text-left text-sm ${selected || d.enrollments.length === 1 ? "font-medium" : "text-muted hover:text-ink"}`}
+                    className={`block w-full space-y-1 text-left text-sm ${selected || learner.enrollments.length === 1 ? "font-medium" : "text-muted hover:text-ink"}`}
                   >
                     <span className="flex justify-between gap-3">
                       <span className="min-w-0 truncate">{titleOf(e.courseId)}</span>
@@ -366,13 +387,7 @@ function GuardedLearner() {
                 <Flag size={18} /> {m.setGoals}
               </summary>
               <div className="mt-3">
-                <GoalsEditor
-                  initial={{ weekdays: d.goals?.weekdays ?? [], paused: d.goals?.paused ?? false }}
-                  onSave={async (goals) => {
-                    await account.setGuardedGoals({ learnerId, goals: { weekdays: [...goals.weekdays], paused: goals.paused } });
-                    await detail.refetch();
-                  }}
-                />
+                {courseId && current && <GuardedGoals learnerId={learnerId} courseId={courseId} subjectId={current.subjectId} />}
               </div>
             </details>
           </Card>

@@ -186,7 +186,7 @@ describe("LearningService", () => {
     expect(firstLesson?.kind.case === "lesson" && firstLesson.kind.value.topicId).toBe("one-step-equations-addition");
     // The report stands until the course is kept or another taken.
     expect(after.report).toMatchObject({ placed: knows.size, total: 20 });
-    expect(after.canChoose).toBe(true);
+    expect(after.canDecide).toBe(true);
     await learning.keepCourse({ courseId: COURSE });
     expect((await learning.getDashboard({ courseId: COURSE })).report).toBeUndefined();
 

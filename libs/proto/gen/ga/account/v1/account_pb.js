@@ -9,217 +9,182 @@ import { file_ga_learning_v1_learning } from "../../learning/v1/learning_pb.js";
  * Describes the file ga/account/v1/account.proto.
  */
 export const file_ga_account_v1_account = /*@__PURE__*/
-  fileDesc("ChtnYS9hY2NvdW50L3YxL2FjY291bnQucHJvdG8SDWdhLmFjY291bnQudjEiKQoFR29hbHMSEAoId2Vla2RheXMYASADKAUSDgoGcGF1c2VkGAIgASgIIjgKCEd1YXJkaWFuEg8KB3VzZXJfaWQYASABKAkSDAoEbmFtZRgCIAEoCRINCgVlbWFpbBgDIAEoCSIUChJHZXRTZXR0aW5nc1JlcXVlc3QiiQEKE0dldFNldHRpbmdzUmVzcG9uc2USEAoIdXNlcm5hbWUYASABKAkSDwoHbGVhZ3VlcxgCIAEoCBIjCgVnb2FscxgDIAEoCzIULmdhLmFjY291bnQudjEuR29hbHMSKgoJZ3VhcmRpYW5zGAQgAygLMhcuZ2EuYWNjb3VudC52MS5HdWFyZGlhbiImChJTZXRVc2VybmFtZVJlcXVlc3QSEAoIdXNlcm5hbWUYASABKAkiFQoTU2V0VXNlcm5hbWVSZXNwb25zZSIkChFTZXRMZWFndWVzUmVxdWVzdBIPCgdlbmFibGVkGAEgASgIIhQKElNldExlYWd1ZXNSZXNwb25zZSI2Cg9TZXRHb2Fsc1JlcXVlc3QSIwoFZ29hbHMYASABKAsyFC5nYS5hY2NvdW50LnYxLkdvYWxzIhIKEFNldEdvYWxzUmVzcG9uc2UiEgoQR2V0TGVhZ3VlUmVxdWVzdCJDCglMZWFndWVSb3cSDAoEcmFuaxgBIAEoBRIQCgh1c2VybmFtZRgCIAEoCRIKCgJ4cBgDIAEoBRIKCgJtZRgEIAEoCCJrCghMYXN0V2VlaxIMCgRyYW5rGAEgASgFEgwKBHRpZXIYAiABKAUSLQoHb3V0Y29tZRgDIAEoDjIcLmdhLmFjY291bnQudjEuTGVhZ3VlT3V0Y29tZRIUCgxtaXNzZWRfd2Vla3MYBCABKAUiwQEKEUdldExlYWd1ZVJlc3BvbnNlEg8KB2VuYWJsZWQYASABKAgSDAoEdGllchgCIAEoBRIPCgdlbmRzX2F0GAMgASgDEiYKBHJvd3MYBCADKAsyGC5nYS5hY2NvdW50LnYxLkxlYWd1ZVJvdxIPCgdwcm9tb3RlGAUgASgFEg4KBmRlbW90ZRgGIAEoBRIqCgRsYXN0GAcgASgLMhcuZ2EuYWNjb3VudC52MS5MYXN0V2Vla0gAiAEBQgcKBV9sYXN0Ih0KG0NyZWF0ZUd1YXJkaWFuSW52aXRlUmVxdWVzdCJAChxDcmVhdGVHdWFyZGlhbkludml0ZVJlc3BvbnNlEgwKBGNvZGUYASABKAkSEgoKZXhwaXJlc19hdBgCIAEoAyIrChtBY2NlcHRHdWFyZGlhbkludml0ZVJlcXVlc3QSDAoEY29kZRgBIAEoCSIyChxBY2NlcHRHdWFyZGlhbkludml0ZVJlc3BvbnNlEhIKCmxlYXJuZXJfaWQYASABKAkiKAoVUmVtb3ZlR3VhcmRpYW5SZXF1ZXN0Eg8KB3VzZXJfaWQYASABKAkiGAoWUmVtb3ZlR3VhcmRpYW5SZXNwb25zZSIvChpMaXN0R3VhcmRlZExlYXJuZXJzUmVxdWVzdBIRCgl0aW1lX3pvbmUYASABKAki9AEKDkd1YXJkZWRMZWFybmVyEhIKCmxlYXJuZXJfaWQYASABKAkSDAoEbmFtZRgCIAEoCRIlCgJ4cBgDIAEoCzIZLmdhLmxlYXJuaW5nLnYxLlhwU3VtbWFyeRIRCgljb3Vyc2VfaWQYBCABKAkSMQoMY291cnNlX3N0YXRzGAUgASgLMhsuZ2EubGVhcm5pbmcudjEuQ291cnNlU3RhdHMSFgoObGFzdF9hY3RpdmVfYXQYBiABKAMSEAoIc3R1ZHlpbmcYByABKAgSKQoGcmVjZW50GAggASgLMhkuZ2EuYWNjb3VudC52MS5SZWNlbnRXb3JrIk4KG0xpc3RHdWFyZGVkTGVhcm5lcnNSZXNwb25zZRIvCghsZWFybmVycxgBIAMoCzIdLmdhLmFjY291bnQudjEuR3VhcmRlZExlYXJuZXIiQQoYR2V0R3VhcmRlZExlYXJuZXJSZXF1ZXN0EhIKCmxlYXJuZXJfaWQYASABKAkSEQoJdGltZV96b25lGAIgASgJIkgKClJlY2VudFdvcmsSDwoHbGVzc29ucxgBIAEoBRIWCg5mYWlsZWRfbGVzc29ucxgCIAEoBRIRCglibG93bl9vZmYYAyABKAUipwEKGUdldEd1YXJkZWRMZWFybmVyUmVzcG9uc2USLgoHbGVhcm5lchgBIAEoCzIdLmdhLmFjY291bnQudjEuR3VhcmRlZExlYXJuZXISIwoFZ29hbHMYAiABKAsyFC5nYS5hY2NvdW50LnYxLkdvYWxzEi8KC2Vucm9sbG1lbnRzGAMgAygLMhouZ2EubGVhcm5pbmcudjEuRW5yb2xsbWVudEoECAQQBSJRChZTZXRHdWFyZGVkR29hbHNSZXF1ZXN0EhIKCmxlYXJuZXJfaWQYASABKAkSIwoFZ29hbHMYAiABKAsyFC5nYS5hY2NvdW50LnYxLkdvYWxzIhkKF1NldEd1YXJkZWRHb2Fsc1Jlc3BvbnNlIjEKG1JlbW92ZUd1YXJkZWRMZWFybmVyUmVxdWVzdBISCgpsZWFybmVyX2lkGAEgASgJIh4KHFJlbW92ZUd1YXJkZWRMZWFybmVyUmVzcG9uc2UqgwEKDUxlYWd1ZU91dGNvbWUSHgoaTEVBR1VFX09VVENPTUVfVU5TUEVDSUZJRUQQABIbChdMRUFHVUVfT1VUQ09NRV9QUk9NT1RFRBABEhkKFUxFQUdVRV9PVVRDT01FX1NUQVlFRBACEhoKFkxFQUdVRV9PVVRDT01FX0RFTU9URUQQAzKWCQoOQWNjb3VudFNlcnZpY2USVAoLR2V0U2V0dGluZ3MSIS5nYS5hY2NvdW50LnYxLkdldFNldHRpbmdzUmVxdWVzdBoiLmdhLmFjY291bnQudjEuR2V0U2V0dGluZ3NSZXNwb25zZRJUCgtTZXRVc2VybmFtZRIhLmdhLmFjY291bnQudjEuU2V0VXNlcm5hbWVSZXF1ZXN0GiIuZ2EuYWNjb3VudC52MS5TZXRVc2VybmFtZVJlc3BvbnNlElEKClNldExlYWd1ZXMSIC5nYS5hY2NvdW50LnYxLlNldExlYWd1ZXNSZXF1ZXN0GiEuZ2EuYWNjb3VudC52MS5TZXRMZWFndWVzUmVzcG9uc2USSwoIU2V0R29hbHMSHi5nYS5hY2NvdW50LnYxLlNldEdvYWxzUmVxdWVzdBofLmdhLmFjY291bnQudjEuU2V0R29hbHNSZXNwb25zZRJOCglHZXRMZWFndWUSHy5nYS5hY2NvdW50LnYxLkdldExlYWd1ZVJlcXVlc3QaIC5nYS5hY2NvdW50LnYxLkdldExlYWd1ZVJlc3BvbnNlEm8KFENyZWF0ZUd1YXJkaWFuSW52aXRlEiouZ2EuYWNjb3VudC52MS5DcmVhdGVHdWFyZGlhbkludml0ZVJlcXVlc3QaKy5nYS5hY2NvdW50LnYxLkNyZWF0ZUd1YXJkaWFuSW52aXRlUmVzcG9uc2USbwoUQWNjZXB0R3VhcmRpYW5JbnZpdGUSKi5nYS5hY2NvdW50LnYxLkFjY2VwdEd1YXJkaWFuSW52aXRlUmVxdWVzdBorLmdhLmFjY291bnQudjEuQWNjZXB0R3VhcmRpYW5JbnZpdGVSZXNwb25zZRJdCg5SZW1vdmVHdWFyZGlhbhIkLmdhLmFjY291bnQudjEuUmVtb3ZlR3VhcmRpYW5SZXF1ZXN0GiUuZ2EuYWNjb3VudC52MS5SZW1vdmVHdWFyZGlhblJlc3BvbnNlEmwKE0xpc3RHdWFyZGVkTGVhcm5lcnMSKS5nYS5hY2NvdW50LnYxLkxpc3RHdWFyZGVkTGVhcm5lcnNSZXF1ZXN0GiouZ2EuYWNjb3VudC52MS5MaXN0R3VhcmRlZExlYXJuZXJzUmVzcG9uc2USZgoRR2V0R3VhcmRlZExlYXJuZXISJy5nYS5hY2NvdW50LnYxLkdldEd1YXJkZWRMZWFybmVyUmVxdWVzdBooLmdhLmFjY291bnQudjEuR2V0R3VhcmRlZExlYXJuZXJSZXNwb25zZRJgCg9TZXRHdWFyZGVkR29hbHMSJS5nYS5hY2NvdW50LnYxLlNldEd1YXJkZWRHb2Fsc1JlcXVlc3QaJi5nYS5hY2NvdW50LnYxLlNldEd1YXJkZWRHb2Fsc1Jlc3BvbnNlEm8KFFJlbW92ZUd1YXJkZWRMZWFybmVyEiouZ2EuYWNjb3VudC52MS5SZW1vdmVHdWFyZGVkTGVhcm5lclJlcXVlc3QaKy5nYS5hY2NvdW50LnYxLlJlbW92ZUd1YXJkZWRMZWFybmVyUmVzcG9uc2ViBnByb3RvMw", [file_ga_learning_v1_learning]);
-
-/**
- * Describes the message ga.account.v1.Goals.
- * Use `create(GoalsSchema)` to create a new message.
- */
-export const GoalsSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 0);
+  fileDesc("ChtnYS9hY2NvdW50L3YxL2FjY291bnQucHJvdG8SDWdhLmFjY291bnQudjEiOAoIR3VhcmRpYW4SDwoHdXNlcl9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEg0KBWVtYWlsGAMgASgJIhQKEkdldFNldHRpbmdzUmVxdWVzdCJqChNHZXRTZXR0aW5nc1Jlc3BvbnNlEhAKCHVzZXJuYW1lGAEgASgJEg8KB2xlYWd1ZXMYAiABKAgSKgoJZ3VhcmRpYW5zGAQgAygLMhcuZ2EuYWNjb3VudC52MS5HdWFyZGlhbkoECAMQBCImChJTZXRVc2VybmFtZVJlcXVlc3QSEAoIdXNlcm5hbWUYASABKAkiFQoTU2V0VXNlcm5hbWVSZXNwb25zZSIkChFTZXRMZWFndWVzUmVxdWVzdBIPCgdlbmFibGVkGAEgASgIIhQKElNldExlYWd1ZXNSZXNwb25zZSISChBHZXRMZWFndWVSZXF1ZXN0IkMKCUxlYWd1ZVJvdxIMCgRyYW5rGAEgASgFEhAKCHVzZXJuYW1lGAIgASgJEgoKAnhwGAMgASgFEgoKAm1lGAQgASgIImsKCExhc3RXZWVrEgwKBHJhbmsYASABKAUSDAoEdGllchgCIAEoBRItCgdvdXRjb21lGAMgASgOMhwuZ2EuYWNjb3VudC52MS5MZWFndWVPdXRjb21lEhQKDG1pc3NlZF93ZWVrcxgEIAEoBSLBAQoRR2V0TGVhZ3VlUmVzcG9uc2USDwoHZW5hYmxlZBgBIAEoCBIMCgR0aWVyGAIgASgFEg8KB2VuZHNfYXQYAyABKAMSJgoEcm93cxgEIAMoCzIYLmdhLmFjY291bnQudjEuTGVhZ3VlUm93Eg8KB3Byb21vdGUYBSABKAUSDgoGZGVtb3RlGAYgASgFEioKBGxhc3QYByABKAsyFy5nYS5hY2NvdW50LnYxLkxhc3RXZWVrSACIAQFCBwoFX2xhc3QiHQobQ3JlYXRlR3VhcmRpYW5JbnZpdGVSZXF1ZXN0IkAKHENyZWF0ZUd1YXJkaWFuSW52aXRlUmVzcG9uc2USDAoEY29kZRgBIAEoCRISCgpleHBpcmVzX2F0GAIgASgDIisKG0FjY2VwdEd1YXJkaWFuSW52aXRlUmVxdWVzdBIMCgRjb2RlGAEgASgJIjIKHEFjY2VwdEd1YXJkaWFuSW52aXRlUmVzcG9uc2USEgoKbGVhcm5lcl9pZBgBIAEoCSIoChVSZW1vdmVHdWFyZGlhblJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCSIYChZSZW1vdmVHdWFyZGlhblJlc3BvbnNlIi8KGkxpc3RHdWFyZGVkTGVhcm5lcnNSZXF1ZXN0EhEKCXRpbWVfem9uZRgBIAEoCSLrAQoOR3VhcmRlZExlYXJuZXISEgoKbGVhcm5lcl9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEiUKAnhwGAMgASgLMhkuZ2EubGVhcm5pbmcudjEuWHBTdW1tYXJ5Ei8KC2Vucm9sbG1lbnRzGAkgAygLMhouZ2EubGVhcm5pbmcudjEuRW5yb2xsbWVudBIWCg5sYXN0X2FjdGl2ZV9hdBgGIAEoAxIQCghzdHVkeWluZxgHIAEoCBIpCgZyZWNlbnQYCCABKAsyGS5nYS5hY2NvdW50LnYxLlJlY2VudFdvcmtKBAgEEAVKBAgFEAYiTgobTGlzdEd1YXJkZWRMZWFybmVyc1Jlc3BvbnNlEi8KCGxlYXJuZXJzGAEgAygLMh0uZ2EuYWNjb3VudC52MS5HdWFyZGVkTGVhcm5lciJBChhHZXRHdWFyZGVkTGVhcm5lclJlcXVlc3QSEgoKbGVhcm5lcl9pZBgBIAEoCRIRCgl0aW1lX3pvbmUYAiABKAkiSAoKUmVjZW50V29yaxIPCgdsZXNzb25zGAEgASgFEhYKDmZhaWxlZF9sZXNzb25zGAIgASgFEhEKCWJsb3duX29mZhgDIAEoBSJdChlHZXRHdWFyZGVkTGVhcm5lclJlc3BvbnNlEi4KB2xlYXJuZXIYASABKAsyHS5nYS5hY2NvdW50LnYxLkd1YXJkZWRMZWFybmVySgQIAhADSgQIAxAESgQIBBAFIjEKG1JlbW92ZUd1YXJkZWRMZWFybmVyUmVxdWVzdBISCgpsZWFybmVyX2lkGAEgASgJIh4KHFJlbW92ZUd1YXJkZWRMZWFybmVyUmVzcG9uc2UqgwEKDUxlYWd1ZU91dGNvbWUSHgoaTEVBR1VFX09VVENPTUVfVU5TUEVDSUZJRUQQABIbChdMRUFHVUVfT1VUQ09NRV9QUk9NT1RFRBABEhkKFUxFQUdVRV9PVVRDT01FX1NUQVlFRBACEhoKFkxFQUdVRV9PVVRDT01FX0RFTU9URUQQAzLnBwoOQWNjb3VudFNlcnZpY2USVAoLR2V0U2V0dGluZ3MSIS5nYS5hY2NvdW50LnYxLkdldFNldHRpbmdzUmVxdWVzdBoiLmdhLmFjY291bnQudjEuR2V0U2V0dGluZ3NSZXNwb25zZRJUCgtTZXRVc2VybmFtZRIhLmdhLmFjY291bnQudjEuU2V0VXNlcm5hbWVSZXF1ZXN0GiIuZ2EuYWNjb3VudC52MS5TZXRVc2VybmFtZVJlc3BvbnNlElEKClNldExlYWd1ZXMSIC5nYS5hY2NvdW50LnYxLlNldExlYWd1ZXNSZXF1ZXN0GiEuZ2EuYWNjb3VudC52MS5TZXRMZWFndWVzUmVzcG9uc2USTgoJR2V0TGVhZ3VlEh8uZ2EuYWNjb3VudC52MS5HZXRMZWFndWVSZXF1ZXN0GiAuZ2EuYWNjb3VudC52MS5HZXRMZWFndWVSZXNwb25zZRJvChRDcmVhdGVHdWFyZGlhbkludml0ZRIqLmdhLmFjY291bnQudjEuQ3JlYXRlR3VhcmRpYW5JbnZpdGVSZXF1ZXN0GisuZ2EuYWNjb3VudC52MS5DcmVhdGVHdWFyZGlhbkludml0ZVJlc3BvbnNlEm8KFEFjY2VwdEd1YXJkaWFuSW52aXRlEiouZ2EuYWNjb3VudC52MS5BY2NlcHRHdWFyZGlhbkludml0ZVJlcXVlc3QaKy5nYS5hY2NvdW50LnYxLkFjY2VwdEd1YXJkaWFuSW52aXRlUmVzcG9uc2USXQoOUmVtb3ZlR3VhcmRpYW4SJC5nYS5hY2NvdW50LnYxLlJlbW92ZUd1YXJkaWFuUmVxdWVzdBolLmdhLmFjY291bnQudjEuUmVtb3ZlR3VhcmRpYW5SZXNwb25zZRJsChNMaXN0R3VhcmRlZExlYXJuZXJzEikuZ2EuYWNjb3VudC52MS5MaXN0R3VhcmRlZExlYXJuZXJzUmVxdWVzdBoqLmdhLmFjY291bnQudjEuTGlzdEd1YXJkZWRMZWFybmVyc1Jlc3BvbnNlEmYKEUdldEd1YXJkZWRMZWFybmVyEicuZ2EuYWNjb3VudC52MS5HZXRHdWFyZGVkTGVhcm5lclJlcXVlc3QaKC5nYS5hY2NvdW50LnYxLkdldEd1YXJkZWRMZWFybmVyUmVzcG9uc2USbwoUUmVtb3ZlR3VhcmRlZExlYXJuZXISKi5nYS5hY2NvdW50LnYxLlJlbW92ZUd1YXJkZWRMZWFybmVyUmVxdWVzdBorLmdhLmFjY291bnQudjEuUmVtb3ZlR3VhcmRlZExlYXJuZXJSZXNwb25zZWIGcHJvdG8z", [file_ga_learning_v1_learning]);
 
 /**
  * Describes the message ga.account.v1.Guardian.
  * Use `create(GuardianSchema)` to create a new message.
  */
 export const GuardianSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 1);
+  messageDesc(file_ga_account_v1_account, 0);
 
 /**
  * Describes the message ga.account.v1.GetSettingsRequest.
  * Use `create(GetSettingsRequestSchema)` to create a new message.
  */
 export const GetSettingsRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 2);
+  messageDesc(file_ga_account_v1_account, 1);
 
 /**
  * Describes the message ga.account.v1.GetSettingsResponse.
  * Use `create(GetSettingsResponseSchema)` to create a new message.
  */
 export const GetSettingsResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 3);
+  messageDesc(file_ga_account_v1_account, 2);
 
 /**
  * Describes the message ga.account.v1.SetUsernameRequest.
  * Use `create(SetUsernameRequestSchema)` to create a new message.
  */
 export const SetUsernameRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 4);
+  messageDesc(file_ga_account_v1_account, 3);
 
 /**
  * Describes the message ga.account.v1.SetUsernameResponse.
  * Use `create(SetUsernameResponseSchema)` to create a new message.
  */
 export const SetUsernameResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 5);
+  messageDesc(file_ga_account_v1_account, 4);
 
 /**
  * Describes the message ga.account.v1.SetLeaguesRequest.
  * Use `create(SetLeaguesRequestSchema)` to create a new message.
  */
 export const SetLeaguesRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 6);
+  messageDesc(file_ga_account_v1_account, 5);
 
 /**
  * Describes the message ga.account.v1.SetLeaguesResponse.
  * Use `create(SetLeaguesResponseSchema)` to create a new message.
  */
 export const SetLeaguesResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 7);
-
-/**
- * Describes the message ga.account.v1.SetGoalsRequest.
- * Use `create(SetGoalsRequestSchema)` to create a new message.
- */
-export const SetGoalsRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 8);
-
-/**
- * Describes the message ga.account.v1.SetGoalsResponse.
- * Use `create(SetGoalsResponseSchema)` to create a new message.
- */
-export const SetGoalsResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 9);
+  messageDesc(file_ga_account_v1_account, 6);
 
 /**
  * Describes the message ga.account.v1.GetLeagueRequest.
  * Use `create(GetLeagueRequestSchema)` to create a new message.
  */
 export const GetLeagueRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 10);
+  messageDesc(file_ga_account_v1_account, 7);
 
 /**
  * Describes the message ga.account.v1.LeagueRow.
  * Use `create(LeagueRowSchema)` to create a new message.
  */
 export const LeagueRowSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 11);
+  messageDesc(file_ga_account_v1_account, 8);
 
 /**
  * Describes the message ga.account.v1.LastWeek.
  * Use `create(LastWeekSchema)` to create a new message.
  */
 export const LastWeekSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 12);
+  messageDesc(file_ga_account_v1_account, 9);
 
 /**
  * Describes the message ga.account.v1.GetLeagueResponse.
  * Use `create(GetLeagueResponseSchema)` to create a new message.
  */
 export const GetLeagueResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 13);
+  messageDesc(file_ga_account_v1_account, 10);
 
 /**
  * Describes the message ga.account.v1.CreateGuardianInviteRequest.
  * Use `create(CreateGuardianInviteRequestSchema)` to create a new message.
  */
 export const CreateGuardianInviteRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 14);
+  messageDesc(file_ga_account_v1_account, 11);
 
 /**
  * Describes the message ga.account.v1.CreateGuardianInviteResponse.
  * Use `create(CreateGuardianInviteResponseSchema)` to create a new message.
  */
 export const CreateGuardianInviteResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 15);
+  messageDesc(file_ga_account_v1_account, 12);
 
 /**
  * Describes the message ga.account.v1.AcceptGuardianInviteRequest.
  * Use `create(AcceptGuardianInviteRequestSchema)` to create a new message.
  */
 export const AcceptGuardianInviteRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 16);
+  messageDesc(file_ga_account_v1_account, 13);
 
 /**
  * Describes the message ga.account.v1.AcceptGuardianInviteResponse.
  * Use `create(AcceptGuardianInviteResponseSchema)` to create a new message.
  */
 export const AcceptGuardianInviteResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 17);
+  messageDesc(file_ga_account_v1_account, 14);
 
 /**
  * Describes the message ga.account.v1.RemoveGuardianRequest.
  * Use `create(RemoveGuardianRequestSchema)` to create a new message.
  */
 export const RemoveGuardianRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 18);
+  messageDesc(file_ga_account_v1_account, 15);
 
 /**
  * Describes the message ga.account.v1.RemoveGuardianResponse.
  * Use `create(RemoveGuardianResponseSchema)` to create a new message.
  */
 export const RemoveGuardianResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 19);
+  messageDesc(file_ga_account_v1_account, 16);
 
 /**
  * Describes the message ga.account.v1.ListGuardedLearnersRequest.
  * Use `create(ListGuardedLearnersRequestSchema)` to create a new message.
  */
 export const ListGuardedLearnersRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 20);
+  messageDesc(file_ga_account_v1_account, 17);
 
 /**
  * Describes the message ga.account.v1.GuardedLearner.
  * Use `create(GuardedLearnerSchema)` to create a new message.
  */
 export const GuardedLearnerSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 21);
+  messageDesc(file_ga_account_v1_account, 18);
 
 /**
  * Describes the message ga.account.v1.ListGuardedLearnersResponse.
  * Use `create(ListGuardedLearnersResponseSchema)` to create a new message.
  */
 export const ListGuardedLearnersResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 22);
+  messageDesc(file_ga_account_v1_account, 19);
 
 /**
  * Describes the message ga.account.v1.GetGuardedLearnerRequest.
  * Use `create(GetGuardedLearnerRequestSchema)` to create a new message.
  */
 export const GetGuardedLearnerRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 23);
+  messageDesc(file_ga_account_v1_account, 20);
 
 /**
  * Describes the message ga.account.v1.RecentWork.
  * Use `create(RecentWorkSchema)` to create a new message.
  */
 export const RecentWorkSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 24);
+  messageDesc(file_ga_account_v1_account, 21);
 
 /**
  * Describes the message ga.account.v1.GetGuardedLearnerResponse.
  * Use `create(GetGuardedLearnerResponseSchema)` to create a new message.
  */
 export const GetGuardedLearnerResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 25);
-
-/**
- * Describes the message ga.account.v1.SetGuardedGoalsRequest.
- * Use `create(SetGuardedGoalsRequestSchema)` to create a new message.
- */
-export const SetGuardedGoalsRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 26);
-
-/**
- * Describes the message ga.account.v1.SetGuardedGoalsResponse.
- * Use `create(SetGuardedGoalsResponseSchema)` to create a new message.
- */
-export const SetGuardedGoalsResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 27);
+  messageDesc(file_ga_account_v1_account, 22);
 
 /**
  * Describes the message ga.account.v1.RemoveGuardedLearnerRequest.
  * Use `create(RemoveGuardedLearnerRequestSchema)` to create a new message.
  */
 export const RemoveGuardedLearnerRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 28);
+  messageDesc(file_ga_account_v1_account, 23);
 
 /**
  * Describes the message ga.account.v1.RemoveGuardedLearnerResponse.
  * Use `create(RemoveGuardedLearnerResponseSchema)` to create a new message.
  */
 export const RemoveGuardedLearnerResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_account_v1_account, 29);
+  messageDesc(file_ga_account_v1_account, 24);
 
 /**
  * Describes the enum ga.account.v1.LeagueOutcome.

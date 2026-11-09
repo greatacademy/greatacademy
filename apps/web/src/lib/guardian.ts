@@ -16,7 +16,7 @@ export function signsOf(learner: GuardedLearner, now: number): Sign[] {
   if (recent && recent.lessons >= 3 && recent.failedLessons * 10 > recent.lessons) signs.push({ kind: "failing" });
   if (recent?.blownOff) signs.push({ kind: "rushing" });
   const last = Number(learner.lastActiveAt);
-  if (learner.courseId && last > 0) {
+  if (learner.enrollments.length > 0 && last > 0) {
     const days = Math.floor((now - last) / DAY);
     if (days >= inactiveDays) signs.push({ kind: "inactive", days });
   }

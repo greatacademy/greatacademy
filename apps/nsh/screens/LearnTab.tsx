@@ -3,7 +3,7 @@ import { computed, effect, signal, Text, View, windowSize } from "nsh";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
-import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
+import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, Cell, colors, ErrorNote, Grid, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { firstPageReady } from "./Launch.tsx";
 import { describeTask, fromCourse, TaskCard } from "./TaskCard.tsx";
@@ -21,10 +21,9 @@ interface LearnData {
 }
 
 async function loadLearn(abort: AbortSignal): Promise<LearnData> {
-  const [profile, list, settings] = await Promise.all([
+  const [profile, list] = await Promise.all([
     learning.getProfile({ timeZone: timeZone() }, { signal: abort }),
     catalog.listCourses({}, { signal: abort }),
-    account.getSettings({}, { signal: abort }),
   ]);
   const courses = await Promise.all(
     profile.enrollments.map(async (enrollment) => ({
@@ -33,7 +32,7 @@ async function loadLearn(abort: AbortSignal): Promise<LearnData> {
       dash: await learning.getDashboard({ courseId: enrollment.courseId, timeZone: timeZone() }, { signal: abort }),
     })),
   );
-  return { xp: profile.xp, paused: settings.goals?.paused ?? false, canChoose: profile.canChoose, courses };
+  return { xp: profile.xp, paused: courses[0]?.dash.goals?.paused ?? false, canChoose: profile.canDecide, courses };
 }
 
 /** GoalBar is one goal's progress: what was earned against the goal, as a bar that turns green once it is met. */

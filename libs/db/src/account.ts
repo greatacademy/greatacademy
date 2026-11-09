@@ -1,33 +1,73 @@
 import { and, asc, eq, gte, lt, sql, sum } from "drizzle-orm";
 import type { Db } from "./db.ts";
 import { user } from "./schema/auth.ts";
-import { event, guardian, guardianInvite, leagueGroup, leagueMember, learner } from "./schema/learning.ts";
+import { event, guardian, guardianInvite, leagueGroup, leagueMember, learner, learnerSubject } from "./schema/learning.ts";
 
-/** LearnerSettings are a learner's goals and league choices. */
+/** LearnerSettings are a learner's league choices. */
 export interface LearnerSettings {
   readonly username: string | null;
   readonly leagues: boolean;
-  readonly goals: readonly number[] | null;
-  readonly goalsPaused: boolean;
 }
 
 /** learnerSettings reads a learner's settings. */
 export async function learnerSettings(db: Db, learnerId: string): Promise<LearnerSettings> {
-  const [row] = await db
-    .select({ username: learner.username, leagues: learner.leagues, goals: learner.goals, goalsPaused: learner.goalsPaused })
-    .from(learner)
-    .where(eq(learner.id, learnerId));
+  const [row] = await db.select({ username: learner.username, leagues: learner.leagues }).from(learner).where(eq(learner.id, learnerId));
   if (!row) throw new Error(`no learner ${learnerId}`);
   return row;
 }
 
 /** updateLearnerSettings changes some of a learner's settings. */
 export async function updateLearnerSettings(db: Db, learnerId: string, changes: Partial<LearnerSettings>): Promise<void> {
+  await db.update(learner).set(changes).where(eq(learner.id, learnerId));
+}
+
+/** SubjectSettings are a learner's decisions about a subject besides its course. */
+export interface SubjectSettings {
+  /** goals holds the XP goal of each weekday, Monday first; null until set. */
+  readonly goals: readonly number[] | null;
+  readonly goalsPaused: boolean;
+  /** endDate is the day the current course should be finished by, "YYYY-MM-DD", or null. */
+  readonly endDate: string | null;
+}
+
+const noSubjectSettings: SubjectSettings = { goals: null, goalsPaused: false, endDate: null };
+
+/** subjectSettings reads a learner's settings of a subject. */
+export async function subjectSettings(db: Db, learnerId: string, subjectId: string): Promise<SubjectSettings> {
+  const [row] = await db
+    .select({ goals: learnerSubject.goals, goalsPaused: learnerSubject.goalsPaused, endDate: learnerSubject.endDate })
+    .from(learnerSubject)
+    .where(and(eq(learnerSubject.learnerId, learnerId), eq(learnerSubject.subjectId, subjectId)));
+  return row ?? noSubjectSettings;
+}
+
+/** allSubjectSettings reads a learner's settings of every subject that has some, by subject id. */
+export async function allSubjectSettings(db: Db, learnerId: string): Promise<Map<string, SubjectSettings>> {
+  const rows = await db
+    .select({
+      subjectId: learnerSubject.subjectId,
+      goals: learnerSubject.goals,
+      goalsPaused: learnerSubject.goalsPaused,
+      endDate: learnerSubject.endDate,
+    })
+    .from(learnerSubject)
+    .where(eq(learnerSubject.learnerId, learnerId));
+  return new Map(rows.map(({ subjectId, ...s }) => [subjectId, s]));
+}
+
+/** updateSubjectSettings changes some of a learner's settings of a subject. */
+export async function updateSubjectSettings(
+  db: Db,
+  learnerId: string,
+  subjectId: string,
+  changes: Partial<SubjectSettings>,
+): Promise<void> {
   const { goals, ...rest } = changes;
+  const set = { ...rest, ...(goals !== undefined && { goals: goals && [...goals] }) };
   await db
-    .update(learner)
-    .set({ ...rest, ...(goals !== undefined && { goals: goals && [...goals] }) })
-    .where(eq(learner.id, learnerId));
+    .insert(learnerSubject)
+    .values({ learnerId, subjectId, ...set })
+    .onConflictDoUpdate({ target: [learnerSubject.learnerId, learnerSubject.subjectId], set });
 }
 
 /** usernameTaken tells whether another learner has a username, ignoring case. */

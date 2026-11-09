@@ -75,7 +75,7 @@ export function PlacementReport(props: { dash: GetDashboardResponse; learnerId?:
           <If when={choice.error()}>
             <ErrorNote message={choice.error()} />
           </If>
-          <If when={props.dash.canChoose} else={<Muted>{m().reportAskGuardian}</Muted>}>
+          <If when={props.dash.canDecide} else={<Muted>{m().reportAskGuardian}</Muted>}>
             <If when={r().recommended}>
               <Action
                 label={m().reportSwitch(title(r().recommended))}
@@ -109,7 +109,7 @@ export function CourseDone(props: { dash: GetDashboardResponse; learnerId?: stri
           <If when={choice.error()}>
             <ErrorNote message={choice.error()} />
           </If>
-          <If when={props.dash.canChoose} else={<Muted>{m().courseDoneAsk}</Muted>}>
+          <If when={props.dash.canDecide} else={<Muted>{m().courseDoneAsk}</Muted>}>
             <Each of={props.dash.nextCourses}>
               {(id) => <Action label={title(id())} disabled={choice.busy()} onPress={() => void choice.choose(id())} />}
             </Each>

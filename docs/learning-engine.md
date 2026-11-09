@@ -194,7 +194,7 @@ Course topics left unresolved count as **not known**: placement errs on the side
 
 Placed topics start at `placedRepNum`, so they come back for review soon and a lucky placement is corrected by the first review.
 
-**Current course.** As in Math Academy, a learner has one current course per subject. It is chosen when the account starts studying: by an adult or teen for themselves, by a guardian for a child. It changes only by a deliberate choice, in settings or in answer to the report below, and only a guardian changes a child's. Course pages introduce a course and do not enroll. Progress belongs to the subject, so a topic learned in one course counts in every course that has it, and changing course loses nothing. Past courses are kept as history.
+**Current course.** As in Math Academy, a learner has one current course per subject. It is chosen and changed only by the learner's supervisor ([Experience §5](experience.md#5-supervision)): an adult or a teen no guardian follows for themselves, else a guardian. It changes only by a deliberate choice, on the subject's Course page or in answer to the report below. Course pages introduce a course and do not enroll. Progress belongs to the subject, so a topic learned in one course counts in every course that has it, and changing course loses nothing. Past courses are kept as history.
 
 **Report.** After a diagnostic that asked something, the dashboard shows a report until whoever chooses the course keeps it or takes the one recommended: the course's topics placed as known, the foundations still to learn, the dates the course would be finished at several daily paces, and `placementAdvice` (`libs/engine/src/courses.ts`):
 
@@ -235,7 +235,7 @@ The state counts recent blown-off tasks in `blowOffs`. The penalty for one is fl
 
 ## 11. Goals and Forecast
 
-A learner sets an XP goal for each weekday, or pauses them. The week's goal is their sum; the dashboard compares today's and this week's XP with them, in the learner's time zone.
+Each subject has its own XP goal for each weekday, which the learner's supervisor sets or pauses. The week's goal is their sum; the dashboard compares today's and this week's XP in the subject with them, in the learner's time zone. Where XP of all subjects is shown, its goals are the sums of the subjects' goals. A subject may also have an end date for its current course, which changing course clears.
 
 The forecast of a course is the lessons' XP not yet learned × (1 + `forecastOverhead`), divided by a pace in XP per day: the learner's average over the last 14 days and fixed paces to compare. It is an estimate, shown as a date, and changes with what the learner does.
 

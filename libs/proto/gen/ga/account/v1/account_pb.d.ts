@@ -4,37 +4,12 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { CourseStats, Enrollment, XpSummary } from "../../learning/v1/learning_pb.js";
+import type { Enrollment, XpSummary } from "../../learning/v1/learning_pb.js";
 
 /**
  * Describes the file ga/account/v1/account.proto.
  */
 export declare const file_ga_account_v1_account: GenFile;
-
-/**
- * Goals are the XP goals of a week.
- *
- * @generated from message ga.account.v1.Goals
- */
-export declare type Goals = Message<"ga.account.v1.Goals"> & {
-  /**
-   * weekdays holds seven values, Monday first; it is empty until goals are set.
-   *
-   * @generated from field: repeated int32 weekdays = 1;
-   */
-  weekdays: number[];
-
-  /**
-   * @generated from field: bool paused = 2;
-   */
-  paused: boolean;
-};
-
-/**
- * Describes the message ga.account.v1.Goals.
- * Use `create(GoalsSchema)` to create a new message.
- */
-export declare const GoalsSchema: GenMessage<Goals>;
 
 /**
  * Guardian is someone who follows the learner.
@@ -89,11 +64,6 @@ export declare type GetSettingsResponse = Message<"ga.account.v1.GetSettingsResp
    * @generated from field: bool leagues = 2;
    */
   leagues: boolean;
-
-  /**
-   * @generated from field: ga.account.v1.Goals goals = 3;
-   */
-  goals?: Goals | undefined;
 
   /**
    * @generated from field: repeated ga.account.v1.Guardian guardians = 4;
@@ -162,34 +132,6 @@ export declare type SetLeaguesResponse = Message<"ga.account.v1.SetLeaguesRespon
  * Use `create(SetLeaguesResponseSchema)` to create a new message.
  */
 export declare const SetLeaguesResponseSchema: GenMessage<SetLeaguesResponse>;
-
-/**
- * @generated from message ga.account.v1.SetGoalsRequest
- */
-export declare type SetGoalsRequest = Message<"ga.account.v1.SetGoalsRequest"> & {
-  /**
-   * @generated from field: ga.account.v1.Goals goals = 1;
-   */
-  goals?: Goals | undefined;
-};
-
-/**
- * Describes the message ga.account.v1.SetGoalsRequest.
- * Use `create(SetGoalsRequestSchema)` to create a new message.
- */
-export declare const SetGoalsRequestSchema: GenMessage<SetGoalsRequest>;
-
-/**
- * @generated from message ga.account.v1.SetGoalsResponse
- */
-export declare type SetGoalsResponse = Message<"ga.account.v1.SetGoalsResponse"> & {
-};
-
-/**
- * Describes the message ga.account.v1.SetGoalsResponse.
- * Use `create(SetGoalsResponseSchema)` to create a new message.
- */
-export declare const SetGoalsResponseSchema: GenMessage<SetGoalsResponse>;
 
 /**
  * @generated from message ga.account.v1.GetLeagueRequest
@@ -453,21 +395,19 @@ export declare type GuardedLearner = Message<"ga.account.v1.GuardedLearner"> & {
   name: string;
 
   /**
+   * xp sums every subject.
+   *
    * @generated from field: ga.learning.v1.XpSummary xp = 3;
    */
   xp?: XpSummary | undefined;
 
   /**
-   * course_id is the current course most recently chosen or worked on; empty before the first.
+   * enrollments are the learner's current courses, one per subject, the one
+   * most recently worked on first, each with its XP against its goals.
    *
-   * @generated from field: string course_id = 4;
+   * @generated from field: repeated ga.learning.v1.Enrollment enrollments = 9;
    */
-  courseId: string;
-
-  /**
-   * @generated from field: ga.learning.v1.CourseStats course_stats = 5;
-   */
-  courseStats?: CourseStats | undefined;
+  enrollments: Enrollment[];
 
   /**
    * last_active_at is in milliseconds since the epoch; 0 before the first task.
@@ -568,18 +508,6 @@ export declare type GetGuardedLearnerResponse = Message<"ga.account.v1.GetGuarde
    * @generated from field: ga.account.v1.GuardedLearner learner = 1;
    */
   learner?: GuardedLearner | undefined;
-
-  /**
-   * @generated from field: ga.account.v1.Goals goals = 2;
-   */
-  goals?: Goals | undefined;
-
-  /**
-   * enrollments are the learner's current courses, one per subject.
-   *
-   * @generated from field: repeated ga.learning.v1.Enrollment enrollments = 3;
-   */
-  enrollments: Enrollment[];
 };
 
 /**
@@ -587,39 +515,6 @@ export declare type GetGuardedLearnerResponse = Message<"ga.account.v1.GetGuarde
  * Use `create(GetGuardedLearnerResponseSchema)` to create a new message.
  */
 export declare const GetGuardedLearnerResponseSchema: GenMessage<GetGuardedLearnerResponse>;
-
-/**
- * @generated from message ga.account.v1.SetGuardedGoalsRequest
- */
-export declare type SetGuardedGoalsRequest = Message<"ga.account.v1.SetGuardedGoalsRequest"> & {
-  /**
-   * @generated from field: string learner_id = 1;
-   */
-  learnerId: string;
-
-  /**
-   * @generated from field: ga.account.v1.Goals goals = 2;
-   */
-  goals?: Goals | undefined;
-};
-
-/**
- * Describes the message ga.account.v1.SetGuardedGoalsRequest.
- * Use `create(SetGuardedGoalsRequestSchema)` to create a new message.
- */
-export declare const SetGuardedGoalsRequestSchema: GenMessage<SetGuardedGoalsRequest>;
-
-/**
- * @generated from message ga.account.v1.SetGuardedGoalsResponse
- */
-export declare type SetGuardedGoalsResponse = Message<"ga.account.v1.SetGuardedGoalsResponse"> & {
-};
-
-/**
- * Describes the message ga.account.v1.SetGuardedGoalsResponse.
- * Use `create(SetGuardedGoalsResponseSchema)` to create a new message.
- */
-export declare const SetGuardedGoalsResponseSchema: GenMessage<SetGuardedGoalsResponse>;
 
 /**
  * @generated from message ga.account.v1.RemoveGuardedLearnerRequest
@@ -719,16 +614,6 @@ export declare const AccountService: GenService<{
     output: typeof SetLeaguesResponseSchema;
   },
   /**
-   * SetGoals sets the XP goal of each weekday.
-   *
-   * @generated from rpc ga.account.v1.AccountService.SetGoals
-   */
-  setGoals: {
-    methodKind: "unary";
-    input: typeof SetGoalsRequestSchema;
-    output: typeof SetGoalsResponseSchema;
-  },
-  /**
    * GetLeague returns the standings of the learner's group this week.
    *
    * @generated from rpc ga.account.v1.AccountService.GetLeague
@@ -787,16 +672,6 @@ export declare const AccountService: GenService<{
     methodKind: "unary";
     input: typeof GetGuardedLearnerRequestSchema;
     output: typeof GetGuardedLearnerResponseSchema;
-  },
-  /**
-   * SetGuardedGoals sets the goals of a guarded learner.
-   *
-   * @generated from rpc ga.account.v1.AccountService.SetGuardedGoals
-   */
-  setGuardedGoals: {
-    methodKind: "unary";
-    input: typeof SetGuardedGoalsRequestSchema;
-    output: typeof SetGuardedGoalsResponseSchema;
   },
   /**
    * RemoveGuardedLearner ends the caller's access to a learner.

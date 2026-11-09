@@ -45,8 +45,8 @@ function CourseSettings() {
             </Link>
           );
         })}
-        <p className="text-sm text-muted">{p.canChoose ? m.changeCourseBody : m.guardianChooses}</p>
-        {p.canChoose && !changing && <Button onClick={() => setChanging(true)}>{m.changeCourse}</Button>}
+        <p className="text-sm text-muted">{p.canDecide ? m.changeCourseBody : m.guardianChooses}</p>
+        {p.canDecide && !changing && <Button onClick={() => setChanging(true)}>{m.changeCourse}</Button>}
       </Card>
       {changing && (
         <div className="space-y-3">

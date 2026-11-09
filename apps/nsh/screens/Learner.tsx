@@ -38,7 +38,7 @@ export function Learner(props: { learnerId: string }) {
     ]);
     // Each course's dashboard carries its diagnostic report, for the guardian to answer.
     const dashboards = await Promise.all(
-      learner.enrollments.map((e) =>
+      (learner.learner?.enrollments ?? []).map((e) =>
         learning.getDashboard({ courseId: e.courseId, timeZone: timeZone(), learnerId: props.learnerId }, { signal: abort }),
       ),
     );
@@ -109,8 +109,8 @@ export function Learner(props: { learnerId: string }) {
                     </If>
                   </Card>
                   <Section title={m().courses}>
-                    <If when={loaded().learner.enrollments.length > 0} else={<Muted>{p().noCourses}</Muted>}>
-                      <Each of={loaded().learner.enrollments} key={(enrollment) => enrollment.courseId}>
+                    <If when={(loaded().learner.learner?.enrollments ?? []).length > 0} else={<Muted>{p().noCourses}</Muted>}>
+                      <Each of={loaded().learner.learner?.enrollments ?? []} key={(enrollment) => enrollment.courseId}>
                         {(enrollment) => (
                           <View style={{ gap: 2 }}>
                             <Text style={{ color: colors().ink, fontSize: 15, fontWeight: "600" }}>
@@ -138,13 +138,13 @@ export function Learner(props: { learnerId: string }) {
                       )}
                     </Each>
                     <Row
-                      title={loaded().learner.enrollments.length > 0 ? m().changeCourse : m().chooseForChild(name())}
+                      title={(loaded().learner.learner?.enrollments ?? []).length > 0 ? m().changeCourse : m().chooseForChild(name())}
                       onPress={() =>
                         nav.push({
                           name: "choose",
                           learnerId: props.learnerId,
                           learnerName: name(),
-                          ...(loaded().learner.enrollments[0] && { current: loaded().learner.enrollments[0]!.courseId }),
+                          ...(loaded().learner.learner?.enrollments[0] && { current: loaded().learner.learner!.enrollments[0]!.courseId }),
                         })
                       }
                     />

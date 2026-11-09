@@ -5,7 +5,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { type FormEvent, type ReactNode, useState } from "react";
 
 import { field, NewPassword, PasswordField } from "../../components/AuthForm.tsx";
-import { GoalsEditor } from "../../components/GoalsEditor.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { PrivacySettings } from "../../components/PrivacySettings.tsx";
 import { Subscriptions } from "../../components/Subscriptions.tsx";
@@ -148,17 +147,6 @@ function Settings() {
       <Subscriptions />
 
       <PrivacySettings />
-
-      <Section title={m.goals}>
-        <p className="text-sm text-muted">{m.goalsBody}</p>
-        <GoalsEditor
-          initial={{ weekdays: s.goals?.weekdays ?? [], paused: s.goals?.paused ?? false }}
-          onSave={async (goals) => {
-            await account.setGoals({ goals: { weekdays: [...goals.weekdays], paused: goals.paused } });
-            await qc.invalidateQueries({ queryKey: ["dashboard"] });
-          }}
-        />
-      </Section>
 
       {!child && (
         <Section title={m.league}>

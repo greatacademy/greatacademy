@@ -67,7 +67,7 @@ export function PlacementReport({ d, learnerId }: { d: GetDashboardResponse; lea
       )}
       <p className="font-medium">{advice}</p>
       {failed && <ErrorNote message={m.error} />}
-      {d.canChoose ? (
+      {d.canDecide ? (
         <div className="flex flex-wrap gap-3">
           {r.recommended && (
             <Button onClick={() => choose.mutate(r.recommended)} disabled={busy}>
@@ -99,7 +99,7 @@ export function CourseDone({ d, learnerId }: { d: GetDashboardResponse; learnerI
       {d.nextCourses.length > 0 && <p className="text-sm">{m.courseDoneBody}</p>}
       {failed && <ErrorNote message={m.error} />}
       {d.nextCourses.length > 0 &&
-        (d.canChoose ? (
+        (d.canDecide ? (
           <div className="flex flex-wrap gap-3">
             {d.nextCourses.map((id, i) => (
               <Button key={id} variant={i === 0 ? "primary" : "secondary"} onClick={() => choose.mutate(id)} disabled={busy}>

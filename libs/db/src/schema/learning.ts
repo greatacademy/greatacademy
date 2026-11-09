@@ -1,6 +1,6 @@
 import type { EngineEvent, LearnerState } from "@ga/engine";
 import { sql } from "drizzle-orm";
-import { bigint, boolean, index, integer, jsonb, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { bigint, boolean, date, index, integer, jsonb, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { user } from "./auth.ts";
 
@@ -23,9 +23,6 @@ export const learner = pgTable(
     username: text("username"),
     /** leagues tells whether the learner takes part in leagues. */
     leagues: boolean("leagues").notNull().default(false),
-    /** goals holds the XP goal of each weekday, Monday first; null until set. */
-    goals: integer("goals").array(),
-    goalsPaused: boolean("goals_paused").notNull().default(false),
     /** band is the age band, null until the learner has answered the age question; the birth date is never stored. */
     band: text("band").$type<AgeBand>(),
     /** bandEndsAt is when the band ends; null for adults. */
@@ -40,6 +37,26 @@ export const learner = pgTable(
     inactiveNoticeAt: at("inactive_notice_at"),
   },
   (t) => [uniqueIndex("learner_username").on(sql`lower(${t.username})`)],
+);
+
+/**
+ * learnerSubject holds a learner's decisions about a subject that are not its course: the weekly goals and the date
+ * the current course should be finished by. A missing row means none of them.
+ */
+export const learnerSubject = pgTable(
+  "learner_subject",
+  {
+    learnerId: uuid("learner_id")
+      .notNull()
+      .references(() => learner.id, { onDelete: "cascade" }),
+    subjectId: text("subject_id").notNull(),
+    /** goals holds the XP goal of each weekday, Monday first; null until set. */
+    goals: integer("goals").array(),
+    goalsPaused: boolean("goals_paused").notNull().default(false),
+    /** endDate is the day the current course should be finished by, "YYYY-MM-DD"; null for none. Changing course clears it. */
+    endDate: date("end_date", { mode: "string" }),
+  },
+  (t) => [primaryKey({ columns: [t.learnerId, t.subjectId] })],
 );
 
 /**

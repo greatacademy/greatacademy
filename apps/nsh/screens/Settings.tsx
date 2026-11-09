@@ -128,12 +128,6 @@ export function Me() {
       removeError.set(errorText(e));
     }
   };
-  const goals = () => {
-    const s = settings();
-    if (!s) return undefined;
-    const total = s.goals?.weekdays.reduce((sum, xp) => sum + xp, 0) ?? 0;
-    return s.goals?.paused ? m().goalsPausedNote : total > 0 ? m().goalsWeekTotal(total) : m().goalNone;
-  };
   return (
     <Scroll
       style={{ backgroundColor: colors().page, flex: 1 }}
@@ -143,7 +137,6 @@ export function Me() {
     >
       <SettingsBody
         profile={sessionUser()?.name}
-        goals={goals()}
         course={profile()?.enrollments[0]?.courseId}
         league={settings() ? (settings()?.leagues ? m().leagueOn : m().leagueOff) : undefined}
         guardians={settings()?.guardians}

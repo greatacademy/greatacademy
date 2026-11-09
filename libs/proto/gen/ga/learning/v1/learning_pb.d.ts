@@ -42,16 +42,19 @@ export declare type GetProfileResponse = Message<"ga.learning.v1.GetProfileRespo
   enrollments: Enrollment[];
 
   /**
+   * xp sums every subject, and its goals are the sums of the subjects' goals.
+   *
    * @generated from field: ga.learning.v1.XpSummary xp = 2;
    */
   xp?: XpSummary | undefined;
 
   /**
-   * can_choose tells whether the learner chooses their own courses; a child's guardian chooses for them.
+   * can_decide tells whether the learner is their own supervisor, who
+   * chooses courses and sets goals; otherwise a guardian does.
    *
-   * @generated from field: bool can_choose = 3;
+   * @generated from field: bool can_decide = 3;
    */
-  canChoose: boolean;
+  canDecide: boolean;
 };
 
 /**
@@ -80,6 +83,13 @@ export declare type Enrollment = Message<"ga.learning.v1.Enrollment"> & {
    * @generated from field: string subject_id = 3;
    */
   subjectId: string;
+
+  /**
+   * xp is the learner's XP in the subject, against the subject's goals.
+   *
+   * @generated from field: ga.learning.v1.XpSummary xp = 4;
+   */
+  xp?: XpSummary | undefined;
 };
 
 /**
@@ -87,6 +97,113 @@ export declare type Enrollment = Message<"ga.learning.v1.Enrollment"> & {
  * Use `create(EnrollmentSchema)` to create a new message.
  */
 export declare const EnrollmentSchema: GenMessage<Enrollment>;
+
+/**
+ * Goals are the XP to earn on each weekday in a subject.
+ *
+ * @generated from message ga.learning.v1.Goals
+ */
+export declare type Goals = Message<"ga.learning.v1.Goals"> & {
+  /**
+   * weekdays holds seven values, Monday first; it is empty until goals are set.
+   *
+   * @generated from field: repeated int32 weekdays = 1;
+   */
+  weekdays: number[];
+
+  /**
+   * @generated from field: bool paused = 2;
+   */
+  paused: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.Goals.
+ * Use `create(GoalsSchema)` to create a new message.
+ */
+export declare const GoalsSchema: GenMessage<Goals>;
+
+/**
+ * @generated from message ga.learning.v1.SetGoalsRequest
+ */
+export declare type SetGoalsRequest = Message<"ga.learning.v1.SetGoalsRequest"> & {
+  /**
+   * @generated from field: string subject_id = 1;
+   */
+  subjectId: string;
+
+  /**
+   * @generated from field: ga.learning.v1.Goals goals = 2;
+   */
+  goals?: Goals | undefined;
+
+  /**
+   * learner_id, when set, sets the goals of a learner the caller is a guardian of.
+   *
+   * @generated from field: string learner_id = 3;
+   */
+  learnerId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.SetGoalsRequest.
+ * Use `create(SetGoalsRequestSchema)` to create a new message.
+ */
+export declare const SetGoalsRequestSchema: GenMessage<SetGoalsRequest>;
+
+/**
+ * @generated from message ga.learning.v1.SetGoalsResponse
+ */
+export declare type SetGoalsResponse = Message<"ga.learning.v1.SetGoalsResponse"> & {
+};
+
+/**
+ * Describes the message ga.learning.v1.SetGoalsResponse.
+ * Use `create(SetGoalsResponseSchema)` to create a new message.
+ */
+export declare const SetGoalsResponseSchema: GenMessage<SetGoalsResponse>;
+
+/**
+ * @generated from message ga.learning.v1.SetEndDateRequest
+ */
+export declare type SetEndDateRequest = Message<"ga.learning.v1.SetEndDateRequest"> & {
+  /**
+   * @generated from field: string subject_id = 1;
+   */
+  subjectId: string;
+
+  /**
+   * end_date is "YYYY-MM-DD", or empty to clear it.
+   *
+   * @generated from field: string end_date = 2;
+   */
+  endDate: string;
+
+  /**
+   * learner_id, when set, sets the date of a learner the caller is a guardian of.
+   *
+   * @generated from field: string learner_id = 3;
+   */
+  learnerId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.SetEndDateRequest.
+ * Use `create(SetEndDateRequestSchema)` to create a new message.
+ */
+export declare const SetEndDateRequestSchema: GenMessage<SetEndDateRequest>;
+
+/**
+ * @generated from message ga.learning.v1.SetEndDateResponse
+ */
+export declare type SetEndDateResponse = Message<"ga.learning.v1.SetEndDateResponse"> & {
+};
+
+/**
+ * Describes the message ga.learning.v1.SetEndDateResponse.
+ * Use `create(SetEndDateResponseSchema)` to create a new message.
+ */
+export declare const SetEndDateResponseSchema: GenMessage<SetEndDateResponse>;
 
 /**
  * CourseStats counts course topics: learned (taught or placed), in all, and due for review.
@@ -342,6 +459,8 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
   stats?: CourseStats | undefined;
 
   /**
+   * xp is the learner's XP in the course's subject, against the subject's goals.
+   *
    * @generated from field: ga.learning.v1.XpSummary xp = 6;
    */
   xp?: XpSummary | undefined;
@@ -389,11 +508,29 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
   nextCourses: string[];
 
   /**
-   * can_choose tells whether the caller may change this learner's course.
+   * can_decide tells whether the caller is the learner's supervisor, who
+   * changes the course and sets the goals and the end date.
    *
-   * @generated from field: bool can_choose = 13;
+   * @generated from field: bool can_decide = 13;
    */
-  canChoose: boolean;
+  canDecide: boolean;
+
+  /**
+   * @generated from field: string subject_id = 14;
+   */
+  subjectId: string;
+
+  /**
+   * @generated from field: ga.learning.v1.Goals goals = 15;
+   */
+  goals?: Goals | undefined;
+
+  /**
+   * end_date is the day the course should be finished by, "YYYY-MM-DD", or empty.
+   *
+   * @generated from field: string end_date = 16;
+   */
+  endDate: string;
 };
 
 /**
@@ -1822,8 +1959,8 @@ export declare const LearningService: GenService<{
   },
   /**
    * ChooseCourse makes a course the current course of its subject, replacing
-   * the one before. An adult or teen chooses for themselves; a guardian
-   * chooses for a learner they guard; a child does not choose.
+   * the one before. Only the learner's supervisor chooses: an adult, a teen
+   * no guardian follows, or a guardian for the learners they follow.
    *
    * @generated from rpc ga.learning.v1.LearningService.ChooseCourse
    */
@@ -1831,6 +1968,28 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof ChooseCourseRequestSchema;
     output: typeof ChooseCourseResponseSchema;
+  },
+  /**
+   * SetGoals sets the XP goal of each weekday in a subject; only the
+   * learner's supervisor sets it.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.SetGoals
+   */
+  setGoals: {
+    methodKind: "unary";
+    input: typeof SetGoalsRequestSchema;
+    output: typeof SetGoalsResponseSchema;
+  },
+  /**
+   * SetEndDate sets or clears the day a subject's current course should be
+   * finished by; only the learner's supervisor sets it.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.SetEndDate
+   */
+  setEndDate: {
+    methodKind: "unary";
+    input: typeof SetEndDateRequestSchema;
+    output: typeof SetEndDateResponseSchema;
   },
   /**
    * KeepCourse answers the diagnostic report by keeping the current course.

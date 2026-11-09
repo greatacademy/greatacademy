@@ -121,7 +121,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 | 包含边 | 知识点 → 更简单的知识点，权重 0–1：高级知识点隐式练习了多少简单知识点；驱动 FIRe |
 | Course（课程） | 按单元和模块分组的有序知识点，附带掌握下限 |
 | Learner（学习者） | 学习的人，有一个用户账户 |
-| Guardian（监护人） | 受学习者邀请、能查看其情况并设定其目标的用户 |
+| Guardian（监护人） | 受学习者邀请关注学习者的用户，监督未成年人：为其选择课程、设定目标 |
 | League group（联赛小组） | 同一段位中一周内竞争的最多 30 名学习者 |
 | Enrollment（选课） | 学习者在某学科的课程：一门当前，其余为历史 |
 | Topic state（知识点状态） | 学习者在某知识点上的重复状态（派生数据） |
@@ -150,7 +150,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 
 `src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选择课程或开始学习。Stripe 的事件到达 `/api/stripe`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/web/src/server/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。
 
-监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
+监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。监督人的决定 `ChooseCourse`、`KeepCourse`、`SetGoals` 和 `SetEndDate` 也接受它；由监护人监督的学习者自己调用这些会被拒绝（[体验 §5](experience.zh-CN.md#5-监督)）。其他会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
 
 ## 6. 部署
 
@@ -199,7 +199,8 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | 表 | 内容 |
 | :--- | :--- |
 | `user`、`session`、`account`、`verification` | better-auth 的核心 schema |
-| `learner` | 学习的人，每个用户一个：公开用户名、是否参加联赛、每周各天的目标、年龄段及其结束日期、国家或地区、账号是否由监护人管理、每日上限 |
+| `learner` | 学习的人，每个用户一个：公开用户名、是否参加联赛、年龄段及其结束日期、国家或地区、账号是否由监护人管理、每日上限 |
+| `learner_subject` | 学习者对某个学科除课程之外的决定：每周各天的目标、是否暂停，以及当前课程的截止日期 |
 | `enrollment` | 学习者的课程：每个学科至多一门当前课程（`ended_at` 为空）、选定时间，以及诊断报告得到回应的时间 |
 | `event` | 每位学习者每个学科的引擎事件日志，用 `seq` 连续编号；保留 `xp` 用于报表 |
 | `learner_state` | 日志折叠到 `seq` 为止的快照；可通过重放重建 |

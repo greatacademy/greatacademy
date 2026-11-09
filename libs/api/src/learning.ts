@@ -11,13 +11,16 @@ import {
   type Db,
   decidePlacement,
   getSession,
+  guardiansOf,
   isGuardian,
   learnerFor,
   loadState,
   placedEvent,
   recordAnswer,
   type SessionRow,
+  subjectSettings,
   updateSession,
+  updateSubjectSettings,
 } from "@ga/db";
 import {
   applyEvent,
@@ -46,6 +49,27 @@ import { joinLeague } from "./league.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, type RunState, runTask, startRun } from "./runner.ts";
 import { xpSummary } from "./summary.ts";
+
+/** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
+const maxDailyGoal = 1000;
+
+/** checkGoals validates goals: seven weekdays, or none. */
+function checkGoals(goals: { weekdays: readonly number[]; paused: boolean } | undefined): { goals: number[] | null; goalsPaused: boolean } {
+  const days = goals?.weekdays ?? [];
+  if (days.length !== 0 && days.length !== 7) throw new ConnectError("goals need seven weekdays", Code.InvalidArgument);
+  if (days.some((d) => !Number.isInteger(d) || d < 0 || d > maxDailyGoal))
+    throw new ConnectError("goal out of range", Code.InvalidArgument);
+  return { goals: days.length === 0 ? null : [...days], goalsPaused: goals?.paused ?? false };
+}
+
+/** checkDate validates a calendar day, "YYYY-MM-DD"; empty means none. */
+function checkDate(day: string): string | null {
+  if (day === "") return null;
+  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(day) ? new Date(`${day}T00:00:00Z`) : undefined;
+  if (!parsed || Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== day)
+    throw new ConnectError("a date is YYYY-MM-DD", Code.InvalidArgument);
+  return day;
+}
 
 /** historyLength bounds the finished sessions a learner's history lists. */
 const historyLength = 100;
@@ -121,9 +145,15 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     return { db, learnerId: guardedId || (await learnerFor(db, userId)), guardian: guardedId !== "" };
   };
 
-  /** canChoose tells whether the caller may choose the learner's courses: a guardian, or a learner who is not a child. */
-  const canChoose = async (db: Db, learnerId: string, guardian: boolean) =>
-    guardian || (await accessOf(db, learnerId, deps.now())).age.band !== "child";
+  /**
+   * canDecide tells whether the caller is the learner's supervisor, who chooses the course and sets the goals and the
+   * end date: a guardian of the learner, or the learner themself when an adult, or a teen no guardian follows.
+   */
+  const canDecide = async (db: Db, learnerId: string, guardian: boolean) => {
+    if (guardian) return true;
+    const band = (await accessOf(db, learnerId, deps.now())).age.band;
+    return band === "adult" || (band === "teen" && (await guardiansOf(db, learnerId)).length === 0);
+  };
 
   /** current resolves the learner and checks the course is their current one; a guardian can name a learner they follow. */
   const current = async (ctx: HandlerContext, courseId: string, guardedId = "") => {
@@ -138,14 +168,20 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     return { db, c, learnerId, guardian, decided: chosen.decided };
   };
 
-  /** chooser resolves a learner whose course the caller is changing, refusing a child choosing for themselves. */
-  const chooser = async (ctx: HandlerContext, guardedId: string) => {
+  /** decider resolves a learner whose course, goals or end date the caller is changing, refusing anyone but their supervisor. */
+  const decider = async (ctx: HandlerContext, guardedId: string) => {
     const { db, learnerId, guardian } = await learner(ctx, guardedId);
     if (!guardian) {
-      const access = await requireStudy(db, learnerId, deps.now());
-      if (access.age.band === "child") throw new ConnectError("a guardian chooses a child's course", Code.PermissionDenied);
+      await requireStudy(db, learnerId, deps.now());
+      if (!(await canDecide(db, learnerId, false))) throw new ConnectError("the learner's guardian decides", Code.PermissionDenied);
     }
     return { db, learnerId };
+  };
+
+  /** subject checks that a subject is served. */
+  const subject = (id: string) => {
+    if (!registry.listings.some((s) => s.id === id)) throw new ConnectError(`unknown subject ${id}`, Code.NotFound);
+    return id;
   };
 
   const state = async (db: Db, learnerId: string, c: CourseEntry, lock = false) =>
@@ -187,31 +223,51 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         if (!c) continue;
         const { state: s } = await state(db, learnerId, c);
         const p = courseProgress(c.planner, s, now);
-        list.push({ courseId: c.id, subjectId: e.subjectId, stats: { learned: p.learned, total: p.total, due: p.due } });
+        list.push({
+          courseId: c.id,
+          subjectId: e.subjectId,
+          stats: { learned: p.learned, total: p.total, due: p.due },
+          xp: await xpSummary(db, learnerId, now, req.timeZone, e.subjectId),
+        });
       }
       return {
         enrollments: list,
         xp: await xpSummary(db, learnerId, now, req.timeZone),
-        canChoose: await canChoose(db, learnerId, false),
+        canDecide: await canDecide(db, learnerId, false),
       };
     },
 
     async chooseCourse(req, ctx) {
-      const { db, learnerId } = await chooser(ctx, req.learnerId);
+      const { db, learnerId } = await decider(ctx, req.learnerId);
       const c = await course(req.courseId);
       if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
       const at = new Date(deps.now());
       await db.transaction(async (tx) => {
-        // Taking another course answers the report of the one replaced.
+        // Taking another course answers the report of the one replaced, and drops its end date.
         const replaced = (await currentCourses(tx, learnerId)).find((e) => e.subjectId === c.subject.def.id && e.courseId !== c.id);
-        if (replaced) await decidePlacement(tx, learnerId, replaced.courseId, at);
+        if (replaced) {
+          await decidePlacement(tx, learnerId, replaced.courseId, at);
+          await updateSubjectSettings(tx, learnerId, c.subject.def.id, { endDate: null });
+        }
         await chooseCourse(tx, learnerId, c.subject.def.id, c.id, at);
       });
       return {};
     },
 
+    async setGoals(req, ctx) {
+      const { db, learnerId } = await decider(ctx, req.learnerId);
+      await updateSubjectSettings(db, learnerId, subject(req.subjectId), checkGoals(req.goals));
+      return {};
+    },
+
+    async setEndDate(req, ctx) {
+      const { db, learnerId } = await decider(ctx, req.learnerId);
+      await updateSubjectSettings(db, learnerId, subject(req.subjectId), { endDate: checkDate(req.endDate) });
+      return {};
+    },
+
     async keepCourse(req, ctx) {
-      const { db, learnerId } = await chooser(ctx, req.learnerId);
+      const { db, learnerId } = await decider(ctx, req.learnerId);
       const c = await course(req.courseId);
       if (!(await currentCourse(db, learnerId, c.id))) throw new ConnectError(`${c.id} is not the current course`, Code.FailedPrecondition);
       await decidePlacement(db, learnerId, c.id, new Date(deps.now()));
@@ -225,7 +281,8 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const active = await activeSession(db, learnerId, c.id);
       const p = courseProgress(c.planner, s, now);
       const run = active?.state as RunState | undefined;
-      const xp = await xpSummary(db, learnerId, now, req.timeZone);
+      const xp = await xpSummary(db, learnerId, now, req.timeZone, c.subject.def.id);
+      const settings = await subjectSettings(db, learnerId, c.subject.def.id);
       const diagnosed = !diagnosticDue(c.planner, s);
       const placed = diagnosed && !decided ? await placedEvent(db, learnerId, c.subject.def.id, c.id) : undefined;
       const report = placed && (placed.tested.length > 0 || (placed.missed?.length ?? 0) > 0) ? placementReport(c, s, placed) : undefined;
@@ -235,7 +292,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         ...(report && { report }),
         finished: courseFinished(c.planner, s),
         nextCourses: [...(c.index.next.get(c.id) ?? [])],
-        canChoose: await canChoose(db, learnerId, guardian),
+        canDecide: await canDecide(db, learnerId, guardian),
+        subjectId: c.subject.def.id,
+        goals: { weekdays: [...(settings.goals ?? [])], paused: settings.goalsPaused },
+        endDate: settings.endDate ?? "",
         tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
         stats: { learned: p.learned, total: p.total, due: p.due },

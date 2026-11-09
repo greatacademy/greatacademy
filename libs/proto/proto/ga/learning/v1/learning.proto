@@ -14,9 +14,15 @@ service LearningService {
   // GetProfile summarizes the learner: current courses and XP.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
   // ChooseCourse makes a course the current course of its subject, replacing
-  // the one before. An adult or teen chooses for themselves; a guardian
-  // chooses for a learner they guard; a child does not choose.
+  // the one before. Only the learner's supervisor chooses: an adult, a teen
+  // no guardian follows, or a guardian for the learners they follow.
   rpc ChooseCourse(ChooseCourseRequest) returns (ChooseCourseResponse);
+  // SetGoals sets the XP goal of each weekday in a subject; only the
+  // learner's supervisor sets it.
+  rpc SetGoals(SetGoalsRequest) returns (SetGoalsResponse);
+  // SetEndDate sets or clears the day a subject's current course should be
+  // finished by; only the learner's supervisor sets it.
+  rpc SetEndDate(SetEndDateRequest) returns (SetEndDateResponse);
   // KeepCourse answers the diagnostic report by keeping the current course.
   rpc KeepCourse(KeepCourseRequest) returns (KeepCourseResponse);
   // GetDashboard returns the tasks offered in a course now.
@@ -45,9 +51,11 @@ message GetProfileRequest {
 message GetProfileResponse {
   // enrollments are the current courses, one per subject, the one most recently chosen or worked on first.
   repeated Enrollment enrollments = 1;
+  // xp sums every subject, and its goals are the sums of the subjects' goals.
   XpSummary xp = 2;
-  // can_choose tells whether the learner chooses their own courses; a child's guardian chooses for them.
-  bool can_choose = 3;
+  // can_decide tells whether the learner is their own supervisor, who
+  // chooses courses and sets goals; otherwise a guardian does.
+  bool can_decide = 3;
 }
 
 // Enrollment is a learner's current course of a subject.
@@ -55,7 +63,35 @@ message Enrollment {
   string course_id = 1;
   CourseStats stats = 2;
   string subject_id = 3;
+  // xp is the learner's XP in the subject, against the subject's goals.
+  XpSummary xp = 4;
 }
+
+// Goals are the XP to earn on each weekday in a subject.
+message Goals {
+  // weekdays holds seven values, Monday first; it is empty until goals are set.
+  repeated int32 weekdays = 1;
+  bool paused = 2;
+}
+
+message SetGoalsRequest {
+  string subject_id = 1;
+  Goals goals = 2;
+  // learner_id, when set, sets the goals of a learner the caller is a guardian of.
+  string learner_id = 3;
+}
+
+message SetGoalsResponse {}
+
+message SetEndDateRequest {
+  string subject_id = 1;
+  // end_date is "YYYY-MM-DD", or empty to clear it.
+  string end_date = 2;
+  // learner_id, when set, sets the date of a learner the caller is a guardian of.
+  string learner_id = 3;
+}
+
+message SetEndDateResponse {}
 
 // CourseStats counts course topics: learned (taught or placed), in all, and due for review.
 message CourseStats {
@@ -121,6 +157,7 @@ message GetDashboardResponse {
   // active is the session in progress, if any; StartTask resumes it.
   optional SessionSummary active = 4;
   CourseStats stats = 5;
+  // xp is the learner's XP in the course's subject, against the subject's goals.
   XpSummary xp = 6;
   // xp_to_quiz is the XP still to earn before the next quiz.
   int32 xp_to_quiz = 7;
@@ -134,8 +171,13 @@ message GetDashboardResponse {
   bool finished = 11;
   // next_courses are the courses that build on this one, in catalog order.
   repeated string next_courses = 12;
-  // can_choose tells whether the caller may change this learner's course.
-  bool can_choose = 13;
+  // can_decide tells whether the caller is the learner's supervisor, who
+  // changes the course and sets the goals and the end date.
+  bool can_decide = 13;
+  string subject_id = 14;
+  Goals goals = 15;
+  // end_date is the day the course should be finished by, "YYYY-MM-DD", or empty.
+  string end_date = 16;
 }
 
 // Task is a unit of work offered on the dashboard.

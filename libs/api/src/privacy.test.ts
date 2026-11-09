@@ -178,6 +178,24 @@ describe("the age question", () => {
     expect((await privacy("grown").getAccess({})).status).toBe(AccessStatus.OK);
   });
 
+  it("lets a teen decide their course until a guardian follows them, and then only the guardian", async () => {
+    await openMarket("US");
+    await newUser("teen");
+    await privacy("teen").setAge({ country: "US", birthYear: 2010, birthMonth: 1 });
+    await learning("teen").chooseCourse({ courseId: COURSE });
+    expect((await learning("teen").getProfile({ timeZone: "UTC" })).canDecide).toBe(true);
+    const account = (user: string) => createClient(AccountService, transport(user));
+    const { code: invite } = await account("teen").createGuardianInvite({});
+    const { learnerId } = await account("parent").acceptGuardianInvite({ code: invite });
+    expect((await learning("teen").getProfile({ timeZone: "UTC" })).canDecide).toBe(false);
+    expect(await code(learning("teen").chooseCourse({ courseId: "prealgebra" }))).toBe(Code.PermissionDenied);
+    const goals = { weekdays: [], paused: false };
+    expect(await code(learning("teen").setGoals({ subjectId: "math", goals }))).toBe(Code.PermissionDenied);
+    expect(await code(learning("teen").setEndDate({ subjectId: "math", endDate: "" }))).toBe(Code.PermissionDenied);
+    await learning("parent").chooseCourse({ courseId: "prealgebra", learnerId });
+    expect((await learning("parent").getDashboard({ courseId: "prealgebra", timeZone: "UTC", learnerId })).canDecide).toBe(true);
+  });
+
   it("widens nothing when a band ends until the learner confirms", async () => {
     await openMarket("US");
     await newUser("teen");
@@ -257,7 +275,7 @@ describe("guardians", () => {
     // A child studies the course their guardian chooses.
     expect(await code(learning(kid).chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
     await learning("parent").chooseCourse({ courseId: COURSE, learnerId });
-    expect((await learning(kid).getDashboard({ courseId: COURSE, timeZone: "UTC" })).canChoose).toBe(false);
+    expect((await learning(kid).getDashboard({ courseId: COURSE, timeZone: "UTC" })).canDecide).toBe(false);
     const account = createClient(AccountService, transport(kid));
     expect(await code(account.setLeagues({ enabled: true }))).toBe(Code.PermissionDenied);
     expect(await code(account.setUsername({ username: "public" }))).toBe(Code.PermissionDenied);

@@ -13,8 +13,6 @@ service AccountService {
   rpc SetUsername(SetUsernameRequest) returns (SetUsernameResponse);
   // SetLeagues joins or leaves the leagues; joining needs a username.
   rpc SetLeagues(SetLeaguesRequest) returns (SetLeaguesResponse);
-  // SetGoals sets the XP goal of each weekday.
-  rpc SetGoals(SetGoalsRequest) returns (SetGoalsResponse);
   // GetLeague returns the standings of the learner's group this week.
   rpc GetLeague(GetLeagueRequest) returns (GetLeagueResponse);
   // CreateGuardianInvite makes a code that lets someone follow this learner.
@@ -27,17 +25,8 @@ service AccountService {
   rpc ListGuardedLearners(ListGuardedLearnersRequest) returns (ListGuardedLearnersResponse);
   // GetGuardedLearner returns how a guarded learner is doing.
   rpc GetGuardedLearner(GetGuardedLearnerRequest) returns (GetGuardedLearnerResponse);
-  // SetGuardedGoals sets the goals of a guarded learner.
-  rpc SetGuardedGoals(SetGuardedGoalsRequest) returns (SetGuardedGoalsResponse);
   // RemoveGuardedLearner ends the caller's access to a learner.
   rpc RemoveGuardedLearner(RemoveGuardedLearnerRequest) returns (RemoveGuardedLearnerResponse);
-}
-
-// Goals are the XP goals of a week.
-message Goals {
-  // weekdays holds seven values, Monday first; it is empty until goals are set.
-  repeated int32 weekdays = 1;
-  bool paused = 2;
 }
 
 // Guardian is someone who follows the learner.
@@ -52,7 +41,7 @@ message GetSettingsRequest {}
 message GetSettingsResponse {
   string username = 1;
   bool leagues = 2;
-  Goals goals = 3;
+  reserved 3;
   repeated Guardian guardians = 4;
 }
 
@@ -67,12 +56,6 @@ message SetLeaguesRequest {
 }
 
 message SetLeaguesResponse {}
-
-message SetGoalsRequest {
-  Goals goals = 1;
-}
-
-message SetGoalsResponse {}
 
 message GetLeagueRequest {}
 
@@ -145,10 +128,12 @@ message ListGuardedLearnersRequest {
 message GuardedLearner {
   string learner_id = 1;
   string name = 2;
+  // xp sums every subject.
   ga.learning.v1.XpSummary xp = 3;
-  // course_id is the current course most recently chosen or worked on; empty before the first.
-  string course_id = 4;
-  ga.learning.v1.CourseStats course_stats = 5;
+  reserved 4, 5;
+  // enrollments are the learner's current courses, one per subject, the one
+  // most recently worked on first, each with its XP against its goals.
+  repeated ga.learning.v1.Enrollment enrollments = 9;
   // last_active_at is in milliseconds since the epoch; 0 before the first task.
   int64 last_active_at = 6;
   // studying tells that a task is open and was touched in the last few minutes.
@@ -174,18 +159,8 @@ message RecentWork {
 
 message GetGuardedLearnerResponse {
   GuardedLearner learner = 1;
-  Goals goals = 2;
-  // enrollments are the learner's current courses, one per subject.
-  repeated ga.learning.v1.Enrollment enrollments = 3;
-  reserved 4;
+  reserved 2, 3, 4;
 }
-
-message SetGuardedGoalsRequest {
-  string learner_id = 1;
-  Goals goals = 2;
-}
-
-message SetGuardedGoalsResponse {}
 
 message RemoveGuardedLearnerRequest {
   string learner_id = 1;

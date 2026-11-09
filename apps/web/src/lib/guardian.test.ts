@@ -1,6 +1,6 @@
 import { create } from "@bufbuild/protobuf";
 import { GuardedLearnerSchema, RecentWorkSchema } from "@ga/proto/account/v1/account_pb";
-import { FinishedSessionSchema, LessonTaskSchema, TaskSchema } from "@ga/proto/learning/v1/learning_pb";
+import { EnrollmentSchema, FinishedSessionSchema, LessonTaskSchema, TaskSchema } from "@ga/proto/learning/v1/learning_pb";
 import { describe, expect, it } from "vitest";
 
 import { signsOf, stuckLessons } from "./guardian.ts";
@@ -17,7 +17,7 @@ function lesson(topicId: string, passed: boolean) {
 
 function learner(lastActiveAt: number, lessons = 0, failedLessons = 0, blownOff = 0) {
   return create(GuardedLearnerSchema, {
-    courseId: "c",
+    enrollments: [create(EnrollmentSchema, { courseId: "c", subjectId: "math" })],
     lastActiveAt: BigInt(lastActiveAt),
     recent: create(RecentWorkSchema, { lessons, failedLessons, blownOff }),
   });

@@ -19,10 +19,7 @@ export const Route = createFileRoute("/guardian/")({ component: Guardian });
 function LearnerCard({ learner }: { learner: GuardedLearner }) {
   const { m, tx } = useI18n();
   const courses = useQuery({ queryKey: ["courses"], queryFn: () => catalog.listCourses({}) });
-  const title = courses.data?.courses.find((c) => c.id === learner.courseId)?.title;
-  const stats = learner.courseStats;
   const xp = learner.xp;
-  const share = stats?.total ? stats.learned / stats.total : 0;
   const signs = signsOf(learner, Date.now());
   return (
     <Link to="/guardian/$learnerId" params={{ learnerId: learner.learnerId }} className="block min-w-0">
@@ -31,14 +28,20 @@ function LearnerCard({ learner }: { learner: GuardedLearner }) {
           <div className="truncate text-lg font-semibold">{learner.name}</div>
           <ActiveLine learner={learner} />
         </div>
-        {learner.courseId ? (
-          <div className="space-y-1 text-sm">
-            <div className="flex justify-between gap-3">
-              <span className="min-w-0 truncate">{title ? tx(title) : ""}</span>
-              <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
-            </div>
-            <Bar value={share} />
-          </div>
+        {learner.enrollments.length > 0 ? (
+          learner.enrollments.map((e) => {
+            const title = courses.data?.courses.find((c) => c.id === e.courseId)?.title;
+            const share = e.stats?.total ? e.stats.learned / e.stats.total : 0;
+            return (
+              <div key={e.subjectId} className="space-y-1 text-sm">
+                <div className="flex justify-between gap-3">
+                  <span className="min-w-0 truncate">{title ? tx(title) : ""}</span>
+                  <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
+                </div>
+                <Bar value={share} />
+              </div>
+            );
+          })
         ) : (
           <p className="text-sm text-muted">{m.noCourseYet}</p>
         )}

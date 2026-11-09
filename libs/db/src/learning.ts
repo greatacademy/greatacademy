@@ -36,7 +36,10 @@ export async function chooseCourse(db: Db, learnerId: string, subjectId: string,
       .values({ learnerId, subjectId, courseId, createdAt: at, chosenAt: at })
       .onConflictDoUpdate({
         target: [enrollment.learnerId, enrollment.courseId],
-        set: { chosenAt: sql`case when ${enrollment.endedAt} is null then ${enrollment.chosenAt} else excluded.chosen_at end`, endedAt: null },
+        set: {
+          chosenAt: sql`case when ${enrollment.endedAt} is null then ${enrollment.chosenAt} else excluded.chosen_at end`,
+          endedAt: null,
+        },
       });
   });
 }
@@ -81,7 +84,12 @@ export async function decidePlacement(db: Db, learnerId: string, courseId: strin
 }
 
 /** placedEvent gives the event that ended a course's diagnostic for a learner, if it ended. */
-export async function placedEvent(db: Db, learnerId: string, subjectId: string, courseId: string): Promise<Extract<EngineEvent, { type: "placed" }> | undefined> {
+export async function placedEvent(
+  db: Db,
+  learnerId: string,
+  subjectId: string,
+  courseId: string,
+): Promise<Extract<EngineEvent, { type: "placed" }> | undefined> {
   const [row] = await db
     .select({ data: event.data })
     .from(event)
@@ -150,22 +158,25 @@ export async function events(db: Db, learnerId: string, subjectId: string): Prom
   return rows.map((r) => r.data);
 }
 
-/** totalXp sums the XP of a learner's events across subjects. */
-export async function totalXp(db: Db, learnerId: string): Promise<number> {
+/** totalXp sums the XP of a learner's events in a subject, or across subjects when subjectId is omitted. */
+export async function totalXp(db: Db, learnerId: string, subjectId?: string): Promise<number> {
   const [row] = await db
     .select({ xp: sum(event.xp) })
     .from(event)
-    .where(eq(event.learnerId, learnerId));
+    .where(and(eq(event.learnerId, learnerId), subjectId === undefined ? undefined : eq(event.subjectId, subjectId)));
   return Number(row?.xp ?? 0);
 }
 
-/** xpByDay sums a learner's XP per calendar day in a time zone, for events at or after since. Days are "YYYY-MM-DD". */
-export async function xpByDay(db: Db, learnerId: string, since: Date, timeZone: string): Promise<Map<string, number>> {
+/**
+ * xpByDay sums a learner's XP per calendar day in a time zone, for events at or after since, in a subject or across
+ * subjects when subjectId is omitted. Days are "YYYY-MM-DD".
+ */
+export async function xpByDay(db: Db, learnerId: string, since: Date, timeZone: string, subjectId?: string): Promise<Map<string, number>> {
   const day = sql<string>`to_char(${event.at} at time zone ${timeZone}, 'YYYY-MM-DD')`;
   const rows = await db
     .select({ day, xp: sum(event.xp) })
     .from(event)
-    .where(and(eq(event.learnerId, learnerId), gte(event.at, since)))
+    .where(and(eq(event.learnerId, learnerId), gte(event.at, since), subjectId === undefined ? undefined : eq(event.subjectId, subjectId)))
     .groupBy(sql`1`);
   return new Map(rows.map((r) => [r.day, Number(r.xp ?? 0)]));
 }

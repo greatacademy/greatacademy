@@ -17,6 +17,7 @@ import type { RunState } from "./runner.ts";
 const compiled = compileMath();
 const registry = await Registry.open([localGateway(compiled)]);
 const COURSE = "algebra-foundations";
+const OTHER_COURSE = "prealgebra";
 const MONDAY = Date.UTC(2026, 9, 5);
 
 let db: Db & { close(): Promise<void> };
@@ -42,12 +43,12 @@ const learning = (user: string): Client<typeof LearningService> => createClient(
 
 /** earn records XP at a time, as a finished task would. */
 const seqs = new Map<string, number>();
-async function earn(user: string, xp: number, at: number) {
+async function earn(user: string, xp: number, at: number, subjectId = "math") {
   const learnerId = await learnerFor(db, user);
   const e: EngineEvent = { type: "quiz", at, results: [] };
-  const seq = (seqs.get(user) ?? 0) + 1;
-  seqs.set(user, seq);
-  await appendEvent(db, { learnerId, subjectId: "math", seq, event: e, xp, state: initialState });
+  const seq = (seqs.get(`${user} ${subjectId}`) ?? 0) + 1;
+  seqs.set(`${user} ${subjectId}`, seq);
+  await appendEvent(db, { learnerId, subjectId, seq, event: e, xp, state: initialState });
 }
 
 /** league signs a user up for leagues. */
@@ -87,21 +88,50 @@ describe("usernames", () => {
 });
 
 describe("goals", () => {
-  it("set the day's and week's targets, unless paused", async () => {
+  it("set the day's and week's targets of a subject, unless paused", async () => {
+    await learning("u1").chooseCourse({ courseId: COURSE });
     // A Thursday: 3 days after Monday.
-    await account("u1").setGoals({ goals: { weekdays: [10, 20, 30, 40, 50, 60, 70], paused: false } });
+    await learning("u1").setGoals({ subjectId: "math", goals: { weekdays: [10, 20, 30, 40, 50, 60, 70], paused: false } });
     await earn("u1", 7, MONDAY + DAY);
     await earn("u1", 5, now - 1000);
     await earn("u1", 100, MONDAY - 1000);
-    const { xp } = await learning("u1").getProfile({ timeZone: "UTC" });
-    expect(xp).toMatchObject({ goalToday: 40, goalWeek: 280, week: 12, today: 5 });
-    await account("u1").setGoals({ goals: { weekdays: [10, 20, 30, 40, 50, 60, 70], paused: true } });
+    const profile = await learning("u1").getProfile({ timeZone: "UTC" });
+    expect(profile.xp).toMatchObject({ goalToday: 40, goalWeek: 280, week: 12, today: 5 });
+    expect(profile.enrollments[0]?.xp).toMatchObject({ goalToday: 40, week: 12, total: 112 });
+    const dash = await learning("u1").getDashboard({ courseId: COURSE, timeZone: "UTC" });
+    expect(dash.xp).toMatchObject({ goalToday: 40, today: 5 });
+    expect(dash.goals?.weekdays).toEqual([10, 20, 30, 40, 50, 60, 70]);
+    await learning("u1").setGoals({ subjectId: "math", goals: { weekdays: [10, 20, 30, 40, 50, 60, 70], paused: true } });
     expect((await learning("u1").getProfile({ timeZone: "UTC" })).xp).toMatchObject({ goalToday: 0, goalWeek: 0, week: 12 });
   });
 
-  it("take seven valid weekdays", async () => {
-    expect(await code(account("u1").setGoals({ goals: { weekdays: [10], paused: false } }))).toBe(Code.InvalidArgument);
-    expect(await code(account("u1").setGoals({ goals: { weekdays: [-1, 0, 0, 0, 0, 0, 0], paused: false } }))).toBe(Code.InvalidArgument);
+  it("count each subject's XP apart, and the profile sums them", async () => {
+    await learning("u1").chooseCourse({ courseId: COURSE });
+    await learning("u1").setGoals({ subjectId: "math", goals: { weekdays: [10, 10, 10, 10, 10, 10, 10], paused: false } });
+    await earn("u1", 7, now - 1000);
+    await earn("u1", 3, now - 1000, "english");
+    const profile = await learning("u1").getProfile({ timeZone: "UTC" });
+    expect(profile.xp).toMatchObject({ goalToday: 10, today: 10, total: 10 });
+    expect(profile.enrollments[0]?.xp).toMatchObject({ today: 7, total: 7 });
+  });
+
+  it("take seven valid weekdays and a subject that exists", async () => {
+    const set = (weekdays: number[], subjectId = "math") =>
+      code(learning("u1").setGoals({ subjectId, goals: { weekdays, paused: false } }));
+    expect(await set([10])).toBe(Code.InvalidArgument);
+    expect(await set([-1, 0, 0, 0, 0, 0, 0])).toBe(Code.InvalidArgument);
+    expect(await set([], "history")).toBe(Code.NotFound);
+  });
+});
+
+describe("end dates", () => {
+  it("are set and cleared by the supervisor, and dropped with the course", async () => {
+    await learning("u1").chooseCourse({ courseId: COURSE });
+    expect(await code(learning("u1").setEndDate({ subjectId: "math", endDate: "2026-02-30" }))).toBe(Code.InvalidArgument);
+    await learning("u1").setEndDate({ subjectId: "math", endDate: "2027-06-30" });
+    expect((await learning("u1").getDashboard({ courseId: COURSE, timeZone: "UTC" })).endDate).toBe("2027-06-30");
+    await learning("u1").chooseCourse({ courseId: OTHER_COURSE });
+    expect((await learning("u1").getDashboard({ courseId: OTHER_COURSE, timeZone: "UTC" })).endDate).toBe("");
   });
 });
 
@@ -273,13 +303,15 @@ describe("guardians", () => {
     const { code: invite } = await account("u1").createGuardianInvite({});
     const { learnerId } = await account("u2").acceptGuardianInvite({ code: invite });
     const seen = await account("u2").getGuardedLearner({ learnerId, timeZone: "UTC" });
-    expect(seen.enrollments.map((e) => e.courseId)).toEqual([COURSE]);
-    expect(seen.learner).toMatchObject({ courseId: COURSE, lastActiveAt: 0n, studying: false });
+    expect(seen.learner?.enrollments.map((e) => [e.courseId, e.subjectId])).toEqual([[COURSE, "math"]]);
+    expect(seen.learner).toMatchObject({ lastActiveAt: 0n, studying: false });
     expect(seen.learner?.recent).toMatchObject({ lessons: 0, failedLessons: 0, blownOff: 0 });
-    await account("u2").setGuardedGoals({ learnerId, goals: { weekdays: [5, 5, 5, 5, 5, 5, 5], paused: false } });
-    expect((await account("u1").getSettings({})).goals?.weekdays).toHaveLength(7);
+    await learning("u2").setGoals({ learnerId, subjectId: "math", goals: { weekdays: [5, 5, 5, 5, 5, 5, 5], paused: false } });
+    expect((await learning("u1").getDashboard({ courseId: COURSE, timeZone: "UTC" })).goals?.weekdays).toHaveLength(7);
     expect(await code(account("u3").getGuardedLearner({ learnerId, timeZone: "UTC" }))).toBe(Code.NotFound);
-    expect(await code(account("u3").setGuardedGoals({ learnerId, goals: { weekdays: [], paused: false } }))).toBe(Code.NotFound);
+    expect(await code(learning("u3").setGoals({ learnerId, subjectId: "math", goals: { weekdays: [], paused: false } }))).toBe(
+      Code.NotFound,
+    );
     expect(await code(account("u3").getGuardedLearner({ learnerId: "not-a-uuid", timeZone: "UTC" }))).toBe(Code.NotFound);
   });
 
@@ -291,7 +323,8 @@ describe("guardians", () => {
     const { learnerId } = await account("u2").acceptGuardianInvite({ code: invite });
 
     const [seen] = (await account("u2").listGuardedLearners({ timeZone: "UTC" })).learners;
-    expect(seen).toMatchObject({ courseId: COURSE, studying: true });
+    expect(seen).toMatchObject({ studying: true });
+    expect(seen?.enrollments[0]?.courseId).toBe(COURSE);
     expect(Number(seen?.lastActiveAt)).toBe(now);
 
     const read = (user: string, id: string) =>
