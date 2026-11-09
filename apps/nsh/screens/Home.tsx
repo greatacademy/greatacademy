@@ -315,27 +315,26 @@ function AccountMenu(props: { name: string; width: number }) {
           style={{
             alignItems: "center",
             alignSelf: "flex-start",
-            borderRadius: 10,
+            borderRadius: 8,
             flexDirection: "row",
             gap: 8,
-            marginLeft: -6,
+            height: 32,
             maxWidth: props.width,
             paddingLeft: 6,
-            paddingRight: 10,
-            paddingVertical: 6,
+            paddingRight: 8,
           }}
         >
           <View
             style={{
               alignItems: "center",
               backgroundColor: colors()["accent-soft"],
-              borderRadius: 16,
-              height: 32,
+              borderRadius: 11,
+              height: 22,
               justifyContent: "center",
-              width: 32,
+              width: 22,
             }}
           >
-            <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...props.name][0]?.toUpperCase() ?? ""}</Text>
+            <Text style={{ color: colors().accent, fontSize: 11, fontWeight: "600" }}>{[...props.name][0]?.toUpperCase() ?? ""}</Text>
           </View>
           <Text style={{ color: colors().ink, flexShrink: 1, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.name}</Text>
           <Image src={caretDown} style={{ height: 12, tintColor: colors().muted, width: 12 }} />
