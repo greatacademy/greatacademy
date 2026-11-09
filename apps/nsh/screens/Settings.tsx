@@ -9,8 +9,7 @@ import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, languageChoice } from "../lib/prefs.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
-import { query } from "../lib/query.ts";
-import { API_URL, account, learning, timeZone } from "../lib/rpc.ts";
+import { API_URL, account } from "../lib/rpc.ts";
 import { canBuy } from "../lib/store.ts";
 import { barSpace, colors, ErrorNote, followScroll, Muted, Quiet, Row, Section, Segmented, topSpace } from "../lib/ui.tsx";
 import { openAccountPage, settingsQuery } from "./Account.tsx";
@@ -98,7 +97,6 @@ export function InviteGuardian() {
 /** Me is the Me tab: how the app looks and speaks on this device, privacy, signing out and deleting the account. */
 export function Me() {
   const settings = settingsQuery();
-  const profile = query(["profile"], ({ signal: abort }) => learning.getProfile({ timeZone: timeZone() }, { signal: abort }));
   const set = (change: Partial<Appearance>) => chooseAppearance({ ...appearance(), ...change });
   const confirmSignOut = async () => {
     const { action } = await AlertDialog.show({
@@ -137,7 +135,6 @@ export function Me() {
     >
       <SettingsBody
         profile={sessionUser()?.name}
-        course={profile()?.enrollments[0]?.courseId}
         league={settings() ? (settings()?.leagues ? m().leagueOn : m().leagueOff) : undefined}
         guardians={settings()?.guardians}
         removeError={removeError()}
@@ -154,9 +151,6 @@ export function Me() {
 /** SettingsBody is the content of the settings page, also shown as the Me tab. */
 export function SettingsBody(props: {
   profile?: string;
-  goals?: string;
-  /** course is the learner's most recent current course, marked when changing course. */
-  course?: string;
   league?: string;
   guardians?: readonly Guardian[];
   removeError?: string;
@@ -178,14 +172,6 @@ export function SettingsBody(props: {
     <View style={{ alignSelf: "center", gap: 24, maxWidth: 640, padding: 16, paddingBottom: 16 + barSpace(), width: "100%" }}>
       <Section title={m().account}>
         <Row title={m().profile} detail={props.profile} onPress={() => openAccountPage("profile")} />
-        <Row title={m().goals} detail={props.goals} onPress={() => openAccountPage("goals")} />
-        <Row
-          title={m().changeCourse}
-          detail={child() ? m().guardianChooses : m().changeCourseBody}
-          onPress={() => {
-            if (!child()) nav.push({ name: "choose", ...(props.course && { current: props.course }) });
-          }}
-        />
         <If when={!child()}>
           <Row title={m().league} detail={props.league} onPress={() => openAccountPage("league")} />
         </If>

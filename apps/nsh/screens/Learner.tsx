@@ -5,6 +5,7 @@ import { nav } from "../lib/nav.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
 import { query } from "../lib/query.ts";
 import { account, catalog, learning, privacy, timeZone } from "../lib/rpc.ts";
+import { courseTitle, SubjectMark, subjectsOf, tint } from "../lib/subject.tsx";
 import {
   Card,
   ConfirmField,
@@ -22,6 +23,7 @@ import {
   Skeleton,
 } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
+import { Bar } from "./LearnTab.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { bandName, confirm, ScopeRow } from "./Privacy.tsx";
 import { openWeb } from "./Settings.tsx";
@@ -108,47 +110,79 @@ export function Learner(props: { learnerId: string }) {
                       )}
                     </If>
                   </Card>
-                  <Section title={m().courses}>
-                    <If when={(loaded().learner.learner?.enrollments ?? []).length > 0} else={<Muted>{p().noCourses}</Muted>}>
-                      <Each of={loaded().learner.learner?.enrollments ?? []} key={(enrollment) => enrollment.courseId}>
-                        {(enrollment) => (
-                          <View style={{ gap: 2 }}>
-                            <Text style={{ color: colors().ink, fontSize: 15, fontWeight: "600" }}>
-                              {tx(loaded().list.courses.find((course) => course.id === enrollment().courseId)?.title) ||
-                                enrollment().courseId}
-                            </Text>
-                            <Muted>
-                              {[
-                                m().topicsLearned(enrollment().stats?.learned ?? 0, enrollment().stats?.total ?? 0),
-                                (enrollment().stats?.due ?? 0) > 0 ? m().dueReviews(enrollment().stats?.due ?? 0) : "",
-                              ]
-                                .filter(Boolean)
-                                .join(" · ")}
-                            </Muted>
+                  <Each of={[...subjectsOf(loaded().list)]} key={(subject) => subject.id}>
+                    {(subject) => {
+                      const enrollment = () => loaded().learner.learner?.enrollments.find((e) => e.subjectId === subject().id);
+                      const dash = () => loaded().dashboards.find((d) => d.courseId === enrollment()?.courseId);
+                      return (
+                        <View style={{ gap: 8 }}>
+                          <View style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
+                            <SubjectMark subject={subject()} size={22} />
+                            <Text style={{ color: colors().ink, fontSize: 15, fontWeight: "600" }}>{tx(subject().title)}</Text>
                           </View>
-                        )}
-                      </Each>
-                    </If>
-                    <Each of={loaded().dashboards} key={(dash) => dash.courseId}>
-                      {(dash) => (
-                        <>
-                          <PlacementReport dash={dash()} learnerId={props.learnerId} onAnswered={() => data.refetch()} />
-                          <CourseDone dash={dash()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
-                        </>
-                      )}
-                    </Each>
-                    <Row
-                      title={(loaded().learner.learner?.enrollments ?? []).length > 0 ? m().changeCourse : m().chooseForChild(name())}
-                      onPress={() =>
-                        nav.push({
-                          name: "choose",
-                          learnerId: props.learnerId,
-                          learnerName: name(),
-                          ...(loaded().learner.learner?.enrollments[0] && { current: loaded().learner.learner!.enrollments[0]!.courseId }),
-                        })
-                      }
-                    />
-                  </Section>
+                          <Card>
+                            <If
+                              when={enrollment()}
+                              else={
+                                <Row
+                                  title={m().chooseForChild(name())}
+                                  detail={m().subjectNotStarted}
+                                  onPress={() =>
+                                    nav.push({ name: "choose", subjectId: subject().id, learnerId: props.learnerId, learnerName: name() })
+                                  }
+                                />
+                              }
+                            >
+                              {(e) => (
+                                <>
+                                  <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>
+                                    {courseTitle(loaded().list, e().courseId)}
+                                  </Text>
+                                  <Bar
+                                    share={(e().stats?.learned ?? 0) / Math.max(1, e().stats?.total ?? 0)}
+                                    color={tint(subject()).strong}
+                                  />
+                                  <Muted>
+                                    {[
+                                      m().topicsLearned(e().stats?.learned ?? 0, e().stats?.total ?? 0),
+                                      (e().stats?.due ?? 0) > 0 ? m().dueReviews(e().stats?.due ?? 0) : "",
+                                      m().subjectToday(e().xp?.today ?? 0, e().xp?.goalToday ?? 0),
+                                    ]
+                                      .filter(Boolean)
+                                      .join(" · ")}
+                                  </Muted>
+                                  <If when={dash()}>
+                                    {(d) => (
+                                      <>
+                                        <PlacementReport dash={d()} learnerId={props.learnerId} onAnswered={() => data.refetch()} />
+                                        <CourseDone dash={d()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
+                                      </>
+                                    )}
+                                  </If>
+                                  <Row
+                                    title={m().goals}
+                                    onPress={() => nav.push({ name: "goals", subjectId: subject().id, learnerId: props.learnerId })}
+                                  />
+                                  <Row
+                                    title={m().changeCourse}
+                                    onPress={() =>
+                                      nav.push({
+                                        name: "choose",
+                                        subjectId: subject().id,
+                                        learnerId: props.learnerId,
+                                        learnerName: name(),
+                                        current: e().courseId,
+                                      })
+                                    }
+                                  />
+                                </>
+                              )}
+                            </If>
+                          </Card>
+                        </View>
+                      );
+                    }}
+                  </Each>
                   <Card>
                     <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{p().guardianControls}</Text>
                     <If when={!shown().some((s) => s.canGrant || s.inForce)}>

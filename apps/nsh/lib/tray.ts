@@ -7,7 +7,7 @@ import { openTab, TABS, type TabId } from "./nav.ts";
 
 /** tabTitle names a tab in the tray, which only desktops have: there the Me tab is the settings. */
 function tabTitle(id: TabId): string {
-  const by: Record<TabId, string> = { learn: m().tabLearn, progress: m().tabProgress, courses: m().tabCourses, me: m().settingsTab };
+  const by: Record<TabId, string> = { learn: m().tabLearn, progress: m().tabProgress, course: m().tabCourse, me: m().settingsTab };
   return by[id];
 }
 

@@ -4,10 +4,11 @@ import { type JSX, signal, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 
 import { access, changeName, changePassword, sendVerification, sessionUser } from "../lib/auth.ts";
-import { errorText, m } from "../lib/i18n.ts";
+import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
-import { account, learning, timeZone } from "../lib/rpc.ts";
+import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
+import { subjectsOf } from "../lib/subject.tsx";
 import {
   Action,
   ConfirmField,
@@ -76,15 +77,27 @@ function Step(props: { glyph: string; label: string; disabled: boolean; onPress:
   );
 }
 
-/** Goals sets how much XP to earn on each weekday, and pauses the goals. */
-export function Goals() {
-  // The goals are those of the subject most recently worked in.
-  const settings = query(["goals"], async ({ signal: abort }) => {
-    const profile = await learning.getProfile({ timeZone: timeZone() }, { signal: abort });
-    const enrollment = profile.enrollments[0];
-    if (!enrollment) return { subjectId: "", goals: undefined };
-    const dash = await learning.getDashboard({ courseId: enrollment.courseId, timeZone: timeZone() }, { signal: abort });
-    return { subjectId: enrollment.subjectId, goals: dash.goals };
+/**
+ * Goals sets how much XP to earn in a subject on each weekday, and pauses them: the goals are the subject's own. With
+ * `learnerId` a guardian sets those of a learner they follow.
+ */
+export function Goals(props: { subjectId: string; learnerId?: string }) {
+  const settings = query(["goals", props.subjectId, props.learnerId ?? ""], async ({ signal: abort }) => {
+    const learnerId = props.learnerId ?? "";
+    const [enrollments, list] = await Promise.all([
+      learnerId
+        ? account
+            .getGuardedLearner({ learnerId, timeZone: timeZone() }, { signal: abort })
+            .then((guarded) => guarded.learner?.enrollments ?? [])
+        : learning.getProfile({ timeZone: timeZone() }, { signal: abort }).then((profile) => profile.enrollments),
+      catalog.listCourses({}, { signal: abort }),
+    ]);
+    const subject = subjectsOf(list).find((s) => s.id === props.subjectId);
+    const enrollment = enrollments.find((e) => e.subjectId === props.subjectId);
+    const dash = enrollment
+      ? await learning.getDashboard({ courseId: enrollment.courseId, timeZone: timeZone(), learnerId }, { signal: abort })
+      : undefined;
+    return { title: tx(subject?.title), goals: dash?.goals };
   });
   const days = signal<number[] | undefined>(undefined);
   const paused = signal<boolean | undefined>(undefined);
@@ -106,7 +119,11 @@ export function Goals() {
     busy.set(true);
     error.set("");
     try {
-      await learning.setGoals({ subjectId: settings()?.subjectId ?? "", goals: { weekdays: week(), paused: isPaused() } });
+      await learning.setGoals({
+        subjectId: props.subjectId,
+        learnerId: props.learnerId ?? "",
+        goals: { weekdays: week(), paused: isPaused() },
+      });
       settings.refetch();
       markChanged();
       saved.set(true);
@@ -117,7 +134,7 @@ export function Goals() {
     }
   };
   return (
-    <Page title={m().goals}>
+    <Page title={settings()?.title ? m().subjectGoals(settings()?.title ?? "") : m().goals}>
       <Muted>{m().goalsBody}</Muted>
       <If when={settings()} else={<Skeleton rows={1} />}>
         <View style={{ gap: 4 }}>
@@ -378,6 +395,6 @@ export function Password() {
 }
 
 /** openAccountPage opens one of the account's pages from the Me tab. */
-export function openAccountPage(name: "goals" | "profile" | "league" | "password"): void {
+export function openAccountPage(name: "profile" | "league" | "password"): void {
   nav.push({ name });
 }

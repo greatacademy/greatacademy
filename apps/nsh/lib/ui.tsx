@@ -406,16 +406,24 @@ function PickCell(props: { title: string; label?: string; chosen: boolean; onPre
 const MONTH_POPUP_WIDTH = 256;
 
 /**
- * MonthField picks a month of a year, and no day: a field that opens the years, newest first, then the months of the
+ * MonthField picks a month of a year, and no day: a field that opens the years, newest first (soonest with `ahead`), then the months of the
  * year picked, in a popup below the field on the desktops and a sheet on phones and tablets. It starts empty and
  * suggests nothing.
  */
-export function MonthField(props: { label: string; value: MonthOfYear | null; onChange: (value: MonthOfYear) => void }) {
+export function MonthField(props: {
+  label: string;
+  value: MonthOfYear | null;
+  onChange: (value: MonthOfYear) => void;
+  /** ahead offers this year and the next `ahead` years, soonest first, in place of the years before. */
+  ahead?: number;
+}) {
   const open = signal(false);
   const year = signal<number | null>(null);
   const width = signal(MONTH_POPUP_WIDTH);
   const thisYear = new Date().getFullYear();
-  const years = Array.from({ length: YEARS_BACK + 1 }, (_, i) => thisYear - i);
+  const years = props.ahead
+    ? Array.from({ length: props.ahead + 1 }, (_, i) => thisYear + i)
+    : Array.from({ length: YEARS_BACK + 1 }, (_, i) => thisYear - i);
   const locale = () => (language() === "zh-CN" ? "zh-CN" : "en");
   const monthName = (month: number, style: "short" | "long") =>
     new Intl.DateTimeFormat(locale(), { month: style, timeZone: "UTC" }).format(Date.UTC(2000, month - 1, 1));
@@ -799,8 +807,9 @@ const TOP_FADE = 20;
 /**
  * TopBar is the head of a tab on a phone, in place of the system header: it reaches up under the status bar, and the
  * page scrolls under it, blurred as iOS 26 blurs a page under its bars, with a fade below the bar rather than a line.
+ * `lead` takes the place of the logo and the title, as the subject switcher does on a subject's tabs.
  */
-export function TopBar(props: { title: string }) {
+export function TopBar(props: { title: string; lead?: JSX.Element }) {
   return (
     <View
       style={{
@@ -818,11 +827,20 @@ export function TopBar(props: { title: string }) {
         top: 0,
       }}
     >
-      <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
-      {/* biome-ignore lint/a11y/useValidAriaRole: nsh's roles are the platforms', where a heading is "header". */}
-      <Text role="header" style={{ color: colors().ink, flex: 1, fontSize: 24, fontWeight: "700" }}>
-        {props.title}
-      </Text>
+      <If
+        when={props.lead}
+        else={
+          <>
+            <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
+            {/* biome-ignore lint/a11y/useValidAriaRole: nsh's roles are the platforms', where a heading is "header". */}
+            <Text role="header" style={{ color: colors().ink, flex: 1, fontSize: 24, fontWeight: "700" }}>
+              {props.title}
+            </Text>
+          </>
+        }
+      >
+        {(lead) => <View style={{ alignItems: "flex-start", flex: 1, minWidth: 0 }}>{lead()}</View>}
+      </If>
       <View
         style={{
           backgroundImage: `linear-gradient(to bottom, ${colors().page.slice(0, 7)}${FADE_TINT}, ${colors().page.slice(0, 7)}00)`,

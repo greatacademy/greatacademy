@@ -8,8 +8,7 @@ export type Route =
   | { name: "home" }
   | { name: "courses" }
   | { name: "course"; courseId: string }
-  | { name: "choose"; learnerId?: string; learnerName?: string; current?: string }
-  | { name: "learn"; courseId: string }
+  | { name: "choose"; subjectId?: string; learnerId?: string; learnerName?: string; current?: string }
   | { name: "map"; courseId: string }
   | { name: "history"; courseId: string }
   | { name: "session"; sessionId: string }
@@ -17,7 +16,7 @@ export type Route =
   | { name: "sign-up" }
   | { name: "forgot-password" }
   | { name: "delete-account" }
-  | { name: "goals" }
+  | { name: "goals"; subjectId: string; learnerId?: string }
   | { name: "profile" }
   | { name: "league" }
   | { name: "password" }
@@ -66,11 +65,11 @@ export const afterSignUp = signal<Route | null>(null);
 /** nav is the app's navigation stack. */
 export const nav = createNavStack<Route>([LAUNCH]);
 
-/** TabId names a tab of the signed-in app. */
-export type TabId = "learn" | "progress" | "courses" | "me";
+/** TabId names a tab of the signed-in app: the first three are the pages of the subject shown (docs/experience.md §3). */
+export type TabId = "learn" | "progress" | "course" | "me";
 
 /** TABS lists the tabs in their order. */
-export const TABS: readonly TabId[] = ["learn", "progress", "courses", "me"];
+export const TABS: readonly TabId[] = ["learn", "progress", "course", "me"];
 
 /** tab is the tab shown on the home page. */
 export const tab = signal<TabId>("learn");

@@ -6,9 +6,11 @@ const text = (en: string, zh: string) => ({ values: { en, "zh-CN": zh } });
 
 const network = {
   [`POST ${url}/ListCourses`]: json({
+    subjects: [{ id: "math", title: text("Mathematics", "数学"), mark: "M", hue: 250 }],
     courses: [
       {
         id: "algebra",
+        subjectId: "math",
         title: text("Algebra", "代数"),
         description: text("Solve equations", "解方程"),
         subjectTitle: text("Mathematics", "数学"),
@@ -351,7 +353,11 @@ function signedIn(extra: Record<string, unknown>) {
     network: {
       ...network,
       [`POST ${privacyUrl}/GetAccess`]: json({ status: "ACCESS_STATUS_OK" }),
-      [`POST ${learningUrl}/GetProfile`]: json({ enrollments: [{ courseId: "algebra", stats: { learned: 1, total: 2 } }], xp: {} }),
+      [`POST ${learningUrl}/GetProfile`]: json({
+        enrollments: [{ courseId: "algebra", subjectId: "math", stats: { learned: 1, total: 2 } }],
+        xp: {},
+        canDecide: true,
+      }),
       [`POST ${accountUrl}/GetSettings`]: json({ username: "learner" }),
       ...extra,
     },
@@ -412,7 +418,6 @@ test("studies a lesson from the course list to its result", async () => {
       },
     }),
   );
-  await app.press("text:Open the course");
   await app.waitFor("text:Next up");
   await app.press("role:button[Start]");
   await app.waitFor("text:Even numbers split in two.");
@@ -471,7 +476,6 @@ test("takes math as plain text and skips in the diagnostic without feedback", as
       },
     }),
   );
-  await app.press("text:Open the course");
   await app.press("role:button[Start]");
   await app.waitFor("text:Add 1");
   await app.press("text:Type it as plain text");
@@ -533,17 +537,14 @@ test("puts the task in progress first on Learn, with the weekly goals", async ()
   const app = await open(
     "./App.tsx",
     signedIn({
-      [`POST ${learningUrl}/GetProfile`]: json({
-        enrollments: [{ courseId: "algebra", stats: { learned: 1, total: 2 } }],
-        xp: { today: 20, goalToday: 30, week: 50, goalWeek: 150, total: 200, days: [10, 20] },
-      }),
       [`POST ${learningUrl}/GetDashboard`]: json({
         courseId: "algebra",
+        subjectId: "math",
         diagnosed: true,
         tasks: [lessonTask],
         active: { id: "s9", task: lessonTask },
         stats: { learned: 1, total: 2 },
-        xp: {},
+        xp: { today: 20, goalToday: 30, week: 50, goalWeek: 150, total: 200, days: [10, 20] },
       }),
     }),
   );
@@ -597,10 +598,10 @@ test("chooses a first course from Learn, then answers the diagnostic's report", 
   expect(kept).toBe(true);
 });
 
-test("sets the weekly goals from Learn", async () => {
+test("sets the weekly goals of the subject from Learn", async () => {
   const app = await open("./App.tsx", {
     ...signedIn({
-      [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }),
+      [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", subjectId: "math", stats: {}, xp: {}, canDecide: true }),
       [`POST ${learningUrl}/SetGoals`]: json({}),
     }),
     platform: "macos",
@@ -608,10 +609,12 @@ test("sets the weekly goals from Learn", async () => {
   await app.waitFor("text:No goal yet");
   await app.press("text:Set goals");
   await app.waitFor("text:150 XP a week");
+  expect(app.texts()).toContain("Weekly goals · Mathematics");
   await app.press("label:More on Mon");
   await app.press("text:Save");
   await app.waitFor("text:Saved");
   const call = app.requests().find((r) => r.url.endsWith("/SetGoals"));
+  expect(JSON.parse(call?.body ?? "{}").subjectId).toBe("math");
   expect(JSON.parse(call?.body ?? "{}").goals.weekdays).toEqual([35, 30, 30, 30, 30, 0, 0]);
 });
 
@@ -623,11 +626,13 @@ test("switches tabs and opens the settings from the sidebar and its shortcuts on
   await app.waitFor("text:Weekly goals");
   await app.keyboard.press("mod+2");
   await app.waitFor("text:The last 14 days");
-  await app.press("label:Courses");
-  await app.waitFor("text:1 / 2 topics");
+  await app.press("label:Course");
+  await app.waitFor("text:Outline of the course");
+  expect(app.texts()).toContain("1 / 2 topics");
   await app.keyboard.press("mod+,");
-  await app.waitFor("text:Weekly goals");
-  expect(app.texts()).toContain("Language");
+  await app.waitFor("text:Language");
+  // Goals belong to a subject, on its pages, not to the settings.
+  expect(app.texts()).not.toContain("Weekly goals");
 });
 
 test("shows a tab's key on hover and collapses the sidebar to its icons on a desktop", async () => {
@@ -652,10 +657,9 @@ test("shows a tab's key on hover and collapses the sidebar to its icons on a des
   expect(app.storage()["ga.sidebar"]).toBe("collapsed");
 });
 
-test("shows the progress map and the history of a course", async () => {
-  const app = await open(
-    "./App.tsx",
-    signedIn({
+test("shows the progress map and the history of a course from Progress", async () => {
+  const app = await open("./App.tsx", {
+    ...signedIn({
       [`POST ${learningUrl}/GetDashboard`]: json({
         courseId: "algebra",
         diagnosed: true,
@@ -668,8 +672,9 @@ test("shows the progress map and the history of a course", async () => {
         sessions: [{ id: "s1", task: lessonTask, completedAt: "1767225600000", passed: true, correct: 3, asked: 3, xp: 10, fullXp: 10 }],
       }),
     }),
-  );
-  await app.press("text:Open the course");
+    platform: "macos",
+  });
+  await app.press("label:Progress");
   await app.press("text:Progress map");
   await app.waitFor("text:Memory 80%");
   expect(app.texts()).toContain("Linear equations");
@@ -680,9 +685,10 @@ test("shows the progress map and the history of a course", async () => {
   expect(app.texts()).toContain("3 of 3 correct");
 });
 
-test("lists the learner's courses first, then the others by shelf", async () => {
+test("lists the learner's courses of the subject first, then the others by shelf", async () => {
   const course = (id: string, title: string, group?: string) => ({
     id,
+    subjectId: "math",
     title: text(title, title),
     description: text("About it", "简介"),
     subjectTitle: text("Mathematics", "数学"),
@@ -692,18 +698,65 @@ test("lists the learner's courses first, then the others by shelf", async () => 
   const app = await open("./App.tsx", {
     ...signedIn({
       [`POST ${url}/ListCourses`]: json({
+        subjects: [{ id: "math", title: text("Mathematics", "数学"), mark: "M", hue: 250 }],
         courses: [course("algebra", "Algebra", "School"), course("geometry", "Geometry", "School"), course("logic", "Logic")],
       }),
       [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", stats: {}, xp: {} }),
     }),
     platform: "macos",
   });
-  await app.press("label:Courses");
+  await app.press("label:Mathematics, switch subject");
+  await app.press("text:All courses");
   await app.waitFor("text:My courses");
   const shown = app.texts();
   expect(shown.indexOf("My courses")).toBeLessThan(shown.indexOf("School"));
   expect(shown.indexOf("Geometry")).toBeLessThan(shown.indexOf("Other courses"));
   expect(shown.filter((t) => t === "Algebra")).toHaveLength(1);
+});
+
+test("switches subject, keeps the choice, and asks before changing course", async () => {
+  const course = (id: string, title: string, subjectId: string) => ({
+    id,
+    subjectId,
+    title: text(title, title),
+    description: text("About it", "简介"),
+    topicCount: 3,
+  });
+  const app = await open("./App.tsx", {
+    ...signedIn({
+      [`POST ${url}/ListCourses`]: json({
+        subjects: [
+          { id: "math", title: text("Mathematics", "数学"), mark: "M", hue: 250 },
+          { id: "english", title: text("English", "英语"), mark: "E", hue: 20 },
+        ],
+        courses: [course("algebra", "Algebra", "math"), course("geometry", "Geometry", "math"), course("reading", "Reading", "english")],
+      }),
+      [`POST ${learningUrl}/GetDashboard`]: json({ courseId: "algebra", subjectId: "math", stats: {}, xp: {}, canDecide: true }),
+      [`POST ${learningUrl}/ChooseCourse`]: json({}),
+    }),
+    platform: "macos",
+  });
+  await app.waitFor("text:Algebra");
+  await app.press("label:Mathematics, switch subject");
+  await app.waitFor("text:Not started");
+  await app.press("label:English");
+  await app.waitFor("text:Choose a course in English");
+  expect(app.storage()["ga.subject"]).toBe("english");
+  await app.press("label:English, switch subject");
+  await app.press("label:Mathematics");
+  await app.keyboard.press("mod+3");
+  await app.press("text:Change course");
+  await app.waitFor("text:Geometry");
+  // Only the subject's courses are offered.
+  expect(app.texts()).not.toContain("Reading");
+  const asked: string[] = [];
+  app.onDialog((dialog) => {
+    asked.push(dialog.title ?? "");
+    return "Cancel";
+  });
+  await app.press("role:button[Start this course]");
+  expect(asked).toEqual(["Switch to Geometry?"]);
+  expect(app.requests().some((r) => r.url.endsWith("/ChooseCourse"))).toBe(false);
 });
 
 test("turns a purpose on and, after asking, off on the privacy page", async () => {

@@ -3,7 +3,7 @@ import { NavPage } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
 import panel from "../assets/sidebar.svg";
-import courses from "../assets/tabs/courses.svg";
+import course from "../assets/tabs/courses.svg";
 import learn from "../assets/tabs/learn.svg";
 import me from "../assets/tabs/me.svg";
 import progress from "../assets/tabs/progress.svg";
@@ -13,8 +13,9 @@ import { HEADER_HEIGHT, SIDEBAR_NARROW, SIDEBAR_WIDE, sidebarToggleLeft, sidebar
 import { m } from "../lib/i18n.ts";
 import { nav, openTab, TABS, type TabId, tab } from "../lib/nav.ts";
 import { collapseSidebar, sidebarCollapsed } from "../lib/prefs.ts";
+import { SubjectSwitcher, usePlace } from "../lib/subject.tsx";
 import { barStyle, colors, glass, headerStyle, isDark, TopBar } from "../lib/ui.tsx";
-import { CourseList } from "./Courses.tsx";
+import { CourseTab } from "./CourseTab.tsx";
 import { Header } from "./Header.tsx";
 import { LearnTab } from "./LearnTab.tsx";
 import { Progress } from "./Progress.tsx";
@@ -25,7 +26,7 @@ export function tabTitle(id: TabId): string {
   const titles = {
     learn: m().tabLearn,
     progress: m().tabProgress,
-    courses: m().tabCourses,
+    course: m().tabCourse,
     me: platform.desktop ? m().settingsTab : m().tabMe,
   };
   return titles[id];
@@ -34,13 +35,17 @@ export function tabTitle(id: TabId): string {
 const icons: Record<TabId, { ios: string; android: string }> = {
   learn: { ios: "graduationcap", android: "android:ic_menu_edit" },
   progress: { ios: "chart.bar", android: "android:ic_menu_sort_by_size" },
-  courses: { ios: "books.vertical", android: "android:ic_menu_agenda" },
+  course: { ios: "books.vertical", android: "android:ic_menu_agenda" },
   me: { ios: "person.crop.circle", android: "android:ic_menu_myplaces" },
 };
 
-/** Home is the signed-in app's first page: the tab chosen in the tab bar or the sidebar. */
+/**
+ * Home is the signed-in app's first page: the tab chosen in the tab bar or the sidebar. Learn, Progress and Course
+ * are the pages of the subject shown, which a phone's top bar names and switches (docs/experience.md §4).
+ */
 export function Home() {
   const shown = (id: TabId) => () => tab() === id && nav.routes().at(-1)?.name === "home";
+  const { place } = usePlace(() => !platform.desktop && nav.routes().at(-1)?.name === "home");
   return (
     <NavPage
       headerStyle={headerStyle()}
@@ -57,15 +62,15 @@ export function Home() {
         <If when={tab() === "progress"}>
           <Progress visible={shown("progress")} />
         </If>
-        <If when={tab() === "courses"}>
-          <CourseList visible={shown("courses")} />
+        <If when={tab() === "course"}>
+          <CourseTab visible={shown("course")} />
         </If>
         <If when={tab() === "me"}>
           <Me />
         </If>
         {/* The phones draw their own head, which the pages scroll under. */}
         <If when={!platform.desktop}>
-          <TopBar title={tabTitle(tab())} />
+          <TopBar title={tabTitle(tab())} lead={tab() === "me" ? undefined : <SubjectSwitcher place={place()} size={22} />} />
         </If>
       </View>
     </NavPage>
@@ -73,7 +78,7 @@ export function Home() {
 }
 
 /** drawn are the icons of the tab bar the app draws itself. */
-const drawn: Record<TabId, typeof learn> = { learn, progress, courses, me };
+const drawn: Record<TabId, typeof learn> = { learn, progress, course, me };
 
 /**
  * PhoneTabs is the tab bar of a phone: on iOS the system's (Liquid Glass from iOS 26); on Android a pill of glass the
@@ -252,7 +257,8 @@ export function ContentCorner() {
 }
 
 /**
- * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
+ * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: first the subject shown, which opens the
+ * switch to another, then the subject's tabs, each with its icon, ⌘1 to ⌘3 (Ctrl on
  * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. Its top row is
  * the window's title bar, with the window controls and `SidebarToggle` over it, which collapses it to its icons (as a
  * narrow window does); at its foot who is signed in and the settings button, which ⌘, opens too, and only the settings
@@ -272,6 +278,7 @@ export function Sidebar() {
   const name = () => sessionUser()?.name ?? "";
   const hovered = signal<TabId | null>(null);
   const settings = () => tab() === "me" && home();
+  const { place } = usePlace(() => true);
   /** Clip holds what a narrower sidebar cuts off at its edge, at the width it has in full. */
   const Clip = (props: { width: number; children: JSX.Element }) => (
     <View style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
@@ -294,6 +301,9 @@ export function Sidebar() {
       <View style={{ backgroundColor: colors().line, bottom: 0, position: "absolute", right: 0, top: HEADER_HEIGHT, width: 1 }} />
       {/* The title bar's row: it drags the window, under the window controls and the collapse button. */}
       <View desktop={{ windowDrag: true }} style={{ height: HEADER_HEIGHT + 8, marginHorizontal: -12 }} />
+      <View style={{ marginBottom: 8, paddingHorizontal: 8, width: SIDEBAR_ROW }}>
+        <SubjectSwitcher place={place()} size={16} compact={!open()} />
+      </View>
       <Each of={[...SIDEBAR]}>
         {(id, index) => {
           const chosen = () => tab() === id();

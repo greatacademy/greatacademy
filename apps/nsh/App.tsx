@@ -25,7 +25,6 @@ import { ForgotPassword } from "./screens/ForgotPassword.tsx";
 import { History } from "./screens/History.tsx";
 import { ContentCorner, commandHeld, Home, heldCommand, PhoneTabs, Sidebar, SidebarToggle } from "./screens/Home.tsx";
 import { Launch, launchLeaving } from "./screens/Launch.tsx";
-import { Learn } from "./screens/Learn.tsx";
 import { Learner } from "./screens/Learner.tsx";
 import { Learners } from "./screens/Learners.tsx";
 import { Plans } from "./screens/Plans.tsx";
@@ -122,9 +121,14 @@ function App() {
             case "course":
               return <CourseOutline courseId={route.courseId} />;
             case "choose":
-              return <ChooseCourse learnerId={route.learnerId} learnerName={route.learnerName} current={route.current} />;
-            case "learn":
-              return <Learn courseId={route.courseId} />;
+              return (
+                <ChooseCourse
+                  subjectId={route.subjectId}
+                  learnerId={route.learnerId}
+                  learnerName={route.learnerName}
+                  current={route.current}
+                />
+              );
             case "map":
               return <CourseMap courseId={route.courseId} />;
             case "history":
@@ -140,7 +144,7 @@ function App() {
             case "delete-account":
               return <DeleteAccount />;
             case "goals":
-              return <Goals />;
+              return <Goals subjectId={route.subjectId} learnerId={route.learnerId} />;
             case "profile":
               return <Profile />;
             case "league":

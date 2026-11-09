@@ -1,12 +1,14 @@
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
 import { computed, List, signal, Text, View } from "nsh";
-import { NavPage } from "nsh/base";
+import { AlertDialog, NavPage } from "nsh/base";
 import { errorText, m, tx } from "../lib/i18n.ts";
-import { nav } from "../lib/nav.ts";
+import { nav, openTab } from "../lib/nav.ts";
+import { chooseSubject, subjectChoice } from "../lib/prefs.ts";
 import { query } from "../lib/query.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
-import { Action, cellStyle, colors, ErrorNote, Grid, headerStyle, Loaded, Muted, PullScroll } from "../lib/ui.tsx";
+import { subjectsOf, tint } from "../lib/subject.tsx";
+import { Action, cellStyle, colors, ErrorNote, Grid, headerStyle, Loaded, Muted, PullScroll, Segmented } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
 function SignInButton() {
@@ -17,14 +19,14 @@ function SignInButton() {
   );
 }
 
-/** Courses is the course list of someone signed out, opened from the welcome page. */
+/** Courses is every course, one subject at a time: opened from the welcome page, or from the subject switcher. */
 export function Courses() {
   return (
     <NavPage
       headerStyle={headerStyle()}
       title={m().courses}
-      header={<Header title={m().courses} right={<SignInButton />} />}
-      headerRight={<SignInButton />}
+      header={<Header title={m().courses} right={token() ? undefined : <SignInButton />} />}
+      headerRight={token() ? undefined : <SignInButton />}
     >
       <CourseList visible={() => nav.routes().at(-1)?.name === "courses"} />
     </NavPage>
@@ -66,17 +68,17 @@ const cardStyle = () => ({
 /** Choosing is what a course list chooses for: the caller's course, or that of a learner they are a guardian of. */
 export interface Choosing {
   readonly learnerId?: string;
-  /** current is the course now current, which is marked instead of offered. */
+  /** current is the course now current, which is marked instead of offered; choosing another asks first. */
   readonly current?: string;
-  readonly onChosen: (courseId: string) => void;
+  readonly onChosen: (courseId: string, subjectId: string) => void;
 }
 
 /**
- * CourseList lists the courses: the learner's own first with how far they are,
- * then the rest by shelf. `visible` says when the page shows, to read the
- * learner's courses again. Given `choose`, it is the list a course is chosen from.
+ * CourseList lists the courses of one subject: the learner's own first with how far they are, then the rest by
+ * shelf. Given `subject` it lists that subject's; without, tabs at its top pick the subject. `visible` says when the
+ * page shows, to read the learner's courses again. Given `choose`, it is the list a course is chosen from.
  */
-export function CourseList(props: { visible: () => boolean; choose?: Choosing; intro?: string }) {
+export function CourseList(props: { visible: () => boolean; choose?: Choosing; intro?: string; subject?: string }) {
   const rpc = query(["courses"], ({ signal }) => catalog.listCourses({}, { signal }));
   const visible = computed(() => props.visible() && token());
   const profile = query(
@@ -84,16 +86,37 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
     () => ["profile"],
     (_, { signal }) => learning.getProfile({ timeZone: timeZone() }, { signal }),
   );
-  const mine = computed(() => (token() && !props.choose ? (profile()?.enrollments ?? []) : []));
+  const picked = signal(props.subject ?? subjectChoice());
+  const subjects = computed(() => {
+    const list = rpc();
+    return list ? subjectsOf(list) : [];
+  });
+  // The subject listed: the one asked for, else the one picked in the tabs while the catalog has it, else the first.
+  const shown = computed(() => props.subject ?? subjects().find((s) => s.id === picked())?.id ?? subjects()[0]?.id ?? "");
+  const mine = computed(() =>
+    token() && !props.choose ? (profile()?.enrollments ?? []).filter((enrollment) => enrollment.subjectId === shown()) : [],
+  );
   const enrolled = computed(() => new Set(mine().map((enrollment) => enrollment.courseId)));
   const busy = signal(false);
   const error = signal("");
-  const choose = async (choosing: Choosing, courseId: string) => {
+  const choose = async (choosing: Choosing, courseId: string, subjectId: string) => {
+    if (choosing.current) {
+      const title = (id: string) => tx(rpc()?.courses.find((course) => course.id === id)?.title) || id;
+      const { action } = await AlertDialog.show({
+        title: m().switchConfirmTitle(title(courseId)),
+        description: m().switchConfirmBody(title(choosing.current)),
+        actions: [
+          { id: "cancel", label: m().cancel, role: "cancel" },
+          { id: "switch", label: m().switchConfirm },
+        ],
+      });
+      if (action !== "switch") return;
+    }
     busy.set(true);
     error.set("");
     try {
       await learning.chooseCourse({ courseId, learnerId: choosing.learnerId ?? "" });
-      choosing.onChosen(courseId);
+      choosing.onChosen(courseId, subjectId);
     } catch (e) {
       error.set(errorText(e));
     } finally {
@@ -109,6 +132,14 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
               <If when={props.intro}>
                 <Text style={{ color: colors().ink, fontSize: 15, lineHeight: 22 }}>{props.intro}</Text>
               </If>
+              <If when={!props.subject && subjects().length > 1}>
+                <Segmented
+                  label={m().subjects}
+                  items={subjects().map((s) => ({ value: s.id, title: tx(s.title) }))}
+                  value={shown()}
+                  onChange={(id) => picked.set(id)}
+                />
+              </If>
               <If when={error()}>
                 <ErrorNote message={error()} />
               </If>
@@ -122,14 +153,23 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
                       return (
                         <View
                           role="button"
-                          onPress={() => nav.push({ name: "learn", courseId: enrollment().courseId })}
+                          onPress={() => {
+                            chooseSubject(enrollment().subjectId);
+                            openTab("learn");
+                          }}
                           style={{ ...cardStyle(), ...cellStyle, borderColor: colors().accent }}
                         >
                           <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>
                             {tx(data().courses.find((course) => course.id === enrollment().courseId)?.title) || enrollment().courseId}
                           </Text>
                           <View style={{ backgroundColor: colors().line, borderRadius: 4, height: 6, overflow: "hidden" }}>
-                            <View style={{ backgroundColor: colors().good, height: 6, width: `${share()}%` }} />
+                            <View
+                              style={{
+                                backgroundColor: tint(subjects().find((s) => s.id === enrollment().subjectId)).strong,
+                                height: 6,
+                                width: `${share()}%`,
+                              }}
+                            />
                           </View>
                           <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
                         </View>
@@ -140,7 +180,7 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
               </If>
               <List
                 viewport="parent"
-                each={shelfRows(data().courses.filter((course) => !enrolled().has(course.id)))}
+                each={shelfRows(data().courses.filter((course) => course.subjectId === shown() && !enrolled().has(course.id)))}
                 keyExtractor={(row) => ("title" in row ? `shelf:${row.title}` : row.courses.map((course) => course.id).join(","))}
                 estimatedItemSize={170}
                 contentStyle={{ gap: 12 }}
@@ -157,7 +197,6 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
                               onPress={() => nav.push({ name: "course", courseId: course().id })}
                               style={{ ...cardStyle(), ...cellStyle }}
                             >
-                              <Muted>{tx(course().subjectTitle)}</Muted>
                               <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(course().title)}</Text>
                               <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(course().description)}</Text>
                               <Muted>{m().topics(course().topicCount)}</Muted>
@@ -169,7 +208,11 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
                                       <Text style={{ color: colors().accent, fontSize: 15, fontWeight: "600" }}>{m().currentCourse}</Text>
                                     }
                                   >
-                                    <Action label={m().chooseThis} disabled={busy()} onPress={() => void choose(choosing(), course().id)} />
+                                    <Action
+                                      label={m().chooseThis}
+                                      disabled={busy()}
+                                      onPress={() => void choose(choosing(), course().id, course().subjectId)}
+                                    />
                                   </If>
                                 )}
                               </If>
