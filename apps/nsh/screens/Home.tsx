@@ -1,4 +1,4 @@
-import { Image, keymap, LayoutAnimation, platform, reduceMotion, safeAreaInsets, signal, Text, View, windowSize } from "nsh";
+import { effect, Image, type JSX, keymap, platform, reduceMotion, safeAreaInsets, signal, Text, untracked, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
@@ -196,11 +196,46 @@ function SidebarButton(props: { icon: typeof logo; label: string; tooltip?: stri
   );
 }
 
+/** SIDEBAR_WIDE and SIDEBAR_NARROW are the sidebar's widths in full and with only its icons, in points. */
+const SIDEBAR_WIDE = 208;
+const SIDEBAR_NARROW = 64;
+
+/** SIDEBAR_ROW is the width of a row's content in full, which a narrower sidebar clips rather than lays out again. */
+const SIDEBAR_ROW = SIDEBAR_WIDE - 24;
+
+/**
+ * sidebarWidth follows the width the sidebar should have, moving to a new one over 200 ms a frame at a time (at once
+ * the first time and while the system asks for less motion). Each frame lays the window out again, so the pages
+ * beside the sidebar move with it in step.
+ */
+function sidebarWidth(target: () => number) {
+  const width = signal(untracked(target));
+  effect(() => {
+    const to = target();
+    const from = untracked(width);
+    if (from === to || untracked(reduceMotion)) {
+      width.set(to);
+      return;
+    }
+    let start: number | undefined;
+    let frame = requestAnimationFrame(function step(time) {
+      start ??= time;
+      const t = Math.min(1, (time - start) / 200);
+      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+      width.set(Math.round(from + (to - from) * eased));
+      if (t < 1) frame = requestAnimationFrame(step);
+    });
+    return () => cancelAnimationFrame(frame);
+  });
+  return width;
+}
+
 /**
  * Sidebar holds the tabs on a desktop, where a bottom bar does not belong: each with its icon, ⌘1 to ⌘3 (Ctrl on
  * Windows and Linux) switch them, and a tab shows its key while the mouse is over it or ⌘ is held. At its head are
- * the logo and a button that collapses it to its icons (as a narrow window does), animated, leaving out the logo; at
- * its foot who is signed in and the settings button, which ⌘, opens too.
+ * the logo and a button that collapses it to its icons (as a narrow window does), leaving out the logo; at its foot who
+ * is signed in and the settings button, which ⌘, opens too, and only the settings button while collapsed. Collapsing
+ * and expanding move its width, the rows keeping their places and the sidebar's edge clipping them.
  */
 export function Sidebar() {
   SIDEBAR.forEach((id, index) => {
@@ -209,14 +244,19 @@ export function Sidebar() {
   keymap.bind("mod+,", () => openTab("me"));
   const roomy = () => windowSize().width >= 760;
   const wide = () => roomy() && !sidebarCollapsed();
+  const width = sidebarWidth(() => (wide() ? SIDEBAR_WIDE : SIDEBAR_NARROW));
+  // The labels, the logo and the name are there while the sidebar is wider than its icons, the edge clipping them.
+  const open = () => width() > SIDEBAR_NARROW;
   const home = () => nav.routes().length === 1;
   const name = () => sessionUser()?.name ?? "";
   const hovered = signal<TabId | null>(null);
   const settings = () => tab() === "me" && home();
-  const toggle = () => {
-    if (!reduceMotion()) LayoutAnimation.configureNext(LayoutAnimation.create(200, "easeInEaseOut", "opacity"));
-    collapseSidebar(!sidebarCollapsed());
-  };
+  /** Clip holds what a narrower sidebar cuts off at its edge, at the width it has in full. */
+  const Clip = (props: { width: number; children: JSX.Element }) => (
+    <View style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
+      <View style={{ alignItems: "center", flexDirection: "row", gap: 8, width: props.width }}>{props.children}</View>
+    </View>
+  );
   return (
     <View
       role="navigation"
@@ -225,26 +265,24 @@ export function Sidebar() {
         borderColor: colors().line,
         borderRightWidth: 1,
         gap: 4,
-        paddingHorizontal: wide() ? 12 : 6,
+        overflow: "hidden",
+        paddingHorizontal: 12,
         paddingVertical: 16,
-        width: wide() ? 208 : 64,
+        width: width(),
       }}
     >
-      <View
-        style={{
-          alignItems: "center",
-          flexDirection: wide() ? "row" : "column",
-          gap: 8,
-          justifyContent: "space-between",
-          marginBottom: 12,
-          paddingHorizontal: wide() ? 6 : 0,
-        }}
-      >
-        <If when={!(roomy() && sidebarCollapsed())}>
-          <Image src={logo} style={{ height: 28, width: 28 }} accessibilityLabel="Great Academy" />
-        </If>
-        <If when={roomy()}>
-          <SidebarButton icon={panel} label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar} onPress={toggle} />
+      <View style={{ alignItems: "center", flexDirection: "row", height: 32, marginBottom: 12, paddingHorizontal: 4 }}>
+        <If when={roomy()} else={<Image src={logo} style={{ height: 28, marginLeft: 2, width: 28 }} accessibilityLabel="Great Academy" />}>
+          <Clip width={SIDEBAR_ROW - 8 - 32}>
+            <If when={open()}>
+              <Image src={logo} style={{ height: 28, marginLeft: 2, width: 28 }} accessibilityLabel="Great Academy" />
+            </If>
+          </Clip>
+          <SidebarButton
+            icon={panel}
+            label={sidebarCollapsed() ? m().expandSidebar : m().collapseSidebar}
+            onPress={() => collapseSidebar(!sidebarCollapsed())}
+          />
         </If>
       </View>
       <Each of={[...SIDEBAR]}>
@@ -261,25 +299,37 @@ export function Sidebar() {
               onMouseLeave={() => hovered.set(null)}
               hoverStyle={{ backgroundColor: chosen() && home() ? colors()["accent-soft"] : colors().line }}
               style={{
-                alignItems: "center",
                 backgroundColor: chosen() && home() ? colors()["accent-soft"] : "transparent",
                 borderRadius: 8,
-                flexDirection: "row",
-                gap: 10,
                 height: 36,
-                justifyContent: wide() ? "flex-start" : "center",
-                paddingHorizontal: 10,
+                overflow: "hidden",
               }}
             >
-              <Image src={drawn[id()]} style={{ height: 20, tintColor: chosen() ? colors().accent : colors().muted, width: 20 }} />
-              <If when={wide()}>
-                <Text
-                  style={{ color: chosen() ? colors().accent : colors().ink, flex: 1, fontSize: 15, fontWeight: chosen() ? "600" : "400" }}
-                >
-                  {tabTitle(id())}
-                </Text>
-                <Hint index={index()} hovered={hovered() === id()} />
-              </If>
+              <View
+                style={{
+                  alignItems: "center",
+                  flexDirection: "row",
+                  gap: 10,
+                  height: 36,
+                  paddingHorizontal: 10,
+                  width: SIDEBAR_ROW,
+                }}
+              >
+                <Image src={drawn[id()]} style={{ height: 20, tintColor: chosen() ? colors().accent : colors().muted, width: 20 }} />
+                <If when={open()}>
+                  <Text
+                    style={{
+                      color: chosen() ? colors().accent : colors().ink,
+                      flex: 1,
+                      fontSize: 15,
+                      fontWeight: chosen() ? "600" : "400",
+                    }}
+                  >
+                    {tabTitle(id())}
+                  </Text>
+                  <Hint index={index()} hovered={hovered() === id()} />
+                </If>
+              </View>
             </View>
           );
         }}
@@ -290,29 +340,29 @@ export function Sidebar() {
           alignItems: "center",
           borderColor: colors().line,
           borderTopWidth: 1,
-          flexDirection: wide() ? "row" : "column",
-          gap: 8,
-          paddingHorizontal: wide() ? 4 : 0,
+          flexDirection: "row",
+          paddingHorizontal: 4,
           paddingTop: 12,
         }}
       >
-        <View
-          accessibilityLabel={name()}
-          tooltip={wide() ? undefined : name()}
-          style={{
-            alignItems: "center",
-            backgroundColor: colors()["accent-soft"],
-            borderRadius: 16,
-            height: 32,
-            justifyContent: "center",
-            width: 32,
-          }}
-        >
-          <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...name()][0]?.toUpperCase() ?? ""}</Text>
-        </View>
-        <If when={wide()}>
-          <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500" }}>{name()}</Text>
-        </If>
+        <Clip width={SIDEBAR_ROW - 8 - 32}>
+          <If when={open()}>
+            <View
+              accessibilityLabel={name()}
+              style={{
+                alignItems: "center",
+                backgroundColor: colors()["accent-soft"],
+                borderRadius: 16,
+                height: 32,
+                justifyContent: "center",
+                width: 32,
+              }}
+            >
+              <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...name()][0]?.toUpperCase() ?? ""}</Text>
+            </View>
+            <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500" }}>{name()}</Text>
+          </If>
+        </Clip>
         <SidebarButton
           icon={gear}
           label={m().settingsTab}
