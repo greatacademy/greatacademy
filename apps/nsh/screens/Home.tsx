@@ -3,7 +3,7 @@ import { Image, type JSX, keymap, platform, safeAreaInsets, signal, Text, View }
 import { NavPage, Popover } from "nsh/base";
 import { TabBar } from "nsh/mobile";
 
-import caretUp from "../assets/icons/caret-up.svg";
+import caretDown from "../assets/icons/caret-down.svg";
 import panel from "../assets/sidebar.svg";
 import course from "../assets/tabs/courses.svg";
 import learn from "../assets/tabs/learn.svg";
@@ -283,7 +283,7 @@ function MenuItem(props: { label: string; tone?: "bad"; onPress: () => void }) {
  * AccountMenu is who is signed in at the sidebar's foot, which opens a menu above it as the web's account menu does:
  * the name and email, then the course catalog, the league, the learners followed, the settings and signing out.
  */
-function AccountMenu(props: { name: string }) {
+function AccountMenu(props: { name: string; width: number }) {
   const shown = signal(false);
   const email = () => sessionUser()?.email ?? "";
   const go = (run: () => void) => () => {
@@ -312,7 +312,7 @@ function AccountMenu(props: { name: string }) {
           role="button"
           accessibilityLabel={m().accountMenu(props.name)}
           hoverStyle={{ backgroundColor: colors().line }}
-          style={{ alignItems: "center", borderRadius: 8, flex: 1, flexDirection: "row", gap: 8, marginLeft: -4, padding: 4 }}
+          style={{ alignItems: "center", borderRadius: 8, flexDirection: "row", gap: 8, marginLeft: -4, padding: 4, width: props.width }}
         >
           <View
             style={{
@@ -327,7 +327,7 @@ function AccountMenu(props: { name: string }) {
             <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{[...props.name][0]?.toUpperCase() ?? ""}</Text>
           </View>
           <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.name}</Text>
-          <Image src={caretUp} style={{ height: 12, tintColor: colors().muted, width: 12 }} />
+          <Image src={caretDown} style={{ height: 12, tintColor: colors().muted, width: 12 }} />
         </View>
       }
     >
@@ -470,7 +470,7 @@ export function Sidebar() {
         }}
       >
         <Clip width={SIDEBAR_ROW - 8 - 32}>
-          <AccountMenu name={name()} />
+          <AccountMenu name={name()} width={SIDEBAR_ROW - 8 - 32} />
         </Clip>
         <SidebarButton
           icon={gear}
