@@ -38,6 +38,8 @@ export function TaskCard({
   let title: ReactNode;
   let detail: string;
   let xp = 0;
+  // A foundation names the earlier course it comes from.
+  const from = k.case === "lesson" || k.case === "review" ? tx(k.value.fromCourse) : "";
   switch (k.case) {
     case "diagnostic":
       icon = <Compass size={22} weight="duotone" />;
@@ -85,6 +87,7 @@ export function TaskCard({
       <div className="min-w-0 flex-1 space-y-1">
         <div className="text-xs font-medium tracking-wide text-muted uppercase">
           {label}
+          {from && <span className="ml-2 rounded bg-page px-1.5 py-0.5 text-muted">{from}</span>}
           {xp > 0 && <span className="ml-2 text-accent">{xp} XP</span>}
         </div>
         <div className="font-semibold">{title}</div>

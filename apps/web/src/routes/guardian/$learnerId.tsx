@@ -4,12 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
+import { ChooseCourse } from "../../components/ChooseCourse.tsx";
 import { Forecast } from "../../components/Forecast.tsx";
 import { GoalsEditor } from "../../components/GoalsEditor.tsx";
 import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
+import { CourseDone, PlacementReport } from "../../components/PlacementReport.tsx";
 import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Bar, Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { XpOverview } from "../../components/XpOverview.tsx";
@@ -178,6 +180,22 @@ function CourseForecast({ learnerId, courseId }: { learnerId: string; courseId: 
   );
 }
 
+/** GuardedReport shows the learner's diagnostic report or finished course, for the guardian to answer. */
+function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: string }) {
+  const dash = useQuery({
+    queryKey: ["guarded", learnerId, "dashboard", courseId],
+    queryFn: () => learning.getDashboard({ courseId, timeZone: timeZone(), learnerId }),
+    staleTime: 0,
+  });
+  if (!dash.data) return null;
+  return (
+    <>
+      <PlacementReport d={dash.data} learnerId={learnerId} />
+      <CourseDone d={dash.data} learnerId={learnerId} />
+    </>
+  );
+}
+
 function GuardedLearner() {
   const { learnerId } = Route.useParams();
   const { m, tx } = useI18n();
@@ -190,6 +208,7 @@ function GuardedLearner() {
   const [chosen, setChosen] = useState<string>();
   const [tab, setTab] = useState<"activity" | "progress">("activity");
   const [confirming, setConfirming] = useState(false);
+  const [changing, setChanging] = useState(false);
   const detail = useQuery({
     queryKey: ["guarded", learnerId],
     queryFn: () => account.getGuardedLearner({ learnerId, timeZone: timeZone() }),
@@ -249,9 +268,30 @@ function GuardedLearner() {
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-4">
-          {!courseId && <Card className="text-muted">{m.noCourseYet}</Card>}
-          {courseId && (
+          {(!courseId || changing) && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold">{m.chooseForChild(learner.name)}</h2>
+                {changing && (
+                  <Button variant="ghost" onClick={() => setChanging(false)}>
+                    {m.cancel}
+                  </Button>
+                )}
+              </div>
+              <p className="text-sm text-muted">{courseId ? m.changeCourseBody : m.chooseForChildBody}</p>
+              <ChooseCourse
+                learnerId={learnerId}
+                current={courseId}
+                onChosen={(id) => {
+                  setChosen(id);
+                  setChanging(false);
+                }}
+              />
+            </div>
+          )}
+          {courseId && !changing && (
             <>
+              <GuardedReport learnerId={learnerId} courseId={courseId} />
               <div className="flex gap-1">
                 <button
                   type="button"
@@ -311,6 +351,11 @@ function GuardedLearner() {
                 </div>
               ) : null}
               {share >= 1 && <p className="text-sm text-good">{m.forecastDone}</p>}
+              {!changing && (
+                <Button variant="ghost" className="-ml-4" onClick={() => setChanging(true)}>
+                  {m.changeCourse}
+                </Button>
+              )}
             </Card>
           )}
           {courseId && <CourseForecast learnerId={learnerId} courseId={courseId} />}

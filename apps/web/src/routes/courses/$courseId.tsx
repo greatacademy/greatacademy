@@ -1,36 +1,28 @@
 import { ArrowRight } from "@phosphor-icons/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { LoadError, NotFoundNote } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
-import { Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
+import { buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { useSession } from "../../lib/auth.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { catalog, learning, timeZone } from "../../lib/rpc.ts";
 
 export const Route = createFileRoute("/courses/$courseId")({ component: CoursePage });
 
+/** CoursePage introduces a course. A course is chosen at sign-up and changed in settings, not here. */
 function CoursePage() {
   const { courseId } = Route.useParams();
   const { m, tx } = useI18n();
   const { data: session } = useSession();
-  const navigate = useNavigate();
-  const qc = useQueryClient();
   const course = useQuery({ queryKey: ["course", courseId], queryFn: () => catalog.getCourse({ courseId }) });
   const profile = useQuery({
     queryKey: ["profile"],
     queryFn: () => learning.getProfile({ timeZone: timeZone() }),
     enabled: !!session,
   });
-  const enrolled = profile.data?.enrollments.some((e) => e.courseId === courseId);
-  const enroll = useMutation({
-    mutationFn: () => learning.enroll({ courseId }),
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ["profile"] });
-      await navigate({ to: "/learn/$courseId", params: { courseId } });
-    },
-  });
+  const current = profile.data?.enrollments.some((e) => e.courseId === courseId);
 
   if (course.isPending) return <Spinner label={m.loading} />;
   if (course.isError) return <LoadError error={course.error} onRetry={() => course.refetch()} />;
@@ -54,16 +46,15 @@ function CoursePage() {
               </Link>
               <span className="text-sm text-muted">{m.signInToLearn}</span>
             </div>
-          ) : enrolled ? (
+          ) : current ? (
             <Link to="/learn/$courseId" params={{ courseId }} className={buttonClass("primary")}>
               {m.continueLearning} <ArrowRight size={16} />
             </Link>
           ) : (
-            <Button onClick={() => enroll.mutate()} disabled={enroll.isPending || profile.isPending}>
-              {m.enroll} <ArrowRight size={16} />
-            </Button>
+            <Link to="/settings/courses" className="text-sm text-accent">
+              {m.changeCourse}
+            </Link>
           )}
-          {enroll.isError && <ErrorNote message={m.error} />}
         </div>
       </div>
 

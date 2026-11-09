@@ -3,7 +3,16 @@ import { useI18n } from "../lib/i18n.tsx";
 const DAY = 86_400_000;
 
 /** comparePaces are the XP per day a learner can compare, from gentle to intense. */
-const comparePaces = [15, 30, 50, 70, 100];
+export const comparePaces = [15, 30, 50, 70, 100];
+
+/** finishDate is the day `remaining` XP is done at `xpPerDay`, from today. */
+export function finishDate(remaining: number, xpPerDay: number, locale: string): string {
+  return new Date(Date.now() + Math.ceil(remaining / xpPerDay) * DAY).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 /** Forecast shows when a course may be finished, at the learner's own pace and at others; guardians read it about the learner. */
 export function Forecast({
@@ -18,12 +27,7 @@ export function Forecast({
   guardian?: boolean;
 }) {
   const { m, locale } = useI18n();
-  const dateAt = (xpPerDay: number) =>
-    new Date(Date.now() + Math.ceil(remaining / xpPerDay) * DAY).toLocaleDateString(locale, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+  const dateAt = (xpPerDay: number) => finishDate(remaining, xpPerDay, locale);
   if (remaining <= 0) return <p className="text-sm text-muted">{m.forecastDone}</p>;
   const own = Math.round(pace);
   const goal = Math.round(goalPace);

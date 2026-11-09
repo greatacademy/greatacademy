@@ -1,10 +1,10 @@
 import { Code, ConnectError } from "@connectrpc/connect";
 import { describe, expect, it } from "vitest";
 
-import { isNotEnrolled, isNotFound, shouldRetry } from "./rpc.ts";
+import { isNotCurrent, isNotFound, shouldRetry } from "./rpc.ts";
 
 const notFound = new ConnectError("unknown course", Code.NotFound);
-const notEnrolled = new ConnectError("not enrolled", Code.FailedPrecondition);
+const notCurrent = new ConnectError("not the current course", Code.FailedPrecondition);
 const unavailable = new ConnectError("try later", Code.Unavailable);
 
 describe("isNotFound", () => {
@@ -15,11 +15,11 @@ describe("isNotFound", () => {
   });
 });
 
-describe("isNotEnrolled", () => {
-  it("recognizes only the code for a missing enrollment", () => {
-    expect(isNotEnrolled(notEnrolled)).toBe(true);
-    expect(isNotEnrolled(notFound)).toBe(false);
-    expect(isNotEnrolled(new Error("network"))).toBe(false);
+describe("isNotCurrent", () => {
+  it("recognizes only the code for a course that is not current", () => {
+    expect(isNotCurrent(notCurrent)).toBe(true);
+    expect(isNotCurrent(notFound)).toBe(false);
+    expect(isNotCurrent(new Error("network"))).toBe(false);
   });
 });
 
@@ -33,7 +33,7 @@ describe("shouldRetry", () => {
     expect(shouldRetry(0, notFound)).toBe(false);
   });
 
-  it("does not ask again before the learner enrolls", () => {
-    expect(shouldRetry(0, notEnrolled)).toBe(false);
+  it("does not ask again about a course that is not current", () => {
+    expect(shouldRetry(0, notCurrent)).toBe(false);
   });
 });

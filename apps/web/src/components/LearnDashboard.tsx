@@ -14,19 +14,20 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
-import { useEnrollFirst, useRequireSession } from "../lib/hooks.ts";
+import { useCurrentCourseFirst, useRequireSession } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { Forecast } from "./Forecast.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
+import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, menuItem, menuPopup, Spinner } from "./ui.tsx";
 import { XpOverview } from "./XpOverview.tsx";
 
 const DAY = 86_400_000;
 
-/** CourseSwitcher names the current course and moves to another, or to the catalog to add one. */
+/** CourseSwitcher names the course and moves to the current course of another subject, or to settings to change course. */
 function CourseSwitcher({ courseId, title }: { courseId: string; title: string }) {
   const { m, tx } = useI18n();
   const navigate = useNavigate();
@@ -52,9 +53,9 @@ function CourseSwitcher({ courseId, title }: { courseId: string; title: string }
                 {e.courseId === courseId && <span className="text-accent">●</span>}
               </Menu.Item>
             ))}
-            <Menu.Item className={menuItem} onClick={() => navigate({ to: "/courses" })}>
+            <Menu.Item className={menuItem} onClick={() => navigate({ to: "/settings/courses" })}>
               <span className="flex items-center gap-2 text-accent">
-                <Plus size={14} /> {m.addCourse}
+                <Plus size={14} /> {m.changeCourse}
               </span>
             </Menu.Item>
           </Menu.Popup>
@@ -186,10 +187,10 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", courseId] }),
   });
 
-  // Not enrolled: the course page has the enroll button.
-  const notEnrolled = useEnrollFirst(courseId, dash.error);
+  // Not the current course: home opens the current one.
+  const notCurrent = useCurrentCourseFirst(dash.error);
 
-  if (!session || dash.isPending || notEnrolled) return <Spinner label={m.loading} />;
+  if (!session || dash.isPending || notCurrent) return <Spinner label={m.loading} />;
   if (dash.isError) return <LoadError error={dash.error} onRetry={() => dash.refetch()} />;
   const d = dash.data;
   const stats = d.stats!;
@@ -221,6 +222,8 @@ export function LearnDashboard({ courseId }: { courseId: string }) {
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-6">
+          <PlacementReport d={d} />
+          <CourseDone d={d} />
           <section className="space-y-3">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4">
               <h2 className="text-lg font-semibold">{m.nextUp}</h2>

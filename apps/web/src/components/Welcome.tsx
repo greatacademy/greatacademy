@@ -1,15 +1,16 @@
 import { ArrowRight, Student, UsersThree } from "@phosphor-icons/react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
-import { CourseCatalog } from "./CourseCatalog.tsx";
+import { ChooseCourse } from "./ChooseCourse.tsx";
 
-/** Welcome is the first screen of an account with no course: it asks who the account is for, then which course to start. */
+/** Welcome is the first screen of an account with no course: it asks who the account is for, then which course to start with. */
 export function Welcome() {
   const { m } = useI18n();
   const { data: session } = useSession();
+  const navigate = useNavigate();
   const [choosing, setChoosing] = useState(false);
   const card = "flex items-start gap-4 rounded-2xl border border-line bg-surface p-5 text-left transition hover:border-accent/50";
 
@@ -20,7 +21,7 @@ export function Welcome() {
           <h1 className="text-2xl font-semibold tracking-tight">{m.welcomeChooseTitle}</h1>
           <p className="max-w-2xl text-muted">{m.welcomeChooseBody}</p>
         </div>
-        <CourseCatalog />
+        <ChooseCourse onChosen={(courseId) => navigate({ to: "/learn/$courseId", params: { courseId } })} />
       </div>
     );
   }

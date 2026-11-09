@@ -9,10 +9,22 @@ import { useI18n } from "../lib/i18n.tsx";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { field } from "./AuthForm.tsx";
 import { Markdown } from "./Markdown.tsx";
-import { Bar, ErrorNote, Spinner } from "./ui.tsx";
+import { Bar, Button, ErrorNote, Spinner } from "./ui.tsx";
 
-/** CourseCatalog lists every course by shelf, with a search and the learner's progress in the courses they took. */
-export function CourseCatalog() {
+/**
+ * CourseCatalog lists every course by shelf, with a search and the learner's
+ * progress in their current courses. Given onChoose, it is the list a course is
+ * chosen from, with the current course marked.
+ */
+export function CourseCatalog({
+  onChoose,
+  current,
+  busy,
+}: {
+  onChoose?: (courseId: string) => void;
+  current?: string;
+  busy?: boolean;
+} = {}) {
   const { m, tx } = useI18n();
   const { data: session } = useSession();
   const [query, setQuery] = useState("");
@@ -83,6 +95,29 @@ export function CourseCatalog() {
           <div className="grid gap-3 md:grid-cols-2">
             {list.map((c) => {
               const stats = enrolled.get(c.id);
+              if (onChoose) {
+                return (
+                  <div key={c.id} className="flex min-w-0 flex-col gap-2 rounded-2xl border border-line bg-surface p-5">
+                    <h3 className="font-semibold">{tx(c.title)}</h3>
+                    <Markdown source={tx(c.description)} className="line-clamp-3 text-sm text-muted" />
+                    <div className="text-xs text-muted">
+                      {c.topicCount} {m.topics} · {c.xp} XP
+                    </div>
+                    <div className="mt-auto flex flex-wrap items-center gap-3 pt-2">
+                      {c.id === current ? (
+                        <span className="text-sm font-medium text-accent">{m.currentCourse}</span>
+                      ) : (
+                        <Button onClick={() => onChoose(c.id)} disabled={busy}>
+                          {m.chooseThis}
+                        </Button>
+                      )}
+                      <Link to="/courses/$courseId" params={{ courseId: c.id }} target="_blank" className="text-sm text-accent">
+                        {m.aboutCourse}
+                      </Link>
+                    </div>
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={c.id}

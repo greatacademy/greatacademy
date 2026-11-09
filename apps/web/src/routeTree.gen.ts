@@ -38,6 +38,7 @@ import { Route as LegalPageRouteImport } from './routes/legal/$page'
 import { Route as SessionSessionIdRouteImport } from './routes/session/$sessionId'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
+import { Route as SettingsCoursesRouteImport } from './routes/settings/courses'
 import { Route as LearnCourseIdIndexRouteImport } from './routes/learn/$courseId/index'
 import { Route as LearnCourseIdHistoryRouteImport } from './routes/learn/$courseId/history'
 import { Route as LearnCourseIdProgressRouteImport } from './routes/learn/$courseId/progress'
@@ -188,6 +189,11 @@ const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
   path: '/appearance',
   getParentRoute: () => SettingsRouteRoute,
 } as any)
+const SettingsCoursesRoute = SettingsCoursesRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => SettingsRouteRoute,
+} as any)
 const LearnCourseIdIndexRoute = LearnCourseIdIndexRouteImport.update({
   id: '/learn/$courseId/',
   path: '/learn/$courseId/',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/settings/courses': typeof SettingsCoursesRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/settings/courses': typeof SettingsCoursesRoute
   '/admin': typeof AdminIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/guardian': typeof GuardianIndexRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/legal/$page': typeof LegalPageRoute
   '/session/$sessionId': typeof SessionSessionIdRoute
   '/settings/appearance': typeof SettingsAppearanceRoute
+  '/settings/courses': typeof SettingsCoursesRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/settings/courses'
     | '/admin/'
     | '/courses/'
     | '/guardian/'
@@ -375,6 +385,7 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/settings/courses'
     | '/admin'
     | '/courses'
     | '/guardian'
@@ -410,6 +421,7 @@ export interface FileRouteTypes {
     | '/legal/$page'
     | '/session/$sessionId'
     | '/settings/appearance'
+    | '/settings/courses'
     | '/admin/'
     | '/courses/'
     | '/guardian/'
@@ -651,6 +663,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsAppearanceRouteImport
       parentRoute: typeof SettingsRouteRoute
     }
+    '/settings/courses': {
+      id: '/settings/courses'
+      path: '/courses'
+      fullPath: '/settings/courses'
+      preLoaderRoute: typeof SettingsCoursesRouteImport
+      parentRoute: typeof SettingsRouteRoute
+    }
     '/learn/$courseId/': {
       id: '/learn/$courseId/'
       path: '/learn/$courseId'
@@ -710,11 +729,13 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 
 interface SettingsRouteRouteChildren {
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
+  SettingsCoursesRoute: typeof SettingsCoursesRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
 }
 
 const SettingsRouteRouteChildren: SettingsRouteRouteChildren = {
   SettingsAppearanceRoute: SettingsAppearanceRoute,
+  SettingsCoursesRoute: SettingsCoursesRoute,
   SettingsIndexRoute: SettingsIndexRoute,
 }
 

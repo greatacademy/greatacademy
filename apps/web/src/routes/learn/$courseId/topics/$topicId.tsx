@@ -9,7 +9,7 @@ import { LoadError } from "../../../../components/LoadError.tsx";
 import { Markdown } from "../../../../components/Markdown.tsx";
 import { AnswerText, ProblemPrompt } from "../../../../components/Problem.tsx";
 import { Button, buttonClass, Card, Spinner } from "../../../../components/ui.tsx";
-import { useEnrollFirst, useRequireSession } from "../../../../lib/hooks.ts";
+import { useCurrentCourseFirst, useRequireSession } from "../../../../lib/hooks.ts";
 import { useI18n } from "../../../../lib/i18n.tsx";
 import { learning } from "../../../../lib/rpc.ts";
 import { statusStyle } from "../../../../lib/topic-status.ts";
@@ -95,9 +95,9 @@ function Topic() {
     enabled: !!session,
   });
 
-  const notEnrolled = useEnrollFirst(courseId, topic.error);
+  const notCurrent = useCurrentCourseFirst(topic.error);
 
-  if (!session || topic.isPending || notEnrolled) return <Spinner label={m.loading} />;
+  if (!session || topic.isPending || notCurrent) return <Spinner label={m.loading} />;
   if (topic.isError) return <LoadError error={topic.error} onRetry={() => topic.refetch()} />;
   const s = statusStyle[topic.data.status];
   return (
