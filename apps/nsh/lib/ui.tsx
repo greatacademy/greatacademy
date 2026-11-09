@@ -479,6 +479,9 @@ export function MonthField(props: {
               <Each of={years}>
                 {(each) => <PickCell title={String(each())} chosen={props.value?.year === each()} onPress={() => year.set(each())} />}
               </Each>
+              <Each of={Array.from({ length: (4 - (years.length % 4)) % 4 }, (_, i) => i)}>
+                {() => <View style={{ flexBasis: "22%", flexGrow: 1 }} />}
+              </Each>
             </View>
           </Scroll>
         }
