@@ -81,7 +81,8 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
       <If when={!platform.desktop}>
         <CloseButton size={44} onPress={props.onClose} />
       </If>
-      <View style={{ flex: 1, gap: 4 }}>
+      {/* On a desktop the bar's middle is the row's, level with the traffic lights, and the words hang below it. */}
+      <View style={platform.desktop ? { alignSelf: "stretch", flex: 1, justifyContent: "center" } : { flex: 1, gap: 4 }}>
         <View
           role="progressbar"
           accessibilityLabel={props.label}
@@ -90,7 +91,15 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
         >
           <View style={{ backgroundColor: colors().accent, borderRadius: 4, height: 8, width: `${Math.round(props.share * 100)}%` }} />
         </View>
-        <Text style={{ color: colors().muted, fontSize: 12 }}>{props.label}</Text>
+        <Text
+          style={{
+            color: colors().muted,
+            fontSize: 12,
+            ...(platform.desktop ? { left: 0, position: "absolute", top: HEADER_HEIGHT / 2 + 7 } : {}),
+          }}
+        >
+          {props.label}
+        </Text>
       </View>
       {/* A phone keeps the bar centered; a desktop's button is at the right, away from the window's own close button. */}
       <If when={platform.desktop} else={<View style={{ width: 44 }} />}>
