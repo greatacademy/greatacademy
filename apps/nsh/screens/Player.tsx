@@ -60,11 +60,10 @@ function progressOf(session: Session, question: Question): { label: string; shar
 
 /**
  * FocusBar is the player's only chrome: a way out, and how far the task has come. On a desktop it is the window's
- * title bar's row too, as a page's header is: as tall, dragging the window, and clear of macOS's traffic lights.
+ * title bar's row too, as a page's header is: as tall, dragging the window, and clear of macOS's traffic lights, with
+ * the way out at its right and a button as large as the sidebar's, which a pointer needs rather than a finger.
  */
 function FocusBar(props: { share: number; label: string; onClose: () => void }) {
-  // A pointer needs less than a finger: on a desktop the button is as large as the sidebar's.
-  const close = platform.desktop ? 36 : 44;
   return (
     <View
       desktop={{ windowDrag: true }}
@@ -79,15 +78,9 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
           : { paddingBottom: 8, paddingTop: "calc(env(safe-area-inset-top) + 8)" }),
       }}
     >
-      <View
-        role="button"
-        accessibilityLabel={m().close}
-        onPress={props.onClose}
-        hoverStyle={{ backgroundColor: colors().line }}
-        style={{ alignItems: "center", borderRadius: 8, height: close, justifyContent: "center", width: close }}
-      >
-        <Text style={{ color: colors().muted, fontSize: 22 }}>✕</Text>
-      </View>
+      <If when={!platform.desktop}>
+        <CloseButton size={44} onPress={props.onClose} />
+      </If>
       <View style={{ flex: 1, gap: 4 }}>
         <View
           role="progressbar"
@@ -99,7 +92,25 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
         </View>
         <Text style={{ color: colors().muted, fontSize: 12 }}>{props.label}</Text>
       </View>
-      <View style={{ width: close }} />
+      {/* A phone keeps the bar centered; a desktop's button is at the right, away from the window's own close button. */}
+      <If when={platform.desktop} else={<View style={{ width: 44 }} />}>
+        <CloseButton size={36} onPress={props.onClose} />
+      </If>
+    </View>
+  );
+}
+
+/** CloseButton leaves the task: at the bar's left on a phone, at its right on a desktop, where the traffic lights are at the left. */
+function CloseButton(props: { size: number; onPress: () => void }) {
+  return (
+    <View
+      role="button"
+      accessibilityLabel={m().close}
+      onPress={props.onPress}
+      hoverStyle={{ backgroundColor: colors().line }}
+      style={{ alignItems: "center", borderRadius: 8, height: props.size, justifyContent: "center", width: props.size }}
+    >
+      <Text style={{ color: colors().muted, fontSize: 22 }}>✕</Text>
     </View>
   );
 }
