@@ -47,7 +47,7 @@ describe("english content", () => {
   it("offers its passages in the course, each needing the topics whose words it uses", () => {
     const subject = compileEnglish();
     const course = english.courses[0];
-    expect(subject.graph.passages.size).toBe(50);
+    expect(subject.graph.passages.size).toBe(60);
     for (const passage of subject.graph.passages.values()) {
       expect(course?.reading, passage.id).toContain(passage.unit);
       const needs = new Set(passage.topics.map((edge) => edge.topic));

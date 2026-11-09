@@ -7,3 +7,5 @@ export const clues = { topic: "context-clues", weight: 0.3 } as const;
 export const cluesAcademic = { topic: "academic-words-1", weight: 0.2 } as const;
 /** academic2 is the share of the second academic words that a passage using some of them practices. */
 export const academic2 = { topic: "academic-words-2", weight: 0.2 } as const;
+/** academic3 is the share of the third academic words that a passage using some of them practices. */
+export const academic3 = { topic: "academic-words-3", weight: 0.2 } as const;

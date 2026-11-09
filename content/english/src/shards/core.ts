@@ -2,6 +2,7 @@
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 import { theHumanBody } from "../reading/body.ts";
+import { ourChangingEarth } from "../reading/earth.ts";
 import { lifeOnTheNile } from "../reading/nile.ts";
 import { howPlantsLive } from "../reading/plants.ts";
 import { waterOnEarth } from "../reading/water.ts";
@@ -28,4 +29,11 @@ export const coreShardTopics: readonly TopicDef[] = [
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */
-export const coreShardReading: readonly ReadingUnitDef[] = [waterOnEarth, howPlantsLive, lifeOnTheNile, weatherAndClimate, theHumanBody];
+export const coreShardReading: readonly ReadingUnitDef[] = [
+  waterOnEarth,
+  howPlantsLive,
+  lifeOnTheNile,
+  weatherAndClimate,
+  theHumanBody,
+  ourChangingEarth,
+];

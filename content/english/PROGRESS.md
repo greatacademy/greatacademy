@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate` and `the-human-body`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
