@@ -8,6 +8,7 @@
 | :--- | :--- |
 | [docs/architecture.zh-CN.md](docs/architecture.zh-CN.md) | 技术选型、仓库结构、依赖方向、领域模型、请求流程、部署 |
 | [docs/content.zh-CN.md](docs/content.zh-CN.md) | 内容模型与编写：知识点、knowledge point、生成器、判定器、课程、编译器 |
+| [docs/experience.zh-CN.md](docs/experience.zh-CN.md) | 学习者和监护人看到的产品：学科作为独立空间、学科的页面、网页和应用中的布局、监督 |
 | [docs/learning-engine.zh-CN.md](docs/learning-engine.zh-CN.md) | 引擎的算法与参数：知识前沿、FIRe、任务选择、课程、复习、测验、诊断、XP |
 | [docs/development.zh-CN.md](docs/development.zh-CN.md) | 工具链、命令、本地数据库、运行应用 |
 | [docs/roadmap.zh-CN.md](docs/roadmap.zh-CN.md) | 阶段、完成标准、状态、风险 |

@@ -8,6 +8,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | :--- | :--- |
 | [docs/architecture.md](docs/architecture.md) | Technology choices, repository structure, dependency direction, domain model, request flow, deployment |
 | [docs/content.md](docs/content.md) | Content model and authoring: topics, knowledge points, generators, checkers, courses, the compiler |
+| [docs/experience.md](docs/experience.md) | How learners and guardians see the product: subjects as separate spaces, the pages of a subject, the arrangement on the web and in the apps, supervision |
 | [docs/learning-engine.md](docs/learning-engine.md) | The engine's algorithms and parameters: frontier, FIRe, task selection, lessons, reviews, quizzes, diagnostic, XP |
 | [docs/development.md](docs/development.md) | Toolchain, commands, local database, running the apps |
 | [docs/roadmap.md](docs/roadmap.md) | Phases, completion criteria, status, risks |
