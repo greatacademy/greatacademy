@@ -123,7 +123,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 | Learner | A person who studies, with one user account |
 | Guardian | A user who follows a learner, and can set their goals, by the learner's invitation |
 | League group | Up to 30 learners in a tier competing for a week |
-| Enrollment | A learner in a course |
+| Enrollment | A learner's course in a subject: one current, the rest history |
 | Topic state | A learner's repetition state on a topic (derived) |
 | Task | A lesson, review, quiz or diagnostic offered on a learner's dashboard |
 | Event | An immutable record: task started, answer submitted, task completed, diagnostic answered |
@@ -148,7 +148,7 @@ The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands re
 
 `/` depends on who is asking. Signed out, it is the landing page, also at `/landing` for everyone, and rendered on the server. Signed in, it opens on the next task of the course most recently worked on; an account with no course and a guarded learner goes to `/guardian`, and any other account with no course is asked who will be learning. A session cookie is enough to choose between the two on the server, so a signed-in learner never sees the landing page flash. The catalog is its own public page, `/courses`.
 
-`src/server.ts` is the Worker's entry: TanStack Start serves requests, and a daily Cron Trigger runs the retention rules of `libs/api/src/retention.ts`. `PrivacyService` carries the age question, consent, verification and deletion ([Minors' Data](minors-data.md)), and `requireStudy` in `libs/api/src/capabilities.ts` is the gate in front of `StartTask`. `AdminService` serves the console at `/admin` ([Admin Console](admin.md)) and refuses anyone without the role. `BillingService` sells plans and manages them ([Billing](billing.md)); while billing is on, `requirePlan` in `libs/api/src/billing.ts` refuses to enroll or start a session in a subject no plan covers. Stripe's events arrive at `/api/stripe`; the handler checks each signature, reads the event into a `BillingEvent` (`apps/web/src/server/stripe.ts`), and `applyBillingEvent` records it, so that a repeated or late event changes nothing.
+`src/server.ts` is the Worker's entry: TanStack Start serves requests, and a daily Cron Trigger runs the retention rules of `libs/api/src/retention.ts`. `PrivacyService` carries the age question, consent, verification and deletion ([Minors' Data](minors-data.md)), and `requireStudy` in `libs/api/src/capabilities.ts` is the gate in front of `StartTask`. `AdminService` serves the console at `/admin` ([Admin Console](admin.md)) and refuses anyone without the role. `BillingService` sells plans and manages them ([Billing](billing.md)); while billing is on, `requirePlan` in `libs/api/src/billing.ts` refuses to choose a course or start a session in a subject no plan covers. Stripe's events arrive at `/api/stripe`; the handler checks each signature, reads the event into a `BillingEvent` (`apps/web/src/server/stripe.ts`), and `applyBillingEvent` records it, so that a repeated or late event changes nothing.
 
 A guardian reads a learner through the same read-only calls a learner uses: `GetDashboard`, `GetCourseProgress` and `ListSessions` take an optional `learner_id`, which is honored only for a learner the caller follows. Calls that change anything take no `learner_id`, and a guardian cannot open a session, so a learner's answers stay their own.
 
@@ -200,7 +200,7 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | :--- | :--- |
 | `user`, `session`, `account`, `verification` | better-auth's core schema |
 | `learner` | A person who studies, one per user: public username, league choice, weekday goals, age band and its end, country, whether a guardian runs the account, daily limit |
-| `enrollment` | A learner in a course |
+| `enrollment` | A learner's courses: at most one current per subject (`ended_at` empty), when it was chosen, and when its diagnostic's report was answered |
 | `event` | The engine's event log per learner and subject, numbered by `seq` without gaps; `xp` kept for reporting |
 | `learner_state` | Snapshot of the fold of the log up to `seq`; rebuildable by replay |
 | `task_session` | Sessions and their runner state; at most one active per learner and course |

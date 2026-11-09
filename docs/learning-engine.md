@@ -135,6 +135,9 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `placedRepNum` | 1 (+0.5 if asked) | Placed topics are known but not recently practiced; a direct correct answer is stronger evidence |
 | `inferFoundationsMinAnswers` | 8 | Fewer answers say too little about the foundations as a whole |
 | `inferFoundationsRate` | 0.85 | Admits a learner who knows the foundations and slips now and then; a learner missing half of them scores about 0.5 |
+| `adviceMinTopics` | 5 | Fewer topics of an earlier course say too little to send a learner back to it |
+| `adviceWeakShare` | 0.3 | Missing almost a third of an earlier course's part in the foundations is more than lessons on the way can fill comfortably |
+| `adviceAheadShare` | 0.8 | A learner who knows four fifths of a course learns more in the next one |
 | `kpStreak` | 2 | Two in a row is unlikely by chance yet quick for a learner who understands |
 | `kpMaxQuestions` | 5 | Enough room for one or two slips; beyond that, a prerequisite is the likelier problem |
 | `reviewQuestions`, `reviewPass` | 3, 2 | A short review that tolerates one slip |
@@ -190,6 +193,18 @@ The next question is the unresolved topic that maximizes min(topics resolved if 
 Course topics left unresolved count as **not known**: placement errs on the side of teaching, since a lesson on something already known costs minutes, while a gap costs much more later. Foundations are different: a broad course has hundreds, and no affordable number of questions resolves them, so a learner who knows them all would sit through hundreds of lessons they do not need. Foundations left unresolved are therefore placed as known when the answers on foundations show the learner has them: at least `inferFoundationsMinAnswers` answers, of which at least `inferFoundationsRate` are correct. Otherwise they count as not known, and a foundation an answer showed is not known is never placed.
 
 Placed topics start at `placedRepNum`, so they come back for review soon and a lucky placement is corrected by the first review.
+
+**Current course.** As in Math Academy, a learner has one current course per subject. It is chosen when the account starts studying: by an adult or teen for themselves, by a guardian for a child. It changes only by a deliberate choice, in settings or in answer to the report below, and only a guardian changes a child's. Course pages introduce a course and do not enroll. Progress belongs to the subject, so a topic learned in one course counts in every course that has it, and changing course loses nothing. Past courses are kept as history.
+
+**Report.** After a diagnostic that asked something, the dashboard shows a report until whoever chooses the course keeps it or takes the one recommended: the course's topics placed as known, the foundations still to learn, the dates the course would be finished at several daily paces, and `placementAdvice` (`libs/engine/src/courses.ts`):
+
+- **later**, when at least `adviceAheadShare` of the course's XP is known and a course builds on it: the first such course;
+- **earlier**, when the answers showed gaps in an earlier course: the lowest such course. Each course declares the courses it builds on ([Content §6](content.md#6-courses)), and the earlier courses are searched from the nearest. For each, the topics counted are its topics among the course's foundations that the answers resolved: those placed as known, and those shown not known, which are the topics answered wrongly and everything that depends on them. It is weak when at least `adviceMinTopics` are counted and the gaps make up at least `adviceWeakShare` of their XP;
+- **stay** otherwise, and always after a skipped diagnostic.
+
+Unresolved topics are not counted as gaps, although placement teaches them: counting them would send every learner to the first course. The `placed` event records the topics answered wrongly for this reason.
+
+**Labels and the end of a course.** A foundation offered as a lesson or review names the course it comes from: the nearest earlier course that teaches it, else the first course of the catalog that does. When every topic of the current course is learned, the dashboard offers the courses that build on it.
 
 ## 10. XP
 

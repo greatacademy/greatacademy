@@ -89,7 +89,7 @@ pnpm nx run web:dev                   # http://localhost:5173
 curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http://localhost:5173/cdn-cgi/local/explorer/api/local/scheduled?worker=ga-web'
 ```
 
-试用方法：注册账号，回答年龄问题，选择“我自己学”，打开「代数基础」，选修，然后参加诊断或跳过。首页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
+试用方法：注册账号，回答年龄问题，选择“我自己学”，选择「代数基础」，然后参加诊断或跳过；问过题的诊断最后会给出报告，可以保留这门课或换到推荐的课。首页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
 
 ## 6. 运行原生应用
 

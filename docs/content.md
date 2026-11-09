@@ -149,6 +149,7 @@ const prealgebra: CourseDef = {
 - Every topic appears once, and after all of its prerequisites that are in the course.
 - **Mastery floor.** Topics that every learner of the course is assumed to know. They and their ancestors are never taught or reviewed by the course. A floor topic must not be in the course.
 - **Foundations** (computed). Ancestors of course topics that are neither in the course nor below the floor. The diagnostic places the learner on them, and a learner who lacks them is taught them first.
+- `buildsOn` lists the courses of the subject the course follows on from, nearest first, such as Algebra I on Prealgebra and 8th Grade Math. The diagnostic's report searches them for gaps, a foundation task is labelled with the earlier course it comes from, and a finished course offers the courses that build on it ([Learning Engine §9](learning-engine.md#9-diagnostic)). Courses share many topics, so this order is declared rather than inferred from the graph. In mathematics, [course-shelves.ts](../content/math/src/course-shelves.ts) declares it. The compiler rejects an unknown course, a course that builds on itself and a cycle.
 
 ## 7. The Compiler
 

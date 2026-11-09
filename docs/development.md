@@ -89,7 +89,7 @@ The admin console is at `/admin`. Answer the age question as an adult on an acco
 curl -X POST -H 'content-type: application/json' -d '{"cron":"0 3 * * *"}' 'http://localhost:5173/cdn-cgi/local/explorer/api/local/scheduled?worker=ga-web'
 ```
 
-To try it: create an account, answer the age question, choose "I'm learning myself", open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
+To try it: create an account, answer the age question, choose "I'm learning myself", choose *Foundations of Algebra*, then take the diagnostic or skip it; a diagnostic that asked something ends with a report to keep the course or take the one recommended. The home page offers the next tasks; the progress map shows every topic's status and estimated memory.
 
 ## 6. Running the Native App
 
