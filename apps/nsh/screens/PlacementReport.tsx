@@ -1,5 +1,6 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
 import { signal, Text, View } from "nsh";
+import { dayText } from "../lib/dates.ts";
 import { errorText, language, m, tx } from "../lib/i18n.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
@@ -49,12 +50,7 @@ function useCourseTitle() {
 export function PlacementReport(props: { dash: GetDashboardResponse; learnerId?: string; onAnswered: () => void }) {
   const title = useCourseTitle();
   const choice = useCourseChoice(props.learnerId, props.onAnswered);
-  const date = (xpPerDay: number) =>
-    new Date(Date.now() + Math.ceil(props.dash.remainingXp / xpPerDay) * DAY).toLocaleDateString(language(), {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+  const date = (xpPerDay: number) => dayText(new Date(Date.now() + Math.ceil(props.dash.remainingXp / xpPerDay) * DAY), language());
   return (
     <If when={props.dash.report}>
       {(r) => (

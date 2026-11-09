@@ -6,6 +6,7 @@ import caretRight from "../assets/icons/caret-right.svg";
 import flag from "../assets/icons/flag.svg";
 import lightning from "../assets/icons/lightning.svg";
 import trophy from "../assets/icons/trophy.svg";
+import { dayText, grouped } from "../lib/dates.ts";
 import { errorText, language, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
@@ -66,7 +67,7 @@ export function EarnedCard(props: { xp: XpSummary | undefined }) {
     <Card>
       <CardTitle icon={lightning} title={m().totalEarned} />
       <Text style={{ color: colors().ink, fontSize: 30, fontVariant: ["tabular-nums"], fontWeight: "700" }}>
-        {`${(props.xp?.total ?? 0).toLocaleString(language())} XP`}
+        {`${grouped(props.xp?.total ?? 0)} XP`}
       </Text>
       <Muted>{m().xpToday(props.xp?.today ?? 0)}</Muted>
     </Card>
@@ -149,7 +150,7 @@ export function WeeklyGoals(props: { dash: GetDashboardResponse; place: Place })
 
 /** dateText writes a day in the app's language. */
 function dateText(at: Date): string {
-  return at.toLocaleDateString(language(), { year: "numeric", month: "short", day: "numeric" });
+  return dayText(at, language());
 }
 
 /** finishAt is the day `remaining` XP is done at `xpPerDay`, from today, in the app's language. */

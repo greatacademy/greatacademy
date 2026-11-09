@@ -2,6 +2,7 @@ import { LeagueOutcome } from "@ga/proto/account/v1/account_pb";
 import { Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import trophy from "../assets/icons/trophy.svg";
+import { momentText } from "../lib/dates.ts";
 import { language, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
@@ -21,14 +22,7 @@ export function Standings() {
       <View style={{ backgroundColor: colors().page, flex: 1 }}>
         <Loaded rpc={rpc} skeleton={<Skeleton rows={5} />}>
           {(l) => {
-            const ends = () =>
-              new Date(Number(l().endsAt)).toLocaleString(language(), {
-                weekday: "long",
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-              });
+            const ends = () => momentText(new Date(Number(l().endsAt)), language());
             const size = () => l().rows.length;
             const last = () => l().last;
             const lastText = () => {

@@ -33,6 +33,7 @@ import eye from "../assets/eye.svg";
 import eyeSlash from "../assets/eye-slash.svg";
 import logo from "../assets/logo.svg";
 import { b } from "./billing-text.ts";
+import { monthOfYear, monthName as nameMonth } from "./dates.ts";
 import { language, m } from "./i18n.ts";
 import { nav, WELCOME } from "./nav.ts";
 import { comeBack, failureOf, online } from "./net.ts";
@@ -437,15 +438,8 @@ export function MonthField(props: {
   const years = props.ahead
     ? Array.from({ length: props.ahead + 1 }, (_, i) => thisYear + i)
     : Array.from({ length: YEARS_BACK + 1 }, (_, i) => thisYear - i);
-  const locale = () => (language() === "zh-CN" ? "zh-CN" : "en");
-  const monthName = (month: number, style: "short" | "long") =>
-    new Intl.DateTimeFormat(locale(), { month: style, timeZone: "UTC" }).format(Date.UTC(2000, month - 1, 1));
-  const title = () =>
-    props.value
-      ? new Intl.DateTimeFormat(locale(), { month: "long", year: "numeric", timeZone: "UTC" }).format(
-          Date.UTC(props.value.year, props.value.month - 1, 1),
-        )
-      : undefined;
+  const monthName = (month: number, style: "short" | "long") => nameMonth(month, style, language());
+  const title = () => (props.value ? monthOfYear(props.value.year, props.value.month, language()) : undefined);
   const setOpen = (next: boolean) => {
     if (next) year.set(null);
     open.set(next);
