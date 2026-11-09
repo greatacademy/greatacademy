@@ -546,10 +546,13 @@ test("puts the task in progress first on Learn, with the weekly goals", async ()
         stats: { learned: 1, total: 2 },
         xp: { today: 20, goalToday: 30, week: 50, goalWeek: 150, total: 200, days: [10, 20] },
       }),
+      [`POST ${learningUrl}/ListSessions`]: json({ sessions: [] }),
     }),
   );
-  await app.waitFor("text:Pick up where you left off");
-  expect(app.texts().indexOf("Pick up where you left off")).toBeLessThan(app.texts().indexOf("Weekly goals"));
+  await app.waitFor("text:Resume");
+  expect(app.texts().indexOf("Resume")).toBeLessThan(app.texts().indexOf("Weekly goals"));
+  expect(app.texts()).toContain("Total earned");
+  expect(app.texts()).toContain("200 XP");
   expect(app.texts()).toContain("20 / 30 XP");
   expect(app.texts()).toContain("50 / 150 XP");
   expect(app.texts()).toContain("10 XP to today's goal");
@@ -675,11 +678,10 @@ test("shows the progress map and the history of a course from Progress", async (
     platform: "macos",
   });
   await app.press("label:Progress");
-  await app.press("text:Progress map");
   await app.waitFor("text:Memory 80%");
+  expect(app.texts()).toContain("Progress map");
   expect(app.texts()).toContain("Linear equations");
   expect(app.texts()).toContain("Learned 1");
-  await app.back();
   await app.press("text:History");
   await app.waitFor("text:+10 XP");
   expect(app.texts()).toContain("3 of 3 correct");
@@ -706,7 +708,7 @@ test("lists the learner's courses of the subject first, then the others by shelf
     platform: "macos",
   });
   await app.press("label:Mathematics, switch subject");
-  await app.press("text:All courses");
+  await app.press("text:Course catalog");
   await app.waitFor("text:My courses");
   const shown = app.texts();
   expect(shown.indexOf("My courses")).toBeLessThan(shown.indexOf("School"));

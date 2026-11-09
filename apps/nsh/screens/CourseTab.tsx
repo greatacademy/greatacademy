@@ -7,7 +7,7 @@ import { markChanged } from "../lib/query.ts";
 import { learning } from "../lib/rpc.ts";
 import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
 import { Action, Card, colors, ErrorNote, Loaded, Muted, PullScroll, Quiet, Row, Section, Skeleton } from "../lib/ui.tsx";
-import { Bar, useDashboard } from "./LearnTab.tsx";
+import { Bar, useDashboard } from "./SubjectCards.tsx";
 
 /**
  * SubjectStart is a subject the learner has no course in yet: the way to choose one, or, for the learner of a

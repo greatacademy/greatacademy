@@ -23,10 +23,10 @@ import {
   Skeleton,
 } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
-import { Bar } from "./LearnTab.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { bandName, confirm, ScopeRow } from "./Privacy.tsx";
 import { openWeb } from "./Settings.tsx";
+import { Bar } from "./SubjectCards.tsx";
 
 const LIMITS = ["0", "15", "30", "45", "60", "90"] as const;
 

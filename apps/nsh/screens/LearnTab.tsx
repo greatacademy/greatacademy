@@ -1,4 +1,4 @@
-import type { GetDashboardResponse, Task, XpSummary } from "@ga/proto/learning/v1/learning_pb";
+import type { GetDashboardResponse, Task } from "@ga/proto/learning/v1/learning_pb";
 import { computed, effect, type Resource, signal, Text, View, windowSize } from "nsh";
 import { errorText, m } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
@@ -7,146 +7,91 @@ import { learning, timeZone } from "../lib/rpc.ts";
 import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
 import { Card, colors, ErrorNote, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
 import { SubjectStart } from "./CourseTab.tsx";
+import { HistoryLine } from "./History.tsx";
 import { firstPageReady } from "./Launch.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
+import { Bar, EarnedCard, ForecastCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 
-/** ASIDE_FROM is the window width, in points, from which the goals sit in a column of ASIDE_WIDTH beside the tasks. */
+/** ASIDE_FROM is the window width, in points, from which the cards sit in a column of ASIDE_WIDTH beside the tasks. */
 const ASIDE_FROM = 1024;
 const ASIDE_WIDTH = 320;
 
-/** useDashboard reads the dashboard of the course shown in a subject's tab, while the tab shows. */
-export function useDashboard(visible: () => boolean, place: () => Place | undefined): Resource<GetDashboardResponse> {
-  const course = computed(() => (visible() && place()?.enrollment?.courseId) || undefined);
-  return query(
-    course,
-    (courseId) => ["dashboard", courseId],
-    (courseId, { signal: abort }) => learning.getDashboard({ courseId, timeZone: timeZone() }, { signal: abort }),
-  );
-}
-
-/** Bar is a share (0 to 1) as a bar in a color. */
-export function Bar(props: { share: number; color: string; height?: number }) {
-  const height = () => props.height ?? 8;
+/** CourseHead heads the Learn tab, as on the web: the course, which opens the Course tab, how far it is and what is due. */
+function CourseHead(props: { place: Place; dash: GetDashboardResponse }) {
+  const stats = () => props.dash.stats;
   return (
-    <View style={{ backgroundColor: colors().line, borderRadius: height() / 2, height: height(), overflow: "hidden" }}>
-      <View
-        style={{
-          backgroundColor: props.color,
-          borderRadius: height() / 2,
-          height: height(),
-          width: `${Math.min(100, Math.max(0, props.share * 100))}%`,
-        }}
-      />
-    </View>
-  );
-}
-
-/** GoalBar is one goal's progress: what was earned against the goal, as a bar that turns green once it is met. */
-function GoalBar(props: { label: string; xp: number; goal: number; color: string }) {
-  const met = () => props.xp >= props.goal;
-  return (
-    <View style={{ gap: 6 }}>
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <Text style={{ color: colors().ink, flex: 1, fontSize: 15, fontWeight: "500" }}>{props.label}</Text>
-        <Text style={{ color: met() ? colors().good : colors().muted, fontSize: 14, fontVariant: ["tabular-nums"] }}>
-          {met() ? `${m().goalDone} · ${m().goalOf(props.xp, props.goal)}` : m().goalOf(props.xp, props.goal)}
-        </Text>
+    <View style={{ gap: 8, maxWidth: 560 }}>
+      <Text role="button" onPress={() => openTab("course")} style={{ color: colors().ink, fontSize: 24, fontWeight: "700" }}>
+        {courseTitle(props.place.data.list, props.dash.courseId)}
+      </Text>
+      <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
+        <View style={{ flex: 1 }}>
+          <Bar share={(stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)} color={tint(props.place.subject).strong} />
+        </View>
+        <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
       </View>
-      <Bar share={props.xp / props.goal} color={met() ? colors().good : props.color} />
+      <If when={(stats()?.due ?? 0) > 0}>
+        <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(stats()?.due ?? 0)}</Text>
+      </If>
     </View>
+  );
+}
+
+/** RecentWork lists the learner's last three tasks in the course and opens the whole history, as on the web. */
+function RecentWork(props: { courseId: string; visible: () => boolean }) {
+  const shown = computed(() => (props.visible() && props.courseId) || undefined);
+  const rpc = query(
+    shown,
+    (courseId) => ["sessions", courseId],
+    (courseId, { signal: abort }) => learning.listSessions({ courseId }, { signal: abort }),
+  );
+  const recent = () => rpc()?.sessions.slice(0, 3) ?? [];
+  return (
+    <If when={recent().length > 0}>
+      <View style={{ gap: 8 }}>
+        <View style={{ alignItems: "baseline", flexDirection: "row", gap: 8 }}>
+          <Text style={{ color: colors().muted, flex: 1, fontSize: 14, fontWeight: "500" }}>{m().recentTasks}</Text>
+          <Text
+            role="button"
+            onPress={() => nav.push({ name: "history", courseId: props.courseId })}
+            style={{ color: colors().accent, fontSize: 14 }}
+          >
+            {m().seeAll}
+          </Text>
+        </View>
+        <Card>
+          <Each of={recent()} key={(session) => session.id}>
+            {(session) => <HistoryLine session={session()} />}
+          </Each>
+        </Card>
+      </View>
+    </If>
+  );
+}
+
+/** Aside is the column of cards beside the tasks, as on the web: the subject's XP, its goals and the forecast. */
+function Aside(props: { place: Place; dash: GetDashboardResponse; onChanged: () => void }) {
+  return (
+    <>
+      <EarnedCard xp={props.dash.xp} />
+      <WeeklyGoals dash={props.dash} place={props.place} />
+      <ForecastCard place={props.place} dash={props.dash} onChanged={props.onChanged} />
+    </>
   );
 }
 
 /**
- * WeeklyGoals shows today's XP and the week's in a subject against its goals; whoever decides for the learner sets
- * them, and the learner of a guardian is told who does.
+ * Today is the Learn tab of a subject with a course, laid out as the web's: the course, the diagnostic's report, the
+ * task in progress or what is next, the recent tasks, and beside them the XP, goals and forecast.
  */
-export function WeeklyGoals(props: { dash: GetDashboardResponse; color: string }) {
-  const xp = (): XpSummary | undefined => props.dash.xp;
-  const paused = () => props.dash.goals?.paused ?? false;
-  const today = () => xp()?.today ?? 0;
-  const goalToday = () => xp()?.goalToday ?? 0;
-  const goalWeek = () => xp()?.goalWeek ?? 0;
-  return (
-    <Card>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
-        <Text style={{ color: colors().ink, flex: 1, fontSize: 17, fontWeight: "600" }}>{m().goals}</Text>
-        <If when={props.dash.canDecide}>
-          <Text
-            role="button"
-            onPress={() => nav.push({ name: "goals", subjectId: props.dash.subjectId })}
-            style={{ color: colors().accent, fontSize: 15 }}
-          >
-            {m().setGoals}
-          </Text>
-        </If>
-      </View>
-      <If when={!paused() && goalWeek() > 0} else={<Muted>{paused() ? m().goalsPausedNote : m().goalNone}</Muted>}>
-        <If when={goalToday() > 0}>
-          <GoalBar label={m().goalToday} xp={today()} goal={goalToday()} color={props.color} />
-        </If>
-        <GoalBar label={m().goalWeek} xp={xp()?.week ?? 0} goal={goalWeek()} color={props.color} />
-        <Muted>
-          {goalToday() === 0
-            ? m().xpWeek(xp()?.week ?? 0)
-            : today() >= goalToday()
-              ? m().goalMetToday
-              : m().goalLeftToday(goalToday() - today())}
-        </Muted>
-      </If>
-      <If when={!props.dash.canDecide}>
-        <Muted>{m().guardianDecides}</Muted>
-      </If>
-    </Card>
-  );
-}
-
-/** Chip is a short note in a tone, as of the reviews due. */
-function Chip(props: { label: string; color: string; background: string }) {
-  return (
-    <Text
-      style={{
-        backgroundColor: props.background,
-        borderRadius: 8,
-        color: props.color,
-        fontSize: 13,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-      }}
-    >
-      {props.label}
-    </Text>
-  );
-}
-
-/** CourseToday is the course of the subject at the head of the Learn tab: how far the learner is and what is due. */
-function CourseToday(props: { place: Place; dash: GetDashboardResponse }) {
-  const stats = () => props.dash.stats;
-  const color = () => tint(props.place.subject);
-  return (
-    <Card>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
-        <Text role="button" onPress={() => openTab("course")} style={{ color: colors().ink, flex: 1, fontSize: 20, fontWeight: "700" }}>
-          {courseTitle(props.place.data.list, props.dash.courseId)}
-        </Text>
-      </View>
-      <Bar share={(stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)} color={color().strong} />
-      <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        <If when={(stats()?.due ?? 0) > 0}>
-          <Chip label={m().dueReviews(stats()?.due ?? 0)} color={colors().warn} background={colors()["warn-soft"]} />
-        </If>
-        <If when={props.dash.diagnosed && props.dash.xpToQuiz > 0}>
-          <Chip label={m().xpToQuiz(props.dash.xpToQuiz)} color={color().onSoft} background={color().soft} />
-        </If>
-      </View>
-    </Card>
-  );
-}
-
-/** Today is the Learn tab of a subject with a course: the task in progress, the diagnostic's report, and what is next. */
-function Today(props: { place: Place; dash: Resource<GetDashboardResponse>; onAnswered: () => void }) {
+function Today(props: {
+  place: Place;
+  dash: Resource<GetDashboardResponse>;
+  visible: () => boolean;
+  onAnswered: () => void;
+  onChanged: () => void;
+}) {
   const busy = signal(false);
   const error = signal("");
   const act = async (run: () => Promise<void>) => {
@@ -178,29 +123,32 @@ function Today(props: { place: Place; dash: Resource<GetDashboardResponse>; onAn
         <PullScroll onRefresh={props.dash.refetch} refreshing={props.dash.state() === "refreshing"} underBar>
           <View style={{ alignItems: wide() ? "flex-start" : "stretch", flexDirection: wide() ? "row" : "column", gap: wide() ? 24 : 12 }}>
             <View style={{ flexBasis: wide() ? 0 : "auto", flexGrow: 1, flexShrink: 1, gap: 12, minWidth: 0 }}>
+              <CourseHead place={props.place} dash={d()} />
+              <PlacementReport dash={d()} onAnswered={props.onAnswered} />
+              <CourseDone dash={d()} onChosen={props.onAnswered} />
+              <View style={{ alignItems: "baseline", flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
+                <Text style={{ color: colors().ink, flex: 1, fontSize: 18, fontWeight: "600" }}>{m().nextUp}</Text>
+                <If when={(d().xp?.goalToday ?? 0) > 0}>
+                  <Muted>
+                    {(d().xp?.today ?? 0) >= (d().xp?.goalToday ?? 0)
+                      ? m().goalMetToday
+                      : m().goalLeftToday((d().xp?.goalToday ?? 0) - (d().xp?.today ?? 0))}
+                  </Muted>
+                </If>
+              </View>
               <If when={error()}>
                 <ErrorNote message={error()} />
               </If>
               <If when={d().active?.task}>
                 {(task) => (
-                  <View style={{ gap: 8 }}>
-                    <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().pickUp}</Text>
-                    <TaskCard
-                      task={task()}
-                      action={m().resume}
-                      onStart={() => nav.push({ name: "session", sessionId: d().active?.id ?? "" })}
-                    />
-                  </View>
+                  <TaskCard
+                    task={task()}
+                    action={m().resume}
+                    onStart={() => nav.push({ name: "session", sessionId: d().active?.id ?? "" })}
+                  />
                 )}
               </If>
-              <CourseToday place={props.place} dash={d()} />
-              <PlacementReport dash={d()} onAnswered={props.onAnswered} />
-              <CourseDone dash={d()} onChosen={props.onAnswered} />
-              <If when={!wide()}>
-                <WeeklyGoals dash={d()} color={tint(props.place.subject).strong} />
-              </If>
               <If when={!d().active}>
-                <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600", marginTop: 4 }}>{m().nextUp}</Text>
                 <Each of={d().tasks}>
                   {(task) => (
                     <TaskCard
@@ -219,10 +167,14 @@ function Today(props: { place: Place; dash: Resource<GetDashboardResponse>; onAn
                   <Muted>{m().nothingToDo}</Muted>
                 </If>
               </If>
+              <RecentWork courseId={d().courseId} visible={props.visible} />
+              <If when={!wide()}>
+                <Aside place={props.place} dash={d()} onChanged={props.onChanged} />
+              </If>
             </View>
             <If when={wide()}>
               <View style={{ gap: 12, width: ASIDE_WIDTH }}>
-                <WeeklyGoals dash={d()} color={tint(props.place.subject).strong} />
+                <Aside place={props.place} dash={d()} onChanged={props.onChanged} />
               </View>
             </If>
           </View>
@@ -244,6 +196,10 @@ export function LearnTab(props: { visible: () => boolean }) {
     if (rpc() !== undefined || rpc.error() !== undefined) firstPageReady.set(true);
   });
   // Keeping the course reads it again; taking another shows that one.
+  const changed = () => {
+    markChanged();
+    dash.refetch();
+  };
   const answered = () => {
     markChanged();
     rpc.refetch();
@@ -259,7 +215,7 @@ export function LearnTab(props: { visible: () => boolean }) {
                 when={here().enrollment}
                 else={<SubjectStart place={here()} onRefresh={rpc.refetch} refreshing={rpc.state() === "refreshing"} />}
               >
-                <Today place={here()} dash={dash} onAnswered={answered} />
+                <Today place={here()} dash={dash} visible={props.visible} onAnswered={answered} onChanged={changed} />
               </If>
             )}
           </If>

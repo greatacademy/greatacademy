@@ -17,7 +17,8 @@ function dayOf(at: bigint): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-function Line(props: { session: FinishedSession }) {
+/** HistoryLine is one finished task: what it was, when, its XP and score; it opens the task's result. */
+export function HistoryLine(props: { session: FinishedSession }) {
   const about = () => (props.session.task ? describeTask(props.session.task) : undefined);
   const tone = () => (props.session.blownOff ? colors().warn : props.session.passed ? colors().good : colors().bad);
   return (
@@ -55,7 +56,7 @@ export function History(props: { courseId: string }) {
               <Card>
                 <If when={data().sessions.length > 0} else={<Muted>{m().noHistory}</Muted>}>
                   <Each of={data().sessions} key={(session) => session.id}>
-                    {(session) => <Line session={session()} />}
+                    {(session) => <HistoryLine session={session()} />}
                   </Each>
                 </If>
               </Card>

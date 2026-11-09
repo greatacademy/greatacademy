@@ -1,4 +1,5 @@
-import { TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import type { GetCourseResponse } from "@ga/proto/catalog/v1/catalog_pb";
+import { type GetCourseProgressResponse, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { computed, List, Text, View } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
@@ -47,20 +48,30 @@ function Dot(props: { status: StatusKey }) {
   );
 }
 
-/** CourseMap shows every topic of a course with the learner's status on it and the memory the engine estimates. */
-export function CourseMap(props: { courseId: string }) {
-  const data = query(["map", props.courseId], async ({ signal }) => {
-    const [course, progress] = await Promise.all([
-      catalog.getCourse({ courseId: props.courseId }, { signal }),
-      learning.getCourseProgress({ courseId: props.courseId }, { signal }),
-    ]);
-    return { course, progress };
-  });
-  const title = computed(() => m().progressMap);
-  const byTopic = computed(() => new Map((data()?.progress.topics ?? []).map((topic) => [topic.topicId, topic])));
+/** MapData is what the progress map reads: the course's outline and the learner's progress in it. */
+export interface MapData {
+  readonly course: GetCourseResponse;
+  readonly progress: GetCourseProgressResponse;
+}
+
+/** loadMap reads a course's outline and the learner's progress in it together. */
+export async function loadMap(courseId: string, signal: AbortSignal): Promise<MapData> {
+  const [course, progress] = await Promise.all([
+    catalog.getCourse({ courseId }, { signal }),
+    learning.getCourseProgress({ courseId }, { signal }),
+  ]);
+  return { course, progress };
+}
+
+/**
+ * MapBody is the progress map itself: how many topics have each status, then every unit's topics with the learner's
+ * status and the memory the engine estimates. The Progress tab shows it as the web's Progress page does.
+ */
+export function MapBody(props: { map: MapData }) {
+  const byTopic = computed(() => new Map(props.map.progress.topics.map((topic) => [topic.topicId, topic])));
   const counts = computed(() => {
     const found: Partial<Record<StatusKey, number>> = {};
-    for (const topic of data()?.progress.topics ?? []) {
+    for (const topic of props.map.progress.topics) {
       if (topic.foundation) continue;
       const key = statusKeys[topic.status];
       if (key) found[key] = (found[key] ?? 0) + 1;
@@ -68,7 +79,79 @@ export function CourseMap(props: { courseId: string }) {
     return found;
   });
   const legend: StatusKey[] = ["learned", "due", "available", "failed", "assumed", "locked"];
+  return (
+    <View style={{ gap: 12 }}>
+      <Card>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+          <Each of={legend.filter((key) => (counts()[key] ?? 0) > 0)}>
+            {(key) => (
+              <View style={{ alignItems: "center", flexDirection: "row", gap: 6 }}>
+                <Dot status={key()} />
+                <Text style={{ color: colors().ink, fontSize: 14 }}>{`${m().statuses[key()]} ${counts()[key()] ?? 0}`}</Text>
+              </View>
+            )}
+          </Each>
+        </View>
+      </Card>
+      <List viewport="parent" each={props.map.course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
+        {(unit) => (
+          <Card>
+            <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(unit().title)}</Text>
+            <Each of={unit().modules}>
+              {(module) => (
+                <View style={{ gap: 8, marginTop: 8 }}>
+                  <Muted>{tx(module().title)}</Muted>
+                  <Each of={module().topics} key={(topic) => topic.id}>
+                    {(topic) => {
+                      const progress = () => byTopic().get(topic().id);
+                      const key = (): StatusKey => statusKeys[progress()?.status ?? TopicStatus.LOCKED] ?? "locked";
+                      const memory = () => Math.round((progress()?.memory ?? 0) * 100);
+                      return (
+                        <View
+                          accessibilityLabel={`${tx(topic().title)}, ${m().statuses[key()]}`}
+                          style={{ alignItems: "center", flexDirection: "row", gap: 10 }}
+                        >
+                          <Dot status={key()} />
+                          <View style={{ flex: 1, gap: 2 }}>
+                            <Text style={{ color: key() === "locked" ? colors().muted : colors().ink, fontSize: 15 }}>
+                              {tx(topic().title)}
+                            </Text>
+                            <Muted>{[m().statuses[key()], progress()?.placed ? m().placed : ""].filter(Boolean).join(" · ")}</Muted>
+                          </View>
+                          <If when={memory() > 0}>
+                            <View style={{ alignItems: "flex-end", gap: 2, width: 72 }}>
+                              <View
+                                style={{
+                                  backgroundColor: colors().line,
+                                  borderRadius: 3,
+                                  height: 6,
+                                  overflow: "hidden",
+                                  width: 72,
+                                }}
+                              >
+                                <View style={{ backgroundColor: statusColor(key()), height: 6, width: `${memory()}%` }} />
+                              </View>
+                              <Text style={{ color: colors().muted, fontSize: 12 }}>{m().memoryOf(memory())}</Text>
+                            </View>
+                          </If>
+                        </View>
+                      );
+                    }}
+                  </Each>
+                </View>
+              )}
+            </Each>
+          </Card>
+        )}
+      </List>
+    </View>
+  );
+}
 
+/** CourseMap shows every topic of a course with the learner's status on it and the memory the engine estimates. */
+export function CourseMap(props: { courseId: string }) {
+  const data = query(["map", props.courseId], ({ signal }) => loadMap(props.courseId, signal));
+  const title = computed(() => m().progressMap);
   return (
     <NavPage headerStyle={headerStyle()} title={title()} header={<Header title={title()} />}>
       <View style={{ backgroundColor: colors().page, flex: 1 }}>
@@ -77,71 +160,7 @@ export function CourseMap(props: { courseId: string }) {
             <PullScroll onRefresh={data.refetch} refreshing={data.state() === "refreshing"}>
               <View style={{ gap: 12 }}>
                 <Text style={{ color: colors().ink, fontSize: 20, fontWeight: "600" }}>{tx(loaded().course.course?.title)}</Text>
-                <Card>
-                  <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-                    <Each of={legend.filter((key) => (counts()[key] ?? 0) > 0)}>
-                      {(key) => (
-                        <View style={{ alignItems: "center", flexDirection: "row", gap: 6 }}>
-                          <Dot status={key()} />
-                          <Text style={{ color: colors().ink, fontSize: 14 }}>{`${m().statuses[key()]} ${counts()[key()] ?? 0}`}</Text>
-                        </View>
-                      )}
-                    </Each>
-                  </View>
-                </Card>
-                <List viewport="parent" each={loaded().course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
-                  {(unit) => (
-                    <Card>
-                      <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(unit().title)}</Text>
-                      <Each of={unit().modules}>
-                        {(module) => (
-                          <View style={{ gap: 8, marginTop: 8 }}>
-                            <Muted>{tx(module().title)}</Muted>
-                            <Each of={module().topics} key={(topic) => topic.id}>
-                              {(topic) => {
-                                const progress = () => byTopic().get(topic().id);
-                                const key = (): StatusKey => statusKeys[progress()?.status ?? TopicStatus.LOCKED] ?? "locked";
-                                const memory = () => Math.round((progress()?.memory ?? 0) * 100);
-                                return (
-                                  <View
-                                    accessibilityLabel={`${tx(topic().title)}, ${m().statuses[key()]}`}
-                                    style={{ alignItems: "center", flexDirection: "row", gap: 10 }}
-                                  >
-                                    <Dot status={key()} />
-                                    <View style={{ flex: 1, gap: 2 }}>
-                                      <Text style={{ color: key() === "locked" ? colors().muted : colors().ink, fontSize: 15 }}>
-                                        {tx(topic().title)}
-                                      </Text>
-                                      <Muted>
-                                        {[m().statuses[key()], progress()?.placed ? m().placed : ""].filter(Boolean).join(" · ")}
-                                      </Muted>
-                                    </View>
-                                    <If when={memory() > 0}>
-                                      <View style={{ alignItems: "flex-end", gap: 2, width: 72 }}>
-                                        <View
-                                          style={{
-                                            backgroundColor: colors().line,
-                                            borderRadius: 3,
-                                            height: 6,
-                                            overflow: "hidden",
-                                            width: 72,
-                                          }}
-                                        >
-                                          <View style={{ backgroundColor: statusColor(key()), height: 6, width: `${memory()}%` }} />
-                                        </View>
-                                        <Text style={{ color: colors().muted, fontSize: 12 }}>{m().memoryOf(memory())}</Text>
-                                      </View>
-                                    </If>
-                                  </View>
-                                );
-                              }}
-                            </Each>
-                          </View>
-                        )}
-                      </Each>
-                    </Card>
-                  )}
-                </List>
+                <MapBody map={loaded()} />
               </View>
             </PullScroll>
           )}
