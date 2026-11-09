@@ -35,6 +35,8 @@ export declare const GetProfileRequestSchema: GenMessage<GetProfileRequest>;
  */
 export declare type GetProfileResponse = Message<"ga.learning.v1.GetProfileResponse"> & {
   /**
+   * enrollments are the current courses, one per subject, the one most recently chosen or worked on first.
+   *
    * @generated from field: repeated ga.learning.v1.Enrollment enrollments = 1;
    */
   enrollments: Enrollment[];
@@ -43,6 +45,13 @@ export declare type GetProfileResponse = Message<"ga.learning.v1.GetProfileRespo
    * @generated from field: ga.learning.v1.XpSummary xp = 2;
    */
   xp?: XpSummary | undefined;
+
+  /**
+   * can_choose tells whether the learner chooses their own courses; a child's guardian chooses for them.
+   *
+   * @generated from field: bool can_choose = 3;
+   */
+  canChoose: boolean;
 };
 
 /**
@@ -52,6 +61,8 @@ export declare type GetProfileResponse = Message<"ga.learning.v1.GetProfileRespo
 export declare const GetProfileResponseSchema: GenMessage<GetProfileResponse>;
 
 /**
+ * Enrollment is a learner's current course of a subject.
+ *
  * @generated from message ga.learning.v1.Enrollment
  */
 export declare type Enrollment = Message<"ga.learning.v1.Enrollment"> & {
@@ -64,6 +75,11 @@ export declare type Enrollment = Message<"ga.learning.v1.Enrollment"> & {
    * @generated from field: ga.learning.v1.CourseStats stats = 2;
    */
   stats?: CourseStats | undefined;
+
+  /**
+   * @generated from field: string subject_id = 3;
+   */
+  subjectId: string;
 };
 
 /**
@@ -148,32 +164,121 @@ export declare type XpSummary = Message<"ga.learning.v1.XpSummary"> & {
 export declare const XpSummarySchema: GenMessage<XpSummary>;
 
 /**
- * @generated from message ga.learning.v1.EnrollRequest
+ * @generated from message ga.learning.v1.ChooseCourseRequest
  */
-export declare type EnrollRequest = Message<"ga.learning.v1.EnrollRequest"> & {
+export declare type ChooseCourseRequest = Message<"ga.learning.v1.ChooseCourseRequest"> & {
   /**
    * @generated from field: string course_id = 1;
    */
   courseId: string;
+
+  /**
+   * learner_id, when set, chooses for a learner the caller is a guardian of.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
 };
 
 /**
- * Describes the message ga.learning.v1.EnrollRequest.
- * Use `create(EnrollRequestSchema)` to create a new message.
+ * Describes the message ga.learning.v1.ChooseCourseRequest.
+ * Use `create(ChooseCourseRequestSchema)` to create a new message.
  */
-export declare const EnrollRequestSchema: GenMessage<EnrollRequest>;
+export declare const ChooseCourseRequestSchema: GenMessage<ChooseCourseRequest>;
 
 /**
- * @generated from message ga.learning.v1.EnrollResponse
+ * @generated from message ga.learning.v1.ChooseCourseResponse
  */
-export declare type EnrollResponse = Message<"ga.learning.v1.EnrollResponse"> & {
+export declare type ChooseCourseResponse = Message<"ga.learning.v1.ChooseCourseResponse"> & {
 };
 
 /**
- * Describes the message ga.learning.v1.EnrollResponse.
- * Use `create(EnrollResponseSchema)` to create a new message.
+ * Describes the message ga.learning.v1.ChooseCourseResponse.
+ * Use `create(ChooseCourseResponseSchema)` to create a new message.
  */
-export declare const EnrollResponseSchema: GenMessage<EnrollResponse>;
+export declare const ChooseCourseResponseSchema: GenMessage<ChooseCourseResponse>;
+
+/**
+ * @generated from message ga.learning.v1.KeepCourseRequest
+ */
+export declare type KeepCourseRequest = Message<"ga.learning.v1.KeepCourseRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * learner_id, when set, keeps the course of a learner the caller is a guardian of.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.KeepCourseRequest.
+ * Use `create(KeepCourseRequestSchema)` to create a new message.
+ */
+export declare const KeepCourseRequestSchema: GenMessage<KeepCourseRequest>;
+
+/**
+ * @generated from message ga.learning.v1.KeepCourseResponse
+ */
+export declare type KeepCourseResponse = Message<"ga.learning.v1.KeepCourseResponse"> & {
+};
+
+/**
+ * Describes the message ga.learning.v1.KeepCourseResponse.
+ * Use `create(KeepCourseResponseSchema)` to create a new message.
+ */
+export declare const KeepCourseResponseSchema: GenMessage<KeepCourseResponse>;
+
+/**
+ * PlacementReport is what a course's diagnostic found, shown until whoever
+ * chooses the course keeps it or takes the recommended one.
+ *
+ * @generated from message ga.learning.v1.PlacementReport
+ */
+export declare type PlacementReport = Message<"ga.learning.v1.PlacementReport"> & {
+  /**
+   * placed counts the course's own topics placed as known, of total.
+   *
+   * @generated from field: int32 placed = 1;
+   */
+  placed: number;
+
+  /**
+   * @generated from field: int32 total = 2;
+   */
+  total: number;
+
+  /**
+   * foundations counts the topics of earlier courses still to learn first.
+   *
+   * @generated from field: int32 foundations = 3;
+   */
+  foundations: number;
+
+  /**
+   * recommended is the course to start with instead; empty to keep this one.
+   *
+   * @generated from field: string recommended = 4;
+   */
+  recommended: string;
+
+  /**
+   * earlier tells that the recommended course comes before this one; else it comes after.
+   *
+   * @generated from field: bool earlier = 5;
+   */
+  earlier: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.PlacementReport.
+ * Use `create(PlacementReportSchema)` to create a new message.
+ */
+export declare const PlacementReportSchema: GenMessage<PlacementReport>;
 
 /**
  * @generated from message ga.learning.v1.GetDashboardRequest
@@ -261,6 +366,34 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
    * @generated from field: double pace = 9;
    */
   pace: number;
+
+  /**
+   * report is the diagnostic report, until it is answered; unset after a skipped diagnostic.
+   *
+   * @generated from field: optional ga.learning.v1.PlacementReport report = 10;
+   */
+  report?: PlacementReport | undefined;
+
+  /**
+   * finished tells that every topic of the course is learned.
+   *
+   * @generated from field: bool finished = 11;
+   */
+  finished: boolean;
+
+  /**
+   * next_courses are the courses that build on this one, in catalog order.
+   *
+   * @generated from field: repeated string next_courses = 12;
+   */
+  nextCourses: string[];
+
+  /**
+   * can_choose tells whether the caller may change this learner's course.
+   *
+   * @generated from field: bool can_choose = 13;
+   */
+  canChoose: boolean;
 };
 
 /**
@@ -358,6 +491,13 @@ export declare type LessonTask = Message<"ga.learning.v1.LessonTask"> & {
    * @generated from field: int32 knowledge_points = 4;
    */
   knowledgePoints: number;
+
+  /**
+   * from_course is the earlier course a foundation comes from; unset for the course's own topics.
+   *
+   * @generated from field: optional ga.common.v1.Text from_course = 5;
+   */
+  fromCourse?: Text | undefined;
 };
 
 /**
@@ -391,6 +531,13 @@ export declare type ReviewTask = Message<"ga.learning.v1.ReviewTask"> & {
    * @generated from field: repeated string covers = 4;
    */
   covers: string[];
+
+  /**
+   * from_course is the earlier course a foundation comes from; unset for the course's own topics.
+   *
+   * @generated from field: optional ga.common.v1.Text from_course = 5;
+   */
+  fromCourse?: Text | undefined;
 };
 
 /**
@@ -1654,8 +1801,9 @@ export enum TopicStatus {
 export declare const TopicStatusSchema: GenEnum<TopicStatus>;
 
 /**
- * LearningService is the signed-in learner's study: enrollment, the dashboard
- * of tasks, and the sessions that carry out tasks one question at a time.
+ * LearningService is the signed-in learner's study: the current course of each
+ * subject, the dashboard of tasks, and the sessions that carry out tasks one
+ * question at a time.
  * Problems are generated and checked on the server; an answer never reaches
  * the client before the learner responds.
  *
@@ -1663,7 +1811,7 @@ export declare const TopicStatusSchema: GenEnum<TopicStatus>;
  */
 export declare const LearningService: GenService<{
   /**
-   * GetProfile summarizes the learner: enrollments and XP.
+   * GetProfile summarizes the learner: current courses and XP.
    *
    * @generated from rpc ga.learning.v1.LearningService.GetProfile
    */
@@ -1673,14 +1821,26 @@ export declare const LearningService: GenService<{
     output: typeof GetProfileResponseSchema;
   },
   /**
-   * Enroll enrolls the learner in a course. Enrolling twice is harmless.
+   * ChooseCourse makes a course the current course of its subject, replacing
+   * the one before. An adult or teen chooses for themselves; a guardian
+   * chooses for a learner they guard; a child does not choose.
    *
-   * @generated from rpc ga.learning.v1.LearningService.Enroll
+   * @generated from rpc ga.learning.v1.LearningService.ChooseCourse
    */
-  enroll: {
+  chooseCourse: {
     methodKind: "unary";
-    input: typeof EnrollRequestSchema;
-    output: typeof EnrollResponseSchema;
+    input: typeof ChooseCourseRequestSchema;
+    output: typeof ChooseCourseResponseSchema;
+  },
+  /**
+   * KeepCourse answers the diagnostic report by keeping the current course.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.KeepCourse
+   */
+  keepCourse: {
+    methodKind: "unary";
+    input: typeof KeepCourseRequestSchema;
+    output: typeof KeepCourseResponseSchema;
   },
   /**
    * GetDashboard returns the tasks offered in a course now.

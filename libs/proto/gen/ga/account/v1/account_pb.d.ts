@@ -458,7 +458,7 @@ export declare type GuardedLearner = Message<"ga.account.v1.GuardedLearner"> & {
   xp?: XpSummary | undefined;
 
   /**
-   * course_id is the course most recently worked on; empty before the first enrollment.
+   * course_id is the current course most recently chosen or worked on; empty before the first.
    *
    * @generated from field: string course_id = 4;
    */
@@ -575,6 +575,8 @@ export declare type GetGuardedLearnerResponse = Message<"ga.account.v1.GetGuarde
   goals?: Goals | undefined;
 
   /**
+   * enrollments are the learner's current courses, one per subject.
+   *
    * @generated from field: repeated ga.learning.v1.Enrollment enrollments = 3;
    */
   enrollments: Enrollment[];

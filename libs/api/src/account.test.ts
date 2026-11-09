@@ -179,7 +179,7 @@ describe("leagues", () => {
 
   it("start with the first XP of a finished task", async () => {
     await join("u1");
-    await learning("u1").enroll({ courseId: COURSE });
+    await learning("u1").chooseCourse({ courseId: COURSE });
     await learning("u1").skipDiagnostic({ courseId: COURSE });
     const session = await finishLesson("u1");
     expect(session.step.case).toBe("result");
@@ -203,7 +203,7 @@ async function finishLesson(user: string): Promise<Session> {
 
 describe("the XP of a session", () => {
   beforeEach(async () => {
-    await learning("u1").enroll({ courseId: COURSE });
+    await learning("u1").chooseCourse({ courseId: COURSE });
     await learning("u1").skipDiagnostic({ courseId: COURSE });
   });
 
@@ -269,7 +269,7 @@ describe("guardians", () => {
   });
 
   it("see how the learner is doing and set goals, while others cannot", async () => {
-    await learning("u1").enroll({ courseId: COURSE });
+    await learning("u1").chooseCourse({ courseId: COURSE });
     const { code: invite } = await account("u1").createGuardianInvite({});
     const { learnerId } = await account("u2").acceptGuardianInvite({ code: invite });
     const seen = await account("u2").getGuardedLearner({ learnerId, timeZone: "UTC" });
@@ -284,7 +284,7 @@ describe("guardians", () => {
   });
 
   it("read the learner's course, but no one else's, and only while they follow", async () => {
-    await learning("u1").enroll({ courseId: COURSE });
+    await learning("u1").chooseCourse({ courseId: COURSE });
     const { tasks } = await learning("u1").getDashboard({ courseId: COURSE, timeZone: "UTC" });
     await learning("u1").startTask({ courseId: COURSE, task: tasks[0] });
     const { code: invite } = await account("u1").createGuardianInvite({});

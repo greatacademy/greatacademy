@@ -445,17 +445,17 @@ describe("plans", () => {
   });
 
   it("gate study by plan only while billing is on", async () => {
-    const learning = { enroll: (r: { courseId: string }) => client(LearningService, "parent").enroll(r) };
-    expect(await code(learning.enroll({ courseId: COURSE }))).toBe(Code.PermissionDenied);
+    const learning = { chooseCourse: (r: { courseId: string }) => client(LearningService, "parent").chooseCourse(r) };
+    expect(await code(learning.chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
     expect((await client(PrivacyService, "parent").getAccess({})).billing).toBe(true);
     billing = false;
-    await learning.enroll({ courseId: COURSE });
+    await learning.chooseCourse({ courseId: COURSE });
     billing = true;
     await client(AdminService, "root").grantPlan({ email: "parent@example.com", scope: SUBJECT, days: 7 });
     expect((await client(PrivacyService, "parent").getAccess({})).covered).toEqual([SUBJECT]);
-    await learning.enroll({ courseId: COURSE });
+    await learning.chooseCourse({ courseId: COURSE });
     now += 8 * DAY;
-    expect(await code(learning.enroll({ courseId: COURSE }))).toBe(Code.PermissionDenied);
+    expect(await code(learning.chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
   });
 
   it("validate grants", async () => {

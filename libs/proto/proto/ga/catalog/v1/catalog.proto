@@ -42,6 +42,8 @@ message Course {
   repeated Unit units = 8;
   // group names the shelf a list of courses shows the course on; unset for none.
   ga.common.v1.Text group = 9;
+  // builds_on lists the courses this one follows on from, nearest first.
+  repeated string builds_on = 10;
 }
 
 message Unit {

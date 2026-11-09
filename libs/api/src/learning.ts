@@ -3,38 +3,43 @@ import { createRng, type Rng } from "@ga/content";
 import {
   activeSession,
   appendEvent,
+  chooseCourse,
   completedSessions,
   createSession,
+  currentCourse,
+  currentCourses,
   type Db,
-  enroll,
-  enrollments,
+  decidePlacement,
   getSession,
-  isEnrolled,
   isGuardian,
   learnerFor,
   loadState,
+  placedEvent,
   recordAnswer,
   type SessionRow,
   updateSession,
 } from "@ga/db";
 import {
   applyEvent,
+  courseFinished,
   courseProgress,
   diagnosticDue,
   type EngineEvent,
   frontier,
   initialState,
   isDue,
+  isKnown,
   type LearnerState,
   memory,
   nextTasks,
+  placementAdvice,
   remainingXp,
   type Task,
 } from "@ga/engine";
 import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import { requirePlan } from "./billing.ts";
-import { requireStudy, studiedToday } from "./capabilities.ts";
+import { accessOf, requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
 import { joinLeague } from "./league.ts";
@@ -52,6 +57,24 @@ function topicStatus(c: CourseEntry, s: LearnerState, open: ReadonlySet<string>,
   if (t?.learned) return isDue(c.ctx.params, t, now) ? TopicStatus.DUE : TopicStatus.LEARNED;
   if (open.has(id)) return TopicStatus.AVAILABLE;
   return t?.failedAt !== undefined ? TopicStatus.FAILED : TopicStatus.LOCKED;
+}
+
+/** placementReport sums up what a course's diagnostic found, with the course it recommends (docs/learning-engine.md §9). */
+function placementReport(
+  c: CourseEntry,
+  s: LearnerState,
+  placed: { known: readonly string[]; tested: readonly string[]; missed?: readonly string[] },
+) {
+  const own = c.course.topics;
+  const known = new Set(placed.known);
+  const advice = placementAdvice(c.planner, c.index, s, { known: placed.known, tested: placed.tested, missed: placed.missed ?? [] });
+  return {
+    placed: own.filter((id) => known.has(id)).length,
+    total: own.length,
+    foundations: c.course.foundations.filter((id) => !c.planner.scope.assumed.has(id) && !isKnown(c.planner, s, id)).length,
+    recommended: advice.kind === "stay" ? "" : advice.course,
+    earlier: advice.kind === "earlier",
+  };
 }
 
 /** LearningDeps are the learning service's dependencies besides the request context. */
@@ -91,18 +114,38 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     return c;
   };
 
-  /** enrolled resolves the learner and checks the enrollment; a guardian can name a learner they follow. */
-  const enrolled = async (ctx: HandlerContext, courseId: string, guardedId = "") => {
+  /** learner resolves the learner a request is about: the caller, or a learner the caller is a guardian of. */
+  const learner = async (ctx: HandlerContext, guardedId = "") => {
     const { db, userId } = auth(ctx);
-    const c = await course(courseId);
     if (guardedId && !(await isGuardian(db, userId, guardedId))) throw new ConnectError("no such learner", Code.NotFound);
-    const learnerId = guardedId || (await learnerFor(db, userId));
-    if (!guardedId) {
+    return { db, learnerId: guardedId || (await learnerFor(db, userId)), guardian: guardedId !== "" };
+  };
+
+  /** canChoose tells whether the caller may choose the learner's courses: a guardian, or a learner who is not a child. */
+  const canChoose = async (db: Db, learnerId: string, guardian: boolean) =>
+    guardian || (await accessOf(db, learnerId, deps.now())).age.band !== "child";
+
+  /** current resolves the learner and checks the course is their current one; a guardian can name a learner they follow. */
+  const current = async (ctx: HandlerContext, courseId: string, guardedId = "") => {
+    const { db, learnerId, guardian } = await learner(ctx, guardedId);
+    const c = await course(courseId);
+    if (!guardian) {
       await requireStudy(db, learnerId, deps.now());
       if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
     }
-    if (!(await isEnrolled(db, learnerId, courseId))) throw new ConnectError(`not enrolled in ${courseId}`, Code.FailedPrecondition);
-    return { db, c, learnerId };
+    const chosen = await currentCourse(db, learnerId, courseId);
+    if (!chosen) throw new ConnectError(`${courseId} is not the current course`, Code.FailedPrecondition);
+    return { db, c, learnerId, guardian, decided: chosen.decided };
+  };
+
+  /** chooser resolves a learner whose course the caller is changing, refusing a child choosing for themselves. */
+  const chooser = async (ctx: HandlerContext, guardedId: string) => {
+    const { db, learnerId, guardian } = await learner(ctx, guardedId);
+    if (!guardian) {
+      const access = await requireStudy(db, learnerId, deps.now());
+      if (access.age.band === "child") throw new ConnectError("a guardian chooses a child's course", Code.PermissionDenied);
+    }
+    return { db, learnerId };
   };
 
   const state = async (db: Db, learnerId: string, c: CourseEntry, lock = false) =>
@@ -139,37 +182,60 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const learnerId = await learnerFor(db, userId);
       const now = deps.now();
       const list = [];
-      for (const e of await enrollments(db, learnerId)) {
+      for (const e of await currentCourses(db, learnerId)) {
         const c = await registry.course(e.courseId);
         if (!c) continue;
         const { state: s } = await state(db, learnerId, c);
         const p = courseProgress(c.planner, s, now);
-        list.push({ courseId: c.id, stats: { learned: p.learned, total: p.total, due: p.due } });
+        list.push({ courseId: c.id, subjectId: e.subjectId, stats: { learned: p.learned, total: p.total, due: p.due } });
       }
-      return { enrollments: list, xp: await xpSummary(db, learnerId, now, req.timeZone) };
+      return {
+        enrollments: list,
+        xp: await xpSummary(db, learnerId, now, req.timeZone),
+        canChoose: await canChoose(db, learnerId, false),
+      };
     },
 
-    async enroll(req, ctx) {
-      const { db, userId } = auth(ctx);
+    async chooseCourse(req, ctx) {
+      const { db, learnerId } = await chooser(ctx, req.learnerId);
       const c = await course(req.courseId);
-      const learnerId = await learnerFor(db, userId);
-      await requireStudy(db, learnerId, deps.now());
       if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
-      await enroll(db, learnerId, c.subject.def.id, c.id);
+      const at = new Date(deps.now());
+      await db.transaction(async (tx) => {
+        // Taking another course answers the report of the one replaced.
+        const replaced = (await currentCourses(tx, learnerId)).find((e) => e.subjectId === c.subject.def.id && e.courseId !== c.id);
+        if (replaced) await decidePlacement(tx, learnerId, replaced.courseId, at);
+        await chooseCourse(tx, learnerId, c.subject.def.id, c.id, at);
+      });
+      return {};
+    },
+
+    async keepCourse(req, ctx) {
+      const { db, learnerId } = await chooser(ctx, req.learnerId);
+      const c = await course(req.courseId);
+      if (!(await currentCourse(db, learnerId, c.id))) throw new ConnectError(`${c.id} is not the current course`, Code.FailedPrecondition);
+      await decidePlacement(db, learnerId, c.id, new Date(deps.now()));
       return {};
     },
 
     async getDashboard(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId, req.learnerId);
+      const { db, c, learnerId, guardian, decided } = await current(ctx, req.courseId, req.learnerId);
       const now = deps.now();
       const { state: s } = await state(db, learnerId, c);
       const active = await activeSession(db, learnerId, c.id);
       const p = courseProgress(c.planner, s, now);
       const run = active?.state as RunState | undefined;
       const xp = await xpSummary(db, learnerId, now, req.timeZone);
+      const diagnosed = !diagnosticDue(c.planner, s);
+      const placed = diagnosed && !decided ? await placedEvent(db, learnerId, c.subject.def.id, c.id) : undefined;
+      const report = placed && (placed.tested.length > 0 || (placed.missed?.length ?? 0) > 0) ? placementReport(c, s, placed) : undefined;
       return {
         courseId: c.id,
-        diagnosed: !diagnosticDue(c.planner, s),
+        diagnosed,
+        ...(report && { report }),
+        finished: courseFinished(c.planner, s),
+        nextCourses: [...(c.index.next.get(c.id) ?? [])],
+        canChoose: await canChoose(db, learnerId, guardian),
         tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
         stats: { learned: p.learned, total: p.total, due: p.due },
@@ -181,7 +247,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async getCourseProgress(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId, req.learnerId);
+      const { db, c, learnerId } = await current(ctx, req.courseId, req.learnerId);
       const now = deps.now();
       const { state: s } = await state(db, learnerId, c);
       const p = c.ctx.params;
@@ -201,7 +267,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async getTopic(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { db, c, learnerId } = await current(ctx, req.courseId);
       const topic = c.subject.topics.get(req.topicId);
       if (!topic) throw new ConnectError("no such topic", Code.NotFound);
       const now = deps.now();
@@ -231,7 +297,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async listSessions(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId, req.learnerId);
+      const { db, c, learnerId } = await current(ctx, req.courseId, req.learnerId);
       const { state: s } = await state(db, learnerId, c);
       const rows = await completedSessions(db, learnerId, c.id, historyLength);
       return {
@@ -257,7 +323,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async startTask(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { db, c, learnerId } = await current(ctx, req.courseId);
       const now = deps.now();
       const { age } = await requireStudy(db, learnerId, now);
       const timeLimit = age.dailyMinutes;
@@ -284,7 +350,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async skipDiagnostic(req, ctx) {
-      const { db, c, learnerId } = await enrolled(ctx, req.courseId);
+      const { db, c, learnerId } = await current(ctx, req.courseId);
       const now = deps.now();
       await db.transaction(async (tx) => {
         const { state: s } = await state(tx, learnerId, c, true);

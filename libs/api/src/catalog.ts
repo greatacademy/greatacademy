@@ -18,6 +18,7 @@ function listed(
     title: text(c.title),
     description: text(c.description),
     ...(c.group && { group: text(c.group) }),
+    buildsOn: [...c.buildsOn],
     topicCount: c.topicCount,
     xp: c.xp,
     ...(outline && { units: outline }),

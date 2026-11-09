@@ -12,7 +12,17 @@ import {
   subjectManifest,
   topicSource,
 } from "@ga/content";
-import { courseScope, defaultParams, type EngineContext, type EngineGraph, engineGraph, type Params, type Planner } from "@ga/engine";
+import {
+  type CourseIndex,
+  courseIndex,
+  courseScope,
+  defaultParams,
+  type EngineContext,
+  type EngineGraph,
+  engineGraph,
+  type Params,
+  type Planner,
+} from "@ga/engine";
 
 /** localGateway serves a compiled subject from this process; tests and tools use it. */
 export function localGateway(subject: CompiledSubject): SubjectGateway {
@@ -40,6 +50,8 @@ export interface SubjectEntry {
   readonly source: SubjectGateway;
   readonly ctx: EngineContext;
   readonly courses: ReadonlyMap<string, CourseEntry>;
+  /** index relates the subject's courses: what each builds on and which teach a topic. */
+  readonly index: CourseIndex;
 }
 
 /** CourseEntry is everything the services need about one course. */
@@ -50,6 +62,8 @@ export interface CourseEntry {
   readonly source: SubjectSource;
   readonly ctx: EngineContext;
   readonly planner: Planner;
+  /** index relates the courses of the course's subject. */
+  readonly index: CourseIndex;
 }
 
 /** loadedSubjects is how many subjects a Registry keeps in memory: a large subject takes tens of megabytes, and a Worker isolate has 128. */
@@ -120,6 +134,12 @@ export class Registry {
     const graph: EngineGraph = engineGraph(subject.graph);
     const ctx = { params, graph };
     const courses = new Map<string, CourseEntry>();
+    // The index is computed when first needed, as the scopes are.
+    let index: CourseIndex | undefined;
+    const indexed = () => {
+      index ??= courseIndex(subject.courses);
+      return index;
+    };
     for (const [id, course] of subject.courses) {
       // A course's scope is computed when first used: most isolates serve few courses.
       let planner: Planner | undefined;
@@ -134,8 +154,19 @@ export class Registry {
           planner ??= { params, graph, scope: courseScope(graph, course) };
           return planner;
         },
+        get index() {
+          return indexed();
+        },
       });
     }
-    return { subject, source, ctx, courses };
+    return {
+      subject,
+      source,
+      ctx,
+      courses,
+      get index() {
+        return indexed();
+      },
+    };
   }
 }

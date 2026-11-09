@@ -152,11 +152,11 @@ describe("the age question", () => {
   it("is required before study, can be answered once, and keeps no birth date", async () => {
     await newUser("u");
     expect((await privacy("u").getAccess({})).status).toBe(AccessStatus.NEEDS_AGE);
-    expect(await code(learning("u").enroll({ courseId: COURSE }))).toBe(Code.PermissionDenied);
+    expect(await code(learning("u").chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
     await privacy("u").setAge({ country: "US", birthYear: 1990, birthMonth: 3 });
     expect((await privacy("u").getAccess({})).status).toBe(AccessStatus.OK);
     expect(await code(privacy("u").setAge({ country: "US", birthYear: 2000, birthMonth: 3 }))).toBe(Code.FailedPrecondition);
-    await learning("u").enroll({ courseId: COURSE });
+    await learning("u").chooseCourse({ courseId: COURSE });
     const columns = Object.keys((await db.select().from(learner).where(eq(learner.band, "adult")))[0]!);
     expect(columns.filter((c) => /birth/i.test(c))).toEqual([]);
   });
@@ -166,7 +166,7 @@ describe("the age question", () => {
     await newUser("u");
     await privacy("u").setAge({ country: "US", birthYear: 2018, birthMonth: 1 });
     expect((await privacy("u").getAccess({})).status).toBe(AccessStatus.NEEDS_GUARDIAN);
-    expect(await code(learning("u").enroll({ courseId: COURSE }))).toBe(Code.PermissionDenied);
+    expect(await code(learning("u").chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
   });
 
   it("closes minors out of a market that is not open, leaving adults alone", async () => {
@@ -249,12 +249,15 @@ describe("guardians", () => {
     });
     const kid = "child-kid01";
     expect((await privacy(kid).getAccess({})).status).toBe(AccessStatus.NEEDS_GUARDIAN);
-    expect(await code(learning(kid).enroll({ courseId: COURSE }))).toBe(Code.PermissionDenied);
+    expect(await code(learning(kid).chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
     await privacy("parent").grantConsent({ learnerId, scope: "basic" });
     const a = await privacy(kid).getAccess({});
     expect(a.status).toBe(AccessStatus.OK);
     expect(a.managed).toBe(true);
-    await learning(kid).enroll({ courseId: COURSE });
+    // A child studies the course their guardian chooses.
+    expect(await code(learning(kid).chooseCourse({ courseId: COURSE }))).toBe(Code.PermissionDenied);
+    await learning("parent").chooseCourse({ courseId: COURSE, learnerId });
+    expect((await learning(kid).getDashboard({ courseId: COURSE, timeZone: "UTC" })).canChoose).toBe(false);
     const account = createClient(AccountService, transport(kid));
     expect(await code(account.setLeagues({ enabled: true }))).toBe(Code.PermissionDenied);
     expect(await code(account.setUsername({ username: "public" }))).toBe(Code.PermissionDenied);
@@ -316,7 +319,7 @@ describe("guardians", () => {
   it("set a daily limit counted in the learner's day", async () => {
     await verified("parent");
     const { learnerId, user } = await child("parent");
-    await learning(user).enroll({ courseId: COURSE });
+    await learning("parent").chooseCourse({ courseId: COURSE, learnerId });
     await learning(user).skipDiagnostic({ courseId: COURSE });
     await privacy("parent").setTimeLimit({ learnerId, minutes: 20 });
     expect(await code(privacy(user).setTimeLimit({ learnerId: "", minutes: 0 }))).toBe(Code.PermissionDenied);
@@ -335,7 +338,7 @@ describe("guardians", () => {
   it("delete a child leaving no row of them", async () => {
     await verified("parent");
     const { learnerId, user } = await child("parent");
-    await learning(user).enroll({ courseId: COURSE });
+    await learning("parent").chooseCourse({ courseId: COURSE, learnerId });
     await learning(user).skipDiagnostic({ courseId: COURSE });
     const offered = (await learning(user).getDashboard({ courseId: COURSE, timeZone: "UTC" })).tasks[0]!;
     await learning(user).startTask({ courseId: COURSE, task: offered });
@@ -357,7 +360,7 @@ describe("free text", () => {
   async function studied() {
     await newUser("teen");
     await privacy("teen").setAge({ country: "US", birthYear: 2010, birthMonth: 1 });
-    await learning("teen").enroll({ courseId: COURSE });
+    await learning("teen").chooseCourse({ courseId: COURSE });
     await learning("teen").skipDiagnostic({ courseId: COURSE });
     const offered = (await learning("teen").getDashboard({ courseId: COURSE, timeZone: "UTC" })).tasks[0]!;
     const s = (await learning("teen").startTask({ courseId: COURSE, task: offered })).session!;

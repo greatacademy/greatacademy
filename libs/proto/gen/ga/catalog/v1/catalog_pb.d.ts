@@ -129,6 +129,13 @@ export declare type Course = Message<"ga.catalog.v1.Course"> & {
    * @generated from field: ga.common.v1.Text group = 9;
    */
   group?: Text | undefined;
+
+  /**
+   * builds_on lists the courses this one follows on from, nearest first.
+   *
+   * @generated from field: repeated string builds_on = 10;
+   */
+  buildsOn: string[];
 };
 
 /**

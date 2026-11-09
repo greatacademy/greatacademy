@@ -10,7 +10,7 @@ import { file_ga_common_v1_text } from "../../common/v1/text_pb.js";
  * Describes the file ga/learning/v1/learning.proto.
  */
 export const file_ga_learning_v1_learning = /*@__PURE__*/
-  fileDesc("Ch1nYS9sZWFybmluZy92MS9sZWFybmluZy5wcm90bxIOZ2EubGVhcm5pbmcudjEiJgoRR2V0UHJvZmlsZVJlcXVlc3QSEQoJdGltZV96b25lGAEgASgJImwKEkdldFByb2ZpbGVSZXNwb25zZRIvCgtlbnJvbGxtZW50cxgBIAMoCzIaLmdhLmxlYXJuaW5nLnYxLkVucm9sbG1lbnQSJQoCeHAYAiABKAsyGS5nYS5sZWFybmluZy52MS5YcFN1bW1hcnkiSwoKRW5yb2xsbWVudBIRCgljb3Vyc2VfaWQYASABKAkSKgoFc3RhdHMYAiABKAsyGy5nYS5sZWFybmluZy52MS5Db3Vyc2VTdGF0cyI6CgtDb3Vyc2VTdGF0cxIPCgdsZWFybmVkGAEgASgFEg0KBXRvdGFsGAIgASgFEgsKA2R1ZRgDIAEoBSJsCglYcFN1bW1hcnkSDQoFdG90YWwYASABKAUSDQoFdG9kYXkYAiABKAUSDAoEZGF5cxgDIAMoBRISCgpnb2FsX3RvZGF5GAQgASgFEhEKCWdvYWxfd2VlaxgFIAEoBRIMCgR3ZWVrGAYgASgFIiIKDUVucm9sbFJlcXVlc3QSEQoJY291cnNlX2lkGAEgASgJIhAKDkVucm9sbFJlc3BvbnNlIk8KE0dldERhc2hib2FyZFJlcXVlc3QSEQoJY291cnNlX2lkGAEgASgJEhEKCXRpbWVfem9uZRgCIAEoCRISCgpsZWFybmVyX2lkGAMgASgJIqwCChRHZXREYXNoYm9hcmRSZXNwb25zZRIRCgljb3Vyc2VfaWQYASABKAkSEQoJZGlhZ25vc2VkGAIgASgIEiMKBXRhc2tzGAMgAygLMhQuZ2EubGVhcm5pbmcudjEuVGFzaxIzCgZhY3RpdmUYBCABKAsyHi5nYS5sZWFybmluZy52MS5TZXNzaW9uU3VtbWFyeUgAiAEBEioKBXN0YXRzGAUgASgLMhsuZ2EubGVhcm5pbmcudjEuQ291cnNlU3RhdHMSJQoCeHAYBiABKAsyGS5nYS5sZWFybmluZy52MS5YcFN1bW1hcnkSEgoKeHBfdG9fcXVpehgHIAEoBRIUCgxyZW1haW5pbmdfeHAYCCABKAUSDAoEcGFjZRgJIAEoAUIJCgdfYWN0aXZlIvoBCgRUYXNrEjQKCmRpYWdub3N0aWMYASABKAsyHi5nYS5sZWFybmluZy52MS5EaWFnbm9zdGljVGFza0gAEiwKBmxlc3NvbhgCIAEoCzIaLmdhLmxlYXJuaW5nLnYxLkxlc3NvblRhc2tIABIsCgZyZXZpZXcYAyABKAsyGi5nYS5sZWFybmluZy52MS5SZXZpZXdUYXNrSAASKAoEcXVpehgEIAEoCzIYLmdhLmxlYXJuaW5nLnYxLlF1aXpUYXNrSAASLgoHcmVhZGluZxgFIAEoCzIbLmdhLmxlYXJuaW5nLnYxLlJlYWRpbmdUYXNrSABCBgoEa2luZCInCg5EaWFnbm9zdGljVGFzaxIVCg1tYXhfcXVlc3Rpb25zGAEgASgFImcKCkxlc3NvblRhc2sSEAoIdG9waWNfaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIKCgJ4cBgDIAEoBRIYChBrbm93bGVkZ2VfcG9pbnRzGAQgASgFIl0KClJldmlld1Rhc2sSEAoIdG9waWNfaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIKCgJ4cBgDIAEoBRIOCgZjb3ZlcnMYBCADKAkiKQoIUXVpelRhc2sSEQoJcXVlc3Rpb25zGAEgASgFEgoKAnhwGAIgASgFInIKC1JlYWRpbmdUYXNrEhIKCnBhc3NhZ2VfaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIKCgJ4cBgDIAEoBRIRCglxdWVzdGlvbnMYBCABKAUSDQoFd29yZHMYBSABKAUiQAoOU2Vzc2lvblN1bW1hcnkSCgoCaWQYASABKAkSIgoEdGFzaxgCIAEoCzIULmdhLmxlYXJuaW5nLnYxLlRhc2siQQoYR2V0Q291cnNlUHJvZ3Jlc3NSZXF1ZXN0EhEKCWNvdXJzZV9pZBgBIAEoCRISCgpsZWFybmVyX2lkGAIgASgJIkoKGUdldENvdXJzZVByb2dyZXNzUmVzcG9uc2USLQoGdG9waWNzGAEgAygLMh0uZ2EubGVhcm5pbmcudjEuVG9waWNQcm9ncmVzcyKCAQoNVG9waWNQcm9ncmVzcxIQCgh0b3BpY19pZBgBIAEoCRIrCgZzdGF0dXMYAiABKA4yGy5nYS5sZWFybmluZy52MS5Ub3BpY1N0YXR1cxIOCgZwbGFjZWQYAyABKAgSDgoGbWVtb3J5GAQgASgBEhIKCmZvdW5kYXRpb24YBSABKAgiXAoQU3RhcnRUYXNrUmVxdWVzdBIRCgljb3Vyc2VfaWQYASABKAkSIgoEdGFzaxgCIAEoCzIULmdhLmxlYXJuaW5nLnYxLlRhc2sSEQoJdGltZV96b25lGAMgASgJIj0KEVN0YXJ0VGFza1Jlc3BvbnNlEigKB3Nlc3Npb24YASABKAsyFy5nYS5sZWFybmluZy52MS5TZXNzaW9uIioKFVNraXBEaWFnbm9zdGljUmVxdWVzdBIRCgljb3Vyc2VfaWQYASABKAkiGAoWU2tpcERpYWdub3N0aWNSZXNwb25zZSIfChFHZXRTZXNzaW9uUmVxdWVzdBIKCgJpZBgBIAEoCSI+ChJHZXRTZXNzaW9uUmVzcG9uc2USKAoHc2Vzc2lvbhgBIAEoCzIXLmdhLmxlYXJuaW5nLnYxLlNlc3Npb24ivgEKB1Nlc3Npb24SCgoCaWQYASABKAkSEQoJY291cnNlX2lkGAIgASgJEiIKBHRhc2sYAyABKAsyFC5nYS5sZWFybmluZy52MS5UYXNrEhAKCGFuc3dlcmVkGAQgASgFEiwKCHF1ZXN0aW9uGAUgASgLMhguZ2EubGVhcm5pbmcudjEuUXVlc3Rpb25IABIoCgZyZXN1bHQYBiABKAsyFi5nYS5sZWFybmluZy52MS5SZXN1bHRIAEIGCgRzdGVwIrgCCghRdWVzdGlvbhINCgVpbmRleBgBIAEoBRI3CgVpbnRybxgCIAEoCzIjLmdhLmxlYXJuaW5nLnYxLktub3dsZWRnZVBvaW50SW50cm9IAIgBARIsCgdwcm9ibGVtGAMgASgLMhsuZ2EubGVhcm5pbmcudjEuUHJvYmxlbVZpZXcSEAoIZmVlZGJhY2sYBCABKAgSEAoIY2FuX3NraXAYBSABKAgSMwoGbGVzc29uGAYgASgLMh4uZ2EubGVhcm5pbmcudjEuTGVzc29uUHJvZ3Jlc3NIAYgBARINCgV0b3RhbBgHIAEoBRItCgdwYXNzYWdlGAggASgLMhcuZ2EubGVhcm5pbmcudjEuUGFzc2FnZUgCiAEBQggKBl9pbnRyb0IJCgdfbGVzc29uQgoKCF9wYXNzYWdlIjoKB1Bhc3NhZ2USIQoFdGl0bGUYASABKAsyEi5nYS5jb21tb24udjEuVGV4dBIMCgRib2R5GAIgASgJIowCChNLbm93bGVkZ2VQb2ludEludHJvEg0KBWluZGV4GAEgASgFEg0KBWNvdW50GAIgASgFEiEKBXRpdGxlGAMgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSJwoLZXhwbGFuYXRpb24YBCABKAsyEi5nYS5jb21tb24udjEuVGV4dBIuCgdleGFtcGxlGAUgASgLMh0uZ2EubGVhcm5pbmcudjEuV29ya2VkRXhhbXBsZRIpCgZmaWd1cmUYBiABKAsyFC5nYS5jb21tb24udjEuRmlndXJlSACIAQESJQoHZmlndXJlcxgHIAMoCzIULmdhLmNvbW1vbi52MS5GaWd1cmVCCQoHX2ZpZ3VyZSK7AQoNV29ya2VkRXhhbXBsZRIsCgdwcm9ibGVtGAEgASgLMhsuZ2EubGVhcm5pbmcudjEuUHJvYmxlbVZpZXcSJAoIc29sdXRpb24YAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIOCgZhbnN3ZXIYAyABKAkSMgoPc29sdXRpb25fZmlndXJlGAQgASgLMhQuZ2EuY29tbW9uLnYxLkZpZ3VyZUgAiAEBQhIKEF9zb2x1dGlvbl9maWd1cmUiYwoOTGVzc29uUHJvZ3Jlc3MSFwoPa25vd2xlZGdlX3BvaW50GAEgASgFEhgKEGtub3dsZWRnZV9wb2ludHMYAiABKAUSDgoGc3RyZWFrGAMgASgFEg4KBm5lZWRlZBgEIAEoBSKNAQoLUHJvYmxlbVZpZXcSIgoGcHJvbXB0GAEgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSJAoFaW5wdXQYAiABKAsyFS5nYS5sZWFybmluZy52MS5JbnB1dBIpCgZmaWd1cmUYAyABKAsyFC5nYS5jb21tb24udjEuRmlndXJlSACIAQFCCQoHX2ZpZ3VyZSLsAQoFSW5wdXQSLQoGY2hvaWNlGAEgASgLMhsuZ2EubGVhcm5pbmcudjEuQ2hvaWNlSW5wdXRIABIpCgRtYXRoGAIgASgLMhkuZ2EubGVhcm5pbmcudjEuTWF0aElucHV0SAASKQoEdGV4dBgDIAEoCzIZLmdhLmxlYXJuaW5nLnYxLlRleHRJbnB1dEgAEikKBHBsb3QYBCABKAsyGS5nYS5sZWFybmluZy52MS5QbG90SW5wdXRIABIrCgVvcmRlchgFIAEoCzIaLmdhLmxlYXJuaW5nLnYxLk9yZGVySW5wdXRIAEIGCgRraW5kIlkKC0Nob2ljZUlucHV0EiMKB29wdGlvbnMYASADKAsyEi5nYS5jb21tb24udjEuVGV4dBIlCgdmaWd1cmVzGAIgAygLMhQuZ2EuY29tbW9uLnYxLkZpZ3VyZSIrCglNYXRoSW5wdXQSDgoGcHJlZml4GAEgASgJEg4KBnN1ZmZpeBgCIAEoCSILCglUZXh0SW5wdXQiLwoKT3JkZXJJbnB1dBIhCgVpdGVtcxgBIAMoCzISLmdhLmNvbW1vbi52MS5UZXh0Io8BCglQbG90SW5wdXQSDQoFeF9taW4YASABKAESDQoFeF9tYXgYAiABKAESDQoFeV9taW4YAyABKAESDQoFeV9tYXgYBCABKAESDAoEc3RlcBgFIAEoARIMCgRsZWZ0GAYgASgBEgsKA3RvcBgHIAEoARINCgVzY2FsZRgIIAEoARIOCgZwb2ludHMYCSABKAUiWAoTU3VibWl0QW5zd2VyUmVxdWVzdBISCgpzZXNzaW9uX2lkGAEgASgJEg0KBWluZGV4GAIgASgFEhAKCHJlc3BvbnNlGAMgASgJEgwKBHNraXAYBCABKAgifgoUU3VibWl0QW5zd2VyUmVzcG9uc2USLwoIZmVlZGJhY2sYASABKAsyGC5nYS5sZWFybmluZy52MS5GZWVkYmFja0gAiAEBEigKB3Nlc3Npb24YAiABKAsyFy5nYS5sZWFybmluZy52MS5TZXNzaW9uQgsKCV9mZWVkYmFjayLPAQoIRmVlZGJhY2sSDwoHY29ycmVjdBgBIAEoCBIoCgdtZXNzYWdlGAIgASgLMhIuZ2EuY29tbW9uLnYxLlRleHRIAIgBARIkCghzb2x1dGlvbhgDIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0Eg4KBmFuc3dlchgEIAEoCRIyCg9zb2x1dGlvbl9maWd1cmUYBSABKAsyFC5nYS5jb21tb24udjEuRmlndXJlSAGIAQFCCgoIX21lc3NhZ2VCEgoQX3NvbHV0aW9uX2ZpZ3VyZSJMCg9HZXRUb3BpY1JlcXVlc3QSEQoJY291cnNlX2lkGAEgASgJEhAKCHRvcGljX2lkGAIgASgJEhQKDGV4YW1wbGVfc2VlZBgDIAEoBSK5AgoQR2V0VG9waWNSZXNwb25zZRIQCgh0b3BpY19pZBgBIAEoCRIhCgV0aXRsZRgCIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EiMKB3N1bW1hcnkYAyABKAsyEi5nYS5jb21tb24udjEuVGV4dBIrCgZzdGF0dXMYBCABKA4yGy5nYS5sZWFybmluZy52MS5Ub3BpY1N0YXR1cxI9ChBrbm93bGVkZ2VfcG9pbnRzGAUgAygLMiMuZ2EubGVhcm5pbmcudjEuS25vd2xlZGdlUG9pbnRJbnRybxIwCg1wcmVyZXF1aXNpdGVzGAYgAygLMhkuZ2EubGVhcm5pbmcudjEuVG9waWNMaW5rEi0KCmRlcGVuZGVudHMYByADKAsyGS5nYS5sZWFybmluZy52MS5Ub3BpY0xpbmsibQoJVG9waWNMaW5rEhAKCHRvcGljX2lkGAEgASgJEiEKBXRpdGxlGAIgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSKwoGc3RhdHVzGAMgASgOMhsuZ2EubGVhcm5pbmcudjEuVG9waWNTdGF0dXMiPAoTTGlzdFNlc3Npb25zUmVxdWVzdBIRCgljb3Vyc2VfaWQYASABKAkSEgoKbGVhcm5lcl9pZBgCIAEoCSJJChRMaXN0U2Vzc2lvbnNSZXNwb25zZRIxCghzZXNzaW9ucxgBIAMoCzIfLmdhLmxlYXJuaW5nLnYxLkZpbmlzaGVkU2Vzc2lvbiK3AQoPRmluaXNoZWRTZXNzaW9uEgoKAmlkGAEgASgJEiIKBHRhc2sYAiABKAsyFC5nYS5sZWFybmluZy52MS5UYXNrEhQKDGNvbXBsZXRlZF9hdBgDIAEoAxIOCgZwYXNzZWQYBCABKAgSDwoHY29ycmVjdBgFIAEoBRINCgVhc2tlZBgGIAEoBRIKCgJ4cBgHIAEoBRIPCgdmdWxsX3hwGAggASgFEhEKCWJsb3duX29mZhgJIAEoCCLeAQoGUmVzdWx0Eg4KBnBhc3NlZBgBIAEoCBIPCgdjb3JyZWN0GAIgASgFEg0KBWFza2VkGAMgASgFEgoKAnhwGAQgASgFEikKBWl0ZW1zGAUgAygLMhouZ2EubGVhcm5pbmcudjEuUmVzdWx0SXRlbRIOCgZwbGFjZWQYBiABKAUSDwoHZnVsbF94cBgHIAEoBRIRCglibG93bl9vZmYYCCABKAgSLQoHcGFzc2FnZRgJIAEoCzIXLmdhLmxlYXJuaW5nLnYxLlBhc3NhZ2VIAIgBAUIKCghfcGFzc2FnZSKQAgoKUmVzdWx0SXRlbRIQCgh0b3BpY19pZBgBIAEoCRIhCgV0aXRsZRgCIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0Eg8KB2NvcnJlY3QYAyABKAgSLAoHcHJvYmxlbRgEIAEoCzIbLmdhLmxlYXJuaW5nLnYxLlByb2JsZW1WaWV3EiQKCHNvbHV0aW9uGAUgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSDgoGYW5zd2VyGAYgASgJEhAKCHJlc3BvbnNlGAcgASgJEjIKD3NvbHV0aW9uX2ZpZ3VyZRgIIAEoCzIULmdhLmNvbW1vbi52MS5GaWd1cmVIAIgBAUISChBfc29sdXRpb25fZmlndXJlKsMBCgtUb3BpY1N0YXR1cxIcChhUT1BJQ19TVEFUVVNfVU5TUEVDSUZJRUQQABIXChNUT1BJQ19TVEFUVVNfTE9DS0VEEAESGgoWVE9QSUNfU1RBVFVTX0FWQUlMQUJMRRACEhcKE1RPUElDX1NUQVRVU19GQUlMRUQQAxIYChRUT1BJQ19TVEFUVVNfTEVBUk5FRBAEEhQKEFRPUElDX1NUQVRVU19EVUUQBRIYChRUT1BJQ19TVEFUVVNfQVNTVU1FRBAGMoEHCg9MZWFybmluZ1NlcnZpY2USUwoKR2V0UHJvZmlsZRIhLmdhLmxlYXJuaW5nLnYxLkdldFByb2ZpbGVSZXF1ZXN0GiIuZ2EubGVhcm5pbmcudjEuR2V0UHJvZmlsZVJlc3BvbnNlEkcKBkVucm9sbBIdLmdhLmxlYXJuaW5nLnYxLkVucm9sbFJlcXVlc3QaHi5nYS5sZWFybmluZy52MS5FbnJvbGxSZXNwb25zZRJZCgxHZXREYXNoYm9hcmQSIy5nYS5sZWFybmluZy52MS5HZXREYXNoYm9hcmRSZXF1ZXN0GiQuZ2EubGVhcm5pbmcudjEuR2V0RGFzaGJvYXJkUmVzcG9uc2USaAoRR2V0Q291cnNlUHJvZ3Jlc3MSKC5nYS5sZWFybmluZy52MS5HZXRDb3Vyc2VQcm9ncmVzc1JlcXVlc3QaKS5nYS5sZWFybmluZy52MS5HZXRDb3Vyc2VQcm9ncmVzc1Jlc3BvbnNlElAKCVN0YXJ0VGFzaxIgLmdhLmxlYXJuaW5nLnYxLlN0YXJ0VGFza1JlcXVlc3QaIS5nYS5sZWFybmluZy52MS5TdGFydFRhc2tSZXNwb25zZRJfCg5Ta2lwRGlhZ25vc3RpYxIlLmdhLmxlYXJuaW5nLnYxLlNraXBEaWFnbm9zdGljUmVxdWVzdBomLmdhLmxlYXJuaW5nLnYxLlNraXBEaWFnbm9zdGljUmVzcG9uc2USUwoKR2V0U2Vzc2lvbhIhLmdhLmxlYXJuaW5nLnYxLkdldFNlc3Npb25SZXF1ZXN0GiIuZ2EubGVhcm5pbmcudjEuR2V0U2Vzc2lvblJlc3BvbnNlElkKDFN1Ym1pdEFuc3dlchIjLmdhLmxlYXJuaW5nLnYxLlN1Ym1pdEFuc3dlclJlcXVlc3QaJC5nYS5sZWFybmluZy52MS5TdWJtaXRBbnN3ZXJSZXNwb25zZRJNCghHZXRUb3BpYxIfLmdhLmxlYXJuaW5nLnYxLkdldFRvcGljUmVxdWVzdBogLmdhLmxlYXJuaW5nLnYxLkdldFRvcGljUmVzcG9uc2USWQoMTGlzdFNlc3Npb25zEiMuZ2EubGVhcm5pbmcudjEuTGlzdFNlc3Npb25zUmVxdWVzdBokLmdhLmxlYXJuaW5nLnYxLkxpc3RTZXNzaW9uc1Jlc3BvbnNlYgZwcm90bzM", [file_ga_common_v1_figure, file_ga_common_v1_text]);
+  fileDesc("Ch1nYS9sZWFybmluZy92MS9sZWFybmluZy5wcm90bxIOZ2EubGVhcm5pbmcudjEiJgoRR2V0UHJvZmlsZVJlcXVlc3QSEQoJdGltZV96b25lGAEgASgJIoABChJHZXRQcm9maWxlUmVzcG9uc2USLwoLZW5yb2xsbWVudHMYASADKAsyGi5nYS5sZWFybmluZy52MS5FbnJvbGxtZW50EiUKAnhwGAIgASgLMhkuZ2EubGVhcm5pbmcudjEuWHBTdW1tYXJ5EhIKCmNhbl9jaG9vc2UYAyABKAgiXwoKRW5yb2xsbWVudBIRCgljb3Vyc2VfaWQYASABKAkSKgoFc3RhdHMYAiABKAsyGy5nYS5sZWFybmluZy52MS5Db3Vyc2VTdGF0cxISCgpzdWJqZWN0X2lkGAMgASgJIjoKC0NvdXJzZVN0YXRzEg8KB2xlYXJuZWQYASABKAUSDQoFdG90YWwYAiABKAUSCwoDZHVlGAMgASgFImwKCVhwU3VtbWFyeRINCgV0b3RhbBgBIAEoBRINCgV0b2RheRgCIAEoBRIMCgRkYXlzGAMgAygFEhIKCmdvYWxfdG9kYXkYBCABKAUSEQoJZ29hbF93ZWVrGAUgASgFEgwKBHdlZWsYBiABKAUiPAoTQ2hvb3NlQ291cnNlUmVxdWVzdBIRCgljb3Vyc2VfaWQYASABKAkSEgoKbGVhcm5lcl9pZBgCIAEoCSIWChRDaG9vc2VDb3Vyc2VSZXNwb25zZSI6ChFLZWVwQ291cnNlUmVxdWVzdBIRCgljb3Vyc2VfaWQYASABKAkSEgoKbGVhcm5lcl9pZBgCIAEoCSIUChJLZWVwQ291cnNlUmVzcG9uc2UiawoPUGxhY2VtZW50UmVwb3J0Eg4KBnBsYWNlZBgBIAEoBRINCgV0b3RhbBgCIAEoBRITCgtmb3VuZGF0aW9ucxgDIAEoBRITCgtyZWNvbW1lbmRlZBgEIAEoCRIPCgdlYXJsaWVyGAUgASgIIk8KE0dldERhc2hib2FyZFJlcXVlc3QSEQoJY291cnNlX2lkGAEgASgJEhEKCXRpbWVfem9uZRgCIAEoCRISCgpsZWFybmVyX2lkGAMgASgJIqkDChRHZXREYXNoYm9hcmRSZXNwb25zZRIRCgljb3Vyc2VfaWQYASABKAkSEQoJZGlhZ25vc2VkGAIgASgIEiMKBXRhc2tzGAMgAygLMhQuZ2EubGVhcm5pbmcudjEuVGFzaxIzCgZhY3RpdmUYBCABKAsyHi5nYS5sZWFybmluZy52MS5TZXNzaW9uU3VtbWFyeUgAiAEBEioKBXN0YXRzGAUgASgLMhsuZ2EubGVhcm5pbmcudjEuQ291cnNlU3RhdHMSJQoCeHAYBiABKAsyGS5nYS5sZWFybmluZy52MS5YcFN1bW1hcnkSEgoKeHBfdG9fcXVpehgHIAEoBRIUCgxyZW1haW5pbmdfeHAYCCABKAUSDAoEcGFjZRgJIAEoARI0CgZyZXBvcnQYCiABKAsyHy5nYS5sZWFybmluZy52MS5QbGFjZW1lbnRSZXBvcnRIAYgBARIQCghmaW5pc2hlZBgLIAEoCBIUCgxuZXh0X2NvdXJzZXMYDCADKAkSEgoKY2FuX2Nob29zZRgNIAEoCEIJCgdfYWN0aXZlQgkKB19yZXBvcnQi+gEKBFRhc2sSNAoKZGlhZ25vc3RpYxgBIAEoCzIeLmdhLmxlYXJuaW5nLnYxLkRpYWdub3N0aWNUYXNrSAASLAoGbGVzc29uGAIgASgLMhouZ2EubGVhcm5pbmcudjEuTGVzc29uVGFza0gAEiwKBnJldmlldxgDIAEoCzIaLmdhLmxlYXJuaW5nLnYxLlJldmlld1Rhc2tIABIoCgRxdWl6GAQgASgLMhguZ2EubGVhcm5pbmcudjEuUXVpelRhc2tIABIuCgdyZWFkaW5nGAUgASgLMhsuZ2EubGVhcm5pbmcudjEuUmVhZGluZ1Rhc2tIAEIGCgRraW5kIicKDkRpYWdub3N0aWNUYXNrEhUKDW1heF9xdWVzdGlvbnMYASABKAUipQEKCkxlc3NvblRhc2sSEAoIdG9waWNfaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIKCgJ4cBgDIAEoBRIYChBrbm93bGVkZ2VfcG9pbnRzGAQgASgFEiwKC2Zyb21fY291cnNlGAUgASgLMhIuZ2EuY29tbW9uLnYxLlRleHRIAIgBAUIOCgxfZnJvbV9jb3Vyc2UimwEKClJldmlld1Rhc2sSEAoIdG9waWNfaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIKCgJ4cBgDIAEoBRIOCgZjb3ZlcnMYBCADKAkSLAoLZnJvbV9jb3Vyc2UYBSABKAsyEi5nYS5jb21tb24udjEuVGV4dEgAiAEBQg4KDF9mcm9tX2NvdXJzZSIpCghRdWl6VGFzaxIRCglxdWVzdGlvbnMYASABKAUSCgoCeHAYAiABKAUicgoLUmVhZGluZ1Rhc2sSEgoKcGFzc2FnZV9pZBgBIAEoCRIhCgV0aXRsZRgCIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EgoKAnhwGAMgASgFEhEKCXF1ZXN0aW9ucxgEIAEoBRINCgV3b3JkcxgFIAEoBSJACg5TZXNzaW9uU3VtbWFyeRIKCgJpZBgBIAEoCRIiCgR0YXNrGAIgASgLMhQuZ2EubGVhcm5pbmcudjEuVGFzayJBChhHZXRDb3Vyc2VQcm9ncmVzc1JlcXVlc3QSEQoJY291cnNlX2lkGAEgASgJEhIKCmxlYXJuZXJfaWQYAiABKAkiSgoZR2V0Q291cnNlUHJvZ3Jlc3NSZXNwb25zZRItCgZ0b3BpY3MYASADKAsyHS5nYS5sZWFybmluZy52MS5Ub3BpY1Byb2dyZXNzIoIBCg1Ub3BpY1Byb2dyZXNzEhAKCHRvcGljX2lkGAEgASgJEisKBnN0YXR1cxgCIAEoDjIbLmdhLmxlYXJuaW5nLnYxLlRvcGljU3RhdHVzEg4KBnBsYWNlZBgDIAEoCBIOCgZtZW1vcnkYBCABKAESEgoKZm91bmRhdGlvbhgFIAEoCCJcChBTdGFydFRhc2tSZXF1ZXN0EhEKCWNvdXJzZV9pZBgBIAEoCRIiCgR0YXNrGAIgASgLMhQuZ2EubGVhcm5pbmcudjEuVGFzaxIRCgl0aW1lX3pvbmUYAyABKAkiPQoRU3RhcnRUYXNrUmVzcG9uc2USKAoHc2Vzc2lvbhgBIAEoCzIXLmdhLmxlYXJuaW5nLnYxLlNlc3Npb24iKgoVU2tpcERpYWdub3N0aWNSZXF1ZXN0EhEKCWNvdXJzZV9pZBgBIAEoCSIYChZTa2lwRGlhZ25vc3RpY1Jlc3BvbnNlIh8KEUdldFNlc3Npb25SZXF1ZXN0EgoKAmlkGAEgASgJIj4KEkdldFNlc3Npb25SZXNwb25zZRIoCgdzZXNzaW9uGAEgASgLMhcuZ2EubGVhcm5pbmcudjEuU2Vzc2lvbiK+AQoHU2Vzc2lvbhIKCgJpZBgBIAEoCRIRCgljb3Vyc2VfaWQYAiABKAkSIgoEdGFzaxgDIAEoCzIULmdhLmxlYXJuaW5nLnYxLlRhc2sSEAoIYW5zd2VyZWQYBCABKAUSLAoIcXVlc3Rpb24YBSABKAsyGC5nYS5sZWFybmluZy52MS5RdWVzdGlvbkgAEigKBnJlc3VsdBgGIAEoCzIWLmdhLmxlYXJuaW5nLnYxLlJlc3VsdEgAQgYKBHN0ZXAiuAIKCFF1ZXN0aW9uEg0KBWluZGV4GAEgASgFEjcKBWludHJvGAIgASgLMiMuZ2EubGVhcm5pbmcudjEuS25vd2xlZGdlUG9pbnRJbnRyb0gAiAEBEiwKB3Byb2JsZW0YAyABKAsyGy5nYS5sZWFybmluZy52MS5Qcm9ibGVtVmlldxIQCghmZWVkYmFjaxgEIAEoCBIQCghjYW5fc2tpcBgFIAEoCBIzCgZsZXNzb24YBiABKAsyHi5nYS5sZWFybmluZy52MS5MZXNzb25Qcm9ncmVzc0gBiAEBEg0KBXRvdGFsGAcgASgFEi0KB3Bhc3NhZ2UYCCABKAsyFy5nYS5sZWFybmluZy52MS5QYXNzYWdlSAKIAQFCCAoGX2ludHJvQgkKB19sZXNzb25CCgoIX3Bhc3NhZ2UiOgoHUGFzc2FnZRIhCgV0aXRsZRgBIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EgwKBGJvZHkYAiABKAkijAIKE0tub3dsZWRnZVBvaW50SW50cm8SDQoFaW5kZXgYASABKAUSDQoFY291bnQYAiABKAUSIQoFdGl0bGUYAyABKAsyEi5nYS5jb21tb24udjEuVGV4dBInCgtleHBsYW5hdGlvbhgEIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0Ei4KB2V4YW1wbGUYBSABKAsyHS5nYS5sZWFybmluZy52MS5Xb3JrZWRFeGFtcGxlEikKBmZpZ3VyZRgGIAEoCzIULmdhLmNvbW1vbi52MS5GaWd1cmVIAIgBARIlCgdmaWd1cmVzGAcgAygLMhQuZ2EuY29tbW9uLnYxLkZpZ3VyZUIJCgdfZmlndXJlIrsBCg1Xb3JrZWRFeGFtcGxlEiwKB3Byb2JsZW0YASABKAsyGy5nYS5sZWFybmluZy52MS5Qcm9ibGVtVmlldxIkCghzb2x1dGlvbhgCIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0Eg4KBmFuc3dlchgDIAEoCRIyCg9zb2x1dGlvbl9maWd1cmUYBCABKAsyFC5nYS5jb21tb24udjEuRmlndXJlSACIAQFCEgoQX3NvbHV0aW9uX2ZpZ3VyZSJjCg5MZXNzb25Qcm9ncmVzcxIXCg9rbm93bGVkZ2VfcG9pbnQYASABKAUSGAoQa25vd2xlZGdlX3BvaW50cxgCIAEoBRIOCgZzdHJlYWsYAyABKAUSDgoGbmVlZGVkGAQgASgFIo0BCgtQcm9ibGVtVmlldxIiCgZwcm9tcHQYASABKAsyEi5nYS5jb21tb24udjEuVGV4dBIkCgVpbnB1dBgCIAEoCzIVLmdhLmxlYXJuaW5nLnYxLklucHV0EikKBmZpZ3VyZRgDIAEoCzIULmdhLmNvbW1vbi52MS5GaWd1cmVIAIgBAUIJCgdfZmlndXJlIuwBCgVJbnB1dBItCgZjaG9pY2UYASABKAsyGy5nYS5sZWFybmluZy52MS5DaG9pY2VJbnB1dEgAEikKBG1hdGgYAiABKAsyGS5nYS5sZWFybmluZy52MS5NYXRoSW5wdXRIABIpCgR0ZXh0GAMgASgLMhkuZ2EubGVhcm5pbmcudjEuVGV4dElucHV0SAASKQoEcGxvdBgEIAEoCzIZLmdhLmxlYXJuaW5nLnYxLlBsb3RJbnB1dEgAEisKBW9yZGVyGAUgASgLMhouZ2EubGVhcm5pbmcudjEuT3JkZXJJbnB1dEgAQgYKBGtpbmQiWQoLQ2hvaWNlSW5wdXQSIwoHb3B0aW9ucxgBIAMoCzISLmdhLmNvbW1vbi52MS5UZXh0EiUKB2ZpZ3VyZXMYAiADKAsyFC5nYS5jb21tb24udjEuRmlndXJlIisKCU1hdGhJbnB1dBIOCgZwcmVmaXgYASABKAkSDgoGc3VmZml4GAIgASgJIgsKCVRleHRJbnB1dCIvCgpPcmRlcklucHV0EiEKBWl0ZW1zGAEgAygLMhIuZ2EuY29tbW9uLnYxLlRleHQijwEKCVBsb3RJbnB1dBINCgV4X21pbhgBIAEoARINCgV4X21heBgCIAEoARINCgV5X21pbhgDIAEoARINCgV5X21heBgEIAEoARIMCgRzdGVwGAUgASgBEgwKBGxlZnQYBiABKAESCwoDdG9wGAcgASgBEg0KBXNjYWxlGAggASgBEg4KBnBvaW50cxgJIAEoBSJYChNTdWJtaXRBbnN3ZXJSZXF1ZXN0EhIKCnNlc3Npb25faWQYASABKAkSDQoFaW5kZXgYAiABKAUSEAoIcmVzcG9uc2UYAyABKAkSDAoEc2tpcBgEIAEoCCJ+ChRTdWJtaXRBbnN3ZXJSZXNwb25zZRIvCghmZWVkYmFjaxgBIAEoCzIYLmdhLmxlYXJuaW5nLnYxLkZlZWRiYWNrSACIAQESKAoHc2Vzc2lvbhgCIAEoCzIXLmdhLmxlYXJuaW5nLnYxLlNlc3Npb25CCwoJX2ZlZWRiYWNrIs8BCghGZWVkYmFjaxIPCgdjb3JyZWN0GAEgASgIEigKB21lc3NhZ2UYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dEgAiAEBEiQKCHNvbHV0aW9uGAMgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSDgoGYW5zd2VyGAQgASgJEjIKD3NvbHV0aW9uX2ZpZ3VyZRgFIAEoCzIULmdhLmNvbW1vbi52MS5GaWd1cmVIAYgBAUIKCghfbWVzc2FnZUISChBfc29sdXRpb25fZmlndXJlIkwKD0dldFRvcGljUmVxdWVzdBIRCgljb3Vyc2VfaWQYASABKAkSEAoIdG9waWNfaWQYAiABKAkSFAoMZXhhbXBsZV9zZWVkGAMgASgFIrkCChBHZXRUb3BpY1Jlc3BvbnNlEhAKCHRvcGljX2lkGAEgASgJEiEKBXRpdGxlGAIgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSIwoHc3VtbWFyeRgDIAEoCzISLmdhLmNvbW1vbi52MS5UZXh0EisKBnN0YXR1cxgEIAEoDjIbLmdhLmxlYXJuaW5nLnYxLlRvcGljU3RhdHVzEj0KEGtub3dsZWRnZV9wb2ludHMYBSADKAsyIy5nYS5sZWFybmluZy52MS5Lbm93bGVkZ2VQb2ludEludHJvEjAKDXByZXJlcXVpc2l0ZXMYBiADKAsyGS5nYS5sZWFybmluZy52MS5Ub3BpY0xpbmsSLQoKZGVwZW5kZW50cxgHIAMoCzIZLmdhLmxlYXJuaW5nLnYxLlRvcGljTGluayJtCglUb3BpY0xpbmsSEAoIdG9waWNfaWQYASABKAkSIQoFdGl0bGUYAiABKAsyEi5nYS5jb21tb24udjEuVGV4dBIrCgZzdGF0dXMYAyABKA4yGy5nYS5sZWFybmluZy52MS5Ub3BpY1N0YXR1cyI8ChNMaXN0U2Vzc2lvbnNSZXF1ZXN0EhEKCWNvdXJzZV9pZBgBIAEoCRISCgpsZWFybmVyX2lkGAIgASgJIkkKFExpc3RTZXNzaW9uc1Jlc3BvbnNlEjEKCHNlc3Npb25zGAEgAygLMh8uZ2EubGVhcm5pbmcudjEuRmluaXNoZWRTZXNzaW9uIrcBCg9GaW5pc2hlZFNlc3Npb24SCgoCaWQYASABKAkSIgoEdGFzaxgCIAEoCzIULmdhLmxlYXJuaW5nLnYxLlRhc2sSFAoMY29tcGxldGVkX2F0GAMgASgDEg4KBnBhc3NlZBgEIAEoCBIPCgdjb3JyZWN0GAUgASgFEg0KBWFza2VkGAYgASgFEgoKAnhwGAcgASgFEg8KB2Z1bGxfeHAYCCABKAUSEQoJYmxvd25fb2ZmGAkgASgIIt4BCgZSZXN1bHQSDgoGcGFzc2VkGAEgASgIEg8KB2NvcnJlY3QYAiABKAUSDQoFYXNrZWQYAyABKAUSCgoCeHAYBCABKAUSKQoFaXRlbXMYBSADKAsyGi5nYS5sZWFybmluZy52MS5SZXN1bHRJdGVtEg4KBnBsYWNlZBgGIAEoBRIPCgdmdWxsX3hwGAcgASgFEhEKCWJsb3duX29mZhgIIAEoCBItCgdwYXNzYWdlGAkgASgLMhcuZ2EubGVhcm5pbmcudjEuUGFzc2FnZUgAiAEBQgoKCF9wYXNzYWdlIpACCgpSZXN1bHRJdGVtEhAKCHRvcGljX2lkGAEgASgJEiEKBXRpdGxlGAIgASgLMhIuZ2EuY29tbW9uLnYxLlRleHQSDwoHY29ycmVjdBgDIAEoCBIsCgdwcm9ibGVtGAQgASgLMhsuZ2EubGVhcm5pbmcudjEuUHJvYmxlbVZpZXcSJAoIc29sdXRpb24YBSABKAsyEi5nYS5jb21tb24udjEuVGV4dBIOCgZhbnN3ZXIYBiABKAkSEAoIcmVzcG9uc2UYByABKAkSMgoPc29sdXRpb25fZmlndXJlGAggASgLMhQuZ2EuY29tbW9uLnYxLkZpZ3VyZUgAiAEBQhIKEF9zb2x1dGlvbl9maWd1cmUqwwEKC1RvcGljU3RhdHVzEhwKGFRPUElDX1NUQVRVU19VTlNQRUNJRklFRBAAEhcKE1RPUElDX1NUQVRVU19MT0NLRUQQARIaChZUT1BJQ19TVEFUVVNfQVZBSUxBQkxFEAISFwoTVE9QSUNfU1RBVFVTX0ZBSUxFRBADEhgKFFRPUElDX1NUQVRVU19MRUFSTkVEEAQSFAoQVE9QSUNfU1RBVFVTX0RVRRAFEhgKFFRPUElDX1NUQVRVU19BU1NVTUVEEAYy6AcKD0xlYXJuaW5nU2VydmljZRJTCgpHZXRQcm9maWxlEiEuZ2EubGVhcm5pbmcudjEuR2V0UHJvZmlsZVJlcXVlc3QaIi5nYS5sZWFybmluZy52MS5HZXRQcm9maWxlUmVzcG9uc2USWQoMQ2hvb3NlQ291cnNlEiMuZ2EubGVhcm5pbmcudjEuQ2hvb3NlQ291cnNlUmVxdWVzdBokLmdhLmxlYXJuaW5nLnYxLkNob29zZUNvdXJzZVJlc3BvbnNlElMKCktlZXBDb3Vyc2USIS5nYS5sZWFybmluZy52MS5LZWVwQ291cnNlUmVxdWVzdBoiLmdhLmxlYXJuaW5nLnYxLktlZXBDb3Vyc2VSZXNwb25zZRJZCgxHZXREYXNoYm9hcmQSIy5nYS5sZWFybmluZy52MS5HZXREYXNoYm9hcmRSZXF1ZXN0GiQuZ2EubGVhcm5pbmcudjEuR2V0RGFzaGJvYXJkUmVzcG9uc2USaAoRR2V0Q291cnNlUHJvZ3Jlc3MSKC5nYS5sZWFybmluZy52MS5HZXRDb3Vyc2VQcm9ncmVzc1JlcXVlc3QaKS5nYS5sZWFybmluZy52MS5HZXRDb3Vyc2VQcm9ncmVzc1Jlc3BvbnNlElAKCVN0YXJ0VGFzaxIgLmdhLmxlYXJuaW5nLnYxLlN0YXJ0VGFza1JlcXVlc3QaIS5nYS5sZWFybmluZy52MS5TdGFydFRhc2tSZXNwb25zZRJfCg5Ta2lwRGlhZ25vc3RpYxIlLmdhLmxlYXJuaW5nLnYxLlNraXBEaWFnbm9zdGljUmVxdWVzdBomLmdhLmxlYXJuaW5nLnYxLlNraXBEaWFnbm9zdGljUmVzcG9uc2USUwoKR2V0U2Vzc2lvbhIhLmdhLmxlYXJuaW5nLnYxLkdldFNlc3Npb25SZXF1ZXN0GiIuZ2EubGVhcm5pbmcudjEuR2V0U2Vzc2lvblJlc3BvbnNlElkKDFN1Ym1pdEFuc3dlchIjLmdhLmxlYXJuaW5nLnYxLlN1Ym1pdEFuc3dlclJlcXVlc3QaJC5nYS5sZWFybmluZy52MS5TdWJtaXRBbnN3ZXJSZXNwb25zZRJNCghHZXRUb3BpYxIfLmdhLmxlYXJuaW5nLnYxLkdldFRvcGljUmVxdWVzdBogLmdhLmxlYXJuaW5nLnYxLkdldFRvcGljUmVzcG9uc2USWQoMTGlzdFNlc3Npb25zEiMuZ2EubGVhcm5pbmcudjEuTGlzdFNlc3Npb25zUmVxdWVzdBokLmdhLmxlYXJuaW5nLnYxLkxpc3RTZXNzaW9uc1Jlc3BvbnNlYgZwcm90bzM", [file_ga_common_v1_figure, file_ga_common_v1_text]);
 
 /**
  * Describes the message ga.learning.v1.GetProfileRequest.
@@ -48,312 +48,333 @@ export const XpSummarySchema = /*@__PURE__*/
   messageDesc(file_ga_learning_v1_learning, 4);
 
 /**
- * Describes the message ga.learning.v1.EnrollRequest.
- * Use `create(EnrollRequestSchema)` to create a new message.
+ * Describes the message ga.learning.v1.ChooseCourseRequest.
+ * Use `create(ChooseCourseRequestSchema)` to create a new message.
  */
-export const EnrollRequestSchema = /*@__PURE__*/
+export const ChooseCourseRequestSchema = /*@__PURE__*/
   messageDesc(file_ga_learning_v1_learning, 5);
 
 /**
- * Describes the message ga.learning.v1.EnrollResponse.
- * Use `create(EnrollResponseSchema)` to create a new message.
+ * Describes the message ga.learning.v1.ChooseCourseResponse.
+ * Use `create(ChooseCourseResponseSchema)` to create a new message.
  */
-export const EnrollResponseSchema = /*@__PURE__*/
+export const ChooseCourseResponseSchema = /*@__PURE__*/
   messageDesc(file_ga_learning_v1_learning, 6);
+
+/**
+ * Describes the message ga.learning.v1.KeepCourseRequest.
+ * Use `create(KeepCourseRequestSchema)` to create a new message.
+ */
+export const KeepCourseRequestSchema = /*@__PURE__*/
+  messageDesc(file_ga_learning_v1_learning, 7);
+
+/**
+ * Describes the message ga.learning.v1.KeepCourseResponse.
+ * Use `create(KeepCourseResponseSchema)` to create a new message.
+ */
+export const KeepCourseResponseSchema = /*@__PURE__*/
+  messageDesc(file_ga_learning_v1_learning, 8);
+
+/**
+ * Describes the message ga.learning.v1.PlacementReport.
+ * Use `create(PlacementReportSchema)` to create a new message.
+ */
+export const PlacementReportSchema = /*@__PURE__*/
+  messageDesc(file_ga_learning_v1_learning, 9);
 
 /**
  * Describes the message ga.learning.v1.GetDashboardRequest.
  * Use `create(GetDashboardRequestSchema)` to create a new message.
  */
 export const GetDashboardRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 7);
+  messageDesc(file_ga_learning_v1_learning, 10);
 
 /**
  * Describes the message ga.learning.v1.GetDashboardResponse.
  * Use `create(GetDashboardResponseSchema)` to create a new message.
  */
 export const GetDashboardResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 8);
+  messageDesc(file_ga_learning_v1_learning, 11);
 
 /**
  * Describes the message ga.learning.v1.Task.
  * Use `create(TaskSchema)` to create a new message.
  */
 export const TaskSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 9);
+  messageDesc(file_ga_learning_v1_learning, 12);
 
 /**
  * Describes the message ga.learning.v1.DiagnosticTask.
  * Use `create(DiagnosticTaskSchema)` to create a new message.
  */
 export const DiagnosticTaskSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 10);
+  messageDesc(file_ga_learning_v1_learning, 13);
 
 /**
  * Describes the message ga.learning.v1.LessonTask.
  * Use `create(LessonTaskSchema)` to create a new message.
  */
 export const LessonTaskSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 11);
+  messageDesc(file_ga_learning_v1_learning, 14);
 
 /**
  * Describes the message ga.learning.v1.ReviewTask.
  * Use `create(ReviewTaskSchema)` to create a new message.
  */
 export const ReviewTaskSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 12);
+  messageDesc(file_ga_learning_v1_learning, 15);
 
 /**
  * Describes the message ga.learning.v1.QuizTask.
  * Use `create(QuizTaskSchema)` to create a new message.
  */
 export const QuizTaskSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 13);
+  messageDesc(file_ga_learning_v1_learning, 16);
 
 /**
  * Describes the message ga.learning.v1.ReadingTask.
  * Use `create(ReadingTaskSchema)` to create a new message.
  */
 export const ReadingTaskSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 14);
+  messageDesc(file_ga_learning_v1_learning, 17);
 
 /**
  * Describes the message ga.learning.v1.SessionSummary.
  * Use `create(SessionSummarySchema)` to create a new message.
  */
 export const SessionSummarySchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 15);
+  messageDesc(file_ga_learning_v1_learning, 18);
 
 /**
  * Describes the message ga.learning.v1.GetCourseProgressRequest.
  * Use `create(GetCourseProgressRequestSchema)` to create a new message.
  */
 export const GetCourseProgressRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 16);
+  messageDesc(file_ga_learning_v1_learning, 19);
 
 /**
  * Describes the message ga.learning.v1.GetCourseProgressResponse.
  * Use `create(GetCourseProgressResponseSchema)` to create a new message.
  */
 export const GetCourseProgressResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 17);
+  messageDesc(file_ga_learning_v1_learning, 20);
 
 /**
  * Describes the message ga.learning.v1.TopicProgress.
  * Use `create(TopicProgressSchema)` to create a new message.
  */
 export const TopicProgressSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 18);
+  messageDesc(file_ga_learning_v1_learning, 21);
 
 /**
  * Describes the message ga.learning.v1.StartTaskRequest.
  * Use `create(StartTaskRequestSchema)` to create a new message.
  */
 export const StartTaskRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 19);
+  messageDesc(file_ga_learning_v1_learning, 22);
 
 /**
  * Describes the message ga.learning.v1.StartTaskResponse.
  * Use `create(StartTaskResponseSchema)` to create a new message.
  */
 export const StartTaskResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 20);
+  messageDesc(file_ga_learning_v1_learning, 23);
 
 /**
  * Describes the message ga.learning.v1.SkipDiagnosticRequest.
  * Use `create(SkipDiagnosticRequestSchema)` to create a new message.
  */
 export const SkipDiagnosticRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 21);
+  messageDesc(file_ga_learning_v1_learning, 24);
 
 /**
  * Describes the message ga.learning.v1.SkipDiagnosticResponse.
  * Use `create(SkipDiagnosticResponseSchema)` to create a new message.
  */
 export const SkipDiagnosticResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 22);
+  messageDesc(file_ga_learning_v1_learning, 25);
 
 /**
  * Describes the message ga.learning.v1.GetSessionRequest.
  * Use `create(GetSessionRequestSchema)` to create a new message.
  */
 export const GetSessionRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 23);
+  messageDesc(file_ga_learning_v1_learning, 26);
 
 /**
  * Describes the message ga.learning.v1.GetSessionResponse.
  * Use `create(GetSessionResponseSchema)` to create a new message.
  */
 export const GetSessionResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 24);
+  messageDesc(file_ga_learning_v1_learning, 27);
 
 /**
  * Describes the message ga.learning.v1.Session.
  * Use `create(SessionSchema)` to create a new message.
  */
 export const SessionSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 25);
+  messageDesc(file_ga_learning_v1_learning, 28);
 
 /**
  * Describes the message ga.learning.v1.Question.
  * Use `create(QuestionSchema)` to create a new message.
  */
 export const QuestionSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 26);
+  messageDesc(file_ga_learning_v1_learning, 29);
 
 /**
  * Describes the message ga.learning.v1.Passage.
  * Use `create(PassageSchema)` to create a new message.
  */
 export const PassageSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 27);
+  messageDesc(file_ga_learning_v1_learning, 30);
 
 /**
  * Describes the message ga.learning.v1.KnowledgePointIntro.
  * Use `create(KnowledgePointIntroSchema)` to create a new message.
  */
 export const KnowledgePointIntroSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 28);
+  messageDesc(file_ga_learning_v1_learning, 31);
 
 /**
  * Describes the message ga.learning.v1.WorkedExample.
  * Use `create(WorkedExampleSchema)` to create a new message.
  */
 export const WorkedExampleSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 29);
+  messageDesc(file_ga_learning_v1_learning, 32);
 
 /**
  * Describes the message ga.learning.v1.LessonProgress.
  * Use `create(LessonProgressSchema)` to create a new message.
  */
 export const LessonProgressSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 30);
+  messageDesc(file_ga_learning_v1_learning, 33);
 
 /**
  * Describes the message ga.learning.v1.ProblemView.
  * Use `create(ProblemViewSchema)` to create a new message.
  */
 export const ProblemViewSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 31);
+  messageDesc(file_ga_learning_v1_learning, 34);
 
 /**
  * Describes the message ga.learning.v1.Input.
  * Use `create(InputSchema)` to create a new message.
  */
 export const InputSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 32);
+  messageDesc(file_ga_learning_v1_learning, 35);
 
 /**
  * Describes the message ga.learning.v1.ChoiceInput.
  * Use `create(ChoiceInputSchema)` to create a new message.
  */
 export const ChoiceInputSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 33);
+  messageDesc(file_ga_learning_v1_learning, 36);
 
 /**
  * Describes the message ga.learning.v1.MathInput.
  * Use `create(MathInputSchema)` to create a new message.
  */
 export const MathInputSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 34);
+  messageDesc(file_ga_learning_v1_learning, 37);
 
 /**
  * Describes the message ga.learning.v1.TextInput.
  * Use `create(TextInputSchema)` to create a new message.
  */
 export const TextInputSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 35);
+  messageDesc(file_ga_learning_v1_learning, 38);
 
 /**
  * Describes the message ga.learning.v1.OrderInput.
  * Use `create(OrderInputSchema)` to create a new message.
  */
 export const OrderInputSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 36);
+  messageDesc(file_ga_learning_v1_learning, 39);
 
 /**
  * Describes the message ga.learning.v1.PlotInput.
  * Use `create(PlotInputSchema)` to create a new message.
  */
 export const PlotInputSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 37);
+  messageDesc(file_ga_learning_v1_learning, 40);
 
 /**
  * Describes the message ga.learning.v1.SubmitAnswerRequest.
  * Use `create(SubmitAnswerRequestSchema)` to create a new message.
  */
 export const SubmitAnswerRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 38);
+  messageDesc(file_ga_learning_v1_learning, 41);
 
 /**
  * Describes the message ga.learning.v1.SubmitAnswerResponse.
  * Use `create(SubmitAnswerResponseSchema)` to create a new message.
  */
 export const SubmitAnswerResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 39);
+  messageDesc(file_ga_learning_v1_learning, 42);
 
 /**
  * Describes the message ga.learning.v1.Feedback.
  * Use `create(FeedbackSchema)` to create a new message.
  */
 export const FeedbackSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 40);
+  messageDesc(file_ga_learning_v1_learning, 43);
 
 /**
  * Describes the message ga.learning.v1.GetTopicRequest.
  * Use `create(GetTopicRequestSchema)` to create a new message.
  */
 export const GetTopicRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 41);
+  messageDesc(file_ga_learning_v1_learning, 44);
 
 /**
  * Describes the message ga.learning.v1.GetTopicResponse.
  * Use `create(GetTopicResponseSchema)` to create a new message.
  */
 export const GetTopicResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 42);
+  messageDesc(file_ga_learning_v1_learning, 45);
 
 /**
  * Describes the message ga.learning.v1.TopicLink.
  * Use `create(TopicLinkSchema)` to create a new message.
  */
 export const TopicLinkSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 43);
+  messageDesc(file_ga_learning_v1_learning, 46);
 
 /**
  * Describes the message ga.learning.v1.ListSessionsRequest.
  * Use `create(ListSessionsRequestSchema)` to create a new message.
  */
 export const ListSessionsRequestSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 44);
+  messageDesc(file_ga_learning_v1_learning, 47);
 
 /**
  * Describes the message ga.learning.v1.ListSessionsResponse.
  * Use `create(ListSessionsResponseSchema)` to create a new message.
  */
 export const ListSessionsResponseSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 45);
+  messageDesc(file_ga_learning_v1_learning, 48);
 
 /**
  * Describes the message ga.learning.v1.FinishedSession.
  * Use `create(FinishedSessionSchema)` to create a new message.
  */
 export const FinishedSessionSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 46);
+  messageDesc(file_ga_learning_v1_learning, 49);
 
 /**
  * Describes the message ga.learning.v1.Result.
  * Use `create(ResultSchema)` to create a new message.
  */
 export const ResultSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 47);
+  messageDesc(file_ga_learning_v1_learning, 50);
 
 /**
  * Describes the message ga.learning.v1.ResultItem.
  * Use `create(ResultItemSchema)` to create a new message.
  */
 export const ResultItemSchema = /*@__PURE__*/
-  messageDesc(file_ga_learning_v1_learning, 48);
+  messageDesc(file_ga_learning_v1_learning, 51);
 
 /**
  * Describes the enum ga.learning.v1.TopicStatus.
@@ -370,8 +391,9 @@ export const TopicStatus = /*@__PURE__*/
   tsEnum(TopicStatusSchema);
 
 /**
- * LearningService is the signed-in learner's study: enrollment, the dashboard
- * of tasks, and the sessions that carry out tasks one question at a time.
+ * LearningService is the signed-in learner's study: the current course of each
+ * subject, the dashboard of tasks, and the sessions that carry out tasks one
+ * question at a time.
  * Problems are generated and checked on the server; an answer never reaches
  * the client before the learner responds.
  *

@@ -5,15 +5,20 @@ package ga.learning.v1;
 import "ga/common/v1/figure.proto";
 import "ga/common/v1/text.proto";
 
-// LearningService is the signed-in learner's study: enrollment, the dashboard
-// of tasks, and the sessions that carry out tasks one question at a time.
+// LearningService is the signed-in learner's study: the current course of each
+// subject, the dashboard of tasks, and the sessions that carry out tasks one
+// question at a time.
 // Problems are generated and checked on the server; an answer never reaches
 // the client before the learner responds.
 service LearningService {
-  // GetProfile summarizes the learner: enrollments and XP.
+  // GetProfile summarizes the learner: current courses and XP.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
-  // Enroll enrolls the learner in a course. Enrolling twice is harmless.
-  rpc Enroll(EnrollRequest) returns (EnrollResponse);
+  // ChooseCourse makes a course the current course of its subject, replacing
+  // the one before. An adult or teen chooses for themselves; a guardian
+  // chooses for a learner they guard; a child does not choose.
+  rpc ChooseCourse(ChooseCourseRequest) returns (ChooseCourseResponse);
+  // KeepCourse answers the diagnostic report by keeping the current course.
+  rpc KeepCourse(KeepCourseRequest) returns (KeepCourseResponse);
   // GetDashboard returns the tasks offered in a course now.
   rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
   // GetCourseProgress returns the learner's status on every topic of a course.
@@ -38,13 +43,18 @@ message GetProfileRequest {
 }
 
 message GetProfileResponse {
+  // enrollments are the current courses, one per subject, the one most recently chosen or worked on first.
   repeated Enrollment enrollments = 1;
   XpSummary xp = 2;
+  // can_choose tells whether the learner chooses their own courses; a child's guardian chooses for them.
+  bool can_choose = 3;
 }
 
+// Enrollment is a learner's current course of a subject.
 message Enrollment {
   string course_id = 1;
   CourseStats stats = 2;
+  string subject_id = 3;
 }
 
 // CourseStats counts course topics: learned (taught or placed), in all, and due for review.
@@ -66,11 +76,35 @@ message XpSummary {
   int32 week = 6;
 }
 
-message EnrollRequest {
+message ChooseCourseRequest {
   string course_id = 1;
+  // learner_id, when set, chooses for a learner the caller is a guardian of.
+  string learner_id = 2;
 }
 
-message EnrollResponse {}
+message ChooseCourseResponse {}
+
+message KeepCourseRequest {
+  string course_id = 1;
+  // learner_id, when set, keeps the course of a learner the caller is a guardian of.
+  string learner_id = 2;
+}
+
+message KeepCourseResponse {}
+
+// PlacementReport is what a course's diagnostic found, shown until whoever
+// chooses the course keeps it or takes the recommended one.
+message PlacementReport {
+  // placed counts the course's own topics placed as known, of total.
+  int32 placed = 1;
+  int32 total = 2;
+  // foundations counts the topics of earlier courses still to learn first.
+  int32 foundations = 3;
+  // recommended is the course to start with instead; empty to keep this one.
+  string recommended = 4;
+  // earlier tells that the recommended course comes before this one; else it comes after.
+  bool earlier = 5;
+}
 
 message GetDashboardRequest {
   string course_id = 1;
@@ -94,6 +128,14 @@ message GetDashboardResponse {
   int32 remaining_xp = 8;
   // pace is the learner's average XP per day over the last 14 days.
   double pace = 9;
+  // report is the diagnostic report, until it is answered; unset after a skipped diagnostic.
+  optional PlacementReport report = 10;
+  // finished tells that every topic of the course is learned.
+  bool finished = 11;
+  // next_courses are the courses that build on this one, in catalog order.
+  repeated string next_courses = 12;
+  // can_choose tells whether the caller may change this learner's course.
+  bool can_choose = 13;
 }
 
 // Task is a unit of work offered on the dashboard.
@@ -117,6 +159,8 @@ message LessonTask {
   ga.common.v1.Text title = 2;
   int32 xp = 3;
   int32 knowledge_points = 4;
+  // from_course is the earlier course a foundation comes from; unset for the course's own topics.
+  optional ga.common.v1.Text from_course = 5;
 }
 
 message ReviewTask {
@@ -125,6 +169,8 @@ message ReviewTask {
   int32 xp = 3;
   // covers are the due topics the review repairs, the reviewed topic included when due.
   repeated string covers = 4;
+  // from_course is the earlier course a foundation comes from; unset for the course's own topics.
+  optional ga.common.v1.Text from_course = 5;
 }
 
 message QuizTask {

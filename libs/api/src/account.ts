@@ -3,8 +3,8 @@ import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@conn
 import {
   addGuardian,
   createGuardianInvite,
+  currentCourses,
   type Db,
-  enrollments,
   groupMembers,
   guardedLearners,
   guardiansOf,
@@ -107,12 +107,12 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
   const courses = async (db: Db, learnerId: string) => {
     const now = deps.now();
     const list = [];
-    for (const e of await enrollments(db, learnerId)) {
+    for (const e of await currentCourses(db, learnerId)) {
       const c = await registry.course(e.courseId);
       if (!c) continue;
       const { state } = await loadState(db, learnerId, c.subject.def.id, initialState);
       const p = courseProgress(c.planner, state, now);
-      list.push({ courseId: c.id, stats: { learned: p.learned, total: p.total, due: p.due } });
+      list.push({ courseId: c.id, subjectId: e.subjectId, stats: { learned: p.learned, total: p.total, due: p.due } });
     }
     return list;
   };

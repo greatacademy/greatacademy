@@ -1,6 +1,6 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
 import type { Figure, InputSpec, KnowledgePointLesson, Problem, Text } from "@ga/content";
-import { diagnosticCandidates, diagnosticLength, type LearnerState, reviewXp, type Task } from "@ga/engine";
+import { diagnosticCandidates, diagnosticLength, homeCourse, type LearnerState, reviewXp, type Task } from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
@@ -46,6 +46,14 @@ export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSche
   return { prompt: text(p.prompt), input: input(p.answer.input), ...(p.figure && { figure: figure(p.figure) }) };
 }
 
+/** fromCourse names the earlier course a foundation of the course comes from, as Math Academy labels such tasks. */
+function fromCourse(c: CourseEntry, topic: string): { fromCourse?: ReturnType<typeof text> } {
+  if (c.planner.scope.inCourse.has(topic)) return {};
+  const home = homeCourse(c.index, c.id, topic);
+  const course = home === undefined ? undefined : c.subject.courses.get(home);
+  return course ? { fromCourse: text(course.def.title) } : {};
+}
+
 /** taskMessage describes an engine task for the dashboard. */
 export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): MessageInitShape<typeof TaskSchema> {
   const topic = (id: string) => c.subject.topics.get(id)!;
@@ -55,12 +63,20 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
     case "lesson": {
       const t = topic(task.topic);
       return {
-        kind: { case: "lesson", value: { topicId: t.id, title: text(t.title), xp: t.xp, knowledgePoints: t.knowledgePoints.length } },
+        kind: {
+          case: "lesson",
+          value: { topicId: t.id, title: text(t.title), xp: t.xp, knowledgePoints: t.knowledgePoints.length, ...fromCourse(c, t.id) },
+        },
       };
     }
     case "review": {
       const t = topic(task.topic);
-      return { kind: { case: "review", value: { topicId: t.id, title: text(t.title), xp: reviewXp(t.xp), covers: [...task.covers] } } };
+      return {
+        kind: {
+          case: "review",
+          value: { topicId: t.id, title: text(t.title), xp: reviewXp(t.xp), covers: [...task.covers], ...fromCourse(c, t.id) },
+        },
+      };
     }
     case "reading": {
       const passage = c.subject.passages.get(task.passage)!;

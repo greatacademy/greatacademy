@@ -94,7 +94,7 @@ async function expectCode(p: Promise<unknown>, code: Code) {
 }
 
 async function skipToLessons() {
-  await learning.enroll({ courseId: COURSE });
+  await learning.chooseCourse({ courseId: COURSE });
   await learning.skipDiagnostic({ courseId: COURSE });
 }
 
@@ -143,15 +143,15 @@ describe("CatalogService", () => {
 });
 
 describe("LearningService", () => {
-  it("requires a signed-in, enrolled learner", async () => {
+  it("requires a signed-in learner in their current course", async () => {
     await expectCode(anonymous.getProfile({}), Code.Unauthenticated);
     await expectCode(learning.getDashboard({ courseId: COURSE }), Code.FailedPrecondition);
-    await expectCode(learning.enroll({ courseId: "nope" }), Code.NotFound);
+    await expectCode(learning.chooseCourse({ courseId: "nope" }), Code.NotFound);
     await expectCode(learning.getProfile({ timeZone: "Mars/Olympus" }), Code.InvalidArgument);
   });
 
   it("offers the diagnostic first and places the learner from it", async () => {
-    await learning.enroll({ courseId: COURSE });
+    await learning.chooseCourse({ courseId: COURSE });
     const dash = await learning.getDashboard({ courseId: COURSE });
     expect(dash.diagnosed).toBe(false);
     expect(dash.tasks.map((t) => t.kind.case)).toEqual(["diagnostic"]);
@@ -184,9 +184,14 @@ describe("LearningService", () => {
     expect(after.stats?.learned).toBe(knows.size);
     const firstLesson = after.tasks.find((t) => t.kind.case === "lesson");
     expect(firstLesson?.kind.case === "lesson" && firstLesson.kind.value.topicId).toBe("one-step-equations-addition");
+    // The report stands until the course is kept or another taken.
+    expect(after.report).toMatchObject({ placed: knows.size, total: 20 });
+    expect(after.canChoose).toBe(true);
+    await learning.keepCourse({ courseId: COURSE });
+    expect((await learning.getDashboard({ courseId: COURSE })).report).toBeUndefined();
 
     // Another course of the subject has its own diagnostic, over the topics not placed yet.
-    await learning.enroll({ courseId: "prealgebra" });
+    await learning.chooseCourse({ courseId: "prealgebra" });
     const other = await learning.getDashboard({ courseId: "prealgebra" });
     expect(other.diagnosed).toBe(false);
     const task = other.tasks[0]?.kind;
@@ -195,6 +200,10 @@ describe("LearningService", () => {
     expect(task?.case === "diagnostic" && task.value.maxQuestions).toBe(diagnosticLength(open.length));
     await learning.skipDiagnostic({ courseId: "prealgebra" });
     expect((await learning.getDashboard({ courseId: "prealgebra" })).diagnosed).toBe(true);
+    // One course of a subject is current; progress stays with the subject.
+    await expectCode(learning.getDashboard({ courseId: COURSE }), Code.FailedPrecondition);
+    expect((await learning.getProfile({ timeZone: "UTC" })).enrollments.map((e) => e.courseId)).toEqual(["prealgebra"]);
+    await learning.chooseCourse({ courseId: COURSE });
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
   });
 
