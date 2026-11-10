@@ -1,6 +1,11 @@
 import { type Generator, joinText, type KnowledgePointDef, type Problem, type Rng, same as sameText, type Text } from "@ga/content";
 
-const quote = (s: string) => `> ${s}`;
+/** quote sets text as a block quote, every line of it. */
+const quote = (s: string) =>
+  s
+    .split("\n")
+    .map((line) => (line === "" ? ">" : `> ${line}`))
+    .join("\n");
 
 /** Why builds the solution of an item from its right answer and its sentence, in every locale. */
 export type Why = (right: string, shown: string) => Text;
