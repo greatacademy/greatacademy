@@ -29,15 +29,16 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
   const catalog = useCatalog();
   const [picked, setPicked] = useState(provider ? provider.catalog : undefined);
   const vendor = catalog.data?.providers.find((c) => c.id === picked);
+  const [kind, setKind] = useState(provider?.kind ?? "model");
   const save = useMutation({
     mutationFn: (form: FormData) =>
       admin.saveProvider({
         provider: {
           id: provider?.id ?? "",
           name: String(form.get("name")),
-          kind: String(form.get("kind")),
+          kind: vendor ? "model" : kind,
           catalog: picked ?? "",
-          api: String(form.get("api")),
+          api: String(form.get("api") ?? ""),
           baseUrl: String(form.get("baseUrl")),
           region: String(form.get("region")),
           enabled: form.get("enabled") === "on",
@@ -85,23 +86,35 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
           </label>
           {vendor ? (
             <>
-              <input type="hidden" name="kind" value="model" />
               <input type="hidden" name="api" value={vendor.api} />
-              <p className="text-sm text-muted">{t.apiOf(vendor.api)}</p>
+              <p className="text-sm text-muted">{t.apiOf(t.apis[vendor.api] ?? vendor.api)}</p>
             </>
           ) : (
             <>
-              <SelectField
-                label={t.kind}
-                name="kind"
-                required
-                defaultValue={provider?.kind ?? "model"}
-                options={Object.entries(t.kinds).map(([value, label]) => ({ value, label }))}
-              />
-              <label className="block space-y-1.5 text-sm font-medium">
-                <span>{t.api}</span>
-                <input name="api" required defaultValue={provider?.api} autoComplete="off" className={field} />
-              </label>
+              <div className="space-y-1.5">
+                <SelectField
+                  label={t.kind}
+                  name="kind"
+                  required
+                  defaultValue={kind}
+                  options={Object.entries(t.kinds).map(([value, label]) => ({ value, label }))}
+                  onValueChange={setKind}
+                />
+                <p className="text-xs text-muted">{t.kindHint}</p>
+              </div>
+              {kind === "model" && (
+                <div className="space-y-1.5">
+                  <SelectField
+                    label={t.api}
+                    name="api"
+                    required
+                    placeholder={t.chooseProvider}
+                    defaultValue={provider?.api || undefined}
+                    options={Object.entries(t.apis).map(([value, label]) => ({ value, label }))}
+                  />
+                  <p className="text-xs text-muted">{t.apiHint}</p>
+                </div>
+              )}
             </>
           )}
           <label className="block space-y-1.5 text-sm font-medium">
@@ -118,23 +131,28 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
           <label className="block space-y-1.5 text-sm font-medium">
             <span>{t.region}</span>
             <input name="region" defaultValue={provider?.region} autoComplete="off" className={field} />
+            <span className="block text-xs font-normal text-muted">{t.regionHint}</span>
           </label>
           <label className="block space-y-1.5 text-sm font-medium">
             <span>{t.apiKey}</span>
             <input name="apiKey" type="password" autoComplete="new-password" className={field} />
             <span className="block text-xs font-normal text-muted">{t.apiKeyHint}</span>
           </label>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{t.dailyBudget}</span>
-              <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
-            </label>
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{t.monthlyBudget}</span>
-              <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
-            </label>
-          </div>
-          <p className="text-xs text-muted">{t.budgetHint}</p>
+          {(vendor || kind === "model") && (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="block space-y-1.5 text-sm font-medium">
+                  <span>{t.dailyBudget}</span>
+                  <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
+                </label>
+                <label className="block space-y-1.5 text-sm font-medium">
+                  <span>{t.monthlyBudget}</span>
+                  <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
+                </label>
+              </div>
+              <p className="text-xs text-muted">{t.budgetHint}</p>
+            </>
+          )}
           <label className="flex items-center gap-2 text-sm">
             <input name="enabled" type="checkbox" defaultChecked={provider?.enabled} />
             {t.enabled}
@@ -174,15 +192,21 @@ function ProviderCard({ provider }: { provider: Provider }) {
             <span className={`text-sm ${provider.enabled ? "text-good" : "text-muted"}`}>{provider.enabled ? t.enabled : t.disabled}</span>
           </div>
           <p className="text-sm text-muted">
-            {t.kinds[provider.kind] ?? provider.kind} · {provider.api}
+            {t.kinds[provider.kind] ?? provider.kind}
+            {provider.api && ` · ${t.apis[provider.api] ?? provider.api}`}
             {provider.region && ` · ${provider.region}`}
           </p>
           <p className="text-sm text-muted">{provider.keyHint ? t.keyEnds(provider.keyHint) : t.noKey}</p>
           {provider.kind === "model" &&
-            (provider.dailyBudget !== undefined && provider.monthlyBudget !== undefined ? (
-              <p className="text-sm text-muted">{t.budgets(usd(provider.dailyBudget), usd(provider.monthlyBudget))}</p>
+            (provider.dailyBudget !== undefined || provider.monthlyBudget !== undefined ? (
+              <p className="text-sm text-muted">
+                {t.budgets(
+                  provider.dailyBudget === undefined ? t.noLimit : usd(provider.dailyBudget),
+                  provider.monthlyBudget === undefined ? t.noLimit : usd(provider.monthlyBudget),
+                )}
+              </p>
             ) : (
-              <p className="text-sm text-warn">{t.noBudgets}</p>
+              <p className="text-sm text-muted">{t.noBudgets}</p>
             ))}
           {remove.isError && <ErrorNote message={errorText(remove.error, locale, m.error)} />}
           <div className="flex gap-2">

@@ -442,7 +442,7 @@ export declare type Provider = Message<"ga.admin.v1.Provider"> & {
 
   /**
    * daily_budget and monthly_budget are in US dollars per UTC day and month;
-   * a vendor without both serves no learner.
+   * one left unset sets no limit.
    *
    * @generated from field: optional double daily_budget = 9;
    */

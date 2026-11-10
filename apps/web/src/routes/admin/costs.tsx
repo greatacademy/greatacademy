@@ -23,7 +23,7 @@ function Meter({ label, spent, budget }: { label: string; spent: number; budget:
     return (
       <div className="space-y-1">
         <div className="text-sm text-muted">{label}</div>
-        <div className="text-sm text-warn">{t.unbudgeted(usd(spent))}</div>
+        <div className="text-sm text-muted">{t.unbudgeted(usd(spent))}</div>
       </div>
     );
   const share = budget > 0 ? spent / budget : 1;
