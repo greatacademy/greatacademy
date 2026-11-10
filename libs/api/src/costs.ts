@@ -95,6 +95,8 @@ export interface Alarm {
   readonly target: string;
   readonly detail: string;
   readonly text: string;
+  /** textZh is text in Simplified Chinese, for an administrator who reads it. */
+  readonly textZh: string;
 }
 
 /** AlarmMail delivers an alarm to one administrator. */
@@ -117,12 +119,16 @@ function budgetAlarms(list: readonly ProviderRow[], spend: ReadonlyMap<string, S
       for (const step of BUDGET_STEPS) {
         if (period.spent < period.budget * step) continue;
         const pct = Math.round(step * 100);
+        const periodZh = period.name === "day" ? "日" : "月";
         out.push({
           target: p.name,
           detail: `budget ${period.name} ${period.key} ${pct}%`,
           text:
             `${p.name} has spent ${dollars(period.spent)} of its ${period.name}ly budget of ${dollars(period.budget)} (${pct}%).` +
             (step === 1 ? " It takes no new texts until the budget is raised or the period ends." : ""),
+          textZh:
+            `${p.name} 已花费 ${dollars(period.spent)}，${periodZh}预算为 ${dollars(period.budget)}（${pct}%）。` +
+            (step === 1 ? "在提高预算或本期结束之前，它不再接收新的文本。" : ""),
         });
       }
     }
@@ -152,6 +158,7 @@ async function modelAlarms(db: Db, list: readonly ProviderRow[], at: number): Pr
           target,
           detail: `cost-jump ${key}`,
           text: `${target} costs ${dollars(perCall)} per call today, against ${dollars(usual)} over the last seven days.`,
+          textZh: `${target} 今天每次调用花费 ${dollars(perCall)}，过去七天平均为 ${dollars(usual)}。`,
         });
     }
     if (m.failed / m.calls > FAILURE_SHARE)
@@ -159,6 +166,7 @@ async function modelAlarms(db: Db, list: readonly ProviderRow[], at: number): Pr
         target,
         detail: `failures ${key}`,
         text: `${m.failed} of ${m.calls} calls to ${target} failed today; retries cost money too.`,
+        textZh: `今天对 ${target} 的 ${m.calls} 次调用中有 ${m.failed} 次失败；重试同样要花钱。`,
       });
   }
   return out;

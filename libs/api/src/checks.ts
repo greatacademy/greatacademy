@@ -117,5 +117,8 @@ export async function driftAlarms(db: Db, list: readonly ProviderRow[], at: numb
       text:
         `On ${d.criterion}, ${d.model} with prompt ${d.promptVersion} agrees with people at kappa ${d.kappa.toFixed(2)} over ${d.checks} checks, ` +
         `below the ${d.calibrationKappa!.toFixed(2)} of its calibration. Calibrate it again, or move its criterion to another route.`,
+      textZh:
+        `在 ${d.criterion} 上，${d.model}（提示词版本 ${d.promptVersion}）在 ${d.checks} 次核对中与人工评分的 kappa 为 ${d.kappa.toFixed(2)}，` +
+        `低于校准时的 ${d.calibrationKappa!.toFixed(2)}。请重新校准，或把这项标准换到另一条路线。`,
     }));
 }
