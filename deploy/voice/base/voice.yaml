@@ -1,0 +1,109 @@
+# The voice pods. Stateless: each runs at most VOICE_CAPACITY conversations, reports not ready when full, and on
+# SIGTERM refuses new sessions and waits up to 24 minutes for the running ones (the session limit), inside the
+# 25-minute grace period.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voice
+  labels:
+    app.kubernetes.io/name: voice
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: voice
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: voice
+    spec:
+      terminationGracePeriodSeconds: 1500
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      # GHCR packages start private; the Secret ghcr holds a token that may read packages.
+      imagePullSecrets:
+        - name: ghcr
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: voice
+      containers:
+        - name: voice
+          image: ga-voice
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: voice
+          env:
+            - name: VOICE_PORT
+              value: "8080"
+            - name: VOICE_WORKER_CREDENTIAL
+              valueFrom:
+                secretKeyRef:
+                  name: voice-secrets
+                  key: VOICE_WORKER_CREDENTIAL
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              # Lets the Service and the Tunnel stop sending new sessions before the drain begins.
+              sleep:
+                seconds: 5
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voice
+  labels:
+    app.kubernetes.io/name: voice
+spec:
+  selector:
+    app.kubernetes.io/name: voice
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

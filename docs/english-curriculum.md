@@ -316,10 +316,10 @@ Production runs on a Kubernetes cluster on Hetzner Cloud in Hillsboro, beside Po
 | :--- | :--- |
 | Workload | A stateless Deployment |
 | Capacity | Each pod runs a fixed number of sessions in pre-started subprocesses, and reports not ready when full; the number comes from a load test |
-| Scaling | KEDA on the number of active sessions, not on CPU |
+| Scaling | KEDA on the number of active sessions, not on CPU: each pod reports `voice_sessions_active` at `/metrics`, and Prometheus sums it |
 | Session length | Limited by the product, starting at 20 minutes |
-| Rollout and scale-down | A `preStop` hook stops new sessions and waits for the running ones; `terminationGracePeriodSeconds` is 25 minutes |
-| Safety | A PodDisruptionBudget, a NetworkPolicy limiting egress, keys in Secrets |
+| Rollout and scale-down | On `SIGTERM` a pod refuses new sessions and waits for the running ones, after a short `preStop` pause that lets traffic move away; `terminationGracePeriodSeconds` is 25 minutes |
+| Safety | A PodDisruptionBudget, a NetworkPolicy admitting only the Tunnel and limiting egress to DNS and public HTTPS, keys in Secrets, a read-only filesystem as a user without privileges |
 | Resources | CPU only, since the speech services are in the cloud |
 
 ### 13.4 Cloudflare Services
@@ -350,7 +350,7 @@ Local tests use **containers only, not Kubernetes**.
 - That the `cf` command line can declare R2 lifecycle rules and the AI binding.
 - That pi-ai works against real providers on Workers. It has so far passed in workerd only against mocked responses, including streaming tool calls for Anthropic, OpenAI and Google.
 - That a WebSocket stays stable through Tunnel for the length of a session.
-- The cluster's region, whether KEDA and Prometheus are installed, and its image registry. With one region, learners far from it have higher latency, which the measurements above must cover.
+- The latency for learners far from Hillsboro, the cluster's one region, which the measurements above must cover.
 
 ## 14. Risks
 

@@ -82,6 +82,7 @@ tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
 tools/calibrate/      Calibration: runs a route on texts scored by two people and records its agreement
+deploy/voice/         The voice service on Kubernetes: a Kustomize base and overlays, with mise tasks to push and check
 docs/                 Documents (English + Simplified Chinese)
 ```
 

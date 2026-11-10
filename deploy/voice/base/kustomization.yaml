@@ -1,0 +1,18 @@
+# The voice service of English (apps/voice) and the Cloudflare Tunnel that reaches it. The overlays set the namespace,
+# pin the image to a pushed digest and fill the ConfigMap.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: greatacademy
+resources:
+  - voice.yaml
+  - scaling.yaml
+  - network.yaml
+  - cloudflared.yaml
+configMapGenerator:
+  - name: voice
+    literals:
+      - VOICE_CAPACITY=4
+      - VOICE_SPEECH=unconfigured
+      - VOICE_LOG_LEVEL=info

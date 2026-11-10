@@ -1,0 +1,56 @@
+# Scaling on running conversations: KEDA reads the pods' voice_sessions_active from Prometheus, which scrapes them
+# through the PodMonitor. A pod KEDA removes drains like any other.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: voice
+  labels:
+    app.kubernetes.io/name: voice
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: voice
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: voice
+spec:
+  scaleTargetRef:
+    name: voice
+  minReplicaCount: 2
+  maxReplicaCount: 20
+  pollingInterval: 15
+  # Long, since scaling in drains a pod for up to 25 minutes.
+  cooldownPeriod: 600
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 600
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 300
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
+        # NAMESPACE is replaced by each overlay.
+        query: sum(voice_sessions_active{namespace="NAMESPACE"})
+        # Three sessions per pod leaves one free slot in each, so a new conversation rarely waits for a pod.
+        threshold: "3"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: voice
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: voice

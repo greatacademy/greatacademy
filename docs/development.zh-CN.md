@@ -161,3 +161,11 @@ docker compose stop voice           # SIGTERM：拒绝新会话，等待进行�
 
 - `voice` 服务属于 `voice` profile，所以普通的 `docker compose up -d` 仍然只启动 PostgreSQL。它通过 `http://host.docker.internal:5173` 访问主机上的 `cf dev`；要指向别处，设置 `VOICE_WORKER_URL`。如果容器访问不到 Web 应用，用 `DEV_HOST=0.0.0.0` 启动 Web 应用。
 - 容器没有卷，文件系统只读，`/tmp` 在内存中。日志中没有音频或转写文本：Pipecat 自己的日志只保留警告及以上级别，调试输出从不打开。
+- `/metrics` 以 Prometheus 文本格式报告 `voice_sessions_active`、`voice_sessions_capacity` 和 `voice_draining`，用于扩缩容。
+
+集群的清单在 `deploy/voice`（[它的 README](../deploy/voice/README.zh-CN.md)）；`mise install` 会安装 kustomize 和 kubeconform：
+
+```bash
+mise run voice:check                # 渲染并校验各 overlay；不接触任何集群
+mise run voice:push test            # 构建、推送到 GHCR，并把 test overlay 固定到该 digest
+```

@@ -48,6 +48,7 @@ tools/simulate/      Simulated students
 tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
 tools/calibrate/     Calibration of AI routes against texts scored by people
+deploy/voice/        Kustomize manifests of the voice service on Kubernetes
 ```
 
 ## Commands

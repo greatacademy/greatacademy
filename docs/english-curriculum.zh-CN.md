@@ -316,10 +316,10 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 | :--- | :--- |
 | 工作负载 | 无状态的 Deployment |
 | 容量 | 每个 Pod 在预启动的子进程中运行固定数量的会话，满时报告未就绪；数量由压测得出 |
-| 扩缩容 | KEDA 按活跃会话数扩缩，不按 CPU |
+| 扩缩容 | KEDA 按活跃会话数扩缩，不按 CPU：每个 pod 在 `/metrics` 报告 `voice_sessions_active`，由 Prometheus 求和 |
 | 会话时长 | 由产品限制，初始为 20 分钟 |
-| 发布与缩容 | `preStop` 钩子停止接收新会话并等待运行中的会话；`terminationGracePeriodSeconds` 为 25 分钟 |
-| 安全 | PodDisruptionBudget、限制出站的 NetworkPolicy、密钥放在 Secret |
+| 发布与缩容 | 收到 `SIGTERM` 后，pod 拒绝新会话并等待运行中的会话；在此之前 `preStop` 短暂停顿，让流量先移走；`terminationGracePeriodSeconds` 为 25 分钟 |
+| 安全 | PodDisruptionBudget、只允许 Tunnel 进入并把出站限制为 DNS 和公网 HTTPS 的 NetworkPolicy、密钥放在 Secret、以无特权用户运行在只读文件系统上 |
 | 资源 | 只用 CPU，因为语音服务在云端 |
 
 ### 13.4 Cloudflare 服务
@@ -350,7 +350,7 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 - `cf` 命令行能否声明 R2 生命周期规则和 AI 绑定。
 - pi-ai 能否在 Workers 上对接真实供应商。目前它只在 workerd 中通过了模拟响应的测试，包括 Anthropic、OpenAI 和 Google 的流式工具调用。
 - WebSocket 经 Tunnel 能否在整个会话期间保持稳定。
-- 集群的区域、是否已安装 KEDA 和 Prometheus，以及镜像仓库。只有一个区域时，距离远的学习者延迟更高，上述测量必须覆盖这种情况。
+- 距离希尔斯伯勒（集群唯一的区域）较远的学习者的延迟，上述测量必须覆盖这种情况。
 
 ## 14. 风险
 

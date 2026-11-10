@@ -161,3 +161,11 @@ docker compose stop voice           # SIGTERM: refuses new sessions, waits for r
 
 - The `voice` service is in the `voice` profile, so a plain `docker compose up -d` still starts only PostgreSQL. It reaches `cf dev` on the host at `http://host.docker.internal:5173`; set `VOICE_WORKER_URL` to point elsewhere. Start the web app with `DEV_HOST=0.0.0.0` if the container cannot reach it.
 - The container has no volume and a read-only filesystem with `/tmp` in memory. Logs hold no audio or transcripts: Pipecat's own records are kept only from warnings up, and debug output is never turned on.
+- `/metrics` reports `voice_sessions_active`, `voice_sessions_capacity` and `voice_draining` in Prometheus's text format, for scaling.
+
+The cluster's manifests are in `deploy/voice` ([its README](../deploy/voice/README.md)); `mise install` provides kustomize and kubeconform:
+
+```bash
+mise run voice:check                # Render the overlays and validate them; touches no cluster
+mise run voice:push test            # Build, push to GHCR and pin the test overlay to the digest
+```

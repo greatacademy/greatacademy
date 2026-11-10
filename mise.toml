@@ -8,3 +8,14 @@ python = "3.14.8"
 uv = "0.13.5"
 # The native apps (apps/nsh) use Native Shell built from its main branch, installed apart from mise:
 # curl -fsSL https://nsh.dev/install.sh | sh -s -- --source
+# The voice service's manifests (deploy/voice): rendering and schema validation.
+kustomize = "5.8.2"
+kubeconform = "0.7.0"
+
+[tasks."voice:push"]
+description = "Build the voice image, push it to GHCR and pin an overlay to its digest"
+run = "deploy/voice/push.sh"
+
+[tasks."voice:check"]
+description = "Render deploy/voice's overlays and validate them"
+run = "deploy/voice/check.sh"

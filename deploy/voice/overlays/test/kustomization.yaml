@@ -1,0 +1,32 @@
+# The test namespace: scripted speech (VOICE_SPEECH=fake), one to three pods, for checking a deploy end to end.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: voice-test
+resources:
+  - namespace.yaml
+  - ../../base
+configMapGenerator:
+  - name: voice
+    behavior: merge
+    envs:
+      - config.env
+    literals:
+      - VOICE_SPEECH=fake
+patches:
+  - target:
+      kind: ScaledObject
+      name: voice
+    patch: |-
+      - op: replace
+        path: /spec/triggers/0/metadata/query
+        value: sum(voice_sessions_active{namespace="voice-test"})
+      - op: replace
+        path: /spec/minReplicaCount
+        value: 1
+      - op: replace
+        path: /spec/maxReplicaCount
+        value: 3
+# mise run voice:push test pins this to the pushed digest.
+images:
+  - name: ga-voice
+    newName: ghcr.io/greatacademy/voice
