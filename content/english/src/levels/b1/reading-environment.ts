@@ -81,13 +81,13 @@ So the next time you throw something away, think for a second. Is it clean? Is i
       title: ["The Coral Reef in Danger", "危险中的珊瑚礁"],
       body: `Under the warm, clear water near many coasts, there are huge gardens of every color under the sea. These are coral reefs. They look like rocks or plants, but coral is actually made of millions of tiny animals that live together.
 
-Coral reefs take up only a tiny part of the ocean floor, but about a quarter of all ocean species live on them or near them. Fish lay their eggs there, turtles feed there, and sharks hunt there. Reefs also protect coasts from storms and waves, and millions of people depend on them for food and for jobs with tourists.
+Coral reefs take up only a tiny part of the ocean floor, but about a quarter of all ocean species live on them or near them. Fish lay their eggs there, turtles feed there, and sharks hunt there. Reefs also protect coasts from storms and waves, and millions of people need them for food and for jobs with tourists.
 
 Today many reefs are at serious risk. The biggest threat is climate change. As the oceans become warmer, the coral becomes weak and loses its colors. It turns white. If the water stays too hot for too long, the coral dies. In the last thirty years, about half of the coral in some famous reefs has been destroyed in this way.
 
 There are other threats too. Pollution from farms and cities is carried into the sea by rivers. Plastic is caught on the coral. In some places, reefs have been damaged by boats and by people who take coral home as a souvenir.
 
-But there is hope. Scientists are growing young coral in special containers and planting it on damaged reefs. Some governments have created protected areas where catching fish is banned. And tourists can help too: they can choose sun cream that does not harm coral, never touch the reef, and help local communities that protect it.
+But there is hope. Scientists are growing young coral in special containers and planting it on damaged reefs. Some governments have made protected areas where catching fish is banned. And tourists can help too: they can choose sun cream that does not harm coral, never touch the reef, and help local communities that protect it.
 
 If we do something now, our children may still be able to swim with these living rainbows.`,
       grammar: [passive],
@@ -196,7 +196,7 @@ Most of it comes from the land. Bags, bottles and packaging are dropped as litte
 
 Plastic does not disappear. It breaks into smaller and smaller pieces, called microplastics, but this takes hundreds of years. Sea creatures often think plastic is food. Turtles eat plastic bags because they look like jellyfish, and sea birds feed pieces of plastic to their young. Many animals die because their stomachs are full of plastic. Microplastics have also been found in fish and salt, and so in our own food.
 
-What can be done? Many countries have banned plastic bags or made people pay for them. Some cities have banned plastic cups and spoons. Volunteers collect huge amounts of litter from beaches every year, and engineers are designing machines that collect plastic from rivers before it gets to the sea.
+What can be done? Many countries have banned plastic bags or made people pay for them. Some cities have banned plastic cups and spoons. Volunteers collect huge amounts of litter from beaches every year, and engineers are building machines that collect plastic from rivers before it gets to the sea.
 
 But the best answer is to use less plastic in the first place. Carry your own bag and water bottle, avoid products with too much packaging, and reuse what you can. Every bottle that is not thrown away is one less bottle in the ocean.`,
       grammar: [passive],
@@ -247,7 +247,7 @@ But the best answer is to use less plastic in the first place. Carry your own ba
 
 Pandas had a few serious threats. Their forests were cut down for wood and farms, so their habitat became smaller and was broken into small pieces. Pandas eat almost nothing but bamboo, up to forty kilos a day, and when the bamboo in one area dies, they must move to another. If the forests are not connected, they cannot move, and they cannot find food.
 
-About thirty years ago the Chinese government began a serious campaign to protect them. Cutting trees in panda areas was banned. Many protected areas were created, and new forests were planted to connect them, so that pandas could move from one area to another. Local people were employed to look after the forests instead of cutting them down.
+About thirty years ago the Chinese government began a serious campaign to protect them. Cutting trees in panda areas was banned. Many protected areas were made, and new forests were planted to connect them, so that pandas could move from one area to another. Local people were employed to look after the forests instead of cutting them down.
 
 Scientists also studied how pandas live and how to help them have babies, which is difficult. Many young pandas were born in special centers, and some of them have been returned to the wild.
 
@@ -298,29 +298,29 @@ The panda story shows that a species can be rescued when governments, scientists
     passage({
       id: "b1-environment-living-through-a-drought",
       title: ["Living Through a Drought", "经历一场干旱"],
-      body: `Last summer the city of Valdera, home to two million people, came very close to running out of water. After three years with almost no rain, the lakes that give the city its water were only a tenth full. The government warned that unless people used much less water, the water would be turned off in eight weeks.
+      body: `Last summer the city of Valdera, home to two million people, came very close to running out of water. After three years with almost no rain, the lakes that give the city its water were only a tenth full. The government said that unless people used much less water, the water would be turned off in eight weeks.
 
 Carmen Ortiz, a mother of three, remembers it well. "At first we didn't think it was serious," she says. "Then we saw photos of the lake. It was just dry, broken ground."
 
-Hard rules were introduced. Every person was allowed fifty liters of water a day, less than a third of what most people used before. Washing cars was banned, and gardens were left to die. Prices for water above fifty liters were raised.
+Hard rules were introduced. Every person was given fifty liters of water a day, less than a third of what most people used before. Washing cars was banned, and gardens were left to die. Prices for water above fifty liters were raised.
 
-Families like the Ortiz family changed their routines totally. They took showers of two minutes, standing in a big bowl, and the water from the bowl was used again. Water from washing vegetables was poured on the few plants they kept alive. "The children made it a game," Carmen says. "They checked our meter every evening to see if we had won."
+Families like the Ortiz family changed their routines completely. They took showers of two minutes, standing in a big bowl, and the water from the bowl was used again. Water from washing vegetables was poured on the few plants they kept alive. "The children made it a game," Carmen says. "They checked our meter every evening to see if we had won."
 
 Within weeks the whole city had reduced its water use by half. The water was never turned off, and in October the rain finally came back.
 
-But scientists warn that droughts like this will happen more often as the climate changes. Valdera is now building a plant that turns sea water into drinking water, and it is repairing old leaks. The Ortiz family still takes short showers. "We learned that water can run out," she says. "We won't forget it."`,
+But scientists say that droughts like this will happen more often as the climate changes. Valdera is now building a plant that turns sea water into drinking water, and it is repairing old leaks. The Ortiz family still takes short showers. "We learned that water can run out," she says. "We won't forget it."`,
       grammar: [passive],
       names: ["Valdera", "Carmen", "Ortiz"],
       questions: [
         [
-          ["What did the government warn?", "政府发出了什么警告？"],
+          ["What did the government say?", "政府发出了什么警告？"],
           ["The water would be turned off unless people used less water", "如果人们不少用水，就会停水"],
           [
             ["The lakes would be full in eight weeks", "八周后湖水就会满"],
             ["Water prices would go down", "水价将会下降"],
           ],
           [
-            '"The government warned that unless people used much less water, the water would be turned off in eight weeks."',
+            '"The government said that unless people used much less water, the water would be turned off in eight weeks."',
             "政府警告：除非大家大幅减少用水，否则八周后将停水。",
           ],
         ],
@@ -357,7 +357,7 @@ But scientists warn that droughts like this will happen more often as the climat
 
 "I couldn't believe it," Lily says. "Straws are used for ten minutes and then they stay in the environment for hundreds of years." She learned that sea creatures are often hurt by them, and she decided to do something.
 
-Lily wrote a petition asking the government to ban plastic straws. She put it online and shared it with her friends. At first only fifty people signed it. Then a local newspaper wrote a short article about her, and a famous actor shared it with his followers. Within a month the petition had been signed by more than a hundred thousand people.
+Lily wrote a petition asking the government to ban plastic straws. She put it online and shared it with her friends. At first only fifty people signed it. Then a local paper wrote a short story about her, and a famous actor shared it with his fans. Within a month the petition had been signed by more than a hundred thousand people.
 
 Not everybody agreed with her. Some restaurant owners said that the ban would cost them money. Others said that straws were only a tiny part of the plastic problem. Lily listened to them. "They were right that straws are small," she says. "But a small change makes people think about the bigger ones."
 
@@ -372,7 +372,7 @@ Today Lily studies the law of the environment at university. Her advice to young
           ["How did Lily's campaign begin?", "莉莉的活动是怎样开始的？"],
           ["With a school project to count litter on a beach", "源于一个统计海滩垃圾的学校项目"],
           [
-            ["With an article in a newspaper", "源于报纸上的一篇文章"],
+            ["With a story in a local paper", "源于当地报纸上的一篇报道"],
             ["With a speech to people from the government", "源于对政府人员的一次演讲"],
           ],
           [

@@ -31,10 +31,10 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Grades 9 to 12: 37 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
-| Course of B1: 12 units, 96 passages, 12 conversations | Done; some passages of units 2 to 5 use words of later units, so they wait for those batches |
-| Course of B2 | Units 1 and 2 done: 16 passages, 2 conversations |
+| Course of B1: 12 units, 96 passages, 12 conversations | Done |
+| Course of B2 | Units 1 to 4 done: 32 passages, 4 conversations |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
-| Topics of B2 | Units 1 to 3 done (39 topics); units 4 to 10 not started |
+| Topics of B2 | Units 1 to 4 done |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 

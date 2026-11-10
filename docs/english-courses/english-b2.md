@@ -134,7 +134,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Writing**
 
-- `writing-an-opinion-essay` Writing an Opinion Essay (judged by a model; after `writing-a-thesis-statement`, `introductions-and-conclusions`). Write an essay of 250 to 300 words that states a clear opinion on a question the task gives, supports it in two body paragraphs, and concludes.
+- `writing-an-opinion-essay` Writing an Opinion Essay (judged by a model; after `introductions-and-conclusions`). Write an essay of 250 to 300 words that states a clear opinion on a question the task gives, supports it in two body paragraphs, answers an opposing view, and concludes.
 
 **Reading:** `b2-reading-climate`, 8 passages: How a glacier remembers; The town that went carbon neutral; Nuclear power: friend or foe?; Farming in a hotter world; The aftermath of a cyclone; Fast fashion and the planet; Can we make seawater drinkable?; What 2050 might look like.
 
@@ -386,7 +386,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b2-words-the-future` | vocabulary | 4 | none |
 | `b2-words-materials-2` | vocabulary | 4 | none |
 | `future-continuous-and-future-perfect` | grammar | 4 | `will-for-the-future`, `present-perfect-or-past-simple` |
-| `writing-an-opinion-essay` | writing | 4 | `writing-a-thesis-statement`, `introductions-and-conclusions` |
+| `writing-an-opinion-essay` | writing | 4 | `introductions-and-conclusions` |
 | `b2-words-journalism` | vocabulary | 5 | none |
 | `b2-words-persuasion` | vocabulary | 5 | none |
 | `b2-words-advertising` | vocabulary | 5 | none |

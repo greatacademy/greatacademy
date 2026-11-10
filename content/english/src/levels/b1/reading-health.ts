@@ -28,15 +28,15 @@ export const readingHealth: ReadingUnitDef = {
       title: ["How Vaccines Work", "疫苗是怎样起作用的"],
       body: `Every year vaccines prevent millions of people from getting serious diseases. But how does a small injection in your arm protect your whole body?
 
-To understand vaccines, we first need to understand how the body deals with an infection. When a virus gets into the body, it starts to make copies of itself very quickly. The body notices that something is wrong and sends special cells, tiny living parts of the body, to destroy it. These cells are part of the immune system, the way the body protects itself. It takes time, often a week or more, for them to learn how to beat a new virus. During that time we can become very ill.
+To understand vaccines, we first need to understand how the body deals with an infection. When a virus gets into the body, it starts to make copies of itself very quickly. The body notices that something is wrong and sends special cells, tiny living parts of the body, to stop it. These cells are part of the immune system, the way the body protects itself. It takes time, often a week or more, for them to learn how to beat a new virus. During that time we can become very ill.
 
-Something important happens after we recover. The immune system remembers the virus. If the same virus gets into the body again, the cells know it at once and destroy it before it can cause any harm. This is why most people get some illnesses only once.
+Something important happens after we recover. The immune system remembers the virus. If the same virus gets into the body again, the cells know it at once and stop it before it can cause any harm. This is why most people get some illnesses only once.
 
 A vaccine uses this memory. It shows the body a dead or very weak form of a virus, or only a small part of it. This form cannot make us ill, but the immune system still learns what the virus looks like. Later, if the real virus arrives, the body is ready.
 
 Some people feel a little sore or tired for a day after an injection. This is normal; it means the body is learning. Serious problems almost never happen.
 
-Vaccines also protect people who cannot have them, like tiny babies or patients with certain diseases. If most people in a community are protected, a virus cannot spread easily, and everyone is safer.`,
+Vaccines also protect people who cannot have them, like tiny babies or patients with some diseases. If most people in a town are protected, a virus cannot pass easily from person to person, and everyone is safer.`,
       grammar: [conditional],
       glossed: ["cells", "immune", "system"],
       questions: [
@@ -48,7 +48,7 @@ Vaccines also protect people who cannot have them, like tiny babies or patients 
             ["It makes copies of the virus", "它会复制这种病毒"],
           ],
           [
-            '"The immune system remembers the virus." If the virus comes again, the cells know it at once and destroy it.',
+            '"The immune system remembers the virus." If the virus comes again, the cells know it at once and stop it.',
             "免疫系统会记住病毒，病毒再次进入时就能立刻认出并消灭它。",
           ],
         ],
@@ -66,13 +66,13 @@ Vaccines also protect people who cannot have them, like tiny babies or patients 
         ],
         [
           ["Why do vaccines also protect people who cannot have them?", "为什么疫苗也能保护那些不能接种的人？"],
-          ["A virus cannot spread easily if most people are protected", "如果大多数人受到保护，病毒就难以传播"],
+          ["A virus cannot pass easily from person to person if most people are protected", "如果大多数人受到保护，病毒就难以传播"],
           [
             ["Their doctors give them a different medicine", "医生会给他们别的药"],
             ["Babies are never ill", "婴儿从来不生病"],
           ],
           [
-            '"If most people in a community are protected, a virus cannot spread easily, and everyone is safer."',
+            '"If most people in a town are protected, a virus cannot pass easily from person to person, and everyone is safer."',
             "这里用了第一条件句：如果大多数人都接种了，病毒就难以传播，大家都更安全。",
           ],
         ],
@@ -81,7 +81,7 @@ Vaccines also protect people who cannot have them, like tiny babies or patients 
     passage({
       id: "b1-health-the-truth-about-sugar",
       title: ["The Truth About Sugar", "关于糖的真相"],
-      body: `Most of us love sweet food. A piece of cake or a glass of cold juice can make a bad day feel better. But doctors around the world are warning that we eat far too much sugar, and that it is harming our health.
+      body: `Most of us love sweet food. A piece of cake or a glass of cold juice can make a bad day feel better. But doctors around the world say that we eat far too much sugar, and that it is harming our health.
 
 The problem is not the sugar in an apple or a banana. Fruit also has fiber and vitamins, and the body takes in its sugar slowly. The problem is the extra sugar that companies add to food and drinks. One bottle of a sweet drink from a shop can have eight or nine spoons of it, more than doctors say we should have in a whole day.
 
@@ -89,7 +89,7 @@ Extra sugar gives us a lot of calories but very little nutrition. If we eat more
 
 The hardest part is that sugar is often hidden. We expect to find it in candy and cookies, but it is also in bread, sauces, soups and even in food that is sold as healthy, like some fruit drinks and breakfast foods.
 
-So what can we do? Doctors say we don't need to avoid sugar totally. Instead, we can choose water over sweet drinks, read what is in our food before we buy it, and keep candy for special days. If you reduce sugar slowly, your taste will change too. After a few weeks, many people find that their old favorite drinks taste much too sweet.`,
+So what can we do? Doctors say we don't need to avoid sugar completely. Instead, we can choose water over sweet drinks, read what is in our food before we buy it, and keep candy for special days. If you reduce sugar slowly, your taste will change too. After a few weeks, many people find that their old favorite drinks taste much too sweet.`,
       grammar: [conditional],
       questions: [
         [
@@ -188,13 +188,13 @@ What is his advice for people who are just starting? "Don't think about the whol
     passage({
       id: "b1-health-why-we-need-sleep-and-naps",
       title: ["Why We Need Sleep and Naps", "我们为什么需要睡眠和小睡"],
-      body: `We spend about a third of our lives sleeping. For a long time scientists were not sure why. Today they know that sleep is not a waste of time. It is one of the most important things we do for our health.
+      body: `We spend about a third of our lives sleeping. For a long time scientists were not sure why. Today they know that sleep is time well used. It is one of the most important things we do for our health.
 
-While we sleep, the brain is busy. It organizes the information of the day and keeps the important memories, so that we can find them for years. That is why students who sleep well after studying remember more than students who stay up all night. Sleep also helps the body repair muscles, protect itself from infections and control weight.
+While we sleep, the brain is busy. It organizes the information of the day and keeps the important memories, so that we can find them for years. That is why students who sleep well after studying remember more than students who stay up all night. Sleep also helps the body repair muscles, protect itself from infections and manage weight.
 
 Most people need seven to nine hours a night, and young people need even more. But many people get much less. They work late, look at their phones in bed or drink coffee in the evening. If you sleep badly for a few nights, you will notice the effects: you will feel tense and in a bad mood, you will make more mistakes, and you will probably eat more snacks.
 
-What about naps? In many countries, a short sleep after lunch is a normal part of the day. Research shows that a nap of ten to twenty minutes can improve attention and mood for a few hours. But a long nap can make you feel worse, not better, and it may stop you from sleeping at night.
+What about naps? In many countries, a short sleep after lunch is a normal part of the day. Studies show that a nap of ten to twenty minutes can improve attention and mood for a few hours. But a long nap can make you feel worse, not better, and it may stop you from sleeping at night.
 
 Doctors give simple advice for better sleep. Go to bed and get up at the same time every day, even at weekends. Keep your bedroom cool, dark and quiet. Avoid coffee after lunch, and put your phone in another room. If you follow these rules for a few weeks, sleep usually improves.`,
       grammar: [conditional],
@@ -242,11 +242,11 @@ Doctors give simple advice for better sleep. Go to bed and get up at the same ti
       title: ["Allergies on the Rise", "日益增多的过敏"],
       body: `When Maya was six, she ate a cookie at a birthday party and, a few minutes later, her face was swollen and she could not breathe well. An ambulance took her to hospital, where doctors gave her an injection. Later a specialist diagnosed an allergy to peanuts.
 
-An allergy happens when the body thinks that something safe, like a peanut, a flower or a cat, is dangerous. The result can be mild, like sneezing or eyes that itch, or very serious, like what happened to Maya.
+An allergy happens when the body thinks that something safe, like a peanut, a flower or a cat, is dangerous. The result can be small, like sneezing or eyes that itch, or very serious, like what happened to Maya.
 
 Allergies are increasing in many parts of the world. In some countries, two times as many children have food allergies today as thirty years ago. Nobody knows exactly why, but scientists have a few ideas.
 
-One idea is that modern homes are too clean. In the past, children grew up with animals, dirty hands and many brothers and sisters, and their bodies learned early what was dangerous and what was not. Today many children grow up in cities with little contact with nature. Another idea is about food: in the past, parents were advised to wait before giving young children foods like peanuts and eggs. Now research suggests that trying them early, in small amounts, may actually prevent allergies.
+One idea is that modern homes are too clean. In the past, children grew up with animals, dirty hands and many brothers and sisters, and their bodies learned early what was dangerous and what was not. Today many children grow up in cities with little contact with nature. Another idea is about food: in the past, parents were told to wait before giving young children foods like peanuts and eggs. Now studies show that trying them early, in small amounts, may actually prevent allergies.
 
 For people like Maya, life needs careful planning. She is now fifteen. She reads the list of what is in every product, asks questions in restaurants and always carries her medicine. "It used to make me scared," she says. "Now it is just part of my routine. If I am careful, I can do everything my friends do."`,
       names: ["Maya", "Maya's"],
@@ -358,7 +358,7 @@ People who suffer from stress for months often have headaches, a sore neck or st
 
 We cannot avoid every cause of stress, but we can reduce its effects. Physical exercise is one of the best ways: a walk of thirty minutes helps the body use the energy that stress gives it. Meditation and slow breathing can calm the nerves. Talking to a friend also helps, because problems often seem smaller when we share them.
 
-Finally, it is important to notice the symptoms early. If you feel tense and tired for weeks, don't just wait for it to go away. Talk to someone you trust, or see a doctor. Asking for help does not mean that you are weak. It means that you care about your health.`,
+Finally, it is important to notice the symptoms early. If you feel tense and tired for weeks, don't just wait for it to go away. Talk to a good friend, or see a doctor. Asking for help does not mean that you are weak. It means that you care about your health.`,
       questions: [
         [
           ["Why is stress useful when you see a bear?", "为什么看见熊时压力是有用的？"],
@@ -403,13 +403,13 @@ Finally, it is important to notice the symptoms early. If you feel tense and tir
       title: ["Small Habits, Big Changes", "小习惯，大改变"],
       body: `Every January, millions of people make big promises. They will go to the gym every day, stop eating sugar and learn a new language. By February, most of them have given up. Why is it so hard to change our habits, and what actually works?
 
-Research suggests that big changes often fail because they ask too much of us at once. A person who has never exercised cannot suddenly train for two hours a day. After a few days their muscles are sore, they feel tired, and they quit.
+Studies show that big changes often fail because they ask too much of us at once. A person who has never exercised cannot suddenly train for two hours a day. After a few days their muscles are sore, they feel tired, and they quit.
 
-A better way is to start with a habit so small that it seems almost funny. Instead of "I will run five kilometers every day", try "I will put on my running shoes after breakfast". Instead of "I will read for an hour", try "I will read one page before bed". These tiny actions are easy to repeat, and repeating is what turns an action into a habit.
+A better way is to start with a habit so small that it seems almost funny. Instead of "I will run five kilometers every day", try "I will put on my running shoes after breakfast". Instead of "I will read for an hour", try "I will read one page before bed". These tiny habits are easy to repeat, and repeating is what turns something you do into a habit.
 
 It also helps to connect a new habit to something you already do. For example: after I brush my teeth, I will drink a glass of water. After I sit down on the bus, I will practice ten new words. The old habit reminds you to do the new one.
 
-Finally, be kind to yourself. If you skip a day, don't think that you have failed. Just start again the next day. Scientists say that it takes about two months, not three weeks, for a new action to become automatic.
+Finally, be kind to yourself. If you skip a day, don't think that you have failed. Just start again the next day. Scientists say that it takes about two months, not three weeks, for a new habit to become natural, so that you do it without thinking.
 
 Small habits may not look important. But if you do a little more every week, after a year you will be surprised how much your lifestyle has changed.`,
       grammar: [conditional],
@@ -434,7 +434,7 @@ Small habits may not look important. But if you do a little more every week, aft
             ["Training for two hours a day", "每天训练两小时"],
           ],
           [
-            "The passage suggests tiny actions such as putting on your running shoes or reading one page before bed.",
+            "The passage gives tiny habits such as putting on your running shoes or reading one page before bed.",
             "文章建议从很小的动作开始，比如睡前读一页书；每天跑五公里是要避免的大目标。",
           ],
         ],

@@ -134,7 +134,7 @@
 
 **写作**
 
-- `writing-an-opinion-essay` 写观点议论文（模型评判；先修：`writing-a-thesis-statement`、`introductions-and-conclusions`）. 就任务给出的问题写一篇 250 到 300 词的议论文：明确表明观点，用两个主体段支持，并写出结论。
+- `writing-an-opinion-essay` 写观点议论文（模型评判；先修：`introductions-and-conclusions`）. 就任务给出的问题写一篇 250 到 300 词的议论文：明确表明观点，用两个主体段支持，回应一个相反的看法，并写出结论。
 
 **阅读：** `b2-reading-climate`，8 篇：冰川怎样记录历史；实现碳中和的小镇；核能：是敌是友？；在更热的世界里种地；气旋过后；快时尚与地球；我们能把海水变成可饮用的水吗？；2050 年会是什么样子。
 
@@ -386,7 +386,7 @@
 | `b2-words-the-future` | 词汇 | 4 | 无 |
 | `b2-words-materials-2` | 词汇 | 4 | 无 |
 | `future-continuous-and-future-perfect` | 语法 | 4 | `will-for-the-future`、`present-perfect-or-past-simple` |
-| `writing-an-opinion-essay` | 写作 | 4 | `writing-a-thesis-statement`、`introductions-and-conclusions` |
+| `writing-an-opinion-essay` | 写作 | 4 | `introductions-and-conclusions` |
 | `b2-words-journalism` | 词汇 | 5 | 无 |
 | `b2-words-persuasion` | 词汇 | 5 | 无 |
 | `b2-words-advertising` | 词汇 | 5 | 无 |

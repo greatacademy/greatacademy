@@ -432,4 +432,33 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the report end with clear, practical recommendations that follow from its findings?",
     quoteWhenMet: true,
   },
+  // B2: essays.
+  {
+    id: "b2-essay-opinion",
+    version: "1",
+    question:
+      "Does the introduction answer the question with a clear opinion, and does the rest of the essay keep to that opinion and support it, without changing sides?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-essay-body",
+    version: "1",
+    question:
+      "Does the essay have at least two body paragraphs, each opening with a topic sentence that gives one main point and developing that point with an explanation and an example, a fact or other evidence?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-essay-conclusion",
+    version: "1",
+    question:
+      "Does the essay end with a conclusion that restates its position in different words and sums up the main points, without adding a new argument?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-essay-linking",
+    version: "1",
+    question:
+      "Are the paragraphs and sentences linked with a range of linking words and phrases, such as Firstly, Moreover, However, As a result and In conclusion, each used with its correct meaning?",
+    quoteWhenMet: false,
+  },
 ];

@@ -2,11 +2,12 @@
 
 import type { TopicDef } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
+import * as climate from "./climate.ts";
 import * as economy from "./economy.ts";
 import * as science from "./science.ts";
 import * as society from "./society.ts";
 
-const units = [society, economy, science];
+const units = [society, economy, science, climate];
 
 /** topics are the topics of B2. */
 export const topics: readonly TopicDef[] = units.flatMap((unit) => unit.topics);

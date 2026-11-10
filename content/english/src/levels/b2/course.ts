@@ -49,6 +49,50 @@ const units: readonly UnitDef[] = [
     "b2-reading-economy",
     "negotiating-a-pay-rise",
   ),
+  levelUnit(
+    t("Science, Ethics and Medicine", "科学、伦理与医学"),
+    {
+      words: [
+        "b2-words-medicine",
+        "b2-words-organs",
+        "b2-words-ethics",
+        "b2-words-research-2",
+        "b2-words-genetics",
+        "b2-words-science-verbs",
+        "b2-words-mental-health",
+        "b2-words-health-systems",
+        "b2-words-scientific-adjectives",
+        "b2-words-animals-and-people",
+        "b2-words-risk",
+      ],
+      grammar: ["modals-of-deduction", "past-modals"],
+      writing: ["introductions-and-conclusions"],
+    },
+    "b2-reading-medicine",
+    "a-hospital-ethics-panel",
+  ),
+  levelUnit(
+    t("Climate and Sustainability", "气候与可持续发展"),
+    {
+      words: [
+        "b2-words-climate-change",
+        "b2-words-energy",
+        "b2-words-ecosystems",
+        "b2-words-sustainability",
+        "b2-words-farming",
+        "b2-words-environmental-action",
+        "b2-words-disasters",
+        "b2-words-water",
+        "b2-words-cause-and-effect",
+        "b2-words-the-future",
+        "b2-words-materials-2",
+      ],
+      grammar: ["future-continuous-and-future-perfect"],
+      writing: ["writing-an-opinion-essay"],
+    },
+    "b2-reading-climate",
+    "a-town-hall-on-energy",
+  ),
 ];
 
 /** courses are the course of B2, with the units written so far. */

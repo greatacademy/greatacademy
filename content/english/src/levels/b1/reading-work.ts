@@ -30,11 +30,11 @@ export const readingWork: ReadingUnitDef = {
       title: ["The First Day at a New Job", "新工作的第一天"],
       body: `Dear Grandma,
 
-I have just finished my first week at the design company, and I want to tell you all about it.
+I have just finished my first week at my new company, and I want to tell you all about it.
 
 On Monday morning I woke up at five, two hours earlier than I needed to. I was so nervous that I couldn't eat breakfast. I arrived at the office forty minutes early, so I waited in a coffee shop across the street and read my contract again.
 
-At nine o'clock the receptionist gave me a card for the door and took me to my department. My manager, Mrs. Okafor, is very professional, but she is also kind. She showed me my desk, my computer and a drawer full of folders. Then she gave me a schedule for the week. There was a meeting with clients, a short course about the software we use, and a lot of reading.
+At nine o'clock the receptionist gave me a card for the door and took me to my department. My manager, Mrs. Okafor, is very professional, but she is also kind. She showed me my desk, my computer and a drawer full of folders. Then she gave me a schedule for the week. There was a meeting with clients, a short course about the computer tools we use, and a lot of reading.
 
 The hardest part was remembering names. There are twenty-two people in my department, and by lunch I had forgotten almost all of them. Then a designer called Tom made me a list with a small drawing next to each name. I still have it on my desk.
 
@@ -64,7 +64,7 @@ Amara`,
           ["He made her a list of names with drawings", "他给她做了一张带小画的名单"],
           [
             ["He sent a document to a client for her", "他替她把文件发给了客户"],
-            ["He taught her the new software", "他教她使用新软件"],
+            ["He taught her the new computer tools", "他教她使用新的电脑工具"],
           ],
           [
             "Amara could not remember the names of her colleagues, so Tom made her a list with a small drawing next to each name.",
@@ -88,13 +88,13 @@ Amara`,
     passage({
       id: "b1-work-why-people-change-careers",
       title: ["Why People Change Careers", "人们为什么转行"],
-      body: `In the past, many people stayed in the same job for their whole life. A man who started work in a bank at eighteen often retired from the same bank at sixty-five. Today this happens much less often. Research in many countries shows that most people change jobs ten or more times, and many change their whole career at least once.
+      body: `In the past, many people stayed in the same job for their whole life. A man who started work in a bank at eighteen often retired from the same bank at sixty-five. Today this happens much less often. Studies in many countries show that most people change jobs ten or more times, and many change their whole career at least once.
 
-Why do they do it? The first reason is money. Some people discover that their industry does not pay well, or that the number of positions goes down every year. Others want a job with a better income, so they get new qualifications and move into a different field.
+Why do they do it? The first reason is money. Some people realize that their industry does not pay well, or that the number of positions goes down every year. Others want a job with a better income, so they get new qualifications and move into a different field.
 
 The second reason is feeling happy. A lawyer may earn a lot but feel bored and tired every day. An accountant may realize that she prefers working with people to working with numbers. Many people say they used to think that a good job was a job with a high salary. Now they think that a good job is one that they enjoy.
 
-The third reason is change in the world itself. New technology has replaced many jobs, and it has created new ones that nobody had twenty years ago. Nobody was a programmer of phone apps in 1990.
+The third reason is change in the world itself. New machines and computers have taken the place of many jobs, and they have brought new ones that nobody had twenty years ago. Nobody was a programmer of phone apps in 1990.
 
 Changing careers is not easy. It can mean studying again, earning less for a few years and starting again with the easiest tasks. But people who have done it often say it was the best thing they ever decided. As one engineer who became a teacher put it: "I used to wait for Friday all week. Now I don't even notice what day it is."`,
       grammar: [usedTo],
@@ -116,7 +116,7 @@ Changing careers is not easy. It can mean studying again, earning less for a few
           ["A lawyer earns a lot but feels bored", "律师收入很高却觉得乏味"],
           [
             ["An industry has a smaller number of positions every year", "一个行业的职位每年都在减少"],
-            ["New technology has replaced many jobs", "新技术取代了许多工作"],
+            ["New machines have taken the place of many jobs", "新机器取代了许多工作"],
           ],
           [
             "The second reason is feeling happy: a lawyer may earn a lot but feel bored, and an accountant may prefer working with people.",
@@ -144,11 +144,11 @@ Changing careers is not easy. It can mean studying again, earning less for a few
 
 Daniel Price has been working night shifts at a large hospital for six years. "People think it is quiet at night," he says, "but it isn't. Patients still need medicine, and emergencies happen at three in the morning too."
 
-Night work has some benefits. The pay is usually higher, and there is less traffic on the way to work. Some people also like the calm. "There isn't a meeting every hour, and the managers are at home," Daniel laughs. "I can actually finish my tasks."
+Night work has some good sides. The pay is usually higher, and there is less traffic on the way to work. Some people also like the calm. "There isn't a meeting every hour, and the managers are at home," Daniel laughs. "I can actually finish my tasks."
 
 But it is not easy for the body. Our bodies expect to sleep when it is dark, and it is hard to sleep well during the day. Daniel used to wake up every afternoon feeling more tired than before. He also missed family dinners and weekends with friends.
 
-Over the years he has learned a few things. He keeps his bedroom totally dark, he turns off his phone, and he eats a small meal before he goes to bed instead of a big one. On his days off, he tries not to change his sleeping times too much. "It is especially important to keep a routine," he says. "Otherwise you feel like you are always flying to another country."
+Over the years he has learned a few things. He keeps his bedroom completely dark, he turns off his phone, and he eats a small meal before he goes to bed instead of a big one. On his days off, he tries not to change his sleeping times too much. "It is especially important to sleep and eat at the same times every day," he says. "Otherwise you feel like you are always flying to another country."
 
 Would he change to day shifts? "Maybe one day," he says. "But for now, I like working while the city sleeps."`,
       grammar: [continuous, usedTo],
@@ -201,7 +201,7 @@ Sofia had always loved making soap. She used to make it in her kitchen as gifts 
 
 She had no office and no shop, only a garage, the small building next to the house where the family kept its car. She moved the car into the street, put two long tables in the garage and started work. Every morning she took the children to school and then made soap until three o'clock. In the evenings she sold it online and at weekend markets.
 
-The first year was hard. She made a loss, and she often worked until midnight. But slowly people began to trust the brand. A shop in the city ordered five hundred pieces, then a thousand. In 2012 she employed her first two workers.
+The first year was hard. She made a loss, and she often worked until midnight. But slowly people began to believe in the brand. A shop in the city ordered five hundred pieces, then a thousand. In 2012 she employed her first two workers.
 
 Today the company has its headquarters in a modern building, sixty employees and customers in twelve countries. Sofia is the manager, but she still makes the first piece of every new product herself.
 
@@ -255,11 +255,11 @@ Today the company has its headquarters in a modern building, sixty employees and
 
 Of course, qualifications matter. A pharmacist needs a degree, and an electrician needs a license. But most employers say that qualifications only get a candidate to the interview. After that, other things are more important.
 
-The thing that employers mention most often is that a worker must be reliable. They want people who arrive on time, finish tasks and do what they promise. "I can teach someone how to use our software in a week," says the manager of a printing business. "I can't teach them to be punctual."
+The thing that employers talk about most often is that a worker must be reliable. They want people who arrive on time, finish tasks and do what they promise. "I can teach someone how to use our computer tools in a week," says the manager of a printing business. "I can't teach them to be punctual."
 
 The second thing they want is a flexible worker. Plans change, clients change their plans, and a schedule that worked on Monday may not work on Wednesday. Employers want people who can handle these changes and stay calm.
 
-Many employers also want people who communicate well. This means writing clear emails, listening carefully in a meeting and asking questions when something is not clear. A candidate who says "I don't know, but I will find out" often makes a better impression than one who says they know everything.
+Many employers also want people who are good at working with others. This means writing clear emails, listening carefully in a meeting and asking questions when something is not clear. A candidate who says "I don't know, but I will find out" often makes a better impression than one who says they know everything.
 
 Finally, employers look for people who are motivated. In an interview they ask why you applied for the position and what you know about the company. Someone who has read about the business and prepared good questions shows that they really want the job.
 
@@ -282,11 +282,11 @@ So when you write your next application, think about examples that show you are 
           ["What does the manager of the printing business mean?", "印刷公司经理的话是什么意思？"],
           ["Skills can be taught, but punctual habits cannot", "技能可以教，守时却教不会"],
           [
-            ["Their software is too hard to learn", "他们的软件太难学了"],
+            ["Their computer tools are too hard to learn", "他们的电脑工具太难学了"],
             ["Punctual people do not need training", "守时的人不需要培训"],
           ],
           [
-            "He can teach someone the software in a week, but he can't teach them to be on time. Being reliable must come from the person.",
+            "He can teach someone the computer tools in a week, but he can't teach them to be on time. Being reliable must come from the person.",
             "他一周就能教会别人用软件，却没法教人守时，可靠的品质要靠本人。",
           ],
         ],
@@ -309,11 +309,11 @@ So when you write your next application, think about examples that show you are 
       title: ["Working from Home", "居家办公"],
       body: `Ten years ago, very few office workers did their jobs from home. Today millions of people work from their kitchen table, at least for part of the week. Is this a good change? We asked two people who have been doing it for a few years.
 
-Priya, 29, programmer: "I love it. I used to spend almost two hours a day on the bus. Now I spend that time sleeping, cooking or going to the gym. I'm also more efficient. In the office my colleagues interrupted me all the time, but at home I can concentrate. We still have a meeting with the whole department every Monday, and that is enough for me. Besides, I save a lot of money on lunches and tickets."
+Priya, 29, programmer: "I love it. I used to spend almost two hours a day on the bus. Now I spend that time sleeping, cooking or going swimming. I'm also more efficient. In the office my colleagues came to my desk to chat all the time, but at home I can concentrate. We still have a meeting with the whole department every Monday, and that is enough for me. Besides, I save a lot of money on lunches and tickets."
 
 Martin, 47, accountant: "At first I thought it was great. But after a year I started to feel lonely. I missed chatting with people at the coffee machine. Those small chats are actually important, because that is how you hear news and solve problems quickly. Also, work and home become the same place. My office is in the bedroom, so I check emails late at night. Now I go into the office three days a week, and I feel much better."
 
-Scientists who study work say both of them are right. Working from home is better for some people and some tasks than for others. It works best when workers have a quiet place, a regular schedule and a manager who trusts them. Many companies have therefore chosen a mix: a few days at home and a few days together.`,
+Scientists who study work say both of them are right. Working from home is better for some people and some tasks than for others. It works best when workers have a quiet place, a clear schedule and a manager who believes in them. Many companies have therefore chosen a mix: a few days at home and a few days together.`,
       grammar: [continuous, usedTo],
       names: ["Priya", "Martin"],
       questions: [
@@ -325,7 +325,7 @@ Scientists who study work say both of them are right. Working from home is bette
             ["Her manager checks her work every day", "她的经理每天检查她的工作"],
           ],
           [
-            'Priya says: "In the office my colleagues interrupted me all the time, but at home I can concentrate."',
+            'Priya says: "In the office my colleagues came to my desk to chat all the time, but at home I can concentrate."',
             "她说在办公室同事总打断她，在家就能专心工作。",
           ],
         ],
@@ -334,7 +334,7 @@ Scientists who study work say both of them are right. Working from home is bette
           ["He felt lonely and worked late at night", "他感到孤独，而且深夜还在工作"],
           [
             ["He spent two hours a day on the bus", "他每天在公交车上花两个小时"],
-            ["He could not use the software at home", "他在家用不了软件"],
+            ["He could not use the computer tools at home", "他在家用不了电脑工具"],
           ],
           [
             "Martin missed talking to people, and because his office is in the bedroom, he checked emails late at night.",
@@ -360,7 +360,7 @@ Scientists who study work say both of them are right. Working from home is bette
       title: ["The Plumber Who Became a Boss", "当上老板的水管工"],
       body: `When Joe Barnes left school at sixteen, his teachers did not expect much from him. He was bad at exams and he couldn't sit still. "Everyone said I should get a practical job," he says, "so I did."
 
-He became an assistant to an old plumber called Mr. Hall. For four years he carried tools, fixed leaks and cleaned up after jobs. He learned fast. Mr. Hall was hard on him but fair, and he taught Joe something that was not about water at all: "Always arrive when you say you will, and always tell the customer the real price."
+He became an assistant to an old plumber called Mr. Hall. For four years he carried tools, repaired kitchens and bathrooms and cleaned up after jobs. He learned fast. Mr. Hall was hard on him but fair, and he taught Joe something that was not about water at all: "Always arrive when you say you will, and always tell the customer the real price."
 
 At twenty-one Joe got his qualifications and started working on his own. He had a van, a small car with a lot of room for tools, a phone and a small book for his invoices. Customers liked him because he was punctual and honest, and they told their friends. Soon he had more work than he could handle, so he employed a second plumber, then a third.
 
@@ -418,7 +418,7 @@ The plan is simple to explain but hard to follow. People who want to retire earl
 
 Helen and Mark Davies retired last year, when they were both fifty-one. They used to work long hours as architects in the city. "We were earning well, but we never saw our children," says Helen. "Every evening we were too tired to talk." For twenty years they saved, and now they live in a small house by the sea.
 
-Not everyone agrees that retiring early is wise. Some scientists who study money warn that prices can rise faster than savings, and that people live longer than they expect. Others say that work gives people more than money. It gives them friends, a routine and a reason to get up in the morning.
+Not everyone agrees that retiring early is wise. Some scientists who study money say that prices can go up faster than the money people have saved, and that people live longer than they expect. Others say that work gives people more than money. It gives them friends, a plan for the day and a reason to get up in the morning.
 
 Helen and Mark understand this. Mark gives free advice to young architects, and Helen has been teaching drawing at the local school since the spring. "We haven't really stopped working," Mark says. "We have just stopped working for money."`,
       grammar: [usedTo, continuous],

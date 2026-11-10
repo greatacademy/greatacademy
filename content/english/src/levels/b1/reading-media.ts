@@ -33,7 +33,7 @@ Then the reporters go out. They attend press conferences, interview witnesses an
 
 In the evening, the editors read every article. They correct mistakes, make long stories shorter and write the headlines. Photos are chosen. Designers put everything on the page, like pieces of a puzzle.
 
-The hardest moment comes at about ten at night, which is the deadline. After that, the pages are sent to the printing factory. If something major happens after the deadline, like an earthquake, the editors may stop the printers and change the front page. One editor told me that this had happened to him three times in thirty years.
+The hardest moment comes at about ten at night, which is the deadline. After that, the pages are sent to the printing factory. If something major happens after the deadline, like an earthquake, the editors may stop the printing machines and change the front page. One editor told me that this had happened to him three times in thirty years.
 
 By four in the morning, the newspapers are on their way to shops all over the country. Of course, today most news is also published online, all day long. But for many people, the paper on the table at breakfast is still the best way to start the day.`,
       grammar: [reported],
@@ -64,7 +64,7 @@ By four in the morning, the newspapers are on their way to shops all over the co
         ],
         [
           ["What did one editor say, according to the writer?", "根据作者的说法，一位编辑说了什么？"],
-          ["That he had stopped the printers three times in thirty years", "他三十年里叫停过三次印刷"],
+          ["That he had stopped the printing machines three times in thirty years", "他三十年里叫停过三次印刷"],
           [
             ["That he never changes the front page", "他从不改动头版"],
             ["That the deadline was at four in the morning", "截稿时间是凌晨四点"],
@@ -81,11 +81,11 @@ By four in the morning, the newspapers are on their way to shops all over the co
       title: ["Fake Photos", "假照片"],
       body: `A shark swimming down a city street after a flood. A famous leader shaking hands with a thief. A huge wave about to hit a beach full of tourists. Photos like these are shared millions of times online, and many of them are fake.
 
-Changing photos is not new. A hundred years ago, people in photos were sometimes painted out by hand. But today anyone with a smartphone can change a picture in a few seconds, and computer programs can create photos of things that never happened at all. Some fake photos are made as a joke. Others are made to make people angry, to sell something or to change how people vote.
+Changing photos is not new. A hundred years ago, people in photos were sometimes painted out by hand. But today anyone with a phone can change a picture in a few seconds, and computer programs can make photos of things that never happened at all. Some fake photos are made as a joke. Others are made to make people angry, to sell something or to change how people vote.
 
-How can you tell if a photo is real? Journalists give some simple advice. First, look at the source. Was the photo published by a reliable newspaper or news channel, or was it shared by an anonymous account with no profile picture? Second, look carefully at the small things in it. Fake photos often have hands with six fingers, writing that means nothing, or light that comes from the wrong side. Third, search for the photo online. You may discover that it was taken years ago in a different country, or that the real picture looks different.
+How can you tell if a photo is real? Journalists give some simple advice. First, look at the source. Was the photo published by a reliable newspaper or news channel, or was it shared by a stranger with no name and no photo? Second, look carefully at the small things in it. Fake photos often have hands with six fingers, writing that means nothing, or light that comes from the wrong side. Third, search for the photo online. You may find that it was taken years ago in a different country, or that the real picture looks different.
 
-Most important of all, stop before you share. Ask yourself how the photo makes you feel. If it makes you very angry or very surprised, that is exactly the moment to be careful. People who create fake photos know that angry or surprised people share without thinking.
+Most important of all, stop before you share. Ask yourself how the photo makes you feel. If it makes you very angry or very surprised, that is exactly the moment to be careful. People who make fake photos know that angry or surprised people share without thinking.
 
 A journalist I spoke to said that she checked every photo two times before using it. "People trust us," she explained. "If we publish one fake, we lose that trust."`,
       grammar: [reported],
@@ -95,7 +95,7 @@ A journalist I spoke to said that she checked every photo two times before using
           ["To make people angry or change how they vote", "为了激怒人们或改变他们的投票"],
           [
             ["To help newspapers save money", "为了帮新闻机构省钱"],
-            ["To teach people how to use smartphones", "为了教人们使用智能手机"],
+            ["To teach people how to use their phones", "为了教人们使用手机"],
           ],
           [
             '"Some fake photos are made as a joke. Others are made to make people angry, to sell something or to change how people vote."',
@@ -131,28 +131,28 @@ A journalist I spoke to said that she checked every photo two times before using
     passage({
       id: "b1-media-the-podcast-that-started-in-a-bedroom",
       title: ["The Podcast That Started in a Bedroom", "从卧室起步的播客"],
-      body: `Three years ago, Noah and Leo Grant were two bored brothers in a small town. They were seventeen and fifteen, they loved history, and they argued about it all the time. "Our mother said that if we were going to argue anyway, we should record it," Noah remembers. So they did.
+      body: `Three years ago, Noah and Leo Grant were two bored brothers in a small town. They were seventeen and fifteen, they loved history, and they argued about it all the time. "Our mother said that if we were going to argue anyway, we should turn it into a podcast," Noah remembers. So they did.
 
-They bought a cheap microphone, put old coats on the walls of their bedroom to make the sound better, and recorded their first episode: a debate of forty minutes about why the Roman Empire fell. They uploaded it and told their friends. Twelve people listened to it.
+They bought cheap equipment, put old coats on the walls of their bedroom to make the sound better, and made their first episode: a debate of forty minutes about why the Roman Empire fell. They uploaded it and told their friends. Twelve people listened to it.
 
-The brothers didn't give up. Every week they chose a new subject, read books from the library, and recorded a new episode. They tried to make history fun: they told stories, did funny voices and asked their audience to vote on questions. Slowly, the number of followers grew. After one year they had five thousand. Then a famous history professor mentioned their podcast in an interview, and within a month they had a hundred thousand.
+The brothers didn't give up. Every week they chose a new subject, read books from the library, and made a new episode. They tried to make history fun: they told stories, did funny voices and asked their audience to vote on questions. Slowly, the number of followers grew. After one year they had five thousand. Then a famous history professor mentioned their podcast in an interview, and within a month they had a hundred thousand.
 
-Today the podcast has more than half a million followers in forty countries. Famous professors have been guests on it, and the brothers have recorded an episode in front of an audience of eight hundred people. They still record most episodes in the same bedroom, but now with better equipment.
+Today the podcast has more than half a million followers in forty countries. Famous professors have been guests on it, and the brothers have made an episode in front of an audience of eight hundred people. They still make most episodes in the same bedroom, but now with better equipment.
 
 What is their advice for young people who want to start a podcast? Leo says that the subject matters more than the equipment. "Talk about something you really love," he says. "If you are bored, your audience will be bored too." Noah adds that it is important to publish regularly. "People want to know when the next episode is coming. If you disappear for two months, they forget about you."`,
       grammar: [reported],
       names: ["Noah", "Leo", "Grant", "Roman", "Empire"],
       questions: [
         [
-          ["Why did the brothers start recording?", "兄弟俩为什么开始录音？"],
-          ["Their mother said they should record their arguments", "他们的妈妈说他们应该把争论录下来"],
+          ["Why did the brothers start the podcast?", "兄弟俩为什么开始做播客？"],
+          ["Their mother said they should turn their arguments into a podcast", "他们的妈妈说他们应该把争论做成播客"],
           [
             ["A history professor asked them to", "一位历史教授请他们录"],
-            ["Their school gave them a microphone", "学校给了他们一个麦克风"],
+            ["Their school gave them some equipment", "学校给了他们一些设备"],
           ],
           [
-            'Reported speech: "Our mother said that if we were going to argue anyway, we should record it."',
-            "妈妈说既然他们反正要争论，不如录下来；这是用间接引语转述的话。",
+            'Reported speech: "Our mother said that if we were going to argue anyway, we should turn it into a podcast."',
+            "妈妈说既然他们反正要争论，不如做成播客；这是用间接引语转述的话。",
           ],
         ],
         [
@@ -160,7 +160,7 @@ What is their advice for young people who want to start a podcast? Leo says that
           ["Within a month they had a hundred thousand followers", "一个月内他们有了十万听众"],
           [
             ["Only twelve people listened to it", "只有十二个人听了"],
-            ["They stopped recording in their bedroom", "他们不再在卧室里录音了"],
+            ["They stopped making episodes in their bedroom", "他们不再在卧室里做节目了"],
           ],
           [
             '"A famous history professor mentioned their podcast in an interview, and within a month they had a hundred thousand."',
@@ -190,7 +190,7 @@ The simple answer is attention. Every day we see thousands of headlines, and we 
 
 Online, it is even harder to get attention. Many websites earn money from advertisements, and they are paid for every person who clicks. A more exciting headline means more clicks, and more clicks mean more money. This has led to "clickbait": headlines that promise something exciting, but the article is boring or doesn't really match the headline.
 
-The problem is that many people read only headlines. A study found that more than half of the links shared on social media had never been clicked by the person who shared them. If the headline is not accurate, people may believe something that is not true. For example, a headline might say "Coffee causes heart disease", while the article explains that one small study found a weak connection in older men.
+The problem is that many people read only headlines. A study found that more than half of the articles shared on social media had never been opened by the person who shared them. If the headline is not accurate, people may believe something that is not true. For example, a headline might say "Coffee causes heart disease", while the article explains that one small study found a weak effect in older men.
 
 Good journalists try to write headlines that are both interesting and honest. As people who read the news, we can help too. Before you believe or share a story, read the article, not just the headline. Ask yourself whether the headline matches the facts. And when a headline shouts very loudly, be especially careful. Often, the louder the headline, the smaller the truth behind it.`,
       grammar: [reported],
@@ -296,9 +296,9 @@ Is it a good job? Hannah laughed. She said that the pay was low and the hours we
 
 Students at a school in Canada were asked to check ten stories that they had seen online. Their teacher, Ms. Carter, gave them three questions to ask about each one.
 
-The first question is: who is telling me this? Is the source a reliable newspaper, a scientist, a government office, or an anonymous account? A source with a name and a history is usually more accurate, because it has a good name to protect.
+The first question is: who is telling me this? Is the source a reliable newspaper, a scientist, a government office, or a stranger with no name? A source with a name and a history is usually more accurate, because it has a good name to protect.
 
-The second question is: what is the evidence? A good article tells you where its facts come from. It may mention a study, use the words of an official or link to a document. If a story says "people are saying" or "everyone knows", but gives no evidence, be careful.
+The second question is: what is the evidence? A good article tells you where its facts come from. It may mention a study, use the words of an official or show a document. If a story says "people are saying" or "everyone knows", but gives no evidence, be careful.
 
 The third question is: what do other sources say? If a story is true and important, other newspapers and channels will report it too. If only one website has it, it may be a rumor.
 
@@ -313,7 +313,7 @@ Ms. Carter said that this was exactly the point. "Nobody can know everything," s
           ["It has a good name to protect", "它有声誉需要维护"],
           [
             ["It always writes long articles", "它总是写长文章"],
-            ["It is never anonymous on social media", "它在社交媒体上从不匿名"],
+            ["It never shares anything on social media", "它从不在社交媒体上分享任何东西"],
           ],
           [
             '"A source with a name and a history is usually more accurate, because it has a good name to protect."',
@@ -414,7 +414,7 @@ I started by making a list of the things I care about most: the cost of universi
 
 My grandmother was very excited for me. She told me that when she was young, women in her village had to work hard for the right to vote. "Never waste your vote," she said.
 
-On Sunday morning I went to the school near my house. I showed my identity card, received a paper with the names of the candidates and went to a small table on my own. I put a mark next to the name I had chosen and put the paper in a box. It took three minutes.
+On Sunday morning I went to the school near my house. I showed my passport, received a paper with the names of the candidates and went to a small table on my own. I put a mark next to the name I had chosen and put the paper in a box. It took three minutes.
 
 My candidate didn't win. But I am not sorry I voted. I expressed my opinion, and I was part of something bigger than myself. Next time I will definitely vote again, and I will try to persuade my friends to vote too.`,
       grammar: [reported],

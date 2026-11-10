@@ -2,8 +2,10 @@
 // in the words of Pre-A1 to B2.
 
 import type { ReadingUnitDef } from "@ga/content";
+import { readingClimate } from "./reading-climate.ts";
 import { readingEconomy } from "./reading-economy.ts";
+import { readingMedicine } from "./reading-medicine.ts";
 import { readingSociety } from "./reading-society.ts";
 
 /** reading are the reading units of B2, in the order of the units. */
-export const reading: readonly ReadingUnitDef[] = [readingSociety, readingEconomy];
+export const reading: readonly ReadingUnitDef[] = [readingSociety, readingEconomy, readingMedicine, readingClimate];
