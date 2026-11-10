@@ -112,19 +112,23 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 | `math` | A math field, with optional `prefix` and `suffix` (such as `x =` or `\text{cm}`) | The LaTeX the learner entered |
 | `text` | A plain text field | The text |
 | `order` | The `items`, each with buttons to move it | The indexes of the items in the chosen order, joined by commas |
+| `writing` | A long text field that counts words against `minWords`, limited to `maxChars` | The text |
 
-`checker` names a registered checker and `expected` is that checker's data. The core registers three checkers (`choice`, `text` and `order`, whose `expected` lists the right orders); subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
+`checker` names a registered checker and `expected` is that checker's data. The core registers four checkers (`choice`, `text`, `order`, whose `expected` lists the right orders, and `writing`); subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
 
 | Checker | `expected` | Accepts |
 | :--- | :--- | :--- |
 | `choice` | The index of the correct option | Exactly that index |
 | `text` | An array of accepted strings | Any of them, ignoring case, Unicode width and spacing |
+| `writing` | `minWords` and `maxChars` | A text of at least `minWords` words and at most `maxChars` characters; it only checks the length before a model judges the text |
 
 A checker returns a `Verdict`: `correct`, and optional `feedback` for a rejection that deserves an explanation (for example "simplify the fraction"). The `CheckerRegistry`:
 
 - rejects two checkers with the same id;
-- rejects responses longer than 2,000 characters;
+- rejects responses longer than the checker's `maxLength`, 2,000 characters unless it says otherwise (`writing` allows 8,000);
 - treats a checker that throws as a rejection.
+
+**Answers judged by a model.** A problem whose `answer.judged` lists criteria is judged by a model on those criteria once its checker accepts the length; `judged.source` gives the text the learner writes from, if any. The criteria are defined on the topic, `TopicDef.criteria`, each with a kebab-case `id`, a short `version`, a yes-or-no `question` ending in a question mark, and `quoteWhenMet`, whether a met criterion must quote the learner's text. The problem's `canonical` is a model answer shown after a verdict that counts, never one that sends the text back. Defining `criteria` makes the topic judged by a model ([Architecture §7](architecture.md#7-storage)).
 
 Checkers must be strict about **value** and explicit about **form**: when a topic teaches simplification, `expected` says that the simplified form is required, and the checker rejects equal but unsimplified answers with feedback.
 
@@ -169,6 +173,8 @@ const prealgebra: CourseDef = {
 | Reading units and passages have unique ids that no topic uses; a passage has a body, positive `xp`, at least one question, and topics that exist | Error |
 | Every word of a passage is in the lexicon, or listed in its `names` or `glossed` | Error |
 | A course's reading units exist | Error |
+| A topic's criteria have kebab-case ids, no repeats, a short version and a question ending in `?`; a criterion shared by two topics is defined the same in both | Error |
+| A topic judged by rules neither depends on nor encompasses a topic judged by a model, since a learner with no route never gets the latter | Error |
 
 The compiled graph provides:
 
@@ -314,5 +320,7 @@ A question about a figure draws it (`content/math/src/exam-figures.ts`), labeled
 | `word-form` | The accepted words | A listed word, spelled exactly, in either case |
 
 **Item banks.** English has no numbers to generate from, so its generators pick from banks of written items by seed. `choiceGenerator`, `typedGenerator` and `orderGenerator` take a question, a bank and a function that builds the solution from the answer, and the shuffling of options and sentences follows from the seed. Every wrong option of a choice is listed as a wrong response, and `choiceGenerator` takes a further function that says, for each wrong option, what choosing it shows the learner missed; it becomes the option's mistake, so the learner who picks it is told. Banks of labels look the label up, and banks whose wrong options come in a fixed order of kinds, such as a detail and a topic too broad for a main idea, use the option's place. An order item may list further right orders, and is never shown already in one. The seed itself selects the item (`Rng.cycle`), and the questions of a run take consecutive seeds starting after the worked example's, so a lesson shows neither the worked example's item again nor the same item twice until the bank runs out. A topic's test requires at least 8 distinct items per knowledge point.
+
+**Writing judged by a model.** `writingGenerator` takes a question, a bank of tasks, each with the notes or text to write from and a model answer, the criteria, the length limits and a function that builds the solution; the first words of the model answer are listed as the wrong response, which the length check rejects. `libs/subject-english` defines the shared criteria of writing in `WRITING_CRITERIA`, W2 meaning checks and W4 paragraph moves, and topics pick theirs with `criterionById`. The first such topic, `writing-a-paragraph`, after `removing-off-topic-sentences` and `choosing-transitions`, asks for a paragraph from notes, with specific details, and with a closing sentence, of 25, 30 and 35 words at least.
 
 **Writing rules.** A typed exercise names what to use and supplies the clauses, so that its patterns can list every accepted sentence; a valid sentence that a pattern rejects is a defect of the item, which the pilot report lists for reading. A literal dollar sign is written `\$`, since `$` starts TeX, and `content/english` passes a `textIssue` that rejects an unescaped one.

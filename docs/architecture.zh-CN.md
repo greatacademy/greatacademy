@@ -72,6 +72,7 @@ libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择
 libs/content/         内容模型：知识点/课程定义、编译器与校验器、题目运行时、答案判定
 libs/subject-math/    数学学科：数学答案判定器、数学题目生成器的辅助函数
 libs/subject-english/ 英语学科：句子和单词判定器、题库工具
+libs/judge/           写作的 AI 判定：提示词、respond 工具、引用经过原文核对的判定结果、经 pi-ai 连接的供应商
 libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
 libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和原生应用生成的形式
@@ -88,6 +89,7 @@ docs/                 文档（英文 + 简体中文）
 ```text
 apps/web ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
    │            │                                       ▲
+   │            ├──► libs/judge ──► libs/content         │
    │            └──► libs/proto                         │
    ├──► libs/design
    │                                             libs/subject-math ◄── content/math
@@ -109,6 +111,7 @@ apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 - `libs/design` 不依赖仓库内任何库，也没有 I/O，因此 Web 和原生应用可以共用。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
+- `libs/judge` 依赖 `libs/content` 的类型和 pi-ai。它不知道任何学科，也不接触数据库：`libs/api` 把标准、文本和模型客户端交给它，再保存它返回的结果。
 - `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
 - `apps/voice` 用 Python 编写，不引入仓库内任何代码。它用自己的凭据经 HTTP 访问 Web Worker，获取导师的回合并写入结果；它与客户端共用的 WebSocket 消息以后在 `libs/proto` 中改为 Protobuf。
 - 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。Web Worker 不引入内容，而是通过服务绑定访问学科。
@@ -215,12 +218,15 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | `guardian`、`guardian_invite` | 谁在关注哪位学习者；一次性且 7 天后过期的邀请码 |
 | `consent`、`guardian_verification` | 按学习者和范围只追加的同意记录；谁证明了自己是监护人，表格的键只在等待决定时保留 |
 | `platform_admin`、`market_launch`、`admin_log` | 后台角色、各市场的开关及签字人、只追加的修改日志 |
+| `judgment` | 每篇交给模型的文本：按键（`id@version`）列出的标准、状态、带引用的判定结果、分数、模型、提示词版本、token、成本、尝试次数和最近一次失败的原因，从不保存供应商的报错内容 |
 | `ai_provider`、`ai_route`、`calibration`、`vendor_check`、`notice` | 带加密密钥的 AI 供应商、各标准的路由、通过的校准、供应商登记表和通知版本 |
 
 **一致性。**
 - 完成一个会话时，追加事件、替换快照、关闭会话在同一个事务中完成。
 - 为写入而读取快照行和会话行时会加锁（`SELECT … FOR UPDATE`）；`(learner, subject, seq)` 唯一索引拒绝任何漏网的写入者。
 - `SubmitAnswer` 携带所回答题目的序号，重复的请求会被拒绝，而不是被判两次。
+- **由模型判定的作答。** `SubmitAnswer` 只检查长度，保存一条待判定的 `judgment`，把它记在执行器状态里，并返回 `pending`。客户端轮询 `GetJudgment`，它在请求内运行到期的判定，因为 Worker 的数据库连接随响应关闭。同一时间只有一个调用方通过 30 秒的租约持有一次判定；一次失败的尝试等待 10 秒，每次加倍，最多 2 分钟，尝试两次后改用备用路由，10 分钟后彻底失败，这时学习者可以跳过这道题，会话结束且不追加事件。达到标准的比例至少为 0.75 时算答对；低于此值时文本退回一次让学习者重写，不显示范文，第二次的结果无论如何都计入。只有这时才追加事件，因此回放不会调用模型。
+- **由模型判定的主题需要路由。** 对每位学习者，课程会去掉这样的主题：它由模型判定，而它的标准并非都有可以接收该学习者文本的线上路由（[管理后台 §5](admin.zh-CN.md#5-ai-服务)）；编译器不允许由规则判定的主题依赖或包含这样的主题。
 
 **迁移**由 drizzle-kit 从 `libs/db/src/schema` 生成到 `libs/db/drizzle` 并提交入库。测试把迁移应用到 PGlite；部署时用 `pnpm nx run db:migrate` 应用。
 

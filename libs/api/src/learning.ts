@@ -1,10 +1,11 @@
 import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@connectrpc/connect";
-import { createRng, type Rng } from "@ga/content";
+import { createRng, type Judged, type Problem, type ProblemRef, type Rng, type Verdict } from "@ga/content";
 import {
   activeSession,
   appendEvent,
   chooseCourse,
   completedSessions,
+  createJudgment,
   createSession,
   currentCourse,
   currentCourses,
@@ -13,6 +14,8 @@ import {
   getSession,
   guardiansOf,
   isGuardian,
+  type JudgmentRow,
+  latestJudgment,
   learnerFor,
   loadState,
   placedEvent,
@@ -41,15 +44,17 @@ import {
   retakeEvent,
   type Task,
 } from "@ga/engine";
+import { criterionKey } from "@ga/judge";
 import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import { requirePlan } from "./billing.ts";
 import { accessOf, requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
+import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
 import { joinLeague } from "./league.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
-import { answerRun, type RunState, runTask, startRun } from "./runner.ts";
+import { type Answered, answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
 import { xpSummary } from "./summary.ts";
 
 /** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
@@ -112,6 +117,39 @@ export interface LearningDeps {
   seed(): number;
   /** billing makes studying a subject need a plan that covers it (docs/billing.md §6). */
   readonly billing?: boolean;
+  /** judging lets answers be judged by models; without it no topic judged by a model is taught. */
+  readonly judging?: JudgingDeps;
+  /**
+   * defer keeps work running after the response is sent, given a database that
+   * outlives the request. Without it a judgment runs when GetJudgment first asks after it.
+   */
+  readonly defer?: (work: Promise<unknown>) => void;
+}
+
+/** feedbackOf is the feedback on an answer, with a model's verdict when one judged it; a text sent back for a rewrite shows no model answer. */
+function feedbackOf(problem: Problem, verdict: Verdict, judged?: { readonly row: JudgmentRow; readonly revise: boolean }) {
+  const hide = judged?.revise || (!verdict.correct && problem.answer.judged !== undefined && !judged);
+  return {
+    correct: verdict.correct,
+    ...(verdict.feedback && { message: text(verdict.feedback) }),
+    ...(!hide && {
+      solution: text(problem.solution),
+      ...(problem.solutionFigure && { solutionFigure: figure(problem.solutionFigure) }),
+      answer: problem.canonical,
+    }),
+    ...(judged?.row.verdict && {
+      criteria: judged.row.verdict.criteria.map(({ id, met, quotation, note }) => ({ id, met, quotation, note })),
+      points: judged.row.verdict.feedback.map(({ point, quotation }) => ({ point, quotation })),
+      score: judged.row.score ?? 0,
+      revise: judged.revise,
+    }),
+    ...(hide && !judged && { revise: true }),
+  };
+}
+
+/** withFeedback tells whether a run's answers get feedback at once. */
+function withFeedback(run: RunState): boolean {
+  return run.kind === "lesson" || run.kind === "review" || run.kind === "reading";
 }
 
 function auth(ctx: HandlerContext): { db: Db; userId: string } {
@@ -160,7 +198,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
   /** current resolves the learner and checks the course is their current one; a guardian can name a learner they follow. */
   const current = async (ctx: HandlerContext, courseId: string, guardedId = "") => {
     const { db, learnerId, guardian } = await learner(ctx, guardedId);
-    const c = await course(courseId);
+    const c = await forLearner(db, await course(courseId), learnerId, deps.now());
     if (!guardian) {
       await requireStudy(db, learnerId, deps.now());
       if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
@@ -209,7 +247,39 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
   const view = async (db: Db, learnerId: string, row: SessionRow) => {
     const c = await course(row.courseId);
     const { state: s } = await state(db, learnerId, c);
-    return sessionMessage(c, row.id, row.state as RunState, s);
+    const run = row.state as RunState;
+    const j = run.pending ? await latestJudgment(db, row.id, run.asked.length) : undefined;
+    return sessionMessage(c, row.id, run, s, j && { delayed: j.status === "pending" && j.error !== null, failed: j.status === "failed" });
+  };
+
+  /** settle records an answer that moved the run on, appending the run's event when it ended. */
+  const settle = async (db: Db, learnerId: string, c: CourseEntry, row: SessionRow, ref: ProblemRef, answered: Answered, at: number) => {
+    const last = answered.run.asked[answered.run.asked.length - 1]!;
+    await recordAnswer(db, {
+      sessionId: row.id,
+      learnerId,
+      index: answered.run.asked.length - 1,
+      topicId: ref.topic,
+      kp: ref.kp,
+      seed: ref.seed,
+      response: last.response,
+      skipped: answered.skipped,
+      correct: answered.verdict.correct,
+      ...(last.score !== undefined && { score: last.score }),
+      at: new Date(at),
+    });
+    if (answered.event) {
+      await append(db, learnerId, c, answered.event, row.id);
+      await joinLeague(db, learnerId, at);
+    }
+    await updateSession(db, row.id, answered.run, answered.event ? "completed" : "active", new Date(at));
+    return { ...row, state: answered.run };
+  };
+
+  /** judgeLater runs a judgment after the response, where work can be deferred. */
+  const judgeLater = (db: Db, c: CourseEntry, id: string) => {
+    const { judging, defer } = deps;
+    if (judging && defer) defer(runJudgment(db, c, id, judging, deps.now()).catch(() => undefined));
   };
 
   const rng = (): Rng => createRng(deps.seed());
@@ -471,48 +541,93 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const learnerId = await learnerFor(db, userId);
       const now = deps.now();
       await requireStudy(db, learnerId, now);
-      const { row, answered } = await db.transaction(async (tx) => {
+      const out = await db.transaction(async (tx) => {
         const row = await getSession(tx, learnerId, req.sessionId, true);
         if (!row) throw new ConnectError("no such session", Code.NotFound);
         if (row.status !== "active") throw new ConnectError("the session is over", Code.FailedPrecondition);
         const run = row.state as RunState;
         if (req.index !== run.asked.length) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
         const c = await course(row.courseId);
-        const { state: before } = await state(tx, learnerId, c, true);
-        const answered = await answerRun(c, run, before, req.response, req.skip, now, rng());
         const ref = run.current!;
-        await recordAnswer(tx, {
-          sessionId: row.id,
-          learnerId,
-          index: req.index,
-          topicId: ref.topic,
-          kp: ref.kp,
-          seed: ref.seed,
-          response: answered.skipped ? "" : req.response,
-          skipped: answered.skipped,
-          correct: answered.verdict.correct,
-          at: new Date(now),
-        });
-        if (answered.event) {
-          await append(tx, learnerId, c, answered.event, row.id);
-          await joinLeague(tx, learnerId, now);
+        if (run.pending) {
+          const j = await latestJudgment(tx, row.id, req.index);
+          const failed = j?.status === "failed";
+          if (req.skip && failed) {
+            // A judgment that failed for good leaves the question with no result: the session ends without an event.
+            await updateSession(tx, row.id, run, "abandoned", new Date(now));
+            return { kind: "abandoned" as const, row: { ...row, status: "abandoned" as const } };
+          }
+          if (!failed && !j?.error) throw new ConnectError("the answer is still being judged", Code.FailedPrecondition);
         }
-        await updateSession(tx, row.id, answered.run, answered.event ? "completed" : "active", new Date(now));
-        return { row: { ...row, state: answered.run }, answered };
+        const skipping = req.skip && canSkip(run);
+        const judged: Judged | undefined = skipping ? undefined : await c.source.judge(ref, req.response);
+        if (judged?.problem.answer.judged) {
+          if (!judged.verdict.correct) return { kind: "rejected" as const, row, judged };
+          const j = await createJudgment(tx, {
+            sessionId: row.id,
+            learnerId,
+            index: req.index,
+            attempt: (run.attempt ?? 0) + 1,
+            topicId: ref.topic,
+            kp: ref.kp,
+            seed: ref.seed,
+            response: req.response,
+            criteria: judgedCriteria(c, ref.topic, judged.problem).map(criterionKey),
+            createdAt: new Date(now),
+            nextAt: new Date(now),
+          });
+          const next = { ...run, pending: { judgment: j.id, response: req.response } } as RunState;
+          await updateSession(tx, row.id, next, "active", new Date(now));
+          return { kind: "pending" as const, row: { ...row, state: next }, c, judgment: j.id };
+        }
+        const { state: before } = await state(tx, learnerId, c, true);
+        const answered = await answerRun(c, run, before, req.response, req.skip, now, rng(), judged as Given | undefined);
+        return { kind: "answered" as const, row: await settle(tx, learnerId, c, row, ref, answered, now), answered };
       });
-      const run = row.state as RunState;
-      const feedback = run.kind === "lesson" || run.kind === "review" || run.kind === "reading";
-      const v = answered.verdict;
+      if (out.kind === "pending") judgeLater(db, out.c, out.judgment);
+      const session = await view(db, learnerId, out.row);
+      if (out.kind === "pending") return { pending: true, session };
+      if (out.kind === "rejected") return { feedback: feedbackOf(out.judged.problem, out.judged.verdict), session };
+      if (out.kind === "abandoned") return { session };
+      const run = out.row.state as RunState;
+      return { ...(withFeedback(run) && { feedback: feedbackOf(out.answered.problem, out.answered.verdict) }), session };
+    },
+
+    async getJudgment(req, ctx) {
+      const { db, userId } = auth(ctx);
+      const learnerId = await learnerFor(db, userId);
+      const now = deps.now();
+      await requireStudy(db, learnerId, now);
+      const found = await getSession(db, learnerId, req.sessionId);
+      if (!found) throw new ConnectError("no such session", Code.NotFound);
+      let j = await latestJudgment(db, found.id, req.index);
+      if (!j) throw new ConnectError("no judgment for that question", Code.NotFound);
+      const c = await course(found.courseId);
+      if (j.status === "pending" && deps.judging && j.nextAt.getTime() <= now) {
+        await runJudgment(db, c, j.id, deps.judging, now);
+        j = (await latestJudgment(db, found.id, req.index))!;
+      }
+      if (j.status !== "done") return { pending: true, session: await view(db, learnerId, found) };
+      const done = j;
+      const [problem] = await c.source.problems([{ topic: done.topicId, kp: done.kp, seed: done.seed }]);
+      const verdict = viewJudgment(done);
+      const row = await db.transaction(async (tx) => {
+        const r = (await getSession(tx, learnerId, req.sessionId, true))!;
+        const run = r.state as RunState;
+        if (r.status !== "active" || run.pending?.judgment !== done.id) return r;
+        if (verdict.revise) {
+          const next: Record<string, unknown> = { ...run, attempt: (run.attempt ?? 0) + 1, servedAt: now };
+          delete next.pending;
+          await updateSession(tx, r.id, next as unknown as RunState, "active", new Date(now));
+          return { ...r, state: next };
+        }
+        const { state: before } = await state(tx, learnerId, c, true);
+        const given = { problem: problem!, verdict: { correct: verdict.passed }, score: done.score ?? 0 };
+        const answered = await answerRun(c, run, before, done.response, false, now, rng(), given);
+        return settle(tx, learnerId, c, r, run.current!, answered, now);
+      });
       return {
-        ...(feedback && {
-          feedback: {
-            correct: v.correct,
-            ...(v.feedback && { message: text(v.feedback) }),
-            solution: text(answered.problem.solution),
-            ...(answered.problem.solutionFigure && { solutionFigure: figure(answered.problem.solutionFigure) }),
-            answer: answered.problem.canonical,
-          },
-        }),
+        ...(withFeedback(row.state as RunState) && { feedback: feedbackOf(problem!, { correct: verdict.passed }, verdict) }),
         session: await view(db, learnerId, row),
       };
     },

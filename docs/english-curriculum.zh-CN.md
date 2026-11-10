@@ -232,7 +232,7 @@
 
 完成标准：切片能够编译，所有生成器通过采样，模拟学生能够完成，真实学习者在不使用平台题目的外部测试上有进步。
 
-此后 `english-grammar-writing` 又增加了八个用规则判分的主题，共 49 个：`comparatives-and-superlatives`（`adjectives-and-adverbs`）、`apostrophes-and-possessives` 和 `commonly-confused-words`（`nouns-and-pronouns`）、`verb-tense-consistency`（`simple-verb-tenses`）、`commas-after-introductions`（`capitals-and-end-punctuation`、`prepositional-phrases`）、`punctuating-dialogue`（`capitals-and-end-punctuation`），以及 `academic-words-2` 和 `academic-words-3`，各自排在前一批之后。
+此后 `english-grammar-writing` 又增加了八个用规则判分的主题，共 49 个：`comparatives-and-superlatives`（`adjectives-and-adverbs`）、`apostrophes-and-possessives` 和 `commonly-confused-words`（`nouns-and-pronouns`）、`verb-tense-consistency`（`simple-verb-tenses`）、`commas-after-introductions`（`capitals-and-end-punctuation`、`prepositional-phrases`）、`punctuating-dialogue`（`capitals-and-end-punctuation`），以及 `academic-words-2` 和 `academic-words-3`，各自排在前一批之后。第五十个主题 `writing-a-paragraph` 是第一个由模型判定的主题（§13.1）；没有路由能服务的学习者学这门课时会跳过它。
 
 第二门课程 `english-reading-comprehension`（阅读理解，三至五年级）用 15 个规则判分的主题讲授 §3 的阅读分支，每道题是一段原创短文加选择：主旨、概括和文本特征；顺序、因果、比较与对比以及文本结构；推断、事实与观点以及作者的目的；叙述视角、人物和故事的寓意；明喻、暗喻和习语。大纲见 [docs/english-courses/english-reading-comprehension.zh-CN.md](english-courses/english-reading-comprehension.zh-CN.md)。只有 `point-of-view` 通过 `nouns-and-pronouns` 依赖第一门课程。第三门课程 `english-literature-argument`（文学与论证，六至八年级）在它之上，用 9 个同样的主题讲授：拟人和夸张、声音修辞和韵式、情节与冲突、主题、语气与氛围；然后是论点、论据、推理、反方观点与反驳。完整的文章写作要等 AI 判分（§8.3）；这些主题讲授的是文章评判所依据的各个部分。大纲见 [docs/english-courses/english-literature-argument.zh-CN.md](english-courses/english-literature-argument.zh-CN.md)。
 
@@ -327,7 +327,7 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 | 阶段 | 服务 | 用途 |
 | :--- | :--- | :--- |
 | 首个切片 | Workers | 英语的网关和分片，不增加新产品 |
-| 写作 | Workflows | 异步判定，支持重试和保存进度 |
+| 写作 | Workers | 学习者等待时在 Web Worker 中判定，重试、租约和进度都保存在 `judgment` 表中，因此不需要 Workflow |
 | 写作 | AI Gateway | 模型调用的日志、成本和限制；判定不缓存，未成年人的文本不写入日志 |
 | 写作 | Rate Limiting | 限制滥用和成本 |
 | 语音 | R2 | 题目音频，以及短期保存、由生命周期规则删除的录音 |
@@ -347,7 +347,7 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 
 ### 13.6 构建前要确认
 
-- `cf` 命令行能否声明 Workflows、R2 生命周期规则和 AI 绑定。
+- `cf` 命令行能否声明 R2 生命周期规则和 AI 绑定。
 - pi-ai 能否在 Workers 上对接真实供应商。目前它只在 workerd 中通过了模拟响应的测试，包括 Anthropic、OpenAI 和 Google 的流式工具调用。
 - WebSocket 经 Tunnel 能否在整个会话期间保持稳定。
 - 集群的区域、是否已安装 KEDA 和 Prometheus，以及镜像仓库。只有一个区域时，距离远的学习者延迟更高，上述测量必须覆盖这种情况。

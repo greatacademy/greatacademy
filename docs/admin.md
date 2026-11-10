@@ -49,7 +49,7 @@ The rules of a market (guardian age, scopes, languages) are code in `libs/api/sr
 
 **Providers.** Name, kind (`model`, `speech` or `other`), pi-ai provider or compatible API, base URL, region, API key, enabled. Keys are encrypted with AES-GCM under `AI_KEYS_SECRET`, a Worker secret that the database never sees.
 
-**Routes.** For each criterion, and for S6, a primary and a backup: provider, model and prompt version. A route has a draft or live state.
+**Routes.** For each criterion, and for S6, a primary and a backup: provider, model and prompt version. A route has a draft or live state. A criterion is named by its key, `id@version` (such as `w4-topic-sentence@1`), so a new version of a criterion needs routes and calibrations of its own.
 
 - **Going live needs calibration.** A route can be set live only if a passing calibration exists for that exact criterion, model and prompt version. Calibrations are written by `tools/calibrate` and are read-only here; an administrator cannot enter one.
 - **Changing a live route's model or prompt returns it to draft,** since changing the model changes the judge.

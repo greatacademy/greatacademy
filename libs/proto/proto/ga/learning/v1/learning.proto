@@ -45,6 +45,9 @@ service LearningService {
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
   // SubmitAnswer answers the current question of a session.
   rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  // GetJudgment asks after an answer a model is judging: still pending, or its
+  // verdict as feedback, with the session moved on.
+  rpc GetJudgment(GetJudgmentRequest) returns (GetJudgmentResponse);
   // GetTopic returns a topic's lesson to reread, and how it connects to other topics.
   rpc GetTopic(GetTopicRequest) returns (GetTopicResponse);
   // ListSessions lists the learner's finished sessions in a course, newest first.
@@ -356,6 +359,19 @@ message Question {
   int32 total = 7;
   // passage is the text the questions are about, for reading only.
   optional Passage passage = 8;
+  // judging is set while a model judges the answer to this question.
+  optional Judging judging = 9;
+  // attempt counts the tries at this question so far; a rewrite after feedback is the next.
+  int32 attempt = 10;
+}
+
+// Judging is an answer waiting for a model's verdict.
+message Judging {
+  string response = 1;
+  // delayed is true when judging has failed for now; the learner may rewrite,
+  // or, once failed is true, skip the question with no result.
+  bool delayed = 2;
+  bool failed = 3;
 }
 
 // Passage is a text to read. Its body is in the language being read, with
@@ -413,7 +429,15 @@ message Input {
     TextInput text = 3;
     PlotInput plot = 4;
     OrderInput order = 5;
+    WritingInput writing = 6;
   }
+}
+
+// WritingInput: a long text field. The response is the learner's text, judged
+// by a model once it has at least min_words words and at most max_chars characters.
+message WritingInput {
+  int32 min_words = 1;
+  int32 max_chars = 2;
 }
 
 // ChoiceInput: the response is the index of the chosen option, in decimal.
@@ -459,14 +483,42 @@ message SubmitAnswerRequest {
   // index is the index of the question answered; a stale index is rejected.
   int32 index = 2;
   string response = 3;
-  // skip answers "I don't know" where allowed.
+  // skip answers "I don't know" where allowed, and leaves a question whose judging failed.
   bool skip = 4;
 }
 
 message SubmitAnswerResponse {
-  // feedback judges the answer; unset where results come at the end.
+  // feedback judges the answer; unset where results come at the end, and while pending.
   optional Feedback feedback = 1;
   Session session = 2;
+  // pending is true while a model judges the answer; ask again with GetJudgment.
+  bool pending = 3;
+}
+
+message GetJudgmentRequest {
+  string session_id = 1;
+  int32 index = 2;
+}
+
+// GetJudgmentResponse is as SubmitAnswerResponse: pending, or the verdict as feedback.
+message GetJudgmentResponse {
+  optional Feedback feedback = 1;
+  Session session = 2;
+  bool pending = 3;
+}
+
+// CriterionResult is a model's verdict on one criterion, with words quoted from the learner's text.
+message CriterionResult {
+  string id = 1;
+  bool met = 2;
+  string quotation = 3;
+  string note = 4;
+}
+
+// FeedbackPoint is one thing to do next, about the quoted words.
+message FeedbackPoint {
+  string point = 1;
+  string quotation = 2;
 }
 
 message Feedback {
@@ -478,6 +530,12 @@ message Feedback {
   string answer = 4;
   // solution_figure is a drawing that shows the solution.
   optional ga.common.v1.Figure solution_figure = 5;
+  // criteria, points and score are a model's verdict, for an answer it judged.
+  repeated CriterionResult criteria = 6;
+  repeated FeedbackPoint points = 7;
+  optional double score = 8;
+  // revise is true when the learner may rewrite the same text; the rewrite is what counts.
+  bool revise = 9;
 }
 
 message GetTopicRequest {

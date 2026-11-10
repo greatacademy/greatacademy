@@ -31,6 +31,8 @@ export interface Asked extends ProblemRef {
   readonly skipped: boolean;
   /** elapsedMs is the server's time from serving the question to receiving the answer. */
   readonly elapsedMs: number;
+  /** score is the fraction of criteria a model found met, for an answer it judged. */
+  readonly score?: number;
 }
 
 /** RunResult is the outcome of a finished run. */
@@ -55,6 +57,10 @@ interface RunBase {
   /** servedAt is when the current question was served. */
   readonly servedAt?: number;
   readonly result?: RunResult;
+  /** attempt counts the judged tries at the current question that were sent back for a rewrite. */
+  readonly attempt?: number;
+  /** pending is the answer to the current question a model is judging; the run waits for its verdict. */
+  readonly pending?: { readonly judgment: string; readonly response: string };
 }
 
 /**
@@ -153,7 +159,16 @@ export function canSkip(run: RunState): boolean {
   return run.kind === "diagnostic";
 }
 
-/** answerRun judges a response to the current question and advances the run; state is the learner's state before the answer. */
+/** Given is a verdict reached outside the checkers, such as a model's on a judged answer, with its score. */
+export interface Given extends Judged {
+  readonly score?: number;
+}
+
+/**
+ * answerRun judges a response to the current question and advances the run;
+ * state is the learner's state before the answer. With given, the verdict is
+ * given's, and the checkers are not asked.
+ */
 export async function answerRun(
   c: CourseEntry,
   run: RunState,
@@ -162,15 +177,45 @@ export async function answerRun(
   skip: boolean,
   now: number,
   rng: Rng,
+  given?: Given,
+): Promise<Answered> {
+  const answered = await advance(c, run, state, response, skip, now, rng, given);
+  const next: Record<string, unknown> = { ...answered.run };
+  delete next.attempt;
+  delete next.pending;
+  return { ...answered, run: next as unknown as RunState };
+}
+
+async function advance(
+  c: CourseEntry,
+  run: RunState,
+  state: LearnerState,
+  response: string,
+  skip: boolean,
+  now: number,
+  rng: Rng,
+  given: Given | undefined,
 ): Promise<Answered> {
   const ref = run.current;
   if (!ref) throw new Error("the session is over");
-  const skipped = skip && canSkip(run);
-  const { problem, verdict }: Judged = skipped
-    ? { problem: (await c.source.problems([ref]))[0]!, verdict: { correct: false } }
-    : await c.source.judge(ref, response);
+  const skipped = !given && skip && canSkip(run);
+  const { problem, verdict }: Judged = given
+    ? given
+    : skipped
+      ? { problem: (await c.source.problems([ref]))[0]!, verdict: { correct: false } }
+      : await c.source.judge(ref, response);
   const elapsedMs = now - (run.servedAt ?? 0);
-  const asked = [...run.asked, { ...ref, response: skipped ? "" : response, correct: verdict.correct, skipped, elapsedMs }];
+  const asked = [
+    ...run.asked,
+    {
+      ...ref,
+      response: skipped ? "" : response,
+      correct: verdict.correct,
+      skipped,
+      elapsedMs,
+      ...(given?.score !== undefined && { score: given.score }),
+    },
+  ];
   const correct = asked.filter((a) => a.correct).length;
   const finish = (next: RunState, finished: TaskEvent, passed: boolean, placed = 0): Answered => {
     const blownOff =

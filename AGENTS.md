@@ -36,6 +36,7 @@ libs/content/        Content model, compiler, problem runtime, checkers (subject
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers
 libs/subject-english/ English checkers and the content kit
+libs/judge/          AI judgment of writing: prompts, the respond tool, checked verdicts, providers on pi-ai
 libs/subject-worker/ Worker entrypoints for any subject's gateway and shards
 libs/proto/          Protobuf contracts and generated TypeScript
 libs/api/            Connect services and the session runner

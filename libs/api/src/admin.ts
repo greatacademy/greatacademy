@@ -267,8 +267,8 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const { db, userId, at } = await admin(ctx);
       const r = req.route;
       need(
-        r && /^[a-z0-9-]{1,64}$/.test(r.criterion) && r.model.trim() && r.promptVersion.trim(),
-        "a route needs a criterion, a model and a prompt version",
+        r && /^[a-z0-9-]{1,64}(@[a-z0-9.-]{1,16})?$/.test(r.criterion) && r.model.trim() && r.promptVersion.trim(),
+        "a route needs a criterion (id@version), a model and a prompt version",
       );
       need(r.position === "primary" || r.position === "backup", "a route is primary or backup");
       const position: RoutePosition = r.position;

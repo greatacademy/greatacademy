@@ -36,6 +36,7 @@ libs/content/        内容模型、编译器、题目运行时、判定器（�
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数
 libs/subject-english/ 英语判定器和内容工具
+libs/judge/          写作的 AI 判定：提示词、respond 工具、经过检查的判定结果、基于 pi-ai 的供应商
 libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
 libs/api/            Connect 服务和会话运行器

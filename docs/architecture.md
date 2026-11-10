@@ -72,6 +72,7 @@ libs/engine/          Learning engine: graph, frontier, FIRe, task selection, di
 libs/content/         Content model: topic/course definitions, compiler and validator, problem runtime, answer checking
 libs/subject-math/    The mathematics subject: math answer checkers and helpers for math problem generators
 libs/subject-english/ The English subject: sentence and word checkers and the kit for item banks
+libs/judge/           AI judgment of writing: the prompt, the respond tool, verdicts whose quotations are checked against the text, providers through pi-ai
 libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
 libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and native
@@ -88,6 +89,7 @@ docs/                 Documents (English + Simplified Chinese)
 ```text
 apps/web ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
    │            │                                       ▲
+   │            ├──► libs/judge ──► libs/content         │
    │            └──► libs/proto                         │
    ├──► libs/design
    │                                             libs/subject-math ◄── content/math
@@ -109,6 +111,7 @@ apps/voice ╌╌► apps/web over HTTP (no package dependency)
 - `libs/design` depends on nothing in the repository and has no I/O, so web and native share it.
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
+- `libs/judge` depends on `libs/content`'s types and on pi-ai. It knows no subject and no database: `libs/api` hands it the criteria, the text and a model client, and stores what it returns.
 - `libs/subject-worker` is the one library that imports the Workers runtime; it knows no subject.
 - `apps/voice` is Python and imports nothing from the repository. It reaches the web Worker over HTTP with its own credential, for the tutor's turns and to write results; the WebSocket messages it shares with clients become Protobuf in `libs/proto`.
 - Only `apps/*` wire storage, transport, authentication and content together. The web Worker does not import content: it reaches subjects through service bindings.
@@ -210,7 +213,8 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | `event` | The engine's event log per learner and subject, numbered by `seq` without gaps; `xp` kept for reporting |
 | `learner_state` | Snapshot of the fold of the log up to `seq`; rebuildable by replay |
 | `task_session` | Sessions and their runner state; at most one active per learner and course |
-| `answer` | Every judged response: problem reference, response, verdict |
+| `answer` | Every judged response: problem reference, response, verdict, and the score of a text judged by a model |
+| `judgment` | Each text sent to a model: the criteria by key (`id@version`), status, verdict with quotations, score, model, prompt version, tokens, cost, tries and the reason of the last failure, never the provider's message |
 | `league_group`, `league_member` | A week's groups by tier and who is in them; weekly XP and outcomes are computed from `event` |
 | `guardian`, `guardian_invite` | Who follows which learner; single-use invitation codes that expire after 7 days |
 | `consent`, `guardian_verification` | Append-only consents per learner and scope; who proved they are a guardian, with the form's key only while it awaits a decision |
@@ -221,6 +225,8 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 - Completing a session appends the event, replaces the snapshot and closes the session in one transaction.
 - The snapshot row and the session row are locked (`SELECT … FOR UPDATE`) while they are read for writing. The unique `(learner, subject, seq)` index rejects any writer that slips past.
 - `SubmitAnswer` carries the index of the question it answers, so a repeated request is rejected instead of being judged twice.
+- **Answers judged by a model.** `SubmitAnswer` checks only the length, stores a pending `judgment`, keeps it in the runner state and returns `pending`. The client polls `GetJudgment`, which runs a judgment that is due inside the request, since a Worker's database connection closes with the response. One caller at a time holds a judgment by a lease of 30 seconds; a failed try waits 10 seconds, doubling up to 2 minutes, moves to the backup route after two tries, and fails for good after 10 minutes, when the learner may skip the question and the session ends with no event. A verdict of at least 0.75 of the criteria met counts as correct; a lower one sends the text back once for a rewrite with no model answer shown, and the second verdict counts either way. Only then is the event appended, so replay never calls a model.
+- **A judged topic needs a route.** A course leaves out, for each learner, every topic judged by a model whose criteria do not all have a live route that may receive that learner's text ([Admin §5](admin.md#5-ai-services)); the compiler keeps any topic judged by rules from depending on or encompassing one.
 
 **Migrations** are generated by drizzle-kit from `libs/db/src/schema` into `libs/db/drizzle` and committed. Tests apply them to PGlite; deployments apply them with `pnpm nx run db:migrate`.
 

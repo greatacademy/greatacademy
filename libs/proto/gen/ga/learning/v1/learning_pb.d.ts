@@ -1137,6 +1137,20 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
    * @generated from field: optional ga.learning.v1.Passage passage = 8;
    */
   passage?: Passage | undefined;
+
+  /**
+   * judging is set while a model judges the answer to this question.
+   *
+   * @generated from field: optional ga.learning.v1.Judging judging = 9;
+   */
+  judging?: Judging | undefined;
+
+  /**
+   * attempt counts the tries at this question so far; a rewrite after feedback is the next.
+   *
+   * @generated from field: int32 attempt = 10;
+   */
+  attempt: number;
 };
 
 /**
@@ -1144,6 +1158,37 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
  * Use `create(QuestionSchema)` to create a new message.
  */
 export declare const QuestionSchema: GenMessage<Question>;
+
+/**
+ * Judging is an answer waiting for a model's verdict.
+ *
+ * @generated from message ga.learning.v1.Judging
+ */
+export declare type Judging = Message<"ga.learning.v1.Judging"> & {
+  /**
+   * @generated from field: string response = 1;
+   */
+  response: string;
+
+  /**
+   * delayed is true when judging has failed for now; the learner may rewrite,
+   * or, once failed is true, skip the question with no result.
+   *
+   * @generated from field: bool delayed = 2;
+   */
+  delayed: boolean;
+
+  /**
+   * @generated from field: bool failed = 3;
+   */
+  failed: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.Judging.
+ * Use `create(JudgingSchema)` to create a new message.
+ */
+export declare const JudgingSchema: GenMessage<Judging>;
 
 /**
  * Passage is a text to read. Its body is in the language being read, with
@@ -1361,6 +1406,12 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
      */
     value: OrderInput;
     case: "order";
+  } | {
+    /**
+     * @generated from field: ga.learning.v1.WritingInput writing = 6;
+     */
+    value: WritingInput;
+    case: "writing";
   } | { case: undefined; value?: undefined };
 };
 
@@ -1369,6 +1420,30 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
  * Use `create(InputSchema)` to create a new message.
  */
 export declare const InputSchema: GenMessage<Input>;
+
+/**
+ * WritingInput: a long text field. The response is the learner's text, judged
+ * by a model once it has at least min_words words and at most max_chars characters.
+ *
+ * @generated from message ga.learning.v1.WritingInput
+ */
+export declare type WritingInput = Message<"ga.learning.v1.WritingInput"> & {
+  /**
+   * @generated from field: int32 min_words = 1;
+   */
+  minWords: number;
+
+  /**
+   * @generated from field: int32 max_chars = 2;
+   */
+  maxChars: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.WritingInput.
+ * Use `create(WritingInputSchema)` to create a new message.
+ */
+export declare const WritingInputSchema: GenMessage<WritingInput>;
 
 /**
  * ChoiceInput: the response is the index of the chosen option, in decimal.
@@ -1538,7 +1613,7 @@ export declare type SubmitAnswerRequest = Message<"ga.learning.v1.SubmitAnswerRe
   response: string;
 
   /**
-   * skip answers "I don't know" where allowed.
+   * skip answers "I don't know" where allowed, and leaves a question whose judging failed.
    *
    * @generated from field: bool skip = 4;
    */
@@ -1556,7 +1631,7 @@ export declare const SubmitAnswerRequestSchema: GenMessage<SubmitAnswerRequest>;
  */
 export declare type SubmitAnswerResponse = Message<"ga.learning.v1.SubmitAnswerResponse"> & {
   /**
-   * feedback judges the answer; unset where results come at the end.
+   * feedback judges the answer; unset where results come at the end, and while pending.
    *
    * @generated from field: optional ga.learning.v1.Feedback feedback = 1;
    */
@@ -1566,6 +1641,13 @@ export declare type SubmitAnswerResponse = Message<"ga.learning.v1.SubmitAnswerR
    * @generated from field: ga.learning.v1.Session session = 2;
    */
   session?: Session | undefined;
+
+  /**
+   * pending is true while a model judges the answer; ask again with GetJudgment.
+   *
+   * @generated from field: bool pending = 3;
+   */
+  pending: boolean;
 };
 
 /**
@@ -1573,6 +1655,111 @@ export declare type SubmitAnswerResponse = Message<"ga.learning.v1.SubmitAnswerR
  * Use `create(SubmitAnswerResponseSchema)` to create a new message.
  */
 export declare const SubmitAnswerResponseSchema: GenMessage<SubmitAnswerResponse>;
+
+/**
+ * @generated from message ga.learning.v1.GetJudgmentRequest
+ */
+export declare type GetJudgmentRequest = Message<"ga.learning.v1.GetJudgmentRequest"> & {
+  /**
+   * @generated from field: string session_id = 1;
+   */
+  sessionId: string;
+
+  /**
+   * @generated from field: int32 index = 2;
+   */
+  index: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.GetJudgmentRequest.
+ * Use `create(GetJudgmentRequestSchema)` to create a new message.
+ */
+export declare const GetJudgmentRequestSchema: GenMessage<GetJudgmentRequest>;
+
+/**
+ * GetJudgmentResponse is as SubmitAnswerResponse: pending, or the verdict as feedback.
+ *
+ * @generated from message ga.learning.v1.GetJudgmentResponse
+ */
+export declare type GetJudgmentResponse = Message<"ga.learning.v1.GetJudgmentResponse"> & {
+  /**
+   * @generated from field: optional ga.learning.v1.Feedback feedback = 1;
+   */
+  feedback?: Feedback | undefined;
+
+  /**
+   * @generated from field: ga.learning.v1.Session session = 2;
+   */
+  session?: Session | undefined;
+
+  /**
+   * @generated from field: bool pending = 3;
+   */
+  pending: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.GetJudgmentResponse.
+ * Use `create(GetJudgmentResponseSchema)` to create a new message.
+ */
+export declare const GetJudgmentResponseSchema: GenMessage<GetJudgmentResponse>;
+
+/**
+ * CriterionResult is a model's verdict on one criterion, with words quoted from the learner's text.
+ *
+ * @generated from message ga.learning.v1.CriterionResult
+ */
+export declare type CriterionResult = Message<"ga.learning.v1.CriterionResult"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: bool met = 2;
+   */
+  met: boolean;
+
+  /**
+   * @generated from field: string quotation = 3;
+   */
+  quotation: string;
+
+  /**
+   * @generated from field: string note = 4;
+   */
+  note: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.CriterionResult.
+ * Use `create(CriterionResultSchema)` to create a new message.
+ */
+export declare const CriterionResultSchema: GenMessage<CriterionResult>;
+
+/**
+ * FeedbackPoint is one thing to do next, about the quoted words.
+ *
+ * @generated from message ga.learning.v1.FeedbackPoint
+ */
+export declare type FeedbackPoint = Message<"ga.learning.v1.FeedbackPoint"> & {
+  /**
+   * @generated from field: string point = 1;
+   */
+  point: string;
+
+  /**
+   * @generated from field: string quotation = 2;
+   */
+  quotation: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.FeedbackPoint.
+ * Use `create(FeedbackPointSchema)` to create a new message.
+ */
+export declare const FeedbackPointSchema: GenMessage<FeedbackPoint>;
 
 /**
  * @generated from message ga.learning.v1.Feedback
@@ -1608,6 +1795,30 @@ export declare type Feedback = Message<"ga.learning.v1.Feedback"> & {
    * @generated from field: optional ga.common.v1.Figure solution_figure = 5;
    */
   solutionFigure?: Figure | undefined;
+
+  /**
+   * criteria, points and score are a model's verdict, for an answer it judged.
+   *
+   * @generated from field: repeated ga.learning.v1.CriterionResult criteria = 6;
+   */
+  criteria: CriterionResult[];
+
+  /**
+   * @generated from field: repeated ga.learning.v1.FeedbackPoint points = 7;
+   */
+  points: FeedbackPoint[];
+
+  /**
+   * @generated from field: optional double score = 8;
+   */
+  score?: number | undefined;
+
+  /**
+   * revise is true when the learner may rewrite the same text; the rewrite is what counts.
+   *
+   * @generated from field: bool revise = 9;
+   */
+  revise: boolean;
 };
 
 /**
@@ -2154,6 +2365,17 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof SubmitAnswerRequestSchema;
     output: typeof SubmitAnswerResponseSchema;
+  },
+  /**
+   * GetJudgment asks after an answer a model is judging: still pending, or its
+   * verdict as feedback, with the session moved on.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.GetJudgment
+   */
+  getJudgment: {
+    methodKind: "unary";
+    input: typeof GetJudgmentRequestSchema;
+    output: typeof GetJudgmentResponseSchema;
   },
   /**
    * GetTopic returns a topic's lesson to reread, and how it connects to other topics.

@@ -127,7 +127,7 @@ E2 and E3 are independent and can run at once. First, a short spike settles what
 
 | Spike | Done when |
 | :--- | :--- |
-| `cf` can declare Workflows, the AI binding and Rate Limiting | Deployed in a test Worker, or a workaround is chosen and documented |
+| `cf` can declare the AI binding and Rate Limiting | Deployed in a test Worker, or a workaround is chosen and documented |
 | pi-ai on Workers with real providers, through AI Gateway and the AI binding | Tool calls, invalid arguments, cancellation and streaming checked against real models; bundle size and startup measured |
 
 ### E2. Graded Reading and Knowledge (L)
@@ -150,16 +150,18 @@ E2 and E3 are independent and can run at once. First, a short spike settles what
 | Id | Work | Files |
 | :--- | :--- | :--- |
 | E3.1 | Criteria, routes and prompts, and a `respond` tool; each quotation must be found in the learner's text or the result is rejected; tests on `faux` | New `libs/judge` |
-| E3.2 | Worker with a Workflow per judgment: retries, a calibrated backup, and a limit of time and cost | New `apps/judge`, using the spike |
+| E3.2 | Judgment in the web Worker on the learner's poll: a lease per judgment, retries, a calibrated backup, and a limit of time | `libs/api` |
 | E3.3 | Table `judgment`: answer, status, criteria and quotations, criterion version, model, prompt version, tokens, cost. `answer` gains a pending state and a score | `libs/db` |
 | E3.4 | `SubmitAnswer` returns pending for an AI-judged item, and `GetSession` shows the verdict. The session waits for it. The event is appended only with the verdict, so replay never calls a model | `libs/proto`, `libs/api` |
 | E3.5 | Item type without a `canonical` answer but with a model answer; length limits per level instead of the 2,000 characters in `CheckerRegistry` | `libs/content` |
 | E3.6 | Attempts on one item: feedback with at most two points, rewriting, and passing on the revision | `libs/api`, `apps/web` |
 | E3.7 | Writing player: a long text field, draft saving, waiting state, marked quotations | `apps/web` |
 | E3.8 | `tools/calibrate`: runs a route on a scored set, reports agreement per criterion and writes the allowed routes | New `tools/calibrate` |
-| E3.9 | Limits per learner, AI Gateway logs with no learner text, a cost alarm; learner text kept in clearly delimited data, with prompt injection tests | `apps/judge`, Cloudflare |
+| E3.9 | Limits per learner, AI Gateway logs with no learner text, a cost alarm; learner text kept in clearly delimited data, with prompt injection tests | `libs/judge`, `libs/api`, Cloudflare |
 | E3.10 | Sampled human checks of live verdicts, tracking drift per route | `tools/calibrate` |
 | E3.11 | Tables and checks for providers, routes and the [vendor register](minors-data.md#12-vendors), with no provider in the code. `tools/calibrate` writes them at first; then a platform administrator role and an [admin console](english-curriculum.md#131-ai-models) with write-only keys and a change log | `libs/db`, `libs/api`, `apps/web` |
+
+**Built so far.** E3.1 to E3.7 and E3.11 are built and tested on pi-ai's `faux` provider. A judgment runs inside `GetJudgment`, which the waiting client polls every 2 seconds, rather than in a Workflow: the `judgment` row holds the lease, the tries and the next time to try, so any request can carry it on, and the session needs no other process. A text passes at 0.75 of its criteria met (*starting*) and may be rewritten once. W4 starts with `writing-a-paragraph`; a learner whom no live route may serve never gets it.
 
 **Failure behavior.** A failed judgment is never a failed answer. The learner sees that judging is delayed and can go on to other courses. Only one session per course can be active, so a learner cannot proceed in this course until the verdict arrives. A judgment that is still failing after its time limit lets the learner rewrite or skip with no result.
 

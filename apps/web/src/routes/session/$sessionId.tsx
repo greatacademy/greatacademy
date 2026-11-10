@@ -13,6 +13,7 @@ import { OrderField } from "../../components/OrderField.tsx";
 import { PlotField } from "../../components/PlotField.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
+import { JudgedFeedback, WritingFlow } from "../../components/WritingFlow.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { learning } from "../../lib/rpc.ts";
@@ -179,6 +180,27 @@ function QuestionFlow({
   if (question.intro && !practicing) {
     const intro = question.intro;
     return <IntroView intro={intro} onDone={() => setPracticing(true)} />;
+  }
+  if (question.problem?.input?.kind.case === "writing") {
+    return (
+      <div className="space-y-4">
+        {question.passage && <PassageCard body={question.passage.body} />}
+        <Card className="space-y-6">
+          {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
+          <ProblemPrompt problem={question.problem} answering />
+        </Card>
+        {pending ? (
+          pending.feedback.criteria.length > 0 && (
+            <Card>
+              <JudgedFeedback feedback={pending.feedback} text={pending.response} />
+            </Card>
+          )
+        ) : (
+          <WritingFlow session={session} question={question} onAnswered={onAnswered} />
+        )}
+        {pending && <FeedbackView feedback={pending.feedback} problem={question.problem} session={session} onContinue={onContinue} />}
+      </div>
+    );
   }
   return (
     <div className="space-y-4">
@@ -438,7 +460,7 @@ function FeedbackView({
       {feedback.message && <Markdown source={tx(feedback.message)} className="text-sm" />}
       {!feedback.correct && (
         <div className="text-sm">
-          <span className="mr-2 text-muted">{m.correctAnswer}:</span>
+          <span className="mr-2 text-muted">{problem?.input?.kind.case === "writing" ? m.modelAnswer : m.correctAnswer}:</span>
           <AnswerText problem={problem} answer={feedback.answer} />
         </div>
       )}

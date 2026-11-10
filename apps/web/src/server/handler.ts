@@ -125,7 +125,13 @@ async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
   const billing = pay !== undefined;
   router.service(
     LearningService,
-    learningService({ registry, now: Date.now, seed: () => Math.floor(Math.random() * 0x7fffffff), billing }),
+    learningService({
+      registry,
+      now: Date.now,
+      seed: () => Math.floor(Math.random() * 0x7fffffff),
+      billing,
+      ...(env.AI_KEYS_SECRET && { judging: { aiKeysSecret: env.AI_KEYS_SECRET } }),
+    }),
   );
   router.service(PrivacyService, privacyService({ now: Date.now, forms: forms(), notify, billing }));
   const appleStore = apple();

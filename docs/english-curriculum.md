@@ -232,7 +232,7 @@ Examples of encompassing edges, with starting weights to calibrate: `combining-w
 
 The slice is complete when it compiles, every generator passes sampling, simulated students finish it, and real learners improve on an outside test written without the platform's questions.
 
-The course `english-grammar-writing` has since added eight topics judged by rules, with 49 in all: `comparatives-and-superlatives` (`adjectives-and-adverbs`), `apostrophes-and-possessives` and `commonly-confused-words` (`nouns-and-pronouns`), `verb-tense-consistency` (`simple-verb-tenses`), `commas-after-introductions` (`capitals-and-end-punctuation`, `prepositional-phrases`), `punctuating-dialogue` (`capitals-and-end-punctuation`), and `academic-words-2` and `academic-words-3`, each after the batch before it.
+The course `english-grammar-writing` has since added eight topics judged by rules, with 49 in all: `comparatives-and-superlatives` (`adjectives-and-adverbs`), `apostrophes-and-possessives` and `commonly-confused-words` (`nouns-and-pronouns`), `verb-tense-consistency` (`simple-verb-tenses`), `commas-after-introductions` (`capitals-and-end-punctuation`, `prepositional-phrases`), `punctuating-dialogue` (`capitals-and-end-punctuation`), and `academic-words-2` and `academic-words-3`, each after the batch before it. A fiftieth, `writing-a-paragraph`, is the first judged by a model (§13.1); a learner whom no route may serve goes through the course without it.
 
 A second course, `english-reading-comprehension` (Reading for Meaning, grades 3 to 5), teaches the reading strand of §3 with 15 topics judged by rules, each item a short original text with a choice: main ideas, summaries and text features; sequence, cause and effect, compare and contrast and text structures; inferences, fact and opinion and the author's purpose; point of view, characters and the lesson of a story; similes, metaphors and idioms. Its outline is [docs/english-courses/english-reading-comprehension.md](english-courses/english-reading-comprehension.md). Only `point-of-view` reaches into the first course, through `nouns-and-pronouns`. A third course, `english-literature-argument` (Literature and Argument, grades 6 to 8), builds on it with 9 such topics: personification and hyperbole, sound devices and rhyme scheme, plot and conflict, theme, and tone and mood; then claims, evidence, reasoning, and counterclaims and rebuttals. Writing whole essays waits for AI judgment (§8.3); these topics teach the parts an essay is judged on. Its outline is [docs/english-courses/english-literature-argument.md](english-courses/english-literature-argument.md).
 
@@ -327,7 +327,7 @@ Production runs on Kubernetes, with manifests in `deploy/voice` as a Kustomize b
 | Stage | Service | Use |
 | :--- | :--- | :--- |
 | First slice | Workers | The gateway and shards of English; no new product |
-| Writing | Workflows | Asynchronous judgment, with retries and saved progress |
+| Writing | Workers | Judgment in the web Worker while the learner waits, with retries, leases and progress kept in the `judgment` table, so no Workflow is needed |
 | Writing | AI Gateway | Logs, cost and limits for model calls; no caching of judgments, and no logging of text by minors |
 | Writing | Rate Limiting | Limits on abuse and cost |
 | Speech | R2 | Audio of prompts, and recordings kept briefly and deleted by a lifecycle rule |
@@ -347,7 +347,7 @@ Local tests use **containers only, not Kubernetes**.
 
 ### 13.6 To Confirm Before Building
 
-- That the `cf` command line can declare Workflows, R2 lifecycle rules and the AI binding.
+- That the `cf` command line can declare R2 lifecycle rules and the AI binding.
 - That pi-ai works against real providers on Workers. It has so far passed in workerd only against mocked responses, including streaming tool calls for Anthropic, OpenAI and Google.
 - That a WebSocket stays stable through Tunnel for the length of a session.
 - The cluster's region, whether KEDA and Prometheus are installed, and its image registry. With one region, learners far from it have higher latency, which the measurements above must cover.

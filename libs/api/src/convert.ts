@@ -38,6 +38,8 @@ function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
       return { kind: { case: "order", value: { items: spec.items.map(text) } } };
     case "plot":
       return { kind: { case: "plot", value: { ...spec.grid, points: spec.points } } };
+    case "writing":
+      return { kind: { case: "writing", value: { minWords: spec.minWords, maxChars: spec.maxChars } } };
   }
 }
 
@@ -118,7 +120,11 @@ export function knowledgePointIntro(
   };
 }
 
-async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof QuestionSchema>> {
+async function question(
+  c: CourseEntry,
+  run: RunState,
+  judging: { readonly delayed: boolean; readonly failed: boolean } | undefined,
+): Promise<MessageInitShape<typeof QuestionSchema>> {
   const ref = run.current!;
   const intro = run.kind === "lesson" && run.lesson.kpAsked === 0 && !run.practice;
   // The question and, when a knowledge point starts, its worked example come in one call.
@@ -129,6 +135,10 @@ async function question(c: CourseEntry, run: RunState): Promise<MessageInitShape
     feedback: run.kind === "lesson" || run.kind === "review" || run.kind === "reading",
     canSkip: canSkip(run),
     total: run.kind === "review" ? run.plan.length : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
+    attempt: run.attempt ?? 0,
+    ...(run.pending && {
+      judging: { response: run.pending.response, delayed: judging?.delayed ?? false, failed: judging?.failed ?? false },
+    }),
   };
   if (run.kind === "reading") {
     const passage = await c.source.passage(run.passage);
@@ -185,12 +195,14 @@ export async function sessionMessage(
   id: string,
   run: RunState,
   state: LearnerState,
+  judging?: { readonly delayed: boolean; readonly failed: boolean },
 ): Promise<MessageInitShape<typeof SessionSchema>> {
+  const q = run.result ? undefined : await question(c, run, judging);
   return {
     id,
     courseId: c.id,
     task: taskMessage(c, runTask(run), state),
     answered: run.asked.length,
-    step: run.result ? { case: "result", value: await result(c, run) } : { case: "question", value: await question(c, run) },
+    step: q ? { case: "question", value: q } : { case: "result", value: await result(c, run) },
   };
 }

@@ -110,6 +110,7 @@ export interface QualifiedRoute {
  * qualifyingRoute finds the route that may judge a learner's work: the live
  * primary, or else the calibrated backup. For a minor all five conditions of
  * docs/admin.md §6 must hold, and with none it returns undefined and judgment waits.
+ * avoid passes over a position, so that a judgment the primary keeps failing moves to the backup.
  */
 export async function qualifyingRoute(
   db: Db,
@@ -117,6 +118,7 @@ export async function qualifyingRoute(
   learnerId: string,
   scope: ConsentScope,
   at: number,
+  avoid?: RoutePosition,
 ): Promise<QualifiedRoute | undefined> {
   const age = await learnerAge(db, learnerId);
   const minor = age.band !== "adult";
@@ -127,7 +129,7 @@ export async function qualifyingRoute(
   if (minor && marketOf(age.country ?? "")?.status !== "open") return undefined;
   const [list, checks, versions, all] = await Promise.all([providers(db), vendorChecks(db), notices(db), routes(db)]);
   const candidates = all
-    .filter((r) => r.criterion === criterion)
+    .filter((r) => r.criterion === criterion && r.position !== avoid)
     .sort((a, b) => a.position.localeCompare(b.position))
     .reverse();
   for (const r of candidates) {

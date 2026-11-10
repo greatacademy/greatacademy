@@ -4,6 +4,8 @@ packages:
   - content/*
   - tools/*
 allowBuilds:
+  '@google/genai': false
+  protobufjs: false
   esbuild: true
   nx: true
   workerd: true

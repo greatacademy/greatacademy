@@ -1,6 +1,20 @@
 import type { EngineEvent, LearnerState } from "@ga/engine";
 import { sql } from "drizzle-orm";
-import { bigint, boolean, date, index, integer, jsonb, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  boolean,
+  date,
+  doublePrecision,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { user } from "./auth.ts";
 
@@ -166,9 +180,70 @@ export const answer = pgTable(
     response: text("response").notNull(),
     skipped: boolean("skipped").notNull().default(false),
     correct: boolean("correct").notNull(),
+    /** score is the fraction of criteria met, for an answer judged by a model. */
+    score: doublePrecision("score"),
     at: at("at").notNull(),
   },
   (t) => [uniqueIndex("answer_session_index").on(t.sessionId, t.index)],
+);
+
+/** JudgmentStatus is where a judgment is: waiting for a model, done, failed for good, or replaced by a rewrite. */
+export type JudgmentStatus = "pending" | "done" | "failed" | "superseded";
+
+/** StoredVerdict is a model's checked verdict as a judgment keeps it: per criterion, with quotations, and at most two points of feedback. */
+export interface StoredVerdict {
+  readonly criteria: readonly {
+    readonly id: string;
+    readonly version: string;
+    readonly met: boolean;
+    readonly quotation: string;
+    readonly note: string;
+  }[];
+  readonly feedback: readonly { readonly point: string; readonly quotation: string }[];
+}
+
+/**
+ * judgment is one learner text sent to be judged by a model, for one attempt at
+ * a question of a session. The answer is recorded, and the event appended, only
+ * once its verdict is in, so replaying the log never calls a model.
+ */
+export const judgment = pgTable(
+  "judgment",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sessionId: uuid("session_id")
+      .notNull()
+      .references(() => taskSession.id, { onDelete: "cascade" }),
+    learnerId: uuid("learner_id")
+      .notNull()
+      .references(() => learner.id, { onDelete: "cascade" }),
+    index: integer("index").notNull(),
+    /** attempt counts the learner's tries at the question, from 1; a rewrite is the next attempt. */
+    attempt: integer("attempt").notNull(),
+    topicId: text("topic_id").notNull(),
+    kp: integer("kp").notNull(),
+    seed: bigint("seed", { mode: "number" }).notNull(),
+    response: text("response").notNull(),
+    /** criteria are the keys (id@version) of the criteria judged. */
+    criteria: jsonb("criteria").$type<readonly string[]>().notNull(),
+    status: text("status").$type<JudgmentStatus>().notNull().default("pending"),
+    verdict: jsonb("verdict").$type<StoredVerdict>(),
+    score: doublePrecision("score"),
+    providerId: text("provider_id"),
+    model: text("model"),
+    promptVersion: text("prompt_version"),
+    inputTokens: integer("input_tokens").notNull().default(0),
+    outputTokens: integer("output_tokens").notNull().default(0),
+    cost: doublePrecision("cost").notNull().default(0),
+    /** tries counts the calls made; error is the reason the last one failed, never the learner's text. */
+    tries: integer("tries").notNull().default(0),
+    error: text("error"),
+    createdAt: at("created_at").notNull(),
+    /** nextAt is when the judgment may be tried again. */
+    nextAt: at("next_at").notNull(),
+    finishedAt: at("finished_at"),
+  },
+  (t) => [index("judgment_session").on(t.sessionId, t.index), index("judgment_due").on(t.status, t.nextAt)],
 );
 
 /** leagueGroup is a group of learners competing in a tier for a week, which starts at week. */
