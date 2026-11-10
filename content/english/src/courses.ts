@@ -162,10 +162,21 @@ export const literatureArgument: CourseDef = {
       title: t("Argument", "论证"),
       modules: [
         { title: t("Building an Argument", "构建论证"), topics: ["claims", "evidence", "reasoning", "counterclaims-and-rebuttals"] },
+        {
+          title: t("Writing an Argument Essay", "写议论文"),
+          topics: [
+            "writing-a-thesis-statement",
+            "outlining-an-argument",
+            "writing-an-evidence-paragraph",
+            "writing-a-counterclaim-paragraph",
+            "introductions-and-conclusions",
+            "revising-a-draft",
+          ],
+        },
       ],
     },
   ],
-  buildsOn: ["english-reading-comprehension"],
+  buildsOn: ["english-reading-comprehension", "english-grammar-writing"],
 };
 
 /** englishCourses lists the courses of English. */

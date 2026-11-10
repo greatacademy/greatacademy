@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, and five judged by a model: two of W2 sentences in `src/topics/writing-sentences-judged.ts` and three of W4 paragraphs in `src/topics/writing-paragraphs-judged.ts`, so the course has 54. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, and five judged by a model: two of W2 sentences in `src/topics/writing-sentences-judged.ts` and three of W4 paragraphs in `src/topics/writing-paragraphs-judged.ts`, so the course has 54. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`, and 6 judged moves of an argument essay in `src/topics/writing-essays-judged.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
@@ -59,3 +59,11 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `writing-an-opinion-paragraph` | `writing-a-paragraph` | 0.4 | An opening point, support and a closing sentence carry over |
 | `writing-a-how-to-paragraph` | `writing-a-paragraph`, `ordering-sentences-in-a-paragraph` | 0.3 each | The paragraph opens with its point and orders its steps |
 | `writing-a-how-to-paragraph` | `choosing-transitions` | 0.2 | Transitions mark the steps, but only of sequence |
+| `writing-a-thesis-statement` | `claims` | 0.4 | A thesis is a claim with its reasons |
+| `outlining-an-argument` | `writing-a-thesis-statement`, `evidence` | 0.3 each | Each outline opens with a thesis and lists evidence |
+| `writing-an-evidence-paragraph` | `reasoning` | 0.4 | Explaining evidence is linking it to the claim |
+| `writing-an-evidence-paragraph` | `outlining-an-argument` | 0.2 | Only a reason with its evidence carries over |
+| `writing-a-counterclaim-paragraph` | `counterclaims-and-rebuttals` | 0.4 | Each paragraph writes both |
+| `writing-a-counterclaim-paragraph` | `writing-an-evidence-paragraph` | 0.2 | A rebuttal backs its answer with a reason or evidence |
+| `introductions-and-conclusions` | `writing-a-thesis-statement` | 0.4 | Each introduction ends on a thesis, and each conclusion restates one |
+| `revising-a-draft` | `writing-an-evidence-paragraph` | 0.3 | Most drafts need a point, evidence or an explanation added |

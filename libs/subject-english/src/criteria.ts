@@ -1,6 +1,6 @@
 import type { CriterionSpec } from "@ga/content";
 
-/** WRITING_CRITERIA are the criteria of the first writing levels of docs/english-curriculum.md §8.1: W2 meaning checks and W4 paragraphs, with starting questions to be calibrated. */
+/** WRITING_CRITERIA are the criteria of the first writing levels of docs/english-curriculum.md §8.1: W2 meaning checks, W4 paragraphs and the moves of W5 essays, with starting questions to be calibrated. */
 export const WRITING_CRITERIA: readonly CriterionSpec[] = [
   {
     id: "w2-keeps-meaning",
@@ -84,6 +84,97 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     id: "w4-answers-prompt",
     version: "1",
     question: "Does the paragraph answer the task it was written for?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w5-thesis-position",
+    version: "1",
+    question: "Does the sentence take a clear side on the question, one that a reasonable person could disagree with?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-thesis-reasons",
+    version: "1",
+    question: "Does the sentence name at least one main reason for its position?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-outline-thesis",
+    version: "1",
+    question: "Does the outline begin with a thesis that takes a clear side on the question?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-outline-reasons",
+    version: "1",
+    question: "Does the outline list at least two different reasons, each of which supports the thesis?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w5-outline-evidence",
+    version: "1",
+    question: "Does every reason in the outline have evidence or an example under it?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w5-uses-source",
+    version: "1",
+    question: "Does the paragraph quote or closely paraphrase evidence from the source passage?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-explains-evidence",
+    version: "1",
+    question: "Does the paragraph explain how its evidence supports its point, rather than only repeating the evidence?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-states-counterclaim",
+    version: "1",
+    question: "Does the paragraph fairly state a view that opposes the essay's claim?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-rebuts",
+    version: "1",
+    question: "Does the paragraph answer the opposing view with a reason or evidence for why the essay's claim still holds?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-intro-hook",
+    version: "1",
+    question:
+      "Does the introduction open with something meant to interest the reader, such as a striking fact, a short scene or a question, rather than announcing the essay?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-intro-thesis",
+    version: "1",
+    question: "Does the introduction end with a thesis that states the position the essay will argue?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-conclusion-restates",
+    version: "1",
+    question: "Does the conclusion restate the thesis in different words rather than copying it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-conclusion-final-thought",
+    version: "1",
+    question: "Does the conclusion end with a final thought, such as why the issue matters or what should happen next?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-revision-fixes",
+    version: "1",
+    question: "Does the revision fix the problem that the task names in the draft?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w5-revision-keeps-point",
+    version: "1",
+    question: "Does the revision keep the main point of the original draft?",
     quoteWhenMet: false,
   },
 ];

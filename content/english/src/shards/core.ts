@@ -21,6 +21,7 @@ import { thinkingReadingTopics } from "../topics/reading-thinking.ts";
 import { usageTopics } from "../topics/usage.ts";
 import { wordTopics } from "../topics/words.ts";
 import { academicWordTopics } from "../topics/words-academic.ts";
+import { judgedEssayTopics } from "../topics/writing-essays-judged.ts";
 import { paragraphTopics } from "../topics/writing-paragraphs.ts";
 import { judgedParagraphTopics } from "../topics/writing-paragraphs-judged.ts";
 import { sentenceWritingTopics } from "../topics/writing-sentences.ts";
@@ -42,6 +43,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...thinkingReadingTopics,
   ...literatureTopics,
   ...argumentTopics,
+  ...judgedEssayTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */

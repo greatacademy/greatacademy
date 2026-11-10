@@ -5,7 +5,7 @@
 - **Level:** Grades 3 to 8
 - **Prerequisite(s):** Speaking English and reading simple sentences
 - **Language of explanation:** English
-- **Size:** 3 units · 11 modules · 49 topics
+- **Size:** 3 units · 11 modules · 54 topics
 
 ## Description
 
@@ -48,7 +48,7 @@ How English sentences work, how to join and improve them, and how words are buil
 1.4.7. Misplaced Modifiers  
 1.4.8. Parallel Structure
 
-### 2. Sentence Writing (15 topics)
+### 2. Sentence Writing (20 topics)
 
 #### 2.1. Punctuating Sentences
 
@@ -63,7 +63,9 @@ How English sentences work, how to join and improve them, and how words are buil
 2.2.2. Combining with Conjunctions  
 2.2.3. Fixing Run-ons  
 2.2.4. Combining with Relative Clauses  
-2.2.5. Combining with Appositives
+2.2.5. Combining with Appositives  
+2.2.6. Expanding Ideas in Your Own Words  
+2.2.7. Combining Sentences in Your Own Words
 
 #### 2.3. Improving Sentences
 
@@ -75,7 +77,12 @@ How English sentences work, how to join and improve them, and how words are buil
 2.4.1. Identifying Topic Sentences  
 2.4.2. Ordering Sentences in a Paragraph  
 2.4.3. Choosing Transitions  
-2.4.4. Removing Off-Topic Sentences
+2.4.4. Removing Off-Topic Sentences  
+2.4.5. Writing a Paragraph  
+2.4.6. Writing an Opinion Paragraph  
+2.4.7. Writing a How-To Paragraph
+
+Topics 2.2.6, 2.2.7 and 2.4.5 to 2.4.7 are judged by a model; a learner whom no route may serve goes through the course without them.
 
 ### 3. Words (13 topics)
 
