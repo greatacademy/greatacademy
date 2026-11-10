@@ -150,7 +150,6 @@ Research suggests that friendships like this are good for both sides. Older peop
 "People ask me whether it is strange to have a best friend who is so old," Ruby says. "I tell them that age is just a number."`,
       grammar: [tags, indirect],
       names: ["Ruby", "Arthur"],
-      glossed: ["strange"],
       questions: [
         [
           ["How did Ruby and Arthur meet?", "露比和亚瑟是怎样认识的？"],
@@ -318,7 +317,7 @@ The results of many studies like this suggest that both matter. Things like how 
 
 Anaïs and her sister now speak almost every day. "I always felt that something was missing," Anaïs says. "I didn't know what it was. Now I know."`,
       names: ["Anaïs", "South", "Korea", "France", "United", "States"],
-      glossed: ["strange", "genes"],
+      glossed: ["genes"],
       questions: [
         [
           ["How did Anaïs find her twin?", "阿纳伊斯是怎样找到她的双胞胎姐妹的？"],

@@ -31,7 +31,8 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Grades 9 to 12: 37 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
-| Course of B1 | Units 1 to 8 done: 64 passages, 8 conversations; units 9 to 12 not started |
+| Course of B1: 12 units, 96 passages, 12 conversations | Done; some passages of units 2 to 5 use words of later units, so they wait for those batches |
+| Course of B2 | Units 1 and 2 done: 16 passages, 2 conversations |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
 | Topics of B2 | Units 1 to 3 done (39 topics); units 4 to 10 not started |
 | Outlines of the native courses | Done |

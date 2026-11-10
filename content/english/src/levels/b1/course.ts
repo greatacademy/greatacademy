@@ -17,6 +17,7 @@ const units: readonly UnitDef[] = [
         "b1-words-qualities",
         "b1-words-study-skills",
         "b1-words-little-words-4",
+        "b1-words-common-words",
       ],
       grammar: ["present-perfect-or-past-simple"],
       writing: ["combining-with-conjunctions", "identifying-topic-sentences", "writing-an-informal-email"],
@@ -151,9 +152,72 @@ const units: readonly UnitDef[] = [
     "b1-reading-relationships",
     "giving-a-friend-advice",
   ),
+  levelUnit(
+    t("Cities and Transport", "城市与交通"),
+    {
+      words: [
+        "b1-words-city-life",
+        "b1-words-getting-around",
+        "b1-words-city-problems",
+        "b1-words-directions-2",
+        "b1-words-buildings",
+        "b1-words-city-services",
+      ],
+      grammar: ["so-and-such", "may-might-and-could"],
+      writing: ["writing-a-how-to-paragraph"],
+    },
+    "b1-reading-cities",
+    "finding-your-way-across-town",
+  ),
+  levelUnit(
+    t("Science and Discovery", "科学与发现"),
+    {
+      words: [
+        "b1-words-science",
+        "b1-words-research",
+        "b1-words-space-2",
+        "b1-words-inventions",
+        "b1-words-numbers-and-amounts",
+        "b1-words-physics",
+        "b1-words-describing-change",
+      ],
+      grammar: ["past-perfect", "verb-tense-consistency"],
+      writing: ["summarizing-a-text"],
+    },
+    "b1-reading-science",
+    "asking-a-scientist-questions",
+  ),
+  levelUnit(
+    t("Money and Consumers", "金钱与消费"),
+    {
+      words: ["b1-words-personal-finance", "b1-words-consumers", "b1-words-value", "b1-words-money-verbs", "b1-words-online-shopping"],
+      grammar: ["gerunds-and-infinitives"],
+      writing: ["writing-a-letter-of-complaint"],
+    },
+    "b1-reading-money",
+    "making-a-complaint",
+  ),
+  levelUnit(
+    t("Arts and Entertainment", "艺术与娱乐"),
+    {
+      words: [
+        "b1-words-arts",
+        "b1-words-film-and-theater",
+        "b1-words-music-2",
+        "b1-words-books-and-stories",
+        "b1-words-entertainment",
+        "b1-words-describing-art",
+        "b1-words-going-out",
+      ],
+      grammar: ["phrasal-verbs"],
+      writing: ["writing-a-review"],
+    },
+    "b1-reading-arts",
+    "planning-a-night-out",
+  ),
 ];
 
-/** courses are the course of B1, with the units written so far. */
+/** courses are the course of B1. */
 export const courses: readonly CourseDef[] = [
   {
     id: "english-b1",
