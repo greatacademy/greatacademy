@@ -120,21 +120,35 @@ class FakeVADAnalyzer(VADAnalyzer):
 
 
 class FakeSpeechToText(FrameProcessor):
-    """FakeSpeechToText 'recognizes' the next scripted line each time the learner stops speaking."""
+    """FakeSpeechToText 'recognizes' the next scripted line in each turn of the learner's.
 
-    def __init__(self, lines: list[str]) -> None:
+    Only the first stretch of speech before the tutor speaks again gets a line, so a learner who
+    pauses mid-sentence still says one line a turn. With ``cycle`` the lines start over when they
+    run out, as a person trying the app locally keeps talking.
+    """
+
+    def __init__(self, lines: list[str], cycle: bool = False) -> None:
         super().__init__()
         self._lines = list(lines)
+        self._script = list(lines)
+        self._cycle = cycle
+        self._heard = False
 
     @override
     async def process_frame(self, frame: Frame, direction: FrameDirection) -> None:
-        """process_frame drops learner audio and pushes a transcription after each stretch of speech."""
+        """process_frame drops learner audio and pushes a transcription after the turn's first stretch of speech."""
         await super().process_frame(frame, direction)
         if isinstance(frame, InputAudioRawFrame):
             return
         await self.push_frame(frame, direction)
-        if isinstance(frame, VADUserStoppedSpeakingFrame) and self._lines:
-            await self.push_frame(TranscriptionFrame(text=self._lines.pop(0), user_id="learner", timestamp=""))
+        if isinstance(frame, BotStartedSpeakingFrame):
+            self._heard = False
+        elif isinstance(frame, VADUserStoppedSpeakingFrame) and not self._heard:
+            if not self._lines and self._cycle:
+                self._lines = list(self._script)
+            if self._lines:
+                self._heard = True
+                await self.push_frame(TranscriptionFrame(text=self._lines.pop(0), user_id="learner", timestamp=""))
 
 
 class FakeTextToSpeech(FrameProcessor):
@@ -184,8 +198,9 @@ class FakeAudioOutput(FrameProcessor):
 class FakeSpeechServices:
     """FakeSpeechServices makes fake stages: for tests, and for local development when switched on."""
 
-    def __init__(self, lines: list[str] | None = None) -> None:
+    def __init__(self, lines: list[str] | None = None, cycle: bool = False) -> None:
         self._lines = lines if lines is not None else ["Hello.", "I am fine, thank you.", "Goodbye."]
+        self._cycle = cycle
 
     def vad_params(self) -> VADParams:
         """vad_params returns FAKE_VAD_PARAMS."""
@@ -197,7 +212,7 @@ class FakeSpeechServices:
 
     def stt(self) -> FrameProcessor:
         """stt returns a FakeSpeechToText with the scripted lines."""
-        return FakeSpeechToText(self._lines)
+        return FakeSpeechToText(self._lines, cycle=self._cycle)
 
     def tts(self) -> FrameProcessor:
         """tts returns a FakeTextToSpeech."""

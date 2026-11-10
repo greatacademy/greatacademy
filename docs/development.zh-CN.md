@@ -161,7 +161,7 @@ docker compose stop voice           # SIGTERM：拒绝新会话，等待进行�
 
 - `voice` 服务属于 `voice` profile，所以普通的 `docker compose up -d` 仍然只启动 PostgreSQL。它通过 `http://host.docker.internal:5173` 访问主机上的 `cf dev`；要指向别处，设置 `VOICE_WORKER_URL`。如果容器访问不到 Web 应用，用 `DEV_HOST=0.0.0.0` 启动 Web 应用。
 - 要端到端运行一次对话，把密钥对的私钥写入 `apps/web/.dev.vars` 的 `VOICE_TICKET_PRIVATE_KEY`，并设置 `VOICE_URL=ws://localhost:8089/v1/conversation`，以及与容器的 `VOICE_WORKER_CREDENTIAL` 相同的 `VOICE_SERVICE_CREDENTIAL`。只有当某段对话有用途为 `conversation` 的、已上线、已校准、有价格的路由时，学习者才能使用它；在本地数据库中，在管理后台添加供应商、价格和路由，再手动插入一行该对话 id 的通过的校准记录。
-- 在 `VOICE_SPEECH=fake` 下，麦克风听到的每一段声音都被识别为下一句脚本台词。无头 Chrome 可以用 `--use-fake-ui-for-media-stream`、`--use-fake-device-for-media-stream` 和 `--use-file-for-fake-audio-capture=<file.wav>` 播放录音；在 macOS 上还需要 `--disable-features=AudioServiceSandbox`，否则假麦克风只有静音。
+- 在 `VOICE_SPEECH=fake` 下，学习者每一轮中的第一段声音被识别为四句脚本台词中的下一句，台词用完后从头开始，导师的话则是一段提示音。无头 Chrome 可以用 `--use-fake-ui-for-media-stream`、`--use-fake-device-for-media-stream` 和 `--use-file-for-fake-audio-capture=<file.wav>` 播放录音；在 macOS 上还需要 `--disable-features=AudioServiceSandbox`，否则假麦克风只有静音。
 - 容器没有卷，文件系统只读，`/tmp` 在内存中。日志中没有音频或转写文本：Pipecat 自己的日志只保留警告及以上级别，调试输出从不打开。
 - `/metrics` 以 Prometheus 文本格式报告 `voice_sessions_active`、`voice_sessions_capacity` 和 `voice_draining`，用于扩缩容。
 

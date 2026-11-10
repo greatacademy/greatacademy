@@ -91,7 +91,9 @@ def speech_services(kind: str) -> SpeechServices:
     """speech_services returns the configured services; real providers come from the admin console later."""
     if kind == "fake":
         logger.warning("voice: fake speech services are on; for local development only")
-        return FakeSpeechServices()
+        # Someone trying the apps by voice says a scripted line each turn, as long as they talk.
+        lines = ["Hello.", "I would like to borrow a book.", "Yes, I have a library card.", "Thank you. Goodbye."]
+        return FakeSpeechServices(lines, cycle=True)
     return UnconfiguredSpeechServices()
 
 
