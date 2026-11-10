@@ -19,7 +19,7 @@
 | P8 账户与监督 | 密码重置、邮箱验证、注销账户、每周目标、联赛；通过邀请码关联的监护人，可查看学习者进度并设置目标；家长和老师角色、托管的学习者档案、报告 | — | 部分完成：最后一个分句之前的内容已完成。生产环境发送邮件需要已验证的发件域名 |
 | P9 计费 | 只提供付费服务，设计见[计费](billing.zh-CN.md)：按学科或全部学科、按月或按年的方案，使用一个 Stripe 账户；30 天退款；监护人凭首笔银行卡付款通过验证 | Checkout、webhook、取消和退款在 Stripe 测试模式下用银行卡以及支付宝或微信支付都可用 | 进行中 |
 | P10 校准 | 用真实作答拟合知识点难度和引擎参数；逐题的内容分析 | — | 计划中 |
-| P11 更多学科 | 在同一核心上实现第二个学科：英语，设计见[英语课程体系](english-curriculum.zh-CN.md)，计划见[英语开发计划](english-development-plan.zh-CN.md) | 每门课程达到计划中相应阶段的标准 | 进行中：`english-grammar-writing`（49 个主题）已写完，通过了抽样和模拟，另有 3 到 5 年级的六个阅读单元（60 篇文章），`english-reading-comprehension`（15 个主题，另有两个阅读单元共 20 篇文章）和 `english-literature-argument`（9 个主题）也已写完；还需要部署、审阅者和试点 |
+| P11 更多学科 | 在同一核心上实现第二个学科：英语，设计见[英语课程体系](english-curriculum.zh-CN.md)，计划见[英语开发计划](english-development-plan.zh-CN.md) | 每门课程达到计划中相应阶段的标准 | 进行中：`english-grammar-writing`（49 个主题）已写完，通过了抽样和模拟，另有 3 到 5 年级的六个阅读单元（60 篇文章），`english-reading-comprehension`（15 个主题，另有两个阅读单元共 20 篇文章）和 `english-literature-argument`（9 个主题，另有两个阅读单元共 20 篇文章）也已写完；还需要部署、审阅者和试点 |
 
 ## 2. 风险与待定事项
 

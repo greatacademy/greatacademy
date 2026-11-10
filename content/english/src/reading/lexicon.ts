@@ -125,6 +125,31 @@ smiling snap snowball snowman soccer soldier sorry spelled speller spelling spen
 sunflower sunflower's sure swayed sweaters sweetest tape teacher ten that's thumbs tightly tired tomato tomatoes torn
 touched towels tower towers toys trying tunnel twice voice wagging wanted wasn't waving we're what's whispered willow
 winner woke won word wrong yelled yesterday
+able adding already argue argues arguing argument aside asleep attention awake babies babysit best board books bored
+burn buses buzz cheap check child choice claim classroom clock closing conditioner controlling cost costs counted
+cousin's decide decision defend delicious deserve deserves disagree dog dogs dollars doors dr drivers earn eighty-four
+eleven erased exist fair favor field's finished fixed fork four-day friday fridays friends frowned games goal habit
+hate homework hospital hottest i'll i've internet it's july jumped kid kids lazy learners lessons let's library local
+locking lunches meanwhile members menu messy mind missed misses mistake money naturally nearby neighbor neighborhood
+newspaper nine-year-old ninety-three o'clock office okay parents parks pay paying pays period pet phone phones pizza
+plan planning plans playgrounds pool popular position price prove public puts quarter question quieter reasonable
+reasoning reasons repaired replaced reported rested routes saturdays save savings schools schoolwork sentence
+sentences serve served serves shades shops sidewalks sister skills someone sports streets student students suggests
+sunday sundays support supporters switched talk talked teachers tearing teenagers teens terrible themselves town's
+towns tripped true understand unhappy voted wake wants wears weekday weekend weekends whether worry worse worth you're
+ached acted address answered aunt backward bangs bank barks basket begging bites blinking blow boards boy's breathing
+bridge bubble cabin camp cans carts chance chased cheered chin clang clapping cleaning climbed coach cocoa complain
+cottage counts cousin crackles crates creak creaked creaking creek cried crossed crow curtains dad dear dim done drips
+drum drums dust earned enjoy especially faces family's feathers filling finger finishes floated flown footsteps forty
+fourth freezer frog gate gates giggles girls glow goat goats grabbed grade grandfather greetings groaned gurgle
+gutters happy harbor hardly heard hills hinges hisses however hums hung husband hush ignore kitten knew knives knocked
+knocking lamp laugh laundry lighthouse lights listening lit lonely louder mangoes medal mew mill moan mood mosquitoes
+ninety noise none oak oldest packet pancakes parade partner path patter pencil peppers pings plays poem porch pounded
+pounds prices probably pulling purr quite radio railing rattled rattles roared rooftops rope rowed rowing rubber
+rumble runner rush says screamed secret seemed shadows shallow shelf shivers shook shore shoulders shouts shut sighed
+sing sink sitting slip smelled smiles somebody son song songs sparrows splash splashed stacks step stepped stopped
+strings striped sunset suppose swam swept tables talking tapping tea tin tiniest tossed uncle village waited waiting
+wander wanders waved wheels whenever whisper whistled windows winning wonderful wood yawns
 `;
 
 /** academic are the academic words that the passages use, with their spellings. */

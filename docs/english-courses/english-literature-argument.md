@@ -34,3 +34,10 @@ How stories and poems make meaning, and how arguments are built from claims, evi
 2.1.2. Evidence  
 2.1.3. Reasoning  
 2.1.4. Counterclaims and Rebuttals
+
+## Reading
+
+Two knowledge units of original passages, offered as each one's topics are learned:
+
+1. Tales and Poems (10 stories, poems and letters: figurative language, sound, plot, theme, tone and mood)
+2. Making the Case (10 arguments: claims, evidence, reasoning, counterclaims and rebuttals)

@@ -2,11 +2,13 @@
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 import { howAnimalsSurvive } from "../reading/animals.ts";
+import { makingTheCase } from "../reading/arguments.ts";
 import { theHumanBody } from "../reading/body.ts";
 import { ourChangingEarth } from "../reading/earth.ts";
 import { lifeOnTheNile } from "../reading/nile.ts";
 import { howPlantsLive } from "../reading/plants.ts";
 import { storiesAndFables } from "../reading/stories.ts";
+import { talesAndPoems } from "../reading/tales.ts";
 import { waterOnEarth } from "../reading/water.ts";
 import { weatherAndClimate } from "../reading/weather.ts";
 import { argumentTopics } from "../topics/argument.ts";
@@ -48,4 +50,6 @@ export const coreShardReading: readonly ReadingUnitDef[] = [
   ourChangingEarth,
   howAnimalsSurvive,
   storiesAndFables,
+  talesAndPoems,
+  makingTheCase,
 ];

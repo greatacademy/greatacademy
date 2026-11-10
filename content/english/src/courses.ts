@@ -144,6 +144,7 @@ export const literatureArgument: CourseDef = {
   ),
   group: t("English", "英语"),
   explanationLocale: "en",
+  reading: ["tales-and-poems", "making-the-case"],
   units: [
     {
       title: t("Literature", "文学"),
