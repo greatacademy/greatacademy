@@ -1,4 +1,5 @@
 export * from "./catalog.ts";
+export * from "./converse.ts";
 export * from "./cost.ts";
 export * from "./criteria.ts";
 export * from "./injection.ts";
