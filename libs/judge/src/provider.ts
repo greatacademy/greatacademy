@@ -5,6 +5,8 @@ import { mistralConversationsApi } from "@earendil-works/pi-ai/api/mistral-conve
 import { openAICompletionsApi } from "@earendil-works/pi-ai/api/openai-completions.lazy";
 import { openAIResponsesApi } from "@earendil-works/pi-ai/api/openai-responses.lazy";
 
+import { catalogVendor } from "./catalog.ts";
+
 /** SUPPORTED_APIS are the wire protocols an administrator can choose for a provider; a new one needs code. */
 export const SUPPORTED_APIS: Readonly<Record<string, () => ProviderStreams>> = {
   "anthropic-messages": anthropicMessagesApi,
@@ -52,6 +54,8 @@ export interface ProviderConfig {
   readonly api: string;
   readonly baseUrl: string;
   readonly apiKey: string;
+  /** catalog is the id of the named vendor in pi-ai's catalog it was picked from, or empty for one configured by hand. */
+  readonly catalog?: string;
 }
 
 /** Configured is a Models collection holding one configured provider, and the model a route names. */
@@ -64,26 +68,33 @@ export interface Configured {
 
 /**
  * configure builds a pi-ai provider from an administrator's configuration, with
- * the key given explicitly so nothing is read from the environment. The model
- * need not be in any catalog: its cost is unknown here, so cost is left at zero
- * and limits are generous; token counts still come from the provider.
+ * the key given explicitly so nothing is read from the environment. A model of
+ * a vendor picked from the catalog keeps the catalog's limits and request
+ * settings, at the configured base URL. Any other model need not be in a
+ * catalog: its limits are generous guesses, and its cost is left at zero, as
+ * every cost is, since costs come from the prices administrators set.
  */
 export function configure(config: ProviderConfig, modelId: string): Configured {
   const api = SUPPORTED_APIS[config.api];
   if (!api) throw new Error(`unsupported api ${config.api}`);
-  const baseUrl = config.baseUrl || DEFAULT_BASE_URLS[config.api] || "";
-  const model: Model<Api> = {
-    id: modelId,
-    name: modelId,
-    api: config.api as Api,
-    provider: config.id,
-    baseUrl,
-    reasoning: false,
-    input: ["text"],
-    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-    contextWindow: 128_000,
-    maxTokens: 4_096,
-  };
+  const vendor = config.catalog ? catalogVendor(config.catalog) : undefined;
+  const baseUrl = config.baseUrl || vendor?.baseUrl || DEFAULT_BASE_URLS[config.api] || "";
+  const known = vendor?.models.find((m) => m.id === modelId);
+  const zero = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 };
+  const model: Model<Api> = known
+    ? { ...known, api: config.api as Api, provider: config.id, baseUrl, cost: zero }
+    : {
+        id: modelId,
+        name: modelId,
+        api: config.api as Api,
+        provider: config.id,
+        baseUrl,
+        reasoning: false,
+        input: ["text"],
+        cost: zero,
+        contextWindow: 128_000,
+        maxTokens: 4_096,
+      };
   const key = config.apiKey;
   const gateway = viaGateway(baseUrl);
   const provider = createProvider({
