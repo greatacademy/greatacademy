@@ -33,6 +33,7 @@ import { Privacy } from "./screens/Privacy.tsx";
 import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
 import { Standings } from "./screens/Standings.tsx";
+import { Talk } from "./screens/Talk.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
 
 void restorePrefs();
@@ -136,6 +137,8 @@ function App() {
               return <History courseId={route.courseId} />;
             case "session":
               return <Player sessionId={route.sessionId} />;
+            case "talk":
+              return <Talk courseId={route.courseId} conversationId={route.conversationId} />;
             case "sign-in":
               return <SignIn />;
             case "sign-up":

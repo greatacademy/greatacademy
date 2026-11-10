@@ -107,7 +107,7 @@ git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/.nsh/s
 cd ~/.nsh/source && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/.nsh/source/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
 ```
 
-更新时在那里拉取分支、重新构建，并把 `apps/nsh/native/store/Cargo.toml` 中的 `rev` 改为同一个提交。每个平台第一次运行或打包时都要连同应用的 crate 编译宿主，需要几分钟；之后会复用。一次只构建一个平台，因为这些构建共用一个目录，会互相等待。
+更新时在那里拉取分支、重新构建，并把应用的 crate（`apps/nsh/native/store/Cargo.toml` 和 `apps/nsh/native/voice/Cargo.toml`）中的 `rev` 改为同一个提交。每个平台第一次运行或打包时都要连同应用的 crate 编译宿主，需要几分钟；之后会复用。一次只构建一个平台，因为这些构建共用一个目录，会互相等待。
 
 ```bash
 pnpm nx run nsh:dev                   # 在本机打开窗口

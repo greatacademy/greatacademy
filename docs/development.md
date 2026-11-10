@@ -107,7 +107,7 @@ git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/.nsh/s
 cd ~/.nsh/source && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/.nsh/source/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
 ```
 
-To update, pull the branch there, build again, and move `rev` in `apps/nsh/native/store/Cargo.toml` to the same commit. The first run or package for each platform compiles that host with the app's crate, which takes several minutes; later ones reuse it. Build one platform at a time, since the builds share one directory and wait for each other.
+To update, pull the branch there, build again, and move `rev` in the app's crates, `apps/nsh/native/store/Cargo.toml` and `apps/nsh/native/voice/Cargo.toml`, to the same commit. The first run or package for each platform compiles that host with the app's crates, which takes several minutes; later ones reuse it. Build one platform at a time, since the builds share one directory and wait for each other.
 
 ```bash
 pnpm nx run nsh:dev                   # A window on this machine

@@ -933,7 +933,7 @@ dependencies = [
 [[package]]
 name = "nsh-core"
 version = "0.4.0"
-source = "git+https://github.com/greatacademy/nsh?rev=50d4d1e142285f2eac98df48dbbdd4f225336264#50d4d1e142285f2eac98df48dbbdd4f225336264"
+source = "git+https://github.com/greatacademy/nsh?rev=10e8686e2154b6b69b01ab4a818ef2f70c03bb5c#10e8686e2154b6b69b01ab4a818ef2f70c03bb5c"
 dependencies = [
  "cap-std",
  "crc32fast",
@@ -967,7 +967,7 @@ dependencies = [
 [[package]]
 name = "nsh-macros"
 version = "0.4.0"
-source = "git+https://github.com/greatacademy/nsh?rev=50d4d1e142285f2eac98df48dbbdd4f225336264#50d4d1e142285f2eac98df48dbbdd4f225336264"
+source = "git+https://github.com/greatacademy/nsh?rev=10e8686e2154b6b69b01ab4a818ef2f70c03bb5c#10e8686e2154b6b69b01ab4a818ef2f70c03bb5c"
 dependencies = [
  "imagesize",
  "proc-macro2",
@@ -980,7 +980,7 @@ dependencies = [
 [[package]]
 name = "nsh-updater"
 version = "0.4.0"
-source = "git+https://github.com/greatacademy/nsh?rev=50d4d1e142285f2eac98df48dbbdd4f225336264#50d4d1e142285f2eac98df48dbbdd4f225336264"
+source = "git+https://github.com/greatacademy/nsh?rev=10e8686e2154b6b69b01ab4a818ef2f70c03bb5c#10e8686e2154b6b69b01ab4a818ef2f70c03bb5c"
 dependencies = [
  "base64 0.22.1",
  "ed25519-dalek",

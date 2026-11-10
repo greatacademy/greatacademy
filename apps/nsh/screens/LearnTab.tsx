@@ -12,6 +12,7 @@ import { SubjectStart } from "./CourseTab.tsx";
 import { firstPageReady } from "./Launch.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
 import { Bar, EarnedCard, ForecastCard, LeagueCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
+import { Conversations } from "./Talk.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
 
 /** ASIDE_FROM is the window width, in points, from which the cards sit in a column of ASIDE_WIDTH beside the tasks. */
@@ -197,6 +198,7 @@ function Today(props: {
                   <Muted>{m().nothingToDo}</Muted>
                 </If>
               </If>
+              <Conversations courseId={d().courseId} visible={props.visible} />
               <RecentWork courseId={d().courseId} visible={props.visible} />
               <If when={!wide()}>
                 <Aside place={props.place} dash={d()} visible={props.visible} onChanged={props.onChanged} />

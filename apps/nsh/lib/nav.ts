@@ -12,6 +12,7 @@ export type Route =
   | { name: "map"; courseId: string }
   | { name: "history"; courseId: string }
   | { name: "session"; sessionId: string }
+  | { name: "talk"; courseId: string; conversationId: string }
   | { name: "sign-in" }
   | { name: "sign-up" }
   | { name: "forgot-password" }

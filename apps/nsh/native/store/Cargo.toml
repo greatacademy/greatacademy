@@ -12,7 +12,7 @@ path = "src/lib.rs"
 # The commit of Native Shell the app builds with: the greatacademy branch of
 # its fork, which is upstream's main and the app's own fixes.
 [dependencies]
-nsh-core = { git = "https://github.com/greatacademy/nsh", rev = "50d4d1e142285f2eac98df48dbbdd4f225336264" }
+nsh-core = { git = "https://github.com/greatacademy/nsh", rev = "10e8686e2154b6b69b01ab4a818ef2f70c03bb5c" }
 
 [target.'cfg(target_os = "ios")'.dependencies]
 dispatch2 = "0.3.1"

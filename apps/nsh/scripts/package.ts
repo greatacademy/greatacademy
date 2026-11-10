@@ -119,6 +119,8 @@ function androidManifest(cleartext: boolean): string {
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="${peek("--id") ?? config.id}">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <application android:label="${name}" android:icon="@mipmap/ic_launcher"${cleartext ? ' android:usesCleartextTraffic="true"' : ""}
         android:extractNativeLibs="false" android:enableOnBackInvokedCallback="true" android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">

@@ -1,0 +1,28 @@
+[package]
+name = "ga-voice"
+description = "The microphone and the speaker of spoken conversations in the Great Academy app (docs/english-curriculum.md §13.3)."
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+# The commit of Native Shell the app builds with, as native/store's.
+[dependencies]
+nsh-core = { git = "https://github.com/greatacademy/nsh", rev = "10e8686e2154b6b69b01ab4a818ef2f70c03bb5c" }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+block2 = "0.6.2"
+libc = "0.2"
+log = "0.4"
+objc2 = "0.6.5"
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSString"] }
+tokio = { version = "1", default-features = false, features = ["sync"] }
+
+[target.'cfg(target_os = "android")'.dependencies]
+log = "0.4"
+# Its library is `nsh`; the app's Android host chooses its features.
+nsh = { package = "nsh-platform-android", git = "https://github.com/greatacademy/nsh", rev = "10e8686e2154b6b69b01ab4a818ef2f70c03bb5c", default-features = false }
+tokio = { version = "1", default-features = false, features = ["sync"] }
