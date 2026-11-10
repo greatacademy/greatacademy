@@ -8,7 +8,7 @@ import { pack as a2 } from "./levels/a2/index.ts";
 import { pack as b1 } from "./levels/b1/index.ts";
 import { pack as b2 } from "./levels/b2/index.ts";
 import { pack as preA1 } from "./levels/pre-a1/index.ts";
-import { native } from "./native/index.ts";
+import { nativePacks } from "./native/index.ts";
 import type { Pack } from "./pack.ts";
 
 /** levelPacks are the packs of the foreign-language levels, lowest first. */
@@ -21,7 +21,7 @@ export const levelPacks: readonly (readonly [level: string, pack: Pack])[] = [
 ];
 
 /** englishPacks are all the packs of English. */
-export const englishPacks: readonly Pack[] = [...levelPacks.map(([, pack]) => pack), native, exams];
+export const englishPacks: readonly Pack[] = [...levelPacks.map(([, pack]) => pack), ...nativePacks, exams];
 
 /** packLexicon adds to a lexicon the words of the packs, and the words their batches teach, that it lacks. */
 export function packLexicon(base: readonly LexiconEntry[]): readonly LexiconEntry[] {
