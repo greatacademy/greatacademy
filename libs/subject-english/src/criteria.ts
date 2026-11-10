@@ -1,4 +1,5 @@
 import type { CriterionSpec } from "@ga/content";
+import { EXAM_CRITERIA } from "./criteria-exams.ts";
 import { LEVEL_CRITERIA } from "./criteria-levels.ts";
 import { NATIVE_CRITERIA } from "./criteria-native.ts";
 
@@ -214,6 +215,7 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
   },
   ...LEVEL_CRITERIA,
   ...NATIVE_CRITERIA,
+  ...EXAM_CRITERIA,
 ];
 
 /** criterionById finds a criterion of WRITING_CRITERIA, or undefined. */
