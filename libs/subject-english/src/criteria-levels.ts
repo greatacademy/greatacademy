@@ -461,4 +461,110 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
       "Are the paragraphs and sentences linked with a range of linking words and phrases, such as Firstly, Moreover, However, As a result and In conclusion, each used with its correct meaning?",
     quoteWhenMet: false,
   },
+  {
+    id: "b2-balanced-introduction",
+    version: "1",
+    question:
+      "Does the introduction present the question the task gives and show that there are arguments on both sides, without yet taking a side?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-essay-balance",
+    version: "1",
+    question:
+      "Does the essay give the arguments for and the arguments against in separate paragraphs, with each side given at least two points that are explained and supported, and with the side the writer disagrees with presented fairly?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-balanced-conclusion",
+    version: "1",
+    question:
+      "Does the essay end with a conclusion that weighs the two sides and reaches a judgment, such as which side is stronger or under what conditions each is right, without adding a new argument?",
+    quoteWhenMet: true,
+  },
+  // B2: proposals.
+  {
+    id: "b2-proposal-need",
+    version: "1",
+    question: "Does the proposal open by stating its purpose and the need or problem it answers, supported by a fact or an example?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-proposal-headings",
+    version: "1",
+    question:
+      "Is the proposal divided into sections with short headings, such as Introduction, The proposal, How it would work and Why it should be chosen, each section dealing with one part of the plan?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-proposal-plan",
+    version: "1",
+    question:
+      "Does the proposal say clearly what is proposed and how it would work in practice, with specific details such as who would do what, when, where or at what cost?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-proposal-benefits",
+    version: "1",
+    question:
+      "Does the proposal explain why it should be chosen, giving specific benefits that follow from the plan, and end with a confident closing recommendation?",
+    quoteWhenMet: true,
+  },
+  // B2: problem-solution essays.
+  {
+    id: "b2-problem-explained",
+    version: "1",
+    question:
+      "Does the essay open by explaining the problem the task names, saying what causes it and who it affects, with a specific fact or example?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-problem-solutions",
+    version: "1",
+    question:
+      "Does the essay propose two distinct solutions, each in its own paragraph, saying how it would work and what it would change?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-problem-drawbacks",
+    version: "1",
+    question:
+      "Does the essay weigh each solution honestly, naming at least one limit, cost or difficulty of each rather than only its advantages?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-problem-judgment",
+    version: "1",
+    question:
+      "Does the conclusion judge which solution would work better, or how the two should be combined, and give a reason that follows from the body of the essay?",
+    quoteWhenMet: true,
+  },
+  // B2: letters to an editor.
+  {
+    id: "b2-editor-response",
+    version: "1",
+    question: "Does the letter open by naming the article it responds to and summing up in a sentence what the article said or proposed?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-editor-view",
+    version: "1",
+    question:
+      "Does the letter state the writer's own view clearly near the start, and acknowledge fairly at least one point on the other side?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-editor-support",
+    version: "1",
+    question:
+      "Is the view supported with specific reasons and evidence, such as figures, examples from other places or personal experience, each explained rather than only listed?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-editor-action",
+    version: "1",
+    question:
+      "Does the letter propose specifically what should be done and by whom, and end with a closing line and a formal sign-off such as Yours faithfully?",
+    quoteWhenMet: true,
+  },
 ];

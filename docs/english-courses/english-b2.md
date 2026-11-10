@@ -6,7 +6,7 @@
 - **Level:** CEFR B2, for learners of English as a foreign language
 - **Prerequisite(s):** B1, or the tenses, conditionals, the passive and reported speech, and about 2,200 words
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 10 units · 139 topics (110 of vocabulary, 16 of grammar, 13 of writing) · 1320 headwords, 3543 by the end of the level
+- **Size:** 10 units · 139 topics (110 of vocabulary, 16 of grammar, 13 of writing) · 1324 headwords, 3547 by the end of the level
 
 ## Aim
 
@@ -64,7 +64,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b2-words-skills` Skills (12): expertise, competence, skilled, unskilled, versatile, innovative, resourceful, diligent, adaptable, analytical, persuasive, decisive
 - `b2-words-success` Success and Failure (12): achieve (achieves, achieved, achieving), achievement (achievements), accomplish (accomplishes, accomplished, accomplishing), accomplishment (accomplishments), setback (setbacks), obstacle (obstacles), overcome (overcomes, overcame, overcoming), persevere (perseveres, persevered, persevering), perseverance, triumph (triumphs), thrive (thrives, thrived, thriving), collapse (collapses, collapsed, collapsing)
 - `b2-words-linking-2` Words of Time and Sequence (12): regardless, accordingly, subsequently, previously, initially, ultimately, eventually, currently, presumably, apparently, evidently, undoubtedly
-- `b2-words-quantity` Describing Quantity (12): abundant, scarce, sufficient, insufficient, adequate, excessive, substantial, minimal, numerous, countless, enormous, modest
+- `b2-words-quantity` Describing Quantity (13): abundant, scarce, sufficient, insufficient, adequate, excessive, substantial, minimal, several, numerous, countless, enormous, modest
 
 **Grammar**
 
@@ -136,7 +136,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `writing-an-opinion-essay` Writing an Opinion Essay (judged by a model; after `introductions-and-conclusions`). Write an essay of 250 to 300 words that states a clear opinion on a question the task gives, supports it in two body paragraphs, answers an opposing view, and concludes.
 
-**Reading:** `b2-reading-climate`, 8 passages: How a glacier remembers; The town that went carbon neutral; Nuclear power: friend or foe?; Farming in a hotter world; The aftermath of a cyclone; Fast fashion and the planet; Can we make seawater drinkable?; What 2050 might look like.
+**Reading:** `b2-reading-climate`, 8 passages: How a glacier remembers; The island that went carbon neutral; Nuclear power: friend or foe?; Farming in a hotter world; The aftermath of a cyclone; Fast fashion and the planet; Can we make seawater drinkable?; What 2050 might look like.
 
 **Conversation:** `a-town-hall-on-energy`. The tutor is a town official at a public meeting about a new wind farm. Task: State your position, raise one concern and one benefit, and respond to the official's answers.
 
@@ -184,7 +184,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b2-words-opportunity` Opportunity (12): privilege (privileges), privileged, disadvantaged, mobility, equal, merit (merits), barrier (barriers), inclusive, inclusion, exclude (excludes, excluded, excluding), quota (quotas), eligible
 - `b2-words-teaching` Teaching (12): curriculum (curricula), syllabus (syllabuses), instruct (instructs, instructed, instructing), instructor (instructors), mentor (mentors), discipline (disciplines), motivate (motivates, motivating), motivation, engage (engages, engaging), inspire (inspires, inspired), encouragement, attentive
 - `b2-words-growing-up` Growing Up (12): maturity, nurture (nurtures, nurtured, nurturing), foster (fosters, fostered, fostering), playful, obedient, rebellious, peer (peers), bully (bullies, bullied, bullying), tantrum (tantrums), curiosity, milestone (milestones), formative
-- `b2-words-abstract-nouns` Abstract Nouns (12): concept (concepts), notion (notions), aspect (aspects), factor (factors), feature (features), dimension (dimensions), framework (frameworks), context (contexts), perspective (perspectives), approach (approaches, approached, approaching), issue (issues), phenomenon (phenomena)
+- `b2-words-abstract-nouns` Abstract Nouns (14): concept (concepts), notion (notions), aspect (aspects), factor (factors), feature (features), dimension (dimensions), framework (frameworks), context (contexts), perspective (perspectives), approach (approaches, approached, approaching), issue (issues), phenomenon (phenomena), kinds, main
 - `b2-words-thinking-verbs` Verbs of Thinking (12): interpret (interprets, interpreted, interpreting), clarify (clarifies, clarified, clarifying), elaborate (elaborates, elaborated, elaborating), categorize (categorizes, categorized, categorizing), classify (classifies, classified, classifying), distinguish (distinguishes, distinguished, distinguishing), differentiate (differentiates, differentiated, differentiating), integrate (integrates, integrated, integrating), synthesize (synthesizes, synthesized, synthesizing), formulate (formulates, formulated, formulating), generalize (generalizes, generalized, generalizing), infer (infers, inferred, inferring)
 - `b2-words-digital-learning` Digital Learning (12): e-learning, virtual, webinar (webinars), module (modules), interactive, self-paced, tutorial (tutorials), forum (forums), distraction (distractions), multitask (multitasks, multitasked, multitasking), bandwidth, hybrid
 - `b2-words-vocations` Vocations (12): vocational, profession (professions), occupation (occupations), apprenticeship (apprenticeships), aspire (aspires, aspired, aspiring), aspiration (aspirations), pursue (pursues, pursued, pursuing), fulfill (fulfills, fulfilled, fulfilling), devoted, rewarding, dedicated, vocation (vocations)
@@ -254,7 +254,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Grammar**
 
-- `wish-and-if-only` Wish and If Only (after `second-conditional`, `third-conditional`). *I wish I knew how it worked. If only we had backed it up!* *Wish* about the present takes the past; about the past, the past perfect.
+- `wish-and-if-only` Wish and If Only (after `third-conditional`). *I wish I knew how it worked. If only we had backed it up!* *Wish* about the present takes the past; about the past, the past perfect.
 
 **Writing**
 
@@ -280,7 +280,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b2-words-policing` Policing (12): patrol (patrols, patrolled, patrolling), investigation (investigations), detective (detectives), suspect (suspects, suspected, suspecting), forensic, fingerprint (fingerprints), interrogate (interrogates, interrogated, interrogating), warrant (warrants), raid (raids), informant (informants), alibi (alibis), motive (motives)
 - `b2-words-government` Government (12): govern (governs, governed, governing), governance, federal, municipal, bureaucracy (bureaucracies), bureaucratic, servant (servants), administration, administrative, jurisdiction, decree (decrees), veto (vetoes, vetoed, vetoing)
 - `b2-words-protest` Protest (12): activism, demonstration (demonstrations), demonstrator (demonstrators), rally (rallies), boycott (boycotts, boycotted, boycotting), disobedience, resistance, resist (resists, resisted, resisting), uprising (uprisings), riot (riots), mobilize (mobilizes, mobilized, mobilizing), grassroots
-- `b2-words-formal-verbs` Formal Verbs (12): obtain (obtains, obtained, obtaining), provide (provides, provided, providing), ensure (ensures, ensured, ensuring), constitute (constitutes, constituted, constituting), exceed (exceeds, exceeded, exceeding), comply (complies, complied, complying), compliance, terminate (terminates, terminated, terminating), commence (commences, commenced, commencing), endeavor (endeavors, endeavored, endeavoring), facilitate (facilitates, facilitated, facilitating), undertake (undertakes, undertook, undertaken, undertaking)
+- `b2-words-formal-verbs` Formal Verbs (13): obtain (obtains, obtained, obtaining), provide (provides, provided, providing), include (includes, included, including), ensure (ensures, ensured, ensuring), constitute (constitutes, constituted, constituting), exceed (exceeds, exceeded, exceeding), comply (complies, complied, complying), compliance, terminate (terminates, terminated, terminating), commence (commences, commenced, commencing), endeavor (endeavors, endeavored, endeavoring), facilitate (facilitates, facilitated, facilitating), undertake (undertakes, undertook, undertaken, undertaking)
 - `b2-words-certainty` Certainty and Doubt (12): undeniable, indisputable, questionable, doubtful, debatable, allegedly, supposedly, reportedly, seemingly, obviously, certainly, surely
 
 **Grammar**
@@ -307,16 +307,16 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b2-words-decisions` Making Decisions (12): deliberate (deliberates, deliberated, deliberating), hesitate (hesitates, hesitated, hesitating), hesitation, impulse (impulses), rational, irrational, intuition, intuitive, judgment (judgments), preference (preferences), alternative (alternatives), trade-off (trade-offs)
 - `b2-words-behavior` Habits and Behavior (12): misbehave (misbehaves, misbehaved, misbehaving), conduct (conducts), tendency (tendencies), tend (tends, tended, tending), compulsive, procrastinate (procrastinates, procrastinated, procrastinating), procrastination, willpower, self-control, temptation (temptations), tempt (tempts, tempted, tempting), reinforce (reinforces, reinforced, reinforcing)
 - `b2-words-memory-and-sleep` Memory and Sleep (12): recollection (recollections), nostalgia, forgetful, reminisce (reminisces, reminisced, reminiscing), nightmare (nightmares), insomnia, drowsy, doze (dozes, dozed, dozing), fatigue, exhausted, alert (alerter, alertest), refreshed
-- `b2-words-bonds` Bonds (12): bond (bonds), companionship, rapport, reconcile (reconciles, reconciled, reconciling), reconciliation, mutual, betray (betrays, betrayed, betraying), betrayal, loyalty, jealousy, dependable, estranged
+- `b2-words-bonds` Bonds (12): bond (bonds), companionship, rapport, reconcile (reconciles, reconciled, reconciling), reconciliation, mutual, betray (betrays, betrayed, betraying), betrayal (betrayals), loyalty, jealousy, dependable, estranged
 - `b2-words-motivation` Motivation (12): intrinsic, extrinsic, purposeful, fulfillment, satisfaction, recognition, self-motivated, apathy, apathetic, complacent, inspiration (inspirations), enthusiasm
-- `b2-words-body-language` Body Language (12): articulate (articulates, articulated, articulating), convey (conveys, conveyed, conveying), gesture (gestures), nonverbal, verbal, posture (postures), facial, expression (expressions), tone (tones), misinterpret (misinterprets, misinterpreted, misinterpreting), clarification, eloquent
+- `b2-words-body-language` Body Language (12): articulate (articulates, articulated, articulating), convey (conveys, conveyed, conveying), gesture (gestures), nonverbal, verbal, posture (postures), facial, expression (expressions), tone (tones), misinterpret (misinterprets, misinterpreted, misinterpreting), clarification (clarifications), eloquent
 - `b2-words-wellbeing` Wellbeing (12): mindfulness, meditate (meditates, meditated, meditating), relaxation, therapeutic, holistic, balance (balances), harmony (harmonies), tranquil, soothing, rejuvenate (rejuvenates, rejuvenated, rejuvenating), self-care, gratitude
 - `b2-words-personality-types` Personality Types (12): conscientious, agreeable, neurotic, reserved, spontaneous, meticulous, perfectionist (perfectionists), optimist (optimists), pessimist (pessimists), introvert (introverts), extrovert (extroverts), sensible
 - `b2-words-academic-adjectives` Weighing Ideas (12): fundamental, crucial, vital, integral, inherent, prominent, predominant, relevant, irrelevant, comprehensive, extensive, explicit
 
 **Grammar**
 
-- `inversion-after-negative-adverbs` Never Have I... (after `present-perfect-or-past-simple`, `present-simple-questions`). *Never have I felt so tired. Rarely do people admit it.* After a negative word at the start of a formal sentence, the order is that of a question.
+- `inversion-after-negative-adverbs` Never Have I... (after `present-perfect-or-past-simple`). *Never have I felt so tired. Rarely do people admit it.* After a negative word at the start of a formal sentence, the order is that of a question.
 - `parallel-structure` Parallel Structure (after `coordinating-conjunctions`, *existing*). Items joined in a list or pair take the same form.
 
 **Writing**
@@ -441,7 +441,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b2-words-networks` | vocabulary | 8 | none |
 | `b2-words-tech-ethics` | vocabulary | 8 | none |
 | `b2-words-transitions` | vocabulary | 8 | none |
-| `wish-and-if-only` | grammar | 8 | `second-conditional`, `third-conditional` |
+| `wish-and-if-only` | grammar | 8 | `third-conditional` |
 | `cutting-wordiness` (existing) | writing | 8 | `active-and-passive-voice` |
 | `writing-a-problem-solution-essay` | writing | 8 | `writing-an-opinion-essay` |
 | `b2-words-law` | vocabulary | 9 | none |
@@ -469,6 +469,6 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b2-words-wellbeing` | vocabulary | 10 | none |
 | `b2-words-personality-types` | vocabulary | 10 | none |
 | `b2-words-academic-adjectives` | vocabulary | 10 | none |
-| `inversion-after-negative-adverbs` | grammar | 10 | `present-perfect-or-past-simple`, `present-simple-questions` |
+| `inversion-after-negative-adverbs` | grammar | 10 | `present-perfect-or-past-simple` |
 | `parallel-structure` (existing) | grammar | 10 | `coordinating-conjunctions` |
 | `revising-a-draft` (existing) | writing | 10 | `writing-an-evidence-paragraph` |

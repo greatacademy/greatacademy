@@ -1006,8 +1006,8 @@ const quantity = vocabularyTopic({
   id: "b2-words-quantity",
   title: t("Describing Quantity", "描述数量"),
   summary: t(
-    "Abundant and scarce; sufficient, insufficient and adequate; excessive and substantial; minimal and modest; numerous, countless and enormous.",
-    "丰富的和稀缺的；足够的、不足的和充分的；过度的和大量的；极少的和适度的；众多的、无数的和巨大的。",
+    "Abundant and scarce; sufficient, insufficient and adequate; excessive and substantial; minimal and modest; several, numerous, countless and enormous.",
+    "丰富的和稀缺的；足够的、不足的和充分的；过度的和大量的；极少的和适度的；几个、众多的、无数的和巨大的。",
   ),
   prerequisites: ["b1-words-numbers-and-amounts"],
   words: [
@@ -1100,6 +1100,13 @@ const quantity = vocabularyTopic({
       "适度的；谦虚的",
       "They live in a {modest} flat near the station.|numerous countless | Prices rose by a {modest} 2 percent.|numerous countless | He is very {modest} about his success.|numerous excessive",
       "modern moist",
+    ),
+    word(
+      "several",
+      "more than two but not very many",
+      "几个；数个",
+      "I have called her {several} times, but she never answers.|scarce minimal | {Several} people were hurt in the accident, but nobody died.|Scarce Insufficient | We waited for {several} hours before the doctor came.|abundant adequate",
+      "severe sever",
     ),
   ],
 });

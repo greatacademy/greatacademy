@@ -6,7 +6,7 @@
 - **级别：** CEFR B2，面向以英语为外语的学习者
 - **先修：** 中级，或掌握各种时态、条件句、被动语态和间接引语以及约 2,200 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 10 个单元 · 139 个知识点（词汇 110 个，语法 16 个，写作 13 个）· 1320 个词条，本级结束时累计 3543 个
+- **规模：** 10 个单元 · 139 个知识点（词汇 110 个，语法 16 个，写作 13 个）· 1324 个词条，本级结束时累计 3547 个
 
 ## 目标
 
@@ -64,7 +64,7 @@
 - `b2-words-skills` 技能 (12): expertise, competence, skilled, unskilled, versatile, innovative, resourceful, diligent, adaptable, analytical, persuasive, decisive
 - `b2-words-success` 成功与失败 (12): achieve (achieves, achieved, achieving), achievement (achievements), accomplish (accomplishes, accomplished, accomplishing), accomplishment (accomplishments), setback (setbacks), obstacle (obstacles), overcome (overcomes, overcame, overcoming), persevere (perseveres, persevered, persevering), perseverance, triumph (triumphs), thrive (thrives, thrived, thriving), collapse (collapses, collapsed, collapsing)
 - `b2-words-linking-2` 时间与顺序词 (12): regardless, accordingly, subsequently, previously, initially, ultimately, eventually, currently, presumably, apparently, evidently, undoubtedly
-- `b2-words-quantity` 描述数量 (12): abundant, scarce, sufficient, insufficient, adequate, excessive, substantial, minimal, numerous, countless, enormous, modest
+- `b2-words-quantity` 描述数量 (13): abundant, scarce, sufficient, insufficient, adequate, excessive, substantial, minimal, several, numerous, countless, enormous, modest
 
 **语法**
 
@@ -136,7 +136,7 @@
 
 - `writing-an-opinion-essay` 写观点议论文（模型评判；先修：`introductions-and-conclusions`）. 就任务给出的问题写一篇 250 到 300 词的议论文：明确表明观点，用两个主体段支持，回应一个相反的看法，并写出结论。
 
-**阅读：** `b2-reading-climate`，8 篇：冰川怎样记录历史；实现碳中和的小镇；核能：是敌是友？；在更热的世界里种地；气旋过后；快时尚与地球；我们能把海水变成可饮用的水吗？；2050 年会是什么样子。
+**阅读：** `b2-reading-climate`，8 篇：冰川怎样记录历史；实现碳中和的小岛；核能：是敌是友？；在更热的世界里种地；气旋过后；快时尚与地球；我们能把海水变成可饮用的水吗？；2050 年会是什么样子。
 
 **对话：** `a-town-hall-on-energy`。导师扮演公众会议上讨论新建风电场的镇官员。 任务：表明立场，提出一个顾虑和一个好处，并回应官员的答复。
 
@@ -184,7 +184,7 @@
 - `b2-words-opportunity` 机会 (12): privilege (privileges), privileged, disadvantaged, mobility, equal, merit (merits), barrier (barriers), inclusive, inclusion, exclude (excludes, excluded, excluding), quota (quotas), eligible
 - `b2-words-teaching` 教学 (12): curriculum (curricula), syllabus (syllabuses), instruct (instructs, instructed, instructing), instructor (instructors), mentor (mentors), discipline (disciplines), motivate (motivates, motivating), motivation, engage (engages, engaging), inspire (inspires, inspired), encouragement, attentive
 - `b2-words-growing-up` 成长 (12): maturity, nurture (nurtures, nurtured, nurturing), foster (fosters, fostered, fostering), playful, obedient, rebellious, peer (peers), bully (bullies, bullied, bullying), tantrum (tantrums), curiosity, milestone (milestones), formative
-- `b2-words-abstract-nouns` 抽象名词 (12): concept (concepts), notion (notions), aspect (aspects), factor (factors), feature (features), dimension (dimensions), framework (frameworks), context (contexts), perspective (perspectives), approach (approaches, approached, approaching), issue (issues), phenomenon (phenomena)
+- `b2-words-abstract-nouns` 抽象名词 (14): concept (concepts), notion (notions), aspect (aspects), factor (factors), feature (features), dimension (dimensions), framework (frameworks), context (contexts), perspective (perspectives), approach (approaches, approached, approaching), issue (issues), phenomenon (phenomena), kinds, main
 - `b2-words-thinking-verbs` 思维动词 (12): interpret (interprets, interpreted, interpreting), clarify (clarifies, clarified, clarifying), elaborate (elaborates, elaborated, elaborating), categorize (categorizes, categorized, categorizing), classify (classifies, classified, classifying), distinguish (distinguishes, distinguished, distinguishing), differentiate (differentiates, differentiated, differentiating), integrate (integrates, integrated, integrating), synthesize (synthesizes, synthesized, synthesizing), formulate (formulates, formulated, formulating), generalize (generalizes, generalized, generalizing), infer (infers, inferred, inferring)
 - `b2-words-digital-learning` 数字化学习 (12): e-learning, virtual, webinar (webinars), module (modules), interactive, self-paced, tutorial (tutorials), forum (forums), distraction (distractions), multitask (multitasks, multitasked, multitasking), bandwidth, hybrid
 - `b2-words-vocations` 志业 (12): vocational, profession (professions), occupation (occupations), apprenticeship (apprenticeships), aspire (aspires, aspired, aspiring), aspiration (aspirations), pursue (pursues, pursued, pursuing), fulfill (fulfills, fulfilled, fulfilling), devoted, rewarding, dedicated, vocation (vocations)
@@ -254,7 +254,7 @@
 
 **语法**
 
-- `wish-and-if-only` wish 和 if only（先修：`second-conditional`、`third-conditional`）. *I wish I knew how it worked. If only we had backed it up!* 对现在的愿望用过去时，对过去的遗憾用过去完成时。
+- `wish-and-if-only` wish 和 if only（先修：`third-conditional`）. *I wish I knew how it worked. If only we had backed it up!* 对现在的愿望用过去时，对过去的遗憾用过去完成时。
 
 **写作**
 
@@ -280,7 +280,7 @@
 - `b2-words-policing` 警务 (12): patrol (patrols, patrolled, patrolling), investigation (investigations), detective (detectives), suspect (suspects, suspected, suspecting), forensic, fingerprint (fingerprints), interrogate (interrogates, interrogated, interrogating), warrant (warrants), raid (raids), informant (informants), alibi (alibis), motive (motives)
 - `b2-words-government` 政府 (12): govern (governs, governed, governing), governance, federal, municipal, bureaucracy (bureaucracies), bureaucratic, servant (servants), administration, administrative, jurisdiction, decree (decrees), veto (vetoes, vetoed, vetoing)
 - `b2-words-protest` 抗议 (12): activism, demonstration (demonstrations), demonstrator (demonstrators), rally (rallies), boycott (boycotts, boycotted, boycotting), disobedience, resistance, resist (resists, resisted, resisting), uprising (uprisings), riot (riots), mobilize (mobilizes, mobilized, mobilizing), grassroots
-- `b2-words-formal-verbs` 正式动词 (12): obtain (obtains, obtained, obtaining), provide (provides, provided, providing), ensure (ensures, ensured, ensuring), constitute (constitutes, constituted, constituting), exceed (exceeds, exceeded, exceeding), comply (complies, complied, complying), compliance, terminate (terminates, terminated, terminating), commence (commences, commenced, commencing), endeavor (endeavors, endeavored, endeavoring), facilitate (facilitates, facilitated, facilitating), undertake (undertakes, undertook, undertaken, undertaking)
+- `b2-words-formal-verbs` 正式动词 (13): obtain (obtains, obtained, obtaining), provide (provides, provided, providing), include (includes, included, including), ensure (ensures, ensured, ensuring), constitute (constitutes, constituted, constituting), exceed (exceeds, exceeded, exceeding), comply (complies, complied, complying), compliance, terminate (terminates, terminated, terminating), commence (commences, commenced, commencing), endeavor (endeavors, endeavored, endeavoring), facilitate (facilitates, facilitated, facilitating), undertake (undertakes, undertook, undertaken, undertaking)
 - `b2-words-certainty` 确定与怀疑 (12): undeniable, indisputable, questionable, doubtful, debatable, allegedly, supposedly, reportedly, seemingly, obviously, certainly, surely
 
 **语法**
@@ -307,16 +307,16 @@
 - `b2-words-decisions` 做决定 (12): deliberate (deliberates, deliberated, deliberating), hesitate (hesitates, hesitated, hesitating), hesitation, impulse (impulses), rational, irrational, intuition, intuitive, judgment (judgments), preference (preferences), alternative (alternatives), trade-off (trade-offs)
 - `b2-words-behavior` 习惯与行为 (12): misbehave (misbehaves, misbehaved, misbehaving), conduct (conducts), tendency (tendencies), tend (tends, tended, tending), compulsive, procrastinate (procrastinates, procrastinated, procrastinating), procrastination, willpower, self-control, temptation (temptations), tempt (tempts, tempted, tempting), reinforce (reinforces, reinforced, reinforcing)
 - `b2-words-memory-and-sleep` 记忆与睡眠 (12): recollection (recollections), nostalgia, forgetful, reminisce (reminisces, reminisced, reminiscing), nightmare (nightmares), insomnia, drowsy, doze (dozes, dozed, dozing), fatigue, exhausted, alert (alerter, alertest), refreshed
-- `b2-words-bonds` 情感纽带 (12): bond (bonds), companionship, rapport, reconcile (reconciles, reconciled, reconciling), reconciliation, mutual, betray (betrays, betrayed, betraying), betrayal, loyalty, jealousy, dependable, estranged
+- `b2-words-bonds` 情感纽带 (12): bond (bonds), companionship, rapport, reconcile (reconciles, reconciled, reconciling), reconciliation, mutual, betray (betrays, betrayed, betraying), betrayal (betrayals), loyalty, jealousy, dependable, estranged
 - `b2-words-motivation` 动机 (12): intrinsic, extrinsic, purposeful, fulfillment, satisfaction, recognition, self-motivated, apathy, apathetic, complacent, inspiration (inspirations), enthusiasm
-- `b2-words-body-language` 肢体语言 (12): articulate (articulates, articulated, articulating), convey (conveys, conveyed, conveying), gesture (gestures), nonverbal, verbal, posture (postures), facial, expression (expressions), tone (tones), misinterpret (misinterprets, misinterpreted, misinterpreting), clarification, eloquent
+- `b2-words-body-language` 肢体语言 (12): articulate (articulates, articulated, articulating), convey (conveys, conveyed, conveying), gesture (gestures), nonverbal, verbal, posture (postures), facial, expression (expressions), tone (tones), misinterpret (misinterprets, misinterpreted, misinterpreting), clarification (clarifications), eloquent
 - `b2-words-wellbeing` 身心健康 (12): mindfulness, meditate (meditates, meditated, meditating), relaxation, therapeutic, holistic, balance (balances), harmony (harmonies), tranquil, soothing, rejuvenate (rejuvenates, rejuvenated, rejuvenating), self-care, gratitude
 - `b2-words-personality-types` 性格类型 (12): conscientious, agreeable, neurotic, reserved, spontaneous, meticulous, perfectionist (perfectionists), optimist (optimists), pessimist (pessimists), introvert (introverts), extrovert (extroverts), sensible
 - `b2-words-academic-adjectives` 权衡观点 (12): fundamental, crucial, vital, integral, inherent, prominent, predominant, relevant, irrelevant, comprehensive, extensive, explicit
 
 **语法**
 
-- `inversion-after-negative-adverbs` Never have I...（先修：`present-perfect-or-past-simple`、`present-simple-questions`）. *Never have I felt so tired. Rarely do people admit it.* 在正式文体中，否定词放在句首时，句子用疑问句语序。
+- `inversion-after-negative-adverbs` Never have I...（先修：`present-perfect-or-past-simple`）. *Never have I felt so tired. Rarely do people admit it.* 在正式文体中，否定词放在句首时，句子用疑问句语序。
 - `parallel-structure` 平行结构（先修：`coordinating-conjunctions`，*已有*）. 列举或成对连接的成分要用相同的形式。
 
 **写作**
@@ -441,7 +441,7 @@
 | `b2-words-networks` | 词汇 | 8 | 无 |
 | `b2-words-tech-ethics` | 词汇 | 8 | 无 |
 | `b2-words-transitions` | 词汇 | 8 | 无 |
-| `wish-and-if-only` | 语法 | 8 | `second-conditional`、`third-conditional` |
+| `wish-and-if-only` | 语法 | 8 | `third-conditional` |
 | `cutting-wordiness`（已有） | 写作 | 8 | `active-and-passive-voice` |
 | `writing-a-problem-solution-essay` | 写作 | 8 | `writing-an-opinion-essay` |
 | `b2-words-law` | 词汇 | 9 | 无 |
@@ -469,6 +469,6 @@
 | `b2-words-wellbeing` | 词汇 | 10 | 无 |
 | `b2-words-personality-types` | 词汇 | 10 | 无 |
 | `b2-words-academic-adjectives` | 词汇 | 10 | 无 |
-| `inversion-after-negative-adverbs` | 语法 | 10 | `present-perfect-or-past-simple`、`present-simple-questions` |
+| `inversion-after-negative-adverbs` | 语法 | 10 | `present-perfect-or-past-simple` |
 | `parallel-structure`（已有） | 语法 | 10 | `coordinating-conjunctions` |
 | `revising-a-draft`（已有） | 写作 | 10 | `writing-an-evidence-paragraph` |

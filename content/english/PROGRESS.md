@@ -34,7 +34,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Course of B1: 12 units, 96 passages, 12 conversations | Done |
 | Course of B2 | Units 1 to 4 done: 32 passages, 4 conversations |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
-| Topics of B2 | Units 1 to 4 done |
+| Topics of B2: 128 topics in 10 units, 371 knowledge points, 3,547 headwords by its end | Done |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -197,3 +197,8 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `modals-of-deduction` | `may-might-and-could` | 0.3 | *might, may, could* are practiced again |
 | `past-modals` | `modals-of-deduction`; `present-perfect-or-past-simple` | 0.4; 0.1 | The same deductions with *have* and a participle |
 | `writing-a-report` | `summarizing-a-text`; `writing-a-formal-email` | 0.2 each | Findings are summarized in a formal register |
+| `wish-and-if-only` | `second-conditional`; `third-conditional` | 0.3 each | Wishes about the present and the past reuse both |
+| The problem-solution essay | the opinion essay | 0.4 | It argues for a solution as an opinion essay argues |
+| `although-despite-and-however` | `subordinating-conjunctions` | 0.3 | *Although* is one of them |
+| The letter to an editor | the letter of complaint; the evidence paragraph | 0.3 each | A formal letter that argues from evidence |
+| `inversion-after-negative-adverbs` | `present-simple-questions` | 0.2 | Only the question word order carries over |
