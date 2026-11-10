@@ -4,6 +4,7 @@ import { t } from "@ga/content";
 /** grammarWriting is the first course of English: grammar and sentence writing for those who already speak it. */
 export const grammarWriting: CourseDef = {
   id: "english-grammar-writing",
+  retired: true,
   title: t("Grammar and Sentence Writing", "语法与句子写作"),
   description: t(
     "How English sentences work, how to join and improve them, and how words are built from their parts. For learners who already speak English, in English.",
@@ -110,6 +111,7 @@ export const grammarWriting: CourseDef = {
 /** readingComprehension is the course of English on reading for meaning, for those who already speak it. */
 export const readingComprehension: CourseDef = {
   id: "english-reading-comprehension",
+  retired: true,
   title: t("Reading for Meaning", "阅读理解"),
   description: t(
     "How to find what a text says, how texts are organized, and how to read between the lines. For learners who already speak English, in English.",
@@ -143,6 +145,7 @@ export const readingComprehension: CourseDef = {
 /** literatureArgument is the course of English on reading literature and arguments in grades 6 to 8. */
 export const literatureArgument: CourseDef = {
   id: "english-literature-argument",
+  retired: true,
   title: t("Literature and Argument", "文学与论证"),
   description: t(
     "How stories and poems make meaning, and how arguments are built from claims, evidence and reasoning. For learners who already speak English, in English.",
@@ -188,6 +191,7 @@ export const literatureArgument: CourseDef = {
 /** rhetoricComposition is the course of English on rhetoric, literature and academic writing in grades 9 to 12. */
 export const rhetoricComposition: CourseDef = {
   id: "english-rhetoric-composition",
+  retired: true,
   title: t("Rhetoric and Composition", "修辞与写作"),
   description: t(
     "How writers and speakers persuade, where reasoning fails, how literature works on a reader, and how to write about all of it from sources. For learners who already speak English, in English.",
