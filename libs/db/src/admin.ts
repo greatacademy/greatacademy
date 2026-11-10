@@ -222,15 +222,15 @@ export async function calibrationPassed(
 }
 
 /**
- * routeCalibrated tells whether a route has a passing calibration. Only
- * judgment is calibrated so far, against its criterion; a route of any other
- * use has none, so it stays a draft.
+ * routeCalibrated tells whether a route has a passing calibration: judgment
+ * against its criterion, conversation against its conversation's id. A route
+ * of a speech use has none so far, so it stays a draft.
  */
 export async function routeCalibrated(
   db: Db,
   r: { use: RouteUse; target: string; providerId: string; model: string; promptVersion: string },
 ): Promise<boolean> {
-  return r.use === "judgment" && calibrationPassed(db, { ...r, criterion: r.target });
+  return (r.use === "judgment" || r.use === "conversation") && calibrationPassed(db, { ...r, criterion: r.target });
 }
 
 /** NoticeRow is a stored notice version. */

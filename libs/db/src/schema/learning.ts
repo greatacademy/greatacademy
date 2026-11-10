@@ -301,3 +301,41 @@ export const guardianInvite = pgTable("guardian_invite", {
     .references(() => learner.id, { onDelete: "cascade" }),
   expiresAt: at("expires_at").notNull(),
 });
+
+/** ConversationStatus is where a spoken conversation is: active from its ticket until the voice service writes its result. */
+export type ConversationStatus = "active" | "ended";
+
+/** StoredLine is one line of a spoken conversation. */
+export interface StoredLine {
+  readonly speaker: "learner" | "tutor";
+  readonly text: string;
+}
+
+/**
+ * conversationSession is one spoken conversation of S6, from the ticket the
+ * web Worker signs to the result the voice service writes. lines is the
+ * transcript, kept for 30 days and never for a child (docs/minors-data.md §10).
+ */
+export const conversationSession = pgTable(
+  "conversation_session",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    learnerId: uuid("learner_id")
+      .notNull()
+      .references(() => learner.id, { onDelete: "cascade" }),
+    subjectId: text("subject_id").notNull(),
+    courseId: text("course_id").notNull(),
+    conversationId: text("conversation_id").notNull(),
+    status: text("status").$type<ConversationStatus>().notNull().default("active"),
+    /** turns counts the tutor turns asked for, which bounds what a session costs. */
+    turns: integer("turns").notNull().default(0),
+    /** reason is the voice service's EndReason, such as tutor_ended or time_limit. */
+    reason: text("reason"),
+    durationSecs: doublePrecision("duration_secs"),
+    learnerLines: integer("learner_lines"),
+    lines: jsonb("lines").$type<readonly StoredLine[]>(),
+    startedAt: at("started_at").notNull(),
+    endedAt: at("ended_at"),
+  },
+  (t) => [index("conversation_learner").on(t.learnerId, t.startedAt), index("conversation_ended").on(t.endedAt)],
+);
