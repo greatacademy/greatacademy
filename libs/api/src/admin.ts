@@ -7,18 +7,22 @@ import {
   createProvider,
   type Db,
   decideVerification,
+  deletePrice,
   deleteProvider,
   deleteRoute,
   grantAdmin,
   isPlatformAdmin,
   lastLogged,
   learnerFor,
+  learnerSpend,
   logChange,
   marketLaunches,
   notices,
+  type PriceRow,
   type ProviderKind,
   type ProviderRow,
   platformAdmins,
+  prices,
   providers,
   publishNotice,
   type RoutePosition,
@@ -26,8 +30,10 @@ import {
   revokeAdmin,
   routes,
   setMarketLaunch,
+  setPrice,
   setRoute,
   setVendorCheck,
+  topSpenders,
   updateProvider,
   userByEmail,
   vendorChecks,
@@ -38,6 +44,7 @@ import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
+import { ALARM_ACTION, budgeted, monthStart, providerSpend } from "./costs.ts";
 import { AI_SCOPES, MARKETS, marketOf, missingLanguages } from "./markets.ts";
 import type { FormStore, Notify } from "./privacy.ts";
 import { RETENTION_ACTION } from "./retention.ts";
@@ -61,11 +68,31 @@ function need(ok: unknown, message: string): asserts ok {
   if (!ok) throw new ConnectError(message, Code.InvalidArgument);
 }
 
-/** routeQualifies tells whether a route could serve at all: its vendor on, calibrated, and live unless it is the backup. */
-async function routeQualifies(db: Db, r: RouteRow, list: readonly ProviderRow[]): Promise<{ calibrated: boolean; qualifies: boolean }> {
+/**
+ * routeQualifies tells whether a route could serve at all: its vendor on with
+ * both budgets, its model priced, calibrated, and live unless it is the backup.
+ * A spent budget does not count here: it pauses the route only until the period ends.
+ */
+async function routeQualifies(
+  db: Db,
+  r: RouteRow,
+  list: readonly ProviderRow[],
+  priceList: readonly PriceRow[],
+): Promise<{ calibrated: boolean; priced: boolean; qualifies: boolean }> {
   const calibrated = await calibrationPassed(db, r);
-  const on = list.some((p) => p.id === r.providerId && p.enabled);
-  return { calibrated, qualifies: on && calibrated && (r.live || r.position === "backup") };
+  const priced = priceList.some((x) => x.providerId === r.providerId && x.model === r.model);
+  const vendor = list.find((p) => p.id === r.providerId && p.enabled);
+  return { calibrated, priced, qualifies: !!vendor && budgeted(vendor) && priced && calibrated && (r.live || r.position === "backup") };
+}
+
+/** COSTS_TOP is how many learners the costs page lists. */
+const COSTS_TOP = 20;
+
+/** budgetOf turns a budget from the console into a stored one: unset when absent, and never negative. */
+function budgetOf(value: number | undefined): number | null {
+  if (value === undefined) return null;
+  need(Number.isFinite(value) && value >= 0, "a budget is a sum of US dollars, zero or more");
+  return value;
 }
 
 /** adminService implements AdminService; anyone without the role gets not found. */
@@ -81,16 +108,19 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
   return {
     async getOverview(_req, ctx) {
       const { db, at } = await admin(ctx);
-      const [waiting, checks, list, all, last, bands] = await Promise.all([
+      const [waiting, checks, list, all, last, bands, priceList, alarms] = await Promise.all([
         waitingVerifications(db),
         vendorChecks(db),
         providers(db),
         routes(db),
         lastLogged(db, RETENTION_ACTION),
         bandCounts(db),
+        prices(db),
+        changeLog(db, ALARM_ACTION, logLength),
       ]);
       const broken: string[] = [];
-      for (const r of all) if (r.live && !(await routeQualifies(db, r, list)).qualifies) broken.push(`${r.criterion}/${r.position}`);
+      for (const r of all)
+        if (r.live && !(await routeQualifies(db, r, list, priceList)).qualifies) broken.push(`${r.criterion}/${r.position}`);
       return {
         waitingForms: waiting.length,
         staleChecks: checks.filter((c) => at.getTime() - c.checkedAt.getTime() > CHECK_VALID_MS - STALE_WARNING).length,
@@ -98,6 +128,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         lastRetentionAt: BigInt(last?.at.getTime() ?? 0),
         lastRetentionDetail: last?.detail ?? "",
         bands: bands.map((b) => ({ band: b.band ?? "", count: b.count })),
+        recentAlarms: alarms.filter((a) => at.getTime() - a.at.getTime() < 24 * 3600_000).length,
       };
     },
 
@@ -201,6 +232,8 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
           region: p.region,
           keyHint: p.keyHint ?? "",
           enabled: p.enabled,
+          ...(p.dailyBudget !== null && { dailyBudget: p.dailyBudget }),
+          ...(p.monthlyBudget !== null && { monthlyBudget: p.monthlyBudget }),
         })),
       };
     },
@@ -221,6 +254,8 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         baseUrl: base,
         region: p.region.trim(),
         enabled: p.enabled,
+        dailyBudget: budgetOf(p.dailyBudget),
+        monthlyBudget: budgetOf(p.monthlyBudget),
         updatedAt: at,
         ...(req.apiKey && { keyCipher: await encryptSecret(deps.aiKeysSecret, req.apiKey), keyHint: req.apiKey.slice(-4) }),
       };
@@ -230,7 +265,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         actor: userId,
         action: p.id ? "ai.provider.update" : "ai.provider.create",
         target: name,
-        detail: `kind=${kind} api=${api} enabled=${p.enabled}${req.apiKey ? " key replaced" : ""}`,
+        detail: `kind=${kind} api=${api} enabled=${p.enabled} budgets=${p.dailyBudget ?? "-"}/${p.monthlyBudget ?? "-"}${req.apiKey ? " key replaced" : ""}`,
         at,
       });
       return { id };
@@ -247,7 +282,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
 
     async listRoutes(_req, ctx) {
       const { db } = await admin(ctx);
-      const list = await providers(db);
+      const [list, priceList] = await Promise.all([providers(db), prices(db)]);
       return {
         routes: await Promise.all(
           (await routes(db)).map(async (r) => ({
@@ -257,7 +292,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
             model: r.model,
             promptVersion: r.promptVersion,
             live: r.live,
-            ...(await routeQualifies(db, r, list)),
+            ...(await routeQualifies(db, r, list, priceList)),
           })),
         ),
       };
@@ -431,6 +466,80 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const rows = await changeLog(db, req.kind, logLength);
       return {
         entries: rows.map((e) => ({ actor: e.actor, action: e.action, target: e.target, detail: e.detail, at: BigInt(e.at.getTime()) })),
+      };
+    },
+
+    async listPrices(_req, ctx) {
+      const { db } = await admin(ctx);
+      return {
+        prices: (await prices(db)).map((p) => ({
+          providerId: p.providerId,
+          model: p.model,
+          inputPerMillion: p.inputPerMillion,
+          outputPerMillion: p.outputPerMillion,
+        })),
+      };
+    },
+
+    async savePrice(req, ctx) {
+      const { db, userId, at } = await admin(ctx);
+      const p = req.price;
+      const model = p?.model.trim();
+      need(p && model, "a price needs a vendor and a model");
+      need(
+        [p.inputPerMillion, p.outputPerMillion].every((n) => Number.isFinite(n) && n >= 0),
+        "a price is US dollars per million tokens, zero or more",
+      );
+      const vendor = (await providers(db)).find((x) => x.id === p.providerId);
+      need(vendor, "no such vendor");
+      await setPrice(db, {
+        providerId: p.providerId,
+        model,
+        inputPerMillion: p.inputPerMillion,
+        outputPerMillion: p.outputPerMillion,
+        updatedAt: at,
+      });
+      await logChange(db, {
+        actor: userId,
+        action: "ai.price.save",
+        target: `${vendor.name}/${model}`,
+        detail: `input=${p.inputPerMillion} output=${p.outputPerMillion}`,
+        at,
+      });
+      return {};
+    },
+
+    async deletePrice(req, ctx) {
+      const { db, userId, at } = await admin(ctx);
+      await deletePrice(db, req.providerId, req.model);
+      await logChange(db, { actor: userId, action: "ai.price.delete", target: `${req.providerId}/${req.model}`, at });
+      return {};
+    },
+
+    async getCosts(_req, ctx) {
+      const { db, at } = await admin(ctx);
+      const since = new Date(monthStart(at.getTime()));
+      const [list, spend, month, top, alarms] = await Promise.all([
+        providers(db),
+        providerSpend(db, at.getTime()),
+        learnerSpend(db, since),
+        topSpenders(db, since, COSTS_TOP),
+        changeLog(db, ALARM_ACTION, logLength),
+      ]);
+      return {
+        providers: list
+          .filter((p) => p.kind === "model")
+          .map((p) => ({
+            providerId: p.id,
+            day: spend.get(p.id)?.day ?? 0,
+            month: spend.get(p.id)?.month ?? 0,
+            ...(p.dailyBudget !== null && { dailyBudget: p.dailyBudget }),
+            ...(p.monthlyBudget !== null && { monthlyBudget: p.monthlyBudget }),
+          })),
+        monthLearners: month.learners,
+        monthCost: month.cost,
+        topLearners: top.map((l) => ({ email: l.email, calls: l.calls, cost: l.cost })),
+        alarms: alarms.map((a) => ({ at: BigInt(a.at.getTime()), target: a.target, detail: a.detail })),
       };
     },
   };

@@ -8,8 +8,9 @@ export default defineConfig({
     entrypoint: "./src/server.ts",
     observability: { enabled: true },
     domains: ["greatacademy.dev"],
-    // The retention run of docs/minors-data.md §10 and the plan reminders of docs/billing.md §3, once a day.
-    triggers: [triggers.scheduled({ schedule: "0 3 * * *" })],
+    // The retention run of docs/minors-data.md §10 and the plan reminders of docs/billing.md §3, once a day
+    // (DAILY_CRON in src/server/handler.ts), and the AI cost check of docs/admin.md §5 every quarter hour.
+    triggers: [triggers.scheduled({ schedule: "0 3 * * *" }), triggers.scheduled({ schedule: "*/15 * * * *" })],
     env: {
       // Postgres through Hyperdrive; locally, the OrbStack database of compose.yaml.
       HYPERDRIVE: bindings.hyperdrive({

@@ -11,8 +11,15 @@ import { useAdminText } from "../../lib/admin-text.ts";
 import { useI18n } from "../../lib/i18n.tsx";
 import { errorText } from "../../lib/privacy-text.ts";
 import { admin } from "../../lib/rpc.ts";
+import { usd } from "../../lib/usd.ts";
 
 export const Route = createFileRoute("/admin/ai")({ component: AiServices });
+
+/** budgetField reads an optional budget from a form: empty leaves it unset. */
+function budgetField(form: FormData, name: string): number | undefined {
+  const value = String(form.get(name) ?? "").trim();
+  return value === "" ? undefined : Number(value);
+}
 
 function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () => void }) {
   const { m, locale } = useI18n();
@@ -29,6 +36,8 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
           baseUrl: String(form.get("baseUrl")),
           region: String(form.get("region")),
           enabled: form.get("enabled") === "on",
+          dailyBudget: budgetField(form, "dailyBudget"),
+          monthlyBudget: budgetField(form, "monthlyBudget"),
         },
         apiKey: String(form.get("apiKey")),
       }),
@@ -71,6 +80,17 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
         <input name="apiKey" type="password" autoComplete="new-password" className={field} />
         <span className="block text-xs font-normal text-muted">{t.apiKeyHint}</span>
       </label>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>{t.dailyBudget}</span>
+          <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>{t.monthlyBudget}</span>
+          <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
+        </label>
+      </div>
+      <p className="text-xs text-muted">{t.budgetHint}</p>
       <label className="flex items-center gap-2 text-sm">
         <input name="enabled" type="checkbox" defaultChecked={provider?.enabled} />
         {t.enabled}
@@ -112,6 +132,12 @@ function ProviderCard({ provider }: { provider: Provider }) {
             {provider.region && ` · ${provider.region}`}
           </p>
           <p className="text-sm text-muted">{provider.keyHint ? t.keyEnds(provider.keyHint) : t.noKey}</p>
+          {provider.kind === "model" &&
+            (provider.dailyBudget !== undefined && provider.monthlyBudget !== undefined ? (
+              <p className="text-sm text-muted">{t.budgets(usd(provider.dailyBudget), usd(provider.monthlyBudget))}</p>
+            ) : (
+              <p className="text-sm text-warn">{t.noBudgets}</p>
+            ))}
           {remove.isError && <ErrorNote message={errorText(remove.error, locale, m.error)} />}
           <div className="flex gap-2">
             <Button variant="secondary" onClick={() => setEditing(true)}>
@@ -248,6 +274,8 @@ function RouteCard({ route, providers }: { route: AiRoute; providers: readonly P
       </p>
       <p className="text-sm">
         <span className={route.calibrated ? "text-good" : "text-warn"}>{route.calibrated ? t.calibrated : t.notCalibrated}</span>
+        {" · "}
+        <span className={route.priced ? "text-good" : "text-warn"}>{route.priced ? t.priced : t.notPriced}</span>
         {" · "}
         <span className={route.qualifies ? "text-good" : "text-warn"}>{route.qualifies ? t.qualifies : t.notQualifies}</span>
       </p>

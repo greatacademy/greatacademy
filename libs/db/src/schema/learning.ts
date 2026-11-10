@@ -243,7 +243,11 @@ export const judgment = pgTable(
     nextAt: at("next_at").notNull(),
     finishedAt: at("finished_at"),
   },
-  (t) => [index("judgment_session").on(t.sessionId, t.index), index("judgment_due").on(t.status, t.nextAt)],
+  (t) => [
+    index("judgment_session").on(t.sessionId, t.index),
+    index("judgment_due").on(t.status, t.nextAt),
+    index("judgment_learner").on(t.learnerId, t.createdAt),
+  ],
 );
 
 /** leagueGroup is a group of learners competing in a tier for a week, which starts at week. */

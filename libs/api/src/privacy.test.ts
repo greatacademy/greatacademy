@@ -605,7 +605,10 @@ describe("the admin console", () => {
     await newUser("teen");
     await privacy("teen").setAge({ country: "US", birthYear: 2010, birthMonth: 1 });
     const learnerId = await learnerFor(db, "teen");
-    const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", kind: "model", api: "x", enabled: true } });
+    const { id } = await admin("root").saveProvider({
+      provider: { name: "Vendor", kind: "model", api: "x", enabled: true, dailyBudget: 1, monthlyBudget: 10 },
+    });
+    await admin("root").savePrice({ price: { providerId: id, model: "m1", inputPerMillion: 2, outputPerMillion: 8 } });
     await recordCalibration(db, {
       criterion: "w1",
       providerId: id,

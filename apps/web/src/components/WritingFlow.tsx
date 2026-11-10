@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
+import { errorText } from "../lib/privacy-text.ts";
 import { learning } from "../lib/rpc.ts";
 import { Markdown } from "./Markdown.tsx";
 import { Button, Card, ErrorNote, Spinner } from "./ui.tsx";
@@ -124,7 +125,7 @@ export function WritingFlow({
   question: Question;
   onAnswered(feedback: Feedback | undefined, next: Session, response: string): void;
 }) {
-  const { m, tx } = useI18n();
+  const { m, tx, locale } = useI18n();
   const input = question.problem?.input?.kind;
   const limits = input?.case === "writing" ? input.value : { minWords: 1, maxChars: 2000 };
   const key = draftKey(session, question);
@@ -204,7 +205,7 @@ export function WritingFlow({
             )}
           </div>
         )}
-        {(poll.isError || submit.isError) && <ErrorNote message={m.error} />}
+        {(poll.isError || submit.isError) && <ErrorNote message={errorText(poll.error ?? submit.error, locale, m.error)} />}
       </Card>
     );
   }
@@ -236,7 +237,7 @@ export function WritingFlow({
             {revise ? m.rewrite : m.sendWriting}
           </Button>
         </div>
-        {submit.isError && <ErrorNote message={m.error} />}
+        {submit.isError && <ErrorNote message={errorText(submit.error, locale, m.error)} />}
       </Card>
     </div>
   );

@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { bigint, boolean, index, pgTable, primaryKey, real, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { bigint, boolean, doublePrecision, index, integer, pgTable, primaryKey, real, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import { user } from "./auth.ts";
 import { learner } from "./learning.ts";
@@ -101,9 +101,54 @@ export const aiProvider = pgTable("ai_provider", {
   keyCipher: text("key_cipher"),
   keyHint: text("key_hint"),
   enabled: boolean("enabled").notNull().default(false),
+  /** dailyBudget and monthlyBudget cap what the vendor may cost, in US dollars per UTC day and month; a vendor without both serves no learner. */
+  dailyBudget: doublePrecision("daily_budget"),
+  monthlyBudget: doublePrecision("monthly_budget"),
   createdAt: at("created_at").notNull(),
   updatedAt: at("updated_at").notNull(),
 });
+
+/** aiPrice is what a vendor charges for a model, in US dollars per million tokens; a route whose model has no price serves no learner. */
+export const aiPrice = pgTable(
+  "ai_price",
+  {
+    providerId: uuid("provider_id")
+      .notNull()
+      .references(() => aiProvider.id, { onDelete: "cascade" }),
+    model: text("model").notNull(),
+    inputPerMillion: doublePrecision("input_per_million").notNull(),
+    outputPerMillion: doublePrecision("output_per_million").notNull(),
+    updatedAt: at("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.providerId, t.model] })],
+);
+
+/** AiUse is what a model call was for. */
+export type AiUse = "judgment" | "calibration";
+
+/**
+ * aiCall is one call to a vendor, failed ones included, with its tokens and
+ * cost. It holds no text; learnerId is cleared when the learner is deleted, so
+ * the spending stays counted.
+ */
+export const aiCall = pgTable(
+  "ai_call",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
+    providerId: uuid("provider_id")
+      .notNull()
+      .references(() => aiProvider.id, { onDelete: "cascade" }),
+    model: text("model").notNull(),
+    use: text("use").$type<AiUse>().notNull(),
+    learnerId: uuid("learner_id").references(() => learner.id, { onDelete: "set null" }),
+    inputTokens: integer("input_tokens").notNull(),
+    outputTokens: integer("output_tokens").notNull(),
+    cost: doublePrecision("cost").notNull(),
+    ok: boolean("ok").notNull(),
+    at: at("at").notNull(),
+  },
+  (t) => [index("ai_call_at").on(t.at), index("ai_call_learner").on(t.learnerId, t.at)],
+);
 
 /** vendorCheck is the register: what a person verified of a vendor for a market, and when. */
 export const vendorCheck = pgTable(

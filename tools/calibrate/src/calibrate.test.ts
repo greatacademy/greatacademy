@@ -1,6 +1,6 @@
 import { createModels, fauxAssistantMessage, fauxProvider, fauxToolCall, type JsonObject } from "@earendil-works/pi-ai";
 import { encryptSecret } from "@ga/api";
-import { createProvider, type Db, schema } from "@ga/db";
+import { createProvider, type Db, schema, setPrice } from "@ga/db";
 import { createTestDb } from "@ga/db/testing";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -78,9 +78,23 @@ describe("runCalibration", () => {
     expect(report.kappa).toBeCloseTo(0.75);
     const [row] = await db.select().from(schema.calibration);
     expect(row).toMatchObject({ criterion: "states-point@1", providerId, model: "m1", promptVersion: "writing-1", passed: true });
-    expect(renderReport(report, { providerName: "Vendor", model: "m1", promptVersion: "writing-1" })).toContain(
-      "| 4 | 0.750 | 0.500 | yes |",
-    );
+    const rendered = renderReport(report, { providerName: "Vendor", model: "m1", promptVersion: "writing-1" });
+    expect(rendered).toContain("| 4 | 0.750 | 0.500 | yes |");
+    expect(rendered).toContain("Cost: unknown");
+    const calls = await db.select().from(schema.aiCall);
+    expect(calls.map((c) => [c.use, c.ok, c.cost, c.learnerId])).toEqual(Array(4).fill(["calibration", true, 0, null]));
+  });
+
+  it("records each call at the model's price, failed ones too, so the run counts against the budget", async () => {
+    await setPrice(db, { providerId, model: "m1", inputPerMillion: 2, outputPerMillion: 8, updatedAt: AT });
+    faux.setResponses([respond(true)]);
+    const report = await run([text("a", [true, true]), text("b", [false, false])], 2);
+    const calls = await db.select().from(schema.aiCall);
+    expect(calls.map((c) => c.ok)).toEqual([true, false, false]);
+    const cost = calls.reduce((t, c) => t + (c.inputTokens * 2 + c.outputTokens * 8) / 1e6, 0);
+    expect(report.priced).toBe(true);
+    expect(report.usage.cost).toBeCloseTo(cost, 12);
+    expect(calls.reduce((t, c) => t + c.cost, 0)).toBeCloseTo(cost, 12);
   });
 
   it("tries a failing text again, then counts it against the route and records a failed calibration", async () => {

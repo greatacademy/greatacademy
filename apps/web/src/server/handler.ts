@@ -19,6 +19,7 @@ import {
   Registry,
   recordApple,
   runBillingReminders,
+  runCostCheck,
   runRetention,
   userIdKey,
 } from "@ga/api";
@@ -32,7 +33,7 @@ import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 import { appStore, notifiedTransaction } from "./apple.ts";
 import { childAccounts, createAuth } from "./auth.ts";
-import { billingEmail, emailSender, privacyEmail } from "./email.ts";
+import { alarmEmail, billingEmail, emailSender, privacyEmail } from "./email.ts";
 import { readWebhook, type StripeKeys, stripePayments, WebhookError } from "./stripe.ts";
 
 /** RPC_PREFIX is where the Connect services are mounted. */
@@ -215,10 +216,19 @@ const remind = async (to: string, kind: Parameters<typeof billingEmail>[1]) => {
   }
 };
 
-/** runScheduled runs the daily retention rules and plan reminders. */
-export async function runScheduled(at: number): Promise<void> {
+/** DAILY_CRON is the schedule of the daily jobs; every other schedule is the cost check. */
+export const DAILY_CRON = "0 3 * * *";
+
+/** runScheduled runs the daily retention rules and plan reminders, or the cost check of docs/admin.md §5 every quarter hour. */
+export async function runScheduled(at: number, cron: string): Promise<void> {
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
+    if (cron !== DAILY_CRON) {
+      const send = emailSender(env.RESEND_API_KEY, env.EMAIL_FROM);
+      const raised = await runCostCheck(conn.db, at, (to, alarm) => send(alarmEmail(to, alarm)));
+      if (raised.length > 0) console.log("cost alarms", JSON.stringify(raised.map((a) => `${a.target}: ${a.detail}`)));
+      return;
+    }
     const result = await runRetention(conn.db, at, { forms: forms(), notify });
     console.log("retention run", JSON.stringify(result));
     if (stripe()) console.log("billing reminders", await runBillingReminders(conn.db, at, remind));

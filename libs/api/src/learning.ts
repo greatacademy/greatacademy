@@ -51,6 +51,7 @@ import { requirePlan } from "./billing.ts";
 import { accessOf, requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
+import { requireJudgingQuota } from "./costs.ts";
 import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
 import { joinLeague } from "./league.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
@@ -563,6 +564,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const judged: Judged | undefined = skipping ? undefined : await c.source.judge(ref, req.response);
         if (judged?.problem.answer.judged) {
           if (!judged.verdict.correct) return { kind: "rejected" as const, row, judged };
+          await requireJudgingQuota(tx, learnerId, now);
           const j = await createJudgment(tx, {
             sessionId: row.id,
             learnerId,

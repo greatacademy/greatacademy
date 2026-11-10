@@ -1,6 +1,15 @@
 import { decryptSecret } from "@ga/api";
-import { type Db, providers, recordCalibration } from "@ga/db";
-import { type Configured, type CriterionDef, configure, criterionKey, judge, type ProviderConfig } from "@ga/judge";
+import { type Db, type NewCall, prices, providers, recordCalibration, recordCalls } from "@ga/db";
+import {
+  type Configured,
+  type CriterionDef,
+  callCost,
+  configure,
+  criterionKey,
+  JudgeRejected,
+  judge,
+  type ProviderConfig,
+} from "@ga/judge";
 
 import { type Agreement, agreement, MIN_TEXTS, type ScoredText } from "./agreement.ts";
 
@@ -27,7 +36,10 @@ export interface CalibrationReport extends Agreement {
   readonly key: string;
   /** failed are the ids of texts the route could not judge, with the reason. */
   readonly failed: readonly { readonly id: string; readonly reason: string }[];
+  /** usage is what the run took; cost is at the model's price in the console, and zero without one. */
   readonly usage: { readonly input: number; readonly output: number; readonly cost: number };
+  /** priced tells whether the model had a price, so that the cost means something. */
+  readonly priced: boolean;
 }
 
 const reasonOf = (e: unknown) => (e instanceof Error && "reason" in e ? String(e.reason) : "error");
@@ -36,7 +48,8 @@ const reasonOf = (e: unknown) => (e instanceof Error && "reason" in e ? String(e
  * runCalibration sends every text of the set that two people scored on the
  * criterion to one route, alone on that criterion, compares the route's labels
  * with the people's, and records the calibration, passed or not, so that the
- * console can set the route live only on a passing one.
+ * console can set the route live only on a passing one. Every call is recorded
+ * as a calibration call with its cost, so the run counts against the vendor's budget.
  */
 export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Promise<CalibrationReport> {
   const key = criterionKey(run.criterion);
@@ -53,6 +66,27 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
     apiKey: await decryptSecret(run.aiKeysSecret, p.keyCipher),
   };
   const { models, model } = (run.connect ?? configure)(config, run.model);
+  const price = (await prices(db)).find((x) => x.providerId === p.id && x.model === run.model);
+  const calls: NewCall[] = [];
+  const call = (tokens: { input: number; output: number } | undefined, ok: boolean) => {
+    const cost = tokens && price ? callCost(tokens, price) : 0;
+    calls.push({
+      providerId: p.id,
+      model: run.model,
+      use: "calibration",
+      learnerId: null,
+      inputTokens: tokens?.input ?? 0,
+      outputTokens: tokens?.output ?? 0,
+      cost,
+      ok,
+      at,
+    });
+    if (tokens) {
+      usage.input += tokens.input;
+      usage.output += tokens.output;
+      usage.cost += cost;
+    }
+  };
 
   const labels: (boolean | undefined)[] = new Array(texts.length);
   const failed: { id: string; reason: string }[] = [];
@@ -72,10 +106,9 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
             promptVersion: run.promptVersion,
           });
           labels[i] = v.criteria[0]!.met;
-          usage.input += v.usage.input;
-          usage.output += v.usage.output;
-          usage.cost += v.usage.cost;
+          call(v.usage, true);
         } catch (e) {
+          call(e instanceof JudgeRejected ? e.usage : undefined, false);
           reason = reasonOf(e);
         }
       }
@@ -83,6 +116,7 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
     }
   };
   await Promise.all(Array.from({ length: Math.max(1, run.concurrency ?? 4) }, worker));
+  await recordCalls(db, calls);
 
   const result = agreement(
     texts.map((t) => t.id),
@@ -100,7 +134,7 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
     passed: result.passed,
     at,
   });
-  return { ...result, key, failed, usage };
+  return { ...result, key, failed, usage, priced: price !== undefined };
 }
 
 /** renderReport writes a report in Markdown, naming texts by id only. */
@@ -115,6 +149,7 @@ export function renderReport(r: CalibrationReport, route: { providerName: string
     `| ${r.texts} | ${r.kappa.toFixed(3)} | ${r.humanKappa.toFixed(3)} | ${r.passed ? "yes" : "no"} |`,
     "",
     `Tokens: ${r.usage.input} in, ${r.usage.output} out.`,
+    r.priced ? `Cost: $${r.usage.cost.toFixed(4)}.` : "Cost: unknown, since the model has no price in the console.",
   ];
   if (r.texts < MIN_TEXTS) lines.push("", `Fewer than ${MIN_TEXTS} texts: a run this small never passes on the default.`);
   if (r.disagreements.length) lines.push("", `Differs from both people on: ${r.disagreements.join(", ")}`);

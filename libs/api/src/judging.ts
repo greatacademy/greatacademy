@@ -1,8 +1,19 @@
 import type { CriterionSpec, Problem } from "@ga/content";
-import { claimJudgment, type Db, finishJudgment, type JudgmentRow, providers, retryJudgment, type StoredVerdict } from "@ga/db";
-import { type Configured, configure, criterionKey, JudgeRejected, judge, type ProviderConfig, type Verdict } from "@ga/judge";
+import {
+  claimJudgment,
+  type Db,
+  finishJudgment,
+  type JudgmentRow,
+  type NewCall,
+  providers,
+  recordCalls,
+  retryJudgment,
+  type StoredVerdict,
+} from "@ga/db";
+import { type Configured, callCost, configure, criterionKey, JudgeRejected, judge, type ProviderConfig, type Verdict } from "@ga/judge";
 
 import { type QualifiedRoute, qualifyingRoute } from "./capabilities.ts";
+import { MAX_TRIES } from "./costs.ts";
 import type { CourseEntry } from "./registry.ts";
 import { decryptSecret } from "./secrets.ts";
 
@@ -48,13 +59,30 @@ const routeKey = (r: QualifiedRoute) => `${r.providerId}|${r.model}|${r.promptVe
  * and calibrations name it, calls the model of each route once for
  * the criteria it holds, and stores the checked verdict. A failure waits and is
  * tried again, on the backup after the first two tries, until JUDGE_LIMIT_MS
- * has passed. It never throws for a model's failure.
+ * has passed or MAX_TRIES were made. Every call is recorded with its cost at
+ * the model's price, failed ones too. A text already taken is finished even
+ * when its vendor's budget has since been spent. It never throws for a model's failure.
  */
 export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: JudgingDeps, now: number): Promise<void> {
   const row = await claimJudgment(db, id, new Date(now), JUDGE_LEASE_MS);
   if (!row) return;
+  const calls: NewCall[] = [];
+  const call = (route: QualifiedRoute, usage: { input: number; output: number } | undefined, ok: boolean) =>
+    calls.push({
+      providerId: route.providerId,
+      model: route.model,
+      use: "judgment",
+      learnerId: row.learnerId,
+      inputTokens: usage?.input ?? 0,
+      outputTokens: usage?.output ?? 0,
+      cost: usage ? callCost(usage, route.price) : 0,
+      ok,
+      at: new Date(now),
+    });
+  let current: QualifiedRoute | undefined;
   const fail = async (reason: string) => {
-    const give = now - row.createdAt.getTime() >= JUDGE_LIMIT_MS;
+    await recordCalls(db, calls);
+    const give = now - row.createdAt.getTime() >= JUDGE_LIMIT_MS || row.tries >= MAX_TRIES;
     await retryJudgment(db, row.id, reason, new Date(now), give ? undefined : new Date(now + retryDelay(row.tries)));
   };
   try {
@@ -64,8 +92,8 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
     const groups = new Map<string, { route: QualifiedRoute; criteria: CriterionSpec[] }>();
     for (const criterion of criteria) {
       const route =
-        (await qualifyingRoute(db, criterionKey(criterion), row.learnerId, "writing", now, avoid)) ??
-        (avoid && (await qualifyingRoute(db, criterionKey(criterion), row.learnerId, "writing", now)));
+        (await qualifyingRoute(db, criterionKey(criterion), row.learnerId, "writing", now, avoid, false)) ??
+        (avoid && (await qualifyingRoute(db, criterionKey(criterion), row.learnerId, "writing", now, undefined, false)));
       if (!route) return await fail("no-route");
       const key = routeKey(route);
       const group = groups.get(key) ?? { route, criteria: [] };
@@ -75,6 +103,7 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
     const list = await providers(db);
     const verdicts: Verdict[] = [];
     for (const { route, criteria: held } of groups.values()) {
+      current = route;
       const p = list.find((x) => x.id === route.providerId);
       if (!p?.keyCipher) return await fail("no-key");
       const config = {
@@ -85,18 +114,19 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
         apiKey: await decryptSecret(deps.aiKeysSecret, p.keyCipher),
       };
       const { models, model } = (deps.connect ?? configure)(config, route.model);
-      verdicts.push(
-        await judge(models, model, {
-          task: {
-            prompt: problem!.prompt.en,
-            modelAnswer: problem!.canonical,
-            ...(problem!.answer.judged?.source && { source: problem!.answer.judged.source }),
-          },
-          criteria: held,
-          text: row.response,
-          promptVersion: route.promptVersion,
-        }),
-      );
+      const verdict = await judge(models, model, {
+        task: {
+          prompt: problem!.prompt.en,
+          modelAnswer: problem!.canonical,
+          ...(problem!.answer.judged?.source && { source: problem!.answer.judged.source }),
+        },
+        criteria: held,
+        text: row.response,
+        promptVersion: route.promptVersion,
+      });
+      call(route, verdict.usage, true);
+      verdicts.push(verdict);
+      current = undefined;
     }
     const byId = new Map(verdicts.flatMap((v) => v.criteria.map((x) => [x.id, x] as const)));
     const verdict: StoredVerdict = {
@@ -105,6 +135,7 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
     };
     const score = verdict.criteria.filter((x) => x.met).length / verdict.criteria.length;
     const routes = [...groups.values()].map((g) => g.route);
+    await recordCalls(db, calls);
     await finishJudgment(
       db,
       row.id,
@@ -116,11 +147,12 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
         promptVersion: [...new Set(routes.map((r) => r.promptVersion))].join("+"),
         inputTokens: verdicts.reduce((t, v) => t + v.usage.input, 0),
         outputTokens: verdicts.reduce((t, v) => t + v.usage.output, 0),
-        cost: verdicts.reduce((t, v) => t + v.usage.cost, 0),
+        cost: calls.reduce((t, c) => t + c.cost, 0),
       },
       new Date(now),
     );
   } catch (e) {
+    if (current) call(current, e instanceof JudgeRejected ? e.usage : undefined, false);
     // Only a reason is kept: a provider's message may repeat the learner's text.
     await fail(e instanceof JudgeRejected ? e.reason : "error");
   }

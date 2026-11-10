@@ -25,10 +25,11 @@ A platform administrator is a row in `platform_admin`. It is separate from guard
 
 | Route | Page | What it does |
 | :--- | :--- | :--- |
-| `/admin` | Overview | What needs attention: forms waiting, register checks that are stale or close to it, routes that stopped qualifying, the last retention run, and learners per band as counts |
+| `/admin` | Overview | What needs attention: forms waiting, register checks that are stale or close to it, routes that stopped qualifying, cost alarms of the last day, the last retention run, and learners per band as counts |
 | `/admin/verifications` | Guardian verifications | The waiting signed forms, oldest first. Open a form, then approve or refuse with a reason. The form is deleted on either decision |
 | `/admin/markets` | Markets | One row per market: its rules from the code, whether it is open to minors, the notice languages it needs, and which AI scopes it can offer now |
-| `/admin/ai` | AI services | Providers and routes |
+| `/admin/ai` | AI services | Providers with their budgets, and routes |
+| `/admin/costs` | Costs | Each model provider's spend today and this month against its budgets, what an active learner cost this month, the alarms, the price of each model, and the learners who cost most |
 | `/admin/register` | Vendor register | For each vendor and market, what was checked and when |
 | `/admin/notices` | Notices | Notice versions and the vendors each one names |
 | `/admin/admins` | Administrators | Who holds the role; granting a plan without payment for a number of days, for testers, reviewers and the pilot ([Billing](billing.md) §6) |
@@ -56,6 +57,15 @@ The rules of a market (guardian age, scopes, languages) are code in `libs/api/sr
 - **Disabling a provider** stops its routes at once.
 
 A route that stops qualifying fails closed: judgment waits or moves to the calibrated backup, and the Overview says so.
+
+**Prices and budgets.** Each model has a price in US dollars per million input and output tokens, entered on the Costs page, and each model provider has a daily and a monthly budget, by UTC day and month. Every call to a model, failed or not, is recorded in `ai_call` with its tokens and its cost at that price, calibration runs included, so the record is what the vendor bills.
+
+- **No price or no budget, no learner.** A route whose model has no price, or whose provider lacks either budget, serves no learner, as if it were not calibrated.
+- **A spent budget stops new texts.** When a provider has spent its daily or monthly budget, no new text is taken on its routes, and the topics they judge are hidden from learners until the next day or month. A text already taken is always judged to the end, even past the budget, so that no learner is left without a verdict. A spent budget does not make a route broken.
+
+**Limits per learner.** A learner may hand in 30 texts for judgment in any 24 hours, rewrites included, and 5 in a minute; a judgment is tried at most 4 times. A refused text is not recorded, the learner is told when to come back, and other courses go on.
+
+**Alarms.** Every 15 minutes a Cron Trigger checks the costs and raises an alarm when a provider passes 50%, 80% or 100% of a budget, when a model's cost per call is more than twice its mean over the last 7 days, or when more than 30% of a model's calls failed in the day, from 10 calls. Each alarm is written once to the change log and sent by email to every administrator.
 
 ## 6. Vendor Register and Notices
 

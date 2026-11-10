@@ -25,16 +25,28 @@ export interface Verdict {
   readonly score: number;
   readonly model: string;
   readonly promptVersion: string;
-  readonly usage: { readonly input: number; readonly output: number; readonly cost: number };
+  readonly usage: Usage;
 }
 
 /** RejectReason says why a judge's answer was not accepted; a rejected answer never becomes a verdict. */
 export type RejectReason = "provider-error" | "no-respond" | "invalid-arguments" | "criteria-mismatch" | "quotation-not-found";
 
-/** JudgeRejected is thrown when a judgment fails; `retryable` tells whether trying again, or the backup route, may help. */
+/** Usage is what a call took: tokens in and out, and pi-ai's cost, which is zero for a model outside its catalog. */
+export interface Usage {
+  readonly input: number;
+  readonly output: number;
+  readonly cost: number;
+}
+
+/**
+ * JudgeRejected is thrown when a judgment fails; `retryable` tells whether
+ * trying again, or the backup route, may help. usage is set when the model
+ * answered, since a rejected answer was still paid for.
+ */
 export class JudgeRejected extends Error {
   readonly reason: RejectReason;
   readonly retryable: boolean;
+  usage?: Usage;
   constructor(reason: RejectReason, message: string, retryable: boolean) {
     super(message);
     this.name = "JudgeRejected";
@@ -120,21 +132,22 @@ export async function judge(models: Models, model: Model<Api>, request: JudgeReq
       ...(options.telemetry ? { telemetry: options.telemetry } : {}),
     },
   );
-  if (message.stopReason === "error" || message.stopReason === "aborted")
-    throw new JudgeRejected("provider-error", message.errorMessage ?? "the provider failed", true);
-  const call = message.content.find((block) => block.type === "toolCall" && block.name === RESPOND_TOOL.name);
-  if (call?.type !== "toolCall") throw new JudgeRejected("no-respond", "the model did not call respond", true);
-  let args: RespondArgs;
+  const usage: Usage = { input: message.usage.input, output: message.usage.output, cost: message.usage.cost.total };
   try {
-    args = validateToolCall([RESPOND_TOOL], call) as RespondArgs;
-  } catch {
-    // The validation message repeats the arguments, which may quote the learner, so it is not kept.
-    throw new JudgeRejected("invalid-arguments", "the respond arguments do not fit the schema", true);
+    if (message.stopReason === "error" || message.stopReason === "aborted")
+      throw new JudgeRejected("provider-error", message.errorMessage ?? "the provider failed", true);
+    const call = message.content.find((block) => block.type === "toolCall" && block.name === RESPOND_TOOL.name);
+    if (call?.type !== "toolCall") throw new JudgeRejected("no-respond", "the model did not call respond", true);
+    let args: RespondArgs;
+    try {
+      args = validateToolCall([RESPOND_TOOL], call) as RespondArgs;
+    } catch {
+      // The validation message repeats the arguments, which may quote the learner, so it is not kept.
+      throw new JudgeRejected("invalid-arguments", "the respond arguments do not fit the schema", true);
+    }
+    return { ...checkArgs(args, request), model: model.id, promptVersion: request.promptVersion, usage };
+  } catch (e) {
+    if (e instanceof JudgeRejected) e.usage = usage;
+    throw e;
   }
-  return {
-    ...checkArgs(args, request),
-    model: model.id,
-    promptVersion: request.promptVersion,
-    usage: { input: message.usage.input, output: message.usage.output, cost: message.usage.cost.total },
-  };
 }

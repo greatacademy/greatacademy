@@ -47,6 +47,14 @@ service AdminService {
   rpc RemoveAdmin(RemoveAdminRequest) returns (RemoveAdminResponse);
   // ListLog lists the change log, newest first.
   rpc ListLog(ListLogRequest) returns (ListLogResponse);
+  // ListPrices lists what vendors charge for models.
+  rpc ListPrices(ListPricesRequest) returns (ListPricesResponse);
+  // SavePrice sets what a vendor charges for a model.
+  rpc SavePrice(SavePriceRequest) returns (SavePriceResponse);
+  // DeletePrice removes a model's price, which stops its routes serving.
+  rpc DeletePrice(DeletePriceRequest) returns (DeletePriceResponse);
+  // GetCosts returns spending against budgets, what learners cost, and the alarms.
+  rpc GetCosts(GetCostsRequest) returns (GetCostsResponse);
 }
 
 message GetOverviewRequest {}
@@ -67,6 +75,8 @@ message GetOverviewResponse {
   int64 last_retention_at = 4;
   string last_retention_detail = 5;
   repeated BandCount bands = 6;
+  // recent_alarms counts the spending alarms of the last 24 hours.
+  int32 recent_alarms = 7;
 }
 
 message ListVerificationsRequest {}
@@ -146,6 +156,10 @@ message Provider {
   // key_hint is the last four characters of the key, empty when none is set.
   string key_hint = 7;
   bool enabled = 8;
+  // daily_budget and monthly_budget are in US dollars per UTC day and month;
+  // a vendor without both serves no learner.
+  optional double daily_budget = 9;
+  optional double monthly_budget = 10;
 }
 
 message ListProvidersResponse {
@@ -184,6 +198,8 @@ message Route {
   bool calibrated = 7;
   // qualifies says whether the route can serve now.
   bool qualifies = 8;
+  // priced says whether its model has a price; it is read-only.
+  bool priced = 9;
 }
 
 message ListRoutesResponse {
@@ -306,4 +322,65 @@ message LogEntry {
 
 message ListLogResponse {
   repeated LogEntry entries = 1;
+}
+
+message ListPricesRequest {}
+
+// Price is what a vendor charges for a model, in US dollars per million tokens.
+message Price {
+  string provider_id = 1;
+  string model = 2;
+  double input_per_million = 3;
+  double output_per_million = 4;
+}
+
+message ListPricesResponse {
+  repeated Price prices = 1;
+}
+
+message SavePriceRequest {
+  Price price = 1;
+}
+
+message SavePriceResponse {}
+
+message DeletePriceRequest {
+  string provider_id = 1;
+  string model = 2;
+}
+
+message DeletePriceResponse {}
+
+message GetCostsRequest {}
+
+// ProviderSpend is what a vendor has cost this UTC day and month, against its budgets.
+message ProviderSpend {
+  string provider_id = 1;
+  double day = 2;
+  double month = 3;
+  optional double daily_budget = 4;
+  optional double monthly_budget = 5;
+}
+
+// LearnerCost is what one learner's calls cost this month.
+message LearnerCost {
+  string email = 1;
+  int32 calls = 2;
+  double cost = 3;
+}
+
+// Alarm is a spending alarm, as the change log keeps it.
+message Alarm {
+  int64 at = 1;
+  string target = 2;
+  string detail = 3;
+}
+
+message GetCostsResponse {
+  repeated ProviderSpend providers = 1;
+  // month_learners counts the learners whose texts were judged this month, and month_cost what judging them cost.
+  int32 month_learners = 2;
+  double month_cost = 3;
+  repeated LearnerCost top_learners = 4;
+  repeated Alarm alarms = 5;
 }

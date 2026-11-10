@@ -281,6 +281,8 @@ const serverErrorsZh: Record<string, string> = {
   "this plan has ended": "这个方案已结束",
   "no card plan": "没有银行卡方案",
   "billing is off": "未开启计费",
+  "too many texts in a minute; wait a moment": "一分钟内提交的文字太多，请稍等片刻",
+  "today's texts are used up; come back tomorrow": "今天的写作批改次数已用完，明天再来；其他课程可以照常学习",
 };
 
 /** errorText words a failed call for the person who made it. */

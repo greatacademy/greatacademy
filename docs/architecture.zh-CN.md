@@ -157,14 +157,14 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 
 `/` 取决于访问者。未登录时是落地页，落地页也可通过 `/landing` 供所有人访问，并在服务端渲染。登录后，打开最近学习的课程的下一个任务；没有课程但有监护学习者的账号转到 `/guardian`，其他没有课程的账号会被问到谁来学习。服务端只凭会话 cookie 就能在两者之间选择，所以已登录的学习者不会看到落地页闪现。课程目录是单独的公开页面 `/courses`。
 
-`src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选择课程或开始学习。Stripe 的事件到达 `/api/stripe`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/web/src/server/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。
+`src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则，另一个每 15 分钟运行一次 `libs/api/src/costs.ts` 中的费用检查，并把告警用电子邮件发给管理员。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选择课程或开始学习。Stripe 的事件到达 `/api/stripe`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/web/src/server/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。
 
 监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。监督人的决定 `ChooseCourse`、`KeepCourse`、`SetGoals` 和 `SetEndDate` 也接受它；由监护人监督的学习者自己调用这些会被拒绝（[体验 §5](experience.zh-CN.md#5-监督)）。其他会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
 
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
+  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日和每 15 分钟的 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
   - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
 - **开发：**
@@ -221,7 +221,8 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | `consent`、`guardian_verification` | 按学习者和范围只追加的同意记录；谁证明了自己是监护人，表格的键只在等待决定时保留 |
 | `platform_admin`、`market_launch`、`admin_log` | 后台角色、各市场的开关及签字人、只追加的修改日志 |
 | `judgment` | 每篇交给模型的文本：按键（`id@version`）列出的标准、状态、带引用的判定结果、分数、模型、提示词版本、token、成本、尝试次数和最近一次失败的原因，从不保存供应商的报错内容 |
-| `ai_provider`、`ai_route`、`calibration`、`vendor_check`、`notice` | 带加密密钥的 AI 供应商、各标准的路由、通过的校准、供应商登记表和通知版本 |
+| `ai_provider`、`ai_route`、`calibration`、`vendor_check`、`notice` | 带加密密钥和预算的 AI 供应商、各标准的路由、通过的校准、供应商登记表和通知版本 |
+| `ai_price`、`ai_call` | 每个模型每百万 token 的价格，以及对模型的每次调用及其 token、费用和学习者 |
 
 **一致性。**
 - 完成一个会话时，追加事件、替换快照、关闭会话在同一个事务中完成。

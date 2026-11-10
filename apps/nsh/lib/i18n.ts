@@ -153,6 +153,8 @@ const messages = {
     judgingDelayed: "Feedback is taking longer than usual. You can wait, or rewrite and send again.",
     judgingFailed: "Feedback could not be given this time. Skip this question to go on; it leaves no result.",
     skipQuestion: "Skip with no result",
+    judgingRate: "Too many texts in a minute. Wait a moment and send again.",
+    judgingDaily: "Today's writing feedback is used up. Come back tomorrow; other courses go on as usual.",
     rewrite: "Rewrite and send again",
     reviseTitle: "Almost: revise your text",
     criteriaMet: "What your text does",
@@ -529,6 +531,8 @@ const messages = {
     judgingDelayed: "反馈比平时慢。你可以等待，也可以改写后再提交。",
     judgingFailed: "这次没能给出反馈。跳过这道题即可继续，不会留下结果。",
     skipQuestion: "跳过，不计结果",
+    judgingRate: "一分钟内提交的文字太多，请稍等片刻再提交。",
+    judgingDaily: "今天的写作批改次数已用完，明天再来；其他课程可以照常学习。",
     rewrite: "改写后再提交",
     reviseTitle: "差一点：请修改你的文字",
     criteriaMet: "你的文字做到了",
@@ -812,5 +816,8 @@ export function errorText(error: unknown): string {
   }
   if (failureOf(error) === "offline") return m().offlineBody;
   if (failureOf(error) === "plan") return m().noPlanBody;
-  return ConnectError.from(error).rawMessage === "that date is not valid" ? m().invalidDate : m().error;
+  const raw = ConnectError.from(error).rawMessage;
+  if (raw === "too many texts in a minute; wait a moment") return m().judgingRate;
+  if (raw === "today's texts are used up; come back tomorrow") return m().judgingDaily;
+  return raw === "that date is not valid" ? m().invalidDate : m().error;
 }

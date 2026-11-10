@@ -1,4 +1,4 @@
-import type { BillingReminder, NoticeKind } from "@ga/api";
+import type { Alarm, BillingReminder, NoticeKind } from "@ga/api";
 
 /** Email is a message to one address. */
 export interface Email {
@@ -91,4 +91,13 @@ const billingReminders: Record<BillingReminder, { subject: string; text: string 
 /** billingEmail is the reminder before a plan renews or ends, in both languages. */
 export function billingEmail(to: string, kind: BillingReminder): Email {
   return { to, ...billingReminders[kind] };
+}
+
+/** alarmEmail tells an administrator of a spending alarm; its text names vendors and sums, never learners. */
+export function alarmEmail(to: string, alarm: Alarm): Email {
+  return {
+    to,
+    subject: `Great Academy AI spending alarm / AI 费用告警: ${alarm.target}`,
+    text: `${alarm.text}\n\n费用告警：${alarm.target}（${alarm.detail}）。详情见管理后台 /admin/ai。\nSee /admin/ai in the admin console.`,
+  };
 }

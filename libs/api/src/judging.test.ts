@@ -1,12 +1,13 @@
-import { createClient, createRouterTransport, type Interceptor } from "@connectrpc/connect";
+import { Code, createClient, createRouterTransport, type Interceptor } from "@connectrpc/connect";
 import { createModels, fauxAssistantMessage, fauxProvider, fauxToolCall, type JsonObject } from "@earendil-works/pi-ai";
 import { compileSubject, type Problem, type SubjectDef, same, type TopicDef, t } from "@ga/content";
-import { createProvider, type Db, recordCalibration, schema, setRoute } from "@ga/db";
+import { createProvider, type Db, grantAdmin, recordCalibration, recordCalls, schema, setPrice, setRoute, updateProvider } from "@ga/db";
 import { createTestDb, createUser } from "@ga/db/testing";
 import { LearningService, type Session } from "@ga/proto/learning/v1/learning_pb";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { dbKey, userIdKey } from "./context.ts";
+import { type Alarm, DAILY_JUDGMENTS, JUDGING_DAILY_REFUSAL, JUDGING_RATE_REFUSAL, MAX_TRIES, runCostCheck } from "./costs.ts";
 import { JUDGE_LIMIT_MS, retryDelay } from "./judging.ts";
 import { learningService } from "./learning.ts";
 import { localGateway, Registry } from "./registry.ts";
@@ -104,7 +105,9 @@ const respond = (met: [boolean, boolean]) =>
     { stopReason: "toolUse" },
   );
 
-async function addRoutes(): Promise<void> {
+const PRICE = { inputPerMillion: 2, outputPerMillion: 8 };
+
+async function addRoutes(): Promise<string> {
   const at = new Date(now);
   const providerId = await createProvider(db, {
     name: "Vendor",
@@ -112,9 +115,12 @@ async function addRoutes(): Promise<void> {
     api: "openai-completions",
     keyCipher: await encryptSecret(SECRET, "test-key"),
     enabled: true,
+    dailyBudget: 1,
+    monthlyBudget: 10,
     createdAt: at,
     updatedAt: at,
   });
+  await setPrice(db, { providerId, model: "m1", ...PRICE, updatedAt: at });
   for (const c of ["states-point@1", "gives-detail@1"]) {
     await recordCalibration(db, {
       criterion: c,
@@ -136,6 +142,7 @@ async function addRoutes(): Promise<void> {
       updatedAt: at,
     });
   }
+  return providerId;
 }
 
 beforeEach(async () => {
@@ -266,5 +273,128 @@ describe("judged writing", () => {
     const [ended] = await db.select().from(schema.taskSession);
     expect(ended?.status).toBe("abandoned");
     expect(await db.select().from(schema.answer)).toEqual([]);
+  });
+
+  it("records every call with its cost at the model's price, the failed ones too", async () => {
+    await addRoutes();
+    const session = await startParagraphs();
+    await learning.submitAnswer({ sessionId: session.id, index: 0, response: TEXT });
+    await settled(); // No response is queued: this call fails.
+    now += retryDelay(1);
+    faux.setResponses([respond([true, true])]);
+    await learning.getJudgment({ sessionId: session.id, index: 0 });
+    const calls = await db.select().from(schema.aiCall);
+    expect(calls.map((c) => [c.use, c.model, c.ok])).toEqual([
+      ["judgment", "m1", false],
+      ["judgment", "m1", true],
+    ]);
+    const good = calls[1]!;
+    expect(good.learnerId).not.toBeNull();
+    expect(good.cost).toBeCloseTo((good.inputTokens * 2 + good.outputTokens * 8) / 1e6, 12);
+    const [row] = await db.select().from(schema.judgment);
+    expect(row?.cost).toBeCloseTo(good.cost, 12);
+  });
+
+  it("serves no learner from a model without a price or a vendor without budgets", async () => {
+    const topics = async () => (await learning.getCourseProgress({ courseId: COURSE })).topics.map((x) => x.topicId);
+    const providerId = await addRoutes();
+    await db.delete(schema.aiPrice);
+    expect(await topics()).toEqual(["basics"]);
+    await setPrice(db, { providerId, model: "m1", ...PRICE, updatedAt: new Date(now) });
+    await updateProvider(db, providerId, { dailyBudget: null });
+    expect(await topics()).toEqual(["basics"]);
+  });
+
+  it("takes no new texts once a budget is spent, but finishes a text already taken", async () => {
+    const topics = async () => (await learning.getCourseProgress({ courseId: COURSE })).topics.map((x) => x.topicId);
+    const providerId = await addRoutes();
+    const session = await startParagraphs();
+    await learning.submitAnswer({ sessionId: session.id, index: 0, response: TEXT });
+    await recordCalls(db, [
+      { providerId, model: "m1", use: "judgment", inputTokens: 0, outputTokens: 0, cost: 1, ok: true, at: new Date(now) },
+    ]);
+    expect(await topics()).toEqual(["basics"]);
+    faux.setResponses([respond([true, true])]);
+    await settled();
+    const done = await learning.getJudgment({ sessionId: session.id, index: 0 });
+    expect(done.feedback).toMatchObject({ correct: true });
+    // The next UTC day has a fresh daily budget.
+    now += 24 * 3600_000;
+    expect(await topics()).toEqual(["basics", "paragraphs"]);
+  });
+
+  it("fails a judgment for good after MAX_TRIES, before the time limit", async () => {
+    await addRoutes();
+    const session = await startParagraphs();
+    await learning.submitAnswer({ sessionId: session.id, index: 0, response: TEXT });
+    await settled();
+    for (let i = 1; i < MAX_TRIES; i++) {
+      now += retryDelay(i);
+      await learning.getJudgment({ sessionId: session.id, index: 0 });
+    }
+    const [row] = await db.select().from(schema.judgment);
+    expect(row).toMatchObject({ status: "failed", tries: MAX_TRIES });
+    expect(now - row!.createdAt.getTime()).toBeLessThan(JUDGE_LIMIT_MS);
+  });
+
+  it("refuses texts beyond the learner's limits per minute and per day, recording nothing", async () => {
+    await addRoutes();
+    const session = await startParagraphs();
+    faux.setResponses([respond([true, true])]);
+    await learning.submitAnswer({ sessionId: session.id, index: 0, response: TEXT });
+    await settled();
+    expect(questionOf((await learning.getJudgment({ sessionId: session.id, index: 0 })).session).index).toBe(1);
+    const [first] = await db.select().from(schema.judgment);
+    const copy = ({ id: _, ...rest }: typeof first & object, at: number) => ({ ...rest, status: "done" as const, createdAt: new Date(at) });
+    await db.insert(schema.judgment).values(Array.from({ length: 4 }, () => copy(first!, now)));
+    const refused = (message: string) => expect.objectContaining({ code: Code.ResourceExhausted, rawMessage: message });
+    const again = () => learning.submitAnswer({ sessionId: session.id, index: 1, response: TEXT });
+    await expect(again()).rejects.toEqual(refused(JUDGING_RATE_REFUSAL));
+    now += 2 * 60_000;
+    await db.insert(schema.judgment).values(Array.from({ length: DAILY_JUDGMENTS - 5 }, () => copy(first!, now - 90_000)));
+    await expect(again()).rejects.toEqual(refused(JUDGING_DAILY_REFUSAL));
+    expect(await db.select().from(schema.judgment)).toHaveLength(DAILY_JUDGMENTS);
+  });
+});
+
+describe("cost alarms", () => {
+  it("warns each administrator once per budget step, model cost jump and run of failures", async () => {
+    await createUser(db, "admin");
+    await grantAdmin(db, "admin", null, new Date(now));
+    const providerId = await addRoutes();
+    const call = (cost: number, ok: boolean, at: number) => ({
+      providerId,
+      model: "m1",
+      use: "judgment" as const,
+      inputTokens: 100,
+      outputTokens: 50,
+      cost,
+      ok,
+      at: new Date(at),
+    });
+    const day = 24 * 3600_000;
+    await recordCalls(
+      db,
+      Array.from({ length: 10 }, (_, i) => call(0.001, true, now - 2 * day + i)),
+    );
+    // Today: 10 calls at 0.085 each, 4 failed: 0.85 of the daily budget of 1, and 85 times the usual cost.
+    await recordCalls(
+      db,
+      Array.from({ length: 10 }, (_, i) => call(0.085, i >= 4, now - 1000 + i)),
+    );
+    const mails: [string, Alarm][] = [];
+    const mail = async (to: string, alarm: Alarm) => void mails.push([to, alarm]);
+    const raised = await runCostCheck(db, now, mail);
+    expect(raised.map((a) => a.detail).sort()).toEqual([
+      "budget day 2026-10-01 50%",
+      "budget day 2026-10-01 80%",
+      "cost-jump 2026-10-01",
+      "failures 2026-10-01",
+    ]);
+    expect(mails).toHaveLength(4);
+    expect(mails.every(([to]) => to === "admin@example.com")).toBe(true);
+    expect(await runCostCheck(db, now + 60_000, mail)).toEqual([]);
+    const log = await db.select().from(schema.adminLog);
+    expect(log.filter((l) => l.action === "ai.alarm")).toHaveLength(4);
   });
 });

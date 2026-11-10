@@ -6,6 +6,7 @@ export * from "./capabilities.ts";
 export * from "./catalog.ts";
 export * from "./context.ts";
 export * from "./convert.ts";
+export * from "./costs.ts";
 export * from "./judging.ts";
 export * from "./league.ts";
 export * from "./learning.ts";

@@ -84,6 +84,13 @@ export declare type GetOverviewResponse = Message<"ga.admin.v1.GetOverviewRespon
    * @generated from field: repeated ga.admin.v1.BandCount bands = 6;
    */
   bands: BandCount[];
+
+  /**
+   * recent_alarms counts the spending alarms of the last 24 hours.
+   *
+   * @generated from field: int32 recent_alarms = 7;
+   */
+  recentAlarms: number;
 };
 
 /**
@@ -432,6 +439,19 @@ export declare type Provider = Message<"ga.admin.v1.Provider"> & {
    * @generated from field: bool enabled = 8;
    */
   enabled: boolean;
+
+  /**
+   * daily_budget and monthly_budget are in US dollars per UTC day and month;
+   * a vendor without both serves no learner.
+   *
+   * @generated from field: optional double daily_budget = 9;
+   */
+  dailyBudget?: number | undefined;
+
+  /**
+   * @generated from field: optional double monthly_budget = 10;
+   */
+  monthlyBudget?: number | undefined;
 };
 
 /**
@@ -588,6 +608,13 @@ export declare type Route = Message<"ga.admin.v1.Route"> & {
    * @generated from field: bool qualifies = 8;
    */
   qualifies: boolean;
+
+  /**
+   * priced says whether its model has a price; it is read-only.
+   *
+   * @generated from field: bool priced = 9;
+   */
+  priced: boolean;
 };
 
 /**
@@ -1129,6 +1156,272 @@ export declare type ListLogResponse = Message<"ga.admin.v1.ListLogResponse"> & {
 export declare const ListLogResponseSchema: GenMessage<ListLogResponse>;
 
 /**
+ * @generated from message ga.admin.v1.ListPricesRequest
+ */
+export declare type ListPricesRequest = Message<"ga.admin.v1.ListPricesRequest"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.ListPricesRequest.
+ * Use `create(ListPricesRequestSchema)` to create a new message.
+ */
+export declare const ListPricesRequestSchema: GenMessage<ListPricesRequest>;
+
+/**
+ * Price is what a vendor charges for a model, in US dollars per million tokens.
+ *
+ * @generated from message ga.admin.v1.Price
+ */
+export declare type Price = Message<"ga.admin.v1.Price"> & {
+  /**
+   * @generated from field: string provider_id = 1;
+   */
+  providerId: string;
+
+  /**
+   * @generated from field: string model = 2;
+   */
+  model: string;
+
+  /**
+   * @generated from field: double input_per_million = 3;
+   */
+  inputPerMillion: number;
+
+  /**
+   * @generated from field: double output_per_million = 4;
+   */
+  outputPerMillion: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.Price.
+ * Use `create(PriceSchema)` to create a new message.
+ */
+export declare const PriceSchema: GenMessage<Price>;
+
+/**
+ * @generated from message ga.admin.v1.ListPricesResponse
+ */
+export declare type ListPricesResponse = Message<"ga.admin.v1.ListPricesResponse"> & {
+  /**
+   * @generated from field: repeated ga.admin.v1.Price prices = 1;
+   */
+  prices: Price[];
+};
+
+/**
+ * Describes the message ga.admin.v1.ListPricesResponse.
+ * Use `create(ListPricesResponseSchema)` to create a new message.
+ */
+export declare const ListPricesResponseSchema: GenMessage<ListPricesResponse>;
+
+/**
+ * @generated from message ga.admin.v1.SavePriceRequest
+ */
+export declare type SavePriceRequest = Message<"ga.admin.v1.SavePriceRequest"> & {
+  /**
+   * @generated from field: ga.admin.v1.Price price = 1;
+   */
+  price?: Price | undefined;
+};
+
+/**
+ * Describes the message ga.admin.v1.SavePriceRequest.
+ * Use `create(SavePriceRequestSchema)` to create a new message.
+ */
+export declare const SavePriceRequestSchema: GenMessage<SavePriceRequest>;
+
+/**
+ * @generated from message ga.admin.v1.SavePriceResponse
+ */
+export declare type SavePriceResponse = Message<"ga.admin.v1.SavePriceResponse"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.SavePriceResponse.
+ * Use `create(SavePriceResponseSchema)` to create a new message.
+ */
+export declare const SavePriceResponseSchema: GenMessage<SavePriceResponse>;
+
+/**
+ * @generated from message ga.admin.v1.DeletePriceRequest
+ */
+export declare type DeletePriceRequest = Message<"ga.admin.v1.DeletePriceRequest"> & {
+  /**
+   * @generated from field: string provider_id = 1;
+   */
+  providerId: string;
+
+  /**
+   * @generated from field: string model = 2;
+   */
+  model: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.DeletePriceRequest.
+ * Use `create(DeletePriceRequestSchema)` to create a new message.
+ */
+export declare const DeletePriceRequestSchema: GenMessage<DeletePriceRequest>;
+
+/**
+ * @generated from message ga.admin.v1.DeletePriceResponse
+ */
+export declare type DeletePriceResponse = Message<"ga.admin.v1.DeletePriceResponse"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.DeletePriceResponse.
+ * Use `create(DeletePriceResponseSchema)` to create a new message.
+ */
+export declare const DeletePriceResponseSchema: GenMessage<DeletePriceResponse>;
+
+/**
+ * @generated from message ga.admin.v1.GetCostsRequest
+ */
+export declare type GetCostsRequest = Message<"ga.admin.v1.GetCostsRequest"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.GetCostsRequest.
+ * Use `create(GetCostsRequestSchema)` to create a new message.
+ */
+export declare const GetCostsRequestSchema: GenMessage<GetCostsRequest>;
+
+/**
+ * ProviderSpend is what a vendor has cost this UTC day and month, against its budgets.
+ *
+ * @generated from message ga.admin.v1.ProviderSpend
+ */
+export declare type ProviderSpend = Message<"ga.admin.v1.ProviderSpend"> & {
+  /**
+   * @generated from field: string provider_id = 1;
+   */
+  providerId: string;
+
+  /**
+   * @generated from field: double day = 2;
+   */
+  day: number;
+
+  /**
+   * @generated from field: double month = 3;
+   */
+  month: number;
+
+  /**
+   * @generated from field: optional double daily_budget = 4;
+   */
+  dailyBudget?: number | undefined;
+
+  /**
+   * @generated from field: optional double monthly_budget = 5;
+   */
+  monthlyBudget?: number | undefined;
+};
+
+/**
+ * Describes the message ga.admin.v1.ProviderSpend.
+ * Use `create(ProviderSpendSchema)` to create a new message.
+ */
+export declare const ProviderSpendSchema: GenMessage<ProviderSpend>;
+
+/**
+ * LearnerCost is what one learner's calls cost this month.
+ *
+ * @generated from message ga.admin.v1.LearnerCost
+ */
+export declare type LearnerCost = Message<"ga.admin.v1.LearnerCost"> & {
+  /**
+   * @generated from field: string email = 1;
+   */
+  email: string;
+
+  /**
+   * @generated from field: int32 calls = 2;
+   */
+  calls: number;
+
+  /**
+   * @generated from field: double cost = 3;
+   */
+  cost: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.LearnerCost.
+ * Use `create(LearnerCostSchema)` to create a new message.
+ */
+export declare const LearnerCostSchema: GenMessage<LearnerCost>;
+
+/**
+ * Alarm is a spending alarm, as the change log keeps it.
+ *
+ * @generated from message ga.admin.v1.Alarm
+ */
+export declare type Alarm = Message<"ga.admin.v1.Alarm"> & {
+  /**
+   * @generated from field: int64 at = 1;
+   */
+  at: bigint;
+
+  /**
+   * @generated from field: string target = 2;
+   */
+  target: string;
+
+  /**
+   * @generated from field: string detail = 3;
+   */
+  detail: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.Alarm.
+ * Use `create(AlarmSchema)` to create a new message.
+ */
+export declare const AlarmSchema: GenMessage<Alarm>;
+
+/**
+ * @generated from message ga.admin.v1.GetCostsResponse
+ */
+export declare type GetCostsResponse = Message<"ga.admin.v1.GetCostsResponse"> & {
+  /**
+   * @generated from field: repeated ga.admin.v1.ProviderSpend providers = 1;
+   */
+  providers: ProviderSpend[];
+
+  /**
+   * month_learners counts the learners whose texts were judged this month, and month_cost what judging them cost.
+   *
+   * @generated from field: int32 month_learners = 2;
+   */
+  monthLearners: number;
+
+  /**
+   * @generated from field: double month_cost = 3;
+   */
+  monthCost: number;
+
+  /**
+   * @generated from field: repeated ga.admin.v1.LearnerCost top_learners = 4;
+   */
+  topLearners: LearnerCost[];
+
+  /**
+   * @generated from field: repeated ga.admin.v1.Alarm alarms = 5;
+   */
+  alarms: Alarm[];
+};
+
+/**
+ * Describes the message ga.admin.v1.GetCostsResponse.
+ * Use `create(GetCostsResponseSchema)` to create a new message.
+ */
+export declare const GetCostsResponseSchema: GenMessage<GetCostsResponse>;
+
+/**
  * AdminService runs the admin console; every call checks the role on the
  * server and answers not found to anyone else.
  *
@@ -1344,6 +1637,46 @@ export declare const AdminService: GenService<{
     methodKind: "unary";
     input: typeof ListLogRequestSchema;
     output: typeof ListLogResponseSchema;
+  },
+  /**
+   * ListPrices lists what vendors charge for models.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.ListPrices
+   */
+  listPrices: {
+    methodKind: "unary";
+    input: typeof ListPricesRequestSchema;
+    output: typeof ListPricesResponseSchema;
+  },
+  /**
+   * SavePrice sets what a vendor charges for a model.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.SavePrice
+   */
+  savePrice: {
+    methodKind: "unary";
+    input: typeof SavePriceRequestSchema;
+    output: typeof SavePriceResponseSchema;
+  },
+  /**
+   * DeletePrice removes a model's price, which stops its routes serving.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.DeletePrice
+   */
+  deletePrice: {
+    methodKind: "unary";
+    input: typeof DeletePriceRequestSchema;
+    output: typeof DeletePriceResponseSchema;
+  },
+  /**
+   * GetCosts returns spending against budgets, what learners cost, and the alarms.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.GetCosts
+   */
+  getCosts: {
+    methodKind: "unary";
+    input: typeof GetCostsRequestSchema;
+    output: typeof GetCostsResponseSchema;
   },
 }>;
 

@@ -16,7 +16,7 @@ function Overview() {
   if (q.isPending) return <Spinner label={m.loading} />;
   if (q.isError) return <LoadError error={q.error} onRetry={() => q.refetch()} />;
   const o = q.data;
-  const stat = (label: string, value: number, to: "/admin/verifications" | "/admin/register") => (
+  const stat = (label: string, value: number, to: "/admin/verifications" | "/admin/register" | "/admin/costs") => (
     <Link to={to} className="block">
       <Card className="h-full p-5 transition hover:border-accent/50">
         <div className="text-sm text-muted">{label}</div>
@@ -28,6 +28,7 @@ function Overview() {
     <div className="grid items-start gap-4 md:grid-cols-2">
       {stat(t.waitingForms, o.waitingForms, "/admin/verifications")}
       {stat(t.staleChecks, o.staleChecks, "/admin/register")}
+      {stat(t.recentAlarms, o.recentAlarms, "/admin/costs")}
       <Card className="space-y-2 p-5">
         <h2 className="font-semibold">{t.brokenRoutes}</h2>
         {o.brokenRoutes.length === 0 ? (

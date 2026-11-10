@@ -9,6 +9,7 @@ import {
   learnerAge,
   marketLaunchOf,
   notices,
+  prices,
   providers,
   type RoutePosition,
   routes,
@@ -16,6 +17,7 @@ import {
   type VendorCheckRow,
   vendorChecks,
 } from "@ga/db";
+import { providerSpend, withinBudget } from "./costs.ts";
 import { AI_SCOPES, ASSENT_SCOPES, marketOf, minorsCanUse, NOTICE_VERSION } from "./markets.ts";
 import { checkTimeZone } from "./summary.ts";
 
@@ -98,12 +100,13 @@ export async function scopeOffered(db: Db, country: string, scope: ConsentScope,
   );
 }
 
-/** QualifiedRoute is a route allowed to receive a learner's data. */
+/** QualifiedRoute is a route allowed to receive a learner's data, with the price of its model. */
 export interface QualifiedRoute {
   readonly position: RoutePosition;
   readonly providerId: string;
   readonly model: string;
   readonly promptVersion: string;
+  readonly price: { readonly inputPerMillion: number; readonly outputPerMillion: number };
 }
 
 /**
@@ -111,6 +114,8 @@ export interface QualifiedRoute {
  * primary, or else the calibrated backup. For a minor all five conditions of
  * docs/admin.md §6 must hold, and with none it returns undefined and judgment waits.
  * avoid passes over a position, so that a judgment the primary keeps failing moves to the backup.
+ * Its model must have a price, and its vendor both budgets with neither spent;
+ * a text already taken is finished whatever the budget, with budget false.
  */
 export async function qualifyingRoute(
   db: Db,
@@ -119,6 +124,7 @@ export async function qualifyingRoute(
   scope: ConsentScope,
   at: number,
   avoid?: RoutePosition,
+  budget = true,
 ): Promise<QualifiedRoute | undefined> {
   const age = await learnerAge(db, learnerId);
   const minor = age.band !== "adult";
@@ -127,13 +133,23 @@ export async function qualifyingRoute(
   );
   if (minor && (consents.length === 0 || !(await marketOpenToMinors(db, age.country)))) return undefined;
   if (minor && marketOf(age.country ?? "")?.status !== "open") return undefined;
-  const [list, checks, versions, all] = await Promise.all([providers(db), vendorChecks(db), notices(db), routes(db)]);
+  const [list, checks, versions, all, priced, spend] = await Promise.all([
+    providers(db),
+    vendorChecks(db),
+    notices(db),
+    routes(db),
+    prices(db),
+    budget ? providerSpend(db, at) : undefined,
+  ]);
   const candidates = all
     .filter((r) => r.criterion === criterion && r.position !== avoid)
     .sort((a, b) => a.position.localeCompare(b.position))
     .reverse();
   for (const r of candidates) {
-    if (!list.some((p) => p.id === r.providerId && p.enabled)) continue;
+    const vendor = list.find((p) => p.id === r.providerId && p.enabled);
+    const price = priced.find((x) => x.providerId === r.providerId && x.model === r.model);
+    if (!vendor || !price) continue;
+    if (spend && !withinBudget(vendor, spend.get(vendor.id))) continue;
     const calibrated = await calibrationPassed(db, r);
     if (!calibrated || (r.position === "primary" && !r.live)) continue;
     if (minor) {
@@ -141,7 +157,13 @@ export async function qualifyingRoute(
       const named = consents.some((c) => versions.find((v) => v.version === c.noticeVersion)?.vendors.includes(r.providerId));
       if (!registered || !named) continue;
     }
-    return { position: r.position, providerId: r.providerId, model: r.model, promptVersion: r.promptVersion };
+    return {
+      position: r.position,
+      providerId: r.providerId,
+      model: r.model,
+      promptVersion: r.promptVersion,
+      price: { inputPerMillion: price.inputPerMillion, outputPerMillion: price.outputPerMillion },
+    };
   }
   return undefined;
 }
