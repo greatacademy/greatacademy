@@ -38,7 +38,6 @@ beforeEach(async () => {
   db = await createTestDb();
   providerId = await createProvider(db, {
     name: "Vendor",
-    kind: "model",
     api: "openai-completions",
     keyCipher: await encryptSecret(SECRET, "test-key"),
     enabled: true,

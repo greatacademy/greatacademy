@@ -2,7 +2,6 @@ import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@conn
 import {
   addPlan,
   bandCounts,
-  calibrationPassed,
   changeLog,
   createProvider,
   type Db,
@@ -20,7 +19,6 @@ import {
   nextCheck,
   notices,
   type PriceRow,
-  type ProviderKind,
   type ProviderRow,
   platformAdmins,
   prices,
@@ -28,7 +26,9 @@ import {
   publishNotice,
   type RoutePosition,
   type RouteRow,
+  type RouteUse,
   revokeAdmin,
+  routeCalibrated,
   routes,
   saveCheck,
   setMarketLaunch,
@@ -67,7 +67,23 @@ export interface AdminDeps {
 
 const STALE_WARNING = 30 * 24 * 3600_000;
 const logLength = 200;
-const kinds: readonly ProviderKind[] = ["model", "speech"];
+/** ROUTE_USES are the uses a route can have, in the order the console shows them. */
+const ROUTE_USES: readonly RouteUse[] = ["judgment", "conversation", "stt", "tts", "pronunciation"];
+
+/** TEXT_USES are the uses served by a text model through pi-ai, with a prompt version. */
+const TEXT_USES: readonly RouteUse[] = ["judgment", "conversation"];
+
+/** TARGETS checks a route's target by use: a criterion key, a conversation's id, or a language tag. */
+const TARGETS: Record<RouteUse, RegExp> = {
+  judgment: /^[a-z0-9-]{1,64}(@[a-z0-9.-]{1,16})?$/,
+  conversation: /^[a-z0-9-]{1,64}$/,
+  stt: /^[a-z]{2,3}(-[A-Z]{2})?$/,
+  tts: /^[a-z]{2,3}(-[A-Z]{2})?$/,
+  pronunciation: /^[a-z]{2,3}(-[A-Z]{2})?$/,
+};
+
+/** routeName names a route in the log and the overview: its use, target and position. */
+const routeName = (r: { use: string; target: string; position: string }) => `${r.use}:${r.target}/${r.position}`;
 
 function need(ok: unknown, message: string): asserts ok {
   if (!ok) throw new ConnectError(message, Code.InvalidArgument);
@@ -84,7 +100,7 @@ async function routeQualifies(
   list: readonly ProviderRow[],
   priceList: readonly PriceRow[],
 ): Promise<{ calibrated: boolean; priced: boolean; qualifies: boolean }> {
-  const calibrated = await calibrationPassed(db, r);
+  const calibrated = await routeCalibrated(db, r);
   const priced = priceList.some((x) => x.providerId === r.providerId && x.model === r.model);
   const vendor = list.find((p) => p.id === r.providerId && p.enabled);
   return { calibrated, priced, qualifies: !!vendor && priced && calibrated && (r.live || r.position === "backup") };
@@ -124,8 +140,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         changeLog(db, ALARM_ACTION, logLength),
       ]);
       const broken: string[] = [];
-      for (const r of all)
-        if (r.live && !(await routeQualifies(db, r, list, priceList)).qualifies) broken.push(`${r.criterion}/${r.position}`);
+      for (const r of all) if (r.live && !(await routeQualifies(db, r, list, priceList)).qualifies) broken.push(routeName(r));
       return {
         waitingForms: waiting.length,
         staleChecks: checks.filter((c) => at.getTime() - c.checkedAt.getTime() > CHECK_VALID_MS - STALE_WARNING).length,
@@ -231,7 +246,6 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         providers: (await providers(db)).map((p) => ({
           id: p.id,
           name: p.name,
-          kind: p.kind,
           catalog: p.catalog,
           api: p.api,
           baseUrl: p.baseUrl,
@@ -268,20 +282,18 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const { db, userId, at } = await admin(ctx);
       const p = req.provider;
       const name = p?.name.trim();
-      const kind = kinds.find((k) => k === p?.kind);
       const catalog = p?.catalog.trim() ?? "";
       const vendor = catalog ? catalogVendor(catalog) : undefined;
       need(!catalog || vendor, "that vendor is not in the catalog");
       // A vendor picked from the catalog speaks the catalog's API; only its endpoint may change, as to go through a gateway.
-      // Only an AI model is called through pi-ai; a speech or other vendor has no API to name.
-      const api = vendor?.api ?? (kind === "model" ? (p?.api.trim() ?? "") : "");
-      need(p && name && kind, "a provider needs a name and a kind");
-      need(kind !== "model" || (api && SUPPORTED_APIS[api]), "an AI model needs one of the supported APIs");
+      // A vendor set up by hand for speech alone has no text API; a named one must be supported.
+      const api = vendor?.api ?? p?.api.trim() ?? "";
+      need(p && name, "a provider needs a name");
+      need(!api || SUPPORTED_APIS[api], "that API is not supported");
       const base = p.baseUrl.trim();
       if (base) need(/^https:\/\//.test(base), "the base URL must use https");
       const fields = {
         name,
-        kind,
         catalog,
         api,
         baseUrl: base,
@@ -297,7 +309,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         actor: userId,
         action: p.id ? "ai.provider.update" : "ai.provider.create",
         target: name,
-        detail: `kind=${kind}${catalog ? ` catalog=${catalog}` : ""} api=${api} enabled=${p.enabled} budgets=${p.dailyBudget ?? "-"}/${p.monthlyBudget ?? "-"}${req.apiKey ? " key replaced" : ""}`,
+        detail: `${catalog ? `catalog=${catalog} ` : ""}api=${api || "-"} enabled=${p.enabled} budgets=${p.dailyBudget ?? "-"}/${p.monthlyBudget ?? "-"}${req.apiKey ? " key replaced" : ""}`,
         at,
       });
       return { id };
@@ -318,11 +330,13 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       return {
         routes: await Promise.all(
           (await routes(db)).map(async (r) => ({
-            criterion: r.criterion,
+            use: r.use,
+            target: r.target,
             position: r.position,
             providerId: r.providerId,
             model: r.model,
             promptVersion: r.promptVersion,
+            voice: r.voice,
             live: r.live,
             ...(await routeQualifies(db, r, list, priceList)),
           })),
@@ -333,30 +347,41 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
     async saveRoute(req, ctx) {
       const { db, userId, at } = await admin(ctx);
       const r = req.route;
-      need(
-        r && /^[a-z0-9-]{1,64}(@[a-z0-9.-]{1,16})?$/.test(r.criterion) && r.model.trim() && r.promptVersion.trim(),
-        "a route needs a criterion (id@version), a model and a prompt version",
-      );
+      const use = ROUTE_USES.find((u) => u === r?.use);
+      need(r && use, "a route needs a use");
+      need(TARGETS[use].test(r.target), use === "judgment" ? "a route needs a criterion (id@version)" : "a route needs a valid target");
       need(r.position === "primary" || r.position === "backup", "a route is primary or backup");
       const position: RoutePosition = r.position;
-      need(
-        (await providers(db)).some((p) => p.id === r.providerId),
-        "no such vendor",
-      );
-      const fields = { criterion: r.criterion, providerId: r.providerId, model: r.model.trim(), promptVersion: r.promptVersion.trim() };
-      const before = (await routes(db)).find((x) => x.criterion === r.criterion && x.position === position);
+      const text = TEXT_USES.includes(use);
+      // A prompt belongs to a text use and a voice to text-to-speech; anything else sent is dropped.
+      const fields = {
+        use,
+        target: r.target,
+        providerId: r.providerId,
+        model: r.model.trim(),
+        promptVersion: text ? r.promptVersion.trim() : "",
+        voice: use === "tts" ? r.voice.trim() : "",
+      };
+      need(fields.model && (!text || fields.promptVersion), text ? "a route needs a model and a prompt version" : "a route needs a model");
+      const vendor = (await providers(db)).find((p) => p.id === r.providerId);
+      need(vendor, "no such vendor");
+      need(!text || vendor.api, "this vendor has no text API");
+      const before = (await routes(db)).find((x) => x.use === use && x.target === r.target && x.position === position);
       const changed =
         before !== undefined &&
-        (before.providerId !== fields.providerId || before.model !== fields.model || before.promptVersion !== fields.promptVersion);
+        (before.providerId !== fields.providerId ||
+          before.model !== fields.model ||
+          before.promptVersion !== fields.promptVersion ||
+          before.voice !== fields.voice);
       const live = r.live && !(before?.live && changed);
-      if (live && !(await calibrationPassed(db, fields)))
+      if (live && !(await routeCalibrated(db, fields)))
         throw new ConnectError("no passing calibration for this exact route", Code.FailedPrecondition);
       await setRoute(db, { ...fields, position, live, updatedAt: at });
       await logChange(db, {
         actor: userId,
         action: "ai.route.save",
-        target: `${r.criterion}/${position}`,
-        detail: `model=${fields.model} prompt=${fields.promptVersion} live=${live}`,
+        target: routeName({ use, target: r.target, position }),
+        detail: `model=${fields.model}${text ? ` prompt=${fields.promptVersion}` : ""}${fields.voice ? ` voice=${fields.voice}` : ""} live=${live}`,
         at,
       });
       return { live };
@@ -365,8 +390,10 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
     async deleteRoute(req, ctx) {
       const { db, userId, at } = await admin(ctx);
       need(req.position === "primary" || req.position === "backup", "a route is primary or backup");
-      await deleteRoute(db, req.criterion, req.position);
-      await logChange(db, { actor: userId, action: "ai.route.delete", target: `${req.criterion}/${req.position}`, at });
+      const use = ROUTE_USES.find((u) => u === req.use);
+      need(use, "a route needs a use");
+      await deleteRoute(db, use, req.target, req.position);
+      await logChange(db, { actor: userId, action: "ai.route.delete", target: routeName({ ...req, use }), at });
       return {};
     },
 
@@ -560,15 +587,13 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         changeLog(db, ALARM_ACTION, logLength),
       ]);
       return {
-        providers: list
-          .filter((p) => p.kind === "model")
-          .map((p) => ({
-            providerId: p.id,
-            day: spend.get(p.id)?.day ?? 0,
-            month: spend.get(p.id)?.month ?? 0,
-            ...(p.dailyBudget !== null && { dailyBudget: p.dailyBudget }),
-            ...(p.monthlyBudget !== null && { monthlyBudget: p.monthlyBudget }),
-          })),
+        providers: list.map((p) => ({
+          providerId: p.id,
+          day: spend.get(p.id)?.day ?? 0,
+          month: spend.get(p.id)?.month ?? 0,
+          ...(p.dailyBudget !== null && { dailyBudget: p.dailyBudget }),
+          ...(p.monthlyBudget !== null && { monthlyBudget: p.monthlyBudget }),
+        })),
         monthLearners: month.learners,
         monthCost: month.cost,
         topLearners: top.map((l) => ({ email: l.email, calls: l.calls, cost: l.cost })),

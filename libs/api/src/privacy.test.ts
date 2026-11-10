@@ -592,7 +592,7 @@ describe("the admin console", () => {
   it("stores keys encrypted and never returns them or logs them", async () => {
     const key = "sk-super-secret-1234";
     const { id } = await admin("root").saveProvider({
-      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+      provider: { name: "Vendor", api: "openai-completions", enabled: true },
       apiKey: key,
     });
     const [row] = await db.select().from(schema.aiProvider);
@@ -602,7 +602,7 @@ describe("the admin console", () => {
     expect(JSON.stringify(providers, (_k, v) => (typeof v === "bigint" ? v.toString() : v))).not.toContain("super-secret");
     expect(providers[0]?.keyHint).toBe("1234");
     expect(JSON.stringify(await db.select().from(schema.adminLog))).not.toContain("super-secret");
-    await admin("root").saveProvider({ provider: { id, name: "Vendor", kind: "model", api: "openai-completions", enabled: false } });
+    await admin("root").saveProvider({ provider: { id, name: "Vendor", api: "openai-completions", enabled: false } });
     expect((await db.select().from(schema.aiProvider))[0]?.keyHint).toBe("1234");
   });
 
@@ -613,28 +613,36 @@ describe("the admin console", () => {
     expect(deepseek?.models.length).toBeGreaterThan(0);
     expect(deepseek?.models[0]?.inputPerMillion).toBeGreaterThan(0);
     await admin("root").saveProvider({
-      provider: { name: "DeepSeek", kind: "model", catalog: "deepseek", api: "anthropic-messages", enabled: false },
+      provider: { name: "DeepSeek", catalog: "deepseek", api: "anthropic-messages", enabled: false },
     });
     const { providers } = await admin("root").listProviders({});
     expect(providers[0]).toMatchObject({ catalog: "deepseek", api: deepseek?.api });
-    expect(
-      await code(admin("root").saveProvider({ provider: { name: "X", kind: "model", catalog: "no-such-vendor", enabled: false } })),
-    ).toBe(Code.InvalidArgument);
-  });
-
-  it("asks an AI model for a supported API, and a speech vendor for none", async () => {
-    expect(await code(admin("root").saveProvider({ provider: { name: "X", kind: "model", api: "x", enabled: false } }))).toBe(
+    expect(await code(admin("root").saveProvider({ provider: { name: "X", catalog: "no-such-vendor", enabled: false } }))).toBe(
       Code.InvalidArgument,
     );
-    const { id } = await admin("root").saveProvider({ provider: { name: "Voice", kind: "speech", api: "x", enabled: false } });
-    expect((await admin("root").listProviders({})).providers.find((p) => p.id === id)?.api).toBe("");
+  });
+
+  it("takes only a supported API, and a vendor without one serves no text use", async () => {
+    expect(await code(admin("root").saveProvider({ provider: { name: "X", api: "x", enabled: false } }))).toBe(Code.InvalidArgument);
+    const { id } = await admin("root").saveProvider({ provider: { name: "Voice", enabled: false } });
+    const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1" };
+    expect(await code(admin("root").saveRoute({ route }))).toBe(Code.InvalidArgument);
+    const stt = { use: "stt", target: "en", position: "primary", providerId: id, model: "s1", promptVersion: "p1", voice: "v" };
+    await admin("root").saveRoute({ route: stt });
+    expect((await admin("root").listRoutes({})).routes).toMatchObject([
+      { use: "stt", target: "en", model: "s1", promptVersion: "", voice: "", calibrated: false, live: false },
+    ]);
+    expect(await code(admin("root").saveRoute({ route: { ...stt, target: "English" } }))).toBe(Code.InvalidArgument);
+    expect(await code(admin("root").saveRoute({ route: { ...stt, live: true } }))).toBe(Code.FailedPrecondition);
+    await admin("root").deleteRoute({ use: "stt", target: "en", position: "primary" });
+    expect((await admin("root").listRoutes({})).routes).toEqual([]);
   });
 
   it("sets routes live only with a calibration, and a changed model goes back to draft", async () => {
     const { id } = await admin("root").saveProvider({
-      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+      provider: { name: "Vendor", api: "openai-completions", enabled: true },
     });
-    const route = { criterion: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true };
+    const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true };
     expect(await code(admin("root").saveRoute({ route }))).toBe(Code.FailedPrecondition);
     await admin("root").saveRoute({ route: { ...route, live: false } });
     await recordCalibration(db, {
@@ -652,8 +660,8 @@ describe("the admin console", () => {
     expect(await calibrationPassed(db, { criterion: "w1", providerId: id, model: "m2", promptVersion: "p1" })).toBe(false);
     expect(await code(admin("root").deleteProvider({ id }))).toBe(Code.FailedPrecondition);
     await admin("root").saveRoute({ route: { ...route, live: true } });
-    await admin("root").saveProvider({ provider: { id, name: "Vendor", kind: "model", api: "openai-completions", enabled: false } });
-    expect((await admin("root").getOverview({})).brokenRoutes).toEqual(["w1/primary"]);
+    await admin("root").saveProvider({ provider: { id, name: "Vendor", api: "openai-completions", enabled: false } });
+    expect((await admin("root").getOverview({})).brokenRoutes).toEqual(["judgment:w1/primary"]);
   });
 
   it("lets a minor's data go out only when all five conditions hold", async () => {
@@ -662,7 +670,7 @@ describe("the admin console", () => {
     await privacy("teen").setAge({ country: "US", birthYear: 2010, birthMonth: 1 });
     const learnerId = await learnerFor(db, "teen");
     const { id } = await admin("root").saveProvider({
-      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true, dailyBudget: 1, monthlyBudget: 10 },
+      provider: { name: "Vendor", api: "openai-completions", enabled: true, dailyBudget: 1, monthlyBudget: 10 },
     });
     await admin("root").savePrice({ price: { providerId: id, model: "m1", inputPerMillion: 2, outputPerMillion: 8 } });
     await recordCalibration(db, {
@@ -676,7 +684,7 @@ describe("the admin console", () => {
       at: new Date(now),
     });
     await admin("root").saveRoute({
-      route: { criterion: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
+      route: { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
     });
     const route = () => qualifyingRoute(db, "w1", learnerId, "writing", now);
     expect(await route()).toBeUndefined();
@@ -711,7 +719,7 @@ describe("the admin console", () => {
   it("offers an AI scope only with a live route", async () => {
     await openMarket("US");
     const { id } = await admin("root").saveProvider({
-      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+      provider: { name: "Vendor", api: "openai-completions", enabled: true },
     });
     await admin("root").saveRegisterEntry({
       entry: {
@@ -740,7 +748,7 @@ describe("the admin console", () => {
       at: new Date(now),
     });
     await admin("root").saveRoute({
-      route: { criterion: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
+      route: { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
     });
     expect(await offered()).toEqual(["writing"]);
   });
@@ -748,7 +756,7 @@ describe("the admin console", () => {
   it("keeps Hong Kong without AI even with a vendor registered", async () => {
     await openMarket("HK");
     const { id } = await admin("root").saveProvider({
-      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+      provider: { name: "Vendor", api: "openai-completions", enabled: true },
     });
     await admin("root").saveRegisterEntry({
       entry: {

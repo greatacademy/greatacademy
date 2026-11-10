@@ -125,7 +125,6 @@ async function addRoutes(): Promise<string> {
   const at = new Date(now);
   const providerId = await createProvider(db, {
     name: "Vendor",
-    kind: "model",
     api: "openai-completions",
     keyCipher: await encryptSecret(SECRET, "test-key"),
     enabled: true,
@@ -147,7 +146,8 @@ async function addRoutes(): Promise<string> {
       at,
     });
     await setRoute(db, {
-      criterion: c,
+      use: "judgment",
+      target: c,
       position: "primary",
       providerId,
       model: "m1",

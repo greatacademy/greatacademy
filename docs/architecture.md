@@ -221,7 +221,7 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | `guardian`, `guardian_invite` | Who follows which learner; single-use invitation codes that expire after 7 days |
 | `consent`, `guardian_verification` | Append-only consents per learner and scope; who proved they are a guardian, with the form's key only while it awaits a decision |
 | `platform_admin`, `market_launch`, `admin_log` | The console's role, each market's switch with who signed off, and the append-only log of changes |
-| `ai_provider`, `ai_route`, `calibration`, `vendor_check`, `notice` | AI vendors with encrypted keys and budgets, routes per criterion, passing calibrations, the vendor register, and notice versions |
+| `ai_provider`, `ai_route`, `calibration`, `vendor_check`, `notice` | AI vendors with encrypted keys and budgets, routes per use and target, passing calibrations, the vendor register, and notice versions |
 | `ai_price`, `ai_call` | The price of each model per million tokens, and every call to a model with its tokens, cost and learner |
 | `verdict_check` | Criteria of live judgments sampled for people to check: the route, its verdict and the person's; the text stays in `judgment` |
 

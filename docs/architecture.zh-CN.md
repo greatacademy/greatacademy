@@ -221,7 +221,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | `consent`、`guardian_verification` | 按学习者和范围只追加的同意记录；谁证明了自己是监护人，表格的键只在等待决定时保留 |
 | `platform_admin`、`market_launch`、`admin_log` | 后台角色、各市场的开关及签字人、只追加的修改日志 |
 | `judgment` | 每篇交给模型的文本：按键（`id@version`）列出的标准、状态、带引用的判定结果、分数、模型、提示词版本、token、成本、尝试次数和最近一次失败的原因，从不保存供应商的报错内容 |
-| `ai_provider`、`ai_route`、`calibration`、`vendor_check`、`notice` | 带加密密钥和预算的 AI 供应商、各标准的路由、通过的校准、供应商登记表和通知版本 |
+| `ai_provider`、`ai_route`、`calibration`、`vendor_check`、`notice` | 带加密密钥和预算的 AI 供应商、按用途和对象的路由、通过的校准、供应商登记表和通知版本 |
 | `ai_price`、`ai_call` | 每个模型每百万 token 的价格，以及对模型的每次调用及其 token、费用和学习者 |
 | `verdict_check` | 抽样供人工检查的线上判定标准：路由、它的判定和人工的判定；文本仍留在 `judgment` 中 |
 

@@ -2,7 +2,6 @@ import { Code, ConnectError } from "@connectrpc/connect";
 import {
   type ConsentRow,
   type ConsentScope,
-  calibrationPassed,
   currentConsents,
   type Db,
   type LearnerAge,
@@ -12,6 +11,8 @@ import {
   prices,
   providers,
   type RoutePosition,
+  type RouteUse,
+  routeCalibrated,
   routes,
   studiedMs,
   type VendorCheckRow,
@@ -82,10 +83,10 @@ export async function currentNotice(db: Db): Promise<{ version: string; vendors:
   return newest ?? { version: NOTICE_VERSION, vendors: [] };
 }
 
-/** kindForScope is the kind of vendor a scope needs. */
-const kindForScope = (scope: ConsentScope) => (scope === "speech" ? "speech" : "model");
+/** useForScope is the use of route a scope needs: writing is judged, and speech is first turned into text. */
+const useForScope = (scope: ConsentScope): RouteUse => (scope === "speech" ? "stt" : "judgment");
 
-/** scopeOffered tells whether a market can offer a scope now: its rule allows it, and the current notice names a vendor of that kind with a live route and a valid check there. */
+/** scopeOffered tells whether a market can offer a scope now: its rule allows it, and the current notice names a vendor with a live route of the use the scope needs and a valid check there. */
 export async function scopeOffered(db: Db, country: string, scope: ConsentScope, at: number): Promise<boolean> {
   if (scope === "basic") return true;
   if (!AI_SCOPES.includes(scope) || marketOf(country)?.status !== "open") return false;
@@ -93,9 +94,8 @@ export async function scopeOffered(db: Db, country: string, scope: ConsentScope,
   return list.some(
     (p) =>
       p.enabled &&
-      p.kind === kindForScope(scope) &&
       notice.vendors.includes(p.id) &&
-      all.some((r) => r.providerId === p.id && r.live) &&
+      all.some((r) => r.providerId === p.id && r.live && r.use === useForScope(scope)) &&
       checks.some((c) => c.providerId === p.id && c.country === country && checkValid(c, at)),
   );
 }
@@ -142,7 +142,7 @@ export async function qualifyingRoute(
     budget ? providerSpend(db, at) : undefined,
   ]);
   const candidates = all
-    .filter((r) => r.criterion === criterion && r.position !== avoid)
+    .filter((r) => r.use === "judgment" && r.target === criterion && r.position !== avoid)
     .sort((a, b) => a.position.localeCompare(b.position))
     .reverse();
   for (const r of candidates) {
@@ -150,7 +150,7 @@ export async function qualifyingRoute(
     const price = priced.find((x) => x.providerId === r.providerId && x.model === r.model);
     if (!vendor || !price) continue;
     if (spend && !withinBudget(vendor, spend.get(vendor.id))) continue;
-    const calibrated = await calibrationPassed(db, r);
+    const calibrated = await routeCalibrated(db, r);
     if (!calibrated || (r.position === "primary" && !r.live)) continue;
     if (minor) {
       const registered = checks.some((c) => c.providerId === r.providerId && c.country === age.country && checkValid(c, at));
