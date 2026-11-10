@@ -111,8 +111,8 @@ const research = vocabularyTopic({
   id: "b1-words-research",
   title: t("Research", "研究"),
   summary: t(
-    "Observing and observations; hypotheses, conclusions and outcomes; analyzing samples and surveys; investigating, predicting, estimating and calculating.",
-    "观察和观察结果；假设、结论和结果；分析样本和调查；调查研究、预测、估计和计算。",
+    "Observing and observations; hypotheses, conclusions and outcomes; analyzing samples and surveys; investigating, predicting, estimating and calculating; researchers.",
+    "观察和观察结果；假设、结论和结果；分析样本和调查；调查研究、预测、估计和计算；研究人员。",
   ),
   prerequisites: ["b1-words-research-and-design"],
   words: [
@@ -202,6 +202,13 @@ const research = vocabularyTopic({
       "计算",
       "{Calculate} the area of the room.|Observe Investigate | The app {calculates} how many calories you burn.|observes investigates | We {calculated} that the trip would cost 500 dollars.|observed investigated",
       "circulate collect",
+    ),
+    word(
+      "researcher researchers",
+      "a person who studies something carefully to find new facts",
+      "研究人员",
+      "{Researchers} have found a new kind of frog.|samples surveys | A {researcher} spent ten years studying these birds.|sample hypothesis | The {researchers} asked 500 students to answer a survey.|samples conclusions",
+      "research reporter",
     ),
   ],
 });

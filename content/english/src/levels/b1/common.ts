@@ -10,8 +10,8 @@ const common = vocabularyTopic({
   id: "b1-words-common-words",
   title: t("Common Words", "常用词"),
   summary: t(
-    "Experts; complete, similar, common, strange and ordinary; hardly; beings and feelings; acting, behaving and recognizing.",
-    "专家；完全、相似、常见、奇怪和普通；几乎不；生物和感情；行动、表现和认出。",
+    "Experts; complete, similar, common, strange and ordinary; hardly; humans, beings and feelings; cases; acting, behaving and recognizing.",
+    "专家；完全、相似、常见、奇怪和普通；几乎不；人类、生物和感情；情况；行动、表现和认出。",
   ),
   prerequisites: ["a2-words-everyday-ideas"],
   words: [
@@ -102,6 +102,20 @@ const common = vocabularyTopic({
       "认出；识别",
       "I didn't {recognize} you with your new haircut!|behave act | Do you {recognize} this song?|behave act | The phone {recognizes} my face and unlocks itself.|behaves acts",
       "remember realize",
+    ),
+    word(
+      "human humans",
+      "of people; a person, not an animal or a machine",
+      "人的；人类",
+      "Dogs can hear sounds that {humans} cannot hear.|feelings acts | The {human} body needs water every day.|hardly completely | Robots can do many jobs that {humans} once did.|feelings acts",
+      "humid woman",
+    ),
+    word(
+      "case cases",
+      "a situation or an example of something; a crime the police work on; a box for keeping things in",
+      "情况；病例；案件；盒子",
+      "In that {case}, we'll stay at home.|being expert | There were three {cases} of the illness at school this week.|feelings experts | Take an umbrella in {case} it rains.|hardly being | The police are still working on the {case}.|hardly common",
+      "cave cash",
     ),
   ],
 });

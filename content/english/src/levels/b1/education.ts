@@ -406,8 +406,8 @@ const thinking = vocabularyTopic({
   id: "b1-words-thinking",
   title: t("Thinking", "思考"),
   summary: t(
-    "Reminding, imagining and wondering; realizing, believing and considering; supposing and preferring; solving, comparing, discussing and describing.",
-    "提醒、想象和想知道；意识到、相信和考虑；猜想和更喜欢；解决、比较、讨论和描述。",
+    "Reminding, imagining and wondering; realizing, believing and considering; supposing and preferring; solving, comparing, discussing and describing; making sense.",
+    "提醒、想象和想知道；意识到、相信和考虑；猜想和更喜欢；解决、比较、讨论和描述；有道理。",
   ),
   prerequisites: ["b1-words-learning"],
   words: [
@@ -496,6 +496,13 @@ const thinking = vocabularyTopic({
       "描述",
       "Can you {describe} the man you saw?|wonder prefer | She {described} her new house to me.|wondered realized | {Describe} your best friend in five sentences.|wonder suppose",
       "discuss compare",
+    ),
+    word(
+      "sense senses",
+      "a feeling or an understanding; one of sight, hearing, smell, taste and touch; a meaning",
+      "感觉；意识；意义",
+      "It doesn't make {sense} to buy a car you can't afford.|wonder remind | Dogs have a very good {sense} of smell.|wonder belief | Hearing and smell are two of our five {senses}.|wonders reminds",
+      "since scene",
     ),
   ],
 });

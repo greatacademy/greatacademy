@@ -430,8 +430,8 @@ const rights = vocabularyTopic({
   id: "b2-words-rights",
   title: t("Rights", "权利"),
   summary: t(
-    "Freedoms and liberties; oppressing people and oppression; persecuting minorities and persecution; asylum; civil and humanitarian rights; violating rights and violations; entitlements.",
-    "自由；压迫；迫害少数群体；庇护；公民权利和人道主义；侵犯权利；应得的权利。",
+    "Freedoms and liberties; oppressing people and oppression; persecuting minorities and persecution; asylum; rights; civil and humanitarian rights; violating rights and violations; entitlements.",
+    "自由；压迫；迫害少数群体；庇护；权利；公民权利和人道主义；侵犯权利；应得的权利。",
   ),
   prerequisites: ["b2-words-politics"],
   words: [
@@ -524,6 +524,14 @@ const rights = vocabularyTopic({
       "应得的权利；特权感",
       "Workers have an {entitlement} to four weeks' paid vacation.|oppression violation | Pensions are an {entitlement}, not a gift.|oppression asylum | His sense of {entitlement} annoyed his colleagues.|oppression asylum",
       "settlement enlightenment",
+    ),
+    word(
+      "rights",
+      "the things that the law or a fair society says every person may have or do (a right, rights)",
+      "权利",
+      "Everyone should have equal {rights}.|oppress violate | The law protects the {rights} of workers.|oppress persecute | She has spent her life fighting for human {rights}.|violate oppress",
+      "rites writes",
+      "entitlement",
     ),
   ],
 });

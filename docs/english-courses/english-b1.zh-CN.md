@@ -6,7 +6,7 @@
 - **级别：** CEFR B1，面向以英语为外语的学习者
 - **先修：** 基础级，或掌握一般过去时、过去进行时、*will* 和 *going to* 表示的将来、现在完成时以及约 1,200 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 12 个单元 · 120 个知识点（词汇 84 个，语法 18 个，写作 18 个）· 1008 个词条，本级结束时累计 2275 个
+- **规模：** 12 个单元 · 120 个知识点（词汇 84 个，语法 18 个，写作 18 个）· 1021 个词条，本级结束时累计 2296 个
 
 ## 目标
 
@@ -28,7 +28,7 @@
 - `b1-words-learning` 我们怎样学习 (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, improvement (improvements), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
 - `b1-words-school-people` 学校里的人 (12): principal (principals), classmate (classmates), tutor (tutors), professor (professors), pupil (pupils), lecturer (lecturers), counselor (counselors), scholarship (scholarships), certificate (certificates), diploma (diplomas), campus (campuses), dormitory (dormitories)
 - `b1-words-subjects-2` 更多学科 (12): geography, biology, chemistry, physics, literature, economics, philosophy, psychology, engineering, law (laws), politics, drama
-- `b1-words-thinking` 思考 (12): remind (reminds, reminded, reminding), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
+- `b1-words-thinking` 思考 (13): remind (reminds, reminded, reminding), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing), sense (senses)
 - `b1-words-qualities` 品质 (12): creative, intelligent, clever (cleverer, cleverest), wise (wiser, wisest), talent (talents), talented, confident, independent, responsible, thoughtful, lazy (lazier, laziest), brave (braver, bravest)
 - `b1-words-study-skills` 学习技能 (12): enroll (enrolls, enrolled, enrolling), define (defines, defined, defining), underline (underlines, underlined, underlining), summarize (summarizes, summarized, summarizing), outline (outlines), highlight (highlights, highlighted, highlighting), repeat (repeats, repeated, repeating), correct (corrects, corrected, correcting), copy (copies, copied, copying), submit (submits, submitted, submitting), note (notes), instruction (instructions)
 - `b1-words-little-words-4` 连接词 1 (12): within, might, whose, whom, although, though, however, unless, either, neither, whether, toward
@@ -60,7 +60,7 @@
 - `b1-words-jobs-3` 专业职业 (12): accountant (accountants), lawyer (lawyers), journalist (journalists), architect (architects), designer (designers), programmer (programmers), secretary (secretaries), receptionist (receptionists), electrician (electricians), plumber (plumbers), pharmacist (pharmacists), assistant (assistants)
 - `b1-words-work-qualities` 职业素质 (12): reliable, flexible, punctual, efficient, ambitious, experienced, professional, honest, interested, careless, motivated, practical
 - `b1-words-office` 办公室 (12): document (documents), folder (folders), form (forms), signature (signatures), sign (signs, signed, signing), stamp (stamps), memo (memos), calendar (calendars), reminder (reminders), invoice (invoices), stapler (staplers), drawer (drawers)
-- `b1-words-little-words-5` 连接词 2 (10): whenever, wherever, anyway, otherwise, besides, therefore, meanwhile, actually, especially, exactly
+- `b1-words-little-words-5` 连接词 2 (13): whenever, wherever, anyway, otherwise, besides, therefore, meanwhile, actually, especially, exactly, simply, rarely, according
 
 **语法**
 
@@ -82,13 +82,13 @@
 **词汇**
 
 - `b1-words-illness` 疾病 (12): disease (diseases), illness (illnesses), infection (infections), virus (viruses), allergy (allergies), injury (injuries), symptom (symptoms), treatment (treatments), cure (cures, cured, curing), recover (recovers, recovered, recovering), operation (operations), surgery (surgeries)
-- `b1-words-healthcare` 医疗 (12): clinic (clinics), surgeon (surgeons), prescription (prescriptions), vaccine (vaccines), insurance, therapy (therapies), x-ray (x-rays), ward (wards), specialist (specialists), bandage (bandages), wheelchair (wheelchairs), diagnose (diagnoses, diagnosed, diagnosing)
+- `b1-words-healthcare` 医疗 (13): clinic (clinics), surgeon (surgeons), prescription (prescriptions), vaccine (vaccines), insurance, therapy (therapies), x-ray (x-rays), ward (wards), specialist (specialists), bandage (bandages), wheelchair (wheelchairs), diagnose (diagnoses, diagnosed, diagnosing), medical
 - `b1-words-fitness` 健身 (12): gym (gyms), muscle (muscles), weight (weights), workout (workouts), jog (jogs, jogged, jogging), stretch (stretches, stretched, stretching), yoga, marathon (marathons), athlete (athletes), energy (energies), sweat (sweats, sweated, sweating), active
 - `b1-words-nutrition` 营养 (12): vitamin (vitamins), protein (proteins), fat (fatter, fattest, fats), calorie (calories), nutrition, vegetarian (vegetarians), balanced, junk, snack (snacks), portion (portions), organic, fiber
-- `b1-words-body-and-mind` 身体与心理 (12): chest (chests), lung (lungs), nerve (nerves), mental, physical, stress, tense (tenser, tensest), anxious, depressed, mood (moods), breathe (breathes, breathed, breathing), pulse (pulses)
+- `b1-words-body-and-mind` 身体与心理 (13): chest (chests), lung (lungs), nerve (nerves), mental, physical, stress, tense (tenser, tensest), anxious, depressed, mood (moods), breathe (breathes, breathed, breathing), pulse (pulses), mind (minds)
 - `b1-words-health-verbs` 原因与结果 (12): avoid (avoids, avoided, avoiding), prevent (prevents, prevented, preventing), reduce (reduces, reduced, reducing), increase (increases, increased, increasing), suffer (suffers, suffered, suffering), affect (affects, affected, affecting), cause (causes, caused, causing), harm (harms, harmed, harming), damage (damages, damaged, damaging), risk (risks), effect (effects), benefit (benefits)
 - `b1-words-symptoms` 症状 (12): examine (examines, examined, examining), injection (injections), bleed (bleeds, bled, bleeding), faint (faints, fainted, fainting), swallow (swallows, swallowed, swallowing), sneeze (sneezes, sneezed, sneezing), itch (itches, itched, itching), scratch (scratches, scratched, scratching), bruise (bruises), swollen, sore (sorer, sorest), dizzy (dizzier, dizziest)
-- `b1-words-healthy-habits` 健康习惯 (12): routine (routines), lifestyle (lifestyles), alcohol, cigarette (cigarettes), overweight, skip (skips, skipped, skipping), regular (regularly), normal, nap (naps), meditation, hygiene, quit (quits, quitting)
+- `b1-words-healthy-habits` 健康习惯 (13): routine (routines), lifestyle (lifestyles), alcohol, cigarette (cigarettes), overweight, skip (skips, skipped, skipping), regular (regularly), normal, nap (naps), meditation, hygiene, quit (quits, quitting), awake
 
 **语法**
 
@@ -112,7 +112,7 @@
 - `b1-words-environment` 环境 (12): environment (environments), pollution, pollute (pollutes, polluted, polluting), climate (climates), waste (wastes, wasted, wasting), trash, recycle (recycles, recycled, recycling), litter (litters), global, resource (resources), fuel (fuels), coal
 - `b1-words-nature-2` 生物 (12): species, habitat (habitats), wildlife, rainforest (rainforests), coral (corals), extinct, endangered, ecosystem (ecosystems), creature (creatures), flood (floods), drought (droughts), wildfire (wildfires)
 - `b1-words-green-living` 绿色生活 (12): solar, renewable, electricity, bin (bins), container (containers), reuse (reuses, reused, reusing), carbon, emission (emissions), gas (gases), footprint (footprints), sustainable, compost (composts)
-- `b1-words-change` 破坏与拯救 (12): rise (rises, risen, rising), disappear (disappears, disappeared, disappearing), destroy (destroys, destroyed, destroying), burn (burns, burned, burning), spread (spreads, spreading), decrease (decreases, decreased, decreasing), threat (threats), crisis (crises), disaster (disasters), impact (impacts), survive (survives, survived, surviving), rescue (rescues, rescued, rescuing)
+- `b1-words-change` 破坏与拯救 (13): rise (rises, risen, rising), disappear (disappears, disappeared, disappearing), destroy (destroys, destroyed, destroying), burn (burns, burned, burning), spread (spreads, spreading), decrease (decreases, decreased, decreasing), threat (threats), crisis (crises), disaster (disasters), impact (impacts), survive (survives, survived, surviving), rescue (rescues, rescued, rescuing), appear (appears, appeared, appearing)
 - `b1-words-taking-action` 采取行动 (12): campaign (campaigns), protest (protests, protested, protesting), petition (petitions), government (governments), ban (bans, banned, banning), encourage (encourages, encouraged, encouraging), persuade (persuades, persuaded, persuading), public, community (communities), awareness, responsibility (responsibilities), action (actions)
 - `b1-words-weather-and-climate` 天气与气候 (12): forecast (forecasts), humid, mild (milder, mildest), heatwave (heatwaves), hurricane (hurricanes), tornado (tornadoes), earthquake (earthquakes), volcano (volcanoes), tsunami (tsunamis), rainfall, breeze (breezes), shower (showers)
 - `b1-words-waste` 材料与垃圾 (12): cardboard, aluminum, rubber, packaging, toxic, dump (dumps, dumped, dumping), landfill (landfills), sewage, leak (leaks, leaked, leaking), spill (spills, spilled, spilling), poison (poisons), smoke (smokes, smoked, smoking)
@@ -141,7 +141,7 @@
 - `b1-words-truth` 真相与谎言 (12): opinion (opinions), truth, lie (lies, lied, lying), false, rumor (rumors), fake, source (sources), evidence, trust (trusts, trusted, trusting), accurate, claim (claims, claimed, claiming), prove (proves, proved, proving)
 - `b1-words-crime` 犯罪与选举 (12): crime (crimes), thief (thieves), steal (steals, stole, stolen, stealing), rob (robs, robbed, robbing), arrest (arrests, arrested, arresting), victim (victims), witness (witnesses), court (courts), judge (judges), prison (prisons), election (elections), vote (votes, voted, voting)
 - `b1-words-describing-events` 描述事件 (12): recent, current, national, international, official, shocking, unexpected, major, minor, sudden, positive, negative
-- `b1-words-communicating` 交流 (12): inform (informs, informed, informing), mention (mentions, mentioned, mentioning), express (expresses, expressed, expressing), respond (responds, responded, responding), response (responses), debate (debates), interrupt (interrupts, interrupted, interrupting), whisper (whispers, whispered, whispering), suggest (suggests, suggested, suggesting), suggestion (suggestions), warn (warns, warned, warning), advise (advises, advised, advising)
+- `b1-words-communicating` 交流 (13): inform (informs, informed, informing), mention (mentions, mentioned, mentioning), express (expresses, expressed, expressing), respond (responds, responded, responding), response (responses), debate (debates), interrupt (interrupts, interrupted, interrupting), whisper (whispers, whispered, whispering), suggest (suggests, suggested, suggesting), suggestion (suggestions), warn (warns, warned, warning), advise (advises, advised, advising), speech (speeches)
 - `b1-words-opinions` 观点 (12): oppose (opposes, opposed, opposing), favor (favors), convince (convinces, convinced, convincing), doubt (doubts), certain, uncertain, obvious, personally, definitely, totally, strongly, absolutely
 
 **语法**
@@ -217,7 +217,7 @@
 
 - `b1-words-relationships` 关系 (12): relationship (relationships), couple (couples), marriage (marriages), divorce (divorces, divorced, divorcing), engaged, boyfriend (boyfriends), girlfriend (girlfriends), single, romantic, acquaintance (acquaintances), generation (generations), childhood
 - `b1-words-personality` 性格 (12): personality (personalities), character (characters), generous, selfish, shy (shyer, shyest), outgoing, sensitive, sociable, stubborn, mature, easygoing, considerate
-- `b1-words-getting-on` 相处 (12): support (supports, supported, supporting), apologize (apologizes, apologized, apologizing), forgive (forgives, forgave, forgiven, forgiving), admit (admits, admitted, admitting), blame (blames, blamed, blaming), criticize (criticizes, criticized, criticizing), praise (praises, praised, praising), complain (complains, complained, complaining), deserve (deserves, deserved, deserving), quarrel (quarrels, quarreled, quarreling), argument (arguments), disagree (disagrees, disagreed, disagreeing)
+- `b1-words-getting-on` 相处 (13): support (supports, supported, supporting), apologize (apologizes, apologized, apologizing), forgive (forgives, forgave, forgiven, forgiving), admit (admits, admitted, admitting), blame (blames, blamed, blaming), criticize (criticizes, criticized, criticizing), praise (praises, praised, praising), complain (complains, complained, complaining), deserve (deserves, deserved, deserving), quarrel (quarrels, quarreled, quarreling), argument (arguments), disagree (disagrees, disagreed, disagreeing), ignore (ignores, ignored, ignoring)
 - `b1-words-emotions` 情感 (12): emotion (emotions), emotional, anger, fear (fears), joy, grateful, disappointed, frustrated, confused, ashamed, relieved, annoyed
 - `b1-words-social-life` 社交生活 (12): gathering (gatherings), reunion (reunions), visitor (visitors), gossip (gossips), greet (greets, greeted, greeting), accept (accepts, accepted, accepting), refuse (refuses, refused, refusing), attitude (attitudes), opportunity (opportunities), situation (situations), conversation (conversations), topic (topics)
 - `b1-words-life-events` 人生大事 (12): birth (births), adult (adults), teenager (teenagers), teenage, youth, elderly, retirement, funeral (funerals), pregnant, twin (twins), ancestor (ancestors), death
@@ -271,7 +271,7 @@
 **词汇**
 
 - `b1-words-science` 科学 (12): theory (theories), atom (atoms), cell (cells), gene (genes), evolution, gravity, oxygen, chemical (chemicals), substance (substances), liquid (liquids), solid (solider, solidest), particle (particles)
-- `b1-words-research` 研究 (12): observe (observes, observed, observing), observation (observations), hypothesis, conclusion (conclusions), outcome (outcomes), analyze (analyzes, analyzed, analyzing), sample (samples), survey (surveys), investigate (investigates, investigated, investigating), predict (predicts, predicted, predicting), estimate (estimates, estimated, estimating), calculate (calculates, calculated, calculating)
+- `b1-words-research` 研究 (13): observe (observes, observed, observing), observation (observations), hypothesis, conclusion (conclusions), outcome (outcomes), analyze (analyzes, analyzed, analyzing), sample (samples), survey (surveys), investigate (investigates, investigated, investigating), predict (predicts, predicted, predicting), estimate (estimates, estimated, estimating), calculate (calculates, calculated, calculating), researcher (researchers)
 - `b1-words-space-2` 探索太空 (12): universe (universes), galaxy (galaxies), orbit (orbits, orbited, orbiting), telescope (telescopes), satellite (satellites), spacecraft, mission (missions), launch (launches, launched, launching), astronomer (astronomers), comet (comets), alien (aliens), explorer (explorers)
 - `b1-words-inventions` 发明 (12): steam, telephone (telephones), microscope (microscopes), patent (patents), prototype (prototypes), breakthrough (breakthroughs), genius (geniuses), pioneer (pioneers), innovation (innovations), technique (techniques), invention (inventions), brilliant
 - `b1-words-numbers-and-amounts` 数字与数量 (12): percent, percentage (percentages), average (averages), total (totals), majority (majorities), minority (minorities), double (doubles, doubled, doubling), rate (rates), dozen (dozens), billion (billions), maximum, minimum
@@ -349,7 +349,7 @@
 
 **词汇**
 
-- `b1-words-common-words` 常用词 (12): expert (experts), completely, similar, common, strange, ordinary, hardly, being (beings), feelings, act (acts, acted, acting), behave (behaves, behaved, behaving), recognize (recognizes, recognized, recognizing)
+- `b1-words-common-words` 常用词 (14): expert (experts), completely, similar, common, strange, ordinary, hardly, being (beings), feelings, act (acts, acted, acting), behave (behaves, behaved, behaving), recognize (recognizes, recognized, recognizing), human (humans), case (cases)
 
 ## 知识点与先修
 

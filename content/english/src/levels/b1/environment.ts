@@ -299,8 +299,8 @@ const change = vocabularyTopic({
   id: "b1-words-change",
   title: t("Damage and Rescue", "破坏和救援"),
   summary: t(
-    "Rising, disappearing and decreasing; destroying, burning and spreading; threats, crises and disasters; impact; surviving and rescuing.",
-    "上升、消失和减少；摧毁、燃烧和蔓延；威胁、危机和灾难；冲击；幸存和救援。",
+    "Rising, appearing, disappearing and decreasing; destroying, burning and spreading; threats, crises and disasters; impact; surviving and rescuing.",
+    "上升、出现、消失和减少；摧毁、燃烧和蔓延；威胁、危机和灾难；冲击；幸存和救援。",
   ),
   prerequisites: ["b1-words-environment"],
   words: [
@@ -387,6 +387,13 @@ const change = vocabularyTopic({
       "营救；救援",
       "Firefighters {rescued} a family from the burning house.|survived decreased | The boat was {rescued} after two days at sea.|survived decreased | They work to {rescue} animals from the floods.|survive decrease",
       "survive destroy",
+    ),
+    word(
+      "appear appears appeared appearing",
+      "to start to be seen; to seem",
+      "出现；似乎",
+      "The sun {appeared} from behind the clouds.|decreased destroyed | A strange man {appeared} at the door.|rescued decreased | She {appears} to be happy in her new job.|survives spreads",
+      "apply happen",
     ),
   ],
 });

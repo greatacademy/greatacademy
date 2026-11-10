@@ -638,8 +638,8 @@ const motivation = vocabularyTopic({
   id: "b2-words-motivation",
   title: t("Motivation", "动力"),
   summary: t(
-    "Intrinsic and extrinsic motivation; purposeful work, fulfillment and satisfaction; recognition; self-motivated learners; apathy and apathetic voters; complacent winners; inspiration and enthusiasm.",
-    "内在的和外在的动力；有目标的工作、成就感和满足感；认可；自我激励的学习者；冷漠和冷漠的选民；自满的胜利者；灵感和热情。",
+    "Intrinsic and extrinsic motivation; purposeful work, fulfillment and satisfaction; recognition; self-motivated learners; apathy and apathetic voters; complacent winners; inspiration and enthusiasm; struggling.",
+    "内在的和外在的动力；有目标的工作、成就感和满足感；认可；自我激励的学习者；冷漠和冷漠的选民；自满的胜利者；灵感和热情；努力挣扎。",
   ),
   prerequisites: ["b2-words-success"],
   words: [
@@ -737,6 +737,13 @@ const motivation = vocabularyTopic({
       "enthusiast euphemism",
       "inspiration",
     ),
+    word(
+      "struggle struggles struggled struggling",
+      "to try very hard to do something difficult; a long, hard effort",
+      "努力；挣扎；斗争",
+      "Many new students {struggle} with managing their time.|complacent apathetic | After a long {struggle}, she finally passed her driving test.|recognition fulfillment | He was {struggling} to stay motivated after losing his job.|complacent apathetic",
+      "strangle stumble",
+    ),
   ],
 });
 
@@ -744,8 +751,8 @@ const body = vocabularyTopic({
   id: "b2-words-body-language",
   title: t("Body Language", "肢体语言"),
   summary: t(
-    "Articulating and conveying ideas; gestures, posture and facial expressions; verbal and nonverbal communication; tone; misinterpreting a message and asking for clarification; eloquent speakers.",
-    "清楚地表达和传达想法；手势、姿势和面部表情；言语和非言语交流；语气；误解信息和请求澄清；能言善辩的演讲者。",
+    "Articulating and conveying ideas; gestures, posture and facial expressions; verbal and nonverbal communication; tone; misinterpreting a message and asking for clarification; eloquent speakers; first impressions.",
+    "清楚地表达和传达想法；手势、姿势和面部表情；言语和非言语交流；语气；误解信息和请求澄清；能言善辩的演讲者；第一印象。",
   ),
   prerequisites: ["b1-words-communicating"],
   words: [
@@ -840,6 +847,13 @@ const body = vocabularyTopic({
       "She gave an {eloquent} speech that moved the audience to tears.|facial nonverbal | He is very {eloquent} in English, though it is his second language.|facial nonverbal | The president was praised for her {eloquent} words.|facial nonverbal",
       "elegant eloquence",
       "articulate",
+    ),
+    word(
+      "impression impressions",
+      "an opinion or feeling about someone or something, often formed quickly",
+      "印象",
+      "She made a good {impression} at the interview.|clarification tone | First {impressions} are hard to change.|postures clarifications | I got the {impression} that he wasn't listening.|clarification posture",
+      "impressive impress",
     ),
   ],
 });

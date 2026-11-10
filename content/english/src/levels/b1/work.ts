@@ -695,8 +695,8 @@ const linking = vocabularyTopic({
   id: "b1-words-little-words-5",
   title: t("Linking Words 2", "连接词 2"),
   summary: t(
-    "Whenever and wherever; anyway and otherwise; besides, therefore and meanwhile; actually, especially and exactly.",
-    "whenever 和 wherever；anyway 和 otherwise；besides、therefore 和 meanwhile；actually、especially 和 exactly。",
+    "Whenever and wherever; anyway and otherwise; besides, therefore and meanwhile; actually, especially and exactly; simply, rarely and according to.",
+    "whenever 和 wherever；anyway 和 otherwise；besides、therefore 和 meanwhile；actually、especially 和 exactly；simply、rarely 和 according to。",
   ),
   prerequisites: ["b1-words-little-words-4"],
   words: [
@@ -771,6 +771,27 @@ const linking = vocabularyTopic({
       "确切地；正好",
       "It's {exactly} three o'clock.|especially otherwise | That's {exactly} what I wanted!|otherwise besides | What {exactly} did he say?|besides therefore",
       "especially actually",
+    ),
+    word(
+      "simply",
+      "only; just; in a way that is easy to understand",
+      "只是；简单地",
+      "I {simply} don't have time today.|meanwhile otherwise | Explain it {simply}, please. I'm new to this.|whenever wherever | It's {simply} too cold to swim.|whenever wherever",
+      "sample supply",
+    ),
+    word(
+      "rarely",
+      "not often",
+      "很少；难得",
+      "My grandfather {rarely} watches TV.|meanwhile wherever | It {rarely} snows here, even in winter.|whenever besides | We {rarely} see each other now that she lives abroad.|wherever whenever",
+      "really nearly",
+    ),
+    word(
+      "according",
+      "as said or shown by someone or something (according to)",
+      "根据；据……所说",
+      "{According} to the weather forecast, it will rain tomorrow.|especially exactly | {According} to my teacher, the test will be easy.|besides actually | The students were put in groups {according} to their age.|especially exactly",
+      "accident account",
     ),
   ],
 });

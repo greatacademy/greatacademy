@@ -203,8 +203,8 @@ const movement = vocabularyTopic({
   id: "a2-words-movement",
   title: t("Movement", "动作"),
   summary: t(
-    "Throwing, kicking, hitting, climbing, pushing, pulling, lifting, rolling, slipping, holding and shouting.",
-    "扔、踢、击打、爬、推、拉、举、滚、滑倒、握住和喊叫。",
+    "Throwing, kicking, hitting, climbing, pushing, pulling, lifting, rolling, slipping, holding, shouting and fighting.",
+    "扔、踢、击打、爬、推、拉、举、滚、滑倒、握住、喊叫和打架。",
   ),
   prerequisites: ["a2-words-competition"],
   words: [
@@ -285,6 +285,13 @@ const movement = vocabularyTopic({
       'Don\'t {shout}! I can hear you.|throw lift | The coach {shouted} at the players.|threw lifted | "Help!" she {shouted}.|lifted rolled',
       "cheer push",
     ),
+    word(
+      "fight fights fought fighting",
+      "to use your body or weapons against someone; to argue",
+      "打架；战斗；争吵",
+      "My brother and I often {fight} about the TV.|lift roll | Dogs sometimes {fight} over food.|lift hold | The doctors are {fighting} to save her life.|rolling slipping | The two cats {fought} in the garden all night.|lifted held",
+      "fit flight",
+    ),
   ],
 });
 
@@ -292,8 +299,8 @@ const games = vocabularyTopic({
   id: "a2-words-games",
   title: t("Games", "游戏"),
   summary: t(
-    "Puzzles, rules, dice and boards; partners and levels; online games and videos; cheating; fair and lucky.",
-    "拼图、规则、骰子和棋盘；搭档和关卡；网络游戏和视频；作弊；公平的和幸运的。",
+    "Puzzles, rules, dice and boards; partners and levels; online games and videos; cheating; chances; fair and lucky.",
+    "拼图、规则、骰子和棋盘；搭档和关卡；网络游戏和视频；作弊；机会；公平的和幸运的。",
   ),
   prerequisites: ["a2-words-movement"],
   words: [
@@ -373,6 +380,13 @@ const games = vocabularyTopic({
       "幸运的",
       "You found money in the street? You're {lucky}!|fair online | Seven is my {lucky} number.|fair online | We were {lucky}: the rain stopped just before the match.|fair online",
       "fair online",
+    ),
+    word(
+      "chance chances",
+      "a time when you can do something; how possible it is that something will happen",
+      "机会；可能性",
+      "Do you think we have a {chance} of winning?|rule dice | I didn't get a {chance} to play today.|dice puzzle | There's a good {chance} it will rain tomorrow.|puzzle partner | She had two {chances} to score, but she missed both.|partners rules",
+      "change charge",
     ),
   ],
 });

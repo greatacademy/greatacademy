@@ -809,8 +809,8 @@ const screen = vocabularyTopic({
   id: "b2-words-film-and-tv",
   title: t("Film and Television", "电影与电视"),
   summary: t(
-    "Sitcoms, thrillers, horror and animation; the cast and the screenplay; sequels; subtitles and dubbing; genres; blockbusters and trailers.",
-    "情景喜剧、惊悚片、恐怖片和动画；演员阵容和剧本；续集；字幕和配音；类型；大片和预告片。",
+    "Sitcoms, thrillers, horror and animation; the cast and the screenplay; sequels; subtitles and dubbing; genres; blockbusters and trailers; critics.",
+    "情景喜剧、惊悚片、恐怖片和动画；演员阵容和剧本；续集；字幕和配音；类型；大片和预告片；评论家。",
   ),
   prerequisites: ["b1-words-film-and-theater"],
   words: [
@@ -899,6 +899,13 @@ const screen = vocabularyTopic({
       "预告片",
       "The {trailer} for the new film has ten million views.|genre sequel | We watched the {trailers} before the film started.|genres casts | The {trailer} shows all the best jokes.|genre cast",
       "trainer traitor",
+    ),
+    word(
+      "critic critics",
+      "a person whose job is to give opinions about films, books, art or food; a person who says what is wrong with someone or something",
+      "评论家；批评者",
+      "The {critics} loved the film, but it made little money.|trailers subtitles | She works as a food {critic} for a newspaper.|genre sequel | Even his {critics} agree that he is a talented director.|sequels subtitles",
+      "critical cricket",
     ),
   ],
 });

@@ -90,7 +90,6 @@ Are these impressions accurate? Sometimes they are. People are often good at jud
 
 What can we do with this knowledge? At a job interview, it is worth paying attention to the first minute: a firm greeting, a relaxed posture and a warm tone can matter more than we would like. When we are the ones judging, the lesson is the opposite. Hardly ever is our first impression the whole truth, and it is fair to give people a second look.`,
       grammar: ["inversion-after-negative-adverbs"],
-      glossed: ["impression", "impressions"],
       questions: [
         [
           ["How long did people see each face in the experiment?", "在实验中，人们看每张脸看了多久？"],

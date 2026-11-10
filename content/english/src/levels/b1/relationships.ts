@@ -207,8 +207,8 @@ const gettingOn = vocabularyTopic({
   id: "b1-words-getting-on",
   title: t("Getting On", "相处"),
   summary: t(
-    "Supporting, apologizing and forgiving; admitting, blaming and criticizing; praising and complaining; deserving; quarrels, arguments and disagreeing.",
-    "支持、道歉和原谅；承认、责备和批评；表扬和抱怨；应得；争吵、争论和意见不合。",
+    "Supporting, apologizing and forgiving; admitting, blaming and criticizing; praising and complaining; deserving; ignoring; quarrels, arguments and disagreeing.",
+    "支持、道歉和原谅；承认、责备和批评；表扬和抱怨；应得；忽视；争吵、争论和意见不合。",
   ),
   prerequisites: ["a2-words-people-together"],
   words: [
@@ -297,6 +297,13 @@ const gettingOn = vocabularyTopic({
       "不同意；意见不合",
       "I {disagree} with you about the new rule.|deserve forgive | My parents often {disagree} about where to go on holiday.|deserve apologize | Two teachers {disagreed} about the best answer.|deserved forgave",
       "dislike disappear",
+    ),
+    word(
+      "ignore ignores ignored ignoring",
+      "to pay no attention to someone or something",
+      "忽视；不理睬",
+      "I said hello, but she {ignored} me.|deserved apologized | Don't {ignore} the doctor's advice.|apologize complain | He kept {ignoring} my messages.|apologizing disagreeing",
+      "ignite inform",
     ),
   ],
 });

@@ -113,8 +113,8 @@ const healthcare = vocabularyTopic({
   id: "b1-words-healthcare",
   title: t("Healthcare", "医疗"),
   summary: t(
-    "Clinics, surgeons and prescriptions; vaccines, insurance and therapy; x-rays, wards and specialists; bandages, wheelchairs and diagnosing.",
-    "诊所、外科医生和处方；疫苗、保险和疗法；X 光、病房和专科医生；绷带、轮椅和诊断。",
+    "Clinics, surgeons and prescriptions; vaccines, insurance and therapy; x-rays, wards and specialists; bandages, wheelchairs and diagnosing; medical help.",
+    "诊所、外科医生和处方；疫苗、保险和疗法；X 光、病房和专科医生；绷带、轮椅和诊断；医疗帮助。",
   ),
   prerequisites: ["b1-words-illness"],
   words: [
@@ -203,6 +203,13 @@ const healthcare = vocabularyTopic({
       "诊断",
       "The doctor {diagnosed} a broken bone.|insured vaccinated | It is hard to {diagnose} this illness early.|insure bandage | Doctors use x-rays to {diagnose} broken bones.|insure ward",
       "insure prescription",
+    ),
+    word(
+      "medical",
+      "about medicine and treating illness and injuries",
+      "医学的；医疗的",
+      "You need {medical} help right away.|medicine diagnose | Your {medical} records are private.|diagnose medicine | He had a {medical} check before the race.|medicine surgeon",
+      "media metal",
     ),
   ],
 });
@@ -403,8 +410,8 @@ const bodyAndMind = vocabularyTopic({
   id: "b1-words-body-and-mind",
   title: t("Body and Mind", "身体和心理"),
   summary: t(
-    "The chest, lungs and nerves; mental and physical; stress, tense and anxious; depressed and moods; breathing and the pulse.",
-    "胸部、肺和神经；精神的和身体的；压力、紧张和焦虑；抑郁和心情；呼吸和脉搏。",
+    "The chest, lungs and nerves; the mind; mental and physical; stress, tense and anxious; depressed and moods; breathing and the pulse.",
+    "胸部、肺和神经；头脑；精神的和身体的；压力、紧张和焦虑；抑郁和心情；呼吸和脉搏。",
   ),
   prerequisites: ["a2-words-body-2"],
   words: [
@@ -493,6 +500,13 @@ const bodyAndMind = vocabularyTopic({
       "脉搏",
       "The nurse took my {pulse}.|mood stress | Your {pulse} goes up when you run.|lung nerve | Check your {pulse} after exercise.|mood stress",
       "mood lung",
+    ),
+    word(
+      "mind minds",
+      "the part of a person that thinks, feels and remembers; to be unhappy about something",
+      "头脑；思想；介意",
+      "I can't get that song out of my {mind}.|pulse lung | She changed her {mind} and stayed at home.|pulse chest | Would you {mind} closing the door?|breathe tense | The best {minds} in the country are working on this problem.|lungs pulses",
+      "mine mild",
     ),
   ],
 });
@@ -695,8 +709,8 @@ const habits = vocabularyTopic({
   id: "b1-words-healthy-habits",
   title: t("Healthy Habits", "健康习惯"),
   summary: t(
-    "Routines and lifestyles; alcohol, cigarettes and being overweight; skipping meals; regular and normal; naps, meditation, hygiene and quitting.",
-    "日常习惯和生活方式；酒精、香烟和超重；不吃饭；规律的和正常的；小睡、冥想、卫生和戒掉。",
+    "Routines and lifestyles; alcohol, cigarettes and being overweight; skipping meals; regular and normal; naps, meditation, hygiene and quitting; staying awake.",
+    "日常习惯和生活方式；酒精、香烟和超重；不吃饭；规律的和正常的；小睡、冥想、卫生和戒掉；保持清醒。",
   ),
   prerequisites: ["a2-words-staying-well"],
   words: [
@@ -785,6 +799,13 @@ const habits = vocabularyTopic({
       "戒掉；放弃",
       "My dad {quit} smoking last year.|skipped napped | It's hard to {quit} sugar.|nap meditate | She's {quitting} her job to travel.|napping meditating",
       "skip nap",
+    ),
+    word(
+      "awake",
+      "not sleeping",
+      "醒着的",
+      "I was still {awake} at midnight.|nap quit | Strong coffee keeps me {awake} at night.|quit skip | Is the baby {awake} yet? I can hear her.|nap skip",
+      "aware away",
     ),
   ],
 });

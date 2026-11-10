@@ -6,7 +6,7 @@
 - **Level:** CEFR A2, for learners of English as a foreign language
 - **Prerequisite(s):** A1, or the present simple and continuous, *was* and *were*, and about 600 words
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 92 topics (55 of vocabulary, 22 of grammar, 15 of writing) · 632 headwords, 1285 by the end of the level
+- **Size:** 12 units · 92 topics (55 of vocabulary, 22 of grammar, 15 of writing) · 638 headwords, 1293 by the end of the level
 
 ## Aim
 
@@ -78,7 +78,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `a2-words-neighborhood` The Neighborhood (12): neighbor (neighbors), neighborhood (neighborhoods), area (areas), village (villages), center (centers), local, square (squares), market (markets), fountain (fountains), church (churches), bakery (bakeries), playground (playgrounds)
 - `a2-words-community-actions` Helping Out (10): share (shares, shared, sharing), join (joins, joined, joining), volunteer (volunteers, volunteered, volunteering), collect (collects, collected, collecting), plant (plants, planted, planting), repair (repairs, repaired, repairing), organize (organizes, organized, organizing), raise (raises, raised, raising), protect (protects, protected, protecting), notice (notices, noticed, noticing)
 - `a2-words-people-around` People Around Us (12): stranger (strangers), guest (guests), member (members), group (groups), leader (leaders), owner (owners), baker (bakers), mail, polite, rude, helpful, lonely
-- `a2-words-describing-places` Describing Places (11): noisy (noisier, noisiest), crowded, peaceful, modern, empty (emptier, emptiest), full (fuller, fullest), safe (safer, safest), dangerous, pretty (prettier, prettiest), ugly (uglier, ugliest), famous
+- `a2-words-describing-places` Describing Places (12): noisy (noisier, noisiest), crowded, peaceful, modern, empty (emptier, emptiest), full (fuller, fullest), safe (safer, safest), dangerous, pretty (prettier, prettiest), ugly (uglier, ugliest), famous, danger (dangers)
 - `a2-words-pronouns` Mine, Yours and Myself (12): mine, yours, hers, ours, theirs, myself, yourself, himself, herself, itself, ourselves, themselves
 
 **Grammar**
@@ -128,8 +128,8 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `a2-words-sports` Sports (12): tennis, volleyball, badminton, ping-pong, baseball, skate (skates, skated, skating), ski (skis, skied, skiing), race (races), match (matches), player (players), coach (coaches), score (scores, scored, scoring)
 - `a2-words-competition` Competition (12): winner (winners), prize (prizes), medal (medals), champion (champions), goal (goals), point (points), against, beat (beats, beaten, beating), practice (practices, practiced, practicing), fan (fans), cheer (cheers, cheered, cheering), final
-- `a2-words-movement` Movement (11): throw (throws, threw, thrown, throwing), kick (kicks, kicked, kicking), hit (hits, hitting), climb (climbs, climbed, climbing), push (pushes, pushed, pushing), pull (pulls, pulled, pulling), lift (lifts, lifted, lifting), roll (rolls, rolled, rolling), slip (slips, slipped, slipping), hold (holds, held, holding), shout (shouts, shouted, shouting)
-- `a2-words-games` Games (11): puzzle (puzzles), rule (rules), dice, board (boards), partner (partners), level (levels), online, video (videos), cheat (cheats, cheated, cheating), fair (fairer, fairest), lucky (luckier, luckiest)
+- `a2-words-movement` Movement (12): throw (throws, threw, thrown, throwing), kick (kicks, kicked, kicking), hit (hits, hitting), climb (climbs, climbed, climbing), push (pushes, pushed, pushing), pull (pulls, pulled, pulling), lift (lifts, lifted, lifting), roll (rolls, rolled, rolling), slip (slips, slipped, slipping), hold (holds, held, holding), shout (shouts, shouted, shouting), fight (fights, fought, fighting)
+- `a2-words-games` Games (12): puzzle (puzzles), rule (rules), dice, board (boards), partner (partners), level (levels), online, video (videos), cheat (cheats, cheated, cheating), fair (fairer, fairest), lucky (luckier, luckiest), chance (chances)
 - `a2-words-adverbs` How We Do Things (11): quickly, slowly, carefully, quietly, loudly, easily, badly, hard (harder, hardest), loud (louder, loudest), almost, quite
 
 **Grammar**
@@ -224,7 +224,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 **Vocabulary**
 
 - `a2-words-money` Money (12): cash, coin (coins), credit, change (changes, changed, changing), cent (cents), wallet (wallets), save (saves, saved, saving), lend (lends, lent, lending), rich (richer, richest), poor (poorer, poorest), cost (costs, costing), thousand (thousands)
-- `a2-words-shops` Shops (12): supermarket (supermarkets), mall (malls), bookstore (bookstores), customer (customers), cashier (cashiers), receipt (receipts), discount (discounts), sale (sales), bargain (bargains), choose (chooses, chose, chosen, choosing), order (orders, ordered, ordering), deliver (delivers, delivered, delivering)
+- `a2-words-shops` Shops (13): supermarket (supermarkets), mall (malls), bookstore (bookstores), customer (customers), cashier (cashiers), receipt (receipts), discount (discounts), sale (sales), bargain (bargains), choose (chooses, chose, chosen, choosing), order (orders, ordered, ordering), deliver (delivers, delivered, delivering), choice (choices)
 - `a2-words-things-we-buy` Things We Buy (11): ring (rings), necklace (necklaces), glove (gloves), scarf (scarves), boot (boots), belt (belts), sunglasses, uniform (uniforms), jeans, sweater (sweaters), pocket (pockets)
 - `a2-words-materials` Materials (12): cotton, wool, leather, plastic, metal (metals), gold, silver, wooden, material (materials), heavy (heavier, heaviest), thick (thicker, thickest), thin (thinner, thinnest)
 
@@ -318,10 +318,10 @@ Words so common that passages of every theme need them, taught in four extra bat
 
 **Vocabulary**
 
-- `a2-words-positions-and-shapes` Where, Who and What Shape (9): top (tops), middle, inside, away, everywhere, nobody, box (boxes), shape (shapes), fire (fires)
+- `a2-words-positions-and-shapes` Where, Who and What Shape (10): top (tops), middle, inside, away, everywhere, nobody, box (boxes), shape (shapes), fire (fires), among
 - `a2-words-sounds-and-messages` Sounds and Messages (9): noise (noises), sound (sounds), voice (voices), letter (letters), radio (radios), touch (touches, touched, touching), secret (secrets), guess (guesses, guessed, guessing), mistake (mistakes)
 - `a2-words-family-food-and-measures` Family, Food and Measures (10): grandfather (grandfathers), grandmother (grandmothers), age (ages), cheese (cheeses), chocolate (chocolates), cinema (cinemas), kilometer (kilometers), meter (meters), quick (quicker, quickest), bright (brighter, brightest)
-- `a2-words-everyday-ideas` Everyday Ideas (12): list (lists), simple (simpler, simplest), clear (clearer, clearest, clearly), seem (seems, seemed, seeming), anyone, somebody, news, fact (facts), result (results), brain (brains), since, instead
+- `a2-words-everyday-ideas` Everyday Ideas (13): list (lists), simple (simpler, simplest), clear (clearer, clearest, clearly), seem (seems, seemed, seeming), anyone, somebody, news, fact (facts), result (results), brain (brains), since, instead, perfect (perfectly)
 
 ## Topics and Prerequisites
 

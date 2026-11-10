@@ -6,7 +6,7 @@
 - **Level:** CEFR A1, for learners of English as a foreign language
 - **Prerequisite(s):** Pre-A1, or knowing its words and sentences with *be*, *have* and *can*
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 73 topics (43 of vocabulary, 19 of grammar, 11 of writing) · 489 headwords, 653 by the end of the level
+- **Size:** 12 units · 73 topics (43 of vocabulary, 19 of grammar, 11 of writing) · 491 headwords, 655 by the end of the level
 
 ## Aim
 
@@ -26,7 +26,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `a1-words-numbers-to-hundred` Numbers 13 to 100 (12): thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty, thirty, forty, fifty, hundred (hundreds)
 - `a1-words-about-me` Where I Live (11): country (countries), city (cities), live (lives, lived, living), from, speak (speaks, spoke, spoken, speaking), English, Chinese, language (languages), phone (phones), number (numbers), email (emails)
-- `a1-words-feelings` How I Feel (11): feel (feels, felt, feeling), fine, well, okay, great (greater, greatest), tired, sick, angry, afraid, now, again
+- `a1-words-feelings` How I Feel (12): feel (feels, felt, feeling), fine, well, okay, great (greater, greatest), tired, sick, angry, afraid, now, again, hate (hates, hated, hating)
 - `a1-words-everyday-words` Everyday Words (12): thing (things), place (places), person, life, idea (ideas), part (parts), cry (cries, cried, crying), high (higher, highest), low (lower, lowest), sure, ready, real
 - `a1-words-little-words-3` Little Words 3 (9): as, let's, each, alone, onto, oh, wow, hey, yeah
 
@@ -162,7 +162,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Vocabulary**
 
-- `a1-words-sports-and-music` Sports and Music (12): sport (sports), game (games), ball (balls), music, song (songs), dance (dances, danced, dancing), sing (sings, sang, sung, singing), ride (rides, rode, ridden, riding), bike (bikes), football, basketball, movie (movies)
+- `a1-words-sports-and-music` Sports and Music (13): sport (sports), game (games), ball (balls), music, song (songs), dance (dances, danced, dancing), sing (sings, sang, sung, singing), ride (rides, rode, ridden, riding), bike (bikes), football, basketball, movie (movies), film (films)
 - `a1-words-hobbies` Hobbies (12): hobby (hobbies), guitar (guitars), piano (pianos), paint (paints, painted, painting), photo (photos), camera (cameras), fun, together, favorite, team (teams), park (parks), free
 - `a1-words-parties` Parties (10): party (parties), gift (gifts), invite (invites, invited, inviting), concert (concerts), club (clubs), enjoy (enjoys, enjoyed, enjoying), laugh (laughs, laughed, laughing), chess, drum (drums), kite (kites)
 - `a1-words-actions` Saying and Thinking (12): say (says, said, saying), tell (tells, told, telling), think (thinks, thought, thinking), hear (hears, heard, hearing), talk (talks, talked, talking), stay (stays, stayed, staying), hope (hopes, hoped, hoping), let (lets, letting), begin (begins, began, begun, beginning), end (ends, ended, ending), wish (wishes, wished, wishing), move (moves, moved, moving)

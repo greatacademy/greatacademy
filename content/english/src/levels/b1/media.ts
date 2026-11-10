@@ -491,8 +491,8 @@ const communicating = vocabularyTopic({
   id: "b1-words-communicating",
   title: t("Communicating", "交流"),
   summary: t(
-    "Informing, mentioning and expressing; responding and responses; debates; interrupting and whispering; suggesting and suggestions; warning and advising.",
-    "通知、提到和表达；回应和答复；辩论；打断和低声说；建议和提议；警告和劝告。",
+    "Informing, mentioning and expressing; responding and responses; debates; interrupting and whispering; suggesting and suggestions; warning and advising; speeches.",
+    "通知、提到和表达；回应和答复；辩论；打断和低声说；建议和提议；警告和劝告；演讲。",
   ),
   prerequisites: ["a2-words-communication"],
   words: [
@@ -579,6 +579,13 @@ const communicating = vocabularyTopic({
       "劝告；建议",
       "The doctor {advised} me to rest for a week.|whispered interrupted | I'd {advise} you to book early.|whisper interrupt | My teacher {advises} us to read every day.|whispers interrupts",
       "suggest warn",
+    ),
+    word(
+      "speech speeches",
+      "a formal talk to a group of people; the ability to speak",
+      "演讲；言语",
+      "The head teacher gave a {speech} at the start of the year.|mention inform | She was nervous before her {speech}.|interrupt advise | The mayor's {speeches} are always short.|informs advises",
+      "speed speak",
     ),
   ],
 });

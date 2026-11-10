@@ -204,7 +204,7 @@ Workers, too, won many of their rights through protest. The weekend, the working
 Not every protest succeeds, of course, and protests can turn into riots that harm innocent people. Experts on history point out that the protests that achieved most usually mixed protest with other strategies: legal challenges, organizing at the grassroots and the patient work of persuading the public. Nevertheless, history suggests that when ordinary people mobilize in large numbers and refuse to give up, even the strongest institutions can be made to change.`,
       grammar: ["linking-words-of-contrast"],
       names: ["Britain", "British", "United", "States", "Montgomery", "Rosa", "Parks"],
-      glossed: ["rights", "railings", "sit-ins"],
+      glossed: ["railings", "sit-ins"],
       questions: [
         [
           ["Why did some campaigners in Britain turn to more radical protest?", "为什么英国的一些活动人士转向更激进的抗议？"],

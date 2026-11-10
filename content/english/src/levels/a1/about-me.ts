@@ -191,7 +191,10 @@ const aboutMe = vocabularyTopic({
 const feelings = vocabularyTopic({
   id: "a1-words-feelings",
   title: t("How I Feel", "我的感受"),
-  summary: t("Saying how you feel: fine, tired, sick, angry, afraid.", "说说你的感受：fine、tired、sick、angry、afraid。"),
+  summary: t(
+    "Saying how you feel: fine, tired, sick, angry, afraid; and what you hate.",
+    "说说你的感受：fine、tired、sick、angry、afraid，以及你讨厌什么。",
+  ),
   prerequisites: ["pre-a1-words-little-words"],
   words: [
     word(
@@ -273,6 +276,13 @@ const feelings = vocabularyTopic({
       "再；又",
       "Can you say that {again}, please?|well okay | Hello {again}! Nice to see you.|now fine | I'm sick {again}! This is the third time this month.|now well",
       "now well",
+    ),
+    word(
+      "hate hates hated hating",
+      "to dislike someone or something very much",
+      "讨厌；憎恨",
+      "I {hate} cold weather.|tired sick | My brother {hates} getting up early.|sick angry | She loves cats, but she {hates} dogs.|afraid fine",
+      "heat hat",
     ),
   ],
 });

@@ -10,8 +10,8 @@ const sportsAndMusic = vocabularyTopic({
   id: "a1-words-sports-and-music",
   title: t("Sports and Music", "运动与音乐"),
   summary: t(
-    "Sports, games, balls, music and songs, dancing, singing, riding a bike, football and movies.",
-    "运动、游戏、球、音乐和歌曲，跳舞、唱歌、骑自行车、足球和电影。",
+    "Sports, games, balls, music and songs, dancing, singing, riding a bike, football, movies and films.",
+    "运动、游戏、球、音乐和歌曲，跳舞、唱歌、骑自行车、足球、电影和影片。",
   ),
   prerequisites: ["a1-words-how-often"],
   words: [
@@ -98,6 +98,14 @@ const sportsAndMusic = vocabularyTopic({
       "电影",
       "Let's watch a {movie} tonight.|song sport | This {movie} is very funny.|ball sport | We go to the {movies} on Saturday.|balls sports",
       "song game",
+    ),
+    word(
+      "film films",
+      "a story told in moving pictures that you watch on a screen",
+      "电影",
+      "Let's watch a {film} on TV this evening.|song bike | This {film} is about a girl and her horse.|ball bike | I like {films} with lots of songs and dancing.|bikes balls",
+      "fill farm",
+      "movie",
     ),
   ],
 });

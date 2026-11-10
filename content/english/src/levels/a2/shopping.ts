@@ -107,8 +107,8 @@ const shops = vocabularyTopic({
   id: "a2-words-shops",
   title: t("Shops", "商店"),
   summary: t(
-    "Supermarkets, malls and bookstores; customers and cashiers; receipts, discounts, sales and bargains; choosing, ordering and delivering.",
-    "超市、商场和书店；顾客和收银员；小票、折扣、促销和便宜货；挑选、订购和送货。",
+    "Supermarkets, malls and bookstores; customers and cashiers; receipts, discounts, sales and bargains; choices, choosing, ordering and delivering.",
+    "超市、商场和书店；顾客和收银员；小票、折扣、促销和便宜货；选择、挑选、订购和送货。",
   ),
   prerequisites: ["a2-words-money"],
   words: [
@@ -195,6 +195,13 @@ const shops = vocabularyTopic({
       "递送；送货",
       "The shop will {deliver} the sofa on Monday.|cost choose | A man on a motorbike {delivers} our pizza.|costs chooses | The postman {delivered} a big box this morning.|chose lent",
       "order choose",
+    ),
+    word(
+      "choice choices",
+      "the act of choosing, or the things you can choose from",
+      "选择",
+      "You have a {choice} of tea or coffee.|receipt cashier | It was a difficult {choice}, but I chose the red dress.|receipt customer | We had no {choice}. The last bus had left.|receipt cashier | The shop has lots of {choices} for lunch.|receipts cashiers",
+      "choose voice",
     ),
   ],
 });

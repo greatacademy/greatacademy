@@ -6,7 +6,7 @@
 - **级别：** CEFR B2，面向以英语为外语的学习者
 - **先修：** 中级，或掌握各种时态、条件句、被动语态和间接引语以及约 2,200 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 10 个单元 · 139 个知识点（词汇 110 个，语法 16 个，写作 13 个）· 1324 个词条，本级结束时累计 3547 个
+- **规模：** 10 个单元 · 139 个知识点（词汇 110 个，语法 16 个，写作 13 个）· 1329 个词条，本级结束时累计 3573 个
 
 ## 目标
 
@@ -63,7 +63,7 @@
 - `b2-words-production` 生产与贸易 (12): manufacture (manufactures, manufactured, manufacturing), manufacturer (manufacturers), produce (produces, produced, producing), production, output (outputs), consumption, consume (consumes, consumed, consuming), supplier (suppliers), distribute (distributes, distributed, distributing), distribution, retail, wholesale
 - `b2-words-skills` 技能 (12): expertise, competence, skilled, unskilled, versatile, innovative, resourceful, diligent, adaptable, analytical, persuasive, decisive
 - `b2-words-success` 成功与失败 (12): achieve (achieves, achieved, achieving), achievement (achievements), accomplish (accomplishes, accomplished, accomplishing), accomplishment (accomplishments), setback (setbacks), obstacle (obstacles), overcome (overcomes, overcame, overcoming), persevere (perseveres, persevered, persevering), perseverance, triumph (triumphs), thrive (thrives, thrived, thriving), collapse (collapses, collapsed, collapsing)
-- `b2-words-linking-2` 时间与顺序词 (12): regardless, accordingly, subsequently, previously, initially, ultimately, eventually, currently, presumably, apparently, evidently, undoubtedly
+- `b2-words-linking-2` 时间与顺序词 (13): regardless, accordingly, subsequently, previously, initially, ultimately, eventually, currently, presumably, apparently, evidently, undoubtedly, seldom
 - `b2-words-quantity` 描述数量 (13): abundant, scarce, sufficient, insufficient, adequate, excessive, substantial, minimal, several, numerous, countless, enormous, modest
 
 **语法**
@@ -154,7 +154,7 @@
 - `b2-words-online-media` 网络媒体 (12): algorithm (algorithms), trending, hashtag (hashtags), meme (memes), livestream (livestreams), content, creator (creators), moderator (moderators), engagement, notification (notifications), troll (trolls), subscriber (subscribers)
 - `b2-words-logic` 逻辑 (12): premise (premises), assumption (assumptions), assume (assumes, assumed, assuming), logic, logical, illogical, fallacy (fallacies), flawed, contradict (contradicts, contradicted, contradicting), contradiction (contradictions), counterargument (counterarguments), refute (refutes, refuted, refuting)
 - `b2-words-tone` 语气与态度 (12): sarcastic, ironic, humorous, sincere, cynical, optimistic, pessimistic, skeptical, critical, enthusiastic, indifferent, sympathetic
-- `b2-words-film-and-tv` 电影与电视 (12): sitcom (sitcoms), thriller (thrillers), horror, animation, cast (casts), screenplay (screenplays), sequel (sequels), subtitle (subtitles), dub (dubs, dubbed, dubbing), genre (genres), blockbuster (blockbusters), trailer (trailers)
+- `b2-words-film-and-tv` 电影与电视 (13): sitcom (sitcoms), thriller (thrillers), horror, animation, cast (casts), screenplay (screenplays), sequel (sequels), subtitle (subtitles), dub (dubs, dubbed, dubbing), genre (genres), blockbuster (blockbusters), trailer (trailers), critic (critics)
 - `b2-words-public-opinion` 舆论 (12): poll (polls), referendum (referendums), consensus, outrage (outrages), backlash (backlashes), criticism, approval, disapproval, sentiment (sentiments), stance (stances), perception (perceptions), perceive (perceives, perceived, perceiving)
 - `b2-words-linking-3` 连接词 4 (12): albeit, notwithstanding, conversely, alternatively, additionally, admittedly, arguably, inevitably, essentially, specifically, notably, particularly
 
@@ -275,7 +275,7 @@
 - `b2-words-court` 法庭 (12): defendant (defendants), prosecutor (prosecutors), prosecute (prosecutes, prosecuted, prosecuting), plaintiff (plaintiffs), jury (juries), verdict (verdicts), guilty, innocent, testify (testifies, testified, testifying), testimony (testimonies), lawsuit (lawsuits), attorney (attorneys)
 - `b2-words-crime-2` 犯罪 (12): offense (offenses), offender (offenders), criminal, fraud, burglary (burglaries), burglar (burglars), assault (assaults, assaulted, assaulting), kidnap (kidnaps, kidnapped, kidnapping), smuggle (smuggles, smuggled, smuggling), bribe (bribes), bribery, arson
 - `b2-words-punishment` 惩罚 (12): punish (punishes, punished, punishing), punishment (punishments), penalty (penalties), imprison (imprisons, imprisoned, imprisoning), imprisonment, parole, probation, rehabilitate (rehabilitates, rehabilitated, rehabilitating), deter (deters, deterred, deterring), deterrent (deterrents), execution (executions), custody
-- `b2-words-rights` 权利 (12): freedom (freedoms), liberty (liberties), oppress (oppresses, oppressed, oppressing), oppression, persecute (persecutes, persecuted, persecuting), persecution, asylum, civil, humanitarian, violate (violates, violated, violating), violation (violations), entitlement (entitlements)
+- `b2-words-rights` 权利 (13): freedom (freedoms), liberty (liberties), oppress (oppresses, oppressed, oppressing), oppression, persecute (persecutes, persecuted, persecuting), persecution, asylum, civil, humanitarian, violate (violates, violated, violating), violation (violations), entitlement (entitlements), rights
 - `b2-words-justice` 正义 (12): justice, injustice, unfair, corrupt, compensate (compensates, compensated, compensating), grievance (grievances), uphold (upholds, upheld, upholding), overturn (overturns, overturned, overturning), retribution, wrongful, equitable, impartiality
 - `b2-words-policing` 警务 (12): patrol (patrols, patrolled, patrolling), investigation (investigations), detective (detectives), suspect (suspects, suspected, suspecting), forensic, fingerprint (fingerprints), interrogate (interrogates, interrogated, interrogating), warrant (warrants), raid (raids), informant (informants), alibi (alibis), motive (motives)
 - `b2-words-government` 政府 (12): govern (governs, governed, governing), governance, federal, municipal, bureaucracy (bureaucracies), bureaucratic, servant (servants), administration, administrative, jurisdiction, decree (decrees), veto (vetoes, vetoed, vetoing)
@@ -308,8 +308,8 @@
 - `b2-words-behavior` 习惯与行为 (12): misbehave (misbehaves, misbehaved, misbehaving), conduct (conducts), tendency (tendencies), tend (tends, tended, tending), compulsive, procrastinate (procrastinates, procrastinated, procrastinating), procrastination, willpower, self-control, temptation (temptations), tempt (tempts, tempted, tempting), reinforce (reinforces, reinforced, reinforcing)
 - `b2-words-memory-and-sleep` 记忆与睡眠 (12): recollection (recollections), nostalgia, forgetful, reminisce (reminisces, reminisced, reminiscing), nightmare (nightmares), insomnia, drowsy, doze (dozes, dozed, dozing), fatigue, exhausted, alert (alerter, alertest), refreshed
 - `b2-words-bonds` 情感纽带 (12): bond (bonds), companionship, rapport, reconcile (reconciles, reconciled, reconciling), reconciliation, mutual, betray (betrays, betrayed, betraying), betrayal (betrayals), loyalty, jealousy, dependable, estranged
-- `b2-words-motivation` 动机 (12): intrinsic, extrinsic, purposeful, fulfillment, satisfaction, recognition, self-motivated, apathy, apathetic, complacent, inspiration (inspirations), enthusiasm
-- `b2-words-body-language` 肢体语言 (12): articulate (articulates, articulated, articulating), convey (conveys, conveyed, conveying), gesture (gestures), nonverbal, verbal, posture (postures), facial, expression (expressions), tone (tones), misinterpret (misinterprets, misinterpreted, misinterpreting), clarification (clarifications), eloquent
+- `b2-words-motivation` 动机 (13): intrinsic, extrinsic, purposeful, fulfillment, satisfaction, recognition, self-motivated, apathy, apathetic, complacent, inspiration (inspirations), enthusiasm, struggle (struggles, struggled, struggling)
+- `b2-words-body-language` 肢体语言 (13): articulate (articulates, articulated, articulating), convey (conveys, conveyed, conveying), gesture (gestures), nonverbal, verbal, posture (postures), facial, expression (expressions), tone (tones), misinterpret (misinterprets, misinterpreted, misinterpreting), clarification (clarifications), eloquent, impression (impressions)
 - `b2-words-wellbeing` 身心健康 (12): mindfulness, meditate (meditates, meditated, meditating), relaxation, therapeutic, holistic, balance (balances), harmony (harmonies), tranquil, soothing, rejuvenate (rejuvenates, rejuvenated, rejuvenating), self-care, gratitude
 - `b2-words-personality-types` 性格类型 (12): conscientious, agreeable, neurotic, reserved, spontaneous, meticulous, perfectionist (perfectionists), optimist (optimists), pessimist (pessimists), introvert (introverts), extrovert (extroverts), sensible
 - `b2-words-academic-adjectives` 权衡观点 (12): fundamental, crucial, vital, integral, inherent, prominent, predominant, relevant, irrelevant, comprehensive, extensive, explicit

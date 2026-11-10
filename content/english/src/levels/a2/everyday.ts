@@ -9,8 +9,8 @@ const positions = vocabularyTopic({
   id: "a2-words-positions-and-shapes",
   title: t("Where, Who and What Shape", "在哪里、谁和什么形状"),
   summary: t(
-    "The top, the middle and inside; away, everywhere and nobody; a box, a shape and a fire.",
-    "顶部、中间和里面；离开、到处和没有人；盒子、形状和火。",
+    "The top, the middle and inside; among, away, everywhere and nobody; a box, a shape and a fire.",
+    "顶部、中间和里面；在……之中、离开、到处和没有人；盒子、形状和火。",
   ),
   prerequisites: ["a1-words-things-at-home"],
   words: [
@@ -76,6 +76,13 @@ const positions = vocabularyTopic({
       "火；火灾",
       "We sat around the {fire} and sang songs.|shape nobody | Call 119 if you see a {fire}!|shape top | The {fire} burned the old house to the ground.|shape middle",
       "box shape",
+    ),
+    word(
+      "among",
+      "in the middle of a group of people or things",
+      "在……中间；在……之中",
+      "I found my pen {among} the books on my desk.|nobody away | She was happy to be {among} friends again.|everywhere nobody | The little house stands {among} tall trees.|everywhere away",
+      "along around",
     ),
   ],
 });
@@ -243,8 +250,8 @@ const ideas = vocabularyTopic({
   id: "a2-words-everyday-ideas",
   title: t("Everyday Ideas", "日常概念"),
   summary: t(
-    "Lists, news and facts; results and the brain; simple and clear; seeming; anyone and somebody; since and instead.",
-    "清单、消息和事实；结果和大脑；简单和清楚；似乎；任何人和某人；自从和代替。",
+    "Lists, news and facts; results and the brain; simple, clear and perfect; seeming; anyone and somebody; since and instead.",
+    "清单、消息和事实；结果和大脑；简单、清楚和完美；似乎；任何人和某人；自从和代替。",
   ),
   prerequisites: ["a2-words-useful-words"],
   words: [
@@ -335,6 +342,13 @@ const ideas = vocabularyTopic({
       "代替；反而",
       "There's no tea, so I'll have coffee {instead}.|since anyone | Let's walk {instead} of taking the bus.|since anyone | He didn't study. {Instead}, he watched TV all night.|Since Anyone",
       "since anyone",
+    ),
+    word(
+      "perfect perfectly",
+      "so good that nothing is wrong with it",
+      "完美的；完全正确的",
+      "The weather was {perfect} for a picnic.|instead since | Nobody is {perfect}. We all make mistakes.|instead anyone | She speaks English {perfectly}.|instead since",
+      "present parent",
     ),
   ],
 });

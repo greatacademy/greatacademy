@@ -905,8 +905,8 @@ const sequence = vocabularyTopic({
   id: "b2-words-linking-2",
   title: t("Words of Time and Sequence", "表示时间和顺序的词"),
   summary: t(
-    "Regardless and accordingly; previously, initially, subsequently, eventually and ultimately; currently; presumably, apparently, evidently and undoubtedly.",
-    "不管和相应地；以前、起初、随后、最终和归根结底；目前；大概、显然、明显和无疑。",
+    "Regardless and accordingly; previously, initially, subsequently, eventually and ultimately; currently and seldom; presumably, apparently, evidently and undoubtedly.",
+    "不管和相应地；以前、起初、随后、最终和归根结底；目前和很少；大概、显然、明显和无疑。",
   ),
   prerequisites: ["b2-words-linking-1"],
   words: [
@@ -998,6 +998,13 @@ const sequence = vocabularyTopic({
       "无疑；肯定",
       "She is {undoubtedly} the best player on the team.|regardless accordingly | This is {undoubtedly} a difficult time.|regardless subsequently | {Undoubtedly}, the internet has changed our lives.|Regardless Accordingly",
       "doubtfully undoubted",
+    ),
+    word(
+      "seldom",
+      "not often; rarely",
+      "很少；不常",
+      "We {seldom} see snow in this part of the country.|accordingly regardless | He {seldom} speaks at a meeting, but when he does, people listen.|regardless accordingly | {Seldom} have I seen such a beautiful view.|regardless accordingly",
+      "selfish soldier",
     ),
   ],
 });

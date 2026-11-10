@@ -287,8 +287,8 @@ const describing = vocabularyTopic({
   id: "a2-words-describing-places",
   title: t("Describing Places", "描述地方"),
   summary: t(
-    "Noisy, crowded, peaceful, modern, empty, full, safe, dangerous, pretty, ugly and famous.",
-    "吵闹的、拥挤的、宁静的、现代的、空的、满的、安全的、危险的、漂亮的、丑的和著名的。",
+    "Noisy, crowded, peaceful, modern, empty, full, safe, dangerous, pretty, ugly and famous; danger.",
+    "吵闹的、拥挤的、宁静的、现代的、空的、满的、安全的、危险的、漂亮的、丑的和著名的；危险。",
   ),
   prerequisites: ["a2-words-people-around"],
   words: [
@@ -370,6 +370,13 @@ const describing = vocabularyTopic({
       "著名的",
       "The Great Wall is {famous} all over the world.|pretty ugly | He's a {famous} singer. Everyone knows his songs.|pretty ugly | Paris is {famous} for its food.|pretty ugly",
       "pretty ugly",
+    ),
+    word(
+      "danger dangers",
+      "the chance that something bad or harmful will happen",
+      "危险",
+      "The doctor says the boy is out of {danger} now.|famous modern | Firefighters often put their lives in {danger}.|empty modern | Too much sugar is a {danger} to your health.|full famous | Children must learn about the {dangers} of the road.|famous empty",
+      "dancer stranger",
     ),
   ],
 });
