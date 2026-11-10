@@ -6,6 +6,7 @@ import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
+import { language } from "./i18n.ts";
 import { netFetch } from "./net.ts";
 import { markChanged } from "./query.ts";
 import { token } from "./session.ts";
@@ -24,6 +25,12 @@ const withToken: Interceptor = (next) => (request) => {
   return next(request);
 };
 
+// The server writes a person's email in the language they last used the app in.
+const withLanguage: Interceptor = (next) => (request) => {
+  request.header.set("Accept-Language", language());
+  return next(request);
+};
+
 // A call that is not a read may change what pages showed, so their answers are read again when shown.
 const READS = /^(Get|List|Check)/;
 const marksChanges: Interceptor = (next) => async (request) => {
@@ -35,7 +42,7 @@ const marksChanges: Interceptor = (next) => async (request) => {
 const transport = createConnectTransport({
   baseUrl: `${API_URL}/api/rpc`,
   fetch: netFetch,
-  interceptors: [withToken, marksChanges],
+  interceptors: [withToken, withLanguage, marksChanges],
 });
 
 /** catalog is the client of the course catalog, which needs no account. */

@@ -1,6 +1,7 @@
 import { Code, ConnectError } from "@connectrpc/connect";
 import { resource, signal } from "nsh";
 
+import { language } from "./i18n.ts";
 import { netFetch } from "./net.ts";
 import { API_URL, privacy } from "./rpc.ts";
 import { setToken, token } from "./session.ts";
@@ -24,7 +25,8 @@ export class AuthError extends Error {
 
 async function post(path: string, body: unknown): Promise<Response> {
   // better-auth checks Origin once a request carries a cookie, which the platform's network stack may add.
-  const headers: Record<string, string> = { "Content-Type": "application/json", Origin: API_URL };
+  // Accept-Language picks the language of the email better-auth sends, such as the link to reset a password.
+  const headers: Record<string, string> = { "Content-Type": "application/json", Origin: API_URL, "Accept-Language": language() };
   const current = token();
   if (current) headers.Authorization = `Bearer ${current}`;
   return netFetch(`${API_URL}/api/auth${path}`, { method: "POST", headers, body: JSON.stringify(body) });
