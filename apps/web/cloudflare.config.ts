@@ -22,8 +22,13 @@ export default defineConfig({
       SUBJECT_ENGLISH: bindings.worker({ worker: "ga-english" }),
       // Signs better-auth sessions; locally from .dev.vars.
       BETTER_AUTH_SECRET: bindings.secret(),
-      // Sends password resets and address verification through Resend; locally, empty logs the links instead.
+      // EMAIL_PROVIDER lists the email services to try in order: "cloudflare" (Cloudflare Email Service through
+      // EMAIL), "resend", or "cloudflare,resend" to fall back on a rate limit or an outage. Empty means Resend when
+      // RESEND_API_KEY is set; locally, with neither, the links are logged instead.
+      EMAIL_PROVIDER: bindings.secret(),
       RESEND_API_KEY: bindings.secret(),
+      EMAIL: bindings.sendEmail(),
+      // The sender, "Great Academy <noreply@mail.greatacademy.dev>", verified with the chosen service.
       EMAIL_FROM: bindings.secret(),
       // Guardians' signed forms, kept only until an administrator decides.
       GUARDIAN_FORMS: bindings.r2({ name: "ga-guardian-forms" }),

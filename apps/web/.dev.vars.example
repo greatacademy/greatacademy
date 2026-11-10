@@ -1,6 +1,8 @@
 # Local secrets for cf dev. Copy to .dev.vars; never commit .dev.vars.
 BETTER_AUTH_SECRET="dev-only-secret-change-me-0123456789abcdef"
-# Leave empty to log password-reset and verification links to the console.
+# The email services to try in order: "resend", "cloudflare" (Cloudflare Email Service) or "cloudflare,resend".
+# Empty uses Resend when its key is set, and with no key logs password-reset and verification links to the console.
+EMAIL_PROVIDER=""
 RESEND_API_KEY=""
 EMAIL_FROM=""
 # Encrypts AI vendors' API keys in the database.

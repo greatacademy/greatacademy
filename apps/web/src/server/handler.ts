@@ -59,10 +59,14 @@ const forms = (): FormStore => ({
   },
 });
 
+/** mailer sends email through the services EMAIL_PROVIDER lists, in order (docs/architecture.md §8). */
+const mailer = () =>
+  emailSender({ provider: env.EMAIL_PROVIDER, resendApiKey: env.RESEND_API_KEY, cloudflare: env.EMAIL, from: env.EMAIL_FROM });
+
 /** notify sends a privacy notice by email; a failure to tell someone does not undo what happened. */
 const notify: Notify = async (to, kind) => {
   try {
-    await emailSender(env.RESEND_API_KEY, env.EMAIL_FROM)(privacyEmail(to, kind));
+    await mailer()(privacyEmail(to, kind));
   } catch (e) {
     console.error(`privacy notice ${kind} failed`, e instanceof Error ? e.message : "");
   }
@@ -160,7 +164,7 @@ export async function handleApi(request: Request): Promise<Response> {
     const endPlans = async (userId: string) => {
       if (pay) await endPlansOf(conn.db, pay, userId, Date.now());
     };
-    const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin, emailSender(env.RESEND_API_KEY, env.EMAIL_FROM), endPlans);
+    const auth = createAuth(conn.db, env.BETTER_AUTH_SECRET, url.origin, mailer(), endPlans);
     if (url.pathname.startsWith("/api/auth/")) return await auth.handler(request);
     if (!url.pathname.startsWith(`${RPC_PREFIX}/`)) return new Response("Not Found", { status: 404 });
     const handler = (await routes()).get(url.pathname.slice(RPC_PREFIX.length));
@@ -210,7 +214,7 @@ async function appleNotification(db: Parameters<typeof applyBillingEvent>[0], re
 /** remind sends a plan reminder by email; a failure is logged, and the next period tries again. */
 const remind = async (to: string, kind: Parameters<typeof billingEmail>[1]) => {
   try {
-    await emailSender(env.RESEND_API_KEY, env.EMAIL_FROM)(billingEmail(to, kind));
+    await mailer()(billingEmail(to, kind));
   } catch (e) {
     console.error(`billing reminder ${kind} failed`, e instanceof Error ? e.message : "");
   }
@@ -224,7 +228,7 @@ export async function runScheduled(at: number, cron: string): Promise<void> {
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
     if (cron !== DAILY_CRON) {
-      const send = emailSender(env.RESEND_API_KEY, env.EMAIL_FROM);
+      const send = mailer();
       const raised = await runCostCheck(conn.db, at, (to, alarm) => send(alarmEmail(to, alarm)));
       if (raised.length > 0) console.log("cost alarms", JSON.stringify(raised.map((a) => `${a.target}: ${a.detail}`)));
       return;

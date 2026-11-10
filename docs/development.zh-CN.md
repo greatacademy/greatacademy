@@ -81,10 +81,10 @@ cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173
 ```
 
-- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`、`RESEND_API_KEY`、`EMAIL_FROM` 和 `AI_KEYS_SECRET`，本地从 `.dev.vars` 读取（已被 git 忽略）；R2 存储桶 `GUARDIAN_FORMS`，开发时在本地；以及每日 Cron Trigger。没有 `STRIPE_SECRET_KEY` 时计费关闭，所有人都可以学习；要试用计费，把 Stripe 测试账户的密钥放进 `.dev.vars`，并用 `stripe listen --forward-to localhost:5173/api/stripe` 转发事件，它给出的签名密钥就是 `STRIPE_WEBHOOK_SECRET`（[计费](billing.zh-CN.md) §10）。`RESEND_API_KEY` 留空时，密码重置和验证邮件不会发出，而是写到控制台，可以从服务器输出里打开其中的链接。
+- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`、`EMAIL_PROVIDER`、`RESEND_API_KEY`、`EMAIL_FROM` 和 `AI_KEYS_SECRET`，本地从 `.dev.vars` 读取（已被 git 忽略）；Cloudflare Email Service 的 `send_email` 绑定 `EMAIL`；R2 存储桶 `GUARDIAN_FORMS`，开发时在本地；以及每日 Cron Trigger。没有 `STRIPE_SECRET_KEY` 时计费关闭，所有人都可以学习；要试用计费，把 Stripe 测试账户的密钥放进 `.dev.vars`，并用 `stripe listen --forward-to localhost:5173/api/stripe` 转发事件，它给出的签名密钥就是 `STRIPE_WEBHOOK_SECRET`（[计费](billing.zh-CN.md) §10）。`EMAIL_PROVIDER` 取 `resend`、`cloudflare` 或 `cloudflare,resend`；它和 `RESEND_API_KEY` 都留空时，密码重置和验证邮件不会发出，而是写到控制台，可以从服务器输出里打开其中的链接。
 - `pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
 - `apps/web/vite.config.ts` 在开发时让学科 Worker 与 Web Worker 一起运行，所以 `web:dev` 不需要额外步骤。请通过 Nx 运行，它会先生成 manifest。
-- `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。Worker 对外提供 `greatacademy.dev`，同样声明在这个文件里。部署前需把该域名作为 zone 加入 Cloudflare 账号，创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，创建 R2 存储桶 `ga-guardian-forms`，并设置密钥，其中 `EMAIL_FROM` 用该域名下已通过 Resend 验证的地址。
+- `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。Worker 对外提供 `greatacademy.dev`，同样声明在这个文件里。部署前需把该域名作为 zone 加入 Cloudflare 账号，创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，创建 R2 存储桶 `ga-guardian-forms`，并设置密钥，其中 `EMAIL_FROM` 用该域名下已被 `EMAIL_PROVIDER` 所列每个服务验证的地址：用 `cloudflare` 时把域名接入 Cloudflare Email Service（需 Workers Paid），用 `resend` 时在 Resend 验证域名；两者都用时，保留一条同时包含两家服务的 SPF 记录。
 - 先部署学科：`pnpm nx run math-workers:deploy` 构建数学的 Worker，先部署分片，再部署网关；`pnpm nx run english-workers:deploy` 对英语做同样的事。之后再部署 Web Worker。
 
 管理后台位于 `/admin`。先在账号上以成年人身份回答年龄问题，再用 `pnpm nx run db:grant-admin -- <email>` 授予角色。每个市场一开始都不向未成年人开放，所以试用儿童账号之前要先在后台开放一个市场。在 `web:dev` 运行时，可以这样运行一次保存期限规则：
