@@ -9,10 +9,17 @@ export type Why = (right: string, shown: string) => Text;
 export type ChoiceItem = readonly [shown: string, right: string, wrong: readonly string[]];
 
 /**
- * choiceGenerator picks an item of a bank by seed and shuffles its options. Each wrong option is a plausible mistake, so
- * it also serves as a listed wrong response.
+ * WhyNot builds the feedback for choosing a wrong option: what that option shows about the learner's reading, without
+ * repeating the solution. position is the option's place among the item's wrong options, for banks that list their
+ * wrong options in a fixed order of kinds.
  */
-export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why: Why): Generator {
+export type WhyNot = (wrong: string, right: string, shown: string, position: number) => Text;
+
+/**
+ * choiceGenerator picks an item of a bank by seed and shuffles its options. Each wrong option is a plausible mistake, so
+ * it also serves as a listed wrong response; with whyNot, choosing it gets feedback of its own.
+ */
+export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why: Why, whyNot?: WhyNot): Generator {
   return (rng: Rng): Problem => {
     const [shown, right, wrong] = rng.cycle(bank);
     const options = rng.shuffle([right, ...wrong]);
@@ -23,6 +30,9 @@ export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why
       solution: why(right, shown),
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
+      ...(whyNot && {
+        mistakes: wrong.map((w, position) => ({ response: String(options.indexOf(w)), feedback: whyNot(w, right, shown, position) })),
+      }),
     };
   };
 }
