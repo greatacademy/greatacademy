@@ -419,8 +419,35 @@ describe("free text", () => {
     const offered = (await learning("teen").getDashboard({ courseId: COURSE, timeZone: "UTC" })).tasks[0]!;
     const s = (await learning("teen").startTask({ courseId: COURSE, task: offered })).session!;
     const res = await learning("teen").submitAnswer({ sessionId: s.id, index: 0, response: MARK });
-    return { learnerId: await learnerFor(db, "teen"), res };
+    const learnerId = await learnerFor(db, "teen");
+    // A judged text, as a writing topic leaves it: the verdict quotes the learner.
+    const at = new Date(now);
+    await db.insert(schema.judgment).values({
+      sessionId: s.id,
+      learnerId,
+      index: 1,
+      attempt: 1,
+      topicId: "t",
+      kp: 0,
+      seed: 1,
+      response: MARK,
+      criteria: ["c@1"],
+      status: "done",
+      verdict: {
+        criteria: [{ id: "c", version: "1", met: true, quotation: MARK, note: MARK }],
+        feedback: [{ point: MARK, quotation: MARK }],
+      },
+      createdAt: at,
+      nextAt: at,
+    });
+    return { learnerId, res };
   }
+
+  const judgmentsKeepOnlyMet = async () => {
+    const [j] = await db.select().from(schema.judgment);
+    expect(JSON.stringify(j)).not.toContain(MARK);
+    expect(j?.verdict).toEqual({ criteria: [{ id: "c", version: "1", met: true, quotation: "", note: "" }], feedback: [] });
+  };
 
   it("never reaches the event log", async () => {
     const { learnerId } = await studied();
@@ -438,6 +465,7 @@ describe("free text", () => {
     expect(after.response).toBe("");
     expect(after.correct).toBe(before.correct);
     expect(JSON.stringify(await db.select().from(taskSession).where(eq(taskSession.learnerId, learnerId)))).not.toContain(MARK);
+    await judgmentsKeepOnlyMet();
   });
 
   it("is emptied by the retention run only after its period, and only for that band", async () => {
@@ -446,9 +474,11 @@ describe("free text", () => {
     const deps = { forms: store, notify };
     await runRetention(db, now + RETENTION.teenResponses - DAY, deps);
     expect(JSON.stringify(await db.select().from(answer))).toContain(MARK);
+    expect(JSON.stringify(await db.select().from(schema.judgment))).toContain(MARK);
     expect((await runRetention(db, now + RETENTION.teenResponses + DAY, deps)).responses).toBe(1);
     expect(JSON.stringify(await db.select().from(answer))).not.toContain(MARK);
     expect(JSON.stringify(await db.select().from(taskSession))).not.toContain(MARK);
+    await judgmentsKeepOnlyMet();
     expect((await runRetention(db, now + RETENTION.teenResponses + 2 * DAY, deps)).responses).toBe(0);
   });
 });

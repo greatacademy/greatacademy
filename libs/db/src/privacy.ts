@@ -2,7 +2,7 @@ import { and, desc, eq, gt, inArray, isNull, lt, or, sql } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { session, user } from "./schema/auth.ts";
-import { type AgeBand, answer, enrollment, event, guardian, learner, taskSession } from "./schema/learning.ts";
+import { type AgeBand, answer, enrollment, event, guardian, judgment, learner, taskSession } from "./schema/learning.ts";
 import { type ConsentScope, consent, guardianVerification } from "./schema/privacy.ts";
 
 /** LearnerAge is what the age question left on a learner. */
@@ -146,8 +146,38 @@ const blankedRuns = sql`jsonb_set(${taskSession.state}, '{asked}', (
 /** hasAsked selects the runs that hold a list of asked questions. */
 const hasAsked = sql`jsonb_typeof(${taskSession.state} -> 'asked') = 'array'`;
 
-/** clearResponses empties a learner's free text in answers and in finished runs, keeping whether each was right. */
+/**
+ * blankedVerdict keeps of a judgment's verdict only whether each criterion was
+ * met: quotations, notes and feedback may repeat the learner's words.
+ */
+const blankedVerdict = sql`case when ${judgment.verdict} is null then null else jsonb_build_object(
+  'criteria', (
+    select coalesce(jsonb_agg(jsonb_set(jsonb_set(c.value, '{quotation}', '""'), '{note}', '""') order by c.ordinality), '[]'::jsonb)
+    from jsonb_array_elements(${judgment.verdict} -> 'criteria') with ordinality as c
+  ),
+  'feedback', '[]'::jsonb
+) end`;
+
+/**
+ * clearJudgments empties the text of the judgments that match: the response,
+ * and the verdict's quotations, notes and feedback. A judgment still pending
+ * fails, so no model is sent text the learner asked to erase.
+ */
+async function clearJudgments(db: Db, where: ReturnType<typeof and>): Promise<void> {
+  await db
+    .update(judgment)
+    .set({
+      response: "",
+      verdict: blankedVerdict,
+      status: sql`case when ${judgment.status} = 'pending' then 'failed' else ${judgment.status} end`,
+      error: sql`case when ${judgment.status} = 'pending' then 'erased' else ${judgment.error} end`,
+    })
+    .where(and(where, sql`${judgment.response} <> ''`));
+}
+
+/** clearResponses empties a learner's free text in answers, judgments and finished runs, keeping whether each was right. */
 export async function clearResponses(db: Db, learnerId: string): Promise<number> {
+  await clearJudgments(db, eq(judgment.learnerId, learnerId));
   const rows = await db
     .update(answer)
     .set({ response: "" })
@@ -160,9 +190,10 @@ export async function clearResponses(db: Db, learnerId: string): Promise<number>
   return rows.length;
 }
 
-/** clearOldResponses empties the free text of learners of a band older than a time, in answers and in the runs that ended by then. */
+/** clearOldResponses empties the free text of learners of a band older than a time, in answers, judgments and the runs that ended by then. */
 export async function clearOldResponses(db: Db, band: AgeBand, before: Date): Promise<number> {
   const ofBand = db.select({ id: learner.id }).from(learner).where(eq(learner.band, band));
+  await clearJudgments(db, and(inArray(judgment.learnerId, ofBand), lt(judgment.createdAt, before)));
   const rows = await db
     .update(answer)
     .set({ response: "" })

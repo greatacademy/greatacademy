@@ -223,7 +223,7 @@ Korea lists student evaluation as high-impact. The same logic is why AI that sco
 | Audio | Until judged, at most 1 day | The same | Deleted |
 | Transcripts | 30 days *starting* | 30 days *starting* | Scores remain |
 | Conversation transcripts | Not kept | 30 days *starting* | Deleted |
-| Free text in `answer.response` | 90 days *starting* | 1 year *starting* | Emptied; correct or not remains |
+| Free text in `answer.response`, and in `judgment` with its quotations, notes and feedback | 90 days *starting* | 1 year *starting* | Emptied; correct or not, and each criterion met or not, remain |
 | Essays and feedback quoting them | 1 year *starting* | 1 year *starting* | Deleted; scores remain |
 | Progress: events, state, whether answers were right | While active | While active | Deleted with the account |
 | IP addresses in logs | 30 days | 30 days | Deleted |
