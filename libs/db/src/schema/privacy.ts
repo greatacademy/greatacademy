@@ -107,7 +107,9 @@ export const aiProvider = pgTable("ai_provider", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull().unique(),
   kind: text("kind").notNull().$type<ProviderKind>(),
-  /** api is the pi-ai provider or compatible API. */
+  /** catalog is the id of the named vendor in pi-ai's catalog the vendor was picked from, or empty for one configured by hand. */
+  catalog: text("catalog").notNull().default(""),
+  /** api is the wire protocol pi-ai speaks to the vendor, such as openai-completions. */
   api: text("api").notNull(),
   baseUrl: text("base_url").notNull().default(""),
   region: text("region").notNull().default(""),
