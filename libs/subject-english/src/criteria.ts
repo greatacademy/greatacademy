@@ -173,6 +173,32 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     quoteWhenMet: true,
   },
   {
+    id: "w5-names-rhetorical-choice",
+    version: "1",
+    question:
+      "Does the paragraph name a specific choice the writer or speaker made to persuade, such as an appeal, a device or a comparison?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-explains-effect",
+    version: "1",
+    question: "Does the paragraph explain the effect of that choice on the audience, rather than only naming it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-uses-both-sources",
+    version: "1",
+    question: "Does the paragraph use evidence from both sources, making clear which source each piece comes from?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w5-connects-sources",
+    version: "1",
+    question:
+      "Does the paragraph explain how the two sources relate to each other in support of its claim, rather than only summarizing each one?",
+    quoteWhenMet: true,
+  },
+  {
     id: "w5-revision-fixes",
     version: "1",
     question: "Does the revision fix the problem that the task names in the draft?",

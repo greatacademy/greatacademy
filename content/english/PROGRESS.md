@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, and five judged by a model: two of W2 sentences in `src/topics/writing-sentences-judged.ts` and three of W4 paragraphs in `src/topics/writing-paragraphs-judged.ts`, so the course has 54. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`, 5 topics of close reading in `src/topics/literary-analysis.ts`, and 7 judged moves of an essay in `src/topics/writing-essays-judged.ts` and `src/topics/literary-analysis.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, and five judged by a model: two of W2 sentences in `src/topics/writing-sentences-judged.ts` and three of W4 paragraphs in `src/topics/writing-paragraphs-judged.ts`, so the course has 54. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`, 5 topics of close reading in `src/topics/literary-analysis.ts`, and 7 judged moves of an essay in `src/topics/writing-essays-judged.ts` and `src/topics/literary-analysis.ts`. The fourth, `english-rhetoric-composition`, has 10 topics of rhetoric, literature and writing from sources for grades 9 to 12 in `src/topics/rhetoric.ts`, two of them judged. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
@@ -73,3 +73,13 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `citing-textual-evidence` | `theme` | 0.2 | Choosing evidence for a claim repeats choosing evidence for a theme |
 | `writing-a-literary-analysis-paragraph` | `citing-textual-evidence` | 0.4 | Every paragraph quotes the passage for a claim |
 | `writing-a-literary-analysis-paragraph` | `writing-an-evidence-paragraph` | 0.3 | Claim, evidence and explanation are the same moves |
+| `rhetorical-situation` | `authors-purpose` | 0.3 | Half of the items name a text's purpose |
+| `rhetorical-appeals` | `reasoning`, `rhetorical-situation` | 0.2 each | Logos is reasoning, and every appeal is aimed at an audience |
+| `rhetorical-devices` | `parallel-structure` | 0.2 | Anaphora and antithesis are built on parallel phrases |
+| `logical-fallacies` | `reasoning` | 0.2 | Each fallacy is a failure of the link from evidence to claim |
+| `evaluating-sources` | `evidence` | 0.2 | Only the attention to what makes evidence strong carries over |
+| `characterization` | `characters` | 0.2 | Inferring a trait from actions is practiced again, but naming the method is the point |
+| `writing-a-rhetorical-analysis` | `rhetorical-appeals`, `rhetorical-devices` | 0.3 each | Most paragraphs name an appeal or a device |
+| `writing-a-rhetorical-analysis` | `writing-a-literary-analysis-paragraph` | 0.2 | Quoting and explaining a passage carries over |
+| `synthesizing-sources` | `writing-an-evidence-paragraph` | 0.3 | Each source is used as evidence for a point |
+| `synthesizing-sources` | `evaluating-sources` | 0.2 | Using sources well relies on knowing what each one shows |

@@ -184,5 +184,35 @@ export const literatureArgument: CourseDef = {
   buildsOn: ["english-reading-comprehension", "english-grammar-writing"],
 };
 
+/** rhetoricComposition is the course of English on rhetoric, literature and academic writing in grades 9 to 12. */
+export const rhetoricComposition: CourseDef = {
+  id: "english-rhetoric-composition",
+  title: t("Rhetoric and Composition", "修辞与写作"),
+  description: t(
+    "How writers and speakers persuade, where reasoning fails, how literature works on a reader, and how to write about all of it from sources. For learners who already speak English, in English.",
+    "作者和演讲者怎样说服人、推理在哪里出错、文学怎样作用于读者，以及怎样依据来源对这一切进行写作。面向已经会说英语的学习者，用英语讲解。",
+  ),
+  group: t("English", "英语"),
+  explanationLocale: "en",
+  units: [
+    {
+      title: t("Rhetoric", "修辞"),
+      modules: [
+        { title: t("Persuasion", "说服"), topics: ["rhetorical-situation", "rhetorical-appeals", "rhetorical-devices"] },
+        { title: t("Reasoning and Sources", "推理与来源"), topics: ["logical-fallacies", "evaluating-sources"] },
+      ],
+    },
+    {
+      title: t("Literature", "文学"),
+      modules: [{ title: t("Craft", "技巧"), topics: ["characterization", "allusion", "paradox-and-oxymoron"] }],
+    },
+    {
+      title: t("Composition", "写作"),
+      modules: [{ title: t("Writing from Texts", "依据文本写作"), topics: ["writing-a-rhetorical-analysis", "synthesizing-sources"] }],
+    },
+  ],
+  buildsOn: ["english-literature-argument"],
+};
+
 /** englishCourses lists the courses of English. */
-export const englishCourses: readonly CourseDef[] = [grammarWriting, readingComprehension, literatureArgument];
+export const englishCourses: readonly CourseDef[] = [grammarWriting, readingComprehension, literatureArgument, rhetoricComposition];
