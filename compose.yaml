@@ -2,7 +2,7 @@
 name: greatacademy
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -10,7 +10,8 @@ services:
     ports:
       - "54329:5432"
     volumes:
-      - postgres:/var/lib/postgresql/data
+      # Since PostgreSQL 18 the image keeps its data in a versioned directory under /var/lib/postgresql.
+      - postgres-18:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d greatacademy"]
       interval: 2s
@@ -44,4 +45,4 @@ services:
       retries: 10
     profiles: ["voice"]
 volumes:
-  postgres:
+  postgres-18:

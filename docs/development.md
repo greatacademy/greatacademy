@@ -75,7 +75,7 @@ The table grows with the repository; [Architecture §3](architecture.md#3-reposi
 The web app runs in workerd through Vite (`cf dev`) against PostgreSQL in a container. On macOS, [OrbStack](https://orbstack.dev) provides `docker`.
 
 ```bash
-docker compose up -d                  # PostgreSQL 17 on localhost:54329 (compose.yaml)
+docker compose up -d                  # PostgreSQL 18 on localhost:54329 (compose.yaml)
 pnpm nx run db:migrate                # Apply the migrations in libs/db/drizzle
 cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173

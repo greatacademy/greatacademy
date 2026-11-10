@@ -75,7 +75,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 Web 应用通过 Vite 在 workerd 中运行（`cf dev`），连接容器中的 PostgreSQL。在 macOS 上用 [OrbStack](https://orbstack.dev) 提供 `docker`。
 
 ```bash
-docker compose up -d                  # PostgreSQL 17，localhost:54329（compose.yaml）
+docker compose up -d                  # PostgreSQL 18，localhost:54329（compose.yaml）
 pnpm nx run db:migrate                # 执行 libs/db/drizzle 中的迁移
 cp apps/web/.dev.vars.example apps/web/.dev.vars
 pnpm nx run web:dev                   # http://localhost:5173

@@ -53,7 +53,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
 | 邮件 | **Cloudflare Email Service**，通过 Worker 的 `send_email` 绑定 `EMAIL`；或 **Resend**，通过 HTTP 调用，使用 `RESEND_API_KEY`。密钥 `EMAIL_PROVIDER` 按顺序列出要用的服务，`EMAIL_FROM` 是发件人 | 密码重置、邮箱验证、通知、提醒和告警，每封都有 HTML 和纯文本两部分，且只用一种语言：本人请求的邮件使用请求的语言（网页的 `ga-locale` cookie，否则为 `Accept-Language`，原生应用会把它设为应用自己的语言），定时发送的邮件使用 `user.locale`，即此人最近使用的语言，每次 API 请求都会更新它；都不知道时用英语（`apps/web/src/server/templates.ts`）。Worker 不需要 SMTP 客户端。两者都列出时，只有第一个因暂时性原因（限流、每日上限、投递失败或故障）失败时才由第二个发送，配置或邮件本身有误时不切换（`apps/web/src/server/email.ts`） |
 | 支付 | **Stripe**，美国公司的一个账户，在 Worker 中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
-| 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
+| 数据库 | **PostgreSQL 18**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:18-alpine` 容器 |
 | 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，来自项目 fork 的 `greatacademy` 分支），内购用的 StoreKit 在应用自己的 Rust crate 中，应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
 | 语音服务 | 由 **uv** 管理的 **Python 3.14**，**Pipecat** 1.15.0 及其 FastAPI WebSocket 传输，运行在 **uvicorn** 上；**pytest**、**ruff**、**pyright** | 英语实时对话，是 Worker 无法运行的长驻进程；内部没有 LLM 服务，导师的回合由 Web Worker 通过 HTTP 给出；票据用 Ed25519 校验（`cryptography`） |
 | 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
@@ -176,7 +176,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
   - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以 `/legal/privacy` 的隐私声明写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
-  - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
+  - 它连接 OrbStack 中 `postgres:18-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
   - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 `cf dev`（[开发指南](development.zh-CN.md) §7）。
 - **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一套 API。
 - **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及与 PostgreSQL 同处一地、运行在 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
