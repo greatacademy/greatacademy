@@ -107,6 +107,9 @@ export function formatIssue(issue: Issue): string {
 
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+/** MAX_CONVERSATION_MINUTES is the longest a conversation may be planned for, below the voice service's limit of a session. */
+export const MAX_CONVERSATION_MINUTES = 15;
+
 /**
  * compileSubject checks a subject's content and builds its graph. It throws a
  * CompileError when any error is found; warnings are kept on the result.
@@ -314,6 +317,21 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     });
   }
 
+  // Conversations.
+  const conversations = new Set<string>();
+  for (const c of def.conversations ?? []) {
+    const path = `conversation ${c.id}`;
+    if (!idPattern.test(c.id)) error(path, "id must be kebab case");
+    if (conversations.has(c.id)) error(path, "duplicate conversation id");
+    conversations.add(c.id);
+    text(`${path} › title`, c.title);
+    text(`${path} › task`, c.task);
+    if (c.scenario.trim() === "") error(path, "a conversation needs a scenario");
+    if (c.opening.trim() === "") error(path, "a conversation needs an opening line");
+    if (!(Number.isInteger(c.minutes) && c.minutes >= 1 && c.minutes <= MAX_CONVERSATION_MINUTES))
+      error(path, `minutes must be a whole number from 1 to ${MAX_CONVERSATION_MINUTES}, got ${c.minutes}`);
+  }
+
   // Courses.
   const courses = new Map<string, CompiledCourse>();
   for (const course of def.courses) {
@@ -341,6 +359,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       });
     });
     for (const unit of course.reading ?? []) if (!units.has(unit)) error(path, `reading unit ${unit} does not exist`);
+    for (const id of course.conversations ?? []) if (!conversations.has(id)) error(path, `conversation ${id} does not exist`);
+    if (new Set(course.conversations).size !== (course.conversations ?? []).length) error(path, "a conversation appears twice");
     const floor = new Set(course.masteryFloor ?? []);
     for (const f of floor) {
       if (!topics.has(f)) error(path, `mastery floor topic ${f} does not exist`);

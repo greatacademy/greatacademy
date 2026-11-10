@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { CompileError, compileSubject } from "./compile.ts";
 import { explanationParts, type Figure, figureIssue, plottedPoints } from "./figure.ts";
-import { subjectListing, subjectManifest } from "./manifest.ts";
+import { readManifest, subjectListing, subjectManifest } from "./manifest.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
@@ -457,5 +457,36 @@ describe("judged topics", () => {
     expect(sampleGenerators(compileSubject(subject([loose])), { samples: 5, minDistinct: 1 })[0]?.message).toBe(
       "a judged problem must be in a topic with criteria",
     );
+  });
+});
+
+describe("conversations", () => {
+  const conversation = {
+    id: "at-the-desk",
+    title: t("At the desk", "在服务台"),
+    task: t("Ask for a book.", "借一本书。"),
+    scenario: "You are a librarian.",
+    opening: "Hello!",
+    minutes: 3,
+  };
+  const withConversations = (conversations: SubjectDef["conversations"], offered: string[]) => ({
+    ...subject([topic("a")], [course(["a"], { conversations: offered })]),
+    conversations,
+  });
+
+  it("compiles a course that offers a conversation, and carries it in the manifest", () => {
+    const s = compileSubject(withConversations([conversation], ["at-the-desk"]));
+    expect(subjectListing(subjectManifest(s)).conversations).toEqual([{ id: "at-the-desk", title: conversation.title }]);
+    expect(readManifest(subjectManifest(s)).conversations.get("at-the-desk")?.opening).toBe("Hello!");
+  });
+
+  it.each([
+    ["an unknown conversation", withConversations([conversation], ["nope"]), "conversation nope does not exist"],
+    ["a duplicate id", withConversations([conversation, conversation], []), "duplicate conversation id"],
+    ["no scenario", withConversations([{ ...conversation, scenario: " " }], []), "needs a scenario"],
+    ["a missing locale", withConversations([{ ...conversation, task: t("Ask.", "") }], []), "non-empty"],
+    ["too many minutes", withConversations([{ ...conversation, minutes: 60 }], []), "minutes must be"],
+  ])("rejects %s", (_, def, message) => {
+    expect(errors(def).join()).toContain(message);
   });
 });

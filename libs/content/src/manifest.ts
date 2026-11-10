@@ -1,6 +1,6 @@
 import type { CompiledCourse, CompiledSubject, Graph, GraphPassage, GraphTopic, WeightedEdge } from "./compile.ts";
 import type { Text } from "./text.ts";
-import type { CourseDef, CriterionSpec } from "./types.ts";
+import type { ConversationDef, CourseDef, CriterionSpec } from "./types.ts";
 
 /** ManifestTopic is what serving a subject needs of a topic without its generators. */
 export interface ManifestTopic extends GraphTopic {
@@ -38,6 +38,8 @@ export interface SubjectManifest {
   /** passages are in reading order. */
   readonly passages: readonly ManifestPassage[];
   readonly courses: readonly ManifestCourse[];
+  /** conversations are the subject's spoken conversations, whole: they are small, and the web Worker plays them. */
+  readonly conversations?: readonly ConversationDef[];
 }
 
 /** CourseListing is what a list of courses shows of a course. */
@@ -61,6 +63,8 @@ export interface SubjectListing {
   readonly courses: readonly CourseListing[];
   /** criteria are the criteria the subject's judged topics are judged on, each once, so that a route can name one. */
   readonly criteria: readonly CriterionSpec[];
+  /** conversations name the subject's conversations, so that a route can name one. */
+  readonly conversations: readonly { readonly id: string; readonly title: Text }[];
 }
 
 /** SubjectCatalog is a manifest read into the indexes the services and the engine use. */
@@ -70,6 +74,7 @@ export interface SubjectCatalog {
   readonly topics: ReadonlyMap<string, ManifestTopic>;
   readonly passages: ReadonlyMap<string, ManifestPassage>;
   readonly courses: ReadonlyMap<string, CompiledCourse>;
+  readonly conversations: ReadonlyMap<string, ConversationDef>;
 }
 
 /** subjectManifest writes a compiled subject as a manifest. */
@@ -98,6 +103,7 @@ export function subjectManifest(subject: CompiledSubject): SubjectManifest {
       masteryFloor: [...c.masteryFloor],
       foundations: c.foundations,
     })),
+    ...(subject.def.conversations?.length && { conversations: subject.def.conversations }),
   };
 }
 
@@ -119,6 +125,7 @@ export function subjectListing(manifest: SubjectManifest): SubjectListing {
       xp: c.topics.reduce((sum, id) => sum + xp.get(id)!, 0),
     })),
     criteria: [...new Map(manifest.topics.flatMap((t) => t.criteria ?? []).map((c) => [`${c.id}@${c.version}`, c])).values()],
+    conversations: (manifest.conversations ?? []).map((c) => ({ id: c.id, title: c.title })),
   };
 }
 
@@ -146,5 +153,6 @@ export function readManifest(manifest: SubjectManifest): SubjectCatalog {
     topics,
     passages,
     courses: new Map(manifest.courses.map((c) => [c.def.id, { ...c, masteryFloor: new Set(c.masteryFloor) }])),
+    conversations: new Map((manifest.conversations ?? []).map((c) => [c.id, c])),
   };
 }

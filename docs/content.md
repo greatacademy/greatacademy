@@ -23,6 +23,7 @@ The pedagogical background is in [The Math Academy Way](the-math-academy-way.md)
 | Checker | `Checker` | Judges a response against a problem's expected data |
 | Passage | `PassageDef` | A text to read with a short comprehension check; a graph node apart from the topics, whose id shares their namespace |
 | Reading unit | `ReadingUnitDef` | An ordered sequence of passages on one domain; a course lists the units it offers in `CourseDef.reading` |
+| Conversation | `ConversationDef` | A spoken scene with the AI tutor (S6): a title, the learner's task, the tutor's scenario in English (never shown to the learner), its opening line and its length in minutes; a course lists the conversations it offers in `CourseDef.conversations` |
 | Lexicon | `LexiconEntry` | The subject's known spellings of each word, each optionally tied to the topic that teaches it |
 
 ## 2. Texts and Locales
@@ -173,6 +174,7 @@ const prealgebra: CourseDef = {
 | Reading units and passages have unique ids that no topic uses; a passage has a body, positive `xp`, at least one question, and topics that exist | Error |
 | Every word of a passage is in the lexicon, or listed in its `names` or `glossed` | Error |
 | A course's reading units exist | Error |
+| Conversations have unique kebab-case ids, texts in every locale, a scenario and an opening line, and a whole number of minutes from 1 to 15; a course's conversations exist and are not repeated | Error |
 | A topic's criteria have kebab-case ids, no repeats, a short version and a question ending in `?`; a criterion shared by two topics is defined the same in both | Error |
 | A topic judged by rules neither depends on nor encompasses a topic judged by a model, since a learner with no route never gets the latter | Error |
 

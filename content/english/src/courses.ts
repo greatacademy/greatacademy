@@ -104,6 +104,7 @@ export const grammarWriting: CourseDef = {
     },
   ],
   reading: ["water-on-earth", "how-plants-live", "life-on-the-nile", "weather-and-climate", "the-human-body", "our-changing-earth"],
+  conversations: ["library-help-desk"],
 };
 
 /** readingComprehension is the course of English on reading for meaning, for those who already speak it. */

@@ -2,6 +2,7 @@ import type { SubjectDef } from "@ga/content";
 import { compileSubject, t } from "@ga/content";
 import { englishCheckers } from "@ga/subject-english";
 
+import { englishConversations } from "./conversations.ts";
 import { englishCourses } from "./courses.ts";
 import { englishLexicon } from "./reading/lexicon.ts";
 import { coreShardReading, coreShardTopics } from "./shards/core.ts";
@@ -17,6 +18,7 @@ export const english: SubjectDef = {
   checkers: englishCheckers,
   reading: coreShardReading,
   lexicon: englishLexicon,
+  conversations: englishConversations,
 };
 
 /** compileEnglish compiles the English subject; it throws a CompileError if the content is invalid. */

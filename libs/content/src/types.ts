@@ -181,6 +181,8 @@ export interface CourseDef {
   readonly masteryFloor?: readonly string[];
   /** reading lists the reading units the course offers, in order. */
   readonly reading?: readonly string[];
+  /** conversations lists the spoken conversations the course offers, in order. */
+  readonly conversations?: readonly string[];
   /**
    * buildsOn lists the courses of the subject this course follows on from,
    * nearest first: what a learner takes before it. A learner placed with many
@@ -226,6 +228,25 @@ export interface ReadingUnitDef {
   readonly passages: readonly PassageDef[];
 }
 
+/**
+ * ConversationDef is a spoken conversation with the AI tutor (S6): a short
+ * scenario the tutor plays a part in, with a task for the learner. The tutor
+ * is never a companion: it plays a role in the scenario and stays in it.
+ */
+export interface ConversationDef {
+  /** id is unique among the subject's conversations, in kebab case, and never changes once published: routes and sessions name it. */
+  readonly id: string;
+  readonly title: Text;
+  /** task tells the learner what to do in the conversation. */
+  readonly task: Text;
+  /** scenario tells the tutor, in English, the part it plays and what the learner must do; the learner never sees it. */
+  readonly scenario: string;
+  /** opening is the tutor's first line, in the language practiced, spoken before any model is called. */
+  readonly opening: string;
+  /** minutes is how long the conversation should last; after it the tutor brings it to an end. */
+  readonly minutes: number;
+}
+
 /** LexiconEntry is a word of the language a subject teaches. */
 export interface LexiconEntry {
   readonly word: string;
@@ -268,4 +289,6 @@ export interface SubjectDef {
   readonly reading?: readonly ReadingUnitDef[];
   /** lexicon lists the words its passages may use; a subject with passages needs one. */
   readonly lexicon?: readonly LexiconEntry[];
+  /** conversations are the subject's spoken conversations. */
+  readonly conversations?: readonly ConversationDef[];
 }
