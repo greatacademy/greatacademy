@@ -24,7 +24,7 @@
 
 **词汇**
 
-- `a2-words-past-time` 表示过去的词 (10): yesterday, ago, once, later, soon, suddenly, finally, during, while, until
+- `a2-words-past-time` 表示过去的词 (10): yesterday, ago, once, recently, soon, suddenly, finally, during, while, until
 - `a2-words-relatives` 亲戚 (12): uncle (uncles), aunt (aunts), cousin (cousins), parent (parents), grandparent (grandparents), son (sons), daughter (daughters), husband (husbands), wife (wives), relative (relatives), married, born
 - `a2-words-events` 发生的事 (12): happen (happens, happened, happening), event (events), plan (plans, planned, planning), decide (decides, decided, deciding), forget (forgets, forgot, forgotten, forgetting), remember (remembers, remembered, remembering), lose (loses, lost, losing), win (wins, won, winning), break (breaks, broke, broken, breaking), catch (catches, caught, catching), drop (drops, dropped, dropping), hurry (hurries, hurried, hurrying)
 - `a2-words-weekend` 周末 (12): relax (relaxes, relaxed, relaxing), spend (spends, spent, spending), rest (rests, rested, resting), picnic (picnics), camp (camps, camped, camping), tent (tents), hike (hikes, hiked, hiking), gallery (galleries), crowd (crowds), bored, boring, interesting
@@ -51,7 +51,7 @@
 
 **词汇**
 
-- `a2-words-health` 生病 (12): health, healthy (healthier, healthiest), ill, pain (pains), headache (headaches), toothache (toothaches), stomach (stomaches), cough (coughs, coughed, coughing), fever (fevers), medicine (medicines), dentist (dentists), hurt (hurts, hurting)
+- `a2-words-health` 生病 (12): health, healthy (healthier, healthiest), ill, pain (pains), headache (headaches), toothache (toothaches), stomach (stomachs), cough (coughs, coughed, coughing), fever (fevers), medicine (medicines), dentist (dentists), hurt (hurts, hurting)
 - `a2-words-body-2` 更多身体部位 (11): neck (necks), shoulder (shoulders), knee (knees), finger (fingers), toe (toes), tooth (teeth), heart (hearts), skin, blood, bone (bones), throat (throats)
 - `a2-words-staying-well` 保持健康 (11): exercise (exercises, exercised, exercising), diet (diets), fit (fitter, fittest), strong (stronger, strongest), weak (weaker, weakest), habit (habits), should, matter (matters, mattered, mattering), advice, careful, accident (accidents)
 - `a2-words-at-the-doctor` 看医生 (12): appointment (appointments), problem (problems), temperature (temperatures), pill (pills), pharmacy (pharmacies), ambulance (ambulances), emergency (emergencies), patient (patients), check (checks, checked, checking), serious, terrible, worry (worries, worried, worrying)
@@ -75,7 +75,7 @@
 
 **词汇**
 
-- `a2-words-neighborhood` 街坊 (12): neighbor (neighbors), neighborhood (neighborhoods), area (areas), village (villages), center (centers), local, square (squares), market (markets), post (posts), church (churches), bakery (bakeries), playground (playgrounds)
+- `a2-words-neighborhood` 街坊 (12): neighbor (neighbors), neighborhood (neighborhoods), area (areas), village (villages), center (centers), local, square (squares), market (markets), fountain (fountains), church (churches), bakery (bakeries), playground (playgrounds)
 - `a2-words-community-actions` 帮忙 (10): share (shares, shared, sharing), join (joins, joined, joining), volunteer (volunteers, volunteered, volunteering), collect (collects, collected, collecting), plant (plants, planted, planting), repair (repairs, repaired, repairing), organize (organizes, organized, organizing), raise (raises, raised, raising), protect (protects, protected, protecting), notice (notices, noticed, noticing)
 - `a2-words-people-around` 身边的人 (12): stranger (strangers), guest (guests), member (members), group (groups), leader (leaders), owner (owners), baker (bakers), mail, polite, rude, helpful, lonely
 - `a2-words-describing-places` 描述地方 (11): noisy (noisier, noisiest), crowded, peaceful, modern, empty (emptier, emptiest), full (fuller, fullest), safe (safer, safest), dangerous, pretty (prettier, prettiest), ugly (uglier, ugliest), famous
@@ -201,7 +201,7 @@
 
 - `a2-words-landscape` 陆地与水 (12): earth, land (lands), ground (grounds), stone (stones), rock (rocks), wood (woods), jungle (jungles), pond (ponds), waterfall (waterfalls), stream (streams), sand, path (paths)
 - `a2-words-weather-2` 暴风雨与冰 (11): storm (storms), thunder, lightning, fog, foggy (foggier, foggiest), freeze (freezes, froze, frozen, freezing), melt (melts, melted, melting), shine (shines, shone, shining), degree (degrees), wet (wetter, wettest), dry (dries, dried, drying, drier, driest)
-- `a2-words-space` 太空 (12): space, star (stars), moon (moons), planet (planets), world (worlds), light (lights), dark (darker, darkest), rocket (rockets), astronaut (astronauts), sunrise (sunrises), air, million (millions)
+- `a2-words-space` 太空 (12): space, star (stars), moon (moons), planet (planets), world (worlds), light (lights), dark (darker, darkest), rocket (rockets), spaceship (spaceships), sunrise (sunrises), air, million (millions)
 - `a2-words-plants` 植物 (11): seed (seeds), root (roots), branch (branches), bush (bushes), rose (roses), pick (picks, picked, picking), nature, natural, rainbow (rainbows), sunflower (sunflowers), bamboo
 - `a2-words-little-words-3` 小词 3 (12): could, ever, even, still, else, around, across, through, along, above, below, without
 
@@ -316,67 +316,67 @@
 
 | 知识点 | 技能 | 单元 | 先修 |
 | :--- | :--- | :--- | :--- |
-| `a2-words-past-time` | 词汇 | 1 | 无 |
-| `a2-words-relatives` | 词汇 | 1 | 无 |
-| `a2-words-events` | 词汇 | 1 | 无 |
-| `a2-words-weekend` | 词汇 | 1 | 无 |
-| `a2-words-useful-words` | 词汇 | 1 | 无 |
+| `a2-words-past-time` | 词汇 | 1 | `a1-words-time` |
+| `a2-words-relatives` | 词汇 | 1 | `pre-a1-words-family` |
+| `a2-words-events` | 词汇 | 1 | `a2-words-past-time` |
+| `a2-words-weekend` | 词汇 | 1 | `a2-words-events` |
+| `a2-words-useful-words` | 词汇 | 1 | `a2-words-weekend` |
 | `past-simple-regular` | 语法 | 1 | `was-and-were`、`present-simple` |
 | `past-simple-irregular` | 语法 | 1 | `past-simple-regular` |
 | `past-simple-questions-and-negatives` | 语法 | 1 | `past-simple-irregular`、`present-simple-questions` |
 | `writing-sentences-in-the-past` | 写作 | 1 | `past-simple-irregular`、`writing-sentences-about-routines` |
 | `writing-about-your-weekend` | 写作 | 1 | `writing-sentences-in-the-past`、`writing-a-short-note` |
-| `a2-words-health` | 词汇 | 2 | 无 |
-| `a2-words-body-2` | 词汇 | 2 | 无 |
-| `a2-words-staying-well` | 词汇 | 2 | 无 |
-| `a2-words-at-the-doctor` | 词汇 | 2 | 无 |
+| `a2-words-health` | 词汇 | 2 | `pre-a1-words-body` |
+| `a2-words-body-2` | 词汇 | 2 | `a2-words-health` |
+| `a2-words-staying-well` | 词汇 | 2 | `a2-words-body-2` |
+| `a2-words-at-the-doctor` | 词汇 | 2 | `a2-words-staying-well` |
 | `should-and-must` | 语法 | 2 | `can-for-ability`、`a2-words-staying-well` |
 | `have-to` | 语法 | 2 | `should-and-must`、`third-person-s` |
 | `writing-advice-with-should` | 写作 | 2 | `should-and-must`、`joining-with-and-but-or` |
-| `a2-words-neighborhood` | 词汇 | 3 | 无 |
-| `a2-words-community-actions` | 词汇 | 3 | 无 |
-| `a2-words-people-around` | 词汇 | 3 | 无 |
-| `a2-words-describing-places` | 词汇 | 3 | 无 |
-| `a2-words-pronouns` | 词汇 | 3 | 无 |
+| `a2-words-neighborhood` | 词汇 | 3 | `a1-words-town` |
+| `a2-words-community-actions` | 词汇 | 3 | `a2-words-neighborhood` |
+| `a2-words-people-around` | 词汇 | 3 | `a2-words-community-actions` |
+| `a2-words-describing-places` | 词汇 | 3 | `a2-words-people-around` |
+| `a2-words-pronouns` | 词汇 | 3 | `pre-a1-words-my-and-your` |
 | `comparatives-and-superlatives`（已有） | 语法 | 3 | `adjectives-and-adverbs` |
 | `possessive-pronouns` | 语法 | 3 | `my-your-his-her`、`a2-words-pronouns` |
 | `apostrophes-and-possessives`（已有） | 语法 | 3 | `nouns-and-pronouns` |
 | `writing-comparisons` | 写作 | 3 | `comparatives-and-superlatives`、`writing-capitals-and-periods` |
 | `writing-a-description-of-a-place` | 写作 | 3 | `writing-comparisons`、`writing-about-a-room` |
-| `a2-words-cooking` | 词汇 | 4 | 无 |
-| `a2-words-ingredients` | 词汇 | 4 | 无 |
-| `a2-words-taste` | 词汇 | 4 | 无 |
-| `a2-words-quantities` | 词汇 | 4 | 无 |
+| `a2-words-cooking` | 词汇 | 4 | `a1-words-meals` |
+| `a2-words-ingredients` | 词汇 | 4 | `a2-words-cooking` |
+| `a2-words-taste` | 词汇 | 4 | `a2-words-ingredients` |
+| `a2-words-quantities` | 词汇 | 4 | `a2-words-taste` |
 | `quantifiers-a-few-and-a-little` | 语法 | 4 | `some-and-any`、`a2-words-quantities` |
 | `writing-steps-in-order` | 写作 | 4 | `imperatives`、`joining-with-and-but-or` |
 | `writing-a-recipe` | 写作 | 4 | `writing-steps-in-order`、`quantifiers-a-few-and-a-little` |
-| `a2-words-sports` | 词汇 | 5 | 无 |
-| `a2-words-competition` | 词汇 | 5 | 无 |
-| `a2-words-movement` | 词汇 | 5 | 无 |
-| `a2-words-games` | 词汇 | 5 | 无 |
-| `a2-words-adverbs` | 词汇 | 5 | 无 |
+| `a2-words-sports` | 词汇 | 5 | `a1-words-sports-and-music` |
+| `a2-words-competition` | 词汇 | 5 | `a2-words-sports` |
+| `a2-words-movement` | 词汇 | 5 | `a2-words-competition` |
+| `a2-words-games` | 词汇 | 5 | `a2-words-movement` |
+| `a2-words-adverbs` | 词汇 | 5 | `a2-words-games` |
 | `adverbs-of-manner` | 语法 | 5 | `adjectives-before-nouns`、`a2-words-adverbs` |
 | `could-for-past-ability` | 语法 | 5 | `can-for-ability`、`past-simple-irregular` |
 | `writing-about-a-past-event` | 写作 | 5 | `writing-sentences-in-the-past`、`adverbs-of-manner` |
-| `a2-words-pets` | 词汇 | 6 | 无 |
-| `a2-words-wildlife` | 词汇 | 6 | 无 |
-| `a2-words-animal-life` | 词汇 | 6 | 无 |
-| `a2-words-farm-and-care` | 词汇 | 6 | 无 |
+| `a2-words-pets` | 词汇 | 6 | `pre-a1-words-animals` |
+| `a2-words-wildlife` | 词汇 | 6 | `a1-words-wild-animals`, `a2-words-pets` |
+| `a2-words-animal-life` | 词汇 | 6 | `a2-words-wildlife` |
+| `a2-words-farm-and-care` | 词汇 | 6 | `a2-words-animal-life` |
 | `past-continuous` | 语法 | 6 | `past-simple-irregular`、`present-continuous` |
 | `coordinating-conjunctions`（已有） | 语法 | 6 | `complete-sentences-and-fragments` |
 | `expanding-with-because-but-so`（已有） | 写作 | 6 | `coordinating-conjunctions` |
-| `a2-words-holidays` | 词汇 | 7 | 无 |
-| `a2-words-places-to-visit` | 词汇 | 7 | 无 |
-| `a2-words-transport` | 词汇 | 7 | 无 |
-| `a2-words-future` | 词汇 | 7 | 无 |
+| `a2-words-holidays` | 词汇 | 7 | `a1-words-trips` |
+| `a2-words-places-to-visit` | 词汇 | 7 | `a2-words-holidays` |
+| `a2-words-transport` | 词汇 | 7 | `a2-words-places-to-visit` |
+| `a2-words-future` | 词汇 | 7 | `a2-words-transport` |
 | `be-going-to` | 语法 | 7 | `present-continuous`、`a2-words-holidays` |
 | `will-for-the-future` | 语法 | 7 | `a2-words-future`、`be-going-to` |
 | `writing-about-future-plans` | 写作 | 7 | `be-going-to`、`writing-a-postcard` |
-| `a2-words-landscape` | 词汇 | 8 | 无 |
-| `a2-words-weather-2` | 词汇 | 8 | 无 |
-| `a2-words-space` | 词汇 | 8 | 无 |
-| `a2-words-plants` | 词汇 | 8 | 无 |
-| `a2-words-little-words-3` | 词汇 | 8 | 无 |
+| `a2-words-landscape` | 词汇 | 8 | `a1-words-nature` |
+| `a2-words-weather-2` | 词汇 | 8 | `a2-words-landscape` |
+| `a2-words-space` | 词汇 | 8 | `a2-words-weather-2` |
+| `a2-words-plants` | 词汇 | 8 | `a2-words-space` |
+| `a2-words-little-words-3` | 词汇 | 8 | `a2-words-plants` |
 | `present-perfect-with-ever-and-never` | 语法 | 8 | `past-simple-irregular`、`have-and-has` |
 | `writing-about-an-experience` | 写作 | 8 | `present-perfect-with-ever-and-never`、`writing-about-your-weekend` |
 | `a2-words-money` | 词汇 | 9 | 无 |

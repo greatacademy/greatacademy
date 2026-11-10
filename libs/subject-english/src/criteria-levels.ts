@@ -90,4 +90,84 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
       "Do the directions tell the reader how to know they have arrived, such as which building, house or door is the writer's home?",
     quoteWhenMet: true,
   },
+  // A2: telling the past.
+  {
+    id: "a2-past-simple",
+    version: "1",
+    question:
+      "Does the text tell finished past events in the past simple, with verbs such as went, played or saw, and not in the present, as in I go or we play?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "a2-events-in-order",
+    version: "1",
+    question:
+      "Does the text tell at least three things that happened, in the order they happened, with words that show the order such as then, after lunch or in the evening?",
+    quoteWhenMet: true,
+  },
+  // A2: a place.
+  {
+    id: "a2-place-where",
+    version: "1",
+    question: "Does the text say where the place is, such as in which part of a town or near what?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "a2-place-what",
+    version: "1",
+    question: "Does the text say at least two things that are in the place, for example with there is or there are?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "a2-place-like",
+    version: "1",
+    question:
+      "Does the text say what the place is like, with adjectives such as quiet, crowded or pretty, or with a comparison such as quieter than the city?",
+    quoteWhenMet: true,
+  },
+  // A2: a recipe.
+  {
+    id: "a2-recipe-ingredients",
+    version: "1",
+    question:
+      "Does the text list what you need for the dish, with an amount for at least three of the things, such as two eggs, a little oil or 200 grams of flour?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "a2-recipe-steps",
+    version: "1",
+    question:
+      "Does the text give at least four steps in order as instructions that start with a verb, with words such as first, then, next and finally that show the order?",
+    quoteWhenMet: true,
+  },
+  // A2: a past event.
+  {
+    id: "a2-event-ending",
+    version: "1",
+    question: "Does the text say how the event ended, such as who won, the final score or the writer's place?",
+    quoteWhenMet: true,
+  },
+  // A2: plans.
+  {
+    id: "a2-future-forms",
+    version: "1",
+    question:
+      "Does the text talk about the future with going to or will and the first form of the verb, as in we are going to visit or it will be hot, without writing future plans in the present simple?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "a2-trip-details",
+    version: "1",
+    question:
+      "Does the text say where the trip is to, when it is, how the writer will travel and at least two things the writer will do there?",
+    quoteWhenMet: true,
+  },
+  // A2: an experience.
+  {
+    id: "a2-present-perfect",
+    version: "1",
+    question:
+      "Does the text say that the writer has had the experience with have or has and a past participle, as in I have seen or I have never climbed, without putting a finished time such as last year in the same sentence?",
+    quoteWhenMet: true,
+  },
 ];

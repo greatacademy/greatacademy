@@ -453,8 +453,88 @@ const presentSimple: TopicDef = {
   ],
 };
 
+const littleWords3 = vocabularyTopic({
+  id: "a1-words-little-words-3",
+  title: t("Little Words 3", "小词 3"),
+  summary: t("As, let's, each, alone and onto; oh, wow, hey and yeah.", "as、let's、each、alone 和 onto；oh、wow、hey 和 yeah。"),
+  prerequisites: ["a1-words-everyday-words"],
+  words: [
+    word(
+      "as",
+      "in the same way; in the job or role of",
+      "像……一样；作为",
+      "She is {as} tall as her mother.|so than | He works {as} a cook in a big hotel.|so than | Do {as} I do: watch and then try.|than so",
+      "so than",
+    ),
+    word(
+      "let's",
+      "let us; a way to say what you want to do together",
+      "让我们",
+      "It's sunny. {Let's} go to the park!|We're Each | {Let's} have pizza for dinner.|Wow Each | I'm hungry. {Let's} eat now.|Hey Each",
+      "we're each",
+    ),
+    word(
+      "each",
+      "every one of two or more, one by one",
+      "每个",
+      "The teacher gave a book to {each} child.|alone onto | {Each} room has a window.|Alone Onto | The apples are fifty cents {each}.|alone onto",
+      "every alone",
+      "every",
+    ),
+    word(
+      "alone",
+      "with no other people",
+      "独自；单独",
+      "My grandpa lives {alone}, so we visit him every Sunday.|each onto | Don't go into the forest {alone}.|each onto | I like to read {alone} in my room.|each onto",
+      "each onto",
+    ),
+    word(
+      "onto",
+      "to a place on something",
+      "到……上",
+      "The cat jumped {onto} the table.|alone each | Put the plates {onto} the tray.|alone each | She climbed {onto} the bus with her bags.|alone each",
+      "into alone",
+    ),
+    word(
+      "oh",
+      "a word you say when you are surprised or you remember something",
+      "哦；啊",
+      "{Oh}, I forgot my keys!|As Each | {Oh} no! It's raining and I have no umbrella.|As Onto | {Oh}, it's you! Come in.|Each Onto",
+      "wow hey",
+    ),
+    word(
+      "wow",
+      "a word you say when something is very good or surprising",
+      "哇",
+      "{Wow}! What a beautiful dress!|Each Onto | {Wow}, you are very good at drawing!|As Alone | You got a new bike? {Wow}!|Each Alone",
+      "oh hey",
+    ),
+    word(
+      "hey",
+      "a friendly word to say hello or to make someone look at you",
+      "嘿",
+      "{Hey}, Tom! How are you?|Each As | {Hey}! That's my bag!|Onto Each | {Hey}, look at this photo.|Alone Onto",
+      "oh wow",
+    ),
+    word(
+      "yeah",
+      "yes, in friendly talk",
+      "是啊；对",
+      "Are you hungry? — {Yeah}, a little.|Each Alone | Do you like it? — {Yeah}, it's great!|Onto As | {Yeah}, I can come to your party.|Each Onto",
+      "hey oh",
+    ),
+  ],
+});
+
 /** topics are the topics of the unit All About Me. */
-export const topics: readonly TopicDef[] = [numbers.topic, aboutMe.topic, feelings.topic, everyday.topic, presentSimple];
+export const topics: readonly TopicDef[] = [
+  numbers.topic,
+  aboutMe.topic,
+  feelings.topic,
+  everyday.topic,
+  littleWords3.topic,
+  presentSimple,
+];
 
 /** vocabulary are the words the unit All About Me teaches. */
-export const vocabulary: readonly WordBatch[] = [numbers.batch, aboutMe.batch, feelings.batch, everyday.batch];
+export const vocabulary: readonly WordBatch[] = [numbers.batch, aboutMe.batch, feelings.batch, everyday.batch, littleWords3.batch];

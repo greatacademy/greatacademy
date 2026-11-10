@@ -568,8 +568,125 @@ const capitalLettersForNames: TopicDef = {
   ],
 };
 
+const ordinals = vocabularyTopic({
+  id: "a1-words-ordinals",
+  title: t("Sixth to Thirtieth", "第六到第三十"),
+  summary: t(
+    "Numbers in order from sixth to twelfth, twentieth and thirtieth, for floors, months and dates.",
+    "表示顺序的数：第六到第十二、第二十和第三十，用于楼层、月份和日期。",
+  ),
+  prerequisites: ["a1-words-dates"],
+  words: [
+    word(
+      "sixth",
+      "number six in order",
+      "第六",
+      "June is the {sixth} month of the year.|seventh eighth | F is the {sixth} letter of the alphabet.|seventh ninth | Fifth, {sixth}, seventh.|eighth fourth",
+      "seventh fifth",
+    ),
+    word(
+      "seventh",
+      "number seven in order",
+      "第七",
+      "July is the {seventh} month.|sixth eighth | G is the {seventh} letter of the alphabet.|sixth ninth | Sixth, {seventh}, eighth.|ninth tenth",
+      "sixth eighth",
+    ),
+    word(
+      "eighth",
+      "number eight in order",
+      "第八",
+      "August is the {eighth} month.|seventh ninth | H is the {eighth} letter of the alphabet.|sixth tenth | Seventh, {eighth}, ninth.|sixth tenth",
+      "seventh ninth",
+    ),
+    word(
+      "ninth",
+      "number nine in order",
+      "第九",
+      "September is the {ninth} month.|eighth tenth | I is the {ninth} letter of the alphabet.|seventh eleventh | Eighth, {ninth}, tenth.|seventh sixth",
+      "eighth tenth",
+    ),
+    word(
+      "tenth",
+      "number ten in order",
+      "第十",
+      "October is the {tenth} month.|ninth twelfth | J is the {tenth} letter of the alphabet.|eighth twelfth | We live on the {tenth} floor, so we take the lift.|zero one",
+      "ninth eleventh",
+    ),
+    word(
+      "eleventh",
+      "number eleven in order",
+      "第十一",
+      "November is the {eleventh} month.|tenth twelfth | Tenth, {eleventh}, twelfth.|ninth twentieth | K is the {eleventh} letter of the alphabet.|ninth twelfth",
+      "tenth twelfth",
+    ),
+    word(
+      "twelfth",
+      "number twelve in order",
+      "第十二",
+      "December is the {twelfth} and last month.|tenth eleventh | Eleventh, {twelfth}, thirteenth.|tenth twentieth | L is the {twelfth} letter of the alphabet.|tenth ninth",
+      "eleventh twentieth",
+    ),
+    word(
+      "twentieth",
+      "number twenty in order",
+      "第二十",
+      "My birthday is on the {twentieth} of May.|twenty thirty | Nineteenth, {twentieth}, twenty-first.|twelfth thirtieth | T is the {twentieth} letter of the alphabet.|twelfth tenth",
+      "twelfth thirtieth",
+    ),
+    word(
+      "thirtieth",
+      "number thirty in order",
+      "第三十",
+      "April has thirty days, so its last day is the {thirtieth}.|thirty twentieth | Grandma's party is on the {thirtieth} of June.|thirty twenty | Twenty-ninth, {thirtieth}, thirty-first.|twentieth thirteenth",
+      "twentieth thirty",
+    ),
+  ],
+});
+
+const tensWords = ["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+const unitWords = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const unitOrdinals = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth"];
+
+/** compoundNumbers are twenty-one to ninety-nine, written with a hyphen; the numbers to a hundred teach them. */
+const compoundNumbers: WordBatch = {
+  topic: "a1-words-numbers-to-hundred",
+  words: tensWords.flatMap((tens) => unitWords.map((unit) => `${tens}-${unit}`)),
+};
+
+/** compoundOrdinals are thirteenth to nineteenth and twenty-first to thirty-first, for dates. */
+const compoundOrdinals: WordBatch = {
+  topic: "a1-words-ordinals",
+  words: [
+    "thirteenth",
+    "fourteenth",
+    "fifteenth",
+    "sixteenth",
+    "seventeenth",
+    "eighteenth",
+    "nineteenth",
+    ...unitOrdinals.map((o) => `twenty-${o}`),
+    "thirty-first",
+  ],
+};
+
 /** topics are the topics of the unit Time and Dates. */
-export const topics: readonly TopicDef[] = [time.topic, days.topic, months.topic, dates.topic, prepositionsOfTime, capitalLettersForNames];
+export const topics: readonly TopicDef[] = [
+  time.topic,
+  days.topic,
+  months.topic,
+  dates.topic,
+  ordinals.topic,
+  prepositionsOfTime,
+  capitalLettersForNames,
+];
 
 /** vocabulary are the words the unit Time and Dates teaches. */
-export const vocabulary: readonly WordBatch[] = [time.batch, days.batch, months.batch, dates.batch];
+export const vocabulary: readonly WordBatch[] = [
+  time.batch,
+  days.batch,
+  months.batch,
+  dates.batch,
+  ordinals.batch,
+  compoundNumbers,
+  compoundOrdinals,
+];

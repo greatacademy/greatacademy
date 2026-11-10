@@ -24,7 +24,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Vocabulary**
 
-- `a2-words-past-time` Words for the Past (10): yesterday, ago, once, later, soon, suddenly, finally, during, while, until
+- `a2-words-past-time` Words for the Past (10): yesterday, ago, once, recently, soon, suddenly, finally, during, while, until
 - `a2-words-relatives` Relatives (12): uncle (uncles), aunt (aunts), cousin (cousins), parent (parents), grandparent (grandparents), son (sons), daughter (daughters), husband (husbands), wife (wives), relative (relatives), married, born
 - `a2-words-events` Things That Happen (12): happen (happens, happened, happening), event (events), plan (plans, planned, planning), decide (decides, decided, deciding), forget (forgets, forgot, forgotten, forgetting), remember (remembers, remembered, remembering), lose (loses, lost, losing), win (wins, won, winning), break (breaks, broke, broken, breaking), catch (catches, caught, catching), drop (drops, dropped, dropping), hurry (hurries, hurried, hurrying)
 - `a2-words-weekend` The Weekend (12): relax (relaxes, relaxed, relaxing), spend (spends, spent, spending), rest (rests, rested, resting), picnic (picnics), camp (camps, camped, camping), tent (tents), hike (hikes, hiked, hiking), gallery (galleries), crowd (crowds), bored, boring, interesting
@@ -51,7 +51,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Vocabulary**
 
-- `a2-words-health` Feeling Ill (12): health, healthy (healthier, healthiest), ill, pain (pains), headache (headaches), toothache (toothaches), stomach (stomaches), cough (coughs, coughed, coughing), fever (fevers), medicine (medicines), dentist (dentists), hurt (hurts, hurting)
+- `a2-words-health` Feeling Ill (12): health, healthy (healthier, healthiest), ill, pain (pains), headache (headaches), toothache (toothaches), stomach (stomachs), cough (coughs, coughed, coughing), fever (fevers), medicine (medicines), dentist (dentists), hurt (hurts, hurting)
 - `a2-words-body-2` More of the Body (11): neck (necks), shoulder (shoulders), knee (knees), finger (fingers), toe (toes), tooth (teeth), heart (hearts), skin, blood, bone (bones), throat (throats)
 - `a2-words-staying-well` Staying Well (11): exercise (exercises, exercised, exercising), diet (diets), fit (fitter, fittest), strong (stronger, strongest), weak (weaker, weakest), habit (habits), should, matter (matters, mattered, mattering), advice, careful, accident (accidents)
 - `a2-words-at-the-doctor` At the Doctor (12): appointment (appointments), problem (problems), temperature (temperatures), pill (pills), pharmacy (pharmacies), ambulance (ambulances), emergency (emergencies), patient (patients), check (checks, checked, checking), serious, terrible, worry (worries, worried, worrying)
@@ -75,7 +75,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Vocabulary**
 
-- `a2-words-neighborhood` The Neighborhood (12): neighbor (neighbors), neighborhood (neighborhoods), area (areas), village (villages), center (centers), local, square (squares), market (markets), post (posts), church (churches), bakery (bakeries), playground (playgrounds)
+- `a2-words-neighborhood` The Neighborhood (12): neighbor (neighbors), neighborhood (neighborhoods), area (areas), village (villages), center (centers), local, square (squares), market (markets), fountain (fountains), church (churches), bakery (bakeries), playground (playgrounds)
 - `a2-words-community-actions` Helping Out (10): share (shares, shared, sharing), join (joins, joined, joining), volunteer (volunteers, volunteered, volunteering), collect (collects, collected, collecting), plant (plants, planted, planting), repair (repairs, repaired, repairing), organize (organizes, organized, organizing), raise (raises, raised, raising), protect (protects, protected, protecting), notice (notices, noticed, noticing)
 - `a2-words-people-around` People Around Us (12): stranger (strangers), guest (guests), member (members), group (groups), leader (leaders), owner (owners), baker (bakers), mail, polite, rude, helpful, lonely
 - `a2-words-describing-places` Describing Places (11): noisy (noisier, noisiest), crowded, peaceful, modern, empty (emptier, emptiest), full (fuller, fullest), safe (safer, safest), dangerous, pretty (prettier, prettiest), ugly (uglier, ugliest), famous
@@ -201,7 +201,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `a2-words-landscape` Land and Water (12): earth, land (lands), ground (grounds), stone (stones), rock (rocks), wood (woods), jungle (jungles), pond (ponds), waterfall (waterfalls), stream (streams), sand, path (paths)
 - `a2-words-weather-2` Storms and Ice (11): storm (storms), thunder, lightning, fog, foggy (foggier, foggiest), freeze (freezes, froze, frozen, freezing), melt (melts, melted, melting), shine (shines, shone, shining), degree (degrees), wet (wetter, wettest), dry (dries, dried, drying, drier, driest)
-- `a2-words-space` Space (12): space, star (stars), moon (moons), planet (planets), world (worlds), light (lights), dark (darker, darkest), rocket (rockets), astronaut (astronauts), sunrise (sunrises), air, million (millions)
+- `a2-words-space` Space (12): space, star (stars), moon (moons), planet (planets), world (worlds), light (lights), dark (darker, darkest), rocket (rockets), spaceship (spaceships), sunrise (sunrises), air, million (millions)
 - `a2-words-plants` Plants (11): seed (seeds), root (roots), branch (branches), bush (bushes), rose (roses), pick (picks, picked, picking), nature, natural, rainbow (rainbows), sunflower (sunflowers), bamboo
 - `a2-words-little-words-3` Little Words 3 (12): could, ever, even, still, else, around, across, through, along, above, below, without
 
@@ -316,67 +316,67 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 | Topic | Strand | Unit | Prerequisites |
 | :--- | :--- | :--- | :--- |
-| `a2-words-past-time` | vocabulary | 1 | none |
-| `a2-words-relatives` | vocabulary | 1 | none |
-| `a2-words-events` | vocabulary | 1 | none |
-| `a2-words-weekend` | vocabulary | 1 | none |
-| `a2-words-useful-words` | vocabulary | 1 | none |
+| `a2-words-past-time` | vocabulary | 1 | `a1-words-time` |
+| `a2-words-relatives` | vocabulary | 1 | `pre-a1-words-family` |
+| `a2-words-events` | vocabulary | 1 | `a2-words-past-time` |
+| `a2-words-weekend` | vocabulary | 1 | `a2-words-events` |
+| `a2-words-useful-words` | vocabulary | 1 | `a2-words-weekend` |
 | `past-simple-regular` | grammar | 1 | `was-and-were`, `present-simple` |
 | `past-simple-irregular` | grammar | 1 | `past-simple-regular` |
 | `past-simple-questions-and-negatives` | grammar | 1 | `past-simple-irregular`, `present-simple-questions` |
 | `writing-sentences-in-the-past` | writing | 1 | `past-simple-irregular`, `writing-sentences-about-routines` |
 | `writing-about-your-weekend` | writing | 1 | `writing-sentences-in-the-past`, `writing-a-short-note` |
-| `a2-words-health` | vocabulary | 2 | none |
-| `a2-words-body-2` | vocabulary | 2 | none |
-| `a2-words-staying-well` | vocabulary | 2 | none |
-| `a2-words-at-the-doctor` | vocabulary | 2 | none |
+| `a2-words-health` | vocabulary | 2 | `pre-a1-words-body` |
+| `a2-words-body-2` | vocabulary | 2 | `a2-words-health` |
+| `a2-words-staying-well` | vocabulary | 2 | `a2-words-body-2` |
+| `a2-words-at-the-doctor` | vocabulary | 2 | `a2-words-staying-well` |
 | `should-and-must` | grammar | 2 | `can-for-ability`, `a2-words-staying-well` |
 | `have-to` | grammar | 2 | `should-and-must`, `third-person-s` |
 | `writing-advice-with-should` | writing | 2 | `should-and-must`, `joining-with-and-but-or` |
-| `a2-words-neighborhood` | vocabulary | 3 | none |
-| `a2-words-community-actions` | vocabulary | 3 | none |
-| `a2-words-people-around` | vocabulary | 3 | none |
-| `a2-words-describing-places` | vocabulary | 3 | none |
-| `a2-words-pronouns` | vocabulary | 3 | none |
+| `a2-words-neighborhood` | vocabulary | 3 | `a1-words-town` |
+| `a2-words-community-actions` | vocabulary | 3 | `a2-words-neighborhood` |
+| `a2-words-people-around` | vocabulary | 3 | `a2-words-community-actions` |
+| `a2-words-describing-places` | vocabulary | 3 | `a2-words-people-around` |
+| `a2-words-pronouns` | vocabulary | 3 | `pre-a1-words-my-and-your` |
 | `comparatives-and-superlatives` (existing) | grammar | 3 | `adjectives-and-adverbs` |
 | `possessive-pronouns` | grammar | 3 | `my-your-his-her`, `a2-words-pronouns` |
 | `apostrophes-and-possessives` (existing) | grammar | 3 | `nouns-and-pronouns` |
 | `writing-comparisons` | writing | 3 | `comparatives-and-superlatives`, `writing-capitals-and-periods` |
 | `writing-a-description-of-a-place` | writing | 3 | `writing-comparisons`, `writing-about-a-room` |
-| `a2-words-cooking` | vocabulary | 4 | none |
-| `a2-words-ingredients` | vocabulary | 4 | none |
-| `a2-words-taste` | vocabulary | 4 | none |
-| `a2-words-quantities` | vocabulary | 4 | none |
+| `a2-words-cooking` | vocabulary | 4 | `a1-words-meals` |
+| `a2-words-ingredients` | vocabulary | 4 | `a2-words-cooking` |
+| `a2-words-taste` | vocabulary | 4 | `a2-words-ingredients` |
+| `a2-words-quantities` | vocabulary | 4 | `a2-words-taste` |
 | `quantifiers-a-few-and-a-little` | grammar | 4 | `some-and-any`, `a2-words-quantities` |
 | `writing-steps-in-order` | writing | 4 | `imperatives`, `joining-with-and-but-or` |
 | `writing-a-recipe` | writing | 4 | `writing-steps-in-order`, `quantifiers-a-few-and-a-little` |
-| `a2-words-sports` | vocabulary | 5 | none |
-| `a2-words-competition` | vocabulary | 5 | none |
-| `a2-words-movement` | vocabulary | 5 | none |
-| `a2-words-games` | vocabulary | 5 | none |
-| `a2-words-adverbs` | vocabulary | 5 | none |
+| `a2-words-sports` | vocabulary | 5 | `a1-words-sports-and-music` |
+| `a2-words-competition` | vocabulary | 5 | `a2-words-sports` |
+| `a2-words-movement` | vocabulary | 5 | `a2-words-competition` |
+| `a2-words-games` | vocabulary | 5 | `a2-words-movement` |
+| `a2-words-adverbs` | vocabulary | 5 | `a2-words-games` |
 | `adverbs-of-manner` | grammar | 5 | `adjectives-before-nouns`, `a2-words-adverbs` |
 | `could-for-past-ability` | grammar | 5 | `can-for-ability`, `past-simple-irregular` |
 | `writing-about-a-past-event` | writing | 5 | `writing-sentences-in-the-past`, `adverbs-of-manner` |
-| `a2-words-pets` | vocabulary | 6 | none |
-| `a2-words-wildlife` | vocabulary | 6 | none |
-| `a2-words-animal-life` | vocabulary | 6 | none |
-| `a2-words-farm-and-care` | vocabulary | 6 | none |
+| `a2-words-pets` | vocabulary | 6 | `pre-a1-words-animals` |
+| `a2-words-wildlife` | vocabulary | 6 | `a1-words-wild-animals`, `a2-words-pets` |
+| `a2-words-animal-life` | vocabulary | 6 | `a2-words-wildlife` |
+| `a2-words-farm-and-care` | vocabulary | 6 | `a2-words-animal-life` |
 | `past-continuous` | grammar | 6 | `past-simple-irregular`, `present-continuous` |
 | `coordinating-conjunctions` (existing) | grammar | 6 | `complete-sentences-and-fragments` |
 | `expanding-with-because-but-so` (existing) | writing | 6 | `coordinating-conjunctions` |
-| `a2-words-holidays` | vocabulary | 7 | none |
-| `a2-words-places-to-visit` | vocabulary | 7 | none |
-| `a2-words-transport` | vocabulary | 7 | none |
-| `a2-words-future` | vocabulary | 7 | none |
+| `a2-words-holidays` | vocabulary | 7 | `a1-words-trips` |
+| `a2-words-places-to-visit` | vocabulary | 7 | `a2-words-holidays` |
+| `a2-words-transport` | vocabulary | 7 | `a2-words-places-to-visit` |
+| `a2-words-future` | vocabulary | 7 | `a2-words-transport` |
 | `be-going-to` | grammar | 7 | `present-continuous`, `a2-words-holidays` |
 | `will-for-the-future` | grammar | 7 | `a2-words-future`, `be-going-to` |
 | `writing-about-future-plans` | writing | 7 | `be-going-to`, `writing-a-postcard` |
-| `a2-words-landscape` | vocabulary | 8 | none |
-| `a2-words-weather-2` | vocabulary | 8 | none |
-| `a2-words-space` | vocabulary | 8 | none |
-| `a2-words-plants` | vocabulary | 8 | none |
-| `a2-words-little-words-3` | vocabulary | 8 | none |
+| `a2-words-landscape` | vocabulary | 8 | `a1-words-nature` |
+| `a2-words-weather-2` | vocabulary | 8 | `a2-words-landscape` |
+| `a2-words-space` | vocabulary | 8 | `a2-words-weather-2` |
+| `a2-words-plants` | vocabulary | 8 | `a2-words-space` |
+| `a2-words-little-words-3` | vocabulary | 8 | `a2-words-plants` |
 | `present-perfect-with-ever-and-never` | grammar | 8 | `past-simple-irregular`, `have-and-has` |
 | `writing-about-an-experience` | writing | 8 | `present-perfect-with-ever-and-never`, `writing-about-your-weekend` |
 | `a2-words-money` | vocabulary | 9 | none |

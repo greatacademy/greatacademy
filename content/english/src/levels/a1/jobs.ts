@@ -516,5 +516,8 @@ const writingAboutAPerson: TopicDef = {
 /** topics are the topics of the unit Jobs and People. */
 export const topics: readonly TopicDef[] = [jobs.topic, describingPeople.topic, workActions.topic, wasAndWere, writingAboutAPerson];
 
+/** beForms are be and its past forms, which the past of be teaches. */
+const beForms: WordBatch = { topic: "was-and-were", words: ["be", "was", "were", "wasn't", "weren't"] };
+
 /** vocabulary are the words the unit Jobs and People teaches. */
-export const vocabulary: readonly WordBatch[] = [jobs.batch, describingPeople.batch, workActions.batch];
+export const vocabulary: readonly WordBatch[] = [jobs.batch, describingPeople.batch, workActions.batch, beForms];

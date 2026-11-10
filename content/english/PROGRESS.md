@@ -22,7 +22,9 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | :--- | :--- |
 | Content model: strands, themed units, packs | Done |
 | Outlines of Pre-A1 to B2 | Done |
-| Topics of Pre-A1 (30) and A1 (71), 266 knowledge points | Done |
+| Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
+| Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
+| Topics of A2, units 1 to 8: 59 topics, 158 knowledge points | Done; units 9 to 12 not started |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -126,3 +128,6 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | Each grammar topic of Pre-A1 and A1 | The grammar it builds on (e.g. `the-verb-be` from `was-and-were`) | 0.3–0.5 | Every item uses those forms again |
 | Each grammar topic of Pre-A1 and A1 | Its unit's word batch | 0.2–0.3 | Its sentences reuse those words |
 | Each writing topic of Pre-A1 and A1 | The grammar it uses; capitals or `writing-a-short-note` | 0.3–0.4; 0.2 | Every answer applies them |
+| Each grammar topic of A2 | The grammar it builds on (e.g. `present-continuous` from `past-continuous`) | 0.2–0.4 | The forms are the same, moved to another time |
+| Each judged writing topic of A2 | The rule-checked writing before it (e.g. `writing-steps-in-order` from `writing-a-recipe`) | 0.3–0.4 | Every answer practices it |
+| Each grammar topic of A2 | Its unit's word batch | 0.1–0.2 | Only a passing review of the words |
