@@ -79,15 +79,11 @@ export async function providerSpend(db: Db, at: number): Promise<Map<string, Spe
   return new Map([...month].map(([id, m]) => [id, { day: day.get(id) ?? 0, month: m }]));
 }
 
-/** budgeted tells whether an administrator gave a vendor both budgets; without them it serves no learner. */
-export function budgeted(p: Pick<ProviderRow, "dailyBudget" | "monthlyBudget">): boolean {
-  return p.dailyBudget !== null && p.monthlyBudget !== null;
-}
-
-/** withinBudget tells whether a vendor may take a new text: both budgets set, and neither spent. */
+/** withinBudget tells whether a vendor may take a new text: no budget it has is spent; a budget left empty sets no limit. */
 export function withinBudget(p: Pick<ProviderRow, "dailyBudget" | "monthlyBudget">, spend: Spend | undefined): boolean {
-  if (!budgeted(p)) return false;
-  return (spend?.day ?? 0) < p.dailyBudget! && (spend?.month ?? 0) < p.monthlyBudget!;
+  return (
+    (p.dailyBudget === null || (spend?.day ?? 0) < p.dailyBudget) && (p.monthlyBudget === null || (spend?.month ?? 0) < p.monthlyBudget)
+  );
 }
 
 /** Alarm is a warning about spending raised by runCostCheck. */

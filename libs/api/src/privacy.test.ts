@@ -622,8 +622,18 @@ describe("the admin console", () => {
     ).toBe(Code.InvalidArgument);
   });
 
+  it("asks an AI model for a supported API, and a speech vendor for none", async () => {
+    expect(await code(admin("root").saveProvider({ provider: { name: "X", kind: "model", api: "x", enabled: false } }))).toBe(
+      Code.InvalidArgument,
+    );
+    const { id } = await admin("root").saveProvider({ provider: { name: "Voice", kind: "speech", api: "x", enabled: false } });
+    expect((await admin("root").listProviders({})).providers.find((p) => p.id === id)?.api).toBe("");
+  });
+
   it("sets routes live only with a calibration, and a changed model goes back to draft", async () => {
-    const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", kind: "model", api: "x", enabled: true } });
+    const { id } = await admin("root").saveProvider({
+      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+    });
     const route = { criterion: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true };
     expect(await code(admin("root").saveRoute({ route }))).toBe(Code.FailedPrecondition);
     await admin("root").saveRoute({ route: { ...route, live: false } });
@@ -642,7 +652,7 @@ describe("the admin console", () => {
     expect(await calibrationPassed(db, { criterion: "w1", providerId: id, model: "m2", promptVersion: "p1" })).toBe(false);
     expect(await code(admin("root").deleteProvider({ id }))).toBe(Code.FailedPrecondition);
     await admin("root").saveRoute({ route: { ...route, live: true } });
-    await admin("root").saveProvider({ provider: { id, name: "Vendor", kind: "model", api: "x", enabled: false } });
+    await admin("root").saveProvider({ provider: { id, name: "Vendor", kind: "model", api: "openai-completions", enabled: false } });
     expect((await admin("root").getOverview({})).brokenRoutes).toEqual(["w1/primary"]);
   });
 
@@ -652,7 +662,7 @@ describe("the admin console", () => {
     await privacy("teen").setAge({ country: "US", birthYear: 2010, birthMonth: 1 });
     const learnerId = await learnerFor(db, "teen");
     const { id } = await admin("root").saveProvider({
-      provider: { name: "Vendor", kind: "model", api: "x", enabled: true, dailyBudget: 1, monthlyBudget: 10 },
+      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true, dailyBudget: 1, monthlyBudget: 10 },
     });
     await admin("root").savePrice({ price: { providerId: id, model: "m1", inputPerMillion: 2, outputPerMillion: 8 } });
     await recordCalibration(db, {
@@ -699,7 +709,9 @@ describe("the admin console", () => {
 
   it("offers an AI scope only with a live route", async () => {
     await openMarket("US");
-    const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", kind: "model", api: "x", enabled: true } });
+    const { id } = await admin("root").saveProvider({
+      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+    });
     await admin("root").saveRegisterEntry({
       entry: {
         providerId: id,
@@ -733,7 +745,9 @@ describe("the admin console", () => {
 
   it("keeps Hong Kong without AI even with a vendor registered", async () => {
     await openMarket("HK");
-    const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", kind: "model", api: "x", enabled: true } });
+    const { id } = await admin("root").saveProvider({
+      provider: { name: "Vendor", kind: "model", api: "openai-completions", enabled: true },
+    });
     await admin("root").saveRegisterEntry({
       entry: {
         providerId: id,

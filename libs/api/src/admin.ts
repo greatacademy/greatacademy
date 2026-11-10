@@ -43,13 +43,13 @@ import {
   waitingForm,
   waitingVerifications,
 } from "@ga/db";
-import { catalogProviders, catalogVendor, redact } from "@ga/judge";
+import { catalogProviders, catalogVendor, redact, SUPPORTED_APIS } from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
 import { CHECK_READ_ACTION, CHECK_SAVE_ACTION, driftOf, MIN_DRIFT_CHECKS } from "./checks.ts";
 import { dbKey, userIdKey } from "./context.ts";
-import { ALARM_ACTION, budgeted, monthStart, providerSpend } from "./costs.ts";
+import { ALARM_ACTION, monthStart, providerSpend } from "./costs.ts";
 import { AI_SCOPES, MARKETS, marketOf, missingLanguages } from "./markets.ts";
 import type { FormStore, Notify } from "./privacy.ts";
 import { RETENTION_ACTION } from "./retention.ts";
@@ -74,8 +74,8 @@ function need(ok: unknown, message: string): asserts ok {
 }
 
 /**
- * routeQualifies tells whether a route could serve at all: its vendor on with
- * both budgets, its model priced, calibrated, and live unless it is the backup.
+ * routeQualifies tells whether a route could serve at all: its vendor on, its
+ * model priced, calibrated, and live unless it is the backup.
  * A spent budget does not count here: it pauses the route only until the period ends.
  */
 async function routeQualifies(
@@ -87,7 +87,7 @@ async function routeQualifies(
   const calibrated = await calibrationPassed(db, r);
   const priced = priceList.some((x) => x.providerId === r.providerId && x.model === r.model);
   const vendor = list.find((p) => p.id === r.providerId && p.enabled);
-  return { calibrated, priced, qualifies: !!vendor && budgeted(vendor) && priced && calibrated && (r.live || r.position === "backup") };
+  return { calibrated, priced, qualifies: !!vendor && priced && calibrated && (r.live || r.position === "backup") };
 }
 
 /** COSTS_TOP is how many learners the costs page lists. */
@@ -274,8 +274,10 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const vendor = catalog ? catalogVendor(catalog) : undefined;
       need(!catalog || vendor, "that vendor is not in the catalog");
       // A vendor picked from the catalog speaks the catalog's API; only its endpoint may change, as to go through a gateway.
-      const api = vendor?.api ?? p?.api.trim();
-      need(p && name && kind && api, "a provider needs a name, a kind and an API");
+      // Only an AI model is called through pi-ai; a speech or other vendor has no API to name.
+      const api = vendor?.api ?? (kind === "model" ? (p?.api.trim() ?? "") : "");
+      need(p && name && kind, "a provider needs a name and a kind");
+      need(kind !== "model" || (api && SUPPORTED_APIS[api]), "an AI model needs one of the supported APIs");
       const base = p.baseUrl.trim();
       if (base) need(/^https:\/\//.test(base), "the base URL must use https");
       const fields = {

@@ -116,7 +116,7 @@ export const aiProvider = pgTable("ai_provider", {
   keyCipher: text("key_cipher"),
   keyHint: text("key_hint"),
   enabled: boolean("enabled").notNull().default(false),
-  /** dailyBudget and monthlyBudget cap what the vendor may cost, in US dollars per UTC day and month; a vendor without both serves no learner. */
+  /** dailyBudget and monthlyBudget cap what the vendor may cost, in US dollars per UTC day and month; one left empty sets no limit. */
   dailyBudget: doublePrecision("daily_budget"),
   monthlyBudget: doublePrecision("monthly_budget"),
   createdAt: at("created_at").notNull(),

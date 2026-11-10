@@ -311,14 +311,17 @@ describe("judged writing", () => {
     expect(row?.cost).toBeCloseTo(good.cost, 12);
   });
 
-  it("serves no learner from a model without a price or a vendor without budgets", async () => {
+  it("serves no learner from a model without a price, and sets no limit for a budget left empty", async () => {
     const topics = async () => (await learning.getCourseProgress({ courseId: COURSE })).topics.map((x) => x.topicId);
     const providerId = await addRoutes();
     await db.delete(schema.aiPrice);
     expect(await topics()).toEqual(["basics"]);
     await setPrice(db, { providerId, model: "m1", ...PRICE, updatedAt: new Date(now) });
-    await updateProvider(db, providerId, { dailyBudget: null });
-    expect(await topics()).toEqual(["basics"]);
+    await updateProvider(db, providerId, { dailyBudget: null, monthlyBudget: null });
+    await recordCalls(db, [
+      { providerId, model: "m1", use: "judgment", inputTokens: 0, outputTokens: 0, cost: 1000, ok: true, at: new Date(now) },
+    ]);
+    expect(await topics()).toEqual(["basics", "paragraphs"]);
   });
 
   it("takes no new texts once a budget is spent, but finishes a text already taken", async () => {

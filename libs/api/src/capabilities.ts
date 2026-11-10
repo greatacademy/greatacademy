@@ -114,7 +114,7 @@ export interface QualifiedRoute {
  * primary, or else the calibrated backup. For a minor all five conditions of
  * docs/admin.md §6 must hold, and with none it returns undefined and judgment waits.
  * avoid passes over a position, so that a judgment the primary keeps failing moves to the backup.
- * Its model must have a price, and its vendor both budgets with neither spent;
+ * Its model must have a price, and no budget its vendor has may be spent;
  * a text already taken is finished whatever the budget, with budget false.
  */
 export async function qualifyingRoute(
