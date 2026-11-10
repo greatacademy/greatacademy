@@ -13,6 +13,7 @@ import {
   notice,
   platformAdmin,
   type RoutePosition,
+  type RouteUse,
   vendorCheck,
 } from "./schema/privacy.ts";
 
@@ -178,7 +179,7 @@ export type RouteRow = typeof aiRoute.$inferSelect;
 
 /** routes lists the routes. */
 export async function routes(db: Db): Promise<RouteRow[]> {
-  return db.select().from(aiRoute).orderBy(asc(aiRoute.criterion), asc(aiRoute.position));
+  return db.select().from(aiRoute).orderBy(asc(aiRoute.use), asc(aiRoute.target), asc(aiRoute.position));
 }
 
 /** setRoute writes a route. */
@@ -186,12 +187,12 @@ export async function setRoute(db: Db, row: typeof aiRoute.$inferInsert): Promis
   await db
     .insert(aiRoute)
     .values(row)
-    .onConflictDoUpdate({ target: [aiRoute.criterion, aiRoute.position], set: row });
+    .onConflictDoUpdate({ target: [aiRoute.use, aiRoute.target, aiRoute.position], set: row });
 }
 
 /** deleteRoute removes a route. */
-export async function deleteRoute(db: Db, criterion: string, position: RoutePosition): Promise<void> {
-  await db.delete(aiRoute).where(and(eq(aiRoute.criterion, criterion), eq(aiRoute.position, position)));
+export async function deleteRoute(db: Db, use: RouteUse, target: string, position: RoutePosition): Promise<void> {
+  await db.delete(aiRoute).where(and(eq(aiRoute.use, use), eq(aiRoute.target, target), eq(aiRoute.position, position)));
 }
 
 /** recordCalibration stores a measured calibration; only tools/calibrate calls it. */
@@ -218,6 +219,18 @@ export async function calibrationPassed(
     .orderBy(desc(calibration.at))
     .limit(1);
   return row?.passed ?? false;
+}
+
+/**
+ * routeCalibrated tells whether a route has a passing calibration. Only
+ * judgment is calibrated so far, against its criterion; a route of any other
+ * use has none, so it stays a draft.
+ */
+export async function routeCalibrated(
+  db: Db,
+  r: { use: RouteUse; target: string; providerId: string; model: string; promptVersion: string },
+): Promise<boolean> {
+  return r.use === "judgment" && calibrationPassed(db, { ...r, criterion: r.target });
 }
 
 /** NoticeRow is a stored notice version. */

@@ -99,14 +99,10 @@ export const marketLaunch = pgTable("market_launch", {
   updatedBy: text("updated_by").notNull(),
 });
 
-/** ProviderKind is what a vendor provides. */
-export type ProviderKind = "model" | "speech";
-
 /** aiProvider is a configured vendor. keyCipher is encrypted outside the database's knowledge and never leaves the server. */
 export const aiProvider = pgTable("ai_provider", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull().unique(),
-  kind: text("kind").notNull().$type<ProviderKind>(),
   /** catalog is the id of the named vendor in pi-ai's catalog the vendor was picked from, or empty for one configured by hand. */
   catalog: text("catalog").notNull().default(""),
   /** api is the wire protocol pi-ai speaks to the vendor, such as openai-completions. */
@@ -189,21 +185,35 @@ export const vendorCheck = pgTable(
 /** RoutePosition tells a route's place: the one used first, or the calibrated one it falls back to. */
 export type RoutePosition = "primary" | "backup";
 
-/** aiRoute is what serves a criterion. */
+/**
+ * RouteUse is what a route does: judging writing, answering in conversation,
+ * speech-to-text, text-to-speech or pronunciation scoring.
+ */
+export type RouteUse = "judgment" | "conversation" | "stt" | "tts" | "pronunciation";
+
+/**
+ * aiRoute says which vendor's model serves one target of a use: a criterion
+ * key such as w4-topic-sentence@1 for judgment, a conversation's id, or a
+ * language such as en for speech.
+ */
 export const aiRoute = pgTable(
   "ai_route",
   {
-    criterion: text("criterion").notNull(),
+    use: text("use").notNull().$type<RouteUse>(),
+    target: text("target").notNull(),
     position: text("position").notNull().$type<RoutePosition>(),
     providerId: uuid("provider_id")
       .notNull()
       .references(() => aiProvider.id, { onDelete: "restrict" }),
     model: text("model").notNull(),
-    promptVersion: text("prompt_version").notNull(),
+    /** promptVersion is the prompt a judgment or conversation route uses, and empty for speech. */
+    promptVersion: text("prompt_version").notNull().default(""),
+    /** voice is the voice a text-to-speech route speaks with, and empty for any other use. */
+    voice: text("voice").notNull().default(""),
     live: boolean("live").notNull().default(false),
     updatedAt: at("updated_at").notNull(),
   },
-  (t) => [primaryKey({ columns: [t.criterion, t.position] })],
+  (t) => [primaryKey({ columns: [t.use, t.target, t.position] })],
 );
 
 /** calibration is a measured agreement with people, written by tools/calibrate and read-only in the console. */
