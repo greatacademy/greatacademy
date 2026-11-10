@@ -43,7 +43,7 @@ import {
   waitingForm,
   waitingVerifications,
 } from "@ga/db";
-import { catalogProviders, catalogVendor, criterionKey, PROMPTS, redact, SUPPORTED_APIS } from "@ga/judge";
+import { CONVERSATION_PROMPTS, catalogProviders, catalogVendor, criterionKey, PROMPTS, redact, SUPPORTED_APIS } from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
@@ -287,10 +287,9 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const listings = deps.registry?.listings ?? [];
       return {
         criteria: listings.flatMap((s) => s.criteria.map((c) => ({ key: criterionKey(c), subjectId: s.id, question: c.question }))),
-        promptVersions: Object.keys(PROMPTS),
+        promptVersions: [...Object.keys(PROMPTS), ...Object.keys(CONVERSATION_PROMPTS)],
         languages: [...SPEECH_LANGUAGES],
-        // No conversation exists before S6 is built.
-        conversations: [],
+        conversations: listings.flatMap((s) => s.conversations.map((c) => c.id)),
       };
     },
 
@@ -379,7 +378,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         voice: use === "tts" ? r.voice.trim() : "",
       };
       need(fields.model && (!text || fields.promptVersion), text ? "a route needs a model and a prompt version" : "a route needs a model");
-      need(!text || PROMPTS[fields.promptVersion], "no such prompt version");
+      need(!text || (use === "conversation" ? CONVERSATION_PROMPTS : PROMPTS)[fields.promptVersion], "no such prompt version");
       const vendor = (await providers(db)).find((p) => p.id === r.providerId);
       need(vendor, "no such vendor");
       need(!text || vendor.api, "this vendor has no text API");

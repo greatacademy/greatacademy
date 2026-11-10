@@ -624,7 +624,7 @@ describe("the admin console", () => {
 
   it("offers the prompt versions and speech languages a route can name, and refuses others", async () => {
     const choices = await admin("root").listRouteChoices({});
-    expect(choices.promptVersions).toEqual(["writing-1"]);
+    expect(choices.promptVersions).toEqual(["writing-1", "conversation-1"]);
     expect(choices.languages).toContain("en-US");
     const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", api: "openai-completions", enabled: true } });
     const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "x" };

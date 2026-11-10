@@ -83,8 +83,9 @@ export async function currentNotice(db: Db): Promise<{ version: string; vendors:
   return newest ?? { version: NOTICE_VERSION, vendors: [] };
 }
 
-/** useForScope is the use of route a scope needs: writing is judged, and speech is first turned into text. */
-const useForScope = (scope: ConsentScope): RouteUse => (scope === "speech" ? "stt" : "judgment");
+/** useForScope is the use of route a scope needs: writing is judged, speech is first turned into text, and a conversation is answered. */
+const useForScope = (scope: ConsentScope): RouteUse =>
+  scope === "speech" ? "stt" : scope === "conversation" ? "conversation" : "judgment";
 
 /** scopeOffered tells whether a market can offer a scope now: its rule allows it, and the current notice names a vendor with a live route of the use the scope needs and a valid check there. */
 export async function scopeOffered(db: Db, country: string, scope: ConsentScope, at: number): Promise<boolean> {
@@ -110,8 +111,9 @@ export interface QualifiedRoute {
 }
 
 /**
- * qualifyingRoute finds the route that may judge a learner's work: the live
- * primary, or else the calibrated backup. For a minor all five conditions of
+ * qualifyingRoute finds the route that may judge a learner's work, or answer
+ * them in a conversation, by the use the scope needs and its target (a
+ * criterion key, or a conversation's id): the live primary, or else the calibrated backup. For a minor all five conditions of
  * docs/admin.md §6 must hold, and with none it returns undefined and judgment waits.
  * avoid passes over a position, so that a judgment the primary keeps failing moves to the backup.
  * Its model must have a price, and no budget its vendor has may be spent;
@@ -142,7 +144,7 @@ export async function qualifyingRoute(
     budget ? providerSpend(db, at) : undefined,
   ]);
   const candidates = all
-    .filter((r) => r.use === "judgment" && r.target === criterion && r.position !== avoid)
+    .filter((r) => r.use === useForScope(scope) && r.target === criterion && r.position !== avoid)
     .sort((a, b) => a.position.localeCompare(b.position))
     .reverse();
   for (const r of candidates) {

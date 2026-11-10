@@ -1,5 +1,6 @@
 import {
   clearInactiveNotices,
+  clearOldConversationLines,
   clearOldResponses,
   clearOldSessionTraces,
   contactsOf,
@@ -21,6 +22,7 @@ export const RETENTION = {
   childResponses: 90 * DAY,
   teenResponses: 365 * DAY,
   sessionTraces: 30 * DAY,
+  conversationLines: 30 * DAY,
   consentReminder: 30 * DAY,
   inactive: 365 * DAY,
   inactiveNotice: 30 * DAY,
@@ -33,6 +35,7 @@ export const RETENTION_ACTION = "retention.run";
 export interface RetentionResult {
   readonly responses: number;
   readonly traces: number;
+  readonly transcripts: number;
   readonly reminders: number;
   readonly notices: number;
   readonly deleted: number;
@@ -44,6 +47,7 @@ export async function runRetention(db: Db, at: number, deps: { forms: FormStore;
   const child = await clearOldResponses(db, "child", new Date(at - RETENTION.childResponses));
   const teen = await clearOldResponses(db, "teen", new Date(at - RETENTION.teenResponses));
   const traces = await clearOldSessionTraces(db, new Date(at - RETENTION.sessionTraces));
+  const transcripts = await clearOldConversationLines(db, new Date(at - RETENTION.conversationLines));
 
   const expiring = await expiringConsents(db, date, new Date(at + RETENTION.consentReminder));
   for (const c of expiring) {
@@ -63,7 +67,14 @@ export async function runRetention(db: Db, at: number, deps: { forms: FormStore;
     await markInactiveNotice(db, learnerId, date);
   }
 
-  const result = { responses: child + teen, traces, reminders: expiring.length, notices: inactive.length, deleted: due.length };
+  const result = {
+    responses: child + teen,
+    traces,
+    transcripts,
+    reminders: expiring.length,
+    notices: inactive.length,
+    deleted: due.length,
+  };
   await logChange(db, { actor: "system", action: RETENTION_ACTION, detail: JSON.stringify(result), at: date });
   return result;
 }

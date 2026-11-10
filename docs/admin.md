@@ -61,7 +61,7 @@ The rules of a market (guardian age, scopes, languages) are code in `libs/api/sr
 | `tts`, text-to-speech | A language | Voice |
 | `pronunciation`, pronunciation scoring | A language | |
 
-A route's target and prompt version are chosen from lists the server keeps: the criteria of the subjects' judged topics, the prompts in `libs/judge`, and the speech languages; it refuses any other. A text use needs a vendor with an API. Only writing judgment is calibrated so far; a route of another use stays a draft until speech services and their calibration arrive.
+A route's target and prompt version are chosen from lists the server keeps: the criteria of the subjects' judged topics, the prompts in `libs/judge`, and the speech languages; it refuses any other. A text use needs a vendor with an API. Writing judgment and conversations are calibrated: a conversation's calibration names the conversation's id as its criterion, from recorded test conversations (E5.12). A route of another use stays a draft until speech services and their calibration arrive.
 
 - **Going live needs calibration.** A route can be set live only if a passing calibration exists for that exact criterion, model and prompt version. Calibrations are written by `tools/calibrate` and are read-only here; an administrator cannot enter one. A calibration passes only if the route also resists every injection probe of `libs/judge`: texts made only of attempts to steer the judge, in English and Chinese, which it must find not to meet the criterion.
 - **Changing a live route's model or prompt returns it to draft,** since changing the model changes the judge.
