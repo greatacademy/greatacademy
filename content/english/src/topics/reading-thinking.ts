@@ -398,8 +398,147 @@ const chooseIdiomBank: readonly ChoiceItem[] = [
   ],
 ];
 
-const pick = (question: [string, string], bank: readonly ChoiceItem[], en: (right: string) => string, zh: (right: string) => string) =>
-  choiceGenerator(t(question[0], question[1]), bank, (right) => t(en(right), zh(right)));
+/** Say gives the feedback for a wrong option, in English and Chinese. */
+type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
+
+const pick = (
+  question: [string, string],
+  bank: readonly ChoiceItem[],
+  en: (right: string) => string,
+  zh: (right: string) => string,
+  not: Say,
+) =>
+  choiceGenerator(
+    t(question[0], question[1]),
+    bank,
+    (right) => t(en(right), zh(right)),
+    (wrong, right, shown, position) => t(...not(wrong, right, shown, position)),
+  );
+
+/** meaning looks up the feedback for a wrong label; a label with no entry is a mistake in the bank. */
+const meaning =
+  (says: Readonly<Record<string, readonly [string, string]>>): Say =>
+  (wrong) => {
+    const said = says[wrong];
+    if (!said) throw new Error(`no feedback for the label ${wrong}`);
+    return said;
+  };
+
+const inferenceNot: Say = (wrong) => [
+  `*${wrong}* does not fit the clues: some of them point another way. An inference has to agree with every clue the text gives.`,
+  `*${wrong}* 与线索不符：有些线索指向别处。推断必须与文中给出的每一条线索都相符。`,
+];
+
+const evidenceNot: Say = (wrong) => [
+  `*${wrong}* is a detail of the scene, but it would be just as true if the inference were wrong, so it proves nothing.`,
+  `*${wrong}* 是场景中的一个细节，但即使推断是错的它也照样成立，所以证明不了什么。`,
+];
+
+const opinionNot: Say = (wrong) => [
+  `*${wrong}* is an opinion: it tells what someone thinks or wants, with words such as *best*, *should* or *more*, and it cannot be proved.`,
+  `*${wrong}* 是观点：它说的是某人的想法或愿望，用了 *best*、*should*、*more* 这样的词，无法证明。`,
+];
+
+const factNot: Say = (wrong) => [
+  `*${wrong}* is a fact: you could check it in a book or by looking. An opinion tells what someone thinks, and others may disagree.`,
+  `*${wrong}* 是事实：可以查书或亲眼核实。观点说的是某人的想法，别人可能不同意。`,
+];
+
+const purposeNot = meaning({
+  "to inform": [
+    "A text written **to inform** only gives facts or explains something. This one does more than that, or something else.",
+    "**to inform（告知）**的文字只提供事实或解释某事。这段文字不只如此，或者在做别的事。",
+  ],
+  "to persuade": [
+    "A text written **to persuade** tries to get the reader to think or do something. This one asks nothing of the reader.",
+    "**to persuade（说服）**的文字试图让读者相信或去做某事。这段文字并没有要求读者什么。",
+  ],
+  "to entertain": [
+    "A text written **to entertain** tells a story or something funny for enjoyment. This one is not a story or a joke.",
+    "**to entertain（娱乐）**的文字讲故事或有趣的事让人享受。这段文字不是故事，也不是笑话。",
+  ],
+});
+
+const persuadeNot: Say = (wrong) => [
+  `*${wrong}* only gives information. It does not tell the reader what to think or do.`,
+  `*${wrong}* 只提供信息，没有告诉读者该怎么想或怎么做。`,
+];
+
+const pointOfViewNot = meaning({
+  "first person": [
+    "**First person** would be told by a narrator inside the story, using *I*, *me*, *we* or *our*. Look at the pronouns here.",
+    "**first person（第一人称）**由故事中的叙述者讲述，用 *I*、*me*、*we*、*our*。看看这里用的代词。",
+  ],
+  "second person": [
+    "**Second person** would speak to the reader as *you*. No sentence here does that.",
+    "**second person（第二人称）**会用 *you* 直接对读者说话。这里没有这样的句子。",
+  ],
+  "third person": [
+    "**Third person** would be told by someone outside the story, using names and *he*, *she* or *they*. Look at the pronouns here.",
+    "**third person（第三人称）**由故事外的人讲述，用名字和 *he*、*she*、*they*。看看这里用的代词。",
+  ],
+});
+
+const narratorNot: Say = (wrong) =>
+  wrong.includes('telling it as "I"')
+    ? [
+        `If ${wrong.replace(/, telling it as "I"$/, "")} told the story, the text would say *I* and *my*. Look at the pronouns the narrator uses.`,
+        `如果由 ${wrong.replace(/, telling it as "I"$/, "")} 来讲，文中会用 *I* 和 *my*。看看叙述者用的代词。`,
+      ]
+    : wrong === "someone outside the story"
+      ? [
+          "A narrator outside the story would call everyone by name or *he*, *she* and *they*. Here the narrator says *I*.",
+          "故事外的叙述者会用名字或 *he*、*she*、*they* 称呼每个人。而这里的叙述者说的是 *I*。",
+        ]
+      : [`*${wrong}* is something the story tells about, not the one telling it.`, `*${wrong}* 是故事讲到的对象，而不是讲故事的人。`];
+
+const traitNot: Say = (wrong) => [
+  `Nothing the character does here shows someone **${wrong}**. A trait is proved by what a character does, again and again.`,
+  `这里人物的所作所为并不能表现出 **${wrong}**。性格特点要由人物的行为来证明。`,
+];
+
+const feelingNot: Say = (wrong) => [
+  `The character's actions and face here do not show someone feeling **${wrong}**. Picture a person doing these things, and name the feeling.`,
+  `这里人物的动作和表情并不能表现出 **${wrong}** 的感受。想象一个人做这些事，说出那种感受。`,
+];
+
+const lessonNot: Say = (wrong) => [
+  `*${wrong}* is a fact from the story, not a lesson about how to live. A lesson is something a reader could use in their own life.`,
+  `*${wrong}* 是故事里的事实，而不是关于怎样生活的道理。道理是读者在自己生活中也能用上的。`,
+];
+
+const storyNot: Say = (wrong) => [
+  `*${wrong}* does not teach the lesson: nothing in it shows that following the lesson leads somewhere good, or that ignoring it goes wrong.`,
+  `*${wrong}* 没有体现这个道理：其中没有表现出遵循它会带来好结果，或者忽视它会出问题。`,
+];
+
+const figureNot: Say = (wrong) => [
+  `*${wrong}* takes the comparison literally, or picks a quality the two things do not share. Ask what the two things have in common.`,
+  `*${wrong}* 把比喻按字面理解了，或者选了两样东西并不共有的特点。问一问两者有什么共同之处。`,
+];
+
+const idiomNot: Say = (wrong) => [
+  `*${wrong}* reads the idiom word for word, or ignores the rest of the sentence. An idiom means something different from its words: let the sentence tell you what fits.`,
+  `*${wrong}* 是逐字理解习语，或者忽略了句子的其余部分。习语的意思不同于字面：让句子告诉你什么意思合适。`,
+];
+
+const idiomMeaning: Readonly<Record<string, readonly [string, string]>> = {
+  "a piece of cake": ["very easy", "非常容易"],
+  "under the weather": ["feeling sick", "身体不舒服"],
+  "on cloud nine": ["very happy", "非常开心"],
+  "in hot water": ["in trouble", "遇到麻烦"],
+  "hit the hay": ["to go to bed", "去睡觉"],
+  "spill the beans": ["to tell a secret", "泄露秘密"],
+  "spilled the beans": ["told a secret", "泄露了秘密"],
+  "break the ice": ["to make people comfortable when they first meet", "让初次见面的人放松下来"],
+  "an arm and a leg": ["very expensive", "非常昂贵"],
+};
+
+const chooseIdiomNot: Say = (wrong) => {
+  const means = idiomMeaning[wrong];
+  if (!means) throw new Error(`no meaning for the idiom ${wrong}`);
+  return [`*${wrong}* means ${means[0]}, which is not the meaning given.`, `*${wrong}* 的意思是"${means[1]}"，不是题目给出的意思。`];
+};
 
 /** thinkingReadingTopics are the topics of thinking about a text: inferences, facts and opinions, purpose, narrators, characters, lessons and figurative language. */
 export const thinkingReadingTopics: readonly TopicDef[] = [
@@ -426,6 +565,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           inferenceBank,
           (right) => `*${right}* fits every clue in the text. The other choices ignore the clues or go against them.`,
           (right) => `*${right}* 与文中的每条线索都相符。其他选项忽视了线索或与之矛盾。`,
+          inferenceNot,
         ),
       ),
       point(
@@ -440,6 +580,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           evidenceBank,
           (right) => `*${right}* points to the inference. The other details may be true, but they say nothing about it.`,
           (right) => `*${right}* 指向这个推断。其他细节也许是真的，却与推断无关。`,
+          evidenceNot,
         ),
       ),
     ],
@@ -468,6 +609,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* can be checked by measuring, counting or looking it up, so it is a fact. The other sentences tell what someone thinks.`,
           (right) => `*${right}* 可以通过测量、计数或查证来核实，所以是事实。其他句子表达的是个人想法。`,
+          opinionNot,
         ),
       ),
       point(
@@ -483,6 +625,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* tells what someone thinks, and others could disagree, so it is an opinion. The other sentences can be checked.`,
           (right) => `*${right}* 表达的是个人想法，别人可能不同意，所以是观点。其他句子可以核实。`,
+          factNot,
         ),
       ),
     ],
@@ -502,10 +645,15 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           "Authors write for a reason. To **inform** is to give facts or explain, as a science book does. To **persuade** is to try to get the reader to think or do something, as an advertisement does, often with opinions. To **entertain** is to give the reader enjoyment, as a story, poem or joke does.",
           "作者写作总有原因。**告知**是提供事实或进行解释，像科学书那样。**说服**是设法让读者相信或去做某事，像广告那样，常常带有观点。**娱乐**是让读者获得乐趣，像故事、诗歌或笑话那样。",
         ),
-        choiceGenerator(t("What is the author's main purpose?", "作者的主要目的是什么？"), purposeBank, (right) => {
-          const [en, zh] = purposeWhy.get(right) ?? ["", ""];
-          return t(`The purpose is **${right}**. ${en}`, `目的是 **${right}**。${zh}`);
-        }),
+        choiceGenerator(
+          t("What is the author's main purpose?", "作者的主要目的是什么？"),
+          purposeBank,
+          (right) => {
+            const [en, zh] = purposeWhy.get(right) ?? ["", ""];
+            return t(`The purpose is **${right}**. ${en}`, `目的是 **${right}**。${zh}`);
+          },
+          (wrong, right, shown, position) => t(...purposeNot(wrong, right, shown, position)),
+        ),
       ),
       point(
         "spotting-persuasion",
@@ -519,6 +667,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           persuadeBank,
           (right) => `*${right}* tells the reader what to think or do. The other sentences only give information.`,
           (right) => `*${right}* 告诉读者该怎么想或怎么做。其他句子只是提供信息。`,
+          persuadeNot,
         ),
       ),
     ],
@@ -549,6 +698,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
             right === "first person"
               ? "这是**第一人称**：叙述者使用 *I, me, my, we* 或 *our*，是故事中的一员。"
               : "这是**第三人称**：叙述者使用人名以及 *he, she* 或 *they*，置身故事之外。",
+          pointOfViewNot,
         ),
       ),
       point(
@@ -563,6 +713,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           narratorBank,
           (right) => `The story is told by **${right}**. The pronouns and what the narrator knows show this.`,
           (right) => `讲故事的是 **${right}**。代词和叙述者所知道的内容说明了这一点。`,
+          narratorNot,
         ),
       ),
     ],
@@ -587,6 +738,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           traitBank,
           (right) => `**${right}** fits what the character does. The other words describe a person who would act differently.`,
           (right) => `**${right}** 与人物的行为相符。其他词描述的是会有不同行为的人。`,
+          traitNot,
         ),
       ),
       point(
@@ -601,6 +753,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           feelingBank,
           (right) => `The details show that the character feels **${right}**. The other feelings would show in different ways.`,
           (right) => `这些细节表明人物感到 **${right}**。其他感受会以不同的方式表现出来。`,
+          feelingNot,
         ),
       ),
     ],
@@ -626,6 +779,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* That is what the story teaches about how to act. The other choices are facts from or about the story, not lessons for the reader.`,
           (right) => `*${right}* 这是故事教人如何做事的道理。其他选项只是关于故事的事实，而不是给读者的道理。`,
+          lessonNot,
         ),
       ),
       point(
@@ -641,6 +795,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* The character's choice and its result show the lesson. The other stories have no such choice, or their result points the other way.`,
           (right) => `*${right}* 人物的选择及其结果体现了这个道理。其他故事没有这样的选择，或者结果恰恰相反。`,
+          storyNot,
         ),
       ),
     ],
@@ -666,6 +821,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           (right) =>
             `It means **${right}**, the quality the two things share. The other choices take the words literally or pick a quality the comparison is not about.`,
           (right) => `意思是 **${right}**，即两者的共同特点。其他选项是按字面理解，或者选了比喻并不针对的特点。`,
+          figureNot,
         ),
       ),
       point(
@@ -680,6 +836,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           metaphorBank,
           (right) => `It means **${right}**. The other choices take the metaphor literally or miss the quality it carries over.`,
           (right) => `意思是 **${right}**。其他选项按字面理解了暗喻，或者没抓住它所转移的特点。`,
+          figureNot,
         ),
       ),
     ],
@@ -704,6 +861,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           idiomBank,
           (right) => `It means **${right}**. Taken word by word, the idiom would not make sense in the sentence.`,
           (right) => `意思是 **${right}**。逐字理解的话，这个习语在句中讲不通。`,
+          idiomNot,
         ),
       ),
       point(
@@ -718,6 +876,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
           chooseIdiomBank,
           (right) => `**${right}** has this meaning. The other idioms mean something else, so the sentence would say the wrong thing.`,
           (right) => `**${right}** 就是这个意思。其他习语意思不同，句子就会表达错误的意思。`,
+          chooseIdiomNot,
         ),
       ),
     ],

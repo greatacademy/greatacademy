@@ -341,6 +341,156 @@ const preciseBank: readonly ChoiceItem[] = [
   ["The sun ___ on the calm water. (shone with small flashes)", "sparkled", ["glared", "faded"]],
 ];
 
+/** entry returns the entry of a feedback table, failing loudly when a bank uses an option the table does not cover. */
+function entry<V>(table: ReadonlyMap<string, V> | Readonly<Record<string, V>>, key: string): V {
+  const found = table instanceof Map ? table.get(key) : (table as Readonly<Record<string, V>>)[key];
+  if (found === undefined) throw new Error(`no feedback for the option "${key}"`);
+  return found;
+}
+
+type Pair = readonly [en: string, zh: string];
+
+const affixes = new Set(["un", "re", "less", "ness", "ful", "dis", "ly", "er"]);
+
+const notBase = (wrong: string) =>
+  affixes.has(wrong)
+    ? t(
+        `“${wrong}” is the part added to the word, a prefix or a suffix. The base word is what is left when that part is taken away.`,
+        `“${wrong}” 是加在词上的部分，即前缀或后缀。基础词是去掉这部分后剩下的词。`,
+      )
+    : t(
+        `“${wrong}” cuts through the base word. Take away only the prefix or suffix and keep every letter of what is left.`,
+        `“${wrong}” 把基础词切断了。只去掉前缀或后缀，保留剩下部分的每一个字母。`,
+      );
+
+const partKind: Readonly<Record<string, Pair>> = {
+  Prefix: [
+    "A prefix is added at the start of a word and cannot stand alone. Check where this part sits and whether it is a word by itself.",
+    "前缀加在词的开头，不能独立成词。看看这部分的位置，以及它本身是不是一个词。",
+  ],
+  Suffix: [
+    "A suffix is added at the end of a word and cannot stand alone. Check where this part sits and whether it is a word by itself.",
+    "后缀加在词的末尾，不能独立成词。看看这部分的位置，以及它本身是不是一个词。",
+  ],
+  "Base word": [
+    "A base word can stand alone as a word of its own. Check whether this part is a word by itself.",
+    "基础词本身能独立成词。看看这部分本身是不是一个词。",
+  ],
+};
+
+const wordClassKind: Readonly<Record<string, Pair>> = {
+  Noun: [
+    "A noun names a person, place, thing or idea, and noun suffixes include *-tion*, *-ment* and *-ness*. Check which group this word's ending belongs to.",
+    "名词为人、地点、事物或概念命名，名词后缀有 *-tion*、*-ment*、*-ness* 等。看看这个词的词尾属于哪一类。",
+  ],
+  Verb: [
+    "A verb names an action, and verb suffixes include *-ize*, *-ify* and *-en*. Check which group this word's ending belongs to.",
+    "动词表示动作，动词后缀有 *-ize*、*-ify*、*-en* 等。看看这个词的词尾属于哪一类。",
+  ],
+  Adjective: [
+    "An adjective describes a noun, and adjective suffixes include *-ous*, *-al* and *-ive*. Check which group this word's ending belongs to.",
+    "形容词描述名词，形容词后缀有 *-ous*、*-al*、*-ive* 等。看看这个词的词尾属于哪一类。",
+  ],
+};
+
+const label = (table: Readonly<Record<string, Pair>>) => (wrong: string) => {
+  const [en, zh] = entry(table, wrong);
+  return t(en, zh);
+};
+
+/** ownerOf maps each meaning a bank offers to the part that has it: the bank's own parts, then parts taught elsewhere. */
+const ownerOf = (bank: readonly ChoiceItem[], elsewhere: Readonly<Record<string, string>> = {}) =>
+  new Map([...bank.map(([part, meaning]) => [meaning, part] as const), ...Object.entries(elsewhere)]);
+
+const otherPart = (owners: ReadonlyMap<string, string>) => (wrong: string, _right: string, shown: string) => {
+  const owner = entry(owners, wrong);
+  return t(
+    `“${wrong}” is what *${owner}* means, not *${shown}*. Think of a word you know with *${shown}* in it, and what that part adds.`,
+    `“${wrong}” 是 *${owner}* 的意思，不是 *${shown}* 的意思。想一个含有 *${shown}* 的熟词，看看这部分带来了什么意思。`,
+  );
+};
+
+const partWord: Readonly<Record<"prefix" | "suffix" | "root", Pair>> = {
+  prefix: ["prefix", "前缀"],
+  suffix: ["suffix", "后缀"],
+  root: ["root", "词根"],
+};
+
+const mismatchedPart = (part: keyof typeof partWord) => (wrong: string, _right: string, shown: string) => {
+  const [en, zh] = partWord[part];
+  return t(
+    `“${wrong}” does not match the ${en} of *${shown}*. Find the ${en}, recall what it means, and join that meaning to the rest of the word.`,
+    `“${wrong}” 与 *${shown}* 的${zh}不符。找出${zh}，想想它的意思，再把这个意思和词的其余部分合起来。`,
+  );
+};
+
+const missedDefinition = (wrong: string) =>
+  t(
+    `“${wrong}” is not what the sentence says the word means. The sentence explains the word itself: look for *or*, *that is*, *which means*, or a phrase set off by commas.`,
+    `句子说的词义并不是“${wrong}”。句子本身解释了这个词：找一找 *or*、*that is*、*which means*，或者用逗号隔开的短语。`,
+  );
+
+const missedContrast = (wrong: string) =>
+  t(
+    `“${wrong}” is not the opposite of what the other side of the contrast says. Find the contrast word, such as *unlike* or *but*, and take the opposite of that side.`,
+    `“${wrong}” 并不是对比另一边所说内容的反义。找出 *unlike* 或 *but* 这样的对比词，取那一边意思的反面。`,
+  );
+
+const missedExamples = (wrong: string) =>
+  t(
+    `“${wrong}” does not fit all the examples the sentence gives. Ask what every one of the examples has in common.`,
+    `“${wrong}” 并不适用于句子给出的所有例子。想一想这些例子共有的特点是什么。`,
+  );
+
+const notTheMeaning = (wrong: string, _right: string, shown: string) =>
+  t(
+    `“${wrong}” is not what *${shown}* means. Picture *${shown}* in a sentence from a textbook and check whether this meaning would make sense there.`,
+    `*${shown}* 的意思不是“${wrong}”。设想 *${shown}* 出现在课本的一个句子里，看看这个意思放在那里是否说得通。`,
+  );
+
+const glossary = new Map([...academicMeaningBank, ...latin1WordBank, ...latin2WordBank].map(([word, meaning]) => [word, meaning] as const));
+
+const wrongWord = (wrong: string) => {
+  const meaning = entry(glossary, wrong);
+  return t(
+    `“${wrong}” means *${meaning}*, which does not complete the thought of this sentence.`,
+    `“${wrong}” 的意思是 *${meaning}*，放进这个句子意思不通。`,
+  );
+};
+
+const lessFavorable = (wrong: string) =>
+  t(
+    `“${wrong}” means nearly the same, but it carries a negative feeling. Ask which word puts what is described in a better light.`,
+    `“${wrong}” 意思几乎相同，但带有负面色彩。想一想哪个词能让所描述的对象显得更好。`,
+  );
+
+const shade: Readonly<Record<string, Pair>> = {
+  skipped: ["moved with little hops", "轻快地跳着走"],
+  strolled: ["walked in a slow, relaxed way", "悠闲地慢慢走"],
+  trudged: ["walked with difficulty", "吃力地走"],
+  crept: ["moved quietly and slowly", "悄悄地慢慢移动"],
+  stomped: ["walked with loud, heavy steps", "重重地跺着脚走"],
+  whispered: ["spoke very softly", "很轻声地说"],
+  mumbled: ["spoke unclearly", "含糊地说"],
+  shouted: ["spoke very loudly", "大声地喊"],
+  announced: ["told everyone publicly", "公开地宣布"],
+  glanced: ["looked quickly", "很快地看一眼"],
+  peeked: ["looked quickly and secretly", "偷偷地很快看一眼"],
+  stared: ["looked for a long time", "长时间地盯着看"],
+  studied: ["looked at carefully to learn", "仔细地察看"],
+  nibbled: ["ate in small bites", "小口地咬着吃"],
+  tasted: ["tried a little to see the flavor", "尝一点味道"],
+  gobbled: ["ate quickly", "狼吞虎咽地吃"],
+  devoured: ["ate all of it hungrily", "饥饿地全部吃光"],
+  glared: ["shone with a harsh, strong light", "发出刺眼的强光"],
+  faded: ["slowly grew dim", "渐渐变暗"],
+};
+
+const otherShade = (wrong: string) => {
+  const [en, zh] = entry(shade, wrong);
+  return t(`“${wrong}” means *${en}*, which is not what the parentheses describe.`, `“${wrong}” 的意思是“${zh}”，与括号中描述的意思不符。`);
+};
+
 /** wordTopics are the topics of word parts, of context and of word choice. */
 export const wordTopics: readonly TopicDef[] = [
   {
@@ -358,8 +508,12 @@ export const wordTopics: readonly TopicDef[] = [
           "Many long words are built from a shorter **base word**. *Unhappy* contains *happy*, and *careless* contains *care*. Finding the base word is the first step in working out what a new word means.",
           "许多长词由较短的**基础词**（base word）构成。*unhappy* 含有 *happy*，*careless* 含有 *care*。找出基础词是弄懂生词的第一步。",
         ),
-        choiceGenerator(t("What is the base word?", "基础词是什么？"), baseBank, (right, shown) =>
-          t(`**${right}** is the word inside *${shown}* that can stand alone.`, `**${right}** 是 *${shown}* 中能独立成词的部分。`),
+        choiceGenerator(
+          t("What is the base word?", "基础词是什么？"),
+          baseBank,
+          (right, shown) =>
+            t(`**${right}** is the word inside *${shown}* that can stand alone.`, `**${right}** 是 *${shown}* 中能独立成词的部分。`),
+          notBase,
         ),
       ),
       point(
@@ -369,11 +523,15 @@ export const wordTopics: readonly TopicDef[] = [
           "A **prefix** goes before a base word: *re* + *read*. A **suffix** goes after it: *color* + *ful*. Together they are called **affixes**, and neither can stand alone as a word in this use.",
           "**前缀**（prefix）加在基础词之前：*re* + *read*。**后缀**（suffix）加在基础词之后：*color* + *ful*。它们合称**词缀**（affix），在这种用法中都不能独立成词。",
         ),
-        choiceGenerator(t("What is this part of the word?", "这是词的哪个部分？"), affixKindBank, (right) =>
-          t(
-            `It is a **${right.toLowerCase()}**. Look at where it sits and whether it can stand alone.`,
-            `它是 **${right}**。看它的位置，以及能否独立成词。`,
-          ),
+        choiceGenerator(
+          t("What is this part of the word?", "这是词的哪个部分？"),
+          affixKindBank,
+          (right) =>
+            t(
+              `It is a **${right.toLowerCase()}**. Look at where it sits and whether it can stand alone.`,
+              `它是 **${right}**。看它的位置，以及能否独立成词。`,
+            ),
+          label(partKind),
         ),
       ),
       point(
@@ -404,11 +562,15 @@ export const wordTopics: readonly TopicDef[] = [
           "A few prefixes appear in a great many words. *Un-*, *dis-* and *non-* mean *not* or the opposite. *Re-* means *again*. *Pre-* means *before*. *Mis-* means *wrongly*. *Over-* means *too much*, and *under-* means *too little*.",
           "少数几个前缀出现在大量词中。*un-*、*dis-*、*non-* 表示“不”或相反。*re-* 表示“再”。*pre-* 表示“之前”。*mis-* 表示“错误地”。*over-* 表示“过多”，*under-* 表示“过少”。",
         ),
-        choiceGenerator(t("What does this prefix mean?", "这个前缀是什么意思？"), prefixMeaningBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this prefix mean?", "这个前缀是什么意思？"),
+          prefixMeaningBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          otherPart(ownerOf(prefixMeaningBank, { after: "post-" })),
         ),
       ),
       point(
@@ -418,11 +580,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Put the meaning of the prefix together with the base word: *misread* is *read* + *wrongly*. This often gives the meaning of a word you have never seen.",
           "把前缀的含义和基础词合起来：*misread* 就是 *read* + “错误地”。这样往往能弄懂从未见过的词。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), prefixWordBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          prefixWordBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          mismatchedPart("prefix"),
         ),
       ),
       point(
@@ -456,11 +622,15 @@ export const wordTopics: readonly TopicDef[] = [
           "*-ful* means *full of*, and *-less* means *without*. *-er* names one who does something. *-ness* means *the state of being*. *-able* means *able to be*. *-ly* means *in a certain way*, *-est* means *the most*, and *-ish* means *somewhat like*.",
           "*-ful* 表示“充满”，*-less* 表示“没有”。*-er* 表示做某事的人。*-ness* 表示“状态”。*-able* 表示“能够被”。*-ly* 表示“以某种方式”，*-est* 表示“最”，*-ish* 表示“有点像”。",
         ),
-        choiceGenerator(t("What does this suffix mean?", "这个后缀是什么意思？"), suffixMeaningBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this suffix mean?", "这个后缀是什么意思？"),
+          suffixMeaningBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          otherPart(ownerOf(suffixMeaningBank, { "a person who": "-er" })),
         ),
       ),
       point(
@@ -470,11 +640,15 @@ export const wordTopics: readonly TopicDef[] = [
           "As with prefixes, combine the two parts: *fearless* is *fear* + *without*, so it means *without fear*. Notice how far apart *-ful* and *-less* put a word: *painful* and *painless* are opposites.",
           "和前缀一样，把两部分合起来：*fearless* 是 *fear* + “没有”，所以意思是“无所畏惧”。注意 *-ful* 和 *-less* 的意思相反：*painful* 和 *painless* 是反义词。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), suffixWordBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          suffixWordBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          mismatchedPart("suffix"),
         ),
       ),
       point(
@@ -509,11 +683,15 @@ export const wordTopics: readonly TopicDef[] = [
           "A suffix often tells you the class of a word. *-tion, -ment* and *-ness* make nouns. *-ize, -ify* and *-en* make verbs. *-ous, -al* and *-ive* make adjectives.",
           "后缀常能告诉你词性。*-tion, -ment, -ness* 构成名词。*-ize, -ify, -en* 构成动词。*-ous, -al, -ive* 构成形容词。",
         ),
-        choiceGenerator(t("What class of word is this?", "这个词是什么词性？"), classBank, (right, shown) =>
-          t(
-            `*${shown}* is a **${right.toLowerCase()}**, as its ending shows. A suffix often tells the class of a word, so look at the last letters first.`,
-            `*${shown}* 是 **${right}**，词尾说明了这一点。后缀往往表明词性，所以先看最后几个字母。`,
-          ),
+        choiceGenerator(
+          t("What class of word is this?", "这个词是什么词性？"),
+          classBank,
+          (right, shown) =>
+            t(
+              `*${shown}* is a **${right.toLowerCase()}**, as its ending shows. A suffix often tells the class of a word, so look at the last letters first.`,
+              `*${shown}* 是 **${right}**，词尾说明了这一点。后缀往往表明词性，所以先看最后几个字母。`,
+            ),
+          label(wordClassKind),
         ),
       ),
       point(
@@ -551,11 +729,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Some prefixes give a number: *uni-* is one, *bi-* is two, *tri-* is three, *semi-* is half, and *multi-* is many. Others give a position: *sub-* is under, *super-* is above, *inter-* is between, *trans-* is across, and *post-* is after.",
           "有些前缀表示数量：*uni-* 是一，*bi-* 是二，*tri-* 是三，*semi-* 是一半，*multi-* 是多。另一些表示位置：*sub-* 是在下，*super-* 是在上，*inter-* 是在之间，*trans-* 是穿过，*post-* 是在之后。",
         ),
-        choiceGenerator(t("What does this prefix mean?", "这个前缀是什么意思？"), positionMeaningBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this prefix mean?", "这个前缀是什么意思？"),
+          positionMeaningBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          otherPart(ownerOf(positionMeaningBank, { over: "over-", before: "pre-" })),
         ),
       ),
       point(
@@ -565,11 +747,15 @@ export const wordTopics: readonly TopicDef[] = [
           "The prefix gives you most of the meaning: a *bicycle* has two wheels, a *submarine* travels under the sea, and an *international* match is played between nations.",
           "前缀提供了大部分含义：*bicycle* 有两个轮子，*submarine* 在海面下航行，*international* 比赛在国家之间进行。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), positionWordBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          positionWordBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          mismatchedPart("prefix"),
         ),
       ),
     ],
@@ -592,11 +778,15 @@ export const wordTopics: readonly TopicDef[] = [
           "A **root** carries the core meaning of a word, but unlike a base word it usually cannot stand alone. *Port* means carry, *dict* say, *rupt* break, *scrib* or *script* write, *struct* build, *tract* pull, *vis* or *vid* see, and *spect* look.",
           "**词根**（root）承载词的核心含义，但和基础词不同，通常不能独立成词。*port* 表示携带，*dict* 表示说，*rupt* 表示破裂，*scrib* 或 *script* 表示写，*struct* 表示建造，*tract* 表示拉，*vis* 或 *vid* 表示看见，*spect* 表示看。",
         ),
-        choiceGenerator(t("What does this root mean?", "这个词根是什么意思？"), latin1RootBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this root mean?", "这个词根是什么意思？"),
+          latin1RootBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          otherPart(ownerOf(latin1RootBank)),
         ),
       ),
       point(
@@ -606,11 +796,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Combine the root with its prefix or suffix: *trans* (across) + *port* (carry) gives *to carry across*, and *pre* (before) + *dict* (say) gives *to say before it happens*.",
           "把词根和前缀或后缀合起来：*trans*（穿过）+ *port*（携带）表示“运送过去”，*pre*（之前）+ *dict*（说）表示“预言”。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), latin1WordBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          latin1WordBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          mismatchedPart("root"),
         ),
       ),
     ],
@@ -630,11 +824,15 @@ export const wordTopics: readonly TopicDef[] = [
           "*Ject* means throw, *mit* or *miss* send, *duc* or *duct* lead, *cred* believe, *aud* hear, *fer* carry or bear, *pel* or *puls* push, and *voc* or *vok* call.",
           "*ject* 表示扔，*mit* 或 *miss* 表示送，*duc* 或 *duct* 表示引导，*cred* 表示相信，*aud* 表示听，*fer* 表示携带，*pel* 或 *puls* 表示推，*voc* 或 *vok* 表示呼喊。",
         ),
-        choiceGenerator(t("What does this root mean?", "这个词根是什么意思？"), latin2RootBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this root mean?", "这个词根是什么意思？"),
+          latin2RootBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          otherPart(ownerOf(latin2RootBank, { carry: "port" })),
         ),
       ),
       point(
@@ -644,11 +842,15 @@ export const wordTopics: readonly TopicDef[] = [
           "These roots work like the first set: *re* (back) + *ject* (throw) gives *to throw back*, and *in* (not) + *cred* (believe) + *ible* (able) gives *not able to be believed*. A word's meaning can drift, so use the root as a strong clue and check it against the sentence.",
           "这些词根的用法和第一组一样：*re*（回）+ *ject*（扔）表示“扔回”，*in*（不）+ *cred*（相信）+ *ible*（能够）表示“难以置信”。词义可能有所引申，所以把词根当作有力的线索，再结合句子验证。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), latin2WordBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          latin2WordBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          mismatchedPart("root"),
         ),
       ),
     ],
@@ -671,11 +873,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Many words of science come from Greek. *Tele* means far, *graph* write or draw, *phon* sound, *photo* light, *bio* life, *geo* earth, *therm* heat, *micro* small, *auto* self, and *scope* look at.",
           "许多科学词汇来自希腊语。*tele* 表示远，*graph* 表示写或画，*phon* 表示声音，*photo* 表示光，*bio* 表示生命，*geo* 表示地球，*therm* 表示热，*micro* 表示小，*auto* 表示自己，*scope* 表示观看。",
         ),
-        choiceGenerator(t("What does this root mean?", "这个词根是什么意思？"), greekRootBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this root mean?", "这个词根是什么意思？"),
+          greekRootBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          otherPart(ownerOf(greekRootBank, { write: "graph" })),
         ),
       ),
       point(
@@ -685,11 +891,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Greek roots often join directly: *tele* + *scope* is a tool for looking at far things, and *bio* + *graph* is the written story of a life. The ending *-logy* means the study of something.",
           "希腊词根常常直接相连：*tele* + *scope* 是看远处事物的工具，*bio* + *graph* 是记述一生的文字。词尾 *-logy* 表示“研究”。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), greekWordBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          greekWordBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          mismatchedPart("root"),
         ),
       ),
     ],
@@ -709,8 +919,11 @@ export const wordTopics: readonly TopicDef[] = [
           "A writer may simply explain a hard word. Look for *which means*, *that is*, or a phrase set off by commas after the word: *The summit, the very top of the mountain, was covered in snow.*",
           "作者可能直接解释难词。留意 *which means*、*that is*，或者词后用逗号隔开的短语：*The summit, the very top of the mountain, was covered in snow.*",
         ),
-        choiceGenerator(t("What does the word in italics mean?", "斜体词是什么意思？"), definitionClueBank, (right) =>
-          t(`It means **${right}**. The sentence explains the word directly.`, `意思是 **${right}**。句子直接解释了这个词。`),
+        choiceGenerator(
+          t("What does the word in italics mean?", "斜体词是什么意思？"),
+          definitionClueBank,
+          (right) => t(`It means **${right}**. The sentence explains the word directly.`, `意思是 **${right}**。句子直接解释了这个词。`),
+          missedDefinition,
         ),
       ),
       point(
@@ -720,8 +933,12 @@ export const wordTopics: readonly TopicDef[] = [
           "Words such as *unlike, but, although, whereas* and *instead of* set up an opposite. If you know the other side, you can reason to the word: *Unlike his timid brother, Omar spoke to everyone* suggests that *timid* means shy.",
           "*unlike, but, although, whereas, instead of* 这样的词表示相反的情况。知道另一面，就能推断这个词：*Unlike his timid brother, Omar spoke to everyone* 暗示 *timid* 的意思是害羞。",
         ),
-        choiceGenerator(t("What does the word in italics mean?", "斜体词是什么意思？"), contrastClueBank, (right) =>
-          t(`It means **${right}**. The sentence sets it against its opposite.`, `意思是 **${right}**。句子把它和相反的情况作对比。`),
+        choiceGenerator(
+          t("What does the word in italics mean?", "斜体词是什么意思？"),
+          contrastClueBank,
+          (right) =>
+            t(`It means **${right}**. The sentence sets it against its opposite.`, `意思是 **${right}**。句子把它和相反的情况作对比。`),
+          missedContrast,
         ),
       ),
       point(
@@ -731,8 +948,11 @@ export const wordTopics: readonly TopicDef[] = [
           "Words such as *such as, like, including* and *for example* introduce examples. Ask what the examples have in common: rain, snow and hail are all water falling from the sky, so that is what *precipitation* means.",
           "*such as, like, including, for example* 这样的词引出例子。问一问这些例子有什么共同点：雨、雪和冰雹都是从天而降的水，这就是 *precipitation* 的意思。",
         ),
-        choiceGenerator(t("What does the word in italics mean?", "斜体词是什么意思？"), exampleClueBank, (right) =>
-          t(`It means **${right}**. That is what the examples have in common.`, `意思是 **${right}**。这正是这些例子的共同点。`),
+        choiceGenerator(
+          t("What does the word in italics mean?", "斜体词是什么意思？"),
+          exampleClueBank,
+          (right) => t(`It means **${right}**. That is what the examples have in common.`, `意思是 **${right}**。这正是这些例子的共同点。`),
+          missedExamples,
         ),
       ),
     ],
@@ -755,11 +975,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Some words appear in nearly every school subject and rarely in daily speech. To **analyze** is to study the parts of something, **evidence** is facts that show something is true, and to **conclude** is to decide from the facts. Others here are **significant, predict, compare, sequence, relevant, estimate** and **source**.",
           "有些词几乎出现在每个学科中，却很少用于日常口语。**analyze** 是研究事物的各个部分，**evidence** 是证明某事为真的事实，**conclude** 是根据事实作出判断。这里还有 **significant, predict, compare, sequence, relevant, estimate, source**。",
         ),
-        choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), academicMeaningBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-            `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-          ),
+        choiceGenerator(
+          t("What does this word mean?", "这个词是什么意思？"),
+          academicMeaningBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
+              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
+            ),
+          notTheMeaning,
         ),
       ),
       point(
@@ -769,8 +993,12 @@ export const wordTopics: readonly TopicDef[] = [
           "Knowing a definition is only half of a word. The other half is recognizing where it fits. Read the whole sentence and ask which word's meaning completes the thought.",
           "知道定义只是掌握一个词的一半。另一半是知道它用在哪里。读完整个句子，问一问哪个词的意思能使句子完整。",
         ),
-        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), academicUseBank, (right, shown) =>
-          t(`${shown.replace("___", `**${right}**`)}`, `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。`),
+        choiceGenerator(
+          t("Which word completes the sentence?", "哪个词能补全句子？"),
+          academicUseBank,
+          (right, shown) =>
+            t(`${shown.replace("___", `**${right}**`)}`, `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。`),
+          wrongWord,
         ),
       ),
     ],
@@ -790,11 +1018,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Words with similar meanings can carry different feelings, called their **connotation**. *Thrifty* and *stingy* both describe someone who spends little, but *thrifty* is praise and *stingy* is criticism.",
           "意思相近的词可能带有不同的感情，这叫作**感情色彩**（connotation）。*thrifty* 和 *stingy* 都形容花钱少的人，但 *thrifty* 是褒义，*stingy* 是贬义。",
         ),
-        choiceGenerator(t("Choose the word that answers the question.", "选择能回答问题的词。"), connotationBank, (right) =>
-          t(
-            `**${right}** carries the more favorable feeling, though the two words mean nearly the same.`,
-            `**${right}** 带有更正面的感情色彩，尽管两个词的意思几乎相同。`,
-          ),
+        choiceGenerator(
+          t("Choose the word that answers the question.", "选择能回答问题的词。"),
+          connotationBank,
+          (right) =>
+            t(
+              `**${right}** carries the more favorable feeling, though the two words mean nearly the same.`,
+              `**${right}** 带有更正面的感情色彩，尽管两个词的意思几乎相同。`,
+            ),
+          lessFavorable,
         ),
       ),
       point(
@@ -804,8 +1036,12 @@ export const wordTopics: readonly TopicDef[] = [
           "A precise word shows the reader more than a general one. *Walked* says little, whereas *trudged* tells you that the walk was slow and tiring, and *skipped* tells you that it was light and cheerful.",
           "精确的词比笼统的词告诉读者更多。*walked* 说明不了什么，而 *trudged* 告诉你走得缓慢而疲惫，*skipped* 告诉你走得轻快而愉悦。",
         ),
-        choiceGenerator(t("Which word fits the meaning in parentheses?", "哪个词符合括号中的意思？"), preciseBank, (right, shown) =>
-          t(`${shown.replace("___", `**${right}**`)}`, `${shown.replace("___", `**${right}**`)} 这个词符合括号中的意思。`),
+        choiceGenerator(
+          t("Which word fits the meaning in parentheses?", "哪个词符合括号中的意思？"),
+          preciseBank,
+          (right, shown) =>
+            t(`${shown.replace("___", `**${right}**`)}`, `${shown.replace("___", `**${right}**`)} 这个词符合括号中的意思。`),
+          otherShade,
         ),
       ),
     ],

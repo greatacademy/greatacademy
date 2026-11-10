@@ -546,8 +546,148 @@ const solutionBank: readonly ChoiceItem[] = [
   ],
 ];
 
-const pick = (question: [string, string], bank: readonly ChoiceItem[], en: (right: string) => string, zh: (right: string) => string) =>
-  choiceGenerator(t(question[0], question[1]), bank, (right) => t(en(right), zh(right)));
+/** Say gives the feedback for a wrong option, in English and Chinese. */
+type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
+
+const pick = (
+  question: [string, string],
+  bank: readonly ChoiceItem[],
+  en: (right: string) => string,
+  zh: (right: string) => string,
+  not: Say,
+) =>
+  choiceGenerator(
+    t(question[0], question[1]),
+    bank,
+    (right) => t(en(right), zh(right)),
+    (wrong, right, shown, position) => t(...not(wrong, right, shown, position)),
+  );
+
+/** meaning looks up the feedback for a wrong label; a label with no entry is a mistake in the bank. */
+const meaning =
+  (says: Readonly<Record<string, readonly [string, string]>>): Say =>
+  (wrong) => {
+    const said = says[wrong];
+    if (!said) throw new Error(`no feedback for the label ${wrong}`);
+    return said;
+  };
+
+const mainIdeaNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `*${wrong}* is one detail from the paragraph. The main idea is what all the details together are about.`,
+        `*${wrong}* 只是段落里的一个细节。主旨是所有细节合起来讲的内容。`,
+      ]
+    : [
+        `*${wrong}* is a general fact that the paragraph does not explain. Its details add up to something more specific.`,
+        `*${wrong}* 是段落并没有展开说明的泛泛事实。段落的细节合起来讲的是更具体的内容。`,
+      ];
+
+const titleNot: Say = (wrong) => [
+  `*${wrong}* fits a word or two of the text at most, not what the whole text is about.`,
+  `*${wrong}* 最多只和文中的一两个词有关，而不是整段文字讲的内容。`,
+];
+
+const supportNot: Say = (wrong) => [
+  `*${wrong}* may be true, but it gives no reason to believe the main idea. A supporting detail shows that the main idea is right.`,
+  `*${wrong}* 也许是真的，但它不能让人相信主旨。支持性细节要能说明主旨是对的。`,
+];
+
+const summaryNot: Say = (wrong) => [
+  `*${wrong}* leaves out the main points of the text, or adds what the text does not say. A summary gives the main points briefly, without opinions.`,
+  `*${wrong}* 漏掉了文本的要点，或者加了文中没有的内容。摘要要简短地讲出要点，不加个人看法。`,
+];
+
+const featureNot = meaning({
+  "the table of contents": [
+    "**The table of contents** lists the chapters in order with their first pages. It does not explain words, pictures or exact topics.",
+    "**the table of contents（目录）**按顺序列出章节和起始页码，不解释词语、图片或具体的话题。",
+  ],
+  "a caption": [
+    "**A caption** only explains the photo or picture it sits under.",
+    "**a caption（图片说明）**只解释它下面或旁边的那张照片或图画。",
+  ],
+  "the glossary": [
+    "**The glossary** gives the meanings of special words, and nothing else.",
+    "**the glossary（词汇表）**只给出专门词语的意思。",
+  ],
+  "a heading": ["**A heading** only tells what the one section below it is about.", "**a heading（小标题）**只说明它下面那一节讲什么。"],
+  "the index": [
+    "**The index** lists topics in alphabetical order with their pages. It does not show the chapters in order or explain words.",
+    "**the index（索引）**按字母顺序列出话题和页码，不按顺序列章节，也不解释词语。",
+  ],
+});
+
+const featureJobNot: Say = (wrong, _right, shown) => [
+  `*${wrong}* is the job of a different text feature, not of the ${shown}.`,
+  `*${wrong}* 是另一种文本特征的作用，不是 ${shown} 的作用。`,
+];
+
+const signalNot: Say = (wrong) => [
+  `*${wrong}* does not tell when something happens: it links ideas in another way, such as a reason, a contrast or a likeness. The blank needs a word of time order.`,
+  `*${wrong}* 不表示时间：它用别的方式连接意思，比如原因、对比或相似。空格处需要一个表示时间顺序的词。`,
+];
+
+const firstNot: Say = (wrong) => [
+  `*${wrong}* happened later. Words such as *before*, *earlier* and *had* show what came first, even when the text tells it later.`,
+  `*${wrong}* 发生得更晚。*before*、*earlier*、*had* 这样的词表明哪件事先发生，即使文中后面才讲到它。`,
+];
+
+const causeNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [`*${wrong}* is the effect, what happened. The cause is why it happened.`, `*${wrong}* 是结果，即发生了什么。原因是它为什么会发生。`]
+    : [
+        `*${wrong}* is a detail of the sentence, but it did not make anything happen.`,
+        `*${wrong}* 是句子里的一个细节，但它没有导致任何事情发生。`,
+      ];
+
+const effectNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `*${wrong}* is the cause, what started things. The effect is what happened because of it.`,
+        `*${wrong}* 是原因，是事情的起点。结果是因此发生的事。`,
+      ]
+    : [
+        `*${wrong}* is the opposite of what the text tells. Reread what happened after the cause.`,
+        `*${wrong}* 与文中所说的正好相反。重读原因之后发生了什么。`,
+      ];
+
+const compareWordNot = meaning(
+  Object.fromEntries([
+    ...["Similarly", "also", "in the same way"].map((w) => [
+      w,
+      [
+        `*${w}* shows that two things are alike, but the sentences here tell how they differ.`,
+        `*${w}* 表示两样东西相似，而这里的句子讲的是它们的不同。`,
+      ],
+    ]),
+    ...["However", "but", "unlike", "instead"].map((w) => [
+      w,
+      [
+        `*${w}* shows a difference, but the sentences here tell how two things are alike.`,
+        `*${w}* 表示不同，而这里的句子讲的是两样东西的相似之处。`,
+      ],
+    ]),
+    ...["Next", "First", "After", "and then", "first", "next"].map((w) => [
+      w,
+      [`*${w}* tells time order, not how two things compare.`, `*${w}* 表示时间顺序，而不是两样东西的比较。`],
+    ]),
+    ...["Because of", "so", "because", "as a result"].map((w) => [
+      w,
+      [`*${w}* tells a cause or an effect, not how two things compare.`, `*${w}* 表示原因或结果，而不是两样东西的比较。`],
+    ]),
+  ]),
+);
+
+const differenceNot: Say = (wrong) => [
+  `*${wrong}* is something the two share, not a difference. Look for the words that show a contrast, such as *but* or *while*.`,
+  `*${wrong}* 是两者的共同点，而不是不同点。找找表示对比的词，比如 *but* 或 *while*。`,
+];
+
+const solutionNot: Say = (wrong) => [
+  `*${wrong}* is not what the people in the text did. Find the action someone took, and what changed after it.`,
+  `*${wrong}* 不是文中的人所做的事。找出有人采取的行动，以及之后发生了什么变化。`,
+];
 
 /** informationalReadingTopics are the topics of reading informational texts: main ideas, features and structures. */
 export const informationalReadingTopics: readonly TopicDef[] = [
@@ -572,6 +712,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `**${right}** Every sentence connects to this idea. The other choices are a single detail, which is too narrow, or a general fact, which is too broad.`,
           (right) => `**${right}** 每个句子都与这个意思相关。其他选项要么只是一个细节，太窄；要么是一般事实，太宽。`,
+          mainIdeaNot,
         ),
       ),
       point(
@@ -587,6 +728,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `**${right}** names what the whole text is about. The other titles are about something the text only touches on, or not at all.`,
           (right) => `**${right}** 点出了全文讲的内容。其他标题说的是文中只稍稍提到或根本没提的东西。`,
+          titleNot,
         ),
       ),
     ],
@@ -615,6 +757,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* shows that the main idea is true. The other sentences are about the same subject but do not back up the idea.`,
           (right) => `*${right}* 证明了主旨。其他句子虽然和同一话题有关，却不支持这个观点。`,
+          supportNot,
         ),
       ),
       point(
@@ -630,6 +773,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* covers the whole text in a few words. One other choice tells only one detail, and the other adds something the text does not say or leaves out its point.`,
           (right) => `*${right}* 用简短的话涵盖了全文。另一个选项只说了一个细节，还有一个添加了原文没有的内容或漏掉了要点。`,
+          summaryNot,
         ),
       ),
     ],
@@ -657,6 +801,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           featureBank,
           (right) => `Use **${right}**. It is the part made for exactly this kind of question.`,
           (right) => `用 **${right}**。它正是为这类问题而设的部分。`,
+          featureNot,
         ),
       ),
       point(
@@ -671,6 +816,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           featureJobBank,
           (right) => `${right} The other choices describe the jobs of other features.`,
           (right) => `${right} 其他选项描述的是别的特征的作用。`,
+          featureJobNot,
         ),
       ),
     ],
@@ -695,6 +841,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           signalBank,
           (right) => `**${right}** shows the order of time. The other choices show a reason, a contrast or an example instead.`,
           (right) => `**${right}** 表示时间顺序。其他选项表示的是原因、转折或举例。`,
+          signalNot,
         ),
       ),
       point(
@@ -710,6 +857,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* came first. Words such as *before, earlier* and *had* show that it happened before the events told around it.`,
           (right) => `*${right}* 最先发生。*before, earlier, had* 这样的词表明它发生在周围所讲的事件之前。`,
+          firstNot,
         ),
       ),
     ],
@@ -735,6 +883,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* That is why the other event happened. One other choice is the effect, and the other is a detail that caused nothing.`,
           (right) => `*${right}* 这就是另一件事发生的原因。另一个选项是结果，还有一个是并未导致任何事的细节。`,
+          causeNot,
         ),
       ),
       point(
@@ -750,6 +899,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* That happened because of what the text describes first. One other choice is the cause, and the other is the opposite of what happened.`,
           (right) => `*${right}* 这是由文中先讲的事情导致的。另一个选项是原因，还有一个与实际发生的相反。`,
+          effectNot,
         ),
       ),
     ],
@@ -783,6 +933,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
             alikeWords.has(right)
               ? `**${right}** 合适，因为句子两部分说的是相同之处。其他选项表示不同或时间顺序。`
               : `**${right}** 合适，因为句子两部分说的是不同之处。其他选项表示相同、原因或时间顺序。`,
+          compareWordNot,
         ),
       ),
       point(
@@ -797,6 +948,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           differenceBank,
           (right) => `They differ in **${right}**. The other choices name ways in which the text says the two are alike.`,
           (right) => `它们的不同在于 **${right}**。其他选项是文中说两者相同的方面。`,
+          differenceNot,
         ),
       ),
     ],
@@ -823,8 +975,15 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           "Informational texts are built in a few common ways. **Sequence** tells events or steps in order. **Cause and effect** tells why things happen. **Compare and contrast** tells how things are alike and different. **Problem and solution** names a problem and how it was solved. **Description** tells what something is like, one detail after another. The signal words you already know point to the structure.",
           "说明性文本有几种常见的结构。**顺序**按次序讲事件或步骤。**因果**讲事情为什么发生。**比较与对比**讲事物的异同。**问题与解决**提出问题并说明如何解决。**描述**一个细节接一个细节地说明事物的样子。你已经学过的信号词能指明结构。",
         ),
-        choiceGenerator(t("Which structure does this text use?", "这段文字用的是哪种结构？"), structureBank, (right) =>
-          t(`**${right}**. ${structureWhy.get(right) ?? ""}`, `**${right}**。${structureWhyZh.get(right) ?? ""}`),
+        choiceGenerator(
+          t("Which structure does this text use?", "这段文字用的是哪种结构？"),
+          structureBank,
+          (right) => t(`**${right}**. ${structureWhy.get(right) ?? ""}`, `**${right}**。${structureWhyZh.get(right) ?? ""}`),
+          (wrong) =>
+            t(
+              `A **${wrong}** text would do this: ${structureWhy.get(wrong) ?? ""} Check whether this text really does.`,
+              `**${wrong}** 结构的文本会这样写：${structureWhyZh.get(wrong) ?? ""}看看这段文字是否真是如此。`,
+            ),
         ),
       ),
       point(
@@ -840,6 +999,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
           (right) =>
             `**${right}** is what was done, and it made the problem go away. The other choices are not in the text or would not solve it.`,
           (right) => `**${right}** 是采取的行动，它解决了问题。其他选项文中没有提到，或者解决不了问题。`,
+          solutionNot,
         ),
       ),
     ],

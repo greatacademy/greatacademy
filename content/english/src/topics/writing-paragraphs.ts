@@ -390,6 +390,49 @@ const subtleBank: readonly ChoiceItem[] = [
   ),
 ];
 
+/** transitionNot gives the feedback for a wrong transition: what relationship it would name. */
+const transitionNot = (says: Readonly<Record<string, readonly [string, string]>>) => (wrong: string) => {
+  const said = says[wrong];
+  if (!said) throw new Error(`no feedback for the transition ${wrong}`);
+  return t(...said);
+};
+
+const meaningNot = transitionNot({
+  However: [
+    "*However* would signal a contrast, but the second sentence does not go against the first.",
+    "*however* 表示对比，但第二句并没有和第一句相反。",
+  ],
+  "As a result": [
+    "*As a result* would make the second sentence a consequence of the first, but the first does not cause it.",
+    "*as a result* 会让第二句成为第一句的结果，但第一句并没有导致它。",
+  ],
+  "For example": [
+    "*For example* would make the second sentence a case of the first, but it is not an example of it.",
+    "*for example* 会让第二句成为第一句的实例，但它并不是一个例子。",
+  ],
+  "In addition": [
+    "*In addition* would add a further point of the same kind, but the second sentence relates to the first in another way.",
+    "*in addition* 补充同类的另一点，但第二句与第一句是别的关系。",
+  ],
+});
+
+const timeNot = transitionNot({
+  First: ["*First* marks the first step, but this step comes after another.", "*first* 表示第一步，但这一步在别的步骤之后。"],
+  Next: [
+    "*Next* only moves on to the following step of a series. Ask whether this sentence is that step, the end, or a look back.",
+    "*next* 只表示进入一系列步骤中的下一步。问一问：这句话是下一步、结尾，还是回顾？",
+  ],
+  Finally: [
+    "*Finally* marks the last step or the end, but more comes after this, or it is not the end.",
+    "*finally* 表示最后一步或结尾，但这之后还有事，或者这里并不是结尾。",
+  ],
+  Meanwhile: [
+    "*Meanwhile* means at the same time, but these events happen one after another.",
+    "*meanwhile* 表示同时，但这些事是先后发生的。",
+  ],
+  Earlier: ["*Earlier* looks back to before, but this event comes later.", "*earlier* 回顾之前的事，但这件事发生在后面。"],
+});
+
 /** paragraphTopics are the topics of how sentences work together in a paragraph. */
 export const paragraphTopics: readonly TopicDef[] = [
   {
@@ -411,6 +454,11 @@ export const paragraphTopics: readonly TopicDef[] = [
           t("These sentences form a paragraph. Which is the topic sentence?", "这些句子构成一个段落。哪一句是主题句？"),
           findTopicBank,
           (right) => t(`**${right}** The other sentences are details that support it.`, `**${right}** 其他句子都是支持它的细节。`),
+          (wrong) =>
+            t(
+              `*${wrong}* is a detail: it could serve as an example for another sentence, but the others are not examples of it.`,
+              `*${wrong}* 是一个细节：它可以作为另一句的例子，但其他句子不是它的例子。`,
+            ),
         ),
       ),
       point(
@@ -425,6 +473,16 @@ export const paragraphTopics: readonly TopicDef[] = [
           chooseTopicBank,
           (right) =>
             t(`**${right}** It covers every detail and makes a point about them.`, `**${right}** 它涵盖了所有细节，并表明了观点。`),
+          (wrong, _right, shown) =>
+            shown.includes(wrong)
+              ? t(
+                  `*${wrong}* only repeats one detail, so it is too narrow to cover the others.`,
+                  `*${wrong}* 只是重复了一个细节，范围太窄，涵盖不了其他细节。`,
+                )
+              : t(
+                  `*${wrong}* mentions the subject but makes no point that these details support.`,
+                  `*${wrong}* 提到了主题，却没有表明这些细节所支持的观点。`,
+                ),
         ),
       ),
     ],
@@ -476,11 +534,15 @@ export const paragraphTopics: readonly TopicDef[] = [
           "A transition names the relationship between two sentences. *However* signals a contrast. *As a result* signals a consequence. *For example* introduces a case of what was just said. *In addition* adds a further point of the same kind.\n\nRead both sentences, decide how they relate, and only then choose.",
           "过渡词说明两个句子的关系。*however* 表示对比。*as a result* 表示结果。*for example* 引出刚才所说内容的实例。*in addition* 补充同类的另一点。\n\n先读两个句子，判断关系，再作选择。",
         ),
-        choiceGenerator(t("Which transition fits?", "哪个过渡词合适？"), contrastBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} This word names how the two sentences relate.`,
-            `${shown.replace("___", `**${right}**`)} 这个词说明了两个句子的关系。`,
-          ),
+        choiceGenerator(
+          t("Which transition fits?", "哪个过渡词合适？"),
+          contrastBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} This word names how the two sentences relate.`,
+              `${shown.replace("___", `**${right}**`)} 这个词说明了两个句子的关系。`,
+            ),
+          meaningNot,
         ),
       ),
       point(
@@ -490,11 +552,15 @@ export const paragraphTopics: readonly TopicDef[] = [
           "*First, next, then* and *finally* mark steps in a sequence. *Meanwhile* means at the same time. *Earlier* looks back to before, and *soon after* looks ahead a little.",
           "*first, next, then, finally* 表示步骤的先后。*meanwhile* 表示同时。*earlier* 回顾之前，*soon after* 表示稍后。",
         ),
-        choiceGenerator(t("Which transition fits?", "哪个过渡词合适？"), sequenceBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} This word places the event in time.`,
-            `${shown.replace("___", `**${right}**`)} 这个词确定了事件的时间位置。`,
-          ),
+        choiceGenerator(
+          t("Which transition fits?", "哪个过渡词合适？"),
+          sequenceBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} This word places the event in time.`,
+              `${shown.replace("___", `**${right}**`)} 这个词确定了事件的时间位置。`,
+            ),
+          timeNot,
         ),
       ),
     ],
@@ -521,6 +587,7 @@ export const paragraphTopics: readonly TopicDef[] = [
           ),
           obviousBank,
           (right) => t(`**${right}** It does not support the main point.`, `**${right}** 它不支持段落的要点。`),
+          (wrong) => t(`*${wrong}* supports the topic sentence, so it belongs.`, `*${wrong}* 支持主题句，所以它属于这个段落。`),
         ),
       ),
       point(
@@ -538,6 +605,11 @@ export const paragraphTopics: readonly TopicDef[] = [
           subtleBank,
           (right) =>
             t(`**${right}** It mentions the subject but does not support the point.`, `**${right}** 它提到了这个话题，却不支持要点。`),
+          (wrong) =>
+            t(
+              `*${wrong}* supports the point of the topic sentence, not just its subject, so it belongs.`,
+              `*${wrong}* 支持的是主题句的要点，而不只是话题，所以它属于这个段落。`,
+            ),
         ),
       ),
     ],

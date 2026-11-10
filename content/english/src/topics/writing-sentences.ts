@@ -693,6 +693,52 @@ const activeBank: readonly TypedItem[] = [
   typed("The test was graded by Mr. Kim.", "Mr. Kim graded the test.", ["The test graded Mr. Kim.", "Mr. Kim was graded by the test."]),
 ];
 
+/** endMarkNot gives the feedback for a wrong end mark: what that mark is for. */
+const endMarkNot = (wrong: string) => {
+  const says: Readonly<Record<string, readonly [string, string]>> = {
+    "?": [
+      "A question mark ends a direct question, one that asks for an answer. This sentence does not ask one.",
+      "问号用在直接提问、需要回答的句子末尾。这个句子并没有这样提问。",
+    ],
+    ".": [
+      "A period ends a statement or a calm request, but this sentence asks a question or shows strong feeling.",
+      "句号用在陈述句或语气平和的请求末尾，而这个句子是在提问或表达强烈的感情。",
+    ],
+    "!": [
+      "An exclamation point shows strong feeling or a sharp warning, but this sentence is calm or asks something.",
+      "感叹号表示强烈的感情或急切的警告，而这个句子语气平和，或者是在提问。",
+    ],
+    ",": ["A comma never ends a sentence: it only separates parts inside one.", "逗号不能结束句子：它只用来分隔句子内部的成分。"],
+  };
+  const said = says[wrong];
+  if (!said) throw new Error(`no feedback for the mark ${wrong}`);
+  return t(...said);
+};
+
+/** finishNot gives the feedback for an ending that does not do what the connecting word of the sentence promises. */
+const finishNot = (wrong: string, _right: string, shown: string) => {
+  const joiner = ["because", "but", "so"].find((w) => shown.includes(` ${w} ___`)) ?? "";
+  if (/^(because|but|so)\b/.test(wrong))
+    return t(
+      `*${wrong}* starts with another joining word, but the sentence already has *${joiner}*.`,
+      `*${wrong}* 又以一个连接词开头，可句子里已经有 *${joiner}* 了。`,
+    );
+  const says: Readonly<Record<string, readonly [string, string]>> = {
+    because: [
+      "*Because* needs a reason for the first part, and this ending gives none.",
+      "*because* 需要说明前半句的原因，这个结尾没有给出原因。",
+    ],
+    but: [
+      "*But* needs an ending that goes against what you might expect from the first part, and this one does not.",
+      "*but* 需要一个出人意料、与前半句相对的结尾，这个结尾不是。",
+    ],
+    so: ["*So* needs a result of the first part, and this ending is not one.", "*so* 需要前半句的结果，这个结尾不是结果。"],
+  };
+  const said = says[joiner];
+  if (!said) throw new Error(`no joining word in ${shown}`);
+  return t(...said);
+};
+
 /** sentenceWritingTopics are the topics of punctuating, joining and improving sentences. */
 export const sentenceWritingTopics: readonly TopicDef[] = [
   {
@@ -724,11 +770,15 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "A statement or a request ends with a period. A direct question ends with a question mark. A strong feeling or a warning ends with an exclamation mark.\n\nA sentence that only reports a question is a statement: *She asked where I was going.*",
           "陈述句或请求以句号结尾。直接疑问句以问号结尾。强烈情感或警告以感叹号结尾。\n\n只是转述问题的句子是陈述句：*She asked where I was going.*",
         ),
-        choiceGenerator(t("Which mark ends the sentence?", "句末应该用哪个标点？"), endMarkBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} Ask whether it states, asks or exclaims.`,
-            `${shown.replace("___", `**${right}**`)} 判断它是陈述、提问还是感叹。`,
-          ),
+        choiceGenerator(
+          t("Which mark ends the sentence?", "句末应该用哪个标点？"),
+          endMarkBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} Ask whether it states, asks or exclaims.`,
+              `${shown.replace("___", `**${right}**`)} 判断它是陈述、提问还是感叹。`,
+            ),
+          endMarkNot,
         ),
       ),
     ],
@@ -766,8 +816,21 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "Two items joined by *and* or *or* take no comma: *Salt and pepper sat on the table.* A comma appears only when a list has three or more items.",
           "用 *and* 或 *or* 连接的两项不加逗号：*Salt and pepper sat on the table.* 只有三项或更多时才用逗号。",
         ),
-        choiceGenerator(t("Which sentence uses commas correctly?", "哪个句子逗号用得正确？"), seriesOrNotBank, (right) =>
-          t(`**${right}** Count the items: only three or more need commas.`, `**${right}** 数一数并列项：三项或更多才需要逗号。`),
+        choiceGenerator(
+          t("Which sentence uses commas correctly?", "哪个句子逗号用得正确？"),
+          seriesOrNotBank,
+          (right) =>
+            t(`**${right}** Count the items: only three or more need commas.`, `**${right}** 数一数并列项：三项或更多才需要逗号。`),
+          (wrong) =>
+            wrong.includes(",")
+              ? t(
+                  `*${wrong}* puts a comma where none belongs: between only two items, or between a verb and what follows it.`,
+                  `*${wrong}* 在不该加逗号的地方加了逗号：只有两项之间，或动词和后面的成分之间。`,
+                )
+              : t(
+                  `*${wrong}* has no commas, but a list of three or more items needs them.`,
+                  `*${wrong}* 没有逗号，但三项或更多的并列需要逗号。`,
+                ),
         ),
       ),
     ],
@@ -787,11 +850,15 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "A short idea can grow with one of three words, and each one demands a different ending. *Because* gives a reason. *But* gives a contrast or a surprise. *So* gives a result.\n\nThe plants died **because** nobody watered them. The plants died, **but** the seeds survived. The plants died, **so** we planted new ones.",
           "一个简短的想法可以用三个词扩展，每个词要求不同的结尾。*because* 给出原因。*but* 给出转折或意外。*so* 给出结果。\n\nThe plants died **because** nobody watered them. The plants died, **but** the seeds survived. The plants died, **so** we planted new ones.",
         ),
-        choiceGenerator(t("Which ending fits the sentence?", "哪个结尾适合这个句子？"), finishBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} The ending has to do what the connecting word promises.`,
-            `${shown.replace("___", `**${right}**`)} 结尾必须符合连接词所表示的关系。`,
-          ),
+        choiceGenerator(
+          t("Which ending fits the sentence?", "哪个结尾适合这个句子？"),
+          finishBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} The ending has to do what the connecting word promises.`,
+              `${shown.replace("___", `**${right}**`)} 结尾必须符合连接词所表示的关系。`,
+            ),
+          finishNot,
         ),
       ),
       point(
@@ -1033,11 +1100,19 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "Many long phrases mean the same as one short word. *Due to the fact that* means *because*, and *at this point in time* means *now*. Use the short word unless the long one adds something.",
           "许多冗长的短语和一个短词意思相同。*due to the fact that* 就是 *because*，*at this point in time* 就是 *now*。除非长的表达确有所增，否则用短词。",
         ),
-        choiceGenerator(t("Which word can replace this phrase?", "哪个词可以替换这个短语？"), fillerBank, (right, shown) =>
-          t(
-            `*${shown}* means **${right}**. One word that says the same thing makes the sentence shorter and clearer.`,
-            `*${shown}* 的意思是 **${right}**。用一个意思相同的词，句子更短也更清楚。`,
-          ),
+        choiceGenerator(
+          t("Which word can replace this phrase?", "哪个词可以替换这个短语？"),
+          fillerBank,
+          (right, shown) =>
+            t(
+              `*${shown}* means **${right}**. One word that says the same thing makes the sentence shorter and clearer.`,
+              `*${shown}* 的意思是 **${right}**。用一个意思相同的词，句子更短也更清楚。`,
+            ),
+          (wrong, _right, shown) =>
+            t(
+              `*${wrong}* is short, but it does not mean the same as *${shown}*. A plain word must keep the meaning.`,
+              `*${wrong}* 虽然简短，但意思和 *${shown}* 不同。简洁的词必须保留原意。`,
+            ),
         ),
       ),
       point(
@@ -1047,8 +1122,15 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "Cut words that repeat what is already clear. *Red in color* says *red* twice, since red is a color. *Square in shape* and *personal opinion* do the same.\n\nThe tightest version keeps all the meaning and adds nothing.",
           "删掉重复已明确内容的词。*red in color* 其实说了两次 *red*，因为红色本来就是颜色。*square in shape* 和 *personal opinion* 也是如此。\n\n最精练的版本保留全部意思，不多加任何内容。",
         ),
-        choiceGenerator(t("Which sentence says it most directly?", "哪个句子表达得最直接？"), wordyBank, (right) =>
-          t(`**${right}** It keeps the meaning and drops the extra words.`, `**${right}** 它保留了意思，去掉了多余的词。`),
+        choiceGenerator(
+          t("Which sentence says it most directly?", "哪个句子表达得最直接？"),
+          wordyBank,
+          (right) => t(`**${right}** It keeps the meaning and drops the extra words.`, `**${right}** 它保留了意思，去掉了多余的词。`),
+          (wrong) =>
+            t(
+              `*${wrong}* still has extra words that add no meaning: an idea said twice, or a long phrase for a short word.`,
+              `*${wrong}* 仍有不增加意思的多余词语：同一个意思说了两遍，或用长短语代替短词。`,
+            ),
         ),
       ),
       point(

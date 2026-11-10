@@ -303,8 +303,71 @@ const conclusionBank: readonly ChoiceItem[] = [
   ],
 ];
 
-const pick = (question: [string, string], bank: readonly ChoiceItem[], en: (right: string) => string, zh: (right: string) => string) =>
-  choiceGenerator(t(question[0], question[1]), bank, (right) => t(en(right), zh(right)));
+/** Say gives the feedback for a wrong option, in English and Chinese. */
+type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
+
+const pick = (
+  question: [string, string],
+  bank: readonly ChoiceItem[],
+  en: (right: string) => string,
+  zh: (right: string) => string,
+  not: Say,
+) =>
+  choiceGenerator(
+    t(question[0], question[1]),
+    bank,
+    (right) => t(en(right), zh(right)),
+    (wrong, right, shown, position) => t(...not(wrong, right, shown, position)),
+  );
+
+const factNot: Say = (wrong) => [
+  `*${wrong}* is a fact about the subject: it can be checked, so no one would argue about it. A claim takes a position that someone could disagree with.`,
+  `*${wrong}* 是关于话题的事实：它可以核实，没有人会为它争论。论点要表明一个别人可能反对的立场。`,
+];
+
+const preciseNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `*${wrong}* is too vague to argue for: it does not say what should change, or who should do it.`,
+        `*${wrong}* 太笼统，无法论证：它没有说出应该改变什么、由谁来做。`,
+      ]
+    : factNot(wrong, _right, _shown, position);
+
+const unrelatedNot: Say = (wrong) => [
+  `*${wrong}* is about the same subject, but even if it is true, it gives no reason to accept the claim.`,
+  `*${wrong}* 和论点话题相同，但即使它是真的，也不能成为接受论点的理由。`,
+];
+
+const weakNot: Say = (wrong) => [
+  `*${wrong}* is a feeling, one person's experience or a general statement. It gives no facts, numbers or records that a reader could check.`,
+  `*${wrong}* 只是感受、个人经历或泛泛之谈。它没有提供读者可以核实的事实、数据或记录。`,
+];
+
+const reasoningNot: Say = (wrong) => [
+  `*${wrong}* only adds another fact or opinion about the subject. It does not explain why the evidence makes the claim true.`,
+  `*${wrong}* 只是又加了一个关于话题的事实或看法，没有解释为什么论据能证明论点。`,
+];
+
+const conclusionNot: Say = (wrong) => [
+  `*${wrong}* goes further than the evidence: it speaks of all, every, never or only, or of something the evidence never measured.`,
+  `*${wrong}* 超出了论据的范围：它说的是"所有""每个""从不""只有"，或是论据根本没有测量过的东西。`,
+];
+
+const sideNot: Say = (wrong) => [
+  `*${wrong}* supports the claim. A counterclaim is a view from the other side, one that disagrees with the claim.`,
+  `*${wrong}* 是在支持论点。反方观点来自另一方，是不同意这个论点的看法。`,
+];
+
+const rebuttalNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `*${wrong}* agrees with the counterclaim. A rebuttal answers it, with a reason or evidence that it is wrong or matters less.`,
+        `*${wrong}* 是在赞同反方观点。反驳要回应它，用理由或证据说明它不对或没那么重要。`,
+      ]
+    : [
+        `*${wrong}* does not answer the counterclaim at all: it gives no reason to doubt it.`,
+        `*${wrong}* 根本没有回应反方观点：它没有提出任何怀疑它的理由。`,
+      ];
 
 /** argumentTopics are the topics of reading and building arguments in grades 6 to 8: claims, evidence, reasoning and counterclaims. */
 export const argumentTopics: readonly TopicDef[] = [
@@ -329,6 +392,7 @@ export const argumentTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* takes a position that people could disagree with. The other sentences are facts, which could be evidence but not the claim.`,
           (right) => `*${right}* 表明了一个别人可能反对的立场。其他句子是事实，可以作为论据，但不是论点。`,
+          factNot,
         ),
       ),
       point(
@@ -343,6 +407,7 @@ export const argumentTopics: readonly TopicDef[] = [
           preciseClaimBank,
           (right) => `*${right}* says exactly what the writer wants. One other choice is too vague to argue, and the other is a fact.`,
           (right) => `*${right}* 准确说出了作者的主张。另一个选项太含糊，无法论证；还有一个是事实。`,
+          preciseNot,
         ),
       ),
     ],
@@ -367,6 +432,7 @@ export const argumentTopics: readonly TopicDef[] = [
           relevantEvidenceBank,
           (right) => `*${right}* helps prove the claim. The other sentences are about the same subject but do not support the claim.`,
           (right) => `*${right}* 有助于证明论点。其他句子与同一话题有关，却不支持这个论点。`,
+          unrelatedNot,
         ),
       ),
       point(
@@ -381,6 +447,7 @@ export const argumentTopics: readonly TopicDef[] = [
           strongerEvidenceBank,
           (right) => `*${right}* is specific and can be checked. The other choices are feelings, one person's view or vague statements.`,
           (right) => `*${right}* 具体且可以核实。其他选项是感受、一个人的看法或含糊的说法。`,
+          weakNot,
         ),
       ),
     ],
@@ -405,6 +472,7 @@ export const argumentTopics: readonly TopicDef[] = [
           reasoningBank,
           (right) => `*${right}* links the evidence to the claim. The other sentences add facts or opinions without showing that link.`,
           (right) => `*${right}* 把论据和论点联系起来。其他句子只是添加了事实或看法，没有揭示这种联系。`,
+          reasoningNot,
         ),
       ),
       point(
@@ -420,6 +488,7 @@ export const argumentTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* claims no more than the evidence shows. The other conclusions go far beyond it or give an opinion it does not prove.`,
           (right) => `*${right}* 没有超出论据所能证明的范围。其他结论远远超出了论据，或者给出了论据无法证明的看法。`,
+          conclusionNot,
         ),
       ),
     ],
@@ -444,6 +513,7 @@ export const argumentTopics: readonly TopicDef[] = [
           counterclaimBank,
           (right) => `*${right}* opposes the claim. The other sentences are reasons that support it.`,
           (right) => `*${right}* 反对这个论点。其他句子是支持论点的理由。`,
+          sideNot,
         ),
       ),
       point(
@@ -458,6 +528,7 @@ export const argumentTopics: readonly TopicDef[] = [
           rebuttalBank,
           (right) => `*${right}* answers the counterclaim with a reason. The other sentences agree with it or only state a general fact.`,
           (right) => `*${right}* 用理由回应了反方观点。其他句子要么认同它，要么只陈述了一般事实。`,
+          rebuttalNot,
         ),
       ),
     ],

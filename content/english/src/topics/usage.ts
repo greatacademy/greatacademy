@@ -283,6 +283,262 @@ const shiftFixBank: readonly TypedItem[] = [
   ),
 ];
 
+/** entry returns the entry of a feedback table, failing loudly when a bank uses an option the table does not cover. */
+function entry<V>(table: Readonly<Record<string, V>>, key: string): V {
+  const found = table[key];
+  if (found === undefined) throw new Error(`no feedback for the option "${key}"`);
+  return found;
+}
+
+type Pair = readonly [en: string, zh: string];
+
+const moreMostFeedback = (wrong: string) =>
+  wrong.startsWith("most ")
+    ? t(
+        `“${wrong}” is the form for one that stands out from three or more. Check how many things the sentence compares.`,
+        `“${wrong}” 用于从三个或更多中突出一个。看看句子比较的是几个事物。`,
+      )
+    : wrong.startsWith("more ")
+      ? t(
+          `“${wrong}” is the form for comparing two things. Check how many things the sentence compares.`,
+          `“${wrong}” 用于比较两个事物。看看句子比较的是几个事物。`,
+        )
+      : t(
+          `“${wrong}” adds an ending to a long adjective. Words like this compare with *more* or *most* instead of *-er* or *-est*.`,
+          `“${wrong}” 给长形容词加了词尾。这类词用 *more* 或 *most* 比较，而不是加 *-er* 或 *-est*。`,
+        );
+
+const regularized = (w: string): Pair => [
+  `“${w}” follows the regular pattern, but this word has an irregular form of its own.`,
+  `“${w}” 套用了规则变化，但这个词有自己的不规则形式。`,
+];
+const forTwo = (w: string): Pair => [
+  `“${w}” is the form for comparing two. Check whether the sentence compares two things or picks one out of a larger group.`,
+  `“${w}” 是比较两者的形式。看看句子是比较两个事物，还是从更多事物中挑出一个。`,
+];
+const forGroup = (w: string): Pair => [
+  `“${w}” is the form for one out of three or more. Check whether the sentence compares two things or picks one out of a larger group.`,
+  `“${w}” 是从三者或更多中挑出一个的形式。看看句子是比较两个事物，还是从更多事物中挑出一个。`,
+];
+
+const irregularForm: Readonly<Record<string, (w: string) => Pair>> = {
+  badder: regularized,
+  goodest: regularized,
+  gooder: regularized,
+  "more good": regularized,
+  baddest: regularized,
+  farrer: regularized,
+  littler: regularized,
+  littlest: regularized,
+  mucher: regularized,
+  "more well": regularized,
+  "most good": regularized,
+  worse: forTwo,
+  better: forTwo,
+  less: forTwo,
+  worst: forGroup,
+  farthest: forGroup,
+  least: forGroup,
+  most: forGroup,
+  best: forGroup,
+};
+
+const doubledFeedback: Readonly<Record<string, Pair>> = {
+  double: [
+    "compares twice: *more* or *most* with an *-er* or *-est* word. Use one way of comparing.",
+    "比较了两次：*more* 或 *most* 和 *-er* 或 *-est* 形式一起用。只用一种比较方式。",
+  ],
+  mostThan: [
+    "uses the form for one out of a group together with *than*, which compares two.",
+    "把用于一组中挑出一个的形式和比较两者的 *than* 一起用了。",
+  ],
+  erForGroup: [
+    "uses the *-er* form, which compares two, yet one stands out from a whole group here.",
+    "用了比较两者的 *-er* 形式，可这里是从一整组中突出一个。",
+  ],
+  estForTwo: ["uses the *-est* form for a comparison of only two.", "只比较两个，却用了 *-est* 形式。"],
+  erOnLong: ["adds *-er* to a long word, which compares with *more* instead.", "给长词加了 *-er*，而这种词要用 *more* 比较。"],
+};
+
+const doubledKind: Readonly<Record<string, keyof typeof doubledFeedback>> = {
+  "This box is more heavier than that one.": "double",
+  "This box is most heavy than that one.": "mostThan",
+  "She is the most kindest person I know.": "double",
+  "She is the kinder person I know.": "erForGroup",
+  "Our team is more stronger this year.": "double",
+  "Our team is strongest this year than last.": "mostThan",
+  "That was the most scariest part of the book.": "double",
+  "That was the scarier part of the whole book.": "erForGroup",
+  "Of the two twins, Sam is tallest.": "estForTwo",
+  "Of the two twins, Sam is more taller.": "double",
+  "The lake is more deeper than the pond.": "double",
+  "The lake is deepest than the pond.": "mostThan",
+  "This is the most oldest tree in the park.": "double",
+  "This is the older tree in the whole park.": "erForGroup",
+  "My new shoes are more comfortabler.": "double",
+  "My new shoes are comfortabler.": "erOnLong",
+};
+
+const irregularOrDoubled = (wrong: string, _right: string, shown: string) => {
+  if (shown.includes("___")) {
+    const [en, zh] = entry(irregularForm, wrong)(wrong);
+    return t(en, zh);
+  }
+  const [en, zh] = entry(doubledFeedback, entry(doubledKind, wrong));
+  return t(`“${wrong}” ${en}`, `“${wrong}” ${zh}`);
+};
+
+const soundAlike: ReadonlyMap<string, Pair> = new Map<string, Pair>([
+  [
+    "it's",
+    [
+      "“it's” means *it is* or *it has*. Read the sentence with those words in the gap and hear whether it makes sense.",
+      "“it's” 的意思是 *it is* 或 *it has*。把它们放进空格读一读，看看是否说得通。",
+    ],
+  ],
+  [
+    "its",
+    [
+      "“its” shows ownership, so a noun that belongs to *it* would follow. Check whether *it is* or *it has* fits instead.",
+      "“its” 表示所属，后面应跟属于 *it* 的名词。看看这里是否换成 *it is* 或 *it has* 才说得通。",
+    ],
+  ],
+  [
+    "its'",
+    ["“its'” is not an English word: *its* never takes an apostrophe after the *s*.", "“its'” 不是英语单词：*its* 的 *s* 后面从不加撇号。"],
+  ],
+  [
+    "their",
+    [
+      "“their” shows ownership, so a noun that belongs to them would follow. Check whether anything here belongs to someone.",
+      "“their” 表示所属，后面应跟属于他们的名词。看看这里有没有东西属于某人。",
+    ],
+  ],
+  [
+    "there",
+    [
+      "“there” names a place or begins a sentence such as *There is*. Check whether the gap is about a place.",
+      "“there” 表示地点，或用于 *There is* 这样的句子开头。看看空格是否与地点有关。",
+    ],
+  ],
+  [
+    "they're",
+    [
+      "“they're” means *they are*. Read the sentence with *they are* in the gap and hear whether it makes sense.",
+      "“they're” 的意思是 *they are*。把 *they are* 放进空格读一读，看看是否说得通。",
+    ],
+  ],
+  [
+    "your",
+    [
+      "“your” shows ownership, so a noun that belongs to you would follow. Check whether *you are* fits instead.",
+      "“your” 表示所属，后面应跟属于你的名词。看看这里是否换成 *you are* 才说得通。",
+    ],
+  ],
+  [
+    "you're",
+    [
+      "“you're” means *you are*. Read the sentence with *you are* in the gap and hear whether it makes sense.",
+      "“you're” 的意思是 *you are*。把 *you are* 放进空格读一读，看看是否说得通。",
+    ],
+  ],
+  [
+    "yore",
+    [
+      "“yore” is an old word meaning *long ago*. It sounds alike but means something else.",
+      "“yore” 是一个古词，意思是“很久以前”。它发音相近，但意思不同。",
+    ],
+  ],
+  [
+    "youre",
+    [
+      "“youre” is not an English word: a contraction keeps its apostrophe where letters are left out.",
+      "“youre” 不是英语单词：缩写要在省略字母的地方保留撇号。",
+    ],
+  ],
+  [
+    "to",
+    [
+      "“to” goes before a place or a verb, as in *to the store* or *to eat*. Check whether the gap means a number or *also* or *more than enough*.",
+      "“to” 用在地点或动词前，例如 *to the store*、*to eat*。看看空格是否表示数字、“也”或“太”。",
+    ],
+  ],
+  [
+    "too",
+    [
+      "“too” means *also* or *more than enough*. Check whether either meaning fits the gap.",
+      "“too” 的意思是“也”或“太”。看看哪种意思能放进空格。",
+    ],
+  ],
+  ["two", ["“two” is the number 2. Check whether the sentence counts anything here.", "“two” 是数字 2。看看句子在这里是否在数数。"]],
+  [
+    "than",
+    [
+      "“than” compares two things, as in *older than*. Check whether the sentence compares anything here.",
+      "“than” 用于比较两个事物，例如 *older than*。看看句子在这里是否在比较。",
+    ],
+  ],
+  [
+    "then",
+    [
+      "“then” tells when, as in *and then we left*. Check whether the sentence is about time here.",
+      "“then” 表示时间，例如 *and then we left*。看看句子在这里是否在说时间。",
+    ],
+  ],
+  [
+    "that",
+    [
+      "“that” points to something or begins a clause; it neither compares nor tells when.",
+      "“that” 指代某物或引出从句；它既不表示比较，也不表示时间。",
+    ],
+  ],
+  [
+    "affect",
+    [
+      "“affect” is usually a verb, to change something. Check whether the gap needs an action or a thing, such as a word after *a* or *what*.",
+      "“affect” 通常是动词，意思是影响某事物。看看空格需要的是动作，还是 *a* 或 *what* 后面的事物。",
+    ],
+  ],
+  [
+    "effect",
+    [
+      "“effect” is usually a noun, a result. Check whether the gap needs a thing or an action, such as a word after *will* or *does*.",
+      "“effect” 通常是名词，意思是结果。看看空格需要的是事物，还是 *will* 或 *does* 后面的动作。",
+    ],
+  ],
+  [
+    "effort",
+    [
+      "“effort” means hard work, not a result. It only looks like the word the sentence needs.",
+      "“effort” 的意思是努力，不是结果。它只是看起来像句子需要的词。",
+    ],
+  ],
+  [
+    "afford",
+    [
+      "“afford” means to have enough money or time for something, not to change it. It only looks like the word the sentence needs.",
+      "“afford” 的意思是买得起或抽得出时间，不是影响。它只是看起来像句子需要的词。",
+    ],
+  ],
+]);
+
+const confusedWord = (wrong: string) => {
+  const found = soundAlike.get(wrong.toLowerCase());
+  if (found === undefined) throw new Error(`no feedback for the option "${wrong}"`);
+  return t(found[0], found[1]);
+};
+
+const tenseShift = (wrong: string, _right: string, _shown: string, position: number) =>
+  position === 0
+    ? t(
+        `In “${wrong}”, the second verb leaves the tense of the first, though both actions happen at the same time.`,
+        `在“${wrong}”中，第二个动词偏离了第一个动词的时态，可两个动作发生在同一时间。`,
+      )
+    : t(
+        `In “${wrong}”, the first verb is in a different tense from the second, though both actions happen at the same time.`,
+        `在“${wrong}”中，第一个动词和第二个动词时态不同，可两个动作发生在同一时间。`,
+      );
+
 /** usageTopics are the topics of usage: comparing, possessives, words that sound alike, and keeping tense. */
 export const usageTopics: readonly TopicDef[] = [
   {
@@ -321,11 +577,15 @@ export const usageTopics: readonly TopicDef[] = [
           "Most adjectives of three or more syllables, and many of two, do not take *-er* or *-est*. Use *more* for two things and *most* for three or more: *more difficult*, *the most careful*.\n\nNever use both: *more heavier* and *most kindest* are wrong.",
           "大多数三个或更多音节的形容词，以及许多两个音节的形容词，不加 *-er* 或 *-est*。比较两者用 *more*，三者及以上用 *most*：*more difficult*、*the most careful*。\n\n两者不能同时使用：*more heavier* 和 *most kindest* 都是错的。",
         ),
-        choiceGenerator(t("Which words complete the sentence?", "哪个选项能补全句子？"), moreMostBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)}`,
-            `${shown.replace("___", `**${right}**`)} 长形容词用 more 或 most，不加 -er 或 -est。`,
-          ),
+        choiceGenerator(
+          t("Which words complete the sentence?", "哪个选项能补全句子？"),
+          moreMostBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)}`,
+              `${shown.replace("___", `**${right}**`)} 长形容词用 more 或 most，不加 -er 或 -est。`,
+            ),
+          moreMostFeedback,
         ),
       ),
       point(
@@ -335,16 +595,20 @@ export const usageTopics: readonly TopicDef[] = [
           "A few common words change completely: *good, better, best*; *bad, worse, worst*; *far, farther, farthest*; *little, less, least*; *much* or *many, more, most*. The adverb *well* also becomes *better* and *best*.\n\nUse one way of comparing, not two: *heavier*, not *more heavier*.",
           "少数常用词的形式完全改变：*good, better, best*；*bad, worse, worst*；*far, farther, farthest*；*little, less, least*；*much* 或 *many, more, most*。副词 *well* 也变成 *better* 和 *best*。\n\n只用一种比较方式，不能重复：*heavier*，而不是 *more heavier*。",
         ),
-        choiceGenerator(t("Choose the correct form.", "选择正确的形式。"), [...irregularBank, ...doubleBank], (right, shown) =>
-          shown.includes("___")
-            ? t(
-                `${shown.replace("___", `**${right}**`)} This word has an irregular form.`,
-                `${shown.replace("___", `**${right}**`)} 这个词的比较形式是不规则的。`,
-              )
-            : t(
-                `**${right}** It compares in one way only, with the right form for the number of things.`,
-                `**${right}** 只用一种比较方式，并且形式符合比较对象的数量。`,
-              ),
+        choiceGenerator(
+          t("Choose the correct form.", "选择正确的形式。"),
+          [...irregularBank, ...doubleBank],
+          (right, shown) =>
+            shown.includes("___")
+              ? t(
+                  `${shown.replace("___", `**${right}**`)} This word has an irregular form.`,
+                  `${shown.replace("___", `**${right}**`)} 这个词的比较形式是不规则的。`,
+                )
+              : t(
+                  `**${right}** It compares in one way only, with the right form for the number of things.`,
+                  `**${right}** 只用一种比较方式，并且形式符合比较对象的数量。`,
+                ),
+          irregularOrDoubled,
         ),
       ),
     ],
@@ -402,11 +666,15 @@ export const usageTopics: readonly TopicDef[] = [
           "*It's* is short for *it is* or *it has*: *It's raining.* *Its* shows ownership, like *his* and *her*, and has no apostrophe: *The dog wagged its tail.*\n\nTest it: if *it is* or *it has* fits, write *it's*.",
           "*It's* 是 *it is* 或 *it has* 的缩写：*It's raining.* *Its* 表示所属，就像 *his* 和 *her* 一样，没有撇号：*The dog wagged its tail.*\n\n检验方法：如果换成 *it is* 或 *it has* 讲得通，就写 *it's*。",
         ),
-        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), itsBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "*It is* or *it has* fits here." : "The word shows ownership, so it has no apostrophe."}`,
-            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "这里可以换成 *it is* 或 *it has*。" : "这个词表示所属，所以没有撇号。"}`,
-          ),
+        choiceGenerator(
+          t("Which word completes the sentence?", "哪个词能补全句子？"),
+          itsBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "*It is* or *it has* fits here." : "The word shows ownership, so it has no apostrophe."}`,
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "这里可以换成 *it is* 或 *it has*。" : "这个词表示所属，所以没有撇号。"}`,
+            ),
+          confusedWord,
         ),
       ),
     ],
@@ -429,11 +697,15 @@ export const usageTopics: readonly TopicDef[] = [
           "*Their* shows ownership: *their bags*. *There* names a place or begins a sentence such as *There are three apples*. *They're* is short for *they are*.\n\nTest it: if *they are* fits, write *they're*; if the word owns a noun after it, write *their*.",
           "*Their* 表示所属：*their bags*。*There* 表示地点，或用于 *There are three apples* 这样的句子开头。*They're* 是 *they are* 的缩写。\n\n检验方法：如果换成 *they are* 讲得通，就写 *they're*；如果这个词后面跟着它所拥有的名词，就写 *their*。",
         ),
-        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), theirBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}`,
-            `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "它表示所属。" : right.toLowerCase() === "there" ? "它表示地点或用于句首。" : "它的意思是 *they are*。"}`,
-          ),
+        choiceGenerator(
+          t("Which word completes the sentence?", "哪个词能补全句子？"),
+          theirBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}`,
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "它表示所属。" : right.toLowerCase() === "there" ? "它表示地点或用于句首。" : "它的意思是 *they are*。"}`,
+            ),
+          confusedWord,
         ),
       ),
       point(
@@ -443,11 +715,15 @@ export const usageTopics: readonly TopicDef[] = [
           "*Your* shows ownership: *your jacket*. *You're* is short for *you are*.\n\n*Two* is the number 2. *Too* means *also* or *more than enough*: *too hot*. *To* is used everywhere else: *to the store*, *to eat*.",
           "*Your* 表示所属：*your jacket*。*You're* 是 *you are* 的缩写。\n\n*Two* 是数字 2。*Too* 的意思是“也”或“太”：*too hot*。其他情况都用 *to*：*to the store*、*to eat*。",
         ),
-        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), yourToBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}`,
-            `${shown.replace("___", `**${right}**`)} ${{ your: "它表示所属。", "you're": "它的意思是 *you are*。", two: "它是数字 2。", too: "它的意思是“也”或“太”。", to: "它既不是数字，也不表示“也”。" }[right.toLowerCase()] ?? ""}`,
-          ),
+        choiceGenerator(
+          t("Which word completes the sentence?", "哪个词能补全句子？"),
+          yourToBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}`,
+              `${shown.replace("___", `**${right}**`)} ${{ your: "它表示所属。", "you're": "它的意思是 *you are*。", two: "它是数字 2。", too: "它的意思是“也”或“太”。", to: "它既不是数字，也不表示“也”。" }[right.toLowerCase()] ?? ""}`,
+            ),
+          confusedWord,
         ),
       ),
       point(
@@ -457,11 +733,15 @@ export const usageTopics: readonly TopicDef[] = [
           "*Than* compares: *older than me*. *Then* tells when: *and then we left*.\n\n*Affect* is usually a verb, to change something: *Does the weather affect you?* *Effect* is usually a noun, the result: *The medicine had an effect.* If *a*, *an* or *the* can come before it, it is the noun *effect*.",
           "*Than* 用于比较：*older than me*。*Then* 表示时间：*and then we left*。\n\n*Affect* 通常是动词，意思是影响某事物：*Does the weather affect you?* *Effect* 通常是名词，意思是结果：*The medicine had an effect.* 如果前面能加 *a*、*an* 或 *the*，就是名词 *effect*。",
         ),
-        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), thenThanBank, (right, shown) =>
-          t(
-            `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}`,
-            `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.["zh-CN"] ?? ""}`,
-          ),
+        choiceGenerator(
+          t("Which word completes the sentence?", "哪个词能补全句子？"),
+          thenThanBank,
+          (right, shown) =>
+            t(
+              `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}`,
+              `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.["zh-CN"] ?? ""}`,
+            ),
+          confusedWord,
         ),
       ),
     ],
@@ -484,11 +764,15 @@ export const usageTopics: readonly TopicDef[] = [
           "When the actions of a sentence happen at the same time, their verbs stay in the same tense. *She opened the door and sees a cat* jumps from past to present for no reason.\n\nA change is right only when the time really changes: *I lived here before, but now I live in town.*",
           "句子中的动作发生在同一时间时，动词要保持同一时态。*She opened the door and sees a cat* 无缘无故地从过去时跳到了现在时。\n\n只有时间真的改变时，时态才可以改变：*I lived here before, but now I live in town.*",
         ),
-        choiceGenerator(t("Choose the sentence.", "选择句子。"), shiftBank, (right) =>
-          t(
-            `**${right}** Both actions happen at the same time, so their verbs share a tense.`,
-            `**${right}** 两个动作发生在同一时间，所以动词时态相同。`,
-          ),
+        choiceGenerator(
+          t("Choose the sentence.", "选择句子。"),
+          shiftBank,
+          (right) =>
+            t(
+              `**${right}** Both actions happen at the same time, so their verbs share a tense.`,
+              `**${right}** 两个动作发生在同一时间，所以动词时态相同。`,
+            ),
+          tenseShift,
         ),
       ),
       point(

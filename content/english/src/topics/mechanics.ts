@@ -326,8 +326,20 @@ export const mechanicsTopics: readonly TopicDef[] = [
           "A longer phrase that opens a sentence, such as *After a long day at the beach* or *Running as fast as she could*, is followed by one comma where the phrase ends and the main sentence begins. Do not put the comma inside the phrase or after the subject.",
           "句首较长的短语，例如 *After a long day at the beach* 或 *Running as fast as she could*，要在短语结束、主句开始的地方加一个逗号。不要把逗号放在短语中间，也不要放在主语后面。",
         ),
-        choiceGenerator(t("Choose the sentence.", "选择句子。"), introPhraseBank, (right) =>
-          t(`**${right}** The comma comes where the opening phrase ends.`, `**${right}** 逗号放在句首短语结束的地方。`),
+        choiceGenerator(
+          t("Choose the sentence.", "选择句子。"),
+          introPhraseBank,
+          (right) => t(`**${right}** The comma comes where the opening phrase ends.`, `**${right}** 逗号放在句首短语结束的地方。`),
+          (wrong, _right, _shown, position) =>
+            position === 0
+              ? t(
+                  `“${wrong}” puts the comma inside the opening phrase, splitting words that belong together. Find where the phrase ends and the main sentence begins.`,
+                  `“${wrong}” 把逗号放在了句首短语中间，拆开了本该连在一起的词。找出短语在哪里结束、主句从哪里开始。`,
+                )
+              : t(
+                  `“${wrong}” puts the comma after the subject, cutting it off from its verb. The comma belongs where the opening phrase ends, before the subject.`,
+                  `“${wrong}” 把逗号放在了主语后面，把主语和它的动词隔开了。逗号应放在句首短语结束处、主语之前。`,
+                ),
         ),
       ),
       point(
@@ -397,11 +409,29 @@ export const mechanicsTopics: readonly TopicDef[] = [
           'A quoted question or exclamation keeps its own question mark or exclamation mark, inside the quotation marks, and takes no comma: *"Where are my shoes?" asked Ben.* *"Watch out!" yelled the coach.*',
           '被引用的疑问句或感叹句保留自己的问号或感叹号，放在引号里面，并且不再加逗号：*"Where are my shoes?" asked Ben.* *"Watch out!" yelled the coach.*',
         ),
-        choiceGenerator(t("Choose the sentence.", "选择句子。"), questionQuoteBank, (right) =>
-          t(
-            `**${right}** The question mark or exclamation mark stays inside the quotation marks.`,
-            `**${right}** 问号或感叹号留在引号里面。`,
-          ),
+        choiceGenerator(
+          t("Choose the sentence.", "选择句子。"),
+          questionQuoteBank,
+          (right) =>
+            t(
+              `**${right}** The question mark or exclamation mark stays inside the quotation marks.`,
+              `**${right}** 问号或感叹号留在引号里面。`,
+            ),
+          (wrong) =>
+            wrong.includes('"?') || wrong.includes('"!')
+              ? t(
+                  `“${wrong}” puts the end mark outside the quotation marks, yet it belongs to the speaker's own words.`,
+                  `“${wrong}” 把句末标点放在了引号外面，可它属于说话人的原话。`,
+                )
+              : wrong.includes(',"')
+                ? t(
+                    `“${wrong}” gives the quoted words a comma, the mark for a plain statement, so the reader loses that they are a question or an exclamation.`,
+                    `“${wrong}” 给引语用了逗号，那是普通陈述句的标点，读者就看不出它是疑问还是感叹。`,
+                  )
+                : t(
+                    `“${wrong}” ends the quoted question with a period, so it no longer reads as a question.`,
+                    `“${wrong}” 用句号结束被引用的问句，它读起来就不再是问句了。`,
+                  ),
         ),
       ),
     ],

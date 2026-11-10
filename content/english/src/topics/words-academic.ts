@@ -55,20 +55,48 @@ const academic3UseBank: readonly ChoiceItem[] = [
   ["Most plants ___ sunlight to grow.", "require", ["occur", "infer"]],
 ];
 
+const glossary = new Map([
+  ...[...academic2MeaningBank, ...academic3MeaningBank].map(([word, meaning]) => [word, meaning] as const),
+  ["summary", "a short statement of the main points"],
+]);
+
+const notTheMeaning = (wrong: string, _right: string, shown: string) =>
+  t(
+    `“${wrong}” is not what *${shown}* means. Picture *${shown}* in a question from schoolwork and check whether this meaning would make sense there.`,
+    `*${shown}* 的意思不是“${wrong}”。设想 *${shown}* 出现在一道作业题里，看看这个意思放在那里是否说得通。`,
+  );
+
+const wrongWord = (wrong: string) => {
+  const meaning = glossary.get(wrong);
+  if (meaning === undefined) throw new Error(`no meaning for the option "${wrong}"`);
+  return t(
+    `“${wrong}” means *${meaning}*, which does not complete the thought of this sentence.`,
+    `“${wrong}” 的意思是 *${meaning}*，放进这个句子意思不通。`,
+  );
+};
+
 const meaning = (bank: readonly ChoiceItem[]) =>
-  choiceGenerator(t("What does this word mean?", "这个词是什么意思？"), bank, (right, shown) =>
-    t(
-      `*${shown}* means **${right}**. The other options describe something else, so they do not fit the word.`,
-      `*${shown}* 的意思是 **${right}**。其他选项描述的是别的东西，与这个词不符。`,
-    ),
+  choiceGenerator(
+    t("What does this word mean?", "这个词是什么意思？"),
+    bank,
+    (right, shown) =>
+      t(
+        `*${shown}* means **${right}**. The other options describe something else, so they do not fit the word.`,
+        `*${shown}* 的意思是 **${right}**。其他选项描述的是别的东西，与这个词不符。`,
+      ),
+    notTheMeaning,
   );
 
 const use = (bank: readonly ChoiceItem[]) =>
-  choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), bank, (right, shown) =>
-    t(
-      `${shown.replace("___", `**${right}**`)} Its meaning completes the thought of the sentence.`,
-      `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。`,
-    ),
+  choiceGenerator(
+    t("Which word completes the sentence?", "哪个词能补全句子？"),
+    bank,
+    (right, shown) =>
+      t(
+        `${shown.replace("___", `**${right}**`)} Its meaning completes the thought of the sentence.`,
+        `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。`,
+      ),
+    wrongWord,
   );
 
 /** academicWordTopics are the batches of academic words after the first. */

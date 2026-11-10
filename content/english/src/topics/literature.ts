@@ -284,16 +284,148 @@ const moodBank: readonly ChoiceItem[] = [
   ["Thunder shook the windows, the lights flickered out, and something scratched at the door.", "frightening", ["peaceful", "festive"]],
 ];
 
-const pick = (question: [string, string], bank: readonly ChoiceItem[], en: (right: string) => string, zh: (right: string) => string) =>
-  choiceGenerator(t(question[0], question[1]), bank, (right) => t(en(right), zh(right)));
+/** Say gives the feedback for a wrong option, in English and Chinese. */
+type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
-const named = (question: [string, string], bank: readonly ChoiceItem[], why: ReadonlyMap<string, readonly string[]>) =>
+const pick = (
+  question: [string, string],
+  bank: readonly ChoiceItem[],
+  en: (right: string) => string,
+  zh: (right: string) => string,
+  not: Say,
+) =>
+  choiceGenerator(
+    t(question[0], question[1]),
+    bank,
+    (right) => t(en(right), zh(right)),
+    (wrong, right, shown, position) => t(...not(wrong, right, shown, position)),
+  );
+
+/** meaning looks up the feedback for a wrong label; a label with no entry is a mistake in the bank. */
+const meaning =
+  (says: Readonly<Record<string, readonly [string, string]>>): Say =>
+  (wrong) => {
+    const said = says[wrong];
+    if (!said) throw new Error(`no feedback for the label ${wrong}`);
+    return said;
+  };
+
+const named = (question: [string, string], bank: readonly ChoiceItem[], why: ReadonlyMap<string, readonly string[]>, not: Say) =>
   pick(
     question,
     bank,
     (right) => `This is **${right}**. ${why.get(right)?.[0] ?? ""}`,
     (right) => `这是 **${right}**。${why.get(right)?.[1] ?? ""}`,
+    not,
   );
+
+const deviceNot = meaning({
+  personification: [
+    "**Personification** would give a human action or feeling to something that is not human. Check whether anything non-human here acts like a person.",
+    "**personification（拟人）**要把人的动作或感受赋予非人的事物。看看这里有没有非人的事物像人一样行动。",
+  ],
+  hyperbole: [
+    "**Hyperbole** would be an exaggeration far beyond the truth. Check whether anything here is impossibly large, long or many.",
+    "**hyperbole（夸张）**是远远超出事实的夸大。看看这里有没有大得、长得或多得不可能的东西。",
+  ],
+  alliteration: [
+    "**Alliteration** would repeat the first consonant sound of nearby words. Read the line aloud: the words here do not start alike.",
+    "**alliteration（头韵）**要让相邻的词重复相同的开头辅音。把句子读出来：这里的词开头并不相同。",
+  ],
+  onomatopoeia: [
+    "**Onomatopoeia** would be a word that sounds like what it names, such as *buzz* or *crash*. No word here imitates a sound.",
+    "**onomatopoeia（拟声）**是听起来像它所指声音的词，比如 *buzz* 或 *crash*。这里没有模仿声音的词。",
+  ],
+  simile: [
+    "A **simile** would compare two things with *like* or *as*. Look for those words: they are not here.",
+    "**simile（明喻）**要用 *like* 或 *as* 比较两样东西。找找这两个词：这里没有。",
+  ],
+  metaphor: [
+    "A **metaphor** would say that one thing *is* another, different thing. Check whether the line names a second thing at all.",
+    "**metaphor（暗喻）**要说一样东西*就是*另一样不同的东西。看看这句话是否提到了第二样东西。",
+  ],
+  rhyme: [
+    "**Rhyme** would repeat the ending sounds of words, as in *night* and *bright*. Listen to the ends of the words: they do not sound alike.",
+    "**rhyme（押韵）**要让词尾音相同，比如 *night* 和 *bright*。听听词的结尾：它们并不相同。",
+  ],
+});
+
+const schemeNot = meaning({
+  ABAB: [
+    "**ABAB** would mean lines 1 and 3 rhyme, and lines 2 and 4 rhyme. Say the last word of each line aloud and compare them in pairs.",
+    "**ABAB** 表示第 1、3 行押韵，第 2、4 行押韵。把每行最后一个词读出来，两两比较。",
+  ],
+  AABB: [
+    "**AABB** would mean lines 1 and 2 rhyme, then lines 3 and 4. Say the last word of each line aloud and compare them in pairs.",
+    "**AABB** 表示第 1、2 行押韵，第 3、4 行押韵。把每行最后一个词读出来，两两比较。",
+  ],
+  ABBA: [
+    "**ABBA** would mean lines 1 and 4 rhyme, and lines 2 and 3 rhyme. Say the last word of each line aloud and compare them in pairs.",
+    "**ABBA** 表示第 1、4 行押韵，第 2、3 行押韵。把每行最后一个词读出来，两两比较。",
+  ],
+  ABCB: [
+    "**ABCB** would mean only lines 2 and 4 rhyme, and lines 1 and 3 rhyme with nothing. Say the last word of each line aloud and compare them in pairs.",
+    "**ABCB** 表示只有第 2、4 行押韵，第 1、3 行不与任何行押韵。把每行最后一个词读出来，两两比较。",
+  ],
+});
+
+const plotNot = meaning({
+  exposition: [
+    "The **exposition** only introduces the characters and setting, before any problem appears. Here something is already happening to the problem.",
+    "**exposition（开端）**只介绍人物和背景，问题还没出现。而这里问题已经在发生变化。",
+  ],
+  "rising action": [
+    "In the **rising action** a problem appears and grows. Ask whether this event builds the problem, or introduces, peaks or settles it.",
+    "**rising action（发展）**中问题出现并加剧。问一问：这件事是在推进问题，还是在介绍、推向顶点或解决问题？",
+  ],
+  climax: [
+    "The **climax** is the single turning point of greatest tension. Ask whether this is that moment, or one before or after it.",
+    "**climax（高潮）**是紧张感最强的那个转折点。问一问：这是那个时刻，还是它之前或之后的事？",
+  ],
+  "falling action": [
+    "The **falling action** comes right after the turning point, as the tension eases but the problem is not yet settled.",
+    "**falling action（回落）**紧接在转折点之后，紧张感缓和，但问题还没有完全解决。",
+  ],
+  resolution: [
+    "The **resolution** settles the problem and ends the story. Ask whether the problem is really over at this point.",
+    "**resolution（结局）**解决问题、结束故事。问一问：到这里问题真的结束了吗？",
+  ],
+});
+
+const conflictNot = meaning({
+  "character against character": [
+    "**Character against character** would need two characters struggling with each other. Ask who or what stands in this character's way.",
+    "**character against character（人与人）**需要两个人物彼此争斗。问一问：挡在这个人物面前的是谁或什么？",
+  ],
+  "character against nature": [
+    "**Character against nature** would need a storm, wild animal, cold or other force of nature to fight. Ask who or what stands in this character's way.",
+    "**character against nature（人与自然）**需要人物对抗风暴、野兽、寒冷之类的自然力量。问一问：挡在这个人物面前的是谁或什么？",
+  ],
+  "character against self": [
+    "**Character against self** would be a struggle inside the character's mind, a fear or a hard choice. Ask whether the obstacle is inside or outside the character.",
+    "**character against self（人与自我）**是人物内心的斗争，比如恐惧或艰难的抉择。问一问：阻碍在人物内心还是外部？",
+  ],
+  "character against society": [
+    "**Character against society** would need a rule, law or belief of a whole group to fight. Ask who or what stands in this character's way.",
+    "**character against society（人与社会）**需要人物对抗整个群体的规则、法律或观念。问一问：挡在这个人物面前的是谁或什么？",
+  ],
+});
+
+const toneNot: Say = (wrong) =>
+  wrong === "sarcastic"
+    ? [
+        "A **sarcastic** tone says the opposite of what the writer means. These words mean just what they say.",
+        "**sarcastic（讽刺）**的语气是字面与真实意思相反。这些话说的就是它的本意。",
+      ]
+    : [
+        `Find the words that carry the writer's feeling: none of them shows a **${wrong}** attitude. Tone comes from those words, not from the subject.`,
+        `找出带有作者情感的词：没有一个表现出 **${wrong}** 的态度。语气来自这些词，而不是话题。`,
+      ];
+
+const moodNot: Say = (wrong) => [
+  `A **${wrong}** mood would need other details. Look at what the setting and the senses give you here, and how they make you feel.`,
+  `**${wrong}** 的氛围需要别的细节。看看这里的背景和感官细节，它们让你有什么感觉。`,
+];
 
 /** literatureTopics are the topics of reading literature in grades 6 to 8: devices, sound, poetry, plot, conflict, theme and tone. */
 export const literatureTopics: readonly TopicDef[] = [
@@ -312,7 +444,7 @@ export const literatureTopics: readonly TopicDef[] = [
           "**Personification** gives human actions or feelings to something that is not human: *The wind whispered*. **Hyperbole** is an exaggeration so great that no one takes it literally: *I have told you a million times*. Like similes and metaphors, both are figurative: they mean something other than what the words literally say.",
           "**拟人**把人的动作或感受赋予非人的事物：*The wind whispered*。**夸张**是极度的夸大，没有人会按字面理解：*I have told you a million times*。和明喻、暗喻一样，两者都是修辞性的：意思不同于字面。",
         ),
-        named(["Which device does the sentence use?", "这句话用了哪种修辞？"], deviceBank, deviceWhy),
+        named(["Which device does the sentence use?", "这句话用了哪种修辞？"], deviceBank, deviceWhy, deviceNot),
       ),
       point(
         "effect-of-the-device",
@@ -326,6 +458,16 @@ export const literatureTopics: readonly TopicDef[] = [
           deviceEffectBank,
           (right) => `${right} The other choices read the words literally, which misses the effect.`,
           (right) => `${right} 其他选项按字面理解，没有抓住效果。`,
+          (_wrong, _right, _shown, position) =>
+            position === 0
+              ? [
+                  "This choice reads the figurative words literally, as if they were plain fact. Ask what the device makes you feel or picture instead.",
+                  "这个选项把修辞按字面理解成了事实。问一问：这个修辞让你有什么感受或想象？",
+                ]
+              : [
+                  "The line does not tell or suggest this. The effect of a device is a feeling or a picture it creates, so start from the device itself.",
+                  "这句话并没有说出或暗示这一点。修辞的效果是它营造的感受或画面，要从修辞本身出发。",
+                ],
         ),
       ),
     ],
@@ -345,7 +487,7 @@ export const literatureTopics: readonly TopicDef[] = [
           "**Alliteration** repeats the first consonant sound of nearby words: *big brown bears*. **Onomatopoeia** is a word that sounds like what it names: *buzz, sizzle, crash*. **Rhyme** repeats the ending sounds of words: *night* and *bright*. Read the line aloud and listen for which one you hear.",
           "**头韵**是相邻的词重复相同的开头辅音：*big brown bears*。**拟声**是听起来像它所指声音的词：*buzz, sizzle, crash*。**押韵**是词尾音相同：*night* 和 *bright*。把句子读出来，听听用的是哪一种。",
         ),
-        named(["Which sound device does the line use most?", "这行主要用了哪种声音修辞？"], soundBank, soundWhy),
+        named(["Which sound device does the line use most?", "这行主要用了哪种声音修辞？"], soundBank, soundWhy, deviceNot),
       ),
       point(
         "rhyme-scheme",
@@ -359,6 +501,7 @@ export const literatureTopics: readonly TopicDef[] = [
           rhymeSchemeBank,
           (right) => `The rhyme scheme is **${right}**. Give the first end sound A, and a new letter to each new sound.`,
           (right) => `韵式是 **${right}**。第一个尾音记为 A，每个新的尾音用一个新字母。`,
+          schemeNot,
         ),
       ),
     ],
@@ -378,7 +521,7 @@ export const literatureTopics: readonly TopicDef[] = [
           "Most plots follow a pattern. The **exposition** introduces the characters and setting. In the **rising action**, a problem appears and grows. The **climax** is the turning point, the moment of greatest tension. In the **falling action**, the tension eases, and the **resolution** settles the problem.",
           "大多数情节遵循一个模式。**开端**介绍人物和背景。在**发展**中，问题出现并不断加剧。**高潮**是转折点，紧张感最强的时刻。在**回落**中，紧张感缓和，**结局**解决问题。",
         ),
-        named(["Which part of the plot is this event?", "这件事属于情节的哪个部分？"], plotBank, plotWhy),
+        named(["Which part of the plot is this event?", "这件事属于情节的哪个部分？"], plotBank, plotWhy, plotNot),
       ),
       point(
         "kinds-of-conflict",
@@ -392,6 +535,7 @@ export const literatureTopics: readonly TopicDef[] = [
           conflictBank,
           (right) => `This is **${right}**: ask what or whom the character is struggling against.`,
           (right) => `这是 **${right}**：问一问人物在和谁或什么作斗争。`,
+          conflictNot,
         ),
       ),
     ],
@@ -420,6 +564,16 @@ export const literatureTopics: readonly TopicDef[] = [
           (right) =>
             `*${right}* is a message about life in a full sentence. The other choices are only a topic or a retelling of the plot.`,
           (right) => `*${right}* 是用完整句子表达的人生道理。其他选项只是话题或情节复述。`,
+          (wrong, _right, _shown, position) =>
+            position === 0
+              ? [
+                  `*${wrong}* is only a topic, a word or phrase. A theme says something about that topic in a full sentence.`,
+                  `*${wrong}* 只是一个话题，一个词或短语。主题要用完整的句子说出关于这个话题的道理。`,
+                ]
+              : [
+                  `*${wrong}* retells what happens in the story. A theme is the message about life that those events show.`,
+                  `*${wrong}* 是在复述故事情节。主题是这些情节所体现的人生道理。`,
+                ],
         ),
       ),
       point(
@@ -434,6 +588,10 @@ export const literatureTopics: readonly TopicDef[] = [
           themeEvidenceBank,
           (right) => `*${right}* shows the theme in action. The other details are true of the story but say nothing about its message.`,
           (right) => `*${right}* 体现了这个主题。其他细节虽属于故事，却与它的道理无关。`,
+          (wrong) => [
+            `*${wrong}* may be true of the story, but no one makes a choice in it and lives with the result, so it does not show the theme in action.`,
+            `*${wrong}* 也许属于故事，但其中没有人物做出选择并承担结果，所以它没有体现主题。`,
+          ],
         ),
       ),
     ],
@@ -458,6 +616,7 @@ export const literatureTopics: readonly TopicDef[] = [
           toneBank,
           (right) => `The tone is **${right}**: the word choice and details show this attitude. The other choices do not fit those words.`,
           (right) => `语气是 **${right}**：用词和细节表现了这种态度。其他选项与这些词不符。`,
+          toneNot,
         ),
       ),
       point(
@@ -473,6 +632,7 @@ export const literatureTopics: readonly TopicDef[] = [
           (right) =>
             `The mood is **${right}**: the setting and details make the reader feel this way. The other moods would need different details.`,
           (right) => `氛围是 **${right}**：背景和细节让读者有这种感觉。其他氛围需要不同的细节。`,
+          moodNot,
         ),
       ),
     ],
