@@ -5,6 +5,7 @@ from ga_voice.drain import Admission
 
 def test_capacity() -> None:
     admission = Admission(capacity=2)
+    assert admission.capacity == 2
     assert admission.admit()
     assert admission.admit()
     assert not admission.ready

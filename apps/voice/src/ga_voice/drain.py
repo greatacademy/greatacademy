@@ -19,6 +19,11 @@ class Admission:
         self._idle.set()
 
     @property
+    def capacity(self) -> int:
+        """capacity is the number of sessions the pod runs at once."""
+        return self._capacity
+
+    @property
     def active(self) -> int:
         """active is the number of running sessions."""
         return self._active

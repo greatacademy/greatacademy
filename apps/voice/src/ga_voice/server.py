@@ -9,7 +9,7 @@ from typing import override
 
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from loguru import logger
 from pipecat.pipeline.worker import PipelineWorker
 from pipecat.transports.websocket.fastapi import FastAPIWebsocketParams, FastAPIWebsocketTransport
@@ -122,8 +122,23 @@ async def handle_conversation(app: VoiceApp, websocket: WebSocket) -> None:
         app.admission.release()
 
 
+def metrics_text(admission: Admission) -> str:
+    """metrics_text is the pod's sessions in Prometheus's text format, from which KEDA scales the Deployment."""
+    return (
+        "# HELP voice_sessions_active Conversation sessions running on this pod.\n"
+        "# TYPE voice_sessions_active gauge\n"
+        f"voice_sessions_active {admission.active}\n"
+        "# HELP voice_sessions_capacity Conversation sessions this pod runs at once.\n"
+        "# TYPE voice_sessions_capacity gauge\n"
+        f"voice_sessions_capacity {admission.capacity}\n"
+        "# HELP voice_draining 1 once the pod has begun to drain.\n"
+        "# TYPE voice_draining gauge\n"
+        f"voice_draining {int(admission.draining)}\n"
+    )
+
+
 def create_app(voice: VoiceApp) -> FastAPI:
-    """create_app returns the FastAPI application: the conversation WebSocket and the probes."""
+    """create_app returns the FastAPI application: the conversation WebSocket, the probes and the metrics."""
     api = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
     @api.get("/healthz")
@@ -135,6 +150,10 @@ def create_app(voice: VoiceApp) -> FastAPI:
         admission = voice.admission
         body = {"ready": admission.ready, "active": admission.active, "draining": admission.draining}
         return JSONResponse(body, status_code=200 if admission.ready else 503)
+
+    @api.get("/metrics")
+    async def _metrics() -> PlainTextResponse:  # pyright: ignore[reportUnusedFunction]
+        return PlainTextResponse(metrics_text(voice.admission), media_type="text/plain; version=0.0.4")
 
     @api.websocket(CONVERSATION_PATH)
     async def _conversation(websocket: WebSocket) -> None:  # pyright: ignore[reportUnusedFunction]

@@ -160,7 +160,11 @@ async def test_full_pod_refuses_and_reports_not_ready() -> None:
         await first.wait_for(lambda: bool(first.of("ready")))
         async with httpx.AsyncClient() as http:
             ready = await http.get(f"http://127.0.0.1:{run.port}/readyz")
+            metrics = await http.get(f"http://127.0.0.1:{run.port}/metrics")
         assert ready.status_code == 503
+        assert "voice_sessions_active 1\n" in metrics.text
+        assert "voice_sessions_capacity 1\n" in metrics.text
+        assert "voice_draining 0\n" in metrics.text
         async with session(run.url, signed(KEY, id="b", session="b")) as second:
             await asyncio.wait_for(second.closed.wait(), 5)
         assert second.of("error") == [{"code": "full", "type": "error"}]
