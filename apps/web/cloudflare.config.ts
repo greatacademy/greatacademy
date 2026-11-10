@@ -8,13 +8,16 @@ export default defineConfig({
     entrypoint: "./src/server.ts",
     observability: { enabled: true },
     domains: ["greatacademy.dev"],
+    // Near PostgreSQL in Hillsboro, since a request makes several queries (docs/architecture.md §6).
+    placement: { region: "aws:us-west-2" },
     // The retention run of docs/minors-data.md §10 and the plan reminders of docs/billing.md §3, once a day
     // (DAILY_CRON in src/server/handler.ts), and the AI cost check of docs/admin.md §5 every quarter hour.
     triggers: [triggers.scheduled({ schedule: "0 3 * * *" }), triggers.scheduled({ schedule: "*/15 * * * *" })],
     env: {
-      // Postgres through Hyperdrive; locally, the OrbStack database of compose.yaml.
+      // Postgres through Hyperdrive, which reaches pg-cluster through the Tunnel of deploy/postgres; locally, the
+      // OrbStack database of compose.yaml.
       HYPERDRIVE: bindings.hyperdrive({
-        id: "00000000000000000000000000000000",
+        id: "45b55d1646e34061b2ef0711d43f35cb",
         dev: { connectionString: "postgres://postgres:postgres@localhost:54329/greatacademy" },
       }),
       // The gateway Worker of each subject, from apps/<subject>-workers; see docs/architecture.md.

@@ -83,6 +83,7 @@ tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
 tools/calibrate/      校准：在两人评分的文本上运行一条路由，并记录它的一致性
 deploy/voice/         语音服务在 Kubernetes 上的部署：Kustomize base 和 overlay，以及推送和校验的 mise 任务
+deploy/postgres/      Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
 docs/                 文档（英文 + 简体中文）
 ```
 
@@ -168,10 +169,12 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
   - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日和每 15 分钟的 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
   - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
+  - 学科的 Worker 没有 `workers.dev` 地址，因为只有服务绑定访问它们；每个都有一个返回 404 的 `fetch` 处理器，因为 Cloudflare 拒绝部署没有事件处理器的 Worker。
+  - Worker 存在之后才能设置它的 secret，所以 Web Worker 首次部署时用 `cf deploy --secrets-file` 一并传入。
 - **区域。** 无论学习者在哪个市场，数据都留在美国西部：
   - PostgreSQL 和语音服务的 Kubernetes 集群运行在 Hetzner Cloud 位于俄勒冈州 Hillsboro 的机房（`hil`），备份也留在美国。
-  - Hyperdrive 经 Cloudflare Tunnel 连接 PostgreSQL，数据库没有公网端口。
-  - Web Worker 放在靠近数据库的地方运行，因为一个请求要查询数据库多次，否则每次查询都要跨洋。学科的 Worker 不查数据库，在边缘运行。
+  - Hyperdrive 经 Cloudflare Tunnel 连接 PostgreSQL，数据库没有公网端口。PostgreSQL 是共享的 CloudNativePG 集群 `pg-cluster` 中的数据库 `greatacademy`；Hyperdrive 配置 `greatacademy` 连接 `db.greatacademy.dev`，`deploy/postgres` 中的 Tunnel `greatacademy-postgres` 把它路由到集群的主库，前面有一个只放行 Hyperdrive 服务令牌的 Cloudflare Access 应用。它的查询缓存关闭，因为学习者会读取自己刚写入的内容；它对集群最多打开 20 个连接，因为集群由其他项目共用。
+  - Web Worker 放在靠近数据库的 `aws:us-west-2` 运行，因为一个请求要查询数据库多次，否则每次查询都要跨洋。学科的 Worker 不查数据库，在边缘运行。
   - R2 存储桶在首次部署前手动创建，位置提示设为 `wnam`，因为存储桶的位置之后不能更改。
   - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以 `/legal/privacy` 的隐私声明写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**

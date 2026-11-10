@@ -35,7 +35,7 @@ G0 ─► E1 first slice ─► G1 ─┬─► E2 reading ───────
 
 | Id | Work | Size | Done when |
 | :--- | :--- | :--- | :--- |
-| E0.1 | Deploy the web and mathematics Workers to Cloudflare, which has not been done yet | M | A test account completes a lesson in production, and startup, memory and latency between Workers are measured ([Roadmap §2](roadmap.md#2-risks-and-open-items)) |
+| E0.1 | Deploy the web and mathematics Workers to Cloudflare; deployed on 2026-11-10, the lesson and the measurements remain | M | A test account completes a lesson in production, and startup, memory and latency between Workers are measured ([Roadmap §2](roadmap.md#2-risks-and-open-items)) |
 | E0.2 | Find an English teacher of grades 3 to 8 to review content, and a Chinese-speaking reviewer of explanations | S | Named people have agreed |
 | E0.3 | Get legal advice on minors' text and recordings in each [first market](minors-data.md#4-market-rows) | S | Written advice on consent, retention and vendors, answering the questions in [Minors' Data](minors-data.md#13-enforcement-in-code-and-what-comes-when); speech and AI stages depend on it |
 | E0.4 | Fix the first course's id and name. Course ids are unique across subjects and never change | S | The id, proposed as `english-grammar-writing`, is in this document |

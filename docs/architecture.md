@@ -83,6 +83,7 @@ tools/audit/          Content audit: outline coverage and heuristic quality chec
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
 tools/calibrate/      Calibration: runs a route on texts scored by two people and records its agreement
 deploy/voice/         The voice service on Kubernetes: a Kustomize base and overlays, with mise tasks to push and check
+deploy/postgres/      The Cloudflare Tunnel through which Hyperdrive reaches PostgreSQL
 docs/                 Documents (English + Simplified Chinese)
 ```
 
@@ -168,10 +169,12 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
   - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger and one every 15 minutes, the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, and the Stripe secrets of [Billing](billing.md) §10.
   - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
   - Migrations are applied with drizzle-kit before a deployment.
+  - The subjects' Workers have no `workers.dev` address, since only service bindings reach them, and each has a `fetch` handler that answers 404, because Cloudflare refuses a Worker without an event handler.
+  - A Worker's secrets can be set only once it exists, so the web Worker's first deployment passed them with `cf deploy --secrets-file`.
 - **Region.** Every learner's data stays in the western United States, whatever their market:
   - PostgreSQL and the voice service's Kubernetes cluster run on Hetzner Cloud in Hillsboro, Oregon (`hil`), and their backups stay in the United States.
-  - Hyperdrive reaches PostgreSQL through Cloudflare Tunnel, so the database has no public port.
-  - The web Worker is placed near the database, since a request makes several queries and each would otherwise cross an ocean. The subjects' Workers query nothing and run at the edge.
+  - Hyperdrive reaches PostgreSQL through Cloudflare Tunnel, so the database has no public port. PostgreSQL is the database `greatacademy` on the shared CloudNativePG cluster `pg-cluster`; the Hyperdrive configuration `greatacademy` connects to `db.greatacademy.dev`, which the Tunnel `greatacademy-postgres` of `deploy/postgres` routes to the cluster's primary, behind a Cloudflare Access application that admits only Hyperdrive's service token. Its query cache is off, since a learner reads what they have just written, and it opens at most 20 connections to the cluster, which other projects share.
+  - The web Worker is placed near the database, in `aws:us-west-2`, since a request makes several queries and each would otherwise cross an ocean. The subjects' Workers query nothing and run at the edge.
   - R2 buckets are created by hand with the location hint `wnam` before their first deployment, since a bucket's location cannot change.
   - Holding data in one country is a transfer for every other market, so the privacy notice at `/legal/privacy` says the data is kept in the United States ([Minors' Data §12](minors-data.md#12-vendors)).
 - **Development:**

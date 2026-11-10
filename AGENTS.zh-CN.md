@@ -49,6 +49,7 @@ tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告
 tools/calibrate/     用人工评分的文本校准 AI 路由
 deploy/voice/        语音服务在 Kubernetes 上的 Kustomize 清单
+deploy/postgres/     Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
 ```
 
 ## 命令

@@ -1,0 +1,12 @@
+# The Cloudflare Tunnel through which Hyperdrive reaches the shared PostgreSQL cluster (pg-cluster in cnpg-system).
+# The database itself is not ours to deploy; only this path to it is.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ga-postgres
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: greatacademy
+resources:
+  - namespace.yaml
+  - cloudflared.yaml
+  - network.yaml
