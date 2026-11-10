@@ -117,7 +117,7 @@ apps/voice ╌╌► apps/web over HTTP (no package dependency)
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
 - `libs/judge` depends on `libs/content`'s types and on pi-ai. It knows no subject and no database: `libs/api` hands it the criteria, the text and a model client, and stores what it returns.
 - `libs/subject-worker` is the one library that imports the Workers runtime; it knows no subject.
-- `apps/voice` is Python and imports nothing from the repository. It reaches the web Worker over HTTP with its own credential, for the tutor's turns and to write results; the WebSocket messages it shares with clients become Protobuf in `libs/proto`.
+- `apps/voice` is Python and imports nothing from the repository. It reaches the web Worker over HTTP with its own credential, for the tutor's turns and to write results; the WebSocket it shares with clients carries PCM as binary messages and JSON text messages defined in `apps/voice`.
 - Only `apps/*` wire storage, transport, authentication and content together. The web Worker does not import content: it reaches subjects through service bindings.
 
 ## 4. Domain Model

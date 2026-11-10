@@ -160,6 +160,8 @@ docker compose stop voice           # SIGTERM: refuses new sessions, waits for r
 ```
 
 - The `voice` service is in the `voice` profile, so a plain `docker compose up -d` still starts only PostgreSQL. It reaches `cf dev` on the host at `http://host.docker.internal:5173`; set `VOICE_WORKER_URL` to point elsewhere. Start the web app with `DEV_HOST=0.0.0.0` if the container cannot reach it.
+- To run a conversation end to end, put the private half of the key pair in `apps/web/.dev.vars` as `VOICE_TICKET_PRIVATE_KEY`, with `VOICE_URL=ws://localhost:8089/v1/conversation` and `VOICE_SERVICE_CREDENTIAL` equal to the container's `VOICE_WORKER_CREDENTIAL`. A learner is offered a conversation only through a live, calibrated, priced route of use `conversation` for it; in a local database, add the provider, price and route in the admin console and a passing calibration row for the conversation's id by hand.
+- With `VOICE_SPEECH=fake`, each stretch of sound the microphone hears is recognized as the next scripted line. Headless Chrome speaks a recording with `--use-fake-ui-for-media-stream`, `--use-fake-device-for-media-stream` and `--use-file-for-fake-audio-capture=<file.wav>`; on macOS it also needs `--disable-features=AudioServiceSandbox`, or the fake microphone gives silence.
 - The container has no volume and a read-only filesystem with `/tmp` in memory. Logs hold no audio or transcripts: Pipecat's own records are kept only from warnings up, and debug output is never turned on.
 - `/metrics` reports `voice_sessions_active`, `voice_sessions_capacity` and `voice_draining` in Prometheus's text format, for scaling.
 

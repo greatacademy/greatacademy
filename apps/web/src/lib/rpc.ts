@@ -4,6 +4,7 @@ import { AccountService } from "@ga/proto/account/v1/account_pb";
 import { AdminService } from "@ga/proto/admin/v1/admin_pb";
 import { BillingService } from "@ga/proto/billing/v1/billing_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
+import { ConversationService } from "@ga/proto/conversation/v1/conversation_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
@@ -17,6 +18,7 @@ export const learning = createClient(LearningService, transport);
 export const privacy = createClient(PrivacyService, transport);
 export const admin = createClient(AdminService, transport);
 export const billing = createClient(BillingService, transport);
+export const conversation = createClient(ConversationService, transport);
 
 /** isNotFound reports whether a call failed because what it asked for does not exist. */
 export const isNotFound = (error: unknown) => ConnectError.from(error).code === Code.NotFound;

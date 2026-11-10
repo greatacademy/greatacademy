@@ -8,10 +8,13 @@ import {
   adminService,
   applyBillingEvent,
   billingService,
+  type ConversationDeps,
   catalogService,
+  conversationService,
   dbKey,
   endPlansOf,
   type FormStore,
+  handleVoice,
   learningService,
   type Notify,
   type Payments,
@@ -22,6 +25,7 @@ import {
   runCostCheck,
   runRetention,
   userIdKey,
+  type VoiceConfig,
 } from "@ga/api";
 import type { SubjectGateway } from "@ga/content";
 import { connect, type Db, localeOfEmail, setUserLocale } from "@ga/db";
@@ -29,6 +33,7 @@ import { AccountService } from "@ga/proto/account/v1/account_pb";
 import { AdminService } from "@ga/proto/admin/v1/admin_pb";
 import { BillingService } from "@ga/proto/billing/v1/billing_pb";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
+import { ConversationService } from "@ga/proto/conversation/v1/conversation_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 import { appStore, notifiedTransaction } from "./apple.ts";
@@ -117,6 +122,13 @@ const apple = (): AppStore | undefined => {
 const APPLE_NOTIFICATIONS = "/api/apple";
 
 let loaded: ReadonlyMap<string, UniversalHandler> | undefined;
+let conversations: ConversationDeps | undefined;
+
+/** voice is the voice service of English (deploy/voice), or undefined while any of its settings is missing. */
+const voice = (): VoiceConfig | undefined =>
+  env.VOICE_URL && env.VOICE_TICKET_PRIVATE_KEY && env.VOICE_SERVICE_CREDENTIAL
+    ? { url: env.VOICE_URL, privateKey: env.VOICE_TICKET_PRIVATE_KEY, credential: env.VOICE_SERVICE_CREDENTIAL }
+    : undefined;
 
 /**
  * routes reads the subject listings and builds the routing table once per
@@ -149,6 +161,16 @@ async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
     billingService({ registry, now: Date.now, ...(pay && { payments: pay }), ...(appleStore && { appStore: appleStore }) }),
   );
   router.service(AdminService, adminService({ now: Date.now, forms: forms(), notify, aiKeysSecret: env.AI_KEYS_SECRET, registry }));
+  const voiceConfig = voice();
+  const talk: ConversationDeps = {
+    registry,
+    now: Date.now,
+    billing,
+    ...(voiceConfig && { voice: voiceConfig }),
+    ...(env.AI_KEYS_SECRET && { judging: { aiKeysSecret: env.AI_KEYS_SECRET } }),
+  };
+  router.service(ConversationService, conversationService(talk));
+  conversations = talk;
   loaded = new Map(router.handlers.map((h) => [h.requestPath, h]));
   return loaded;
 }
@@ -183,6 +205,17 @@ export async function handleApi(request: Request): Promise<Response> {
       .set(userIdKey, session?.user.id)
       .set(accountsKey, childAccounts(auth, conn.db));
     return universalServerResponseToFetch(await handler(req));
+  } finally {
+    waitUntil(conn.close());
+  }
+}
+
+/** handleVoiceApi serves the voice service's calls under /voice/v1, which it makes with its own credential. */
+export async function handleVoiceApi(request: Request): Promise<Response> {
+  await routes();
+  const conn = connect(env.HYPERDRIVE.connectionString);
+  try {
+    return await handleVoice(request, conn.db, conversations!);
   } finally {
     waitUntil(conn.close());
   }

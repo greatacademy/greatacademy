@@ -214,7 +214,7 @@ W6 属于 E7。
 | E5.2 | 技术验证：容器中的 Pipecat 1.15 或更新版本，学习者用真实手机网络连接；决定从 Mavio 借用内容的许可证问题 | 临时目录，之后进入 `apps/voice` | 测得至少三个地区从说完到听到第一段音频的时间 |
 | E5.3 | `apps/voice`，使用 uv 和固定版本的 Python；`package.json` 脚本运行 pytest、ruff 和 pyright，让 Nx 像对待其他项目一样识别它 | `apps/voice`、`mise.toml` | `pnpm nx run-many -t typecheck test lint` 包含它 |
 | E5.4 | 使用伪造语音服务的流水线：语音活动、一轮结束、打断、按级别设置的最长停顿、会话时长限制 | `apps/voice` | 不联网也能通过测试 |
-| E5.5 | 票据、服务凭据和 Protobuf 消息；结果写入幂等 | `libs/proto`、`libs/api`、`apps/voice` | 过期、伪造和重复使用的票据都被拒绝 |
+| E5.5 | 票据、服务凭据和会话的消息；结果写入幂等 | `libs/proto`、`libs/api`、`apps/voice` | 过期、伪造和重复使用的票据都被拒绝 |
 | E5.6 | `compose.yaml` 中的 `voice`；会话期间的 `SIGTERM` 测试；连接 `cf dev` 和真实服务的对话，**只用容器** | `compose.yaml` | 停止容器时拒绝新会话，并让当前会话结束 |
 | E5.7 | Web 上的对话播放器，包括麦克风检查、字幕和会话结束总结 | `apps/web` | 本地能端到端完成一次会话 |
 | E5.8 | 内含权重的镜像；按摘要构建和推送的脚本。仓库目前没有 CI，所以先用 `mise` 任务 | `apps/voice`、`mise.toml` | 镜像启动时不下载任何东西 |
@@ -226,7 +226,9 @@ W6 属于 E7。
 
 **集群。** Hetzner Cloud 希尔斯伯勒区域 Talos 上的 Kubernetes 1.33，用 Terraform 搭建，带有 Cilium、kube-prometheus-stack 和 KEDA 2.20；镜像放在 GHCR 的 `ghcr.io/greatacademy/voice`；Secret 用 `kubectl` 手动创建（[deploy/voice](../deploy/voice/README.zh-CN.md)）。
 
-**已完成。** E5.8 和 E5.9：`mise run voice:push <overlay>` 从已提交的代码为 `linux/amd64` 构建镜像、推送，并把 overlay 固定到它的 digest，镜像在无网络时也能启动；`mise run voice:check` 渲染 `test` 和 `production` 两个 overlay，并用 kubeconform 校验，包括 KEDA 和 Prometheus Operator 的资源。KEDA 按 `voice_sessions_active` 扩缩，每个 pod 在 `/metrics` 报告它。E5.10 中，测试命名空间 `ga-voice-test` 在它的 Tunnel 后运行一个使用脚本化语音的 pod，Tunnel 只放行 `/v1/conversation`；不是由 Web Worker 的密钥签发的票据在那里被拒绝。会话期间的滚动更新要等 E5.5 和 E5.7，因为目前还无法签发票据。
+**已完成。** E5.8 和 E5.9：`mise run voice:push <overlay>` 从已提交的代码为 `linux/amd64` 构建镜像、推送，并把 overlay 固定到它的 digest，镜像在无网络时也能启动；`mise run voice:check` 渲染 `test` 和 `production` 两个 overlay，并用 kubeconform 校验，包括 KEDA 和 Prometheus Operator 的资源。KEDA 按 `voice_sessions_active` 扩缩，每个 pod 在 `/metrics` 报告它。E5.10 中，测试命名空间 `ga-voice-test` 在它的 Tunnel 后运行一个使用脚本化语音的 pod，Tunnel 只放行 `/v1/conversation`；不是由 Web Worker 的密钥签发的票据在那里被拒绝。会话期间的滚动更新要等 E5.5 和 E5.7 部署之后。
+
+E5.5 和 E5.7：内容模型有了对话（`ConversationDef`），英语在“语法与句子写作”中提供一段测试对话 `library-help-desk`。`ConversationService` 列出课程的对话以及每段当前能否进行，用 Worker 的 Ed25519 密钥签发票据（原始 32 字节，即 `ga_voice.devkeys` 打印的格式，或 PKCS #8），并展示会话结果；语音服务带着凭据调用 `POST /voice/v1/turn` 和 `PUT /voice/v1/sessions/{id}/result`。导师的台词来自 `libs/judge` 的 `converse`，提示词为 `conversation-1`，学习者的话经过脱敏并作为数据围起来。只有成年人能使用对话，并且需要用途为 `conversation` 的、已上线、已校准、有价格的路由；未成年人不会被询问 `conversation` 授权。Web 播放器在 `/$subject/talk/$conversationId`，用音量条检查麦克风，实时显示字幕，结束时显示原因、学习者说话的次数和对话记录。一次对话已在本地端到端跑通：无头 Chrome 播放录好的麦克风声音，compose 中的语音服务使用脚本化语音，`cf dev`，以及一个替身模型。应用中的播放器要等 Native Shell 提供原始麦克风采集。
 
 ### E6. 自然拼读（L）
 

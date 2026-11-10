@@ -307,8 +307,10 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 - **流水线。** Pipecat 负责语音活动检测、判断一轮结束、打断和语音服务。它不用 LLM 服务：回答由 Worker 通过 pi-ai 生成，让所有模型调用都在一处。学习者的停顿比母语者长，所以一轮中最长的停顿按级别设置。
 - **项目。** Python 和 uv 在 `mise.toml` 中固定，使用 pytest、ruff 和 pyright。Pipecat 精确固定版本（当前为 1.15.0）。镜像包含模型权重，首次会话无需下载。
 - **票据。** Worker 签发有效期约 60 秒的票据，写明学习者、课程和会话；服务用公钥验证。服务用自己的凭据调用 Worker，写入结果时按会话 ID 保证幂等。
-- **传输。** 使用 Protobuf 消息的 WebSocket，Pod 不需要 UDP。如果在各地区真实移动网络上的测量不达标，就改用经 Cloudflare TURN 的 WebRTC；流水线不依赖传输方式。
-- **隐私。** Pod 没有持久卷，不保存音频，日志不含转写内容。
+- **回合。** 服务把到目前为止的对话发给 Worker，得到导师的下一句以及是否结束；第一句是对话的开场白，不调用模型。Worker 通过用途为 `conversation` 的路由（先主路由，再备用路由）扮演对话的情景，并在 40 个回合后或对话时长用完时结束。每位学习者每天最多 10 次对话。
+- **传输。** WebSocket，Pod 不需要 UDP：双向以二进制消息传输 16 kHz 单声道 16 位 PCM，其余为 JSON 文本消息（`apps/voice/src/ga_voice/messages.py`）。如果在各地区真实移动网络上的测量不达标，就改用经 Cloudflare TURN 的 WebRTC；流水线不依赖传输方式。
+- **隐私。** Pod 没有持久卷，不保存音频，日志不含转写内容。Worker 保存会话转写 30 天，从不保存儿童的。
+- **客户端。** Web 客户端沿用 Mavio 的做法：在学习者点击时按设备采样率创建 AudioContext；worklet 以平均的方式降采样到 16 kHz，每帧 20 ms；导师的声音经同一个上下文播放，让浏览器的回声消除能去掉它；没有声音的麦克风会被换成另一个；套接字打开前说的话先保存，打开后再发送。
 
 生产环境运行在 Hetzner Cloud 位于 Hillsboro 的 Kubernetes 集群上，与 PostgreSQL 同处一地（[架构 §6](architecture.zh-CN.md#6-部署)），配置放在 `deploy/voice`，使用 Kustomize 的 base 和 overlay：
 

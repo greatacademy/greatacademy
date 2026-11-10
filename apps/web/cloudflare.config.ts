@@ -50,6 +50,9 @@ export default defineConfig({
       // whose public half is VOICE_TICKET_PUBLIC_KEY in each overlay's config.env, and the credential it presents.
       VOICE_TICKET_PRIVATE_KEY: bindings.secret(),
       VOICE_SERVICE_CREDENTIAL: bindings.secret(),
+      // The voice service's WebSocket, such as wss://voice.greatacademy.dev/v1/conversation; without the three, no
+      // conversation is offered.
+      VOICE_URL: bindings.secret(),
       // The App Store Server API's in-app purchase key; without it the iOS app sells nothing (docs/billing.md §8).
       APPLE_IAP_KEY_ID: bindings.secret(),
       APPLE_IAP_ISSUER_ID: bindings.secret(),

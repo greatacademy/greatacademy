@@ -6,6 +6,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useRequireSession } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
+import { ConversationsCard } from "./Conversations.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
@@ -223,6 +224,7 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
             {!d.active && d.tasks.length > 1 && <p className="text-sm text-muted">{m.tasksHint}</p>}
             {!d.active && d.tasks.length === 0 && <Card className="text-muted">{m.nothingToDo}</Card>}
           </section>
+          <ConversationsCard courseId={courseId} subjectId={subjectId} />
           <RecentWork courseId={courseId} subject={subjectId} />
         </div>
 

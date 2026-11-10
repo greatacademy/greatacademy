@@ -117,7 +117,7 @@ apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
 - `libs/judge` 依赖 `libs/content` 的类型和 pi-ai。它不知道任何学科，也不接触数据库：`libs/api` 把标准、文本和模型客户端交给它，再保存它返回的结果。
 - `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
-- `apps/voice` 用 Python 编写，不引入仓库内任何代码。它用自己的凭据经 HTTP 访问 Web Worker，获取导师的回合并写入结果；它与客户端共用的 WebSocket 消息以后在 `libs/proto` 中改为 Protobuf。
+- `apps/voice` 用 Python 编写，不引入仓库内任何代码。它用自己的凭据经 HTTP 访问 Web Worker，获取导师的回合并写入结果；它与客户端共用的 WebSocket 以二进制消息传输 PCM，其余是在 `apps/voice` 中定义的 JSON 文本消息。
 - 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。Web Worker 不引入内容，而是通过服务绑定访问学科。
 
 ## 4. 领域模型

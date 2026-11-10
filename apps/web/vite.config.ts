@@ -31,8 +31,9 @@ function embedAssets(): Plugin {
 }
 
 export default defineConfig({
-  // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server.
-  server: { port: 5173, host: process.env.DEV_HOST },
+  // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server; the voice service in
+  // compose reaches it as host.docker.internal.
+  server: { port: 5173, host: process.env.DEV_HOST, allowedHosts: ["host.docker.internal"] },
   plugins: [
     embedAssets(),
     cloudflare({

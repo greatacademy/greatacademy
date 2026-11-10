@@ -47,6 +47,8 @@ import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
 import { Route as SettingsDeleteRouteImport } from './routes/settings/delete'
 import { Route as SettingsPasswordRouteImport } from './routes/settings/password'
+import { Route as VoiceSplatRouteImport } from './routes/voice/$'
+import { Route as SubjectTalkConversationIdRouteImport } from './routes/$subject/talk/$conversationId'
 import { Route as SubjectTopicsTopicIdRouteImport } from './routes/$subject/topics/$topicId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -239,6 +241,17 @@ const SettingsPasswordRoute = SettingsPasswordRouteImport.update({
   path: '/password',
   getParentRoute: () => SettingsRouteRoute,
 } as any)
+const VoiceSplatRoute = VoiceSplatRouteImport.update({
+  id: '/voice/$',
+  path: '/voice/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubjectTalkConversationIdRoute =
+  SubjectTalkConversationIdRouteImport.update({
+    id: '/talk/$conversationId',
+    path: '/talk/$conversationId',
+    getParentRoute: () => SubjectRouteRoute,
+  } as any)
 const SubjectTopicsTopicIdRoute = SubjectTopicsTopicIdRouteImport.update({
   id: '/topics/$topicId',
   path: '/topics/$topicId',
@@ -279,11 +292,13 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/settings/delete': typeof SettingsDeleteRoute
   '/settings/password': typeof SettingsPasswordRoute
+  '/voice/$': typeof VoiceSplatRoute
   '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/$subject/talk/$conversationId': typeof SubjectTalkConversationIdRoute
   '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
 }
 export interface FileRoutesByTo {
@@ -317,11 +332,13 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/settings/delete': typeof SettingsDeleteRoute
   '/settings/password': typeof SettingsPasswordRoute
+  '/voice/$': typeof VoiceSplatRoute
   '/$subject': typeof SubjectIndexRoute
   '/admin': typeof AdminIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/guardian': typeof GuardianIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/$subject/talk/$conversationId': typeof SubjectTalkConversationIdRoute
   '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
 }
 export interface FileRoutesById {
@@ -359,11 +376,13 @@ export interface FileRoutesById {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/settings/delete': typeof SettingsDeleteRoute
   '/settings/password': typeof SettingsPasswordRoute
+  '/voice/$': typeof VoiceSplatRoute
   '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/guardian/': typeof GuardianIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/$subject/talk/$conversationId': typeof SubjectTalkConversationIdRoute
   '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
 }
 export interface FileRouteTypes {
@@ -402,11 +421,13 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/delete'
     | '/settings/password'
+    | '/voice/$'
     | '/$subject/'
     | '/admin/'
     | '/courses/'
     | '/guardian/'
     | '/settings/'
+    | '/$subject/talk/$conversationId'
     | '/$subject/topics/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -440,11 +461,13 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/delete'
     | '/settings/password'
+    | '/voice/$'
     | '/$subject'
     | '/admin'
     | '/courses'
     | '/guardian'
     | '/settings'
+    | '/$subject/talk/$conversationId'
     | '/$subject/topics/$topicId'
   id:
     | '__root__'
@@ -481,11 +504,13 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/delete'
     | '/settings/password'
+    | '/voice/$'
     | '/$subject/'
     | '/admin/'
     | '/courses/'
     | '/guardian/'
     | '/settings/'
+    | '/$subject/talk/$conversationId'
     | '/$subject/topics/$topicId'
   fileRoutesById: FileRoutesById
 }
@@ -508,6 +533,7 @@ export interface RootRouteChildren {
   GuardianLearnerIdRoute: typeof GuardianLearnerIdRoute
   LegalPageRoute: typeof LegalPageRoute
   SessionSessionIdRoute: typeof SessionSessionIdRoute
+  VoiceSplatRoute: typeof VoiceSplatRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   GuardianIndexRoute: typeof GuardianIndexRoute
 }
@@ -780,6 +806,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsPasswordRouteImport
       parentRoute: typeof SettingsRouteRoute
     }
+    '/voice/$': {
+      id: '/voice/$'
+      path: '/voice/$'
+      fullPath: '/voice/$'
+      preLoaderRoute: typeof VoiceSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$subject/talk/$conversationId': {
+      id: '/$subject/talk/$conversationId'
+      path: '/talk/$conversationId'
+      fullPath: '/$subject/talk/$conversationId'
+      preLoaderRoute: typeof SubjectTalkConversationIdRouteImport
+      parentRoute: typeof SubjectRouteRoute
+    }
     '/$subject/topics/$topicId': {
       id: '/$subject/topics/$topicId'
       path: '/topics/$topicId'
@@ -795,6 +835,7 @@ interface SubjectRouteRouteChildren {
   SubjectHistoryRoute: typeof SubjectHistoryRoute
   SubjectProgressRoute: typeof SubjectProgressRoute
   SubjectIndexRoute: typeof SubjectIndexRoute
+  SubjectTalkConversationIdRoute: typeof SubjectTalkConversationIdRoute
   SubjectTopicsTopicIdRoute: typeof SubjectTopicsTopicIdRoute
 }
 
@@ -803,6 +844,7 @@ const SubjectRouteRouteChildren: SubjectRouteRouteChildren = {
   SubjectHistoryRoute: SubjectHistoryRoute,
   SubjectProgressRoute: SubjectProgressRoute,
   SubjectIndexRoute: SubjectIndexRoute,
+  SubjectTalkConversationIdRoute: SubjectTalkConversationIdRoute,
   SubjectTopicsTopicIdRoute: SubjectTopicsTopicIdRoute,
 }
 
@@ -877,6 +919,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuardianLearnerIdRoute: GuardianLearnerIdRoute,
   LegalPageRoute: LegalPageRoute,
   SessionSessionIdRoute: SessionSessionIdRoute,
+  VoiceSplatRoute: VoiceSplatRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   GuardianIndexRoute: GuardianIndexRoute,
 }
