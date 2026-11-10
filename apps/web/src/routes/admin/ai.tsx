@@ -16,6 +16,15 @@ import { usd } from "../../lib/usd.ts";
 
 export const Route = createFileRoute("/admin/ai")({ component: AiServices });
 
+/** USES are the uses of a route, in the order the page groups them. */
+const USES = ["judgment", "conversation", "stt", "tts", "pronunciation"] as const;
+
+/** TEXT_USES are the uses served by a text model through pi-ai, with a prompt version. */
+const TEXT_USES: readonly string[] = ["judgment", "conversation"];
+
+/** NO_API stands for a vendor set up by hand without a text API, since a list cannot hold an empty value. */
+const NO_API = "none";
+
 /** budgetField reads an optional budget from a form: empty leaves it unset. */
 function budgetField(form: FormData, name: string): number | undefined {
   const value = String(form.get(name) ?? "").trim();
@@ -29,16 +38,14 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
   const catalog = useCatalog();
   const [picked, setPicked] = useState(provider ? provider.catalog : undefined);
   const vendor = catalog.data?.providers.find((c) => c.id === picked);
-  const [kind, setKind] = useState(provider?.kind ?? "model");
   const save = useMutation({
     mutationFn: (form: FormData) =>
       admin.saveProvider({
         provider: {
           id: provider?.id ?? "",
           name: String(form.get("name")),
-          kind: vendor ? "model" : kind,
           catalog: picked ?? "",
-          api: String(form.get("api") ?? ""),
+          api: form.get("api") === NO_API ? "" : String(form.get("api") ?? ""),
           baseUrl: String(form.get("baseUrl")),
           enabled: form.get("enabled") === "on",
           dailyBudget: budgetField(form, "dailyBudget"),
@@ -89,32 +96,17 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
               <p className="text-sm text-muted">{t.apiOf(t.apis[vendor.api] ?? vendor.api)}</p>
             </>
           ) : (
-            <>
-              <div className="space-y-1.5">
-                <SelectField
-                  label={t.kind}
-                  name="kind"
-                  required
-                  defaultValue={kind}
-                  options={Object.entries(t.kinds).map(([value, label]) => ({ value, label }))}
-                  onValueChange={setKind}
-                />
-                <p className="text-xs text-muted">{t.kindHint}</p>
-              </div>
-              {kind === "model" && (
-                <div className="space-y-1.5">
-                  <SelectField
-                    label={t.api}
-                    name="api"
-                    required
-                    placeholder={t.chooseProvider}
-                    defaultValue={provider?.api || undefined}
-                    options={Object.entries(t.apis).map(([value, label]) => ({ value, label }))}
-                  />
-                  <p className="text-xs text-muted">{t.apiHint}</p>
-                </div>
-              )}
-            </>
+            <div className="space-y-1.5">
+              <SelectField
+                label={t.api}
+                name="api"
+                required
+                placeholder={t.chooseProvider}
+                defaultValue={provider ? provider.api || NO_API : undefined}
+                options={[...Object.entries(t.apis).map(([value, label]) => ({ value, label })), { value: NO_API, label: t.noApi }]}
+              />
+              <p className="text-xs text-muted">{t.apiHint}</p>
+            </div>
           )}
           <label className="block space-y-1.5 text-sm font-medium">
             <span>{t.baseUrl}</span>
@@ -132,21 +124,17 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
             <input name="apiKey" type="password" autoComplete="new-password" className={field} />
             <span className="block text-xs font-normal text-muted">{t.apiKeyHint}</span>
           </label>
-          {(vendor || kind === "model") && (
-            <>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="block space-y-1.5 text-sm font-medium">
-                  <span>{t.dailyBudget}</span>
-                  <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
-                </label>
-                <label className="block space-y-1.5 text-sm font-medium">
-                  <span>{t.monthlyBudget}</span>
-                  <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
-                </label>
-              </div>
-              <p className="text-xs text-muted">{t.budgetHint}</p>
-            </>
-          )}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{t.dailyBudget}</span>
+              <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
+            </label>
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{t.monthlyBudget}</span>
+              <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
+            </label>
+          </div>
+          <p className="text-xs text-muted">{t.budgetHint}</p>
           <label className="flex items-center gap-2 text-sm">
             <input name="enabled" type="checkbox" defaultChecked={provider?.enabled} />
             {t.enabled}
@@ -166,7 +154,7 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
   );
 }
 
-function ProviderCard({ provider }: { provider: Provider }) {
+function ProviderCard({ provider, uses }: { provider: Provider; uses: readonly string[] }) {
   const { m, locale } = useI18n();
   const t = useAdminText();
   const qc = useQueryClient();
@@ -185,22 +173,19 @@ function ProviderCard({ provider }: { provider: Provider }) {
             <h3 className="min-w-0 truncate font-semibold">{provider.name}</h3>
             <span className={`text-sm ${provider.enabled ? "text-good" : "text-muted"}`}>{provider.enabled ? t.enabled : t.disabled}</span>
           </div>
-          <p className="text-sm text-muted">
-            {t.kinds[provider.kind] ?? provider.kind}
-            {provider.api && ` · ${t.apis[provider.api] ?? provider.api}`}
-          </p>
+          <p className="text-sm text-muted">{uses.length > 0 ? uses.map((u) => t.uses[u] ?? u).join(" · ") : t.noUses}</p>
+          {provider.api && <p className="text-sm text-muted">{t.apiOf(t.apis[provider.api] ?? provider.api)}</p>}
           <p className="text-sm text-muted">{provider.keyHint ? t.keyEnds(provider.keyHint) : t.noKey}</p>
-          {provider.kind === "model" &&
-            (provider.dailyBudget !== undefined || provider.monthlyBudget !== undefined ? (
-              <p className="text-sm text-muted">
-                {t.budgets(
-                  provider.dailyBudget === undefined ? t.noLimit : usd(provider.dailyBudget),
-                  provider.monthlyBudget === undefined ? t.noLimit : usd(provider.monthlyBudget),
-                )}
-              </p>
-            ) : (
-              <p className="text-sm text-muted">{t.noBudgets}</p>
-            ))}
+          {provider.dailyBudget !== undefined || provider.monthlyBudget !== undefined ? (
+            <p className="text-sm text-muted">
+              {t.budgets(
+                provider.dailyBudget === undefined ? t.noLimit : usd(provider.dailyBudget),
+                provider.monthlyBudget === undefined ? t.noLimit : usd(provider.monthlyBudget),
+              )}
+            </p>
+          ) : (
+            <p className="text-sm text-muted">{t.noBudgets}</p>
+          )}
           {remove.isError && <ErrorNote message={errorText(remove.error, locale, m.error)} />}
           <div className="flex gap-2">
             <Button variant="secondary" onClick={() => setEditing(true)}>
@@ -222,6 +207,8 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
   const qc = useQueryClient();
   const [draftNote, setDraftNote] = useState(false);
   const catalog = useCatalog();
+  const [use, setUse] = useState<string>(route?.use ?? "judgment");
+  const text = TEXT_USES.includes(use);
   const [providerId, setProviderId] = useState(route?.providerId ?? "");
   const models = catalogModels(catalog.data?.providers, providers, providerId);
   const [modelId, setModelId] = useState(route?.model ?? "");
@@ -233,11 +220,13 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
       return admin
         .saveRoute({
           route: {
-            criterion: String(form.get("criterion")),
+            use,
+            target: String(form.get("target")),
             position: String(form.get("position")),
             providerId: String(form.get("provider")),
             model: String(form.get("model")),
-            promptVersion: String(form.get("prompt")),
+            promptVersion: String(form.get("prompt") ?? ""),
+            voice: String(form.get("voice") ?? ""),
             live,
           },
         })
@@ -256,18 +245,19 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
   }
   return (
     <form onSubmit={submit} className="space-y-3">
+      <SelectField
+        label={t.use}
+        name="use"
+        required
+        defaultValue={use}
+        disabled={!!route}
+        options={USES.map((value) => ({ value, label: t.uses[value] ?? value }))}
+        onValueChange={setUse}
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.criterion}</span>
-          <input
-            name="criterion"
-            required
-            pattern="[a-z0-9\-]+"
-            defaultValue={route?.criterion}
-            readOnly={!!route}
-            autoComplete="off"
-            className={field}
-          />
+          <span>{t.targets[use]}</span>
+          <input name="target" required defaultValue={route?.target} readOnly={!!route} autoComplete="off" className={field} />
         </label>
         <div>
           <SelectField
@@ -286,7 +276,7 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
         required
         placeholder={t.chooseProvider}
         defaultValue={route?.providerId}
-        options={providers.map((p) => ({ value: p.id, label: p.name }))}
+        options={providers.filter((p) => !text || p.api).map((p) => ({ value: p.id, label: p.name }))}
         onValueChange={setProviderId}
       />
       <div className="grid gap-3 sm:grid-cols-2">
@@ -308,10 +298,18 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
           )}
           <ModelOptions id={listId} models={models} />
         </label>
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.promptVersion}</span>
-          <input name="prompt" required defaultValue={route?.promptVersion} autoComplete="off" className={field} />
-        </label>
+        {text && (
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t.promptVersion}</span>
+            <input name="prompt" required defaultValue={route?.promptVersion} autoComplete="off" className={field} />
+          </label>
+        )}
+        {use === "tts" && (
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t.voice}</span>
+            <input name="voice" required defaultValue={route?.voice} autoComplete="off" className={field} />
+          </label>
+        )}
       </div>
       <label className="flex items-center gap-2 text-sm">
         <input name="live" type="checkbox" defaultChecked={route?.live} />
@@ -336,7 +334,7 @@ function RouteCard({ route, providers }: { route: AiRoute; providers: readonly P
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
   const remove = useMutation({
-    mutationFn: () => admin.deleteRoute({ criterion: route.criterion, position: route.position }),
+    mutationFn: () => admin.deleteRoute({ use: route.use, target: route.target, position: route.position }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
   });
   if (editing)
@@ -349,12 +347,14 @@ function RouteCard({ route, providers }: { route: AiRoute; providers: readonly P
     <Card className="space-y-2 p-5">
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="min-w-0 truncate font-semibold">
-          {route.criterion} · {t.positions[route.position] ?? route.position}
+          {route.target} · {t.positions[route.position] ?? route.position}
         </h3>
         <span className={`text-sm ${route.live ? "text-good" : "text-muted"}`}>{route.live ? t.live : t.draft}</span>
       </div>
       <p className="text-sm text-muted">
-        {providers.find((p) => p.id === route.providerId)?.name} · {route.model} · {route.promptVersion}
+        {[providers.find((p) => p.id === route.providerId)?.name, route.model, route.promptVersion || route.voice]
+          .filter(Boolean)
+          .join(" · ")}
       </p>
       <p className="text-sm">
         <span className={route.calibrated ? "text-good" : "text-warn"}>{route.calibrated ? t.calibrated : t.notCalibrated}</span>
@@ -393,7 +393,11 @@ function AiServices() {
         {list.length === 0 && <p className="text-muted">{t.noProviders}</p>}
         <div className="grid items-start gap-4 md:grid-cols-2">
           {list.map((p) => (
-            <ProviderCard key={p.id} provider={p} />
+            <ProviderCard
+              key={p.id}
+              provider={p}
+              uses={USES.filter((u) => routes.data.routes.some((r) => r.providerId === p.id && r.use === u))}
+            />
           ))}
           {addingProvider && (
             <Card className="p-5">
@@ -409,18 +413,29 @@ function AiServices() {
       </section>
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">{t.routes}</h2>
-        <p className="text-sm text-muted">{t.calibrationNote}</p>
+        <p className="text-sm text-muted">
+          {t.routesNote} {t.calibrationNote}
+        </p>
         {routes.data.routes.length === 0 && <p className="text-muted">{t.noRoutes}</p>}
-        <div className="grid items-start gap-4 md:grid-cols-2">
-          {routes.data.routes.map((r) => (
-            <RouteCard key={`${r.criterion}/${r.position}`} route={r} providers={list} />
-          ))}
-          {addingRoute && (
-            <Card className="p-5">
-              <RouteForm providers={list} onDone={() => setAddingRoute(false)} />
-            </Card>
-          )}
-        </div>
+        {USES.map((u) => {
+          const group = routes.data.routes.filter((r) => r.use === u);
+          if (group.length === 0) return null;
+          return (
+            <div key={u} className="space-y-3">
+              <h3 className="font-semibold">{t.uses[u]}</h3>
+              <div className="grid items-start gap-4 md:grid-cols-2">
+                {group.map((r) => (
+                  <RouteCard key={`${r.target}/${r.position}`} route={r} providers={list} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+        {addingRoute && (
+          <Card className="p-5 md:max-w-[calc(50%-0.5rem)]">
+            <RouteForm providers={list} onDone={() => setAddingRoute(false)} />
+          </Card>
+        )}
         {!addingRoute && list.length > 0 && (
           <Button variant="secondary" onClick={() => setAddingRoute(true)}>
             {t.newRoute}

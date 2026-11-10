@@ -108,7 +108,7 @@ function PriceForm({ providers, price, onDone }: { providers: readonly Provider[
           placeholder={t.chooseProvider}
           defaultValue={price?.providerId}
           disabled={!!price}
-          options={providers.filter((p) => p.kind === "model").map((p) => ({ value: p.id, label: p.name }))}
+          options={providers.map((p) => ({ value: p.id, label: p.name }))}
           onValueChange={setProviderId}
         />
         {price && <input type="hidden" name="provider" value={price.providerId} />}
@@ -271,7 +271,7 @@ function Costs() {
             </Card>
           )}
         </div>
-        {!adding && list.some((p) => p.kind === "model") && (
+        {!adding && list.length > 0 && (
           <Button variant="secondary" onClick={() => setAdding(true)}>
             {t.newPrice}
           </Button>
