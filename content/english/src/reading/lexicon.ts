@@ -101,6 +101,30 @@ went were west wet what whatever wheat wheel when where wherever which while whi
 will win wind window winds windy wings winter winters wires with within without women wooden words wore work worked
 workers working works world worms worn would wounds wrapped wrist write writers writing writings written wrote year
 years yellow yet you young younger your yourself zone zones
+afraid angry attached attack attacks banging bear bear's bee birth bitten bold bonus bottoms box breathes bumps buried
+butterfly buzzing champion climbs closes coldest continued corner creep crowd curls danger deer dig disappearing
+drifting easy edge egg eight elephant elephants enemies enemy facts family fat favorite fear fewer fill finding fires
+fishing following forest forget garden girl got grandparents grass grown halfway hardest head her herd hide hiding hit
+home hungry hunter hunters hurt hurts i icy impossible insect lay leaping legs lesson lighting likely lines lions
+looking loose lots marks matches meal minutes monsters movies my name nearly neat neighbors nothing noticed opinion
+pad painful park parking ponds print problem protection raises respect resting return sadly salmon's scientist sell
+shadow she should shouting shuts sleeper sleeping sleeps slipping snowshoe solve spend spot springs squirrel's
+stepping steps stick stories story stripes surprising swim swimmers tail teaches tiger tiger's toes told tracks tried
+waits wakes walked walking watching whale whoever wild wire woods yard zoo
+added afterward age alarm am anyone apple asked asking audience barn beetle beetle's beetles bell bench bent better
+bicycle bit blank boots boulder bow boxes boy broke brother builder cake can't cardboard careful carrot castle checked
+cheeks chocolate clapped class coin cookie cookies correct crown crumpled cry curtain daughter decided desk don't
+doubled dragon drawn drew dropped evening farmer's father felt fence fix fixing flag flying forgotten four-leaf fridge
+friend gap giving glue gold golden grandmother grandmother's grandpa gray grinned growled guard hall hat herself himself
+honest horse house icicles island joke kick kicked kite knees knelt landed laughed leg letter licking lion lips list
+loudly loved luck lucky man march marched maybe me meadow mole mom monday moon mother mr ms muddy mugs napkin necessary
+nobody nodded noon note notebook opened packing passed patch paused paw picked pillow play pleased post practiced prints
+proud queen quiet quietly raised rang reached recess relaxed remembered reminds ribbon ribbons rocket rolled roofs round
+row sad said sandwiches sat saturday scrambled seen sees shaky shiny shivering shout shouted silent silly silver smiled
+smiling snap snowball snowman soccer soldier sorry spelled speller spelling spent stairs standing stared street string
+sunflower sunflower's sure swayed sweaters sweetest tape teacher ten that's thumbs tightly tired tomato tomatoes torn
+touched towels tower towers toys trying tunnel twice voice wagging wanted wasn't waving we're what's whispered willow
+winner woke won word wrong yelled yesterday
 `;
 
 /** academic are the academic words that the passages use, with their spellings. */

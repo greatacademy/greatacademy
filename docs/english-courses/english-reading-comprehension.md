@@ -46,3 +46,10 @@ How to find what a text says, how texts are organized, and how to read between t
 
 2.3.1. Similes and Metaphors  
 2.3.2. Idioms
+
+## Reading
+
+Two knowledge units of original passages, offered as each one's topics are learned:
+
+1. How Animals Survive (10 informational passages: main ideas, organization, inference, fact and opinion, purpose)
+2. Stories and Fables (10 stories: characters, point of view, lessons, figurative language)

@@ -111,6 +111,7 @@ export const readingComprehension: CourseDef = {
   ),
   group: t("English", "英语"),
   explanationLocale: "en",
+  reading: ["how-animals-survive", "stories-and-fables"],
   units: [
     {
       title: t("Informational Texts", "说明性文本"),
