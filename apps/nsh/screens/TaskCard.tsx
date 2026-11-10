@@ -33,19 +33,23 @@ export function fromCourse(task: Task): string {
 
 /** TaskCard offers a task: what it is, its course if a foundation, its XP, and a button to start it (and, for the diagnostic, to skip it). */
 export function TaskCard(props: { task: Task; action: string; busy?: boolean; onStart: () => void; extra?: () => void }) {
-  const about = describeTask(props.task);
-  if (!about) return null;
+  // The card follows its task: a page that keeps the card, as the Learn tab does across subjects, gives it another.
+  const about = () => describeTask(props.task);
   return (
-    <Card>
-      <Muted>{[about.label, fromCourse(props.task), about.xp > 0 ? `${about.xp} XP` : ""].filter(Boolean).join(" · ")}</Muted>
-      <Rich source={about.title} inline bold fontSize={17} />
-      <If when={about.detail}>
-        <Muted>{about.detail}</Muted>
-      </If>
-      <Action label={props.action} disabled={props.busy} onPress={props.onStart} />
-      <If when={props.extra}>
-        <Quiet label={m().skipDiagnostic} disabled={props.busy} onPress={() => props.extra?.()} />
-      </If>
-    </Card>
+    <If when={about()}>
+      {(a) => (
+        <Card>
+          <Muted>{[a().label, fromCourse(props.task), a().xp > 0 ? `${a().xp} XP` : ""].filter(Boolean).join(" · ")}</Muted>
+          <Rich source={a().title} inline bold fontSize={17} />
+          <If when={a().detail}>
+            <Muted>{a().detail}</Muted>
+          </If>
+          <Action label={props.action} disabled={props.busy} onPress={props.onStart} />
+          <If when={props.extra}>
+            <Quiet label={m().skipDiagnostic} disabled={props.busy} onPress={() => props.extra?.()} />
+          </If>
+        </Card>
+      )}
+    </If>
   );
 }
