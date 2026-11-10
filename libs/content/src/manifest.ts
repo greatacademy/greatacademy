@@ -1,12 +1,14 @@
 import type { CompiledCourse, CompiledSubject, Graph, GraphPassage, GraphTopic, WeightedEdge } from "./compile.ts";
 import type { Text } from "./text.ts";
-import type { CourseDef } from "./types.ts";
+import type { CourseDef, CriterionSpec } from "./types.ts";
 
 /** ManifestTopic is what serving a subject needs of a topic without its generators. */
 export interface ManifestTopic extends GraphTopic {
   readonly title: Text;
   readonly summary: Text;
   readonly practiceOnly?: boolean;
+  /** criteria make the topic judged by a model, as in TopicDef. */
+  readonly criteria?: readonly CriterionSpec[];
 }
 
 /** ManifestPassage is what serving a subject needs of a passage without its text. */
@@ -82,6 +84,7 @@ export function subjectManifest(subject: CompiledSubject): SubjectManifest {
         title: topic.title,
         summary: topic.summary,
         ...(topic.practiceOnly && { practiceOnly: true }),
+        ...(topic.criteria && { criteria: topic.criteria }),
       };
     }),
     passages: (subject.def.reading ?? []).flatMap((unit) =>

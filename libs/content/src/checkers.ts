@@ -41,8 +41,33 @@ export const orderChecker: Checker = {
   },
 };
 
+/** MAX_WRITING_CHARS is the longest text a writing response may be, whatever its problem allows. */
+export const MAX_WRITING_CHARS = 8000;
+
+/** wordCount counts the words of a text: runs without spaces that hold a letter or a digit. */
+export function wordCount(text: string): number {
+  return text.split(/\s+/u).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+}
+
+/**
+ * writingChecker accepts a text of the length a judged problem asks for, the
+ * check before a model judges it; expected is { minWords, maxChars }.
+ */
+export const writingChecker: Checker = {
+  id: "writing",
+  maxLength: MAX_WRITING_CHARS,
+  check(expected, response) {
+    const { minWords, maxChars } = expected as { minWords: number; maxChars: number };
+    if (response.length > maxChars)
+      return { correct: false, feedback: t(`Keep it under ${maxChars} characters.`, `请控制在 ${maxChars} 个字符以内。`) };
+    if (wordCount(response) < minWords)
+      return { correct: false, feedback: t(`Write at least ${minWords} words.`, `请至少写 ${minWords} 个词。`) };
+    return { correct: true };
+  },
+};
+
 /** coreCheckers are the checkers every subject has. */
-export const coreCheckers: readonly Checker[] = [choiceChecker, textChecker, orderChecker];
+export const coreCheckers: readonly Checker[] = [choiceChecker, textChecker, orderChecker, writingChecker];
 
 /** CheckerRegistry finds checkers by id. */
 export class CheckerRegistry {
@@ -63,7 +88,7 @@ export class CheckerRegistry {
   check(id: string, expected: Json, response: string) {
     const checker = this.#checkers.get(id);
     if (!checker) throw new Error(`unknown checker ${id}`);
-    if (response.length > 2000) return { correct: false, feedback: t("The answer is too long.", "答案太长了。") };
+    if (response.length > (checker.maxLength ?? 2000)) return { correct: false, feedback: t("The answer is too long.", "答案太长了。") };
     try {
       return checker.check(expected, response);
     } catch {
@@ -75,7 +100,7 @@ export class CheckerRegistry {
   same(id: string, expected: Json, response: string, mistake: string): boolean {
     const checker = this.#checkers.get(id);
     if (!checker) throw new Error(`unknown checker ${id}`);
-    if (response.length > 2000) return false;
+    if (response.length > (checker.maxLength ?? 2000)) return false;
     try {
       return checker.same ? checker.same(expected, response, mistake) : response.replace(/\s+/g, "") === mistake.replace(/\s+/g, "");
     } catch {

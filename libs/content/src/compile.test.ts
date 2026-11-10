@@ -392,3 +392,64 @@ describe("passages", () => {
     expect(errors(subject({ lexicon: [{ word: "bee" }, { word: "bee" }] })).join()).toContain("appears twice");
   });
 });
+
+describe("judged topics", () => {
+  const criterion = { id: "states-point", version: "1", question: "Does the text state its point?", quoteWhenMet: true };
+  const writing = (n: number, criteria: readonly string[] = ["states-point"]): Problem => ({
+    prompt: t(`Write ${n} words about pets.`, `用英语写 ${n} 个词谈宠物。`),
+    answer: {
+      checker: "writing",
+      expected: { minWords: n, maxChars: 600 },
+      input: { kind: "writing", minWords: n, maxChars: 600 },
+      judged: { criteria },
+    },
+    solution: same("Dogs make good pets because they are loyal."),
+    canonical: "Dogs make good pets because they are loyal and kind.",
+    wrong: ["Dogs."],
+  });
+  const judgedTopic = (id: string, criteria: readonly string[] = ["states-point"], extra: Partial<TopicDef> = {}) =>
+    topic(id, {
+      criteria: [criterion],
+      knowledgePoints: [
+        { id: "kp", title: t("Write", "写"), explanation: t("Explain", "讲解"), generate: (rng) => writing(rng.int(3, 6), criteria) },
+      ],
+      ...extra,
+    });
+
+  it("lets a judged topic depend on any topic, but no other topic depend on it", () => {
+    expect(errors(subject([topic("a"), judgedTopic("w", undefined, { prerequisites: ["a"] })]))).toEqual([]);
+    expect(errors(subject([judgedTopic("w"), topic("b", { prerequisites: ["w"] })]))).toEqual([
+      "topic b: prerequisite w is judged by a model, so a topic that is not cannot depend on it",
+    ]);
+    expect(errors(subject([judgedTopic("w"), topic("b", { encompasses: [{ topic: "w", weight: 0.5, nonAncestor: true }] })]))).toEqual([
+      "topic b: encompassed topic w is judged by a model, so a topic that is not cannot encompass it",
+    ]);
+  });
+
+  it("checks criteria, and that a criterion shared by topics is the same", () => {
+    const bad = { ...criterion, id: "Bad", question: "State the point." };
+    expect(errors(subject([topic("a", { criteria: [bad, bad] })]))).toEqual([
+      "topic a › criterion Bad: id must be kebab case",
+      "topic a › criterion Bad: the question must be a yes-or-no question",
+      "topic a › criterion Bad: id must be kebab case",
+      "topic a › criterion Bad: duplicate criterion",
+      "topic a › criterion Bad: the question must be a yes-or-no question",
+    ]);
+    const other = { ...criterion, question: "Is the point clear?" };
+    expect(errors(subject([judgedTopic("w"), topic("v", { criteria: [other] })]))).toEqual([
+      "topic v › criterion states-point: a criterion shared by topics must be the same in each; change its id or version",
+    ]);
+  });
+
+  it("samples judged problems, checking their criteria and limits", () => {
+    expect(sampleGenerators(compileSubject(subject([judgedTopic("w")])), { samples: 20, minDistinct: 1 })).toEqual([]);
+    const unknown = sampleGenerators(compileSubject(subject([judgedTopic("w", ["other"])])), { samples: 5, minDistinct: 1 });
+    expect(unknown[0]?.message).toBe("criterion other is not one of the topic's");
+    const loose = topic("x", {
+      knowledgePoints: [{ id: "kp", title: t("W", "写"), explanation: t("E", "讲"), generate: () => writing(3) }],
+    });
+    expect(sampleGenerators(compileSubject(subject([loose])), { samples: 5, minDistinct: 1 })[0]?.message).toBe(
+      "a judged problem must be in a topic with criteria",
+    );
+  });
+});

@@ -19,7 +19,9 @@ export type InputSpec =
    * Points marked on the problem's figure; the response lists them as "(x, y)", joined by "; " when there are several, once
    * all of them are marked.
    */
-  | { readonly kind: "plot"; readonly grid: PlotGrid; readonly points: number };
+  | { readonly kind: "plot"; readonly grid: PlotGrid; readonly points: number }
+  /** A long text field for writing judged by a model; the response is the learner's text, of at least minWords words and at most maxChars characters. */
+  | { readonly kind: "writing"; readonly minWords: number; readonly maxChars: number };
 
 /** PlotGrid says where a figure's coordinates lie and which points of it a learner can mark. */
 export interface PlotGrid {
@@ -43,6 +45,31 @@ export interface AnswerSpec {
   /** expected is the checker's data: the correct answer and any form requirements. */
   readonly expected: Json;
   readonly input: InputSpec;
+  /** judged marks a response that a model judges once the checker has accepted its length; the problem's canonical response is then the model answer shown to the judge. */
+  readonly judged?: JudgedSpec;
+}
+
+/** JudgedSpec is what a model judges a response to a problem against. */
+export interface JudgedSpec {
+  /** criteria are the ids of the topic's criteria the response is judged on, assessing only what the step taught. */
+  readonly criteria: readonly string[];
+  /** source is text the task is about, such as the sentences to combine or the passage to answer from, in English. */
+  readonly source?: string;
+}
+
+/**
+ * CriterionSpec is one yes-or-no question a model answers about a learner's
+ * text. Its id and version name it in routes and calibrations: changing the
+ * question changes the version, and a new version needs its own calibration.
+ */
+export interface CriterionSpec {
+  /** id is unique within its subject, in kebab case. */
+  readonly id: string;
+  readonly version: string;
+  /** question is asked of the text, answerable with yes or no, in English. */
+  readonly question: string;
+  /** quoteWhenMet asks the judge to quote the words that meet the criterion. */
+  readonly quoteWhenMet: boolean;
 }
 
 /** Mistake is a wrong response that shows a known misunderstanding, with what to say about it. */
@@ -119,6 +146,12 @@ export interface TopicDef {
   readonly diagnostic?: string;
   /** standards are codes of the standards the topic covers, such as "CCSS.7.NS.A.1". */
   readonly standards?: readonly string[];
+  /**
+   * criteria make the topic judged by a model: its judged problems are judged
+   * against them. A learner for whom some criterion has no qualifying route does
+   * not get the topic, so no topic without criteria may depend on one with them.
+   */
+  readonly criteria?: readonly CriterionSpec[];
 }
 
 /** ModuleDef groups topics of a unit. */
@@ -215,6 +248,8 @@ export interface Checker {
   check(expected: Json, response: string): Verdict;
   /** same tells whether a response means the same as a listed mistake; without it they must be equal apart from spacing. */
   same?(expected: Json, response: string, mistake: string): boolean;
+  /** maxLength is the longest response the checker reads; longer ones are rejected unread. 2,000 characters by default. */
+  readonly maxLength?: number;
 }
 
 /** SubjectDef is everything a subject contributes. */

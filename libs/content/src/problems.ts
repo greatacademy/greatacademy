@@ -1,4 +1,4 @@
-import { orderIndexes } from "./checkers.ts";
+import { MAX_WRITING_CHARS, orderIndexes } from "./checkers.ts";
 import type { CompiledSubject, Issue } from "./compile.ts";
 import { type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { createRng } from "./rng.ts";
@@ -107,6 +107,25 @@ function plotIssue(grid: PlotGrid, points: number, canonical: string): string | 
   return undefined;
 }
 
+/** judgedIssue tells what is wrong with a problem judged by a model: its input, its criteria or its length limits. */
+function judgedIssue(topic: TopicDef, problem: Problem): string | undefined {
+  const { input, judged, checker, expected } = problem.answer;
+  if (input.kind !== "writing" || !judged) return "a writing input and a judged answer go together";
+  if (checker !== "writing") return "a judged problem is checked by the writing checker";
+  if (!topic.criteria) return "a judged problem must be in a topic with criteria";
+  if (judged.criteria.length === 0) return "a judged problem needs at least one criterion";
+  const known = new Set(topic.criteria.map((c) => c.id));
+  const unknown = judged.criteria.find((c) => !known.has(c));
+  if (unknown) return `criterion ${unknown} is not one of the topic's`;
+  if (new Set(judged.criteria).size !== judged.criteria.length) return "a judged problem lists a criterion twice";
+  if (!(Number.isInteger(input.minWords) && input.minWords > 0)) return "minWords must be a positive whole number";
+  if (!(Number.isInteger(input.maxChars) && input.maxChars > 0 && input.maxChars <= MAX_WRITING_CHARS))
+    return `maxChars must be a whole number from 1 to ${MAX_WRITING_CHARS}`;
+  const e = expected as { minWords?: unknown; maxChars?: unknown };
+  if (e.minWords !== input.minWords || e.maxChars !== input.maxChars) return "the writing checker must expect the input's limits";
+  return undefined;
+}
+
 function checkSample(
   subject: CompiledSubject,
   topic: TopicDef,
@@ -178,6 +197,10 @@ function checkSample(
   if (answer.input.kind === "plot") {
     if (!a.figure) return "a plot needs a figure to mark";
     const issue = plotIssue(answer.input.grid, answer.input.points, a.canonical);
+    if (issue) return issue;
+  }
+  if (answer.input.kind === "writing" || answer.judged) {
+    const issue = judgedIssue(topic, a);
     if (issue) return issue;
   }
   const verdict = subject.checkers.check(answer.checker, answer.expected, a.canonical);

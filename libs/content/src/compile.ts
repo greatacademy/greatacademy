@@ -3,7 +3,7 @@ import { explanationParts, figureIssue } from "./figure.ts";
 import { bodyWords, lexiconIndex } from "./passages.ts";
 import type { Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
-import type { CourseDef, KnowledgePointDef, SubjectDef, TopicDef } from "./types.ts";
+import type { CourseDef, CriterionSpec, KnowledgePointDef, SubjectDef, TopicDef } from "./types.ts";
 
 /** Issue is a problem the compiler found in a subject's content. */
 export interface Issue {
@@ -133,6 +133,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
 
   // Topics, their texts and knowledge points.
   const topics = new Map<string, TopicDef>();
+  const criteria = new Map<string, CriterionSpec>();
   for (const topic of def.topics) {
     const path = `topic ${topic.id}`;
     if (!idPattern.test(topic.id)) error(path, "id must be kebab case");
@@ -166,6 +167,22 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     }
     if (topic.diagnostic !== undefined && !kpIds.has(topic.diagnostic))
       error(path, `diagnostic knowledge point ${topic.diagnostic} does not exist`);
+    if (topic.criteria) {
+      if (topic.criteria.length === 0) error(path, "a judged topic needs at least one criterion");
+      const own = new Set<string>();
+      for (const c of topic.criteria) {
+        const cPath = `${path} › criterion ${c.id}`;
+        if (!idPattern.test(c.id)) error(cPath, "id must be kebab case");
+        if (own.has(c.id)) error(cPath, "duplicate criterion");
+        own.add(c.id);
+        if (!/^[a-z0-9.-]{1,16}$/.test(c.version)) error(cPath, "version must be a short token");
+        if (!c.question.trim().endsWith("?")) error(cPath, "the question must be a yes-or-no question");
+        const before = criteria.get(c.id);
+        if (before && (before.version !== c.version || before.question !== c.question || before.quoteWhenMet !== c.quoteWhenMet))
+          error(cPath, "a criterion shared by topics must be the same in each; change its id or version");
+        criteria.set(c.id, c);
+      }
+    }
   }
 
   // Prerequisite edges.
@@ -177,6 +194,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       else if (!topics.has(p)) error(path, `prerequisite ${p} does not exist`);
       if (seen.has(p)) error(path, `duplicate prerequisite ${p}`);
       seen.add(p);
+      if (!topic.criteria && topics.get(p)?.criteria)
+        error(path, `prerequisite ${p} is judged by a model, so a topic that is not cannot depend on it`);
     }
   }
 
@@ -210,6 +229,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
         error(path, `encompassing weight of ${e.topic} must be in (0, 1], got ${e.weight}`);
       if (seen.has(e.topic)) error(path, `duplicate encompassing of ${e.topic}`);
       seen.add(e.topic);
+      if (!topic.criteria && topics.get(e.topic)?.criteria)
+        error(path, `encompassed topic ${e.topic} is judged by a model, so a topic that is not cannot encompass it`);
     }
     for (const kp of topic.knowledgePoints) {
       for (const k of kp.keyPrerequisites ?? []) {
