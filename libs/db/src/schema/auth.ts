@@ -24,6 +24,8 @@ export const user = pgTable("user", {
   username: text("username").unique(),
   /** displayUsername is the username as its owner wrote it, which leagues show. */
   displayUsername: text("display_username"),
+  /** locale is the language the person last used, "en" or "zh-CN", in which email is written to them; null until known. */
+  locale: text("locale"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

@@ -92,6 +92,13 @@
       "when": 1794283334483,
       "tag": "0012_verdict-checks",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794292684479,
+      "tag": "0013_user-locale",
+      "breakpoints": true
     }
   ]
 }

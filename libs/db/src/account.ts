@@ -237,3 +237,20 @@ export async function recentEvents(db: Db, learnerId: string, since: Date): Prom
     blownOff: tasks.filter((e) => "blownOff" in e && e.blownOff).length,
   };
 }
+
+/** EmailLocale is a language email is written in. */
+export type EmailLocale = "en" | "zh-CN";
+
+/** setUserLocale records the language a person last used; it writes only when the language changed. */
+export async function setUserLocale(db: Db, userId: string, locale: EmailLocale): Promise<void> {
+  await db
+    .update(user)
+    .set({ locale })
+    .where(and(eq(user.id, userId), sql`${user.locale} is distinct from ${locale}`));
+}
+
+/** localeOfEmail is the language of the account with an address, or undefined when none is recorded. */
+export async function localeOfEmail(db: Db, email: string): Promise<EmailLocale | undefined> {
+  const [row] = await db.select({ locale: user.locale }).from(user).where(eq(user.email, email));
+  return row?.locale === "en" || row?.locale === "zh-CN" ? row.locale : undefined;
+}
