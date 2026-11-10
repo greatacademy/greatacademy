@@ -156,6 +156,10 @@ export const literatureArgument: CourseDef = {
       modules: [
         { title: t("Language of Literature", "文学语言"), topics: ["personification-and-hyperbole", "sound-devices"] },
         { title: t("Story and Meaning", "故事与意义"), topics: ["plot-and-conflict", "theme", "tone-and-mood"] },
+        {
+          title: t("Reading Closely", "细读"),
+          topics: ["narrative-point-of-view", "symbolism", "irony", "foreshadowing-and-flashback", "citing-textual-evidence"],
+        },
       ],
     },
     {
@@ -171,6 +175,7 @@ export const literatureArgument: CourseDef = {
             "writing-a-counterclaim-paragraph",
             "introductions-and-conclusions",
             "revising-a-draft",
+            "writing-a-literary-analysis-paragraph",
           ],
         },
       ],

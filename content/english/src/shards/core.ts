@@ -14,6 +14,7 @@ import { weatherAndClimate } from "../reading/weather.ts";
 import { argumentTopics } from "../topics/argument.ts";
 import { clauseTopics } from "../topics/grammar-clauses.ts";
 import { sentenceTopics } from "../topics/grammar-sentences.ts";
+import { literaryAnalysisTopics } from "../topics/literary-analysis.ts";
 import { literatureTopics } from "../topics/literature.ts";
 import { mechanicsTopics } from "../topics/mechanics.ts";
 import { informationalReadingTopics } from "../topics/reading-informational.ts";
@@ -42,6 +43,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...informationalReadingTopics,
   ...thinkingReadingTopics,
   ...literatureTopics,
+  ...literaryAnalysisTopics,
   ...argumentTopics,
   ...judgedEssayTopics,
 ];

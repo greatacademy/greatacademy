@@ -5,7 +5,7 @@
 - **Level:** Grades 6 to 8
 - **Prerequisite(s):** Reading for Meaning, Grammar and Sentence Writing
 - **Language of explanation:** English
-- **Size:** 2 units · 4 modules · 15 topics
+- **Size:** 2 units · 5 modules · 21 topics
 
 ## Description
 
@@ -13,7 +13,7 @@ How stories and poems make meaning, and how arguments are built from claims, evi
 
 ## Units
 
-### 1. Literature (5 topics)
+### 1. Literature (10 topics)
 
 #### 1.1. Language of Literature
 
@@ -26,7 +26,15 @@ How stories and poems make meaning, and how arguments are built from claims, evi
 1.2.2. Theme  
 1.2.3. Tone and Mood
 
-### 2. Argument (10 topics)
+#### 1.3. Reading Closely
+
+1.3.1. Narrators and What They Know  
+1.3.2. Symbolism  
+1.3.3. Irony  
+1.3.4. Foreshadowing and Flashback  
+1.3.5. Citing Textual Evidence
+
+### 2. Argument (11 topics)
 
 #### 2.1. Building an Argument
 
@@ -42,7 +50,8 @@ How stories and poems make meaning, and how arguments are built from claims, evi
 2.2.3. Writing a Body Paragraph with Evidence  
 2.2.4. Writing a Counterclaim Paragraph  
 2.2.5. Introductions and Conclusions  
-2.2.6. Revising a Draft
+2.2.6. Revising a Draft  
+2.2.7. Writing About a Passage
 
 The topics of 2.2 are judged by a model, one move of an essay at a time; a learner whom no route may serve goes through the course without them.
 

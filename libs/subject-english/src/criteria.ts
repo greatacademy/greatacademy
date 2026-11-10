@@ -166,6 +166,13 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     quoteWhenMet: true,
   },
   {
+    id: "w5-literary-claim",
+    version: "1",
+    question:
+      "Does the paragraph open with a claim about the passage's meaning or the writer's craft, rather than only retelling what happens?",
+    quoteWhenMet: true,
+  },
+  {
     id: "w5-revision-fixes",
     version: "1",
     question: "Does the revision fix the problem that the task names in the draft?",
