@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { type CloudflareMail, type EmailSettings, emailProviders, emailSender, resetPasswordEmail, senderAddress } from "./email.ts";
+import { type CloudflareMail, type EmailSettings, emailProviders, emailSender, senderAddress } from "./email.ts";
+import { resetPasswordEmail } from "./templates.ts";
 
 const FROM = "Great Academy <noreply@mail.example.test>";
-const email = resetPasswordEmail("guardian@example.test", "https://example.test/reset");
+const email = resetPasswordEmail("guardian@example.test", "https://example.test/reset", "en");
 
 const failing = (code: string) => {
   const error = Object.assign(new Error("failed"), { code });
@@ -58,6 +59,7 @@ describe("emailSender", () => {
       to: "guardian@example.test",
       subject: email.subject,
       text: email.text,
+      html: email.html,
     });
   });
 

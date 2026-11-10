@@ -24,7 +24,7 @@ import {
   userIdKey,
 } from "@ga/api";
 import type { SubjectGateway } from "@ga/content";
-import { connect } from "@ga/db";
+import { connect, type Db, localeOfEmail, setUserLocale } from "@ga/db";
 import { AccountService } from "@ga/proto/account/v1/account_pb";
 import { AdminService } from "@ga/proto/admin/v1/admin_pb";
 import { BillingService } from "@ga/proto/billing/v1/billing_pb";
@@ -33,8 +33,9 @@ import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 import { appStore, notifiedTransaction } from "./apple.ts";
 import { childAccounts, createAuth } from "./auth.ts";
-import { alarmEmail, billingEmail, emailSender, privacyEmail } from "./email.ts";
+import { emailSender } from "./email.ts";
 import { readWebhook, type StripeKeys, stripePayments, WebhookError } from "./stripe.ts";
+import { alarmEmail, billingEmail, privacyEmail, requestLocale } from "./templates.ts";
 
 /** RPC_PREFIX is where the Connect services are mounted. */
 export const RPC_PREFIX = "/api/rpc";
@@ -65,10 +66,13 @@ const mailer = () =>
 
 /** notify sends a privacy notice by email; a failure to tell someone does not undo what happened. */
 const notify: Notify = async (to, kind) => {
+  const conn = connect(env.HYPERDRIVE.connectionString);
   try {
-    await mailer()(privacyEmail(to, kind));
+    await mailer()(privacyEmail(to, kind, (await localeOfEmail(conn.db, to)) ?? "en"));
   } catch (e) {
     console.error(`privacy notice ${kind} failed`, e instanceof Error ? e.message : "");
+  } finally {
+    waitUntil(conn.close());
   }
 };
 
@@ -170,6 +174,9 @@ export async function handleApi(request: Request): Promise<Response> {
     const handler = (await routes()).get(url.pathname.slice(RPC_PREFIX.length));
     if (!handler) return new Response("Not Found", { status: 404 });
     const session = await auth.api.getSession({ headers: request.headers });
+    // The language a person uses is the one their scheduled email is written in.
+    const locale = requestLocale(request.headers);
+    if (session && locale && session.user.locale !== locale) await setUserLocale(conn.db, session.user.id, locale);
     const req = universalServerRequestFromFetch(request, {});
     req.contextValues = createContextValues()
       .set(dbKey, conn.db)
@@ -211,10 +218,10 @@ async function appleNotification(db: Parameters<typeof applyBillingEvent>[0], re
   }
 }
 
-/** remind sends a plan reminder by email; a failure is logged, and the next period tries again. */
-const remind = async (to: string, kind: Parameters<typeof billingEmail>[1]) => {
+/** reminder sends a plan reminder by email; a failure is logged, and the next period tries again. */
+const reminder = (db: Db) => async (to: string, kind: Parameters<typeof billingEmail>[1]) => {
   try {
-    await mailer()(billingEmail(to, kind));
+    await mailer()(billingEmail(to, kind, (await localeOfEmail(db, to)) ?? "en"));
   } catch (e) {
     console.error(`billing reminder ${kind} failed`, e instanceof Error ? e.message : "");
   }
@@ -229,13 +236,15 @@ export async function runScheduled(at: number, cron: string): Promise<void> {
   try {
     if (cron !== DAILY_CRON) {
       const send = mailer();
-      const raised = await runCostCheck(conn.db, at, (to, alarm) => send(alarmEmail(to, alarm)));
+      const raised = await runCostCheck(conn.db, at, async (to, alarm) =>
+        send(alarmEmail(to, alarm, (await localeOfEmail(conn.db, to)) ?? "en")),
+      );
       if (raised.length > 0) console.log("cost alarms", JSON.stringify(raised.map((a) => `${a.target}: ${a.detail}`)));
       return;
     }
     const result = await runRetention(conn.db, at, { forms: forms(), notify });
     console.log("retention run", JSON.stringify(result));
-    if (stripe()) console.log("billing reminders", await runBillingReminders(conn.db, at, remind));
+    if (stripe()) console.log("billing reminders", await runBillingReminders(conn.db, at, reminder(conn.db)));
   } finally {
     await conn.close();
   }

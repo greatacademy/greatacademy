@@ -51,7 +51,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
 | 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用由应用自身渲染，再显示在 Native Shell 的 `WebView` 中，样式表、字体和 MathLive 从 Worker 的 `/embed` 加载 |
 | 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
-| 邮件 | **Cloudflare Email Service**，通过 Worker 的 `send_email` 绑定 `EMAIL`；或 **Resend**，通过 HTTP 调用，使用 `RESEND_API_KEY`。密钥 `EMAIL_PROVIDER` 按顺序列出要用的服务，`EMAIL_FROM` 是发件人 | 密码重置、邮箱验证、通知、提醒和告警，含两种语言；Worker 不需要 SMTP 客户端。两者都列出时，只有第一个因暂时性原因（限流、每日上限、投递失败或故障）失败时才由第二个发送，配置或邮件本身有误时不切换（`apps/web/src/server/email.ts`） |
+| 邮件 | **Cloudflare Email Service**，通过 Worker 的 `send_email` 绑定 `EMAIL`；或 **Resend**，通过 HTTP 调用，使用 `RESEND_API_KEY`。密钥 `EMAIL_PROVIDER` 按顺序列出要用的服务，`EMAIL_FROM` 是发件人 | 密码重置、邮箱验证、通知、提醒和告警，每封都有 HTML 和纯文本两部分，且只用一种语言：本人请求的邮件使用请求的语言（网页的 `ga-locale` cookie，否则为 `Accept-Language`，原生应用会把它设为应用自己的语言），定时发送的邮件使用 `user.locale`，即此人最近使用的语言，每次 API 请求都会更新它；都不知道时用英语（`apps/web/src/server/templates.ts`）。Worker 不需要 SMTP 客户端。两者都列出时，只有第一个因暂时性原因（限流、每日上限、投递失败或故障）失败时才由第二个发送，配置或邮件本身有误时不切换（`apps/web/src/server/email.ts`） |
 | 支付 | **Stripe**，美国公司的一个账户，在 Worker 中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
 | 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，来自项目 fork 的 `greatacademy` 分支），内购用的 StoreKit 在应用自己的 Rust crate 中，应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |

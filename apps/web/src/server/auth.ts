@@ -7,10 +7,15 @@ import { APIError } from "better-auth/api";
 import { bearer, username } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 
-import { resetPasswordEmail, type SendEmail, verifyEmail } from "./email.ts";
+import type { SendEmail } from "./email.ts";
+import { type Locale, requestLocale, resetPasswordEmail, verifyEmail } from "./templates.ts";
 
 /** usernameForm is the form a username is stored and looked up in: Unicode NFC, lowercase. */
 const usernameForm = (name: string) => name.trim().normalize("NFC").toLowerCase();
+
+/** emailLocale is the language of an email a person asked for: that of their request, else the one they last used, else English. */
+const emailLocale = (request: Request | undefined, stored: unknown): Locale =>
+  requestLocale(request?.headers) ?? (stored === "zh-CN" || stored === "en" ? stored : "en");
 
 /**
  * createAuth configures better-auth on a request's database. Every account has
@@ -40,12 +45,14 @@ export function createAuth(
       minPasswordLength: 8,
       resetPasswordTokenExpiresIn: 60 * 60,
       revokeSessionsOnPasswordReset: true,
-      sendResetPassword: ({ user, url }) => sendEmail(resetPasswordEmail(user.email, url)),
+      sendResetPassword: ({ user, url }, request) =>
+        sendEmail(resetPasswordEmail(user.email, url, emailLocale(request, (user as { locale?: unknown }).locale))),
     },
     emailVerification: {
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
-      sendVerificationEmail: ({ user, url }) => sendEmail(verifyEmail(user.email, url)),
+      sendVerificationEmail: ({ user, url }, request) =>
+        sendEmail(verifyEmail(user.email, url, emailLocale(request, (user as { locale?: unknown }).locale))),
     },
     plugins: [
       username({
@@ -60,11 +67,12 @@ export function createAuth(
     databaseHooks: {
       user: {
         create: {
-          before: async (user) => {
+          before: async (user, ctx) => {
             const name = typeof user.name === "string" ? user.name.trim() : "";
             if (!name) throw new APIError("BAD_REQUEST", { message: "enter your name" });
             if (typeof user.username !== "string" || !user.username) throw new APIError("BAD_REQUEST", { message: "choose a username" });
-            return { data: { ...user, name } };
+            const locale = requestLocale(ctx?.headers ?? ctx?.request?.headers);
+            return { data: { ...user, name, ...(locale && { locale }) } };
           },
         },
         update: {
@@ -78,6 +86,7 @@ export function createAuth(
       },
     },
     user: {
+      additionalFields: { locale: { type: "string", required: false, input: false } },
       deleteUser: {
         enabled: true,
         beforeDelete: async ({ id }) => {
