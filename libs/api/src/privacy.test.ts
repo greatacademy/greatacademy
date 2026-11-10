@@ -690,6 +690,7 @@ describe("the admin console", () => {
       shortRetention: true,
       processingAgreement: true,
       transferMechanism: true,
+      region: "US",
     };
     await admin("root").saveRegisterEntry({ entry });
     await admin("root").publishNotice({ version: "2026-12", vendors: [id] });
@@ -722,6 +723,7 @@ describe("the admin console", () => {
         shortRetention: true,
         processingAgreement: true,
         transferMechanism: true,
+        region: "US",
       },
     });
     await admin("root").publishNotice({ version: "2026-12", vendors: [id] });
@@ -758,6 +760,7 @@ describe("the admin console", () => {
         shortRetention: true,
         processingAgreement: true,
         transferMechanism: true,
+        region: "US",
       },
     });
     await admin("root").publishNotice({ version: "2026-12", vendors: [id] });

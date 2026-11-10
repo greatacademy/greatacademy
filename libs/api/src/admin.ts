@@ -67,7 +67,7 @@ export interface AdminDeps {
 
 const STALE_WARNING = 30 * 24 * 3600_000;
 const logLength = 200;
-const kinds: readonly ProviderKind[] = ["model", "speech", "other"];
+const kinds: readonly ProviderKind[] = ["model", "speech"];
 
 function need(ok: unknown, message: string): asserts ok {
   if (!ok) throw new ConnectError(message, Code.InvalidArgument);
@@ -235,7 +235,6 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
           catalog: p.catalog,
           api: p.api,
           baseUrl: p.baseUrl,
-          region: p.region,
           keyHint: p.keyHint ?? "",
           enabled: p.enabled,
           ...(p.dailyBudget !== null && { dailyBudget: p.dailyBudget }),
@@ -286,7 +285,6 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         catalog,
         api,
         baseUrl: base,
-        region: p.region.trim(),
         enabled: p.enabled,
         dailyBudget: budgetOf(p.dailyBudget),
         monthlyBudget: budgetOf(p.monthlyBudget),
@@ -396,6 +394,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const { db, userId, at } = await admin(ctx);
       const e = req.entry;
       need(e && marketOf(e.country), "no such market");
+      need(e.region.trim(), "an entry names the region where the vendor processes the market's data");
       need(
         (await providers(db)).some((p) => p.id === e.providerId),
         "no such vendor",

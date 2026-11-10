@@ -272,7 +272,7 @@ A model answers by calling a `respond` tool whose schema holds the criteria and 
 
 **What the administrator sets:**
 
-- **Providers:** a named vendor from pi-ai's catalog, or an API and base URL given by hand, with the API key and region. Keys are encrypted with a key held in Worker secrets and can be replaced but never read back.
+- **Providers:** a named vendor from pi-ai's catalog, or an API and base URL given by hand, with the API key. Keys are encrypted with a key held in Worker secrets and can be replaced but never read back.
 - **Routes:** for each criterion, and for S6, the model, the prompt version and a backup.
 - **The vendor register** of [Minors' Data](minors-data.md#12-vendors): for each provider, the markets it serves, its terms for minors, its retention, and the date checked.
 
