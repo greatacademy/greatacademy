@@ -14,5 +14,5 @@ export const pack: Pack = {
   conversations,
   lexicon: [],
   vocabulary,
-  passageWords: [160, 320],
+  passageWords: [250, 450],
 };

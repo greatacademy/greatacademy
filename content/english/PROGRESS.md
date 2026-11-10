@@ -14,6 +14,8 @@ The level courses of [docs/english-curriculum.md §6](../../docs/english-curricu
 
 Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english-b2`; `english-grades-3-5`, `english-grades-6-8`, `english-grades-9-12`, `english-college-writing`; `english-ielts`, `english-toefl`, `english-cambridge-first`, `english-gaokao`.
 
+**Depth before breadth.** Rule-checked grammar, usage and sentence-writing knowledge points have at least 30 distinct items, each vocabulary word appears in at least three sentences (25 items or more per knowledge point), judged writing has at least 12 tasks per knowledge point, and reading units have 6 to 8 passages (native units 8 to 10). Fewer topics are written rather than thin ones.
+
 Content that needs audio or recording (listening of S1, speaking of S2 to S4, phonics) waits for its services; a unit is written without it, and its outline says what it will gain.
 
 | Step | State |
