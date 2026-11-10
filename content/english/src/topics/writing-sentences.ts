@@ -739,6 +739,225 @@ const finishNot = (wrong: string, _right: string, shown: string) => {
   return t(...said);
 };
 
+// More items, built from hand-written cores by deterministic templates.
+
+/** capitalSentences are correct sentences with names; the items lower them and ask for the capitals back. */
+const capitalSentences: readonly string[] = [
+  "Our class visited the Grand Canyon in May.",
+  "Uncle Ray lives in Chicago.",
+  "We swam in Lake Erie last summer.",
+  "My dog Biscuit sleeps all day.",
+  "The Nile River flows through Egypt.",
+  "Dr. Patel works at Lincoln Hospital.",
+  "On Friday we went to Pine Park.",
+  "Grandma flew from Mexico to Canada.",
+  "I read a book about Abraham Lincoln.",
+  "Mr. and Mrs. Kim own a bakery on Elm Street.",
+  "The Pacific Ocean is very deep.",
+  "My cousin Ava was born in June.",
+  "We drove across the Golden Gate Bridge.",
+  "Our school is called Maple Elementary.",
+  "The parade is on Monday in Boston.",
+  "Ms. Ortiz teaches us about Mars.",
+  "Jake and I watched the game on Sunday.",
+  "Mount Everest is in Asia.",
+  "My family celebrates Thanksgiving in November.",
+  "The Amazon River is in South America.",
+  "Aunt Lucy sent a card from London.",
+  "We hiked in Yellowstone National Park.",
+];
+const capitalMore: readonly TypedItem[] = capitalSentences.map((right) => {
+  const low = right.toLowerCase();
+  return fixed(low, right, cap(low), right.charAt(0).toLowerCase() + right.slice(1));
+});
+
+/** lists are a sentence opening, three items and an ending. */
+const lists: readonly (readonly [lead: string, a: string, b: string, c: string, tail: string])[] = [
+  ["Leo packed", "socks", "shirts", "a toothbrush", ""],
+  ["The salad has", "lettuce", "tomatoes", "cucumbers", ""],
+  ["We saw", "lions", "zebras", "giraffes", " at the zoo"],
+  ["My favorite colors are", "green", "purple", "orange", ""],
+  ["Ana plays", "soccer", "tennis", "basketball", ""],
+  ["The bag held", "a map", "a compass", "a flashlight", ""],
+  ["Grandpa grows", "beans", "peas", "carrots", " in his garden"],
+  ["The puppy is", "small", "fluffy", "playful", ""],
+  ["Bring", "a pencil", "an eraser", "a ruler", " to class"],
+  ["We visited", "Rome", "Paris", "Madrid", " last year"],
+  ["The cake needs", "flour", "eggs", "sugar", ""],
+  ["Tom", "swept the floor", "washed the dishes", "took out the trash", ""],
+  ["The kids", "ran", "jumped", "laughed", ""],
+  ["Our flag has", "stars", "stripes", "a blue square", ""],
+  ["She invited", "Mia", "Zoe", "Priya", " to her party"],
+  ["The forest was", "dark", "quiet", "cold", ""],
+  ["I need", "glue", "scissors", "colored paper", " for the project"],
+  ["Dad bought", "milk", "bread", "cheese", " at the store"],
+  ["The band played", "drums", "guitars", "a piano", ""],
+  ["The birds", "sang", "chirped", "fluttered", " in the trees"],
+  ["Ella read", "a poem", "a story", "a short play", ""],
+  ["The trail crosses", "a creek", "a meadow", "a rocky hill", ""],
+];
+const seriesMore: readonly TypedItem[] = lists.map(([lead, a, b, c, tail]) =>
+  typed(
+    `${lead} ${a} ${b} and ${c}${tail}.`,
+    `${lead} ${a}, ${b}, and ${c}${tail}.`,
+    [`${lead} ${a} ${b} and ${c}${tail}.`, `${lead}, ${a}, ${b}, and ${c}${tail}.`],
+    [`${lead} ${a}, ${b}(,) and ${c}${tail}.`],
+  ),
+);
+const seriesOrNotMore: readonly ChoiceItem[] = lists.map(
+  ([lead, a, b, c, tail], i): ChoiceItem =>
+    i % 2 === 0
+      ? ["", `${lead} ${a} and ${c}${tail}.`, [`${lead} ${a}, and ${c}${tail}.`, `${lead} ${a} and, ${c}${tail}.`]]
+      : ["", `${lead} ${a}, ${b}, and ${c}${tail}.`, [`${lead}, ${a}, ${b}, and ${c}${tail}.`, `${lead} ${a} ${b} and ${c}${tail}.`]],
+);
+
+/** pairs are two complete thoughts and the conjunction that joins them. */
+const pairs: readonly (readonly [word: string, first: string, second: string])[] = [
+  ["so", "The tank was empty", "we stopped for gas"],
+  ["but", "The puzzle was hard", "Lin solved it"],
+  ["so", "My shoes were wet", "I left them by the fire"],
+  ["but", "We waited an hour", "the bus never came"],
+  ["so", "The baby was sleeping", "we whispered"],
+  ["but", "The kitten is tiny", "she is very brave"],
+  ["so", "The museum was free", "we stayed all day"],
+  ["but", "The sun was out", "the air was cold"],
+  ["so", "The tickets sold out", "we watched at home"],
+  ["but", "Max studied hard", "he still felt nervous"],
+  ["so", "Jo practiced every day", "her playing improved"],
+  ["but", "The map was old", "it was still useful"],
+  ["so", "The path was dark", "Dad brought a flashlight"],
+  ["but", "I knocked loudly", "nobody opened the door"],
+  ["so", "The cookies were hot", "we let them cool"],
+  ["but", "The dress was pretty", "it cost too much"],
+  ["so", "The wind was strong", "the kites flew high"],
+  ["but", "The river looked calm", "the current was strong"],
+  ["so", "Ben was hungry", "he made a sandwich"],
+  ["but", "Ella wanted to swim", "the pool was closed"],
+  ["so", "The library was quiet", "I finished my book"],
+  ["but", "The team played well", "they lost the game"],
+];
+const andOr: readonly (readonly [word: string, first: string, second: string])[] = [
+  ["and", "The music started", "everyone danced"],
+  ["or", "You can take the stairs", "you can wait for the elevator"],
+  ["and", "Mom cooked dinner", "Dad washed the dishes"],
+  ["or", "We could visit the zoo", "we could go to the museum"],
+  ["and", "The lights dimmed", "the show began"],
+  ["or", "You can pay now", "you can pay later"],
+  ["and", "Ruby drew the pictures", "Sam wrote the words"],
+  ["or", "We can walk to the park", "we can ride our bikes"],
+];
+const expandMore: readonly TypedItem[] = pairs.slice(0, 20).map(([w, a, b]) => joined(w, a, b));
+const coordinatingMore: readonly TypedItem[] = [...andOr, ...pairs.slice(8)].map(([w, a, b]) => joined(w, a, b));
+const runOnOf = (i: number, a: string, b: string) => (i % 2 === 0 ? `${a} ${b}.` : `${a}, ${b}.`);
+const periodFixMore: readonly TypedItem[] = pairs.map(([, a, b], i) => {
+  const shown = runOnOf(i, a, b);
+  return typed(shown, `${a}. ${cap(b)}.`, [shown, `${a}, ${b.toLowerCase()}.`, `${a}. ${b.toLowerCase()}.`]);
+});
+const conjunctionFixMore: readonly TypedItem[] = pairs.map(([w, a, b], i) => conjunctionFix(w, runOnOf(i + 1, a, b), a, b));
+
+const subordinateMore: readonly TypedItem[] = [
+  subordinated("although", "she smiled", "she was nervous"),
+  subordinated("although", "the team kept playing", "it started to rain"),
+  subordinated("when", "the crowd cheered", "the band came on"),
+  subordinated("when", "I will call you", "I get home"),
+  subordinated("if", "we can go sledding", "it snows tonight"),
+  subordinated("if", "the plant will grow", "you water it"),
+  subordinated("because", "the roads were closed", "the river flooded"),
+  subordinated("because", "Tom stayed home", "he had a cold"),
+  subordinated("while", "the dog slept", "we ate dinner"),
+  subordinated("while", "Mom read the paper", "the kettle boiled"),
+  subordinated("after", "we played outside", "we finished our homework"),
+  subordinated("after", "the room was quiet", "the teacher spoke"),
+  subordinated("before", "wash your hands", "you eat"),
+  subordinated("before", "the birds sang", "the sun came up"),
+  subordinated("unless", "the show will start at six", "it is canceled"),
+  subordinated("unless", "you cannot enter", "you have a ticket"),
+  subordinated("until", "the children played", "the sun went down"),
+  subordinated("until", "keep stirring", "the soup boils"),
+  subordinated("since", "we have not seen him", "he moved away"),
+  subordinated("since", "Lena has been happier", "she joined the choir"),
+];
+
+/** causes are an effect and its cause, each written to fit after *because* or at the start of a sentence. */
+const causes: readonly (readonly [effect: string, cause: string])[] = [
+  ["the grass was wet", "it rained last night"],
+  ["Mia wore a coat", "it was cold outside"],
+  ["the plant died", "nobody watered it"],
+  ["we laughed", "the clown fell over"],
+  ["the puppy whined", "it wanted to go out"],
+  ["the store closed early", "it was a holiday"],
+  ["Leo got a prize", "he won the spelling bee"],
+  ["the road was blocked", "a tree had fallen"],
+  ["I was late", "my alarm did not ring"],
+  ["the kids cheered", "school was canceled"],
+  ["the milk went sour", "we left it out"],
+  ["the dog barked", "a stranger knocked"],
+  ["Ana was proud", "she finished the race"],
+  ["the ice melted", "the sun came out"],
+  ["we went inside", "the mosquitoes were biting"],
+  ["the lights flickered", "the storm was strong"],
+  ["Dad was tired", "he worked all night"],
+  ["the class was quiet", "the test had started"],
+  ["the bread was hard", "it was three days old"],
+  ["my hands were sticky", "I ate a peach"],
+  ["the river rose", "snow melted in the mountains"],
+  ["we packed snacks", "the trip was long"],
+  ["the beach was crowded", "the day was hot"],
+];
+const becauseMore: readonly TypedItem[] = causes.map(([effect, cause]) =>
+  typed(
+    `${cap(effect)}. ${cap(cause)}.`,
+    `${cap(effect)} because ${cause}.`,
+    [`${cap(cause)} because ${effect}.`, `${cap(effect)} because ${cause}`],
+    [`${cap(effect)} because ${cause}.`, `Because ${cause}, ${effect}.`],
+    use("because"),
+  ),
+);
+
+const endMarkMore: readonly ChoiceItem[] = [
+  ["Have you ever seen a whale___", "?", [".", ","]],
+  ["Our class planted a tree today___", ".", ["?", ","]],
+  ["Stop, the stove is hot___", "!", ["?", ","]],
+  ["Please pass the bread___", ".", ["?", ","]],
+  ["Who left the door open___", "?", [".", "!"]],
+  ["What a beautiful sunset___", "!", ["?", ","]],
+  ["He asked if the library was open___", ".", ["?", ","]],
+  ["Is it going to snow tonight___", "?", [".", ","]],
+  ["Get away from the edge___", "!", ["?", ","]],
+  ["The museum opens at ten___", ".", ["?", "!"]],
+  ["Why is the sky blue___", "?", [".", ","]],
+  ["We won the championship___", "!", ["?", ","]],
+  ["Tell me what you found___", ".", ["?", ","]],
+  ["Would you like more soup___", "?", [".", ","]],
+  ["Mom wondered where her keys were___", ".", ["?", ","]],
+  ["Ouch, that really hurt___", "!", ["?", ","]],
+  ["Turn left at the next corner___", ".", ["?", ","]],
+  ["When does the movie start___", "?", [".", "!"]],
+  ["The teacher asked who had finished___", ".", ["?", ","]],
+  ["Look out for the falling rocks___", "!", ["?", ","]],
+];
+
+const finishMore: readonly ChoiceItem[] = [
+  ["The game was canceled because ___", "the field was flooded.", ["the weather was perfect.", "so we went home."]],
+  ["The game was canceled, but ___", "we still practiced indoors.", ["the field was flooded.", "because of the rain."]],
+  ["The game was canceled, so ___", "we went to the movies instead.", ["the field was flooded.", "because it rained."]],
+  ["Leo was tired because ___", "he stayed up late.", ["he slept for ten hours.", "so he took a nap."]],
+  ["Leo was tired, but ___", "he finished his chores.", ["he stayed up late.", "because he ran a lot."]],
+  ["Leo was tired, so ___", "he went to bed early.", ["he stayed up late.", "but he was busy."]],
+  ["The ice cream melted because ___", "the freezer broke.", ["the freezer was very cold.", "so we drank it."]],
+  ["The ice cream melted, but ___", "it still tasted good.", ["the freezer broke.", "because of the heat."]],
+  ["The ice cream melted, so ___", "we made milkshakes.", ["the freezer broke.", "because it was warm."]],
+  ["Ana was nervous because ___", "she had to give a speech.", ["she felt calm and ready.", "so she practiced."]],
+  ["Ana was nervous, but ___", "she spoke clearly.", ["she had to give a speech.", "because of the crowd."]],
+  ["Ana was nervous, so ___", "she practiced in front of a mirror.", ["she had to give a speech.", "but she was brave."]],
+  ["The bus was late because ___", "there was a traffic jam.", ["the roads were empty.", "so we waited."]],
+  ["The bus was late, but ___", "we still got to school on time.", ["there was a traffic jam.", "because of the snow."]],
+  ["The bus was late, so ___", "we missed the first bell.", ["there was a traffic jam.", "because it snowed."]],
+  ["Bees visit flowers because ___", "flowers have nectar.", ["flowers have no smell.", "so they make honey."]],
+  ["Bees visit flowers, but ___", "they do not visit every kind.", ["flowers have nectar.", "because they are hungry."]],
+  ["Bees visit flowers, so ___", "the flowers get pollinated.", ["flowers have nectar.", "because they need food."]],
+];
+
 /** sentenceWritingTopics are the topics of punctuating, joining and improving sentences. */
 export const sentenceWritingTopics: readonly TopicDef[] = [
   {
@@ -759,7 +978,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with the correct capital letters.", "用正确的大写字母改写句子。"),
-          capitalBank,
+          [...capitalBank, ...capitalMore],
           (right) => t(`**${right}** Capitalize the first word and every name.`, `**${right}** 第一个词和所有专有名称都要大写。`),
         ),
       ),
@@ -772,7 +991,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which mark ends the sentence?", "句末应该用哪个标点？"),
-          endMarkBank,
+          [...endMarkBank, ...endMarkMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Ask whether it states, asks or exclaims.`,
@@ -801,7 +1020,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence-pattern",
           t("Rewrite the sentence with commas in the list.", "改写句子，为列表加上逗号。"),
-          seriesBank,
+          [...seriesBank, ...seriesMore],
           (right) =>
             t(
               `**${right}** Commas separate the items and do not come before the first or after the last.`,
@@ -818,7 +1037,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence uses commas correctly?", "哪个句子逗号用得正确？"),
-          seriesOrNotBank,
+          [...seriesOrNotBank, ...seriesOrNotMore],
           (right) =>
             t(`**${right}** Count the items: only three or more need commas.`, `**${right}** 数一数并列项：三项或更多才需要逗号。`),
           (wrong) =>
@@ -852,7 +1071,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which ending fits the sentence?", "哪个结尾适合这个句子？"),
-          finishBank,
+          [...finishBank, ...finishMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The ending has to do what the connecting word promises.`,
@@ -868,8 +1087,11 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "To join two complete sentences with *but* or *so*, drop the first period, add a comma and the word, and lower the capital of the second sentence unless it is a name: *The road was icy, so we drove slowly.*",
           "用 *but* 或 *so* 连接两个完整句子时，去掉第一个句号，加上逗号和连词，并把第二句的首字母改成小写（名字除外）：*The road was icy, so we drove slowly.*",
         ),
-        typedGenerator("sentence", t("Join the two sentences into one.", "把两个句子合并成一句。"), expandBank, (right) =>
-          t(`**${right}** A comma comes before the connecting word.`, `**${right}** 连接词前要加逗号。`),
+        typedGenerator(
+          "sentence",
+          t("Join the two sentences into one.", "把两个句子合并成一句。"),
+          [...expandBank, ...expandMore],
+          (right) => t(`**${right}** A comma comes before the connecting word.`, `**${right}** 连接词前要加逗号。`),
         ),
       ),
       point(
@@ -879,8 +1101,11 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "*Because* attaches the reason to the result: *We stayed inside because it was raining.* Make sure the reason follows the word. *It was raining because we stayed inside* reverses the meaning.\n\nIf you begin with *Because*, a comma follows the reason: *Because it was raining, we stayed inside.*",
           "*because* 把原因接到结果上：*We stayed inside because it was raining.* 要确保原因紧跟这个词。*It was raining because we stayed inside* 把意思弄反了。\n\n如果以 *Because* 开头，原因之后要加逗号：*Because it was raining, we stayed inside.*",
         ),
-        typedGenerator("sentence-pattern", t("Join the two sentences into one.", "把两个句子合并成一句。"), becauseBank, (right) =>
-          t(`**${right}** The word *because* comes right before the reason.`, `**${right}** *because* 紧接在原因之前。`),
+        typedGenerator(
+          "sentence-pattern",
+          t("Join the two sentences into one.", "把两个句子合并成一句。"),
+          [...becauseBank, ...becauseMore],
+          (right) => t(`**${right}** The word *because* comes right before the reason.`, `**${right}** *because* 紧接在原因之前。`),
         ),
       ),
     ],
@@ -903,8 +1128,12 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "When two sentences carry equal weight, join them with a comma and *and, but, or* or *so*. The two sentences keep their order and all their words: *The bell rang, and the students left.*",
           "两个句子分量相等时，用逗号加 *and, but, or* 或 *so* 连接。两句保持顺序，也保留所有词：*The bell rang, and the students left.*",
         ),
-        typedGenerator("sentence", t("Join the two sentences into one.", "把两个句子合并成一句。"), coordinatingBank, (right) =>
-          t(`**${right}** A comma and a conjunction join the two complete sentences.`, `**${right}** 用逗号加连词连接两个完整句子。`),
+        typedGenerator(
+          "sentence",
+          t("Join the two sentences into one.", "把两个句子合并成一句。"),
+          [...coordinatingBank, ...coordinatingMore],
+          (right) =>
+            t(`**${right}** A comma and a conjunction join the two complete sentences.`, `**${right}** 用逗号加连词连接两个完整句子。`),
         ),
       ),
       point(
@@ -917,7 +1146,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence-pattern",
           t("Join the two sentences into one. The conjunction goes with the second sentence.", "把两个句子合并成一句。连词属于第二句。"),
-          conjunctionBank,
+          [...conjunctionBank, ...subordinateMore],
           (right) =>
             t(
               `**${right}** The conjunction opens the dependent clause, and that clause takes a comma if it comes first.`,
@@ -942,11 +1171,15 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "The simplest repair is to make two sentences. Find where the first complete sentence ends, put a period there, and begin the next with a capital: *The sun set. We drove home.*",
           "最简单的修改是分成两句。找到第一个完整句子结束的地方，加上句号，下一句以大写字母开头：*The sun set. We drove home.*",
         ),
-        typedGenerator("sentence", t("Rewrite this as two sentences.", "把它改写成两个句子。"), periodFixBank, (right) =>
-          t(
-            `**${right}** Each complete sentence now has its own capital and period.`,
-            `**${right}** 每个完整句子现在都有自己的大写字母和句号。`,
-          ),
+        typedGenerator(
+          "sentence",
+          t("Rewrite this as two sentences.", "把它改写成两个句子。"),
+          [...periodFixBank, ...periodFixMore],
+          (right) =>
+            t(
+              `**${right}** Each complete sentence now has its own capital and period.`,
+              `**${right}** 每个完整句子现在都有自己的大写字母和句号。`,
+            ),
         ),
       ),
       point(
@@ -956,8 +1189,11 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "To keep one sentence and show how the ideas relate, put a comma and a conjunction between them: *The test was hard, but I finished it anyway.* A comma alone is not enough, and neither is a conjunction alone.",
           "如果要保持一句话并表明意思间的关系，就在中间加逗号和连词：*The test was hard, but I finished it anyway.* 只有逗号不够，只有连词也不够。",
         ),
-        typedGenerator("sentence", t("Rewrite this as one correct sentence.", "把它改写成一个正确的句子。"), conjunctionFixBank, (right) =>
-          t(`**${right}** The comma and the conjunction work together.`, `**${right}** 逗号和连词要一起使用。`),
+        typedGenerator(
+          "sentence",
+          t("Rewrite this as one correct sentence.", "把它改写成一个正确的句子。"),
+          [...conjunctionFixBank, ...conjunctionFixMore],
+          (right) => t(`**${right}** The comma and the conjunction work together.`, `**${right}** 逗号和连词要一起使用。`),
         ),
       ),
     ],

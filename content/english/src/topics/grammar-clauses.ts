@@ -480,7 +480,7 @@ const wordClass: Readonly<Record<string, WordClass>> = {
 };
 
 const notThisClass = (target: Pair) => (wrong: string) => {
-  const [en, zh] = classDescription[entry(wordClass, wrong)];
+  const [en, zh] = classDescription[entry(allWordClass, wrong)];
   return t(`“${wrong}” ${en}. ${target[0]}`, `“${wrong}” ${zh}。${target[1]}`);
 };
 
@@ -774,6 +774,313 @@ const stillNotParallel = (wrong: string, _right: string, shown: string) =>
       )
     : t(`“${wrong}” still has a different form from the other items in the list.`, `“${wrong}” 的形式仍与列表中的其他项不同。`);
 
+// More items, built from hand-written cores by deterministic templates.
+
+const upper = (s: string) => s[0]!.toUpperCase() + s.slice(1);
+
+/** describedScenes are sentences in four parts: adjective, noun, verb and the object noun. */
+const describedScenes: readonly (readonly [adjective: string, noun: string, verb: string, object: string])[] = [
+  ["proud", "captain", "steered", "ship"],
+  ["sleepy", "cat", "watched", "birds"],
+  ["muddy", "boots", "left", "prints"],
+  ["clever", "student", "solved", "puzzle"],
+  ["old", "tractor", "pulled", "wagon"],
+  ["hungry", "bear", "found", "honey"],
+  ["patient", "teacher", "answered", "question"],
+  ["bright", "lamp", "lit", "room"],
+  ["tiny", "ant", "carried", "crumb"],
+  ["loud", "drum", "shook", "floor"],
+  ["cheerful", "clerk", "wrapped", "present"],
+  ["gentle", "giant", "lifted", "boulder"],
+  ["rusty", "key", "opened", "chest"],
+  ["brave", "knight", "guarded", "gate"],
+  ["noisy", "crow", "stole", "bread"],
+  ["careful", "driver", "passed", "truck"],
+  ["fresh", "paint", "covered", "wall"],
+  ["wise", "owl", "studied", "forest"],
+  ["shiny", "coin", "caught", "light"],
+  ["busy", "chef", "chopped", "onions"],
+  ["quiet", "librarian", "stamped", "cards"],
+  ["sticky", "jam", "coated", "spoon"],
+];
+const modifierKindMore: readonly ChoiceItem[] = describedScenes.map(([a, n, v, o]) => [`The ${a} ${n} ${v} the ${o}.`, a, [n, v, o]]);
+
+/** actionScenes are sentences in three parts: noun, verb and adverb. */
+const actionScenes: readonly (readonly [noun: string, verb: string, adverb: string])[] = [
+  ["swimmer", "dove", "gracefully"],
+  ["puppy", "barked", "excitedly"],
+  ["owl", "hooted", "softly"],
+  ["crowd", "waited", "patiently"],
+  ["students", "listened", "carefully"],
+  ["kettle", "whistled", "loudly"],
+  ["snow", "fell", "silently"],
+  ["guard", "spoke", "firmly"],
+  ["dancer", "spun", "quickly"],
+  ["rabbit", "hopped", "away"],
+  ["mechanic", "worked", "tirelessly"],
+  ["boat", "rocked", "gently"],
+  ["twins", "argued", "constantly"],
+  ["traveler", "returned", "yesterday"],
+  ["thief", "crept", "quietly"],
+  ["sun", "rose", "early"],
+  ["children", "played", "outside"],
+  ["clock", "ticked", "steadily"],
+  ["visitors", "arrived", "today"],
+  ["batter", "swung", "hard"],
+  ["eagle", "soared", "high"],
+  ["audience", "clapped", "politely"],
+];
+const adverbMore: readonly ChoiceItem[] = actionScenes.map(([n, v, d]) => [`The ${n} ${v} ${d}.`, d, [n, v, "The"]]);
+
+/** formTriples are an adjective, its adverb and its noun, each with a sentence for the adverb and one for the adjective. */
+const formTriples: readonly (readonly [adjective: string, adverb: string, noun: string, forAdverb: string, forAdjective: string])[] = [
+  ["careful", "carefully", "carefulness", "Mia carried the eggs ___.", "Mia is a ___ driver."],
+  ["happy", "happily", "happiness", "The children laughed ___.", "The children looked ___."],
+  ["kind", "kindly", "kindness", "The nurse spoke ___ to us.", "The nurse was ___."],
+  ["soft", "softly", "softness", "The music played ___.", "The blanket feels ___."],
+  ["calm", "calmly", "calmness", "Dad answered ___.", "The lake was ___ this morning."],
+  ["polite", "politely", "politeness", "Leo asked ___ for water.", "Leo is always ___."],
+  ["neat", "neatly", "neatness", "She wrote her name ___.", "Her handwriting is ___."],
+  ["eager", "eagerly", "eagerness", "The puppy waited ___ for dinner.", "The puppy seemed ___."],
+  ["sweet", "sweetly", "sweetness", "The bird sang ___.", "The peaches taste ___."],
+  ["loud", "loudly", "loudness", "The fans cheered ___.", "The fans were ___."],
+];
+const adjOrAdvMore: readonly ChoiceItem[] = formTriples.flatMap(([adj, adv, noun, forAdv, forAdj]): ChoiceItem[] => [
+  [forAdv, adv, [adj, noun]],
+  [forAdj, adj, [adv, noun]],
+]);
+
+const phraseMore: readonly ChoiceItem[] = [
+  ["The fox hid behind the old barn.", "behind the old barn", ["The fox", "hid behind", "the old"]],
+  ["A girl with long braids smiled.", "with long braids", ["A girl", "braids smiled", "long braids"]],
+  ["We walked across the wooden bridge.", "across the wooden bridge", ["We walked", "walked across", "the wooden"]],
+  ["The vase on the windowsill broke.", "on the windowsill", ["The vase", "windowsill broke", "vase on"]],
+  ["Ben swam to the floating dock.", "to the floating dock", ["Ben swam", "swam to", "the floating"]],
+  ["A postcard from Paris came today.", "from Paris", ["A postcard", "came today", "Paris came"]],
+  ["The train rushed through the tunnel.", "through the tunnel", ["The train", "rushed through", "train rushed"]],
+  ["My shoes are under the bed.", "under the bed", ["My shoes", "are under", "shoes are"]],
+  ["The baby sat beside her brother.", "beside her brother", ["The baby", "sat beside", "her brother"]],
+  ["After the concert, we ate pizza.", "After the concert", ["we ate", "ate pizza", "concert, we"]],
+  ["The man with the camera waved.", "with the camera", ["The man", "camera waved", "the man with"]],
+  ["Ducks paddled across the pond.", "across the pond", ["Ducks paddled", "paddled across", "the pond"]],
+  ["The note from my teacher was short.", "from my teacher", ["The note", "was short", "teacher was"]],
+  ["The kite drifted behind the trees.", "behind the trees", ["The kite", "drifted behind", "kite drifted"]],
+  ["Pia rode her bike to the library.", "to the library", ["Pia rode", "her bike", "bike to"]],
+  ["The keys on the hook are mine.", "on the hook", ["The keys", "are mine", "hook are"]],
+  ["A deer ran through the meadow.", "through the meadow", ["A deer", "ran through", "the meadow"]],
+  ["We played chess after dinner.", "after dinner", ["We played", "played chess", "chess after"]],
+  ["The puppy curled up beside the fire.", "beside the fire", ["The puppy", "curled up", "up beside"]],
+  ["The bucket under the sink is cracked.", "under the sink", ["The bucket", "is cracked", "sink is"]],
+];
+
+const phraseJobMore: readonly ChoiceItem[] = [
+  ["The girl **with the kite** laughed.", "girl", ["laughed", "kite"]],
+  ["We swam **in the lake**.", "swam", ["We", "lake"]],
+  ["The bread **on the counter** is fresh.", "bread", ["fresh", "counter"]],
+  ["He napped **after lunch**.", "napped", ["He", "lunch"]],
+  ["The store **across the street** sells toys.", "store", ["sells", "street"]],
+  ["They hid **behind the shed**.", "hid", ["They", "shed"]],
+  ["The picture **above the fireplace** fell.", "picture", ["fell", "fireplace"]],
+  ["Mom jogs **before breakfast**.", "jogs", ["Mom", "breakfast"]],
+  ["The bench **under the tree** is wet.", "bench", ["wet", "tree"]],
+  ["The cat sleeps **on the sofa**.", "sleeps", ["cat", "sofa"]],
+  ["A friend **from Spain** visited.", "friend", ["visited", "Spain"]],
+  ["We camped **near the river**.", "camped", ["We", "river"]],
+  ["The boy **in the blue coat** waved.", "boy", ["waved", "coat"]],
+  ["She studied **during the storm**.", "studied", ["She", "storm"]],
+  ["The road **to the farm** is muddy.", "road", ["muddy", "farm"]],
+  ["The birds flew **over the hill**.", "flew", ["birds", "hill"]],
+  ["The lamp **beside the bed** flickered.", "lamp", ["flickered", "bed"]],
+  ["Leo practiced **at the gym**.", "practiced", ["Leo", "gym"]],
+  ["The cookies **in the jar** are gone.", "cookies", ["gone", "jar"]],
+  ["The plane landed **at noon**.", "landed", ["plane", "noon"]],
+  ["The jacket **with the hood** is mine.", "jacket", ["mine", "hood"]],
+  ["Grandma knits **by the window**.", "knits", ["Grandma", "window"]],
+];
+
+const fanboysMore: readonly ChoiceItem[] = [
+  ["The movie was long, ___ it was exciting.", "but", ["so", "or"]],
+  ["I was thirsty, ___ I drank some water.", "so", ["but", "or"]],
+  ["Do you want soup, ___ would you like salad?", "or", ["so", "but"]],
+  ["Max plays soccer, ___ his sister plays tennis.", "and", ["so", "or"]],
+  ["The shop was closed, ___ we came back later.", "so", ["or", "but"]],
+  ["She trained hard, ___ she did not win.", "but", ["so", "or"]],
+  ["We can paint the room blue, ___ we can paint it green.", "or", ["so", "but"]],
+  ["The dog barked, ___ the cat hissed.", "and", ["or", "so"]],
+  ["The map was old, ___ it was still useful.", "but", ["so", "or"]],
+  ["The bus was late, ___ we walked to school.", "so", ["or", "nor"]],
+  ["You can call me, ___ you can send a note.", "or", ["so", "but"]],
+  ["He does not eat meat, ___ does he eat fish.", "nor", ["and", "so"]],
+  ["The sun came out, ___ the snow began to melt.", "so", ["or", "nor"]],
+  ["My cousin lives far away, ___ we talk every week.", "but", ["so", "or"]],
+  ["The kitten was tiny, ___ it was very brave.", "but", ["so", "or"]],
+  ["Grandpa cooked dinner, ___ I set the table.", "and", ["or", "nor"]],
+  ["The ice was thin, ___ nobody skated on it.", "so", ["but", "or"]],
+  ["Shall we take the train, ___ shall we drive?", "or", ["so", "nor"]],
+  ["She did not like the play, ___ did her friends.", "nor", ["but", "so"]],
+  ["The garden is small, ___ it grows lots of beans.", "but", ["or", "so"]],
+];
+
+/** compounds are two complete thoughts that can be joined: first, conjunction, second, a word early in the first and a word late in the second. */
+const compounds: readonly (readonly [first: string, conjunction: string, second: string, early: string, late: string])[] = [
+  ["The lights went out", "and", "the room went dark", "lights", "dark"],
+  ["I knocked twice", "but", "nobody answered", "knocked", "answered"],
+  ["We could bake cookies", "or", "we could make muffins", "bake", "make"],
+  ["The road was flooded", "so", "the bus took another way", "road", "bus"],
+  ["Mia drew the map", "and", "Sam wrote the clues", "drew", "wrote"],
+  ["The puppy is small", "but", "it eats a lot", "puppy", "eats"],
+  ["You can sit here", "or", "you can stand by the door", "sit", "stand"],
+  ["The milk was sour", "so", "I poured it out", "milk", "poured"],
+  ["The wind howled", "and", "the windows rattled", "wind", "rattled"],
+  ["Dad called the shop", "but", "the line was busy", "called", "busy"],
+  ["The game ended early", "so", "we went for ice cream", "game", "went"],
+  ["Nina fed the fish", "and", "Omar walked the dog", "fed", "walked"],
+  ["The phone rang", "and", "Grandma answered it", "phone", "answered"],
+  ["The soup was hot", "so", "we waited a minute", "soup", "waited"],
+  ["Kai lost his ticket", "but", "the guard let him in", "lost", "let"],
+  ["The stars came out", "and", "the owls began to hoot", "stars", "began"],
+  ["Our team scored late", "so", "the fans cheered", "team", "cheered"],
+  ["The box was heavy", "but", "Ava lifted it", "box", "lifted"],
+  ["We packed our bags", "and", "Dad loaded the car", "packed", "loaded"],
+  ["The trail was steep", "so", "we rested often", "trail", "rested"],
+];
+const lastWord = (s: string) => s.split(" ").at(-1)!;
+const runOn = ([first, , second]: (typeof compounds)[number]) => `${first} ${second}.`;
+
+const conjunctionCommaMore: readonly ChoiceItem[] = [
+  ...compounds.slice(0, 14).map(([first, conjunction, second]): ChoiceItem => {
+    const words = first.split(" ");
+    const k = words.length > 3 ? 2 : 1;
+    return [
+      "",
+      `${first}, ${conjunction} ${second}.`,
+      [`${first} ${conjunction}, ${second}.`, `${words.slice(0, k).join(" ")}, ${words.slice(k).join(" ")} ${conjunction} ${second}.`],
+    ];
+  }),
+  ...[
+    ["Cats", "dogs ran across the yard."],
+    ["She laughed", "cried at the movie."],
+    ["We need flour", "sugar for the cake."],
+    ["He swept", "mopped the floor."],
+    ["The bread was warm", "soft."],
+    ["Rice", "beans filled the pot."],
+    ["Bring a pen", "a notebook."],
+    ["The kids jumped", "shouted."],
+  ].map(([a, b]): ChoiceItem => ["", `${a} and ${b}`, [`${a}, and ${b}`, `${a} and, ${b}`]]),
+];
+
+const runonKindMore: readonly ChoiceItem[] = compounds.map((c, j) => {
+  const [first, conjunction, second] = c;
+  const k = (j % 3) as 0 | 1 | 2;
+  if (k === 1) return kind(runOn(c), 1);
+  if (k === 2) return kind(`${first}, ${second}.`, 2);
+  return kind(j % 2 === 0 ? `${first}, ${conjunction} ${second}.` : `${first}. ${upper(second)}.`, 0);
+});
+
+const firstSentenceMore: readonly ChoiceItem[] = compounds.map((c) => [runOn(c), lastWord(c[0]), [c[3], c[4]]]);
+
+const subordinatorMore: readonly ChoiceItem[] = [
+  ["We waited inside until the rain stopped.", "until", ["waited", "inside", "rain"]],
+  ["Because the floor was wet, Ana slipped.", "Because", ["floor", "wet", "slipped"]],
+  ["Ring the bell when you get there.", "when", ["Ring", "bell", "get"]],
+  ["If you finish early, read a book.", "If", ["finish", "early", "read"]],
+  ["Although Max was tired, he kept dancing.", "Although", ["tired", "kept", "dancing"]],
+  ["The dog sleeps while we eat.", "while", ["dog", "sleeps", "eat"]],
+  ["Since you asked, I will tell you.", "Since", ["asked", "tell", "I"]],
+  ["Wash your hands before you eat dinner.", "before", ["Wash", "hands", "dinner"]],
+  ["After the guests left, we cleaned up.", "After", ["guests", "left", "cleaned"]],
+  ["Unless it snows, school will open.", "Unless", ["snows", "school", "open"]],
+  ["She hummed while she painted.", "while", ["hummed", "painted", "she"]],
+  ["We stayed late because the show was fun.", "because", ["stayed", "show", "fun"]],
+  ["When the whistle blew, the players stopped.", "When", ["whistle", "blew", "players"]],
+  ["I will wait until you return.", "until", ["wait", "I", "return"]],
+  ["Although the soup was cold, Leo ate it.", "Although", ["soup", "cold", "ate"]],
+  ["If the store is open, buy milk.", "If", ["store", "open", "buy"]],
+  ["The baby cried because she was hungry.", "because", ["baby", "cried", "hungry"]],
+  ["Before the sun rose, the farmer milked the cows.", "Before", ["sun", "rose", "farmer"]],
+  ["Since the bridge was closed, we took a ferry.", "Since", ["bridge", "took", "ferry"]],
+  ["Tell me if you need help.", "if", ["Tell", "me", "help"]],
+];
+
+/** moreWordClass gives the class of every wrong option in the added items. */
+const moreWordClass: Readonly<Record<string, WordClass>> = {
+  ...Object.fromEntries(
+    describedScenes.flatMap(([, n, v, o]) => [
+      [n, "noun"],
+      [v, "verb"],
+      [o, "noun"],
+    ]),
+  ),
+  ...Object.fromEntries(
+    actionScenes.flatMap(([n, v]) => [
+      [n, "noun"],
+      [v, "verb"],
+    ]),
+  ),
+  ...Object.fromEntries(
+    "rain floor bell dog hands dinner guests show whistle players soup store baby sun farmer bridge ferry help"
+      .split(" ")
+      .map((w) => [w, "noun"]),
+  ),
+  ...Object.fromEntries(
+    "slipped Ring get finish read dancing sleeps eat asked tell Wash left cleaned snows hummed painted wait return buy cried rose took Tell"
+      .split(" ")
+      .map((w) => [w, "verb"]),
+  ),
+  ...Object.fromEntries("wet tired open fun cold hungry".split(" ").map((w) => [w, "adjective"])),
+  early: "adverb",
+  I: "pronoun",
+};
+
+const subordinatorMeaningMore: readonly ChoiceItem[] = [
+  ["We stayed indoors ___ it was raining.", "because", ["although", "until"]],
+  ["___ the test was hard, Mia passed it.", "Although", ["Because", "Unless"]],
+  ["Keep stirring ___ the sauce gets thick.", "until", ["although", "because"]],
+  ["___ you water the seeds, they will not grow.", "Unless", ["Because", "While"]],
+  ["You may play outside ___ you finish your chores.", "after", ["although", "unless"]],
+  ["The phone rang ___ I was in the shower.", "while", ["because", "unless"]],
+  ["___ it is sunny tomorrow, we will go to the beach.", "If", ["Although", "Until"]],
+  ["Dan was late ___ his alarm did not ring.", "because", ["although", "while"]],
+  ["___ she was scared, she climbed the ladder.", "Although", ["Because", "If"]],
+  ["Stay on the path ___ you see the red sign.", "until", ["although", "because"]],
+  ["The cake will burn ___ you take it out soon.", "unless", ["because", "while"]],
+  ["He reads comics ___ he waits for the bus.", "while", ["although", "unless"]],
+  ["We cannot go in ___ the doors open.", "until", ["because", "if"]],
+  ["___ you are cold, put on a sweater.", "If", ["Although", "Until"]],
+  ["The streets were wet ___ it had rained all night.", "because", ["although", "unless"]],
+  ["___ the dog barked loudly, the baby kept sleeping.", "Although", ["Because", "If"]],
+  ["Bring an umbrella ___ it rains.", "in case", ["although", "until"]],
+  ["Turn off the stove ___ you leave the kitchen.", "before", ["although", "unless"]],
+  ["I hum ___ I walk to school.", "while", ["because", "unless"]],
+  ["The team won ___ their best player was sick.", "although", ["because", "if"]],
+];
+
+/** clausePairs are a subordinating conjunction, its clause, and the main clause. */
+const clausePairs: readonly (readonly [subordinator: string, clause: string, main: string])[] = [
+  ["When", "the movie ended", "we clapped"],
+  ["Because", "the road was icy", "the bus moved slowly"],
+  ["If", "you see Ana", "give her this note"],
+  ["Although", "the water was cold", "we swam anyway"],
+  ["After", "the rain stopped", "the birds sang"],
+  ["Before", "you cross the street", "look both ways"],
+  ["Since", "the store was closed", "we went home"],
+  ["While", "Dad cooked dinner", "I set the table"],
+  ["Unless", "you hurry", "you will miss the train"],
+  ["Until", "the bell rings", "stay in your seat"],
+  ["As soon as", "the doors opened", "the crowd rushed in"],
+];
+const clauseCommaMore: readonly ChoiceItem[] = clausePairs.flatMap(([sub, clause, main]): ChoiceItem[] => {
+  const [head, ...rest] = main.split(" ");
+  const low = sub.toLowerCase();
+  return [
+    ["", `${sub} ${clause}, ${main}.`, [`${sub}, ${clause} ${main}.`, `${sub} ${clause} ${head}, ${rest.join(" ")}.`]],
+    ["", `${upper(main)} ${low} ${clause}.`, [`${upper(main)} ${low}, ${clause}.`, `${upper(head!)}, ${rest.join(" ")} ${low} ${clause}.`]],
+  ];
+});
+
+/** allWordClass is the class of every word used as a wrong option. */
+const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass };
+
 /** clauseTopics are the topics of phrases and clauses. */
 export const clauseTopics: readonly TopicDef[] = [
   {
@@ -793,7 +1100,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word is an adjective?", "哪个词是形容词？"),
-          modifierKindBank,
+          [...modifierKindBank, ...modifierKindMore],
           (right) =>
             t(
               `**${right}** describes a noun, so it is an adjective. An adverb would describe a verb, an adjective or another adverb instead.`,
@@ -814,7 +1121,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word is an adverb?", "哪个词是副词？"),
-          adverbBank,
+          [...adverbBank, ...adverbMore],
           (right) =>
             t(
               `**${right}** tells how, when or how often the action happens, so it is an adverb.`,
@@ -835,7 +1142,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          adjOrAdvBank,
+          [...adjOrAdvBank, ...adjOrAdvMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Decide whether the word describes a noun or an action.`,
@@ -863,7 +1170,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words form a prepositional phrase?", "哪些词构成介词短语？"),
-          phraseBank,
+          [...phraseBank, ...phraseMore],
           (right) => t(`**${right}** starts with a preposition and ends with a noun.`, `**${right}** 以介词开头，以名词结尾。`),
           notPhrase,
         ),
@@ -877,7 +1184,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word does the phrase in bold describe?", "粗体短语修饰哪个词？"),
-          phraseJobBank,
+          [...phraseJobBank, ...phraseJobMore],
           (right) =>
             t(
               `The phrase tells more about **${right}**. Ask which word the phrase answers a question about, such as which one, where or when.`,
@@ -905,7 +1212,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word best completes the sentence?", "哪个词最适合补全句子？"),
-          fanboysBank,
+          [...fanboysBank, ...fanboysMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The two parts of the sentence relate in the way this word shows.`,
@@ -923,7 +1230,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
-          conjunctionCommaBank,
+          [...conjunctionCommaBank, ...conjunctionCommaMore],
           (right) =>
             t(
               `**${right}** The comma goes before the conjunction only when both sides could stand alone.`,
@@ -951,7 +1258,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is this?", "这属于哪一种？"),
-          runonKindBank,
+          [...runonKindBank, ...runonKindMore],
           (right, shown) =>
             t(
               `**${right}**. Find where the first complete sentence ends, then look at what comes between it and the next: ${shown}`,
@@ -969,7 +1276,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("This is a run-on. Which word ends the first complete sentence?", "这是一个连写句。哪个词结束了第一个完整句子？"),
-          firstSentenceBank,
+          [...firstSentenceBank, ...firstSentenceMore],
           (right, shown) =>
             t(
               `The first sentence ends at **${right}**, and a new subject follows it: ${shown}`,
@@ -997,7 +1304,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word is the subordinating conjunction?", "哪个词是从属连词？"),
-          subordinatorBank,
+          [...subordinatorBank, ...subordinatorMore],
           (right) =>
             t(
               `**${right}** begins the clause that cannot stand alone. Cover the clause it starts, and the rest of the sentence still makes sense on its own.`,
@@ -1018,7 +1325,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word best completes the sentence?", "哪个词最适合补全句子？"),
-          subordinatorMeaningBank,
+          [...subordinatorMeaningBank, ...subordinatorMeaningMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} This word shows how the two ideas relate.`,
@@ -1036,7 +1343,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
-          clauseCommaBank,
+          [...clauseCommaBank, ...clauseCommaMore],
           (right) =>
             t(`**${right}** A comma follows a dependent clause that opens the sentence.`, `**${right}** 从句放在句首时，后面要加逗号。`),
           clauseComma,

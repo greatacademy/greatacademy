@@ -539,6 +539,272 @@ const tenseShift = (wrong: string, _right: string, _shown: string, position: num
         `在“${wrong}”中，第一个动词和第二个动词时态不同，可两个动作发生在同一时间。`,
       );
 
+// More items, built from hand-written cores by deterministic templates.
+
+/** shortAdjectives are adjectives that compare with *-er* and *-est*: the word, its two forms, likely misspellings, and two things to compare. */
+const shortAdjectives: readonly (readonly [
+  word: string,
+  er: string,
+  est: string,
+  badEr: string,
+  badEst: string,
+  two: string,
+  group: string,
+])[] = [
+  ["short", "shorter", "shortest", "", "", "two pencils", "all the ropes"],
+  ["thin", "thinner", "thinnest", "thiner", "thinest", "two slices of bread", "all the books on the shelf"],
+  ["sad", "sadder", "saddest", "sader", "sadest", "two songs", "all the stories in the book"],
+  ["busy", "busier", "busiest", "busyer", "busyest", "two streets", "all the days of the week"],
+  ["cold", "colder", "coldest", "", "", "two winters", "all the months of the year"],
+  ["heavy", "heavier", "heaviest", "heavyer", "heavyest", "two backpacks", "all the boxes"],
+  ["nice", "nicer", "nicest", "niceer", "niceest", "two hotels", "all the neighbors"],
+  ["brave", "braver", "bravest", "braveer", "braveest", "two knights", "all the firefighters"],
+  ["sunny", "sunnier", "sunniest", "sunnyer", "sunnyest", "two afternoons", "all the days this month"],
+  ["wide", "wider", "widest", "wideer", "wideest", "two rivers", "all the roads in town"],
+];
+const erEstMore: readonly TypedItem[] = shortAdjectives.flatMap(([w, er, est, badEr, badEst, two, group]) => [
+  form(`${w}: comparing ${two}`, er, badEr || est, `more ${w}`),
+  form(`${w}: standing out among ${group}`, est, badEst || er, `most ${w}`),
+]);
+
+/** longAdjectives are adjectives that compare with *more* and *most*, with a sentence comparing two and one picking from a group. */
+const longAdjectives: readonly (readonly [word: string, er: string, two: string, group: string])[] = [
+  ["famous", "famouser", "This singer is ___ than her sister.", "He is the ___ chef in the country."],
+  ["important", "importanter", "Sleep is ___ than staying up late.", "This is the ___ rule of the game."],
+  ["delicious", "deliciouser", "The apple pie was ___ than the cake.", "That was the ___ meal of the trip."],
+  ["comfortable", "comfortabler", "This chair is ___ than the bench.", "It is the ___ bed in the house."],
+  ["expensive", "expensiver", "The red bike is ___ than the blue one.", "It is the ___ hotel in the city."],
+  ["popular", "popularer", "Soccer is ___ than chess at our school.", "She is the ___ author in the library."],
+  ["peaceful", "peacefuler", "The lake is ___ than the busy beach.", "Dawn is the ___ time of the day."],
+  ["curious", "curiouser", "The kitten is ___ than the old cat.", "Ali is the ___ student in our class."],
+  ["helpful", "helpfuler", "The second map was ___ than the first.", "That was the ___ tip of all."],
+  ["powerful", "powerfuler", "The new engine is ___ than the old one.", "It is the ___ storm on record."],
+  ["surprising", "surprisinger", "The ending was ___ than I expected.", "That was the ___ news of the year."],
+];
+const moreMostMore: readonly ChoiceItem[] = longAdjectives.flatMap(([w, er, two, group]): ChoiceItem[] => [
+  [two, `more ${w}`, [er, `most ${w}`]],
+  [group, `most ${w}`, [`${er.slice(0, -2)}est`, `more ${w}`]],
+]);
+
+const irregularMore: readonly ChoiceItem[] = [
+  ["Your idea is ___ than mine.", "better", ["gooder", "best"]],
+  ["This is the ___ cold I have ever had.", "worst", ["baddest", "worse"]],
+  ["The second test was ___ than the first.", "worse", ["badder", "worst"]],
+  ["She is the ___ swimmer on the team.", "best", ["goodest", "better"]],
+  ["The library is ___ away than the park.", "farther", ["farrer", "farthest"]],
+  ["There is ___ milk in this jug than in that one.", "less", ["littler", "least"]],
+  ["Of the three drinks, this one has the ___ sugar.", "least", ["littlest", "less"]],
+  ["We have ___ snow this year than last year.", "more", ["mucher", "most"]],
+  ["He sings ___ than his brother.", "better", ["more well", "best"]],
+  ["Of all the fruits, I like mangoes ___.", "best", ["better", "most good"]],
+  ["My knee feels ___ today than yesterday.", "worse", ["badder", "worst"]],
+  ["That was the ___ meal of the whole trip.", "best", ["goodest", "better"]],
+  ["Today the traffic was the ___ all week.", "worst", ["baddest", "worse"]],
+];
+
+/** singularOwners are one owner and one thing it owns, with the plural of the owner. */
+const singularOwners: readonly (readonly [thing: string, owner: string, possessive: string, wrong1: string, wrong2: string])[] = [
+  ["whistle", "the coach", "coach's", "coaches", "coachs'"],
+  ["tractor", "the farmer", "farmer's", "farmers", "farmers'"],
+  ["map", "the pilot", "pilot's", "pilots", "pilots'"],
+  ["crown", "the queen", "queen's", "queens", "queens'"],
+  ["bag", "the doctor", "doctor's", "doctors", "doctors'"],
+  ["scarf", "Emma", "Emma's", "Emmas", "Emmas'"],
+  ["bowl", "the puppy", "puppy's", "puppies", "puppys"],
+  ["arm", "the robot", "robot's", "robots", "robots'"],
+  ["brush", "the artist", "artist's", "artists", "artists'"],
+  ["office", "the boss", "boss's", "bosses", "boss'"],
+  ["kite", "the girl", "girl's", "girls", "girls'"],
+  ["garden", "Mr. Lee", "Mr. Lee's", "Mr. Lees", "Mr. Lees'"],
+  ["diary", "my sister", "sister's", "sisters", "sisters'"],
+  ["saddle", "the horse", "horse's", "horses", "horses'"],
+  ["castle", "the king", "king's", "kings", "kings'"],
+  ["drum", "Lucas", "Lucas's", "Lucases", "Luca's"],
+  ["rules", "the library", "library's", "libraries", "librarys"],
+  ["ship", "the captain", "captain's", "captains", "captains'"],
+  ["locker", "the student", "student's", "students", "students'"],
+  ["apron", "the chef", "chef's", "chefs", "chefs'"],
+];
+const singularPossessiveMore: readonly TypedItem[] = singularOwners.map(([thing, owner, right, w1, w2]) =>
+  form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owner}`, right, w1, w2),
+);
+
+/** pluralOwners are many owners and what they own, with the forms learners write by mistake. */
+const pluralOwners: readonly (readonly [thing: string, owners: string, possessive: string, wrong1: string, wrong2: string])[] = [
+  ["uniforms", "the players", "players'", "player's", "players's"],
+  ["station", "the nurses", "nurses'", "nurse's", "nurses's"],
+  ["market", "the farmers", "farmers'", "farmer's", "farmers's"],
+  ["basket", "the kittens", "kittens'", "kitten's", "kittens's"],
+  ["lounge", "the pilots", "pilots'", "pilot's", "pilots's"],
+  ["room", "my sisters", "sisters'", "sister's", "sisters's"],
+  ["leashes", "the dogs", "dogs'", "dog's", "dogs's"],
+  ["flags", "the teams", "teams'", "team's", "teams's"],
+  ["bikes", "my cousins", "cousins'", "cousin's", "cousins's"],
+  ["helmets", "the workers", "workers'", "worker's", "workers's"],
+  ["blankets", "the babies", "babies'", "baby's", "babies's"],
+  ["den", "the wolves", "wolves'", "wolf's", "wolves's"],
+  ["trucks", "the firefighters", "firefighters'", "firefighter's", "firefighters's"],
+  ["toys", "the puppies", "puppies'", "puppy's", "puppies's"],
+  ["umbrellas", "the people", "people's", "peoples'", "peoples"],
+  ["feathers", "the geese", "geese's", "geeses'", "gooses'"],
+  ["cart", "the oxen", "oxen's", "oxens'", "oxes'"],
+  ["playground", "the children", "children's", "childrens'", "childs'"],
+  ["pen", "the sheep", "sheep's", "sheeps'", "sheeps"],
+  ["choir", "the men", "men's", "mens'", "mens"],
+];
+const pluralPossessiveMore: readonly TypedItem[] = pluralOwners.map(([thing, owners, right, w1, w2]) =>
+  form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owners}`, right, w1, w2),
+);
+
+const itsMore: readonly ChoiceItem[] = [
+  ["The bird flapped ___ wings.", "its", ["it's", "its'"]],
+  ["___ too windy to fly a kite.", "It's", ["Its", "Its'"]],
+  ["The bakery changed ___ hours.", "its", ["it's", "its'"]],
+  ["I hope ___ sunny on Saturday.", "it's", ["its", "its'"]],
+  ["The car needs ___ oil changed.", "its", ["it's", "its'"]],
+  ["___ been a long day.", "It's", ["Its", "Its'"]],
+  ["The cat licked ___ paw.", "its", ["it's", "its'"]],
+  ["Grab your coat; ___ starting to snow.", "it's", ["its", "its'"]],
+  ["Every flower turned ___ face to the sun.", "its", ["it's", "its'"]],
+  ["___ my turn to choose the game.", "It's", ["Its", "Its'"]],
+  ["The river overflowed ___ banks.", "its", ["it's", "its'"]],
+  ["Do you know if ___ open on Sunday?", "it's", ["its", "its'"]],
+  ["The school painted ___ gym blue.", "its", ["it's", "its'"]],
+  ["___ hard to see in the fog.", "It's", ["Its", "Its'"]],
+  ["The spider fixed ___ web.", "its", ["it's", "its'"]],
+  ["The movie is long, but ___ worth it.", "it's", ["its", "its'"]],
+  ["The team won ___ last game.", "its", ["it's", "its'"]],
+  ["___ already eight o'clock!", "It's", ["Its", "Its'"]],
+  ["The phone lost ___ signal.", "its", ["it's", "its'"]],
+  ["Tell me when ___ ready.", "it's", ["its", "its'"]],
+  ["The kite lost ___ tail in the wind.", "its", ["it's", "its'"]],
+  ["Wear a hat if ___ windy.", "it's", ["its", "its'"]],
+  ["The hive buzzed as ___ bees returned.", "its", ["it's", "its'"]],
+];
+
+const theirMore: readonly ChoiceItem[] = [
+  ["The twins rode ___ bikes to school.", "their", ["there", "they're"]],
+  ["Is anyone sitting over ___?", "there", ["their", "they're"]],
+  ["___ coming over for dinner tonight.", "They're", ["Their", "There"]],
+  ["The neighbors painted ___ house green.", "their", ["there", "they're"]],
+  ["___ are two cats on the porch.", "There", ["Their", "They're"]],
+  ["I think ___ lost.", "they're", ["their", "there"]],
+  ["The players shook ___ coach's hand.", "their", ["there", "they're"]],
+  ["We stopped ___ for lunch.", "there", ["their", "they're"]],
+  ["___ both very good at chess.", "They're", ["Their", "There"]],
+  ["The birds left ___ nest.", "their", ["there", "they're"]],
+  ["___ is a spider in the bath!", "There", ["Their", "They're"]],
+  ["My friends said ___ too tired to play.", "they're", ["their", "there"]],
+  ["The students handed in ___ reports.", "their", ["there", "they're"]],
+  ["Put your shoes down ___ by the door.", "there", ["their", "they're"]],
+  ["___ moving to a new town next month.", "They're", ["Their", "There"]],
+  ["The kids lost ___ ball in the bushes.", "their", ["there", "they're"]],
+  ["Was ___ any mail today?", "there", ["their", "they're"]],
+  ["I hope ___ on time.", "they're", ["their", "there"]],
+  ["Both dogs wagged ___ tails.", "their", ["there", "they're"]],
+  ["___ goes the bus!", "There", ["Their", "They're"]],
+  ["The swans fed ___ young by the shore.", "their", ["there", "they're"]],
+  ["Ask the twins if ___ ready to leave.", "they're", ["their", "there"]],
+];
+
+const yourToMore: readonly ChoiceItem[] = [
+  ["Don't forget ___ lunch.", "your", ["you're", "yore"]],
+  ["___ the fastest runner I know.", "You're", ["Your", "Youre"]],
+  ["We drove ___ the beach.", "to", ["too", "two"]],
+  ["This box is ___ heavy to lift.", "too", ["to", "two"]],
+  ["She has ___ cats and a dog.", "two", ["to", "too"]],
+  ["Is that ___ dog in the yard?", "your", ["you're", "youre"]],
+  ["Call me when ___ home.", "you're", ["your", "yore"]],
+  ["I want to come ___!", "too", ["to", "two"]],
+  ["Give the book ___ Mr. Park.", "to", ["too", "two"]],
+  ["The game starts at ___ o'clock.", "two", ["to", "too"]],
+  ["Put on ___ boots; it is muddy.", "your", ["you're", "yore"]],
+  ["I think ___ right about that.", "you're", ["your", "youre"]],
+  ["The tea is ___ hot to drink.", "too", ["to", "two"]],
+  ["Walk ___ the corner and turn left.", "to", ["too", "two"]],
+  ["We waited for ___ hours.", "two", ["to", "too"]],
+  ["Thank you for ___ help.", "your", ["you're", "youre"]],
+  ["___ going to need a jacket.", "You're", ["Your", "Yore"]],
+  ["My sister likes pizza, ___.", "too", ["to", "two"]],
+  ["Send a card ___ your aunt.", "to", ["too", "two"]],
+  ["Cut the paper into ___ pieces.", "two", ["to", "too"]],
+];
+
+const thenThanMore: readonly ChoiceItem[] = [
+  ["A cheetah is faster ___ a horse.", "than", ["then", "that"]],
+  ["Brush your teeth, and ___ go to bed.", "then", ["than", "that"]],
+  ["The test was easier ___ I thought.", "than", ["then", "that"]],
+  ["We hiked to the top and ___ ate lunch.", "then", ["than", "that"]],
+  ["My cat is smaller ___ my dog.", "than", ["then", "that"]],
+  ["First stir the paint, ___ dip the brush.", "then", ["than", "that"]],
+  ["I would rather read ___ watch TV.", "than", ["then", "that"]],
+  ["Back ___, the town had only one road.", "then", ["than", "that"]],
+  ["This road is longer ___ that one.", "than", ["then", "that"]],
+  ["Finish your work, and ___ you can play.", "then", ["than", "that"]],
+  ["Loud noise can ___ how well you sleep.", "affect", ["effect", "afford"]],
+  ["The rain had a good ___ on the garden.", "effect", ["affect", "effort"]],
+  ["Will the snow ___ our trip?", "affect", ["effect", "afford"]],
+  ["The movie had a strong ___ on me.", "effect", ["affect", "effort"]],
+  ["Too little sleep can ___ your mood.", "affect", ["effect", "afford"]],
+  ["What is the ___ of the new rule?", "effect", ["affect", "effort"]],
+  ["The cold did not ___ the plants.", "affect", ["effect", "afford"]],
+  ["One side ___ of the medicine is sleepiness.", "effect", ["affect", "effort"]],
+  ["How will the move ___ your family?", "affect", ["effect", "afford"]],
+  ["The music had a calming ___ on the baby.", "effect", ["affect", "effort"]],
+];
+
+/** shiftScenes are two actions at one time: lead words, the first verb in past and present, its rest, the second verb in past and present, its rest, and whether the time is past. */
+const shiftScenes: readonly (readonly [
+  lead: string,
+  v1: string,
+  v1Now: string,
+  rest1: string,
+  v2: string,
+  v2Now: string,
+  rest2: string,
+  past: boolean,
+])[] = [
+  ["Last week Grandpa", "fixed", "fixes", "the fence", "painted", "paints", "the gate", true],
+  ["Every night my sister", "read", "reads", "a chapter", "turned", "turns", "off the light", false],
+  ["Yesterday the chef", "chopped", "chops", "the onions", "stirred", "stirs", "the soup", true],
+  ["Each morning the baker", "opened", "opens", "the shop", "lit", "lights", "the ovens", false],
+  ["On Saturday Leo", "cleaned", "cleans", "his room", "found", "finds", "an old coin", true],
+  ["Every spring the bird", "built", "builds", "a nest", "laid", "lays", "three eggs", false],
+  ["Last night the dog", "heard", "hears", "a noise", "ran", "runs", "to the door", true],
+  ["Each day the mail carrier", "walked", "walks", "our street", "waved", "waves", "at us", false],
+  ["This morning Mom", "made", "makes", "pancakes", "sang", "sings", "a song", true],
+  ["Every weekend my uncle", "drove", "drives", "to the lake", "fished", "fishes", "for hours", false],
+  ["During the storm the tree", "shook", "shakes", "hard", "lost", "loses", "a branch", true],
+  ["Each evening the cat", "climbed", "climbs", "onto the bed", "fell", "falls", "asleep", false],
+  ["Last year our class", "planted", "plants", "a garden", "grew", "grows", "tomatoes", true],
+  ["Every summer Ana", "visited", "visits", "her grandmother", "swam", "swims", "in the river", false],
+  ["After lunch yesterday the teacher", "collected", "collects", "the papers", "graded", "grades", "them", true],
+  ["Every Friday the coach", "blew", "blows", "the whistle", "called", "calls", "the team together", false],
+  ["Two days ago the river", "rose", "rises", "quickly", "flooded", "floods", "the road", true],
+  ["Each winter the bear", "ate", "eats", "a lot", "slept", "sleeps", "for months", false],
+  ["On his birthday Sam", "opened", "opens", "his gifts", "thanked", "thanks", "everyone", true],
+  ["Every afternoon my brother", "practiced", "practices", "the piano", "did", "does", "his homework", false],
+  ["Yesterday the wind", "blew", "blows", "all day", "knocked", "knocks", "over our fence", true],
+];
+const shiftForms = ([lead, v1, v1Now, r1, v2, v2Now, r2, past]: (typeof shiftScenes)[number]) => {
+  const [a1, a2, b1, b2] = past ? [v1, v2, v1Now, v2Now] : [v1Now, v2Now, v1, v2];
+  return {
+    right: `${lead} ${a1} ${r1} and ${a2} ${r2}.`,
+    secondShifted: `${lead} ${a1} ${r1} and ${b2} ${r2}.`,
+    firstShifted: `${lead} ${b1} ${r1} and ${a2} ${r2}.`,
+    bothShifted: `${lead} ${b1} ${r1} and ${b2} ${r2}.`,
+  };
+};
+const shiftMore: readonly ChoiceItem[] = shiftScenes.map((scene) => {
+  const f = shiftForms(scene);
+  return ["Which sentence keeps its verbs in the same time?", f.right, [f.secondShifted, f.firstShifted]];
+});
+const shiftFixMore: readonly TypedItem[] = shiftScenes.map((scene, i) => {
+  const f = shiftForms(scene);
+  const shown = i % 2 === 0 ? f.secondShifted : f.firstShifted;
+  return fixed(shown, f.right, shown, f.bothShifted);
+});
+
 /** usageTopics are the topics of usage: comparing, possessives, words that sound alike, and keeping tense. */
 export const usageTopics: readonly TopicDef[] = [
   {
@@ -562,7 +828,7 @@ export const usageTopics: readonly TopicDef[] = [
         typedGenerator(
           "word-form",
           t("Write the form of the adjective that fits.", "写出符合要求的形容词形式。"),
-          erEstBank,
+          [...erEstBank, ...erEstMore],
           (right, shown) =>
             t(
               `**${right}**. ${shown.includes("comparing two") ? "Two things are compared, so the word takes the -er form, with any spelling change." : "One stands out from a whole group, so the word takes the -est form, with any spelling change."}`,
@@ -579,7 +845,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words complete the sentence?", "哪个选项能补全句子？"),
-          moreMostBank,
+          [...moreMostBank, ...moreMostMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)}`,
@@ -597,7 +863,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct form.", "选择正确的形式。"),
-          [...irregularBank, ...doubleBank],
+          [...irregularBank, ...doubleBank, ...irregularMore],
           (right, shown) =>
             shown.includes("___")
               ? t(
@@ -631,7 +897,7 @@ export const usageTopics: readonly TopicDef[] = [
         typedGenerator(
           "word-form",
           t("Write the possessive word, such as dog's.", "写出所有格形式，例如 dog's。"),
-          singularPossessiveBank,
+          [...singularPossessiveBank, ...singularPossessiveMore],
           (right) =>
             t(
               `**${right}**. There is one owner, so the word takes an apostrophe and then *s*, even after a final *s*.`,
@@ -649,7 +915,7 @@ export const usageTopics: readonly TopicDef[] = [
         typedGenerator(
           "word-form",
           t("Write the possessive word, such as girls'.", "写出所有格形式，例如 girls'。"),
-          pluralPossessiveBank,
+          [...pluralPossessiveBank, ...pluralPossessiveMore],
           (right) =>
             t(
               right.endsWith("s'")
@@ -668,7 +934,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          itsBank,
+          [...itsBank, ...itsMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "*It is* or *it has* fits here." : "The word shows ownership, so it has no apostrophe."}`,
@@ -699,7 +965,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          theirBank,
+          [...theirBank, ...theirMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}`,
@@ -717,7 +983,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          yourToBank,
+          [...yourToBank, ...yourToMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}`,
@@ -735,7 +1001,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          thenThanBank,
+          [...thenThanBank, ...thenThanMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}`,
@@ -766,7 +1032,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the sentence.", "选择句子。"),
-          shiftBank,
+          [...shiftBank, ...shiftMore],
           (right) =>
             t(
               `**${right}** Both actions happen at the same time, so their verbs share a tense.`,
@@ -785,7 +1051,7 @@ export const usageTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Rewrite the sentence so its verbs agree in tense.", "改写句子，使动词时态一致。"),
-          shiftFixBank,
+          [...shiftFixBank, ...shiftFixMore],
           (right) =>
             t(`**${right}** The time is past, so the second verb is past as well.`, `**${right}** 时间是过去，所以第二个动词也用过去时。`),
         ),

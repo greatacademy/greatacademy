@@ -59,6 +59,30 @@ const fromNotesBank: readonly WritingItem[] = [
     model:
       "Everyone should learn to swim. A swimmer is much safer near rivers, lakes and pools. Swimming is also good exercise, because it works the whole body. And a swimmer can join friends at the beach instead of watching from the sand.",
   },
+  {
+    task: "Turn these notes into a paragraph about why owls are good hunters.",
+    source: "see well in the dark; fly almost silently; sharp claws to grip prey",
+    model:
+      "Owls are skilled hunters of the night. Their large eyes let them see well even when it is very dark. Soft feathers allow them to fly almost without a sound, so their prey does not hear them coming. Once they swoop down, their sharp claws hold on tight.",
+  },
+  {
+    task: "Turn these notes into a paragraph about why reading aloud is helpful.",
+    source: "practice saying new words; hear how sentences should sound; share stories with others",
+    model:
+      "Reading aloud helps readers in several ways. It gives them practice saying new words instead of skipping over them. When they hear their own voice, they learn how sentences should sound. Reading aloud is also a way to share a good story with friends or family.",
+  },
+  {
+    task: "Turn these notes into a paragraph about why trees matter in a city.",
+    source: "give shade on hot days; clean the air; homes for birds and squirrels",
+    model:
+      "Trees make a big difference in a city. On hot days, they give shade that keeps streets and houses cooler. Their leaves help clean the air that people breathe. Trees also give birds and squirrels a place to live among the buildings.",
+  },
+  {
+    task: "Turn these notes into a paragraph about why a class pet teaches students.",
+    source: "students take turns feeding it; learn what animals need; learn to be gentle and patient",
+    model:
+      "A class pet can teach students many lessons. Students take turns feeding it, so everyone shares the job. They learn what an animal needs to stay healthy, such as fresh water and a clean cage. Caring for the pet also teaches them to be gentle and patient.",
+  },
 ];
 
 /** detailBank asks for a paragraph that backs its point with specific details, examples or facts. */
@@ -102,6 +126,26 @@ const detailBank: readonly WritingItem[] = [
     task: "Write a paragraph about a book or a story you enjoyed. Give at least one specific detail from it.",
     model:
       "I enjoyed a story about a girl who builds a boat. She uses old doors and a bedsheet for the sail. When a storm comes, she has to fix a hole in the boat while the waves splash over her.",
+  },
+  {
+    task: "Write a paragraph about your favorite time of year. Give at least one specific detail that shows why you like it.",
+    model:
+      "Autumn is my favorite time of year. The maple tree in our yard turns bright orange, and I rake the leaves into a huge pile to jump in. On cool evenings, my dad makes apple cider that fills the whole kitchen with the smell of cinnamon.",
+  },
+  {
+    task: "Write a paragraph about a person who helps you. Give at least one specific example of how that person helps.",
+    model:
+      "My older cousin Rosa helps me more than anyone. When I was stuck on fractions last month, she drew pizzas on a napkin to show me how halves and quarters work. Now she quizzes me every Sunday before dinner.",
+  },
+  {
+    task: "Write a paragraph about a meal you enjoy. Give at least one specific detail about how it looks, smells or tastes.",
+    model:
+      "My favorite meal is the noodle soup my grandmother makes. The broth is golden and smells of ginger and garlic. She adds soft eggs and green onions on top, and the first spoonful always warms me up on a cold day.",
+  },
+  {
+    task: "Write a paragraph about a game you like to play. Give at least one specific example of a time you played it.",
+    model:
+      "I love playing tag with my friends at the park. Last Saturday, I hid behind the slide while Omar searched for me, then dashed to the big oak tree, which was our safe base. Everyone laughed when he tripped over his own shoelace trying to catch me.",
   },
 ];
 
@@ -147,6 +191,26 @@ const fullBank: readonly WritingItem[] = [
     model:
       "Families should try to eat dinner together. At the table, everyone can share what happened during the day. Children learn to listen and take turns speaking. Even a short meal together each evening helps a family stay close.",
   },
+  {
+    task: "Write a paragraph that explains why it is important to drink water every day.",
+    model:
+      "Drinking water every day keeps our bodies working well. Water helps carry food and air to every part of the body. It also keeps us cool when we run and play in the heat. Without enough water, people feel tired and get headaches. A full water bottle is one of the simplest ways to stay healthy.",
+  },
+  {
+    task: "Write a paragraph that explains why students should learn to cook.",
+    model:
+      "Every student should learn to cook a few simple meals. Cooking teaches useful skills, such as measuring and following steps in order. It also helps students choose healthy food instead of snacks. When I made pancakes for my family, I learned how much work goes into breakfast. Knowing how to cook is a skill that lasts a lifetime.",
+  },
+  {
+    task: "Write a paragraph that explains why it is good to visit a museum.",
+    model:
+      "Visiting a museum is a great way to learn. Museums let people see real objects, like dinosaur bones and old coins, instead of only pictures. Guides and signs explain the history behind each object. On my class trip, I stood next to a whale skeleton longer than our bus. A museum turns facts into something you can see for yourself.",
+  },
+  {
+    task: "Write a paragraph that explains why recycling matters.",
+    model:
+      "Recycling matters because it helps protect the planet. When we recycle bottles and cans, they can be made into new things instead of filling landfills. Recycling paper means fewer trees are cut down. Our school collects enough cans each month to fill three big bins. Small habits like these add up to a cleaner world.",
+  },
 ];
 
 /** opinionBank asks for a paragraph that states an opinion and backs it with reasons. */
@@ -191,6 +255,26 @@ const opinionBank: readonly WritingItem[] = [
     model:
       "Students should not get homework on weekends. Weekends are a time to rest, so students come back to school ready to learn. They also need time for sports, hobbies and their families. A free weekend makes for a better school week.",
   },
+  {
+    task: "Should students have homework on weekends? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Students should not have homework on weekends. Weekends are a time to rest so that they come back to school ready to learn. Families also need time together for trips, chores and games. For these reasons, weekends should stay free of homework.",
+  },
+  {
+    task: "Is it better to live in the city or the countryside? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "I think it is better to live in the countryside. The air is cleaner, and there is plenty of space to run and explore. It is also quieter, so it is easier to sleep and think. That is why the countryside is the best place to live.",
+  },
+  {
+    task: "Should every student learn to swim? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Every student should learn to swim. Swimming is an important safety skill near lakes, rivers and pools. It is also great exercise that people can enjoy their whole lives. For these reasons, swimming lessons should be part of growing up.",
+  },
+  {
+    task: "Is summer or winter the better season? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "In my opinion, summer is the better season. The long, warm days give us more time to play outside. There is also no school, so families can travel and visit relatives. That is why summer beats winter every year.",
+  },
 ];
 
 /** stepsBank asks for a paragraph that explains how to do something, step by step. */
@@ -234,6 +318,26 @@ const stepsBank: readonly WritingItem[] = [
     task: "Write a paragraph that explains how to care for a goldfish.",
     model:
       "Caring for a goldfish is simple but takes some attention. First, keep the fish in a large tank with clean water, not a small bowl. Next, feed it a pinch of fish food once or twice a day. Every week, change part of the water so it stays fresh. If you follow these steps, your goldfish can live for many years.",
+  },
+  {
+    task: "Write a paragraph that explains how to brush your teeth.",
+    model:
+      "Brushing your teeth well takes only a few steps. First, wet your toothbrush and squeeze on a small amount of toothpaste. Next, brush the front, back and top of every tooth in small circles. Then gently brush your tongue to clean away germs. Finally, rinse your mouth and your brush with water.",
+  },
+  {
+    task: "Write a paragraph that explains how to wrap a present.",
+    model:
+      "Wrapping a present is easy when you go step by step. First, place the box in the middle of a sheet of wrapping paper. Next, fold the paper over the box and tape it closed. Then fold in the ends like an envelope and tape them down. Finally, add a bow and a card with the person's name.",
+  },
+  {
+    task: "Write a paragraph that explains how to make a paper airplane.",
+    model:
+      "You can make a paper airplane in a few simple steps. First, fold a sheet of paper in half the long way and then open it again. Next, fold the top two corners down to the center line. Then fold the new edges to the center once more and fold the plane in half. Finally, fold each wing down and give the plane a gentle throw.",
+  },
+  {
+    task: "Write a paragraph that explains how to wash your hands.",
+    model:
+      "Washing your hands properly keeps germs away. First, wet your hands with clean, warm water. Next, rub soap over your palms, the backs of your hands and between your fingers. Then keep scrubbing for about twenty seconds. Finally, rinse off the soap and dry your hands with a clean towel.",
   },
 ];
 

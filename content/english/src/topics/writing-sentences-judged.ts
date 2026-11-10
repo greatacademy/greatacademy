@@ -55,6 +55,31 @@ const becauseBank: readonly WritingItem[] = [
     source: "Grandpa keeps a flashlight by his bed.",
     model: "Grandpa keeps a flashlight by his bed because the power sometimes goes out at night.",
   },
+  {
+    task: "Expand this sentence with because and a reason of your own.",
+    source: "The dog hid under the bed.",
+    model: "The dog hid under the bed because the fireworks outside were so loud.",
+  },
+  {
+    task: "Expand this sentence with because and a reason of your own.",
+    source: "Our class cheered.",
+    model: "Our class cheered because the principal gave us an extra recess.",
+  },
+  {
+    task: "Expand this sentence with because and a reason of your own.",
+    source: "Grandpa put on his reading glasses.",
+    model: "Grandpa put on his reading glasses because the letters on the map were tiny.",
+  },
+  {
+    task: "Expand this sentence with because and a reason of your own.",
+    source: "The pond froze solid.",
+    model: "The pond froze solid because the temperature stayed below zero all week.",
+  },
+  {
+    task: "Expand this sentence with because and a reason of your own.",
+    source: "Sofia packed an extra sandwich.",
+    model: "Sofia packed an extra sandwich because her friend often forgets his lunch.",
+  },
 ];
 
 /** butBank asks for a contrast or a limit that follows a short sentence. */
@@ -99,6 +124,31 @@ const butBank: readonly WritingItem[] = [
     source: "The old car is slow.",
     model: "The old car is slow, but it has never broken down.",
   },
+  {
+    task: "Expand this sentence with but and a contrast of your own.",
+    source: "The puppy was tiny.",
+    model: "The puppy was tiny, but it barked louder than any dog on the street.",
+  },
+  {
+    task: "Expand this sentence with but and a contrast of your own.",
+    source: "We left home early.",
+    model: "We left home early, but heavy traffic made us late anyway.",
+  },
+  {
+    task: "Expand this sentence with but and a contrast of your own.",
+    source: "The soup smelled delicious.",
+    model: "The soup smelled delicious, but it was far too salty to eat.",
+  },
+  {
+    task: "Expand this sentence with but and a contrast of your own.",
+    source: "Ben wanted to play outside.",
+    model: "Ben wanted to play outside, but his homework was not finished yet.",
+  },
+  {
+    task: "Expand this sentence with but and a contrast of your own.",
+    source: "The old bike was rusty.",
+    model: "The old bike was rusty, but it still rode smoothly down the hill.",
+  },
 ];
 
 /** soBank asks for a result that follows from a short sentence. */
@@ -142,6 +192,31 @@ const soBank: readonly WritingItem[] = [
     task: "Expand this sentence with so and a result of your own.",
     source: "My little sister is afraid of the dark.",
     model: "My little sister is afraid of the dark, so she sleeps with a night light.",
+  },
+  {
+    task: "Expand this sentence with so and a result of your own.",
+    source: "The power went out.",
+    model: "The power went out, so we read our books by candlelight.",
+  },
+  {
+    task: "Expand this sentence with so and a result of your own.",
+    source: "Mia forgot her umbrella.",
+    model: "Mia forgot her umbrella, so she was soaked by the time she got home.",
+  },
+  {
+    task: "Expand this sentence with so and a result of your own.",
+    source: "The library had a new mystery book.",
+    model: "The library had a new mystery book, so I put my name on the waiting list.",
+  },
+  {
+    task: "Expand this sentence with so and a result of your own.",
+    source: "The river rose after the storm.",
+    model: "The river rose after the storm, so the park by the bank was closed.",
+  },
+  {
+    task: "Expand this sentence with so and a result of your own.",
+    source: "Our team practiced every afternoon.",
+    model: "Our team practiced every afternoon, so we were ready for the final game.",
   },
 ];
 

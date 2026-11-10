@@ -335,7 +335,7 @@ const classMeaning: Readonly<Record<WordClass, readonly [en: string, zh: string]
 };
 
 const notNoun = (wrong: string) => {
-  const [en, zh] = classMeaning[entry(wordClass, wrong)];
+  const [en, zh] = classMeaning[entry(allWordClass, wrong)];
   return t(
     `“${wrong}” ${en}. A noun names a person, place, thing or idea itself; try putting *the* in front of the word.`,
     `“${wrong}” ${zh}。名词本身为人、地点、事物或概念命名；试试在词前加 *the*。`,
@@ -343,7 +343,7 @@ const notNoun = (wrong: string) => {
 };
 
 const notPronoun = (wrong: string) => {
-  const [en, zh] = classMeaning[entry(wordClass, wrong)];
+  const [en, zh] = classMeaning[entry(allWordClass, wrong)];
   return t(
     `“${wrong}” ${en}. A pronoun is a short word such as *he* or *them* that takes the place of a noun.`,
     `“${wrong}” ${zh}。代词是 *he*、*them* 这类代替名词的短词。`,
@@ -368,6 +368,7 @@ const pronounForm: Readonly<Record<string, PronounForm>> = {
   my: "owner",
   mine: "owner",
   our: "owner",
+  their: "owner",
   it: "it",
   "it's": "contraction",
 };
@@ -520,6 +521,353 @@ const notAntecedent = (wrong: string) => {
   return t(`${en} Find the noun the pronoun stands for and check whether it matches.`, `${zh} 找出代词所指的名词，看看是否一致。`);
 };
 
+// More items, built from hand-written cores by deterministic templates.
+
+/** scenes are hand-written sentences in four parts: subject, predicate, the object inside the predicate, and a place phrase. */
+const scenes: readonly (readonly [subject: string, predicate: string, object: string, place: string])[] = [
+  ["The young pilot", "landed the plane on the runway", "the plane", "near the hangar"],
+  ["My cousin Leo", "built a birdhouse for the garden", "a birdhouse", "in the backyard"],
+  ["A gray squirrel", "buried an acorn under the oak", "an acorn", "beside the path"],
+  ["The school nurse", "wrapped my sprained ankle", "my sprained ankle", "in the office"],
+  ["Our science teacher", "showed us a fossil", "a fossil", "at the front of the room"],
+  ["The old fisherman", "mended his torn net", "his torn net", "on the dock"],
+  ["A tiny hummingbird", "sipped nectar from the flower", "nectar", "by the window"],
+  ["The museum guide", "led the visitors upstairs", "the visitors", "at the entrance"],
+  ["Grandpa Joe", "told a story about his first job", "a story", "in his armchair"],
+  ["The brave firefighter", "carried the child to safety", "the child", "in the smoky hallway"],
+  ["Two busy beavers", "blocked the stream with logs", "the stream", "near the pond"],
+  ["The new librarian", "sorted the returned books", "the returned books", "at the front desk"],
+  ["A loud thunderclap", "woke the whole family", "the whole family", "over the hills"],
+  ["The visiting author", "signed copies of her book", "copies", "at the bookstore"],
+  ["Our soccer coach", "blew the whistle twice", "the whistle", "on the sideline"],
+  ["The hungry campers", "cooked beans over the fire", "beans", "around the campfire"],
+  ["A friendly mail carrier", "delivered a package to Mrs. Lee", "a package", "on our street"],
+  ["The city workers", "repaired the cracked sidewalk", "the cracked sidewalk", "on Main Street"],
+  ["My little brother", "spilled juice on the rug", "juice", "under the table"],
+  ["The class president", "read the announcement aloud", "the announcement", "at the podium"],
+];
+
+const lower = (s: string) => (/^(Grandpa|Mrs?\.|Dr\.)/.test(s) ? s : s[0]!.toLowerCase() + s.slice(1));
+const upper = (s: string) => s[0]!.toUpperCase() + s.slice(1);
+
+const openers: readonly (readonly [opener: string, noun: string])[] = [
+  ["After breakfast", "breakfast"],
+  ["On Saturday", "Saturday"],
+  ["Before sunrise", "sunrise"],
+  ["During the holiday", "the holiday"],
+  ["In the afternoon", "the afternoon"],
+  ["After the storm", "the storm"],
+  ["At noon", "noon"],
+  ["Before the parade", "the parade"],
+  ["During the break", "the break"],
+  ["After school", "school"],
+  ["On the last day", "the last day"],
+  ["Before lunch", "lunch"],
+  ["In the evening", "the evening"],
+  ["After the game", "the game"],
+  ["During the visit", "the visit"],
+  ["On Monday", "Monday"],
+  ["At dawn", "dawn"],
+  ["After the bell", "the bell"],
+  ["Before the show", "the show"],
+  ["In the spring", "the spring"],
+];
+
+const subjectMore: readonly ChoiceItem[] = scenes.map(([s, p, o]) => [`${s} ${p}.`, s, [p, o]]);
+const predicateMore: readonly ChoiceItem[] = scenes.map(([s, p, o]) => [`${s} ${p}.`, p, [s, o]]);
+const movedSubjectMore: readonly ChoiceItem[] = scenes.map(([s, p, o], i) => {
+  const [opener, noun] = openers[i]!;
+  return [`${opener}, ${lower(s)} ${p}.`, lower(s), [noun, o]];
+});
+const missingPartMore: readonly ChoiceItem[] = scenes.map(([s, p, , place], i) =>
+  i % 3 === 0 ? missing(`${s} ${p}.`, 0) : i % 3 === 1 ? missing(`${upper(p)}.`, 1) : missing(`${s} ${place}.`, 2),
+);
+
+const subordinators = ["Because", "When", "Although", "After", "Before"] as const;
+const mainClauses = ["everyone clapped", "we went inside", "the room grew quiet", "I smiled", "nobody said a word"] as const;
+const clauseFragmentMore: readonly ChoiceItem[] = scenes.map(([s, p], i) => {
+  const clause = `${subordinators[i % 5]} ${lower(s)} ${p}`;
+  return i % 2 === 0 ? unfinished(`${clause}.`, false) : unfinished(`${clause}, ${mainClauses[(i >> 1) % 5]}.`, true);
+});
+const fixFragmentMore: readonly ChoiceItem[] = [
+  ["A bowl of warm soup.", "Mom served a bowl of warm soup.", ["A bowl and warm soup.", "A big bowl of warm soup."]],
+  [
+    "When the lights went out.",
+    "When the lights went out, we lit a candle.",
+    ["When the lights went out again.", "When the lights and the candle."],
+  ],
+  ...scenes.map(([s, p, , place], i): ChoiceItem => {
+    if (i % 2 === 0) {
+      const word = (["Because", "After", "When"] as const)[(i >> 1) % 3];
+      const clause = `${word} ${lower(s)} ${p}`;
+      return [
+        `${clause}.`,
+        `${clause}, ${mainClauses[(i >> 1) % 5]}.`,
+        [`${clause} again.`, `${word} ${lower(s)} and ${place.split(" ").slice(1).join(" ")}.`],
+      ];
+    }
+    return [`${s} ${place}.`, `${s} ${place} ${p}.`, [`${s} and ${place.split(" ").slice(1).join(" ")}.`, `${s} ${place} today.`]];
+  }),
+];
+
+/** actors are subjects with regular verbs for the tense items: subject, base verb, *-s* form, past form, the rest. */
+const actors: readonly (readonly [subject: string, base: string, s: string, past: string, rest: string])[] = [
+  ["my aunt", "visit", "visits", "visited", "the zoo"],
+  ["the farmer", "plant", "plants", "planted", "corn"],
+  ["our coach", "call", "calls", "called", "a meeting"],
+  ["Ella", "paint", "paints", "painted", "the fence"],
+  ["the chef", "cook", "cooks", "cooked", "soup"],
+  ["my brother", "wash", "washes", "washed", "the car"],
+  ["the hikers", "climb", "climb", "climbed", "the hill"],
+  ["Grandma", "bake", "bakes", "baked", "bread"],
+  ["the class", "clean", "cleans", "cleaned", "the park"],
+  ["Mr. Ortiz", "fix", "fixes", "fixed", "the sink"],
+  ["the twins", "play", "play", "played", "chess"],
+  ["our neighbor", "walk", "walks", "walked", "his dog"],
+  ["the band", "practice", "practices", "practiced", "a new song"],
+  ["my parents", "watch", "watch", "watched", "the news"],
+  ["the gardener", "water", "waters", "watered", "the roses"],
+  ["Sofia", "help", "helps", "helped", "her grandfather"],
+  ["the students", "collect", "collect", "collected", "leaves"],
+  ["the baker", "decorate", "decorates", "decorated", "a cake"],
+  ["Dad", "repair", "repairs", "repaired", "the roof"],
+  ["the scouts", "explore", "explore", "explored", "the cave"],
+];
+const pastTimes = ["Yesterday", "Last summer", "Two days ago", "Last night", "Last month", "On Friday night", "A week ago"] as const;
+const presentTimes = ["Every day", "Each morning", "Every weekend", "Most evenings", "Each spring", "Every Sunday", "Every year"] as const;
+const futureTimes = ["Tomorrow", "Next week", "Next summer", "In two days", "Later tonight", "Next Monday", "In a month"] as const;
+const tenseMore: readonly ChoiceItem[] = actors.map(([who, base, s, past, rest], i) => {
+  const k = Math.floor(i / 3);
+  if (i % 3 === 0) return [`${pastTimes[k % 7]}, ${who} ___ ${rest}.`, past, [s, `will ${base}`]];
+  if (i % 3 === 1) return [`${presentTimes[k % 7]}, ${who} ___ ${rest}.`, s, [past, `will ${base}`]];
+  return [`${futureTimes[k % 7]}, ${who} ___ ${rest}.`, `will ${base}`, [past, s]];
+});
+
+/** pairs are singular and plural subjects for agreement: subject, plural?, base verb, *-s* form, *-ing* form, the rest. */
+const pairs: readonly (readonly [subject: string, plural: boolean, base: string, s: string, ing: string, rest: string])[] = [
+  ["The baker", false, "bake", "bakes", "baking", "bread at dawn"],
+  ["My grandparents", true, "grow", "grows", "growing", "tomatoes"],
+  ["This robot", false, "sweep", "sweeps", "sweeping", "the floor"],
+  ["The pilots", true, "check", "checks", "checking", "the weather"],
+  ["Our principal", false, "greet", "greets", "greeting", "every student"],
+  ["Snails", true, "move", "moves", "moving", "very slowly"],
+  ["The river", false, "flow", "flows", "flowing", "toward the sea"],
+  ["My friends", true, "ride", "rides", "riding", "bikes after school"],
+  ["The old clock", false, "chime", "chimes", "chiming", "every hour"],
+  ["We", true, "eat", "eats", "eating", "dinner at six"],
+  ["Her uncle", false, "drive", "drives", "driving", "a delivery truck"],
+  ["The puppies", true, "chew", "chews", "chewing", "everything"],
+  ["A firefly", false, "glow", "glows", "glowing", "in the dark"],
+  ["You", true, "sing", "sings", "singing", "beautifully"],
+  ["The nurse", false, "carry", "carries", "carrying", "a clipboard"],
+  ["The bees", true, "visit", "visits", "visiting", "the clover"],
+  ["It", false, "rain", "rains", "raining", "a lot in April"],
+  ["My cousins", true, "speak", "speaks", "speaking", "two languages"],
+  ["The coach", false, "watch", "watches", "watching", "every practice"],
+  ["The farmers", true, "sell", "sells", "selling", "eggs at the market"],
+];
+const agreementMore: readonly ChoiceItem[] = pairs.map(([who, plural, base, s, ing, rest]) =>
+  plural ? [`${who} ___ ${rest}.`, base, [s, ing]] : [`${who} ___ ${rest}.`, s, [base, ing]],
+);
+
+const hardAgreementMore: readonly ChoiceItem[] = [
+  ["The basket of apples ___ heavy.", "is", ["are", "am"]],
+  ["The windows in the kitchen ___ open.", "are", ["is", "am"]],
+  ["The color of the leaves ___ in the fall.", "changes", ["change", "changing"]],
+  ["The players on the team ___ red shirts.", "wear", ["wears", "wearing"]],
+  ["Leo and his dad ___ at the lake.", "are", ["is", "am"]],
+  ["The noise from the trucks ___ the baby.", "wakes", ["wake", "waking"]],
+  ["The books on the top shelf ___ dusty.", "are", ["is", "am"]],
+  ["Each of the puppies ___ a name.", "has", ["have", "having"]],
+  ["The bag of marbles ___ under the bed.", "is", ["are", "am"]],
+  ["My aunt and uncle ___ in Texas.", "live", ["lives", "living"]],
+  ["The smell of the cookies ___ the house.", "fills", ["fill", "filling"]],
+  ["The girls in the choir ___ every Friday.", "sing", ["sings", "singing"]],
+  ["The teacher with the twins ___ late.", "is", ["are", "am"]],
+  ["The birds on the wire ___ loudly.", "chirp", ["chirps", "chirping"]],
+  ["A herd of elephants ___ near the water.", "rests", ["rest", "resting"]],
+  ["Salt and pepper ___ on the table.", "are", ["is", "am"]],
+  ["The lid of the jars ___ stuck.", "is", ["are", "am"]],
+  ["The students in my class ___ hard.", "work", ["works", "working"]],
+  ["The roof of the houses ___ red.", "is", ["are", "am"]],
+  ["The cups in the sink ___ washing.", "need", ["needs", "needing"]],
+];
+
+const pronounFormMore: readonly ChoiceItem[] = [
+  ["Lucy lost ___ scarf at the rink.", "her", ["she", "hers"]],
+  ["___ and Ravi built the volcano. (Mina)", "She", ["Her", "Hers"]],
+  ["The teacher gave ___ a sticker. (Owen)", "him", ["he", "his"]],
+  ["Dad drove Kim and ___ to practice.", "me", ["I", "my"]],
+  ["___ and I shared a tent. (Tom)", "He", ["Him", "His"]],
+  ["The cat curled up in ___ basket.", "its", ["it", "it's"]],
+  ["The guide told ___ a secret. (the campers)", "them", ["they", "their"]],
+  ["___ cleaned the beach together. (the volunteers)", "They", ["Them", "Their"]],
+  ["Mr. Diaz thanked ___ for the card. (my sister and me)", "us", ["we", "our"]],
+  ["Sara and ___ won the relay.", "I", ["me", "my"]],
+  ["The parrot flapped ___ wings.", "its", ["it", "it's"]],
+  ["Please pass the salt to ___. (Grandpa)", "him", ["he", "his"]],
+  ["Our team lost, but ___ played well.", "we", ["us", "our"]],
+  ["The puppies chased ___ tails.", "their", ["them", "they"]],
+  ["Coach Ruiz picked Zoe and ___ for the team.", "me", ["I", "mine"]],
+  ["___ is my best friend. (Hana)", "She", ["Her", "Hers"]],
+  ["The tree dropped ___ leaves.", "its", ["it", "it's"]],
+  ["My brother and ___ painted the fence.", "I", ["me", "my"]],
+  ["The bus driver waved at ___. (Eli and Max)", "them", ["they", "their"]],
+  ["Aunt Mae told ___ a joke. (Lily)", "her", ["she", "hers"]],
+];
+
+/** nounScenes are sentences in four parts: adjective, noun, verb, adverb. */
+const nounScenes: readonly (readonly [adjective: string, noun: string, verb: string, adverb: string])[] = [
+  ["shy", "deer", "vanished", "quickly"],
+  ["noisy", "crowd", "cheered", "loudly"],
+  ["heavy", "suitcase", "fell", "suddenly"],
+  ["clever", "fox", "escaped", "easily"],
+  ["golden", "sun", "set", "slowly"],
+  ["tiny", "baby", "giggled", "happily"],
+  ["rusty", "gate", "creaked", "noisily"],
+  ["friendly", "waiter", "smiled", "warmly"],
+  ["strong", "wind", "howled", "fiercely"],
+  ["young", "athlete", "trained", "daily"],
+  ["muddy", "dog", "shook", "wildly"],
+  ["proud", "farmer", "worked", "hard"],
+  ["cold", "rain", "fell", "steadily"],
+  ["curious", "child", "asked", "politely"],
+  ["ancient", "castle", "stood", "proudly"],
+  ["lazy", "cat", "stretched", "slowly"],
+  ["nervous", "actor", "spoke", "softly"],
+  ["full", "moon", "glowed", "silently"],
+  ["kind", "nurse", "listened", "patiently"],
+  ["gentle", "breeze", "blew", "softly"],
+];
+const nounMore: readonly ChoiceItem[] = nounScenes.map(([a, n, v, d], i) => [
+  `The ${a} ${n} ${v} ${d}.`,
+  n,
+  i % 2 === 0 ? [a, v, d] : [v, a, d],
+]);
+
+const pronounMore: readonly ChoiceItem[] = [
+  ["The puppy chased the ball until it rolled away.", "it", ["puppy", "chased", "ball"]],
+  ["Grandma baked cookies and shared them.", "them", ["cookies", "baked", "shared"]],
+  ["The twins said we could borrow the kite.", "we", ["twins", "said", "kite"]],
+  ["My aunt sent me a postcard.", "me", ["aunt", "sent", "postcard"]],
+  ["The students cleaned their classroom.", "their", ["students", "cleaned", "classroom"]],
+  ["The coach asked her about the trip.", "her", ["coach", "asked", "trip"]],
+  ["The farmer fed his goats early.", "his", ["farmer", "fed", "goats"]],
+  ["Our neighbors invited us to the picnic.", "us", ["neighbors", "invited", "picnic"]],
+  ["The pilot thanked them after the flight.", "them", ["pilot", "thanked", "flight"]],
+  ["The bird built its nest in the hedge.", "its", ["bird", "built", "nest"]],
+  ["I watered the plants yesterday.", "I", ["watered", "plants", "yesterday"]],
+  ["The children laughed when he juggled.", "he", ["children", "laughed", "juggled"]],
+  ["The painter finished the mural, and she smiled.", "she", ["painter", "mural", "smiled"]],
+  ["The kittens drank milk, and then they slept.", "they", ["kittens", "milk", "slept"]],
+  ["The coach gave you a medal.", "you", ["coach", "gave", "medal"]],
+  ["Everyone cheered loudly for the runners.", "Everyone", ["cheered", "loudly", "runners"]],
+  ["The waiter brought him a glass of water.", "him", ["waiter", "brought", "water"]],
+  ["The robot lifted the crate and moved it.", "it", ["robot", "lifted", "crate"]],
+  ["The scouts packed their bags early.", "their", ["scouts", "packed", "bags"]],
+  ["The baby dropped the rattle, so we picked it up.", "we", ["baby", "dropped", "rattle"]],
+];
+
+/** moreWordClass gives the class of every wrong option in the added noun and pronoun items. */
+const moreWordClass: Readonly<Record<string, WordClass>> = {
+  ...Object.fromEntries(
+    nounScenes.flatMap(([a, , v, d]) => [
+      [a, "adjective"],
+      [v, "verb"],
+      [d, "adverb"],
+    ]),
+  ),
+  ...Object.fromEntries(
+    "puppy ball cookies twins kite aunt postcard students classroom coach trip farmer goats neighbors picnic pilot flight bird nest plants children painter mural kittens milk medal runners waiter water robot crate scouts bags baby rattle"
+      .split(" ")
+      .map((w) => [w, "noun"]),
+  ),
+  ...Object.fromEntries(
+    "chased baked shared said sent cleaned asked fed invited thanked built watered laughed juggled finished smiled drank slept gave cheered brought lifted packed dropped"
+      .split(" ")
+      .map((w) => [w, "verb"]),
+  ),
+  yesterday: "adverb",
+  loudly: "adverb",
+};
+
+const antecedentMore: readonly ChoiceItem[] = [
+  ["The team celebrated ___ victory.", "its", ["their", "his"]],
+  ["Grandpa polished ___ old boots.", "his", ["their", "its"]],
+  ["The girls packed ___ lunches.", "their", ["her", "its"]],
+  ["Aunt Rita watered ___ garden.", "her", ["his", "their"]],
+  ["The tree lost ___ leaves.", "its", ["their", "his"]],
+  ["The firefighters checked ___ hoses.", "their", ["his", "its"]],
+  ["Mr. Chen parked ___ truck.", "his", ["her", "their"]],
+  ["The mother bird fed ___ chicks.", "her", ["their", "its"]],
+  ["My cousins visited ___ grandmother.", "their", ["his", "its"]],
+  ["Nadia finished ___ painting.", "her", ["his", "its"]],
+  ["The school changed ___ schedule.", "its", ["their", "her"]],
+  ["The players tied ___ shoes.", "their", ["his", "its"]],
+  ["Uncle Sam lost ___ glasses.", "his", ["their", "her"]],
+  ["The kitten chased ___ own tail.", "its", ["their", "his"]],
+  ["The doctors washed ___ hands.", "their", ["his", "its"]],
+  ["The queen waved to ___ people.", "her", ["his", "their"]],
+  ["The museum opened ___ new wing.", "its", ["their", "his"]],
+  ["Felix brought ___ own lunch.", "his", ["their", "her"]],
+  ["The ducks shook water off ___ feathers.", "their", ["its", "her"]],
+  ["The library extended ___ hours.", "its", ["their", "his"]],
+];
+
+/** referencePairs are two people of the same gender, a meeting, and a state that could belong to either. */
+const referencePairs: readonly (readonly [a: string, b: string, pronoun: string, met: string, state: string])[] = [
+  ["Ava", "Lily", "she", "talked to", "tired"],
+  ["Sam", "Leo", "he", "met", "nervous"],
+  ["Nora", "Zoe", "she", "called", "excited"],
+  ["Omar", "Ben", "he", "visited", "hungry"],
+  ["Rita", "Jade", "she", "sat with", "sad"],
+  ["Max", "Eli", "he", "played with", "cold"],
+  ["Hana", "Mei", "she", "walked with", "sleepy"],
+  ["Luis", "Kai", "he", "waited for", "worried"],
+  ["Tess", "Ruby", "she", "hugged", "proud"],
+  ["Finn", "Owen", "he", "argued with", "upset"],
+  ["Iris", "Paula", "she", "danced with", "dizzy"],
+];
+const clearReferenceMore: readonly ChoiceItem[] = referencePairs.flatMap(([a, b, p, met, state]): ChoiceItem[] => [
+  [
+    `Which sentence makes it clear who was ${state}?`,
+    `${a} was ${state} when ${p} ${met} ${b}.`,
+    [`When ${a} ${met} ${b}, ${p} was ${state}.`, `${a} ${met} ${b}, and ${p} was ${state}.`],
+  ],
+  [
+    `Which sentence makes it clear who felt ${state}?`,
+    `${b} ${met} ${a} and said, "I feel ${state}."`,
+    [`${b} ${met} ${a}, and ${p} felt ${state}.`, `After ${b} ${met} ${a}, ${p} felt ${state}.`],
+  ],
+]);
+
+const irregularMore = [
+  typed("Today I see. Yesterday I ___.", "saw", ["seed", "seen"]),
+  typed("Today she teaches. Yesterday she ___.", "taught", ["teached", "tought"]),
+  typed("Today we buy. Yesterday we ___.", "bought", ["buyed", "brought"]),
+  typed("Today the bird flies. Yesterday the bird ___.", "flew", ["flyed", "flown"]),
+  typed("Today they drink. Yesterday they ___.", "drank", ["drinked", "drunk"]),
+  typed("Today he sings. Yesterday he ___.", "sang", ["singed", "sung"]),
+  typed("Today you speak. Yesterday you ___.", "spoke", ["speaked", "spoken"]),
+  typed("Today I take. Yesterday I ___.", "took", ["taked", "taken"]),
+  typed("Today she gives. Yesterday she ___.", "gave", ["gived", "given"]),
+  typed("Today we find. Yesterday we ___.", "found", ["finded", "founded"]),
+  typed("Today the cat sits. Yesterday the cat ___.", "sat", ["sitted", "set"]),
+  typed("Today the baby sleeps. Yesterday the baby ___.", "slept", ["sleeped", "slep"]),
+  typed("Today they keep. Yesterday they ___.", "kept", ["keeped", "kep"]),
+  typed("Today he tells. Yesterday he ___.", "told", ["telled", "tolled"]),
+  typed("Today the glass breaks. Yesterday the glass ___.", "broke", ["breaked", "broken"]),
+  typed("Today my mom drives. Yesterday my mom ___.", "drove", ["drived", "driven"]),
+  typed("Today we ride. Yesterday we ___.", "rode", ["rided", "ridden"]),
+  typed("Today I know. Yesterday I ___.", "knew", ["knowed", "known"]),
+  typed("Today the plant grows. Yesterday the plant ___.", "grew", ["growed", "grown"]),
+  typed("Today you throw. Yesterday you ___.", "threw", ["throwed", "thrown"]),
+  typed("Today our team wins. Yesterday our team ___.", "won", ["winned", "wan"]),
+];
+
+/** allWordClass is the class of every word used as a wrong option. */
+const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass };
+
 /** sentenceTopics are the topics of what a sentence is made of. */
 export const sentenceTopics: readonly TopicDef[] = [
   {
@@ -539,7 +887,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is the subject of this sentence?", "这句话的主语是什么？"),
-          subjectBank,
+          [...subjectBank, ...subjectMore],
           (right) =>
             t(
               `The sentence is about **${right}**, so that is the subject. The rest tells what happens.`,
@@ -566,7 +914,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is the predicate of this sentence?", "这句话的谓语是什么？"),
-          predicateBank,
+          [...predicateBank, ...predicateMore],
           (right) =>
             t(`**${right}** tells what the subject does, so it is the predicate.`, `**${right}** 说明主语做了什么，所以它是谓语。`),
           (wrong, _right, _shown, position) =>
@@ -590,7 +938,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is the subject of this sentence?", "这句话的主语是什么？"),
-          movedSubjectBank,
+          [...movedSubjectBank, ...movedSubjectMore],
           (right) =>
             t(
               `Ask who or what does the action: **${right}**. The opening phrase only tells when or where.`,
@@ -627,7 +975,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word in this sentence is a noun?", "这句话中哪个词是名词？"),
-          nounBank,
+          [...nounBank, ...nounMore],
           (right) =>
             t(
               `**${right}** names a person, place, thing or idea, so it is a noun.`,
@@ -645,7 +993,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word in this sentence is a pronoun?", "这句话中哪个词是代词？"),
-          pronounBank,
+          [...pronounBank, ...pronounMore],
           (right) =>
             t(
               `**${right}** stands in for a noun, so it is a pronoun. The other words name, describe or show action, but none of them takes the place of a noun.`,
@@ -663,7 +1011,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which pronoun completes the sentence?", "哪个代词能补全句子？"),
-          pronounFormBank,
+          [...pronounFormBank, ...pronounFormMore],
           (right, shown) =>
             t(
               `The right form is **${right}**: ${shown.replace("___", right)} Try the pronoun alone to hear which form fits its job.`,
@@ -691,7 +1039,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Is this a complete sentence? If not, what is missing?", "这是完整句吗？如果不是，缺少什么？"),
-          missingPartBank,
+          [...missingPartBank, ...missingPartMore],
           (right) =>
             t(
               `**${right}**. Look for a subject and a predicate: a complete sentence needs both.`,
@@ -709,7 +1057,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Is this a complete sentence? If not, what is wrong with it?", "这是完整句吗？如果不是，问题在哪里？"),
-          clauseFragmentBank,
+          [...clauseFragmentBank, ...clauseFragmentMore],
           (right) =>
             t(
               `**${right}**. A group of words that begins with a word like *because* needs another complete thought.`,
@@ -727,7 +1075,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which one fixes this fragment?", "哪一项修改了这个片段？"),
-          fixFragmentBank,
+          [...fixFragmentBank, ...fixFragmentMore],
           (right) =>
             t(
               `**${right}** has a subject and a predicate and stands alone. The other choices are still fragments.`,
@@ -755,7 +1103,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which verb completes the sentence?", "哪个动词能补全句子？"),
-          tenseBank,
+          [...tenseBank, ...tenseMore],
           (right, shown) =>
             t(
               `The time words call for **${right}**: ${shown.replace("___", right)}`,
@@ -771,8 +1119,11 @@ export const sentenceTopics: readonly TopicDef[] = [
           "Many common verbs do not add *-ed* in the past. They change in their own way: *go* becomes *went*, *see* becomes *saw*, *teach* becomes *taught*. These forms have to be learned one by one, and using them often is what makes them stick.",
           "许多常用动词的过去式不加 *-ed*，而是有自己的变化：*go* 变成 *went*，*see* 变成 *saw*，*teach* 变成 *taught*。这些形式要逐个学习，多用才能记住。",
         ),
-        typedGenerator("word-form", t("Type the past form of the verb.", "输入动词的过去式。"), irregularBank, (right) =>
-          t(`The past form is **${right}**. This verb does not add *-ed*.`, `过去式是 **${right}**。这个动词不加 *-ed*。`),
+        typedGenerator(
+          "word-form",
+          t("Type the past form of the verb.", "输入动词的过去式。"),
+          [...irregularBank, ...irregularMore],
+          (right) => t(`The past form is **${right}**. This verb does not add *-ed*.`, `过去式是 **${right}**。这个动词不加 *-ed*。`),
         ),
       ),
     ],
@@ -794,7 +1145,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which verb agrees with the subject?", "哪个动词与主语一致？"),
-          agreementBank,
+          [...agreementBank, ...agreementMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The verb matches its subject in number.`,
@@ -812,7 +1163,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which verb agrees with the subject?", "哪个动词与主语一致？"),
-          hardAgreementBank,
+          [...hardAgreementBank, ...hardAgreementMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Find the real subject, ignoring any phrase between it and the verb.`,
@@ -840,7 +1191,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which pronoun completes the sentence?", "哪个代词能补全句子？"),
-          antecedentBank,
+          [...antecedentBank, ...antecedentMore],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The pronoun matches the noun it stands for.`,
@@ -858,7 +1209,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the clearest sentence.", "选出最清楚的句子。"),
-          clearReferenceBank,
+          [...clearReferenceBank, ...clearReferenceMore],
           (right) =>
             t(
               `**${right}** can be read only one way. In the others, the pronoun could point to either noun.`,

@@ -406,8 +406,9 @@ const label = (table: Readonly<Record<string, Pair>>) => (wrong: string) => {
 const ownerOf = (bank: readonly ChoiceItem[], elsewhere: Readonly<Record<string, string>> = {}) =>
   new Map([...bank.map(([part, meaning]) => [meaning, part] as const), ...Object.entries(elsewhere)]);
 
-const otherPart = (owners: ReadonlyMap<string, string>) => (wrong: string, _right: string, shown: string) => {
+const otherPart = (owners: ReadonlyMap<string, string>) => (wrong: string, _right: string, item: string) => {
   const owner = entry(owners, wrong);
+  const shown = item.split(" as in ")[0]!;
   return t(
     `“${wrong}” is what *${owner}* means, not *${shown}*. Think of a word you know with *${shown}* in it, and what that part adds.`,
     `“${wrong}” 是 *${owner}* 的意思，不是 *${shown}* 的意思。想一个含有 *${shown}* 的熟词，看看这部分带来了什么意思。`,
@@ -495,6 +496,417 @@ const otherShade = (wrong: string) => {
   return t(`“${wrong}” means *${en}*, which is not what the parentheses describe.`, `“${wrong}” 的意思是“${zh}”，与括号中描述的意思不符。`);
 };
 
+// More items, built from hand-written cores by deterministic templates.
+
+/** rows splits hand-written lines of fields separated by bars. */
+const rows = (lines: string): string[][] =>
+  lines
+    .trim()
+    .split("\n")
+    .map((line) => line.trim().split("|"));
+
+/** choices turns lines of word, meaning and two wrong meanings into choice items. */
+const choices = (lines: string): ChoiceItem[] => rows(lines).map(([shown, right, ...wrong]) => [shown!, right!, wrong]);
+
+/** inWords gives each part of a meaning bank in three words that use it, keeping the part's meaning and wrong meanings. */
+const inWords = (bank: readonly ChoiceItem[], words: Readonly<Record<string, string>>): ChoiceItem[] =>
+  bank.flatMap(([part, right, wrong]) =>
+    (words[part] ?? "")
+      .split(" ")
+      .filter(Boolean)
+      .map((word): ChoiceItem => [`${part} as in *${word}*`, right, wrong]),
+  );
+
+const prefixMeaningMore = inWords(prefixMeaningBank, {
+  "un-": "unafraid unlucky unsafe",
+  "re-": "refill retell reopen",
+  "dis-": "disagree disappear disconnect",
+  "pre-": "preview preschool prepay",
+  "mis-": "misspell misread misplace",
+  "non-": "nonstop nonfiction nonsense",
+  "over-": "overcook overfill oversleep",
+  "under-": "undercook underpaid underfed",
+});
+const suffixMeaningMore = inWords(suffixMeaningBank, {
+  "-ful": "hopeful playful painful",
+  "-less": "spotless endless sleepless",
+  "-er": "teacher baker painter",
+  "-ness": "sadness darkness softness",
+  "-able": "washable breakable readable",
+  "-ly": "quickly softly bravely",
+  "-est": "tallest smallest coldest",
+  "-ish": "childish greenish foolish",
+});
+const positionMeaningMore = inWords(positionMeaningBank, {
+  "uni-": "uniform unicorn",
+  "bi-": "bicycle bilingual",
+  "tri-": "tricycle tripod",
+  "semi-": "semicircle semisweet",
+  "multi-": "multicolor multistory",
+  "sub-": "subway submarine",
+  "super-": "superscript supersonic",
+  "inter-": "international interstate",
+  "trans-": "transatlantic transplant",
+  "post-": "postwar postscript",
+});
+const latin1RootMore = inWords(latin1RootBank, {
+  port: "portable import export",
+  dict: "dictate contradict verdict",
+  rupt: "interrupt rupture disrupt",
+  "scrib or script": "describe manuscript inscribe",
+  struct: "construct instruct structure",
+  tract: "tractor attract subtract",
+  "vis or vid": "vision video invisible",
+  spect: "inspect spectator spectacles",
+});
+const greekRootMore = inWords(greekRootBank, {
+  tele: "telescope television",
+  graph: "paragraph autograph",
+  phon: "microphone phonics",
+  photo: "photograph photocopy",
+  bio: "biology biologist",
+  geo: "geography geology",
+  therm: "thermometer thermos",
+  micro: "microscope microchip",
+  auto: "automatic autopilot",
+  scope: "periscope microscope",
+});
+
+const prefixWordMore = choices(`
+  unafraid|not afraid|afraid again|afraid before
+  unlucky|not lucky|lucky again|lucky before
+  unkind|not kind|kind again|kind before
+  refill|fill again|not fill|fill before
+  retell|tell again|tell wrongly|not tell
+  reopen|open again|open before|not open
+  disagree|not agree|agree again|agree before
+  disappear|the opposite of appear|appear again|appear before
+  disconnect|the opposite of connect|connect again|connect wrongly
+  preview|view before|view again|not view
+  prepay|pay before|pay again|pay too much
+  misspell|spell wrongly|spell again|spell before
+  misbehave|behave wrongly|behave again|behave before
+  misplace|put in the wrong place|put in place again|put in place before
+  nonliving|not living|living again|living before
+  nonfiction|writing that is not made up|writing made up again|writing made up before
+  overeat|eat too much|eat too little|eat again
+  oversleep|sleep too long|sleep too little|sleep again
+  undercook|cook too little|cook too much|cook before
+  underfed|fed too little|fed too much|fed again
+  unwrap|take the wrapping off|wrap again|wrap before
+`);
+const suffixWordMore = choices(`
+  hopeful|full of hope|without hope|someone who hopes
+  playful|full of play|without play|able to play
+  spotless|without a spot|full of spots|able to be spotted
+  endless|without an end|full of ends|someone who ends
+  sleepless|without sleep|full of sleep|able to sleep
+  teacher|a person who teaches|without teaching|able to teach
+  baker|a person who bakes|without baking|full of baking
+  painter|a person who paints|able to be painted|without paint
+  illness|the state of being ill|a person who is ill|in an ill way
+  darkness|the state of being dark|without dark|in a dark way
+  softness|the state of being soft|able to be soft|a person who is soft
+  enjoyable|able to be enjoyed|without joy|a person who enjoys
+  drinkable|able to be drunk|without drinking|someone who drinks
+  readable|able to be read|without reading|a person who reads
+  quickly|in a quick way|the state of being quick|the most quick
+  loudly|in a loud way|full of loudness|without loudness
+  bravely|in a brave way|without bravery|the most brave
+  longest|the most long|somewhat long|in a long way
+  coldest|the most cold|somewhat cold|in a cold way
+  greenish|somewhat green|the most green|without green
+  childish|like a child|without a child|a person who is a child
+`);
+const positionWordMore = choices(`
+  uniform|clothing that is all one style|clothing in two styles|clothing in three styles
+  unicorn|a creature with one horn|a creature with two horns|a creature with many horns
+  bicycle|a cycle with two wheels|a cycle with one wheel|a cycle with three wheels
+  bilingual|speaking two languages|speaking one language|speaking many languages
+  tricycle|a cycle with three wheels|a cycle with two wheels|a cycle with one wheel
+  tripod|a stand with three legs|a stand with two legs|a stand with many legs
+  semicircle|half a circle|three circles|many circles
+  multicolor|having many colors|having one color|having two colors
+  multistory|having many floors|having one floor|having half a floor
+  subway|a train that runs under the ground|a train that runs over the ground|a train that runs across the ground
+  submarine|a ship that goes under the sea|a ship that goes above the sea|a ship that goes across the sea
+  superscript|writing set above the line|writing set under the line|writing set between lines
+  supersonic|above the speed of sound|below the speed of sound|between two speeds of sound
+  intercity|between cities|under one city|after the cities
+  interstate|a road between states|a road under a state|a road after a state
+  transcontinental|across a continent|under a continent|before a continent
+  transplant|to move a plant across to a new place|to plant under the ground|to plant before spring
+  postdate|to put a date after the real one|to put a date before the real one|to put a date under the real one
+  postscript|a note written after the letter|a note written before the letter|a note written under the letter
+  postgame|after the game|before the game|between games
+`);
+const latin1WordMore = choices(`
+  portable|able to be carried|able to be seen|able to be written
+  import|to carry into a country|to see into a country|to break into a country
+  porter|a person who carries bags|a person who writes letters|a person who breaks rocks
+  dictate|to say words for someone to write|to carry words to someone|to break words apart
+  contradict|to say the opposite|to see the opposite|to build the opposite
+  verdict|what a jury says is true|what a jury carries|what a jury builds
+  interrupt|to break into a conversation|to say into a conversation|to look into a conversation
+  disrupt|to break apart an order|to pull apart an order|to see apart an order
+  describe|to write or tell about|to break apart|to pull about
+  manuscript|something written by hand|something carried by hand|something broken by hand
+  inscribe|to write into a surface|to look into a surface|to carry into a surface
+  reconstruct|to build again|to pull again|to say again
+  structure|something that is built|something that is carried|something that is said
+  tractor|a machine that pulls|a machine that writes|a machine that looks
+  attract|to pull toward|to say toward|to break toward
+  subtract|to pull away a number|to write a number|to see a number
+  vision|the ability to see|the ability to carry|the ability to say
+  invisible|not able to be seen|not able to be carried|not able to be built
+  inspect|to look into closely|to break into closely|to carry into closely
+  spectator|a person who looks on|a person who builds|a person who writes
+  rupture|a break or burst|a pull or tug|a written note
+`);
+const greekWordMore = choices(`
+  telescope|a tool for looking at things far away|a tool for hearing life|a tool for measuring heat
+  television|pictures sent from far away|sounds of the earth|a picture of oneself
+  paragraph|a block of written sentences|a block of sounds|a block of light
+  photograph|a picture made with light|a sound recorded far away|a map of the earth
+  microphone|a device that picks up small sounds|a device for small lights|a device for measuring heat
+  symphony|sounds played together|lights shown together|lives lived together
+  geothermal|heat from inside the earth|sound from inside the earth|light from inside the earth
+  geography|writing about the earth|the study of life|a picture made with light
+  geologist|a scientist who studies the earth|a scientist who studies life|a scientist who studies sound
+  thermostat|a device that controls heat|a device that controls sound|a device that controls light
+  thermos|a bottle that keeps heat in|a bottle that keeps sound in|a bottle that keeps light in
+  microbe|a very small living thing|a very large living thing|a living thing far away
+  automatic|working by itself|working far away|working with light
+  autopilot|a system that flies a plane by itself|a system that flies a plane far away|a system that flies a plane with sound
+  automobile|a vehicle that moves by itself|a vehicle that moves by sound|a vehicle that moves with light
+  periscope|a tube for looking around|a tube for sound|a tube for heat
+  phonics|the sounds of letters|the light of letters|the life of letters
+  telegram|a written message sent far|a sound recorded at home|a picture of the earth
+  photocopy|a copy made with light|a copy made with sound|a copy made by hand
+  biologist|a scientist who studies life|a scientist who studies heat|a scientist who studies sound
+`);
+
+const spelledRows = (lines: string): TypedItem[] => rows(lines).map(([shown, right, ...wrong]) => spelled(shown!, right!, ...wrong));
+const prefixTypedMore = spelledRows(`
+  not afraid|unafraid|disafraid|inafraid
+  fill again|refill|prefill|unfill
+  not agree|disagree|unagree|misagree
+  view before|preview|review|misview
+  spell wrongly|misspell|mispell|disspell
+  without stopping|nonstop|unstop|disstop
+  cook too much|overcook|undercook|recook
+  cook too little|undercook|overcook|miscook
+  visit again|revisit|previsit|unvisit
+  not lucky|unlucky|dislucky|inlucky
+  the opposite of like|dislike|unlike|mislike
+  heat before|preheat|reheat|misheat
+  read wrongly|misread|reread|disread
+  work too much|overwork|underwork|miswork
+  not safe|unsafe|dissafe|insafe
+  open again|reopen|preopen|unopen
+  place wrongly|misplace|displace|replace
+  writing that is not fiction|nonfiction|unfiction|disfiction
+  the opposite of connect|disconnect|unconnect|misconnect
+  fed too little|underfed|overfed|misfed
+`);
+const suffixTypedMore = spelledRows(`
+  hope + ful|hopeful|hopefull|hopful
+  play + ful|playful|playfull|plaful
+  end + less|endless|endles|endlees
+  spot + less|spotless|spotles|spottless
+  teach + er|teacher|teachor|teacheer
+  write + er|writer|writeer|writter
+  sad + ness|sadness|sadnes|saddness
+  dark + ness|darkness|darknes|darkniss
+  wash + able|washable|washible|washabel
+  break + able|breakable|breakible|breakabel
+  quick + ly|quickly|quickely|quikly
+  brave + ly|bravely|bravly|bravelly
+  tall + est|tallest|tallist|talest
+  hot + est|hottest|hotest|hottist
+  child + ish|childish|childsh|childesh
+  win + er|winner|winer|winnor
+  lazy + ness|laziness|lazyness|lazines
+  plenty + ful|plentiful|plentyful|plentifull
+  happy + ly|happily|happyly|happly
+  shop + er|shopper|shoper|shoppor
+`);
+const buildMore = spelledRows(`
+  un + able|unable|unabel
+  re + fill|refill|refil
+  care + less|careless|carless
+  help + less|helpless|helples
+  dis + obey|disobey|disobay
+  re + paint|repaint|repant
+  play + er|player|playor
+  un + even|uneven|unevan
+  sweet + ness|sweetness|sweetnes
+  re + write|rewrite|rewright
+  sad + ly|sadly|sadley
+  thank + ful|thankful|thankfull
+  dis + honest|dishonest|dishonist
+  un + wrap|unwrap|unrap
+  fear + less|fearless|fearles
+  re + heat|reheat|reheet
+  soft + ness|softness|softnes
+  farm + er|farmer|farmor
+  un + tie|untie|untye
+  dis + trust|distrust|distrus
+`);
+
+/** parted are words split into a base and the part added to it, with a cut that splits the base. */
+const parted: readonly (readonly [word: string, base: string, affix: string, cut: string])[] = rows(`
+  unpack|pack|un|unpa
+  refill|fill|re|refi
+  hopeless|hope|less|hop
+  softness|soft|ness|sof
+  playful|play|ful|pla
+  disarm|arm|dis|disa
+  slowly|slow|ly|slo
+  speaker|speak|er|spea
+  untie|tie|un|ti
+  reheat|heat|re|hea
+  fearless|fear|less|fea
+  fitness|fit|ness|fi
+  thankful|thank|ful|than
+  disobey|obey|dis|obe
+  quietly|quiet|ly|qui
+  climber|climb|er|cli
+  unwrap|wrap|un|wra
+  retell|tell|re|tel
+  sleepless|sleep|less|slee
+  kindly|kind|ly|kin
+`).map(([w, b, a, c]) => [w!, b!, a!, c!]);
+const baseMore: readonly ChoiceItem[] = parted.map(([w, b, a, c]) => [w, b, [a, c]]);
+const isPrefix = (affix: string) => ["un", "re", "dis"].includes(affix);
+const affixKindMore: readonly ChoiceItem[] = [
+  ...parted.map(([w, , a]): ChoiceItem => {
+    const kind = isPrefix(a) ? "Prefix" : "Suffix";
+    return [`The *${isPrefix(a) ? `${a}-` : `-${a}`}* in *${w}*`, kind, [kind === "Prefix" ? "Suffix" : "Prefix", "Base word"]];
+  }),
+  ...parted.slice(0, 4).map(([w, b]): ChoiceItem => [`The *${b}* in *${w}*`, "Base word", ["Prefix", "Suffix"]]),
+];
+
+const classMore: readonly ChoiceItem[] = rows(`
+  government|Noun
+  treatment|Noun
+  payment|Noun
+  invention|Noun
+  friendship|Noun
+  statement|Noun
+  purify|Verb
+  sharpen|Verb
+  organize|Verb
+  brighten|Verb
+  terrify|Verb
+  apologize|Verb
+  solidify|Verb
+  poisonous|Adjective
+  magical|Adjective
+  joyous|Adjective
+  famous|Adjective
+  natural|Adjective
+  active|Adjective
+  nervous|Adjective
+`).map(([w, c]) => [w!, c!, ["Noun", "Verb", "Adjective"].filter((k) => k !== c)]);
+
+const classTypedMore = spelledRows(`
+  We watched the (perform) at the theater.|performance|performence|performation
+  The (invent) of the wheel changed history.|invention|inventation|invension
+  Please (simple) the instructions.|simplify|simplize|simpleify
+  The puppy was very (play).|playful|playfull|playable
+  Her (kind) made everyone smile.|kindness|kindment|kindnes
+  The trip was full of (excite).|excitement|excitment|excitness
+  The ancient vase is very (value).|valuable|valueable|valuful
+  The (move) of the clock hands is slow.|movement|movment|movation
+  The hike was (adventure).|adventurous|adventureous|adventurful
+  The lamp will (bright) the room.|brighten|brightify|brightize
+  The town held a (celebrate).|celebration|celebratement|celebrateion
+  The (agree) was signed today.|agreement|agreemant|agreetion
+  The (create) project won a prize.|creative|createive|creatful
+  Their (friend) lasted for years.|friendship|friendment|friendness
+  Please (apology) to your sister.|apologize|apologyize|apologate
+  The (music) show was fun.|musical|musicful|musicous
+  The (explain) was clear.|explanation|explaination|explainment
+  We need to (short) the rope.|shorten|shortify|shortize
+  The (decorate) on the cake looked great.|decoration|decoratement|decorasion
+  The (nature) light came through the window.|natural|naturous|natureal
+  The (govern) made a new law.|government|governation|govermant
+`);
+
+const definitionClueMore = choices(`
+  The desert is home to many *reptiles*, or cold-blooded animals with scales.|cold-blooded animals with scales|birds that cannot fly|small furry animals
+  Grandpa is a *carpenter*, a person who builds things out of wood.|a person who builds with wood|a person who drives a truck|a person who grows food
+  The *summit*, or top of the mountain, was covered in snow.|the top of a mountain|the bottom of a valley|the edge of a river
+  Bears *hibernate*; that is, they sleep through the winter.|sleep through the winter|hunt in the snow|move south for the winter
+  A *meteorologist*, a scientist who studies weather, gave the forecast.|a weather scientist|a star scientist|a rock scientist
+  The bread was *stale*, which means it was old and dry.|old and dry|warm and soft|sweet and fresh
+  We saw a *mirage*, something that looks real but is not there.|something that looks real but is not|a kind of desert plant|a strong sandstorm
+  The road was *congested*; in other words, it was full of traffic.|full of traffic|newly paved|very narrow
+  The *ancient* coins, which were thousands of years old, sat in a case.|very old|very shiny|very rare
+  My aunt is *frugal*, meaning she is careful not to waste money.|careful with money|generous with gifts|quick to anger
+  The *larva*, or young form of an insect, wriggled on the leaf.|a young insect|a kind of leaf|an insect's nest
+  He felt *drowsy*, which is to say sleepy, after lunch.|sleepy|hungry|cheerful
+  The *orchard*, a field of fruit trees, was full of apples.|a field of fruit trees|a large barn|a vegetable stand
+  She is *ambidextrous*; that is, she can use both hands equally well.|able to use both hands well|able to run very fast|able to speak two languages
+  The *crevice*, a narrow crack in the rock, hid a lizard.|a narrow crack|a tall tower|a deep lake
+  The soup was *bland*, meaning it had very little taste.|having little taste|very spicy|too hot
+  A *pediatrician*, a doctor for children, checked my ears.|a children's doctor|an animal doctor|a tooth doctor
+  The forest was *dense*, or thick and crowded with trees.|thick and crowded|bright and open|wet and muddy
+  We need to *conserve*, or save, water during the drought.|save|waste|heat
+  The *nomads*, people who move from place to place, set up their tents.|people who keep moving|people who build cities|people who fish
+  My brother is *punctual*; in other words, he is always on time.|always on time|always hungry|always loud
+  A *glacier*, a huge river of slow-moving ice, filled the valley.|a huge mass of moving ice|a hot spring|a sandy beach
+`);
+const contrastClueMore = choices(`
+  Unlike the *placid* lake, the river rushed and foamed.|calm|deep|cold
+  The first test was easy, but the second was *arduous*.|very hard|very short|very new
+  Although Mia is usually *talkative*, she was quiet today.|liking to talk a lot|liking to sleep a lot|liking to eat a lot
+  The old bridge was *rickety*, but the new one is strong and steady.|shaky and weak|long and wide|painted and bright
+  Instead of being *generous*, the king kept all the gold for himself.|willing to give|willing to fight|willing to travel
+  The puppy was *docile*, unlike the wild, snapping fox.|gentle and easy to handle|fast and noisy|tiny and fluffy
+  Sam's room is *cluttered*, while Ana's is neat and empty.|messy and full of things|large and bright|cold and dark
+  The weather was *frigid* yesterday, but today it is warm.|very cold|very windy|very wet
+  Unlike his *cautious* sister, Leo jumped in without looking.|careful|tall|sleepy
+  The movie was *tedious*, not exciting at all.|boring|scary|funny
+  Although the path looked *hazardous*, it turned out to be perfectly safe.|dangerous|long|beautiful
+  Most of the fruit was ripe, but a few pears were still *immature*.|not fully grown|too soft|very sweet
+  Her answer was *vague*, but his was clear and exact.|unclear|long|loud
+  The baby was *wailing* a minute ago, but now she is silent.|crying loudly|laughing quietly|eating slowly
+  Unlike the *barren* field, the garden was full of plants.|empty, with nothing growing|wet and muddy|fenced in
+  The castle walls were *massive*, but the doors were tiny.|very large|very old|very thin
+  Instead of *praising* the team, the coach pointed out every mistake.|saying good things about|watching closely|paying
+  The city was *bustling* during the day, but quiet at night.|busy and full of activity|dark and cold|clean and new
+  My cat is *aloof*, while my dog is friendly to everyone.|distant and unfriendly|lazy and slow|small and quiet
+  The first rope was *taut*, but the second hung loose.|pulled tight|very long|cut short
+  Although Ravi felt *anxious* before the race, he was calm afterward.|worried|hungry|proud
+  The beach was *pristine* in the morning, but littered by evening.|perfectly clean|very crowded|very windy
+`);
+const exampleClueMore = choices(`
+  *Citrus* fruits, such as lemons, limes and oranges, are full of juice.|a group of tangy, juicy fruits|fruits with hard shells|fruits that grow underground
+  *Rodents*, including mice, rats and squirrels, live in the old barn.|small gnawing animals|large hunting cats|birds that swim
+  She plays *percussion* instruments like drums, cymbals and bells.|instruments you strike|instruments you blow into|instruments with strings
+  *Furniture*, for example chairs, tables and beds, filled the truck.|large movable objects in a home|food for the kitchen|tools for the garden
+  *Amphibians*, such as frogs, toads and salamanders, lay eggs in ponds.|cold-blooded animals that start life in water|birds of prey|sea mammals
+  *Gems*, such as rubies, emeralds and diamonds, sparkled in the case.|valuable stones|old coins|glass bottles
+  *Vehicles* like buses, trucks and vans crowded the road.|machines that carry people or things|traffic signs|street lights
+  *Utensils*, including forks, spoons and ladles, hung by the stove.|tools for cooking or eating|kinds of soup|kitchen chairs
+  *Celestial* objects, such as stars, planets and moons, fill the night sky.|found in the sky or space|found under the sea|found in caves
+  *Insects* such as ants, bees and beetles lived in the old log.|small six-legged creatures|small furry animals|worms and snails
+  *Beverages*, for instance juice, milk and tea, were served at the party.|drinks|snacks|desserts
+  *Toiletries*, like toothpaste, soap and shampoo, go in this bag.|things for washing and grooming|things for cooking|things for writing
+  *Marsupials*, such as kangaroos, koalas and wombats, live in Australia.|animals that carry their young in a pouch|animals that lay eggs in sand|animals that live only in trees
+  *Garments* such as coats, skirts and shirts hung in the closet.|pieces of clothing|pieces of furniture|kinds of fabric
+  *Condiments*, including ketchup, mustard and relish, sat on the table.|sauces added to food for flavor|main dishes|kinds of bread
+  *Predators*, such as lions, wolves and sharks, are feared by many animals.|animals that hunt others|animals that eat only plants|animals that live in herds
+  *Hardware*, such as nails, screws and bolts, was sold by the pound.|small metal parts for building|paint and brushes|wooden boards
+  *Cereals*, including wheat, rice and oats, are grown on farms.|grains|fruits|root vegetables
+  *Primates* like monkeys, apes and lemurs climbed in the zoo's trees.|monkeys and their relatives|cats and their relatives|bears and their relatives
+  *Footwear*, for example boots, sandals and sneakers, was on sale.|things worn on the feet|things worn on the head|things carried in the hands
+  *Seasonings*, such as salt, pepper and garlic, make food tasty.|things that add flavor|things that keep food cold|things that make food crunchy
+  *Stationery*, including paper, envelopes and pens, filled the drawer.|writing supplies|cleaning supplies|sewing supplies
+`);
+
 /** wordTopics are the topics of word parts, of context and of word choice. */
 export const wordTopics: readonly TopicDef[] = [
   {
@@ -514,7 +926,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is the base word?", "基础词是什么？"),
-          baseBank,
+          [...baseBank, ...baseMore],
           (right, shown) =>
             t(`**${right}** is the word inside *${shown}* that can stand alone.`, `**${right}** 是 *${shown}* 中能独立成词的部分。`),
           notBase,
@@ -529,7 +941,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is this part of the word?", "这是词的哪个部分？"),
-          affixKindBank,
+          [...affixKindBank, ...affixKindMore],
           (right) =>
             t(
               `It is a **${right.toLowerCase()}**. Look at where it sits and whether it can stand alone.`,
@@ -545,7 +957,7 @@ export const wordTopics: readonly TopicDef[] = [
           "To build a word, join the parts: *re* + *build* makes *rebuild*. Keep all the letters of a prefix even when this doubles a letter: *mis* + *spell* makes *misspell*.",
           "构词时把各部分连起来：*re* + *build* 构成 *rebuild*。前缀的字母要全部保留，即使出现双写：*mis* + *spell* 构成 *misspell*。",
         ),
-        typedGenerator("word-form", t("Type the word these parts make.", "输入这些部分构成的词。"), buildBank, (right) =>
+        typedGenerator("word-form", t("Type the word these parts make.", "输入这些部分构成的词。"), [...buildBank, ...buildMore], (right) =>
           t(`The word is **${right}**. Its parts join without losing any letters.`, `这个词是 **${right}**。各部分相连时没有丢失字母。`),
         ),
       ),
@@ -568,7 +980,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this prefix mean?", "这个前缀是什么意思？"),
-          prefixMeaningBank,
+          [...prefixMeaningBank, ...prefixMeaningMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -586,7 +998,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this word mean?", "这个词是什么意思？"),
-          prefixWordBank,
+          [...prefixWordBank, ...prefixWordMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -602,11 +1014,15 @@ export const wordTopics: readonly TopicDef[] = [
           "Choose the prefix for the meaning you want, then attach it to the base word. Each base word usually goes with particular prefixes: we say *unfair* and *dishonest*, not *disfair* and *unhonest*.",
           "根据想表达的意思选择前缀，再加到基础词上。每个基础词通常只搭配特定前缀：我们说 *unfair* 和 *dishonest*，而不说 *disfair* 和 *unhonest*。",
         ),
-        typedGenerator("word-form", t("Type one word that means this.", "输入一个表示这个意思的词。"), prefixTypedBank, (right) =>
-          t(
-            `The word is **${right}**. This base word takes this prefix to give that meaning.`,
-            `这个词是 **${right}**。这个基础词要用这个前缀才能表达该意思。`,
-          ),
+        typedGenerator(
+          "word-form",
+          t("Type one word that means this.", "输入一个表示这个意思的词。"),
+          [...prefixTypedBank, ...prefixTypedMore],
+          (right) =>
+            t(
+              `The word is **${right}**. This base word takes this prefix to give that meaning.`,
+              `这个词是 **${right}**。这个基础词要用这个前缀才能表达该意思。`,
+            ),
         ),
       ),
     ],
@@ -628,7 +1044,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this suffix mean?", "这个后缀是什么意思？"),
-          suffixMeaningBank,
+          [...suffixMeaningBank, ...suffixMeaningMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -646,7 +1062,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this word mean?", "这个词是什么意思？"),
-          suffixWordBank,
+          [...suffixWordBank, ...suffixWordMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -665,7 +1081,7 @@ export const wordTopics: readonly TopicDef[] = [
         typedGenerator(
           "word-form",
           t("Type the word these parts make, with the right spelling.", "输入这些部分构成的词，注意拼写。"),
-          suffixTypedBank,
+          [...suffixTypedBank, ...suffixTypedMore],
           (right) =>
             t(`The word is **${right}**. One of the three spelling rules applies.`, `这个词是 **${right}**。这里用到了三条拼写规则之一。`),
         ),
@@ -689,7 +1105,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What class of word is this?", "这个词是什么词性？"),
-          classBank,
+          [...classBank, ...classMore],
           (right, shown) =>
             t(
               `*${shown}* is a **${right.toLowerCase()}**, as its ending shows. A suffix often tells the class of a word, so look at the last letters first.`,
@@ -708,7 +1124,7 @@ export const wordTopics: readonly TopicDef[] = [
         typedGenerator(
           "word-form",
           t("Type the form of the word in parentheses that fits the sentence.", "输入括号中词的合适形式。"),
-          classTypedBank,
+          [...classTypedBank, ...classTypedMore],
           (right) =>
             t(
               `The word is **${right}**. The place in the sentence calls for this class.`,
@@ -735,7 +1151,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this prefix mean?", "这个前缀是什么意思？"),
-          positionMeaningBank,
+          [...positionMeaningBank, ...positionMeaningMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -753,7 +1169,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this word mean?", "这个词是什么意思？"),
-          positionWordBank,
+          [...positionWordBank, ...positionWordMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -784,7 +1200,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this root mean?", "这个词根是什么意思？"),
-          latin1RootBank,
+          [...latin1RootBank, ...latin1RootMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -802,7 +1218,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this word mean?", "这个词是什么意思？"),
-          latin1WordBank,
+          [...latin1WordBank, ...latin1WordMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -879,7 +1295,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this root mean?", "这个词根是什么意思？"),
-          greekRootBank,
+          [...greekRootBank, ...greekRootMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -897,7 +1313,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this word mean?", "这个词是什么意思？"),
-          greekWordBank,
+          [...greekWordBank, ...greekWordMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -925,7 +1341,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does the word in italics mean?", "斜体词是什么意思？"),
-          definitionClueBank,
+          [...definitionClueBank, ...definitionClueMore],
           (right) => t(`It means **${right}**. The sentence explains the word directly.`, `意思是 **${right}**。句子直接解释了这个词。`),
           missedDefinition,
         ),
@@ -939,7 +1355,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does the word in italics mean?", "斜体词是什么意思？"),
-          contrastClueBank,
+          [...contrastClueBank, ...contrastClueMore],
           (right) =>
             t(`It means **${right}**. The sentence sets it against its opposite.`, `意思是 **${right}**。句子把它和相反的情况作对比。`),
           missedContrast,
@@ -954,7 +1370,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does the word in italics mean?", "斜体词是什么意思？"),
-          exampleClueBank,
+          [...exampleClueBank, ...exampleClueMore],
           (right) => t(`It means **${right}**. That is what the examples have in common.`, `意思是 **${right}**。这正是这些例子的共同点。`),
           missedExamples,
         ),

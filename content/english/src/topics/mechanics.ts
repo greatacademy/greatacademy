@@ -289,6 +289,190 @@ const questionQuoteBank: readonly ChoiceItem[] = [
   ],
 ];
 
+// More items, built from hand-written cores by deterministic templates.
+
+const upper = (s: string) => s[0]!.toUpperCase() + s.slice(1);
+
+/** introWords are an opening word and the sentence after it. */
+const introWords: readonly (readonly [word: string, rest: string])[] = [
+  ["Suddenly", "the lights went out."],
+  ["Unfortunately", "we missed the bus."],
+  ["Next", "add two cups of flour."],
+  ["Besides", "the tickets were too expensive."],
+  ["Afterward", "we went out for pizza."],
+  ["Honestly", "I liked the first book better."],
+  ["Surprisingly", "the shy puppy came to me."],
+  ["Later", "Dad called from the airport."],
+  ["Instead", "we played a board game."],
+  ["Fortunately", "the rain stopped in time."],
+  ["Wow", "that was a great catch."],
+  ["Actually", "the party starts at six."],
+  ["Okay", "let me try once more."],
+  ["Second", "fold the paper in half."],
+  ["Hey", "wait for me."],
+  ["Eventually", "the baby fell asleep."],
+  ["Usually", "the store opens at nine."],
+  ["Thankfully", "the old bridge held."],
+  ["Lastly", "clean up your desk."],
+  ["Anyway", "the movie was fun."],
+];
+const introWordMore: readonly TypedItem[] = introWords.map(([w, rest]) => {
+  const words = rest.split(" ");
+  const k = words.length > 3 ? 2 : 1;
+  const late = `${w} ${words.slice(0, k).join(" ")}, ${words.slice(k).join(" ")}`;
+  return fixed(`${w} ${rest}`, `${w}, ${rest}`, `${w} ${rest}`, late);
+});
+
+/** introPhrases are an opening phrase in two parts, a subject and a predicate. */
+const introPhrases: readonly (readonly [start: string, end: string, subject: string, predicate: string])[] = [
+  ["After the soccer game", "on Saturday", "we", "ate pizza"],
+  ["In the corner", "of the garden", "a rabbit", "nibbled lettuce"],
+  ["Before the start", "of the play", "the actors", "waited backstage"],
+  ["Along the edge", "of the river", "the ducks", "rested"],
+  ["During the long ride", "to the city", "my brother", "fell asleep"],
+  ["Behind the curtain", "on the stage", "a cat", "was hiding"],
+  ["At the top", "of the hill", "the hikers", "stopped for lunch"],
+  ["Near the end", "of the movie", "the hero", "found the map"],
+  ["After a week", "of rain", "the sun", "finally came out"],
+  ["Inside the box", "under the bed", "Maya", "kept her letters"],
+  ["Smiling at the crowd", "from the stage", "the singer", "waved"],
+  ["Covered in mud", "from head to toe", "the puppy", "ran inside"],
+  ["On the first day", "of spring", "the children", "planted seeds"],
+  ["Across the street", "from the school", "a new bakery", "opened"],
+  ["With a loud crash", "of thunder", "the storm", "began"],
+  ["Holding the rope", "with both hands", "Theo", "climbed the wall"],
+  ["In the back", "of the closet", "Dad", "found his old guitar"],
+  ["At the beginning", "of the lesson", "the teacher", "read a poem"],
+  ["Under a pile", "of leaves", "the squirrel", "hid an acorn"],
+  ["Excited about the trip", "to the coast", "the girls", "packed early"],
+  ["Between the two tall trees", "in the park", "someone", "had hung a hammock"],
+];
+const introPhraseMore: readonly ChoiceItem[] = introPhrases.map(([a, b, s, p]) => [
+  "Where does the comma go?",
+  `${a} ${b}, ${s} ${p}.`,
+  [`${a}, ${b} ${s} ${p}.`, `${a} ${b} ${s}, ${p}.`],
+]);
+
+const addressMore: readonly TypedItem[] = [
+  fixed("Leo pass me the salt.", "Leo, pass me the salt.", "Leo pass me the salt.", "Leo pass, me the salt."),
+  fixed("Thanks for the ride Aunt Jo.", "Thanks for the ride, Aunt Jo.", "Thanks for the ride Aunt Jo.", "Thanks, for the ride Aunt Jo."),
+  fixed("Do you know the answer Kim?", "Do you know the answer, Kim?", "Do you know the answer Kim?", "Do you, know the answer Kim?"),
+  fixed("Grandma look at my drawing.", "Grandma, look at my drawing.", "Grandma look at my drawing.", "Grandma look, at my drawing."),
+  fixed(
+    "Class please open your books.",
+    "Class, please open your books.",
+    "Class please open your books.",
+    "Class please, open your books.",
+  ),
+  fixed("Hurry up Max.", "Hurry up, Max.", "Hurry up Max.", "Hurry, up Max."),
+  fixed("Where are you going Lucy?", "Where are you going, Lucy?", "Where are you going Lucy?", "Where, are you going Lucy?"),
+  fixed("Dr. Kim my arm still hurts.", "Dr. Kim, my arm still hurts.", "Dr. Kim my arm still hurts.", "Dr. Kim my arm, still hurts."),
+  fixed(
+    "I told you Nora that it would work.",
+    "I told you, Nora, that it would work.",
+    "I told you Nora that it would work.",
+    "I told you, Nora that it would work.",
+  ),
+  fixed("Happy birthday Grandpa.", "Happy birthday, Grandpa.", "Happy birthday Grandpa.", "Happy, birthday Grandpa."),
+  fixed("Team let's huddle up.", "Team, let's huddle up.", "Team let's huddle up.", "Team let's, huddle up."),
+  fixed(
+    "Can I borrow a pencil Mr. Ruiz?",
+    "Can I borrow a pencil, Mr. Ruiz?",
+    "Can I borrow a pencil Mr. Ruiz?",
+    "Can I, borrow a pencil Mr. Ruiz?",
+  ),
+  fixed("Jake you left your hat.", "Jake, you left your hat.", "Jake you left your hat.", "Jake you, left your hat."),
+  fixed("Good night Mom.", "Good night, Mom.", "Good night Mom.", "Good, night Mom."),
+  fixed(
+    "Listen Eva this is important.",
+    "Listen, Eva, this is important.",
+    "Listen Eva this is important.",
+    "Listen, Eva this is important.",
+  ),
+  fixed(
+    "Friends thank you for coming.",
+    "Friends, thank you for coming.",
+    "Friends thank you for coming.",
+    "Friends thank, you for coming.",
+  ),
+  fixed("Is this your bag Owen?", "Is this your bag, Owen?", "Is this your bag Owen?", "Is this, your bag Owen?"),
+  fixed(
+    "No Rosa the bus leaves at eight.",
+    "No, Rosa, the bus leaves at eight.",
+    "No Rosa the bus leaves at eight.",
+    "No, Rosa the bus leaves at eight.",
+  ),
+  fixed("Welcome back everyone.", "Welcome back, everyone.", "Welcome back everyone.", "Welcome, back everyone."),
+  fixed("Please sit down Pablo.", "Please sit down, Pablo.", "Please sit down Pablo.", "Please, sit down Pablo."),
+];
+
+/** statements are spoken words, the speaking verb and the speaker. */
+const statements: readonly (readonly [words: string, verb: string, speaker: string])[] = [
+  ["The water is warm", "said", "Dad"],
+  ["I lost my glove", "said", "Mia"],
+  ["The bus is here", "called", "Mom"],
+  ["This soup needs salt", "said", "the chef"],
+  ["I can see the ocean", "shouted", "Leo"],
+  ["My tooth is loose", "said", "Ruby"],
+  ["We should leave soon", "whispered", "Ana"],
+  ["The movie starts at seven", "said", "Grandpa"],
+  ["I finished the puzzle", "announced", "Tom"],
+  ["That dog is huge", "said", "Kai"],
+  ["It is my turn", "said", "my brother"],
+  ["The library closes at five", "said", "Ms. Hill"],
+  ["I feel much better", "said", "Nora"],
+  ["We need more paint", "said", "the artist"],
+  ["The game is tied", "reported", "Sam"],
+  ["My kite is stuck in the tree", "cried", "Zoe"],
+  ["The cookies are ready", "called", "Aunt May"],
+  ["I will carry the bags", "offered", "Ben"],
+  ["The bridge is closed", "said", "the officer"],
+  ["It was a great trip", "said", "Emma"],
+  ["The puppy is asleep", "whispered", "Jonah"],
+];
+const tagAfterMore: readonly TypedItem[] = statements.map(([w, v, s]) =>
+  fixed(`${w} ${v} ${s}.`, `"${w}," ${v} ${s}.`, `"${w}", ${v} ${s}.`, `"${w}." ${v} ${s}.`, `${w}, ${v} ${s}.`),
+);
+const tagBeforeMore: readonly TypedItem[] = statements.map(([w, v, s]) => {
+  const lead = `${upper(s)} ${v}`;
+  const low = w.startsWith("I ") ? `i${w.slice(1)}` : w[0]!.toLowerCase() + w.slice(1);
+  return fixed(`${lead} ${w}.`, `${lead}, "${w}."`, `${lead}, "${w}".`, `${lead} "${w}."`, `${lead}, "${low}."`);
+});
+
+const asked: readonly (readonly [question: string, speaker: string])[] = [
+  ["Is the pool open today", "Ella"],
+  ["Who ate the last cookie", "Dad"],
+  ["Can we stop for lunch", "my brother"],
+  ["Where did you find that shell", "Mom"],
+  ["How far is the lake", "Ravi"],
+  ["May I sit here", "the new girl"],
+  ["Why is the sky so dark", "Lily"],
+];
+const askedBefore: readonly (readonly [speaker: string, question: string])[] = [
+  ["Leo", "Do you want to play"],
+  ["The guide", "Has anyone been here before"],
+  ["Grandpa", "Who wants pancakes"],
+  ["My aunt", "Did you bring a jacket"],
+  ["The driver", "Where are you going"],
+  ["Nina", "Is this seat taken"],
+  ["Coach Diaz", "Are you ready"],
+];
+const exclaimed: readonly (readonly [words: string, verb: string, speaker: string])[] = [
+  ["Look at that rainbow", "shouted", "Theo"],
+  ["We did it", "cheered", "the team"],
+  ["Stop that bus", "yelled", "Dad"],
+  ["What a surprise", "gasped", "Aunt Rosa"],
+  ["Hooray", "cried", "the children"],
+  ["Be careful", "warned", "the lifeguard"],
+  ["I found it", "exclaimed", "Maya"],
+];
+const which = "Which sentence is punctuated correctly?";
+const questionQuoteMore: readonly ChoiceItem[] = [
+  ...asked.map(([q, s]): ChoiceItem => [which, `"${q}?" asked ${s}.`, [`"${q}," asked ${s}.`, `"${q}"? asked ${s}.`]]),
+  ...askedBefore.map(([s, q]): ChoiceItem => [which, `${s} asked, "${q}?"`, [`${s} asked, "${q}"?`, `${s} asked, "${q}."`]]),
+  ...exclaimed.map(([e, v, s]): ChoiceItem => [which, `"${e}!" ${v} ${s}.`, [`"${e}," ${v} ${s}!`, `"${e}"! ${v} ${s}.`]]),
+];
+
 /** mechanicsTopics are the topics of mechanics: introductory commas, commas of address, and dialogue. */
 export const mechanicsTopics: readonly TopicDef[] = [
   {
@@ -315,7 +499,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with the comma it needs.", "改写句子，加上需要的逗号。"),
-          introWordBank,
+          [...introWordBank, ...introWordMore],
           (right) => t(`**${right}** The comma follows the opening word.`, `**${right}** 逗号放在句首引导词之后。`),
         ),
       ),
@@ -328,7 +512,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the sentence.", "选择句子。"),
-          introPhraseBank,
+          [...introPhraseBank, ...introPhraseMore],
           (right) => t(`**${right}** The comma comes where the opening phrase ends.`, `**${right}** 逗号放在句首短语结束的地方。`),
           (wrong, _right, _shown, position) =>
             position === 0
@@ -352,7 +536,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with the commas it needs.", "改写句子，加上需要的逗号。"),
-          addressBank,
+          [...addressBank, ...addressMore],
           (right) =>
             t(`**${right}** The name of the person spoken to is set off with commas.`, `**${right}** 被称呼者的名字要用逗号隔开。`),
         ),
@@ -380,7 +564,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with quotation marks and the comma.", "改写句子，加上引号和逗号。"),
-          tagAfterBank,
+          [...tagAfterBank, ...tagAfterMore],
           (right) => t(`**${right}** The comma goes inside the closing quotation mark.`, `**${right}** 逗号放在后引号里面。`),
         ),
       ),
@@ -394,7 +578,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with a comma and quotation marks.", "改写句子，加上逗号和引号。"),
-          tagBeforeBank,
+          [...tagBeforeBank, ...tagBeforeMore],
           (right) =>
             t(
               `**${right}** A comma introduces the quotation, which starts with a capital and ends inside the quotation marks.`,
@@ -411,7 +595,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the sentence.", "选择句子。"),
-          questionQuoteBank,
+          [...questionQuoteBank, ...questionQuoteMore],
           (right) =>
             t(
               `**${right}** The question mark or exclamation mark stays inside the quotation marks.`,
