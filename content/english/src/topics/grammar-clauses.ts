@@ -26,16 +26,16 @@ const adverbBank: readonly ChoiceItem[] = [
 ];
 
 const adjOrAdvBank: readonly ChoiceItem[] = [
-  ["The turtle moved ___.", "slowly", ["slow"]],
-  ["The turtle is ___.", "slow", ["slowly"]],
-  ["She plays the violin ___.", "well", ["good"]],
-  ["She is a ___ violinist.", "good", ["well"]],
-  ["He closed the door ___.", "quietly", ["quiet"]],
-  ["The room was ___.", "quiet", ["quietly"]],
-  ["The soup smells ___.", "delicious", ["deliciously"]],
-  ["The team played ___ in the final.", "badly", ["bad"]],
-  ["We felt ___ about the mistake.", "bad", ["badly"]],
-  ["The sun shone ___.", "brightly", ["bright"]],
+  ["The turtle moved ___.", "slowly", ["slow", "slowness"]],
+  ["The turtle is ___.", "slow", ["slowly", "slowness"]],
+  ["She plays the violin ___.", "well", ["good", "goodness"]],
+  ["She is a ___ violinist.", "good", ["well", "goodness"]],
+  ["He closed the door ___.", "quietly", ["quiet", "quietness"]],
+  ["The room was ___.", "quiet", ["quietly", "quietness"]],
+  ["The soup smells ___.", "delicious", ["deliciously", "deliciousness"]],
+  ["The team played ___ in the final.", "badly", ["bad", "badness"]],
+  ["We felt ___ about the mistake.", "bad", ["badly", "badness"]],
+  ["The sun shone ___.", "brightly", ["bright", "brightness"]],
 ];
 
 const phraseBank: readonly ChoiceItem[] = [
@@ -318,8 +318,12 @@ const misplacedFindBank: readonly ChoiceItem[] = [
   ],
 ];
 
-const voiceKinds = ["Active", "Passive"];
-const voice = (s: string, active: boolean): ChoiceItem => [s, voiceKinds[active ? 0 : 1]!, [voiceKinds[active ? 1 : 0]!]];
+/** voiceKinds are the voices a sentence can be in, telling apart a passive that names its doer from one that does not. */
+const voiceKinds = ["Active", "Passive, naming the doer", "Passive, without the doer"] as const;
+const voice = (s: string, active: boolean): ChoiceItem => {
+  const kind = active ? 0 : s.includes(" by ") ? 1 : 2;
+  return [s, voiceKinds[kind], voiceKinds.filter((_, i) => i !== kind)];
+};
 
 const voiceKindBank: readonly ChoiceItem[] = [
   voice("The chef cooked the meal.", true),
@@ -332,6 +336,8 @@ const voiceKindBank: readonly ChoiceItem[] = [
   voice("Rain flooded the road.", true),
   voice("The road was flooded by rain.", false),
   voice("The prize will be given tomorrow.", false),
+  voice("The bridge was built a hundred years ago.", false),
+  voice("Our letters were mailed this morning.", false),
 ];
 
 const toActiveBank: readonly ChoiceItem[] = [
@@ -479,15 +485,20 @@ const notThisClass = (target: Pair) => (wrong: string) => {
 };
 
 const adjOrAdv = (wrong: string) =>
-  wrong.endsWith("ly") || wrong === "well"
+  wrong.endsWith("ness")
     ? t(
-        `“${wrong}” is an adverb, which tells how an action is done. Check whether the gap describes an action, or the person or thing itself.`,
-        `“${wrong}” 是副词，说明动作是怎样做的。看看空格描述的是动作，还是人或事物本身。`,
+        `“${wrong}” is a noun, the name of a quality. The gap needs a word that describes, not one that names.`,
+        `“${wrong}” 是名词，是一种性质的名称。空格需要的是起描述作用的词，而不是名称。`,
       )
-    : t(
-        `“${wrong}” is an adjective, which describes a person or thing. Check whether the gap describes an action, or the person or thing itself.`,
-        `“${wrong}” 是形容词，描述人或事物。看看空格描述的是动作，还是人或事物本身。`,
-      );
+    : wrong.endsWith("ly") || wrong === "well"
+      ? t(
+          `“${wrong}” is an adverb, which tells how an action is done. Check whether the gap describes an action, or the person or thing itself.`,
+          `“${wrong}” 是副词，说明动作是怎样做的。看看空格描述的是动作，还是人或事物本身。`,
+        )
+      : t(
+          `“${wrong}” is an adjective, which describes a person or thing. Check whether the gap describes an action, or the person or thing itself.`,
+          `“${wrong}” 是形容词，描述人或事物。看看空格描述的是动作，还是人或事物本身。`,
+        );
 
 const prepositions = ["under", "through", "beside", "behind", "across", "from", "on", "with", "to", "after"];
 
@@ -731,9 +742,13 @@ const voiceFeedback: Readonly<Record<string, Pair>> = {
     "In the active voice the subject does the action. Check whether the subject here does something or has something done to it.",
     "主动语态中主语发出动作。看看这里的主语是在做某事，还是被做了某事。",
   ],
-  Passive: [
-    "In the passive voice the subject receives the action, with a form of *be* such as *was* and a verb such as *cooked*. Check whether the subject here does something or has something done to it.",
-    "被动语态中主语承受动作，使用 *was* 这类 *be* 的形式和 *cooked* 这类动词。看看这里的主语是在做某事，还是被做了某事。",
+  "Passive, naming the doer": [
+    "A passive sentence that names the doer does so after *by*, as in *by the chef*. Check whether the subject receives the action, and whether *by* names who did it.",
+    "点出动作发出者的被动句会在 *by* 后面说出它，比如 *by the chef*。看看主语是否承受动作，以及 *by* 是否说出了是谁做的。",
+  ],
+  "Passive, without the doer": [
+    "A passive sentence without the doer never says who did the action. Check whether the subject receives the action, and whether a *by* phrase names who did it.",
+    "不点出动作发出者的被动句不会说明是谁做的。看看主语是否承受动作，以及有没有 *by* 短语说出是谁做的。",
   ],
 };
 
@@ -1225,7 +1240,10 @@ export const clauseTopics: readonly TopicDef[] = [
           "在**主动语态**（active voice）中，主语发出动作：*The chef cooked the meal.* 在**被动语态**（passive voice）中，主语承受动作：*The meal was cooked by the chef.*\n\n被动动词由 *be* 的某种形式加过去分词构成（*was cooked*、*will be given*），动作发出者甚至可以不出现：*The window was broken.*",
         ),
         choiceGenerator(
-          t("Is this sentence active or passive?", "这句话是主动还是被动？"),
+          t(
+            "Is this sentence active or passive, and if passive, does it name the doer?",
+            "这句话是主动还是被动？如果是被动，是否点出了动作发出者？",
+          ),
           voiceKindBank,
           (right) =>
             t(

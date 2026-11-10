@@ -316,16 +316,20 @@ const academicUseBank: readonly ChoiceItem[] = [
 ];
 
 const connotationBank: readonly ChoiceItem[] = [
-  ["thrifty or stingy: Which is the kinder way to describe someone who saves money?", "thrifty", ["stingy"]],
-  ["curious or nosy: Which is the kinder way to describe someone who asks questions?", "curious", ["nosy"]],
-  ["slim or scrawny: Which is the kinder way to describe a thin person?", "slim", ["scrawny"]],
-  ["confident or arrogant: Which is the kinder way to describe someone sure of themselves?", "confident", ["arrogant"]],
-  ["stubborn or determined: Which is the kinder way to describe someone who will not give up?", "determined", ["stubborn"]],
-  ["cheap or affordable: Which makes a price sound better?", "affordable", ["cheap"]],
-  ["cozy or cramped: Which makes a small room sound better?", "cozy", ["cramped"]],
-  ["old or antique: Which makes a chair sound more valuable?", "antique", ["old"]],
-  ["smell or fragrance: Which makes a scent sound better?", "fragrance", ["smell"]],
-  ["crowd or mob: Which makes a large group sound less dangerous?", "crowd", ["mob"]],
+  ["thrifty, stingy or tight-fisted: Which is the kindest way to describe someone who saves money?", "thrifty", ["stingy", "tight-fisted"]],
+  ["curious, nosy or prying: Which is the kindest way to describe someone who asks questions?", "curious", ["nosy", "prying"]],
+  ["slim, scrawny or bony: Which is the kindest way to describe a thin person?", "slim", ["scrawny", "bony"]],
+  ["confident, arrogant or cocky: Which is the kindest way to describe someone sure of themselves?", "confident", ["arrogant", "cocky"]],
+  [
+    "stubborn, determined or pigheaded: Which is the kindest way to describe someone who will not give up?",
+    "determined",
+    ["stubborn", "pigheaded"],
+  ],
+  ["cheap, affordable or cut-rate: Which makes a price sound best?", "affordable", ["cheap", "cut-rate"]],
+  ["cozy, cramped or poky: Which makes a small room sound best?", "cozy", ["cramped", "poky"]],
+  ["old, antique or worn-out: Which makes a chair sound most valuable?", "antique", ["old", "worn-out"]],
+  ["smell, fragrance or odor: Which makes a scent sound best?", "fragrance", ["smell", "odor"]],
+  ["crowd, mob or horde: Which makes a large group sound least dangerous?", "crowd", ["mob", "horde"]],
 ];
 
 const preciseBank: readonly ChoiceItem[] = [
@@ -460,8 +464,8 @@ const wrongWord = (wrong: string) => {
 
 const lessFavorable = (wrong: string) =>
   t(
-    `“${wrong}” means nearly the same, but it carries a negative feeling. Ask which word puts what is described in a better light.`,
-    `“${wrong}” 意思几乎相同，但带有负面色彩。想一想哪个词能让所描述的对象显得更好。`,
+    `“${wrong}” means nearly the same, but it carries a less favorable feeling. Ask which word puts what is described in the best light.`,
+    `“${wrong}” 意思几乎相同，但感情色彩没那么正面。想一想哪个词能让所描述的对象显得最好。`,
   );
 
 const shade: Readonly<Record<string, Pair>> = {
@@ -1023,8 +1027,8 @@ export const wordTopics: readonly TopicDef[] = [
           connotationBank,
           (right) =>
             t(
-              `**${right}** carries the more favorable feeling, though the two words mean nearly the same.`,
-              `**${right}** 带有更正面的感情色彩，尽管两个词的意思几乎相同。`,
+              `**${right}** carries the most favorable feeling, though the words mean nearly the same.`,
+              `**${right}** 带有最正面的感情色彩，尽管这几个词的意思几乎相同。`,
             ),
           lessFavorable,
         ),

@@ -81,33 +81,42 @@ const pronounFormBank: readonly ChoiceItem[] = [
   ["This coat belongs to Omar, so it is ___.", "his", ["he", "him"]],
 ];
 
-const fragmentChoices = ["Complete sentence", "Fragment"];
-const judge = (s: string, complete: boolean): ChoiceItem => [s, fragmentChoices[complete ? 0 : 1]!, [fragmentChoices[complete ? 1 : 0]!]];
+/** missingKinds are what a group of words can be: complete, or a fragment missing its subject or its predicate. */
+const missingKinds = ["Complete sentence", "Fragment with no subject", "Fragment with no predicate"] as const;
+const missing = (s: string, kind: 0 | 1 | 2): ChoiceItem => [s, missingKinds[kind], missingKinds.filter((_, i) => i !== kind)];
+
+/** clauseKinds are what a group of words with a word like *because* can be. */
+const clauseKinds = ["Complete sentence", "Fragment left unfinished", "Fragment with no subject"] as const;
+const unfinished = (s: string, complete: boolean): ChoiceItem => {
+  const kind = complete ? 0 : 1;
+  return [s, clauseKinds[kind], clauseKinds.filter((_, i) => i !== kind)];
+};
 
 const missingPartBank: readonly ChoiceItem[] = [
-  judge("The small boat near the shore.", false),
-  judge("The small boat rocked near the shore.", true),
-  judge("Ran all the way to school.", false),
-  judge("Tess ran all the way to school.", true),
-  judge("My favorite song on the radio.", false),
-  judge("My favorite song played on the radio.", true),
-  judge("Jumped over the fence and kept going.", false),
-  judge("The horse jumped over the fence.", true),
-  judge("A box of old photographs in the attic.", false),
-  judge("We found old photographs in the attic.", true),
+  missing("The small boat near the shore.", 2),
+  missing("The small boat rocked near the shore.", 0),
+  missing("Ran all the way to school.", 1),
+  missing("Tess ran all the way to school.", 0),
+  missing("My favorite song on the radio.", 2),
+  missing("My favorite song played on the radio.", 0),
+  missing("Jumped over the fence and kept going.", 1),
+  missing("The horse jumped over the fence.", 0),
+  missing("A box of old photographs in the attic.", 2),
+  missing("We found old photographs in the attic.", 0),
+  missing("Barked at the mail carrier all morning.", 1),
 ];
 
 const clauseFragmentBank: readonly ChoiceItem[] = [
-  judge("Because the road was closed.", false),
-  judge("The road was closed.", true),
-  judge("When the rain finally stopped.", false),
-  judge("When the rain finally stopped, we went out.", true),
-  judge("Although she practiced every day.", false),
-  judge("She practiced every day.", true),
-  judge("If you see my brother.", false),
-  judge("If you see my brother, tell him to call.", true),
-  judge("Since the store opened last year.", false),
-  judge("We left because the store closed.", true),
+  unfinished("Because the road was closed.", false),
+  unfinished("The road was closed.", true),
+  unfinished("When the rain finally stopped.", false),
+  unfinished("When the rain finally stopped, we went out.", true),
+  unfinished("Although she practiced every day.", false),
+  unfinished("She practiced every day.", true),
+  unfinished("If you see my brother.", false),
+  unfinished("If you see my brother, tell him to call.", true),
+  unfinished("Since the store opened last year.", false),
+  unfinished("We left because the store closed.", true),
 ];
 
 const fixFragmentBank: readonly ChoiceItem[] = [
@@ -164,29 +173,29 @@ const irregularBank = [
 ];
 
 const agreementBank: readonly ChoiceItem[] = [
-  ["The dog ___ at strangers.", "barks", ["bark"]],
-  ["The dogs ___ at strangers.", "bark", ["barks"]],
-  ["My brother ___ the piano.", "plays", ["play"]],
-  ["These apples ___ sweet.", "taste", ["tastes"]],
-  ["She ___ to school.", "walks", ["walk"]],
-  ["They ___ near the river.", "live", ["lives"]],
-  ["The teacher ___ the answer.", "knows", ["know"]],
-  ["The children ___ a story.", "want", ["wants"]],
-  ["He ___ his lunch every day.", "packs", ["pack"]],
-  ["Birds ___ nests in spring.", "build", ["builds"]],
+  ["The dog ___ at strangers.", "barks", ["bark", "barking"]],
+  ["The dogs ___ at strangers.", "bark", ["barks", "barking"]],
+  ["My brother ___ the piano.", "plays", ["play", "playing"]],
+  ["These apples ___ sweet.", "taste", ["tastes", "tasting"]],
+  ["She ___ to school.", "walks", ["walk", "walking"]],
+  ["They ___ near the river.", "live", ["lives", "living"]],
+  ["The teacher ___ the answer.", "knows", ["know", "knowing"]],
+  ["The children ___ a story.", "want", ["wants", "wanting"]],
+  ["He ___ his lunch every day.", "packs", ["pack", "packing"]],
+  ["Birds ___ nests in spring.", "build", ["builds", "building"]],
 ];
 
 const hardAgreementBank: readonly ChoiceItem[] = [
-  ["The box of crayons ___ on the desk.", "is", ["are"]],
-  ["The keys to the car ___ missing.", "are", ["is"]],
-  ["One of the students ___ absent.", "is", ["are"]],
-  ["The flowers in the vase ___ wilting.", "are", ["is"]],
-  ["Tom and Ana ___ the same bus.", "ride", ["rides"]],
-  ["A bowl of cherries ___ on the table.", "sits", ["sit"]],
-  ["The sound of the waves ___ me calm.", "keeps", ["keep"]],
-  ["My cousin and her friends ___ soccer.", "play", ["plays"]],
-  ["The pages of this book ___ torn.", "are", ["is"]],
-  ["The leader of the hikers ___ the map.", "carries", ["carry"]],
+  ["The box of crayons ___ on the desk.", "is", ["are", "am"]],
+  ["The keys to the car ___ missing.", "are", ["is", "am"]],
+  ["One of the students ___ absent.", "is", ["are", "am"]],
+  ["The flowers in the vase ___ wilting.", "are", ["is", "am"]],
+  ["Tom and Ana ___ the same bus.", "ride", ["rides", "riding"]],
+  ["A bowl of cherries ___ on the table.", "sits", ["sit", "sitting"]],
+  ["The sound of the waves ___ me calm.", "keeps", ["keep", "keeping"]],
+  ["My cousin and her friends ___ soccer.", "play", ["plays", "playing"]],
+  ["The pages of this book ___ torn.", "are", ["is", "am"]],
+  ["The leader of the hikers ___ the map.", "carries", ["carry", "carrying"]],
 ];
 
 const antecedentBank: readonly ChoiceItem[] = [
@@ -396,9 +405,13 @@ const fragmentLabelFeedback: Readonly<Record<string, readonly [en: string, zh: s
     "A complete sentence needs both a subject and a predicate. Ask who or what this is about, and what that person or thing does: one of the two answers is missing.",
     "完整句需要主语和谓语。问一问这句话谈的是谁或什么，那个人或物做了什么：其中一个答案找不到。",
   ],
-  Fragment: [
-    "A fragment is missing a subject or a predicate. Ask who or what this is about, and what that person or thing does: check whether both answers are there.",
-    "片段缺少主语或谓语。问一问这句话谈的是谁或什么，那个人或物做了什么：检查两个答案是否都在。",
+  "Fragment with no subject": [
+    "Ask who or what this is about. If the words name someone or something before telling what happens, the subject is there.",
+    "问一问这句话谈的是谁或什么。如果这组词在说明发生什么之前先说出了某人或某物，主语就在。",
+  ],
+  "Fragment with no predicate": [
+    "Ask what the person or thing does or is. If the words tell an action, such as *ran* or *played*, the predicate is there.",
+    "问一问这个人或物做了什么或是什么。如果这组词说出了 *ran*、*played* 这样的动作，谓语就在。",
   ],
 };
 
@@ -407,9 +420,13 @@ const clauseLabelFeedback: Readonly<Record<string, readonly [en: string, zh: str
     "A subject and a verb are not enough. A group of words that begins with a word like *because* or *when* leaves the reader waiting unless a complete thought goes with it.",
     "有主语和动词还不够。以 *because* 或 *when* 这类词开头的一组词，如果没有接上完整的意思，读者就仍在等待。",
   ],
-  Fragment: [
-    "A word like *when* makes a fragment only when nothing completes the thought. Check whether a complete part follows it, or whether the words begin with such a word at all.",
-    "*when* 这类词只有在没有接上完整意思时才构成片段。检查后面是否接上了完整的部分，或者这组词是否根本没有以这类词开头。",
+  "Fragment left unfinished": [
+    "A word like *when* leaves a thought unfinished only when nothing completes it. Check whether a complete part follows it, or whether the words begin with such a word at all.",
+    "*when* 这类词只有在没有接上完整意思时才让意思悬而未决。检查后面是否接上了完整的部分，或者这组词是否根本没有以这类词开头。",
+  ],
+  "Fragment with no subject": [
+    "Every group of words here names who or what it is about, such as *the road* or *she*, so a subject is not what is missing.",
+    "这里每组词都说出了谈论的是谁或什么，比如 *the road* 或 *she*，所以缺的不是主语。",
   ],
 };
 
@@ -453,27 +470,39 @@ const tenseFeedback = (wrong: string) => {
   );
 };
 
+const helperNeeded = (wrong: string) =>
+  t(
+    `“${wrong}” needs a helping verb such as *is* or *are* in front of it; on its own it cannot be the verb of the sentence.`,
+    `“${wrong}” 前面需要 *is* 或 *are* 这样的助动词；单独使用时它不能作句子的动词。`,
+  );
+
 const agreementFeedback = (wrong: string) =>
-  wrong.endsWith("s")
-    ? t(
-        `“${wrong}” ends in *-s*, the form for one person or thing, such as *he* or *the dog*. Check whether the subject is one or more than one.`,
-        `“${wrong}” 以 *-s* 结尾，是用于单个人或物（如 *he*、*the dog*）的形式。看看主语是一个还是多个。`,
-      )
-    : t(
-        `“${wrong}” has no *-s*, the form for more than one, such as *they* or *the dogs*. Check whether the subject is one or more than one.`,
-        `“${wrong}” 不带 *-s*，是用于多个（如 *they*、*the dogs*）的形式。看看主语是一个还是多个。`,
-      );
+  wrong.endsWith("ing")
+    ? helperNeeded(wrong)
+    : wrong.endsWith("s")
+      ? t(
+          `“${wrong}” ends in *-s*, the form for one person or thing, such as *he* or *the dog*. Check whether the subject is one or more than one.`,
+          `“${wrong}” 以 *-s* 结尾，是用于单个人或物（如 *he*、*the dog*）的形式。看看主语是一个还是多个。`,
+        )
+      : t(
+          `“${wrong}” has no *-s*, the form for more than one, such as *they* or *the dogs*. Check whether the subject is one or more than one.`,
+          `“${wrong}” 不带 *-s*，是用于多个（如 *they*、*the dogs*）的形式。看看主语是一个还是多个。`,
+        );
 
 const hardAgreementFeedback = (wrong: string) =>
-  wrong === "is" || wrong.endsWith("s")
-    ? t(
-        `“${wrong}” is the singular form, as if the subject were one thing. Find the whole subject: a noun inside a phrase such as *of the car* does not count, and two subjects joined by *and* are plural.`,
-        `“${wrong}” 是单数形式，好像主语只有一个。找出完整的主语：*of the car* 这类短语里的名词不算，用 *and* 连接的两个主语是复数。`,
-      )
-    : t(
-        `“${wrong}” is the plural form, perhaps matched to a plural noun in a phrase between the subject and the verb. Cover that phrase and check the subject alone.`,
-        `“${wrong}” 是复数形式，可能是与主语和动词之间短语里的复数名词搭配了。遮住这个短语，只看主语。`,
-      );
+  wrong.endsWith("ing")
+    ? helperNeeded(wrong)
+    : wrong === "am"
+      ? t("“am” goes only with *I*. Find the subject of this sentence.", "“am” 只能与 *I* 搭配。找出这个句子的主语。")
+      : wrong === "is" || wrong.endsWith("s")
+        ? t(
+            `“${wrong}” is the singular form, as if the subject were one thing. Find the whole subject: a noun inside a phrase such as *of the car* does not count, and two subjects joined by *and* are plural.`,
+            `“${wrong}” 是单数形式，好像主语只有一个。找出完整的主语：*of the car* 这类短语里的名词不算，用 *and* 连接的两个主语是复数。`,
+          )
+        : t(
+            `“${wrong}” is the plural form, perhaps matched to a plural noun in a phrase between the subject and the verb. Cover that phrase and check the subject alone.`,
+            `“${wrong}” 是复数形式，可能是与主语和动词之间短语里的复数名词搭配了。遮住这个短语，只看主语。`,
+          );
 
 const antecedentFeedback: Readonly<Record<string, readonly [en: string, zh: string]>> = {
   his: ["“his” points to one male person.", "“his” 指一个男性。"],
@@ -661,11 +690,11 @@ export const sentenceTopics: readonly TopicDef[] = [
           "**完整句**（complete sentence）有主语和谓语。缺少其中之一的一组词是**片段**（fragment），即使它以大写字母开头、以句号结尾。\n\n*The boat near the shore* 没有谓语：船怎么了？*Rocked near the shore* 没有主语：什么在摇晃？",
         ),
         choiceGenerator(
-          t("Is this a complete sentence or a fragment?", "这是完整句还是片段？"),
+          t("Is this a complete sentence? If not, what is missing?", "这是完整句吗？如果不是，缺少什么？"),
           missingPartBank,
           (right) =>
             t(
-              `This is a **${right.toLowerCase()}**. Look for a subject and a predicate: a complete sentence needs both.`,
+              `**${right}**. Look for a subject and a predicate: a complete sentence needs both.`,
               `答案是 **${right}**。找一找主语和谓语：完整句两者都需要。`,
             ),
           fromTable(fragmentLabelFeedback),
@@ -679,11 +708,11 @@ export const sentenceTopics: readonly TopicDef[] = [
           "*because, when, although, if* 和 *since* 这类词会让一组词依赖其他内容。*Because the road was closed* 有主语和动词，但读者仍在等待：因此发生了什么？\n\n它仍然是片段，除非接上完整的意思：*We turned back because the road was closed.*",
         ),
         choiceGenerator(
-          t("Is this a complete sentence or a fragment?", "这是完整句还是片段？"),
+          t("Is this a complete sentence? If not, what is wrong with it?", "这是完整句吗？如果不是，问题在哪里？"),
           clauseFragmentBank,
           (right) =>
             t(
-              `This is a **${right.toLowerCase()}**. A group of words that begins with a word like *because* needs another complete thought.`,
+              `**${right}**. A group of words that begins with a word like *because* needs another complete thought.`,
               `答案是 **${right}**。以 *because* 这类词开头的一组词，需要另一个完整的意思。`,
             ),
           fromTable(clauseLabelFeedback),
