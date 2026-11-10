@@ -29,11 +29,12 @@ export const minProseWords = 15;
 export const minSolutionWords = 10;
 
 const cjk = /[一-鿿]/;
+/** visualTitle matches titles that name a picture; the *graph* of a paragraph and the plot of a story are not one. */
 const visualTitle =
-  /(?<!crypto)graph(?!ing calculator)|plot|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
+  /(?<!crypto|para)graph(?!ing calculator)|plot(?! and conflict)|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
 
 const visualExplanation =
-  /\b(rotat|reflect|translat|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|parallel|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
+  /\b(rotat|reflect|translat|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|(?<!\*)parallel(?! structure)|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|(?<!\*)graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
 
 /** normalizeTitle reduces a title to lowercase words so that outline and code titles compare equal. */
 export function normalizeTitle(title: string): string {
