@@ -24,12 +24,14 @@ import { academicWordTopics } from "../topics/words-academic.ts";
 import { paragraphTopics } from "../topics/writing-paragraphs.ts";
 import { judgedParagraphTopics } from "../topics/writing-paragraphs-judged.ts";
 import { sentenceWritingTopics } from "../topics/writing-sentences.ts";
+import { judgedSentenceTopics } from "../topics/writing-sentences-judged.ts";
 
 /** coreShardTopics are the topics held by the `core` shard. */
 export const coreShardTopics: readonly TopicDef[] = [
   ...sentenceTopics,
   ...clauseTopics,
   ...sentenceWritingTopics,
+  ...judgedSentenceTopics,
   ...paragraphTopics,
   ...judgedParagraphTopics,
   ...wordTopics,

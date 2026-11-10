@@ -9,6 +9,12 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     quoteWhenMet: false,
   },
   {
+    id: "w2-one-sentence",
+    version: "1",
+    question: "Is the response a single complete sentence, rather than the original sentences copied one after another?",
+    quoteWhenMet: false,
+  },
+  {
     id: "w2-because-reason",
     version: "1",
     question: "After the word because, does the sentence give a reason that actually explains the first part?",
@@ -48,6 +54,30 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     id: "w4-concludes",
     version: "1",
     question: "Does the paragraph end with a sentence that closes or sums up its point?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w4-states-opinion",
+    version: "1",
+    question: "Does the paragraph open with a sentence that clearly states the writer's opinion?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w4-gives-reasons",
+    version: "1",
+    question: "Does the paragraph give at least two different reasons that support its opinion?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w4-in-order",
+    version: "1",
+    question: "Are the steps or events of the paragraph told in an order that makes sense?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w4-uses-transitions",
+    version: "1",
+    question: "Does the paragraph use transition words or phrases, such as first, next, then or finally, to connect its steps or ideas?",
     quoteWhenMet: true,
   },
   {

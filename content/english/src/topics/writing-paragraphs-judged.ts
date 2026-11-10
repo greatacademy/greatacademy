@@ -149,9 +149,100 @@ const fullBank: readonly WritingItem[] = [
   },
 ];
 
+/** opinionBank asks for a paragraph that states an opinion and backs it with reasons. */
+const opinionBank: readonly WritingItem[] = [
+  {
+    task: "Should every school have a library? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Every school should have a library. A library gives students books they might not have at home. It is also a quiet place to study and do research. For these reasons, a school without a library is missing something important.",
+  },
+  {
+    task: "Is it better to have a cat or a dog? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "I think a dog is a better pet than a cat. A dog gets you outside, because it needs a walk every day. Dogs can also learn tricks and play games such as fetch. That is why a dog makes the best friend.",
+  },
+  {
+    task: "Should students wear uniforms to school? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Students should not have to wear uniforms. Choosing their own clothes lets students show who they are. Uniforms can also cost families extra money, since they are only worn at school. Students can dress well without being told exactly what to wear.",
+  },
+  {
+    task: "Is summer or winter the better season? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Summer is the better season. The days are long, so there is more time to play outside after dinner. There is no school, which means families can travel together. Winter has its fun, but summer gives us more freedom.",
+  },
+  {
+    task: "Should children learn to cook? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Every child should learn to cook. Cooking teaches you to measure, follow steps and be careful with heat. It also means you can make a healthy meal for yourself instead of eating snacks. Learning to cook is a skill you will use for the rest of your life.",
+  },
+  {
+    task: "Is it better to read a book or watch the movie of it? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Reading the book is better than watching the movie. A book has room for more of the story, so you learn what the characters think. When you read, you also picture the places in your own way. The movie can be fun, but the book usually tells the whole story.",
+  },
+  {
+    task: "Should our town build a new park or a new swimming pool? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Our town should build a new park. A park is free, so every family can use it. It can be enjoyed all year, while a pool is closed for most of the winter. A park would bring the most people together.",
+  },
+  {
+    task: "Should students have homework on weekends? Write a paragraph that gives your opinion and at least two reasons.",
+    model:
+      "Students should not get homework on weekends. Weekends are a time to rest, so students come back to school ready to learn. They also need time for sports, hobbies and their families. A free weekend makes for a better school week.",
+  },
+];
+
+/** stepsBank asks for a paragraph that explains how to do something, step by step. */
+const stepsBank: readonly WritingItem[] = [
+  {
+    task: "Write a paragraph that explains how to make a sandwich.",
+    model:
+      "Making a sandwich is easy if you follow a few steps. First, take two slices of bread and lay them on a plate. Next, spread butter or mayonnaise on one side of each slice. Then add cheese, lettuce and tomato to one slice. Finally, put the other slice on top and cut the sandwich in half.",
+  },
+  {
+    task: "Write a paragraph that explains how to plant a seed.",
+    model:
+      "Planting a seed takes only a few minutes. First, fill a small pot with soil. Next, push a hole into the soil about as deep as your fingertip. Then drop the seed into the hole and cover it gently. Finally, water the soil and put the pot in a sunny window.",
+  },
+  {
+    task: "Write a paragraph that explains how to brush your teeth.",
+    model:
+      "Brushing your teeth well keeps them healthy. First, wet your toothbrush and squeeze on a small amount of toothpaste. Next, brush the front, back and top of every tooth in small circles. After two minutes, spit out the toothpaste and rinse your mouth with water. Finally, rinse your brush and put it away to dry.",
+  },
+  {
+    task: "Write a paragraph that explains how to wrap a present.",
+    model:
+      "You can wrap a present in a few simple steps. First, place the box upside down on a sheet of wrapping paper. Next, cut the paper so it is big enough to cover all sides. Then fold the paper around the box and tape it closed. Last, fold in the ends, tape them down, and add a bow on top.",
+  },
+  {
+    task: "Write a paragraph that explains how to get ready for school in the morning.",
+    model:
+      "A good morning routine makes it easy to get to school on time. First, get out of bed as soon as the alarm rings. Then wash your face, brush your teeth and get dressed. After that, eat a healthy breakfast. Finally, check that your homework is in your bag before you leave.",
+  },
+  {
+    task: "Write a paragraph that explains how to make a paper airplane.",
+    model:
+      "Making a paper airplane takes just one sheet of paper. First, fold the paper in half the long way and open it again. Next, fold the two top corners down to the middle line. Then fold the new edges to the middle once more. Finally, fold the plane in half, fold down the wings, and it is ready to fly.",
+  },
+  {
+    task: "Write a paragraph that explains how to wash your hands properly.",
+    model:
+      "Washing your hands the right way stops germs from spreading. First, wet your hands under clean running water. Next, rub soap over your palms, the backs of your hands and between your fingers for twenty seconds. Then rinse off all the soap. Finally, dry your hands with a clean towel.",
+  },
+  {
+    task: "Write a paragraph that explains how to care for a goldfish.",
+    model:
+      "Caring for a goldfish is simple but takes some attention. First, keep the fish in a large tank with clean water, not a small bowl. Next, feed it a pinch of fish food once or twice a day. Every week, change part of the water so it stays fresh. If you follow these steps, your goldfish can live for many years.",
+  },
+];
+
 const notesCriteria = ["w4-topic-sentence", "w4-supports-point", "w4-answers-prompt"];
 const detailCriteria = ["w4-topic-sentence", "w4-gives-detail", "w4-answers-prompt"];
 const fullCriteria = ["w4-topic-sentence", "w4-supports-point", "w4-gives-detail", "w4-concludes"];
+const reasonsCriteria = ["w4-states-opinion", "w4-gives-reasons", "w4-answers-prompt"];
+const opinionCriteria = ["w4-states-opinion", "w4-gives-reasons", "w4-supports-point", "w4-concludes"];
+const stepsCriteria = ["w4-topic-sentence", "w4-in-order", "w4-uses-transitions", "w4-answers-prompt"];
 
 /**
  * judgedParagraphTopics are the paragraphs a learner writes, judged by a model
@@ -223,6 +314,92 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           ),
           fullBank,
           fullCriteria,
+          { minWords: 35, maxChars: 1500 },
+          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+        ),
+      ),
+    ],
+  },
+  {
+    id: "writing-an-opinion-paragraph",
+    title: t("Writing an Opinion Paragraph", "写观点段落"),
+    summary: t(
+      "State what you think in the first sentence, back it with reasons, and close by bringing the reader back to your opinion.",
+      "在第一句说出你的看法，用理由支持它，结尾再把读者带回你的观点。",
+    ),
+    prerequisites: ["writing-a-paragraph"],
+    encompasses: [{ topic: "writing-a-paragraph", weight: 0.4 }],
+    xp: 20,
+    criteria: [...new Set([...reasonsCriteria, ...opinionCriteria])].map(criterion),
+    knowledgePoints: [
+      point(
+        "opinion-and-reasons",
+        t("An Opinion and Its Reasons", "观点和理由"),
+        t(
+          "An **opinion** is what you think, and other people may think differently: *Dogs make better pets than cats.* State it plainly in your first sentence, so the reader knows where you stand.\n\nThen give **reasons**: why do you think so? Each reason should be different. *Dogs are fun* and *Dogs are enjoyable* are one reason said twice. *Dogs get you outside every day* and *Dogs can learn tricks* are two.",
+          "**观点**（opinion）是你的看法，别人可能看法不同：*Dogs make better pets than cats.* 在第一句就明确说出来，让读者知道你的立场。\n\n然后给出**理由**（reason）：你为什么这样想？每条理由应当不同。*Dogs are fun* 和 *Dogs are enjoyable* 是同一条理由说了两遍；*Dogs get you outside every day* 和 *Dogs can learn tricks* 才是两条。",
+        ),
+        writingGenerator(
+          t(
+            "Write a paragraph in English. State your opinion in the first sentence, then give at least two different reasons.",
+            "用英语写一个段落。在第一句说出你的观点，再给出至少两条不同的理由。",
+          ),
+          opinionBank,
+          reasonsCriteria,
+          { minWords: 30, maxChars: 1200 },
+          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+        ),
+      ),
+      point(
+        "closing-an-opinion",
+        t("Closing an Opinion Paragraph", "观点段落的结尾"),
+        t(
+          "An opinion paragraph ends by bringing the reader back to the opinion, now that the reasons have been given. Use new words rather than copying the first sentence, and words such as *For these reasons* or *That is why* can lead into it.\n\nOpinion: *Every school should have a garden.* Closing: *For these reasons, a garden is worth the space it takes.*\n\nKeep every sentence on your opinion: a sentence about something else weakens the paragraph.",
+          "观点段落在给出理由之后，结尾要把读者带回观点。用新的说法，而不是照抄第一句；可以用 *For these reasons* 或 *That is why* 这样的词引出结尾。\n\n观点：*Every school should have a garden.* 结尾：*For these reasons, a garden is worth the space it takes.*\n\n每个句子都要围绕你的观点：写别的事情的句子会削弱段落。",
+        ),
+        writingGenerator(
+          t(
+            "Write a paragraph in English that states your opinion, supports it with at least two reasons, and ends with a closing sentence.",
+            "用英语写一个段落：说出你的观点，用至少两条理由支持它，并以结尾句收束。",
+          ),
+          opinionBank,
+          opinionCriteria,
+          { minWords: 35, maxChars: 1500 },
+          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+        ),
+      ),
+    ],
+  },
+  {
+    id: "writing-a-how-to-paragraph",
+    title: t("Writing a How-To Paragraph", "写操作步骤段落"),
+    summary: t(
+      "Explain how to do something: name the task, give the steps in order, and connect them with transitions.",
+      "说明怎样做一件事：点明任务，按顺序写出步骤，并用过渡词把它们连接起来。",
+    ),
+    prerequisites: ["writing-a-paragraph"],
+    encompasses: [
+      { topic: "writing-a-paragraph", weight: 0.3 },
+      { topic: "ordering-sentences-in-a-paragraph", weight: 0.3 },
+      { topic: "choosing-transitions", weight: 0.2 },
+    ],
+    xp: 20,
+    criteria: stepsCriteria.map(criterion),
+    knowledgePoints: [
+      point(
+        "steps-in-order",
+        t("Steps in Order", "按顺序写步骤"),
+        t(
+          "A how-to paragraph opens by naming the task: *Planting a seed takes only a few minutes.* Then it gives the steps in the order the reader must do them. A step out of order can spoil the task: you cannot water a seed you have not planted yet.\n\n**Transitions** show the reader where each step begins: *first*, *next*, *then*, *after that*, *finally*.",
+          "操作步骤段落开头先点明任务：*Planting a seed takes only a few minutes.* 然后按读者要做的顺序写出步骤。步骤顺序错了，事情就可能做不成：种子还没种下，就没法浇水。\n\n**过渡词**（transition）告诉读者每一步从哪里开始：*first*、*next*、*then*、*after that*、*finally*。",
+        ),
+        writingGenerator(
+          t(
+            "Write a paragraph in English. Name the task in the first sentence, then give the steps in order with transition words.",
+            "用英语写一个段落。在第一句点明任务，再用过渡词按顺序写出步骤。",
+          ),
+          stepsBank,
+          stepsCriteria,
           { minWords: 35, maxChars: 1500 },
           (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
         ),

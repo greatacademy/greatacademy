@@ -1,6 +1,6 @@
 # English Content Progress
 
-The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, so the course has 49. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
+The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, and five judged by a model: two of W2 sentences in `src/topics/writing-sentences-judged.ts` and three of W4 paragraphs in `src/topics/writing-paragraphs-judged.ts`, so the course has 54. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
 ## Reasons for Encompassing Weights
 
@@ -51,3 +51,11 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `evidence` | `claims` | 0.3 | Each item first needs the claim the evidence serves |
 | `reasoning` | `evidence` | 0.3 | Each item links evidence to its claim |
 | `counterclaims-and-rebuttals` | `reasoning` | 0.2 | A rebuttal gives reasons, but the point is the opposing view |
+| `writing-a-paragraph` | `identifying-topic-sentences` | 0.5 | Every paragraph opens with a topic sentence |
+| `writing-a-paragraph` | `removing-off-topic-sentences` | 0.3 | Every sentence must support the point, but nothing is removed |
+| `expanding-ideas-in-your-own-words` | `expanding-with-because-but-so` | 0.5 | The same three words, with endings of one's own |
+| `combining-sentences-in-your-own-words` | `combining-with-conjunctions`, `combining-with-relative-clauses` | 0.3 each | Most items are combined with one of these |
+| `combining-sentences-in-your-own-words` | `combining-with-appositives` | 0.2 | Some items are best combined with an appositive |
+| `writing-an-opinion-paragraph` | `writing-a-paragraph` | 0.4 | An opening point, support and a closing sentence carry over |
+| `writing-a-how-to-paragraph` | `writing-a-paragraph`, `ordering-sentences-in-a-paragraph` | 0.3 each | The paragraph opens with its point and orders its steps |
+| `writing-a-how-to-paragraph` | `choosing-transitions` | 0.2 | Transitions mark the steps, but only of sequence |
