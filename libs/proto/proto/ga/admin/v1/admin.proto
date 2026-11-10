@@ -19,6 +19,8 @@ service AdminService {
   rpc SetMarketOpen(SetMarketOpenRequest) returns (SetMarketOpenResponse);
   // ListProviders lists the AI vendors, never their keys.
   rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse);
+  // ListCatalog lists the named vendors of pi-ai's catalog an administrator can pick, with their models.
+  rpc ListCatalog(ListCatalogRequest) returns (ListCatalogResponse);
   // SaveProvider adds or changes a vendor.
   rpc SaveProvider(SaveProviderRequest) returns (SaveProviderResponse);
   // DeleteProvider removes a vendor that has no routes.
@@ -166,10 +168,38 @@ message Provider {
   // a vendor without both serves no learner.
   optional double daily_budget = 9;
   optional double monthly_budget = 10;
+  // catalog is the id of the named vendor in pi-ai's catalog the vendor was picked from, or empty for one configured by hand.
+  string catalog = 11;
 }
 
 message ListProvidersResponse {
   repeated Provider providers = 1;
+}
+
+message ListCatalogRequest {}
+
+// CatalogModel is a model of a named vendor, with the vendor's list prices in US dollars per million tokens.
+message CatalogModel {
+  string id = 1;
+  string name = 2;
+  int32 context_window = 3;
+  int32 max_tokens = 4;
+  bool reasoning = 5;
+  double input_per_million = 6;
+  double output_per_million = 7;
+}
+
+// CatalogProvider is a named vendor an administrator can pick, which fills in its API, endpoint and models.
+message CatalogProvider {
+  string id = 1;
+  string name = 2;
+  string api = 3;
+  string base_url = 4;
+  repeated CatalogModel models = 5;
+}
+
+message ListCatalogResponse {
+  repeated CatalogProvider providers = 1;
 }
 
 message SaveProviderRequest {

@@ -452,6 +452,13 @@ export declare type Provider = Message<"ga.admin.v1.Provider"> & {
    * @generated from field: optional double monthly_budget = 10;
    */
   monthlyBudget?: number | undefined;
+
+  /**
+   * catalog is the id of the named vendor in pi-ai's catalog the vendor was picked from, or empty for one configured by hand.
+   *
+   * @generated from field: string catalog = 11;
+   */
+  catalog: string;
 };
 
 /**
@@ -475,6 +482,120 @@ export declare type ListProvidersResponse = Message<"ga.admin.v1.ListProvidersRe
  * Use `create(ListProvidersResponseSchema)` to create a new message.
  */
 export declare const ListProvidersResponseSchema: GenMessage<ListProvidersResponse>;
+
+/**
+ * @generated from message ga.admin.v1.ListCatalogRequest
+ */
+export declare type ListCatalogRequest = Message<"ga.admin.v1.ListCatalogRequest"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.ListCatalogRequest.
+ * Use `create(ListCatalogRequestSchema)` to create a new message.
+ */
+export declare const ListCatalogRequestSchema: GenMessage<ListCatalogRequest>;
+
+/**
+ * CatalogModel is a model of a named vendor, with the vendor's list prices in US dollars per million tokens.
+ *
+ * @generated from message ga.admin.v1.CatalogModel
+ */
+export declare type CatalogModel = Message<"ga.admin.v1.CatalogModel"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: int32 context_window = 3;
+   */
+  contextWindow: number;
+
+  /**
+   * @generated from field: int32 max_tokens = 4;
+   */
+  maxTokens: number;
+
+  /**
+   * @generated from field: bool reasoning = 5;
+   */
+  reasoning: boolean;
+
+  /**
+   * @generated from field: double input_per_million = 6;
+   */
+  inputPerMillion: number;
+
+  /**
+   * @generated from field: double output_per_million = 7;
+   */
+  outputPerMillion: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.CatalogModel.
+ * Use `create(CatalogModelSchema)` to create a new message.
+ */
+export declare const CatalogModelSchema: GenMessage<CatalogModel>;
+
+/**
+ * CatalogProvider is a named vendor an administrator can pick, which fills in its API, endpoint and models.
+ *
+ * @generated from message ga.admin.v1.CatalogProvider
+ */
+export declare type CatalogProvider = Message<"ga.admin.v1.CatalogProvider"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string api = 3;
+   */
+  api: string;
+
+  /**
+   * @generated from field: string base_url = 4;
+   */
+  baseUrl: string;
+
+  /**
+   * @generated from field: repeated ga.admin.v1.CatalogModel models = 5;
+   */
+  models: CatalogModel[];
+};
+
+/**
+ * Describes the message ga.admin.v1.CatalogProvider.
+ * Use `create(CatalogProviderSchema)` to create a new message.
+ */
+export declare const CatalogProviderSchema: GenMessage<CatalogProvider>;
+
+/**
+ * @generated from message ga.admin.v1.ListCatalogResponse
+ */
+export declare type ListCatalogResponse = Message<"ga.admin.v1.ListCatalogResponse"> & {
+  /**
+   * @generated from field: repeated ga.admin.v1.CatalogProvider providers = 1;
+   */
+  providers: CatalogProvider[];
+};
+
+/**
+ * Describes the message ga.admin.v1.ListCatalogResponse.
+ * Use `create(ListCatalogResponseSchema)` to create a new message.
+ */
+export declare const ListCatalogResponseSchema: GenMessage<ListCatalogResponse>;
 
 /**
  * @generated from message ga.admin.v1.SaveProviderRequest
@@ -1705,6 +1826,16 @@ export declare const AdminService: GenService<{
     methodKind: "unary";
     input: typeof ListProvidersRequestSchema;
     output: typeof ListProvidersResponseSchema;
+  },
+  /**
+   * ListCatalog lists the named vendors of pi-ai's catalog an administrator can pick, with their models.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.ListCatalog
+   */
+  listCatalog: {
+    methodKind: "unary";
+    input: typeof ListCatalogRequestSchema;
+    output: typeof ListCatalogResponseSchema;
   },
   /**
    * SaveProvider adds or changes a vendor.
