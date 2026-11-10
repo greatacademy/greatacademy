@@ -55,7 +55,7 @@ kubectl -n voice-test create secret generic cloudflared-token --from-literal=tok
 kubectl -n voice-test create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=<github-user> --docker-password=<token that may read packages>
 ```
 
-The credential is the one the web Worker accepts from the voice service. The Tunnel token comes from the Tunnel created in the Cloudflare dashboard (Zero Trust, Networks, Tunnels), whose public hostname routes to `http://voice:8080`. The GHCR package is private, so pods pull it with the `ghcr` Secret. The voice hostname also gets WAF and rate limiting rules.
+The credential is the one the web Worker accepts from the voice service. Each namespace has its own remotely managed Tunnel, apart from the cluster's other Tunnel: `greatacademy-voice-test` routes `voice-test.greatacademy.dev` to `http://voice:8080`, through a proxied CNAME to the Tunnel. It was made with `cf tunnels create --config-src cloudflare`, `cf tunnels config update` and `cf dns records create`, and its token piped from `cf tunnels token get` into the Secret, never printed. Production gets `greatacademy-voice` and `voice.greatacademy.dev` the same way. The GHCR package is private, so pods pull it with the `ghcr` Secret. The voice hostname also gets WAF and rate limiting rules.
 
 ## Deploying
 
