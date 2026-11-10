@@ -134,6 +134,16 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     error(`subject ${def.id}`, (e as Error).message);
   }
 
+  // Strands.
+  const strands = new Set<string>();
+  for (const strand of def.strands ?? []) {
+    const path = `strand ${strand.id}`;
+    if (!idPattern.test(strand.id)) error(path, "id must be kebab case");
+    if (strands.has(strand.id)) error(path, "duplicate strand id");
+    strands.add(strand.id);
+    text(`${path} › title`, strand.title);
+  }
+
   // Topics, their texts and knowledge points.
   const topics = new Map<string, TopicDef>();
   const criteria = new Map<string, CriterionSpec>();
@@ -144,6 +154,10 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     topics.set(topic.id, topic);
     text(`${path} › title`, topic.title);
     text(`${path} › summary`, topic.summary);
+    if (def.strands === undefined) {
+      if (topic.strand !== undefined) error(path, `strand ${topic.strand} is given but the subject declares no strands`);
+    } else if (topic.strand === undefined) error(path, "a topic needs a strand");
+    else if (!strands.has(topic.strand)) error(path, `strand ${topic.strand} does not exist`);
     if (!(Number.isFinite(topic.xp) && topic.xp > 0)) error(path, `xp must be positive, got ${topic.xp}`);
     if (topic.knowledgePoints.length === 0) error(path, "a topic needs at least one knowledge point");
     const kpIds = new Set<string>();
@@ -359,6 +373,17 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       });
     });
     for (const unit of course.reading ?? []) if (!units.has(unit)) error(path, `reading unit ${unit} does not exist`);
+    const closing = new Set<string>();
+    course.units.forEach((unit, u) => {
+      for (const r of unit.reading ?? [])
+        if (!(course.reading ?? []).includes(r)) error(`${path} › unit ${u + 1}`, `reading unit ${r} is not offered by the course`);
+      if (unit.conversation !== undefined) {
+        if (!(course.conversations ?? []).includes(unit.conversation))
+          error(`${path} › unit ${u + 1}`, `conversation ${unit.conversation} is not offered by the course`);
+        if (closing.has(unit.conversation)) error(`${path} › unit ${u + 1}`, `conversation ${unit.conversation} closes two units`);
+        closing.add(unit.conversation);
+      }
+    });
     for (const id of course.conversations ?? []) if (!conversations.has(id)) error(path, `conversation ${id} does not exist`);
     if (new Set(course.conversations).size !== (course.conversations ?? []).length) error(path, "a conversation appears twice");
     const floor = new Set(course.masteryFloor ?? []);

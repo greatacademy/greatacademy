@@ -2,6 +2,26 @@
 
 The first slice is written: the 41 topics of `english-grammar-writing`, reviewed by no outside reader yet. Eight more topics of usage, mechanics and academic words follow it, and five judged by a model: two of W2 sentences in `src/topics/writing-sentences-judged.ts` and three of W4 paragraphs in `src/topics/writing-paragraphs-judged.ts`, so the course has 54. Its reading units of grades 3 to 5 are `water-on-earth`, `how-plants-live`, `life-on-the-nile`, `weather-and-climate`, `the-human-body` and `our-changing-earth`, 10 passages each, in `src/reading`; their words are in `src/reading/lexicon.ts`. The second course, `english-reading-comprehension`, has 15 topics of reading skills in `src/topics/reading-informational.ts` and `src/topics/reading-thinking.ts`, reviewed by no outside reader yet. The third, `english-literature-argument`, has 9 topics of literature and argument for grades 6 to 8 in `src/topics/literature.ts` and `src/topics/argument.ts`, 5 topics of close reading in `src/topics/literary-analysis.ts`, and 7 judged moves of an essay in `src/topics/writing-essays-judged.ts` and `src/topics/literary-analysis.ts`. The fourth, `english-rhetoric-composition`, has 10 topics of rhetoric, literature and writing from sources for grades 9 to 12 in `src/topics/rhetoric.ts`, two of them judged, and the reading units `voices-of-persuasion` of 10 persuasive texts in `src/reading/speeches.ts` and `the-writers-craft` of 10 short stories in `src/reading/craft.ts`. See [docs/english-development-plan.md](../../docs/english-development-plan.md).
 
+## Courses by Level: Claims and Order
+
+The level courses of [docs/english-curriculum.md §6](../../docs/english-curriculum.md#6-courses) are written by several agents at once in this directory. Each owns the files below and edits no other; the coordinator owns everything else, including `src/pack.ts`, `src/packs.ts`, `src/index.ts`, `src/shards/`, `src/courses.ts`, `src/conversations.ts`, the tests at the top of `src/`, this file and `docs/english-curriculum*.md`, reviews the work and commits it. No agent commits.
+
+| Owner | Files | Work, in order |
+| :--- | :--- | :--- |
+| `levels-topics` | `src/levels/*/topics.ts` and topic files beside it, `libs/subject-english/src/criteria-levels.ts`, `docs/english-courses/english-{pre-a1,a1,a2,b1,b2}*.md` | The outlines of all five levels first, then the topics of Pre-A1, A1, A2, B1 and B2 in turn |
+| `levels-courses` | `src/levels/*/reading.ts`, `src/levels/*/conversations.ts`, `src/levels/*/course.ts` and files beside them, `src/exams/` | For each level once its topics are in: its reading units, conversations and course; then the exam courses |
+| `native` | `src/native/`, `src/topics/`, `src/reading/`, `libs/subject-english/src/criteria-native.ts`, `docs/english-courses/english-grades-*.md`, `docs/english-courses/english-college-*.md` | The outlines of the native courses, then grades 3 to 5, 6 to 8, 9 to 12 and college writing in turn |
+
+Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english-b2`; `english-grades-3-5`, `english-grades-6-8`, `english-grades-9-12`, `english-college-writing`; `english-ielts`, `english-toefl`, `english-cambridge-first`, `english-gaokao`.
+
+Content that needs audio or recording (listening of S1, speaking of S2 to S4, phonics) waits for its services; a unit is written without it, and its outline says what it will gain.
+
+| Step | State |
+| :--- | :--- |
+| Content model: strands, themed units, packs | Done |
+| Outlines of Pre-A1 to B2 | Not started |
+| Outlines of the native courses | Not started |
+
 ## Reasons for Encompassing Weights
 
 Weights are starting points, to be calibrated from real answers (P10). Each states how much of the earlier topic a problem of the later one practices.

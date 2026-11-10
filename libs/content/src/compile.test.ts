@@ -5,7 +5,7 @@ import { explanationParts, type Figure, figureIssue, plottedPoints } from "./fig
 import { readManifest, subjectListing, subjectManifest } from "./manifest.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
-import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
+import type { CourseDef, Problem, SubjectDef, TopicDef, UnitDef } from "./types.ts";
 
 const problem = (n: number): Problem => ({
   prompt: same(`What is $${n}$?`),
@@ -486,6 +486,37 @@ describe("conversations", () => {
     ["no scenario", withConversations([{ ...conversation, scenario: " " }], []), "needs a scenario"],
     ["a missing locale", withConversations([{ ...conversation, task: t("Ask.", "") }], []), "non-empty"],
     ["too many minutes", withConversations([{ ...conversation, minutes: 60 }], []), "minutes must be"],
+  ])("rejects %s", (_, def, message) => {
+    expect(errors(def).join()).toContain(message);
+  });
+});
+
+describe("strands and themed units", () => {
+  const strands = [{ id: "reading", title: t("Reading", "阅读") }];
+  const conversation = {
+    id: "at-the-desk",
+    title: t("At the desk", "在服务台"),
+    task: t("Ask for a book.", "借一本书。"),
+    scenario: "You are a librarian.",
+    opening: "Hello!",
+    minutes: 3,
+  };
+  const withUnit = (unit: Partial<UnitDef>, offered: string[] = []): SubjectDef => {
+    const c = course(["a"], { conversations: offered });
+    return { ...subject([topic("a")], [{ ...c, units: c.units.map((u) => ({ ...u, ...unit })) }]), conversations: [conversation] };
+  };
+
+  it("compiles topics that name a declared strand, and a unit closed by an offered conversation", () => {
+    const def = withUnit({ conversation: "at-the-desk" }, ["at-the-desk"]);
+    expect(errors({ ...def, strands, topics: [topic("a", { strand: "reading" })] })).toEqual([]);
+  });
+
+  it.each([
+    ["a topic without a strand", { ...subject([topic("a")]), strands }, "a topic needs a strand"],
+    ["an unknown strand", { ...subject([topic("a", { strand: "music" })]), strands }, "strand music does not exist"],
+    ["a strand with none declared", subject([topic("a", { strand: "reading" })]), "declares no strands"],
+    ["a unit's conversation the course does not offer", withUnit({ conversation: "at-the-desk" }), "is not offered by the course"],
+    ["a unit's reading the course does not offer", withUnit({ reading: ["water"] }), "reading unit water is not offered"],
   ])("rejects %s", (_, def, message) => {
     expect(errors(def).join()).toContain(message);
   });

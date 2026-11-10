@@ -1,6 +1,8 @@
 // The topics of the `core` shard: for now, all of English. See docs/architecture.md on why content is split.
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
+import { inStrand } from "../pack.ts";
+import { englishPacks } from "../packs.ts";
 import { howAnimalsSurvive } from "../reading/animals.ts";
 import { makingTheCase } from "../reading/arguments.ts";
 import { theHumanBody } from "../reading/body.ts";
@@ -31,26 +33,36 @@ import { judgedParagraphTopics } from "../topics/writing-paragraphs-judged.ts";
 import { sentenceWritingTopics } from "../topics/writing-sentences.ts";
 import { judgedSentenceTopics } from "../topics/writing-sentences-judged.ts";
 
-/** coreShardTopics are the topics held by the `core` shard. */
-export const coreShardTopics: readonly TopicDef[] = [
-  ...sentenceTopics,
-  ...clauseTopics,
-  ...sentenceWritingTopics,
-  ...judgedSentenceTopics,
-  ...paragraphTopics,
-  ...judgedParagraphTopics,
-  ...wordTopics,
-  ...usageTopics,
-  ...mechanicsTopics,
-  ...academicWordTopics,
-  ...informationalReadingTopics,
-  ...thinkingReadingTopics,
-  ...literatureTopics,
-  ...literaryAnalysisTopics,
-  ...argumentTopics,
-  ...judgedEssayTopics,
-  ...rhetoricTopics,
+/** writingByModel are the topics of reading files whose problems are writing judged by a model. */
+const writingByModel = new Set(["writing-a-literary-analysis-paragraph", "writing-a-rhetorical-analysis", "synthesizing-sources"]);
+
+/** skillTopics are the topics of the skill courses, each in its strand. */
+const skillTopics: readonly TopicDef[] = [
+  ...inStrand("grammar", [...sentenceTopics, ...clauseTopics, ...usageTopics]),
+  ...inStrand("writing", [
+    ...sentenceWritingTopics,
+    ...judgedSentenceTopics,
+    ...paragraphTopics,
+    ...judgedParagraphTopics,
+    ...mechanicsTopics,
+    ...judgedEssayTopics,
+  ]),
+  ...inStrand("vocabulary", [...wordTopics, ...academicWordTopics]),
+  ...inStrand(
+    "reading",
+    [
+      ...informationalReadingTopics,
+      ...thinkingReadingTopics,
+      ...literatureTopics,
+      ...literaryAnalysisTopics,
+      ...argumentTopics,
+      ...rhetoricTopics,
+    ].map((topic) => (writingByModel.has(topic.id) ? { ...topic, strand: "writing" } : topic)),
+  ),
 ];
+
+/** coreShardTopics are the topics held by the `core` shard: for now, all of English. */
+export const coreShardTopics: readonly TopicDef[] = [...skillTopics, ...englishPacks.flatMap((pack) => pack.topics)];
 
 /** coreShardReading are the reading units held by the `core` shard. */
 export const coreShardReading: readonly ReadingUnitDef[] = [
@@ -66,4 +78,5 @@ export const coreShardReading: readonly ReadingUnitDef[] = [
   makingTheCase,
   voicesOfPersuasion,
   theWritersCraft,
+  ...englishPacks.flatMap((pack) => pack.reading),
 ];

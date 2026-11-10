@@ -24,6 +24,7 @@ The pedagogical background is in [The Math Academy Way](the-math-academy-way.md)
 | Passage | `PassageDef` | A text to read with a short comprehension check; a graph node apart from the topics, whose id shares their namespace |
 | Reading unit | `ReadingUnitDef` | An ordered sequence of passages on one domain; a course lists the units it offers in `CourseDef.reading` |
 | Conversation | `ConversationDef` | A spoken scene with the AI tutor (S6): a title, the learner's task, the tutor's scenario in English (never shown to the learner), its opening line and its length in minutes; a course lists the conversations it offers in `CourseDef.conversations` |
+| Strand | `StrandDef` | A kind of topic, such as reading or writing; a subject that declares strands (`SubjectDef.strands`) gives each topic one (`TopicDef.strand`), so that a course can be reviewed and balanced across them |
 | Lexicon | `LexiconEntry` | The subject's known spellings of each word, each optionally tied to the topic that teaches it |
 
 ## 2. Texts and Locales
@@ -149,6 +150,7 @@ const prealgebra: CourseDef = {
 ```
 
 - A course lists its topics in teaching order, grouped into units and modules for display only.
+- In a course built on themes, a unit is a theme: `reading` lists the course's reading units on it, and `conversation` names the course's conversation that closes it.
 - `explanationLocale` makes a course teach in one language whatever the interface language. `Registry` in `libs/api` reads every text of the course's lessons, problems and verdicts in that locale, so clients change nothing; titles from the catalog stay in the interface language. Every text is still written in both locales, because another course over the same topics may teach in the other.
 - `group` names the shelf that lists of courses show the course on, such as a stage of schooling. In mathematics, [course-shelves.ts](../content/math/src/course-shelves.ts) assigns it and orders the shelves; a course on no shelf is an error.
 - Every topic appears once, and after all of its prerequisites that are in the course.
@@ -175,6 +177,8 @@ const prealgebra: CourseDef = {
 | Every word of a passage is in the lexicon, or listed in its `names` or `glossed` | Error |
 | A course's reading units exist | Error |
 | Conversations have unique kebab-case ids, texts in every locale, a scenario and an opening line, and a whole number of minutes from 1 to 15; a course's conversations exist and are not repeated | Error |
+| Strands have unique kebab-case ids; when a subject declares strands, every topic names one of them, and otherwise none does | Error |
+| A unit's reading units and conversation are offered by its course, and no conversation closes two units | Error |
 | A topic's criteria have kebab-case ids, no repeats, a short version and a question ending in `?`; a criterion shared by two topics is defined the same in both | Error |
 | A topic judged by rules neither depends on nor encompasses a topic judged by a model, since a learner with no route never gets the latter | Error |
 

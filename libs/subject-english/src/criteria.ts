@@ -1,4 +1,6 @@
 import type { CriterionSpec } from "@ga/content";
+import { LEVEL_CRITERIA } from "./criteria-levels.ts";
+import { NATIVE_CRITERIA } from "./criteria-native.ts";
 
 /** WRITING_CRITERIA are the criteria of the first writing levels of docs/english-curriculum.md §8.1: W2 meaning checks, W4 paragraphs and the moves of W5 essays, with starting questions to be calibrated. */
 export const WRITING_CRITERIA: readonly CriterionSpec[] = [
@@ -210,6 +212,8 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the revision keep the main point of the original draft?",
     quoteWhenMet: false,
   },
+  ...LEVEL_CRITERIA,
+  ...NATIVE_CRITERIA,
 ];
 
 /** criterionById finds a criterion of WRITING_CRITERIA, or undefined. */

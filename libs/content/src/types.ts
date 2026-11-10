@@ -152,6 +152,15 @@ export interface TopicDef {
    * not get the topic, so no topic without criteria may depend on one with them.
    */
   readonly criteria?: readonly CriterionSpec[];
+  /** strand is the id of the subject's strand the topic belongs to, such as "grammar"; required when the subject declares strands. */
+  readonly strand?: string;
+}
+
+/** StrandDef is a strand of a subject: a kind of topic a course balances against the others, such as reading or writing. */
+export interface StrandDef {
+  /** id is unique within its subject, in kebab case. */
+  readonly id: string;
+  readonly title: Text;
 }
 
 /** ModuleDef groups topics of a unit. */
@@ -162,8 +171,13 @@ export interface ModuleDef {
 
 /** UnitDef groups modules of a course. */
 export interface UnitDef {
+  /** title names the unit; in a course built on themes, its theme. */
   readonly title: Text;
   readonly modules: readonly ModuleDef[];
+  /** reading lists the course's reading units that belong to this unit's theme. */
+  readonly reading?: readonly string[];
+  /** conversation is the course's conversation that closes this unit. */
+  readonly conversation?: string;
 }
 
 /** CourseDef is an ordered selection of topics: a view of the knowledge graph. */
@@ -291,4 +305,6 @@ export interface SubjectDef {
   readonly lexicon?: readonly LexiconEntry[];
   /** conversations are the subject's spoken conversations. */
   readonly conversations?: readonly ConversationDef[];
+  /** strands are the kinds of topic the subject has; when given, every topic names one. */
+  readonly strands?: readonly StrandDef[];
 }
