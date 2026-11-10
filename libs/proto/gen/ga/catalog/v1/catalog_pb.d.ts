@@ -177,6 +177,14 @@ export declare type Course = Message<"ga.catalog.v1.Course"> & {
    * @generated from field: repeated string builds_on = 10;
    */
   buildsOn: string[];
+
+  /**
+   * retired marks a course no longer offered to new learners: its learners
+   * keep it, catalogs leave it out for everyone else, and ChooseCourse refuses it.
+   *
+   * @generated from field: bool retired = 11;
+   */
+  retired: boolean;
 };
 
 /**

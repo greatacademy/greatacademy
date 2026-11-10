@@ -313,6 +313,8 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     async chooseCourse(req, ctx) {
       const { db, learnerId } = await decider(ctx, req.learnerId);
       const c = await course(req.courseId);
+      if (c.course.def.retired && !(await currentCourses(db, learnerId)).some((e) => e.courseId === c.id))
+        throw new ConnectError(`course ${c.id} is retired`, Code.FailedPrecondition);
       if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
       const at = new Date(deps.now());
       await db.transaction(async (tx) => {

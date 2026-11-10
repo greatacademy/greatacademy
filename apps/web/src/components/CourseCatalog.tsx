@@ -43,11 +43,12 @@ export function CourseCatalog({
     const byTitle = new Map<string, Course[]>();
     for (const c of courses.data?.courses ?? []) {
       if (subject && c.subjectId !== subject) continue;
+      if (c.retired && !profile.data?.enrollments.some((e) => e.courseId === c.id)) continue;
       const title = tx(c.group) || m.otherCourses;
       byTitle.set(title, [...(byTitle.get(title) ?? []), c]);
     }
     return [...byTitle];
-  }, [courses.data, subject, tx, m.otherCourses]);
+  }, [courses.data, profile.data, subject, tx, m.otherCourses]);
 
   if (courses.isPending) return <Spinner label={m.loading} />;
   if (courses.isError) return <ErrorNote message={m.error} retry={m.retry} onRetry={() => courses.refetch()} />;

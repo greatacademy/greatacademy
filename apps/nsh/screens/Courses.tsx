@@ -180,7 +180,9 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
               </If>
               <List
                 viewport="parent"
-                each={shelfRows(data().courses.filter((course) => course.subjectId === shown() && !enrolled().has(course.id)))}
+                each={shelfRows(
+                  data().courses.filter((course) => course.subjectId === shown() && !course.retired && !enrolled().has(course.id)),
+                )}
                 keyExtractor={(row) => ("title" in row ? `shelf:${row.title}` : row.courses.map((course) => course.id).join(","))}
                 estimatedItemSize={170}
                 contentStyle={{ gap: 12 }}

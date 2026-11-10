@@ -353,3 +353,38 @@ describe("LearningService", () => {
     expect(xp).toMatchObject({ total: 0, today: 0 });
   });
 });
+
+describe("retired courses", () => {
+  // A copy of the subject in which Prealgebra is retired.
+  const retired = {
+    ...compiled,
+    courses: new Map(
+      [...compiled.courses].map(([id, c]) => [id, id === "prealgebra" ? { ...c, def: { ...c.def, retired: true } } : c] as const),
+    ),
+  };
+
+  it("lists a retired course as such, and lets only its own learners choose it", async () => {
+    const reg = await Registry.open([localGateway(retired)]);
+    const transport = createRouterTransport((router) => router.service(CatalogService, catalogService(reg)));
+    const auth: Interceptor = (next) => (req) => {
+      req.contextValues.set(dbKey, db);
+      req.contextValues.set(userIdKey, "u1");
+      return next(req);
+    };
+    const client = createClient(
+      LearningService,
+      createRouterTransport(
+        (router) => router.service(LearningService, learningService({ registry: reg, now: () => now, seed: () => seed++ })),
+        { router: { interceptors: [auth] } },
+      ),
+    );
+    const listed = (await createClient(CatalogService, transport).listCourses({})).courses;
+    expect(listed.find((c) => c.id === "prealgebra")?.retired).toBe(true);
+    expect(listed.find((c) => c.id === COURSE)?.retired).toBe(false);
+
+    await expectCode(client.chooseCourse({ courseId: "prealgebra" }), Code.FailedPrecondition);
+    // A learner already in the course keeps it: choosing it again changes nothing.
+    await learning.chooseCourse({ courseId: "prealgebra" });
+    await client.chooseCourse({ courseId: "prealgebra" });
+  });
+});

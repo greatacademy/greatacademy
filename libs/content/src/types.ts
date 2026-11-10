@@ -204,6 +204,8 @@ export interface CourseDef {
    * courses that build on it.
    */
   readonly buildsOn?: readonly string[];
+  /** retired marks a course no longer offered to new learners: its learners keep it, and others cannot choose it. */
+  readonly retired?: boolean;
 }
 
 /** PassageQuestionDef is one comprehension question of a passage. */

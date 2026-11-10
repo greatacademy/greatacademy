@@ -50,6 +50,8 @@ export interface CourseListing {
   readonly group?: Text;
   /** buildsOn lists the courses this one follows on from, nearest first. */
   readonly buildsOn: readonly string[];
+  /** retired marks a course no longer offered to new learners. */
+  readonly retired?: boolean;
   readonly topicCount: number;
   readonly xp: number;
 }
@@ -121,6 +123,7 @@ export function subjectListing(manifest: SubjectManifest): SubjectListing {
       description: c.def.description,
       ...(c.def.group && { group: c.def.group }),
       buildsOn: c.def.buildsOn ?? [],
+      ...(c.def.retired && { retired: true }),
       topicCount: c.topics.length,
       xp: c.topics.reduce((sum, id) => sum + xp.get(id)!, 0),
     })),

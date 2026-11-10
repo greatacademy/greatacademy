@@ -150,6 +150,7 @@ const prealgebra: CourseDef = {
 ```
 
 - A course lists its topics in teaching order, grouped into units and modules for display only.
+- `retired` marks a course no longer offered to new learners. Its learners keep it; catalogs leave it out for everyone else, and choosing it is refused. A retired course stays defined, because learners' enrollments name it.
 - In a course built on themes, a unit is a theme: `reading` lists the course's reading units on it, and `conversation` names the course's conversation that closes it.
 - `explanationLocale` makes a course teach in one language whatever the interface language. `Registry` in `libs/api` reads every text of the course's lessons, problems and verdicts in that locale, so clients change nothing; titles from the catalog stay in the interface language. Every text is still written in both locales, because another course over the same topics may teach in the other.
 - `group` names the shelf that lists of courses show the course on, such as a stage of schooling. In mathematics, [course-shelves.ts](../content/math/src/course-shelves.ts) assigns it and orders the shelves; a course on no shelf is an error.

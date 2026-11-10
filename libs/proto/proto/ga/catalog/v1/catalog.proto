@@ -55,6 +55,9 @@ message Course {
   ga.common.v1.Text group = 9;
   // builds_on lists the courses this one follows on from, nearest first.
   repeated string builds_on = 10;
+  // retired marks a course no longer offered to new learners: its learners
+  // keep it, catalogs leave it out for everyone else, and ChooseCourse refuses it.
+  bool retired = 11;
 }
 
 message Unit {

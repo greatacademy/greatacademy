@@ -130,6 +130,7 @@ function Shelves() {
   const courses = useQuery({ queryKey: ["courses"], queryFn: () => catalog.listCourses({}) });
   const shelves = new Map<string, string[]>();
   for (const c of courses.data?.courses ?? []) {
+    if (c.retired) continue;
     const title = tx(c.group) || m.otherCourses;
     shelves.set(title, [...(shelves.get(title) ?? []), tx(c.title)]);
   }
