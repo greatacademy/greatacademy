@@ -28,6 +28,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
 | Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
 | Topics of A2: 83 topics in 12 units | Done |
+| Course of A2: 12 units, 96 passages, 12 conversations | Done |
 | Topics of B1 | Unit 1 done (10 topics); units 2 to 12 not started |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
