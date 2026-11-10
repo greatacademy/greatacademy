@@ -46,6 +46,10 @@ export default defineConfig({
       STRIPE_WALLET: bindings.secret(),
       // "on" turns on Stripe Tax for card plans.
       STRIPE_TAX: bindings.secret(),
+      // The voice service of English (deploy/voice): the Ed25519 key that signs its tickets, PKCS #8 in base64url,
+      // whose public half is VOICE_TICKET_PUBLIC_KEY in each overlay's config.env, and the credential it presents.
+      VOICE_TICKET_PRIVATE_KEY: bindings.secret(),
+      VOICE_SERVICE_CREDENTIAL: bindings.secret(),
       // The App Store Server API's in-app purchase key; without it the iOS app sells nothing (docs/billing.md §8).
       APPLE_IAP_KEY_ID: bindings.secret(),
       APPLE_IAP_ISSUER_ID: bindings.secret(),
