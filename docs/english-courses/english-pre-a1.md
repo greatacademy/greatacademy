@@ -16,7 +16,7 @@ Explanations are short and lean on examples. For Chinese speakers they name the 
 
 ## How to Read This Outline
 
-Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). The reading unit and the conversation are written from this outline in a later step; listening and speaking wait for audio and recording, and each unit says what it will gain.
+Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). Each unit closes with the reading unit and the conversation named below; listening and speaking wait for audio and recording, and each unit says what it will gain.
 
 ## Units
 
@@ -54,7 +54,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `writing-capitals-and-periods` Capital Letters and Periods (judged by rules; after `the-verb-be`). A sentence begins with a capital letter and ends with a period or a question mark, and *I* is always a capital.
 
-**Reading:** `pre-a1-reading-numbers-and-colors`, 6 passages: Counting balloons at a party; A box of colored pencils; How old is Sam?; Red, blue and green cars; Twelve eggs; What color is it?.
+**Reading:** `pre-a1-reading-numbers-and-colors`, 6 passages: Twelve oranges, counted again; My colored pencils; How old is Sam?; Red, blue and green bags; Twelve children in a classroom; What color is it? (riddles).
 
 **Conversation:** `counting-and-colors`. The tutor sells toys at a market stall. Task: Say which toy you want by its color, and ask how many there are.
 
@@ -74,7 +74,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `my-your-his-her` My, Your, His and Her (after `pre-a1-words-my-and-your`, `he-she-and-it`). *my mom*, *his sister*, *their dog*: the word for whose comes before the noun and takes no *de*. *His* is for a man, *her* for a woman.
 - `have-and-has` Have and Has (after `pre-a1-words-people`, `he-she-and-it`). *I have*, *you have*, but *she has*, *he has*, *it has*.
 
-**Reading:** `pre-a1-reading-my-family`, 6 passages: A family photo; A new baby brother; Grandma and Grandpa come for lunch; Who is that man?; Two sisters and a brother; I love my family.
+**Reading:** `pre-a1-reading-my-family`, 6 passages: Who is in my family?; A baby brother; Grandma and Grandpa are here; Who is that man?; Two sisters and a brother; I love my family.
 
 **Conversation:** `talking-about-my-family`. The tutor is a friend looking at your family photo. Task: Say who is in your family, and give their names and ages.
 
@@ -98,7 +98,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `writing-words-in-order` Words in Order (judged by rules; after `writing-capitals-and-periods`). Put words in the order of an English sentence: who, then the verb, then the rest.
 
-**Reading:** `pre-a1-reading-classroom`, 6 passages: What is in my bag?; Our classroom; The teacher says: open your books; Where is my pen?; These books and those books; A new school.
+**Reading:** `pre-a1-reading-classroom`, 6 passages: What is in my bag?; Our classroom; The teacher says: open your books; Where is my pen?; These books and those books; My school.
 
 **Conversation:** `finding-things-in-the-classroom`. The tutor is a teacher who cannot find things in the classroom. Task: Say where each thing is, with *in*, *on* and *under*.
 
@@ -117,7 +117,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `can-for-ability` Can and Can't (after `pre-a1-words-can-and-like`). *A bird can fly. A fish can't walk.* After *can* the verb has no *-s* and no *to*.
 - `questions-with-be` Questions with Be (after `the-verb-be`, `pre-a1-words-animals`). *Is it a cat? Yes, it is.* The verb moves to the front; Chinese adds *ma* at the end instead.
 
-**Reading:** `pre-a1-reading-animals`, 6 passages: On the farm; A cat and a mouse; Can a fish fly?; A big dog and a small dog; What animals do you like?; A frog in the pond.
+**Reading:** `pre-a1-reading-animals`, 6 passages: Grandpa's animals; A cat and a mouse; Can a fish fly?; A big dog and a small dog; What animals do you like?; Hop the frog.
 
 **Conversation:** `my-favorite-animal`. The tutor is a friend at the zoo gate. Task: Say which animal you like, what color it is and what it can do.
 

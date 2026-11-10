@@ -16,7 +16,7 @@ The grammar is the present: the present simple with its third-person *-s*, its n
 
 ## How to Read This Outline
 
-Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). The reading unit and the conversation are written from this outline in a later step; listening and speaking wait for audio and recording, and each unit says what it will gain.
+Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). Each unit closes with the reading unit and the conversation named below; listening and speaking wait for audio and recording, and each unit says what it will gain.
 
 ## Units
 
@@ -33,7 +33,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `present-simple` The Present Simple (after `the-verb-be`, `a1-words-about-me`). *I live in Beijing. We speak Chinese.* The present simple tells what is true or usual; with *I*, *you*, *we* and *they* the verb has no ending.
 
-**Reading:** `a1-reading-all-about-me`, 7 passages: A new student from Canada; Pen friends; Languages in our class; How old are you?; A phone number; My city; How do you feel today?.
+**Reading:** `a1-reading-all-about-me`, 7 passages: A student from Canada; Pen friends; Languages in our class; How old are you?; A phone number; My city; How do you feel today?.
 
 **Conversation:** `introducing-yourself`. The tutor is a teacher in an online class with students from many countries. Task: Say your name, your age, where you are from and which languages you speak.
 
@@ -80,7 +80,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `writing-capital-letters-for-names` Capital Letters for Names (judged by rules; after `writing-capitals-and-periods`, `a1-words-months`). Names of people, places, languages, days and months begin with a capital letter: *On Monday, Anna speaks English.*
 
-**Reading:** `a1-reading-time-and-dates`, 7 passages: Tom's week; Birthdays around the year; Clocks and calendars; The bus at half past eight; A month of weekends; The first day of spring; Late again!.
+**Reading:** `a1-reading-time-and-dates`, 7 passages: Tom's week; Birthdays around the year; What time is it?; The bus at half past eight; A month of weekends; The first day of spring; Late again!.
 
 **Conversation:** `making-a-plan-to-meet`. The tutor is a friend who wants to meet this week. Task: Agree on a day and a time to meet, and say why other times are no good.
 
@@ -127,7 +127,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `writing-what-people-are-wearing` Writing What People Are Wearing (judged by rules; after `present-continuous`, `writing-capitals-and-periods`). Turn notes into present continuous sentences: *Mia / a blue dress* becomes *Mia is wearing a blue dress.*
 
-**Reading:** `a1-reading-shopping`, 7 passages: At the market; A new coat for winter; The school uniform; Two dollars or ten?; Which shoes?; A present for Mom; The shop on our street.
+**Reading:** `a1-reading-shopping`, 7 passages: At the market; A new coat for winter; The school uniform; Two dollars or ten?; Which shoes?; A gift for Mom; The shop on our street.
 
 **Conversation:** `buying-clothes`. The tutor works in a clothes shop. Task: Ask for a piece of clothing in your size and a color you like, ask the price, and decide whether to buy it.
 
@@ -263,7 +263,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `writing-about-a-person` Writing About a Person (judged by a model; after `third-person-s`, `have-and-has`, `a1-words-describing-people`, `writing-a-short-note`). Write four to six sentences about someone you know: who they are, what they look like, what they do and what they like.
 
-**Reading:** `a1-reading-jobs`, 7 passages: A day with a nurse; Grandpa was a farmer; Jobs in our town; The bus driver; A doctor's busy morning; Who builds houses?; My aunt works in a factory.
+**Reading:** `a1-reading-jobs`, 7 passages: A day with a nurse; Grandpa worked on a farm; Jobs in our town; The bus driver; A doctor's busy morning; Who builds houses?; My mom works in a factory.
 
 **Conversation:** `asking-about-a-job`. The tutor is a worker who visits your class on careers day. Task: Find out what their job is, where they work and what they do every day.
 
