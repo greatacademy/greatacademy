@@ -126,6 +126,7 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
         api: p.api,
         baseUrl: p.baseUrl,
         apiKey: await decryptSecret(deps.aiKeysSecret, p.keyCipher),
+        catalog: p.catalog,
       };
       const { models, model, gateway } = (deps.connect ?? configure)(config, route.model);
       const meta = { use: "judgment", criteria: held.map(criterionKey).join(","), prompt: route.promptVersion };

@@ -606,6 +606,22 @@ describe("the admin console", () => {
     expect((await db.select().from(schema.aiProvider))[0]?.keyHint).toBe("1234");
   });
 
+  it("lists the catalog, and a vendor picked from it speaks the catalog's API", async () => {
+    expect(await code(admin("learner").listCatalog({}))).toBe(Code.NotFound);
+    const { providers: catalog } = await admin("root").listCatalog({});
+    const deepseek = catalog.find((p) => p.id === "deepseek");
+    expect(deepseek?.models.length).toBeGreaterThan(0);
+    expect(deepseek?.models[0]?.inputPerMillion).toBeGreaterThan(0);
+    await admin("root").saveProvider({
+      provider: { name: "DeepSeek", kind: "model", catalog: "deepseek", api: "anthropic-messages", enabled: false },
+    });
+    const { providers } = await admin("root").listProviders({});
+    expect(providers[0]).toMatchObject({ catalog: "deepseek", api: deepseek?.api });
+    expect(
+      await code(admin("root").saveProvider({ provider: { name: "X", kind: "model", catalog: "no-such-vendor", enabled: false } })),
+    ).toBe(Code.InvalidArgument);
+  });
+
   it("sets routes live only with a calibration, and a changed model goes back to draft", async () => {
     const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", kind: "model", api: "x", enabled: true } });
     const route = { criterion: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true };

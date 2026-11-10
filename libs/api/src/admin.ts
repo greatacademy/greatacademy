@@ -43,7 +43,7 @@ import {
   waitingForm,
   waitingVerifications,
 } from "@ga/db";
-import { redact } from "@ga/judge";
+import { catalogProviders, catalogVendor, redact } from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
@@ -232,6 +232,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
           id: p.id,
           name: p.name,
           kind: p.kind,
+          catalog: p.catalog,
           api: p.api,
           baseUrl: p.baseUrl,
           region: p.region,
@@ -243,18 +244,44 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       };
     },
 
+    async listCatalog(_req, ctx) {
+      await admin(ctx);
+      return {
+        providers: catalogProviders().map((p) => ({
+          id: p.id,
+          name: p.name,
+          api: p.api,
+          baseUrl: p.baseUrl,
+          models: p.models.map((m) => ({
+            id: m.id,
+            name: m.name,
+            contextWindow: m.contextWindow,
+            maxTokens: m.maxTokens,
+            reasoning: m.reasoning,
+            inputPerMillion: m.cost.input,
+            outputPerMillion: m.cost.output,
+          })),
+        })),
+      };
+    },
+
     async saveProvider(req, ctx) {
       const { db, userId, at } = await admin(ctx);
       const p = req.provider;
       const name = p?.name.trim();
       const kind = kinds.find((k) => k === p?.kind);
-      const api = p?.api.trim();
+      const catalog = p?.catalog.trim() ?? "";
+      const vendor = catalog ? catalogVendor(catalog) : undefined;
+      need(!catalog || vendor, "that vendor is not in the catalog");
+      // A vendor picked from the catalog speaks the catalog's API; only its endpoint may change, as to go through a gateway.
+      const api = vendor?.api ?? p?.api.trim();
       need(p && name && kind && api, "a provider needs a name, a kind and an API");
       const base = p.baseUrl.trim();
       if (base) need(/^https:\/\//.test(base), "the base URL must use https");
       const fields = {
         name,
         kind,
+        catalog,
         api,
         baseUrl: base,
         region: p.region.trim(),
@@ -270,7 +297,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         actor: userId,
         action: p.id ? "ai.provider.update" : "ai.provider.create",
         target: name,
-        detail: `kind=${kind} api=${api} enabled=${p.enabled} budgets=${p.dailyBudget ?? "-"}/${p.monthlyBudget ?? "-"}${req.apiKey ? " key replaced" : ""}`,
+        detail: `kind=${kind}${catalog ? ` catalog=${catalog}` : ""} api=${api} enabled=${p.enabled} budgets=${p.dailyBudget ?? "-"}/${p.monthlyBudget ?? "-"}${req.apiKey ? " key replaced" : ""}`,
         at,
       });
       return { id };
