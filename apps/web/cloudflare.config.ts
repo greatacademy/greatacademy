@@ -27,7 +27,9 @@ export default defineConfig({
       // RESEND_API_KEY is set; locally, with neither, the links are logged instead.
       EMAIL_PROVIDER: bindings.secret(),
       RESEND_API_KEY: bindings.secret(),
-      EMAIL: bindings.sendEmail(),
+      // Remote in development too, so that EMAIL_PROVIDER=cloudflare in .dev.vars sends real email; the sending
+      // subdomain mail.greatacademy.dev is onboarded to Email Service.
+      EMAIL: bindings.sendEmail({ dev: { remote: true } }),
       // The sender, "Great Academy <noreply@mail.greatacademy.dev>", verified with the chosen service.
       EMAIL_FROM: bindings.secret(),
       // Guardians' signed forms, kept only until an administrator decides.
