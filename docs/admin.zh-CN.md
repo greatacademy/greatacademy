@@ -49,7 +49,7 @@
 
 ## 5. AI 服务
 
-**供应商。** 名称、类型（`model`、`speech` 或 `other`）、pi-ai provider 或兼容的 API、基础 URL、区域、API 密钥、是否启用。密钥用 AES-GCM 在 `AI_KEYS_SECRET` 下加密，这是数据库接触不到的 Worker secret。基础 URL 位于 `gateway.ai.cloudflare.com` 时，调用经过 Cloudflare AI Gateway：每次调用带上 `cf-aig-collect-log-payload: false`，网关只记录模型、token、费用、状态和耗时，不记录请求和响应；`cf-aig-metadata` 写明用途、标准和提示词版本，从不写学习者。
+**供应商。** 先从 pi-ai 的具名供应商目录中选择，或者手动设置。目录（`libs/judge/src/catalog.ts`）列出 pi-ai 内置的、使用 API 密钥、在固定地址上使用平台支持的 API 的供应商，不含面向编程工具的个人订阅（Copilot、编程套餐和 Token 套餐）；选择后自动填好名称、API 和基础 URL，并记下它的 id。手动设置的供应商需要填写类型（`model`、`speech` 或 `other`）和 API。随后是区域、API 密钥和是否启用。来自目录的供应商使用目录中的 API，只有基础 URL 可以修改，例如经由网关。添加路由或价格时，模型字段会列出该供应商在目录中的模型，也接受其他名称；新价格先按供应商标价填好，由管理员改成平台实际支付的价格。目录认识的路由模型沿用目录中的上下文长度、输出上限和请求设置，其他模型使用宽松的估计值。密钥用 AES-GCM 在 `AI_KEYS_SECRET` 下加密，这是数据库接触不到的 Worker secret。基础 URL 位于 `gateway.ai.cloudflare.com` 时，调用经过 Cloudflare AI Gateway：每次调用带上 `cf-aig-collect-log-payload: false`，网关只记录模型、token、费用、状态和耗时，不记录请求和响应；`cf-aig-metadata` 写明用途、标准和提示词版本，从不写学习者。
 
 **路由。** 每项标准和 S6 各有主路由和备用路由：供应商、模型和提示词版本。路由有草稿和上线两种状态。标准用它的键 `id@version` 命名（例如 `w4-topic-sentence@1`），所以标准的新版本需要自己的路由和校准。
 

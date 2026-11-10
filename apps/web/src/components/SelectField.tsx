@@ -32,6 +32,8 @@ export function SelectField(props: {
   defaultValue?: string;
   required?: boolean;
   disabled?: boolean;
+  /** onValueChange hears each choice, for a form whose other fields follow it. */
+  onValueChange?: (value: string) => void;
 }) {
   const id = useId();
   return (
@@ -47,6 +49,7 @@ export function SelectField(props: {
         disabled={props.disabled}
         items={props.options}
         defaultValue={props.defaultValue ?? null}
+        onValueChange={(value) => props.onValueChange?.(typeof value === "string" ? value : "")}
       >
         <Select.Trigger className={`${field} relative cursor-default pr-8 text-left font-normal data-[disabled]:opacity-60`}>
           <Select.Value placeholder={props.placeholder} className={(state) => (state.placeholder ? "text-muted" : "")} />

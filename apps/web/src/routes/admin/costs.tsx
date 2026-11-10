@@ -1,13 +1,14 @@
 import type { Price, Provider, ProviderSpend } from "@ga/proto/admin/v1/admin_pb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { SelectField } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
+import { catalogModels, ModelOptions, useCatalog } from "../../lib/catalog.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { errorText } from "../../lib/privacy-text.ts";
 import { admin } from "../../lib/rpc.ts";
@@ -61,6 +62,23 @@ function PriceForm({ providers, price, onDone }: { providers: readonly Provider[
   const { m, locale } = useI18n();
   const t = useAdminText();
   const qc = useQueryClient();
+  const catalog = useCatalog();
+  const [providerId, setProviderId] = useState(price?.providerId ?? "");
+  const models = catalogModels(catalog.data?.providers, providers, providerId);
+  const [model, setModel] = useState(price?.model ?? "");
+  const [input, setInput] = useState(price ? String(price.inputPerMillion) : "");
+  const [output, setOutput] = useState(price ? String(price.outputPerMillion) : "");
+  const [filled, setFilled] = useState(false);
+  const listId = useId();
+  /** chooseModel fills a new price from the vendor's list price, which the administrator then corrects to what they pay. */
+  function chooseModel(id: string) {
+    setModel(id);
+    const known = models.find((x) => x.id === id);
+    if (price || !known) return;
+    setInput(String(known.inputPerMillion));
+    setOutput(String(known.outputPerMillion));
+    setFilled(true);
+  }
   const save = useMutation({
     mutationFn: (form: FormData) =>
       admin.savePrice({
@@ -91,23 +109,54 @@ function PriceForm({ providers, price, onDone }: { providers: readonly Provider[
           defaultValue={price?.providerId}
           disabled={!!price}
           options={providers.filter((p) => p.kind === "model").map((p) => ({ value: p.id, label: p.name }))}
+          onValueChange={setProviderId}
         />
         {price && <input type="hidden" name="provider" value={price.providerId} />}
       </div>
       <label className="block space-y-1.5 text-sm font-medium">
         <span>{t.model}</span>
-        <input name="model" required defaultValue={price?.model} readOnly={!!price} autoComplete="off" className={field} />
+        <input
+          name="model"
+          required
+          value={model}
+          onChange={(e) => chooseModel(e.target.value)}
+          readOnly={!!price}
+          list={!price && models.length > 0 ? listId : undefined}
+          autoComplete="off"
+          className={field}
+        />
+        {!price && models.length > 0 && <span className="block text-xs font-normal text-muted">{t.modelHint}</span>}
+        <ModelOptions id={listId} models={models} />
       </label>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.inputPrice}</span>
-          <input name="input" type="number" required min="0" step="any" defaultValue={price?.inputPerMillion} className={field} />
+          <input
+            name="input"
+            type="number"
+            required
+            min="0"
+            step="any"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className={field}
+          />
         </label>
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.outputPrice}</span>
-          <input name="output" type="number" required min="0" step="any" defaultValue={price?.outputPerMillion} className={field} />
+          <input
+            name="output"
+            type="number"
+            required
+            min="0"
+            step="any"
+            value={output}
+            onChange={(e) => setOutput(e.target.value)}
+            className={field}
+          />
         </label>
       </div>
+      {filled && <p className="text-xs text-muted">{t.priceFilled}</p>}
       {save.isError && <ErrorNote message={errorText(save.error, locale, m.error)} />}
       <div className="flex gap-2">
         <Button type="submit" disabled={save.isPending}>

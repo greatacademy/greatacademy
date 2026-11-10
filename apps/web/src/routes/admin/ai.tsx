@@ -1,13 +1,14 @@
 import type { Route as AiRoute, Provider } from "@ga/proto/admin/v1/admin_pb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { SelectField } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
+import { catalogModels, ModelOptions, useCatalog } from "../../lib/catalog.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { errorText } from "../../lib/privacy-text.ts";
 import { admin } from "../../lib/rpc.ts";
@@ -25,6 +26,9 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
   const { m, locale } = useI18n();
   const t = useAdminText();
   const qc = useQueryClient();
+  const catalog = useCatalog();
+  const [picked, setPicked] = useState(provider ? provider.catalog : undefined);
+  const vendor = catalog.data?.providers.find((c) => c.id === picked);
   const save = useMutation({
     mutationFn: (form: FormData) =>
       admin.saveProvider({
@@ -32,6 +36,7 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
           id: provider?.id ?? "",
           name: String(form.get("name")),
           kind: String(form.get("kind")),
+          catalog: picked ?? "",
           api: String(form.get("api")),
           baseUrl: String(form.get("baseUrl")),
           region: String(form.get("region")),
@@ -50,51 +55,92 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
     e.preventDefault();
     save.mutate(new FormData(e.currentTarget));
   }
+  const CUSTOM = "custom";
+  // A new vendor starts with a choice from the catalog; the fields below appear once it is made.
+  if (catalog.isPending) return <Spinner label={m.loading} />;
+  const options = [
+    ...(catalog.data?.providers ?? []).map((c) => ({ value: c.id, label: c.name })),
+    { value: CUSTOM, label: t.customVendor },
+  ];
   return (
     <form onSubmit={submit} className="space-y-3">
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.name}</span>
-        <input name="name" required defaultValue={provider?.name} className={field} />
-      </label>
-      <SelectField
-        label={t.kind}
-        name="kind"
-        required
-        defaultValue={provider?.kind ?? "model"}
-        options={Object.entries(t.kinds).map(([value, label]) => ({ value, label }))}
-      />
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.api}</span>
-        <input name="api" required defaultValue={provider?.api} autoComplete="off" className={field} />
-      </label>
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.baseUrl}</span>
-        <input name="baseUrl" type="url" defaultValue={provider?.baseUrl} autoComplete="off" className={field} />
-      </label>
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.region}</span>
-        <input name="region" defaultValue={provider?.region} autoComplete="off" className={field} />
-      </label>
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.apiKey}</span>
-        <input name="apiKey" type="password" autoComplete="new-password" className={field} />
-        <span className="block text-xs font-normal text-muted">{t.apiKeyHint}</span>
-      </label>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.dailyBudget}</span>
-          <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
-        </label>
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.monthlyBudget}</span>
-          <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
-        </label>
+      <div className="space-y-1.5">
+        <SelectField
+          label={t.vendor}
+          name="vendor"
+          required
+          placeholder={t.chooseProvider}
+          defaultValue={picked === undefined ? undefined : picked || CUSTOM}
+          disabled={!!provider}
+          options={options}
+          onValueChange={(v) => setPicked(v === CUSTOM ? "" : v)}
+        />
+        {!provider && <p className="text-xs text-muted">{t.vendorHint}</p>}
       </div>
-      <p className="text-xs text-muted">{t.budgetHint}</p>
-      <label className="flex items-center gap-2 text-sm">
-        <input name="enabled" type="checkbox" defaultChecked={provider?.enabled} />
-        {t.enabled}
-      </label>
+      {picked !== undefined && (
+        <div key={picked} className="space-y-3">
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t.name}</span>
+            <input name="name" required defaultValue={provider?.name ?? vendor?.name} className={field} />
+          </label>
+          {vendor ? (
+            <>
+              <input type="hidden" name="kind" value="model" />
+              <input type="hidden" name="api" value={vendor.api} />
+              <p className="text-sm text-muted">{t.apiOf(vendor.api)}</p>
+            </>
+          ) : (
+            <>
+              <SelectField
+                label={t.kind}
+                name="kind"
+                required
+                defaultValue={provider?.kind ?? "model"}
+                options={Object.entries(t.kinds).map(([value, label]) => ({ value, label }))}
+              />
+              <label className="block space-y-1.5 text-sm font-medium">
+                <span>{t.api}</span>
+                <input name="api" required defaultValue={provider?.api} autoComplete="off" className={field} />
+              </label>
+            </>
+          )}
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t.baseUrl}</span>
+            <input
+              name="baseUrl"
+              type="url"
+              defaultValue={provider ? provider.baseUrl : vendor?.baseUrl}
+              placeholder={vendor?.baseUrl}
+              autoComplete="off"
+              className={field}
+            />
+          </label>
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t.region}</span>
+            <input name="region" defaultValue={provider?.region} autoComplete="off" className={field} />
+          </label>
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t.apiKey}</span>
+            <input name="apiKey" type="password" autoComplete="new-password" className={field} />
+            <span className="block text-xs font-normal text-muted">{t.apiKeyHint}</span>
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{t.dailyBudget}</span>
+              <input name="dailyBudget" type="number" min="0" step="0.01" defaultValue={provider?.dailyBudget} className={field} />
+            </label>
+            <label className="block space-y-1.5 text-sm font-medium">
+              <span>{t.monthlyBudget}</span>
+              <input name="monthlyBudget" type="number" min="0" step="0.01" defaultValue={provider?.monthlyBudget} className={field} />
+            </label>
+          </div>
+          <p className="text-xs text-muted">{t.budgetHint}</p>
+          <label className="flex items-center gap-2 text-sm">
+            <input name="enabled" type="checkbox" defaultChecked={provider?.enabled} />
+            {t.enabled}
+          </label>
+        </div>
+      )}
       {save.isError && <ErrorNote message={errorText(save.error, locale, m.error)} />}
       <div className="flex gap-2">
         <Button type="submit" disabled={save.isPending}>
@@ -158,6 +204,12 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
   const t = useAdminText();
   const qc = useQueryClient();
   const [draftNote, setDraftNote] = useState(false);
+  const catalog = useCatalog();
+  const [providerId, setProviderId] = useState(route?.providerId ?? "");
+  const models = catalogModels(catalog.data?.providers, providers, providerId);
+  const [modelId, setModelId] = useState(route?.model ?? "");
+  const known = models.find((x) => x.id === modelId);
+  const listId = useId();
   const save = useMutation({
     mutationFn: (form: FormData) => {
       const live = form.get("live") === "on";
@@ -218,11 +270,26 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
         placeholder={t.chooseProvider}
         defaultValue={route?.providerId}
         options={providers.map((p) => ({ value: p.id, label: p.name }))}
+        onValueChange={setProviderId}
       />
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.model}</span>
-          <input name="model" required defaultValue={route?.model} autoComplete="off" className={field} />
+          <input
+            name="model"
+            required
+            value={modelId}
+            onChange={(e) => setModelId(e.target.value)}
+            list={models.length > 0 ? listId : undefined}
+            autoComplete="off"
+            className={field}
+          />
+          {models.length > 0 && (
+            <span className="block text-xs font-normal text-muted">
+              {known ? t.listPrice(usd(known.inputPerMillion), usd(known.outputPerMillion)) : t.modelHint}
+            </span>
+          )}
+          <ModelOptions id={listId} models={models} />
         </label>
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.promptVersion}</span>
