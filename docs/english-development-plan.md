@@ -13,12 +13,12 @@ This document turns the design in [English Curriculum](english-curriculum.md) in
 | 0 Preparation | Decisions, reviewers and a deployed platform | Reviewers, legal advice | Gate G0 |
 | 1 First slice | Grammar, sentence writing and words for grades 3 to 8, judged by rules | Pilot learners | Gate G1 |
 | 2 Reading and writing | Graded reading, knowledge units, paragraphs and essays judged by AI | Human raters, model keys | Gate G2 |
-| 3 Foreign-language courses | A1 to B1, audio, recording, S1 to S4 | Speech vendors, recordings scored by people | Gate G3 |
+| 3 Level courses | A1 and A2 by themes with all four skills, then B1; audio, recording, S1 to S4 | Speech vendors, recordings scored by people | Gate G3 |
 | 4 Conversation and both ends | S5 and S6 on the voice service, phonics, college writing, exam courses | The Kubernetes cluster | Each course meets its criteria |
 
 ```text
 G0 ─► E1 first slice ─► G1 ─┬─► E2 reading ──────────┐
-                            ├─► E3 AI writing ───────┴─► G2 ─► E4 foreign-language ─► G3 ─┬─► E5 conversation
+                            ├─► E3 AI writing ───────┴─► G2 ─► E4 level courses ────► G3 ─┬─► E5 conversation
                             │                                                             ├─► E6 phonics
                             └── P6 mobile task players (needed by E4.7)                   └─► E7 college and exams
 ```
@@ -184,9 +184,11 @@ W6 belongs to E7.
 3. The cost per active learner per month is measured and acceptable.
 4. Learners improve on an outside writing test scored blind by people.
 
-## 5. Stage 3: Foreign-Language Courses
+## 5. Stage 3: Level Courses
 
-### E4. A1 to B1, with Listening and S1 to S4 (L)
+### E4. A1 to B1 by Themes, with Listening and S1 to S4 (L)
+
+The courses are built by level, in units on themes, with every skill learned together ([§6 of the design](english-curriculum.md#6-courses)). E4.8 to E4.10 need neither audio nor recording, so they start at once, alongside E2 and E3; listening and speaking join each unit as E4.3 and E4.7 land.
 
 | Id | Work | Files | Done when |
 | :--- | :--- | :--- | :--- |
@@ -197,8 +199,14 @@ W6 belongs to E7.
 | E4.5 | Speech interface behind `libs/judge`; a test of each speech-to-text service with 200 recordings of grammatical errors, for silent correction | `libs/judge`, `tools/calibrate` | The S4 service is chosen, or S4 is cut if none preserves errors |
 | E4.6 | Pronunciation comparison of [§13.2 of the design](english-curriculum.md#132-recorded-speech): 200 to 300 clips (*starting*) rated by people, including Chinese first-language speakers, other accents and children, whose clips need the separate `research` consent of [Minors' Data](minors-data.md#9-text-and-speech) | `tools/calibrate` | A vendor is chosen, or target-word recognition replaces it for S2 |
 | E4.7 | S2, S3 and S4 with low-confidence retries, on the web, then on mobile once P6 task players exist, using native recording | `apps/web`, `apps/nsh` | Low confidence asks for another recording and counts no failure, tested for each level |
-| E4.8 | Courses in order A1, A2, B1, with the topics for speakers of Chinese (articles, tense, plurals, th, r and l) and practice balanced across the four strands | `content/english` | Each course compiles, is reviewed, and has time balanced across strands in simulation |
-| E4.9 | Pilot of A1 and A2 with Chinese-speaking adults and other first languages, using an outside listening and speaking test | Team | Gate G3 |
+| E4.8 | Themed units and the strand of each topic in the content model, checked by the compiler | `libs/content`, `docs/content.md` | A unit without a theme, or a topic without a strand, fails to compile |
+| E4.9 | A1 and A2 in themed units: each unit a batch of words, one or two grammar points, passages and writing from sentences to a paragraph; the topics already built regrouped by id, new ones added for each theme, with the topics for speakers of Chinese (articles, tense, plurals, th, r and l) | `content/english` | Each course compiles and is reviewed, and every unit has words, grammar, reading and writing |
+| E4.10 | The skill courses retire: not recommended to new learners once A1 ships, and removed from the catalog once level courses hold all their topics | `content/english`, `apps/web`, `apps/nsh` | A learner of a retired course goes on in a level course with the same topics learned |
+| E4.11 | Listening (S1) and speaking (S2 to S4) in every unit of A1 and A2 | `content/english` | Every unit has listening and speaking topics that pass sampling |
+| E4.12 | The conversation as a unit's last task: prerequisites on the unit's topics, scheduled under Next once its rubric passes calibration (E5.12) | `libs/content`, `libs/engine`, `libs/api`, `apps/web`, `apps/nsh` | A learner who has learned a unit's topics sees its conversation under Next, and one without a microphone skips it with nothing lost |
+| E4.13 | Balance across strands: simulated students measure the time each strand gets in A1 and A2; a target share per group of topics enters the engine only if a strand drifts more than 10 points from its share (*starting*) | `tools/simulate`, `libs/engine`, `docs/learning-engine.md` | Each strand stays within 10 points of its share in simulation, with or without the parameter |
+| E4.14 | B1 on the same plan | `content/english` | The course compiles, is reviewed, and is balanced in simulation |
+| E4.15 | Pilot of A1 and A2 with Chinese-speaking adults and other first languages, using an outside listening and speaking test | Team | Gate G3 |
 
 **Gate G3.** Learners improve on the outside test, intelligible accented speech is rarely rejected (under 5%, *starting*), and legal review of recordings is complete in each market served. C1 and C2 then merge into the native courses as the design says.
 

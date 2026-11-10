@@ -2,18 +2,19 @@
 
 > English | [简体中文](english-curriculum.zh-CN.md)
 
-This document specifies the design of the English subject: its knowledge graph, its courses for native and foreign-language learners, and how it teaches and assesses reading, writing and speaking. It applies the method of [The Math Academy Way](the-math-academy-way.md) and runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md). The first slice of §11 is implemented; §12 lists the order of work, and [English Development Plan](english-development-plan.md) breaks it into milestones.
+This document specifies the design of the English subject: its knowledge graph, its courses by level for foreign-language and native learners, in which listening, speaking, reading and writing are learned together in units built on themes, and how it teaches and assesses each skill. It applies the method of [The Math Academy Way](the-math-academy-way.md) and runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md). The first slice of §11 is implemented; §12 lists the order of work, and [English Development Plan](english-development-plan.md) breaks it into milestones.
 
 ---
 
 ## 1. Principles
 
 1. **One subject, one graph.** Native and foreign-language learners share one knowledge graph. They differ by course: each course is a view over the graph with its own foundations and mastery floor ([Content §6](content.md#6-courses)).
-2. **Native learners come first.** The design covers both audiences in full, and native language arts sets the priority of the work and the top of the curriculum. Foreign-language courses merge into the native courses at the upper levels.
-3. **Decompose before assessing.** A large skill such as writing an essay becomes hard to judge only when it is assessed whole. Most practice happens on small skills that can be judged reliably.
-4. **Deterministic judgment wherever possible.** Rules judge what rules can judge. AI judges only what they cannot, and only after calibration against people (§8.3).
-5. **Volume is part of the curriculum.** Language ability and reading comprehension also depend on large amounts of reading, listening and knowledge. Mastery of topics does not replace them (§5).
-6. **Never lower the bar.** Feedback points at a problem and does not fix it for the learner. Speaking is judged by intelligibility, never by accent.
+2. **Courses follow levels, not skills.** A course is a level, such as A1 or grades 3 to 5, and teaches every skill of that level at once, as a mathematics course teaches algebra and geometry in the same weeks. Its units are themes; its order comes from the graph (§6).
+3. **Both audiences, foreign-language learners first.** The design covers both audiences in full. Foreign-language courses come first in the order of work, because many first learners speak Chinese; native language arts sets the top of the curriculum, and the foreign-language courses merge into the native courses at C1.
+4. **Decompose before assessing.** A large skill such as writing an essay becomes hard to judge only when it is assessed whole. Most practice happens on small skills that can be judged reliably.
+5. **Deterministic judgment wherever possible.** Rules judge what rules can judge. AI judges only what they cannot, and only after calibration against people (§8.3).
+6. **Volume is part of the curriculum.** Language ability and reading comprehension also depend on large amounts of reading, listening and knowledge. Mastery of topics does not replace them (§5).
+7. **Never lower the bar.** Feedback points at a problem and does not fix it for the learner. Speaking is judged by intelligibility, never by accent.
 
 ## 2. What Carries Over from Mathematics
 
@@ -72,7 +73,41 @@ Comprehension checks draw on many passages, because a passage read before no lon
 
 ## 6. Courses
 
-### 6.1 Native Courses
+A course is a level. Each one teaches vocabulary, grammar, listening, speaking, reading and writing together, because a learner uses them together: a word heard in a story is read, said and written in the same week. Courses split by skill would have a learner finish grammar before reading, which is not how anyone learns a language. Mathematics works the same way: a grade's course teaches number, algebra and geometry side by side.
+
+### 6.1 Units Are Themes
+
+A course's units are themes: the library, animals or the weather for beginners, and knowledge units such as ancient Egypt or the water cycle for older native learners (§5). A unit holds:
+
+| Part | In a unit on the library | Judged by |
+| :--- | :--- | :--- |
+| Words | A batch of 8 to 12 words: borrow, return, shelf, card, due (§4) | Rules |
+| Grammar | One or two points the theme uses: questions with can, the simple past | Rules |
+| Reading | Graded passages on the theme (§5) | Rules |
+| Listening | Short dialogues and announcements on the theme, with a choice (S1) | Rules |
+| Writing | From sentences to a paragraph on the theme (§8) | Rules, then AI |
+| Speaking | Saying the unit's words and sentences (S2 to S4) | Speech services |
+| Conversation | A spoken scene that uses the unit's words and patterns, such as `library-help-desk` (§6.5) | AI against a rubric |
+
+Themes wrap the content; they do not set the order of learning. Every part is a topic or task with its own prerequisites in the graph, and the engine picks from the frontier as in mathematics, so a learner usually works in two or three units at once and the strands interleave: a lesson on a grammar point, a review of last week's words, a passage, a sentence to write. A topic has one place in the graph however many courses show it; a unit groups it for display and decides which theme its examples and passages use.
+
+### 6.2 Foreign-Language Courses
+
+Levels follow the CEFR, whose levels are widely used by tests and textbooks. These courses come first in the order of work (§12).
+
+| Course | Focus |
+| :--- | :--- |
+| Pre-A1 | Letters and sounds, the first hundred words, classroom phrases, a large amount of listening |
+| A1 | Everyday themes such as family, school, food and the library; the present, questions, simple sentences and short messages |
+| A2 | The past and the future, comparisons, short stories and letters, describing and explaining |
+| B1 | Authentic texts, complex sentences, paragraphs, opinions, longer conversations |
+| B2 | Argument and discussion, essays, fluent reading of general texts |
+| C1 to C2 | **Merge with the native secondary and college courses** |
+| Exam courses | IELTS, TOEFL, Cambridge, Gaokao: practice-only courses over topics already in the graph |
+
+Practice in these courses follows Nation's four strands, in roughly equal time: meaning-focused input, meaning-focused output, language-focused learning and fluency development. Without this balance a course turns into grammar and word lists (§6.4).
+
+### 6.3 Native Courses
 
 | Course | Focus |
 | :--- | :--- |
@@ -82,19 +117,17 @@ Comprehension checks draw on many passages, because a passage read before no lon
 | Grades 9 to 12 | Rhetoric, literature, academic writing, college admission and advanced placement exams |
 | College and beyond | Research writing, critical reading, professional writing, style |
 
-### 6.2 Foreign-Language Courses
+Native courses are built the same way: a grade band's units are knowledge units and genres, and each unit reads, discusses and writes about its theme. The focus column says what weighs most in a band, not what it teaches alone.
 
-Levels follow the CEFR, whose levels are widely used by tests and textbooks.
+### 6.4 Balance Across Strands
 
-| Course | Focus |
-| :--- | :--- |
-| Pre-A1 to A2 | Letters and sounds, high-frequency words, basic grammar, a large amount of listening |
-| B1 to B2 | Authentic texts, complex sentences, paragraph writing, discussion |
-| C1 to C2 | **Merge with the native secondary and college courses** |
-| Exam courses | IELTS, TOEFL, Cambridge, Gaokao: practice-only courses over topics already in the graph |
+The frontier decides what may be learned; within it, the engine prefers what unlocks most and reviews what is due. That alone can drift toward the strands with the most topics, usually grammar and words. A course may therefore declare a target share of time for groups of its topics, such as Nation's four strands, and the engine leans its choice toward the group furthest below its share. The parameter is subject-agnostic: it names groups of topics, not skills. Whether it is needed, and how strongly it leans, are decided with simulated students before it is adopted ([Learning Engine](learning-engine.md)).
 
-Practice in these courses follows Nation's four strands, in roughly equal time: meaning-focused input, meaning-focused output, language-focused learning and fluency development. Without this balance a course turns into grammar and word lists.
+### 6.5 Conversation Closes a Unit
 
+A unit's last task is a conversation with the AI tutor that needs the unit's words and patterns, such as `library-help-desk` at the end of a unit on the library. Its prerequisites are the unit's topics, so once they are learned it appears under Next like any other task, not as a separate offer. It is done when the learner meets its rubric (S6, §9.1), and earns XP for its time. Until its rubric passes calibration it stays outside the engine and the learner may choose it. A learner without a microphone, or whom no route may serve, skips it and loses nothing in the graph.
+
+### 6.6 How the Audiences Differ
 ### 6.3 How the Audiences Differ
 
 | | Native learners | Foreign-language learners |
@@ -112,6 +145,8 @@ The core stays subject-agnostic. `libs/subject-english` holds the checkers and `
 - **Audience.** A knowledge point can hold examples for different audiences, so that an adult beginner does not read sentences written for an eight-year-old.
 - **Item banks.** English cannot be generated from random numbers as mathematics can. A generator picks from hand-written items by seed, and may vary them by template. It stays deterministic, lists wrong responses and passes `sampleGenerators`.
 - **Audio.** Prompts can play audio, and responses can be recordings.
+- **Themed units.** A course's units carry a theme, and list the passages, listening and conversation that use it (§6.1).
+- **Strands.** Each topic names its strand, so that a course can be reviewed and balanced across strands (§6.4).
 
 ## 8. Writing
 
@@ -166,7 +201,7 @@ Foreign-language courses start early and concentrate on S1 to S4, which build au
 - **Low confidence is never a failure.** Speech systems can be inaccurate for children and for less common accents. When confidence is low, the learner is asked to record again and no failure is counted.
 - **Technology never blocks learning.** A learner without a microphone or in a noisy place can skip speaking. Reading and writing topics have no prerequisites in speaking.
 - **Privacy.** Learners include minors. By default only the transcript and scores are kept, not the recording. This requires legal review before launch; the mechanism is in [Minors' Data](minors-data.md).
-- **AI conversation is application, not instruction.** It motivates, but progress in it is hard to measure, so it does not replace S1 to S5.
+- **AI conversation applies; it does not teach.** It closes a unit by using what the unit taught (§6.5). Progress in it is hard to measure, so it does not replace S1 to S5.
 
 ## 10. Diagnostic and Pilot
 
@@ -236,19 +271,22 @@ The course `english-grammar-writing` has since added eight topics judged by rule
 
 A second course, `english-reading-comprehension` (Reading for Meaning, grades 3 to 5), teaches the reading strand of §3 with 15 topics judged by rules, each item a short original text with a choice: main ideas, summaries and text features; sequence, cause and effect, compare and contrast and text structures; inferences, fact and opinion and the author's purpose; point of view, characters and the lesson of a story; similes, metaphors and idioms. Its outline is [docs/english-courses/english-reading-comprehension.md](english-courses/english-reading-comprehension.md). Only `point-of-view` reaches into the first course, through `nouns-and-pronouns`. A third course, `english-literature-argument` (Literature and Argument, grades 6 to 8), builds on it with 9 such topics: personification and hyperbole, sound devices and rhyme scheme, plot and conflict, theme, and tone and mood; then claims, evidence, reasoning, and counterclaims and rebuttals. Five more teach close reading: narrators and what they know, symbolism, irony, foreshadowing and flashback, and citing textual evidence. Seven topics judged by a model follow, one move of an essay each (§8.3): a thesis statement, an outline, a body paragraph with evidence from a source, a counterclaim paragraph, introductions and conclusions, revising a draft, and a paragraph of literary analysis. A whole essay, judged after the session ends, comes later. Its outline is [docs/english-courses/english-literature-argument.md](english-courses/english-literature-argument.md). A fourth course, `english-rhetoric-composition` (Rhetoric and Composition, grades 9 to 12), builds on the third with 8 topics judged by rules: the rhetorical situation, ethos, pathos and logos, rhetorical devices, logical fallacies and evaluating sources; characterization, allusion, and paradox and oxymoron. Two judged topics close it: a rhetorical analysis and a synthesis of two sources. Its outline is [docs/english-courses/english-rhetoric-composition.md](english-courses/english-rhetoric-composition.md).
 
+**From skill courses to level courses.** These four courses were built by skill, which this design no longer does (§6). Their topics keep their ids and places in the graph, and are regrouped into the level courses: the grammar, words and sentence writing into A1 to B1 and grades 3 to 5, the reading topics into grades 3 to 5 and B1, and the literature, argument and rhetoric into grades 6 to 12 and B2. The four courses are no longer recommended to new learners, and each retires once the level courses that replace it ship. Progress is kept per topic, so a learner who moves to a level course loses nothing.
+
 ## 12. Order of Work
 
 1. **First slice** (§11).
 2. **Reading and knowledge:** graded reading and knowledge units, then AI-judged paragraphs and essays.
-3. **Foreign-language courses:** A1 to B1, with listening and S1 to S4.
-4. **Conversation and both ends:** S5 and S6 on the voice service; phonics below; college writing and exam courses above.
+3. **A1 and A2 by themes:** units on everyday themes that regroup the topics already built and add words, grammar, passages and writing for each theme. No listening or speaking content exists yet, so the first versions are strongest in reading, writing, words and grammar; each unit gains listening (S1) and speaking (S2 to S4) as audio and recording arrive, and its conversation once rubrics pass calibration. The skill courses then retire (§11).
+4. **B1, B2 and the native grade bands,** built the same way.
+5. **Conversation and both ends:** S5 and S6 on the voice service; phonics below; college writing and exam courses above.
 
 | Change | Scope |
 | :--- | :--- |
-| Content model | Language of explanation, audience, audio, reading tasks |
+| Content model | Language of explanation, audience, audio, reading tasks, themed units, the strand of each topic |
 | AI judgment | An asynchronous service; verdicts stored in events (§13.1) |
 | Speech | Recording in the clients; speech services on the server (§13.2); a voice service on Kubernetes for conversation (§13.3) |
-| Engine | No change to the frontier, implicit repetition, reviews, XP or quizzes |
+| Engine | A calibrated conversation becomes a task under Next; balance across strands only if simulation shows it is needed (§6.4); no change to the frontier, implicit repetition, reviews, XP or quizzes |
 
 ## 13. Technology and Deployment
 
