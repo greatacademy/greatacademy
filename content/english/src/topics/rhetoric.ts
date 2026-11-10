@@ -2,6 +2,19 @@
 
 import { type CriterionSpec, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, criterionById, point, type WritingItem, writingGenerator } from "@ga/subject-english";
+import {
+  allusionMore,
+  appealMore,
+  audienceMore,
+  characterizationMore,
+  deviceMore,
+  fallacyMore,
+  paradoxMore,
+  purposeMore,
+  rhetoricalAnalysisMore,
+  sourceMore,
+  synthesisMore,
+} from "./rhetoric-more.ts";
 
 type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
@@ -91,6 +104,7 @@ const audienceBank: readonly ChoiceItem[] = [
     "children at a beach",
     ["the lifeguards on duty", "parents who cannot swim"],
   ],
+  ...audienceMore,
 ];
 
 const purposeBank: readonly ChoiceItem[] = [
@@ -134,6 +148,7 @@ const purposeBank: readonly ChoiceItem[] = [
     "to entertain readers",
     ["to inform readers about insects", "to persuade readers to own a cat"],
   ],
+  ...purposeMore,
 ];
 
 // Appeals.
@@ -148,6 +163,7 @@ const appealBank: readonly ChoiceItem[] = [
   ["Since every study of the program shows higher reading scores, the program works.", "logos", ["pathos", "ethos"]],
   ["Three Nobel Prize winners have signed this letter supporting the research.", "ethos", ["pathos", "logos"]],
   ["Imagine the joy on your daughter's face when she sees the park for the first time.", "pathos", ["ethos", "logos"]],
+  ...appealMore,
 ];
 
 const appealWhy: Readonly<Record<string, readonly [string, string]>> = {
@@ -190,6 +206,7 @@ const deviceBank: readonly ChoiceItem[] = [
   ["Many are called, but few are chosen.", "antithesis", ["rhetorical question", "anaphora"]],
   ["With courage we began, with courage we struggled, and with courage we will finish.", "anaphora", ["antithesis", "rhetorical question"]],
   ["How much longer must we wait for clean water?", "rhetorical question", ["anaphora", "antithesis"]],
+  ...deviceMore,
 ];
 
 const deviceWhy: Readonly<Record<string, readonly [string, string]>> = {
@@ -259,6 +276,7 @@ const fallacyBank: readonly ChoiceItem[] = [
     "straw man",
     ["slippery slope", "hasty generalization"],
   ],
+  ...fallacyMore,
 ];
 
 const fallacyWhy: Readonly<Record<string, readonly [string, string]>> = {
@@ -314,6 +332,7 @@ const characterizationBank: readonly ChoiceItem[] = [
   ['"Turn back?" the captain laughed, gripping the wheel as the waves rose. "Not while I\'m standing."', "indirect", ["direct"]],
   ["Jin counted his coins three times before handing over a single one, then asked for a receipt.", "indirect", ["direct"]],
   ["Everyone agreed that Jin was the most careful spender in town.", "direct", ["indirect"]],
+  ...characterizationMore,
 ];
 
 // Allusion.
@@ -359,6 +378,7 @@ const allusionBank: readonly ChoiceItem[] = [
     "He has made a choice that cannot be taken back.",
     ["He has gone on a long journey by boat.", "He has failed at his dream."],
   ],
+  ...allusionMore,
 ];
 
 // Paradox and oxymoron.
@@ -372,6 +392,7 @@ const paradoxBank: readonly ChoiceItem[] = [
   ["Less is more.", "paradox", ["oxymoron"]],
   ["They were living a lonely crowd of a life, surrounded by strangers.", "oxymoron", ["paradox"]],
   ["You must be cruel to be kind.", "paradox", ["oxymoron"]],
+  ...paradoxMore,
 ];
 
 const paradoxWhy: Readonly<Record<string, readonly [string, string]>> = {
@@ -436,6 +457,7 @@ const sourceBank: readonly ChoiceItem[] = [
     "A geological survey's report written by volcano scientists",
     ["A travel agency's page about visiting the volcano", "A novel set near the volcano"],
   ],
+  ...sourceMore,
 ];
 
 // Writing about rhetoric.
@@ -498,6 +520,7 @@ const rhetoricalAnalysisBank: readonly WritingItem[] = [
     model:
       'The writer persuades through a simple cost comparison that any family can follow. Setting "forty dollars a month" against a tank of gas that "costs more than that in a week" makes the bus seem obviously cheaper. The plain, numerical style suggests the writer is reasoning rather than selling. By adding that passes would "take cars off the road at the busiest hour," the writer gives a second benefit for readers who are not parents.',
   },
+  ...rhetoricalAnalysisMore,
 ];
 
 /** synthesisBank asks for a paragraph that brings two sources together in support of one claim. */
@@ -558,6 +581,7 @@ const synthesisBank: readonly WritingItem[] = [
     model:
       'Community service helps students grow and opens doors for their future. Source A finds that teenage volunteers "felt more connected to their communities," a sense of belonging that supports their well-being. Source B shows that this service is also noticed, since admissions officers "value applicants who have served others." The sources together show that service rewards students in the present and later on.',
   },
+  ...synthesisMore,
 ];
 
 /** rhetoricTopics are the topics of rhetoric, literature and composition for grades 9 to 12. */

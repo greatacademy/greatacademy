@@ -261,4 +261,186 @@ export const NATIVE_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the narrative tell the event the task gives, with a beginning and an ending that shows what it meant to the narrator?",
     quoteWhenMet: true,
   },
+  // Grades 9 to 12: a literary analysis essay.
+  {
+    id: "g912-litessay-thesis",
+    version: "1",
+    question:
+      "Does the essay state, near its start, a thesis that makes an arguable claim about the meaning of the story, not just a summary of what happens?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-litessay-evidence",
+    version: "1",
+    question: "Do the body paragraphs quote or closely cite specific words or details from the source to support the thesis?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-litessay-analysis",
+    version: "1",
+    question:
+      "Does the essay explain how each piece of evidence supports the thesis, rather than leaving the quotations to speak for themselves?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-litessay-structure",
+    version: "1",
+    question:
+      "Is the essay organized into an introduction, at least two body paragraphs with their own points, and a conclusion that returns to the thesis?",
+    quoteWhenMet: false,
+  },
+  // Grades 9 to 12: a scene of drama.
+  {
+    id: "g912-scene-format",
+    version: "1",
+    question: "Is the scene written in script form, with character names before their lines and at least one stage direction?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "g912-scene-conflict",
+    version: "1",
+    question: "Does the scene present a clear conflict between characters that is carried mainly by their dialogue?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-scene-character",
+    version: "1",
+    question: "Do the characters' words and actions reveal what they are like or what they want, without a narrator explaining it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-scene-shape",
+    version: "1",
+    question: "Does the scene build to a turning point or ending that changes the situation from where it began?",
+    quoteWhenMet: true,
+  },
+  // Grades 9 to 12: an argumentative essay.
+  {
+    id: "g912-argument-thesis",
+    version: "1",
+    question: "Does the essay state a clear, arguable position on the question in its introduction?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-argument-evidence",
+    version: "1",
+    question: "Do the body paragraphs support the position with specific reasons and evidence, such as facts or examples from the notes?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-argument-counterclaim",
+    version: "1",
+    question: "Does the essay fairly state an opposing view and answer it with a reasoned rebuttal?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-argument-structure",
+    version: "1",
+    question: "Is the essay organized into an introduction, body paragraphs and a conclusion, with transitions that connect the reasoning?",
+    quoteWhenMet: false,
+  },
+  // Grades 9 to 12: an explanatory essay.
+  {
+    id: "g912-explain-focus",
+    version: "1",
+    question: "Does the introduction state the topic and a controlling idea that the rest of the essay explains?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-explain-development",
+    version: "1",
+    question: "Does the essay develop the topic with relevant facts, definitions, examples or causes from the notes?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "g912-explain-organization",
+    version: "1",
+    question: "Are the paragraphs in a logical order, such as by cause and effect or by time, linked by transitions?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "g912-explain-objective",
+    version: "1",
+    question: "Does the essay keep an objective, informative tone without arguing for the writer's own opinion, and end with a conclusion?",
+    quoteWhenMet: false,
+  },
+  // Grades 9 to 12: an analysis of a poem.
+  {
+    id: "g912-poetry-claim",
+    version: "1",
+    question: "Does the essay make a clear claim about the poem's meaning or effect, beyond a summary of it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-poetry-quotes",
+    version: "1",
+    question: "Does the essay quote specific words or lines of the poem as evidence?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-poetry-craft",
+    version: "1",
+    question:
+      "Does the essay explain how at least one element of the poem's form or sound, such as its stanzas, line breaks, rhyme, meter, repetition or imagery, creates its meaning or effect?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-poetry-structure",
+    version: "1",
+    question: "Is the analysis organized into paragraphs with an introduction and a conclusion?",
+    quoteWhenMet: false,
+  },
+  // Grades 9 to 12: a personal essay.
+  {
+    id: "g912-personal-experience",
+    version: "1",
+    question: "Does the essay tell one specific experience with concrete details of what happened?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-personal-reflection",
+    version: "1",
+    question: "Does the essay reflect on what the experience meant or how it changed the writer, beyond telling what happened?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-personal-voice",
+    version: "1",
+    question:
+      "Is the essay written in the first person in an honest, individual voice, with vivid description or dialogue in at least one moment?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-personal-shape",
+    version: "1",
+    question: "Does the essay open in a way that draws the reader in and end in a way that closes the reflection?",
+    quoteWhenMet: true,
+  },
+  // Grades 9 to 12: a college application essay.
+  {
+    id: "g912-college-prompt",
+    version: "1",
+    question: "Does the essay answer the question the prompt asks?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "g912-college-specific",
+    version: "1",
+    question: "Is the essay built on specific moments, actions or examples from the writer's life rather than general statements?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-college-insight",
+    version: "1",
+    question:
+      "Does the essay show what the writer values, how they think or how they have grown, so that a reader learns something about them?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "g912-college-craft",
+    version: "1",
+    question:
+      "Does the essay have an engaging opening, keep one clear focus, and end with a conclusion that leaves the reader with a final insight?",
+    quoteWhenMet: true,
+  },
 ];

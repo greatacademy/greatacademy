@@ -27,6 +27,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
 | Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
+| Grades 9 to 12: 37 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
 | Course of B1 | Unit 1 done: 8 passages, 1 conversation |
@@ -162,3 +163,10 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `reported-speech` | `past-simple-irregular` | 0.2 | Reporting moves verbs into the past |
 | `writing-a-formal-email` | `writing-an-informal-email` | 0.3 | The same moves in another register |
 | `writing-an-article` | `writing-a-paragraph` | 0.3 | Its paragraphs keep the same structure |
+| The literary analysis essay of grades 9 to 12 | `writing-a-literary-analysis-paragraph`; introductions and conclusions | 0.4; 0.3 | The essay is built of those parts |
+| Writing a scene | point-of-view narrative; `punctuating-dialogue` | 0.3; 0.2 | A scene is narration and dialogue |
+| The argumentative essay | the rebuttal paragraph; introductions and conclusions | 0.4; 0.3 | The rebuttal is its central paragraph |
+| The explanatory essay | the explanatory paragraph; introductions and conclusions | 0.4; 0.3 | The same, for explanation |
+| Analyzing a poem | `responding-to-a-poem`; the literary analysis essay | 0.3 each | It is literary analysis of a poem |
+| The personal essay | point-of-view narrative; introductions and conclusions | 0.3; 0.2 | Narrative with reflection |
+| The application essay | the personal essay | 0.4 | It is a kind of personal essay |

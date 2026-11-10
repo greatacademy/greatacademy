@@ -21,6 +21,19 @@ import { readingSkillTopics68 } from "./grades-6-8/reading-skills.ts";
 import { turningPoints } from "./grades-6-8/reading-turning-points.ts";
 import { vocabulary68, wordTopics68 } from "./grades-6-8/words.ts";
 import { writingTopics68 } from "./grades-6-8/writing.ts";
+import { conversations912 } from "./grades-9-12/conversations.ts";
+import { course912 } from "./grades-9-12/course.ts";
+import { grammarTopics912 } from "./grades-9-12/grammar.ts";
+import { lexicon912 } from "./grades-9-12/lexicon.ts";
+import { aCenturyOfChange } from "./grades-9-12/reading-century.ts";
+import { essaysOfExperience } from "./grades-9-12/reading-essays.ts";
+import { rightsAndLaws } from "./grades-9-12/reading-law.ts";
+import { poemsAcrossTime } from "./grades-9-12/reading-poems.ts";
+import { scienceAndSociety } from "./grades-9-12/reading-science.ts";
+import { readingSkillTopics912 } from "./grades-9-12/reading-skills.ts";
+import { tragedyOnTheStage } from "./grades-9-12/reading-stage.ts";
+import { vocabulary912, wordTopics912 } from "./grades-9-12/words.ts";
+import { writingTopics912 } from "./grades-9-12/writing.ts";
 
 /** grades35 is the content of the grades 3 to 5 course. */
 const grades35: Pack = {
@@ -45,7 +58,15 @@ const grades68: Pack = {
 };
 
 /** grades912 is the content of the grades 9 to 12 course, with passages of 300 to 600 words. */
-const grades912: Pack = { ...emptyPack, passageWords: [300, 600] };
+const grades912: Pack = {
+  topics: [...wordTopics912, ...grammarTopics912, ...readingSkillTopics912, ...writingTopics912],
+  courses: [course912],
+  reading: [tragedyOnTheStage, essaysOfExperience, poemsAcrossTime, aCenturyOfChange, scienceAndSociety, rightsAndLaws],
+  conversations: conversations912,
+  lexicon: lexicon912,
+  vocabulary: vocabulary912,
+  passageWords: [300, 600],
+};
 
 /** college is the content of the college writing course, with passages of 500 to 900 words. */
 const college: Pack = { ...emptyPack, passageWords: [500, 900] };
