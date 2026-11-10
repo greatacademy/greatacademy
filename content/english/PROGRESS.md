@@ -33,6 +33,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
 | Course of B1 | Units 1 to 8 done: 64 passages, 8 conversations; units 9 to 12 not started |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
+| Topics of B2 | Units 1 to 3 done (39 topics); units 4 to 10 not started |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -189,3 +190,9 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `revising-for-clarity` | clear sentences; `cutting-wordiness` | 0.3; 0.2 | Revising applies both |
 | Memo and cover letter | the professional email | 0.3 each | The same workplace register |
 | The research proposal | the research question; the executive summary | 0.4; 0.2 | The proposal is built on its question |
+| `third-conditional` | `second-conditional`; `past-perfect` | 0.3; 0.4 | The result clause keeps *would*, and the *if* clause is a whole past perfect |
+| `passive-with-modals-and-perfect-forms` | `active-and-passive-voice`; `present-perfect-or-past-simple` | 0.4; 0.2 | The passive is its core, with *has/have been* |
+| `causative-have-and-get` | `active-and-passive-voice` | 0.2 | The participle carries a passive meaning |
+| `modals-of-deduction` | `may-might-and-could` | 0.3 | *might, may, could* are practiced again |
+| `past-modals` | `modals-of-deduction`; `present-perfect-or-past-simple` | 0.4; 0.1 | The same deductions with *have* and a participle |
+| `writing-a-report` | `summarizing-a-text`; `writing-a-formal-email` | 0.2 each | Findings are summarized in a formal register |

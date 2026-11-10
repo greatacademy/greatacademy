@@ -397,4 +397,39 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the review end by saying clearly whether the writer recommends it and to whom, or for what kind of person?",
     quoteWhenMet: true,
   },
+  // B2: shared by its formal texts.
+  {
+    id: "b2-neutral-register",
+    version: "1",
+    question:
+      "Is the text written in a neutral or formal register throughout, without contractions, slang or emotional language, using impersonal phrases where they suit, such as It was found that or It is recommended that?",
+    quoteWhenMet: false,
+  },
+  // B2: a report.
+  {
+    id: "b2-report-purpose",
+    version: "1",
+    question: "Does the report state in its opening section what it is about and why it was written, and who it is for?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-report-headings",
+    version: "1",
+    question:
+      "Is the report divided into sections with short headings, such as Introduction, Findings and Recommendations, each section dealing with one part of the subject?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b2-report-findings",
+    version: "1",
+    question:
+      "Does the report present what was found with specific facts, figures or examples, such as how many people said something, rather than only general statements?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b2-report-recommendations",
+    version: "1",
+    question: "Does the report end with clear, practical recommendations that follow from its findings?",
+    quoteWhenMet: true,
+  },
 ];

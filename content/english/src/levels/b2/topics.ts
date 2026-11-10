@@ -2,9 +2,14 @@
 
 import type { TopicDef } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
+import * as economy from "./economy.ts";
+import * as science from "./science.ts";
+import * as society from "./society.ts";
+
+const units = [society, economy, science];
 
 /** topics are the topics of B2. */
-export const topics: readonly TopicDef[] = [];
+export const topics: readonly TopicDef[] = units.flatMap((unit) => unit.topics);
 
 /** vocabulary are the words that the vocabulary topics of B2 teach. */
-export const vocabulary: readonly WordBatch[] = [];
+export const vocabulary: readonly WordBatch[] = units.flatMap((unit) => unit.vocabulary);
