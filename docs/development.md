@@ -58,6 +58,7 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
 | `voice` | `apps/voice` | The voice service for live conversation in English, in Python on Pipecat; tested with faked speech services and a faked web Worker (§7) |
 | `pilot` | `tools/pilot` | Pilot report for a course from a database: `DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i` ([Roadmap §3](roadmap.md#3-pilot)) |
+| `calibrate` | `tools/calibrate` | Calibration of one route on one criterion: `DATABASE_URL=… AI_KEYS_SECRET=… pnpm nx run calibrate:calibrate -- --criterion w4-topic-sentence@1 --provider <id> --model <model> --prompt writing-1 --set scored.jsonl`. Each line of the set is `{id, task: {prompt, modelAnswer, source?}, text, scores: {"<id@version>": [first, second]}}`, the two people's yes or no. It records the calibration, passed or not, and prints a report naming texts by id ([English Development Plan §4](english-development-plan.md#4-stage-2-reading-and-writing)) |
 
 The table grows with the repository; [Architecture §3](architecture.md#3-repository-structure) shows the target structure.
 

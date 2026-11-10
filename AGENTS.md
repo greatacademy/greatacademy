@@ -47,6 +47,7 @@ content/english/     English content
 tools/simulate/      Simulated students
 tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
+tools/calibrate/     Calibration of AI routes against texts scored by people
 ```
 
 ## Commands

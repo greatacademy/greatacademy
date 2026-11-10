@@ -81,6 +81,7 @@ content/english/      Authored English content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
+tools/calibrate/      Calibration: runs a route on texts scored by two people and records its agreement
 docs/                 Documents (English + Simplified Chinese)
 ```
 
@@ -102,6 +103,7 @@ apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
+tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
 apps/voice ╌╌► apps/web over HTTP (no package dependency)
 ```
 

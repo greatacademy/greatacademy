@@ -81,6 +81,7 @@ content/english/      编写的英语内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
+tools/calibrate/      校准：在两人评分的文本上运行一条路由，并记录它的一致性
 docs/                 文档（英文 + 简体中文）
 ```
 
@@ -102,6 +103,7 @@ apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
+tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
 apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 ```
 

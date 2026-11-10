@@ -1,0 +1,28 @@
+{
+  "name": "@ga/calibrate",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "calibrate": "mise exec -- node src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "calibrate"
+  },
+  "dependencies": {
+    "@ga/api": "workspace:*",
+    "@ga/db": "workspace:*",
+    "@ga/judge": "workspace:*",
+    "@ga/subject-english": "workspace:*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "1.5.0",
+    "@types/node": "26.6.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

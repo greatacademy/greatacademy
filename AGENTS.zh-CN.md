@@ -47,6 +47,7 @@ content/english/     英语内容
 tools/simulate/      模拟学生
 tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告
+tools/calibrate/     用人工评分的文本校准 AI 路由
 ```
 
 ## 命令
