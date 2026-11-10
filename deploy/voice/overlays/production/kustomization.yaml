@@ -1,7 +1,7 @@
 # Production. VOICE_SPEECH stays unconfigured, refusing sessions, until a speech provider is set up.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: voice
+namespace: ga-voice
 resources:
   - namespace.yaml
   - ../../base
@@ -19,7 +19,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/triggers/0/metadata/query
-        value: sum(voice_sessions_active{namespace="voice"})
+        value: sum(voice_sessions_active{namespace="ga-voice"})
       - op: replace
         path: /spec/minReplicaCount
         value: 2

@@ -2,7 +2,7 @@
 
 > [English](README.md) | 简体中文
 
-英语语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上的清单。它们是一个 Kustomize base 和两个 overlay：`test`（命名空间 `voice-test`）和 `production`（命名空间 `voice`）。
+英语语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上的清单。它们是一个 Kustomize base 和两个 overlay：`test`（命名空间 `ga-voice-test`）和 `production`（命名空间 `ga-voice`）。
 
 | 文件 | 内容 |
 | :--- | :--- |
@@ -50,9 +50,9 @@ mise run voice:push test
 Secret 手动创建，从不提交。每个命名空间：
 
 ```bash
-kubectl -n voice-test create secret generic voice-secrets --from-literal=VOICE_WORKER_CREDENTIAL=<credential>
-kubectl -n voice-test create secret generic cloudflared-token --from-literal=token=<tunnel token>
-kubectl -n voice-test create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=<github-user> --docker-password=<可读取 packages 的令牌>
+kubectl -n ga-voice-test create secret generic voice-secrets --from-literal=VOICE_WORKER_CREDENTIAL=<credential>
+kubectl -n ga-voice-test create secret generic cloudflared-token --from-literal=token=<tunnel token>
+kubectl -n ga-voice-test create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=<github-user> --docker-password=<可读取 packages 的令牌>
 ```
 
 credential 是 Web Worker 接受的、来自语音服务的凭据。每个命名空间有自己的远程管理 Tunnel，与集群中的另一个 Tunnel 分开：`greatacademy-voice-test` 通过指向该 Tunnel 的代理 CNAME，把 `voice-test.greatacademy.dev` 路由到 `http://voice:8080`。它用 `cf tunnels create --config-src cloudflare`、`cf tunnels config update` 和 `cf dns records create` 创建，令牌从 `cf tunnels token get` 直接通过管道写入 Secret，从未打印。生产环境以同样方式使用 `greatacademy-voice` 和 `voice.greatacademy.dev`。GHCR 的 package 是私有的，所以 pod 用 `ghcr` Secret 拉取镜像。语音主机名还要配置 WAF 和限流规则。

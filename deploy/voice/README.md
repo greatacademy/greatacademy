@@ -2,7 +2,7 @@
 
 > English | [简体中文](README.zh-CN.md)
 
-Manifests for the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)) on the Talos cluster in Hetzner Cloud's Hillsboro region. They are a Kustomize base and two overlays, `test` (namespace `voice-test`) and `production` (namespace `voice`).
+Manifests for the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)) on the Talos cluster in Hetzner Cloud's Hillsboro region. They are a Kustomize base and two overlays, `test` (namespace `ga-voice-test`) and `production` (namespace `ga-voice`).
 
 | File | Contents |
 | :--- | :--- |
@@ -50,9 +50,9 @@ It builds for `linux/amd64`, pushes `ghcr.io/greatacademy/voice:<commit>`, and p
 Secrets are created by hand and never committed. For each namespace:
 
 ```bash
-kubectl -n voice-test create secret generic voice-secrets --from-literal=VOICE_WORKER_CREDENTIAL=<credential>
-kubectl -n voice-test create secret generic cloudflared-token --from-literal=token=<tunnel token>
-kubectl -n voice-test create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=<github-user> --docker-password=<token that may read packages>
+kubectl -n ga-voice-test create secret generic voice-secrets --from-literal=VOICE_WORKER_CREDENTIAL=<credential>
+kubectl -n ga-voice-test create secret generic cloudflared-token --from-literal=token=<tunnel token>
+kubectl -n ga-voice-test create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=<github-user> --docker-password=<token that may read packages>
 ```
 
 The credential is the one the web Worker accepts from the voice service. Each namespace has its own remotely managed Tunnel, apart from the cluster's other Tunnel: `greatacademy-voice-test` routes `voice-test.greatacademy.dev` to `http://voice:8080`, through a proxied CNAME to the Tunnel. It was made with `cf tunnels create --config-src cloudflare`, `cf tunnels config update` and `cf dns records create`, and its token piped from `cf tunnels token get` into the Secret, never printed. Production gets `greatacademy-voice` and `voice.greatacademy.dev` the same way. The GHCR package is private, so pods pull it with the `ghcr` Secret. The voice hostname also gets WAF and rate limiting rules.

@@ -1,7 +1,7 @@
 # The test namespace: scripted speech (VOICE_SPEECH=fake), one to three pods, for checking a deploy end to end.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: voice-test
+namespace: ga-voice-test
 resources:
   - namespace.yaml
   - ../../base
@@ -19,7 +19,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/triggers/0/metadata/query
-        value: sum(voice_sessions_active{namespace="voice-test"})
+        value: sum(voice_sessions_active{namespace="ga-voice-test"})
       - op: replace
         path: /spec/minReplicaCount
         value: 1
