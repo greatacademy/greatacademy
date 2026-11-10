@@ -36,6 +36,7 @@ function subject(id: string, loads: string[]): SubjectGateway {
       mark: "T",
       hue: 200,
       courses: [{ id: `${id}-course`, title: manifest.title, description: manifest.title, buildsOn: [], topicCount: 0, xp: 0 }],
+      criteria: [],
     }),
     manifest: async () => {
       loads.push(id);

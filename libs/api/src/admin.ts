@@ -43,7 +43,7 @@ import {
   waitingForm,
   waitingVerifications,
 } from "@ga/db";
-import { catalogProviders, catalogVendor, redact, SUPPORTED_APIS } from "@ga/judge";
+import { catalogProviders, catalogVendor, criterionKey, PROMPTS, redact, SUPPORTED_APIS } from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
@@ -52,6 +52,7 @@ import { dbKey, userIdKey } from "./context.ts";
 import { ALARM_ACTION, monthStart, providerSpend } from "./costs.ts";
 import { AI_SCOPES, MARKETS, marketOf, missingLanguages } from "./markets.ts";
 import type { FormStore, Notify } from "./privacy.ts";
+import type { Registry } from "./registry.ts";
 import { RETENTION_ACTION } from "./retention.ts";
 import { encryptSecret } from "./secrets.ts";
 
@@ -63,6 +64,8 @@ export interface AdminDeps {
   readonly notify: Notify;
   /** aiKeysSecret encrypts vendors' API keys; the database never sees it. */
   readonly aiKeysSecret: string;
+  /** registry lists the subjects served, whose criteria a judgment route can name; without it none is offered. */
+  readonly registry?: Registry;
 }
 
 const STALE_WARNING = 30 * 24 * 3600_000;
@@ -73,14 +76,15 @@ const ROUTE_USES: readonly RouteUse[] = ["judgment", "conversation", "stt", "tts
 /** TEXT_USES are the uses served by a text model through pi-ai, with a prompt version. */
 const TEXT_USES: readonly RouteUse[] = ["judgment", "conversation"];
 
-/** TARGETS checks a route's target by use: a criterion key, a conversation's id, or a language tag. */
-const TARGETS: Record<RouteUse, RegExp> = {
-  judgment: /^[a-z0-9-]{1,64}(@[a-z0-9.-]{1,16})?$/,
-  conversation: /^[a-z0-9-]{1,64}$/,
-  stt: /^[a-z]{2,3}(-[A-Z]{2})?$/,
-  tts: /^[a-z]{2,3}(-[A-Z]{2})?$/,
-  pronunciation: /^[a-z]{2,3}(-[A-Z]{2})?$/,
-};
+/** SPEECH_LANGUAGES are the language tags a speech route can serve: a language alone, or with the accent heard and scored. */
+export const SPEECH_LANGUAGES: readonly string[] = ["en", "en-US", "en-GB", "en-AU", "en-CA"];
+
+/** targetValid checks a route's target by use: a criterion key, a conversation's id, or one of the speech languages. */
+function targetValid(use: RouteUse, target: string): boolean {
+  if (use === "judgment") return /^[a-z0-9-]{1,64}(@[a-z0-9.-]{1,16})?$/.test(target);
+  if (use === "conversation") return /^[a-z0-9-]{1,64}$/.test(target);
+  return SPEECH_LANGUAGES.includes(target);
+}
 
 /** routeName names a route in the log and the overview: its use, target and position. */
 const routeName = (r: { use: string; target: string; position: string }) => `${r.use}:${r.target}/${r.position}`;
@@ -278,6 +282,18 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       };
     },
 
+    async listRouteChoices(_req, ctx) {
+      await admin(ctx);
+      const listings = deps.registry?.listings ?? [];
+      return {
+        criteria: listings.flatMap((s) => s.criteria.map((c) => ({ key: criterionKey(c), subjectId: s.id, question: c.question }))),
+        promptVersions: Object.keys(PROMPTS),
+        languages: [...SPEECH_LANGUAGES],
+        // No conversation exists before S6 is built.
+        conversations: [],
+      };
+    },
+
     async saveProvider(req, ctx) {
       const { db, userId, at } = await admin(ctx);
       const p = req.provider;
@@ -349,7 +365,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const r = req.route;
       const use = ROUTE_USES.find((u) => u === r?.use);
       need(r && use, "a route needs a use");
-      need(TARGETS[use].test(r.target), use === "judgment" ? "a route needs a criterion (id@version)" : "a route needs a valid target");
+      need(targetValid(use, r.target), use === "judgment" ? "a route needs a criterion (id@version)" : "a route needs a valid target");
       need(r.position === "primary" || r.position === "backup", "a route is primary or backup");
       const position: RoutePosition = r.position;
       const text = TEXT_USES.includes(use);
@@ -363,6 +379,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         voice: use === "tts" ? r.voice.trim() : "",
       };
       need(fields.model && (!text || fields.promptVersion), text ? "a route needs a model and a prompt version" : "a route needs a model");
+      need(!text || PROMPTS[fields.promptVersion], "no such prompt version");
       const vendor = (await providers(db)).find((p) => p.id === r.providerId);
       need(vendor, "no such vendor");
       need(!text || vendor.api, "this vendor has no text API");

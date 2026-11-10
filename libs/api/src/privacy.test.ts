@@ -622,12 +622,23 @@ describe("the admin console", () => {
     );
   });
 
+  it("offers the prompt versions and speech languages a route can name, and refuses others", async () => {
+    const choices = await admin("root").listRouteChoices({});
+    expect(choices.promptVersions).toEqual(["writing-1"]);
+    expect(choices.languages).toContain("en-US");
+    const { id } = await admin("root").saveProvider({ provider: { name: "Vendor", api: "openai-completions", enabled: true } });
+    const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "x" };
+    expect(await code(admin("root").saveRoute({ route }))).toBe(Code.InvalidArgument);
+    const stt = { ...route, use: "stt", target: "fr", promptVersion: "" };
+    expect(await code(admin("root").saveRoute({ route: stt }))).toBe(Code.InvalidArgument);
+  });
+
   it("takes only a supported API, and a vendor without one serves no text use", async () => {
     expect(await code(admin("root").saveProvider({ provider: { name: "X", api: "x", enabled: false } }))).toBe(Code.InvalidArgument);
     const { id } = await admin("root").saveProvider({ provider: { name: "Voice", enabled: false } });
-    const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1" };
+    const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "writing-1" };
     expect(await code(admin("root").saveRoute({ route }))).toBe(Code.InvalidArgument);
-    const stt = { use: "stt", target: "en", position: "primary", providerId: id, model: "s1", promptVersion: "p1", voice: "v" };
+    const stt = { use: "stt", target: "en", position: "primary", providerId: id, model: "s1", promptVersion: "writing-1", voice: "v" };
     await admin("root").saveRoute({ route: stt });
     expect((await admin("root").listRoutes({})).routes).toMatchObject([
       { use: "stt", target: "en", model: "s1", promptVersion: "", voice: "", calibrated: false, live: false },
@@ -642,14 +653,22 @@ describe("the admin console", () => {
     const { id } = await admin("root").saveProvider({
       provider: { name: "Vendor", api: "openai-completions", enabled: true },
     });
-    const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true };
+    const route = {
+      use: "judgment",
+      target: "w1",
+      position: "primary",
+      providerId: id,
+      model: "m1",
+      promptVersion: "writing-1",
+      live: true,
+    };
     expect(await code(admin("root").saveRoute({ route }))).toBe(Code.FailedPrecondition);
     await admin("root").saveRoute({ route: { ...route, live: false } });
     await recordCalibration(db, {
       criterion: "w1",
       providerId: id,
       model: "m1",
-      promptVersion: "p1",
+      promptVersion: "writing-1",
       kappa: 0.8,
       humanKappa: 0.82,
       passed: true,
@@ -657,7 +676,7 @@ describe("the admin console", () => {
     });
     expect((await admin("root").saveRoute({ route })).live).toBe(true);
     expect((await admin("root").saveRoute({ route: { ...route, model: "m2" } })).live).toBe(false);
-    expect(await calibrationPassed(db, { criterion: "w1", providerId: id, model: "m2", promptVersion: "p1" })).toBe(false);
+    expect(await calibrationPassed(db, { criterion: "w1", providerId: id, model: "m2", promptVersion: "writing-1" })).toBe(false);
     expect(await code(admin("root").deleteProvider({ id }))).toBe(Code.FailedPrecondition);
     await admin("root").saveRoute({ route: { ...route, live: true } });
     await admin("root").saveProvider({ provider: { id, name: "Vendor", api: "openai-completions", enabled: false } });
@@ -677,14 +696,14 @@ describe("the admin console", () => {
       criterion: "w1",
       providerId: id,
       model: "m1",
-      promptVersion: "p1",
+      promptVersion: "writing-1",
       kappa: 0.8,
       humanKappa: 0.82,
       passed: true,
       at: new Date(now),
     });
     await admin("root").saveRoute({
-      route: { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
+      route: { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "writing-1", live: true },
     });
     const route = () => qualifyingRoute(db, "w1", learnerId, "writing", now);
     expect(await route()).toBeUndefined();
@@ -741,14 +760,14 @@ describe("the admin console", () => {
       criterion: "w1",
       providerId: id,
       model: "m1",
-      promptVersion: "p1",
+      promptVersion: "writing-1",
       kappa: 0.8,
       humanKappa: 0.82,
       passed: true,
       at: new Date(now),
     });
     await admin("root").saveRoute({
-      route: { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "p1", live: true },
+      route: { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "writing-1", live: true },
     });
     expect(await offered()).toEqual(["writing"]);
   });

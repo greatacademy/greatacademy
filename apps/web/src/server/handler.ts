@@ -148,7 +148,7 @@ async function routes(): Promise<ReadonlyMap<string, UniversalHandler>> {
     BillingService,
     billingService({ registry, now: Date.now, ...(pay && { payments: pay }), ...(appleStore && { appStore: appleStore }) }),
   );
-  router.service(AdminService, adminService({ now: Date.now, forms: forms(), notify, aiKeysSecret: env.AI_KEYS_SECRET }));
+  router.service(AdminService, adminService({ now: Date.now, forms: forms(), notify, aiKeysSecret: env.AI_KEYS_SECRET, registry }));
   loaded = new Map(router.handlers.map((h) => [h.requestPath, h]));
   return loaded;
 }
