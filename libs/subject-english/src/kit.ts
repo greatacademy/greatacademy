@@ -113,6 +113,50 @@ export function typed(
   return { shown, canonical, accepted: patterns ?? [canonical], wrong, ...(instruction && { instruction }) };
 }
 
+/** WritingItem is one bank item of a writing task: what to write about, any text to work from, and a model answer by the author. */
+export interface WritingItem {
+  /** task is what to write, in English; it follows the question. */
+  readonly task: string;
+  /** source is text the task works from, such as notes to turn into a paragraph. */
+  readonly source?: string;
+  /** model is one good response: shown to the judge, and to the learner after a verdict that counts. */
+  readonly model: string;
+}
+
+/** WritingLimits are the length a writing task asks for. */
+export interface WritingLimits {
+  readonly minWords: number;
+  readonly maxChars: number;
+}
+
+/**
+ * writingGenerator picks an item of a bank by seed; the learner writes a text that a model
+ * judges against criteria of the topic. A response far too short is a listed wrong one.
+ */
+export function writingGenerator(
+  question: Text,
+  bank: readonly WritingItem[],
+  criteria: readonly string[],
+  limits: WritingLimits,
+  why: (model: string) => Text,
+): Generator {
+  return (rng: Rng): Problem => {
+    const item = rng.cycle(bank);
+    return {
+      prompt: joinText([question, sameText(item.task), ...(item.source ? [sameText(quote(item.source))] : [])]),
+      answer: {
+        checker: "writing",
+        expected: { ...limits },
+        input: { kind: "writing", ...limits },
+        judged: { criteria: [...criteria], ...(item.source && { source: item.source }) },
+      },
+      solution: why(item.model),
+      canonical: item.model,
+      wrong: [item.model.split(/\s+/u).slice(0, 3).join(" ")],
+    };
+  };
+}
+
 /** point builds a knowledge point. */
 export function point(id: string, title: Text, explanation: Text, generate: Generator): KnowledgePointDef {
   return { id, title, explanation, generate };

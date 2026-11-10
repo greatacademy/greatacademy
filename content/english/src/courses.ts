@@ -73,6 +73,7 @@ export const grammarWriting: CourseDef = {
             "ordering-sentences-in-a-paragraph",
             "choosing-transitions",
             "removing-off-topic-sentences",
+            "writing-a-paragraph",
           ],
         },
       ],
