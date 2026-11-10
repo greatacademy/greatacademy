@@ -209,6 +209,8 @@ Mathematics has five shards, one for each stretch of the curriculum (`content/ma
 | `ga-math-calculus` | 8.7 MB | 133 ms |
 | `ga-math-college` | 6.8 MB | 112 ms |
 | `ga-math-exam` | 2.6 MB | 49 ms |
+| `ga-english` (gateway) | 2.8 MB | 30 ms |
+| `ga-english-core` | 7.5 MB | 240 ms |
 
 A shard is split in two when its startup time or memory nears the limits, which `startup_time_ms` in the deployment output and production metrics show: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
 

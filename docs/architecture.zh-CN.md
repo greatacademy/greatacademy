@@ -209,6 +209,8 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | `ga-math-calculus` | 8.7 MB | 133 毫秒 |
 | `ga-math-college` | 6.8 MB | 112 毫秒 |
 | `ga-math-exam` | 2.6 MB | 49 毫秒 |
+| `ga-english`（网关） | 2.8 MB | 30 毫秒 |
+| `ga-english-core` | 7.5 MB | 240 毫秒 |
 
 当分片的启动时间或内存接近上限时（部署输出中的 `startup_time_ms` 和线上指标可以反映）就一分为二：把 topic 移到 `shards/` 下的新文件，在 `apps/math-workers/src/shards/` 下新增入口，并增加一个绑定。学习者状态不记录 topic 属于哪个分片，所以随时都可以这样做。
 
