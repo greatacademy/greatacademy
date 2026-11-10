@@ -2,6 +2,18 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import {
+  conflictMore,
+  deviceEffectMore,
+  deviceMore,
+  moodMore,
+  plotMore,
+  rhymeSchemeMore,
+  soundMore,
+  themeEvidenceMore,
+  themeMore,
+  toneMore,
+} from "./literature-more.ts";
 
 const deviceBank: readonly ChoiceItem[] = [
   ["The wind whispered secrets through the pines.", "personification", ["hyperbole", "alliteration"]],
@@ -444,7 +456,7 @@ export const literatureTopics: readonly TopicDef[] = [
           "**Personification** gives human actions or feelings to something that is not human: *The wind whispered*. **Hyperbole** is an exaggeration so great that no one takes it literally: *I have told you a million times*. Like similes and metaphors, both are figurative: they mean something other than what the words literally say.",
           "**拟人**把人的动作或感受赋予非人的事物：*The wind whispered*。**夸张**是极度的夸大，没有人会按字面理解：*I have told you a million times*。和明喻、暗喻一样，两者都是修辞性的：意思不同于字面。",
         ),
-        named(["Which device does the sentence use?", "这句话用了哪种修辞？"], deviceBank, deviceWhy, deviceNot),
+        named(["Which device does the sentence use?", "这句话用了哪种修辞？"], [...deviceBank, ...deviceMore], deviceWhy, deviceNot),
       ),
       point(
         "effect-of-the-device",
@@ -455,7 +467,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the effect of the figurative language?", "这里修辞的效果是什么？"],
-          deviceEffectBank,
+          [...deviceEffectBank, ...deviceEffectMore],
           (right) => `${right} The other choices read the words literally, which misses the effect.`,
           (right) => `${right} 其他选项按字面理解，没有抓住效果。`,
           (_wrong, _right, _shown, position) =>
@@ -487,7 +499,12 @@ export const literatureTopics: readonly TopicDef[] = [
           "**Alliteration** repeats the first consonant sound of nearby words: *big brown bears*. **Onomatopoeia** is a word that sounds like what it names: *buzz, sizzle, crash*. **Rhyme** repeats the ending sounds of words: *night* and *bright*. Read the line aloud and listen for which one you hear.",
           "**头韵**是相邻的词重复相同的开头辅音：*big brown bears*。**拟声**是听起来像它所指声音的词：*buzz, sizzle, crash*。**押韵**是词尾音相同：*night* 和 *bright*。把句子读出来，听听用的是哪一种。",
         ),
-        named(["Which sound device does the line use most?", "这行主要用了哪种声音修辞？"], soundBank, soundWhy, deviceNot),
+        named(
+          ["Which sound device does the line use most?", "这行主要用了哪种声音修辞？"],
+          [...soundBank, ...soundMore],
+          soundWhy,
+          deviceNot,
+        ),
       ),
       point(
         "rhyme-scheme",
@@ -498,7 +515,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the rhyme scheme of this stanza? A slash marks the end of each line.", "这个诗节的韵式是什么？斜线表示每行的结尾。"],
-          rhymeSchemeBank,
+          [...rhymeSchemeBank, ...rhymeSchemeMore],
           (right) => `The rhyme scheme is **${right}**. Give the first end sound A, and a new letter to each new sound.`,
           (right) => `韵式是 **${right}**。第一个尾音记为 A，每个新的尾音用一个新字母。`,
           schemeNot,
@@ -521,7 +538,7 @@ export const literatureTopics: readonly TopicDef[] = [
           "Most plots follow a pattern. The **exposition** introduces the characters and setting. In the **rising action**, a problem appears and grows. The **climax** is the turning point, the moment of greatest tension. In the **falling action**, the tension eases, and the **resolution** settles the problem.",
           "大多数情节遵循一个模式。**开端**介绍人物和背景。在**发展**中，问题出现并不断加剧。**高潮**是转折点，紧张感最强的时刻。在**回落**中，紧张感缓和，**结局**解决问题。",
         ),
-        named(["Which part of the plot is this event?", "这件事属于情节的哪个部分？"], plotBank, plotWhy, plotNot),
+        named(["Which part of the plot is this event?", "这件事属于情节的哪个部分？"], [...plotBank, ...plotMore], plotWhy, plotNot),
       ),
       point(
         "kinds-of-conflict",
@@ -532,7 +549,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What kind of conflict is this?", "这是哪种冲突？"],
-          conflictBank,
+          [...conflictBank, ...conflictMore],
           (right) => `This is **${right}**: ask what or whom the character is struggling against.`,
           (right) => `这是 **${right}**：问一问人物在和谁或什么作斗争。`,
           conflictNot,
@@ -560,7 +577,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which states the theme of this story?", "哪一项陈述了这个故事的主题？"],
-          themeBank,
+          [...themeBank, ...themeMore],
           (right) =>
             `*${right}* is a message about life in a full sentence. The other choices are only a topic or a retelling of the plot.`,
           (right) => `*${right}* 是用完整句子表达的人生道理。其他选项只是话题或情节复述。`,
@@ -585,7 +602,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which event best supports the theme?", "哪个事件最能支持这个主题？"],
-          themeEvidenceBank,
+          [...themeEvidenceBank, ...themeEvidenceMore],
           (right) => `*${right}* shows the theme in action. The other details are true of the story but say nothing about its message.`,
           (right) => `*${right}* 体现了这个主题。其他细节虽属于故事，却与它的道理无关。`,
           (wrong) => [
@@ -613,7 +630,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the tone of this passage?", "这段话的语气是什么？"],
-          toneBank,
+          [...toneBank, ...toneMore],
           (right) => `The tone is **${right}**: the word choice and details show this attitude. The other choices do not fit those words.`,
           (right) => `语气是 **${right}**：用词和细节表现了这种态度。其他选项与这些词不符。`,
           toneNot,
@@ -628,7 +645,7 @@ export const literatureTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What mood does this passage create?", "这段话营造了什么氛围？"],
-          moodBank,
+          [...moodBank, ...moodMore],
           (right) =>
             `The mood is **${right}**: the setting and details make the reader feel this way. The other moods would need different details.`,
           (right) => `氛围是 **${right}**：背景和细节让读者有这种感觉。其他氛围需要不同的细节。`,

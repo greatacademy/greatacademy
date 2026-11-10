@@ -2,6 +2,7 @@
 
 import { type CriterionSpec, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, criterionById, point, type WritingItem, writingGenerator } from "@ga/subject-english";
+import { citeMore, ironyMore, narratorEffectMore, narratorMore, orderMore, symbolMore } from "./literary-analysis-more.ts";
 
 type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
@@ -456,7 +457,12 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           "A third-person narrator stands outside the story, but narrators differ in what they know. A **third person limited** narrator shares the thoughts of one character only. A **third person omniscient** narrator knows what several characters think and feel, and what happens where none of them can see.\n\nTo tell them apart, count whose thoughts the narrator reports. One mind means limited; more than one means omniscient. A narrator who says *I* is **first person**.",
           "第三人称叙述者在故事之外，但他们所知道的不同。**第三人称有限视角**（third person limited）的叙述者只讲述一个人物的想法。**第三人称全知视角**（third person omniscient）的叙述者知道多个人物的所想所感，以及任何人物都看不到的地方发生的事。\n\n要区分它们，就数一数叙述者讲了谁的想法。只有一个人的内心是有限视角；不止一个是全知视角。说 *I* 的叙述者是**第一人称**（first person）。",
         ),
-        named(["What point of view is this passage told in?", "这段文字是用哪种视角叙述的？"], narratorBank, narratorWhy, narratorNot),
+        named(
+          ["What point of view is this passage told in?", "这段文字是用哪种视角叙述的？"],
+          [...narratorBank, ...narratorMore],
+          narratorWhy,
+          narratorNot,
+        ),
       ),
       point(
         "what-the-narrator-changes",
@@ -467,7 +473,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the most likely effect of this choice of narrator?", "这种叙述者的选择最可能产生什么效果？"],
-          narratorEffectBank,
+          [...narratorEffectBank, ...narratorEffectMore],
           (right) => `*${right}* The narrator decides what the reader can know, and this effect follows from that.`,
           (right) => `*${right}* 叙述者决定了读者能知道什么，这个效果正是由此而来。`,
           (wrong) => [
@@ -495,7 +501,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What does the object in this passage most likely stand for?", "这段文字中的东西最可能象征什么？"],
-          symbolBank,
+          [...symbolBank, ...symbolMore],
           (right) => `It stands for *${right}*. The object appears, and changes, at the moments that matter to that idea.`,
           (right) => `它象征 *${right}*。这个东西在与此意义相关的关键时刻出现并发生变化。`,
           (wrong) => [
@@ -524,7 +530,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           "**Irony** is a gap between how things seem and how they are. In **verbal irony**, a character says the opposite of what they mean: *Great, another flat tire.* In **situational irony**, an event turns out the opposite of what anyone would expect: a lifeguard who needs rescuing. In **dramatic irony**, the reader knows something a character does not, and watches them walk toward it.",
           "**反讽**（irony）是表面与实际之间的落差。在**言语反讽**（verbal irony）中，人物说的与本意相反：*Great, another flat tire.* 在**情境反讽**（situational irony）中，事件的结果与任何人的预期相反：救生员自己需要被救。在**戏剧反讽**（dramatic irony）中，读者知道人物不知道的事，看着他们一步步走向它。",
         ),
-        named(["What kind of irony is this?", "这是哪种反讽？"], ironyBank, ironyWhy, ironyNot),
+        named(["What kind of irony is this?", "这是哪种反讽？"], [...ironyBank, ...ironyMore], ironyWhy, ironyNot),
       ),
     ],
   },
@@ -543,7 +549,12 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           "Writers do not always tell events in order. **Foreshadowing** drops a hint of something that will happen later: a warning ignored, a crack no one fixes, a calm that feels too calm. A **flashback** moves the story back in time to show an earlier event, often through a memory, and then returns to the present.\n\nWords such as *remembered*, *years earlier* or *went back to* often mark a flashback. A detail that makes the reader uneasy about what comes next is often foreshadowing.",
           "作者并不总是按顺序讲述事件。**伏笔**（foreshadowing）埋下对后事的暗示：被忽视的警告、没人修的裂缝、平静得过分的平静。**倒叙**（flashback）把故事带回过去，展示较早的事件，常通过回忆来实现，然后再回到当下。\n\n*remembered*、*years earlier*、*went back to* 这样的词常标志着倒叙。让读者对接下来的事感到不安的细节，往往是伏笔。",
         ),
-        named(["Is this foreshadowing, a flashback, or neither?", "这是伏笔、倒叙，还是两者都不是？"], orderBank, orderWhy, orderNot),
+        named(
+          ["Is this foreshadowing, a flashback, or neither?", "这是伏笔、倒叙，还是两者都不是？"],
+          [...orderBank, ...orderMore],
+          orderWhy,
+          orderNot,
+        ),
       ),
     ],
   },
@@ -564,7 +575,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Read the claim and choose the best evidence.", "阅读论点，选出最好的证据。"],
-          citeBank,
+          [...citeBank, ...citeMore],
           (right) => `${right} shows the quality in action, so it proves the claim.`,
           (right) => `${right} 展示了这一特点的实际表现，所以能证明论点。`,
           citeNot,

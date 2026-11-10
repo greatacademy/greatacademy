@@ -495,6 +495,28 @@ const shade: Readonly<Record<string, Pair>> = {
   devoured: ["ate all of it hungrily", "饥饿地全部吃光"],
   glared: ["shone with a harsh, strong light", "发出刺眼的强光"],
   faded: ["slowly grew dim", "渐渐变暗"],
+  screeched: ["stopped with a harsh, rough sound", "发出刺耳的声音停下"],
+  glided: ["moved smoothly and easily", "平稳轻松地滑行"],
+  drifted: ["moved slowly, carried by air or water", "随风或随水缓缓漂移"],
+  stumbled: ["tripped and almost lost balance", "绊了一下差点摔倒"],
+  marched: ["walked with regular, steady steps", "迈着整齐的步子走"],
+  wandered: ["walked with no aim", "漫无目的地走"],
+  dashed: ["moved very fast for a short way", "飞快地冲过一小段路"],
+  whimpered: ["cried softly and sadly", "低声哀哭"],
+  roared: ["made a deep, very loud sound", "发出低沉响亮的吼声"],
+  giggled: ["laughed in a light, silly way", "咯咯地傻笑"],
+  muttered: ["spoke low and unhappily", "不高兴地低声嘟囔"],
+  sobbed: ["cried loudly with heavy breaths", "抽噎着大哭"],
+  gazed: ["looked with wonder", "惊叹地凝视"],
+  squinted: ["looked with eyes half closed", "眯着眼看"],
+  scanned: ["looked over quickly but completely", "快速而全面地扫视"],
+  lapped: ["drank noisily with the tongue", "用舌头舔着喝"],
+  sipped: ["drank in small mouthfuls", "小口地啜饮"],
+  gulped: ["drank fast in big swallows", "大口地吞咽"],
+  flickered: ["burned with a weak, unsteady light", "微弱地闪烁"],
+  blazed: ["burned brightly and strongly", "熊熊燃烧"],
+  glittered: ["shone with small bright flashes", "闪闪发光"],
+  stalked: ["moved slowly and secretly toward", "悄悄地慢慢逼近"],
 };
 
 const otherShade = (wrong: string) => {
@@ -669,6 +691,112 @@ const latin1WordMore = choices(`
   spectator|a person who looks on|a person who builds|a person who writes
   rupture|a break or burst|a pull or tug|a written note
 `);
+const latin2RootMore = inWords(latin2RootBank, {
+  ject: "eject inject object",
+  "mit or miss": "admit dismiss mission",
+  "duc or duct": "educate introduce product",
+  cred: "credit creed discredit",
+  aud: "audience audio audition",
+  fer: "ferry fertile infer",
+  "pel or puls": "repel expel impulse",
+  "voc or vok": "vocabulary invoke advocate",
+});
+const latin2WordMore = choices(`
+  eject|to throw out|to send out|to call out
+  inject|to throw or force into|to hear into|to lead into
+  projectile|an object thrown forward|an object heard ahead|an object believed in
+  dejected|cast down in spirit|sent away in spirit|called down in spirit
+  admit|to send or let in|to throw in|to push in
+  dismiss|to send away|to lead away|to call away
+  submit|to send in for judging|to throw under|to hear under
+  mission|a task someone is sent to do|a task someone believes in|a task someone hears about
+  emit|to send out light, heat or sound|to carry out a sound|to push out a sound
+  educate|to lead out the mind, to teach|to call out the mind|to send out the mind
+  introduce|to lead in and make known|to push in and hide|to carry in and sell
+  aqueduct|a channel that leads water|a channel that hears water|a channel that pushes air
+  deduce|to lead to a conclusion by reasoning|to throw a conclusion away|to call a conclusion out
+  credit|trust that someone will pay later|a call to pay now|a push to pay later
+  credulous|too ready to believe|too ready to hear|too ready to throw
+  audience|a group of people who hear or watch|a group of people who lead|a group of people who push
+  audition|a hearing to test a performer|a call to test a performer|a push to test a performer
+  auditorium|a hall where people hear performances|a hall where people throw things|a hall where people send mail
+  ferry|a boat that carries people across water|a boat that pushes water|a boat that calls for help
+  infer|to carry a meaning from clues|to hear a meaning from clues|to send a meaning in clues
+  repel|to push back or away|to call back or away|to send back by mail
+  expel|to push out|to lead out|to hear out
+  compulsory|pushed on everyone as a rule|believed by everyone|heard by everyone
+  invoke|to call on for help|to throw on for help|to send on for help
+  advocate|a person who speaks up or calls for a cause|a person who throws a cause away|a person who leads a parade
+  vocation|a calling, a type of work|a sending, a type of mail|a pushing, a type of sport
+`);
+const connotationMore: readonly ChoiceItem[] = [
+  ["childish, youthful or immature: Which is the kindest way to describe someone who acts young?", "youthful", ["childish", "immature"]],
+  [
+    "talkative, loudmouthed or mouthy: Which is the kindest way to describe someone who talks a lot?",
+    "talkative",
+    ["mouthy", "loudmouthed"],
+  ],
+  ["relaxed, lazy or idle: Which is the kindest way to describe someone who is resting?", "relaxed", ["lazy", "idle"]],
+  ["bold, reckless or rash: Which is the kindest way to describe someone who takes risks?", "bold", ["reckless", "rash"]],
+  ["firm, harsh or severe: Which is the kindest way to describe a strict teacher?", "firm", ["harsh", "severe"]],
+  ["inexpensive, cheap or bargain-basement: Which makes a gift sound best?", "inexpensive", ["cheap", "bargain-basement"]],
+  ["unique, strange or weird: Which is the kindest way to describe an unusual outfit?", "unique", ["strange", "weird"]],
+  [
+    "sensitive, touchy or thin-skinned: Which is the kindest way to describe someone with strong feelings?",
+    "sensitive",
+    ["touchy", "thin-skinned"],
+  ],
+  ["careful, fussy or picky: Which is the kindest way to describe someone who checks details?", "careful", ["fussy", "picky"]],
+  ["elderly, old or ancient: Which is the kindest way to describe an older neighbor?", "elderly", ["old", "ancient"]],
+  [
+    "easygoing, careless or sloppy: Which is the kindest way to describe someone who does not worry much?",
+    "easygoing",
+    ["careless", "sloppy"],
+  ],
+  ["persuasive, pushy or bossy: Which is the kindest way to describe someone who gets others to agree?", "persuasive", ["pushy", "bossy"]],
+  ["sturdy, chubby or heavy: Which is the kindest way to describe a strongly built dog?", "sturdy", ["chubby", "heavy"]],
+  ["home, house or shack: Which makes a place to live sound warmest?", "home", ["house", "shack"]],
+  ["aroma, stench or reek: Which makes the smell of a kitchen sound best?", "aroma", ["stench", "reek"]],
+  ["frank, blunt or rude: Which is the kindest way to describe someone who speaks honestly?", "frank", ["blunt", "rude"]],
+  ["quiet, timid or mousy: Which is the kindest way to describe someone who says little?", "quiet", ["timid", "mousy"]],
+  [
+    "ambitious, greedy or grasping: Which is the kindest way to describe someone who wants to get ahead?",
+    "ambitious",
+    ["greedy", "grasping"],
+  ],
+  ["spirited, wild or unruly: Which is the kindest way to describe an energetic class?", "spirited", ["wild", "unruly"]],
+  [
+    "generous, wasteful or extravagant: Which is the kindest way to describe someone who spends freely on others?",
+    "generous",
+    ["wasteful", "extravagant"],
+  ],
+  ["vintage, used or secondhand: Which makes an old jacket sound most valuable?", "vintage", ["used", "secondhand"]],
+  ["slender, skinny or gaunt: Which is the kindest way to describe a thin tree?", "slender", ["skinny", "gaunt"]],
+];
+const preciseMore: readonly ChoiceItem[] = [
+  ["The old car ___ to a stop at the corner. (stopped with a harsh, rough sound)", "screeched", ["glided", "drifted"]],
+  ["The swan ___ across the pond. (moved smoothly and easily)", "glided", ["screeched", "stumbled"]],
+  ["He ___ on the loose stone and nearly fell. (tripped and almost lost balance)", "stumbled", ["glided", "marched"]],
+  ["The soldiers ___ across the square in step. (walked with regular, steady steps)", "marched", ["wandered", "stumbled"]],
+  ["We ___ through the market with no plan at all. (walked with no aim)", "wandered", ["marched", "dashed"]],
+  ["She ___ to catch the bus before it left. (moved very fast for a short way)", "dashed", ["wandered", "strolled"]],
+  ["The puppy ___ when we left it alone. (cried softly and sadly)", "whimpered", ["roared", "giggled"]],
+  ["The crowd ___ when the team scored. (made a deep, very loud sound)", "roared", ["whimpered", "muttered"]],
+  ["The little girls ___ at the funny video. (laughed in a light, silly way)", "giggled", ["roared", "sobbed"]],
+  ["He ___ under his breath about the rain. (spoke low and unhappily)", "muttered", ["roared", "announced"]],
+  ["She ___ when she heard the sad news. (cried loudly with heavy breaths)", "sobbed", ["giggled", "muttered"]],
+  ["The hikers ___ at the view from the top. (looked with wonder)", "gazed", ["squinted", "glanced"]],
+  ["He ___ against the bright sun. (looked with eyes half closed)", "squinted", ["gazed", "stared"]],
+  ["The detective ___ the room for clues. (looked over quickly but completely)", "scanned", ["gazed", "peeked"]],
+  ["The tired dog ___ its water. (drank noisily with its tongue)", "lapped", ["sipped", "gulped"]],
+  ["She ___ the hot tea slowly. (drank in small mouthfuls)", "sipped", ["gulped", "lapped"]],
+  ["After the race, he ___ a whole bottle of water. (drank fast in big swallows)", "gulped", ["sipped", "nibbled"]],
+  ["The fire ___ in the dark fireplace. (burned with a weak, unsteady light)", "flickered", ["blazed", "glared"]],
+  ["The bonfire ___ high into the night. (burned brightly and strongly)", "blazed", ["flickered", "faded"]],
+  ["The diamond ring ___ under the lamp. (shone with small bright flashes)", "glittered", ["faded", "flickered"]],
+  ["The pages had ___ to a pale yellow. (slowly lost color)", "faded", ["blazed", "glittered"]],
+  ["The cat ___ the mouse from behind the chair. (moved slowly and secretly toward)", "stalked", ["dashed", "marched"]],
+];
 const greekWordMore = choices(`
   telescope|a tool for looking at things far away|a tool for hearing life|a tool for measuring heat
   television|pictures sent from far away|sounds of the earth|a picture of oneself
@@ -1252,7 +1380,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this root mean?", "这个词根是什么意思？"),
-          latin2RootBank,
+          [...latin2RootBank, ...latin2RootMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -1270,7 +1398,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What does this word mean?", "这个词是什么意思？"),
-          latin2WordBank,
+          [...latin2WordBank, ...latin2WordMore],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
@@ -1442,7 +1570,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the word that answers the question.", "选择能回答问题的词。"),
-          connotationBank,
+          [...connotationBank, ...connotationMore],
           (right) =>
             t(
               `**${right}** carries the most favorable feeling, though the words mean nearly the same.`,
@@ -1460,7 +1588,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word fits the meaning in parentheses?", "哪个词符合括号中的意思？"),
-          preciseBank,
+          [...preciseBank, ...preciseMore],
           (right, shown) =>
             t(`${shown.replace("___", `**${right}**`)}`, `${shown.replace("___", `**${right}**`)} 这个词符合括号中的意思。`),
           otherShade,

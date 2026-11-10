@@ -2,6 +2,16 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import {
+  claimMore,
+  conclusionMore,
+  counterclaimMore,
+  preciseClaimMore,
+  reasoningMore,
+  rebuttalMore,
+  relevantEvidenceMore,
+  strongerEvidenceMore,
+} from "./argument-more.ts";
 
 const claimBank: readonly ChoiceItem[] = [
   [
@@ -388,7 +398,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence is a claim that an argument could prove?", "哪个句子是可以用论证来证明的论点？"],
-          claimBank,
+          [...claimBank, ...claimMore],
           (right) =>
             `*${right}* takes a position that people could disagree with. The other sentences are facts, which could be evidence but not the claim.`,
           (right) => `*${right}* 表明了一个别人可能反对的立场。其他句子是事实，可以作为论据，但不是论点。`,
@@ -404,7 +414,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which is the most precise claim?", "哪一项是最明确的论点？"],
-          preciseClaimBank,
+          [...preciseClaimBank, ...preciseClaimMore],
           (right) => `*${right}* says exactly what the writer wants. One other choice is too vague to argue, and the other is a fact.`,
           (right) => `*${right}* 准确说出了作者的主张。另一个选项太含糊，无法论证；还有一个是事实。`,
           preciseNot,
@@ -429,7 +439,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which evidence is relevant to the claim?", "哪项论据与论点相关？"],
-          relevantEvidenceBank,
+          [...relevantEvidenceBank, ...relevantEvidenceMore],
           (right) => `*${right}* helps prove the claim. The other sentences are about the same subject but do not support the claim.`,
           (right) => `*${right}* 有助于证明论点。其他句子与同一话题有关，却不支持这个论点。`,
           unrelatedNot,
@@ -444,7 +454,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which is the strongest evidence for the claim?", "哪项是支持论点最有力的论据？"],
-          strongerEvidenceBank,
+          [...strongerEvidenceBank, ...strongerEvidenceMore],
           (right) => `*${right}* is specific and can be checked. The other choices are feelings, one person's view or vague statements.`,
           (right) => `*${right}* 具体且可以核实。其他选项是感受、一个人的看法或含糊的说法。`,
           weakNot,
@@ -469,7 +479,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence best explains how the evidence supports the claim?", "哪个句子最好地解释了论据如何支持论点？"],
-          reasoningBank,
+          [...reasoningBank, ...reasoningMore],
           (right) => `*${right}* links the evidence to the claim. The other sentences add facts or opinions without showing that link.`,
           (right) => `*${right}* 把论据和论点联系起来。其他句子只是添加了事实或看法，没有揭示这种联系。`,
           reasoningNot,
@@ -484,7 +494,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which conclusion does the evidence support?", "论据支持哪个结论？"],
-          conclusionBank,
+          [...conclusionBank, ...conclusionMore],
           (right) =>
             `*${right}* claims no more than the evidence shows. The other conclusions go far beyond it or give an opinion it does not prove.`,
           (right) => `*${right}* 没有超出论据所能证明的范围。其他结论远远超出了论据，或者给出了论据无法证明的看法。`,
@@ -510,7 +520,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence states a counterclaim to this claim?", "哪个句子陈述了这个论点的反方观点？"],
-          counterclaimBank,
+          [...counterclaimBank, ...counterclaimMore],
           (right) => `*${right}* opposes the claim. The other sentences are reasons that support it.`,
           (right) => `*${right}* 反对这个论点。其他句子是支持论点的理由。`,
           sideNot,
@@ -525,7 +535,7 @@ export const argumentTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence is the best rebuttal to the counterclaim?", "哪个句子是对这个反方观点最好的反驳？"],
-          rebuttalBank,
+          [...rebuttalBank, ...rebuttalMore],
           (right) => `*${right}* answers the counterclaim with a reason. The other sentences agree with it or only state a general fact.`,
           (right) => `*${right}* 用理由回应了反方观点。其他句子要么认同它，要么只陈述了一般事实。`,
           rebuttalNot,

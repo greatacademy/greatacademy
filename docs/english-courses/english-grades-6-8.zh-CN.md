@@ -16,7 +16,7 @@
 
 每个单元是一个主题，同时教授四样东西：该主题的词汇、语法和标点、一项阅读技能，以及写作。单元以一个主题阅读单元和一个对话收尾。标为“已有”的知识点已在知识图中，保留各自的先修；每个新知识点列出其先修，三至五年级的知识点视为已掌握。六至八年级的每个已有知识点恰好属于一个单元。
 
-深度：每个由规则判定的新知识点至少有 30 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中；每个由模型评判的写作知识点至少有 12 个带范文的任务；每个新阅读单元有 8 到 10 篇 200 到 400 词的文章，每篇三道题。本学段的已有知识点各有一两个知识要点，每个约十道题；构建课程时把它们的题库加深到 30 道，id 不变。
+深度：每个由规则判定的新知识点至少有 30 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中；每个由模型评判的新写作知识点至少有 12 个带范文的任务；每个新阅读单元有 8 到 10 篇 200 到 400 词的文章，每篇三道题。本学段的已有知识点各有一两个知识要点，每个约十道题；它们由规则判定的知识要点各加深到至少 30 道题，id 不变；其中由模型评判的写作知识点仍各有 8 个任务。
 
 听力和口语要等音频和录音：在此之前，单元列出对话但不提供，每个单元说明届时会增加什么。
 
@@ -32,7 +32,7 @@
 
 **写作：** `combining-with-relative-clauses`（已有）；`retelling-a-myth` 复述神话（由模型评判；先修 `writing-a-narrative-paragraph`、`plot-and-conflict`）：根据笔记用两三段话复述一个神话，保留其冲突和寓意。
 
-**阅读单元：** `myths-and-legends`（新增），10 篇原创复述：盘古开天辟地；普罗米修斯盗火；潘多拉的罐子；伊卡洛斯和他的翅膀；织女阿拉克涅；珀耳塞福涅与四季；雷神丢失的锤子；后羿射日；阿南西和智慧之罐；毛伊让太阳放慢脚步。
+**阅读单元：** `myths-and-legends`（新增），8 篇原创复述：盘古开天辟地；普罗米修斯盗火；潘多拉的罐子；伊卡洛斯和他的翅膀；织女阿拉克涅；珀耳塞福涅与四季；后羿射日；毛伊让太阳放慢脚步。
 
 **对话：** `myth-retelling-for-a-podcast`。导师主持一档学校播客。任务：为听众复述一个神话，并说明它试图解释世界上的什么。
 
@@ -60,11 +60,11 @@
 
 **语法：** `participial-phrases`、`misplaced-modifiers`（已有）。
 
-**阅读：** `primary-and-secondary-sources` 一手资料与二手资料（先修 `fact-and-opinion`、`authors-purpose`）：资料由谁、在何时写成，作者离事件有多近。
+**阅读：** `primary-and-secondary-sources` 一手资料与二手资料（先修 `authors-purpose`，它本已排在 `fact-and-opinion` 之后；同时涵盖 `fact-and-opinion`）：资料由谁、在何时写成，作者离事件有多近。
 
 **写作：** `varying-sentence-openings`（已有）；`writing-an-informative-paragraph` 写说明段落（由模型评判；先修 `writing-a-paragraph`、`text-structures`）：根据笔记，用事实、定义和例子说明一个话题。
 
-**阅读单元：** `ancient-rome`（新增），10 篇：建城传说；共和国；元老院和执政官；道路；引水渠；军队；庞贝的一天；斗兽场；我们词汇中的拉丁语；西部帝国的终结。
+**阅读单元：** `ancient-rome`（新增），8 篇：建城传说；共和国；元老院和执政官；道路；引水渠；庞贝的一天；斗兽场；西部帝国的终结。
 
 **对话：** `roman-forum-tour-guide`。导师带领参观古罗马广场遗址。任务：询问一座建筑：那里发生过什么，我们是怎么知道的。
 
@@ -74,7 +74,7 @@
 
 **词汇：** `words-of-argument` 论证的词（先修 `context-clues`、`fact-and-opinion`）：assert, justify, valid, bias, perspective, concede, refute, persuade, credible, relevant。
 
-**语法：** `active-and-passive-voice`（已有）；`verb-moods` 动词的语气（先修 `modal-verbs`、`simple-verb-tenses`）：陈述、祈使、条件和虚拟语气（*If I were…*、*I suggest that he be…*）。
+**语法：** `active-and-passive-voice`（已有）；`verb-moods` 动词的语气（先修 `modal-verbs`，它本已排在 `simple-verb-tenses` 之后）：陈述、祈使、条件和虚拟语气（*If I were…*、*I suggest that he be…*）。
 
 **阅读：** `claims`、`evidence`、`reasoning`、`counterclaims-and-rebuttals`（已有）。
 
@@ -96,7 +96,7 @@
 
 **写作：** `cutting-wordiness`（已有）；`writing-an-objective-summary` 写客观摘要（由模型评判；先修 `writing-a-summary`、`citing-textual-evidence`）：写出较长文章的中心思想及其展开，不加个人观点。
 
-**阅读单元：** `life-in-the-ocean`（新增），10 篇：海洋的分层；浮游生物；珊瑚礁；海藻林；海洋食物网；深海生命；鲸的迁徙；潮汐；海里的塑料；保护海洋。
+**阅读单元：** `life-in-the-ocean`（新增），8 篇：海洋的分层；浮游生物；珊瑚礁；海藻林；海洋食物网；鲸的迁徙；海里的塑料；保护海洋。
 
 **对话：** `marine-biologist-interview`。导师扮演科考船上的海洋生物学家。任务：弄清楚她研究什么、怎样研究、为什么重要。
 
@@ -112,7 +112,7 @@
 
 **写作：** `writing-a-literary-analysis-paragraph`（已有）。
 
-**阅读单元：** `turning-points`（新增），10 篇关于成长的原创短篇：第一份工作；搬到新城市；失去的友谊；祖父母生病；承认一个错误；输了比赛的球队；保守的秘密；新出生的弟妹；晚来的天赋；一次出了岔子的盼望已久的旅行。
+**阅读单元：** `turning-points`（新增），8 篇关于成长的原创短篇：第一份工作；搬到新城市；失去的友谊；祖父母生病；承认一个错误；输了比赛的球队；新出生的弟妹；一次出了岔子的盼望已久的旅行。
 
 **对话：** `book-club-discussion`。导师是读书会的成员。任务：讨论你读过的一篇故事里某个人物的转折点，并用细节支持你的看法。
 
@@ -122,13 +122,13 @@
 
 **词汇：** `words-of-technology` 技术的词（先修 `context-clues`）：invention, engine, circuit, patent, prototype, efficient, mechanism, automate, innovation, transmit。
 
-**语法：** `simple-compound-and-complex-sentences` 简单句、并列句和复合句（先修 `coordinating-conjunctions`、`subordinating-conjunctions`）：说出句子的类型，并选择句型来表明观点之间的关系。
+**语法：** `simple-compound-and-complex-sentences` 简单句、并列句和复合句（先修 `subordinating-conjunctions`，它本已排在 `coordinating-conjunctions` 之后；两者都被涵盖）：说出句子的类型，并选择句型来表明观点之间的关系。
 
 **阅读：** `comparing-texts-on-a-topic` 比较同一话题的文章（先修 `citing-textual-evidence`、`compare-and-contrast-in-texts`）：两位作者怎样以不同方式呈现同样的事件或事实。
 
 **写作：** `combining-sentences-in-your-own-words`、`introductions-and-conclusions`（已有）。
 
-**阅读单元：** `machines-that-changed-the-world`（新增），10 篇：印刷机；蒸汽机；电报；电灯泡；电话；飞机；流水线；无线电；计算机；智能手机。
+**阅读单元：** `machines-that-changed-the-world`（新增），8 篇：印刷机；蒸汽机；电报；电灯泡；电话；飞机；计算机；智能手机。
 
 **对话：** `inventor-pitch`。导师是发明展的评委。任务：介绍一项发明，说明它解决的问题，并回答一个相关提问。
 
@@ -144,7 +144,7 @@
 
 **写作：** `revising-a-draft`（已有）；`writing-a-narrative-from-a-point-of-view` 从某一视角写叙事（由模型评判；先修 `writing-a-narrative-paragraph`、`narrative-point-of-view`）：由一个人物讲述一件事，只写这个人物能知道和感受到的。
 
-**阅读单元：** `explorers-and-voyages`（新增），10 篇：郑和的船队；波利尼西亚航海者；伊本·白图泰；哥伦布的航行及其代价；麦哲伦船队环游世界；刘易斯与克拉克；奔向南极的竞赛；马修·汉森；潜入最深的海；在月球上迈出第一步。
+**阅读单元：** `explorers-and-voyages`（新增），8 篇：郑和的船队；波利尼西亚航海者；伊本·白图泰；哥伦布的航行及其代价；麦哲伦船队环游世界；奔向南极的竞赛；潜入最深的海；在月球上迈出第一步。
 
 **对话：** `expedition-planning-meeting`。导师带领一支探险队。任务：规划一次去你选定地点的旅程：路线、要带的东西，以及要防备的一种危险。
 
@@ -161,16 +161,16 @@
 | `coordinate-adjectives` | 写作 | 2 | `order-of-adjectives`，`commas-in-a-series` |
 | `responding-to-a-poem` | 写作（模型评判） | 2 | `tone-and-mood`，`writing-a-paragraph` |
 | `words-of-ancient-rome` | 词汇 | 3 | `context-clues` |
-| `primary-and-secondary-sources` | 阅读 | 3 | `fact-and-opinion`，`authors-purpose` |
+| `primary-and-secondary-sources` | 阅读 | 3 | `authors-purpose` |
 | `writing-an-informative-paragraph` | 写作（模型评判） | 3 | `writing-a-paragraph`，`text-structures` |
 | `words-of-argument` | 词汇 | 4 | `context-clues`，`fact-and-opinion` |
-| `verb-moods` | 语法 | 4 | `modal-verbs`，`simple-verb-tenses` |
+| `verb-moods` | 语法 | 4 | `modal-verbs` |
 | `words-of-ecosystems` | 词汇 | 5 | `context-clues` |
 | `writing-an-objective-summary` | 写作（模型评判） | 5 | `writing-a-summary`，`citing-textual-evidence` |
 | `words-for-character-and-motive` | 词汇 | 6 | `context-clues`，`characters` |
 | `gerund-and-infinitive-phrases` | 语法 | 6 | `participial-phrases` |
 | `words-of-technology` | 词汇 | 7 | `context-clues` |
-| `simple-compound-and-complex-sentences` | 语法 | 7 | `coordinating-conjunctions`，`subordinating-conjunctions` |
+| `simple-compound-and-complex-sentences` | 语法 | 7 | `subordinating-conjunctions` |
 | `comparing-texts-on-a-topic` | 阅读 | 7 | `citing-textual-evidence`，`compare-and-contrast-in-texts` |
 | `words-of-exploration` | 词汇 | 8 | `context-clues` |
 | `dashes-parentheses-and-ellipses` | 写作 | 8 | `appositives`，`commas-after-introductions` |

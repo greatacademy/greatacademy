@@ -24,6 +24,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Outlines of Pre-A1 to B2 | Done |
 | Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
+| Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
 | Topics of A2, units 1 to 8: 59 topics, 158 knowledge points | Done; units 9 to 12 not started |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
@@ -131,3 +132,17 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | Each grammar topic of A2 | The grammar it builds on (e.g. `present-continuous` from `past-continuous`) | 0.2–0.4 | The forms are the same, moved to another time |
 | Each judged writing topic of A2 | The rule-checked writing before it (e.g. `writing-steps-in-order` from `writing-a-recipe`) | 0.3–0.4 | Every answer practices it |
 | Each grammar topic of A2 | Its unit's word batch | 0.1–0.2 | Only a passing review of the words |
+| The eight word batches of grades 6 to 8 | `context-clues` | 0.1 | Every item reads the word in a sentence |
+| `pronoun-case` | `pronoun-antecedent-agreement` | 0.2 | Both need the pronoun's role |
+| `coordinate-adjectives` | `commas-in-a-series`, `order-of-adjectives` | 0.3, 0.2 | The comma rule extends both |
+| `verb-moods` | `modal-verbs` | 0.2 | Conditionals are formed with modals |
+| `gerund-and-infinitive-phrases` | `participial-phrases` | 0.2 | Both are verbals |
+| `simple-compound-and-complex-sentences` | `subordinating-conjunctions`, `coordinating-conjunctions` | 0.3, 0.2 | The sentence types are built with them |
+| `dashes-parentheses-and-ellipses` | `appositives` | 0.2 | Dashes and parentheses often set off appositives |
+| `primary-and-secondary-sources` | `authors-purpose`, `fact-and-opinion` | 0.2 each | Judging a source uses both |
+| `comparing-texts-on-a-topic` | `compare-and-contrast-in-texts`, `citing-textual-evidence` | 0.3, 0.2 | Comparing two texts quotes each |
+| `retelling-a-myth` | `writing-a-narrative-paragraph`, `plot-and-conflict` | 0.4, 0.2 | A retelling is a narrative with its plot |
+| `responding-to-a-poem` | `tone-and-mood`, `writing-a-paragraph` | 0.3 each | The response names the tone in a paragraph |
+| `writing-an-informative-paragraph` | `writing-a-paragraph`, `text-structures` | 0.3, 0.2 | It is a paragraph with a chosen structure |
+| `writing-an-objective-summary` | `writing-a-summary`, `citing-textual-evidence` | 0.4, 0.2 | It is a summary that keeps the text's words |
+| `writing-a-narrative-from-a-point-of-view` | `writing-a-narrative-paragraph`, `narrative-point-of-view` | 0.4, 0.3 | A story told from a chosen point of view |
