@@ -272,7 +272,8 @@ These are candidates we have read about, not choices:
 | Azure AI Speech | See §9 | Contract, regions per market |
 | Azure OpenAI in Hong Kong | [Microsoft said it served eligible customers there](https://sg.finance.yahoo.com/news/microsoft-maintains-ai-services-hong-093000823.html); undated, and terms not read | Whether it still does, and for minors |
 | Other speech and AI vendors, pi-ai routes, AI Gateway | Not checked | Each one, before use |
-| Cloudflare (hosting and Email Service), PostgreSQL host, Resend, Stripe | Not checked | Agreements, regions |
+| Hetzner (PostgreSQL and the voice service) | Hetzner Cloud in Hillsboro, Oregon, United States. Its data processing agreement under GDPR Art. 28 was concluded in the account on November 10, 2026, naming children's data and learners' texts and recordings in Appendix 1. Hetzner Online GmbH is the contracting party; Hetzner US LLC runs the US locations in third-party data centres | Whether the agreement meets each market's rules, such as COPPA, Korea's disclosure of entrusted processing and Quebec's assessment before a transfer |
+| Cloudflare (hosting and Email Service), Resend, Stripe | Not checked | Agreements, regions |
 
 **Hong Kong.** A vendor's region policy looks at where the user is. Routing a Hong Kong learner through our servers elsewhere would break it, so we do not. Hong Kong opens with `basic` and rule-judged work; AI scopes open when a vendor that serves Hong Kong and accepts minors' data is in the register.
 

@@ -310,7 +310,7 @@ client ──wss with a short-lived ticket──► Cloudflare ──Tunnel─�
 - **Transport.** A WebSocket with Protobuf messages, which needs no UDP on the pods. If measurements on real mobile networks across regions fall short, the transport changes to WebRTC through Cloudflare's TURN; the pipeline does not depend on it.
 - **Privacy.** Pods have no persistent volume and keep no audio, and logs hold no transcripts.
 
-Production runs on Kubernetes, with manifests in `deploy/voice` as a Kustomize base and overlays:
+Production runs on a Kubernetes cluster on Hetzner Cloud in Hillsboro, beside PostgreSQL ([Architecture §6](architecture.md#6-deployment)), with manifests in `deploy/voice` as a Kustomize base and overlays:
 
 | Concern | Design |
 | :--- | :--- |

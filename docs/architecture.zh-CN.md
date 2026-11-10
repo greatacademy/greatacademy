@@ -164,15 +164,21 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定托管 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日和每 15 分钟的 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
+  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定 PostgreSQL，通过 R2 绑定存放媒体和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日和每 15 分钟的 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
   - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
   - 部署前用 drizzle-kit 执行迁移。
+- **区域。** 无论学习者在哪个市场，数据都留在美国西部：
+  - PostgreSQL 和语音服务的 Kubernetes 集群运行在 Hetzner Cloud 位于俄勒冈州 Hillsboro 的机房（`hil`），备份也留在美国。
+  - Hyperdrive 经 Cloudflare Tunnel 连接 PostgreSQL，数据库没有公网端口。
+  - Web Worker 放在靠近数据库的地方运行，因为一个请求要查询数据库多次，否则每次查询都要跨洋。学科的 Worker 不查数据库，在边缘运行。
+  - R2 存储桶在首次部署前手动创建，位置提示设为 `wnam`，因为存储桶的位置之后不能更改。
+  - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以在为某个市场的未成年人提供服务之前，通知必须写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
   - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 `cf dev`（[开发指南](development.zh-CN.md) §7）。
 - **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一套 API。
-- **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
+- **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及与 PostgreSQL 同处一地、运行在 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 
 ### 6.1 学科作为 Worker
 

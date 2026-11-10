@@ -164,15 +164,21 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
 ## 6. Deployment
 
 - **Production:**
-  - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to a managed PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger and one every 15 minutes, the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, and the Stripe secrets of [Billing](billing.md) §10.
+  - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger and one every 15 minutes, the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, and the Stripe secrets of [Billing](billing.md) §10.
   - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
   - Migrations are applied with drizzle-kit before a deployment.
+- **Region.** Every learner's data stays in the western United States, whatever their market:
+  - PostgreSQL and the voice service's Kubernetes cluster run on Hetzner Cloud in Hillsboro, Oregon (`hil`), and their backups stay in the United States.
+  - Hyperdrive reaches PostgreSQL through Cloudflare Tunnel, so the database has no public port.
+  - The web Worker is placed near the database, since a request makes several queries and each would otherwise cross an ocean. The subjects' Workers query nothing and run at the edge.
+  - R2 buckets are created by hand with the location hint `wnam` before their first deployment, since a bucket's location cannot change.
+  - Holding data in one country is a transfer for every other market, so the notice must name the United States before a market's minors are served ([Minors' Data §12](minors-data.md#12-vendors)).
 - **Development:**
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).
   - The voice service runs in a container from its production image beside PostgreSQL, reaching `cf dev` on the host ([Development](development.md) §7).
 - **Mobile and desktop:** `nsh package` builds each platform's installable app. The app talks to the same API.
-- **Planned for English:** further Cloudflare services, AI models through pi-ai with providers configured by platform administrators, and a voice service on Kubernetes ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
+- **Planned for English:** further Cloudflare services, AI models through pi-ai with providers configured by platform administrators, and a voice service on Kubernetes beside PostgreSQL ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
 
 ### 6.1 Subjects as Workers
 

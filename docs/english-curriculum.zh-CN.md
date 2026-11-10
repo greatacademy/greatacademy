@@ -310,7 +310,7 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 - **传输。** 使用 Protobuf 消息的 WebSocket，Pod 不需要 UDP。如果在各地区真实移动网络上的测量不达标，就改用经 Cloudflare TURN 的 WebRTC；流水线不依赖传输方式。
 - **隐私。** Pod 没有持久卷，不保存音频，日志不含转写内容。
 
-生产环境运行在 Kubernetes 上，配置放在 `deploy/voice`，使用 Kustomize 的 base 和 overlay：
+生产环境运行在 Hetzner Cloud 位于 Hillsboro 的 Kubernetes 集群上，与 PostgreSQL 同处一地（[架构 §6](architecture.zh-CN.md#6-部署)），配置放在 `deploy/voice`，使用 Kustomize 的 base 和 overlay：
 
 | 问题 | 设计 |
 | :--- | :--- |
