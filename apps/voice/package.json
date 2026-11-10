@@ -1,0 +1,15 @@
+{
+  "name": "@ga/voice",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "uv run --locked ga-voice",
+    "typecheck": "uv run --locked pyright",
+    "test": "uv run --locked pytest",
+    "lint": "uv run --locked ruff check . && uv run --locked ruff format --check ."
+  },
+  "nx": {
+    "name": "voice"
+  }
+}

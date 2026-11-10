@@ -32,7 +32,7 @@ This document describes the system as built: technology choices, repository stru
    - The student model (repetition state, ability, XP) is derived state that can be rebuilt by replaying the log through the engine.
    - Changing a parameter of the engine is therefore a replay, not a data migration.
 5. **One language, shared everywhere.**
-   - All code is TypeScript. The one planned exception is the Python voice service of English ([English Curriculum §13.3](english-curriculum.md#133-the-voice-service)).
+   - All code is TypeScript. The one exception is the Python voice service of English, `apps/voice` ([English Curriculum §13.3](english-curriculum.md#133-the-voice-service)).
    - The engine and the content runtime are pure functions with no I/O. The same code runs in the Worker, the browser, the native apps, tests and offline simulations.
 6. **Content is code.**
    - Topics, knowledge points and problem generators are TypeScript modules reviewed through git.
@@ -55,6 +55,7 @@ This document describes the system as built: technology choices, repository stru
 | Payments | **Stripe**, one account of the US company, through `stripe` in the Worker (its fetch client and Web Crypto) | Plans by card that renew, and by Alipay and WeChat Pay that do not ([Billing](billing.md)); Checkout and the customer portal are Stripe's pages, so no card data reaches us |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
 | Mobile and desktop | **[Native Shell](https://nsh.dev)** (`nsh`, from the `greatacademy` branch of the project's fork), with StoreKit for in-app purchases in the app's own Rust crate, with the app in TSX on its QuickJS runtime | One app with each platform's own views on iOS, Android, macOS, Windows and Linux; same contracts and tokens as the web app |
+| Voice service | **Python 3.14** managed by **uv**, **Pipecat** 1.15.0 with its FastAPI WebSocket transport on **uvicorn**; **pytest**, **ruff**, **pyright** | Live conversation in English, a long-lived process that Workers cannot run; no LLM service inside, since the tutor's turns come from the web Worker over HTTP; tickets verified with Ed25519 (`cryptography`) |
 | Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
 
 ## 3. Repository Structure
@@ -64,6 +65,7 @@ apps/web/             TanStack Start on Workers: pages, better-auth, and libs/ap
 apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
 apps/english-workers/ The Workers serving English: a gateway and its shard
 apps/nsh/             Native Shell app in TSX (iOS, Android, macOS, Windows, Linux)
+apps/voice/           The voice service of English in Python on Pipecat: turn taking, barge-in, tickets, drain
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
 libs/api/             Connect service implementations and the session runner; transport- and host-agnostic
 libs/engine/          Learning engine: graph, frontier, FIRe, task selection, diagnostic, XP, quizzes (pure)
@@ -98,6 +100,7 @@ apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
+apps/voice ╌╌► apps/web over HTTP (no package dependency)
 ```
 
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.
@@ -107,6 +110,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
 - `libs/subject-worker` is the one library that imports the Workers runtime; it knows no subject.
+- `apps/voice` is Python and imports nothing from the repository. It reaches the web Worker over HTTP with its own credential, for the tutor's turns and to write results; the WebSocket messages it shares with clients become Protobuf in `libs/proto`.
 - Only `apps/*` wire storage, transport, authentication and content together. The web Worker does not import content: it reaches subjects through service bindings.
 
 ## 4. Domain Model
@@ -161,6 +165,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
 - **Development:**
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).
+  - The voice service runs in a container from its production image beside PostgreSQL, reaching `cf dev` on the host ([Development](development.md) §7).
 - **Mobile and desktop:** `nsh package` builds each platform's installable app. The app talks to the same API.
 - **Planned for English:** further Cloudflare services, AI models through pi-ai with providers configured by platform administrators, and a voice service on Kubernetes ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
 

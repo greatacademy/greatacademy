@@ -3,5 +3,8 @@ node = "26.11.1"
 pnpm = "12.11.2"
 # Code generation of libs/proto.
 buf = "1.73.0"
+# The voice service (apps/voice), the one Python project.
+python = "3.14.8"
+uv = "0.13.5"
 # The native apps (apps/nsh) use Native Shell built from its main branch, installed apart from mise:
 # curl -fsSL https://nsh.dev/install.sh | sh -s -- --source

@@ -16,5 +16,32 @@ services:
       interval: 2s
       timeout: 3s
       retries: 20
+  # The voice service (apps/voice), built from the production image. It keeps no audio:
+  # no volume, a read-only filesystem, and /tmp in memory. It reaches `cf dev` on the host.
+  voice:
+    build:
+      context: apps/voice
+    image: greatacademy-voice:dev
+    env_file:
+      - path: apps/voice/.env.local
+        required: false
+    environment:
+      VOICE_WORKER_URL: ${VOICE_WORKER_URL:-http://host.docker.internal:5173}
+      VOICE_SPEECH: ${VOICE_SPEECH:-fake}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8089:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    # Like terminationGracePeriodSeconds in production: SIGTERM lets running sessions finish.
+    stop_grace_period: 25m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    profiles: ["voice"]
 volumes:
   postgres:

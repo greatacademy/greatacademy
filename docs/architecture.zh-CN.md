@@ -32,7 +32,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
    - 学生模型（重复状态、能力、XP）是派生状态，可以用引擎重放日志来重建。
    - 因此修改引擎参数只需重放，不需要数据迁移。
 5. **一种语言，处处共享。**
-   - 全部代码使用 TypeScript。唯一计划中的例外是英语的 Python 语音服务（[英语课程体系 §13.3](english-curriculum.zh-CN.md#133-语音服务)）。
+   - 全部代码使用 TypeScript。唯一的例外是英语的 Python 语音服务 `apps/voice`（[英语课程体系 §13.3](english-curriculum.zh-CN.md#133-语音服务)）。
    - 引擎和内容运行时都是没有 I/O 的纯函数，同一份代码运行在 Worker、浏览器、原生应用、测试和离线模拟中。
 6. **内容即代码。**
    - 知识点、knowledge point 和题目生成器都是 TypeScript 模块，通过 git 评审。
@@ -55,6 +55,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 支付 | **Stripe**，美国公司的一个账户，在 Worker 中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
 | 数据库 | **PostgreSQL 17**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:17-alpine` 容器 |
 | 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，来自项目 fork 的 `greatacademy` 分支），内购用的 StoreKit 在应用自己的 Rust crate 中，应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
+| 语音服务 | 由 **uv** 管理的 **Python 3.14**，**Pipecat** 1.15.0 及其 FastAPI WebSocket 传输，运行在 **uvicorn** 上；**pytest**、**ruff**、**pyright** | 英语实时对话，是 Worker 无法运行的长驻进程；内部没有 LLM 服务，导师的回合由 Web Worker 通过 HTTP 给出；票据用 Ed25519 校验（`cryptography`） |
 | 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
 
 ## 3. 仓库结构
@@ -64,6 +65,7 @@ apps/web/             TanStack Start on Workers：页面、better-auth，并把 
 apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
 apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
 apps/nsh/             Native Shell 的 TSX 应用（iOS、Android、macOS、Windows、Linux）
+apps/voice/           英语的语音服务，用 Python 基于 Pipecat 编写：轮流说话、打断、票据、排空
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
 libs/api/             Connect 服务实现与会话执行器；与传输方式和宿主无关
 libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择、诊断、XP、测验（纯函数）
@@ -98,6 +100,7 @@ apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
+apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 ```
 
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。
@@ -107,6 +110,7 @@ tools/pilot ──► libs/db, libs/engine, content/math, content/english
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
 - `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
+- `apps/voice` 用 Python 编写，不引入仓库内任何代码。它用自己的凭据经 HTTP 访问 Web Worker，获取导师的回合并写入结果；它与客户端共用的 WebSocket 消息以后在 `libs/proto` 中改为 Protobuf。
 - 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。Web Worker 不引入内容，而是通过服务绑定访问学科。
 
 ## 4. 领域模型
@@ -161,6 +165,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
 - **开发：**
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
+  - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 `cf dev`（[开发指南](development.zh-CN.md) §7）。
 - **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一套 API。
 - **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 

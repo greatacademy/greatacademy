@@ -22,7 +22,7 @@
 
 ## 项目概述
 
-Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、基于 Native Shell 的 TSX 原生应用，以及内容和学习引擎的纯函数库。唯一计划中的例外是英语的 Python 语音服务（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
+Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、基于 Native Shell 的 TSX 原生应用，以及内容和学习引擎的纯函数库。唯一的例外是英语的 Python 语音服务 `apps/voice`（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
 
 ## 目录结构
 
@@ -31,6 +31,7 @@ apps/web/            TanStack Start on Cloudflare Workers：页面、Connect API
 apps/math-workers/   数学的网关和分片 Worker
 apps/english-workers/ 英语的网关和分片 Worker
 apps/nsh/            Native Shell 的 TSX 应用：iOS、Android、macOS、Windows、Linux
+apps/voice/          英语的语音服务：基于 Pipecat 的 Python，由 uv 管理
 libs/content/        内容模型、编译器、题目运行时、判定器（与学科无关）
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数
@@ -49,7 +50,7 @@ tools/pilot/         根据真实作答生成试点报告
 
 ## 命令
 
-工具版本由 `mise.toml` 固定；`pnpm nx` 在 `mise exec` 下运行 Nx。Native Shell 则使用项目 fork 的 `greatacademy` 分支（[docs/development.zh-CN.md](docs/development.zh-CN.md) §6）。
+工具版本由 `mise.toml` 固定，包括 `apps/voice` 用的 Python 和 uv；`pnpm nx` 在 `mise exec` 下运行 Nx。Native Shell 则使用项目 fork 的 `greatacademy` 分支（[docs/development.zh-CN.md](docs/development.zh-CN.md) §6）。
 
 ```bash
 mise install
@@ -85,6 +86,7 @@ pnpm format                                # 用 Biome 格式化并修复
 - 全部使用 Vitest，测试文件以 `*.test.ts` 放在代码旁边。
 - 引擎规则用显式的时间和种子测试，没有测试依赖真实时钟。
 - 数据库测试运行在 PGlite 上，不需要启动任何服务器。
+- `apps/voice` 通过 `uv run` 使用 pytest、pyright 和 ruff，确切版本写在 `pyproject.toml` 和 `uv.lock` 中；它的测试模拟语音服务和 Web Worker，不需要网络（[docs/development.zh-CN.md](docs/development.zh-CN.md) §7）。
 
 ## 文档
 

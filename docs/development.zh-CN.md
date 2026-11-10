@@ -8,7 +8,7 @@
 
 ## 1. 工具链
 
-工具版本由 `mise.toml` 固定（Node.js、pnpm、buf）。安装 [mise](https://mise.jdx.dev) 后执行下面的命令。原生应用需要 Native Shell 的 main 分支，mise 不提供它（§6）。
+工具版本由 `mise.toml` 固定（Node.js、pnpm、buf，以及语音服务用的 Python 和 uv）。安装 [mise](https://mise.jdx.dev) 后执行下面的命令。原生应用需要 Native Shell 的 main 分支，mise 不提供它（§6）。
 
 ```bash
 mise install
@@ -32,6 +32,8 @@ pnpm format                                # Biome：格式化并应用安全修
 | `test` | Vitest | 测试以 `*.test.ts` 放在代码旁边 |
 | `lint` | Biome | 只在 `biome.json` 中配置一次 |
 
+语音服务（`apps/voice`）是唯一的 Python 项目：它的 `typecheck`、`test` 和 `lint` 脚本通过 `uv run` 运行 pyright、pytest，以及 `ruff check` 和 `ruff format --check`，配置在它的 `pyproject.toml` 中（§7）。
+
 Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输入改变时目标才会重新运行。
 
 ## 3. 项目
@@ -54,6 +56,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `nsh` | `apps/nsh` | Native Shell 应用：欢迎页、登录、注册和年龄问题；学习、进度、课程、我的四个标签页；账号设置（个人资料、每周目标、联赛、密码、监护人）；课程大纲、进度地图、历史记录和任务播放器；隐私、同意和监护人页面；连接 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误 |
+| `voice` | `apps/voice` | 英语实时对话的语音服务，用 Python 基于 Pipecat 编写；用模拟的语音服务和模拟的 Web Worker 测试（§7） |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
@@ -135,3 +138,25 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - 桌面窗口不能缩小到 420×600 点以下（`lib/window.ts`）。
 - `pnpm nx run nsh:package -- --target <target>` 构建安装包，应用标识符是 `dev.greatacademy.app`，图标来自 `assets/`。它默认使用 `https://greatacademy.dev`，可用 `--api-url` 指定其他服务器；其他参数（如 `--sign` 和 `--profile`）会传给 `nsh package`。Nx 通过 shell 传递参数，所以当参数值含有括号时（签名身份就是这样），请在 `apps/nsh` 下通过 `mise exec` 用同样的参数运行 `node scripts/package.ts`。
 - 图标跟随系统的浅色或深色外观：背景是白色或深色的 surface 令牌。`nsh package` 只接受一个图标，所以脚本随后用 `actool` 为 iOS 和 macOS 编译 `assets/AppIcon.icon`（macOS 保留 `.icns` 给旧系统），把 `assets/icon-dark.png` 作为 Android 夜间模式的启动器图标，然后重新签名。Windows 和 Linux 仍用浅色图标。如果 iOS 宿主链接的 SDK 早于 iOS 26（Native Shell 0.4.0 发布版就是这样），脚本会在签名前让它报告 iOS 26，因为 UIKit 只给这样的应用绘制 Liquid Glass。
+
+## 7. 运行语音服务
+
+语音服务（`apps/voice`，[英语课程 §13.3](english-curriculum.zh-CN.md#133-语音服务)）是由 uv 管理的 Python 项目；`mise install` 会安装两者。`uv run` 第一次使用时按 `uv.lock` 创建 `apps/voice/.venv`，Nx 目标也是如此。
+
+```bash
+pnpm nx run-many -t typecheck test lint -p voice   # pyright、pytest、ruff
+cd apps/voice && uv run python -m ga_voice.devkeys # 生成用于票据的开发密钥对
+```
+
+- 测试不需要网络：语音服务、语音活动检测和 Web Worker 都是模拟的；一个端到端测试在进程内用真实的 WebSocket 运行服务器，包括会话进行中的 `SIGTERM`。
+- 服务读取 `VOICE_*` 变量：`VOICE_TICKET_PUBLIC_KEY`（Worker 签发票据所用密钥的公钥）、`VOICE_WORKER_URL` 和 `VOICE_WORKER_CREDENTIAL` 是必需的；`VOICE_SPEECH` 为 `unconfigured`（以 `speech_unavailable` 拒绝会话）或 `fake`（脚本化的语音，仅用于本地开发）。代码中不选定任何语音服务商。
+- 像生产环境一样在容器中运行：把 `apps/voice/.env.example` 复制为 `apps/voice/.env.local`（被 git 忽略）并填入公钥，然后：
+
+```bash
+docker compose build voice
+docker compose up -d voice          # ws://localhost:8089/v1/conversation；/healthz 和 /readyz
+docker compose stop voice           # SIGTERM：拒绝新会话，等待进行中的会话结束（最长 25 分钟）
+```
+
+- `voice` 服务属于 `voice` profile，所以普通的 `docker compose up -d` 仍然只启动 PostgreSQL。它通过 `http://host.docker.internal:5173` 访问主机上的 `cf dev`；要指向别处，设置 `VOICE_WORKER_URL`。如果容器访问不到 Web 应用，用 `DEV_HOST=0.0.0.0` 启动 Web 应用。
+- 容器没有卷，文件系统只读，`/tmp` 在内存中。日志中没有音频或转写文本：Pipecat 自己的日志只保留警告及以上级别，调试输出从不打开。

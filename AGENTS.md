@@ -22,7 +22,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 
 ## Project Overview
 
-Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, native apps in TSX on Native Shell, and pure libraries for content and the learning engine. The one planned exception is the Python voice service of English ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
+Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, native apps in TSX on Native Shell, and pure libraries for content and the learning engine. The one exception is the Python voice service of English, `apps/voice` ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
 
 ## Directory Structure
 
@@ -31,6 +31,7 @@ apps/web/            TanStack Start on Cloudflare Workers: pages, Connect API, b
 apps/math-workers/   The gateway and shard Workers of mathematics
 apps/english-workers/ The gateway and shard Workers of English
 apps/nsh/            Native Shell app in TSX: iOS, Android, macOS, Windows, Linux
+apps/voice/          The voice service of English: Python on Pipecat, managed by uv
 libs/content/        Content model, compiler, problem runtime, checkers (subject-agnostic)
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers
@@ -49,7 +50,7 @@ tools/pilot/         Pilot report from real answers
 
 ## Commands
 
-Tool versions are pinned in `mise.toml`; `pnpm nx` runs Nx under `mise exec`. Native Shell comes from the `greatacademy` branch of the project's fork instead ([docs/development.md](docs/development.md) §6).
+Tool versions are pinned in `mise.toml`, Python and uv for `apps/voice` included; `pnpm nx` runs Nx under `mise exec`. Native Shell comes from the `greatacademy` branch of the project's fork instead ([docs/development.md](docs/development.md) §6).
 
 ```bash
 mise install
@@ -85,6 +86,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 - Vitest everywhere; tests sit next to the code as `*.test.ts`.
 - Engine rules are tested with explicit times and seeds; no test depends on the wall clock.
 - Database tests run on PGlite; no test needs a running server.
+- `apps/voice` uses pytest, pyright and ruff through `uv run`, with exact versions in `pyproject.toml` and `uv.lock`; its tests fake the speech services and the web Worker and need no network ([docs/development.md](docs/development.md) §7).
 
 ## Documentation
 

@@ -8,7 +8,7 @@ This document explains how to set up the repository, run the checks, and run the
 
 ## 1. Toolchain
 
-Tool versions are pinned in `mise.toml` (Node.js, pnpm, buf). Install [mise](https://mise.jdx.dev), then the commands below. The native app needs Native Shell from its main branch, which mise does not provide (§6).
+Tool versions are pinned in `mise.toml` (Node.js, pnpm, buf, and Python and uv for the voice service). Install [mise](https://mise.jdx.dev), then the commands below. The native app needs Native Shell from its main branch, which mise does not provide (§6).
 
 ```bash
 mise install
@@ -32,6 +32,8 @@ pnpm format                                # Biome: format and apply safe fixes
 | `test` | Vitest | Tests sit next to the code as `*.test.ts` |
 | `lint` | Biome | Configured once in `biome.json` |
 
+The voice service (`apps/voice`) is the one Python project: its `typecheck`, `test` and `lint` scripts run pyright, pytest, and `ruff check` with `ruff format --check` through `uv run`, configured in its `pyproject.toml` (§7).
+
 Nx caches the results of these targets in `.nx/` (ignored by git); a target reruns only when its inputs change.
 
 ## 3. Projects
@@ -54,6 +56,7 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `nsh` | `apps/nsh` | The Native Shell app: the welcome page, sign-in, sign-up and the age question; the Learn, Progress, Courses and Me tabs; account settings (profile, weekly goals, leagues, password, guardians); course outlines, the progress map, the history and the task player; privacy, consent and the guardian pages; against the web app's API (§6) |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 | `audit` | `tools/audit` | Content audit: outline topics missing from courses and heuristic checks (short explanations, terse solutions, missing `wrong`, missing figures and more). `pnpm nx run audit:audit -- <absolute path>` writes a Markdown report; findings are leads to review, not errors |
+| `voice` | `apps/voice` | The voice service for live conversation in English, in Python on Pipecat; tested with faked speech services and a faked web Worker (§7) |
 | `pilot` | `tools/pilot` | Pilot report for a course from a database: `DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i` ([Roadmap §3](roadmap.md#3-pilot)) |
 
 The table grows with the repository; [Architecture §3](architecture.md#3-repository-structure) shows the target structure.
@@ -135,3 +138,25 @@ pnpm nx run nsh:android               # An emulator or device; needs the Android
 - A desktop window cannot be made smaller than 420 by 600 points (`lib/window.ts`).
 - `pnpm nx run nsh:package -- --target <target>` builds an installable app, whose identifier is `dev.greatacademy.app`, with its icon from `assets/`. It uses `https://greatacademy.dev` unless `--api-url` names another server, and passes other flags, such as `--sign` and `--profile`, on to `nsh package`. Nx runs its arguments through a shell, so when a value holds parentheses, as a signing identity does, run `node scripts/package.ts` with the same flags from `apps/nsh` under `mise exec`.
 - The icon follows the system's light or dark appearance: the background is white or the dark surface token. `nsh package` takes one icon, so the script then compiles `assets/AppIcon.icon` with `actool` for iOS and macOS (macOS keeps the `.icns` for older systems), adds `assets/icon-dark.png` as Android's night launcher icon, and signs the app again. Windows and Linux keep the light icon. An iOS host linked against an SDK older than iOS 26, as Native Shell's 0.4.0 release was, is made to report iOS 26 before signing, since UIKit draws Liquid Glass only for apps that do.
+
+## 7. Running the Voice Service
+
+The voice service (`apps/voice`, [English curriculum §13.3](english-curriculum.md#133-the-voice-service)) is a Python project managed by uv; `mise install` provides both. `uv run` creates `apps/voice/.venv` from `uv.lock` on first use, which the Nx targets do too.
+
+```bash
+pnpm nx run-many -t typecheck test lint -p voice   # pyright, pytest, ruff
+cd apps/voice && uv run python -m ga_voice.devkeys # A development key pair for tickets
+```
+
+- The tests need no network: speech services, voice activity and the web Worker are faked, and an end-to-end test runs the server in the process with real WebSockets, including a `SIGTERM` during a session.
+- The service reads `VOICE_*` variables: `VOICE_TICKET_PUBLIC_KEY` (the public half of the key the Worker signs tickets with), `VOICE_WORKER_URL` and `VOICE_WORKER_CREDENTIAL` are required; `VOICE_SPEECH` is `unconfigured` (sessions are refused with `speech_unavailable`) or `fake` (scripted speech, for local development only). No speech provider is chosen in code.
+- In a container, as in production: copy `apps/voice/.env.example` to `apps/voice/.env.local` (ignored by git) and fill in the public key, then:
+
+```bash
+docker compose build voice
+docker compose up -d voice          # ws://localhost:8089/v1/conversation; /healthz and /readyz
+docker compose stop voice           # SIGTERM: refuses new sessions, waits for running ones (up to 25 minutes)
+```
+
+- The `voice` service is in the `voice` profile, so a plain `docker compose up -d` still starts only PostgreSQL. It reaches `cf dev` on the host at `http://host.docker.internal:5173`; set `VOICE_WORKER_URL` to point elsewhere. Start the web app with `DEV_HOST=0.0.0.0` if the container cannot reach it.
+- The container has no volume and a read-only filesystem with `/tmp` in memory. Logs hold no audio or transcripts: Pipecat's own records are kept only from warnings up, and debug output is never turned on.
