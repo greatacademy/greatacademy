@@ -1,6 +1,14 @@
 // The native courses by grade band, built from the topics of the skill courses and new ones by theme.
 
 import { emptyPack, type Pack } from "../pack.ts";
+import { conversationsCollege } from "./college/conversations.ts";
+import { courseCollege } from "./college/course.ts";
+import { grammarTopicsCollege } from "./college/grammar.ts";
+import { lexiconCollege } from "./college/lexicon.ts";
+import { academicProse } from "./college/reading-academic.ts";
+import { readingSkillTopicsCollege } from "./college/reading-skills.ts";
+import { vocabularyCollege, wordTopicsCollege } from "./college/words.ts";
+import { writingTopicsCollege } from "./college/writing.ts";
 import { conversations35 } from "./grades-3-5/conversations.ts";
 import { course35 } from "./grades-3-5/course.ts";
 import { grammarTopics35 } from "./grades-3-5/grammar.ts";
@@ -69,7 +77,16 @@ const grades912: Pack = {
 };
 
 /** college is the content of the college writing course, with passages of 500 to 900 words. */
-const college: Pack = { ...emptyPack, passageWords: [500, 900] };
+const college: Pack = {
+  ...emptyPack,
+  topics: [...wordTopicsCollege, ...grammarTopicsCollege, ...readingSkillTopicsCollege, ...writingTopicsCollege],
+  courses: [courseCollege],
+  reading: [academicProse],
+  conversations: conversationsCollege,
+  lexicon: lexiconCollege,
+  vocabulary: vocabularyCollege,
+  passageWords: [500, 900],
+};
 
 /** nativePacks are the native courses by grade band, one pack each, so that each band has its own passage lengths. */
 export const nativePacks: readonly Pack[] = [grades35, grades68, grades912, college];

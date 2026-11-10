@@ -6,7 +6,7 @@
 - **阶段：** 大学一年级，以及为学习或工作而写作的成年人
 - **先修：** [英语：九至十二年级](english-grades-9-12.zh-CN.md)（`buildsOn: ["english-grades-9-12"]`）
 - **讲解语言：** 英语
-- **规模：** 8 个单元 · 38 个知识点，全部新增（词汇 8 个，语法、文体与书写规范 9 个，阅读 8 个，由模型评判的写作 13 个）· 8 个阅读单元 · 8 个对话
+- **规模：** 8 个单元 · 38 个知识点，全部新增（词汇 8 个，语法、文体与书写规范 9 个，阅读 8 个，由模型评判的写作 13 个）· 8 个阅读单元（第一个 `academic-prose` 已写成；其余七个尚在计划中，写成之前相应单元没有阅读单元）· 8 个对话
 
 ## 目标
 
@@ -16,7 +16,7 @@
 
 每个单元是一个主题，同时教授四样东西：词汇、句子与文体、一种阅读，以及写作。单元以一个主题阅读单元和一个对话收尾。每个知识点列出其先修，三至十二年级的知识点视为已掌握。
 
-深度：每个由规则判定的知识点至少有 30 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中；每个由模型评判的写作知识点至少有 12 个带范文的任务，研究论文分成可以逐个评判的知识要点（问题与论点、文献综述部分、方法或证据部分、讨论部分、带参考文献的全文）。每个阅读单元有 8 到 10 篇 500 到 900 词的文章，每篇四道题。
+深度：每个由规则判定的知识点至少有 30 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中；每个由模型评判的写作知识点至少有 12 个带范文的任务，研究论文分成三个可以逐个评判的知识要点（引言，含背景、空白与论点；讨论部分；带参考文献的全文），文献综述单独成为一个知识点。每个阅读单元至少有 8 篇 500 到 900 词的文章，每篇三道题。
 
 听力和口语要等音频和录音：在此之前，单元列出对话但不提供，每个单元说明届时会增加什么。
 
@@ -32,7 +32,7 @@
 
 **写作：** `writing-a-critical-summary` 写评述性摘要（由模型评判；先修 `writing-an-objective-summary`、`reading-academic-arguments`）：用一段话概括文章的论证，再指出一个长处和一个局限。
 
-**阅读单元：** `academic-prose`，10 篇仿学术期刊风格的原创文章：一项关于记忆的研究；最低工资；历史学家之间的一场争论；儿童怎样习得语法；城市里的鸟；青少年与社交媒体；自由意志；家庭作业与学习；睡眠与成绩；一门正在消亡的语言。
+**阅读单元：** `academic-prose`，8 篇仿学术期刊风格的原创文章：一项关于记忆的研究；最低工资；历史学家之间的一场争论；儿童怎样习得语法；城市里的鸟；青少年与社交媒体；自由意志；一门正在消亡的语言。
 
 **对话：** `professor-office-hours`。导师扮演答疑时间的教授。任务：说明你在一篇指定文章中觉得难懂的地方，并提一个有针对性的问题。
 
@@ -88,9 +88,9 @@
 
 ### 5. 文体与清晰
 
-**词汇：** `words-often-misused` 常被误用的词（先修 `context-clues`）：comprise, disinterested, enormity, literally, nauseous, ironic, decimate, fortuitous, peruse, bemused。
+**词汇：** `words-often-misused` 常被误用的词（先修 `connotation-and-precise-words`）：comprise, disinterested, enormity, literally, infer, ironic, decimate, fortuitous, peruse, bemused。
 
-**文体：** `clear-sentences-characters-and-actions` 清晰的句子：人物与动作（先修 `cutting-wordiness`、`active-and-passive-voice`）：让主要人物作主语、动作作谓语，并化解名词化。
+**文体：** `clear-sentences-characters-and-actions` 清晰的句子：人物与动作（先修 `cutting-wordiness`）：让主要人物作主语、动作作谓语，并化解名词化。
 
 **阅读：** `analyzing-prose-style` 分析散文文体（先修 `rhetorical-devices`）：措辞、句法和节奏，以及它们怎样塑造读者的体验。
 
@@ -110,7 +110,7 @@
 
 **阅读：** `reading-charts-and-statistics` 阅读图表和统计（先修 `evaluating-sources`、`logical-fallacies`）：图表显示了什么、隐藏了什么，相关与因果，以及误导性的刻度。
 
-**写作：** `writing-about-data` 写数据（由模型评判；先修 `reading-charts-and-statistics`、`writing-an-explanatory-essay`）：写一段话准确地报告一张表或图，只得出它所支持的结论。
+**写作：** `writing-about-data` 写数据（由模型评判；先修 `reading-charts-and-statistics`、`numbers-in-writing`、`writing-an-explanatory-essay`）：写一段话准确地报告一张表或图，只得出它所支持的结论。
 
 **阅读单元：** `numbers-in-the-news`，10 篇，每篇附一张用文字描述的表或图：选举前的民调；犯罪率；房价；屏幕使用时间；考试成绩；空气污染；预期寿命；一项医疗风险；性别薪酬差距；一项体育统计。
 
@@ -173,14 +173,14 @@
 | `reading-a-research-paper` | 阅读 | 4 | `reading-academic-arguments` |
 | `writing-a-literature-review` | 写作（模型评判） | 4 | `writing-an-annotated-bibliography`，`synthesizing-sources` |
 | `writing-a-research-paper` | 写作（模型评判，W6） | 4 | `writing-a-literature-review`，`citing-in-mla-and-apa`，`writing-an-argumentative-essay` |
-| `words-often-misused` | 词汇 | 5 | `context-clues` |
-| `clear-sentences-characters-and-actions` | 语法 | 5 | `cutting-wordiness`，`active-and-passive-voice` |
+| `words-often-misused` | 词汇 | 5 | `connotation-and-precise-words` |
+| `clear-sentences-characters-and-actions` | 语法 | 5 | `cutting-wordiness` |
 | `analyzing-prose-style` | 阅读 | 5 | `rhetorical-devices` |
 | `revising-for-clarity` | 写作（模型评判） | 5 | `clear-sentences-characters-and-actions`，`revising-a-draft` |
 | `words-of-statistics` | 词汇 | 6 | `context-clues` |
 | `numbers-in-writing` | 写作 | 6 | `capitalizing-names-and-titles` |
 | `reading-charts-and-statistics` | 阅读 | 6 | `evaluating-sources`，`logical-fallacies` |
-| `writing-about-data` | 写作（模型评判） | 6 | `reading-charts-and-statistics`，`writing-an-explanatory-essay` |
+| `writing-about-data` | 写作（模型评判） | 6 | `reading-charts-and-statistics`，`numbers-in-writing`，`writing-an-explanatory-essay` |
 | `words-of-the-workplace` | 词汇 | 7 | `context-clues` |
 | `tone-and-register-at-work` | 语法 | 7 | `connotation-and-precise-words`，`verb-moods` |
 | `reading-workplace-documents` | 阅读 | 7 | `text-features` |

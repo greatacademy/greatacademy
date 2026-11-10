@@ -6,7 +6,7 @@
 - **Level:** First year of university, and adults who write for study or work
 - **Prerequisite(s):** [English, Grades 9 to 12](english-grades-9-12.md) (`buildsOn: ["english-grades-9-12"]`)
 - **Language of explanation:** English
-- **Size:** 8 units · 38 topics, all new (8 of vocabulary, 9 of grammar, style and mechanics, 8 of reading, 13 of writing judged by a model) · 8 reading units · 8 conversations
+- **Size:** 8 units · 38 topics, all new (8 of vocabulary, 9 of grammar, style and mechanics, 8 of reading, 13 of writing judged by a model) · 8 reading units (the first, `academic-prose`, is written; the other seven are planned, and their units go without one until then) · 8 conversations
 
 ## Aim
 
@@ -16,7 +16,7 @@ By the end of the course a learner reads academic articles, data and workplace d
 
 Every unit is a theme and teaches four things together: words, sentences and style, a kind of reading, and writing. It ends with a reading unit on the theme and a conversation. Each topic lists its prerequisites; topics of grades 3 to 12 count as known.
 
-Depth: each rule-checked knowledge point has at least 30 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences; each judged writing knowledge point has at least 12 tasks with a model, and the research paper is split into knowledge points that can be judged one at a time (a question and thesis, a literature review section, a methods or evidence section, a discussion, the whole paper with its references). Each reading unit has 8 to 10 passages of 500 to 900 words with four questions each.
+Depth: each rule-checked knowledge point has at least 30 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences; each judged writing knowledge point has at least 12 tasks with a model, and the research paper is split into three knowledge points that can be judged one at a time (the introduction, with its context, gap and thesis; the discussion; the whole paper with its references), the literature review being a topic of its own. Each reading unit has at least 8 passages of 500 to 900 words with three questions each.
 
 Listening and speaking wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
@@ -32,7 +32,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-a-critical-summary` Writing a Critical Summary (judged by a model; after `writing-an-objective-summary`, `reading-academic-arguments`): an article's argument in a paragraph, then one strength and one limitation.
 
-**Reading unit:** `academic-prose`, 10 original passages in the manner of journal articles: a study of memory; the minimum wage; a debate among historians; how children learn grammar; birds in cities; teenagers and social media; free will; homework and learning; sleep and grades; a language that is dying.
+**Reading unit:** `academic-prose`, 8 original passages in the manner of journal articles: a study of memory; the minimum wage; a debate among historians; how children learn grammar; birds in cities; teenagers and social media; free will; a language that is dying.
 
 **Conversation:** `professor-office-hours`. The tutor is a professor in office hours. Task: explain what you found hard in an assigned article and ask a focused question about it.
 
@@ -88,9 +88,9 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 ### 5. Style and Clarity
 
-**Words:** `words-often-misused` Words Often Misused (after `context-clues`): comprise, disinterested, enormity, literally, nauseous, ironic, decimate, fortuitous, peruse, bemused.
+**Words:** `words-often-misused` Words Often Misused (after `connotation-and-precise-words`): comprise, disinterested, enormity, literally, infer, ironic, decimate, fortuitous, peruse, bemused.
 
-**Style:** `clear-sentences-characters-and-actions` Clear Sentences: Characters and Actions (after `cutting-wordiness`, `active-and-passive-voice`): main characters as subjects, actions as verbs, and undoing nominalizations.
+**Style:** `clear-sentences-characters-and-actions` Clear Sentences: Characters and Actions (after `cutting-wordiness`): main characters as subjects, actions as verbs, and undoing nominalizations.
 
 **Reading:** `analyzing-prose-style` Analyzing Prose Style (after `rhetorical-devices`): diction, syntax and rhythm, and how they shape a reader's experience.
 
@@ -110,7 +110,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Reading:** `reading-charts-and-statistics` Reading Charts and Statistics (after `evaluating-sources`, `logical-fallacies`): what a chart shows and hides, correlation and cause, and misleading scales.
 
-**Writing:** `writing-about-data` Writing About Data (judged by a model; after `reading-charts-and-statistics`, `writing-an-explanatory-essay`): a paragraph that reports a table or chart accurately and draws only the conclusion it supports.
+**Writing:** `writing-about-data` Writing About Data (judged by a model; after `reading-charts-and-statistics`, `numbers-in-writing`, `writing-an-explanatory-essay`): a paragraph that reports a table or chart accurately and draws only the conclusion it supports.
 
 **Reading unit:** `numbers-in-the-news`, 10 passages, each with a table or figure described in words: a poll before an election; crime rates; the price of housing; screen time; test scores; air pollution; life expectancy; a medical risk; the gender pay gap; a sports statistic.
 
@@ -173,14 +173,14 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 | `reading-a-research-paper` | reading | 4 | `reading-academic-arguments` |
 | `writing-a-literature-review` | writing (judged) | 4 | `writing-an-annotated-bibliography`, `synthesizing-sources` |
 | `writing-a-research-paper` | writing (judged, W6) | 4 | `writing-a-literature-review`, `citing-in-mla-and-apa`, `writing-an-argumentative-essay` |
-| `words-often-misused` | vocabulary | 5 | `context-clues` |
-| `clear-sentences-characters-and-actions` | grammar | 5 | `cutting-wordiness`, `active-and-passive-voice` |
+| `words-often-misused` | vocabulary | 5 | `connotation-and-precise-words` |
+| `clear-sentences-characters-and-actions` | grammar | 5 | `cutting-wordiness` |
 | `analyzing-prose-style` | reading | 5 | `rhetorical-devices` |
 | `revising-for-clarity` | writing (judged) | 5 | `clear-sentences-characters-and-actions`, `revising-a-draft` |
 | `words-of-statistics` | vocabulary | 6 | `context-clues` |
 | `numbers-in-writing` | writing | 6 | `capitalizing-names-and-titles` |
 | `reading-charts-and-statistics` | reading | 6 | `evaluating-sources`, `logical-fallacies` |
-| `writing-about-data` | writing (judged) | 6 | `reading-charts-and-statistics`, `writing-an-explanatory-essay` |
+| `writing-about-data` | writing (judged) | 6 | `reading-charts-and-statistics`, `numbers-in-writing`, `writing-an-explanatory-essay` |
 | `words-of-the-workplace` | vocabulary | 7 | `context-clues` |
 | `tone-and-register-at-work` | grammar | 7 | `connotation-and-precise-words`, `verb-moods` |
 | `reading-workplace-documents` | reading | 7 | `text-features` |

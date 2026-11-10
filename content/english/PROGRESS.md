@@ -27,6 +27,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
 | Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
+| College writing: 38 topics in 8 units, 8 conversations | Done; only `academic-prose` of 8 reading units is written |
 | Grades 9 to 12: 37 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
@@ -176,3 +177,15 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `summarizing-a-text` | `writing-a-paragraph` | 0.2 | A summary is one paragraph |
 | `writing-a-letter-of-complaint` | `writing-a-formal-email` | 0.3 | It uses the whole formal email |
 | `writing-a-review` | `writing-an-opinion-paragraph` | 0.3 | It uses the whole opinion paragraph |
+| `finding-scholarly-sources`; `tracing-claims-to-sources` | `evaluating-sources` | 0.3; 0.2 | Judging sources is the core of one and a step of the other |
+| `reading-a-research-paper` | `reading-academic-arguments` | 0.3 | It reads the same argument structure |
+| `analyzing-prose-style` | `rhetorical-devices` | 0.2 | It names devices |
+| `reading-charts-and-statistics` | `logical-fallacies` | 0.2 | Misreading data is a fallacy |
+| `reading-requests-for-proposals` | `reading-workplace-documents` | 0.3 | Both are workplace documents |
+| The critical summary | `writing-an-objective-summary` | 0.4 | An objective summary is its body |
+| The annotated bibliography | the critical summary | 0.3 | Each annotation is a critical summary |
+| The literature review | `synthesizing-sources`; the annotated bibliography | 0.4; 0.2 | A review synthesizes its sources |
+| The research paper | the literature review; the argumentative essay; citing | 0.3; 0.3; 0.2 | The paper contains all three |
+| `revising-for-clarity` | clear sentences; `cutting-wordiness` | 0.3; 0.2 | Revising applies both |
+| Memo and cover letter | the professional email | 0.3 each | The same workplace register |
+| The research proposal | the research question; the executive summary | 0.4; 0.2 | The proposal is built on its question |

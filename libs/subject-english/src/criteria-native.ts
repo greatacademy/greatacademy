@@ -443,4 +443,370 @@ export const NATIVE_CRITERIA: readonly CriterionSpec[] = [
       "Does the essay have an engaging opening, keep one clear focus, and end with a conclusion that leaves the reader with a final insight?",
     quoteWhenMet: true,
   },
+  // College: a critical summary.
+  {
+    id: "col-critsum-claim",
+    version: "1",
+    question: "Does the response state the question the source addresses and its main claim or finding?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-critsum-support",
+    version: "1",
+    question:
+      "Does the summary give the source's main evidence or reasoning accurately and in the writer's own words, without adding anything the source does not say?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-critsum-strength",
+    version: "1",
+    question: "After the summary, does the response name one specific strength of the source and say why it is a strength?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-critsum-limitation",
+    version: "1",
+    question:
+      "Does the response name one specific limitation of the source, grounded in what the source says or does (such as its sample, method or scope)?",
+    quoteWhenMet: true,
+  },
+  // College: a research question.
+  {
+    id: "col-question-focused",
+    version: "1",
+    question: "Is the research question focused, naming a specific group, place, time or aspect rather than a whole broad topic?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-question-open",
+    version: "1",
+    question: "Is the question open to argument and analysis, rather than answerable with a single fact or a plain yes or no?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-question-researchable",
+    version: "1",
+    question:
+      "Does the response say what kind of evidence or sources could answer the question, so that it can be researched in the time and with the means a student has?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-question-significance",
+    version: "1",
+    question: "Does the response explain why the question matters or what answering it would add?",
+    quoteWhenMet: false,
+  },
+  // College: an annotated bibliography.
+  {
+    id: "col-annot-citation",
+    version: "1",
+    question:
+      "Does each entry begin with a full citation of the source, with author, year, title and publication, in one consistent style such as APA or MLA?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-annot-summary",
+    version: "1",
+    question: "Does each annotation summarize the source's main argument or findings accurately and briefly?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-annot-evaluation",
+    version: "1",
+    question: "Does each annotation judge the source, such as its credibility, method or limits?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-annot-use",
+    version: "1",
+    question: "Does each annotation say how the source relates to the stated research question or how the writer will use it?",
+    quoteWhenMet: true,
+  },
+  // College: a paraphrase.
+  {
+    id: "col-para-faithful",
+    version: "1",
+    question: "Does the paraphrase keep the meaning of the source, neither changing nor adding to what it says?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-para-complete",
+    version: "1",
+    question: "Does the paraphrase keep all the main points of the source passage?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-para-own-words",
+    version: "1",
+    question:
+      "Is the paraphrase written in new words and a new sentence structure, without strings of several words copied from the source outside quotation marks?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-para-cited",
+    version: "1",
+    question: "Does the paraphrase credit its source with a signal phrase or a citation that names the author?",
+    quoteWhenMet: true,
+  },
+  // College: a literature review.
+  {
+    id: "col-litrev-synthesis",
+    version: "1",
+    question:
+      "Is the review organized by ideas or findings that several sources share, rather than as a list that summarizes one source after another?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-litrev-relations",
+    version: "1",
+    question: "Does the review show where the sources agree, where they disagree, and why their results might differ?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-litrev-gap",
+    version: "1",
+    question: "Does the review end by identifying a question the sources leave open, a gap that further research could fill?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-litrev-citations",
+    version: "1",
+    question: "Is each claim taken from a source attributed to it, with the author and year?",
+    quoteWhenMet: false,
+  },
+  // College: a research paper.
+  {
+    id: "col-paper-context",
+    version: "1",
+    question: "Does the introduction set out the context of the topic and why it matters before narrowing to the question?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-paper-thesis",
+    version: "1",
+    question: "Does the writing state the research question and a clear thesis that answers it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-paper-gap",
+    version: "1",
+    question: "Does the introduction say what earlier work leaves open, so that the reader sees what this paper adds?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-paper-interprets",
+    version: "1",
+    question: "Does the discussion explain what the results mean for the research question, rather than only repeating the numbers?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-paper-compares",
+    version: "1",
+    question: "Does the discussion relate the results to earlier work, saying where they agree or differ?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-paper-limits",
+    version: "1",
+    question: "Does the writing acknowledge at least one limitation of the evidence and say how it affects the conclusions?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-paper-evidence",
+    version: "1",
+    question: "Does each body paragraph support the thesis with evidence from the sources, cited in the text with author and year?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-paper-organization",
+    version: "1",
+    question:
+      "Is the paper organized in a logical order, with an introduction, body paragraphs that each develop one point, and a conclusion that answers the question?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-paper-references",
+    version: "1",
+    question: "Does the paper end with a list of references for the sources it cites, in one consistent style?",
+    quoteWhenMet: true,
+  },
+  // College: revising for clarity.
+  {
+    id: "col-clarity-meaning",
+    version: "1",
+    question: "Does the revision keep every idea of the original paragraph, without changing its meaning?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-clarity-actors",
+    version: "1",
+    question:
+      "Does the revision make the main characters the subjects of its sentences and express the main actions as verbs rather than as abstract nouns?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-clarity-concise",
+    version: "1",
+    question: "Does the revision cut words that add nothing, such as empty phrases, repetition and needless qualifiers?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-clarity-readable",
+    version: "1",
+    question: "Is the revision grammatical and easy to read, with sentences of sensible length?",
+    quoteWhenMet: false,
+  },
+  // College: writing about data.
+  {
+    id: "col-data-context",
+    version: "1",
+    question: "Does the paragraph say what the data describe: who or what was measured, where, when and in what units?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-data-accurate",
+    version: "1",
+    question: "Are the figures the paragraph reports taken correctly from the data?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-data-pattern",
+    version: "1",
+    question: "Does the paragraph state the main pattern in the data and support it with comparisons of specific figures?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-data-supported",
+    version: "1",
+    question:
+      "Does the paragraph draw only the conclusions the data support, without claiming a cause from a correlation or going beyond what was measured?",
+    quoteWhenMet: false,
+  },
+  // College: a professional email.
+  {
+    id: "col-email-subject",
+    version: "1",
+    question: "Does the email have a specific subject line that tells the reader what it is about?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-email-purpose",
+    version: "1",
+    question: "Does the email state its purpose in its first one or two sentences?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-email-tone",
+    version: "1",
+    question: "Is the tone polite and professional, suited to the reader and the situation, neither too casual nor too stiff?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-email-action",
+    version: "1",
+    question:
+      "Does the email say clearly what the writer needs from the reader, or what happens next, with any dates or details the reader needs?",
+    quoteWhenMet: true,
+  },
+  // College: a memo.
+  {
+    id: "col-memo-format",
+    version: "1",
+    question: "Does the memo begin with To, From, Date and Subject lines?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-memo-purpose",
+    version: "1",
+    question: "Does the first paragraph state the memo's purpose and main point?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-memo-organization",
+    version: "1",
+    question: "Is the information organized so it can be scanned, with short paragraphs, and headings or lists where they help?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-memo-action",
+    version: "1",
+    question: "Does the memo end by saying what readers must do or what happens next, with any deadline?",
+    quoteWhenMet: true,
+  },
+  // College: a cover letter.
+  {
+    id: "col-cover-position",
+    version: "1",
+    question: "Does the letter name the position applied for near its start?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-cover-match",
+    version: "1",
+    question: "Does the letter match the applicant's specific experience or skills to the requirements of the job, with concrete examples?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-cover-tone",
+    version: "1",
+    question: "Is the tone confident, courteous and professional, without exaggeration or empty praise of oneself?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-cover-close",
+    version: "1",
+    question: "Does the letter close by asking for an interview or a next step and thanking the reader, with a proper sign-off?",
+    quoteWhenMet: true,
+  },
+  // College: an executive summary.
+  {
+    id: "col-exec-purpose",
+    version: "1",
+    question: "Does the summary open by saying what the report is about and why it was written?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-exec-findings",
+    version: "1",
+    question: "Does the summary give the most important findings, with key figures?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-exec-recommendation",
+    version: "1",
+    question: "Does the summary state the main recommendation or decision the report calls for?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-exec-standalone",
+    version: "1",
+    question: "Is the summary brief and complete enough that a busy reader could act on it without reading the full report?",
+    quoteWhenMet: false,
+  },
+  // College: a research proposal.
+  {
+    id: "col-proposal-question",
+    version: "1",
+    question: "Does the proposal state a focused research question or aim?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "col-proposal-rationale",
+    version: "1",
+    question: "Does the proposal explain why the question matters, with reference to what is already known?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-proposal-method",
+    version: "1",
+    question:
+      "Does the proposal describe how the evidence will be gathered and analyzed, in enough detail to judge whether the method fits the question?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "col-proposal-feasible",
+    version: "1",
+    question: "Does the proposal show that the work is feasible, with a schedule of stages and the resources it needs?",
+    quoteWhenMet: true,
+  },
 ];
