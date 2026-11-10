@@ -226,7 +226,7 @@ W6 属于 E7。
 
 **集群。** Hetzner Cloud 希尔斯伯勒区域 Talos 上的 Kubernetes 1.33，用 Terraform 搭建，带有 Cilium、kube-prometheus-stack 和 KEDA 2.20；镜像放在 GHCR 的 `ghcr.io/greatacademy/voice`；Secret 用 `kubectl` 手动创建（[deploy/voice](../deploy/voice/README.zh-CN.md)）。
 
-**已完成。** E5.8 和 E5.9：`mise run voice:push <overlay>` 从已提交的代码为 `linux/amd64` 构建镜像、推送，并把 overlay 固定到它的 digest，镜像在无网络时也能启动；`mise run voice:check` 渲染 `test` 和 `production` 两个 overlay，并用 kubeconform 校验，包括 KEDA 和 Prometheus Operator 的资源。KEDA 按 `voice_sessions_active` 扩缩，每个 pod 在 `/metrics` 报告它。集群上还没有运行过任何东西。
+**已完成。** E5.8 和 E5.9：`mise run voice:push <overlay>` 从已提交的代码为 `linux/amd64` 构建镜像、推送，并把 overlay 固定到它的 digest，镜像在无网络时也能启动；`mise run voice:check` 渲染 `test` 和 `production` 两个 overlay，并用 kubeconform 校验，包括 KEDA 和 Prometheus Operator 的资源。KEDA 按 `voice_sessions_active` 扩缩，每个 pod 在 `/metrics` 报告它。E5.10 中，测试命名空间 `ga-voice-test` 在它的 Tunnel 后运行一个使用脚本化语音的 pod，Tunnel 只放行 `/v1/conversation`；不是由 Web Worker 的密钥签发的票据在那里被拒绝。会话期间的滚动更新要等 E5.5 和 E5.7，因为目前还无法签发票据。
 
 ### E6. 自然拼读（L）
 

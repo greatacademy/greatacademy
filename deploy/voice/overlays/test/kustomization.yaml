@@ -3,30 +3,31 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ga-voice-test
 resources:
-  - namespace.yaml
-  - ../../base
+- namespace.yaml
+- ../../base
 configMapGenerator:
-  - name: voice
-    behavior: merge
-    envs:
-      - config.env
-    literals:
-      - VOICE_SPEECH=fake
+- behavior: merge
+  envs:
+  - config.env
+  literals:
+  - VOICE_SPEECH=fake
+  name: voice
 patches:
-  - target:
-      kind: ScaledObject
-      name: voice
-    patch: |-
-      - op: replace
-        path: /spec/triggers/0/metadata/query
-        value: sum(voice_sessions_active{namespace="ga-voice-test"})
-      - op: replace
-        path: /spec/minReplicaCount
-        value: 1
-      - op: replace
-        path: /spec/maxReplicaCount
-        value: 3
+- patch: |-
+    - op: replace
+      path: /spec/triggers/0/metadata/query
+      value: sum(voice_sessions_active{namespace="ga-voice-test"})
+    - op: replace
+      path: /spec/minReplicaCount
+      value: 1
+    - op: replace
+      path: /spec/maxReplicaCount
+      value: 3
+  target:
+    kind: ScaledObject
+    name: voice
 # mise run voice:push test pins this to the pushed digest.
 images:
-  - name: ga-voice
-    newName: ghcr.io/greatacademy/voice
+- digest: sha256:085c159c2dec1833778e2236d90771e0a2ab0e332a12d69fa7b4b704cb530550
+  name: ga-voice
+  newName: ghcr.io/greatacademy/voice

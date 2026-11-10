@@ -226,7 +226,7 @@ The three tracks are independent. E5 needs the cluster's details; E6 needs the a
 
 **The cluster.** Kubernetes 1.33 on Talos in Hetzner Cloud's Hillsboro region, set up with Terraform, with Cilium, kube-prometheus-stack and KEDA 2.20; images in GHCR at `ghcr.io/greatacademy/voice`; Secrets created by hand with `kubectl` ([deploy/voice](../deploy/voice/README.md)).
 
-**Built so far.** E5.8 and E5.9: `mise run voice:push <overlay>` builds the image for `linux/amd64` from committed code, pushes it and pins the overlay to its digest, and the image starts with no network; `mise run voice:check` renders the `test` and `production` overlays and validates them with kubeconform, KEDA's and the Prometheus Operator's resources included. KEDA scales on `voice_sessions_active`, which each pod reports at `/metrics`. Nothing has run on the cluster yet.
+**Built so far.** E5.8 and E5.9: `mise run voice:push <overlay>` builds the image for `linux/amd64` from committed code, pushes it and pins the overlay to its digest, and the image starts with no network; `mise run voice:check` renders the `test` and `production` overlays and validates them with kubeconform, KEDA's and the Prometheus Operator's resources included. KEDA scales on `voice_sessions_active`, which each pod reports at `/metrics`. Of E5.10, the test namespace `ga-voice-test` runs one pod with scripted speech behind its Tunnel, which admits only `/v1/conversation`; a ticket the web Worker's key did not sign is refused there. The rollout during a session waits for E5.5 and E5.7, since no ticket can be issued yet.
 
 ### E6. Phonics (L)
 

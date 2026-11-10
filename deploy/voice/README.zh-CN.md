@@ -55,7 +55,7 @@ kubectl -n ga-voice-test create secret generic cloudflared-token --from-literal=
 kubectl -n ga-voice-test create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=<github-user> --docker-password=<可读取 packages 的令牌>
 ```
 
-credential 是 Web Worker 接受的、来自语音服务的凭据。每个命名空间有自己的远程管理 Tunnel，与集群中的另一个 Tunnel 分开：`greatacademy-voice-test` 通过指向该 Tunnel 的代理 CNAME，把 `voice-test.greatacademy.dev` 路由到 `http://voice:8080`。它用 `cf tunnels create --config-src cloudflare`、`cf tunnels config update` 和 `cf dns records create` 创建，令牌从 `cf tunnels token get` 直接通过管道写入 Secret，从未打印。生产环境以同样方式使用 `greatacademy-voice` 和 `voice.greatacademy.dev`。GHCR 的 package 是私有的，所以 pod 用 `ghcr` Secret 拉取镜像。语音主机名还要配置 WAF 和限流规则。
+credential 是 Web Worker 接受的、来自语音服务的凭据，即它的 secret `VOICE_SERVICE_CREDENTIAL`；Worker 用 `VOICE_TICKET_PRIVATE_KEY` 签发票据，其公钥是 `config.env` 中的 `VOICE_TICKET_PUBLIC_KEY`。`ghcr` Secret 由工作站的 `docker login ghcr.io` 生成，从其凭据存储直接通过管道写入。每个命名空间有自己的远程管理 Tunnel，与集群中的另一个 Tunnel 分开：`greatacademy-voice-test` 通过指向该 Tunnel 的代理 CNAME，把 `voice-test.greatacademy.dev/v1/conversation` 路由到 `http://voice:8080`；其他路径返回 404，所以探针和 `/metrics` 只在集群内可达。它用 `cf tunnels create --config-src cloudflare`、`cf tunnels config update` 和 `cf dns records create` 创建，令牌从 `cf tunnels token get` 直接通过管道写入 Secret，从未打印。生产环境以同样方式使用 `greatacademy-voice` 和 `voice.greatacademy.dev`。GHCR 的 package 是私有的，所以 pod 用 `ghcr` Secret 拉取镜像。语音主机名还要配置 WAF 和限流规则。
 
 ## 部署
 
