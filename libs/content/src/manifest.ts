@@ -59,6 +59,8 @@ export interface SubjectListing {
   readonly mark: string;
   readonly hue: number;
   readonly courses: readonly CourseListing[];
+  /** criteria are the criteria the subject's judged topics are judged on, each once, so that a route can name one. */
+  readonly criteria: readonly CriterionSpec[];
 }
 
 /** SubjectCatalog is a manifest read into the indexes the services and the engine use. */
@@ -116,6 +118,7 @@ export function subjectListing(manifest: SubjectManifest): SubjectListing {
       topicCount: c.topics.length,
       xp: c.topics.reduce((sum, id) => sum + xp.get(id)!, 0),
     })),
+    criteria: [...new Map(manifest.topics.flatMap((t) => t.criteria ?? []).map((c) => [`${c.id}@${c.version}`, c])).values()],
   };
 }
 

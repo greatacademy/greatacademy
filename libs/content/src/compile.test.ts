@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { CompileError, compileSubject } from "./compile.ts";
 import { explanationParts, type Figure, figureIssue, plottedPoints } from "./figure.ts";
+import { subjectListing, subjectManifest } from "./manifest.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
@@ -424,6 +425,11 @@ describe("judged topics", () => {
     expect(errors(subject([judgedTopic("w"), topic("b", { encompasses: [{ topic: "w", weight: 0.5, nonAncestor: true }] })]))).toEqual([
       "topic b: encompassed topic w is judged by a model, so a topic that is not cannot encompass it",
     ]);
+  });
+
+  it("lists each criterion of the judged topics once", () => {
+    const listing = subjectListing(subjectManifest(compileSubject(subject([judgedTopic("w"), judgedTopic("v")]))));
+    expect(listing.criteria).toEqual([criterion]);
   });
 
   it("checks criteria, and that a criterion shared by topics is the same", () => {
