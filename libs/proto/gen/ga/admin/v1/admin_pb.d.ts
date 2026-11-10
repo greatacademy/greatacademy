@@ -407,13 +407,6 @@ export declare type Provider = Message<"ga.admin.v1.Provider"> & {
   name: string;
 
   /**
-   * kind is "model" or "speech".
-   *
-   * @generated from field: string kind = 3;
-   */
-  kind: string;
-
-  /**
    * @generated from field: string api = 4;
    */
   api: string;
@@ -680,9 +673,13 @@ export declare const ListRoutesRequestSchema: GenMessage<ListRoutesRequest>;
  */
 export declare type Route = Message<"ga.admin.v1.Route"> & {
   /**
-   * @generated from field: string criterion = 1;
+   * target is what the route serves within its use: a criterion key such as
+   * w4-topic-sentence@1 for judgment, a conversation's id, or a language such
+   * as en for speech.
+   *
+   * @generated from field: string target = 1;
    */
-  criterion: string;
+  target: string;
 
   /**
    * position is "primary" or "backup".
@@ -731,6 +728,20 @@ export declare type Route = Message<"ga.admin.v1.Route"> & {
    * @generated from field: bool priced = 9;
    */
   priced: boolean;
+
+  /**
+   * use is "judgment", "conversation", "stt", "tts" or "pronunciation".
+   *
+   * @generated from field: string use = 10;
+   */
+  use: string;
+
+  /**
+   * voice is the voice of a text-to-speech route, and empty for any other use.
+   *
+   * @generated from field: string voice = 11;
+   */
+  voice: string;
 };
 
 /**
@@ -794,14 +805,19 @@ export declare const SaveRouteResponseSchema: GenMessage<SaveRouteResponse>;
  */
 export declare type DeleteRouteRequest = Message<"ga.admin.v1.DeleteRouteRequest"> & {
   /**
-   * @generated from field: string criterion = 1;
+   * @generated from field: string target = 1;
    */
-  criterion: string;
+  target: string;
 
   /**
    * @generated from field: string position = 2;
    */
   position: string;
+
+  /**
+   * @generated from field: string use = 3;
+   */
+  use: string;
 };
 
 /**

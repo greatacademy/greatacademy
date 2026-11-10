@@ -156,8 +156,9 @@ message ListProvidersRequest {}
 message Provider {
   string id = 1;
   string name = 2;
-  // kind is "model" or "speech".
-  string kind = 3;
+  // kind gave way to the uses of the vendor's routes.
+  reserved 3;
+  reserved "kind";
   string api = 4;
   string base_url = 5;
   // region moved to each market's entry in the vendor register.
@@ -225,7 +226,10 @@ message ListRoutesRequest {}
 
 // Route is what serves a criterion.
 message Route {
-  string criterion = 1;
+  // target is what the route serves within its use: a criterion key such as
+  // w4-topic-sentence@1 for judgment, a conversation's id, or a language such
+  // as en for speech.
+  string target = 1;
   // position is "primary" or "backup".
   string position = 2;
   string provider_id = 3;
@@ -238,6 +242,10 @@ message Route {
   bool qualifies = 8;
   // priced says whether its model has a price; it is read-only.
   bool priced = 9;
+  // use is "judgment", "conversation", "stt", "tts" or "pronunciation".
+  string use = 10;
+  // voice is the voice of a text-to-speech route, and empty for any other use.
+  string voice = 11;
 }
 
 message ListRoutesResponse {
@@ -254,8 +262,9 @@ message SaveRouteResponse {
 }
 
 message DeleteRouteRequest {
-  string criterion = 1;
+  string target = 1;
   string position = 2;
+  string use = 3;
 }
 
 message DeleteRouteResponse {}
