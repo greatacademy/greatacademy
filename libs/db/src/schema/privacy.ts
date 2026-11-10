@@ -1,8 +1,21 @@
 import { sql } from "drizzle-orm";
-import { bigint, boolean, doublePrecision, index, integer, pgTable, primaryKey, real, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  boolean,
+  doublePrecision,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  real,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { user } from "./auth.ts";
-import { learner } from "./learning.ts";
+import { judgment, learner } from "./learning.ts";
 
 const at = (name: string) => timestamp(name, { withTimezone: true, mode: "date" });
 
@@ -232,4 +245,40 @@ export const adminLog = pgTable(
     at: at("at").notNull(),
   },
   (t) => [index("admin_log_at").on(t.at), index("admin_log_action").on(t.action, t.at)],
+);
+
+/** CheckTask is the task a sampled text answered, as the person checking it reads it. */
+export interface CheckTask {
+  readonly prompt: string;
+  readonly source?: string;
+}
+
+/**
+ * verdictCheck is one criterion of a live judgment sampled for a person to
+ * check: the route that judged it, its verdict, and the person's, once given.
+ * The text stays in the judgment, so it expires with it, and the sample with
+ * no text left is never shown.
+ */
+export const verdictCheck = pgTable(
+  "verdict_check",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    judgmentId: uuid("judgment_id")
+      .notNull()
+      .references(() => judgment.id, { onDelete: "cascade" }),
+    criterion: text("criterion").notNull(),
+    question: text("question").notNull(),
+    task: jsonb("task").$type<CheckTask>().notNull(),
+    providerId: uuid("provider_id")
+      .notNull()
+      .references(() => aiProvider.id, { onDelete: "cascade" }),
+    model: text("model").notNull(),
+    promptVersion: text("prompt_version").notNull(),
+    met: boolean("met").notNull(),
+    personMet: boolean("person_met"),
+    checkedBy: text("checked_by").references(() => user.id, { onDelete: "set null" }),
+    sampledAt: at("sampled_at").notNull(),
+    checkedAt: at("checked_at"),
+  },
+  (t) => [index("verdict_check_waiting").on(t.checkedAt, t.sampledAt), index("verdict_check_judgment").on(t.judgmentId)],
 );

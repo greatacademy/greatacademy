@@ -223,6 +223,7 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 | `platform_admin`, `market_launch`, `admin_log` | The console's role, each market's switch with who signed off, and the append-only log of changes |
 | `ai_provider`, `ai_route`, `calibration`, `vendor_check`, `notice` | AI vendors with encrypted keys and budgets, routes per criterion, passing calibrations, the vendor register, and notice versions |
 | `ai_price`, `ai_call` | The price of each model per million tokens, and every call to a model with its tokens, cost and learner |
+| `verdict_check` | Criteria of live judgments sampled for people to check: the route, its verdict and the person's; the text stays in `judgment` |
 
 **Consistency.**
 - Completing a session appends the event, replaces the snapshot and closes the session in one transaction.

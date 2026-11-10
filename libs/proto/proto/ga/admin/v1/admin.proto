@@ -55,6 +55,12 @@ service AdminService {
   rpc DeletePrice(DeletePriceRequest) returns (DeletePriceResponse);
   // GetCosts returns spending against budgets, what learners cost, and the alarms.
   rpc GetCosts(GetCostsRequest) returns (GetCostsResponse);
+  // GetCheck returns the oldest sampled verdict waiting for a person, without the route's verdict, and logs the reading.
+  rpc GetCheck(GetCheckRequest) returns (GetCheckResponse);
+  // SaveCheck records a person's verdict on a sample and returns the route's.
+  rpc SaveCheck(SaveCheckRequest) returns (SaveCheckResponse);
+  // ListDrift compares each route's live verdicts with people's checks.
+  rpc ListDrift(ListDriftRequest) returns (ListDriftResponse);
 }
 
 message GetOverviewRequest {}
@@ -383,4 +389,52 @@ message GetCostsResponse {
   double month_cost = 3;
   repeated LearnerCost top_learners = 4;
   repeated Alarm alarms = 5;
+}
+
+message GetCheckRequest {}
+
+// Check is a sampled criterion of a live judgment, with the learner's text filtered and no learner named.
+message Check {
+  string id = 1;
+  string task = 2;
+  string source = 3;
+  string question = 4;
+  string text = 5;
+}
+
+message GetCheckResponse {
+  // check is unset when nothing is waiting.
+  optional Check check = 1;
+  int32 waiting = 2;
+}
+
+message SaveCheckRequest {
+  string id = 1;
+  bool met = 2;
+}
+
+message SaveCheckResponse {
+  bool route_met = 1;
+}
+
+message ListDriftRequest {}
+
+// RouteDrift is how one route's live verdicts compare with people's checks.
+message RouteDrift {
+  string criterion = 1;
+  string provider_id = 2;
+  string model = 3;
+  string prompt_version = 4;
+  int32 checks = 5;
+  double agreement = 6;
+  double kappa = 7;
+  optional double calibration_kappa = 8;
+  bool drifting = 9;
+}
+
+message ListDriftResponse {
+  repeated RouteDrift routes = 1;
+  int32 waiting = 2;
+  // min_checks is how many checks a route needs before its drift is judged.
+  int32 min_checks = 3;
 }

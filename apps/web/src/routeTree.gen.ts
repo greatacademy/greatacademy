@@ -29,6 +29,7 @@ import { Route as SubjectProgressRouteImport } from './routes/$subject/progress'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAdminsRouteImport } from './routes/admin/admins'
 import { Route as AdminAiRouteImport } from './routes/admin/ai'
+import { Route as AdminChecksRouteImport } from './routes/admin/checks'
 import { Route as AdminCostsRouteImport } from './routes/admin/costs'
 import { Route as AdminLogRouteImport } from './routes/admin/log'
 import { Route as AdminMarketsRouteImport } from './routes/admin/markets'
@@ -148,6 +149,11 @@ const AdminAiRoute = AdminAiRouteImport.update({
   path: '/ai',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminChecksRoute = AdminChecksRouteImport.update({
+  id: '/checks',
+  path: '/checks',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminCostsRoute = AdminCostsRouteImport.update({
   id: '/costs',
   path: '/costs',
@@ -258,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/$subject/progress': typeof SubjectProgressRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/ai': typeof AdminAiRoute
+  '/admin/checks': typeof AdminChecksRoute
   '/admin/costs': typeof AdminCostsRoute
   '/admin/log': typeof AdminLogRoute
   '/admin/markets': typeof AdminMarketsRoute
@@ -295,6 +302,7 @@ export interface FileRoutesByTo {
   '/$subject/progress': typeof SubjectProgressRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/ai': typeof AdminAiRoute
+  '/admin/checks': typeof AdminChecksRoute
   '/admin/costs': typeof AdminCostsRoute
   '/admin/log': typeof AdminLogRoute
   '/admin/markets': typeof AdminMarketsRoute
@@ -336,6 +344,7 @@ export interface FileRoutesById {
   '/$subject/progress': typeof SubjectProgressRoute
   '/admin/admins': typeof AdminAdminsRoute
   '/admin/ai': typeof AdminAiRoute
+  '/admin/checks': typeof AdminChecksRoute
   '/admin/costs': typeof AdminCostsRoute
   '/admin/log': typeof AdminLogRoute
   '/admin/markets': typeof AdminMarketsRoute
@@ -378,6 +387,7 @@ export interface FileRouteTypes {
     | '/$subject/progress'
     | '/admin/admins'
     | '/admin/ai'
+    | '/admin/checks'
     | '/admin/costs'
     | '/admin/log'
     | '/admin/markets'
@@ -415,6 +425,7 @@ export interface FileRouteTypes {
     | '/$subject/progress'
     | '/admin/admins'
     | '/admin/ai'
+    | '/admin/checks'
     | '/admin/costs'
     | '/admin/log'
     | '/admin/markets'
@@ -455,6 +466,7 @@ export interface FileRouteTypes {
     | '/$subject/progress'
     | '/admin/admins'
     | '/admin/ai'
+    | '/admin/checks'
     | '/admin/costs'
     | '/admin/log'
     | '/admin/markets'
@@ -642,6 +654,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAiRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/checks': {
+      id: '/admin/checks'
+      path: '/checks'
+      fullPath: '/admin/checks'
+      preLoaderRoute: typeof AdminChecksRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/costs': {
       id: '/admin/costs'
       path: '/costs'
@@ -794,6 +813,7 @@ const SubjectRouteRouteWithChildren = SubjectRouteRoute._addFileChildren(
 interface AdminRouteRouteChildren {
   AdminAdminsRoute: typeof AdminAdminsRoute
   AdminAiRoute: typeof AdminAiRoute
+  AdminChecksRoute: typeof AdminChecksRoute
   AdminCostsRoute: typeof AdminCostsRoute
   AdminLogRoute: typeof AdminLogRoute
   AdminMarketsRoute: typeof AdminMarketsRoute
@@ -806,6 +826,7 @@ interface AdminRouteRouteChildren {
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminAdminsRoute: AdminAdminsRoute,
   AdminAiRoute: AdminAiRoute,
+  AdminChecksRoute: AdminChecksRoute,
   AdminCostsRoute: AdminCostsRoute,
   AdminLogRoute: AdminLogRoute,
   AdminMarketsRoute: AdminMarketsRoute,

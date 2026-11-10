@@ -11,6 +11,8 @@ import {
   spendByProvider,
 } from "@ga/db";
 
+import { driftAlarms } from "./checks.ts";
+
 /** DAILY_JUDGMENTS is how many texts a learner may send to be judged in 24 hours, rewrites included (*starting*). */
 export const DAILY_JUDGMENTS = 30;
 
@@ -169,7 +171,11 @@ async function modelAlarms(db: Db, list: readonly ProviderRow[], at: number): Pr
  */
 export async function runCostCheck(db: Db, at: number, mail: AlarmMail): Promise<Alarm[]> {
   const list = await providers(db);
-  const candidates = [...budgetAlarms(list, await providerSpend(db, at), at), ...(await modelAlarms(db, list, at))];
+  const candidates = [
+    ...budgetAlarms(list, await providerSpend(db, at), at),
+    ...(await modelAlarms(db, list, at)),
+    ...(await driftAlarms(db, list, at)),
+  ];
   const raised: Alarm[] = [];
   for (const alarm of candidates) {
     if (await logged(db, ALARM_ACTION, alarm.target, alarm.detail)) continue;

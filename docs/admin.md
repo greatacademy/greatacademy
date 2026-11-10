@@ -30,6 +30,7 @@ A platform administrator is a row in `platform_admin`. It is separate from guard
 | `/admin/markets` | Markets | One row per market: its rules from the code, whether it is open to minors, the notice languages it needs, and which AI scopes it can offer now |
 | `/admin/ai` | AI services | Providers with their budgets, and routes |
 | `/admin/costs` | Costs | Each model provider's spend today and this month against its budgets, what an active learner cost this month, the alarms, the price of each model, and the learners who cost most |
+| `/admin/checks` | Checks | Sampled live verdicts to check blind, one criterion at a time, and each route's agreement with people against its calibration |
 | `/admin/register` | Vendor register | For each vendor and market, what was checked and when |
 | `/admin/notices` | Notices | Notice versions and the vendors each one names |
 | `/admin/admins` | Administrators | Who holds the role; granting a plan without payment for a number of days, for testers, reviewers and the pilot ([Billing](billing.md) §6) |
@@ -66,6 +67,10 @@ A route that stops qualifying fails closed: judgment waits or moves to the calib
 **Limits per learner.** A learner may hand in 30 texts for judgment in any 24 hours, rewrites included, and 5 in a minute; a judgment is tried at most 4 times. A refused text is not recorded, the learner is told when to come back, and other courses go on.
 
 **Alarms.** Every 15 minutes a Cron Trigger checks the costs and raises an alarm when a provider passes 50%, 80% or 100% of a budget, when a model's cost per call is more than twice its mean over the last 7 days, or when more than 30% of a model's calls failed in the day, from 10 calls. Each alarm is written once to the change log and sent by email to every administrator.
+
+**Sampled checks.** A share of finished judgments, 5% *starting*, chosen from the judgment's id so that no text can steer it, is sampled: each of its criteria waits for a person with the route that judged it and its verdict. The Checks page shows the oldest waiting one: the task, the learner's text through the same filter as a model call, with no learner named, and the criterion's question. The person answers before seeing the route's answer. Every text opened and every answer is written to the change log by the sample's id, never with the text. A sample whose text has expired is no longer shown.
+
+- **Drift.** For each route, the checks of the last 90 days give its agreement and its kappa with people. A route with at least 30 checks whose kappa falls more than 0.1 below its newest passing calibration's drifts (*starting*): the Checks page marks it, and the cost check raises an alarm once a month. The answer is to calibrate it again or move its criterion to another route.
 
 ## 6. Vendor Register and Notices
 

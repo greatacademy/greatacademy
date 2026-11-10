@@ -1,5 +1,6 @@
 import type { CriterionSpec, Problem } from "@ga/content";
 import {
+  addChecks,
   claimJudgment,
   type Db,
   finishJudgment,
@@ -23,6 +24,7 @@ import {
 } from "@ga/judge";
 
 import { type QualifiedRoute, qualifyingRoute } from "./capabilities.ts";
+import { CHECK_SHARE, sampled } from "./checks.ts";
 import { MAX_TRIES } from "./costs.ts";
 import type { CourseEntry } from "./registry.ts";
 import { decryptSecret } from "./secrets.ts";
@@ -49,6 +51,8 @@ export interface JudgingDeps {
   readonly aiKeysSecret: string;
   /** connect builds a model client; tests pass one backed by pi-ai's faux provider. */
   readonly connect?: (config: ProviderConfig, model: string) => Configured;
+  /** checkShare is the share of finished judgments sampled for people to check; the default is CHECK_SHARE. */
+  readonly checkShare?: number;
 }
 
 /** judgedCriteria are the criteria a judged problem is judged on, as its topic defines them. */
@@ -152,6 +156,25 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
     const score = verdict.criteria.filter((x) => x.met).length / verdict.criteria.length;
     const routes = [...groups.values()].map((g) => g.route);
     await recordCalls(db, calls);
+    if (sampled(row.id, deps.checkShare ?? CHECK_SHARE)) {
+      const task = { prompt: problem!.prompt.en, ...(problem!.answer.judged?.source && { source: problem!.answer.judged.source }) };
+      await addChecks(
+        db,
+        [...groups.values()].flatMap(({ route, criteria: held }) =>
+          held.map((x) => ({
+            judgmentId: row.id,
+            criterion: criterionKey(x),
+            question: x.question,
+            task,
+            providerId: route.providerId,
+            model: route.model,
+            promptVersion: route.promptVersion,
+            met: byId.get(x.id)!.met,
+            sampledAt: new Date(now),
+          })),
+        ),
+      );
+    }
     await finishJudgment(
       db,
       row.id,

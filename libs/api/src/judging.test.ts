@@ -1,11 +1,25 @@
 import { Code, createClient, createRouterTransport, type Interceptor } from "@connectrpc/connect";
 import { createModels, fauxAssistantMessage, fauxProvider, fauxToolCall, type JsonObject } from "@earendil-works/pi-ai";
 import { compileSubject, type Problem, type SubjectDef, same, type TopicDef, t } from "@ga/content";
-import { createProvider, type Db, grantAdmin, recordCalibration, recordCalls, schema, setPrice, setRoute, updateProvider } from "@ga/db";
+import {
+  addChecks,
+  createProvider,
+  type Db,
+  grantAdmin,
+  recordCalibration,
+  recordCalls,
+  schema,
+  setPrice,
+  setRoute,
+  updateProvider,
+} from "@ga/db";
 import { createTestDb, createUser } from "@ga/db/testing";
+import { AdminService } from "@ga/proto/admin/v1/admin_pb";
 import { LearningService, type Session } from "@ga/proto/learning/v1/learning_pb";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { adminService } from "./admin.ts";
+import { MIN_DRIFT_CHECKS } from "./checks.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { type Alarm, DAILY_JUDGMENTS, JUDGING_DAILY_REFUSAL, JUDGING_RATE_REFUSAL, MAX_TRIES, runCostCheck } from "./costs.ts";
 import { JUDGE_LIMIT_MS, retryDelay } from "./judging.ts";
@@ -168,6 +182,8 @@ beforeEach(async () => {
           defer: (work) => deferred.push(work),
           judging: {
             aiKeysSecret: SECRET,
+            // Every finished judgment is sampled, so the checks can be tested.
+            checkShare: 1,
             connect: () => {
               const models = createModels();
               models.setProvider(faux.provider);
@@ -354,6 +370,103 @@ describe("judged writing", () => {
     await db.insert(schema.judgment).values(Array.from({ length: DAILY_JUDGMENTS - 5 }, () => copy(first!, now - 90_000)));
     await expect(again()).rejects.toEqual(refused(JUDGING_DAILY_REFUSAL));
     expect(await db.select().from(schema.judgment)).toHaveLength(DAILY_JUDGMENTS);
+  });
+});
+
+describe("sampled checks", () => {
+  const adminClient = () => {
+    const auth: Interceptor = (next) => (req) => {
+      req.contextValues.set(dbKey, db);
+      req.contextValues.set(userIdKey, "admin");
+      return next(req);
+    };
+    const forms = { put: async () => {}, get: async () => undefined, delete: async () => {} };
+    return createClient(
+      AdminService,
+      createRouterTransport(
+        (router) => router.service(AdminService, adminService({ now: () => now, forms, notify: async () => {}, aiKeysSecret: SECRET })),
+        { router: { interceptors: [auth] } },
+      ),
+    );
+  };
+
+  async function judged(): Promise<string> {
+    const providerId = await addRoutes();
+    await createUser(db, "admin");
+    await grantAdmin(db, "admin", null, new Date(now));
+    const session = await startParagraphs();
+    faux.setResponses([respond([true, false])]);
+    await learning.submitAnswer({ sessionId: session.id, index: 0, response: `${TEXT} Write to me at kid@example.com.` });
+    await settled();
+    return providerId;
+  }
+
+  it("samples each criterion of a finished judgment with its route and verdict", async () => {
+    const providerId = await judged();
+    const rows = await db.select().from(schema.verdictCheck);
+    expect(rows.map((r) => [r.criterion, r.met, r.providerId, r.model, r.promptVersion]).sort()).toEqual([
+      ["gives-detail@1", false, providerId, "m1", "writing-1"],
+      ["states-point@1", true, providerId, "m1", "writing-1"],
+    ]);
+    expect(rows[0]?.task.prompt).toMatch(/^Write a paragraph about pet number \d+\.$/u);
+  });
+
+  it("shows a person the filtered text blind, logs the reading, and reveals the route's verdict after", async () => {
+    await judged();
+    const admin = adminClient();
+    const first = await admin.getCheck({});
+    expect(first.waiting).toBe(2);
+    const check = first.check!;
+    expect(check.text).toContain("Write to me at [email].");
+    expect(check.text).not.toContain("kid@example.com");
+    expect([states.question, details.question]).toContain(check.question);
+    const row = (await db.select().from(schema.verdictCheck)).find((r) => r.id === check.id)!;
+    expect(await admin.saveCheck({ id: check.id, met: !row.met })).toMatchObject({ routeMet: row.met });
+    await expect(admin.saveCheck({ id: check.id, met: true })).rejects.toMatchObject({ code: Code.FailedPrecondition });
+    expect((await admin.getCheck({})).waiting).toBe(1);
+    const log = await db.select().from(schema.adminLog);
+    expect(log.filter((l) => l.action === "check.read").map((l) => l.target)).toContain(check.id);
+    expect(log.find((l) => l.action === "check.save")).toMatchObject({ actor: "admin", target: check.id });
+    expect(JSON.stringify(log)).not.toContain("Max");
+    // Once the text expires, its samples are no longer shown.
+    await db.update(schema.judgment).set({ response: "" });
+    expect(await admin.getCheck({})).toMatchObject({ waiting: 0 });
+    expect((await admin.getCheck({})).check).toBeUndefined();
+  });
+
+  it("finds a route drifting once enough checks fall below its calibration, and raises one alarm a month", async () => {
+    const providerId = await judged();
+    const [j] = await db.select().from(schema.judgment);
+    const task = { prompt: "Write." };
+    // The route and the people disagree on every check: kappa far below the calibration's 0.8.
+    await addChecks(
+      db,
+      Array.from({ length: MIN_DRIFT_CHECKS }, (_, i) => ({
+        judgmentId: j!.id,
+        criterion: "states-point@1",
+        question: states.question,
+        task,
+        providerId,
+        model: "m1",
+        promptVersion: "writing-1",
+        met: i % 2 === 0,
+        personMet: i % 2 !== 0,
+        checkedBy: "admin",
+        sampledAt: new Date(now),
+        checkedAt: new Date(now),
+      })),
+    );
+    const drift = await adminClient().listDrift({});
+    expect(drift.minChecks).toBe(MIN_DRIFT_CHECKS);
+    expect(drift.routes.map((r) => [r.criterion, r.checks, r.agreement, r.calibrationKappa, r.drifting])).toEqual([
+      ["states-point@1", MIN_DRIFT_CHECKS, 0, 0.8, true],
+    ]);
+    expect(drift.routes[0]!.kappa).toBeLessThan(0);
+    const mails: [string, Alarm][] = [];
+    const raised = await runCostCheck(db, now, async (to, alarm) => void mails.push([to, alarm]));
+    expect(raised.map((a) => [a.target, a.detail])).toEqual([["Vendor/m1/states-point@1", "drift 2026-10"]]);
+    expect(mails).toHaveLength(1);
+    expect(await runCostCheck(db, now + 3600_000, async () => {})).toEqual([]);
   });
 });
 

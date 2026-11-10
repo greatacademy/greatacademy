@@ -4,6 +4,7 @@ export * from "./apple.ts";
 export * from "./billing.ts";
 export * from "./capabilities.ts";
 export * from "./catalog.ts";
+export * from "./checks.ts";
 export * from "./context.ts";
 export * from "./convert.ts";
 export * from "./costs.ts";

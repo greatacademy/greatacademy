@@ -1,6 +1,7 @@
 export * from "./account.ts";
 export * from "./admin.ts";
 export * from "./billing.ts";
+export * from "./checks.ts";
 export * from "./costs.ts";
 export * from "./db.ts";
 export * from "./judgment.ts";

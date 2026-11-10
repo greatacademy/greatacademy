@@ -17,6 +17,7 @@ import {
   learnerSpend,
   logChange,
   marketLaunches,
+  nextCheck,
   notices,
   type PriceRow,
   type ProviderKind,
@@ -29,6 +30,7 @@ import {
   type RouteRow,
   revokeAdmin,
   routes,
+  saveCheck,
   setMarketLaunch,
   setPrice,
   setRoute,
@@ -37,12 +39,15 @@ import {
   updateProvider,
   userByEmail,
   vendorChecks,
+  waitingChecks,
   waitingForm,
   waitingVerifications,
 } from "@ga/db";
+import { redact } from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
+import { CHECK_READ_ACTION, CHECK_SAVE_ACTION, driftOf, MIN_DRIFT_CHECKS } from "./checks.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { ALARM_ACTION, budgeted, monthStart, providerSpend } from "./costs.ts";
 import { AI_SCOPES, MARKETS, marketOf, missingLanguages } from "./markets.ts";
@@ -540,6 +545,58 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
         monthCost: month.cost,
         topLearners: top.map((l) => ({ email: l.email, calls: l.calls, cost: l.cost })),
         alarms: alarms.map((a) => ({ at: BigInt(a.at.getTime()), target: a.target, detail: a.detail })),
+      };
+    },
+
+    async getCheck(_req, ctx) {
+      const { db, userId, at } = await admin(ctx);
+      const [next, waiting] = await Promise.all([nextCheck(db), waitingChecks(db)]);
+      if (!next) return { waiting };
+      // Reading a learner's text is staff access, so it is logged, by the sample's id and never with the text.
+      await logChange(db, { actor: userId, action: CHECK_READ_ACTION, target: next.check.id, detail: next.check.criterion, at });
+      return {
+        waiting,
+        check: {
+          id: next.check.id,
+          task: next.check.task.prompt,
+          source: next.check.task.source ?? "",
+          question: next.check.question,
+          text: redact(next.text),
+        },
+      };
+    },
+
+    async saveCheck(req, ctx) {
+      const { db, userId, at } = await admin(ctx);
+      const row = await saveCheck(db, req.id, req.met, userId, at);
+      if (!row) throw new ConnectError("that sample was already checked or is gone", Code.FailedPrecondition);
+      await logChange(db, {
+        actor: userId,
+        action: CHECK_SAVE_ACTION,
+        target: row.id,
+        detail: `${row.criterion} route=${row.met} person=${req.met}`,
+        at,
+      });
+      return { routeMet: row.met };
+    },
+
+    async listDrift(_req, ctx) {
+      const { db, at } = await admin(ctx);
+      const [drift, waiting] = await Promise.all([driftOf(db, at.getTime()), waitingChecks(db)]);
+      return {
+        waiting,
+        minChecks: MIN_DRIFT_CHECKS,
+        routes: drift.map((d) => ({
+          criterion: d.criterion,
+          providerId: d.providerId,
+          model: d.model,
+          promptVersion: d.promptVersion,
+          checks: d.checks,
+          agreement: d.agreement,
+          kappa: d.kappa,
+          ...(d.calibrationKappa !== undefined && { calibrationKappa: d.calibrationKappa }),
+          drifting: d.drifting,
+        })),
       };
     },
   };

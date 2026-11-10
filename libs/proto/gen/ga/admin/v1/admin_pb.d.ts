@@ -1422,6 +1422,214 @@ export declare type GetCostsResponse = Message<"ga.admin.v1.GetCostsResponse"> &
 export declare const GetCostsResponseSchema: GenMessage<GetCostsResponse>;
 
 /**
+ * @generated from message ga.admin.v1.GetCheckRequest
+ */
+export declare type GetCheckRequest = Message<"ga.admin.v1.GetCheckRequest"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.GetCheckRequest.
+ * Use `create(GetCheckRequestSchema)` to create a new message.
+ */
+export declare const GetCheckRequestSchema: GenMessage<GetCheckRequest>;
+
+/**
+ * Check is a sampled criterion of a live judgment, with the learner's text filtered and no learner named.
+ *
+ * @generated from message ga.admin.v1.Check
+ */
+export declare type Check = Message<"ga.admin.v1.Check"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string task = 2;
+   */
+  task: string;
+
+  /**
+   * @generated from field: string source = 3;
+   */
+  source: string;
+
+  /**
+   * @generated from field: string question = 4;
+   */
+  question: string;
+
+  /**
+   * @generated from field: string text = 5;
+   */
+  text: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.Check.
+ * Use `create(CheckSchema)` to create a new message.
+ */
+export declare const CheckSchema: GenMessage<Check>;
+
+/**
+ * @generated from message ga.admin.v1.GetCheckResponse
+ */
+export declare type GetCheckResponse = Message<"ga.admin.v1.GetCheckResponse"> & {
+  /**
+   * check is unset when nothing is waiting.
+   *
+   * @generated from field: optional ga.admin.v1.Check check = 1;
+   */
+  check?: Check | undefined;
+
+  /**
+   * @generated from field: int32 waiting = 2;
+   */
+  waiting: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.GetCheckResponse.
+ * Use `create(GetCheckResponseSchema)` to create a new message.
+ */
+export declare const GetCheckResponseSchema: GenMessage<GetCheckResponse>;
+
+/**
+ * @generated from message ga.admin.v1.SaveCheckRequest
+ */
+export declare type SaveCheckRequest = Message<"ga.admin.v1.SaveCheckRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: bool met = 2;
+   */
+  met: boolean;
+};
+
+/**
+ * Describes the message ga.admin.v1.SaveCheckRequest.
+ * Use `create(SaveCheckRequestSchema)` to create a new message.
+ */
+export declare const SaveCheckRequestSchema: GenMessage<SaveCheckRequest>;
+
+/**
+ * @generated from message ga.admin.v1.SaveCheckResponse
+ */
+export declare type SaveCheckResponse = Message<"ga.admin.v1.SaveCheckResponse"> & {
+  /**
+   * @generated from field: bool route_met = 1;
+   */
+  routeMet: boolean;
+};
+
+/**
+ * Describes the message ga.admin.v1.SaveCheckResponse.
+ * Use `create(SaveCheckResponseSchema)` to create a new message.
+ */
+export declare const SaveCheckResponseSchema: GenMessage<SaveCheckResponse>;
+
+/**
+ * @generated from message ga.admin.v1.ListDriftRequest
+ */
+export declare type ListDriftRequest = Message<"ga.admin.v1.ListDriftRequest"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.ListDriftRequest.
+ * Use `create(ListDriftRequestSchema)` to create a new message.
+ */
+export declare const ListDriftRequestSchema: GenMessage<ListDriftRequest>;
+
+/**
+ * RouteDrift is how one route's live verdicts compare with people's checks.
+ *
+ * @generated from message ga.admin.v1.RouteDrift
+ */
+export declare type RouteDrift = Message<"ga.admin.v1.RouteDrift"> & {
+  /**
+   * @generated from field: string criterion = 1;
+   */
+  criterion: string;
+
+  /**
+   * @generated from field: string provider_id = 2;
+   */
+  providerId: string;
+
+  /**
+   * @generated from field: string model = 3;
+   */
+  model: string;
+
+  /**
+   * @generated from field: string prompt_version = 4;
+   */
+  promptVersion: string;
+
+  /**
+   * @generated from field: int32 checks = 5;
+   */
+  checks: number;
+
+  /**
+   * @generated from field: double agreement = 6;
+   */
+  agreement: number;
+
+  /**
+   * @generated from field: double kappa = 7;
+   */
+  kappa: number;
+
+  /**
+   * @generated from field: optional double calibration_kappa = 8;
+   */
+  calibrationKappa?: number | undefined;
+
+  /**
+   * @generated from field: bool drifting = 9;
+   */
+  drifting: boolean;
+};
+
+/**
+ * Describes the message ga.admin.v1.RouteDrift.
+ * Use `create(RouteDriftSchema)` to create a new message.
+ */
+export declare const RouteDriftSchema: GenMessage<RouteDrift>;
+
+/**
+ * @generated from message ga.admin.v1.ListDriftResponse
+ */
+export declare type ListDriftResponse = Message<"ga.admin.v1.ListDriftResponse"> & {
+  /**
+   * @generated from field: repeated ga.admin.v1.RouteDrift routes = 1;
+   */
+  routes: RouteDrift[];
+
+  /**
+   * @generated from field: int32 waiting = 2;
+   */
+  waiting: number;
+
+  /**
+   * min_checks is how many checks a route needs before its drift is judged.
+   *
+   * @generated from field: int32 min_checks = 3;
+   */
+  minChecks: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.ListDriftResponse.
+ * Use `create(ListDriftResponseSchema)` to create a new message.
+ */
+export declare const ListDriftResponseSchema: GenMessage<ListDriftResponse>;
+
+/**
  * AdminService runs the admin console; every call checks the role on the
  * server and answers not found to anyone else.
  *
@@ -1677,6 +1885,36 @@ export declare const AdminService: GenService<{
     methodKind: "unary";
     input: typeof GetCostsRequestSchema;
     output: typeof GetCostsResponseSchema;
+  },
+  /**
+   * GetCheck returns the oldest sampled verdict waiting for a person, without the route's verdict, and logs the reading.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.GetCheck
+   */
+  getCheck: {
+    methodKind: "unary";
+    input: typeof GetCheckRequestSchema;
+    output: typeof GetCheckResponseSchema;
+  },
+  /**
+   * SaveCheck records a person's verdict on a sample and returns the route's.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.SaveCheck
+   */
+  saveCheck: {
+    methodKind: "unary";
+    input: typeof SaveCheckRequestSchema;
+    output: typeof SaveCheckResponseSchema;
+  },
+  /**
+   * ListDrift compares each route's live verdicts with people's checks.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.ListDrift
+   */
+  listDrift: {
+    methodKind: "unary";
+    input: typeof ListDriftRequestSchema;
+    output: typeof ListDriftResponseSchema;
   },
 }>;
 

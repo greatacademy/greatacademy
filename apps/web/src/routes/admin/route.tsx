@@ -15,6 +15,7 @@ const pages = [
   ["markets", "/admin/markets"],
   ["ai", "/admin/ai"],
   ["costs", "/admin/costs"],
+  ["checks", "/admin/checks"],
   ["register", "/admin/register"],
   ["notices", "/admin/notices"],
   ["admins", "/admin/admins"],
