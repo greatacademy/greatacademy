@@ -48,11 +48,11 @@
 
 ## 5. AI 服务
 
-**供应商。** 名称、类型（`model`、`speech` 或 `other`）、pi-ai provider 或兼容的 API、基础 URL、区域、API 密钥、是否启用。密钥用 AES-GCM 在 `AI_KEYS_SECRET` 下加密，这是数据库接触不到的 Worker secret。
+**供应商。** 名称、类型（`model`、`speech` 或 `other`）、pi-ai provider 或兼容的 API、基础 URL、区域、API 密钥、是否启用。密钥用 AES-GCM 在 `AI_KEYS_SECRET` 下加密，这是数据库接触不到的 Worker secret。基础 URL 位于 `gateway.ai.cloudflare.com` 时，调用经过 Cloudflare AI Gateway：每次调用带上 `cf-aig-collect-log-payload: false`，网关只记录模型、token、费用、状态和耗时，不记录请求和响应；`cf-aig-metadata` 写明用途、标准和提示词版本，从不写学习者。
 
 **路由。** 每项标准和 S6 各有主路由和备用路由：供应商、模型和提示词版本。路由有草稿和上线两种状态。标准用它的键 `id@version` 命名（例如 `w4-topic-sentence@1`），所以标准的新版本需要自己的路由和校准。
 
-- **上线需要校准。** 只有这组标准、模型和提示词版本已有通过的校准，路由才能上线。校准由 `tools/calibrate` 写入，在这里只读；管理员不能录入。
+- **上线需要校准。** 只有这组标准、模型和提示词版本已有通过的校准，路由才能上线。校准由 `tools/calibrate` 写入，在这里只读；管理员不能录入。路由还必须抵御 `libs/judge` 中的每一条注入探针，校准才算通过：这些文本只由试图操纵评分者的话组成，有英文也有中文，路由必须判定它们不满足标准。
 - **修改已上线路由的模型或提示词，它会回到草稿，** 因为换模型就是换评分者。
 - **停用供应商** 会立即停止它的路由。
 

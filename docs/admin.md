@@ -48,11 +48,11 @@ The rules of a market (guardian age, scopes, languages) are code in `libs/api/sr
 
 ## 5. AI Services
 
-**Providers.** Name, kind (`model`, `speech` or `other`), pi-ai provider or compatible API, base URL, region, API key, enabled. Keys are encrypted with AES-GCM under `AI_KEYS_SECRET`, a Worker secret that the database never sees.
+**Providers.** Name, kind (`model`, `speech` or `other`), pi-ai provider or compatible API, base URL, region, API key, enabled. Keys are encrypted with AES-GCM under `AI_KEYS_SECRET`, a Worker secret that the database never sees. A base URL on `gateway.ai.cloudflare.com` sends the calls through Cloudflare AI Gateway: each call carries `cf-aig-collect-log-payload: false`, so the gateway logs its model, tokens, cost, status and duration but no request or response, and `cf-aig-metadata` names its use, criteria and prompt version, never a learner.
 
 **Routes.** For each criterion, and for S6, a primary and a backup: provider, model and prompt version. A route has a draft or live state. A criterion is named by its key, `id@version` (such as `w4-topic-sentence@1`), so a new version of a criterion needs routes and calibrations of its own.
 
-- **Going live needs calibration.** A route can be set live only if a passing calibration exists for that exact criterion, model and prompt version. Calibrations are written by `tools/calibrate` and are read-only here; an administrator cannot enter one.
+- **Going live needs calibration.** A route can be set live only if a passing calibration exists for that exact criterion, model and prompt version. Calibrations are written by `tools/calibrate` and are read-only here; an administrator cannot enter one. A calibration passes only if the route also resists every injection probe of `libs/judge`: texts made only of attempts to steer the judge, in English and Chinese, which it must find not to meet the criterion.
 - **Changing a live route's model or prompt returns it to draft,** since changing the model changes the judge.
 - **Disabling a provider** stops its routes at once.
 

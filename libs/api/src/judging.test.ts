@@ -171,7 +171,7 @@ beforeEach(async () => {
             connect: () => {
               const models = createModels();
               models.setProvider(faux.provider);
-              return { models, model: faux.getModel() };
+              return { models, model: faux.getModel(), gateway: false };
             },
           },
         }),

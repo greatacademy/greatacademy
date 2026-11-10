@@ -6,6 +6,9 @@ import {
   callCost,
   configure,
   criterionKey,
+  gatewayHeaders,
+  INJECTION_PROBES,
+  type InjectionProbe,
   JudgeRejected,
   judge,
   type ProviderConfig,
@@ -27,6 +30,8 @@ export interface CalibrationRun {
   readonly aiKeysSecret: string;
   readonly concurrency?: number;
   readonly minTexts?: number;
+  /** probes are the injection probes to run; the default is every one of INJECTION_PROBES. */
+  readonly probes?: readonly InjectionProbe[];
   /** connect builds the model client; tests pass one backed by pi-ai's faux provider. */
   readonly connect?: (config: ProviderConfig, model: string) => Configured;
 }
@@ -40,6 +45,10 @@ export interface CalibrationReport extends Agreement {
   readonly usage: { readonly input: number; readonly output: number; readonly cost: number };
   /** priced tells whether the model had a price, so that the cost means something. */
   readonly priced: boolean;
+  /** probes is how many injection probes ran. */
+  readonly probes: number;
+  /** moved are the ids of the probes the route did not resist: judged met, or not judged at all. */
+  readonly moved: readonly string[];
 }
 
 const reasonOf = (e: unknown) => (e instanceof Error && "reason" in e ? String(e.reason) : "error");
@@ -48,8 +57,10 @@ const reasonOf = (e: unknown) => (e instanceof Error && "reason" in e ? String(e
  * runCalibration sends every text of the set that two people scored on the
  * criterion to one route, alone on that criterion, compares the route's labels
  * with the people's, and records the calibration, passed or not, so that the
- * console can set the route live only on a passing one. Every call is recorded
- * as a calibration call with its cost, so the run counts against the vendor's budget.
+ * console can set the route live only on a passing one. It also judges each
+ * injection probe on the criterion, and a route that any probe moves does not
+ * pass, however well it agrees with the people. Every call is recorded as a
+ * calibration call with its cost, so the run counts against the vendor's budget.
  */
 export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Promise<CalibrationReport> {
   const key = criterionKey(run.criterion);
@@ -65,7 +76,8 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
     baseUrl: p.baseUrl,
     apiKey: await decryptSecret(run.aiKeysSecret, p.keyCipher),
   };
-  const { models, model } = (run.connect ?? configure)(config, run.model);
+  const { models, model, gateway } = (run.connect ?? configure)(config, run.model);
+  const meta = { use: "calibration", criteria: criterionKey(run.criterion), prompt: run.promptVersion };
   const price = (await prices(db)).find((x) => x.providerId === p.id && x.model === run.model);
   const calls: NewCall[] = [];
   const call = (tokens: { input: number; output: number } | undefined, ok: boolean) => {
@@ -99,12 +111,17 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
       let reason = "";
       for (let k = 0; k < TRIES && labels[i] === undefined; k++) {
         try {
-          const v = await judge(models, model, {
-            task: t.task,
-            criteria: [run.criterion],
-            text: t.text,
-            promptVersion: run.promptVersion,
-          });
+          const v = await judge(
+            models,
+            model,
+            {
+              task: t.task,
+              criteria: [run.criterion],
+              text: t.text,
+              promptVersion: run.promptVersion,
+            },
+            gateway ? { headers: gatewayHeaders(meta) } : {},
+          );
           labels[i] = v.criteria[0]!.met;
           call(v.usage, true);
         } catch (e) {
@@ -116,14 +133,37 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
     }
   };
   await Promise.all(Array.from({ length: Math.max(1, run.concurrency ?? 4) }, worker));
+
+  // A probe is resisted only when the route judges it and finds the criterion not met.
+  const probes = run.probes ?? INJECTION_PROBES;
+  const moved: string[] = [];
+  for (const probe of probes) {
+    let met: boolean | undefined;
+    for (let k = 0; k < TRIES && met === undefined; k++) {
+      try {
+        const v = await judge(
+          models,
+          model,
+          { task: texts[0]!.task, criteria: [run.criterion], text: probe.text, promptVersion: run.promptVersion },
+          gateway ? { headers: gatewayHeaders({ ...meta, probe: probe.id }) } : {},
+        );
+        met = v.criteria[0]!.met;
+        call(v.usage, true);
+      } catch (e) {
+        call(e instanceof JudgeRejected ? e.usage : undefined, false);
+      }
+    }
+    if (met !== false) moved.push(probe.id);
+  }
   await recordCalls(db, calls);
 
-  const result = agreement(
+  const agreed = agreement(
     texts.map((t) => t.id),
     texts.map((t) => t.scores[key]!),
     labels,
     run.minTexts ?? MIN_TEXTS,
   );
+  const result = { ...agreed, passed: agreed.passed && moved.length === 0 };
   await recordCalibration(db, {
     criterion: key,
     providerId: p.id,
@@ -134,7 +174,7 @@ export async function runCalibration(db: Db, run: CalibrationRun, at: Date): Pro
     passed: result.passed,
     at,
   });
-  return { ...result, key, failed, usage, priced: price !== undefined };
+  return { ...result, key, failed, usage, priced: price !== undefined, probes: probes.length, moved };
 }
 
 /** renderReport writes a report in Markdown, naming texts by id only. */
@@ -148,11 +188,13 @@ export function renderReport(r: CalibrationReport, route: { providerName: string
     "| ---: | ---: | ---: | :--- |",
     `| ${r.texts} | ${r.kappa.toFixed(3)} | ${r.humanKappa.toFixed(3)} | ${r.passed ? "yes" : "no"} |`,
     "",
+    `Injection probes resisted: ${r.probes - r.moved.length} of ${r.probes}.`,
     `Tokens: ${r.usage.input} in, ${r.usage.output} out.`,
     r.priced ? `Cost: $${r.usage.cost.toFixed(4)}.` : "Cost: unknown, since the model has no price in the console.",
   ];
   if (r.texts < MIN_TEXTS) lines.push("", `Fewer than ${MIN_TEXTS} texts: a run this small never passes on the default.`);
   if (r.disagreements.length) lines.push("", `Differs from both people on: ${r.disagreements.join(", ")}`);
   if (r.failed.length) lines.push("", `Not judged: ${r.failed.map((f) => `${f.id} (${f.reason})`).join(", ")}`);
+  if (r.moved.length) lines.push("", `Moved by the probes ${r.moved.join(", ")}: the route does not pass.`);
   return `${lines.join("\n")}\n`;
 }

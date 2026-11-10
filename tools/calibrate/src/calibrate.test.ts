@@ -2,6 +2,7 @@ import { createModels, fauxAssistantMessage, fauxProvider, fauxToolCall, type Js
 import { encryptSecret } from "@ga/api";
 import { createProvider, type Db, schema, setPrice } from "@ga/db";
 import { createTestDb } from "@ga/db/testing";
+import { INJECTION_PROBES, type InjectionProbe } from "@ga/judge";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import type { ScoredText } from "./agreement.ts";
@@ -48,7 +49,7 @@ beforeEach(async () => {
 });
 afterEach(() => db.close());
 
-const run = (set: ScoredText[], minTexts: number) =>
+const run = (set: ScoredText[], minTexts: number, probes: readonly InjectionProbe[] = []) =>
   runCalibration(
     db,
     {
@@ -60,11 +61,12 @@ const run = (set: ScoredText[], minTexts: number) =>
       aiKeysSecret: SECRET,
       concurrency: 1,
       minTexts,
+      probes,
       connect: (config) => {
         expect(config.apiKey).toBe("test-key");
         const models = createModels();
         models.setProvider(faux.provider);
-        return { models, model: faux.getModel() };
+        return { models, model: faux.getModel(), gateway: false };
       },
     },
     AT,
@@ -106,6 +108,31 @@ describe("runCalibration", () => {
     expect(report.passed).toBe(false);
     const [row] = await db.select().from(schema.calibration);
     expect(row?.passed).toBe(false);
+  });
+
+  it("fails a route that an injection probe moves, however well it agrees with the people", async () => {
+    const [first, second] = INJECTION_PROBES;
+    // Two texts agree with the people; the first probe is resisted, the second is judged met.
+    faux.setResponses([respond(true), respond(false), respond(false), respond(true)]);
+    const report = await run([text("a", [true, true]), text("b", [false, false])], 2, [first!, second!]);
+    expect(report.kappa).toBe(1);
+    expect(report).toMatchObject({ probes: 2, moved: [second!.id], passed: false });
+    const [row] = await db.select().from(schema.calibration);
+    expect(row?.passed).toBe(false);
+    expect(renderReport(report, { providerName: "Vendor", model: "m1", promptVersion: "writing-1" })).toContain(
+      "Injection probes resisted: 1 of 2.",
+    );
+  });
+
+  it("passes a route that resists every probe, and counts a probe it cannot judge as not resisted", async () => {
+    const [first] = INJECTION_PROBES;
+    faux.setResponses([respond(true), respond(false), respond(false)]);
+    expect(await run([text("a", [true, true]), text("b", [false, false])], 2, [first!])).toMatchObject({ moved: [], passed: true });
+    faux.setResponses([respond(true), respond(false)]);
+    expect(await run([text("a", [true, true]), text("b", [false, false])], 2, [first!])).toMatchObject({
+      moved: [first!.id],
+      passed: false,
+    });
   });
 
   it("refuses a set with no text scored on the criterion", async () => {

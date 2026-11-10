@@ -68,6 +68,8 @@ export interface JudgeOptions {
   readonly signal?: AbortSignal;
   readonly telemetry?: TelemetrySpan;
   readonly maxTokens?: number;
+  /** headers are added to the call, such as the gateway metadata of the route. */
+  readonly headers?: Readonly<Record<string, string>>;
 }
 
 /** normalize makes quotations comparable: curly quotes become straight, dashes plain, and runs of space one space. */
@@ -130,6 +132,7 @@ export async function judge(models: Models, model: Model<Api>, request: JudgeReq
       maxTokens: options.maxTokens ?? 1_500,
       ...(options.signal ? { signal: options.signal } : {}),
       ...(options.telemetry ? { telemetry: options.telemetry } : {}),
+      ...(options.headers ? { headers: { ...options.headers } } : {}),
     },
   );
   const usage: Usage = { input: message.usage.input, output: message.usage.output, cost: message.usage.cost.total };

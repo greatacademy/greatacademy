@@ -10,7 +10,17 @@ import {
   retryJudgment,
   type StoredVerdict,
 } from "@ga/db";
-import { type Configured, callCost, configure, criterionKey, JudgeRejected, judge, type ProviderConfig, type Verdict } from "@ga/judge";
+import {
+  type Configured,
+  callCost,
+  configure,
+  criterionKey,
+  gatewayHeaders,
+  JudgeRejected,
+  judge,
+  type ProviderConfig,
+  type Verdict,
+} from "@ga/judge";
 
 import { type QualifiedRoute, qualifyingRoute } from "./capabilities.ts";
 import { MAX_TRIES } from "./costs.ts";
@@ -113,17 +123,23 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
         baseUrl: p.baseUrl,
         apiKey: await decryptSecret(deps.aiKeysSecret, p.keyCipher),
       };
-      const { models, model } = (deps.connect ?? configure)(config, route.model);
-      const verdict = await judge(models, model, {
-        task: {
-          prompt: problem!.prompt.en,
-          modelAnswer: problem!.canonical,
-          ...(problem!.answer.judged?.source && { source: problem!.answer.judged.source }),
+      const { models, model, gateway } = (deps.connect ?? configure)(config, route.model);
+      const meta = { use: "judgment", criteria: held.map(criterionKey).join(","), prompt: route.promptVersion };
+      const verdict = await judge(
+        models,
+        model,
+        {
+          task: {
+            prompt: problem!.prompt.en,
+            modelAnswer: problem!.canonical,
+            ...(problem!.answer.judged?.source && { source: problem!.answer.judged.source }),
+          },
+          criteria: held,
+          text: row.response,
+          promptVersion: route.promptVersion,
         },
-        criteria: held,
-        text: row.response,
-        promptVersion: route.promptVersion,
-      });
+        gateway ? { headers: gatewayHeaders(meta) } : {},
+      );
       call(route, verdict.usage, true);
       verdicts.push(verdict);
       current = undefined;

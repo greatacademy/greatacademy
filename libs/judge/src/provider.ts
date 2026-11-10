@@ -23,6 +23,28 @@ export const DEFAULT_BASE_URLS: Readonly<Record<string, string>> = {
   "mistral-conversations": "https://api.mistral.ai",
 };
 
+/** GATEWAY_HOST is the host of Cloudflare AI Gateway, which a provider's base URL may point at. */
+export const GATEWAY_HOST = "gateway.ai.cloudflare.com";
+
+/** viaGateway tells whether a base URL goes through Cloudflare AI Gateway. */
+export function viaGateway(baseUrl: string): boolean {
+  try {
+    return new URL(baseUrl).hostname === GATEWAY_HOST;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * gatewayHeaders are the headers of a call through AI Gateway. The gateway logs
+ * the call's model, tokens, cost, status and duration but not its request or
+ * response, so it keeps no learner's text; the metadata lets its log be read by
+ * use, criterion and prompt, and never names a learner.
+ */
+export function gatewayHeaders(meta: Readonly<Record<string, string>>): Record<string, string> {
+  return { "cf-aig-collect-log-payload": "false", "cf-aig-metadata": JSON.stringify(meta) };
+}
+
 /** ProviderConfig is a provider as an administrator configured it, with its key decrypted on the server. */
 export interface ProviderConfig {
   readonly id: string;
@@ -36,6 +58,8 @@ export interface ProviderConfig {
 export interface Configured {
   readonly models: Models;
   readonly model: Model<Api>;
+  /** gateway tells whether calls go through Cloudflare AI Gateway. */
+  readonly gateway: boolean;
 }
 
 /**
@@ -61,6 +85,7 @@ export function configure(config: ProviderConfig, modelId: string): Configured {
     maxTokens: 4_096,
   };
   const key = config.apiKey;
+  const gateway = viaGateway(baseUrl);
   const provider = createProvider({
     id: config.id,
     name: config.name,
@@ -71,5 +96,5 @@ export function configure(config: ProviderConfig, modelId: string): Configured {
   });
   const models = createModels();
   models.setProvider(provider);
-  return { models, model };
+  return { models, model, gateway };
 }

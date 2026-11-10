@@ -19,10 +19,22 @@ export interface BuiltPrompt {
 /** PromptBuilder builds the prompt of one prompt version. */
 export type PromptBuilder = (task: JudgeTask, criteria: readonly CriterionDef[], text: string) => BuiltPrompt;
 
-/** fence wraps text in a tag, removing any copy of the closing tag inside it, so the text cannot end its own block. */
-export function fence(tag: string, text: string): string {
-  const close = new RegExp(`</?\\s*${tag}\\s*>`, "giu");
-  return `<${tag}>\n${text.replace(close, "")}\n</${tag}>`;
+/** FENCE_TAGS are the tags that fence the parts of a prompt. */
+export const FENCE_TAGS = ["task", "source", "model_answer", "criteria", "learner_text"] as const;
+
+/** FenceTag is one of FENCE_TAGS. */
+export type FenceTag = (typeof FENCE_TAGS)[number];
+
+// Any opening or closing fence tag, also with full-width or angle-quote brackets, which a model may read as tags.
+const ANY_FENCE = new RegExp(`[<＜‹〈]\\s*/?\\s*(?:${FENCE_TAGS.join("|")})\\s*[>＞›〉]`, "giu");
+
+/**
+ * fence wraps text in a tag, removing every fence tag inside it, its own or
+ * another's and in any bracket, so the text can neither end its own block nor
+ * open a block that looks like the task or the criteria.
+ */
+export function fence(tag: FenceTag, text: string): string {
+  return `<${tag}>\n${text.replace(ANY_FENCE, "")}\n</${tag}>`;
 }
 
 const v1: PromptBuilder = (task, criteria, text) => ({
