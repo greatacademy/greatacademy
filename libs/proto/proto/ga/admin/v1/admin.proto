@@ -156,11 +156,13 @@ message ListProvidersRequest {}
 message Provider {
   string id = 1;
   string name = 2;
-  // kind is "model", "speech" or "other".
+  // kind is "model" or "speech".
   string kind = 3;
   string api = 4;
   string base_url = 5;
-  string region = 6;
+  // region moved to each market's entry in the vendor register.
+  reserved 6;
+  reserved "region";
   // key_hint is the last four characters of the key, empty when none is set.
   string key_hint = 7;
   bool enabled = 8;

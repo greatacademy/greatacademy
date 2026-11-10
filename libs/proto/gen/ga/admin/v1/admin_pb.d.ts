@@ -407,7 +407,7 @@ export declare type Provider = Message<"ga.admin.v1.Provider"> & {
   name: string;
 
   /**
-   * kind is "model", "speech" or "other".
+   * kind is "model" or "speech".
    *
    * @generated from field: string kind = 3;
    */
@@ -422,11 +422,6 @@ export declare type Provider = Message<"ga.admin.v1.Provider"> & {
    * @generated from field: string base_url = 5;
    */
   baseUrl: string;
-
-  /**
-   * @generated from field: string region = 6;
-   */
-  region: string;
 
   /**
    * key_hint is the last four characters of the key, empty when none is set.
