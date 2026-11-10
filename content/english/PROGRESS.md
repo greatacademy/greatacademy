@@ -22,7 +22,8 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | :--- | :--- |
 | Content model: strands, themed units, packs | Done |
 | Outlines of Pre-A1 to B2 | Not started |
-| Outlines of the native courses | Not started |
+| Outlines of the native courses | Done |
+| Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
 ## Reasons for Encompassing Weights
 
@@ -105,3 +106,19 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `writing-a-rhetorical-analysis` | `writing-a-literary-analysis-paragraph` | 0.2 | Quoting and explaining a passage carries over |
 | `synthesizing-sources` | `writing-an-evidence-paragraph` | 0.3 | Each source is used as evidence for a point |
 | `synthesizing-sources` | `evaluating-sources` | 0.2 | Using sources well relies on knowing what each one shows |
+| The ten word batches of grades 3 to 5 (`words-for-character-traits` … `words-of-the-solar-system`) | `context-clues` | 0.1 | Every item reads the word in a sentence |
+| `multiple-meaning-words` | `context-clues` | 0.3 | Choosing the meaning is using context |
+| `plural-nouns` | `nouns-and-pronouns` | 0.1 | Only knowing what a noun is carries over |
+| `order-of-adjectives` | `adjectives-and-adverbs` | 0.2 | Every item uses adjectives, but their order is the point |
+| `progressive-verb-tenses` | `simple-verb-tenses`, `subject-verb-agreement` | 0.2 each | Forming them chooses *am/is/are* to agree with the subject |
+| `perfect-verb-tenses` | `simple-verb-tenses` | 0.2 | Past participles of irregular verbs repeat the past forms |
+| `perfect-verb-tenses` | `progressive-verb-tenses` | 0.1 | Only choosing a tense for a time carries over |
+| `correlative-conjunctions` | `coordinating-conjunctions` | 0.2 | The pairs join words like conjunctions do |
+| `correlative-conjunctions` | `subject-verb-agreement` | 0.3 | One knowledge point is agreement after *either … or* |
+| `capitalizing-names-and-titles` | `capitals-and-end-punctuation` | 0.3 | Every item capitalizes, now beyond the first word |
+| `writing-a-narrative-paragraph` | `punctuating-dialogue`, `verb-tense-consistency`, `choosing-transitions` | 0.2 each | A story uses dialogue, keeps one tense and orders events |
+| `writing-a-summary` | `supporting-details` | 0.3 | A summary keeps only the important details |
+| `writing-a-summary` | `main-idea` | 0.2 | It begins with the main idea |
+| `writing-a-compare-and-contrast-paragraph` | `compare-and-contrast-in-texts`, `writing-a-paragraph` | 0.3 each | It writes the structure it read, in a whole paragraph |
+| `writing-a-cause-and-effect-paragraph` | `cause-and-effect-in-texts`, `writing-a-paragraph` | 0.3 each | It writes the structure it read, in a whole paragraph |
+| `writing-a-descriptive-paragraph` | `similes-and-metaphors`, `adjectives-and-adverbs`, `writing-a-paragraph` | 0.2 each | Description uses figures and precise modifiers in a paragraph |
