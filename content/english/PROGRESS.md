@@ -202,3 +202,10 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `although-despite-and-however` | `subordinating-conjunctions` | 0.3 | *Although* is one of them |
 | The letter to an editor | the letter of complaint; the evidence paragraph | 0.3 each | A formal letter that argues from evidence |
 | `inversion-after-negative-adverbs` | `present-simple-questions` | 0.2 | Only the question word order carries over |
+| `future-continuous-and-future-perfect` | `will-for-the-future`; `present-perfect-or-past-simple` | 0.3; 0.2 | *Will* carries both, and the perfect brings its participles |
+| The opinion essay | `writing-a-thesis-statement`; `introductions-and-conclusions` | 0.3 each | The essay opens and closes with both |
+| `reporting-verbs` | `reported-speech`; `gerunds-and-infinitives` | 0.3 each | Each verb reports, followed by a gerund or an infinitive |
+| `mixed-conditionals` | `third-conditional` | 0.4 | One half of each sentence is a third conditional |
+| The for-and-against essay | the opinion essay; the counterclaim paragraph | 0.3 each | It weighs both sides before its opinion |
+| `cleft-sentences` | `relative-clauses` | 0.3 | The cleft part is a relative clause |
+| The proposal | the report | 0.4 | It is a report that recommends |
