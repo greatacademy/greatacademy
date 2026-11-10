@@ -83,8 +83,11 @@ const inTabs = computed(() => {
   const top = nav.routes().at(-1)?.name ?? "launch";
   return !!token() && access()?.status === AccessStatus.OK && !ENTRY.has(top);
 });
+/** FOCUSED are the pages that take the whole window, with no tab bar or sidebar: a task and a spoken conversation. */
+const FOCUSED: ReadonlySet<string> = new Set(["session", "talk"]);
+const focused = () => FOCUSED.has(nav.routes().at(-1)?.name ?? "");
 // The system tab bar would sit over the mark of the launch, so it comes as the mark leaves.
-effect(() => tabsShown.set(!platform.desktop && launchLeaving() && inTabs() && nav.routes().at(-1)?.name !== "session"));
+effect(() => tabsShown.set(!platform.desktop && launchLeaving() && inTabs() && !focused()));
 effect(() => showTray(inTabs()));
 // A page or tab the learner opens starts with the tab bar in sight.
 effect(() => {
@@ -94,7 +97,7 @@ effect(() => {
 });
 
 function App() {
-  const sidebar = () => platform.desktop && inTabs() && nav.routes().at(-1)?.name !== "session";
+  const sidebar = () => platform.desktop && inTabs() && !focused();
   effect(() => sidebarShown.set(sidebar()));
   return (
     <View
