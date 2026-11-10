@@ -30,7 +30,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
 | Course of B1 | Unit 1 done: 8 passages, 1 conversation |
-| Topics of B1 | Unit 1 done (10 topics); units 2 to 12 not started |
+| Topics of B1 | Units 1 to 6 done; units 7 to 12 not started |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -155,3 +155,10 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `present-perfect-or-past-simple` | past simple questions and negatives | 0.2 | Only half of the past simple is practiced |
 | `writing-an-informal-email` | the A2 email to a friend | 0.4 | The same structure, asked for more |
 | `writing-an-informal-email` | `present-perfect-or-past-simple` | 0.1 | Model answers use it, answers need not |
+| `used-to` | past simple questions and negatives; `past-simple-irregular` | 0.3; 0.1 | It practices *did* in questions and negatives |
+| `present-perfect-continuous` | `present-perfect-or-past-simple`; `present-continuous` | 0.3; 0.2 | It reuses *have* and the *-ing* form |
+| `first-conditional` | `will-for-the-future`; `subordinating-conjunctions` | 0.3; 0.1 | The main clause is a *will* future |
+| `second-conditional` | `first-conditional`; `was-and-were` | 0.3; 0.1 | The *if* sentence is the same, with *If I were* |
+| `reported-speech` | `past-simple-irregular` | 0.2 | Reporting moves verbs into the past |
+| `writing-a-formal-email` | `writing-an-informal-email` | 0.3 | The same moves in another register |
+| `writing-an-article` | `writing-a-paragraph` | 0.3 | Its paragraphs keep the same structure |

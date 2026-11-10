@@ -6,7 +6,7 @@
 - **Level:** CEFR B1, for learners of English as a foreign language
 - **Prerequisite(s):** A2, or the past simple and continuous, the future with *will* and *going to*, the present perfect, and about 1,200 words
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 119 topics (83 of vocabulary, 18 of grammar, 18 of writing) · 996 headwords, 2223 by the end of the level
+- **Size:** 12 units · 119 topics (83 of vocabulary, 18 of grammar, 18 of writing) · 994 headwords, 2261 by the end of the level
 
 ## Aim
 
@@ -25,10 +25,10 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 **Vocabulary**
 
 - `b1-words-school-life` School Life (12): education, semester (semesters), term (terms), grade (grades), exam (exams), mark (marks), pass (passes, passed, passing), revise (revises, revised, revising), assignment (assignments), essay (essays), presentation (presentations), deadline (deadlines)
-- `b1-words-learning` How We Learn (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, mistake (mistakes), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
+- `b1-words-learning` How We Learn (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, improvement (improvements), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
 - `b1-words-school-people` People at School (12): principal (principals), classmate (classmates), tutor (tutors), professor (professors), pupil (pupils), lecturer (lecturers), counselor (counselors), scholarship (scholarships), certificate (certificates), diploma (diplomas), campus (campuses), dormitory (dormitories)
 - `b1-words-subjects-2` More Subjects (12): geography, biology, chemistry, physics, literature, economics, philosophy, psychology, engineering, law (laws), politics, drama
-- `b1-words-thinking` Thinking (12): guess (guesses, guessed, guessing), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
+- `b1-words-thinking` Thinking (12): remind (reminds, reminded, reminding), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
 - `b1-words-qualities` Qualities (12): creative, intelligent, clever (cleverer, cleverest), wise (wiser, wisest), talent (talents), talented, confident, independent, responsible, thoughtful, lazy (lazier, laziest), brave (braver, bravest)
 - `b1-words-study-skills` Study Skills (12): enroll (enrolls, enrolled, enrolling), define (defines, defined, defining), underline (underlines, underlined, underlining), summarize (summarizes, summarized, summarizing), outline (outlines), highlight (highlights, highlighted, highlighting), repeat (repeats, repeated, repeating), correct (corrects, corrected, correcting), copy (copies, copied, copying), submit (submits, submitted, submitting), note (notes), instruction (instructions)
 - `b1-words-little-words-4` Linking Words 1 (12): within, might, whose, whom, although, though, however, unless, either, neither, whether, toward
@@ -57,13 +57,14 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b1-words-business` Business (12): business (businesses), industry (industries), product (products), service (services), trade (trades, traded, trading), profit (profits), loss (losses), income (incomes), tax (taxes), budget (budgets), invest (invests, invested, investing), brand (brands)
 - `b1-words-work-verbs` Getting Things Done (12): manage (manages, managed, managing), employ (employs, employed, employing), retire (retires, retired, retiring), resign (resigns, resigned, resigning), promote (promotes, promoted, promoting), lead (leads, led, leading), deal (deals, dealt, dealing), handle (handles, handled, handling), arrange (arranges, arranged, arranging), attend (attends, attended, attending), complete (completes, completed, completing), prepare (prepares, prepared, preparing)
 - `b1-words-jobs-3` Professions (12): accountant (accountants), lawyer (lawyers), journalist (journalists), architect (architects), designer (designers), programmer (programmers), secretary (secretaries), receptionist (receptionists), electrician (electricians), plumber (plumbers), pharmacist (pharmacists), assistant (assistants)
-- `b1-words-work-qualities` Qualities at Work (12): reliable, flexible, punctual, efficient, ambitious, experienced, professional, honest, loyal, careless, motivated, practical
+- `b1-words-work-qualities` Qualities at Work (12): reliable, flexible, punctual, efficient, ambitious, experienced, professional, honest, interested, careless, motivated, practical
 - `b1-words-office` The Office (12): document (documents), folder (folders), form (forms), signature (signatures), sign (signs, signed, signing), stamp (stamps), memo (memos), calendar (calendars), reminder (reminders), invoice (invoices), stapler (staplers), drawer (drawers)
+- `b1-words-little-words-5` Linking Words 2 (10): whenever, wherever, anyway, otherwise, besides, therefore, meanwhile, actually, especially, exactly
 
 **Grammar**
 
-- `used-to` Used To (after `past-simple-irregular`). *I used to work in a bank.* *Used to* tells of a past habit or state that is no longer true.
-- `present-perfect-continuous` The Present Perfect Continuous (after `present-perfect-or-past-simple`, `b1-words-little-words-5`). *She has been working here since May.* For something that started in the past and is still going on, with *for* and *since*; Chinese says *yǐjīng ... le*.
+- `used-to` Used To (after `past-simple-questions-and-negatives`). *I used to work in a bank.* *Used to* tells of a past habit or state that is no longer true.
+- `present-perfect-continuous` The Present Perfect Continuous (after `present-perfect-or-past-simple`, `present-continuous`, `b1-words-little-words-5`). *She has been working here since May.* For something that started in the past and is still going on, with *for* and *since*; Chinese says *yǐjīng ... le*.
 
 **Writing**
 
@@ -83,10 +84,10 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b1-words-healthcare` Healthcare (12): clinic (clinics), surgeon (surgeons), prescription (prescriptions), vaccine (vaccines), insurance, therapy (therapies), x-ray (x-rays), ward (wards), specialist (specialists), bandage (bandages), wheelchair (wheelchairs), diagnose (diagnoses, diagnosed, diagnosing)
 - `b1-words-fitness` Fitness (12): gym (gyms), muscle (muscles), weight (weights), workout (workouts), jog (jogs, jogged, jogging), stretch (stretches, stretched, stretching), yoga, marathon (marathons), athlete (athletes), energy (energies), sweat (sweats, sweated, sweating), active
 - `b1-words-nutrition` Nutrition (12): vitamin (vitamins), protein (proteins), fat (fatter, fattest, fats), calorie (calories), nutrition, vegetarian (vegetarians), balanced, junk, snack (snacks), portion (portions), organic, fiber
-- `b1-words-body-and-mind` Body and Mind (12): brain (brains), lung (lungs), nerve (nerves), mental, physical, stress, tense (tenser, tensest), anxious, depressed, mood (moods), breathe (breathes, breathed, breathing), pulse (pulses)
+- `b1-words-body-and-mind` Body and Mind (12): chest (chests), lung (lungs), nerve (nerves), mental, physical, stress, tense (tenser, tensest), anxious, depressed, mood (moods), breathe (breathes, breathed, breathing), pulse (pulses)
 - `b1-words-health-verbs` Causes and Effects (12): avoid (avoids, avoided, avoiding), prevent (prevents, prevented, preventing), reduce (reduces, reduced, reducing), increase (increases, increased, increasing), suffer (suffers, suffered, suffering), affect (affects, affected, affecting), cause (causes, caused, causing), harm (harms, harmed, harming), damage (damages, damaged, damaging), risk (risks), effect (effects), benefit (benefits)
 - `b1-words-symptoms` Symptoms (12): examine (examines, examined, examining), injection (injections), bleed (bleeds, bled, bleeding), faint (faints, fainted, fainting), swallow (swallows, swallowed, swallowing), sneeze (sneezes, sneezed, sneezing), itch (itches, itched, itching), scratch (scratches, scratched, scratching), bruise (bruises), swollen, sore (sorer, sorest), dizzy (dizzier, dizziest)
-- `b1-words-healthy-habits` Healthy Habits (12): routine (routines), lifestyle (lifestyles), alcohol, cigarette (cigarettes), overweight, skip (skips, skipped, skipping), regular, regularly, nap (naps), meditation, hygiene, quit (quits, quitting)
+- `b1-words-healthy-habits` Healthy Habits (12): routine (routines), lifestyle (lifestyles), alcohol, cigarette (cigarettes), overweight, skip (skips, skipped, skipping), regular (regularly), normal, nap (naps), meditation, hygiene, quit (quits, quitting)
 
 **Grammar**
 
@@ -135,12 +136,11 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Vocabulary**
 
-- `b1-words-news` The News (12): news, newspaper (newspapers), magazine (magazines), article (articles), headline (headlines), reporter (reporters), editor (editors), channel (channels), broadcast (broadcasts, broadcasting), announce (announces, announced, announcing), publish (publishes, published, publishing), press
+- `b1-words-news` The News (12): bulletin (bulletins), newspaper (newspapers), magazine (magazines), article (articles), headline (headlines), reporter (reporters), editor (editors), channel (channels), broadcast (broadcasts, broadcasting), announce (announces, announced, announcing), publish (publishes, published, publishing), press
 - `b1-words-media` Media (12): media, audience (audiences), viewer (viewers), program (programs), series, episode (episodes), documentary (documentaries), podcast (podcasts), blog (blogs), comment (comments, commented, commenting), follower (followers), subscribe (subscribes, subscribed, subscribing)
-- `b1-words-truth` Truth and Facts (12): fact (facts), opinion (opinions), truth, false, rumor (rumors), fake, source (sources), evidence, trust (trusts, trusted, trusting), accurate, claim (claims, claimed, claiming), prove (proves, proved, proving)
+- `b1-words-truth` Truth and Lies (12): opinion (opinions), truth, lie (lies, lied, lying), false, rumor (rumors), fake, source (sources), evidence, trust (trusts, trusted, trusting), accurate, claim (claims, claimed, claiming), prove (proves, proved, proving)
 - `b1-words-crime` Crime and Elections (12): crime (crimes), thief (thieves), steal (steals, stole, stolen, stealing), rob (robs, robbed, robbing), arrest (arrests, arrested, arresting), victim (victims), witness (witnesses), court (courts), judge (judges), prison (prisons), election (elections), vote (votes, voted, voting)
 - `b1-words-describing-events` Describing Events (12): recent, current, national, international, official, shocking, unexpected, major, minor, sudden, positive, negative
-- `b1-words-little-words-5` Linking Words 2 (12): since, whatever, whenever, wherever, anyway, otherwise, instead, besides, therefore, meanwhile, actually, especially
 - `b1-words-communicating` Communicating (12): inform (informs, informed, informing), mention (mentions, mentioned, mentioning), express (expresses, expressed, expressing), respond (responds, responded, responding), response (responses), debate (debates), interrupt (interrupts, interrupted, interrupting), whisper (whispers, whispered, whispering), suggest (suggests, suggested, suggesting), suggestion (suggestions), warn (warns, warned, warning), advise (advises, advised, advising)
 - `b1-words-opinions` Opinions (12): oppose (opposes, opposed, opposing), favor (favors), convince (convinces, convinced, convincing), doubt (doubts), certain, uncertain, obvious, personally, definitely, totally, strongly, absolutely
 
@@ -365,8 +365,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b1-words-jobs-3` | vocabulary | 2 | none |
 | `b1-words-work-qualities` | vocabulary | 2 | none |
 | `b1-words-office` | vocabulary | 2 | none |
-| `used-to` | grammar | 2 | `past-simple-irregular` |
-| `present-perfect-continuous` | grammar | 2 | `present-perfect-or-past-simple`, `b1-words-little-words-5` |
+| `b1-words-little-words-5` | vocabulary | 2 | none |
+| `used-to` | grammar | 2 | `past-simple-questions-and-negatives` |
+| `present-perfect-continuous` | grammar | 2 | `present-perfect-or-past-simple`, `present-continuous`, `b1-words-little-words-5` |
 | `writing-a-formal-email` | writing | 2 | `writing-an-informal-email` |
 | `b1-words-illness` | vocabulary | 3 | none |
 | `b1-words-healthcare` | vocabulary | 3 | none |
@@ -395,7 +396,6 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b1-words-truth` | vocabulary | 5 | none |
 | `b1-words-crime` | vocabulary | 5 | none |
 | `b1-words-describing-events` | vocabulary | 5 | none |
-| `b1-words-little-words-5` | vocabulary | 5 | none |
 | `b1-words-communicating` | vocabulary | 5 | none |
 | `b1-words-opinions` | vocabulary | 5 | none |
 | `reported-speech` | grammar | 5 | `past-simple-irregular`, `object-pronouns` |

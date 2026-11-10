@@ -3,8 +3,13 @@
 import type { TopicDef } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
 import * as education from "./education.ts";
+import * as environment from "./environment.ts";
+import * as health from "./health.ts";
+import * as media from "./media.ts";
+import * as technology from "./technology.ts";
+import * as work from "./work.ts";
 
-const units = [education];
+const units = [education, work, health, environment, media, technology];
 
 /** topics are the topics of B1. */
 export const topics: readonly TopicDef[] = units.flatMap((unit) => unit.topics);

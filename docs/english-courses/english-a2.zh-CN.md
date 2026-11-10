@@ -6,7 +6,7 @@
 - **级别：** CEFR A2，面向以英语为外语的学习者
 - **先修：** 初级，或掌握一般现在时、现在进行时、*was* 和 *were* 以及约 600 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 12 个单元 · 88 个知识点（词汇 51 个，语法 22 个，写作 15 个）· 592 个词条，本级结束时累计 1245 个
+- **规模：** 12 个单元 · 92 个知识点（词汇 55 个，语法 22 个，写作 15 个）· 632 个词条，本级结束时累计 1285 个
 
 ## 目标
 
@@ -58,7 +58,7 @@
 
 **语法**
 
-- `should-and-must` should 和 must（先修：`can-for-ability`、`a2-words-staying-well`）. *You should rest. You must take this medicine.* *should* 表示建议，*must* 表示必须；两者后面都不加 *to*。
+- `should-and-must` should 和 must（先修：`can-for-ability`、`a2-words-staying-well`）. *You should rest. You must take this medicine.* *should* 表示建议，*must* 表示必须；两者后面都不加 *to*。同时教授 *shouldn't* 和 *mustn't* 这两个形式。
 - `have-to` have to 和 don't have to（先修：`should-and-must`、`third-person-s`）. *She has to stay in bed. You don't have to come.* *don't have to* 表示不必，而不是不允许。
 
 **写作**
@@ -207,7 +207,7 @@
 
 **语法**
 
-- `present-perfect-with-ever-and-never` Have you ever...?（先修：`past-simple-irregular`、`have-and-has`）. *Have you ever seen a waterfall? I have never climbed a mountain.* 现在完成时由 *have* 加过去分词构成，表示到现在为止任何时候的经历。
+- `present-perfect-with-ever-and-never` Have you ever...?（先修：`past-simple-irregular`、`have-and-has`）. *Have you ever seen a waterfall? I have never climbed a mountain.* 现在完成时由 *have* 加过去分词构成，表示到现在为止任何时候的经历。同时教授 *been*、*I've*、*you've*、*we've* 和 *they've* 这几个形式。
 
 **写作**
 
@@ -312,6 +312,17 @@
 
 **有了音频和录音之后：** 听别人描述工作并记下细节；口头回答面试问题。
 
+### 常用词
+
+各个主题的文章都离不开的常用词，在单元之外分四个额外批次教授；课程在需要的地方安排它们。
+
+**词汇**
+
+- `a2-words-positions-and-shapes` 在哪里、谁和什么形状 (9): top (tops), middle, inside, away, everywhere, nobody, box (boxes), shape (shapes), fire (fires)
+- `a2-words-sounds-and-messages` 声音和信息 (9): noise (noises), sound (sounds), voice (voices), letter (letters), radio (radios), touch (touches, touched, touching), secret (secrets), guess (guesses, guessed, guessing), mistake (mistakes)
+- `a2-words-family-food-and-measures` 家人、食物和度量 (10): grandfather (grandfathers), grandmother (grandmothers), age (ages), cheese (cheeses), chocolate (chocolates), cinema (cinemas), kilometer (kilometers), meter (meters), quick (quicker, quickest), bright (brighter, brightest)
+- `a2-words-everyday-ideas` 日常概念 (12): list (lists), simple (simpler, simplest), clear (clearer, clearest, clearly), seem (seems, seemed, seeming), anyone, somebody, news, fact (facts), result (results), brain (brains), since, instead
+
 ## 知识点与先修
 
 | 知识点 | 技能 | 单元 | 先修 |
@@ -404,3 +415,7 @@
 | `a2-words-ambitions` | 词汇 | 12 | `a2-words-work-life` |
 | `subject-and-object-questions` | 语法 | 12 | `wh-questions`、`past-simple-questions-and-negatives` |
 | `writing-about-your-dream-job` | 写作 | 12 | `writing-about-future-plans`、`expanding-with-because-but-so` |
+| `a2-words-positions-and-shapes` | 词汇 | 额外 | `a1-words-things-at-home` |
+| `a2-words-sounds-and-messages` | 词汇 | 额外 | `a2-words-communication` |
+| `a2-words-family-food-and-measures` | 词汇 | 额外 | `a1-words-numbers-to-hundred` |
+| `a2-words-everyday-ideas` | 词汇 | 额外 | `a2-words-useful-words` |

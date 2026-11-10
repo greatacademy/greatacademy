@@ -4,6 +4,7 @@ import type { TopicDef } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
 import * as animals from "./animals.ts";
 import * as cooking from "./cooking.ts";
+import * as everyday from "./everyday.ts";
 import * as festivals from "./festivals.ts";
 import * as health from "./health.ts";
 import * as jobs from "./jobs.ts";
@@ -15,7 +16,7 @@ import * as sports from "./sports.ts";
 import * as technology from "./technology.ts";
 import * as travel from "./travel.ts";
 
-const units = [lastWeekend, health, neighbors, cooking, sports, animals, travel, nature, shopping, technology, festivals, jobs];
+const units = [lastWeekend, health, neighbors, cooking, sports, animals, travel, nature, shopping, technology, festivals, jobs, everyday];
 
 /** topics are the topics of A2. */
 export const topics: readonly TopicDef[] = units.flatMap((unit) => unit.topics);

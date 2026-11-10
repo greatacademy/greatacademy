@@ -6,7 +6,7 @@
 - **Level:** CEFR A2, for learners of English as a foreign language
 - **Prerequisite(s):** A1, or the present simple and continuous, *was* and *were*, and about 600 words
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 88 topics (51 of vocabulary, 22 of grammar, 15 of writing) · 592 headwords, 1245 by the end of the level
+- **Size:** 12 units · 92 topics (55 of vocabulary, 22 of grammar, 15 of writing) · 632 headwords, 1285 by the end of the level
 
 ## Aim
 
@@ -58,7 +58,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Grammar**
 
-- `should-and-must` Should and Must (after `can-for-ability`, `a2-words-staying-well`). *You should rest. You must take this medicine.* *Should* gives advice, *must* a rule; neither takes *to* after it.
+- `should-and-must` Should and Must (after `can-for-ability`, `a2-words-staying-well`). *You should rest. You must take this medicine.* *Should* gives advice, *must* a rule; neither takes *to* after it. It also teaches the forms *shouldn't* and *mustn't*.
 - `have-to` Have To and Don't Have To (after `should-and-must`, `third-person-s`). *She has to stay in bed. You don't have to come.* *Don't have to* means it is not needed, not that it is not allowed.
 
 **Writing**
@@ -207,7 +207,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Grammar**
 
-- `present-perfect-with-ever-and-never` Have You Ever...? (after `past-simple-irregular`, `have-and-has`). *Have you ever seen a waterfall? I have never climbed a mountain.* The present perfect is *have* with a past participle, for experiences at any time up to now.
+- `present-perfect-with-ever-and-never` Have You Ever...? (after `past-simple-irregular`, `have-and-has`). *Have you ever seen a waterfall? I have never climbed a mountain.* The present perfect is *have* with a past participle, for experiences at any time up to now. It also teaches the forms *been*, *I've*, *you've*, *we've* and *they've*.
 
 **Writing**
 
@@ -312,6 +312,17 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Later, with audio and recording:** Listening to people describe their jobs and noting the details; answering interview questions aloud.
 
+### Everyday Words
+
+Words so common that passages of every theme need them, taught in four extra batches beside the units; each course places them where it needs them.
+
+**Vocabulary**
+
+- `a2-words-positions-and-shapes` Where, Who and What Shape (9): top (tops), middle, inside, away, everywhere, nobody, box (boxes), shape (shapes), fire (fires)
+- `a2-words-sounds-and-messages` Sounds and Messages (9): noise (noises), sound (sounds), voice (voices), letter (letters), radio (radios), touch (touches, touched, touching), secret (secrets), guess (guesses, guessed, guessing), mistake (mistakes)
+- `a2-words-family-food-and-measures` Family, Food and Measures (10): grandfather (grandfathers), grandmother (grandmothers), age (ages), cheese (cheeses), chocolate (chocolates), cinema (cinemas), kilometer (kilometers), meter (meters), quick (quicker, quickest), bright (brighter, brightest)
+- `a2-words-everyday-ideas` Everyday Ideas (12): list (lists), simple (simpler, simplest), clear (clearer, clearest, clearly), seem (seems, seemed, seeming), anyone, somebody, news, fact (facts), result (results), brain (brains), since, instead
+
 ## Topics and Prerequisites
 
 | Topic | Strand | Unit | Prerequisites |
@@ -404,3 +415,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `a2-words-ambitions` | vocabulary | 12 | `a2-words-work-life` |
 | `subject-and-object-questions` | grammar | 12 | `wh-questions`, `past-simple-questions-and-negatives` |
 | `writing-about-your-dream-job` | writing | 12 | `writing-about-future-plans`, `expanding-with-because-but-so` |
+| `a2-words-positions-and-shapes` | vocabulary | extra | `a1-words-things-at-home` |
+| `a2-words-sounds-and-messages` | vocabulary | extra | `a2-words-communication` |
+| `a2-words-family-food-and-measures` | vocabulary | extra | `a1-words-numbers-to-hundred` |
+| `a2-words-everyday-ideas` | vocabulary | extra | `a2-words-useful-words` |

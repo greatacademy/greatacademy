@@ -209,7 +209,7 @@ const atTheShop = vocabularyTopic({
       "would other",
     ),
     word(
-      "would",
+      "would I'd wouldn't",
       "with *like*, a kind way to say *want*",
       "（would like）想要（礼貌说法）",
       "I {would} like a cup of tea, please.|want more | {Would} you like some cake?|Want More | What {would} you like to buy?|want more",

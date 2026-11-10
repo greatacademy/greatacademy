@@ -6,7 +6,7 @@
 - **级别：** CEFR B1，面向以英语为外语的学习者
 - **先修：** 基础级，或掌握一般过去时、过去进行时、*will* 和 *going to* 表示的将来、现在完成时以及约 1,200 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 12 个单元 · 119 个知识点（词汇 83 个，语法 18 个，写作 18 个）· 996 个词条，本级结束时累计 2223 个
+- **规模：** 12 个单元 · 119 个知识点（词汇 83 个，语法 18 个，写作 18 个）· 994 个词条，本级结束时累计 2261 个
 
 ## 目标
 
@@ -25,10 +25,10 @@
 **词汇**
 
 - `b1-words-school-life` 校园生活 (12): education, semester (semesters), term (terms), grade (grades), exam (exams), mark (marks), pass (passes, passed, passing), revise (revises, revised, revising), assignment (assignments), essay (essays), presentation (presentations), deadline (deadlines)
-- `b1-words-learning` 我们怎样学习 (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, mistake (mistakes), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
+- `b1-words-learning` 我们怎样学习 (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, improvement (improvements), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
 - `b1-words-school-people` 学校里的人 (12): principal (principals), classmate (classmates), tutor (tutors), professor (professors), pupil (pupils), lecturer (lecturers), counselor (counselors), scholarship (scholarships), certificate (certificates), diploma (diplomas), campus (campuses), dormitory (dormitories)
 - `b1-words-subjects-2` 更多学科 (12): geography, biology, chemistry, physics, literature, economics, philosophy, psychology, engineering, law (laws), politics, drama
-- `b1-words-thinking` 思考 (12): guess (guesses, guessed, guessing), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
+- `b1-words-thinking` 思考 (12): remind (reminds, reminded, reminding), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
 - `b1-words-qualities` 品质 (12): creative, intelligent, clever (cleverer, cleverest), wise (wiser, wisest), talent (talents), talented, confident, independent, responsible, thoughtful, lazy (lazier, laziest), brave (braver, bravest)
 - `b1-words-study-skills` 学习技能 (12): enroll (enrolls, enrolled, enrolling), define (defines, defined, defining), underline (underlines, underlined, underlining), summarize (summarizes, summarized, summarizing), outline (outlines), highlight (highlights, highlighted, highlighting), repeat (repeats, repeated, repeating), correct (corrects, corrected, correcting), copy (copies, copied, copying), submit (submits, submitted, submitting), note (notes), instruction (instructions)
 - `b1-words-little-words-4` 连接词 1 (12): within, might, whose, whom, although, though, however, unless, either, neither, whether, toward
@@ -57,13 +57,14 @@
 - `b1-words-business` 商业 (12): business (businesses), industry (industries), product (products), service (services), trade (trades, traded, trading), profit (profits), loss (losses), income (incomes), tax (taxes), budget (budgets), invest (invests, invested, investing), brand (brands)
 - `b1-words-work-verbs` 把事情做好 (12): manage (manages, managed, managing), employ (employs, employed, employing), retire (retires, retired, retiring), resign (resigns, resigned, resigning), promote (promotes, promoted, promoting), lead (leads, led, leading), deal (deals, dealt, dealing), handle (handles, handled, handling), arrange (arranges, arranged, arranging), attend (attends, attended, attending), complete (completes, completed, completing), prepare (prepares, prepared, preparing)
 - `b1-words-jobs-3` 专业职业 (12): accountant (accountants), lawyer (lawyers), journalist (journalists), architect (architects), designer (designers), programmer (programmers), secretary (secretaries), receptionist (receptionists), electrician (electricians), plumber (plumbers), pharmacist (pharmacists), assistant (assistants)
-- `b1-words-work-qualities` 职业素质 (12): reliable, flexible, punctual, efficient, ambitious, experienced, professional, honest, loyal, careless, motivated, practical
+- `b1-words-work-qualities` 职业素质 (12): reliable, flexible, punctual, efficient, ambitious, experienced, professional, honest, interested, careless, motivated, practical
 - `b1-words-office` 办公室 (12): document (documents), folder (folders), form (forms), signature (signatures), sign (signs, signed, signing), stamp (stamps), memo (memos), calendar (calendars), reminder (reminders), invoice (invoices), stapler (staplers), drawer (drawers)
+- `b1-words-little-words-5` 连接词 2 (10): whenever, wherever, anyway, otherwise, besides, therefore, meanwhile, actually, especially, exactly
 
 **语法**
 
-- `used-to` used to（先修：`past-simple-irregular`）. *I used to work in a bank.* *used to* 表示过去的习惯或状态，现在已经不是这样了。
-- `present-perfect-continuous` 现在完成进行时（先修：`present-perfect-or-past-simple`、`b1-words-little-words-5`）. *She has been working here since May.* 表示从过去开始、现在仍在进行的事，常和 *for*、*since* 连用；中文说“已经……了”。
+- `used-to` used to（先修：`past-simple-questions-and-negatives`）. *I used to work in a bank.* *used to* 表示过去的习惯或状态，现在已经不是这样了。
+- `present-perfect-continuous` 现在完成进行时（先修：`present-perfect-or-past-simple`、`present-continuous`、`b1-words-little-words-5`）. *She has been working here since May.* 表示从过去开始、现在仍在进行的事，常和 *for*、*since* 连用；中文说“已经……了”。
 
 **写作**
 
@@ -83,10 +84,10 @@
 - `b1-words-healthcare` 医疗 (12): clinic (clinics), surgeon (surgeons), prescription (prescriptions), vaccine (vaccines), insurance, therapy (therapies), x-ray (x-rays), ward (wards), specialist (specialists), bandage (bandages), wheelchair (wheelchairs), diagnose (diagnoses, diagnosed, diagnosing)
 - `b1-words-fitness` 健身 (12): gym (gyms), muscle (muscles), weight (weights), workout (workouts), jog (jogs, jogged, jogging), stretch (stretches, stretched, stretching), yoga, marathon (marathons), athlete (athletes), energy (energies), sweat (sweats, sweated, sweating), active
 - `b1-words-nutrition` 营养 (12): vitamin (vitamins), protein (proteins), fat (fatter, fattest, fats), calorie (calories), nutrition, vegetarian (vegetarians), balanced, junk, snack (snacks), portion (portions), organic, fiber
-- `b1-words-body-and-mind` 身体与心理 (12): brain (brains), lung (lungs), nerve (nerves), mental, physical, stress, tense (tenser, tensest), anxious, depressed, mood (moods), breathe (breathes, breathed, breathing), pulse (pulses)
+- `b1-words-body-and-mind` 身体与心理 (12): chest (chests), lung (lungs), nerve (nerves), mental, physical, stress, tense (tenser, tensest), anxious, depressed, mood (moods), breathe (breathes, breathed, breathing), pulse (pulses)
 - `b1-words-health-verbs` 原因与结果 (12): avoid (avoids, avoided, avoiding), prevent (prevents, prevented, preventing), reduce (reduces, reduced, reducing), increase (increases, increased, increasing), suffer (suffers, suffered, suffering), affect (affects, affected, affecting), cause (causes, caused, causing), harm (harms, harmed, harming), damage (damages, damaged, damaging), risk (risks), effect (effects), benefit (benefits)
 - `b1-words-symptoms` 症状 (12): examine (examines, examined, examining), injection (injections), bleed (bleeds, bled, bleeding), faint (faints, fainted, fainting), swallow (swallows, swallowed, swallowing), sneeze (sneezes, sneezed, sneezing), itch (itches, itched, itching), scratch (scratches, scratched, scratching), bruise (bruises), swollen, sore (sorer, sorest), dizzy (dizzier, dizziest)
-- `b1-words-healthy-habits` 健康习惯 (12): routine (routines), lifestyle (lifestyles), alcohol, cigarette (cigarettes), overweight, skip (skips, skipped, skipping), regular, regularly, nap (naps), meditation, hygiene, quit (quits, quitting)
+- `b1-words-healthy-habits` 健康习惯 (12): routine (routines), lifestyle (lifestyles), alcohol, cigarette (cigarettes), overweight, skip (skips, skipped, skipping), regular (regularly), normal, nap (naps), meditation, hygiene, quit (quits, quitting)
 
 **语法**
 
@@ -135,12 +136,11 @@
 
 **词汇**
 
-- `b1-words-news` 新闻 (12): news, newspaper (newspapers), magazine (magazines), article (articles), headline (headlines), reporter (reporters), editor (editors), channel (channels), broadcast (broadcasts, broadcasting), announce (announces, announced, announcing), publish (publishes, published, publishing), press
+- `b1-words-news` 新闻 (12): bulletin (bulletins), newspaper (newspapers), magazine (magazines), article (articles), headline (headlines), reporter (reporters), editor (editors), channel (channels), broadcast (broadcasts, broadcasting), announce (announces, announced, announcing), publish (publishes, published, publishing), press
 - `b1-words-media` 媒体 (12): media, audience (audiences), viewer (viewers), program (programs), series, episode (episodes), documentary (documentaries), podcast (podcasts), blog (blogs), comment (comments, commented, commenting), follower (followers), subscribe (subscribes, subscribed, subscribing)
-- `b1-words-truth` 真相与事实 (12): fact (facts), opinion (opinions), truth, false, rumor (rumors), fake, source (sources), evidence, trust (trusts, trusted, trusting), accurate, claim (claims, claimed, claiming), prove (proves, proved, proving)
+- `b1-words-truth` 真相与谎言 (12): opinion (opinions), truth, lie (lies, lied, lying), false, rumor (rumors), fake, source (sources), evidence, trust (trusts, trusted, trusting), accurate, claim (claims, claimed, claiming), prove (proves, proved, proving)
 - `b1-words-crime` 犯罪与选举 (12): crime (crimes), thief (thieves), steal (steals, stole, stolen, stealing), rob (robs, robbed, robbing), arrest (arrests, arrested, arresting), victim (victims), witness (witnesses), court (courts), judge (judges), prison (prisons), election (elections), vote (votes, voted, voting)
 - `b1-words-describing-events` 描述事件 (12): recent, current, national, international, official, shocking, unexpected, major, minor, sudden, positive, negative
-- `b1-words-little-words-5` 连接词 2 (12): since, whatever, whenever, wherever, anyway, otherwise, instead, besides, therefore, meanwhile, actually, especially
 - `b1-words-communicating` 交流 (12): inform (informs, informed, informing), mention (mentions, mentioned, mentioning), express (expresses, expressed, expressing), respond (responds, responded, responding), response (responses), debate (debates), interrupt (interrupts, interrupted, interrupting), whisper (whispers, whispered, whispering), suggest (suggests, suggested, suggesting), suggestion (suggestions), warn (warns, warned, warning), advise (advises, advised, advising)
 - `b1-words-opinions` 观点 (12): oppose (opposes, opposed, opposing), favor (favors), convince (convinces, convinced, convincing), doubt (doubts), certain, uncertain, obvious, personally, definitely, totally, strongly, absolutely
 
@@ -365,8 +365,9 @@
 | `b1-words-jobs-3` | 词汇 | 2 | 无 |
 | `b1-words-work-qualities` | 词汇 | 2 | 无 |
 | `b1-words-office` | 词汇 | 2 | 无 |
-| `used-to` | 语法 | 2 | `past-simple-irregular` |
-| `present-perfect-continuous` | 语法 | 2 | `present-perfect-or-past-simple`、`b1-words-little-words-5` |
+| `b1-words-little-words-5` | 词汇 | 2 | 无 |
+| `used-to` | 语法 | 2 | `past-simple-questions-and-negatives` |
+| `present-perfect-continuous` | 语法 | 2 | `present-perfect-or-past-simple`、`present-continuous`、`b1-words-little-words-5` |
 | `writing-a-formal-email` | 写作 | 2 | `writing-an-informal-email` |
 | `b1-words-illness` | 词汇 | 3 | 无 |
 | `b1-words-healthcare` | 词汇 | 3 | 无 |
@@ -395,7 +396,6 @@
 | `b1-words-truth` | 词汇 | 5 | 无 |
 | `b1-words-crime` | 词汇 | 5 | 无 |
 | `b1-words-describing-events` | 词汇 | 5 | 无 |
-| `b1-words-little-words-5` | 词汇 | 5 | 无 |
 | `b1-words-communicating` | 词汇 | 5 | 无 |
 | `b1-words-opinions` | 词汇 | 5 | 无 |
 | `reported-speech` | 语法 | 5 | `past-simple-irregular`、`object-pronouns` |

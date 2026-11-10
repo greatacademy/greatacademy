@@ -625,8 +625,11 @@ const presentPerfectEverNever: TopicDef = {
   ],
 };
 
-/** been is the past participle of be, which the present perfect teaches. */
-const been: WordBatch = { topic: "present-perfect-with-ever-and-never", words: ["been"] };
+/** been and the short forms of have are the word forms this topic teaches. */
+const been: WordBatch = {
+  topic: "present-perfect-with-ever-and-never",
+  words: ["been", "i've", "you've", "we've", "they've"],
+};
 
 // Writing about an experience.
 

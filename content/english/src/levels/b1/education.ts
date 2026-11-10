@@ -111,8 +111,8 @@ const learning = vocabularyTopic({
   id: "b1-words-learning",
   title: t("How We Learn", "我们怎样学习"),
   summary: t(
-    "Knowledge and memory; memorizing, concentrating and focusing; progress, mistakes and effort; methods, attention, explanations and ability.",
-    "知识和记忆；背诵、集中注意力；进步、错误和努力；方法、注意力、解释和能力。",
+    "Knowledge and memory; memorizing, concentrating and focusing; progress, improvements and effort; methods, attention, explanations and ability.",
+    "知识和记忆；背诵、集中注意力；进步、改进和努力；方法、注意力、解释和能力。",
   ),
   prerequisites: ["b1-words-school-life"],
   words: [
@@ -161,11 +161,12 @@ const learning = vocabularyTopic({
       "effort method",
     ),
     word(
-      "mistake mistakes",
-      "something that is not right",
-      "错误",
-      "I made three {mistakes} in my spelling test.|methods memories | It was a {mistake} to leave so late. We missed the train.|method memory | Everyone makes {mistakes}. That's how we learn.|methods abilities",
-      "effort progress",
+      "improvement improvements",
+      "a change that makes something better",
+      "改进；进步",
+      "There has been a big {improvement} in your writing this term.|memory method | The new library is a great {improvement} on the old one.|attention memory | We made some {improvements} to the essay before we handed it in.|memories abilities",
+      "effort method",
+      "progress",
     ),
     word(
       "effort efforts",
@@ -405,18 +406,17 @@ const thinking = vocabularyTopic({
   id: "b1-words-thinking",
   title: t("Thinking", "思考"),
   summary: t(
-    "Guessing, imagining and wondering; realizing, believing and considering; supposing and preferring; solving, comparing, discussing and describing.",
-    "猜测、想象和想知道；意识到、相信和考虑；猜想和更喜欢；解决、比较、讨论和描述。",
+    "Reminding, imagining and wondering; realizing, believing and considering; supposing and preferring; solving, comparing, discussing and describing.",
+    "提醒、想象和想知道；意识到、相信和考虑；猜想和更喜欢；解决、比较、讨论和描述。",
   ),
   prerequisites: ["b1-words-learning"],
   words: [
     word(
-      "guess guesses guessed guessing",
-      "to give an answer when you are not sure",
-      "猜",
-      "{Guess} what? I've passed my driving test!|describe compare | Can you {guess} how old my grandma is?|compare solve | She {guessed} the answer, and she was right!|described compared",
+      "remind reminds reminded reminding",
+      "to make someone remember something",
+      "提醒；使想起",
+      "Please {remind} me to buy milk on the way home.|describe compare | This song {reminds} me of my summer holiday.|describes compares | She {reminded} us that the essay was due on Friday.|described solved",
       "realize solve",
-      "suppose",
     ),
     word(
       "imagine imagines imagined imagining",

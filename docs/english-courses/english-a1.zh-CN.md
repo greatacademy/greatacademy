@@ -118,7 +118,7 @@
 
 - `a1-words-clothes` 衣服 (12): clothes, shirt (shirts), T-shirt (t-shirts), dress (dresses), skirt (skirts), pants, shoe (shoes), sock (socks), hat (hats), coat (coats), jacket (jackets), wear (wears, wore, worn, wearing)
 - `a1-words-shopping` 购物 (12): shop (shops, shopped, shopping), buy (buys, bought, buying), sell (sells, sold, selling), money, dollar (dollars), cheap (cheaper, cheapest), expensive, price (prices), store (stores), pay (pays, paid, paying), size (sizes), try (tries, tried, trying)
-- `a1-words-at-the-shop` 哪一个？ (11): want (wants, wanted, wanting), would, new (newer, newest), another, other (others), same, different, only, all, more, most
+- `a1-words-at-the-shop` 哪一个？ (11): want (wants, wanted, wanting), would (I'd, wouldn't), new (newer, newest), another, other (others), same, different, only, all, more, most
 
 **语法**
 

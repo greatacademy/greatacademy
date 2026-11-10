@@ -248,4 +248,47 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
       "Is the email set out as a greeting, two or more short paragraphs each about one main idea, and an ending with the writer's name?",
     quoteWhenMet: false,
   },
+  // B1: a formal email.
+  {
+    id: "b1-formal-email-purpose",
+    version: "1",
+    question: "Does the email say near its start why the writer is writing, and does it cover every point that the task names?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-formal-register",
+    version: "1",
+    question:
+      "Is the email formal throughout: an opening such as Dear Ms. Hall or Dear Sir or Madam, a closing such as Yours sincerely or Yours faithfully with the writer's full name, no short forms such as I'm or don't, and no slang?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-polite-requests",
+    version: "1",
+    question:
+      "Does the email make at least one request, and make every request politely, with forms such as Could you…, I would be grateful if… or I would like to know…, rather than as an order?",
+    quoteWhenMet: true,
+  },
+  // B1: an article.
+  {
+    id: "b1-article-title-and-opening",
+    version: "1",
+    question:
+      "Does the article have a title, and does it open with something that catches the reader's interest, such as a question, a surprising fact or a short scene?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-article-paragraphs",
+    version: "1",
+    question:
+      "After the opening, does the article have two or more paragraphs, each about one main idea on the topic the task names, joined with linking words?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b1-article-reader",
+    version: "1",
+    question:
+      "Does the article speak to its readers, for example as you, and end with something for them, such as advice, a question or an invitation?",
+    quoteWhenMet: true,
+  },
 ];

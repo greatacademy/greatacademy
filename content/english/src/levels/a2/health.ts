@@ -749,5 +749,8 @@ export const topics: readonly TopicDef[] = [
   writingAdvice,
 ];
 
+/** shortForms are the short forms of should and must that the topic teaches. */
+const shortForms: WordBatch = { topic: "should-and-must", words: ["shouldn't", "mustn't"] };
+
 /** vocabulary are the words the unit Health and the Body teaches. */
-export const vocabulary: readonly WordBatch[] = [health.batch, body2.batch, stayingWell.batch, atTheDoctor.batch];
+export const vocabulary: readonly WordBatch[] = [health.batch, body2.batch, stayingWell.batch, atTheDoctor.batch, shortForms];
