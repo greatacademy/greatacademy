@@ -32,7 +32,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |
 | Course of B1: 12 units, 96 passages, 12 conversations | Done |
-| Course of B2 | Units 1 to 4 done: 32 passages, 4 conversations |
+| Course of B2: 10 units, 80 passages, 10 conversations | Done |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
 | Topics of B2: 128 topics in 10 units, 371 knowledge points, 3,547 headwords by its end | Done |
 | Exam courses: IELTS (5 new topics, 1 reading unit) and TOEFL (4 new topics, 1 reading unit), Cambridge First (6 new topics, 6 passages) and the Gaokao (5 new topics, 8 passages), all practice-only | Done |
