@@ -7,6 +7,7 @@ import { theHumanBody } from "../reading/body.ts";
 import { ourChangingEarth } from "../reading/earth.ts";
 import { lifeOnTheNile } from "../reading/nile.ts";
 import { howPlantsLive } from "../reading/plants.ts";
+import { voicesOfPersuasion } from "../reading/speeches.ts";
 import { storiesAndFables } from "../reading/stories.ts";
 import { talesAndPoems } from "../reading/tales.ts";
 import { waterOnEarth } from "../reading/water.ts";
@@ -62,4 +63,5 @@ export const coreShardReading: readonly ReadingUnitDef[] = [
   storiesAndFables,
   talesAndPoems,
   makingTheCase,
+  voicesOfPersuasion,
 ];

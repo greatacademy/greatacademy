@@ -150,6 +150,18 @@ rumble runner rush says screamed secret seemed shadows shallow shelf shivers sho
 sing sink sitting slip smelled smiles somebody son song songs sparrows splash splashed stacks step stepped stopped
 strings striped sunset suppose swam swept tables talking tapping tea tin tiniest tossed uncle village waited waiting
 wander wanders waved wheels whenever whisper whistled windows winning wonderful wood yawns
+admits adults advertised afford agree allow allows amazed app approve arrived authors bill born budget caught
+certain certainly childhood claimed cleanest company company's concern congratulations considering council
+customer danced date dawn deals decides described destroying director discovery discuss doesn't doubt drinkers
+editor education either engineer equals essay evenings everywhere experts explain false feelings fifteen
+forgetting forty-one free future gain given gloves grandparent guide harmful heating honestly idea included
+knowing latest law listed loss luxury mall meadow's meeting mentioned met midnight model names neighborhoods
+news number object offer percent perhaps photograph pleasant politician promises proves published questions
+rates reader readers recommends reject remove removing report research returned ruining seat sells separately
+sets seven-year-old shopping sixteen sixty speaker speaking stands state station staying strangers stretch
+studies subject succeed summary supporter taught teammate tear tenth tenth-grade tested theater tight titled
+treats university university's upsets upsetting urge useless vote votes warned week's wise woman youngest
+yours
 `;
 
 /** academic are the academic words that the passages use, with their spellings. */

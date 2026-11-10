@@ -42,3 +42,9 @@ How writers and speakers persuade, where reasoning fails, how literature works o
 3.1.2. Synthesizing Sources
 
 The topics of unit 3 are judged by a model; a learner whom no route may serve goes through the course without them.
+
+## Reading
+
+One knowledge unit of original passages, offered as its topics are learned:
+
+1. Voices of Persuasion (10 speeches, letters, editorials and advertisements: the rhetorical situation, appeals, devices, fallacies and the credibility of sources)
