@@ -1,14 +1,14 @@
-import type { Route as AiRoute, Provider } from "@ga/proto/admin/v1/admin_pb";
+import type { Route as AiRoute, ListRouteChoicesResponse, Provider } from "@ga/proto/admin/v1/admin_pb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
-import { SelectField } from "../../components/SelectField.tsx";
+import { SelectField, type SelectOption } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
-import { catalogModels, ModelOptions, useCatalog } from "../../lib/catalog.tsx";
+import { catalogModels, ModelField, useCatalog, useRouteChoices } from "../../lib/catalog.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { errorText } from "../../lib/privacy-text.ts";
 import { admin } from "../../lib/rpc.ts";
@@ -201,6 +201,24 @@ function ProviderCard({ provider, uses }: { provider: Provider; uses: readonly s
   );
 }
 
+/** targetOptions are what a route of a use may serve: a criterion, a conversation or a speech language, with the route's own kept. */
+function targetOptions(
+  use: string,
+  choices: ListRouteChoicesResponse | undefined,
+  locale: string,
+  current: string | undefined,
+): SelectOption[] {
+  const languages = new Intl.DisplayNames(locale, { type: "language" });
+  const options: SelectOption[] =
+    use === "judgment"
+      ? (choices?.criteria ?? []).map((c) => ({ value: c.key, label: `${c.key} · ${c.question}` }))
+      : use === "conversation"
+        ? (choices?.conversations ?? []).map((value) => ({ value, label: value }))
+        : (choices?.languages ?? []).map((value) => ({ value, label: `${languages.of(value) ?? value} · ${value}` }));
+  if (current && !options.some((o) => o.value === current)) options.push({ value: current, label: current });
+  return options;
+}
+
 function RouteForm({ providers, route, onDone }: { providers: readonly Provider[]; route?: AiRoute; onDone: () => void }) {
   const { m, locale } = useI18n();
   const t = useAdminText();
@@ -213,7 +231,8 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
   const models = catalogModels(catalog.data?.providers, providers, providerId);
   const [modelId, setModelId] = useState(route?.model ?? "");
   const known = models.find((x) => x.id === modelId);
-  const listId = useId();
+  const choices = useRouteChoices();
+  const targets = targetOptions(use, choices.data, locale, route?.target);
   const save = useMutation({
     mutationFn: (form: FormData) => {
       const live = form.get("live") === "on";
@@ -245,20 +264,16 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
   }
   return (
     <form onSubmit={submit} className="space-y-3">
-      <SelectField
-        label={t.use}
-        name="use"
-        required
-        defaultValue={use}
-        disabled={!!route}
-        options={USES.map((value) => ({ value, label: t.uses[value] ?? value }))}
-        onValueChange={setUse}
-      />
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.targets[use]}</span>
-          <input name="target" required defaultValue={route?.target} readOnly={!!route} autoComplete="off" className={field} />
-        </label>
+        <SelectField
+          label={t.use}
+          name="use"
+          required
+          defaultValue={use}
+          disabled={!!route}
+          options={USES.map((value) => ({ value, label: t.uses[value] ?? value }))}
+          onValueChange={setUse}
+        />
         <div>
           <SelectField
             label={t.position}
@@ -270,6 +285,19 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
           {route && <input type="hidden" name="position" value={route.position} />}
         </div>
       </div>
+      <div>
+        <SelectField
+          key={use}
+          label={t.targets[use] ?? t.target}
+          name="target"
+          required
+          placeholder={targets.length > 0 ? t.chooseTarget : t.noTargets}
+          defaultValue={route?.target}
+          disabled={!!route || targets.length === 0}
+          options={targets}
+        />
+        {route && <input type="hidden" name="target" value={route.target} />}
+      </div>
       <SelectField
         label={t.provider}
         name="provider"
@@ -279,30 +307,31 @@ function RouteForm({ providers, route, onDone }: { providers: readonly Provider[
         options={providers.filter((p) => !text || p.api).map((p) => ({ value: p.id, label: p.name }))}
         onValueChange={setProviderId}
       />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.model}</span>
-          <input
-            name="model"
-            required
+      <div className="space-y-3">
+        <div className="space-y-1.5">
+          <ModelField
+            key={`${providerId}/${models.length}`}
+            label={t.model}
+            otherLabel={t.otherModel}
+            placeholder={t.chooseModel}
+            models={models}
             value={modelId}
-            onChange={(e) => setModelId(e.target.value)}
-            list={models.length > 0 ? listId : undefined}
-            autoComplete="off"
-            className={field}
+            onChange={setModelId}
           />
-          {models.length > 0 && (
-            <span className="block text-xs font-normal text-muted">
-              {known ? t.listPrice(usd(known.inputPerMillion), usd(known.outputPerMillion)) : t.modelHint}
-            </span>
+          {known && (
+            <span className="block text-xs text-muted">{t.listPrice(usd(known.inputPerMillion), usd(known.outputPerMillion))}</span>
           )}
-          <ModelOptions id={listId} models={models} />
-        </label>
+        </div>
         {text && (
-          <label className="block space-y-1.5 text-sm font-medium">
-            <span>{t.promptVersion}</span>
-            <input name="prompt" required defaultValue={route?.promptVersion} autoComplete="off" className={field} />
-          </label>
+          <SelectField
+            key={choices.data ? "ready" : "loading"}
+            label={t.promptVersion}
+            name="prompt"
+            required
+            placeholder={t.choosePrompt}
+            defaultValue={route?.promptVersion || (choices.data?.promptVersions.length === 1 ? choices.data.promptVersions[0] : undefined)}
+            options={(choices.data?.promptVersions ?? []).map((value) => ({ value, label: value }))}
+          />
         )}
         {use === "tts" && (
           <label className="block space-y-1.5 text-sm font-medium">

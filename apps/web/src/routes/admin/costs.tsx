@@ -1,14 +1,14 @@
 import type { Price, Provider, ProviderSpend } from "@ga/proto/admin/v1/admin_pb";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { SelectField } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
-import { catalogModels, ModelOptions, useCatalog } from "../../lib/catalog.tsx";
+import { catalogModels, ModelField, useCatalog } from "../../lib/catalog.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { errorText } from "../../lib/privacy-text.ts";
 import { admin } from "../../lib/rpc.ts";
@@ -69,7 +69,6 @@ function PriceForm({ providers, price, onDone }: { providers: readonly Provider[
   const [input, setInput] = useState(price ? String(price.inputPerMillion) : "");
   const [output, setOutput] = useState(price ? String(price.outputPerMillion) : "");
   const [filled, setFilled] = useState(false);
-  const listId = useId();
   /** chooseModel fills a new price from the vendor's list price, which the administrator then corrects to what they pay. */
   function chooseModel(id: string) {
     setModel(id);
@@ -113,21 +112,16 @@ function PriceForm({ providers, price, onDone }: { providers: readonly Provider[
         />
         {price && <input type="hidden" name="provider" value={price.providerId} />}
       </div>
-      <label className="block space-y-1.5 text-sm font-medium">
-        <span>{t.model}</span>
-        <input
-          name="model"
-          required
-          value={model}
-          onChange={(e) => chooseModel(e.target.value)}
-          readOnly={!!price}
-          list={!price && models.length > 0 ? listId : undefined}
-          autoComplete="off"
-          className={field}
-        />
-        {!price && models.length > 0 && <span className="block text-xs font-normal text-muted">{t.modelHint}</span>}
-        <ModelOptions id={listId} models={models} />
-      </label>
+      <ModelField
+        key={`${providerId}/${models.length}`}
+        label={t.model}
+        otherLabel={t.otherModel}
+        placeholder={t.chooseModel}
+        models={models}
+        value={model}
+        onChange={chooseModel}
+        disabled={!!price}
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.inputPrice}</span>

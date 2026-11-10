@@ -4,6 +4,7 @@ import { type FormEvent, useState } from "react";
 
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
+import { SelectField } from "../../components/SelectField.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { useAdminText } from "../../lib/admin-text.ts";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -95,16 +96,13 @@ function GrantPlan() {
           <span>{t.email}</span>
           <input name="email" type="email" required autoComplete="off" className={field} />
         </label>
-        <label className="block space-y-1.5 text-sm font-medium">
-          <span>{t.grantScope}</span>
-          <select name="scope" required className={field}>
-            {plans.data?.plans.map((p) => (
-              <option key={p.scope} value={p.scope}>
-                {p.title ? tx(p.title) : p.scope}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label={t.grantScope}
+          name="scope"
+          required
+          placeholder={t.choosePlan}
+          options={(plans.data?.plans ?? []).map((p) => ({ value: p.scope, label: p.title ? tx(p.title) : p.scope }))}
+        />
         <label className="block space-y-1.5 text-sm font-medium">
           <span>{t.grantDays}</span>
           <input name="days" type="number" required min={1} max={366} defaultValue={30} className={field} />

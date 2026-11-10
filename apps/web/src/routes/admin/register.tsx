@@ -11,6 +11,9 @@ import { useI18n } from "../../lib/i18n.tsx";
 import { errorText, regionName } from "../../lib/privacy-text.ts";
 import { admin } from "../../lib/rpc.ts";
 
+/** DATA_REGIONS are the places a vendor may process a market's data in: the European Union and the countries vendors host in. */
+const DATA_REGIONS = ["US", "EU", "GB", "CH", "CA", "AU", "JP", "KR", "SG", "HK", "TW", "IN", "BR", "CN"] as const;
+
 export const Route = createFileRoute("/admin/register")({ component: Register });
 
 const conditions = [
@@ -100,7 +103,7 @@ function Register() {
                 label={t.country}
                 name="country"
                 required
-                placeholder={t.chooseProvider}
+                placeholder={t.chooseMarket}
                 options={markets.data.markets.map((x) => ({ value: x.country, label: regionName(x.country, locale) }))}
               />
             </div>
@@ -110,11 +113,16 @@ function Register() {
                 {t.conditions[c]}
               </label>
             ))}
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{t.region}</span>
-              <input name="region" required autoComplete="off" className={field} />
-              <span className="block text-xs font-normal text-muted">{t.regionHint}</span>
-            </label>
+            <div className="space-y-1.5">
+              <SelectField
+                label={t.region}
+                name="region"
+                required
+                placeholder={t.chooseRegion}
+                options={DATA_REGIONS.map((code) => ({ value: code, label: `${regionName(code, locale)} · ${code}` }))}
+              />
+              <p className="text-xs text-muted">{t.regionHint}</p>
+            </div>
             <label className="block space-y-1.5 text-sm font-medium">
               <span>{t.notes}</span>
               <textarea name="notes" rows={2} className={field} />
