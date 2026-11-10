@@ -2,7 +2,7 @@
 
 > English | [简体中文](README.zh-CN.md)
 
-Manifests for the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)) on the k3s cluster in Hetzner Cloud's Hillsboro region. They are a Kustomize base and two overlays, `test` (namespace `voice-test`) and `production` (namespace `voice`).
+Manifests for the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)) on the Talos cluster in Hetzner Cloud's Hillsboro region. They are a Kustomize base and two overlays, `test` (namespace `voice-test`) and `production` (namespace `voice`).
 
 | File | Contents |
 | :--- | :--- |
@@ -23,11 +23,11 @@ Renders each overlay and validates it with kubeconform against the Kubernetes sc
 
 ## The Cluster
 
-The cluster is built with hetzner-k3s in `hil`, and has these installed before the first deploy:
+The cluster runs Kubernetes 1.33 on Talos in `hil`, set up with Terraform, and has these installed before the first deploy:
 
-- KEDA, in the namespace `keda`.
-- kube-prometheus-stack, released as `kube-prometheus-stack` in the namespace `monitoring`, so that Prometheus is at `kube-prometheus-stack-prometheus.monitoring.svc:9090`. Its Prometheus must select PodMonitors in every namespace.
-- k3s enforces NetworkPolicies itself.
+- KEDA 2.20, in the namespace `keda`. KEDA 2.21 needs Kubernetes 1.34 or later.
+- kube-prometheus-stack, released as `kube-prometheus-stack` in the namespace `monitoring`, so that Prometheus is at `kube-prometheus-stack-prometheus.monitoring.svc:9090`. Its Prometheus selects PodMonitors labeled `release: kube-prometheus-stack` in every namespace, which the voice PodMonitor carries.
+- Cilium, which enforces NetworkPolicies.
 
 ## Pushing an Image
 

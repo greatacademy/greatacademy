@@ -2,7 +2,7 @@
 
 > [English](README.md) | 简体中文
 
-英语语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）在 Hetzner Cloud 希尔斯伯勒区域 k3s 集群上的清单。它们是一个 Kustomize base 和两个 overlay：`test`（命名空间 `voice-test`）和 `production`（命名空间 `voice`）。
+英语语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上的清单。它们是一个 Kustomize base 和两个 overlay：`test`（命名空间 `voice-test`）和 `production`（命名空间 `voice`）。
 
 | 文件 | 内容 |
 | :--- | :--- |
@@ -23,11 +23,11 @@ mise run voice:check
 
 ## 集群
 
-集群用 hetzner-k3s 在 `hil` 搭建，首次部署前已安装：
+集群在 `hil` 的 Talos 上运行 Kubernetes 1.33，用 Terraform 搭建，首次部署前已安装：
 
-- KEDA，在命名空间 `keda`。
-- kube-prometheus-stack，以 `kube-prometheus-stack` 为发布名安装在命名空间 `monitoring`，因此 Prometheus 位于 `kube-prometheus-stack-prometheus.monitoring.svc:9090`。它的 Prometheus 必须选择所有命名空间中的 PodMonitor。
-- k3s 自己执行 NetworkPolicy。
+- KEDA 2.20，在命名空间 `keda`。KEDA 2.21 需要 Kubernetes 1.34 或更高版本。
+- kube-prometheus-stack，以 `kube-prometheus-stack` 为发布名安装在命名空间 `monitoring`，因此 Prometheus 位于 `kube-prometheus-stack-prometheus.monitoring.svc:9090`。它的 Prometheus 选择所有命名空间中带 `release: kube-prometheus-stack` 标签的 PodMonitor，语音服务的 PodMonitor 带有这个标签。
+- Cilium，它执行 NetworkPolicy。
 
 ## 推送镜像
 

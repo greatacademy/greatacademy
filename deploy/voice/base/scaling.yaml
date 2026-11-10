@@ -6,6 +6,8 @@ metadata:
   name: voice
   labels:
     app.kubernetes.io/name: voice
+    # kube-prometheus-stack's Prometheus selects PodMonitors by its release label.
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:

@@ -224,7 +224,7 @@ The three tracks are independent. E5 needs the cluster's details; E6 needs the a
 | E5.12 | Calibrate S6 rubrics on recorded test conversations; add limits and costs | `tools/calibrate` | Routes pass calibration |
 | E5.13 | Production overlay, a small learner group first, then wider; alarms on sessions, latency, errors and cost | `deploy/voice` | Stable for a chosen period, with cost per minute measured |
 
-**The cluster.** k3s on Hetzner Cloud in Hillsboro, set up with hetzner-k3s, with KEDA and kube-prometheus-stack installed; images in GHCR at `ghcr.io/greatacademy/voice`; Secrets created by hand with `kubectl` ([deploy/voice](../deploy/voice/README.md)).
+**The cluster.** Kubernetes 1.33 on Talos in Hetzner Cloud's Hillsboro region, set up with Terraform, with Cilium, kube-prometheus-stack and KEDA 2.20; images in GHCR at `ghcr.io/greatacademy/voice`; Secrets created by hand with `kubectl` ([deploy/voice](../deploy/voice/README.md)).
 
 **Built so far.** E5.8 and E5.9: `mise run voice:push <overlay>` builds the image for `linux/amd64` from committed code, pushes it and pins the overlay to its digest, and the image starts with no network; `mise run voice:check` renders the `test` and `production` overlays and validates them with kubeconform, KEDA's and the Prometheus Operator's resources included. KEDA scales on `voice_sessions_active`, which each pod reports at `/metrics`. Nothing has run on the cluster yet.
 
