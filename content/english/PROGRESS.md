@@ -21,7 +21,8 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Step | State |
 | :--- | :--- |
 | Content model: strands, themed units, packs | Done |
-| Outlines of Pre-A1 to B2 | Not started |
+| Outlines of Pre-A1 to B2 | Done |
+| Topics of Pre-A1 (30) and A1 (71), 266 knowledge points | Done |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -122,3 +123,6 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `writing-a-compare-and-contrast-paragraph` | `compare-and-contrast-in-texts`, `writing-a-paragraph` | 0.3 each | It writes the structure it read, in a whole paragraph |
 | `writing-a-cause-and-effect-paragraph` | `cause-and-effect-in-texts`, `writing-a-paragraph` | 0.3 each | It writes the structure it read, in a whole paragraph |
 | `writing-a-descriptive-paragraph` | `similes-and-metaphors`, `adjectives-and-adverbs`, `writing-a-paragraph` | 0.2 each | Description uses figures and precise modifiers in a paragraph |
+| Each grammar topic of Pre-A1 and A1 | The grammar it builds on (e.g. `the-verb-be` from `was-and-were`) | 0.3–0.5 | Every item uses those forms again |
+| Each grammar topic of Pre-A1 and A1 | Its unit's word batch | 0.2–0.3 | Its sentences reuse those words |
+| Each writing topic of Pre-A1 and A1 | The grammar it uses; capitals or `writing-a-short-note` | 0.3–0.4; 0.2 | Every answer applies them |
