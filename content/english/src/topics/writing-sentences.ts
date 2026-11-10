@@ -3,6 +3,20 @@
 
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-english";
+import {
+  activeOf,
+  appositiveRecords,
+  endAppositiveRecords,
+  moreFillers,
+  moreWordy,
+  openingRecords,
+  participleRecords,
+  passiveOf,
+  recordText,
+  relativeRecords,
+  relativeSentence,
+  voiceRecords,
+} from "./grammar-clauses-more.ts";
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const use = (word: string): Text => t(`Use *${word}*.`, `使用 *${word}*。`);
@@ -693,6 +707,87 @@ const activeBank: readonly TypedItem[] = [
   typed("The test was graded by Mr. Kim.", "Mr. Kim graded the test.", ["The test graded Mr. Kim.", "Mr. Kim was graded by the test."]),
 ];
 
+// More items, built from the records shared with grammar-clauses.ts.
+
+const { upper, lower, noStop } = recordText;
+
+const moreWhoCombine: readonly TypedItem[] = relativeRecords
+  .filter((r) => !r[5])
+  .map((r) => {
+    const [noun, word, clause, rest, second, , object] = r;
+    const right = relativeSentence(r, word);
+    const choice = word === "who" ? "[who|that]" : word === "that" ? (object ? "[that |which |]" : "[that|which]") : word;
+    const pattern = object ? `${noun} ${choice}${clause} ${rest}.` : `${noun} ${choice} ${clause} ${rest}.`;
+    return relativeCombine(
+      `${noun} ${rest}. ${second}`,
+      right,
+      [pattern],
+      word,
+      `${noun} ${rest} ${word} ${clause}.`,
+      `${noun}, ${word} ${clause}, ${rest}.`,
+    );
+  });
+
+const moreWhichCombine: readonly TypedItem[] = relativeRecords
+  .filter((r) => r[5])
+  .map((r) => {
+    const [noun, word, clause, rest, second] = r;
+    const right = relativeSentence(r, word);
+    return relativeCombine(
+      `${noun} ${rest}. ${second}`,
+      right,
+      [right],
+      word,
+      `${noun} ${word} ${clause} ${rest}.`,
+      relativeSentence(r, "that"),
+    );
+  });
+
+const moreAppositiveCombine: readonly TypedItem[] = appositiveRecords.map(([noun, appositive, rest, second]) =>
+  appositiveCombine(
+    `${noun} ${rest}. ${second}`,
+    `${noun}, ${appositive}, ${rest}.`,
+    `${noun} ${appositive} ${rest}.`,
+    `${noun}, ${appositive} ${rest}.`,
+    `${noun}, ${lower(noStop(second))}, ${rest}.`,
+  ),
+);
+
+const moreAppositiveEnd: readonly TypedItem[] = endAppositiveRecords.map(([start, noun, appositive, second]) =>
+  appositiveCombine(
+    `${start} ${noun}. ${second}`,
+    `${start} ${noun}, ${appositive}.`,
+    `${start} ${noun} ${appositive}.`,
+    `${start} ${noun}, ${lower(second)}`,
+  ),
+);
+
+const moreOpeningPhrase: readonly TypedItem[] = openingRecords.map(([phrase, rest]) => {
+  const [first, ...others] = rest.split(" ");
+  return typed(
+    `${upper(rest)} ${phrase}.`,
+    `${upper(phrase)}, ${rest}.`,
+    [`${upper(phrase)} ${first}, ${others.join(" ")}.`, `${phrase}, ${rest}.`],
+    [`${upper(phrase)}(,) ${rest}.`],
+  );
+});
+
+const moreOpeningParticiple: readonly TypedItem[] = participleRecords
+  .filter((r) => r[7])
+  .map(([ing, , , past, phrase, subject, predicate]) =>
+    typed(
+      `${upper(subject)} ${past} ${phrase} and ${predicate}.`,
+      `${ing} ${phrase}, ${subject} ${predicate}.`,
+      [`${ing} ${phrase} ${subject} ${predicate}.`, `${ing} ${phrase}, ${subject} ${predicate}`],
+      undefined,
+      beginWith(ing),
+    ),
+  );
+
+const moreActive: readonly TypedItem[] = voiceRecords.map((r) =>
+  typed(passiveOf(r, true), activeOf(r), [activeOf(r, true), passiveOf(r, true, true)]),
+);
+
 /** endMarkNot gives the feedback for a wrong end mark: what that mark is for. */
 const endMarkNot = (wrong: string) => {
   const says: Readonly<Record<string, readonly [string, string]>> = {
@@ -1216,11 +1311,15 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "When the second sentence tells which one, replace its pronoun with *who* or *that* and place it right after the noun: *The boy plays drums. He lives next door* becomes *The boy who lives next door plays drums.*\n\nDrop the old pronoun: not *who he lives*, and not *that Mia baked it*. No commas are needed, because the clause is needed to identify the noun.",
           "第二句说明“哪一个”时，把其中的代词换成 *who* 或 *that*，放在名词之后：*The boy plays drums. He lives next door* 变成 *The boy who lives next door plays drums.*\n\n要去掉原来的代词：不是 *who he lives*，也不是 *that Mia baked it*。不需要逗号，因为从句是确定名词所必需的。",
         ),
-        typedGenerator("sentence-pattern", t("Join the two sentences into one.", "把两个句子合并成一句。"), whoCombineBank, (right) =>
-          t(
-            `**${right}** The clause sits right after the noun it describes, and the old pronoun is gone.`,
-            `**${right}** 从句紧跟所修饰的名词，原来的代词已去掉。`,
-          ),
+        typedGenerator(
+          "sentence-pattern",
+          t("Join the two sentences into one.", "把两个句子合并成一句。"),
+          [...whoCombineBank, ...moreWhoCombine],
+          (right) =>
+            t(
+              `**${right}** The clause sits right after the noun it describes, and the old pronoun is gone.`,
+              `**${right}** 从句紧跟所修饰的名词，原来的代词已去掉。`,
+            ),
         ),
       ),
       point(
@@ -1230,8 +1329,11 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "When the noun is already clear, the clause only adds information. Set it off with two commas, and use *who* for people or *which* for things: *My coat, which is very old, keeps me warm.* *That* does not work here.",
           "名词已经明确时，从句只是补充信息。用两个逗号把它隔开，人用 *who*，物用 *which*：*My coat, which is very old, keeps me warm.* 这里不能用 *that*。",
         ),
-        typedGenerator("sentence", t("Join the two sentences into one.", "把两个句子合并成一句。"), whichCombineBank, (right) =>
-          t(`**${right}** Two commas set off the added information.`, `**${right}** 用两个逗号隔开补充信息。`),
+        typedGenerator(
+          "sentence",
+          t("Join the two sentences into one.", "把两个句子合并成一句。"),
+          [...whichCombineBank, ...moreWhichCombine],
+          (right) => t(`**${right}** Two commas set off the added information.`, `**${right}** 用两个逗号隔开补充信息。`),
         ),
       ),
     ],
@@ -1257,7 +1359,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Join the two sentences into one with an appositive.", "用同位语把两个句子合并成一句。"),
-          appositiveCombineBank,
+          [...appositiveCombineBank, ...moreAppositiveCombine],
           (right) =>
             t(
               `**${right}** The phrase renames the noun, with a comma on each side.`,
@@ -1275,7 +1377,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence",
           t("Join the two sentences into one with an appositive.", "用同位语把两个句子合并成一句。"),
-          appositiveEndBank,
+          [...appositiveEndBank, ...moreAppositiveEnd],
           (right) =>
             t(`**${right}** One comma sets off an appositive that ends the sentence.`, `**${right}** 位于句末的同位语只用一个逗号隔开。`),
         ),
@@ -1303,7 +1405,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         typedGenerator(
           "sentence-pattern",
           t("Rewrite the sentence so that it opens with its phrase of time or place.", "改写句子，让表示时间或地点的短语位于句首。"),
-          openingPhraseBank,
+          [...openingPhraseBank, ...moreOpeningPhrase],
           (right) =>
             t(`**${right}** The meaning is the same, and the sentence opens differently.`, `**${right}** 意思不变，只是开头不同。`),
         ),
@@ -1315,8 +1417,11 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "When one subject does two actions, the first can become an opening phrase: *Sara laughed at the joke and dropped her fork* becomes *Laughing at the joke, Sara dropped her fork.*\n\nThe doer of the action must come right after the comma.",
           "同一个主语做两个动作时，第一个动作可以变成开头的短语：*Sara laughed at the joke and dropped her fork* 变成 *Laughing at the joke, Sara dropped her fork.*\n\n动作的发出者必须紧跟逗号。",
         ),
-        typedGenerator("sentence", t("Rewrite the sentence as told.", "按要求改写句子。"), openingParticipleBank, (right) =>
-          t(`**${right}** The doer of the action follows the comma.`, `**${right}** 动作的发出者紧跟逗号。`),
+        typedGenerator(
+          "sentence",
+          t("Rewrite the sentence as told.", "按要求改写句子。"),
+          [...openingParticipleBank, ...moreOpeningParticiple],
+          (right) => t(`**${right}** The doer of the action follows the comma.`, `**${right}** 动作的发出者紧跟逗号。`),
         ),
       ),
     ],
@@ -1338,7 +1443,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word can replace this phrase?", "哪个词可以替换这个短语？"),
-          fillerBank,
+          [...fillerBank, ...moreFillers],
           (right, shown) =>
             t(
               `*${shown}* means **${right}**. One word that says the same thing makes the sentence shorter and clearer.`,
@@ -1360,7 +1465,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence says it most directly?", "哪个句子表达得最直接？"),
-          wordyBank,
+          [...wordyBank, ...moreWordy],
           (right) => t(`**${right}** It keeps the meaning and drops the extra words.`, `**${right}** 它保留了意思，去掉了多余的词。`),
           (wrong) =>
             t(
@@ -1376,8 +1481,12 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           "The passive usually takes more words than the active. Rewriting with the doer as the subject is often the quickest way to shorten a sentence: *The ball was kicked by Sam* becomes *Sam kicked the ball.*",
           "被动句通常比主动句用词更多。让动作发出者作主语，往往是缩短句子最快的办法：*The ball was kicked by Sam* 变成 *Sam kicked the ball.*",
         ),
-        typedGenerator("sentence", t("Rewrite the sentence in the active voice.", "把句子改写成主动语态。"), activeBank, (right) =>
-          t(`**${right}** The doer is now the subject, and the sentence is shorter.`, `**${right}** 动作发出者成为主语，句子也更短了。`),
+        typedGenerator(
+          "sentence",
+          t("Rewrite the sentence in the active voice.", "把句子改写成主动语态。"),
+          [...activeBank, ...moreActive],
+          (right) =>
+            t(`**${right}** The doer is now the subject, and the sentence is shorter.`, `**${right}** 动作发出者成为主语，句子也更短了。`),
         ),
       ),
     ],

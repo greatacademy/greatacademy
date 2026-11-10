@@ -2,6 +2,20 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import {
+  moreAppositiveCommas,
+  moreAppositiveFinds,
+  moreMisplacedFinds,
+  moreMisplacedFixes,
+  moreParallelFinds,
+  moreParallelFixes,
+  moreParticipleFinds,
+  moreParticipleForms,
+  moreRelativeFinds,
+  moreRelativeWords,
+  moreToActive,
+  voiceSentences,
+} from "./grammar-clauses-more.ts";
 
 const modifierKindBank: readonly ChoiceItem[] = [
   ["The nervous actor forgot a line.", "nervous", ["actor", "forgot", "line"]],
@@ -1368,7 +1382,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words form the relative clause?", "哪些词构成关系从句？"),
-          relativeFindBank,
+          [...relativeFindBank, ...moreRelativeFinds],
           (right) =>
             t(
               `**${right}** begins with a relative word and describes the noun before it.`,
@@ -1386,7 +1400,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          relativeWordBank,
+          [...relativeWordBank, ...moreRelativeWords],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Look at what the word refers to, and whether it shows ownership.`,
@@ -1414,7 +1428,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words form the appositive?", "哪些词构成同位语？"),
-          appositiveBank,
+          [...appositiveBank, ...moreAppositiveFinds],
           (right) =>
             t(
               `**${right}** renames the noun beside it. You could put it in place of that noun, and the sentence would still be about the same thing.`,
@@ -1432,7 +1446,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
-          appositiveCommaBank,
+          [...appositiveCommaBank, ...moreAppositiveCommas],
           (right) =>
             t(
               `**${right}** The commas mark off the appositive from the rest of the sentence.`,
@@ -1460,7 +1474,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words form the participial phrase?", "哪些词构成分词短语？"),
-          participleFindBank,
+          [...participleFindBank, ...moreParticipleFinds],
           (right) =>
             t(
               `**${right}** begins with a verb form and describes a noun in the sentence.`,
@@ -1478,7 +1492,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          participleFormBank,
+          [...participleFormBank, ...moreParticipleForms],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Ask whether the noun does the action or receives it.`,
@@ -1506,7 +1520,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence has a modifier problem?", "哪个句子的修饰语有问题？"),
-          misplacedFindBank,
+          [...misplacedFindBank, ...moreMisplacedFinds],
           (right) =>
             t(
               `**${right}** The word right after the comma cannot do the action in the opening phrase.`,
@@ -1524,7 +1538,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence is clear?", "哪个句子意思清楚？"),
-          misplacedBank,
+          [...misplacedBank, ...moreMisplacedFixes],
           (right) => t(`**${right}** Each modifier sits beside the word it describes.`, `**${right}** 每个修饰语都紧挨它所修饰的词。`),
           misplacedModifier,
         ),
@@ -1551,7 +1565,7 @@ export const clauseTopics: readonly TopicDef[] = [
             "Is this sentence active or passive, and if passive, does it name the doer?",
             "这句话是主动还是被动？如果是被动，是否点出了动作发出者？",
           ),
-          voiceKindBank,
+          [...voiceKindBank, ...voiceSentences.map(([sentence, active]) => voice(sentence, active))],
           (right) =>
             t(
               `**${right}**. Ask whether the subject does the action or receives it.`,
@@ -1569,7 +1583,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence is the active version?", "哪句是主动形式？"),
-          toActiveBank,
+          [...toActiveBank, ...moreToActive],
           (right) =>
             t(`**${right}** The doer is now the subject, and the meaning is unchanged.`, `**${right}** 动作发出者现在是主语，意思不变。`),
           notActiveVersion,
@@ -1594,7 +1608,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence is parallel?", "哪个句子是平行结构？"),
-          parallelFindBank,
+          [...parallelFindBank, ...moreParallelFinds],
           (right) => t(`**${right}** Every item has the same grammatical form.`, `**${right}** 每一项的语法形式都相同。`),
           notParallel,
         ),
@@ -1608,7 +1622,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words should replace the last item in the list?", "应该用哪些词替换列表中的最后一项？"),
-          parallelFixBank,
+          [...parallelFixBank, ...moreParallelFixes],
           (right) =>
             t(
               `**${right}** matches the form of the other items. Items joined in a list or by *and* should all be the same kind of word or phrase.`,

@@ -2,6 +2,18 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import {
+  causeRecords,
+  infoRecords,
+  moreCompareWords,
+  moreDifferenceBank,
+  moreFeatureBank,
+  moreFeatureJobBank,
+  moreFirstBank,
+  moreSignalBank,
+  moreSolutionBank,
+  type Structure,
+} from "./reading-informational-more.ts";
 
 const mainIdeaBank: readonly ChoiceItem[] = [
   [
@@ -395,7 +407,13 @@ const compareWordBank: readonly ChoiceItem[] = [
 ];
 
 /** alikeWords are the answers of compareWordBank that show likeness. */
-const alikeWords = new Set(["Likewise", "and", "too", "like"]);
+const alikeWords = new Set([
+  "Likewise",
+  "and",
+  "too",
+  "like",
+  ...moreCompareWords.filter(([, alike]) => alike).map(([[, right]]) => right),
+]);
 
 const differenceBank: readonly ChoiceItem[] = [
   [
@@ -546,6 +564,19 @@ const solutionBank: readonly ChoiceItem[] = [
   ],
 ];
 
+const structures: readonly Structure[] = ["sequence", "problem and solution", "cause and effect", "compare and contrast", "description"];
+
+const recordMainIdea = infoRecords.map((r): ChoiceItem => [r.text, r.main, [r.detail, r.general]]);
+const recordTitle = infoRecords.map((r): ChoiceItem => [r.text, r.title, [...r.badTitles]]);
+const recordSupport = infoRecords.map((r): ChoiceItem => [`Main idea: ${r.main}`, r.detail, [r.general, r.aside]]);
+const recordSummary = infoRecords.map((r): ChoiceItem => [r.text, r.summary, [r.detail, r.opinion]]);
+const recordStructure = infoRecords.map((r, i): ChoiceItem => {
+  const others = structures.filter((s) => s !== r.structure);
+  return [r.text, r.structure, [others[i % 4]!, others[(i + 1) % 4]!]];
+});
+const recordCause = causeRecords.map(([text, cause, effect, detail]): ChoiceItem => [text, cause, [effect, detail]]);
+const recordEffect = causeRecords.map(([text, cause, effect, , opposite]): ChoiceItem => [text, effect, [cause, opposite]]);
+
 /** Say gives the feedback for a wrong option, in English and Chinese. */
 type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
@@ -618,9 +649,12 @@ const featureNot = meaning({
   ],
 });
 
+/** featureName names the feature an item asks about, whether it is shown alone or with the book it belongs to. */
+const featureName = (shown: string) => (shown.includes(",") ? shown.slice(0, shown.indexOf(",")) : `the ${shown}`);
+
 const featureJobNot: Say = (wrong, _right, shown) => [
-  `*${wrong}* is the job of a different text feature, not of the ${shown}.`,
-  `*${wrong}* 是另一种文本特征的作用，不是 ${shown} 的作用。`,
+  `*${wrong}* is the job of a different text feature, not of ${featureName(shown)}.`,
+  `*${wrong}* 是另一种文本特征的作用，不是 ${featureName(shown)} 的作用。`,
 ];
 
 const signalNot: Say = (wrong) => [
@@ -708,7 +742,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the main idea of this paragraph?", "这段话的主旨是什么？"],
-          mainIdeaBank,
+          [...mainIdeaBank, ...recordMainIdea],
           (right) =>
             `**${right}** Every sentence connects to this idea. The other choices are a single detail, which is too narrow, or a general fact, which is too broad.`,
           (right) => `**${right}** 每个句子都与这个意思相关。其他选项要么只是一个细节，太窄；要么是一般事实，太宽。`,
@@ -724,7 +758,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which title fits this text best?", "哪个标题最适合这段文字？"],
-          titleBank,
+          [...titleBank, ...recordTitle],
           (right) =>
             `**${right}** names what the whole text is about. The other titles are about something the text only touches on, or not at all.`,
           (right) => `**${right}** 点出了全文讲的内容。其他标题说的是文中只稍稍提到或根本没提的东西。`,
@@ -753,7 +787,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which detail supports the main idea?", "哪个细节支持这个主旨？"],
-          supportBank,
+          [...supportBank, ...recordSupport],
           (right) =>
             `*${right}* shows that the main idea is true. The other sentences are about the same subject but do not back up the idea.`,
           (right) => `*${right}* 证明了主旨。其他句子虽然和同一话题有关，却不支持这个观点。`,
@@ -769,7 +803,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which is the best summary of this text?", "哪一项是对这段文字最好的概括？"],
-          summaryBank,
+          [...summaryBank, ...recordSummary],
           (right) =>
             `*${right}* covers the whole text in a few words. One other choice tells only one detail, and the other adds something the text does not say or leaves out its point.`,
           (right) => `*${right}* 用简短的话涵盖了全文。另一个选项只说了一个细节，还有一个添加了原文没有的内容或漏掉了要点。`,
@@ -798,7 +832,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which text feature should you use?", "你应该使用哪种文本特征？"],
-          featureBank,
+          [...featureBank, ...moreFeatureBank],
           (right) => `Use **${right}**. It is the part made for exactly this kind of question.`,
           (right) => `用 **${right}**。它正是为这类问题而设的部分。`,
           featureNot,
@@ -813,7 +847,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What does this text feature do?", "这种文本特征有什么作用？"],
-          featureJobBank,
+          [...featureJobBank, ...moreFeatureJobBank],
           (right) => `${right} The other choices describe the jobs of other features.`,
           (right) => `${right} 其他选项描述的是别的特征的作用。`,
           featureJobNot,
@@ -838,7 +872,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which word or words complete the sequence?", "哪个词能补全这个顺序？"],
-          signalBank,
+          [...signalBank, ...moreSignalBank],
           (right) => `**${right}** shows the order of time. The other choices show a reason, a contrast or an example instead.`,
           (right) => `**${right}** 表示时间顺序。其他选项表示的是原因、转折或举例。`,
           signalNot,
@@ -853,7 +887,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which of these happened first?", "下面哪件事最先发生？"],
-          firstBank,
+          [...firstBank, ...moreFirstBank],
           (right) =>
             `*${right}* came first. Words such as *before, earlier* and *had* show that it happened before the events told around it.`,
           (right) => `*${right}* 最先发生。*before, earlier, had* 这样的词表明它发生在周围所讲的事件之前。`,
@@ -879,7 +913,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the cause?", "原因是什么？"],
-          causeBank,
+          [...causeBank, ...recordCause],
           (right) =>
             `*${right}* That is why the other event happened. One other choice is the effect, and the other is a detail that caused nothing.`,
           (right) => `*${right}* 这就是另一件事发生的原因。另一个选项是结果，还有一个是并未导致任何事的细节。`,
@@ -895,7 +929,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What is the effect?", "结果是什么？"],
-          effectBank,
+          [...effectBank, ...recordEffect],
           (right) =>
             `*${right}* That happened because of what the text describes first. One other choice is the cause, and the other is the opposite of what happened.`,
           (right) => `*${right}* 这是由文中先讲的事情导致的。另一个选项是原因，还有一个与实际发生的相反。`,
@@ -924,7 +958,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which word or words complete the sentence?", "哪个词能补全句子？"],
-          compareWordBank,
+          [...compareWordBank, ...moreCompareWords.map(([item]) => item)],
           (right) =>
             alikeWords.has(right)
               ? `**${right}** fits, because the two parts of the sentence tell how things are alike. The other choices show a difference or an order of time.`
@@ -945,7 +979,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["According to the text, how are the two things different?", "根据文中所说，这两样东西有什么不同？"],
-          differenceBank,
+          [...differenceBank, ...moreDifferenceBank],
           (right) => `They differ in **${right}**. The other choices name ways in which the text says the two are alike.`,
           (right) => `它们的不同在于 **${right}**。其他选项是文中说两者相同的方面。`,
           differenceNot,
@@ -977,7 +1011,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which structure does this text use?", "这段文字用的是哪种结构？"),
-          structureBank,
+          [...structureBank, ...recordStructure],
           (right) => t(`**${right}**. ${structureWhy.get(right) ?? ""}`, `**${right}**。${structureWhyZh.get(right) ?? ""}`),
           (wrong) =>
             t(
@@ -995,7 +1029,7 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What was the solution to the problem?", "问题是怎样解决的？"],
-          solutionBank,
+          [...solutionBank, ...moreSolutionBank],
           (right) =>
             `**${right}** is what was done, and it made the problem go away. The other choices are not in the text or would not solve it.`,
           (right) => `**${right}** 是采取的行动，它解决了问题。其他选项文中没有提到，或者解决不了问题。`,

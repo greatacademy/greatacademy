@@ -2,6 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
+import { academicSentenceBanks, academicSentences1 } from "./words-academic-sentences.ts";
 
 const spelled = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => ({
   shown,
@@ -452,6 +453,11 @@ const notTheMeaning = (wrong: string, _right: string, shown: string) =>
     `“${wrong}” is not what *${shown}* means. Picture *${shown}* in a sentence from a textbook and check whether this meaning would make sense there.`,
     `*${shown}* 的意思不是“${wrong}”。设想 *${shown}* 出现在课本的一个句子里，看看这个意思放在那里是否说得通。`,
   );
+
+const academic1 = academicSentenceBanks(academicMeaningBank, academicSentences1);
+
+/** bold finds the word in bold in a sentence, or gives back what is shown when nothing is bold. */
+const bold = (shown: string): string => /\*\*(.+?)\*\*/.exec(shown)?.[1] ?? shown;
 
 const glossary = new Map([...academicMeaningBank, ...latin1WordBank, ...latin2WordBank].map(([word, meaning]) => [word, meaning] as const));
 
@@ -1396,14 +1402,10 @@ export const wordTopics: readonly TopicDef[] = [
           "有些词几乎出现在每个学科中，却很少用于日常口语。**analyze** 是研究事物的各个部分，**evidence** 是证明某事为真的事实，**conclude** 是根据事实作出判断。这里还有 **significant, predict, compare, sequence, relevant, estimate, source**。",
         ),
         choiceGenerator(
-          t("What does this word mean?", "这个词是什么意思？"),
-          academicMeaningBank,
-          (right, shown) =>
-            t(
-              `*${shown}* means **${right}**. Recognizing this in a new word helps you work out what the word means.`,
-              `*${shown}* 的意思是 **${right}**。在生词中认出它，有助于推断词义。`,
-            ),
-          notTheMeaning,
+          t("What does the word in bold mean?", "加粗的词是什么意思？"),
+          [...academicMeaningBank.map(([word, right, wrong]): ChoiceItem => [`**${word}**`, right, wrong]), ...academic1.meaning],
+          (right, shown) => t(`${shown} The word in bold means **${right}**.`, `${shown} 加粗的词的意思是 **${right}**。`),
+          (wrong, _right, shown) => notTheMeaning(wrong, _right, bold(shown)),
         ),
       ),
       point(
@@ -1415,7 +1417,7 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          academicUseBank,
+          [...academicUseBank, ...academic1.use],
           (right, shown) =>
             t(`${shown.replace("___", `**${right}**`)}`, `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。`),
           wrongWord,

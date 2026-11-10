@@ -2,6 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import { type AcademicSentences, academicSentenceBanks, academicSentences2, academicSentences3 } from "./words-academic-sentences.ts";
 
 const academic2MeaningBank: readonly ChoiceItem[] = [
   ["identify", "to find and name something", ["to hide something", "to make something new"]],
@@ -60,10 +61,13 @@ const glossary = new Map([
   ["summary", "a short statement of the main points"],
 ]);
 
+/** bold finds the word in bold in a sentence, or gives back what is shown when nothing is bold. */
+const bold = (shown: string): string => /\*\*(.+?)\*\*/.exec(shown)?.[1] ?? shown;
+
 const notTheMeaning = (wrong: string, _right: string, shown: string) =>
   t(
-    `“${wrong}” is not what *${shown}* means. Picture *${shown}* in a question from schoolwork and check whether this meaning would make sense there.`,
-    `*${shown}* 的意思不是“${wrong}”。设想 *${shown}* 出现在一道作业题里，看看这个意思放在那里是否说得通。`,
+    `“${wrong}” is not what *${bold(shown)}* means. Picture *${bold(shown)}* in a question from schoolwork and check whether this meaning would make sense there.`,
+    `*${bold(shown)}* 的意思不是“${wrong}”。设想 *${bold(shown)}* 出现在一道作业题里，看看这个意思放在那里是否说得通。`,
   );
 
 const wrongWord = (wrong: string) => {
@@ -75,22 +79,22 @@ const wrongWord = (wrong: string) => {
   );
 };
 
-const meaning = (bank: readonly ChoiceItem[]) =>
+const meaning = (bank: readonly ChoiceItem[], sentences: AcademicSentences) =>
   choiceGenerator(
-    t("What does this word mean?", "这个词是什么意思？"),
-    bank,
+    t("What does the word in bold mean?", "加粗的词是什么意思？"),
+    [...bank.map(([word, right, wrong]): ChoiceItem => [`**${word}**`, right, wrong]), ...academicSentenceBanks(bank, sentences).meaning],
     (right, shown) =>
       t(
-        `*${shown}* means **${right}**. The other options describe something else, so they do not fit the word.`,
-        `*${shown}* 的意思是 **${right}**。其他选项描述的是别的东西，与这个词不符。`,
+        `${shown} The word in bold means **${right}**. The other options describe something else, so they do not fit the word.`,
+        `${shown} 加粗的词的意思是 **${right}**。其他选项描述的是别的东西，与这个词不符。`,
       ),
     notTheMeaning,
   );
 
-const use = (bank: readonly ChoiceItem[]) =>
+const use = (bank: readonly ChoiceItem[], meanings: readonly ChoiceItem[], sentences: AcademicSentences) =>
   choiceGenerator(
     t("Which word completes the sentence?", "哪个词能补全句子？"),
-    bank,
+    [...bank, ...academicSentenceBanks(meanings, sentences).use],
     (right, shown) =>
       t(
         `${shown.replace("___", `**${right}**`)} Its meaning completes the thought of the sentence.`,
@@ -119,7 +123,7 @@ export const academicWordTopics: readonly TopicDef[] = [
           "Many questions in school are built on a few words. To **identify** is to find and name, to **summarize** is to give the main points briefly, to **explain** is to make clear with reasons, and to **support** is to back up an idea with facts. The others here are **cause, effect, structure, process, region** and **purpose**.",
           "学校里的许多题目都建立在几个词上。**identify** 是找出并说出名称，**summarize** 是简要说出要点，**explain** 是用理由讲清楚，**support** 是用事实支持观点。这里还有 **cause, effect, structure, process, region, purpose**。",
         ),
-        meaning(academic2MeaningBank),
+        meaning(academic2MeaningBank, academicSentences2),
       ),
       point(
         "academic-2-use",
@@ -128,7 +132,7 @@ export const academicWordTopics: readonly TopicDef[] = [
           "A cause comes before its effect: rain is the cause, and the flood is the effect. Read the whole sentence, decide what kind of word fits the blank, and then choose the word whose meaning completes the thought.",
           "原因（cause）在结果（effect）之前：雨是原因，洪水是结果。读完整个句子，判断空格需要什么样的词，再选择意思能使句子完整的词。",
         ),
-        use(academic2UseBank),
+        use(academic2UseBank, academic2MeaningBank, academicSentences2),
       ),
     ],
   },
@@ -150,7 +154,7 @@ export const academicWordTopics: readonly TopicDef[] = [
           "To **infer** is to work out something the text does not say from clues it does give. To **interpret** is to explain what something means. **Data** are facts and numbers collected to study, often gathered by a **survey**. The others here are **illustrate, method, factor, contrast, occur** and **require**.",
           "**infer** 是根据文本给出的线索推断它没有直接说的内容。**interpret** 是解释某事物的意义。**data** 是为了研究而收集的事实和数字，常常通过 **survey**（调查）获得。这里还有 **illustrate, method, factor, contrast, occur, require**。",
         ),
-        meaning(academic3MeaningBank),
+        meaning(academic3MeaningBank, academicSentences3),
       ),
       point(
         "academic-3-use",
@@ -159,7 +163,7 @@ export const academicWordTopics: readonly TopicDef[] = [
           "*Contrast* points to differences, while *compare* looks at both likenesses and differences. *Occur* and *require* are formal words for *happen* and *need*. Read the whole sentence and choose the word whose meaning completes the thought.",
           "*contrast* 着眼于差异，而 *compare* 既看相同点也看不同点。*occur* 和 *require* 是 *happen* 和 *need* 的正式说法。读完整个句子，选择意思能使句子完整的词。",
         ),
-        use(academic3UseBank),
+        use(academic3UseBank, academic3MeaningBank, academicSentences3),
       ),
     ],
   },

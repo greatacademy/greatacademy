@@ -2,6 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, type OrderItem, orderGenerator, point } from "@ga/subject-english";
+import { moreLogicOrder, moreMeaningTransitions, moreTimeOrder, moreTimeTransitions, paragraphRecords } from "./writing-paragraphs-more.ts";
 
 /** paragraphChoice is an item that shows sentences and asks for one of them, the first listed being the answer. */
 const paragraphChoice = (right: string, ...others: readonly string[]): ChoiceItem => ["", right, others];
@@ -391,6 +392,21 @@ const subtleBank: readonly ChoiceItem[] = [
 ];
 
 /** transitionNot gives the feedback for a wrong transition: what relationship it would name. */
+/** withOneOut places a sentence that does not belong among two details, after the topic sentence, at a place that moves from record to record. */
+const withOneOut = (topic: string, details: readonly [string, string], odd: string, i: number): ChoiceItem => {
+  const at = 1 + (i % 3);
+  const body = [...details];
+  body.splice(at - 1, 0, odd);
+  return offTopic([topic, ...body], at);
+};
+
+const recordFindTopic = paragraphRecords.map((p) => paragraphChoice(p.topic, ...p.details));
+const recordChooseTopic = paragraphRecords.map(
+  (p, i): ChoiceItem => [`Details: ${p.details.join(" ")}`, p.topic, [p.vague, p.details[i % 3]!]],
+);
+const recordObvious = paragraphRecords.map((p, i) => withOneOut(p.topic, [p.details[0], p.details[1]], p.off, i));
+const recordSubtle = paragraphRecords.map((p, i) => withOneOut(p.topic, [p.details[1], p.details[2]], p.offPoint, i + 1));
+
 const transitionNot = (says: Readonly<Record<string, readonly [string, string]>>) => (wrong: string) => {
   const said = says[wrong];
   if (!said) throw new Error(`no feedback for the transition ${wrong}`);
@@ -452,7 +468,7 @@ export const paragraphTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("These sentences form a paragraph. Which is the topic sentence?", "这些句子构成一个段落。哪一句是主题句？"),
-          findTopicBank,
+          [...findTopicBank, ...recordFindTopic],
           (right) => t(`**${right}** The other sentences are details that support it.`, `**${right}** 其他句子都是支持它的细节。`),
           (wrong) =>
             t(
@@ -470,7 +486,7 @@ export const paragraphTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence would best open a paragraph with these details?", "哪个句子最适合作为包含这些细节的段落的开头？"),
-          chooseTopicBank,
+          [...chooseTopicBank, ...recordChooseTopic],
           (right) =>
             t(`**${right}** It covers every detail and makes a point about them.`, `**${right}** 它涵盖了所有细节，并表明了观点。`),
           (wrong, _right, shown) =>
@@ -502,8 +518,10 @@ export const paragraphTopics: readonly TopicDef[] = [
           "Stories and instructions run in the order things happen. Look for words such as *first, then, next, after, by noon* and *finally*. Each one tells you where its sentence belongs.",
           "故事和操作说明按事情发生的顺序展开。留意 *first, then, next, after, by noon, finally* 这样的词，它们告诉你句子的位置。",
         ),
-        orderGenerator(t("Put the sentences in the right order.", "把句子排成正确的顺序。"), timeOrderBank, (right) =>
-          t(`The order is: ${right}`, `正确的顺序是：${right}`),
+        orderGenerator(
+          t("Put the sentences in the right order.", "把句子排成正确的顺序。"),
+          [...timeOrderBank, ...moreTimeOrder],
+          (right) => t(`The order is: ${right}`, `正确的顺序是：${right}`),
         ),
       ),
       point(
@@ -513,8 +531,10 @@ export const paragraphTopics: readonly TopicDef[] = [
           "Other paragraphs start with the topic sentence and build from there. Look for what each sentence refers back to: *they* and *this* point to something already mentioned, and *however* needs an earlier idea to contrast with. A sentence cannot come before what it refers to.",
           "另一些段落以主题句开始，再逐步展开。留意每个句子指向什么：*they* 和 *this* 指向已提到的内容，*however* 需要前面有可对比的意思。句子不能出现在它所指代的内容之前。",
         ),
-        orderGenerator(t("Put the sentences in the right order.", "把句子排成正确的顺序。"), logicOrderBank, (right) =>
-          t(`The order is: ${right}`, `正确的顺序是：${right}`),
+        orderGenerator(
+          t("Put the sentences in the right order.", "把句子排成正确的顺序。"),
+          [...logicOrderBank, ...moreLogicOrder],
+          (right) => t(`The order is: ${right}`, `正确的顺序是：${right}`),
         ),
       ),
     ],
@@ -536,7 +556,7 @@ export const paragraphTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which transition fits?", "哪个过渡词合适？"),
-          contrastBank,
+          [...contrastBank, ...moreMeaningTransitions],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} This word names how the two sentences relate.`,
@@ -554,7 +574,7 @@ export const paragraphTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which transition fits?", "哪个过渡词合适？"),
-          sequenceBank,
+          [...sequenceBank, ...moreTimeTransitions],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} This word places the event in time.`,
@@ -585,7 +605,7 @@ export const paragraphTopics: readonly TopicDef[] = [
             "The first sentence is the topic sentence. Which other sentence does not belong?",
             "第一句是主题句。其他句子中哪一句不属于这个段落？",
           ),
-          obviousBank,
+          [...obviousBank, ...recordObvious],
           (right) => t(`**${right}** It does not support the main point.`, `**${right}** 它不支持段落的要点。`),
           (wrong) => t(`*${wrong}* supports the topic sentence, so it belongs.`, `*${wrong}* 支持主题句，所以它属于这个段落。`),
         ),
@@ -602,7 +622,7 @@ export const paragraphTopics: readonly TopicDef[] = [
             "The first sentence is the topic sentence. Which other sentence does not belong?",
             "第一句是主题句。其他句子中哪一句不属于这个段落？",
           ),
-          subtleBank,
+          [...subtleBank, ...recordSubtle],
           (right) =>
             t(`**${right}** It mentions the subject but does not support the point.`, `**${right}** 它提到了这个话题，却不支持要点。`),
           (wrong) =>

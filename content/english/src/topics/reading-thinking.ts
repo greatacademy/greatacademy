@@ -2,6 +2,18 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import {
+  claims,
+  fables,
+  idioms,
+  moreFeelingBank,
+  moreMetaphorBank,
+  morePurposeBank,
+  moreSimileBank,
+  moreTraitBank,
+  scenes,
+  tellings,
+} from "./reading-thinking-more.ts";
 
 const inferenceBank: readonly ChoiceItem[] = [
   [
@@ -398,6 +410,36 @@ const chooseIdiomBank: readonly ChoiceItem[] = [
   ],
 ];
 
+const sceneInference = scenes.map(([scene, inference, misfits]): ChoiceItem => [scene, inference, [...misfits]]);
+const sceneEvidence = scenes.map(([, inference, , clue, details]): ChoiceItem => [`Inference: ${inference}`, clue, [...details]]);
+const claimFacts = [0, 1].flatMap((i) => claims.map(([facts, opinions]): ChoiceItem => ["", facts[i]!, [...opinions]]));
+const claimOpinions = [0, 1].flatMap((i) => claims.map(([facts, opinions]): ChoiceItem => ["", opinions[i]!, [...facts]]));
+const claimPersuade = claims.map(([facts, , persuade]): ChoiceItem => ["", persuade, [...facts]]);
+const tellingPerson = tellings.flatMap(([first, third], i): ChoiceItem[] => [
+  [first, "first person", i % 2 === 0 ? ["third person", "second person"] : ["second person", "third person"]],
+  [third, "third person", i % 2 === 0 ? ["second person", "first person"] : ["first person", "second person"]],
+]);
+const tellingNarrator = tellings.flatMap(([first, third, name, other]): ChoiceItem[] => [
+  [first, 'a character in the story, telling it as "I"', ["someone outside the story", other]],
+  [third, "someone outside the story", [`${name}, telling it as "I"`, other]],
+]);
+const fableLessons = fables.map(([story, lesson, facts]): ChoiceItem => [story, lesson, [...facts]]);
+const fableStories = fables.map(
+  ([, lesson, , gist], i): ChoiceItem => [
+    `Lesson: ${lesson}`,
+    gist,
+    [fables[(i + 1) % fables.length]![3], fables[(i + 2) % fables.length]![3]],
+  ],
+);
+const idiomMeanings = idioms.map(([, meaning, sentence, misreadings]): ChoiceItem => [sentence, meaning[0], [...misreadings]]);
+const idiomChoices = idioms.map(
+  ([idiom, meaning, , , gap], i): ChoiceItem => [
+    `Meaning: ${meaning[0]}. "${gap}"`,
+    idiom,
+    [idioms[(i + 5) % idioms.length]![0], idioms[(i + 11) % idioms.length]![0]],
+  ],
+);
+
 /** Say gives the feedback for a wrong option, in English and Chinese. */
 type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
@@ -532,6 +574,7 @@ const idiomMeaning: Readonly<Record<string, readonly [string, string]>> = {
   "spilled the beans": ["told a secret", "泄露了秘密"],
   "break the ice": ["to make people comfortable when they first meet", "让初次见面的人放松下来"],
   "an arm and a leg": ["very expensive", "非常昂贵"],
+  ...Object.fromEntries(idioms.map(([idiom, meaning]) => [idiom, meaning])),
 };
 
 const chooseIdiomNot: Say = (wrong) => {
@@ -562,7 +605,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What can you infer from this text?", "从这段文字中你能推断出什么？"],
-          inferenceBank,
+          [...inferenceBank, ...sceneInference],
           (right) => `*${right}* fits every clue in the text. The other choices ignore the clues or go against them.`,
           (right) => `*${right}* 与文中的每条线索都相符。其他选项忽视了线索或与之矛盾。`,
           inferenceNot,
@@ -577,7 +620,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which detail is the best evidence for the inference?", "哪个细节是这个推断最好的依据？"],
-          evidenceBank,
+          [...evidenceBank, ...sceneEvidence],
           (right) => `*${right}* points to the inference. The other details may be true, but they say nothing about it.`,
           (right) => `*${right}* 指向这个推断。其他细节也许是真的，却与推断无关。`,
           evidenceNot,
@@ -605,7 +648,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence states a fact?", "哪个句子陈述的是事实？"],
-          factBank,
+          [...factBank, ...claimFacts],
           (right) =>
             `*${right}* can be checked by measuring, counting or looking it up, so it is a fact. The other sentences tell what someone thinks.`,
           (right) => `*${right}* 可以通过测量、计数或查证来核实，所以是事实。其他句子表达的是个人想法。`,
@@ -621,7 +664,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence states an opinion?", "哪个句子表达的是观点？"],
-          opinionBank,
+          [...opinionBank, ...claimOpinions],
           (right) =>
             `*${right}* tells what someone thinks, and others could disagree, so it is an opinion. The other sentences can be checked.`,
           (right) => `*${right}* 表达的是个人想法，别人可能不同意，所以是观点。其他句子可以核实。`,
@@ -647,7 +690,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is the author's main purpose?", "作者的主要目的是什么？"),
-          purposeBank,
+          [...purposeBank, ...morePurposeBank],
           (right) => {
             const [en, zh] = purposeWhy.get(right) ?? ["", ""];
             return t(`The purpose is **${right}**. ${en}`, `目的是 **${right}**。${zh}`);
@@ -664,7 +707,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which sentence is trying to persuade the reader?", "哪个句子在试图说服读者？"],
-          persuadeBank,
+          [...persuadeBank, ...claimPersuade],
           (right) => `*${right}* tells the reader what to think or do. The other sentences only give information.`,
           (right) => `*${right}* 告诉读者该怎么想或怎么做。其他句子只是提供信息。`,
           persuadeNot,
@@ -689,7 +732,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What point of view is this sentence told in?", "这句话是用哪种视角叙述的？"],
-          pointOfViewBank,
+          [...pointOfViewBank, ...tellingPerson],
           (right) =>
             right === "first person"
               ? "It is **first person**: the narrator uses *I, me, my, we* or *our* and is part of the story."
@@ -710,7 +753,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Who is telling this story?", "是谁在讲这个故事？"],
-          narratorBank,
+          [...narratorBank, ...tellingNarrator],
           (right) => `The story is told by **${right}**. The pronouns and what the narrator knows show this.`,
           (right) => `讲故事的是 **${right}**。代词和叙述者所知道的内容说明了这一点。`,
           narratorNot,
@@ -735,7 +778,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which word best describes the character?", "哪个词最能描述这个人物？"],
-          traitBank,
+          [...traitBank, ...moreTraitBank],
           (right) => `**${right}** fits what the character does. The other words describe a person who would act differently.`,
           (right) => `**${right}** 与人物的行为相符。其他词描述的是会有不同行为的人。`,
           traitNot,
@@ -750,7 +793,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["How does the character most likely feel?", "这个人物最可能有什么感受？"],
-          feelingBank,
+          [...feelingBank, ...moreFeelingBank],
           (right) => `The details show that the character feels **${right}**. The other feelings would show in different ways.`,
           (right) => `这些细节表明人物感到 **${right}**。其他感受会以不同的方式表现出来。`,
           feelingNot,
@@ -775,7 +818,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What lesson does this story teach?", "这个故事讲了什么道理？"],
-          lessonBank,
+          [...lessonBank, ...fableLessons],
           (right) =>
             `*${right}* That is what the story teaches about how to act. The other choices are facts from or about the story, not lessons for the reader.`,
           (right) => `*${right}* 这是故事教人如何做事的道理。其他选项只是关于故事的事实，而不是给读者的道理。`,
@@ -791,7 +834,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which story teaches this lesson?", "哪个故事传达了这个道理？"],
-          storyForLessonBank,
+          [...storyForLessonBank, ...fableStories],
           (right) =>
             `*${right}* The character's choice and its result show the lesson. The other stories have no such choice, or their result points the other way.`,
           (right) => `*${right}* 人物的选择及其结果体现了这个道理。其他故事没有这样的选择，或者结果恰恰相反。`,
@@ -817,7 +860,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What does the simile mean?", "这个明喻是什么意思？"],
-          simileBank,
+          [...simileBank, ...moreSimileBank],
           (right) =>
             `It means **${right}**, the quality the two things share. The other choices take the words literally or pick a quality the comparison is not about.`,
           (right) => `意思是 **${right}**，即两者的共同特点。其他选项是按字面理解，或者选了比喻并不针对的特点。`,
@@ -833,7 +876,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What does the metaphor mean?", "这个暗喻是什么意思？"],
-          metaphorBank,
+          [...metaphorBank, ...moreMetaphorBank],
           (right) => `It means **${right}**. The other choices take the metaphor literally or miss the quality it carries over.`,
           (right) => `意思是 **${right}**。其他选项按字面理解了暗喻，或者没抓住它所转移的特点。`,
           figureNot,
@@ -858,7 +901,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["What does the idiom in this sentence mean?", "这句话中的习语是什么意思？"],
-          idiomBank,
+          [...idiomBank, ...idiomMeanings],
           (right) => `It means **${right}**. Taken word by word, the idiom would not make sense in the sentence.`,
           (right) => `意思是 **${right}**。逐字理解的话，这个习语在句中讲不通。`,
           idiomNot,
@@ -873,7 +916,7 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         ),
         pick(
           ["Which idiom completes the sentence with this meaning?", "哪个习语能以这个意思补全句子？"],
-          chooseIdiomBank,
+          [...chooseIdiomBank, ...idiomChoices],
           (right) => `**${right}** has this meaning. The other idioms mean something else, so the sentence would say the wrong thing.`,
           (right) => `**${right}** 就是这个意思。其他习语意思不同，句子就会表达错误的意思。`,
           chooseIdiomNot,
