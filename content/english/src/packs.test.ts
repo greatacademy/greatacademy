@@ -1,18 +1,21 @@
 import { bodyWords } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { englishPacks, levelPacks } from "./packs.ts";
+import { englishTracks, levelPacks } from "./packs.ts";
 
 describe("english packs", () => {
-  it("teaches each word in one batch only, of a topic of the same pack", () => {
-    const taught = new Map<string, string>();
-    for (const pack of englishPacks) {
-      const own = new Set(pack.topics.map((topic) => topic.id));
-      for (const batch of pack.vocabulary) {
-        expect(own, `the batch of ${batch.topic}`).toContain(batch.topic);
-        for (const word of batch.words) {
-          expect(taught.get(word), `${word} in ${batch.topic}`).toBeUndefined();
-          taught.set(word, batch.topic);
+  it("teaches each word in one batch only within a track, of a topic of the same pack", () => {
+    // A learner follows either the levels (and then an exam) or the native grades, so a word may be taught once in each.
+    for (const track of englishTracks) {
+      const taught = new Map<string, string>();
+      for (const pack of track) {
+        const own = new Set(pack.topics.map((topic) => topic.id));
+        for (const batch of pack.vocabulary) {
+          expect(own, `the batch of ${batch.topic}`).toContain(batch.topic);
+          for (const word of batch.words) {
+            expect(taught.get(word), `${word} in ${batch.topic}`).toBeUndefined();
+            taught.set(word, batch.topic);
+          }
         }
       }
     }

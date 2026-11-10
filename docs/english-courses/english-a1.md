@@ -6,7 +6,7 @@
 - **Level:** CEFR A1, for learners of English as a foreign language
 - **Prerequisite(s):** Pre-A1, or knowing its words and sentences with *be*, *have* and *can*
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 71 topics (41 of vocabulary, 19 of grammar, 11 of writing) · 471 headwords, 635 by the end of the level
+- **Size:** 12 units · 73 topics (43 of vocabulary, 19 of grammar, 11 of writing) · 489 headwords, 653 by the end of the level
 
 ## Aim
 
@@ -28,6 +28,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `a1-words-about-me` Where I Live (11): country (countries), city (cities), live (lives, lived, living), from, speak (speaks, spoke, spoken, speaking), English, Chinese, language (languages), phone (phones), number (numbers), email (emails)
 - `a1-words-feelings` How I Feel (11): feel (feels, felt, feeling), fine, well, okay, great (greater, greatest), tired, sick, angry, afraid, now, again
 - `a1-words-everyday-words` Everyday Words (12): thing (things), place (places), person, life, idea (ideas), part (parts), cry (cries, cried, crying), high (higher, highest), low (lower, lowest), sure, ready, real
+- `a1-words-little-words-3` Little Words 3 (9): as, let's, each, alone, onto, oh, wow, hey, yeah
 
 **Grammar**
 
@@ -71,6 +72,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `a1-words-days` Days of the Week (10): Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, month (months), next, last
 - `a1-words-months` Months (12): January, February, March, April, May, June, July, August, September, October, November, December
 - `a1-words-dates` Dates and Birthdays (12): sixty, seventy, eighty, ninety, zero, first, second (seconds), third, fourth, fifth, birthday (birthdays), date (dates)
+- `a1-words-ordinals` Sixth to Thirtieth (9): sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, twentieth, thirtieth
 
 **Grammar**
 
@@ -300,6 +302,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `a1-words-about-me` | vocabulary | 1 | none |
 | `a1-words-feelings` | vocabulary | 1 | none |
 | `a1-words-everyday-words` | vocabulary | 1 | none |
+| `a1-words-little-words-3` | vocabulary | 1 | `a1-words-everyday-words` |
 | `present-simple` | grammar | 1 | `the-verb-be`, `a1-words-about-me` |
 | `a1-words-my-day` | vocabulary | 2 | none |
 | `a1-words-times-of-day` | vocabulary | 2 | none |
@@ -312,6 +315,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `a1-words-days` | vocabulary | 3 | none |
 | `a1-words-months` | vocabulary | 3 | none |
 | `a1-words-dates` | vocabulary | 3 | none |
+| `a1-words-ordinals` | vocabulary | 3 | `a1-words-dates` |
 | `prepositions-of-time` | grammar | 3 | `a1-words-days`, `a1-words-time` |
 | `writing-capital-letters-for-names` | writing | 3 | `writing-capitals-and-periods`, `a1-words-months` |
 | `a1-words-food` | vocabulary | 4 | none |

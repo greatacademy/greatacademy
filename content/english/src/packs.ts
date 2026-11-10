@@ -23,6 +23,9 @@ export const levelPacks: readonly (readonly [level: string, pack: Pack])[] = [
 /** englishPacks are all the packs of English. */
 export const englishPacks: readonly Pack[] = [...levelPacks.map(([, pack]) => pack), ...nativePacks, exams];
 
+/** englishTracks are the packs of each path a learner follows: the levels with the exams, and the native grades. */
+export const englishTracks: readonly (readonly Pack[])[] = [[...levelPacks.map(([, pack]) => pack), exams], nativePacks];
+
 /** packLexicon adds to a lexicon the words of the packs, and the words their batches teach, that it lacks. */
 export function packLexicon(base: readonly LexiconEntry[]): readonly LexiconEntry[] {
   const seen = new Set(base.flatMap((entry) => [entry.word, ...(entry.forms ?? [])]));

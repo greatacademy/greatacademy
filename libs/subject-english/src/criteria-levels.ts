@@ -170,4 +170,82 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
       "Does the text say that the writer has had the experience with have or has and a past participle, as in I have seen or I have never climbed, without putting a finished time such as last year in the same sentence?",
     quoteWhenMet: true,
   },
+  // A2: a message to a shop.
+  {
+    id: "a2-shop-problem",
+    version: "1",
+    question:
+      "Does the message say what the writer bought, and what is wrong with it, such as that it is too small, broken or the wrong color?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "a2-shop-request",
+    version: "1",
+    question:
+      "Does the message say politely what the writer would like the shop to do, such as change the thing, repair it or give the money back, with words such as I would like or Could you?",
+    quoteWhenMet: true,
+  },
+  // A2: an email to a friend.
+  {
+    id: "a2-email-answers",
+    version: "1",
+    question: "Does the email answer the friend's email: does it reply to their news or to at least one of their questions?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "a2-email-news-and-question",
+    version: "1",
+    question: "Does the email give at least one piece of the writer's own news and ask the friend at least one question?",
+    quoteWhenMet: true,
+  },
+  // A2: an invitation and a reply.
+  {
+    id: "a2-invitation-details",
+    version: "1",
+    question:
+      "If the task asks for an invitation, does it say what the event is, when it is and where it is? If the task asks for a reply, does it say yes or no to the invitation, and give a reason when the answer is no?",
+    quoteWhenMet: true,
+  },
+  // A2: a dream job.
+  {
+    id: "a2-job-and-reasons",
+    version: "1",
+    question: "Does the text name the job the writer would like and give at least two reasons for wanting it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "a2-job-steps",
+    version: "1",
+    question:
+      "Does the text say at least one thing the writer will do or is going to do to get the job, such as study a subject or practice a skill?",
+    quoteWhenMet: true,
+  },
+  // B1: an informal email.
+  {
+    id: "b1-informal-email-answers",
+    version: "1",
+    question: "Does the email answer every question in the friend's email, and react to their news?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-informal-email-news-and-plan",
+    version: "1",
+    question:
+      "Does the email give some of the writer's own news and suggest a plan to do something together, with at least a time or a place?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-informal-tone",
+    version: "1",
+    question:
+      "Is the tone friendly and informal throughout, as between friends, with an informal greeting and ending, and without stiff, formal phrases?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-email-paragraphs",
+    version: "1",
+    question:
+      "Is the email set out as a greeting, two or more short paragraphs each about one main idea, and an ending with the writer's name?",
+    quoteWhenMet: false,
+  },
 ];

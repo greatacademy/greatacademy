@@ -25,7 +25,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 **Vocabulary**
 
 - `b1-words-school-life` School Life (12): education, semester (semesters), term (terms), grade (grades), exam (exams), mark (marks), pass (passes, passed, passing), revise (revises, revised, revising), assignment (assignments), essay (essays), presentation (presentations), deadline (deadlines)
-- `b1-words-learning` How We Learn (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, mistake (mistakes), effort (efforts), method (methods), attention, curious, ability (abilities)
+- `b1-words-learning` How We Learn (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, mistake (mistakes), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
 - `b1-words-school-people` People at School (12): principal (principals), classmate (classmates), tutor (tutors), professor (professors), pupil (pupils), lecturer (lecturers), counselor (counselors), scholarship (scholarships), certificate (certificates), diploma (diplomas), campus (campuses), dormitory (dormitories)
 - `b1-words-subjects-2` More Subjects (12): geography, biology, chemistry, physics, literature, economics, philosophy, psychology, engineering, law (laws), politics, drama
 - `b1-words-thinking` Thinking (12): guess (guesses, guessed, guessing), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
@@ -347,14 +347,14 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 | Topic | Strand | Unit | Prerequisites |
 | :--- | :--- | :--- | :--- |
-| `b1-words-school-life` | vocabulary | 1 | none |
-| `b1-words-learning` | vocabulary | 1 | none |
-| `b1-words-school-people` | vocabulary | 1 | none |
-| `b1-words-subjects-2` | vocabulary | 1 | none |
-| `b1-words-thinking` | vocabulary | 1 | none |
-| `b1-words-qualities` | vocabulary | 1 | none |
-| `b1-words-study-skills` | vocabulary | 1 | none |
-| `b1-words-little-words-4` | vocabulary | 1 | none |
+| `b1-words-school-life` | vocabulary | 1 | `a1-words-schoolwork` |
+| `b1-words-learning` | vocabulary | 1 | `b1-words-school-life` |
+| `b1-words-school-people` | vocabulary | 1 | `b1-words-school-life` |
+| `b1-words-subjects-2` | vocabulary | 1 | `a1-words-school-subjects` |
+| `b1-words-thinking` | vocabulary | 1 | `b1-words-learning` |
+| `b1-words-qualities` | vocabulary | 1 | `a1-words-describing-people` |
+| `b1-words-study-skills` | vocabulary | 1 | `b1-words-school-life` |
+| `b1-words-little-words-4` | vocabulary | 1 | `a2-words-little-words-3` |
 | `present-perfect-or-past-simple` | grammar | 1 | `present-perfect-with-just-already-and-yet`, `past-simple-questions-and-negatives` |
 | `identifying-topic-sentences` (existing) | writing | 1 | `combining-with-conjunctions` |
 | `writing-an-informal-email` | writing | 1 | `writing-an-email-to-a-friend`, `present-perfect-or-past-simple` |

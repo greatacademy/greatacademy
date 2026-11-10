@@ -16,6 +16,8 @@ Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english
 
 **Depth before breadth.** Rule-checked grammar, usage and sentence-writing knowledge points have at least 30 distinct items, each vocabulary word appears in at least three sentences (25 items or more per knowledge point), judged writing has at least 12 tasks per knowledge point, and reading units have 6 to 8 passages (native units 8 to 10). Fewer topics are written rather than thin ones.
 
+A word is taught once within each track: the levels with the exams, and the native grades, since a learner follows one of them.
+
 Content that needs audio or recording (listening of S1, speaking of S2 to S4, phonics) waits for its services; a unit is written without it, and its outline says what it will gain.
 
 | Step | State |
@@ -25,7 +27,8 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
 | Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
-| Topics of A2, units 1 to 8: 59 topics, 158 knowledge points | Done; units 9 to 12 not started |
+| Topics of A2: 83 topics in 12 units | Done |
+| Topics of B1 | Unit 1 done (10 topics); units 2 to 12 not started |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -146,3 +149,7 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `writing-an-informative-paragraph` | `writing-a-paragraph`, `text-structures` | 0.3, 0.2 | It is a paragraph with a chosen structure |
 | `writing-an-objective-summary` | `writing-a-summary`, `citing-textual-evidence` | 0.4, 0.2 | It is a summary that keeps the text's words |
 | `writing-a-narrative-from-a-point-of-view` | `writing-a-narrative-paragraph`, `narrative-point-of-view` | 0.4, 0.3 | A story told from a chosen point of view |
+| `present-perfect-or-past-simple` | `just-already-yet` | 0.3 | Every item writes a perfect form |
+| `present-perfect-or-past-simple` | past simple questions and negatives | 0.2 | Only half of the past simple is practiced |
+| `writing-an-informal-email` | the A2 email to a friend | 0.4 | The same structure, asked for more |
+| `writing-an-informal-email` | `present-perfect-or-past-simple` | 0.1 | Model answers use it, answers need not |

@@ -6,7 +6,7 @@
 - **级别：** CEFR A1，面向以英语为外语的学习者
 - **先修：** 入门级，或掌握其中的词以及用 *be*、*have*、*can* 造的句子
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 12 个单元 · 71 个知识点（词汇 41 个，语法 19 个，写作 11 个）· 471 个词条，本级结束时累计 635 个
+- **规模：** 12 个单元 · 73 个知识点（词汇 43 个，语法 19 个，写作 11 个）· 489 个词条，本级结束时累计 653 个
 
 ## 目标
 
@@ -28,6 +28,7 @@
 - `a1-words-about-me` 我住在哪里 (11): country (countries), city (cities), live (lives, lived, living), from, speak (speaks, spoke, spoken, speaking), English, Chinese, language (languages), phone (phones), number (numbers), email (emails)
 - `a1-words-feelings` 我的感受 (11): feel (feels, felt, feeling), fine, well, okay, great (greater, greatest), tired, sick, angry, afraid, now, again
 - `a1-words-everyday-words` 日常用词 (12): thing (things), place (places), person, life, idea (ideas), part (parts), cry (cries, cried, crying), high (higher, highest), low (lower, lowest), sure, ready, real
+- `a1-words-little-words-3` 小词 3 (9): as, let's, each, alone, onto, oh, wow, hey, yeah
 
 **语法**
 
@@ -71,6 +72,7 @@
 - `a1-words-days` 星期 (10): Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, month (months), next, last
 - `a1-words-months` 月份 (12): January, February, March, April, May, June, July, August, September, October, November, December
 - `a1-words-dates` 日期与生日 (12): sixty, seventy, eighty, ninety, zero, first, second (seconds), third, fourth, fifth, birthday (birthdays), date (dates)
+- `a1-words-ordinals` 第六到第三十 (9): sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, twentieth, thirtieth
 
 **语法**
 
@@ -300,6 +302,7 @@
 | `a1-words-about-me` | 词汇 | 1 | 无 |
 | `a1-words-feelings` | 词汇 | 1 | 无 |
 | `a1-words-everyday-words` | 词汇 | 1 | 无 |
+| `a1-words-little-words-3` | 词汇 | 1 | `a1-words-everyday-words` |
 | `present-simple` | 语法 | 1 | `the-verb-be`、`a1-words-about-me` |
 | `a1-words-my-day` | 词汇 | 2 | 无 |
 | `a1-words-times-of-day` | 词汇 | 2 | 无 |
@@ -312,6 +315,7 @@
 | `a1-words-days` | 词汇 | 3 | 无 |
 | `a1-words-months` | 词汇 | 3 | 无 |
 | `a1-words-dates` | 词汇 | 3 | 无 |
+| `a1-words-ordinals` | 词汇 | 3 | `a1-words-dates` |
 | `prepositions-of-time` | 语法 | 3 | `a1-words-days`、`a1-words-time` |
 | `writing-capital-letters-for-names` | 写作 | 3 | `writing-capitals-and-periods`、`a1-words-months` |
 | `a1-words-food` | 词汇 | 4 | 无 |

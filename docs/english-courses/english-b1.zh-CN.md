@@ -25,7 +25,7 @@
 **词汇**
 
 - `b1-words-school-life` 校园生活 (12): education, semester (semesters), term (terms), grade (grades), exam (exams), mark (marks), pass (passes, passed, passing), revise (revises, revised, revising), assignment (assignments), essay (essays), presentation (presentations), deadline (deadlines)
-- `b1-words-learning` 我们怎样学习 (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, mistake (mistakes), effort (efforts), method (methods), attention, curious, ability (abilities)
+- `b1-words-learning` 我们怎样学习 (12): knowledge, memory (memories), memorize (memorizes, memorized, memorizing), concentrate (concentrates, concentrated, concentrating), focus (focuses, focused, focusing), progress, mistake (mistakes), effort (efforts), method (methods), attention, explanation (explanations), ability (abilities)
 - `b1-words-school-people` 学校里的人 (12): principal (principals), classmate (classmates), tutor (tutors), professor (professors), pupil (pupils), lecturer (lecturers), counselor (counselors), scholarship (scholarships), certificate (certificates), diploma (diplomas), campus (campuses), dormitory (dormitories)
 - `b1-words-subjects-2` 更多学科 (12): geography, biology, chemistry, physics, literature, economics, philosophy, psychology, engineering, law (laws), politics, drama
 - `b1-words-thinking` 思考 (12): guess (guesses, guessed, guessing), imagine (imagines, imagined, imagining), wonder (wonders, wondered, wondering), realize (realizes, realized, realizing), believe (believes, believed, believing), consider (considers, considered, considering), suppose (supposes, supposed, supposing), prefer (prefers, preferred, preferring), solve (solves, solved, solving), compare (compares, compared, comparing), discuss (discusses, discussed, discussing), describe (describes, described, describing)
@@ -347,14 +347,14 @@
 
 | 知识点 | 技能 | 单元 | 先修 |
 | :--- | :--- | :--- | :--- |
-| `b1-words-school-life` | 词汇 | 1 | 无 |
-| `b1-words-learning` | 词汇 | 1 | 无 |
-| `b1-words-school-people` | 词汇 | 1 | 无 |
-| `b1-words-subjects-2` | 词汇 | 1 | 无 |
-| `b1-words-thinking` | 词汇 | 1 | 无 |
-| `b1-words-qualities` | 词汇 | 1 | 无 |
-| `b1-words-study-skills` | 词汇 | 1 | 无 |
-| `b1-words-little-words-4` | 词汇 | 1 | 无 |
+| `b1-words-school-life` | 词汇 | 1 | `a1-words-schoolwork` |
+| `b1-words-learning` | 词汇 | 1 | `b1-words-school-life` |
+| `b1-words-school-people` | 词汇 | 1 | `b1-words-school-life` |
+| `b1-words-subjects-2` | 词汇 | 1 | `a1-words-school-subjects` |
+| `b1-words-thinking` | 词汇 | 1 | `b1-words-learning` |
+| `b1-words-qualities` | 词汇 | 1 | `a1-words-describing-people` |
+| `b1-words-study-skills` | 词汇 | 1 | `b1-words-school-life` |
+| `b1-words-little-words-4` | 词汇 | 1 | `a2-words-little-words-3` |
 | `present-perfect-or-past-simple` | 语法 | 1 | `present-perfect-with-just-already-and-yet`、`past-simple-questions-and-negatives` |
 | `identifying-topic-sentences`（已有） | 写作 | 1 | `combining-with-conjunctions` |
 | `writing-an-informal-email` | 写作 | 1 | `writing-an-email-to-a-friend`、`present-perfect-or-past-simple` |

@@ -6,7 +6,7 @@
 - **级别：** CEFR A2，面向以英语为外语的学习者
 - **先修：** 初级，或掌握一般现在时、现在进行时、*was* 和 *were* 以及约 600 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 12 个单元 · 88 个知识点（词汇 51 个，语法 22 个，写作 15 个）· 592 个词条，本级结束时累计 1227 个
+- **规模：** 12 个单元 · 88 个知识点（词汇 51 个，语法 22 个，写作 15 个）· 592 个词条，本级结束时累计 1245 个
 
 ## 目标
 
@@ -223,15 +223,15 @@
 
 **词汇**
 
-- `a2-words-money` 金钱 (12): cash, coin (coins), credit, change (changes, changed, changing), cent (cents), wallet (wallets), save (saves, saved, saving), lend (lends, lent, lending), rich (richer, richest), poor (poorer, poorest), cost (costs, costing), thousand (thousands)
+- `a2-words-money` 钱 (12): cash, coin (coins), credit, change (changes, changed, changing), cent (cents), wallet (wallets), save (saves, saved, saving), lend (lends, lent, lending), rich (richer, richest), poor (poorer, poorest), cost (costs, costing), thousand (thousands)
 - `a2-words-shops` 商店 (12): supermarket (supermarkets), mall (malls), bookstore (bookstores), customer (customers), cashier (cashiers), receipt (receipts), discount (discounts), sale (sales), bargain (bargains), choose (chooses, chose, chosen, choosing), order (orders, ordered, ordering), deliver (delivers, delivered, delivering)
-- `a2-words-things-we-buy` 买的东西 (11): ring (rings), necklace (necklaces), glove (gloves), scarf (scarves), boot (boots), belt (belts), sunglasses, uniform (uniforms), jeans, sweater (sweaters), pocket (pockets)
+- `a2-words-things-we-buy` 我们买的东西 (11): ring (rings), necklace (necklaces), glove (gloves), scarf (scarves), boot (boots), belt (belts), sunglasses, uniform (uniforms), jeans, sweater (sweaters), pocket (pockets)
 - `a2-words-materials` 材料 (12): cotton, wool, leather, plastic, metal (metals), gold, silver, wooden, material (materials), heavy (heavier, heaviest), thick (thicker, thickest), thin (thinner, thinnest)
 
 **语法**
 
 - `too-and-enough` too 和 enough（先修：`adjectives-before-nouns`、`a2-words-quantities`）. *It's too big. It isn't big enough.* *too* 放在形容词前，*enough* 放在形容词后。
-- `one-and-ones` this one 和 the red ones（先修：`adjectives-before-nouns`、`too-and-enough`）. *I like the blue one. These ones are cheaper.* *one* 代替前面说过的名词。
+- `one-and-ones` this one 和 the red ones（先修：`too-and-enough`）. *I like the blue one. These ones are cheaper.* *one* 代替前面说过的名词。
 
 **写作**
 
@@ -250,7 +250,7 @@
 - `a2-words-technology` 设备 (12): internet, website (websites), app (apps), message (messages, messaged, messaging), text (texts, texted, texting), screen (screens), keyboard (keyboards), laptop (laptops), tablet (tablets), battery (batteries), charge (charges, charged, charging), password (passwords)
 - `a2-words-using-tech` 使用科技 (12): click (clicks, clicked, clicking), type (types, typed, typing), download (downloads, downloaded, downloading), upload (uploads, uploaded, uploading), search (searches, searched, searching), send (sends, sent, sending), receive (receives, received, receiving), delete (deletes, deleted, deleting), print (prints, printed, printing), switch (switches, switched, switching), button (buttons), file (files)
 - `a2-words-communication` 保持联系 (12): reply (replies, replied, replying), chat (chats, chatted, chatting), information, contact (contacts, contacted, contacting), connect (connects, connected, connecting), social, network (networks), address (addresses), explain (explains, explained, explaining), mean (means, meant, meaning), robot (robots), true
-- `a2-words-machines` 机器 (12): machine (machines), invent (invents, invented, inventing), inventor (inventors), invention (inventions), wheel (wheels), engine (engines), power (powers), electric, television (televisions), useful, already, yet
+- `a2-words-machines` 机器 (12): machine (machines), invent (invents, invented, inventing), inventor (inventors), wheel (wheels), power, electric, television (televisions), useful, already, yet, tool (tools), motor (motors)
 
 **语法**
 
@@ -271,9 +271,9 @@
 **词汇**
 
 - `a2-words-festivals` 节日 (12): festival (festivals), celebrate (celebrates, celebrated, celebrating), tradition (traditions), traditional, lantern (lanterns), firework (fireworks), parade (parades), costume (costumes), candle (candles), decorate (decorates, decorated, decorating), wedding (weddings), anniversary (anniversaries)
-- `a2-words-wishes` 祝愿与邀请 (11): congratulations, welcome (welcomes, welcomed, welcoming), invitation (invitations), special, wrap (wraps, wrapped, wrapping), surprise (surprises), dear, luck, mooncake (mooncakes), envelope (envelopes), midnight
+- `a2-words-wishes` 祝福和邀请 (11): congratulations, welcome (welcomes, welcomed, welcoming), invitation (invitations), special, wrap (wraps, wrapped, wrapping), surprise (surprises), dear, luck, mooncake (mooncakes), envelope (envelopes), midnight
 - `a2-words-feelings-2` 更多感受 (12): excited, exciting, surprised, pleased, nervous, proud (prouder, proudest), glad, upset, embarrassed, calm (calmer, calmest), cheerful, jealous
-- `a2-words-people-together` 人与人 (11): hug (hugs, hugged, hugging), kiss (kisses, kissed, kissing), wave (waves, waved, waving), shake (shakes, shook, shaken, shaking), agree (agrees, agreed, agreeing), argue (argues, argued, arguing), friendship (friendships), joke (jokes), introduce (introduces, introduced, introducing), each, everybody
+- `a2-words-people-together` 人与人 (11): hug (hugs, hugged, hugging), kiss (kisses, kissed, kissing), wave (waves, waved, waving), shake (shakes, shook, shaken, shaking), agree (agrees, agreed, agreeing), argue (argues, argued, arguing), friendship (friendships), joke (jokes), introduce (introduces, introduced, introducing), everybody, host (hosts, hosted, hosting)
 
 **语法**
 
@@ -295,7 +295,7 @@
 **词汇**
 
 - `a2-words-jobs-2` 更多职业 (12): engineer (engineers), scientist (scientists), artist (artists), singer (singers), actor (actors), pilot (pilots), waiter (waiters), chef (chefs), writer (writers), mechanic (mechanics), firefighter (firefighters), businessman (businessmen)
-- `a2-words-work-life` 职场生活 (12): company (companies), boss (bosses), earn (earns, earned, earning), salary (salaries), career (careers), interview (interviews), skill (skills), experience (experiences), colleague (colleagues), manager (managers), staff, part-time
+- `a2-words-work-life` 工作生活 (12): company (companies), boss (bosses), earn (earns, earned, earning), salary (salaries), career (careers), interview (interviews), skill (skills), experience (experiences), colleague (colleagues), manager (managers), staff, part-time
 - `a2-words-ambitions` 抱负 (12): become (becomes, became, becoming), succeed (succeeds, succeeded, succeeding), success (successes), fail (fails, failed, failing), improve (improves, improved, improving), study (studies, studied, studying), university (universities), college (colleges), graduate (graduates, graduated, graduating), course (courses), ambition (ambitions), hard-working
 
 **语法**
@@ -379,28 +379,28 @@
 | `a2-words-little-words-3` | 词汇 | 8 | `a2-words-plants` |
 | `present-perfect-with-ever-and-never` | 语法 | 8 | `past-simple-irregular`、`have-and-has` |
 | `writing-about-an-experience` | 写作 | 8 | `present-perfect-with-ever-and-never`、`writing-about-your-weekend` |
-| `a2-words-money` | 词汇 | 9 | 无 |
-| `a2-words-shops` | 词汇 | 9 | 无 |
-| `a2-words-things-we-buy` | 词汇 | 9 | 无 |
-| `a2-words-materials` | 词汇 | 9 | 无 |
+| `a2-words-money` | 词汇 | 9 | `a1-words-shopping` |
+| `a2-words-shops` | 词汇 | 9 | `a2-words-money` |
+| `a2-words-things-we-buy` | 词汇 | 9 | `a2-words-shops` |
+| `a2-words-materials` | 词汇 | 9 | `a2-words-things-we-buy` |
 | `too-and-enough` | 语法 | 9 | `adjectives-before-nouns`、`a2-words-quantities` |
-| `one-and-ones` | 语法 | 9 | `adjectives-before-nouns`、`too-and-enough` |
+| `one-and-ones` | 语法 | 9 | `too-and-enough` |
 | `writing-a-message-to-a-shop` | 写作 | 9 | `writing-a-short-note`、`too-and-enough` |
-| `a2-words-technology` | 词汇 | 10 | 无 |
-| `a2-words-using-tech` | 词汇 | 10 | 无 |
-| `a2-words-communication` | 词汇 | 10 | 无 |
-| `a2-words-machines` | 词汇 | 10 | 无 |
+| `a2-words-technology` | 词汇 | 10 | `a1-words-things-at-home` |
+| `a2-words-using-tech` | 词汇 | 10 | `a2-words-technology` |
+| `a2-words-communication` | 词汇 | 10 | `a2-words-using-tech` |
+| `a2-words-machines` | 词汇 | 10 | `a2-words-communication` |
 | `present-perfect-with-just-already-and-yet` | 语法 | 10 | `present-perfect-with-ever-and-never`、`a2-words-machines` |
 | `writing-an-email-to-a-friend` | 写作 | 10 | `writing-a-short-note`、`past-simple-irregular` |
-| `a2-words-festivals` | 词汇 | 11 | 无 |
-| `a2-words-wishes` | 词汇 | 11 | 无 |
-| `a2-words-feelings-2` | 词汇 | 11 | 无 |
-| `a2-words-people-together` | 词汇 | 11 | 无 |
+| `a2-words-festivals` | 词汇 | 11 | `a1-words-parties` |
+| `a2-words-wishes` | 词汇 | 11 | `a2-words-festivals` |
+| `a2-words-feelings-2` | 词汇 | 11 | `a2-words-wishes`、`a1-words-feelings` |
+| `a2-words-people-together` | 词汇 | 11 | `a2-words-feelings-2` |
 | `verbs-followed-by-to` | 语法 | 11 | `present-simple`、`a2-words-events` |
 | `subordinating-conjunctions`（已有） | 语法 | 11 | `coordinating-conjunctions` |
 | `writing-an-invitation-and-a-reply` | 写作 | 11 | `writing-a-short-note`、`will-for-the-future` |
-| `a2-words-jobs-2` | 词汇 | 12 | 无 |
-| `a2-words-work-life` | 词汇 | 12 | 无 |
-| `a2-words-ambitions` | 词汇 | 12 | 无 |
+| `a2-words-jobs-2` | 词汇 | 12 | `a1-words-jobs` |
+| `a2-words-work-life` | 词汇 | 12 | `a2-words-jobs-2` |
+| `a2-words-ambitions` | 词汇 | 12 | `a2-words-work-life` |
 | `subject-and-object-questions` | 语法 | 12 | `wh-questions`、`past-simple-questions-and-negatives` |
 | `writing-about-your-dream-job` | 写作 | 12 | `writing-about-future-plans`、`expanding-with-because-but-so` |

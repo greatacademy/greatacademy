@@ -6,7 +6,7 @@
 - **Level:** CEFR A2, for learners of English as a foreign language
 - **Prerequisite(s):** A1, or the present simple and continuous, *was* and *were*, and about 600 words
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 88 topics (51 of vocabulary, 22 of grammar, 15 of writing) · 592 headwords, 1227 by the end of the level
+- **Size:** 12 units · 88 topics (51 of vocabulary, 22 of grammar, 15 of writing) · 592 headwords, 1245 by the end of the level
 
 ## Aim
 
@@ -231,7 +231,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 **Grammar**
 
 - `too-and-enough` Too and Enough (after `adjectives-before-nouns`, `a2-words-quantities`). *It's too big. It isn't big enough.* *Too* goes before an adjective, *enough* after it.
-- `one-and-ones` This One and the Red Ones (after `adjectives-before-nouns`, `too-and-enough`). *I like the blue one. These ones are cheaper.* *One* stands for a noun already said.
+- `one-and-ones` This One and the Red Ones (after `too-and-enough`). *I like the blue one. These ones are cheaper.* *One* stands for a noun already said.
 
 **Writing**
 
@@ -250,7 +250,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `a2-words-technology` Devices (12): internet, website (websites), app (apps), message (messages, messaged, messaging), text (texts, texted, texting), screen (screens), keyboard (keyboards), laptop (laptops), tablet (tablets), battery (batteries), charge (charges, charged, charging), password (passwords)
 - `a2-words-using-tech` Using Technology (12): click (clicks, clicked, clicking), type (types, typed, typing), download (downloads, downloaded, downloading), upload (uploads, uploaded, uploading), search (searches, searched, searching), send (sends, sent, sending), receive (receives, received, receiving), delete (deletes, deleted, deleting), print (prints, printed, printing), switch (switches, switched, switching), button (buttons), file (files)
 - `a2-words-communication` Staying in Touch (12): reply (replies, replied, replying), chat (chats, chatted, chatting), information, contact (contacts, contacted, contacting), connect (connects, connected, connecting), social, network (networks), address (addresses), explain (explains, explained, explaining), mean (means, meant, meaning), robot (robots), true
-- `a2-words-machines` Machines (12): machine (machines), invent (invents, invented, inventing), inventor (inventors), invention (inventions), wheel (wheels), engine (engines), power (powers), electric, television (televisions), useful, already, yet
+- `a2-words-machines` Machines (12): machine (machines), invent (invents, invented, inventing), inventor (inventors), wheel (wheels), power, electric, television (televisions), useful, already, yet, tool (tools), motor (motors)
 
 **Grammar**
 
@@ -273,7 +273,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `a2-words-festivals` Festivals (12): festival (festivals), celebrate (celebrates, celebrated, celebrating), tradition (traditions), traditional, lantern (lanterns), firework (fireworks), parade (parades), costume (costumes), candle (candles), decorate (decorates, decorated, decorating), wedding (weddings), anniversary (anniversaries)
 - `a2-words-wishes` Wishes and Invitations (11): congratulations, welcome (welcomes, welcomed, welcoming), invitation (invitations), special, wrap (wraps, wrapped, wrapping), surprise (surprises), dear, luck, mooncake (mooncakes), envelope (envelopes), midnight
 - `a2-words-feelings-2` More Feelings (12): excited, exciting, surprised, pleased, nervous, proud (prouder, proudest), glad, upset, embarrassed, calm (calmer, calmest), cheerful, jealous
-- `a2-words-people-together` People Together (11): hug (hugs, hugged, hugging), kiss (kisses, kissed, kissing), wave (waves, waved, waving), shake (shakes, shook, shaken, shaking), agree (agrees, agreed, agreeing), argue (argues, argued, arguing), friendship (friendships), joke (jokes), introduce (introduces, introduced, introducing), each, everybody
+- `a2-words-people-together` People Together (11): hug (hugs, hugged, hugging), kiss (kisses, kissed, kissing), wave (waves, waved, waving), shake (shakes, shook, shaken, shaking), agree (agrees, agreed, agreeing), argue (argues, argued, arguing), friendship (friendships), joke (jokes), introduce (introduces, introduced, introducing), everybody, host (hosts, hosted, hosting)
 
 **Grammar**
 
@@ -379,28 +379,28 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `a2-words-little-words-3` | vocabulary | 8 | `a2-words-plants` |
 | `present-perfect-with-ever-and-never` | grammar | 8 | `past-simple-irregular`, `have-and-has` |
 | `writing-about-an-experience` | writing | 8 | `present-perfect-with-ever-and-never`, `writing-about-your-weekend` |
-| `a2-words-money` | vocabulary | 9 | none |
-| `a2-words-shops` | vocabulary | 9 | none |
-| `a2-words-things-we-buy` | vocabulary | 9 | none |
-| `a2-words-materials` | vocabulary | 9 | none |
+| `a2-words-money` | vocabulary | 9 | `a1-words-shopping` |
+| `a2-words-shops` | vocabulary | 9 | `a2-words-money` |
+| `a2-words-things-we-buy` | vocabulary | 9 | `a2-words-shops` |
+| `a2-words-materials` | vocabulary | 9 | `a2-words-things-we-buy` |
 | `too-and-enough` | grammar | 9 | `adjectives-before-nouns`, `a2-words-quantities` |
-| `one-and-ones` | grammar | 9 | `adjectives-before-nouns`, `too-and-enough` |
+| `one-and-ones` | grammar | 9 | `too-and-enough` |
 | `writing-a-message-to-a-shop` | writing | 9 | `writing-a-short-note`, `too-and-enough` |
-| `a2-words-technology` | vocabulary | 10 | none |
-| `a2-words-using-tech` | vocabulary | 10 | none |
-| `a2-words-communication` | vocabulary | 10 | none |
-| `a2-words-machines` | vocabulary | 10 | none |
+| `a2-words-technology` | vocabulary | 10 | `a1-words-things-at-home` |
+| `a2-words-using-tech` | vocabulary | 10 | `a2-words-technology` |
+| `a2-words-communication` | vocabulary | 10 | `a2-words-using-tech` |
+| `a2-words-machines` | vocabulary | 10 | `a2-words-communication` |
 | `present-perfect-with-just-already-and-yet` | grammar | 10 | `present-perfect-with-ever-and-never`, `a2-words-machines` |
 | `writing-an-email-to-a-friend` | writing | 10 | `writing-a-short-note`, `past-simple-irregular` |
-| `a2-words-festivals` | vocabulary | 11 | none |
-| `a2-words-wishes` | vocabulary | 11 | none |
-| `a2-words-feelings-2` | vocabulary | 11 | none |
-| `a2-words-people-together` | vocabulary | 11 | none |
+| `a2-words-festivals` | vocabulary | 11 | `a1-words-parties` |
+| `a2-words-wishes` | vocabulary | 11 | `a2-words-festivals` |
+| `a2-words-feelings-2` | vocabulary | 11 | `a2-words-wishes`, `a1-words-feelings` |
+| `a2-words-people-together` | vocabulary | 11 | `a2-words-feelings-2` |
 | `verbs-followed-by-to` | grammar | 11 | `present-simple`, `a2-words-events` |
 | `subordinating-conjunctions` (existing) | grammar | 11 | `coordinating-conjunctions` |
 | `writing-an-invitation-and-a-reply` | writing | 11 | `writing-a-short-note`, `will-for-the-future` |
-| `a2-words-jobs-2` | vocabulary | 12 | none |
-| `a2-words-work-life` | vocabulary | 12 | none |
-| `a2-words-ambitions` | vocabulary | 12 | none |
+| `a2-words-jobs-2` | vocabulary | 12 | `a1-words-jobs` |
+| `a2-words-work-life` | vocabulary | 12 | `a2-words-jobs-2` |
+| `a2-words-ambitions` | vocabulary | 12 | `a2-words-work-life` |
 | `subject-and-object-questions` | grammar | 12 | `wh-questions`, `past-simple-questions-and-negatives` |
 | `writing-about-your-dream-job` | writing | 12 | `writing-about-future-plans`, `expanding-with-because-but-so` |
