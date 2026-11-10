@@ -472,6 +472,87 @@ export declare type ListProvidersResponse = Message<"ga.admin.v1.ListProvidersRe
 export declare const ListProvidersResponseSchema: GenMessage<ListProvidersResponse>;
 
 /**
+ * @generated from message ga.admin.v1.ListRouteChoicesRequest
+ */
+export declare type ListRouteChoicesRequest = Message<"ga.admin.v1.ListRouteChoicesRequest"> & {
+};
+
+/**
+ * Describes the message ga.admin.v1.ListRouteChoicesRequest.
+ * Use `create(ListRouteChoicesRequestSchema)` to create a new message.
+ */
+export declare const ListRouteChoicesRequestSchema: GenMessage<ListRouteChoicesRequest>;
+
+/**
+ * Criterion is a criterion a judgment route can serve.
+ *
+ * @generated from message ga.admin.v1.Criterion
+ */
+export declare type Criterion = Message<"ga.admin.v1.Criterion"> & {
+  /**
+   * key is its id and version, such as w4-topic-sentence@1.
+   *
+   * @generated from field: string key = 1;
+   */
+  key: string;
+
+  /**
+   * @generated from field: string subject_id = 2;
+   */
+  subjectId: string;
+
+  /**
+   * question is what the judge asks of the text, in English.
+   *
+   * @generated from field: string question = 3;
+   */
+  question: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.Criterion.
+ * Use `create(CriterionSchema)` to create a new message.
+ */
+export declare const CriterionSchema: GenMessage<Criterion>;
+
+/**
+ * @generated from message ga.admin.v1.ListRouteChoicesResponse
+ */
+export declare type ListRouteChoicesResponse = Message<"ga.admin.v1.ListRouteChoicesResponse"> & {
+  /**
+   * @generated from field: repeated ga.admin.v1.Criterion criteria = 1;
+   */
+  criteria: Criterion[];
+
+  /**
+   * prompt_versions are the prompts a judgment or conversation route can use.
+   *
+   * @generated from field: repeated string prompt_versions = 2;
+   */
+  promptVersions: string[];
+
+  /**
+   * languages are the language tags a speech route can serve, such as en-US.
+   *
+   * @generated from field: repeated string languages = 3;
+   */
+  languages: string[];
+
+  /**
+   * conversations are the ids of the conversations a conversation route can serve.
+   *
+   * @generated from field: repeated string conversations = 4;
+   */
+  conversations: string[];
+};
+
+/**
+ * Describes the message ga.admin.v1.ListRouteChoicesResponse.
+ * Use `create(ListRouteChoicesResponseSchema)` to create a new message.
+ */
+export declare const ListRouteChoicesResponseSchema: GenMessage<ListRouteChoicesResponse>;
+
+/**
  * @generated from message ga.admin.v1.ListCatalogRequest
  */
 export declare type ListCatalogRequest = Message<"ga.admin.v1.ListCatalogRequest"> & {
@@ -1847,6 +1928,16 @@ export declare const AdminService: GenService<{
     methodKind: "unary";
     input: typeof ListCatalogRequestSchema;
     output: typeof ListCatalogResponseSchema;
+  },
+  /**
+   * ListRouteChoices lists what a route can name: the criteria of the subjects served, the prompt versions and the languages of speech.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.ListRouteChoices
+   */
+  listRouteChoices: {
+    methodKind: "unary";
+    input: typeof ListRouteChoicesRequestSchema;
+    output: typeof ListRouteChoicesResponseSchema;
   },
   /**
    * SaveProvider adds or changes a vendor.

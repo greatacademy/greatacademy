@@ -21,6 +21,8 @@ service AdminService {
   rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse);
   // ListCatalog lists the named vendors of pi-ai's catalog an administrator can pick, with their models.
   rpc ListCatalog(ListCatalogRequest) returns (ListCatalogResponse);
+  // ListRouteChoices lists what a route can name: the criteria of the subjects served, the prompt versions and the languages of speech.
+  rpc ListRouteChoices(ListRouteChoicesRequest) returns (ListRouteChoicesResponse);
   // SaveProvider adds or changes a vendor.
   rpc SaveProvider(SaveProviderRequest) returns (SaveProviderResponse);
   // DeleteProvider removes a vendor that has no routes.
@@ -177,6 +179,27 @@ message Provider {
 
 message ListProvidersResponse {
   repeated Provider providers = 1;
+}
+
+message ListRouteChoicesRequest {}
+
+// Criterion is a criterion a judgment route can serve.
+message Criterion {
+  // key is its id and version, such as w4-topic-sentence@1.
+  string key = 1;
+  string subject_id = 2;
+  // question is what the judge asks of the text, in English.
+  string question = 3;
+}
+
+message ListRouteChoicesResponse {
+  repeated Criterion criteria = 1;
+  // prompt_versions are the prompts a judgment or conversation route can use.
+  repeated string prompt_versions = 2;
+  // languages are the language tags a speech route can serve, such as en-US.
+  repeated string languages = 3;
+  // conversations are the ids of the conversations a conversation route can serve.
+  repeated string conversations = 4;
 }
 
 message ListCatalogRequest {}
