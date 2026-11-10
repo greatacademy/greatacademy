@@ -26,7 +26,6 @@ spec:
     name: voice
   minReplicaCount: 2
   maxReplicaCount: 20
-  pollingInterval: 15
   # Long, since scaling in drains a pod for up to 25 minutes.
   cooldownPeriod: 600
   advanced:
