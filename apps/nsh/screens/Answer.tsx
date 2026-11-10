@@ -213,6 +213,10 @@ export function AnswerInput(props: {
           <If when={input.value.suffix}>{(tex) => <Tex tex={tex()} fontSize={20} />}</If>
         </View>
       );
+    case "writing":
+      return (
+        <Input accessibilityLabel={m().yourAnswer} value={props.value} multiline readonly style={{ ...fieldStyle(), minHeight: 120 }} />
+      );
     default:
       return (
         <Input

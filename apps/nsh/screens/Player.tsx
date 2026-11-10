@@ -22,6 +22,7 @@ import { learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet } from "../lib/ui.tsx";
 import { AnswerInput, AnswerText, Prompt } from "./Answer.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
+import { JudgedFeedback, WritingFlow } from "./Writing.tsx";
 
 type Answered = { feedback: Feedback; next: Session; response: string };
 
@@ -209,15 +210,19 @@ function Intro(props: { intro: NonNullable<Question["intro"]> }) {
 function Solution(props: { answered: Answered; question: Question }) {
   const { feedback } = props.answered;
   const problem = props.question.problem;
-  const open = signal(!feedback.correct);
+  const judged = feedback.criteria.length > 0;
+  const open = signal(!feedback.correct || judged);
   return (
     <If when={open()} else={<Quiet label={m().showSolution} onPress={() => open.set(true)} />}>
       <Card>
-        <If when={!feedback.correct && problem}>
+        <If when={judged}>
+          <JudgedFeedback feedback={feedback} />
+        </If>
+        <If when={!feedback.correct && problem && !judged}>
           <Muted>{m().correctAnswer}</Muted>
           {problem ? <AnswerText problem={problem} answer={feedback.answer} /> : null}
         </If>
-        <Muted>{m().solution}</Muted>
+        <Muted>{judged ? m().modelAnswer : m().solution}</Muted>
         <Rich source={tx(feedback.solution)} />
         <If when={feedback.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
       </Card>
@@ -251,7 +256,8 @@ function QuestionFlow(props: {
   onContinue: () => void;
 }) {
   const question = props.question;
-  const practicing = signal(!question.intro);
+  const writing = question.problem?.input?.kind.case === "writing";
+  const practicing = signal(!question.intro || !!question.judging);
   const response = signal("");
   const busy = signal(false);
   const error = signal("");
@@ -259,7 +265,7 @@ function QuestionFlow(props: {
   // Far enough down to show what was added below, the solution or the math keyboard; the view stops at the end.
   const toEnd = () => setTimeout(() => scroll?.scrollTo({ y: 100_000, animated: true }), 50);
   const send = async (skip: boolean) => {
-    if (busy() || props.answered() || (!skip && response().trim() === "")) return;
+    if (writing || busy() || props.answered() || (!skip && response().trim() === "")) return;
     busy.set(true);
     error.set("");
     try {
@@ -299,51 +305,62 @@ function QuestionFlow(props: {
         </>
       }
     >
-      <Body ref={(node) => (scroll = node)}>
-        <If when={question.passage}>
-          {(passage) => (
-            <Card>
-              <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
-            </Card>
-          )}
-        </If>
-        <If when={question.lesson}>
-          <Muted>{m().practice}</Muted>
-        </If>
-        <If when={question.problem}>
-          {(problem) => (
-            <View style={{ gap: 16 }}>
-              <Prompt problem={problem()} answering />
-              <AnswerInput
-                problem={problem()}
-                value={props.answered()?.response ?? response()}
-                onChange={(value) => response.set(value)}
-                onSubmit={() => void send(false)}
-                onKeyboard={(height) => height > 0 && toEnd()}
-                disabled={busy() || !!props.answered()}
-                feedback={props.answered()?.feedback}
+      <If when={writing && !props.answered()}>
+        <Body>
+          <If when={question.lesson}>
+            <Muted>{m().practice}</Muted>
+          </If>
+          <If when={question.problem}>{(problem) => <Prompt problem={problem()} answering />}</If>
+          <WritingFlow session={props.session} question={question} onAnswered={props.onAnswered} />
+        </Body>
+      </If>
+      <If when={!writing || props.answered()}>
+        <Body ref={(node) => (scroll = node)}>
+          <If when={question.passage}>
+            {(passage) => (
+              <Card>
+                <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
+              </Card>
+            )}
+          </If>
+          <If when={question.lesson}>
+            <Muted>{m().practice}</Muted>
+          </If>
+          <If when={question.problem}>
+            {(problem) => (
+              <View style={{ gap: 16 }}>
+                <Prompt problem={problem()} answering />
+                <AnswerInput
+                  problem={problem()}
+                  value={props.answered()?.response ?? response()}
+                  onChange={(value) => response.set(value)}
+                  onSubmit={() => void send(false)}
+                  onKeyboard={(height) => height > 0 && toEnd()}
+                  disabled={busy() || !!props.answered()}
+                  feedback={props.answered()?.feedback}
+                />
+              </View>
+            )}
+          </If>
+          <If when={error()}>
+            <ErrorNote message={error()} />
+          </If>
+          <If when={props.answered()}>{(answered) => <Solution answered={answered()} question={question} />}</If>
+        </Body>
+        <If
+          when={props.answered()}
+          else={
+            <BottomBar>
+              <Buttons
+                quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
+                main={{ label: m().submit, onPress: () => void send(false) }}
+                disabled={busy()}
               />
-            </View>
-          )}
+            </BottomBar>
+          }
+        >
+          {(answered) => <Verdict answered={answered()} onContinue={props.onContinue} />}
         </If>
-        <If when={error()}>
-          <ErrorNote message={error()} />
-        </If>
-        <If when={props.answered()}>{(answered) => <Solution answered={answered()} question={question} />}</If>
-      </Body>
-      <If
-        when={props.answered()}
-        else={
-          <BottomBar>
-            <Buttons
-              quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
-              main={{ label: m().submit, onPress: () => void send(false) }}
-              disabled={busy()}
-            />
-          </BottomBar>
-        }
-      >
-        {(answered) => <Verdict answered={answered()} onContinue={props.onContinue} />}
       </If>
     </If>
   );
