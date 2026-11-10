@@ -2,7 +2,7 @@ import { CompileError, createRng, formatIssue, type Problem, sampleGenerators, t
 import { describe, expect, it } from "vitest";
 
 import { compileEnglish, english } from "./index.ts";
-import { englishPacks, levelPacks } from "./packs.ts";
+import { englishPacks, englishTracks } from "./packs.ts";
 import { coreShardTopics } from "./shards/core.ts";
 
 /** unescapedDollar matches a dollar sign that the Markdown renderer would take as the start of TeX. */
@@ -48,13 +48,13 @@ describe("english content", () => {
   it("offers its passages in the course, each needing the topics whose words it uses", () => {
     const subject = compileEnglish();
     const offered = new Set(english.courses.flatMap((course) => course.reading ?? []));
-    const levelUnits = new Set(levelPacks.flatMap(([, pack]) => pack.reading.map((unit) => unit.id)));
+    const levelUnits = new Set(englishTracks[0]?.flatMap((pack) => pack.reading.map((unit) => unit.id)));
     const bounds = new Map(englishPacks.flatMap((pack) => pack.reading.map((unit) => [unit.id, pack.passageWords] as const)));
     expect(subject.graph.passages.size).toBe((english.reading ?? []).reduce((n, unit) => n + unit.passages.length, 0));
     for (const passage of subject.graph.passages.values()) {
       expect(offered, passage.id).toContain(passage.unit);
       const needs = new Set(passage.topics.map((edge) => edge.topic));
-      // The lexicon's topics gate the native passages; a level's passages are gated by its batches in packs.test.ts.
+      // The lexicon's topics gate the native passages; the passages of the levels and exams are gated by their batches.
       if (!levelUnits.has(passage.unit))
         for (const topic of Object.keys(passage.wordsByTopic)) expect(needs, `${passage.id} uses ${topic}`).toContain(topic);
       const [min, max] = bounds.get(passage.unit) ?? [140, 260];

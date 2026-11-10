@@ -35,6 +35,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Course of B2 | Units 1 to 4 done: 32 passages, 4 conversations |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
 | Topics of B2: 128 topics in 10 units, 371 knowledge points, 3,547 headwords by its end | Done |
+| Exam courses: IELTS (5 new topics, 1 reading unit) and TOEFL (4 new topics, 1 reading unit), all practice-only; Cambridge First and the Gaokao | IELTS and TOEFL done |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -209,3 +210,11 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | The for-and-against essay | the opinion essay; the counterclaim paragraph | 0.3 each | It weighs both sides before its opinion |
 | `cleft-sentences` | `relative-clauses` | 0.3 | The cleft part is a relative clause |
 | The proposal | the report | 0.4 | It is a report that recommends |
+| `ielts-describing-data` | `b2-words-trends`; `comparatives-and-superlatives` | 0.2 each | Describing a chart uses both |
+| `ielts-true-false-not-given` | `fact-and-opinion`; `making-inferences` | 0.2 each | Telling what a text says from what it does not |
+| `ielts-matching-headings` | `main-idea`; `supporting-details` | 0.3; 0.2 | A heading names a paragraph's main idea |
+| `ielts-writing-task-1` | `ielts-describing-data`; `writing-a-report` | 0.4; 0.2 | The task is a short report on data |
+| `ielts-writing-task-2` | the opinion essay; `introductions-and-conclusions` | 0.5; 0.2 | The task is an opinion essay |
+| `toefl-build-a-sentence` | `indirect-questions` | 0.2 | Many replies are indirect questions |
+| `toefl-writing-an-email` | `writing-a-formal-email` | 0.4 | The task is a formal email |
+| `toefl-academic-discussion` | `writing-an-opinion-paragraph`; `counterclaims-and-rebuttals` | 0.4; 0.2 | A post is an opinion paragraph answering others |
