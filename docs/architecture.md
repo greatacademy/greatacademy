@@ -172,7 +172,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
   - Hyperdrive reaches PostgreSQL through Cloudflare Tunnel, so the database has no public port.
   - The web Worker is placed near the database, since a request makes several queries and each would otherwise cross an ocean. The subjects' Workers query nothing and run at the edge.
   - R2 buckets are created by hand with the location hint `wnam` before their first deployment, since a bucket's location cannot change.
-  - Holding data in one country is a transfer for every other market, so the notice must name the United States before a market's minors are served ([Minors' Data §12](minors-data.md#12-vendors)).
+  - Holding data in one country is a transfer for every other market, so the privacy notice at `/legal/privacy` says the data is kept in the United States ([Minors' Data §12](minors-data.md#12-vendors)).
 - **Development:**
   - `cf dev` runs the Worker in workerd through Vite.
   - It connects to PostgreSQL in a `postgres:17-alpine` container under OrbStack. See [Development](development.md).

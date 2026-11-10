@@ -100,9 +100,16 @@ const en: Record<LegalPageName, LegalPage> = {
       {
         heading: "Who receives it",
         items: [
-          "Our hosting and email providers, who process it only for us.",
+          "Our hosting providers, Cloudflare and Hetzner, and our email provider, who process it only for us.",
           "AI companies only if an AI feature is on, only for that feature, and only companies named in the notice you agreed to. They may not train on it.",
           "Your guardian, if you have one, can see your progress and activity. They don't see the text of your answers in the app.",
+        ],
+      },
+      {
+        heading: "Where it is kept",
+        paragraphs: [
+          "We keep your data in the United States, in Oregon, whichever country you live in, and our backups stay there too. Cloudflare serves our pages from a place near you, but doesn't keep your data there.",
+          "If you live outside the United States, using Great Academy sends your data there, where the law that protects it may differ from yours.",
         ],
       },
       {
@@ -264,9 +271,16 @@ const zh: Record<LegalPageName, LegalPage> = {
       {
         heading: "谁会收到",
         items: [
-          "我们的托管和邮件服务商，它们只代我们处理。",
+          "我们的托管服务商 Cloudflare 和 Hetzner，以及邮件服务商，它们只代我们处理。",
           "只有开启 AI 功能时才会发送给 AI 公司，仅用于该功能，且仅限你同意的通知中写明的公司。它们不得用这些数据训练模型。",
           "你的监护人（如果有）可以看到你的进度和活动。他们在应用中看不到你答案的文本。",
+        ],
+      },
+      {
+        heading: "存放在哪里",
+        paragraphs: [
+          "无论你住在哪个国家或地区，你的数据都存放在美国俄勒冈州，备份也留在那里。Cloudflare 会从离你近的地方提供我们的页面，但不在那里保存你的数据。",
+          "如果你住在美国以外，使用 Great Academy 会把你的数据传到美国；那里保护数据的法律可能与你所在地不同。",
         ],
       },
       {

@@ -172,7 +172,7 @@ Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请
   - Hyperdrive 经 Cloudflare Tunnel 连接 PostgreSQL，数据库没有公网端口。
   - Web Worker 放在靠近数据库的地方运行，因为一个请求要查询数据库多次，否则每次查询都要跨洋。学科的 Worker 不查数据库，在边缘运行。
   - R2 存储桶在首次部署前手动创建，位置提示设为 `wnam`，因为存储桶的位置之后不能更改。
-  - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以在为某个市场的未成年人提供服务之前，通知必须写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
+  - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以 `/legal/privacy` 的隐私声明写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
