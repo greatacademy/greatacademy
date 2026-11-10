@@ -35,7 +35,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Course of B2 | Units 1 to 4 done: 32 passages, 4 conversations |
 | Topics of B1: 12 units, 2,275 headwords by its end | Done |
 | Topics of B2: 128 topics in 10 units, 371 knowledge points, 3,547 headwords by its end | Done |
-| Exam courses: IELTS (5 new topics, 1 reading unit) and TOEFL (4 new topics, 1 reading unit), all practice-only; Cambridge First and the Gaokao | IELTS and TOEFL done |
+| Exam courses: IELTS (5 new topics, 1 reading unit) and TOEFL (4 new topics, 1 reading unit), Cambridge First (6 new topics, 6 passages) and the Gaokao (5 new topics, 8 passages), all practice-only | Done |
 | Outlines of the native courses | Done |
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
 
@@ -218,3 +218,14 @@ Weights are starting points, to be calibrated from real answers (P10). Each stat
 | `toefl-build-a-sentence` | `indirect-questions` | 0.2 | Many replies are indirect questions |
 | `toefl-writing-an-email` | `writing-a-formal-email` | 0.4 | The task is a formal email |
 | `toefl-academic-discussion` | `writing-an-opinion-paragraph`; `counterclaims-and-rebuttals` | 0.4; 0.2 | A post is an opinion paragraph answering others |
+| `fce-multiple-choice-cloze` | `phrasal-verbs` | 0.2 | About half of its second knowledge point |
+| `fce-open-cloze` | articles; `relative-clauses` | 0.2 each | Some items of each knowledge point |
+| `fce-word-formation` | `suffixes-that-change-word-class`; `common-prefixes` | 0.3; 0.2 | Its first knowledge point is all suffixes, its second has negative prefixes |
+| `fce-key-word-transformations` | `third-conditional`; `reported-speech`; `passive-with-modals-and-perfect-forms` | 0.2 each | About a quarter of the items each |
+| `fce-writing-an-essay` | the opinion essay | 0.5 | Every task is an opinion essay |
+| `fce-writing-part-2` | the article; the review; the report; the formal email | 0.2 each | Three tasks of each kind |
+| `gaokao-seven-from-five` | ordering sentences; choosing transitions | 0.2 each | The middle gaps depend on both |
+| `gaokao-cloze` | `phrasal-verbs` | 0.1 | Only a few items |
+| `gaokao-grammar-filling` | `relative-clauses`; the passive; `past-perfect` | 0.1 each | A few items each |
+| `gaokao-practical-writing` | the formal email; the informal email | 0.3 each | Most tasks are emails |
+| `gaokao-continuation-writing` | `writing-a-story` | 0.5 | Every task continues a story |
