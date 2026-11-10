@@ -46,7 +46,7 @@ const units: readonly UnitDef[] = [
       reading: ["finding-scholarly-sources"],
       writing: ["forming-a-research-question", "writing-an-annotated-bibliography"],
     },
-    undefined,
+    "research-in-practice",
     "librarian-research-consultation",
   ),
   unit(
@@ -57,7 +57,7 @@ const units: readonly UnitDef[] = [
       reading: ["tracing-claims-to-sources"],
       writing: ["writing-a-paraphrase"],
     },
-    undefined,
+    "the-ethics-of-knowledge",
     "writing-center-citation-help",
   ),
   unit(
@@ -68,7 +68,7 @@ const units: readonly UnitDef[] = [
       reading: ["reading-a-research-paper"],
       writing: ["writing-a-literature-review", "writing-a-research-paper"],
     },
-    undefined,
+    "inside-a-research-paper",
     "peer-review-workshop",
   ),
   unit(
@@ -79,7 +79,7 @@ const units: readonly UnitDef[] = [
       reading: ["analyzing-prose-style"],
       writing: ["revising-for-clarity"],
     },
-    undefined,
+    "essays-on-writing",
     "editor-style-review",
   ),
   unit(
@@ -90,7 +90,7 @@ const units: readonly UnitDef[] = [
       reading: ["reading-charts-and-statistics"],
       writing: ["writing-about-data"],
     },
-    undefined,
+    "numbers-in-the-news",
     "presenting-findings-to-a-panel",
   ),
   unit(
@@ -101,7 +101,7 @@ const units: readonly UnitDef[] = [
       reading: ["reading-workplace-documents"],
       writing: ["writing-a-professional-email", "writing-a-memo", "writing-a-cover-letter"],
     },
-    undefined,
+    "writing-at-work",
     "job-interview-practice",
   ),
   unit(
@@ -112,7 +112,7 @@ const units: readonly UnitDef[] = [
       reading: ["reading-requests-for-proposals"],
       writing: ["writing-an-executive-summary", "writing-a-research-proposal"],
     },
-    undefined,
+    "plans-that-worked",
     "client-project-meeting",
   ),
 ];

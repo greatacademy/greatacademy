@@ -6,7 +6,7 @@
 - **阶段：** 大学一年级，以及为学习或工作而写作的成年人
 - **先修：** [英语：九至十二年级](english-grades-9-12.zh-CN.md)（`buildsOn: ["english-grades-9-12"]`）
 - **讲解语言：** 英语
-- **规模：** 8 个单元 · 38 个知识点，全部新增（词汇 8 个，语法、文体与书写规范 9 个，阅读 8 个，由模型评判的写作 13 个）· 8 个阅读单元（第一个 `academic-prose` 已写成；其余七个尚在计划中，写成之前相应单元没有阅读单元）· 8 个对话
+- **规模：** 8 个单元 · 38 个知识点，全部新增（词汇 8 个，语法、文体与书写规范 9 个，阅读 8 个，由模型评判的写作 13 个）· 8 个阅读单元，每个 8 篇 · 8 个对话
 
 ## 目标
 
@@ -48,7 +48,7 @@
 
 **写作：** `forming-a-research-question` 提出研究问题（由模型评判；先修 `reading-academic-arguments`）：问题要窄到能够回答，又开放到值得论证。`writing-an-annotated-bibliography` 写带注释的参考文献（由模型评判；先修 `finding-scholarly-sources`、`writing-a-critical-summary`）。
 
-**阅读单元：** `research-in-practice`，10 篇关于研究者怎样工作的文章：选择问题；一次失败的检索；地下室里的档案；在村庄里访谈；实验记录本；出人意料的实验；带着质疑读资料；跨领域的合作；有缺陷的数据集；无法重复的结果。
+**阅读单元：** `research-in-practice`，8 篇关于虚构研究者怎样工作的原创文章：选择研究问题；一次失败的检索；地下室里的档案；村庄里的访谈；实验记录本；出人意料的实验；跨领域的合作；无法重复的结果。
 
 **对话：** `librarian-research-consultation`。导师是研究馆员。任务：说明你的课题，把它缩小成一个问题，并得到两种检索策略。
 
@@ -64,7 +64,7 @@
 
 **写作：** `writing-a-paraphrase` 写转述（由模型评判；先修 `quoting-and-paraphrasing`）：用新的措辞和结构忠实地重述一段文字，并注明出处。
 
-**阅读单元：** `the-ethics-of-knowledge`，10 篇：一桩著名的造假案；论文怎样被撤回；同行评审怎样运作；脚注简史；开放获取运动；人人都能编辑的百科全书；一个没有出处却广为流传的统计数字；合作者之间的署名；互联网时代的抄袭；荣誉准则。
+**阅读单元：** `the-ethics-of-knowledge`，8 篇原创文章，案例均为虚构：骗过整个领域的造假；论文是怎样被撤回的；同行评审是怎样运作的；脚注简史；人人可编辑的百科全书；没有出处的统计数字；合著者之间的署名；抄袭与署名。
 
 **对话：** `writing-center-citation-help`。导师是写作中心的辅导员。任务：指出你在草稿中使用资料的地方，一起弄清楚怎样正确地引用或转述并注明出处。
 
@@ -80,7 +80,7 @@
 
 **写作：** `writing-a-literature-review` 写文献综述（由模型评判；先修 `writing-an-annotated-bibliography`、`synthesizing-sources`）。`writing-a-research-paper` 写研究论文（由模型评判，W6；先修 `writing-a-literature-review`、`citing-in-mla-and-apa`、`writing-an-argumentative-essay`）。
 
-**阅读单元：** `inside-a-research-paper`，8 篇，从头到尾跟随一项研究：问题；文献；方法；数据；结果；讨论；局限；其他研究者的回应。
+**阅读单元：** `inside-a-research-paper`，8 篇，从头到尾跟随一项虚构的研究（学校周边绿地与儿童注意力）：研究问题；文献；研究方法；数据；研究结果；讨论；局限；其他研究者的回应。
 
 **对话：** `peer-review-workshop`。导师是你审阅过其草稿的同学。任务：就他的论点和证据给出反馈，并回答他对你的意见提出的问题。
 
@@ -96,7 +96,7 @@
 
 **写作：** `revising-for-clarity` 为清晰而修改（由模型评判；先修 `clear-sentences-characters-and-actions`、`revising-a-draft`）：把一段晦涩的文字改写清楚，而不丢失原意。
 
-**阅读单元：** `essays-on-writing`，10 篇关于写作的原创文章：行话为什么流行；法律中的平实语言；长句与短句；为屏幕写作；为被动语态辩护；编辑怎样读稿；文体指南及其规则；用第二语言写作；第一句话；修改即重新思考。
+**阅读单元：** `essays-on-writing`，8 篇关于写作的原创文章：行话为何蔓延；法律中的平实语言；长句与短句；为屏幕写作；为被动语态辩护；编辑怎样阅读；用第二语言写作；修改即重新思考。
 
 **对话：** `editor-style-review`。导师是编辑。任务：在编辑质疑之后，为你段落中的三处选择辩护或作出修改。
 
@@ -112,7 +112,7 @@
 
 **写作：** `writing-about-data` 写数据（由模型评判；先修 `reading-charts-and-statistics`、`numbers-in-writing`、`writing-an-explanatory-essay`）：写一段话准确地报告一张表或图，只得出它所支持的结论。
 
-**阅读单元：** `numbers-in-the-news`，10 篇，每篇附一张用文字描述的表或图：选举前的民调；犯罪率；房价；屏幕使用时间；考试成绩；空气污染；预期寿命；一项医疗风险；性别薪酬差距；一项体育统计。
+**阅读单元：** `numbers-in-the-news`，8 篇原创文章，每篇附一张用文字描述的虚构表或图：选举前的民调；犯罪率统计的是什么；住房的价格；屏幕时间与睡眠；考试成绩与排名；空气糟糕的日子；一项医疗风险；联赛最佳投手。
 
 **对话：** `presenting-findings-to-a-panel`。导师主持一个评审小组。任务：介绍一项小型研究的一个发现，并回答一个关于数据不能说明什么的问题。
 
@@ -128,7 +128,7 @@
 
 **写作：** `writing-a-professional-email` 写工作邮件（由模型评判；先修 `tone-and-register-at-work`）。`writing-a-memo` 写备忘录（由模型评判；先修 `writing-a-professional-email`）。`writing-a-cover-letter` 写求职信（由模型评判；先修 `writing-a-professional-email`、`reading-workplace-documents`）。
 
-**阅读单元：** `writing-at-work`，10 篇带评注的范例文书：向经理提出请求；一封拒绝信；会议总结；关于新规定的备忘录；招聘启事；求职信；投诉及其回复；给新员工的说明；事故报告；感谢信。
+**阅读单元：** `writing-at-work`，8 篇原创范例文书，每篇后附评注：给经理的请求；得体地拒绝；会议纪要；关于新规定的备忘录；读懂招聘启事；求职信；投诉与回复；给新员工的说明。
 
 **对话：** `job-interview-practice`。导师是你所选工作的面试官。任务：用具体例子回答三个关于你经历的问题，并就这份工作提一个问题。
 
@@ -144,7 +144,7 @@
 
 **写作：** `writing-an-executive-summary` 写执行摘要（由模型评判；先修 `writing-a-critical-summary`、`writing-a-memo`）。`writing-a-research-proposal` 写研究提案（由模型评判；先修 `forming-a-research-question`、`writing-an-executive-summary`）。
 
-**阅读单元：** `plans-that-worked`，8 篇关于提案及其结果的文章：社区花园的资助申请；学校回收计划；小企业的推介；城市自行车道；一项研究资助；图书馆延长开放时间；村里的诊所；一个失败的计划及其原因。
+**阅读单元：** `plans-that-worked`，8 篇关于提案及其结果的原创记述：社区花园的资助申请；学校的回收计划；小企业的融资陈述；修建自行车道的城市；科研经费申请；延长开放时间的图书馆；村里的诊所；失败的计划。
 
 **对话：** `client-project-meeting`。导师是委托你写提案的客户。任务：介绍你计划的目标、日程和费用，并就客户要求的一处修改达成一致。
 

@@ -6,7 +6,14 @@ import { courseCollege } from "./college/course.ts";
 import { grammarTopicsCollege } from "./college/grammar.ts";
 import { lexiconCollege } from "./college/lexicon.ts";
 import { academicProse } from "./college/reading-academic.ts";
+import { theEthicsOfKnowledge } from "./college/reading-ethics.ts";
+import { numbersInTheNews } from "./college/reading-numbers.ts";
+import { insideAResearchPaper } from "./college/reading-paper.ts";
+import { plansThatWorked } from "./college/reading-plans.ts";
+import { researchInPractice } from "./college/reading-research.ts";
 import { readingSkillTopicsCollege } from "./college/reading-skills.ts";
+import { essaysOnWriting } from "./college/reading-style.ts";
+import { writingAtWork } from "./college/reading-work.ts";
 import { vocabularyCollege, wordTopicsCollege } from "./college/words.ts";
 import { writingTopicsCollege } from "./college/writing.ts";
 import { conversations35 } from "./grades-3-5/conversations.ts";
@@ -81,7 +88,16 @@ const college: Pack = {
   ...emptyPack,
   topics: [...wordTopicsCollege, ...grammarTopicsCollege, ...readingSkillTopicsCollege, ...writingTopicsCollege],
   courses: [courseCollege],
-  reading: [academicProse],
+  reading: [
+    academicProse,
+    researchInPractice,
+    theEthicsOfKnowledge,
+    insideAResearchPaper,
+    essaysOnWriting,
+    numbersInTheNews,
+    writingAtWork,
+    plansThatWorked,
+  ],
   conversations: conversationsCollege,
   lexicon: lexiconCollege,
   vocabulary: vocabularyCollege,

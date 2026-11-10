@@ -27,7 +27,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
 | Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
-| College writing: 38 topics in 8 units, 8 conversations | Done; only `academic-prose` of 8 reading units is written |
+| College writing: 38 topics in 8 units, 8 reading units of 8 passages, 8 conversations | Done |
 | Grades 9 to 12: 37 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | Topics of A2: 83 topics in 12 units | Done |
 | Course of A2: 12 units, 96 passages, 12 conversations | Done |

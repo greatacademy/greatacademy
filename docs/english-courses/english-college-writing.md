@@ -6,7 +6,7 @@
 - **Level:** First year of university, and adults who write for study or work
 - **Prerequisite(s):** [English, Grades 9 to 12](english-grades-9-12.md) (`buildsOn: ["english-grades-9-12"]`)
 - **Language of explanation:** English
-- **Size:** 8 units · 38 topics, all new (8 of vocabulary, 9 of grammar, style and mechanics, 8 of reading, 13 of writing judged by a model) · 8 reading units (the first, `academic-prose`, is written; the other seven are planned, and their units go without one until then) · 8 conversations
+- **Size:** 8 units · 38 topics, all new (8 of vocabulary, 9 of grammar, style and mechanics, 8 of reading, 13 of writing judged by a model) · 8 reading units of 8 passages each · 8 conversations
 
 ## Aim
 
@@ -48,7 +48,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `forming-a-research-question` Forming a Research Question (judged by a model; after `reading-academic-arguments`): a question narrow enough to answer and open enough to argue. `writing-an-annotated-bibliography` Writing an Annotated Bibliography (judged by a model; after `finding-scholarly-sources`, `writing-a-critical-summary`).
 
-**Reading unit:** `research-in-practice`, 10 passages on how researchers work: choosing a question; a search that failed; an archive in a basement; interviews in a village; a lab notebook; an experiment that surprised; reading against a source; a collaboration across fields; a dataset with a flaw; a result that would not replicate.
+**Reading unit:** `research-in-practice`, 8 original essays on how invented researchers work: Choosing a Question; A Search That Failed; An Archive in a Basement; Interviews in a Village; The Lab Notebook; An Experiment That Surprised; A Collaboration Across Fields; A Result That Would Not Replicate.
 
 **Conversation:** `librarian-research-consultation`. The tutor is a research librarian. Task: describe your topic, narrow it to a question, and leave with two search strategies.
 
@@ -64,7 +64,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-a-paraphrase` Writing a Paraphrase (judged by a model; after `quoting-and-paraphrasing`): a passage restated faithfully in new words and structure, with its citation.
 
-**Reading unit:** `the-ethics-of-knowledge`, 10 passages: a famous fraud; how a paper is retracted; how peer review works; a short history of the footnote; the open access movement; an encyclopedia anyone can edit; a statistic that spread without a source; credit among co-authors; copying in the age of the internet; the honor code.
+**Reading unit:** `the-ethics-of-knowledge`, 8 original essays, the cases invented: The Fraud That Fooled a Field; How a Paper Is Retracted; How Peer Review Works; A Short History of the Footnote; An Encyclopedia Anyone Can Edit; A Statistic Without a Source; Credit Among Co-Authors; Copying and Credit.
 
 **Conversation:** `writing-center-citation-help`. The tutor is a writing center tutor. Task: show where you used a source in a draft, and work out together how to quote or paraphrase and cite it correctly.
 
@@ -80,7 +80,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-a-literature-review` Writing a Literature Review (judged by a model; after `writing-an-annotated-bibliography`, `synthesizing-sources`). `writing-a-research-paper` Writing a Research Paper (judged by a model, W6; after `writing-a-literature-review`, `citing-in-mla-and-apa`, `writing-an-argumentative-essay`).
 
-**Reading unit:** `inside-a-research-paper`, 8 passages that follow one study from start to finish: the question; the literature; the method; the data; the results; the discussion; the limitations; the response of other researchers.
+**Reading unit:** `inside-a-research-paper`, 8 passages that follow one invented study, of green space near schools and children's attention, from start to finish: The Question; The Literature; The Method; The Data; The Results; The Discussion; The Limitations; The Response of Other Researchers.
 
 **Conversation:** `peer-review-workshop`. The tutor is a classmate whose draft you reviewed. Task: give feedback on their thesis and evidence, and answer their questions about your comments.
 
@@ -96,7 +96,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `revising-for-clarity` Revising for Clarity (judged by a model; after `clear-sentences-characters-and-actions`, `revising-a-draft`): a dense paragraph rewritten to be clear without losing its meaning.
 
-**Reading unit:** `essays-on-writing`, 10 original essays on writing: why jargon spreads; plain language in law; the long sentence and the short one; writing for a screen; the passive voice defended; how editors read; style guides and their rules; writing in a second language; the first sentence; revision as rethinking.
+**Reading unit:** `essays-on-writing`, 8 original essays on writing: Why Jargon Spreads; Plain Language in Law; The Long Sentence and the Short; Writing for a Screen; The Passive Voice Defended; How Editors Read; Writing in a Second Language; Revision as Rethinking.
 
 **Conversation:** `editor-style-review`. The tutor is an editor. Task: defend or revise three choices in your paragraph after the editor questions them.
 
@@ -112,7 +112,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-about-data` Writing About Data (judged by a model; after `reading-charts-and-statistics`, `numbers-in-writing`, `writing-an-explanatory-essay`): a paragraph that reports a table or chart accurately and draws only the conclusion it supports.
 
-**Reading unit:** `numbers-in-the-news`, 10 passages, each with a table or figure described in words: a poll before an election; crime rates; the price of housing; screen time; test scores; air pollution; life expectancy; a medical risk; the gender pay gap; a sports statistic.
+**Reading unit:** `numbers-in-the-news`, 8 original articles, each with an invented table or figure described in words: A Poll Before an Election; Crime Rates and What They Count; The Price of a Home; Screen Time and Sleep; Test Scores and Rankings; Air on a Bad Day; A Medical Risk; The Best Shooter in the League.
 
 **Conversation:** `presenting-findings-to-a-panel`. The tutor chairs a panel. Task: present one finding from a small study and answer a question about what the data cannot show.
 
@@ -128,7 +128,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-a-professional-email` Writing a Professional Email (judged by a model; after `tone-and-register-at-work`). `writing-a-memo` Writing a Memo (judged by a model; after `writing-a-professional-email`). `writing-a-cover-letter` Writing a Cover Letter (judged by a model; after `writing-a-professional-email`, `reading-workplace-documents`).
 
-**Reading unit:** `writing-at-work`, 10 passages of model documents with commentary: a request to a manager; a refusal; a meeting summary; a memo on a new policy; a job posting; a cover letter; a complaint and its reply; instructions for a new hire; a report of an incident; a thank-you note.
+**Reading unit:** `writing-at-work`, 8 original model documents, each followed by a commentary: A Request to a Manager; Saying No Well; A Meeting Summary; A Memo on a New Policy; Reading a Job Posting; A Cover Letter; A Complaint and Its Reply; Instructions for a New Hire.
 
 **Conversation:** `job-interview-practice`. The tutor is an interviewer for a job you choose. Task: answer three questions about your experience with specific examples, and ask one question about the job.
 
@@ -144,7 +144,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-an-executive-summary` Writing an Executive Summary (judged by a model; after `writing-a-critical-summary`, `writing-a-memo`). `writing-a-research-proposal` Writing a Research Proposal (judged by a model; after `forming-a-research-question`, `writing-an-executive-summary`).
 
-**Reading unit:** `plans-that-worked`, 8 passages on proposals and what came of them: a grant for a community garden; a school recycling plan; a pitch for a small business; a city's bicycle lanes; a research grant; a library's late hours; a clinic in a village; a plan that failed and why.
+**Reading unit:** `plans-that-worked`, 8 original accounts of proposals and what came of them: A Grant for a Community Garden; A School Recycling Plan; A Pitch for a Small Business; The City That Built Bicycle Lanes; A Research Grant; A Library Open Late; A Clinic in a Village; A Plan That Failed.
 
 **Conversation:** `client-project-meeting`. The tutor is a client who has asked for a proposal. Task: present your plan's aim, schedule and cost, and agree on one change the client asks for.
 
