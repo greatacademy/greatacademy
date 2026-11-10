@@ -13,6 +13,10 @@ import {
   topicSource,
 } from "@ga/content";
 
+// Cloudflare refuses to deploy a Worker without an event handler, even one called only over RPC.
+// Nothing serves these Workers on HTTP, so a request gets 404.
+const unreachable = () => new Response(null, { status: 404 });
+
 /**
  * shardWorker is the Worker entrypoint of a shard: it serves a subject's source
  * for the topics it holds. A subject is split into shards because a single
@@ -26,6 +30,9 @@ export function shardWorker(topics: readonly TopicDef[], checkers: readonly Chec
     return source;
   };
   return class extends WorkerEntrypoint {
+    override fetch() {
+      return unreachable();
+    }
     problems(refs: readonly ProblemRef[]) {
       return held().problems(refs);
     }
@@ -54,6 +61,9 @@ export function gatewayWorker(manifest: SubjectManifest, shards: Readonly<Record
       if (!shard) throw new Error(`no service binding ${binding}`);
       return shard;
     });
+    override fetch() {
+      return unreachable();
+    }
     async listing() {
       return listing;
     }

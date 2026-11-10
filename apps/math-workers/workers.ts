@@ -4,7 +4,12 @@ import { bindings } from "cf/config";
 
 // One request can log in the web Worker, the gateway and a shard. Errors reach the web Worker through RPC, and it logs every
 // request, so these Workers log a sample.
-const common = { compatibilityDate: "2026-10-23", observability: { enabled: true, headSamplingRate: 0.01 } };
+// They are reached only through service bindings, so they have no workers.dev address.
+const common = {
+  compatibilityDate: "2026-10-23",
+  observability: { enabled: true, headSamplingRate: 0.01 },
+  workersDev: false,
+};
 const entry = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 /** shardWorkers are the configurations of the Workers holding the generators of mathematics. */

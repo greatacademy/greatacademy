@@ -3,5 +3,10 @@
 declare module "cloudflare:workers" {
   export class WorkerEntrypoint<Env = unknown> {
     protected env: Env;
+    fetch?(request: unknown): Response | Promise<Response>;
   }
+}
+
+declare class Response {
+  constructor(body: null, init: { status: number });
 }
