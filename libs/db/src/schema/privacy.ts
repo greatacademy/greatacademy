@@ -100,7 +100,7 @@ export const marketLaunch = pgTable("market_launch", {
 });
 
 /** ProviderKind is what a vendor provides. */
-export type ProviderKind = "model" | "speech" | "other";
+export type ProviderKind = "model" | "speech";
 
 /** aiProvider is a configured vendor. keyCipher is encrypted outside the database's knowledge and never leaves the server. */
 export const aiProvider = pgTable("ai_provider", {
@@ -112,7 +112,6 @@ export const aiProvider = pgTable("ai_provider", {
   /** api is the wire protocol pi-ai speaks to the vendor, such as openai-completions. */
   api: text("api").notNull(),
   baseUrl: text("base_url").notNull().default(""),
-  region: text("region").notNull().default(""),
   keyCipher: text("key_cipher"),
   keyHint: text("key_hint"),
   enabled: boolean("enabled").notNull().default(false),
