@@ -6,7 +6,7 @@
 - **级别：** CEFR B1，面向以英语为外语的学习者
 - **先修：** 基础级，或掌握一般过去时、过去进行时、*will* 和 *going to* 表示的将来、现在完成时以及约 1,200 个词
 - **讲解语言：** 界面语言：中文或英语
-- **规模：** 12 个单元 · 119 个知识点（词汇 83 个，语法 18 个，写作 18 个）· 994 个词条，本级结束时累计 2261 个
+- **规模：** 12 个单元 · 120 个知识点（词汇 84 个，语法 18 个，写作 18 个）· 1008 个词条，本级结束时累计 2275 个
 
 ## 目标
 
@@ -39,6 +39,7 @@
 
 **写作**
 
+- `combining-with-conjunctions` 用连词合并句子（规则评判；先修：`subordinating-conjunctions`、`expanding-with-because-but-so`，*已有*）. 用连词合并句子，并正确使用标点。
 - `identifying-topic-sentences` 识别主题句（规则评判；先修：`combining-with-conjunctions`，*已有*）. 找出说明段落主旨的句子。
 - `writing-an-informal-email` 写非正式电子邮件（模型评判；先修：`writing-an-email-to-a-friend`、`present-perfect-or-past-simple`）. 给朋友写一封 100 到 150 词的电子邮件：回答对方的问题，讲讲你的近况，提出一个计划，语气友好。
 
@@ -97,7 +98,6 @@
 
 - `ordering-sentences-in-a-paragraph` 排列段落中的句子（规则评判；先修：`identifying-topic-sentences`，*已有*）. 把段落中的句子按合理的顺序排列。
 - `removing-off-topic-sentences` 删除离题句（规则评判；先修：`identifying-topic-sentences`，*已有*）. 找出不属于这个段落的句子。
-- `combining-with-conjunctions` 用连词合并句子（规则评判；先修：`subordinating-conjunctions`、`expanding-with-because-but-so`，*已有*）. 用连词合并句子，并正确使用标点。
 
 **阅读：** `b1-reading-health`，8 篇：疫苗怎样起作用；关于糖的真相；为第一次马拉松训练；我们为什么需要睡眠和午睡；越来越多的过敏；医院病房的一天；压力与身体；小习惯，大改变。
 
@@ -219,7 +219,7 @@
 - `b1-words-personality` 性格 (12): personality (personalities), character (characters), generous, selfish, shy (shyer, shyest), outgoing, sensitive, sociable, stubborn, mature, easygoing, considerate
 - `b1-words-getting-on` 相处 (12): support (supports, supported, supporting), apologize (apologizes, apologized, apologizing), forgive (forgives, forgave, forgiven, forgiving), admit (admits, admitted, admitting), blame (blames, blamed, blaming), criticize (criticizes, criticized, criticizing), praise (praises, praised, praising), complain (complains, complained, complaining), deserve (deserves, deserved, deserving), quarrel (quarrels, quarreled, quarreling), argument (arguments), disagree (disagrees, disagreed, disagreeing)
 - `b1-words-emotions` 情感 (12): emotion (emotions), emotional, anger, fear (fears), joy, grateful, disappointed, frustrated, confused, ashamed, relieved, annoyed
-- `b1-words-social-life` 社交生活 (12): gathering (gatherings), reunion (reunions), host (hosts), gossip (gossips), touch (touches, touched, touching), accept (accepts, accepted, accepting), refuse (refuses, refused, refusing), attitude (attitudes), opportunity (opportunities), situation (situations), conversation (conversations), topic (topics)
+- `b1-words-social-life` 社交生活 (12): gathering (gatherings), reunion (reunions), visitor (visitors), gossip (gossips), greet (greets, greeted, greeting), accept (accepts, accepted, accepting), refuse (refuses, refused, refusing), attitude (attitudes), opportunity (opportunities), situation (situations), conversation (conversations), topic (topics)
 - `b1-words-life-events` 人生大事 (12): birth (births), adult (adults), teenager (teenagers), teenage, youth, elderly, retirement, funeral (funerals), pregnant, twin (twins), ancestor (ancestors), death
 - `b1-words-family-life` 家庭生活 (12): upbringing, household (households), chore (chores), allowance (allowances), sibling (siblings), nephew (nephews), niece (nieces), grandchild (grandchildren), spouse (spouses), bride (brides), groom (grooms), adopt (adopts, adopted, adopting)
 
@@ -246,14 +246,14 @@
 
 - `b1-words-city-life` 城市生活 (12): urban, rural, suburb (suburbs), downtown, skyscraper (skyscrapers), resident (residents), housing, rent (rents, rented, renting), property (properties), district (districts), facility (facilities), sidewalk (sidewalks)
 - `b1-words-getting-around` 出行 (12): commute (commutes, commuted, commuting), transport (transports), transportation, vehicle (vehicles), pedestrian (pedestrians), cyclist (cyclists), lane (lanes), jam (jams), rush (rushes, rushed, rushing), parking, fare (fares), highway (highways)
-- `b1-words-city-problems` 城市问题 (12): noise, homeless, poverty, shortage (shortages), overcrowded, smog, graffiti, unemployment, congestion, lack (lacks, lacked, lacking), growth, pressure (pressures)
+- `b1-words-city-problems` 城市问题 (12): vandalism, homeless, poverty, shortage (shortages), overcrowded, smog, graffiti, unemployment, congestion, lack (lacks, lacked, lacking), growth, pressure (pressures)
 - `b1-words-directions-2` 位置 (12): opposite, beside, beyond, north, south, east, west, direction (directions), distance (distances), block (blocks), location (locations), nearby
 - `b1-words-buildings` 建筑 (12): architecture, structure (structures), tunnel (tunnels), construction, construct (constructs, constructed, constructing), concrete, steel, brick (bricks), historic, monument (monuments), elevator (elevators), entrance (entrances)
-- `b1-words-city-services` 城市服务 (12): council (councils), mayor (mayors), garbage, hall (halls), stadium (stadiums), cinema (cinemas), pool (pools), fountain (fountains), bench (benches), streetlight (streetlights), tram (trams), cycle (cycles, cycled, cycling)
+- `b1-words-city-services` 城市服务 (12): council (councils), mayor (mayors), garbage, hall (halls), stadium (stadiums), aquarium (aquariums), pool (pools), plaza (plazas), bench (benches), streetlight (streetlights), tram (trams), cycle (cycles, cycled, cycling)
 
 **语法**
 
-- `so-and-such` so 和 such（先修：`adjectives-before-nouns`、`too-and-enough`）. *The city is so crowded. It is such a crowded city.* 单独的形容词前用 *so*，形容词加名词前用 *such a*。
+- `so-and-such` so 和 such（先修：`too-and-enough`，它已蕴含 `adjectives-before-nouns`；教授 *such* 一词）. *The city is so crowded. It is such a crowded city.* 单独的形容词前用 *so*，形容词加名词前用 *such a*。
 - `may-might-and-could` may、might 和 could（先修：`should-and-must`、`b1-words-little-words-4`）. *The bus might be late. It could rain.* 这些词表示某事可能发生，而不是一定发生。
 
 **写作**
@@ -271,16 +271,16 @@
 **词汇**
 
 - `b1-words-science` 科学 (12): theory (theories), atom (atoms), cell (cells), gene (genes), evolution, gravity, oxygen, chemical (chemicals), substance (substances), liquid (liquids), solid (solider, solidest), particle (particles)
-- `b1-words-research` 研究 (12): observe (observes, observed, observing), observation (observations), hypothesis, conclusion (conclusions), result (results), analyze (analyzes, analyzed, analyzing), sample (samples), survey (surveys), investigate (investigates, investigated, investigating), predict (predicts, predicted, predicting), estimate (estimates, estimated, estimating), calculate (calculates, calculated, calculating)
+- `b1-words-research` 研究 (12): observe (observes, observed, observing), observation (observations), hypothesis, conclusion (conclusions), outcome (outcomes), analyze (analyzes, analyzed, analyzing), sample (samples), survey (surveys), investigate (investigates, investigated, investigating), predict (predicts, predicted, predicting), estimate (estimates, estimated, estimating), calculate (calculates, calculated, calculating)
 - `b1-words-space-2` 探索太空 (12): universe (universes), galaxy (galaxies), orbit (orbits, orbited, orbiting), telescope (telescopes), satellite (satellites), spacecraft, mission (missions), launch (launches, launched, launching), astronomer (astronomers), comet (comets), alien (aliens), explorer (explorers)
-- `b1-words-inventions` 发明 (12): steam, telephone (telephones), microscope (microscopes), patent (patents), prototype (prototypes), breakthrough (breakthroughs), genius (geniuses), pioneer (pioneers), innovation (innovations), technique (techniques), tool (tools), brilliant
+- `b1-words-inventions` 发明 (12): steam, telephone (telephones), microscope (microscopes), patent (patents), prototype (prototypes), breakthrough (breakthroughs), genius (geniuses), pioneer (pioneers), innovation (innovations), technique (techniques), invention (inventions), brilliant
 - `b1-words-numbers-and-amounts` 数字与数量 (12): percent, percentage (percentages), average (averages), total (totals), majority (majorities), minority (minorities), double (doubles, doubled, doubling), rate (rates), dozen (dozens), billion (billions), maximum, minimum
-- `b1-words-physics` 力与物质 (12): force (forces), motion, speed (speeds), sound (sounds), magnet (magnets), magnetic, reflect (reflects, reflected, reflecting), mass (masses), volume (volumes), surface (surfaces), layer (layers), element (elements)
+- `b1-words-physics` 力与物质 (12): force (forces), motion, speed (speeds), friction, magnet (magnets), magnetic, reflect (reflects, reflected, reflecting), mass (masses), volume (volumes), surface (surfaces), layer (layers), element (elements)
 - `b1-words-describing-change` 描述变化 (12): gradual, gradually, rapid, rapidly, steady, steadily, slight, slightly, significant, constant, temporary, permanent
 
 **语法**
 
-- `past-perfect` 过去完成时（先修：`past-simple-irregular`、`present-perfect-or-past-simple`）. *When we arrived, the film had started.* *had* 加过去分词表示两个过去事件中较早的那个。
+- `past-perfect` 过去完成时（先修：`present-perfect-or-past-simple`，它已蕴含 `past-simple-irregular`；教授 *hadn't* 一词）. *When we arrived, the film had started.* *had* 加过去分词表示两个过去事件中较早的那个。
 - `verb-tense-consistency` 保持动词时态一致（先修：`simple-verb-tenses`，*已有*）. 一段话中保持同一时间，除非时间确实变了。
 
 **写作**
@@ -343,6 +343,14 @@
 
 **有了音频和录音之后：** 听一段电台评论并判断评论者是否推荐；描述一部你喜欢的电影或书。
 
+### 常用词
+
+各个主题的文章都离不开的常用词，在单元之外以一个额外批次教授；课程把它放在文章最先需要它的单元。
+
+**词汇**
+
+- `b1-words-common-words` 常用词 (12): expert (experts), completely, similar, common, strange, ordinary, hardly, being (beings), feelings, act (acts, acted, acting), behave (behaves, behaved, behaving), recognize (recognizes, recognized, recognizing)
+
 ## 知识点与先修
 
 | 知识点 | 技能 | 单元 | 先修 |
@@ -356,6 +364,7 @@
 | `b1-words-study-skills` | 词汇 | 1 | `b1-words-school-life` |
 | `b1-words-little-words-4` | 词汇 | 1 | `a2-words-little-words-3` |
 | `present-perfect-or-past-simple` | 语法 | 1 | `present-perfect-with-just-already-and-yet`、`past-simple-questions-and-negatives` |
+| `combining-with-conjunctions`（已有） | 写作 | 1 | `subordinating-conjunctions`、`expanding-with-because-but-so` |
 | `identifying-topic-sentences`（已有） | 写作 | 1 | `combining-with-conjunctions` |
 | `writing-an-informal-email` | 写作 | 1 | `writing-an-email-to-a-friend`、`present-perfect-or-past-simple` |
 | `b1-words-applying` | 词汇 | 2 | 无 |
@@ -380,7 +389,6 @@
 | `first-conditional` | 语法 | 3 | `will-for-the-future`、`subordinating-conjunctions` |
 | `ordering-sentences-in-a-paragraph`（已有） | 写作 | 3 | `identifying-topic-sentences` |
 | `removing-off-topic-sentences`（已有） | 写作 | 3 | `identifying-topic-sentences` |
-| `combining-with-conjunctions`（已有） | 写作 | 3 | `subordinating-conjunctions`、`expanding-with-because-but-so` |
 | `b1-words-environment` | 词汇 | 4 | 无 |
 | `b1-words-nature-2` | 词汇 | 4 | 无 |
 | `b1-words-green-living` | 词汇 | 4 | 无 |
@@ -437,7 +445,7 @@
 | `b1-words-directions-2` | 词汇 | 9 | 无 |
 | `b1-words-buildings` | 词汇 | 9 | 无 |
 | `b1-words-city-services` | 词汇 | 9 | 无 |
-| `so-and-such` | 语法 | 9 | `adjectives-before-nouns`、`too-and-enough` |
+| `so-and-such` | 语法 | 9 | `too-and-enough` |
 | `may-might-and-could` | 语法 | 9 | `should-and-must`、`b1-words-little-words-4` |
 | `writing-a-how-to-paragraph`（已有） | 写作 | 9 | `writing-a-paragraph` |
 | `b1-words-science` | 词汇 | 10 | 无 |
@@ -447,7 +455,7 @@
 | `b1-words-numbers-and-amounts` | 词汇 | 10 | 无 |
 | `b1-words-physics` | 词汇 | 10 | 无 |
 | `b1-words-describing-change` | 词汇 | 10 | 无 |
-| `past-perfect` | 语法 | 10 | `past-simple-irregular`、`present-perfect-or-past-simple` |
+| `past-perfect` | 语法 | 10 | `present-perfect-or-past-simple` |
 | `verb-tense-consistency`（已有） | 语法 | 10 | `simple-verb-tenses` |
 | `summarizing-a-text` | 写作 | 10 | `writing-a-paragraph` |
 | `b1-words-personal-finance` | 词汇 | 11 | 无 |
@@ -466,3 +474,4 @@
 | `b1-words-going-out` | 词汇 | 12 | 无 |
 | `phrasal-verbs` | 语法 | 12 | `b1-words-little-words-5`、`present-perfect-or-past-simple` |
 | `writing-a-review` | 写作 | 12 | `writing-an-opinion-paragraph` |
+| `b1-words-common-words` | 词汇 | 额外 | `a2-words-everyday-ideas` |

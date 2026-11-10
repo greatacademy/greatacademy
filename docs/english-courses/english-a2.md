@@ -314,7 +314,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 ### Everyday Words
 
-Words so common that passages of every theme need them, taught in four extra batches beside the units; each course places them where it needs them.
+Words so common that passages of every theme need them, taught in four extra batches beside the units. The course places them in the units whose passages first need them: Family, Food and Measures in unit 1, Where, Who and What Shape in unit 3, Sounds and Messages in unit 10, and Everyday Ideas in unit 12.
 
 **Vocabulary**
 
@@ -415,7 +415,7 @@ Words so common that passages of every theme need them, taught in four extra bat
 | `a2-words-ambitions` | vocabulary | 12 | `a2-words-work-life` |
 | `subject-and-object-questions` | grammar | 12 | `wh-questions`, `past-simple-questions-and-negatives` |
 | `writing-about-your-dream-job` | writing | 12 | `writing-about-future-plans`, `expanding-with-because-but-so` |
-| `a2-words-positions-and-shapes` | vocabulary | extra | `a1-words-things-at-home` |
-| `a2-words-sounds-and-messages` | vocabulary | extra | `a2-words-communication` |
-| `a2-words-family-food-and-measures` | vocabulary | extra | `a1-words-numbers-to-hundred` |
-| `a2-words-everyday-ideas` | vocabulary | extra | `a2-words-useful-words` |
+| `a2-words-positions-and-shapes` | vocabulary | 3 | `a1-words-things-at-home` |
+| `a2-words-sounds-and-messages` | vocabulary | 10 | `a2-words-communication` |
+| `a2-words-family-food-and-measures` | vocabulary | 1 | `a1-words-numbers-to-hundred` |
+| `a2-words-everyday-ideas` | vocabulary | 12 | `a2-words-useful-words` |

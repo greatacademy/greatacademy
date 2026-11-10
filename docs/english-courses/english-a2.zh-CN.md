@@ -314,7 +314,7 @@
 
 ### 常用词
 
-各个主题的文章都离不开的常用词，在单元之外分四个额外批次教授；课程在需要的地方安排它们。
+各个主题的文章都离不开的常用词，在单元之外分四个额外批次教授。课程把它们放在文章最先需要它们的单元：家人、食物和度量在第 1 单元，在哪里、谁和什么形状在第 3 单元，声音和信息在第 10 单元，日常概念在第 12 单元。
 
 **词汇**
 
@@ -415,7 +415,7 @@
 | `a2-words-ambitions` | 词汇 | 12 | `a2-words-work-life` |
 | `subject-and-object-questions` | 语法 | 12 | `wh-questions`、`past-simple-questions-and-negatives` |
 | `writing-about-your-dream-job` | 写作 | 12 | `writing-about-future-plans`、`expanding-with-because-but-so` |
-| `a2-words-positions-and-shapes` | 词汇 | 额外 | `a1-words-things-at-home` |
-| `a2-words-sounds-and-messages` | 词汇 | 额外 | `a2-words-communication` |
-| `a2-words-family-food-and-measures` | 词汇 | 额外 | `a1-words-numbers-to-hundred` |
-| `a2-words-everyday-ideas` | 词汇 | 额外 | `a2-words-useful-words` |
+| `a2-words-positions-and-shapes` | 词汇 | 3 | `a1-words-things-at-home` |
+| `a2-words-sounds-and-messages` | 词汇 | 10 | `a2-words-communication` |
+| `a2-words-family-food-and-measures` | 词汇 | 1 | `a1-words-numbers-to-hundred` |
+| `a2-words-everyday-ideas` | 词汇 | 12 | `a2-words-useful-words` |

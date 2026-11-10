@@ -8,7 +8,13 @@ const units: readonly UnitDef[] = [
   levelUnit(
     t("All About Me", "关于我"),
     {
-      words: ["a1-words-numbers-to-hundred", "a1-words-about-me", "a1-words-feelings", "a1-words-everyday-words"],
+      words: [
+        "a1-words-numbers-to-hundred",
+        "a1-words-about-me",
+        "a1-words-feelings",
+        "a1-words-everyday-words",
+        "a1-words-little-words-3",
+      ],
       grammar: ["present-simple"],
     },
     "a1-reading-all-about-me",
@@ -27,7 +33,7 @@ const units: readonly UnitDef[] = [
   levelUnit(
     t("Time and Dates", "时间和日期"),
     {
-      words: ["a1-words-time", "a1-words-days", "a1-words-months", "a1-words-dates"],
+      words: ["a1-words-time", "a1-words-days", "a1-words-months", "a1-words-dates", "a1-words-ordinals"],
       grammar: ["prepositions-of-time"],
       writing: ["writing-capital-letters-for-names"],
     },

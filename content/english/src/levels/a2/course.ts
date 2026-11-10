@@ -8,7 +8,14 @@ const units: readonly UnitDef[] = [
   levelUnit(
     t("Last Weekend", "上个周末"),
     {
-      words: ["a2-words-past-time", "a2-words-relatives", "a2-words-events", "a2-words-weekend", "a2-words-useful-words"],
+      words: [
+        "a2-words-past-time",
+        "a2-words-relatives",
+        "a2-words-events",
+        "a2-words-weekend",
+        "a2-words-useful-words",
+        "a2-words-family-food-and-measures",
+      ],
       grammar: ["past-simple-regular", "past-simple-irregular", "past-simple-questions-and-negatives"],
       writing: ["writing-sentences-in-the-past", "writing-about-your-weekend"],
     },
@@ -34,6 +41,7 @@ const units: readonly UnitDef[] = [
         "a2-words-people-around",
         "a2-words-describing-places",
         "a2-words-pronouns",
+        "a2-words-positions-and-shapes",
       ],
       grammar: ["comparatives-and-superlatives", "possessive-pronouns", "apostrophes-and-possessives"],
       writing: ["writing-comparisons", "writing-a-description-of-a-place"],
@@ -104,7 +112,7 @@ const units: readonly UnitDef[] = [
   levelUnit(
     t("Technology", "科技"),
     {
-      words: ["a2-words-technology", "a2-words-using-tech", "a2-words-communication", "a2-words-machines"],
+      words: ["a2-words-technology", "a2-words-using-tech", "a2-words-communication", "a2-words-machines", "a2-words-sounds-and-messages"],
       grammar: ["present-perfect-with-just-already-and-yet"],
       writing: ["writing-an-email-to-a-friend"],
     },
@@ -124,7 +132,7 @@ const units: readonly UnitDef[] = [
   levelUnit(
     t("Jobs and Dreams", "工作和梦想"),
     {
-      words: ["a2-words-jobs-2", "a2-words-work-life", "a2-words-ambitions"],
+      words: ["a2-words-jobs-2", "a2-words-work-life", "a2-words-ambitions", "a2-words-everyday-ideas"],
       grammar: ["subject-and-object-questions"],
       writing: ["writing-about-your-dream-job"],
     },
@@ -139,8 +147,8 @@ export const courses: readonly CourseDef[] = [
     id: "english-a2",
     title: t("English A2", "英语 A2"),
     description: t(
-      "The third course for learners of English as a foreign language, after A1: about 590 new words in twelve units. Themed units on last weekend, health, the neighborhood, cooking, sport, animals, travel, the natural world, shopping, technology, festivals and jobs teach the past simple and continuous, should, must and have to, comparisons, going to and will, the present perfect with ever, never, just, already and yet, too and enough, verbs with to, linking words and questions about the subject, with emails, recipes, stories, invitations and descriptions to write and stories, emails and simple articles to read on each theme.",
-      "面向把英语作为外语学习者的第三门课程，接在 A1 之后：十二个单元约 590 个新单词。主题单元涵盖上个周末、健康、邻里、烹饪、运动、动物、旅行、自然世界、购物、科技、节日和职业，教授一般过去时和过去进行时、should、must 和 have to、比较级、going to 和 will、与 ever、never、just、already 和 yet 连用的现在完成时、too 和 enough、接 to 的动词、连接词以及对主语提问；每个主题都有邮件、食谱、故事、邀请和描述要写，也有故事、邮件和简单的文章供阅读。",
+      "The third course for learners of English as a foreign language, after A1: about 630 new words in twelve units. Themed units on last weekend, health, the neighborhood, cooking, sport, animals, travel, the natural world, shopping, technology, festivals and jobs teach the past simple and continuous, should, must and have to, comparisons, going to and will, the present perfect with ever, never, just, already and yet, too and enough, verbs with to, linking words and questions about the subject, with emails, recipes, stories, invitations and descriptions to write and stories, emails and simple articles to read on each theme.",
+      "面向把英语作为外语学习者的第三门课程，接在 A1 之后：十二个单元约 630 个新单词。主题单元涵盖上个周末、健康、邻里、烹饪、运动、动物、旅行、自然世界、购物、科技、节日和职业，教授一般过去时和过去进行时、should、must 和 have to、比较级、going to 和 will、与 ever、never、just、already 和 yet 连用的现在完成时、too 和 enough、接 to 的动词、连接词以及对主语提问；每个主题都有邮件、食谱、故事、邀请和描述要写，也有故事、邮件和简单的文章供阅读。",
     ),
     group: t("English as a Foreign Language", "英语（外语）"),
     buildsOn: ["english-a1"],

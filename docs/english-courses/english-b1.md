@@ -6,7 +6,7 @@
 - **Level:** CEFR B1, for learners of English as a foreign language
 - **Prerequisite(s):** A2, or the past simple and continuous, the future with *will* and *going to*, the present perfect, and about 1,200 words
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 119 topics (83 of vocabulary, 18 of grammar, 18 of writing) · 994 headwords, 2261 by the end of the level
+- **Size:** 12 units · 120 topics (84 of vocabulary, 18 of grammar, 18 of writing) · 1008 headwords, 2275 by the end of the level
 
 ## Aim
 
@@ -39,6 +39,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Writing**
 
+- `combining-with-conjunctions` Combining with Conjunctions (judged by rules; after `subordinating-conjunctions`, `expanding-with-because-but-so`, *existing*). Join sentences with conjunctions and punctuate them correctly.
 - `identifying-topic-sentences` Identifying Topic Sentences (judged by rules; after `combining-with-conjunctions`, *existing*). Find the sentence that states what a paragraph is about.
 - `writing-an-informal-email` Writing an Informal Email (judged by a model; after `writing-an-email-to-a-friend`, `present-perfect-or-past-simple`). Write an email of 100 to 150 words to a friend that answers their questions, gives your news and suggests a plan, in a friendly tone.
 
@@ -97,7 +98,6 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `ordering-sentences-in-a-paragraph` Ordering Sentences in a Paragraph (judged by rules; after `identifying-topic-sentences`, *existing*). Put the sentences of a paragraph in a logical order.
 - `removing-off-topic-sentences` Removing Off-Topic Sentences (judged by rules; after `identifying-topic-sentences`, *existing*). Find the sentence that does not belong in a paragraph.
-- `combining-with-conjunctions` Combining with Conjunctions (judged by rules; after `subordinating-conjunctions`, `expanding-with-because-but-so`, *existing*). Join sentences with conjunctions and punctuate them correctly.
 
 **Reading:** `b1-reading-health`, 8 passages: How vaccines work; The truth about sugar; Training for a first marathon; Why we need sleep and naps; Allergies on the rise; A day in a hospital ward; Stress and the body; Small habits, big changes.
 
@@ -219,7 +219,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 - `b1-words-personality` Personality (12): personality (personalities), character (characters), generous, selfish, shy (shyer, shyest), outgoing, sensitive, sociable, stubborn, mature, easygoing, considerate
 - `b1-words-getting-on` Getting On (12): support (supports, supported, supporting), apologize (apologizes, apologized, apologizing), forgive (forgives, forgave, forgiven, forgiving), admit (admits, admitted, admitting), blame (blames, blamed, blaming), criticize (criticizes, criticized, criticizing), praise (praises, praised, praising), complain (complains, complained, complaining), deserve (deserves, deserved, deserving), quarrel (quarrels, quarreled, quarreling), argument (arguments), disagree (disagrees, disagreed, disagreeing)
 - `b1-words-emotions` Emotions (12): emotion (emotions), emotional, anger, fear (fears), joy, grateful, disappointed, frustrated, confused, ashamed, relieved, annoyed
-- `b1-words-social-life` Social Life (12): gathering (gatherings), reunion (reunions), host (hosts), gossip (gossips), touch (touches, touched, touching), accept (accepts, accepted, accepting), refuse (refuses, refused, refusing), attitude (attitudes), opportunity (opportunities), situation (situations), conversation (conversations), topic (topics)
+- `b1-words-social-life` Social Life (12): gathering (gatherings), reunion (reunions), visitor (visitors), gossip (gossips), greet (greets, greeted, greeting), accept (accepts, accepted, accepting), refuse (refuses, refused, refusing), attitude (attitudes), opportunity (opportunities), situation (situations), conversation (conversations), topic (topics)
 - `b1-words-life-events` Life Events (12): birth (births), adult (adults), teenager (teenagers), teenage, youth, elderly, retirement, funeral (funerals), pregnant, twin (twins), ancestor (ancestors), death
 - `b1-words-family-life` Family Life (12): upbringing, household (households), chore (chores), allowance (allowances), sibling (siblings), nephew (nephews), niece (nieces), grandchild (grandchildren), spouse (spouses), bride (brides), groom (grooms), adopt (adopts, adopted, adopting)
 
@@ -246,14 +246,14 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 - `b1-words-city-life` City Life (12): urban, rural, suburb (suburbs), downtown, skyscraper (skyscrapers), resident (residents), housing, rent (rents, rented, renting), property (properties), district (districts), facility (facilities), sidewalk (sidewalks)
 - `b1-words-getting-around` Getting Around (12): commute (commutes, commuted, commuting), transport (transports), transportation, vehicle (vehicles), pedestrian (pedestrians), cyclist (cyclists), lane (lanes), jam (jams), rush (rushes, rushed, rushing), parking, fare (fares), highway (highways)
-- `b1-words-city-problems` City Problems (12): noise, homeless, poverty, shortage (shortages), overcrowded, smog, graffiti, unemployment, congestion, lack (lacks, lacked, lacking), growth, pressure (pressures)
+- `b1-words-city-problems` City Problems (12): vandalism, homeless, poverty, shortage (shortages), overcrowded, smog, graffiti, unemployment, congestion, lack (lacks, lacked, lacking), growth, pressure (pressures)
 - `b1-words-directions-2` Location (12): opposite, beside, beyond, north, south, east, west, direction (directions), distance (distances), block (blocks), location (locations), nearby
 - `b1-words-buildings` Buildings (12): architecture, structure (structures), tunnel (tunnels), construction, construct (constructs, constructed, constructing), concrete, steel, brick (bricks), historic, monument (monuments), elevator (elevators), entrance (entrances)
-- `b1-words-city-services` City Services (12): council (councils), mayor (mayors), garbage, hall (halls), stadium (stadiums), cinema (cinemas), pool (pools), fountain (fountains), bench (benches), streetlight (streetlights), tram (trams), cycle (cycles, cycled, cycling)
+- `b1-words-city-services` City Services (12): council (councils), mayor (mayors), garbage, hall (halls), stadium (stadiums), aquarium (aquariums), pool (pools), plaza (plazas), bench (benches), streetlight (streetlights), tram (trams), cycle (cycles, cycled, cycling)
 
 **Grammar**
 
-- `so-and-such` So and Such (after `adjectives-before-nouns`, `too-and-enough`). *The city is so crowded. It is such a crowded city.* *So* before an adjective alone, *such a* before an adjective with a noun.
+- `so-and-such` So and Such (after `too-and-enough`, which already implies `adjectives-before-nouns`; it teaches the word *such*). *The city is so crowded. It is such a crowded city.* *So* before an adjective alone, *such a* before an adjective with a noun.
 - `may-might-and-could` May, Might and Could (after `should-and-must`, `b1-words-little-words-4`). *The bus might be late. It could rain.* These say that something is possible, not certain.
 
 **Writing**
@@ -271,16 +271,16 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 **Vocabulary**
 
 - `b1-words-science` Science (12): theory (theories), atom (atoms), cell (cells), gene (genes), evolution, gravity, oxygen, chemical (chemicals), substance (substances), liquid (liquids), solid (solider, solidest), particle (particles)
-- `b1-words-research` Research (12): observe (observes, observed, observing), observation (observations), hypothesis, conclusion (conclusions), result (results), analyze (analyzes, analyzed, analyzing), sample (samples), survey (surveys), investigate (investigates, investigated, investigating), predict (predicts, predicted, predicting), estimate (estimates, estimated, estimating), calculate (calculates, calculated, calculating)
+- `b1-words-research` Research (12): observe (observes, observed, observing), observation (observations), hypothesis, conclusion (conclusions), outcome (outcomes), analyze (analyzes, analyzed, analyzing), sample (samples), survey (surveys), investigate (investigates, investigated, investigating), predict (predicts, predicted, predicting), estimate (estimates, estimated, estimating), calculate (calculates, calculated, calculating)
 - `b1-words-space-2` Exploring Space (12): universe (universes), galaxy (galaxies), orbit (orbits, orbited, orbiting), telescope (telescopes), satellite (satellites), spacecraft, mission (missions), launch (launches, launched, launching), astronomer (astronomers), comet (comets), alien (aliens), explorer (explorers)
-- `b1-words-inventions` Inventions (12): steam, telephone (telephones), microscope (microscopes), patent (patents), prototype (prototypes), breakthrough (breakthroughs), genius (geniuses), pioneer (pioneers), innovation (innovations), technique (techniques), tool (tools), brilliant
+- `b1-words-inventions` Inventions (12): steam, telephone (telephones), microscope (microscopes), patent (patents), prototype (prototypes), breakthrough (breakthroughs), genius (geniuses), pioneer (pioneers), innovation (innovations), technique (techniques), invention (inventions), brilliant
 - `b1-words-numbers-and-amounts` Numbers and Amounts (12): percent, percentage (percentages), average (averages), total (totals), majority (majorities), minority (minorities), double (doubles, doubled, doubling), rate (rates), dozen (dozens), billion (billions), maximum, minimum
-- `b1-words-physics` Forces and Matter (12): force (forces), motion, speed (speeds), sound (sounds), magnet (magnets), magnetic, reflect (reflects, reflected, reflecting), mass (masses), volume (volumes), surface (surfaces), layer (layers), element (elements)
+- `b1-words-physics` Forces and Matter (12): force (forces), motion, speed (speeds), friction, magnet (magnets), magnetic, reflect (reflects, reflected, reflecting), mass (masses), volume (volumes), surface (surfaces), layer (layers), element (elements)
 - `b1-words-describing-change` Describing Change (12): gradual, gradually, rapid, rapidly, steady, steadily, slight, slightly, significant, constant, temporary, permanent
 
 **Grammar**
 
-- `past-perfect` The Past Perfect (after `past-simple-irregular`, `present-perfect-or-past-simple`). *When we arrived, the film had started.* *Had* with a past participle is for the earlier of two past events.
+- `past-perfect` The Past Perfect (after `present-perfect-or-past-simple`, which already implies `past-simple-irregular`; it teaches the word *hadn't*). *When we arrived, the film had started.* *Had* with a past participle is for the earlier of two past events.
 - `verb-tense-consistency` Keeping Verb Tense Consistent (after `simple-verb-tenses`, *existing*). Keep one time in a passage unless the time really changes.
 
 **Writing**
@@ -343,6 +343,14 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Later, with audio and recording:** Listening to a radio review and saying whether the critic recommends the show; describing a film or book you liked.
 
+### Everyday Words
+
+Words so common that passages of every theme need them, taught in an extra batch beside the units; the course places it in the unit whose passages first need it.
+
+**Vocabulary**
+
+- `b1-words-common-words` Common Words (12): expert (experts), completely, similar, common, strange, ordinary, hardly, being (beings), feelings, act (acts, acted, acting), behave (behaves, behaved, behaving), recognize (recognizes, recognized, recognizing)
+
 ## Topics and Prerequisites
 
 | Topic | Strand | Unit | Prerequisites |
@@ -356,6 +364,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b1-words-study-skills` | vocabulary | 1 | `b1-words-school-life` |
 | `b1-words-little-words-4` | vocabulary | 1 | `a2-words-little-words-3` |
 | `present-perfect-or-past-simple` | grammar | 1 | `present-perfect-with-just-already-and-yet`, `past-simple-questions-and-negatives` |
+| `combining-with-conjunctions` (existing) | writing | 1 | `subordinating-conjunctions`, `expanding-with-because-but-so` |
 | `identifying-topic-sentences` (existing) | writing | 1 | `combining-with-conjunctions` |
 | `writing-an-informal-email` | writing | 1 | `writing-an-email-to-a-friend`, `present-perfect-or-past-simple` |
 | `b1-words-applying` | vocabulary | 2 | none |
@@ -380,7 +389,6 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `first-conditional` | grammar | 3 | `will-for-the-future`, `subordinating-conjunctions` |
 | `ordering-sentences-in-a-paragraph` (existing) | writing | 3 | `identifying-topic-sentences` |
 | `removing-off-topic-sentences` (existing) | writing | 3 | `identifying-topic-sentences` |
-| `combining-with-conjunctions` (existing) | writing | 3 | `subordinating-conjunctions`, `expanding-with-because-but-so` |
 | `b1-words-environment` | vocabulary | 4 | none |
 | `b1-words-nature-2` | vocabulary | 4 | none |
 | `b1-words-green-living` | vocabulary | 4 | none |
@@ -437,7 +445,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b1-words-directions-2` | vocabulary | 9 | none |
 | `b1-words-buildings` | vocabulary | 9 | none |
 | `b1-words-city-services` | vocabulary | 9 | none |
-| `so-and-such` | grammar | 9 | `adjectives-before-nouns`, `too-and-enough` |
+| `so-and-such` | grammar | 9 | `too-and-enough` |
 | `may-might-and-could` | grammar | 9 | `should-and-must`, `b1-words-little-words-4` |
 | `writing-a-how-to-paragraph` (existing) | writing | 9 | `writing-a-paragraph` |
 | `b1-words-science` | vocabulary | 10 | none |
@@ -447,7 +455,7 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b1-words-numbers-and-amounts` | vocabulary | 10 | none |
 | `b1-words-physics` | vocabulary | 10 | none |
 | `b1-words-describing-change` | vocabulary | 10 | none |
-| `past-perfect` | grammar | 10 | `past-simple-irregular`, `present-perfect-or-past-simple` |
+| `past-perfect` | grammar | 10 | `present-perfect-or-past-simple` |
 | `verb-tense-consistency` (existing) | grammar | 10 | `simple-verb-tenses` |
 | `summarizing-a-text` | writing | 10 | `writing-a-paragraph` |
 | `b1-words-personal-finance` | vocabulary | 11 | none |
@@ -466,3 +474,4 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 | `b1-words-going-out` | vocabulary | 12 | none |
 | `phrasal-verbs` | grammar | 12 | `b1-words-little-words-5`, `present-perfect-or-past-simple` |
 | `writing-a-review` | writing | 12 | `writing-an-opinion-paragraph` |
+| `b1-words-common-words` | vocabulary | extra | `a2-words-everyday-ideas` |

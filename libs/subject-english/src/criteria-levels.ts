@@ -291,4 +291,110 @@ export const LEVEL_CRITERIA: readonly CriterionSpec[] = [
       "Does the article speak to its readers, for example as you, and end with something for them, such as advice, a question or an invitation?",
     quoteWhenMet: true,
   },
+  // B1: a story.
+  {
+    id: "b1-story-shape",
+    version: "1",
+    question:
+      "Does the story begin with the sentence the task gives and go on from it, with a beginning that sets the scene, a problem or a surprise in the middle, and an ending that tells how it turned out?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b1-story-past-tenses",
+    version: "1",
+    question:
+      "Is the story told in the past throughout, with the past simple for the main events and the past continuous or the past perfect where they fit, and without slipping into the present for the events?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-story-details",
+    version: "1",
+    question:
+      "Does the story bring its events to life with details of what people saw, felt or said, such as a description, a feeling or a line of speech in quotation marks?",
+    quoteWhenMet: true,
+  },
+  // B1: a letter of advice.
+  {
+    id: "b1-advice-understanding",
+    version: "1",
+    question: "Does the reply show near its start that the writer understands the problem in the letter and how its writer feels?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-advice-with-reasons",
+    version: "1",
+    question:
+      "Does the reply give at least two different pieces of advice that fit the problem, each with a reason or a likely result, using forms such as I think you should, Why don't you or If you…?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-advice-kind-ending",
+    version: "1",
+    question: "Does the reply end kindly, with hope or encouragement for the writer of the letter, before the writer's name?",
+    quoteWhenMet: true,
+  },
+  // B1: a summary.
+  {
+    id: "b1-summary-main-point",
+    version: "1",
+    question:
+      "Does the summary state the main point of the whole source text, usually near its start, so that a reader who has not read the text knows what it is about?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-summary-key-details",
+    version: "1",
+    question:
+      "Does the summary include the key facts, steps or reasons of the source text, leave out minor examples and repetition, and add no opinion or information that is not in the source?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "b1-summary-own-words",
+    version: "1",
+    question:
+      "Is the summary written mostly in the writer's own words, without copying whole sentences or long phrases of the source text?",
+    quoteWhenMet: false,
+  },
+  // B1: a letter of complaint.
+  {
+    id: "b1-complaint-what-happened",
+    version: "1",
+    question:
+      "Does the letter say near its start what it complains about, and then describe what happened with facts such as dates, places, prices or what the writer has already done?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-complaint-why-a-problem",
+    version: "1",
+    question: "Does the letter explain why what happened is a problem for the writer?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-complaint-what-you-want",
+    version: "1",
+    question:
+      "Does the letter say clearly and politely what the writer wants the reader to do, such as a refund, a repair, a replacement or an explanation?",
+    quoteWhenMet: true,
+  },
+  // B1: a review.
+  {
+    id: "b1-review-what-it-is",
+    version: "1",
+    question:
+      "Does the review say near its start what it reviews, with its name and kind, such as a film, a book, a show or an exhibition, and briefly what it is about without giving away the ending?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-review-good-and-bad",
+    version: "1",
+    question:
+      "Does the review describe at least one good point and at least one weaker point, each with a reason or an example, using describing words such as dramatic, dull, original or impressive?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "b1-review-recommendation",
+    version: "1",
+    question: "Does the review end by saying clearly whether the writer recommends it and to whom, or for what kind of person?",
+    quoteWhenMet: true,
+  },
 ];
