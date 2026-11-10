@@ -199,7 +199,7 @@ Korea lists student evaluation as high-impact. The same logic is why AI that sco
 **Text.**
 
 - **Prompts avoid personal topics.** Items ask about the given text or a made-up situation, not "describe your family".
-- **Filter first.** Before text leaves the platform or reaches a person, emails, phone numbers, addresses, handles and likely names are replaced with placeholders. The filter is checked on samples in each language before launch. It will miss some, so a miss is not treated as harmless.
+- **Filter first.** Before text leaves the platform or reaches a person, emails, phone numbers, addresses, handles and likely names are replaced with placeholders. The filter is `redact` in `libs/judge`, which every judgment and calibration applies; it takes a name only after a phrase that introduces one, such as *my name is* or 我叫, and in Chinese keeps the street and removes the number. The filter is checked on samples in each language before launch. It will miss some, so a miss is not treated as harmless.
 - **Model calls.** Only vendors of §12, no gateway logging of the text, no caching. The prompt holds the filtered text and no account data.
 - **Events hold no text.** Replay needs scores, so the event log stores ids and scores. The response lives in `answer`, or a writing table, where it can expire without touching the learner's state.
 - **People who read text.** Pilot reports aggregate responses with no learner identity. Staff access is approved and logged.

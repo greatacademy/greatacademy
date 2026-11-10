@@ -3,6 +3,7 @@ import type { TelemetrySpan } from "@earendil-works/pi-telemetry";
 import type { CriterionDef } from "./criteria.ts";
 import type { JudgeTask } from "./prompt.ts";
 import { promptFor } from "./prompt.ts";
+import { redact } from "./redact.ts";
 import { RESPOND_TOOL, type RespondArgs } from "./respond.ts";
 
 /** MAX_TEXT_CHARS is the longest learner text sent to a judge; longer text is refused before any call. */
@@ -112,14 +113,17 @@ export function checkArgs(args: RespondArgs, request: JudgeRequest): Pick<Verdic
 
 /**
  * judge asks one model for a verdict through pi-ai and checks it. The learner's
- * text goes in a fenced block of the user message, never in the system prompt.
+ * text, with personal data replaced by redact, goes in a fenced block of the
+ * user message, never in the system prompt.
  * Every quotation must be found in the text, or the answer is rejected, so a
  * judge cannot show a learner words they never wrote.
  */
 export async function judge(models: Models, model: Model<Api>, request: JudgeRequest, options: JudgeOptions = {}): Promise<Verdict> {
   if (request.criteria.length === 0) throw new Error("no criteria to judge");
   if (request.text.length > MAX_TEXT_CHARS) throw new Error("the text is too long to judge");
-  const built = promptFor(request.promptVersion)(request.task, request.criteria, request.text);
+  // The model sees, and quotes from, the text with personal data replaced.
+  const filtered = { ...request, text: redact(request.text) };
+  const built = promptFor(request.promptVersion)(request.task, request.criteria, filtered.text);
   const message = await models.complete(
     model,
     {
@@ -148,7 +152,7 @@ export async function judge(models: Models, model: Model<Api>, request: JudgeReq
       // The validation message repeats the arguments, which may quote the learner, so it is not kept.
       throw new JudgeRejected("invalid-arguments", "the respond arguments do not fit the schema", true);
     }
-    return { ...checkArgs(args, request), model: model.id, promptVersion: request.promptVersion, usage };
+    return { ...checkArgs(args, filtered), model: model.id, promptVersion: request.promptVersion, usage };
   } catch (e) {
     if (e instanceof JudgeRejected) e.usage = usage;
     throw e;

@@ -180,6 +180,25 @@ describe("configure", () => {
     }
   });
 
+  it("sends the model the learner's text with personal data replaced", async () => {
+    const bodies: string[] = [];
+    const real = globalThis.fetch;
+    globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+      bodies.push(input instanceof Request ? await input.text() : String(init?.body));
+      return new Response(JSON.stringify({ error: { message: "stopped by the test" } }), { status: 400 });
+    }) as typeof fetch;
+    try {
+      const { models, model } = configure({ id: "p1", name: "Vendor", api: "openai-completions", baseUrl: "", apiKey: "k" }, "m");
+      const text = "Dogs make good pets. My name is Anna Lee, write to anna@example.com.";
+      await expect(judge(models, model, { ...request, text })).rejects.toThrow();
+      expect(bodies[0]).toContain("My name is [name], write to [email].");
+      expect(bodies[0]).not.toContain("anna@example.com");
+      expect(bodies[0]).not.toContain("Anna Lee");
+    } finally {
+      globalThis.fetch = real;
+    }
+  });
+
   it("refuses an api it does not know", () => {
     expect(() => configure({ id: "p1", name: "Vendor", api: "smoke-signals", baseUrl: "", apiKey: "k" }, "m")).toThrow("unsupported api");
   });

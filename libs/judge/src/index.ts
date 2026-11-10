@@ -4,4 +4,5 @@ export * from "./injection.ts";
 export * from "./judge.ts";
 export * from "./prompt.ts";
 export * from "./provider.ts";
+export * from "./redact.ts";
 export * from "./respond.ts";
