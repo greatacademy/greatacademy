@@ -211,7 +211,7 @@ export const rhetoricComposition: CourseDef = {
       modules: [{ title: t("Writing from Texts", "依据文本写作"), topics: ["writing-a-rhetorical-analysis", "synthesizing-sources"] }],
     },
   ],
-  reading: ["voices-of-persuasion"],
+  reading: ["voices-of-persuasion", "the-writers-craft"],
   buildsOn: ["english-literature-argument"],
 };
 

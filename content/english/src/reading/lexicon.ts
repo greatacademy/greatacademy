@@ -162,6 +162,14 @@ sets seven-year-old shopping sixteen sixty speaker speaking stands state station
 studies subject succeed summary supporter taught teammate tear tenth tenth-grade tested theater tight titled
 treats university university's upsets upsetting urge useless vote votes warned week's wise woman youngest
 yours
+adventure agreed although ana appeared basketball bea bea's bills booked brushed calls children's clocks
+college comfortable cooked counter cousins crying dancing daniel december died drawer drawings dreamed earlier
+eighteen except father's final flew flight fourteen game glasses goodbye grandma hated icarus joking jonah
+kayla laughing laughter lead lemon length leo loudest mira miserable mornings mother's myself neck nineteen
+nora notes november october offered ortiz paint perfect placed players pouring promised rather refused
+riverside ruined runners sadness sam sam's saying sent september seventy shop silence slid slipped smallest
+softly speak spoke strict thinks threw tool train traveler trusted twentieth warning washes watered watering
+wedding wing worried
 `;
 
 /** academic are the academic words that the passages use, with their spellings. */

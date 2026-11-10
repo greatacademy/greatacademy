@@ -4,6 +4,7 @@ import type { ReadingUnitDef, TopicDef } from "@ga/content";
 import { howAnimalsSurvive } from "../reading/animals.ts";
 import { makingTheCase } from "../reading/arguments.ts";
 import { theHumanBody } from "../reading/body.ts";
+import { theWritersCraft } from "../reading/craft.ts";
 import { ourChangingEarth } from "../reading/earth.ts";
 import { lifeOnTheNile } from "../reading/nile.ts";
 import { howPlantsLive } from "../reading/plants.ts";
@@ -64,4 +65,5 @@ export const coreShardReading: readonly ReadingUnitDef[] = [
   talesAndPoems,
   makingTheCase,
   voicesOfPersuasion,
+  theWritersCraft,
 ];

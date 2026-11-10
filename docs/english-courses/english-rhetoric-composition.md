@@ -45,6 +45,7 @@ The topics of unit 3 are judged by a model; a learner whom no route may serve go
 
 ## Reading
 
-One knowledge unit of original passages, offered as its topics are learned:
+Two knowledge units of original passages, offered as each one's topics are learned:
 
 1. Voices of Persuasion (10 speeches, letters, editorials and advertisements: the rhetorical situation, appeals, devices, fallacies and the credibility of sources)
+2. The Writer's Craft (10 short stories: characterization, allusion, paradox and oxymoron, symbolism, irony, the narrator, foreshadowing and flashback)
