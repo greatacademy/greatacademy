@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package ga.conversation.v1;
+
+import "ga/common/v1/text.proto";
+
+// ConversationService starts the spoken conversations of S6 with the AI tutor
+// and shows how they went. The conversation itself runs on the voice service.
+service ConversationService {
+  // ListConversations lists the conversations of a course the learner takes, whether each can be had now, and recent sessions.
+  rpc ListConversations(ListConversationsRequest) returns (ListConversationsResponse);
+  // StartConversation signs a ticket for the voice service: the client opens a WebSocket at url and sends the ticket first.
+  rpc StartConversation(StartConversationRequest) returns (StartConversationResponse);
+  // GetConversation shows one of the learner's sessions; its result is in once the voice service has written it.
+  rpc GetConversation(GetConversationRequest) returns (GetConversationResponse);
+}
+
+// Conversation is a conversation a course offers.
+message Conversation {
+  string id = 1;
+  ga.common.v1.Text title = 2;
+  // task tells the learner what to do.
+  ga.common.v1.Text task = 3;
+  uint32 minutes = 4;
+  // available tells whether the learner can have this conversation now.
+  bool available = 5;
+}
+
+// Session is one spoken conversation of the learner's.
+message Session {
+  string id = 1;
+  string conversation_id = 2;
+  // status is "active" until the voice service writes the result, then "ended".
+  string status = 3;
+  // reason is why it ended: "tutor_ended", "learner_ended", "time_limit", "disconnected" or "error".
+  string reason = 4;
+  double duration_secs = 5;
+  // started_at is in milliseconds since the epoch.
+  int64 started_at = 6;
+  // learner_lines counts what the learner said.
+  uint32 learner_lines = 7;
+}
+
+// Line is one line of a conversation.
+message Line {
+  // speaker is "learner" or "tutor".
+  string speaker = 1;
+  string text = 2;
+}
+
+message ListConversationsRequest {
+  string course_id = 1;
+}
+
+message ListConversationsResponse {
+  repeated Conversation conversations = 1;
+  // unavailable says why no conversation can be had now, or is empty: "voice-off" when the voice service is not
+  // configured, "daily-limit" when the learner has had today's conversations.
+  string unavailable = 2;
+  repeated Session recent = 3;
+}
+
+message StartConversationRequest {
+  string course_id = 1;
+  string conversation_id = 2;
+}
+
+message StartConversationResponse {
+  string session_id = 1;
+  // ticket is valid for about a minute and may be used once.
+  string ticket = 2;
+  // url is the voice service's WebSocket.
+  string url = 3;
+  Conversation conversation = 4;
+}
+
+message GetConversationRequest {
+  string session_id = 1;
+}
+
+message GetConversationResponse {
+  Session session = 1;
+  // lines is the transcript while it is kept: 30 days, and never for a child.
+  repeated Line lines = 2;
+}
