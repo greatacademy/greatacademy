@@ -112,7 +112,8 @@ function Register() {
             ))}
             <label className="block space-y-1.5 text-sm font-medium">
               <span>{t.region}</span>
-              <input name="region" autoComplete="off" className={field} />
+              <input name="region" required autoComplete="off" className={field} />
+              <span className="block text-xs font-normal text-muted">{t.regionHint}</span>
             </label>
             <label className="block space-y-1.5 text-sm font-medium">
               <span>{t.notes}</span>

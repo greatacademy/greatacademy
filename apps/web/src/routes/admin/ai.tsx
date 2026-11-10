@@ -40,7 +40,6 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
           catalog: picked ?? "",
           api: String(form.get("api") ?? ""),
           baseUrl: String(form.get("baseUrl")),
-          region: String(form.get("region")),
           enabled: form.get("enabled") === "on",
           dailyBudget: budgetField(form, "dailyBudget"),
           monthlyBudget: budgetField(form, "monthlyBudget"),
@@ -129,11 +128,6 @@ function ProviderForm({ provider, onDone }: { provider?: Provider; onDone: () =>
             />
           </label>
           <label className="block space-y-1.5 text-sm font-medium">
-            <span>{t.region}</span>
-            <input name="region" defaultValue={provider?.region} autoComplete="off" className={field} />
-            <span className="block text-xs font-normal text-muted">{t.regionHint}</span>
-          </label>
-          <label className="block space-y-1.5 text-sm font-medium">
             <span>{t.apiKey}</span>
             <input name="apiKey" type="password" autoComplete="new-password" className={field} />
             <span className="block text-xs font-normal text-muted">{t.apiKeyHint}</span>
@@ -194,7 +188,6 @@ function ProviderCard({ provider }: { provider: Provider }) {
           <p className="text-sm text-muted">
             {t.kinds[provider.kind] ?? provider.kind}
             {provider.api && ` · ${t.apis[provider.api] ?? provider.api}`}
-            {provider.region && ` · ${provider.region}`}
           </p>
           <p className="text-sm text-muted">{provider.keyHint ? t.keyEnds(provider.keyHint) : t.noKey}</p>
           {provider.kind === "model" &&

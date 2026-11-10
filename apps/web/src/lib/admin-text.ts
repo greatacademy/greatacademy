@@ -60,7 +60,7 @@ const en = {
   newProvider: "Add a provider",
   name: "Name",
   kind: "Kind",
-  kinds: { model: "AI model", speech: "Speech", other: "Other" } as Record<string, string>,
+  kinds: { model: "AI model", speech: "Speech" } as Record<string, string>,
   api: "API",
   apis: {
     "openai-completions": "OpenAI-compatible (Chat Completions)",
@@ -72,9 +72,8 @@ const en = {
   apiHint:
     "The protocol the vendor's endpoint speaks. Most other vendors and self-hosted servers, such as Ollama or vLLM, are OpenAI-compatible.",
   kindHint:
-    "AI models judge writing. Speech is for speaking practice, such as recognition and pronunciation scoring. Other is for any vendor that receives learners' data for something else; nothing calls it, but it can be named in the privacy notice and the vendor register.",
-  regionHint:
-    "Where the vendor processes and stores data, such as US or EU. It is a record for the vendor register; calls do not depend on it.",
+    "AI models judge writing and answer in conversation, through pi-ai. Speech is for speaking practice: speech-to-text, text-to-speech and pronunciation scoring.",
+  regionHint: "Where the vendor processes and stores this market's data, such as US or EU; the register needs one named.",
   vendor: "Vendor",
   customVendor: "Another vendor, set up by hand",
   vendorHint:
@@ -277,7 +276,7 @@ const zh: typeof en = {
   newProvider: "添加供应商",
   name: "名称",
   kind: "类型",
-  kinds: { model: "AI 模型", speech: "语音", other: "其他" },
+  kinds: { model: "AI 模型", speech: "语音" },
   api: "API",
   apis: {
     "openai-completions": "OpenAI 兼容（Chat Completions）",
@@ -287,9 +286,8 @@ const zh: typeof en = {
     "mistral-conversations": "Mistral",
   },
   apiHint: "供应商接口遵循的协议。大多数其他供应商和自建服务（如 Ollama、vLLM）选「OpenAI 兼容」。",
-  kindHint:
-    "AI 模型用于批改写作；语音用于口语练习，如语音识别和发音评分；其他用于以别的方式接收学习者数据的供应商，系统不会调用它，只用于在隐私声明和供应商登记表中列出。",
-  regionHint: "供应商处理和存储数据的地区，如 US 或 EU。它是供应商登记表的记录，不影响调用。",
+  kindHint: "AI 模型经由 pi-ai 批改写作、在对话中作答；语音用于口语练习：语音转文字、文字转语音和发音评分。",
+  regionHint: "供应商处理和存储该市场数据的地区，如 US 或 EU；登记表要求写明。",
   vendor: "供应商",
   customVendor: "其他供应商，手动设置",
   vendorHint: "选择供应商后会自动填好它的 API、地址和模型，你只需填写密钥和预算。只有经由网关时才需要修改基础 URL。",
