@@ -250,6 +250,16 @@ Kindergarten to grade 2: the sound and print strand, then oral reading fluency (
 
 Each course is complete when it compiles, passes sampling and review, has its AI routes calibrated, and has shown improvement on an outside test when it is the first of its kind.
 
+### E8. Depth and Native Courses by Grade (L)
+
+English had 652 topics and 1,599 knowledge points when the level, native and exam courses were done, against 4,100 and 12,144 in mathematics, and its native band courses held 580 to 908 XP of lessons for three or four school years, where a mathematics course of grades 4 to 8 holds 1,800 to 2,100 for one. `pnpm nx run audit:stats -- english` measures this.
+
+- **E8.1 A floor first.** Every topic checked by rules has at least two knowledge points, from recognizing to producing; a knowledge point checked by rules has at least 30 distinct items (25 for words), a judged one at least 12 tasks; every solution names the rule and applies it in ten words or more; and the wrong options of a choice are explained where something can be said about them. Wrong options of the word topics are explained from the meanings of the words the levels teach. The statistics list what falls short.
+- **E8.2 One course per grade** (curriculum §6.3), `english-grade-3` to `english-grade-12`, each with an outline in `docs/english-courses/` first, then its topics, reading units and conversations, then the course and simulated students. Grades 3 to 5 come first, then 6 to 8, then 9 to 12. A band course retires once the grade courses hold all of its topics.
+- **E8.3 Larger banks from templates.** A grammar knowledge point may draw its items from hand-written frames whose slots take words of a list, so its bank holds a hundred distinct sentences or more; every frame is read by its author, and a frame that can make an unnatural sentence is narrowed.
+
+E8 is complete for a grade when its course compiles and passes sampling, the statistics show no knowledge point below its depth, simulated students finish it, and it has been reviewed.
+
 ## 7. Across All Stages
 
 ### 7.1 Testing

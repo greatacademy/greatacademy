@@ -112,12 +112,14 @@ Practice in these courses follows Nation's four strands, in roughly equal time: 
 | Course | Focus |
 | :--- | :--- |
 | Kindergarten to grade 2 | Phonics, oral reading fluency, listening comprehension, sentence building |
-| Grades 3 to 5 | Grammar, word roots, paragraphs, knowledge-based reading |
-| Grades 6 to 8 | Essay structure, argument, literary analysis |
-| Grades 9 to 12 | Rhetoric, literature, academic writing, college admission and advanced placement exams |
+| Grades 3, 4 and 5 | Grammar, word roots, paragraphs, knowledge-based reading |
+| Grades 6, 7 and 8 | Essay structure, argument, literary analysis |
+| Grades 9, 10, 11 and 12 | Rhetoric, literature, academic writing, college admission and advanced placement exams |
 | College and beyond | Research writing, critical reading, professional writing, style |
 
-Native courses are built the same way: a grade band's units are knowledge units and genres, and each unit reads, discusses and writes about its theme. The focus column says what weighs most in a band, not what it teaches alone.
+Native courses are built the same way: a grade's units are knowledge units and genres, and each unit reads, discusses and writes about its theme. The focus column says what weighs most in those grades, not what they teach alone.
+
+From grade 3 there is one course per grade, as in mathematics, because a year of school needs a year of work: a grade has about ten themed units, 100 to 130 topics with 1,500 to 2,000 XP of lessons, and eight to ten reading units, close to a mathematics course of grades 4 to 8. A grade teaches the words of its themes and the academic words of its year, and its grammar, reading skills and writing, so the strands share it roughly as vocabulary 40%, grammar and mechanics 20%, reading 20%, writing checked by rules 12% and writing judged by a model 8%. The first native courses were built by grade bands (3 to 5, 6 to 8 and 9 to 12); their topics move into the grade that teaches them, and a band course retires once the grade courses hold all of its topics, as the skill courses did (§11). The levels C1 and C2 stay merged with grades 9 to 12 and college (§6.2): their academic words, collocations and style go into those courses.
 
 ### 6.4 Balance Across Strands
 
@@ -128,7 +130,6 @@ The frontier decides what may be learned; within it, the engine prefers what unl
 A unit's last task is a conversation with the AI tutor that needs the unit's words and patterns, such as `library-help-desk` at the end of a unit on the library. Its prerequisites are the unit's topics, so once they are learned it appears under Next like any other task, not as a separate offer. It is done when the learner meets its rubric (S6, §9.1), and earns XP for its time. Until its rubric passes calibration it stays outside the engine and the learner may choose it. A learner without a microphone, or whom no route may serve, skips it and loses nothing in the graph.
 
 ### 6.6 How the Audiences Differ
-### 6.3 How the Audiences Differ
 
 | | Native learners | Foreign-language learners |
 | :--- | :--- | :--- |
@@ -280,6 +281,7 @@ A second course, `english-reading-comprehension` (Reading for Meaning, grades 3 
 3. **A1 and A2 by themes:** units on everyday themes that regroup the topics already built and add words, grammar, passages and writing for each theme. No listening or speaking content exists yet, so the first versions are strongest in reading, writing, words and grammar; each unit gains listening (S1) and speaking (S2 to S4) as audio and recording arrive, and its conversation once rubrics pass calibration. The skill courses then retire (§11).
 4. **B1, B2 and the native grade bands,** built the same way.
 5. **Conversation and both ends:** S5 and S6 on the voice service; phonics below; college writing and exam courses above.
+6. **Native courses by grade:** grades 3 to 12 one course each (§6.3), first 3 to 5, then 6 to 8, then 9 to 12; the band courses then retire.
 
 | Change | Scope |
 | :--- | :--- |
