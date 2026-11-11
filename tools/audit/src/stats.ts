@@ -51,7 +51,7 @@ export interface SubjectStats {
   readonly depth: ReadonlyMap<string, number>;
   /** strands counts topics and knowledge points by strand, "-" for a topic without one. */
   readonly strands: ReadonlyMap<string, { readonly topics: number; readonly knowledgePoints: number }>;
-  /** singleStep are the topics with only one knowledge point. */
+  /** singleStep are the topics checked by rules with only one knowledge point; a judged topic may be one task. */
   readonly singleStep: readonly string[];
   readonly thin: readonly ThinPoint[];
 }
@@ -109,7 +109,7 @@ export function subjectStats(subject: CompiledSubject, options: StatsOptions = {
       judgedTopics++;
       judgedKnowledgePoints += topic.knowledgePoints.length;
     }
-    if (topic.knowledgePoints.length === 1) singleStep.push(topic.id);
+    if (topic.knowledgePoints.length === 1 && !judged) singleStep.push(topic.id);
     const strand = strands.get(topic.strand ?? "-") ?? { topics: 0, knowledgePoints: 0 };
     strand.topics++;
     strand.knowledgePoints += topic.knowledgePoints.length;
@@ -196,7 +196,7 @@ export function renderStats(stats: SubjectStats): string {
     "",
     ...stats.thin.map((p) => `- ${p.topic}#${p.kp}: ${p.distinct} of ${p.needed}${p.judged ? " (judged)" : ""}`),
     "",
-    `## Topics with one knowledge point (${stats.singleStep.length})`,
+    `## Topics checked by rules with one knowledge point (${stats.singleStep.length})`,
     "",
     ...stats.singleStep.map((id) => `- ${id}`),
     "",
