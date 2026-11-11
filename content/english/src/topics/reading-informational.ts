@@ -24,12 +24,12 @@ const mainIdeaBank: readonly ChoiceItem[] = [
   [
     "A city park is more than grass and trees. Families have picnics there on weekends. Runners and bikers use its paths every morning. In summer, the park holds free concerts at night.",
     "A city park gives people many ways to spend their time.",
-    ["Runners use the park every morning.", "Parks are full of grass and trees."],
+    ["Runners use the park every morning.", "Parks are full of grass and trees, and most towns and cities have at least one of them."],
   ],
   [
     "Camels are well suited to the desert. Their humps store fat that they can live on when food is scarce. Long lashes keep sand out of their eyes, and wide feet keep them from sinking into the sand.",
     "Camels have features that help them live in the desert.",
-    ["Camels store fat in their humps.", "Deserts are hot and sandy."],
+    ["Camels store fat in their humps.", "Deserts are hot, sandy places where very little rain falls during the year."],
   ],
   [
     "The first bicycles had no pedals. Riders pushed along with their feet. Later bicycles had a huge front wheel that was hard to climb onto. Over many years, bicycles became the safe, simple machines we ride today.",
@@ -44,7 +44,7 @@ const mainIdeaBank: readonly ChoiceItem[] = [
   [
     "Recycling paper helps the planet. Fewer trees have to be cut down to make new paper. Less trash ends up in landfills. Making paper from old paper also uses less water and energy.",
     "Recycling paper is good for the environment in several ways.",
-    ["Fewer trees are cut down.", "Paper is made from trees."],
+    ["Fewer trees are cut down.", "Paper is made from trees, and people use it every day for books, boxes and letters."],
   ],
   [
     "Octopuses are clever animals. They can open jars to reach food inside. Some have escaped from their tanks at night and crawled back before morning. In tests, they learn to solve puzzles quickly.",
@@ -59,7 +59,7 @@ const mainIdeaBank: readonly ChoiceItem[] = [
   [
     "Lighthouses kept sailors safe for hundreds of years. Their bright lamps warned ships away from rocks at night. In fog, many lighthouses sounded loud horns. Each one flashed its own pattern, so sailors could tell where they were.",
     "Lighthouses helped protect ships and sailors.",
-    ["Lighthouses sounded horns in fog.", "Sailors travel on ships."],
+    ["Lighthouses sounded horns in fog.", "Sailors travel on ships across the oceans, carrying people and goods from one port to another."],
   ],
 ];
 
@@ -163,17 +163,20 @@ const summaryBank: readonly ChoiceItem[] = [
   [
     "Monarch butterflies travel a very long way each autumn. Millions fly from Canada and the United States to forests in Mexico. There they rest on trees through the winter. In spring, they head north again.",
     "Monarch butterflies fly south to Mexico for the winter and return north in spring.",
-    ["Monarch butterflies rest on trees.", "Monarch butterflies are orange and black, and they are beautiful."],
+    [
+      "Monarch butterflies rest on trees.",
+      "Monarch butterflies make the most beautiful journey of any insect, flying all the way to Mexico.",
+    ],
   ],
   [
     "Glass is made from sand. The sand is heated until it melts into a hot liquid. Workers shape the liquid by blowing or pressing it. When it cools, it hardens into glass.",
     "Glass is made by melting sand, shaping it and letting it cool.",
-    ["Glass breaks easily.", "Workers blow into hot liquid."],
+    ["Glass breaks easily.", "Glass is made from melted sand, and glass bowls are much prettier than plastic ones."],
   ],
   [
     "Earthworms help gardens. Their tunnels let air and water reach plant roots. They eat dead leaves and leave behind waste that makes the soil rich.",
     "Earthworms improve garden soil with their tunnels and waste.",
-    ["Earthworms live underground.", "Gardens need water and sun."],
+    ["Earthworms live underground.", "Earthworms are slimy and unpleasant, but every garden should have lots of them in its soil."],
   ],
   [
     "The Wright brothers built bicycles before they built airplanes. They studied how birds fly and tested gliders for years. In 1903, their airplane made the first powered flight.",
@@ -183,7 +186,7 @@ const summaryBank: readonly ChoiceItem[] = [
   [
     "Many birds build nests to protect their eggs. Robins shape cups of mud and grass. Some swallows use mud alone. Eagles pile up sticks into huge nests high in trees.",
     "Different birds build different kinds of nests to protect their eggs.",
-    ["Eagles build nests in trees.", "Birds lay eggs in the spring."],
+    ["Eagles build nests in trees.", "Eagles build the best nests of all, piling up sticks into huge nests high in the trees."],
   ],
   [
     "Before refrigerators, people kept food cold with ice. Workers cut blocks of ice from frozen lakes in winter. They stored the ice in sawdust so it lasted into summer.",
@@ -193,7 +196,7 @@ const summaryBank: readonly ChoiceItem[] = [
   [
     "Volunteers cleaned up the beach on Saturday. They picked up bottles, bags and old fishing nets. By noon, they had filled forty bags of trash.",
     "Volunteers removed forty bags of trash from the beach on Saturday.",
-    ["Fishing nets are made of rope.", "The beach is a fun place to visit."],
+    ["Fishing nets are made of rope.", "The beach is a fun place to visit, and everyone should help clean it up on Saturdays."],
   ],
   [
     "Hummingbirds are the smallest birds. Their wings beat so fast that they hum. They can fly backward and hover in place while they drink nectar from flowers.",
@@ -530,12 +533,12 @@ const solutionBank: readonly ChoiceItem[] = [
   [
     "The class pet fish kept getting sick because the tank was dirty. The students made a chart so that a different pair cleaned the tank each week.",
     "Taking turns cleaning the tank with a chart",
-    ["Buying a new fish", "Moving the tank"],
+    ["Buying a new fish for the tank every few weeks", "Moving the tank"],
   ],
   [
     "Many people in the village had to walk hours to get water. Volunteers dug a well in the center of the village, so water was close to every home.",
     "Digging a well in the village",
-    ["Walking for hours", "Buying bottled water"],
+    ["Walking for hours", "Buying bottled water from a truck in the next town"],
   ],
   [
     "Lucy kept forgetting her homework at home. She began packing her bag every night before bed and setting it by the door.",
@@ -550,7 +553,7 @@ const solutionBank: readonly ChoiceItem[] = [
   [
     "Birds kept flying into the library's big glass windows. The librarians stuck bird shapes on the glass so the birds could see it and fly around.",
     "Putting bird shapes on the windows",
-    ["Removing the windows", "Feeding the birds"],
+    ["Removing the windows", "Feeding the birds far from the building every morning"],
   ],
   [
     "The team's old bus broke down before every away game. The families held a bake sale and raised enough money to repair it.",

@@ -320,8 +320,15 @@ const pcItems = (n: number, skip: number) =>
     .slice(skip)
     .map(([[subject, be, short], [verb, ing, misspelled, rest]]) => ({ subject, be, short, verb, ing, misspelled, rest }));
 
+/** otherBe is a form of be that does not match the subject that takes the given one. */
+const otherBe = (be: string): string => (be === "is" ? "are" : "is");
+
 const pcChoiceBank: readonly ChoiceItem[] = pcItems(44, 0).map(
-  ({ subject, be, verb, ing, rest }): ChoiceItem => [`${subject} ___ ${rest} now. (${verb})`, `${be} ${ing}`, [ing, `${be} ${verb}`]],
+  ({ subject, be, verb, ing, rest }): ChoiceItem => [
+    `${subject} ___ ${rest} now. (${verb})`,
+    `${be} ${ing}`,
+    [ing, `${be} ${verb}`, `${otherBe(be)} ${ing}`],
+  ],
 );
 
 const pcSpellBank: readonly TypedItem[] = pcItems(40, 44).map(
@@ -393,16 +400,21 @@ const presentContinuous: TopicDef = {
             `*now* 表示此刻正在发生，所以用跟 *${subject}* 搭配的 *${be}*，再加动词的 *-ing* 形式：${sentence}`,
           );
         },
-        (wrong, _right, _shown, position) =>
+        (wrong, _right, shown, position) =>
           position === 0
             ? t(
                 `*${wrong}* has no *am*, *is* or *are*, but the *-ing* form cannot be the verb without one.`,
                 `*${wrong}* 前面没有 *am*、*is* 或 *are*，可 *-ing* 形式不能单独作动词。`,
               )
-            : t(
-                `*${wrong}* has the form of *be* but a plain verb; for what is happening now, the verb takes *-ing*.`,
-                `*${wrong}* 有 *be*，动词却用了原形；表示正在发生的事，动词要加 *-ing*。`,
-              ),
+            : position === 1
+              ? t(
+                  `*${wrong}* has the form of *be* but a plain verb; for what is happening now, the verb takes *-ing*.`,
+                  `*${wrong}* 有 *be*，动词却用了原形；表示正在发生的事，动词要加 *-ing*。`,
+                )
+              : t(
+                  `*${wrong}* has the *-ing* form, but *${wrong.split(" ")[0]}* is not the form of *be* for *${shown.split(" ___")[0]}*.`,
+                  `*${wrong}* 用了 *-ing* 形式，可 *${wrong.split(" ")[0]}* 不是与 *${shown.split(" ___")[0]}* 搭配的 *be*。`,
+                ),
       ),
     ),
     point(
@@ -623,7 +635,11 @@ const wearItems = pairUp(42, wearers, outfits).map(([[who, be, short], outfit]) 
 }));
 
 const wearChoiceBank: readonly ChoiceItem[] = wearItems.map(
-  ({ note, right, who, be, outfit }): ChoiceItem => [note, right, [`${who} wearing ${outfit}.`, `${who} ${be} wear ${outfit}.`]],
+  ({ note, right, who, be, outfit }): ChoiceItem => [
+    note,
+    right,
+    [`${who} wearing ${outfit}.`, `${who} ${be} wear ${outfit}.`, `${who} ${otherBe(be)} wearing ${outfit}.`],
+  ],
 );
 
 const wearTypedBank: readonly TypedItem[] = wearItems.map(
@@ -677,10 +693,15 @@ const whatPeopleAreWearing: TopicDef = {
                 "This leaves out *am*, *is* or *are*, but *wearing* cannot be the verb without one.",
                 "这句漏了 *am*、*is* 或 *are*，可 *wearing* 不能单独作动词。",
               )
-            : t(
-                "This uses the plain verb *wear*, but for what someone has on now the verb takes *-ing*.",
-                "这句用了动词原形 *wear*，可说某人现在穿着什么，动词要加 *-ing*。",
-              ),
+            : position === 1
+              ? t(
+                  "This uses the plain verb *wear*, but for what someone has on now the verb takes *-ing*.",
+                  "这句用了动词原形 *wear*，可说某人现在穿着什么，动词要加 *-ing*。",
+                )
+              : t(
+                  "This has *wearing*, but its form of *be* does not match the person: *I am*, *he* or *she is*, *we* or *they are*.",
+                  "这句有 *wearing*，可 *be* 的形式与人不搭配：*I am*，*he*、*she is*，*we*、*they are*。",
+                ),
       ),
     ),
     point(

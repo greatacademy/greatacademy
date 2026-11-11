@@ -237,7 +237,7 @@ export const progressiveFormBank: readonly ChoiceItem[] = range(48).map((i): Cho
   const shown = `${opening}, ${subject} ___ ${rest}.`;
   if (time === 0) return [shown, `${now} ${ing}`, [`${wrongNow} ${ing}`, ing]];
   if (time === 1) return [shown, `${past} ${ing}`, [`${wrongPast} ${ing}`, `${now} ${ing}`]];
-  return [shown, `will be ${ing}`, [`will ${ing}`, `${now} ${ing}`]];
+  return [shown, `will be ${ing}`, [`will ${ing}`, `${now} ${ing}`, `will ${now} ${ing}`]];
 });
 
 const activities: readonly (readonly [
@@ -265,12 +265,12 @@ const activities: readonly (readonly [
 
 /** progressiveMeaningBank asks which tense shows an action in progress, a habit, or an action that was interrupted. */
 export const progressiveMeaningBank: readonly ChoiceItem[] = [0, 1, 2].flatMap((q) =>
-  activities.map(([subject, ing, s, past, rest, habit, interruption]): ChoiceItem => {
+  activities.map(([subject, ing, s, past, rest, habit, interruption], i): ChoiceItem => {
     const now = `${subject} is ${ing} ${rest} right now.`;
     const usual = `${subject} ${s} ${rest} ${habit}.`;
-    const yesterday = `${subject} ${past} ${rest} yesterday.`;
+    const yesterday = `${subject} ${past} ${rest} ${i % 2 === 0 ? "yesterday afternoon" : "yesterday"}.`;
     const interrupted = `${subject} was ${ing} ${rest} when ${interruption}.`;
-    const after = `${subject} ${past} ${rest} after ${interruption}.`;
+    const after = `${subject} ${past} ${rest} ${i % 2 === 1 ? "right after" : "after"} ${interruption}.`;
     if (q === 0) return ["Which sentence tells about something happening at this very moment?", now, [usual, yesterday]];
     if (q === 1) return ["Which sentence tells about something that happens again and again, as a habit?", usual, [now, interrupted]];
     return ["Which sentence tells about an action that was in progress when something else happened?", interrupted, [after, usual]];

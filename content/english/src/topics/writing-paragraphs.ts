@@ -67,12 +67,12 @@ const chooseTopicBank: readonly ChoiceItem[] = [
   [
     "Details: Tickets cost less online. You skip the line. You can pick your seat.",
     "Buying tickets online has real advantages.",
-    ["The theater opens at noon.", "You skip the line."],
+    ["The theater on Main Street opens at noon every day.", "You skip the line."],
   ],
   [
     "Details: Trees give shade. They clean the air. They shelter birds.",
     "Trees do a great deal for a neighborhood.",
-    ["Some trees lose their leaves.", "They shelter birds."],
+    ["Some trees lose all of their leaves every autumn.", "They shelter birds."],
   ],
   [
     "Details: The roof leaked. The heater broke. The door would not lock.",
@@ -82,12 +82,12 @@ const chooseTopicBank: readonly ChoiceItem[] = [
   [
     "Details: Dogs guide people who cannot see. They find lost hikers. They sniff out danger at airports.",
     "Dogs do many important jobs.",
-    ["Dogs come in many sizes.", "They find lost hikers."],
+    ["Dogs come in many sizes and colors.", "They find lost hikers."],
   ],
   [
     "Details: Lights were left on. Water ran all day. Windows stayed open in winter.",
     "Our school wastes a lot of energy.",
-    ["Our school has two floors.", "Water ran all day."],
+    ["Our school has two floors and a large gym.", "Water ran all day."],
   ],
   [
     "Details: She practiced every morning. She studied old games. She asked her coach for advice.",
@@ -402,7 +402,7 @@ const withOneOut = (topic: string, details: readonly [string, string], odd: stri
 
 const recordFindTopic = paragraphRecords.map((p) => paragraphChoice(p.topic, ...p.details));
 const recordChooseTopic = paragraphRecords.map(
-  (p, i): ChoiceItem => [`Details: ${p.details.join(" ")}`, p.topic, [p.vague, p.details[i % 3]!]],
+  (p, i): ChoiceItem => [`Details: ${p.details.join(" ")}`, p.topic, [p.vague, p.details[i % 3]!, p.offPoint]],
 );
 const recordObvious = paragraphRecords.map((p, i) => withOneOut(p.topic, [p.details[0], p.details[1]], p.off, i));
 const recordSubtle = paragraphRecords.map((p, i) => withOneOut(p.topic, [p.details[1], p.details[2]], p.offPoint, i + 1));

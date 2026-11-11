@@ -43,26 +43,26 @@ export const deviceMore = bars(`
 export const deviceEffectMore = bars(`
   The thunder grumbled angrily over the hills.|It makes the storm seem threatening and bad-tempered.|It shows the thunder was a person in a bad mood.|It tells how far away the hills were.
   I have a million things to do before Friday.|It stresses how busy and overwhelmed the speaker feels.|It gives the exact number of tasks on the list.|It shows Friday is a holiday.
-  The lonely lighthouse watched over the dark sea.|It makes the lighthouse seem faithful and alone.|It shows the lighthouse had eyes.|It tells how tall the lighthouse was.
+  The lonely lighthouse watched over the dark sea.|It makes the lighthouse seem faithful and alone.|It shows the lighthouse had eyes.|It tells how tall the lighthouse was and how far its light could reach.
   This suitcase weighs a ton.|It stresses how heavy and hard to carry the suitcase is.|It gives the real weight of the suitcase.|It shows the suitcase is made of metal.
-  The kettle sang happily on the stove.|It creates a cozy, cheerful feeling in the kitchen.|It shows the kettle can carry a tune.|It tells what was being cooked.
-  The line for the ride stretched to the next city.|It stresses how long and tiring the wait seemed.|It tells the exact length of the line.|It shows the ride was in another city.
+  The kettle sang happily on the stove.|It creates a cozy, cheerful feeling in the kitchen.|It shows the kettle can really carry a tune and sing songs like a person.|It tells what was being cooked.
+  The line for the ride stretched to the next city.|It stresses how long and tiring the wait seemed.|It tells the exact length of the line, measured from the ride to the end.|It shows the ride was in another city.
   The old house sighed as the wind blew through it.|It makes the house seem tired and sad.|It shows the house could breathe.|It tells what year the house was built.
   He ran faster than the speed of light.|It stresses how amazingly fast he ran.|It compares his real speed with light.|It shows he was running at night.
-  The waves reached up and grabbed at our feet.|It makes the sea seem playful and a little dangerous.|It shows the waves had hands.|It tells how cold the water was.
+  The waves reached up and grabbed at our feet.|It makes the sea seem playful and a little dangerous.|It shows the waves had real hands that could reach out and hold things.|It tells how cold the water was.
   My feet are killing me after the hike.|It stresses how much the speaker's feet hurt.|It means the feet are truly harming the speaker.|It tells how long the hike lasted.
-  The city never sleeps.|It shows how busy and lively the city is at all hours.|It means the city is a person who stays awake.|It tells how many people live there.
+  The city never sleeps.|It shows how busy and lively the city is at all hours.|It means the city is a real person who stays awake all night and never rests.|It tells how many people live there.
   We laughed until we thought we would explode.|It stresses how hard and long they laughed.|It shows they were in real danger.|It tells what joke they heard.
   The tired old car wheezed up the hill.|It makes the car seem weak and worn out.|It shows the car was sick and needed a doctor.|It tells the color of the car.
-  I told my sister a hundred times to knock first.|It shows how frustrated the speaker is with repeating it.|It gives the exact count of reminders.|It tells where the sister's room is.
+  I told my sister a hundred times to knock first.|It shows how frustrated the speaker is with repeating it.|It gives the exact count of reminders the speaker has given her sister so far.|It tells where the sister's room is.
   The moon hid its face behind the clouds.|It makes the night seem shy and mysterious.|It shows the moon has a real face.|It tells what time the moon rose.
-  The homework monster swallowed my whole weekend.|It stresses how much time the homework took.|It shows a real monster ate the weekend.|It tells which subject the homework was.
+  The homework monster swallowed my whole weekend.|It stresses how much time the homework took.|It shows a real monster came into the house and ate up the whole weekend.|It tells which subject the homework was.
   Opportunity knocked, and she opened the door.|It shows she took a chance when it came.|It means someone knocked on her real door.|It tells what her house looked like.
   The silence was so loud it hurt my ears.|It stresses how uncomfortable the silence felt.|It shows the silence made a real noise.|It tells where the speaker was sitting.
-  The wind howled its anger at the windows.|It makes the night seem wild and frightening.|It shows the wind was a real angry animal.|It tells how big the windows were.
+  The wind howled its anger at the windows.|It makes the night seem wild and frightening.|It shows the wind was a real angry animal trying to break into the house.|It tells how big the windows were.
   I am so hungry I could eat a whole cow.|It stresses how very hungry the speaker is.|It means the speaker plans to eat a cow.|It tells what is for dinner.
   The flowers turned their faces to the sun.|It creates a gentle, hopeful picture of the garden.|It shows the flowers have real faces.|It tells what kind of flowers they were.
-  This classroom is an oven today.|It stresses how hot and uncomfortable the room feels.|It means the classroom is used for baking.|It tells how many students are in the room.
+  This classroom is an oven today.|It stresses how hot and uncomfortable the room feels.|It means the classroom is really used for baking bread and cakes during the day.|It tells how many students are in the room.
 `);
 
 /** soundMore are more lines that use alliteration, onomatopoeia or rhyme. */
@@ -170,54 +170,54 @@ export const conflictMore = bars(`
 
 /** themeMore are more short stories, with the theme first, then a topic only and a retelling of the plot. */
 export const themeMore = bars(`
-  A boy hides his poor test score from his parents. The lie grows bigger each day until he confesses, and his parents help him study.|Hiding a mistake only makes it harder to fix.|lying|A boy gets a poor test score.
+  A boy hides his poor test score from his parents. The lie grows bigger each day until he confesses, and his parents help him study.|Hiding a mistake only makes it harder to fix.|lying|A boy hides a poor test score from his parents until he finally confesses.
   A girl laughs at her classmate's homemade shoes. Later, she learns her classmate's family lost everything in a fire.|We should not judge others before we know their story.|judging others|A girl laughs at a classmate.
   An ant works all summer while a grasshopper plays. When winter comes, the ant has food and the grasshopper is hungry.|Preparing for the future is wiser than living only for today.|ants|An ant and a grasshopper spend the summer differently.
   A champion runner loses a race to a newcomer and is angry. Training with the newcomer, he runs faster than ever before.|Competition can help us grow if we learn from it.|running|A champion loses a race.
-  A wealthy man buys a huge house but has no friends to invite. His poor neighbor's tiny home is always full of laughter.|Friendship is worth more than wealth.|houses|A wealthy man buys a big house.
+  A wealthy man buys a huge house but has no friends to invite. His poor neighbor's tiny home is always full of laughter.|Friendship is worth more than wealth.|houses|A wealthy man buys a huge house, while his poor neighbor's tiny home is full of laughter.
   A team of mismatched students builds a robot. Each one's odd skill turns out to be the piece the robot needs.|Everyone has something to offer a team.|robots|Students build a robot together.
-  A girl practices the same song every night for months. At the concert, she plays it perfectly.|Patience and practice lead to success.|music|A girl plays at a concert.
+  A girl practices the same song every night for months. At the concert, she plays it perfectly.|Patience and practice lead to success.|music|A girl practices a song every night for months and then plays it at a concert.
   A boy keeps a stray dog secret, fearing his parents will say no. When he finally asks, they welcome the dog.|Being honest is often easier than we fear.|pets|A boy finds a stray dog.
   A village cuts down its whole forest for firewood. Floods soon wash away its fields.|Harming nature brings harm back to us.|forests|A village cuts down trees.
-  A girl who always wins at chess finally loses to her little brother. She laughs and asks him for a rematch.|Losing gracefully is a sign of strength.|chess|A girl loses a game of chess.
+  A girl who always wins at chess finally loses to her little brother. She laughs and asks him for a rematch.|Losing gracefully is a sign of strength.|chess|A girl who always wins at chess loses to her little brother and asks for a rematch.
   A boy is told he is too small to play basketball. He practices passing until he becomes the team's most valuable player.|Determination can overcome what others see as weaknesses.|basketball|A small boy plays basketball.
-  A greedy merchant tricks his customers for years. One day, no one in town will buy from him.|Dishonesty eventually destroys trust.|merchants|A merchant tricks his customers.
+  A greedy merchant tricks his customers for years. One day, no one in town will buy from him.|Dishonesty eventually destroys trust.|merchants|A greedy merchant tricks his customers for years until no one will buy from him.
   Two sisters fight over who gets the bigger room. When one moves away to college, the other misses her terribly.|We often do not value people until they are gone.|sisters|Two sisters share a house.
-  An inventor fails a hundred times. On the hundred and first try, her machine works.|Failure is a step on the way to success.|inventions|An inventor builds a machine.
+  An inventor fails a hundred times. On the hundred and first try, her machine works.|Failure is a step on the way to success.|inventions|An inventor fails a hundred times before her machine works on the next try.
   A shy girl writes letters to a lonely old man in a nursing home. Her letters become the brightest part of his week.|Small kindnesses can mean a great deal to others.|letters|A girl writes letters.
-  A prince trades places with a poor boy for a day. He learns how hard life is for his people.|Understanding others requires seeing the world through their eyes.|princes|A prince trades places with a boy.
+  A prince trades places with a poor boy for a day. He learns how hard life is for his people.|Understanding others requires seeing the world through their eyes.|princes|A prince trades places with a poor boy for a day and sees how his people live.
   A boy brags that he can swim across the lake. Halfway across, he must be rescued.|Pride can lead us into danger.|swimming|A boy tries to swim across a lake.
-  A class plants a garden on an empty lot. Soon the neighbors join in, and the lot becomes a park.|One group's effort can inspire a whole community.|gardens|A class plants a garden.
+  A class plants a garden on an empty lot. Soon the neighbors join in, and the lot becomes a park.|One group's effort can inspire a whole community.|gardens|A class plants a garden on an empty lot, and the neighbors soon join in.
   A girl moves to a new country and feels she belongs nowhere. Slowly, she learns to treasure both her old and new homes.|We can belong to more than one place.|moving|A girl moves to a new country.
-  A boy who is always late finally misses the school trip. The next week, he is the first one at the bus.|We learn from the consequences of our choices.|being late|A boy misses a school trip.
+  A boy who is always late finally misses the school trip. The next week, he is the first one at the bus.|We learn from the consequences of our choices.|being late|A boy who is always late misses the school trip and is early the next week.
   An old fisherman shares his catch with a starving stranger. Years later, the stranger saves the fisherman's village.|Generosity is often repaid in unexpected ways.|fishing|An old fisherman shares fish.
-  A girl copies her friend's style to be popular. She is unhappy until she starts dressing as she likes again.|Being true to yourself brings happiness.|fashion|A girl changes her clothes.
+  A girl copies her friend's style to be popular. She is unhappy until she starts dressing as she likes again.|Being true to yourself brings happiness.|fashion|A girl copies her friend's style, is unhappy, and goes back to dressing as she likes.
 `);
 
 /** themeEvidenceMore are more themes, each with an event that shows it and two details that do not. */
 export const themeEvidenceMore = bars(`
-  Theme: Forgiveness can heal a broken friendship.|After months of silence, Mia accepts Zoe's apology, and they laugh together again.|Mia and Zoe live on the same street.|Zoe has a red bicycle.
+  Theme: Forgiveness can heal a broken friendship.|After months of silence, Mia accepts Zoe's apology, and they laugh together again.|Mia and Zoe live on the same quiet street, three houses apart, and walk past each other's homes.|Zoe has a red bicycle.
   Theme: Bravery means acting despite fear.|Shaking with fear, Leo still climbs the tree to rescue the trapped kitten.|The tree is in Leo's backyard.|The kitten is orange and white.
-  Theme: Teamwork achieves more than working alone.|The rowers only win once they stop arguing and pull together.|The race is held on a river.|The rowers wear yellow shirts.
+  Theme: Teamwork achieves more than working alone.|The rowers only win once they stop arguing and pull together.|The race is held on a wide river that winds through the middle of the city.|The rowers wear yellow shirts.
   Theme: Greed leaves people lonely.|The rich man refuses to share his harvest, and his neighbors stop visiting him.|The rich man owns many fields.|The harvest is in autumn.
-  Theme: Honesty earns respect.|When Ana returns the lost wallet, the whole town learns to trust her.|The wallet is made of brown leather.|Ana walks to the market on Sundays.
+  Theme: Honesty earns respect.|When Ana returns the lost wallet, the whole town learns to trust her.|The wallet is made of soft brown leather and has a small silver clasp on the front.|Ana walks to the market on Sundays.
   Theme: Hard times reveal true friends.|When Tom's family loses their home, only Ben keeps visiting and helping.|Tom's house was near the school.|Ben likes to play football.
-  Theme: Curiosity leads to discovery.|Asking why the stream turns red, Lucy finds a hidden source of iron in the hills.|The stream runs past the village.|Lucy has two older brothers.
+  Theme: Curiosity leads to discovery.|Asking why the stream turns red, Lucy finds a hidden source of iron in the hills.|The stream runs past the village and down through the green hills until it reaches the sea.|Lucy has two older brothers.
   Theme: Listening is as important as speaking.|The mayor finally solves the town's problem after listening to the children's idea.|The town hall has a tall clock.|The mayor wears a blue hat.
-  Theme: Pride can blind us to our mistakes.|The captain ignores the crew's warning about the rocks, and the ship runs aground.|The ship has white sails.|The captain has sailed for twenty years.
-  Theme: It is never too late to learn.|At seventy, Grandma Li learns to read and writes her first letter to her grandson.|Grandma Li lives in a small village.|Her grandson is studying in the city.
+  Theme: Pride can blind us to our mistakes.|The captain ignores the crew's warning about the rocks, and the ship runs aground.|The ship has tall white sails and a carved wooden figure of a mermaid at the front of its bow.|The captain has sailed for twenty years.
+  Theme: It is never too late to learn.|At seventy, Grandma Li learns to read and writes her first letter to her grandson.|Grandma Li lives in a small village surrounded by rice fields, low green hills and a few old farms.|Her grandson is studying in the city.
   Theme: Loyalty is tested in difficult times.|When the others flee, the dog stays by the injured hiker all night.|The hiker carries a green backpack.|The mountain trail is steep.
-  Theme: Fear of change can hold us back.|Refusing to try the new school, Max misses the chance to join its famous science team.|The new school is across town.|Max's old school has a garden.
+  Theme: Fear of change can hold us back.|Refusing to try the new school, Max misses the chance to join its famous science team.|The new school is across town, in a tall brick building next to the public library and the park.|Max's old school has a garden.
   Theme: Kindness spreads.|After a stranger pays for her lunch, Rosa pays for the next person in line.|The cafe sells sandwiches.|Rosa is wearing a raincoat.
-  Theme: Envy can poison a friendship.|Jealous of Kim's prize, Jo spreads a rumor and loses her best friend.|The prize is a silver medal.|Kim and Jo are in the same class.
+  Theme: Envy can poison a friendship.|Jealous of Kim's prize, Jo spreads a rumor and loses her best friend.|The prize is a shiny silver medal that hangs from a long blue ribbon around the neck.|Kim and Jo are in the same class.
   Theme: Perseverance brings rewards.|After failing the driving test three times, Sam passes on his fourth try.|The test center is downtown.|Sam's car is old.
-  Theme: Respect for elders brings wisdom.|By listening to her grandfather's stories, Nia learns how to find water in the desert.|Her grandfather wears a white robe.|Nia's family keeps camels.
+  Theme: Respect for elders brings wisdom.|By listening to her grandfather's stories, Nia learns how to find water in the desert.|Her grandfather wears a long white robe and carries a carved walking stick everywhere.|Nia's family keeps camels.
   Theme: Money cannot buy happiness.|The lottery winner buys everything he wants and still feels empty inside.|He wins the lottery on a Tuesday.|He buys a blue car.
-  Theme: Standing up for others takes courage.|Though she is new, Aisha tells the older boys to stop teasing the little kid.|Aisha's school has three floors.|The older boys play basketball.
+  Theme: Standing up for others takes courage.|Though she is new, Aisha tells the older boys to stop teasing the little kid.|Aisha's school has three floors, a large gym and a playground behind the cafeteria.|The older boys play basketball.
   Theme: Nature has the power to heal.|After weeks of sadness, Owen feels calm again while walking in the forest each morning.|The forest has tall pine trees.|Owen lives with his aunt.
-  Theme: Sharing knowledge makes everyone stronger.|Instead of keeping her method secret, the farmer teaches it to the whole village, and every field thrives.|The farmer grows rice.|The village is near a river.
+  Theme: Sharing knowledge makes everyone stronger.|Instead of keeping her method secret, the farmer teaches it to the whole village, and every field thrives.|The farmer grows rice in wide, flooded fields at the foot of the mountains, where the soil is dark and rich.|The village is near a river.
   Theme: The truth eventually comes out.|Years after the theft, a letter reveals who really took the jewels.|The jewels were kept in a safe.|The letter is written in blue ink.
-  Theme: Caring for others gives life meaning.|The lonely old man finds joy again when he starts teaching neighborhood children to garden.|The old man's house has a porch.|The children ride bicycles.
+  Theme: Caring for others gives life meaning.|The lonely old man finds joy again when he starts teaching neighborhood children to garden.|The old man's house has a wide wooden porch with two rocking chairs, a swing and a row of flower pots.|The children ride bicycles.
 `);
 
 /** toneMore are more passages, with the writer's tone. */

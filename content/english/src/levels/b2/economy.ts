@@ -1174,15 +1174,29 @@ const modals: readonly (readonly [string, string, string, string, string])[] = [
 
 const modalPattern = (modal: string) => (modal === "can't" ? "[can't|cannot]" : modal === "must not" ? "[must not|mustn't]" : modal);
 
+/** passiveIng is the -ing form of a base form whose past participle is given: making, cancelling, painting. */
+const passiveIng = (base: string, pp: string): string =>
+  pp === `${base}${base.at(-1) ?? ""}ed`
+    ? `${base}${base.at(-1) ?? ""}ing`
+    : /[^aeiou]e$/u.test(base)
+      ? `${base.slice(0, -1)}ing`
+      : `${base}ing`;
+
 const perfectChoice: readonly ChoiceItem[] = perfects.map(
-  ([s, aux, base, pp, rest]): ChoiceItem => [`${joinWords(s, "___", rest)}.`, `${aux} been ${pp}`, [`${aux} ${pp}`, `${aux} been ${base}`]],
+  ([s, aux, base, pp, rest], k): ChoiceItem => [
+    `${joinWords(s, "___", rest)}.`,
+    `${aux} been ${pp}`,
+    k % 2 === 1 ? [`${aux} ${pp}`, `${aux} been ${base}`, `${aux} been ${passiveIng(base, pp)}`] : [`${aux} ${pp}`, `${aux} been ${base}`],
+  ],
 );
 
 const modalChoice: readonly ChoiceItem[] = modals.map(
-  ([s, modal, base, pp, rest]): ChoiceItem => [
+  ([s, modal, base, pp, rest], k): ChoiceItem => [
     `${joinWords(s, "___", rest)}.`,
     `${modal} be ${pp}`,
-    [`${modal} ${base}`, `${modal} be ${base}`],
+    k % 2 === 0
+      ? [`${modal} ${base}`, `${modal} be ${base}`, `${modal} be ${passiveIng(base, pp)}`]
+      : [`${modal} ${base}`, `${modal} be ${base}`],
   ],
 );
 
@@ -1238,10 +1252,15 @@ const whyNotPassive = (wrong: string, right: string, shown: string, position: nu
           `*${wrong}* is active: it says that *${subject}* did the action, and it has no *${be}*.`,
           `*${wrong}* 是主动形式，意思成了 *${subject}* 做了这件事，而且缺少 *${be}*。`,
         )
-      : t(
-          `*${wrong.split(" ").at(-1) ?? ""}* is the base form, which never follows *${be}* in the passive.`,
-          `*${wrong.split(" ").at(-1) ?? ""}* 是动词原形，被动语态里 *${be}* 后面不能用原形。`,
-        );
+      : position === 2
+        ? t(
+            `*${wrong.split(" ").at(-1) ?? ""}* is the *-ing* form, which makes it active and continuous: it says that *${subject}* is doing the action.`,
+            `*${wrong.split(" ").at(-1) ?? ""}* 是 *-ing* 形式，这就成了主动的进行时，意思是 *${subject}* 在做这件事。`,
+          )
+        : t(
+            `*${wrong.split(" ").at(-1) ?? ""}* is the base form, which never follows *${be}* in the passive.`,
+            `*${wrong.split(" ").at(-1) ?? ""}* 是动词原形，被动语态里 *${be}* 后面不能用原形。`,
+          );
   return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
 };
 

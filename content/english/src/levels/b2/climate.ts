@@ -1213,7 +1213,7 @@ const formChoice: readonly ChoiceItem[] = interleave([
   const wrong =
     aspect === "perfect"
       ? [`will had ${pp}`, past !== pp ? `will have ${past}` : `will have ${base === pp ? `${pp}ed` : base}`]
-      : [`will be ${base}`, `will ${ing}`];
+      : [`will be ${base}`, `will ${ing}`, `will have ${pp}`];
   return [`${time}, ${joinWords(s, "___", rest)}.`, futureOf(aspect, ing, pp), wrong];
 });
 

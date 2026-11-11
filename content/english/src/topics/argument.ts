@@ -17,55 +17,74 @@ const claimBank: readonly ChoiceItem[] = [
   [
     "",
     "Schools should start an hour later to let students sleep.",
-    ["Most schools start between seven and eight.", "Teenagers need eight to ten hours of sleep."],
+    ["Most schools in our state start between seven and eight in the morning.", "Teenagers need eight to ten hours of sleep."],
   ],
   ["", "Our city must build more bike lanes.", ["The city has twelve miles of bike lanes.", "Many people ride bikes to work."]],
   [
     "",
     "Homework in elementary school does more harm than good.",
-    ["Many students do homework after dinner.", "A survey asked parents about homework."],
+    ["Many students do homework after dinner.", "A survey last spring asked three hundred parents about homework."],
   ],
-  ["", "Zoos do important work to protect endangered animals.", ["The city zoo has two hundred animals.", "Some zoos breed rare animals."]],
-  ["", "Every student should learn a second language.", ["Spanish is taught at our school.", "Millions of people speak two languages."]],
-  ["", "Plastic bags should be banned in grocery stores.", ["Plastic bags are made from oil.", "Some stores charge for bags."]],
+  [
+    "",
+    "Zoos do important work to protect endangered animals.",
+    ["The city zoo has two hundred animals from more than forty countries.", "Some zoos breed rare animals."],
+  ],
+  [
+    "",
+    "Every student should learn a second language.",
+    ["Spanish is taught at our school.", "Millions of people around the world speak two or more languages."],
+  ],
+  [
+    "",
+    "Plastic bags should be banned in grocery stores.",
+    ["Plastic bags are made from oil and take hundreds of years to break down.", "Some stores charge for bags."],
+  ],
   [
     "",
     "Video games can help young people learn problem solving.",
     ["Many teenagers play video games.", "The first video games appeared in the 1970s."],
   ],
-  ["", "The school lunch period should be longer.", ["Lunch lasts twenty-five minutes.", "The cafeteria serves pizza on Fridays."]],
+  [
+    "",
+    "The school lunch period should be longer.",
+    ["Lunch lasts twenty-five minutes.", "The cafeteria serves pizza on Fridays and tacos on Tuesdays."],
+  ],
 ];
 
 const relevantEvidenceBank: readonly ChoiceItem[] = [
   [
     "Claim: Schools should start later.",
     "A study found that students who started later had better grades and attendance.",
-    ["Many students ride the bus to school.", "Some teachers prefer to arrive early."],
+    [
+      "Many students ride the yellow bus to school, and some of them live more than ten miles away.",
+      "Some teachers prefer to arrive early.",
+    ],
   ],
   [
     "Claim: Our town needs a public library branch on the east side.",
     "East-side families travel forty minutes to reach the nearest library.",
-    ["The main library was built in 1920.", "Libraries lend books and movies."],
+    ["The main library downtown was built in 1920 and has a famous stone staircase.", "Libraries lend books and movies."],
   ],
   [
     "Claim: Recess improves learning.",
     "Teachers report that students focus better in class after a break to play.",
-    ["Recess usually happens outside.", "Students play tag and soccer at recess."],
+    ["Recess usually happens outside.", "Students play tag, soccer and jump rope at recess on the field behind the school."],
   ],
   [
     "Claim: Planting trees cools city streets.",
     "Streets lined with trees are up to ten degrees cooler on summer afternoons.",
-    ["Oak trees can live for centuries.", "Leaves change color in the fall."],
+    ["Oak trees can live for centuries, and some in our state are more than five hundred years old.", "Leaves change color in the fall."],
   ],
   [
     "Claim: Learning music helps students in other subjects.",
     "Students in music programs scored higher on math tests in several studies.",
-    ["The band plays at every football game.", "Pianos have eighty-eight keys."],
+    ["The school band plays at every home football game and marches in the town parade.", "Pianos have eighty-eight keys."],
   ],
   [
     "Claim: Pets can make people healthier.",
     "Dog owners walk more each day than people without dogs, on average.",
-    ["Dogs come in hundreds of breeds.", "Cats were kept in ancient Egypt."],
+    ["Dogs come in hundreds of breeds.", "Cats were kept as pets in ancient Egypt, where people painted them on the walls of tombs."],
   ],
   [
     "Claim: Cell phones should be put away during class.",
@@ -75,7 +94,7 @@ const relevantEvidenceBank: readonly ChoiceItem[] = [
   [
     "Claim: Students should help plan the school menu.",
     "When students chose some meals at one school, far less food was thrown away.",
-    ["The cafeteria opens at eleven.", "Lunch trays are washed every day."],
+    ["The cafeteria opens at eleven, and the first lunch group comes in at a quarter past.", "Lunch trays are washed every day."],
   ],
 ];
 
@@ -83,42 +102,66 @@ const strongerEvidenceBank: readonly ChoiceItem[] = [
   [
     "Claim: Our school should add a recycling program.",
     "Last month, the school threw away four hundred pounds of paper that could have been recycled.",
-    ["My friend thinks recycling is cool.", "Everybody knows recycling is good."],
+    [
+      "My best friend thinks recycling is really cool and always tells me to put my cans in the blue bin.",
+      "Everybody knows recycling is good.",
+    ],
   ],
   [
     "Claim: The park needs more lights.",
     "Police reports show that most problems in the park happen after dark in its unlit areas.",
-    ["I feel a little scared in the park at night.", "Parks are nicer when they are bright."],
+    [
+      "I feel a little scared when I walk through the park at night, especially near the trees by the pond.",
+      "Parks are nicer when they are bright.",
+    ],
   ],
   [
     "Claim: The crosswalk near the school is dangerous.",
     "There were six accidents at that crosswalk last year, according to city records.",
-    ["Some parents say the crosswalk seems risky.", "Crosswalks can be dangerous anywhere."],
+    [
+      "Some parents at the last school meeting said the crosswalk seems risky to them when they drop off their kids.",
+      "Crosswalks can be dangerous anywhere.",
+    ],
   ],
   [
     "Claim: Students need more time for lunch.",
     "In a survey of three hundred students, most said they could not finish eating in twenty minutes.",
-    ["One student said lunch feels short.", "Lunch is the best part of the day."],
+    [
+      "One student in my class said lunch feels short, because she is always the last in line for food.",
+      "Lunch is the best part of the day.",
+    ],
   ],
   [
     "Claim: Reading for fun improves vocabulary.",
     "Researchers found that students who read for fun learned thousands more words each year.",
-    ["Reading is a fun way to spend time.", "My sister reads a lot and seems smart."],
+    [
+      "Reading is a fun way to spend time.",
+      "My older sister reads a lot of books for fun, and she seems really smart and knows lots of big words.",
+    ],
   ],
   [
     "Claim: The town pool should stay open later.",
     "Records show the pool is full every evening until it closes at six.",
-    ["Swimming is great exercise.", "A few kids wish the pool stayed open."],
+    [
+      "Swimming is great exercise.",
+      "A few kids I know wish the pool stayed open later, because they cannot go until their parents get home.",
+    ],
   ],
   [
     "Claim: Walking to school is good for students' health.",
     "Doctors recommend sixty minutes of activity a day, and a walk to school can supply a third of it.",
-    ["Walking is something everyone can do.", "I like to walk with my friends."],
+    [
+      "Walking is something everyone can do.",
+      "I like to walk to school with my friends, and I always feel better and more awake when I get there.",
+    ],
   ],
   [
     "Claim: The library needs more computers.",
     "Each afternoon, students wait an average of thirty minutes to use one of the four computers.",
-    ["Computers are important nowadays.", "Some students would like a computer."],
+    [
+      "Computers are important nowadays.",
+      "Some students would like a computer, and I have heard them complain about it at lunch more than once.",
+    ],
   ],
 ];
 
@@ -126,22 +169,34 @@ const reasoningBank: readonly ChoiceItem[] = [
   [
     "Claim: Schools should start later. Evidence: Teenagers' bodies fall asleep late at night.",
     "If students cannot fall asleep early, a later start lets them get the sleep they need.",
-    ["Many schools start at eight.", "Teenagers like to stay up late."],
+    [
+      "Many schools start at eight.",
+      "Teenagers like to stay up late on weekends, talking with friends or playing games until after midnight.",
+    ],
   ],
   [
     "Claim: The town should plant more trees. Evidence: Tree-lined streets are much cooler in summer.",
     "Cooler streets would make summers safer and more comfortable for everyone in town.",
-    ["Trees are beautiful in every season.", "Some streets already have trees."],
+    [
+      "Trees are beautiful in every season, from the bright flowers of spring to the bare branches of winter.",
+      "Some streets already have trees.",
+    ],
   ],
   [
     "Claim: Students should learn to cook. Evidence: Home-cooked meals tend to be healthier than fast food.",
     "Knowing how to cook lets students choose healthier meals for the rest of their lives.",
-    ["Cooking classes are fun.", "Fast food is sold everywhere."],
+    [
+      "Cooking classes are fun.",
+      "Fast food is sold almost everywhere now, from highway rest stops to the food courts of big shopping malls.",
+    ],
   ],
   [
     "Claim: The library should open on Sundays. Evidence: Most students do big projects on weekends.",
     "Opening on Sunday would give students resources at the time they need them most.",
-    ["The library is closed on Sundays.", "Many families go out on Sundays."],
+    [
+      "The library is closed on Sundays.",
+      "Many families go out together on Sundays, to visit relatives, eat at restaurants or play in the park.",
+    ],
   ],
   [
     "Claim: Bike lanes make streets safer. Evidence: Cities with bike lanes report fewer crashes with cyclists.",
@@ -151,17 +206,23 @@ const reasoningBank: readonly ChoiceItem[] = [
   [
     "Claim: Students should have a say in rules. Evidence: People follow rules more when they helped make them.",
     "If students help write the rules, they will feel they are fair and be more likely to follow them.",
-    ["Rules are posted in every classroom.", "Some rules are very old."],
+    [
+      "Rules are posted in every classroom.",
+      "Some of the rules in our school handbook are very old and were written before any of us were born.",
+    ],
   ],
   [
     "Claim: Families should eat dinner together. Evidence: Children who eat with family do better in school.",
     "Shared meals give children time to talk about their day and get support with their problems.",
-    ["Dinner is usually eaten in the evening.", "Some families eat in front of the TV."],
+    [
+      "Dinner is usually eaten in the evening.",
+      "Some families eat dinner in front of the TV, watching the news or a favorite show while they eat.",
+    ],
   ],
   [
     "Claim: Our school needs a garden. Evidence: Students who grow vegetables are more willing to eat them.",
     "A garden would lead students to eat more vegetables and be healthier.",
-    ["Vegetables grow best in the spring.", "Our school has a large field."],
+    ["Vegetables grow best in the spring and early summer, when the days are long and the soil is warm.", "Our school has a large field."],
   ],
 ];
 
@@ -174,12 +235,15 @@ const counterclaimBank: readonly ChoiceItem[] = [
   [
     "Claim: Homework should be limited to thirty minutes a night.",
     "Others argue that more practice at home leads to higher test scores.",
-    ["Too much homework leaves no time for sleep.", "Students need time for family and play."],
+    [
+      "Too much homework leaves no time for sleep.",
+      "Students need time in the evenings for family, play and rest, not just more work at the kitchen table.",
+    ],
   ],
   [
     "Claim: The town should build a skate park.",
     "Critics worry that a skate park will be noisy for the nearby houses.",
-    ["Skaters now ride in parking lots, which is dangerous.", "A skate park gives teenagers a safe place to meet."],
+    ["Skaters now ride in parking lots, which is dangerous.", "A skate park gives teenagers a safe place to meet after school."],
   ],
   [
     "Claim: Students should be allowed to use phones at lunch.",
@@ -189,22 +253,34 @@ const counterclaimBank: readonly ChoiceItem[] = [
   [
     "Claim: Zoos should be closed.",
     "Supporters point out that zoos help save endangered species.",
-    ["Large animals need more space than zoos give them.", "Animals in zoos often show signs of stress."],
+    [
+      "Large animals need more space than zoos give them.",
+      "Animals in zoos often show signs of stress, such as pacing back and forth or pulling out their own fur.",
+    ],
   ],
   [
     "Claim: School should run all year with shorter breaks.",
     "Many families say summer is their only time to travel together.",
-    ["Students forget less over short breaks.", "Teachers spend less time on review."],
+    [
+      "Students forget less over short breaks.",
+      "Teachers spend less time on review at the start of each year, so classes can move on to new lessons sooner.",
+    ],
   ],
   [
     "Claim: The city should ban cars from Main Street.",
     "Shop owners fear that without cars, fewer customers will come.",
-    ["Walkers would make the street livelier.", "The air on Main Street would be cleaner."],
+    [
+      "Walkers would make the street livelier.",
+      "The air on Main Street would be cleaner and the street quieter, which would make it a nicer place to shop.",
+    ],
   ],
   [
     "Claim: Students should choose their own reading books.",
     "Some teachers argue that assigned books expose students to important works they would not pick.",
-    ["Choice makes students more eager to read.", "Students who read more read better."],
+    [
+      "Choice makes students more eager to read.",
+      "Students who read more read better, and they are more likely to read more when the books are ones they picked.",
+    ],
   ],
 ];
 
@@ -212,62 +288,98 @@ const rebuttalBank: readonly ChoiceItem[] = [
   [
     "Counterclaim: Uniforms limit self-expression.",
     "However, students can still express themselves through their ideas, art and activities.",
-    ["Uniforms do limit what students can wear.", "Uniforms come in many colors."],
+    [
+      "Uniforms do limit what students can wear.",
+      "Uniforms come in many colors, and most schools choose the colors of their own sports teams.",
+    ],
   ],
   [
     "Counterclaim: A skate park will be too noisy.",
     "However, the park could be built in the field by the highway, far from any homes.",
-    ["Skateboards are very noisy.", "Many people dislike noise."],
+    ["Skateboards are very noisy.", "Many people dislike noise, especially late in the evening when they are trying to sleep."],
   ],
   [
     "Counterclaim: Without cars, shops on Main Street will lose customers.",
     "Yet towns that closed streets to cars found that shops gained customers from more people walking by.",
-    ["Shops do need customers.", "Some people drive to every store."],
+    [
+      "Shops on Main Street do need customers, and several of them have struggled to stay open in recent years.",
+      "Some people drive to every store, even ones that are only a few blocks away from their homes.",
+    ],
   ],
   [
     "Counterclaim: More homework raises test scores.",
     "Still, research shows that beyond about an hour, extra homework adds little for young students.",
-    ["Practice can help students learn.", "Test scores matter to schools."],
+    [
+      "Practice can help students learn, and some students do need extra practice at home to keep up.",
+      "Test scores matter a great deal to schools, parents and the people who run the district.",
+    ],
   ],
   [
     "Counterclaim: Phones keep students from talking at lunch.",
     "However, a simple rule of phones down for the first ten minutes could keep conversation going.",
-    ["Phones can be distracting.", "Students like to talk at lunch."],
+    ["Phones can be distracting.", "Students like to talk with their friends at lunch about their classes, games and weekend plans."],
   ],
   [
     "Counterclaim: Zoos save endangered species.",
     "But most zoo animals are not endangered, and wildlife parks can protect rare species in their own habitats.",
-    ["Some species have been saved by zoos.", "Zoos are popular with families."],
+    [
+      "Some species, like the California condor, have been saved from dying out by zoos.",
+      "Zoos are popular with families, and the city zoo had more than a million visitors last year alone, a record.",
+    ],
   ],
   [
     "Counterclaim: Families need summer to travel.",
     "However, a year-round calendar includes several breaks of two or three weeks that families can use for trips.",
-    ["Summer is a good time to travel.", "Travel can be expensive."],
+    ["Summer is a good time to travel.", "Travel can be expensive, especially in summer, when the prices of flights and hotels go up."],
   ],
   [
     "Counterclaim: Assigned books expose students to important works.",
     "Even so, teachers can offer a list of important books and let students choose from it.",
-    ["Some classic books are important.", "Teachers know many good books."],
+    ["Some classic books are important.", "Teachers know many good books, and most of them have read hundreds of novels over the years."],
   ],
 ];
 
 const preciseClaimBank: readonly ChoiceItem[] = [
-  ["", "Our school should replace soda machines with water fountains.", ["Drinks are important.", "Our school has two soda machines."]],
-  ["", "The town should keep the library open until nine on weeknights.", ["Libraries are good.", "The library closes at six."]],
-  ["", "Middle schools should offer cooking as a required class.", ["Cooking is a thing people do.", "Some schools have kitchens."]],
-  ["", "Every classroom should have ten minutes of silent reading each day.", ["Reading matters a lot.", "Our class reads on Mondays."]],
+  [
+    "",
+    "Our school should replace soda machines with water fountains.",
+    ["Drinks are important.", "Our school has two soda machines, one by the gym and one outside the cafeteria."],
+  ],
+  [
+    "",
+    "The town should keep the library open until nine on weeknights.",
+    ["Libraries are good.", "The library closes at six on weeknights and at four on Saturdays and Sundays."],
+  ],
+  [
+    "",
+    "Middle schools should offer cooking as a required class.",
+    ["Cooking is a thing people do.", "Some schools have kitchens with ovens and sinks that students are allowed to use."],
+  ],
+  [
+    "",
+    "Every classroom should have ten minutes of silent reading each day.",
+    ["Reading matters a lot, and it is one of the most important things in everyone's life.", "Our class reads on Mondays."],
+  ],
   [
     "",
     "The city should turn the empty lot on Oak Street into a community garden.",
     ["Gardens are nice.", "The lot on Oak Street is empty."],
   ],
-  ["", "Students should be allowed to retake one test each term.", ["Tests are a big deal.", "Our school gives tests every month."]],
+  [
+    "",
+    "Students should be allowed to retake one test each term.",
+    ["Tests are a big deal.", "Our school gives tests in every subject at the end of each month of the term."],
+  ],
   [
     "",
     "Buses should stop at the new apartments on River Road.",
-    ["Transportation is important.", "New apartments were built on River Road."],
+    ["Transportation is important.", "New apartments for three hundred families were built on River Road last year."],
   ],
-  ["", "Our team should practice three times a week instead of two.", ["Sports are fun.", "The team practices on Tuesdays and Thursdays."]],
+  [
+    "",
+    "Our team should practice three times a week instead of two.",
+    ["Sports are fun.", "The team practices on Tuesdays and Thursdays from four to six in the school gym."],
+  ],
 ];
 
 const conclusionBank: readonly ChoiceItem[] = [
@@ -279,17 +391,20 @@ const conclusionBank: readonly ChoiceItem[] = [
   [
     "Evidence: The new crosswalk had no accidents in its first year, while the old one had five.",
     "The new crosswalk seems to have made that corner safer.",
-    ["Crosswalks prevent all accidents.", "No one will ever be hurt there again."],
+    ["Crosswalks like this one prevent all accidents, in every town and on every kind of road.", "No one will ever be hurt there again."],
   ],
   [
     "Evidence: Three of the five apple trees in the orchard had worms this year.",
     "Worms were a problem for many trees in the orchard this year.",
-    ["Every apple tree in the country has worms.", "Apples are no longer safe to eat."],
+    [
+      "Every apple tree in the country has worms.",
+      "Apples from this orchard and every other orchard are no longer safe for anyone to eat.",
+    ],
   ],
   [
     "Evidence: Sales of the school's healthy snacks doubled after prices were lowered.",
     "Lower prices led more students to buy the healthy snacks.",
-    ["Students only care about prices.", "All students now eat healthy food."],
+    ["Students only care about prices.", "All students at the school now eat healthy food at every meal."],
   ],
   [
     "Evidence: Two students who studied with flash cards scored higher than they had before.",
@@ -309,7 +424,10 @@ const conclusionBank: readonly ChoiceItem[] = [
   [
     "Evidence: A study of one thousand students found that those who slept more had better grades on average.",
     "More sleep is linked to better grades for many students.",
-    ["Sleeping more guarantees perfect grades.", "Students with low grades never sleep."],
+    [
+      "Sleeping more guarantees perfect grades.",
+      "Students with low grades never get enough sleep, and that is the only reason their grades are low.",
+    ],
   ],
 ];
 

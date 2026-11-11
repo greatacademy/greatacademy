@@ -202,26 +202,26 @@ indirect|Mrs. Kim gave Leo a zero for copying, then stayed after school to help 
 /** allusionMore are more sentences with an allusion, with what each suggests. */
 export const allusionMore: readonly ChoiceItem[] = bars(`
 His promise to fix the roads turned out to be a Trojan horse for higher taxes.|A gift or offer hides a harmful purpose.|The promise was kept exactly as he said.|He gave the town a wooden horse.
-The athlete's weak ankle was his Achilles' heel.|It is the one weak point in someone otherwise strong.|He was the fastest runner on the team.|His heel helped him win the race.
+The athlete's weak ankle was his Achilles' heel.|It is the one weak point in someone otherwise strong.|He was the fastest runner on the team.|His strong heel helped him push off and win the race at the end.
 Getting the city council to agree on anything is a Herculean task.|It is a job that needs enormous strength or effort.|It is a quick and easy job.|It is a job only for one person named Hercules.
-She has the Midas touch with failing restaurants.|Everything she works on becomes successful and profitable.|She ruins everything she touches.|She likes to decorate restaurants in gold.
+She has the Midas touch with failing restaurants.|Everything she works on becomes successful and profitable.|She ruins everything she touches.|She likes to decorate her restaurants in gold paint and shiny gold lamps.
 After the scandal, the senator found himself in a Catch-22.|Every choice open to him leads to a bad result.|He had twenty-two ways out.|He was caught by twenty-two reporters.
-The tiny startup was a modern Cinderella story.|Something humble rose suddenly to great success.|The company was cruel to its workers.|The company made glass shoes.
-His refusal to ask for directions was a kind of odyssey.|It became a long, wandering journey full of trouble.|It was a short and simple trip.|He refused to read a famous poem.
+The tiny startup was a modern Cinderella story.|Something humble rose suddenly to great success.|The company was cruel to its workers, like a wicked stepmother.|The company made glass shoes.
+His refusal to ask for directions was a kind of odyssey.|It became a long, wandering journey full of trouble.|It was a short and simple trip.|He refused to read a famous long poem about a sailor that he was given in school.
 The two brothers' rivalry was like Cain and Abel's.|Their rivalry is bitter and could become violent.|They are the best of friends.|They both work as farmers.
 She felt like Atlas, carrying the whole family's problems on her shoulders.|She is bearing a huge burden alone.|She is very strong and enjoys lifting things.|She has a map of the world.
-The candidate's speech was a siren song to anxious voters.|It was attractive but likely to lead them into danger.|It was a loud warning of danger.|It was sung beautifully at the end.
-Opening the attic after forty years felt like finding Aladdin's cave.|It was a place full of unexpected treasures.|It was a dangerous and dark trap.|It was a small, empty room.
+The candidate's speech was a siren song to anxious voters.|It was attractive but likely to lead them into danger.|It was a loud warning of danger.|It was a song that was sung beautifully by a choir at the end of the evening.
+Opening the attic after forty years felt like finding Aladdin's cave.|It was a place full of unexpected treasures.|It was a dangerous and dark trap that no one could escape once they went inside.|It was a small, empty room.
 His rise and fall in the company was the story of Icarus.|Too much ambition led him to ruin.|He was careful and slowly rose to the top.|He learned to fly airplanes.
-The forgotten letter in the drawer was her Rosetta Stone.|It was the key that made something puzzling understandable.|It was a heavy, useless stone.|It was written in Egyptian.
+The forgotten letter in the drawer was her Rosetta Stone.|It was the key that made something puzzling understandable.|It was a heavy, useless stone.|It was written in ancient Egyptian and carved into a large stone tablet.
 The dancer was a Romeo, leaving broken hearts in every city.|He is a romantic lover of many women.|He is a loyal husband.|He is a famous playwright.
 The manager acted like Big Brother, watching every email his workers sent.|He watched and controlled people too closely.|He took care of his workers like an older brother.|He was the oldest person in the office.
-The government's new rule was met with a Pyrrhic victory for its supporters.|They won, but at such a cost that it was nearly a defeat.|They won easily and gained a lot.|They lost the vote completely.
+The government's new rule was met with a Pyrrhic victory for its supporters.|They won, but at such a cost that it was nearly a defeat.|They won easily and gained a lot of new seats.|They lost the vote completely.
 Waiting for the results felt like the sword of Damocles hanging over us.|A danger threatened at every moment.|We were preparing for a sword fight.|We were relaxed and happy.
-After years of victories, the general finally met his Waterloo.|He suffered a final, decisive defeat.|He won his greatest victory.|He visited a famous town in Belgium.
+After years of victories, the general finally met his Waterloo.|He suffered a final, decisive defeat.|He won his greatest victory.|He visited a famous little town in Belgium and toured its old battlefield.
 The coach was a Scrooge with the team's budget.|He was very unwilling to spend money.|He was very generous with money.|He loved celebrating holidays.
 Moving to a new country, he felt like Rip Van Winkle, waking into a world he did not recognize.|Everything around him had changed beyond what he knew.|He slept well on the journey.|He felt young and full of energy.
-Her plan to win the election was quixotic.|It was idealistic but impractical and unlikely to succeed.|It was carefully planned and sure to work.|It involved fighting real giants.
+Her plan to win the election was quixotic.|It was idealistic but impractical and unlikely to succeed.|It was carefully planned and sure to work.|It involved fighting real giants and riding out on horseback against them.
 The leaked memo was the smoking gun investigators needed.|It was clear proof that someone was guilty.|It was a dangerous weapon.|It was evidence that someone was innocent.
 `);
 
@@ -258,25 +258,25 @@ paradox|What we hold too tightly, we often lose.
 export const sourceMore: readonly ChoiceItem[] = bars(`
 You are writing about the population of your country. Which source is most credible?|The national statistics office's latest census report|A travel website's page of fun facts|A comment on a social media post
 You are writing about the safety of a children's car seat. Which source is most credible?|Crash test results from an independent safety agency|The car seat company's advertisement|A parent's review on a shopping site
-You are writing about the causes of the First World War. Which source is most credible?|A history book by a university historian, with notes on its sources|A war film based loosely on events|A video game set in the war
-You are writing about how a new law affects renters. Which source is most credible?|The text of the law and a report by a nonpartisan research group|A landlord association's flyer|An angry post by a tenant who did not read the law
+You are writing about the causes of the First World War. Which source is most credible?|A history book by a university historian, with notes on its sources|A war film based loosely on events, which won several awards for its battle scenes|A video game set in the war
+You are writing about how a new law affects renters. Which source is most credible?|The text of the law and a report by a nonpartisan research group|A landlord association's flyer explaining what it says the law will change|An angry post by a tenant who did not read the law
 You are writing about the nutrition of breakfast cereals. Which source is most credible?|A government health agency's report on nutrition labels|A cereal maker's television commercial|A celebrity chef's opinion on a talk show
-You are writing about the effects of a drought on farms this year. Which source is most credible?|A recent report by the national weather service and farm agency|A weather report from ten years ago|A rumor shared in a farmers' chat group
-You are writing about whether a famous quotation is real. Which source is most credible?|A scholarly edition of the speaker's collected speeches and letters|A poster with the quotation over a sunset|A quotation website with no sources listed
+You are writing about the effects of a drought on farms this year. Which source is most credible?|A recent report by the national weather service and farm agency|A weather report from ten years ago|A rumor shared in a farmers' chat group by a member who says he heard it in town
+You are writing about whether a famous quotation is real. Which source is most credible?|A scholarly edition of the speaker's collected speeches and letters|A poster with the quotation over a sunset, sold in a shop with other famous sayings|A quotation website with no sources listed
 You are writing about the dangers of a volcano near a city. Which source is most credible?|A geological survey's monitoring report on the volcano|A tourist brochure for the volcano's hiking trails|A novel set on the volcano
-You are writing about how much homework affects learning. Which source is most credible?|A review of many studies in an education research journal|A homework-help company's blog|An opinion from a student who dislikes homework
-You are writing about the history of a local factory. Which source is most credible?|The factory's archived records and newspaper reports from the time|A website selling souvenirs of the town|A friend's memory of a story his uncle told
+You are writing about how much homework affects learning. Which source is most credible?|A review of many studies in an education research journal|A homework-help company's blog|An opinion from a student who dislikes homework, posted on the school's website
+You are writing about the history of a local factory. Which source is most credible?|The factory's archived records and newspaper reports from the time|A website selling souvenirs of the town|A friend's memory of a story his uncle told him about the factory when he was a boy
 You are writing about a new treatment for asthma. Which source is most credible?|Results of a clinical trial published in a peer-reviewed medical journal|An advertisement from the company that makes the treatment|A post on a health forum by an unnamed user
 You are writing about air pollution in your city. Which source is most credible?|Data from the city's air-quality monitoring stations|A car company's report on its own vehicles|A meme about smog
 You are writing about the life of a famous poet. Which source is most credible?|A biography by a scholar who studied the poet's letters and diaries|A film loosely based on the poet's life|A fan page that invents scenes from the poet's life
-You are writing about whether electric cars are cleaner than gasoline cars. Which source is most credible?|A study by independent researchers comparing both kinds over their whole lives|An oil company's pamphlet|An electric car maker's advertisement
-You are writing about a recent election's results. Which source is most credible?|The official results published by the election commission|A partisan blog that disputes the count|A text message forwarded many times
+You are writing about whether electric cars are cleaner than gasoline cars. Which source is most credible?|A study by independent researchers comparing both kinds over their whole lives|An oil company's pamphlet|An electric car maker's advertisement comparing its cars with ones that burn gasoline
+You are writing about a recent election's results. Which source is most credible?|The official results published by the election commission|A partisan blog that disputes the count, with charts its writers made themselves|A text message forwarded many times
 You are writing about how bees communicate. Which source is most credible?|A book by a biologist who has studied bees for decades|A children's cartoon about a talking bee|A post by someone who keeps one hive
-You are writing about the cost of college. Which source is most credible?|Data from the government's education department on tuition and aid|A loan company's advertisement|A friend's guess about what college costs
-You are writing about the effects of screen time on sleep. Which source is most credible?|A study by sleep scientists in a medical journal|A phone company's press release|An influencer's video about her bedtime routine
+You are writing about the cost of college. Which source is most credible?|Data from the government's education department on tuition and aid|A loan company's advertisement|A friend's guess about what college costs, based on what his older sister paid
+You are writing about the effects of screen time on sleep. Which source is most credible?|A study by sleep scientists in a medical journal|A phone company's press release|An influencer's video about her bedtime routine, watched by millions of teenagers
 You are writing about a war that ended in 1975. Which source is most credible?|Documents from the time and a historian's book that analyzes them|A website with no author or date|A song written about the war
 You are writing about the safety of tap water in your town. Which source is most credible?|The water utility's latest test results, checked by a state agency|A company selling home water filters|A neighbor's complaint about the taste
-You are writing about the speed of the fastest land animal. Which source is most credible?|A wildlife research institute's published measurements|A cartoon that shows a cheetah racing a car|A trivia game card with no source
+You are writing about the speed of the fastest land animal. Which source is most credible?|A wildlife research institute's published measurements|A cartoon that shows a cheetah racing a car on the highway and winning easily|A trivia game card with no source
 You are writing about current unemployment figures. Which source is most credible?|The latest monthly report from the national labor statistics office|A report from five years ago|An online comment from someone who lost a job
 `);
 

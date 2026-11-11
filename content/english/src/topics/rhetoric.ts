@@ -365,12 +365,12 @@ const allusionBank: readonly ChoiceItem[] = [
   [
     "Selling the family farm would be opening Pandora's box.",
     "It would release many troubles that could not be undone.",
-    ["It would make the family very rich.", "It would let them keep the farm safe."],
+    ["It would make the family very rich, with enough money to buy a big house in the city.", "It would let them keep the farm safe."],
   ],
   [
     "The small company faced the giant corporation like David facing Goliath.",
     "A weak side is challenging a much stronger one, and might win.",
-    ["The two companies are the same size.", "The small company has already lost."],
+    ["The two companies are the same size.", "The small company has already lost the fight and is closing down."],
   ],
   [
     "Tired of the noise, he wished he could find his own Walden.",
@@ -380,7 +380,7 @@ const allusionBank: readonly ChoiceItem[] = [
   [
     "Her one weakness, her Achilles' heel, was her fear of speaking in public.",
     "It is the single weak point in someone otherwise strong.",
-    ["It is her greatest strength.", "It is an injury to her foot."],
+    ["It is her greatest strength.", "It is an old injury to her foot that still hurts when she walks."],
   ],
   [
     "Finishing the project became a Herculean task.",
@@ -400,7 +400,7 @@ const allusionBank: readonly ChoiceItem[] = [
   [
     "Leaving his job to chase a dream, he felt he had crossed the Rubicon.",
     "He has made a choice that cannot be taken back.",
-    ["He has gone on a long journey by boat.", "He has failed at his dream."],
+    ["He has gone on a long journey by boat across a river in another country.", "He has failed at his dream."],
   ],
   ...allusionMore,
 ];
@@ -467,17 +467,23 @@ const sourceBank: readonly ChoiceItem[] = [
   [
     "You are writing about the health effects of sleep. Which source is most credible?",
     "A study in a medical journal by sleep researchers at a university",
-    ["A mattress company's advertisement about better sleep", "An anonymous post on a forum about staying up late"],
+    [
+      "A mattress company's advertisement about better sleep, quoting a doctor it pays",
+      "An anonymous post on a forum about staying up late",
+    ],
   ],
   [
     "You are writing about the history of the town's bridge. Which source is most credible?",
     "Records kept by the town's historical society, with dates and photographs",
-    ["A blog post by someone who once drove over the bridge", "A souvenir shop's leaflet with no author"],
+    [
+      "A blog post by someone who once drove over the bridge, with photos of it from the car window",
+      "A souvenir shop's leaflet with no author",
+    ],
   ],
   [
     "You are writing about whether a new medicine works. Which source is most credible?",
     "A report by an independent health agency that reviewed many trials",
-    ["The medicine maker's website", "A celebrity's interview praising the medicine"],
+    ["The medicine maker's website, with a long page of glowing reviews from customers", "A celebrity's interview praising the medicine"],
   ],
   [
     "You are writing about this year's weather in your region. Which source is most credible?",
@@ -497,12 +503,12 @@ const sourceBank: readonly ChoiceItem[] = [
   [
     "You are writing about recycling rates in your country. Which source is most credible?",
     "Data published by the government's environment agency, updated this year",
-    ["A news article from fifteen years ago", "A comment by a reader below an online article"],
+    ["A news article from fifteen years ago", "A comment by a reader below an online article, with hundreds of likes and replies"],
   ],
   [
     "You are writing about the dangers of a volcano. Which source is most credible?",
     "A geological survey's report written by volcano scientists",
-    ["A travel agency's page about visiting the volcano", "A novel set near the volcano"],
+    ["A travel agency's page about visiting the volcano, with tips on the best season to go", "A novel set near the volcano"],
   ],
   ...sourceMore,
 ];

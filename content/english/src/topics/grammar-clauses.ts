@@ -3,6 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
 import {
+  lateComma,
   moreAppositiveCommas,
   moreAppositiveFinds,
   moreMisplacedFinds,
@@ -55,13 +56,13 @@ const adjOrAdvBank: readonly ChoiceItem[] = [
 const phraseBank: readonly ChoiceItem[] = [
   ["The cat slept under the warm blanket.", "under the warm blanket", ["The cat", "slept under", "the warm"]],
   ["A letter from my aunt arrived today.", "from my aunt", ["A letter", "arrived today", "my aunt arrived"]],
-  ["We hiked through the dark forest.", "through the dark forest", ["We hiked", "hiked through", "the dark"]],
-  ["The book on the top shelf is mine.", "on the top shelf", ["The book", "is mine", "top shelf is"]],
+  ["We hiked through the dark forest.", "through the dark forest", ["We hiked", "hiked through the dark forest", "the dark"]],
+  ["The book on the top shelf is mine.", "on the top shelf", ["The book on the top shelf", "is mine", "top shelf is"]],
   ["They ate lunch beside the river.", "beside the river", ["They ate", "ate lunch", "lunch beside"]],
-  ["The boy with the red hat waved.", "with the red hat", ["The boy", "hat waved", "the red"]],
+  ["The boy with the red hat waved.", "with the red hat", ["The boy with the red hat", "hat waved", "the red"]],
   ["She hid the gift behind the sofa.", "behind the sofa", ["She hid", "the gift", "gift behind"]],
   ["The path to the beach is narrow.", "to the beach", ["The path", "is narrow", "beach is"]],
-  ["He ran across the field.", "across the field", ["He ran", "ran across", "the field"]],
+  ["He ran across the field.", "across the field", ["He ran", "ran across the field", "the field"]],
   ["After the movie, we went home.", "After the movie", ["we went", "went home", "movie, we"]],
 ];
 
@@ -516,16 +517,21 @@ const adjOrAdv = (wrong: string) =>
 
 const prepositions = ["under", "through", "beside", "behind", "across", "from", "on", "with", "to", "after"];
 
-const notPhrase = (wrong: string) =>
-  wrong.split(/[ ,]+/).some((w) => prepositions.includes(w.toLowerCase()))
+const notPhrase = (wrong: string, right: string) =>
+  wrong.toLowerCase().endsWith(` ${right.toLowerCase()}`)
     ? t(
-        `“${wrong}” has the preposition in the wrong place. A prepositional phrase begins with the preposition and runs to the noun after it.`,
-        `“${wrong}” 中介词的位置不对。介词短语以介词开头，一直到它后面的名词。`,
+        `“${wrong}” holds the phrase but also words before it. A prepositional phrase begins with the preposition itself, so leave out the words in front of it.`,
+        `“${wrong}” 包含了这个短语，但也带上了它前面的词。介词短语从介词本身开始，所以要去掉它前面的词。`,
       )
-    : t(
-        `“${wrong}” has no preposition, a word such as *under*, *from* or *across* that links a noun to the rest of the sentence.`,
-        `“${wrong}” 里没有介词，也就是 *under*、*from*、*across* 这类把名词与句子其余部分联系起来的词。`,
-      );
+    : wrong.split(/[ ,]+/).some((w) => prepositions.includes(w.toLowerCase()))
+      ? t(
+          `“${wrong}” has the preposition in the wrong place. A prepositional phrase begins with the preposition and runs to the noun after it.`,
+          `“${wrong}” 中介词的位置不对。介词短语以介词开头，一直到它后面的名词。`,
+        )
+      : t(
+          `“${wrong}” has no preposition, a word such as *under*, *from* or *across* that links a noun to the rest of the sentence.`,
+          `“${wrong}” 里没有介词，也就是 *under*、*from*、*across* 这类把名词与句子其余部分联系起来的词。`,
+        );
 
 const notPhraseTarget = (wrong: string, _right: string, _shown: string, position: number) =>
   position === 1
@@ -668,6 +674,11 @@ const notThisRelative = (wrong: string) => {
 };
 
 const notAppositive = (wrong: string, right: string, shown: string) => {
+  if (wrong.includes(right))
+    return t(
+      `“${wrong}” takes in the noun as well as its appositive. The appositive is only the phrase that renames the noun, not the noun itself.`,
+      `“${wrong}” 把名词和它的同位语都选上了。同位语只是为名词换个说法的那个短语，不包括名词本身。`,
+    );
   if (shown.includes(`${wrong}, ${right}`))
     return t(
       `“${wrong}” is the noun being renamed. The appositive is the phrase beside it that gives it another name.`,
@@ -689,6 +700,11 @@ const appositiveComma = (wrong: string, right: string, _shown: string, position:
     return t(
       `“${wrong}” puts the comma in the wrong place, splitting words that belong together. The comma goes just before the appositive.`,
       `“${wrong}” 的逗号位置不对，拆开了本该连在一起的词。逗号应放在同位语前面。`,
+    );
+  if (position === 2)
+    return t(
+      `“${wrong}” puts the closing comma one word too late, after the verb, so it splits the verb from the rest of the sentence. The comma goes right after the appositive.`,
+      `“${wrong}” 把后一个逗号放晚了一个词，放在了动词后面，把动词和句子其余部分隔开了。逗号应紧跟在同位语后面。`,
     );
   return position === 0
     ? t(
@@ -865,26 +881,26 @@ const adjOrAdvMore: readonly ChoiceItem[] = formTriples.flatMap(([adj, adv, noun
 ]);
 
 const phraseMore: readonly ChoiceItem[] = [
-  ["The fox hid behind the old barn.", "behind the old barn", ["The fox", "hid behind", "the old"]],
+  ["The fox hid behind the old barn.", "behind the old barn", ["The fox", "hid behind the old barn", "the old"]],
   ["A girl with long braids smiled.", "with long braids", ["A girl", "braids smiled", "long braids"]],
   ["We walked across the wooden bridge.", "across the wooden bridge", ["We walked", "walked across", "the wooden"]],
-  ["The vase on the windowsill broke.", "on the windowsill", ["The vase", "windowsill broke", "vase on"]],
+  ["The vase on the windowsill broke.", "on the windowsill", ["The vase on the windowsill", "windowsill broke", "vase on"]],
   ["Ben swam to the floating dock.", "to the floating dock", ["Ben swam", "swam to", "the floating"]],
   ["A postcard from Paris came today.", "from Paris", ["A postcard", "came today", "Paris came"]],
-  ["The train rushed through the tunnel.", "through the tunnel", ["The train", "rushed through", "train rushed"]],
+  ["The train rushed through the tunnel.", "through the tunnel", ["The train", "rushed through the tunnel", "train rushed"]],
   ["My shoes are under the bed.", "under the bed", ["My shoes", "are under", "shoes are"]],
-  ["The baby sat beside her brother.", "beside her brother", ["The baby", "sat beside", "her brother"]],
+  ["The baby sat beside her brother.", "beside her brother", ["The baby", "sat beside her brother", "her brother"]],
   ["After the concert, we ate pizza.", "After the concert", ["we ate", "ate pizza", "concert, we"]],
-  ["The man with the camera waved.", "with the camera", ["The man", "camera waved", "the man with"]],
+  ["The man with the camera waved.", "with the camera", ["The man with the camera", "camera waved", "the man with"]],
   ["Ducks paddled across the pond.", "across the pond", ["Ducks paddled", "paddled across", "the pond"]],
-  ["The note from my teacher was short.", "from my teacher", ["The note", "was short", "teacher was"]],
+  ["The note from my teacher was short.", "from my teacher", ["The note from my teacher", "was short", "teacher was"]],
   ["The kite drifted behind the trees.", "behind the trees", ["The kite", "drifted behind", "kite drifted"]],
-  ["Pia rode her bike to the library.", "to the library", ["Pia rode", "her bike", "bike to"]],
+  ["Pia rode her bike to the library.", "to the library", ["Pia rode", "her bike to the library", "bike to"]],
   ["The keys on the hook are mine.", "on the hook", ["The keys", "are mine", "hook are"]],
-  ["A deer ran through the meadow.", "through the meadow", ["A deer", "ran through", "the meadow"]],
+  ["A deer ran through the meadow.", "through the meadow", ["A deer", "ran through the meadow", "the meadow"]],
   ["We played chess after dinner.", "after dinner", ["We played", "played chess", "chess after"]],
   ["The puppy curled up beside the fire.", "beside the fire", ["The puppy", "curled up", "up beside"]],
-  ["The bucket under the sink is cracked.", "under the sink", ["The bucket", "is cracked", "sink is"]],
+  ["The bucket under the sink is cracked.", "under the sink", ["The bucket under the sink", "is cracked", "sink is"]],
 ];
 
 const phraseJobMore: readonly ChoiceItem[] = [
@@ -1446,7 +1462,13 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
-          [...appositiveCommaBank, ...moreAppositiveCommas],
+          [
+            ...appositiveCommaBank.map(
+              ([shown, right, wrong]): ChoiceItem =>
+                right.split(",").length === 3 ? [shown, right, [...wrong, lateComma(right)]] : [shown, right, wrong],
+            ),
+            ...moreAppositiveCommas,
+          ],
           (right) =>
             t(
               `**${right}** The commas mark off the appositive from the rest of the sentence.`,

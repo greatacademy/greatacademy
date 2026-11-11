@@ -139,12 +139,18 @@ const narratorEffectBank: readonly ChoiceItem[] = [
   [
     "A story about a family argument is told by an omniscient narrator who shares what every family member feels.",
     "The reader understands each side, so no one seems simply right or wrong.",
-    ["The reader only sees the argument through the youngest child's eyes.", "The reader cannot tell how anyone feels."],
+    [
+      "The reader only sees the argument through the youngest child's eyes, as she hears it from the stairs.",
+      "The reader cannot tell how anyone feels.",
+    ],
   ],
   [
     "A story about a girl's first day at a new school is told in third person limited, through her eyes only.",
     "The reader shares her worries and does not know what the other students really think of her.",
-    ["The reader knows what every student thinks of her.", "The reader hears the story in her own voice, saying I."],
+    [
+      "The reader knows what every student thinks of her.",
+      "The reader hears the whole story in her own voice, saying I and telling us everything she sees.",
+    ],
   ],
   [
     "In a ghost story, the omniscient narrator reveals that the old house is safe, while the characters inside are terrified.",
@@ -154,7 +160,10 @@ const narratorEffectBank: readonly ChoiceItem[] = [
   [
     "A boy tells his own story in first person, years later, as a grown man looking back.",
     "The reader gets both the boy's feelings and the man's wiser view of them.",
-    ["The reader knows only what the boy understood at the time.", "The reader learns the thoughts of everyone the boy met."],
+    [
+      "The reader knows only what the boy understood at the time, with none of the man's later thoughts.",
+      "The reader learns the thoughts of everyone the boy met.",
+    ],
   ],
   [
     "A story about a race is told in third person limited, through the runner who is losing.",
@@ -164,12 +173,18 @@ const narratorEffectBank: readonly ChoiceItem[] = [
   [
     "A story is told in first person by a narrator who boasts about how brave he is, while his actions show he is afraid.",
     "The reader learns to doubt the narrator and see more than he admits.",
-    ["The reader must believe everything the narrator says.", "The reader sees the story through every character's eyes."],
+    [
+      "The reader must believe everything the narrator says.",
+      "The reader sees the story through every character's eyes and learns what each one is hiding.",
+    ],
   ],
   [
     "In a war story, an omniscient narrator moves between soldiers on both sides of the battle.",
     "The reader sees that the enemies share the same fears, which makes the war feel sad rather than heroic.",
-    ["The reader only sees one army's side.", "The reader is told the story by one soldier who says I."],
+    [
+      "The reader only sees one army's side.",
+      "The reader is told the whole story by one soldier who says I and sees only his own side of the war.",
+    ],
   ],
 ];
 
@@ -179,22 +194,22 @@ const symbolBank: readonly ChoiceItem[] = [
   [
     "Throughout the story, Ana tends a small plant her late grandmother gave her. On the day Ana finally feels at home in her new country, the plant blooms.",
     "Ana's growing roots and new life in her new home",
-    ["Ana's love of gardening", "The weather in her new country"],
+    ["Ana's love of gardening", "The weather in her new country, which is colder and rainier than her old home"],
   ],
   [
     "A prisoner watches a single bird outside his window every morning. On the day he is released, he looks for it and sees it fly away.",
     "The freedom the prisoner longs for and finally wins",
-    ["The prisoner's interest in birds", "The time of year he is released"],
+    ["The prisoner's interest in the birds that fly past his window each day", "The time of year he is released"],
   ],
   [
     "After the two brothers stop speaking, the narrator notices that the bridge between their farms is falling apart. At the end, they rebuild it together.",
     "The broken and then repaired bond between the brothers",
-    ["The poor roads in the countryside", "The brothers' skill at building"],
+    ["The poor roads in the countryside", "The brothers' skill at building bridges out of wood and stone with their hands"],
   ],
   [
     "A girl keeps a light on in the window every night while her father is at sea. When he returns, she finally lets it go out.",
     "Her hope that her father will come home safely",
-    ["Her fear of the dark", "The cost of electricity"],
+    ["Her fear of the dark, which grows worse whenever the lights go out at night", "The cost of electricity"],
   ],
   [
     "The old clock in the hallway stopped on the day the family's mother left. No one in the house has wound it since.",
@@ -204,7 +219,7 @@ const symbolBank: readonly ChoiceItem[] = [
   [
     "Each time Kai is tempted to give up on his dream, he looks at the mountain peak he can see from his window. In the last scene, he stands on top of it.",
     "Kai's goal and the effort it takes to reach it",
-    ["Kai's love of the view from his room", "The height of the mountain"],
+    ["Kai's love of the view of the mountain from his bedroom window", "The height of the mountain"],
   ],
   [
     "A storm builds outside as the two friends' argument grows. When they finally apologize, the clouds break and the sun comes out.",
@@ -214,7 +229,7 @@ const symbolBank: readonly ChoiceItem[] = [
   [
     "A soldier carries his daughter's drawing in his pocket through every battle. When he is afraid, he touches it.",
     "His love for his family and the reason he keeps going",
-    ["His interest in art", "The paper he was given by the army"],
+    ["His interest in art", "The paper he was given by the army to write letters home while he was away"],
   ],
 ];
 
@@ -332,17 +347,26 @@ const citeBank: readonly ChoiceItem[] = [
   [
     "Claim: Tomas is generous even when he has little. Which quotation best supports it?",
     '"Tomas had only one coat, but when he saw the boy shivering, he took it off without a word."',
-    ['"Tomas lived in a small house at the edge of the village."', '"Everyone in the village knew Tomas by his loud laugh."'],
+    [
+      '"Tomas lived in a small stone house at the edge of the village, next to the old mill by the river."',
+      '"Everyone in the village knew Tomas by his loud laugh."',
+    ],
   ],
   [
     "Claim: The narrator is afraid of the new school. Which quotation best supports it?",
     '"I walked past the gate twice before I could make myself go in."',
-    ['"The school was a tall brick building with blue doors."', '"My mother had bought me a new backpack for the first day."'],
+    [
+      '"The school was a tall brick building with blue doors."',
+      '"My mother had bought me a new blue backpack and a box of pencils for the first day of school."',
+    ],
   ],
   [
     "Claim: The forest in the story is dangerous. Which quotation best supports it?",
     '"No one who entered the forest after dark had ever come back the same."',
-    ['"The forest stretched for miles to the north of the town."', '"In autumn, the leaves of the forest turned gold and red."'],
+    [
+      '"The forest stretched for miles to the north of the town."',
+      '"In autumn, the leaves of the forest turned gold and red, and the paths were covered in them."',
+    ],
   ],
   [
     "Claim: Elena grows more confident by the end of the story. Which quotation best supports it?",
@@ -352,22 +376,34 @@ const citeBank: readonly ChoiceItem[] = [
   [
     "Claim: The king cares more about gold than about his people. Which quotation best supports it?",
     '"While the villagers went hungry, the king ordered a new golden throne."',
-    ['"The king lived in a castle on the hill."', '"The king had ruled the land for twenty years."'],
+    [
+      '"The king lived in a castle on the hill."',
+      '"The king had ruled the land for twenty years, ever since his father died in the long winter war."',
+    ],
   ],
   [
     "Claim: The two friends' bond is stronger than their argument. Which quotation best supports it?",
     '"Even while they were not speaking, Ben still saved Leo a seat on the bus every morning."',
-    ['"Ben and Leo had argued about the soccer game."', '"Ben and Leo lived on the same street."'],
+    [
+      '"Ben and Leo had argued about the soccer game on Saturday, and neither of them would say who started it."',
+      '"Ben and Leo lived on the same street."',
+    ],
   ],
   [
     "Claim: The grandmother is wise. Which quotation best supports it?",
     '"Whenever the family argued, they went to Grandmother, and her few words always settled it."',
-    ['"Grandmother was the oldest person in the family."', '"Grandmother lived in the room at the top of the stairs."'],
+    [
+      '"Grandmother was the oldest person in the family."',
+      '"Grandmother lived in the small room at the top of the stairs, with a window that looked over the garden."',
+    ],
   ],
   [
     "Claim: The storm changes how the town sees the new family. Which quotation best supports it?",
     '"After the new family opened their home to everyone who lost power, no one called them strangers again."',
-    ['"The storm knocked out the power for three days."', '"The new family had moved to town in the spring."'],
+    [
+      '"The storm knocked out the power for three days."',
+      '"The new family had moved to town in the spring, into the yellow house at the end of our street, near the school."',
+    ],
   ],
 ];
 

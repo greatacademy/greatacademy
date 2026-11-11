@@ -669,10 +669,13 @@ const routineTypedBank: readonly TypedItem[] = routineItems.map(
 );
 
 const routineChoiceBank: readonly ChoiceItem[] = routineItems.map(
-  ({ note, right, verb, words, name }): ChoiceItem => [
+  ({ note, right, verb, words, name }, i): ChoiceItem => [
     note,
     right,
-    [`${name} ${verb} at ${words} o'clock.`, `At ${words} o'clock ${name.charAt(0).toLowerCase()}${name.slice(1)} ${verb}.`],
+    [
+      `${name} ${verb} at ${words} o'clock.`,
+      `At ${words} o'clock ${name.charAt(0).toLowerCase()}${name.slice(1)} ${i % 2 === 0 ? verb : (right.slice(name.length + 1).split(" at ")[0] ?? verb)}.`,
+    ],
   ],
 );
 
@@ -712,16 +715,21 @@ const routinesWriting: TopicDef = {
         t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"),
         routineChoiceBank,
         routineWhy,
-        (_wrong, _right, _shown, position) =>
+        (wrong, _right, shown, position) =>
           position === 0
             ? t(
                 "This leaves the verb as it is in the note, but after one person it needs *-s*.",
                 "这句的动词照抄了笔记，可单数主语后的动词要加 *-s*。",
               )
-            : t(
-                "This puts the time first, as Chinese does, and leaves out the *-s* the verb needs after one person.",
-                "这句像中文一样把时间放在前面，单数主语后的动词也漏了 *-s*。",
-              ),
+            : !wrong.endsWith(` ${shown.split(" / ")[1] ?? ""}.`)
+              ? t(
+                  "The verb has its *-s*, but this puts the time first, as Chinese does. In English the time goes last, after *at*.",
+                  "这句动词加了 *-s*，却像中文一样把时间放在前面。英语里时间要放在句末，前面加 *at*。",
+                )
+              : t(
+                  "This puts the time first, as Chinese does, and leaves out the *-s* the verb needs after one person.",
+                  "这句像中文一样把时间放在前面，单数主语后的动词也漏了 *-s*。",
+                ),
       ),
     ),
     point(

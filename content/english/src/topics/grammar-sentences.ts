@@ -20,25 +20,29 @@ const predicateBank: readonly ChoiceItem[] = [
   ["The hungry puppy chewed my shoe.", "chewed my shoe", ["The hungry puppy", "my shoe"]],
   ["Lena painted a mural on the wall.", "painted a mural on the wall", ["Lena", "a mural"]],
   ["The old clock stopped at noon.", "stopped at noon", ["The old clock", "noon"]],
-  ["Two geese landed on the pond.", "landed on the pond", ["Two geese", "the pond"]],
+  ["Two geese from the north landed on the pond.", "landed on the pond", ["Two geese from the north", "the pond"]],
   ["My uncle fixes bicycles in his garage.", "fixes bicycles in his garage", ["My uncle", "bicycles"]],
   ["The bright stars appeared after sunset.", "appeared after sunset", ["The bright stars", "sunset"]],
-  ["The baker sold the last loaf.", "sold the last loaf", ["The baker", "the last loaf"]],
+  ["The baker on our corner sold the last loaf.", "sold the last loaf", ["The baker on our corner", "the last loaf"]],
   ["A small crowd waited outside the theater.", "waited outside the theater", ["A small crowd", "the theater"]],
-  ["The river flooded the lower fields.", "flooded the lower fields", ["The river", "the lower fields"]],
-  ["Our team practiced before the game.", "practiced before the game", ["Our team", "the game"]],
+  ["The river behind the farm flooded the lower fields.", "flooded the lower fields", ["The river behind the farm", "the lower fields"]],
+  [
+    "Every player on our soccer team practiced before the game.",
+    "practiced before the game",
+    ["Every player on our soccer team", "the game"],
+  ],
 ];
 
 const movedSubjectBank: readonly ChoiceItem[] = [
-  ["After lunch, the students returned to class.", "the students", ["lunch", "class"]],
+  ["After the long assembly, the students returned to class.", "the students", ["the long assembly", "class"]],
   ["Under the bridge, a heron waited for fish.", "a heron", ["the bridge", "fish"]],
-  ["During the storm, the lights went out.", "the lights", ["the storm", "out"]],
+  ["During the violent storm, the lights went out.", "the lights", ["the violent storm", "out"]],
   ["In the morning, my brother walks the dog.", "my brother", ["the morning", "the dog"]],
   ["Behind the barn, the children built a fort.", "the children", ["the barn", "a fort"]],
   ["Across the street, a new shop opened.", "a new shop", ["the street", "opened"]],
-  ["Without a map, the hikers lost the trail.", "the hikers", ["a map", "the trail"]],
+  ["Without a detailed map, the hikers lost the trail.", "the hikers", ["a detailed map", "the trail"]],
   ["Near the door, a wet umbrella dripped.", "a wet umbrella", ["the door", "dripped"]],
-  ["Before dinner, the twins set the table.", "the twins", ["dinner", "the table"]],
+  ["Before the holiday dinner, the twins set the table.", "the twins", ["the holiday dinner", "the table"]],
   ["At the end of the race, the runners rested.", "the runners", ["the race", "the end"]],
 ];
 
@@ -123,13 +127,13 @@ const fixFragmentBank: readonly ChoiceItem[] = [
   [
     "The tall man in the green coat.",
     "The tall man in the green coat waved.",
-    ["The tall man and the green coat.", "Tall man in the green coat."],
+    ["The tall man and the green coat.", "The tall man in the green coat with the shiny buttons."],
   ],
   ["Sang in the school play.", "Lucia sang in the school play.", ["Singing in the school play.", "Sang in the play at school."]],
   [
     "Because it was too cold.",
     "We stayed inside because it was too cold.",
-    ["Because it was much too cold.", "Because of it was too cold."],
+    ["Because it was much too cold outside all afternoon.", "Because of it was too cold."],
   ],
   [
     "A jar of honey on the shelf.",
@@ -140,10 +144,14 @@ const fixFragmentBank: readonly ChoiceItem[] = [
   [
     "Barked at the mail carrier.",
     "The dog barked at the mail carrier.",
-    ["Barking at the mail carrier.", "Barked at the mail carrier again."],
+    ["Barking at the mail carrier.", "Barked loudly at the mail carrier again and again."],
   ],
   ["When the bell rings.", "When the bell rings, line up at the door.", ["When the bell rings loudly.", "When the bell and the door."]],
-  ["The last slice of pizza.", "Dad ate the last slice of pizza.", ["The very last slice of pizza.", "The last slice of the pizza."]],
+  [
+    "The last slice of pizza.",
+    "Dad ate the last slice of pizza.",
+    ["The very last slice of the cheesy pizza from dinner.", "The last slice of the pizza."],
+  ],
 ];
 
 const tenseBank: readonly ChoiceItem[] = [
@@ -551,30 +559,34 @@ const lower = (s: string) => (/^(Grandpa|Mrs?\.|Dr\.)/.test(s) ? s : s[0]!.toLow
 const upper = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
 const openers: readonly (readonly [opener: string, noun: string])[] = [
-  ["After breakfast", "breakfast"],
+  ["After a long breakfast", "a long breakfast"],
   ["On Saturday", "Saturday"],
-  ["Before sunrise", "sunrise"],
+  ["Before the first sunrise", "the first sunrise"],
   ["During the holiday", "the holiday"],
   ["In the afternoon", "the afternoon"],
-  ["After the storm", "the storm"],
+  ["After the terrible storm", "the terrible storm"],
   ["At noon", "noon"],
-  ["Before the parade", "the parade"],
-  ["During the break", "the break"],
+  ["Before the big spring parade", "the big spring parade"],
+  ["During the long lunch break", "the long lunch break"],
   ["After school", "school"],
-  ["On the last day", "the last day"],
+  ["On the last day of summer", "the last day of summer"],
   ["Before lunch", "lunch"],
   ["In the evening", "the evening"],
-  ["After the game", "the game"],
+  ["After the championship game", "the championship game"],
   ["During the visit", "the visit"],
   ["On Monday", "Monday"],
   ["At dawn", "dawn"],
   ["After the bell", "the bell"],
-  ["Before the show", "the show"],
+  ["Before the school talent show", "the school talent show"],
   ["In the spring", "the spring"],
 ];
 
 const subjectMore: readonly ChoiceItem[] = scenes.map(([s, p, o]) => [`${s} ${p}.`, s, [p, o]]);
-const predicateMore: readonly ChoiceItem[] = scenes.map(([s, p, o]) => [`${s} ${p}.`, p, [s, o]]);
+// Every other subject carries its place phrase, so the complete subject is sometimes the longer part.
+const predicateMore: readonly ChoiceItem[] = scenes.map(([s, p, o, place], i) => {
+  const subject = i % 2 === 1 ? `${s} ${place}` : s;
+  return [`${subject} ${p}.`, p, [subject, o]];
+});
 const movedSubjectMore: readonly ChoiceItem[] = scenes.map(([s, p, o], i) => {
   const [opener, noun] = openers[i]!;
   return [`${opener}, ${lower(s)} ${p}.`, lower(s), [noun, o]];
@@ -590,7 +602,11 @@ const clauseFragmentMore: readonly ChoiceItem[] = scenes.map(([s, p], i) => {
   return i % 2 === 0 ? unfinished(`${clause}.`, false) : unfinished(`${clause}, ${mainClauses[(i >> 1) % 5]}.`, true);
 });
 const fixFragmentMore: readonly ChoiceItem[] = [
-  ["A bowl of warm soup.", "Mom served a bowl of warm soup.", ["A bowl and warm soup.", "A big bowl of warm soup."]],
+  [
+    "A bowl of warm soup.",
+    "Mom served a bowl of warm soup.",
+    ["A bowl and warm soup.", "A big bowl of warm soup with fresh bread on the side."],
+  ],
   [
     "When the lights went out.",
     "When the lights went out, we lit a candle.",
@@ -603,10 +619,20 @@ const fixFragmentMore: readonly ChoiceItem[] = [
       return [
         `${clause}.`,
         `${clause}, ${mainClauses[(i >> 1) % 5]}.`,
-        [`${clause} again.`, `${word} ${lower(s)} and ${place.split(" ").slice(1).join(" ")}.`],
+        [
+          i % 4 === 0 ? `${clause} on that cold, windy afternoon.` : `${clause} again.`,
+          `${word} ${lower(s)} and ${place.split(" ").slice(1).join(" ")}.`,
+        ],
       ];
     }
-    return [`${s} ${place}.`, `${s} ${place} ${p}.`, [`${s} and ${place.split(" ").slice(1).join(" ")}.`, `${s} ${place} today.`]];
+    return [
+      `${s} ${place}.`,
+      `${s} ${place} ${p}.`,
+      [
+        `${s} and ${place.split(" ").slice(1).join(" ")}.`,
+        i % 4 === 1 ? `${s} ${place}, who had been there since early morning.` : `${s} ${place} today.`,
+      ],
+    ];
   }),
 ];
 

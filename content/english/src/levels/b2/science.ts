@@ -531,28 +531,28 @@ const scienceVerbs = vocabularyTopic({
       "determine determines determined determining",
       "to find out the facts about something; to decide or control what happens",
       "确定；决定",
-      "Tests will {determine} the cause of death.|placebo valid | Your genes partly {determine} your height.|placebo valid | Scientists are trying to {determine} the age of the rock.|placebo statistical",
+      "Tests will {determine} the cause of death.|placebo valid | Your genes partly {determine} your height.|placebo statistical | Scientists are trying to {determine} the age of the rock.|placebo statistical",
       "terminate detain",
     ),
     word(
       "indicate indicates indicated indicating",
       "to show that something is probably true; to point to something",
       "表明；指出",
-      "Early results {indicate} that the treatment works.|placebo valid | Please {indicate} your answer with a tick.|placebo valid | A red light {indicates} danger.|placebo bias",
+      "Early results {indicate} that the treatment works.|placebo valid | Please {indicate} your answer with a tick.|placebo statistical | A red light {indicates} danger.|placebo bias",
       "dedicate indict",
     ),
     word(
       "reveal reveals revealed revealing",
       "to make known something that was secret or hidden",
       "揭示；透露",
-      "The tests {revealed} a small tumor.|placebo valid | She refused to {reveal} her age.|placebo valid | The report {revealed} serious mistakes.|placebo statistical",
+      "The tests {revealed} a small tumor.|placebo valid | She refused to {reveal} her age.|placebo clinical | The report {revealed} serious mistakes.|placebo statistical",
       "revel repeal",
     ),
     word(
       "confirm confirms confirmed confirming",
       "to show or say that something is definitely true or will definitely happen",
       "证实；确认",
-      "Please {confirm} your booking by email.|bias valid | The tests {confirmed} that she had the virus.|bias statistical | Can you {confirm} the time of the meeting?|bias clinical",
+      "Please {confirm} your booking by email.|bias clinical | The tests {confirmed} that she had the virus.|bias statistical | Can you {confirm} the time of the meeting?|bias clinical",
       "conform confine",
     ),
     word(
@@ -566,35 +566,35 @@ const scienceVerbs = vocabularyTopic({
       "assess assesses assessed assessing",
       "to judge the amount, value or quality of something",
       "评估；评定",
-      "Doctors {assessed} the patient's condition.|bias statistical | The test {assesses} your reading skills.|bias placebo | It's hard to {assess} the damage.|bias valid",
+      "Doctors {assessed} the patient's condition.|bias statistical | The test {assesses} your reading skills.|bias placebo | It's hard to {assess} the damage.|bias clinical",
       "access assist",
     ),
     word(
       "identify identifies identified identifying",
       "to recognize and name someone or something",
       "识别；确认",
-      "The police {identified} the thief from the video.|bias valid | Can you {identify} this bird?|bias valid | Scientists {identified} the gene that causes the disease.|bias clinical",
+      "The police {identified} the thief from the video.|bias valid | Can you {identify} this bird?|bias statistical | Scientists {identified} the gene that causes the disease.|bias clinical",
       "identity intensify",
     ),
     word(
       "detect detects detected detecting",
       "to notice or discover something that is hard to see, hear or smell",
       "察觉；检测出",
-      "The test can {detect} cancer early.|bias valid | Dogs can {detect} smells that we can't.|bias valid | I {detected} a note of anger in her voice.|bias statistical",
+      "The test can {detect} cancer early.|bias valid | Dogs can {detect} smells that we can't.|bias clinical | I {detected} a note of anger in her voice.|bias statistical",
       "deflect protect",
     ),
     word(
       "monitor monitors monitored monitoring",
       "to watch or check something carefully over a period of time; a machine that does this",
       "监测；监视器",
-      "Nurses {monitor} the patient's heart rate.|bias valid | The government {monitors} air pollution.|bias placebo | The heart {monitor} beeped.|bias valid",
+      "Nurses {monitor} the patient's heart rate.|bias clinical | The government {monitors} air pollution.|bias placebo | The heart {monitor} beeped.|bias valid",
       "mentor monster",
     ),
     word(
       "simulate simulates simulated simulating",
       "to create a situation like a real one, often on a computer",
       "模拟；仿真",
-      "The computer {simulates} a flight.|bias valid | The game {simulates} real driving.|bias valid | Scientists {simulated} the spread of the virus.|bias statistical",
+      "The computer {simulates} a flight.|bias valid | The game {simulates} real driving.|bias statistical | Scientists {simulated} the spread of the virus.|bias statistical",
       "stimulate assimilate",
     ),
   ],
@@ -1261,10 +1261,10 @@ const doings: readonly (readonly [string, string, Deduction, string, string, str
 ];
 
 const doingChoice: readonly ChoiceItem[] = doings.map(
-  ([context, s, modal, base, ing, rest]): ChoiceItem => [
+  ([context, s, modal, base, ing, rest], k): ChoiceItem => [
     `${context} ${joinWords(s, modal, "___", rest)}.`,
     `be ${ing}`,
-    [ing, `be ${base}`],
+    k % 2 === 0 ? [ing, `be ${base}`, `been ${ing}`] : [ing, `be ${base}`],
   ],
 );
 
@@ -1313,15 +1313,20 @@ const deduction: TopicDef = {
             `推测的是此刻正在发生的事，所以情态动词后面接 *be* 加 *-ing*：${fill(shown, right)}`,
           ),
         (wrong) =>
-          wrong.startsWith("be ")
+          wrong.startsWith("been ")
             ? t(
-                `*${wrong}* has the base form after *be*. A guess about this moment takes *be* and the *-ing* form.`,
-                `*${wrong}* 在 *be* 后面用了原形。推测此刻正在发生的事，要用 *be* 加 *-ing*。`,
+                `*${wrong}* has *been*, the past participle, but right after a modal *be* stays in its base form: *be* and the *-ing* form.`,
+                `*${wrong}* 用了过去分词 *been*，可紧跟在情态动词后面的 *be* 要用原形：*be* 加 *-ing*。`,
               )
-            : t(
-                `*${wrong}* leaves out *be*. A guess about this moment takes *be* and the *-ing* form after the modal.`,
-                `*${wrong}* 漏掉了 *be*。推测此刻正在发生的事，情态动词后面要接 *be* 加 *-ing*。`,
-              ),
+            : wrong.startsWith("be ")
+              ? t(
+                  `*${wrong}* has the base form after *be*. A guess about this moment takes *be* and the *-ing* form.`,
+                  `*${wrong}* 在 *be* 后面用了原形。推测此刻正在发生的事，要用 *be* 加 *-ing*。`,
+                )
+              : t(
+                  `*${wrong}* leaves out *be*. A guess about this moment takes *be* and the *-ing* form after the modal.`,
+                  `*${wrong}* 漏掉了 *be*。推测此刻正在发生的事，情态动词后面要接 *be* 加 *-ing*。`,
+                ),
       ),
     ),
     point(
@@ -1391,10 +1396,10 @@ const pastChoice: readonly ChoiceItem[] = pasts.map(
 );
 
 const pastFormChoice: readonly ChoiceItem[] = pasts.map(
-  ([context, s, past, , pp, rest, kind]): ChoiceItem => [
+  ([context, s, past, , pp, rest, kind], k): ChoiceItem => [
     `${context} ${joinWords(s, "___", rest)}.`,
     `${kind} have ${pp}`,
-    [`${kind} had ${pp}`, past === pp ? `${kind} ${pp}` : `${kind} have ${past}`],
+    [`${kind} had ${pp}`, past === pp ? `${kind} ${pp}` : `${kind} have ${past}`, ...(k % 2 === 0 ? [`${kind} to have ${pp}`] : [])],
   ],
 );
 
@@ -1468,6 +1473,11 @@ const pastModals: TopicDef = {
         (wrong, right) => {
           const pp = right.split(" ").at(-1) ?? "";
           const [, w1 = "", w2 = ""] = wrong.split(" ");
+          if (w1 === "to")
+            return t(
+              `A modal is followed directly by its verb, with no *to*: *${right}*.`,
+              `情态动词后面直接跟动词，不加 *to*：*${right}*。`,
+            );
           if (w1 === "had")
             return t(
               `After a modal, the verb is in its base form: *have*, not *had*. Then comes the past participle, *${pp}*.`,

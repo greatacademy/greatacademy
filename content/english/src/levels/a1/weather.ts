@@ -427,7 +427,13 @@ const weatherRests = pairUp(60, weatherStates, weatherTimes).map(([state, when])
 const itRests = (half: 0 | 1): readonly string[] =>
   interleave([weatherRests.slice(half * 30, half * 30 + 30), clockStates.slice(half * 6, half * 6 + 6)]);
 
-const itChoiceBank: readonly ChoiceItem[] = itRests(0).map((rest): ChoiceItem => ["", `It's ${rest}.`, [`Is ${rest}.`, `It ${rest}.`]]);
+const itChoiceBank: readonly ChoiceItem[] = itRests(0).map(
+  (rest, k): ChoiceItem => [
+    "",
+    `It's ${rest}.`,
+    k % 2 === 0 ? [`Is ${rest}.`, `It ${rest}.`, `There is ${rest}.`] : [`Is ${rest}.`, `It ${rest}.`],
+  ],
+);
 
 const itFixBank: readonly TypedItem[] = itRests(1).map((rest, k): TypedItem => {
   const shown = k % 2 === 0 ? `Is ${rest}.` : `${rest.charAt(0).toUpperCase()}${rest.slice(1)}.`;
@@ -448,17 +454,22 @@ const itWhy = (right: string): Text => {
   );
 };
 
-/** whyNotIt explains a sentence that leaves out it or is. */
+/** whyNotIt explains a sentence that leaves out it or is, or puts there is in place of it. */
 const whyNotIt = (wrong: string, right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
         `*${wrong}* has a verb but no subject. English cannot leave out *it*: *${right}*`,
         `*${wrong}* 有动词却没有主语。英语不能省略 *it*：*${right}*`,
       )
-    : t(
-        `*${wrong}* has a subject but no verb. *It* needs *is* or *'s* after it: *${right}*`,
-        `*${wrong}* 有主语却没有动词。*It* 后面要有 *is* 或 *'s*：*${right}*`,
-      );
+    : position === 1
+      ? t(
+          `*${wrong}* has a subject but no verb. *It* needs *is* or *'s* after it: *${right}*`,
+          `*${wrong}* 有主语却没有动词。*It* 后面要有 *is* 或 *'s*：*${right}*`,
+        )
+      : t(
+          `*${wrong}* uses *there is*, which says that something exists. For ${itTalksAbout(right).en}, the subject is *it*: *${right}*`,
+          `*${wrong}* 用了 *there is*，它表示某物存在。谈${itTalksAbout(right)["zh-CN"]}时主语用 *it*：*${right}*`,
+        );
 
 const itForWeather: TopicDef = {
   id: "it-for-weather",

@@ -39,7 +39,7 @@ const deviceEffectBank: readonly ChoiceItem[] = [
   [
     "The angry sea swallowed the little boat.",
     "It makes the sea seem fierce and dangerous.",
-    ["It shows that the sea was hungry.", "It tells how deep the sea was."],
+    ["It shows that the sea was really hungry and wanted to eat the boat.", "It tells how deep the sea was."],
   ],
   [
     "My homework will take a hundred years.",
@@ -49,7 +49,7 @@ const deviceEffectBank: readonly ChoiceItem[] = [
   [
     "The tired house sagged under the snow.",
     "It makes the house seem old and worn out.",
-    ["It shows the house needed sleep.", "It tells how much snow fell."],
+    ["It shows the house needed sleep.", "It tells how much snow fell on the roof of the house that night."],
   ],
   [
     "We waited forever for the bus.",
@@ -59,7 +59,7 @@ const deviceEffectBank: readonly ChoiceItem[] = [
   [
     "The flowers danced in the spring breeze.",
     "It creates a lively, cheerful picture of moving flowers.",
-    ["It shows the flowers had legs.", "It tells that the breeze was cold."],
+    ["It shows the flowers had real legs and could move around the garden.", "It tells that the breeze was cold."],
   ],
   [
     "Her backpack was heavier than an elephant.",
@@ -74,7 +74,7 @@ const deviceEffectBank: readonly ChoiceItem[] = [
   [
     "The test questions went on for miles.",
     "It stresses how long the test felt.",
-    ["It gives the length of the paper.", "It shows the test was outside."],
+    ["It gives the length of the paper the test was printed on.", "It shows the test was outside."],
   ],
 ];
 
@@ -197,7 +197,7 @@ const themeBank: readonly ChoiceItem[] = [
   [
     "Two rival teams are stranded together after a bus breaks down. By sharing food and stories, they become friends.",
     "People can find common ground when they work together.",
-    ["friendship", "Two teams get stranded on a trip."],
+    ["friendship", "Two rival teams get stranded together after their bus breaks down on a trip."],
   ],
   [
     "A girl spends a summer hiding her stutter. When she finally speaks up at the town meeting, people listen to her ideas, not her voice.",
@@ -207,7 +207,7 @@ const themeBank: readonly ChoiceItem[] = [
   [
     "A boy wishes for endless free time. When his wish comes true, he grows bored and lonely, and he misses school and his friends.",
     "Getting everything you want does not always make you happy.",
-    ["wishes", "A boy's wish comes true."],
+    ["wishes", "A boy wishes for endless free time, and his wish comes true for a whole summer."],
   ],
   [
     "An old woman plants an oak tree she knows she will never see grown. Years later, her grandchildren play in its shade.",
@@ -217,7 +217,7 @@ const themeBank: readonly ChoiceItem[] = [
   [
     "A runner cheats to win a race but cannot enjoy the medal. She finally confesses and feels free for the first time.",
     "Honesty brings a peace that winning by cheating cannot.",
-    ["running", "A runner wins a medal."],
+    ["running", "A runner wins a race and a medal, and later she tells everyone that she cheated."],
   ],
   [
     "A town ignores warnings about the river. When the flood comes, neighbors who never spoke rush to help one another.",
@@ -227,7 +227,7 @@ const themeBank: readonly ChoiceItem[] = [
   [
     "A young artist copies famous painters for years, until her teacher tells her to paint what she sees. Her own style finally appears.",
     "True success comes from being yourself.",
-    ["art", "A young artist paints pictures."],
+    ["art", "A young artist copies famous painters for years before her teacher gives her advice."],
   ],
 ];
 
@@ -246,12 +246,12 @@ const themeEvidenceBank: readonly ChoiceItem[] = [
   [
     "Theme: Kindness can change an enemy into a friend.",
     "The boy who bullied Sam softens when Sam helps him after he falls.",
-    ["Sam walks to school every morning.", "The bully is the tallest boy in class."],
+    ["Sam walks to school every morning.", "The bully is the tallest boy in class and sits in the back row near the window."],
   ],
   [
     "Theme: Greed can destroy what we value most.",
     "The miner keeps digging for more gold until the mine collapses on his house.",
-    ["The miner lives near the mountains.", "Gold is a yellow metal."],
+    ["The miner lives in a small wooden house near the mountains, at the end of a long dirt road.", "Gold is a yellow metal."],
   ],
   [
     "Theme: Hard work matters more than talent.",
@@ -261,7 +261,7 @@ const themeEvidenceBank: readonly ChoiceItem[] = [
   [
     "Theme: Home is where the people you love are.",
     "After traveling the world, the sailor is happiest back at his family's small table.",
-    ["The sailor visits ten countries.", "The ship has three tall masts."],
+    ["The sailor visits ten countries.", "The sailor's ship has three tall masts and a crew of twenty men from many different ports."],
   ],
   [
     "Theme: Telling the truth takes courage.",
@@ -276,7 +276,7 @@ const themeEvidenceBank: readonly ChoiceItem[] = [
   [
     "Theme: Nature must be respected.",
     "The hikers ignore the storm warning and are trapped on the mountain for two days.",
-    ["The mountain is covered with pine trees.", "The hikers carry red backpacks."],
+    ["The mountain is covered with tall pine trees, and a narrow trail winds up to its rocky top.", "The hikers carry red backpacks."],
   ],
   [
     "Theme: Small acts can make a big difference.",

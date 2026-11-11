@@ -973,7 +973,7 @@ const ppcChoice: readonly ChoiceItem[] = interleave([
   }),
   activities.map(([s, have, , ing, rest, , dur]): ChoiceItem => {
     const be = beOf(s, have);
-    return [`${words(s, "___", rest, "for", dur)}.`, `${have} been ${ing}`, [`${be} ${ing}`, `${have} ${ing}`]];
+    return [`${words(s, "___", rest, "for", dur)}.`, `${have} been ${ing}`, [`${be} ${ing}`, `${have} ${ing}`, `${have} being ${ing}`]];
   }),
 ]);
 
@@ -1023,7 +1023,12 @@ const whyNotPpc = (wrong: string, right: string, shown: string): Text => {
   const rule = ppcRule(shown);
   const [first0 = ""] = wrong.split(" ");
   let first: Text;
-  if (/^(am|is|are)$/u.test(first0) && wrong.includes(" been "))
+  if (wrong.includes(" being "))
+    first = t(
+      `*${wrong}* has *being*, the *-ing* form of *be*; after *${first0}* the form is *been*.`,
+      `*${wrong}* 用了 *being*，即 *be* 的 *-ing* 形式；*${first0}* 后面要用 *been*。`,
+    );
+  else if (/^(am|is|are)$/u.test(first0) && wrong.includes(" been "))
     first = t(
       `*${first0}* cannot go with *been*; the present perfect takes *${right.split(" ")[0]}*.`,
       `*${first0}* 不能和 *been* 连用，完成时要用 *${right.split(" ")[0]}*。`,

@@ -18,7 +18,7 @@ export const scenes: readonly Scene[] = [
     "Leo was about to take his dog for a walk.",
     ["Leo was going to bed.", "Leo was afraid of his dog."],
     "He grabbed the leash with a grin.",
-    ["The dog had brown fur.", "Leo lived in a small house."],
+    ["The dog had soft brown fur and one white paw.", "Leo lived in a small house."],
   ],
   [
     "The kitchen smelled of smoke, and the cookies on the tray were black.",
@@ -32,7 +32,7 @@ export const scenes: readonly Scene[] = [
     "It was very cold outside.",
     ["It was a hot summer day.", "Ana was going swimming."],
     "Her breath made little clouds in the air.",
-    ["Her scarf was red.", "Ana walked to the corner."],
+    ["Her scarf was red, with a pattern of little white stars.", "Ana walked to the corner."],
   ],
   [
     "When Dad came home, he dropped his bag, kicked off his shoes and fell asleep on the couch.",
@@ -46,7 +46,7 @@ export const scenes: readonly Scene[] = [
     "It had been raining.",
     ["It was the middle of recess.", "The slide had just been painted."],
     "Puddles covered the slide.",
-    ["The playground had swings.", "The slide was green."],
+    ["The playground had four swings, a slide and a sandbox.", "The slide was green."],
   ],
   [
     "Jen read the last page, closed the book slowly and hugged it to her chest.",
@@ -60,7 +60,7 @@ export const scenes: readonly Scene[] = [
     "Mr. Park was going to change the tire.",
     ["Mr. Park was going to sell the car.", "Mr. Park was pleased about the tire."],
     "He lifted the spare tire out of the trunk.",
-    ["The car was parked on a street.", "Mr. Park wore a hat."],
+    ["The car was parked on a quiet street lined with tall trees.", "Mr. Park wore a hat."],
   ],
   [
     "The crowd jumped to its feet and roared as the ball sailed over the fence.",
@@ -74,7 +74,7 @@ export const scenes: readonly Scene[] = [
     "Sofia did not want to get up.",
     ["Sofia was eager to start the day.", "Sofia's alarm was broken."],
     "She pulled the blanket over her head.",
-    ["The alarm clock was on the table.", "Sofia's blanket was soft."],
+    ["The alarm clock was on the small wooden table beside her bed.", "Sofia's blanket was soft."],
   ],
   [
     "Empty boxes filled the hallway, and the walls of the house were bare.",
@@ -88,7 +88,7 @@ export const scenes: readonly Scene[] = [
     "Ravi had been painting.",
     ["Ravi had been swimming.", "Ravi had just bought the shirt."],
     "His shirt was spattered with paint.",
-    ["His shirt had a pocket.", "Ravi was ten years old."],
+    ["His shirt had a pocket on the front and long sleeves.", "Ravi was ten years old."],
   ],
   [
     "The waiter set down a cake with candles, and everyone at the table began to sing.",
@@ -102,7 +102,7 @@ export const scenes: readonly Scene[] = [
     "Max was full.",
     ["Max was still hungry.", "Max had not eaten anything."],
     "He said he could not eat another bite.",
-    ["His plate was white.", "Max sat at the end of the table."],
+    ["His plate was white with a thin blue line around the edge.", "Max sat at the end of the table."],
   ],
   [
     "The lights in the house were off, the curtains were closed, and newspapers piled up on the porch.",
@@ -116,7 +116,7 @@ export const scenes: readonly Scene[] = [
     "Lily had been running.",
     ["Lily had been sleeping.", "Lily had been reading quietly."],
     "She was breathing hard, and her hair was wet with sweat.",
-    ["Lily had long hair.", "Lily wore a green shirt."],
+    ["Lily had long brown hair that she wore in a ponytail.", "Lily wore a green shirt."],
   ],
   [
     "The farmer looked up at the dark clouds, then hurried to bring the hay into the barn.",
@@ -130,7 +130,7 @@ export const scenes: readonly Scene[] = [
     "Ella had been going the wrong way.",
     ["Ella had reached the end of her trip.", "Ella was learning to draw maps."],
     "She turned the car around after studying the map.",
-    ["The map was folded.", "The car was blue."],
+    ["The map was folded into a small square and kept in the glove box.", "The car was blue."],
   ],
   [
     "The baby cried and cried until her mother gave her a bottle, and then she smiled.",
@@ -144,7 +144,7 @@ export const scenes: readonly Scene[] = [
     "Carmen wanted to play well at the concert.",
     ["Carmen did not care about the concert.", "Carmen had never played the piano."],
     "She practiced the song every day for a month.",
-    ["The piano was black.", "The concert was in the town hall."],
+    ["The piano was black and stood in the corner of the living room.", "The concert was in the town hall."],
   ],
   [
     "Grandpa squinted at the menu, then reached into his pocket for his glasses.",
@@ -158,7 +158,7 @@ export const scenes: readonly Scene[] = [
     "The teacher was leaving the school.",
     ["It was the first day of school.", "The teacher had just been hired."],
     "The sign said 'We'll miss you!'",
-    ["The desk was made of wood.", "The cards were different colors."],
+    ["The desk was made of dark wood and had three drawers on one side.", "The cards were different colors."],
   ],
   [
     "Water dripped from the ceiling into a bucket in the corner of the room.",
@@ -177,7 +177,7 @@ export const claims: readonly Claims[] = [
   [
     ["Sea turtles lay their eggs on beaches.", "Some sea turtles live for more than fifty years."],
     ["Sea turtles are the most graceful animals in the sea.", "Watching turtles hatch is more exciting than any movie."],
-    "Please keep the beaches dark at night so that baby turtles can find the sea!",
+    "Keep the beaches dark for baby turtles!",
   ],
   [
     ["A bicycle has two wheels.", "Riding a bike uses no fuel."],
@@ -187,27 +187,27 @@ export const claims: readonly Claims[] = [
   [
     ["The Moon travels around the Earth.", "Astronauts first walked on the Moon in 1969."],
     ["The full moon is the loveliest sight in the night sky.", "Space travel is more exciting than sea travel."],
-    "Come to the science center on Friday night and see the Moon through our giant telescope!",
+    "Come see the Moon through our telescope!",
   ],
   [
     ["Our library lends books for three weeks.", "The library has a reading room on the second floor."],
     ["The library's reading room is too cold.", "Mystery books are better than science books."],
-    "Get your library card today and open the door to a world of stories!",
+    "Get your library card today and start reading!",
   ],
   [
     ["Aluminum cans can be recycled many times.", "Our town collects recycling on Thursdays."],
     ["Recycling is the most important thing a family can do.", "Sorting trash is boring."],
-    "Put every can in the blue bin, and help keep our town clean!",
+    "Put every can in the blue bin!",
   ],
   [
     ["Dogs can hear sounds that people cannot.", "Some dogs are trained to guide people who cannot see."],
     ["Dogs are the best friends a person could have.", "Small dogs are cuter than big dogs."],
-    "Adopt a dog from the shelter this weekend, and give it a loving home!",
+    "Adopt a shelter dog this weekend!",
   ],
   [
     ["Children need about ten hours of sleep a night.", "The body grows during sleep."],
     ["Going to bed early is no fun.", "Nights are better than mornings."],
-    "Turn off your screens an hour before bed, and wake up ready for the day!",
+    "Turn off your screens an hour before bed!",
   ],
   [
     ["Carrots grow under the ground.", "Spinach contains iron."],
@@ -217,7 +217,7 @@ export const claims: readonly Claims[] = [
   [
     ["The city museum has a dinosaur skeleton.", "The museum is open six days a week."],
     ["The dinosaur room is the most amazing room in the museum.", "Museums are more interesting than zoos."],
-    "Visit the museum this summer and come face to face with a real dinosaur!",
+    "Come face to face with a real dinosaur!",
   ],
   [
     ["A piano has eighty-eight keys.", "The school band practices on Wednesdays."],
@@ -227,7 +227,7 @@ export const claims: readonly Claims[] = [
   [
     ["Salt water covers most of the Earth's surface.", "The Pacific Ocean is deeper than the Atlantic."],
     ["The ocean is scarier than the mountains.", "Beach vacations are the best kind."],
-    "Help clean our beach on Saturday, and keep plastic out of the sea!",
+    "Help clean our beach on Saturday!",
   ],
   [
     ["School lunch is served at noon.", "The cafeteria serves milk with every meal."],
@@ -247,7 +247,7 @@ export const claims: readonly Claims[] = [
   [
     ["Snow is made of tiny crystals of ice.", "The town got twenty inches of snow last winter."],
     ["Snow days are the best days of the year.", "Shoveling snow is the worst chore."],
-    "Be a good neighbor and help shovel the sidewalks after the next snow!",
+    "Help shovel the sidewalks after the next snow!",
   ],
   [
     ["Our class read twelve books this year.", "The book fair starts on Monday."],
@@ -257,7 +257,7 @@ export const claims: readonly Claims[] = [
   [
     ["Bees make honey from nectar.", "A hive can hold tens of thousands of bees."],
     ["Honey is the tastiest treat in the world.", "Bees are scarier than spiders."],
-    "Plant flowers in your yard to give hungry bees a place to feed!",
+    "Plant flowers to feed hungry bees!",
   ],
   [
     ["The train to the city leaves every hour.", "The trip takes forty minutes."],
@@ -267,7 +267,7 @@ export const claims: readonly Claims[] = [
   [
     ["The park has a pond and two playgrounds.", "The park closes at sunset."],
     ["The park is the prettiest place in town.", "The new playground is too small."],
-    "Help us raise money for new benches in the park!",
+    "Help us buy new park benches!",
   ],
   [
     ["The art room has twenty easels.", "Mixing blue and yellow paint makes green."],
@@ -429,7 +429,7 @@ export const fables: readonly Fable[] = [
   [
     "Two squirrels found a big pile of acorns. One ate all he could and napped. The other buried acorns all fall. When snow covered the ground, only the second squirrel had food.",
     "Plan ahead for hard times.",
-    ["The squirrels found acorns.", "Snow covered the ground."],
+    ["The squirrels found a big pile of acorns before the winter came.", "Snow covered the ground."],
     "A girl saves part of her allowance each week and has money when her bike needs a new tire.",
   ],
   [
@@ -441,7 +441,7 @@ export const fables: readonly Fable[] = [
   [
     "A little goat and a big goat met in the middle of a narrow log over a stream. Both pushed, and both fell into the cold water. The next day, one waited while the other crossed, and both stayed dry.",
     "Taking turns works better than fighting.",
-    ["The log was narrow.", "The water was cold."],
+    ["The log over the stream was narrow, and the water below it was cold.", "The water was cold."],
     "Two children who both want the swing agree to take turns, and both get to play.",
   ],
   [
@@ -453,7 +453,7 @@ export const fables: readonly Fable[] = [
   [
     "A rooster told the other animals that his crowing made the sun rise. One morning he overslept, and the sun rose anyway. The other animals laughed at him for weeks.",
     "Boasting can make you look foolish.",
-    ["The rooster overslept.", "The sun rose."],
+    ["The rooster overslept one morning, and the sun rose anyway.", "The sun rose."],
     "A boy brags that he never misses a basket, then misses every shot in front of his friends.",
   ],
   [
@@ -465,7 +465,7 @@ export const fables: readonly Fable[] = [
   [
     "A spider started her web nine times, and each time the wind tore it apart. On the tenth try, she built it behind a rock, and it held.",
     "Keep trying, and learn from each failure.",
-    ["The wind tore the web.", "There was a rock."],
+    ["The wind tore the spider's web apart nine times.", "There was a rock."],
     "A boy fails his swimming test twice, practices harder and passes on his third try.",
   ],
   [
@@ -477,7 +477,7 @@ export const fables: readonly Fable[] = [
   [
     "A dog had a good bone but wanted the bone of every other dog too. While he chased them around the yard, a crow flew off with his own bone.",
     "Wanting too much can make you lose what you have.",
-    ["The dog had a bone.", "A crow flew away."],
+    ["The dog had a good bone, and a crow flew off with it.", "A crow flew away."],
     "A boy who tries to win every prize at the fair spends all his money and goes home with nothing.",
   ],
   [
@@ -489,7 +489,7 @@ export const fables: readonly Fable[] = [
   [
     "A young deer ignored his mother's warning and drank from the river at night. A loud splash in the dark sent him running home, and from then on he listened to her.",
     "Listen to the advice of those who know more.",
-    ["The deer drank from the river.", "It was night."],
+    ["The young deer drank from the river at night and heard a loud splash.", "It was night."],
     "A girl ignores her coach's advice to stretch first and hurts her leg in the race.",
   ],
   [
@@ -513,7 +513,7 @@ export const fables: readonly Fable[] = [
   [
     "A young bear wanted to catch fish but hated waiting. Each time a fish swam near, he splashed and scared it away. His grandmother sat still for an hour and caught three.",
     "Patience brings results.",
-    ["The bear wanted fish.", "His grandmother caught three fish."],
+    ["The bear wanted fish.", "His grandmother sat still for an hour and caught three fish."],
     "A girl waits quietly by the feeder for an hour and finally sees the rare bird she was hoping for.",
   ],
   [
@@ -525,7 +525,7 @@ export const fables: readonly Fable[] = [
   [
     "Every day, a cricket said he would fix the hole in his roof tomorrow. When the rain came, his house flooded.",
     "Do not put off what needs doing.",
-    ["The cricket's roof had a hole.", "The rain came."],
+    ["The cricket's roof had a hole, and his house flooded when the rain came.", "The rain came."],
     "A boy keeps putting off his science project and has to stay up all night before it is due.",
   ],
   [
@@ -537,7 +537,7 @@ export const fables: readonly Fable[] = [
   [
     "A young eagle was afraid to leave the nest. His mother told him that the sky was his to fly. At last he jumped, flapped hard and soared.",
     "You will not know what you can do until you try.",
-    ["The eagle lived in a nest.", "His mother spoke to him."],
+    ["The young eagle lived in a nest, and his mother told him the sky was his.", "His mother spoke to him."],
     "A shy boy finally tries out for the school play and wins a leading part.",
   ],
   [
@@ -549,7 +549,7 @@ export const fables: readonly Fable[] = [
   [
     "A young ant tried to carry a crumb twice her size. When the other ants offered to help, she refused, slipped and dropped the crumb into a puddle.",
     "It is wise to accept help when you need it.",
-    ["The crumb was large.", "There was a puddle."],
+    ["The crumb was twice the size of the young ant.", "There was a puddle."],
     "A boy refuses help with a heavy box, drops it and breaks what is inside.",
   ],
   [
@@ -588,22 +588,22 @@ export const moreSimileBank: readonly ChoiceItem[] = [
 
 /** moreMetaphorBank asks what a metaphor means. */
 export const moreMetaphorBank: readonly ChoiceItem[] = [
-  ["The garden was a rainbow of tulips.", "full of many bright colors", ["made of light", "wet with rain"]],
+  ["The garden was a rainbow of tulips.", "full of many bright colors", ["made of light and shaped like an arch", "wet with rain"]],
   ["Her bedroom is a pigsty.", "very messy", ["full of pigs", "small and pink"]],
   ["The test was a mountain I had to climb.", "very hard", ["very tall", "made of rock"]],
   ["My dad is a walking encyclopedia.", "he knows a great deal", ["he is made of paper", "he walks a lot"]],
-  ["The kids were monkeys on the playground.", "wild and full of energy", ["furry", "eating bananas"]],
+  ["The kids were monkeys on the playground.", "wild and full of energy", ["furry", "eating bananas and climbing trees"]],
   ["The city at night was a sea of lights.", "full of countless lights", ["under water", "blue and wavy"]],
   ["His angry words were knives.", "they hurt", ["they were sharp metal tools", "they were used for cooking"]],
   ["The baby's laugh was music to my ears.", "very pleasant to hear", ["played on a piano", "very loud"]],
   ["The hallway was an oven in July.", "very hot", ["used for baking", "dark"]],
   ["Our neighbor has a heart of gold.", "she is very kind", ["her heart is made of metal", "she is very rich"]],
-  ["The moon was a silver coin in the sky.", "round and shining", ["worth money", "falling"]],
+  ["The moon was a silver coin in the sky.", "round and shining", ["worth a lot of money to whoever finds it", "falling"]],
   ["Life is a roller coaster.", "full of ups and downs", ["a ride at a fair", "always fast"]],
   ["The coach was a drill sergeant at practice.", "strict and demanding", ["in the army", "loud and funny"]],
   ["The library was a treasure chest of stories.", "full of valuable things to discover", ["made of wood", "locked with a key"]],
   ["My memory is a sieve.", "I forget many things", ["it is made of metal", "it is full of water"]],
-  ["The fog was a gray blanket over the town.", "a thick, covering layer", ["warm and soft", "made of wool"]],
+  ["The fog was a gray blanket over the town.", "a thick, covering layer", ["warm and soft, so the town felt cozy", "made of wool"]],
   ["Her brother is a night owl.", "he stays up late", ["he has feathers", "he hunts mice"]],
   ["After the ice storm, the playground was a skating rink.", "very icy and slippery", ["full of skaters", "a building for sports"]],
   ["Words are bridges between people.", "they connect people", ["they are made of stone", "they cross rivers"]],

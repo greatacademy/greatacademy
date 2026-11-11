@@ -517,9 +517,25 @@ const participleFrames: readonly ((rest: string) => string)[] = [
   (rest) => `My sister has ___ ${rest} twice.`,
 ];
 
+/** regularized is the -ed form a learner might give an irregular verb: swimmed, flied, rided. */
+const regularized = (verb: string): string =>
+  verb.endsWith("e")
+    ? `${verb}d`
+    : /[^aeiou]y$/u.test(verb)
+      ? `${verb.slice(0, -1)}ied`
+      : /^[^aeiou]*[aeiou][^aeiouwy]$/u.test(verb)
+        ? `${verb}${verb.slice(-1)}ed`
+        : `${verb}ed`;
+
 const participleBank: readonly ChoiceItem[] = interleave(
   participleFrames.map((frame) =>
-    irregular.map(([verb, past, participle, rest]): ChoiceItem => [`${frame(rest)} (${verb})`, participle, [past, verb]]),
+    irregular.map(
+      ([verb, past, participle, rest]): ChoiceItem => [
+        `${frame(rest)} (${verb})`,
+        participle,
+        verb === "be" ? [past, verb] : [past, verb, regularized(verb)],
+      ],
+    ),
   ),
 );
 
@@ -596,10 +612,15 @@ const whyNotParticiple = (wrong: string, right: string, _shown: string, position
         `*${wrong}* is the past simple. After *have* or *has*, use the past participle, *${right}*.`,
         `*${wrong}* 是一般过去式。在 *have* 或 *has* 后面要用过去分词 *${right}*。`,
       )
-    : t(
-        `*${wrong}* is the plain form. After *have* or *has*, use the past participle, *${right}*.`,
-        `*${wrong}* 是动词原形。在 *have* 或 *has* 后面要用过去分词 *${right}*。`,
-      );
+    : position === 1
+      ? t(
+          `*${wrong}* is the plain form. After *have* or *has*, use the past participle, *${right}*.`,
+          `*${wrong}* 是动词原形。在 *have* 或 *has* 后面要用过去分词 *${right}*。`,
+        )
+      : t(
+          `*${wrong}* adds *-ed* as a regular verb would, but this verb is irregular: its past participle is *${right}*.`,
+          `*${wrong}* 像规则动词那样加了 *-ed*，可这个动词是不规则的：它的过去分词是 *${right}*。`,
+        );
 
 /** haveSubject is the subject of a gapped sentence with have or has. */
 const haveSubject = (shown: string): string =>

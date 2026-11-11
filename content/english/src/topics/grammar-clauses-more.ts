@@ -123,6 +123,13 @@ export const appositiveRecords: readonly AppositiveRecord[] = [
   ["The cheetah", "the fastest land animal", "can run seventy miles an hour", "It is the fastest land animal."],
 ];
 
+/** lateComma moves the comma that closes a mid-sentence appositive one word too far, past the verb that follows it. */
+export const lateComma = (sentence: string): string => {
+  const close = sentence.indexOf(", ", sentence.indexOf(", ") + 2);
+  const next = sentence.indexOf(" ", close + 2);
+  return `${sentence.slice(0, close)} ${sentence.slice(close + 2, next)},${sentence.slice(next)}`;
+};
+
 /** appositiveSentence writes an appositive record as one sentence with its two commas. */
 export const appositiveSentence = ([noun, appositive, rest]: AppositiveRecord): string => `${noun}, ${appositive}, ${rest}.`;
 
@@ -158,17 +165,33 @@ export const endAppositiveRecords: readonly EndAppositiveRecord[] = [
 /** moreAppositiveFinds are items that ask for the appositive in a sentence. */
 export const moreAppositiveFinds: readonly ChoiceItem[] = appositiveRecords.flatMap((r, i): ChoiceItem[] => {
   const [noun, appositive, rest] = r;
-  const front: ChoiceItem = [appositiveSentence(r), appositive, [noun, rest, lastWords(appositive, 2)]];
+  // Every other item also offers the noun together with its appositive, a mistake that takes in too much.
+  const front: ChoiceItem = [
+    appositiveSentence(r),
+    appositive,
+    [noun, rest, i % 2 === 0 ? `${noun}, ${appositive}` : lastWords(appositive, 2)],
+  ];
   const e = endAppositiveRecords[i];
   if (e === undefined) return [front];
   const [start, endNoun, endAppositive] = e;
-  return [front, [`${start} ${endNoun}, ${endAppositive}.`, endAppositive, [endNoun, start, lastWords(endAppositive, 2)]]];
+  return [
+    front,
+    [
+      `${start} ${endNoun}, ${endAppositive}.`,
+      endAppositive,
+      [endNoun, start, i % 2 === 1 ? `${endNoun}, ${endAppositive}` : lastWords(endAppositive, 2)],
+    ],
+  ];
 });
 
-/** moreAppositiveCommas are items that ask for the correctly punctuated sentence; the first wrong one lacks the comma before the appositive, the second the comma after it. */
+/** moreAppositiveCommas are items that ask for the correctly punctuated sentence; the first wrong one lacks the comma before the appositive, the second the comma after it, and the third puts that comma one word too late. */
 export const moreAppositiveCommas: readonly ChoiceItem[] = appositiveRecords.map((r) => {
   const [noun, appositive, rest] = r;
-  return ["", appositiveSentence(r), [`${noun} ${appositive}, ${rest}.`, `${noun}, ${appositive} ${rest}.`]];
+  return [
+    "",
+    appositiveSentence(r),
+    [`${noun} ${appositive}, ${rest}.`, `${noun}, ${appositive} ${rest}.`, lateComma(appositiveSentence(r))],
+  ];
 });
 
 /** ParticipleRecord is a participial phrase and the sentence it opens: the -ing, past participle, -s and simple past forms of the verb, the rest of the phrase, the subject, the predicate, and whether the subject does the action. */
@@ -185,20 +208,20 @@ export type ParticipleRecord = readonly [
 
 /** participleRecords are the participial-phrase records. */
 export const participleRecords: readonly ParticipleRecord[] = [
-  ["Grabbing", "Grabbed", "Grabs", "grabbed", "her umbrella", "Nora", "ran out the door", true],
-  ["Surprising", "Surprised", "Surprises", "", "by the news", "Kayla", "dropped her phone", false],
-  ["Whistling", "Whistled", "Whistles", "whistled", "a happy tune", "the farmer", "fed the chickens", true],
-  ["Climbing", "Climbed", "Climbs", "climbed", "the steep hill", "we", "stopped to rest", true],
+  ["Grabbing", "Grabbed", "Grabs", "grabbed", "her umbrella", "Nora", "ran out the door into the rain", true],
+  ["Surprising", "Surprised", "Surprises", "", "by the news", "Kayla", "dropped her phone on the floor", false],
+  ["Whistling", "Whistled", "Whistles", "whistled", "a happy tune", "the farmer", "fed the chickens in the yard", true],
+  ["Climbing", "Climbed", "Climbs", "climbed", "the steep hill", "we", "stopped to rest under a tree", true],
   ["Painting", "Painted", "Paints", "", "bright yellow", "the old door", "looked brand new", false],
-  ["Searching", "Searched", "Searches", "searched", "under the couch", "Max", "found his lost shoe", true],
-  ["Smiling", "Smiled", "Smiles", "smiled", "at the crowd", "the singer", "took a bow", true],
-  ["Frightening", "Frightened", "Frightens", "", "by the thunder", "the horses", "ran to the barn", false],
+  ["Searching", "Searched", "Searches", "searched", "under the couch", "Max", "found his lost shoe at last", true],
+  ["Smiling", "Smiled", "Smiles", "smiled", "at the crowd", "the singer", "took a deep bow and waved", true],
+  ["Frightening", "Frightened", "Frightens", "", "by the thunder", "the horses", "ran back to the safety of the barn", false],
   ["Shivering", "Shivered", "Shivers", "shivered", "in the cold", "the puppy", "curled up by the fire", true],
-  ["Checking", "Checked", "Checks", "checked", "her watch", "Ms. Hale", "started the test", true],
-  ["Writing", "Written", "Writes", "", "in pencil", "the note", "was hard to read", false],
+  ["Checking", "Checked", "Checks", "checked", "her watch", "Ms. Hale", "started the math test", true],
+  ["Writing", "Written", "Writes", "", "in pencil", "the note", "was very hard to read", false],
   ["Pointing", "Pointed", "Points", "pointed", "at the sky", "Leo", "spotted a shooting star", true],
   ["Turning", "Turned", "Turns", "turned", "the last page", "Ava", "closed the book with a sigh", true],
-  ["Wrapping", "Wrapped", "Wraps", "", "in a warm blanket", "the baby", "fell asleep", false],
+  ["Wrapping", "Wrapped", "Wraps", "", "in a warm blanket", "the baby", "fell fast asleep in her crib", false],
   ["Racing", "Raced", "Races", "raced", "down the field", "the striker", "kicked the ball into the net", true],
   ["Humming", "Hummed", "Hums", "hummed", "to herself", "Grandma", "rolled out the dough", true],
   ["Tiring", "Tired", "Tires", "", "from the long game", "the players", "went straight to bed", false],
@@ -206,8 +229,8 @@ export const participleRecords: readonly ParticipleRecord[] = [
   ["Packing", "Packed", "Packs", "packed", "their bags", "the campers", "waited for the bus", true],
   ["Covering", "Covered", "Covers", "", "in snow", "the mountains", "glowed pink at sunset", false],
   ["Spotting", "Spotted", "Spots", "spotted", "a hawk", "the rabbit", "dashed into its hole", true],
-  ["Stretching", "Stretched", "Stretches", "stretched", "its wings", "the eagle", "rose into the air", true],
-  ["Hiding", "Hidden", "Hides", "", "behind a cloud", "the moon", "gave little light", false],
+  ["Stretching", "Stretched", "Stretches", "stretched", "its wings", "the eagle", "rose high into the air", true],
+  ["Hiding", "Hidden", "Hides", "", "behind a cloud", "the moon", "gave very little light", false],
   ["Yawning", "Yawned", "Yawns", "yawned", "loudly", "Ben", "turned off the light", true],
   ["Juggling", "Juggled", "Juggles", "juggled", "three oranges", "the clown", "walked across the stage", true],
   ["Clutching", "Clutched", "Clutches", "clutched", "her ticket", "Zoe", "boarded the train", true],

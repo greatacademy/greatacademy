@@ -53,10 +53,10 @@ const prefixMeaningBank: readonly ChoiceItem[] = [
   ["un-", "not", ["again", "before"]],
   ["re-", "again", ["not", "wrongly"]],
   ["dis-", "not or the opposite of", ["before", "again"]],
-  ["pre-", "before", ["after", "not"]],
-  ["mis-", "wrongly", ["again", "before"]],
+  ["pre-", "before", ["after", "wrongly"]],
+  ["mis-", "wrongly", ["too much", "before"]],
   ["non-", "without or not", ["again", "wrongly"]],
-  ["over-", "too much", ["not", "before"]],
+  ["over-", "too much", ["too little", "before"]],
   ["under-", "too little", ["again", "too much"]],
 ];
 
@@ -219,8 +219,8 @@ const latin2WordBank: readonly ChoiceItem[] = [
   ["transfer", "to carry across", ["to push across", "to call across"]],
   ["propel", "to push forward", ["to lead forward", "to send back"]],
   ["vocal", "of the voice", ["of the ear", "of the hand"]],
-  ["projector", "a machine that throws an image forward", ["a machine that hears", "a machine that sends letters"]],
-  ["incredible", "hard to believe", ["hard to hear", "hard to send"]],
+  ["projector", "a machine that throws an image forward", ["a machine that hears sounds from far away", "a machine that sends letters"]],
+  ["incredible", "hard to believe", ["hard to hear clearly", "hard to send"]],
 ];
 
 const greekRootBank: readonly ChoiceItem[] = [
@@ -262,29 +262,41 @@ const definitionClueBank: readonly ChoiceItem[] = [
 
 const contrastClueBank: readonly ChoiceItem[] = [
   ["Unlike his *timid* brother, Omar spoke to everyone.", "shy", ["friendly", "tall"]],
-  ["The room was *immaculate*, but mine was covered in dirt.", "perfectly clean", ["very large", "quite dark"]],
+  ["The room was *immaculate*, but mine was covered in dirt.", "perfectly clean", ["very large", "quite dark and gloomy"]],
   ["Although the first path was *treacherous*, the second was safe.", "dangerous", ["short", "pretty"]],
-  ["She is *frugal*, whereas her sister spends everything she earns.", "careful with money", ["good at sports", "quick to anger"]],
-  ["The first act was *tedious*; the second, by contrast, was exciting.", "boring", ["funny", "short"]],
+  [
+    "She is *frugal*, whereas her sister spends everything she earns.",
+    "careful with money",
+    ["good at sports", "quick to anger over small things"],
+  ],
+  ["The first act was *tedious*; the second, by contrast, was exciting.", "boring", ["funny", "short and simple"]],
   ["Instead of being *hostile*, the neighbors welcomed us warmly.", "unfriendly", ["curious", "wealthy"]],
   ["The river is *placid* today, but it was wild last week.", "calm", ["deep", "cold"]],
-  ["Far from being *scarce*, apples were everywhere that fall.", "hard to find", ["sweet", "expensive"]],
+  ["Far from being *scarce*, apples were everywhere that fall.", "hard to find", ["sweet", "expensive to buy"]],
 ];
 
 const exampleClueBank: readonly ChoiceItem[] = [
-  ["*Precipitation*, such as rain, snow and hail, fell all week.", "water falling from the sky", ["strong wind", "thick clouds"]],
-  ["She loves *legumes*, including beans, peas and lentils.", "plants with seeds in pods", ["sweet fruits", "green leaves"]],
+  [
+    "*Precipitation*, such as rain, snow and hail, fell all week.",
+    "water falling from the sky",
+    ["strong wind", "thick clouds that block the sun"],
+  ],
+  [
+    "She loves *legumes*, including beans, peas and lentils.",
+    "plants with seeds in pods",
+    ["sweet fruits that grow on trees", "green leaves"],
+  ],
   [
     "The shop sells *percussion* instruments like drums and cymbals.",
     "instruments you strike",
     ["instruments you blow", "instruments with strings"],
   ],
-  ["He collects *amphibians*, such as frogs, toads and newts.", "animals of land and water", ["birds", "large insects"]],
+  ["He collects *amphibians*, such as frogs, toads and newts.", "animals of land and water", ["birds", "large insects that live in ponds"]],
   ["*Celestial* objects, such as stars and planets, filled the sky.", "of the sky", ["very bright", "very small"]],
   [
     "They bought *utensils*, for example forks, spoons and ladles.",
     "tools for eating and cooking",
-    ["kinds of food", "pieces of furniture"],
+    ["kinds of food", "pieces of furniture for the kitchen"],
   ],
   ["*Inclement* weather, such as storms and sleet, closed the road.", "harsh", ["warm", "changing"]],
   ["The zoo has many *primates*, including apes, monkeys and lemurs.", "apes and their relatives", ["big cats", "large birds"]],
@@ -357,16 +369,21 @@ type Pair = readonly [en: string, zh: string];
 
 const affixes = new Set(["un", "re", "less", "ness", "ful", "dis", "ly", "er"]);
 
-const notBase = (wrong: string) =>
-  affixes.has(wrong)
+const notBase = (wrong: string, _right: string, shown: string) =>
+  wrong === shown
     ? t(
-        `“${wrong}” is the part added to the word, a prefix or a suffix. The base word is what is left when that part is taken away.`,
-        `“${wrong}” 是加在词上的部分，即前缀或后缀。基础词是去掉这部分后剩下的词。`,
+        `“${wrong}” is the whole word, with the prefix or suffix still on it. The base word is what is left when that part is taken away.`,
+        `“${wrong}” 是整个词，前缀或后缀还在上面。基础词是去掉这部分后剩下的词。`,
       )
-    : t(
-        `“${wrong}” cuts through the base word. Take away only the prefix or suffix and keep every letter of what is left.`,
-        `“${wrong}” 把基础词切断了。只去掉前缀或后缀，保留剩下部分的每一个字母。`,
-      );
+    : affixes.has(wrong)
+      ? t(
+          `“${wrong}” is the part added to the word, a prefix or a suffix. The base word is what is left when that part is taken away.`,
+          `“${wrong}” 是加在词上的部分，即前缀或后缀。基础词是去掉这部分后剩下的词。`,
+        )
+      : t(
+          `“${wrong}” cuts through the base word. Take away only the prefix or suffix and keep every letter of what is left.`,
+          `“${wrong}” 把基础词切断了。只去掉前缀或后缀，保留剩下部分的每一个字母。`,
+        );
 
 const partKind: Readonly<Record<string, Pair>> = {
   Prefix: [
@@ -703,30 +720,30 @@ const latin2RootMore = inWords(latin2RootBank, {
 });
 const latin2WordMore = choices(`
   eject|to throw out|to send out|to call out
-  inject|to throw or force into|to hear into|to lead into
-  projectile|an object thrown forward|an object heard ahead|an object believed in
+  inject|to throw or force into|to hear into|to lead or guide someone into
+  projectile|an object thrown forward|an object heard ahead|an object believed in by many
   dejected|cast down in spirit|sent away in spirit|called down in spirit
   admit|to send or let in|to throw in|to push in
   dismiss|to send away|to lead away|to call away
-  submit|to send in for judging|to throw under|to hear under
+  submit|to send in for judging|to throw under the ground|to hear under
   mission|a task someone is sent to do|a task someone believes in|a task someone hears about
-  emit|to send out light, heat or sound|to carry out a sound|to push out a sound
-  educate|to lead out the mind, to teach|to call out the mind|to send out the mind
-  introduce|to lead in and make known|to push in and hide|to carry in and sell
+  emit|to send out light, heat or sound|to carry out a sound from place to place|to push out a sound
+  educate|to lead out the mind, to teach|to call out to the mind, to shout|to send out the mind
+  introduce|to lead in and make known|to push in and hide|to carry in and sell at the market
   aqueduct|a channel that leads water|a channel that hears water|a channel that pushes air
-  deduce|to lead to a conclusion by reasoning|to throw a conclusion away|to call a conclusion out
-  credit|trust that someone will pay later|a call to pay now|a push to pay later
+  deduce|to lead to a conclusion by reasoning|to throw a conclusion away and start over|to call a conclusion out
+  credit|trust that someone will pay later|a call to pay now|a push to pay back everything right away
   credulous|too ready to believe|too ready to hear|too ready to throw
-  audience|a group of people who hear or watch|a group of people who lead|a group of people who push
+  audience|a group of people who hear or watch|a group of people who lead a march or parade|a group of people who push
   audition|a hearing to test a performer|a call to test a performer|a push to test a performer
-  auditorium|a hall where people hear performances|a hall where people throw things|a hall where people send mail
-  ferry|a boat that carries people across water|a boat that pushes water|a boat that calls for help
+  auditorium|a hall where people hear performances|a hall where people throw balls and play games|a hall where people send mail
+  ferry|a boat that carries people across water|a boat that pushes water|a boat that calls loudly for help in a storm
   infer|to carry a meaning from clues|to hear a meaning from clues|to send a meaning in clues
   repel|to push back or away|to call back or away|to send back by mail
   expel|to push out|to lead out|to hear out
   compulsory|pushed on everyone as a rule|believed by everyone|heard by everyone
   invoke|to call on for help|to throw on for help|to send on for help
-  advocate|a person who speaks up or calls for a cause|a person who throws a cause away|a person who leads a parade
+  advocate|a person who speaks up or calls for a cause|a person who throws a cause away when it gets hard|a person who leads a parade
   vocation|a calling, a type of work|a sending, a type of mail|a pushing, a type of sport
 `);
 const connotationMore: readonly ChoiceItem[] = [
@@ -998,40 +1015,40 @@ const contrastClueMore = choices(`
   Although Mia is usually *talkative*, she was quiet today.|liking to talk a lot|liking to sleep a lot|liking to eat a lot
   The old bridge was *rickety*, but the new one is strong and steady.|shaky and weak|long and wide|painted and bright
   Instead of being *generous*, the king kept all the gold for himself.|willing to give|willing to fight|willing to travel
-  The puppy was *docile*, unlike the wild, snapping fox.|gentle and easy to handle|fast and noisy|tiny and fluffy
-  Sam's room is *cluttered*, while Ana's is neat and empty.|messy and full of things|large and bright|cold and dark
+  The puppy was *docile*, unlike the wild, snapping fox.|gentle and easy to handle|fast, noisy and hard to catch|tiny and fluffy
+  Sam's room is *cluttered*, while Ana's is neat and empty.|messy and full of things|large and bright with tall windows|cold and dark
   The weather was *frigid* yesterday, but today it is warm.|very cold|very windy|very wet
   Unlike his *cautious* sister, Leo jumped in without looking.|careful|tall|sleepy
   The movie was *tedious*, not exciting at all.|boring|scary|funny
   Although the path looked *hazardous*, it turned out to be perfectly safe.|dangerous|long|beautiful
-  Most of the fruit was ripe, but a few pears were still *immature*.|not fully grown|too soft|very sweet
-  Her answer was *vague*, but his was clear and exact.|unclear|long|loud
+  Most of the fruit was ripe, but a few pears were still *immature*.|not fully grown|much too soft to eat|very sweet
+  Her answer was *vague*, but his was clear and exact.|unclear|long and detailed|loud
   The baby was *wailing* a minute ago, but now she is silent.|crying loudly|laughing quietly|eating slowly
-  Unlike the *barren* field, the garden was full of plants.|empty, with nothing growing|wet and muddy|fenced in
+  Unlike the *barren* field, the garden was full of plants.|empty, with nothing growing|wet and muddy after the rain|fenced in
   The castle walls were *massive*, but the doors were tiny.|very large|very old|very thin
   Instead of *praising* the team, the coach pointed out every mistake.|saying good things about|watching closely|paying
-  The city was *bustling* during the day, but quiet at night.|busy and full of activity|dark and cold|clean and new
+  The city was *bustling* during the day, but quiet at night.|busy and full of activity|dark and cold|clean and new, with fresh paint
   My cat is *aloof*, while my dog is friendly to everyone.|distant and unfriendly|lazy and slow|small and quiet
-  The first rope was *taut*, but the second hung loose.|pulled tight|very long|cut short
-  Although Ravi felt *anxious* before the race, he was calm afterward.|worried|hungry|proud
+  The first rope was *taut*, but the second hung loose.|pulled tight|very long|cut short at one end
+  Although Ravi felt *anxious* before the race, he was calm afterward.|worried|hungry and thirsty|proud
   The beach was *pristine* in the morning, but littered by evening.|perfectly clean|very crowded|very windy
 `);
 const exampleClueMore = choices(`
-  *Citrus* fruits, such as lemons, limes and oranges, are full of juice.|a group of tangy, juicy fruits|fruits with hard shells|fruits that grow underground
+  *Citrus* fruits, such as lemons, limes and oranges, are full of juice.|a group of tangy, juicy fruits|fruits with hard shells|a group of fruits that grow underground
   *Rodents*, including mice, rats and squirrels, live in the old barn.|small gnawing animals|large hunting cats|birds that swim
   She plays *percussion* instruments like drums, cymbals and bells.|instruments you strike|instruments you blow into|instruments with strings
-  *Furniture*, for example chairs, tables and beds, filled the truck.|large movable objects in a home|food for the kitchen|tools for the garden
+  *Furniture*, for example chairs, tables and beds, filled the truck.|large movable objects in a home|food for the kitchen|tools for working in the garden or yard
   *Amphibians*, such as frogs, toads and salamanders, lay eggs in ponds.|cold-blooded animals that start life in water|birds of prey|sea mammals
   *Gems*, such as rubies, emeralds and diamonds, sparkled in the case.|valuable stones|old coins|glass bottles
-  *Vehicles* like buses, trucks and vans crowded the road.|machines that carry people or things|traffic signs|street lights
+  *Vehicles* like buses, trucks and vans crowded the road.|machines that carry people or things|signs and lights that direct traffic on roads|street lights
   *Utensils*, including forks, spoons and ladles, hung by the stove.|tools for cooking or eating|kinds of soup|kitchen chairs
   *Celestial* objects, such as stars, planets and moons, fill the night sky.|found in the sky or space|found under the sea|found in caves
   *Insects* such as ants, bees and beetles lived in the old log.|small six-legged creatures|small furry animals|worms and snails
   *Beverages*, for instance juice, milk and tea, were served at the party.|drinks|snacks|desserts
-  *Toiletries*, like toothpaste, soap and shampoo, go in this bag.|things for washing and grooming|things for cooking|things for writing
-  *Marsupials*, such as kangaroos, koalas and wombats, live in Australia.|animals that carry their young in a pouch|animals that lay eggs in sand|animals that live only in trees
+  *Toiletries*, like toothpaste, soap and shampoo, go in this bag.|things for washing and grooming|things for cooking and baking in the kitchen|things for writing
+  *Marsupials*, such as kangaroos, koalas and wombats, live in Australia.|animals that carry their young in a pouch|animals that lay their eggs in the warm sand|animals that live only in trees
   *Garments* such as coats, skirts and shirts hung in the closet.|pieces of clothing|pieces of furniture|kinds of fabric
-  *Condiments*, including ketchup, mustard and relish, sat on the table.|sauces added to food for flavor|main dishes|kinds of bread
+  *Condiments*, including ketchup, mustard and relish, sat on the table.|sauces added to food for flavor|main dishes served hot at dinner|kinds of bread
   *Predators*, such as lions, wolves and sharks, are feared by many animals.|animals that hunt others|animals that eat only plants|animals that live in herds
   *Hardware*, such as nails, screws and bolts, was sold by the pound.|small metal parts for building|paint and brushes|wooden boards
   *Cereals*, including wheat, rice and oats, are grown on farms.|grains|fruits|root vegetables
@@ -1060,7 +1077,8 @@ export const wordTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is the base word?", "基础词是什么？"),
-          [...baseBank, ...baseMore],
+          // Every other item also offers the whole word, for the learner who leaves the added part on.
+          [...baseBank, ...baseMore].map(([word, base, wrong], i): ChoiceItem => [word, base, i % 2 === 0 ? [...wrong, word] : wrong]),
           (right, shown) =>
             t(`**${right}** is the word inside *${shown}* that can stand alone.`, `**${right}** 是 *${shown}* 中能独立成词的部分。`),
           notBase,

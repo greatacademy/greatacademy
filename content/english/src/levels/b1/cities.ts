@@ -935,7 +935,8 @@ const modalMeaning: readonly ChoiceItem[] = maybes.map(([perhaps, subject, vp, ,
   const m = modalAt(k, negative);
   const right = negative ? `${subject} ${m} not ${vp}.` : `${subject} ${m} ${vp}.`;
   const sure = negative ? `${subject} can't ${vp}.` : `${subject} must ${vp}.`;
-  return [perhaps, right, [certain, sure]];
+  const certainly = negative ? `${subject} will certainly not ${vp}.` : `${subject} will certainly ${vp}.`;
+  return [perhaps, right, k % 2 === 0 ? [certain, sure, certainly] : [certain, sure]];
 });
 
 const modalTyped: readonly TypedItem[] = maybes.map(([perhaps, subject, vp, , certain, negative], k): TypedItem => {
@@ -986,7 +987,7 @@ const whyNotModalForm = (wrong: string, right: string): Text => {
 
 /** whyNotModalMeaning explains a sentence that is certain instead of possible. */
 const whyNotModalMeaning = (wrong: string): Text =>
-  /\b(must|can't)\b/u.test(wrong)
+  /\b(must|can't|certainly)\b/u.test(wrong)
     ? t(`*${wrong}* says you are sure, but *perhaps* says it is only possible.`, `*${wrong}* 表示你很肯定，但 *perhaps* 只表示有可能。`)
     : t(`*${wrong}* says it as a fact, but *perhaps* says it is only possible.`, `*${wrong}* 把它说成了事实，但 *perhaps* 只表示有可能。`);
 

@@ -1254,10 +1254,10 @@ const pastNowChoice: readonly ChoiceItem[] = pastNows.map(
 );
 
 const nowPastChoice: readonly ChoiceItem[] = nowPasts.map(
-  ([s, , past, rest, rs, rbase, rpp, rr]): ChoiceItem => [
+  ([s, , past, rest, rs, rbase, rpp, rr], k): ChoiceItem => [
     `${joinWords("If", s, past, rest)}, ${joinWords(rs, "___", rr)}.`,
     `would have ${rpp}`,
-    [`would ${rbase}`, `had ${rpp}`],
+    k % 2 === 0 ? [`would ${rbase}`, `had ${rpp}`, `would have had ${rpp}`] : [`would ${rbase}`, `had ${rpp}`],
   ],
 );
 
@@ -1312,7 +1312,12 @@ const mixedWhy = (right: string, sentence: string): Text => {
 const whyNotMixed = (wrong: string, right: string): Text => {
   const rule = mixedRule(right);
   let first: Text;
-  if (wrong.startsWith("would have "))
+  if (wrong.startsWith("would have had "))
+    first = t(
+      `*${wrong}* adds a *had* the result does not take: after *would have* comes the past participle alone.`,
+      `*${wrong}* 多加了一个 *had*：*would have* 后面直接接过去分词。`,
+    );
+  else if (wrong.startsWith("would have "))
     first = t(`*${wrong}* puts the result in the past, but it is about now.`, `*${wrong}* 把结果放在了过去，但结果说的是现在。`);
   else if (wrong.startsWith("would "))
     first = t(`*${wrong}* puts the result in the present, but it is in the past.`, `*${wrong}* 把结果放在了现在，但结果发生在过去。`);

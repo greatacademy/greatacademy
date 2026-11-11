@@ -1186,7 +1186,7 @@ const wouldHaveChoice: readonly ChoiceItem[] = interleave([
     ([s, , pp, , rest, rs, , rpp, rr]): ChoiceItem => [
       `${joinWords(sentenceCase(rs), "___", rr, "if", s, "had", pp, rest)}.`,
       `would have ${rpp}`,
-      [`would had ${rpp}`, `had ${rpp}`],
+      [`would had ${rpp}`, `had ${rpp}`, `would have had ${rpp}`],
     ],
   ),
 ]);
@@ -1246,10 +1246,15 @@ const whyNotWouldHave = (wrong: string, right: string, _shown: string, position:
         `After *would* the verb is in its base form, so it is *have*, never *had*. Use *${right}*.`,
         `*would* 后面的动词用原形，所以是 *have*，不能用 *had*。要用 *${right}*。`,
       )
-    : t(
-        `*${wrong}* leaves out *would*, so it says what really happened before something else. The imagined result takes *${right}*.`,
-        `*${wrong}* 漏掉了 *would*，说的是在另一件事之前真实发生的事。想象的结果要用 *${right}*。`,
-      );
+    : position === 1
+      ? t(
+          `*${wrong}* leaves out *would*, so it says what really happened before something else. The imagined result takes *${right}*.`,
+          `*${wrong}* 漏掉了 *would*，说的是在另一件事之前真实发生的事。想象的结果要用 *${right}*。`,
+        )
+      : t(
+          `*${wrong}* copies the *had* of the *if*-part into the result. The result takes *would have* and the past participle alone: *${right}*.`,
+          `*${wrong}* 把 *if* 部分的 *had* 搬进了结果部分。结果部分只用 *would have* 加过去分词：*${right}*。`,
+        );
 
 /** pastIfWriteWhy explains how a third conditional is put together, with the comma when the if-part comes first. */
 const pastIfWriteWhy = (right: string): Text =>

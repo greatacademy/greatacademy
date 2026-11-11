@@ -421,12 +421,13 @@ const likeItems = (from: number, count: number) =>
     .map(([[subject, verb, enjoy], [base, ing, misspelled, rest]]) => ({ subject, verb, enjoy, base, ing, misspelled, rest }));
 
 const likeChoiceBank: readonly ChoiceItem[] = likeItems(0, 44).map(
-  ({ subject, verb, base, ing, rest }): ChoiceItem => [
+  ({ subject, verb, base, ing, misspelled, rest }): ChoiceItem => [
     `${subject} ${verb} ___${rest}. (${base})`,
     ing,
     [
       base,
       base.endsWith("y") && !base.endsWith("ay") ? `${base.slice(0, -1)}ies` : /(ch|sh|s|x|o)$/u.test(base) ? `${base}es` : `${base}s`,
+      misspelled,
     ],
   ],
 );
@@ -506,10 +507,15 @@ const likeAndLove: TopicDef = {
                 `*${wrong}* puts two verbs side by side, as Chinese does, but after *${likeVerbOf(shown)}* the second verb needs *-ing*.`,
                 `*${wrong}* 像中文一样把两个动词直接连在一起，可 *${likeVerbOf(shown)}* 后面的第二个动词要用 *-ing*。`,
               )
-            : t(
-                `*${wrong}* gives the second verb *-s*, but only the first verb changes for the subject.`,
-                `*${wrong}* 给第二个动词加了 *-s*，可只有第一个动词随主语变化。`,
-              ),
+            : position === 1
+              ? t(
+                  `*${wrong}* gives the second verb *-s*, but only the first verb changes for the subject.`,
+                  `*${wrong}* 给第二个动词加了 *-s*，可只有第一个动词随主语变化。`,
+                )
+              : t(
+                  `*${wrong}* has *-ing*, but it is not spelled right: drop a last *e*, double one last consonant only after one short vowel, and otherwise just add *-ing*.`,
+                  `*${wrong}* 加了 *-ing*，可拼写不对：以不发音的 *e* 结尾的去 *e*，只有一个短元音加一个辅音结尾时才双写辅音，其他直接加 *-ing*。`,
+                ),
       ),
     ),
     point(
@@ -572,10 +578,13 @@ const likeNotes = Array.from({ length: 42 }, (_, k) => {
     right: `${who} ${verbForm} ${ings}.`,
     pattern: verb === "enjoy" ? `${who} ${verbForm} ${ings}.` : `${who} ${verbForm} [${ings}|${tos}].`,
     wrong: [`${who} ${verbForm} ${bases}.`, `${who} ${s ? verb : `${verb}s`} ${ings}.`],
+    toIng: `${who} ${verbForm} to ${ings}.`,
   };
 });
 
-const likesChoiceBank: readonly ChoiceItem[] = likeNotes.map(({ note, right, wrong }): ChoiceItem => [note, right, wrong]);
+const likesChoiceBank: readonly ChoiceItem[] = likeNotes.map(
+  ({ note, right, wrong, toIng }, k): ChoiceItem => [note, right, k % 2 === 0 ? [...wrong, toIng] : wrong],
+);
 const likesTypedBank: readonly TypedItem[] = likeNotes.map(
   ({ note, right, pattern, wrong }): TypedItem => ({
     shown: note,
@@ -627,10 +636,15 @@ const writingAboutLikes: TopicDef = {
                 "This leaves the activities as plain verbs, but after *like*, *love* and *enjoy* each one takes *-ing*.",
                 "这句的活动用了动词原形，可 *like*、*love*、*enjoy* 后面的每个动词都要用 *-ing*。",
               )
-            : t(
-                "This gets the *-s* on *like*, *love* or *enjoy* wrong: it takes *-s* after one person, and none after *I* or more than one.",
-                "这句的 *like*、*love* 或 *enjoy* 词尾错了：单数第三人称主语后加 *-s*，*I* 和复数主语后不加。",
-              ),
+            : position === 1
+              ? t(
+                  "This gets the *-s* on *like*, *love* or *enjoy* wrong: it takes *-s* after one person, and none after *I* or more than one.",
+                  "这句的 *like*、*love* 或 *enjoy* 词尾错了：单数第三人称主语后加 *-s*，*I* 和复数主语后不加。",
+                )
+              : t(
+                  "This puts *to* before the *-ing* form, but *to* goes with a plain verb; after *like*, *love* and *enjoy* the *-ing* form follows directly.",
+                  "这句在 *-ing* 形式前加了 *to*，可 *to* 后面跟动词原形；*like*、*love*、*enjoy* 后面直接跟 *-ing* 形式。",
+                ),
       ),
     ),
     point(

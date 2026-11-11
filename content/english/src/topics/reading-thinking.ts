@@ -72,7 +72,7 @@ const evidenceBank: readonly ChoiceItem[] = [
   [
     "Inference: Ana was nervous about her speech.",
     "Her hands shook as she held her notes.",
-    ["She wore her favorite shirt.", "The room had twenty chairs."],
+    ["She wore her favorite shirt.", "The room had twenty chairs arranged in four neat rows."],
   ],
   [
     "Inference: The garden had not been cared for in a long time.",
@@ -82,7 +82,7 @@ const evidenceBank: readonly ChoiceItem[] = [
   [
     "Inference: The puppy was new to the house.",
     "It sniffed every corner and hid under the bed whenever someone came in.",
-    ["The puppy had brown spots.", "The puppy ate dog food."],
+    ["The puppy had brown spots on its back and a short, curly tail.", "The puppy ate dog food."],
   ],
   [
     "Inference: It was very cold that morning.",
@@ -92,7 +92,7 @@ const evidenceBank: readonly ChoiceItem[] = [
   [
     "Inference: Sam had practiced the song many times.",
     "He played it from memory without looking at his music.",
-    ["He sat on a wooden bench.", "The piano was in the living room."],
+    ["He sat on a wooden bench that his grandfather had built years ago.", "The piano was in the living room."],
   ],
   [
     "Inference: The store was about to close.",
@@ -102,7 +102,7 @@ const evidenceBank: readonly ChoiceItem[] = [
   [
     "Inference: The river had flooded recently.",
     "Mud lines ran along the walls of the houses, high above the ground.",
-    ["The river had many fish.", "A bridge crossed the river."],
+    ["The river had many kinds of fish, and people came from far away to catch them.", "A bridge crossed the river."],
   ],
 ];
 
@@ -175,7 +175,7 @@ const narratorBank: readonly ChoiceItem[] = [
   [
     "Kenji did not like spiders until the day one saved his tomatoes from the beetles.",
     "someone outside the story",
-    ['Kenji, telling it as "I"', "the spider"],
+    ['Kenji, telling it as "I"', 'the spider, telling it as "I"'],
   ],
   [
     "Lucy whispered to her brother. Neither of them knew that their mother was listening at the door.",
@@ -185,7 +185,7 @@ const narratorBank: readonly ChoiceItem[] = [
   [
     "My sister and I found an old map in the attic, and we decided to follow it.",
     'one of the sisters, telling it as "I"',
-    ["someone outside the story", "the map"],
+    ["someone outside the story who knows more than the characters", "the map"],
   ],
   [
     "The old man fed the pigeons every morning. He did not know that the girl across the street watched him each day.",
@@ -195,7 +195,7 @@ const narratorBank: readonly ChoiceItem[] = [
   [
     "I am a lighthouse, and for a hundred years I have watched the ships go by.",
     'the lighthouse, telling it as "I"',
-    ["someone outside the story", "a sailor on a ship"],
+    ["someone outside the story who knows more than the characters", "a sailor on a ship"],
   ],
   [
     "When Max saw the broken vase, his heart sank. He knew he would have to tell his dad.",
@@ -242,7 +242,7 @@ const lessonBank: readonly ChoiceItem[] = [
   [
     "A boy kept shouting that a wolf was coming, just to watch the villagers run. When a wolf really came, no one believed him.",
     "If you lie, people may not believe you even when you tell the truth.",
-    ["Wolves are dangerous.", "Villagers should stay indoors."],
+    ["Wolves are dangerous.", "The boy shouted that a wolf was coming just to watch the villagers run."],
   ],
   [
     "Two friends found a melon. Each wanted it all, and while they argued, a crow flew off with it.",
@@ -252,7 +252,7 @@ const lessonBank: readonly ChoiceItem[] = [
   [
     "An ant worked all summer storing food. A grasshopper sang and played. When winter came, the grasshopper was hungry, and the ant was fed.",
     "It is wise to prepare for the future.",
-    ["Grasshoppers sing well.", "Ants live underground."],
+    ["The grasshopper sang and played all summer while the ant stored food.", "Ants live underground."],
   ],
   [
     "Lena was afraid to join the soccer team because she had never played. She tried anyway, and by the end of the season she was the team's best defender.",
@@ -262,7 +262,7 @@ const lessonBank: readonly ChoiceItem[] = [
   [
     "A lion spared a tiny mouse. Later, the lion was caught in a net, and the mouse chewed through the ropes to set it free.",
     "Even small friends can be a great help.",
-    ["Lions are stronger than mice.", "Nets are made of rope."],
+    ["Lions are stronger than mice.", "The lion was caught in a net, and the mouse chewed through the ropes."],
   ],
   [
     "Jack teased the new girl about her accent. Later, when Jack moved to a new town, others laughed at the way he talked, and he finally understood how she had felt.",
@@ -272,7 +272,7 @@ const lessonBank: readonly ChoiceItem[] = [
   [
     "A dog with a bone saw its reflection in a stream and thought it saw another dog with a bigger bone. It snapped at it and dropped its own bone into the water.",
     "Being greedy can make you lose what you already have.",
-    ["Dogs like bones.", "Streams can show reflections."],
+    ["Dogs like bones.", "The dog saw its reflection in a stream and thought it was another dog."],
   ],
 ];
 
@@ -290,10 +290,10 @@ const simileBank: readonly ChoiceItem[] = [
 
 const metaphorBank: readonly ChoiceItem[] = [
   ["The classroom was a zoo after the fire drill.", "wild and noisy", ["full of animals", "very clean"]],
-  ["Grandpa's beard is a snowy forest.", "thick and white", ["full of trees", "cold"]],
+  ["Grandpa's beard is a snowy forest.", "thick and white", ["full of tall trees and wild animals", "cold"]],
   ["Her smile was sunshine on a gray day.", "warm and cheering", ["very bright to look at", "only seen in summer"]],
   ["Time is a thief that steals our summer days.", "it makes summer pass too quickly", ["someone stole a calendar", "summer is dangerous"]],
-  ["The stars were diamonds scattered across the sky.", "bright and sparkling", ["expensive", "falling down"]],
+  ["The stars were diamonds scattered across the sky.", "bright and sparkling", ["expensive enough to buy and sell", "falling down"]],
   ["My little brother is a tornado when he plays.", "he moves wildly and makes a mess", ["he is a storm", "he spins in circles"]],
   ["The road was a ribbon winding through the hills.", "long, thin and curving", ["made of cloth", "tied in a bow"]],
   ["Dad was a bear before his morning coffee.", "grumpy", ["hairy", "hungry for fish"]],
@@ -321,25 +321,17 @@ const persuadeBank: readonly ChoiceItem[] = [
   ["", "Don't miss the best sale of the year at Green's Shoes!", ["Green's Shoes is on Main Street.", "Green's Shoes opened in 1990."]],
   [
     "",
-    "Our town needs a new pool, so please sign our letter to the mayor.",
+    "Please sign our letter asking for a new pool.",
     ["The old pool was built forty years ago.", "The pool is open from June to August."],
   ],
-  [
-    "",
-    "Every family should plant a tree this spring to make our city greener.",
-    ["Trees take in carbon dioxide.", "Oak trees can live for hundreds of years."],
-  ],
+  ["", "Every family should plant a tree!", ["Trees take in carbon dioxide.", "Oak trees can live for hundreds of years."]],
   ["", "Choose Fresh Farms milk for the strongest bones in town!", ["Milk contains calcium.", "Fresh Farms has sixty cows."]],
   [
     "",
     "Turn off the lights when you leave a room; it is the right thing to do for the planet.",
     ["Lights use electricity.", "Most rooms have a light switch."],
   ],
-  [
-    "",
-    "Vote for Sam for class president, the only candidate who will really listen to you!",
-    ["Sam is in the fourth grade.", "The vote will be held on Friday."],
-  ],
+  ["", "Vote Sam for president!", ["Sam is in the fourth grade.", "The vote will be held on Friday."]],
   [
     "",
     "You will love this book so much that you will not be able to put it down.",
@@ -419,9 +411,10 @@ const tellingPerson = tellings.flatMap(([first, third], i): ChoiceItem[] => [
   [first, "first person", i % 2 === 0 ? ["third person", "second person"] : ["second person", "third person"]],
   [third, "third person", i % 2 === 0 ? ["second person", "first person"] : ["first person", "second person"]],
 ]);
-const tellingNarrator = tellings.flatMap(([first, third, name, other]): ChoiceItem[] => [
-  [first, 'a character in the story, telling it as "I"', ["someone outside the story", other]],
-  [third, "someone outside the story", [`${name}, telling it as "I"`, other]],
+const allKnowing = "someone outside the story who knows more than the characters";
+const tellingNarrator = tellings.flatMap(([first, third, name, other], i): ChoiceItem[] => [
+  [first, 'a character in the story, telling it as "I"', ["someone outside the story", i % 2 === 0 ? allKnowing : other]],
+  [third, "someone outside the story", [`${name}, telling it as "I"`, i % 2 === 0 ? `${other}, telling it as "I"` : other]],
 ]);
 const fableLessons = fables.map(([story, lesson, facts]): ChoiceItem => [story, lesson, [...facts]]);
 const fableStories = fables.map(
@@ -527,7 +520,7 @@ const narratorNot: Say = (wrong) =>
         `If ${wrong.replace(/, telling it as "I"$/, "")} told the story, the text would say *I* and *my*. Look at the pronouns the narrator uses.`,
         `如果由 ${wrong.replace(/, telling it as "I"$/, "")} 来讲，文中会用 *I* 和 *my*。看看叙述者用的代词。`,
       ]
-    : wrong === "someone outside the story"
+    : wrong.startsWith("someone outside the story")
       ? [
           "A narrator outside the story would call everyone by name or *he*, *she* and *they*. Here the narrator says *I*.",
           "故事外的叙述者会用名字或 *he*、*she*、*they* 称呼每个人。而这里的叙述者说的是 *I*。",
