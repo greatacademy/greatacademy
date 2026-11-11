@@ -27,6 +27,8 @@ export const samplesPerKnowledgePoint = 40;
 export const minProseWords = 15;
 /** minSolutionWords is the fewest words a solution with no equation or relation needs outside its math. */
 export const minSolutionWords = 10;
+/** longestShare is the share of choices above which a right option that is always the longest gives the answer away. */
+export const longestShare = 0.6;
 
 const cjk = /[一-鿿]/;
 /** visualTitle matches titles that name a picture; the *graph* of a paragraph and the plot of a story are not one. */
@@ -125,6 +127,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       let noWrong = 0;
       let leaks = 0;
       const answerIndexes = new Set<number>();
+      let longest = 0;
       const terse = new Set<string>();
       let unworked = 0;
       for (let seed = 1; seed <= samplesPerKnowledgePoint; seed++) {
@@ -141,6 +144,9 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
           options = problem.answer.input.options.length;
           answerIndexes.add(Number(problem.answer.expected));
           if (problem.mistakes?.length) explained++;
+          const lengths = problem.answer.input.options.map((o) => o.en.length);
+          const right = lengths[Number(problem.answer.expected)] ?? 0;
+          if (lengths.every((n, i) => i === Number(problem.answer.expected) || n < right)) longest++;
         }
         if (!problem.wrong?.length) noWrong++;
         if (!cjk.test(problem.prompt["zh-CN"])) add("zh prompt without Chinese", `${path} seed ${seed}`);
@@ -160,6 +166,9 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (choices === samplesPerKnowledgePoint && answerIndexes.size === 1) add("choice answer always at the same index", path);
       if (choices === samplesPerKnowledgePoint && options === 2) add("two-option choice", path);
       if (choices > 0 && explained === 0) add("choice whose wrong options are not explained", path);
+      // With three or more options, the right one is longest by chance in a third of items or fewer.
+      if (choices >= samplesPerKnowledgePoint / 2 && options >= 3 && longest > choices * longestShare)
+        add("right option usually the longest", path);
       if (noWrong === samplesPerKnowledgePoint) add("no wrong responses listed", path);
       if (leaks > samplesPerKnowledgePoint / 2) add("canonical answer appears in the prompt", path);
     });
