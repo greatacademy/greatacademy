@@ -94,11 +94,25 @@ const quote = (s: string) => same(`> ${s}`);
 const explained = (w: WordDef, sentence: string): Text =>
   t(`*${w.head}*: ${w.meaning.en}.\n\n${sentence}`, `*${w.head}*：${w.meaning["zh-CN"]}。\n\n${sentence}`);
 
+/**
+ * glossary maps each spelling of every headword of a vocabulary topic, in lower case, to its word, so that choosing a
+ * wrong option can be answered with what that word means. It fills as the content modules build their topics and is
+ * read only when a problem is generated, by which time every topic is built; the first word to claim a spelling keeps it.
+ */
+const glossary = new Map<string, WordDef>();
+
+/** gloss is the word a spelling belongs to, if a vocabulary topic teaches it. */
+export function gloss(spelling: string): WordDef | undefined {
+  return glossary.get(spelling.toLowerCase());
+}
+
 interface ChoiceItem {
   readonly prompt: Text;
   readonly right: string;
   readonly wrong: readonly string[];
   readonly solution: Text;
+  /** whyNot says what choosing a wrong option shows, when there is something to say about it. */
+  readonly whyNot: (wrong: string) => Text | undefined;
 }
 
 function choiceFrom(items: readonly ChoiceItem[]): Generator {
@@ -106,14 +120,45 @@ function choiceFrom(items: readonly ChoiceItem[]): Generator {
     const item = rng.cycle(items);
     const options = rng.shuffle([item.right, ...item.wrong]);
     const answer = options.indexOf(item.right);
+    const mistakes = item.wrong.flatMap((w) => {
+      const feedback = item.whyNot(w);
+      return feedback ? [{ response: String(options.indexOf(w)), feedback }] : [];
+    });
     return {
       prompt: item.prompt,
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map(same) } },
       solution: item.solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
+      ...(mistakes.length > 0 && { mistakes }),
     };
   };
+}
+
+/** meansOther says what a wrong option means, if a vocabulary topic teaches it. */
+function meansOther(wrong: string): Text | undefined {
+  const other = gloss(wrong);
+  if (!other) return undefined;
+  return t(`*${wrong}* means “${other.meaning.en}”.`, `*${wrong}* 的意思是“${other.meaning["zh-CN"]}”。`);
+}
+
+/**
+ * fitsNot says why a wrong filler does not complete the sentence: another form of the word, which a filler that is not a
+ * taught word but starts like the answer is taken to be, or a word of another meaning.
+ */
+function fitsNot(w: WordDef, wrong: string, answer: string): Text | undefined {
+  const lower = wrong.toLowerCase();
+  if (w.spellings.some((s) => s.toLowerCase() === lower) || (!gloss(wrong) && lower.slice(0, 4) === answer.toLowerCase().slice(0, 4)))
+    return t(
+      `*${wrong}* is not the form of *${w.head}* this sentence needs: look at the words just before and after the gap.`,
+      `这个句子需要的不是 *${wrong}* 这种形式的 *${w.head}*：看看空白前后紧挨着的词。`,
+    );
+  const other = gloss(wrong);
+  if (!other || other === w) return undefined;
+  return t(
+    `*${wrong}* means “${other.meaning.en}”, which does not make sense in this sentence.`,
+    `*${wrong}* 的意思是“${other.meaning["zh-CN"]}”，放进这个句子意思说不通。`,
+  );
 }
 
 /** interleave orders items by sentence and then by word, so consecutive seeds show different words. */
@@ -144,6 +189,8 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
   const { id, words } = spec;
   const heads = words.map((w) => w.head);
   if (new Set(heads.map((h) => h.toLowerCase())).size !== heads.length) throw new Error(`${id}: a headword twice`);
+  for (const w of words)
+    for (const spelling of w.spellings) if (!glossary.has(spelling.toLowerCase())) glossary.set(spelling.toLowerCase(), w);
   const isAlike = (a: WordDef, b: string) => a.alike.includes(b) || (words.find((w) => w.head === b)?.alike.includes(a.head) ?? false);
 
   const complete = distinct(
@@ -155,6 +202,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             right: s.answer,
             wrong: s.wrong,
             solution: explained(w, s.full),
+            whyNot: (wrong) => fitsNot(w, wrong, s.answer),
           }),
         ),
       ),
@@ -176,6 +224,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             right: w.head,
             wrong: wrong.filter((x): x is string => x !== undefined),
             solution: explained(w, w.sentences[0]?.full ?? ""),
+            whyNot: meansOther,
           }),
         );
       }),
